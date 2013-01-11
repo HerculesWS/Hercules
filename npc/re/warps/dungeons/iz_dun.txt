@@ -1,0 +1,18 @@
+//===== rAthena Script =======================================
+//= Izlude Dungeon Renewal Warp Script
+//===== By: ==================================================
+//= Athena (1.0)
+//= Nana (1.1)
+//===== Current Version: =====================================
+//= 1.2
+//===== Compatible With: =====================================
+//= Any Athena Version
+//===== Description: =========================================
+//= Warp Points for Bibilyn Island & Undersea Cave
+//===== Additional Comments: =================================
+//= 1.2 Moved common warps to base path. [Euphy]
+//============================================================
+
+//= Undersea Cave ============================================
+iz_dun04,129,233,0	warp	izd07	2,2,iz_dun05,141,187
+iz_dun05,141,190,0	warp	izd07-1	2,2,iz_dun04,129,230

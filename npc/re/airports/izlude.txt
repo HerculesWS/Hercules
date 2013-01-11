@@ -1,0 +1,14 @@
+//===== rAthena Script ======================================= 
+//= Izlude Airport NPCs
+//===== By: ================================================== 
+//= rAthena Dev Team
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//===== Description: ========================================= 
+//= Izlude Airport NPCs
+//===== Additional Comments: ================================= 
+//= Official NPCs.
+//= Updated to match the new Izlude Map. [Masao]
+//============================================================ 
+
+izlude,204,75,3	duplicate(Airship_Staff_izlude)	Airship Staff#izlude	90

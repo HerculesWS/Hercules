@@ -1,0 +1,277 @@
+//===== rAthena Script =======================================
+//= Hunting Missions
+//===== By: ==================================================
+//= Euphy
+//===== Current Version: =====================================
+//= 1.2b
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//===== Description: =========================================
+//= Random hunting missions.
+//= Rewards are based on quest difficulty.
+//============================================================
+
+prontera,152,187,6	script	Hunting Missions	951,{
+function Chk; function Cm;
+	mes "[Hunting Missions]";
+	mes "Hello, "+strcharinfo(0)+"!";
+	if (!#Mission_Delay) {
+		next;
+		mes "[Hunting Missions]";
+		mes "I can't find any records...";
+		mes "You must be new here!";
+		emotion e_omg;
+		next;
+		callsub Mission_Info;
+		emotion e_go;
+		set #Mission_Delay,1;
+		close;
+	}
+	mes rand(2)?"Working hard, as always...":"Not slacking, I hope...";
+	mes "Is there anything I can help";
+	mes "you with?";
+	mes " ";
+	mes "^777777~ You've completed ^0055FF"+Mission_Total+"^777777 mission"+((Mission_Total == 1)?"":"s")+". ~^000000";
+	next;
+	switch(select(((!Mission0)?" ~ New Mission::":": ~ Mission Status: ~ Abandon Mission")+": ~ Information: ~ Mission Shop: ~ View Top Hunters: ~ ^777777Cancel^000000")) {
+	case 1:
+		mes "[Hunting Missions]";
+		if (#Mission_Count) {
+			mes "You've started a mission";
+			mes "on another character.";
+			close;
+		}
+		if (#Mission_Delay > gettimetick(2) && .Delay) {
+			set .@i, #Mission_Delay-gettimetick(2);
+			if (.@i > 3600) set .@j$, (.@i/3600)+" hour"+(((.@i/3600) == 1)?"":"s");
+			else if (.@i > 60) set .@j$, (.@i/60)+" minute"+(((.@i/60) == 1)?"":"s");
+			else set .@j$, (.@i)+" second"+((.@i == 1)?"":"s");
+			mes "I'm afraid you'll have to wait "+.@j$+" before taking another mission.";
+			close;
+		}
+		mes "You must hunt:";
+		query_sql("SELECT ID FROM mob_db WHERE left(Sprite, 4) != 'meta' AND left(Sprite, 2) != 'E_' AND ~Mode & 32 AND EXP > 0 AND MVP1id = 0 AND DropCardid > 4000 AND DropCardid < 5000 AND ID < 2000 ORDER BY rand() LIMIT "+.Quests, .@mob);
+		for (set .@i,0; .@i<.Quests; set .@i,.@i+1) {
+			setd "Mission"+.@i, .@mob[.@i];
+			setd "Mission"+.@i +"_",0;
+		}
+		set #Mission_Count, rand(.Count[0],.Count[1]);
+		callsub Mission_Status;
+		next;
+		mes "[Hunting Missions]";
+		mes "Report back when";
+		mes "you've finished.";
+		mes "Good luck!";
+		close;
+	case 2:
+		mes "[Hunting Missions]";
+		mes "Mission status:";
+		callsub Mission_Status;
+		close;
+	case 3:
+		mes "[Hunting Missions]";
+		mes "Do you really want to";
+		mes "abandon your mission?";
+		if (.Delay) mes "Your delay time will not be reset.";
+		next;
+		switch(select(" ~ Abandon...: ~ ^777777Cancel^000000")) {
+		case 1:
+			mes "[Hunting Missions]";
+			mes "Alright, I've dropped";
+			mes "your current mission.";
+			specialeffect2 EF_STORMKICK4;
+			for(set .@i,0; .@i<.Quests; set .@i,.@i+1) {
+				setd "Mission"+.@i,0;
+				setd "Mission"+.@i+"_",0;
+			}
+			set #Mission_Count,0;
+			if (.Delay) set #Mission_Delay, gettimetick(2)+(.Delay*3600);
+			close;
+		case 2:
+			mes "[Hunting Missions]";
+			mes "I knew you were kidding!";
+			mes "Keep up the good work.";
+			emotion e_heh;
+			close;
+		}
+	case 4:
+		callsub Mission_Info;
+		close;
+	case 5:
+		mes "[Hunting Missions]";
+		mes "You have ^0055FF"+#Mission_Points+"^000000 Mission Points.";
+		mes "Use them well!";
+		callshop "mission_shop",1;
+		npcshopattach "mission_shop";
+		end;
+	case 6:
+		mes "[Hunting Missions]";
+		mes "The top hunters are:";
+		query_sql("SELECT char_id AS id, (SELECT `name` FROM `char` WHERE char_id = id),`value` FROM `global_reg_value` WHERE str = 'Mission_Total' ORDER BY CAST(`value` AS SIGNED) DESC LIMIT 5",.@id,.@name$,.@val);
+		for(set .@i,0; .@i<5; set .@i,.@i+1)
+			mes "  [Rank "+(.@i+1)+"]  "+((.@name$[.@i] == "")?"^777777none":"^0055FF"+.@name$[.@i]+"^000000 : ^FF0000"+.@val[.@i]+" pt.")+"^000000";
+		close;
+	case 7:
+		mes "[Hunting Missions]";
+		mes "Nothing? Okay...";
+		emotion e_hmm;
+		close;
+	}
+
+Mission_Status:
+	set @f,0;
+	deletearray .@j[0], getarraysize(.@j);
+	for(set .@i,0; .@i<.Quests; set .@i,.@i+1) {
+		set .@j[.@i], getd("Mission"+.@i);
+		set .@j[.Quests], .@j[.Quests]+strmobinfo(3,.@j[.@i]);
+		set .@j[.Quests+1], .@j[.Quests+1]+(strmobinfo(6,.@j[.@i])/(getbattleflag("base_exp_rate")/100)*.Modifier[0]);
+		set .@j[.Quests+2], .@j[.Quests+2]+(strmobinfo(7,.@j[.@i])/(getbattleflag("job_exp_rate")/100)*.Modifier[1]);
+		mes " > "+Chk(getd("Mission"+.@i+"_"),#Mission_Count)+strmobinfo(1,.@j[.@i])+" ("+getd("Mission"+.@i+"_")+"/"+#Mission_Count+")^000000";
+	}
+
+	// Reward formulas:
+	set .@Mission_Points, 3+(.@j[.Quests]/.Quests/6);
+	set .@Base_Exp, #Mission_Count*.@j[.Quests+1]/5;
+	set .@Job_Exp, #Mission_Count*.@j[.Quests+2]/5;
+	set .@Zeny, #Mission_Count*.Quests*.@j[.@i]*.Modifier[2];
+
+	next;
+	mes "[Hunting Missions]";
+	mes "Mission rewards:";
+	mes " > Mission Points: ^0055FF"+.@Mission_Points+"^000000";
+	mes " > Base Experience: ^0055FF"+Cm(.@Base_Exp)+"^000000";
+	mes " > Job Experience: ^0055FF"+Cm(.@Job_Exp)+"^000000";
+	mes " > Zeny: ^0055FF"+Cm(.@Zeny)+"^000000";
+	if (@f) { set @f,0; return; }
+	next;
+	mes "[Hunting Missions]";
+	mes "Oh, you're done!";
+	mes "Good work.";
+	mes "Here's your reward.";
+	emotion e_no1;
+	specialeffect2 EF_ANGEL;
+	specialeffect2 EF_TRUESIGHT;
+	set #Mission_Points, #Mission_Points+.@Mission_Points;
+	set BaseExp, BaseExp+.@Base_Exp;
+	set JobExp, JobExp+.@Job_Exp;
+	set Zeny, Zeny+.@Zeny;
+	for(set .@i,0; .@i<.Quests; set .@i,.@i+1) {
+		setd "Mission"+.@i,0;
+		setd "Mission"+.@i+"_",0;
+	}
+	set #Mission_Count,0;
+	if (.Delay) set #Mission_Delay, gettimetick(2)+(.Delay*3600);
+	set Mission_Total, Mission_Total+1;
+	if (Mission_Total == 1) query_sql("INSERT INTO `global_reg_value` (`char_id`,`str`,`value`,`type`,`account_id`) VALUES ("+getcharid(0)+",'Mission_Total','1',3,0)");
+	else query_sql("UPDATE `global_reg_value` SET `value` = "+Mission_Total+" WHERE char_id = "+getcharid(0)+" AND `str` = 'Mission_Total'");
+	close;
+
+Mission_Info:
+	mes "[Hunting Missions]";
+	mes "If you so choose, I can assign";
+	mes "you a random hunting quest.";
+	mes "Some are easier than others, but";
+	mes "the rewards increase with difficulty.";
+	next;
+	mes "[Hunting Missions]";
+	mes "Missions points are shared";
+	mes "amongst all your characters.";
+	if (.Delay) mes "Delay time is, too.";
+	mes "You can't take missions on";
+	mes "multiple characters at once.";
+	next;
+	mes "[Hunting Missions]";
+	mes "You can start a quest";
+	if (.Delay) mes "every "+((.Delay == 1)?"hour.":.Delay+" hours.");
+	else mes "whenever you want.";
+	mes "That's everything~";
+	return;
+
+function Chk {
+	if (getarg(0) < getarg(1)) { set @f,1; return "^FF0000"; }
+	else return "^00FF00"; }
+
+function Cm {
+	set .@str$, getarg(0);
+	for(set .@i,getstrlen(.@str$)-3; .@i>0; set .@i,.@i-3)
+		set .@str$, insertchar(.@str$,",",.@i);
+	return .@str$; }
+
+OnBuyItem:
+	set @cost,0;
+	for(set .@i,0; .@i<getarraysize(@bought_nameid); set .@i,.@i+1)
+		for(set .@j,0; .@j<getarraysize(.Shop); set .@j,.@j+2)
+			if (@bought_nameid[.@i] == .Shop[.@j]) {
+				set @cost, @cost+(.Shop[.@j+1]*@bought_quantity[.@i]);
+				break;
+			}
+	mes "[Hunting Missions]";
+	if (@cost > #Mission_Points) mes "You don't have enough Mission Points.";
+	else {
+		for(set .@i,0; .@i<getarraysize(@bought_nameid); set .@i,.@i+1) {
+			getitem @bought_nameid[.@i], @bought_quantity[.@i];
+			dispbottom "Purchased "+@bought_quantity[.@i]+"x "+getitemname(@bought_nameid[.@i])+".";
+		}
+		set #Mission_Points, #Mission_Points-@cost;
+		mes "Deal completed.";
+		emotion e_cash;
+	}
+	set @cost,0;
+	deletearray @bought_nameid[0], getarraysize(@bought_nameid);
+	deletearray @bought_quantity[0], getarraysize(@bought_quantity);
+	close;
+
+OnNPCKillEvent:
+	if (!getcharid(1) || !.Party) {
+		if (!#Mission_Count || !Mission0) end;
+		for (set .@i, 0; .@i<.Quests; set .@i,.@i+1) {
+			if (strmobinfo(1,killedrid) == strmobinfo(1,getd("Mission"+.@i))) {
+				if (getd("Mission"+.@i+"_") < #Mission_Count) {
+					dispbottom "[Hunting Mission] Killed "+(set(getd("Mission"+.@i+"_"),getd("Mission"+.@i+"_")+1))+" of "+#Mission_Count+" "+strmobinfo(1,killedrid)+".";
+					end;
+				}
+			}
+		}
+	} else if (.Party) {
+		set .@mob, killedrid;
+		getmapxy(.@map1$,.@x1,.@y1,0);
+		getpartymember getcharid(1),1;
+		getpartymember getcharid(1),2;
+		for(set .@i,0; .@i<$@partymembercount; set .@i,.@i+1) {
+			if (isloggedin($@partymemberaid[.@i], $@partymembercid[.@i])) {
+				attachrid $@partymemberaid[.@i];
+				if (#Mission_Count && Mission0 && HP > 0) {
+					getmapxy(.@map2$,.@x2,.@y2,0);
+					if ((.@map1$ == .@map2$ || .Party == 1) && (distance(.@x1,.@y1,.@x2,.@y2) <= 30 || .Party < 3)) {
+						for(set .@j,0; .@j<.Quests; set .@j,.@j+1) {
+							if (strmobinfo(1,.@mob) == strmobinfo(1,getd("Mission"+.@j))) {
+								if (getd("Mission"+.@j+"_") < #Mission_Count) {
+									dispbottom "[Hunting Mission] Killed "+(set(getd("Mission"+.@j+"_"),getd("Mission"+.@j+"_")+1))+" of "+#Mission_Count+" "+strmobinfo(1,.@mob)+".";
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	end;
+
+OnInit:
+	set .Delay,12;		// Quest delay, in hours (0 to disable).
+	set .Quests,4;		// Number of subquests per mission (increases rewards).
+	set .Party,3;		// Party options: 0 (exclude party kills), 1 (include party kills), 2 (same map only), 3 (screen area only)
+	setarray .Count[0],	// Min and max monsters per subquest (increases rewards).
+		40,70;
+	setarray .Modifier[0],	// Multipliers for Base Exp, Job Exp, and Zeny rewards.
+		getbattleflag("base_exp_rate")/100,getbattleflag("job_exp_rate")/100,60;
+	setarray .Shop[0],	// Reward items: <ID>,<point cost> (about 10~20 points per hunt).
+		512,1,513,1,514,1,538,5,539,5,558,10,561,10;
+
+	npcshopdelitem "mission_shop",512;
+	for(set .@i,0; .@i<getarraysize(.Shop); set .@i,.@i+2)
+		npcshopadditem "mission_shop", .Shop[.@i], .Shop[.@i+1];
+	end;
+}
+-	shop	mission_shop	-1,512:-1

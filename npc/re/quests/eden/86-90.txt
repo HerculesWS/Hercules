@@ -1,0 +1,113 @@
+//===== rAthena Script =======================================
+//= Eden Group Quests - Mission [86 - 90]
+//===== By: ==================================================
+//= Chilly
+//===== Current Version: =====================================
+//= 1.2
+//===== Compatible With: =====================================
+//= rAthena SVN
+//===== Description: =========================================
+//= Repetable Quests for Players between Baselevel 86 - 90.
+//===== Additional Comments: =================================
+//= 1.0 First Version. [Chilly]
+//= 1.1 Some little improvements here and there. [Masao]
+//= 1.2 Optimized. [Euphy]
+//============================================================
+
+moc_para01,48,175,3	script	Mission [86 - 90]	857,{
+	if (countitem(6219) < 1) {
+		mes "- Only members of the -";
+		mes "- Eden Group can read -";
+		mes "- this bulletin board. -";
+		close;
+	}
+	if (BaseLevel < 86) {
+		mes "- This missions can only be -";
+		mes "- read by those who are -";
+		mes "- of the correct level. -";
+		mes "- There might be another -";
+		mes "- board somewhere for -";
+		mes "- my level. -";
+		close;
+	}
+	if (BaseLevel > 90) {
+		setarray .@Exp[0],76000,82000,82000,72000,76000,72000,117000,82000,120000,72000,72000,72000,86000,80000;
+		setarray .@Mob$[0],"Dragon Tail","Spring Rabbit","Pest","Bathory","Alarm","Baba Yaga","Hyegun","Antique Firelock","Zipper Bear","Earth Petite","Rafflesia","Venomous","Pitman","Yellow Novus";
+		for(set .@i,0; .@i<14; set .@i,.@i+1)
+			if (checkquest(4167+.@i,HUNTING) == 2) {
+				mes "You hunted all 30 "+.@Mob$[.@i]+".";
+				mes "Thank you very much.";
+				next;
+				mes "I know it isn't much but here's a small gift.";
+				mes "I hope that it helps you at least a little bit.";
+				next;
+				erasequest 4167+.@i;
+				getexp .@Exp[.@i],0;
+				mes "Wooohoo!";
+				mes "Good luck.";
+				close;
+			}
+		mes "- This missions can only be -";
+		mes "- read by those who are -";
+		mes "- of the correct level. -";
+		mes "- There might be another -";
+		mes "- board somewhere for -";
+		mes "- my level. -";
+		close;
+	}
+	mes "- Many hunting missions -";
+	mes "- are on the bulletin board. -";
+	next;
+	switch(select("Turtle Dungeon Area:Clock Tower Area:Local Area:Other Area")) {
+	case 1:
+		switch(select("Dragon Tail:Spring Rabbit:Pest")) {
+			case 1: callsub L_Quest,4167,"Dragon Tail",76000;
+			case 2: callsub L_Quest,4168,"Spring Rabbit",82000;
+			case 3: callsub L_Quest,4169,"Pest",82000;
+		}
+	case 2:
+		switch(select("Bathory:Alarm")) {
+			case 1: callsub L_Quest,4170,"Bathory",72000;
+			case 2: callsub L_Quest,4171,"Alarm",76000;
+		}
+	case 3:
+		switch(select("Baba Yaga:Hyegun:Antique Firelock:Zipper Bear")) {
+			case 1: callsub L_Quest,4172,"Baba Yaga",72000;
+			case 2: callsub L_Quest,4173,"Hyegun",117000;
+			case 3: callsub L_Quest,4174,"Antique Firelock",82000;
+			case 4: callsub L_Quest,4175,"Zipper Bear",120000;
+		}
+	case 4:
+		switch(select("Earth Petite:Rafflesia:Venomous:Pitman:Yellow Novus")) {
+			case 1: callsub L_Quest,4176,"Earth Petite",72000;
+			case 2: callsub L_Quest,4177,"Rafflesia",72000;
+			case 3: callsub L_Quest,4178,"Venomous",72000;
+			case 4: callsub L_Quest,4179,"Pitman",86000;
+			case 5: callsub L_Quest,4180,"Yellow Novus",80000;
+		}
+	}
+	end;
+L_Quest:
+	if (checkquest(getarg(0),HUNTING) == 2) {
+		mes "You hunted all 30 "+getarg(1)+".";
+		mes "Thank you very much.";
+		next;
+		mes "I know it isn't much but here's a small gift.";
+		mes "I hope that it helps you at least a little bit.";
+		next;
+		erasequest getarg(0);
+		getexp getarg(2),0;
+		mes "Wooohoo!";
+		mes "Good luck.";
+		close;
+	}
+	if (checkquest(getarg(0)) == -1) {
+		setquest getarg(0);
+		mes "Please hunt 30 "+getarg(1)+" and return here.";
+		close;
+	}
+	mes "Umm? You didn't hunt";
+	mes "all 30 "+getarg(1)+" yet...";
+	mes "Will you check again?";
+	close;
+}
