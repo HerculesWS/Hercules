@@ -1,0 +1,38 @@
+//===== rAthena Documentation ================================
+//= MD5 Hash Check
+//===== By: ==================================================
+//= rAthena Dev Team
+//===== Current Version: =====================================
+//= 20120921
+//===== Description: =========================================
+//= This file outlines the login server's MD5 hash check.
+//============================================================
+
+The login server is able to perform a check of the client's MD5 hash.
+This will ensure that a user has not tampered with the client and that
+the client is the one specific to your server.
+
+The client can only send the correct MD5 hash to the server on certain
+server types, so a client diff is required to ensure the hash is sent.
+A link containing the required WeeDiffGen plugin can be found at:
+http://rathena.org/board/topic/70841-r16771-client-md5-hash-check/
+
+The settings for the hash check are located in conf\login_athena.conf:
+
+// Client MD5 hash check
+// If turned on, the login server will check if the client's hash matches
+// the value below, and will not connect tampered clients.
+// Note: see doc\md5_hashcheck.txt for more details.
+client_hash_check: off
+
+// Client MD5 hashes
+// A player can login with a client hash at or below the account group_id.
+// Format: group_id, hash
+client_hash: 0, 113e195e6c051bb1cfb12a644bb084c5
+client_hash: 99, cb1ea78023d337c38e8ba5124e2338ae
+
+To enable MD5 hash checks, set 'client_hash_check' to 'on'.
+The 'client_hash' group_id can be any of the groups in conf\groups.conf,
+and is particularly useful if you wanted to allow GMs a different client
+than normal players; for example, a GM client could be hexed differently
+with dual-clienting enabled and chat flood disabled.

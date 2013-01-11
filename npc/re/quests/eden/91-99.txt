@@ -1,0 +1,118 @@
+//===== rAthena Script =======================================
+//= Eden Group Quests - Mission [91 - 99]
+//===== By: ==================================================
+//= Chilly
+//===== Current Version: =====================================
+//= 1.2
+//===== Compatible With: =====================================
+//= rAthena SVN
+//===== Description: =========================================
+//= Repetable Quests for Players between Baselevel 91 - 99.
+//===== Additional Comments: =================================
+//= 1.0 First Version. [Chilly]
+//= 1.1 Some little improvements here and there. [Masao]
+//= 1.2 Optimized. [Euphy]
+//============================================================
+
+moc_para01,48,177,3	script	Mission [91 - 99]	857,{
+	if (countitem(6219) < 1) {
+		mes "- Only members of the -";
+		mes "- Eden Group can read -";
+		mes "- this bulletin board. -";
+		close;
+	}
+	if (BaseLevel < 91) {
+		mes "- This missions can only be -";
+		mes "- read by those who are -";
+		mes "- of the correct level. -";
+		mes "- There might be another -";
+		mes "- board somewhere for -";
+		mes "- my level. -";
+		close;
+	}
+	if (BaseLevel > 99) {
+		setarray .@Exp[0],90000,94000,114000,96000,96000,146000,96000,102000,110000,102000,108000,110000,138000,118000,96000,134000;
+		setarray .@Mob$[0],"Solider","Freezer","Heater","Injustice","Rybio","Dark Priest","Stapo","Roween","Siroma","Shinobi","Evil Nymph","Deviruchi","Mineral","Kaho","Neraid","Disguise";
+		for(set .@i,0; .@i<16; set .@i,.@i+1)
+			if (checkquest(4181+.@i,HUNTING) == 2) {
+				mes "You hunted all 30 "+.@Mob$[.@i]+".";
+				mes "Thank you very much.";
+				next;
+				mes "I know it isn't much but here's a small gift.";
+				mes "I hope that it helps you at least a little bit.";
+				next;
+				erasequest 4181+.@i;
+				getexp .@Exp[.@i],311000;
+				mes "Wooohoo!";
+				mes "Good luck.";
+				close;
+			}
+		mes "- This missions can only be -";
+		mes "- read by those who are -";
+		mes "- of the correct level. -";
+		mes "- There might be another -";
+		mes "- board somewhere for -";
+		mes "- my level. -";
+		close;
+	}
+	mes "- Many hunting missions -";
+	mes "- are on the bulletin board. -";
+	next;
+	switch(select("Turtle Dungeon Area:Glast Heim Area:Rachel Area:Local Area:Other Area")) {
+	case 1:
+		switch(select("Solider:Freezer:Heater")) {
+			case 1: callsub L_Quest,4181,"Solider",90000;
+			case 2: callsub L_Quest,4182,"Freezer",94000;
+			case 3: callsub L_Quest,4183,"Heater",114000;
+		}
+	case 2:
+		switch(select("Injustice:Rybio:Dark Priest")) {
+			case 1: callsub L_Quest,4184,"Injustice",96000;
+			case 2: callsub L_Quest,4185,"Rybio",96000;
+			case 3: callsub L_Quest,4186,"Dark Priest",146000;
+		}
+	case 3:
+		switch(select("Stapo:Roween:Siroma")) {
+			case 1: callsub L_Quest,4187,"Stapo",96000;
+			case 2: callsub L_Quest,4188,"Roween",102000;
+			case 3: callsub L_Quest,4189,"Siroma",110000;
+		}
+	case 4:
+		switch(select("Shinobi:Evil Nymph")) {
+			case 1: callsub L_Quest,4190,"Shinobi",102000;
+			case 2: callsub L_Quest,4191,"Evil Nymph",108000;
+		}
+	case 5:
+		switch(select("Deviruchi:Mineral:Kaho:Neraid:Disguise")) {
+			case 1: callsub L_Quest,4192,"Deviruchi",110000;
+			case 2: callsub L_Quest,4193,"Mineral",138000;
+			case 3: callsub L_Quest,4194,"Kaho",118000;
+			case 4: callsub L_Quest,4195,"Neraid",96000;
+			case 5: callsub L_Quest,4196,"Disguise",134000;
+		}
+	}
+	end;
+L_Quest:
+	if (checkquest(getarg(0),HUNTING) == 2) {
+		mes "You hunted all 30 "+getarg(1)+".";
+		mes "Thank you very much.";
+		next;
+		mes "I know it isn't much but here's a small gift.";
+		mes "I hope that it helps you at least a little bit.";
+		next;
+		erasequest getarg(0);
+		getexp getarg(2),311000;
+		mes "Wooohoo!";
+		mes "Good luck.";
+		close;
+	}
+	if (checkquest(getarg(0)) == -1) {
+		setquest getarg(0);
+		mes "Please hunt 30 "+getarg(1)+" and return here.";
+		close;
+	}
+	mes "Umm? You didn't hunt";
+	mes "all 30 "+getarg(1)+" yet...";
+	mes "Will you check again?";
+	close;
+}

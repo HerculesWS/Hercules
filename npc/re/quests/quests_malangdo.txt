@@ -1,0 +1,1906 @@
+//===== rAthena Script =======================================
+//= Malangdo Quest NPCs
+//===== By: ==================================================
+//= Muad_Dib
+//===== Current Version: =====================================
+//= 1.1
+//===== Compatible With: =====================================
+//= rAthena SVN
+//===== Description: =========================================
+//= Quest NPCs related to Malangdo.
+//===== Additional Comments: =================================
+//= 1.0 First version. [Euphy]
+//= 1.1 Added two quests.
+//============================================================
+
+// Help the bad cats in danger :: mal_bad_guys
+//============================================================
+malangdo,175,206,3	script	Gobonge#ml	561,{
+	if (checkweight(1201,1) == 0) {
+		mes "- Can't go next step due to having too many items. -";
+		close;
+	}
+	if (checkquest(1152,PLAYTIME) == 0) {
+		mes "[Gobonge]";
+		mes "Hmm, investigation is not enough.";
+		mes "We need go back to basic point.";
+		mes "Come again tomorrow.";
+		mes "I might be in pain of stomach";
+		mes "like usual.";
+		close;
+	} else if (checkquest(1152,PLAYTIME) == 1) {
+		erasequest 1152;
+		set malang_bad_guys,0;
+	} else if (checkquest(1152,PLAYTIME) == 2) {
+		completequest 1152;
+		erasequest 1152;
+		set malang_bad_guys,0;
+	}
+	if (BaseLevel < 60) {
+		mes "[Gobonge]";
+		mes "Are you here to get help";
+		mes "or to get help?";
+		mes "You look so weak, haha...";
+		mes "Go and hunt more Porings!";
+		close;
+	}
+	if (malang_bad_guys == 0) {
+		mes "[Gobonge]";
+		mes "Will you listen my sorrow?";
+		next;
+		switch(select("Sure I will.:No, I won't.")) {
+		case 1:
+			mes "[Gobonge]";
+			mes "This is a sad story.";
+			mes "As usual, I unpacked the bag";
+			mes "to see strange cats";
+			mes "to show them.";
+			next;
+			mes "[Gobonge]";
+			mes "There were lots of cans.";
+			mes "I thougt it was new due to different shape";
+			mes "but it was bad cans!";
+			mes "I ate too much and";
+			mes "got in bed right away";
+			mes "so I can't do anything...";
+			next;
+			mes "[Gobonge]";
+			mes "And by the way, you have...";
+			mes "nice colthes.";
+			mes "I can't let you go,";
+			mes "that hurts me so badly!";
+			emotion e_sob;
+			next;
+			switch(select("You deserve the pain!:Need help?")) {
+			case 1:
+				mes "[Gobonge]";
+				mes "Yes you are!";
+				close;
+			case 2:
+				mes "[Gobonge]";
+				mes "You know what care is.";
+				mes "Please find the bad provider";
+				mes "and revenge our enemy!";
+				next;
+				switch(select("No, I don't want to!:Yes, I'll do it!")) {
+				case 1:
+					mes "[" + strcharinfo(0) + "]";
+					mes "For the peace in Malangdo,";
+					mes "just lay in bed forever.";
+					next;
+					mes "[Gobonge]";
+					mes "I will!";
+					mes "I will have your peace first once I get well!";
+					close;
+				case 2:
+					mes "[Gobonge]";
+					mes "Okay, you can do it?";
+					mes "The enemy must be near the dock";
+					mes "where we got the bundle.";
+					mes "We should get them to help";
+					mes "our cats' well-being!";
+					setquest 1145;
+					set malang_bad_guys,1;
+					close;
+				}
+			}
+		case 2:
+			mes "[Gobonge]";
+			mes "Why are you here!";
+			mes "If I am usual, I will engrave something";
+			mes "with your tear...";
+			mes "Let your bag be here instead!";
+			emotion e_sob;
+			close;
+		}
+	} else if (malang_bad_guys == 1) {
+		mes "[Gobonge]";
+		mes "The enemy must be near the dock";
+		mes "where we got the bundle.";
+		mes "We should get them to help";
+		mes "our cats' well-being!";
+		close;
+	} else if (malang_bad_guys > 1 && malang_bad_guys < 7) {
+		mes "[Gobonge]";
+		mes "I am so tired due to";
+		mes "lack of forbidden bad activity.";
+		close;
+	} else if (malang_bad_guys == 7) {
+		if (countitem(6426) > 29) {
+			mes "[Gobonge]";
+			mes "Was it from raccoon that made us pain in stomach?";
+			mes "Oh bad raccoon!";
+			mes "I feel stomachache again from this anger!";
+			mes "All right, I will show my power once";
+			mes "I can get out of bed.";
+			next;
+			mes "[Gobonge]";
+			mes "I need time to concentrate on my stomachache.";
+			mes "You can go now!";
+			erasequest 1151;
+			set malang_bad_guys,8;
+			getitem 12636,20; //Malang_Sp_Can
+			delitem 6427,1; //Bad_Can_Sack
+			delitem 6426,30; //Bad_Can
+			close;
+		}
+		mes "[Gobonge]";
+		mes "How do you know the source of bad can?";
+		mes "Do you have time to do slow at the moment?";
+		emotion e_sob;
+		close;
+	} else if (malang_bad_guys == 8) {
+		mes "[Gobonge]";
+		mes "The Patrol Leader wants to go back to";
+		mes "bad world as soon as possible.";
+		mes "I want you to go first to soothe him instead.";
+		mes "How about it?";
+		next;
+		switch(select("It's troublsome, I quit.:Sure I will!")) {
+		case 1:
+			mes "[Gobonge]";
+			mes "Haha, you think it is a bad word.";
+			mes "I want you to be one of our staffs.";
+			next;
+			mes "[Gobonge]";
+			mes "Sorry, but you should go now";
+			mes "so that I can concentrate on my stomachache.";
+			setquest 1152;
+			set malang_bad_guys,9;
+			close;
+		case 2:
+			mes "[Gobonge]";
+			mes "All right, then I will have time";
+			mes "to concentrate on my stomachache.";
+			setquest 1153;
+			set malang_bad_guys,10;
+			close;
+		}
+	} else if (malang_bad_guys == 9) {
+		mes "[Gobonge]";
+		mes "Hmm, investigation is not enough.";
+		mes "We need go back to basic point.";
+		mes "Come again tomorrow.";
+		mes "I might be in pain of stomach";
+		mes "like usual.";
+		close;
+	} else if (malang_bad_guys > 9 && malang_bad_guys < 12) {
+		mes "[Gobonge]";
+		mes "Go and have fun with the Patrol Leader!";
+		close;
+	} else if (malang_bad_guys == 12) {
+		mes "[Gobonge]";
+		mes "Instead of us, you did bad behavior.";
+		mes "Good to hear that?";
+		mes "This is what teacher see best pupil?";
+		emotion e_swt;
+		next;
+		mes "[Gobonge]";
+		mes "You deserve a reward!";
+		mes "I need to get some more rest,";
+		mes "so let's investigate tomorrow!";
+		erasequest 1155;
+		setquest 1152;
+		set malang_bad_guys,13;
+		getitem 6422,5; //Egrade_Coin
+		close;
+	} else if (malang_bad_guys == 13) {
+		mes "[Gobonge]";
+		mes "Come again tomorrow.";
+		mes "I might be in pain of stomach";
+		mes "like usual.";
+		close;
+	}
+OnEnable:
+	enablenpc "Gobonge#ml";
+	close;
+OnDisable:
+	disablenpc "Gobonge#ml";
+	close;
+}
+
+malangdo,181,205,3	script	Gobulee#ml1	547,{
+	mes "[Gobulee]";
+	mes "Why do you come now?";
+	mes "You should have come when we were healthy.";
+	mes "So, you want to me take out what you have?";
+	close;
+}
+
+malangdo,180,202,3	script	Gobyungee#ml1	547,{
+	mes "[Gobyungee]";
+	mes "I can't see other cats because";
+	mes "I could't have time to do bad behavior...";
+	close;
+}
+
+malangdo,186,201,3	script	Gosigee#ml1	547,{
+	mes "[Gosigee]";
+	mes "I am desperate for pill of stomachache,";
+	mes "cap is only thinking of finding out criminal";
+	mes "and to revenge!";
+	mes "...";
+	next;
+	mes "[Gosigee]";
+	mes "How can we follow him as a cap...!";
+	close;
+}
+
+malangdo,177,202,3	script	Gonanee#ml2	547,{
+	mes "[Gonanee]";
+	mes "We are only bad circle in Malangdo";
+	mes "and we are very proud.";
+	mes "Can't just lie in bed.";
+	close;
+}
+
+malangdo,183,202,3	script	Godoree#ml3	547,{
+	mes "[Godoree]";
+	mes "I saw unfamiliar cats around";
+	mes "the dock frequently.";
+	mes "Are they tourists?";
+	mes "We should check their pockets";
+	mes "once I get well...";
+	close;
+}
+
+malangdo,203,116,5	script	Suspious Dealer#ml	543,{
+	mes "On listening to the story for";
+	mes "a while, he pretends to be indifferent once hearing someone's noise.";
+	next;
+	mes "[Suspious Dealer]";
+	mes "Oh my body, too much pain...";
+	close;
+}
+
+malangdo,205,116,3	script	Very Suspious Dealer#ml1	543,{
+	mes "On listening to the story for";
+	mes "a while, he pretends to be indifferent once hearing someone's noise.";
+	next;
+	mes "[Very Suspious Dealer]";
+	mes "The weather is so dirty...";
+	close;
+}
+
+malangdo,197,120,5	script	Foolish Cat#ml	546,{
+	mes "[Foolish Cat]";
+	mes "If you stay here, you";
+	mes "can hear all they're saying.";
+	mes "Don't know exactly what, but";
+	mes "you do hear everything.";
+	mes "Hehehe...";
+	close;
+}
+
+malangdo,196,120,0	script	#ml1	-1,2,2,{
+OnTouch:
+	if (malang_bad_guys == 1 || malang_bad_guys == 2) {
+		mes "You hear a conversation between the Suspious Dealers.";
+		next;
+		mes "[Suspious Dealer]";
+		mes "Because unexpected robbery at that moment...";
+		mes "our great work has delayed.";
+		next;
+		mes "[Very Suspious Dealer]";
+		mes "Do not worry about the thing, I placed it near balloon bag where";
+		mes "Ship Navi is in the north, and I hid it perfectly.";
+		next;
+		mes "You need to check a place near north of balloon bag in ship Navi.";
+		if (malang_bad_guys == 1) {
+			erasequest 1145;
+			setquest 1146;
+			set malang_bad_guys,2;
+		}
+		close;
+	} else if (malang_bad_guys > 2 && malang_bad_guys < 8) {
+		mes "You still hear a suspicious conversation.";
+		next;
+		mes "[Suspious Dealer]";
+		mes "But near the balloon bag is still";
+		mes "worrying so much!";
+		next;
+		mes "[Very Suspious Dealer]";
+		mes "Oh how cowardly you are!";
+		mes "I hid it in ship Navi perfectly.";
+		mes "Relax!";
+		next;
+		mes "[Suspious Dealer]";
+		mes "The rest of part is in staffs.";
+		mes "We should believe.";
+		next;
+		mes "We need to investigate Navi first.";
+		mes "Let's see other guys in ship Navi.";
+		if (malang_bad_guys == 3) {
+			erasequest 1147;
+			setquest 1148;
+			set malang_bad_guys,4;
+		}
+		close;
+	} else if (malang_bad_guys > 7) {
+		mes "You still hear a suspicious conversation.";
+		next;
+		mes "[Suspious Dealer]";
+		mes "Star candy is still healthy,";
+		mes "what happens?";
+		next;
+		mes "[Very Suspious Dealer]";
+		mes "No way...";
+		mes "We should get more bad cans.";
+		close;
+	}
+	end;
+}
+
+malangdo,155,179,0	script	#ml2	-1,2,2,{
+OnTouch:
+	if (malang_bad_guys == 2 || malang_bad_guys == 3) {
+		mes "There's a memo.";
+		next;
+		mes "[Memo]";
+		mes "Here is not what we wanted, huh!";
+		next;
+		mes "...do listen the conversation of merchant.";
+		if (malang_bad_guys == 2) {
+			erasequest 1146;
+			setquest 1147;
+			set malang_bad_guys,3;
+		}
+		close;
+	}
+	end;
+}
+
+malangdo,171,163,3	script	Awfully Suspious Dealer	543,{
+	if (malang_bad_guys < 4) {
+		mes "[Awfully Suspious Dealer]";
+		mes "We quit our sales,";
+		mes "find the other merchant!";
+		close;
+	} else if (malang_bad_guys == 4) {
+		mes "[Awfully Suspious Dealer]";
+		mes "Bad cans?";
+		mes "Due to lots of work in here";
+		mes "can't have a short time to talk?";
+		next;
+		switch(select("Look suspicious?:I knew all things here!")) {
+		case 1:
+			mes "[Awfully Suspious Dealer]";
+			mes "I have a same boat with you!";
+			close;
+		case 2:
+			mes "[Awfully Suspious Dealer]";
+			mes "...";
+			mes "You searched the lounge of ship Navi?";
+			mes "...";
+			next;
+			mes "[Awfully Suspious Dealer]";
+			mes "It looks wrong place~";
+			mes "Go and do other things~!";
+			next;
+			mes "You need to search lounge of ship Navi?";
+			erasequest 1148;
+			setquest 1149;
+			set malang_bad_guys,5;
+			close;
+		}
+	} else if (malang_bad_guys == 5) {
+		mes "[Awfully Suspious Dealer]";
+		mes "A thought to search Gozangee around ship Navi";
+		mes "is like to ride a skill";
+		mes "with frying pan, it is idiot things.";
+		mes "I do not recommend.";
+		close;
+	} else if (malang_bad_guys == 6) {
+		if (countitem(6427) == 0) {
+			mes "[Awfully Suspious Dealer]";
+			mes "You searched the lounge of ship Navi?";
+			mes "But still nothing in hand.";
+			mes "I told you there's nothing.";
+			mes "...";
+			next;
+			mes "[Awfully Suspious Dealer]";
+			mes "...there must be something...";
+			close;
+		}
+		mes "[Awfully Suspious Dealer]";
+		mes "Oh! That's ^0000FFa sack of bad cans^000000, isn't it?";
+		mes "Where did you get it? Amazing!";
+		next;
+		switch(select("Do not pretend not to know!:Need to show them our general!")) {
+		case 1:
+			mes "[Awfully Suspious Dealer]";
+			mes "It just looks wonderful.";
+			mes "There's nothing more to have?";
+			emotion e_ho;
+			close;
+		case 2:
+			mes "[Awfully Suspious Dealer]";
+			mes "Relax!";
+			mes "Let's have smile and fun with only ours.";
+			next;
+			mes "[Awfully Suspious Dealer]";
+			mes "To be honest, I am a member of raccoon hurray team.";
+			mes "A homeless community of raccoons";
+			mes "became a black market group.";
+			mes "I will make headquater of raccoon hurray team here";
+			mes "after kick out group of cats.";
+			next;
+			switch(select("Are you the leader?:Let me clear the usage of bad can.:Can it be worked as you want?")) {
+			case 1:
+				mes "[Awfully Suspious Dealer]";
+				mes "This is thankful misunderstanding,";
+				mes "I am just little staff.";
+				mes "I don't know who the leader is.";
+				close;
+			case 2:
+				mes "[Awfully Suspious Dealer]";
+				mes "That is...";
+				mes "for food...";
+				mes "Don't ask me more, please!";
+				close;
+			case 3:
+				mes "[Awfully Suspious Dealer]";
+				mes "You look down out raccoon hurray team?";
+				mes "Look more! To my star candy who stands island";
+				mes "I will make them have stomachache";
+				mes "with lots of bad cans.";
+				mes "Aren't you expecting?";
+				next;
+				mes "[Awfully Suspious Dealer]";
+				mes "I can't make him eat with my hand,";
+				mes "to creature in shining coral area that is basic food of star candy";
+				mes "I am still feeding them with bad cans.";
+				mes "You must see amazing reaction, just wait!";
+				next;
+				mes "The situation is serious.";
+				mes "Once the cats figure out,";
+				mes "you might be confused.";
+				mes "Let's withdraw the bad cans first,";
+				mes "located in the shining coral area.";
+				erasequest 1150;
+				setquest 1151;
+				set malang_bad_guys,7;
+				close;
+			}
+		}
+	} else if (malang_bad_guys == 7) {
+		mes "[Awfully Suspious Dealer]";
+		mes "Plese forget what I have told you.";
+		mes "Please...";
+		mes "After you got 30 pcs of bad cans";
+		mes "in shining coral area";
+		mes "do not tell the cats";
+		mes "or report this fact!";
+		close;
+	}
+	mes "[Awfully Suspious Dealer]";
+	mes "So you reported all things?";
+	mes "...";
+	mes "Now it's time to live a new life";
+	mes "of group for hair tufts...";
+	close;
+}
+
+mal_in02,184,72,3	script	Gozangee#ml	547,{
+	mes "[Gozangee]";
+	mes "I have too much pain in my stomach...";
+	mes "Should endure myself!";
+	mes "...do bad activity...";
+	close;
+}
+
+mal_in02,184,77,0	script	#ml3	-1,2,2,{
+OnTouch:
+	if (checkweight(1201,1) == 0) {
+		mes "- You have too many items. -";
+		close;
+	}
+	if (malang_bad_guys == 4) {
+		mes "I came to...";
+		mes "know a thing that shouldn't be";
+		mes "appeared to anyone.";
+		mes "Just pretend that I didn't see this.";
+		close;
+	} else if (malang_bad_guys == 5) {
+		mes "This is...!";
+		mes "...";
+		next;
+		mes "A sack that carrying bad cans.";
+		next;
+		mes "Let's bring this to a guy who";
+		mes "is in Awfully Suspious Dealer in deck.";
+		erasequest 1149;
+		setquest 1150;
+		set malang_bad_guys,6;
+		getitem 6427,1; //Bad_Can_Sack
+		close;
+	} else if (malang_bad_guys == 6) {
+		mes "I saw a sack of bad cans.";
+		mes "located on the deck.";
+		mes "Let's bring this to a guy who";
+		mes "is in Awfully Suspious Dealer in deck.";
+		close;
+	}
+	end;
+}
+
+malangdo,125,147,3	script	Patrol Leader#ml	545,{
+	if (checkweight(1201,1) == 0) {
+		mes "- Can't go next step due to having too many items. -";
+		close;
+	}
+	if (malang_bad_guys < 10) {
+		mes "[Patrol Leader]";
+		mes "Be careful of distribution for";
+		mes "bad cans recently in here";
+		mes "so should be noticed.";
+		close;
+	} else if (malang_bad_guys == 10) {
+		mes "[Patrol Leader]";
+		mes "So you are going to do bad activity instead of";
+		mes "group of hair tufts lying in bed?";
+		mes "It's gonna be exciting!";
+		mes "So excited...";
+		next;
+		mes "[Patrol Leader]";
+		mes "Gobonge and his friends";
+		mes "liked to torment ^0000FFRed Eruma^000000 in shining";
+		mes "coral area more than anything.";
+		next;
+		mes "[Patrol Leader]";
+		mes "Report to me after tormenting 20 ^0000FFRed Eruma^000000";
+		mes "for a while.";
+		mes "I will scold you as Patrol Leader!";
+		next;
+		switch(select("What Patrol Leader do like this?:Cheer up!!")) {
+		case 1:
+			mes "[Patrol Leader]";
+			mes "This is what my flavor to do this!";
+			close;
+		case 2:
+			mes "[Patrol Leader]";
+			mes "I will expect various bad activities.";
+			erasequest 1153;
+			setquest 1154;
+			set malang_bad_guys,11;
+			close;
+		}
+	} else if (malang_bad_guys == 11) {
+		if (checkquest(1154,HUNTING) == 2) {
+			mes "[Patrol Leader]";
+			mes "Wow, you did to ^0000FFRed Eruma^000000 so badly!";
+			mes "I am impressed at your work.";
+			next;
+			mes "[Crime Prevention Staff]";
+			mes "Captain, we have work again, right?";
+			emotion e_sob;
+			emotion e_sob,0,"Crime Prevention Staff#ml";
+			next;
+			mes "[Patrol Leader]";
+			mes "Hide your tears and save your tears!";
+			mes "You should cry when having a clue for bad activity";
+			mes "at crime spot!";
+			emotion e_sob;
+			emotion e_sob,0,"Crime Prevention Staff#ml";
+			next;
+			mes "[Patrol Leader]";
+			mes "I will scold you once the investigation is over!";
+			mes "Visit Gobonge now.";
+			erasequest 1154;
+			setquest 1155;
+			set malang_bad_guys,12;
+			close;
+		}
+		mes "[Patrol Leader]";
+		mes "Inside of starry coral area,";
+		mes "report to me after tormenting 20 ^0000FFRed Eruma^000000";
+		mes "for a while.";
+		mes "I will scold you as Patrol Leader!";
+		close;
+	}
+	mes "[Patrol Leader]";
+	mes "I will scold you once the investigation";
+	mes "is over!";
+	mes "visit Gobonge now.";
+	close;
+}
+
+malangdo,129,146,3	script	Crime Prevention Staff	545,{
+	if (malang_bad_guys > 11) {
+		mes "[Crime Prevention Staff]";
+		mes "A work to do means happy things!";
+		mes "I ask you to do various bad activities!";
+		close;
+	}
+	mes "[Crime Prevention Staff]";
+	mes "A group of cats that";
+	mes "ate bad cans got";
+	mes "pain in stomache.";
+	mes "They are lying at the north";
+	mes "of place but still rolling with anger.";
+	next;
+	mes "[Crime Prevention Staff]";
+	mes "Haha... the village is becoming";
+	mes "peaceful and calm, but feels";
+	mes "somewhat empty. This is not";
+	mes "usual scene that we can have.";
+	mes "Let's see there?";
+	close;
+}
+
+/*
+malangdo,3,1,3	script	Guidance for quest#ml	543,{
+	input .@input,1,9999;
+	if (.@input != 1854) {
+		mes "[Helper]";
+		mes "What is this security code?";
+		mes "Go away!";
+		close;
+	}
+	mes "[Helper]";
+	mes "Choose now, hurry!";
+	next;
+	switch(select("NPC appear!:NPC walkout!:Reset setitem:30 pcs of bad cans:Just before collecting cans:Start quest for Patrol Leader")) {
+	case 1:
+		donpcevent "Gobonge#ml::OnEnable";
+		mes "[Helper]";
+		mes "First appearance!";
+		close;
+	case 2:
+		donpcevent "Gobonge#ml::OnDisable";
+		mes "[Helper]";
+		mes "Walk out!";
+		close;
+	case 3:
+		mes "[Helper]";
+		mes "Yap!";
+		set malang_bad_guys,0;
+		erasequest 1152;
+		close;
+	case 4:
+		mes "[Helper]";
+		mes "Owing?";
+		getitem 6426,30; //Bad_Can
+		close;
+	case 5:
+		mes "[Helper]";
+		mes "Yap!";
+		erasequest 1150;
+		setquest 1151;
+		set malang_bad_guys,7;
+		close;
+	case 6:
+		mes "[Helper]";
+		mes "Yap!";
+		set malang_bad_guys,10;
+		close;
+	}
+}
+*/
+
+// Pipielle :: mal_ppl
+//============================================================
+malangdo,137,200,6	script	Pipielle	549,{
+	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+		mes "You have too many items, please try again after reducing your weight.";
+		close;
+	}
+	if (BaseLevel < 60) {
+		mes "[Pipielle]";
+		mes "Wow this is nice weather, do you like this kind of weather too? I like it too but I need to my work now.";
+		next;
+		mes "[Pipielle]";
+		mes "I would ask for your help if you were a stronger advanturer...";
+		next;
+		mes "^770099This cat is working on something, she asks for help above LV60.^000000";
+		close;
+	}
+	set .@fish_ss1$, "What are you doing??";
+	if (countitem(6451) > 29)
+		set .@fish_ss2$, "I caught a lot of strange fishes!";
+	else
+		set .@fish_ss2$, "Remaining " + (30-countitem(6451)) + " of ^bbbbbbUnidentified Fish are required.^000000";
+	if (ma_tomas == 100)
+		set .@fish_ss3$, "I met an Admiral Thomas...";
+	mes "[Pipielle]";
+	mes "Would you come here and open your bag for me?";
+	next;
+	switch(select(.@fish_ss1$,.@fish_ss2$,.@fish_ss3$)) {
+	case 1:
+		mes "[Pipielle]";
+		mes "There are many beautiful fishes around here. So I feel my heard beating when I standing here.";
+		next;
+		select("Of course, my heart will beat up too if I see delicious thing!");
+		mes "[Pipielle]";
+		mes "How come you only know about eating!! My heart don't beat up because of I see the delicious thing. Don't treat me the same as others.";
+		next;
+		mes "[Pipielle]";
+		mes "I used to study from scholar from uno same as human. And I am good at human language as well. Don't treat me same as others.";
+		next;
+		mes "[Pipielle]";
+		mes "I am a scholar who researches fish in here. It's little funny that cat research fish but it's true.";
+		next;
+		select("Are you originally a scholar?");
+		mes "[Pipielle]";
+		mes "Originally I used to mate of admiral Thomas. But our ship never to back to sea after we has arrived here.";
+		next;
+		mes "[Pipielle]";
+		mes "The mate from ship that never voyage is lonely.";
+		next;
+		mes "[Pipielle]";
+		mes "The scholar from Uno came here for research and he thought it is amazing thing that cat speaks human language. Therefore he started teach me.";
+		next;
+		select("But now everyone speaks human language.");
+		mes "[Pipielle]";
+		mes "Oh yes, there were only little cat speaks human language. That's why he treated me special.";
+		next;
+		mes "[Pipielle]";
+		mes "Anyways, now I collect specimens to be ichthyologist. I hope you can help me.";
+		next;
+		if(select("How can I help you?:I would say no.") == 2) {
+			mes "[Pipielle]";
+			mes "Oh, okay. If you change your mind, please come again.";
+			close;
+		}
+		mes "[Pipielle]";
+		mes "There is a Pouring who's eating all fishes in Octopus and Culvert dungeon.";
+		next;
+		mes "[Pipielle]";
+		mes "It used to not live there, but he might came here for winter, so could you collect the specimens unidentified fish after get rid of it.";
+		next;
+		mes "[Pipielle]";
+		mes "You can get identified fishes from Pouring, so please collect about 30 pieces.";
+		close;
+	case 2:
+		if (countitem(6451) > 29) {
+			//saveppl Unknown_Fish
+			delitem 6451,30; //Unknown_Fish
+			mes "[Pipielle]";
+			mes "Oh, thank you! I will take these specimens.";
+			next;
+			mes "[Pipielle]";
+			mes "I want to give you something, but last one is out of stock now so I will just write your name here.";
+			next;
+			mes "[Pipielle]";
+			mes "I can give you good new even from far distance, but it's only possible if I am really lucky...";
+			close;
+		}
+		mes "[Pipielle]";
+		mes "I'm sorry, but please collect 30 pieces of unidentified fishes specimens.";
+		close;
+	case 3:
+		mes "[Pipielle]";
+		mes "Oh, you have met admiral Thomas... how was it?";
+		next;
+		if(select("He looks gentle:He looks terrible") == 2) {
+			mes "[Pipielle]";
+			mes "Hmm...";
+			mes "Frankly speaking, I was a real fan of Admiral Thomas. Can you take a responsibility of your word?";
+			next;
+			if(select("Just kidding!:Oh yes, he was really terrible!") == 2) {
+				mes "[Pipielle]";
+				mes "Is he?";
+				mes "Okay, it really depends on personal taste...";
+				close;
+			}
+		}
+		mes "[Pipielle]";
+		mes "Is he?";
+		mes "I knew you would say so.";
+		next;
+		mes "[Pipielle]";
+		mes "Admiral Thomas is a legendary figure who has voyaged to this island with leading all of us. I think it was the most happiest moment in my life.";
+		next;
+		mes "[Pipielle]";
+		mes "Please help him a lot. There are not many people to trust. This is my personal request.";
+		next;
+		mes "[Pipielle]";
+		mes "And this is small gift for ask you to look after admiral Thomas.";
+		set ma_tomas,101;
+		getitem 6422,200; //Egrade_Coin
+		mes "^0000ffReceived 200 E Class Coins.^000000";
+		close;
+	}
+}
+
+// Clean the Ship :: mal_day_qook
+//============================================================
+mal_in02,76,63,7	script	Cleanyang	544,{
+	if (checkweight(1201,1) == 0) {
+		mes "- You have too many items so you can't continue the quest. -";
+		close;
+	}
+	if (BaseLevel < 60) {
+		mes "Sailor cat is crying sadly.";
+		next;
+		mes "[Cleanyang]";
+		mes "Meow neow meoow";
+		mes "What... Meow .. Something... going... Heuheung~";
+		mes "You don't have to know. Meow heuheuheuk... ";
+		next;
+		mes "He does not continue to talk.";
+		mes "He might say like that with shaking his head.";
+		mes "'You are still young. That is why you don't understand my anguish and sadness...'";
+		next;
+		mes "It is much better to do not know.";
+		close;
+	}
+	if (mal_qook == 0) {
+		mes "Sailor cat is crying sadly.";
+		emotion e_sob;
+		next;
+		mes "[Cleanyang]";
+		mes "Meow meow meoooow~";
+		mes "What is going on... Heu... heuk...";
+		mes "You don't have to know. Heu... heuk...";
+		emotion e_sob;
+		next;
+		mes "Could not continue talk.";
+		next;
+		switch(select("Cheer him up.:Ignore.")) {
+		case 1:
+			mes "I comforted his wounded heart just standing by him.";
+			next;
+			emotion e_sob;
+			mes "[Cleanyang]";
+			mes "This is unjust... Heuheuk...";
+			mes "The chef... He always gives me scolding.";
+			next;
+			mes "[Cleanyang]";
+			mes "I always clean up diligently.";
+			mes "I have no idea where they are from... Heuheuk...";
+			mes "They penetrated into the ingredients...";
+			next;
+			select("They?");
+			mes "[Cleanyang]";
+			mes "Yes, they are fast, small, hard and shiny black.";
+			mes "Meow... Also, white and wriggled...";
+			mes "My chef is so clean.";
+			next;
+			mes "[Cleanyang]";
+			mes "It's ok. Clean, vermin and";
+			mes "whatever... the unfair thing is";
+			mes "that I really killed vermin as well, meow.";
+			mes "In addition, I clean up diligently.";
+			next;
+			mes "[Cleanyang]";
+			mes "By the way, they are coming over and over again.";
+			mes "I don't know where they are from.";
+			next;
+			switch(select("Don't ask anymore.:Asking for the place of vermin came.")) {
+			case 1:
+				emotion e_sob;
+				mes "[Cleanyang]";
+				mes "...what's wrong with your face?";
+				mes "Are you afraid of sending on an errand?";
+				mes "What are you thinking about me... meow, meow...?";
+				mes "It's not fair... meow, meow...";
+				next;
+				mes "Poor sailor cat Cleanyang begins to cry.";
+				mes "Leave him alone.";
+				close;
+			case 2:
+				mes "[Cleanyang]";
+				mes "Does someone will go there and check it?";
+				mes "Please, search everywhere of the ship Navi?";
+				mes "I can't live like this! Meow, meow!";
+				next;
+				mes "[Cleanyang]";
+				mes "There is definitely something I do not know. Meow.";
+				mes "Meow... I'll clean this place up. Please find something instead of me.";
+				set mal_qook,1;
+				setquest 7260;
+				close;
+			}
+		case 2:
+			mes "You leave the crying cat and move back.";
+			close;
+		}
+	} else if (mal_qook == 1) {
+		if (checkquest(7261) != -1 && checkquest(7262) != -1 && checkquest(7263) != -1) {
+			emotion e_omg;
+			mes "[Cleanyang]";
+			mes "Uh. What is that? Meow.";
+			mes "This is cat's ship biscuit... It might be left for a long time...";
+			mes "No way...!";
+			next;
+			select("Yeah, this is it.");
+			emotion e_hmm;
+			mes "[Cleanyang]";
+			mes "There were infested with insects because sailors hided and left the cat's ship biscuit..";
+			mes "I got a scolding cause of just teeth grinder?";
+			mes "Meow!";
+			next;
+			select("Teeth Grinder?");
+			mes "[Cleanyang]";
+			mes "That is right, meow.";
+			mes "This is stiff-baked bread for preserve easily during sailing, meow.";
+			mes "It is too hard, so if you just bite this, probably your canine will be broken, meow.";
+			next;
+			mes "[Cleanyang]";
+			mes "It is baked with just salt and flour for preserve long time that is why it does not have any taste.";
+			mes "More than all..... look at this.";
+			next;
+			mes "Cleanyang breaks cat's ship biscuit with hammer and chisel";
+			mes "and hit on the floor. Then...";
+			next;
+			mes "[Cleanyang]";
+			mes "........can you see something coming out from here?";
+			mes "This is Weevil Bug..........";
+			mes "It is such a castle of insects.";
+			next;
+			mes "[Cleanyang]";
+			mes "Maybe someone really does not want to eat this.";
+			mes "These insects are left before we are settled on island and change the menu.";
+			next;
+			mes "[Cleanyang]";
+			mes "After settled on this island, we did not make cat's ship biscuit due to fresh ingredients.";
+			mes "........";
+			next;
+			mes "[Cleanyang]";
+			mes "Please show this to chef and tell him that Cleanyang really cleaned up very well.";
+			mes "Well... I'm still afraid of chef...";
+			mes "...please! Meow!";
+			set mal_qook,2;
+			erasequest 7261;
+			erasequest 7262;
+			erasequest 7263;
+			erasequest 7260;
+			setquest 7264;
+			next;
+			mes "[Cleanyang]";
+			mes "Ah, that cat's ship biscuit is still fine, so just try to eat.";
+			mes "Do you wonder what is that? It was a great food even though it's not look good...";
+			close;
+		}
+		mes "[Cleanyang]";
+		mes "Please search the ship Navi and find the place of origin.";
+		mes "I just believe you.";
+		close;
+	} else if (mal_qook == 2) {
+		mes "[Cleanyang]";
+		mes "If you show cat's ship biscuit to chef and those insects were from there,";
+		mes "my misunderstanding will be resolved.";
+		next;
+		select("Why don't you go by yourself?");
+		mes "[Cleanyang]";
+		mes "Um... I still have to clean up...";
+		mes "I'm still scared of my chef, so please.";
+		close;
+	} else if (mal_qook == 3) {
+		mes "[Cleanyang]";
+		mes "Chef gets angry.";
+		mes "Just beg for mercy!";
+		close;
+	} else if (mal_qook == 4) {
+		mes "[Cleanyang]";
+		mes "Did you say that chef was more upset about cat's ship biscuit?";
+		mes "From now, I don't have to crying?";
+		next;
+		mes "[Cleanyang]";
+		mes "If chef needs something, Just bring it for him~";
+		mes "Is that good for each other?";
+		next;
+		mes "[Cleanyang]";
+		mes "When chef is satisfied and pleased, just come at that time.";
+		mes "I may not able to clean up until that time because I'm nervous. Meow....";
+		close;
+	} else if (mal_qook == 5) {
+		mes "[Cleanyang]";
+		mes "Did you finish work what chef wanted?";
+		mes "By the way, why do you make cat's ship biscuit suddenly?";
+		next;
+		select("New menu for you.");
+		mes "[Cleanyang]";
+		mes "Meoooow----!!";
+		mes "Keemeoooow!!";
+		mes "Nyahuhuh... Kmeoooow!";
+		next;
+		mes "[Cleanyang]";
+		mes "Nooo!!!!!!!!!!!";
+		mes "Without cat's ship biscuit was a heaven. I don't want to go hell again!!!!";
+		mes "Kmeoooow... Kmeoooow... Kmeoooow~";
+		next;
+		switch(select("Tickling under the chin.:Hit the end of nose.:Tap on butt.")) {
+		case 1:
+			mes "[Cleanyang]";
+			mes "Meoow... Koleung koleung...";
+			mes "Kyarreung...";
+			mes "Huahhuah... Golgolgol...";
+			next;
+			break;
+		case 2:
+			mes "[Cleanyang]";
+			mes "Eung Kya-!";
+			mes "Uh nyanyanyanaynyan!";
+			mes "What the heck are you doing!";
+			next;
+			break;
+		case 3:
+			mes "[Cleanyang]";
+			mes "Heu keeyangyang";
+			mes "Heunyang... Euhnyang-!";
+			mes "What are you doing!";
+			next;
+			break;
+		}
+		mes "[Cleanyang]";
+		mes "Please stop...";
+		mes "Now, be calm.";
+		mes "I understand that chef's saying and huge plan.";
+		next;
+		mes "[Cleanyang]";
+		mes "Hey, human who helped me, you, you!";
+		mes "Could you do me favor.";
+		mes "If the menu will be changed and provide cat's ship biscuit, definitely they appear...";
+		next;
+		select("What?");
+		mes "[Cleanyang]";
+		mes "Cat the Cat!";
+		mes "Cats who hide cat's ship biscuit secretly.";
+		mes "No one says that do not want to eat and throw away because they are scare chef.";
+		next;
+		mes "[Cleanyang]";
+		mes "Absolutely, they begin to hide cat's ship biscuit...";
+		mes "And it will be infested by insects!";
+		mes "Chef will give a scolding again!";
+		next;
+		mes "[Cleanyang]";
+		mes "So let me see you everyday from provided cat's ship biscuit tomorrow.";
+		mes "You did good job. This is a token of thanks.";
+		set mal_qook,6;
+		getitem 12636,30; //Malang_Sp_Can
+		getexp 80000,80000;
+		setquest 7267;
+		close;
+	}
+	switch(rand(3)) {
+	case 0:
+		mes "[Cleanyang]";
+		mes "Ohohohong...";
+		mes "Euhohohohong...";
+		mes "It's horrible... I got cat's ship biscuit but I don't know when It was made.";
+		mes "It's really hard. I almost lost my teeth.";
+		break;
+	case 1:
+		mes "[Cleanyang]";
+		mes "Chef might forget everything that he gave me a scolding cause of insects.";
+		mes "He got a shock by cat's ship biscuit. Is this bigger case than the clean up?";
+		break;
+	case 2:
+		mes "[Cleanyang]";
+		mes "I'm a cleaning cat Cleanyang~";
+		mes "Meow~";
+		mes "Make a scratch others' door of house Meow~";
+		mes "Meow~ Uh? Did you hear it?";
+		mes "This is my cleaning song.";
+		break;
+	}
+	next;
+	mes "[Cleanyang]";
+	mes "By the way, what is going on?";
+	next;
+	switch(select("It's time to promise~:I'm here to see the result~:Shake your butt~")) {
+	case 1:
+		if (checkquest(7267,PLAYTIME) == 0) {
+			mes "[Cleanyang]";
+			mes "Uh? Not yet.";
+			mes "Today's cat's ship biscuit is not provided yet, so I will know that after wait little bit more.";
+			mes "It might be after chef's distribution of cat's ship biscuit.";
+			close;
+		}
+		if (checkquest(7268) != -1) {
+			mes "[Cleanyang]";
+			mes "My service to you today.";
+			mes "Recently, there are 9 spot that hided cat's ship biscuit as well.";
+			next;
+			mes "[Cleanyang]";
+			mes "Someone think that good angel took them all as I collected and threw away";
+			mes "He still hide them that place.";
+			next;
+			mes "[Cleanyang]";
+			mes "It is so easy because I don't have to search everywhere, but";
+			mes "Please search the 9 spot where hiding frequently.";
+			close;
+		}
+		if (checkquest(7267,PLAYTIME) == 2)
+			completequest 7267;
+		erasequest 7267;
+		mes "[Cleanyang]";
+		mes "Is there guy who hide cat's ship biscuit today?";
+		mes "Probably there he is?";
+		next;
+		switch(select("Try to search today.:Maybe not today.")) {
+		case 1:
+			mes "[Cleanyang]";
+			mes "My service to you today.";
+			mes "The inside of ship Navi, home and cat tower too. Don't even miss a blade of grass";
+			mes "Search everywhere.";
+			setquest 7268;
+			close;
+		case 2:
+			mes "[Cleanyang]";
+			mes "Do you think so?";
+			mes "If so, It's good thing.";
+			mes "Anyway, It is not infested of insects due to we find them and remove right away.";
+			mes "That's enough.";
+			close;
+		}
+	case 2:
+		if (checkquest(7268) == -1) {
+			mes "[Cleanyang]";
+			mes "Um? Nobody request for collecting cat's ship biscuit today.";
+			mes "By the way, what is the result report?";
+			mes "Are you sick?";
+			close;
+		}
+		if (checkquest(7261) != -1 && checkquest(7262) != -1 && checkquest(7263) != -1 && checkquest(7269) != -1 && checkquest(7270) != -1 &&
+		    checkquest(7271) != -1 && checkquest(7272) != -1 && checkquest(7273) != -1 && checkquest(7274) != -1 && checkquest(7275) != -1) {
+			mes "[Cleanyang]";
+			mes "Um, the rising cat's ship biscuit spot!";
+			mes "Did you collect all fully?";
+			mes "I guess this is pretty enough.";
+			next;
+			mes "[Cleanyang]";
+			mes "Just take all finding cat's ship biscuit.";
+			mes "Taste is not bad and have a resilient too...";
+			next;
+			mes "[Cleanyang]";
+			mes "Ok today's work is enough. Please come tomorrow!";
+			mes "There will be tomorrow's cat's ship biscuit!";
+			mes "Nya hahahong~";
+			setquest 7267;
+			erasequest 7268;
+			erasequest 7261;
+			erasequest 7262;
+			erasequest 7263;
+			erasequest 7269;
+			erasequest 7270;
+			erasequest 7271;
+			erasequest 7272;
+			erasequest 7273;
+			erasequest 7274;
+			erasequest 7275;
+			getexp 30000,40000;
+			getitem 12636,10; //Malang_Sp_Can
+			close;
+		}
+		mes "[Cleanyang]";
+		mes "Did you find all of them?";
+		next;
+		mes "[Cleanyang]";
+		mes "Someone think that good angel took them all as I collected and threw away.";
+		mes "He still hide them that place.";
+		next;
+		mes "[Cleanyang]";
+		mes "It is so easy because I don't have to search everywhere, but";
+		mes "please search the 9 spot where hiding frequently.";
+		close;
+	case 3:
+		mes "[Cleanyang]";
+		mes "Meooow-!";
+		mes "What are you doing? Meow!";
+		mes "Goreureureung...";
+		next;
+		mes "[Cleanyang]";
+		mes "Hmhm.";
+		mes "Hey, don't do that.";
+		mes "...isn't it a crime? Meow.";
+		close;
+	}
+}
+
+mal_in02,29,67,0	script	#CaptainRoom3	844,{
+	if (checkweight(1201,1) == 0) {
+		mes "- You have too many items so you can't continue the quest. -";
+		close;
+	}
+	if (mal_qook == 1) {
+		if (checkquest(7261) == -1) {
+			mes "Lots of junk are piled up in a corner of captain's room.";
+			mes "Cleanyang might not clean in a corner because it is not within his hand.";
+			next;
+			mes "[Admiral Thomas]";
+			mes "Uh? What are you doing over there?";
+			mes "Do not touch that!";
+			cutin "ma_tomas03",2;
+			next;
+			switch(select("Sorry.:I'll clean up!")) {
+			case 1:
+				mes "[Admiral Thomas]";
+				mes "We have a common interest to talk.";
+				mes "There is no reason to search there like you.";
+				mes "Please leave me alone.";
+				cutin "ma_tomas01",2;
+				cutin "ma_tomas03",255;
+				break;
+			case 2:
+				cutin "ma_tomas03",255;
+				mes "Ignoring Thomas and search under the junk.";
+				mes "And at that time...";
+				next;
+				emotion e_omg;
+				mes "The place where the black shadow just passed, I don't how long been it is left.";
+				mes "Find a cat's ship biscuit.";
+				switch(rand(3)) {
+					case 0: monster "mal_in02",30,67,"Quick Dark Shadow",2209,1;
+					case 1: monster "mal_in02",30,65,"Quick Dark Shadow",2209,1;
+					case 2: monster "mal_in02",29,65,"Quick Dark Shadow",2209,1;
+				}
+				setquest 7261;
+				getitem 11536,1; //Cat_Hard_Biscuit
+				next;
+				if (checkquest(7261) != -1 && checkquest(7262) != -1 && checkquest(7263) != -1) {
+					mes "I guess I searched pretty enough.";
+					mes "Let's tell Cleanyang that is infested of insects due to cat's ship biscuit is left long time.";
+					close;
+				}
+				mes "It was one of reason that the insects are appeared.";
+				close;
+			}
+		}
+		mes "It used to be habitat of insects because someone left cat's ship biscuit.";
+		mes "I think it's ok now due to we removed all of them.";
+		close;
+	}
+	if (checkquest(7268) != -1) {
+		if (checkquest(7261) == -1) {
+			mes "Lots of junk are piled up in a corner of captain's room.";
+			mes "Cleanyng might not clean in a corner because it is not within his hand.";
+			mes "He reached out and search under the junk.";
+			next;
+			mes "And at that time...";
+			mes "The place where the dark shadow just passed, find a cat's ship biscuit that is hided recently.";
+			emotion e_omg;
+			switch(rand(3)) {
+				case 0: monster "mal_in02",30,67,"Quick Dark Shadow",2209,1;
+				case 1: monster "mal_in02",30,65,"Quick Dark Shadow",2209,1;
+				case 2: monster "mal_in02",29,65,"Quick Dark Shadow",2209,1;
+			}
+			setquest 7261;
+			getitem 11536,1; //Cat_Hard_Biscuit
+			close;
+		}
+		mes "It used to be habitat of insects because someone left cat's ship biscuit.";
+		mes "I think it's ok now due to we removed all of them.";
+		close;
+	}
+	mes "I don't have any business here.";
+	close;
+}
+
+mal_in02,183,49,0	script	#MeetingFloor4	844,{
+	if (checkweight(1201,1) == 0) {
+		mes "- You have too many items so you can't continue the quest. -";
+		close;
+	}
+	if (mal_qook == 1 || checkquest(7268) != -1) {
+		if (checkquest(7263) == -1) {
+			mes "This is ventilation window on the floor. It is really close to Cooking table";
+			mes "I'm trying to ignore that but it is on my mind. What should I do?";
+			next;
+			switch(select("Just look roughly.:Take a look at this.")) {
+			case 1:
+				mes "I looked at the ventilation window well, but did not find any problem.";
+				close;
+			case 2:
+				mes "It looks good from the top... I took it off because it's on my mind.";
+				mes "I can see something the bottom of way of ventilation.";
+				mes "And at that time...";
+				next;
+				mes "The place where the dark shadow just passed, I don't how long been it is left.";
+				mes "Find a cat's ship biscuit.";
+				emotion e_omg;
+				switch(rand(2)) {
+					case 0: monster "mal_in02",182,50,"Quick Dark Shadow",2209,1;
+					case 1: monster "mal_in02",184,50,"Quick Dark Shadow",2209,1;
+				}
+				setquest 7263;
+				getitem 11536,1; //Cat_Hard_Biscuit
+				if (mal_qook == 1) {
+					next;
+					if (checkquest(7261) != -1 && checkquest(7262) != -1 && checkquest(7263) != -1) {
+						mes "I guess I searched pretty enough.";
+						mes "Let's tell Cleanyang that is infested of insects due to cat's ship biscuit is left long time.";
+					} else
+						mes "It was one of reason that the insects are appeared.";
+				}
+				close;
+			}
+		}
+		mes "It used to be habitat of insects because someone left cat's ship biscuit.";
+		mes "I think it's ok now due to we removed all of them.";
+		close;
+	}
+	mes "I don't have any business here.";
+	close;
+}
+
+mal_in02,103,22,0	script	#MalBed5	844,{
+	if (checkweight(1201,1) == 0) {
+		mes "- You have too many items so you can't continue the quest. -";
+		close;
+	}
+	if (mal_qook == 1 || checkquest(7268) != -1) {
+		if (checkquest(7262) == -1) {
+			mes "This is bed for sailors. There is too much hair and so messy.";
+			mes "At the corner of under the bed is does not reached hand so I'm thinking too much about that.";
+			next;
+			switch(select("Raise the matress slightly.:Search under the bed.")) {
+			case 1:
+				mes "I slightly push and raise the part that touched edge of wall.";
+				mes "And at that time...";
+				next;
+				mes "The place where the dark shadow just passed, I don't how long been it is left.";
+				mes "Find a cat's ship biscuit.";
+				emotion e_omg;
+				monster "mal_in02",102,23,"Quick Dark Shadow",2209,1;
+				setquest 7262;
+				getitem 11536,1; //Cat_Hard_Biscuit
+				if (mal_qook == 1) {
+					next;
+					if (checkquest(7261) != -1 && checkquest(7262) != -1 && checkquest(7263) != -1) {
+						mes "I guess I searched pretty enough.";
+						mes "Let's tell Cleanyang that is infested of insects due to cat's ship biscuit is left long time.";
+					} else
+						mes "It was one of reason that the insects are appeared.";
+				}
+				close;
+			case 2:
+				mes "I searched under the bed, but I didn't find any problem.";
+				mes "Maybe Cleanyang cleaned up. It's pretty good condition.";
+				close;
+			}
+		}
+		mes "It used to be habitat of insects because someone left cat's ship biscuit.";
+		mes "I think it's ok now due to we removed all of them.";
+		close;
+	}
+	mes "The bed for sailors.";
+	mes "Lots of cat's hair are attached.";
+	close;
+}
+
+malangdo,141,178,0	script	#Darkweed6	844,{
+	if (checkweight(1201,1) == 0) {
+		mes "- You have too many items so you can't continue the quest. -";
+		close;
+	}
+	if (checkquest(7268) != -1) {
+		if (checkquest(7269) == -1) {
+			mes "Many weeds are growing in rest area near cat tower.";
+			mes "It's easily ignored, so it's on my mind.";
+			next;
+			switch(select("Search through the weeds.:Search under the chair.")) {
+			case 1:
+				mes "I decide to search the forest that out of people's eye.";
+				mes "And at that time...";
+				next;
+				mes "From the place where Dark shadow just passed and someone hided recently.";
+				mes "Find a cat's ship biscuit.";
+				emotion e_omg;
+				monster "malangdo",141,178,"Quick Dark Shadow",2209,1;
+				setquest 7269;
+				getitem 11536,1; //Cat_Hard_Biscuit
+				close;
+			case 2:
+				mes "I searched under the chair in rest area, but I didn't find any problem.";
+				mes "It's pretty good condition even though it's outside.";
+				close;
+			}
+		}
+		mes "Many weeds are growing in rest area near cat tower.";
+		mes "We already collected hiding cat's ship biscuit here.";
+		close;
+	}
+	mes "Many weeds are growing under the cat tower.";
+	mes "It seems to be hard to clean.";
+	close;
+}
+
+malangdo,133,134,0	script	Strange Pile of Sand#7	557,{
+	if (checkweight(1201,1) == 0) {
+		mes "- You have too many items so you can't continue the quest. -";
+		close;
+	}
+	if (checkquest(7268) != -1) {
+		set .@quest, (strnpcinfo(0) == "Strange Pile of Sand#7")?7270:7275;
+		if (checkquest(.@quest) == -1) {
+			mes "The pile of sand is billowed like a grave. Should be something in there.";
+			mes "According to rumors, cats have a habit to bury with sand after stool...";
+			next;
+			switch(select("Avoid this dirty place.:Darn it-!")) {
+			case 1:
+				mes "[" + strcharinfo(0) + "]";
+				mes "Right!";
+				mes "It may be cat's grave... Do not touch them!";
+				mes "Avoid, avoid~";
+				break;
+			case 2:
+				mes "Close eyes and start to dig that pile of sand!";
+				mes "Therefore, something came out quickly from there and disappeared.";
+				mes "And...";
+				next;
+				mes "From the place where Dark shadow just passed and someone hided recently.";
+				mes "Find a some chips of cat's ship biscuit.";
+				setquest .@quest;
+				if (!rand(3)) {
+					emotion e_omg;
+					getmapxy(.@map$,.@x,.@y,1);
+					monster .@map$,.@x,.@y,"Quick Dark Shadow",2209,1;
+				} else
+					getitem 11536,1; //Cat_Hard_Biscuit
+				close;
+			}
+		}
+		mes "We already collected buried cat's ship biscuit.";
+		close;
+	}
+	mes "- Look so strange. -";
+	mes "- That's it... -";
+	close;
+}
+malangdo,197,237,0	duplicate(Strange Pile of Sand#7)	Strange Pile of Sand#12	557
+
+malangdo,232,131,0	script	#UnderStairs8	844,{
+	if (checkweight(1201,1) == 0) {
+		mes "- You have too many items so you can't continue the quest. -";
+		close;
+	}
+	if (checkquest(7268) != -1) {
+		if (checkquest(7271) == -1) {
+			mes "Some weeds are growing under the low stairs.";
+			mes "It's really hard to find something fell under the stairs..";
+			next;
+			mes "To lie flat and look under the stairs carefully.";
+			mes "And at that time...";
+			next;
+			mes "From the place where Dark shadow just passed and someone hided recently.";
+			mes "Find a some chips of cat's ship biscuit.";
+			setquest 7271;
+			if (!rand(3)) {
+				emotion e_omg;
+				monster "malangdo",231,130,"Quick Dark Shadow",2209,1;
+			} else
+				getitem 11536,1; //Cat_Hard_Biscuit
+			close;
+		}
+		mes "Sometimes, someone played with pulling people's ankle under the stairs";
+		mes "Now, I can't see mischievous boys or any strange thing.";
+		next;
+		mes "We already collected buried cat's ship biscuit.";
+		close;
+	}
+	mes "Out of people's hand under the stairs.";
+	mes "Sometimes, I look around there when I search lost toys.";
+	close;
+}
+
+mal_in01,74,20,0	script	#CornerTower9	844,{
+	if (checkweight(1201,1) == 0) {
+		mes "- You have too many items so you can't continue the quest. -";
+		close;
+	}
+	if (checkquest(7268) != -1) {
+		if (checkquest(7272) == -1) {
+			mes "This cat tower is for playing and resting.";
+			mes "Dust is piled up because there is gap between the foothold and ground.";
+			next;
+			mes "Push the thin and long rod in the gap and search something.";
+			mes "And at that time...";
+			next;
+			mes "From the place where Dark shadow just passed and someone hided recently.";
+			mes "Find a some chips of cat's ship biscuit.";
+			setquest 7272;
+			if (!rand(3)) {
+				emotion e_omg;
+				monster "mal_in01",73,19,"Quick Dark Shadow",2209,1;
+			} else
+				getitem 11536,1; //Cat_Hard_Biscuit
+			close;
+		}
+		mes "We already collected buried cat's ship biscuit.";
+		close;
+	}
+	mes "There are cat's bed near cat tower.";
+	mes "Specially, some cats love an out of the way place.";
+	close;
+}
+
+mal_in01,159,225,0	script	#CornerLocker10	844,{
+	if (checkweight(1201,1) == 0) {
+		mes "- You have too many items so you can't continue the quest. -";
+		close;
+	}
+	if (checkquest(7268) != -1) {
+		if (checkquest(7273) == -1) {
+			mes "In the corner of the gap between the wall and locker that is used by cat's gamers,";
+			mes "I can see something there. It's really hard to find object if drop there.";
+			next;
+			mes "Push the thin and long rod in the gap and search something.";
+			mes "And at that time...";
+			next;
+			mes "From the place where Dark shadow just passed and someone hided recently.";
+			mes "Find a some chips of cat's ship biscuit.";
+			setquest 7273;
+			if (!rand(3)) {
+				emotion e_omg;
+				monster "mal_in01",159,225,"Quick Dark Shadow",2209,1;
+			} else
+				getitem 11536,1; //Cat_Hard_Biscuit
+			close;
+		}
+		mes "We already collected buried cat's ship biscuit.";
+		close;
+	}
+	mes "The corner of gap is between locker that is used by cat's gamers and wall.";
+	mes "If drop kind of small toys there, never find them at all.";
+	close;
+}
+
+mal_in01,24,72,0	script	#FootholdTower11	844,{
+	if (checkweight(1201,1) == 0) {
+		mes "- You have too many items so you can't continue the quest. -";
+		close;
+	}
+	if (checkquest(7268) != -1) {
+		if (checkquest(7274) == -1) {
+			mes "This cat tower is for playing and resting in Malangdo.";
+			mes "Dust is piled up because there is gap between the foothold and ground.";
+			next;
+			mes "Push the thin and long rod in the gap and search something.";
+			mes "And at that time...";
+			next;
+			mes "From the place where Dark shadow just passed and someone hided recently.";
+			mes "Find a some chips of cat's ship biscuit.";
+			setquest 7274;
+			if (!rand(3)) {
+				emotion e_omg;
+				monster "mal_in01",24,71,"Quick Dark Shadow",2209,1;
+			} else
+				getitem 11536,1; //Cat_Hard_Biscuit
+			close;
+		}
+		mes "There is mark that shows something used to be jammed in gap of foothold in very bottom of cat tower.";
+		mes "We already collected buried cat's ship biscuit.";
+		close;
+	}
+	mes "This cat tower is for playing and resting in Malangdo.";
+	mes "When I look cats on the cat tower, It looks like a tree landen with cats...";
+	close;
+}
+
+// Help Chef Nyas :: mal_day_qook
+//============================================================
+mal_in02,187,58,3	script	Chef Nyas	548,{
+	if (checkweight(1201,1) == 0) {
+		mes "- You have too many items so you can't continue the quest. -";
+		close;
+	}
+	if (BaseLevel < 60) {
+		mes "[Chef Nyas]";
+		mes "What is going on boy?";
+		mes "I don't want to talk to you. Get away from me!";
+		next;
+		mes "I'm ignored by uncomfortable cat.";
+		mes "May not ignored if I'm getting stronger...";
+		close;
+	}
+	if (mal_qook < 2) {
+		mes "[Chef Nyas]";
+		mes "I'm a unique chef in entire fleet.";
+		mes "Do you want something from me?";
+		next;
+		mes "[Chef Nyas]";
+		mes "Even though I have no time to spare, I usually serve a plate of soup gladly, but now!";
+		mes "The ingredient is infested with worms cause of one stupid's carelessness!";
+		next;
+		mes "[Chef Nyas]";
+		mes "Therefore, when my blaze of anger becomes quiet like a calm sea, come back again!";
+		mes "By the way, where is that stupid!";
+		close;
+	} else if (mal_qook == 2) {
+		mes "[Chef Nyas]";
+		mes "I'm a unique chef in entire fleet.";
+		mes "Do you want something from me?";
+		next;
+		switch(select("Show the cat's ship biscuit.:Talk about story of Cleanyang.")) {
+		case 1:
+			mes "[Chef Nyas]";
+			mes "Hm? is this cat's ship biscuit?";
+			mes "Specially, I can feel the flow of time from this biscuit.";
+			mes "By the way, how can you have this?";
+			next;
+			mes "He is telling the story that place where he found cat's ship biscuit and";
+			mes "Explain the Cleanyang's story.";
+			next;
+			break;
+		case 2:
+			mes "[Chef Nyas]";
+			mes "Why that stupid?";
+			mes "Are you trying to make a thunder storm in the calm sea?!";
+			next;
+			mes "Pacify an angry chef";
+			mes "Explain a misunderstanding about Cleanyang and tell whole story of cat's ship biscuit.";
+			next;
+			break;
+		}
+		mes "[Chef Nyas]";
+		mes "So this is happening because of cat buscuit?";
+		mes "Yes, is this story about that?";
+		next;
+		select("You are quick understand.");
+		mes "[Chef Nyas]";
+		mes "..........He is such a jerk!";
+		mes "In addition, What? Find another one in captain's room?!";
+		next;
+		mes "[Chef Nyas]";
+		mes "Thomas......";
+		mes "He has position that should take the lead to sailors, but he got a wrong?";
+		mes "Ududuk.";
+		next;
+		mes "[Chef Nyas]";
+		mes "This cat's ship biscuit was! Always thankful food to help our starvation during a long sailing!";
+		mes "No matter what taste, It always saves us at crossroads of life and death!";
+		next;
+		mes "[Chef Nyas]";
+		mes "Although the situation is not able to use fire for a month, two month even 1000 days!";
+		mes "This is blessed food to guarantee on open sea!";
+		next;
+		mes "[Chef Nyas]";
+		mes "How many chef cats have difficult time to make a cat's ship biscuit!";
+		mes "The military discipline has been relaxed because we settled down on island! Already forget the dangerous situation?!";
+		next;
+		mes "Chef is outraged and very upset.";
+		mes "He mumbled and made a threatening sound with grind his teeth.";
+		mes "Come back later when he calms down.";
+		set mal_qook,3;
+		erasequest 7264;
+		setquest 7265;
+		close;
+	} else if (mal_qook == 3) {
+		if (!rand(3)) {
+			mes "[Chef Nyas]";
+			mes "There you are? I made a bad break.";
+			mes "I made a big decision when you are out for me.";
+			next;
+			mes "[Chef Nyas]";
+			mes "After settled down on Island, depraved mindset cause of plentiful foods.";
+			mes "Therefore, I'll change the menu that cat's ship biscuit is provided for one meal a day!.";
+			next;
+			mes "[Chef Nyas]";
+			mes "That ingredient is needed to make cat's ship biscuit.";
+			mes "There is no wheat on this island, so I need to get your help.";
+			next;
+			mes "[Chef Nyas]";
+			mes "Anything is possible to grind flour and knead dough.";
+			mes "Please bring that kind of ^4d4dff10 Grain^000000 and ^4d4dff 1 Plain Sauce^000000.";
+			mes "Replace salt with seawater..";
+			next;
+			mes "[Chef Nyas]";
+			mes "Could we get them easily on land?";
+			mes "I'll get the rest what I need.";
+			next;
+			mes "[Chef Nyas]";
+			mes "I'll fix their taste that is crazy for canned food.";
+			mes "He approached like a calm sea that has horrible thunder storm";
+			mes "I'll give a pain like a god of sea's anger! Kmeow~~!!";
+			next;
+			mes "A look of chef is quite serious.";
+			mes "Let me tell Cleanyang about the result first.";
+			set mal_qook,4;
+			erasequest 7265;
+			setquest 7266;
+			close;
+		}
+		mes "Chef is still trying to soothe his anger.";
+		mes "Maybe need more time.";
+		close;
+	} else if (mal_qook == 4) {
+		if (countitem(577) >= 10 && countitem(7454) > 0) {
+			mes "[Chef Nyas]";
+			mes "Finally here. Wow, this land is pretty different.";
+			mes "That is enough to process.";
+			next;
+			mes "[Chef Nyas]";
+			mes "If you are ok, I want to get these food everyday.";
+			mes "If you don't mind, just come back tomorrow.";
+			delitem 577,10; //Grain
+			delitem 7454,1; //Plain_Sauce
+			set mal_qook,5;
+			erasequest 7266;
+			setquest 7276;
+			close;
+		}
+		mes "[Chef Nyas]";
+		mes "That ingredient is needed to make cat's ship biscuit.";
+		mes "There is no wheat on this island, so I need to get your help.";
+		next;
+		mes "[Chef Nyas]";
+		mes "Anything is possible to grind flour and knead dough.";
+		mes "Please bring that kind of ^4d4dff10 Grain^000000 and ^4d4dff 1 Plain Sauce^000000.";
+		mes "Replace salt with seawater...";
+		close;
+	}
+	mes "[Chef Nyas]";
+	mes "There you are.";
+	mes "It's not mealtime... Why are you here?";
+	next;
+	switch(select("What's today's work?:Food Delivery:Just bored...")) {
+	case 1:
+		if (checkquest(7276,PLAYTIME) == 0) {
+			mes "[Chef Nyas]";
+			mes "Now, cat's ship biscuit is being baked in this oven.";
+			mes "It's all for your delivery food.";
+			next;
+			mes "[Chef Nyas]";
+			mes "Quiet wave with a little salty and savory smell.";
+			mes "The food of sea is coming to make sailor's heart flutter.";
+			next;
+			mes "[Chef Nyas]";
+			mes "I've got enough ingredients of cat's ship biscuit today.";
+			mes "Let me order next time.";
+			close;
+		}
+		if (mal_food > 0) {
+			mes "[Chef Nyas]";
+			mes "Um? You are dull.";
+			mes "You already took my order list?";
+			mes "Just take care of them.";
+			close;
+		}
+		if (checkquest(7276,PLAYTIME) == 2)
+			completequest 7276;
+		mes "[Chef Nyas]";
+		mes "Here you are.";
+		mes "I need ingredients for cat's ship biscuit now. Fortunately, you are here at the right moment.";
+		if (checkquest(7276) != -1)
+			erasequest 7276;
+		next;
+		mes "[Chef Nyas]";
+		mes "Could you bring some ingrediednts for cat's ship biscuit from land?";
+		mes "If you say so, I have one more thing to request...";
+		next;
+		switch(select("I'm busy today.:Sure, what are you need?")) {
+		case 1:
+			mes "[Chef Nyas]";
+			mes "That is sad news.";
+			mes "However, it's ok. Cat's ship biscuit is originally prepared food.";
+			mes "Anyway, today's biscuit wll be provided when the second moon is full.";
+			next;
+			switch(select("So teeth grinder?:Worm castle...:Do not throw away?")) {
+			case 1:
+				mes "[Chef Nyas]";
+				mes "What do you want to hear from me?!";
+				mes "Kmeow!!";
+				mes "The hardness of cat's ship biscuit is like a noble endurance in the sea!";
+				mes "Do not ignore this!!";
+				close;
+			case 2:
+				mes "[Chef Nyas]";
+				mes "Only idiot who does not take care of preserving says like that.";
+				mes "Dry enough and seal it in cool dry place. Tut-tut.";
+				next;
+				mes "[Chef Nyas]";
+				mes "Anyway Is that all about protein?";
+				mes "Why don't you eat at night if it's on your mind!";
+				close;
+			case 3:
+				mes "[Chef Nyas]";
+				mes "Never throw food!";
+				mes "When you are hit by cat's ship biscuit, you will get bruise or bleeding but";
+				mes "It is not that reason!!!";
+				mes "Do not play with food!";
+				close;
+			}
+		case 2:
+			if (mal_food == 0) {
+				mes "[Chef Nyas]";
+				mes "The ingredients of cat's ship biscuit are 10 Grain and 1 Plain Sauce as usual.";
+				mes "And I'd like to study food of human, so bring one of them.";
+				next;
+				mes "[Chef Nyas]";
+				mes "My curious food is...";
+				set .@i, rand(1,66);
+
+				// IDs grouped in 5s incrementally.
+				setarray .@StartID[0],12061,12091,12041,12071,12056,12086,12051,12081,12046,12076,12066,12096,12429,12434;
+				mes "^4d4dff "+getitemname(.@StartID[(.@i-1)/5]+((.@i-1)%5))+" ^000000 .";
+
+				set mal_food,.@i;
+				setquest 7280+.@i;
+				mes "Just one dish is enough, so please do it together.";
+				next;
+				mes "[Chef Nyas]";
+				mes "You have to bring the dish that made from fresh ingredients.";
+				mes "^ff0000I will refuse the instant food.^000000";
+				close;
+			}
+			mes "[Chef Nyas]";
+			mes "Hey my friend, you have a bad memory.";
+			mes "Did you already take my order list?";
+			close;
+		}
+	case 2:
+		if (mal_food == 0) {
+			mes "[Chef Nyas]";
+			mes "Do you remember what I ask to bring?";
+			mes "I have no idea.";
+			close;
+		} else if (mal_food > 66) {
+			mes "[Chef Nyas]";
+			mes "What did I say to bring?";
+			mes "I don't remember?";
+			mes "Did you get something wrong to come here?";
+			close;
+		}
+		mes "[Chef Nyas]";
+		mes "Is that ingredients of cat's ship biscuit and the food of human?";
+		mes "Let me check what you brought...";
+		next;
+		set .@i, mal_food;
+
+		// IDs grouped in 5s incrementally.
+		setarray .@StartID[0],12061,12091,12041,12071,12056,12086,12051,12081,12046,12076,12066,12096,12429,12434;
+		set .@food, .@StartID[(.@i-1)/5]+((.@i-1)%5);
+
+		if (countitem(577) >= 10 && countitem(7454) > 0 && countitem(.@food) > 0) {
+			mes "[Chef Nyas]";
+			mes "Great.";
+			mes "This is that food!";
+			mes "It will be good reference. Well done.";
+			delitem 577,10; //Grain
+			delitem 7454,1; //Plain_Sauce
+			delitem .@food,1;
+			setquest 7276;
+			set mal_food,0;
+			erasequest 7280+.@i;
+			
+			// Quantities grouped in 10s repeating.
+			// [ 3, 3, 6, 6, 9, 9, 12, 12, 15, 18 ]
+			// Last group [ 61 - 66 ] receives 25 constant.
+			getitem 6422, ((.@i < 61)?((.@i%10)?3*(((.@i%10)+1)/2):18):25); //Egrade_Coin
+
+			getexp 50000,80000;
+			next;
+			mes "[Chef Nyas]";
+			mes "Alright, could you come tomorrow?";
+			mes "When the time to you coming, I'm very excited.";
+			mes "Nyahuh Nyahuh";
+			close;
+		}
+		mes "[Chef Nyas]";
+		mes "Yummm...";
+		mes "Did I overestimate your ability?";
+		mes "Double check what is short and bring them properly.";
+		next;
+		mes "[Chef Nyas]";
+		mes "There is not different from undiscerning young cat.";
+		close;
+	case 3:
+		mes "[Chef Nyas]";
+		mes "You are quite bold like a killer whale.";
+		mes "If you don't have any business, don't touch vegetable and go away.";
+		close;
+	}
+}
