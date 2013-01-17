@@ -7414,7 +7414,7 @@ BUILDIN_FUNC(getequipname)
 	i = pc_checkequip(sd,equip[num]);
 	if( i < 0 )
 	{
-		script_pushint(st,-1);
+		script_pushconststr(st,"");
 		return 0;
 	}
 
@@ -12911,6 +12911,11 @@ BUILDIN_FUNC(npcwalkto)
 	y=script_getnum(st,3);
 
 	if(nd) {
+		if (!nd->status.hp) {
+			status_calc_npc(nd, true);
+		} else {
+			status_calc_npc(nd, false);
+		}
 		unit_walktoxy(&nd->bl,x,y,0);
 	}
 
