@@ -22,11 +22,13 @@
 /map-server_sql
 /mapcache
 /rAthena
+/.DS_Store
 
 # /3rdparty/cmake/
 
 # /3rdparty/libconfig/
 /3rdparty/libconfig/Makefile
+/3rdparty/libconfig/*.o
 
 # /3rdparty/mt19937ar/
 /3rdparty/mt19937ar/Makefile
