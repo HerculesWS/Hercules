@@ -331,7 +331,7 @@ AC_PATH_PROG(AR, ar)
 AC_LANG([C])
 
 
-CFLAGS="$CFLAGS -pipe -ffast-math -Wall"
+CFLAGS="$CFLAGS -pipe -ffast-math -Wall -Wno-sign-compare"
 CPPFLAGS="$CPPFLAGS -I../common"
 
 
@@ -420,13 +420,12 @@ OLD_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -Wno-unused-parameter"
 AC_COMPILE_IFELSE(
 	[int foo;],
-	[AC_MSG_RESULT([no])],
+	[AC_MSG_RESULT([yes])],
 	[
-		AC_MSG_RESULT([yes])
-		PROD_WARN="$PROD_WARN -Wno-unused-parameter"
+		AC_MSG_RESULT([no])
+		CFLAGS="$OLD_CFLAGS"
 	]
 )
-CFLAGS="$OLD_CFLAGS"
 
 
 #
@@ -478,18 +477,19 @@ AC_COMPILE_IFELSE(
 			[int foo;],
 			[
 				AC_MSG_RESULT([yes])
-				PROD_WARN="$PROD_WARN -Wno-pointer-sign"
+				CFLAGS="$OLD_CFLAGS -Wno-pointer-sign"
 			],
 			[
 				AC_MSG_RESULT([no])
+				CFLAGS="$OLD_CFLAGS"
 			]
 		)
 	],
 	[
-		AC_MSG_RESULT([no])		
+		AC_MSG_RESULT([no])
+		CFLAGS="$OLD_CFLAGS"
 	]
 )
-CFLAGS="$OLD_CFLAGS"
 
 
 AC_MSG_CHECKING([whether $CC supports -Wno-switch])
@@ -497,14 +497,13 @@ OLD_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -Wno-switch"
 AC_COMPILE_IFELSE(
 	[int foo;],
-	[	AC_MSG_RESULT([yes])
-		PROD_WARN="$PROD_WARN -Wno-switch"
-	],
+	[AC_MSG_RESULT([yes])],
 	[
 		AC_MSG_RESULT([no])
+		CFLAGS="$OLD_CFLAGS"
 	]
 )
-CFLAGS="$OLD_CFLAGS"
+
 
 AC_MSG_CHECKING([whether $CC supports -fPIC])
 OLD_CFLAGS="$CFLAGS"
@@ -605,10 +604,10 @@ fi
 case $enable_debug in
 	"no")
 		# default value
-		CFLAGS="$CFLAGS -Wno-unused -Wno-parentheses $PROD_WARN"
+		CFLAGS="$CFLAGS -Wno-unused -Wno-parentheses"
 		;;
 	"yes")
-		CFLAGS="$CFLAGS -g -DDEBUG -Wconversion"
+		CFLAGS="$CFLAGS -g -DDEBUG"
 		;;
 	"gdb")
 		CFLAGS="$CFLAGS -ggdb -DDEBUG"
@@ -855,7 +854,7 @@ else
 	AC_MSG_RESULT([no])
 fi
 
-AC_MSG_NOTICE([PROD_WARN= $PROD_WARN])
-AC_MSG_NOTICE([Configure finish, CFLAG= $CFLAGS])
+
+
 ###############################################################################
 AC_OUTPUT
