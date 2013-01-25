@@ -3668,7 +3668,7 @@ ACMD_FUNC(reloadskilldb)
 }
 
 /*==========================================
- * @reloadatcommand - reloads atcommand_athena.conf groups.conf
+ * @reloadatcommand - reloads conf/atcommand.conf conf/groups.conf
  *------------------------------------------*/
 void atcommand_doload();
 ACMD_FUNC(reloadatcommand) {
@@ -3682,7 +3682,7 @@ ACMD_FUNC(reloadatcommand) {
 	config_destroy(&run_test);
 
 	if (conf_read_file(&run_test, ATCOMMAND_CONF_FILENAME)) {
-		clif_displaymessage(fd, msg_txt(1037)); // Error reading atcommand_athena.conf, reload failed.
+		clif_displaymessage(fd, msg_txt(1037)); // Error reading atcommand.conf, reload failed.
 		return -1;
 	}
 
@@ -3694,7 +3694,7 @@ ACMD_FUNC(reloadatcommand) {
 	return 0;
 }
 /*==========================================
- * @reloadbattleconf - reloads battle_athena.conf
+ * @reloadbattleconf - reloads /conf/battle.conf
  *------------------------------------------*/
 ACMD_FUNC(reloadbattleconf)
 {
