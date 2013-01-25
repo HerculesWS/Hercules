@@ -3184,7 +3184,7 @@ int parse_console(const char* buf)
 }
 
 /*==========================================
- * Read map server configuration files (conf/map_athena.conf...)
+ * Read map server configuration files (conf/map_server.conf...)
  *------------------------------------------*/
 int map_config_read(char *cfgName)
 {
@@ -3746,13 +3746,13 @@ int do_init(int argc, char *argv[])
 	GC_enable_incremental();
 #endif
 
-	INTER_CONF_NAME="conf/inter_athena.conf";
-	LOG_CONF_NAME="conf/log_athena.conf";
-	MAP_CONF_NAME = "conf/map_athena.conf";
-	BATTLE_CONF_FILENAME = "conf/battle_athena.conf";
-	ATCOMMAND_CONF_FILENAME = "conf/atcommand_athena.conf";
-	SCRIPT_CONF_NAME = "conf/script_athena.conf";
-	MSG_CONF_NAME = "conf/msg_athena.conf";
+	INTER_CONF_NAME="conf/inter-server.conf";
+	LOG_CONF_NAME="conf/logs.conf";
+	MAP_CONF_NAME = "conf/map-server.conf";
+	BATTLE_CONF_FILENAME = "conf/battle.conf";
+	ATCOMMAND_CONF_FILENAME = "conf/atcommand.conf";
+	SCRIPT_CONF_NAME = "conf/script.conf";
+	MSG_CONF_NAME = "conf/messages.conf";
 	GRF_PATH_FILENAME = "conf/grf-files.txt";
 
 	rnd_init();
@@ -3855,7 +3855,7 @@ int do_init(int argc, char *argv[])
 		char ip_str[16];
 		ip2str(addr_[0], ip_str);
 
-		ShowWarning("Not all IP addresses in map_athena.conf configured, autodetecting...\n");
+		ShowWarning("Not all IP addresses in /conf/map-server.conf configured, autodetecting...\n");
 
 		if (naddr_ == 0)
 			ShowError("Unable to determine your IP address...\n");

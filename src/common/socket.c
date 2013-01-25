@@ -1262,7 +1262,7 @@ int socket_getips(uint32* ips, int max)
 
 void socket_init(void)
 {
-	char *SOCKET_CONF_FILENAME = "conf/packet_athena.conf";
+	char *SOCKET_CONF_FILENAME = "conf/packet.conf";
 	unsigned int rlim_cur = FD_SETSIZE;
 
 #ifdef WIN32

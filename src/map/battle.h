@@ -382,7 +382,7 @@ extern struct Battle_Config
 	int debuff_on_logout; // Removes a few "official" negative Scs on logout. [Skotlex]
 	int mob_ai; //Configures various mob_ai settings to make them smarter or dumber(official). [Skotlex]
 	int hom_setting; //Configures various homunc settings which make them behave unlike normal characters.. [Skotlex]
-	int dynamic_mobs; // Dynamic Mobs [Wizputer] - battle_athena flag implemented by [random]
+	int dynamic_mobs; // Dynamic Mobs [Wizputer] - battle.conf flag implemented by [random]
 	int mob_remove_damaged; // Dynamic Mobs - Remove mobs even if damaged [Wizputer]
 	int mob_remove_delay; // Dynamic Mobs - delay before removing mobs from a map [Skotlex]
 	int mob_active_time; //Duration through which mobs execute their Hard AI after players leave their area of sight.
