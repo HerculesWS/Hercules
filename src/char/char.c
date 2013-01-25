@@ -30,9 +30,9 @@
 #include <stdlib.h>
 
 // private declarations
-#define CHAR_CONF_NAME	"conf/char_athena.conf"
-#define LAN_CONF_NAME	"conf/subnet_athena.conf"
-#define SQL_CONF_NAME	"conf/inter_athena.conf"
+#define CHAR_CONF_NAME	"conf/char-server.conf"
+#define LAN_CONF_NAME	"conf/subnet.conf"
+#define SQL_CONF_NAME	"conf/inter-server.conf"
 
 char char_db[256] = "char";
 char scdata_db[256] = "sc_data";
@@ -2091,7 +2091,7 @@ int parse_fromlogin(int fd) {
 				ShowError("Can not connect to login-server.\n");
 				ShowError("The server communication passwords (default s1/p1) are probably invalid.\n");
 				ShowError("Also, please make sure your login db has the correct communication username/passwords and the gender of the account is S.\n");
-				ShowError("The communication passwords are set in map_athena.conf and char_athena.conf\n");
+				ShowError("The communication passwords are set in /conf/map-server.conf and /conf/char-server.conf\n");
 				set_eof(fd);
 				return 0;
 			} else {
