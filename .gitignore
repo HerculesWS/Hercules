@@ -1,3 +1,5 @@
+#Global
+.DS_Store
 
 # /
 /*.exe
@@ -22,7 +24,6 @@
 /map-server_sql
 /mapcache
 /rAthena
-/.DS_Store
 
 # /3rdparty/cmake/
 
