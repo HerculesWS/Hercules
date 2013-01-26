@@ -265,18 +265,19 @@ static void display_title(void) {
 	//ClearScreen(); // clear screen and go up/left (0, 0 position in text)
 
 	ShowMessage("\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"                                                                 "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"       "CL_BT_WHITE"            rAthena Development Team presents                  "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"                 ___   __  __                                    "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"           _____/   | / /_/ /_  ___  ____  ____ _                "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"          / ___/ /| |/ __/ __ \\/ _ \\/ __ \\/ __ `/                "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"         / /  / ___ / /_/ / / /  __/ / / / /_/ /                 "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"        /_/  /_/  |_\\__/_/ /_/\\___/_/ /_/\\__,_/                  "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"                                                                 "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"       "CL_GREEN"              http://rathena.org/board/                        "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"                                                                 "CL_PASS""CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"                                                                 "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED"       "CL_BT_WHITE"                Hercules Development Team presents                  "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"                _   _                     _           "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"               | | | |                   | |          "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"               | |_| | ___ _ __ ___ _   _| | ___  ___ "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"               |  _  |/ _ \\ '__/ __| | | | |/ _ \\/ __|"CL_BG_RED""CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"               | | | |  __/ | | (__| |_| | |  __/\\__ \\"CL_BG_RED""CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"               \\_| |_/\\___|_|  \\___|\\__,_|_|\\___||___/"CL_BG_RED""CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"                                                                 "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED"       "CL_BT_WHITE"                   http://hercules.ws/board/                        "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"                                                                 "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
 
-	ShowInfo("SVN Revision: '"CL_WHITE"%s"CL_RESET"'.\n", get_svn_revision());
+	//ShowInfo("SVN Revision: '"CL_WHITE"%s"CL_RESET"'.\n", get_svn_revision());
 }
 
 // Warning if executed as superuser (root)
@@ -284,7 +285,7 @@ void usercheck(void)
 {
 #ifndef _WIN32
     if (geteuid() == 0) {
-		ShowWarning ("You are running rAthena with root privileges, it is not necessary.\n");
+		ShowWarning ("You are running Hercules with root privileges, it is not necessary.\n");
     }
 #endif
 }

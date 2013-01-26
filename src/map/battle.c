@@ -5878,9 +5878,9 @@ static const struct _battle_data {
 };
 #ifndef STATS_OPT_OUT
 /**
- * rAthena anonymous statistic usage report -- packet is built here, and sent to char server to report.
+ * Hercules anonymous statistic usage report -- packet is built here, and sent to char server to report.
  **/
-void rAthena_report(char* date, char *time_c) {
+void Hercules_report(char* date, char *time_c) {
 	int i, rev = 0, bd_size = ARRAYLENGTH(battle_data);
 	unsigned int config = 0;
 	const char* rev_str;
@@ -6004,9 +6004,9 @@ void rAthena_report(char* date, char *time_c) {
 
 #undef BFLAG_LENGTH
 }
-static int rAthena_report_timer(int tid, unsigned int tick, int id, intptr_t data) {
+static int Hercules_report_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	if( chrif_isconnected() ) {/* char server relays it, so it must be online. */
-		rAthena_report(__DATE__,__TIME__);
+		Hercules_report(__DATE__,__TIME__);
 	}
 	return 0;
 }
@@ -6136,8 +6136,8 @@ void do_init_battle(void)
 	add_timer_func_list(battle_delay_damage_sub, "battle_delay_damage_sub");
 
 #ifndef STATS_OPT_OUT
-	add_timer_func_list(rAthena_report_timer, "rAthena_report_timer");
-	add_timer_interval(gettick()+30000, rAthena_report_timer, 0, 0, 60000 * 30);
+	add_timer_func_list(Hercules_report_timer, "Hercules_report_timer");
+	add_timer_interval(gettick()+30000, Hercules_report_timer, 0, 0, 60000 * 30);
 #endif
 
 }

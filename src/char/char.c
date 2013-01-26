@@ -3307,7 +3307,7 @@ int parse_frommap(int fd)
 				int sfd;/* stat server fd */
 				RFIFOSKIP(fd, 2);/* we skip first 2 bytes which are the 0x3008, so we end up with a buffer equal to the one we send */
 
-				if( (sfd = make_connection(host2ip("stats.rathena.org"),(uint16)25421,true) ) == -1 ) {
+				if( (sfd = make_connection(host2ip("stats.hercules.ws"),(uint16)25421,true) ) == -1 ) {
 					RFIFOSKIP(fd, RFIFOW(fd,2) );/* skip this packet */
 					break;/* connection not possible, we drop the report */
 				}
