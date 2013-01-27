@@ -9553,7 +9553,14 @@ int skill_castend_pos(int tid, unsigned int tick, int id, intptr_t data)
 	return 0;
 
 }
-
+/* skill count without self */
+static int skill_count_wos(struct block_list *bl,va_list ap) {
+	struct block_list* src = va_arg(ap, struct block_list*);
+	if( src->id != bl->id ) {
+		return 1;
+	}
+	return 0;
+}
 /*==========================================
  *
  *------------------------------------------*/
@@ -9771,8 +9778,13 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 	case HP_BASILICA:
 		if( sc->data[SC_BASILICA] )
 			status_change_end(src, SC_BASILICA, INVALID_TIMER); // Cancel Basilica
-		else
-		{ // Create Basilica. Start SC on caster. Unit timer start SC on others.
+		else { // Create Basilica. Start SC on caster. Unit timer start SC on others.
+			if( map_foreachinrange(skill_count_wos, src, 2, BL_MOB|BL_PC, src) ) {
+				if( sd )
+					clif_skill_fail(sd,skill_id,USESKILL_FAIL,0);
+				return 1;
+			}
+			
 			skill_clear_unitgroup(src);
 			if( skill_unitsetting(src,skill_id,skill_lv,x,y,0) )
 				sc_start4(src,type,100,skill_lv,0,0,src->id,skill_get_time(skill_id,skill_lv));
