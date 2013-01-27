@@ -393,7 +393,7 @@ endif()
 #####################################################################
 # package stuff
 #
-set( CPACK_PACKAGE_NAME "rAthena" )
+set( CPACK_PACKAGE_NAME "Hercules" )
 set( CPACK_PACKAGE_DESCRIPTION_SUMMARY "MMORPG server package" )
 set( CPACK_PACKAGE_VERSION ${SVNVERSION} )
 set( CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE )
@@ -459,8 +459,8 @@ set( DEVELOPMENT_FILES
 	"${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt"
 	"${CMAKE_CURRENT_SOURCE_DIR}/configure"
 	"${CMAKE_CURRENT_SOURCE_DIR}/configure.in"
-	"${CMAKE_CURRENT_SOURCE_DIR}/rAthena-9.sln"
-	"${CMAKE_CURRENT_SOURCE_DIR}/rAthena-10.sln"
+	"${CMAKE_CURRENT_SOURCE_DIR}/Hercules-9.sln"
+	"${CMAKE_CURRENT_SOURCE_DIR}/Hercules-10.sln"
 	)
 set( DEVELOPMENT_DIRECTORIES
 	"3rdparty"
