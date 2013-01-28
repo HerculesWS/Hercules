@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules dev team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena dev team
 
 #include "../common/cbasetypes.h"
 #include "../common/socket.h"
@@ -1043,8 +1044,6 @@ static int clif_set_unit_idle(struct block_list* bl, unsigned char* buffer, bool
 	}
 #endif
 #if PACKETVER >= 20110111
-	if( sd )
-		ShowDebug("Hi:%d v %d for %s\n",vd->robe,sd->status.robe,sd->status.name);
 	WBUFW(buf,34) = vd->robe;
 	offset+= 2;
 	buf = WBUFP(buffer,offset);
