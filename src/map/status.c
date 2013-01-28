@@ -8646,6 +8646,10 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		case SC_PARALYSIS:
 			unit_stop_walking(bl,1);
 		break;
+		case SC_ANKLE:
+			if( battle_config.skill_trap_type )
+				unit_stop_walking(bl,1);
+			break;
 		case SC_HIDING:
 		case SC_CLOAKING:
 		case SC_CLOAKINGEXCEED:
