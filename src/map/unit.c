@@ -890,8 +890,7 @@ int unit_is_walking(struct block_list *bl)
 /*==========================================
  * Determines if the bl can move based on status changes. [Skotlex]
  *------------------------------------------*/
-int unit_can_move(struct block_list *bl)
-{
+int unit_can_move(struct block_list *bl) {
 	struct map_session_data *sd;
 	struct unit_data *ud;
 	struct status_change *sc;
@@ -930,6 +929,9 @@ int unit_can_move(struct block_list *bl)
 			|| (sc->data[SC_CLOAKING] && //Need wall at level 1-2
 				sc->data[SC_CLOAKING]->val1 < 3 && !(sc->data[SC_CLOAKING]->val4&1))
 			)
+			return 0;
+		
+		if( sc->data[SC_ANKLE] && !unit_is_walking(bl) ) // Ankle only stops you after you're done moving
 			return 0;
 
 		if (sc->opt1 > 0 && sc->opt1 != OPT1_STONEWAIT && sc->opt1 != OPT1_BURNING && (sc->opt1 != OPT1_CRYSTALIZE && bl->type != BL_MOB))

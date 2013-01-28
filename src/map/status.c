@@ -997,7 +997,6 @@ void initChangeTables(void) {
 		StatusIconChangeTable[SC_HALLUCINATION] = SI_BLANK;
 
 	/* StatusChangeState (SCS_) NOMOVE */
-	StatusChangeStateTable[SC_ANKLE]               |= SCS_NOMOVE;
 	StatusChangeStateTable[SC_AUTOCOUNTER]         |= SCS_NOMOVE;
 	StatusChangeStateTable[SC_TRICKDEAD]           |= SCS_NOMOVE;
 	StatusChangeStateTable[SC_BLADESTOP]           |= SCS_NOMOVE;
@@ -8632,7 +8631,6 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		case SC_CONFUSION:
 		case SC_CLOSECONFINE:
 		case SC_CLOSECONFINE2:
-		case SC_ANKLE:
 		case SC_SPIDERWEB:
 		case SC_ELECTRICSHOCKER:
 		case SC_BITE:
