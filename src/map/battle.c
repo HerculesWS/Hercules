@@ -623,7 +623,7 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 				}
 #endif
 				if( (left&1) && cardfix_ != 1000 )
-					damage = damage * cardfix / 1000;
+					damage = damage * cardfix_ / 1000;
 				else if( cardfix != 1000 )
 					damage = damage * cardfix / 1000;
 
