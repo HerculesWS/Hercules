@@ -1,11 +1,7 @@
 //============================================================
-//= rAthena Readme File
+//= Hercules Readme File
 //===== By: ==================================================
-//= rAthena Dev Team
-//===== Current Version: =====================================
-//= $Revision$
-//===== Last Updated: ========================================
-//= $LastChangedDate$
+//= Hercules Dev Team
 //===== Description: =========================================
 //= Basic information and installation guide with links to
 //= various forum posts and Wiki articles.
@@ -14,7 +10,7 @@
 ============================
 ||   Table of Contents    ||
 ============================
-|| 1. What is rAthena?    ||
+|| 1. What is Hercules?    ||
 || 2. Prerequisites        ||
 || 3. Installation        ||
 || 4. Troubleshooting     ||
@@ -24,26 +20,26 @@
 
 
 ============================
-|| 1. What is rAthena?    ||
+|| 1. What is Hercules?    ||
 ============================
-rAthena is a collaborative software development project revolving around the
+Hercules is a collaborative software development project revolving around the
 creation of a robust massively multiplayer online role playing game (MMORPG)
 server package. Written in C, the program is very versatile and provides NPCs,
 warps and modifications. The project is jointly managed by a group of volunteers
 located around the world as well as a tremendous community providing QA and
-support. rAthena is a continuation of the eAthena project.
+support. Hercules is a continuation of the original Athena project.
 
 
 
 ============================
 || 2. Prerequisites       ||
 ============================
-Before installing rAthena there are certain tools and applications you will need.
+Before installing Hercules there are certain tools and applications you will need.
 This differs between the varying operating systems available, so the following
 is broken down into Windows and Linux prerequisites.
 
 Windows
-	* TortoiseSVN (http://tortoisesvn.net/downloads.html)
+	* TortoiseGIT (http://code.google.com/p/tortoisegit/)
 	* MySQL (http://www.mysql.com/downloads/mysql/)
 	* MySQL Workbench (http://www.mysql.com/downloads/workbench/)
 	* MS Visual C++ (http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express)
@@ -55,7 +51,7 @@ Linux (names of packages may require specific version numbers on certain distrib
 	* mysql-devel
 	* mysql-server
 	* pcre-devel
-	* subversion
+	* git
 	* zlib-devel
 
 
@@ -68,23 +64,26 @@ relevant to your Operation System, please refer to the Wiki (links at the end of
 
 Windows
 	* Install prerequisites
-	* Create a folder to download rAthena into (e.g. C:\rAthena)
-	* Right click this folder and select "SVN Checkout".
-	* Paste the SVN URL into the box: https://rathena.svn.sourceforge.net/svnroot/rathena/trunk/
+	* Create a folder to download Hercules into (e.g. C:\Hercules)
+	* Right click this folder and select "Git Clone".
+	* Paste the GIT URL into the box: https://github.com/HerculesWS/Hercules.git
 	* Open MySQL Workbench and create an instance to connect to your MySQL Server
-	* Create a database (rathena), a user (rathena), give permissions (GRANT SELECT,INSERT,UPDATE,DELETE)
+	* Create a database (hercules), a user (hercules), give permissions (GRANT SELECT,INSERT,UPDATE,DELETE)
 		and then login using the new user
-	* Use MySQL Workbench to run the .sql files in /sql-files/ on the new rathena database
+	* Use MySQL Workbench to run the .sql files in /sql-files/ on the new Hercules database
 
 Linux
-	(For CentOS) Type: yum install gcc make mysql mysql-devel mysql-server pcre-devel subversion zlib-devel
-	(For Debian) Type: apt-get install subversion make gcc libmysqlclient-dev zlib1g-dev libpcre3-dev
+	(For CentOS) Step 1: yum install gcc make mysql mysql-devel mysql-server pcre-devel zlib-devel
+	Step 2: rpm -Uvhhttp://repo.webtatic.com/yum/centos/5/latest.rpm
+	Step 3: yum install --enablerepo=webtatic git-all
+	Step 4: yum install --enablerepo=webtatic --disableexcludes=main git-all
+	(For Debian) Type: apt-get install git make gcc libmysqlclient-dev zlib1g-dev libpcre3-dev
 	* Type: mysql_secure_installation
 	* Start your MySQL server
-	* Setup a MySQL user: CREATE USER 'rathena'@'localhost' IDENTIFIED BY 'password';
-	* Assign permissions: GRANT SELECT,INSERT,UPDATE,DELETE ON `rathena\_rag`.* TO 'rathena'@'localhost';
-	* Type: svn checkout https://rathena.svn.sourceforge.net/svnroot/rathena/trunk/ ~/trunk
-	* Insert SQL files: mysql --user=root -p rathena_rag < trunk/sql-files/main.sql (and others)
+	* Setup a MySQL user: CREATE USER 'hercules'@'localhost' IDENTIFIED BY 'password';
+	* Assign permissions: GRANT SELECT,INSERT,UPDATE,DELETE ON `hercules\_rag`.* TO 'hercules'@'localhost';
+	* Type: git clone https://github.com/HerculesWS/Hercules.git ~/Hercules
+	* Insert SQL files: mysql --user=root -p hercules_rag < trunk/sql-files/main.sql (and others)
 	* Type: cd trunk && ./configure && make clean && make sql
 	* When you're ready, type: ./athena-start start
 
@@ -136,29 +135,25 @@ Examples:
 ============================
 || 5. Helpful Links       ||
 ============================
-The following list of links point to various help files within the SVN, articles or
-pages on the Wiki or topics within the rAthena forum.
+The following list of links point to various help files within the GIT, articles or
+pages on the Wiki or topics within the Hercules forum.
 
-* rAthena Forums
-	http://rathena.org/
+* Hercules Forums
+	http://hercules.ws/board/
 
-* SVN Repository URL:
-	https://rathena.svn.sourceforge.net/svnroot/rathena/trunk/
-
-* Full Installation Instructions:
-	Windows		http://rathena.org/wiki/Installation_on_Windows
-	CentOS		http://rathena.org/wiki/Installation_(CentOS)
-	Debian		http://rathena.org/wiki/Installation_(Debian)
+* GIT Repository URL:
+	https://github.com/HerculesWS/Hercules
 	
-* rAthena IRC Channel
-	irc://irc.rathena.net
+* Hercules IRC Channel
+	irc.rizon.net
+	Channel: #Hercules
 
 
 
 ============================
 || 6. More Documentation  ||
 ============================
-rAthena has a large collection of help files and sample NPC scripts located in /doc/
+Hercules has a large collection of help files and sample NPC scripts located in /doc/
 
 * Scripting
 	It is recommended to look through /doc/script_commands.txt for help, pointers or
@@ -170,7 +165,7 @@ rAthena has a large collection of help files and sample NPC scripts located in /
 	For an in-depth explanation, please see /doc/atcommands.txt
 
 * Permissions
-	The rAthena emulator has a permission system that enables certain groups of players
+	The Hercules emulator has a permission system that enables certain groups of players
 	to perform certain actions, or have access to certain visual enhancements or in-game
 	activity. To see what permissions are available, they are detailed in /doc/permissions.txt
 
