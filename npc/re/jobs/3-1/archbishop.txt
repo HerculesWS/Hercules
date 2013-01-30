@@ -1,12 +1,10 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Arch Bishop Job Quest
 //===== By: ==================================================
 //= L0ne_W0lf
 //= Credits: Gepard
 //===== Current Version: =====================================
 //= 1.7a
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official Conversion]
 //= Job change Quest from Priest / High Priest -> Arch Bishop.

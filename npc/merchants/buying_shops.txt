@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Buying Shop Scripts
 //===== By: ==================================================
 //= Kisuka, skyiing, Scriptor
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= Buying Shop licenses and catalogs.
 //===== Additional Comments: =================================
