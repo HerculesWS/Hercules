@@ -40,6 +40,7 @@ is broken down into Windows and Linux prerequisites.
 
 Windows
 	* TortoiseGIT (http://code.google.com/p/tortoisegit/)
+	* MSysGit (http://code.google.com/p/msysgit/downloads/list?can=2)
 	* MySQL (http://www.mysql.com/downloads/mysql/)
 	* MySQL Workbench (http://www.mysql.com/downloads/workbench/)
 	* MS Visual C++ (http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express)
