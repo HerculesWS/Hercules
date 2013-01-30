@@ -1,18 +1,14 @@
-﻿//===== rAthena Documentation ================================
-//= rAthena Script Commands
+﻿//===== Hercules Documentation ================================
+//= Hercules Script Commands
 //===== By: ==================================================
-//= rAthena Dev Team
-//===== Current Version: =====================================
-//= $Revision$
-//===== Last Updated: ========================================
-//= $LastChangedDate$
+//= Hercules Dev Team
 //===== Description: =========================================
-//= A reference manual for the rAthena scripting language.
+//= A reference manual for the Hercules scripting language.
 //= Commands are sorted depending on their functionality.
 //============================================================
 
 This document is a reference manual for all the scripting commands and functions 
-available in current rAthena SVN. It is not a simple tutorial. When people tell 
+available in current Hercules GIT. It is not a simple tutorial. When people tell 
 you to "Read The F***ing Manual", they mean this.
 
 The information was mostly acquired through looking up how things actually work 
@@ -75,7 +71,7 @@ Wherever you refer to a map name, it's always 'mapname' or 'mapname.gat'
 Script loading structure
 ------------------------
 
-Scripts are loaded by the map server as referenced in the 'conf/map_athena.conf' 
+Scripts are loaded by the map server as referenced in the 'conf/map-server.conf' 
 configuration file, but in the default configuration, it doesn't load any script 
 files itself. Instead, it loads the file 'npc/scripts_main.conf' which itself 
 contains references to other files. The actual scripts are loaded from txt 
@@ -83,7 +79,7 @@ files, which are linked up like this:
 
 npc: <path to a filename>
 
-Any line like this, invoked, ultimately, by 'map_athena.conf' will load up the 
+Any line like this, invoked, ultimately, by 'map-server.conf' will load up the 
 script contained in this file, which will make the script available. No file 
 will get loaded twice, to prevent possible errors.
 
@@ -101,7 +97,7 @@ place it.
 // This line will be ignored when processing the script.
 
 Block comments can also be used, where you can place /* and */ between any text you 
-wish rAthena to ignore.
+wish Hercules to ignore.
 
 Example:
 /* This text,
@@ -154,12 +150,12 @@ Monster name is the name the monsters will have on screen, and has no relation
 whatsoever to their names anywhere else. It's the mob id that counts, which 
 identifies monster record in 'mob_db.txt' database of monsters. If the mob name 
 is given as "--ja--", the 'japanese name' field from the monster database is 
-used, (which, in rAthena, actually contains an English name) if it's "--en--", 
+used, (which, in Hercules, actually contains an English name) if it's "--en--", 
 it's the 'english name' from the monster database (which contains an uppercase 
 name used to summon the monster with a GM command).
 
 Amount is the amount of monsters that will be spawned when this command is 
-executed, it is affected by spawn rates in 'battle_athena.conf'.
+executed, it is affected by spawn rates in 'battle.conf'.
 
 Delay1 and delay2 control monster respawn delays - the first one is the fixed
 base respawn time, and the second is random variance on top of the base time.
@@ -407,7 +403,7 @@ Variables
 The meat of every programming language is variables - places where you store 
 data.
 
-In the rAthena scripting language, variable names are not case sensitive.
+In the Hercules scripting language, variable names are not case sensitive.
 
 Variables are divided into and uniquely identified by the combination of:
 prefix  - determines the scope and extent (or lifetime) of the variable
@@ -584,7 +580,7 @@ To include symbol '"' in a string you should use prefix '\"'
 Arrays
 ------
 
-Arrays (in rAthena at least) are essentially a set of variables going under the 
+Arrays (in Hercules at least) are essentially a set of variables going under the 
 same name. You can tell between the specific variables of an array with an 
 'array index', a number of a variable in that array:
 
@@ -731,7 +727,7 @@ Logical bitwise operators work only on numbers, and they are the following:
  |  - Or.
 	The bitwise operator AND (&) is used to test two values against each other, 
 	and results in setting bits which are active in both arguments. This can
-	be used for a few things, but in rAthena this operator is usually used to
+	be used for a few things, but in Hercules this operator is usually used to
 	create bit-masks in scripts. 
 	
 	The bitwise operator OR (|)sets to 1 a binary position if the binary position
@@ -1429,7 +1425,7 @@ receive free Zeny as a result.
 
 Since trunk r12192 the command has two optional arguments and a return value.
 The default value of 'min' and 'max' can be set with 'input_min_value' and 
-'input_max_value' in script_athena.conf.
+'input_max_value' in script.conf.
 For numeric inputs the value is capped to the range [min,max]. Returns 1 if 
 the value was higher than 'max', -1 if lower than 'min' and 0 otherwise.
 For string inputs it returns 1 if the string was longer than 'max', -1 is 
@@ -1995,7 +1991,7 @@ Example:
 	for ( set .@i,0; .@i<.@bigloop; set .@i, .@i+1 ) {
 		dothis;
 		// will sleep the script for 1ms when detect an infinity loop to 
-		// let rAthena do what it need to do (socket, timer, process, etc.)
+		// let Hercules do what it need to do (socket, timer, process, etc.)
 	}
 
 	freeloop(0); // disable
@@ -2516,7 +2512,7 @@ See 'getequipid' for a full list of valid equipment slots.
 *getitemname(<item id>)
 
 Given the database ID number of an item, this function will return the text 
-stored in the 'japanese name' field (which, in rAthena, stores an English name 
+stored in the 'japanese name' field (which, in Hercules, stores an English name 
 the players would normally see on screen.)
 
 ---------------------------------------
@@ -2904,7 +2900,7 @@ http://www.delorie.com/gnu/docs/glibc/libc_437.html
 All the format characters given in there should properly work.
 Max length is the maximum length of a time string to generate.
 
-The example given in rAthena sample scripts works like this:
+The example given in Hercules sample scripts works like this:
 
   mes gettimestr("%Y-%m/%d %H:%M:%S",21);
   
@@ -3375,7 +3371,7 @@ Example 2:
 *basicskillcheck()
 
 This function will return the state of the configuration option 
-'basic_skill_check' in 'battle_athena.conf'. It returns 1 if the option is 
+'basic_skill_check' in 'battle.conf'. It returns 1 if the option is 
 enabled and 0 if it isn't. If the 'basic_skill_check' option is enabled, which 
 it is by default, characters must have a certain number of basic skill levels to 
 sit, request a trade, use emotions, etc. Making your script behave differently 
@@ -3924,7 +3920,7 @@ changing jobs, which can be checked for later in scripts.
 
 *jobname (<job number>)
 
-This command retrieves the name of the given job using the msg_athena entries 550->650.
+This command retrieves the name of the given job using the messages.conf entries 550->650.
 
 	mes "[Kid]";
 	mes "I never thought I'd met a "+jobname(Class)+" here of all places.";
@@ -4094,7 +4090,7 @@ sprites, which is essential for making custom headgear.
 
 Since a lot of people have different palettes for hair and clothes, it's 
 impossible to tell you what all the color numbers are. If you want a serious 
-example, there is a Stylist script inside the default rAthena installation that 
+example, there is a Stylist script inside the default Hercules installation that 
 you can look at: 'npc/custom/stylist.txt'
 
 ---------------------------------------
@@ -4121,7 +4117,7 @@ This command will return the SVN revision number that the server is
 currently running on.
 
     if ( get_revision() >= 15000 )
-        mes "Welcome rAthena!";
+        mes "Welcome Hercules!";
 
 ---------------------------------------
 \\
@@ -4830,7 +4826,7 @@ Used in reset NPC's (duh!)
 This command takes off all the skill points on the invoking character, so they 
 only have Basic Skill blanked out (lvl 0) left, and returns the points for them 
 to spend again. Nothing else will change but the skills. Quest skills will also 
-reset if 'quest_skill_reset' option is set to Yes in 'battle_athena.conf'. If 
+reset if 'quest_skill_reset' option is set to Yes in 'battle.conf'. If 
 the 'quest_skill_learn' option is set in there, the points in the quest skills 
 will also count towards the total.
 
@@ -5897,7 +5893,7 @@ hold information about the name id (item id) sold and the amount sold of it. Sam
 goes for the OnSellItem label, only the variables are named different 
 (@sold_nameid, @sold_quantity, @sold_refine, @sold_attribute, @sold_identify,
 @sold_card1, @sold_card2, @sold_card3, @sold_card4). An example on a shop comes
-with rAthena, and can be found in the doc/sample/npc_dynamic_shop.txt file.
+with Hercules, and can be found in the doc/sample/npc_dynamic_shop.txt file.
  
 This example shows how to use the labels and their set variables to create a dynamic shop.
 
@@ -6032,7 +6028,7 @@ characters are present in the room to mess up the script.
 
 The 'enablearena'/'disablearena' commands are just aliases with no parameter.
 These are supposedly left here for compatibility with official server scripts,
-but no rAthena script uses these at the moment.
+but no Hercules script uses these at the moment.
 
 ---------------------------------------
 
@@ -6350,7 +6346,7 @@ will not be displayed anywhere else.
 *logmes "<message>";
 
 This command will write the message given to the map server NPC log file, as 
-specified in 'conf/log_athena.conf'. In the TXT version of the server, the log 
+specified in 'conf/logs.conf'. In the TXT version of the server, the log 
 file is 'log/npclog.log' by default. In the SQL version, if SQL logging is 
 enabled, the message will go to the 'npclog' table, otherwise, it will go to the 
 same log file.
@@ -6937,7 +6933,7 @@ uppercase/lowercase. Otherwise, 0. Characters not of the alphabelt will return 0
 
 Example:
 	
-	charisupper("rAthena", 1); //returns 1
+	charisupper("Hercules", 1); //returns 1
 	
 ---------------------------------------
 
@@ -7154,7 +7150,7 @@ at the maximum possible.
 
 The behavior modified with the above mentioned commands will only be exhibited if 
 the pet is loyal and appropriate configuration options are set in 
-'battle_athena.conf'.
+'battle.conf'.
 
 Pet scripts in the database normally run whenever a pet of that type hatches 
 from the egg. Other commands usable in item scripts (see 'bonus') will also 
