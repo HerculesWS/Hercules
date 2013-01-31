@@ -203,7 +203,7 @@ int clif_setip(const char* ip)
 		return 0;
 	}
 
-	strncpy(map_ip_str, ip, sizeof(map_ip_str));
+	safestrncpy(map_ip_str, ip, sizeof(map_ip_str));
 	ShowInfo("Map Server IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, ip2str(map_ip, ip_str));
 	return 1;
 }
