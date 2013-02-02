@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Abyss Lake Dungeon Warp Script
 //===== By: ==================================================
 //= Muad-Dib (1.0)
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Any Athena Version; RO Episode 10+
 //===== Description: =========================================
 //= Warp Points for Abyss Lake Dungeon
 //===== Additional Comments: =================================

@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Arena Warps
 //===== By: ==================================================
 //= SinSloth
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Description: =========================================
 //= Warp Points related to Izlude Arena && Control Panel
 //===== Additional Comments: =================================
