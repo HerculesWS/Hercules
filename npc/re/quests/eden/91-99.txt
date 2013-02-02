@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Eden Group Quests - Mission [91 - 99]
 //===== By: ==================================================
 //= Chilly
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= Repetable Quests for Players between Baselevel 91 - 99.
 //===== Additional Comments: =================================

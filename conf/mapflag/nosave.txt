@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Mapflag: Disable auto-save.
 //===== By: ==================================================
-//= rAthena Dev Team
+//= Hercules Dev Team
 //===== Current Version: =====================================
 //= 1.7
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: ========================================= 
 //= Characters logging out on the specified map will be warped
 //= to the map specified in the last field, or "SavePoint".

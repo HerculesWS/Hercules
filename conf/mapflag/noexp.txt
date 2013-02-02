@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Mapflag: Disable EXP gain.
 //===== By: ==================================================
-//= rAthena Dev Team
+//= Hercules Dev Team
 //===== Current Version: =====================================
 //= 1.7
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: ========================================= 
 //= Same as 'nobaseexp' and 'nojobexp' combined.
 //===== Additional Comments: ================================= 

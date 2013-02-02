@@ -1,12 +1,10 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= 2008 Headgear
 //===== By: ==================================================
 //= Masao
 //= Credits: Muad_Dib
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= SVN rA
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Cats Footprint, Cute Ribbon Dyer and Brides Corolla.

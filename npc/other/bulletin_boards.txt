@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Official scripts for beginners from iRO
 //===== By: ==================================================
 //= MasterOfMuppets
 //===== Current Version: =====================================
 //= 1.8
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Additional Comments: =================================
 //= 1.0 Added Alberta, Prontera, Izlude, Payon, Byalan Island,
 //= 	Archer Village, Payon Cave and Coal Mine

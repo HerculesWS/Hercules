@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= War of Emperium SE - Template File
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= Like agit_main, this file is required
 //= for SE castles to function.

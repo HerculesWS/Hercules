@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Ayothaya Fields Monster Spawn Script
 //===== By: ==================================================
 //= Athena (1.0)
 //===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Additional Comments: =================================
 //= 1.1 Using EuRO data [Ishizu]
 //= 1.2 According the guide book, added a Choco [Lupus&VP]
