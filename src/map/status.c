@@ -2443,6 +2443,20 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 		if(!sd->inventory_data[index])
 			continue;
 
+		if(sd->inventory_data[index]->flag.no_equip) { // Items may be equipped, their effects however are nullified.
+			if(map[sd->bl.m].flag.restricted && sd->inventory_data[index]->flag.no_equip&(8*map[sd->bl.m].zone))
+				continue;
+			if(!map_flag_vs(sd->bl.m) && sd->inventory_data[index]->flag.no_equip&1)
+				continue;
+			if(map[sd->bl.m].flag.pvp && sd->inventory_data[index]->flag.no_equip&2)
+				continue;
+			if(map_flag_gvg(sd->bl.m) && sd->inventory_data[index]->flag.no_equip&4)
+				continue;
+			if(map[sd->bl.m].flag.battleground && sd->inventory_data[index]->flag.no_equip&8)
+				continue;
+		}
+
+		
 		status->def += sd->inventory_data[index]->def;
 
 		if(first && sd->inventory_data[index]->equip_script)

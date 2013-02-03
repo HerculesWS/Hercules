@@ -861,20 +861,6 @@ int pc_isequip(struct map_session_data *sd,int n)
 #endif
 	if(item->sex != 2 && sd->status.sex != item->sex)
 		return 0;
-	if(!map_flag_vs(sd->bl.m) && ((item->flag.no_equip&1)))
-		return 0;
-	if(map[sd->bl.m].flag.pvp && ((item->flag.no_equip&2)))
-		return 0;
-	if(map_flag_gvg(sd->bl.m) && ((item->flag.no_equip&4)))
-		return 0;
-	if(map[sd->bl.m].flag.battleground && ((item->flag.no_equip&8)))
-		return 0;
-	if(map[sd->bl.m].flag.restricted)
-	{
-		int flag =8*map[sd->bl.m].zone;
-		if (item->flag.no_equip&flag)
-			return 0;
-	}
 
 	if (sd->sc.count) {
 
@@ -4134,16 +4120,6 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 	else if( itemdb_is_poison(nameid) && (sd->class_&MAPID_THIRDMASK) != MAPID_GUILLOTINE_CROSS )
 		return 0;
 
-	//added item_noequip.txt items check by Maya&[Lupus]
-	if (
-		(!map_flag_vs(sd->bl.m) && item->flag.no_equip&1) || // Normal
-		(map[sd->bl.m].flag.pvp && item->flag.no_equip&2) || // PVP
-		(map_flag_gvg(sd->bl.m) && item->flag.no_equip&4) || // GVG
-		(map[sd->bl.m].flag.battleground && item->flag.no_equip&8) || // Battleground
-		(map[sd->bl.m].flag.restricted && item->flag.no_equip&(8*map[sd->bl.m].zone)) // Zone restriction
-	)
-		return 0;
-
 	//Gender check
 	if(item->sex != 2 && sd->status.sex != item->sex)
 		return 0;
@@ -4222,7 +4198,7 @@ int pc_useitem(struct map_session_data *sd,int n)
 		(itemdb_iscashfood(nameid) && DIFF_TICK(sd->canusecashfood_tick, tick) > 0)
 	)
 		return 0;
-
+	
 	/* Items with delayed consume are not meant to work while in mounts except reins of mount(12622) */
 	if( sd->inventory_data[n]->flag.delay_consume ) {
 		if( nameid != ITEMID_REINS_OF_MOUNT && sd->sc.option&OPTION_MOUNTING )
@@ -4273,6 +4249,21 @@ int pc_useitem(struct map_session_data *sd,int n)
 		}
 	}
 
+	/* on restricted maps the item is consumed but the effect is not used */
+	if (
+		(!map_flag_vs(sd->bl.m) && sd->inventory_data[n]->flag.no_equip&1) || // Normal
+		(map[sd->bl.m].flag.pvp && sd->inventory_data[n]->flag.no_equip&2) || // PVP
+		(map_flag_gvg(sd->bl.m) && sd->inventory_data[n]->flag.no_equip&4) || // GVG
+		(map[sd->bl.m].flag.battleground && sd->inventory_data[n]->flag.no_equip&8) || // Battleground
+		(map[sd->bl.m].flag.restricted && sd->inventory_data[n]->flag.no_equip&(8*map[sd->bl.m].zone)) // Zone restriction
+		) {
+		if( battle_config.item_restricted_consumption_type ) {
+			clif_useitemack(sd,n,sd->status.inventory[n].amount-1,true);
+			pc_delitem(sd,n,1,1,0,LOG_TYPE_CONSUME);
+		}
+		return 0;/* regardless, effect is not run */
+	}
+	
 	sd->itemid = sd->status.inventory[n].nameid;
 	sd->itemindex = n;
 	if(sd->catch_target_class != -1) //Abort pet catching.
@@ -8612,7 +8603,6 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 int pc_checkitem(struct map_session_data *sd)
 {
 	int i,id,calc_flag = 0;
-	struct item_data *it=NULL;
 
 	nullpo_ret(sd);
 
@@ -8640,7 +8630,6 @@ int pc_checkitem(struct map_session_data *sd)
 	}
 
 	for( i = 0; i < MAX_INVENTORY; i++) {
-		it = sd->inventory_data[i];
 
 		if( sd->status.inventory[i].nameid == 0 )
 			continue;
@@ -8654,18 +8643,6 @@ int pc_checkitem(struct map_session_data *sd)
 			continue;
 		}
 
-		if( it ) { // check for forbiden items.
-			int flag =
-					(map[sd->bl.m].flag.restricted?(8*map[sd->bl.m].zone):0)
-					| (!map_flag_vs(sd->bl.m)?1:0)
-					| (map[sd->bl.m].flag.pvp?2:0)
-					| (map_flag_gvg(sd->bl.m)?4:0)
-					| (map[sd->bl.m].flag.battleground?8:0);
-			if( flag && (it->flag.no_equip&flag) ) {
-				pc_unequipitem(sd, i, 2);
-				calc_flag = 1;
-			}
-		}
 	}
 
 	if( calc_flag && sd->state.active ) {
