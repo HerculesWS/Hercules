@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= War of Emperium - nguild guardians script
 //===== By: ==================================================
 //= kobra_k88
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena 0.1+; RO Episode 4+
 //===== Description: =========================================
 //= Re-spawns guardians on server start if they have been
 //= purchased.  Also announces when a guardian dies.

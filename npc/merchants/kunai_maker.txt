@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Kunai Merchant Kashin
 //===== By: ==================================================
-//= rAthena dev team
+//= rAthena Dev Team
 //===== Current Version: =====================================
 //= 1.3a
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= Trades a few shurikens + ninja stones for elemental kunai.
 //===== Additional Comments: =================================

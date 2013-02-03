@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Valkyrie's Gift NPCs
 //===== By: ================================================== 
 //= L0ne_W0lf
 //===== Current Version: ===================================== 
 //= 1.0
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Post-God Item SE Creation Summoning Event 

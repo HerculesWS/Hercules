@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Falicious Okolnir (Valfreja & Nidhoggr)
 //===== By: ================================================== 
 //= Joseph
 //===== Current Version: ===================================== 
 //= 1.0
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= God Item SE Creation script (Asprika & Brynhild)

@@ -1,4 +1,4 @@
-//===== Hercules Script =======================================
+//===== Hercules Script ======================================
 //= Official scripts for beginners from iRO
 //===== By: ==================================================
 //= MasterOfMuppets

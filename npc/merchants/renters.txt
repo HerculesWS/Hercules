@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Renters
 //===== By: ================================================== 
 //= kobra_k88, mod by Lupus
 //===== Current Version: ===================================== 
 //= 2.2
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= Knight and Crusader Peco Peco Breeders, Falcon Breeder scripts
 //===== Additional Comments: ================================= 

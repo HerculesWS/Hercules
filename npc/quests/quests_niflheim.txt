@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Quest NPCs related to Niflheim
 //===== By: ================================================== 
 //= The rAthena Dev Team
 //===== Current Version: ===================================== 
 //= 1.5
-//===== Compatible With: ===================================== 
-//= rAthena 7.15 +
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Piano Key Ouest

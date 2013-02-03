@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Nidhoggr's Nest
 //===== By: ================================================== 
 //= L0ne_W0lf, various sources
 //===== Current Version: ===================================== 
 //= 1.4
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Nidhoggr's Nest Instance

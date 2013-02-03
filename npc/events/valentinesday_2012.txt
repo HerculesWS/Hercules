@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Valentine's Day Event (2012)
 //===== By: ==================================================
 //= Rikimaru
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= The full Valentine's Day NPCs of the Valentine's Day
 //= Event 2012 (account-based).

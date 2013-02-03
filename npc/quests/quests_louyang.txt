@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Quest NPCs related to Louyang
 //===== By: ================================================== 
 //= Evera and The rAthena Dev Team
 //===== Current Version: ===================================== 
 //= 2.2
-//===== Compatible With: ===================================== 
-//= rAthena 1.0
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Soup Quest

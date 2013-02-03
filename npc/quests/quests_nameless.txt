@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Nameless Island Quests
 //===== By: ================================================== 
 //= L0ne_W0lf
 //===== Current Version: ===================================== 
 //= 2.2a
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Collection of Nameless Island Quests

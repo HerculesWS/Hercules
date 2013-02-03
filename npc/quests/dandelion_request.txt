@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Dandelion's Request / Morocc Invasion quest
 //===== By: ================================================== 
 //= SinSloth
 //===== Current Version: ===================================== 
 //= 1.2
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= A Morroc quest that is no longer used.
 //===== Additional Comments: ================================= 
