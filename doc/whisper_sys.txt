@@ -1,11 +1,11 @@
-//===== rAthena Documentation ================================
+//===== Hercules Documentation ================================
 //= NPC Whisper System
 //===== By: ==================================================
 //= lordalfa
 //===== Current Version: =====================================
 //= 20120904
 //===== Description: =========================================
-//= A description of rAthena's NPC whispering system.
+//= A description of Hercules' NPC whispering system.
 //============================================================
 
 This piece of code to allows characters to execute events in NPCs by whispering 

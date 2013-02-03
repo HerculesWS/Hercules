@@ -1,12 +1,10 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================= 
 //= Headgear Dyer (Cash)
 //===== By: ==================================================
 //= Xantara
 //= Maud_Dib
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Change headgear's color. Cost is a Mysterious Dyestuff

@@ -808,13 +808,12 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 				 * in RE, SW possesses a lifetime equal to 3 times the caster's health
 				 **/
 			#ifdef RENEWAL
+				d->dmg_lv = ATK_BLOCK;
 				if ( ( group->val2 - damage) > 0 ) {
 					group->val2 -= damage;
-					d->dmg_lv = ATK_BLOCK;
-					return 0;
 				} else
-					damage -= group->val2;
-				skill_delunitgroup(group);
+					skill_delunitgroup(group);
+				return 0;
 			#else
 				if (--group->val2<=0)
 					skill_delunitgroup(group);

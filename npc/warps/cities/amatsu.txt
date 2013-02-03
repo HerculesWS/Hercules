@@ -1,12 +1,10 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Amatsu Warps Script
 //===== By: ==================================================
 //= Athena (1.0)
 //= Nana (1.1)
 //===== Current Version: =====================================
 //= 1.7
-//===== Compatible With: =====================================
-//= Any Athena Version; RO Episode 6+
 //===== Description: =========================================
 //= [Aegis COnversion]
 //= Warp Points for Amatsu

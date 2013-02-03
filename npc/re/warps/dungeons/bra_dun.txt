@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Brasilis Dungeon Warp
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Brasilis Dungeon warp script

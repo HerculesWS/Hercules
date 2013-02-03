@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Mapflag: Disable Dead Branch use.
 //===== By: ==================================================
-//= rAthena Dev Team
+//= HerculesDev Team
 //===== Current Version: =====================================
 //= 1.8
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: ========================================= 
 //= Disables the following items:
 //=   Dead Branch (604), Bloody Branch (12103),

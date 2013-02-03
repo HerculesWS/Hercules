@@ -1,4 +1,4 @@
-//===== rAthena Script =======================================
+//===== HerculesScript =======================================
 //= Blacksmith Job Quest
 //===== By: ==================================================
 //= EREMES THE CANIVALIZER(Aegis)
@@ -8,8 +8,6 @@
 //= Further bugfixed and tested by Lupus
 //===== Current Version: =====================================
 //= 2.8
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official Conversion]
 //= Job Change quest for Blacksmith class.
