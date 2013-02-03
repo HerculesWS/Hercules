@@ -325,7 +325,8 @@ int unit_walktoxy( struct block_list *bl, short x, short y, int flag)
 	if( ud == NULL) return 0;
 
 #ifdef OFFICIAL_WALKPATH
-	if( path_search(&wpd, bl->m, bl->x, bl->y, x, y, flag&1, CELL_CHKNOPASS) // Check if there is an obstacle between
+	path_search(&wpd, bl->m, bl->x, bl->y, x, y, flag&1, CELL_CHKNOPASS); // Count walk path cells
+	if( !path_search_long(NULL, bl->m, bl->x, bl->y, x, y, CELL_CHKNOPASS) // Check if there is an obstacle between
 		&& wpd.path_len > 14 ) // Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett]
 		return 0;
 #endif
