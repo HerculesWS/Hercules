@@ -700,24 +700,24 @@ int pc_setequipindex(struct map_session_data *sd)
 
 	return 0;
 }
+//static int pc_isAllowedCardOn(struct map_session_data *sd,int s,int eqindex,int flag)
+//{
+//	int i;
+//	struct item *item = &sd->status.inventory[eqindex];
+//	struct item_data *data;
+//
+//	//Crafted/made/hatched items.
+//	if (itemdb_isspecial(item->card[0]))
+//		return 1;
+//
+//	/* scan for enchant armor gems */
+//	if( item->card[MAX_SLOTS - 1] && s < MAX_SLOTS - 1 )
+//		s = MAX_SLOTS - 1;
+//
+//	ARR_FIND( 0, s, i, item->card[i] && (data = itemdb_exists(item->card[i])) != NULL && data->flag.no_equip&flag );
+//	return( i < s ) ? 0 : 1;
+//}
 
-static int pc_isAllowedCardOn(struct map_session_data *sd,int s,int eqindex,int flag)
-{
-	int i;
-	struct item *item = &sd->status.inventory[eqindex];
-	struct item_data *data;
-
-	//Crafted/made/hatched items.
-	if (itemdb_isspecial(item->card[0]))
-		return 1;
-
-	/* scan for enchant armor gems */
-	if( item->card[MAX_SLOTS - 1] && s < MAX_SLOTS - 1 )
-		s = MAX_SLOTS - 1;
-
-	ARR_FIND( 0, s, i, item->card[i] && (data = itemdb_exists(item->card[i])) != NULL && data->flag.no_equip&flag );
-	return( i < s ) ? 0 : 1;
-}
 
 bool pc_isequipped(struct map_session_data *sd, int nameid)
 {
@@ -860,18 +860,18 @@ int pc_isequip(struct map_session_data *sd,int n)
 #endif
 	if(item->sex != 2 && sd->status.sex != item->sex)
 		return 0;
-	if(!map_flag_vs(sd->bl.m) && ((item->flag.no_equip&1) || !pc_isAllowedCardOn(sd,item->slot,n,1)))
+	if(!map_flag_vs(sd->bl.m) && ((item->flag.no_equip&1)))
 		return 0;
-	if(map[sd->bl.m].flag.pvp && ((item->flag.no_equip&2) || !pc_isAllowedCardOn(sd,item->slot,n,2)))
+	if(map[sd->bl.m].flag.pvp && ((item->flag.no_equip&2)))
 		return 0;
-	if(map_flag_gvg(sd->bl.m) && ((item->flag.no_equip&4) || !pc_isAllowedCardOn(sd,item->slot,n,4)))
+	if(map_flag_gvg(sd->bl.m) && ((item->flag.no_equip&4)))
 		return 0;
-	if(map[sd->bl.m].flag.battleground && ((item->flag.no_equip&8) || !pc_isAllowedCardOn(sd,item->slot,n,8)))
+	if(map[sd->bl.m].flag.battleground && ((item->flag.no_equip&8)))
 		return 0;
 	if(map[sd->bl.m].flag.restricted)
 	{
 		int flag =8*map[sd->bl.m].zone;
-		if (item->flag.no_equip&flag || !pc_isAllowedCardOn(sd,item->slot,n,flag))
+		if (item->flag.no_equip&flag)
 			return 0;
 	}
 
@@ -8618,33 +8618,27 @@ int pc_checkitem(struct map_session_data *sd)
 	if( sd->state.vending ) //Avoid reorganizing items when we are vending, as that leads to exploits (pointed out by End of Exam)
 		return 0;
 
-	if( battle_config.item_check )
-	{// check for invalid(ated) items
-		for( i = 0; i < MAX_INVENTORY; i++ )
-		{
+	if( battle_config.item_check ) { // check for invalid(ated) items
+		for( i = 0; i < MAX_INVENTORY; i++ ) {
 			id = sd->status.inventory[i].nameid;
 
-			if( id && !itemdb_available(id) )
-			{
+			if( id && !itemdb_available(id) ) {
 				ShowWarning("Removed invalid/disabled item id %d from inventory (amount=%d, char_id=%d).\n", id, sd->status.inventory[i].amount, sd->status.char_id);
 				pc_delitem(sd, i, sd->status.inventory[i].amount, 0, 0, LOG_TYPE_OTHER);
 			}
 		}
 
-		for( i = 0; i < MAX_CART; i++ )
-		{
+		for( i = 0; i < MAX_CART; i++ ) {
 			id = sd->status.cart[i].nameid;
 
-			if( id && !itemdb_available(id) )
-			{
+			if( id && !itemdb_available(id) ) {
 				ShowWarning("Removed invalid/disabled item id %d from cart (amount=%d, char_id=%d).\n", id, sd->status.cart[i].amount, sd->status.char_id);
 				pc_cart_delitem(sd, i, sd->status.cart[i].amount, 0, LOG_TYPE_OTHER);
 			}
 		}
 	}
 
-	for( i = 0; i < MAX_INVENTORY; i++)
-	{
+	for( i = 0; i < MAX_INVENTORY; i++) {
 		it = sd->inventory_data[i];
 
 		if( sd->status.inventory[i].nameid == 0 )
@@ -8653,31 +8647,27 @@ int pc_checkitem(struct map_session_data *sd)
 		if( !sd->status.inventory[i].equip )
 			continue;
 
-		if( sd->status.inventory[i].equip&~pc_equippoint(sd,i) )
-		{
+		if( sd->status.inventory[i].equip&~pc_equippoint(sd,i) ) {
 			pc_unequipitem(sd, i, 2);
 			calc_flag = 1;
 			continue;
 		}
 
-		if( it )
-		{ // check for forbiden items.
+		if( it ) { // check for forbiden items.
 			int flag =
 					(map[sd->bl.m].flag.restricted?(8*map[sd->bl.m].zone):0)
 					| (!map_flag_vs(sd->bl.m)?1:0)
 					| (map[sd->bl.m].flag.pvp?2:0)
 					| (map_flag_gvg(sd->bl.m)?4:0)
 					| (map[sd->bl.m].flag.battleground?8:0);
-			if( flag && (it->flag.no_equip&flag || !pc_isAllowedCardOn(sd,it->slot,i,flag)) )
-			{
+			if( flag && (it->flag.no_equip&flag) ) {
 				pc_unequipitem(sd, i, 2);
 				calc_flag = 1;
 			}
 		}
 	}
 
-	if( calc_flag && sd->state.active )
-	{
+	if( calc_flag && sd->state.active ) {
 		pc_checkallowskill(sd);
 		status_calc_pc(sd,0);
 	}
