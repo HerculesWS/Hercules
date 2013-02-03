@@ -1585,7 +1585,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 
 	if( sc && sc->count ) {
 
-		if (skill_id != RK_REFRESH && sc->opt1 >0 && (sc->opt1 != OPT1_CRYSTALIZE && src->type != BL_MOB) && sc->opt1 != OPT1_BURNING && skill_id != SR_GENTLETOUCH_CURE) { //Stuned/Frozen/etc
+		if (skill_id != RK_REFRESH && sc->opt1 >0 && !(sc->opt1 == OPT1_CRYSTALIZE && src->type == BL_MOB) && sc->opt1 != OPT1_BURNING && skill_id != SR_GENTLETOUCH_CURE) { //Stuned/Frozen/etc
 			if (flag != 1) //Can't cast, casted stuff can't damage.
 				return 0;
 			if (!(skill_get_inf(skill_id)&INF_GROUND_SKILL))
@@ -1678,22 +1678,22 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 		}
 	}
 
-	if (sc && sc->option)
-	{
-		if (sc->option&OPTION_HIDE)
-		switch (skill_id) { //Usable skills while hiding.
-			case TF_HIDING:
-			case AS_GRIMTOOTH:
-			case RG_BACKSTAP:
-			case RG_RAID:
-			case NJ_SHADOWJUMP:
-			case NJ_KIRIKAGE:
-			case KO_YAMIKUMO:
-				break;
-			default:
-				//Non players can use all skills while hidden.
-				if (!skill_id || src->type == BL_PC)
-					return 0;
+	if (sc && sc->option) {
+		if (sc->option&OPTION_HIDE) {
+			switch (skill_id) { //Usable skills while hiding.
+				case TF_HIDING:
+				case AS_GRIMTOOTH:
+				case RG_BACKSTAP:
+				case RG_RAID:
+				case NJ_SHADOWJUMP:
+				case NJ_KIRIKAGE:
+				case KO_YAMIKUMO:
+					break;
+				default:
+					//Non players can use all skills while hidden.
+					if (!skill_id || src->type == BL_PC)
+						return 0;
+			}
 		}
 		if (sc->option&OPTION_CHASEWALK && skill_id != ST_CHASEWALK)
 			return 0;
