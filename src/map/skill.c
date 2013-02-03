@@ -2252,6 +2252,7 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 			rmdamage = 1;
 			bl = src;
 			src = tbl;
+			dsrc = tbl;
 			sd = BL_CAST(BL_PC, src);
 			tsd = BL_CAST(BL_PC, bl);
 			sc = status_get_sc(bl);
