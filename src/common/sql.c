@@ -19,7 +19,7 @@
 void hercules_mysql_error_handler(unsigned int ecode);
 
 int mysql_reconnect_type;
-int mysql_reconnect_count;
+unsigned int mysql_reconnect_count;
 
 /// Sql handle
 struct Sql
