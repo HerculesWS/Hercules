@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Mapflag: Disable return warp.
 //===== By: ==================================================
-//= rAthena Dev Team
+//= Hercules Dev Team
 //===== Current Version: =====================================
 //= 1.6
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: ========================================= 
 //= Disables the following items:
 //=   Butterfly Wing (602), Siege Teleport Scroll (14591),

@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Amatsu Dungeon Script
 //===== By: ==================================================
 //= Nana (1.0)
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Any Athena Version; RO Episode 6+
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Warp Points for Amatsu Dungeon

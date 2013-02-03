@@ -1,7 +1,7 @@
-//===== rAthena Documentation ================================
-//= rAthena Item Bonuses List
+//===== Hercules Documentation ================================
+//= Hercules Item Bonuses List
 //===== By: ==================================================
-//= rAthena Dev Team
+//= Hercules Dev Team
 //===== Current Version: =====================================
 //= 20121219
 //===== Description: =========================================

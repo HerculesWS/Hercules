@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================= 
 //= Assassin Job Quest
 //===== By: ================================================== 
 //= kobra_k88
 //===== Current Version: ===================================== 
 //= 3.5
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Job Change quest for Assassin class.

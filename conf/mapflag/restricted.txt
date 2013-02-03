@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Mapflag: Restricted.
 //===== By: ==================================================
 //= Komurka
 //===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: ========================================= 
 //= Disables items configured in item_noequip.txt
 //= and skills configured in skill_nocast_db.txt.
