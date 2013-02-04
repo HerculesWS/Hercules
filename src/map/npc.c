@@ -2911,11 +2911,13 @@ int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const c
 	for( i = 0; i < ( strlen( message ) + 1 ) && k < 127; i ++ ) {
 		if( message[i] == ' ' || message[i] == '\0' ) {
 			if( message[ ( i - 1 ) ] == ' ' ) {
-				continue; // To prevent "@atcmd [space][space][space]..."
+				continue; // To prevent "@atcmd [space][space]" and .@atcmd_numparameters return 1 without any parameter.
 			}
 			temp[k] = '\0';
 			k = 0;
-			setd_sub( st, NULL, ".@atcmd_parameters$", j++, (void *)temp, NULL );
+			if( temp[0] != '\0' ) {
+				setd_sub( st, NULL, ".@atcmd_parameters$", j++, (void *)temp, NULL );
+			}
 		} else {
 			temp[k] = message[i];
 			k++;
