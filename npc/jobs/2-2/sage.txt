@@ -1,4 +1,4 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Sage Job Quest
 //===== By: ==================================================
 //= jAthena (0.9) - I guess
@@ -6,8 +6,6 @@
 //= Darkchild (1.2)
 //===== Current Version: ===================================== 
 //= 2.8
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Job quest for Sage classes

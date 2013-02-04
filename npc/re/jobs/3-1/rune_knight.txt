@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Rune Knight Job Quest
 //===== By: ==================================================
 //= L0ne_W0lf, Muad_Dib
 //===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= Job change Quest from Knight / Lord Knight -> Rune Knight.
 //===== Additional Comments: =================================

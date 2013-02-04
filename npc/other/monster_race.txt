@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Hugel Monster Races
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.8
-//===== Compatible With: =====================================
-//= rAthena SVN (Trunk, r12752+)
 //===== Description: =========================================
 //= [Official Conversion]
 //= - Hugel Monster Races (Single and Double)

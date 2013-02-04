@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Umbala Town script
 //===== By: ==================================================
 //= jAthena (1.0) Fusion Dev Team (1.1) Muad Dib (1.2) Darkchild (1.3)
 //===== Current Version: =====================================
 //= 2.1
-//===== Compatible With: =====================================
-//= rAthena SVN; RO Episode XX
 //===== Description: =========================================
 //- [Aegis Conversion]
 //= Umbala Town Npcs

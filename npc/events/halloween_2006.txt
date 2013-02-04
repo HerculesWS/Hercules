@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= 2006 Halloween Event
 //===== By: ==================================================
 //= Brainstorm
 //===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Event 1: Redeem "Pumpkin Mojo" for pumpkin headgear.

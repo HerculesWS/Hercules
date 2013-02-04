@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Feast Day Of Ramadan Idul Fitri Event
 //===== By: ================================================== 
 //= $ephiroth
 //===== Current Version: ===================================== 
 //= 1.1
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= Info : Official idRO
 //= 2006/10/16: 1.0 Release and fully working. [$ephiroth]

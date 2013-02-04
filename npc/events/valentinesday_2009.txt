@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= iRO Valentine's Day Event (2009)
 //===== By: ==================================================
 //= Kisuka
 //===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= iRO Valentine's Day Event. (2009)
 //= Make Chocolate/Chocolate Boxes/Home-Made Chocolate.

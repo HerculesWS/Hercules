@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Renewal Refining NPCs
 //===== By: ==================================================
 //= rAthena Dev Team
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= Renewal-specific refining NPCs and material merchants.
 //===== Additional Comments: =================================

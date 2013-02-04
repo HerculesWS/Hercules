@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Quest NPCs related to Amatsu
 //===== By: ================================================== 
 //= rAthena team & others? & MasterOfMuppets
 //===== Current Version: ===================================== 
 //= 1.4a
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Momotaro Event

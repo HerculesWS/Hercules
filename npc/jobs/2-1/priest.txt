@@ -1,4 +1,4 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Priest Job Quest
 //===== By: ================================================== 
 //= Translated By: Pgro Team (OwNaGe)(Aegis)
@@ -6,8 +6,6 @@
 //= Further bugfixed and tested by Lupus
 //===== Current Version: ===================================== 
 //= 2.6
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Job Change quest for Priest class.

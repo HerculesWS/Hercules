@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Official Gonryun Power Arena
 //===== By: ==================================================
 //= KarLaeda
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Athena SVN 9000+
 //===== Additional Comments: =================================
 //= [Aegis Conversion]
 //= 1.1 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]

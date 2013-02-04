@@ -1,12 +1,10 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Rachel City NPCs
 //===== By: ==================================================
 //= First Version: Tsuyuki and Harp
 //= iRO Version: L0ne_W0lf
 //===== Current Version: =====================================
 //= 0.9
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Partial Aegis Conversion]
 //= Arunafeltz NPCs

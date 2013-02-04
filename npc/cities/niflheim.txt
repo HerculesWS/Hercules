@@ -1,13 +1,10 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Niflheim Script 
 //===== By: ================================================== 
 //= Fyrien, Dizzy, PKGINGO
 //= Official NPCs translated and re-edited by Celest
 //===== Current Version: ===================================== 
 //= 1.5
-//===== Compatible With: ===================================== 
-//= [Aegis Conversion]
-//= rAthena SVN; Niflheim Required
 //===== Description: ========================================= 
 //= Official NPC's for Niflheim
 //= 1.01 Splitted file(guides, shops). Fixed rand() bugs,
