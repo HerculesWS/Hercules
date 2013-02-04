@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules dev team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena dev team
 
 #include "../common/mmo.h"
 #include "../common/malloc.h"
@@ -184,7 +185,7 @@ int mapif_create_pet(int fd, int account_id, int char_id, short pet_class, short
 	short pet_equip, short intimate, short hungry, char rename_flag, char incuvate, char *pet_name)
 {
 	memset(pet_pt, 0, sizeof(struct s_pet));
-	strncpy(pet_pt->name, pet_name, NAME_LENGTH);
+	safestrncpy(pet_pt->name, pet_name, NAME_LENGTH);
 	if(incuvate == 1)
 		pet_pt->account_id = pet_pt->char_id = 0;
 	else {

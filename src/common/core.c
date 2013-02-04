@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules dev team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena dev team
 
 #include "../common/mmo.h"
 #include "../common/showmsg.h"
@@ -11,6 +12,7 @@
 #include "../common/timer.h"
 #include "../common/thread.h"
 #include "../common/mempool.h"
+#include "../common/sql.h"
 #endif
 
 #include <stdio.h>
@@ -319,6 +321,7 @@ int main (int argc, char **argv)
 	display_title();
 	usercheck();
 
+	Sql_Init();
 	rathread_init();
 	mempool_init();
 	db_init();

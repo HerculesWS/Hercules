@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules dev team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena dev team
 
 #include "../common/mmo.h"
 #include "../common/showmsg.h"
@@ -37,7 +38,7 @@ const char* mapindex_getmapname(const char* string, char* output)
 		len -= 4; // strip .gat extension
 	
 	len = min(len, MAP_NAME_LENGTH-1);
-	strncpy(dest, string, len+1);
+	safestrncpy(dest, string, len+1);
 	memset(&dest[len], '\0', MAP_NAME_LENGTH-len);
 	
 	return dest;
@@ -61,7 +62,7 @@ const char* mapindex_getmapname_ext(const char* string, char* output)
 		ShowWarning("(mapindex_normalize_name) Map name '%*s' is too long!\n", 2*MAP_NAME_LENGTH, buf);
 		len--;
 	}
-	strncpy(dest, buf, len+1);
+	safestrncpy(dest, buf, len+1);
 
 	if (len < 4 || stricmp(&dest[len-4], ".gat") != 0) {
 		strcpy(&dest[len], ".gat");

@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules dev team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena dev team
 
 #ifndef _COMMON_SQL_H_
 #define _COMMON_SQL_H_
@@ -339,6 +340,7 @@ void SqlStmt_ShowDebug_(SqlStmt* self, const char* debug_file, const unsigned lo
 /// Frees a SqlStmt returned by SqlStmt_Malloc.
 void SqlStmt_Free(SqlStmt* self);
 
+void Sql_Init(void);
 
 
 #endif /* _COMMON_SQL_H_ */

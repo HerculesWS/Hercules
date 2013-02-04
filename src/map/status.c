@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules dev team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena dev team
 
 #include "../common/cbasetypes.h"
 #include "../common/timer.h"
@@ -1584,7 +1585,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 
 	if( sc && sc->count ) {
 
-		if (skill_id != RK_REFRESH && sc->opt1 >0 && (sc->opt1 != OPT1_CRYSTALIZE && src->type != BL_MOB) && sc->opt1 != OPT1_BURNING && skill_id != SR_GENTLETOUCH_CURE) { //Stuned/Frozen/etc
+		if (skill_id != RK_REFRESH && sc->opt1 >0 && !(sc->opt1 == OPT1_CRYSTALIZE && src->type == BL_MOB) && sc->opt1 != OPT1_BURNING && skill_id != SR_GENTLETOUCH_CURE) { //Stuned/Frozen/etc
 			if (flag != 1) //Can't cast, casted stuff can't damage.
 				return 0;
 			if (!(skill_get_inf(skill_id)&INF_GROUND_SKILL))
@@ -1677,22 +1678,22 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 		}
 	}
 
-	if (sc && sc->option)
-	{
-		if (sc->option&OPTION_HIDE)
-		switch (skill_id) { //Usable skills while hiding.
-			case TF_HIDING:
-			case AS_GRIMTOOTH:
-			case RG_BACKSTAP:
-			case RG_RAID:
-			case NJ_SHADOWJUMP:
-			case NJ_KIRIKAGE:
-			case KO_YAMIKUMO:
-				break;
-			default:
-				//Non players can use all skills while hidden.
-				if (!skill_id || src->type == BL_PC)
-					return 0;
+	if (sc && sc->option) {
+		if (sc->option&OPTION_HIDE) {
+			switch (skill_id) { //Usable skills while hiding.
+				case TF_HIDING:
+				case AS_GRIMTOOTH:
+				case RG_BACKSTAP:
+				case RG_RAID:
+				case NJ_SHADOWJUMP:
+				case NJ_KIRIKAGE:
+				case KO_YAMIKUMO:
+					break;
+				default:
+					//Non players can use all skills while hidden.
+					if (!skill_id || src->type == BL_PC)
+						return 0;
+			}
 		}
 		if (sc->option&OPTION_CHASEWALK && skill_id != ST_CHASEWALK)
 			return 0;
@@ -2442,6 +2443,20 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 		if(!sd->inventory_data[index])
 			continue;
 
+		if(sd->inventory_data[index]->flag.no_equip) { // Items may be equipped, their effects however are nullified.
+			if(map[sd->bl.m].flag.restricted && sd->inventory_data[index]->flag.no_equip&(8*map[sd->bl.m].zone))
+				continue;
+			if(!map_flag_vs(sd->bl.m) && sd->inventory_data[index]->flag.no_equip&1)
+				continue;
+			if(map[sd->bl.m].flag.pvp && sd->inventory_data[index]->flag.no_equip&2)
+				continue;
+			if(map_flag_gvg(sd->bl.m) && sd->inventory_data[index]->flag.no_equip&4)
+				continue;
+			if(map[sd->bl.m].flag.battleground && sd->inventory_data[index]->flag.no_equip&8)
+				continue;
+		}
+
+		
 		status->def += sd->inventory_data[index]->def;
 
 		if(first && sd->inventory_data[index]->equip_script)

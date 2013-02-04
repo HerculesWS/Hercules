@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules dev team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena dev team
 
 #include "../common/cbasetypes.h"
 #include "../common/malloc.h"
@@ -246,7 +247,7 @@ int chrif_setip(const char* ip) {
 		return 0;
 	}
 	
-	strncpy(char_ip_str, ip, sizeof(char_ip_str));
+	safestrncpy(char_ip_str, ip, sizeof(char_ip_str));
 	
 	ShowInfo("Char Server IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, ip2str(char_ip, ip_str));
 	

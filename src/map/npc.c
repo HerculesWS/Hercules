@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules dev team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena dev team
 
 #include "../common/cbasetypes.h"
 #include "../common/timer.h"
@@ -231,6 +232,9 @@ int npc_rr_secure_timeout_timer(int tid, unsigned int tick, int id, intptr_t dat
 		 **/
 		if( sd->st )
 			sd->st->state = END;
+		sd->state.menu_or_input = 0;
+		sd->npc_menu = 0;
+
 		/**
 		 * This guy's been idle for longer than allowed, close him.
 		 **/
@@ -1915,7 +1919,7 @@ void npc_addsrcfile(const char* name)
 
 	file = (struct npc_src_list*)aMalloc(sizeof(struct npc_src_list) + strlen(name));
 	file->next = NULL;
-	strncpy(file->name, name, strlen(name) + 1);
+	safestrncpy(file->name, name, strlen(name) + 1);
 	if( file_prev == NULL )
 		npc_src_files = file;
 	else
@@ -3606,7 +3610,7 @@ void npc_read_event_script(void)
 		DBData *data;
 
 		char name[64]="::";
-		strncpy(name+2,config[i].event_name,62);
+		safestrncpy(name+2,config[i].event_name,62);
 
 		script_event[i].event_count = 0;
 		iter = db_iterator(ev_db);

@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules dev team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena dev team
 
 #include "../common/cbasetypes.h"
 #include "../common/mmo.h"
@@ -1815,7 +1816,7 @@ int mapif_parse_GuildMasterChange(int fd, int guild_id, const char* name, int le
 	g->member[0].position = 0; //Position 0: guild Master.
 	g->member[0].modified = GS_MEMBER_MODIFIED;
 
-	strncpy(g->master, name, len);
+	safestrncpy(g->master, name, len);
 	if (len < NAME_LENGTH)
 		g->master[len] = '\0';
 

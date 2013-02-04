@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules dev team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena dev team
 
 #include "../common/cbasetypes.h"
 #include "../common/timer.h"
@@ -4120,7 +4121,7 @@ static bool mob_parse_row_chatdb(char** str, const char* source, int line, int* 
 	}
 
 	msg[len] = 0;  // strip previously found EOL
-	strncpy(ms->msg, str[2], CHAT_SIZE_MAX);
+	safestrncpy(ms->msg, str[2], CHAT_SIZE_MAX);
 
 	return true;
 }

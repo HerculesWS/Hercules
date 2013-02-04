@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules dev team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena dev team
 
 #include "../common/cbasetypes.h"
 #include "../common/malloc.h"
@@ -10,6 +11,7 @@
 #include "../common/showmsg.h"
 #include "../common/utils.h"
 #include "../common/random.h"
+#include "../common/strlib.h"
 
 #include "log.h"
 #include "clif.h"
@@ -795,8 +797,8 @@ int read_elementaldb(void) {
 
 		db = &elemental_db[j];
 		db->class_ = atoi(str[0]);
-		strncpy(db->sprite, str[1], NAME_LENGTH);
-		strncpy(db->name, str[2], NAME_LENGTH);
+		safestrncpy(db->sprite, str[1], NAME_LENGTH);
+		safestrncpy(db->name, str[2], NAME_LENGTH);
 		db->lv = atoi(str[3]);
 
 		status = &db->status;
