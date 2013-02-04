@@ -1,12 +1,10 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Hugel City
 //===== By: ==================================================
 //= vicious_pucca, Poki#3, erKURITA, Munin, and everybody in the
 //= comments
 //===== Current Version: =====================================
 //= 1.7
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= NPC's for the City of Hugel.
 //===== Additional Comments: =================================

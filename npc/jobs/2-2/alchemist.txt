@@ -1,4 +1,4 @@
-//===== Hercules Script ======================================= 
+//===== Hercules Script ======================================
 //= Alchemist Job Quest
 //===== By: ==================================================
 //= nestor_zulueta (Fusion), converted by Darkchild

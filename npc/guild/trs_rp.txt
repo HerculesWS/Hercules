@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Treasure Room Protection
 //===== By: ================================================== 
 //= Masao
 //===== Current Version: ===================================== 
 //= 1.1
-//===== Compatible With: ===================================== 
-//= rAthena
 //===== Description: ========================================= 
 //= Warps every Player out of the Treasure Room except for the
 //= Guildleader.

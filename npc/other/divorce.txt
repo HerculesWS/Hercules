@@ -1,12 +1,10 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Divorcing Deviruchi
 //===== By: ================================================== 
 //= Perkka, Scriptor, LightFighter
 //= L0ne_W0lf
 //===== Current Version: ===================================== 
 //= 1.5
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Official Divorce script.

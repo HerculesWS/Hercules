@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Dungeon Teleport Service
 //===== By: ================================================== 
 //= Evera
 //===== Current Version: ===================================== 
 //= 2.8
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official Conversion]
 //= Cool Event Corp NPCs vs. Kafra Dungeon Teleport Service and voting system.

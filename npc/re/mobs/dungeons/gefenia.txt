@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Geffenia Dungeon Monster Spawn Script
 //===== By: ==================================================
-//= Muad_Dib, rAthena dev team
+//= Muad_Dib, rAthena Dev Team
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Additional Comments: =================================
 //= Added 1st Version. [Muad_Dib]
 //= Conversion to eA [MasterOfMuppets]

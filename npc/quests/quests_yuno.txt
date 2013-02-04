@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Quest NPCs related to Juno
 //===== By: ================================================== 
 //= rAthena Dev Team; L0ne_W0lf
 //===== Current Version: ===================================== 
 //= 2.0a
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Metto Quest:

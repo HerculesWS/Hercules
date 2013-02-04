@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 // BattleGround System - KvM Entrance NPCs
 //===== By: ================================================== 
 //= L0ne_W0lf
 //===== Current Version: ===================================== 
 //= 1.1
-//===== Compatible With: ===================================== 
-//= rAthena 1.0
 //===== Description: ========================================= 
 //= [AEGIS Conversion]
 //= Kreiger Von Midgard Battleground Entrance NPCs

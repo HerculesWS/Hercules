@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Episode 11.1 Socket Enchant NPC
 //===== By: ==================================================
 //= rAthena Dev Team
 //===== Current Version: =====================================
 //= 2.0
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Adds slots to selected weapons and armor.

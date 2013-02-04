@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= 2005 ChristMas Event
 //===== By: ==================================================
 //= Brainstorm
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Event 1: Louise's Kim creates Louise's Santa Hat.
