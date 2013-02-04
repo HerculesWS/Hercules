@@ -8194,6 +8194,10 @@ int pc_removecombo(struct map_session_data *sd, struct item_data *data ) {
 
 			cursor++;
 		}
+		
+		/* check if combo requirements still fit */
+		if( pc_checkcombo( sd, data ) )
+			continue;
 
 		/* it's empty, we can clear all the memory */
 		if( (sd->combos.count = cursor) == 0 ) {
