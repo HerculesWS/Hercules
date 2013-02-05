@@ -13819,6 +13819,10 @@ int skill_vfcastfix (struct block_list *bl, double time, uint16 skill_id, uint16
 	if(sd  && !(skill_get_castnodex(skill_id, skill_lv)&4) ){ // Increases/Decreases fixed/variable cast time of a skill by item/card bonuses.
 		if( sd->bonus.varcastrate < 0 )
 			VARCAST_REDUCTION(sd->bonus.varcastrate);
+		if( sd->bonus.add_varcast != 0 ) // bonus bVariableCast
+			time += sd->bonus.add_varcast; 
+		if( sd->bonus.add_fixcast != 0 ) // bonus bFixedCast
+			fixed += sd->bonus.add_fixcast; 
 		for (i = 0; i < ARRAYLENGTH(sd->skillfixcast) && sd->skillfixcast[i].id; i++)
 			if (sd->skillfixcast[i].id == skill_id){ // bonus2 bSkillFixedCast
 				fixed += sd->skillfixcast[i].val;
@@ -13833,6 +13837,12 @@ int skill_vfcastfix (struct block_list *bl, double time, uint16 skill_id, uint16
 			if( sd->skillcast[i].id == skill_id ){ // bonus2 bVariableCastrate
 				if( (i=sd->skillcast[i].val) < 0)
 					VARCAST_REDUCTION(i);
+				break;
+			}
+		for( i = 0; i < ARRAYLENGTH(sd->skillfixcastrate) && sd->skillfixcastrate[i].id; i++ )
+
+			if( sd->skillfixcastrate[i].id == skill_id ){ // bonus2 bFixedCastrate
+				fixcast_r = sd->skillfixcastrate[i].val; // just speculation
 				break;
 			}
 	}
