@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules dev team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena dev team
 
 #ifndef _BATTLE_H_
 #define _BATTLE_H_
@@ -483,9 +484,12 @@ extern struct Battle_Config
 	int atcommand_mobinfo_type;
 
 	int mob_size_influence; // Enable modifications on earned experience, drop rates and monster status depending on monster size. [mkbu95]
+	
+	/** Hercules **/
 	int skill_trap_type;
 	int item_restricted_consumption_type;
 	int max_walk_path;
+	
 } battle_config;
 
 void do_init_battle(void);
