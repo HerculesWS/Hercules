@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules dev team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena dev team
 
 //#define DEBUG_DISP
 //#define DEBUG_DISASM
@@ -7860,6 +7861,7 @@ BUILDIN_FUNC(bonus)
 		case SP_SKILL_FIXEDCAST:
 		case SP_SKILL_VARIABLECAST:
 		case SP_VARCASTRATE:
+		case SP_FIXCASTRATE:
 		case SP_SKILL_USE_SP:
 			// these bonuses support skill names
 			val1 = ( script_isstring(st,3) ? skill_name2id(script_getstr(st,3)) : script_getnum(st,3) );

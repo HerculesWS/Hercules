@@ -2884,24 +2884,23 @@ int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const c
 	setd_sub(st, NULL, ".@atcmd_command$", 0, (void *)command, NULL);
 
 	// split atcmd parameters based on spaces
-	i = 0;
-	j = 0;
-
 	temp = (char*)aMalloc(strlen(message) + 1);
 
-	while( message[i] != '\0' ) {
-		if( message[i] == ' ' && k < 127 ) {
-			temp[j] = '\0';
-			setd_sub(st, NULL, ".@atcmd_parameters$", k++, (void *)temp, NULL);
-			j = 0;
-			++i;
-		} else
-			temp[j++] = message[i++];
+	for( i = 0; i < ( strlen( message ) + 1 ) && k < 127; i ++ ) {
+		if( message[i] == ' ' || message[i] == '\0' ) {
+			if( message[ ( i - 1 ) ] == ' ' ) {
+				continue; // To prevent "@atcmd [space][space][space]..."
+			}
+			temp[k] = '\0';
+			k = 0;
+			setd_sub( st, NULL, ".@atcmd_parameters$", j++, (void *)temp, NULL );
+		} else {
+			temp[k] = message[i];
+			k++;
+		}
 	}
 
-	temp[j] = '\0';
-	setd_sub(st, NULL, ".@atcmd_parameters$", k++, (void *)temp, NULL);
-	setd_sub(st, NULL, ".@atcmd_numparameters", 0, (void *)&k, NULL);
+	setd_sub(st, NULL, ".@atcmd_numparameters", 0, (void *)__64BPRTSIZE(j), NULL);
 	aFree(temp);
 
 	run_script_main(st);

@@ -23,9 +23,6 @@
 /Makefile.cache
 /map-server_sql
 /mapcache
-/rAthena
-
-# /3rdparty/cmake/
 
 # /3rdparty/libconfig/
 /3rdparty/libconfig/Makefile
@@ -42,35 +39,6 @@
 /log/*.log
 /log/map-server_sql.leaks
 
-# /npc/airports/
-
-# /npc/cities/
-
-# /npc/jobs/
-
-# /npc/kafras/
-
-# /npc/merchants/
-
-# /npc/mobs/
-
-# /npc/other/
-
-# /npc/quests/
-
-# /npc/re/quests/eden/
-/npc/re/quests/eden/55-70.txt
-
-# /npc/warps/
-
-# /npc/warps/cities/
-
-# /npc/warps/dungeons/
-
-# /npc/warps/fields/
-
-# /npc/warps/other/
-
 # /src/char/
 /src/char/Makefile
 /src/char/obj_sql
@@ -86,15 +54,11 @@
 /src/login/obj_txt
 /src/login/obj_sql
 
-# /src/login/sql/
-
 # /src/map/
 /src/map/Makefile
 /src/map/obj_sql
 /src/map/obj_txt
 /src/map/pcre.h
-
-# /src/map/sql/
 
 # /src/test/
 /src/test/Makefile
@@ -111,13 +75,18 @@
 /tools/*.ilk
 /tools/*.pdb
 
+# /vcproj-12/
+/vcproj-12/char-server_sql
+/vcproj-12/login-server_sql
+/vcproj-12/mapcache
+/vcproj-12/map-server_sql
+/vcproj-12/*.user
+
 # /vcproj-10/
 /vcproj-10/char-server_sql
 /vcproj-10/login-server_sql
 /vcproj-10/mapcache
 /vcproj-10/map-server_sql
-/vcproj-10/txt-converter-char
-/vcproj-10/txt-converter-login
 /vcproj-10/*.user
 
 # /vcproj-9/
@@ -126,7 +95,3 @@
 /vcproj-9/login-server_sql
 /vcproj-9/map-server_sql
 /vcproj-9/mapcache
-/vcproj-9/plugin-console
-/vcproj-9/plugin-pid
-/vcproj-9/txt-converter-char
-/vcproj-9/txt-converter-login
