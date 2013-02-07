@@ -10612,6 +10612,8 @@ struct skill_unit_group* skill_unitsetting (struct block_list *src, uint16 skill
 		break;
 
 	case WZ_FIREPILLAR:
+		if( map_getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) )
+			return NULL;
 		if((flag&1)!=0)
 			limit=1000;
 		val1=skill_lv+2;
@@ -14712,7 +14714,7 @@ static int skill_cell_overlap(struct block_list *bl, va_list ap)
 				skill_delunit(unit);
 				return 1;
 			}
-			if( !(skill_get_inf2(unit->group->skill_id)&(INF2_SONG_DANCE|INF2_TRAP)) ) { //It deletes everything except songs/dances and traps
+			if( !(skill_get_inf2(unit->group->skill_id)&(INF2_SONG_DANCE|INF2_TRAP)) || unit->group->skill_id == WZ_FIREPILLAR ) { //It deletes everything except songs/dances and traps
 				skill_delunit(unit);
 				return 1;
 			}
