@@ -3893,7 +3893,7 @@
 6342,Fade_Notation_Purple,Fade Notation Purple,3,0,,10,,,,,,,,,,,,,{},{},{}
 6343,Fade_Notation_Blue,Fade Notation Blue,3,0,,10,,,,,,,,,,,,,{},{},{}
 6344,Muscle_Story,Muscle Story,3,0,,0,,,,,,,,,,,,,{},{},{}
-6345,Love_Ball,Love Ball,3,0,,0,,,,,,,,,,,,,{},{},{}
+6345,Love_Ball,Love Lump,3,0,,0,,,,,,,,,,,,,{},{},{}
 6346,Seagate_Mark,Seagate Mark,3,0,,0,,,,,,,,,,,,,{},{},{}
 6347,Bless_Word_Paper1,Bless Word Paper,3,4020,,0,,,,,,,,,,,,,{},{},{}
 6348,Bless_Word_Paper2,Bless Word Paper,3,4020,,0,,,,,,,,,,,,,{},{},{}
@@ -6158,7 +6158,7 @@
 //13064,
 //13065,
 13066,P_Dagger3,Eden Dagger III,4,0,,0,165:80,,1,0,0xFE9F7EEF,7,2,2,3,60,0,1,{},{},{}
-13067,Kris,Kris,4,20,,700,107:70,,1,1,0xFE9F7EEF,2,2,2,3,30,1,1,{ bonus2 bHpDrainRate,50,10; },{},{}
+13067,Caress,Keris,4,20,,700,107:70,,1,1,0xFE9F7EEF,2,2,2,3,30,1,1,{ bonus2 bHpDrainRate,20,10; },{},{}
 13068,Pompano,Pompano,4,0,,0,160:100,,3,0,0xFE9F7EEF,7,2,2,1,50,0,1,{ bonus bUnbreakableWeapon,0; autobonus "{ bonus bBaseAtk,30; }",10,7000,BF_WEAPON,"{ specialeffect2 EF_ENHANCE; }"; autobonus "{ bonus bMatk,20; }",10,7000,BF_MAGIC,"{ specialeffect2 EF_SUFFRAGIUM; }"; if(BaseLevel>99) { bonus bBaseAtk,10; bonus bMatk,10; } },{},{}
 13069,As-nail,As-nail,4,56000,,500,160:80,,1,0,0x000654E2,7,2,2,4,110,1,1,{ bonus bAtkEle,Ele_Wind; bonus2 bAddEff,Eff_Freeze,100+(getrefine()*50); },{},{}
 13070,Scarlet-nail,Scarlet-nail,4,56000,,500,160:80,,1,0,0x000654E2,7,2,2,4,110,1,1,{ bonus bAtkEle,Ele_Fire; bonus2 bAddEff,Eff_Stone,100+(getrefine()*50); },{},{}
