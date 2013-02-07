@@ -6360,6 +6360,12 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			}
 			if(status_isimmune(bl) || !tsc || !tsc->count)
 				break;
+			
+			if( sd && dstsd && !map_flag_vs(sd->bl.m) && sd->status.guild_id == dstsd->status.guild_id ) {
+				clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				break;
+			}
+			
 			for(i=0;i<SC_MAX;i++)
 			{
 				if (!tsc->data[i])
