@@ -62,7 +62,8 @@ relevant to your Operation System, please refer to the Wiki (links at the end of
 			* Step 2: rpm -Uvhhttp://repo.webtatic.com/yum/centos/5/latest.rpm
 			* Step 3: yum install --enablerepo=webtatic git-all
 			* Step 4: yum install --enablerepo=webtatic --disableexcludes=main git-all
-	(For Debian) Type: apt-get install git make gcc libmysqlclient-dev zlib1g-dev libpcre3-dev
+	* (For Debian/Others)
+		* Type: apt-get install git make gcc libmysqlclient-dev zlib1g-dev libpcre3-dev
 	* Type: mysql_secure_installation
 	* Start your MySQL server
 	* Setup a MySQL user:
