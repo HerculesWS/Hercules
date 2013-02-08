@@ -1,0 +1,1 @@
+ALTER TABLE `char` ADD COLUMN `slotchange` SMALLINT(3) unsigned NOT NULL default '0';
