@@ -1,11 +1,9 @@
-//===== eAthena Script =======================================
+//===== Hercules Script ======================================
 //= Hugel Fields Monster Spawn Script
 //===== By: ==================================================
 //= Athena (1.0)
 //===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Additional Comments: =================================
 //= Spawns for hu_fild05 and hu_fild04, numbers may not be correct [MasterOfMuppets]
 //= 0.2 Fixed Petit ID

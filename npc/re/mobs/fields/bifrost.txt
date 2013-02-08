@@ -1,11 +1,9 @@
-//===== eAthena Script ========================================
+//===== Hercules Script ======================================
 //= Bifrost Monster Spawn Script
 //===== By: ==================================================
 //= Chilly
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Description: =========================================
 //= Official monster spawn in Bifrost Field.
 //===== Additional Comments: =================================
