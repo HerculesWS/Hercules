@@ -1,9 +1,11 @@
-//===== Hercules Script =======================================
+//===== eAthena Script =======================================
 //= Amatsu Fields Monster Spawn Script
 //===== By: ==================================================
 //= Athena (1.0)
 //===== Current Version: =====================================
 //= 1.4
+//===== Compatible With: =====================================
+//= Any Athena Version
 //===== Additional Comments: =================================
 //= 1.1 replaced Hydra -> G_Hydra (to fix drops exploit) [Lupus]
 //= 1.2 Official kRO 10.1 spawns [Playtester]

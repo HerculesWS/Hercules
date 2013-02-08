@@ -1,13 +1,16 @@
-//===== Hercules Script ======================================
-//= Bifrost Field Monster Spawn Script
+//===== eAthena Script ========================================
+//= Bifrost Monster Spawn Script
 //===== By: ==================================================
 //= Chilly
 //===== Current Version: =====================================
-//= 1.0
+//= 1.1
+//===== Compatible With: =====================================
+//= Any Athena Version
 //===== Description: =========================================
-//= Official kRO monster spawns
+//= Official monster spawn in Bifrost Field.
 //===== Additional Comments: =================================
 //= 1.0 First Release
+//= 1.1 Added more accurate 1@mist monsters
 //============================================================
 
 //==================================================
@@ -29,3 +32,79 @@ bif_fild02,0,0,0,0	monster	Pom Spider	2132,5,0,0,0
 bif_fild02,0,0,0,0	monster	Angra Mantis	2133,5,0,0,0
 bif_fild02,0,0,0,0	monster	Little Fatum	2136,50,0,0,0
 bif_fild02,0,0,0,0	monster	Miming	2137,30,0,0,0
+
+//==================================================
+// 1@mist - Forest Maze of Mists
+//==================================================
+1@mist,247,124,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,247,124,0,0	monster	Nydhoggur Memory	2138,1,1200000,600000,0
+1@mist,247,124,0,0	monster	Nydhoggur Memory	2139,1,1200000,600000,0
+1@mist,225,98,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,225,98,0,0	monster	Nydhoggur Memory	2138,1,1200000,600000,0
+1@mist,225,98,0,0	monster	Nydhoggur Memory	2139,1,1200000,600000,0
+1@mist,159,184,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,159,184,0,0	monster	Nydhoggur Memory	2138,1,1200000,600000,0
+1@mist,159,184,0,0	monster	Nydhoggur Memory	2139,1,1200000,600000,0
+1@mist,61,39,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,61,39,0,0	monster	Nydhoggur Memory	2138,1,1200000,600000,0
+1@mist,61,39,0,0	monster	Nydhoggur Memory	2139,1,1200000,600000,0
+1@mist,254,151,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,254,151,0,0	monster	Nydhoggur Memory	2138,1,1200000,600000,0
+1@mist,254,151,0,0	monster	Nydhoggur Memory	2139,1,1200000,600000,0
+1@mist,230,179,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,230,179,0,0	monster	Nydhoggur Memory	2140,1,1200000,600000,0
+1@mist,230,179,0,0	monster	Nydhoggur Memory	2141,1,1200000,600000,0
+1@mist,285,225,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,285,225,0,0	monster	Nydhoggur Memory	2140,1,1200000,600000,0
+1@mist,285,225,0,0	monster	Nydhoggur Memory	2141,1,1200000,600000,0
+1@mist,161,316,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,161,316,0,0	monster	Nydhoggur Memory	2140,1,1200000,600000,0
+1@mist,161,316,0,0	monster	Nydhoggur Memory	2141,1,1200000,600000,0
+1@mist,230,324,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,230,324,0,0	monster	Nydhoggur Memory	2140,1,1200000,600000,0
+1@mist,230,324,0,0	monster	Nydhoggur Memory	2141,1,1200000,600000,0
+1@mist,206,200,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,206,200,0,0	monster	Nydhoggur Memory	2140,1,1200000,600000,0
+1@mist,206,200,0,0	monster	Nydhoggur Memory	2141,1,1200000,600000,0
+1@mist,221,236,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,221,236,0,0	monster	Nydhoggur Memory	2142,1,1200000,600000,0
+1@mist,221,236,0,0	monster	Nydhoggur Memory	2143,1,1200000,600000,0
+1@mist,204,299,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,204,299,0,0	monster	Nydhoggur Memory	2142,1,1200000,600000,0
+1@mist,204,299,0,0	monster	Nydhoggur Memory	2143,1,1200000,600000,0
+1@mist,84,273,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,84,273,0,0	monster	Nydhoggur Memory	2142,1,1200000,600000,0
+1@mist,84,273,0,0	monster	Nydhoggur Memory	2143,1,1200000,600000,0
+1@mist,95,287,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,95,287,0,0	monster	Nydhoggur Memory	2142,1,1200000,600000,0
+1@mist,95,287,0,0	monster	Nydhoggur Memory	2143,1,1200000,600000,0
+1@mist,324,325,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,324,325,0,0	monster	Nydhoggur Memory	2142,1,1200000,600000,0
+1@mist,324,325,0,0	monster	Nydhoggur Memory	2143,1,1200000,600000,0
+1@mist,280,343,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,280,343,0,0	monster	Nydhoggur Memory	2142,1,1200000,600000,0
+1@mist,280,343,0,0	monster	Nydhoggur Memory	2143,1,1200000,600000,0
+1@mist,345,186,0,0	monster	Creeper	2135,1,1200000,600000,0
+1@mist,345,186,0,0	monster	Nydhoggur Memory	2142,1,1200000,600000,0
+1@mist,345,186,0,0	monster	Nydhoggur Memory	2143,1,1200000,600000,0
+1@mist,105,105,85,85	monster	Pom Spider	2132,8,1200000,600000,0
+1@mist,105,105,85,85	monster	Angra Mantis	2133,8,1200000,600000,0
+1@mist,105,105,85,85	monster	Parus	2134,8,1200000,600000,0
+1@mist,105,105,85,85	monster	Little Fatum	2136,8,1200000,600000,0
+1@mist,105,105,85,85	monster	Miming	2137,5,1200000,600000,0
+1@mist,105,275,85,85	monster	Pom Spider	2132,10,1200000,600000,0
+1@mist,105,275,85,85	monster	Angra Mantis	2133,10,1200000,600000,0
+1@mist,105,275,85,85	monster	Parus	2134,10,1200000,600000,0
+1@mist,105,275,85,85	monster	Little Fatum	2136,8,1200000,600000,0
+1@mist,105,275,85,85	monster	Miming	2137,5,1200000,600000,0
+1@mist,275,105,85,85	monster	Pom Spider	2132,12,1200000,600000,0
+1@mist,275,105,85,85	monster	Angra Mantis	2133,12,1200000,600000,0
+1@mist,275,105,85,85	monster	Parus	2134,10,1200000,600000,0
+1@mist,275,105,85,85	monster	Little Fatum	2136,8,1200000,600000,0
+1@mist,275,105,85,85	monster	Miming	2137,5,1200000,600000,0
+1@mist,275,275,85,85	monster	Pom Spider	2132,15,1200000,600000,0
+1@mist,275,275,85,85	monster	Angra Mantis	2133,15,1200000,600000,0
+1@mist,275,275,85,85	monster	Parus	2134,10,1200000,600000,0
+1@mist,275,275,85,85	monster	Little Fatum	2136,8,1200000,600000,0
+1@mist,275,275,85,85	monster	Miming	2137,5,1200000,600000,0
+1@mist,325,210,25,150	boss_monster	Lost Dragon	2131,1,1,7200000,600000,1

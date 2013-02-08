@@ -1,11 +1,11 @@
-//===== rAthena Script ========================================
+//===== eAthena Script ========================================
 //= Dewata Field Monster Spawn Script
 //===== By: ==================================================
 //= Chilly
 //===== Current Version: =====================================
 //= 1.0
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Any Athena Version
 //===== Description: =========================================
 //= Official kRO monster spawns
 //===== Additional Comments: =================================
