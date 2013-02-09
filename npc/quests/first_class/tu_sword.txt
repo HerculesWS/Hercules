@@ -1006,7 +1006,10 @@ geffen,154,143,3	script	Dequ'ee	734,{
 		set tu_swordman, 21;
 		changequest 8226,8227;
 		close2;
-		warp "izlude",35,78;
+		if (checkre(0))
+			warp "izlude",127,100;
+		else
+			warp "izlude",35,78;
 		end;
 	}
 	if(tu_swordman == 19){
@@ -2116,7 +2119,10 @@ geffen,154,143,3	script	Dequ'ee	734,{
 					mes "of yourself,";
 					mes "brave Swordman.";
 					next;
-					warp "izlude",35,78;
+					if (checkre(0))
+						warp "izlude",127,100;
+					else
+						warp "izlude",35,78;
 					close;
 				}
 			case 2:

@@ -1,7 +1,7 @@
 //===== Hercules Script ======================================
 //= Lighthalzen Fields Monster Spawn Script
 //===== By: ==================================================
-//= Muad_Dib, eAthena dev team
+//= Muad_Dib, rAthena Dev Team
 //===== Current Version: =====================================
 //= 1.6
 //===== Additional Comments: =================================

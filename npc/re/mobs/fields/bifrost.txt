@@ -1,11 +1,11 @@
 //===== Hercules Script ======================================
-//= Bifrost Monster Spawn Script
+//= Bifrost Field Monster Spawn Script
 //===== By: ==================================================
 //= Chilly
 //===== Current Version: =====================================
 //= 1.1
 //===== Description: =========================================
-//= Official monster spawn in Bifrost Field.
+//= Official kRO monster spawns
 //===== Additional Comments: =================================
 //= 1.0 First Release
 //= 1.1 Added more accurate 1@mist monsters
