@@ -1,6 +1,6 @@
 // Copyright (c) Hercules dev team, licensed under GNU GPL.
 // See the LICENSE file
-// Portions Copyright (c) Athena dev team
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _MAP_H_
 #define _MAP_H_

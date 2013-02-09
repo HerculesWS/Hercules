@@ -1,6 +1,6 @@
 // Copyright (c) Hercules dev team, licensed under GNU GPL.
 // See the LICENSE file
-// Portions Copyright (c) Athena dev team
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/mmo.h"
@@ -602,7 +602,7 @@ static struct guild_castle* inter_guildcastle_fromsql(int castle_id)
 // Read exp_guild.txt
 static bool exp_guild_parse_row(char* split[], int column, int current)
 {
-	unsigned int exp = atoll(split[0]);
+	unsigned int exp = (unsigned int)atol(split[0]);
 
 	if (exp < 0 || exp >= UINT_MAX) {
 		ShowError("exp_guild: Invalid exp %d at line %d\n", exp, current);

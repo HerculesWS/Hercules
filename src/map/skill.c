@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Hercules dev team, licensed under GNU GPL.
 // See the LICENSE file
-// Portions Copyright (c) Athena dev team
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/timer.h"
@@ -6360,6 +6360,12 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			}
 			if(status_isimmune(bl) || !tsc || !tsc->count)
 				break;
+			
+			if( sd && dstsd && !map_flag_vs(sd->bl.m) && sd->status.guild_id == dstsd->status.guild_id ) {
+				clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				break;
+			}
+			
 			for(i=0;i<SC_MAX;i++)
 			{
 				if (!tsc->data[i])
@@ -10612,6 +10618,8 @@ struct skill_unit_group* skill_unitsetting (struct block_list *src, uint16 skill
 		break;
 
 	case WZ_FIREPILLAR:
+		if( map_getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) )
+			return NULL;
 		if((flag&1)!=0)
 			limit=1000;
 		val1=skill_lv+2;
@@ -11451,7 +11459,7 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 					const struct TimerData* td = tsc->data[type]?get_timer(tsc->data[type]->timer):NULL;
 					if( td )
 						sec = DIFF_TICK(td->tick, tick);
-					if( sg->unit_id == UNT_MANHOLE || battle_config.skill_trap_type ) {
+					if( sg->unit_id == UNT_MANHOLE || battle_config.skill_trap_type || !map_flag_gvg(src->bl.m) ) {
 						unit_movepos(bl, src->bl.x, src->bl.y, 0, 0);
 						clif_fixpos(bl);
 					}
@@ -13064,7 +13072,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		}
 		break;
 	case ST_RIDING:
-		if(!pc_isriding(sd) || !pc_isridingdragon(sd)) {
+		if(!pc_isriding(sd) && !pc_isridingdragon(sd)) {
 			clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			return 0;
 		}
@@ -14712,7 +14720,7 @@ static int skill_cell_overlap(struct block_list *bl, va_list ap)
 				skill_delunit(unit);
 				return 1;
 			}
-			if( !(skill_get_inf2(unit->group->skill_id)&(INF2_SONG_DANCE|INF2_TRAP)) ) { //It deletes everything except songs/dances and traps
+			if( !(skill_get_inf2(unit->group->skill_id)&(INF2_SONG_DANCE|INF2_TRAP)) || unit->group->skill_id == WZ_FIREPILLAR ) { //It deletes everything except songs/dances and traps
 				skill_delunit(unit);
 				return 1;
 			}
