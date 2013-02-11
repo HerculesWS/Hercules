@@ -858,11 +858,7 @@ moc_prydn1
 moc_prydn2
 
 // ===============================
-<<<<<<< HEAD
 // New Maps added 2013-02-10
-=======
-// New Maps added 2013-02-10 (Thanks Streusel!)
->>>>>>> Maps
 // ===============================
 //iz_int
 //iz_int01
