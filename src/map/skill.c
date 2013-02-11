@@ -11459,7 +11459,7 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 					const struct TimerData* td = tsc->data[type]?get_timer(tsc->data[type]->timer):NULL;
 					if( td )
 						sec = DIFF_TICK(td->tick, tick);
-					if( sg->unit_id == UNT_MANHOLE || battle_config.skill_trap_type ) {
+					if( sg->unit_id == UNT_MANHOLE || battle_config.skill_trap_type || !map_flag_gvg(src->bl.m) ) {
 						unit_movepos(bl, src->bl.x, src->bl.y, 0, 0);
 						clif_fixpos(bl);
 					}
@@ -13072,7 +13072,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		}
 		break;
 	case ST_RIDING:
-		if(!pc_isriding(sd) || !pc_isridingdragon(sd)) {
+		if(!pc_isriding(sd) && !pc_isridingdragon(sd)) {
 			clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			return 0;
 		}
