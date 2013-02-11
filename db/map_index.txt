@@ -168,10 +168,16 @@ orcsdun01
 orcsdun02
 ordeal_1-1
 ordeal_1-2
+//ordeal_1-3
+//ordeal_1-4
 ordeal_2-1
 ordeal_2-2
+//ordeal_2-3
+//ordeal_2-4
 ordeal_3-1
 ordeal_3-2
+//ordeal_3-3
+//ordeal_3-4
 pay_arche
 pay_dun00
 pay_dun01
@@ -933,6 +939,8 @@ silk_lair
 //prontera_s
 //pay_arche_s
 //xmas_old
+//ordeal_a00
+//ordeal_a02
 //fay_vilg00
 //fay_vilg01
 //gef_vilg00
