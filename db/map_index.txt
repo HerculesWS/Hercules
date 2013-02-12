@@ -168,16 +168,16 @@ orcsdun01
 orcsdun02
 ordeal_1-1
 ordeal_1-2
-ordeal_1-3
-ordeal_1-4
+//ordeal_1-3
+//ordeal_1-4
 ordeal_2-1
 ordeal_2-2
-ordeal_2-3
-ordeal_2-4
+//ordeal_2-3
+//ordeal_2-4
 ordeal_3-1
 ordeal_3-2
-ordeal_3-3
-ordeal_3-4
+//ordeal_3-3
+//ordeal_3-4
 pay_arche
 pay_dun00
 pay_dun01
@@ -862,6 +862,58 @@ ecl_hub01
 que_avan01
 moc_prydn1
 moc_prydn2
+
+// ===============================
+// New Maps added 2013-02-10 (Thanks Streusel!)
+// Credits also to Baneado for reporting some
+// ===============================
+iz_int
+iz_int01
+iz_int02
+iz_int03
+iz_int04
+iz_ac01
+iz_ac02
+iz_ng01
+treasure_n1
+treasure_n2
+iz_ac01_d
+iz_ac02_d
+iz_ac01_c
+iz_ac02_c
+iz_ac01_b
+iz_ac02_b
+iz_ac01_a
+iz_ac02_a
+izlude_d
+izlude_c
+izlude_b
+izlude_a
+prt_fild08d
+prt_fild08c
+prt_fild08b
+prt_fild08a
+te_prt_gld
+te_prtcas01
+te_prtcas02
+te_prtcas03
+te_prtcas04
+te_prtcas05
+teg_dun01
+teg_dun02
+te_alde_gld
+te_aldecas1
+te_aldecas2
+te_aldecas3
+te_aldecas4
+te_aldecas5
+gl_cas02_
+gl_chyard_
+2@gl_k
+1@gl_k
+silk_lair
+1@def02
+1@def03
 
 // Only add maps under this line if they are not standard maps!
 
