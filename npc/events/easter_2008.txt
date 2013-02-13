@@ -91,41 +91,35 @@ prontera,111,99,5	script	Egg Salesman#prt::EggVendor	98,{
 					mes "many you want for real now.";
 					next;
 				}
-				else {
-					set .@egg_zeny,.@input*500;
-					if (zeny < .@egg_zeny) {
-						mes "[Egg Salesman]";
-						mes "You don't have enough Zeny.";
-						next;
-						mes "[Egg Salesman]";
-						mes "No discount, go and get enough Zeny.";
-						close;
-					}
-					else {
-						if (checkweight(7605,.@input) == 0) {
-							mes "[Egg Salesman]";
-							mes "Hey, I know you really";
-							mes "want to buy some Chicken";
-							mes "Eggs, but you won't be able";
-							mes "to carry that much now. Why";
-							mes "don't you free up some";
-							mes "Inventory space first?.";
-							close;
-						}
-						else {
-							mes "[Egg Salesman]";
-							mes "Here's your Chicken Eggs!";
-							mes "I guess there's some festival";
-							mes "happening where you'll need";
-							mes "them, but I don't know anything";
-							mes "about that. Well, have a good";
-							mes "time, and I'll see you again!";
-							set zeny,zeny-.@egg_zeny;
-							getitem 7605,.@input; //Chicken_Egg
-							close;
-						}
-					}
+				set .@egg_zeny,.@input*500;
+				if (zeny < .@egg_zeny) {
+					mes "[Egg Salesman]";
+					mes "You don't have enough Zeny.";
+					next;
+					mes "[Egg Salesman]";
+					mes "No discount, go and get enough Zeny.";
+					close;
 				}
+				if (checkweight(7605,.@input) == 0) {
+					mes "[Egg Salesman]";
+					mes "Hey, I know you really";
+					mes "want to buy some Chicken";
+					mes "Eggs, but you won't be able";
+					mes "to carry that much now. Why";
+					mes "don't you free up some";
+					mes "Inventory space first?.";
+					close;
+				}
+				mes "[Egg Salesman]";
+				mes "Here's your Chicken Eggs!";
+				mes "I guess there's some festival";
+				mes "happening where you'll need";
+				mes "them, but I don't know anything";
+				mes "about that. Well, have a good";
+				mes "time, and I'll see you again!";
+				set zeny,zeny-.@egg_zeny;
+				getitem 7605,.@input; //Chicken_Egg
+				close;
 			}
 		case 4:
 			mes "[Egg Salesman]";
@@ -260,27 +254,22 @@ prontera,230,312,3	script	Nerlen#es07	79,{
 				mes "cancel, then just enter ''0.''";
 				next;
 			}
-			else {
-				if ((countitem(509) < .@input) || (countitem(511) < .@input) || (countitem(508) < .@input) || (countitem(523) < .@input) || (countitem(7605) < .@input)) {
-					mes "[Nerlen]";
-					mes "I'm sorry, but you don't";
-					mes "have enough items to make";
-					mes "Holy Eggs. You need the";
-					mes "following for me to create";
-					mes "each Holy Egg for you.";
-					next;
-					mes "[Nerlen]";
-					mes "^4D4DFF1 White Herb^000000,";
-					mes "^4D4DFF1 Green Herb^000000,";
-					mes "^4D4DFF1 Yellow Herb^000000,";
-					mes "^4D4DFF1 Holy Water^000000, and";
-					mes "^4D4DFF1 Chicken Egg^000000.";
-					close;
-				}
-				else {
-					break;
-				}
-			}
+			if ((countitem(509) < .@input) || (countitem(511) < .@input) || (countitem(508) < .@input) || (countitem(523) < .@input) || (countitem(7605) < .@input)) {
+				mes "[Nerlen]";
+				mes "I'm sorry, but you don't";
+				mes "have enough items to make";
+				mes "Holy Eggs. You need the";
+				mes "following for me to create";
+				mes "each Holy Egg for you.";
+				next;
+				mes "[Nerlen]";
+				mes "^4D4DFF1 White Herb^000000,";
+				mes "^4D4DFF1 Green Herb^000000,";
+				mes "^4D4DFF1 Yellow Herb^000000,";
+				mes "^4D4DFF1 Holy Water^000000, and";
+				mes "^4D4DFF1 Chicken Egg^000000.";
+				close;
+			} else break;
 		}
 		if (checkweight(12019,.@input) == 0) {
 			mes "[Nerlen]";
@@ -291,20 +280,18 @@ prontera,230,312,3	script	Nerlen#es07	79,{
 			mes "space in your Inventory first.";
 			close;
 		}
-		else {
-			delitem 509,.@input; //White_Herb
-			delitem 511,.@input; //Green_Herb
-			delitem 508,.@input; //Yellow_Herb
-			delitem 523,.@input; //Holy_Water
-			delitem 7605,.@input; //Egg
-			getitem 12019,.@input; //Holy_Egg
-			mes "[Nerlen]";
-			mes "Thank you!";
-			mes "I hope you enjoy";
-			mes "these Holy Eggs~";
-			mes "Hope you to be with God's love.";
-			close;
-		}
+		delitem 509,.@input; //White_Herb
+		delitem 511,.@input; //Green_Herb
+		delitem 508,.@input; //Yellow_Herb
+		delitem 523,.@input; //Holy_Water
+		delitem 7605,.@input; //Egg
+		getitem 12019,.@input; //Holy_Egg
+		mes "[Nerlen]";
+		mes "Thank you!";
+		mes "I hope you enjoy";
+		mes "these Holy Eggs~";
+		mes "Hope you to be with God's love.";
+		close;
 	case 3:
 		mes "[Nerlen]";
 		mes "Alright, I understand.";
@@ -334,8 +321,7 @@ morocc,131,26,5	script	Secret Corps#egg	880,{
 			mes "Why don't";
 			mes "you... Join us?";
 			next;
-			switch(select("What for?:Um... But you're suspicious!")) {
-			case 1:
+			if(select("What for?:Um... But you're suspicious!") ==1) {
 				mes "[Corps Member]";
 				mes "I see I've caught your";
 				mes "interest! Well, if you'd";
@@ -345,26 +331,23 @@ morocc,131,26,5	script	Secret Corps#egg	880,{
 				mes "That is my condition.";
 				set easter2008,2;
 				close;
-			case 2:
-				mes "[Corps Member]";
-				mes "Really? Well, I suppose";
-				mes "I can't help it. Let me";
-				mes "assure you that our";
-				mes "organization works";
-				mes "for the greater good.";
-				close;
 			}
-		}
-		else {
 			mes "[Corps Member]";
-			mes "We should all enjoy";
-			mes "life while we still can.";
-			mes "Who knows? Perhaps";
-			mes "there will be other lives";
-			mes "to live after this one.";
-			mes "Perhaps, perhaps....";
+			mes "Really? Well, I suppose";
+			mes "I can't help it. Let me";
+			mes "assure you that our";
+			mes "organization works";
+			mes "for the greater good.";
 			close;
 		}
+		mes "[Corps Member]";
+		mes "We should all enjoy";
+		mes "life while we still can.";
+		mes "Who knows? Perhaps";
+		mes "there will be other lives";
+		mes "to live after this one.";
+		mes "Perhaps, perhaps....";
+		close;
 	}
 	else if (easter2008 == 2) {
 		mes "[Corps Member]";
@@ -374,8 +357,7 @@ morocc,131,26,5	script	Secret Corps#egg	880,{
 		mes "I hope you brought the";
 		mes "10 Holy Eggs I require.";
 		next;
-		switch(select("Give Holy Eggs:Don't Give Holy Eggs")) {
-		case 1:
+		if(select("Give Holy Eggs:Don't Give Holy Eggs") ==1) {
 			mes "[Corps Member]";
 			mes "So you do wish to";
 			mes "join our organization.";
@@ -400,23 +382,20 @@ morocc,131,26,5	script	Secret Corps#egg	880,{
 				mes "sore throat. Give me a sec...";
 				close;
 			}
-			else {
-				mes "[Corps Member]";
-				mes "Hm. You don't have enough";
-				mes "Holy Eggs to meet the condition";
-				mes "I set for you. Did you leave";
-				mes "them in your Storage?";
-				close;
-			}
-		case 2:
 			mes "[Corps Member]";
-			mes "Hm? I suppose I can't";
-			mes "blame you for being a bit";
-			mes "suspicious of us. Let me";
-			mes "assure you that ours is";
-			mes "a mission of holiness.";
+			mes "Hm. You don't have enough";
+			mes "Holy Eggs to meet the condition";
+			mes "I set for you. Did you leave";
+			mes "them in your Storage?";
 			close;
 		}
+		mes "[Corps Member]";
+		mes "Hm? I suppose I can't";
+		mes "blame you for being a bit";
+		mes "suspicious of us. Let me";
+		mes "assure you that ours is";
+		mes "a mission of holiness.";
+		close;
 	}
 	else if (easter2008 == 3) {
 		mes "[Corps Member]";
@@ -452,8 +431,7 @@ morocc,131,26,5	script	Secret Corps#egg	880,{
 		mes "Now, did you bring me";
 		mes "33 Holy Eggs for your task?";
 		next;
-		switch(select("Give Holy Eggs:Don't Give Holy Eggs")) {
-		case 1:
+		if(select("Give Holy Eggs:Don't Give Holy Eggs") ==1) {
 			if (countitem(12019) > 32) {
 				mes "[Corps Member]";
 				mes "Ah, these will do!";
@@ -495,34 +473,29 @@ morocc,131,26,5	script	Secret Corps#egg	880,{
 					set easter2008,7;
 					close;
 				}
-				else {
-					mes "[Corps Member]";
-					mes "Go to Glastheim, and";
-					mes "sacrifice the Holy Eggs";
-					mes "as soon as you enter the";
-					mes "2nd floor. A hero perished";
-					mes "there, but you shall bring";
-					mes "him back to the living!";
-					set easter2008,8;
-					close;
-				}
-			}
-			else {
 				mes "[Corps Member]";
-				mes "Hm? This isn't";
-				mes "33 Holy Eggs. Did you";
-				mes "leave some in your Storage?";
+				mes "Go to Glastheim, and";
+				mes "sacrifice the Holy Eggs";
+				mes "as soon as you enter the";
+				mes "2nd floor. A hero perished";
+				mes "there, but you shall bring";
+				mes "him back to the living!";
+				set easter2008,8;
 				close;
 			}
-		case 2:
 			mes "[Corps Member]";
-			mes "Don't you understand";
-			mes "the righteousness of";
-			mes "our cause? Returning fallen";
-			mes "heroes will bring peace to";
-			mes "our lands much more quickly!";
+			mes "Hm? This isn't";
+			mes "33 Holy Eggs. Did you";
+			mes "leave some in your Storage?";
 			close;
 		}
+		mes "[Corps Member]";
+		mes "Don't you understand";
+		mes "the righteousness of";
+		mes "our cause? Returning fallen";
+		mes "heroes will bring peace to";
+		mes "our lands much more quickly!";
+		close;
 	}
 	else if (easter2008 >= 5 && easter2008 <= 8) {
 		mes "[Corps Member]";
@@ -604,28 +577,22 @@ morocc,131,26,5	script	Secret Corps#egg	880,{
 			getexp 50000,0;
 			getexp 50000,0;
 		}
-		else if ((BaseLevel > 60) && (BaseLevel < 81)) {
+		else if ((BaseLevel > 60) && (BaseLevel < 81))
 			getexp 500000,0;
-		}
-		else if ((BaseLevel > 80) && (BaseLevel < 99)) {
+		else if ((BaseLevel > 80) && (BaseLevel < 99))
 			getexp 1000000,0;
-		}
 		else {
-			if (Upper == 2) {
+			if (Upper == 2)
 				getexp 0,10000000;
-			}
-			else {
+			else
 				getexp 2000000,0;
-			}
 		}
 		close;
 	}
-	else {
-		mes "[Corps Member]";
-		mes "Shh! Tell no one";
-		mes "that I am here.";
-		close;
-	}
+	mes "[Corps Member]";
+	mes "Shh! Tell no one";
+	mes "that I am here.";
+	close;
 }
 
 pay_dun00,22,127,0	script	Trace#egg1	844,{
@@ -663,21 +630,17 @@ pay_dun00,22,127,0	script	Trace#egg1	844,{
 			set easter2008,9;
 			end;
 		}
-		else {
-			mes "[" + strcharinfo(0) + "]";
-			mes "Huh? Where did I put";
-			mes "those 33 Holy Eggs";
-			mes "that I needed for this?";
-			close;
-		}
-	}
-	else {
 		mes "[" + strcharinfo(0) + "]";
-		mes "There was something";
-		mes "here, but I can't tell";
-		mes "for sure what it was...";
+		mes "Huh? Where did I put";
+		mes "those 33 Holy Eggs";
+		mes "that I needed for this?";
 		close;
 	}
+	mes "[" + strcharinfo(0) + "]";
+	mes "There was something";
+	mes "here, but I can't tell";
+	mes "for sure what it was...";
+	close;
 }
 
 iz_dun02,340,346,0	script	Trace#egg	844,{
@@ -715,21 +678,17 @@ iz_dun02,340,346,0	script	Trace#egg	844,{
 			set easter2008,9;
 			end;
 		}
-		else {
-			mes "[" + strcharinfo(0) + "]";
-			mes "Huh? Where did I put";
-			mes "those 33 Holy Eggs";
-			mes "that I needed for this?";
-			close;
-		}
-	}
-	else {
 		mes "[" + strcharinfo(0) + "]";
-		mes "There was something";
-		mes "here, but I can't tell";
-		mes "for sure what it was...";
+		mes "Huh? Where did I put";
+		mes "those 33 Holy Eggs";
+		mes "that I needed for this?";
 		close;
 	}
+	mes "[" + strcharinfo(0) + "]";
+	mes "There was something";
+	mes "here, but I can't tell";
+	mes "for sure what it was...";
+	close;
 }
 
 mjo_dun03,308,256,0	script	Trace#egg2	844,{
@@ -767,21 +726,17 @@ mjo_dun03,308,256,0	script	Trace#egg2	844,{
 			set easter2008,9;
 			end;
 		}
-		else {
-			mes "[" + strcharinfo(0) + "]";
-			mes "Huh? Where did I put";
-			mes "those 33 Holy Eggs";
-			mes "that I needed for this?";
-			close;
-		}
-	}
-	else {
 		mes "[" + strcharinfo(0) + "]";
-		mes "There was something";
-		mes "here, but I can't tell";
-		mes "for sure what it was...";
+		mes "Huh? Where did I put";
+		mes "those 33 Holy Eggs";
+		mes "that I needed for this?";
 		close;
 	}
+	mes "[" + strcharinfo(0) + "]";
+	mes "There was something";
+	mes "here, but I can't tell";
+	mes "for sure what it was...";
+	close;
 }
 
 gl_prison,157,176,0	script	Trace#egg3	844,{
@@ -819,19 +774,15 @@ gl_prison,157,176,0	script	Trace#egg3	844,{
 			set easter2008,9;
 			end;
 		}
-		else {
-			mes "[" + strcharinfo(0) + "]";
-			mes "Huh? Where did I put";
-			mes "those 33 Holy Eggs";
-			mes "that I needed for this?";
-			close;
-		}
-	}
-	else {
 		mes "[" + strcharinfo(0) + "]";
-		mes "There was something";
-		mes "here, but I can't tell";
-		mes "for sure what it was...";
+		mes "Huh? Where did I put";
+		mes "those 33 Holy Eggs";
+		mes "that I needed for this?";
 		close;
 	}
+	mes "[" + strcharinfo(0) + "]";
+	mes "There was something";
+	mes "here, but I can't tell";
+	mes "for sure what it was...";
+	close;
 }
