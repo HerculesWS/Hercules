@@ -254,17 +254,46 @@ const char* get_svn_revision(void)
 	}
 
 	// fallback
-	snprintf(svn_version_buffer, sizeof(svn_version_buffer), "Unknown");
+	svn_version_buffer[0] = HERC_UNKNOWN_VER;
 	return svn_version_buffer;
 }
 #endif
-
+/* whats our origin */
+#define GIT_ORIGIN "master"
+/* Grabs the hash from the last time the user updated his working copy (last pull)  */
+const char *get_git_hash (void) {
+	static char HerculesGitHash[41] = "";//Sha(40) + 1
+	FILE *fp;
+	
+	if( HerculesGitHash[0] != '\0' )
+		return HerculesGitHash;
+	
+	if ( (fp = fopen (".git/refs/remotes/origin/"GIT_ORIGIN, "r")) != NULL) {
+		char line[64];
+		char *rev = malloc (sizeof (char) * 50);
+		
+		if (fgets (line, sizeof (line), fp) && sscanf (line, "%s", rev))
+			snprintf (HerculesGitHash, sizeof (HerculesGitHash), "%s", rev);
+		
+		free (rev);
+		fclose (fp);
+	} else {
+		HerculesGitHash[0] = HERC_UNKNOWN_VER;
+	}
+	
+	if (! (*HerculesGitHash)) {
+		HerculesGitHash[0] = HERC_UNKNOWN_VER;
+	}
+	
+	return HerculesGitHash;
+}
 /*======================================
  *	CORE : Display title
  *  ASCII By CalciumKid 1/12/2011
  *--------------------------------------*/
 static void display_title(void) {
-	//ClearScreen(); // clear screen and go up/left (0, 0 position in text)
+	const char* svn = get_svn_revision();
+	const char* git = get_git_hash();
 
 	ShowMessage("\n");
 	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"                                                                 "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
@@ -279,7 +308,10 @@ static void display_title(void) {
 	ShowMessage(""CL_BG_RED"       "CL_BT_WHITE"                   http://hercules.ws/board/                        "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
 	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"                                                                 "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
 
-	//ShowInfo("SVN Revision: '"CL_WHITE"%s"CL_RESET"'.\n", get_svn_revision());
+	if( git[0] != HERC_UNKNOWN_VER )
+		ShowInfo("Git Hash: '"CL_WHITE"%s"CL_RESET"'\n", git);
+	else if( svn[0] != HERC_UNKNOWN_VER )
+		ShowInfo("SVN Revision: '"CL_WHITE"%s"CL_RESET"'\n", svn);
 }
 
 // Warning if executed as superuser (root)
