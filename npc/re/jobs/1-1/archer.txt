@@ -3,11 +3,12 @@
 //===== By: ================================================== 
 //= Kisuka
 //===== Current Version: ===================================== 
-//= 1.0
+//= 1.1
 //===== Description: ========================================= 
 //= Job Change to Archer Class
 //===== Additional Comments: ================================= 
 //= 1.0 First Version. [Kisuka]
+//= 1.1 Added Baby Job compatibility [Streusel]
 //============================================================ 
 payon_in02,64,71,4	script	Archer Guildsman#archer	85,{
 	if (Upper == 1) {
@@ -61,7 +62,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	85,{
 	next;
 	switch(select("I want to be an Archer.:I need the requirements, please.:Nothing, thanks.")) {
 	case 1:
-		if(Class != Job_Novice) {
+		if(Class != Job_Novice && Class != Job_Baby) {
 			mes "[Archer Guildsman]";
 			if(Class == Job_Archer) {
 				mes "Haha, you are kidding me..";
@@ -90,7 +91,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	85,{
 			mes "[Archer Guildsman]";
 			mes "Congratulations! You are now an Archer! Also, we hope that you actively participate in many programs for the revival of the Archer Guild.";
 			mes "Ah, items have arrived from the Production Department. Here, take these! These are all yours!";
-			jobchange Job_Archer;
+			callfunc "Job_Change",Job_Archer;
 			getitem 1742,1;	// N_Composite_Bow
 			getitem 12004,1;	// Arrow_Container
 			getitem 12009,1;	// Silver_Arrow_Container

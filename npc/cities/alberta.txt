@@ -67,11 +67,11 @@ alberta,131,139,2	script	Drunken Old Man	54,{
 	mes "Wh-what are you";
 	mes "staring at? Get lost!!";
 	next;
-	if(select("Say nothing.","Leave him alone.") ==1) {
+	if(select("Say nothing.","Leave him alone.") == 1) {
 		mes "[Deagle]";
 		mes "Hahahaha ^666666*hiccup*^000000... You've got some nerve. I may look worthless now, but I used to be a sailor on the 'Going Mary.'";
 		next;
-		if(select("Never heard of it.","Really? No kidding!") ==1) {
+		if(select("Never heard of it.","Really? No kidding!") == 1) {
 			mes "[Deagle]";
 			mes "Never heard of it?! Everybody knows th'notorious pirate ship 'Going Mary!' ^666666*Hiccup~*^000000";
 			next;
@@ -228,7 +228,7 @@ alb2trea,39,50,6	script	Fisk#a2t	100,{
 	mes "[Fisk]";
 	mes "So you wanna head back to the mainland in Alberta, eh?";
 	next;
-	if(select("Yes please.","I changed my mind.")==1)
+	if(select("Yes please.","I changed my mind.") == 1)
 		warp "alberta",192,169;
 	close;
 }
@@ -251,7 +251,7 @@ alberta,195,151,2	script	Paul	86,{
 	mes "fee is only";
 	mes "200 Zeny.";
 	next;
-	if(select("Sign me up!","Uh, no thanks.") ==1) {
+	if(select("Sign me up!","Uh, no thanks.") == 1) {
 		if (Zeny < 200) {
 			mes "[Paul]";
 			mes "It seems you don't have the money, my friend. But please come back when you're able to pay.";
@@ -295,8 +295,7 @@ alberta,190,173,4	script	Phelix	85,{
 	}
 	mes "Hmm.. you want to exchange jellopies for Red Potions or some Carrots eh? Well.. which one?";
 	next;
-	if(select("Red Potions please.","Carrots please.") ==1) {
-	case 1:
+	if(select("Red Potions please.","Carrots please.") == 1) {
 		mes "[Phelix]";
 		mes "Alright...";
 		mes "Let's see";
