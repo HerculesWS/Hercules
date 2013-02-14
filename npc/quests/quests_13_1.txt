@@ -9272,7 +9272,7 @@ mid_campin,90,121,5	script	Hibba Agip	459,{
 		mes "And please take this small reward.";
 		mes "Thank you for your help so far.";
 		next;
-		if(checkre(0)
+		if(checkre(0))
 			getexp 30000,0; //kRO
 			//getexp 3750000,0; //iRO?
 		else

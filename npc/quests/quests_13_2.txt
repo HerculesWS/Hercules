@@ -44,7 +44,7 @@
 //= 2.4 Optimized (6000+ lines reduced!). [Euphy]
 //= 2.4a Fixed an invisible NPC clashing with a warp portal. [Euphy]
 //= 2.5 Fixed EXP values, added support for pre-re
-/=      & other minor stuff [Streusel] 
+//=      & other minor stuff [Streusel] 
 //============================================================ 
 
 // Cat Hand Addition.
