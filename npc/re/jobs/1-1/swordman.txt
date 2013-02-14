@@ -80,7 +80,7 @@ izlude_in,74,172,4	script	Swordman#swd	119,{
 		mes "In my opinion, Swordman is the best job ever!";
 		close;
 	case 2:
-		if(Class != Job_Novice) {
+		if(Class != Job_Novice && Class != Job_Baby) {
 			mes "[Swordman Guildsman]";
 			if(Class == Job_Swordman) {
 				mes "You are already an excellent Swordman, aren't you?";

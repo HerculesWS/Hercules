@@ -65,7 +65,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	69,{
 		mes "If you want to become a Thief, ask the sharp-eyed guy next to me.";
 		close;
 	}
-	if(Class != Job_Novice) {
+	if(Class != Job_Novice && Class != Job_Baby) {
 		if(Class == Job_Thief) {
 			mes "[Thief Guildsman]";
 			mes "Hey~ if you have any trouble, get it out to me anytime, huh?";
@@ -169,7 +169,7 @@ moc_prydb1,42,133,2	script	Thief Guildsman#thief	118,{
 		mes "[Commander of Thief Guild]";
 		mes "'"+strcharinfo(0)+".'";
 		mes "'For those who are ready, the moonlight shall open the way. Now you are fully ready, I now officially allow you to become a member of the Thief Guild.'";
-		jobchange Job_Thief;
+		callfunc "Job_Change",Job_Thief;
 		set q_job_thief,0;
 		getitem 13041,1; // N_Main_Gauche
 		next;
@@ -189,7 +189,7 @@ moc_prydb1,42,133,2	script	Thief Guildsman#thief	118,{
 		mes "See you again.";
 		close;
 	}
-	if(Class != Job_Novice) {
+	if(Class != Job_Novice && Class != Job_Baby) {
 		if(Class == Job_Thief) {
 			mes "[Brad]";
 			mes "I don't have any special events now. So go on your way and come back later.";

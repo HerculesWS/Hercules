@@ -52,7 +52,7 @@ geffen_in,164,124,4	script	Mage Guildsman#mage	123,{
 			close;
 		}
 	}
-	if(Class != Job_Novice) {
+	if(Class != Job_Novice && Class != Job_Baby) {
 		mes "[Mage Guildsman]";
 		if(Class == Job_Mage) {
 			mes "Hey, haven't you realized? You're already a Mage, silly!";
