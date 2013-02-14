@@ -3,13 +3,14 @@
 //===== By: ================================================== 
 //= Kisuka
 //===== Current Version: ===================================== 
-//= 1.0
+//= 1.1
 //===== Compatible With: ===================================== 
 //= rAthena SVN
 //===== Description: ========================================= 
 //= Job Change to Mage Class
 //===== Additional Comments: ================================= 
 //= 1.0 First Version. [Kisuka]
+//= 1.1 Added Baby Job compatibility [Streusel]
 //============================================================ 
 geffen_in,164,124,4	script	Mage Guildsman#mage	123,{
 	if (Upper == 1) {

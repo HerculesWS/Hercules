@@ -3,13 +3,14 @@
 //===== By: ================================================== 
 //= Kisuka
 //===== Current Version: ===================================== 
-//= 1.0
+//= 1.1
 //===== Compatible With: ===================================== 
 //= rAthena SVN
 //===== Description: ========================================= 
 //= Job Change to Thief Class
 //===== Additional Comments: ================================= 
 //= 1.0 First Version. [Kisuka]
+//= 1.1 Added Baby Job compatibility [Streusel]
 //============================================================ 
 moc_prydb1,39,129,2	script	Thief Guide#thief	69,{
 	if (Upper == 1) {

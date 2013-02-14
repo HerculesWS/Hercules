@@ -3,12 +3,13 @@
 //===== By: ================================================== 
 //= Kisuka
 //===== Current Version: ===================================== 
-//= 1.1
+//= 1.2
 //===== Description: ========================================= 
 //= Job Change to Acolyte Class
 //===== Additional Comments: ================================= 
 //= 1.0 First Version. [Kisuka]
 //= 1.1 Added back the npcs used for the priest quest.
+//= 1.2 Added Baby Job compatibility [Streusel]
 //============================================================ 
 prt_church,184,41,4	script	Cleric#aco	60,{
 	if (Upper == 1) {
