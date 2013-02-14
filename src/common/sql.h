@@ -325,7 +325,7 @@ int SqlStmt_NextRow(SqlStmt* self);
 /// Frees the result of the statement execution.
 void SqlStmt_FreeResult(SqlStmt* self);
 
-
+void Sql_HerculesUpdateCheck(Sql* self);
 
 #if defined(SQL_REMOVE_SHOWDEBUG)
 #define SqlStmt_ShowDebug(self) (void)0

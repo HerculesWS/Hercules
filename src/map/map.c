@@ -3939,6 +3939,8 @@ int do_init(int argc, char *argv[])
 
 	ShowStatus("Server is '"CL_GREEN"ready"CL_RESET"' and listening on port '"CL_WHITE"%d"CL_RESET"'.\n\n", map_port);
 
+	Sql_HerculesUpdateCheck(mmysql_handle);
+	
 	if( runflag != CORE_ST_STOP )
 	{
 		shutdown_callback = do_shutdown;

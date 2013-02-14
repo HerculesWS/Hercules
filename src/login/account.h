@@ -152,5 +152,6 @@ struct AccountDB
 	AccountDBIterator* (*iterator)(AccountDB* self);
 };
 
+void account_db_sql_up(AccountDB* self);
 
 #endif // __ACCOUNT_H_INCLUDED__

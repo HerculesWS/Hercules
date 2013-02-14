@@ -633,6 +633,16 @@ CREATE TABLE IF NOT EXISTS `skill_homunculus` (
 ) ENGINE=MyISAM;
 
 --
+-- Table structure for table `sql_updates`
+--
+
+CREATE TABLE IF NOT EXISTS `sql_updates` (
+  `timestamp` int(11) unsigned NOT NULL,
+  `ignored` enum('Yes','No') NOT NULL DEFAULT 'No'
+) ENGINE=MyISAM;
+
+
+--
 -- Table structure for table `sstatus`
 --
 

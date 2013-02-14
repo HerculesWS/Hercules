@@ -4820,6 +4820,7 @@ int do_init(int argc, char **argv)
 	char_fd = make_listen_bind(bind_ip, char_port);
 	ShowStatus("The char-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %d).\n\n", char_port);
 
+	Sql_HerculesUpdateCheck(sql_handle);
 	if( runflag != CORE_ST_STOP )
 	{
 		shutdown_callback = do_shutdown;
