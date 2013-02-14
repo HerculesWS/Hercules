@@ -618,6 +618,7 @@ CREATE TABLE IF NOT EXISTS `skill` (
   `char_id` int(11) unsigned NOT NULL default '0',
   `id` smallint(11) unsigned NOT NULL default '0',
   `lv` tinyint(4) unsigned NOT NULL default '0',
+  `flag` TINYINT(1) UNSIGNED NOT NULL default 0,
   PRIMARY KEY  (`char_id`,`id`)
 ) ENGINE=MyISAM;
 
@@ -641,6 +642,8 @@ CREATE TABLE IF NOT EXISTS `sql_updates` (
   `ignored` enum('Yes','No') NOT NULL DEFAULT 'No'
 ) ENGINE=MyISAM;
 
+-- Existent updates to enter
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1360858500);
 
 --
 -- Table structure for table `sstatus`

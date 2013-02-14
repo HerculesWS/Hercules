@@ -595,19 +595,20 @@ int mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		}
 
 		StringBuf_Clear(&buf);
-		StringBuf_Printf(&buf, "INSERT INTO `%s`(`char_id`,`id`,`lv`) VALUES ", skill_db);
+		StringBuf_Printf(&buf, "INSERT INTO `%s`(`char_id`,`id`,`lv`,`flag`) VALUES ", skill_db);
 		//insert here.
-		for( i = 0, count = 0; i < MAX_SKILL; ++i )
-		{
-			if( p->skill[i].id != 0 && p->skill[i].flag != SKILL_FLAG_TEMPORARY )
-			{
-				if( p->skill[i].flag == SKILL_FLAG_PERMANENT && p->skill[i].lv == 0 )
+		for( i = 0, count = 0; i < MAX_SKILL; ++i ) {
+			if( p->skill[i].id != 0 && p->skill[i].flag != SKILL_FLAG_TEMPORARY ) {
+							
+				if( p->skill[i].lv == 0 && ( p->skill[i].flag == SKILL_FLAG_PERM_GRANTED || p->skill[i].flag == SKILL_FLAG_PERMANENT ) )
 					continue;
-				if( p->skill[i].flag != SKILL_FLAG_PERMANENT && (p->skill[i].flag - SKILL_FLAG_REPLACED_LV_0) == 0 )
+				if( p->skill[i].flag != SKILL_FLAG_PERMANENT && p->skill[i].flag != SKILL_FLAG_PERM_GRANTED && (p->skill[i].flag - SKILL_FLAG_REPLACED_LV_0) == 0 )
 					continue;
 				if( count )
 					StringBuf_AppendStr(&buf, ",");
-				StringBuf_Printf(&buf, "('%d','%d','%d')", char_id, p->skill[i].id, (p->skill[i].flag == SKILL_FLAG_PERMANENT ? p->skill[i].lv : p->skill[i].flag - SKILL_FLAG_REPLACED_LV_0));
+				StringBuf_Printf(&buf, "('%d','%d','%d','%d')", char_id, p->skill[i].id,
+								 ( (p->skill[i].flag == SKILL_FLAG_PERMANENT || p->skill[i].flag == SKILL_FLAG_PERM_GRANTED) ? p->skill[i].lv : p->skill[i].flag - SKILL_FLAG_REPLACED_LV_0),
+								 p->skill[i].flag == SKILL_FLAG_PERM_GRANTED ? p->skill[i].flag : 0);/* other flags do not need to be saved */
 				++count;
 			}
 		}
@@ -1274,13 +1275,16 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 
 	//read skill
 	//`skill` (`char_id`, `id`, `lv`)
-	if( SQL_ERROR == SqlStmt_Prepare(stmt, "SELECT `id`, `lv` FROM `%s` WHERE `char_id`=? LIMIT %d", skill_db, MAX_SKILL)
+	if( SQL_ERROR == SqlStmt_Prepare(stmt, "SELECT `id`, `lv`,`flag` FROM `%s` WHERE `char_id`=? LIMIT %d", skill_db, MAX_SKILL)
 	||	SQL_ERROR == SqlStmt_BindParam(stmt, 0, SQLDT_INT, &char_id, 0)
 	||	SQL_ERROR == SqlStmt_Execute(stmt)
 	||	SQL_ERROR == SqlStmt_BindColumn(stmt, 0, SQLDT_USHORT, &tmp_skill.id, 0, NULL, NULL)
-	||	SQL_ERROR == SqlStmt_BindColumn(stmt, 1, SQLDT_USHORT, &tmp_skill.lv, 0, NULL, NULL) )
+	||	SQL_ERROR == SqlStmt_BindColumn(stmt, 1, SQLDT_USHORT, &tmp_skill.lv, 0, NULL, NULL)
+	||	SQL_ERROR == SqlStmt_BindColumn(stmt, 2, SQLDT_USHORT, &tmp_skill.flag, 0, NULL, NULL) )
 		SqlStmt_ShowDebug(stmt);
-	tmp_skill.flag = SKILL_FLAG_PERMANENT;
+	
+	if( tmp_skill.flag != SKILL_FLAG_PERM_GRANTED )
+		tmp_skill.flag = SKILL_FLAG_PERMANENT;
 
 	for( i = 0; i < MAX_SKILL && SQL_SUCCESS == SqlStmt_NextRow(stmt); ++i )
 	{
