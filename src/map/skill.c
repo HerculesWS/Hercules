@@ -10570,308 +10570,316 @@ struct skill_unit_group* skill_unitsetting (struct block_list *src, uint16 skill
 	unit_flag = skill_get_unit_flag(skill_id);
 	layout = skill_get_unit_layout(skill_id,skill_lv,src,x,y);
 
+	if( map[src->m].unit_count ) {
+		ARR_FIND(0, map[src->m].unit_count, i, map[src->m].units[i]->skill_id == skill_id );
+
+		if( i < map[src->m].unit_count ) {
+			limit = limit * map[src->m].units[i]->modifier / 100;
+		}
+	}
+	
 	sd = BL_CAST(BL_PC, src);
 	status = status_get_status_data(src);
 	sc = status_get_sc(src);	// for traps, firewall and fogwall - celest
 
 	switch( skill_id ) {
-	case MH_STEINWAND:
-	    val2 = 4 + skill_lv; //nb of attack blocked
-	    break;
-	case MG_SAFETYWALL:
-	#ifdef RENEWAL
-		/**
-		 * According to data provided in RE, SW life is equal to 3 times caster's health
-		 **/
-		val2 = status_get_max_hp(src) * 3;
-	#else
-		val2 = skill_lv+1;
-	#endif
-		break;
-	case MG_FIREWALL:
-		if(sc && sc->data[SC_VIOLENTGALE])
-			limit = limit*3/2;
-		val2=4+skill_lv;
-		break;
-
-	case AL_WARP:
-		val1=skill_lv+6;
-		if(!(flag&1))
-			limit=2000;
-		else // previous implementation (not used anymore)
-		{	//Warp Portal morphing to active mode, extract relevant data from src. [Skotlex]
-			if( src->type != BL_SKILL ) return NULL;
-			group = ((TBL_SKILL*)src)->group;
-			src = map_id2bl(group->src_id);
-			if( !src ) return NULL;
-			val2 = group->val2; //Copy the (x,y) position you warp to
-			val3 = group->val3; //as well as the mapindex to warp to.
-		}
-		break;
-	case HP_BASILICA:
-		val1 = src->id; // Store caster id.
-		break;
-
-	case PR_SANCTUARY:
-	case NPC_EVILLAND:
-		val1=(skill_lv+3)*2;
-		break;
-
-	case WZ_FIREPILLAR:
-		if( map_getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) )
-			return NULL;
-		if((flag&1)!=0)
-			limit=1000;
-		val1=skill_lv+2;
-		break;
-	case WZ_QUAGMIRE:	//The target changes to "all" if used in a gvg map. [Skotlex]
-	case AM_DEMONSTRATION:
-	case GN_HELLS_PLANT:
-		if (map_flag_vs(src->m) && battle_config.vs_traps_bctall
-			&& (src->type&battle_config.vs_traps_bctall))
-			target = BCT_ALL;
-		break;
-	case HT_SHOCKWAVE:
-		val1=skill_lv*15+10;
-	case HT_SANDMAN:
-	case MA_SANDMAN:
-	case HT_CLAYMORETRAP:
-	case HT_SKIDTRAP:
-	case MA_SKIDTRAP:
-	case HT_LANDMINE:
-	case MA_LANDMINE:
-	case HT_ANKLESNARE:
-	case HT_FLASHER:
-	case HT_FREEZINGTRAP:
-	case MA_FREEZINGTRAP:
-	case HT_BLASTMINE:
-	/**
-	 * Ranger
-	 **/
-	case RA_ELECTRICSHOCKER:
-	case RA_CLUSTERBOMB:
-	case RA_MAGENTATRAP:
-	case RA_COBALTTRAP:
-	case RA_MAIZETRAP:
-	case RA_VERDURETRAP:
-	case RA_FIRINGTRAP:
-	case RA_ICEBOUNDTRAP:
-		{
-			struct skill_condition req = skill_get_requirement(sd,skill_id,skill_lv);
-			ARR_FIND(0, MAX_SKILL_ITEM_REQUIRE, i, req.itemid[i] && (req.itemid[i] == ITEMID_TRAP || req.itemid[i] == ITEMID_TRAP_ALLOY));
-			if( req.itemid[i] )
-				req_item = req.itemid[i];
-			if( map_flag_gvg(src->m) || map[src->m].flag.battleground )
-				limit *= 4; // longer trap times in WOE [celest]
-			if( battle_config.vs_traps_bctall && map_flag_vs(src->m) && (src->type&battle_config.vs_traps_bctall) )
-				target = BCT_ALL;
-		}
-		break;
-
-	case SA_LANDPROTECTOR:
-	case SA_VOLCANO:
-	case SA_DELUGE:
-	case SA_VIOLENTGALE:
-	{
-		struct skill_unit_group *old_sg;
-		if ((old_sg = skill_locate_element_field(src)) != NULL)
-		{	//HelloKitty confirmed that these are interchangeable,
-			//so you can change element and not consume gemstones.
-			if ((
-				old_sg->skill_id == SA_VOLCANO ||
-				old_sg->skill_id == SA_DELUGE ||
-				old_sg->skill_id == SA_VIOLENTGALE
-			) && old_sg->limit > 0)
-			{	//Use the previous limit (minus the elapsed time) [Skotlex]
-				limit = old_sg->limit - DIFF_TICK(gettick(), old_sg->tick);
-				if (limit < 0)	//This can happen...
-					limit = skill_get_time(skill_id,skill_lv);
-			}
-			skill_clear_group(src,1);
-		}
-		break;
-	}
-
-	case BA_DISSONANCE:
-	case DC_UGLYDANCE:
-		val1 = 10;	//FIXME: This value is not used anywhere, what is it for? [Skotlex]
-		break;
-	case BA_WHISTLE:
-		val1 = skill_lv +status->agi/10; // Flee increase
-		val2 = ((skill_lv+1)/2)+status->luk/10; // Perfect dodge increase
-		if(sd){
-			val1 += pc_checkskill(sd,BA_MUSICALLESSON);
-			val2 += pc_checkskill(sd,BA_MUSICALLESSON);
-		}
-		break;
-	case DC_HUMMING:
-		val1 = 2*skill_lv+status->dex/10; // Hit increase
+		case MH_STEINWAND:
+			val2 = 4 + skill_lv; //nb of attack blocked
+			break;
+		case MG_SAFETYWALL:
 		#ifdef RENEWAL
-			val1 *= 2;
+			/**
+			 * According to data provided in RE, SW life is equal to 3 times caster's health
+			 **/
+			val2 = status_get_max_hp(src) * 3;
+		#else
+			val2 = skill_lv+1;
 		#endif
-		if(sd)
-			val1 += pc_checkskill(sd,DC_DANCINGLESSON);
-		break;
-	case BA_POEMBRAGI:
-		val1 = 3*skill_lv+status->dex/10; // Casting time reduction
-		//For some reason at level 10 the base delay reduction is 50%.
-		val2 = (skill_lv<10?3*skill_lv:50)+status->int_/5; // After-cast delay reduction
-		if(sd){
-			val1 += 2*pc_checkskill(sd,BA_MUSICALLESSON);
-			val2 += 2*pc_checkskill(sd,BA_MUSICALLESSON);
-		}
-		break;
-	case DC_DONTFORGETME:
-		val1 = status->dex/10 + 3*skill_lv + 5; // ASPD decrease
-		val2 = status->agi/10 + 3*skill_lv + 5; // Movement speed adjustment.
-		if(sd){
-			val1 += pc_checkskill(sd,DC_DANCINGLESSON);
-			val2 += pc_checkskill(sd,DC_DANCINGLESSON);
-		}
-		break;
-	case BA_APPLEIDUN:
-		val1 = 5+2*skill_lv+status->vit/10; // MaxHP percent increase
-		if(sd)
-			val1 += pc_checkskill(sd,BA_MUSICALLESSON);
-		break;
-	case DC_SERVICEFORYOU:
-		val1 = 15+skill_lv+(status->int_/10); // MaxSP percent increase TO-DO: this INT bonus value is guessed
-		val2 = 20+3*skill_lv+(status->int_/10); // SP cost reduction
-		if(sd){
-			val1 += pc_checkskill(sd,DC_DANCINGLESSON); //TO-DO This bonus value is guessed
-			val2 += pc_checkskill(sd,DC_DANCINGLESSON); //TO-DO Should be half this value
-		}
-		break;
-	case BA_ASSASSINCROSS:
-		val1 = 100+(10*skill_lv)+(status->agi/10); // ASPD increase
-		if(sd)
-			val1 += 5*pc_checkskill(sd,BA_MUSICALLESSON);
-		break;
-	case DC_FORTUNEKISS:
-		val1 = 10+skill_lv+(status->luk/10); // Critical increase
-		if(sd)
-			val1 += pc_checkskill(sd,DC_DANCINGLESSON);
-		val1*=10; //Because every 10 crit is an actual cri point.
-		break;
-	case BD_DRUMBATTLEFIELD:
-	#ifdef RENEWAL
-		val1 = (skill_lv+5)*25;	//Watk increase
-		val2 = skill_lv*10;		//Def increase
-	#else
-		val1 = (skill_lv+1)*25;	//Watk increase
-		val2 = (skill_lv+1)*2;	//Def increase
-	#endif
-		break;
-	case BD_RINGNIBELUNGEN:
-		val1 = (skill_lv+2)*25;	//Watk increase
-		break;
-	case BD_RICHMANKIM:
-		val1 = 25 + 11*skill_lv; //Exp increase bonus.
-		break;
-	case BD_SIEGFRIED:
-		val1 = 55 + skill_lv*5;	//Elemental Resistance
-		val2 = skill_lv*10;	//Status ailment resistance
-		break;
-	case WE_CALLPARTNER:
-		if (sd) val1 = sd->status.partner_id;
-		break;
-	case WE_CALLPARENT:
-		if (sd) {
-			val1 = sd->status.father;
-		 	val2 = sd->status.mother;
-		}
-		break;
-	case WE_CALLBABY:
-		if (sd) val1 = sd->status.child;
-		break;
-	case NJ_KAENSIN:
-		skill_clear_group(src, 1); //Delete previous Kaensins/Suitons
-		val2 = (skill_lv+1)/2 + 4;
-		break;
-	case NJ_SUITON:
-		skill_clear_group(src, 1);
-		break;
+			break;
+		case MG_FIREWALL:
+			if(sc && sc->data[SC_VIOLENTGALE])
+				limit = limit*3/2;
+			val2=4+skill_lv;
+			break;
 
-	case GS_GROUNDDRIFT:
-		{
-		int element[5]={ELE_WIND,ELE_DARK,ELE_POISON,ELE_WATER,ELE_FIRE};
-
-		val1 = status->rhw.ele;
-		if (!val1)
-			val1=element[rnd()%5];
-
-		switch (val1)
-		{
-			case ELE_FIRE:
-				subunt++;
-			case ELE_WATER:
-				subunt++;
-			case ELE_POISON:
-				subunt++;
-			case ELE_DARK:
-				subunt++;
-			case ELE_WIND:
-				break;
-			default:
-				subunt=rnd()%5;
-				break;
-		}
-
-		break;
-		}
-	case GC_POISONSMOKE:
-		if( !(sc && sc->data[SC_POISONINGWEAPON]) )
-			return NULL;
-		val2 = sc->data[SC_POISONINGWEAPON]->val2; // Type of Poison
-		val3 = sc->data[SC_POISONINGWEAPON]->val1;
-		limit = 4000 + 2000 * skill_lv;
-		break;
-	case GD_LEADERSHIP:
-	case GD_GLORYWOUNDS:
-	case GD_SOULCOLD:
-	case GD_HAWKEYES:
-		limit = 1000000;//it doesn't matter
-		break;
-	case LG_BANDING:
-		limit = -1;
-		break;
-	case WM_REVERBERATION:
-		interval = limit;
-		val2 = 1;
-	case WM_POEMOFNETHERWORLD:	// Can't be placed on top of Land Protector.
-		if( map_getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) )
-			return NULL;
-		break;
-	case SO_CLOUD_KILL:
-		skill_clear_group(src, 4);
-		break;
-	case SO_WARMER:
-		skill_clear_group(src, 8);
-		break;
-	case SO_VACUUM_EXTREME:
-		range++;
-
-		break;
-	case SC_BLOODYLUST:
-		skill_clear_group(src, 32);
-		break;
-	case GN_WALLOFTHORN:
-		if( flag&1 )
-			limit = 3000;
-		val3 = (x<<16)|y;
-		break;
-	case KO_ZENKAI:
-		if( sd ){
-			ARR_FIND(1, 6, i, sd->talisman[i] > 0);
-			if( i < 5 ){
-				val1 = sd->talisman[i]; // no. of aura
-				val2 = i; // aura type
-				limit += val1 * 1000;
-				subunt = i - 1;
-				pc_del_talisman(sd, sd->talisman[i], i);
+		case AL_WARP:
+			val1=skill_lv+6;
+			if(!(flag&1))
+				limit=2000;
+			else // previous implementation (not used anymore)
+			{	//Warp Portal morphing to active mode, extract relevant data from src. [Skotlex]
+				if( src->type != BL_SKILL ) return NULL;
+				group = ((TBL_SKILL*)src)->group;
+				src = map_id2bl(group->src_id);
+				if( !src ) return NULL;
+				val2 = group->val2; //Copy the (x,y) position you warp to
+				val3 = group->val3; //as well as the mapindex to warp to.
 			}
+			break;
+		case HP_BASILICA:
+			val1 = src->id; // Store caster id.
+			break;
+
+		case PR_SANCTUARY:
+		case NPC_EVILLAND:
+			val1=(skill_lv+3)*2;
+			break;
+
+		case WZ_FIREPILLAR:
+			if( map_getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) )
+				return NULL;
+			if((flag&1)!=0)
+				limit=1000;
+			val1=skill_lv+2;
+			break;
+		case WZ_QUAGMIRE:	//The target changes to "all" if used in a gvg map. [Skotlex]
+		case AM_DEMONSTRATION:
+		case GN_HELLS_PLANT:
+			if (map_flag_vs(src->m) && battle_config.vs_traps_bctall
+				&& (src->type&battle_config.vs_traps_bctall))
+				target = BCT_ALL;
+			break;
+		case HT_SHOCKWAVE:
+			val1=skill_lv*15+10;
+		case HT_SANDMAN:
+		case MA_SANDMAN:
+		case HT_CLAYMORETRAP:
+		case HT_SKIDTRAP:
+		case MA_SKIDTRAP:
+		case HT_LANDMINE:
+		case MA_LANDMINE:
+		case HT_ANKLESNARE:
+		case HT_FLASHER:
+		case HT_FREEZINGTRAP:
+		case MA_FREEZINGTRAP:
+		case HT_BLASTMINE:
+		/**
+		 * Ranger
+		 **/
+		case RA_ELECTRICSHOCKER:
+		case RA_CLUSTERBOMB:
+		case RA_MAGENTATRAP:
+		case RA_COBALTTRAP:
+		case RA_MAIZETRAP:
+		case RA_VERDURETRAP:
+		case RA_FIRINGTRAP:
+		case RA_ICEBOUNDTRAP:
+			{
+				struct skill_condition req = skill_get_requirement(sd,skill_id,skill_lv);
+				ARR_FIND(0, MAX_SKILL_ITEM_REQUIRE, i, req.itemid[i] && (req.itemid[i] == ITEMID_TRAP || req.itemid[i] == ITEMID_TRAP_ALLOY));
+				if( req.itemid[i] )
+					req_item = req.itemid[i];
+				if( map_flag_gvg(src->m) || map[src->m].flag.battleground )
+					limit *= 4; // longer trap times in WOE [celest]
+				if( battle_config.vs_traps_bctall && map_flag_vs(src->m) && (src->type&battle_config.vs_traps_bctall) )
+					target = BCT_ALL;
+			}
+			break;
+
+		case SA_LANDPROTECTOR:
+		case SA_VOLCANO:
+		case SA_DELUGE:
+		case SA_VIOLENTGALE:
+		{
+			struct skill_unit_group *old_sg;
+			if ((old_sg = skill_locate_element_field(src)) != NULL)
+			{	//HelloKitty confirmed that these are interchangeable,
+				//so you can change element and not consume gemstones.
+				if ((
+					old_sg->skill_id == SA_VOLCANO ||
+					old_sg->skill_id == SA_DELUGE ||
+					old_sg->skill_id == SA_VIOLENTGALE
+				) && old_sg->limit > 0)
+				{	//Use the previous limit (minus the elapsed time) [Skotlex]
+					limit = old_sg->limit - DIFF_TICK(gettick(), old_sg->tick);
+					if (limit < 0)	//This can happen...
+						limit = skill_get_time(skill_id,skill_lv);
+				}
+				skill_clear_group(src,1);
+			}
+			break;
 		}
-		break;
+
+		case BA_DISSONANCE:
+		case DC_UGLYDANCE:
+			val1 = 10;	//FIXME: This value is not used anywhere, what is it for? [Skotlex]
+			break;
+		case BA_WHISTLE:
+			val1 = skill_lv +status->agi/10; // Flee increase
+			val2 = ((skill_lv+1)/2)+status->luk/10; // Perfect dodge increase
+			if(sd){
+				val1 += pc_checkskill(sd,BA_MUSICALLESSON);
+				val2 += pc_checkskill(sd,BA_MUSICALLESSON);
+			}
+			break;
+		case DC_HUMMING:
+			val1 = 2*skill_lv+status->dex/10; // Hit increase
+			#ifdef RENEWAL
+				val1 *= 2;
+			#endif
+			if(sd)
+				val1 += pc_checkskill(sd,DC_DANCINGLESSON);
+			break;
+		case BA_POEMBRAGI:
+			val1 = 3*skill_lv+status->dex/10; // Casting time reduction
+			//For some reason at level 10 the base delay reduction is 50%.
+			val2 = (skill_lv<10?3*skill_lv:50)+status->int_/5; // After-cast delay reduction
+			if(sd){
+				val1 += 2*pc_checkskill(sd,BA_MUSICALLESSON);
+				val2 += 2*pc_checkskill(sd,BA_MUSICALLESSON);
+			}
+			break;
+		case DC_DONTFORGETME:
+			val1 = status->dex/10 + 3*skill_lv + 5; // ASPD decrease
+			val2 = status->agi/10 + 3*skill_lv + 5; // Movement speed adjustment.
+			if(sd){
+				val1 += pc_checkskill(sd,DC_DANCINGLESSON);
+				val2 += pc_checkskill(sd,DC_DANCINGLESSON);
+			}
+			break;
+		case BA_APPLEIDUN:
+			val1 = 5+2*skill_lv+status->vit/10; // MaxHP percent increase
+			if(sd)
+				val1 += pc_checkskill(sd,BA_MUSICALLESSON);
+			break;
+		case DC_SERVICEFORYOU:
+			val1 = 15+skill_lv+(status->int_/10); // MaxSP percent increase TO-DO: this INT bonus value is guessed
+			val2 = 20+3*skill_lv+(status->int_/10); // SP cost reduction
+			if(sd){
+				val1 += pc_checkskill(sd,DC_DANCINGLESSON); //TO-DO This bonus value is guessed
+				val2 += pc_checkskill(sd,DC_DANCINGLESSON); //TO-DO Should be half this value
+			}
+			break;
+		case BA_ASSASSINCROSS:
+			val1 = 100+(10*skill_lv)+(status->agi/10); // ASPD increase
+			if(sd)
+				val1 += 5*pc_checkskill(sd,BA_MUSICALLESSON);
+			break;
+		case DC_FORTUNEKISS:
+			val1 = 10+skill_lv+(status->luk/10); // Critical increase
+			if(sd)
+				val1 += pc_checkskill(sd,DC_DANCINGLESSON);
+			val1*=10; //Because every 10 crit is an actual cri point.
+			break;
+		case BD_DRUMBATTLEFIELD:
+		#ifdef RENEWAL
+			val1 = (skill_lv+5)*25;	//Watk increase
+			val2 = skill_lv*10;		//Def increase
+		#else
+			val1 = (skill_lv+1)*25;	//Watk increase
+			val2 = (skill_lv+1)*2;	//Def increase
+		#endif
+			break;
+		case BD_RINGNIBELUNGEN:
+			val1 = (skill_lv+2)*25;	//Watk increase
+			break;
+		case BD_RICHMANKIM:
+			val1 = 25 + 11*skill_lv; //Exp increase bonus.
+			break;
+		case BD_SIEGFRIED:
+			val1 = 55 + skill_lv*5;	//Elemental Resistance
+			val2 = skill_lv*10;	//Status ailment resistance
+			break;
+		case WE_CALLPARTNER:
+			if (sd) val1 = sd->status.partner_id;
+			break;
+		case WE_CALLPARENT:
+			if (sd) {
+				val1 = sd->status.father;
+				val2 = sd->status.mother;
+			}
+			break;
+		case WE_CALLBABY:
+			if (sd) val1 = sd->status.child;
+			break;
+		case NJ_KAENSIN:
+			skill_clear_group(src, 1); //Delete previous Kaensins/Suitons
+			val2 = (skill_lv+1)/2 + 4;
+			break;
+		case NJ_SUITON:
+			skill_clear_group(src, 1);
+			break;
+
+		case GS_GROUNDDRIFT:
+			{
+			int element[5]={ELE_WIND,ELE_DARK,ELE_POISON,ELE_WATER,ELE_FIRE};
+
+			val1 = status->rhw.ele;
+			if (!val1)
+				val1=element[rnd()%5];
+
+			switch (val1)
+			{
+				case ELE_FIRE:
+					subunt++;
+				case ELE_WATER:
+					subunt++;
+				case ELE_POISON:
+					subunt++;
+				case ELE_DARK:
+					subunt++;
+				case ELE_WIND:
+					break;
+				default:
+					subunt=rnd()%5;
+					break;
+			}
+
+			break;
+			}
+		case GC_POISONSMOKE:
+			if( !(sc && sc->data[SC_POISONINGWEAPON]) )
+				return NULL;
+			val2 = sc->data[SC_POISONINGWEAPON]->val2; // Type of Poison
+			val3 = sc->data[SC_POISONINGWEAPON]->val1;
+			limit = 4000 + 2000 * skill_lv;
+			break;
+		case GD_LEADERSHIP:
+		case GD_GLORYWOUNDS:
+		case GD_SOULCOLD:
+		case GD_HAWKEYES:
+			limit = 1000000;//it doesn't matter
+			break;
+		case LG_BANDING:
+			limit = -1;
+			break;
+		case WM_REVERBERATION:
+			interval = limit;
+			val2 = 1;
+		case WM_POEMOFNETHERWORLD:	// Can't be placed on top of Land Protector.
+			if( map_getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) )
+				return NULL;
+			break;
+		case SO_CLOUD_KILL:
+			skill_clear_group(src, 4);
+			break;
+		case SO_WARMER:
+			skill_clear_group(src, 8);
+			break;
+		case SO_VACUUM_EXTREME:
+			range++;
+
+			break;
+		case SC_BLOODYLUST:
+			skill_clear_group(src, 32);
+			break;
+		case GN_WALLOFTHORN:
+			if( flag&1 )
+				limit = 3000;
+			val3 = (x<<16)|y;
+			break;
+		case KO_ZENKAI:
+			if( sd ){
+				ARR_FIND(1, 6, i, sd->talisman[i] > 0);
+				if( i < 5 ){
+					val1 = sd->talisman[i]; // no. of aura
+					val2 = i; // aura type
+					limit += val1 * 1000;
+					subunt = i - 1;
+					pc_del_talisman(sd, sd->talisman[i], i);
+				}
+			}
+			break;
 	}
 
 	nullpo_retr(NULL, group=skill_initunitgroup(src,layout->count,skill_id,skill_lv,skill_get_unit_id(skill_id,flag&1)+subunt, limit, interval));
@@ -10910,8 +10918,7 @@ struct skill_unit_group* skill_unitsetting (struct block_list *src, uint16 skill
 	}
 
 	limit = group->limit;
-	for( i = 0; i < layout->count; i++ )
-	{
+	for( i = 0; i < layout->count; i++ ) {
 		struct skill_unit *unit;
 		int ux = x + layout->dx[i];
 		int uy = y + layout->dy[i];
@@ -10924,65 +10931,61 @@ struct skill_unit_group* skill_unitsetting (struct block_list *src, uint16 skill
 		if( battle_config.skill_wall_check && skill_get_unit_flag(skill_id)&UF_PATHCHECK && !path_search_long(NULL,src->m,ux,uy,x,y,CELL_CHKWALL) )
 			continue; // no path between cell and center of casting.
 
-		switch( skill_id )
-		{
-		case MG_FIREWALL:
-		case NJ_KAENSIN:
-			val2=group->val2;
-			break;
-		case WZ_ICEWALL:
-			val1 = (skill_lv <= 1) ? 500 : 200 + 200*skill_lv;
-			val2 = map_getcell(src->m, ux, uy, CELL_GETTYPE);
-			break;
-		case HT_LANDMINE:
-		case MA_LANDMINE:
-		case HT_ANKLESNARE:
-		case HT_SHOCKWAVE:
-		case HT_SANDMAN:
-		case MA_SANDMAN:
-		case HT_FLASHER:
-		case HT_FREEZINGTRAP:
-		case MA_FREEZINGTRAP:
-		case HT_TALKIEBOX:
-		case HT_SKIDTRAP:
-		case MA_SKIDTRAP:
-		case HT_CLAYMORETRAP:
-		case HT_BLASTMINE:
-		/**
-		 * Ranger
-		 **/
-		case RA_ELECTRICSHOCKER:
-		case RA_CLUSTERBOMB:
-		case RA_MAGENTATRAP:
-		case RA_COBALTTRAP:
-		case RA_MAIZETRAP:
-		case RA_VERDURETRAP:
-		case RA_FIRINGTRAP:
-		case RA_ICEBOUNDTRAP:
-			val1 = 3500;
-			break;
-		case GS_DESPERADO:
-			val1 = abs(layout->dx[i]);
-			val2 = abs(layout->dy[i]);
-			if (val1 < 2 || val2 < 2) { //Nearby cross, linear decrease with no diagonals
-				if (val2 > val1) val1 = val2;
-				if (val1) val1--;
-				val1 = 36 -12*val1;
-			} else //Diagonal edges
-				val1 = 28 -4*val1 -4*val2;
-			if (val1 < 1) val1 = 1;
-			val2 = 0;
-			break;
-		case WM_REVERBERATION:
-			val1 = 1 + skill_lv;
-			break;
-		case GN_WALLOFTHORN:
-			val1 = 1000 * skill_lv;	// Need official value. [LimitLine]
-			break;
-		default:
-			if (group->state.song_dance&0x1)
-				val2 = unit_flag&(UF_DANCE|UF_SONG); //Store whether this is a song/dance
-			break;
+		switch( skill_id ) {
+			case MG_FIREWALL:
+			case NJ_KAENSIN:
+				val2=group->val2;
+				break;
+			case WZ_ICEWALL:
+				val1 = (skill_lv <= 1) ? 500 : 200 + 200*skill_lv;
+				val2 = map_getcell(src->m, ux, uy, CELL_GETTYPE);
+				break;
+			case HT_LANDMINE:
+			case MA_LANDMINE:
+			case HT_ANKLESNARE:
+			case HT_SHOCKWAVE:
+			case HT_SANDMAN:
+			case MA_SANDMAN:
+			case HT_FLASHER:
+			case HT_FREEZINGTRAP:
+			case MA_FREEZINGTRAP:
+			case HT_TALKIEBOX:
+			case HT_SKIDTRAP:
+			case MA_SKIDTRAP:
+			case HT_CLAYMORETRAP:
+			case HT_BLASTMINE:
+			case RA_ELECTRICSHOCKER:
+			case RA_CLUSTERBOMB:
+			case RA_MAGENTATRAP:
+			case RA_COBALTTRAP:
+			case RA_MAIZETRAP:
+			case RA_VERDURETRAP:
+			case RA_FIRINGTRAP:
+			case RA_ICEBOUNDTRAP:
+				val1 = 3500;
+				break;
+			case GS_DESPERADO:
+				val1 = abs(layout->dx[i]);
+				val2 = abs(layout->dy[i]);
+				if (val1 < 2 || val2 < 2) { //Nearby cross, linear decrease with no diagonals
+					if (val2 > val1) val1 = val2;
+					if (val1) val1--;
+					val1 = 36 -12*val1;
+				} else //Diagonal edges
+					val1 = 28 -4*val1 -4*val2;
+				if (val1 < 1) val1 = 1;
+				val2 = 0;
+				break;
+			case WM_REVERBERATION:
+				val1 = 1 + skill_lv;
+				break;
+			case GN_WALLOFTHORN:
+				val1 = 1000 * skill_lv;	// Need official value. [LimitLine]
+				break;
+			default:
+				if (group->state.song_dance&0x1)
+					val2 = unit_flag&(UF_DANCE|UF_SONG); //Store whether this is a song/dance
+				break;
 		}
 		if (skill_get_unit_flag(skill_id) & UF_RANGEDSINGLEUNIT && i == (layout->count / 2))
 			val2 |= UF_RANGEDSINGLEUNIT; // center.

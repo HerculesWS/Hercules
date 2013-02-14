@@ -2894,13 +2894,41 @@ int map_delmap(char* mapname)
 	return 0;
 }
 
-/// Initializes map flags and adjusts them depending on configuration.
-void map_flags_init(void)
-{
+void map_data_clean(void) {
 	int i;
 
-	for( i = 0; i < map_num; i++ )
-	{
+	for( i = 0; i < map_num; i++ ) {
+		
+		if(map[i].cell) aFree(map[i].cell);
+		if(map[i].block) aFree(map[i].block);
+		if(map[i].block_mob) aFree(map[i].block_mob);
+		
+		if(battle_config.dynamic_mobs) { //Dynamic mobs flag by [random]
+			int j;
+			if(map[i].mob_delete_timer != INVALID_TIMER)
+				delete_timer(map[i].mob_delete_timer, map_removemobs_timer);
+			for (j=0; j<MAX_MOB_LIST_PER_MAP; j++)
+				if (map[i].moblist[j]) aFree(map[i].moblist[j]);
+		}
+
+		if( map[i].unit_count ) {
+			int v;
+			for(v = 0; v < map[i].unit_count; v++) {
+				aFree(map[i].units[v]);
+			}
+			aFree(map[i].units);
+			map[i].unit_count = 0;
+		}
+		
+	}
+	
+}
+
+/// Initializes map flags and adjusts them depending on configuration.
+void map_flags_init(void) {
+	int i;
+
+	for( i = 0; i < map_num; i++ ) {
 		// mapflags
 		memset(&map[i].flag, 0, sizeof(map[i].flag));
 
@@ -2911,6 +2939,15 @@ void map_flags_init(void)
 		map[i].jexp      = 100;  // per map job exp multiplicator
 		memset(map[i].drop_list, 0, sizeof(map[i].drop_list));  // pvp nightmare drop list
 
+		if( map[i].unit_count ) {
+			int v;
+			for(v = 0; v < map[i].unit_count; v++) {
+				aFree(map[i].units[v]);
+			}
+			aFree(map[i].units);
+			map[i].unit_count = 0;
+		}
+		
 		// adjustments
 		if( battle_config.pk_mode )
 			map[i].flag.pvp = 1; // make all maps pvp for pk_mode [Valaris]
@@ -3552,7 +3589,7 @@ static int cleanup_db_sub(DBKey key, DBData *data, va_list va)
  *------------------------------------------*/
 void do_final(void)
 {
-	int i, j;
+	int i;
 	struct map_session_data* sd;
 	struct s_mapiterator* iter;
 
@@ -3603,18 +3640,8 @@ void do_final(void)
 
 	map_db->destroy(map_db, map_db_final);
 
-	for (i=0; i<map_num; i++) {
-		if(map[i].cell) aFree(map[i].cell);
-		if(map[i].block) aFree(map[i].block);
-		if(map[i].block_mob) aFree(map[i].block_mob);
-		if(battle_config.dynamic_mobs) { //Dynamic mobs flag by [random]
-			if(map[i].mob_delete_timer != INVALID_TIMER)
-				delete_timer(map[i].mob_delete_timer, map_removemobs_timer);
-			for (j=0; j<MAX_MOB_LIST_PER_MAP; j++)
-				if (map[i].moblist[j]) aFree(map[i].moblist[j]);
-		}
-	}
-
+	map_data_clean();
+	
 	mapindex_final();
 	if(enable_grf)
 		grfio_final();

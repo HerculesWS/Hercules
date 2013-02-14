@@ -496,6 +496,11 @@ struct iwall_data {
 	bool shootable;
 };
 
+struct adjust_unit_duration {
+	int skill_id;
+	unsigned short modifier;
+};
+
 struct map_data {
 	char name[MAP_NAME_LENGTH];
 	uint16 index; // The map index used by the mapindex* functions.
@@ -588,6 +593,9 @@ struct map_data {
 	// Instance Variables
 	int instance_id;
 	int instance_src_map;
+	
+	struct adjust_unit_duration **units;
+	unsigned short unit_count;
 };
 
 /// Stores information about a remote map (for multi-mapserver setups).
