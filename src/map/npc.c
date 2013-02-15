@@ -3412,10 +3412,29 @@ static const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, con
 			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n", atoi(mod), w4, map[m].name, filepath, strline(buffer,start-buffer));
 		} else {
 			int idx = map[m].unit_count;
-			RECREATE(map[m].units, struct adjust_unit_duration*, ++map[m].unit_count);
-			CREATE(map[m].units[idx],struct adjust_unit_duration,1);
-			map[m].units[idx]->skill_id = skill_id;
+			RECREATE(map[m].units, struct mapflag_skill_adjust*, ++map[m].unit_count);
+			CREATE(map[m].units[idx],struct mapflag_skill_adjust,1);
+			map[m].units[idx]->skill_id = (unsigned short)skill_id;
 			map[m].units[idx]->modifier = (unsigned short)atoi(mod);
+		}
+	} else if (!strcmpi(w3,"adjust_skill_damage")) {
+		char *mod;
+		int skill_id;
+		
+		strtok(w4,"\t");/* makes w4 contain only 4th param */
+		
+		if( !(mod = strtok(NULL,"\t")) ) {/* makes mod contain only the 5th param */
+			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
+		} else if( !( skill_id = skill_name2id(w4) ) ) {
+			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", w4, map[m].name, filepath, strline(buffer,start-buffer));
+		} else if ( atoi(mod) < 1 || atoi(mod) > USHRT_MAX ) {
+			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", atoi(mod), w4, map[m].name, filepath, strline(buffer,start-buffer));
+		} else {
+			int idx = map[m].skill_count;
+			RECREATE(map[m].skills, struct mapflag_skill_adjust*, ++map[m].skill_count);
+			CREATE(map[m].skills[idx],struct mapflag_skill_adjust,1);
+			map[m].skills[idx]->skill_id = (unsigned short)skill_id;
+			map[m].skills[idx]->modifier = (unsigned short)atoi(mod);
 		}
 	} else
 		ShowError("npc_parse_mapflag: unrecognized mapflag '%s' (file '%s', line '%d').\n", w3, filepath, strline(buffer,start-buffer));

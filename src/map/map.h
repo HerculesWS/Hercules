@@ -496,8 +496,8 @@ struct iwall_data {
 	bool shootable;
 };
 
-struct adjust_unit_duration {
-	int skill_id;
+struct mapflag_skill_adjust {
+	unsigned short skill_id;
 	unsigned short modifier;
 };
 
@@ -594,8 +594,12 @@ struct map_data {
 	int instance_id;
 	int instance_src_map;
 	
-	struct adjust_unit_duration **units;
+	/* adjust_unit_duration mapflag */
+	struct mapflag_skill_adjust **units;
 	unsigned short unit_count;
+	/* adjust_skill_damage mapflag */
+	struct mapflag_skill_adjust **skills;
+	unsigned short skill_count;
 };
 
 /// Stores information about a remote map (for multi-mapserver setups).

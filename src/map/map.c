@@ -2894,8 +2894,8 @@ int map_delmap(char* mapname)
 	return 0;
 }
 
-void map_data_clean(void) {
-	int i;
+void do_final_maps(void) {
+	int i, v = 0;
 
 	for( i = 0; i < map_num; i++ ) {
 		
@@ -2912,21 +2912,34 @@ void map_data_clean(void) {
 		}
 
 		if( map[i].unit_count ) {
-			int v;
 			for(v = 0; v < map[i].unit_count; v++) {
 				aFree(map[i].units[v]);
 			}
-			aFree(map[i].units);
+			if( map[i].units ) {
+				aFree(map[i].units);
+				map[i].units = NULL;
+			}
 			map[i].unit_count = 0;
 		}
 		
+		if( map[i].skill_count ) {
+			for(v = 0; v < map[i].skill_count; v++) {
+				aFree(map[i].skills[v]);
+			}
+			if( map[i].skills ) {
+				aFree(map[i].skills);
+				map[i].skills = NULL;
+			}
+			map[i].skill_count = 0;
+		}
+
 	}
 	
 }
 
 /// Initializes map flags and adjusts them depending on configuration.
 void map_flags_init(void) {
-	int i;
+	int i, v = 0;
 
 	for( i = 0; i < map_num; i++ ) {
 		// mapflags
@@ -2940,13 +2953,22 @@ void map_flags_init(void) {
 		memset(map[i].drop_list, 0, sizeof(map[i].drop_list));  // pvp nightmare drop list
 
 		if( map[i].unit_count ) {
-			int v;
 			for(v = 0; v < map[i].unit_count; v++) {
 				aFree(map[i].units[v]);
 			}
 			aFree(map[i].units);
-			map[i].unit_count = 0;
 		}
+		map[i].units = NULL;
+		map[i].unit_count = 0;
+		
+		if( map[i].skill_count ) {
+			for(v = 0; v < map[i].skill_count; v++) {
+				aFree(map[i].skills[v]);
+			}
+			aFree(map[i].skills);
+		}
+		map[i].skills = NULL;
+		map[i].skill_count = 0;
 		
 		// adjustments
 		if( battle_config.pk_mode )
@@ -3637,10 +3659,9 @@ void do_final(void)
 	do_final_battleground();
 	do_final_duel();
 	do_final_elemental();
-
+	do_final_maps();
+	
 	map_db->destroy(map_db, map_db_final);
-
-	map_data_clean();
 	
 	mapindex_final();
 	if(enable_grf)
