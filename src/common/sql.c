@@ -1016,6 +1016,53 @@ void Sql_inter_server_read(const char* cfgName, bool first) {
 	return;
 }
 
+void Sql_HerculesUpdateCheck(Sql* self) {
+	char line[22];// "yyyy-mm-dd--hh-mm" (17) + ".sql" (4) + 1
+	FILE* ifp;/* index fp */
+	unsigned int performed = 0;
+	
+	if( !( ifp = fopen("sql-files/upgrades/index.txt", "r") ) ) {
+		ShowError("SQL upgrade index was not found!\n");
+		return;
+	}
+
+	while(fgets(line, sizeof(line), ifp)) {
+		char path[41];// "sql-files/upgrades/" (19) + "yyyy-mm-dd--hh-mm" (17) + ".sql" (4) + 1
+		char timestamp[11];// "1360186680" (10) + 1
+		FILE* ufp;/* upgrade fp */
+		
+		sprintf(path,"sql-files/upgrades/%s",line);
+		
+		if( !( ufp = fopen(path, "r") ) ) {
+			ShowError("SQL upgrade file %s was not found!\n",path);
+			continue;
+		}
+		
+		if( fgetc(ufp) != '#' )
+			continue;
+		
+		fseek (ufp,1,SEEK_SET);/* woo. skip the # */
+		
+		if( fgets(timestamp,sizeof(timestamp),ufp) ) {
+			unsigned int timestampui = atol(timestamp);
+			if( SQL_ERROR == Sql_Query(self, "SELECT 1 FROM `sql_updates` WHERE `timestamp` = '%u' LIMIT 1", timestampui) )
+				Sql_ShowDebug(self);
+			if( Sql_NumRows(self) != 1 ) {
+				ShowSQL("'"CL_WHITE"%s"CL_RESET"' wasn't applied to the database\n",path);
+				performed++;
+			}
+		}
+		
+		fclose(ufp);
+	}
+	
+	fclose(ifp);
+	
+	if( performed ) {
+		ShowSQL("If you did apply these updates or would like to be skip, insert a new entry in your sql_updates table with the timestamp of each file\n");
+	}
+}
+
 void Sql_Init(void) {
 	Sql_inter_server_read("conf/inter-server.conf",true);
 }
