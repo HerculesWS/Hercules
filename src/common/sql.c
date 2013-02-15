@@ -1031,6 +1031,9 @@ void Sql_HerculesUpdateCheck(Sql* self) {
 		char timestamp[11];// "1360186680" (10) + 1
 		FILE* ufp;/* upgrade fp */
 		
+		if( line[0] == '\n' || ( line[0] == '/' && line[1] == '/' ) )/* skip \n and "//" comments */
+			continue;
+		
 		sprintf(path,"sql-files/upgrades/%s",line);
 		
 		if( !( ufp = fopen(path, "r") ) ) {
