@@ -3104,13 +3104,12 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 				break;
 		}
 
-		if( sd )
-		{
+		if( (i = battle_adjust_skill_damage(src->m,skill_id)) )
+			ATK_RATE(i);
+		
+		if( sd ) {
 			if (skill_id && (i = pc_skillatk_bonus(sd, skill_id)))
 				ATK_ADDRATE(i);
-
-			if( (i = battle_adjust_skill_damage(sd->bl.m,skill_id)) )
-				ATK_RATE(i);
 			
 			if( skill_id != PA_SACRIFICE && skill_id != MO_INVESTIGATE && skill_id != CR_GRANDCROSS && skill_id != NPC_GRANDDARKNESS && skill_id != PA_SHIELDCHAIN && !flag.cri )
 			{ //Elemental/Racial adjustments
@@ -4094,7 +4093,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 			if ((i = pc_skillatk_bonus(sd, skill_id)))
 				ad.damage += ad.damage*i/100;
 			
-			if( (i = battle_adjust_skill_damage(sd->bl.m,skill_id)) )
+			if( (i = battle_adjust_skill_damage(src->m,skill_id)) )
 				MATK_RATE(i);
 
 			//Ignore Defense?
@@ -4477,7 +4476,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	if (sd && (i = pc_skillatk_bonus(sd, skill_id)))
 		md.damage += md.damage*i/100;
 
-	if( (i = battle_adjust_skill_damage(sd->bl.m,skill_id)) )
+	if( (i = battle_adjust_skill_damage(src->m,skill_id)) )
 		md.damage = md.damage * i / 100;
 
 	if(md.damage < 0)
