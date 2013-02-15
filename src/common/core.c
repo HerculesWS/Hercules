@@ -259,7 +259,7 @@ const char* get_svn_revision(void)
 }
 #endif
 /* whats our origin */
-#define GIT_ORIGIN "master"
+#define GIT_ORIGIN "refs/remotes/origin/master"
 /* Grabs the hash from the last time the user updated his working copy (last pull)  */
 const char *get_git_hash (void) {
 	static char HerculesGitHash[41] = "";//Sha(40) + 1
@@ -268,7 +268,7 @@ const char *get_git_hash (void) {
 	if( HerculesGitHash[0] != '\0' )
 		return HerculesGitHash;
 	
-	if ( (fp = fopen (".git/refs/remotes/origin/"GIT_ORIGIN, "r")) != NULL) {
+	if ( (fp = fopen (".git/"GIT_ORIGIN, "r")) != NULL) {
 		char line[64];
 		char *rev = malloc (sizeof (char) * 50);
 		
