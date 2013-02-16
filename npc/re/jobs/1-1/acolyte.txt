@@ -3,13 +3,14 @@
 //===== By: ================================================== 
 //= Kisuka
 //===== Current Version: ===================================== 
-//= 1.2
+//= 1.3
 //===== Description: ========================================= 
 //= Job Change to Acolyte Class
 //===== Additional Comments: ================================= 
 //= 1.0 First Version. [Kisuka]
 //= 1.1 Added back the npcs used for the priest quest.
 //= 1.2 Added Baby Job compatibility [Streusel]
+//= 1.3 Rewrote bits [Euphy]
 //============================================================ 
 prt_church,184,41,4	script	Cleric#aco	60,{
 	if (Upper == 1) {
@@ -62,13 +63,12 @@ prt_church,184,41,4	script	Cleric#aco	60,{
 	next;
 	switch(select("Change your job to acolyte.:Ask the requirements to be an acolyte.:Quit it.")) {
 	case 1:
-		if(Class != Job_Novice && Class != Job_Baby) {
+		if(BaseJob != Job_Novice) {
 			mes "[Father Mareusis]";
-			if(Class == Job_Acolyte) {
+			if(BaseJob == Job_Acolyte)
 				mes "Are you feeling okay today? I can tell by your attire that you are already an Acolyte. You're not joking around, are you?";
-			}else{
+			else
 				mes "I'm sorry but it seems you already have your own job, aren't you?";
-			}
 			close;
 		}else{
 			mes "[Father Mareusis]";

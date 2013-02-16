@@ -597,7 +597,7 @@ dic_in01,51,270,7	script	Supply Dept. 1 Manager	449,{
 		mes "Cannot proceed because the weight of your items is too heavy. Let's try again after you get rid of some weight.";
 		close;
 	}
-	if (!isequipped(2782) < 1) {
+	if (!isequipped(2782)) {
 		mes "¡õ¢£¡ô";
 		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
 		next;
@@ -878,7 +878,7 @@ dic_in01,40,193,1	script	Papyrus#0001	453,{
 		mes "Your inventory is too heavy.";
 		close;
 	}
-	if (isequipped(2782)) {
+	if (!isequipped(2782)) {
 		mes "¡õ¢£¡ô";
 		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
 		next;
@@ -6941,8 +6941,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	453,{
 			mes "But of course, since this is adding spells on top of its original magic, I cannot guarantee that you will get what you want on one try.";
 			close;
 		}
-		if (countitem(2844) < 1) //Luz de El Dicastes
-		{
+		if (countitem(2844) < 1) { //Light of El Dicastes
 			mes "[Kareka]";
 			mes "Either you are not wearing or don't have the equipment to upgrade on you.";
 			close;
