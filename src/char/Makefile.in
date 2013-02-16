@@ -29,21 +29,21 @@ endif
 @SET_MAKE@
 
 #####################################################################
-.PHONY : all char-server_sql clean help
+.PHONY : all char-server clean help
 
-all: char-server_sql
+all: char-server
 
-char-server_sql: $(CHAR_SERVER_SQL_DEPENDS)
+char-server: $(CHAR_SERVER_SQL_DEPENDS)
 	@echo "	LD	$@"
-	@@CC@ @LDFLAGS@ -o ../../char-server_sql@EXEEXT@ $(CHAR_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
+	@@CC@ @LDFLAGS@ -o ../../char-server@EXEEXT@ $(CHAR_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
 
 clean:
 	@echo "	CLEAN	char"
-	@rm -rf *.o obj_sql ../../char-server_sql@EXEEXT@
+	@rm -rf *.o obj_sql ../../char-server@EXEEXT@
 
 help:
-	@echo "possible targets are 'char-server_sql' 'all' 'clean' 'help'"
-	@echo "'char-server_sql'  - char server (SQL version)"
+	@echo "possible targets are 'char-server' 'all' 'clean' 'help'"
+	@echo "'char-server'  - char server (SQL version)"
 	@echo "'all'              - builds all above targets"
 	@echo "'clean'            - cleans builds and objects"
 	@echo "'help'             - outputs this message"

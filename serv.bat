@@ -47,8 +47,8 @@ ECHO %2 has crashed!
 GOTO RESTART_NT
 
 :DIRECT
-ECHO Do not run this file directly. It is used by logserv.bat, charserv.bat,
-ECHO mapserv.bat and their '-sql' counterparts.
+ECHO Do not run this file directly. It is used by login-server.bat, char-server.bat,
+ECHO and map-server.bat
 GOTO END
 
 :NOTFOUND

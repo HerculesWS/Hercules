@@ -32,7 +32,7 @@ MAP_H = map.h chrif.h clif.h pc.h status.h npc.h \
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
 	ALL_DEPENDS=txt sql
-	SQL_DEPENDS=map-server_sql
+	SQL_DEPENDS=map-server
 else
 	ALL_TARGET=txt
 	SQL_DEPENDS=needs_mysql
@@ -59,7 +59,7 @@ sql: $(SQL_DEPENDS)
 
 clean:
 	@echo "	CLEAN	map"
-	@rm -rf *.o obj_txt obj_sql ../../map-server@EXEEXT@ ../../map-server_sql@EXEEXT@
+	@rm -rf *.o obj_txt obj_sql ../../map-server@EXEEXT@ ../../map-server@EXEEXT@
 
 help:
 ifeq ($(HAVE_MYSQL),yes)
@@ -90,9 +90,9 @@ obj_sql:
 
 # executables
 
-map-server_sql: obj_sql $(MAP_SQL_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a
+map-server: obj_sql $(MAP_SQL_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a
 	@echo "	LD	$@"
-	@@CC@ @LDFLAGS@ -o ../../map-server_sql@EXEEXT@ $(MAP_SQL_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @PCRE_LIBS@ @MYSQL_LIBS@
+	@@CC@ @LDFLAGS@ -o ../../map-server@EXEEXT@ $(MAP_SQL_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @PCRE_LIBS@ @MYSQL_LIBS@
 
 # map object files
 
