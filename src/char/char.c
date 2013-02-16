@@ -3768,7 +3768,18 @@ int parse_char(int fd)
 
 			char_id = atoi(data);
 			Sql_FreeResult(sql_handle);
-			mmo_char_fromsql(char_id, &char_dat, true);
+			
+			/* set char as online prior to loading its data so 3rd party applications will realise the sql data is not reliable */
+			set_char_online(-2,char_id,sd->account_id);
+			if( !mmo_char_fromsql(char_id, &char_dat, true) ) { /* failed? set it back offline */
+				set_char_offline(char_id, sd->account_id);
+				/* failed to load something. REJECT! */
+				WFIFOHEAD(fd,3);
+				WFIFOW(fd,0) = 0x6c;
+				WFIFOB(fd,2) = 0;
+				WFIFOSET(fd,3);
+				break;/* jump off this boat */
+			}
 
 			//Have to switch over to the DB instance otherwise data won't propagate [Kevin]
 			cd = (struct mmo_charstatus *)idb_get(char_db_, char_id);
@@ -3866,8 +3877,6 @@ int parse_char(int fd)
 			node->group_id = sd->group_id;
 			node->ip = ipl;
 			idb_put(auth_db, sd->account_id, node);
-
-			set_char_online(-2,node->char_id,sd->account_id);
 
 		}
 		break;
