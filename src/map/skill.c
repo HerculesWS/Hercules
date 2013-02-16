@@ -1,4 +1,4 @@
-﻿// Copyright (c) Hercules dev team, licensed under GNU GPL.
+﻿// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
