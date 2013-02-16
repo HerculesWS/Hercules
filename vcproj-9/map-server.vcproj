@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="map-server_sql"
+	Name="map-server"
 	ProjectGUID="{D356871D-58E1-450B-967A-E6E9646175AF}"
-	RootNamespace="map-server_sql"
+	RootNamespace="map-server"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
