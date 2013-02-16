@@ -645,6 +645,7 @@ CREATE TABLE IF NOT EXISTS `sql_updates` (
 
 -- Existent updates to enter
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1360858500);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1360951560);
 
 --
 -- Table structure for table `sstatus`
