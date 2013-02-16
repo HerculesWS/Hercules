@@ -4830,10 +4830,16 @@ int do_init(int argc, char **argv)
 		Sql_ShowDebug(sql_handle);
 
 	set_defaultparse(parse_char);
-	char_fd = make_listen_bind(bind_ip, char_port);
-	ShowStatus("The char-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %d).\n\n", char_port);
-
+	
+	if( (char_fd = make_listen_bind(bind_ip,char_port)) == -1 ) {
+		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",char_port);
+		exit(EXIT_FAILURE);
+	}
+	
 	Sql_HerculesUpdateCheck(sql_handle);
+	
+	ShowStatus("The char-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %d).\n\n", char_port);
+	
 	if( runflag != CORE_ST_STOP )
 	{
 		shutdown_callback = do_shutdown;
