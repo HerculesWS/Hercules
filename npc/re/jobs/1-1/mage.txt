@@ -3,7 +3,7 @@
 //===== By: ================================================== 
 //= Kisuka
 //===== Current Version: ===================================== 
-//= 1.1
+//= 1.2
 //===== Compatible With: ===================================== 
 //= rAthena SVN
 //===== Description: ========================================= 
@@ -11,6 +11,7 @@
 //===== Additional Comments: ================================= 
 //= 1.0 First Version. [Kisuka]
 //= 1.1 Added Baby Job compatibility [Streusel]
+//= 1.2 Rewrote bits [Euphy]
 //============================================================ 
 geffen_in,164,124,4	script	Mage Guildsman#mage	123,{
 	if (Upper == 1) {
@@ -53,9 +54,9 @@ geffen_in,164,124,4	script	Mage Guildsman#mage	123,{
 			close;
 		}
 	}
-	if(Class != Job_Novice && Class != Job_Baby) {
+	if(BaseJob != Job_Novice) {
 		mes "[Mage Guildsman]";
-		if(Class == Job_Mage) {
+		if(BaseJob == Job_Mage) {
 			mes "Hey, haven't you realized? You're already a Mage, silly!";
 			mes "One of these days you'll realize the power inside of you when you can make Fire with your mind!";
 		}else{
@@ -63,7 +64,6 @@ geffen_in,164,124,4	script	Mage Guildsman#mage	123,{
 		}
 		close;
 	}else{
-		mes "[Mage Guildsman]";
 		mes "Hey?";
 		next;
 		switch(select("I want to be a Mage:What are the requirements to be a Mage?:Nothing, thanks.")) {

@@ -3,12 +3,13 @@
 //===== By: ================================================== 
 //= Kisuka
 //===== Current Version: ===================================== 
-//= 1.1
+//= 1.2
 //===== Description: ========================================= 
 //= Job Change to Archer Class
 //===== Additional Comments: ================================= 
 //= 1.0 First Version. [Kisuka]
 //= 1.1 Added Baby Job compatibility [Streusel]
+//= 1.2 Rewrote bits [Euphy]
 //============================================================ 
 payon_in02,64,71,4	script	Archer Guildsman#archer	85,{
 	if (Upper == 1) {
@@ -62,9 +63,9 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	85,{
 	next;
 	switch(select("I want to be an Archer.:I need the requirements, please.:Nothing, thanks.")) {
 	case 1:
-		if(Class != Job_Novice && Class != Job_Baby) {
+		if(BaseJob != Job_Novice) {
 			mes "[Archer Guildsman]";
-			if(Class == Job_Archer) {
+			if(BaseJob == Job_Archer) {
 				mes "Haha, you are kidding me..";
 			}else{
 				mes "I feel sorry but only Novices can change their job.";

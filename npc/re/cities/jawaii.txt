@@ -9,7 +9,8 @@
 //===== Description: =========================================
 //= Jawaii town NPCs.
 //===== Additional Comments: =================================
-//= 1.0 First Version. Renewal coordinates by Masao.
+//= 1.0 First Version. Renewal coordinates [Masao]
+//= 1.1 Changed to Official coordinates [Streusel]
 //============================================================
 
-izlude,102,150,6	duplicate(Honeymoon_Helper_Izlude)	Honeymoon Helper#Izlude	71
+izlude,180,224,6	duplicate(Honeymoon_Helper_Izlude)	Honeymoon Helper#Izlude	71
