@@ -863,7 +863,7 @@ static void chrif_char_ask_name_answer(int acc, const char* player_name, uint16 
  * Request char server to change sex of char (modified by Yor)
  *------------------------------------------*/
 int chrif_changedsex(int fd) {
-	int acc, sex, i;
+	int acc, sex;
 	struct map_session_data *sd;
 
 	acc = RFIFOL(fd,2);
@@ -880,6 +880,7 @@ int chrif_changedsex(int fd) {
 
 		// reset skill of some job
 		if ((sd->class_&MAPID_UPPERMASK) == MAPID_BARDDANCER) {
+			int i;
 			// remove specifical skills of Bard classes 
 			for(i = 315; i <= 322; i++) {
 				if (sd->status.skill[i].id > 0 && sd->status.skill[i].flag == SKILL_FLAG_PERMANENT) {

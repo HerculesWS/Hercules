@@ -481,7 +481,6 @@ void pc_inventory_rentals(struct map_session_data *sd)
 
 void pc_inventory_rental_add(struct map_session_data *sd, int seconds)
 {
-	const struct TimerData * td;
 	int tick = seconds * 1000;
 
 	if( sd == NULL )
@@ -489,6 +488,7 @@ void pc_inventory_rental_add(struct map_session_data *sd, int seconds)
 
 	if( sd->rental_timer != INVALID_TIMER )
 	{
+		const struct TimerData * td;
 		td = get_timer(sd->rental_timer);
 		if( DIFF_TICK(td->tick, gettick()) > tick )
 		{ // Update Timer as this one ends first than the current one
@@ -1361,14 +1361,15 @@ int pc_calc_skilltree(struct map_session_data *sd)
 		flag = 0;
 		for( i = 0; i < MAX_SKILL_TREE && (id = skill_tree[c][i].id) > 0; i++ )
 		{
-			int j, f, k, inf2;
-
+			int f;
 			if( sd->status.skill[id].id )
 				continue; //Skill already known.
 
 			f = 1;
 			if(!battle_config.skillfree) {
+				int j;
 				for(j = 0; j < MAX_PC_SKILL_REQUIRE; j++) {
+					int k;
 					if((k=skill_tree[c][i].need[j].id))
 					{
 						if (sd->status.skill[k].id == 0 || sd->status.skill[k].flag == SKILL_FLAG_TEMPORARY || sd->status.skill[k].flag == SKILL_FLAG_PLAGIARIZED)
@@ -1390,6 +1391,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 			}
 
 			if( f ) {
+				int inf2;
 				inf2 = skill_get_inf2(id);
 
 				if(!sd->status.skill[id].lv && (
@@ -3669,7 +3671,6 @@ int pc_payzeny(struct map_session_data *sd,int zeny, enum e_log_pick_type type, 
 
 int pc_paycash(struct map_session_data *sd, int price, int points)
 {
-	char output[128];
 	int cash;
 	nullpo_retr(-1,sd);
 
@@ -3699,6 +3700,7 @@ int pc_paycash(struct map_session_data *sd, int price, int points)
 
 	if( battle_config.cashshop_show_points )
 	{
+		char output[128];
 		sprintf(output, msg_txt(504), points, cash, sd->kafraPoints, sd->cashPoints);
 		clif_disp_onlyself(sd, output, strlen(output));
 	}
@@ -4214,7 +4216,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 int pc_useitem(struct map_session_data *sd,int n)
 {
 	unsigned int tick = gettick();
-	int amount, i, nameid;
+	int amount, nameid;
 	struct script_code *script;
 
 	nullpo_ret(sd);
@@ -4264,6 +4266,7 @@ int pc_useitem(struct map_session_data *sd,int n)
 		return 0;
 
 	if( sd->inventory_data[n]->delay > 0 ) {
+		int i;
 		ARR_FIND(0, MAX_ITEMDELAYS, i, sd->item_delay[i].nameid == nameid );
 			if( i == MAX_ITEMDELAYS ) /* item not found. try first empty now */
 				ARR_FIND(0, MAX_ITEMDELAYS, i, !sd->item_delay[i].nameid );
@@ -6770,11 +6773,11 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 				int eq_num=0,eq_n[MAX_INVENTORY];
 				memset(eq_n,0,sizeof(eq_n));
 				for(i=0;i<MAX_INVENTORY;i++){
-					int k;
 					if( (type == 1 && !sd->status.inventory[i].equip)
 						|| (type == 2 && sd->status.inventory[i].equip)
 						||  type == 3)
 					{
+						int k;
 						ARR_FIND( 0, MAX_INVENTORY, k, eq_n[k] <= 0 );
 						if( k < MAX_INVENTORY )
 							eq_n[k] = i;
@@ -7182,9 +7185,10 @@ void pc_heal(struct map_session_data *sd,unsigned int hp,unsigned int sp, int ty
  *------------------------------------------*/
 int pc_itemheal(struct map_session_data *sd,int itemid, int hp,int sp)
 {
-	int i, bonus;
+	int bonus;
 
 	if(hp) {
+		int i;
 		bonus = 100 + (sd->battle_status.vit<<1)
 			+ pc_checkskill(sd,SM_RECOVERY)*10
 			+ pc_checkskill(sd,AM_LEARNINGPOTION)*5;
@@ -8548,13 +8552,13 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 
 	/* check for combos (MUST be before status_calc_pc) */
 	if ( id ) {
-		struct item_data *data;
 		if( id->combos_count )
 			pc_checkcombo(sd,id);
 		if(itemdb_isspecial(sd->status.inventory[n].card[0]))
 			; //No cards
 		else {
 			for( i = 0; i < id->slot; i++ ) {
+				struct item_data *data;
 				if (!sd->status.inventory[n].card[i])
 					continue;
 				if ( ( data = itemdb_exists(sd->status.inventory[n].card[i]) ) != NULL ) {
@@ -8571,13 +8575,13 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 
 	//OnEquip script [Skotlex]
 	if (id) {
-		struct item_data *data;
 		if (id->equip_script)
 			run_script(id->equip_script,0,sd->bl.id,fake_nd->bl.id);
 		if(itemdb_isspecial(sd->status.inventory[n].card[0]))
 			; //No cards
 		else {
 			for( i = 0; i < id->slot; i++ ) {
+				struct item_data *data;
 				if (!sd->status.inventory[n].card[i])
 					continue;
 				if ( ( data = itemdb_exists(sd->status.inventory[n].card[i]) ) != NULL ) {
@@ -8700,8 +8704,6 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 
 	/* check for combos (MUST be before status_calc_pc) */
 	if ( sd->inventory_data[n] ) {
-		struct item_data *data;
-
 		if( sd->inventory_data[n]->combos_count ) {
 			if( pc_removecombo(sd,sd->inventory_data[n]) )
 				status_cacl = true;
@@ -8709,6 +8711,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 			; //No cards
 		else {
 			for( i = 0; i < sd->inventory_data[n]->slot; i++ ) {
+				struct item_data *data;
 				if (!sd->status.inventory[n].card[i])
 					continue;
 				if ( ( data = itemdb_exists(sd->status.inventory[n].card[i]) ) != NULL ) {
@@ -8731,13 +8734,13 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 
 	//OnUnEquip script [Skotlex]
 	if (sd->inventory_data[n]) {
-		struct item_data *data;
 		if (sd->inventory_data[n]->unequip_script)
 			run_script(sd->inventory_data[n]->unequip_script,0,sd->bl.id,fake_nd->bl.id);
 		if(itemdb_isspecial(sd->status.inventory[n].card[0]))
 			; //No cards
 		else {
 			for( i = 0; i < sd->inventory_data[n]->slot; i++ ) {
+				struct item_data *data;
 				if (!sd->status.inventory[n].card[i])
 					continue;
 
@@ -8815,7 +8818,7 @@ int pc_checkitem(struct map_session_data *sd)
  *------------------------------------------*/
 int pc_calc_pvprank_sub(struct block_list *bl,va_list ap)
 {
-	struct map_session_data *sd1,*sd2=NULL;
+	struct map_session_data *sd1,*sd2;
 
 	sd1=(struct map_session_data *)bl;
 	sd2=va_arg(ap,struct map_session_data *);
@@ -8850,7 +8853,7 @@ int pc_calc_pvprank(struct map_session_data *sd)
  *------------------------------------------*/
 int pc_calc_pvprank_timer(int tid, unsigned int tick, int id, intptr_t data)
 {
-	struct map_session_data *sd=NULL;
+	struct map_session_data *sd;
 
 	sd=map_id2sd(id);
 	if(sd==NULL)
@@ -9486,7 +9489,7 @@ static bool pc_readdb_levelpenalty(char* fields[], int columns, int current)
 		return false;
 	}
 
-	if( race < 0 && race > RC_MAX ){
+	if( race < 0 || race > RC_MAX ){
 		ShowWarning("pc_readdb_levelpenalty: Invalid race %d specified.\n", race);
 		return false;
 	}

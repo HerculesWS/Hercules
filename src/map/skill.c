@@ -441,10 +441,11 @@ int skill_calc_heal(struct block_list *src, struct block_list *target, uint16 sk
 		default:
 			{
 				struct status_data *status = status_get_status_data(src);
-				int min, max, wMatk, variance;
+				int min, max;
 
 				min = max = status_base_matk(status, status_get_lv(src));
 				if( status->rhw.matk > 0 ){
+					int wMatk, variance;
 					wMatk = status->rhw.matk;
 					variance = wMatk * status->rhw.wlv / 10;
 					min += wMatk - variance;
@@ -2305,7 +2306,7 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 		rdamage = battle_calc_return_damage(bl,src, &damage, dmg.flag, skill_id);
 
 	if( damage && sc && sc->data[SC_GENSOU] && dmg.flag&BF_MAGIC ){
-		struct block_list *nbl = NULL;
+		struct block_list *nbl;
 		nbl = battle_getenemyarea(bl,bl->x,bl->y,2,BL_CHAR,bl->id);
 		if( nbl ){ // Only one target is chosen.
 			damage = damage / 2; // Deflect half of the damage to a target nearby
@@ -3124,7 +3125,7 @@ static int skill_timerskill(int tid, unsigned int tick, int id, intptr_t data)
 {
 	struct block_list *src = map_id2bl(id),*target;
 	struct unit_data *ud = unit_bl2ud(src);
-	struct skill_timerskill *skl = NULL;
+	struct skill_timerskill *skl;
 	int range;
 
 	nullpo_ret(src);
@@ -4954,7 +4955,6 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			{// mob-casted
 				struct unit_data *ud = unit_bl2ud(src);
 				int inf = skill_get_inf(abra_skill_id);
-				int target_id = 0;
 				if (!ud) break;
 				if (inf&INF_SELF_SKILL || inf&INF_SUPPORT_SKILL) {
 					if (src->type == BL_PET)
@@ -4962,6 +4962,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					if (!bl) bl = src;
 					unit_skilluse_id(src, bl->id, abra_skill_id, abra_skill_lv);
 				} else {	//Assume offensive skills
+					int target_id = 0;
 					if (ud->target)
 						target_id = ud->target;
 					else switch (src->type) {
@@ -6191,12 +6192,13 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 	case AM_BERSERKPITCHER:
 	case AM_POTIONPITCHER: {
-			int i,x,hp = 0,sp = 0,bonus=100;
+			int i,hp = 0,sp = 0;
 			if( dstmd && dstmd->class_ == MOBID_EMPERIUM ) {
 				map_freeblock_unlock();
 				return 1;
 			}
 			if( sd ) {
+				int x,bonus=100;
 				x = skill_lv%11 - 1;
 				i = pc_search_inventory(sd,skill_db[skill_id].itemid[x]);
 				if( i < 0 || skill_db[skill_id].itemid[x] <= 0 ) {
@@ -7080,11 +7082,12 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					break;
 				case 3:	// 1000 damage, random armor destroyed
 					{
-						int where[] = { EQP_ARMOR, EQP_SHIELD, EQP_HELM, EQP_SHOES, EQP_GARMENT };
 						status_fix_damage(src, bl, 1000, 0);
 						clif_damage(src,bl,tick,0,0,1000,0,0,0);
-						if( !status_isdead(bl) )
+						if( !status_isdead(bl) ) {
+							int where[] = { EQP_ARMOR, EQP_SHIELD, EQP_HELM, EQP_SHOES, EQP_GARMENT };
 							skill_break_equip(bl, where[rnd()%5], 10000, BCT_ENEMY);
+						}
 					}
 					break;
 				case 4:	// atk halved
@@ -7253,7 +7256,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			int dx[9]={-1, 1, 0, 0,-1, 1,-1, 1, 0};
 			int dy[9]={ 0, 0, 1,-1, 1,-1,-1, 1, 0};
 			int j = 0;
-			struct guild *g = NULL;
+			struct guild *g;
 			// i don't know if it actually summons in a circle, but oh well. ;P
 			g = sd?sd->state.gmaster_flag:guild_search(status_get_guild_id(src));
 			if (!g)
@@ -8523,7 +8526,6 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			} else {
 				struct unit_data *ud = unit_bl2ud(src);
 				int inf = skill_get_inf(improv_skill_id);
-				int target_id = 0;
 				if (!ud) break;
 				if (inf&INF_SELF_SKILL || inf&INF_SUPPORT_SKILL) {
 					if (src->type == BL_PET)
@@ -8531,6 +8533,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					if (!bl) bl = src;
 					unit_skilluse_id(src, bl->id, improv_skill_id, improv_skill_lv);
 				} else {
+					int target_id = 0;
 					if (ud->target)
 						target_id = ud->target;
 					else switch (src->type) {

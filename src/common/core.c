@@ -272,7 +272,7 @@ const char *get_git_hash (void) {
 		char line[64];
 		char *rev = malloc (sizeof (char) * 50);
 		
-		if (fgets (line, sizeof (line), fp) && sscanf (line, "%s", rev))
+		if (fgets (line, sizeof (line), fp) && sscanf (line, "%50s", rev))
 			snprintf (HerculesGitHash, sizeof (HerculesGitHash), "%s", rev);
 		
 		free (rev);
