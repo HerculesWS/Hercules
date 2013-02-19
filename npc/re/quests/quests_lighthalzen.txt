@@ -1,21 +1,22 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================= 
 //= Quest NPCs located in Lighthalzen
 //===== By: ================================================== 
 //= Ziu, Heris (translation)
 //===== Current Version: ===================================== 
-//= 1.1
+//= 1.1a
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules GIT
 //===== Description: ========================================= 
 //= Quests related to Lighthalzen City.
 //===== Additional Comments: ================================= 
 //= 1.0 Updated to match the new Izlude Map. [Masao]
 //= 1.1 Added Somatology Laboratory F4 quest. [Euphy]
+//= 1.1a Coordinate update
 //============================================================ 
 
 // Renewal split [Daegaladh]
 //============================================================
-izlude,171,73,6	duplicate(Scamp)	Scamp#2	853
+izlude,172,73,6	duplicate(Scamp)	Scamp#2	853
 
 // Somatology Laboratory F4
 //============================================================

@@ -862,11 +862,6 @@ ecl_hub01
 que_avan01
 moc_prydn1
 moc_prydn2
-
-// ===============================
-// New Maps added 2013-02-10 (Thanks Streusel!)
-// Credits also to Baneado for reporting some
-// ===============================
 iz_int
 iz_int01
 iz_int02
@@ -907,13 +902,19 @@ te_aldecas2
 te_aldecas3
 te_aldecas4
 te_aldecas5
+1@gl_k
+2@gl_k
 gl_cas02_
 gl_chyard_
-2@gl_k
-1@gl_k
 silk_lair
+1@def01
 1@def02
 1@def03
+1@gef
+1@face
+1@sara
+1@gef_in
+dali
 
 // Only add maps under this line if they are not standard maps!
 

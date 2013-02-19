@@ -1,16 +1,15 @@
 //===== Hercules Script =======================================
-//= Jawaii Town Renewal
+//= Monster Tamers
 //===== By: ==================================================
-//= Daegaladh, Masao
+//= Streusel
 //===== Current Version: =====================================
 //= 1.0
 //===== Compatible With: =====================================
-//= Hercules GIT
+//= Hercules
 //===== Description: =========================================
-//= Jawaii town NPCs.
+//= Cute pet quest items
 //===== Additional Comments: =================================
-//= 1.0 First Version. Renewal coordinates [Masao]
-//= 1.1 Changed to Official coordinates [Streusel]
+//= 1.0 Duplicates for Monster Tamer
 //============================================================
 
-izlude,180,224,6	duplicate(Honeymoon_Helper_Izlude)	Honeymoon Helper#Izlude	71
+izlude_in,55,105,4	duplicate(Monster_Tamer#izu)	Monster Tamer#izlude	125

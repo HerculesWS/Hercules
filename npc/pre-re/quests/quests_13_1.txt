@@ -1,0 +1,17 @@
+//===== Hercules Script ======================================
+//= Quest NPCs related to Ash-Vacuum
+//===== By: ==================================================
+//= Streusel
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= [Official Conversion]
+//= Contains:
+//= Promotional Staff Duplicate for pre-renewal
+//===== Additional Comments: =================================
+//= 1.0 First Version. [Streusel]
+//============================================================
+
+// Onward to the New World
+//============================================================
+izlude,101,173,6	duplicate(Promotional Staff#iz)	Promotional Staff#izlude	100
