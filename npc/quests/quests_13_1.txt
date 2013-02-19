@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
-//= 2.7
+//= 2.7a
 //===== Description: =========================================
 //= [Official Conversion]
 //= Contains Quests:
@@ -43,7 +43,8 @@
 //= 2.5a Minor fixes. [Euphy]
 //= 2.6 Disabled "Ash Vacuum Warper" as it's no longer in iRO. [Euphy]
 //= 2.6a Added 'npcskill' command. [Euphy]
-//= 2.7 Updated incorrect EXP values & added checkre() checks
+//= 2.7 Updated incorrect EXP values & added checkre() checks [Streusel]
+//= 2.7a Modified Promotional Staff for Izlude
 //============================================================
 
 // Onward to the New World
