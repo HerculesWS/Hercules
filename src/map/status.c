@@ -1,4 +1,4 @@
-﻿// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
@@ -4689,7 +4689,7 @@ static unsigned short status_calc_matk(struct block_list *bl, struct status_chan
     if (sc->data[SC_IZAYOI])
         matk += 50 * sc->data[SC_IZAYOI]->val1;
 #endif
-    if (sc->data[SC_MAGICPOWER])
+    if (sc->data[SC_MAGICPOWER] && sc->data[SC_MAGICPOWER]->val4)
         matk += matk * sc->data[SC_MAGICPOWER]->val3/100;
     if (sc->data[SC_MINDBREAKER])
         matk += matk * sc->data[SC_MINDBREAKER]->val2/100;
@@ -6286,7 +6286,7 @@ int status_get_sc_def(struct block_list *bl, enum sc_type type, int rate, int ti
 			tick -= (status->int_ + status->luk) / 20 * 1000;
 			break;
 		case SC_STASIS:
-			//5 second (fixed) + { Stasis Skill level * 5 - (Target�s VIT + DEX) / 20 }
+			//5 second (fixed) + { Stasis Skill level * 5 - (Target's VIT + DEX) / 20 }
 			tick -= (status->vit + status->dex) / 20 * 1000;
 		break;
 	case SC_WHITEIMPRISON:
@@ -10674,9 +10674,10 @@ int status_change_timer_sub(struct block_list* bl, va_list ap)
 		if (battle_check_target( src, bl, BCT_ENEMY ) > 0 &&
 			status_check_skilluse(src, bl, WZ_SIGHTBLASTER, 2))
 		{
-			skill_attack(BF_MAGIC,src,src,bl,WZ_SIGHTBLASTER,1,tick,0);
-			if (sce && !(bl->type&BL_SKILL)) //The hit is not counted if it's against a trap
+			if (sce && !(bl->type&BL_SKILL) //The hit is not counted if it's against a trap
+				&& skill_attack(BF_MAGIC,src,src,bl,WZ_SIGHTBLASTER,1,tick,0)){
 				sce->val2 = 0; //This signals it to end.
+			}
 		}
 		break;
 	case SC_CLOSECONFINE:
