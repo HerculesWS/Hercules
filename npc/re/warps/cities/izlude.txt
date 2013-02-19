@@ -23,8 +23,8 @@ izlude,21,98,0	warp	iz001	3,3,prt_fild08,367,212
 izlude,52,172,0	warp	iz04	2,2,izlude_in,74,161
 izlude,130,257,0	warp	iz09#1	2,2,iz_ac01,99,29
 izlude,125,257,0	warp	iz09#2	2,2,iz_ac01,99,29
-izlude,209,161,0	warp	iz10	2,2,arena_room,100,30
-arena_room,99,23,0	warp	iz_arena	2,2,izlude,209,161
+izlude,213,161,0	warp	iz10	2,2,arena_room,100,30
+arena_room,99,24,0	warp	iz_arena	2,2,izlude,209,161
 izlude_in,108,169,0	warp	iz05	2,3,izlude_in,84,169
 izlude_in,148,127,0	warp	iz03-1	2,5,izlude,207,162
 
