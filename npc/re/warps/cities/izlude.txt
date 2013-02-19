@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= Athena (1.0), Nana (1.1)
 //===== Current Version: =====================================
-//= 1.6
+//= 1.7
 //===== Compatible With: =====================================
 //= Any Athena & Hercules Version
 //===== Description: =========================================
@@ -13,6 +13,7 @@
 //= 1.4 Minor correction on airport warps
 //= 1.5 Updated to match the new Izlude Map. [Masao]
 //= 1.6 Added new warps [Streusel]
+//= 1.7 Removed indoor warps [Streusel]
 //============================================================
 
 //= Izlude City ==============================================
@@ -22,13 +23,11 @@ izlude,21,98,0	warp	iz001	3,3,prt_fild08,367,212
 izlude,52,172,0	warp	iz04	2,2,izlude_in,74,161
 izlude,130,257,0	warp	iz09#1	2,2,iz_ac01,99,29
 izlude,125,257,0	warp	iz09#2	2,2,iz_ac01,99,29
-
+izlude,209,161,0	warp	iz10	2,2,arena_room,100,30
+arena_room,99,23,0	warp	iz_arena	2,2,izlude,209,161
 izlude_in,108,169,0	warp	iz05	2,3,izlude_in,84,169
 izlude_in,148,127,0	warp	iz03-1	2,5,izlude,207,162
-izlude_in,171,97,0	warp	iz06	3,2,izlude_in,172,119
-izlude_in,172,116,0	warp	iz06-1	3,2,izlude_in,172,94
-izlude_in,172,139,0	warp	iz07	3,2,izlude_in,172,161
-izlude_in,172,158,0	warp	iz07-1	3,2,izlude_in,172,136
+
 izlude_in,43,169,0	warp	w219	2,3,izlude_in,64,169
 izlude_in,65,84,0	warp	iz01-1	5,2,izlude,113,178
 izlude_in,74,158,0	warp	iz04-1	3,2,izlude,52,166
