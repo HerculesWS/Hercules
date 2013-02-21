@@ -10,7 +10,7 @@
 //= 1.0 First version, done by SinSloth. [MasterOfMuppets]
 //= 1.1 updated welcome_arena warp coords (was 128,126) [Lupus]
 //= 1.2 Made some updates due to Izlude Battle Arena release. [SinSloth]
-//= Moved welcome_arena & bye_arena to pre-re [Streusel]
+//= 1.3 Moved welcome_arena & bye_arena to pre-re [Streusel]
 //============================================================
 
 arena_room,84,103,0	warp	arn_room_11_1	1,1,arena_room,63,130
