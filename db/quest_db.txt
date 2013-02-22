@@ -2333,3 +2333,18 @@
 2300,0,0,0,0,0,0,0,"Training Center: Talk to General Reindeer"
 2301,0,0,0,0,0,0,0,"Training Center: Leave the boat"
 2302,0,0,0,0,0,0,0,"Training Center: Formation"
+
+
+// Port Malaya
+7350,0,0,0,0,0,0,0,"Cautious Village"
+7351,0,0,0,0,0,0,0,"Better than My Old Button"
+7352,0,0,0,0,0,0,0,"Sailor Wants a Button"
+7353,0,0,0,0,0,0,0,"Old Man Wants a Button"
+7354,0,0,0,0,0,0,0,"Young Man Wants a Button"
+7355,0,0,0,0,0,0,0,"Merchant Wants a Button"
+7356,0,0,0,0,0,0,0,"Little Kid Wants a Button"
+7357,0,0,0,0,0,0,0,"Middle-aged Guy Wants a Button"
+7358,0,0,0,0,0,0,0,"Why do they want my Buttons?"
+7360,0,0,0,0,0,0,0,"Deliver Holy Item to Old Man"
+7363,0,0,0,0,0,0,0,"Deliver Holy Item to Little Kid"
+7364,0,0,0,0,0,0,0,"Deliver Holy Item to Middle-aged Man"
