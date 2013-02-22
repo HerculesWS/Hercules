@@ -503,11 +503,7 @@ int merc_hom_gainexp(struct homun_data *hd,int exp)
 	}
 
  	//levelup
-	do
-	{
-		merc_hom_levelup(hd) ;
-	}
-	while(hd->homunculus.exp > hd->exp_next && hd->exp_next != 0 );
+	while( hd->homunculus.exp > hd->exp_next && merc_hom_levelup(hd) );
 
 	if( hd->exp_next == 0 )
 		hd->homunculus.exp = 0 ;
@@ -983,7 +979,7 @@ void merc_reset_stats(struct homun_data *hd)
 int merc_hom_shuffle(struct homun_data *hd)
 {
 	struct map_session_data *sd;
-	int lv, i, skillpts;
+	int lv, skillpts;
 	unsigned int exp;
 	struct s_skill b_skill[MAX_HOMUNSKILL];
 
@@ -998,10 +994,9 @@ int merc_hom_shuffle(struct homun_data *hd)
 	//Reset values to level 1.
 	merc_reset_stats(hd);
 	//Level it back up
-	for (i = 1; i < lv && hd->exp_next; i++){
+	do{
 		hd->homunculus.exp += hd->exp_next;
-		merc_hom_levelup(hd);
-	}
+	}while( hd->homunculus.level < lv && merc_hom_levelup(hd) );
 
 	if(hd->homunculus.class_ == hd->homunculusDB->evo_class) {
 		//Evolved bonuses
