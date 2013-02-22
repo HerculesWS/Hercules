@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
@@ -398,7 +398,7 @@ int skill_calc_heal(struct block_list *src, struct block_list *target, uint16 sk
 		#ifdef RENEWAL
             /**
              * Renewal Heal Formula
-             * Formula: ( [(Base Level + INT) / 5] Ã— 30 ) Ã— (Heal Level / 10) Ã— (Modifiers) + MATK
+             * Formula: ( [(Base Level + INT) / 5] × 30 ) × (Heal Level / 10) × (Modifiers) + MATK
              **/
             hp = (status_get_lv(src) + status_get_int(src)) / 5 * 30  * skill_lv / 10;
 		#else
@@ -8597,7 +8597,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 	case SO_ARRULLO:
 		{
-			// [(15 + 5 * Skill Level) + ( Casterâ€™s INT / 5 ) + ( Casterâ€™s Job Level / 5 ) - ( Targetâ€™s INT / 6 ) - ( Targetâ€™s LUK / 10 )] %
+			// [(15 + 5 * Skill Level) + ( Caster’s INT / 5 ) + ( Caster’s Job Level / 5 ) - ( Target’s INT / 6 ) - ( Target’s LUK / 10 )] %
 			int rate = (15 + 5 * skill_lv) + status_get_int(src)/5 + (sd ? sd->status.job_level : 0);
 			rate -= status_get_int(bl)/6 - status_get_luk(bl)/10;
 			clif_skill_nodamage(src, bl, skill_id, skill_lv, 1);
@@ -8607,7 +8607,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 	case WM_LULLABY_DEEPSLEEP:
 		if( flag&1 ){
-			//[(Skill Level x 4) + (Voice Lessons Skill Level x 2) + (Casterâ€™s Base Level / 15) + (Casterâ€™s Job Level / 5)] %
+			//[(Skill Level x 4) + (Voice Lessons Skill Level x 2) + (Caster’s Base Level / 15) + (Caster’s Job Level / 5)] %
 			int rate = (4 * skill_lv) + ( (sd) ? pc_checkskill(sd,WM_LESSON)*2 + sd->status.job_level/5 : 0 ) + status_get_lv(src) / 15;
 			if( bl != src )
 				sc_start(bl,type,rate,skill_lv,skill_get_time(skill_id,skill_lv));
@@ -9496,7 +9496,7 @@ int skill_castend_pos(int tid, unsigned int tick, int id, intptr_t data)
 
 		if( sd )
 		{
-			if( !skill_check_condition_castend(sd, ud->skill_id, ud->skill_lv) )
+			if( ud->skill_id != AL_WARP && !skill_check_condition_castend(sd, ud->skill_id, ud->skill_lv) )
 				break;
 			else
 				skill_consume_requirement(sd,ud->skill_id,ud->skill_lv,1);
