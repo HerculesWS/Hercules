@@ -2973,7 +2973,10 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 					skillratio += -100 + 100 * skill_lv;
 					break;
 			}
-
+#ifdef RENEWAL
+			if( sc && sc->data[SC_TRUESIGHT] )
+				skillratio += 2*sc->data[SC_TRUESIGHT]->val1;
+#endif
 			ATK_RATE(skillratio);
 
 			//Constant/misc additions from skills
@@ -3068,8 +3071,10 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src,struct blo
 
 		//The following are applied on top of current damage and are stackable.
 		if ( sc ) {
+#ifndef RENEWAL
 			if( sc->data[SC_TRUESIGHT] )
 				ATK_ADDRATE(2*sc->data[SC_TRUESIGHT]->val1);
+#endif
 			if( sc->data[SC_GLOOMYDAY_SK] &&
 				( skill_id == LK_SPIRALPIERCE || skill_id == KN_BRANDISHSPEAR ||
 				  skill_id == CR_SHIELDBOOMERANG || skill_id == PA_SHIELDCHAIN ||
