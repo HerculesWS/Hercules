@@ -1347,8 +1347,8 @@ int clif_spawn(struct block_list *bl)
 
 	if (vd->cloth_color)
 		clif_refreshlook(bl,bl->id,LOOK_CLOTHES_COLOR,vd->cloth_color,AREA_WOS);
-	
-	
+
+
 	switch (bl->type)
 	{
 	case BL_PC:
