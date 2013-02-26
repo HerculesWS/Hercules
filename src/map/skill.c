@@ -9227,6 +9227,11 @@ int skill_castend_id(int tid, unsigned int tick, int id, intptr_t data)
 				inf &= ~BCT_NEUTRAL;
 			}
 
+			if( sd && (inf2&INF2_CHORUS_SKILL) && skill_check_pc_partner(sd, ud->skill_id, &ud->skill_lv, 1, 0) < 1 ) { 
+				clif_skill_fail(sd, ud->skill_id, USESKILL_FAIL_NEED_HELPER, 0); 
+				break; 
+			} 
+
 			if( ud->skill_id >= SL_SKE && ud->skill_id <= SL_SKA && target->type == BL_MOB )
 			{
 				if( ((TBL_MOB*)target)->class_ == MOBID_EMPERIUM )
