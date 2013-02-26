@@ -10207,10 +10207,10 @@ void clif_parse_EquipItem(int fd,struct map_session_data *sd)
 	if (index < 0 || index >= MAX_INVENTORY)
 		return; //Out of bounds check.
 
-	if(sd->npc_id) {
-		if (sd->npc_id != sd->npc_item_flag)
+	if( sd->npc_id )
+		if ( !sd->npc_item_flag )
 			return;
-	} else if (sd->state.storage_flag || sd->sc.opt1)
+	else if ( sd->state.storage_flag || sd->sc.opt1 )
 		; //You can equip/unequip stuff while storage is open/under status changes
 	else if ( pc_cant_act2(sd) )
 		return;
@@ -10247,7 +10247,10 @@ void clif_parse_UnequipItem(int fd,struct map_session_data *sd)
 		return;
 	}
 
-	if (sd->state.storage_flag || sd->sc.opt1)
+	if( sd->npc_id )
+		if ( !sd->npc_item_flag )
+			return;
+	else if ( sd->state.storage_flag || sd->sc.opt1 )
 		; //You can equip/unequip stuff while storage is open/under status changes
 	else if ( pc_cant_act2(sd) )
 		return;
