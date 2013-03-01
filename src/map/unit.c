@@ -1092,7 +1092,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		case HLIF_AVOID:
 		case HAMI_DEFENCE:
 		case HAMI_CASTLE:
-			target = battle_get_master(src);
+			target = battle->get_master(src);
 			if (!target) return 0;
 			target_id = target->id;
 	}
@@ -1141,7 +1141,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 			sd->skill_id_old = skill_id;
 			break;
 		case WL_WHITEIMPRISON:
-			if( battle_check_target(src,target,BCT_SELF|BCT_ENEMY) < 0 ) {
+			if( battle->check_target(src,target,BCT_SELF|BCT_ENEMY) < 0 ) {
 				clif_skill_fail(sd,skill_id,USESKILL_FAIL_TOTARGET,0);
 				return 0;
 			}
@@ -1179,9 +1179,9 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 			if( !unit_can_reach_bl(src, target, range + 1, 1, NULL, NULL) )
 				return 0; // Walk-path check failed.
 		} else if( src->type == BL_MER && skill_id == MA_REMOVETRAP ) {
-			if( !battle_check_range(battle_get_master(src), target, range + 1) )
+			if( !battle->check_range(battle->get_master(src), target, range + 1) )
 				return 0; // Aegis calc remove trap based on Master position, ignoring mercenary O.O
-		} else if( !battle_check_range(src, target, range + (skill_id == RG_CLOSECONFINE?0:2)) ) {
+		} else if( !battle->check_range(src, target, range + (skill_id == RG_CLOSECONFINE?0:2)) ) {
 			return 0; // Arrow-path check failed.
 		}
 	}
@@ -1198,7 +1198,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 
 	switch(skill_id){
 	case ALL_RESURRECTION:
-		if(battle_check_undead(tstatus->race,tstatus->def_ele)) {
+		if(battle->check_undead(tstatus->race,tstatus->def_ele)) {
 			temp = 1;
 		} else if (!status_isdead(target))
 			return 0; //Can't cast on non-dead characters.
@@ -1262,7 +1262,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	case EL_WATER_SCREW:
 	case EL_TIDAL_WEAPON:
 		if( src->type == BL_ELEM ){
-			sd = BL_CAST(BL_PC, battle_get_master(src));
+			sd = BL_CAST(BL_PC, battle->get_master(src));
 			if( sd && sd->skill_id_old == SO_EL_ACTION ){
 				casttime = -1;
 				sd->skill_id_old = 0;
@@ -1294,7 +1294,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 			TBL_MOB *md = (TBL_MOB*)target;
 			mobskill_event(md, src, tick, -1); //Cast targetted skill event.
 			if (tstatus->mode&(MD_CASTSENSOR_IDLE|MD_CASTSENSOR_CHASE) &&
-				battle_check_target(target, src, BCT_ENEMY) > 0)
+				battle->check_target(target, src, BCT_ENEMY) > 0)
 			{
 				switch (md->state.skillstate) {
 				case MSS_RUSH:
@@ -1437,7 +1437,7 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 		if( !unit_can_reach_bl(src, &bl, range + 1, 1, NULL, NULL) )
 			return 0; //Walk-path check failed.
 	}
-	else if( !battle_check_range(src, &bl, range + 1) )
+	else if( !battle->check_range(src, &bl, range + 1) )
 		return 0; //Arrow-path check failed.
 
 	unit_stop_attack(src);
@@ -1580,7 +1580,7 @@ int unit_attack(struct block_list *src,int target_id,int continuous)
 			return 0;
 		}
 	}
-	if( battle_check_target(src,target,BCT_ENEMY) <= 0 || !status_check_skilluse(src, target, 0, 0) ) {
+	if( battle->check_target(src,target,BCT_ENEMY) <= 0 || !status_check_skilluse(src, target, 0, 0) ) {
 		unit_unattackable(src);
 		return 1;
 	}
@@ -1765,7 +1765,7 @@ static int unit_attack_timer_sub(struct block_list* src, int tid, unsigned int t
 		return 0;
 
 	if( status_isdead(src) || status_isdead(target) ||
-			battle_check_target(src,target,BCT_ENEMY) <= 0 || !status_check_skilluse(src, target, 0, 0)
+			battle->check_target(src,target,BCT_ENEMY) <= 0 || !status_check_skilluse(src, target, 0, 0)
 #ifdef OFFICIAL_WALKPATH
 	   || !path_search_long(NULL, src->m, src->x, src->y, target->x, target->y, CELL_CHKWALL)
 #endif
@@ -1811,7 +1811,7 @@ static int unit_attack_timer_sub(struct block_list* src, int tid, unsigned int t
 			unit_walktobl(src,target,ud->chaserange,ud->state.walk_easy|2);
 		return 1;
 	}
-	if( !battle_check_range(src,target,range) ) {
+	if( !battle->check_range(src,target,range) ) {
 	  	//Within range, but no direct line of attack
 		if( ud->state.attack_continue ) {
 			if(ud->chaserange > 2) ud->chaserange-=2;
@@ -1843,7 +1843,7 @@ static int unit_attack_timer_sub(struct block_list* src, int tid, unsigned int t
 			return 1;
 
 		map_freeblock_lock();
-		ud->attacktarget_lv = battle_weapon_attack(src,target,tick,0);
+		ud->attacktarget_lv = battle->weapon_attack(src,target,tick,0);
 
 		if(sd && sd->status.pet_id > 0 && sd->pd && battle_config.pet_attack_support)
 			pet_target_check(sd,target,0);

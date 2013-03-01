@@ -525,7 +525,7 @@ struct skill_unit* map_find_skill_unit_oncell(struct block_list* target,int16 x,
 		unit = (struct skill_unit *) bl;
 		if( unit == out_unit || !unit->alive || !unit->group || unit->group->skill_id != skill_id )
 			continue;
-		if( !(flag&1) || battle_check_target(&unit->bl,target,unit->group->target_flag) > 0 )
+		if( !(flag&1) || battle->check_target(&unit->bl,target,unit->group->target_flag) > 0 )
 			return unit;
 	}
 	return NULL;
@@ -3639,7 +3639,7 @@ void do_final(void)
 	chrif_flush_fifo();
 
 	do_final_atcommand();
-	do_final_battle();
+	battle->final();
 	do_final_chrif();
 	do_final_clif();
 	do_final_npc();
@@ -3919,7 +3919,9 @@ int do_init(int argc, char *argv[])
 			chrif_setip(ip_str);
 	}
 
-	battle_config_read(BATTLE_CONF_FILENAME);
+	battle_defaults();
+	
+	battle->config_read(BATTLE_CONF_FILENAME);
 	msg_config_read(MSG_CONF_NAME);
 	script_config_read(SCRIPT_CONF_NAME);
 	inter_config_read(INTER_CONF_NAME);
@@ -3943,7 +3945,7 @@ int do_init(int argc, char *argv[])
 	mapindex_init();
 	if(enable_grf)
 		grfio_init(GRF_PATH_FILENAME);
-
+	
 	map_readallmaps();
 
 	add_timer_func_list(map_freeblock_timer, "map_freeblock_timer");
@@ -3952,7 +3954,7 @@ int do_init(int argc, char *argv[])
 	add_timer_interval(gettick()+1000, map_freeblock_timer, 0, 0, 60*1000);
 
 	do_init_atcommand();
-	do_init_battle();
+	battle->init();
 	do_init_instance();
 	do_init_chrif();
 	do_init_clif();

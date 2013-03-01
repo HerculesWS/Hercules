@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/db.h"
 #include "../common/timer.h"
@@ -901,7 +902,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, uns
 
 	if (target->type != BL_ITEM) 
 	{ //enemy targetted
-		if(!battle_check_range(&pd->bl,target,pd->status.rhw.range))
+		if(!battle->check_range(&pd->bl,target,pd->status.rhw.range))
 		{	//Chase
 			if(!unit_walktobl(&pd->bl, target, pd->status.rhw.range, 2))
 				pet_unlocktarget(pd); //Unreachable target.

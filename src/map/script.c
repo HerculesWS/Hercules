@@ -13494,7 +13494,7 @@ BUILDIN_FUNC(setbattleflag)
 	flag = script_getstr(st,2);
 	value = script_getstr(st,3);  // HACK: Retrieve number as string (auto-converted) for battle_set_value
 
-	if (battle_set_value(flag, value) == 0)
+	if (battle->config_set_value(flag, value) == 0)
 		ShowWarning("buildin_setbattleflag: unknown battle_config flag '%s'\n",flag);
 	else
 		ShowInfo("buildin_setbattleflag: battle_config flag '%s' is now set to '%s'.\n",flag,value);
@@ -13506,7 +13506,7 @@ BUILDIN_FUNC(getbattleflag)
 {
 	const char *flag;
 	flag = script_getstr(st,2);
-	script_pushint(st,battle_get_value(flag));
+	script_pushint(st,battle->config_get_value(flag));
 	return 0;
 }
 
@@ -16625,7 +16625,7 @@ static int buildin_mobuseskill_sub(struct block_list *bl,va_list ap)
 		case 0: tbl = map_id2bl(md->bl.id); break;
 		case 1: tbl = map_id2bl(md->target_id); break;
 		case 2: tbl = map_id2bl(md->master_id); break;
-		default:tbl = battle_getenemy(&md->bl, DEFAULT_ENEMY_TYPE(md),skill_get_range2(&md->bl, skill_id, skill_lv)); break;
+		default:tbl = battle->get_enemy(&md->bl, DEFAULT_ENEMY_TYPE(md),skill_get_range2(&md->bl, skill_id, skill_lv)); break;
 	}
 
 	if( !tbl )

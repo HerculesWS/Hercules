@@ -3701,7 +3701,7 @@ ACMD_FUNC(reloadbattleconf)
 	struct Battle_Config prev_config;
 	memcpy(&prev_config, &battle_config, sizeof(prev_config));
 
-	battle_config_read(BATTLE_CONF_FILENAME);
+	battle->config_read(BATTLE_CONF_FILENAME);
 
 	if( prev_config.item_rate_mvp          != battle_config.item_rate_mvp
 	||  prev_config.item_rate_common       != battle_config.item_rate_common
@@ -6471,10 +6471,9 @@ ACMD_FUNC(setbattleflag)
 	if (!message || !*message || sscanf(message, "%127s %127s", flag, value) != 2) {
         	clif_displaymessage(fd, msg_txt(1231)); // Usage: @setbattleflag <flag> <value>
         	return -1;
-    	}
+	}
 
-	if (battle_set_value(flag, value) == 0)
-	{
+	if (battle->config_set_value(flag, value) == 0) {
 		clif_displaymessage(fd, msg_txt(1232)); // Unknown battle_config flag.
 		return -1;
 	}

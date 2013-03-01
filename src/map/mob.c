@@ -356,14 +356,14 @@ bool mob_ksprotected (struct block_list *src, struct block_list *target)
 	if( !(md = BL_CAST(BL_MOB,target)) )
 		return false; // Tarjet is not MOB
 
-	if( (s_bl = battle_get_master(src)) == NULL )
+	if( (s_bl = battle->get_master(src)) == NULL )
 		s_bl = src;
 
 	if( !(sd = BL_CAST(BL_PC,s_bl)) )
 		return false; // Master is not PC
 
 	t_bl = map_id2bl(md->target_id);
-	if( !t_bl || (s_bl = battle_get_master(t_bl)) == NULL )
+	if( !t_bl || (s_bl = battle->get_master(t_bl)) == NULL )
 		s_bl = t_bl;
 
 	t_sd = BL_CAST(BL_PC,s_bl);
@@ -1068,7 +1068,7 @@ static int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
 	if ((mode&MD_TARGETWEAK) && status_get_lv(bl) >= md->level-5)
 		return 0;
 
-	if(battle_check_target(&md->bl,bl,BCT_ENEMY)<=0)
+	if(battle->check_target(&md->bl,bl,BCT_ENEMY)<=0)
 		return 0;
 
 	switch (bl->type)
@@ -1085,7 +1085,7 @@ static int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
 		dist = distance_bl(&md->bl, bl);
 		if(
 			((*target) == NULL || !check_distance_bl(&md->bl, *target, dist)) &&
-			battle_check_range(&md->bl,bl,md->db->range2)
+			battle->check_range(&md->bl,bl,md->db->range2)
 		) { //Pick closest target?
 
 			if( map[bl->m].icewall_num &&
@@ -1122,12 +1122,11 @@ static int mob_ai_sub_hard_changechase(struct block_list *bl,va_list ap)
 
 	//If can't seek yet, not an enemy, or you can't attack it, skip.
 	if ((*target) == bl ||
-		battle_check_target(&md->bl,bl,BCT_ENEMY)<=0 ||
+		battle->check_target(&md->bl,bl,BCT_ENEMY)<=0 ||
 	  	!status_check_skilluse(&md->bl, bl, 0, 0))
 		return 0;
 
-	if(battle_check_range (&md->bl, bl, md->status.rhw.range))
-	{
+	if(battle->check_range (&md->bl, bl, md->status.rhw.range)) {
 		(*target) = bl;
 		md->target_id=bl->id;
 		md->min_chase= md->db->range3;
@@ -1146,7 +1145,7 @@ static int mob_ai_sub_hard_bg_ally(struct block_list *bl,va_list ap) {
 	md=va_arg(ap,struct mob_data *);
 	target= va_arg(ap,struct block_list**);
 
-	if( status_check_skilluse(&md->bl, bl, 0, 0) && battle_check_target(&md->bl,bl,BCT_ENEMY)<=0 ) {
+	if( status_check_skilluse(&md->bl, bl, 0, 0) && battle->check_target(&md->bl,bl,BCT_ENEMY)<=0 ) {
 		(*target) = bl;
 	}
 	return 1;
@@ -1269,7 +1268,7 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md,unsigned int tick)
 			else if (ud->skilltarget) {
 				tbl = map_id2bl(ud->skilltarget);
 				//Required check as skilltarget is not always an enemy. [Skotlex]
-				if (tbl && battle_check_target(&md->bl, tbl, BCT_ENEMY) <= 0)
+				if (tbl && battle->check_target(&md->bl, tbl, BCT_ENEMY) <= 0)
 					tbl = NULL;
 			}
 			if (tbl && status_check_skilluse(&md->bl, tbl, 0, 0)) {
@@ -1462,7 +1461,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 	{
 		if( md->attacked_id == md->target_id )
 		{	//Rude attacked check.
-			if( !battle_check_range(&md->bl, tbl, md->status.rhw.range)
+			if( !battle->check_range(&md->bl, tbl, md->status.rhw.range)
 			   &&  ( //Can't attack back and can't reach back.
 					(!can_move && DIFF_TICK(tick, md->ud.canmove_tick) > 0 && (battle_config.mob_ai&0x2 || (md->sc.data[SC_SPIDERWEB] && md->sc.data[SC_SPIDERWEB]->val1)
 					|| md->sc.data[SC_BITE] || md->sc.data[SC_VACUUM_EXTREME] || md->sc.data[SC_THORNSTRAP]
@@ -1483,9 +1482,9 @@ static bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 			int dist;
 			if( md->bl.m != abl->m || abl->prev == NULL
 				|| (dist = distance_bl(&md->bl, abl)) >= MAX_MINCHASE // Attacker longer than visual area
-				|| battle_check_target(&md->bl, abl, BCT_ENEMY) <= 0 // Attacker is not enemy of mob
+				|| battle->check_target(&md->bl, abl, BCT_ENEMY) <= 0 // Attacker is not enemy of mob
 				|| (battle_config.mob_ai&0x2 && !status_check_skilluse(&md->bl, abl, 0, 0)) // Cannot normal attack back to Attacker
-				|| (!battle_check_range(&md->bl, abl, md->status.rhw.range) // Not on Melee Range and ...
+				|| (!battle->check_range(&md->bl, abl, md->status.rhw.range) // Not on Melee Range and ...
 				&& ( // Reach check
 					(!can_move && DIFF_TICK(tick, md->ud.canmove_tick) > 0 && (battle_config.mob_ai&0x2 || (md->sc.data[SC_SPIDERWEB] && md->sc.data[SC_SPIDERWEB]->val1)
 					|| md->sc.data[SC_BITE] || md->sc.data[SC_VACUUM_EXTREME] || md->sc.data[SC_THORNSTRAP]
@@ -1511,7 +1510,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 			else
 			{ //Attackable
 				if (!tbl || dist < md->status.rhw.range || !check_distance_bl(&md->bl, tbl, dist)
-					|| battle_gettarget(tbl) != md->bl.id)
+					|| battle->get_target(tbl) != md->bl.id)
 				{	//Change if the new target is closer than the actual one
 					//or if the previous target is not attacking the mob. [Skotlex]
 					md->target_id = md->attacked_id; // set target
@@ -1629,7 +1628,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 	if (md->ud.target == tbl->id && md->ud.attacktimer != INVALID_TIMER) //Already locked.
 		return true;
 
-	if (battle_check_range (&md->bl, tbl, md->status.rhw.range))
+	if (battle->check_range (&md->bl, tbl, md->status.rhw.range))
 	{	//Target within range, engage
 
 		if(tbl->type == BL_PC)
@@ -2988,7 +2987,7 @@ int mob_getfriendhprate_sub(struct block_list *bl,va_list ap)
 	if ((*fr) != NULL) //A friend was already found.
 		return 0;
 
-	if (battle_check_target(&md->bl,bl,BCT_ENEMY)>0)
+	if (battle->check_target(&md->bl,bl,BCT_ENEMY)>0)
 		return 0;
 
 	rate = get_percentage(status_get_hp(bl), status_get_max_hp(bl));
@@ -3040,7 +3039,7 @@ int mob_getfriendstatus_sub(struct block_list *bl,va_list ap)
 	if( mmd->bl.id == bl->id && !(battle_config.mob_ai&0x10) )
 		return 0;
 
-	if (battle_check_target(&mmd->bl,bl,BCT_ENEMY)>0)
+	if (battle->check_target(&mmd->bl,bl,BCT_ENEMY)>0)
 		return 0;
 	cond1=va_arg(ap,int);
 	cond2=va_arg(ap,int);
@@ -3182,7 +3181,7 @@ int mobskill_use(struct mob_data *md, unsigned int tick, int event)
 			short x, y;
 			switch (ms[i].target) {
 				case MST_RANDOM: //Pick a random enemy within skill range.
-					bl = battle_getenemy(&md->bl, DEFAULT_ENEMY_TYPE(md),
+					bl = battle->get_enemy(&md->bl, DEFAULT_ENEMY_TYPE(md),
 						skill_get_range2(&md->bl, ms[i].skill_id, ms[i].skill_lv));
 					break;
 				case MST_TARGET:
@@ -3218,7 +3217,7 @@ int mobskill_use(struct mob_data *md, unsigned int tick, int event)
 			}
 			md->skill_idx = i;
 			map_freeblock_lock();
-			if( !battle_check_range(&md->bl,bl,skill_get_range2(&md->bl, ms[i].skill_id,ms[i].skill_lv)) ||
+			if( !battle->check_range(&md->bl,bl,skill_get_range2(&md->bl, ms[i].skill_id,ms[i].skill_lv)) ||
 				!unit_skilluse_pos2(&md->bl, x, y,ms[i].skill_id, ms[i].skill_lv,ms[i].casttime, ms[i].cancel) )
 			{
 				map_freeblock_unlock();
@@ -3228,7 +3227,7 @@ int mobskill_use(struct mob_data *md, unsigned int tick, int event)
 			//Targetted skill
 			switch (ms[i].target) {
 				case MST_RANDOM: //Pick a random enemy within skill range.
-					bl = battle_getenemy(&md->bl, DEFAULT_ENEMY_TYPE(md),
+					bl = battle->get_enemy(&md->bl, DEFAULT_ENEMY_TYPE(md),
 						skill_get_range2(&md->bl, ms[i].skill_id, ms[i].skill_lv));
 					break;
 				case MST_TARGET:
@@ -3256,7 +3255,7 @@ int mobskill_use(struct mob_data *md, unsigned int tick, int event)
 
 			md->skill_idx = i;
 			map_freeblock_lock();
-			if( !battle_check_range(&md->bl,bl,skill_get_range2(&md->bl, ms[i].skill_id,ms[i].skill_lv)) ||
+			if( !battle->check_range(&md->bl,bl,skill_get_range2(&md->bl, ms[i].skill_id,ms[i].skill_lv)) ||
 				!unit_skilluse_id2(&md->bl, bl->id,ms[i].skill_id, ms[i].skill_lv,ms[i].casttime, ms[i].cancel) )
 			{
 				map_freeblock_unlock();
@@ -3313,7 +3312,7 @@ int mobskill_event(struct mob_data *md, struct block_list *src, unsigned int tic
 	//Restore previous target only if skill condition failed to trigger. [Skotlex]
 		md->target_id = target_id;
 	//Otherwise check if the target is an enemy, and unlock if needed.
-	else if (battle_check_target(&md->bl, src, BCT_ENEMY) <= 0)
+	else if (battle->check_target(&md->bl, src, BCT_ENEMY) <= 0)
 		md->target_id = target_id;
 
 	return res;

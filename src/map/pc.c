@@ -6647,7 +6647,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 				clif_charnameack(0, &md->bl);
 			}
 		}
-		src = battle_get_master(src); // Maybe Player Summon
+		src = battle->get_master(src); // Maybe Player Summon
 	}
 	break;
 	case BL_PET: //Pass on to master...
@@ -8747,7 +8747,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 		status_calc_pc(sd,0);
 	}
 
-	if(sd->sc.data[SC_SIGNUMCRUCIS] && !battle_check_undead(sd->battle_status.race,sd->battle_status.def_ele))
+	if(sd->sc.data[SC_SIGNUMCRUCIS] && !battle->check_undead(sd->battle_status.race,sd->battle_status.def_ele))
 		status_change_end(&sd->bl, SC_SIGNUMCRUCIS, INVALID_TIMER);
 
 	//OnUnEquip script [Skotlex]

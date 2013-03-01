@@ -1752,9 +1752,9 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 		case BL_HOM:
 		case BL_MER:
 		case BL_ELEM:
-			if( target->type == BL_HOM && skill_id && battle_config.hom_setting&0x1 && skill_get_inf(skill_id)&INF_SUPPORT_SKILL && battle_get_master(target) != src )
+			if( target->type == BL_HOM && skill_id && battle_config.hom_setting&0x1 && skill_get_inf(skill_id)&INF_SUPPORT_SKILL && battle->get_master(target) != src )
 				return 0; // Can't use support skills on Homunculus (only Master/Self)
-			if( target->type == BL_MER && (skill_id == PR_ASPERSIO || (skill_id >= SA_FLAMELAUNCHER && skill_id <= SA_SEISMICWEAPON)) && battle_get_master(target) != src )
+			if( target->type == BL_MER && (skill_id == PR_ASPERSIO || (skill_id >= SA_FLAMELAUNCHER && skill_id <= SA_SEISMICWEAPON)) && battle->get_master(target) != src )
 				return 0; // Can't use Weapon endow skills on Mercenary (only Master)
 			if( skill_id == AM_POTIONPITCHER && ( target->type == BL_MER || target->type == BL_ELEM) )
 				return 0; // Can't use Potion Pitcher on Mercenaries
@@ -6516,7 +6516,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		if( !tick ) return 0;
 	}
 
-	undead_flag = battle_check_undead(status->race,status->def_ele);
+	undead_flag = battle->check_undead(status->race,status->def_ele);
 	//Check for inmunities / sc fails
 	switch (type) {
         case SC_ANGRIFFS_MODUS:
@@ -10571,7 +10571,7 @@ int status_change_timer(int tid, unsigned int tick, int id, intptr_t data)
 	case SC_STONE_SHIELD:
 	case SC_SOLID_SKIN:
 		if( !status_charge(bl,0,sce->val2) ){
-			struct block_list *s_bl = battle_get_master(bl);
+			struct block_list *s_bl = battle->get_master(bl);
 			if( s_bl )
 				status_change_end(s_bl,type+1,INVALID_TIMER);
 			status_change_end(bl,type,INVALID_TIMER);
@@ -10668,7 +10668,7 @@ int status_change_timer_sub(struct block_list* bl, va_list ap)
 			status_change_end(bl, SC_CAMOUFLAGE, INVALID_TIMER);
 			status_change_end(bl, SC_CLOAKINGEXCEED, INVALID_TIMER);
 			status_change_end(bl, SC__INVISIBILITY, INVALID_TIMER);
-			if(battle_check_target( src, bl, BCT_ENEMY ) > 0)
+			if(battle->check_target( src, bl, BCT_ENEMY ) > 0)
 				skill_attack(BF_MAGIC,src,src,bl,AL_RUWACH,1,tick,0);
 		}
 		if( tsc && tsc->data[SC__SHADOWFORM] && (sce && sce->val4 >0 && sce->val4%2000 == 0) && // for every 2 seconds do the checking
@@ -10676,7 +10676,7 @@ int status_change_timer_sub(struct block_list* bl, va_list ap)
 				status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
 		break;
 	case SC_SIGHTBLASTER:
-		if (battle_check_target( src, bl, BCT_ENEMY ) > 0 &&
+		if (battle->check_target( src, bl, BCT_ENEMY ) > 0 &&
 			status_check_skilluse(src, bl, WZ_SIGHTBLASTER, 2))
 		{
 			if (sce && !(bl->type&BL_SKILL) //The hit is not counted if it's against a trap

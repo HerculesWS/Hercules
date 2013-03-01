@@ -288,7 +288,7 @@ int elemental_clean_single_effect(struct elemental_data *ed, uint16 skill_id) {
 
 	nullpo_ret(ed);
 
-	bl = battle_get_master(&ed->bl);
+	bl = battle->get_master(&ed->bl);
 
 	if( type ) {
 		switch( type ) {
@@ -422,7 +422,7 @@ int elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned 
 	ed->last_thinktime = tick;
 
 	// Not in skill range.
-	if( !battle_check_range(&ed->bl,bl,skill_get_range(skill_id,skill_lv)) ) {
+	if( !battle->check_range(&ed->bl,bl,skill_get_range(skill_id,skill_lv)) ) {
 		// Try to walk to the target.
 		if( !unit_walktobl(&ed->bl, bl, skill_get_range(skill_id,skill_lv), 2) )
 			elemental_unlocktarget(ed);
@@ -444,7 +444,7 @@ int elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned 
 	req = elemental_skill_get_requirements(skill_id, skill_lv);
 
 	if(req.hp || req.sp){
-		struct map_session_data *sd = BL_CAST(BL_PC, battle_get_master(&ed->bl));
+		struct map_session_data *sd = BL_CAST(BL_PC, battle->get_master(&ed->bl));
 		if( sd ){
 			if( sd->skill_id_old != SO_EL_ACTION && //regardless of remaining HP/SP it can be cast
 				(status_get_hp(&ed->bl) < req.hp || status_get_sp(&ed->bl) < req.sp) )
@@ -615,7 +615,7 @@ static int elemental_ai_sub_timer_activesearch(struct block_list *bl, va_list ap
 	if( (*target) == bl || !status_check_skilluse(&ed->bl, bl, 0, 0) )
 		return 0;
 
-	if( battle_check_target(&ed->bl,bl,BCT_ENEMY) <= 0 )
+	if( battle->check_target(&ed->bl,bl,BCT_ENEMY) <= 0 )
 		return 0;
 
 	switch( bl->type ) {
@@ -624,7 +624,7 @@ static int elemental_ai_sub_timer_activesearch(struct block_list *bl, va_list ap
 				return 0;
 		default:
 			dist = distance_bl(&ed->bl, bl);
-			if( ((*target) == NULL || !check_distance_bl(&ed->bl, *target, dist)) && battle_check_range(&ed->bl,bl,ed->db->range2) ) { //Pick closest target?
+			if( ((*target) == NULL || !check_distance_bl(&ed->bl, *target, dist)) && battle->check_range(&ed->bl,bl,ed->db->range2) ) { //Pick closest target?
 				(*target) = bl;
 				ed->target_id = bl->id;
 				ed->min_chase = dist + ed->db->range3;
@@ -723,7 +723,7 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 			return 1;
 		}
 
-		if( battle_check_range(&ed->bl,target,view_range) && rnd()%100 < 2 ) { // 2% chance to cast attack skill.
+		if( battle->check_range(&ed->bl,target,view_range) && rnd()%100 < 2 ) { // 2% chance to cast attack skill.
 			if(	elemental_action(ed,target,tick) )
 				return 1;
 		}
@@ -733,7 +733,7 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 		if( ed->ud.target == target->id && ed->ud.attacktimer != INVALID_TIMER ) //Already locked.
 			return 1;
 
-		if( battle_check_range(&ed->bl, target, ed->base_status.rhw.range) ) {//Target within range, engage
+		if( battle->check_range(&ed->bl, target, ed->base_status.rhw.range) ) {//Target within range, engage
 			unit_attack(&ed->bl,target->id,1);
 			return 1;
 		}
