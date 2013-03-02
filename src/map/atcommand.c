@@ -3175,7 +3175,7 @@ ACMD_FUNC(questskill)
 		clif_displaymessage(fd, msg_txt(198)); // This skill number doesn't exist.
 		return -1;
 	}
-	if (!(skill_get_inf2(skill_id) & INF2_QUEST_SKILL)) {
+	if (!(skill->get_inf2(skill_id) & INF2_QUEST_SKILL)) {
 		clif_displaymessage(fd, msg_txt(197)); // This skill number doesn't exist or isn't a quest skill.
 		return -1;
 	}
@@ -3219,7 +3219,7 @@ ACMD_FUNC(lostskill)
 		clif_displaymessage(fd, msg_txt(198)); // This skill number doesn't exist.
 		return -1;
 	}
-	if (!(skill_get_inf2(skill_id) & INF2_QUEST_SKILL)) {
+	if (!(skill->get_inf2(skill_id) & INF2_QUEST_SKILL)) {
 		clif_displaymessage(fd, msg_txt(197)); // This skill number doesn't exist or isn't a quest skill.
 		return -1;
 	}
@@ -3658,7 +3658,7 @@ ACMD_FUNC(reloadmobdb)
 ACMD_FUNC(reloadskilldb)
 {
 	nullpo_retr(-1, sd);
-	skill_reload();
+	skill->reload();
 	merc_skill_reload();
 	reload_elemental_skilldb();
 	read_mercenary_skilldb();
@@ -4236,7 +4236,7 @@ ACMD_FUNC(nuke)
 
 	if ((pl_sd = map_nick2sd(atcmd_player_name)) != NULL) {
 		if (pc_get_group_level(sd) >= pc_get_group_level(pl_sd)) { // you can kill only lower or same GM level
-			skill_castend_nodamage_id(&pl_sd->bl, &pl_sd->bl, NPC_SELFDESTRUCTION, 99, gettick(), 0);
+			skill->castend_nodamage_id(&pl_sd->bl, &pl_sd->bl, NPC_SELFDESTRUCTION, 99, gettick(), 0);
 			clif_displaymessage(fd, msg_txt(109)); // Player has been nuked!
 		} else {
 			clif_displaymessage(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
@@ -5400,7 +5400,7 @@ ACMD_FUNC(skillid) {
 	iter = db_iterator(skilldb_name2id);
 	
 	for( data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key) ) {
-		idx = skill_get_index(db_data2i(data));
+		idx = skill->get_index(db_data2i(data));
 		if (strnicmp(key.str, message, skillen) == 0 || strnicmp(skill_db[idx].desc, message, skillen) == 0) {
 			sprintf(atcmd_output, msg_txt(1164), db_data2i(data), skill_db[idx].desc, key.str); // skill %d: %s (%s)
 			clif_displaymessage(fd, atcmd_output);
@@ -5459,7 +5459,7 @@ ACMD_FUNC(useskill)
 	else
 		bl = &sd->bl;
 
-	if (skill_get_inf(skill_id)&INF_GROUND_SKILL)
+	if (skill->get_inf(skill_id)&INF_GROUND_SKILL)
 		unit_skilluse_pos(bl, pl_sd->bl.x, pl_sd->bl.y, skill_id, skill_lv);
 	else
 		unit_skilluse_id(bl, pl_sd->bl.id, skill_id, skill_lv);

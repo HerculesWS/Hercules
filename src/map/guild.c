@@ -1301,11 +1301,11 @@ void guild_guildaura_refresh(struct map_session_data *sd, uint16 skill_id, uint1
 		return;
 	if( !skill_lv )
 		return;
-	if( sd->sc.data[type] && (group = skill_id2group(sd->sc.data[type]->val4)) ) {
-		skill_delunitgroup(group);
+	if( sd->sc.data[type] && (group = skill->id2group(sd->sc.data[type]->val4)) ) {
+		skill->del_unitgroup(group,ALC_MARK);
 		status_change_end(&sd->bl,type,INVALID_TIMER);
 	}
-	group = skill_unitsetting(&sd->bl,skill_id,skill_lv,sd->bl.x,sd->bl.y,0);
+	group = skill->unitsetting(&sd->bl,skill_id,skill_lv,sd->bl.x,sd->bl.y,0);
 	if( group ) {
 		sc_start4(&sd->bl,type,100,(battle_config.guild_aura&16)?0:skill_lv,0,0,group->group_id,600000);//duration doesn't matter these status never end with val4
 	}
@@ -1338,7 +1338,7 @@ void guild_block_skill(struct map_session_data *sd, int time)
 	uint16 skill_id[] = { GD_BATTLEORDER, GD_REGENERATION, GD_RESTORE, GD_EMERGENCYCALL };
 	int i;
 	for (i = 0; i < 4; i++)
-		skill_blockpc_start_(sd, skill_id[i], time , true);
+		skill->blockpc_start(sd, skill_id[i], time , true);
 }
 
 /*====================================================

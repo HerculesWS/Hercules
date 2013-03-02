@@ -1506,12 +1506,12 @@ int clif_homskillinfoblock(struct map_session_data *sd)
 		if( (id = hd->homunculus.hskill[i].id) != 0 ){
 			j = id - HM_SKILLBASE;
 			WFIFOW(fd,len  ) = id;
-			WFIFOW(fd,len+2) = skill_get_inf(id);
+			WFIFOW(fd,len+2) = skill->get_inf(id);
 			WFIFOW(fd,len+4) = 0;
 			WFIFOW(fd,len+6) = hd->homunculus.hskill[j].lv;
-			WFIFOW(fd,len+8) = skill_get_sp(id,hd->homunculus.hskill[j].lv);
-			WFIFOW(fd,len+10)= skill_get_range2(&sd->hd->bl, id,hd->homunculus.hskill[j].lv);
-			safestrncpy((char*)WFIFOP(fd,len+12), skill_get_name(id), NAME_LENGTH);
+			WFIFOW(fd,len+8) = skill->get_sp(id,hd->homunculus.hskill[j].lv);
+			WFIFOW(fd,len+10)= skill->get_range2(&sd->hd->bl, id,hd->homunculus.hskill[j].lv);
+			safestrncpy((char*)WFIFOP(fd,len+12), skill->get_name(id), NAME_LENGTH);
 			WFIFOB(fd,len+36) = (hd->homunculus.hskill[j].lv < merc_skill_tree_get_max(id, hd->homunculus.class_))?1:0;
 			len+=37;
 		}
@@ -1536,9 +1536,9 @@ void clif_homskillup(struct map_session_data *sd, uint16 skill_id)
 	WFIFOW(fd,0) = 0x239;
 	WFIFOW(fd,2) = skill_id;
 	WFIFOW(fd,4) = hd->homunculus.hskill[idx].lv;
-	WFIFOW(fd,6) = skill_get_sp(skill_id,hd->homunculus.hskill[idx].lv);
-	WFIFOW(fd,8) = skill_get_range2(&hd->bl, skill_id,hd->homunculus.hskill[idx].lv);
-	WFIFOB(fd,10) = (hd->homunculus.hskill[idx].lv < skill_get_max(hd->homunculus.hskill[idx].id)) ? 1 : 0;
+	WFIFOW(fd,6) = skill->get_sp(skill_id,hd->homunculus.hskill[idx].lv);
+	WFIFOW(fd,8) = skill->get_range2(&hd->bl, skill_id,hd->homunculus.hskill[idx].lv);
+	WFIFOB(fd,10) = (hd->homunculus.hskill[idx].lv < skill->get_max(hd->homunculus.hskill[idx].id)) ? 1 : 0;
 	WFIFOSET(fd,packet_len(0x239));
 }
 
@@ -4419,9 +4419,9 @@ static void clif_getareachar_skillunit(struct map_session_data *sd, struct skill
 	WFIFOL(fd, 6)=unit->group->src_id;
 	WFIFOW(fd,10)=unit->bl.x;
 	WFIFOW(fd,12)=unit->bl.y;
-	if (battle_config.traps_setting&1 && skill_get_inf2(unit->group->skill_id)&INF2_TRAP)
+	if (battle_config.traps_setting&1 && skill->get_inf2(unit->group->skill_id)&INF2_TRAP)
 		WFIFOB(fd,14)=UNT_DUMMYSKILL; //Use invisible unit id for traps.
-    else if (skill_get_unit_flag(unit->group->skill_id) & UF_RANGEDSINGLEUNIT && !(unit->val2 & UF_RANGEDSINGLEUNIT))
+    else if (skill->get_unit_flag(unit->group->skill_id) & UF_RANGEDSINGLEUNIT && !(unit->val2 & UF_RANGEDSINGLEUNIT))
 		WFIFOB(fd,14)=UNT_DUMMYSKILL; //Use invisible unit id for traps.
 	else
 		WFIFOB(fd,14)=unit->group->unit_id;
@@ -4623,13 +4623,13 @@ void clif_skillinfoblock(struct map_session_data *sd)
 				break;
 
 			WFIFOW(fd,len)   = id;
-			WFIFOL(fd,len+2) = skill_get_inf(id);
+			WFIFOL(fd,len+2) = skill->get_inf(id);
 			WFIFOW(fd,len+6) = sd->status.skill[i].lv;
-			WFIFOW(fd,len+8) = skill_get_sp(id,sd->status.skill[i].lv);
-			WFIFOW(fd,len+10)= skill_get_range2(&sd->bl, id,sd->status.skill[i].lv);
-			safestrncpy((char*)WFIFOP(fd,len+12), skill_get_name(id), NAME_LENGTH);
+			WFIFOW(fd,len+8) = skill->get_sp(id,sd->status.skill[i].lv);
+			WFIFOW(fd,len+10)= skill->get_range2(&sd->bl, id,sd->status.skill[i].lv);
+			safestrncpy((char*)WFIFOP(fd,len+12), skill->get_name(id), NAME_LENGTH);
 			if(sd->status.skill[i].flag == SKILL_FLAG_PERMANENT)
-				WFIFOB(fd,len+36) = (sd->status.skill[i].lv < skill_tree_get_max(id, sd->status.class_))? 1:0;
+				WFIFOB(fd,len+36) = (sd->status.skill[i].lv < skill->tree_get_max(id, sd->status.class_))? 1:0;
 			else
 				WFIFOB(fd,len+36) = 0;
 			len += 37;
@@ -4669,13 +4669,13 @@ void clif_addskill(struct map_session_data *sd, int id)
 	WFIFOHEAD(fd, packet_len(0x111));
 	WFIFOW(fd,0) = 0x111;
 	WFIFOW(fd,2) = id;
-	WFIFOL(fd,4) = skill_get_inf(id);
+	WFIFOL(fd,4) = skill->get_inf(id);
 	WFIFOW(fd,8) = sd->status.skill[id].lv;
-	WFIFOW(fd,10) = skill_get_sp(id,sd->status.skill[id].lv);
-	WFIFOW(fd,12)= skill_get_range2(&sd->bl, id,sd->status.skill[id].lv);
-	safestrncpy((char*)WFIFOP(fd,14), skill_get_name(id), NAME_LENGTH);
+	WFIFOW(fd,10) = skill->get_sp(id,sd->status.skill[id].lv);
+	WFIFOW(fd,12)= skill->get_range2(&sd->bl, id,sd->status.skill[id].lv);
+	safestrncpy((char*)WFIFOP(fd,14), skill->get_name(id), NAME_LENGTH);
 	if( sd->status.skill[id].flag == SKILL_FLAG_PERMANENT )
-		WFIFOB(fd,38) = (sd->status.skill[id].lv < skill_tree_get_max(id, sd->status.class_))? 1:0;
+		WFIFOB(fd,38) = (sd->status.skill[id].lv < skill->tree_get_max(id, sd->status.class_))? 1:0;
 	else
 		WFIFOB(fd,38) = 0;
 	WFIFOSET(fd,packet_len(0x111));
@@ -4715,28 +4715,28 @@ void clif_skillup(struct map_session_data *sd,uint16 skill_id)
 	WFIFOW(fd,0) = 0x10e;
 	WFIFOW(fd,2) = skill_id;
 	WFIFOW(fd,4) = sd->status.skill[skill_id].lv;
-	WFIFOW(fd,6) = skill_get_sp(skill_id,sd->status.skill[skill_id].lv);
-	WFIFOW(fd,8) = skill_get_range2(&sd->bl,skill_id,sd->status.skill[skill_id].lv);
-	WFIFOB(fd,10) = (sd->status.skill[skill_id].lv < skill_tree_get_max(sd->status.skill[skill_id].id, sd->status.class_)) ? 1 : 0;
+	WFIFOW(fd,6) = skill->get_sp(skill_id,sd->status.skill[skill_id].lv);
+	WFIFOW(fd,8) = skill->get_range2(&sd->bl,skill_id,sd->status.skill[skill_id].lv);
+	WFIFOB(fd,10) = (sd->status.skill[skill_id].lv < skill->tree_get_max(sd->status.skill[skill_id].id, sd->status.class_)) ? 1 : 0;
 	WFIFOSET(fd,packet_len(0x10e));
 }
 
 
 /// Updates a skill in the skill tree (ZC_SKILLINFO_UPDATE2).
 /// 07e1 <skill id>.W <type>.L <level>.W <sp cost>.W <attack range>.W <upgradable>.B
-void clif_skillinfo(struct map_session_data *sd,int skill, int inf)
+void clif_skillinfo(struct map_session_data *sd,int skill_id, int inf)
 {
 	const int fd = sd->fd;
 
 	WFIFOHEAD(fd,packet_len(0x7e1));
 	WFIFOW(fd,0) = 0x7e1;
-	WFIFOW(fd,2) = skill;
-	WFIFOL(fd,4) = inf?inf:skill_get_inf(skill);
-	WFIFOW(fd,8) = sd->status.skill[skill].lv;
-	WFIFOW(fd,10) = skill_get_sp(skill,sd->status.skill[skill].lv);
-	WFIFOW(fd,12) = skill_get_range2(&sd->bl,skill,sd->status.skill[skill].lv);
-	if( sd->status.skill[skill].flag == SKILL_FLAG_PERMANENT )
-		WFIFOB(fd,14) = (sd->status.skill[skill].lv < skill_tree_get_max(skill, sd->status.class_))? 1:0;
+	WFIFOW(fd,2) = skill_id;
+	WFIFOL(fd,4) = inf?inf:skill->get_inf(skill_id);
+	WFIFOW(fd,8) = sd->status.skill[skill_id].lv;
+	WFIFOW(fd,10) = skill->get_sp(skill_id,sd->status.skill[skill_id].lv);
+	WFIFOW(fd,12) = skill->get_range2(&sd->bl,skill_id,sd->status.skill[skill_id].lv);
+	if( sd->status.skill[skill_id].flag == SKILL_FLAG_PERMANENT )
+		WFIFOB(fd,14) = (sd->status.skill[skill_id].lv < skill->tree_get_max(skill_id, sd->status.class_))? 1:0;
 	else
 		WFIFOB(fd,14) = 0;
 	WFIFOSET(fd,packet_len(0x7e1));
@@ -5116,7 +5116,7 @@ void clif_skill_setunit(struct skill_unit *unit)
 	WBUFW(buf,12)=unit->bl.y;
 	if (unit->group->state.song_dance&0x1 && unit->val2&UF_ENSEMBLE)
 		WBUFB(buf,14)=unit->val2&UF_SONG?UNT_DISSONANCE:UNT_UGLYDANCE;
-    else if (skill_get_unit_flag(unit->group->skill_id) & UF_RANGEDSINGLEUNIT && !(unit->val2 & UF_RANGEDSINGLEUNIT))
+    else if (skill->get_unit_flag(unit->group->skill_id) & UF_RANGEDSINGLEUNIT && !(unit->val2 & UF_RANGEDSINGLEUNIT))
         WBUFB(buf, 14) = UNT_DUMMYSKILL; // Only display the unit at center.
 	else
 		WBUFB(buf,14)=unit->group->unit_id;
@@ -5254,7 +5254,7 @@ void clif_skill_produce_mix_list(struct map_session_data *sd, int skill_id , int
 	WFIFOW(fd, 0)=0x18d;
 
 	for(i=0,c=0;i<MAX_SKILL_PRODUCE_DB;i++){
-		if( skill_can_produce_mix(sd,skill_produce_db[i].nameid, trigger, 1) &&
+		if( skill->can_produce_mix(sd,skill_produce_db[i].nameid, trigger, 1) &&
 			( ( skill_id > 0 && skill_produce_db[i].req_skill == skill_id ) || skill_id < 0 )
 			){
 			if((view = itemdb_viewid(skill_produce_db[i].nameid)) > 0)
@@ -5301,7 +5301,7 @@ void clif_cooking_list(struct map_session_data *sd, int trigger, uint16 skill_id
 
 	c = 0;
 	for( i = 0; i < MAX_SKILL_PRODUCE_DB; i++ ) {
-		if( !skill_can_produce_mix(sd,skill_produce_db[i].nameid,trigger, qty) )
+		if( !skill->can_produce_mix(sd,skill_produce_db[i].nameid,trigger, qty) )
 			continue;
 
 		if( (view = itemdb_viewid(skill_produce_db[i].nameid)) > 0 )
@@ -5952,12 +5952,12 @@ void clif_item_skill(struct map_session_data *sd,uint16 skill_id,uint16 skill_lv
 	WFIFOHEAD(fd,packet_len(0x147));
 	WFIFOW(fd, 0)=0x147;
 	WFIFOW(fd, 2)=skill_id;
-	WFIFOW(fd, 4)=skill_get_inf(skill_id);
+	WFIFOW(fd, 4)=skill->get_inf(skill_id);
 	WFIFOW(fd, 6)=0;
 	WFIFOW(fd, 8)=skill_lv;
-	WFIFOW(fd,10)=skill_get_sp(skill_id,skill_lv);
-	WFIFOW(fd,12)=skill_get_range2(&sd->bl, skill_id,skill_lv);
-	safestrncpy((char*)WFIFOP(fd,14),skill_get_name(skill_id),NAME_LENGTH);
+	WFIFOW(fd,10)=skill->get_sp(skill_id,skill_lv);
+	WFIFOW(fd,12)=skill->get_range2(&sd->bl, skill_id,skill_lv);
+	safestrncpy((char*)WFIFOP(fd,14),skill->get_name(skill_id),NAME_LENGTH);
 	WFIFOB(fd,38)=0;
 	WFIFOSET(fd,packet_len(0x147));
 }
@@ -6880,7 +6880,7 @@ void clif_devotion(struct block_list *src, struct map_session_data *tsd)
 		if( md && md->master && md->devotion_flag )
 			WBUFL(buf,6) = md->master->bl.id;
 
-		WBUFW(buf,26) = skill_get_range2(src, ML_DEVOTION, mercenary_checkskill(md, ML_DEVOTION));
+		WBUFW(buf,26) = skill->get_range2(src, ML_DEVOTION, mercenary_checkskill(md, ML_DEVOTION));
 	}
 	else
 	{
@@ -6891,7 +6891,7 @@ void clif_devotion(struct block_list *src, struct map_session_data *tsd)
 
 		for( i = 0; i < 5; i++ )
 			WBUFL(buf,6+4*i) = sd->devotion[i];
-		WBUFW(buf,26) = skill_get_range2(src, CR_DEVOTION, pc_checkskill(sd, CR_DEVOTION));
+		WBUFW(buf,26) = skill->get_range2(src, CR_DEVOTION, pc_checkskill(sd, CR_DEVOTION));
 	}
 
 	if( tsd )
@@ -7446,11 +7446,11 @@ void clif_guild_skillinfo(struct map_session_data* sd)
 			int id = g->skill[i].id;
 			int p = 6 + c*37;
 			WFIFOW(fd,p+0) = id;
-			WFIFOL(fd,p+2) = skill_get_inf(id);
+			WFIFOL(fd,p+2) = skill->get_inf(id);
 			WFIFOW(fd,p+6) = g->skill[i].lv;
-			WFIFOW(fd,p+8) = skill_get_sp(id, g->skill[i].lv);
-			WFIFOW(fd,p+10) = skill_get_range(id, g->skill[i].lv);
-			safestrncpy((char*)WFIFOP(fd,p+12), skill_get_name(id), NAME_LENGTH);
+			WFIFOW(fd,p+8) = skill->get_sp(id, g->skill[i].lv);
+			WFIFOW(fd,p+10) = skill->get_range(id, g->skill[i].lv);
+			safestrncpy((char*)WFIFOP(fd,p+12), skill->get_name(id), NAME_LENGTH);
 			WFIFOB(fd,p+36)= (g->skill[i].lv < guild_skill_get_max(id) && sd == g->member[0].sd) ? 1 : 0;
 			c++;
 		}
@@ -7647,8 +7647,8 @@ int clif_guild_skillup(struct map_session_data *sd,uint16 skill_id,int lv)
 	WFIFOW(fd,0) = 0x10e;
 	WFIFOW(fd,2) = skill_id;
 	WFIFOW(fd,4) = lv;
-	WFIFOW(fd,6) = skill_get_sp(skill_id,lv);
-	WFIFOW(fd,8) = skill_get_range(skill_id,lv);
+	WFIFOW(fd,6) = skill->get_sp(skill_id,lv);
+	WFIFOW(fd,8) = skill->get_range(skill_id,lv);
 	WFIFOB(fd,10) = 1;
 	WFIFOSET(fd,11);
 	return 0;
@@ -9220,7 +9220,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 			clif_spawn(&sd->pd->bl);
 			clif_send_petdata(sd,sd->pd,0,0);
 			clif_send_petstatus(sd);
-//			skill_unit_move(&sd->pd->bl,gettick(),1);
+//			skill->unit_move(&sd->pd->bl,gettick(),1);
 		}
 	}
 
@@ -9236,7 +9236,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 		if( battle_config.hom_setting&0x8 )
 			status_calc_bl(&sd->hd->bl, SCB_SPEED); //Homunc mimic their master's speed on each map change
 		if( !(battle_config.hom_setting&0x2) )
-			skill_unit_move(&sd->hd->bl,gettick(),1); // apply land skills immediately
+			skill->unit_move(&sd->hd->bl,gettick(),1); // apply land skills immediately
 	}
 
 	if( sd->md ) {
@@ -9285,7 +9285,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 			if(sd->bl.m == sd->feel_map[0].m
 				|| sd->bl.m == sd->feel_map[1].m
 				|| sd->bl.m == sd->feel_map[2].m)
-				sc_start(&sd->bl, SC_KNOWLEDGE, 100, lv, skill_get_time(SG_KNOWLEDGE, lv));
+				sc_start(&sd->bl, SC_KNOWLEDGE, 100, lv, skill->get_time(SG_KNOWLEDGE, lv));
 		}
 
 		if(sd->pd && sd->pd->pet.intimate > 900)
@@ -9405,13 +9405,13 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 	if(pc_isdead(sd))
 		clif_clearunit_area(&sd->bl, CLR_DEAD);
 	else {
-		skill_usave_trigger(sd);
+		skill->usave_trigger(sd);
 		clif_changed_dir(&sd->bl, SELF);
 	}
 
 // Trigger skill effects if you appear standing on them
 	if(!battle_config.pc_invincible_time)
-		skill_unit_move(&sd->bl,gettick(),1);
+		skill->unit_move(&sd->bl,gettick(),1);
 }
 
 
@@ -9890,7 +9890,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 			break;
 
 		pc_setsit(sd);
-		skill_sit(sd,1);
+		skill->sit(sd,1);
 		clif_sitting(&sd->bl);
 	break;
 	case 0x03: // standup
@@ -9900,7 +9900,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 			return;
 		}
 		pc_setstand(sd);
-		skill_sit(sd,0);
+		skill->sit(sd,0);
 		clif_standing(&sd->bl);
 	break;
 	}
@@ -10670,15 +10670,13 @@ static void clif_parse_UseSkillToId_homun(struct homun_data *hd, struct map_sess
 
 	if( !hd )
 		return;
-	if( skillnotok_hom(skill_id, hd) )
+	if( skill->not_ok_hom(skill_id, hd) )
 		return;
-	if( hd->bl.id != target_id && skill_get_inf(skill_id)&INF_SELF_SKILL )
+	if( hd->bl.id != target_id && skill->get_inf(skill_id)&INF_SELF_SKILL )
 		target_id = hd->bl.id;
-	if( hd->ud.skilltimer != INVALID_TIMER )
-	{
+	if( hd->ud.skilltimer != INVALID_TIMER ) {
 		if( skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST ) return;
-	}
-	else if( DIFF_TICK(tick, hd->ud.canact_tick) < 0 )
+	} else if( DIFF_TICK(tick, hd->ud.canact_tick) < 0 )
 		return;
 
 	lv = merc_hom_checkskill(hd, skill_id);
@@ -10693,7 +10691,7 @@ static void clif_parse_UseSkillToPos_homun(struct homun_data *hd, struct map_ses
 	int lv;
 	if( !hd )
 		return;
-	if( skillnotok_hom(skill_id, hd) )
+	if( skill->not_ok_hom(skill_id, hd) )
 		return;
 	if( hd->ud.skilltimer != INVALID_TIMER ) {
 		if( skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST ) return;
@@ -10715,15 +10713,13 @@ static void clif_parse_UseSkillToId_mercenary(struct mercenary_data *md, struct 
 
 	if( !md )
 		return;
-	if( skillnotok_mercenary(skill_id, md) )
+	if( skill->not_ok_mercenary(skill_id, md) )
 		return;
-	if( md->bl.id != target_id && skill_get_inf(skill_id)&INF_SELF_SKILL )
+	if( md->bl.id != target_id && skill->get_inf(skill_id)&INF_SELF_SKILL )
 		target_id = md->bl.id;
-	if( md->ud.skilltimer != INVALID_TIMER )
-	{
+	if( md->ud.skilltimer != INVALID_TIMER ) {
 		if( skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST ) return;
-	}
-	else if( DIFF_TICK(tick, md->ud.canact_tick) < 0 )
+	} else if( DIFF_TICK(tick, md->ud.canact_tick) < 0 )
 		return;
 
 	lv = mercenary_checkskill(md, skill_id);
@@ -10738,12 +10734,11 @@ static void clif_parse_UseSkillToPos_mercenary(struct mercenary_data *md, struct
 	int lv;
 	if( !md )
 		return;
-	if( skillnotok_mercenary(skill_id, md) )
+	if( skill->not_ok_mercenary(skill_id, md) )
 		return;
 	if( md->ud.skilltimer != INVALID_TIMER )
 		return;
-	if( DIFF_TICK(tick, md->ud.canact_tick) < 0 )
-	{
+	if( DIFF_TICK(tick, md->ud.canact_tick) < 0 ) {
 		clif_skill_fail(md->master, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0);
 		return;
 	}
@@ -10774,7 +10769,7 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 
 	if( skill_lv < 1 ) skill_lv = 1; //No clue, I have seen the client do this with guild skills :/ [Skotlex]
 
-	tmp = skill_get_inf(skill_id);
+	tmp = skill->get_inf(skill_id);
 	if (tmp&INF_GROUND_SKILL || !tmp)
 		return; //Using a ground/passive skill on a target? WRONG.
 
@@ -10804,7 +10799,7 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 	if( pc_issit(sd) )
 		return;
 
-	if( skillnotok(skill_id, sd) )
+	if( skill->not_ok(skill_id, sd) )
 		return;
 
 	if( sd->bl.id != target_id && tmp&INF_SELF_SKILL )
@@ -10874,7 +10869,7 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 {
 	unsigned int tick = gettick();
 
-	if( !(skill_get_inf(skill_id)&INF_GROUND_SKILL) )
+	if( !(skill->get_inf(skill_id)&INF_GROUND_SKILL) )
 		return; //Using a target skill on the ground? WRONG.
 
 	if( skill_id >= HM_SKILLBASE && skill_id < HM_SKILLBASE + MAX_HOMUNSKILL ) {
@@ -10891,7 +10886,7 @@ static void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uin
 	//Whether skill fails or not is irrelevant, the char ain't idle. [Skotlex]
 	sd->idletime = last_tick;
 
-	if( skillnotok(skill_id, sd) )
+	if( skill->not_ok(skill_id, sd) )
 		return;
 	if( skillmoreinfo != -1 )
 	{
@@ -11004,7 +10999,7 @@ void clif_parse_UseSkillMap(int fd, struct map_session_data* sd)
 	}
 
 	pc_delinvincibletimer(sd);
-	skill_castend_map(sd,skill_id,map_name);
+	skill->castend_map(sd,skill_id,map_name);
 }
 
 
@@ -11036,8 +11031,8 @@ void clif_parse_ProduceMix(int fd,struct map_session_data *sd)
 		clif_menuskill_clear(sd);
 		return;
 	}
-	if( skill_can_produce_mix(sd,RFIFOW(fd,2),sd->menuskill_val, 1) )
-		skill_produce_mix(sd,0,RFIFOW(fd,2),RFIFOW(fd,4),RFIFOW(fd,6),RFIFOW(fd,8), 1);
+	if( skill->can_produce_mix(sd,RFIFOW(fd,2),sd->menuskill_val, 1) )
+		skill->produce_mix(sd,0,RFIFOW(fd,2),RFIFOW(fd,4),RFIFOW(fd,6),RFIFOW(fd,8), 1);
 	clif_menuskill_clear(sd);
 }
 
@@ -11064,8 +11059,8 @@ void clif_parse_Cooking(int fd,struct map_session_data *sd) {
 		clif_menuskill_clear(sd);
 		return;
 	}
-	if( skill_can_produce_mix(sd,nameid,sd->menuskill_val, amount) )
-		skill_produce_mix(sd,(type>1?sd->menuskill_id:0),nameid,0,0,0,amount);
+	if( skill->can_produce_mix(sd,nameid,sd->menuskill_val, amount) )
+		skill->produce_mix(sd,(type>1?sd->menuskill_id:0),nameid,0,0,0,amount);
 	clif_menuskill_clear(sd);
 }
 
@@ -11082,7 +11077,7 @@ void clif_parse_RepairItem(int fd, struct map_session_data *sd)
 		clif_menuskill_clear(sd);
 		return;
 	}
-	skill_repairweapon(sd,RFIFOW(fd,2));
+	skill->repairweapon(sd,RFIFOW(fd,2));
 	clif_menuskill_clear(sd);
 }
 
@@ -11102,7 +11097,7 @@ void clif_parse_WeaponRefine(int fd, struct map_session_data *sd)
 		return;
 	}
 	idx = RFIFOL(fd,packet_db[sd->packet_ver][RFIFOW(fd,0)].pos[0]);
-	skill_weaponrefine(sd, idx-2);
+	skill->weaponrefine(sd, idx-2);
 	clif_menuskill_clear(sd);
 }
 
@@ -11197,7 +11192,7 @@ void clif_parse_ItemIdentify(int fd,struct map_session_data *sd)
 		clif_menuskill_clear(sd);
 		return;
 	}
-	skill_identify(sd,idx-2);
+	skill->identify(sd,idx-2);
 	clif_menuskill_clear(sd);
 }
 
@@ -11214,19 +11209,19 @@ void clif_parse_SelectArrow(int fd,struct map_session_data *sd)
 	}
 	switch( sd->menuskill_id ) {
 		case AC_MAKINGARROW:
-			skill_arrow_create(sd,RFIFOW(fd,2));
+			skill->arrow_create(sd,RFIFOW(fd,2));
 			break;
 		case SA_CREATECON:
-			skill_produce_mix(sd,SA_CREATECON,RFIFOW(fd,2),0,0,0, 1);
+			skill->produce_mix(sd,SA_CREATECON,RFIFOW(fd,2),0,0,0, 1);
 			break;
 		case WL_READING_SB:
-			skill_spellbook(sd,RFIFOW(fd,2));
+			skill->spellbook(sd,RFIFOW(fd,2));
 			break;
 		case GC_POISONINGWEAPON:
-			skill_poisoningweapon(sd,RFIFOW(fd,2));
+			skill->poisoningweapon(sd,RFIFOW(fd,2));
 			break;
 		case NC_MAGICDECOY:
-			skill_magicdecoy(sd,RFIFOW(fd,2));
+			skill->magicdecoy(sd,RFIFOW(fd,2));
 			break;
 	}
 
@@ -11240,7 +11235,7 @@ void clif_parse_AutoSpell(int fd,struct map_session_data *sd)
 {
 	if (sd->menuskill_id != SA_AUTOSPELL)
 		return;
-	skill_autospell(sd,RFIFOL(fd,2));
+	skill->autospell(sd,RFIFOL(fd,2));
 	clif_menuskill_clear(sd);
 }
 
@@ -12812,7 +12807,7 @@ void clif_parse_NoviceExplosionSpirits(int fd, struct map_session_data *sd)
 
 			if( percent && ( percent%100 ) == 0 )
 			{// 10.0%, 20.0%, ..., 90.0%
-				sc_start(&sd->bl, status_skill2sc(MO_EXPLOSIONSPIRITS), 100, 17, skill_get_time(MO_EXPLOSIONSPIRITS, 5)); //Lv17-> +50 critical (noted by Poki) [Skotlex]
+				sc_start(&sd->bl, status_skill2sc(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5)); //Lv17-> +50 critical (noted by Poki) [Skotlex]
 				clif_skill_nodamage(&sd->bl, &sd->bl, MO_EXPLOSIONSPIRITS, 5, 1);  // prayer always shows successful Lv5 cast and disregards noskill restrictions
 			}
 		}
@@ -14915,11 +14910,11 @@ void clif_mercenary_skillblock(struct map_session_data *sd)
 			continue;
 		j = id - MC_SKILLBASE;
 		WFIFOW(fd,len) = id;
-		WFIFOL(fd,len+2) = skill_get_inf(id);
+		WFIFOL(fd,len+2) = skill->get_inf(id);
 		WFIFOW(fd,len+6) = md->db->skill[j].lv;
-		WFIFOW(fd,len+8) = skill_get_sp(id, md->db->skill[j].lv);
-		WFIFOW(fd,len+10) = skill_get_range2(&md->bl, id, md->db->skill[j].lv);
-		safestrncpy((char*)WFIFOP(fd,len+12), skill_get_name(id), NAME_LENGTH);
+		WFIFOW(fd,len+8) = skill->get_sp(id, md->db->skill[j].lv);
+		WFIFOW(fd,len+10) = skill->get_range2(&md->bl, id, md->db->skill[j].lv);
+		safestrncpy((char*)WFIFOP(fd,len+12), skill->get_name(id), NAME_LENGTH);
 		WFIFOB(fd,len+36) = 0; // Skillable for Mercenary?
 		len += 37;
 	}
@@ -15387,11 +15382,11 @@ void clif_parse_ItemListWindowSelected(int fd, struct map_session_data* sd) {
 
 	switch( type ) {
 		case 0: // Change Material
-			skill_changematerial(sd,n,item_list);
+			skill->changematerial(sd,n,item_list);
 			break;
 		case 1:	// Level 1: Pure to Rough
 		case 2:	// Level 2: Rough to Pure
-			skill_elementalanalysis(sd,n,type,item_list);
+			skill->elementalanalysis(sd,n,type,item_list);
 			break;
 	}
 	clif_menuskill_clear(sd);
@@ -15993,7 +15988,7 @@ int clif_elementalconverter_list(struct map_session_data *sd) {
 	WFIFOW(fd, 0)=0x1ad;
 
 	for(i=0,c=0;i<MAX_SKILL_PRODUCE_DB;i++){
-		if( skill_can_produce_mix(sd,skill_produce_db[i].nameid,23, 1) ){
+		if( skill->can_produce_mix(sd,skill_produce_db[i].nameid,23, 1) ){
 			if((view = itemdb_viewid(skill_produce_db[i].nameid)) > 0)
 				WFIFOW(fd,c*2+ 4)= view;
 			else
@@ -16147,7 +16142,7 @@ int clif_autoshadowspell_list(struct map_session_data *sd) {
 	WFIFOW(fd,0) = 0x442;
 	for( i = 0, c = 0; i < MAX_SKILL; i++ )
 		if( sd->status.skill[i].flag == SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].id > 0 &&
-				sd->status.skill[i].id < GS_GLITTERING && skill_get_type(sd->status.skill[i].id) == BF_MAGIC )
+				sd->status.skill[i].id < GS_GLITTERING && skill->get_type(sd->status.skill[i].id) == BF_MAGIC )
 		{ // Can't auto cast both Extended class and 3rd class skills.
 			WFIFOW(fd,8+c*2) = sd->status.skill[i].id;
 			c++;
@@ -16264,7 +16259,7 @@ void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd) {
 		return;
 	}
 
-	skill_select_menu(sd,RFIFOW(fd,6));
+	skill->select_menu(sd,RFIFOW(fd,6));
 
 	clif_menuskill_clear(sd);
 }

@@ -834,7 +834,7 @@ int party_skill_check(struct map_session_data *sd, int party_id, uint16 skill_id
 					&& pc_checkskill(p_sd,MO_TRIPLEATTACK)) {
 					sc_start4(&p_sd->bl,SC_SKILLRATE_UP,100,MO_TRIPLEATTACK,
 						50+50*skill_lv, //+100/150/200% rate
-						0,0,skill_get_time(SG_FRIEND, 1));
+						0,0,skill->get_time(SG_FRIEND, 1));
 				}
 				break;
 			case MO_COMBOFINISH: //Increase Counter rate of Star Gladiators
@@ -843,7 +843,7 @@ int party_skill_check(struct map_session_data *sd, int party_id, uint16 skill_id
 					&& pc_checkskill(p_sd,SG_FRIEND)) {
 					sc_start4(&p_sd->bl,SC_SKILLRATE_UP,100,TK_COUNTER,
 						50+50*pc_checkskill(p_sd,SG_FRIEND), //+100/150/200% rate
-						0,0,skill_get_time(SG_FRIEND, 1));
+						0,0,skill->get_time(SG_FRIEND, 1));
 				}
 				break;
 		}

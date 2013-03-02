@@ -985,7 +985,7 @@ int mob_spawn (struct mob_data *md)
 	map_addblock(&md->bl);
 	if( map[md->bl.m].users )
 		clif_spawn(&md->bl);
-	skill_unit_move(&md->bl,tick,1);
+	skill->unit_move(&md->bl,tick,1);
 	mobskill_use(md, tick, MSC_SPAWN);
 	return 0;
 }
@@ -2652,7 +2652,7 @@ void mob_revive(struct mob_data *md, unsigned int hp)
 	if (!md->bl.prev)
 		map_addblock(&md->bl);
 	clif_spawn(&md->bl);
-	skill_unit_move(&md->bl,tick,1);
+	skill->unit_move(&md->bl,tick,1);
 	mobskill_use(md, tick, MSC_SPAWN);
 	if (battle_config.show_mob_info&3)
 		clif_charnameack (0, &md->bl);
@@ -3176,13 +3176,12 @@ int mobskill_use(struct mob_data *md, unsigned int tick, int event)
 			continue; //Skill requisite failed to be fulfilled.
 
 		//Execute skill
-		if (skill_get_casttype(ms[i].skill_id) == CAST_GROUND)
-		{	//Ground skill.
+		if (skill->get_casttype(ms[i].skill_id) == CAST_GROUND) {//Ground skill.
 			short x, y;
 			switch (ms[i].target) {
 				case MST_RANDOM: //Pick a random enemy within skill range.
 					bl = battle->get_enemy(&md->bl, DEFAULT_ENEMY_TYPE(md),
-						skill_get_range2(&md->bl, ms[i].skill_id, ms[i].skill_lv));
+						skill->get_range2(&md->bl, ms[i].skill_id, ms[i].skill_lv));
 					break;
 				case MST_TARGET:
 				case MST_AROUND5:
@@ -3217,7 +3216,7 @@ int mobskill_use(struct mob_data *md, unsigned int tick, int event)
 			}
 			md->skill_idx = i;
 			map_freeblock_lock();
-			if( !battle->check_range(&md->bl,bl,skill_get_range2(&md->bl, ms[i].skill_id,ms[i].skill_lv)) ||
+			if( !battle->check_range(&md->bl,bl,skill->get_range2(&md->bl, ms[i].skill_id,ms[i].skill_lv)) ||
 				!unit_skilluse_pos2(&md->bl, x, y,ms[i].skill_id, ms[i].skill_lv,ms[i].casttime, ms[i].cancel) )
 			{
 				map_freeblock_unlock();
@@ -3228,7 +3227,7 @@ int mobskill_use(struct mob_data *md, unsigned int tick, int event)
 			switch (ms[i].target) {
 				case MST_RANDOM: //Pick a random enemy within skill range.
 					bl = battle->get_enemy(&md->bl, DEFAULT_ENEMY_TYPE(md),
-						skill_get_range2(&md->bl, ms[i].skill_id, ms[i].skill_lv));
+						skill->get_range2(&md->bl, ms[i].skill_id, ms[i].skill_lv));
 					break;
 				case MST_TARGET:
 					bl = map_id2bl(md->target_id);
@@ -3255,7 +3254,7 @@ int mobskill_use(struct mob_data *md, unsigned int tick, int event)
 
 			md->skill_idx = i;
 			map_freeblock_lock();
-			if( !battle->check_range(&md->bl,bl,skill_get_range2(&md->bl, ms[i].skill_id,ms[i].skill_lv)) ||
+			if( !battle->check_range(&md->bl,bl,skill->get_range2(&md->bl, ms[i].skill_id,ms[i].skill_lv)) ||
 				!unit_skilluse_id2(&md->bl, bl->id,ms[i].skill_id, ms[i].skill_lv,ms[i].casttime, ms[i].cancel) )
 			{
 				map_freeblock_unlock();
@@ -3390,21 +3389,21 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 	for (i=0,j = MAX_SKILL_TREE-1;j>=0 && i< MAX_MOBSKILL ;j--) {
 		skill_id = skill_tree[pc_class2idx(sd->status.class_)][j].id;
 		if (!skill_id || sd->status.skill[skill_id].lv < 1 ||
-			(skill_get_inf2(skill_id)&(INF2_WEDDING_SKILL|INF2_GUILD_SKILL)) ||
-			skill_get_nocast(skill_id)&16
+			(skill->get_inf2(skill_id)&(INF2_WEDDING_SKILL|INF2_GUILD_SKILL)) ||
+			skill->get_nocast(skill_id)&16
 		)
 			continue;
 		//Normal aggressive mob, disable skills that cannot help them fight
 		//against players (those with flags UF_NOMOB and UF_NOPC are specific
 		//to always aid players!) [Skotlex]
 		if (!(flag&1) &&
-			skill_get_unit_id(skill_id, 0) &&
-			skill_get_unit_flag(skill_id)&(UF_NOMOB|UF_NOPC))
+			skill->get_unit_id(skill_id, 0) &&
+			skill->get_unit_flag(skill_id)&(UF_NOMOB|UF_NOPC))
 			continue;
 		/**
 		 * The clone should be able to cast the skill (e.g. have the required weapon) bugreport:5299)
 		 **/
-		if( !skill_check_condition_castbegin(sd,skill_id,sd->status.skill[skill_id].lv) )
+		if( !skill->check_condition_castbegin(sd,skill_id,sd->status.skill[skill_id].lv) )
 			continue;
 
 		memset (&ms[i], 0, sizeof(struct mob_skill));
@@ -3414,23 +3413,23 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 		ms[i].permillage = 500*battle_config.mob_skill_rate/100; //Default chance of all skills: 5%
 		ms[i].emotion = -1;
 		ms[i].cancel = 0;
-		ms[i].casttime = skill_castfix(&sd->bl,skill_id, ms[i].skill_lv);
-		ms[i].delay = 5000+skill_delayfix(&sd->bl,skill_id, ms[i].skill_lv);
+		ms[i].casttime = skill->cast_fix(&sd->bl,skill_id, ms[i].skill_lv);
+		ms[i].delay = 5000+skill->delay_fix(&sd->bl,skill_id, ms[i].skill_lv);
 
-		inf = skill_get_inf(skill_id);
+		inf = skill->get_inf(skill_id);
 		if (inf&INF_ATTACK_SKILL) {
 			ms[i].target = MST_TARGET;
 			ms[i].cond1 = MSC_ALWAYS;
-			if (skill_get_range(skill_id, ms[i].skill_lv)  > 3)
+			if (skill->get_range(skill_id, ms[i].skill_lv)  > 3)
 				ms[i].state = MSS_ANYTARGET;
 			else
 				ms[i].state = MSS_BERSERK;
 		} else if(inf&INF_GROUND_SKILL) {
-			if (skill_get_inf2(skill_id)&INF2_TRAP) { //Traps!
+			if (skill->get_inf2(skill_id)&INF2_TRAP) { //Traps!
 				ms[i].state = MSS_IDLE;
 				ms[i].target = MST_AROUND2;
 				ms[i].delay = 60000;
-			} else if (skill_get_unit_target(skill_id) == BCT_ENEMY) { //Target Enemy
+			} else if (skill->get_unit_target(skill_id) == BCT_ENEMY) { //Target Enemy
 				ms[i].state = MSS_ANYTARGET;
 				ms[i].target = MST_TARGET;
 				ms[i].cond1 = MSC_ALWAYS;
@@ -3440,10 +3439,10 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 				ms[i].cond2 = 95;
 			}
 		} else if (inf&INF_SELF_SKILL) {
-			if (skill_get_inf2(skill_id)&INF2_NO_TARGET_SELF) { //auto-select target skill.
+			if (skill->get_inf2(skill_id)&INF2_NO_TARGET_SELF) { //auto-select target skill.
 				ms[i].target = MST_TARGET;
 				ms[i].cond1 = MSC_ALWAYS;
-				if (skill_get_range(skill_id, ms[i].skill_lv)  > 3) {
+				if (skill->get_range(skill_id, ms[i].skill_lv)  > 3) {
 					ms[i].state = MSS_ANYTARGET;
 				} else {
 					ms[i].state = MSS_BERSERK;
@@ -3454,7 +3453,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 				ms[i].cond2 = 90;
 				ms[i].permillage = 2000;
 				//Delay: Remove the stock 5 secs and add half of the support time.
-				ms[i].delay += -5000 +(skill_get_time(skill_id, ms[i].skill_lv) + skill_get_time2(skill_id, ms[i].skill_lv))/2;
+				ms[i].delay += -5000 +(skill->get_time(skill_id, ms[i].skill_lv) + skill->get_time2(skill_id, ms[i].skill_lv))/2;
 				if (ms[i].delay < 5000)
 					ms[i].delay = 5000; //With a minimum of 5 secs.
 			}
@@ -3467,7 +3466,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 			else if (skill_id == ALL_RESURRECTION)
 				ms[i].cond2 = 1;
 			//Delay: Remove the stock 5 secs and add half of the support time.
-			ms[i].delay += -5000 +(skill_get_time(skill_id, ms[i].skill_lv) + skill_get_time2(skill_id, ms[i].skill_lv))/2;
+			ms[i].delay += -5000 +(skill->get_time(skill_id, ms[i].skill_lv) + skill->get_time2(skill_id, ms[i].skill_lv))/2;
 			if (ms[i].delay < 2000)
 				ms[i].delay = 2000; //With a minimum of 2 secs.
 
@@ -4348,18 +4347,16 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	}
 
 	//Check that the target condition is right for the skill type. [Skotlex]
-	if (skill_get_casttype(ms->skill_id) == CAST_GROUND)
-	{	//Ground skill.
-		if (ms->target > MST_AROUND)
-		{
+	if (skill->get_casttype(ms->skill_id) == CAST_GROUND) {//Ground skill.
+		if (ms->target > MST_AROUND) {
 			ShowWarning("mob_parse_row_mobskilldb: Wrong mob skill target for ground skill %d (%s) for %s.\n",
-				ms->skill_id, skill_get_name(ms->skill_id),
+				ms->skill_id, skill->get_name(ms->skill_id),
 				mob_id < 0?"all mobs":mob_db_data[mob_id]->sprite);
 			ms->target = MST_TARGET;
 		}
 	} else if (ms->target > MST_MASTER) {
 		ShowWarning("mob_parse_row_mobskilldb: Wrong mob skill target 'around' for non-ground skill %d (%s) for %s.\n",
-			ms->skill_id, skill_get_name(ms->skill_id),
+			ms->skill_id, skill->get_name(ms->skill_id),
 			mob_id < 0?"all mobs":mob_db_data[mob_id]->sprite);
 		ms->target = MST_TARGET;
 	}

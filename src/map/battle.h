@@ -64,7 +64,6 @@ enum e_battle_check_target { //New definitions [Skotlex]
 	BCT_NEUTRAL = 0x100000,
 };
 
-
 /**
  * Structures
  **/
@@ -469,7 +468,7 @@ struct Battle_Config {
 
 
 /**
- * Misc Vars
+ * Vars
  **/
 //attribute table
 extern int attr_fix_table[4][10][10];

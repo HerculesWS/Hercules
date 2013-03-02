@@ -422,20 +422,20 @@ int elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned 
 	ed->last_thinktime = tick;
 
 	// Not in skill range.
-	if( !battle->check_range(&ed->bl,bl,skill_get_range(skill_id,skill_lv)) ) {
+	if( !battle->check_range(&ed->bl,bl,skill->get_range(skill_id,skill_lv)) ) {
 		// Try to walk to the target.
-		if( !unit_walktobl(&ed->bl, bl, skill_get_range(skill_id,skill_lv), 2) )
+		if( !unit_walktobl(&ed->bl, bl, skill->get_range(skill_id,skill_lv), 2) )
 			elemental_unlocktarget(ed);
 		else {
 			// Walking, waiting to be in range. Client don't handle it, then we must handle it here.
-			int walk_dist = distance_bl(&ed->bl,bl) - skill_get_range(skill_id,skill_lv);
+			int walk_dist = distance_bl(&ed->bl,bl) - skill->get_range(skill_id,skill_lv);
 			ed->ud.skill_id = skill_id;
 			ed->ud.skill_lv = skill_lv;
 
-			if( skill_get_inf(skill_id) & INF_GROUND_SKILL )
-				ed->ud.skilltimer = add_timer( tick+status_get_speed(&ed->bl)*walk_dist, skill_castend_pos, ed->bl.id, 0 );
+			if( skill->get_inf(skill_id) & INF_GROUND_SKILL )
+				ed->ud.skilltimer = add_timer( tick+status_get_speed(&ed->bl)*walk_dist, skill->castend_pos, ed->bl.id, 0 );
 			else
-				ed->ud.skilltimer = add_timer( tick+status_get_speed(&ed->bl)*walk_dist, skill_castend_id, ed->bl.id, 0 );
+				ed->ud.skilltimer = add_timer( tick+status_get_speed(&ed->bl)*walk_dist, skill->castend_id, ed->bl.id, 0 );
 		}
 		return 1;
 
@@ -455,7 +455,7 @@ int elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned 
 	}
 
 	//Otherwise, just cast the skill.
-	if( skill_get_inf(skill_id) & INF_GROUND_SKILL )
+	if( skill->get_inf(skill_id) & INF_GROUND_SKILL )
 		unit_skilluse_pos(&ed->bl, bl->x, bl->y, skill_id, skill_lv);
 	else
 		unit_skilluse_id(&ed->bl, bl->id, skill_id, skill_lv);
@@ -499,7 +499,7 @@ int elemental_change_mode_ack(struct elemental_data *ed, int mode) {
 	ed->target_id = bl->id;	// Set new target
 	ed->last_thinktime = gettick();
 
-	if( skill_get_inf(skill_id) & INF_GROUND_SKILL )
+	if( skill->get_inf(skill_id) & INF_GROUND_SKILL )
 		unit_skilluse_pos(&ed->bl, bl->x, bl->y, skill_id, skill_lv);
 	else
 		unit_skilluse_id(&ed->bl,bl->id,skill_id,skill_lv);
@@ -556,18 +556,18 @@ int elemental_unlocktarget(struct elemental_data *ed) {
 }
 
 int elemental_skillnotok(uint16 skill_id, struct elemental_data *ed) {
-	int idx = skill_get_index(skill_id);
+	int idx = skill->get_index(skill_id);
 	nullpo_retr(1,ed);
 
 	if (idx == 0)
 		return 1; // invalid skill id
 
-	return skillnotok(skill_id, ed->master);
+	return skill->not_ok(skill_id, ed->master);
 }
 
 struct skill_condition elemental_skill_get_requirements(uint16 skill_id, uint16 skill_lv){
 	struct skill_condition req;
-	int idx = skill_get_index(skill_id);
+	int idx = skill->get_index(skill_id);
 
 	memset(&req,0,sizeof(req));
 

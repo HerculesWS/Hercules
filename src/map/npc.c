@@ -3411,7 +3411,7 @@ static const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, con
 		
 		if( !(mod = strtok(NULL,"\t")) ) {/* makes mod contain only the 5th param */
 			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
-		} else if( !( skill_id = skill_name2id(w4) ) || !skill_get_unit_id( skill_name2id(w4), 0) ) {
+		} else if( !( skill_id = skill->name2id(w4) ) || !skill->get_unit_id( skill->name2id(w4), 0) ) {
 			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n", w4, map[m].name, filepath, strline(buffer,start-buffer));
 		} else if ( atoi(mod) < 1 || atoi(mod) > USHRT_MAX ) {
 			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n", atoi(mod), w4, map[m].name, filepath, strline(buffer,start-buffer));
@@ -3430,7 +3430,7 @@ static const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, con
 		
 		if( !(mod = strtok(NULL,"\t")) ) {/* makes mod contain only the 5th param */
 			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
-		} else if( !( skill_id = skill_name2id(w4) ) ) {
+		} else if( !( skill_id = skill->name2id(w4) ) ) {
 			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", w4, map[m].name, filepath, strline(buffer,start-buffer));
 		} else if ( atoi(mod) < 1 || atoi(mod) > USHRT_MAX ) {
 			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", atoi(mod), w4, map[m].name, filepath, strline(buffer,start-buffer));

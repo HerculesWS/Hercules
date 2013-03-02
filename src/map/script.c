@@ -7866,7 +7866,7 @@ BUILDIN_FUNC(bonus)
 		case SP_FIXCASTRATE:
 		case SP_SKILL_USE_SP:
 			// these bonuses support skill names
-			val1 = ( script_isstring(st,3) ? skill_name2id(script_getstr(st,3)) : script_getnum(st,3) );
+			val1 = ( script_isstring(st,3) ? skill->name2id(script_getstr(st,3)) : script_getnum(st,3) );
 			break;
 		default:
 			val1 = script_getnum(st,3);
@@ -7888,7 +7888,7 @@ BUILDIN_FUNC(bonus)
 			break;
 		case 4:
 			if( type == SP_AUTOSPELL_ONSKILL && script_isstring(st,4) )
-				val2 = skill_name2id(script_getstr(st,4)); // 2nd value can be skill name
+				val2 = skill->name2id(script_getstr(st,4)); // 2nd value can be skill name
 			else
 				val2 = script_getnum(st,4);
 
@@ -7898,7 +7898,7 @@ BUILDIN_FUNC(bonus)
 			break;
 		case 5:
 			if( type == SP_AUTOSPELL_ONSKILL && script_isstring(st,4) )
-				val2 = skill_name2id(script_getstr(st,4)); // 2nd value can be skill name
+				val2 = skill->name2id(script_getstr(st,4)); // 2nd value can be skill name
 			else
 				val2 = script_getnum(st,4);
 
@@ -8005,7 +8005,7 @@ BUILDIN_FUNC(autobonus3)
 
 	rate = script_getnum(st,3);
 	dur = script_getnum(st,4);
-	atk_type = ( script_isstring(st,5) ? skill_name2id(script_getstr(st,5)) : script_getnum(st,5) );
+	atk_type = ( script_isstring(st,5) ? skill->name2id(script_getstr(st,5)) : script_getnum(st,5) );
 	bonus_script = script_getstr(st,2);
 	if( !rate || !dur || !atk_type || !bonus_script )
 		return 0;
@@ -8045,7 +8045,7 @@ BUILDIN_FUNC(skill)
 	if( sd == NULL )
 		return 0;// no player attached, report source
 
-	id = ( script_isstring(st,2) ? skill_name2id(script_getstr(st,2)) : script_getnum(st,2) );
+	id = ( script_isstring(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	level = script_getnum(st,3);
 	if( script_hasdata(st,4) )
 		flag = script_getnum(st,4);
@@ -8074,7 +8074,7 @@ BUILDIN_FUNC(addtoskill)
 	if( sd == NULL )
 		return 0;// no player attached, report source
 
-	id = ( script_isstring(st,2) ? skill_name2id(script_getstr(st,2)) : script_getnum(st,2) );
+	id = ( script_isstring(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	level = script_getnum(st,3);
 	if( script_hasdata(st,4) )
 		flag = script_getnum(st,4);
@@ -8098,7 +8098,7 @@ BUILDIN_FUNC(guildskill)
 	if( sd == NULL )
 		return 0;// no player attached, report source
 
-	id = ( script_isstring(st,2) ? skill_name2id(script_getstr(st,2)) : script_getnum(st,2) );
+	id = ( script_isstring(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	level = script_getnum(st,3);
 	for( i=0; i < level; i++ )
 		guild_skillup(sd, id);
@@ -8119,7 +8119,7 @@ BUILDIN_FUNC(getskilllv)
 	if( sd == NULL )
 		return 0;// no player attached, report source
 
-	id = ( script_isstring(st,2) ? skill_name2id(script_getstr(st,2)) : script_getnum(st,2) );
+	id = ( script_isstring(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	script_pushint(st, pc_checkskill(sd,id));
 
 	return 0;
@@ -8136,7 +8136,7 @@ BUILDIN_FUNC(getgdskilllv)
 	struct guild* g;
 
 	guild_id = script_getnum(st,2);
-	skill_id = ( script_isstring(st,3) ? skill_name2id(script_getstr(st,3)) : script_getnum(st,3) );
+	skill_id = ( script_isstring(st,3) ? skill->name2id(script_getstr(st,3)) : script_getnum(st,3) );
 	g = guild_search(guild_id);
 	if( g == NULL )
 		script_pushint(st, -1);
@@ -8663,7 +8663,7 @@ BUILDIN_FUNC(itemskill)
 	if( sd == NULL || sd->ud.skilltimer != INVALID_TIMER )
 		return 0;
 
-	id = ( script_isstring(st,2) ? skill_name2id(script_getstr(st,2)) : script_getnum(st,2) );
+	id = ( script_isstring(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	lv = script_getnum(st,3);
 
 	sd->skillitem=id;
@@ -9846,7 +9846,7 @@ BUILDIN_FUNC(sc_start)
 
 	if( tick == 0 && val1 > 0 && type > SC_NONE && type < SC_MAX && status_sc2skill(type) != 0 )
 	{// When there isn't a duration specified, try to get it from the skill_db
-		tick = skill_get_time(status_sc2skill(type), val1);
+		tick = skill->get_time(status_sc2skill(type), val1);
 	}
 
 	if( potion_flag == 1 && potion_target )
@@ -9885,7 +9885,7 @@ BUILDIN_FUNC(sc_start2)
 
 	if( tick == 0 && val1 > 0 && type > SC_NONE && type < SC_MAX && status_sc2skill(type) != 0 )
 	{// When there isn't a duration specified, try to get it from the skill_db
-		tick = skill_get_time(status_sc2skill(type), val1);
+		tick = skill->get_time(status_sc2skill(type), val1);
 	}
 
 	if( potion_flag == 1 && potion_target )
@@ -9927,7 +9927,7 @@ BUILDIN_FUNC(sc_start4)
 
 	if( tick == 0 && val1 > 0 && type > SC_NONE && type < SC_MAX && status_sc2skill(type) != 0 )
 	{// When there isn't a duration specified, try to get it from the skill_db
-		tick = skill_get_time(status_sc2skill(type), val1);
+		tick = skill->get_time(status_sc2skill(type), val1);
 	}
 
 	if( potion_flag == 1 && potion_target )
@@ -12388,7 +12388,7 @@ BUILDIN_FUNC(petskillattack)
 	if (pd->a_skill == NULL)
 		pd->a_skill = (struct pet_skill_attack *)aMalloc(sizeof(struct pet_skill_attack));
 
-	pd->a_skill->id=( script_isstring(st,2) ? skill_name2id(script_getstr(st,2)) : script_getnum(st,2) );
+	pd->a_skill->id=( script_isstring(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	pd->a_skill->lv=script_getnum(st,3);
 	pd->a_skill->div_ = 0;
 	pd->a_skill->rate=script_getnum(st,4);
@@ -12414,7 +12414,7 @@ BUILDIN_FUNC(petskillattack2)
 	if (pd->a_skill == NULL)
 		pd->a_skill = (struct pet_skill_attack *)aMalloc(sizeof(struct pet_skill_attack));
 
-	pd->a_skill->id=( script_isstring(st,2) ? skill_name2id(script_getstr(st,2)) : script_getnum(st,2) );
+	pd->a_skill->id=( script_isstring(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	pd->a_skill->lv=script_getnum(st,3);
 	pd->a_skill->div_ = script_getnum(st,4);
 	pd->a_skill->rate=script_getnum(st,5);
@@ -12449,7 +12449,7 @@ BUILDIN_FUNC(petskillsupport)
 	} else //init memory
 		pd->s_skill = (struct pet_skill_support *) aMalloc(sizeof(struct pet_skill_support));
 
-	pd->s_skill->id=( script_isstring(st,2) ? skill_name2id(script_getstr(st,2)) : script_getnum(st,2) );
+	pd->s_skill->id=( script_isstring(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	pd->s_skill->lv=script_getnum(st,3);
 	pd->s_skill->delay=script_getnum(st,4);
 	pd->s_skill->hp=script_getnum(st,5);
@@ -12473,7 +12473,7 @@ BUILDIN_FUNC(skilleffect)
 {
 	TBL_PC *sd;
 
-	uint16 skill_id=( script_isstring(st,2) ? skill_name2id(script_getstr(st,2)) : script_getnum(st,2) );
+	uint16 skill_id=( script_isstring(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	uint16 skill_lv=script_getnum(st,3);
 	sd=script_rid2sd(st);
 
@@ -12491,7 +12491,7 @@ BUILDIN_FUNC(npcskilleffect)
 {
 	struct block_list *bl= map_id2bl(st->oid);
 
-	uint16 skill_id=( script_isstring(st,2) ? skill_name2id(script_getstr(st,2)) : script_getnum(st,2) );
+	uint16 skill_id=( script_isstring(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	uint16 skill_lv=script_getnum(st,3);
 	int x=script_getnum(st,4);
 	int y=script_getnum(st,5);
@@ -14553,7 +14553,6 @@ int buildin_query_sql_sub(struct script_state* st, Sql* handle)
 
 	return 0;
 }
-
 BUILDIN_FUNC(query_sql) {
 #ifdef BETA_THREAD_TEST
 	if( st->state != RERUNLINE ) {
@@ -15404,7 +15403,7 @@ BUILDIN_FUNC(unitskilluseid)
 	struct block_list* bl;
 
 	unit_id  = script_getnum(st,2);
-	skill_id = ( script_isstring(st,3) ? skill_name2id(script_getstr(st,3)) : script_getnum(st,3) );
+	skill_id = ( script_isstring(st,3) ? skill->name2id(script_getstr(st,3)) : script_getnum(st,3) );
 	skill_lv = script_getnum(st,4);
 	target_id = ( script_hasdata(st,5) ? script_getnum(st,5) : unit_id );
 
@@ -15429,7 +15428,7 @@ BUILDIN_FUNC(unitskillusepos)
 	struct block_list* bl;
 
 	unit_id  = script_getnum(st,2);
-	skill_id = ( script_isstring(st,3) ? skill_name2id(script_getstr(st,3)) : script_getnum(st,3) );
+	skill_id = ( script_isstring(st,3) ? skill->name2id(script_getstr(st,3)) : script_getnum(st,3) );
 	skill_lv = script_getnum(st,4);
 	skill_x  = script_getnum(st,5);
 	skill_y  = script_getnum(st,6);
@@ -15621,7 +15620,7 @@ BUILDIN_FUNC(warpportal)
 	if( mapindex == 0 )
 		return 0;// map not found
 
-	group = skill_unitsetting(bl, AL_WARP, 4, spx, spy, 0);
+	group = skill->unitsetting(bl, AL_WARP, 4, spx, spy, 0);
 	if( group == NULL )
 		return 0;// failed
 	group->val2 = (tpx<<16) | tpy;
@@ -16625,7 +16624,7 @@ static int buildin_mobuseskill_sub(struct block_list *bl,va_list ap)
 		case 0: tbl = map_id2bl(md->bl.id); break;
 		case 1: tbl = map_id2bl(md->target_id); break;
 		case 2: tbl = map_id2bl(md->master_id); break;
-		default:tbl = battle->get_enemy(&md->bl, DEFAULT_ENEMY_TYPE(md),skill_get_range2(&md->bl, skill_id, skill_lv)); break;
+		default:tbl = battle->get_enemy(&md->bl, DEFAULT_ENEMY_TYPE(md),skill->get_range2(&md->bl, skill_id, skill_lv)); break;
 	}
 
 	if( !tbl )
@@ -16634,7 +16633,7 @@ static int buildin_mobuseskill_sub(struct block_list *bl,va_list ap)
 	if( md->ud.skilltimer != INVALID_TIMER ) // Cancel the casting skill.
 		unit_skillcastcancel(bl,0);
 
-	if( skill_get_casttype(skill_id) == CAST_GROUND )
+	if( skill->get_casttype(skill_id) == CAST_GROUND )
 		unit_skilluse_pos2(&md->bl, tbl->x, tbl->y, skill_id, skill_lv, casttime, cancel);
 	else
 		unit_skilluse_id2(&md->bl, tbl->id, skill_id, skill_lv, casttime, cancel);
@@ -16666,7 +16665,7 @@ BUILDIN_FUNC(areamobuseskill)
 	center.y = script_getnum(st,4);
 	range = script_getnum(st,5);
 	mobid = script_getnum(st,6);
-	skill_id = ( script_isstring(st,7) ? skill_name2id(script_getstr(st,7)) : script_getnum(st,7) );
+	skill_id = ( script_isstring(st,7) ? skill->name2id(script_getstr(st,7)) : script_getnum(st,7) );
 	if( (skill_lv = script_getnum(st,8)) > battle_config.mob_max_skilllvl )
 		skill_lv = battle_config.mob_max_skilllvl;
 
@@ -17304,7 +17303,7 @@ BUILDIN_FUNC(npcskill)
 	struct npc_data *nd;
 	struct map_session_data *sd;
 
-	skill_id	= script_isstring(st, 2) ? skill_name2id(script_getstr(st, 2)) : script_getnum(st, 2);
+	skill_id	= script_isstring(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
 	skill_level	= script_getnum(st, 3);
 	stat_point	= script_getnum(st, 4);
 	npc_level	= script_getnum(st, 5);
@@ -17332,7 +17331,7 @@ BUILDIN_FUNC(npcskill)
 		status_calc_npc(nd, false);
 	}
 
-	if (skill_get_inf(skill_id)&INF_GROUND_SKILL) {
+	if (skill->get_inf(skill_id)&INF_GROUND_SKILL) {
 		unit_skilluse_pos(&nd->bl, sd->bl.x, sd->bl.y, skill_id, skill_level);
 	} else {
 		unit_skilluse_id(&nd->bl, sd->bl.id, skill_id, skill_level);

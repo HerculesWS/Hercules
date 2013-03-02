@@ -269,7 +269,7 @@ int merc_skill_tree_get_max(int id, int b_class){
 	for(i=0;(skill_id=hskill_tree[b_class][i].id)>0;i++)
 		if (id == skill_id)
 			return hskill_tree[b_class][i].max;
-	return skill_get_max(id);
+	return skill->get_max(id);
 }
 
 void merc_hom_skillup(struct homun_data *hd,uint16 skill_id)
@@ -424,7 +424,7 @@ int merc_hom_evolution(struct homun_data *hd)
 	status_calc_homunculus(hd,1);
 
 	if (!(battle_config.hom_setting&0x2))
-		skill_unit_move(&sd->hd->bl,gettick(),1); // apply land skills immediately
+		skill->unit_move(&sd->hd->bl,gettick(),1); // apply land skills immediately
 
 	return 1 ;
 }
@@ -471,7 +471,7 @@ int hom_mutate(struct homun_data *hd, int homun_id)
 	status_calc_homunculus(hd,1);
 
 	if (!(battle_config.hom_setting&0x2))
-		skill_unit_move(&sd->hd->bl,gettick(),1); // apply land skills immediately
+		skill->unit_move(&sd->hd->bl,gettick(),1); // apply land skills immediately
 
 	return 1;
 }

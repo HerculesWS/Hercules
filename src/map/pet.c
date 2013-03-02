@@ -118,7 +118,7 @@ int pet_attackskill(struct pet_data *pd, int target_id)
 			!check_distance_bl(&pd->bl, bl, pd->db->range3))
 			return 0;
 
-		inf = skill_get_inf(pd->a_skill->id);
+		inf = skill->get_inf(pd->a_skill->id);
 		if (inf & INF_GROUND_SKILL)
 			unit_skilluse_pos(&pd->bl, bl->x, bl->y, pd->a_skill->id, pd->a_skill->lv);
 		else	//Offensive self skill? Could be stuff like GX.
@@ -1186,7 +1186,7 @@ int pet_skill_support_timer(int tid, unsigned int tick, int id, intptr_t data)
 	pet_stop_attack(pd);
 	pet_stop_walking(pd,1);
 	pd->s_skill->timer=add_timer(tick+pd->s_skill->delay*1000,pet_skill_support_timer,sd->bl.id,0);
-	if (skill_get_inf(pd->s_skill->id) & INF_GROUND_SKILL)
+	if (skill->get_inf(pd->s_skill->id) & INF_GROUND_SKILL)
 		unit_skilluse_pos(&pd->bl, sd->bl.x, sd->bl.y, pd->s_skill->id, pd->s_skill->lv);
 	else
 		unit_skilluse_id(&pd->bl, sd->bl.id, pd->s_skill->id, pd->s_skill->lv);
