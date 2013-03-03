@@ -6076,8 +6076,7 @@ int battle_get_value(const char* w1)
 		return *battle_data[i].val;
 }
 
-void battle_set_defaults()
-{
+void battle_set_defaults(void) {
 	int i;
 	for (i = 0; i < ARRAYLENGTH(battle_data); i++)
 		*battle_data[i].val = battle_data[i].defval;
