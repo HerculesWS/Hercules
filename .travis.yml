@@ -4,3 +4,8 @@ compiler:
   - clang
 # Change this to your needs
 script: ./configure --enable-debug && make
+
+# Disallow 'rathena' branch to be compiled by Travis
+branches:
+  only:
+    - master
