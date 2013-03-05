@@ -6192,6 +6192,7 @@ void battle_defaults(void) {
 	battle->delay_damage = battle_delay_damage;
 	battle->drain = battle_drain;
 	battle->calc_return_damage = battle_calc_return_damage;
+	battle->calc_weapon_attack = battle_calc_weapon_attack;
 	battle->attr_ratio = battle_attr_ratio;
 	battle->attr_fix = battle_attr_fix;
 	battle->calc_cardfix = battle_calc_cardfix;
