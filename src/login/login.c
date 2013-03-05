@@ -557,6 +557,7 @@ int parse_fromchar(int fd)
 			time_t expiration_time = 0;
 			char email[40] = "";
 			int group_id = 0;
+			uint8 char_slots = 0;
 			char birthdate[10+1] = "";
 
 			int account_id = RFIFOL(fd,2);
@@ -564,22 +565,23 @@ int parse_fromchar(int fd)
 
 			if( !accounts->load_num(accounts, &acc, account_id) )
 				ShowNotice("Char-server '%s': account %d NOT found (ip: %s).\n", server[id].name, account_id, ip);
-			else
-			{
+			else {
 				safestrncpy(email, acc.email, sizeof(email));
 				expiration_time = acc.expiration_time;
 				group_id = acc.group_id;
+				char_slots = acc.char_slots;
 				safestrncpy(birthdate, acc.birthdate, sizeof(birthdate));
 			}
 
-			WFIFOHEAD(fd,62);
+			WFIFOHEAD(fd,63);
 			WFIFOW(fd,0) = 0x2717;
 			WFIFOL(fd,2) = account_id;
 			safestrncpy((char*)WFIFOP(fd,6), email, 40);
 			WFIFOL(fd,46) = (uint32)expiration_time;
-			WFIFOB(fd,50) = group_id;
-			safestrncpy((char*)WFIFOP(fd,51), birthdate, 10+1);
-			WFIFOSET(fd,62);
+			WFIFOB(fd,50) = (unsigned char)group_id;
+			WFIFOB(fd,51) = char_slots;
+			safestrncpy((char*)WFIFOP(fd,52), birthdate, 10+1);
+			WFIFOSET(fd,63);
 		}
 		break;
 
@@ -956,7 +958,8 @@ int mmo_auth_new(const char* userid, const char* pass, const char sex, const cha
 	safestrncpy(acc.lastlogin, "0000-00-00 00:00:00", sizeof(acc.lastlogin));
 	safestrncpy(acc.last_ip, last_ip, sizeof(acc.last_ip));
 	safestrncpy(acc.birthdate, "0000-00-00", sizeof(acc.birthdate));
-
+	acc.char_slots = 0;
+	
 	if( !accounts->create(accounts, &acc) )
 		return 0;
 
