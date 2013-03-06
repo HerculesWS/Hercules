@@ -907,14 +907,30 @@ te_aldecas5
 gl_cas02_
 gl_chyard_
 silk_lair
+evt_bomb
 1@def01
 1@def02
 1@def03
-1@gef
 1@face
 1@sara
-1@gef_in
 dali
+dali02
+1@tnm1
+1@tnm2
+1@tnm3
+1@ge_st
+1@gef
+1@gef_in
+1@spa
+moro_vol
+moro_cav
+1@dth1
+1@dth2
+1@dth3
+1@rev
+1@xm_d
+1@eom
+1@jtb
 
 // Only add maps under this line if they are not standard maps!
 
