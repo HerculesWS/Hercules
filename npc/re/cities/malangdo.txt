@@ -153,10 +153,7 @@ mora,57,150,4	duplicate(Dolangmal)	Dolangmal#9	553
 
 
 izlude,182,218,4	script	Odgnalam#iz	554,{
-	if (strnpcinfo(4) == "izlude")
-		mes "Receiving the warm sun of Izlude, the cat is sleeping.";
-	else if (strnpcinfo(4) == "alberta")
-		mes "Receiving the warm sun of Alberta, the cat is sleeping.";
+	mes "This cat is sleeping in the warm "+strnpcinfo(2)+" sun.";
 	next;
 	if(select("Let him sleep:Talk to him") == 1) close;
 	mes "[Odgnalam]";
