@@ -456,18 +456,36 @@ dewata,89,191,6	script	Small Shrine#dew1	844,{
 		next;
 		callsub L_Wish;
 		set Zeny, Zeny - .@input;
-		if (.@stat & 1 && .@bonus)
-			consumeitem 12043; //Str_Dish03
-		else if (.@stat & 2 && .@bonus)
-			consumeitem 12058; //Agi_Dish03
-		else if (.@stat & 4 && .@bonus)
-			consumeitem 12063; //Dex_Dish03
-		else if (.@stat & 8 && .@bonus)
-			consumeitem 12053; //Vit_Dish03
-		else if (.@stat & 16 && .@bonus)
-			consumeitem 12048; //Int_Dish03
-		else if (.@stat & 32 && .@bonus)
-			consumeitem 12068; //Luk_Dish03
+		if (.@stat & 1 && .@bonus){
+			sc_start SC_STRFOOD,1200000,3;
+			percentheal 5,0;
+			//consumeitem 12043; //Str_Dish03
+		}
+		else if (.@stat & 2 && .@bonus){
+			sc_start SC_AGIFOOD,1200000,3;
+			percentheal 5,0;
+			//consumeitem 12058; //Agi_Dish03
+		}
+		else if (.@stat & 4 && .@bonus){
+			sc_start SC_DEXFOOD,1200000,3;
+			percentheal 5,0;
+			//consumeitem 12063; //Dex_Dish03
+		}
+		else if (.@stat & 8 && .@bonus){
+			sc_start SC_VITFOOD,1200000,3;
+			percentheal 5,0;
+			//consumeitem 12053; //Vit_Dish03
+		}
+		else if (.@stat & 16 && .@bonus){
+			sc_start SC_INTFOOD,1200000,3;
+			percentheal 5,0;
+			//consumeitem 12048; //Int_Dish03
+		}
+		else if (.@stat & 32 && .@bonus){
+			sc_start SC_LUKFOOD,1200000,3;
+			percentheal 5,0;
+			//consumeitem 12068; //Luk_Dish03
+		}
 		else if (.@stat & 64) {
 			specialeffect2 EF_ANGEL;
 			mes "- A celestial entity gives you a blessing. -";
@@ -603,7 +621,7 @@ OnTouch:
 	close;
 }
 
-dewata,233,263,8	script	Sweet Married Couple#dew1	828,2,3,{
+dewata,233,263,8	script	Sweet Married Couple::smc_dew_01	828,2,3,{
 OnTouch:
 	mes "[Sweet Husband]";
 	mes "You are the most beautiful thing in the world baby~";
@@ -623,7 +641,7 @@ OnTouch:
 	close;
 }
 
-dewata,234,263,8	script	Sweet Married Couple#dew2	727,2,3,{
+dewata,234,263,8	script	Sweet Married Couple::smc_dew_02	727,2,3,{
 OnTouch:
 	mes "[Sweet Wife]";
 	mes "Baby~ You know what flower that is~?";
@@ -822,7 +840,7 @@ OnTouch:
 	close;
 }
 
-dewata,278,281,4	script	Happily Married Grandpa#dew	534,{
+dewata,278,281,4	script	Happily Married Grandpa::hmg_dew_01	534,{
 	mes "[Happily Married Grandpa]";
 	mes "Today, I should ask my lady to";
 	mes "cook me some ^006400fried rice^000000.";
@@ -838,7 +856,7 @@ dewata,278,281,4	script	Happily Married Grandpa#dew	534,{
 	close;
 }
 
-dewata,280,277,4	script	Happily Married Grandma#dew	535,{
+dewata,280,277,4	script	Happily Married Grandma::hmg_dew_02	535,{
 	mes "[Happily Married Grandma]";
 	mes "In my younger days,";
 	mes "there were many gentleman callers";
@@ -929,7 +947,7 @@ dewata,181,88,6	script	Young Man#dew-2	536,{
 	mes "really beautiful?";
 	mes "The children always play";
 	mes "at this beach. It really";
-	mes "reminds me of my youth."
+	mes "reminds me of my youth.";
 	next;
 	mes "[Young Man]";
 	mes "At the evening, you can see";
@@ -1086,7 +1104,7 @@ dewata,127,248,6	script	Wishing Kid#dew	539,{
 	close;
 }
 
-dew_fild01,101,259,6	script	Jaty Tribe Gatekeeper#dew	541,{
+dew_fild01,101,259,6	script	Jaty Tribe Gatekeeper::jtg_dew	541,{
 	mes "[Jaty Tribe Gatekeeper]";
 	mes "Welcome to ^FF0000Jaty^000000 town.";
 	mes "Our tribe reveres strength and bravery.";
