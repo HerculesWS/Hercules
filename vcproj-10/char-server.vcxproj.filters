@@ -76,7 +76,7 @@
     <ClCompile Include="..\src\char\inter.c">
       <Filter>char_sql</Filter>
     </ClCompile>
-	ClCompile Include="..\src\char\pincode.c">
+	<ClCompile Include="..\src\char\pincode.c">
       <Filter>char_sql</Filter>
     </ClCompile>
     <ClCompile Include="..\3rdparty\mt19937ar\mt19937ar.c">
