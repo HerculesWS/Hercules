@@ -11,6 +11,9 @@
 struct map_session_data;
 struct mob_data;
 struct block_list;
+struct weapon_atk;
+struct status_change;
+struct status_data;
 
 /**
  * Defines
@@ -523,11 +526,25 @@ struct battle_interface {
 	bool (*check_range) (struct block_list *src,struct block_list *bl,int range);
 	/* consume amo for this skill and lv */
 	void (*consume_ammo) (struct map_session_data* sd, int skill, int lv);
+	int (*get_targeted_sub) (struct block_list *bl, va_list ap);
+	int (*get_enemy_sub) (struct block_list *bl, va_list ap);
+	int (*get_enemy_area_sub) (struct block_list *bl, va_list ap);
+	int (*delay_damage_sub) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*blewcount_bonus) (struct map_session_data *sd, uint16 skill_id);
+	/* skill range criteria */
+	int (*range_type) (struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv);
+	int (*calc_base_damage) (struct status_data *status, struct weapon_atk *wa, struct status_change *sc, unsigned short t_size, struct map_session_data *sd, int flag);
+	struct Damage (*calc_misc_attack) (struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int mflag);
+	struct Damage (*calc_magic_attack) (struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int mflag);
+	int (*adjust_skill_damage) (int m, unsigned short skill_id);
+	int (*add_mastery) (struct map_session_data *sd,struct block_list *target,int dmg,int type);
+	int (*calc_drain) (int damage, int rate, int per);
 	/* - battle_config                           */
 	int (*config_read) (const char *cfgName);
 	void (*config_set_defaults) (void);
 	int (*config_set_value) (const char* w1, const char* w2);
 	int (*config_get_value) (const char* w1);
+	void (*config_adjust) (void);
 	/* ----------------------------------------- */
 	/* picks a random enemy within the specified range */
 	struct block_list* (*get_enemy_area) (struct block_list *src, int x, int y, int range, int type, int ignore_id);
