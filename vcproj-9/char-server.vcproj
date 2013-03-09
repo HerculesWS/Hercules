@@ -528,6 +528,14 @@
 				RelativePath="..\src\char\inter.h"
 				>
 			</File>
+			<File
+				RelativePath="..\src\char\pincode.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\char\pincode.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

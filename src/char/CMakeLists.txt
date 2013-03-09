@@ -23,6 +23,7 @@ set( SQL_CHAR_HEADERS
 	"${CMAKE_CURRENT_SOURCE_DIR}/int_quest.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/int_storage.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/inter.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/pincode.h"
 	)
 set( SQL_CHAR_SOURCES
 	"${CMAKE_CURRENT_SOURCE_DIR}/char.c"
@@ -37,6 +38,7 @@ set( SQL_CHAR_SOURCES
 	"${CMAKE_CURRENT_SOURCE_DIR}/int_quest.c"
 	"${CMAKE_CURRENT_SOURCE_DIR}/int_storage.c"
 	"${CMAKE_CURRENT_SOURCE_DIR}/inter.c"
+	"${CMAKE_CURRENT_SOURCE_DIR}/pincode.c"
 	)
 set( DEPENDENCIES common_sql )
 set( LIBRARIES ${GLOBAL_LIBRARIES} )

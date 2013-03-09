@@ -21,6 +21,7 @@
 #include "int_storage.h"
 #include "char.h"
 #include "inter.h"
+#include "pincode.h"
 
 #include <sys/types.h>
 #include <time.h>
@@ -83,7 +84,7 @@ struct mmo_map_server {
 	unsigned short map[MAX_MAP_PER_SERVER];
 } server[MAX_MAP_SERVERS];
 
-int login_fd=-1, char_fd=-1;
+int char_fd=-1;
 char userid[24];
 char passwd[24];
 char server_name[20];
@@ -120,20 +121,6 @@ struct s_subnet {
 	uint32 map_ip;
 } subnet[16];
 int subnet_count = 0;
-
-struct char_session_data {
-	bool auth; // whether the session is authed or not
-	int account_id, login_id1, login_id2, sex;
-	int found_char[MAX_CHARS]; // ids of chars on this account
-	char email[40]; // e-mail (default: a@a.com) by [Yor]
-	time_t expiration_time; // # of seconds 1/1/1970 (timestamp): Validity limit of the account (0 = unlimited)
-	int group_id; // permission
-	uint8 char_slots;
-	uint32 version;
-	uint8 clienttype;
-	char new_name[NAME_LENGTH];
-	char birthdate[10+1];  // YYYY-MM-DD
-};
 
 int max_connect_user = -1;
 int gm_allow_group = -1;
@@ -2149,13 +2136,12 @@ int parse_fromlogin(int fd) {
 		break;
 
 		case 0x2717: // account data
-			if (RFIFOREST(fd) < 63)
+			if (RFIFOREST(fd) < 72)
 				return 0;
 
 			// find the authenticated session with this account id
 			ARR_FIND( 0, fd_max, i, session[i] && (sd = (struct char_session_data*)session[i]->session_data) && sd->auth && sd->account_id == RFIFOL(fd,2) );
-			if( i < fd_max )
-			{
+			if( i < fd_max ) {
 				int server_id;
 				memcpy(sd->email, RFIFOP(fd,6), 40);
 				sd->expiration_time = (time_t)RFIFOL(fd,46);
@@ -2167,6 +2153,8 @@ int parse_fromlogin(int fd) {
 				} else if ( !sd->char_slots )/* no value aka 0 in sql */
 					sd->char_slots = MAX_CHARS;/* cap to maximum */
 				safestrncpy(sd->birthdate, (const char*)RFIFOP(fd,52), sizeof(sd->birthdate));
+				safestrncpy(sd->pincode, (const char*)RFIFOP(fd,63), sizeof(sd->pincode));
+				sd->pincode_change = RFIFOL(fd,68);
 				ARR_FIND( 0, ARRAYLENGTH(server), server_id, server[server_id].fd > 0 && server[server_id].map[0] );
 				// continued from char_auth_ok...
 				if( server_id == ARRAYLENGTH(server) || //server not online, bugreport:2359
@@ -2180,19 +2168,12 @@ int parse_fromlogin(int fd) {
 				} else {
 					// send characters to player
 					mmo_char_send006b(i, sd);
-#if PACKETVER >=  20110309
-					// PIN code system, disabled
-					WFIFOHEAD(i, 12);
-					WFIFOW(i, 0) = 0x08B9;
-					WFIFOW(i, 2) = 0;
-					WFIFOW(i, 4) = 0;
-					WFIFOL(i, 6) = sd->account_id;
-					WFIFOW(i, 10) = 0;
-					WFIFOSET(i, 12);
+#if PACKETVER >= 20110309
+					pincode->handle(i, sd);
 #endif
 				}
 			}
-			RFIFOSKIP(fd,63);
+			RFIFOSKIP(fd,72);
 		break;
 
 		// login-server alive packet
@@ -4190,6 +4171,50 @@ int parse_char(int fd)
 		}
 		return 0; // avoid processing of followup packets here
 
+		// checks the entered pin
+		case 0x8b8:
+			if( RFIFOREST(fd) < 10 )
+				return 0;
+			
+			if( RFIFOL(fd,2) == sd->account_id )
+				pincode->check( fd, sd );
+			
+			RFIFOSKIP(fd,10);
+		break;
+			
+		// request for PIN window
+		case 0x8c5:
+			if( RFIFOREST(fd) < 6 )
+				return 0;
+			
+			if( RFIFOL(fd,2) == sd->account_id )
+				pincode->state( fd, sd, PINCODE_NOTSET );
+						
+			RFIFOSKIP(fd,6);
+		break;
+			
+		// pincode change request
+		case 0x8be:
+			if( RFIFOREST(fd) < 14 )
+				return 0;
+			
+			if( RFIFOL(fd,2) == sd->account_id )
+				pincode->change( fd, sd );
+			
+			RFIFOSKIP(fd,14);
+		break;
+			
+		// activate PIN system and set first PIN
+		case 0x8ba:
+			if( RFIFOREST(fd) < 10 )
+				return 0;
+			
+			if( RFIFOL(fd,2) == sd->account_id )
+				pincode->new( fd, sd );
+			
+			RFIFOSKIP(fd,10);
+		break;
+				
 		// unknown packet received
 		default:
 			ShowError("parse_char: Received unknown packet "CL_WHITE"0x%x"CL_RESET" from ip '"CL_WHITE"%s"CL_RESET"'! Disconnecting!\n", RFIFOW(fd,0), ip2str(ipl, NULL));
@@ -4544,7 +4569,17 @@ void sql_config_read(const char* cfgName)
 	fclose(fp);
 	ShowInfo("Done reading %s.\n", cfgName);
 }
-
+void char_config_dispatch(char *w1, char *w2) {
+	bool (*dispatch_to[]) (char *w1, char *w2) = {
+		/* as many as it needs */
+		pincode->config_read
+	};
+	int i, len = ARRAYLENGTH(dispatch_to);
+	for(i = 0; i < len; i++) {
+		if( (*dispatch_to[i])(w1,w2) )
+			break;/* we found who this belongs to, can stop */
+	}
+}
 int char_config_read(const char* cfgName)
 {
 	char line[1024], w1[1024], w2[1024];
@@ -4695,7 +4730,8 @@ int char_config_read(const char* cfgName)
 			guild_exp_rate = atoi(w2);
 		} else if (strcmpi(w1, "import") == 0) {
 			char_config_read(w2);
-		}
+		} else
+			char_config_dispatch(w1,w2);
 	}
 	fclose(fp);
 
@@ -4774,6 +4810,8 @@ int do_init(int argc, char **argv)
 	mapindex_init();
 	start_point.map = mapindex_name2id("new_zone01");
 
+	pincode_defaults();
+	
 	char_config_read((argc < 2) ? CHAR_CONF_NAME : argv[1]);
 	char_lan_config_read((argc > 3) ? argv[3] : LAN_CONF_NAME);
 	sql_config_read(SQL_CONF_NAME);
@@ -4783,7 +4821,7 @@ int do_init(int argc, char **argv)
 		ShowNotice("Please edit your 'login' table to create a proper inter-server user/password (gender 'S')\n");
 		ShowNotice("And then change the user/password to use in conf/char_athena.conf (or conf/import/char_conf.txt)\n");
 	}
-
+	
 	inter_init_sql((argc > 2) ? argv[2] : inter_cfgName); // inter server configuration
 
 	auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
@@ -4791,8 +4829,7 @@ int do_init(int argc, char **argv)
 	mmo_char_sql_init();
 	char_read_fame_list(); //Read fame lists.
 
-	if ((naddr_ != 0) && (!login_ip || !char_ip))
-	{
+	if ((naddr_ != 0) && (!login_ip || !char_ip)) {
 		char ip_str[16];
 		ip2str(addr_[0], ip_str);
 
@@ -4824,8 +4861,7 @@ int do_init(int argc, char **argv)
 	add_timer_func_list(online_data_cleanup, "online_data_cleanup");
 	add_timer_interval(gettick() + 1000, online_data_cleanup, 0, 0, 600 * 1000);
 
-	if( console )
-	{
+	if( console ) {
 		//##TODO invoke a CONSOLE_START plugin event
 	}
 

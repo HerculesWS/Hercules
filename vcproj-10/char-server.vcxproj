@@ -168,6 +168,7 @@
     <ClInclude Include="..\src\char\int_quest.h" />
     <ClInclude Include="..\src\char\int_storage.h" />
     <ClInclude Include="..\src\char\inter.h" />
+	<ClInclude Include="..\src\char\pincode.h" />
     <ClInclude Include="..\src\common\winapi.h" />
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +207,7 @@
     <ClCompile Include="..\src\char\int_quest.c" />
     <ClCompile Include="..\src\char\int_storage.c" />
     <ClCompile Include="..\src\char\inter.c" />
+	<ClCompile Include="..\src\char\pincode.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

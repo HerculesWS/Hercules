@@ -7,14 +7,31 @@
 #include "../config/core.h"
 #include "../common/core.h" // CORE_ST_LAST
 
-enum E_CHARSERVER_ST
-{
+enum E_CHARSERVER_ST {
 	CHARSERVER_ST_RUNNING = CORE_ST_LAST,
 	CHARSERVER_ST_SHUTDOWN,
 	CHARSERVER_ST_LAST
 };
 
 struct mmo_charstatus;
+
+struct char_session_data {
+	bool auth; // whether the session is authed or not
+	int account_id, login_id1, login_id2, sex;
+	int found_char[MAX_CHARS]; // ids of chars on this account
+	char email[40]; // e-mail (default: a@a.com) by [Yor]
+	time_t expiration_time; // # of seconds 1/1/1970 (timestamp): Validity limit of the account (0 = unlimited)
+	int group_id; // permission
+	uint8 char_slots;
+	uint32 version;
+	uint8 clienttype;
+	char pincode[4+1];
+	uint16 pincode_seed;
+	uint16 pincode_try;
+	uint32 pincode_change;
+	char new_name[NAME_LENGTH];
+	char birthdate[10+1];  // YYYY-MM-DD
+};
 
 #define MAX_MAP_SERVERS 30
 
@@ -39,7 +56,7 @@ int char_family(int pl1,int pl2,int pl3);
 
 int request_accreg2(int account_id, int char_id);
 int save_accreg2(unsigned char* buf, int len);
-
+int login_fd;
 extern int char_name_option;
 extern char char_name_letters[];
 extern bool char_gm_read;
