@@ -921,17 +921,45 @@ int unit_can_move(struct block_list *bl) {
 		return 0; //Can't move
 
 	if (sc) {
-		if( sc->cant.move /* status placed here are ones that cannot be cached by sc->cant.move for they depend on other conditions other than their availability */
-			|| (sc->data[SC_FEAR] && sc->data[SC_FEAR]->val2 > 0)
-			|| (sc->data[SC_SPIDERWEB] && sc->data[SC_SPIDERWEB]->val1)
-			|| (sc->data[SC_DANCING] && sc->data[SC_DANCING]->val4 && (
-																	!sc->data[SC_LONGING] ||
-																	(sc->data[SC_DANCING]->val1&0xFFFF) == CG_MOONLIT ||
-																	(sc->data[SC_DANCING]->val1&0xFFFF) == CG_HERMODE
-																	) )
-			|| (sc->data[SC_CLOAKING] && //Need wall at level 1-2
-				sc->data[SC_CLOAKING]->val1 < 3 && !(sc->data[SC_CLOAKING]->val4&1))
-			)
+		if( sc->count && (
+						    sc->data[SC_ANKLE]
+						||  sc->data[SC_AUTOCOUNTER]
+						||  sc->data[SC_TRICKDEAD]
+						||  sc->data[SC_BLADESTOP]
+						||  sc->data[SC_BLADESTOP_WAIT]
+						|| (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF) // cannot move while gospel is in effect
+						|| (sc->data[SC_BASILICA] && sc->data[SC_BASILICA]->val4 == bl->id) // Basilica caster cannot move
+						||  sc->data[SC_STOP]
+						||  sc->data[SC_CLOSECONFINE]
+						||  sc->data[SC_CLOSECONFINE2]
+						||  sc->data[SC_MADNESSCANCEL]
+						|| (sc->data[SC_GRAVITATION] && sc->data[SC_GRAVITATION]->val3 == BCT_SELF)
+						||  sc->data[SC_WHITEIMPRISON]
+						||  sc->data[SC_ELECTRICSHOCKER]
+						||  sc->data[SC_BITE]
+						||  sc->data[SC_THORNSTRAP]
+						||  sc->data[SC_MAGNETICFIELD]
+						||  sc->data[SC__MANHOLE]
+						||  sc->data[SC_CURSEDCIRCLE_ATKER]
+						||  sc->data[SC_CURSEDCIRCLE_TARGET]
+						|| (sc->data[SC_CRYSTALIZE] && bl->type != BL_MOB)
+						||  sc->data[SC_NETHERWORLD]
+						|| (sc->data[SC_CAMOUFLAGE] && sc->data[SC_CAMOUFLAGE]->val1 < 3 && !(sc->data[SC_CAMOUFLAGE]->val3&1))
+						||  sc->data[SC_MEIKYOUSISUI]
+						||  sc->data[SC_KAGEHUMI]
+						||  sc->data[SC_KYOUGAKU]
+						||  sc->data[SC_PARALYSIS]
+						||  sc->data[SC_VACUUM_EXTREME]
+						|| (sc->data[SC_FEAR] && sc->data[SC_FEAR]->val2 > 0)
+						|| (sc->data[SC_SPIDERWEB] && sc->data[SC_SPIDERWEB]->val1)
+						|| (sc->data[SC_DANCING] && sc->data[SC_DANCING]->val4 && (
+																				!sc->data[SC_LONGING] ||
+																				(sc->data[SC_DANCING]->val1&0xFFFF) == CG_MOONLIT ||
+																				(sc->data[SC_DANCING]->val1&0xFFFF) == CG_HERMODE
+																				) )
+						|| (sc->data[SC_CLOAKING] && //Need wall at level 1-2
+							sc->data[SC_CLOAKING]->val1 < 3 && !(sc->data[SC_CLOAKING]->val4&1))
+			) )
 			return 0;
 		
 

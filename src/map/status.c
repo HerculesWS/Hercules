@@ -83,7 +83,6 @@ static int StatusIconChangeTable[SC_MAX];          // status -> "icon" (icon is 
 static unsigned int StatusChangeFlagTable[SC_MAX]; // status -> flags
 static int StatusSkillChangeTable[SC_MAX];         // status -> skill
 static int StatusRelevantBLTypes[SI_MAX];          // "icon" -> enum bl_type (for clif_status_change to identify for which bl types to send packets)
-static unsigned int StatusChangeStateTable[SC_MAX]; // status -> flags
 
 
 /**
@@ -185,7 +184,6 @@ void initChangeTables(void) {
 
 	memset(StatusSkillChangeTable, 0, sizeof(StatusSkillChangeTable));
 	memset(StatusChangeFlagTable, 0, sizeof(StatusChangeFlagTable));
-	memset(StatusChangeStateTable, 0, sizeof(StatusChangeStateTable));
 
 
 	//First we define the skill for common ailments. These are used in skill_additional_effect through sc cards. [Skotlex]
@@ -994,66 +992,6 @@ void initChangeTables(void) {
 
 	if( !battle_config.display_hallucination ) //Disable Hallucination.
 		StatusIconChangeTable[SC_HALLUCINATION] = SI_BLANK;
-
-	/* StatusChangeState (SCS_) NOMOVE */
-	StatusChangeStateTable[SC_ANKLE]			|= SCS_NOMOVE;
-	StatusChangeStateTable[SC_AUTOCOUNTER]         |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_TRICKDEAD]           |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_BLADESTOP]           |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_BLADESTOP_WAIT]      |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_GOSPEL]              |= SCS_NOMOVE|SCS_NOMOVECOND;
-	StatusChangeStateTable[SC_BASILICA]            |= SCS_NOMOVE|SCS_NOMOVECOND;
-	StatusChangeStateTable[SC_STOP]                |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_CLOSECONFINE]        |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_CLOSECONFINE2]       |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_MADNESSCANCEL]       |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_GRAVITATION]         |= SCS_NOMOVE|SCS_NOMOVECOND;
-	StatusChangeStateTable[SC_WHITEIMPRISON]       |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_ELECTRICSHOCKER]     |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_BITE]                |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_THORNSTRAP]          |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_MAGNETICFIELD]       |= SCS_NOMOVE;
-	StatusChangeStateTable[SC__MANHOLE]            |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_CURSEDCIRCLE_ATKER]  |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_CURSEDCIRCLE_TARGET] |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_CRYSTALIZE]          |= SCS_NOMOVE|SCS_NOMOVECOND;
-	StatusChangeStateTable[SC_NETHERWORLD]         |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_CAMOUFLAGE]          |= SCS_NOMOVE|SCS_NOMOVECOND;
-	StatusChangeStateTable[SC_MEIKYOUSISUI]		   |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_KAGEHUMI]            |= SCS_NOMOVE;
-	StatusChangeStateTable[SC_KYOUGAKU]			   |= SCS_NOMOVE;
-
-	/* StatusChangeState (SCS_) NOPICKUPITEMS */
-	StatusChangeStateTable[SC_HIDING]              |= SCS_NOPICKITEM;
-	StatusChangeStateTable[SC_CLOAKING]            |= SCS_NOPICKITEM;
-	StatusChangeStateTable[SC_TRICKDEAD]           |= SCS_NOPICKITEM;
-	StatusChangeStateTable[SC_BLADESTOP]           |= SCS_NOPICKITEM;
-	StatusChangeStateTable[SC_CLOAKINGEXCEED]      |= SCS_NOPICKITEM;
-	StatusChangeStateTable[SC_NOCHAT]              |= SCS_NOPICKITEM|SCS_NOPICKITEMCOND;
-
-	/* StatusChangeState (SCS_) NODROPITEMS */
-	StatusChangeStateTable[SC_AUTOCOUNTER]         |= SCS_NODROPITEM;
-	StatusChangeStateTable[SC_BLADESTOP]           |= SCS_NODROPITEM;
-	StatusChangeStateTable[SC_NOCHAT]              |= SCS_NODROPITEM|SCS_NODROPITEMCOND;
-
-	/* StatusChangeState (SCS_) NOCAST (skills) */
-	StatusChangeStateTable[SC_SILENCE]             |= SCS_NOCAST;
-	StatusChangeStateTable[SC_STEELBODY]           |= SCS_NOCAST;
-	StatusChangeStateTable[SC_BERSERK]             |= SCS_NOCAST;
-	StatusChangeStateTable[SC__BLOODYLUST]         |= SCS_NOCAST;
-	StatusChangeStateTable[SC_OBLIVIONCURSE]       |= SCS_NOCAST;
-	StatusChangeStateTable[SC_WHITEIMPRISON]       |= SCS_NOCAST;
-	StatusChangeStateTable[SC__INVISIBILITY]       |= SCS_NOCAST;
-	StatusChangeStateTable[SC_CRYSTALIZE]          |= SCS_NOCAST|SCS_NOCASTCOND;
-	StatusChangeStateTable[SC__IGNORANCE]          |= SCS_NOCAST;
-	StatusChangeStateTable[SC_DEEPSLEEP]           |= SCS_NOCAST;
-	StatusChangeStateTable[SC_SATURDAYNIGHTFEVER]  |= SCS_NOCAST;
-	StatusChangeStateTable[SC_CURSEDCIRCLE_TARGET] |= SCS_NOCAST;
-	StatusChangeStateTable[SC_SILENCE]             |= SCS_NOCAST;
-
-	//Homon S
-	StatusChangeStateTable[SC_PARALYSIS]               |= SCS_NOMOVE;
-
 }
 
 static void initDummyData(void)
@@ -1646,7 +1584,18 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 			(src->type != BL_PC || ((TBL_PC*)src)->skillitem != skill_id)
 		) {	//Skills blocked through status changes...
 			if (!flag && ( //Blocked only from using the skill (stuff like autospell may still go through
-				sc->cant.cast ||
+				 sc->data[SC_SILENCE] ||
+				 sc->data[SC_STEELBODY] ||
+				 sc->data[SC_BERSERK] ||
+				 sc->data[SC__BLOODYLUST] ||
+				 sc->data[SC_OBLIVIONCURSE] ||
+				 sc->data[SC_WHITEIMPRISON] ||
+				 sc->data[SC__INVISIBILITY] ||
+				(sc->data[SC_CRYSTALIZE] && src->type != BL_MOB) ||
+				 sc->data[SC__IGNORANCE] ||
+				 sc->data[SC_DEEPSLEEP] ||
+				 sc->data[SC_SATURDAYNIGHTFEVER] ||
+				 sc->data[SC_CURSEDCIRCLE_TARGET] ||
 				(sc->data[SC_MARIONETTE] && skill_id != CG_MARIONETTE) || //Only skill you can use is marionette again to cancel it
 				(sc->data[SC_MARIONETTE2] && skill_id == CG_MARIONETTE) || //Cannot use marionette if you are being buffed by another
 				(sc->data[SC_STASIS] && skill->block_check(src, SC_STASIS, skill_id)) ||
@@ -3499,63 +3448,6 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 	        || (sc->data[SC_WIND_INSIGNIA] && sc->data[SC_WIND_INSIGNIA]->val1 == 1))
 	    regen->rate.hp *= 2;
 
-}
-void status_calc_state( struct block_list *bl, struct status_change *sc, enum scs_flag flag, bool start ) {
-
-	/* no sc at all, we can zero without any extra weight over our conciousness */
-	if( !sc->count ) {
-		memset(&sc->cant, 0, sizeof (sc->cant));
-		return;
-	}
-
-	/* can move? */
-	if( flag&SCS_NOMOVE ) {
-		if( !(flag&SCS_NOMOVECOND) ) {
-			sc->cant.move += ( start ? 1 : -1 );
-		} else if(
-				     (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF)	// cannot move while gospel is in effect
-				  || (sc->data[SC_BASILICA] && sc->data[SC_BASILICA]->val4 == bl->id) // Basilica caster cannot move
-				  || (sc->data[SC_GRAVITATION] && sc->data[SC_GRAVITATION]->val3 == BCT_SELF)
-				  || (sc->data[SC_CRYSTALIZE] && bl->type != BL_MOB)
-				  || (sc->data[SC_CAMOUFLAGE] && sc->data[SC_CAMOUFLAGE]->val1 < 3
-							&& !(sc->data[SC_CAMOUFLAGE]->val3&1))
-				 ) {
-			sc->cant.move += ( start ? 1 : -1 );
-		}
-	}
-
-	/* can't use skills */
-	if( flag&SCS_NOCAST ) {
-		if( !(flag&SCS_NOCASTCOND) ) {
-			sc->cant.cast += ( start ? 1 : -1 );
-		} else if( (sc->data[SC_CRYSTALIZE] && bl->type != BL_MOB) ){
-			sc->cant.cast += ( start ? 1 : -1 );
-		}
-	}
-
-	/* player-only states */
-	if( bl->type == BL_PC ) {
-
-		/* can pick items? */
-		if( flag&SCS_NOPICKITEM ) {
-			if( !(flag&SCS_NOPICKITEMCOND) ) {
-				sc->cant.pickup += ( start ? 1 : -1 );
-			} else if( (sc->data[SC_NOCHAT] && sc->data[SC_NOCHAT]->val1&MANNER_NOITEM) ) {
-				sc->cant.pickup += ( start ? 1 : -1 );
-			}
-		}
-
-		/* can drop items? */
-		if( flag&SCS_NODROPITEM ) {
-			if( !(flag&SCS_NODROPITEMCOND) ) {
-				sc->cant.drop += ( start ? 1 : -1 );
-			} else if( (sc->data[SC_NOCHAT] && sc->data[SC_NOCHAT]->val1&MANNER_NOITEM) ) {
-				sc->cant.drop += ( start ? 1 : -1 );
-			}
-		}
-	}
-
-	return;
 }
 /// Recalculates parts of an object's battle status according to the specified flags.
 /// @param flag bitfield of values from enum scb_flag
@@ -6430,7 +6322,6 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 	struct status_data *status;
 	struct view_data *vd;
 	int opt_flag, calc_flag, undead_flag, val_flag = 0, tick_time = 0;
-	bool sc_isnew = true;
 
 	nullpo_ret(bl);
 	sc = status_get_sc(bl);
@@ -8866,7 +8757,6 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 	if((sce=sc->data[type])) {// reuse old sc
 		if( sce->timer != INVALID_TIMER )
 			delete_timer(sce->timer, status_change_timer);
-		sc_isnew = false;
 	} else {// new sc
 		++(sc->count);
 		sce = sc->data[type] = ers_alloc(sc_data_ers, struct status_change_entry);
@@ -8882,10 +8772,6 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 
 	if (calc_flag)
 		status_calc_bl(bl,calc_flag);
-
-	if ( sc_isnew && StatusChangeStateTable[type] ) /* non-zero */
-		status_calc_state(bl,sc,( enum scs_flag ) StatusChangeStateTable[type],true);
-
 
 	if(sd && sd->pd)
 		pet_sc_check(sd, type); //Skotlex: Pet Status Effect Healing
@@ -8984,8 +8870,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
  * 2 - Do clif
  * 3 - Do not remove some permanent/time-independent effects
  *------------------------------------------*/
-int status_change_clear(struct block_list* bl, int type)
-{
+int status_change_clear(struct block_list* bl, int type) {
 	struct status_change* sc;
 	int i;
 
@@ -8994,69 +8879,64 @@ int status_change_clear(struct block_list* bl, int type)
 	if (!sc || !sc->count)
 		return 0;
 
-	for(i = 0; i < SC_MAX; i++)
-	{
+	for(i = 0; i < SC_MAX; i++) {
 		if(!sc->data[i])
 		  continue;
 
 		if(type == 0)
-		switch (i)
-		{	//Type 0: PC killed -> Place here statuses that do not dispel on death.
-		case SC_ELEMENTALCHANGE://Only when its Holy or Dark that it doesn't dispell on death
-			if( sc->data[i]->val2 != ELE_HOLY && sc->data[i]->val2 != ELE_DARK )
-				break;
-		case SC_WEIGHT50:
-		case SC_WEIGHT90:
-		case SC_EDP:
-		case SC_MELTDOWN:
-		case SC_XMAS:
-		case SC_SUMMER:
-		case SC_NOCHAT:
-		case SC_FUSION:
-		case SC_EARTHSCROLL:
-		case SC_READYSTORM:
-		case SC_READYDOWN:
-		case SC_READYCOUNTER:
-		case SC_READYTURN:
-		case SC_DODGE:
-		case SC_JAILED:
-		case SC_EXPBOOST:
-		case SC_ITEMBOOST:
-		case SC_HELLPOWER:
-		case SC_JEXPBOOST:
-		case SC_AUTOTRADE:
-		case SC_WHISTLE:
-		case SC_ASSNCROS:
-		case SC_POEMBRAGI:
-		case SC_APPLEIDUN:
-		case SC_HUMMING:
-		case SC_DONTFORGETME:
-		case SC_FORTUNE:
-		case SC_SERVICE4U:
-		case SC_FOOD_STR_CASH:
-		case SC_FOOD_AGI_CASH:
-		case SC_FOOD_VIT_CASH:
-		case SC_FOOD_DEX_CASH:
-		case SC_FOOD_INT_CASH:
-		case SC_FOOD_LUK_CASH:
-		case SC_DEF_RATE:
-		case SC_MDEF_RATE:
-		case SC_INCHEALRATE:
-		case SC_INCFLEE2:
-		case SC_INCHIT:
-		case SC_ATKPOTION:
-		case SC_MATKPOTION:
-		case SC_S_LIFEPOTION:
-		case SC_L_LIFEPOTION:
-		case SC_PUSH_CART:
-			continue;
-
+		switch (i) {	//Type 0: PC killed -> Place here statuses that do not dispel on death.
+			case SC_ELEMENTALCHANGE://Only when its Holy or Dark that it doesn't dispell on death
+				if( sc->data[i]->val2 != ELE_HOLY && sc->data[i]->val2 != ELE_DARK )
+					break;
+			case SC_WEIGHT50:
+			case SC_WEIGHT90:
+			case SC_EDP:
+			case SC_MELTDOWN:
+			case SC_XMAS:
+			case SC_SUMMER:
+			case SC_NOCHAT:
+			case SC_FUSION:
+			case SC_EARTHSCROLL:
+			case SC_READYSTORM:
+			case SC_READYDOWN:
+			case SC_READYCOUNTER:
+			case SC_READYTURN:
+			case SC_DODGE:
+			case SC_JAILED:
+			case SC_EXPBOOST:
+			case SC_ITEMBOOST:
+			case SC_HELLPOWER:
+			case SC_JEXPBOOST:
+			case SC_AUTOTRADE:
+			case SC_WHISTLE:
+			case SC_ASSNCROS:
+			case SC_POEMBRAGI:
+			case SC_APPLEIDUN:
+			case SC_HUMMING:
+			case SC_DONTFORGETME:
+			case SC_FORTUNE:
+			case SC_SERVICE4U:
+			case SC_FOOD_STR_CASH:
+			case SC_FOOD_AGI_CASH:
+			case SC_FOOD_VIT_CASH:
+			case SC_FOOD_DEX_CASH:
+			case SC_FOOD_INT_CASH:
+			case SC_FOOD_LUK_CASH:
+			case SC_DEF_RATE:
+			case SC_MDEF_RATE:
+			case SC_INCHEALRATE:
+			case SC_INCFLEE2:
+			case SC_INCHIT:
+			case SC_ATKPOTION:
+			case SC_MATKPOTION:
+			case SC_S_LIFEPOTION:
+			case SC_L_LIFEPOTION:
+			case SC_PUSH_CART:
+				continue;
 		}
 
-		if( type == 3 )
-		{
-			switch (i)
-			{// TODO: This list may be incomplete
+		if( type == 3 ) {
+			switch (i) {// TODO: This list may be incomplete
 				case SC_WEIGHT50:
 				case SC_WEIGHT90:
 				case SC_NOCHAT:
@@ -9067,8 +8947,8 @@ int status_change_clear(struct block_list* bl, int type)
 
 		status_change_end(bl, (sc_type)i, INVALID_TIMER);
 
-		if( type == 1 && sc->data[i] )
-		{	//If for some reason status_change_end decides to still keep the status when quitting. [Skotlex]
+		if( type == 1 && sc->data[i] ) {
+			//If for some reason status_change_end decides to still keep the status when quitting. [Skotlex]
 			(sc->count)--;
 			if (sc->data[i]->timer != INVALID_TIMER)
 				delete_timer(sc->data[i]->timer, status_change_timer);
@@ -9141,9 +9021,6 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 	}
 
 	(sc->count)--;
-
-	if ( StatusChangeStateTable[type] )
-		status_calc_state(bl,sc,( enum scs_flag ) StatusChangeStateTable[type],false);
 
 	sc->data[type] = NULL;
 
@@ -9570,9 +9447,6 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 					sc->bs_counter--;
 				}
 			}
-			break;
-		case SC_VACUUM_EXTREME:
-			if(sc && sc->cant.move > 0) sc->cant.move--;
 			break;
 		case SC_KYOUGAKU:
 			clif_status_load(bl, SI_KYOUGAKU, 0); // Avoid client crash
@@ -10385,10 +10259,6 @@ int status_change_timer(int tid, unsigned int tick, int id, intptr_t data)
 		break;
 	case SC_VACUUM_EXTREME:
 		if( --(sce->val4) >= 0 ){
-			if( !unit_is_walking(bl) && !sce->val2 ){
-				sc->cant.move++;
-				sce->val2 = 1;
-			}
 			sc_timer_next(100 + tick, status_change_timer, bl->id, data);
 			return 0;
 		}

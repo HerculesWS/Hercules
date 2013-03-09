@@ -10116,7 +10116,14 @@ void clif_parse_TakeItem(int fd, struct map_session_data *sd)
 		if (fitem == NULL || fitem->bl.type != BL_ITEM || fitem->bl.m != sd->bl.m)
 			break;
 
-		if( sd->sc.cant.pickup )
+		if( sd->sc.count && (
+				 sd->sc.data[SC_HIDING] ||
+				 sd->sc.data[SC_CLOAKING] ||
+				 sd->sc.data[SC_TRICKDEAD] ||
+				 sd->sc.data[SC_BLADESTOP] ||
+				 sd->sc.data[SC_CLOAKINGEXCEED] ||
+				(sd->sc.data[SC_NOCHAT] &&sd->sc.data[SC_NOCHAT]->val1&MANNER_NOITEM)
+			) )
 			break;
 
 		if (pc_cant_act(sd))
