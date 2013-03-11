@@ -1642,9 +1642,6 @@ int battle_blewcount_bonus(struct map_session_data *sd, uint16 skill_id) {
 	return 0;
 }
 
-struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int mflag);
-struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int mflag);
-
 //For quick div adjustment.
 #define damage_div_fix(dmg, div) { if (div > 1) (dmg)*=div; else if (div < 0) (div)*=-1; }
 /*==========================================
