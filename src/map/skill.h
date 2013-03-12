@@ -17,6 +17,7 @@ struct homun_data;
 struct skill_unit;
 struct skill_unit_group;
 struct status_change_entry;
+struct square;
 
 /**
  * Defines
@@ -1701,6 +1702,7 @@ struct skill_interface {
 	int (*init) (void);
 	int (*final) (void);
 	void (*reload) (void);
+	void (*read_db) (void);
 	/* accesssors */
 	int	(*get_index) ( uint16 skill_id );
 	int	(*get_type) ( uint16 skill_id );
@@ -1716,6 +1718,7 @@ struct skill_interface {
 	int	(*get_mhp) ( uint16 skill_id, uint16 skill_lv );
 	int	(*get_sp) ( uint16 skill_id, uint16 skill_lv );
 	int	(*get_state) (uint16 skill_id);
+	int	(*get_spiritball) (uint16 skill_id, uint16 skill_lv);
 	int	(*get_zeny) ( uint16 skill_id, uint16 skill_lv );
 	int	(*get_num) ( uint16 skill_id, uint16 skill_lv );
 	int	(*get_cast) ( uint16 skill_id, uint16 skill_lv );
@@ -1739,9 +1742,14 @@ struct skill_interface {
 	int	(*get_unit_target) ( uint16 skill_id );
 	int	(*get_unit_interval) ( uint16 skill_id );
 	int	(*get_unit_bl_target) ( uint16 skill_id );
+	int	(*get_unit_layout_type) ( uint16 skill_id ,uint16 skill_lv );
+	int	(*get_unit_range) ( uint16 skill_id, uint16 skill_lv );
+	int	(*get_cooldown) ( uint16 skill_id, uint16 skill_lv );
 	int	(*tree_get_max) ( uint16 skill_id, int b_class );
 	const char*	(*get_name) ( uint16 skill_id );
 	const char*	(*get_desc) ( uint16 skill_id );
+	/* check */
+	void (*chk) (int16* skill_id, uint16 skill_lv);
 	/* whether its CAST_GROUND, CAST_DAMAGE or CAST_NODAMAGE */
 	int (*get_casttype) (uint16 skill_id);
 	int (*name2id) (const char* name);
@@ -1780,7 +1788,6 @@ struct skill_interface {
 	int (*unit_move) (struct block_list *bl,unsigned int tick,int flag);
 	int (*unit_onleft) (uint16 skill_id, struct block_list *bl,unsigned int tick);
 	int (*unit_onout) (struct skill_unit *src, struct block_list *bl, unsigned int tick);
-	//ake
 	int (*unit_move_unit_group) ( struct skill_unit_group *group, int16 m,int16 dx,int16 dy);
 	int (*guildaura_sub) (struct map_session_data* sd, int id, int strvit, int agidex);
 	int (*sit) (struct map_session_data *sd, int type);
@@ -1807,6 +1814,67 @@ struct skill_interface {
 	int (*blockmerc_start) (struct mercenary_data*,uint16 skill_id,int);
 	int (*attack) ( int attack_type, struct block_list* src, struct block_list *dsrc,struct block_list *bl,uint16 skill_id,uint16 skill_lv,unsigned int tick,int flag );
 	int (*attack_area) (struct block_list *bl,va_list ap);
+	int (*area_sub) (struct block_list *bl, va_list ap);
+	int (*area_sub_count) (struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, unsigned int tick, int flag);
+	int (*check_unit_range) (struct block_list *bl, int x, int y, uint16 skill_id, uint16 skill_lv);
+	int (*check_unit_range_sub) (struct block_list *bl, va_list ap);
+	int (*check_unit_range2) (struct block_list *bl, int x, int y, uint16 skill_id, uint16 skill_lv);
+	int (*check_unit_range2_sub) (struct block_list *bl, va_list ap);
+	void (*toggle_magicpower) (struct block_list *bl, uint16 skill_id);
+	int (*magic_reflect) (struct block_list* src, struct block_list* bl, int type);
+	int (*onskillusage) (struct map_session_data *sd, struct block_list *bl, uint16 skill_id, unsigned int tick);
+	int (*cell_overlap) (struct block_list *bl, va_list ap);
+	int (*timerskill) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*trap_splash) (struct block_list *bl, va_list ap);
+	int (*check_condition_mercenary) (struct block_list *bl, int skill_id, int lv, int type);
+	struct skill_unit_group *(*locate_element_field) (struct block_list *bl);
+	int (*graffitiremover) (struct block_list *bl, va_list ap);
+	int (*activate_reverberation) ( struct block_list *bl, va_list ap);
+	int (*dance_overlap_sub) (struct block_list* bl, va_list ap);
+	int (*dance_overlap) (struct skill_unit* unit, int flag);
+	struct s_skill_unit_layout *(*get_unit_layout) (uint16 skill_id, uint16 skill_lv, struct block_list* src, int x, int y);
+	int (*frostjoke_scream) (struct block_list *bl, va_list ap);
+	int (*greed) (struct block_list *bl, va_list ap);
+	int (*destroy_trap) ( struct block_list *bl, va_list ap );
+	int (*icewall_block) (struct block_list *bl,va_list ap);
+	struct skill_unit_group_tickset *(*unitgrouptickset_search) (struct block_list *bl, struct skill_unit_group *group, int tick);
+	bool (*dance_switch) (struct skill_unit* unit, int flag);
+	int (*check_condition_char_sub) (struct block_list *bl, va_list ap);
+	int (*check_condition_mob_master_sub) (struct block_list *bl, va_list ap);
+	void (*brandishspear_first) (struct square *tc, uint8 dir, int16 x, int16 y);
+	void (*brandishspear_dir) (struct square* tc, uint8 dir, int are);
+#ifdef RENEWAL_CAST
+	int	(*get_fixed_cast) ( uint16 skill_id ,uint16 skill_lv );
+#endif
+	int (*sit_count) (struct block_list *bl, va_list ap);
+	int (*sit_in) (struct block_list *bl, va_list ap);
+	int (*sit_out) (struct block_list *bl, va_list ap);
+	void (*unitsetmapcell) (struct skill_unit *src, uint16 skill_id, uint16 skill_lv, cell_t cell, bool flag);
+	int (*unit_onplace_timer) (struct skill_unit *src, struct block_list *bl, unsigned int tick);
+	int (*unit_effect) (struct block_list* bl, va_list ap);
+	int (*unit_timer_sub_onplace) (struct block_list* bl, va_list ap);
+	int (*unit_move_sub) (struct block_list* bl, va_list ap);
+	int (*blockpc_end) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*blockhomun_end) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*blockmerc_end) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*split_atoi) (char *str, int *val);
+	int (*unit_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*unit_timer_sub) (DBKey key, DBData *data, va_list ap);
+	void (*init_unit_layout) (void);
+	bool (*parse_row_skilldb) (char* split[], int columns, int current);
+	bool (*parse_row_requiredb) (char* split[], int columns, int current);
+	bool (*parse_row_castdb) (char* split[], int columns, int current);
+	bool (*parse_row_castnodexdb) (char* split[], int columns, int current);
+	bool (*parse_row_unitdb) (char* split[], int columns, int current);
+	bool (*parse_row_nocastdb) (char* split[], int columns, int current);
+	bool (*parse_row_producedb) (char* split[], int columns, int current);
+	bool (*parse_row_createarrowdb) (char* split[], int columns, int current);
+	bool (*parse_row_abradb) (char* split[], int columns, int current);
+	bool (*parse_row_spellbookdb) (char* split[], int columns, int current);
+	bool (*parse_row_magicmushroomdb) (char* split[], int column, int current);
+	bool (*parse_row_reproducedb) (char* split[], int column, int current);
+	bool (*parse_row_improvisedb) (char* split[], int columns, int current);
+	bool (*parse_row_changematerialdb) (char* split[], int columns, int current);
 	/* save new unit skill */
 	void (*usave_add) (struct map_session_data * sd, uint16 skill_id, uint16 skill_lv);
 	/* trigger saved unit skills */
