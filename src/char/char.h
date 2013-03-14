@@ -6,6 +6,7 @@
 
 #include "../config/core.h"
 #include "../common/core.h" // CORE_ST_LAST
+#include "../common/db.h"
 
 enum E_CHARSERVER_ST {
 	CHARSERVER_ST_RUNNING = CORE_ST_LAST,
@@ -26,12 +27,24 @@ struct char_session_data {
 	uint32 version;
 	uint8 clienttype;
 	char pincode[4+1];
-	uint16 pincode_seed;
+	uint32 pincode_seed;
 	uint16 pincode_try;
 	uint32 pincode_change;
+	bool pincode_pass;
 	char new_name[NAME_LENGTH];
 	char birthdate[10+1];  // YYYY-MM-DD
 };
+
+struct online_char_data {
+	int account_id;
+	int char_id;
+	int fd;
+	int waiting_disconnect;
+	short server; // -2: unknown server, -1: not connected, 0+: id of server
+	bool pincode_passed;
+};
+
+DBMap* online_char_db; // int account_id -> struct online_char_data*
 
 #define MAX_MAP_SERVERS 30
 

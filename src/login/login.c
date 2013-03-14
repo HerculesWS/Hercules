@@ -921,7 +921,7 @@ int parse_fromchar(int fd)
 				
 				if( accounts->load_num(accounts, &acc, RFIFOL(fd,2) ) ) {
 					strncpy( acc.pincode, (char*)RFIFOP(fd,6), 5 );
-					acc.pincode_change = time( NULL );
+					acc.pincode_change = ((unsigned int)time( NULL ));
 					accounts->save(accounts, &acc);
 				}
 				RFIFOSKIP(fd,11);

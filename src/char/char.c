@@ -173,15 +173,6 @@ static DBMap* auth_db; // int account_id -> struct auth_node*
 // Online User Database
 //-----------------------------------------------------
 
-struct online_char_data {
-	int account_id;
-	int char_id;
-	int fd;
-	int waiting_disconnect;
-	short server; // -2: unknown server, -1: not connected, 0+: id of server
-};
-
-static DBMap* online_char_db; // int account_id -> struct online_char_data*
 static int chardb_waiting_disconnect(int tid, unsigned int tick, int id, intptr_t data);
 int delete_char_sql(int char_id);
 
@@ -4176,9 +4167,11 @@ int parse_char(int fd)
 			if( RFIFOREST(fd) < 10 )
 				return 0;
 			
-			if( RFIFOL(fd,2) == sd->account_id )
-				pincode->check( fd, sd );
-			
+			if( !sd->pincode_pass ) {
+				if( RFIFOL(fd,2) == sd->account_id )
+					pincode->check( fd, sd );
+			}
+				
 			RFIFOSKIP(fd,10);
 		break;
 			
@@ -4186,7 +4179,6 @@ int parse_char(int fd)
 		case 0x8c5:
 			if( RFIFOREST(fd) < 6 )
 				return 0;
-			
 			if( RFIFOL(fd,2) == sd->account_id )
 				pincode->state( fd, sd, PINCODE_NOTSET );
 						
@@ -4197,9 +4189,10 @@ int parse_char(int fd)
 		case 0x8be:
 			if( RFIFOREST(fd) < 14 )
 				return 0;
-			
-			if( RFIFOL(fd,2) == sd->account_id )
-				pincode->change( fd, sd );
+			if( !sd->pincode_pass ) {
+				if( RFIFOL(fd,2) == sd->account_id )
+					pincode->change( fd, sd );
+			}
 			
 			RFIFOSKIP(fd,14);
 		break;
@@ -4208,10 +4201,10 @@ int parse_char(int fd)
 		case 0x8ba:
 			if( RFIFOREST(fd) < 10 )
 				return 0;
-			
-			if( RFIFOL(fd,2) == sd->account_id )
-				pincode->new( fd, sd );
-			
+			if( !sd->pincode_pass ) {
+				if( RFIFOL(fd,2) == sd->account_id )
+					pincode->new( fd, sd );
+			}
 			RFIFOSKIP(fd,10);
 		break;
 				
