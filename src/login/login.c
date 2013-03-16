@@ -559,7 +559,7 @@ int parse_fromchar(int fd)
 			int group_id = 0;
 			uint8 char_slots = 0;
 			char birthdate[10+1] = "";
-			char pincode[4+1] = "\0\0\0\0\0";
+			char pincode[4+1] = "\0\0\0\0";
 
 			int account_id = RFIFOL(fd,2);
 			RFIFOSKIP(fd,6);

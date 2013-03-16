@@ -19,75 +19,54 @@ int charselect = 0;
 unsigned int multiplier = 0x3498, baseSeed = 0x881234;
 
 void pincode_handle ( int fd, struct char_session_data* sd ) {
-	bool pass = true;
+	 struct online_char_data* character;
 	
-	if( !*pincode->charselect ) {
-		struct online_char_data* character;
-		if( (character = (struct online_char_data*)idb_get(online_char_db, sd->account_id)) != NULL ) {
-			if( character->pincode_passed )
-				pass = false;
-		}
+	character = (struct online_char_data*)idb_get(online_char_db, sd->account_id);
+	
+	if( character && character->pincode_enable > *pincode->charselect ){
+		character->pincode_enable = *pincode->charselect * 2;
+	}else{
+		pincode->sendstate( fd, sd, PINCODE_OK );
+		return;
 	}
 	
-	if( *pincode->enabled && pass ) {
+	if( strlen(sd->pincode) ){
+		if( *pincode->changetime && time(NULL) > (sd->pincode_change+*pincode->changetime) ){ // User hasnt changed his PIN code for a long time
+			pincode->sendstate( fd, sd, PINCODE_EXPIRED );
+		} else { // Ask user for his PIN code
+			pincode->sendstate( fd, sd, PINCODE_ASK );
+		}
+	} else // No PIN code has been set yet
+		pincode->sendstate( fd, sd, PINCODE_NOTSET );
+}
 
-		sd->pincode_pass = false;
-		// PIN code system enabled
-		if( sd->pincode[0] == '\0' ){
-			// No PIN code has been set yet
-			pincode->state( fd, sd, PINCODE_NOTSET );
-		} else {
-			if( !pincode->changetime || !( time(NULL) > (sd->pincode_change+*pincode->changetime) ) ){
-				// Ask user for his PIN code
-				pincode->state( fd, sd, PINCODE_ASK );
-			} else {
-				// User hasnt changed his PIN code too long
-				pincode->state( fd, sd, PINCODE_EXPIRED );
-			}
-		}
-	} else {
-		// PIN code system, disabled
-		pincode->state( fd, sd, PINCODE_OK );
-	}
-}
-void pincode_pass(struct char_session_data *sd) {
-	struct online_char_data* character;
-	
-	if( (character = (struct online_char_data*)idb_get(online_char_db, sd->account_id)) != NULL ) {
-		character->pincode_passed = true;
-	}
-	sd->pincode_pass = true;
-}
 void pincode_check(int fd, struct char_session_data* sd) {
-	char pin[4] = "\0\0\0\0";
+	char pin[5] = "\0\0\0\0";
 	
-	strncpy(pin, (char*)RFIFOP(fd, 6), 3+1);
+	strncpy(pin, (char*)RFIFOP(fd, 6), 4+1);
 	pincode->decrypt(sd->pincode_seed, pin);
 	if( pincode->compare( fd, sd, pin ) ){
-		pincode->state( fd, sd, PINCODE_OK );
+		pincode->sendstate( fd, sd, PINCODE_OK );
 	}
 }
 
 int pincode_compare(int fd, struct char_session_data* sd, char* pin) {
 	if( strcmp( sd->pincode, pin ) == 0 ){
 		sd->pincode_try = 0;
-		pincode->pass(sd);
 		return 1;
 	} else {
-		pincode->state( fd, sd, PINCODE_WRONG );
-		
+		pincode->sendstate( fd, sd, PINCODE_WRONG );
 		if( *pincode->maxtry && ++sd->pincode_try >= *pincode->maxtry ){
 			pincode->error( sd->account_id );
 		}
-		
 		return 0;
 	}
 }
 
 void pincode_change(int fd, struct char_session_data* sd) {
-	char oldpin[4] = "\0\0\0\0", newpin[4] = "\0\0\0\0";
+	char oldpin[5] = "\0\0\0\0", newpin[5] = "\0\0\0\0";
 	
-	strncpy(oldpin, (char*)RFIFOP(fd,6), 3+1);
+	strncpy(oldpin, (char*)RFIFOP(fd,6), 4+1);
 	pincode->decrypt(sd->pincode_seed,oldpin);
 	if( !pincode->compare( fd, sd, oldpin ) )
 		return;
@@ -96,22 +75,21 @@ void pincode_change(int fd, struct char_session_data* sd) {
 	pincode->decrypt(sd->pincode_seed,newpin);
 	pincode->update( sd->account_id, newpin );
 	
-	pincode->state( fd, sd, PINCODE_OK );
+	pincode->sendstate( fd, sd, PINCODE_OK );
 }
 
 void pincode_setnew(int fd, struct char_session_data* sd) {
-	char newpin[4] = "\0\0\0\0";
+	char newpin[5] = "\0\0\0\0";
 	
-	strncpy(newpin, (char*)RFIFOP(fd,6), 3+1);
+	strncpy(newpin, (char*)RFIFOP(fd,6), 4+1);
 	pincode->decrypt(sd->pincode_seed,newpin);
 	
 	pincode->update( sd->account_id, newpin );
 	
-	pincode->state( fd, sd, PINCODE_OK );
-	pincode->pass(sd);
+	pincode->sendstate( fd, sd, PINCODE_OK );
 }
 
-// 0 = disabled / pin is correct
+// 0 = pin is correct
 // 1 = ask for pin - client sends 0x8b8
 // 2 = create new pin - client sends 0x8ba
 // 3 = pin must be changed - client 0x8be
@@ -171,7 +149,7 @@ bool pincode_config_read(char *w1, char *w2) {
 		
 		if ( strcmpi(w1, "pincode_enabled") == 0 ) {
 			enabled = atoi(w2);
-#ifdef PACKETVER < 20110309
+#if PACKETVER < 20110309
 			if( enabled ) {
 				ShowWarning("pincode_enabled requires PACKETVER 20110309 or higher. disabling...\n");
 				enabled = 0;
@@ -210,11 +188,10 @@ void pincode_defaults(void) {
 	pincode->decrypt = pincode_decrypt;
 	pincode->error = pincode_notifyLoginPinError;
 	pincode->update = pincode_notifyLoginPinUpdate;
-	pincode->state = pincode_sendstate;
-	pincode->new = pincode_setnew;
+	pincode->sendstate = pincode_sendstate;
+	pincode->setnew = pincode_setnew;
 	pincode->change = pincode_change;
 	pincode->compare = pincode_compare;
-	pincode->pass = pincode_pass;
 	pincode->check = pincode_check;
 	pincode->config_read = pincode_config_read;
 

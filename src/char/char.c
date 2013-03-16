@@ -186,6 +186,7 @@ static DBData create_online_char_data(DBKey key, va_list args)
 	character->account_id = key.i;
 	character->char_id = -1;
   	character->server = -1;
+	character->pincode_enable = -1;
 	character->fd = -1;
 	character->waiting_disconnect = INVALID_TIMER;
 	return db_ptr2data(character);
@@ -203,6 +204,8 @@ void set_char_charselect(int account_id)
 
 	character->char_id = -1;
 	character->server = -1;
+	if(character->pincode_enable == -1)
+		character->pincode_enable = *pincode->charselect + *pincode->enabled;
 
 	if(character->waiting_disconnect != INVALID_TIMER) {
 		delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
@@ -299,6 +302,7 @@ void set_char_offline(int char_id, int account_id)
 		{
 			character->char_id = -1;
 			character->server = -1;
+			character->pincode_enable = -1;
 		}
 
 		//FIXME? Why Kevin free'd the online information when the char was effectively in the map-server?
@@ -4167,10 +4171,8 @@ int parse_char(int fd)
 			if( RFIFOREST(fd) < 10 )
 				return 0;
 			
-			if( !sd->pincode_pass ) {
-				if( RFIFOL(fd,2) == sd->account_id )
-					pincode->check( fd, sd );
-			}
+			if( RFIFOL(fd,2) == sd->account_id )
+				pincode->check( fd, sd );
 				
 			RFIFOSKIP(fd,10);
 		break;
@@ -4180,7 +4182,7 @@ int parse_char(int fd)
 			if( RFIFOREST(fd) < 6 )
 				return 0;
 			if( RFIFOL(fd,2) == sd->account_id )
-				pincode->state( fd, sd, PINCODE_NOTSET );
+				pincode->sendstate( fd, sd, PINCODE_NOTSET );
 						
 			RFIFOSKIP(fd,6);
 		break;
@@ -4189,10 +4191,8 @@ int parse_char(int fd)
 		case 0x8be:
 			if( RFIFOREST(fd) < 14 )
 				return 0;
-			if( !sd->pincode_pass ) {
-				if( RFIFOL(fd,2) == sd->account_id )
-					pincode->change( fd, sd );
-			}
+			if( RFIFOL(fd,2) == sd->account_id )
+				pincode->change( fd, sd );
 			
 			RFIFOSKIP(fd,14);
 		break;
@@ -4201,10 +4201,8 @@ int parse_char(int fd)
 		case 0x8ba:
 			if( RFIFOREST(fd) < 10 )
 				return 0;
-			if( !sd->pincode_pass ) {
-				if( RFIFOL(fd,2) == sd->account_id )
-					pincode->new( fd, sd );
-			}
+			if( RFIFOL(fd,2) == sd->account_id )
+				pincode->setnew( fd, sd );
 			RFIFOSKIP(fd,10);
 		break;
 				

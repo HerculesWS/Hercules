@@ -30,7 +30,6 @@ struct char_session_data {
 	uint32 pincode_seed;
 	uint16 pincode_try;
 	uint32 pincode_change;
-	bool pincode_pass;
 	char new_name[NAME_LENGTH];
 	char birthdate[10+1];  // YYYY-MM-DD
 };
@@ -41,7 +40,7 @@ struct online_char_data {
 	int fd;
 	int waiting_disconnect;
 	short server; // -2: unknown server, -1: not connected, 0+: id of server
-	bool pincode_passed;
+	int pincode_enable;
 };
 
 DBMap* online_char_db; // int account_id -> struct online_char_data*

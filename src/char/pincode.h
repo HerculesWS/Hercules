@@ -27,11 +27,10 @@ struct pincode_interface {
 	void (*decrypt) (unsigned int userSeed, char* pin);
 	void (*error) (int account_id);
 	void (*update) (int account_id, char* pin);
-	void (*state) (int fd, struct char_session_data* sd, uint16 state);
-	void (*new) (int fd, struct char_session_data* sd);
+	void (*sendstate) (int fd, struct char_session_data* sd, uint16 state);
+	void (*setnew) (int fd, struct char_session_data* sd);
 	void (*change) (int fd, struct char_session_data* sd);
 	int  (*compare) (int fd, struct char_session_data* sd, char* pin);
-	void (*pass) (struct char_session_data *sd);
 	void (*check) (int fd, struct char_session_data* sd);
 	bool (*config_read) (char *w1, char *w2);
 } pincode_s;
