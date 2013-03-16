@@ -19,9 +19,7 @@ int charselect = 0;
 unsigned int multiplier = 0x3498, baseSeed = 0x881234;
 
 void pincode_handle ( int fd, struct char_session_data* sd ) {
-	 struct online_char_data* character;
-	
-	character = (struct online_char_data*)idb_get(online_char_db, sd->account_id);
+	struct online_char_data* character = (struct online_char_data*)idb_get(online_char_db, sd->account_id);
 	
 	if( character && character->pincode_enable > *pincode->charselect ){
 		character->pincode_enable = *pincode->charselect * 2;
@@ -38,6 +36,9 @@ void pincode_handle ( int fd, struct char_session_data* sd ) {
 		}
 	} else // No PIN code has been set yet
 		pincode->sendstate( fd, sd, PINCODE_NOTSET );
+
+	if( character )
+		character->pincode_enable = -1;
 }
 
 void pincode_check(int fd, struct char_session_data* sd) {
@@ -46,6 +47,9 @@ void pincode_check(int fd, struct char_session_data* sd) {
 	strncpy(pin, (char*)RFIFOP(fd, 6), 4+1);
 	pincode->decrypt(sd->pincode_seed, pin);
 	if( pincode->compare( fd, sd, pin ) ){
+		struct online_char_data* character;
+		if( (character = (struct online_char_data*)idb_get(online_char_db, sd->account_id)) )
+			character->pincode_enable = *pincode->charselect * 2;
 		pincode->sendstate( fd, sd, PINCODE_OK );
 	}
 }
@@ -65,7 +69,8 @@ int pincode_compare(int fd, struct char_session_data* sd, char* pin) {
 
 void pincode_change(int fd, struct char_session_data* sd) {
 	char oldpin[5] = "\0\0\0\0", newpin[5] = "\0\0\0\0";
-	
+	struct online_char_data* character;
+
 	strncpy(oldpin, (char*)RFIFOP(fd,6), 4+1);
 	pincode->decrypt(sd->pincode_seed,oldpin);
 	if( !pincode->compare( fd, sd, oldpin ) )
@@ -74,19 +79,23 @@ void pincode_change(int fd, struct char_session_data* sd) {
 	strncpy(newpin, (char*)RFIFOP(fd,10), 3+1);
 	pincode->decrypt(sd->pincode_seed,newpin);
 	pincode->update( sd->account_id, newpin );
-	
+	if( (character = (struct online_char_data*)idb_get(online_char_db, sd->account_id)) )
+		character->pincode_enable = *pincode->charselect * 2;
 	pincode->sendstate( fd, sd, PINCODE_OK );
 }
 
 void pincode_setnew(int fd, struct char_session_data* sd) {
 	char newpin[5] = "\0\0\0\0";
-	
+	struct online_char_data* character;
+
 	strncpy(newpin, (char*)RFIFOP(fd,6), 4+1);
 	pincode->decrypt(sd->pincode_seed,newpin);
 	
 	pincode->update( sd->account_id, newpin );
 	
 	pincode->sendstate( fd, sd, PINCODE_OK );
+	if( (character = (struct online_char_data*)idb_get(online_char_db, sd->account_id)) )
+		character->pincode_enable = *pincode->charselect * 2;
 }
 
 // 0 = pin is correct

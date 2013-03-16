@@ -3741,6 +3741,18 @@ int parse_char(int fd)
 			int slot = RFIFOB(fd,2);
 			RFIFOSKIP(fd,3);
 
+			if( *pincode->enabled ){ // hack check
+				struct online_char_data* character;	
+				character = (struct online_char_data*)idb_get(online_char_db, sd->account_id);
+				if( character && character->pincode_enable == -1){
+					WFIFOHEAD(fd,3);
+					WFIFOW(fd,0) = 0x6c;
+					WFIFOB(fd,2) = 0;
+					WFIFOSET(fd,3);
+					break;
+				}
+			}
+
 			if ( SQL_SUCCESS != Sql_Query(sql_handle, "SELECT `char_id` FROM `%s` WHERE `account_id`='%d' AND `char_num`='%d'", char_db, sd->account_id, slot)
 			  || SQL_SUCCESS != Sql_NextRow(sql_handle)
 			  || SQL_SUCCESS != Sql_GetData(sql_handle, 0, &data, NULL) )
@@ -3935,6 +3947,18 @@ int parse_char(int fd)
 			if (cmd == 0x1fb) FIFOSD_CHECK(56);
 		{
 			int cid = RFIFOL(fd,2);
+
+			if( *pincode->enabled ){ // hack check
+				struct online_char_data* character;	
+				character = (struct online_char_data*)idb_get(online_char_db, sd->account_id);
+				if( character && character->pincode_enable == -1 ){
+					WFIFOHEAD(fd,3);
+					WFIFOW(fd,0) = 0x6c;
+					WFIFOB(fd,2) = 0;
+					WFIFOSET(fd,3);
+					break;
+				}
+			}
 
 			ShowInfo(CL_RED"Request Char Deletion: "CL_GREEN"%d (%d)"CL_RESET"\n", sd->account_id, cid);
 			memcpy(email, RFIFOP(fd,6), 40);
