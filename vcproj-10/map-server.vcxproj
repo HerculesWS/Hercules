@@ -137,6 +137,7 @@
     <ClInclude Include="..\src\common\cbasetypes.h" />
     <ClInclude Include="..\src\common\conf.h" />
     <ClInclude Include="..\src\common\core.h" />
+	<ClInclude Include="..\src\common\console.h" />
     <ClInclude Include="..\src\common\db.h" />
     <ClInclude Include="..\src\common\des.h" />
     <ClInclude Include="..\src\common\ers.h" />
@@ -209,6 +210,7 @@
     <ClCompile Include="..\3rdparty\mt19937ar\mt19937ar.c" />
     <ClCompile Include="..\src\common\conf.c" />
     <ClCompile Include="..\src\common\core.c" />
+	<ClCompile Include="..\src\common\console.c" />
     <ClCompile Include="..\src\common\db.c" />
     <ClCompile Include="..\src\common\des.c" />
     <ClCompile Include="..\src\common\ers.c" />

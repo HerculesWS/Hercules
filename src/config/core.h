@@ -1,12 +1,8 @@
-// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 #ifndef _CONFIG_CORE_H_
 #define _CONFIG_CORE_H_
-
-/**
- * rAthena configuration file (http://rathena.org)
- * For detailed guidance on these check http://rathena.org/wiki/SRC/config/
- **/
 
 /// Max number of items on @autolootid list
 #define AUTOLOOTITEM_SIZE 10
@@ -27,8 +23,15 @@
 /// your map-server using more resources while this is active, comment the line
 #define SCRIPT_CALLFUNC_CHECK
 
-/// Uncomment to disable rAthena's anonymous stat report
-/// We kindly ask you to consider keeping it enabled, it helps us improve rAthena.
+/// Comment to disable Hercules' console_parse
+/// CONSOLE_INPUT allows you to type commands into the server's console,
+/// Disabling it saves one thread.
+#define CONSOLE_INPUT
+/// Maximum number of caracters 'CONSOLE_INPUT' will support per line.
+#define MAX_CONSOLE_INPUT 150
+
+/// Uncomment to disable Hercules' anonymous stat report
+/// We kindly ask you to consider keeping it enabled, it helps us improve Hercules.
 //#define STATS_OPT_OUT
 
 /// uncomment to enable query_sql script command and mysql logs to function on it's own thread

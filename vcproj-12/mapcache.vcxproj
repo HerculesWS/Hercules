@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\common\core.c" />
+	<ClCompile Include="..\src\common\console.c" />
     <ClCompile Include="..\src\common\des.c" />
     <ClCompile Include="..\src\common\grfio.c" />
     <ClCompile Include="..\src\common\malloc.c" />
@@ -139,6 +140,7 @@
   <ItemGroup>
     <ClInclude Include="..\src\common\cbasetypes.h" />
     <ClInclude Include="..\src\common\core.h" />
+	<ClInclude Include="..\src\common\console.h" />
     <ClInclude Include="..\src\common\des.h" />
     <ClInclude Include="..\src\common\grfio.h" />
     <ClInclude Include="..\src\common\malloc.h" />

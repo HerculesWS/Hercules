@@ -1,10 +1,10 @@
 
 COMMON_OBJ = ../common/obj_all/minicore.o ../common/obj_all/malloc.o \
 	../common/obj_all/showmsg.o ../common/obj_all/strlib.o \
-	../common/obj_all/utils.o ../common/obj_all/des.o ../common/obj_all/grfio.o
+	../common/obj_all/utils.o ../common/obj_all/des.o ../common/obj_all/grfio.o ../common/obj_all/miniconsole.o
 COMMON_H = ../common/core.h ../common/mmo.h \
 	../common/malloc.h ../common/showmsg.h ../common/strlib.h \
-	../common/utils.h ../common/cbasetypes.h ../common/des.h ../common/grfio.h ../config/renewal.h
+	../common/utils.h ../common/cbasetypes.h ../common/des.h ../common/grfio.h ../common/console.h ../config/renewal.h
 
 LIBCONFIG_OBJ = ../../3rdparty/libconfig/libconfig.o ../../3rdparty/libconfig/grammar.o \
 	../../3rdparty/libconfig/scanctx.o ../../3rdparty/libconfig/scanner.o ../../3rdparty/libconfig/strbuf.o

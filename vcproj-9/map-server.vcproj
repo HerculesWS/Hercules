@@ -292,6 +292,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\common\console.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\common\console.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\common\db.c"
 				>
 			</File>

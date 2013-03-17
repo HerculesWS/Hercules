@@ -36,6 +36,7 @@ set( COMMON_ALL_HEADERS
 set( COMMON_MINI_HEADERS
 	${COMMON_ALL_HEADERS}
 	"${COMMON_SOURCE_DIR}/core.h"
+	"${COMMON_SOURCE_DIR}/console.h"
 	"${COMMON_SOURCE_DIR}/malloc.h"
 	"${COMMON_SOURCE_DIR}/showmsg.h"
 	"${COMMON_SOURCE_DIR}/strlib.h"
@@ -43,6 +44,7 @@ set( COMMON_MINI_HEADERS
 	CACHE INTERNAL "" )
 set( COMMON_MINI_SOURCES
 	"${COMMON_SOURCE_DIR}/core.c"
+	"${COMMON_SOURCE_DIR}/console.c"
 	"${COMMON_SOURCE_DIR}/malloc.c"
 	"${COMMON_SOURCE_DIR}/showmsg.c"
 	"${COMMON_SOURCE_DIR}/strlib.c"
@@ -61,6 +63,7 @@ set( COMMON_BASE_HEADERS
 	${COMMON_ALL_HEADERS}
 	"${COMMON_SOURCE_DIR}/conf.h"
 	"${COMMON_SOURCE_DIR}/core.h"
+	"${COMMON_SOURCE_DIR}/console.h"
 	"${COMMON_SOURCE_DIR}/db.h"
 	"${COMMON_SOURCE_DIR}/des.h"
 	"${COMMON_SOURCE_DIR}/ers.h"
@@ -86,6 +89,7 @@ set( COMMON_BASE_HEADERS
 set( COMMON_BASE_SOURCES
 	"${COMMON_SOURCE_DIR}/conf.c"
 	"${COMMON_SOURCE_DIR}/core.c"
+	"${COMMON_SOURCE_DIR}/console.c"
 	"${COMMON_SOURCE_DIR}/db.c"
 	"${COMMON_SOURCE_DIR}/des.c"
 	"${COMMON_SOURCE_DIR}/ers.c"

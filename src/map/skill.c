@@ -16758,9 +16758,7 @@ int skill_blockpc_end(int tid, unsigned int tick, int id, intptr_t data) {
  * @param   load      whether this assignment is being loaded upon player login
  * @return  0 if successful, -1 otherwise
  */
-int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick, bool load)
-{
-	int oskill_id = skill_id;
+int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick, bool load) {
 	struct skill_cd* cd = NULL;
 	uint16 idx = skill->get_index(skill_id);
 
@@ -16786,7 +16784,7 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick,
 		// record the skill duration in the database map
 		cd->duration[cd->cursor] = tick;
 		cd->skidx[cd->cursor] = idx;
-		cd->nameid[cd->cursor] = oskill_id;
+		cd->nameid[cd->cursor] = skill_id;
 		cd->cursor++;
 	}
 
