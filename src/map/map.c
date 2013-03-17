@@ -157,7 +157,6 @@ char charhelp_txt[256] = "conf/charhelp.txt";
 
 char wisp_server_name[NAME_LENGTH] = "Server"; // can be modified in char-server configuration file
 
-int console = 0;
 int enable_spy = 0; //To enable/disable @spy commands, which consume too much cpu time when sending packets. [Skotlex]
 int enable_grf = 0;	//To enable/disable reading maps from GRF files, bypassing mapcache [blackhole89]
 
@@ -3328,11 +3327,7 @@ int map_config_read(char *cfgName)
 			strcpy(charhelp_txt, w2);
 		else if(strcmpi(w1,"db_path") == 0)
 			safestrncpy(db_path,w2,255);
-		else if (strcmpi(w1, "console") == 0) {
-			console = config_switch(w2);
-			if (console)
-				ShowNotice("Console Commands are enabled.\n");
-		} else if (strcmpi(w1, "enable_spy") == 0)
+		else if (strcmpi(w1, "enable_spy") == 0)
 			enable_spy = config_switch(w2);
 		else if (strcmpi(w1, "use_grf") == 0)
 			enable_grf = config_switch(w2);
@@ -3979,11 +3974,6 @@ int do_init(int argc, char *argv[])
 	do_init_duel();
 
 	npc_event_do_oninit();	// Init npcs (OnInit)
-
-	if( console )
-	{
-		//##TODO invoke a CONSOLE_START plugin event
-	}
 
 	if (battle_config.pk_mode)
 		ShowNotice("Server is running on '"CL_WHITE"PK Mode"CL_RESET"'.\n");

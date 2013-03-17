@@ -1602,7 +1602,6 @@ void login_set_defaults()
 	login_config.ip_sync_interval = 0;
 	login_config.log_login = true;
 	safestrncpy(login_config.date_format, "%Y-%m-%d %H:%M:%S", sizeof(login_config.date_format));
-	login_config.console = false;
 	login_config.new_account_flag = true;
 	login_config.new_acc_length_limit = true;
 	login_config.use_md5_passwds = false;
@@ -1682,8 +1681,6 @@ int login_config_read(const char* cfgName)
 			login_config.min_group_id_to_connect = atoi(w2);
 		else if(!strcmpi(w1, "date_format"))
 			safestrncpy(login_config.date_format, w2, sizeof(login_config.date_format));
-		else if(!strcmpi(w1, "console"))
-			login_config.console = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "allowed_regs")) //account flood protection system
 			allowed_regs = atoi(w2);
 		else if(!strcmpi(w1, "time_allowed"))
@@ -1908,10 +1905,6 @@ int do_init(int argc, char** argv)
 			ShowFatalError("do_init: Failed to initialize account engine '%s'.\n", login_config.account_engine);
 			exit(EXIT_FAILURE);
 		}
-	}
-
-	if( login_config.console ) {
-		//##TODO invoke a CONSOLE_START plugin event
 	}
 
 	// server port open & binding	

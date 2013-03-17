@@ -148,8 +148,6 @@ unsigned int save_flag = 0;
 // Initial position (it's possible to set it in conf file)
 struct point start_point = { 0, 53, 111 };
 
-int console = 0;
-
 //-----------------------------------------------------
 // Auth database
 //-----------------------------------------------------
@@ -4721,8 +4719,6 @@ int char_config_read(const char* cfgName)
 			char_del_delay = atoi(w2);
 		} else if(strcmpi(w1,"db_path")==0) {
 			safestrncpy(db_path, w2, sizeof(db_path));
-		} else if (strcmpi(w1, "console") == 0) {
-			console = config_switch(w2);
 		} else if (strcmpi(w1, "fame_list_alchemist") == 0) {
 			fame_list_size_chemist = atoi(w2);
 			if (fame_list_size_chemist > MAX_FAME_LIST) {
@@ -4875,10 +4871,6 @@ int do_init(int argc, char **argv)
 	// Online Data timers (checking if char still connected)
 	add_timer_func_list(online_data_cleanup, "online_data_cleanup");
 	add_timer_interval(gettick() + 1000, online_data_cleanup, 0, 0, 600 * 1000);
-
-	if( console ) {
-		//##TODO invoke a CONSOLE_START plugin event
-	}
 
 	//Cleaning the tables for NULL entrys @ startup [Sirius]
 	//Chardb clean
