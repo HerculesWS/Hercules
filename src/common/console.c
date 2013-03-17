@@ -3,9 +3,9 @@
 // Portions Copyright (c) Athena Dev Teams
 
 #include "../common/showmsg.h"
-#include "../common/console.h"
+#include "../common/core.h"
 #include "../config/core.h"
-#include "core.h"
+#include "console.h"
 
 #ifndef MINICORE
 	#include "../common/atomic.h"
@@ -29,6 +29,8 @@
 		#include <conio.h> /* _kbhit() */
 	#endif
 #endif
+
+struct console_interface console_s;
 
 /*======================================
  *	CORE : Display title
@@ -160,7 +162,6 @@ void console_parse_init(void) {
 #endif /* CONSOLE_INPUT */
 
 void console_init (void) {
-	console->display_title();
 #ifdef CONSOLE_INPUT
 	console->parse_init();
 #endif

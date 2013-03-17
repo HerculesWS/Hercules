@@ -4,7 +4,6 @@
 #ifndef	_CONSOLE_H_
 #define	_CONSOLE_H_
 
-#include "../common/atomic.h"
 #include "../common/thread.h"
 #include "../common/mutex.h"
 #include "../common/spinlock.h"
@@ -39,7 +38,7 @@ struct console_interface {
 	void (*parse) (char* line);
 	int (*key_pressed) (void);
 #endif
-} console_s;
+};
 
 struct console_interface *console;
 
