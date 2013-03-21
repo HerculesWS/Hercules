@@ -1,16 +1,14 @@
 //===== Hercules Script ======================================
 //= Endless Tower
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.1
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Endless Tower Memorial Dungeon
 //= Consists of 101 floors.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version.
 //= 1.1 Removed a disablenpc from #102FShadowDust1. (bugreport:4415)
 //= 1.2 Added ends to several NPCs which would allow you to restart timers.
@@ -33,7 +31,7 @@
 //=		the invoking party meets the requirements to join the Memorial Dungeon.
 //= 2.0 Fixed broken else/if chaining. [Joseph]
 //= 2.1 Updated to match latest official script. [Euphy]
-//============================================================ 
+//============================================================
 
 alberta,214,77,6	script	Captain Janssen	709,{
 	if (checkweight(1201,1) == 0) {
