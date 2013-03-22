@@ -9557,6 +9557,44 @@ static int buildin_announce_sub(struct block_list *bl, va_list ap)
 		clif_broadcast(bl, mes, len, type, SELF);
 	return 0;
 }
+/* Runs item effect on attached character.
+ * consumeitem <item id>;
+ * consumeitem "<item name>"; */
+BUILDIN_FUNC(itemeffect) {
+	TBL_NPC *nd;
+	TBL_PC *sd;
+	struct script_data *data;
+	struct item_data *item_data;
+	
+	nullpo_retr( 1, ( sd = script_rid2sd( st ) ) );
+	nullpo_retr( 1, ( nd = (TBL_NPC *)map_id2bl( sd->npc_id ) ) );
+	
+	data = script_getdata( st, 2 );
+	get_val( st, data );
+	
+	if( data_isstring( data ) ){
+		const char *name = conv_str( st, data );
+		
+		if( ( item_data = itemdb_searchname( name ) ) == NULL ){
+			ShowError( "buildin_itemeffect: Nonexistant item %s requested.\n", name );
+			return 1;
+		}
+	}else if( data_isint( data ) ){
+		int nameid = conv_num( st, data );
+		
+		if( ( item_data = itemdb_exists( nameid ) ) == NULL ){
+			ShowError("buildin_itemeffect: Nonexistant item %d requested.\n", nameid );
+			return 1;
+		}
+	}else{
+		ShowError("buildin_itemeffect: invalid data type for argument #1 (%d).", data->type );
+		return 1;
+	}
+	
+	run_script( item_data->script, 0, sd->bl.id, nd->bl.id );
+	
+	return 0;
+}
 
 BUILDIN_FUNC(mapannounce)
 {
@@ -17784,6 +17822,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(cleanmap,"s"),
 	BUILDIN_DEF2(cleanmap,"cleanarea","siiii"),
 	BUILDIN_DEF(npcskill,"viii"),
+	BUILDIN_DEF(itemeffect,"v"),
 	/**
 	 * @commands (script based)
 	 **/
