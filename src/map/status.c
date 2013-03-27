@@ -2228,7 +2228,7 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 	const struct status_change *sc = &sd->sc;
 	struct s_skill b_skill[MAX_SKILL]; // previous skill tree
 	int b_weight, b_max_weight, b_cart_weight_max, // previous weight
-	i, index, skill,refinedef=0;
+	i, k, index, skill,refinedef=0;
 	int64 i64;
 
 	if (++calculating > 10) //Too many recursive calls!
@@ -2392,19 +2392,14 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 		if(!sd->inventory_data[index])
 			continue;
 
-		if(sd->inventory_data[index]->flag.no_equip) { // Items may be equipped, their effects however are nullified.
-			if(map[sd->bl.m].flag.restricted && sd->inventory_data[index]->flag.no_equip&(8*map[sd->bl.m].zone))
-				continue;
-			if(!map_flag_vs(sd->bl.m) && sd->inventory_data[index]->flag.no_equip&1)
-				continue;
-			if(map[sd->bl.m].flag.pvp && sd->inventory_data[index]->flag.no_equip&2)
-				continue;
-			if(map_flag_gvg(sd->bl.m) && sd->inventory_data[index]->flag.no_equip&4)
-				continue;
-			if(map[sd->bl.m].flag.battleground && sd->inventory_data[index]->flag.no_equip&8)
-				continue;
+		for(k = 0; k < map[sd->bl.m].zone->disabled_items_count; k++) {
+			if( map[sd->bl.m].zone->disabled_items[k] == sd->inventory_data[index]->nameid ) {
+				break;
+			}
 		}
-
+		
+		if( k < map[sd->bl.m].zone->disabled_items_count )
+			continue;
 		
 		status->def += sd->inventory_data[index]->def;
 
@@ -2540,28 +2535,24 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 				data = itemdb_exists(c);
 				if(!data)
 					continue;
-				if(first && data->equip_script)
-			  	{	//Execute equip-script on login
+				if(first && data->equip_script) {//Execute equip-script on login
 					run_script(data->equip_script,0,sd->bl.id,0);
 					if (!calculating)
 						return 1;
 				}
 				if(!data->script)
 					continue;
-				if(data->flag.no_equip) { //Card restriction checks.
-					if(map[sd->bl.m].flag.restricted && data->flag.no_equip&(8*map[sd->bl.m].zone))
-						continue;
-					if(!map_flag_vs(sd->bl.m) && data->flag.no_equip&1)
-						continue;
-					if(map[sd->bl.m].flag.pvp && data->flag.no_equip&2)
-						continue;
-					if(map_flag_gvg(sd->bl.m) && data->flag.no_equip&4)
-						continue;
-					if(map[sd->bl.m].flag.battleground && data->flag.no_equip&8)
-						continue;
+				
+				for(k = 0; k < map[sd->bl.m].zone->disabled_items_count; k++) {
+					if( map[sd->bl.m].zone->disabled_items[k] == sd->inventory_data[index]->nameid ) {
+						break;
+					}
 				}
-				if(i == EQI_HAND_L && sd->status.inventory[index].equip == EQP_HAND_L)
-				{	//Left hand status.
+				
+				if( k < map[sd->bl.m].zone->disabled_items_count )
+					continue;
+				
+				if(i == EQI_HAND_L && sd->status.inventory[index].equip == EQP_HAND_L) { //Left hand status.
 					sd->state.lr_flag = 1;
 					run_script(data->script,0,sd->bl.id,0);
 					sd->state.lr_flag = 0;

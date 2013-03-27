@@ -4227,12 +4227,13 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 int pc_useitem(struct map_session_data *sd,int n)
 {
 	unsigned int tick = gettick();
-	int amount, nameid;
+	int amount, nameid, i;
 	struct script_code *script;
 
 	nullpo_ret(sd);
 
 	if( sd->npc_id ){
+		/* TODO: add to clif_messages enum */
 #ifdef RENEWAL
 		clif_msg(sd, 0x783); // TODO look for the client date that has this message.
 #endif
@@ -4320,19 +4321,15 @@ int pc_useitem(struct map_session_data *sd,int n)
 		}
 	}
 
-	/* on restricted maps the item is consumed but the effect is not used */
-	if (
-		(!map_flag_vs(sd->bl.m) && sd->inventory_data[n]->flag.no_equip&1) || // Normal
-		(map[sd->bl.m].flag.pvp && sd->inventory_data[n]->flag.no_equip&2) || // PVP
-		(map_flag_gvg(sd->bl.m) && sd->inventory_data[n]->flag.no_equip&4) || // GVG
-		(map[sd->bl.m].flag.battleground && sd->inventory_data[n]->flag.no_equip&8) || // Battleground
-		(map[sd->bl.m].flag.restricted && sd->inventory_data[n]->flag.no_equip&(8*map[sd->bl.m].zone)) // Zone restriction
-		) {
-		if( battle_config.item_restricted_consumption_type ) {
-			clif_useitemack(sd,n,sd->status.inventory[n].amount-1,true);
-			pc_delitem(sd,n,1,1,0,LOG_TYPE_CONSUME);
+	/* on restricted maps the item is consumed but the effect is not used */	
+	for(i = 0; i < map[sd->bl.m].zone->disabled_items_count; i++) {
+		if( map[sd->bl.m].zone->disabled_items[i] == nameid ) {
+			if( battle_config.item_restricted_consumption_type ) {
+				clif_useitemack(sd,n,sd->status.inventory[n].amount-1,true);
+				pc_delitem(sd,n,1,1,0,LOG_TYPE_CONSUME);
+			}
+			return 0;
 		}
-		return 0;/* regardless, effect is not run */
 	}
 	
 	sd->itemid = sd->status.inventory[n].nameid;

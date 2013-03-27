@@ -586,27 +586,6 @@ static void itemdb_read_itemgroup(void)
 }
 
 /*==========================================
- * Read item forbidden by mapflag (can't equip item)
- *------------------------------------------*/
-static bool itemdb_read_noequip(char* str[], int columns, int current)
-{// <nameid>,<mode>
-	int nameid;
-	struct item_data *id;
-
-	nameid = atoi(str[0]);
-
-	if( ( id = itemdb_exists(nameid) ) == NULL )
-	{
-		ShowWarning("itemdb_read_noequip: Invalid item id %d.\n", nameid);
-		return false;
-	}
-
-	id->flag.no_equip |= atoi(str[1]);
-
-	return true;
-}
-
-/*==========================================
  * Reads item trade restrictions [Skotlex]
  *------------------------------------------*/
 static bool itemdb_read_itemtrade(char* str[], int columns, int current)
@@ -1310,7 +1289,6 @@ static void itemdb_read(void) {
 	itemdb_read_combos();
 	itemdb_read_itemgroup();
 	sv_readdb(db_path, "item_avail.txt",         ',', 2, 2, -1, &itemdb_read_itemavail);
-	sv_readdb(db_path, DBPATH"item_noequip.txt", ',', 2, 2, -1, &itemdb_read_noequip);
 	sv_readdb(db_path, DBPATH"item_trade.txt",   ',', 3, 3, -1, &itemdb_read_itemtrade);
 	sv_readdb(db_path, "item_delay.txt",         ',', 2, 2, -1, &itemdb_read_itemdelay);
 	sv_readdb(db_path, "item_stack.txt",         ',', 3, 3, -1, &itemdb_read_stack);

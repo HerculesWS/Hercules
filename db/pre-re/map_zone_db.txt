@@ -1,0 +1,239 @@
+//====================================================
+//=       _   _                     _           
+//=      | | | |                   | |          
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___ 
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//=                                                  
+//=            http://hercules.ws/board/                        
+//====================================================
+//= Hercules Map Zone Database [Ind/Hercules]
+//==
+//= A unlimited number of zones may be created, a zone
+//= may be used to create a set of disabled items, disabled skills
+//= and mapflags to be used by as many maps as one chooses,
+//= maps can be linked to a specific zone through the zone mapflag
+//= '<map name><tab>mapflag<tab>zone<tab><zone name>'
+zones: (
+{
+	/* Normal zone is applied to all maps that are not pkable (where players cant fight each other)  */
+	/* However, it wont be applied to maps with its own zones (specified thru mapflag) */
+	name: "Normal" /* changing this name requires MAP_ZONE_NORMAL_NAME to also be changed in src/map/map.h file */
+	
+	disabled_skills: {
+		WM_LULLABY_DEEPSLEEP: true
+		WM_SIRCLEOFNATURE: true
+		WM_SATURDAY_NIGHT_FEVER: true
+		SO_ARRULLO: true
+		CG_HERMODE: true
+	}
+	
+	disabled_items: {
+	
+	}
+	mapflags: ( )
+},
+{
+	/* PvP zone is applied to all maps with a pvp mapflag */
+	name: "PvP" /* changing this name requires MAP_ZONE_PVP_NAME to also be changed in src/map/map.h file */
+	
+	disabled_skills: {
+		BS_GREED: true
+		CG_HERMODE: true
+	}
+	
+	disabled_items: {
+		Greed_Scroll: true
+	}
+},
+{
+	/* GvG zone is applied to all maps with a pvp mapflag */
+	name: "GvG" /* changing this name requires MAP_ZONE_GVG_NAME to also be changed in src/map/map.h file */
+	
+	disabled_skills: {
+		AL_TELEPORT: true
+		AL_WARP: true
+		WZ_ICEWALL: true
+		TF_BACKSLIDING: true
+		RG_INTIMIDATE: true
+		WE_CALLPARTNER: true
+		HP_ASSUMPTIO: true
+		HP_BASILICA: true
+		CG_MOONLIT: true
+		WE_CALLPARENT: true
+		WE_CALLBABY: true
+		CR_CULTIVATION: true
+		NJ_KIRIKAGE: true
+		CASH_ASSUMPTIO: true
+		BS_GREED: true
+		SC_FATALMENACE: true
+		SC_DIMENSIONDOOR: true
+	}
+	
+	disabled_items: {
+		Assumptio_5_Scroll: true
+		Greed_Scroll: true
+		Pty_Assumptio_Scroll: true
+	}
+},
+{
+	/* Battlegrounds zone is applied to all maps with a battlegrounds mapflag */
+	name: "Battlegrounds" /* changing this name requires MAP_ZONE_BG_NAME to also be changed in src/map/map.h file */
+	
+	disabled_skills: {
+		AL_TELEPORT: true
+		AL_WARP: true
+		WZ_ICEWALL: true
+		TF_BACKSLIDING: true
+		RG_INTIMIDATE: true
+		MO_BODYRELOCATION: true
+		WE_CALLPARTNER: true
+		HP_ASSUMPTIO: true
+		HP_BASILICA: true
+		CG_MOONLIT: true
+		WE_CALLPARENT: true
+		WE_CALLBABY: true
+		CR_CULTIVATION: true
+		TK_RUN: true
+		TK_HIGHJUMP: true
+		SG_FEEL: true
+		SG_SUN_WARM: true
+		SG_MOON_WARM: true
+		SG_STAR_WARM: true
+		SG_SUN_COMFORT: true
+		SG_MOON_COMFORT: true
+		SG_STAR_COMFORT: true
+		SG_HATE: true
+		SG_SUN_ANGER: true
+		SG_MOON_ANGER: true
+		SG_STAR_ANGER: true
+		SG_SUN_BLESS: true
+		SG_MOON_BLESS: true
+		SG_STAR_BLESS: true
+		NJ_KIRIKAGE: true
+		CASH_ASSUMPTIO: true
+		SC_FATALMENACE: true
+		SC_DIMENSIONDOOR: true
+	}
+	disabled_items: {
+		Assumptio_5_Scroll: true
+		Pty_Assumptio_Scroll: true
+	}
+},
+{
+	name: "Aldebaran Turbo Track"
+	
+	disabled_skills: {
+		SM_ENDURE: true
+		AL_TELEPORT: true
+		AL_WARP: true
+		AL_CURE: true
+		TF_HIDING: true
+		WZ_ICEWALL: true
+		AS_CLOAKING: true
+		RG_INTIMIDATE: true
+		MO_BODYRELOCATION: true
+		LK_CONCENTRATION: true
+		LK_BERSERK: true
+		HP_BASILICA: true
+		WS_CARTBOOST: true
+		ST_CHASEWALK: true
+		CG_MOONLIT: true
+		SC_FATALMENACE: true
+		SC_DIMENSIONDOOR: true
+		GN_CARTBOOST: true
+	}
+	
+	disabled_items: {
+		Wing_Of_Fly: true
+		Anodyne: true
+		Green_Potion: true
+		Panacea: true
+	}
+},
+{
+	name: "Jail"
+	
+	disabled_skills: {
+		TK_JUMPKICK: true
+		TK_HIGHJUMP: true
+	}
+	
+	disabled_items: {
+		Wing_Of_Fly: true
+		Wing_Of_Butterfly: true
+		Giant_Fly_Wing: true
+		WOB_Rune: true
+		WOB_Schwaltz: true
+		WOB_Rachel: true
+		WOB_Local: true
+	}
+},
+{
+	name: "Izlude Battle Arena"
+	
+	disabled_skills: {
+		RG_INTIMIDATE: true
+		AL_TELEPORT: true
+		SC_FATALMENACE: true
+		SC_DIMENSIONDOOR: true		
+	}
+	
+	disabled_items: {
+		Wing_Of_Fly: true
+	}
+},
+{
+	name: "GvG2"
+	inherit: ( "GvG" ) /* will import all gvg has */
+	
+	disabled_skills: {
+		TK_HIGHJUMP: true
+		SA_ABRACADABRA: true
+	}
+},
+{
+	name: "Sealed Shrine"
+	
+	disabled_skills: {
+		MG_SAFETYWALL: true
+		AL_TELEPORT: true
+		RG_INTIMIDATE: true
+		HP_ASSUMPTIO: true
+		CASH_ASSUMPTIO: true
+		SC_FATALMENACE: true
+		SC_DIMENSIONDOOR: true
+	}
+},
+{
+	name: "Memorial Dungeon" /* ETower, Orc's Memory, Nidhoggur's Nest, etc */
+	
+	disabled_skills: {
+		AL_TELEPORT: true
+		WZ_ICEWALL: true
+		RG_INTIMIDATE: true
+		PF_SPIDERWEB: true
+		NPC_EXPULSION: true
+		SC_FATALMENACE: true
+		SC_DIMENSIONDOOR: true
+	}
+},
+{
+	name: "Towns"
+	
+	disabled_skills: {
+		AM_CANNIBALIZE: true
+		AM_SPHEREMINE: true
+		CR_CULTIVATION: true
+		BS_GREED: true
+		SC_MANHOLE: true
+		WM_POEMOFNETHERWORLD: true
+		GN_WALLOFTHORN: true
+	}
+	
+	disabled_items: {
+		Greed_Scroll: true
+	}
+}
+)

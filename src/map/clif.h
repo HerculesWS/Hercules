@@ -314,6 +314,10 @@ enum useskill_fail_cause
 	USESKILL_FAIL_THERE_ARE_NPC_AROUND = 83,
 };
 
+enum clif_messages {
+	SKILL_CANT_USE_AREA = 0x536,
+};
+
 int clif_setip(const char* ip);
 void clif_setbindip(const char* ip);
 void clif_setport(uint16 port);

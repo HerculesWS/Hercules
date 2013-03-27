@@ -11,9 +11,6 @@
 #include "../common/mapindex.h"
 #include "../common/db.h"
 
-/**
- * [rAthena.org]
- **/
 #include "../config/core.h"
 
 #include <stdarg.h>
@@ -21,8 +18,7 @@
 struct npc_data;
 struct item_data;
 
-enum E_MAPSERVER_ST
-{
+enum E_MAPSERVER_ST {
 	MAPSERVER_ST_RUNNING = CORE_ST_LAST,
 	MAPSERVER_ST_SHUTDOWN,
 	MAPSERVER_ST_LAST
@@ -501,6 +497,28 @@ struct mapflag_skill_adjust {
 	unsigned short modifier;
 };
 
+#define MAP_ZONE_NAME_LENGTH 30
+#define MAP_ZONE_ALL_NAME "Normal"
+#define MAP_ZONE_PVP_NAME "PvP"
+#define MAP_ZONE_GVG_NAME "GvG"
+#define MAP_ZONE_BG_NAME "Battlegrounds"
+#define MAP_ZONE_MAPFLAG_LENGTH 50
+DBMap *zone_db;/* string => struct map_zone_data */
+struct map_zone_data {
+	char name[MAP_ZONE_NAME_LENGTH];/* 20'd */
+	int *disabled_skills;
+	int disabled_skills_count;
+	int *disabled_items;
+	int disabled_items_count;
+	char **mapflags;
+	int mapflags_count;
+};
+void map_zone_init(void);
+void map_zone_apply(int m, struct map_zone_data *zone,char* w1, const char* start, const char* buffer, const char* filepath);
+
+struct map_zone_data map_zone_all;/* used as a base on all maps */
+
+
 struct map_data {
 	char name[MAP_NAME_LENGTH];
 	uint16 index; // The map index used by the mapindex* functions.
@@ -559,7 +577,6 @@ struct map_data {
 		unsigned nomobloot	: 1; // [Lorky]
 		unsigned nomvploot	: 1; // [Lorky]
 		unsigned nightenabled :1; //For night display. [Skotlex]
-		unsigned restricted	: 1; // [Komurka]
 		unsigned nodrop : 1;
 		unsigned novending : 1;
 		unsigned loadevent : 1;
@@ -579,7 +596,6 @@ struct map_data {
 
 	struct spawn_data *moblist[MAX_MOB_LIST_PER_MAP]; // [Wizputer]
 	int mob_delete_timer;	// [Skotlex]
-	int zone;	// zone number (for item/skill restrictions)
 	int jexp;	// map experience multiplicator
 	int bexp;	// map experience multiplicator
 	int nocommand; //Blocks @/# commands for non-gms. [Skotlex]
@@ -600,6 +616,9 @@ struct map_data {
 	/* adjust_skill_damage mapflag */
 	struct mapflag_skill_adjust **skills;
 	unsigned short skill_count;
+	
+	/* Hercules nocast db overhaul */
+	struct map_zone_data *zone;
 };
 
 /// Stores information about a remote map (for multi-mapserver setups).

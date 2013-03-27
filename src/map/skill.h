@@ -1732,7 +1732,6 @@ struct skill_interface {
 	int	(*get_weapontype) ( uint16 skill_id );
 	int	(*get_ammotype) ( uint16 skill_id );
 	int	(*get_ammo_qty) ( uint16 skill_id, uint16 skill_lv );
-	int	(*get_nocast) ( uint16 skill_id );
 	int	(*get_unit_id) (uint16 skill_id,int flag);
 	int	(*get_inf2) ( uint16 skill_id );
 	int	(*get_castcancel) ( uint16 skill_id );
@@ -1866,7 +1865,6 @@ struct skill_interface {
 	bool (*parse_row_castdb) (char* split[], int columns, int current);
 	bool (*parse_row_castnodexdb) (char* split[], int columns, int current);
 	bool (*parse_row_unitdb) (char* split[], int columns, int current);
-	bool (*parse_row_nocastdb) (char* split[], int columns, int current);
 	bool (*parse_row_producedb) (char* split[], int columns, int current);
 	bool (*parse_row_createarrowdb) (char* split[], int columns, int current);
 	bool (*parse_row_abradb) (char* split[], int columns, int current);

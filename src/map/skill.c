@@ -212,7 +212,6 @@ int	skill_get_blewcount( uint16 skill_id ,uint16 skill_lv ) { skill_get (skill_d
 int	skill_get_mhp( uint16 skill_id ,uint16 skill_lv )       { skill_get (skill_db[skill_id].mhp[skill_lv-1], skill_id, skill_lv); }
 int	skill_get_castnodex( uint16 skill_id ,uint16 skill_lv ) { skill_get (skill_db[skill_id].castnodex[skill_lv-1], skill_id, skill_lv); }
 int	skill_get_delaynodex( uint16 skill_id ,uint16 skill_lv ){ skill_get (skill_db[skill_id].delaynodex[skill_lv-1], skill_id, skill_lv); }
-int	skill_get_nocast ( uint16 skill_id )           { skill_get (skill_db[skill_id].nocast, skill_id, 1); }
 int	skill_get_type( uint16 skill_id )              { skill_get (skill_db[skill_id].skill_type, skill_id, 1); }
 int	skill_get_unit_id ( uint16 skill_id, int flag ){ skill_get (skill_db[skill_id].unit_id[flag], skill_id, 1); }
 int	skill_get_unit_interval( uint16 skill_id )     { skill_get (skill_db[skill_id].unit_interval, skill_id, 1); }
@@ -478,6 +477,7 @@ int can_copy (struct map_session_data *sd, uint16 skill_id, struct block_list* b
 int skillnotok (uint16 skill_id, struct map_session_data *sd)
 {
 	int16 idx,m;
+	int i;
 	nullpo_retr (1, sd);
 	m = sd->bl.m;
 	idx = skill->get_index(skill_id);
@@ -501,25 +501,23 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 		return 1;
 	}
 
-	if (sd->blockskill[idx] > 0){
+	if (sd->blockskill[idx] > 0) {
 		clif_skill_fail(sd, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0);
 		return 1;
 	}
+	
 	/**
-	 * It has been confirmed on a official server (thanks to Yommy) that item-cast skills bypass all the restrictions above
+	 * It has been confirmed on a official server (thanks to Yommy) that item-cast skills bypass all the restrictions below
 	 * Also, without this check, an exploit where an item casting + healing (or any other kind buff) isn't deleted after used on a restricted map
 	 **/
 	if( sd->skillitem == skill_id )
 		return 0;
-	/* TODO: these skill_get_nocast should be cached once instead of looking it up 5 times =_= */
-	// Check skill restrictions [Celest]
-	if( (!map_flag_vs(m) && skill->get_nocast (skill_id) & 1) ||
-		(map[m].flag.pvp && skill->get_nocast (skill_id) & 2) ||
-		(map_flag_gvg(m) && skill->get_nocast (skill_id) & 4) ||
-		(map[m].flag.battleground && skill->get_nocast (skill_id) & 8) ||
-		(map[m].flag.restricted && map[m].zone && skill->get_nocast (skill_id) & (8*map[m].zone)) ){
-			clif_msg(sd, 0x536); // This skill cannot be used within this area
+	
+	for(i = 0; i < map[m].zone->disabled_skills_count; i++) {
+		if( skill_id == map[m].zone->disabled_skills[i] ) {
+			clif_msg(sd, SKILL_CANT_USE_AREA); // This skill cannot be used within this area
 			return 1;
+		}
 	}
 
 	if( sd->sc.option&OPTION_MOUNTING )
@@ -17476,18 +17474,6 @@ bool skill_parse_row_castnodexdb(char* split[], int columns, int current) {
 	return true;
 }
 
-bool skill_parse_row_nocastdb(char* split[], int columns, int current) {
-// skill_id,Flag
-	uint16 skill_id = atoi(split[0]);
-	uint16 idx = skill->get_index(skill_id);
-	if( !idx ) // invalid skill id
-		return false;
-
-	skill_db[idx].nocast |= atoi(split[1]);
-
-	return true;
-}
-
 bool skill_parse_row_unitdb(char* split[], int columns, int current) {
 // ID,unit ID,unit ID 2,layout,range,interval,target,flag
 	uint16 skill_id = atoi(split[0]);
@@ -17734,8 +17720,6 @@ void skill_readdb(void) {
 	sv_readdb(db_path, DBPATH"skill_castnodex_db.txt", ',',   2,  3, MAX_SKILL_DB, skill->parse_row_castnodexdb);
 	sv_readdb(db_path, DBPATH"skill_unit_db.txt"     , ',',   8,  8, MAX_SKILL_DB, skill->parse_row_unitdb);
 
-	sv_readdb(db_path, DBPATH"skill_nocast_db.txt"   , ',',   2,  2, MAX_SKILL_DB, skill->parse_row_nocastdb);
-
 	skill->init_unit_layout();
 	sv_readdb(db_path, "produce_db.txt"        , ',',   4,  4+2*MAX_PRODUCE_RESOURCE, MAX_SKILL_PRODUCE_DB, skill->parse_row_producedb);
 	sv_readdb(db_path, "create_arrow_db.txt"   , ',', 1+2,  1+2*MAX_ARROW_RESOURCE, MAX_SKILL_ARROW_DB, skill->parse_row_createarrowdb);
@@ -17747,7 +17731,6 @@ void skill_readdb(void) {
 	sv_readdb(db_path, "skill_reproduce_db.txt", ',',   1,  1, MAX_SKILL_DB, skill->parse_row_reproducedb);
 	sv_readdb(db_path, "skill_improvise_db.txt"      , ',',   2,  2, MAX_SKILL_IMPROVISE_DB, skill->parse_row_improvisedb);
 	sv_readdb(db_path, "skill_changematerial_db.txt"      , ',',   4,  4+2*5, MAX_SKILL_PRODUCE_DB, skill->parse_row_changematerialdb);
-
 }
 
 void skill_reload (void) {
@@ -17791,6 +17774,7 @@ int do_init_skill (void)
 int do_final_skill(void)
 {
 	db_destroy(skilldb_name2id);
+	/* TODO: ZONE_DB IS NOT PROPERLY CLEARED */
 	db_destroy(group_db);
 	db_destroy(skillunit_db);
 	db_destroy(skillcd_db);
@@ -17834,7 +17818,6 @@ void skill_defaults(void) {
 	skill->get_weapontype = skill_get_weapontype;
 	skill->get_ammotype = skill_get_ammotype;
 	skill->get_ammo_qty = skill_get_ammo_qty;
-	skill->get_nocast = skill_get_nocast;
 	skill->get_unit_id = skill_get_unit_id;
 	skill->get_inf2 = skill_get_inf2;
 	skill->get_castcancel = skill_get_castcancel;
@@ -17967,7 +17950,6 @@ void skill_defaults(void) {
 	skill->parse_row_castdb = skill_parse_row_castdb;
 	skill->parse_row_castnodexdb = skill_parse_row_castnodexdb;
 	skill->parse_row_unitdb = skill_parse_row_unitdb;
-	skill->parse_row_nocastdb = skill_parse_row_nocastdb;
 	skill->parse_row_producedb = skill_parse_row_producedb;
 	skill->parse_row_createarrowdb = skill_parse_row_createarrowdb;
 	skill->parse_row_abradb = skill_parse_row_abradb;

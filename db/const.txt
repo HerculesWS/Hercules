@@ -348,7 +348,7 @@ mf_nomvploot	32
 mf_noreturn	33
 mf_nowarpto	34
 mf_nightmaredrop	35
-mf_restricted	36
+mf_zone	36
 mf_nocommand	37
 mf_nodrop	38
 mf_jexp	39
