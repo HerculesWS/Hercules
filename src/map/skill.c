@@ -17774,7 +17774,6 @@ int do_init_skill (void)
 int do_final_skill(void)
 {
 	db_destroy(skilldb_name2id);
-	/* TODO: ZONE_DB IS NOT PROPERLY CLEARED */
 	db_destroy(group_db);
 	db_destroy(skillunit_db);
 	db_destroy(skillcd_db);
