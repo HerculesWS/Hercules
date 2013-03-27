@@ -86,6 +86,7 @@ Upper: Equippable upper-types. Uses the following bitmasks:
 Gender: Gender restriction. 0 is female, 1 is male, 2 for both.
 
 Loc: Equipment's placement. Values are:
+	2^13 8192 = Costume Garment/Robe
 	2^12 4096 = Costume Low Headgear
 	2^11 2048 = Costume Mid Headgear
 	2^10 1024 = Costume Top Headgear
