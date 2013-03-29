@@ -5,8 +5,8 @@
 #define _H_CONSTANTS_
 
 /**
- * rAthena configuration file (http://rathena.org)
- * For detailed guidance on these check http://rathena.org/wiki/SRC/config/
+ * Hercules configuration file (http://hercules.ws)
+ * For detailed guidance on these check http://hercules.ws/wiki/SRC/config/
  **/
 
 /**
