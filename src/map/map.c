@@ -5,6 +5,7 @@
 #include "../common/cbasetypes.h"
 #include "../common/core.h"
 #include "../common/timer.h"
+#include "../common/ers.h"
 #include "../common/grfio.h"
 #include "../common/malloc.h"
 #include "../common/socket.h" // WFIFO*()
@@ -3255,6 +3256,8 @@ int parse_console(const char* buf)
 			runflag = 0;
 		}
 	}
+	else if( strcmpi("ers_report", type) == 0 )
+		ers_report();	
 	else if( strcmpi("help", type) == 0 )
 	{
 		ShowInfo("To use GM commands:\n");
