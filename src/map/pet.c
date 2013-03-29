@@ -226,9 +226,9 @@ static int pet_hungry(int tid, unsigned int tick, int id, intptr_t data)
 			pd->status.speed = pd->db->status.speed;
 		}
 		status_calc_pet(pd, 0);
-		clif_send_petdata(sd,pd,1,pd->pet.intimate);
+		clif->send_petdata(sd,pd,1,pd->pet.intimate);
 	}
-	clif_send_petdata(sd,pd,2,pd->pet.hungry);
+	clif->send_petdata(sd,pd,2,pd->pet.hungry);
 
 	if(battle_config.pet_hungry_delay_rate != 100)
 		interval = (pd->petDB->hungry_delay*battle_config.pet_hungry_delay_rate)/100;
@@ -285,7 +285,7 @@ static int pet_performance(struct map_session_data *sd, struct pet_data *pd)
 		val = 1;
 
 	pet_stop_walking(pd,2000<<8);
-	clif_pet_performance(pd, rnd()%val + 1);
+	clif->send_petdata(NULL, pd, 4, rnd()%val + 1);
 	pet_lootitem_drop(pd,NULL);
 	return 1;
 }
@@ -304,7 +304,7 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	tmp_item.card[2] = GetWord(pd->pet.pet_id,1);
 	tmp_item.card[3] = pd->pet.rename_flag;
 	if((flag = pc_additem(sd,&tmp_item,1,LOG_TYPE_OTHER))) {
-		clif_additem(sd,0,0,flag);
+		clif->additem(sd,0,0,flag);
 		map_addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 	}
 	pd->pet.incuvate = 1;
@@ -411,11 +411,11 @@ int pet_birth_process(struct map_session_data *sd, struct s_pet *pet)
 
 	if(sd->bl.prev != NULL) {
 		map_addblock(&sd->pd->bl);
-		clif_spawn(&sd->pd->bl);
-		clif_send_petdata(sd,sd->pd, 0,0);
-		clif_send_petdata(sd,sd->pd, 5,battle_config.pet_hair_style);
-		clif_pet_equip_area(sd->pd);
-		clif_send_petstatus(sd);
+		clif->spawn(&sd->pd->bl);
+		clif->send_petdata(sd,sd->pd, 0,0);
+		clif->send_petdata(sd,sd->pd, 5,battle_config.pet_hair_style);
+		clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
+		clif->send_petstatus(sd);
 	}
 	Assert((sd->status.pet_id == 0 || sd->pd == 0) || sd->pd->msd == sd); 
 
@@ -452,11 +452,11 @@ int pet_recv_petdata(int account_id,struct s_pet *p,int flag)
 		pet_data_init(sd,p);
 		if(sd->pd && sd->bl.prev != NULL) {
 			map_addblock(&sd->pd->bl);
-			clif_spawn(&sd->pd->bl);
-			clif_send_petdata(sd,sd->pd,0,0);
-			clif_send_petdata(sd,sd->pd,5,battle_config.pet_hair_style);
-			clif_pet_equip_area(sd->pd);
-			clif_send_petstatus(sd);
+			clif->spawn(&sd->pd->bl);
+			clif->send_petdata(sd,sd->pd,0,0);
+			clif->send_petdata(sd,sd->pd,5,battle_config.pet_hair_style);
+			clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
+			clif->send_petstatus(sd);
 		}
 	}
 
@@ -483,7 +483,7 @@ int pet_catch_process1(struct map_session_data *sd,int target_class)
 	nullpo_ret(sd);
 
 	sd->catch_target_class = target_class;
-	clif_catch_process(sd);
+	clif->catch_process(sd);
 
 	return 0;
 }
@@ -498,7 +498,7 @@ int pet_catch_process2(struct map_session_data* sd, int target_id)
 	md = (struct mob_data*)map_id2bl(target_id);
 	if(!md || md->bl.type != BL_MOB || md->bl.prev == NULL)
 	{	// Invalid inputs/state, abort capture.
-		clif_pet_roulette(sd,0);
+		clif->pet_roulette(sd,0);
 		sd->catch_target_class = -1;
 		sd->itemid = sd->itemindex = -1;
 		return 1;
@@ -511,8 +511,8 @@ int pet_catch_process2(struct map_session_data* sd, int target_id)
 	if (sd->catch_target_class == 0 && !(md->status.mode&MD_BOSS))
 		sd->catch_target_class = md->class_;
 	if(i < 0 || sd->catch_target_class != md->class_) {
-		clif_emotion(&md->bl, E_AG);	//mob will do /ag if wrong lure is used on them.
-		clif_pet_roulette(sd,0);
+		clif->emotion(&md->bl, E_AG);	//mob will do /ag if wrong lure is used on them.
+		clif->pet_roulette(sd,0);
 		sd->catch_target_class = -1;
 		return 1;
 	}
@@ -527,13 +527,13 @@ int pet_catch_process2(struct map_session_data* sd, int target_id)
 	{
 		unit_remove_map(&md->bl,CLR_OUTSIGHT);
 		status_kill(&md->bl);
-		clif_pet_roulette(sd,1);
+		clif->pet_roulette(sd,1);
 		intif_create_pet(sd->status.account_id,sd->status.char_id,pet_db[i].class_,mob_db(pet_db[i].class_)->lv,
 			pet_db[i].EggID,0,pet_db[i].intimate,100,0,1,pet_db[i].jname);
 	}
 	else
 	{
-		clif_pet_roulette(sd,0);
+		clif->pet_roulette(sd,0);
 		sd->catch_target_class = -1;
 	}
 
@@ -569,7 +569,7 @@ int pet_get_egg(int account_id,int pet_id,int flag)
 	tmp_item.card[2] = GetWord(pet_id,1);
 	tmp_item.card[3] = 0; //New pets are not named.
 	if((ret = pc_additem(sd,&tmp_item,1,LOG_TYPE_PICKDROP_PLAYER))) {
-		clif_additem(sd,0,0,ret);
+		clif->additem(sd,0,0,ret);
 		map_addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 	}
 
@@ -592,7 +592,7 @@ int pet_menu(struct map_session_data *sd,int menunum)
 	
 	switch(menunum) {
 		case 0:
-			clif_send_petstatus(sd);
+			clif->send_petstatus(sd);
 			break;
 		case 1:
 			pet_food(sd, sd->pd);
@@ -636,15 +636,15 @@ int pet_change_name_ack(struct map_session_data *sd, char* name, int flag)
 	normalize_name(name," ");//bugreport:3032
 
 	if ( !flag || !strlen(name) ) {
-		clif_displaymessage(sd->fd, msg_txt(280)); // You cannot use this name for your pet.
-		clif_send_petstatus(sd); //Send status so client knows oet name change got rejected.
+		clif->displaymessage(sd->fd, msg_txt(280)); // You cannot use this name for your pet.
+		clif->send_petstatus(sd); //Send status so client knows oet name change got rejected.
 		return 0;
 	}
 	memcpy(pd->pet.name, name, NAME_LENGTH);
-	clif_charnameack (0,&pd->bl);
+	clif->charnameack (0,&pd->bl);
 	pd->pet.rename_flag = 1;
-	clif_pet_equip_area(pd);
-	clif_send_petstatus(sd);
+	clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
+	clif->send_petstatus(sd);
 	return 1;
 }
 
@@ -660,14 +660,14 @@ int pet_equipitem(struct map_session_data *sd,int index)
 	nameid = sd->status.inventory[index].nameid;
 	
 	if(pd->petDB->AcceID == 0 || nameid != pd->petDB->AcceID || pd->pet.equip != 0) {
-		clif_equipitemack(sd,0,0,0);
+		clif->equipitemack(sd,0,0,0);
 		return 1;
 	}
 
 	pc_delitem(sd,index,1,0,0,LOG_TYPE_OTHER);
 	pd->pet.equip = nameid;
 	status_set_viewdata(&pd->bl, pd->pet.class_); //Updates view_data.
-	clif_pet_equip_area(pd);
+	clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
 	if (battle_config.pet_equip_required)
 	{ 	//Skotlex: start support timers if need
 		unsigned int tick = gettick();
@@ -696,12 +696,12 @@ static int pet_unequipitem(struct map_session_data *sd, struct pet_data *pd)
 	nameid = pd->pet.equip;
 	pd->pet.equip = 0;
 	status_set_viewdata(&pd->bl, pd->pet.class_);
-	clif_pet_equip_area(pd);
+	clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
 	memset(&tmp_item,0,sizeof(tmp_item));
 	tmp_item.nameid = nameid;
 	tmp_item.identify = 1;
 	if((flag = pc_additem(sd,&tmp_item,1,LOG_TYPE_OTHER))) {
-		clif_additem(sd,0,0,flag);
+		clif->additem(sd,0,0,flag);
 		map_addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 	}
 	if( battle_config.pet_equip_required )
@@ -736,7 +736,7 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 	k=pd->petDB->FoodID;
 	i=pc_search_inventory(sd,k);
 	if(i < 0) {
-		clif_pet_food(sd,k,0);
+		clif->pet_food(sd,k,0);
 		return 1;
 	}
 	pc_delitem(sd,i,1,0,0,LOG_TYPE_CONSUME);
@@ -770,9 +770,9 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 	if( pd->pet.hungry > 100 )
 		pd->pet.hungry = 100;
 
-	clif_send_petdata(sd,pd,2,pd->pet.hungry);
-	clif_send_petdata(sd,pd,1,pd->pet.intimate);
-	clif_pet_food(sd,pd->petDB->FoodID,1);
+	clif->send_petdata(sd,pd,2,pd->pet.hungry);
+	clif->send_petdata(sd,pd,1,pd->pet.intimate);
+	clif->pet_food(sd,pd->petDB->FoodID,1);
 
 	return 0;
 }
@@ -1012,7 +1012,7 @@ int pet_lootitem_drop(struct pet_data *pd,struct map_session_data *sd)
 		it = &pd->loot->item[i];
 		if(sd){
 			if((flag = pc_additem(sd,it,it->amount,LOG_TYPE_PICKDROP_PLAYER))){
-				clif_additem(sd,0,0,flag);
+				clif->additem(sd,0,0,flag);
 				ditem = ers_alloc(item_drop_ers, struct item_drop);
 				memcpy(&ditem->item_data, it, sizeof(struct item));
 				ditem->next = dlist->item;
@@ -1102,9 +1102,9 @@ int pet_recovery_timer(int tid, unsigned int tick, int id, intptr_t data)
 	if(sd->sc.data[pd->recovery->type])
 	{	//Display a heal animation? 
 		//Detoxify is chosen for now.
-		clif_skill_nodamage(&pd->bl,&sd->bl,TF_DETOXIFY,1,1);
+		clif->skill_nodamage(&pd->bl,&sd->bl,TF_DETOXIFY,1,1);
 		status_change_end(&sd->bl, pd->recovery->type, INVALID_TIMER);
-		clif_emotion(&pd->bl, E_OK);
+		clif->emotion(&pd->bl, E_OK);
 	}
 
 	pd->recovery->timer = INVALID_TIMER;
@@ -1141,7 +1141,7 @@ int pet_heal_timer(int tid, unsigned int tick, int id, intptr_t data)
 	}
 	pet_stop_attack(pd);
 	pet_stop_walking(pd,1);
-	clif_skill_nodamage(&pd->bl,&sd->bl,AL_HEAL,pd->s_skill->lv,1);
+	clif->skill_nodamage(&pd->bl,&sd->bl,AL_HEAL,pd->s_skill->lv,1);
 	status_heal(&sd->bl, pd->s_skill->lv,0, 0);
 	pd->s_skill->timer=add_timer(tick+pd->s_skill->delay*1000,pet_heal_timer,sd->bl.id,0);
 	return 0;

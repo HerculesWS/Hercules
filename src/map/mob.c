@@ -162,7 +162,7 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 	status_set_viewdata(&nd->bl, nd->class_);
     status_change_init(&nd->bl);
     unit_dataset(&nd->bl);
-    clif_spawn(&nd->bl);
+    clif->spawn(&nd->bl);
 
 }
 
@@ -174,7 +174,7 @@ void mvptomb_destroy(struct mob_data *md) {
 
 		m = nd->bl.m;
 
-		clif_clearunit_area(&nd->bl,CLR_OUTSIGHT);
+		clif->clearunit_area(&nd->bl,CLR_OUTSIGHT);
 
 		map_delblock(&nd->bl);
 
@@ -399,7 +399,7 @@ bool mob_ksprotected (struct block_list *src, struct block_list *target)
 		if( DIFF_TICK(sd->ks_floodprotect_tick, tick) <= 0 )
 		{
 			sprintf(output, "[KS Warning!! - Owner : %s]", pl_sd->status.name);
-			clif_disp_onlyself(sd, output, strlen(output));
+			clif->disp_onlyself(sd, output, strlen(output));
 
 			sd->ks_floodprotect_tick = tick + 2000;
 		}
@@ -408,7 +408,7 @@ bool mob_ksprotected (struct block_list *src, struct block_list *target)
 		if( DIFF_TICK(pl_sd->ks_floodprotect_tick, tick) <= 0 )
 		{
 			sprintf(output, "[Watch out! %s is trying to KS you!]", sd->status.name);
-			clif_disp_onlyself(pl_sd, output, strlen(output));
+			clif->disp_onlyself(pl_sd, output, strlen(output));
 
 			pl_sd->ks_floodprotect_tick = tick + 2000;
 		}
@@ -984,7 +984,7 @@ int mob_spawn (struct mob_data *md)
 
 	map_addblock(&md->bl);
 	if( map[md->bl.m].users )
-		clif_spawn(&md->bl);
+		clif->spawn(&md->bl);
 	skill->unit_move(&md->bl,tick,1);
 	mobskill_use(md, tick, MSC_SPAWN);
 	return 0;
@@ -1614,7 +1614,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 		}
 		if (pcdb_checkid(md->vd->class_))
 		{	//Give them walk act/delay to properly mimic players. [Skotlex]
-			clif_takeitem(&md->bl,tbl);
+			clif->takeitem(&md->bl,tbl);
 			md->ud.canact_tick = tick + md->status.amotion;
 			unit_set_walkdelay(&md->bl, tick, md->status.amotion, 1);
 		}
@@ -2063,7 +2063,7 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage)
 	}
 
 	if (battle_config.show_mob_info&3)
-		clif_charnameack (0, &md->bl);
+		clif->charnameack (0, &md->bl);
 
 	if (!src)
 		return;
@@ -2074,7 +2074,7 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage)
 		for(i = 0; i < DAMAGELOG_SIZE; i++){ // must show hp bar to all char who already hit the mob.
 			struct map_session_data *sd = map_charid2sd(md->dmglog[i].id);
 			if( sd && check_distance_bl(&md->bl, &sd->bl, AREA_SIZE) ) // check if in range
-				clif_monster_hp_bar(md, sd->fd);
+				clif->monster_hp_bar(md, sd->fd);
 		}
 	}
 #endif
@@ -2481,8 +2481,8 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 		mexp = (unsigned int)cap_value(exp, 1, UINT_MAX);
 
-		clif_mvp_effect(mvp_sd);
-		clif_mvp_exp(mvp_sd,mexp);
+		clif->mvp_effect(mvp_sd);
+		clif->mvp_exp(mvp_sd,mexp);
 		pc_gainexp(mvp_sd, &md->bl, mexp,0, false);
 		log_mvp[1] = mexp;
 
@@ -2519,7 +2519,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				memset(&item,0,sizeof(item));
 				item.nameid=mdrop_id[i];
 				item.identify= itemdb_isidentified(item.nameid);
-				clif_mvp_item(mvp_sd,item.nameid);
+				clif->mvp_item(mvp_sd,item.nameid);
 				log_mvp[0] = item.nameid;
 
 				//A Rare MVP Drop Global Announce by Lupus
@@ -2533,7 +2533,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				}
 
 				if((temp = pc_additem(mvp_sd,&item,1,LOG_TYPE_PICKDROP_PLAYER)) != 0) {
-					clif_additem(mvp_sd,0,0,temp);
+					clif->additem(mvp_sd,0,0,temp);
 					map_addflooritem(&item,1,mvp_sd->bl.m,mvp_sd->bl.x,mvp_sd->bl.y,mvp_sd->status.char_id,(second_sd?second_sd->status.char_id:0),(third_sd?third_sd->status.char_id:0),1);
 				}
 
@@ -2569,7 +2569,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 					sd->mission_mobid = temp;
 					pc_setglobalreg(sd,"TK_MISSION_ID", temp);
 					sd->mission_count = 0;
-					clif_mission_info(sd, temp, 0);
+					clif->mission_info(sd, temp, 0);
 				}
 				pc_setglobalreg(sd,"TK_MISSION_COUNT", sd->mission_count);
 			}
@@ -2616,14 +2616,14 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 		if( pcdb_checkid(md->vd->class_) ) {//Player mobs are not removed automatically by the client.
 			/* first we set them dead, then we delay the outsight effect */
-			clif_clearunit_area(&md->bl,CLR_DEAD);
-			clif_clearunit_delayed(&md->bl, CLR_OUTSIGHT,tick+3000);
+			clif->clearunit_area(&md->bl,CLR_DEAD);
+			clif->clearunit_delayed(&md->bl, CLR_OUTSIGHT,tick+3000);
 		} else
 			/**
 			 * We give the client some time to breath and this allows it to display anything it'd like with the dead corpose
 			 * For example, this delay allows it to display soul drain effect
 			 **/
-			clif_clearunit_delayed(&md->bl, CLR_DEAD, tick+250);
+			clif->clearunit_delayed(&md->bl, CLR_DEAD, tick+250);
 
 	}
 
@@ -2651,11 +2651,11 @@ void mob_revive(struct mob_data *md, unsigned int hp)
 	md->tdmg = 0;
 	if (!md->bl.prev)
 		map_addblock(&md->bl);
-	clif_spawn(&md->bl);
+	clif->spawn(&md->bl);
 	skill->unit_move(&md->bl,tick,1);
 	mobskill_use(md, tick, MSC_SPAWN);
 	if (battle_config.show_mob_info&3)
-		clif_charnameack (0, &md->bl);
+		clif->charnameack (0, &md->bl);
 }
 
 int mob_guardian_guildchange(struct mob_data *md)
@@ -2762,7 +2762,7 @@ int mob_class_change (struct mob_data *md, int class_)
 	mob_stop_walking(md, 0);
 	unit_skillcastcancel(&md->bl, 0);
 	status_set_viewdata(&md->bl, class_);
-	clif_mob_class_change(md,md->vd->class_);
+	clif->class_change(&md->bl, md->vd->class_, 1);
 	status_calc_mob(md, 1);
 	md->ud.state.speed_changed = 1; //Speed change update.
 
@@ -2784,7 +2784,7 @@ int mob_class_change (struct mob_data *md, int class_)
 	md->target_id = md->attacked_id = 0;
 
 	//Need to update name display.
-	clif_charnameack(0, &md->bl);
+	clif->charnameack(0, &md->bl);
 	status_change_end(&md->bl,SC_KEEPING,INVALID_TIMER);
 	return 0;
 }
@@ -2795,7 +2795,7 @@ int mob_class_change (struct mob_data *md, int class_)
 void mob_heal(struct mob_data *md,unsigned int heal)
 {
 	if (battle_config.show_mob_info&3)
-		clif_charnameack (0, &md->bl);
+		clif->charnameack (0, &md->bl);
 }
 
 /*==========================================
@@ -2945,7 +2945,7 @@ int mob_summonslave(struct mob_data *md2,int *value,int amount,uint16 skill_id)
 			}
 		}
 
-		clif_skill_nodamage(&md->bl,&md->bl,skill_id,amount,1);
+		clif->skill_nodamage(&md->bl,&md->bl,skill_id,amount,1);
 	}
 
 	return 0;
@@ -3269,7 +3269,7 @@ int mobskill_use(struct mob_data *md, unsigned int tick, int event)
  			snprintf(name, sizeof name,"%s", md->name);
  			strtok(name, "#"); // discard extra name identifier if present [Daegaladh]
  			snprintf(temp, sizeof temp,"%s : %s", name, mc->msg);
-			clif_messagecolor(&md->bl, mc->color, temp);
+			clif->messagecolor(&md->bl, mc->color, temp);
 		}
 		if(!(battle_config.mob_ai&0x200)) { //pass on delay to same skill.
 			for (j = 0; j < md->db->maxskill; j++)

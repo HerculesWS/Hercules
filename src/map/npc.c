@@ -199,24 +199,24 @@ int npc_enable(const char* name, int flag)
 
 	if (flag&1) {
 		nd->sc.option&=~OPTION_INVISIBLE;
-		clif_spawn(&nd->bl);
+		clif->spawn(&nd->bl);
 	} else if (flag&2)
 		nd->sc.option&=~OPTION_HIDE;
 	else if (flag&4)
 		nd->sc.option|= OPTION_HIDE;
 	else {	//Can't change the view_data to invisible class because the view_data for all npcs is shared! [Skotlex]
 		nd->sc.option|= OPTION_INVISIBLE;
-		clif_clearunit_area(&nd->bl,CLR_OUTSIGHT);  // Hack to trick maya purple card [Xazax]
+		clif->clearunit_area(&nd->bl,CLR_OUTSIGHT);  // Hack to trick maya purple card [Xazax]
 	}
 
 	if (nd->class_ == WARP_CLASS || nd->class_ == FLAG_CLASS)
 	{	//Client won't display option changes for these classes [Toms]
 		if (nd->sc.option&(OPTION_HIDE|OPTION_INVISIBLE))
-			clif_clearunit_area(&nd->bl, CLR_OUTSIGHT);
+			clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);
 		else
-			clif_spawn(&nd->bl);
+			clif->spawn(&nd->bl);
 	} else
-		clif_changeoption(&nd->bl);
+		clif->changeoption(&nd->bl);
 
 	if( flag&3 && (nd->u.scr.xs >= 0 || nd->u.scr.ys >= 0) ) 	//check if player standing on a OnTouchArea
 		map_foreachinarea( npc_enable_sub, nd->bl.m, nd->bl.x-nd->u.scr.xs, nd->bl.y-nd->u.scr.ys, nd->bl.x+nd->u.scr.xs, nd->bl.y+nd->u.scr.ys, BL_PC, nd );
@@ -256,7 +256,7 @@ int npc_rr_secure_timeout_timer(int tid, unsigned int tick, int id, intptr_t dat
 		/**
 		 * This guy's been idle for longer than allowed, close him.
 		 **/
-		clif_scriptclose(sd,sd->npc_id);
+		clif->scriptclose(sd,sd->npc_id);
 		sd->npc_idle_timer = INVALID_TIMER;
 	} else //Create a new instance of ourselves to continue
 		sd->npc_idle_timer = add_timer(gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc_rr_secure_timeout_timer,sd->bl.id,0);
@@ -274,7 +274,7 @@ int npc_event_dequeue(struct map_session_data* sd)
 	if(sd->npc_id)
 	{	//Current script is aborted.
 		if(sd->state.using_fake_npc){
-			clif_clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
+			clif->clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
 			sd->state.using_fake_npc = 0;
 		}
 		if (sd->st) {
@@ -970,7 +970,7 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 				struct unit_data *ud = unit_bl2ud(&sd->bl);
 				if( ud && ud->walkpath.path_pos < ud->walkpath.path_len )
 				{ // Since walktimer always == INVALID_TIMER at this time, we stop walking manually. [Inkfish]
-					clif_fixpos(&sd->bl);
+					clif->fixpos(&sd->bl);
 					ud->walkpath.path_pos = ud->walkpath.path_len;
 				}
 				sd->areanpc_id = map[m].npc[i]->bl.id;
@@ -1141,7 +1141,7 @@ int npc_globalmessage(const char* name, const char* mes)
 		return 0;
 
 	snprintf(temp, sizeof(temp), "%s : %s", name, mes);
-	clif_GlobalMessage(&nd->bl,temp);
+	clif->GlobalMessage(&nd->bl,temp);
 
 	return 0;
 }
@@ -1156,19 +1156,19 @@ void run_tomb(struct map_session_data* sd, struct npc_data* nd)
 
 	// TODO: Find exact color?
 	snprintf(buffer, sizeof(buffer), msg_txt(657), nd->u.tomb.md->db->name);
-    clif_scriptmes(sd, nd->bl.id, buffer);
+    clif->scriptmes(sd, nd->bl.id, buffer);
 
-    clif_scriptmes(sd, nd->bl.id, msg_txt(658));
+    clif->scriptmes(sd, nd->bl.id, msg_txt(658));
 
     snprintf(buffer, sizeof(buffer), msg_txt(659), time);
-    clif_scriptmes(sd, nd->bl.id, buffer);
+    clif->scriptmes(sd, nd->bl.id, buffer);
 
-    clif_scriptmes(sd, nd->bl.id, msg_txt(660));
+    clif->scriptmes(sd, nd->bl.id, msg_txt(660));
 
 	snprintf(buffer, sizeof(buffer), msg_txt(661), nd->u.tomb.killer_name[0] ? nd->u.tomb.killer_name : "Unknown");
-    clif_scriptmes(sd, nd->bl.id, buffer);
+    clif->scriptmes(sd, nd->bl.id, buffer);
 
-    clif_scriptclose(sd, nd->bl.id);
+    clif->scriptclose(sd, nd->bl.id);
 }
 
 /*==========================================
@@ -1193,10 +1193,10 @@ int npc_click(struct map_session_data* sd, struct npc_data* nd)
 
 	switch(nd->subtype) {
 		case SHOP:
-			clif_npcbuysell(sd,nd->bl.id);
+			clif->npcbuysell(sd,nd->bl.id);
 			break;
 		case CASHSHOP:
-			clif_cashshop_show(sd,nd);
+			clif->cashshop_show(sd,nd);
 			break;
 		case SCRIPT:
 			run_script(nd->u.scr.script,0,sd->bl.id,nd->bl.id);
@@ -1285,9 +1285,9 @@ int npc_buysellsel(struct map_session_data* sd, int id, int type)
 	sd->npc_shopid = id;
 
 	if (type==0) {
-		clif_buylist(sd,nd);
+		clif->buylist(sd,nd);
 	} else {
-		clif_selllist(sd);
+		clif->selllist(sd);
 	}
 	return 0;
 }
@@ -1483,7 +1483,7 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 /// Player item purchase from npc shop.
 ///
 /// @param item_list 'n' pairs <amount,itemid>
-/// @return result code for clif_parse_NpcBuyListSend
+/// @return result code for clif->parse_NpcBuyListSend
 int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list)
 {
 	struct npc_data* nd;
@@ -1662,7 +1662,7 @@ static int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* 
 /// Player item selling to npc shop.
 ///
 /// @param item_list 'n' pairs <index,amount>
-/// @return result code for clif_parse_NpcSellListSend
+/// @return result code for clif->parse_NpcSellListSend
 int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list)
 {
 	double z;
@@ -1766,7 +1766,7 @@ int npc_remove_map(struct npc_data* nd)
 	if(nd->bl.prev == NULL || nd->bl.m < 0)
 		return 1; //Not assigned to a map.
   	m = nd->bl.m;
-	clif_clearunit_area(&nd->bl,CLR_RESPAWN);
+	clif->clearunit_area(&nd->bl,CLR_RESPAWN);
 	npc_unsetcells(nd);
 	map_delblock(&nd->bl);
 	//Remove npc from map[].npc list. [Skotlex]
@@ -2102,7 +2102,7 @@ struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short 
 	status_change_init(&nd->bl);
 	unit_dataset(&nd->bl);
 	if( map[nd->bl.m].users )
-		clif_spawn(&nd->bl);
+		clif->spawn(&nd->bl);
 	strdb_put(npcname_db, nd->exname, nd);
 
 	return nd;
@@ -2163,7 +2163,7 @@ static const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const 
 	status_change_init(&nd->bl);
 	unit_dataset(&nd->bl);
 	if( map[nd->bl.m].users )
-		clif_spawn(&nd->bl);
+		clif->spawn(&nd->bl);
 	strdb_put(npcname_db, nd->exname, nd);
 
 	return strchr(start,'\n');// continue
@@ -2276,7 +2276,7 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 		unit_dataset(&nd->bl);
 		nd->ud.dir = dir;
 		if( map[nd->bl.m].users )
-			clif_spawn(&nd->bl);
+			clif->spawn(&nd->bl);
 	} else
 	{// 'floating' shop?
 		map_addiddb(&nd->bl);
@@ -2489,7 +2489,7 @@ static const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, cons
 		{
 			status_set_viewdata(&nd->bl, nd->class_);
 			if( map[nd->bl.m].users )
-				clif_spawn(&nd->bl);
+				clif->spawn(&nd->bl);
 		}
 	}
 	else
@@ -2650,7 +2650,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		{
 			status_set_viewdata(&nd->bl, nd->class_);
 			if( map[nd->bl.m].users )
-				clif_spawn(&nd->bl);
+				clif->spawn(&nd->bl);
 		}
 	}
 	else
@@ -2728,7 +2728,7 @@ int npc_duplicate4instance(struct npc_data *snd, int16 m) {
 		status_change_init(&wnd->bl);
 		unit_dataset(&wnd->bl);
 		if( map[wnd->bl.m].users )
-			clif_spawn(&wnd->bl);
+			clif->spawn(&wnd->bl);
 		strdb_put(npcname_db, wnd->exname, wnd);
 	}
 	else
@@ -2832,9 +2832,9 @@ void npc_movenpc(struct npc_data* nd, int16 x, int16 y)
 	x = cap_value(x, 0, map[m].xs-1);
 	y = cap_value(y, 0, map[m].ys-1);
 
-	map_foreachinrange(clif_outsight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
+	map_foreachinrange(clif->outsight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
 	map_moveblock(&nd->bl, x, y, gettick());
-	map_foreachinrange(clif_insight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
+	map_foreachinrange(clif->insight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
 }
 
 /// Changes the display name of the npc.
@@ -2847,7 +2847,7 @@ void npc_setdisplayname(struct npc_data* nd, const char* newname)
 
 	safestrncpy(nd->name, newname, sizeof(nd->name));
 	if( map[nd->bl.m].users )
-		clif_charnameack(0, &nd->bl);
+		clif->charnameack(0, &nd->bl);
 }
 
 /// Changes the display class of the npc.
@@ -2862,11 +2862,11 @@ void npc_setclass(struct npc_data* nd, short class_)
 		return;
 
 	if( map[nd->bl.m].users )
-		clif_clearunit_area(&nd->bl, CLR_OUTSIGHT);// fade out
+		clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);// fade out
 	nd->class_ = class_;
 	status_set_viewdata(&nd->bl, class_);
 	if( map[nd->bl.m].users )
-		clif_spawn(&nd->bl);// fade in
+		clif->spawn(&nd->bl);// fade in
 }
 
 // @commands (script based)

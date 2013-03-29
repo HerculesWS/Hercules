@@ -38,7 +38,7 @@ void vending_closevending(struct map_session_data* sd)
 	if( sd->state.vending )
 	{
 		sd->state.vending = false;
-		clif_closevendingboard(&sd->bl, 0);
+		clif->closevendingboard(&sd->bl, 0);
 	}
 }
 
@@ -57,13 +57,13 @@ void vending_vendinglistreq(struct map_session_data* sd, int id)
 
 	if (!pc_can_give_items(sd) || !pc_can_give_items(vsd)) //check if both GMs are allowed to trade
 	{	// GM is not allowed to trade
-		clif_displaymessage(sd->fd, msg_txt(246));
+		clif->displaymessage(sd->fd, msg_txt(246));
 		return;
 	} 
 
 	sd->vended_id = vsd->vender_id;  // register vending uid
 
-	clif_vendinglist(sd, id, vsd->vending);
+	clif->vendinglist(sd, id, vsd->vending);
 }
 
 /*==========================================
@@ -82,7 +82,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, int uid, const ui
 
 	if( vsd->vender_id != uid )
 	{// shop has changed
-		clif_buyvending(sd, 0, 0, 6);  // store information was incorrect
+		clif->buyvending(sd, 0, 0, 6);  // store information was incorrect
 		return;
 	}
 
@@ -124,19 +124,19 @@ void vending_purchasereq(struct map_session_data* sd, int aid, int uid, const ui
 		z += ((double)vsd->vending[j].value * (double)amount);
 		if( z > (double)sd->status.zeny || z < 0. || z > (double)MAX_ZENY )
 		{
-			clif_buyvending(sd, idx, amount, 1); // you don't have enough zeny
+			clif->buyvending(sd, idx, amount, 1); // you don't have enough zeny
 			return;
 		}
 		if( z + (double)vsd->status.zeny > (double)MAX_ZENY && !battle_config.vending_over_max )
 		{
-			clif_buyvending(sd, idx, vsd->vending[j].amount, 4); // too much zeny = overflow
+			clif->buyvending(sd, idx, vsd->vending[j].amount, 4); // too much zeny = overflow
 			return;
 
 		}
 		w += itemdb_weight(vsd->status.cart[idx].nameid) * amount;
 		if( w + sd->weight > sd->max_weight )
 		{
-			clif_buyvending(sd, idx, amount, 2); // you can not buy, because overweight
+			clif->buyvending(sd, idx, amount, 2); // you can not buy, because overweight
 			return;
 		}
 		
@@ -149,7 +149,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, int uid, const ui
 		if( vending[j].amount < amount )
 		{
 			// send more quantity is not a hack (an other player can have buy items just before)
-			clif_buyvending(sd, idx, vsd->vending[j].amount, 4); // not enough quantity
+			clif->buyvending(sd, idx, vsd->vending[j].amount, 4); // not enough quantity
 			return;
 		}
 		
@@ -183,14 +183,14 @@ void vending_purchasereq(struct map_session_data* sd, int aid, int uid, const ui
 		pc_additem(sd, &vsd->status.cart[idx], amount, LOG_TYPE_VENDING);
 		vsd->vending[vend_list[i]].amount -= amount;
 		pc_cart_delitem(vsd, idx, amount, 0, LOG_TYPE_VENDING);
-		clif_vendingreport(vsd, idx, amount);
+		clif->vendingreport(vsd, idx, amount);
 
 		//print buyer's name
 		if( battle_config.buyer_name )
 		{
 			char temp[256];
 			sprintf(temp, msg_txt(265), sd->status.name);
-			clif_disp_onlyself(vsd,temp,strlen(temp));
+			clif->disp_onlyself(vsd,temp,strlen(temp));
 		}
 	}
 
@@ -248,14 +248,14 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 	// skill level and cart check
 	if( !vending_skill_lvl || !pc_iscarton(sd) )
 	{
-		clif_skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0);
+		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0);
 		return;
 	}
 
 	// check number of items in shop
 	if( count < 1 || count > MAX_VENDING || count > 2 + vending_skill_lvl )
 	{	// invalid item count
-		clif_skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0);
+		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0);
 		return;
 	}
     
@@ -286,11 +286,11 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 	}
 
 	if( i != j )
-		clif_displaymessage (sd->fd, msg_txt(266)); //"Some of your items cannot be vended and were removed from the shop."
+		clif->displaymessage (sd->fd, msg_txt(266)); //"Some of your items cannot be vended and were removed from the shop."
 
 	if( i == 0 )
 	{	// no valid item found
-		clif_skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0); // custom reply packet
+		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0); // custom reply packet
 		return;
 	}
 	sd->state.prevend = 0;
@@ -299,8 +299,8 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 	sd->vend_num = i;
 	safestrncpy(sd->message, message, MESSAGE_SIZE);
 
-	clif_openvending(sd,sd->bl.id,sd->vending);
-	clif_showvendingboard(&sd->bl,message,0);
+	clif->openvending(sd,sd->bl.id,sd->vending);
+	clif->showvendingboard(&sd->bl,message,0);
 }
 
 

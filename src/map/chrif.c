@@ -330,8 +330,8 @@ int chrif_connect(int fd) {
 	memcpy(WFIFOP(fd,2), userid, NAME_LENGTH);
 	memcpy(WFIFOP(fd,26), passwd, NAME_LENGTH);
 	WFIFOL(fd,50) = 0;
-	WFIFOL(fd,54) = htonl(clif_getip());
-	WFIFOW(fd,58) = htons(clif_getport());
+	WFIFOL(fd,54) = htonl(clif->map_ip);
+	WFIFOW(fd,58) = htons(clif->map_port);
 	WFIFOSET(fd,60);
 
 	return 0;
@@ -400,7 +400,7 @@ int chrif_changemapserver(struct map_session_data* sd, uint32 ip, uint16 port) {
 	nullpo_retr(-1, sd);
 
 	if (other_mapserver_count < 1) {//No other map servers are online!
-		clif_authfail_fd(sd->fd, 0);
+		clif->authfail_fd(sd->fd, 0);
 		return -1;
 	}
 
@@ -435,9 +435,9 @@ int chrif_changemapserverack(int account_id, int login_id1, int login_id2, int c
 
 	if ( !login_id1 ) {
 		ShowError("map server change failed.\n");
-		clif_authfail_fd(node->fd, 0);
+		clif->authfail_fd(node->fd, 0);
 	} else
-		clif_changemapserver(node->sd, map_index, x, y, ntohl(ip), ntohs(port));
+		clif->changemapserver(node->sd, map_index, x, y, ntohl(ip), ntohs(port));
 
 	//Player has been saved already, remove him from memory. [Skotlex]
 	chrif_auth_delete(account_id, char_id, ST_MAPCHANGE);
@@ -498,7 +498,7 @@ static int chrif_reconnect(DBKey key, DBData *data, va_list ap) {
 			if( map_mapname2ipport(sd->mapindex,&ip,&port) == 0 )
 				chrif_changemapserver(sd, ip, port);
 			else //too much lag/timeout is the closest explanation for this error.
-				clif_authfail_fd(sd->fd, 3);
+				clif->authfail_fd(sd->fd, 3);
 			
 			break;
 			}
@@ -673,7 +673,7 @@ void chrif_authfail(int fd) {/* HELLO WORLD. ip in RFIFOL 15 is not being used (
 		node->sex == sex &&
 		node->state == ST_LOGIN )
 	{// found a match
-		clif_authfail_fd(node->fd, 0);
+		clif->authfail_fd(node->fd, 0);
 		chrif_auth_delete(account_id, char_id, ST_LOGIN);
 	}
 }
@@ -811,10 +811,10 @@ int chrif_changesex(struct map_session_data *sd) {
 	WFIFOW(char_fd,30) = 5;
 	WFIFOSET(char_fd,44);
 
-	clif_displaymessage(sd->fd, msg_txt(408)); //"Need disconnection to perform change-sex request..."
+	clif->displaymessage(sd->fd, msg_txt(408)); //"Need disconnection to perform change-sex request..."
 
 	if (sd->fd)
-		clif_authfail_fd(sd->fd, 15);
+		clif->authfail_fd(sd->fd, 15);
 	else
 		map_quit(sd);
 	return 0;
@@ -856,7 +856,7 @@ static void chrif_char_ask_name_answer(int acc, const char* player_name, uint16 
 		default: output[0] = '\0'; break;
 	}
 	
-	clif_displaymessage(sd->fd, output);
+	clif->displaymessage(sd->fd, output);
 }
 
 /*==========================================
@@ -897,7 +897,7 @@ int chrif_changedsex(int fd) {
 					sd->status.skill[i].lv = 0;
 				}
 			}
-			clif_updatestatus(sd, SP_SKILLPOINT);
+			clif->updatestatus(sd, SP_SKILLPOINT);
 			// change job if necessary
 			if (sd->status.sex) //Changed from Dancer
 				sd->status.class_ -= 1;
@@ -908,7 +908,7 @@ int chrif_changedsex(int fd) {
 		// save character
 		sd->login_id1++; // change identify, because if player come back in char within the 5 seconds, he can change its characters
 							  // do same modify in login-server for the account, but no in char-server (it ask again login_id1 to login, and don't remember it)
-		clif_displaymessage(sd->fd, msg_txt(409)); //"Your sex has been changed (need disconnection by the server)..."
+		clif->displaymessage(sd->fd, msg_txt(409)); //"Your sex has been changed (need disconnection by the server)..."
 		set_eof(sd->fd); // forced to disconnect for the change
 		map_quit(sd); // Remove leftovers (e.g. autotrading) [Paradox924X]
 	}
@@ -967,7 +967,7 @@ int chrif_deadopt(int father_id, int mother_id, int child_id) {
 		sd->status.skill[WE_CALLBABY].id = 0;
 		sd->status.skill[WE_CALLBABY].lv = 0;
 		sd->status.skill[WE_CALLBABY].flag = 0;
-		clif_deleteskill(sd,WE_CALLBABY);
+		clif->deleteskill(sd,WE_CALLBABY);
 	}
 
 	if( mother_id && ( sd = map_charid2sd(mother_id) ) != NULL && sd->status.child == child_id ) {
@@ -975,7 +975,7 @@ int chrif_deadopt(int father_id, int mother_id, int child_id) {
 		sd->status.skill[WE_CALLBABY].id = 0;
 		sd->status.skill[WE_CALLBABY].lv = 0;
 		sd->status.skill[WE_CALLBABY].flag = 0;
-		clif_deleteskill(sd,WE_CALLBABY);
+		clif->deleteskill(sd,WE_CALLBABY);
 	}
 
 	return 0;
@@ -1004,18 +1004,18 @@ int chrif_accountban(int fd) {
 	if (RFIFOB(fd,6) == 0) { // 0: change of statut, 1: ban
                 int ret_status = RFIFOL(fd,7); // status or final date of a banishment
                 if(0<ret_status && ret_status<=9)
-                    clif_displaymessage(sd->fd, msg_txt(411+ret_status));
+                    clif->displaymessage(sd->fd, msg_txt(411+ret_status));
                 else if(ret_status==100)
-                    clif_displaymessage(sd->fd, msg_txt(421));
+                    clif->displaymessage(sd->fd, msg_txt(421));
                 else    
-                    clif_displaymessage(sd->fd, msg_txt(420)); //"Your account has not more authorised." 
+                    clif->displaymessage(sd->fd, msg_txt(420)); //"Your account has not more authorised."
 	} else if (RFIFOB(fd,6) == 1) { // 0: change of statut, 1: ban
 		time_t timestamp;
 		char tmpstr[2048];
 		timestamp = (time_t)RFIFOL(fd,7); // status or final date of a banishment
 		strcpy(tmpstr, msg_txt(423)); //"Your account has been banished until "
 		strftime(tmpstr + strlen(tmpstr), 24, "%d-%m-%Y %H:%M:%S", localtime(&timestamp));
-		clif_displaymessage(sd->fd, tmpstr);
+		clif->displaymessage(sd->fd, tmpstr);
 	}
 
 	set_eof(sd->fd); // forced to disconnect for the change
@@ -1048,11 +1048,11 @@ int chrif_disconnectplayer(int fd) {
 	}
 
 	switch(RFIFOB(fd, 6)) {
-		case 1: clif_authfail_fd(sd->fd, 1); break; //server closed
-		case 2: clif_authfail_fd(sd->fd, 2); break; //someone else logged in
-		case 3: clif_authfail_fd(sd->fd, 4); break; //server overpopulated
-		case 4: clif_authfail_fd(sd->fd, 10); break; //out of available time paid for
-		case 5: clif_authfail_fd(sd->fd, 15); break; //forced to dc by gm
+		case 1: clif->authfail_fd(sd->fd, 1); break; //server closed
+		case 2: clif->authfail_fd(sd->fd, 2); break; //someone else logged in
+		case 3: clif->authfail_fd(sd->fd, 4); break; //server overpopulated
+		case 4: clif->authfail_fd(sd->fd, 10); break; //out of available time paid for
+		case 5: clif->authfail_fd(sd->fd, 15); break; //forced to dc by gm
 	}
 	return 0;
 }
@@ -1349,7 +1349,7 @@ void chrif_update_ip(int fd) {
 	if (new_ip && new_ip != char_ip)
 		char_ip = new_ip; //Update char_ip
 
-	new_ip = clif_refresh_ip();
+	new_ip = clif->refresh_ip();
 	
 	if (!new_ip)
 		return; //No change
@@ -1425,7 +1425,7 @@ int chrif_parse(int fd) {
 			case 0x2afb: chrif_sendmapack(fd); break;
 			case 0x2afd: chrif_authok(fd); break;
 			case 0x2b00: map_setusers(RFIFOL(fd,2)); chrif_keepalive(fd); break;
-			case 0x2b03: clif_charselectok(RFIFOL(fd,2), RFIFOB(fd,6)); break;
+			case 0x2b03: clif->charselectok(RFIFOL(fd,2), RFIFOB(fd,6)); break;
 			case 0x2b04: chrif_recvmap(fd); break;
 			case 0x2b06: chrif_changemapserverack(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14), RFIFOW(fd,18), RFIFOW(fd,20), RFIFOW(fd,22), RFIFOL(fd,24), RFIFOW(fd,28)); break;
 			case 0x2b09: map_addnickdb(RFIFOL(fd,2), (char*)RFIFOP(fd,6)); break;

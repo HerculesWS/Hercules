@@ -88,7 +88,7 @@ int instance_create(int party_id, const char *name)
 	memset( instance[i].map, 0x00, sizeof(instance[i].map) );
 	p->instance_id = i;
 
-	clif_instance(i, 1, 0); // Start instancing window
+	clif->instance(i, 1, 0); // Start instancing window
 	ShowInfo("[Instance] Created: %s.\n", name);
 	return i;
 }
@@ -357,7 +357,7 @@ void instance_destroy(int instance_id)
 	else
 		type = 3;
 
-	clif_instance(instance_id, 5, type); // Report users this instance has been destroyed
+	clif->instance(instance_id, 5, type); // Report users this instance has been destroyed
 
 	while( instance[instance_id].num_map && last != instance[instance_id].map[0] )
 	{ // Remove all maps from instance
@@ -403,13 +403,13 @@ void instance_check_idle(int instance_id)
 		delete_timer(instance[instance_id].idle_timer, instance_destroy_timer);
 		instance[instance_id].idle_timer = INVALID_TIMER;
 		instance[instance_id].idle_timeout = 0;
-		clif_instance(instance_id, 3, 0); // Notify instance users normal instance expiration
+		clif->instance(instance_id, 3, 0); // Notify instance users normal instance expiration
 	}
 	else if( instance[instance_id].idle_timer == INVALID_TIMER && idle )
 	{
 		instance[instance_id].idle_timeout = now + instance[instance_id].idle_timeoutval;
 		instance[instance_id].idle_timer = add_timer( gettick() + (unsigned int)instance[instance_id].idle_timeoutval * 1000, instance_destroy_timer, instance_id, 0);
-		clif_instance(instance_id, 4, 0); // Notify instance users it will be destroyed of no user join it again in "X" time
+		clif->instance(instance_id, 4, 0); // Notify instance users it will be destroyed of no user join it again in "X" time
 	}
 }
 
@@ -453,7 +453,7 @@ void instance_set_timeout(int instance_id, unsigned int progress_timeout, unsign
 	}
 
 	if( instance[instance_id].idle_timer == INVALID_TIMER && instance[instance_id].progress_timer != INVALID_TIMER )
-		clif_instance(instance_id, 3, 0);
+		clif->instance(instance_id, 3, 0);
 }
 
 /*--------------------------------------
@@ -463,7 +463,7 @@ void instance_check_kick(struct map_session_data *sd)
 {
 	int16 m = sd->bl.m;
 
-	clif_instance_leave(sd->fd);
+	clif->instance_leave(sd->fd);
 	if( map[m].instance_id )
 	{ // User was on the instance map
 		if( map[m].save.map )

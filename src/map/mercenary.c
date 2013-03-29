@@ -157,7 +157,7 @@ int mercenary_set_faith(struct mercenary_data *md, int value)
 
 	*faith += value;
 	*faith = cap_value(*faith, 0, SHRT_MAX);
-	clif_mercenary_updatestatus(sd, SP_MERCFAITH);
+	clif->mercenary_updatestatus(sd, SP_MERCFAITH);
 
 	return 0;
 }
@@ -261,7 +261,7 @@ int merc_delete(struct mercenary_data *md, int reply)
 		case 1: mercenary_set_faith(md, -1); break; // -1 Loyalty on Mercenary killed
 	}
 
-	clif_mercenary_message(sd, reply);
+	clif->mercenary_message(sd, reply);
 	return unit_remove_map(&md->bl, CLR_OUTSIGHT);
 }
 
@@ -337,9 +337,9 @@ int merc_data_received(struct s_mercenary *merc, bool flag)
 	if( md && md->bl.prev == NULL && sd->bl.prev != NULL )
 	{
 		map_addblock(&md->bl);
-		clif_spawn(&md->bl);
-		clif_mercenary_info(sd);
-		clif_mercenary_skillblock(sd);
+		clif->spawn(&md->bl);
+		clif->mercenary_info(sd);
+		clif->mercenary_skillblock(sd);
 	}
 
 	return 1;
@@ -348,9 +348,9 @@ int merc_data_received(struct s_mercenary *merc, bool flag)
 void mercenary_heal(struct mercenary_data *md, int hp, int sp)
 {
 	if( hp )
-		clif_mercenary_updatestatus(md->master, SP_HP);
+		clif->mercenary_updatestatus(md->master, SP_HP);
 	if( sp )
-		clif_mercenary_updatestatus(md->master, SP_SP);
+		clif->mercenary_updatestatus(md->master, SP_SP);
 }
 
 int mercenary_dead(struct mercenary_data *md)
@@ -380,7 +380,7 @@ int mercenary_kills(struct mercenary_data *md)
 	}
 
 	if( md->master )
-		clif_mercenary_updatestatus(md->master, SP_MERCKILLS);
+		clif->mercenary_updatestatus(md->master, SP_MERCKILLS);
 
 	return 0;
 }

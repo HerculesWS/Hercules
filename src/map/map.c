@@ -1282,7 +1282,7 @@ int map_clearflooritem_timer(int tid, unsigned int tick, int id, intptr_t data)
 	if (search_petDB_index(fitem->item_data.nameid, PET_EGG) >= 0)
 		intif_delete_petdata(MakeDWord(fitem->item_data.card[1], fitem->item_data.card[2]));
 
-	clif_clearflooritem(fitem, 0);
+	clif->clearflooritem(fitem, 0);
 	map_deliddb(&fitem->bl);
 	map_delblock(&fitem->bl);
 	map_freeblock(&fitem->bl);
@@ -1298,7 +1298,7 @@ void map_clearflooritem(struct block_list *bl) {
 	if( fitem->cleartimer )
 		delete_timer(fitem->cleartimer,map_clearflooritem_timer);
 
-	clif_clearflooritem(fitem, 0);
+	clif->clearflooritem(fitem, 0);
 	map_deliddb(&fitem->bl);
 	map_delblock(&fitem->bl);
 	map_freeblock(&fitem->bl);
@@ -1465,7 +1465,7 @@ int map_addflooritem(struct item *item_data,int amount,int16 m,int16 x,int16 y,i
 
 	map_addiddb(&fitem->bl);
 	map_addblock(&fitem->bl);
-	clif_dropflooritem(fitem);
+	clif->dropflooritem(fitem);
 
 	return fitem->bl.id;
 }
@@ -1494,13 +1494,12 @@ void map_addnickdb(int charid, const char* nick)
 	p = idb_ensure(nick_db, charid, create_charid2nick);
 	safestrncpy(p->nick, nick, sizeof(p->nick));
 
-	while( p->requests )
-	{
+	while( p->requests ) {
 		req = p->requests;
 		p->requests = req->next;
 		sd = map_charid2sd(req->charid);
 		if( sd )
-			clif_solved_charname(sd->fd, charid, p->nick);
+			clif->solved_charname(sd->fd, charid, p->nick);
 		aFree(req);
 	}
 }
@@ -1517,13 +1516,12 @@ void map_delnickdb(int charid, const char* name)
 	if (!nick_db->remove(nick_db, db_i2key(charid), &data) || (p = db_data2ptr(&data)) == NULL)
 		return;
 
-	while( p->requests )
-	{
+	while( p->requests ) {
 		req = p->requests;
 		p->requests = req->next;
 		sd = map_charid2sd(req->charid);
 		if( sd )
-			clif_solved_charname(sd->fd, charid, name);
+			clif->solved_charname(sd->fd, charid, name);
 		aFree(req);
 	}
 	aFree(p);
@@ -1541,16 +1539,14 @@ void map_reqnickdb(struct map_session_data * sd, int charid)
 	nullpo_retv(sd);
 
 	tsd = map_charid2sd(charid);
-	if( tsd )
-	{
-		clif_solved_charname(sd->fd, charid, tsd->status.name);
+	if( tsd ) {
+		clif->solved_charname(sd->fd, charid, tsd->status.name);
 		return;
 	}
 
 	p = idb_ensure(nick_db, charid, create_charid2nick);
-	if( *p->nick )
-	{
-		clif_solved_charname(sd->fd, charid, p->nick);
+	if( *p->nick ) {
+		clif->solved_charname(sd->fd, charid, p->nick);
 		return;
 	}
 	// not in cache, request it
@@ -2635,7 +2631,7 @@ bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool shootable
 		map_setcell(m, x1, y1, CELL_WALKABLE, false);
 		map_setcell(m, x1, y1, CELL_SHOOTABLE, shootable);
 
-		clif_changemapcell(0, m, x1, y1, map_getcell(m, x1, y1, CELL_GETTYPE), ALL_SAMEMAP);
+		clif->changemapcell(0, m, x1, y1, map_getcell(m, x1, y1, CELL_GETTYPE), ALL_SAMEMAP);
 	}
 
 	iwall->size = i;
@@ -2646,8 +2642,7 @@ bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool shootable
 	return true;
 }
 
-void map_iwall_get(struct map_session_data *sd)
-{
+void map_iwall_get(struct map_session_data *sd) {
 	struct iwall_data *iwall;
 	DBIterator* iter;
 	int16 x1, y1;
@@ -2657,15 +2652,13 @@ void map_iwall_get(struct map_session_data *sd)
 		return;
 
 	iter = db_iterator(iwall_db);
-	for( iwall = dbi_first(iter); dbi_exists(iter); iwall = dbi_next(iter) )
-	{
+	for( iwall = dbi_first(iter); dbi_exists(iter); iwall = dbi_next(iter) ) {
 		if( iwall->m != sd->bl.m )
 			continue;
 
-		for( i = 0; i < iwall->size; i++ )
-		{
+		for( i = 0; i < iwall->size; i++ ) {
 			map_iwall_nextxy(iwall->x, iwall->y, iwall->dir, i, &x1, &y1);
-			clif_changemapcell(sd->fd, iwall->m, x1, y1, map_getcell(iwall->m, x1, y1, CELL_GETTYPE), SELF);
+			clif->changemapcell(sd->fd, iwall->m, x1, y1, map_getcell(iwall->m, x1, y1, CELL_GETTYPE), SELF);
 		}
 	}
 	dbi_destroy(iter);
@@ -2679,14 +2672,13 @@ void map_iwall_remove(const char *wall_name)
 	if( (iwall = (struct iwall_data *)strdb_get(iwall_db, wall_name)) == NULL )
 		return; // Nothing to do
 
-	for( i = 0; i < iwall->size; i++ )
-	{
+	for( i = 0; i < iwall->size; i++ ) {
 		map_iwall_nextxy(iwall->x, iwall->y, iwall->dir, i, &x1, &y1);
 
 		map_setcell(iwall->m, x1, y1, CELL_SHOOTABLE, true);
 		map_setcell(iwall->m, x1, y1, CELL_WALKABLE, true);
 
-		clif_changemapcell(0, iwall->m, x1, y1, map_getcell(iwall->m, x1, y1, CELL_GETTYPE), ALL_SAMEMAP);
+		clif->changemapcell(0, iwall->m, x1, y1, map_getcell(iwall->m, x1, y1, CELL_GETTYPE), ALL_SAMEMAP);
 	}
 
 	map[iwall->m].iwall_num--;
@@ -2717,7 +2709,7 @@ int map_setipport(unsigned short mapindex, uint32 ip, uint16 port)
 
 	if(mdos->cell) //Local map,Do nothing. Give priority to our own local maps over ones from another server. [Skotlex]
 		return 0;
-	if(ip == clif_getip() && port == clif_getport()) {
+	if(ip == clif->map_ip && port == clif->map_port) {
 		//That's odd, we received info that we are the ones with this map, but... we don't have it.
 		ShowFatalError("map_setipport : received info that this map-server SHOULD have map '%s', but it is not loaded.\n",mapindex_id2name(mapindex));
 		exit(EXIT_FAILURE);
@@ -3322,11 +3314,11 @@ int map_config_read(char *cfgName)
 		else if (strcmpi(w1, "char_port") == 0)
 			chrif_setport(atoi(w2));
 		else if (strcmpi(w1, "map_ip") == 0)
-			map_ip_set = clif_setip(w2);
+			map_ip_set = clif->setip(w2);
 		else if (strcmpi(w1, "bind_ip") == 0)
-			clif_setbindip(w2);
+			clif->setbindip(w2);
 		else if (strcmpi(w1, "map_port") == 0) {
-			clif_setport(atoi(w2));
+			clif->setport(atoi(w2));
 			map_port = (atoi(w2));
 		} else if (strcmpi(w1, "map") == 0)
 			map_addmap(w2);
@@ -3957,7 +3949,7 @@ void do_final(void)
 	do_final_atcommand();
 	battle->final();
 	do_final_chrif();
-	do_final_clif();
+	clif->final();
 	do_final_npc();
 	do_final_script();
 	do_final_instance();
@@ -4084,7 +4076,7 @@ void do_shutdown(void)
 			struct map_session_data* sd;
 			struct s_mapiterator* iter = mapit_getallusers();
 			for( sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); sd = (TBL_PC*)mapit_next(iter) )
-				clif_GM_kick(NULL, sd);
+				clif->GM_kick(NULL, sd);
 			mapit_free(iter);
 			flush_fifos();
 		}
@@ -4208,14 +4200,16 @@ int do_init(int argc, char *argv[])
 		}
 	}
 
+	battle_defaults();
+	clif_defaults();
+	skill_defaults();
+	
 	map_config_read(MAP_CONF_NAME);
-	/* only temporary until sirius's datapack patch is complete  */
-
 	// loads npcs
 	map_reloadnpc(false);
 
 	chrif_checkdefaultlogin();
-
+	
 	if (!map_ip_set || !char_ip_set) {
 		char ip_str[16];
 		ip2str(addr_[0], ip_str);
@@ -4230,13 +4224,10 @@ int do_init(int argc, char *argv[])
 		ShowInfo("Defaulting to %s as our IP address\n", ip_str);
 
 		if (!map_ip_set)
-			clif_setip(ip_str);
+			clif->setip(ip_str);
 		if (!char_ip_set)
 			chrif_setip(ip_str);
 	}
-
-	battle_defaults();
-	skill_defaults();
 	
 	battle->config_read(BATTLE_CONF_FILENAME);
 	msg_config_read(MSG_CONF_NAME);
@@ -4276,7 +4267,7 @@ int do_init(int argc, char *argv[])
 	battle->init();
 	do_init_instance();
 	do_init_chrif();
-	do_init_clif();
+	clif->init();
 	do_init_script();
 	do_init_itemdb();
 	skill->init();

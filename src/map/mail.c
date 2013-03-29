@@ -33,7 +33,7 @@ int mail_removeitem(struct map_session_data *sd, short flag)
 		if (flag) // Item send
 			pc_delitem(sd, sd->mail.index, sd->mail.amount, 1, 0, LOG_TYPE_MAIL);
 		else
-			clif_additem(sd, sd->mail.index, sd->mail.amount, 0);
+			clif->additem(sd, sd->mail.index, sd->mail.amount, 0);
 	}
 
 	sd->mail.nameid = 0;
@@ -68,7 +68,7 @@ unsigned char mail_setitem(struct map_session_data *sd, int idx, int amount) {
 			amount = sd->status.zeny;
 
 		sd->mail.zeny = amount;
-		// clif_updatestatus(sd, SP_ZENY);
+		// clif->updatestatus(sd, SP_ZENY);
 		return 0;
 	} else { // Item Transfer
 		idx -= 2;
@@ -132,7 +132,7 @@ void mail_getattachment(struct map_session_data* sd, int zeny, struct item* item
 	if( item->nameid > 0 && item->amount > 0 )
 	{
 		pc_additem(sd, item, item->amount, LOG_TYPE_MAIL);
-		clif_Mail_getattachment(sd->fd, 0);
+		clif->mail_getattachment(sd->fd, 0);
 	}
 
 	if( zeny > 0 )
@@ -148,7 +148,7 @@ int mail_openmail(struct map_session_data *sd)
 	if( sd->state.storage_flag || sd->state.vending || sd->state.buyingstore || sd->state.trading )
 		return 0;
 
-	clif_Mail_window(sd->fd, 0);
+	clif->mail_window(sd->fd, 0);
 
 	return 1;
 }
@@ -169,7 +169,7 @@ void mail_deliveryfail(struct map_session_data *sd, struct mail_message *msg)
 		pc_getzeny(sd,msg->zeny,LOG_TYPE_MAIL, NULL); //Zeny receive (due to failure)
 	}
 
-	clif_Mail_send(sd->fd, true);
+	clif->mail_send(sd->fd, true);
 }
 
 // This function only check if the mail operations are valid
@@ -177,7 +177,7 @@ bool mail_invalid_operation(struct map_session_data *sd)
 {
 	if( !map[sd->bl.m].flag.town && !pc_can_use_command(sd, "mail", COMMAND_ATCOMMAND) )
 	{
-		ShowWarning("clif_parse_Mail: char '%s' trying to do invalid mail operations.\n", sd->status.name);
+		ShowWarning("clif->parse_Mail: char '%s' trying to do invalid mail operations.\n", sd->status.name);
 		return true;
 	}
 

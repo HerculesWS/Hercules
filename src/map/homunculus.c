@@ -96,7 +96,7 @@ int hom_addspiritball(TBL_HOM *hd, int max) {
     else
         hd->homunculus.spiritball++;
 
-    clif_spiritball(&hd->bl);
+    clif->spiritball(&hd->bl);
 
     return 0;
 }
@@ -117,13 +117,13 @@ int hom_delspiritball(TBL_HOM *hd, int count, int type) {
 
     hd->homunculus.spiritball -= count;
     if (!type)
-        clif_spiritball(&hd->bl);
+        clif->spiritball(&hd->bl);
 
     return 0;
 }
 
 void merc_damage(struct homun_data *hd) {
-	clif_hominfo(hd->master,hd,0);
+	clif->hominfo(hd->master,hd,0);
 }
 
 int merc_hom_dead(struct homun_data *hd)
@@ -131,7 +131,7 @@ int merc_hom_dead(struct homun_data *hd)
 	//There's no intimacy penalties on death (from Tharis)
 	struct map_session_data *sd = hd->master;
 
-	clif_emotion(&hd->bl, E_WAH);
+	clif->emotion(&hd->bl, E_WAH);
 
 	//Delete timers when dead.
 	merc_hom_hungry_timer_delete(hd);
@@ -140,7 +140,7 @@ int merc_hom_dead(struct homun_data *hd)
 	if (!sd) //unit remove map will invoke unit free
 		return 3;
 
-	clif_emotion(&sd->bl, E_SOB);
+	clif->emotion(&sd->bl, E_SOB);
 	//Remove from map (if it has no intimacy, it is auto-removed from memory)
 	return 3;
 }
@@ -168,7 +168,7 @@ int merc_hom_vaporize(struct map_session_data *sd, int flag)
 	hd->homunculus.vaporize = 1;
 	if(battle_config.hom_setting&0x40)
 		memset(hd->blockskill, 0, sizeof(hd->blockskill));
-	clif_hominfo(sd, sd->hd, 0);
+	clif->hominfo(sd, sd->hd, 0);
 	merc_save(hd);
 	return unit_remove_map(&hd->bl, CLR_OUTSIGHT);
 }
@@ -185,13 +185,13 @@ int merc_hom_delete(struct homun_data *hd, int emote)
 		return unit_free(&hd->bl,CLR_DEAD);
 
 	if (emote >= 0)
-		clif_emotion(&sd->bl, emote);
+		clif->emotion(&sd->bl, emote);
 
 	//This makes it be deleted right away.
 	hd->homunculus.intimacy = 0;
 	// Send homunculus_dead to client
 	hd->homunculus.hp = 0;
-	clif_hominfo(sd, hd, 0);
+	clif->hominfo(sd, hd, 0);
 	return unit_remove_map(&hd->bl,CLR_OUTSIGHT);
 }
 
@@ -247,7 +247,7 @@ int merc_hom_calc_skilltree(struct homun_data *hd, int flag_evolve)
 	}
 
 	if( hd->master )
-		clif_homskillinfoblock(hd->master);
+		clif->homskillinfoblock(hd->master);
 	return 0;
 }
 
@@ -291,9 +291,9 @@ void merc_hom_skillup(struct homun_data *hd,uint16 skill_id)
 		hd->homunculus.skillpts-- ;
 		status_calc_homunculus(hd,0);
 		if (hd->master) {
-			clif_homskillup(hd->master, skill_id);
-			clif_hominfo(hd->master,hd,0);
-			clif_homskillinfoblock(hd->master);
+			clif->homskillup(hd->master, skill_id);
+			clif->hominfo(hd->master,hd,0);
+			clif->homskillinfoblock(hd->master);
 		}
 	}
 }
@@ -358,7 +358,7 @@ int merc_hom_levelup(struct homun_data *hd)
 			growth_max_hp, growth_max_sp,
 			growth_str/10.0, growth_agi/10.0, growth_vit/10.0,
 			growth_int/10.0, growth_dex/10.0, growth_luk/10.0);
-		clif_disp_onlyself(hd->master,output,strlen(output));
+		clif->disp_onlyself(hd->master,output,strlen(output));
 	}
 	return 1 ;
 }
@@ -385,7 +385,7 @@ int merc_hom_evolution(struct homun_data *hd)
 
 	if(!hd->homunculusDB->evo_class || hd->homunculus.class_ == hd->homunculusDB->evo_class)
 	{
-		clif_emotion(&hd->bl, E_SWT);
+		clif->emotion(&hd->bl, E_SWT);
 		return 0 ;
 	}
 	sd = hd->master;
@@ -414,9 +414,9 @@ int merc_hom_evolution(struct homun_data *hd)
 	unit_remove_map(&hd->bl, CLR_OUTSIGHT);
 	map_addblock(&hd->bl);
 
-	clif_spawn(&hd->bl);
-	clif_emotion(&sd->bl, E_NO1);
-	clif_specialeffect(&hd->bl,568,AREA);
+	clif->spawn(&hd->bl);
+	clif->emotion(&sd->bl, E_NO1);
+	clif->specialeffect(&hd->bl,568,AREA);
 
 	//status_Calc flag&1 will make current HP/SP be reloaded from hom structure
 	hom->hp = hd->battle_status.hp;
@@ -440,7 +440,7 @@ int hom_mutate(struct homun_data *hd, int homun_id)
 	m_id    = hom_class2mapid(homun_id);
 
 	if( m_class == -1 || m_id == -1 || !(m_class&HOM_EVO) || !(m_id&HOM_S) ) {
-		clif_emotion(&hd->bl, E_SWT);
+		clif->emotion(&hd->bl, E_SWT);
 		return 0;
 	}
 
@@ -458,9 +458,9 @@ int hom_mutate(struct homun_data *hd, int homun_id)
 	unit_remove_map(&hd->bl, CLR_OUTSIGHT);
 	map_addblock(&hd->bl);
 
-	clif_spawn(&hd->bl);
-	clif_emotion(&sd->bl, E_NO1);
-	clif_specialeffect(&hd->bl,568,AREA);
+	clif->spawn(&hd->bl);
+	clif->emotion(&sd->bl, E_NO1);
+	clif->specialeffect(&hd->bl,568,AREA);
 
 
 	//status_Calc flag&1 will make current HP/SP be reloaded from hom structure
@@ -498,7 +498,7 @@ int merc_hom_gainexp(struct homun_data *hd,int exp)
 	hd->homunculus.exp += exp;
 
 	if(hd->homunculus.exp < hd->exp_next) {
-		clif_hominfo(hd->master,hd,0);
+		clif->hominfo(hd->master,hd,0);
 		return 0;
 	}
 
@@ -508,7 +508,7 @@ int merc_hom_gainexp(struct homun_data *hd,int exp)
 	if( hd->exp_next == 0 )
 		hd->homunculus.exp = 0 ;
 
-	clif_specialeffect(&hd->bl,568,AREA);
+	clif->specialeffect(&hd->bl,568,AREA);
 	status_calc_homunculus(hd,0);
 	status_percent_heal(&hd->bl, 100, 100);
 	return 0;
@@ -539,7 +539,7 @@ int merc_hom_decrease_intimacy(struct homun_data * hd, unsigned int value)
 }
 
 void merc_hom_heal(struct homun_data *hd) {
-	clif_hominfo(hd->master,hd,0);
+	clif->hominfo(hd->master,hd,0);
 }
 
 void merc_save(struct homun_data *hd)
@@ -586,7 +586,7 @@ int merc_hom_food(struct map_session_data *sd, struct homun_data *hd)
 	foodID = hd->homunculusDB->foodID;
 	i = pc_search_inventory(sd,foodID);
 	if(i < 0) {
-		clif_hom_food(sd,foodID,0);
+		clif->hom_food(sd,foodID,0);
 		return 1;
 	}
 	pc_delitem(sd,i,1,0,0,LOG_TYPE_CONSUME);
@@ -612,10 +612,10 @@ int merc_hom_food(struct map_session_data *sd, struct homun_data *hd)
 	if(hd->homunculus.hunger > 100)
 		hd->homunculus.hunger = 100;
 
-	clif_emotion(&hd->bl,emotion);
-	clif_send_homdata(sd,SP_HUNGRY,hd->homunculus.hunger);
-	clif_send_homdata(sd,SP_INTIMATE,hd->homunculus.intimacy / 100);
-	clif_hom_food(sd,foodID,1);
+	clif->emotion(&hd->bl,emotion);
+	clif->send_homdata(sd,SP_HUNGRY,hd->homunculus.hunger);
+	clif->send_homdata(sd,SP_INTIMATE,hd->homunculus.intimacy / 100);
+	clif->hom_food(sd,foodID,1);
 
 	// Too much food :/
 	if(hd->homunculus.intimacy == 0)
@@ -645,11 +645,11 @@ static int merc_hom_hungry(int tid, unsigned int tick, int id, intptr_t data)
 
 	hd->homunculus.hunger-- ;
 	if(hd->homunculus.hunger <= 10) {
-		clif_emotion(&hd->bl, E_AN);
+		clif->emotion(&hd->bl, E_AN);
 	} else if(hd->homunculus.hunger == 25) {
-		clif_emotion(&hd->bl, E_HMM);
+		clif->emotion(&hd->bl, E_HMM);
 	} else if(hd->homunculus.hunger == 75) {
-		clif_emotion(&hd->bl, E_OK);
+		clif->emotion(&hd->bl, E_OK);
 	}
 
 	if(hd->homunculus.hunger < 0) {
@@ -657,10 +657,10 @@ static int merc_hom_hungry(int tid, unsigned int tick, int id, intptr_t data)
 		// Delete the homunculus if intimacy <= 100
 		if ( !merc_hom_decrease_intimacy(hd, 100) )
 			return merc_hom_delete(hd, E_OMG);
-		clif_send_homdata(sd,SP_INTIMATE,hd->homunculus.intimacy / 100);
+		clif->send_homdata(sd,SP_INTIMATE,hd->homunculus.intimacy / 100);
 	}
 
-	clif_send_homdata(sd,SP_HUNGRY,hd->homunculus.hunger);
+	clif->send_homdata(sd,SP_HUNGRY,hd->homunculus.hunger);
 	hd->hungry_timer = add_timer(tick+hd->homunculusDB->hungryDelay,merc_hom_hungry,sd->bl.id,0); //simple Fix albator
 	return 0;
 }
@@ -703,13 +703,13 @@ int merc_hom_change_name_ack(struct map_session_data *sd, char* name, int flag)
 	normalize_name(name," ");//bugreport:3032
 
 	if ( !flag || !strlen(name) ) {
-		clif_displaymessage(sd->fd, msg_txt(280)); // You cannot use this name
+		clif->displaymessage(sd->fd, msg_txt(280)); // You cannot use this name
 		return 0;
 	}
 	safestrncpy(hd->homunculus.name,name,NAME_LENGTH);
-	clif_charnameack (0,&hd->bl);
+	clif->charnameack (0,&hd->bl);
 	hd->homunculus.rename_flag = 1;
-	clif_hominfo(sd,hd,0);
+	clif->hominfo(sd,hd,0);
 	return 1;
 }
 
@@ -814,11 +814,11 @@ int merc_call_homunculus(struct map_session_data *sd)
 		hd->bl.y = sd->bl.y;
 		hd->bl.m = sd->bl.m;
 		map_addblock(&hd->bl);
-		clif_spawn(&hd->bl);
-		clif_send_homdata(sd,SP_ACK,0);
-		clif_hominfo(sd,hd,1);
-		clif_hominfo(sd,hd,0); // send this x2. dunno why, but kRO does that [blackhole89]
-		clif_homskillinfoblock(sd);
+		clif->spawn(&hd->bl);
+		clif->send_homdata(sd,SP_ACK,0);
+		clif->hominfo(sd,hd,1);
+		clif->hominfo(sd,hd,0); // send this x2. dunno why, but kRO does that [blackhole89]
+		clif->homskillinfoblock(sd);
 		if (battle_config.slaves_inherit_speed&1)
 			status_calc_bl(&hd->bl, SCB_SPEED);
 		merc_save(hd);
@@ -860,11 +860,11 @@ int merc_hom_recv_data(int account_id, struct s_homunculus *sh, int flag)
 	if(hd && hd->homunculus.hp && !hd->homunculus.vaporize && hd->bl.prev == NULL && sd->bl.prev != NULL)
 	{
 		map_addblock(&hd->bl);
-		clif_spawn(&hd->bl);
-		clif_send_homdata(sd,SP_ACK,0);
-		clif_hominfo(sd,hd,1);
-		clif_hominfo(sd,hd,0); // send this x2. dunno why, but kRO does that [blackhole89]
-		clif_homskillinfoblock(sd);
+		clif->spawn(&hd->bl);
+		clif->send_homdata(sd,SP_ACK,0);
+		clif->hominfo(sd,hd,1);
+		clif->hominfo(sd,hd,0); // send this x2. dunno why, but kRO does that [blackhole89]
+		clif->homskillinfoblock(sd);
 		merc_hom_init_timers(hd);
 	}
 	return 1;
@@ -934,7 +934,7 @@ int merc_resurrect_homunculus(struct map_session_data* sd, unsigned char per, sh
 		hd->bl.x = x;
 		hd->bl.y = y;
 		map_addblock(&hd->bl);
-		clif_spawn(&hd->bl);
+		clif->spawn(&hd->bl);
 	}
 	status_revive(&hd->bl, per, 0);
 	return 1;
@@ -946,10 +946,10 @@ void merc_hom_revive(struct homun_data *hd, unsigned int hp, unsigned int sp)
 	hd->homunculus.hp = hd->battle_status.hp;
 	if (!sd)
 		return;
-	clif_send_homdata(sd,SP_ACK,0);
-	clif_hominfo(sd,hd,1);
-	clif_hominfo(sd,hd,0);
-	clif_homskillinfoblock(sd);
+	clif->send_homdata(sd,SP_ACK,0);
+	clif->hominfo(sd,hd,1);
+	clif->hominfo(sd,hd,0);
+	clif->homskillinfoblock(sd);
 }
 
 void merc_reset_stats(struct homun_data *hd)
@@ -1015,10 +1015,10 @@ int merc_hom_shuffle(struct homun_data *hd)
 	hd->homunculus.exp = exp;
 	memcpy(&hd->homunculus.hskill, &b_skill, sizeof(b_skill));
 	hd->homunculus.skillpts = skillpts;
-	clif_homskillinfoblock(sd);
+	clif->homskillinfoblock(sd);
 	status_calc_homunculus(hd,0);
 	status_percent_heal(&hd->bl, 100, 100);
-	clif_specialeffect(&hd->bl,568,AREA);
+	clif->specialeffect(&hd->bl,568,AREA);
 
 	return 1;
 }
