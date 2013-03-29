@@ -13668,6 +13668,9 @@ int skill_castfix_sc (struct block_list *bl, int time)
 	if( time < 0 )
 		return 0;
 
+	if( bl->type == BL_MOB ) // mobs casttime is fixed nothing to alter.
+		return time;
+
 	if (sc && sc->count) {
 		if (sc->data[SC_SLOWCAST])
 			time += time * sc->data[SC_SLOWCAST]->val2 / 100;
@@ -13701,6 +13704,9 @@ int skill_vfcastfix (struct block_list *bl, double time, uint16 skill_id, uint16
 
 	if( time < 0 )
 		return 0;
+
+	if( bl->type == BL_MOB ) // mobs casttime is fixed nothing to alter.
+		return time;
 
 	if( fixed == 0 ){
 		fixed = (int)time * 20 / 100; // fixed time
