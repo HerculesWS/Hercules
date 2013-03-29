@@ -38,6 +38,7 @@
 //    0x1000- disable usage on enemies (for non-offensive skills).
 //    0x2000- skill ignores land protector (e.g. arrow shower)
 //    0x4000- chorus skill
+//    0x8000- skill wont be passed to clones
 // 13 maxcount: max amount of skill instances to place on the ground when
 //    player_land_skill_limit/monster_land_skill_limit is enabled. For skills
 //    that attack using a path, this is the path length to be used.

@@ -7524,53 +7524,51 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 	nullpo_ret(sd);
 
 	switch(type){
-	case LOOK_HAIR:	//Use the battle_config limits! [Skotlex]
-		val = cap_value(val, MIN_HAIR_STYLE, MAX_HAIR_STYLE);
+		case LOOK_HAIR:	//Use the battle_config limits! [Skotlex]
+			val = cap_value(val, MIN_HAIR_STYLE, MAX_HAIR_STYLE);
 
-		if (sd->status.hair != val)
-		{
-			sd->status.hair=val;
-			if (sd->status.guild_id) //Update Guild Window. [Skotlex]
-				intif_guild_change_memberinfo(sd->status.guild_id,sd->status.account_id,sd->status.char_id,
-				GMI_HAIR,&sd->status.hair,sizeof(sd->status.hair));
-		}
-		break;
-	case LOOK_WEAPON:
-		sd->status.weapon=val;
-		break;
-	case LOOK_HEAD_BOTTOM:
-		sd->status.head_bottom=val;
-		break;
-	case LOOK_HEAD_TOP:
-		sd->status.head_top=val;
-		break;
-	case LOOK_HEAD_MID:
-		sd->status.head_mid=val;
-		break;
-	case LOOK_HAIR_COLOR:	//Use the battle_config limits! [Skotlex]
-		val = cap_value(val, MIN_HAIR_COLOR, MAX_HAIR_COLOR);
+			if (sd->status.hair != val) {
+				sd->status.hair=val;
+				if (sd->status.guild_id) //Update Guild Window. [Skotlex]
+					intif_guild_change_memberinfo(sd->status.guild_id,sd->status.account_id,sd->status.char_id,
+					GMI_HAIR,&sd->status.hair,sizeof(sd->status.hair));
+			}
+			break;
+		case LOOK_WEAPON:
+			sd->status.weapon=val;
+			break;
+		case LOOK_HEAD_BOTTOM:
+			sd->status.head_bottom=val;
+			break;
+		case LOOK_HEAD_TOP:
+			sd->status.head_top=val;
+			break;
+		case LOOK_HEAD_MID:
+			sd->status.head_mid=val;
+			break;
+		case LOOK_HAIR_COLOR:	//Use the battle_config limits! [Skotlex]
+			val = cap_value(val, MIN_HAIR_COLOR, MAX_HAIR_COLOR);
 
-		if (sd->status.hair_color != val)
-		{
-			sd->status.hair_color=val;
-			if (sd->status.guild_id) //Update Guild Window. [Skotlex]
-				intif_guild_change_memberinfo(sd->status.guild_id,sd->status.account_id,sd->status.char_id,
-				GMI_HAIR_COLOR,&sd->status.hair_color,sizeof(sd->status.hair_color));
-		}
-		break;
-	case LOOK_CLOTHES_COLOR:	//Use the battle_config limits! [Skotlex]
-		val = cap_value(val, MIN_CLOTH_COLOR, MAX_CLOTH_COLOR);
+			if (sd->status.hair_color != val) {
+				sd->status.hair_color=val;
+				if (sd->status.guild_id) //Update Guild Window. [Skotlex]
+					intif_guild_change_memberinfo(sd->status.guild_id,sd->status.account_id,sd->status.char_id,
+					GMI_HAIR_COLOR,&sd->status.hair_color,sizeof(sd->status.hair_color));
+			}
+			break;
+		case LOOK_CLOTHES_COLOR:	//Use the battle_config limits! [Skotlex]
+			val = cap_value(val, MIN_CLOTH_COLOR, MAX_CLOTH_COLOR);
 
-		sd->status.clothes_color=val;
-		break;
-	case LOOK_SHIELD:
-		sd->status.shield=val;
-		break;
-	case LOOK_SHOES:
-		break;
-	case LOOK_ROBE:
-		sd->status.robe = val;
-		break;
+			sd->status.clothes_color=val;
+			break;
+		case LOOK_SHIELD:
+			sd->status.shield=val;
+			break;
+		case LOOK_SHOES:
+			break;
+		case LOOK_ROBE:
+			sd->status.robe = val;
+			break;
 	}
 	clif_changelook(&sd->bl,type,val);
 	return 0;
