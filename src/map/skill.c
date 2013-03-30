@@ -13706,7 +13706,7 @@ int skill_vfcastfix (struct block_list *bl, double time, uint16 skill_id, uint16
 		return 0;
 
 	if( bl->type == BL_MOB ) // mobs casttime is fixed nothing to alter.
-		return time;
+		return (int)time;
 
 	if( fixed == 0 ){
 		fixed = (int)time * 20 / 100; // fixed time

@@ -28,7 +28,7 @@ void pincode_handle ( int fd, struct char_session_data* sd ) {
 		return;
 	}
 	
-	if( strlen(sd->pincode) ){
+	if( strlen(sd->pincode) == 4 ){
 		if( *pincode->changetime && time(NULL) > (sd->pincode_change+*pincode->changetime) ){ // User hasnt changed his PIN code for a long time
 			pincode->sendstate( fd, sd, PINCODE_EXPIRED );
 		} else { // Ask user for his PIN code
@@ -69,33 +69,27 @@ int pincode_compare(int fd, struct char_session_data* sd, char* pin) {
 
 void pincode_change(int fd, struct char_session_data* sd) {
 	char oldpin[5] = "\0\0\0\0", newpin[5] = "\0\0\0\0";
-	struct online_char_data* character;
 
-	strncpy(oldpin, (char*)RFIFOP(fd,6), 4+1);
+	strncpy(oldpin, (char*)RFIFOP(fd,6), sizeof(oldpin));
 	pincode->decrypt(sd->pincode_seed,oldpin);
 	if( !pincode->compare( fd, sd, oldpin ) )
 		return;
 	
-	strncpy(newpin, (char*)RFIFOP(fd,10), 3+1);
+	strncpy(newpin, (char*)RFIFOP(fd,10), sizeof(newpin));
 	pincode->decrypt(sd->pincode_seed,newpin);
 	pincode->update( sd->account_id, newpin );
-	if( (character = (struct online_char_data*)idb_get(online_char_db, sd->account_id)) )
-		character->pincode_enable = *pincode->charselect * 2;
-	pincode->sendstate( fd, sd, PINCODE_OK );
+	strncpy(sd->pincode, newpin, sizeof(sd->pincode));
+	pincode->sendstate( fd, sd, PINCODE_ASK );
 }
 
 void pincode_setnew(int fd, struct char_session_data* sd) {
 	char newpin[5] = "\0\0\0\0";
-	struct online_char_data* character;
 
-	strncpy(newpin, (char*)RFIFOP(fd,6), 4+1);
+	strncpy(newpin, (char*)RFIFOP(fd,6), sizeof(newpin));
 	pincode->decrypt(sd->pincode_seed,newpin);
-	
 	pincode->update( sd->account_id, newpin );
-	
-	pincode->sendstate( fd, sd, PINCODE_OK );
-	if( (character = (struct online_char_data*)idb_get(online_char_db, sd->account_id)) )
-		character->pincode_enable = *pincode->charselect * 2;
+	strncpy(sd->pincode, newpin, sizeof(sd->pincode));
+	pincode->sendstate( fd, sd, PINCODE_ASK );
 }
 
 // 0 = pin is correct
