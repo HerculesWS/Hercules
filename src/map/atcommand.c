@@ -1115,13 +1115,6 @@ ACMD_FUNC(heal)
 	nullpo_retr(-1, sd);
 	
 	sscanf(message, "%d %d", &hp, &sp);
-
-	WFIFOHEAD(fd, 4);
-	WFIFOW(fd, 0) = 0x23e;
-	WFIFOW(fd, 2) = hp;
-	WFIFOSET(fd, 4);
-	ShowDebug("Sending~! %d\n",hp);
-
 	
 	// some overflow checks
 	if( hp == INT_MIN ) hp++;
