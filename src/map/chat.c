@@ -83,13 +83,13 @@ int chat_createpcchat(struct map_session_data* sd, const char* title, const char
 
 	if( map[sd->bl.m].flag.nochat )
 	{
-		clif->displaymessage(sd->fd, msg_txt(281));
+		clif->message(sd->fd, msg_txt(281));
 		return 0; //Can't create chatrooms on this map.
 	}
 
 	if( map_getcell(sd->bl.m,sd->bl.x,sd->bl.y,CELL_CHKNOCHAT) )
 	{
-		clif->displaymessage (sd->fd, msg_txt(665));
+		clif->message (sd->fd, msg_txt(665));
 		return 0;
 	}
 

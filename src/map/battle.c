@@ -1324,7 +1324,7 @@ int battle_calc_gvg_damage(struct block_list *src,struct block_list *bl,int dama
 			}
 		}
 		if(src->type != BL_MOB) {
-			struct guild *g = guild_search(status_get_guild_id(src));
+			struct guild *g = src->type == BL_PC ? ((TBL_PC *)src)->guild : guild_search(status_get_guild_id(src));
 
 			if (class_ == MOBID_EMPERIUM && (!g || guild_checkskill(g,GD_APPROVAL) <= 0 ))
 				return 0;
@@ -1335,32 +1335,32 @@ int battle_calc_gvg_damage(struct block_list *src,struct block_list *bl,int dama
 	}
 
 	switch (skill_id) {
-	//Skills with no damage reduction.
-	case PA_PRESSURE:
-	case HW_GRAVITATION:
-	case NJ_ZENYNAGE:
-	case KO_MUCHANAGE:
-		break;
-	default:
-		/* Uncomment if you want god-mode Emperiums at 100 defense. [Kisuka]
-		if (md && md->guardian_data) {
-			damage -= damage * (md->guardian_data->castle->defense/100) * battle_config.castle_defense_rate/100;
-		}
-		*/
-		if (flag & BF_SKILL) { //Skills get a different reduction than non-skills. [Skotlex]
-			if (flag&BF_WEAPON)
-				damage = damage * battle_config.gvg_weapon_damage_rate / 100;
-			if (flag&BF_MAGIC)
-				damage = damage * battle_config.gvg_magic_damage_rate / 100;
-			if (flag&BF_MISC)
-				damage = damage * battle_config.gvg_misc_damage_rate / 100;
-		} else { //Normal attacks get reductions based on range.
-			if (flag & BF_SHORT)
-				damage = damage * battle_config.gvg_short_damage_rate / 100;
-			if (flag & BF_LONG)
-				damage = damage * battle_config.gvg_long_damage_rate / 100;
-		}
-		if(!damage) damage  = 1;
+		//Skills with no damage reduction.
+		case PA_PRESSURE:
+		case HW_GRAVITATION:
+		case NJ_ZENYNAGE:
+		case KO_MUCHANAGE:
+			break;
+		default:
+			/* Uncomment if you want god-mode Emperiums at 100 defense. [Kisuka]
+			if (md && md->guardian_data) {
+				damage -= damage * (md->guardian_data->castle->defense/100) * battle_config.castle_defense_rate/100;
+			}
+			*/
+			if (flag & BF_SKILL) { //Skills get a different reduction than non-skills. [Skotlex]
+				if (flag&BF_WEAPON)
+					damage = damage * battle_config.gvg_weapon_damage_rate / 100;
+				if (flag&BF_MAGIC)
+					damage = damage * battle_config.gvg_magic_damage_rate / 100;
+				if (flag&BF_MISC)
+					damage = damage * battle_config.gvg_misc_damage_rate / 100;
+			} else { //Normal attacks get reductions based on range.
+				if (flag & BF_SHORT)
+					damage = damage * battle_config.gvg_short_damage_rate / 100;
+				if (flag & BF_LONG)
+					damage = damage * battle_config.gvg_long_damage_rate / 100;
+			}
+			if(!damage) damage  = 1;
 	}
 	return damage;
 }

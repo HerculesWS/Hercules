@@ -1068,7 +1068,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 				sprintf(buf,"SVN Revision: %s", svn);
 			else
 				sprintf(buf,"Unknown Version");
-			clif->displaymessage(sd->fd, buf);
+			clif->message(sd->fd, buf);
 		}
 
 		// Message of the Day [Valaris]
@@ -1076,7 +1076,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 			if (battle_config.motd_type)
 				clif->disp_onlyself(sd,motd_text[i],strlen(motd_text[i]));
 			else
-				clif->displaymessage(sd->fd, motd_text[i]);
+				clif->message(sd->fd, motd_text[i]);
 		}
 
 		// message of the limited time of the account
@@ -1234,10 +1234,9 @@ int pc_reg_received(struct map_session_data *sd)
 	intif_Mail_requestinbox(sd->status.char_id, 0); // MAIL SYSTEM - Request Mail Inbox
 	intif_request_questlog(sd);
 
-	if (sd->state.connect_new == 0 && sd->fd)
-	{	//Character already loaded map! Gotta trigger LoadEndAck manually.
+	if (sd->state.connect_new == 0 && sd->fd) { //Character already loaded map! Gotta trigger LoadEndAck manually.
 		sd->state.connect_new = 1;
-		clif->LoadEndAck(sd->fd, sd);
+		clif->pLoadEndAck(sd->fd, sd);
 	}
 
 	pc_inventory_rentals(sd);
@@ -3974,13 +3973,13 @@ int pc_dropitem(struct map_session_data *sd,int n,int amount)
 
 	if( map[sd->bl.m].flag.nodrop )
 	{
-		clif->displaymessage (sd->fd, msg_txt(271));
+		clif->message (sd->fd, msg_txt(271));
 		return 0; //Can't drop items in nodrop mapflag maps.
 	}
 
 	if( !pc_candrop(sd,&sd->status.inventory[n]) )
 	{
-		clif->displaymessage (sd->fd, msg_txt(263));
+		clif->message (sd->fd, msg_txt(263));
 		return 0;
 	}
 
@@ -4113,7 +4112,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		case 14591: // Siege Teleport Scroll
 			if( sd->duel_group && !battle_config.duel_allow_teleport )
 			{
-				clif->displaymessage(sd->fd, msg_txt(663));
+				clif->message(sd->fd, msg_txt(663));
 				return 0;
 			}
 			if( nameid != 601 && nameid != 12212 && map[sd->bl.m].flag.noreturn )
@@ -4392,7 +4391,7 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 
 	if( !itemdb_cancartstore(item_data, pc_get_group_level(sd)) )
 	{ // Check item trade restrictions	[Skotlex]
-		clif->displaymessage (sd->fd, msg_txt(264));
+		clif->message (sd->fd, msg_txt(264));
 		return 1;
 	}
 
@@ -4556,7 +4555,7 @@ int pc_show_steal(struct block_list *bl,va_list ap)
 		sprintf(output,"%s stole an Unknown Item (id: %i).",sd->status.name, itemid);
 	else
 		sprintf(output,"%s stole %s.",sd->status.name,item->jname);
-	clif->displaymessage( ((struct map_session_data *)bl)->fd, output);
+	clif->message( ((struct map_session_data *)bl)->fd, output);
 
 	return 0;
 }
@@ -4754,9 +4753,14 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 			sd->regen.state.gc = 0;
 		// make sure vending is allowed here
 		if (sd->state.vending && map[m].flag.novending) {
-			clif->displaymessage (sd->fd, msg_txt(276)); // "You can't open a shop on this map"
+			clif->message (sd->fd, msg_txt(276)); // "You can't open a shop on this map"
 			vending_closevending(sd);
 		}
+		
+		if( hChSys.local && map[sd->bl.m].channel && idb_exists(map[sd->bl.m].channel->users, sd->status.char_id) ) {
+			clif->chsys_left(map[sd->bl.m].channel,sd);
+		}
+		
 	}
 
 	if( m < 0 )
@@ -4800,7 +4804,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 	}
 
 	if (sd->state.vending && map_getcell(m,x,y,CELL_CHKNOVENDING)) {
-		clif->displaymessage (sd->fd, msg_txt(204)); // "You can't open a shop on this cell."
+		clif->message (sd->fd, msg_txt(204)); // "You can't open a shop on this cell."
 		vending_closevending(sd);
 	}
 
@@ -4938,16 +4942,13 @@ int pc_memo(struct map_session_data* sd, int pos)
 int pc_checkskill(struct map_session_data *sd,uint16 skill_id)
 {
 	if(sd == NULL) return 0;
-	if( skill_id >= GD_SKILLBASE && skill_id < GD_MAX )
-	{
+	if( skill_id >= GD_SKILLBASE && skill_id < GD_MAX ) {
 		struct guild *g;
 
-		if( sd->status.guild_id>0 && (g=guild_search(sd->status.guild_id))!=NULL)
+		if( sd->status.guild_id>0 && (g=sd->guild)!=NULL)
 			return guild_checkskill(g,skill_id);
 		return 0;
-	}
-	else if(skill_id >= ARRAYLENGTH(sd->status.skill) )
-	{
+	} else if(skill_id >= ARRAYLENGTH(sd->status.skill) ) {
 		ShowError("pc_checkskill: Invalid skill id %d (char_id=%d).\n", skill_id, sd->status.char_id);
 		return 0;
 	}
@@ -8555,7 +8556,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 	
 	if(pos & EQP_SHOES)
 		clif->changelook(&sd->bl,LOOK_SHOES,0);
-	if( pos&EQP_GARMENT ) {
+	if( pos&EQP_GARMENT && pc_checkequip(sd,EQP_COSTUME_GARMENT) == -1 ) {
 		sd->status.robe = id ? id->look : 0;
 		clif->changelook(&sd->bl, LOOK_ROBE, sd->status.robe);
 	}

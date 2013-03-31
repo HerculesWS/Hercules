@@ -3461,6 +3461,8 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		} else if( map[m].zone != zone ) { /* we do not override :P would mess everything */
 			map_zone_apply(m,zone,w1,start,buffer,filepath);
 		}
+	} else if ( !strcmpi(w3,"nomapchannelautojoin") ) {
+		map[m].flag.chsysnolocalaj = state;
 	} else
 		ShowError("npc_parse_mapflag: unrecognized mapflag '%s' (file '%s', line '%d').\n", w3, filepath, strline(buffer,start-buffer));
 

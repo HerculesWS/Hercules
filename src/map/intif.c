@@ -170,10 +170,7 @@ int intif_broadcast(const char* mes, int len, int type)
 int intif_broadcast2(const char* mes, int len, unsigned long fontColor, short fontType, short fontSize, short fontAlign, short fontY)
 {
 	// Send to the local players
-	if (fontColor == 0xFE000000) // This is main chat message [LuzZza]
-		clif->MainChatMessage(mes);
-	else
-		clif->broadcast2(NULL, mes, len, fontColor, fontType, fontSize, fontAlign, fontY, ALL_CLIENT);
+	clif->broadcast2(NULL, mes, len, fontColor, fontType, fontSize, fontAlign, fontY, ALL_CLIENT);
 
 	if (CheckForCharServer())
 		return 0;
@@ -1888,7 +1885,7 @@ static void intif_parse_Auction_close(int fd)
 	if( result == 0 )
 	{
 		// FIXME: Leeching off a parse function
-		clif->Auction_cancelreg(fd, sd);
+		clif->pAuction_cancelreg(fd, sd);
 		intif_Auction_requestlist(sd->status.char_id, 6, 0, "", 1);
 	}
 }
@@ -1926,7 +1923,7 @@ static void intif_parse_Auction_bid(int fd)
 		pc_getzeny(sd, bid, LOG_TYPE_AUCTION,NULL);
 	}
 	if( result == 1 ) { // To update the list, display your buy list
-		clif->Auction_cancelreg(fd, sd);
+		clif->pAuction_cancelreg(fd, sd);
 		intif_Auction_requestlist(sd->status.char_id, 7, 0, "", 1);
 	}
 }
@@ -2145,7 +2142,7 @@ void intif_parse_MessageToFD(int fd) {
 		if( sd->bl.id == aid ) {
 			char msg[512];
 			safestrncpy(msg, (char*)RFIFOP(fd,12), RFIFOW(fd,2) - 12);
-			clif->displaymessage(u_fd,msg);
+			clif->message(u_fd,msg);
 		}
 
 	}
@@ -2181,8 +2178,6 @@ int intif_parse(int fd)
 	case 0x3800:
 		if (RFIFOL(fd,4) == 0xFF000000) //Normal announce.
 			clif->broadcast(NULL, (char *) RFIFOP(fd,16), packet_len-16, 0, ALL_CLIENT);
-		else if (RFIFOL(fd,4) == 0xFE000000) //Main chat message [LuzZza]
-			clif->MainChatMessage((char *)RFIFOP(fd,16));
 		else //Color announce.
 			clif->broadcast2(NULL, (char *) RFIFOP(fd,16), packet_len-16, RFIFOL(fd,4), RFIFOW(fd,8), RFIFOW(fd,10), RFIFOW(fd,12), RFIFOW(fd,14), ALL_CLIENT);
 		break;

@@ -57,7 +57,7 @@ void vending_vendinglistreq(struct map_session_data* sd, int id)
 
 	if (!pc_can_give_items(sd) || !pc_can_give_items(vsd)) //check if both GMs are allowed to trade
 	{	// GM is not allowed to trade
-		clif->displaymessage(sd->fd, msg_txt(246));
+		clif->message(sd->fd, msg_txt(246));
 		return;
 	} 
 
@@ -286,7 +286,7 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 	}
 
 	if( i != j )
-		clif->displaymessage (sd->fd, msg_txt(266)); //"Some of your items cannot be vended and were removed from the shop."
+		clif->message (sd->fd, msg_txt(266)); //"Some of your items cannot be vended and were removed from the shop."
 
 	if( i == 0 )
 	{	// no valid item found
