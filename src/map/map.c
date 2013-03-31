@@ -3626,9 +3626,9 @@ void read_map_zone_db(void) {
 	config_setting_t *zones = NULL;
 	/* TODO: #ifndef required for re/pre-re */
 #ifdef RENEWAL
-	const char *config_filename = "db/re/map_zone_db.txt"; // FIXME hardcoded name
+	const char *config_filename = "db/re/map_zone_db.conf"; // FIXME hardcoded name
 #else
-	const char *config_filename = "db/pre-re/map_zone_db.txt"; // FIXME hardcoded name
+	const char *config_filename = "db/pre-re/map_zone_db.conf"; // FIXME hardcoded name
 #endif
 	if (conf_read_file(&map_zone_db, config_filename))
 		return;
