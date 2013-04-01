@@ -3567,7 +3567,7 @@ void clif_useitemack(struct map_session_data *sd,int index,int amount,bool ok)
 void clif_hercules_chsys_send(struct hChSysCh *channel, struct map_session_data *sd, char *msg) {
 	char message[150];
 	snprintf(message, 150, "[ #%s ] %s : %s",channel->name,sd->status.name, msg);
-	clif->chsys_msg(channel,sd,message);	
+	clif->chsys_msg(channel,sd,message);
 }
 
 /// Inform client whether chatroom creation was successful or not (ZC_ACK_CREATE_CHATROOM).
@@ -10363,10 +10363,7 @@ void clif_hercules_chsys_delete(struct hChSysCh *channel) {
 	if( db_size(channel->users) && !hChSys.closing ) {
 		DBIterator *iter;
 		struct map_session_data *sd;
-		char message[60];
 		unsigned char i;
-		sprintf(message, "#%s channel is being shut down",channel->name);
-		clif->chsys_msg(channel,sd,message);
 		iter = db_iterator(channel->users);
 		for( sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter) ) {
 			for( i = 0; i < sd->channel_count; i++ ) {

@@ -8904,6 +8904,7 @@ ACMD_FUNC(channel) {
 		clif->chsys_create(channel,sub1 + 1,sub2,0);
 		
 		channel->owner = sd->status.char_id;
+		channel->type = hChSys_PRIVATE;
 		
 		if( !( channel->opt & hChSys_OPT_ANNOUNCE_JOIN ) ) {
 			sprintf(atcmd_output, msg_txt(1403),sub1); // You're now in the '%s' channel
