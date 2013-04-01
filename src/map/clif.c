@@ -8297,8 +8297,6 @@ void clif_refresh(struct map_session_data *sd)
 		chat_leavechat(sd,0);
 	if( sd->state.vending )
 		clif->openvending(sd, sd->bl.id, sd->vending);
-	if( sd->state.buyingstore )
-		clif->buyingstore_entry_single(sd, sd);
 	if( pc_issit(sd) )
 		clif->sitting(&sd->bl); // FIXME: just send to self, not area
 	if( pc_isdead(sd) ) // When you refresh, resend the death packet.
