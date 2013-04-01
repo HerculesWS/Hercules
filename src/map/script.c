@@ -10753,7 +10753,7 @@ static int script_mapflag_pvp_sub(struct block_list *bl,va_list ap) {
 BUILDIN_FUNC(setmapflag)
 {
 	int16 m,i;
-	const char *str, *val2;
+	const char *str, *val2 = NULL;
 	struct script_data* data;
 	int val=0;
 

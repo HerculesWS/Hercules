@@ -10117,7 +10117,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 			return;
 		}
 	} else if( target[0] == '#' ) {
-		struct hChSysCh *channel;
+		struct hChSysCh *channel = NULL;
 		char* chname = target;
 
 		chname++;
