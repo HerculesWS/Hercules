@@ -587,6 +587,7 @@ struct map_data {
 		unsigned src4instance : 1; // To flag this map when it's used as a src map for instances
 		unsigned reset :1; // [Daegaladh]
 		unsigned chsysnolocalaj : 1;
+		unsigned noknockback : 1;
 	} flag;
 	struct point save;
 	struct npc_data *npc[MAX_NPC_PER_MAP];

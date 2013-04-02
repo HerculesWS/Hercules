@@ -2049,8 +2049,8 @@ int skill_blown(struct block_list* src, struct block_list* target, int count, in
 
 	nullpo_ret(src);
 
-	if (src != target && (map_flag_gvg(target->m) || map[target->m].flag.battleground))
-		return 0; //No knocking back in WoE
+	if (src != target && map[src->m].flag.noknockback)
+		return 0; //No knocking
 	if (count == 0)
 		return 0; //Actual knockback distance is 0.
 
