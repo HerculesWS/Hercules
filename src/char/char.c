@@ -984,13 +984,15 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	char last_map[MAP_NAME_LENGTH_EXT];
 
 	stmt = SqlStmt_Malloc(sql_handle);
-	if( stmt == NULL )
-	{
+	if( stmt == NULL ) {
 		SqlStmt_ShowDebug(stmt);
 		return 0;
 	}
 	memset(&p, 0, sizeof(p));
 
+	for(i = 0 ; i < MAX_CHARS; i++ )
+		sd->found_char[i] = -1;
+	
 	// read char data
 	if( SQL_ERROR == SqlStmt_Prepare(stmt, "SELECT "
 		"`char_id`,`char_num`,`name`,`class`,`base_level`,`job_level`,`base_exp`,`job_exp`,`zeny`,"
@@ -1043,14 +1045,12 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 		SqlStmt_Free(stmt);
 		return 0;
 	}
-	for( i = 0; i < MAX_CHARS && SQL_SUCCESS == SqlStmt_NextRow(stmt); i++ )
-	{
+	
+	for( i = 0; i < MAX_CHARS && SQL_SUCCESS == SqlStmt_NextRow(stmt); i++ ) {
 		p.last_point.map = mapindex_name2id(last_map);
 		sd->found_char[p.slot] = p.char_id;
 		j += mmo_char_tobuf(WBUFP(buf, j), &p);
 	}
-	for( ; i < MAX_CHARS; i++ )
-		sd->found_char[i] = -1;
 
 	memset(sd->new_name,0,sizeof(sd->new_name));
 
@@ -1533,7 +1533,7 @@ int make_new_char_sql(struct char_session_data* sd, char* name_, int str, int ag
 #endif
 
 	// check char slot
-	if( sd->found_char[slot] )
+	if( sd->found_char[slot] != -1 )
 		return -2; /* character account limit exceeded */
 
 	// validation success, log result
