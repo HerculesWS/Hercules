@@ -497,6 +497,10 @@ struct mapflag_skill_adjust {
 	unsigned short skill_id;
 	unsigned short modifier;
 };
+struct map_zone_disabled_skill_entry {
+	unsigned short nameid;
+	enum bl_type type;
+};
 
 #define MAP_ZONE_NAME_LENGTH 30
 #define MAP_ZONE_ALL_NAME "Normal"
@@ -507,7 +511,7 @@ struct mapflag_skill_adjust {
 DBMap *zone_db;/* string => struct map_zone_data */
 struct map_zone_data {
 	char name[MAP_ZONE_NAME_LENGTH];/* 20'd */
-	int *disabled_skills;
+	struct map_zone_disabled_skill_entry **disabled_skills;
 	int disabled_skills_count;
 	int *disabled_items;
 	int disabled_items_count;
@@ -568,10 +572,6 @@ struct map_data {
 		unsigned fireworks : 1;
 		unsigned sakura : 1; // [Valaris]
 		unsigned leaves : 1; // [Valaris]
-		/**
-		 * No longer available, keeping here just in case it's back someday. [Ind]
-		 **/
-		//unsigned rain : 1; // [Valaris]
 		unsigned nogo : 1; // [Valaris]
 		unsigned nobaseexp	: 1; // [Lorky] added by Lupus
 		unsigned nojobexp	: 1; // [Lorky]

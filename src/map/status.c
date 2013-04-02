@@ -1494,28 +1494,40 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 			return 0;
 	}
 
-	switch( skill_id ) {
-		case PA_PRESSURE:
-			if( flag && target ) {
-				//Gloria Avoids pretty much everything....
-				tsc = status_get_sc(target);
-				if(tsc && tsc->option&OPTION_HIDE)
-					return 0;
+	if( skill_id ) {
+		int i;
+		
+		for(i = 0; i < map[src->m].zone->disabled_skills_count; i++) {
+			if( skill_id == map[src->m].zone->disabled_skills[i]->nameid && (map[src->m].zone->disabled_skills[i]->type&src->type) ) {
+				if( src->type == BL_PC )
+					clif->msg((TBL_PC*)src, SKILL_CANT_USE_AREA); // This skill cannot be used within this area
+				return 0;
 			}
-			break;
-		case GN_WALLOFTHORN:
-			if( target && status_isdead(target) )
-				return 0;
-			break;
-		case AL_TELEPORT:
-			//Should fail when used on top of Land Protector [Skotlex]
-			if (src && map_getcell(src->m, src->x, src->y, CELL_CHKLANDPROTECTOR)
-				&& !(status->mode&MD_BOSS)
-				&& (src->type != BL_PC || ((TBL_PC*)src)->skillitem != skill_id))
-				return 0;
-			break;
-		default:
-			break;
+		}
+
+		switch( skill_id ) {
+			case PA_PRESSURE:
+				if( flag && target ) {
+					//Gloria Avoids pretty much everything....
+					tsc = status_get_sc(target);
+					if(tsc && tsc->option&OPTION_HIDE)
+						return 0;
+				}
+				break;
+			case GN_WALLOFTHORN:
+				if( target && status_isdead(target) )
+					return 0;
+				break;
+			case AL_TELEPORT:
+				//Should fail when used on top of Land Protector [Skotlex]
+				if (src && map_getcell(src->m, src->x, src->y, CELL_CHKLANDPROTECTOR)
+					&& !(status->mode&MD_BOSS)
+					&& (src->type != BL_PC || ((TBL_PC*)src)->skillitem != skill_id))
+					return 0;
+				break;
+			default:
+				break;
+		}
 	}
 
 	if ( src ) sc = status_get_sc(src);

@@ -477,7 +477,6 @@ int can_copy (struct map_session_data *sd, uint16 skill_id, struct block_list* b
 int skillnotok (uint16 skill_id, struct map_session_data *sd)
 {
 	int16 idx,m;
-	int i;
 	nullpo_retr (1, sd);
 	m = sd->bl.m;
 	idx = skill->get_index(skill_id);
@@ -513,13 +512,6 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 	if( sd->skillitem == skill_id )
 		return 0;
 	
-	for(i = 0; i < map[m].zone->disabled_skills_count; i++) {
-		if( skill_id == map[m].zone->disabled_skills[i] ) {
-			clif->msg(sd, SKILL_CANT_USE_AREA); // This skill cannot be used within this area
-			return 1;
-		}
-	}
-
 	if( sd->sc.option&OPTION_MOUNTING )
 		return 1;//You can't use skills while in the new mounts (The client doesn't let you, this is to make cheat-safe)
 

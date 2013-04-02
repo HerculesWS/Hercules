@@ -2911,6 +2911,9 @@ void map_zone_db_clear(void) {
 	
 	DBIterator *iter = db_iterator(zone_db);
 	for(zone = dbi_first(iter); dbi_exists(iter); zone = dbi_next(iter)) {
+		for(i = 0; i < zone->disabled_skills_count; i++) {
+			aFree(zone->disabled_skills[i]);
+		}
 		aFree(zone->disabled_skills);
 		aFree(zone->disabled_items);
 		for(i = 0; i < zone->mapflags_count; i++) {
@@ -2923,6 +2926,9 @@ void map_zone_db_clear(void) {
 	db_destroy(zone_db);/* will aFree(zone) */
 	
 	/* clear the main zone stuff */
+	for(i = 0; i < map_zone_all.disabled_skills_count; i++) {
+		aFree(map_zone_all.disabled_skills[i]);
+	}
 	aFree(map_zone_all.disabled_skills);
 	aFree(map_zone_all.disabled_items);
 	for(i = 0; i < map_zone_all.mapflags_count; i++) {
@@ -3621,6 +3627,36 @@ void map_zone_init(void) {
 	}
 		
 }
+enum bl_type map_zone_bl_type(const char *entry) {
+	char temp[200], *parse;
+	enum bl_type bl;
+	safestrncpy(temp, entry, 200);
+	
+	parse = strtok(temp,"|");
+		
+	while (parse != NULL) {
+		normalize_name(parse," ");
+		if( strcmpi(parse,"player") == 0 )
+			bl |= BL_PC;
+		else if( strcmpi(parse,"homun") == 0 )
+			bl |= BL_HOM;
+		else if( strcmpi(parse,"mercenary") == 0 )
+			bl |= BL_MER;
+		else if( strcmpi(parse,"monster") == 0 )
+			bl |= BL_MOB;
+		else if( strcmpi(parse,"elemental") == 0 )
+			bl |= BL_ELEM;
+		else if( strcmpi(parse,"all") == 0 )
+			bl |= BL_ALL;
+		else if( strcmpi(parse,"none") == 0 ) {
+			bl = 0;
+		} else {
+			ShowError("map_zone_db: '%s' unknown type, skipping...\n",parse);
+		}
+		parse = strtok(NULL,"|");
+	}
+	return bl;
+}
 void read_map_zone_db(void) {
 	config_t map_zone_db;
 	config_setting_t *zones = NULL;
@@ -3644,7 +3680,7 @@ void read_map_zone_db(void) {
 		config_setting_t *mapflags;
 		const char *name;
 		const char *zonename;
-		int i,h;
+		int i,h,v;
 		int zone_count = 0, disabled_skills_count = 0, disabled_items_count = 0, mapflags_count = 0;
 		
 		zone_count = config_setting_length(zones);
@@ -3694,18 +3730,25 @@ void read_map_zone_db(void) {
 						--h;
 						continue;
 					}
-					if( !config_setting_get_bool(skill) )/* we dont remove it from the three due to inheritance */
+					if( !map_zone_bl_type(config_setting_get_string_elem(skills,h)) )/* we dont remove it from the three due to inheritance */
 						--disabled_skills_count;
 				}
 				/* all ok, process */
-				CREATE( zone->disabled_skills, int, disabled_skills_count );
-				for(h = 0; h < disabled_skills_count; h++) {
+				CREATE( zone->disabled_skills, struct map_zone_disabled_skill_entry *, disabled_skills_count );
+				for(h = 0, v = 0; h < config_setting_length(skills); h++) {
 					config_setting_t *skill = config_setting_get_elem(skills, h);
-					
+					struct map_zone_disabled_skill_entry * entry;
+					enum bl_type type;
 					name = config_setting_name(skill);
 					
-					if( config_setting_get_bool(skill) )/* only add if enabled */
-						zone->disabled_skills[h] = strdb_iget(skilldb_name2id, name);
+					if( (type = map_zone_bl_type(config_setting_get_string_elem(skills,h))) ) { /* only add if enabled */
+						CREATE( entry, struct map_zone_disabled_skill_entry, 1 );
+						
+						entry->nameid = strdb_iget(skilldb_name2id, name);
+						entry->type = type;
+						
+						zone->disabled_skills[v++] = entry;
+					}
 					
 				}
 				zone->disabled_skills_count = disabled_skills_count;
@@ -3730,13 +3773,13 @@ void read_map_zone_db(void) {
 				}
 				/* all ok, process */
 				CREATE( zone->disabled_items, int, disabled_items_count );
-				for(h = 0; h < disabled_items_count; h++) {
+				for(h = 0, v = 0; h < config_setting_length(items); h++) {
 					config_setting_t *item = config_setting_get_elem(items, h);
 					
 					if( config_setting_get_bool(item) ) { /* only add if enabled */
 						name = config_setting_name(item);
 						data = itemdb_searchname(name);
-						zone->disabled_items[h] = data->nameid;
+						zone->disabled_items[v++] = data->nameid;
 					}
 					
 				}
@@ -3800,15 +3843,17 @@ void read_map_zone_db(void) {
 							int k;
 							for(k = 0; k < disabled_skills_count; k++) {
 								config_setting_t *skill = config_setting_get_elem(skills, k);
-								if( strdb_iget(skilldb_name2id, config_setting_name(skill)) == izone->disabled_skills[j] ) {
-									if( config_setting_get_bool(skill) )
-										continue;
+								if( strdb_iget(skilldb_name2id, config_setting_name(skill)) == izone->disabled_skills[j]->nameid ) {
 									break;
 								}
 							}
 							if( k == disabled_skills_count ) {/* we didn't find it */
-								RECREATE( zone->disabled_skills, int, ++zone->disabled_skills_count );
-								zone->disabled_skills[zone->disabled_skills_count-1] = izone->disabled_skills[j];
+								struct map_zone_disabled_skill_entry *entry;
+								RECREATE( zone->disabled_skills, struct map_zone_disabled_skill_entry *, ++zone->disabled_skills_count );
+								CREATE( entry, struct map_zone_disabled_skill_entry, 1 );
+								entry->nameid = izone->disabled_skills[j]->nameid;
+								entry->type = izone->disabled_skills[j]->type;
+								zone->disabled_skills[zone->disabled_skills_count-1] = entry;
 							}
 						}
 					}
