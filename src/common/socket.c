@@ -1411,20 +1411,21 @@ void socket_datasync(int fd, bool send) {
 		{ sizeof(struct fame_list) },
 	};
 	unsigned short i;
+	unsigned int alen = ARRAYLENGTH(data_list);
 	if( send ) {
-		unsigned short p_len = ( sizeof(data_list) * 4 ) + 4;
+		unsigned short p_len = ( alen * 4 ) + 4;
 		WFIFOHEAD(fd, p_len);
 
 		WFIFOW(fd, 0) = 0x2b0a;
 		WFIFOW(fd, 2) = p_len;
 		
-		for( i = 0; i < sizeof(data_list); i++ ) {
+		for( i = 0; i < alen; i++ ) {
 			WFIFOL(fd, 4 + ( i * 4 ) ) = data_list[i].length;
 		}
 		
 		WFIFOSET(fd, p_len);
 	} else {
-		for( i = 0; i < sizeof(data_list); i++ ) {
+		for( i = 0; i < alen; i++ ) {
 			if( RFIFOL(fd, 4 + (i * 4) ) != data_list[i].length ) {
 				/* force the other to go wrong too so both are taken down */
 				WFIFOHEAD(fd, 8);
@@ -1434,7 +1435,7 @@ void socket_datasync(int fd, bool send) {
 				WFIFOSET(fd, 8);
 				flush_fifo(fd);
 				/* shut down */
-				ShowFatalError("Servers are out of sync! recompile from scratch\n");
+				ShowFatalError("Servers are out of sync! recompile from scratch (%d)\n",i);
 				exit(EXIT_FAILURE);
 			}
 		}
