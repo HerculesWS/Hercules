@@ -124,10 +124,11 @@ static int pc_invincible_timer(int tid, unsigned int tick, int id, intptr_t data
 	return 0;
 }
 
-void pc_setinvincibletimer(struct map_session_data* sd, int val)
-{
+void pc_setinvincibletimer(struct map_session_data* sd, int val) {
 	nullpo_retv(sd);
 
+	val += map[sd->bl.m].invincible_time_inc;
+	
 	if( sd->invincible_timer != INVALID_TIMER )
 		delete_timer(sd->invincible_timer,pc_invincible_timer);
 	sd->invincible_timer = add_timer(gettick()+val,pc_invincible_timer,sd->bl.id,0);

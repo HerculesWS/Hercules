@@ -9197,10 +9197,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 		guild_send_memberinfoshort(sd,1);
 
 	if(battle_config.pc_invincible_time > 0) {
-		if(map_flag_gvg(sd->bl.m))
-			pc_setinvincibletimer(sd,battle_config.pc_invincible_time<<1);
-		else
-			pc_setinvincibletimer(sd,battle_config.pc_invincible_time);
+		pc_setinvincibletimer(sd,battle_config.pc_invincible_time);
 	}
 
 	if( map[sd->bl.m].users++ == 0 && battle_config.dynamic_mobs )

@@ -624,6 +624,9 @@ struct map_data {
 	
 	/* Hercules Local Chat */
 	struct hChSysCh *channel;
+	
+	/* invincible_time_inc mapflag */
+	unsigned int invincible_time_inc;
 };
 
 /// Stores information about a remote map (for multi-mapserver setups).

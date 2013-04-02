@@ -3019,6 +3019,8 @@ void map_flags_init(void) {
 			map[i].flag.pvp = 1; // make all maps pvp for pk_mode [Valaris]
 		/* align with 'All' zone */
 		map[i].zone = &map_zone_all;
+		
+		map[i].invincible_time_inc = 0;
 	}
 }
 

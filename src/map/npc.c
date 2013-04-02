@@ -3361,11 +3361,6 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		map[m].flag.sakura=state;
 	else if (!strcmpi(w3,"leaves"))
 		map[m].flag.leaves=state;
-	/**
-	 * No longer available, keeping here just in case it's back someday. [Ind]
-	 **/
-	//else if (!strcmpi(w3,"rain"))
-	//	map[m].flag.rain=state;
 	else if (!strcmpi(w3,"nightenabled"))
 		map[m].flag.nightenabled=state;
 	else if (!strcmpi(w3,"nogo"))
@@ -3463,6 +3458,8 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		}
 	} else if ( !strcmpi(w3,"nomapchannelautojoin") ) {
 		map[m].flag.chsysnolocalaj = state;
+	} else if ( !strcmpi(w3,"invincible_time_inc") ) {
+		map[m].invincible_time_inc = (state) ? atoi(w4) : 0;
 	} else
 		ShowError("npc_parse_mapflag: unrecognized mapflag '%s' (file '%s', line '%d').\n", w3, filepath, strline(buffer,start-buffer));
 
