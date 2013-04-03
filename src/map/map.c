@@ -2925,6 +2925,16 @@ void map_zone_db_clear(void) {
 	
 	db_destroy(zone_db);/* will aFree(zone) */
 	
+	/* clear the pk zone stuff */
+	for(i = 0; i < map_zone_pk.disabled_skills_count; i++) {
+		aFree(map_zone_pk.disabled_skills[i]);
+	}
+	aFree(map_zone_pk.disabled_skills);
+	aFree(map_zone_pk.disabled_items);
+	for(i = 0; i < map_zone_pk.mapflags_count; i++) {
+		aFree(map_zone_pk.mapflags[i]);
+	}
+	aFree(map_zone_pk.mapflags);
 	/* clear the main zone stuff */
 	for(i = 0; i < map_zone_all.disabled_skills_count; i++) {
 		aFree(map_zone_all.disabled_skills[i]);
@@ -3015,12 +3025,19 @@ void map_flags_init(void) {
 		map[i].skill_count = 0;
 				
 		// adjustments
-		if( battle_config.pk_mode )
+		if( battle_config.pk_mode ) {
 			map[i].flag.pvp = 1; // make all maps pvp for pk_mode [Valaris]
-		/* align with 'All' zone */
-		map[i].zone = &map_zone_all;
+			map[i].zone = &map_zone_pk;
+		} else /* align with 'All' zone */
+			map[i].zone = &map_zone_all;
 		
 		map[i].invincible_time_inc = 0;
+		
+		map[i].weapon_damage_rate = 100;
+		map[i].magic_damage_rate  = 100;
+		map[i].misc_damage_rate   = 100;
+		map[i].short_damage_rate  = 100;
+		map[i].long_damage_rate   = 100;
 	}
 }
 
@@ -3601,7 +3618,7 @@ void map_zone_apply(int m, struct map_zone_data *zone,char* w1, const char* star
 		npc_parse_mapflag(w1,empty,flag,params,start,buffer,filepath);
 	}
 }
-/* used on npc load and reload to apply all "Normal" zone */
+/* used on npc load and reload to apply all "Normal" and "PK Mode" zones */
 void map_zone_init(void) {
 	struct map_zone_data *zone;
 	char empty[1] = "\0";
@@ -3622,8 +3639,30 @@ void map_zone_init(void) {
 			}
 		}
 		for(j = 0; j < map_num; j++) {
-			if( map[j].zone == &map_zone_all ) {
+			if( map[j].zone == zone ) {
 				npc_parse_mapflag(map[j].name,empty,flag,params,empty,empty,empty);
+			}
+		}
+	}
+	
+	if( battle_config.pk_mode ) {
+		zone = &map_zone_pk;
+		for(i = 0; i < zone->mapflags_count; i++) {
+			char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
+			int len = strlen(zone->mapflags[i]);
+			params[0] = '\0';
+			memcpy(flag, zone->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
+			for(k = 0; k < len; k++) {
+				if( flag[k] == '\t' ) {
+					memcpy(params, &flag[k+1], len - k);
+					flag[k] = '\0';
+					break;
+				}
+			}
+			for(j = 0; j < map_num; j++) {
+				if( map[j].zone == zone ) {
+					npc_parse_mapflag(map[j].name,empty,flag,params,empty,empty,empty);
+				}
 			}
 		}
 	}
@@ -3711,6 +3750,9 @@ void read_map_zone_db(void) {
 			/* is this the global template? */
 			if( strncmpi(zonename,MAP_ZONE_ALL_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
 				zone = &map_zone_all;
+				is_all = true;
+			} else if( strncmpi(zonename,MAP_ZONE_PK_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
+				zone = &map_zone_pk;
 				is_all = true;
 			} else {
 				CREATE( zone, struct map_zone_data, 1 );

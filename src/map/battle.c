@@ -1199,23 +1199,31 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
                     if (hd) hom_addspiritball(hd, 10);
                 }
 	}
-
-	if (battle_config.pk_mode && sd && bl->type == BL_PC && damage && map[bl->m].flag.pvp)
-  	{
-		if (flag & BF_SKILL) { //Skills get a different reduction than non-skills. [Skotlex]
-			if (flag&BF_WEAPON)
-				damage = damage * battle_config.pk_weapon_damage_rate / 100;
-			if (flag&BF_MAGIC)
-				damage = damage * battle_config.pk_magic_damage_rate / 100;
-			if (flag&BF_MISC)
-				damage = damage * battle_config.pk_misc_damage_rate / 100;
-		} else { //Normal attacks get reductions based on range.
-			if (flag & BF_SHORT)
-				damage = damage * battle_config.pk_short_damage_rate / 100;
-			if (flag & BF_LONG)
-				damage = damage * battle_config.pk_long_damage_rate / 100;
+	/* no data claims these settings affect anything other than players */
+	if( damage && sd && bl->type == BL_PC ) {
+		switch( skill_id ) {
+			//case PA_PRESSURE: /* pressure also belongs to this list but it doesn't reach this area -- so dont worry about it */
+			case HW_GRAVITATION:
+			case NJ_ZENYNAGE:
+			case KO_MUCHANAGE:
+				break;
+			default:
+				if (flag & BF_SKILL) { //Skills get a different reduction than non-skills. [Skotlex]
+					if (flag&BF_WEAPON)
+						damage = damage * map[bl->m].weapon_damage_rate / 100;
+					if (flag&BF_MAGIC)
+						damage = damage * map[bl->m].magic_damage_rate / 100;
+					if (flag&BF_MISC)
+						damage = damage * map[bl->m].misc_damage_rate / 100;
+				} else { //Normal attacks get reductions based on range.
+					if (flag & BF_SHORT)
+						damage = damage * map[bl->m].short_damage_rate / 100;
+					if (flag & BF_LONG)
+						damage = damage * map[bl->m].long_damage_rate / 100;
+				}
+				if(!damage) damage  = 1;
+				break;
 		}
-		if(!damage) damage  = 1;
 	}
 
 	if(battle_config.skill_min_damage && damage > 0 && damage < div_)
@@ -1267,33 +1275,8 @@ int battle_calc_bg_damage(struct block_list *src, struct block_list *bl, int dam
 	if( bl->type == BL_MOB ) {
 		struct mob_data* md = BL_CAST(BL_MOB, bl);
 		
-		if( map[bl->m].flag.battleground && (md->class_ == MOBID_BLUE_CRYST || md->class_ == MOBID_PINK_CRYST) && flag&BF_SKILL )
+		if( flag&BF_SKILL && (md->class_ == MOBID_BLUE_CRYST || md->class_ == MOBID_PINK_CRYST) )
 			return 0; // Crystal cannot receive skill damage on battlegrounds
-	}
-
-	switch( skill_id ) {
-		case PA_PRESSURE:
-		case HW_GRAVITATION:
-		case NJ_ZENYNAGE:
-		case KO_MUCHANAGE:
-			break;
-		default:
-			if( flag&BF_SKILL ) { //Skills get a different reduction than non-skills. [Skotlex]
-				if( flag&BF_WEAPON )
-					damage = damage * battle_config.bg_weapon_damage_rate / 100;
-				if( flag&BF_MAGIC )
-					damage = damage * battle_config.bg_magic_damage_rate / 100;
-				if(	flag&BF_MISC )
-					damage = damage * battle_config.bg_misc_damage_rate / 100;
-			} else { //Normal attacks get reductions based on range.
-				if( flag&BF_SHORT )
-					damage = damage * battle_config.bg_short_damage_rate / 100;
-				if( flag&BF_LONG )
-					damage = damage * battle_config.bg_long_damage_rate / 100;
-			}
-
-			if( !damage )
-				damage = 1;
 	}
 
 	return damage;
@@ -1335,7 +1318,6 @@ int battle_calc_gvg_damage(struct block_list *src,struct block_list *bl,int dama
 	}
 
 	switch (skill_id) {
-		//Skills with no damage reduction.
 		case PA_PRESSURE:
 		case HW_GRAVITATION:
 		case NJ_ZENYNAGE:
@@ -1347,21 +1329,9 @@ int battle_calc_gvg_damage(struct block_list *src,struct block_list *bl,int dama
 				damage -= damage * (md->guardian_data->castle->defense/100) * battle_config.castle_defense_rate/100;
 			}
 			*/
-			if (flag & BF_SKILL) { //Skills get a different reduction than non-skills. [Skotlex]
-				if (flag&BF_WEAPON)
-					damage = damage * battle_config.gvg_weapon_damage_rate / 100;
-				if (flag&BF_MAGIC)
-					damage = damage * battle_config.gvg_magic_damage_rate / 100;
-				if (flag&BF_MISC)
-					damage = damage * battle_config.gvg_misc_damage_rate / 100;
-			} else { //Normal attacks get reductions based on range.
-				if (flag & BF_SHORT)
-					damage = damage * battle_config.gvg_short_damage_rate / 100;
-				if (flag & BF_LONG)
-					damage = damage * battle_config.gvg_long_damage_rate / 100;
-			}
-			if(!damage) damage  = 1;
+			break;
 	}
+	
 	return damage;
 }
 
@@ -5665,17 +5635,7 @@ static const struct _battle_data {
 	{ "player_cloak_check_type",            &battle_config.pc_cloak_check_type,             1,      0,      1|2|4,          },
 	{ "monster_cloak_check_type",           &battle_config.monster_cloak_check_type,        4,      0,      1|2|4,          },
 	{ "sense_type",                         &battle_config.estimation_type,                 1|2,    0,      1|2,            },
-	{ "gvg_short_attack_damage_rate",       &battle_config.gvg_short_damage_rate,           80,     0,      INT_MAX,        },
-	{ "gvg_long_attack_damage_rate",        &battle_config.gvg_long_damage_rate,            80,     0,      INT_MAX,        },
-	{ "gvg_weapon_attack_damage_rate",      &battle_config.gvg_weapon_damage_rate,          60,     0,      INT_MAX,        },
-	{ "gvg_magic_attack_damage_rate",       &battle_config.gvg_magic_damage_rate,           60,     0,      INT_MAX,        },
-	{ "gvg_misc_attack_damage_rate",        &battle_config.gvg_misc_damage_rate,            60,     0,      INT_MAX,        },
 	{ "gvg_flee_penalty",                   &battle_config.gvg_flee_penalty,                20,     0,      INT_MAX,        },
-	{ "pk_short_attack_damage_rate",        &battle_config.pk_short_damage_rate,            80,     0,      INT_MAX,        },
-	{ "pk_long_attack_damage_rate",         &battle_config.pk_long_damage_rate,             70,     0,      INT_MAX,        },
-	{ "pk_weapon_attack_damage_rate",       &battle_config.pk_weapon_damage_rate,           60,     0,      INT_MAX,        },
-	{ "pk_magic_attack_damage_rate",        &battle_config.pk_magic_damage_rate,            60,     0,      INT_MAX,        },
-	{ "pk_misc_attack_damage_rate",         &battle_config.pk_misc_damage_rate,             60,     0,      INT_MAX,        },
 	{ "mob_changetarget_byskill",           &battle_config.mob_changetarget_byskill,        0,      0,      1,              },
 	{ "attack_direction_change",            &battle_config.attack_direction_change,         BL_ALL, BL_NUL, BL_ALL,         },
 	{ "land_skill_limit",                   &battle_config.land_skill_limit,                BL_ALL, BL_NUL, BL_ALL,         },
@@ -5867,11 +5827,6 @@ static const struct _battle_data {
 	{ "client_limit_unit_lv",               &battle_config.client_limit_unit_lv,            0,      0,      BL_ALL,         },
 // BattleGround Settings
 	{ "bg_update_interval",                 &battle_config.bg_update_interval,              1000,   100,    INT_MAX,        },
-	{ "bg_short_attack_damage_rate",        &battle_config.bg_short_damage_rate,            80,     0,      INT_MAX,        },
-	{ "bg_long_attack_damage_rate",         &battle_config.bg_long_damage_rate,             80,     0,      INT_MAX,        },
-	{ "bg_weapon_attack_damage_rate",       &battle_config.bg_weapon_damage_rate,           60,     0,      INT_MAX,        },
-	{ "bg_magic_attack_damage_rate",        &battle_config.bg_magic_damage_rate,            60,     0,      INT_MAX,        },
-	{ "bg_misc_attack_damage_rate",         &battle_config.bg_misc_damage_rate,             60,     0,      INT_MAX,        },
 	{ "bg_flee_penalty",                    &battle_config.bg_flee_penalty,                 20,     0,      INT_MAX,        },
 	/**
 	 * rAthena
