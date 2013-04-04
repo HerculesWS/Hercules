@@ -799,6 +799,7 @@ int guild_member_added(int guild_id,int account_id,int char_id,int flag)
     //if all ok add player to guild
 	sd->status.guild_id = g->guild_id;
 	sd->guild_emblem_id = g->emblem_id;
+	sd->guild = g;
 	//Packets which were sent in the previous 'guild_sent' implementation.
 	clif->guild_belonginfo(sd,g);
 	clif->guild_notice(sd,g);
