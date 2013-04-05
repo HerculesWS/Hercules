@@ -5651,8 +5651,8 @@ ACMD_FUNC(changelook)
  * @autotrade by durf [Lupus] [Paradox924X]
  * Turns on/off Autotrade for a specific player
  *------------------------------------------*/
-ACMD_FUNC(autotrade)
-{
+ACMD_FUNC(autotrade) {
+	int i;
 	nullpo_retr(-1, sd);
 
 	if( map[sd->bl.m].flag.autotrade != battle_config.autotrade_mapflag ) {
@@ -5675,6 +5675,29 @@ ACMD_FUNC(autotrade)
 		int timeout = atoi(message);
 		status_change_start(&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0, ((timeout > 0) ? min(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, 0);
 	}
+	
+	if( hChSys.ally && sd->status.guild_id ) {
+		struct guild *g = sd->guild, *sg;
+		if( g ) {
+			if( idb_exists(((struct hChSysCh *)g->channel)->users, sd->status.char_id) )
+				clif->chsys_left((struct hChSysCh *)g->channel,sd);
+			for (i = 0; i < MAX_GUILDALLIANCE; i++) {
+				if(	g->alliance[i].guild_id && (sg = guild_search(g->alliance[i].guild_id) ) ) {
+					if( idb_exists(((struct hChSysCh *)sg->channel)->users, sd->status.char_id) )
+						clif->chsys_left((struct hChSysCh *)sg->channel,sd);
+					break;
+				}
+			}
+		}
+	}
+		
+	if( sd->channel_count ) {
+		for( i = 0; i < sd->channel_count; i++ ) {
+			if( sd->channels[i] != NULL )
+				clif->chsys_left(sd->channels[i],sd);
+		}
+	}
+	
 	clif->authfail_fd(sd->fd, 15);
 
 	return 0;
