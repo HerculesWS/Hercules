@@ -3670,7 +3670,7 @@ void map_zone_init(void) {
 }
 enum bl_type map_zone_bl_type(const char *entry) {
 	char temp[200], *parse;
-	enum bl_type bl;
+	enum bl_type bl = BL_NUL;
 	safestrncpy(temp, entry, 200);
 	
 	parse = strtok(temp,"|");
@@ -3690,7 +3690,7 @@ enum bl_type map_zone_bl_type(const char *entry) {
 		else if( strcmpi(parse,"all") == 0 )
 			bl |= BL_ALL;
 		else if( strcmpi(parse,"none") == 0 ) {
-			bl = 0;
+			bl = BL_NUL;
 		} else {
 			ShowError("map_zone_db: '%s' unknown type, skipping...\n",parse);
 		}
