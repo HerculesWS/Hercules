@@ -1495,13 +1495,16 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 	}
 
 	if( skill_id ) {
-		int i;
 		
-		for(i = 0; i < map[src->m].zone->disabled_skills_count; i++) {
-			if( skill_id == map[src->m].zone->disabled_skills[i]->nameid && (map[src->m].zone->disabled_skills[i]->type&src->type) ) {
-				if( src->type == BL_PC )
-					clif->msg((TBL_PC*)src, SKILL_CANT_USE_AREA); // This skill cannot be used within this area
-				return 0;
+		if( src ) {
+			int i;
+			
+			for(i = 0; i < map[src->m].zone->disabled_skills_count; i++) {
+				if( skill_id == map[src->m].zone->disabled_skills[i]->nameid && (map[src->m].zone->disabled_skills[i]->type&src->type) ) {
+					if( src->type == BL_PC )
+						clif->msg((TBL_PC*)src, SKILL_CANT_USE_AREA); // This skill cannot be used within this area
+					return 0;
+				}
 			}
 		}
 
