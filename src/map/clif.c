@@ -5421,8 +5421,11 @@ void clif_status_change(struct block_list *bl,int type,int flag,int tick,int val
 
 	if (!(status_type2relevant_bl_types(type)&bl->type)) // only send status changes that actually matter to the client
 		return;
-
-#if PACKETVER >= 20090121
+#if PACKETVER >= 20120618
+	if(flag && battle_config.display_status_timers && sd)
+		WBUFW(buf,0)=0x983;
+	else
+#elif PACKETVER >= 20090121
 	if(flag && battle_config.display_status_timers && sd)
 		WBUFW(buf,0)=0x43f;
 	else
@@ -5431,9 +5434,19 @@ void clif_status_change(struct block_list *bl,int type,int flag,int tick,int val
 	WBUFW(buf,2)=type;
 	WBUFL(buf,4)=bl->id;
 	WBUFB(buf,8)=flag;
-#if PACKETVER >= 20090121
-	if(flag && battle_config.display_status_timers && sd)
-	{
+#if PACKETVER >= 20120618
+	WBUFL(buf,9)=tick;/* at this stage remain and total are the same value I believe */
+	WBUFL(buf,13)=tick;
+	if(flag && battle_config.display_status_timers && sd) {
+		if (tick <= 0)
+			tick = 9999; // this is indeed what official servers do
+		
+		WBUFL(buf,17) = val1;
+		WBUFL(buf,21) = val2;
+		WBUFL(buf,25) = val3;
+	}
+#elif PACKETVER >= 20090121
+	if(flag && battle_config.display_status_timers && sd) {
 		if (tick <= 0)
 				tick = 9999; // this is indeed what official servers do
 
@@ -5443,6 +5456,7 @@ void clif_status_change(struct block_list *bl,int type,int flag,int tick,int val
 		WBUFL(buf,21) = val3;
 	}
 #endif
+	ShowDebug("Len for %d vs %d is %d\n",WBUFW(buf,0),0x983,packet_len(WBUFW(buf,0)));
 	clif->send(buf,packet_len(WBUFW(buf,0)),bl, (sd && sd->status.option&OPTION_INVISIBLE) ? SELF : AREA);
 }
 
@@ -16791,6 +16805,11 @@ static int packetdb_readdb(void)
 		0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 		0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
 		0,  0,  0,  0,  0,  0,  0, 14,  0,  0,  0,  0,  0,  0,  0,  0,
+	//#0x0980
+		0,  0,  0, 29,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+		0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+		0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+		0,  0,  0,  0,  0,  0,  0, 14,  0,  0,  0,  0,  0,  0,  0,  0,
 
 	};
 	struct {
@@ -17076,6 +17095,7 @@ static int packetdb_readdb(void)
 		if(str[0]==NULL)
 			continue;
 		cmd=strtol(str[0],(char **)NULL,0);
+			
 		if(max_cmd < cmd)
 			max_cmd = cmd;
 		if(cmd <= 0 || cmd > MAX_PACKET_DB)
@@ -17135,7 +17155,8 @@ static int packetdb_readdb(void)
 
 		clif_config.packet_db_ver = j?j:MAX_PACKET_VER;
 	}
-	ShowStatus("Done reading packet database from '"CL_WHITE"%s"CL_RESET"'. Using default packet version: "CL_WHITE"%d"CL_RESET".\n", "packet_db.txt", clif_config.packet_db_ver);
+	ShowStatus("Done reading packet database from '"CL_WHITE"%s"CL_RESET"'.\n","packet_db.txt");
+	ShowStatus("Using default packet version: "CL_WHITE"%d"CL_RESET".\n", clif_config.packet_db_ver);
 	return 0;
 }
 
