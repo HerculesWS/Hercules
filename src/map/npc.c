@@ -3413,42 +3413,62 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 	else if (!strcmpi(w3,"reset"))
 		map[m].flag.reset=state;
 	else if (!strcmpi(w3,"adjust_unit_duration")) {
-		char *mod;
-		int skill_id;
+		int skill_id, k;
+		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
+		int len = strlen(w4);
 		
-		strtok(w4,"\t");/* makes w4 contain only 4th param */
+		modifier[0] = '\0';
+		memcpy(skill_name, w4, MAP_ZONE_MAPFLAG_LENGTH);
 		
-		if( !(mod = strtok(NULL,"\t")) ) {/* makes mod contain only the 5th param */
+		for(k = 0; k < len; k++) {
+			if( skill_name[k] == '\t' ) {
+				memcpy(modifier, &skill_name[k+1], len - k);
+				skill_name[k] = '\0';
+				break;
+			}
+		}
+		
+		if( modifier[0] == '\0' ) {
 			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
-		} else if( !( skill_id = skill->name2id(w4) ) || !skill->get_unit_id( skill->name2id(w4), 0) ) {
-			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n", w4, map[m].name, filepath, strline(buffer,start-buffer));
-		} else if ( atoi(mod) < 1 || atoi(mod) > USHRT_MAX ) {
-			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n", atoi(mod), w4, map[m].name, filepath, strline(buffer,start-buffer));
+		} else if( !( skill_id = skill->name2id(skill_name) ) || !skill->get_unit_id( skill->name2id(skill_name), 0) ) {
+			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n",skill_name, map[m].name, filepath, strline(buffer,start-buffer));
+		} else if ( atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
+			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n", atoi(modifier), skill_name, map[m].name, filepath, strline(buffer,start-buffer));
 		} else {
 			int idx = map[m].unit_count;
 			RECREATE(map[m].units, struct mapflag_skill_adjust*, ++map[m].unit_count);
 			CREATE(map[m].units[idx],struct mapflag_skill_adjust,1);
 			map[m].units[idx]->skill_id = (unsigned short)skill_id;
-			map[m].units[idx]->modifier = (unsigned short)atoi(mod);
+			map[m].units[idx]->modifier = (unsigned short)atoi(modifier);
 		}
 	} else if (!strcmpi(w3,"adjust_skill_damage")) {
-		char *mod;
-		int skill_id;
+		int skill_id, k;
+		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
+		int len = strlen(w4);
 		
-		strtok(w4,"\t");/* makes w4 contain only 4th param */
+		modifier[0] = '\0';
+		memcpy(skill_name, w4, MAP_ZONE_MAPFLAG_LENGTH);
 		
-		if( !(mod = strtok(NULL,"\t")) ) {/* makes mod contain only the 5th param */
+		for(k = 0; k < len; k++) {
+			if( skill_name[k] == '\t' ) {
+				memcpy(modifier, &skill_name[k+1], len - k);
+				skill_name[k] = '\0';
+				break;
+			}
+		}
+				
+		if( modifier[0] == '\0' ) {
 			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
-		} else if( !( skill_id = skill->name2id(w4) ) ) {
-			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", w4, map[m].name, filepath, strline(buffer,start-buffer));
-		} else if ( atoi(mod) < 1 || atoi(mod) > USHRT_MAX ) {
-			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", atoi(mod), w4, map[m].name, filepath, strline(buffer,start-buffer));
+		} else if( !( skill_id = skill->name2id(skill_name) ) ) {
+			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", skill_name, map[m].name, filepath, strline(buffer,start-buffer));
+		} else if ( atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
+			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", atoi(modifier), skill_name, map[m].name, filepath, strline(buffer,start-buffer));
 		} else {
 			int idx = map[m].skill_count;
 			RECREATE(map[m].skills, struct mapflag_skill_adjust*, ++map[m].skill_count);
 			CREATE(map[m].skills[idx],struct mapflag_skill_adjust,1);
 			map[m].skills[idx]->skill_id = (unsigned short)skill_id;
-			map[m].skills[idx]->modifier = (unsigned short)atoi(mod);
+			map[m].skills[idx]->modifier = (unsigned short)atoi(modifier);
 		}
 	} else if (!strcmpi(w3,"zone")) {
 		struct map_zone_data *zone;
