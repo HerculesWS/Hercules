@@ -1531,6 +1531,7 @@ ACMD_FUNC(pvpoff)
 		return -1;
 	}
 
+	map_zone_change2(sd->bl.m,map[sd->bl.m].prev_zone);
 	map[sd->bl.m].flag.pvp = 0;
 
 	if (!battle_config.pk_mode)
@@ -1566,11 +1567,11 @@ ACMD_FUNC(pvpon)
 		clif->message(fd, msg_txt(161)); // PvP is already On.
 		return -1;
 	}
-
+	
+	map_zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_PVP_NAME));
 	map[sd->bl.m].flag.pvp = 1;
 
-	if (!battle_config.pk_mode)
-	{// display pvp circle and rank
+	if (!battle_config.pk_mode) {// display pvp circle and rank
 		clif->map_property_mapall(sd->bl.m, MAPPROPERTY_FREEPVPZONE);
 		map_foreachinmap(atcommand_pvpon_sub,sd->bl.m, BL_PC);
 	}
@@ -1592,6 +1593,7 @@ ACMD_FUNC(gvgoff)
 		return -1;
 	}
 
+	map_zone_change2(sd->bl.m,map[sd->bl.m].prev_zone);
 	map[sd->bl.m].flag.gvg = 0;
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_NOTHING);
 	map_foreachinmap(atcommand_stopattack,sd->bl.m, BL_CHAR, 0);
@@ -1611,7 +1613,8 @@ ACMD_FUNC(gvgon)
 		clif->message(fd, msg_txt(163)); // GvG is already On.
 		return -1;
 	}
-
+	
+	map_zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_GVG_NAME));
 	map[sd->bl.m].flag.gvg = 1;
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_AGITZONE);
 	clif->message(fd, msg_txt(34)); // GvG: On.
@@ -7668,6 +7671,23 @@ ACMD_FUNC(mapflag) {
 	}
 	for (i = 0; flag_name[i]; i++) flag_name[i] = (char)tolower(flag_name[i]); //lowercase
 
+	if ( strcmp( flag_name , "gvg" ) == 0 ) {
+		if( flag && !map[sd->bl.m].flag.gvg )
+			map_zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_GVG_NAME));
+		else if ( !flag && map[sd->bl.m].flag.gvg )
+			map_zone_change2(sd->bl.m,map[sd->bl.m].prev_zone);
+	} else if ( strcmp( flag_name , "pvp" ) == 0 ) {
+		if( flag && !map[sd->bl.m].flag.pvp )
+			map_zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_PVP_NAME));
+		else if ( !flag && map[sd->bl.m].flag.pvp )
+			map_zone_change2(sd->bl.m,map[sd->bl.m].prev_zone);
+	} else if ( strcmp( flag_name , "battleground" ) == 0 ) {
+		if( flag && !map[sd->bl.m].flag.battleground )
+			map_zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_BG_NAME));
+		else if ( !flag && map[sd->bl.m].flag.battleground )
+			map_zone_change2(sd->bl.m,map[sd->bl.m].prev_zone);
+	}
+	
 	setflag(autotrade);			setflag(allowks);			setflag(nomemo);			setflag(noteleport);
 	setflag(noreturn);			setflag(monster_noteleport);setflag(nosave);			setflag(nobranch);
 	setflag(noexppenalty);		setflag(pvp);				setflag(pvp_noparty);		setflag(pvp_noguild);
@@ -7680,7 +7700,7 @@ ACMD_FUNC(mapflag) {
 	setflag(nojobexp);			setflag(nomobloot);			setflag(nomvploot);			setflag(nightenabled);
 	setflag(nodrop);			setflag(novending);			setflag(loadevent);
 	setflag(nochat);			setflag(partylock);			setflag(guildlock);			setflag(src4instance);
-
+	
 	clif->message(sd->fd,msg_txt(1314)); // Invalid flag name or flag.
 	clif->message(sd->fd,msg_txt(1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
 	clif->message(sd->fd,msg_txt(1315)); // Available Flags:

@@ -520,7 +520,10 @@ struct map_zone_data {
 	int mapflags_count;
 };
 void map_zone_init(void);
-void map_zone_apply(int m, struct map_zone_data *zone,char* w1, const char* start, const char* buffer, const char* filepath);
+void map_zone_remove(int m);
+void map_zone_apply(int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath);
+void map_zone_change(int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath);
+void map_zone_change2(int m, struct map_zone_data *zone);
 
 struct map_zone_data map_zone_all;/* used as a base on all maps */
 struct map_zone_data map_zone_pk;/* used for (pk_mode) */
@@ -624,6 +627,9 @@ struct map_data {
 	
 	/* Hercules nocast db overhaul */
 	struct map_zone_data *zone;
+	char **zone_mf;/* used to store this map's zone mapflags that should be re-applied once zone is removed */
+	unsigned short zone_mf_count;
+	struct map_zone_data *prev_zone;
 	
 	/* Hercules Local Chat */
 	struct hChSysCh *channel;

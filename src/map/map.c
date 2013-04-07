@@ -1712,6 +1712,10 @@ int map_quit(struct map_session_data *sd) {
 		}
 	}
 	
+	if( hChSys.local && map[sd->bl.m].channel && idb_exists(map[sd->bl.m].channel->users, sd->status.char_id) ) {
+		clif->chsys_left(map[sd->bl.m].channel,sd);
+	}
+	
 	if( sd->channel_count ) {
 		for( i = 0; i < sd->channel_count; i++ ) {
 			if( sd->channels[i] != NULL )
@@ -2985,6 +2989,18 @@ void do_final_maps(void) {
 			}
 			map[i].skill_count = 0;
 		}
+		
+		if( map[i].zone_mf_count ) {
+			for(v = 0; v < map[i].zone_mf_count; v++) {
+				aFree(map[i].zone_mf[v]);
+			}
+			if( map[i].zone_mf ) {
+				aFree(map[i].zone_mf);
+				map[i].zone_mf = NULL;
+			}
+			map[i].zone_mf_count = 0;
+		}
+		
 		if( map[i].channel )
 			clif->chsys_delete(map[i].channel);
 	}
@@ -3030,6 +3046,17 @@ void map_flags_init(void) {
 			map[i].zone = &map_zone_pk;
 		} else /* align with 'All' zone */
 			map[i].zone = &map_zone_all;
+		
+		if( map[i].zone_mf_count ) {
+			for(v = 0; v < map[i].zone_mf_count; v++) {
+				aFree(map[i].zone_mf[v]);
+			}
+			aFree(map[i].zone_mf);
+		}
+		
+		map[i].zone_mf = NULL;
+		map[i].zone_mf_count = 0;
+		map[i].prev_zone = map[i].zone;
 		
 		map[i].invincible_time_inc = 0;
 		
@@ -3598,12 +3625,759 @@ int log_sql_init(void)
 #endif
 	return 0;
 }
-void map_zone_apply(int m, struct map_zone_data *zone,char* w1, const char* start, const char* buffer, const char* filepath) {
+void map_zone_change2(int m, struct map_zone_data *zone) {
+	char empty[1] = "\0";
+	
+	map[m].prev_zone = map[m].zone;
+
+	if( map[m].zone_mf_count )
+		map_zone_remove(m);
+	
+	map_zone_apply(m,zone,empty,empty,empty);
+}
+/* when changing from a mapflag to another during runtime */
+void map_zone_change(int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath) {
+	map[m].prev_zone = map[m].zone;
+	
+	if( map[m].zone_mf_count )
+		map_zone_remove(m);
+	map_zone_apply(m,zone,start,buffer,filepath);
+}
+/* removes previous mapflags from this map */
+void map_zone_remove(int m) {
+	char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
+	unsigned short k;
+	char empty[1] = "\0";
+	for(k = 0; k < map[m].zone_mf_count; k++) {
+		int len = strlen(map[m].zone_mf[k]),j;
+		params[0] = '\0';
+		memcpy(flag, map[m].zone_mf[k], MAP_ZONE_MAPFLAG_LENGTH);
+		for(j = 0; j < len; j++) {
+			if( flag[j] == '\t' ) {
+				memcpy(params, &flag[j+1], len - j);
+				flag[j] = '\0';
+				break;
+			}
+		}
+		
+		npc_parse_mapflag(map[m].name,empty,flag,params,empty,empty,empty);
+		aFree(map[m].zone_mf[k]);
+		map[m].zone_mf[k] = NULL;
+	}
+	
+	aFree(map[m].zone_mf);
+	map[m].zone_mf = NULL;
+	map[m].zone_mf_count = 0;
+}
+static inline void map_zone_mf_cache_add(int m, char *rflag) {
+	RECREATE(map[m].zone_mf, char *, ++map[m].zone_mf_count);
+	CREATE(map[m].zone_mf[map[m].zone_mf_count - 1], char, MAP_ZONE_MAPFLAG_LENGTH);
+	safestrncpy(map[m].zone_mf[map[m].zone_mf_count - 1], rflag, MAP_ZONE_MAPFLAG_LENGTH);
+}
+/* TODO: introduce enumerations to each mapflag so instead of reading the string a number of times we read it only once and use its value wherever we need */
+/* cache previous values to revert */
+bool map_zone_mf_cache(int m, char *flag, char *params) {
+	char rflag[MAP_ZONE_MAPFLAG_LENGTH];
+	int state = 1;
+	
+	if (params[0] != '\0' && !strcmpi(params, "off"))
+		state = 0;
+	
+	if (!strcmpi(flag, "nosave")) {
+		;/* not yet supported to be reversed */
+		/*
+		char savemap[32];
+		int savex, savey;
+		if (state == 0) {
+			if( map[m].flag.nosave ) {
+				sprintf(rflag, "nosave	SavePoint");
+				map_zone_mf_cache_add(m,nosave);
+			}
+		} else if (!strcmpi(params, "SavePoint")) {
+			if( map[m].save.map ) {
+				sprintf(rflag, "nosave	%s,%d,%d",mapindex_id2name(map[m].save.map),map[m].save.x,map[m].save.y);
+			} else
+				sprintf(rflag, "nosave	%s,%d,%d",mapindex_id2name(map[m].save.map),map[m].save.x,map[m].save.y);
+				map_zone_mf_cache_add(m,nosave);
+		} else if (sscanf(params, "%31[^,],%d,%d", savemap, &savex, &savey) == 3) {
+			if( map[m].save.map ) {
+				sprintf(rflag, "nosave	%s,%d,%d",mapindex_id2name(map[m].save.map),map[m].save.x,map[m].save.y);
+				map_zone_mf_cache_add(m,nosave);
+			}
+		}*/
+	} else if (!strcmpi(flag,"autotrade")) {
+		if( state && map[m].flag.autotrade )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"autotrade	off");
+			else if( !map[m].flag.autotrade )
+				map_zone_mf_cache_add(m,"autotrade");
+		}
+	} else if (!strcmpi(flag,"allowks")) {
+		if( state && map[m].flag.allowks )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"allowks	off");
+			else if( !map[m].flag.allowks )
+				map_zone_mf_cache_add(m,"allowks");
+		}
+	} else if (!strcmpi(flag,"town")) {
+		if( state && map[m].flag.town )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"town	off");
+			else if( !map[m].flag.town )
+				map_zone_mf_cache_add(m,"town");
+		}
+	} else if (!strcmpi(flag,"nomemo")) {
+		if( state && map[m].flag.nomemo )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nomemo	off");
+			else if( !map[m].flag.nomemo )
+				map_zone_mf_cache_add(m,"nomemo");
+		}
+	} else if (!strcmpi(flag,"noteleport")) {
+		if( state && map[m].flag.noteleport )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noteleport	off");
+			else if( !map[m].flag.noteleport )
+				map_zone_mf_cache_add(m,"noteleport");
+		}
+	} else if (!strcmpi(flag,"nowarp")) {
+		if( state && map[m].flag.nowarp )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nowarp	off");
+			else if( !map[m].flag.nowarp )
+				map_zone_mf_cache_add(m,"nowarp");
+		}
+	} else if (!strcmpi(flag,"nowarpto")) {
+		if( state && map[m].flag.nowarpto )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nowarpto	off");
+			else if( !map[m].flag.nowarpto )
+				map_zone_mf_cache_add(m,"nowarpto");
+		}
+	} else if (!strcmpi(flag,"noreturn")) {
+		if( state && map[m].flag.noreturn )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noreturn	off");
+			else if( map[m].flag.noreturn )
+				map_zone_mf_cache_add(m,"noreturn");
+		}
+	} else if (!strcmpi(flag,"monster_noteleport")) {
+		if( state && map[m].flag.monster_noteleport )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"monster_noteleport	off");
+			else if( map[m].flag.monster_noteleport )
+				map_zone_mf_cache_add(m,"monster_noteleport");
+		}
+	} else if (!strcmpi(flag,"nobranch")) {
+		if( state && map[m].flag.nobranch )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nobranch	off");
+			else if( map[m].flag.nobranch )
+				map_zone_mf_cache_add(m,"nobranch");
+		}
+	} else if (!strcmpi(flag,"nopenalty")) {
+		if( state && map[m].flag.noexppenalty ) /* they are applied together, no need to check both */
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nopenalty	off");
+			else if( map[m].flag.noexppenalty )
+				map_zone_mf_cache_add(m,"nopenalty");
+		}
+	} else if (!strcmpi(flag,"pvp")) {
+		if( state && map[m].flag.pvp )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"pvp	off");
+			else if( map[m].flag.pvp )
+				map_zone_mf_cache_add(m,"pvp");
+		}
+	}
+	else if (!strcmpi(flag,"pvp_noparty")) {
+		if( state && map[m].flag.pvp_noparty )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"pvp_noparty	off");
+			else if( map[m].flag.pvp_noparty )
+				map_zone_mf_cache_add(m,"pvp_noparty");
+		}
+	} else if (!strcmpi(flag,"pvp_noguild")) {
+		if( state && map[m].flag.pvp_noguild )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"pvp_noguild	off");
+			else if( map[m].flag.pvp_noguild )
+				map_zone_mf_cache_add(m,"pvp_noguild");
+		}
+	} else if (!strcmpi(flag, "pvp_nightmaredrop")) {
+		if( state && map[m].flag.pvp_nightmaredrop )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"pvp_nightmaredrop	off");
+			else if( map[m].flag.pvp_nightmaredrop )
+				map_zone_mf_cache_add(m,"pvp_nightmaredrop");
+		}
+		/* not yet fully supported */
+		/*char drop_arg1[16], drop_arg2[16];
+		int drop_per = 0;
+		if (sscanf(w4, "%[^,],%[^,],%d", drop_arg1, drop_arg2, &drop_per) == 3) {
+			int drop_id = 0, drop_type = 0;
+			if (!strcmpi(drop_arg1, "random"))
+				drop_id = -1;
+			else if (itemdb_exists((drop_id = atoi(drop_arg1))) == NULL)
+				drop_id = 0;
+			if (!strcmpi(drop_arg2, "inventory"))
+				drop_type = 1;
+			else if (!strcmpi(drop_arg2,"equip"))
+				drop_type = 2;
+			else if (!strcmpi(drop_arg2,"all"))
+				drop_type = 3;
+			
+			if (drop_id != 0){
+				int i;
+				for (i = 0; i < MAX_DROP_PER_MAP; i++) {
+					if (map[m].drop_list[i].drop_id == 0){
+						map[m].drop_list[i].drop_id = drop_id;
+						map[m].drop_list[i].drop_type = drop_type;
+						map[m].drop_list[i].drop_per = drop_per;
+						break;
+					}
+				}
+				map[m].flag.pvp_nightmaredrop = 1;
+			}
+		} else if (!state) //Disable
+			map[m].flag.pvp_nightmaredrop = 0;
+		 */
+	} else if (!strcmpi(flag,"pvp_nocalcrank")) {
+		if( state && map[m].flag.pvp_nocalcrank )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"pvp_nocalcrank	off");
+			else if( map[m].flag.pvp_nocalcrank )
+				map_zone_mf_cache_add(m,"pvp_nocalcrank");
+		}
+	} else if (!strcmpi(flag,"gvg")) {
+		if( state && map[m].flag.gvg )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"gvg	off");
+			else if( map[m].flag.gvg )
+				map_zone_mf_cache_add(m,"gvg");
+		}
+	} else if (!strcmpi(flag,"gvg_noparty")) {
+		if( state && map[m].flag.gvg_noparty )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"gvg_noparty	off");
+			else if( map[m].flag.gvg_noparty )
+				map_zone_mf_cache_add(m,"gvg_noparty");
+		}
+	} else if (!strcmpi(flag,"gvg_dungeon")) {
+		if( state && map[m].flag.gvg_dungeon )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"gvg_dungeon	off");
+			else if( map[m].flag.gvg_dungeon )
+				map_zone_mf_cache_add(m,"gvg_dungeon");
+		}
+	}
+	else if (!strcmpi(flag,"gvg_castle")) {
+		if( state && map[m].flag.gvg_castle )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"gvg_castle	off");
+			else if( map[m].flag.gvg_castle )
+				map_zone_mf_cache_add(m,"gvg_castle");
+		}
+	}
+	else if (!strcmpi(flag,"battleground")) {
+		if( state && map[m].flag.battleground )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"battleground	off");
+			else if( map[m].flag.battleground )
+				map_zone_mf_cache_add(m,"battleground");
+		}
+	} else if (!strcmpi(flag,"noexppenalty")) {
+		if( state && map[m].flag.noexppenalty )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noexppenalty	off");
+			else if( map[m].flag.noexppenalty )
+				map_zone_mf_cache_add(m,"noexppenalty");
+		}
+	} else if (!strcmpi(flag,"nozenypenalty")) {
+		if( state && map[m].flag.nozenypenalty )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nozenypenalty	off");
+			else if( map[m].flag.nozenypenalty )
+				map_zone_mf_cache_add(m,"nozenypenalty");
+		}
+	} else if (!strcmpi(flag,"notrade")) {
+		if( state && map[m].flag.notrade )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"notrade	off");
+			else if( map[m].flag.notrade )
+				map_zone_mf_cache_add(m,"notrade");
+		}
+	} else if (!strcmpi(flag,"novending")) {
+		if( state && map[m].flag.novending )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"novending	off");
+			else if( map[m].flag.novending )
+				map_zone_mf_cache_add(m,"novending");
+		}
+	} else if (!strcmpi(flag,"nodrop")) {
+		if( state && map[m].flag.nodrop )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nodrop	off");
+			else if( map[m].flag.nodrop )
+				map_zone_mf_cache_add(m,"nodrop");
+		}
+	} else if (!strcmpi(flag,"noskill")) {
+		if( state && map[m].flag.noskill )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noskill	off");
+			else if( map[m].flag.noskill )
+				map_zone_mf_cache_add(m,"noskill");
+		}
+	} else if (!strcmpi(flag,"noicewall")) {
+		if( state && map[m].flag.noicewall )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noicewall	off");
+			else if( map[m].flag.noicewall )
+				map_zone_mf_cache_add(m,"noicewall");
+		}
+	} else if (!strcmpi(flag,"snow")) {
+		if( state && map[m].flag.snow )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"snow	off");
+			else if( map[m].flag.snow )
+				map_zone_mf_cache_add(m,"snow");
+		}
+	} else if (!strcmpi(flag,"clouds")) {
+		if( state && map[m].flag.clouds )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"clouds	off");
+			else if( map[m].flag.clouds )
+				map_zone_mf_cache_add(m,"clouds");
+		}
+	} else if (!strcmpi(flag,"clouds2")) {
+		if( state && map[m].flag.clouds2 )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"clouds2	off");
+			else if( map[m].flag.clouds2 )
+				map_zone_mf_cache_add(m,"clouds2");
+		}
+	} else if (!strcmpi(flag,"fog")) {
+		if( state && map[m].flag.fog )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"fog	off");
+			else if( map[m].flag.fog )
+				map_zone_mf_cache_add(m,"fog");
+		}
+	} else if (!strcmpi(flag,"fireworks")) {
+		if( state && map[m].flag.fireworks )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"fireworks	off");
+			else if( map[m].flag.fireworks )
+				map_zone_mf_cache_add(m,"fireworks");
+		}
+	} else if (!strcmpi(flag,"sakura")) {
+		if( state && map[m].flag.sakura )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"sakura	off");
+			else if( map[m].flag.sakura )
+				map_zone_mf_cache_add(m,"sakura");
+		}
+	} else if (!strcmpi(flag,"leaves")) {
+		if( state && map[m].flag.leaves )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"leaves	off");
+			else if( map[m].flag.leaves )
+				map_zone_mf_cache_add(m,"leaves");
+		}
+	} else if (!strcmpi(flag,"nightenabled")) {
+		if( state && map[m].flag.nightenabled )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nightenabled	off");
+			else if( map[m].flag.nightenabled )
+				map_zone_mf_cache_add(m,"nightenabled");
+		}
+	} else if (!strcmpi(flag,"nogo")) {
+		if( state && map[m].flag.nogo )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nogo	off");
+			else if( map[m].flag.nogo )
+				map_zone_mf_cache_add(m,"nogo");
+		}
+	} else if (!strcmpi(flag,"noexp")) {
+		if( state && map[m].flag.nobaseexp )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noexp	off");
+			else if( map[m].flag.nobaseexp )
+				map_zone_mf_cache_add(m,"noexp");
+		}
+	}
+	else if (!strcmpi(flag,"nobaseexp")) {
+		if( state && map[m].flag.nobaseexp )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nobaseexp	off");
+			else if( map[m].flag.nobaseexp )
+				map_zone_mf_cache_add(m,"nobaseexp");
+		}
+	} else if (!strcmpi(flag,"nojobexp")) {
+		if( state && map[m].flag.nojobexp )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nojobexp	off");
+			else if( map[m].flag.nojobexp )
+				map_zone_mf_cache_add(m,"nojobexp");
+		}
+	} else if (!strcmpi(flag,"noloot")) {
+		if( state && map[m].flag.nomobloot )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noloot	off");
+			else if( map[m].flag.nomobloot )
+				map_zone_mf_cache_add(m,"noloot");
+		}
+	} else if (!strcmpi(flag,"nomobloot")) {
+		if( state && map[m].flag.nomobloot )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nomobloot	off");
+			else if( map[m].flag.nomobloot )
+				map_zone_mf_cache_add(m,"nomobloot");
+		}
+	} else if (!strcmpi(flag,"nomvploot")) {
+		if( state && map[m].flag.nomvploot )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nomvploot	off");
+			else if( map[m].flag.nomvploot )
+				map_zone_mf_cache_add(m,"nomvploot");
+		}
+	} else if (!strcmpi(flag,"nocommand")) {
+		/* implementation may be incomplete */
+		if( state && sscanf(params, "%d", &state) == 1 ) {
+			sprintf(rflag, "nocommand	%s",params);
+			map_zone_mf_cache_add(m,rflag);
+		} else if( !state && map[m].nocommand ) {
+			sprintf(rflag, "nocommand	%d",map[m].nocommand);
+			map_zone_mf_cache_add(m,rflag);
+		} else if( map[m].nocommand ) {
+			map_zone_mf_cache_add(m,"nocommand	off");
+		}
+	} else if (!strcmpi(flag,"jexp")) {
+		if( !state ) {
+			if( map[m].jexp != 100 ) {
+				sprintf(rflag,"jexp	%d",map[m].jexp);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].jexp ) {
+				sprintf(rflag,"jexp	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	} else if (!strcmpi(flag,"bexp")) {
+		if( !state ) {
+			if( map[m].bexp != 100 ) {
+				sprintf(rflag,"bexp	%d",map[m].jexp);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].bexp ) {
+				sprintf(rflag,"bexp	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	} else if (!strcmpi(flag,"loadevent")) {
+		if( state && map[m].flag.loadevent )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"loadevent	off");
+			else if( map[m].flag.loadevent )
+				map_zone_mf_cache_add(m,"loadevent");
+		}
+	} else if (!strcmpi(flag,"nochat")) {
+		if( state && map[m].flag.nochat )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nochat	off");
+			else if( map[m].flag.nochat )
+				map_zone_mf_cache_add(m,"nochat");
+		}
+	} else if (!strcmpi(flag,"partylock")) {
+		if( state && map[m].flag.partylock )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"partylock	off");
+			else if( map[m].flag.partylock )
+				map_zone_mf_cache_add(m,"partylock");
+		}
+	} else if (!strcmpi(flag,"guildlock")) {
+		if( state && map[m].flag.guildlock )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"guildlock	off");
+			else if( map[m].flag.guildlock )
+				map_zone_mf_cache_add(m,"guildlock");
+		}
+	} else if (!strcmpi(flag,"reset")) {
+		if( state && map[m].flag.reset )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"reset	off");
+			else if( map[m].flag.reset )
+				map_zone_mf_cache_add(m,"reset");
+		}
+	} else if (!strcmpi(flag,"adjust_unit_duration")) {
+		int skill_id, k;
+		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
+		int len = strlen(params);
+		
+		modifier[0] = '\0';
+		memcpy(skill_name, params, MAP_ZONE_MAPFLAG_LENGTH);
+		
+		for(k = 0; k < len; k++) {
+			if( skill_name[k] == '\t' ) {
+				memcpy(modifier, &skill_name[k+1], len - k);
+				skill_name[k] = '\0';
+				break;
+			}
+		}
+		
+		if( modifier[0] == '\0' || !( skill_id = skill->name2id(skill_name) ) || !skill->get_unit_id( skill->name2id(skill_name), 0) || atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
+			;/* we dont mind it, the server will take care of it next. */
+		} else {
+			int idx = map[m].unit_count;
+			
+			k = 0;
+			ARR_FIND(0, idx, k, map[m].units[k]->skill_id == skill_id);
+			
+			if( k < idx ) {
+				if( atoi(modifier) != map[m].units[k]->modifier ) {
+					sprintf(rflag,"adjust_unit_duration	%s	%d",skill_name,map[m].units[k]->modifier);
+					map_zone_mf_cache_add(m,rflag);
+				}
+			} else {
+				sprintf(rflag,"adjust_unit_duration	%s	100",skill_name);
+				map_zone_mf_cache_add(m,rflag);
+			}			
+		}
+	} else if (!strcmpi(flag,"adjust_skill_damage")) {
+		int skill_id, k;
+		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
+		int len = strlen(params);
+		
+		modifier[0] = '\0';
+		memcpy(skill_name, params, MAP_ZONE_MAPFLAG_LENGTH);
+		
+		for(k = 0; k < len; k++) {
+			if( skill_name[k] == '\t' ) {
+				memcpy(modifier, &skill_name[k+1], len - k);
+				skill_name[k] = '\0';
+				break;
+			}
+		}
+		
+		if( modifier[0] == '\0' || !( skill_id = skill->name2id(skill_name) ) || atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
+			;/* we dont mind it, the server will take care of it next. */
+		} else {
+			int idx = map[m].skill_count;
+			
+			k = 0;
+			ARR_FIND(0, idx, k, map[m].skills[k]->skill_id == skill_id);
+			
+			if( k < idx ) {
+				if( atoi(modifier) != map[m].skills[k]->modifier ) {
+					sprintf(rflag,"adjust_skill_damage	%s	%d",skill_name,map[m].skills[k]->modifier);
+					map_zone_mf_cache_add(m,rflag);
+				}
+			} else {
+				sprintf(rflag,"adjust_skill_damage	%s	100",skill_name);
+				map_zone_mf_cache_add(m,rflag);
+			}
+			
+		}
+	} else if (!strcmpi(flag,"zone")) {
+		ShowWarning("You can't add a zone through a zone! ERROR, skipping for '%s'...\n",map[m].name);
+		return true;
+	} else if ( !strcmpi(flag,"nomapchannelautojoin") ) {
+		if( state && map[m].flag.chsysnolocalaj )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nomapchannelautojoin	off");
+			else if( map[m].flag.chsysnolocalaj )
+				map_zone_mf_cache_add(m,"nomapchannelautojoin");
+		}
+	} else if ( !strcmpi(flag,"invincible_time_inc") ) {
+		if( !state ) {
+			if( map[m].invincible_time_inc != 0 ) {
+				sprintf(rflag,"invincible_time_inc	%d",map[m].invincible_time_inc);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].invincible_time_inc ) {
+				sprintf(rflag,"invincible_time_inc	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	} else if ( !strcmpi(flag,"noknockback") ) {
+		if( state && map[m].flag.noknockback )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noknockback	off");
+			else if( map[m].flag.noknockback )
+				map_zone_mf_cache_add(m,"noknockback");
+		}
+	} else if ( !strcmpi(flag,"weapon_damage_rate") ) {
+		if( !state ) {
+			if( map[m].weapon_damage_rate != 100 ) {
+				sprintf(rflag,"weapon_damage_rate	%d",map[m].weapon_damage_rate);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].weapon_damage_rate ) {
+				sprintf(rflag,"weapon_damage_rate	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	} else if ( !strcmpi(flag,"magic_damage_rate") ) {
+		if( !state ) {
+			if( map[m].magic_damage_rate != 100 ) {
+				sprintf(rflag,"magic_damage_rate	%d",map[m].magic_damage_rate);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].magic_damage_rate ) {
+				sprintf(rflag,"magic_damage_rate	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	} else if ( !strcmpi(flag,"misc_damage_rate") ) {
+		if( !state ) {
+			if( map[m].misc_damage_rate != 100 ) {
+				sprintf(rflag,"misc_damage_rate	%d",map[m].misc_damage_rate);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].misc_damage_rate ) {
+				sprintf(rflag,"misc_damage_rate	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	} else if ( !strcmpi(flag,"short_damage_rate") ) {
+		if( !state ) {
+			if( map[m].short_damage_rate != 100 ) {
+				sprintf(rflag,"short_damage_rate	%d",map[m].short_damage_rate);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].short_damage_rate ) {
+				sprintf(rflag,"short_damage_rate	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	} else if ( !strcmpi(flag,"long_damage_rate") ) {
+		if( !state ) {
+			if( map[m].long_damage_rate != 100 ) {
+				sprintf(rflag,"long_damage_rate	%d",map[m].long_damage_rate);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].long_damage_rate ) {
+				sprintf(rflag,"long_damage_rate	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	}
+	return false;
+}
+void map_zone_apply(int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath) {
 	int i;
 	char empty[1] = "\0";
+	char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
 	map[m].zone = zone;
 	for(i = 0; i < zone->mapflags_count; i++) {
-		char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
 		int len = strlen(zone->mapflags[i]);
 		int k;
 		params[0] = '\0';
@@ -3615,11 +4389,16 @@ void map_zone_apply(int m, struct map_zone_data *zone,char* w1, const char* star
 				break;
 			}
 		}
-		npc_parse_mapflag(w1,empty,flag,params,start,buffer,filepath);
+		
+		if( map_zone_mf_cache(m,flag,params) )
+			continue;
+		
+		npc_parse_mapflag(map[m].name,empty,flag,params,start,buffer,filepath);
 	}
 }
 /* used on npc load and reload to apply all "Normal" and "PK Mode" zones */
 void map_zone_init(void) {
+	char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
 	struct map_zone_data *zone;
 	char empty[1] = "\0";
 	int i,k,j;
@@ -3627,7 +4406,6 @@ void map_zone_init(void) {
 	zone = &map_zone_all;
 	
 	for(i = 0; i < zone->mapflags_count; i++) {
-		char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
 		int len = strlen(zone->mapflags[i]);
 		params[0] = '\0';
 		memcpy(flag, zone->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
@@ -3638,8 +4416,11 @@ void map_zone_init(void) {
 				break;
 			}
 		}
+		
 		for(j = 0; j < map_num; j++) {
 			if( map[j].zone == zone ) {
+				if( map_zone_mf_cache(j,flag,params) )
+					break;
 				npc_parse_mapflag(map[j].name,empty,flag,params,empty,empty,empty);
 			}
 		}
@@ -3648,7 +4429,6 @@ void map_zone_init(void) {
 	if( battle_config.pk_mode ) {
 		zone = &map_zone_pk;
 		for(i = 0; i < zone->mapflags_count; i++) {
-			char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
 			int len = strlen(zone->mapflags[i]);
 			params[0] = '\0';
 			memcpy(flag, zone->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
@@ -3661,6 +4441,8 @@ void map_zone_init(void) {
 			}
 			for(j = 0; j < map_num; j++) {
 				if( map[j].zone == zone ) {
+					if( map_zone_mf_cache(j,flag,params) )
+						break;
 					npc_parse_mapflag(map[j].name,empty,flag,params,empty,empty,empty);
 				}
 			}

@@ -48,6 +48,7 @@ OnAgitStart2:
 	if (agitcheck2()) {
 		maprespawnguildid strnpcinfo(2),getcastledata(strnpcinfo(2),1),2;
 		gvgon strnpcinfo(2);
+		setmapflag strnpcinfo(2),mf_zone,"GvG2";
 		donpcevent strnpcinfo(0)+"::OnStart";
 	}
 	else for(set .@i,0; .@i<4; set .@i,.@i+1)
@@ -57,6 +58,7 @@ OnAgitStart2:
 OnAgitEnd2:
 	if (strnpcinfo(2) == "template") end;
 	gvgoff strnpcinfo(2);
+	removemapflag strnpcinfo(2),mf_zone;
 	if (getcastledata(strnpcinfo(2),1)) {
 		set .@str$,substr(strnpcinfo(2),0,1)+substr(strnpcinfo(2),8,9);
 		killmonster strnpcinfo(2),"Steward#"+.@str$+"::OnStartArena";

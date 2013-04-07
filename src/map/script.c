@@ -10906,8 +10906,8 @@ BUILDIN_FUNC(removemapflag)
 			case MF_NORETURN:			map[m].flag.noreturn = 0; break;
 			case MF_NOWARPTO:			map[m].flag.nowarpto = 0; break;
 			case MF_NIGHTMAREDROP:		map[m].flag.pvp_nightmaredrop = 0; break;
-			case MF_ZONE:/* reset zone state, mapflags cant be removed however */
-				map[m].zone = ( battle_config.pk_mode && map[m].flag.pvp ) ? &map_zone_pk : &map_zone_all;
+			case MF_ZONE:
+				map_zone_change2(m, map[m].prev_zone);
 				break;
 			case MF_NOCOMMAND:			map[m].nocommand = 0; break;
 			case MF_NODROP:				map[m].flag.nodrop = 0; break;
@@ -10943,6 +10943,7 @@ BUILDIN_FUNC(pvpon)
 	if( m < 0 || map[m].flag.pvp )
 		return 0; // nothing to do
 
+	map_zone_change2(m, strdb_get(zone_db, MAP_ZONE_PVP_NAME));
 	map[m].flag.pvp = 1;
 	clif->map_property_mapall(m, MAPPROPERTY_FREEPVPZONE);
 
@@ -10987,7 +10988,8 @@ BUILDIN_FUNC(pvpoff)
 	m = map_mapname2mapid(str);
 	if(m < 0 || !map[m].flag.pvp)
 		return 0; //fixed Lupus
-
+	
+	map_zone_change2(m, map[m].prev_zone);
 	map[m].flag.pvp = 0;
 	clif->map_property_mapall(m, MAPPROPERTY_NOTHING);
 
@@ -11006,6 +11008,7 @@ BUILDIN_FUNC(gvgon)
 	str=script_getstr(st,2);
 	m = map_mapname2mapid(str);
 	if(m >= 0 && !map[m].flag.gvg) {
+		map_zone_change2(m, strdb_get(zone_db, MAP_ZONE_GVG_NAME));
 		map[m].flag.gvg = 1;
 		clif->map_property_mapall(m, MAPPROPERTY_AGITZONE);
 	}
@@ -11020,6 +11023,7 @@ BUILDIN_FUNC(gvgoff)
 	str=script_getstr(st,2);
 	m = map_mapname2mapid(str);
 	if(m >= 0 && map[m].flag.gvg) {
+		map_zone_change2(m, map[m].prev_zone);
 		map[m].flag.gvg = 0;
 		clif->map_property_mapall(m, MAPPROPERTY_NOTHING);
 	}

@@ -3242,7 +3242,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing BattleGround flag from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
 		}
 		if( state && (zone = strdb_get(zone_db, MAP_ZONE_PVP_NAME)) && map[m].zone != zone ) {
-			map_zone_apply(m,zone,w1,start,buffer,filepath);
+			map_zone_change(m,zone,start,buffer,filepath);
 		} else if ( !state ) {
 			map[m].zone = &map_zone_pk;
 		}
@@ -3297,7 +3297,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing BattleGround flag from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
 		}
 		if( state && (zone = strdb_get(zone_db, MAP_ZONE_GVG_NAME)) && map[m].zone != zone ) {
-			map_zone_apply(m,zone,w1,start,buffer,filepath);
+			map_zone_change(m,zone,start,buffer,filepath);
 		}
 	}
 	else if (!strcmpi(w3,"gvg_noparty"))
@@ -3332,7 +3332,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		}
 		
 		if( state && (zone = strdb_get(zone_db, MAP_ZONE_BG_NAME)) && map[m].zone != zone ) {
-			map_zone_apply(m,zone,w1,start,buffer,filepath);
+			map_zone_change(m,zone,start,buffer,filepath);
 		}
 	}
 	else if (!strcmpi(w3,"noexppenalty"))
@@ -3436,10 +3436,35 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n", atoi(modifier), skill_name, map[m].name, filepath, strline(buffer,start-buffer));
 		} else {
 			int idx = map[m].unit_count;
-			RECREATE(map[m].units, struct mapflag_skill_adjust*, ++map[m].unit_count);
-			CREATE(map[m].units[idx],struct mapflag_skill_adjust,1);
-			map[m].units[idx]->skill_id = (unsigned short)skill_id;
-			map[m].units[idx]->modifier = (unsigned short)atoi(modifier);
+			
+			ARR_FIND(0, idx, k, map[m].units[k]->skill_id == skill_id);
+			
+			if( k < idx ) {
+				if( atoi(modifier) != 100 )
+					map[m].units[k]->modifier = (unsigned short)atoi(modifier);
+				else { /* remove */
+					int cursor = 0;
+					aFree(map[m].units[k]);
+					map[m].units[k] = NULL;
+					for( k = 0; k < idx; k++ ) {
+						if( map[m].units[k] == NULL )
+							continue;
+						
+						memmove(&map[m].units[cursor], &map[m].units[k], sizeof(struct mapflag_skill_adjust));
+						
+						cursor++;
+					}
+					if( !( map[m].unit_count = cursor ) ) {
+						aFree(map[m].units);
+						map[m].units = NULL;
+					}
+				}
+			} else if( atoi(modifier) != 100 )  {
+				RECREATE(map[m].units, struct mapflag_skill_adjust*, ++map[m].unit_count);
+				CREATE(map[m].units[idx],struct mapflag_skill_adjust,1);
+				map[m].units[idx]->skill_id = (unsigned short)skill_id;
+				map[m].units[idx]->modifier = (unsigned short)atoi(modifier);
+			}
 		}
 	} else if (!strcmpi(w3,"adjust_skill_damage")) {
 		int skill_id, k;
@@ -3465,18 +3490,44 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", atoi(modifier), skill_name, map[m].name, filepath, strline(buffer,start-buffer));
 		} else {
 			int idx = map[m].skill_count;
-			RECREATE(map[m].skills, struct mapflag_skill_adjust*, ++map[m].skill_count);
-			CREATE(map[m].skills[idx],struct mapflag_skill_adjust,1);
-			map[m].skills[idx]->skill_id = (unsigned short)skill_id;
-			map[m].skills[idx]->modifier = (unsigned short)atoi(modifier);
+						
+			ARR_FIND(0, idx, k, map[m].skills[k]->skill_id == skill_id);
+			
+			if( k < idx ) {
+				if( atoi(modifier) != 100 )
+					map[m].skills[k]->modifier = (unsigned short)atoi(modifier);
+				else { /* remove */
+					int cursor = 0;
+					aFree(map[m].skills[k]);
+					map[m].skills[k] = NULL;
+					for( k = 0; k < idx; k++ ) {
+						if( map[m].skills[k] == NULL )
+							continue;
+						
+						memmove(&map[m].skills[cursor], &map[m].skills[k], sizeof(struct mapflag_skill_adjust));
+						
+						cursor++;
+					}
+					if( !( map[m].skill_count = cursor ) ) {
+						aFree(map[m].skills);
+						map[m].skills = NULL;
+					}
+				}
+			} else if( atoi(modifier) != 100 ) {
+				RECREATE(map[m].skills, struct mapflag_skill_adjust*, ++map[m].skill_count);
+				CREATE(map[m].skills[idx],struct mapflag_skill_adjust,1);
+				map[m].skills[idx]->skill_id = (unsigned short)skill_id;
+				map[m].skills[idx]->modifier = (unsigned short)atoi(modifier);
+			}
+			
 		}
 	} else if (!strcmpi(w3,"zone")) {
 		struct map_zone_data *zone;
 		
 		if( !(zone = strdb_get(zone_db, w4)) ) {
 			ShowWarning("npc_parse_mapflag: Invalid zone '%s'! removing flag from %s (file '%s', line '%d').\n", w4, map[m].name, filepath, strline(buffer,start-buffer));
-		} else if( map[m].zone != zone ) { /* we do not override :P would mess everything */
-			map_zone_apply(m,zone,w1,start,buffer,filepath);
+		} else if( map[m].zone != zone ) {
+			map_zone_change(m,zone,start,buffer,filepath);
 		}
 	} else if ( !strcmpi(w3,"nomapchannelautojoin") ) {
 		map[m].flag.chsysnolocalaj = state;
