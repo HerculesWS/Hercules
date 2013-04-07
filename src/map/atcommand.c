@@ -3839,7 +3839,7 @@ ACMD_FUNC(mapinfo) {
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) ) {
 		if( pl_sd->mapindex == m_index ) {
-			if( sd->state.vending )
+			if( pl_sd->state.vending )
 				vend_num++;
 			else if( (cd = (struct chat_data*)map_id2bl(pl_sd->chatID)) != NULL && cd->usersd[0] == pl_sd )
 				chat_num++;
