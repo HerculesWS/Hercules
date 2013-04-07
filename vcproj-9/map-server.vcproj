@@ -656,6 +656,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\map\packets.h"
+				>
+			</File>			
+			<File
 				RelativePath="..\src\map\party.c"
 				>
 			</File>

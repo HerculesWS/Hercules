@@ -302,7 +302,6 @@ struct Battle_Config {
 	int day_duration; // added by [Yor]
 	int night_duration; // added by [Yor]
 	int ban_hack_trade; // added by [Yor]
-	int packet_ver_flag; // added by [Yor]
 	
 	int min_hair_style; // added by [MouseJstr]
 	int max_hair_style; // added by [MouseJstr]

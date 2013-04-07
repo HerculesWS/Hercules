@@ -40,8 +40,7 @@ struct eri;
 /**
  * Defines
  **/
-#define SERVER 0 /* reserved for server use */
-#define packet_len(cmd) packet_db[SERVER][cmd].len
+#define packet_len(cmd) packet_db[cmd].len
 #define clif_menuskill_clear(sd) (sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0;
 #define HCHSYS_NAME_LENGTH 20
 
@@ -50,7 +49,6 @@ struct eri;
  **/
 enum {// packet DB
 	MAX_PACKET_DB  = 0xF00,
-	MAX_PACKET_VER = 34,
 	MAX_PACKET_POS = 20,
 };
 
@@ -344,9 +342,10 @@ enum hChSysChType {
 /**
  * Structures
  **/
+typedef void (*pFunc)(int, struct map_session_data *); //cant help but put it first
 struct s_packet_db {
 	short len;
-	void (*func)(int, struct map_session_data *);
+	pFunc func;
 	short pos[MAX_PACKET_POS];
 };
 
@@ -376,7 +375,7 @@ struct hChSysCh {
 /**
  * Vars
  **/
-struct s_packet_db packet_db[MAX_PACKET_VER + 1][MAX_PACKET_DB + 1];
+struct s_packet_db packet_db[MAX_PACKET_DB + 1];
 unsigned long color_table[COLOR_MAX];
 
 /**
@@ -816,7 +815,6 @@ struct clif_interface {
 	void (*adopt_reply) (struct map_session_data *sd, int type);
 	void (*adopt_request) (struct map_session_data *sd, struct map_session_data *src, int p_id);
 	void (*readbook) (int fd, int book_id, int page);
-	int (*guess_PacketVer) (int fd, int get_previous, int *error);
 	void (*notify_time) (struct map_session_data* sd, unsigned long time);
 	void (*user_count) (struct map_session_data* sd, int count);
 	void (*noask_sub) (struct map_session_data *src, struct map_session_data *target, int type);
