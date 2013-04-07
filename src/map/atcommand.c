@@ -7369,15 +7369,18 @@ ACMD_FUNC(whereis)
 	return 0;
 }
 
-ACMD_FUNC(version)
-{
-	const char * revision;
+ACMD_FUNC(version) {
+	const char *git = get_git_hash();
+	const char *svn = get_svn_revision();
 
-	if ((revision = get_svn_revision()) != 0) {
-		sprintf(atcmd_output,msg_txt(1295),revision); // rAthena Version SVN r%s
+	if ( git[0] != HERC_UNKNOWN_VER ) {
+		sprintf(atcmd_output,msg_txt(1295),git); // Git Hash '%s'
+		clif->message(fd,atcmd_output);
+	} else if ( svn[0] != HERC_UNKNOWN_VER ) {
+		sprintf(atcmd_output,msg_txt(1436),git); // SVN r%s
 		clif->message(fd,atcmd_output);
 	} else
-		clif->message(fd,msg_txt(1296)); // Cannot determine SVN revision.
+		clif->message(fd,msg_txt(1296)); // Cannot determine version
 
 	return 0;
 }
