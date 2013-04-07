@@ -5456,7 +5456,6 @@ void clif_status_change(struct block_list *bl,int type,int flag,int tick,int val
 		WBUFL(buf,21) = val3;
 	}
 #endif
-	ShowDebug("Len for %d vs %d is %d\n",WBUFW(buf,0),0x983,packet_len(WBUFW(buf,0)));
 	clif->send(buf,packet_len(WBUFW(buf,0)),bl, (sd && sd->status.option&OPTION_INVISIBLE) ? SELF : AREA);
 }
 
@@ -6480,7 +6479,8 @@ void clif_party_option(struct party_data *p,struct map_session_data *sd,int flag
 
 	if(!sd && flag==0){
 		int i;
-		for(i=0;i<MAX_PARTY && !p->data[i].sd;i++);
+		for(i=0;i<MAX_PARTY && !p->data[i].sd;i++)
+			;
 		if (i < MAX_PARTY)
 			sd = p->data[i].sd;
 	}
