@@ -1021,6 +1021,7 @@ struct clif_interface {
 	void (*pDebug) (int fd,struct map_session_data *sd);
 	void (*pSkillSelectMenu) (int fd, struct map_session_data *sd);
 	void (*pMoveItem) (int fd, struct map_session_data *sd);
+	void (*pDull) (int fd, struct map_session_data *sd);
 } clif_s;
 
 struct clif_interface *clif;

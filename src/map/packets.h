@@ -1956,22 +1956,22 @@ packet(0x020d,-1);
 	packet(0x08EC,73);
 	packet(0x08ED,43);
 	packet(0x08EE,6);
-	//packet(0x08EF,6,bookingignorereq,2);
+	packet(0x08EF,6,clif->pDull,2); //bookingignorereq
 	packet(0x08F0,6);
-	//packet(0x08F1,6,bookingjoinpartyreq,2);
+	packet(0x08F1,6,clif->pDull,2); //bookingjoinpartyreq
 	packet(0x08F2,36);
 	packet(0x08F3,-1);
 	packet(0x08F4,6);
-	//packet(0x08F5,-1,bookingsummonmember,2,4);
+	packet(0x08F5,-1,clif->pDull,2,4); //bookingsummonmember
 	packet(0x08F6,22);
 	packet(0x08F7,3);
 	packet(0x08F8,7);
 	packet(0x08F9,6);
 	packet(0x08FA,6);
-	//packet(0x08FB,6,bookingcanceljoinparty,2);
+	packet(0x08FB,6,clif->pDull,2); //bookingcanceljoinparty
 	packet(0x0907,5,clif->pMoveItem,2,4);
 	packet(0x0908,5);
-	//packet(0x08D7,28,battlegroundreg,2,4);
+	packet(0x08D7,28,clif->pDull,2,4); //battlegroundreg
 	packet(0x08CF,10);//Amulet spirits
 	packet(0x0977,14);//Monster HP Bar
 #endif

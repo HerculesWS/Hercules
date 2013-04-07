@@ -16279,6 +16279,10 @@ void clif_monster_hp_bar( struct mob_data* md, int fd ) {
 	WFIFOSET(fd,packet_len(0x977));
 #endif
 }
+/* [Ind/Hercules] placeholder for unsupported incoming packets (avoids server disconnecting client) */
+void __attribute__ ((unused)) clif_parse_dull(int fd,struct map_session_data *sd) {
+	return;
+}
 
 /*==========================================
  * Main client packet processing function
@@ -17137,4 +17141,5 @@ void clif_defaults(void) {
 	clif->pDebug = clif_parse_debug;
 	clif->pSkillSelectMenu = clif_parse_SkillSelectMenu;
 	clif->pMoveItem = clif_parse_MoveItem;
+	clif->pDull = clif_parse_dull;
 }
