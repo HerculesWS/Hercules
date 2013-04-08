@@ -10152,7 +10152,7 @@ BUILDIN_FUNC(homunculus_mutate)
 	TBL_PC *sd;
 
 	sd = script_rid2sd(st);
-	if( sd == NULL )
+	if( sd == NULL || sd->hd == NULL )
 		return 0;
 
 	if(script_hasdata(st,2))

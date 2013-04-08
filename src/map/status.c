@@ -2335,7 +2335,8 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 	memset(&status->max_hp, 0, sizeof(struct status_data)-(sizeof(status->hp)+sizeof(status->sp)));
 
 	//FIXME: Most of these stuff should be calculated once, but how do I fix the memset above to do that? [Skotlex]
-	status->speed = DEFAULT_WALK_SPEED;
+	if (!pc->state.permanent_speed)
+		status->speed = DEFAULT_WALK_SPEED;
 	//Give them all modes except these (useful for clones)
 	status->mode = MD_MASK&~(MD_BOSS|MD_PLANT|MD_DETECTOR|MD_ANGRY|MD_TARGETWEAK);
 
@@ -4987,6 +4988,9 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 
 	if( sc == NULL )
 		return cap_value(speed,10,USHRT_MAX);
+
+	if (sd && sd->state.permanent_speed)
+		return (short)cap_value(speed,10,USHRT_MAX);
 
 	if( sd && sd->ud.skilltimer != INVALID_TIMER && (pc_checkskill(sd,SA_FREECAST) > 0 || sd->ud.skill_id == LG_EXEEDBREAK) )
 	{
