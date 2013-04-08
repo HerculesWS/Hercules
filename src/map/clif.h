@@ -7,6 +7,7 @@
 
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
+#include "../common/cobj.h"
 #include <stdarg.h>
 
 /**
@@ -342,7 +343,7 @@ enum hChSysChType {
 /**
  * Structures
  **/
-typedef void (*pFunc)(int, struct map_session_data *); //cant help but put it first
+typedef VTABLE_ENTRY(void, pFunc, int, struct map_session_data *) //cant help but put it first
 struct s_packet_db {
 	short len;
 	pFunc func;
@@ -378,6 +379,8 @@ struct hChSysCh {
 struct s_packet_db packet_db[MAX_PACKET_DB + 1];
 unsigned long color_table[COLOR_MAX];
 
+#define PACKET_ENTRY(name) VTABLE_ENTRY(void, p##name, int fd, struct map_session_data *sd)
+
 /**
  * Clif.c Interface
  **/
@@ -392,640 +395,641 @@ struct clif_interface {
 	/* for clif_clearunit_delayed */
 	struct eri *delay_clearunit_ers;
 	/* core */
-	int (*init) (void);
-	void (*final) (void);
-	int (*setip) (const char* ip);
-	void (*setbindip) (const char* ip);
-	void (*setport) (uint16 port);
-	uint32 (*refresh_ip) (void);
-	int (*send) (const uint8* buf, int len, struct block_list* bl, enum send_target type);
-	int (*send_sub) (struct block_list *bl, va_list ap);
-	int (*parse) (int fd);
+	VTABLE_ENTRY(int, init)
+	VTABLE_ENTRY(void, final)
+	VTABLE_ENTRY(int, setip, const char* ip)
+	VTABLE_ENTRY(void, setbindip, const char* ip)
+	VTABLE_ENTRY(void, setport, uint16 port)
+	VTABLE_ENTRY(uint32, refresh_ip)
+	VTABLE_ENTRY(int, send, const uint8* buf, int len, struct block_list* bl, enum send_target type)
+	VTABLE_ENTRY(int, send_sub, struct block_list *bl, va_list ap)
+	VTABLE_ENTRY(int, parse, int fd)
 	/* auth */
-	void (*authok) (struct map_session_data *sd);
-	void (*authrefuse) (int fd, uint8 error_code);
-	void (*authfail_fd) (int fd, int type);
-	void (*charselectok) (int id, uint8 ok);
+	VTABLE_ENTRY(void, authok, struct map_session_data *sd)
+	VTABLE_ENTRY(void, authrefuse, int fd, uint8 error_code)
+	VTABLE_ENTRY(void, authfail_fd, int fd, int type)
+	VTABLE_ENTRY(void, charselectok, int id, uint8 ok)
 	/* item-related */
-	void (*dropflooritem) (struct flooritem_data* fitem);
-	void (*clearflooritem) (struct flooritem_data *fitem, int fd);
-	void (*additem) (struct map_session_data *sd, int n, int amount, int fail);
-	void (*dropitem) (struct map_session_data *sd,int n,int amount);
-	void (*delitem) (struct map_session_data *sd,int n,int amount, short reason);
-	void (*takeitem) (struct block_list* src, struct block_list* dst);
-	void (*arrowequip) (struct map_session_data *sd,int val);
-	void (*arrow_fail) (struct map_session_data *sd,int type);
-	void (*use_card) (struct map_session_data *sd,int idx);
-	void (*cart_additem) (struct map_session_data *sd,int n,int amount,int fail);
-	void (*cart_delitem) (struct map_session_data *sd,int n,int amount);
-	void (*equipitemack) (struct map_session_data *sd,int n,int pos,int ok);
-	void (*unequipitemack) (struct map_session_data *sd,int n,int pos,int ok);
-	void (*useitemack) (struct map_session_data *sd,int index,int amount,bool ok);
-	void (*addcards) (unsigned char* buf, struct item* item);
-	void (*item_sub) (unsigned char *buf, int n, struct item *i, struct item_data *id, int equip);
-	void (*getareachar_item) (struct map_session_data* sd,struct flooritem_data* fitem);
+	VTABLE_ENTRY(void, dropflooritem, struct flooritem_data* fitem)
+	VTABLE_ENTRY(void, clearflooritem, struct flooritem_data *fitem, int fd)
+	VTABLE_ENTRY(void, additem, struct map_session_data *sd, int n, int amount, int fail)
+	VTABLE_ENTRY(void, dropitem, struct map_session_data *sd,int n,int amount)
+	VTABLE_ENTRY(void, delitem, struct map_session_data *sd,int n,int amount, short reason)
+	VTABLE_ENTRY(void, takeitem, struct block_list* src, struct block_list* dst)
+	VTABLE_ENTRY(void, arrowequip, struct map_session_data *sd,int val)
+	VTABLE_ENTRY(void, arrow_fail, struct map_session_data *sd,int type)
+	VTABLE_ENTRY(void, use_card, struct map_session_data *sd,int idx)
+	VTABLE_ENTRY(void, cart_additem, struct map_session_data *sd,int n,int amount,int fail)
+	VTABLE_ENTRY(void, cart_delitem, struct map_session_data *sd,int n,int amount)
+	VTABLE_ENTRY(void, equipitemack, struct map_session_data *sd,int n,int pos,int ok)
+	VTABLE_ENTRY(void, unequipitemack, struct map_session_data *sd,int n,int pos,int ok)
+	VTABLE_ENTRY(void, useitemack, struct map_session_data *sd,int index,int amount,bool ok)
+	VTABLE_ENTRY(void, addcards, unsigned char* buf, struct item* item)
+	VTABLE_ENTRY(void, item_sub, unsigned char *buf, int n, struct item *i, struct item_data *id, int equip)
+	VTABLE_ENTRY(void, getareachar_item, struct map_session_data* sd,struct flooritem_data* fitem)
 	/* unit-related */
-	void (*clearunit_single) (int id, clr_type type, int fd);
-	void (*clearunit_area) (struct block_list* bl, clr_type type);
-	void (*clearunit_delayed) (struct block_list* bl, clr_type type, unsigned int tick);
-	void (*walkok) (struct map_session_data *sd);
-	void (*move) (struct unit_data *ud);
-	void (*move2) (struct block_list *bl, struct view_data *vd, struct unit_data *ud);
-	void (*blown) (struct block_list *bl);
-	void (*slide) (struct block_list *bl, int x, int y);
-	void (*fixpos) (struct block_list *bl);
-	void (*changelook) (struct block_list *bl,int type,int val);
-	void (*changetraplook) (struct block_list *bl,int val);
-	void (*refreshlook) (struct block_list *bl,int id,int type,int val,enum send_target target);
-	void (*class_change) (struct block_list *bl,int class_,int type);
-	void (*skill_setunit) (struct skill_unit *unit);
-	void (*skill_delunit) (struct skill_unit *unit);
-	void (*skillunit_update) (struct block_list* bl);
-	int (*clearunit_delayed_sub) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*set_unit_idle) (struct block_list* bl, unsigned char* buffer, bool spawn);
-	void (*setdisguise) (struct block_list *bl, unsigned char *buf,int len);
-	int (*set_unit_walking) (struct block_list* bl, struct unit_data* ud, unsigned char* buffer);
-	int (*calc_walkdelay) (struct block_list *bl,int delay, int type, int damage, int div_);
-	void (*getareachar_skillunit) (struct map_session_data *sd, struct skill_unit *unit);
-	void (*getareachar_unit) (struct map_session_data* sd,struct block_list *bl);
-	void (*clearchar_skillunit) (struct skill_unit *unit, int fd);
-	int (*getareachar) (struct block_list* bl,va_list ap);
+	VTABLE_ENTRY(void, clearunit_single, int id, clr_type type, int fd)
+	VTABLE_ENTRY(void, clearunit_area, struct block_list* bl, clr_type type)
+	VTABLE_ENTRY(void, clearunit_delayed, struct block_list* bl, clr_type type, unsigned int tick)
+	VTABLE_ENTRY(void, walkok, struct map_session_data *sd)
+	VTABLE_ENTRY(void, move, struct unit_data *ud)
+	VTABLE_ENTRY(void, move2, struct block_list *bl, struct view_data *vd, struct unit_data *ud)
+	VTABLE_ENTRY(void, blown, struct block_list *bl)
+	VTABLE_ENTRY(void, slide, struct block_list *bl, int x, int y)
+	VTABLE_ENTRY(void, fixpos, struct block_list *bl)
+	VTABLE_ENTRY(void, changelook, struct block_list *bl,int type,int val)
+	VTABLE_ENTRY(void, changetraplook, struct block_list *bl,int val)
+	VTABLE_ENTRY(void, refreshlook, struct block_list *bl,int id,int type,int val,enum send_target target)
+	VTABLE_ENTRY(void, class_change, struct block_list *bl,int class_,int type)
+	VTABLE_ENTRY(void, skill_setunit, struct skill_unit *unit)
+	VTABLE_ENTRY(void, skill_delunit, struct skill_unit *unit)
+	VTABLE_ENTRY(void, skillunit_update, struct block_list* bl)
+	VTABLE_ENTRY(int, clearunit_delayed_sub, int tid, unsigned int tick, int id, intptr_t data)
+	VTABLE_ENTRY(int, set_unit_idle, struct block_list* bl, unsigned char* buffer, bool spawn)
+	VTABLE_ENTRY(void, setdisguise, struct block_list *bl, unsigned char *buf,int len)
+	VTABLE_ENTRY(int, set_unit_walking, struct block_list* bl, struct unit_data* ud, unsigned char* buffer)
+	VTABLE_ENTRY(int, calc_walkdelay, struct block_list *bl,int delay, int type, int damage, int div_)
+	VTABLE_ENTRY(void, getareachar_skillunit, struct map_session_data *sd, struct skill_unit *unit)
+	VTABLE_ENTRY(void, getareachar_unit, struct map_session_data* sd,struct block_list *bl)
+	VTABLE_ENTRY(void, clearchar_skillunit, struct skill_unit *unit, int fd)
+	VTABLE_ENTRY(int, getareachar, struct block_list* bl,va_list ap)
 	/* main unit spawn */
-	int (*spawn) (struct block_list *bl);
+	VTABLE_ENTRY(int, spawn, struct block_list *bl)
 	/* map-related */
-	void (*changemap) (struct map_session_data *sd, short map, int x, int y);
-	void (*changemapcell) (int fd, int16 m, int x, int y, int type, enum send_target target);
-	void (*map_property) (struct map_session_data* sd, enum map_property property);
-	void (*pvpset) (struct map_session_data *sd, int pvprank, int pvpnum,int type);
-	void (*map_property_mapall) (int map, enum map_property property);
-	void (*bossmapinfo) (int fd, struct mob_data *md, short flag);
-	void (*map_type) (struct map_session_data* sd, enum map_type type);
+	VTABLE_ENTRY(void, changemap, struct map_session_data *sd, short map, int x, int y)
+	VTABLE_ENTRY(void, changemapcell, int fd, int16 m, int x, int y, int type, enum send_target target)
+	VTABLE_ENTRY(void, map_property, struct map_session_data* sd, enum map_property property)
+	VTABLE_ENTRY(void, pvpset, struct map_session_data *sd, int pvprank, int pvpnum,int type)
+	VTABLE_ENTRY(void, map_property_mapall, int map, enum map_property property)
+	VTABLE_ENTRY(void, bossmapinfo, int fd, struct mob_data *md, short flag)
+	VTABLE_ENTRY(void, map_type, struct map_session_data* sd, enum map_type type)
 	/* multi-map-server */
-	void (*changemapserver) (struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port);
+	VTABLE_ENTRY(void, changemapserver, struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port)
 	/* npc-shop-related */
-	void (*npcbuysell) (struct map_session_data* sd, int id);
-	void (*buylist) (struct map_session_data *sd, struct npc_data *nd);
-	void (*selllist) (struct map_session_data *sd);
-	void (*cashshop_show) (struct map_session_data *sd, struct npc_data *nd);
-	void (*npc_buy_result) (struct map_session_data* sd, unsigned char result);
-	void (*npc_sell_result) (struct map_session_data* sd, unsigned char result);
-	void (*cashshop_ack) (struct map_session_data* sd, int error);
+	VTABLE_ENTRY(void, npcbuysell, struct map_session_data* sd, int id)
+	VTABLE_ENTRY(void, buylist, struct map_session_data *sd, struct npc_data *nd)
+	VTABLE_ENTRY(void, selllist, struct map_session_data *sd)
+	VTABLE_ENTRY(void, cashshop_show, struct map_session_data *sd, struct npc_data *nd)
+	VTABLE_ENTRY(void, npc_buy_result, struct map_session_data* sd, unsigned char result)
+	VTABLE_ENTRY(void, npc_sell_result, struct map_session_data* sd, unsigned char result)
+	VTABLE_ENTRY(void, cashshop_ack, struct map_session_data* sd, int error)
 	/* npc-script-related */
-	void (*scriptmes) (struct map_session_data *sd, int npcid, const char *mes);
-	void (*scriptnext) (struct map_session_data *sd,int npcid);
-	void (*scriptclose) (struct map_session_data *sd, int npcid);
-	void (*scriptmenu) (struct map_session_data* sd, int npcid, const char* mes);
-	void (*scriptinput) (struct map_session_data *sd, int npcid);
-	void (*scriptinputstr) (struct map_session_data *sd, int npcid);
-	void (*cutin) (struct map_session_data* sd, const char* image, int type);
-	void (*sendfakenpc) (struct map_session_data *sd, int npcid);
+	VTABLE_ENTRY(void, scriptmes, struct map_session_data *sd, int npcid, const char *mes)
+	VTABLE_ENTRY(void, scriptnext, struct map_session_data *sd,int npcid)
+	VTABLE_ENTRY(void, scriptclose, struct map_session_data *sd, int npcid)
+	VTABLE_ENTRY(void, scriptmenu, struct map_session_data* sd, int npcid, const char* mes)
+	VTABLE_ENTRY(void, scriptinput, struct map_session_data *sd, int npcid)
+	VTABLE_ENTRY(void, scriptinputstr, struct map_session_data *sd, int npcid)
+	VTABLE_ENTRY(void, cutin, struct map_session_data* sd, const char* image, int type)
+	VTABLE_ENTRY(void, sendfakenpc, struct map_session_data *sd, int npcid)
 	/* client-user-interface-related */
-	void (*viewpoint) (struct map_session_data *sd, int npc_id, int type, int x, int y, int id, int color);
-	int (*damage) (struct block_list* src, struct block_list* dst, unsigned int tick, int sdelay, int ddelay, int damage, int div, int type, int damage2);
-	void (*sitting) (struct block_list* bl);
-	void (*standing) (struct block_list* bl);
-	void (*arrow_create_list) (struct map_session_data *sd);
-	void (*refresh) (struct map_session_data *sd);
-	void (*fame_blacksmith) (struct map_session_data *sd, int points);
-	void (*fame_alchemist) (struct map_session_data *sd, int points);
-	void (*fame_taekwon) (struct map_session_data *sd, int points);
-	void (*hotkeys) (struct map_session_data *sd);
-	int (*insight) (struct block_list *bl,va_list ap);
-	int (*outsight) (struct block_list *bl,va_list ap);
-	void (*skillcastcancel) (struct block_list* bl);
-	void (*skill_fail) (struct map_session_data *sd,uint16 skill_id,enum useskill_fail_cause cause,int btype);
-	void (*skill_cooldown) (struct map_session_data *sd, uint16 skill_id, unsigned int tick);
-	void (*skill_memomessage) (struct map_session_data* sd, int type);
-	void (*skill_teleportmessage) (struct map_session_data *sd, int type);
-	void (*skill_produce_mix_list) (struct map_session_data *sd, int skill_id, int trigger);
-	void (*cooking_list) (struct map_session_data *sd, int trigger, uint16 skill_id, int qty, int list_type);
-	void (*autospell) (struct map_session_data *sd,uint16 skill_lv);
-	void (*combo_delay) (struct block_list *bl,int wait);
-	void (*status_change) (struct block_list *bl,int type,int flag,int tick,int val1, int val2, int val3);
-	void (*insert_card) (struct map_session_data *sd,int idx_equip,int idx_card,int flag);
-	void (*inventorylist) (struct map_session_data *sd);
-	void (*equiplist) (struct map_session_data *sd);
-	void (*cartlist) (struct map_session_data *sd);
-	void (*favorite_item) (struct map_session_data* sd, unsigned short index);
-	void (*clearcart) (int fd);
-	void (*item_identify_list) (struct map_session_data *sd);
-	void (*item_identified) (struct map_session_data *sd,int idx,int flag);
-	void (*item_repair_list) (struct map_session_data *sd, struct map_session_data *dstsd, int lv);
-	void (*item_repaireffect) (struct map_session_data *sd, int idx, int flag);
-	void (*item_damaged) (struct map_session_data* sd, unsigned short position);
-	void (*item_refine_list) (struct map_session_data *sd);
-	void (*item_skill) (struct map_session_data *sd,uint16 skill_id,uint16 skill_lv);
-	void (*mvp_item) (struct map_session_data *sd,int nameid);
-	void (*mvp_exp) (struct map_session_data *sd, unsigned int exp);
-	void (*mvp_noitem) (struct map_session_data* sd);
-	void (*changed_dir) (struct block_list *bl, enum send_target target);
-	void (*charnameack) (int fd, struct block_list *bl);
-	void (*monster_hp_bar) ( struct mob_data* md, int fd );
-	int (*hpmeter) (struct map_session_data *sd);
-	void (*hpmeter_single) (int fd, int id, unsigned int hp, unsigned int maxhp);
-	int (*hpmeter_sub) (struct block_list *bl, va_list ap);
-	void (*upgrademessage) (int fd, int result, int item_id);
-	void (*get_weapon_view) (struct map_session_data* sd, unsigned short *rhand, unsigned short *lhand);
-	void (*gospel_info) (struct map_session_data *sd, int type);
-	void (*feel_req) (int fd, struct map_session_data *sd, uint16 skill_lv);
-	void (*starskill) (struct map_session_data* sd, const char* mapname, int monster_id, unsigned char star, unsigned char result);
-	void (*feel_info) (struct map_session_data* sd, unsigned char feel_level, unsigned char type);
-	void (*hate_info) (struct map_session_data *sd, unsigned char hate_level,int class_, unsigned char type);
-	void (*mission_info) (struct map_session_data *sd, int mob_id, unsigned char progress);
-	void (*feel_hate_reset) (struct map_session_data *sd);
-	void (*equiptickack) (struct map_session_data* sd, int flag);
-	void (*viewequip_ack) (struct map_session_data* sd, struct map_session_data* tsd);
-	void (*viewequip_fail) (struct map_session_data* sd);
-	void (*equipcheckbox) (struct map_session_data* sd);
-	void (*displayexp) (struct map_session_data *sd, unsigned int exp, char type, bool quest);
-	void (*font) (struct map_session_data *sd);
-	void (*progressbar) (struct map_session_data * sd, unsigned long color, unsigned int second);
-	void (*progressbar_abort) (struct map_session_data * sd);
-	void (*showdigit) (struct map_session_data* sd, unsigned char type, int value);
-	int (*elementalconverter_list) (struct map_session_data *sd);
-	int (*spellbook_list) (struct map_session_data *sd);
-	int (*magicdecoy_list) (struct map_session_data *sd, uint16 skill_lv, short x, short y);
-	int (*poison_list) (struct map_session_data *sd, uint16 skill_lv);
-	int (*autoshadowspell_list) (struct map_session_data *sd);
-	int (*skill_itemlistwindow) ( struct map_session_data *sd, uint16 skill_id, uint16 skill_lv );
-	int (*sc_notick) (struct block_list *bl,int type,int flag,int val1, int val2, int val3);
-	int (*sc_single) (int fd, int id,int type,int flag,int val1, int val2, int val3);
-	void (*initialstatus) (struct map_session_data *sd);
+	VTABLE_ENTRY(void, viewpoint, struct map_session_data *sd, int npc_id, int type, int x, int y, int id, int color)
+	VTABLE_ENTRY(int, damage, struct block_list* src, struct block_list* dst, unsigned int tick, int sdelay, int ddelay, int damage, int div, int type, int damage2)
+	VTABLE_ENTRY(void, sitting, struct block_list* bl)
+	VTABLE_ENTRY(void, standing, struct block_list* bl)
+	VTABLE_ENTRY(void, arrow_create_list, struct map_session_data *sd)
+	VTABLE_ENTRY(void, refresh, struct map_session_data *sd)
+	VTABLE_ENTRY(void, fame_blacksmith, struct map_session_data *sd, int points)
+	VTABLE_ENTRY(void, fame_alchemist, struct map_session_data *sd, int points)
+	VTABLE_ENTRY(void, fame_taekwon, struct map_session_data *sd, int points)
+	VTABLE_ENTRY(void, hotkeys, struct map_session_data *sd)
+	VTABLE_ENTRY(int, insight, struct block_list *bl,va_list ap)
+	VTABLE_ENTRY(int, outsight, struct block_list *bl,va_list ap)
+	VTABLE_ENTRY(void, skillcastcancel, struct block_list* bl)
+	VTABLE_ENTRY(void, skill_fail, struct map_session_data *sd,uint16 skill_id,enum useskill_fail_cause cause,int btype)
+	VTABLE_ENTRY(void, skill_cooldown, struct map_session_data *sd, uint16 skill_id, unsigned int tick)
+	VTABLE_ENTRY(void, skill_memomessage, struct map_session_data* sd, int type)
+	VTABLE_ENTRY(void, skill_teleportmessage, struct map_session_data *sd, int type)
+	VTABLE_ENTRY(void, skill_produce_mix_list, struct map_session_data *sd, int skill_id, int trigger)
+	VTABLE_ENTRY(void, cooking_list, struct map_session_data *sd, int trigger, uint16 skill_id, int qty, int list_type)
+	VTABLE_ENTRY(void, autospell, struct map_session_data *sd,uint16 skill_lv)
+	VTABLE_ENTRY(void, combo_delay, struct block_list *bl,int wait)
+	VTABLE_ENTRY(void, status_change, struct block_list *bl,int type,int flag,int tick,int val1, int val2, int val3)
+	VTABLE_ENTRY(void, insert_card, struct map_session_data *sd,int idx_equip,int idx_card,int flag)
+	VTABLE_ENTRY(void, inventorylist, struct map_session_data *sd)
+	VTABLE_ENTRY(void, equiplist, struct map_session_data *sd)
+	VTABLE_ENTRY(void, cartlist, struct map_session_data *sd)
+	VTABLE_ENTRY(void, favorite_item, struct map_session_data* sd, unsigned short index)
+	VTABLE_ENTRY(void, clearcart, int fd)
+	VTABLE_ENTRY(void, item_identify_list, struct map_session_data *sd)
+	VTABLE_ENTRY(void, item_identified, struct map_session_data *sd,int idx,int flag)
+	VTABLE_ENTRY(void, item_repair_list, struct map_session_data *sd, struct map_session_data *dstsd, int lv)
+	VTABLE_ENTRY(void, item_repaireffect, struct map_session_data *sd, int idx, int flag)
+	VTABLE_ENTRY(void, item_damaged, struct map_session_data* sd, unsigned short position)
+	VTABLE_ENTRY(void, item_refine_list, struct map_session_data *sd)
+	VTABLE_ENTRY(void, item_skill, struct map_session_data *sd,uint16 skill_id,uint16 skill_lv)
+	VTABLE_ENTRY(void, mvp_item, struct map_session_data *sd,int nameid)
+	VTABLE_ENTRY(void, mvp_exp, struct map_session_data *sd, unsigned int exp)
+	VTABLE_ENTRY(void, mvp_noitem, struct map_session_data* sd)
+	VTABLE_ENTRY(void, changed_dir, struct block_list *bl, enum send_target target)
+	VTABLE_ENTRY(void, charnameack, int fd, struct block_list *bl)
+	VTABLE_ENTRY(void, monster_hp_bar,  struct mob_data* md, int fd )
+	VTABLE_ENTRY(int, hpmeter, struct map_session_data *sd)
+	VTABLE_ENTRY(void, hpmeter_single, int fd, int id, unsigned int hp, unsigned int maxhp)
+	VTABLE_ENTRY(int, hpmeter_sub, struct block_list *bl, va_list ap)
+	VTABLE_ENTRY(void, upgrademessage, int fd, int result, int item_id)
+	VTABLE_ENTRY(void, get_weapon_view, struct map_session_data* sd, unsigned short *rhand, unsigned short *lhand)
+	VTABLE_ENTRY(void, gospel_info, struct map_session_data *sd, int type)
+	VTABLE_ENTRY(void, feel_req, int fd, struct map_session_data *sd, uint16 skill_lv)
+	VTABLE_ENTRY(void, starskill, struct map_session_data* sd, const char* mapname, int monster_id, unsigned char star, unsigned char result)
+	VTABLE_ENTRY(void, feel_info, struct map_session_data* sd, unsigned char feel_level, unsigned char type)
+	VTABLE_ENTRY(void, hate_info, struct map_session_data *sd, unsigned char hate_level,int class_, unsigned char type)
+	VTABLE_ENTRY(void, mission_info, struct map_session_data *sd, int mob_id, unsigned char progress)
+	VTABLE_ENTRY(void, feel_hate_reset, struct map_session_data *sd)
+	VTABLE_ENTRY(void, equiptickack, struct map_session_data* sd, int flag)
+	VTABLE_ENTRY(void, viewequip_ack, struct map_session_data* sd, struct map_session_data* tsd)
+	VTABLE_ENTRY(void, viewequip_fail, struct map_session_data* sd)
+	VTABLE_ENTRY(void, equipcheckbox, struct map_session_data* sd)
+	VTABLE_ENTRY(void, displayexp, struct map_session_data *sd, unsigned int exp, char type, bool quest)
+	VTABLE_ENTRY(void, font, struct map_session_data *sd)
+	VTABLE_ENTRY(void, progressbar, struct map_session_data * sd, unsigned long color, unsigned int second)
+	VTABLE_ENTRY(void, progressbar_abort, struct map_session_data * sd)
+	VTABLE_ENTRY(void, showdigit, struct map_session_data* sd, unsigned char type, int value)
+	VTABLE_ENTRY(int, elementalconverter_list, struct map_session_data *sd)
+	VTABLE_ENTRY(int, spellbook_list, struct map_session_data *sd)
+	VTABLE_ENTRY(int, magicdecoy_list, struct map_session_data *sd, uint16 skill_lv, short x, short y)
+	VTABLE_ENTRY(int, poison_list, struct map_session_data *sd, uint16 skill_lv)
+	VTABLE_ENTRY(int, autoshadowspell_list, struct map_session_data *sd)
+	VTABLE_ENTRY(int, skill_itemlistwindow,  struct map_session_data *sd, uint16 skill_id, uint16 skill_lv )
+	VTABLE_ENTRY(int, sc_notick, struct block_list *bl,int type,int flag,int val1, int val2, int val3)
+	VTABLE_ENTRY(int, sc_single, int fd, int id,int type,int flag,int val1, int val2, int val3)
+	VTABLE_ENTRY(void, initialstatus, struct map_session_data *sd)
 	/* player-unit-specific-related */
-	void (*updatestatus) (struct map_session_data *sd,int type);
-	void (*changestatus) (struct map_session_data* sd,int type,int val);
-	void (*statusupack) (struct map_session_data *sd,int type,int ok,int val);
-	void (*movetoattack) (struct map_session_data *sd,struct block_list *bl);
-	void (*solved_charname) (int fd, int charid, const char* name);
-	void (*charnameupdate) (struct map_session_data *ssd);
-	int (*delayquit) (int tid, unsigned int tick, int id, intptr_t data);
-	void (*getareachar_pc) (struct map_session_data* sd,struct map_session_data* dstsd);
-	void (*disconnect_ack) (struct map_session_data* sd, short result);
-	void (*PVPInfo) (struct map_session_data* sd);
-	void (*blacksmith) (struct map_session_data* sd);
-	void (*alchemist) (struct map_session_data* sd);
-	void (*taekwon) (struct map_session_data* sd);
-	void (*ranking_pk) (struct map_session_data* sd);
-	void (*quitsave) (int fd,struct map_session_data *sd);
+	VTABLE_ENTRY(void, updatestatus, struct map_session_data *sd,int type)
+	VTABLE_ENTRY(void, changestatus, struct map_session_data* sd,int type,int val)
+	VTABLE_ENTRY(void, statusupack, struct map_session_data *sd,int type,int ok,int val)
+	VTABLE_ENTRY(void, movetoattack, struct map_session_data *sd,struct block_list *bl)
+	VTABLE_ENTRY(void, solved_charname, int fd, int charid, const char* name)
+	VTABLE_ENTRY(void, charnameupdate, struct map_session_data *ssd)
+	VTABLE_ENTRY(int, delayquit, int tid, unsigned int tick, int id, intptr_t data)
+	VTABLE_ENTRY(void, getareachar_pc, struct map_session_data* sd,struct map_session_data* dstsd)
+	VTABLE_ENTRY(void, disconnect_ack, struct map_session_data* sd, short result)
+	VTABLE_ENTRY(void, PVPInfo, struct map_session_data* sd)
+	VTABLE_ENTRY(void, blacksmith, struct map_session_data* sd)
+	VTABLE_ENTRY(void, alchemist, struct map_session_data* sd)
+	VTABLE_ENTRY(void, taekwon, struct map_session_data* sd)
+	VTABLE_ENTRY(void, ranking_pk, struct map_session_data* sd)
+	VTABLE_ENTRY(void, quitsave, int fd,struct map_session_data *sd)
 	/* visual effects client-side */
-	void (*misceffect) (struct block_list* bl,int type);
-	void (*changeoption) (struct block_list* bl);
-	void (*changeoption2) (struct block_list* bl);
-	void (*emotion) (struct block_list *bl,int type);
-	void (*talkiebox) (struct block_list* bl, const char* talkie);
-	void (*wedding_effect) (struct block_list *bl);
-	void (*divorced) (struct map_session_data* sd, const char* name);
-	void (*callpartner) (struct map_session_data *sd);
-	int (*skill_damage) (struct block_list *src,struct block_list *dst,unsigned int tick,int sdelay,int ddelay,int damage,int div,uint16 skill_id,uint16 skill_lv,int type);
-	int (*skill_nodamage) (struct block_list *src,struct block_list *dst,uint16 skill_id,int heal,int fail);
-	void (*skill_poseffect) (struct block_list *src,uint16 skill_id,int val,int x,int y,int tick);
-	void (*skill_estimation) (struct map_session_data *sd,struct block_list *dst);
-	void (*skill_warppoint) (struct map_session_data* sd, uint16 skill_id, uint16 skill_lv, unsigned short map1, unsigned short map2, unsigned short map3, unsigned short map4);
-	void (*skillcasting) (struct block_list* bl, int src_id, int dst_id, int dst_x, int dst_y, uint16 skill_id, int property, int casttime);
-	void (*produce_effect) (struct map_session_data* sd,int flag,int nameid);
-	void (*devotion) (struct block_list *src, struct map_session_data *tsd);
-	void (*spiritball) (struct block_list *bl);
-	void (*spiritball_single) (int fd, struct map_session_data *sd);
-	void (*bladestop) (struct block_list *src, int dst_id, int active);
-	void (*mvp_effect) (struct map_session_data *sd);
-	void (*heal) (int fd,int type,int val);
-	void (*resurrection) (struct block_list *bl,int type);
-	void (*refine) (int fd, int fail, int index, int val);
-	void (*weather) (int16 m);
-	void (*specialeffect) (struct block_list* bl, int type, enum send_target target);
-	void (*specialeffect_single) (struct block_list* bl, int type, int fd);
-	void (*specialeffect_value) (struct block_list* bl, int effect_id, int num, send_target target);
-	void (*millenniumshield) (struct map_session_data *sd, short shields );
-	void (*talisman) (struct map_session_data *sd, short type);
-	void (*talisman_single) (int fd, struct map_session_data *sd, short type);
-	void (*snap) ( struct block_list *bl, short x, short y );
-	void (*weather_check) (struct map_session_data *sd);
+	VTABLE_ENTRY(void, misceffect, struct block_list* bl,int type)
+	VTABLE_ENTRY(void, changeoption, struct block_list* bl)
+	VTABLE_ENTRY(void, changeoption2, struct block_list* bl)
+	VTABLE_ENTRY(void, emotion, struct block_list *bl,int type)
+	VTABLE_ENTRY(void, talkiebox, struct block_list* bl, const char* talkie)
+	VTABLE_ENTRY(void, wedding_effect, struct block_list *bl)
+	VTABLE_ENTRY(void, divorced, struct map_session_data* sd, const char* name)
+	VTABLE_ENTRY(void, callpartner, struct map_session_data *sd)
+	VTABLE_ENTRY(int, skill_damage, struct block_list *src,struct block_list *dst,unsigned int tick,int sdelay,int ddelay,int damage,int div,uint16 skill_id,uint16 skill_lv,int type)
+	VTABLE_ENTRY(int, skill_nodamage, struct block_list *src,struct block_list *dst,uint16 skill_id,int heal,int fail)
+	VTABLE_ENTRY(void, skill_poseffect, struct block_list *src,uint16 skill_id,int val,int x,int y,int tick)
+	VTABLE_ENTRY(void, skill_estimation, struct map_session_data *sd,struct block_list *dst)
+	VTABLE_ENTRY(void, skill_warppoint, struct map_session_data* sd, uint16 skill_id, uint16 skill_lv, unsigned short map1, unsigned short map2, unsigned short map3, unsigned short map4)
+	VTABLE_ENTRY(void, skillcasting, struct block_list* bl, int src_id, int dst_id, int dst_x, int dst_y, uint16 skill_id, int property, int casttime)
+	VTABLE_ENTRY(void, produce_effect, struct map_session_data* sd,int flag,int nameid)
+	VTABLE_ENTRY(void, devotion, struct block_list *src, struct map_session_data *tsd)
+	VTABLE_ENTRY(void, spiritball, struct block_list *bl)
+	VTABLE_ENTRY(void, spiritball_single, int fd, struct map_session_data *sd)
+	VTABLE_ENTRY(void, bladestop, struct block_list *src, int dst_id, int active)
+	VTABLE_ENTRY(void, mvp_effect, struct map_session_data *sd)
+	VTABLE_ENTRY(void, heal, int fd,int type,int val)
+	VTABLE_ENTRY(void, resurrection, struct block_list *bl,int type)
+	VTABLE_ENTRY(void, refine, int fd, int fail, int index, int val)
+	VTABLE_ENTRY(void, weather, int16 m)
+	VTABLE_ENTRY(void, specialeffect, struct block_list* bl, int type, enum send_target target)
+	VTABLE_ENTRY(void, specialeffect_single, struct block_list* bl, int type, int fd)
+	VTABLE_ENTRY(void, specialeffect_value, struct block_list* bl, int effect_id, int num, send_target target)
+	VTABLE_ENTRY(void, millenniumshield, struct map_session_data *sd, short shields )
+	VTABLE_ENTRY(void, talisman, struct map_session_data *sd, short type)
+	VTABLE_ENTRY(void, talisman_single, int fd, struct map_session_data *sd, short type)
+	VTABLE_ENTRY(void, snap,  struct block_list *bl, short x, short y )
+	VTABLE_ENTRY(void, weather_check, struct map_session_data *sd)
 	/* sound effects client-side */
-	void (*playBGM) (struct map_session_data* sd, const char* name);
-	void (*soundeffect) (struct map_session_data* sd, struct block_list* bl, const char* name, int type);
-	void (*soundeffectall) (struct block_list* bl, const char* name, int type, enum send_target coverage);
+	VTABLE_ENTRY(void, playBGM, struct map_session_data* sd, const char* name)
+	VTABLE_ENTRY(void, soundeffect, struct map_session_data* sd, struct block_list* bl, const char* name, int type)
+	VTABLE_ENTRY(void, soundeffectall, struct block_list* bl, const char* name, int type, enum send_target coverage)
 	/* chat/message-related */
-	void (*GlobalMessage) (struct block_list* bl, const char* message);
-	void (*createchat) (struct map_session_data* sd, int flag);
-	void (*dispchat) (struct chat_data* cd, int fd);
-	void (*joinchatfail) (struct map_session_data *sd,int flag);
-	void (*joinchatok) (struct map_session_data *sd,struct chat_data* cd);
-	void (*addchat) (struct chat_data* cd,struct map_session_data *sd);
-	void (*changechatowner) (struct chat_data* cd, struct map_session_data* sd);
-	void (*clearchat) (struct chat_data *cd,int fd);
-	void (*leavechat) (struct chat_data* cd, struct map_session_data* sd, bool flag);
-	void (*changechatstatus) (struct chat_data* cd);
-	void (*wis_message) (int fd, const char* nick, const char* mes, int mes_len);
-	void (*wis_end) (int fd, int flag);
-	void (*disp_onlyself) (struct map_session_data *sd, const char *mes, int len);
-	void (*disp_message) (struct block_list* src, const char* mes, int len, enum send_target target);
-	void (*broadcast) (struct block_list* bl, const char* mes, int len, int type, enum send_target target);
-	void (*broadcast2) (struct block_list* bl, const char* mes, int len, unsigned long fontColor, short fontType, short fontSize, short fontAlign, short fontY, enum send_target target);
-	void (*messagecolor) (struct block_list* bl, unsigned long color, const char* msg);
-	void (*disp_overhead) (struct block_list *bl, const char* mes);
-	void (*msg) (struct map_session_data* sd, unsigned short id);
-	void (*msg_value) (struct map_session_data* sd, unsigned short id, int value);
-	void (*msg_skill) (struct map_session_data* sd, uint16 skill_id, int msg_id);
-	void (*msgtable) (int fd, int line);
-	void (*msgtable_num) (int fd, int line, int num);
-	void (*message) (const int fd, const char* mes);
-	int (*colormes) (struct map_session_data * sd, enum clif_colors color, const char* msg);
-	bool (*process_message) (struct map_session_data* sd, int format, char** name_, int* namelen_, char** message_, int* messagelen_);
-	void (*wisexin) (struct map_session_data *sd,int type,int flag);
-	void (*wisall) (struct map_session_data *sd,int type,int flag);
-	void (*PMIgnoreList) (struct map_session_data* sd);
+	VTABLE_ENTRY(void, GlobalMessage, struct block_list* bl, const char* message)
+	VTABLE_ENTRY(void, createchat, struct map_session_data* sd, int flag)
+	VTABLE_ENTRY(void, dispchat, struct chat_data* cd, int fd)
+	VTABLE_ENTRY(void, joinchatfail, struct map_session_data *sd,int flag)
+	VTABLE_ENTRY(void, joinchatok, struct map_session_data *sd,struct chat_data* cd)
+	VTABLE_ENTRY(void, addchat, struct chat_data* cd,struct map_session_data *sd)
+	VTABLE_ENTRY(void, changechatowner, struct chat_data* cd, struct map_session_data* sd)
+	VTABLE_ENTRY(void, clearchat, struct chat_data *cd,int fd)
+	VTABLE_ENTRY(void, leavechat, struct chat_data* cd, struct map_session_data* sd, bool flag)
+	VTABLE_ENTRY(void, changechatstatus, struct chat_data* cd)
+	VTABLE_ENTRY(void, wis_message, int fd, const char* nick, const char* mes, int mes_len)
+	VTABLE_ENTRY(void, wis_end, int fd, int flag)
+	VTABLE_ENTRY(void, disp_onlyself, struct map_session_data *sd, const char *mes, int len)
+	VTABLE_ENTRY(void, disp_message, struct block_list* src, const char* mes, int len, enum send_target target)
+	VTABLE_ENTRY(void, broadcast, struct block_list* bl, const char* mes, int len, int type, enum send_target target)
+	VTABLE_ENTRY(void, broadcast2, struct block_list* bl, const char* mes, int len, unsigned long fontColor, short fontType, short fontSize, short fontAlign, short fontY, enum send_target target)
+	VTABLE_ENTRY(void, messagecolor, struct block_list* bl, unsigned long color, const char* msg)
+	VTABLE_ENTRY(void, disp_overhead, struct block_list *bl, const char* mes)
+	VTABLE_ENTRY(void, msg, struct map_session_data* sd, unsigned short id)
+	VTABLE_ENTRY(void, msg_value, struct map_session_data* sd, unsigned short id, int value)
+	VTABLE_ENTRY(void, msg_skill, struct map_session_data* sd, uint16 skill_id, int msg_id)
+	VTABLE_ENTRY(void, msgtable, int fd, int line)
+	VTABLE_ENTRY(void, msgtable_num, int fd, int line, int num)
+	VTABLE_ENTRY(void, message, const int fd, const char* mes)
+	VTABLE_ENTRY(int, colormes, struct map_session_data * sd, enum clif_colors color, const char* msg)
+	VTABLE_ENTRY(bool, process_message, struct map_session_data* sd, int format, char** name_, int* namelen_, char** message_, int* messagelen_)
+	VTABLE_ENTRY(void, wisexin, struct map_session_data *sd,int type,int flag)
+	VTABLE_ENTRY(void, wisall, struct map_session_data *sd,int type,int flag)
+	VTABLE_ENTRY(void, PMIgnoreList, struct map_session_data* sd)
 	/* trade handling */
-	void (*traderequest) (struct map_session_data* sd, const char* name);
-	void (*tradestart) (struct map_session_data* sd, uint8 type);
-	void (*tradeadditem) (struct map_session_data* sd, struct map_session_data* tsd, int index, int amount);
-	void (*tradeitemok) (struct map_session_data* sd, int index, int fail);
-	void (*tradedeal_lock) (struct map_session_data* sd, int fail);
-	void (*tradecancelled) (struct map_session_data* sd);
-	void (*tradecompleted) (struct map_session_data* sd, int fail);
-	void (*tradeundo) (struct map_session_data* sd);
+	VTABLE_ENTRY(void, traderequest, struct map_session_data* sd, const char* name)
+	VTABLE_ENTRY(void, tradestart, struct map_session_data* sd, uint8 type)
+	VTABLE_ENTRY(void, tradeadditem, struct map_session_data* sd, struct map_session_data* tsd, int index, int amount)
+	VTABLE_ENTRY(void, tradeitemok, struct map_session_data* sd, int index, int fail)
+	VTABLE_ENTRY(void, tradedeal_lock, struct map_session_data* sd, int fail)
+	VTABLE_ENTRY(void, tradecancelled, struct map_session_data* sd)
+	VTABLE_ENTRY(void, tradecompleted, struct map_session_data* sd, int fail)
+	VTABLE_ENTRY(void, tradeundo, struct map_session_data* sd)
 	/* vending handling */
-	void (*openvendingreq) (struct map_session_data* sd, int num);
-	void (*showvendingboard) (struct block_list* bl, const char* message, int fd);
-	void (*closevendingboard) (struct block_list* bl, int fd);
-	void (*vendinglist) (struct map_session_data* sd, int id, struct s_vending* vending);
-	void (*buyvending) (struct map_session_data* sd, int index, int amount, int fail);
-	void (*openvending) (struct map_session_data* sd, int id, struct s_vending* vending);
-	void (*vendingreport) (struct map_session_data* sd, int index, int amount);
+	VTABLE_ENTRY(void, openvendingreq, struct map_session_data* sd, int num)
+	VTABLE_ENTRY(void, showvendingboard, struct block_list* bl, const char* message, int fd)
+	VTABLE_ENTRY(void, closevendingboard, struct block_list* bl, int fd)
+	VTABLE_ENTRY(void, vendinglist, struct map_session_data* sd, int id, struct s_vending* vending)
+	VTABLE_ENTRY(void, buyvending, struct map_session_data* sd, int index, int amount, int fail)
+	VTABLE_ENTRY(void, openvending, struct map_session_data* sd, int id, struct s_vending* vending)
+	VTABLE_ENTRY(void, vendingreport, struct map_session_data* sd, int index, int amount)
 	/* storage handling */
-	void (*storagelist) (struct map_session_data* sd, struct item* items, int items_length);
-	void (*updatestorageamount) (struct map_session_data* sd, int amount, int max_amount);
-	void (*storageitemadded) (struct map_session_data* sd, struct item* i, int index, int amount);
-	void (*storageitemremoved) (struct map_session_data* sd, int index, int amount);
-	void (*storageclose) (struct map_session_data* sd);
+	VTABLE_ENTRY(void, storagelist, struct map_session_data* sd, struct item* items, int items_length)
+	VTABLE_ENTRY(void, updatestorageamount, struct map_session_data* sd, int amount, int max_amount)
+	VTABLE_ENTRY(void, storageitemadded, struct map_session_data* sd, struct item* i, int index, int amount)
+	VTABLE_ENTRY(void, storageitemremoved, struct map_session_data* sd, int index, int amount)
+	VTABLE_ENTRY(void, storageclose, struct map_session_data* sd)
 	/* skill-list handling */
-	void (*skillinfoblock) (struct map_session_data *sd);
-	void (*skillup) (struct map_session_data *sd,uint16 skill_id);
-	void (*skillinfo) (struct map_session_data *sd,int skill, int inf);
-	void (*addskill) (struct map_session_data *sd, int id);
-	void (*deleteskill) (struct map_session_data *sd, int id);
+	VTABLE_ENTRY(void, skillinfoblock, struct map_session_data *sd)
+	VTABLE_ENTRY(void, skillup, struct map_session_data *sd,uint16 skill_id)
+	VTABLE_ENTRY(void, skillinfo, struct map_session_data *sd,int skill, int inf)
+	VTABLE_ENTRY(void, addskill, struct map_session_data *sd, int id)
+	VTABLE_ENTRY(void, deleteskill, struct map_session_data *sd, int id)
 	/* party-specific */
-	void (*party_created) (struct map_session_data *sd,int result);
-	void (*party_member_info) (struct party_data *p, struct map_session_data *sd);
-	void (*party_info) (struct party_data* p, struct map_session_data *sd);
-	void (*party_invite) (struct map_session_data *sd,struct map_session_data *tsd);
-	void (*party_inviteack) (struct map_session_data* sd, const char* nick, int result);
-	void (*party_option) (struct party_data *p,struct map_session_data *sd,int flag);
-	void (*party_withdraw) (struct party_data* p, struct map_session_data* sd, int account_id, const char* name, int flag);
-	void (*party_message) (struct party_data* p, int account_id, const char* mes, int len);
-	void (*party_xy) (struct map_session_data *sd);
-	void (*party_xy_single) (int fd, struct map_session_data *sd);
-	void (*party_hp) (struct map_session_data *sd);
-	void (*party_xy_remove) (struct map_session_data *sd);
-	void (*party_show_picker) (struct map_session_data * sd, struct item * item_data);
-	void (*partyinvitationstate) (struct map_session_data* sd);
+	VTABLE_ENTRY(void, party_created, struct map_session_data *sd,int result)
+	VTABLE_ENTRY(void, party_member_info, struct party_data *p, struct map_session_data *sd)
+	VTABLE_ENTRY(void, party_info, struct party_data* p, struct map_session_data *sd)
+	VTABLE_ENTRY(void, party_invite, struct map_session_data *sd,struct map_session_data *tsd)
+	VTABLE_ENTRY(void, party_inviteack, struct map_session_data* sd, const char* nick, int result)
+	VTABLE_ENTRY(void, party_option, struct party_data *p,struct map_session_data *sd,int flag)
+	VTABLE_ENTRY(void, party_withdraw, struct party_data* p, struct map_session_data* sd, int account_id, const char* name, int flag)
+	VTABLE_ENTRY(void, party_message, struct party_data* p, int account_id, const char* mes, int len)
+	VTABLE_ENTRY(void, party_xy, struct map_session_data *sd)
+	VTABLE_ENTRY(void, party_xy_single, int fd, struct map_session_data *sd)
+	VTABLE_ENTRY(void, party_hp, struct map_session_data *sd)
+	VTABLE_ENTRY(void, party_xy_remove, struct map_session_data *sd)
+	VTABLE_ENTRY(void, party_show_picker, struct map_session_data * sd, struct item * item_data)
+	VTABLE_ENTRY(void, partyinvitationstate, struct map_session_data* sd)
 	/* guild-specific */
-	void (*guild_created) (struct map_session_data *sd,int flag);
-	void (*guild_belonginfo) (struct map_session_data *sd, struct guild *g);
-	void (*guild_masterormember) (struct map_session_data *sd);
-	void (*guild_basicinfo) (struct map_session_data *sd);
-	void (*guild_allianceinfo) (struct map_session_data *sd);
-	void (*guild_memberlist) (struct map_session_data *sd);
-	void (*guild_skillinfo) (struct map_session_data* sd);
-	void (*guild_send_onlineinfo) (struct map_session_data *sd); //[LuzZza]
-	void (*guild_memberlogin_notice) (struct guild *g,int idx,int flag);
-	void (*guild_invite) (struct map_session_data *sd,struct guild *g);
-	void (*guild_inviteack) (struct map_session_data *sd,int flag);
-	void (*guild_leave) (struct map_session_data *sd,const char *name,const char *mes);
-	void (*guild_expulsion) (struct map_session_data* sd, const char* name, const char* mes, int account_id);
-	void (*guild_positionchanged) (struct guild *g,int idx);
-	void (*guild_memberpositionchanged) (struct guild *g,int idx);
-	void (*guild_emblem) (struct map_session_data *sd,struct guild *g);
-	void (*guild_emblem_area) (struct block_list* bl);
-	void (*guild_notice) (struct map_session_data* sd, struct guild* g);
-	void (*guild_message) (struct guild *g,int account_id,const char *mes,int len);
-	int (*guild_skillup) (struct map_session_data *sd,uint16 skill_id,int lv);
-	void (*guild_reqalliance) (struct map_session_data *sd,int account_id,const char *name);
-	void (*guild_allianceack) (struct map_session_data *sd,int flag);
-	void (*guild_delalliance) (struct map_session_data *sd,int guild_id,int flag);
-	void (*guild_oppositionack) (struct map_session_data *sd,int flag);
-	void (*guild_broken) (struct map_session_data *sd,int flag);
-	void (*guild_xy) (struct map_session_data *sd);
-	void (*guild_xy_single) (int fd, struct map_session_data *sd);
-	void (*guild_xy_remove) (struct map_session_data *sd);
-	void (*guild_positionnamelist) (struct map_session_data *sd);
-	void (*guild_positioninfolist) (struct map_session_data *sd);
-	void (*guild_expulsionlist) (struct map_session_data* sd);
-	bool (*validate_emblem) (const uint8* emblem, unsigned long emblem_len);
+	VTABLE_ENTRY(void, guild_created, struct map_session_data *sd,int flag)
+	VTABLE_ENTRY(void, guild_belonginfo, struct map_session_data *sd, struct guild *g)
+	VTABLE_ENTRY(void, guild_masterormember, struct map_session_data *sd)
+	VTABLE_ENTRY(void, guild_basicinfo, struct map_session_data *sd)
+	VTABLE_ENTRY(void, guild_allianceinfo, struct map_session_data *sd)
+	VTABLE_ENTRY(void, guild_memberlist, struct map_session_data *sd)
+	VTABLE_ENTRY(void, guild_skillinfo, struct map_session_data* sd)
+	VTABLE_ENTRY(void, guild_send_onlineinfo, struct map_session_data *sd) //[LuzZza]
+	VTABLE_ENTRY(void, guild_memberlogin_notice, struct guild *g,int idx,int flag)
+	VTABLE_ENTRY(void, guild_invite, struct map_session_data *sd,struct guild *g)
+	VTABLE_ENTRY(void, guild_inviteack, struct map_session_data *sd,int flag)
+	VTABLE_ENTRY(void, guild_leave, struct map_session_data *sd,const char *name,const char *mes)
+	VTABLE_ENTRY(void, guild_expulsion, struct map_session_data* sd, const char* name, const char* mes, int account_id)
+	VTABLE_ENTRY(void, guild_positionchanged, struct guild *g,int idx)
+	VTABLE_ENTRY(void, guild_memberpositionchanged, struct guild *g,int idx)
+	VTABLE_ENTRY(void, guild_emblem, struct map_session_data *sd,struct guild *g)
+	VTABLE_ENTRY(void, guild_emblem_area, struct block_list* bl)
+	VTABLE_ENTRY(void, guild_notice, struct map_session_data* sd, struct guild* g)
+	VTABLE_ENTRY(void, guild_message, struct guild *g,int account_id,const char *mes,int len)
+	VTABLE_ENTRY(int, guild_skillup, struct map_session_data *sd,uint16 skill_id,int lv)
+	VTABLE_ENTRY(void, guild_reqalliance, struct map_session_data *sd,int account_id,const char *name)
+	VTABLE_ENTRY(void, guild_allianceack, struct map_session_data *sd,int flag)
+	VTABLE_ENTRY(void, guild_delalliance, struct map_session_data *sd,int guild_id,int flag)
+	VTABLE_ENTRY(void, guild_oppositionack, struct map_session_data *sd,int flag)
+	VTABLE_ENTRY(void, guild_broken, struct map_session_data *sd,int flag)
+	VTABLE_ENTRY(void, guild_xy, struct map_session_data *sd)
+	VTABLE_ENTRY(void, guild_xy_single, int fd, struct map_session_data *sd)
+	VTABLE_ENTRY(void, guild_xy_remove, struct map_session_data *sd)
+	VTABLE_ENTRY(void, guild_positionnamelist, struct map_session_data *sd)
+	VTABLE_ENTRY(void, guild_positioninfolist, struct map_session_data *sd)
+	VTABLE_ENTRY(void, guild_expulsionlist, struct map_session_data* sd)
+	VTABLE_ENTRY(bool, validate_emblem, const uint8* emblem, unsigned long emblem_len)
 	/* battleground-specific */
-	void (*bg_hp) (struct map_session_data *sd);
-	void (*bg_xy) (struct map_session_data *sd);
-	void (*bg_xy_remove) (struct map_session_data *sd);
-	void (*bg_message) (struct battleground_data *bg, int src_id, const char *name, const char *mes, int len);
-	void (*bg_updatescore) (int16 m);
-	void (*bg_updatescore_single) (struct map_session_data *sd);
-	void (*sendbgemblem_area) (struct map_session_data *sd);
-	void (*sendbgemblem_single) (int fd, struct map_session_data *sd);
+	VTABLE_ENTRY(void, bg_hp, struct map_session_data *sd)
+	VTABLE_ENTRY(void, bg_xy, struct map_session_data *sd)
+	VTABLE_ENTRY(void, bg_xy_remove, struct map_session_data *sd)
+	VTABLE_ENTRY(void, bg_message, struct battleground_data *bg, int src_id, const char *name, const char *mes, int len)
+	VTABLE_ENTRY(void, bg_updatescore, int16 m)
+	VTABLE_ENTRY(void, bg_updatescore_single, struct map_session_data *sd)
+	VTABLE_ENTRY(void, sendbgemblem_area, struct map_session_data *sd)
+	VTABLE_ENTRY(void, sendbgemblem_single, int fd, struct map_session_data *sd)
 	/* instance-related */
-	int (*instance) (int instance_id, int type, int flag);
-	void (*instance_join) (int fd, int instance_id);
-	void (*instance_leave) (int fd);
+	VTABLE_ENTRY(int, instance, int instance_id, int type, int flag)
+	VTABLE_ENTRY(void, instance_join, int fd, int instance_id)
+	VTABLE_ENTRY(void, instance_leave, int fd)
 	/* pet-related */
-	void (*catch_process) (struct map_session_data *sd);
-	void (*pet_roulette) (struct map_session_data *sd,int data);
-	void (*sendegg) (struct map_session_data *sd);
-	void (*send_petstatus) (struct map_session_data *sd);
-	void (*send_petdata) (struct map_session_data* sd, struct pet_data* pd, int type, int param);
-	void (*pet_emotion) (struct pet_data *pd,int param);
-	void (*pet_food) (struct map_session_data *sd,int foodid,int fail);
+	VTABLE_ENTRY(void, catch_process, struct map_session_data *sd)
+	VTABLE_ENTRY(void, pet_roulette, struct map_session_data *sd,int data)
+	VTABLE_ENTRY(void, sendegg, struct map_session_data *sd)
+	VTABLE_ENTRY(void, send_petstatus, struct map_session_data *sd)
+	VTABLE_ENTRY(void, send_petdata, struct map_session_data* sd, struct pet_data* pd, int type, int param)
+	VTABLE_ENTRY(void, pet_emotion, struct pet_data *pd,int param)
+	VTABLE_ENTRY(void, pet_food, struct map_session_data *sd,int foodid,int fail)
 	/* friend-related */
-	int (*friendslist_toggle_sub) (struct map_session_data *sd,va_list ap);
-	void (*friendslist_send) (struct map_session_data *sd);
-	void (*friendslist_reqack) (struct map_session_data *sd, struct map_session_data *f_sd, int type);
-	void (*friendslist_toggle) (struct map_session_data *sd,int account_id, int char_id, int online);
-	void (*friendlist_req) (struct map_session_data* sd, int account_id, int char_id, const char* name);
+	VTABLE_ENTRY(int, friendslist_toggle_sub, struct map_session_data *sd,va_list ap)
+	VTABLE_ENTRY(void, friendslist_send, struct map_session_data *sd)
+	VTABLE_ENTRY(void, friendslist_reqack, struct map_session_data *sd, struct map_session_data *f_sd, int type)
+	VTABLE_ENTRY(void, friendslist_toggle, struct map_session_data *sd,int account_id, int char_id, int online)
+	VTABLE_ENTRY(void, friendlist_req, struct map_session_data* sd, int account_id, int char_id, const char* name)
 	/* gm-related */
-	void (*GM_kickack) (struct map_session_data *sd, int id);
-	void (*GM_kick) (struct map_session_data *sd,struct map_session_data *tsd);
-	void (*manner_message) (struct map_session_data* sd, uint32 type);
-	void (*GM_silence) (struct map_session_data* sd, struct map_session_data* tsd, uint8 type);
-	void (*account_name) (struct map_session_data* sd, int account_id, const char* accname);
-	void (*check) (int fd, struct map_session_data* pl_sd);
+	VTABLE_ENTRY(void, GM_kickack, struct map_session_data *sd, int id)
+	VTABLE_ENTRY(void, GM_kick, struct map_session_data *sd,struct map_session_data *tsd)
+	VTABLE_ENTRY(void, manner_message, struct map_session_data* sd, uint32 type)
+	VTABLE_ENTRY(void, GM_silence, struct map_session_data* sd, struct map_session_data* tsd, uint8 type)
+	VTABLE_ENTRY(void, account_name, struct map_session_data* sd, int account_id, const char* accname)
+	VTABLE_ENTRY(void, check, int fd, struct map_session_data* pl_sd)
 	/* hom-related */
-	void (*hominfo) (struct map_session_data *sd, struct homun_data *hd, int flag);
-	int (*homskillinfoblock) (struct map_session_data *sd);
-	void (*homskillup) (struct map_session_data *sd, uint16 skill_id);
-	int (*hom_food) (struct map_session_data *sd,int foodid,int fail);
-	void (*send_homdata) (struct map_session_data *sd, int state, int param);
+	VTABLE_ENTRY(void, hominfo, struct map_session_data *sd, struct homun_data *hd, int flag)
+	VTABLE_ENTRY(int, homskillinfoblock, struct map_session_data *sd)
+	VTABLE_ENTRY(void, homskillup, struct map_session_data *sd, uint16 skill_id)
+	VTABLE_ENTRY(int, hom_food, struct map_session_data *sd,int foodid,int fail)
+	VTABLE_ENTRY(void, send_homdata, struct map_session_data *sd, int state, int param)
 	/* questlog-related */
-	void (*quest_send_list) (struct map_session_data * sd);
-	void (*quest_send_mission) (struct map_session_data * sd);
-	void (*quest_add) (struct map_session_data * sd, struct quest * qd, int index);
-	void (*quest_delete) (struct map_session_data * sd, int quest_id);
-	void (*quest_update_status) (struct map_session_data * sd, int quest_id, bool active);
-	void (*quest_update_objective) (struct map_session_data * sd, struct quest * qd, int index);
-	void (*quest_show_event) (struct map_session_data *sd, struct block_list *bl, short state, short color);
+	VTABLE_ENTRY(void, quest_send_list, struct map_session_data * sd)
+	VTABLE_ENTRY(void, quest_send_mission, struct map_session_data * sd)
+	VTABLE_ENTRY(void, quest_add, struct map_session_data * sd, struct quest * qd, int index)
+	VTABLE_ENTRY(void, quest_delete, struct map_session_data * sd, int quest_id)
+	VTABLE_ENTRY(void, quest_update_status, struct map_session_data * sd, int quest_id, bool active)
+	VTABLE_ENTRY(void, quest_update_objective, struct map_session_data * sd, struct quest * qd, int index)
+	VTABLE_ENTRY(void, quest_show_event, struct map_session_data *sd, struct block_list *bl, short state, short color)
 	/* mail-related */
-	void (*mail_window) (int fd, int flag);
-	void (*mail_read) (struct map_session_data *sd, int mail_id);
-	void (*mail_delete) (int fd, int mail_id, short fail);
-	void (*mail_return) (int fd, int mail_id, short fail);
-	void (*mail_send) (int fd, bool fail);
-	void (*mail_new) (int fd, int mail_id, const char *sender, const char *title);
-	void (*mail_refreshinbox) (struct map_session_data *sd);
-	void (*mail_getattachment) (int fd, uint8 flag);
-	void (*mail_setattachment) (int fd, int index, uint8 flag);
+	VTABLE_ENTRY(void, mail_window, int fd, int flag)
+	VTABLE_ENTRY(void, mail_read, struct map_session_data *sd, int mail_id)
+	VTABLE_ENTRY(void, mail_delete, int fd, int mail_id, short fail)
+	VTABLE_ENTRY(void, mail_return, int fd, int mail_id, short fail)
+	VTABLE_ENTRY(void, mail_send, int fd, bool fail)
+	VTABLE_ENTRY(void, mail_new, int fd, int mail_id, const char *sender, const char *title)
+	VTABLE_ENTRY(void, mail_refreshinbox, struct map_session_data *sd)
+	VTABLE_ENTRY(void, mail_getattachment, int fd, uint8 flag)
+	VTABLE_ENTRY(void, mail_setattachment, int fd, int index, uint8 flag)
 	/* auction-related */
-	void (*auction_openwindow) (struct map_session_data *sd);
-	void (*auction_results) (struct map_session_data *sd, short count, short pages, uint8 *buf);
-	void (*auction_message) (int fd, unsigned char flag);
-	void (*auction_close) (int fd, unsigned char flag);
-	void (*auction_setitem) (int fd, int index, bool fail);
+	VTABLE_ENTRY(void, auction_openwindow, struct map_session_data *sd)
+	VTABLE_ENTRY(void, auction_results, struct map_session_data *sd, short count, short pages, uint8 *buf)
+	VTABLE_ENTRY(void, auction_message, int fd, unsigned char flag)
+	VTABLE_ENTRY(void, auction_close, int fd, unsigned char flag)
+	VTABLE_ENTRY(void, auction_setitem, int fd, int index, bool fail)
 	/* mercenary-related */
-	void (*mercenary_info) (struct map_session_data *sd);
-	void (*mercenary_skillblock) (struct map_session_data *sd);
-	void (*mercenary_message) (struct map_session_data* sd, int message);
-	void (*mercenary_updatestatus) (struct map_session_data *sd, int type);
+	VTABLE_ENTRY(void, mercenary_info, struct map_session_data *sd)
+	VTABLE_ENTRY(void, mercenary_skillblock, struct map_session_data *sd)
+	VTABLE_ENTRY(void, mercenary_message, struct map_session_data* sd, int message)
+	VTABLE_ENTRY(void, mercenary_updatestatus, struct map_session_data *sd, int type)
 	/* item rental */
-	void (*rental_time) (int fd, int nameid, int seconds);
-	void (*rental_expired) (int fd, int index, int nameid);
+	VTABLE_ENTRY(void, rental_time, int fd, int nameid, int seconds)
+	VTABLE_ENTRY(void, rental_expired, int fd, int index, int nameid)
 	/* party booking related */
-	void (*PartyBookingRegisterAck) (struct map_session_data *sd, int flag);
-	void (*PartyBookingDeleteAck) (struct map_session_data* sd, int flag);
-	void (*PartyBookingSearchAck) (int fd, struct party_booking_ad_info** results, int count, bool more_result);
-	void (*PartyBookingUpdateNotify) (struct map_session_data* sd, struct party_booking_ad_info* pb_ad);
-	void (*PartyBookingDeleteNotify) (struct map_session_data* sd, int index);
-	void (*PartyBookingInsertNotify) (struct map_session_data* sd, struct party_booking_ad_info* pb_ad);
+	VTABLE_ENTRY(void, PartyBookingRegisterAck, struct map_session_data *sd, int flag)
+	VTABLE_ENTRY(void, PartyBookingDeleteAck, struct map_session_data* sd, int flag)
+	VTABLE_ENTRY(void, PartyBookingSearchAck, int fd, struct party_booking_ad_info** results, int count, bool more_result)
+	VTABLE_ENTRY(void, PartyBookingUpdateNotify, struct map_session_data* sd, struct party_booking_ad_info* pb_ad)
+	VTABLE_ENTRY(void, PartyBookingDeleteNotify, struct map_session_data* sd, int index)
+	VTABLE_ENTRY(void, PartyBookingInsertNotify, struct map_session_data* sd, struct party_booking_ad_info* pb_ad)
 	/* buying store-related */
-	void (*buyingstore_open) (struct map_session_data* sd);
-	void (*buyingstore_open_failed) (struct map_session_data* sd, unsigned short result, unsigned int weight);
-	void (*buyingstore_myitemlist) (struct map_session_data* sd);
-	void (*buyingstore_entry) (struct map_session_data* sd);
-	void (*buyingstore_entry_single) (struct map_session_data* sd, struct map_session_data* pl_sd);
-	void (*buyingstore_disappear_entry) (struct map_session_data* sd);
-	void (*buyingstore_disappear_entry_single) (struct map_session_data* sd, struct map_session_data* pl_sd);
-	void (*buyingstore_itemlist) (struct map_session_data* sd, struct map_session_data* pl_sd);
-	void (*buyingstore_trade_failed_buyer) (struct map_session_data* sd, short result);
-	void (*buyingstore_update_item) (struct map_session_data* sd, unsigned short nameid, unsigned short amount);
-	void (*buyingstore_delete_item) (struct map_session_data* sd, short index, unsigned short amount, int price);
-	void (*buyingstore_trade_failed_seller) (struct map_session_data* sd, short result, unsigned short nameid);
+	VTABLE_ENTRY(void, buyingstore_open, struct map_session_data* sd)
+	VTABLE_ENTRY(void, buyingstore_open_failed, struct map_session_data* sd, unsigned short result, unsigned int weight)
+	VTABLE_ENTRY(void, buyingstore_myitemlist, struct map_session_data* sd)
+	VTABLE_ENTRY(void, buyingstore_entry, struct map_session_data* sd)
+	VTABLE_ENTRY(void, buyingstore_entry_single, struct map_session_data* sd, struct map_session_data* pl_sd)
+	VTABLE_ENTRY(void, buyingstore_disappear_entry, struct map_session_data* sd)
+	VTABLE_ENTRY(void, buyingstore_disappear_entry_single, struct map_session_data* sd, struct map_session_data* pl_sd)
+	VTABLE_ENTRY(void, buyingstore_itemlist, struct map_session_data* sd, struct map_session_data* pl_sd)
+	VTABLE_ENTRY(void, buyingstore_trade_failed_buyer, struct map_session_data* sd, short result)
+	VTABLE_ENTRY(void, buyingstore_update_item, struct map_session_data* sd, unsigned short nameid, unsigned short amount)
+	VTABLE_ENTRY(void, buyingstore_delete_item, struct map_session_data* sd, short index, unsigned short amount, int price)
+	VTABLE_ENTRY(void, buyingstore_trade_failed_seller, struct map_session_data* sd, short result, unsigned short nameid)
 	/* search store-related */
-	void (*search_store_info_ack) (struct map_session_data* sd);
-	void (*search_store_info_failed) (struct map_session_data* sd, unsigned char reason);
-	void (*open_search_store_info) (struct map_session_data* sd);
-	void (*search_store_info_click_ack) (struct map_session_data* sd, short x, short y);
+	VTABLE_ENTRY(void, search_store_info_ack, struct map_session_data* sd)
+	VTABLE_ENTRY(void, search_store_info_failed, struct map_session_data* sd, unsigned char reason)
+	VTABLE_ENTRY(void, open_search_store_info, struct map_session_data* sd)
+	VTABLE_ENTRY(void, search_store_info_click_ack, struct map_session_data* sd, short x, short y)
 	/* elemental-related */
-	void (*elemental_info) (struct map_session_data *sd);
-	void (*elemental_updatestatus) (struct map_session_data *sd, int type);
+	VTABLE_ENTRY(void, elemental_info, struct map_session_data *sd)
+	VTABLE_ENTRY(void, elemental_updatestatus, struct map_session_data *sd, int type)
 	/* misc-handling */
-	void (*adopt_reply) (struct map_session_data *sd, int type);
-	void (*adopt_request) (struct map_session_data *sd, struct map_session_data *src, int p_id);
-	void (*readbook) (int fd, int book_id, int page);
-	void (*notify_time) (struct map_session_data* sd, unsigned long time);
-	void (*user_count) (struct map_session_data* sd, int count);
-	void (*noask_sub) (struct map_session_data *src, struct map_session_data *target, int type);
-	void (*chsys_create) (struct hChSysCh *channel, char *name, char *pass, unsigned char color);
-	void (*chsys_msg) (struct hChSysCh *channel, struct map_session_data *sd, char *msg);
-	void (*chsys_send) (struct hChSysCh *channel, struct map_session_data *sd, char *msg);
-	void (*chsys_join) (struct hChSysCh *channel, struct map_session_data *sd);
-	void (*chsys_left) (struct hChSysCh *channel, struct map_session_data *sd);
-	void (*chsys_delete) (struct hChSysCh *channel);
-	void (*chsys_mjoin) (struct map_session_data *sd);
+	VTABLE_ENTRY(void, adopt_reply, struct map_session_data *sd, int type)
+	VTABLE_ENTRY(void, adopt_request, struct map_session_data *sd, struct map_session_data *src, int p_id)
+	VTABLE_ENTRY(void, readbook, int fd, int book_id, int page)
+	VTABLE_ENTRY(void, notify_time, struct map_session_data* sd, unsigned long time)
+	VTABLE_ENTRY(void, user_count, struct map_session_data* sd, int count)
+	VTABLE_ENTRY(void, noask_sub, struct map_session_data *src, struct map_session_data *target, int type)
+	VTABLE_ENTRY(void, chsys_create, struct hChSysCh *channel, char *name, char *pass, unsigned char color)
+	VTABLE_ENTRY(void, chsys_msg, struct hChSysCh *channel, struct map_session_data *sd, char *msg)
+	VTABLE_ENTRY(void, chsys_send, struct hChSysCh *channel, struct map_session_data *sd, char *msg)
+	VTABLE_ENTRY(void, chsys_join, struct hChSysCh *channel, struct map_session_data *sd)
+	VTABLE_ENTRY(void, chsys_left, struct hChSysCh *channel, struct map_session_data *sd)
+	VTABLE_ENTRY(void, chsys_delete, struct hChSysCh *channel)
+	VTABLE_ENTRY(void, chsys_mjoin, struct map_session_data *sd)
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/
-	void (*pWantToConnection) (int fd, struct map_session_data *sd);
-	void (*pLoadEndAck) (int fd,struct map_session_data *sd);
-	void (*pTickSend) (int fd, struct map_session_data *sd);
-	void (*pHotkey) (int fd, struct map_session_data *sd);
-	void (*pProgressbar) (int fd, struct map_session_data * sd);
-	void (*pWalkToXY) (int fd, struct map_session_data *sd);
-	void (*pQuitGame) (int fd, struct map_session_data *sd);
-	void (*pGetCharNameRequest) (int fd, struct map_session_data *sd);
-	void (*pGlobalMessage) (int fd, struct map_session_data* sd);
-	void (*pMapMove) (int fd, struct map_session_data *sd);
-	void (*pChangeDir) (int fd, struct map_session_data *sd);
-	void (*pEmotion) (int fd, struct map_session_data *sd);
-	void (*pHowManyConnections) (int fd, struct map_session_data *sd);
-	void (*pActionRequest) (int fd, struct map_session_data *sd);
-	void (*pActionRequest_sub) (struct map_session_data *sd, int action_type, int target_id, unsigned int tick);
-	void (*pRestart) (int fd, struct map_session_data *sd);
-	void (*pWisMessage) (int fd, struct map_session_data* sd);
-	void (*pBroadcast) (int fd, struct map_session_data* sd);
-	void (*pTakeItem) (int fd, struct map_session_data *sd);
-	void (*pDropItem) (int fd, struct map_session_data *sd);
-	void (*pUseItem) (int fd, struct map_session_data *sd);
-	void (*pEquipItem) (int fd,struct map_session_data *sd);
-	void (*pUnequipItem) (int fd,struct map_session_data *sd);
-	void (*pNpcClicked) (int fd,struct map_session_data *sd);
-	void (*pNpcBuySellSelected) (int fd,struct map_session_data *sd);
-	void (*pNpcBuyListSend) (int fd, struct map_session_data* sd);
-	void (*pNpcSellListSend) (int fd,struct map_session_data *sd);
-	void (*pCreateChatRoom) (int fd, struct map_session_data* sd);
-	void (*pChatAddMember) (int fd, struct map_session_data* sd);
-	void (*pChatRoomStatusChange) (int fd, struct map_session_data* sd);
-	void (*pChangeChatOwner) (int fd, struct map_session_data* sd);
-	void (*pKickFromChat) (int fd,struct map_session_data *sd);
-	void (*pChatLeave) (int fd, struct map_session_data* sd);
-	void (*pTradeRequest) (int fd,struct map_session_data *sd);
-	void (*chann_config_read) (void);
-	void (*pTradeAck) (int fd,struct map_session_data *sd);
-	void (*pTradeAddItem) (int fd,struct map_session_data *sd);
-	void (*pTradeOk) (int fd,struct map_session_data *sd);
-	void (*pTradeCancel) (int fd,struct map_session_data *sd);
-	void (*pTradeCommit) (int fd,struct map_session_data *sd);
-	void (*pStopAttack) (int fd,struct map_session_data *sd);
-	void (*pPutItemToCart) (int fd,struct map_session_data *sd);
-	void (*pGetItemFromCart) (int fd,struct map_session_data *sd);
-	void (*pRemoveOption) (int fd,struct map_session_data *sd);
-	void (*pChangeCart) (int fd,struct map_session_data *sd);
-	void (*pStatusUp) (int fd,struct map_session_data *sd);
-	void (*pSkillUp) (int fd,struct map_session_data *sd);
-	void (*pUseSkillToId) (int fd, struct map_session_data *sd);
-	void (*pUseSkillToId_homun) (struct homun_data *hd, struct map_session_data *sd, unsigned int tick, uint16 skill_id, uint16 skill_lv, int target_id);
-	void (*pUseSkillToId_mercenary) (struct mercenary_data *md, struct map_session_data *sd, unsigned int tick, uint16 skill_id, uint16 skill_lv, int target_id);
-	void (*pUseSkillToPos) (int fd, struct map_session_data *sd);
-	void (*pUseSkillToPosSub) (int fd, struct map_session_data *sd, uint16 skill_lv, uint16 skill_id, short x, short y, int skillmoreinfo);
-	void (*pUseSkillToPos_homun) (struct homun_data *hd, struct map_session_data *sd, unsigned int tick, uint16 skill_id, uint16 skill_lv, short x, short y, int skillmoreinfo);
-	void (*pUseSkillToPos_mercenary) (struct mercenary_data *md, struct map_session_data *sd, unsigned int tick, uint16 skill_id, uint16 skill_lv, short x, short y, int skillmoreinfo);
-	void (*pUseSkillToPosMoreInfo) (int fd, struct map_session_data *sd);
-	void (*pUseSkillMap) (int fd, struct map_session_data* sd);
-	void (*pRequestMemo) (int fd,struct map_session_data *sd);
-	void (*pProduceMix) (int fd,struct map_session_data *sd);
-	void (*pCooking) (int fd,struct map_session_data *sd);
-	void (*pRepairItem) (int fd, struct map_session_data *sd);
-	void (*pWeaponRefine) (int fd, struct map_session_data *sd);
-	void (*pNpcSelectMenu) (int fd,struct map_session_data *sd);
-	void (*pNpcNextClicked) (int fd,struct map_session_data *sd);
-	void (*pNpcAmountInput) (int fd,struct map_session_data *sd);
-	void (*pNpcStringInput) (int fd, struct map_session_data* sd);
-	void (*pNpcCloseClicked) (int fd,struct map_session_data *sd);
-	void (*pItemIdentify) (int fd,struct map_session_data *sd);
-	void (*pSelectArrow) (int fd,struct map_session_data *sd);
-	void (*pAutoSpell) (int fd,struct map_session_data *sd);
-	void (*pUseCard) (int fd,struct map_session_data *sd);
-	void (*pInsertCard) (int fd,struct map_session_data *sd);
-	void (*pSolveCharName) (int fd, struct map_session_data *sd);
-	void (*pResetChar) (int fd, struct map_session_data *sd);
-	void (*pLocalBroadcast) (int fd, struct map_session_data* sd);
-	void (*pMoveToKafra) (int fd, struct map_session_data *sd);
-	void (*pMoveFromKafra) (int fd,struct map_session_data *sd);
-	void (*pMoveToKafraFromCart) (int fd, struct map_session_data *sd);
-	void (*pMoveFromKafraToCart) (int fd, struct map_session_data *sd);
-	void (*pCloseKafra) (int fd, struct map_session_data *sd);
-	void (*pStoragePassword) (int fd, struct map_session_data *sd);
-	void (*pCreateParty) (int fd, struct map_session_data *sd);
-	void (*pCreateParty2) (int fd, struct map_session_data *sd);
-	void (*pPartyInvite) (int fd, struct map_session_data *sd);
-	void (*pPartyInvite2) (int fd, struct map_session_data *sd);
-	void (*pReplyPartyInvite) (int fd,struct map_session_data *sd);
-	void (*pReplyPartyInvite2) (int fd,struct map_session_data *sd);
-	void (*pLeaveParty) (int fd, struct map_session_data *sd);
-	void (*pRemovePartyMember) (int fd, struct map_session_data *sd);
-	void (*pPartyChangeOption) (int fd, struct map_session_data *sd);
-	void (*pPartyMessage) (int fd, struct map_session_data* sd);
-	void (*pPartyChangeLeader) (int fd, struct map_session_data* sd);
-	void (*pPartyBookingRegisterReq) (int fd, struct map_session_data* sd);
-	void (*pPartyBookingSearchReq) (int fd, struct map_session_data* sd);
-	void (*pPartyBookingDeleteReq) (int fd, struct map_session_data* sd);
-	void (*pPartyBookingUpdateReq) (int fd, struct map_session_data* sd);
-	void (*pCloseVending) (int fd, struct map_session_data* sd);
-	void (*pVendingListReq) (int fd, struct map_session_data* sd);
-	void (*pPurchaseReq) (int fd, struct map_session_data* sd);
-	void (*pPurchaseReq2) (int fd, struct map_session_data* sd);
-	void (*pOpenVending) (int fd, struct map_session_data* sd);
-	void (*pCreateGuild) (int fd,struct map_session_data *sd);
-	void (*pGuildCheckMaster) (int fd, struct map_session_data *sd);
-	void (*pGuildRequestInfo) (int fd, struct map_session_data *sd);
-	void (*pGuildChangePositionInfo) (int fd, struct map_session_data *sd);
-	void (*pGuildChangeMemberPosition) (int fd, struct map_session_data *sd);
-	void (*pGuildRequestEmblem) (int fd,struct map_session_data *sd);
-	void (*pGuildChangeEmblem) (int fd,struct map_session_data *sd);
-	void (*pGuildChangeNotice) (int fd, struct map_session_data* sd);
-	void (*pGuildInvite) (int fd,struct map_session_data *sd);
-	void (*pGuildReplyInvite) (int fd,struct map_session_data *sd);
-	void (*pGuildLeave) (int fd,struct map_session_data *sd);
-	void (*pGuildExpulsion) (int fd,struct map_session_data *sd);
-	void (*pGuildMessage) (int fd, struct map_session_data* sd);
-	void (*pGuildRequestAlliance) (int fd, struct map_session_data *sd);
-	void (*pGuildReplyAlliance) (int fd, struct map_session_data *sd);
-	void (*pGuildDelAlliance) (int fd, struct map_session_data *sd);
-	void (*pGuildOpposition) (int fd, struct map_session_data *sd);
-	void (*pGuildBreak) (int fd, struct map_session_data *sd);
-	void (*pPetMenu) (int fd, struct map_session_data *sd);
-	void (*pCatchPet) (int fd, struct map_session_data *sd);
-	void (*pSelectEgg) (int fd, struct map_session_data *sd);
-	void (*pSendEmotion) (int fd, struct map_session_data *sd);
-	void (*pChangePetName) (int fd, struct map_session_data *sd);
-	void (*pGMKick) (int fd, struct map_session_data *sd);
-	void (*pGMKickAll) (int fd, struct map_session_data* sd);
-	void (*pGMShift) (int fd, struct map_session_data *sd);
-	void (*pGMRemove2) (int fd, struct map_session_data* sd);
-	void (*pGMRecall) (int fd, struct map_session_data *sd);
-	void (*pGMRecall2) (int fd, struct map_session_data* sd);
-	void (*pGM_Monster_Item) (int fd, struct map_session_data *sd);
-	void (*pGMHide) (int fd, struct map_session_data *sd);
-	void (*pGMReqNoChat) (int fd,struct map_session_data *sd);
-	void (*pGMRc) (int fd, struct map_session_data* sd);
-	void (*pGMReqAccountName) (int fd, struct map_session_data *sd);
-	void (*pGMChangeMapType) (int fd, struct map_session_data *sd);
-	void (*pPMIgnore) (int fd, struct map_session_data* sd);
-	void (*pPMIgnoreAll) (int fd, struct map_session_data *sd);
-	void (*pPMIgnoreList) (int fd,struct map_session_data *sd);
-	void (*pNoviceDoriDori) (int fd, struct map_session_data *sd);
-	void (*pNoviceExplosionSpirits) (int fd, struct map_session_data *sd);
-	void (*pFriendsListAdd) (int fd, struct map_session_data *sd);
-	void (*pFriendsListReply) (int fd, struct map_session_data *sd);
-	void (*pFriendsListRemove) (int fd, struct map_session_data *sd);
-	void (*pPVPInfo) (int fd,struct map_session_data *sd);
-	void (*pBlacksmith) (int fd,struct map_session_data *sd);
-	void (*pAlchemist) (int fd,struct map_session_data *sd);
-	void (*pTaekwon) (int fd,struct map_session_data *sd);
-	void (*pRankingPk) (int fd,struct map_session_data *sd);
-	void (*pFeelSaveOk) (int fd,struct map_session_data *sd);
-	void (*pChangeHomunculusName) (int fd, struct map_session_data *sd);
-	void (*pHomMoveToMaster) (int fd, struct map_session_data *sd);
-	void (*pHomMoveTo) (int fd, struct map_session_data *sd);
-	void (*pHomAttack) (int fd,struct map_session_data *sd);
-	void (*pHomMenu) (int fd, struct map_session_data *sd);
-	void (*pAutoRevive) (int fd, struct map_session_data *sd);
-	void (*pCheck) (int fd, struct map_session_data *sd);
-	void (*pMail_refreshinbox) (int fd, struct map_session_data *sd);
-	void (*pMail_read) (int fd, struct map_session_data *sd);
-	void (*pMail_getattach) (int fd, struct map_session_data *sd);
-	void (*pMail_delete) (int fd, struct map_session_data *sd);
-	void (*pMail_return) (int fd, struct map_session_data *sd);
-	void (*pMail_setattach) (int fd, struct map_session_data *sd);
-	void (*pMail_winopen) (int fd, struct map_session_data *sd);
-	void (*pMail_send) (int fd, struct map_session_data *sd);
-	void (*pAuction_cancelreg) (int fd, struct map_session_data *sd);
-	void (*pAuction_setitem) (int fd, struct map_session_data *sd);
-	void (*pAuction_register) (int fd, struct map_session_data *sd);
-	void (*pAuction_cancel) (int fd, struct map_session_data *sd);
-	void (*pAuction_close) (int fd, struct map_session_data *sd);
-	void (*pAuction_bid) (int fd, struct map_session_data *sd);
-	void (*pAuction_search) (int fd, struct map_session_data* sd);
-	void (*pAuction_buysell) (int fd, struct map_session_data* sd);
-	void (*pcashshop_buy) (int fd, struct map_session_data *sd);
-	void (*pAdopt_request) (int fd, struct map_session_data *sd);
-	void (*pAdopt_reply) (int fd, struct map_session_data *sd);
-	void (*pViewPlayerEquip) (int fd, struct map_session_data* sd);
-	void (*pEquipTick) (int fd, struct map_session_data* sd);
-	void (*pquestStateAck) (int fd, struct map_session_data * sd);
-	void (*pmercenary_action) (int fd, struct map_session_data* sd);
-	void (*pBattleChat) (int fd, struct map_session_data* sd);
-	void (*pLessEffect) (int fd, struct map_session_data* sd);
-	void (*pItemListWindowSelected) (int fd, struct map_session_data* sd);
-	void (*pReqOpenBuyingStore) (int fd, struct map_session_data* sd);
-	void (*pReqCloseBuyingStore) (int fd, struct map_session_data* sd);
-	void (*pReqClickBuyingStore) (int fd, struct map_session_data* sd);
-	void (*pReqTradeBuyingStore) (int fd, struct map_session_data* sd);
-	void (*pSearchStoreInfo) (int fd, struct map_session_data* sd);
-	void (*pSearchStoreInfoNextPage) (int fd, struct map_session_data* sd);
-	void (*pCloseSearchStoreInfo) (int fd, struct map_session_data* sd);
-	void (*pSearchStoreInfoListItemClick) (int fd, struct map_session_data* sd);
-	void (*pDebug) (int fd,struct map_session_data *sd);
-	void (*pSkillSelectMenu) (int fd, struct map_session_data *sd);
-	void (*pMoveItem) (int fd, struct map_session_data *sd);
-	void (*pDull) (int fd, struct map_session_data *sd);
-} clif_s;
+	PACKET_ENTRY(WantToConnection)
+	PACKET_ENTRY(LoadEndAck)
+	PACKET_ENTRY(TickSend)
+	PACKET_ENTRY(Hotkey)
+	PACKET_ENTRY(Progressbar)
+	PACKET_ENTRY(WalkToXY)
+	PACKET_ENTRY(QuitGame)
+	PACKET_ENTRY(GetCharNameRequest)
+	PACKET_ENTRY(GlobalMessage)
+	PACKET_ENTRY(MapMove)
+	PACKET_ENTRY(ChangeDir)
+	PACKET_ENTRY(Emotion)
+	PACKET_ENTRY(HowManyConnections)
+	PACKET_ENTRY(ActionRequest)
+	VTABLE_ENTRY(void, pActionRequest_sub, struct map_session_data *sd, int action_type, int target_id, unsigned int tick)
+	PACKET_ENTRY(Restart)
+	PACKET_ENTRY(WisMessage)
+	PACKET_ENTRY(Broadcast)
+	PACKET_ENTRY(TakeItem)
+	PACKET_ENTRY(DropItem)
+	PACKET_ENTRY(UseItem)
+	PACKET_ENTRY(EquipItem)
+	PACKET_ENTRY(UnequipItem)
+	PACKET_ENTRY(NpcClicked)
+	PACKET_ENTRY(NpcBuySellSelected)
+	PACKET_ENTRY(NpcBuyListSend)
+	PACKET_ENTRY(NpcSellListSend)
+	PACKET_ENTRY(CreateChatRoom)
+	PACKET_ENTRY(ChatAddMember)
+	PACKET_ENTRY(ChatRoomStatusChange)
+	PACKET_ENTRY(ChangeChatOwner)
+	PACKET_ENTRY(KickFromChat)
+	PACKET_ENTRY(ChatLeave)
+	PACKET_ENTRY(TradeRequest)
+	VTABLE_ENTRY(void, chann_config_read)
+	PACKET_ENTRY(TradeAck)
+	PACKET_ENTRY(TradeAddItem)
+	PACKET_ENTRY(TradeOk)
+	PACKET_ENTRY(TradeCancel)
+	PACKET_ENTRY(TradeCommit)
+	PACKET_ENTRY(StopAttack)
+	PACKET_ENTRY(PutItemToCart)
+	PACKET_ENTRY(GetItemFromCart)
+	PACKET_ENTRY(RemoveOption)
+	PACKET_ENTRY(ChangeCart)
+	PACKET_ENTRY(StatusUp)
+	PACKET_ENTRY(SkillUp)
+	PACKET_ENTRY(UseSkillToId)
+	VTABLE_ENTRY(void, pUseSkillToId_homun, struct homun_data *hd, struct map_session_data *sd, unsigned int tick, uint16 skill_id, uint16 skill_lv, int target_id)
+	VTABLE_ENTRY(void, pUseSkillToId_mercenary, struct mercenary_data *md, struct map_session_data *sd, unsigned int tick, uint16 skill_id, uint16 skill_lv, int target_id)
+	PACKET_ENTRY(UseSkillToPos)
+	VTABLE_ENTRY(void, pUseSkillToPosSub, int fd, struct map_session_data *sd, uint16 skill_lv, uint16 skill_id, short x, short y, int skillmoreinfo)
+	VTABLE_ENTRY(void, pUseSkillToPos_homun, struct homun_data *hd, struct map_session_data *sd, unsigned int tick, uint16 skill_id, uint16 skill_lv, short x, short y, int skillmoreinfo)
+	VTABLE_ENTRY(void, pUseSkillToPos_mercenary, struct mercenary_data *md, struct map_session_data *sd, unsigned int tick, uint16 skill_id, uint16 skill_lv, short x, short y, int skillmoreinfo)
+	PACKET_ENTRY(UseSkillToPosMoreInfo)
+	PACKET_ENTRY(UseSkillMap)
+	PACKET_ENTRY(RequestMemo)
+	PACKET_ENTRY(ProduceMix)
+	PACKET_ENTRY(Cooking)
+	PACKET_ENTRY(RepairItem)
+	PACKET_ENTRY(WeaponRefine)
+	PACKET_ENTRY(NpcSelectMenu)
+	PACKET_ENTRY(NpcNextClicked)
+	PACKET_ENTRY(NpcAmountInput)
+	PACKET_ENTRY(NpcStringInput)
+	PACKET_ENTRY(NpcCloseClicked)
+	PACKET_ENTRY(ItemIdentify)
+	PACKET_ENTRY(SelectArrow)
+	PACKET_ENTRY(AutoSpell)
+	PACKET_ENTRY(UseCard)
+	PACKET_ENTRY(InsertCard)
+	PACKET_ENTRY(SolveCharName)
+	PACKET_ENTRY(ResetChar)
+	PACKET_ENTRY(LocalBroadcast)
+	PACKET_ENTRY(MoveToKafra)
+	PACKET_ENTRY(MoveFromKafra)
+	PACKET_ENTRY(MoveToKafraFromCart)
+	PACKET_ENTRY(MoveFromKafraToCart)
+	PACKET_ENTRY(CloseKafra)
+	PACKET_ENTRY(StoragePassword)
+	PACKET_ENTRY(CreateParty)
+	PACKET_ENTRY(CreateParty2)
+	PACKET_ENTRY(PartyInvite)
+	PACKET_ENTRY(PartyInvite2)
+	PACKET_ENTRY(ReplyPartyInvite)
+	PACKET_ENTRY(ReplyPartyInvite2)
+	PACKET_ENTRY(LeaveParty)
+	PACKET_ENTRY(RemovePartyMember)
+	PACKET_ENTRY(PartyChangeOption)
+	PACKET_ENTRY(PartyMessage)
+	PACKET_ENTRY(PartyChangeLeader)
+	PACKET_ENTRY(PartyBookingRegisterReq)
+	PACKET_ENTRY(PartyBookingSearchReq)
+	PACKET_ENTRY(PartyBookingDeleteReq)
+	PACKET_ENTRY(PartyBookingUpdateReq)
+	PACKET_ENTRY(CloseVending)
+	PACKET_ENTRY(VendingListReq)
+	PACKET_ENTRY(PurchaseReq)
+	PACKET_ENTRY(PurchaseReq2)
+	PACKET_ENTRY(OpenVending)
+	PACKET_ENTRY(CreateGuild)
+	PACKET_ENTRY(GuildCheckMaster)
+	PACKET_ENTRY(GuildRequestInfo)
+	PACKET_ENTRY(GuildChangePositionInfo)
+	PACKET_ENTRY(GuildChangeMemberPosition)
+	PACKET_ENTRY(GuildRequestEmblem)
+	PACKET_ENTRY(GuildChangeEmblem)
+	PACKET_ENTRY(GuildChangeNotice)
+	PACKET_ENTRY(GuildInvite)
+	PACKET_ENTRY(GuildReplyInvite)
+	PACKET_ENTRY(GuildLeave)
+	PACKET_ENTRY(GuildExpulsion)
+	PACKET_ENTRY(GuildMessage)
+	PACKET_ENTRY(GuildRequestAlliance)
+	PACKET_ENTRY(GuildReplyAlliance)
+	PACKET_ENTRY(GuildDelAlliance)
+	PACKET_ENTRY(GuildOpposition)
+	PACKET_ENTRY(GuildBreak)
+	PACKET_ENTRY(PetMenu)
+	PACKET_ENTRY(CatchPet)
+	PACKET_ENTRY(SelectEgg)
+	PACKET_ENTRY(SendEmotion)
+	PACKET_ENTRY(ChangePetName)
+	PACKET_ENTRY(GMKick)
+	PACKET_ENTRY(GMKickAll)
+	PACKET_ENTRY(GMShift)
+	PACKET_ENTRY(GMRemove2)
+	PACKET_ENTRY(GMRecall)
+	PACKET_ENTRY(GMRecall2)
+	PACKET_ENTRY(GM_Monster_Item)
+	PACKET_ENTRY(GMHide)
+	PACKET_ENTRY(GMReqNoChat)
+	PACKET_ENTRY(GMRc)
+	PACKET_ENTRY(GMReqAccountName)
+	PACKET_ENTRY(GMChangeMapType)
+	PACKET_ENTRY(PMIgnore)
+	PACKET_ENTRY(PMIgnoreAll)
+	PACKET_ENTRY(PMIgnoreList)
+	PACKET_ENTRY(NoviceDoriDori)
+	PACKET_ENTRY(NoviceExplosionSpirits)
+	PACKET_ENTRY(FriendsListAdd)
+	PACKET_ENTRY(FriendsListReply)
+	PACKET_ENTRY(FriendsListRemove)
+	PACKET_ENTRY(PVPInfo)
+	PACKET_ENTRY(Blacksmith)
+	PACKET_ENTRY(Alchemist)
+	PACKET_ENTRY(Taekwon)
+	PACKET_ENTRY(RankingPk)
+	PACKET_ENTRY(FeelSaveOk)
+	PACKET_ENTRY(ChangeHomunculusName)
+	PACKET_ENTRY(HomMoveToMaster)
+	PACKET_ENTRY(HomMoveTo)
+	PACKET_ENTRY(HomAttack)
+	PACKET_ENTRY(HomMenu)
+	PACKET_ENTRY(AutoRevive)
+	PACKET_ENTRY(Check)
+	PACKET_ENTRY(Mail_refreshinbox)
+	PACKET_ENTRY(Mail_read)
+	PACKET_ENTRY(Mail_getattach)
+	PACKET_ENTRY(Mail_delete)
+	PACKET_ENTRY(Mail_return)
+	PACKET_ENTRY(Mail_setattach)
+	PACKET_ENTRY(Mail_winopen)
+	PACKET_ENTRY(Mail_send)
+	PACKET_ENTRY(Auction_cancelreg)
+	PACKET_ENTRY(Auction_setitem)
+	PACKET_ENTRY(Auction_register)
+	PACKET_ENTRY(Auction_cancel)
+	PACKET_ENTRY(Auction_close)
+	PACKET_ENTRY(Auction_bid)
+	PACKET_ENTRY(Auction_search)
+	PACKET_ENTRY(Auction_buysell)
+	PACKET_ENTRY(cashshop_buy)
+	PACKET_ENTRY(Adopt_request)
+	PACKET_ENTRY(Adopt_reply)
+	PACKET_ENTRY(ViewPlayerEquip)
+	PACKET_ENTRY(EquipTick)
+	PACKET_ENTRY(questStateAck)
+	PACKET_ENTRY(mercenary_action)
+	PACKET_ENTRY(BattleChat)
+	PACKET_ENTRY(LessEffect)
+	PACKET_ENTRY(ItemListWindowSelected)
+	PACKET_ENTRY(ReqOpenBuyingStore)
+	PACKET_ENTRY(ReqCloseBuyingStore)
+	PACKET_ENTRY(ReqClickBuyingStore)
+	PACKET_ENTRY(ReqTradeBuyingStore)
+	PACKET_ENTRY(SearchStoreInfo)
+	PACKET_ENTRY(SearchStoreInfoNextPage)
+	PACKET_ENTRY(CloseSearchStoreInfo)
+	PACKET_ENTRY(SearchStoreInfoListItemClick)
+	PACKET_ENTRY(Debug)
+	PACKET_ENTRY(SkillSelectMenu)
+	PACKET_ENTRY(MoveItem)
+	PACKET_ENTRY(Dull)
+};
 
-struct clif_interface *clif;
+#undef p
 
-void clif_defaults(void);
+extern struct clif_interface *clif;
+extern void clif_defaults(void);
 
 #endif /* _CLIF_H_ */

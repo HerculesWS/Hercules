@@ -15,7 +15,7 @@
 #define COBJ_GET_DETAIL(obj, type) ((type)((obj)->__detail))
 #define COBJ_SET_DETAIL(obj, value) (obj)->__detail = (void*)(value)
 
-#define VTABLE_ENTRY(ret, name, args) \
-	ret (*name) args;
+#define VTABLE_ENTRY(ret, name, ...) \
+	ret (*name) (__VA_ARGS__);
 
 #endif

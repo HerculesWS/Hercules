@@ -142,6 +142,7 @@
     <ClInclude Include="..\3rdparty\mt19937ar\mt19937ar.h" />
     <ClInclude Include="..\src\char\inter_packets.h" />
     <ClInclude Include="..\src\common\cbasetypes.h" />
+    <ClInclude Include="..\src\common\cobj.h" />
     <ClInclude Include="..\src\common\core.h" />
     <ClInclude Include="..\src\common\console.h" />
     <ClInclude Include="..\src\common\db.h" />

@@ -54,6 +54,9 @@
 //#define DUMP_UNKNOWN_PACKET
 //#define DUMP_INVALID_PACKET
 
+static struct clif_interface clif_s;
+struct clif_interface *clif;
+
 //Converts item type in case of pet eggs.
 static inline int itemtype(int type) {
 	return ( type == IT_PETEGG ) ? IT_WEAPON : type;

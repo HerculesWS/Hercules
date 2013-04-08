@@ -112,7 +112,7 @@
     <ClCompile Include="..\src\common\core.c">
       <Filter>common</Filter>
     </ClCompile>
-	<ClCompile Include="..\src\common\console.c">
+    <ClCompile Include="..\src\common\console.c">
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\des.c">
@@ -312,7 +312,7 @@
     <ClInclude Include="..\src\common\core.h">
       <Filter>common</Filter>
     </ClInclude>
-	<ClInclude Include="..\src\common\console.h">
+    <ClInclude Include="..\src\common\console.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\db.h">
@@ -411,6 +411,9 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\raconf.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\cobj.h">
       <Filter>common</Filter>
     </ClInclude>
   </ItemGroup>
