@@ -4,7 +4,7 @@
     <ClCompile Include="..\src\common\core.c">
       <Filter>common</Filter>
     </ClCompile>
-	<ClCompile Include="..\src\common\console.c">
+    <ClCompile Include="..\src\common\console.c">
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\db.c">
@@ -43,45 +43,6 @@
     <ClCompile Include="..\src\common\utils.c">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\char\char.c">
-      <Filter>char_sql</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\char\int_auction.c">
-      <Filter>char_sql</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\char\int_elemental.c">
-      <Filter>char_sql</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\char\int_guild.c">
-      <Filter>char_sql</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\char\int_homun.c">
-      <Filter>char_sql</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\char\int_mail.c">
-      <Filter>char_sql</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\char\int_mercenary.c">
-      <Filter>char_sql</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\char\int_party.c">
-      <Filter>char_sql</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\char\int_pet.c">
-      <Filter>char_sql</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\char\int_quest.c">
-      <Filter>char_sql</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\char\int_storage.c">
-      <Filter>char_sql</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\char\inter.c">
-      <Filter>char_sql</Filter>
-    </ClCompile>
-	<ClCompile Include="..\src\char\pincode.c">
-      <Filter>char_sql</Filter>
-    </ClCompile>
     <ClCompile Include="..\3rdparty\mt19937ar\mt19937ar.c">
       <Filter>3rdparty\mt19937ar</Filter>
     </ClCompile>
@@ -112,6 +73,41 @@
     <ClCompile Include="..\src\common\raconf.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\char\int_auction.c">
+      <Filter>inter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char\int_elemental.c">
+      <Filter>inter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char\int_guild.c">
+      <Filter>inter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char\int_homun.c">
+      <Filter>inter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char\int_mail.c">
+      <Filter>inter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char\int_mercenary.c">
+      <Filter>inter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char\int_party.c">
+      <Filter>inter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char\int_pet.c">
+      <Filter>inter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char\int_quest.c">
+      <Filter>inter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char\int_storage.c">
+      <Filter>inter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char\inter.c">
+      <Filter>inter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char\char.c" />
+    <ClCompile Include="..\src\char\pincode.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\common\cbasetypes.h">
@@ -120,7 +116,7 @@
     <ClInclude Include="..\src\common\core.h">
       <Filter>common</Filter>
     </ClInclude>
-	<ClInclude Include="..\src\common\console.h">
+    <ClInclude Include="..\src\common\console.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\db.h">
@@ -162,45 +158,6 @@
     <ClInclude Include="..\src\common\utils.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\char\inter.h">
-      <Filter>char_sql</Filter>
-    </ClInclude>
-	<ClInclude Include="..\src\char\pincode.h">
-      <Filter>char_sql</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\char\char.h">
-      <Filter>char_sql</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\char\int_auction.h">
-      <Filter>char_sql</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\char\int_elemental.h">
-      <Filter>char_sql</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\char\int_guild.h">
-      <Filter>char_sql</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\char\int_homun.h">
-      <Filter>char_sql</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\char\int_mail.h">
-      <Filter>char_sql</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\char\int_mercenary.h">
-      <Filter>char_sql</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\char\int_party.h">
-      <Filter>char_sql</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\char\int_pet.h">
-      <Filter>char_sql</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\char\int_quest.h">
-      <Filter>char_sql</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\char\int_storage.h">
-      <Filter>char_sql</Filter>
-    </ClInclude>
     <ClInclude Include="..\3rdparty\mt19937ar\mt19937ar.h">
       <Filter>3rdparty\mt19937ar</Filter>
     </ClInclude>
@@ -240,13 +197,48 @@
     <ClInclude Include="..\src\common\raconf.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\char\int_auction.h">
+      <Filter>inter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\int_elemental.h">
+      <Filter>inter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\int_guild.h">
+      <Filter>inter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\int_homun.h">
+      <Filter>inter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\int_mail.h">
+      <Filter>inter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\int_mercenary.h">
+      <Filter>inter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\int_party.h">
+      <Filter>inter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\int_pet.h">
+      <Filter>inter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\int_quest.h">
+      <Filter>inter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\int_storage.h">
+      <Filter>inter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\inter.h">
+      <Filter>inter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char\char.h" />
+    <ClInclude Include="..\src\char\pincode.h" />
+    <ClInclude Include="..\src\char\inter_packets.h">
+      <Filter>inter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
       <UniqueIdentifier>{623f21b1-c166-4848-83d8-8b4fe0e2e2df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="char_sql">
-      <UniqueIdentifier>{83b1ecf5-21d1-4dac-915f-95ff77a90899}</UniqueIdentifier>
     </Filter>
     <Filter Include="3rdparty">
       <UniqueIdentifier>{b3f5c857-79c0-4a55-b8c5-7e7f56a8f948}</UniqueIdentifier>
@@ -256,6 +248,9 @@
     </Filter>
     <Filter Include="3rdparty\libconfig">
       <UniqueIdentifier>{9e8badd7-548f-4eb4-9e87-613e87e772ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inter">
+      <UniqueIdentifier>{1d96fee0-bb59-4bc5-832d-f3c66679c701}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
