@@ -1001,14 +1001,24 @@ ACMD_FUNC(jobchange)
 	nullpo_retr(-1, sd);
 
     if (!message || !*message || sscanf(message, "%d %d", &job, &upper) < 1) {
-		int i, found = 0;
+		int i;
+		bool found = false;
 
-        for (i = JOB_NOVICE; i < JOB_MAX; ++i) {
-            if (strncmpi(message, job_name(i), 16) == 0) {
-                job = i;
-				upper = 0;
-				found = 1;
-				break;
+		upper = 0;
+ 
+		// Normal Jobs
+		for( i = JOB_NOVICE; i < JOB_MAX_BASIC && !found; i++ ){
+			if (strncmpi(message, job_name(i), 16) == 0) {
+				job = i;
+				found = true;
+			}
+		}
+ 
+		// High Jobs, Babys and Third
+		for( i = JOB_NOVICE_HIGH; i < JOB_MAX && !found; i++ ){
+			if (strncmpi(message, job_name(i), 16) == 0) {
+				job = i;
+				found = true;
 			}
 		}
 
