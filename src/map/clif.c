@@ -16284,6 +16284,18 @@ void __attribute__ ((unused)) clif_parse_dull(int fd,struct map_session_data *sd
 	return;
 }
 
+void clif_parse_CashShopOpen(int fd, struct map_session_data *sd) {
+	WFIFOHEAD(fd, 10);
+	WFIFOW(fd, 0) = 0x845;
+	WFIFOL(fd, 2) = 0;
+	WFIFOL(fd, 6) = 0;
+	WFIFOSET(fd, 10);
+}
+
+void clif_parse_CashShopClose(int fd, struct map_session_data *sd) {
+	
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -17142,4 +17154,7 @@ void clif_defaults(void) {
 	clif->pSkillSelectMenu = clif_parse_SkillSelectMenu;
 	clif->pMoveItem = clif_parse_MoveItem;
 	clif->pDull = clif_parse_dull;
+	/* RagExe Cash Shop [Ind/Hercules] */
+	clif->pCashShopOpen = clif_parse_CashShopOpen;
+	clif->pCashShopClose = clif_parse_CashShopClose;
 }

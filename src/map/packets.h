@@ -2058,6 +2058,8 @@ packet(0x020d,-1);
 	packet(0x094E,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
 	//packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
 	//packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0844,2,clif->pCashShopOpen,0);/* tell server cashshop window is being open */
+	packet(0x084a,2,clif->pCashShopClose,0);/* tell server cashshop window is being closed */
 #endif
 
 #endif /* _PACKETS_H_ */
