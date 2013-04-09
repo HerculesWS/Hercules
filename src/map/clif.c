@@ -10286,6 +10286,7 @@ void clif_hercules_chsys_delete(struct hChSysCh *channel) {
 				}
 			}
 		}
+		dbi_destroy(iter);
 	}
 	db_destroy(channel->users);
 	if( channel->m ) {
