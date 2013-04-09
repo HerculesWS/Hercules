@@ -2030,7 +2030,6 @@ packet(0x020d,-1);
 	//packet(0x0288,-1,clif->pcashshop_buy,4,8);
 	packet(0x086F,26,clif->pPartyInvite2,2);
 	packet(0x0888,19,clif->pWantToConnection,2,6,10,14,18);
-	packet(0x08c9,4);
 	packet(0x088E,7,clif->pActionRequest,2,6);
 	packet(0x089B,10,clif->pUseSkillToId,2,4,6);
 	packet(0x0881,5,clif->pWalkToXY,2);
@@ -2060,6 +2059,8 @@ packet(0x020d,-1);
 	//packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
 	packet(0x0844,2,clif->pCashShopOpen,0);/* tell server cashshop window is being open */
 	packet(0x084a,2,clif->pCashShopClose,0);/* tell server cashshop window is being closed */
+	packet(0x08c9,4,clif->pCashShopSchedule,0);
+	packet(0x0848,-1,clif->pCashShopBuy,0);
 #endif
 
 #endif /* _PACKETS_H_ */

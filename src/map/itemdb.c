@@ -1430,6 +1430,7 @@ int do_init_itemdb(void) {
 	itemdb_other = idb_alloc(DB_OPT_BASE);
 	create_dummy_data(); //Dummy data item.
 	itemdb_read();
+	clif->cashshop_load();
 
 	return 0;
 }

@@ -338,6 +338,28 @@ enum hChSysChType {
 	hChSys_ALLY		= 3,
 };
 
+enum CASH_SHOP_TABS {
+	CASHSHOP_TAB_NEW		= 0,
+	CASHSHOP_TAB_POPULAR	= 1,
+	CASHSHOP_TAB_LIMITED	= 2,
+	CASHSHOP_TAB_RENTAL		= 3,
+	CASHSHOP_TAB_PERPETUITY = 4,
+	CASHSHOP_TAB_BUFF		= 5,
+	CASHSHOP_TAB_RECOVERY	= 6,
+	CASHSHOP_TAB_ETC		= 7,
+	CASHSHOP_TAB_MAX,
+};
+
+enum CASH_SHOP_BUY_RESULT {
+	CSBR_SUCCESS					= 0x0,
+	CSBR_SHORTTAGE_CASH				= 0x2,
+	CSBR_UNKONWN_ITEM				= 0x3,
+	CSBR_INVENTORY_WEIGHT			= 0x4,
+	CSBR_INVENTORY_ITEMCNT			= 0x5,
+	CSBR_RUNE_OVERCOUNT				= 0x9,
+	CSBR_EACHITEM_OVERCOUNT			= 0xa,
+	CSBR_UNKNOWN					= 0xb,
+};
 
 /**
  * Structures
@@ -372,6 +394,11 @@ struct hChSysCh {
 	uint16 m;
 };
 
+struct hCSData {
+	unsigned short id;
+	unsigned int price;
+};
+
 /**
  * Vars
  **/
@@ -391,6 +418,11 @@ struct clif_interface {
 	DBMap* channel_db;
 	/* for clif_clearunit_delayed */
 	struct eri *delay_clearunit_ers;
+	/* Cash Shop [Ind/Hercules] */
+	struct {
+		struct hCSData **data[CASHSHOP_TAB_MAX];
+		unsigned int item_count[CASHSHOP_TAB_MAX];
+	} cs;
 	/* core */
 	int (*init) (void);
 	void (*final) (void);
@@ -424,6 +456,7 @@ struct clif_interface {
 	void (*addcards) (unsigned char* buf, struct item* item);
 	void (*item_sub) (unsigned char *buf, int n, struct item *i, struct item_data *id, int equip);
 	void (*getareachar_item) (struct map_session_data* sd,struct flooritem_data* fitem);
+	void (*cashshop_load) (void);
 	/* unit-related */
 	void (*clearunit_single) (int id, clr_type type, int fd);
 	void (*clearunit_area) (struct block_list* bl, clr_type type);
@@ -1025,6 +1058,8 @@ struct clif_interface {
 	/* RagExe Cash Shop [Ind/Hercules] */
 	void (*pCashShopOpen) (int fd, struct map_session_data *sd);
 	void (*pCashShopClose) (int fd, struct map_session_data *sd);
+	void (*pCashShopSchedule) (int fd, struct map_session_data *sd);
+	void (*pCashShopBuy) (int fd, struct map_session_data *sd);
 } clif_s;
 
 struct clif_interface *clif;
