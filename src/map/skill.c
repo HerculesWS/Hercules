@@ -4043,7 +4043,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 
 			skill->blown(src,bl,distance_bl(src,bl)-1,unit_getdir(src),0);
-			if( battle->check_target(src,bl,BCT_ENEMY) )
+			if( battle->check_target(src,bl,BCT_ENEMY) > 0 )
 				skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 			break;
 
@@ -5223,7 +5223,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				int bonus = 25 + 10 * skill_lv;
 				bonus += (pc_checkskill(sd, SA_FLAMELAUNCHER)+pc_checkskill(sd, SA_FROSTWEAPON)+pc_checkskill(sd, SA_LIGHTNINGLOADER)+pc_checkskill(sd, SA_SEISMICWEAPON))*5;
 				clif->skill_nodamage( src, bl, skill_id, skill_lv,
-									battle->check_target(src,bl,BCT_PARTY) ?
+									battle->check_target(src,bl,BCT_PARTY) > 0 ?
 									sc_start2(bl, type, 100, skill_lv, bonus, skill->get_time(skill_id,skill_lv)) :
 									0
 					);
@@ -7740,7 +7740,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			break;
 
 		case WL_WHITEIMPRISON:
-			if( (src == bl || battle->check_target(src, bl, BCT_ENEMY)) && !is_boss(bl) )// Should not work with bosses.
+			if( (src == bl || battle->check_target(src, bl, BCT_ENEMY) > 0 ) && !is_boss(bl) )// Should not work with bosses.
 			{
 				int rate = ( sd? sd->status.job_level : 50 ) / 4;
 
@@ -11670,11 +11670,11 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 			break;
 
 		case UNT_SEVERE_RAINSTORM:
-			if( battle->check_target(&src->bl, bl, BCT_ENEMY) )
+			if( battle->check_target(&src->bl, bl, BCT_ENEMY) > 0 )
 				skill->attack(BF_WEAPON,ss,&src->bl,bl,WM_SEVERE_RAINSTORM_MELEE,sg->skill_lv,tick,0);
 			break;
 		case UNT_NETHERWORLD:
-			if( !(status_get_mode(bl)&MD_BOSS) && ss != bl && battle->check_target(&src->bl, bl, BCT_PARTY) ) {
+			if( !(status_get_mode(bl)&MD_BOSS) && ss != bl && battle->check_target(&src->bl, bl, BCT_PARTY) > 0 ) {
 				if( !(tsc && tsc->data[type]) ){
 					sc_start(bl, type, 100, sg->skill_lv, skill->get_time2(sg->skill_id,sg->skill_lv));
 					sg->limit = DIFF_TICK(tick,sg->tick);
@@ -11811,7 +11811,7 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 			break;
 
 		case UNT_FIRE_MANTLE:
-			if( battle->check_target(&src->bl, bl, BCT_ENEMY) )
+			if( battle->check_target(&src->bl, bl, BCT_ENEMY) > 0 )
 				skill->attack(BF_MAGIC,ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
 			break;
 
