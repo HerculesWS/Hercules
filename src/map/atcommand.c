@@ -5708,12 +5708,7 @@ ACMD_FUNC(autotrade) {
 		}
 	}
 		
-	if( sd->channel_count ) {
-		for( i = 0; i < sd->channel_count; i++ ) {
-			if( sd->channels[i] != NULL )
-				clif->chsys_left(sd->channels[i],sd);
-		}
-	}
+	clif->chsys_quit(sd);
 	
 	clif->authfail_fd(sd->fd, 15);
 

@@ -858,6 +858,8 @@ struct clif_interface {
 	void (*chsys_left) (struct hChSysCh *channel, struct map_session_data *sd);
 	void (*chsys_delete) (struct hChSysCh *channel);
 	void (*chsys_mjoin) (struct map_session_data *sd);
+	void (*chsys_quit) (struct map_session_data *sd);
+	void (*chsys_quitg) (struct map_session_data *sd);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/

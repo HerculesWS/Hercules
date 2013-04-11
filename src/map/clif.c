@@ -9901,6 +9901,74 @@ void clif_hercules_chsys_left(struct hChSysCh *channel, struct map_session_data 
 
 }
 
+void clif_hercules_chsys_quitg(struct map_session_data *sd) {
+	unsigned char i;
+	struct hChSysCh *channel = NULL;
+	
+	for( i = 0; i < sd->channel_count; i++ ) {
+		if( (channel = sd->channels[i] ) != NULL && channel->type == hChSys_ALLY ) {
+			idb_remove(channel->users,sd->status.char_id);
+			
+			if( channel == sd->gcbind )
+				sd->gcbind = NULL;
+			
+			if( !db_size(channel->users) && channel->type == hChSys_PRIVATE ) {
+				clif->chsys_delete(channel);
+			} else if( !hChSys.closing && (channel->opt & hChSys_OPT_ANNOUNCE_JOIN) ) {
+				char message[60];
+				sprintf(message, "#%s '%s' left",channel->name,sd->status.name);
+				clif->chsys_msg(channel,sd,message);
+			}
+			sd->channels[i] = NULL;
+		}
+	}
+		
+	if( i < sd->channel_count ) {
+		unsigned char cursor = 0;
+		for( i = 0; i < sd->channel_count; i++ ) {
+			if( sd->channels[i] == NULL )
+				continue;
+			if( cursor != i ) {
+				sd->channels[cursor] = sd->channels[i];
+			}
+			cursor++;
+		}
+		if ( !(sd->channel_count = cursor) ) {
+			aFree(sd->channels);
+			sd->channels = NULL;
+		}
+	}
+	
+}
+
+
+void clif_hercules_chsys_quit(struct map_session_data *sd) {
+	unsigned char i;
+	struct hChSysCh *channel = NULL;
+	
+	for( i = 0; i < sd->channel_count; i++ ) {
+		if( (channel = sd->channels[i] ) != NULL ) {
+			idb_remove(channel->users,sd->status.char_id);
+			
+			if( channel == sd->gcbind )
+				sd->gcbind = NULL;
+			
+			if( !db_size(channel->users) && channel->type == hChSys_PRIVATE ) {
+				clif->chsys_delete(channel);
+			} else if( !hChSys.closing && (channel->opt & hChSys_OPT_ANNOUNCE_JOIN) ) {
+				char message[60];
+				sprintf(message, "#%s '%s' left",channel->name,sd->status.name);
+				clif->chsys_msg(channel,sd,message);
+			}
+			
+		}
+	}
+
+	sd->channel_count = 0;
+	aFree(sd->channels);
+	sd->channels = NULL;	
+}
+
 /// Request for an action.
 /// 0089 <target id>.L <action>.B (CZ_REQUEST_ACT)
 /// 0437 <target id>.L <action>.B (CZ_REQUEST_ACT2)
@@ -17160,6 +17228,8 @@ void clif_defaults(void) {
 	clif->chsys_left = clif_hercules_chsys_left;
 	clif->chsys_delete = clif_hercules_chsys_delete;
 	clif->chsys_mjoin = clif_hercules_chsys_mjoin;
+	clif->chsys_quit = clif_hercules_chsys_quit;
+	clif->chsys_quitg = clif_hercules_chsys_quitg;
 	clif->cashshop_load = clif_cashshop_db;
 	/*------------------------
 	 *- Parse Incoming Packet
