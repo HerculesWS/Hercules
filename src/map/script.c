@@ -17263,10 +17263,17 @@ BUILDIN_FUNC(getrandgroupitem) {
 		ShowError("getrandgroupitem: qty is <= 0!\n");
 		return 1;
 	}
-	if( (nameid = itemdb_searchrandomid(group)) == UNKNOWN_ITEM_ID ) {
-		return 1;/* itemdb_searchrandomid will already scream a error */
+	
+	if(group < 1 || group >= MAX_ITEMGROUP) {
+		ShowError("getrandgroupitem: Invalid group id %d\n", group);
+		return 1;
+	}
+	if (!itemgroup_db[group].qty) {
+		ShowError("getrandgroupitem: group id %d is empty!\n", group);
+		return 1;
 	}
 
+	nameid = itemdb_searchrandomid(group);
 	memset(&item_tmp,0,sizeof(item_tmp));
 
 	item_tmp.nameid   = nameid;

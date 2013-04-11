@@ -155,6 +155,8 @@ struct item_combo {
 	bool isRef;/* whether this struct is a reference or the master */
 };
 
+struct item_group itemgroup_db[MAX_ITEMGROUP];
+
 struct item_data* itemdb_searchname(const char *name);
 int itemdb_searchname_array(struct item_data** data, int size, const char *str);
 struct item_data* itemdb_load(int nameid);
