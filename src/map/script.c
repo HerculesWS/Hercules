@@ -17855,6 +17855,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF2(cleanmap,"cleanarea","siiii"),
 	BUILDIN_DEF(npcskill,"viii"),
 	BUILDIN_DEF(itemeffect,"v"),
+	BUILDIN_DEF(delequip,"i"),
 	/**
 	 * @commands (script based)
 	 **/

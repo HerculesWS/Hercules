@@ -204,7 +204,7 @@ izlude,182,218,4	script	Odgnalam#iz	554,{
 	warp "malangdo",217,85;
 	close;
 }
-alberta,200,151,4	duplicate(Odgnalam#Izlude)	Odgnalam#Alberta	554
+alberta,200,151,4	duplicate(Odgnalam#iz)	Odgnalam#Alberta	554
 
 malangdo,219,86,4	script	Kong#malang	545,{
 	mes "[Kong]";
