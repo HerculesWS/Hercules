@@ -565,9 +565,6 @@ void clif_authok(struct map_session_data *sd)
 	
 	p.PacketType = authokType;
 	p.startTime = gettick();
-	p.PosDir[0] = sd->bl.x;
-	p.PosDir[1] = sd->bl.y;
-	p.PosDir[2] = sd->ud.dir;
 	WBUFPOS(&p.PosDir[0],0,sd->bl.x,sd->bl.y,sd->ud.dir); /* do the stupid client math */
 	p.xSize = p.ySize = 5; /* not-used */
 	
