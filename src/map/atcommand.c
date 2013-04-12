@@ -1550,8 +1550,10 @@ ACMD_FUNC(pvpoff)
 	map_zone_change2(sd->bl.m,map[sd->bl.m].prev_zone);
 	map[sd->bl.m].flag.pvp = 0;
 
-	if (!battle_config.pk_mode)
+	if (!battle_config.pk_mode) {
 		clif->map_property_mapall(sd->bl.m, MAPPROPERTY_NOTHING);
+		clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
+	}
 	map_foreachinmap(atcommand_pvpoff_sub,sd->bl.m, BL_PC);
 	map_foreachinmap(atcommand_stopattack,sd->bl.m, BL_CHAR, 0);
 	clif->message(fd, msg_txt(31)); // PvP: Off.
@@ -1589,6 +1591,7 @@ ACMD_FUNC(pvpon)
 
 	if (!battle_config.pk_mode) {// display pvp circle and rank
 		clif->map_property_mapall(sd->bl.m, MAPPROPERTY_FREEPVPZONE);
+		clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
 		map_foreachinmap(atcommand_pvpon_sub,sd->bl.m, BL_PC);
 	}
 
@@ -1612,6 +1615,7 @@ ACMD_FUNC(gvgoff)
 	map_zone_change2(sd->bl.m,map[sd->bl.m].prev_zone);
 	map[sd->bl.m].flag.gvg = 0;
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_NOTHING);
+	clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
 	map_foreachinmap(atcommand_stopattack,sd->bl.m, BL_CHAR, 0);
 	clif->message(fd, msg_txt(33)); // GvG: Off.
 
@@ -1633,6 +1637,7 @@ ACMD_FUNC(gvgon)
 	map_zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_GVG_NAME));
 	map[sd->bl.m].flag.gvg = 1;
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_AGITZONE);
+	clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
 	clif->message(fd, msg_txt(34)); // GvG: On.
 
 	return 0;

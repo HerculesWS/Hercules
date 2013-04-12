@@ -2045,9 +2045,7 @@ packet(0x020d,-1);
 	packet(0x094C,6,clif->pSolveCharName,2);
 	packet(0x0907,5,clif->pMoveItem,2,4);
 	packet(0x0908,5);
-	packet(0x08CF,10); //Amulet spirits
 	packet(0x08d2,10);
-	packet(0x0977,14); //Monster HP Bar
 	packet(0x0998,8,clif->pEquipItem,2,4);
 	//packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
 	packet(0x0938,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
@@ -2061,6 +2059,7 @@ packet(0x020d,-1);
 	packet(0x084a,2,clif->pCashShopClose,0);/* tell server cashshop window is being closed */
 	packet(0x08c9,4,clif->pCashShopSchedule,0);
 	packet(0x0848,-1,clif->pCashShopBuy,0);
+	packet(0x0447,2);
 #endif
 
 #endif /* _PACKETS_H_ */

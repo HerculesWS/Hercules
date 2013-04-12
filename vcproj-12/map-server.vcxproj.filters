@@ -267,6 +267,9 @@
     <ClInclude Include="..\src\map\packets.h">
       <Filter>map_sql</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\map\packets_struct.h">
+      <Filter>map_sql</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\map\party.h">
       <Filter>map_sql</Filter>
     </ClInclude>

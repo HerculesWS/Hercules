@@ -186,6 +186,7 @@
     <ClInclude Include="..\src\map\mob.h" />
     <ClInclude Include="..\src\map\npc.h" />
     <ClInclude Include="..\src\map\packets.h" />
+    <ClInclude Include="..\src\map\packets_struct.h" />
     <ClInclude Include="..\src\map\party.h" />
     <ClInclude Include="..\src\map\path.h" />
     <ClInclude Include="..\src\map\pc.h" />

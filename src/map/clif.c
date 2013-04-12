@@ -44,6 +44,7 @@
 #include "clif.h"
 #include "mail.h"
 #include "quest.h"
+#include "packets_struct.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -256,7 +257,7 @@ static inline unsigned char clif_bl_type(struct block_list *bl) {
 int clif_send_sub(struct block_list *bl, va_list ap) {
 	struct block_list *src_bl;
 	struct map_session_data *sd;
-	unsigned char *buf;
+	void *buf;
 	int len, type, fd;
 
 	nullpo_ret(bl);
@@ -266,7 +267,7 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 	if (!fd) //Don't send to disconnected clients.
 		return 0;
 
-	buf = va_arg(ap,unsigned char*);
+	buf = va_arg(ap,void*);
 	len = va_arg(ap,int);
 	nullpo_ret(src_bl = va_arg(ap,struct block_list*));
 	type = va_arg(ap,int);
@@ -319,7 +320,7 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
  * Packet Delegation (called on all packets that require data to be sent to more than one client)
  * functions that are sent solely to one use whose ID it posses use WFIFOSET
  *------------------------------------------*/
-int clif_send(const uint8* buf, int len, struct block_list* bl, enum send_target type) {
+int clif_send(const void* buf, int len, struct block_list* bl, enum send_target type) {
 	int i;
 	struct map_session_data *sd, *tsd;
 	struct party_data *p = NULL;
@@ -555,29 +556,26 @@ int clif_send(const uint8* buf, int len, struct block_list* bl, enum send_target
 	return 0;
 }
 
-
 /// Notifies the client, that it's connection attempt was accepted.
 /// 0073 <start time>.L <position>.3B <x size>.B <y size>.B (ZC_ACCEPT_ENTER)
 /// 02eb <start time>.L <position>.3B <x size>.B <y size>.B <font>.W (ZC_ACCEPT_ENTER2)
 void clif_authok(struct map_session_data *sd)
 {
-#if PACKETVER < 20080102
-	const int cmd = 0x73;
-#else
-	const int cmd = 0x2eb;
-#endif
-	int fd = sd->fd;
-
-	WFIFOHEAD(fd,packet_len(cmd));
-	WFIFOW(fd, 0) = cmd;
-	WFIFOL(fd, 2) = gettick();
-	WFIFOPOS(fd, 6, sd->bl.x, sd->bl.y, sd->ud.dir);
-	WFIFOB(fd, 9) = 5; // ignored
-	WFIFOB(fd,10) = 5; // ignored
+	struct packet_authok p;
+	
+	p.PacketType = authokType;
+	p.startTime = gettick();
+	p.PosDir[0] = sd->bl.x;
+	p.PosDir[1] = sd->bl.y;
+	p.PosDir[2] = sd->ud.dir;
+	WBUFPOS(&p.PosDir[0],0,sd->bl.x,sd->bl.y,sd->ud.dir); /* do the stupid client math */
+	p.xSize = p.ySize = 5; /* not-used */
+	
 #if PACKETVER >= 20080102
-	WFIFOW(fd,11) = sd->user_font;  // FIXME: Font is currently not saved.
+	p.font = sd->user_font;  // FIXME: Font is currently not saved.
 #endif
-	WFIFOSET(fd,packet_len(cmd));
+	
+	clif->send(&p,sizeof(p),&sd->bl,SELF);
 }
 
 
@@ -5580,7 +5578,7 @@ void clif_map_property(struct map_session_data* sd, enum map_property property)
 	int fd;
 
 	nullpo_retv(sd);
-
+	
 	fd=sd->fd;
 	WFIFOHEAD(fd,packet_len(0x199));
 	WFIFOW(fd,0)=0x199;
@@ -5642,7 +5640,7 @@ void clif_map_property_mapall(int map, enum map_property property)
 {
 	struct block_list bl;
 	unsigned char buf[16];
-
+	
 	bl.id = 0;
 	bl.type = BL_NUL;
 	bl.m = map;
@@ -9162,7 +9160,6 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 
 	if( map_flag_gvg(sd->bl.m) )
 		clif->map_property(sd, MAPPROPERTY_AGITZONE);
-
 	// info about nearby objects
 	// must use foreachinarea (CIRCULAR_AREA interferes with foreachinrange)
 	map_foreachinarea(clif->getareachar, sd->bl.m, sd->bl.x-AREA_SIZE, sd->bl.y-AREA_SIZE, sd->bl.x+AREA_SIZE, sd->bl.y+AREA_SIZE, BL_ALL, sd);
@@ -9320,6 +9317,8 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 
 	mail_clear(sd);
 
+	clif->maptypeproperty2(&sd->bl,SELF);
+	
 	/* Guild Aura Init */
 	if( sd->state.gmaster_flag ) {
 		guild_guildaura_refresh(sd,GD_LEADERSHIP,guild_checkskill(sd->state.gmaster_flag,GD_LEADERSHIP));
@@ -16577,6 +16576,28 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 	}
 }
 
+/* [Ind/Hercules] */
+void clif_maptypeproperty2(struct block_list *bl,enum send_target t) {
+#if PACKETVER >= 20130000 /* not entirely sure when this started */
+	struct packet_maptypeproperty2 p;
+	
+	p.PacketType = maptypeproperty2Type;
+	p.type = 0x28;
+	p.flag.usecart = 1;
+	p.flag.party = 1;
+	p.flag.guild = 1;
+	p.flag.siege = map_flag_gvg2(bl->m) ? 1: 0;
+	p.flag.mineffect = 1;
+	p.flag.nolockon = 0;
+	p.flag.countpk = map[bl->m].flag.pvp ? 1 : 0;
+	p.flag.nopartyformation = 0;
+	p.flag.noitemconsumption = 0;
+	p.flag.summonstarmiracle = 0;
+	p.flag.bg = map[bl->m].flag.battleground ? 1 : 0;
+	
+	clif->send(&p,sizeof(p),bl,t);
+#endif
+}
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -16882,6 +16903,7 @@ void clif_defaults(void) {
 	clif->map_property_mapall = clif_map_property_mapall;
 	clif->bossmapinfo = clif_bossmapinfo;
 	clif->map_type = clif_map_type;
+	clif->maptypeproperty2 = clif_maptypeproperty2;
 	/* multi-map-server */
 	clif->changemapserver = clif_changemapserver;
 	/* npc-shop-related */

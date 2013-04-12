@@ -28,6 +28,7 @@ set( SQL_MAP_HEADERS
 	"${SQL_MAP_SOURCE_DIR}/mob.h"
 	"${SQL_MAP_SOURCE_DIR}/npc.h"
 	"${SQL_MAP_SOURCE_DIR}/packets.h"
+	"${SQL_MAP_SOURCE_DIR}/packets_struct.h"
 	"${SQL_MAP_SOURCE_DIR}/party.h"
 	"${SQL_MAP_SOURCE_DIR}/path.h"
 	"${SQL_MAP_SOURCE_DIR}/pc.h"

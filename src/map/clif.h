@@ -438,7 +438,7 @@ struct clif_interface {
 	void (*setbindip) (const char* ip);
 	void (*setport) (uint16 port);
 	uint32 (*refresh_ip) (void);
-	int (*send) (const uint8* buf, int len, struct block_list* bl, enum send_target type);
+	int (*send) (const void* buf, int len, struct block_list* bl, enum send_target type);
 	int (*send_sub) (struct block_list *bl, va_list ap);
 	int (*parse) (int fd);
 	/* auth */
@@ -501,6 +501,7 @@ struct clif_interface {
 	void (*map_property_mapall) (int map, enum map_property property);
 	void (*bossmapinfo) (int fd, struct mob_data *md, short flag);
 	void (*map_type) (struct map_session_data* sd, enum map_type type);
+	void (*maptypeproperty2) (struct block_list *bl,enum send_target t);
 	/* multi-map-server */
 	void (*changemapserver) (struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port);
 	/* npc-shop-related */
