@@ -1694,6 +1694,9 @@ void clif_hercules_chsys_create(struct hChSysCh *channel, char *name, char *pass
 		safestrncpy(channel->pass, pass, HCHSYS_NAME_LENGTH);
 	
 	channel->opt = hChSys_OPT_BASE;
+	channel->banned = NULL;
+	
+	channel->msg_delay = 0;
 	
 	if( channel->type != hChSys_MAP && channel->type != hChSys_ALLY )
 		strdb_put(clif->channel_db, channel->name, channel);
@@ -3534,9 +3537,16 @@ void clif_useitemack(struct map_session_data *sd,int index,int amount,bool ok)
 }
 
 void clif_hercules_chsys_send(struct hChSysCh *channel, struct map_session_data *sd, char *msg) {
-	char message[150];
-	snprintf(message, 150, "[ #%s ] %s : %s",channel->name,sd->status.name, msg);
-	clif->chsys_msg(channel,sd,message);
+	if( channel->msg_delay != 0 && DIFF_TICK(sd->hchsysch_tick + ( channel->msg_delay * 1000 ), gettick()) > 0 && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
+		clif->colormes(sd->fd,COLOR_RED,msg_txt(1455));
+		return;
+	} else {
+		char message[150];
+		snprintf(message, 150, "[ #%s ] %s : %s",channel->name,sd->status.name, msg);
+		clif->chsys_msg(channel,sd,message);
+		if( channel->msg_delay != 0 )
+			sd->hchsysch_tick = gettick();
+	}
 }
 
 /// Inform client whether chatroom creation was successful or not (ZC_ACK_CREATE_CHATROOM).
@@ -8181,16 +8191,16 @@ void clif_specialeffect_value(struct block_list* bl, int effect_id, int num, sen
 }
 // Modification of clif_messagecolor to send colored messages to players to chat log only (doesn't display overhead)
 /// 02c1 <packet len>.W <id>.L <color>.L <message>.?B
-int clif_colormes(struct map_session_data * sd, enum clif_colors color, const char* msg) {
+int clif_colormes(int fd, enum clif_colors color, const char* msg) {
 	unsigned short msg_len = strlen(msg) + 1;
 
-	WFIFOHEAD(sd->fd,msg_len + 12);
-	WFIFOW(sd->fd,0) = 0x2C1;
-	WFIFOW(sd->fd,2) = msg_len + 12;
-	WFIFOL(sd->fd,4) = 0;
-	WFIFOL(sd->fd,8) = color_table[color];
-	safestrncpy((char*)WFIFOP(sd->fd,12), msg, msg_len);
-	WFIFOSET(sd->fd, msg_len + 12);
+	WFIFOHEAD(fd,msg_len + 12);
+	WFIFOW(fd,0) = 0x2C1;
+	WFIFOW(fd,2) = msg_len + 12;
+	WFIFOL(fd,4) = 0;
+	WFIFOL(fd,8) = color_table[color];
+	safestrncpy((char*)WFIFOP(fd,12), msg, msg_len);
+	WFIFOSET(fd, msg_len + 12);
 
 	return 0;
 }
@@ -9037,12 +9047,17 @@ void clif_hercules_chsys_mjoin(struct map_session_data *sd) {
 		
 		clif->chsys_create(map[sd->bl.m].channel,NULL,NULL,hChSys.local_color);
 	}
+	
+	if( map[sd->bl.m].channel->banned && idb_exists(map[sd->bl.m].channel->banned, sd->status.account_id) ) {
+		return;
+	}
+	
 	clif->chsys_join(map[sd->bl.m].channel,sd);
 	
 	if( !( map[sd->bl.m].channel->opt & hChSys_OPT_ANNOUNCE_JOIN ) ) {
 		char mout[60];
 		sprintf(mout, msg_txt(1435),hChSys.local_name,map[sd->bl.m].name); // You're now in the '#%s' channel for '%s'
-		clif->message(sd->fd, mout);
+		clif->colormes(sd->fd, COLOR_DEFAULT, mout);
 	}
 }
 
@@ -10106,7 +10121,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 			}
 			if( k < sd->channel_count ) {
 				clif->chsys_send(channel,sd,message);
-			} else if( channel->pass[0] == '\0' ) {
+			} else if( channel->pass[0] == '\0' && !(channel->banned && idb_exists(channel->banned, sd->status.account_id)) ) {
 				clif->chsys_join(channel,sd);
 				clif->chsys_send(channel,sd,message);
 			} else {
@@ -10355,6 +10370,10 @@ void clif_hercules_chsys_delete(struct hChSysCh *channel) {
 			}
 		}
 		dbi_destroy(iter);
+	}
+	if( channel->banned ) {
+		db_destroy(channel->banned);
+		channel->banned = NULL;
 	}
 	db_destroy(channel->users);
 	if( channel->m ) {
@@ -16727,7 +16746,7 @@ void packetdb_loaddb(void) {
  *
  *------------------------------------------*/
 int do_init_clif(void) {
-	const char* colors[COLOR_MAX] = { "0xFF0000" };
+	const char* colors[COLOR_MAX] = { "0xFF0000", "0x00ff00" };
 	int i;
 	/**
 	 * Setup Color Table (saves unnecessary load of strtoul on every call)

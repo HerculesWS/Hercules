@@ -754,12 +754,15 @@ void guild_member_joined(struct map_session_data *sd)
 		
 		if( hChSys.ally && hChSys.ally_autojoin ) {
 			struct guild* sg = NULL;
-			clif->chsys_join((struct hChSysCh*)g->channel,sd);
+			struct hChSysCh *channel = (struct hChSysCh*)g->channel;
+			
+			if( !(channel->banned && idb_exists(channel->banned, sd->status.account_id) ) )
+				clif->chsys_join(channel,sd);
 
 			for (i = 0; i < MAX_GUILDALLIANCE; i++) {
 				if(	g->alliance[i].guild_id && (sg = guild_search(g->alliance[i].guild_id) ) ) {
-					clif->chsys_join((struct hChSysCh*)sg->channel,sd);
-					break;
+					if( !(((struct hChSysCh*)sg->channel)->banned && idb_exists(((struct hChSysCh*)sg->channel)->banned, sd->status.account_id)))
+						clif->chsys_join((struct hChSysCh*)sg->channel,sd);
 				}
 			}
 		}

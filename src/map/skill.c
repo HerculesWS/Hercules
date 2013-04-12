@@ -12858,7 +12858,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				    MOBID_EMPERIUM, MOBID_GUARIDAN_STONE1, MOBID_GUARIDAN_STONE2)) {
 				char output[128];
 				sprintf(output, "You're too close to a stone or emperium to do this skill");
-				clif->colormes(sd, COLOR_RED, output);
+				clif->colormes(sd->fd, COLOR_RED, output);
 				return 0;
 			    }
 			}
@@ -13239,7 +13239,7 @@ int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, 
 						skill->get_desc(skill_id),
 						require.ammo_qty,
 						itemdb_jname(sd->status.inventory[i].nameid));
-			clif->colormes(sd,COLOR_RED,e_msg);
+			clif->colormes(sd->fd,COLOR_RED,e_msg);
 			return 0;
 		}
 		if (!(require.ammo&1<<sd->inventory_data[i]->look)) { //Ammo type check. Send the "wrong weapon type" message

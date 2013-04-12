@@ -7,6 +7,7 @@
 
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
+#include "../common/mmo.h"
 #include <stdarg.h>
 
 /**
@@ -322,13 +323,14 @@ enum clif_messages {
  **/
 enum clif_colors {
 	COLOR_RED,
-	
+	COLOR_DEFAULT,
 	COLOR_MAX
 };
 
 enum hChSysChOpt {
-	hChSys_OPT_BASE				= 0,
-	hChSys_OPT_ANNOUNCE_JOIN	= 1,
+	hChSys_OPT_BASE				= 0x0,
+	hChSys_OPT_ANNOUNCE_JOIN	= 0x1,
+	hChSys_OPT_MSG_DELAY		= 0x2,
 };
 
 enum hChSysChType {
@@ -383,15 +385,21 @@ struct {
 	bool allow_user_channel_creation;
 } hChSys;
 
+struct hChSysBanEntry {
+	char name[NAME_LENGTH];
+};
+
 struct hChSysCh {
 	char name[HCHSYS_NAME_LENGTH];
 	char pass[HCHSYS_NAME_LENGTH];
 	unsigned char color;
 	DBMap *users;
+	DBMap *banned;
 	unsigned int opt;
 	unsigned int owner;
 	enum hChSysChType type;
 	uint16 m;
+	unsigned char msg_delay;
 };
 
 struct hCSData {
@@ -662,7 +670,7 @@ struct clif_interface {
 	void (*msgtable) (int fd, int line);
 	void (*msgtable_num) (int fd, int line, int num);
 	void (*message) (const int fd, const char* mes);
-	int (*colormes) (struct map_session_data * sd, enum clif_colors color, const char* msg);
+	int (*colormes) (int fd, enum clif_colors color, const char* msg);
 	bool (*process_message) (struct map_session_data* sd, int format, char** name_, int* namelen_, char** message_, int* messagelen_);
 	void (*wisexin) (struct map_session_data *sd,int type,int flag);
 	void (*wisall) (struct map_session_data *sd,int type,int flag);

@@ -982,6 +982,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	sd->cantalk_tick = tick;
 	sd->canskill_tick = tick;
 	sd->cansendmail_tick = tick;
+	sd->hchsysch_tick = tick;
 
 	for(i = 0; i < MAX_SKILL_LEVEL; i++)
 		sd->spirit_timer[i] = INVALID_TIMER;
@@ -4302,7 +4303,7 @@ int pc_useitem(struct map_session_data *sd,int n)
 						sprintf(e_msg,"Item Failed. [%s] is cooling down. wait %d seconds.",
 										itemdb_jname(sd->status.inventory[n].nameid),
 										e_tick+1);
-					clif->colormes(sd,COLOR_RED,e_msg);
+					clif->colormes(sd->fd,COLOR_RED,e_msg);
 					return 0; // Delay has not expired yet
 				}
 			} else {// not yet used item (all slots are initially empty)
