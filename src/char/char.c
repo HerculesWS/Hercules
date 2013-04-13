@@ -1051,6 +1051,13 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 		sd->found_char[p.slot] = p.char_id;
 		j += mmo_char_tobuf(WBUFP(buf, j), &p);
 	}
+	
+#if PACKETVER >= 20130000
+	/* for some reason the client doesn't like "3" characters (yes...3) we gotta send a fake one or it wont display any =_= */
+	if( j == 432 ){/* we just duplicate the last visually the client will say 4 chars instead of 3 though >_> */
+		j += mmo_char_tobuf(WBUFP(buf, j), &p);
+	}
+#endif
 
 	memset(sd->new_name,0,sizeof(sd->new_name));
 
@@ -1865,7 +1872,30 @@ int mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p)
 
 	return 106+offset;
 }
-
+	
+//----------------------------------------
+// [Ind/Hercules] notify client about charselect window data
+//----------------------------------------
+void mmo_char_send082d(int fd, struct char_session_data* sd) {
+	if (save_log)
+		ShowInfo("Loading Char Data ("CL_BOLD"%d"CL_RESET")\n",sd->account_id);
+	
+	WFIFOHEAD(fd,29);
+	WFIFOW(fd,0) = 0x82d;
+	WFIFOW(fd,2) = 29;
+	WFIFOB(fd,4) = sd->char_slots;
+	WFIFOB(fd,5) = MAX_CHARS - sd->char_slots;
+	WFIFOB(fd,6) = MAX_CHARS - sd->char_slots;
+	WFIFOB(fd,7) = sd->char_slots;
+	WFIFOB(fd,8) = sd->char_slots;
+	memset(WFIFOP(fd,9), 0, 20); // unused bytes
+	WFIFOSET(fd,29);
+	WFIFOHEAD(fd, 6);
+	WFIFOW(fd,0) = 0x9a0;
+	WFIFOL(fd,2) = 1;
+	WFIFOSET(fd, 6);
+	
+}
 //----------------------------------------
 // Function to send characters to a player
 //----------------------------------------
@@ -1874,11 +1904,10 @@ int mmo_char_send006b(int fd, struct char_session_data* sd)
 	int j, offset = 0;
 #if PACKETVER >= 20100413
 	offset += 3;
-#endif
-
+#endif	
 	if (save_log)
 		ShowInfo("Loading Char Data ("CL_BOLD"%d"CL_RESET")\n",sd->account_id);
-
+	
 	j = 24 + offset; // offset
 	WFIFOHEAD(fd,j + MAX_CHARS*MAX_CHAR_BUF);
 	WFIFOW(fd,0) = 0x6b;
@@ -2179,7 +2208,7 @@ int parse_fromlogin(int fd) {
 				if( sd->char_slots > MAX_CHARS ) {
 					ShowError("Account '%d' `character_slots` column is higher than supported MAX_CHARS (%d), update MAX_CHARS in mmo.h! capping to MAX_CHARS...\n",sd->account_id,sd->char_slots);
 					sd->char_slots = MAX_CHARS;/* cap to maximum */
-				} else if ( !sd->char_slots )/* no value aka 0 in sql */
+				} else if ( sd->char_slots <= 0 )/* no value aka 0 in sql */
 					sd->char_slots = MAX_CHARS;/* cap to maximum */
 				safestrncpy(sd->birthdate, (const char*)RFIFOP(fd,52), sizeof(sd->birthdate));
 				safestrncpy(sd->pincode, (const char*)RFIFOP(fd,63), sizeof(sd->pincode));
@@ -2196,7 +2225,11 @@ int parse_fromlogin(int fd) {
 					WFIFOSET(i,3);
 				} else {
 					// send characters to player
+#if PACKETVER >= 20130000
+					mmo_char_send082d(i, sd);
+#else
 					mmo_char_send006b(i, sd);
+#endif
 #if PACKETVER >= 20110309
 					pincode->handle(i, sd);
 #endif
@@ -3615,8 +3648,7 @@ static void char_delete2_accept(int fd, struct char_session_data* sd)
 	}
 
 	// refresh character list cache
-	for(k = i; k < MAX_CHARS-1; k++)
-	{
+	for(k = i; k < MAX_CHARS-1; k++) {
 		sd->found_char[k] = sd->found_char[k+1];
 	}
 	sd->found_char[MAX_CHARS-1] = -1;
@@ -4285,12 +4317,31 @@ int parse_char(int fd)
 					WFIFOSET(fd, 8);
 					/* for some stupid reason it requires the char data again (gravity -_-) */
 					if( ret )
-						mmo_char_send006b( fd, sd );
+#if PACKETVER >= 20130000
+						mmo_char_send082d(fd, sd);
+#else
+						mmo_char_send006b(fd, sd);
+#endif
 						
 					RFIFOSKIP(fd, 8);
 				}
 			break;
-					
+			
+			/* [Ind/Hercules] after hours reading over and over Shakto's network report, finally found this little ***hole */
+			case 0x9a1:
+				FIFOSD_CHECK(2);
+				{
+					int j = 4;
+					RFIFOSKIP(fd, 2);
+					WFIFOHEAD(fd,j + (MAX_CHARS*MAX_CHAR_BUF));
+					WFIFOW(fd,0) = 0x99d;
+					j+=mmo_chars_fromsql(sd, WFIFOP(fd,j));
+					WFIFOW(fd,2) = j;
+					ShowDump(WFIFOP(fd, 0),j);
+					WFIFOSET(fd,j);
+				}
+				break;
+				
 			// unknown packet received
 			default:
 				ShowError("parse_char: Received unknown packet "CL_WHITE"0x%x"CL_RESET" from ip '"CL_WHITE"%s"CL_RESET"'! Disconnecting!\n", RFIFOW(fd,0), ip2str(ipl, NULL));
