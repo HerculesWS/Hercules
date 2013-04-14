@@ -4337,7 +4337,6 @@ int parse_char(int fd)
 					WFIFOW(fd,0) = 0x99d;
 					j+=mmo_chars_fromsql(sd, WFIFOP(fd,j));
 					WFIFOW(fd,2) = j;
-					ShowDump(WFIFOP(fd, 0),j);
 					WFIFOSET(fd,j);
 				}
 				break;
