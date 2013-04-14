@@ -6589,11 +6589,6 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			opt_flag = 0; //Reuse to check success condition.
 			if(sd->bonus.unstripable_equip&EQP_WEAPON)
 				return 0;
-			i = sd->equip_index[EQI_HAND_L];
-			if (i>=0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_WEAPON) {
-				opt_flag|=1;
-				pc_unequipitem(sd,i,3); //L-hand weapon
-			}
 
 			i = sd->equip_index[EQI_HAND_R];
 			if (i>=0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_WEAPON) {
