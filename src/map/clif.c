@@ -5409,12 +5409,12 @@ void clif_status_change(struct block_list *bl,int type,int flag,int tick,int val
 	WBUFL(buf,4)=bl->id;
 	WBUFB(buf,8)=flag;
 #if PACKETVER >= 20120618
-	WBUFL(buf,9)=tick;/* at this stage remain and total are the same value I believe */
-	WBUFL(buf,13)=tick;
 	if(flag && battle_config.display_status_timers && sd) {
 		if (tick <= 0)
 			tick = 9999; // this is indeed what official servers do
-		
+			
+		WBUFL(buf,9) = tick;/* at this stage remain and total are the same value I believe */
+		WBUFL(buf,13) = tick;
 		WBUFL(buf,17) = val1;
 		WBUFL(buf,21) = val2;
 		WBUFL(buf,25) = val3;
