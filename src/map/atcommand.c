@@ -9007,7 +9007,7 @@ ACMD_FUNC(channel) {
 			}
 			if( hChSys.ally && sd->status.guild_id ) {
 				struct guild *g = sd->guild;
-				if( !g ) return -1;
+				if( !g ) { dbi_destroy(iter); return -1; }
 				sprintf(atcmd_output, msg_txt(1409), hChSys.ally_name, db_size(((struct hChSysCh *)g->channel)->users));// - #%s ( %d users )
 				clif->message(fd, atcmd_output);
 			}
