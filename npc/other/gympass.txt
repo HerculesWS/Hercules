@@ -77,7 +77,7 @@ payon,173,141,4	script	Ripped Cabus#GymPass	899,{
 				mes "training together like this.";
 				delitem 7776,1; //Max_Weight_Up_Scroll
 				set gympassmemory,.@add_carry;
-				skill "ALL_INCCARRY",.@add_carry,0;
+				skill "ALL_INCCARRY",.@add_carry,3;
 				close;
 			}
 			else {
@@ -133,7 +133,7 @@ payon,173,141,4	script	Ripped Cabus#GymPass	899,{
 			mes "muscles grew back,";
 			mes "just like that! Try not to";
 			mes "wimp out again, okay?";
-			skill "ALL_INCCARRY",gympassmemory,0;
+			skill "ALL_INCCARRY",gympassmemory,3;
 			close;
 		}
 		else {
