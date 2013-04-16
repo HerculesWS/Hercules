@@ -575,6 +575,7 @@ struct clif_interface {
 	void (*hate_info) (struct map_session_data *sd, unsigned char hate_level,int class_, unsigned char type);
 	void (*mission_info) (struct map_session_data *sd, int mob_id, unsigned char progress);
 	void (*feel_hate_reset) (struct map_session_data *sd);
+	void (*partytickack) (struct map_session_data* sd, bool flag);
 	void (*equiptickack) (struct map_session_data* sd, int flag);
 	void (*viewequip_ack) (struct map_session_data* sd, struct map_session_data* tsd);
 	void (*viewequip_fail) (struct map_session_data* sd);
@@ -1071,6 +1072,7 @@ struct clif_interface {
 	void (*pCashShopClose) (int fd, struct map_session_data *sd);
 	void (*pCashShopSchedule) (int fd, struct map_session_data *sd);
 	void (*pCashShopBuy) (int fd, struct map_session_data *sd);
+	void (*pPartyTick) (int fd, struct map_session_data *sd);
 } clif_s;
 
 struct clif_interface *clif;

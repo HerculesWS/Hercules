@@ -6354,7 +6354,7 @@ void clif_partyinvitationstate(struct map_session_data* sd)
 
 	WFIFOHEAD(fd, packet_len(0x2c9));
 	WFIFOW(fd, 0) = 0x2c9;
-	WFIFOB(fd, 2) = 0; // not implemented
+	WFIFOB(fd, 2) = sd->status.allow_party ? 1 : 0;
 	WFIFOSET(fd, packet_len(0x2c9));
 }
 
@@ -14641,6 +14641,16 @@ void clif_parse_EquipTick(int fd, struct map_session_data* sd)
 	clif->equiptickack(sd, flag);
 }
 
+/// Request to change party invitation tick.
+///     value:
+///         0 = disabled
+///         1 = enabled
+void clif_parse_PartyTick(int fd, struct map_session_data* sd)
+{
+	bool flag = RFIFOB(fd,6)?true:false;
+	sd->status.allow_party = flag;
+	clif->partytickack(sd, flag);
+}
 
 /// Questlog System [Kevin] [Inkfish]
 ///
@@ -16595,6 +16605,15 @@ void clif_maptypeproperty2(struct block_list *bl,enum send_target t) {
 	clif->send(&p,sizeof(p),bl,t);
 #endif
 }
+
+void clif_partytickack(struct map_session_data* sd, bool flag) {
+	
+	WFIFOHEAD(sd->fd, packet_len(0x2c9));
+	WFIFOW(sd->fd, 0) = 0x2c9;
+	WFIFOB(sd->fd, 2) = flag;
+	WFIFOSET(sd->fd, packet_len(0x2c9));
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -16974,6 +16993,7 @@ void clif_defaults(void) {
 	clif->hate_info = clif_hate_info;
 	clif->mission_info = clif_mission_info;
 	clif->feel_hate_reset = clif_feel_hate_reset;
+	clif->partytickack = clif_partytickack;
 	clif->equiptickack = clif_equiptickack;
 	clif->viewequip_ack = clif_viewequip_ack;
 	clif->viewequip_fail = clif_viewequip_fail;
@@ -17465,10 +17485,13 @@ void clif_defaults(void) {
 	clif->pDebug = clif_parse_debug;
 	clif->pSkillSelectMenu = clif_parse_SkillSelectMenu;
 	clif->pMoveItem = clif_parse_MoveItem;
-	clif->pDull = clif_parse_dull;
 	/* RagExe Cash Shop [Ind/Hercules] */
 	clif->pCashShopOpen = clif_parse_CashShopOpen;
 	clif->pCashShopClose = clif_parse_CashShopClose;
 	clif->pCashShopSchedule = clif_parse_CashShopSchedule;
 	clif->pCashShopBuy = clif_parse_CashShopBuy;
+	/*  */
+	clif->pPartyTick = clif_parse_PartyTick;
+	/* dull */
+	clif->pDull = clif_parse_dull;
 }

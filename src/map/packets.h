@@ -1116,7 +1116,7 @@ packet(0x020d,-1);
 	packet(0x02c5,30);
 	packet(0x02c6,30);
 	packet(0x02c7,7,clif->pReplyPartyInvite2,2,6);
-	packet(0x02c8,3);
+	packet(0x02c8,3,clif->pPartyTick,2);
 	packet(0x02c9,3);
 	packet(0x02ca,3);
 	packet(0x02cb,20);
