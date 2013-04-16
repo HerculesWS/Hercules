@@ -8998,7 +8998,6 @@ int status_change_clear(struct block_list* bl, int type) {
 	sc->opt1 = 0;
 	sc->opt2 = 0;
 	sc->opt3 = 0;
-	sc->option &= OPTION_MASK;
 
 	if( type == 0 || type == 2 )
 		clif->changeoption(bl);
