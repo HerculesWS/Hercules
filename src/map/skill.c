@@ -6344,7 +6344,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					case SC_DONTFORGETME:
 					case SC_FORTUNE:
 					case SC_SERVICE4U:
-						if( tsc->data[i]->val4 ) //val4 = out-of-song-area
+						if( !tsc->data[i]->val4 ) //val4 = out-of-song-area
 							continue;
 						break;
 					case SC_ASSUMPTIO:
