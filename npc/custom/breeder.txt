@@ -32,7 +32,7 @@ prontera,124,201,1	script	Universal Rental NPC	726,{
 		message strcharinfo(0),"You do not meet requirements to rent.";
 		close; }
 	specialeffect2 EF_TEIHIT3;
-	close;
+	end;
 }
 
 //============================================================ 
