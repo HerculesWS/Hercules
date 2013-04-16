@@ -50,6 +50,7 @@
 #include "script.h"
 #include "quest.h"
 #include "elemental.h"
+#include "../config/core.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -3603,7 +3604,7 @@ static void script_detach_state(struct script_state* st, bool dequeue_event)
 			/**
 			 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 			 **/
-#if SECURE_NPCTIMEOUT
+#ifdef SECURE_NPCTIMEOUT
 			/**
 			 * We're done with this NPC session, so we cancel the timer (if existent) and move on
 			 **/
@@ -3649,7 +3650,7 @@ static void script_attach_state(struct script_state* st)
 /**
  * For the Secure NPC Timeout option (check config/Secure.h) [RR]
  **/
-#if SECURE_NPCTIMEOUT
+#ifdef SECURE_NPCTIMEOUT
 		if( sd->npc_idle_timer == INVALID_TIMER )
 			sd->npc_idle_timer = add_timer(gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc_rr_secure_timeout_timer,sd->bl.id,0);
 		sd->npc_idle_tick = gettick();
@@ -4376,7 +4377,9 @@ BUILDIN_FUNC(next)
 	sd = script_rid2sd(st);
 	if( sd == NULL )
 		return 0;
-
+#ifdef SECURE_NPCTIMEOUT
+	sd->npc_idle_type = NPCT_WAIT;
+#endif
 	st->state = STOP;
 	clif->scriptnext(sd, st->oid);
 	return 0;
@@ -4478,6 +4481,10 @@ BUILDIN_FUNC(menu)
 	if( sd == NULL )
 		return 0;
 
+#ifdef SECURE_NPCTIMEOUT
+	sd->npc_idle_type = NPCT_MENU;
+#endif
+	
 	// TODO detect multiple scripts waiting for input at the same time, and what to do when that happens
 	if( sd->state.menu_or_input == 0 )
 	{
@@ -4603,6 +4610,10 @@ BUILDIN_FUNC(select)
 	if( sd == NULL )
 		return 0;
 
+#ifdef SECURE_NPCTIMEOUT
+	sd->npc_idle_type = NPCT_MENU;
+#endif
+	
 	if( sd->state.menu_or_input == 0 ) {
 		struct StringBuf buf;
 
@@ -4678,6 +4689,10 @@ BUILDIN_FUNC(prompt)
 	if( sd == NULL )
 		return 0;
 
+#ifdef SECURE_NPCTIMEOUT
+	sd->npc_idle_type = NPCT_MENU;
+#endif
+	
 	if( sd->state.menu_or_input == 0 )
 	{
 		struct StringBuf buf;
@@ -5417,6 +5432,10 @@ BUILDIN_FUNC(input)
 	min = (script_hasdata(st,3) ? script_getnum(st,3) : script_config.input_min_value);
 	max = (script_hasdata(st,4) ? script_getnum(st,4) : script_config.input_max_value);
 
+#ifdef SECURE_NPCTIMEOUT
+	sd->npc_idle_type = NPCT_WAIT;
+#endif
+	
 	if( !sd->state.menu_or_input )
 	{	// first invocation, display npc input box
 		sd->state.menu_or_input = 1;
