@@ -1910,10 +1910,13 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		if (rnd()%1000 < cri)
 			flag.cri = 1;
 	}
-	if (flag.cri)
-	{
+	if (flag.cri) {
 		wd.type = 0x0a;
+#ifdef RENEWAL
+		flag.hit = 1;
+#else
 		flag.idef = flag.idef2 = flag.hit = 1;
+#endif
 	} else {	//Check for Perfect Hit
 		if(sd && sd->bonus.perfect_hit > 0 && rnd()%100 < sd->bonus.perfect_hit)
 			flag.hit = 1;
@@ -3374,8 +3377,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	if(skill_id == CR_GRANDCROSS || skill_id == NPC_GRANDDARKNESS)
 		return wd; //Enough, rest is not needed.
 
-	if (sd)
-	{
+	if (sd) {
 		if (skill_id != CR_SHIELDBOOMERANG) //Only Shield boomerang doesn't takes the Star Crumbs bonus.
 			ATK_ADD2(wd.div_*sd->right_weapon.star, wd.div_*sd->left_weapon.star);
 		if (skill_id==MO_FINGEROFFENSIVE) { //The finger offensive spheres on moment of attack do count. [Skotlex]
@@ -3388,7 +3390,10 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
         wd.damage = battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage, 2, wd.flag);
         if( flag.lh )
             wd.damage2 = battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage2, 3, wd.flag);
-
+#ifdef RENEWAL
+	    if( flag.cri )
+		    ATK_ADDRATE(sd->bonus.crit_atk_rate>=100?sd->bonus.crit_atk_rate-60:40);
+#endif
 		if( skill_id == CR_SHIELDBOOMERANG || skill_id == PA_SHIELDCHAIN )
 		{ //Refine bonus applies after cards and elements.
 			short index= sd->equip_index[EQI_HAND_L];
@@ -3401,8 +3406,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
     if(!sd && tsd) //if player on player then it was already measured above
         wd.damage = battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage, flag.lh, wd.flag);
 
-	if( flag.infdef )
-	{ //Plants receive 1 damage when hit
+	if( flag.infdef ) { //Plants receive 1 damage when hit
 		short class_ = status_get_class(target);
 		if( flag.hit || wd.damage > 0 )
 			wd.damage = wd.div_; // In some cases, right hand no need to have a weapon to increase damage
