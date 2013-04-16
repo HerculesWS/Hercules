@@ -2233,8 +2233,11 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 		 * Official Magic Reflection Behavior : damage reflected depends on gears caster wears, not target
 		 **/
 		#if MAGIC_REFLECTION_TYPE
-			if( dmg.dmg_lv != ATK_MISS )//Wiz SL cancelled and consumed fragment
+			if( dmg.dmg_lv != ATK_MISS ){ //Wiz SL cancelled and consumed fragment
+				battle->isMagicReflect = true;
 				dmg = battle->calc_attack(BF_MAGIC,bl,bl,skill_id,skill_lv,flag&0xFFF);
+				battle->isMagicReflect = false;
+			}
 		#endif
 		}
 		if(sc && sc->data[SC_MAGICROD] && src == dsrc) {

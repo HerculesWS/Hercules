@@ -462,6 +462,8 @@ extern int attr_fix_table[4][10][10];
  * Battle.c Interface
  **/
 struct battle_interface {
+	/* vars */
+	bool isMagicReflect;/* maybe better as a flag atlho the system isnt threaded so there isn't any bug by using it like this */
 	/* init */
 	void (*init) (void);
 	/* final */
