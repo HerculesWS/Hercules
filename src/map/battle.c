@@ -433,8 +433,6 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 
 	switch(attack_type){
 		case BF_MAGIC:
-			if( battle->isMagicReflect )
-				nk |= NK_NO_CARDFIX_ATK;
 			if ( sd && !(nk&NK_NO_CARDFIX_ATK) ) {
 				cardfix=cardfix*(100+sd->magic_addrace[tstatus->race])/100;
 				if (!(nk&NK_NO_ELEFIX))
@@ -993,7 +991,7 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 		//Finally damage reductions....
 		// Assumptio doubles the def & mdef on RE mode, otherwise gives a reduction on the final damage. [Igniz]
 #ifndef RENEWAL
-		if( sc->data[SC_ASSUMPTIO] && !battle->isMagicReflect ) {
+		if( sc->data[SC_ASSUMPTIO] ) {
 			if( map_flag_vs(bl->m) )
 				damage = damage*2/3; //Receive 66% damage
 			else
@@ -1038,9 +1036,9 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 			damage -= damage * sc->data[SC_ARMOR]->val2 / 100;
 
 #ifdef RENEWAL
-		if(sc->data[SC_ENERGYCOAT] && (battle->isMagicReflect || ((flag&BF_WEAPON || flag&BF_MAGIC) && skill_id != WS_CARTTERMINATION)))
+		if(sc->data[SC_ENERGYCOAT] && (flag&BF_WEAPON || flag&BF_MAGIC) && skill_id != WS_CARTTERMINATION)
 #else
-		if(sc->data[SC_ENERGYCOAT] && (battle->isMagicReflect || (flag&BF_WEAPON && skill_id != WS_CARTTERMINATION)))
+		if(sc->data[SC_ENERGYCOAT] && (flag&BF_WEAPON && skill_id != WS_CARTTERMINATION))
 #endif
 		{
 			struct status_data *status = status_get_status_data(bl);
@@ -4085,8 +4083,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 			if (!flag.imdef && (
 				sd->bonus.ignore_mdef_ele & ( 1 << tstatus->def_ele ) ||
 				sd->bonus.ignore_mdef_race & ( 1 << tstatus->race ) ||
-				sd->bonus.ignore_mdef_race & ( is_boss(target) ? 1 << RC_BOSS : 1 << RC_NONBOSS ) ||
-				battle->isMagicReflect
+				sd->bonus.ignore_mdef_race & ( is_boss(target) ? 1 << RC_BOSS : 1 << RC_NONBOSS )
 			))
 				flag.imdef = 1;
 		}
