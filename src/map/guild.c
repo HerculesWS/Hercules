@@ -583,7 +583,7 @@ int guild_recv_info(struct guild *sg) {
 		sd = g->member[i].sd;
 		if( sd==NULL )
 			continue;
-
+		sd->guild = g;
         if (before.guild_lv != g->guild_lv || bm != m ||
                 before.max_member != g->max_member) {
             clif->guild_basicinfo(sd); //Submit basic information
