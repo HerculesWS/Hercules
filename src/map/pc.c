@@ -4471,7 +4471,7 @@ int pc_cart_delitem(struct map_session_data *sd,int n,int amount,int type,e_log_
 	struct item_data * data;
 	nullpo_retr(1, sd);
 
-	if( sd->status.cart[n].nameid == 0 || sd->status.cart[n].amount < amount || !data )
+	if( sd->status.cart[n].nameid == 0 || sd->status.cart[n].amount < amount || !(data = itemdb_exists(sd->status.cart[n].nameid)) )
 		return 1;
 
 	logs->pick_pc(sd, log_type, -amount, &sd->status.cart[n],data);
