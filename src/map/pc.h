@@ -189,7 +189,8 @@ struct map_session_data {
 	unsigned short class_;	//This is the internal job ID used by the map server to simplify comparisons/queries/etc. [Skotlex]
 	int group_id, group_pos, group_level;
 	unsigned int permissions;/* group permissions */
-
+	bool group_log_command;
+	
 	struct mmo_charstatus status;
 	struct registry save_reg;
 
@@ -398,8 +399,8 @@ struct map_session_data {
 	int guildspy; // [Syrus22]
 	int partyspy; // [Syrus22]
 
-	int vended_id;
-	int vender_id;
+	unsigned int vended_id;
+	unsigned int vender_id;
 	int vend_num;
 	char message[MESSAGE_SIZE];
 	struct s_vending vending[MAX_VENDING];
@@ -699,9 +700,9 @@ int pc_get_group_id(struct map_session_data *sd);
 int pc_getrefinebonus(int lv,int type);
 bool pc_can_give_items(struct map_session_data *sd);
 
-bool pc_can_use_command(struct map_session_data *sd, const char *command, AtCommandType type);
+bool pc_can_use_command(struct map_session_data *sd, const char *command);
 #define pc_has_permission(sd, permission) ( ((sd)->permissions&permission) != 0 )
-bool pc_should_log_commands(struct map_session_data *sd);
+#define pc_should_log_commands(sd) ( (sd)->group_log_command != false )
 
 int pc_setrestartvalue(struct map_session_data *sd,int type);
 int pc_makesavestatus(struct map_session_data *);

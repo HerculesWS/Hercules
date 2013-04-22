@@ -77,7 +77,7 @@ void trade_traderequest(struct map_session_data *sd, struct map_session_data *ta
 	}
 
 	// Players can not request trade from far away, unless they are allowed to use @trade.
-	if (!pc_can_use_command(sd, "trade", COMMAND_ATCOMMAND) &&
+	if (!pc_can_use_command(sd, "@trade") &&
 	    (sd->bl.m != target_sd->bl.m || !check_distance_bl(&sd->bl, &target_sd->bl, TRADE_DISTANCE))) {
 		clif->tradestart(sd, 0); // too far
 		return ;
@@ -135,7 +135,7 @@ void trade_tradeack(struct map_session_data *sd, int type)
 
 	// Players can not request trade from far away, unless they are allowed to use @trade.
 	// Check here as well since the original character could had warped.
-	if (!pc_can_use_command(sd, "trade", COMMAND_ATCOMMAND) &&
+	if (!pc_can_use_command(sd, "@trade") &&
 	    (sd->bl.m != tsd->bl.m || !check_distance_bl(&sd->bl, &tsd->bl, TRADE_DISTANCE))) {
 		clif->tradestart(sd, 0); // too far
 		sd->trade_partner=0;

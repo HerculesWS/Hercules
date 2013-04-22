@@ -588,6 +588,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\map\irc-bot.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\map\irc-bot.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\map\itemdb.c"
 				>
 			</File>

@@ -53,9 +53,9 @@
 
 /* pointer size fix which fixes several gcc warnings */
 #ifdef __64BIT__
-	#define __64BPRTSIZE(y) (intptr)y
+	#define __64BPTRSIZE(y) (intptr)y
 #else
-	#define __64BPRTSIZE(y) y
+	#define __64BPTRSIZE(y) y
 #endif
 
 /* ATCMD_FUNC(mobinfo) HIT and FLEE calculations */

@@ -464,8 +464,7 @@ int itemdb_isrestricted(struct item* item, int gmlv, int gmlv2, int (*func)(stru
 /*==========================================
  *	Specifies if item-type should drop unidentified.
  *------------------------------------------*/
-int itemdb_isidentified(int nameid)
-{
+int itemdb_isidentified(int nameid) {
 	int type=itemdb_type(nameid);
 	switch (type) {
 		case IT_WEAPON:
@@ -476,6 +475,18 @@ int itemdb_isidentified(int nameid)
 			return 1;
 	}
 }
+/* same as itemdb_isidentified but without a lookup */
+int itemdb_isidentified2(struct item_data *data) {
+	switch (data->type) {
+		case IT_WEAPON:
+		case IT_ARMOR:
+		case IT_PETARMOR:
+			return 0;
+		default:
+			return 1;
+	}
+}
+
 
 /*==========================================
  * Search by name for the override flags available items
@@ -512,18 +523,18 @@ static bool itemdb_read_itemavail(char* str[], int columns, int current)
 /*==========================================
  * read item group data
  *------------------------------------------*/
-static void itemdb_read_itemgroup_sub(const char* filename)
-{
+static unsigned int itemdb_read_itemgroup_sub(const char* filename) {
 	FILE *fp;
 	char line[1024];
 	int ln=0;
+	unsigned int count = 0;
 	int groupid,j,k,nameid;
 	char *str[3],*p;
 	char w1[1024], w2[1024];
 	
 	if( (fp=fopen(filename,"r"))==NULL ){
 		ShowError("can't read %s\n", filename);
-		return;
+		return 0;
 	}
 
 	while(fgets(line, sizeof(line), fp))
@@ -534,7 +545,7 @@ static void itemdb_read_itemgroup_sub(const char* filename)
 		if(strstr(line,"import")) {
 			if (sscanf(line, "%[^:]: %[^\r\n]", w1, w2) == 2 &&
 				strcmpi(w1, "import") == 0) {
-				itemdb_read_itemgroup_sub(w2);
+				count += itemdb_read_itemgroup_sub(w2);
 				continue;
 			}
 		}
@@ -568,18 +579,20 @@ static void itemdb_read_itemgroup_sub(const char* filename)
 		}
 		for(j=0;j<k;j++)
 			itemgroup_db[groupid].nameid[itemgroup_db[groupid].qty++] = nameid;
+		count++;
 	}
 	fclose(fp);
-	return;
+	return count;
 }
 
 static void itemdb_read_itemgroup(void)
 {
 	char path[256];
+	unsigned int count;
 	snprintf(path, 255, "%s/"DBPATH"item_group_db.txt", db_path);
 	memset(&itemgroup_db, 0, sizeof(itemgroup_db));
-	itemdb_read_itemgroup_sub(path);
-	ShowStatus("Done reading '"CL_WHITE"%s"CL_RESET"'.\n", "item_group_db.txt");
+	count = itemdb_read_itemgroup_sub(path);
+	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, "item_group_db.txt");
 	return;
 }
 

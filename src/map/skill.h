@@ -95,7 +95,6 @@ enum e_skill_inf2 {
 	INF2_NO_ENEMY       = 0x1000,
 	INF2_NOLP           = 0x2000, // Spells that can ignore Land Protector
 	INF2_CHORUS_SKILL	= 0x4000, // Chorus skill
-	INF2_CLONE_NOCOPY	= 0x8000, // Clones will not copy this skill
 };
 
 

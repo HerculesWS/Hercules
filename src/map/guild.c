@@ -1033,7 +1033,7 @@ int guild_send_message(struct map_session_data *sd,const char *mes,int len)
 	guild_recv_message(sd->status.guild_id,sd->status.account_id,mes,len);
 
 	// Chat logging type 'G' / Guild Chat
-	log_chat(LOG_CHAT_GUILD, sd->status.guild_id, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);
+	logs->chat(LOG_CHAT_GUILD, sd->status.guild_id, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);
 
 	return 0;
 }
@@ -1955,8 +1955,8 @@ int guild_castledatasave(int castle_id, int index, int value)
 
 void guild_castle_reconnect_sub(void *key, void *data, va_list ap)
 {
-	int castle_id = GetWord((int)__64BPRTSIZE(key), 0);
-	int index = GetWord((int)__64BPRTSIZE(key), 1);
+	int castle_id = GetWord((int)__64BPTRSIZE(key), 0);
+	int index = GetWord((int)__64BPTRSIZE(key), 1);
 	intif_guild_castle_datasave(castle_id, index, *(int *)data);
 	aFree(data);
 }
@@ -1977,7 +1977,7 @@ void guild_castle_reconnect(int castle_id, int index, int value)
 		int *data;
 		CREATE(data, int, 1);
 		*data = value;
-		linkdb_replace(&gc_save_pending, (void*)__64BPRTSIZE((MakeDWord(castle_id, index))), data);
+		linkdb_replace(&gc_save_pending, (void*)__64BPTRSIZE((MakeDWord(castle_id, index))), data);
 	}
 }
 

@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/conf.h"
 #include "../common/db.h"
@@ -20,21 +21,20 @@ typedef struct GroupSettings GroupSettings;
 struct GroupSettings {
 	unsigned int id; // groups.[].id
 	int level; // groups.[].level
-	const char *name; // groups.[].name
-	config_setting_t *commands; // groups.[].commands
+	char name[60]; // copy of groups.[].name
 	unsigned int e_permissions; // packed groups.[].permissions
 	bool log_commands; // groups.[].log_commands
-	/// Following are used only during config reading
+	int group_pos;/* pos on load [Ind] */
+	/// Following are used/avaialble only during config reading
+	config_setting_t *commands; // groups.[].commands
 	config_setting_t *permissions; // groups.[].permissions
 	config_setting_t *inherit; // groups.[].inherit
 	bool inheritance_done; // have all inheritance rules been evaluated?
 	config_setting_t *root; // groups.[]
-	int group_pos;/* pos on load */
 };
 
 int pc_group_max; /* known number of groups */
 
-static config_t pc_group_config;
 static DBMap* pc_group_db; // id -> GroupSettings
 static DBMap* pc_groupname_db; // name -> GroupSettings
 
@@ -60,8 +60,8 @@ static inline GroupSettings* name2group(const char* group_name)
  * Loads group configuration from config file into memory.
  * @private
  */
-static void read_config(void)
-{
+static void read_config(void) {
+	config_t pc_group_config;
 	config_setting_t *groups = NULL;
 	const char *config_filename = "conf/groups.conf"; // FIXME hardcoded name
 	int group_count = 0;
@@ -126,7 +126,7 @@ static void read_config(void)
 			CREATE(group_settings, GroupSettings, 1);
 			group_settings->id = id;
 			group_settings->level = level;
-			group_settings->name = groupname;
+			safestrncpy(group_settings->name, groupname, 60);
 			group_settings->log_commands = (bool)log_commands;
 			group_settings->inherit = config_setting_get_member(group, "inherit");
 			group_settings->commands = config_setting_get_member(group, "commands");
@@ -155,7 +155,7 @@ static void read_config(void)
 			for (i = 0; i < count; ++i) {
 				config_setting_t *command = config_setting_get_elem(commands, i);
 				const char *name = config_setting_name(command);
-				if (!atcommand_exists(name)) {
+				if (!atcommand->exists(name)) {
 					ShowConfigWarning(command, "pc_groups:read_config: non-existent command name '%s', removing...", name);
 					config_setting_remove(commands, name);
 					--i;
@@ -284,20 +284,13 @@ static void read_config(void)
 			group_ids[i++] = group_settings->id;
 		}
 		
-		atcommand_db_load_groups(group_ids);
+		atcommand->load_groups(group_ids);
 		
 		aFree(group_ids);
 		
 		dbi_destroy(iter);
 	}
-}
-
-/**
- * Removes group configuration from memory.
- * @private
- */
-static void destroy_config(void)
-{
+	
 	config_destroy(&pc_group_config);
 }
 
@@ -312,13 +305,12 @@ static void destroy_config(void)
 static inline int AtCommandType2idx(AtCommandType type) { return (type-1); }
 
 /**
- * Checks if player group can use @/#command
+ * Checks if player group can use @/#command, used only during parse (only available during parse)
  * @param group_id ID of the group
  * @param command Command name without @/# and params
  * @param type enum AtCommanndType { COMMAND_ATCOMMAND = 1, COMMAND_CHARCOMMAND = 2 }
  */
-bool pc_group_can_use_command(int group_id, const char *command, AtCommandType type)
-{
+bool pc_group_can_use_command(int group_id, const char *command, AtCommandType type) {
 	int result = 0;
 	config_setting_t *commands = NULL;
 	GroupSettings *group = NULL;
@@ -357,6 +349,7 @@ void pc_group_pc_load(struct map_session_data * sd) {
 	sd->permissions = group->e_permissions;
 	sd->group_pos = group->group_pos;
 	sd->group_level = group->level;
+	sd->group_log_command = group->log_commands;
 }
 /**
  * Checks if player group has a permission
@@ -442,7 +435,6 @@ void do_final_pc_groups(void)
 		db_destroy(pc_group_db);
 	if (pc_groupname_db != NULL )
 		db_destroy(pc_groupname_db);
-	destroy_config();
 }
 
 /**

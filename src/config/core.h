@@ -34,11 +34,6 @@
 /// We kindly ask you to consider keeping it enabled, it helps us improve Hercules.
 //#define STATS_OPT_OUT
 
-/// uncomment to enable query_sql script command and mysql logs to function on it's own thread
-/// be aware this feature is under tests and you should use at your own risk, we however
-/// welcome any feedback you may have regarding this feature, please send us all bug reports.
-//#define BETA_THREAD_TEST
-
 /// Uncomment to enable the Cell Stack Limit mod.
 /// It's only config is the battle_config cell_stack_limit.
 /// Only chars affected are those defined in BL_CHAR (mobs and players currently)
@@ -50,6 +45,17 @@
 /// Enabling this changes such checks to circular checks, which is more realistic,
 /// - but is not the official behaviour.
 //#define CIRCULAR_AREA
+
+//This is the distance at which @autoloot works,
+//if the item drops farther from the player than this,
+//it will not be autolooted. [Skotlex]
+//Note: The range is unlimited unless this define is set.
+//#define AUTOLOOT_DISTANCE AREA_SIZE
+
+/// Uncomment to switch the way map zones' "skill_damage_cap" functions.
+/// When commented the cap takes place before modifiers, as to have them be useful.
+/// When uncommented the cap takes place after modifiers.
+//#define HMAP_ZONE_DAMAGE_CAP_TYPE
 
 /// Uncomment to enable Non Stackable items unique ID
 /// By enabling it, the system will create an unique id for each new non stackable item created

@@ -1,11 +1,12 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef	_VENDING_H_
 #define	_VENDING_H_
 
 #include "../common/cbasetypes.h"
-//#include "map.h"
+#include "../common/db.h"
 struct map_session_data;
 struct s_search_store_search;
 
@@ -15,11 +16,23 @@ struct s_vending {
 	unsigned int value; //at wich price
 };
 
-void vending_closevending(struct map_session_data* sd);
-void vending_openvending(struct map_session_data* sd, const char* message, const uint8* data, int count);
-void vending_vendinglistreq(struct map_session_data* sd, int id);
-void vending_purchasereq(struct map_session_data* sd, int aid, int uid, const uint8* data, int count);
-bool vending_search(struct map_session_data* sd, unsigned short nameid);
-bool vending_searchall(struct map_session_data* sd, const struct s_search_store_search* s);
+struct vending_interface {
+	unsigned int next_id;/* next vender id */
+	DBMap *db;
+	/* */
+	void (*init) (void);
+	void (*final) (void);
+	/* */
+	void (*close) (struct map_session_data* sd);
+	void (*open) (struct map_session_data* sd, const char* message, const uint8* data, int count);
+	void (*list) (struct map_session_data* sd, unsigned int id);
+	void (*purchase) (struct map_session_data* sd, int aid, unsigned int uid, const uint8* data, int count);
+	bool (*search) (struct map_session_data* sd, unsigned short nameid);
+	bool (*searchall) (struct map_session_data* sd, const struct s_search_store_search* s);
+} vending_s;
+
+struct vending_interface * vending;
+
+void vending_defaults(void);
 
 #endif /* _VENDING_H_ */
