@@ -125,8 +125,7 @@ int max_connect_user = -1;
 int gm_allow_group = -1;
 int autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
 int start_zeny = 0;
-int start_weapon = 1201;
-int start_armor = 2301;
+int start_items[64]; //32 starting items allowed [mkbu95]
 int guild_exp_rate = 100;
 
 //Custom limits for the fame lists. [Skotlex]
@@ -1523,7 +1522,7 @@ int make_new_char_sql(struct char_session_data* sd, char* name_, int str, int ag
 
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
-	int char_id, flag;
+	int char_id, flag, k;
 
 	safestrncpy(name, name_, NAME_LENGTH);
 	normalize_name(name,TRIM_CHARS);
@@ -1587,13 +1586,10 @@ int make_new_char_sql(struct char_session_data* sd, char* name_, int str, int ag
 	//Retrieve the newly auto-generated char id
 	char_id = (int)Sql_LastInsertId(sql_handle);
 	//Give the char the default items
-	if (start_weapon > 0) { //add Start Weapon (Knife?)
-		if( SQL_ERROR == Sql_Query(sql_handle, "INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')", inventory_db, char_id, start_weapon, 1, 1) )
-			Sql_ShowDebug(sql_handle);
-	}
-	if (start_armor > 0) { //Add default armor (cotton shirt?)
-		if( SQL_ERROR == Sql_Query(sql_handle, "INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')", inventory_db, char_id, start_armor, 1, 1) )
-			Sql_ShowDebug(sql_handle);
+	
+	for (k = 0; k < ARRAYLENGTH(start_items) && start_items[k] != 0; k += 2) {
+		if( SQL_ERROR == Sql_Query(sql_handle, "INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')", inventory_db, char_id, start_items[k], start_items[k + 1], 1) )
+				Sql_ShowDebug(sql_handle);
 	}
 
 	ShowInfo("Created char: account: %d, char: %d, slot: %d, name: %s\n", sd->account_id, char_id, slot, name);
@@ -4788,18 +4784,29 @@ int char_config_read(const char* cfgName)
 				ShowError("Specified start_point %s not found in map-index cache.\n", map);
 			start_point.x = x;
 			start_point.y = y;
+		} else if (strcmpi(w1, "start_items") == 0) {
+			int i;
+			char *split, *split2;
+
+			i = 0;
+			split = strtok(w2, ",");
+			while (split != NULL) {
+				split2 = split;
+				split = strtok(NULL, ",");
+				start_items[i] = atoi(split2);
+				if (start_items[i] < 0)
+					start_items[i] = 0;
+				++i;
+			}
+
+			if (i%2) { //we know it must be a even number
+				ShowError("Specified 'start_items' is missing a parameter. Removing '%d'.\n", start_items[i - 1]);
+				start_items[i - 1] = 0;
+			}
 		} else if (strcmpi(w1, "start_zeny") == 0) {
 			start_zeny = atoi(w2);
 			if (start_zeny < 0)
 				start_zeny = 0;
-		} else if (strcmpi(w1, "start_weapon") == 0) {
-			start_weapon = atoi(w2);
-			if (start_weapon < 0)
-				start_weapon = 0;
-		} else if (strcmpi(w1, "start_armor") == 0) {
-			start_armor = atoi(w2);
-			if (start_armor < 0)
-				start_armor = 0;
 		} else if(strcmpi(w1,"log_char")==0) {		//log char or not [devil]
 			log_char = atoi(w2);
 		} else if (strcmpi(w1, "unknown_char_name") == 0) {
