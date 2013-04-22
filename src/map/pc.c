@@ -99,10 +99,6 @@ int pc_class2idx(int class_) {
 	return class_;
 }
 
-inline int pc_get_group_id(struct map_session_data *sd) {
-	return sd->group_id;
-}
-
 inline int pc_get_group_level(struct map_session_data *sd) {
 	return sd->group_level;
 }
