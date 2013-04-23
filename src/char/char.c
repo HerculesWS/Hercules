@@ -4790,7 +4790,7 @@ int char_config_read(const char* cfgName)
 
 			i = 0;
 			split = strtok(w2, ",");
-			while (split != NULL && i < MAX_START_ITEMS) {
+			while (split != NULL && i < MAX_START_ITEMS*2) {
 				split2 = split;
 				split = strtok(NULL, ",");
 				start_items[i] = atoi(split2);
