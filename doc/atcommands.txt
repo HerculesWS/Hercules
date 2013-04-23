@@ -9,7 +9,7 @@
 //============================================================
 
 This file describes the usage of in-game commands and assumes that
-'conf/atcommand_athena.conf' has the following:
+'conf/atcommand.conf' has the following:
 	atcommand_symbol : "@"
 	charcommand_symbol: "#"
 
