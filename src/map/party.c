@@ -786,7 +786,7 @@ int party_send_message(struct map_session_data *sd,const char *mes,int len)
 	party_recv_message(sd->status.party_id,sd->status.account_id,mes,len);
 
 	// Chat logging type 'P' / Party Chat
-	log_chat(LOG_CHAT_PARTY, sd->status.party_id, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);
+	logs->chat(LOG_CHAT_PARTY, sd->status.party_id, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);
 
 	return 0;
 }
@@ -910,6 +910,9 @@ int party_exp_share(struct party_data* p, struct block_list* src, unsigned int b
 {
 	struct map_session_data* sd[MAX_PARTY];
 	unsigned int i, c;
+#ifdef RENEWAL_EXP
+	unsigned int job_exp_bonus, base_exp_bonus;
+#endif
 
 	nullpo_ret(p);
 
@@ -926,8 +929,7 @@ int party_exp_share(struct party_data* p, struct block_list* src, unsigned int b
 	job_exp/=c;
 	zeny/=c;
 
-	if (battle_config.party_even_share_bonus && c > 1)
-	{
+	if (battle_config.party_even_share_bonus && c > 1) {
 		double bonus = 100 + battle_config.party_even_share_bonus*(c-1);
 		if (base_exp)
 			base_exp = (unsigned int) cap_value(base_exp * bonus/100, 0, UINT_MAX);
@@ -937,12 +939,17 @@ int party_exp_share(struct party_data* p, struct block_list* src, unsigned int b
 			zeny = (unsigned int) cap_value(zeny * bonus/100, INT_MIN, INT_MAX);
 	}
 
+#ifdef RENEWAL_EXP
+	base_exp_bonus = base_exp;
+	job_exp_bonus  = job_exp;
+#endif
+	
 	for (i = 0; i < c; i++) {
 #ifdef RENEWAL_EXP
 		if( !(src && src->type == BL_MOB && ((TBL_MOB*)src)->db->mexp) ){
 			int rate = pc_level_penalty_mod(sd[i], (TBL_MOB*)src, 1);
-			base_exp = (unsigned int)cap_value(base_exp * rate / 100, 1, UINT_MAX);
-			job_exp = (unsigned int)cap_value(job_exp * rate / 100, 1, UINT_MAX);
+			base_exp = (unsigned int)cap_value(base_exp_bonus * rate / 100, 1, UINT_MAX);
+			job_exp = (unsigned int)cap_value(job_exp_bonus * rate / 100, 1, UINT_MAX);
 		}
 #endif
 		pc_gainexp(sd[i], src, base_exp, job_exp, false);

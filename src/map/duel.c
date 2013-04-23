@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 
@@ -95,7 +96,7 @@ int duel_create(struct map_session_data* sd, const unsigned int maxpl)
 	clif->disp_onlyself(sd, output, strlen(output));
 	
 	clif->map_property(sd, MAPPROPERTY_FREEPVPZONE);
-	//clif->misceffect2(&sd->bl, 159);
+	clif->maptypeproperty2(&sd->bl,SELF);
 	return i;
 }
 
@@ -141,6 +142,7 @@ void duel_leave(const unsigned int did, struct map_session_data* sd)
 	sd->duel_group = 0;
 	duel_savetime(sd);
 	clif->map_property(sd, MAPPROPERTY_NOTHING);
+	clif->maptypeproperty2(&sd->bl,SELF);
 }
 
 void duel_accept(const unsigned int did, struct map_session_data* sd)
@@ -157,7 +159,7 @@ void duel_accept(const unsigned int did, struct map_session_data* sd)
 	clif->disp_message(&sd->bl, output, strlen(output), DUEL_WOS);
 
 	clif->map_property(sd, MAPPROPERTY_FREEPVPZONE);
-	//clif->misceffect2(&sd->bl, 159);
+	clif->maptypeproperty2(&sd->bl,SELF);
 }
 
 void duel_reject(const unsigned int did, struct map_session_data* sd)

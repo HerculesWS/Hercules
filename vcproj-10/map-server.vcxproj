@@ -171,6 +171,7 @@
     <ClInclude Include="..\src\map\elemental.h" />
     <ClInclude Include="..\src\map\guild.h" />
     <ClInclude Include="..\src\map\intif.h" />
+    <ClInclude Include="..\src\map\irc-bot.h" />
     <ClInclude Include="..\src\map\itemdb.h" />
     <ClInclude Include="..\src\map\log.h" />
     <ClInclude Include="..\src\map\mail.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="..\src\map\mob.h" />
     <ClInclude Include="..\src\map\npc.h" />
     <ClInclude Include="..\src\map\packets.h" />
+    <ClInclude Include="..\src\map\packets_struct.h" />
     <ClInclude Include="..\src\map\party.h" />
     <ClInclude Include="..\src\map\path.h" />
     <ClInclude Include="..\src\map\pc.h" />
@@ -243,6 +245,7 @@
     <ClCompile Include="..\src\map\elemental.c" />
     <ClCompile Include="..\src\map\guild.c" />
     <ClCompile Include="..\src\map\intif.c" />
+    <ClCompile Include="..\src\map\irc-bot.c" />
     <ClCompile Include="..\src\map\itemdb.c" />
     <ClCompile Include="..\src\map\log.c" />
     <ClCompile Include="..\src\map\mail.c" />

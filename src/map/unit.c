@@ -330,7 +330,7 @@ int unit_walktoxy( struct block_list *bl, short x, short y, int flag)
 		&& wpd.path_len > 14 ) // Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett]
 		return 0;
 #endif
-	if( battle_config.max_walk_path < wpd.path_len )
+	if( (battle_config.max_walk_path < wpd.path_len) && (bl->type != BL_NPC) )
 		return 0;
 
 	if (flag&4 && DIFF_TICK(ud->canmove_tick, gettick()) > 0 &&
@@ -406,7 +406,7 @@ int unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, int 
 
 	ud = unit_bl2ud(bl);
 	if( ud == NULL) return 0;
-	
+
 	if (!(status_get_mode(bl)&MD_CANMOVE))
 		return 0;
 
@@ -416,13 +416,13 @@ int unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, int 
 		ud->target_to = 0;
 		return 0;
 	}
-	
+
 	ud->state.walk_easy = flag&1;
 	ud->target_to = tbl->id;
 	ud->chaserange = range; //Note that if flag&2, this SHOULD be attack-range
 	ud->state.attack_continue = flag&2?1:0; //Chase to attack.
 	unit_set_target(ud, 0);
-	
+
 	sc = status_get_sc(bl);
 	if (sc && sc->data[SC_CONFUSION]) //Randomize the target position
 		map_random_dir(bl, &ud->to_x, &ud->to_y);
@@ -432,7 +432,7 @@ int unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, int 
 		set_mobstate(bl, flag&2);
 		return 1;
 	}
-	
+
 	if(DIFF_TICK(ud->canmove_tick, gettick()) > 0)
 	{	//Can't move, wait a bit before invoking the movement.
 		add_timer(ud->canmove_tick+1, unit_walktobl_sub, bl->id, ud->target);
@@ -1149,40 +1149,40 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	if(sd) {
 
 		if( (skill->get_inf2(skill_id)&INF2_ENSEMBLE_SKILL) && skill->check_pc_partner(sd, skill_id, &skill_lv, 1, 0) < 1 ) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0); 
+			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			return 0; 
-        } 
-
+        }
+		
 		switch(skill_id){
-		case SA_CASTCANCEL:
-			if(ud->skill_id != skill_id){
-				sd->skill_id_old = ud->skill_id;
-				sd->skill_lv_old = ud->skill_lv;
+			case SA_CASTCANCEL:
+				if(ud->skill_id != skill_id){
+					sd->skill_id_old = ud->skill_id;
+					sd->skill_lv_old = ud->skill_lv;
+				}
+				break;
+			case BD_ENCORE:
+				//Prevent using the dance skill if you no longer have the skill in your tree.
+				if(!sd->skill_id_dance || pc_checkskill(sd,sd->skill_id_dance)<=0){
+					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+					return 0;
+				}
+				sd->skill_id_old = skill_id;
+				break;
+			case WL_WHITEIMPRISON:
+				if( battle->check_target(src,target,BCT_SELF|BCT_ENEMY) < 0 ) {
+					clif->skill_fail(sd,skill_id,USESKILL_FAIL_TOTARGET,0);
+					return 0;
+				}
+				break;
+			case MG_FIREBOLT:
+			case MG_LIGHTNINGBOLT:
+			case MG_COLDBOLT:
+				sd->skill_id_old = skill_id;
+				sd->skill_lv_old = skill_lv;
+				break;
 			}
-			break;
-		case BD_ENCORE:
-			//Prevent using the dance skill if you no longer have the skill in your tree.
-			if(!sd->skill_id_dance || pc_checkskill(sd,sd->skill_id_dance)<=0){
-				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+			if (!skill->check_condition_castbegin(sd, skill_id, skill_lv))
 				return 0;
-			}
-			sd->skill_id_old = skill_id;
-			break;
-		case WL_WHITEIMPRISON:
-			if( battle->check_target(src,target,BCT_SELF|BCT_ENEMY) < 0 ) {
-				clif->skill_fail(sd,skill_id,USESKILL_FAIL_TOTARGET,0);
-				return 0;
-			}
-			break;
-		case MG_FIREBOLT:
-		case MG_LIGHTNINGBOLT:
-		case MG_COLDBOLT:
-			sd->skill_id_old = skill_id;
-			sd->skill_lv_old = skill_lv;
-			break;
-		}
-		if (!skill->check_condition_castbegin(sd, skill_id, skill_lv))
-			return 0;
 	}
 
 	if( src->type == BL_MOB )
@@ -2089,13 +2089,18 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 		case BL_PC: {
 			struct map_session_data *sd = (struct map_session_data*)bl;
 
+			if(sd->shadowform_id){
+			    struct block_list *d_bl = map_id2bl(sd->shadowform_id);
+			    if( d_bl )
+				    status_change_end(d_bl,SC__SHADOWFORM,INVALID_TIMER);
+			}
 			//Leave/reject all invitations.
 			if(sd->chatID)
 				chat_leavechat(sd,0);
 			if(sd->trade_partner)
 				trade_tradecancel(sd);
-			buyingstore_close(sd);
-			searchstore_close(sd);
+			buyingstore->close(sd);
+			searchstore->close(sd);
 			if(sd->state.storage_flag == 1)
 				storage_storage_quit(sd,0);
 			else if (sd->state.storage_flag == 2)

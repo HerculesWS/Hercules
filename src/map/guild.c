@@ -549,6 +549,7 @@ int guild_recv_info(struct guild *sg) {
 				guild_block_skill(sd, 300000);
 
 			//Also set the guild master flag.
+			sd->guild = g;
 			sd->state.gmaster_flag = g;
 			clif->charnameupdate(sd); // [LuzZza]
 			clif->guild_masterormember(sd);
@@ -582,7 +583,7 @@ int guild_recv_info(struct guild *sg) {
 		sd = g->member[i].sd;
 		if( sd==NULL )
 			continue;
-
+		sd->guild = g;
         if (before.guild_lv != g->guild_lv || bm != m ||
                 before.max_member != g->max_member) {
             clif->guild_basicinfo(sd); //Submit basic information
@@ -754,12 +755,15 @@ void guild_member_joined(struct map_session_data *sd)
 		
 		if( hChSys.ally && hChSys.ally_autojoin ) {
 			struct guild* sg = NULL;
-			clif->chsys_join((struct hChSysCh*)g->channel,sd);
+			struct hChSysCh *channel = (struct hChSysCh*)g->channel;
+			
+			if( !(channel->banned && idb_exists(channel->banned, sd->status.account_id) ) )
+				clif->chsys_join(channel,sd);
 
 			for (i = 0; i < MAX_GUILDALLIANCE; i++) {
 				if(	g->alliance[i].guild_id && (sg = guild_search(g->alliance[i].guild_id) ) ) {
-					clif->chsys_join((struct hChSysCh*)sg->channel,sd);
-					break;
+					if( !(((struct hChSysCh*)sg->channel)->banned && idb_exists(((struct hChSysCh*)sg->channel)->banned, sd->status.account_id)))
+						clif->chsys_join((struct hChSysCh*)sg->channel,sd);
 				}
 			}
 		}
@@ -902,17 +906,13 @@ int guild_member_withdraw(int guild_id, int account_id, int char_id, int flag, c
 	clif->guild_memberlist(online_member_sd);
 
 	// update char, if online
-	if(sd != NULL && sd->status.guild_id == guild_id)
-	{
+	if(sd != NULL && sd->status.guild_id == guild_id) {
 		// do stuff that needs the guild_id first, BEFORE we wipe it
 		if (sd->state.storage_flag == 2) //Close the guild storage.
 			storage_guild_storageclose(sd);
 		guild_send_dot_remove(sd);
 		if( hChSys.ally ) {
-			for (i = 0; i < sd->channel_count; i++) {
-				if( sd->channels[i] && sd->channels[i]->type == hChSys_ALLY )
-					clif->chsys_left(sd->channels[i],sd);
-			}
+			clif->chsys_quitg(sd);
 		}
 		sd->status.guild_id = 0;
 		sd->guild = NULL;
@@ -1033,7 +1033,7 @@ int guild_send_message(struct map_session_data *sd,const char *mes,int len)
 	guild_recv_message(sd->status.guild_id,sd->status.account_id,mes,len);
 
 	// Chat logging type 'G' / Guild Chat
-	log_chat(LOG_CHAT_GUILD, sd->status.guild_id, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);
+	logs->chat(LOG_CHAT_GUILD, sd->status.guild_id, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);
 
 	return 0;
 }
@@ -1955,8 +1955,8 @@ int guild_castledatasave(int castle_id, int index, int value)
 
 void guild_castle_reconnect_sub(void *key, void *data, va_list ap)
 {
-	int castle_id = GetWord((int)__64BPRTSIZE(key), 0);
-	int index = GetWord((int)__64BPRTSIZE(key), 1);
+	int castle_id = GetWord((int)__64BPTRSIZE(key), 0);
+	int index = GetWord((int)__64BPTRSIZE(key), 1);
 	intif_guild_castle_datasave(castle_id, index, *(int *)data);
 	aFree(data);
 }
@@ -1977,7 +1977,7 @@ void guild_castle_reconnect(int castle_id, int index, int value)
 		int *data;
 		CREATE(data, int, 1);
 		*data = value;
-		linkdb_replace(&gc_save_pending, (void*)__64BPRTSIZE((MakeDWord(castle_id, index))), data);
+		linkdb_replace(&gc_save_pending, (void*)__64BPTRSIZE((MakeDWord(castle_id, index))), data);
 	}
 }
 

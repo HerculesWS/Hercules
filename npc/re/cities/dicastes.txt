@@ -3,7 +3,7 @@
 //===== By: ================================================== 
 //= Gennosuke Kouga, Muad_Dib
 //===== Current Version: ===================================== 
-//= 1.2
+//= 1.2a
 //===== Compatible With: ===================================== 
 //= rAthena SVN
 //===== Description: ========================================= 
@@ -12,6 +12,7 @@
 //= 1.0 First version.
 //= 1.1 Standardized. [Euphy]
 //= 1.2 Updated to match the official script. [Joseph]
+//= 1.2a Moved Guide to a separate file. [Euphy]
 //============================================================
 
 dicastes01,194,159,5	script	Excited Galten#a	492,{

@@ -76,6 +76,7 @@ int pet_create_egg(struct map_session_data *sd, int item_id)
 {
 	int pet_id = search_petDB_index(item_id, PET_EGG);
 	if (pet_id < 0) return 0; //No pet egg here.
+	if (!pc_inventoryblank(sd)) return 0; // Inventory full
 	sd->catch_target_class = pet_db[pet_id].class_;
 	intif_create_pet(sd->status.account_id, sd->status.char_id,
 		(short)pet_db[pet_id].class_,
@@ -582,6 +583,7 @@ static int pet_ai_sub_hard_lootsearch(struct block_list *bl,va_list ap);
 
 int pet_menu(struct map_session_data *sd,int menunum)
 {
+	struct item_data *egg_id;
 	nullpo_ret(sd);
 	if (sd->pd == NULL)
 		return 1;
@@ -589,6 +591,14 @@ int pet_menu(struct map_session_data *sd,int menunum)
 	//You lost the pet already.
 	if(!sd->status.pet_id || sd->pd->pet.intimate <= 0 || sd->pd->pet.incuvate)
 		return 1;
+		
+	egg_id = itemdb_exists(sd->pd->petDB->EggID);
+	if (egg_id) {
+		if ((egg_id->flag.trade_restriction&0x01) && !pc_inventoryblank(sd)) {
+			clif->message(sd->fd, msg_txt(451)); // You can't return your pet because your inventory is full.
+			return 1;
+		}
+	}
 	
 	switch(menunum) {
 		case 0:
@@ -875,7 +885,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, uns
 		}
 	}
 	
-	if(!target && pd->loot && pd->loot->count < pd->loot->max && DIFF_TICK(tick,pd->ud.canact_tick)>0) {
+	if(!target && pd->loot && pd->msd && pc_has_permission(pd->msd, PC_PERM_TRADE) && pd->loot->count < pd->loot->max && DIFF_TICK(tick,pd->ud.canact_tick)>0) {
 		//Use half the pet's range of sight.
 		map_foreachinrange(pet_ai_sub_hard_lootsearch,&pd->bl,
 			pd->db->range2/2, BL_ITEM,pd,&target);

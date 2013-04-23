@@ -88,7 +88,12 @@ enum actor_classes
 	INVISIBLE_CLASS = 32767,
 };
 
+// Old NPC range
 #define MAX_NPC_CLASS 1000
+// New NPC range
+#define MAX_NPC_CLASS2_START 10000
+#define MAX_NPC_CLASS2_END 10049
+
 //Checks if a given id is a valid npc id. [Skotlex]
 //Since new npcs are added all the time, the max valid value is the one before the first mob (Scorpion = 1001)
 #define npcdb_checkid(id) ( ( (id) >= 46 && (id) <= 125) || (id) == HIDDEN_WARP_CLASS || ( (id) > 400 && (id) < MAX_NPC_CLASS ) || (id) == INVISIBLE_CLASS || ( (id) > 10000 && (id) < 10049 ) )
@@ -174,7 +179,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 /**
  * For the Secure NPC Timeout option (check config/Secure.h) [RR]
  **/
-#if SECURE_NPCTIMEOUT
+#ifdef SECURE_NPCTIMEOUT
 	int npc_rr_secure_timeout_timer(int tid, unsigned int tick, int id, intptr_t data);
 #endif
 

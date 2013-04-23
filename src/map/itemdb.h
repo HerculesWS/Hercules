@@ -155,6 +155,8 @@ struct item_combo {
 	bool isRef;/* whether this struct is a reference or the master */
 };
 
+struct item_group itemgroup_db[MAX_ITEMGROUP];
+
 struct item_data* itemdb_searchname(const char *name);
 int itemdb_searchname_array(struct item_data** data, int size, const char *str);
 struct item_data* itemdb_load(int nameid);
@@ -216,6 +218,7 @@ int itemdb_isrestricted(struct item* item, int gmlv, int gmlv2, int (*func)(stru
 int itemdb_isequip(int);
 int itemdb_isequip2(struct item_data *);
 int itemdb_isidentified(int);
+int itemdb_isidentified2(struct item_data *data);
 int itemdb_isstackable(int);
 int itemdb_isstackable2(struct item_data *);
 uint64 itemdb_unique_id(int8 flag, int64 value); // Unique Item ID

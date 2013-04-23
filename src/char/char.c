@@ -125,8 +125,7 @@ int max_connect_user = -1;
 int gm_allow_group = -1;
 int autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
 int start_zeny = 0;
-int start_weapon = 1201;
-int start_armor = 2301;
+int start_items[MAX_START_ITEMS*2];
 int guild_exp_rate = 100;
 
 //Custom limits for the fame lists. [Skotlex]
@@ -436,7 +435,7 @@ int mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		else
 			errors++;
 	}
-
+	
 	if (
 		(p->base_exp != cp->base_exp) || (p->base_level != cp->base_level) ||
 		(p->job_level != cp->job_level) || (p->job_exp != cp->job_exp) ||
@@ -453,9 +452,16 @@ int mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		(p->pet_id != cp->pet_id) || (p->weapon != cp->weapon) || (p->hom_id != cp->hom_id) ||
 		(p->ele_id != cp->ele_id) || (p->shield != cp->shield) || (p->head_top != cp->head_top) ||
 		(p->head_mid != cp->head_mid) || (p->head_bottom != cp->head_bottom) || (p->delete_date != cp->delete_date) ||
-		(p->rename != cp->rename) || (p->slotchange != cp->slotchange) || (p->robe != cp->robe)
-	)
-	{	//Save status
+		(p->rename != cp->rename) || (p->slotchange != cp->slotchange) || (p->robe != cp->robe) ||
+		(p->show_equip != cp->show_equip) || (p->allow_party != cp->allow_party)
+	) {	//Save status
+		unsigned int opt = 0;
+		
+		if( p->allow_party )
+			opt |= OPT_ALLOW_PARTY;
+		if( p->show_equip )
+			opt |= OPT_SHOW_EQUIP;
+		
 		if( SQL_ERROR == Sql_Query(sql_handle, "UPDATE `%s` SET `base_level`='%d', `job_level`='%d',"
 			"`base_exp`='%u', `job_exp`='%u', `zeny`='%d',"
 			"`max_hp`='%d',`hp`='%d',`max_sp`='%d',`sp`='%d',`status_point`='%d',`skill_point`='%d',"
@@ -463,7 +469,7 @@ int mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			"`option`='%d',`party_id`='%d',`guild_id`='%d',`pet_id`='%d',`homun_id`='%d',`elemental_id`='%d',"
 			"`weapon`='%d',`shield`='%d',`head_top`='%d',`head_mid`='%d',`head_bottom`='%d',"
 			"`last_map`='%s',`last_x`='%d',`last_y`='%d',`save_map`='%s',`save_x`='%d',`save_y`='%d', `rename`='%d',"
-			"`delete_date`='%lu',`robe`='%d',`slotchange`='%d'"
+			"`delete_date`='%lu',`robe`='%d',`slotchange`='%d', `char_opt`='%u'"
 			" WHERE  `account_id`='%d' AND `char_id` = '%d'",
 			char_db, p->base_level, p->job_level,
 			p->base_exp, p->job_exp, p->zeny,
@@ -474,7 +480,7 @@ int mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			mapindex_id2name(p->last_point.map), p->last_point.x, p->last_point.y,
 			mapindex_id2name(p->save_point.map), p->save_point.x, p->save_point.y, p->rename,
 			(unsigned long)p->delete_date,  // FIXME: platform-dependent size
-			p->robe,p->slotchange,
+			p->robe,p->slotchange,opt,
 			p->account_id, p->char_id) )
 		{
 			Sql_ShowDebug(sql_handle);
@@ -1051,7 +1057,7 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 		sd->found_char[p.slot] = p.char_id;
 		j += mmo_char_tobuf(WBUFP(buf, j), &p);
 	}
-
+	
 	memset(sd->new_name,0,sizeof(sd->new_name));
 
 	SqlStmt_Free(stmt);
@@ -1077,6 +1083,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	struct hotkey tmp_hotkey;
 	int hotkey_num;
 #endif
+	unsigned int opt;
 
 	memset(p, 0, sizeof(struct mmo_charstatus));
 
@@ -1095,7 +1102,8 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 		"`str`,`agi`,`vit`,`int`,`dex`,`luk`,`max_hp`,`hp`,`max_sp`,`sp`,"
 		"`status_point`,`skill_point`,`option`,`karma`,`manner`,`party_id`,`guild_id`,`pet_id`,`homun_id`,`elemental_id`,`hair`,"
 		"`hair_color`,`clothes_color`,`weapon`,`shield`,`head_top`,`head_mid`,`head_bottom`,`last_map`,`last_x`,`last_y`,"
-		"`save_map`,`save_x`,`save_y`,`partner_id`,`father`,`mother`,`child`,`fame`,`rename`,`delete_date`,`robe`,`slotchange`"
+		"`save_map`,`save_x`,`save_y`,`partner_id`,`father`,`mother`,`child`,`fame`,`rename`,`delete_date`,`robe`,`slotchange`,"
+		"`char_opt`"
 		" FROM `%s` WHERE `char_id`=? LIMIT 1", char_db)
 	||	SQL_ERROR == SqlStmt_BindParam(stmt, 0, SQLDT_INT, &char_id, 0)
 	||	SQL_ERROR == SqlStmt_Execute(stmt)
@@ -1152,6 +1160,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	||	SQL_ERROR == SqlStmt_BindColumn(stmt, 50, SQLDT_UINT32, &p->delete_date, 0, NULL, NULL)
 	||	SQL_ERROR == SqlStmt_BindColumn(stmt, 51, SQLDT_SHORT,  &p->robe, 0, NULL, NULL)
 	||	SQL_ERROR == SqlStmt_BindColumn(stmt, 52, SQLDT_USHORT, &p->slotchange, 0, NULL, NULL)
+	||	SQL_ERROR == SqlStmt_BindColumn(stmt, 53, SQLDT_UINT,	&opt, 0, NULL, NULL)
 	)
 	{
 		SqlStmt_ShowDebug(stmt);
@@ -1323,6 +1332,12 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	SqlStmt_Free(stmt);
 	StringBuf_Destroy(&buf);
 
+	/* load options into proper vars */
+	if( opt & OPT_ALLOW_PARTY )
+		p->allow_party = true;
+	if( opt & OPT_SHOW_EQUIP )
+		p->show_equip = true;
+	
 	cp = idb_ensure(char_db_, char_id, create_charstatus);
 	memcpy(cp, p, sizeof(struct mmo_charstatus));
 	return 1;
@@ -1507,7 +1522,7 @@ int make_new_char_sql(struct char_session_data* sd, char* name_, int str, int ag
 
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
-	int char_id, flag;
+	int char_id, flag, k;
 
 	safestrncpy(name, name_, NAME_LENGTH);
 	normalize_name(name,TRIM_CHARS);
@@ -1571,13 +1586,10 @@ int make_new_char_sql(struct char_session_data* sd, char* name_, int str, int ag
 	//Retrieve the newly auto-generated char id
 	char_id = (int)Sql_LastInsertId(sql_handle);
 	//Give the char the default items
-	if (start_weapon > 0) { //add Start Weapon (Knife?)
-		if( SQL_ERROR == Sql_Query(sql_handle, "INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')", inventory_db, char_id, start_weapon, 1, 1) )
-			Sql_ShowDebug(sql_handle);
-	}
-	if (start_armor > 0) { //Add default armor (cotton shirt?)
-		if( SQL_ERROR == Sql_Query(sql_handle, "INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')", inventory_db, char_id, start_armor, 1, 1) )
-			Sql_ShowDebug(sql_handle);
+	
+	for (k = 0; k < ARRAYLENGTH(start_items) && start_items[k] != 0; k += 2) {
+		if( SQL_ERROR == Sql_Query(sql_handle, "INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')", inventory_db, char_id, start_items[k], start_items[k + 1], 1) )
+				Sql_ShowDebug(sql_handle);
 	}
 
 	ShowInfo("Created char: account: %d, char: %d, slot: %d, name: %s\n", sd->account_id, char_id, slot, name);
@@ -1865,7 +1877,27 @@ int mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p)
 
 	return 106+offset;
 }
-
+	int mmo_char_send006b(int fd, struct char_session_data* sd);
+//----------------------------------------
+// [Ind/Hercules] notify client about charselect window data
+//----------------------------------------
+void mmo_char_send082d(int fd, struct char_session_data* sd) {
+	if (save_log)
+		ShowInfo("Loading Char Data ("CL_BOLD"%d"CL_RESET")\n",sd->account_id);
+	
+	WFIFOHEAD(fd,29);
+	WFIFOW(fd,0) = 0x82d;
+	WFIFOW(fd,2) = 29;
+	WFIFOB(fd,4) = sd->char_slots;
+	WFIFOB(fd,5) = MAX_CHARS - sd->char_slots;
+	WFIFOB(fd,6) = MAX_CHARS - sd->char_slots;
+	WFIFOB(fd,7) = sd->char_slots;
+	WFIFOB(fd,8) = sd->char_slots;
+	memset(WFIFOP(fd,9), 0, 20); // unused bytes
+	WFIFOSET(fd,29);
+	mmo_char_send006b(fd,sd);
+	
+}
 //----------------------------------------
 // Function to send characters to a player
 //----------------------------------------
@@ -1874,11 +1906,10 @@ int mmo_char_send006b(int fd, struct char_session_data* sd)
 	int j, offset = 0;
 #if PACKETVER >= 20100413
 	offset += 3;
-#endif
-
+#endif	
 	if (save_log)
 		ShowInfo("Loading Char Data ("CL_BOLD"%d"CL_RESET")\n",sd->account_id);
-
+	
 	j = 24 + offset; // offset
 	WFIFOHEAD(fd,j + MAX_CHARS*MAX_CHAR_BUF);
 	WFIFOW(fd,0) = 0x6b;
@@ -2179,7 +2210,7 @@ int parse_fromlogin(int fd) {
 				if( sd->char_slots > MAX_CHARS ) {
 					ShowError("Account '%d' `character_slots` column is higher than supported MAX_CHARS (%d), update MAX_CHARS in mmo.h! capping to MAX_CHARS...\n",sd->account_id,sd->char_slots);
 					sd->char_slots = MAX_CHARS;/* cap to maximum */
-				} else if ( !sd->char_slots )/* no value aka 0 in sql */
+				} else if ( sd->char_slots <= 0 )/* no value aka 0 in sql */
 					sd->char_slots = MAX_CHARS;/* cap to maximum */
 				safestrncpy(sd->birthdate, (const char*)RFIFOP(fd,52), sizeof(sd->birthdate));
 				safestrncpy(sd->pincode, (const char*)RFIFOP(fd,63), sizeof(sd->pincode));
@@ -2196,7 +2227,11 @@ int parse_fromlogin(int fd) {
 					WFIFOSET(i,3);
 				} else {
 					// send characters to player
+#if PACKETVER >= 20130000
+					mmo_char_send082d(i, sd);
+#else
 					mmo_char_send006b(i, sd);
+#endif
 #if PACKETVER >= 20110309
 					pincode->handle(i, sd);
 #endif
@@ -3615,8 +3650,7 @@ static void char_delete2_accept(int fd, struct char_session_data* sd)
 	}
 
 	// refresh character list cache
-	for(k = i; k < MAX_CHARS-1; k++)
-	{
+	for(k = i; k < MAX_CHARS-1; k++) {
 		sd->found_char[k] = sd->found_char[k+1];
 	}
 	sd->found_char[MAX_CHARS-1] = -1;
@@ -4285,12 +4319,16 @@ int parse_char(int fd)
 					WFIFOSET(fd, 8);
 					/* for some stupid reason it requires the char data again (gravity -_-) */
 					if( ret )
-						mmo_char_send006b( fd, sd );
+#if PACKETVER >= 20130000
+						mmo_char_send082d(fd, sd);
+#else
+						mmo_char_send006b(fd, sd);
+#endif
 						
 					RFIFOSKIP(fd, 8);
 				}
 			break;
-					
+				
 			// unknown packet received
 			default:
 				ShowError("parse_char: Received unknown packet "CL_WHITE"0x%x"CL_RESET" from ip '"CL_WHITE"%s"CL_RESET"'! Disconnecting!\n", RFIFOW(fd,0), ip2str(ipl, NULL));
@@ -4746,18 +4784,29 @@ int char_config_read(const char* cfgName)
 				ShowError("Specified start_point %s not found in map-index cache.\n", map);
 			start_point.x = x;
 			start_point.y = y;
+		} else if (strcmpi(w1, "start_items") == 0) {
+			int i;
+			char *split, *split2;
+
+			i = 0;
+			split = strtok(w2, ",");
+			while (split != NULL && i < MAX_START_ITEMS*2) {
+				split2 = split;
+				split = strtok(NULL, ",");
+				start_items[i] = atoi(split2);
+				if (start_items[i] < 0)
+					start_items[i] = 0;
+				++i;
+			}
+
+			if (i%2) { //we know it must be a even number
+				ShowError("Specified 'start_items' is missing a parameter. Removing '%d'.\n", start_items[i - 1]);
+				start_items[i - 1] = 0;
+			}
 		} else if (strcmpi(w1, "start_zeny") == 0) {
 			start_zeny = atoi(w2);
 			if (start_zeny < 0)
 				start_zeny = 0;
-		} else if (strcmpi(w1, "start_weapon") == 0) {
-			start_weapon = atoi(w2);
-			if (start_weapon < 0)
-				start_weapon = 0;
-		} else if (strcmpi(w1, "start_armor") == 0) {
-			start_armor = atoi(w2);
-			if (start_armor < 0)
-				start_armor = 0;
 		} else if(strcmpi(w1,"log_char")==0) {		//log char or not [devil]
 			log_char = atoi(w2);
 		} else if (strcmpi(w1, "unknown_char_name") == 0) {

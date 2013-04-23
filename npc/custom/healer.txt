@@ -30,7 +30,7 @@
 		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
 	}
 	if (.@Delay) set @HD, gettimetick(2)+.@Delay;
-	close;
+	end;
 }
 
 alberta,25,240,6	duplicate(Healer)	Healer#alb	909

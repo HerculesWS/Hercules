@@ -96,6 +96,7 @@ static DBMap *npc_path_db;
 
 //For holding the view data of npc classes. [Skotlex]
 static struct view_data npc_viewdb[MAX_NPC_CLASS];
+static struct view_data npc_viewdb2[MAX_NPC_CLASS2_END-MAX_NPC_CLASS2_START];
 
 static struct script_event_s
 {	//Holds pointers to the commonly executed scripts for speedup. [Skotlex]
@@ -108,8 +109,13 @@ struct view_data* npc_get_viewdata(int class_)
 {	//Returns the viewdata for normal npc classes.
 	if( class_ == INVISIBLE_CLASS )
 		return &npc_viewdb[0];
-	if (npcdb_checkid(class_) || class_ == WARP_CLASS)
-		return &npc_viewdb[class_];
+	if (npcdb_checkid(class_) || class_ == WARP_CLASS){
+		if( class_ > MAX_NPC_CLASS2_START ){
+			return &npc_viewdb2[class_-MAX_NPC_CLASS2_START];
+		}else{
+			return &npc_viewdb[class_];
+		}
+	}
 	return NULL;
 }
 
@@ -234,17 +240,29 @@ struct npc_data* npc_name2id(const char* name)
 /**
  * For the Secure NPC Timeout option (check config/Secure.h) [RR]
  **/
-#if SECURE_NPCTIMEOUT
+#ifdef SECURE_NPCTIMEOUT
 /**
  * Timer to check for idle time and timeout the dialog if necessary
  **/
 int npc_rr_secure_timeout_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	struct map_session_data* sd = NULL;
+	unsigned int timeout = NPC_SECURE_TIMEOUT_NEXT;
 	if( (sd = map_id2sd(id)) == NULL || !sd->npc_id ) {
 		if( sd ) sd->npc_idle_timer = INVALID_TIMER;
 		return 0;//Not logged in anymore OR no longer attached to a npc
 	}
-	if( DIFF_TICK(tick,sd->npc_idle_tick) > (SECURE_NPCTIMEOUT*1000) ) {
+	
+	switch( sd->npc_idle_type ) {
+		case NPCT_INPUT:
+			timeout = NPC_SECURE_TIMEOUT_INPUT;
+			break;
+		case NPCT_MENU:
+			timeout = NPC_SECURE_TIMEOUT_MENU;
+			break;
+		//case NPCT_WAIT: var starts with this value
+	}
+	
+	if( DIFF_TICK(tick,sd->npc_idle_tick) > (timeout*1000) ) {
 		/**
 		 * If we still have the NPC script attached, tell it to stop.
 		 **/
@@ -1234,7 +1252,7 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing)
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/
-#if SECURE_NPCTIMEOUT
+#ifdef SECURE_NPCTIMEOUT
 	/**
 	 * Update the last NPC iteration
 	 **/
@@ -2133,6 +2151,11 @@ static const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const 
 		return strchr(start,'\n');// skip and continue
 	}
 
+	if( m != -1 && ( x < 0 || x >= map[m].xs || y < 0 || y >= map[m].ys ) ) {
+		ShowError("npc_parse_warp: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d, in file '%s', line '%d'\n", map[m].name, x, y, map[m].xs, map[m].ys,filepath,strline(buffer,start-buffer));
+		return strchr(start,'\n');;//try next
+	}
+	
 	CREATE(nd, struct npc_data, 1);
 
 	nd->bl.id = npc_get_new_npc_id();
@@ -2180,13 +2203,10 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 	struct npc_data *nd;
 	enum npc_subtype type;
 
-	if( strcmp(w1,"-") == 0 )
-	{// 'floating' shop?
+	if( strcmp(w1,"-") == 0 ) {// 'floating' shop?
 		x = y = dir = 0;
 		m = -1;
-	}
-	else
-	{// w1=<map name>,<x>,<y>,<facing>
+	} else {// w1=<map name>,<x>,<y>,<facing>
 		char mapname[32];
 		if( sscanf(w1, "%31[^,],%d,%d,%d", mapname, &x, &y, &dir) != 4
 		||	strchr(w4, ',') == NULL )
@@ -2198,6 +2218,11 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 		m = map_mapname2mapid(mapname);
 	}
 
+	if( m != -1 && ( x < 0 || x >= map[m].xs || y < 0 || y >= map[m].ys ) ) {
+		ShowError("npc_parse_shop: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d, in file '%s', line '%d'\n", map[m].name, x, y, map[m].xs, map[m].ys,filepath,strline(buffer,start-buffer));
+		return strchr(start,'\n');;//try next
+	}
+	
 	if( !strcasecmp(w2,"cashshop") )
 		type = CASHSHOP;
 	else
@@ -2583,6 +2608,11 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		m = map_mapname2mapid(mapname);
 	}
 
+	if( m != -1 && ( x < 0 || x >= map[m].xs || y < 0 || y >= map[m].ys ) ) {
+		ShowError("npc_parse_duplicate: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d, in file '%s', line '%d'\n", map[m].name, x, y, map[m].xs, map[m].ys,filepath,strline(buffer,start-buffer));
+		return end;//try next
+	}
+	
 	if( type == WARP && sscanf(w4, "%d,%d", &xs, &ys) == 2 );// <spanx>,<spany>
 	else if( type == SCRIPT && sscanf(w4, "%d,%d,%d", &class_, &xs, &ys) == 3);// <sprite id>,<triggerX>,<triggerY>
 	else if( type != WARP ) class_ = atoi(w4);// <sprite id>
@@ -2911,18 +2941,20 @@ int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const c
 	for( i = 0; i < ( strlen( message ) + 1 ) && k < 127; i ++ ) {
 		if( message[i] == ' ' || message[i] == '\0' ) {
 			if( message[ ( i - 1 ) ] == ' ' ) {
-				continue; // To prevent "@atcmd [space][space][space]..."
+				continue; // To prevent "@atcmd [space][space]" and .@atcmd_numparameters return 1 without any parameter.
 			}
 			temp[k] = '\0';
 			k = 0;
-			setd_sub( st, NULL, ".@atcmd_parameters$", j++, (void *)temp, NULL );
+			if( temp[0] != '\0' ) {
+				setd_sub( st, NULL, ".@atcmd_parameters$", j++, (void *)temp, NULL );
+			}
 		} else {
 			temp[k] = message[i];
 			k++;
 		}
 	}
 
-	setd_sub(st, NULL, ".@atcmd_numparameters", 0, (void *)__64BPRTSIZE(j), NULL);
+	setd_sub(st, NULL, ".@atcmd_numparameters", 0, (void *)__64BPTRSIZE(j), NULL);
 	aFree(temp);
 
 	run_script_main(st);
@@ -3365,8 +3397,6 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		map[m].flag.leaves=state;
 	else if (!strcmpi(w3,"nightenabled"))
 		map[m].flag.nightenabled=state;
-	else if (!strcmpi(w3,"nogo"))
-		map[m].flag.nogo=state;
 	else if (!strcmpi(w3,"noexp")) {
 		map[m].flag.nobaseexp=state;
 		map[m].flag.nojobexp=state;
@@ -3992,6 +4022,8 @@ int do_init_npc(void)
 	npc_viewdb[0].class_ = INVISIBLE_CLASS; //Invisible class is stored here.
 	for( i = 1; i < MAX_NPC_CLASS; i++ )
 		npc_viewdb[i].class_ = i;
+	for( i = MAX_NPC_CLASS2_START; i < MAX_NPC_CLASS2_END; i++ )
+		npc_viewdb2[i - MAX_NPC_CLASS2_START].class_ = i;
 
 	ev_db = strdb_alloc((DBOptions)(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA),2*NAME_LENGTH+2+1);
 	npcname_db = strdb_alloc(DB_OPT_BASE,NAME_LENGTH);

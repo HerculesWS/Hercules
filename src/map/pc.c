@@ -99,10 +99,6 @@ int pc_class2idx(int class_) {
 	return class_;
 }
 
-inline int pc_get_group_id(struct map_session_data *sd) {
-	return sd->group_id;
-}
-
 inline int pc_get_group_level(struct map_session_data *sd) {
 	return sd->group_level;
 }
@@ -522,9 +518,9 @@ int pc_makesavestatus(struct map_session_data *sd)
   	//Only copy the Cart/Peco/Falcon options, the rest are handled via
 	//status change load/saving. [Skotlex]
 #ifdef NEW_CARTS
-	sd->status.option = sd->sc.option&(OPTION_FALCON|OPTION_RIDING|OPTION_DRAGON|OPTION_WUG|OPTION_WUGRIDER|OPTION_MADOGEAR|OPTION_MOUNTING);
+	sd->status.option = sd->sc.option&(OPTION_INVISIBLE|OPTION_FALCON|OPTION_RIDING|OPTION_DRAGON|OPTION_WUG|OPTION_WUGRIDER|OPTION_MADOGEAR|OPTION_MOUNTING);
 #else
-	sd->status.option = sd->sc.option&(OPTION_CART|OPTION_FALCON|OPTION_RIDING|OPTION_DRAGON|OPTION_WUG|OPTION_WUGRIDER|OPTION_MADOGEAR|OPTION_MOUNTING);
+	sd->status.option = sd->sc.option&(OPTION_INVISIBLE|OPTION_CART|OPTION_FALCON|OPTION_RIDING|OPTION_DRAGON|OPTION_WUG|OPTION_WUGRIDER|OPTION_MADOGEAR|OPTION_MOUNTING);
 #endif
 	if (sd->sc.data[SC_JAILED])
 	{	//When Jailed, do not move last point.
@@ -968,12 +964,13 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/
-#if SECURE_NPCTIMEOUT
+#ifdef SECURE_NPCTIMEOUT
 	/**
 	 * Initialize to defaults/expected
 	 **/
 	sd->npc_idle_timer = INVALID_TIMER;
 	sd->npc_idle_tick = tick;
+	sd->npc_idle_type = NPCT_INPUT;
 #endif
 
 	sd->canuseitem_tick = tick;
@@ -982,6 +979,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	sd->cantalk_tick = tick;
 	sd->canskill_tick = tick;
 	sd->cansendmail_tick = tick;
+	sd->hchsysch_tick = tick;
 
 	for(i = 0; i < MAX_SKILL_LEVEL; i++)
 		sd->spirit_timer[i] = INVALID_TIMER;
@@ -1006,14 +1004,13 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	pc_setinventorydata(sd);
 	pc_setequipindex(sd);
 
+	if( sd->status.option & OPTION_INVISIBLE && !pc_can_use_command(sd, "@hide") )
+		sd->status.option &=~ OPTION_INVISIBLE;
+	
 	status_change_init(&sd->bl);
-
-	if (pc_can_use_command(sd, "hide", COMMAND_ATCOMMAND))
-		sd->status.option &= (OPTION_MASK | OPTION_INVISIBLE);
-	else
-		sd->status.option &= OPTION_MASK;
-
+	
 	sd->sc.option = sd->status.option; //This is the actual option used in battle.
+		
 	//Set here because we need the inventory data for weapon sprite parsing.
 	status_set_viewdata(&sd->bl, sd->status.class_);
 	unit_dataset(&sd->bl);
@@ -1241,6 +1238,20 @@ int pc_reg_received(struct map_session_data *sd)
 	}
 
 	pc_inventory_rentals(sd);
+
+	if( sd->sc.option & OPTION_INVISIBLE ) {
+		sd->vd.class_ = INVISIBLE_CLASS;
+		clif->message(sd->fd, msg_txt(11)); // Invisible: On
+		// decrement the number of pvp players on the map
+		map[sd->bl.m].users_pvp--;
+		
+		if( map[sd->bl.m].flag.pvp && !map[sd->bl.m].flag.pvp_nocalcrank && sd->pvp_timer != INVALID_TIMER ) {// unregister the player for ranking
+			delete_timer( sd->pvp_timer, pc_calc_pvprank_timer );
+			sd->pvp_timer = INVALID_TIMER;
+		}
+		clif->changeoption(&sd->bl);
+	}
+
 
 	return 1;
 }
@@ -3435,11 +3446,11 @@ int pc_bonus5(struct map_session_data *sd,int type,int type2,int type3,int type4
 }
 
 /*==========================================
- *	Grants a player a given skill. Flag values are:
- *	0 - Grant skill unconditionally and forever (only this one invokes status_calc_pc,
- *	    as the other two are assumed to be invoked from within it)
- *	1 - Grant an item skill (temporary)
- *	2 - Like 1, except the level granted can stack with previously learned level.
+ * Grants a player a given skill. Flag values are:
+ * 0 - Grant permanent skill to be bound to skill tree
+ * 1 - Grant an item skill (temporary)
+ * 2 - Like 1, except the level granted can stack with previously learned level.
+ * 3 - Grant skill unconditionally and forever (persistent to job changes and skill resets)
  *------------------------------------------*/
 int pc_skill(TBL_PC* sd, int id, int level, int flag)
 {
@@ -3459,42 +3470,52 @@ int pc_skill(TBL_PC* sd, int id, int level, int flag)
 	}
 
 	switch( flag ){
-	case 0: //Set skill data overwriting whatever was there before.
-		sd->status.skill[id].id   = id;
-		sd->status.skill[id].lv   = level;
-		sd->status.skill[id].flag = SKILL_FLAG_PERM_GRANTED;
-		if( level == 0 ) //Remove skill.
-		{
-			sd->status.skill[id].id = 0;
-			clif->deleteskill(sd,id);
-		}
-		else
-			clif->addskill(sd,id);
-		if( !skill->get_inf(id) ) //Only recalculate for passive skills.
-			status_calc_pc(sd, 0);
-	break;
-	case 1: //Item bonus skill.
-		if( sd->status.skill[id].id == id ){
-			if( sd->status.skill[id].lv >= level )
-				return 0;
-			if( sd->status.skill[id].flag == SKILL_FLAG_PERMANENT ) //Non-granted skill, store it's level.
-				sd->status.skill[id].flag = SKILL_FLAG_REPLACED_LV_0 + sd->status.skill[id].lv;
-		} else {
+		case 0: //Set skill data overwriting whatever was there before.
 			sd->status.skill[id].id   = id;
-			sd->status.skill[id].flag = SKILL_FLAG_TEMPORARY;
-		}
-		sd->status.skill[id].lv = level;
-	break;
-	case 2: //Add skill bonus on top of what you had.
-		if( sd->status.skill[id].id == id ){
-			if( sd->status.skill[id].flag == SKILL_FLAG_PERMANENT )
-				sd->status.skill[id].flag = SKILL_FLAG_REPLACED_LV_0 + sd->status.skill[id].lv; // Store previous level.
-		} else {
+			sd->status.skill[id].lv   = level;
+			sd->status.skill[id].flag = SKILL_FLAG_PERMANENT;
+			if( level == 0 ) { //Remove skill.
+				sd->status.skill[id].id = 0;
+				clif->deleteskill(sd,id);
+			} else
+				clif->addskill(sd,id);
+			if( !skill->get_inf(id) ) //Only recalculate for passive skills.
+				status_calc_pc(sd, 0);
+		break;
+		case 1: //Item bonus skill.
+			if( sd->status.skill[id].id == id ) {
+				if( sd->status.skill[id].lv >= level )
+					return 0;
+				if( sd->status.skill[id].flag == SKILL_FLAG_PERMANENT ) //Non-granted skill, store it's level.
+					sd->status.skill[id].flag = SKILL_FLAG_REPLACED_LV_0 + sd->status.skill[id].lv;
+			} else {
+				sd->status.skill[id].id   = id;
+				sd->status.skill[id].flag = SKILL_FLAG_TEMPORARY;
+			}
+			sd->status.skill[id].lv = level;
+		break;
+		case 2: //Add skill bonus on top of what you had.
+			if( sd->status.skill[id].id == id ) {
+				if( sd->status.skill[id].flag == SKILL_FLAG_PERMANENT )
+					sd->status.skill[id].flag = SKILL_FLAG_REPLACED_LV_0 + sd->status.skill[id].lv; // Store previous level.
+			} else {
+				sd->status.skill[id].id   = id;
+				sd->status.skill[id].flag = SKILL_FLAG_TEMPORARY; //Set that this is a bonus skill.
+			}
+			sd->status.skill[id].lv += level;
+		break;
+		case 3:
 			sd->status.skill[id].id   = id;
-			sd->status.skill[id].flag = SKILL_FLAG_TEMPORARY; //Set that this is a bonus skill.
-		}
-		sd->status.skill[id].lv += level;
-	break;
+			sd->status.skill[id].lv   = level;
+			sd->status.skill[id].flag = SKILL_FLAG_PERM_GRANTED;
+			if( level == 0 ) { //Remove skill.
+				sd->status.skill[id].id = 0;
+				clif->deleteskill(sd,id);
+			} else
+				clif->addskill(sd,id);
+			if( !skill->get_inf(id) ) //Only recalculate for passive skills.
+				status_calc_pc(sd, 0);
+			break;
 	default: //Unknown flag?
 		return 0;
 	}
@@ -3546,9 +3567,9 @@ int pc_insert_card(struct map_session_data* sd, int idx_card, int idx_equip)
 	}
 	else
 	{// success
-		log_pick_pc(sd, LOG_TYPE_OTHER, -1, &sd->status.inventory[idx_equip]);
+		logs->pick_pc(sd, LOG_TYPE_OTHER, -1, &sd->status.inventory[idx_equip],sd->inventory_data[idx_equip]);
 		sd->status.inventory[idx_equip].card[i] = nameid;
-		log_pick_pc(sd, LOG_TYPE_OTHER,  1, &sd->status.inventory[idx_equip]);
+		logs->pick_pc(sd, LOG_TYPE_OTHER,  1, &sd->status.inventory[idx_equip],sd->inventory_data[idx_equip]);
 		clif->insert_card(sd,idx_equip,idx_card,0);
 	}
 
@@ -3667,7 +3688,7 @@ int pc_payzeny(struct map_session_data *sd,int zeny, enum e_log_pick_type type, 
 	clif->updatestatus(sd,SP_ZENY);
 
 	if(!tsd) tsd = sd;
-	log_zeny(sd, type, tsd, -zeny);
+	logs->zeny(sd, type, tsd, -zeny);
 	if( zeny > 0 && sd->state.showzeny ) {
 		char output[255];
 		sprintf(output, "Removed %dz.", zeny);
@@ -3795,7 +3816,7 @@ int pc_getzeny(struct map_session_data *sd,int zeny, enum e_log_pick_type type, 
 	clif->updatestatus(sd,SP_ZENY);
 
 	if(!tsd) tsd = sd;
-	log_zeny(sd, type, tsd, zeny);
+	logs->zeny(sd, type, tsd, zeny);
 	if( zeny > 0 && sd->state.showzeny ) {
 		char output[255];
 		sprintf(output, "Gained %dz.", zeny);
@@ -3890,7 +3911,7 @@ int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_l
 	if( !itemdb_isstackable2(data) && !item_data->unique_id )
 		sd->status.inventory[i].unique_id = itemdb_unique_id(0,0);
 #endif
-	log_pick_pc(sd, log_type, amount, &sd->status.inventory[i]);
+	logs->pick_pc(sd, log_type, amount, &sd->status.inventory[i],sd->inventory_data[i]);
 
 	sd->weight += w;
 	clif->updatestatus(sd,SP_WEIGHT);
@@ -3930,7 +3951,7 @@ int pc_delitem(struct map_session_data *sd,int n,int amount,int type, short reas
 	if(sd->status.inventory[n].nameid==0 || amount <= 0 || sd->status.inventory[n].amount<amount || sd->inventory_data[n] == NULL)
 		return 1;
 
-	log_pick_pc(sd, log_type, -amount, &sd->status.inventory[n]);
+	logs->pick_pc(sd, log_type, -amount, &sd->status.inventory[n],sd->inventory_data[n]);
 
 	sd->status.inventory[n].amount -= amount;
 	sd->weight -= sd->inventory_data[n]->weight*amount ;
@@ -4213,7 +4234,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 	//Dead Branch & Bloody Branch & Porings Box
 	// FIXME: outdated, use constants or database
 	if( nameid == 604 || nameid == 12103 || nameid == 12109 )
-		log_branch(sd);
+		logs->branch(sd);
 
 	return 1;
 }
@@ -4302,7 +4323,7 @@ int pc_useitem(struct map_session_data *sd,int n)
 						sprintf(e_msg,"Item Failed. [%s] is cooling down. wait %d seconds.",
 										itemdb_jname(sd->status.inventory[n].nameid),
 										e_tick+1);
-					clif->colormes(sd,COLOR_RED,e_msg);
+					clif->colormes(sd->fd,COLOR_RED,e_msg);
 					return 0; // Delay has not expired yet
 				}
 			} else {// not yet used item (all slots are initially empty)
@@ -4428,7 +4449,7 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 		clif->cart_additem(sd,i,amount,0);
 	}
 	sd->status.cart[i].favorite = 0;/* clear */
-	log_pick_pc(sd, log_type, amount, &sd->status.cart[i]);
+	logs->pick_pc(sd, log_type, amount, &sd->status.cart[i],data);
 
 	sd->cart_weight += w;
 	clif->updatestatus(sd,SP_CARTINFO);
@@ -4442,18 +4463,17 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
  *	0 = success
  *	1 = fail
  *------------------------------------------*/
-int pc_cart_delitem(struct map_session_data *sd,int n,int amount,int type,e_log_pick_type log_type)
-{
+int pc_cart_delitem(struct map_session_data *sd,int n,int amount,int type,e_log_pick_type log_type) {
+	struct item_data * data;
 	nullpo_retr(1, sd);
 
-	if(sd->status.cart[n].nameid==0 ||
-	   sd->status.cart[n].amount<amount)
+	if( sd->status.cart[n].nameid == 0 || sd->status.cart[n].amount < amount || !(data = itemdb_exists(sd->status.cart[n].nameid)) )
 		return 1;
 
-	log_pick_pc(sd, log_type, -amount, &sd->status.cart[n]);
+	logs->pick_pc(sd, log_type, -amount, &sd->status.cart[n],data);
 
 	sd->status.cart[n].amount -= amount;
-	sd->cart_weight -= itemdb_weight(sd->status.cart[n].nameid)*amount ;
+	sd->cart_weight -= data->weight*amount ;
 	if(sd->status.cart[n].amount <= 0){
 		memset(&sd->status.cart[n],0,sizeof(sd->status.cart[0]));
 		sd->cart_num--;
@@ -4573,6 +4593,7 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	struct status_data *sd_status, *md_status;
 	struct mob_data *md;
 	struct item tmp_item;
+	struct item_data *data;
 
 	if(!sd || !bl || bl->type!=BL_MOB)
 		return 0;
@@ -4604,7 +4625,7 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	// Try dropping one item, in the order from first to last possible slot.
 	// Droprate is affected by the skill success rate.
 	for( i = 0; i < MAX_STEAL_DROP; i++ )
-		if( md->db->dropitem[i].nameid > 0 && itemdb_exists(md->db->dropitem[i].nameid) && rnd() % 10000 < md->db->dropitem[i].p * rate/100. )
+		if( md->db->dropitem[i].nameid > 0 && (data = itemdb_exists(md->db->dropitem[i].nameid)) && rnd() % 10000 < md->db->dropitem[i].p * rate/100. )
 			break;
 	if( i == MAX_STEAL_DROP )
 		return 0;
@@ -4613,7 +4634,7 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	memset(&tmp_item,0,sizeof(tmp_item));
 	tmp_item.nameid = itemid;
 	tmp_item.amount = 1;
-	tmp_item.identify = itemdb_isidentified(itemid);
+	tmp_item.identify = itemdb_isidentified2(data);
 	flag = pc_additem(sd,&tmp_item,1,LOG_TYPE_PICKDROP_PLAYER);
 
 	//TODO: Should we disable stealing when the item you stole couldn't be added to your inventory? Perhaps players will figure out a way to exploit this behaviour otherwise?
@@ -4628,14 +4649,12 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 		party_foreachsamemap(pc_show_steal,sd,AREA_SIZE,sd,tmp_item.nameid);
 
 	//Logs items, Stolen from mobs [Lupus]
-	log_pick_mob(md, LOG_TYPE_STEAL, -1, &tmp_item);
+	logs->pick_mob(md, LOG_TYPE_STEAL, -1, &tmp_item, data);
 
 	//A Rare Steal Global Announce by Lupus
 	if(md->db->dropitem[i].p<=battle_config.rare_drop_announce) {
-		struct item_data *i_data;
 		char message[128];
-		i_data = itemdb_search(itemid);
-		sprintf (message, msg_txt(542), (sd->status.name != NULL)?sd->status.name :"GM", md->db->jname, i_data->jname, (float)md->db->dropitem[i].p/100);
+		sprintf (message, msg_txt(542), (sd->status.name != NULL)?sd->status.name :"GM", md->db->jname, data->jname, (float)md->db->dropitem[i].p/100);
 		//MSG: "'%s' stole %s's %s (chance: %0.02f%%)"
 		intif_broadcast(message,strlen(message)+1,0);
 	}
@@ -4755,7 +4774,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		// make sure vending is allowed here
 		if (sd->state.vending && map[m].flag.novending) {
 			clif->message (sd->fd, msg_txt(276)); // "You can't open a shop on this map"
-			vending_closevending(sd);
+			vending->close(sd);
 		}
 		
 		if( hChSys.local && map[sd->bl.m].channel && idb_exists(map[sd->bl.m].channel->users, sd->status.char_id) ) {
@@ -4806,7 +4825,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 
 	if (sd->state.vending && map_getcell(m,x,y,CELL_CHKNOVENDING)) {
 		clif->message (sd->fd, msg_txt(204)); // "You can't open a shop on this cell."
-		vending_closevending(sd);
+		vending->close(sd);
 	}
 
 	if(sd->bl.prev != NULL){
@@ -6306,7 +6325,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		if( pc_checkskill(sd, SG_DEVIL) &&  !pc_nextjobexp(sd) )
 			clif->status_change(&sd->bl, SI_DEVIL, 0, 0, 0, 0, 0); //Remove perma blindness due to skill-reset. [Skotlex]
 		i = sd->sc.option;
-		if( i&OPTION_RIDING && pc_checkskill(sd, KN_RIDING) )
+		if( i&OPTION_RIDING && (!pc_checkskill(sd, KN_RIDING) || (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT) )
 			i &= ~OPTION_RIDING;
 		if( i&OPTION_FALCON && pc_checkskill(sd, HT_FALCON) )
 			i &= ~OPTION_FALCON;
@@ -7085,7 +7104,7 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 	case SP_ZENY:
 		if( val < 0 )
 			return 0;// can't set negative zeny
-		log_zeny(sd, LOG_TYPE_SCRIPT, sd, -(sd->status.zeny - cap_value(val, 0, MAX_ZENY)));
+		logs->zeny(sd, LOG_TYPE_SCRIPT, sd, -(sd->status.zeny - cap_value(val, 0, MAX_ZENY)));
 		sd->status.zeny = cap_value(val, 0, MAX_ZENY);
 		break;
 	case SP_BASEEXP:
@@ -7444,7 +7463,7 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	if (sd->ed)
 		elemental_delete(sd->ed, 0);
 	if (sd->state.vending)
-		vending_closevending(sd);
+		vending->close(sd);
 
 	map_foreachinmap(jobchange_killclone, sd->bl.m, BL_MOB, sd->bl.id);
 
@@ -7594,7 +7613,7 @@ int pc_setoption(struct map_session_data *sd,int type)
 		clif->status_change(&sd->bl, SI_RIDING, 1, 0, 0, 0, 0);
 		status_calc_pc(sd,0);
 	}
-	else if( (!(type&OPTION_RIDING) && p_type&OPTION_RIDING) || (!(type&OPTION_DRAGON) && p_type&OPTION_DRAGON && pc_checkskill(sd,RK_DRAGONTRAINING) > 0) )
+	else if( (!(type&OPTION_RIDING) && p_type&OPTION_RIDING) || (!(type&OPTION_DRAGON) && p_type&OPTION_DRAGON) )
 	{ // Dismount
 		clif->status_change(&sd->bl, SI_RIDING, 0, 0, 0, 0, 0);
 		status_calc_pc(sd,0);
@@ -9243,22 +9262,10 @@ bool pc_isautolooting(struct map_session_data *sd, int nameid)
 /**
  * Checks if player can use @/#command
  * @param sd Player map session data
- * @param command Command name without @/# and params
- * @param type is it atcommand or charcommand
+ * @param command Command name with @/# and without params
  */
-bool pc_can_use_command(struct map_session_data *sd, const char *command, AtCommandType type)
-{
-	return pc_group_can_use_command(pc_get_group_id(sd), command, type);
-}
-
-/**
- * Checks if commands used by a player should be logged
- * according to their group setting.
- * @param sd Player map session data
- */
-bool pc_should_log_commands(struct map_session_data *sd)
-{
-	return pc_group_should_log_commands(pc_get_group_id(sd));
+bool pc_can_use_command(struct map_session_data *sd, const char *command) {
+	return atcommand->can_use(sd,command);
 }
 
 static int pc_talisman_timer(int tid, unsigned int tick, int id, intptr_t data)
@@ -9542,7 +9549,8 @@ static bool pc_readdb_levelpenalty(char* fields[], int columns, int current)
  *------------------------------------------*/
 int pc_readdb(void)
 {
-	int i,j,k,tmp=0;
+	int i,j,k;
+	unsigned int count = 0;
 	FILE *fp;
 	char line[24000],*p;
 
@@ -9586,7 +9594,7 @@ int pc_readdb(void)
 			ShowWarning("pc_readdb: Specified max level %u for job %d is beyond server's limit (%u).\n ", maxlv, job_id, MAX_LEVEL);
 			maxlv = MAX_LEVEL;
 		}
-
+		count++;
 		job = jobs[0] = pc_class2idx(job_id);
 		//We send one less and then one more because the last entry in the exp array should hold 0.
 		max_level[job][type] = pc_split_atoui(split[3], exp_table[job][type],',',maxlv-1)+1;
@@ -9629,8 +9637,8 @@ int pc_readdb(void)
 		if (!max_level[j][1])
 			ShowWarning("Class %s (%d) does not has a job exp table.\n", job_name(i), i);
 	}
-	ShowStatus("Done reading '"CL_WHITE"%s"CL_RESET"'.\n","exp.txt");
-
+	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s/"DBPATH"%s"CL_RESET"'.\n",count,db_path,"exp.txt");
+	count = 0;
 	// Reset and read skilltree
 	memset(skill_tree,0,sizeof(skill_tree));
 	sv_readdb(db_path, DBPATH"skill_tree.txt", ',', 3+MAX_PC_SKILL_REQUIRE*2, 4+MAX_PC_SKILL_REQUIRE*2, -1, &pc_readdb_skilltree);
@@ -9639,7 +9647,7 @@ int pc_readdb(void)
 	sv_readdb(db_path, "re/level_penalty.txt", ',', 4, 4, -1, &pc_readdb_levelpenalty);
 	for( k=1; k < 3; k++ ){ // fill in the blanks
 		for( j = 0; j < RC_MAX; j++ ){
-			tmp = 0;
+			int tmp = 0;
 			for( i = 0; i < MAX_LEVEL*2; i++ ){
 				if( i == MAX_LEVEL+1 )
 					tmp = level_penalty[k][j][0];// reset
@@ -9681,7 +9689,7 @@ int pc_readdb(void)
 
 		lv=atoi(split[0]);
 		n=atoi(split[1]);
-
+		count++;
 		for(i=0;i<n && i<ELE_MAX;){
 			if( !fgets(line, sizeof(line), fp) )
 				break;
@@ -9702,8 +9710,8 @@ int pc_readdb(void)
 		}
 	}
 	fclose(fp);
-	ShowStatus("Done reading '"CL_WHITE"%s"CL_RESET"'.\n","attr_fix.txt");
-
+	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s/"DBPATH"%s"CL_RESET"'.\n",count,db_path,"attr_fix.txt");
+	count = 0;
     // reset then read statspoint
 	memset(statp,0,sizeof(statp));
 	i=1;
@@ -9723,12 +9731,13 @@ int pc_readdb(void)
 				stat=0;
 			if (i > MAX_LEVEL)
 				break;
+			count++;
 			statp[i]=stat;
 			i++;
 		}
 		fclose(fp);
 
-		ShowStatus("Done reading '"CL_WHITE"%s"CL_RESET"'.\n","statpoint.txt");
+		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s/"DBPATH"%s"CL_RESET"'.\n",count,db_path,"statpoint.txt");
 	}
 	// generate the remaining parts of the db if necessary
 	k = battle_config.use_statpoint_table; //save setting

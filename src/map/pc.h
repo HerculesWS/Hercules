@@ -109,6 +109,12 @@ struct s_autobonus {
 	unsigned short pos;
 };
 
+enum npc_timeout_type {
+	NPCT_INPUT = 0,
+	NPCT_MENU  = 1,
+	NPCT_WAIT  = 2,
+};
+
 struct map_session_data {
 	struct block_list bl;
 	struct unit_data ud;
@@ -165,6 +171,7 @@ struct map_session_data {
 		struct guild *gmaster_flag;
 		unsigned int prevend : 1;//used to flag wheather you've spent 40sp to open the vending or not.
 		unsigned int warping : 1;//states whether you're in the middle of a warp processing
+		unsigned int permanent_speed : 1; // When 1, speed cannot be changed through status_calc_pc().
 	} state;
 	struct {
 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;
@@ -182,7 +189,8 @@ struct map_session_data {
 	unsigned short class_;	//This is the internal job ID used by the map server to simplify comparisons/queries/etc. [Skotlex]
 	int group_id, group_pos, group_level;
 	unsigned int permissions;/* group permissions */
-
+	bool group_log_command;
+	
 	struct mmo_charstatus status;
 	struct registry save_reg;
 
@@ -391,8 +399,8 @@ struct map_session_data {
 	int guildspy; // [Syrus22]
 	int partyspy; // [Syrus22]
 
-	int vended_id;
-	int vender_id;
+	unsigned int vended_id;
+	unsigned int vender_id;
 	int vend_num;
 	char message[MESSAGE_SIZE];
 	struct s_vending vending[MAX_VENDING];
@@ -466,7 +474,7 @@ struct map_session_data {
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/
-#if SECURE_NPCTIMEOUT
+#ifdef SECURE_NPCTIMEOUT
 	/**
 	 * ID of the timer
 	 * @info
@@ -480,6 +488,8 @@ struct map_session_data {
 	 * - It is updated on every NPC iteration as mentioned above
 	 **/
 	unsigned int npc_idle_tick;
+	/* */
+	enum npc_timeout_type npc_idle_type;
 #endif
 
 	struct {
@@ -500,7 +510,8 @@ struct map_session_data {
 	unsigned char channel_count;
 	struct hChSysCh *gcbind;
 	bool stealth;
-	unsigned char fontcolor; /* debug-only */
+	unsigned char fontcolor;
+	unsigned int hchsysch_tick;
 	
 	// temporary debugging of bug #3504
 	const char* delunit_prevfile;
@@ -685,13 +696,13 @@ enum equip_pos {
 
 int pc_class2idx(int class_);
 int pc_get_group_level(struct map_session_data *sd);
-int pc_get_group_id(struct map_session_data *sd);
+#define pc_get_group_id(sd) ( (sd)->group_id )
 int pc_getrefinebonus(int lv,int type);
 bool pc_can_give_items(struct map_session_data *sd);
 
-bool pc_can_use_command(struct map_session_data *sd, const char *command, AtCommandType type);
+bool pc_can_use_command(struct map_session_data *sd, const char *command);
 #define pc_has_permission(sd, permission) ( ((sd)->permissions&permission) != 0 )
-bool pc_should_log_commands(struct map_session_data *sd);
+#define pc_should_log_commands(sd) ( (sd)->group_log_command != false )
 
 int pc_setrestartvalue(struct map_session_data *sd,int type);
 int pc_makesavestatus(struct map_session_data *);

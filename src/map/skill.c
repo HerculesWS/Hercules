@@ -2233,8 +2233,30 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 		 * Official Magic Reflection Behavior : damage reflected depends on gears caster wears, not target
 		 **/
 		#if MAGIC_REFLECTION_TYPE
-			if( dmg.dmg_lv != ATK_MISS )//Wiz SL cancelled and consumed fragment
-				dmg = battle->calc_attack(BF_MAGIC,bl,bl,skill_id,skill_lv,flag&0xFFF);
+			if( dmg.dmg_lv != ATK_MISS ){ //Wiz SL cancelled and consumed fragment
+				short s_ele = skill->get_ele(skill_id, skill_lv);
+				
+				if (s_ele == -1) // the skill takes the weapon's element
+					s_ele = sstatus->rhw.ele;
+				else if (s_ele == -2) //Use status element
+					s_ele = status_get_attack_sc_element(src,status_get_sc(src));
+				else if( s_ele == -3 ) //Use random element
+					s_ele = rnd()%ELE_MAX;
+				
+				dmg.damage = battle->attr_fix(bl, bl, dmg.damage, s_ele, status_get_element(bl), status_get_element_level(bl));
+				
+				if( sc && sc->data[SC_ENERGYCOAT] ) {
+					struct status_data *status = status_get_status_data(bl);
+					int per = 100*status->sp / status->max_sp -1; //100% should be counted as the 80~99% interval
+					per /=20; //Uses 20% SP intervals.
+					//SP Cost: 1% + 0.5% per every 20% SP
+					if (!status_charge(bl, 0, (10+5*per)*status->max_sp/1000))
+						status_change_end(bl, SC_ENERGYCOAT, INVALID_TIMER);
+					//Reduction: 6% + 6% every 20%
+					dmg.damage -= dmg.damage * (6 * (1+per)) / 100;
+				}
+				
+			}
 		#endif
 		}
 		if(sc && sc->data[SC_MAGICROD] && src == dsrc) {
@@ -4043,7 +4065,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 
 			skill->blown(src,bl,distance_bl(src,bl)-1,unit_getdir(src),0);
-			if( battle->check_target(src,bl,BCT_ENEMY) )
+			if( battle->check_target(src,bl,BCT_ENEMY) > 0 )
 				skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 			break;
 
@@ -5223,7 +5245,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				int bonus = 25 + 10 * skill_lv;
 				bonus += (pc_checkskill(sd, SA_FLAMELAUNCHER)+pc_checkskill(sd, SA_FROSTWEAPON)+pc_checkskill(sd, SA_LIGHTNINGLOADER)+pc_checkskill(sd, SA_SEISMICWEAPON))*5;
 				clif->skill_nodamage( src, bl, skill_id, skill_lv,
-									battle->check_target(src,bl,BCT_PARTY) ?
+									battle->check_target(src,bl,BCT_PARTY) > 0 ?
 									sc_start2(bl, type, 100, skill_lv, bonus, skill->get_time(skill_id,skill_lv)) :
 									0
 					);
@@ -6344,7 +6366,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					case SC_DONTFORGETME:
 					case SC_FORTUNE:
 					case SC_SERVICE4U:
-						if( tsc->data[i]->val4 ) //val4 = out-of-song-area
+						if( !tsc->data[i]->val4 ) //val4 = out-of-song-area
 							continue;
 						break;
 					case SC_ASSUMPTIO:
@@ -6635,18 +6657,21 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 		case NPC_EMOTION_ON:
 		case NPC_EMOTION:
-			//va[0] is the emotion to use.
+			//val[0] is the emotion to use.
 			//NPC_EMOTION & NPC_EMOTION_ON can change a mob's mode 'permanently' [Skotlex]
 			//val[1] 'sets' the mode
 			//val[2] adds to the current mode
 			//val[3] removes from the current mode
 			//val[4] if set, asks to delete the previous mode change.
-			if(md && md->skill_idx >= 0 && tsc)
-			{
+			if(md && md->skill_idx >= 0 && tsc) {
 				clif->emotion(bl, md->db->skill[md->skill_idx].val[0]);
 				if(md->db->skill[md->skill_idx].val[4] && tsce)
 					status_change_end(bl, type, INVALID_TIMER);
 
+				//If mode gets set by NPC_EMOTION then the target should be reset [Playtester]
+				if(skill_id == NPC_EMOTION && md->db->skill[md->skill_idx].val[1])
+					mob_unlocktarget(md,tick);
+				
 				if(md->db->skill[md->skill_idx].val[1] || md->db->skill[md->skill_idx].val[2])
 					sc_start4(src, type, 100, skill_lv,
 						md->db->skill[md->skill_idx].val[1],
@@ -7374,7 +7399,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		case ALL_BUYING_STORE:
 			if( sd )
 			{// players only, skill allows 5 buying slots
-				clif->skill_nodamage(src, bl, skill_id, skill_lv, buyingstore_setup(sd, MAX_BUYINGSTORE_SLOTS));
+				clif->skill_nodamage(src, bl, skill_id, skill_lv, buyingstore->setup(sd, MAX_BUYINGSTORE_SLOTS));
 			}
 			break;
 		case RK_ENCHANTBLADE:
@@ -7740,7 +7765,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			break;
 
 		case WL_WHITEIMPRISON:
-			if( (src == bl || battle->check_target(src, bl, BCT_ENEMY)) && !is_boss(bl) )// Should not work with bosses.
+			if( (src == bl || battle->check_target(src, bl, BCT_ENEMY) > 0 ) && !is_boss(bl) )// Should not work with bosses.
 			{
 				int rate = ( sd? sd->status.job_level : 50 ) / 4;
 
@@ -11670,11 +11695,11 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 			break;
 
 		case UNT_SEVERE_RAINSTORM:
-			if( battle->check_target(&src->bl, bl, BCT_ENEMY) )
+			if( battle->check_target(&src->bl, bl, BCT_ENEMY) > 0 )
 				skill->attack(BF_WEAPON,ss,&src->bl,bl,WM_SEVERE_RAINSTORM_MELEE,sg->skill_lv,tick,0);
 			break;
 		case UNT_NETHERWORLD:
-			if( !(status_get_mode(bl)&MD_BOSS) && ss != bl && battle->check_target(&src->bl, bl, BCT_PARTY) ) {
+			if( !(status_get_mode(bl)&MD_BOSS) && ss != bl && battle->check_target(&src->bl, bl, BCT_PARTY) > 0 ) {
 				if( !(tsc && tsc->data[type]) ){
 					sc_start(bl, type, 100, sg->skill_lv, skill->get_time2(sg->skill_id,sg->skill_lv));
 					sg->limit = DIFF_TICK(tick,sg->tick);
@@ -11811,7 +11836,7 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 			break;
 
 		case UNT_FIRE_MANTLE:
-			if( battle->check_target(&src->bl, bl, BCT_ENEMY) )
+			if( battle->check_target(&src->bl, bl, BCT_ENEMY) > 0 )
 				skill->attack(BF_MAGIC,ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
 			break;
 
@@ -12855,7 +12880,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				    MOBID_EMPERIUM, MOBID_GUARIDAN_STONE1, MOBID_GUARIDAN_STONE2)) {
 				char output[128];
 				sprintf(output, "You're too close to a stone or emperium to do this skill");
-				clif->colormes(sd, COLOR_RED, output);
+				clif->colormes(sd->fd, COLOR_RED, output);
 				return 0;
 			    }
 			}
@@ -13236,7 +13261,7 @@ int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, 
 						skill->get_desc(skill_id),
 						require.ammo_qty,
 						itemdb_jname(sd->status.inventory[i].nameid));
-			clif->colormes(sd,COLOR_RED,e_msg);
+			clif->colormes(sd->fd,COLOR_RED,e_msg);
 			return 0;
 		}
 		if (!(require.ammo&1<<sd->inventory_data[i]->look)) { //Ammo type check. Send the "wrong weapon type" message
@@ -14160,9 +14185,9 @@ void skill_weaponrefine (struct map_session_data *sd, int idx)
 
 			pc_delitem(sd, i, 1, 0, 0, LOG_TYPE_OTHER);
 			if (per > rnd() % 100) {
-				log_pick_pc(sd, LOG_TYPE_OTHER, -1, item);
+				logs->pick_pc(sd, LOG_TYPE_OTHER, -1, item, ditem);
 				item->refine++;
-				log_pick_pc(sd, LOG_TYPE_OTHER,  1, item);
+				logs->pick_pc(sd, LOG_TYPE_OTHER,  1, item, ditem);
 				if(item->equip) {
 					ep = item->equip;
 					pc_unequipitem(sd,idx,3);

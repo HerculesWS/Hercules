@@ -98,8 +98,9 @@
 #define MAX_GUILDSKILL	15 // increased max guild skills because of new skills [Sara-chan]
 #define MAX_GUILDLEVEL 50
 #define MAX_GUARDIANS 8	//Local max per castle. [Skotlex]
-#define MAX_QUEST_DB 2350 //Max quests that the server will load
+#define MAX_QUEST_DB 2400 //Max quests that the server will load
 #define MAX_QUEST_OBJECTIVES 3 //Max quest objectives for a quest
+#define MAX_START_ITEMS 32	//Max number of items allowed to be given to a char whenever it's created. [mkbu95]
 
 // for produce
 #define MIN_ATTRIBUTE 0
@@ -217,6 +218,12 @@ enum e_skill_flag
 	SKILL_FLAG_REPLACED_LV_0, // temporary skill overshadowing permanent skill of level 'N - SKILL_FLAG_REPLACED_LV_0',
 	SKILL_FLAG_PERM_GRANTED, // permanent, granted through someway e.g. script
 	//...
+};
+
+enum e_mmo_charstatus_opt {
+	OPT_NONE		= 0x0,
+	OPT_SHOW_EQUIP	= 0x1,
+	OPT_ALLOW_PARTY	= 0x2,
 };
 
 struct s_skill {
@@ -378,7 +385,7 @@ struct mmo_charstatus {
 #ifdef HOTKEY_SAVING
 	struct hotkey hotkeys[MAX_HOTKEYS];
 #endif
-	bool show_equip;
+	bool show_equip, allow_party;
 	unsigned short rename;
 	unsigned short slotchange;
 
