@@ -125,7 +125,7 @@ int max_connect_user = -1;
 int gm_allow_group = -1;
 int autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
 int start_zeny = 0;
-int start_items[64]; //32 starting items allowed [mkbu95]
+int start_items[MAX_START_ITEMS*2];
 int guild_exp_rate = 100;
 
 //Custom limits for the fame lists. [Skotlex]
@@ -4790,7 +4790,7 @@ int char_config_read(const char* cfgName)
 
 			i = 0;
 			split = strtok(w2, ",");
-			while (split != NULL) {
+			while (split != NULL && i < MAX_START_ITEMS) {
 				split2 = split;
 				split = strtok(NULL, ",");
 				start_items[i] = atoi(split2);
