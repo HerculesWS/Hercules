@@ -4935,7 +4935,7 @@ int do_init(int argc, char **argv)
 	if (strcmp(userid, "s1")==0 && strcmp(passwd, "p1")==0) {
 		ShowWarning("Using the default user/password s1/p1 is NOT RECOMMENDED.\n");
 		ShowNotice("Please edit your 'login' table to create a proper inter-server user/password (gender 'S')\n");
-		ShowNotice("And then change the user/password to use in conf/char_athena.conf (or conf/import/char_conf.txt)\n");
+		ShowNotice("And then change the user/password to use in conf/char-server.conf (or conf/import/char_conf.txt)\n");
 	}
 	
 	inter_init_sql((argc > 2) ? argv[2] : inter_cfgName); // inter server configuration

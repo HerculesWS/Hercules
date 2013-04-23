@@ -117,7 +117,7 @@ Examples:
 			[Warning]: Using the default user/password s1/p1 is NOT RECOMMENDED.
 			[Notice]: Please edit your 'login' table to create a proper inter-server user/pa
 			ssword (gender 'S')
-			[Notice]: and then edit your user/password in conf/map_athena.conf (or conf/impo
+			[Notice]: and then edit your user/password in conf/map_server.conf (or conf/impo
 			rt/map_conf.txt)
 
 		Relax. This is just indicating that you're using the default username and password. To
