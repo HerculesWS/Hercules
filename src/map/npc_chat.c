@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifdef PCRE_SUPPORT
 
@@ -414,7 +415,7 @@ int buildin_defpattern(struct script_state* st)
 	
 	npc_chat_def_pattern(nd, setid, pattern, label);
 	
-	return 0;
+	return 1;
 }
 
 int buildin_activatepset(struct script_state* st)
@@ -424,7 +425,7 @@ int buildin_activatepset(struct script_state* st)
 	
 	activate_pcreset(nd, setid);
 	
-	return 0;
+	return 1;
 }
 
 int buildin_deactivatepset(struct script_state* st)
@@ -434,7 +435,7 @@ int buildin_deactivatepset(struct script_state* st)
 	
 	deactivate_pcreset(nd, setid);
 	
-	return 0;
+	return 1;
 }
 
 int buildin_deletepset(struct script_state* st)
@@ -444,7 +445,7 @@ int buildin_deletepset(struct script_state* st)
 	
 	delete_pcreset(nd, setid);
 	
-	return 0;
+	return 1;
 }
 
 #endif //PCRE_SUPPORT
