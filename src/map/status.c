@@ -904,6 +904,7 @@ void initChangeTables(void) {
 	StatusIconChangeTable[SC_CURSED_SOIL] = SI_CURSED_SOIL;
 	StatusIconChangeTable[SC_UPHEAVAL] = SI_UPHEAVAL;
 	StatusIconChangeTable[SC_PUSH_CART] = SI_ON_PUSH_CART;
+	StatusIconChangeTable[SC_ALL_RIDING] = SI_ALL_RIDING;
 
 	//Other SC which are not necessarily associated to skills.
 	StatusChangeFlagTable[SC_ASPDPOTION0] = SCB_ASPD;
@@ -1664,7 +1665,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 		}
 		if (sc->option&OPTION_CHASEWALK && skill_id != ST_CHASEWALK)
 			return 0;
-		if(sc->option&OPTION_MOUNTING)
+		if( sc->data[SC_ALL_RIDING] )
 			return 0;//New mounts can't attack nor use skills in the client; this check makes it cheat-safe [Ind]
 	}
 
@@ -5014,7 +5015,7 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 			if( sc->data[SC_FUSION] )
 				val = 25;
 			else if( sd ) {
-				if( pc_isriding(sd) || sd->sc.option&(OPTION_DRAGON|OPTION_MOUNTING) )
+				if( pc_isriding(sd) || sd->sc.option&(OPTION_DRAGON) || sd->sc.data[SC_ALL_RIDING] )
 					val = 25;//Same bonus
 				else if( pc_isridingwug(sd) )
 					val = 15 + 5 * pc_checkskill(sd, RA_WUGRIDER);
@@ -5940,124 +5941,122 @@ void status_set_viewdata(struct block_list *bl, int class_)
 		vd = NULL;
 
 	switch (bl->type) {
-	case BL_PC:
-		{
-			TBL_PC* sd = (TBL_PC*)bl;
-			if (pcdb_checkid(class_)) {
-				if (sd->sc.option&OPTION_WEDDING)
-					class_ = JOB_WEDDING;
-				else if (sd->sc.option&OPTION_SUMMER)
-					class_ = JOB_SUMMER;
-				else if (sd->sc.option&OPTION_XMAS)
-					class_ = JOB_XMAS;
-				else if (sd->sc.option&OPTION_RIDING) {
-					switch (class_) {	//Adapt class to a Mounted one.
-						case JOB_KNIGHT:
-							class_ = JOB_KNIGHT2;
-							break;
-						case JOB_CRUSADER:
-							class_ = JOB_CRUSADER2;
-							break;
-						case JOB_LORD_KNIGHT:
-							class_ = JOB_LORD_KNIGHT2;
-							break;
-						case JOB_PALADIN:
-							class_ = JOB_PALADIN2;
-							break;
-						case JOB_BABY_KNIGHT:
-							class_ = JOB_BABY_KNIGHT2;
-							break;
-						case JOB_BABY_CRUSADER:
-							class_ = JOB_BABY_CRUSADER2;
-							break;
+		case BL_PC:
+			{
+				TBL_PC* sd = (TBL_PC*)bl;
+				if (pcdb_checkid(class_)) {
+					if (sd->sc.option&OPTION_RIDING) {
+						switch (class_) {	//Adapt class to a Mounted one.
+							case JOB_KNIGHT:
+								class_ = JOB_KNIGHT2;
+								break;
+							case JOB_CRUSADER:
+								class_ = JOB_CRUSADER2;
+								break;
+							case JOB_LORD_KNIGHT:
+								class_ = JOB_LORD_KNIGHT2;
+								break;
+							case JOB_PALADIN:
+								class_ = JOB_PALADIN2;
+								break;
+							case JOB_BABY_KNIGHT:
+								class_ = JOB_BABY_KNIGHT2;
+								break;
+							case JOB_BABY_CRUSADER:
+								class_ = JOB_BABY_CRUSADER2;
+								break;
+						}
 					}
-				}
-				sd->vd.class_ = class_;
-				clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
-				sd->vd.head_top = sd->status.head_top;
-				sd->vd.head_mid = sd->status.head_mid;
-				sd->vd.head_bottom = sd->status.head_bottom;
-				sd->vd.hair_style = cap_value(sd->status.hair,0,battle_config.max_hair_style);
-				sd->vd.hair_color = cap_value(sd->status.hair_color,0,battle_config.max_hair_color);
-				sd->vd.cloth_color = cap_value(sd->status.clothes_color,0,battle_config.max_cloth_color);
-				sd->vd.robe = sd->status.robe;
-				sd->vd.sex = sd->status.sex;
-			} else if (vd)
-				memcpy(&sd->vd, vd, sizeof(struct view_data));
-			else
-				ShowError("status_set_viewdata (PC): No view data for class %d\n", class_);
-		}
-	break;
-	case BL_MOB:
-		{
-			TBL_MOB* md = (TBL_MOB*)bl;
-			if (vd)
-				md->vd = vd;
-			else
-				ShowError("status_set_viewdata (MOB): No view data for class %d\n", class_);
-		}
-	break;
-	case BL_PET:
-		{
-			TBL_PET* pd = (TBL_PET*)bl;
-			if (vd) {
-				memcpy(&pd->vd, vd, sizeof(struct view_data));
-				if (!pcdb_checkid(vd->class_)) {
-					pd->vd.hair_style = battle_config.pet_hair_style;
-					if(pd->pet.equip) {
-						pd->vd.head_bottom = itemdb_viewid(pd->pet.equip);
-						if (!pd->vd.head_bottom)
-							pd->vd.head_bottom = pd->pet.equip;
+					sd->vd.class_ = class_;
+					clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
+					sd->vd.head_top = sd->status.head_top;
+					sd->vd.head_mid = sd->status.head_mid;
+					sd->vd.head_bottom = sd->status.head_bottom;
+					sd->vd.hair_style = cap_value(sd->status.hair,0,battle_config.max_hair_style);
+					sd->vd.hair_color = cap_value(sd->status.hair_color,0,battle_config.max_hair_color);
+					sd->vd.cloth_color = cap_value(sd->status.clothes_color,0,battle_config.max_cloth_color);
+					sd->vd.robe = sd->status.robe;
+					sd->vd.sex = sd->status.sex;
+					
+					if ( sd->vd.cloth_color ) {
+						if( sd->sc.option&OPTION_WEDDING && battle_config.wedding_ignorepalette )
+							sd->vd.cloth_color = 0;
+						if( sd->sc.option&OPTION_XMAS && battle_config.xmas_ignorepalette )
+							sd->vd.cloth_color = 0;
+						if( sd->sc.option&OPTION_SUMMER && battle_config.summer_ignorepalette )
+							sd->vd.cloth_color = 0;
+						if( sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette )
+							sd->vd.cloth_color = 0;
 					}
-				}
-			} else
-				ShowError("status_set_viewdata (PET): No view data for class %d\n", class_);
-		}
-	break;
-	case BL_NPC:
-		{
-			TBL_NPC* nd = (TBL_NPC*)bl;
-			if (vd)
-				nd->vd = vd;
-			else
-				ShowError("status_set_viewdata (NPC): No view data for class %d\n", class_);
-		}
-	break;
-	case BL_HOM:		//[blackhole89]
-		{
-			struct homun_data *hd = (struct homun_data*)bl;
-			if (vd)
-				hd->vd = vd;
-			else
-				ShowError("status_set_viewdata (HOMUNCULUS): No view data for class %d\n", class_);
-		}
+				} else if (vd)
+					memcpy(&sd->vd, vd, sizeof(struct view_data));
+				else
+					ShowError("status_set_viewdata (PC): No view data for class %d\n", class_);
+			}
 		break;
-	case BL_MER:
-		{
-			struct mercenary_data *md = (struct mercenary_data*)bl;
-			if (vd)
-				md->vd = vd;
-			else
-				ShowError("status_set_viewdata (MERCENARY): No view data for class %d\n", class_);
-		}
+		case BL_MOB:
+			{
+				TBL_MOB* md = (TBL_MOB*)bl;
+				if (vd)
+					md->vd = vd;
+				else
+					ShowError("status_set_viewdata (MOB): No view data for class %d\n", class_);
+			}
 		break;
-	case BL_ELEM:
-		{
-			struct elemental_data *ed = (struct elemental_data*)bl;
-			if (vd)
-				ed->vd = vd;
-			else
-				ShowError("status_set_viewdata (ELEMENTAL): No view data for class %d\n", class_);
-		}
+		case BL_PET:
+			{
+				TBL_PET* pd = (TBL_PET*)bl;
+				if (vd) {
+					memcpy(&pd->vd, vd, sizeof(struct view_data));
+					if (!pcdb_checkid(vd->class_)) {
+						pd->vd.hair_style = battle_config.pet_hair_style;
+						if(pd->pet.equip) {
+							pd->vd.head_bottom = itemdb_viewid(pd->pet.equip);
+							if (!pd->vd.head_bottom)
+								pd->vd.head_bottom = pd->pet.equip;
+						}
+					}
+				} else
+					ShowError("status_set_viewdata (PET): No view data for class %d\n", class_);
+			}
 		break;
+		case BL_NPC:
+			{
+				TBL_NPC* nd = (TBL_NPC*)bl;
+				if (vd)
+					nd->vd = vd;
+				else
+					ShowError("status_set_viewdata (NPC): No view data for class %d\n", class_);
+			}
+		break;
+		case BL_HOM:		//[blackhole89]
+			{
+				struct homun_data *hd = (struct homun_data*)bl;
+				if (vd)
+					hd->vd = vd;
+				else
+					ShowError("status_set_viewdata (HOMUNCULUS): No view data for class %d\n", class_);
+			}
+			break;
+		case BL_MER:
+			{
+				struct mercenary_data *md = (struct mercenary_data*)bl;
+				if (vd)
+					md->vd = vd;
+				else
+					ShowError("status_set_viewdata (MERCENARY): No view data for class %d\n", class_);
+			}
+			break;
+		case BL_ELEM:
+			{
+				struct elemental_data *ed = (struct elemental_data*)bl;
+				if (vd)
+					ed->vd = vd;
+				else
+					ShowError("status_set_viewdata (ELEMENTAL): No view data for class %d\n", class_);
+			}
+			break;
 	}
-	vd = status_get_viewdata(bl);
-	if (vd && vd->cloth_color && (
-		(vd->class_==JOB_WEDDING && battle_config.wedding_ignorepalette)
-		|| (vd->class_==JOB_XMAS && battle_config.xmas_ignorepalette)
-		|| (vd->class_==JOB_SUMMER && battle_config.summer_ignorepalette)
-	))
-		vd->cloth_color = 0;
 }
 
 /// Returns the status_change data of bl or NULL if it doesn't exist.
@@ -7327,17 +7326,10 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		case SC_WEDDING:
 		case SC_XMAS:
 		case SC_SUMMER:
+		case SC_HANBOK:
 			if (!vd) return 0;
 			//Store previous values as they could be removed.
-			val1 = vd->class_;
-			val2 = vd->weapon;
-			val3 = vd->shield;
-			val4 = vd->cloth_color;
 			unit_stop_attack(bl);
-			clif->changelook(bl,LOOK_WEAPON,0);
-			clif->changelook(bl,LOOK_SHIELD,0);
-			clif->changelook(bl,LOOK_BASE,type==SC_WEDDING?JOB_WEDDING:type==SC_XMAS?JOB_XMAS:JOB_SUMMER);
-			clif->changelook(bl,LOOK_CLOTHES_COLOR,vd->cloth_color);
 			break;
 		case SC_NOCHAT:
 			// [GodLesZ] FIXME: is this correct? a hardcoded interval of 60sec? what about configuration ?_?
@@ -7466,6 +7458,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		case SC_READYTURN:
 		case SC_DODGE:
 		case SC_PUSH_CART:
+		case SC_ALL_RIDING:
 			tick = -1;
 			break;
 
@@ -8546,22 +8539,22 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				ShowError("UnknownStatusChange [%d]\n", type);
 				return 0;
 			}
-	}
-	else //Special considerations when loading SC data.
-	switch( type )
-	{
-		case SC_WEDDING:
-		case SC_XMAS:
-		case SC_SUMMER:
-			clif->changelook(bl,LOOK_WEAPON,0);
-			clif->changelook(bl,LOOK_SHIELD,0);
-			clif->changelook(bl,LOOK_BASE,type==SC_WEDDING?JOB_WEDDING:type==SC_XMAS?JOB_XMAS:JOB_SUMMER);
-			clif->changelook(bl,LOOK_CLOTHES_COLOR,val4);
-			break;
-		case SC_KAAHI:
-			val4 = INVALID_TIMER;
-			break;
-	}
+	} else //Special considerations when loading SC data.
+		switch( type ) {
+			case SC_WEDDING:
+			case SC_XMAS:
+			case SC_SUMMER:
+			case SC_HANBOK:
+				if( !vd ) break;
+				clif->changelook(bl,LOOK_BASE,vd->class_);
+				clif->changelook(bl,LOOK_WEAPON,0);
+				clif->changelook(bl,LOOK_SHIELD,0);
+				clif->changelook(bl,LOOK_CLOTHES_COLOR,vd->cloth_color);
+				break;
+			case SC_KAAHI:
+				val4 = INVALID_TIMER;
+				break;
+		}
 
 	//Those that make you stop attacking/walking....
 	switch (type) {
@@ -8619,8 +8612,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 
 	// Set option as needed.
 	opt_flag = 1;
-	switch(type)
-	{
+	switch(type) {
 		//OPT1
 		case SC_STONE:  sc->opt1 = OPT1_STONEWAIT; break;
 		case SC_FREEZE: sc->opt1 = OPT1_FREEZE;    break;
@@ -8756,12 +8748,19 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			break;
 		case SC_WEDDING:
 			sc->option |= OPTION_WEDDING;
+			opt_flag |= 0x4;
 			break;
 		case SC_XMAS:
 			sc->option |= OPTION_XMAS;
+			opt_flag |= 0x4;
 			break;
 		case SC_SUMMER:
 			sc->option |= OPTION_SUMMER;
+			opt_flag |= 0x4;
+			break;
+		case SC_HANBOK:
+			sc->option |= OPTION_HANBOK;
+			opt_flag |= 0x4;
 			break;
 		case SC_ORCISH:
 			sc->option |= OPTION_ORCISH;
@@ -8774,13 +8773,17 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 	}
 
 	//On Aegis, when turning on a status change, first goes the option packet, then the sc packet.
-	if(opt_flag)
+	if(opt_flag) {			
 		clif->changeoption(bl);
-
-	if (calc_flag&SCB_DYE)
-	{	//Reset DYE color
-		if (vd && vd->cloth_color)
-		{
+		if( sd && opt_flag&0x4 ) {
+			clif->changelook(bl,LOOK_BASE,vd->class_);
+			clif->changelook(bl,LOOK_WEAPON,0);
+			clif->changelook(bl,LOOK_SHIELD,0);
+			clif->changelook(bl,LOOK_CLOTHES_COLOR,vd->cloth_color);
+		}
+	}
+	if (calc_flag&SCB_DYE) {	//Reset DYE color
+		if (vd && vd->cloth_color) {
 			val4 = vd->cloth_color;
 			clif->changelook(bl,LOOK_CLOTHES_COLOR,0);
 		}
@@ -8936,6 +8939,7 @@ int status_change_clear(struct block_list* bl, int type) {
 			case SC_MELTDOWN:
 			case SC_XMAS:
 			case SC_SUMMER:
+			case SC_HANBOK:
 			case SC_NOCHAT:
 			case SC_FUSION:
 			case SC_EARTHSCROLL:
@@ -8974,6 +8978,7 @@ int status_change_clear(struct block_list* bl, int type) {
 			case SC_S_LIFEPOTION:
 			case SC_L_LIFEPOTION:
 			case SC_PUSH_CART:
+			case SC_ALL_RIDING:
 				continue;
 		}
 
@@ -8983,6 +8988,7 @@ int status_change_clear(struct block_list* bl, int type) {
 				case SC_WEIGHT90:
 				case SC_NOCHAT:
 				case SC_PUSH_CART:
+				case SC_ALL_RIDING:
 					continue;
 			}
 		}
@@ -9079,28 +9085,6 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
             if(bl->type == BL_PC)
                 skill->break_equip(bl,EQP_WEAPON,10000,BCT_SELF);
             break;
-		case SC_WEDDING:
-		case SC_XMAS:
-		case SC_SUMMER:
-			if (!vd) break;
-			if (sd)
-			{	//Load data from sd->status.* as the stored values could have changed.
-				//Must remove OPTION to prevent class being rechanged.
-				sc->option &= type==SC_WEDDING?~OPTION_WEDDING:type==SC_XMAS?~OPTION_XMAS:~OPTION_SUMMER;
-				clif->changeoption(&sd->bl);
-				status_set_viewdata(bl, sd->status.class_);
-			} else {
-				vd->class_ = sce->val1;
-				vd->weapon = sce->val2;
-				vd->shield = sce->val3;
-				vd->cloth_color = sce->val4;
-			}
-			clif->changelook(bl,LOOK_BASE,vd->class_);
-			clif->changelook(bl,LOOK_CLOTHES_COLOR,vd->cloth_color);
-			clif->changelook(bl,LOOK_WEAPON,vd->weapon);
-			clif->changelook(bl,LOOK_SHIELD,vd->shield);
-			if(sd) clif->skillinfoblock(sd);
-		break;
 		case SC_RUN:
 		{
 			struct unit_data *ud = unit_bl2ud(bl);
@@ -9496,169 +9480,175 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		case SC_INTRAVISION:
 			calc_flag = SCB_ALL;/* required for overlapping */
 			break;
-		}
+	}
 
 	opt_flag = 1;
 	switch(type){
-	case SC_STONE:
-	case SC_FREEZE:
-	case SC_STUN:
-	case SC_SLEEP:
-	case SC_DEEPSLEEP:
-	case SC_BURNING:
-	case SC_WHITEIMPRISON:
-	case SC_CRYSTALIZE:
-		sc->opt1 = 0;
-		break;
+		case SC_STONE:
+		case SC_FREEZE:
+		case SC_STUN:
+		case SC_SLEEP:
+		case SC_DEEPSLEEP:
+		case SC_BURNING:
+		case SC_WHITEIMPRISON:
+		case SC_CRYSTALIZE:
+			sc->opt1 = 0;
+			break;
 
-	case SC_POISON:
-	case SC_CURSE:
-	case SC_SILENCE:
-	case SC_BLIND:
-		sc->opt2 &= ~(1<<(type-SC_POISON));
-		break;
-	case SC_DPOISON:
-		sc->opt2 &= ~OPT2_DPOISON;
-		break;
-	case SC_SIGNUMCRUCIS:
-		sc->opt2 &= ~OPT2_SIGNUMCRUCIS;
-		break;
+		case SC_POISON:
+		case SC_CURSE:
+		case SC_SILENCE:
+		case SC_BLIND:
+			sc->opt2 &= ~(1<<(type-SC_POISON));
+			break;
+		case SC_DPOISON:
+			sc->opt2 &= ~OPT2_DPOISON;
+			break;
+		case SC_SIGNUMCRUCIS:
+			sc->opt2 &= ~OPT2_SIGNUMCRUCIS;
+			break;
 
-	case SC_HIDING:
-		sc->option &= ~OPTION_HIDE;
-		opt_flag|= 2|4; //Check for warp trigger + AoE trigger
-		break;
-	case SC_CLOAKING:
-	case SC_CLOAKINGEXCEED:
-	case SC__INVISIBILITY:
-		sc->option &= ~OPTION_CLOAK;
-	case SC_CAMOUFLAGE:
-		opt_flag|= 2;
-		break;
-	case SC_CHASEWALK:
-		sc->option &= ~(OPTION_CHASEWALK|OPTION_CLOAK);
-		opt_flag|= 2;
-		break;
-	case SC_SIGHT:
-		sc->option &= ~OPTION_SIGHT;
-		break;
-	case SC_WEDDING:
-		sc->option &= ~OPTION_WEDDING;
-		break;
-	case SC_XMAS:
-		sc->option &= ~OPTION_XMAS;
-		break;
-	case SC_SUMMER:
-		sc->option &= ~OPTION_SUMMER;
-		break;
-	case SC_ORCISH:
-		sc->option &= ~OPTION_ORCISH;
-		break;
-	case SC_RUWACH:
-		sc->option &= ~OPTION_RUWACH;
-		break;
-	case SC_FUSION:
-		sc->option &= ~OPTION_FLYING;
-		break;
-	//opt3
-	case SC_TWOHANDQUICKEN:
-	case SC_ONEHAND:
-	case SC_SPEARQUICKEN:
-	case SC_CONCENTRATION:
-	case SC_MERC_QUICKEN:
-		sc->opt3 &= ~OPT3_QUICKEN;
-		opt_flag = 0;
-		break;
-	case SC_OVERTHRUST:
-	case SC_MAXOVERTHRUST:
-	case SC_SWOO:
-		sc->opt3 &= ~OPT3_OVERTHRUST;
-		if( type == SC_SWOO )
-			opt_flag = 8;
-		else
-			opt_flag = 0;
-		break;
-	case SC_ENERGYCOAT:
-	case SC_SKE:
-		sc->opt3 &= ~OPT3_ENERGYCOAT;
-		opt_flag = 0;
-		break;
-	case SC_INCATKRATE: //Simulated Explosion spirits effect.
-		if (bl->type != BL_MOB)
-		{
+		case SC_HIDING:
+			sc->option &= ~OPTION_HIDE;
+			opt_flag|= 2|4; //Check for warp trigger + AoE trigger
+			break;
+		case SC_CLOAKING:
+		case SC_CLOAKINGEXCEED:
+		case SC__INVISIBILITY:
+			sc->option &= ~OPTION_CLOAK;
+		case SC_CAMOUFLAGE:
+			opt_flag|= 2;
+			break;
+		case SC_CHASEWALK:
+			sc->option &= ~(OPTION_CHASEWALK|OPTION_CLOAK);
+			opt_flag|= 2;
+			break;
+		case SC_SIGHT:
+			sc->option &= ~OPTION_SIGHT;
+			break;
+		case SC_WEDDING:
+			sc->option &= ~OPTION_WEDDING;
+			opt_flag |= 0x4;
+			break;
+		case SC_XMAS:
+			sc->option &= ~OPTION_XMAS;
+			opt_flag |= 0x4;
+			break;
+		case SC_SUMMER:
+			sc->option &= ~OPTION_SUMMER;
+			opt_flag |= 0x4;
+			break;
+		case SC_HANBOK:
+			sc->option &= ~OPTION_HANBOK;
+			opt_flag |= 0x4;
+			break;
+		case SC_ORCISH:
+			sc->option &= ~OPTION_ORCISH;
+			break;
+		case SC_RUWACH:
+			sc->option &= ~OPTION_RUWACH;
+			break;
+		case SC_FUSION:
+			sc->option &= ~OPTION_FLYING;
+			break;
+		//opt3
+		case SC_TWOHANDQUICKEN:
+		case SC_ONEHAND:
+		case SC_SPEARQUICKEN:
+		case SC_CONCENTRATION:
+		case SC_MERC_QUICKEN:
+			sc->opt3 &= ~OPT3_QUICKEN;
 			opt_flag = 0;
 			break;
-		}
-	case SC_EXPLOSIONSPIRITS:
-		sc->opt3 &= ~OPT3_EXPLOSIONSPIRITS;
-		opt_flag = 0;
-		break;
-	case SC_STEELBODY:
-	case SC_SKA:
-		sc->opt3 &= ~OPT3_STEELBODY;
-		opt_flag = 0;
-		break;
-	case SC_BLADESTOP:
-		sc->opt3 &= ~OPT3_BLADESTOP;
-		opt_flag = 0;
-		break;
-	case SC_AURABLADE:
-		sc->opt3 &= ~OPT3_AURABLADE;
-		opt_flag = 0;
-		break;
-	case SC_BERSERK:
-		opt_flag = 0;
-//	case SC__BLOODYLUST:
-		sc->opt3 &= ~OPT3_BERSERK;
-		break;
-//	case ???: // doesn't seem to do anything
-//		sc->opt3 &= ~OPT3_LIGHTBLADE;
-//		opt_flag = 0;
-//		break;
-	case SC_DANCING:
-		if ((sce->val1&0xFFFF) == CG_MOONLIT)
-			sc->opt3 &= ~OPT3_MOONLIT;
-		opt_flag = 0;
-		break;
-	case SC_MARIONETTE:
-	case SC_MARIONETTE2:
-		sc->opt3 &= ~OPT3_MARIONETTE;
-		opt_flag = 0;
-		break;
-	case SC_ASSUMPTIO:
-		sc->opt3 &= ~OPT3_ASSUMPTIO;
-		opt_flag = 0;
-		break;
-	case SC_WARM: //SG skills [Komurka]
-		sc->opt3 &= ~OPT3_WARM;
-		opt_flag = 0;
-		break;
-	case SC_KAITE:
-		sc->opt3 &= ~OPT3_KAITE;
-		opt_flag = 0;
-		break;
-	case SC_BUNSINJYUTSU:
-		sc->opt3 &= ~OPT3_BUNSIN;
-		opt_flag = 0;
-		break;
-	case SC_SPIRIT:
-		sc->opt3 &= ~OPT3_SOULLINK;
-		opt_flag = 0;
-		break;
-	case SC_CHANGEUNDEAD:
-		sc->opt3 &= ~OPT3_UNDEAD;
-		opt_flag = 0;
-		break;
-//	case ???: // from DA_CONTRACT (looks like biolab mobs aura)
-//		sc->opt3 &= ~OPT3_CONTRACT;
-//		opt_flag = 0;
-//		break;
-	default:
-		opt_flag = 0;
+		case SC_OVERTHRUST:
+		case SC_MAXOVERTHRUST:
+		case SC_SWOO:
+			sc->opt3 &= ~OPT3_OVERTHRUST;
+			if( type == SC_SWOO )
+				opt_flag = 8;
+			else
+				opt_flag = 0;
+			break;
+		case SC_ENERGYCOAT:
+		case SC_SKE:
+			sc->opt3 &= ~OPT3_ENERGYCOAT;
+			opt_flag = 0;
+			break;
+		case SC_INCATKRATE: //Simulated Explosion spirits effect.
+			if (bl->type != BL_MOB)
+			{
+				opt_flag = 0;
+				break;
+			}
+		case SC_EXPLOSIONSPIRITS:
+			sc->opt3 &= ~OPT3_EXPLOSIONSPIRITS;
+			opt_flag = 0;
+			break;
+		case SC_STEELBODY:
+		case SC_SKA:
+			sc->opt3 &= ~OPT3_STEELBODY;
+			opt_flag = 0;
+			break;
+		case SC_BLADESTOP:
+			sc->opt3 &= ~OPT3_BLADESTOP;
+			opt_flag = 0;
+			break;
+		case SC_AURABLADE:
+			sc->opt3 &= ~OPT3_AURABLADE;
+			opt_flag = 0;
+			break;
+		case SC_BERSERK:
+			opt_flag = 0;
+	//	case SC__BLOODYLUST:
+			sc->opt3 &= ~OPT3_BERSERK;
+			break;
+	//	case ???: // doesn't seem to do anything
+	//		sc->opt3 &= ~OPT3_LIGHTBLADE;
+	//		opt_flag = 0;
+	//		break;
+		case SC_DANCING:
+			if ((sce->val1&0xFFFF) == CG_MOONLIT)
+				sc->opt3 &= ~OPT3_MOONLIT;
+			opt_flag = 0;
+			break;
+		case SC_MARIONETTE:
+		case SC_MARIONETTE2:
+			sc->opt3 &= ~OPT3_MARIONETTE;
+			opt_flag = 0;
+			break;
+		case SC_ASSUMPTIO:
+			sc->opt3 &= ~OPT3_ASSUMPTIO;
+			opt_flag = 0;
+			break;
+		case SC_WARM: //SG skills [Komurka]
+			sc->opt3 &= ~OPT3_WARM;
+			opt_flag = 0;
+			break;
+		case SC_KAITE:
+			sc->opt3 &= ~OPT3_KAITE;
+			opt_flag = 0;
+			break;
+		case SC_BUNSINJYUTSU:
+			sc->opt3 &= ~OPT3_BUNSIN;
+			opt_flag = 0;
+			break;
+		case SC_SPIRIT:
+			sc->opt3 &= ~OPT3_SOULLINK;
+			opt_flag = 0;
+			break;
+		case SC_CHANGEUNDEAD:
+			sc->opt3 &= ~OPT3_UNDEAD;
+			opt_flag = 0;
+			break;
+	//	case ???: // from DA_CONTRACT (looks like biolab mobs aura)
+	//		sc->opt3 &= ~OPT3_CONTRACT;
+	//		opt_flag = 0;
+	//		break;
+		default:
+			opt_flag = 0;
 	}
 
-	if (calc_flag&SCB_DYE)
-	{	//Restore DYE color
+	if (calc_flag&SCB_DYE) { //Restore DYE color
 		if (vd && !vd->cloth_color && sce->val4)
 			clif->changelook(bl,LOOK_CLOTHES_COLOR,sce->val4);
 		calc_flag&=~SCB_DYE;
@@ -9669,8 +9659,16 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 
 	if( opt_flag&8 ) //bugreport:681
 		clif->changeoption2(bl);
-	else if(opt_flag)
+	else if(opt_flag) {
 		clif->changeoption(bl);
+		if( sd && opt_flag&0x4 ) {
+			clif->changelook(bl,LOOK_BASE,vd->class_);
+			clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
+			clif->changelook(bl,LOOK_WEAPON,sd->vd.weapon);
+			clif->changelook(bl,LOOK_SHIELD,sd->vd.shield);
+			clif->changelook(bl,LOOK_CLOTHES_COLOR,cap_value(sd->status.clothes_color,0,battle_config.max_cloth_color));
+		}
+	}
 
 	if (calc_flag)
 		status_calc_bl(bl,calc_flag);

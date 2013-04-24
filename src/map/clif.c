@@ -772,8 +772,7 @@ void clif_clearunit_delayed(struct block_list* bl, clr_type type, unsigned int t
 
 void clif_get_weapon_view(struct map_session_data* sd, unsigned short *rhand, unsigned short *lhand)
 {
-	if(sd->sc.option&(OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER))
-	{
+	if(sd->sc.option&(OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER|OPTION_HANBOK)) {
 		*rhand = *lhand = 0;
 		return;
 	}
@@ -1358,7 +1357,7 @@ int clif_spawn(struct block_list *bl)
 					clif->specialeffect(bl,421,AREA);
 				if( sd->bg_id && map[sd->bl.m].flag.battleground )
 					clif->sendbgemblem_area(sd);
-				if( sd->sc.option&OPTION_MOUNTING ) {
+				if( sd->sc.data[SC_ALL_RIDING] ) {
 					//New Mounts are not complaint to the original method, so we gotta tell this guy that he is mounting.
 					clif->sc_notick(&sd->bl,SI_ALL_RIDING,2,1,0,0);
 				}
@@ -3244,15 +3243,24 @@ void clif_changelook(struct block_list *bl,int type,int val)
 					vd->shield = val;
 			break;
 			case LOOK_BASE:
-				vd->class_ = val;
-				if (vd->class_ == JOB_WEDDING || vd->class_ == JOB_XMAS || vd->class_ == JOB_SUMMER)
+				if( !sd ) break;
+				
+				if( sd->sc.option&(OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER|OPTION_HANBOK) )
 					vd->weapon = vd->shield = 0;
-				if (vd->cloth_color && (
-					(vd->class_ == JOB_WEDDING && battle_config.wedding_ignorepalette) ||
-					(vd->class_ == JOB_XMAS && battle_config.xmas_ignorepalette) ||
-					(vd->class_ == JOB_SUMMER && battle_config.summer_ignorepalette)
-				))
-					clif->changelook(bl,LOOK_CLOTHES_COLOR,0);
+				
+				if( !vd->cloth_color )
+					break;
+				
+				if( sd ) {
+					if( sd->sc.option&OPTION_WEDDING && battle_config.wedding_ignorepalette )
+						vd->cloth_color = 0;
+					if( sd->sc.option&OPTION_XMAS && battle_config.xmas_ignorepalette )
+						vd->cloth_color = 0;
+					if( sd->sc.option&OPTION_SUMMER && battle_config.summer_ignorepalette )
+						vd->cloth_color = 0;
+					if( sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette )
+						vd->cloth_color = 0;
+				}
 			break;
 			case LOOK_HAIR:
 				vd->hair_style = val;
@@ -3270,12 +3278,16 @@ void clif_changelook(struct block_list *bl,int type,int val)
 				vd->hair_color = val;
 			break;
 			case LOOK_CLOTHES_COLOR:
-				if (val && (
-					(vd->class_ == JOB_WEDDING && battle_config.wedding_ignorepalette) ||
-					(vd->class_ == JOB_XMAS && battle_config.xmas_ignorepalette) ||
-					(vd->class_ == JOB_SUMMER && battle_config.summer_ignorepalette)
-				))
-					val = 0;
+				if( val && sd ) {
+					if( sd->sc.option&OPTION_WEDDING && battle_config.wedding_ignorepalette )
+						val = 0;
+					if( sd->sc.option&OPTION_XMAS && battle_config.xmas_ignorepalette )
+						val = 0;
+					if( sd->sc.option&OPTION_SUMMER && battle_config.summer_ignorepalette )
+						val = 0;
+					if( sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette )
+						val = 0;
+				}
 				vd->cloth_color = val;
 			break;
 			case LOOK_SHOES:
@@ -4297,7 +4309,7 @@ void clif_getareachar_pc(struct map_session_data* sd,struct map_session_data* ds
 		if( dstsd->talisman[i] > 0 )
 			clif->talisman_single(sd->fd, dstsd, i);
 	}
-	if( dstsd->sc.option&OPTION_MOUNTING ) {
+	if( dstsd->sc.data[SC_ALL_RIDING] ) {
 		//New Mounts are not complaint to the original method, so we gotta tell this guy that I'm mounting.
 		clif->sc_single(sd->fd,dstsd->bl.id,SI_ALL_RIDING,2,1,0,0);
 	}
@@ -10037,7 +10049,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 			if( pc_cant_act(sd) || sd->sc.option&OPTION_HIDE )
 				return;
 
-			if( sd->sc.option&(OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER) )
+			if( sd->sc.option&(OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER|OPTION_HANBOK) )
 				return;
 
 			if( sd->sc.data[SC_BASILICA] || sd->sc.data[SC__SHADOWFORM] )
@@ -11185,7 +11197,7 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 		}
 	}
 
-	if( sd->sc.option&(OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER) )
+	if( sd->sc.option&(OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER|OPTION_HANBOK) )
 		return;
 
 	if( sd->sc.data[SC_BASILICA] && (skill_id != HP_BASILICA || sd->sc.data[SC_BASILICA]->val4 != sd->bl.id) )
@@ -11269,7 +11281,7 @@ void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uint16 ski
 		}
 	}
 
-	if( sd->sc.option&(OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER) )
+	if( sd->sc.option&(OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER|OPTION_HANBOK) )
 		return;
 
 	if( sd->sc.data[SC_BASILICA] && (skill_id != HP_BASILICA || sd->sc.data[SC_BASILICA]->val4 != sd->bl.id) )

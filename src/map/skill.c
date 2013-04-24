@@ -512,7 +512,7 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 	if( sd->skillitem == skill_id )
 		return 0;
 	
-	if( sd->sc.option&OPTION_MOUNTING )
+	if( sd->sc.data[SC_ALL_RIDING] )
 		return 1;//You can't use skills while in the new mounts (The client doesn't let you, this is to make cheat-safe)
 
 	switch (skill_id) {

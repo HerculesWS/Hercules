@@ -8504,12 +8504,12 @@ ACMD(charcommands)
 ACMD(mount2) {
 	
 	clif->message(sd->fd,msg_txt(1362)); // NOTICE: If you crash with mount your LUA is outdated.
-	if( !(sd->sc.option&OPTION_MOUNTING) ) {
+	if( !(sd->sc.data[SC_ALL_RIDING]) ) {
 		clif->message(sd->fd,msg_txt(1363)); // You have mounted.
-		pc_setoption(sd, sd->sc.option|OPTION_MOUNTING);
+		sc_start(&sd->bl,SC_ALL_RIDING,100,0,-1);
 	} else {
 		clif->message(sd->fd,msg_txt(1364)); // You have released your mount.
-		pc_setoption(sd, sd->sc.option&~OPTION_MOUNTING);
+		status_change_end(&sd->bl, SC_ALL_RIDING, INVALID_TIMER);
 	}
 	return true;
 }
@@ -9380,6 +9380,56 @@ ACMD(searchstore){
 	
 	return true;
 }
+ACMD(costume){
+	const char* names[4] = {
+		"Wedding",
+		"Xmas",
+		"Summer",
+		"Hanbok",
+	};
+	const int name2id[4] = { SC_WEDDING, SC_XMAS, SC_SUMMER, SC_HANBOK };
+	unsigned short k = 0;
+	
+	if( !message || !*message ) {
+		for( k = 0; k < 4; k++ ) {
+			if( sd->sc.data[name2id[k]] ) {
+				sprintf(atcmd_output,msg_txt(1473),names[k]);//Costume '%s' removed.
+				clif->message(sd->fd,atcmd_output);
+				status_change_end(&sd->bl,name2id[k],INVALID_TIMER);
+				return true;
+			}
+		}
+		
+		clif->message(sd->fd,msg_txt(1472));
+		for( k = 0; k < 4; k++ ) {
+			sprintf(atcmd_output,msg_txt(1471),names[k]);//-- %s
+			clif->message(sd->fd,atcmd_output);
+		}
+		return false;
+	}
+	
+	for( k = 0; k < 4; k++ ) {
+		if( sd->sc.data[name2id[k]] ) {
+			sprintf(atcmd_output,msg_txt(1470),names[k]);// You're already with a '%s' costume, type '@costume' to remove it.
+			clif->message(sd->fd,atcmd_output);
+			return false;
+		}
+	}
+	
+	for( k = 0; k < 4; k++ ) {
+		if( strcmpi(message,names[k]) == 0 )
+			break;
+	}
+	if( k == 4 ) {
+		sprintf(atcmd_output,msg_txt(1469),message);// '%s' is not a known costume
+		clif->message(sd->fd,atcmd_output);
+		return false;
+	}
+	
+	sc_start(&sd->bl, name2id[k], 100, 0, -1);
+	
+	return true;
+}
 /**
  * Fills the reference of available commands in atcommand DBMap
  **/
@@ -9644,6 +9694,7 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(channel),
 		ACMD_DEF(fontcolor),
 		ACMD_DEF(searchstore),
+		ACMD_DEF(costume),
 	};
 	AtCommandInfo* cmd;
 	int i;

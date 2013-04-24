@@ -457,8 +457,8 @@ void pc_inventory_rentals(struct map_session_data *sd)
 
 		if( sd->status.inventory[i].expire_time <= time(NULL) ) {
 			if( sd->status.inventory[i].nameid == ITEMID_REINS_OF_MOUNT
-					&& sd->sc.option&OPTION_MOUNTING ) {
-				pc_setoption(sd, sd->sc.option&~OPTION_MOUNTING);
+					&& sd->sc.data[SC_ALL_RIDING] ) {
+				status_change_end(&sd->bl,SC_ALL_RIDING,INVALID_TIMER);
 			}
 			clif->rental_expired(sd->fd, i, sd->status.inventory[i].nameid);
 			pc_delitem(sd, i, sd->status.inventory[i].amount, 0, 0, LOG_TYPE_OTHER);
@@ -518,9 +518,9 @@ int pc_makesavestatus(struct map_session_data *sd)
   	//Only copy the Cart/Peco/Falcon options, the rest are handled via
 	//status change load/saving. [Skotlex]
 #ifdef NEW_CARTS
-	sd->status.option = sd->sc.option&(OPTION_INVISIBLE|OPTION_FALCON|OPTION_RIDING|OPTION_DRAGON|OPTION_WUG|OPTION_WUGRIDER|OPTION_MADOGEAR|OPTION_MOUNTING);
+	sd->status.option = sd->sc.option&(OPTION_INVISIBLE|OPTION_FALCON|OPTION_RIDING|OPTION_DRAGON|OPTION_WUG|OPTION_WUGRIDER|OPTION_MADOGEAR);
 #else
-	sd->status.option = sd->sc.option&(OPTION_INVISIBLE|OPTION_CART|OPTION_FALCON|OPTION_RIDING|OPTION_DRAGON|OPTION_WUG|OPTION_WUGRIDER|OPTION_MADOGEAR|OPTION_MOUNTING);
+	sd->status.option = sd->sc.option&(OPTION_INVISIBLE|OPTION_CART|OPTION_FALCON|OPTION_RIDING|OPTION_DRAGON|OPTION_WUG|OPTION_WUGRIDER|OPTION_MADOGEAR);
 #endif
 	if (sd->sc.data[SC_JAILED])
 	{	//When Jailed, do not move last point.
@@ -4293,7 +4293,7 @@ int pc_useitem(struct map_session_data *sd,int n)
 	
 	/* Items with delayed consume are not meant to work while in mounts except reins of mount(12622) */
 	if( sd->inventory_data[n]->flag.delay_consume ) {
-		if( nameid != ITEMID_REINS_OF_MOUNT && sd->sc.option&OPTION_MOUNTING )
+		if( nameid != ITEMID_REINS_OF_MOUNT && sd->sc.data[SC_ALL_RIDING] )
 			return 0;
 		else if( pc_issit(sd) )
 			return 0;
@@ -6337,8 +6337,6 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 			i &= ~OPTION_WUGRIDER;
 		if( i&OPTION_MADOGEAR && ( sd->class_&MAPID_THIRDMASK ) == MAPID_MECHANIC )
 			i &= ~OPTION_MADOGEAR;
-		if( i&OPTION_MOUNTING )
-			i &= ~OPTION_MOUNTING;
 #ifndef NEW_CARTS
 		if( i&OPTION_CART && pc_checkskill(sd, MC_PUSHCART) )
 			i &= ~OPTION_CART;
@@ -7632,15 +7630,6 @@ int pc_setoption(struct map_session_data *sd,int type)
 	}
 #endif
 
-	if (type&OPTION_MOUNTING && !(p_type&OPTION_MOUNTING) ) {
-		clif->sc_notick(&sd->bl,SI_ALL_RIDING,2,1,0,0);
-		status_calc_pc(sd,0);
-	} else if (!(type&OPTION_MOUNTING) && p_type&OPTION_MOUNTING) {
-		clif->sc_notick(&sd->bl,SI_ALL_RIDING,0,0,0,0);
-		status_calc_pc(sd,0);
-	}
-
-
 	if (type&OPTION_FALCON && !(p_type&OPTION_FALCON)) //Falcon ON
 		clif->status_change(&sd->bl, SI_FALCON, 1, 0, 0, 0, 0);
 	else if (!(type&OPTION_FALCON) && p_type&OPTION_FALCON) //Falcon OFF
@@ -7679,22 +7668,7 @@ int pc_setoption(struct map_session_data *sd,int type)
 		new_look = JOB_STAR_GLADIATOR2;
 	else if (!(type&OPTION_FLYING) && p_type&OPTION_FLYING)
 		new_look = -1;
-
-	if (type&OPTION_WEDDING && !(p_type&OPTION_WEDDING))
-		new_look = JOB_WEDDING;
-	else if (!(type&OPTION_WEDDING) && p_type&OPTION_WEDDING)
-		new_look = -1;
-
-	if (type&OPTION_XMAS && !(p_type&OPTION_XMAS))
-		new_look = JOB_XMAS;
-	else if (!(type&OPTION_XMAS) && p_type&OPTION_XMAS)
-		new_look = -1;
-
-	if (type&OPTION_SUMMER && !(p_type&OPTION_SUMMER))
-		new_look = JOB_SUMMER;
-	else if (!(type&OPTION_SUMMER) && p_type&OPTION_SUMMER)
-		new_look = -1;
-
+	
 	if (sd->disguise || !new_look)
 		return 0; //Disguises break sprite changes
 
