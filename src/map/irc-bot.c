@@ -22,7 +22,7 @@
 char send_string[200];
 
 int irc_connect_timer(int tid, unsigned int tick, int id, intptr_t data) {
-	if( ircbot->fd != -1 || session[ircbot->fd] || ++ircbot->fails >= 3 )
+	if( ircbot->isOn || ++ircbot->fails >= 3 )
 		return 0;
 	
 	ircbot->last_try = gettick();
@@ -35,7 +35,7 @@ int irc_connect_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 
 int irc_identify_timer(int tid, unsigned int tick, int id, intptr_t data) {
-	if( ircbot->fd == -1 )
+	if( !ircbot->isOn )
 		return 0;
 	
 	sprintf(send_string, "USER HerculesWS%d 8 * : Hercules IRC Bridge",rand()%777);
@@ -49,7 +49,7 @@ int irc_identify_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 
 int irc_join_timer(int tid, unsigned int tick, int id, intptr_t data) {
-	if( ircbot->fd == -1 )
+	if( !ircbot->isOn )
 		return 0;
 	
 	if( hChSys.irc_nick_pw[0] != '\0' ) {
@@ -79,7 +79,8 @@ int irc_parse(int fd) {
 
 	if (session[fd]->flag.eof) {
 		do_close(fd);
-		ircbot->fd = -1;
+		ircbot->fd = 0;
+		ircbot->isOn = false;
 		ircbot->isIn = false;
 		ircbot->fails = 0;
 		ircbot->ip = host2ip(hChSys.irc_server);
@@ -225,8 +226,9 @@ void irc_bot_init(void) {
 	}
 	
 	ircbot->fails = 0;
-	ircbot->fd = -1;
-	ircbot->isIn = true;
+	ircbot->fd = 0;
+	ircbot->isIn = false;
+	ircbot->isOn = false;
 	
 	add_timer_func_list(ircbot->connect_timer, "irc_connect_timer");
 	add_timer(gettick() + 7000, ircbot->connect_timer, 0, 0);
@@ -237,7 +239,7 @@ void irc_bot_final(void) {
 	
 	if( !hChSys.irc )
 		return;
-	if( ircbot->fd != -1 ) {
+	if( ircbot->isOn ) {
 		ircbot->send("QUIT :Hercules is shutting down");
 		do_close(ircbot->fd);
 	}

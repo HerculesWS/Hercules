@@ -17,7 +17,7 @@ struct irc_func {
 
 struct irc_bot_interface {
 	int fd;
-	bool isIn;
+	bool isIn, isOn;
 	unsigned int last_try;
 	unsigned char fails;
 	unsigned long ip;
