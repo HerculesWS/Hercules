@@ -17,7 +17,7 @@ server types, so a client diff is required to ensure the hash is sent.
 A link containing the required WeeDiffGen plugin can be found at:
 http://rathena.org/board/topic/70841-r16771-client-md5-hash-check/
 
-The settings for the hash check are located in conf\login_athena.conf:
+The settings for the hash check are located in conf\login.conf:
 
 // Client MD5 hash check
 // If turned on, the login server will check if the client's hash matches
