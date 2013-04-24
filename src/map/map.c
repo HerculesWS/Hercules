@@ -4500,9 +4500,10 @@ enum bl_type map_zone_bl_type(const char *entry, enum map_zone_skill_subtype *su
 			bl |= BL_ELEM;
 		else if( strcmpi(parse,"pet") == 0 )
 			bl |= BL_PET;
-		else if( strcmpi(parse,"all") == 0 )
+		else if( strcmpi(parse,"all") == 0 ) {
 			bl |= BL_ALL;
-		else if( strcmpi(parse,"none") == 0 ) {
+			*subtype |= MZS_ALL;
+		} else if( strcmpi(parse,"none") == 0 ) {
 			bl = BL_NUL;
 		} else {
 			ShowError("map_zone_db: '%s' unknown type, skipping...\n",parse);
