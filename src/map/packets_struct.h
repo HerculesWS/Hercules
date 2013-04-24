@@ -23,7 +23,7 @@ enum packet_headers {
 	additemType = 0xa0,
 #elif PACKETVER < 20071002
 	additemType = 0x29a,
-#elif PACKETVER < 2013000 /* not sure date */
+#elif PACKETVER < 20130000 /* not sure date */
 	additemType = 0x2d4,
 #else
 	additemType = 0x990,
@@ -85,7 +85,7 @@ enum packet_headers {
 #else
 	unit_walkingType = 0x914,
 #endif
-#if PACKETVER > 2013000 /* not sure date */
+#if PACKETVER > 20130000 /* not sure date */
 	dropflooritemType = 0x84b,
 #else
 	dropflooritemType = 0x9e,
