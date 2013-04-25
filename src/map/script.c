@@ -6540,11 +6540,11 @@ static bool buildin_delitem_search(struct map_session_data* sd, struct item* it,
 		
 		if( amount )
 		{// not enough items
-			return true;
+			return false;
 		}
 		else if( delete_items )
 		{// we are done with the work
-			return false;
+			return true;
 		}
 		else
 		{// get rid of the items now
