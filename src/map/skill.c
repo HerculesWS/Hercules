@@ -6350,7 +6350,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					case SC_EXEEDBREAK:		case SC_FORCEOFVANGUARD:	case SC_BANDING:
 					case SC_DUPLELIGHT:		case SC_EXPIATIO:		case SC_LAUDAAGNUS:
 					case SC_LAUDARAMUS:		case SC_GATLINGFEVER:	case SC_INCREASING:
-					case SC_ADJUSTMENT:		case SC_MADNESSCANCEL:
+					case SC_ADJUSTMENT:		case SC_MADNESSCANCEL:	case SC_ALL_RIDING:
 		#ifdef RENEWAL
 					case SC_EXTREMITYFIST2:
 		#endif
