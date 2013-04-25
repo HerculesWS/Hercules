@@ -851,7 +851,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 #endif
 	p.GID = bl->id;
 	p.speed = status_get_speed(bl);
-	p.bodypalette = (sc) ? sc->opt1 : 0;
+	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
 	p.effectState = (sc) ? sc->option : 0;
 	p.job = vd->class_;
@@ -1093,7 +1093,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 #endif
 	p.GID = bl->id;
 	p.speed = status_get_speed(bl);
-	p.bodypalette = (sc) ? sc->opt1 : 0;
+	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
 	p.effectState = (sc) ? sc->option : 0;
 	p.job = vd->class_;
@@ -1172,7 +1172,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 #endif
 	p.GID = bl->id;
 	p.speed = status_get_speed(bl);
-	p.bodypalette = (sc) ? sc->opt1 : 0;
+	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
 	p.effectState = (sc) ? sc->option : 0;
 	p.job = vd->class_;
