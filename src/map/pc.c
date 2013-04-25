@@ -4593,7 +4593,7 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	struct status_data *sd_status, *md_status;
 	struct mob_data *md;
 	struct item tmp_item;
-	struct item_data *data;
+	struct item_data *data = NULL;
 
 	if(!sd || !bl || bl->type!=BL_MOB)
 		return 0;
