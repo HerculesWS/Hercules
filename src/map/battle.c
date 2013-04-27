@@ -5858,6 +5858,7 @@ static const struct _battle_data {
 	{ "duel_time_interval",                 &battle_config.duel_time_interval,              60,     0,      INT_MAX,        },
 	{ "duel_only_on_same_map",              &battle_config.duel_only_on_same_map,           0,      0,      1,              },
 	{ "skip_teleport_lv1_menu",             &battle_config.skip_teleport_lv1_menu,          0,      0,      1,              },
+	{ "mob_max_skilllvl",                   &battle_config.mob_max_skilllvl,                100,	1,		INT_MAX,		},
 	{ "allow_skill_without_day",            &battle_config.allow_skill_without_day,         0,      0,      1,              },
 	{ "allow_es_magic_player",              &battle_config.allow_es_magic_pc,               0,      0,      1,              },
 	{ "skill_caster_check",                 &battle_config.skill_caster_check,              1,      0,      1,              },

@@ -2067,7 +2067,16 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
 		return;
 
 #if PACKETVER >= 20120404
-	clif->monster_hp_bar(md);
+	if( !(md->status.mode&MD_BOSS) ){
+		int i;
+		for(i = 0; i < DAMAGELOG_SIZE; i++){ // must show hp bar to all char who already hit the mob.
+			if( md->dmglog[i].id ) {
+				struct map_session_data *sd = map_charid2sd(md->dmglog[i].id);
+				if( sd && check_distance_bl(&md->bl, &sd->bl, AREA_SIZE) ) // check if in range
+					clif->monster_hp_bar(md,sd);
+			}
+		}
+	}
 #endif
 
 	if( md->special_state.ai == 2 ) {//LOne WOlf explained that ANYONE can trigger the marine countdown skill. [Skotlex]
@@ -4315,7 +4324,7 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 
 	//Skill lvl
 	j= atoi(str[4])<=0 ? 1 : atoi(str[4]);
-	ms->skill_lv= j;
+	ms->skill_lv= j>battle_config.mob_max_skilllvl ? battle_config.mob_max_skilllvl : j; //we strip max skill level
 
 	//Apply battle_config modifiers to rate (permillage) and delay [Skotlex]
 	tmp = atoi(str[5]);

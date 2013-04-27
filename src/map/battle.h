@@ -372,7 +372,7 @@ struct Battle_Config {
 	int duel_only_on_same_map; // [Toms]
 	
 	int skip_teleport_lv1_menu; // possibility to disable (skip) Teleport Lv1 menu, that have only two lines `Random` and `Cancel` [LuzZza]
-	
+	int mob_max_skilllvl;
 	int allow_skill_without_day; // [Komurka]
 	int allow_es_magic_pc; // [Skotlex]
 	int skill_wall_check; // [Skotlex]

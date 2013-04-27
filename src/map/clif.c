@@ -265,7 +265,7 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 	nullpo_ret(sd = (struct map_session_data *)bl);
 
 	fd = sd->fd;
-	if (!fd) //Don't send to disconnected clients.
+	if (!fd || session[fd] == NULL) //Don't send to disconnected clients.
 		return 0;
 
 	buf = va_arg(ap,void*);
@@ -296,9 +296,6 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 		}
 		break;
 	}
-
-	if (session[fd] == NULL)
-		return 0;
 
 	WFIFOHEAD(fd, len);
 	if (WFIFOP(fd,0) == buf) {
@@ -887,7 +884,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 #if PACKETVER >= 20080102
 	p.font = (sd) ? sd->user_font : 0;
 #endif
-#if PACKETVER >= 20120712
+#if PACKETVER >= 20140000 //actual 20120221
 	if( bl->type == BL_MOB ) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
@@ -1128,7 +1125,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 #if PACKETVER >= 20080102
 	p.font = (sd) ? sd->user_font : 0;
 #endif
-#if PACKETVER >= 20120712
+#if PACKETVER >= 20140000 //actual 20120221
 	if( bl->type == BL_MOB ) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
@@ -1203,7 +1200,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 #if PACKETVER >= 20080102
 	p.font = (sd) ? sd->user_font : 0;
 #endif
-#if PACKETVER >= 20120712
+#if PACKETVER >= 20140000 //actual 20120221
 	if( bl->type == BL_MOB ) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
@@ -4394,12 +4391,17 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 					clif->specialeffect_single(bl,423,sd->fd);
 				else if(md->special_state.size==SZ_MEDIUM)
 					clif->specialeffect_single(bl,421,sd->fd);
-			/* only between 04-04 and 07-12 (afterwards its bundled on the other packet) */
-			#if PACKETVER >= 20120404
-				#if PACKETVER <= 20120712
-						clif->monster_hp_bar(md);
-				#endif
-			#endif
+#if PACKETVER >= 20120404
+				if( !(md->status.mode&MD_BOSS) ){
+					int i;
+					for(i = 0; i < DAMAGELOG_SIZE; i++) {// must show hp bar to all char who already hit the mob.
+						if( md->dmglog[i].id == sd->status.char_id ) {
+							clif->monster_hp_bar(md, sd);
+							break;
+						}
+					}
+				}
+#endif
 			}
 			break;
 		case BL_PET:
@@ -16660,7 +16662,7 @@ void clif_snap( struct block_list *bl, short x, short y ) {
 	clif->send(buf,packet_len(0x8d2),bl,AREA);
 }
 
-void clif_monster_hp_bar( struct mob_data* md ) {
+void clif_monster_hp_bar( struct mob_data* md, struct map_session_data *sd ) {
 	struct packet_monster_hp p;
 	
 	p.PacketType = monsterhpType;
@@ -16668,7 +16670,7 @@ void clif_monster_hp_bar( struct mob_data* md ) {
 	p.HP = md->status.hp;
 	p.MaxHP = md->status.max_hp;
 	
-	clif->send(&p,sizeof(p),&md->bl,AREA_WOS);
+	clif->send(&p,sizeof(p),&sd->bl,SELF);
 }
 /* [Ind/Hercules] placeholder for unsupported incoming packets (avoids server disconnecting client) */
 void __attribute__ ((unused)) clif_parse_dull(int fd,struct map_session_data *sd) {
@@ -16789,7 +16791,7 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 
 /* [Ind/Hercules] */
 void clif_maptypeproperty2(struct block_list *bl,enum send_target t) {
-#if PACKETVER >= 20130000 /* not entirely sure when this started */
+#if PACKETVER >= 20121010
 	struct packet_maptypeproperty2 p;
 	
 	p.PacketType = maptypeproperty2Type;

@@ -23,7 +23,7 @@ enum packet_headers {
 	additemType = 0xa0,
 #elif PACKETVER < 20071002
 	additemType = 0x29a,
-#elif PACKETVER < 20130000 /* not sure date */
+#elif PACKETVER < 20120925
 	additemType = 0x2d4,
 #else
 	additemType = 0x990,
@@ -38,7 +38,7 @@ enum packet_headers {
 	idle_unitType = 0x2ee,
 #elif PACKETVER < 20101124
 	idle_unitType = 0x7f9,
-#elif PACKETVER < 20130000
+#elif PACKETVER < 20140000 //actual 20120221
 	idle_unitType = 0x857,
 #else
 	idle_unitType = 0x915,
@@ -60,7 +60,7 @@ enum packet_headers {
 	spawn_unitType = 0x2ed,
 #elif PACKETVER < 20101124
 	spawn_unitType = 0x7f8,
-#elif PACKETVER < 20130000
+#elif PACKETVER < 20140000 //actual 20120221
 	spawn_unitType = 0x858,
 #else
 	spawn_unitType = 0x90f,
@@ -80,7 +80,7 @@ enum packet_headers {
 	unit_walkingType = 0x2ec,
 #elif PACKETVER < 20101124
 	unit_walkingType = 0x7f7,
-#elif PACKETVER < 20130000
+#elif PACKETVER < 20140000 //actual 20120221
 	unit_walkingType = 0x856,
 #else
 	unit_walkingType = 0x914,
@@ -130,7 +130,7 @@ struct packet_additem {
 	bool IsDamaged;
 	unsigned char refiningLevel;
 	struct EQUIPSLOTINFO slot;
-#if PACKETVER >= 20130000 /* not sure */
+#if PACKETVER >= 20120925
 	unsigned int location;
 #else
 	unsigned short location;
@@ -211,7 +211,7 @@ struct packet_spawn_unit {
 #if PACKETVER >= 20080102
 	short font;
 #endif
-#if PACKETVER >= 20120712
+#if PACKETVER >= 20140000 //actual 20120221
 	int maxHP;
 	int HP;
 	unsigned char isBoss;
@@ -270,7 +270,7 @@ struct packet_unit_walking {
 #if PACKETVER >= 20080102
 	short font;
 #endif
-#if PACKETVER >= 20120712
+#if PACKETVER >= 20140000 //actual 20120221
 	int maxHP;
 	int HP;
 	unsigned char isBoss;
@@ -329,7 +329,7 @@ struct packet_idle_unit {
 #if PACKETVER >= 20080102
 	short font;
 #endif
-#if PACKETVER >= 20120712
+#if PACKETVER >= 20140000 //actual 20120221
 	int maxHP;
 	int HP;
 	unsigned char isBoss;
