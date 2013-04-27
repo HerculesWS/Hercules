@@ -16477,9 +16477,7 @@ BUILDIN(areamobuseskill)
 	range = script_getnum(st,5);
 	mobid = script_getnum(st,6);
 	skill_id = ( script_isstring(st,7) ? skill->name2id(script_getstr(st,7)) : script_getnum(st,7) );
-	if( (skill_lv = script_getnum(st,8)) > battle_config.mob_max_skilllvl )
-		skill_lv = battle_config.mob_max_skilllvl;
-	
+	skill_lv = script_getnum(st,8);
 	casttime = script_getnum(st,9);
 	cancel = script_getnum(st,10);
 	emotion = script_getnum(st,11);

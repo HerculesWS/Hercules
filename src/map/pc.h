@@ -717,6 +717,7 @@ int pc_equippoint(struct map_session_data *sd,int n);
 int pc_setinventorydata(struct map_session_data *sd);
 
 int pc_checkskill(struct map_session_data *sd,uint16 skill_id);
+int pc_checkskill2(struct map_session_data *sd,uint16 index);
 int pc_checkallowskill(struct map_session_data *sd);
 int pc_checkequip(struct map_session_data *sd,int pos);
 
@@ -879,10 +880,12 @@ const char * job_name(int class_);
 
 struct skill_tree_entry {
 	short id;
+	unsigned short idx;
 	unsigned char max;
 	unsigned char joblv;
 	struct {
 		short id;
+		unsigned short idx;
 		unsigned char lv;
 	} need[MAX_PC_SKILL_REQUIRE];
 }; // Celest

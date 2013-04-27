@@ -1506,7 +1506,7 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list)
 {
 	struct npc_data* nd;
 	double z;
-	int i,j,w,skill,new_;
+	int i,j,w,skill_t,new_, idx = skill->get_index(MC_DISCOUNT);
 
 	nullpo_retr(3, sd);
 	nullpo_retr(3, item_list);
@@ -1521,8 +1521,7 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list)
 	w = 0;
 	new_ = 0;
 	// process entries in buy list, one by one
-	for( i = 0; i < n; ++i )
-	{
+	for( i = 0; i < n; ++i ) {
 		int nameid, amount, value;
 
 		// find this entry in the shop's sell list
@@ -1541,20 +1540,19 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list)
 		if( !itemdb_exists(nameid) )
 			return 3; // item no longer in itemdb
 
-		if( !itemdb_isstackable(nameid) && amount > 1 )
-		{	//Exploit? You can't buy more than 1 of equipment types o.O
+		if( !itemdb_isstackable(nameid) && amount > 1 ) {
+			//Exploit? You can't buy more than 1 of equipment types o.O
 			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of nonstackable item %d!\n",
 				sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
 			amount = item_list[i*2+0] = 1;
 		}
 
-		if( nd->master_nd )
-		{// Script-controlled shops decide by themselves, what can be bought and for what price.
+		if( nd->master_nd ) {
+			// Script-controlled shops decide by themselves, what can be bought and for what price.
 			continue;
 		}
 
-		switch( pc_checkadditem(sd,nameid,amount) )
-		{
+		switch( pc_checkadditem(sd,nameid,amount) ) {
 			case ADDITEM_EXIST:
 				break;
 
@@ -1584,16 +1582,14 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list)
 
 	pc_payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
 
-	for( i = 0; i < n; ++i )
-	{
+	for( i = 0; i < n; ++i ) {
 		int nameid = item_list[i*2+1];
 		int amount = item_list[i*2+0];
 		struct item item_tmp;
 
 		if (itemdb_type(nameid) == IT_PETEGG)
 			pet_create_egg(sd, nameid);
-		else
-		{
+		else {
 			memset(&item_tmp,0,sizeof(item_tmp));
 			item_tmp.nameid = nameid;
 			item_tmp.identify = 1;
@@ -1603,14 +1599,12 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list)
 	}
 
 	// custom merchant shop exp bonus
-	if( battle_config.shop_exp > 0 && z > 0 && (skill = pc_checkskill(sd,MC_DISCOUNT)) > 0 )
-	{
-		if( sd->status.skill[MC_DISCOUNT].flag >= SKILL_FLAG_REPLACED_LV_0 )
-			skill = sd->status.skill[MC_DISCOUNT].flag - SKILL_FLAG_REPLACED_LV_0;
+	if( battle_config.shop_exp > 0 && z > 0 && (skill_t = pc_checkskill2(sd,idx)) > 0 ) {
+		if( sd->status.skill[idx].flag >= SKILL_FLAG_REPLACED_LV_0 )
+			skill_t = sd->status.skill[idx].flag - SKILL_FLAG_REPLACED_LV_0;
 
-		if( skill > 0 )
-		{
-			z = z * (double)skill * (double)battle_config.shop_exp/10000.;
+		if( skill_t > 0 ) {
+			z = z * (double)skill_t * (double)battle_config.shop_exp/10000.;
 			if( z < 1 )
 				z = 1;
 			pc_gainexp(sd,NULL,0,(int)z, false);
@@ -1684,41 +1678,36 @@ static int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* 
 int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list)
 {
 	double z;
-	int i,skill;
+	int i,skill_t, idx = skill->get_index(MC_OVERCHARGE);
 	struct npc_data *nd;
 
 	nullpo_retr(1, sd);
 	nullpo_retr(1, item_list);
 
-	if( ( nd = npc_checknear(sd, map_id2bl(sd->npc_shopid)) ) == NULL || nd->subtype != SHOP )
-	{
+	if( ( nd = npc_checknear(sd, map_id2bl(sd->npc_shopid)) ) == NULL || nd->subtype != SHOP ) {
 		return 1;
 	}
 
 	z = 0;
 
 	// verify the sell list
-	for( i = 0; i < n; i++ )
-	{
+	for( i = 0; i < n; i++ ) {
 		int nameid, amount, idx, value;
 
 		idx    = item_list[i*2]-2;
 		amount = item_list[i*2+1];
 
-		if( idx >= MAX_INVENTORY || idx < 0 || amount < 0 )
-		{
+		if( idx >= MAX_INVENTORY || idx < 0 || amount < 0 ) {
 			return 1;
 		}
 
 		nameid = sd->status.inventory[idx].nameid;
 
-		if( !nameid || !sd->inventory_data[idx] || sd->status.inventory[idx].amount < amount )
-		{
+		if( !nameid || !sd->inventory_data[idx] || sd->status.inventory[idx].amount < amount ) {
 			return 1;
 		}
 
-		if( nd->master_nd )
-		{// Script-controlled shops decide by themselves, what can be sold and at what price.
+		if( nd->master_nd ) {// Script-controlled shops decide by themselves, what can be sold and at what price.
 			continue;
 		}
 
@@ -1727,23 +1716,19 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list)
 		z+= (double)value*amount;
 	}
 
-	if( nd->master_nd )
-	{// Script-controlled shops
+	if( nd->master_nd ) { // Script-controlled shops
 		return npc_selllist_sub(sd, n, item_list, nd->master_nd);
 	}
 
 	// delete items
-	for( i = 0; i < n; i++ )
-	{
+	for( i = 0; i < n; i++ ) {
 		int amount, idx;
 
 		idx    = item_list[i*2]-2;
 		amount = item_list[i*2+1];
 
-		if( sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET )
-		{
-			if( search_petDB_index(sd->status.inventory[idx].nameid, PET_EGG) >= 0 )
-			{
+		if( sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET ) {
+			if( search_petDB_index(sd->status.inventory[idx].nameid, PET_EGG) >= 0 ) {
 				intif_delete_petdata(MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]));
 			}
 		}
@@ -1757,14 +1742,12 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list)
 	pc_getzeny(sd, (int)z, LOG_TYPE_NPC, NULL);
 
 	// custom merchant shop exp bonus
-	if( battle_config.shop_exp > 0 && z > 0 && ( skill = pc_checkskill(sd,MC_OVERCHARGE) ) > 0)
-	{
-		if( sd->status.skill[MC_OVERCHARGE].flag >= SKILL_FLAG_REPLACED_LV_0 )
-			skill = sd->status.skill[MC_OVERCHARGE].flag - SKILL_FLAG_REPLACED_LV_0;
+	if( battle_config.shop_exp > 0 && z > 0 && ( skill_t = pc_checkskill2(sd,idx) ) > 0) {
+		if( sd->status.skill[idx].flag >= SKILL_FLAG_REPLACED_LV_0 )
+			skill_t = sd->status.skill[idx].flag - SKILL_FLAG_REPLACED_LV_0;
 
-		if( skill > 0 )
-		{
-			z = z * (double)skill * (double)battle_config.shop_exp/10000.;
+		if( skill_t > 0 ) {
+			z = z * (double)skill_t * (double)battle_config.shop_exp/10000.;
 			if( z < 1 )
 				z = 1;
 			pc_gainexp(sd, NULL, 0, (int)z, false);

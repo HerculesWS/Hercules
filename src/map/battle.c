@@ -5047,9 +5047,9 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 	}
 	if (sd) {
 		if( wd.flag&BF_SHORT && sc && sc->data[SC__AUTOSHADOWSPELL] && rnd()%100 < sc->data[SC__AUTOSHADOWSPELL]->val3 &&
-			sd->status.skill[sc->data[SC__AUTOSHADOWSPELL]->val1].id != 0 && sd->status.skill[sc->data[SC__AUTOSHADOWSPELL]->val1].flag == SKILL_FLAG_PLAGIARIZED )
+			sd->status.skill[skill->get_index(sc->data[SC__AUTOSHADOWSPELL]->val1)].id != 0 && sd->status.skill[skill->get_index(sc->data[SC__AUTOSHADOWSPELL]->val1)].flag == SKILL_FLAG_PLAGIARIZED )
 		{
-			int r_skill = sd->status.skill[sc->data[SC__AUTOSHADOWSPELL]->val1].id,
+			int r_skill = sd->status.skill[skill->get_index(sc->data[SC__AUTOSHADOWSPELL]->val1)].id,
 				r_lv = sc->data[SC__AUTOSHADOWSPELL]->val2;
 
 			if (r_skill != AL_HOLYLIGHT && r_skill != PR_MAGNUS) {
@@ -5849,7 +5849,6 @@ static const struct _battle_data {
 	{ "show_hp_sp_gain",                    &battle_config.show_hp_sp_gain,                 1,      0,      1,              },
 	{ "mob_npc_event_type",                 &battle_config.mob_npc_event_type,              1,      0,      1,              },
 	{ "character_size",                     &battle_config.character_size,                  1|2,    0,      1|2,            },
-	{ "mob_max_skilllvl",                   &battle_config.mob_max_skilllvl,                MAX_SKILL_LEVEL, 1, MAX_SKILL_LEVEL, },
 	{ "retaliate_to_master",                &battle_config.retaliate_to_master,             1,      0,      1,              },
 	{ "rare_drop_announce",                 &battle_config.rare_drop_announce,              0,      0,      10000,          },
 	{ "duel_allow_pvp",                     &battle_config.duel_allow_pvp,                  0,      0,      1,              },

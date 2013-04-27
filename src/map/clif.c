@@ -4862,10 +4862,8 @@ void clif_skillinfoblock(struct map_session_data *sd)
 
 	WFIFOHEAD(fd, MAX_SKILL * 37 + 4);
 	WFIFOW(fd,0) = 0x10f;
-	for ( i = 0, len = 4; i < MAX_SKILL; i++)
-	{
-		if( (id = sd->status.skill[i].id) != 0 )
-		{
+	for ( i = 0, len = 4; i < MAX_SKILL; i++) {
+		if( (id = sd->status.skill[i].id) != 0 ) {
 			// workaround for bugreport:5348
 			if (len + 37 > 8192)
 				break;
@@ -4902,25 +4900,25 @@ void clif_skillinfoblock(struct map_session_data *sd)
 /// 0111 <skill id>.W <type>.L <level>.W <sp cost>.W <attack range>.W <skill name>.24B <upgradable>.B
 void clif_addskill(struct map_session_data *sd, int id)
 {
-	int fd;
+	int fd, idx = skill->get_index(id);
 
 	nullpo_retv(sd);
 
 	fd = sd->fd;
 	if (!fd) return;
 
-	if( sd->status.skill[id].id <= 0 )
+	if( sd->status.skill[idx].id <= 0 )
 		return;
 
 	WFIFOHEAD(fd, packet_len(0x111));
 	WFIFOW(fd,0) = 0x111;
 	WFIFOW(fd,2) = id;
 	WFIFOL(fd,4) = skill->get_inf(id);
-	WFIFOW(fd,8) = sd->status.skill[id].lv;
-	WFIFOW(fd,10) = skill->get_sp(id,sd->status.skill[id].lv);
-	WFIFOW(fd,12)= skill->get_range2(&sd->bl, id,sd->status.skill[id].lv);
+	WFIFOW(fd,8) = sd->status.skill[idx].lv;
+	WFIFOW(fd,10) = skill->get_sp(id,sd->status.skill[idx].lv);
+	WFIFOW(fd,12)= skill->get_range2(&sd->bl, id,sd->status.skill[idx].lv);
 	safestrncpy((char*)WFIFOP(fd,14), skill->get_name(id), NAME_LENGTH);
-	if( sd->status.skill[id].flag == SKILL_FLAG_PERMANENT )
+	if( sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT )
 		WFIFOB(fd,38) = (sd->status.skill[id].lv < skill->tree_get_max(id, sd->status.class_))? 1:0;
 	else
 		WFIFOB(fd,38) = 0;
@@ -4950,9 +4948,8 @@ void clif_deleteskill(struct map_session_data *sd, int id)
 
 /// Updates a skill in the skill tree (ZC_SKILLINFO_UPDATE).
 /// 010e <skill id>.W <level>.W <sp cost>.W <attack range>.W <upgradable>.B
-void clif_skillup(struct map_session_data *sd,uint16 skill_id)
-{
-	int fd;
+void clif_skillup(struct map_session_data *sd,uint16 skill_id) {
+	int fd, idx = skill->get_index(skill_id);
 
 	nullpo_retv(sd);
 
@@ -4960,10 +4957,10 @@ void clif_skillup(struct map_session_data *sd,uint16 skill_id)
 	WFIFOHEAD(fd,packet_len(0x10e));
 	WFIFOW(fd,0) = 0x10e;
 	WFIFOW(fd,2) = skill_id;
-	WFIFOW(fd,4) = sd->status.skill[skill_id].lv;
-	WFIFOW(fd,6) = skill->get_sp(skill_id,sd->status.skill[skill_id].lv);
-	WFIFOW(fd,8) = skill->get_range2(&sd->bl,skill_id,sd->status.skill[skill_id].lv);
-	WFIFOB(fd,10) = (sd->status.skill[skill_id].lv < skill->tree_get_max(sd->status.skill[skill_id].id, sd->status.class_)) ? 1 : 0;
+	WFIFOW(fd,4) = sd->status.skill[idx].lv;
+	WFIFOW(fd,6) = skill->get_sp(skill_id,sd->status.skill[idx].lv);
+	WFIFOW(fd,8) = skill->get_range2(&sd->bl,skill_id,sd->status.skill[idx].lv);
+	WFIFOB(fd,10) = (sd->status.skill[idx].lv < skill->tree_get_max(sd->status.skill[idx].id, sd->status.class_)) ? 1 : 0;
 	WFIFOSET(fd,packet_len(0x10e));
 }
 
@@ -4973,16 +4970,17 @@ void clif_skillup(struct map_session_data *sd,uint16 skill_id)
 void clif_skillinfo(struct map_session_data *sd,int skill_id, int inf)
 {
 	const int fd = sd->fd;
+	int idx = skill->get_index(skill_id);
 
 	WFIFOHEAD(fd,packet_len(0x7e1));
 	WFIFOW(fd,0) = 0x7e1;
 	WFIFOW(fd,2) = skill_id;
 	WFIFOL(fd,4) = inf?inf:skill->get_inf(skill_id);
-	WFIFOW(fd,8) = sd->status.skill[skill_id].lv;
-	WFIFOW(fd,10) = skill->get_sp(skill_id,sd->status.skill[skill_id].lv);
-	WFIFOW(fd,12) = skill->get_range2(&sd->bl,skill_id,sd->status.skill[skill_id].lv);
-	if( sd->status.skill[skill_id].flag == SKILL_FLAG_PERMANENT )
-		WFIFOB(fd,14) = (sd->status.skill[skill_id].lv < skill->tree_get_max(skill_id, sd->status.class_))? 1:0;
+	WFIFOW(fd,8) = sd->status.skill[idx].lv;
+	WFIFOW(fd,10) = skill->get_sp(skill_id,sd->status.skill[idx].lv);
+	WFIFOW(fd,12) = skill->get_range2(&sd->bl,skill_id,sd->status.skill[idx].lv);
+	if( sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT )
+		WFIFOB(fd,14) = (sd->status.skill[idx].lv < skill->tree_get_max(skill_id, sd->status.class_))? 1:0;
 	else
 		WFIFOB(fd,14) = 0;
 	WFIFOSET(fd,packet_len(0x7e1));

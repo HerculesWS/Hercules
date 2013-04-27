@@ -3379,9 +3379,10 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 
 	//Go Backwards to give better priority to advanced skills.
 	for (i=0,j = MAX_SKILL_TREE-1;j>=0 && i< MAX_MOBSKILL ;j--) {
+		int idx = skill_tree[pc_class2idx(sd->status.class_)][j].idx;
 		skill_id = skill_tree[pc_class2idx(sd->status.class_)][j].id;
-		if (!skill_id || sd->status.skill[skill_id].lv < 1 ||
-			(skill->get_inf2(skill_id)&(INF2_WEDDING_SKILL|INF2_GUILD_SKILL))
+		if (!skill_id || sd->status.skill[idx].lv < 1 ||
+			(skill_db[idx].inf2&(INF2_WEDDING_SKILL|INF2_GUILD_SKILL))
 		)
 			continue;
 		for(h = 0; h < map[sd->bl.m].zone->disabled_skills_count; h++) {
@@ -3401,12 +3402,12 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 		/**
 		 * The clone should be able to cast the skill (e.g. have the required weapon) bugreport:5299)
 		 **/
-		if( !skill->check_condition_castbegin(sd,skill_id,sd->status.skill[skill_id].lv) )
+		if( !skill->check_condition_castbegin(sd,skill_id,sd->status.skill[idx].lv) )
 			continue;
 
 		memset (&ms[i], 0, sizeof(struct mob_skill));
 		ms[i].skill_id = skill_id;
-		ms[i].skill_lv = sd->status.skill[skill_id].lv;
+		ms[i].skill_lv = sd->status.skill[idx].lv;
 		ms[i].state = MSS_ANY;
 		ms[i].permillage = 500*battle_config.mob_skill_rate/100; //Default chance of all skills: 5%
 		ms[i].emotion = -1;
@@ -3414,7 +3415,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 		ms[i].casttime = skill->cast_fix(&sd->bl,skill_id, ms[i].skill_lv);
 		ms[i].delay = 5000+skill->delay_fix(&sd->bl,skill_id, ms[i].skill_lv);
 
-		inf = skill->get_inf(skill_id);
+		inf = skill_db[idx].inf;
 		if (inf&INF_ATTACK_SKILL) {
 			ms[i].target = MST_TARGET;
 			ms[i].cond1 = MSC_ALWAYS;
@@ -4256,6 +4257,7 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	struct mob_skill *ms, gms;
 	int mob_id;
 	int i =0, j, tmp;
+	uint16 sidx = 0;
 
 	mob_id = atoi(str[0]);
 
@@ -4302,8 +4304,7 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 
 	//Skill ID
 	j=atoi(str[3]);
-	if (j<=0 || j>MAX_SKILL_DB) //fixed Lupus
-	{
+	if ( !(sidx = skill->get_index(j) ) ) {
 		if (mob_id < 0)
 			ShowError("mob_parse_row_mobskilldb: Invalid Skill ID (%d) for all mobs\n", j);
 		else
@@ -4314,7 +4315,7 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 
 	//Skill lvl
 	j= atoi(str[4])<=0 ? 1 : atoi(str[4]);
-	ms->skill_lv= j>battle_config.mob_max_skilllvl ? battle_config.mob_max_skilllvl : j; //we strip max skill level
+	ms->skill_lv= j;
 
 	//Apply battle_config modifiers to rate (permillage) and delay [Skotlex]
 	tmp = atoi(str[5]);
@@ -4345,16 +4346,16 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	}
 
 	//Check that the target condition is right for the skill type. [Skotlex]
-	if (skill->get_casttype(ms->skill_id) == CAST_GROUND) {//Ground skill.
+	if ( skill->get_casttype2(sidx) == CAST_GROUND) {//Ground skill.
 		if (ms->target > MST_AROUND) {
 			ShowWarning("mob_parse_row_mobskilldb: Wrong mob skill target for ground skill %d (%s) for %s.\n",
-				ms->skill_id, skill->get_name(ms->skill_id),
+				ms->skill_id, skill_db[sidx].name,
 				mob_id < 0?"all mobs":mob_db_data[mob_id]->sprite);
 			ms->target = MST_TARGET;
 		}
 	} else if (ms->target > MST_MASTER) {
 		ShowWarning("mob_parse_row_mobskilldb: Wrong mob skill target 'around' for non-ground skill %d (%s) for %s.\n",
-			ms->skill_id, skill->get_name(ms->skill_id),
+			ms->skill_id, skill_db[sidx].name,
 			mob_id < 0?"all mobs":mob_db_data[mob_id]->sprite);
 		ms->target = MST_TARGET;
 	}
