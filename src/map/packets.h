@@ -2021,6 +2021,10 @@ packet(0x020d,-1);
 	packet(0x0960,5,clif->pChangeDir,2,4);
 #endif
 
+#if PACKETVER >= 20120710
+	packet(0x0886,2,clif->pReqCloseBuyingStore,0);
+#endif
+
 #if PACKETVER >= 20130313
 	packet(0x035f,6,clif->pReqClickBuyingStore,2);
 #endif
@@ -2053,7 +2057,6 @@ packet(0x020d,-1);
 	packet(0x0998,8,clif->pEquipItem,2,4);
 	//packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
 	packet(0x0938,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
-	packet(0x0815,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0922,-1,clif->pReqTradeBuyingStore,2,4,8,12);
 	packet(0x094E,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
 	//packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
