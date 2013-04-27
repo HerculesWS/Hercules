@@ -1994,6 +1994,7 @@ packet(0x020d,-1);
 	packet(0x0368,6,clif->pSolveCharName,2);
 	packet(0x08E5,41,clif->pPartyBookingRegisterReq,2,4);
 	packet(0x08d2,10);
+	packet(0x0916,26,clif->pGuildInvite2,2);
 #endif
 
 //2012-06-18aRagexeRE

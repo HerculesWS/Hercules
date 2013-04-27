@@ -1079,6 +1079,7 @@ struct clif_interface {
 	void (*pCashShopSchedule) (int fd, struct map_session_data *sd);
 	void (*pCashShopBuy) (int fd, struct map_session_data *sd);
 	void (*pPartyTick) (int fd, struct map_session_data *sd);
+	void (*pGuildInvite2) (int fd, struct map_session_data *sd);
 } clif_s;
 
 struct clif_interface *clif;
