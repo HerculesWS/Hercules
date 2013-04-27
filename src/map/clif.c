@@ -840,7 +840,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	struct status_change* sc = status_get_sc(bl);
 	struct view_data* vd = status_get_viewdata(bl);
 	struct packet_idle_unit p;
-	int g_id = status_get_emblem_id(bl);
+	int g_id = status_get_guild_id(bl);
 	
 	sd = BL_CAST(BL_PC, bl);
 	
@@ -1082,7 +1082,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	struct status_change* sc = status_get_sc(bl);
 	struct view_data* vd = status_get_viewdata(bl);
 	struct packet_spawn_unit p;
-	int g_id = status_get_emblem_id(bl);
+	int g_id = status_get_guild_id(bl);
 
 	sd = BL_CAST(BL_PC, bl);
 	
@@ -1161,7 +1161,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 	struct status_change* sc = status_get_sc(bl);
 	struct view_data* vd = status_get_viewdata(bl);
 	struct packet_unit_walking p;
-	int g_id = status_get_emblem_id(bl);
+	int g_id = status_get_guild_id(bl);
 	
 	sd = BL_CAST(BL_PC, bl);
 	
