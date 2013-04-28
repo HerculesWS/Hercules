@@ -265,7 +265,7 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 	nullpo_ret(sd = (struct map_session_data *)bl);
 
 	fd = sd->fd;
-	if (!fd) //Don't send to disconnected clients.
+	if (!fd || session[fd] == NULL) //Don't send to disconnected clients.
 		return 0;
 
 	buf = va_arg(ap,void*);
@@ -296,9 +296,6 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 		}
 		break;
 	}
-
-	if (session[fd] == NULL)
-		return 0;
 
 	WFIFOHEAD(fd, len);
 	if (WFIFOP(fd,0) == buf) {
@@ -840,7 +837,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	struct status_change* sc = status_get_sc(bl);
 	struct view_data* vd = status_get_viewdata(bl);
 	struct packet_idle_unit p;
-	int g_id = status_get_emblem_id(bl);
+	int g_id = status_get_guild_id(bl);
 	
 	sd = BL_CAST(BL_PC, bl);
 	
@@ -887,7 +884,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 #if PACKETVER >= 20080102
 	p.font = (sd) ? sd->user_font : 0;
 #endif
-#if PACKETVER >= 20120712
+#if PACKETVER >= 20140000 //actual 20120221
 	if( bl->type == BL_MOB ) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
@@ -1082,7 +1079,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	struct status_change* sc = status_get_sc(bl);
 	struct view_data* vd = status_get_viewdata(bl);
 	struct packet_spawn_unit p;
-	int g_id = status_get_emblem_id(bl);
+	int g_id = status_get_guild_id(bl);
 
 	sd = BL_CAST(BL_PC, bl);
 	
@@ -1128,7 +1125,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 #if PACKETVER >= 20080102
 	p.font = (sd) ? sd->user_font : 0;
 #endif
-#if PACKETVER >= 20120712
+#if PACKETVER >= 20140000 //actual 20120221
 	if( bl->type == BL_MOB ) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
@@ -1161,7 +1158,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 	struct status_change* sc = status_get_sc(bl);
 	struct view_data* vd = status_get_viewdata(bl);
 	struct packet_unit_walking p;
-	int g_id = status_get_emblem_id(bl);
+	int g_id = status_get_guild_id(bl);
 	
 	sd = BL_CAST(BL_PC, bl);
 	
@@ -1203,7 +1200,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 #if PACKETVER >= 20080102
 	p.font = (sd) ? sd->user_font : 0;
 #endif
-#if PACKETVER >= 20120712
+#if PACKETVER >= 20140000 //actual 20120221
 	if( bl->type == BL_MOB ) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
@@ -4394,12 +4391,17 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 					clif->specialeffect_single(bl,423,sd->fd);
 				else if(md->special_state.size==SZ_MEDIUM)
 					clif->specialeffect_single(bl,421,sd->fd);
-			/* only between 04-04 and 07-12 (afterwards its bundled on the other packet) */
-			#if PACKETVER >= 20120404
-				#if PACKETVER <= 20120712
-						clif->monster_hp_bar(md);
-				#endif
-			#endif
+#if PACKETVER >= 20120404
+				if( !(md->status.mode&MD_BOSS) ){
+					int i;
+					for(i = 0; i < DAMAGELOG_SIZE; i++) {// must show hp bar to all char who already hit the mob.
+						if( md->dmglog[i].id == sd->status.char_id ) {
+							clif->monster_hp_bar(md, sd);
+							break;
+						}
+					}
+				}
+#endif
 			}
 			break;
 		case BL_PET:
@@ -4862,10 +4864,8 @@ void clif_skillinfoblock(struct map_session_data *sd)
 
 	WFIFOHEAD(fd, MAX_SKILL * 37 + 4);
 	WFIFOW(fd,0) = 0x10f;
-	for ( i = 0, len = 4; i < MAX_SKILL; i++)
-	{
-		if( (id = sd->status.skill[i].id) != 0 )
-		{
+	for ( i = 0, len = 4; i < MAX_SKILL; i++) {
+		if( (id = sd->status.skill[i].id) != 0 ) {
 			// workaround for bugreport:5348
 			if (len + 37 > 8192)
 				break;
@@ -4902,25 +4902,25 @@ void clif_skillinfoblock(struct map_session_data *sd)
 /// 0111 <skill id>.W <type>.L <level>.W <sp cost>.W <attack range>.W <skill name>.24B <upgradable>.B
 void clif_addskill(struct map_session_data *sd, int id)
 {
-	int fd;
+	int fd, idx = skill->get_index(id);
 
 	nullpo_retv(sd);
 
 	fd = sd->fd;
 	if (!fd) return;
 
-	if( sd->status.skill[id].id <= 0 )
+	if( sd->status.skill[idx].id <= 0 )
 		return;
 
 	WFIFOHEAD(fd, packet_len(0x111));
 	WFIFOW(fd,0) = 0x111;
 	WFIFOW(fd,2) = id;
 	WFIFOL(fd,4) = skill->get_inf(id);
-	WFIFOW(fd,8) = sd->status.skill[id].lv;
-	WFIFOW(fd,10) = skill->get_sp(id,sd->status.skill[id].lv);
-	WFIFOW(fd,12)= skill->get_range2(&sd->bl, id,sd->status.skill[id].lv);
+	WFIFOW(fd,8) = sd->status.skill[idx].lv;
+	WFIFOW(fd,10) = skill->get_sp(id,sd->status.skill[idx].lv);
+	WFIFOW(fd,12)= skill->get_range2(&sd->bl, id,sd->status.skill[idx].lv);
 	safestrncpy((char*)WFIFOP(fd,14), skill->get_name(id), NAME_LENGTH);
-	if( sd->status.skill[id].flag == SKILL_FLAG_PERMANENT )
+	if( sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT )
 		WFIFOB(fd,38) = (sd->status.skill[id].lv < skill->tree_get_max(id, sd->status.class_))? 1:0;
 	else
 		WFIFOB(fd,38) = 0;
@@ -4950,9 +4950,8 @@ void clif_deleteskill(struct map_session_data *sd, int id)
 
 /// Updates a skill in the skill tree (ZC_SKILLINFO_UPDATE).
 /// 010e <skill id>.W <level>.W <sp cost>.W <attack range>.W <upgradable>.B
-void clif_skillup(struct map_session_data *sd,uint16 skill_id)
-{
-	int fd;
+void clif_skillup(struct map_session_data *sd,uint16 skill_id) {
+	int fd, idx = skill->get_index(skill_id);
 
 	nullpo_retv(sd);
 
@@ -4960,10 +4959,10 @@ void clif_skillup(struct map_session_data *sd,uint16 skill_id)
 	WFIFOHEAD(fd,packet_len(0x10e));
 	WFIFOW(fd,0) = 0x10e;
 	WFIFOW(fd,2) = skill_id;
-	WFIFOW(fd,4) = sd->status.skill[skill_id].lv;
-	WFIFOW(fd,6) = skill->get_sp(skill_id,sd->status.skill[skill_id].lv);
-	WFIFOW(fd,8) = skill->get_range2(&sd->bl,skill_id,sd->status.skill[skill_id].lv);
-	WFIFOB(fd,10) = (sd->status.skill[skill_id].lv < skill->tree_get_max(sd->status.skill[skill_id].id, sd->status.class_)) ? 1 : 0;
+	WFIFOW(fd,4) = sd->status.skill[idx].lv;
+	WFIFOW(fd,6) = skill->get_sp(skill_id,sd->status.skill[idx].lv);
+	WFIFOW(fd,8) = skill->get_range2(&sd->bl,skill_id,sd->status.skill[idx].lv);
+	WFIFOB(fd,10) = (sd->status.skill[idx].lv < skill->tree_get_max(sd->status.skill[idx].id, sd->status.class_)) ? 1 : 0;
 	WFIFOSET(fd,packet_len(0x10e));
 }
 
@@ -4973,16 +4972,17 @@ void clif_skillup(struct map_session_data *sd,uint16 skill_id)
 void clif_skillinfo(struct map_session_data *sd,int skill_id, int inf)
 {
 	const int fd = sd->fd;
+	int idx = skill->get_index(skill_id);
 
 	WFIFOHEAD(fd,packet_len(0x7e1));
 	WFIFOW(fd,0) = 0x7e1;
 	WFIFOW(fd,2) = skill_id;
 	WFIFOL(fd,4) = inf?inf:skill->get_inf(skill_id);
-	WFIFOW(fd,8) = sd->status.skill[skill_id].lv;
-	WFIFOW(fd,10) = skill->get_sp(skill_id,sd->status.skill[skill_id].lv);
-	WFIFOW(fd,12) = skill->get_range2(&sd->bl,skill_id,sd->status.skill[skill_id].lv);
-	if( sd->status.skill[skill_id].flag == SKILL_FLAG_PERMANENT )
-		WFIFOB(fd,14) = (sd->status.skill[skill_id].lv < skill->tree_get_max(skill_id, sd->status.class_))? 1:0;
+	WFIFOW(fd,8) = sd->status.skill[idx].lv;
+	WFIFOW(fd,10) = skill->get_sp(skill_id,sd->status.skill[idx].lv);
+	WFIFOW(fd,12) = skill->get_range2(&sd->bl,skill_id,sd->status.skill[idx].lv);
+	if( sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT )
+		WFIFOB(fd,14) = (sd->status.skill[idx].lv < skill->tree_get_max(skill_id, sd->status.class_))? 1:0;
 	else
 		WFIFOB(fd,14) = 0;
 	WFIFOSET(fd,packet_len(0x7e1));
@@ -6698,7 +6698,8 @@ void clif_party_withdraw(struct party_data* p, struct map_session_data* sd, int 
 	if(!sd && (flag&0xf0)==0)
 	{
 		int i;
-		for(i=0;i<MAX_PARTY && !p->data[i].sd;i++);
+		for(i=0;i<MAX_PARTY && !p->data[i].sd;i++)
+			;
 			if (i < MAX_PARTY)
 				sd = p->data[i].sd;
 	}
@@ -12432,29 +12433,46 @@ void clif_parse_GuildChangeNotice(int fd, struct map_session_data* sd)
 	guild_change_notice(sd, guild_id, msg1, msg2);
 }
 
+// Helper function for guild invite functions
+int
+clif_sub_guild_invite(int fd, struct map_session_data *sd, struct map_session_data *t_sd) {
+	if (t_sd == NULL) {// not online or does not exist
+		return 1;
+	}
+	
+	if (map[sd->bl.m].flag.guildlock) { //Guild locked.
+		clif->message(fd, msg_txt(228));
+		return 1;
+	}
+	
+	if (t_sd && t_sd->state.noask) {// @noask [LuzZza]
+		clif->noask_sub(sd, t_sd, 2);
+		return 1;
+	}
+
+	guild_invite(sd,t_sd);
+	return 0;
+}
 
 /// Guild invite request (CZ_REQ_JOIN_GUILD).
 /// 0168 <account id>.L <inviter account id>.L <inviter char id>.L
 void clif_parse_GuildInvite(int fd,struct map_session_data *sd)
 {
-	struct map_session_data *t_sd;
+	struct map_session_data *t_sd = map_id2sd(RFIFOL(fd,2));
 
-	if(map[sd->bl.m].flag.guildlock) { //Guild locked.
-		clif->message(fd, msg_txt(228));
+	if (clif_sub_guild_invite(fd, sd, t_sd))
 		return;
-	}
-
-	t_sd = map_id2sd(RFIFOL(fd,2));
-
-	// @noask [LuzZza]
-	if(t_sd && t_sd->state.noask) {
-		clif->noask_sub(sd, t_sd, 2);
-		return;
-	}
-
-	guild_invite(sd,t_sd);
 }
 
+/// Guild invite request (/guildinvite) (CZ_REQ_JOIN_GUILD2).
+/// 0916 <char name>.24B
+void clif_parse_GuildInvite2(int fd, struct map_session_data *sd)
+{
+	struct map_session_data *t_sd = map_nick2sd((char *)RFIFOP(fd, 2));
+	
+	if (clif_sub_guild_invite(fd, sd, t_sd))
+		return;
+}
 
 /// Answer to guild invitation (CZ_JOIN_GUILD).
 /// 016b <guild id>.L <answer>.L
@@ -16662,7 +16680,7 @@ void clif_snap( struct block_list *bl, short x, short y ) {
 	clif->send(buf,packet_len(0x8d2),bl,AREA);
 }
 
-void clif_monster_hp_bar( struct mob_data* md ) {
+void clif_monster_hp_bar( struct mob_data* md, struct map_session_data *sd ) {
 	struct packet_monster_hp p;
 	
 	p.PacketType = monsterhpType;
@@ -16670,7 +16688,7 @@ void clif_monster_hp_bar( struct mob_data* md ) {
 	p.HP = md->status.hp;
 	p.MaxHP = md->status.max_hp;
 	
-	clif->send(&p,sizeof(p),&md->bl,AREA_WOS);
+	clif->send(&p,sizeof(p),&sd->bl,SELF);
 }
 /* [Ind/Hercules] placeholder for unsupported incoming packets (avoids server disconnecting client) */
 void __attribute__ ((unused)) clif_parse_dull(int fd,struct map_session_data *sd) {
@@ -16791,7 +16809,7 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 
 /* [Ind/Hercules] */
 void clif_maptypeproperty2(struct block_list *bl,enum send_target t) {
-#if PACKETVER >= 20130000 /* not entirely sure when this started */
+#if PACKETVER >= 20121010
 	struct packet_maptypeproperty2 p;
 	
 	p.PacketType = maptypeproperty2Type;
@@ -17707,6 +17725,7 @@ void clif_defaults(void) {
 	clif->pCashShopBuy = clif_parse_CashShopBuy;
 	/*  */
 	clif->pPartyTick = clif_parse_PartyTick;
+	clif->pGuildInvite2 = clif_parse_GuildInvite2;
 	/* dull */
 	clif->pDull = clif_parse_dull;
 }

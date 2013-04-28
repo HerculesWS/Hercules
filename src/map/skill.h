@@ -24,13 +24,13 @@ struct square;
  **/
 #define MAX_SKILL_DB			MAX_SKILL
 #define MAX_SKILL_PRODUCE_DB	270
-#define MAX_PRODUCE_RESOURCE	12
-#define MAX_SKILL_ARROW_DB		150
+#define MAX_PRODUCE_RESOURCE	10
+#define MAX_SKILL_ARROW_DB		140
 #define MAX_ARROW_RESOURCE		5
-#define MAX_SKILL_ABRA_DB		350
-#define MAX_SKILL_IMPROVISE_DB 50
-#define MAX_SKILL_LEVEL 100
-#define MAX_SKILL_UNIT_LAYOUT	50
+#define MAX_SKILL_ABRA_DB		210
+#define MAX_SKILL_IMPROVISE_DB 30
+#define MAX_SKILL_LEVEL 10
+#define MAX_SKILL_UNIT_LAYOUT	45
 #define MAX_SQUARE_LAYOUT		5	// 11*11 Placement of a maximum unit
 #define MAX_SKILL_UNIT_COUNT ((MAX_SQUARE_LAYOUT*2+1)*(MAX_SQUARE_LAYOUT*2+1))
 #define MAX_SKILLTIMERSKILL 15
@@ -1575,6 +1575,7 @@ struct skill_condition {
 
 // Database skills
 struct s_skill_db {
+	unsigned short nameid;
 	char name[NAME_LENGTH];
 	char desc[40];
 	int range[MAX_SKILL_LEVEL],hit,inf,element[MAX_SKILL_LEVEL],nk,splash[MAX_SKILL_LEVEL],max;
@@ -1748,9 +1749,10 @@ struct skill_interface {
 	const char*	(*get_name) ( uint16 skill_id );
 	const char*	(*get_desc) ( uint16 skill_id );
 	/* check */
-	void (*chk) (int16* skill_id, uint16 skill_lv);
+	void (*chk) (int16* skill_id);
 	/* whether its CAST_GROUND, CAST_DAMAGE or CAST_NODAMAGE */
 	int (*get_casttype) (uint16 skill_id);
+	int (*get_casttype2) (uint16 index);
 	int (*name2id) (const char* name);
 	int (*isammotype) (struct map_session_data *sd, int skill);
 	int (*castend_id) (int tid, unsigned int tick, int id, intptr_t data);

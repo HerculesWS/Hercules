@@ -1994,6 +1994,7 @@ packet(0x020d,-1);
 	packet(0x0368,6,clif->pSolveCharName,2);
 	packet(0x08E5,41,clif->pPartyBookingRegisterReq,2,4);
 	packet(0x08d2,10);
+	packet(0x0916,26,clif->pGuildInvite2,2);
 #endif
 
 //2012-06-18aRagexeRE
@@ -2019,6 +2020,14 @@ packet(0x020d,-1);
 	packet(0x094a,6,clif->pGetCharNameRequest,2);
 	packet(0x0953,5,clif->pWalkToXY,2);
 	packet(0x0960,5,clif->pChangeDir,2,4);
+#endif
+
+#if PACKETVER >= 20120710
+	packet(0x0886,2,clif->pReqCloseBuyingStore,0);
+#endif
+
+#if PACKETVER >= 20130313
+	packet(0x035f,6,clif->pReqClickBuyingStore,2);
 #endif
 
 //2013-03-20Ragexe (Judas)
@@ -2049,16 +2058,14 @@ packet(0x020d,-1);
 	packet(0x0998,8,clif->pEquipItem,2,4);
 	//packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
 	packet(0x0938,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
-	//packet(0x0817,2,clif->pReqCloseBuyingStore,0);
-	//packet(0x0360,6,clif->pReqClickBuyingStore,2);
 	packet(0x0922,-1,clif->pReqTradeBuyingStore,2,4,8,12);
 	packet(0x094E,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
 	//packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
 	//packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
-	packet(0x0844,2,clif->pCashShopOpen,0);/* tell server cashshop window is being open */
-	packet(0x084a,2,clif->pCashShopClose,0);/* tell server cashshop window is being closed */
-	packet(0x08c9,4,clif->pCashShopSchedule,0);
-	packet(0x0848,-1,clif->pCashShopBuy,0);
+	packet(0x0844,2,clif->pCashShopOpen,2);/* tell server cashshop window is being open */
+	packet(0x084a,2,clif->pCashShopClose,2);/* tell server cashshop window is being closed */
+	packet(0x08c9,4,clif->pCashShopSchedule,2);
+	packet(0x0848,-1,clif->pCashShopBuy,2);
 	packet(0x0447,2);
 #endif
 
