@@ -282,9 +282,9 @@ to -1, the 'buy price' given in the item database will be used. Otherwise, the
 price you gave will be used for this item, which is how you create differing 
 prices for items in different shops.
 
-Since trunk r12264 you can alternatively use "cashshop" in place of "shop"
-to use the Cash Shop interface, allowing you to buy items with special points
-(Currently stored as account vars in global_reg #CASHPOINTS and #KAFRAPOINTS.)
+You can alternatively use "cashshop" in place of "shop" to use the Cash Shop 
+interface, allowing you to buy items with special points (Currently stored as 
+account vars in global_reg #CASHPOINTS and #KAFRAPOINTS).
 This type of shop will not allow you to sell items at it, you may only
 purchase items here. The layout used to define sale items still count, and
 "<price>" refers to how many points will be spent purchasing the them.
@@ -1139,7 +1139,7 @@ will make @x equal 100.
 will compute 1+5/8+9 (which is, surprisingly, 10 - remember, all numbers are 
 integer in this language) and make @x equal it.
 
-Returns the variable reference (since trunk r12870).
+Returns the variable reference.
 
 ---------------------------------------
 
@@ -1423,7 +1423,7 @@ This is done to prevent exploits in badly written scripts, which would
 let people, for example, put negative amounts of Zeny into a bank script and 
 receive free Zeny as a result.
 
-Since trunk r12192 the command has two optional arguments and a return value.
+The command has two optional arguments and a return value. 
 The default value of 'min' and 'max' can be set with 'input_min_value' and 
 'input_max_value' in script.conf.
 For numeric inputs the value is capped to the range [min,max]. Returns 1 if 
@@ -1599,7 +1599,7 @@ You can pass multiple arguments in a function call:
 
 getarg(0) would be 5, getarg(1) would be 4 and getarg(2) would be 3.
 
-Getarg has an optional argument since trunk r10773 and stable r10958.
+Getarg has an optional argument:
 If the target argument exists, it is returned.
 Otherwise, if <default_value> is present it is returned instead, 
 if not the script terminates immediately.
@@ -5330,23 +5330,17 @@ command, and all monsters summoned with GM commands, but no other ones - that
 is, all non-permanent monsters) on the specified map will be killed regardless 
 of the event label value.
 
-As of r12876 killmonster now supports an optional argument type. Using 1 for type
-will make the command fire "OnMyMobDead" events from any monsters that do die
-as a result of this command.
+killmonster supports an optional argument type. Using 1 for type will make the command 
+fire "OnMyMobDead" events from any monsters that do die as a result of this command.
 
 ---------------------------------------
 
 *killmonsterall "<map name>"{,<type>};
 
 This command will kill all monsters on a specified map name, regardless of how 
-they were spawned or what they are. As of r12873, The behavior has changed slightly.
-In light of a label behavior fix for mob spawning commands that will now allow the label to 
-trigger when there is no player, killmonsterall has also been modified to support this.
-
-Using this the normal/old way means labels don't trigger when a player didn't
-attack/kill a monster. This is because it breaks compatibility with older scripts if
-forced to use the new method. However, if you wish to use the new label type with this
-command, simply use 1 for type. Any other number won't be recognized.
+they were spawned or what they are without triggering any event label attached to them, 
+unless you specify 1 for type parameter. In this case, mob death labels will be allowed to
+trigger when there is no player. Any other number for this parameter won't be recognized.
 
 ---------------------------------------
 
@@ -5590,7 +5584,7 @@ the invoking NPC's actions, such as using an emotion or talking.
 Whichever of the both NPCs is talked to, both will show a random emotion at the
 same time. 
 
-As of r16564, command now returns 1 or 0 on success and failure.
+Command returns 1 or 0 on success and failure.
 A debug message also shows on the console when no events are triggered.
 
 ---------------------------------------
@@ -6286,7 +6280,6 @@ castle guardian monsters and will only work with them. It will set the guardian
 characteristics up according to the castle's investment values and otherwise 
 set the things up that only castle guardians need.
 
-Since trunk r12524:
 Returns the id of the mob or 0 if an error occurred.
 When 'guardian index' isn't supplied it produces a temporary guardian.
 Temporary guardians are not saved with the castle and can't be accessed by guardianinfo.
