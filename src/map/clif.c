@@ -6687,7 +6687,8 @@ void clif_party_withdraw(struct party_data* p, struct map_session_data* sd, int 
 	if(!sd && (flag&0xf0)==0)
 	{
 		int i;
-		for(i=0;i<MAX_PARTY && !p->data[i].sd;i++);
+		for(i=0;i<MAX_PARTY && !p->data[i].sd;i++)
+			;
 			if (i < MAX_PARTY)
 				sd = p->data[i].sd;
 	}
@@ -12421,29 +12422,46 @@ void clif_parse_GuildChangeNotice(int fd, struct map_session_data* sd)
 	guild_change_notice(sd, guild_id, msg1, msg2);
 }
 
+// Helper function for guild invite functions
+int
+clif_sub_guild_invite(int fd, struct map_session_data *sd, struct map_session_data *t_sd) {
+	if (t_sd == NULL) {// not online or does not exist
+		return 1;
+	}
+	
+	if (map[sd->bl.m].flag.guildlock) { //Guild locked.
+		clif->message(fd, msg_txt(228));
+		return 1;
+	}
+	
+	if (t_sd && t_sd->state.noask) {// @noask [LuzZza]
+		clif->noask_sub(sd, t_sd, 2);
+		return 1;
+	}
+
+	guild_invite(sd,t_sd);
+	return 0;
+}
 
 /// Guild invite request (CZ_REQ_JOIN_GUILD).
 /// 0168 <account id>.L <inviter account id>.L <inviter char id>.L
 void clif_parse_GuildInvite(int fd,struct map_session_data *sd)
 {
-	struct map_session_data *t_sd;
+	struct map_session_data *t_sd = map_id2sd(RFIFOL(fd,2));
 
-	if(map[sd->bl.m].flag.guildlock) { //Guild locked.
-		clif->message(fd, msg_txt(228));
+	if (clif_sub_guild_invite(fd, sd, t_sd))
 		return;
-	}
-
-	t_sd = map_id2sd(RFIFOL(fd,2));
-
-	// @noask [LuzZza]
-	if(t_sd && t_sd->state.noask) {
-		clif->noask_sub(sd, t_sd, 2);
-		return;
-	}
-
-	guild_invite(sd,t_sd);
 }
 
+/// Guild invite request (/guildinvite) (CZ_REQ_JOIN_GUILD2).
+/// 0916 <char name>.24B
+void clif_parse_GuildInvite2(int fd, struct map_session_data *sd)
+{
+	struct map_session_data *t_sd = map_nick2sd((char *)RFIFOP(fd, 2));
+	
+	if (clif_sub_guild_invite(fd, sd, t_sd))
+		return;
+}
 
 /// Answer to guild invitation (CZ_JOIN_GUILD).
 /// 016b <guild id>.L <answer>.L
@@ -17697,6 +17715,7 @@ void clif_defaults(void) {
 	clif->pCashShopBuy = clif_parse_CashShopBuy;
 	/*  */
 	clif->pPartyTick = clif_parse_PartyTick;
+	clif->pGuildInvite2 = clif_parse_GuildInvite2;
 	/* dull */
 	clif->pDull = clif_parse_dull;
 }
