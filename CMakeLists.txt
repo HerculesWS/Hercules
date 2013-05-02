@@ -493,6 +493,7 @@ set( RUNTIME_DIRECTORIES
 	"doc"
 	"log"
 	"npc"
+	"plugins"
 	"sql-files"
 	"tools"
 	)

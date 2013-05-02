@@ -37,11 +37,7 @@ HPExport void plugin_init (void) {
 	server_name = GET_SYMBOL("SERVER_NAME");
 
 	script = GET_SYMBOL("script");
-	
-	if( !(script = GET_SYMBOL("script")) ) {
-		ShowError("Failed to load script interface var!\n");
-	}
-	
+		
 	ShowInfo ("Server type is ");
 	
 	switch (*server_type) {
