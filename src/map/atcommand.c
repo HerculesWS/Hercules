@@ -51,12 +51,7 @@
 #include <string.h>
 #include <math.h>
 
-
-#define ACMD(x) static bool atcommand_ ## x (const int fd, struct map_session_data* sd, const char* command, const char* message, struct AtCommandInfo *info)
-
 static char* msg_table[MAX_MSG]; // Server messages (0-499 reserved for GM commands, 500-999 reserved for others)
-static DBMap* atcommand_db = NULL; //name -> AtCommandInfo
-static DBMap* atcommand_alias_db = NULL; //alias -> AtCommandInfo
 
 static char atcmd_output[CHAT_SIZE_MAX];
 static char atcmd_player_name[NAME_LENGTH];
@@ -1436,7 +1431,7 @@ ACMD(help) {
 		StringBuf_Init(&buf);
 		StringBuf_AppendStr(&buf, msg_txt(990)); // Available aliases:
 		command_info = get_atcommandinfo_byname(command_name);
-		iter = db_iterator(atcommand_alias_db);
+		iter = db_iterator(atcommand->alias_db);
 		for (alias_info = dbi_first(iter); dbi_exists(iter); alias_info = dbi_next(iter)) {
 			if (alias_info->command == command_info) {
 				StringBuf_Printf(&buf, " %s", alias_info->alias);
@@ -8433,7 +8428,7 @@ static void atcommand_commands_sub(struct map_session_data* sd, const int fd, At
 	char line_buff[CHATBOX_SIZE];
 	char* cur = line_buff;
 	AtCommandInfo* cmd;
-	DBIterator *iter = db_iterator(atcommand_db);
+	DBIterator *iter = db_iterator(atcommand->db);
 	int count = 0;
 	
 	memset(line_buff,' ',CHATBOX_SIZE);
@@ -9699,7 +9694,7 @@ void atcommand_basecommands(void) {
 	};
 	AtCommandInfo* cmd;
 	int i;
-
+	
 	for( i = 0; i < ARRAYLENGTH(atcommand_base); i++ ) {
 		if(atcommand->exists(atcommand_base[i].command)) { // Should not happen if atcommand_base[] array is OK
 			ShowDebug("atcommand_basecommands: duplicate ACMD_DEF for '%s'.\n", atcommand_base[i].command);
@@ -9709,7 +9704,7 @@ void atcommand_basecommands(void) {
 		safestrncpy(cmd->command, atcommand_base[i].command, sizeof(cmd->command));
 		cmd->func = atcommand_base[i].func;
 		cmd->help = NULL;/* start as null dear */
-		strdb_put(atcommand_db, cmd->command, cmd);
+		strdb_put(atcommand->db, cmd->command, cmd);
 	}
 	return;
 }
@@ -9718,20 +9713,20 @@ void atcommand_basecommands(void) {
  * Command lookup functions
  *------------------------------------------*/
 AtCommandInfo* atcommand_exists(const char* name) {
-	return strdb_get(atcommand_db, name);
+	return strdb_get(atcommand->db, name);
 }
 
-static AtCommandInfo* get_atcommandinfo_byname(const char *name)
-{
-	if (strdb_exists(atcommand_db, name))
-		return (AtCommandInfo*)strdb_get(atcommand_db, name);
+static AtCommandInfo* get_atcommandinfo_byname(const char *name) {
+	AtCommandInfo *cmd;
+	if ((cmd = strdb_get(atcommand->db, name)))
+		return cmd;
 	return NULL;
 }
 
 static const char* atcommand_checkalias(const char *aliasname)
 {
 	AliasInfo *alias_info = NULL;
-	if ((alias_info = (AliasInfo*)strdb_get(atcommand_alias_db, aliasname)) != NULL)
+	if ((alias_info = (AliasInfo*)strdb_get(atcommand->alias_db, aliasname)) != NULL)
 		return alias_info->command->command;
 	return aliasname;
 }
@@ -9752,8 +9747,8 @@ static void atcommand_get_suggestions(struct map_session_data* sd, const char *n
 	if (!battle_config.atcommand_suggestions_enabled)
 		return;
 
-	atcommand_iter = db_iterator(atcommand_db);
-	alias_iter = db_iterator(atcommand_alias_db);
+	atcommand_iter = db_iterator(atcommand->db);
+	alias_iter = db_iterator(atcommand->alias_db);
 
 	// Build the matches
 	for (command_info = dbi_first(atcommand_iter); dbi_exists(atcommand_iter); command_info = dbi_next(atcommand_iter))     {
@@ -10050,14 +10045,14 @@ static void atcommand_config_read(const char* config_filename) {
 				const char *alias = config_setting_get_string_elem(command, j);
 				if (alias != NULL) {
 					AliasInfo *alias_info;
-					if (strdb_exists(atcommand_alias_db, alias)) {
+					if (strdb_exists(atcommand->alias_db, alias)) {
 						ShowConfigWarning(command, "atcommand_config_read: alias %s already exists", alias);
 						continue;
 					}
 					CREATE(alias_info, AliasInfo, 1);
 					alias_info->command = commandinfo;
 					safestrncpy(alias_info->alias, alias, sizeof(alias_info->alias));
-					strdb_put(atcommand_alias_db, alias, alias_info);
+					strdb_put(atcommand->alias_db, alias, alias_info);
 					++num_aliases;
 				}
 			}
@@ -10116,8 +10111,8 @@ static void atcommand_config_read(const char* config_filename) {
 	config_destroy(&atcommand_config);
 	return;
 }
-void atcommand_db_load_groups(int* group_ids) {
-	DBIterator *iter = db_iterator(atcommand_db);
+void atcommand_db_load_groups(void) {
+	DBIterator *iter = db_iterator(atcommand->db);
 	AtCommandInfo* cmd;
 	int i;
 
@@ -10125,11 +10120,11 @@ void atcommand_db_load_groups(int* group_ids) {
 		cmd->at_groups = aMalloc( pc_group_max * sizeof(char) );
 		cmd->char_groups = aMalloc( pc_group_max * sizeof(char) );
 		for(i = 0; i < pc_group_max; i++) {
-			if( pc_group_can_use_command(group_ids[i], cmd->command, COMMAND_ATCOMMAND ) )
+			if( pc_group_can_use_command(atcommand->group_ids[i], cmd->command, COMMAND_ATCOMMAND ) )
 			   cmd->at_groups[i] = 1;
 			else
 			   cmd->at_groups[i] = 0;
-		   if( pc_group_can_use_command(group_ids[i], cmd->command, COMMAND_CHARCOMMAND ) )
+		   if( pc_group_can_use_command(atcommand->group_ids[i], cmd->command, COMMAND_CHARCOMMAND ) )
 			  cmd->char_groups[i] = 1;
 			else
 			  cmd->char_groups[i] = 0;
@@ -10166,11 +10161,35 @@ bool atcommand_can_use2(struct map_session_data *sd, const char *command, AtComm
 	
 	return false;
 }
-
+bool atcommand_hp_add(char *name, AtCommandFunc func) {
+	AtCommandInfo* cmd;
+	
+	if( runflag == MAPSERVER_ST_RUNNING ) {
+		ShowDebug("atcommand_hp_add: Commands can't be added after server is ready, skipping '%s'...\n",name);
+		return false;
+	}
+	
+	if( !atcommand->db )
+		atcommand->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
+	
+	if( atcommand->exists(name) ) {
+		ShowDebug("atcommand_hp_add: duplicate command '%s', skipping...\n", name);
+		return false;
+	}
+	
+	CREATE(cmd, AtCommandInfo, 1);
+	
+	safestrncpy(cmd->command, name, sizeof(cmd->command));
+	cmd->func = func;
+	cmd->help = NULL;/* start as null dear */
+	
+	strdb_put(atcommand->db, cmd->command, cmd);
+	return true;
+}
 void atcommand_db_clear(void) {
 
-	if (atcommand_db != NULL) {
-		DBIterator *iter = db_iterator(atcommand_db);
+	if (atcommand->db != NULL) {
+		DBIterator *iter = db_iterator(atcommand->db);
 		AtCommandInfo* cmd;
 
 		for (cmd = dbi_first(iter); dbi_exists(iter); cmd = dbi_next(iter)) {
@@ -10182,16 +10201,18 @@ void atcommand_db_clear(void) {
 
 		dbi_destroy(iter);
 
-		db_destroy(atcommand_db);
+		db_destroy(atcommand->db);
 	}
-	if (atcommand_alias_db != NULL)
-		db_destroy(atcommand_alias_db);
+	if (atcommand->alias_db != NULL)
+		db_destroy(atcommand->alias_db);
 }
 
 void atcommand_doload(void) {
-	atcommand_db_clear();
-	atcommand_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
-	atcommand_alias_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
+	if( runflag >= MAPSERVER_ST_RUNNING )
+		atcommand_db_clear();
+	if( !atcommand->db )
+		atcommand->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
+	atcommand->alias_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
 	atcommand_basecommands(); //fills initial atcommand_db with known commands
 	atcommand_config_read(ATCOMMAND_CONF_FILENAME);
 }
@@ -10206,10 +10227,14 @@ void do_init_atcommand(void) {
 
 void do_final_atcommand(void) {
 	atcommand_db_clear();
+	if( atcommand->group_ids )
+		aFree(atcommand->group_ids);
 }
 
 void atcommand_defaults(void) {
 	atcommand = &atcommand_s;
+	
+	atcommand->db = NULL;
 	
 	atcommand->init = do_init_atcommand;
 	atcommand->final = do_final_atcommand;
@@ -10217,6 +10242,7 @@ void atcommand_defaults(void) {
 	atcommand->parse = is_atcommand;
 	atcommand->can_use = atcommand_can_use;
 	atcommand->can_use2 = atcommand_can_use2;
+	atcommand->create = atcommand_hp_add;
 	atcommand->load_groups = atcommand_db_load_groups;
 	atcommand->exists = atcommand_exists;
 	atcommand->msg_read = msg_config_read;

@@ -317,6 +317,18 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\common\HPM.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\common\HPM.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\common\HPMi.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\common\malloc.c"
 				>
 			</File>

@@ -1,7 +1,7 @@
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 /*****************************************************************************\
- *  Copyright (c) Athena Dev Teams - Licensed under GNU GPL                  *
- *  For more information, see LICENCE in the main folder                     *
- *                                                                           *
  *  <H1>Entry Reusage System</H1>                                            *
  *                                                                           *
  *  There are several root entry managers, each with a different entry size. *
@@ -48,8 +48,7 @@
 
 #ifndef DISABLE_ERS
 
-#define ERS_ROOT_SIZE 256
-#define ERS_BLOCK_ENTRIES 4096
+#define ERS_BLOCK_ENTRIES 2048
 
 struct ers_list
 {

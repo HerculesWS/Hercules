@@ -13,6 +13,9 @@
     <ClCompile Include="..\src\common\ers.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\common\HPM.c">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\common\malloc.c">
       <Filter>common</Filter>
     </ClCompile>
@@ -127,6 +130,12 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\ers.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\HPM.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\HPMi.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\malloc.h">

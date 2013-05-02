@@ -18,6 +18,14 @@ else
 	MAP_SQL_DEPENDS=needs_mysql
 endif
 
+WITH_PLUGINS=@WITH_PLUGINS@
+ifeq ($(WITH_PLUGINS),yes)
+	ALL_DEPENDS+=plugins
+	PLUGIN_DEPENDS=common_sql
+else
+	PLUGIN_DEPENDS=no_plugins
+endif
+
 
 #####################################################################
 .PHONY: sql  \
@@ -27,6 +35,7 @@ endif
 	char_sql \
 	map_sql \
 	tools \
+	plugins \
 	import \
 	test \
 	clean help
@@ -59,6 +68,9 @@ tools:
 test:
 	@$(MAKE) -C src/test
 
+plugins: $(PLUGIN_DEPENDS)
+	@$(MAKE) -C src/plugins
+
 import:
 # 1) create conf/import folder
 # 2) add missing files
@@ -75,6 +87,7 @@ clean:
 	@$(MAKE) -C src/login $@
 	@$(MAKE) -C src/char $@
 	@$(MAKE) -C src/map $@
+	@$(MAKE) -C src/plugins $@
 	@$(MAKE) -C src/tool $@
 	@$(MAKE) -C src/test $@
 
@@ -100,6 +113,10 @@ help:
 
 needs_mysql:
 	@echo "MySQL not found or disabled by the configure script"
+	@exit 1
+
+no_plugins:
+	@echo "Plugins disabled by the configure script"
 	@exit 1
 
 #####################################################################

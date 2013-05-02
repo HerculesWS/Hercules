@@ -63,103 +63,6 @@
 #include <setjmp.h>
 #include <errno.h>
 
-
-///////////////////////////////////////////////////////////////////////////////
-//## TODO possible enhancements: [FlavioJS]
-// - 'callfunc' supporting labels in the current npc "::LabelName"
-// - 'callfunc' supporting labels in other npcs "NpcName::LabelName"
-// - 'function FuncName;' function declarations reverting to global functions
-//   if local label isn't found
-// - join callfunc and callsub's functionality
-// - remove dynamic allocation in add_word()
-// - remove GETVALUE / SETVALUE
-// - clean up the set_reg / set_val / setd_sub mess
-// - detect invalid label references at parse-time
-
-//
-// struct script_state* st;
-//
-
-/// Returns the script_data at the target index
-#define script_getdata(st,i) ( &((st)->stack->stack_data[(st)->start + (i)]) )
-/// Returns if the stack contains data at the target index
-#define script_hasdata(st,i) ( (st)->end > (st)->start + (i) )
-/// Returns the index of the last data in the stack
-#define script_lastdata(st) ( (st)->end - (st)->start - 1 )
-/// Pushes an int into the stack
-#define script_pushint(st,val) push_val((st)->stack, C_INT, (val))
-/// Pushes a string into the stack (script engine frees it automatically)
-#define script_pushstr(st,val) push_str((st)->stack, C_STR, (val))
-/// Pushes a copy of a string into the stack
-#define script_pushstrcopy(st,val) push_str((st)->stack, C_STR, aStrdup(val))
-/// Pushes a constant string into the stack (must never change or be freed)
-#define script_pushconststr(st,val) push_str((st)->stack, C_CONSTSTR, (val))
-/// Pushes a nil into the stack
-#define script_pushnil(st) push_val((st)->stack, C_NOP, 0)
-/// Pushes a copy of the data in the target index
-#define script_pushcopy(st,i) push_copy((st)->stack, (st)->start + (i))
-
-#define script_isstring(st,i) data_isstring(script_getdata(st,i))
-#define script_isint(st,i) data_isint(script_getdata(st,i))
-
-#define script_getnum(st,val) conv_num(st, script_getdata(st,val))
-#define script_getstr(st,val) conv_str(st, script_getdata(st,val))
-#define script_getref(st,val) ( script_getdata(st,val)->ref )
-
-// Note: "top" functions/defines use indexes relative to the top of the stack
-//       -1 is the index of the data at the top
-
-/// Returns the script_data at the target index relative to the top of the stack
-#define script_getdatatop(st,i) ( &((st)->stack->stack_data[(st)->stack->sp + (i)]) )
-/// Pushes a copy of the data in the target index relative to the top of the stack
-#define script_pushcopytop(st,i) push_copy((st)->stack, (st)->stack->sp + (i))
-/// Removes the range of values [start,end[ relative to the top of the stack
-#define script_removetop(st,start,end) ( pop_stack((st), ((st)->stack->sp + (start)), (st)->stack->sp + (end)) )
-
-//
-// struct script_data* data;
-//
-
-/// Returns if the script data is a string
-#define data_isstring(data) ( (data)->type == C_STR || (data)->type == C_CONSTSTR )
-/// Returns if the script data is an int
-#define data_isint(data) ( (data)->type == C_INT )
-/// Returns if the script data is a reference
-#define data_isreference(data) ( (data)->type == C_NAME )
-/// Returns if the script data is a label
-#define data_islabel(data) ( (data)->type == C_POS )
-/// Returns if the script data is an internal script function label
-#define data_isfunclabel(data) ( (data)->type == C_USERFUNC_POS )
-
-/// Returns if this is a reference to a constant
-#define reference_toconstant(data) ( str_data[reference_getid(data)].type == C_INT )
-/// Returns if this a reference to a param
-#define reference_toparam(data) ( str_data[reference_getid(data)].type == C_PARAM )
-/// Returns if this a reference to a variable
-//##TODO confirm it's C_NAME [FlavioJS]
-#define reference_tovariable(data) ( str_data[reference_getid(data)].type == C_NAME )
-/// Returns the unique id of the reference (id and index)
-#define reference_getuid(data) ( (data)->u.num )
-/// Returns the id of the reference
-#define reference_getid(data) ( (int32)(reference_getuid(data) & 0x00ffffff) )
-/// Returns the array index of the reference
-#define reference_getindex(data) ( (int32)(((uint32)(reference_getuid(data) & 0xff000000)) >> 24) )
-/// Returns the name of the reference
-#define reference_getname(data) ( str_buf + str_data[reference_getid(data)].str )
-/// Returns the linked list of uid-value pairs of the reference (can be NULL)
-#define reference_getref(data) ( (data)->ref )
-/// Returns the value of the constant
-#define reference_getconstant(data) ( str_data[reference_getid(data)].val )
-/// Returns the type of param
-#define reference_getparamtype(data) ( str_data[reference_getid(data)].val )
-
-/// Composes the uid of a reference from the id and the index
-#define reference_uid(id,idx) ( (int32)((((uint32)(id)) & 0x00ffffff) | (((uint32)(idx)) << 24)) )
-
-#define not_server_variable(prefix) ( (prefix) != '$' && (prefix) != '.' && (prefix) != '\'')
-#define not_array_variable(prefix) ( (prefix) != '$' && (prefix) != '@' && (prefix) != '.' && (prefix) != '\'' )
-#define is_string_variable(name) ( (name)[strlen(name) - 1] == '$' )
-
 #define FETCH(n, t) \
 		if( script_hasdata(st,n) ) \
 			(t)=script_getnum(st,n);
@@ -297,14 +200,6 @@ int potion_target=0;
 
 c_op get_com(unsigned char *script,int *pos);
 int get_num(unsigned char *script,int *pos);
-
-typedef struct script_function {
-	bool (*func)(struct script_state *st);
-	const char *name;
-	const char *arg;
-} script_function;
-
-extern script_function BUILDIN[];
 
 static struct linkdb_node* sleep_db;// int oid -> struct script_state*
 
@@ -472,20 +367,19 @@ static void script_reportsrc(struct script_state *st)
 	if( bl == NULL )
 		return;
 
-	switch( bl->type )
-	{
-	case BL_NPC:
-		if( bl->m >= 0 )
-			ShowDebug("Source (NPC): %s at %s (%d,%d)\n", ((struct npc_data *)bl)->name, map[bl->m].name, bl->x, bl->y);
-		else
-			ShowDebug("Source (NPC): %s (invisible/not on a map)\n", ((struct npc_data *)bl)->name);
-		break;
-	default:
-		if( bl->m >= 0 )
-			ShowDebug("Source (Non-NPC type %d): name %s at %s (%d,%d)\n", bl->type, status_get_name(bl), map[bl->m].name, bl->x, bl->y);
-		else
-			ShowDebug("Source (Non-NPC type %d): name %s (invisible/not on a map)\n", bl->type, status_get_name(bl));
-		break;
+	switch( bl->type ) {
+		case BL_NPC:
+			if( bl->m >= 0 )
+				ShowDebug("Source (NPC): %s at %s (%d,%d)\n", ((struct npc_data *)bl)->name, map[bl->m].name, bl->x, bl->y);
+			else
+				ShowDebug("Source (NPC): %s (invisible/not on a map)\n", ((struct npc_data *)bl)->name);
+			break;
+		default:
+			if( bl->m >= 0 )
+				ShowDebug("Source (Non-NPC type %d): name %s at %s (%d,%d)\n", bl->type, status_get_name(bl), map[bl->m].name, bl->x, bl->y);
+			else
+				ShowDebug("Source (Non-NPC type %d): name %s (invisible/not on a map)\n", bl->type, status_get_name(bl));
+			break;
 	}
 }
 
@@ -494,54 +388,43 @@ static void script_reportdata(struct script_data* data)
 {
 	if( data == NULL )
 		return;
-	switch( data->type )
-	{
-	case C_NOP:// no value
-		ShowDebug("Data: nothing (nil)\n");
-		break;
-	case C_INT:// number
-		ShowDebug("Data: number value=%d\n", data->u.num);
-		break;
-	case C_STR:
-	case C_CONSTSTR:// string
-		if( data->u.str )
-		{
-			ShowDebug("Data: string value=\"%s\"\n", data->u.str);
-		}
-		else
-		{
-			ShowDebug("Data: string value=NULL\n");
-		}
-		break;
-	case C_NAME:// reference
-		if( reference_tovariable(data) )
-		{// variable
-			const char* name = reference_getname(data);
-			if( not_array_variable(*name) )
-				ShowDebug("Data: variable name='%s'\n", name);
-			else
-				ShowDebug("Data: variable name='%s' index=%d\n", name, reference_getindex(data));
-		}
-		else if( reference_toconstant(data) )
-		{// constant
-			ShowDebug("Data: constant name='%s' value=%d\n", reference_getname(data), reference_getconstant(data));
-		}
-		else if( reference_toparam(data) )
-		{// param
-			ShowDebug("Data: param name='%s' type=%d\n", reference_getname(data), reference_getparamtype(data));
-		}
-		else
-		{// ???
-			ShowDebug("Data: reference name='%s' type=%s\n", reference_getname(data), script_op2name(data->type));
-			ShowDebug("Please report this!!! - str_data.type=%s\n", script_op2name(str_data[reference_getid(data)].type));
-		}
-		break;
-	case C_POS:// label
-		ShowDebug("Data: label pos=%d\n", data->u.num);
-		break;
-	default:
-		ShowDebug("Data: %s\n", script_op2name(data->type));
-		break;
+	switch( data->type ) {
+		case C_NOP:// no value
+			ShowDebug("Data: nothing (nil)\n");
+			break;
+		case C_INT:// number
+			ShowDebug("Data: number value=%d\n", data->u.num);
+			break;
+		case C_STR:
+		case C_CONSTSTR:// string
+			if( data->u.str ) {
+				ShowDebug("Data: string value=\"%s\"\n", data->u.str);
+			} else {
+				ShowDebug("Data: string value=NULL\n");
+			}
+			break;
+		case C_NAME:// reference
+			if( reference_tovariable(data) ) {// variable
+				const char* name = reference_getname(data);
+				if( not_array_variable(*name) )
+					ShowDebug("Data: variable name='%s'\n", name);
+				else
+					ShowDebug("Data: variable name='%s' index=%d\n", name, reference_getindex(data));
+			} else if( reference_toconstant(data) ) {// constant
+				ShowDebug("Data: constant name='%s' value=%d\n", reference_getname(data), reference_getconstant(data));
+			} else if( reference_toparam(data) ) {// param
+				ShowDebug("Data: param name='%s' type=%d\n", reference_getname(data), reference_getparamtype(data));
+			} else {// ???
+				ShowDebug("Data: reference name='%s' type=%s\n", reference_getname(data), script_op2name(data->type));
+				ShowDebug("Please report this!!! - str_data.type=%s\n", script_op2name(str_data[reference_getid(data)].type));
+			}
+			break;
+		case C_POS:// label
+			ShowDebug("Data: label pos=%d\n", data->u.num);
+			break;
+		default:
+			ShowDebug("Data: %s\n", script_op2name(data->type));
+			break;
 	}
 }
 
@@ -773,33 +656,33 @@ static void add_scriptl(int l)
 	int backpatch = str_data[l].backpatch;
 
 	switch(str_data[l].type){
-	case C_POS:
-	case C_USERFUNC_POS:
-		add_scriptc(C_POS);
-		add_scriptb(str_data[l].label);
-		add_scriptb(str_data[l].label>>8);
-		add_scriptb(str_data[l].label>>16);
-		break;
-	case C_NOP:
-	case C_USERFUNC:
-		// Embedded data backpatch there is a possibility of label
-		add_scriptc(C_NAME);
-		str_data[l].backpatch = script_pos;
-		add_scriptb(backpatch);
-		add_scriptb(backpatch>>8);
-		add_scriptb(backpatch>>16);
-		break;
-	case C_INT:
-		add_scripti(abs(str_data[l].val));
-		if( str_data[l].val < 0 ) //Notice that this is negative, from jA (Rayce)
-			add_scriptc(C_NEG);
-		break;
-	default: // assume C_NAME
-		add_scriptc(C_NAME);
-		add_scriptb(l);
-		add_scriptb(l>>8);
-		add_scriptb(l>>16);
-		break;
+		case C_POS:
+		case C_USERFUNC_POS:
+			add_scriptc(C_POS);
+			add_scriptb(str_data[l].label);
+			add_scriptb(str_data[l].label>>8);
+			add_scriptb(str_data[l].label>>16);
+			break;
+		case C_NOP:
+		case C_USERFUNC:
+			// Embedded data backpatch there is a possibility of label
+			add_scriptc(C_NAME);
+			str_data[l].backpatch = script_pos;
+			add_scriptb(backpatch);
+			add_scriptb(backpatch>>8);
+			add_scriptb(backpatch>>16);
+			break;
+		case C_INT:
+			add_scripti(abs(str_data[l].val));
+			if( str_data[l].val < 0 ) //Notice that this is negative, from jA (Rayce)
+				add_scriptc(C_NEG);
+			break;
+		default: // assume C_NAME
+			add_scriptc(C_NAME);
+			add_scriptb(l);
+			add_scriptb(l>>8);
+			add_scriptb(l>>16);
+			break;
 	}
 }
 
@@ -927,8 +810,8 @@ int add_word(const char* p)
 static
 const char* parse_callfunc(const char* p, int require_paren, int is_custom)
 {
-	const char* p2;
-	const char* arg=NULL;
+	const char *p2;
+	char *arg = NULL;
 	int func;
 
 	func = add_word(p);
@@ -936,13 +819,13 @@ const char* parse_callfunc(const char* p, int require_paren, int is_custom)
 		// buildin function
 		add_scriptl(func);
 		add_scriptc(C_ARG);
-		arg = BUILDIN[str_data[func].val].arg;
+		arg = script->buildin[str_data[func].val];
 	} else if( str_data[func].type == C_USERFUNC || str_data[func].type == C_USERFUNC_POS ){
 		// script defined function
 		add_scriptl(buildin_callsub_ref);
 		add_scriptc(C_ARG);
 		add_scriptl(func);
-		arg = BUILDIN[str_data[buildin_callsub_ref].val].arg;
+		arg = script->buildin[str_data[buildin_callsub_ref].val];
 		if( *arg == 0 )
 			disp_error_message("parse_callfunc: callsub has no arguments, please review it's definition",p);
 		if( *arg != '*' )
@@ -960,7 +843,7 @@ const char* parse_callfunc(const char* p, int require_paren, int is_custom)
 			add_scriptc(C_STR);
 			while( *name ) add_scriptb(*name ++);
 			add_scriptb(0);
-			arg = BUILDIN[str_data[buildin_callfunc_ref].val].arg;
+			arg = script->buildin[str_data[buildin_callfunc_ref].val];
 			if( *arg != '*' ) ++ arg;
 		}
 #endif
@@ -982,8 +865,7 @@ const char* parse_callfunc(const char* p, int require_paren, int is_custom)
 	{// <func name>
 		syntax.curly[syntax.curly_count].flag = ARGLIST_NO_PAREN;
 	*/
-	} else
-	{// <func name> <arg list>
+	} else {// <func name> <arg list>
 		if( require_paren ){
 			if( *p != '(' )
 				disp_error_message("need '('",p);
@@ -1009,7 +891,7 @@ const char* parse_callfunc(const char* p, int require_paren, int is_custom)
 		}
 		--syntax.curly_count;
 	}
-	if( *arg && *arg != '?' && *arg != '*' )
+	if( arg && *arg && *arg != '?' && *arg != '*' )
 		disp_error_message2("parse_callfunc: not enough arguments, expected ','", p, script_config.warn_func_mismatch_paramnum);
 	if( syntax.curly[syntax.curly_count].type != TYPE_ARGLIST )
 		disp_error_message("parse_callfunc: DEBUG last curly is not an argument list",p);
@@ -2087,45 +1969,6 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 	}
 }
 
-/*==========================================
- * Added built-in functions
- *------------------------------------------*/
-static void add_BUILDIN(void)
-{
-	int i,n;
-	const char* p;
-	for( i = 0; BUILDIN[i].func; i++ )
-	{
-		// arg must follow the pattern: (v|s|i|r|l)*\?*\*?
-		// 'v' - value (either string or int or reference)
-		// 's' - string
-		// 'i' - int
-		// 'r' - reference (of a variable)
-		// 'l' - label
-		// '?' - one optional parameter
-		// '*' - unknown number of optional parameters
-		p = BUILDIN[i].arg;
-		while( *p == 'v' || *p == 's' || *p == 'i' || *p == 'r' || *p == 'l' ) ++p;
-		while( *p == '?' ) ++p;
-		if( *p == '*' ) ++p;
-		if( *p != 0){
-			ShowWarning("add_BUILDIN: ignoring function \"%s\" with invalid arg \"%s\".\n", BUILDIN[i].name, BUILDIN[i].arg);
-		} else if( *skip_word(BUILDIN[i].name) != 0 ){
-			ShowWarning("add_BUILDIN: ignoring function with invalid name \"%s\" (must be a word).\n", BUILDIN[i].name);
-		} else {
-			n = add_str(BUILDIN[i].name);
-			str_data[n].type = C_FUNC;
-			str_data[n].val = i;
-			str_data[n].func = BUILDIN[i].func;
-
-            if (!strcmp(BUILDIN[i].name, "set")) buildin_set_ref = n;
-            else if (!strcmp(BUILDIN[i].name, "callsub")) buildin_callsub_ref = n;
-            else if (!strcmp(BUILDIN[i].name, "callfunc")) buildin_callfunc_ref = n;
-            else if( !strcmp(BUILDIN[i].name, "getelementofarray") ) buildin_getelementofarray_ref = n;
-		}
-	}
-}
-
 /// Retrieves the value of a constant.
 bool script_get_constant(const char* name, int* value)
 {
@@ -2254,7 +2097,6 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 	const char *p,*tmpp;
 	int i;
 	struct script_code* code = NULL;
-	static int first=1;
 	char end;
 	bool unresolved_names = false;
 
@@ -2262,11 +2104,6 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 		return NULL;// empty script
 
 	memset(&syntax,0,sizeof(syntax));
-	if(first){
-		add_BUILDIN();
-		read_constdb();
-		first=0;
-	}
 
 	script_buf=(unsigned char *)aMalloc(SCRIPT_BLOCK_SIZE*sizeof(unsigned char));
 	script_pos=0;
@@ -2754,8 +2591,7 @@ const char* conv_str(struct script_state* st, struct script_data* data)
 }
 
 /// Converts the data to an int
-int conv_num(struct script_state* st, struct script_data* data)
-{
+int conv_num(struct script_state* st, struct script_data* data) {
 	char* p;
 	long num;
 
@@ -3215,11 +3051,11 @@ void op_2(struct script_state *st, int op)
 	case C_ADD:
 		if( data_isint(left) && data_isstring(right) )
 		{// convert int-string to string-string
-			conv_str(st, left);
+			script->conv_str(st, left);
 		}
 		else if( data_isstring(left) && data_isint(right) )
 		{// convert string-int to string-string
-			conv_str(st, right);
+			script->conv_str(st, right);
 		}
 		break;
 	}
@@ -3306,26 +3142,20 @@ static void script_check_buildin_argtype(struct script_state* st, int func)
 {
 	char type;
 	int idx, invalid = 0;
-	script_function* sf = &BUILDIN[str_data[func].val];
+	char* sf = script->buildin[str_data[func].val];
 
-	for( idx = 2; script_hasdata(st, idx); idx++ )
-	{
+	for( idx = 2; script_hasdata(st, idx); idx++ ) {
 		struct script_data* data = script_getdata(st, idx);
 
-		type = sf->arg[idx-2];
-
-		if( type == '?' || type == '*' )
-		{// optional argument or unknown number of optional parameters ( no types are after this )
+		type = sf[idx-2];
+		
+		if( type == '?' || type == '*' ) {// optional argument or unknown number of optional parameters ( no types are after this )
 			break;
-		}
-		else if( type == 0 )
-		{// more arguments than necessary ( should not happen, as it is checked before )
+		} else if( type == 0 ) {// more arguments than necessary ( should not happen, as it is checked before )
 			ShowWarning("Found more arguments than necessary. unexpected arg type %s\n",script_op2name(data->type));
 			invalid++;
 			break;
-		}
-		else
-		{
+		} else {
 			const char* name = NULL;
 
 			if( data_isreference(data) )
@@ -3333,8 +3163,7 @@ static void script_check_buildin_argtype(struct script_state* st, int func)
 				name = reference_getname(data);
 			}
 
-			switch( type )
-			{
+			switch( type ) {
 				case 'v':
 					if( !data_isstring(data) && !data_isint(data) && !data_isreference(data) )
 					{// variant
@@ -3379,8 +3208,7 @@ static void script_check_buildin_argtype(struct script_state* st, int func)
 		}
 	}
 
-	if(invalid)
-	{
+	if(invalid) {
 		ShowDebug("Function: %s\n", get_str(func));
 		script_reportsrc(st);
 	}
@@ -3929,7 +3757,7 @@ void script_setarray_pc(struct map_session_data* sd, const char* varname, uint8 
 /*==========================================
  * Destructor
  *------------------------------------------*/
-int do_final_script() {
+void do_final_script(void) {
 	int i;
 #ifdef DEBUG_HASH
 	if (battle_config.etc_log)
@@ -4012,19 +3840,27 @@ int do_final_script() {
 
 	if( atcommand->binding_count != 0 )
 		aFree(atcommand->binding);
+	
+	for( i = 0; i < script->buildin_count; i++) {
+		if( script->buildin[i] ) {
+			aFree(script->buildin[i]);
+			script->buildin[i] = NULL;
+		}
+	}
+	
+	aFree(script->buildin);
 
-	return 0;
 }
 /*==========================================
  * Initialization
  *------------------------------------------*/
-int do_init_script() {
-	userfunc_db=strdb_alloc(DB_OPT_DUP_KEY,0);
-	scriptlabel_db=strdb_alloc(DB_OPT_DUP_KEY,50);
+void do_init_script(void) {
+	userfunc_db = strdb_alloc(DB_OPT_DUP_KEY,0);
+	scriptlabel_db = strdb_alloc(DB_OPT_DUP_KEY,50);
 	autobonus_db = strdb_alloc(DB_OPT_DUP_KEY,0);
-
+	script->parse_builtin();
+	read_constdb();
 	mapreg_init();
-	return 0;
 }
 
 int script_reload() {
@@ -4061,7 +3897,6 @@ int script_reload() {
 
 #define BUILDIN_DEF(x,args) { buildin_ ## x , #x , args }
 #define BUILDIN_DEF2(x,x2,args) { buildin_ ## x , x2 , args }
-#define BUILDIN(x) bool buildin_ ## x (struct script_state* st)
 
 /////////////////////////////////////////////////////////////////////
 // NPC interaction
@@ -5768,11 +5603,11 @@ BUILDIN(countitem)
 	
 	if( data_isstring(data) )
 	{// item name
-		id = itemdb_searchname(conv_str(st, data));
+		id = itemdb_searchname(script->conv_str(st, data));
 	}
 	else
 	{// item id
-		id = itemdb_exists(conv_num(st, data));
+		id = itemdb_exists(script->conv_num(st, data));
 	}
 	
 	if( id == NULL )
@@ -5815,11 +5650,11 @@ BUILDIN(countitem2)
 	
 	if( data_isstring(data) )
 	{// item name
-		id = itemdb_searchname(conv_str(st, data));
+		id = itemdb_searchname(script->conv_str(st, data));
 	}
 	else
 	{// item id
-		id = itemdb_exists(conv_num(st, data));
+		id = itemdb_exists(script->conv_num(st, data));
 	}
 	
 	if( id == NULL )
@@ -5882,9 +5717,9 @@ BUILDIN(checkweight)
 	    data = script_getdata(st,i);
 	    get_val(st, data);  // convert into value in case of a variable
 	    if( data_isstring(data) ){// item name
-		    id = itemdb_searchname(conv_str(st, data));
+		    id = itemdb_searchname(script->conv_str(st, data));
 	    } else {// item id
-		    id = itemdb_exists(conv_num(st, data));
+		    id = itemdb_exists(script->conv_num(st, data));
 	    }
 	    if( id == NULL ) {
 		    ShowError("buildin_checkweight: Invalid item '%s'.\n", script_getstr(st,i));  // returns string, regardless of what it was
@@ -6055,14 +5890,14 @@ BUILDIN(getitem)
 	get_val(st,data);
 	if( data_isstring(data) )
 	{// "<item name>"
-		const char *name=conv_str(st,data);
+		const char *name=script->conv_str(st,data);
 		if( (item_data = itemdb_searchname(name)) == NULL ){
 			ShowError("buildin_getitem: Nonexistant item %s requested.\n", name);
 			return false; //No item created.
 		}
 		nameid=item_data->nameid;
 	} else if( data_isint(data) ) {// <item id>
-		nameid=conv_num(st,data);
+		nameid=script->conv_num(st,data);
 		//Violet Box, Blue Box, etc - random item pick
 		if( nameid < 0 ) {
 			nameid = -nameid;
@@ -6142,14 +5977,14 @@ BUILDIN(getitem2)
 	data=script_getdata(st,2);
 	get_val(st,data);
 	if( data_isstring(data) ){
-		const char *name=conv_str(st,data);
+		const char *name=script->conv_str(st,data);
 		struct item_data *item_data = itemdb_searchname(name);
 		if( item_data )
 			nameid=item_data->nameid;
 		else
 			nameid=UNKNOWN_ITEM_ID;
 	}else
-		nameid=conv_num(st,data);
+		nameid=script->conv_num(st,data);
 	
 	amount=script_getnum(st,3);
 	iden=script_getnum(st,4);
@@ -6238,7 +6073,7 @@ BUILDIN(rentitem)
 	
 	if( data_isstring(data) )
 	{
-		const char *name = conv_str(st,data);
+		const char *name = script->conv_str(st,data);
 		struct item_data *itd = itemdb_searchname(name);
 		if( itd == NULL )
 		{
@@ -6249,7 +6084,7 @@ BUILDIN(rentitem)
 	}
 	else if( data_isint(data) )
 	{
-		nameid = conv_num(st,data);
+		nameid = script->conv_num(st,data);
 		if( nameid <= 0 || !itemdb_exists(nameid) )
 		{
 			ShowError("buildin_rentitem: Nonexistant item %d requested.\n", nameid);
@@ -6300,7 +6135,7 @@ BUILDIN(getnameditem)
 	data=script_getdata(st,2);
 	get_val(st,data);
 	if( data_isstring(data) ){
-		const char *name=conv_str(st,data);
+		const char *name=script->conv_str(st,data);
 		struct item_data *item_data = itemdb_searchname(name);
 		if( item_data == NULL)
 		{	//Failed
@@ -6309,7 +6144,7 @@ BUILDIN(getnameditem)
 		}
 		nameid = item_data->nameid;
 	}else
-		nameid = conv_num(st,data);
+		nameid = script->conv_num(st,data);
 	
 	if(!itemdb_exists(nameid)/* || itemdb_isstackable(nameid)*/)
 	{	//Even though named stackable items "could" be risky, they are required for certain quests.
@@ -6320,9 +6155,9 @@ BUILDIN(getnameditem)
 	data=script_getdata(st,3);
 	get_val(st,data);
 	if( data_isstring(data) )	//Char Name
-		tsd=map_nick2sd(conv_str(st,data));
+		tsd=map_nick2sd(script->conv_str(st,data));
 	else	//Char Id was given
-		tsd=map_charid2sd(conv_num(st,data));
+		tsd=map_charid2sd(script->conv_num(st,data));
 	
 	if( tsd == NULL )
 	{	//Failed
@@ -6374,13 +6209,13 @@ BUILDIN(makeitem)
 	data=script_getdata(st,2);
 	get_val(st,data);
 	if( data_isstring(data) ){
-		const char *name=conv_str(st,data);
+		const char *name=script->conv_str(st,data);
 		if( (item_data = itemdb_searchname(name)) )
 			nameid=item_data->nameid;
 		else
 			nameid=UNKNOWN_ITEM_ID;
 	} else {
-		nameid=conv_num(st,data);
+		nameid=script->conv_num(st,data);
 		if( nameid <= 0 || !(item_data = itemdb_exists(nameid)) ){
 			ShowError("makeitem: Nonexistant item %d requested.\n", nameid);
 			return false; //No item created.
@@ -6587,7 +6422,7 @@ BUILDIN(delitem)
 	get_val(st,data);
 	if( data_isstring(data) )
 	{
-		const char* item_name = conv_str(st,data);
+		const char* item_name = script->conv_str(st,data);
 		struct item_data* id = itemdb_searchname(item_name);
 		if( id == NULL )
 		{
@@ -6599,7 +6434,7 @@ BUILDIN(delitem)
 	}
 	else
 	{
-		it.nameid = conv_num(st,data);// <item id>
+		it.nameid = script->conv_num(st,data);// <item id>
 		if( !itemdb_exists( it.nameid ) )
 		{
 			ShowError("script:delitem: unknown item \"%d\".\n", it.nameid);
@@ -6656,7 +6491,7 @@ BUILDIN(delitem2)
 	get_val(st,data);
 	if( data_isstring(data) )
 	{
-		const char* item_name = conv_str(st,data);
+		const char* item_name = script->conv_str(st,data);
 		struct item_data* id = itemdb_searchname(item_name);
 		if( id == NULL )
 		{
@@ -6668,7 +6503,7 @@ BUILDIN(delitem2)
 	}
 	else
 	{
-		it.nameid = conv_num(st,data);// <item id>
+		it.nameid = script->conv_num(st,data);// <item id>
 		if( !itemdb_exists( it.nameid ) )
 		{
 			ShowError("script:delitem: unknown item \"%d\".\n", it.nameid);
@@ -9004,11 +8839,11 @@ BUILDIN(initnpctimer)
 		data = script_getdata(st,2);
 		get_val(st,data);
 		if( data_isstring(data) ) //NPC name
-			nd = npc_name2id(conv_str(st, data));
+			nd = npc_name2id(script->conv_str(st, data));
 		else if( data_isint(data) ) //Flag
 		{
 			nd = (struct npc_data *)map_id2bl(st->oid);
-			flag = conv_num(st,data);
+			flag = script->conv_num(st,data);
 		}
 		else
 		{
@@ -9052,11 +8887,11 @@ BUILDIN(startnpctimer)
 		data = script_getdata(st,2);
 		get_val(st,data);
 		if( data_isstring(data) ) //NPC name
-			nd = npc_name2id(conv_str(st, data));
+			nd = npc_name2id(script->conv_str(st, data));
 		else if( data_isint(data) ) //Flag
 		{
 			nd = (struct npc_data *)map_id2bl(st->oid);
-			flag = conv_num(st,data);
+			flag = script->conv_num(st,data);
 		}
 		else
 		{
@@ -9098,11 +8933,11 @@ BUILDIN(stopnpctimer)
 		data = script_getdata(st,2);
 		get_val(st,data);
 		if( data_isstring(data) ) //NPC name
-			nd = npc_name2id(conv_str(st, data));
+			nd = npc_name2id(script->conv_str(st, data));
 		else if( data_isint(data) ) //Flag
 		{
 			nd = (struct npc_data *)map_id2bl(st->oid);
-			flag = conv_num(st,data);
+			flag = script->conv_num(st,data);
 		}
 		else
 		{
@@ -9332,14 +9167,14 @@ BUILDIN(itemeffect) {
 	get_val( st, data );
 	
 	if( data_isstring( data ) ){
-		const char *name = conv_str( st, data );
+		const char *name = script->conv_str( st, data );
 		
 		if( ( item_data = itemdb_searchname( name ) ) == NULL ){
 			ShowError( "buildin_itemeffect: Nonexistant item %s requested.\n", name );
 			return false;
 		}
 	} else if( data_isint( data ) ){
-		int nameid = conv_num( st, data );
+		int nameid = script->conv_num( st, data );
 		
 		if( ( item_data = itemdb_exists( nameid ) ) == NULL ){
 			ShowError("buildin_itemeffect: Nonexistant item %d requested.\n", nameid );
@@ -9567,13 +9402,13 @@ BUILDIN(getareadropitem)
 	data=script_getdata(st,7);
 	get_val(st,data);
 	if( data_isstring(data) ){
-		const char *name=conv_str(st,data);
+		const char *name=script->conv_str(st,data);
 		struct item_data *item_data = itemdb_searchname(name);
 		item=UNKNOWN_ITEM_ID;
 		if( item_data )
 			item=item_data->nameid;
 	}else
-		item=conv_num(st,data);
+		item=script->conv_num(st,data);
 	
 	if( (m=map_mapname2mapid(str))< 0){
 		script_pushint(st,-1);
@@ -11631,12 +11466,12 @@ BUILDIN(getitemname)
 	get_val(st,data);
 	
 	if( data_isstring(data) ){
-		const char *name=conv_str(st,data);
+		const char *name=script->conv_str(st,data);
 		struct item_data *item_data = itemdb_searchname(name);
 		if( item_data )
 			item_id=item_data->nameid;
 	}else
-		item_id=conv_num(st,data);
+		item_id=script->conv_num(st,data);
 	
 	i_data = itemdb_exists(item_id);
 	if (i_data == NULL)
@@ -14162,9 +13997,9 @@ BUILDIN(setnpcdisplay)
 	
 	get_val(st, data);
 	if( data_isstring(data) )
- 		newname = conv_str(st,data);
+ 		newname = script->conv_str(st,data);
 	else if( data_isint(data) )
- 		class_ = conv_num(st,data);
+ 		class_ = script->conv_num(st,data);
 	else
 	{
 		ShowError("script:setnpcdisplay: expected a string or number\n");
@@ -14634,17 +14469,17 @@ BUILDIN(npcshopattach)
 BUILDIN(setitemscript)
 {
 	int item_id,n=0;
-	const char *script;
+	const char *new_bonus_script;
 	struct item_data *i_data;
 	struct script_code **dstscript;
 	
 	item_id	= script_getnum(st,2);
-	script = script_getstr(st,3);
+	new_bonus_script = script_getstr(st,3);
 	if( script_hasdata(st,4) )
 		n=script_getnum(st,4);
 	i_data = itemdb_exists(item_id);
 	
-	if (!i_data || script==NULL || ( script[0] && script[0]!='{' )) {
+	if (!i_data || new_bonus_script==NULL || ( new_bonus_script[0] && new_bonus_script[0]!='{' )) {
 		script_pushint(st,0);
 		return true;
 	}
@@ -14662,7 +14497,7 @@ BUILDIN(setitemscript)
 	if(*dstscript)
 		script_free_code(*dstscript);
 	
-	*dstscript = script[0] ? parse_script(script, "script_setitemscript", 0, 0) : NULL;
+	*dstscript = new_bonus_script[0] ? parse_script(new_bonus_script, "script_setitemscript", 0, 0) : NULL;
 	script_pushint(st,1);
 	return true;
 }
@@ -15094,11 +14929,11 @@ BUILDIN(unitattack)
 	get_val(st, data);
 	if( data_isstring(data) )
 	{
-		TBL_PC* sd = map_nick2sd(conv_str(st, data));
+		TBL_PC* sd = map_nick2sd(script->conv_str(st, data));
 		if( sd != NULL )
 			target_bl = &sd->bl;
 	} else
-		target_bl = map_id2bl(conv_num(st, data));
+		target_bl = map_id2bl(script->conv_num(st, data));
 	// request the attack
 	if( target_bl == NULL )
 	{
@@ -17158,466 +16993,565 @@ BUILDIN(npcskill)
 	
 	return true;
 }
-
 // declarations that were supposed to be exported from npc_chat.c
 #ifdef PCRE_SUPPORT
-BUILDIN(defpattern);
-BUILDIN(activatepset);
-BUILDIN(deactivatepset);
-BUILDIN(deletepset);
+	BUILDIN(defpattern);
+	BUILDIN(activatepset);
+	BUILDIN(deactivatepset);
+	BUILDIN(deletepset);
 #endif
 
-/// script command definitions
-/// for an explanation on args, see add_BUILDIN
-struct script_function BUILDIN[] = {
-	// NPC interaction
-	BUILDIN_DEF(mes,"s*"),
-	BUILDIN_DEF(next,""),
-	BUILDIN_DEF(close,""),
-	BUILDIN_DEF(close2,""),
-	BUILDIN_DEF(menu,"sl*"),
-	BUILDIN_DEF(select,"s*"), //for future jA script compatibility
-	BUILDIN_DEF(prompt,"s*"),
-	//
-	BUILDIN_DEF(goto,"l"),
-	BUILDIN_DEF(callsub,"l*"),
-	BUILDIN_DEF(callfunc,"s*"),
-	BUILDIN_DEF(return,"?"),
-	BUILDIN_DEF(getarg,"i?"),
-	BUILDIN_DEF(jobchange,"i?"),
-	BUILDIN_DEF(jobname,"i"),
-	BUILDIN_DEF(input,"r??"),
-	BUILDIN_DEF(warp,"sii"),
-	BUILDIN_DEF(areawarp,"siiiisii??"),
-	BUILDIN_DEF(warpchar,"siii"), // [LuzZza]
-	BUILDIN_DEF(warpparty,"siii?"), // [Fredzilla] [Paradox924X]
-	BUILDIN_DEF(warpguild,"siii"), // [Fredzilla]
-	BUILDIN_DEF(setlook,"ii"),
-	BUILDIN_DEF(changelook,"ii"), // Simulates but don't Store it
-	BUILDIN_DEF(set,"rv"),
-	BUILDIN_DEF(setarray,"rv*"),
-	BUILDIN_DEF(cleararray,"rvi"),
-	BUILDIN_DEF(copyarray,"rri"),
-	BUILDIN_DEF(getarraysize,"r"),
-	BUILDIN_DEF(deletearray,"r?"),
-	BUILDIN_DEF(getelementofarray,"ri"),
-	BUILDIN_DEF(getitem,"vi?"),
-	BUILDIN_DEF(rentitem,"vi"),
-	BUILDIN_DEF(getitem2,"viiiiiiii?"),
-	BUILDIN_DEF(getnameditem,"vv"),
-	BUILDIN_DEF2(grouprandomitem,"groupranditem","i"),
-	BUILDIN_DEF(makeitem,"visii"),
-	BUILDIN_DEF(delitem,"vi?"),
-	BUILDIN_DEF(delitem2,"viiiiiiii?"),
-	BUILDIN_DEF2(enableitemuse,"enable_items",""),
-	BUILDIN_DEF2(disableitemuse,"disable_items",""),
-	BUILDIN_DEF(cutin,"si"),
-	BUILDIN_DEF(viewpoint,"iiiii"),
-	BUILDIN_DEF(heal,"ii"),
-	BUILDIN_DEF(itemheal,"ii"),
-	BUILDIN_DEF(percentheal,"ii"),
-	BUILDIN_DEF(rand,"i?"),
-	BUILDIN_DEF(countitem,"v"),
-	BUILDIN_DEF(countitem2,"viiiiiii"),
-	BUILDIN_DEF(checkweight,"vi*"),
-	BUILDIN_DEF(checkweight2,"rr"),
-	BUILDIN_DEF(readparam,"i?"),
-	BUILDIN_DEF(getcharid,"i?"),
-	BUILDIN_DEF(getnpcid,"i?"),
-	BUILDIN_DEF(getpartyname,"i"),
-	BUILDIN_DEF(getpartymember,"i?"),
-	BUILDIN_DEF(getpartyleader,"i?"),
-	BUILDIN_DEF(getguildname,"i"),
-	BUILDIN_DEF(getguildmaster,"i"),
-	BUILDIN_DEF(getguildmasterid,"i"),
-	BUILDIN_DEF(strcharinfo,"i"),
-	BUILDIN_DEF(strnpcinfo,"i"),
-	BUILDIN_DEF(getequipid,"i"),
-	BUILDIN_DEF(getequipname,"i"),
-	BUILDIN_DEF(getbrokenid,"i"), // [Valaris]
-	BUILDIN_DEF(repair,"i"), // [Valaris]
-	BUILDIN_DEF(repairall,""),
-	BUILDIN_DEF(getequipisequiped,"i"),
-	BUILDIN_DEF(getequipisenableref,"i"),
-	BUILDIN_DEF(getequipisidentify,"i"),
-	BUILDIN_DEF(getequiprefinerycnt,"i"),
-	BUILDIN_DEF(getequipweaponlv,"i"),
-	BUILDIN_DEF(getequippercentrefinery,"i"),
-	BUILDIN_DEF(successrefitem,"i"),
-	BUILDIN_DEF(failedrefitem,"i"),
-	BUILDIN_DEF(downrefitem,"i"),
-	BUILDIN_DEF(statusup,"i"),
-	BUILDIN_DEF(statusup2,"ii"),
-	BUILDIN_DEF(bonus,"iv"),
-	BUILDIN_DEF2(bonus,"bonus2","ivi"),
-	BUILDIN_DEF2(bonus,"bonus3","ivii"),
-	BUILDIN_DEF2(bonus,"bonus4","ivvii"),
-	BUILDIN_DEF2(bonus,"bonus5","ivviii"),
-	BUILDIN_DEF(autobonus,"sii??"),
-	BUILDIN_DEF(autobonus2,"sii??"),
-	BUILDIN_DEF(autobonus3,"siiv?"),
-	BUILDIN_DEF(skill,"vi?"),
-	BUILDIN_DEF(addtoskill,"vi?"), // [Valaris]
-	BUILDIN_DEF(guildskill,"vi"),
-	BUILDIN_DEF(getskilllv,"v"),
-	BUILDIN_DEF(getgdskilllv,"iv"),
-	BUILDIN_DEF(basicskillcheck,""),
-	BUILDIN_DEF(getgmlevel,""),
-	BUILDIN_DEF(getgroupid,""),
-	BUILDIN_DEF(end,""),
-	BUILDIN_DEF(checkoption,"i"),
-	BUILDIN_DEF(setoption,"i?"),
-	BUILDIN_DEF(setcart,"?"),
-	BUILDIN_DEF(checkcart,""),
-	BUILDIN_DEF(setfalcon,"?"),
-	BUILDIN_DEF(checkfalcon,""),
-	BUILDIN_DEF(setriding,"?"),
-	BUILDIN_DEF(checkriding,""),
-	BUILDIN_DEF(checkwug,""),
-	BUILDIN_DEF(checkmadogear,""),
-	BUILDIN_DEF(setmadogear,"?"),
-	BUILDIN_DEF2(savepoint,"save","sii"),
-	BUILDIN_DEF(savepoint,"sii"),
-	BUILDIN_DEF(gettimetick,"i"),
-	BUILDIN_DEF(gettime,"i"),
-	BUILDIN_DEF(gettimestr,"si"),
-	BUILDIN_DEF(openstorage,""),
-	BUILDIN_DEF(guildopenstorage,""),
-	BUILDIN_DEF(itemskill,"vi"),
-	BUILDIN_DEF(produce,"i"),
-	BUILDIN_DEF(cooking,"i"),
-	BUILDIN_DEF(monster,"siisii???"),
-	BUILDIN_DEF(getmobdrops,"i"),
-	BUILDIN_DEF(areamonster,"siiiisii???"),
-	BUILDIN_DEF(killmonster,"ss?"),
-	BUILDIN_DEF(killmonsterall,"s?"),
-	BUILDIN_DEF(clone,"siisi????"),
-	BUILDIN_DEF(doevent,"s"),
-	BUILDIN_DEF(donpcevent,"s"),
-	BUILDIN_DEF(cmdothernpc,"ss"),
-	BUILDIN_DEF(addtimer,"is"),
-	BUILDIN_DEF(deltimer,"s"),
-	BUILDIN_DEF(addtimercount,"si"),
-	BUILDIN_DEF(initnpctimer,"??"),
-	BUILDIN_DEF(stopnpctimer,"??"),
-	BUILDIN_DEF(startnpctimer,"??"),
-	BUILDIN_DEF(setnpctimer,"i?"),
-	BUILDIN_DEF(getnpctimer,"i?"),
-	BUILDIN_DEF(attachnpctimer,"?"), // attached the player id to the npc timer [Celest]
-	BUILDIN_DEF(detachnpctimer,"?"), // detached the player id from the npc timer [Celest]
-	BUILDIN_DEF(playerattached,""), // returns id of the current attached player. [Skotlex]
-	BUILDIN_DEF(announce,"si?????"),
-	BUILDIN_DEF(mapannounce,"ssi?????"),
-	BUILDIN_DEF(areaannounce,"siiiisi?????"),
-	BUILDIN_DEF(getusers,"i"),
-	BUILDIN_DEF(getmapguildusers,"si"),
-	BUILDIN_DEF(getmapusers,"s"),
-	BUILDIN_DEF(getareausers,"siiii"),
-	BUILDIN_DEF(getareadropitem,"siiiiv"),
-	BUILDIN_DEF(enablenpc,"s"),
-	BUILDIN_DEF(disablenpc,"s"),
-	BUILDIN_DEF(hideoffnpc,"s"),
-	BUILDIN_DEF(hideonnpc,"s"),
-	BUILDIN_DEF(sc_start,"iii?"),
-	BUILDIN_DEF(sc_start2,"iiii?"),
-	BUILDIN_DEF(sc_start4,"iiiiii?"),
-	BUILDIN_DEF(sc_end,"i?"),
-	BUILDIN_DEF(getstatus, "i?"),
-	BUILDIN_DEF(getscrate,"ii?"),
-	BUILDIN_DEF(debugmes,"s"),
-	BUILDIN_DEF2(catchpet,"pet","i"),
-	BUILDIN_DEF2(birthpet,"bpet",""),
-	BUILDIN_DEF(resetlvl,"i"),
-	BUILDIN_DEF(resetstatus,""),
-	BUILDIN_DEF(resetskill,""),
-	BUILDIN_DEF(skillpointcount,""),
-	BUILDIN_DEF(changebase,"i?"),
-	BUILDIN_DEF(changesex,""),
-	BUILDIN_DEF(waitingroom,"si?????"),
-	BUILDIN_DEF(delwaitingroom,"?"),
-	BUILDIN_DEF2(waitingroomkickall,"kickwaitingroomall","?"),
-	BUILDIN_DEF(enablewaitingroomevent,"?"),
-	BUILDIN_DEF(disablewaitingroomevent,"?"),
-	BUILDIN_DEF2(enablewaitingroomevent,"enablearena",""),		// Added by RoVeRT
-	BUILDIN_DEF2(disablewaitingroomevent,"disablearena",""),	// Added by RoVeRT
-	BUILDIN_DEF(getwaitingroomstate,"i?"),
-	BUILDIN_DEF(warpwaitingpc,"sii?"),
-	BUILDIN_DEF(attachrid,"i"),
-	BUILDIN_DEF(detachrid,""),
-	BUILDIN_DEF(isloggedin,"i?"),
-	BUILDIN_DEF(setmapflagnosave,"ssii"),
-	BUILDIN_DEF(getmapflag,"si"),
-	BUILDIN_DEF(setmapflag,"si?"),
-	BUILDIN_DEF(removemapflag,"si?"),
-	BUILDIN_DEF(pvpon,"s"),
-	BUILDIN_DEF(pvpoff,"s"),
-	BUILDIN_DEF(gvgon,"s"),
-	BUILDIN_DEF(gvgoff,"s"),
-	BUILDIN_DEF(emotion,"i??"),
-	BUILDIN_DEF(maprespawnguildid,"sii"),
-	BUILDIN_DEF(agitstart,""),	// <Agit>
-	BUILDIN_DEF(agitend,""),
-	BUILDIN_DEF(agitcheck,""),   // <Agitcheck>
-	BUILDIN_DEF(flagemblem,"i"),	// Flag Emblem
-	BUILDIN_DEF(getcastlename,"s"),
-	BUILDIN_DEF(getcastledata,"si"),
-	BUILDIN_DEF(setcastledata,"sii"),
-	BUILDIN_DEF(requestguildinfo,"i?"),
-	BUILDIN_DEF(getequipcardcnt,"i"),
-	BUILDIN_DEF(successremovecards,"i"),
-	BUILDIN_DEF(failedremovecards,"ii"),
-	BUILDIN_DEF(marriage,"s"),
-	BUILDIN_DEF2(wedding_effect,"wedding",""),
-	BUILDIN_DEF(divorce,""),
-	BUILDIN_DEF(ispartneron,""),
-	BUILDIN_DEF(getpartnerid,""),
-	BUILDIN_DEF(getchildid,""),
-	BUILDIN_DEF(getmotherid,""),
-	BUILDIN_DEF(getfatherid,""),
-	BUILDIN_DEF(warppartner,"sii"),
-	BUILDIN_DEF(getitemname,"v"),
-	BUILDIN_DEF(getitemslots,"i"),
-	BUILDIN_DEF(makepet,"i"),
-	BUILDIN_DEF(getexp,"ii"),
-	BUILDIN_DEF(getinventorylist,""),
-	BUILDIN_DEF(getskilllist,""),
-	BUILDIN_DEF(clearitem,""),
-	BUILDIN_DEF(classchange,"ii"),
-	BUILDIN_DEF(misceffect,"i"),
-	BUILDIN_DEF(playBGM,"s"),
-	BUILDIN_DEF(playBGMall,"s?????"),
-	BUILDIN_DEF(soundeffect,"si"),
-	BUILDIN_DEF(soundeffectall,"si?????"),	// SoundEffectAll [Codemaster]
-	BUILDIN_DEF(strmobinfo,"ii"),	// display mob data [Valaris]
-	BUILDIN_DEF(guardian,"siisi??"),	// summon guardians
-	BUILDIN_DEF(guardianinfo,"sii"),	// display guardian data [Valaris]
-	BUILDIN_DEF(petskillbonus,"iiii"), // [Valaris]
-	BUILDIN_DEF(petrecovery,"ii"), // [Valaris]
-	BUILDIN_DEF(petloot,"i"), // [Valaris]
-	BUILDIN_DEF(petheal,"iiii"), // [Valaris]
-	BUILDIN_DEF(petskillattack,"viii"), // [Skotlex]
-	BUILDIN_DEF(petskillattack2,"viiii"), // [Valaris]
-	BUILDIN_DEF(petskillsupport,"viiii"), // [Skotlex]
-	BUILDIN_DEF(skilleffect,"vi"), // skill effect [Celest]
-	BUILDIN_DEF(npcskilleffect,"viii"), // npc skill effect [Valaris]
-	BUILDIN_DEF(specialeffect,"i??"), // npc skill effect [Valaris]
-	BUILDIN_DEF(specialeffect2,"i??"), // skill effect on players[Valaris]
-	BUILDIN_DEF(nude,""), // nude command [Valaris]
-	BUILDIN_DEF(mapwarp,"ssii??"),		// Added by RoVeRT
-	BUILDIN_DEF(atcommand,"s"), // [MouseJstr]
-	BUILDIN_DEF2(atcommand,"charcommand","s"), // [MouseJstr]
-	BUILDIN_DEF(movenpc,"sii?"), // [MouseJstr]
-	BUILDIN_DEF(message,"ss"), // [MouseJstr]
-	BUILDIN_DEF(npctalk,"s"), // [Valaris]
-	BUILDIN_DEF(mobcount,"ss"),
-	BUILDIN_DEF(getlook,"i"),
-	BUILDIN_DEF(getsavepoint,"i"),
-	BUILDIN_DEF(npcspeed,"i"), // [Valaris]
-	BUILDIN_DEF(npcwalkto,"ii"), // [Valaris]
-	BUILDIN_DEF(npcstop,""), // [Valaris]
-	BUILDIN_DEF(getmapxy,"rrri?"),	//by Lorky [Lupus]
-	BUILDIN_DEF(checkoption1,"i"),
-	BUILDIN_DEF(checkoption2,"i"),
-	BUILDIN_DEF(guildgetexp,"i"),
-	BUILDIN_DEF(guildchangegm,"is"),
-	BUILDIN_DEF(logmes,"s"), //this command actls as MES but rints info into LOG file either SQL/TXT [Lupus]
-	BUILDIN_DEF(summon,"si??"), // summons a slave monster [Celest]
-	BUILDIN_DEF(isnight,""), // check whether it is night time [Celest]
-	BUILDIN_DEF(isday,""), // check whether it is day time [Celest]
-	BUILDIN_DEF(isequipped,"i*"), // check whether another item/card has been equipped [Celest]
-	BUILDIN_DEF(isequippedcnt,"i*"), // check how many items/cards are being equipped [Celest]
-	BUILDIN_DEF(cardscnt,"i*"), // check how many items/cards are being equipped in the same arm [Lupus]
-	BUILDIN_DEF(getrefine,""), // returns the refined number of the current item, or an item with index specified [celest]
-	BUILDIN_DEF(night,""), // sets the server to night time
-	BUILDIN_DEF(day,""), // sets the server to day time
+bool script_hp_add(char *name, char *args, bool (*func)(struct script_state *st)) {
+	int n = add_str(name), i = 0;
+	
+	if( str_data[n].type == C_FUNC ) {
+		str_data[n].func = func;
+		i = str_data[n].val;
+		if( args ) {
+			int slen = strlen(args);
+			if( script->buildin[i] ) {
+				aFree(script->buildin[i]);
+			}
+			CREATE(script->buildin[i], char, slen + 1);
+			safestrncpy(script->buildin[i], args, slen + 1);
+		} else {
+			if( script->buildin[i] )
+				aFree(script->buildin[i]);
+			script->buildin[i] = NULL;
+		}
+
+	} else {
+		i = script->buildin_count;
+		str_data[n].type = C_FUNC;
+		str_data[n].val = i;
+		str_data[n].func = func;
+		
+		RECREATE(script->buildin, char *, ++script->buildin_count);
+				
+		/* we only store the arguments, its the only thing used out of this */
+		if( args != NULL ) {
+			int slen = strlen(args);
+			CREATE(script->buildin[i], char, slen + 1);
+			safestrncpy(script->buildin[i], args, slen + 1);
+		} else
+			script->buildin[i] = NULL;
+	}
+	
+	return true;
+}
+
+void script_parse_builtin(void) {
+	struct script_function BUILDIN[] = {
+		// NPC interaction
+		BUILDIN_DEF(mes,"s*"),
+		BUILDIN_DEF(next,""),
+		BUILDIN_DEF(close,""),
+		BUILDIN_DEF(close2,""),
+		BUILDIN_DEF(menu,"sl*"),
+		BUILDIN_DEF(select,"s*"), //for future jA script compatibility
+		BUILDIN_DEF(prompt,"s*"),
+		//
+		BUILDIN_DEF(goto,"l"),
+		BUILDIN_DEF(callsub,"l*"),
+		BUILDIN_DEF(callfunc,"s*"),
+		BUILDIN_DEF(return,"?"),
+		BUILDIN_DEF(getarg,"i?"),
+		BUILDIN_DEF(jobchange,"i?"),
+		BUILDIN_DEF(jobname,"i"),
+		BUILDIN_DEF(input,"r??"),
+		BUILDIN_DEF(warp,"sii"),
+		BUILDIN_DEF(areawarp,"siiiisii??"),
+		BUILDIN_DEF(warpchar,"siii"), // [LuzZza]
+		BUILDIN_DEF(warpparty,"siii?"), // [Fredzilla] [Paradox924X]
+		BUILDIN_DEF(warpguild,"siii"), // [Fredzilla]
+		BUILDIN_DEF(setlook,"ii"),
+		BUILDIN_DEF(changelook,"ii"), // Simulates but don't Store it
+		BUILDIN_DEF(set,"rv"),
+		BUILDIN_DEF(setarray,"rv*"),
+		BUILDIN_DEF(cleararray,"rvi"),
+		BUILDIN_DEF(copyarray,"rri"),
+		BUILDIN_DEF(getarraysize,"r"),
+		BUILDIN_DEF(deletearray,"r?"),
+		BUILDIN_DEF(getelementofarray,"ri"),
+		BUILDIN_DEF(getitem,"vi?"),
+		BUILDIN_DEF(rentitem,"vi"),
+		BUILDIN_DEF(getitem2,"viiiiiiii?"),
+		BUILDIN_DEF(getnameditem,"vv"),
+		BUILDIN_DEF2(grouprandomitem,"groupranditem","i"),
+		BUILDIN_DEF(makeitem,"visii"),
+		BUILDIN_DEF(delitem,"vi?"),
+		BUILDIN_DEF(delitem2,"viiiiiiii?"),
+		BUILDIN_DEF2(enableitemuse,"enable_items",""),
+		BUILDIN_DEF2(disableitemuse,"disable_items",""),
+		BUILDIN_DEF(cutin,"si"),
+		BUILDIN_DEF(viewpoint,"iiiii"),
+		BUILDIN_DEF(heal,"ii"),
+		BUILDIN_DEF(itemheal,"ii"),
+		BUILDIN_DEF(percentheal,"ii"),
+		BUILDIN_DEF(rand,"i?"),
+		BUILDIN_DEF(countitem,"v"),
+		BUILDIN_DEF(countitem2,"viiiiiii"),
+		BUILDIN_DEF(checkweight,"vi*"),
+		BUILDIN_DEF(checkweight2,"rr"),
+		BUILDIN_DEF(readparam,"i?"),
+		BUILDIN_DEF(getcharid,"i?"),
+		BUILDIN_DEF(getnpcid,"i?"),
+		BUILDIN_DEF(getpartyname,"i"),
+		BUILDIN_DEF(getpartymember,"i?"),
+		BUILDIN_DEF(getpartyleader,"i?"),
+		BUILDIN_DEF(getguildname,"i"),
+		BUILDIN_DEF(getguildmaster,"i"),
+		BUILDIN_DEF(getguildmasterid,"i"),
+		BUILDIN_DEF(strcharinfo,"i"),
+		BUILDIN_DEF(strnpcinfo,"i"),
+		BUILDIN_DEF(getequipid,"i"),
+		BUILDIN_DEF(getequipname,"i"),
+		BUILDIN_DEF(getbrokenid,"i"), // [Valaris]
+		BUILDIN_DEF(repair,"i"), // [Valaris]
+		BUILDIN_DEF(repairall,""),
+		BUILDIN_DEF(getequipisequiped,"i"),
+		BUILDIN_DEF(getequipisenableref,"i"),
+		BUILDIN_DEF(getequipisidentify,"i"),
+		BUILDIN_DEF(getequiprefinerycnt,"i"),
+		BUILDIN_DEF(getequipweaponlv,"i"),
+		BUILDIN_DEF(getequippercentrefinery,"i"),
+		BUILDIN_DEF(successrefitem,"i"),
+		BUILDIN_DEF(failedrefitem,"i"),
+		BUILDIN_DEF(downrefitem,"i"),
+		BUILDIN_DEF(statusup,"i"),
+		BUILDIN_DEF(statusup2,"ii"),
+		BUILDIN_DEF(bonus,"iv"),
+		BUILDIN_DEF2(bonus,"bonus2","ivi"),
+		BUILDIN_DEF2(bonus,"bonus3","ivii"),
+		BUILDIN_DEF2(bonus,"bonus4","ivvii"),
+		BUILDIN_DEF2(bonus,"bonus5","ivviii"),
+		BUILDIN_DEF(autobonus,"sii??"),
+		BUILDIN_DEF(autobonus2,"sii??"),
+		BUILDIN_DEF(autobonus3,"siiv?"),
+		BUILDIN_DEF(skill,"vi?"),
+		BUILDIN_DEF(addtoskill,"vi?"), // [Valaris]
+		BUILDIN_DEF(guildskill,"vi"),
+		BUILDIN_DEF(getskilllv,"v"),
+		BUILDIN_DEF(getgdskilllv,"iv"),
+		BUILDIN_DEF(basicskillcheck,""),
+		BUILDIN_DEF(getgmlevel,""),
+		BUILDIN_DEF(getgroupid,""),
+		BUILDIN_DEF(end,""),
+		BUILDIN_DEF(checkoption,"i"),
+		BUILDIN_DEF(setoption,"i?"),
+		BUILDIN_DEF(setcart,"?"),
+		BUILDIN_DEF(checkcart,""),
+		BUILDIN_DEF(setfalcon,"?"),
+		BUILDIN_DEF(checkfalcon,""),
+		BUILDIN_DEF(setriding,"?"),
+		BUILDIN_DEF(checkriding,""),
+		BUILDIN_DEF(checkwug,""),
+		BUILDIN_DEF(checkmadogear,""),
+		BUILDIN_DEF(setmadogear,"?"),
+		BUILDIN_DEF2(savepoint,"save","sii"),
+		BUILDIN_DEF(savepoint,"sii"),
+		BUILDIN_DEF(gettimetick,"i"),
+		BUILDIN_DEF(gettime,"i"),
+		BUILDIN_DEF(gettimestr,"si"),
+		BUILDIN_DEF(openstorage,""),
+		BUILDIN_DEF(guildopenstorage,""),
+		BUILDIN_DEF(itemskill,"vi"),
+		BUILDIN_DEF(produce,"i"),
+		BUILDIN_DEF(cooking,"i"),
+		BUILDIN_DEF(monster,"siisii???"),
+		BUILDIN_DEF(getmobdrops,"i"),
+		BUILDIN_DEF(areamonster,"siiiisii???"),
+		BUILDIN_DEF(killmonster,"ss?"),
+		BUILDIN_DEF(killmonsterall,"s?"),
+		BUILDIN_DEF(clone,"siisi????"),
+		BUILDIN_DEF(doevent,"s"),
+		BUILDIN_DEF(donpcevent,"s"),
+		BUILDIN_DEF(cmdothernpc,"ss"),
+		BUILDIN_DEF(addtimer,"is"),
+		BUILDIN_DEF(deltimer,"s"),
+		BUILDIN_DEF(addtimercount,"si"),
+		BUILDIN_DEF(initnpctimer,"??"),
+		BUILDIN_DEF(stopnpctimer,"??"),
+		BUILDIN_DEF(startnpctimer,"??"),
+		BUILDIN_DEF(setnpctimer,"i?"),
+		BUILDIN_DEF(getnpctimer,"i?"),
+		BUILDIN_DEF(attachnpctimer,"?"), // attached the player id to the npc timer [Celest]
+		BUILDIN_DEF(detachnpctimer,"?"), // detached the player id from the npc timer [Celest]
+		BUILDIN_DEF(playerattached,""), // returns id of the current attached player. [Skotlex]
+		BUILDIN_DEF(announce,"si?????"),
+		BUILDIN_DEF(mapannounce,"ssi?????"),
+		BUILDIN_DEF(areaannounce,"siiiisi?????"),
+		BUILDIN_DEF(getusers,"i"),
+		BUILDIN_DEF(getmapguildusers,"si"),
+		BUILDIN_DEF(getmapusers,"s"),
+		BUILDIN_DEF(getareausers,"siiii"),
+		BUILDIN_DEF(getareadropitem,"siiiiv"),
+		BUILDIN_DEF(enablenpc,"s"),
+		BUILDIN_DEF(disablenpc,"s"),
+		BUILDIN_DEF(hideoffnpc,"s"),
+		BUILDIN_DEF(hideonnpc,"s"),
+		BUILDIN_DEF(sc_start,"iii?"),
+		BUILDIN_DEF(sc_start2,"iiii?"),
+		BUILDIN_DEF(sc_start4,"iiiiii?"),
+		BUILDIN_DEF(sc_end,"i?"),
+		BUILDIN_DEF(getstatus, "i?"),
+		BUILDIN_DEF(getscrate,"ii?"),
+		BUILDIN_DEF(debugmes,"s"),
+		BUILDIN_DEF2(catchpet,"pet","i"),
+		BUILDIN_DEF2(birthpet,"bpet",""),
+		BUILDIN_DEF(resetlvl,"i"),
+		BUILDIN_DEF(resetstatus,""),
+		BUILDIN_DEF(resetskill,""),
+		BUILDIN_DEF(skillpointcount,""),
+		BUILDIN_DEF(changebase,"i?"),
+		BUILDIN_DEF(changesex,""),
+		BUILDIN_DEF(waitingroom,"si?????"),
+		BUILDIN_DEF(delwaitingroom,"?"),
+		BUILDIN_DEF2(waitingroomkickall,"kickwaitingroomall","?"),
+		BUILDIN_DEF(enablewaitingroomevent,"?"),
+		BUILDIN_DEF(disablewaitingroomevent,"?"),
+		BUILDIN_DEF2(enablewaitingroomevent,"enablearena",""),		// Added by RoVeRT
+		BUILDIN_DEF2(disablewaitingroomevent,"disablearena",""),	// Added by RoVeRT
+		BUILDIN_DEF(getwaitingroomstate,"i?"),
+		BUILDIN_DEF(warpwaitingpc,"sii?"),
+		BUILDIN_DEF(attachrid,"i"),
+		BUILDIN_DEF(detachrid,""),
+		BUILDIN_DEF(isloggedin,"i?"),
+		BUILDIN_DEF(setmapflagnosave,"ssii"),
+		BUILDIN_DEF(getmapflag,"si"),
+		BUILDIN_DEF(setmapflag,"si?"),
+		BUILDIN_DEF(removemapflag,"si?"),
+		BUILDIN_DEF(pvpon,"s"),
+		BUILDIN_DEF(pvpoff,"s"),
+		BUILDIN_DEF(gvgon,"s"),
+		BUILDIN_DEF(gvgoff,"s"),
+		BUILDIN_DEF(emotion,"i??"),
+		BUILDIN_DEF(maprespawnguildid,"sii"),
+		BUILDIN_DEF(agitstart,""),	// <Agit>
+		BUILDIN_DEF(agitend,""),
+		BUILDIN_DEF(agitcheck,""),   // <Agitcheck>
+		BUILDIN_DEF(flagemblem,"i"),	// Flag Emblem
+		BUILDIN_DEF(getcastlename,"s"),
+		BUILDIN_DEF(getcastledata,"si"),
+		BUILDIN_DEF(setcastledata,"sii"),
+		BUILDIN_DEF(requestguildinfo,"i?"),
+		BUILDIN_DEF(getequipcardcnt,"i"),
+		BUILDIN_DEF(successremovecards,"i"),
+		BUILDIN_DEF(failedremovecards,"ii"),
+		BUILDIN_DEF(marriage,"s"),
+		BUILDIN_DEF2(wedding_effect,"wedding",""),
+		BUILDIN_DEF(divorce,""),
+		BUILDIN_DEF(ispartneron,""),
+		BUILDIN_DEF(getpartnerid,""),
+		BUILDIN_DEF(getchildid,""),
+		BUILDIN_DEF(getmotherid,""),
+		BUILDIN_DEF(getfatherid,""),
+		BUILDIN_DEF(warppartner,"sii"),
+		BUILDIN_DEF(getitemname,"v"),
+		BUILDIN_DEF(getitemslots,"i"),
+		BUILDIN_DEF(makepet,"i"),
+		BUILDIN_DEF(getexp,"ii"),
+		BUILDIN_DEF(getinventorylist,""),
+		BUILDIN_DEF(getskilllist,""),
+		BUILDIN_DEF(clearitem,""),
+		BUILDIN_DEF(classchange,"ii"),
+		BUILDIN_DEF(misceffect,"i"),
+		BUILDIN_DEF(playBGM,"s"),
+		BUILDIN_DEF(playBGMall,"s?????"),
+		BUILDIN_DEF(soundeffect,"si"),
+		BUILDIN_DEF(soundeffectall,"si?????"),	// SoundEffectAll [Codemaster]
+		BUILDIN_DEF(strmobinfo,"ii"),	// display mob data [Valaris]
+		BUILDIN_DEF(guardian,"siisi??"),	// summon guardians
+		BUILDIN_DEF(guardianinfo,"sii"),	// display guardian data [Valaris]
+		BUILDIN_DEF(petskillbonus,"iiii"), // [Valaris]
+		BUILDIN_DEF(petrecovery,"ii"), // [Valaris]
+		BUILDIN_DEF(petloot,"i"), // [Valaris]
+		BUILDIN_DEF(petheal,"iiii"), // [Valaris]
+		BUILDIN_DEF(petskillattack,"viii"), // [Skotlex]
+		BUILDIN_DEF(petskillattack2,"viiii"), // [Valaris]
+		BUILDIN_DEF(petskillsupport,"viiii"), // [Skotlex]
+		BUILDIN_DEF(skilleffect,"vi"), // skill effect [Celest]
+		BUILDIN_DEF(npcskilleffect,"viii"), // npc skill effect [Valaris]
+		BUILDIN_DEF(specialeffect,"i??"), // npc skill effect [Valaris]
+		BUILDIN_DEF(specialeffect2,"i??"), // skill effect on players[Valaris]
+		BUILDIN_DEF(nude,""), // nude command [Valaris]
+		BUILDIN_DEF(mapwarp,"ssii??"),		// Added by RoVeRT
+		BUILDIN_DEF(atcommand,"s"), // [MouseJstr]
+		BUILDIN_DEF2(atcommand,"charcommand","s"), // [MouseJstr]
+		BUILDIN_DEF(movenpc,"sii?"), // [MouseJstr]
+		BUILDIN_DEF(message,"ss"), // [MouseJstr]
+		BUILDIN_DEF(npctalk,"s"), // [Valaris]
+		BUILDIN_DEF(mobcount,"ss"),
+		BUILDIN_DEF(getlook,"i"),
+		BUILDIN_DEF(getsavepoint,"i"),
+		BUILDIN_DEF(npcspeed,"i"), // [Valaris]
+		BUILDIN_DEF(npcwalkto,"ii"), // [Valaris]
+		BUILDIN_DEF(npcstop,""), // [Valaris]
+		BUILDIN_DEF(getmapxy,"rrri?"),	//by Lorky [Lupus]
+		BUILDIN_DEF(checkoption1,"i"),
+		BUILDIN_DEF(checkoption2,"i"),
+		BUILDIN_DEF(guildgetexp,"i"),
+		BUILDIN_DEF(guildchangegm,"is"),
+		BUILDIN_DEF(logmes,"s"), //this command actls as MES but rints info into LOG file either SQL/TXT [Lupus]
+		BUILDIN_DEF(summon,"si??"), // summons a slave monster [Celest]
+		BUILDIN_DEF(isnight,""), // check whether it is night time [Celest]
+		BUILDIN_DEF(isday,""), // check whether it is day time [Celest]
+		BUILDIN_DEF(isequipped,"i*"), // check whether another item/card has been equipped [Celest]
+		BUILDIN_DEF(isequippedcnt,"i*"), // check how many items/cards are being equipped [Celest]
+		BUILDIN_DEF(cardscnt,"i*"), // check how many items/cards are being equipped in the same arm [Lupus]
+		BUILDIN_DEF(getrefine,""), // returns the refined number of the current item, or an item with index specified [celest]
+		BUILDIN_DEF(night,""), // sets the server to night time
+		BUILDIN_DEF(day,""), // sets the server to day time
 #ifdef PCRE_SUPPORT
-	BUILDIN_DEF(defpattern,"iss"), // Define pattern to listen for [MouseJstr]
-	BUILDIN_DEF(activatepset,"i"), // Activate a pattern set [MouseJstr]
-	BUILDIN_DEF(deactivatepset,"i"), // Deactive a pattern set [MouseJstr]
-	BUILDIN_DEF(deletepset,"i"), // Delete a pattern set [MouseJstr]
+		BUILDIN_DEF(defpattern,"iss"), // Define pattern to listen for [MouseJstr]
+		BUILDIN_DEF(activatepset,"i"), // Activate a pattern set [MouseJstr]
+		BUILDIN_DEF(deactivatepset,"i"), // Deactive a pattern set [MouseJstr]
+		BUILDIN_DEF(deletepset,"i"), // Delete a pattern set [MouseJstr]
 #endif
-	BUILDIN_DEF(dispbottom,"s"), //added from jA [Lupus]
-	BUILDIN_DEF(getusersname,""),
-	BUILDIN_DEF(recovery,""),
-	BUILDIN_DEF(getpetinfo,"i"),
-	BUILDIN_DEF(gethominfo,"i"),
-	BUILDIN_DEF(getmercinfo,"i?"),
-	BUILDIN_DEF(checkequipedcard,"i"),
-	BUILDIN_DEF(jump_zero,"il"), //for future jA script compatibility
-	BUILDIN_DEF(globalmes,"s?"), //end jA addition
-	BUILDIN_DEF(unequip,"i"), // unequip command [Spectre]
-	BUILDIN_DEF(getstrlen,"s"), //strlen [Valaris]
-	BUILDIN_DEF(charisalpha,"si"), //isalpha [Valaris]
-	BUILDIN_DEF(charat,"si"),
-	BUILDIN_DEF(setchar,"ssi"),
-	BUILDIN_DEF(insertchar,"ssi"),
-	BUILDIN_DEF(delchar,"si"),
-	BUILDIN_DEF(strtoupper,"s"),
-	BUILDIN_DEF(strtolower,"s"),
-	BUILDIN_DEF(charisupper, "si"),
-	BUILDIN_DEF(charislower, "si"),
-	BUILDIN_DEF(substr,"sii"),
-	BUILDIN_DEF(explode, "rss"),
-	BUILDIN_DEF(implode, "r?"),
-	BUILDIN_DEF(sprintf,"s*"),  // [Mirei]
-	BUILDIN_DEF(sscanf,"ss*"),  // [Mirei]
-	BUILDIN_DEF(strpos,"ss?"),
-	BUILDIN_DEF(replacestr,"sss??"),
-	BUILDIN_DEF(countstr,"ss?"),
-	BUILDIN_DEF(setnpcdisplay,"sv??"),
-	BUILDIN_DEF(compare,"ss"), // Lordalfa - To bring strstr to scripting Engine.
-	BUILDIN_DEF(getiteminfo,"ii"), //[Lupus] returns Items Buy / sell Price, etc info
-	BUILDIN_DEF(setiteminfo,"iii"), //[Lupus] set Items Buy / sell Price, etc info
-	BUILDIN_DEF(getequipcardid,"ii"), //[Lupus] returns CARD ID or other info from CARD slot N of equipped item
-	// [zBuffer] List of mathematics commands --->
-	BUILDIN_DEF(sqrt,"i"),
-	BUILDIN_DEF(pow,"ii"),
-	BUILDIN_DEF(distance,"iiii"),
-	// <--- [zBuffer] List of mathematics commands
-	BUILDIN_DEF(md5,"s"),
-	// [zBuffer] List of dynamic var commands --->
-	BUILDIN_DEF(getd,"s"),
-	BUILDIN_DEF(setd,"sv"),
-	// <--- [zBuffer] List of dynamic var commands
-	BUILDIN_DEF(petstat,"i"),
-	BUILDIN_DEF(callshop,"s?"), // [Skotlex]
-	BUILDIN_DEF(npcshopitem,"sii*"), // [Lance]
-	BUILDIN_DEF(npcshopadditem,"sii*"),
-	BUILDIN_DEF(npcshopdelitem,"si*"),
-	BUILDIN_DEF(npcshopattach,"s?"),
-	BUILDIN_DEF(equip,"i"),
-	BUILDIN_DEF(autoequip,"ii"),
-	BUILDIN_DEF(setbattleflag,"si"),
-	BUILDIN_DEF(getbattleflag,"s"),
-	BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus
-	BUILDIN_DEF(disguise,"i"), //disguise player. Lupus
-	BUILDIN_DEF(undisguise,""), //undisguise player. Lupus
-	BUILDIN_DEF(getmonsterinfo,"ii"), //Lupus
-	BUILDIN_DEF(axtoi,"s"),
-	BUILDIN_DEF(query_sql,"s*"),
-	BUILDIN_DEF(query_logsql,"s*"),
-	BUILDIN_DEF(escape_sql,"v"),
-	BUILDIN_DEF(atoi,"s"),
-	// [zBuffer] List of player cont commands --->
-	BUILDIN_DEF(rid2name,"i"),
-	BUILDIN_DEF(pcfollow,"ii"),
-	BUILDIN_DEF(pcstopfollow,"i"),
-	BUILDIN_DEF(pcblockmove,"ii"),
-	// <--- [zBuffer] List of player cont commands
-	// [zBuffer] List of mob control commands --->
-	BUILDIN_DEF(unitwalk,"ii?"),
-	BUILDIN_DEF(unitkill,"i"),
-	BUILDIN_DEF(unitwarp,"isii"),
-	BUILDIN_DEF(unitattack,"iv?"),
-	BUILDIN_DEF(unitstop,"i"),
-	BUILDIN_DEF(unittalk,"is"),
-	BUILDIN_DEF(unitemote,"ii"),
-	BUILDIN_DEF(unitskilluseid,"ivi?"), // originally by Qamera [Celest]
-	BUILDIN_DEF(unitskillusepos,"iviii"), // [Celest]
-// <--- [zBuffer] List of mob control commands
-	BUILDIN_DEF(sleep,"i"),
-	BUILDIN_DEF(sleep2,"i"),
-	BUILDIN_DEF(awake,"s"),
-	BUILDIN_DEF(getvariableofnpc,"rs"),
-	BUILDIN_DEF(warpportal,"iisii"),
-	BUILDIN_DEF2(homunculus_evolution,"homevolution",""),	//[orn]
-	BUILDIN_DEF2(homunculus_mutate,"hommutate","?"),
-	BUILDIN_DEF2(homunculus_shuffle,"homshuffle",""),	//[Zephyrus]
-	BUILDIN_DEF(eaclass,"?"),	//[Skotlex]
-	BUILDIN_DEF(roclass,"i?"),	//[Skotlex]
-	BUILDIN_DEF(checkvending,"?"),
-	BUILDIN_DEF(checkchatting,"?"),
-	BUILDIN_DEF(checkidle,"?"),
-	BUILDIN_DEF(openmail,""),
-	BUILDIN_DEF(openauction,""),
-	BUILDIN_DEF(checkcell,"siii"),
-	BUILDIN_DEF(setcell,"siiiiii"),
-	BUILDIN_DEF(setwall,"siiiiis"),
-	BUILDIN_DEF(delwall,"s"),
-	BUILDIN_DEF(searchitem,"rs"),
-	BUILDIN_DEF(mercenary_create,"ii"),
-	BUILDIN_DEF(mercenary_heal,"ii"),
-	BUILDIN_DEF(mercenary_sc_start,"iii"),
-	BUILDIN_DEF(mercenary_get_calls,"i"),
-	BUILDIN_DEF(mercenary_get_faith,"i"),
-	BUILDIN_DEF(mercenary_set_calls,"ii"),
-	BUILDIN_DEF(mercenary_set_faith,"ii"),
-	BUILDIN_DEF(readbook,"ii"),
-	BUILDIN_DEF(setfont,"i"),
-	BUILDIN_DEF(areamobuseskill,"siiiiviiiii"),
-	BUILDIN_DEF(progressbar,"si"),
-	BUILDIN_DEF(pushpc,"ii"),
-	BUILDIN_DEF(buyingstore,"i"),
-	BUILDIN_DEF(searchstores,"ii"),
-	BUILDIN_DEF(showdigit,"i?"),
-	// WoE SE
-	BUILDIN_DEF(agitstart2,""),
-	BUILDIN_DEF(agitend2,""),
-	BUILDIN_DEF(agitcheck2,""),
-	// BattleGround
-	BUILDIN_DEF(waitingroom2bg,"siiss?"),
-	BUILDIN_DEF(waitingroom2bg_single,"isiis"),
-	BUILDIN_DEF(bg_team_setxy,"iii"),
-	BUILDIN_DEF(bg_warp,"isii"),
-	BUILDIN_DEF(bg_monster,"isiisi?"),
-	BUILDIN_DEF(bg_monster_set_team,"ii"),
-	BUILDIN_DEF(bg_leave,""),
-	BUILDIN_DEF(bg_destroy,"i"),
-	BUILDIN_DEF(areapercentheal,"siiiiii"),
-	BUILDIN_DEF(bg_get_data,"ii"),
-	BUILDIN_DEF(bg_getareausers,"isiiii"),
-	BUILDIN_DEF(bg_updatescore,"sii"),
+		BUILDIN_DEF(dispbottom,"s"), //added from jA [Lupus]
+		BUILDIN_DEF(getusersname,""),
+		BUILDIN_DEF(recovery,""),
+		BUILDIN_DEF(getpetinfo,"i"),
+		BUILDIN_DEF(gethominfo,"i"),
+		BUILDIN_DEF(getmercinfo,"i?"),
+		BUILDIN_DEF(checkequipedcard,"i"),
+		BUILDIN_DEF(jump_zero,"il"), //for future jA script compatibility
+		BUILDIN_DEF(globalmes,"s?"), //end jA addition
+		BUILDIN_DEF(unequip,"i"), // unequip command [Spectre]
+		BUILDIN_DEF(getstrlen,"s"), //strlen [Valaris]
+		BUILDIN_DEF(charisalpha,"si"), //isalpha [Valaris]
+		BUILDIN_DEF(charat,"si"),
+		BUILDIN_DEF(setchar,"ssi"),
+		BUILDIN_DEF(insertchar,"ssi"),
+		BUILDIN_DEF(delchar,"si"),
+		BUILDIN_DEF(strtoupper,"s"),
+		BUILDIN_DEF(strtolower,"s"),
+		BUILDIN_DEF(charisupper, "si"),
+		BUILDIN_DEF(charislower, "si"),
+		BUILDIN_DEF(substr,"sii"),
+		BUILDIN_DEF(explode, "rss"),
+		BUILDIN_DEF(implode, "r?"),
+		BUILDIN_DEF(sprintf,"s*"),  // [Mirei]
+		BUILDIN_DEF(sscanf,"ss*"),  // [Mirei]
+		BUILDIN_DEF(strpos,"ss?"),
+		BUILDIN_DEF(replacestr,"sss??"),
+		BUILDIN_DEF(countstr,"ss?"),
+		BUILDIN_DEF(setnpcdisplay,"sv??"),
+		BUILDIN_DEF(compare,"ss"), // Lordalfa - To bring strstr to scripting Engine.
+		BUILDIN_DEF(getiteminfo,"ii"), //[Lupus] returns Items Buy / sell Price, etc info
+		BUILDIN_DEF(setiteminfo,"iii"), //[Lupus] set Items Buy / sell Price, etc info
+		BUILDIN_DEF(getequipcardid,"ii"), //[Lupus] returns CARD ID or other info from CARD slot N of equipped item
+		// [zBuffer] List of mathematics commands --->
+		BUILDIN_DEF(sqrt,"i"),
+		BUILDIN_DEF(pow,"ii"),
+		BUILDIN_DEF(distance,"iiii"),
+		// <--- [zBuffer] List of mathematics commands
+		BUILDIN_DEF(md5,"s"),
+		// [zBuffer] List of dynamic var commands --->
+		BUILDIN_DEF(getd,"s"),
+		BUILDIN_DEF(setd,"sv"),
+		// <--- [zBuffer] List of dynamic var commands
+		BUILDIN_DEF(petstat,"i"),
+		BUILDIN_DEF(callshop,"s?"), // [Skotlex]
+		BUILDIN_DEF(npcshopitem,"sii*"), // [Lance]
+		BUILDIN_DEF(npcshopadditem,"sii*"),
+		BUILDIN_DEF(npcshopdelitem,"si*"),
+		BUILDIN_DEF(npcshopattach,"s?"),
+		BUILDIN_DEF(equip,"i"),
+		BUILDIN_DEF(autoequip,"ii"),
+		BUILDIN_DEF(setbattleflag,"si"),
+		BUILDIN_DEF(getbattleflag,"s"),
+		BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus
+		BUILDIN_DEF(disguise,"i"), //disguise player. Lupus
+		BUILDIN_DEF(undisguise,""), //undisguise player. Lupus
+		BUILDIN_DEF(getmonsterinfo,"ii"), //Lupus
+		BUILDIN_DEF(axtoi,"s"),
+		BUILDIN_DEF(query_sql,"s*"),
+		BUILDIN_DEF(query_logsql,"s*"),
+		BUILDIN_DEF(escape_sql,"v"),
+		BUILDIN_DEF(atoi,"s"),
+		// [zBuffer] List of player cont commands --->
+		BUILDIN_DEF(rid2name,"i"),
+		BUILDIN_DEF(pcfollow,"ii"),
+		BUILDIN_DEF(pcstopfollow,"i"),
+		BUILDIN_DEF(pcblockmove,"ii"),
+		// <--- [zBuffer] List of player cont commands
+		// [zBuffer] List of mob control commands --->
+		BUILDIN_DEF(unitwalk,"ii?"),
+		BUILDIN_DEF(unitkill,"i"),
+		BUILDIN_DEF(unitwarp,"isii"),
+		BUILDIN_DEF(unitattack,"iv?"),
+		BUILDIN_DEF(unitstop,"i"),
+		BUILDIN_DEF(unittalk,"is"),
+		BUILDIN_DEF(unitemote,"ii"),
+		BUILDIN_DEF(unitskilluseid,"ivi?"), // originally by Qamera [Celest]
+		BUILDIN_DEF(unitskillusepos,"iviii"), // [Celest]
+		// <--- [zBuffer] List of mob control commands
+		BUILDIN_DEF(sleep,"i"),
+		BUILDIN_DEF(sleep2,"i"),
+		BUILDIN_DEF(awake,"s"),
+		BUILDIN_DEF(getvariableofnpc,"rs"),
+		BUILDIN_DEF(warpportal,"iisii"),
+		BUILDIN_DEF2(homunculus_evolution,"homevolution",""),	//[orn]
+		BUILDIN_DEF2(homunculus_mutate,"hommutate","?"),
+		BUILDIN_DEF2(homunculus_shuffle,"homshuffle",""),	//[Zephyrus]
+		BUILDIN_DEF(eaclass,"?"),	//[Skotlex]
+		BUILDIN_DEF(roclass,"i?"),	//[Skotlex]
+		BUILDIN_DEF(checkvending,"?"),
+		BUILDIN_DEF(checkchatting,"?"),
+		BUILDIN_DEF(checkidle,"?"),
+		BUILDIN_DEF(openmail,""),
+		BUILDIN_DEF(openauction,""),
+		BUILDIN_DEF(checkcell,"siii"),
+		BUILDIN_DEF(setcell,"siiiiii"),
+		BUILDIN_DEF(setwall,"siiiiis"),
+		BUILDIN_DEF(delwall,"s"),
+		BUILDIN_DEF(searchitem,"rs"),
+		BUILDIN_DEF(mercenary_create,"ii"),
+		BUILDIN_DEF(mercenary_heal,"ii"),
+		BUILDIN_DEF(mercenary_sc_start,"iii"),
+		BUILDIN_DEF(mercenary_get_calls,"i"),
+		BUILDIN_DEF(mercenary_get_faith,"i"),
+		BUILDIN_DEF(mercenary_set_calls,"ii"),
+		BUILDIN_DEF(mercenary_set_faith,"ii"),
+		BUILDIN_DEF(readbook,"ii"),
+		BUILDIN_DEF(setfont,"i"),
+		BUILDIN_DEF(areamobuseskill,"siiiiviiiii"),
+		BUILDIN_DEF(progressbar,"si"),
+		BUILDIN_DEF(pushpc,"ii"),
+		BUILDIN_DEF(buyingstore,"i"),
+		BUILDIN_DEF(searchstores,"ii"),
+		BUILDIN_DEF(showdigit,"i?"),
+		// WoE SE
+		BUILDIN_DEF(agitstart2,""),
+		BUILDIN_DEF(agitend2,""),
+		BUILDIN_DEF(agitcheck2,""),
+		// BattleGround
+		BUILDIN_DEF(waitingroom2bg,"siiss?"),
+		BUILDIN_DEF(waitingroom2bg_single,"isiis"),
+		BUILDIN_DEF(bg_team_setxy,"iii"),
+		BUILDIN_DEF(bg_warp,"isii"),
+		BUILDIN_DEF(bg_monster,"isiisi?"),
+		BUILDIN_DEF(bg_monster_set_team,"ii"),
+		BUILDIN_DEF(bg_leave,""),
+		BUILDIN_DEF(bg_destroy,"i"),
+		BUILDIN_DEF(areapercentheal,"siiiiii"),
+		BUILDIN_DEF(bg_get_data,"ii"),
+		BUILDIN_DEF(bg_getareausers,"isiiii"),
+		BUILDIN_DEF(bg_updatescore,"sii"),
+		
+		// Instancing
+		BUILDIN_DEF(instance_create,"si"),
+		BUILDIN_DEF(instance_destroy,"?"),
+		BUILDIN_DEF(instance_attachmap,"si?"),
+		BUILDIN_DEF(instance_detachmap,"s?"),
+		BUILDIN_DEF(instance_attach,"i"),
+		BUILDIN_DEF(instance_id,"?"),
+		BUILDIN_DEF(instance_set_timeout,"ii?"),
+		BUILDIN_DEF(instance_init,"i"),
+		BUILDIN_DEF(instance_announce,"isi?????"),
+		BUILDIN_DEF(instance_npcname,"s?"),
+		BUILDIN_DEF(has_instance,"s?"),
+		BUILDIN_DEF(instance_warpall,"sii?"),
+		BUILDIN_DEF(instance_check_party,"i???"),
+		/**
+		 * 3rd-related
+		 **/
+		BUILDIN_DEF(makerune,"i"),
+		BUILDIN_DEF(checkdragon,""),//[Ind]
+		BUILDIN_DEF(setdragon,"?"),//[Ind]
+		BUILDIN_DEF(ismounting,""),//[Ind]
+		BUILDIN_DEF(setmounting,""),//[Ind]
+		BUILDIN_DEF(checkre,"i"),
+		/**
+		 * rAthena and beyond!
+		 **/
+		BUILDIN_DEF(getargcount,""),
+		BUILDIN_DEF(getcharip,"?"),
+		BUILDIN_DEF(is_function,"s"),
+		BUILDIN_DEF(get_revision,""),
+		BUILDIN_DEF(freeloop,"i"),
+		BUILDIN_DEF(getrandgroupitem,"ii"),
+		BUILDIN_DEF(cleanmap,"s"),
+		BUILDIN_DEF2(cleanmap,"cleanarea","siiii"),
+		BUILDIN_DEF(npcskill,"viii"),
+		BUILDIN_DEF(itemeffect,"v"),
+		BUILDIN_DEF(delequip,"i"),
+		/**
+		 * @commands (script based)
+		 **/
+		BUILDIN_DEF(bindatcmd, "ss???"),
+		BUILDIN_DEF(unbindatcmd, "s"),
+		BUILDIN_DEF(useatcmd, "s"),
+		
+		//Quest Log System [Inkfish]
+		BUILDIN_DEF(setquest, "i"),
+		BUILDIN_DEF(erasequest, "i"),
+		BUILDIN_DEF(completequest, "i"),
+		BUILDIN_DEF(checkquest, "i?"),
+		BUILDIN_DEF(changequest, "ii"),
+		BUILDIN_DEF(showevent, "ii"),
+	};
+	int i,n, len = ARRAYLENGTH(BUILDIN), start = script->buildin_count;
+	char* p;
+	RECREATE(script->buildin, char *, start + len);
+	for( i = 0; i < len; i++ ) {
+		// arg must follow the pattern: (v|s|i|r|l)*\?*\*?
+		// 'v' - value (either string or int or reference)
+		// 's' - string
+		// 'i' - int
+		// 'r' - reference (of a variable)
+		// 'l' - label
+		// '?' - one optional parameter
+		// '*' - unknown number of optional parameters
+		p = BUILDIN[i].arg;
+		while( *p == 'v' || *p == 's' || *p == 'i' || *p == 'r' || *p == 'l' ) ++p;
+		while( *p == '?' ) ++p;
+		if( *p == '*' ) ++p;
+		if( *p != 0 ){
+			ShowWarning("script_parse_builtin: ignoring function \"%s\" with invalid arg \"%s\".\n", BUILDIN[i].name, BUILDIN[i].arg);
+		} else if( *skip_word(BUILDIN[i].name) != 0 ){
+			ShowWarning("script_parse_builtin: ignoring function with invalid name \"%s\" (must be a word).\n", BUILDIN[i].name);
+		} else {
+			int slen = strlen(BUILDIN[i].arg), offset = start + i;
+			n = add_str(BUILDIN[i].name);
+			
+			if (!strcmp(BUILDIN[i].name, "set")) buildin_set_ref = n;
+            else if (!strcmp(BUILDIN[i].name, "callsub")) buildin_callsub_ref = n;
+            else if (!strcmp(BUILDIN[i].name, "callfunc")) buildin_callfunc_ref = n;
+            else if (!strcmp(BUILDIN[i].name, "getelementofarray") ) buildin_getelementofarray_ref = n;
+			
+			if( str_data[n].func && str_data[n].func != BUILDIN[i].func )
+				continue;/* something replaced it, skip. */
+			
+			str_data[n].type = C_FUNC;
+			str_data[n].val = offset;
+			str_data[n].func = BUILDIN[i].func;
+			
+			/* we only store the arguments, its the only thing used out of this */
+			if( slen ) {
+				CREATE(script->buildin[offset], char, slen + 1);
+				safestrncpy(script->buildin[offset], BUILDIN[i].arg, slen + 1);
+			} else
+				script->buildin[offset] = NULL;
+			
+			script->buildin_count++;
 
-	// Instancing
-	BUILDIN_DEF(instance_create,"si"),
-	BUILDIN_DEF(instance_destroy,"?"),
-	BUILDIN_DEF(instance_attachmap,"si?"),
-	BUILDIN_DEF(instance_detachmap,"s?"),
-	BUILDIN_DEF(instance_attach,"i"),
-	BUILDIN_DEF(instance_id,"?"),
-	BUILDIN_DEF(instance_set_timeout,"ii?"),
-	BUILDIN_DEF(instance_init,"i"),
-	BUILDIN_DEF(instance_announce,"isi?????"),
-	BUILDIN_DEF(instance_npcname,"s?"),
-	BUILDIN_DEF(has_instance,"s?"),
-	BUILDIN_DEF(instance_warpall,"sii?"),
-	BUILDIN_DEF(instance_check_party,"i???"),
-	/**
-	 * 3rd-related
-	 **/
-	BUILDIN_DEF(makerune,"i"),
-	BUILDIN_DEF(checkdragon,""),//[Ind]
-	BUILDIN_DEF(setdragon,"?"),//[Ind]
-	BUILDIN_DEF(ismounting,""),//[Ind]
-	BUILDIN_DEF(setmounting,""),//[Ind]
-	BUILDIN_DEF(checkre,"i"),
-	/**
-	 * rAthena and beyond!
-	 **/
-	BUILDIN_DEF(getargcount,""),
-	BUILDIN_DEF(getcharip,"?"),
-	BUILDIN_DEF(is_function,"s"),
-	BUILDIN_DEF(get_revision,""),
-	BUILDIN_DEF(freeloop,"i"),
-	BUILDIN_DEF(getrandgroupitem,"ii"),
-	BUILDIN_DEF(cleanmap,"s"),
-	BUILDIN_DEF2(cleanmap,"cleanarea","siiii"),
-	BUILDIN_DEF(npcskill,"viii"),
-	BUILDIN_DEF(itemeffect,"v"),
-	BUILDIN_DEF(delequip,"i"),
-	/**
-	 * @commands (script based)
-	 **/
-	BUILDIN_DEF(bindatcmd, "ss???"),
-	BUILDIN_DEF(unbindatcmd, "s"),
-	BUILDIN_DEF(useatcmd, "s"),
+		}
+	}
+}
 
-	//Quest Log System [Inkfish]
-	BUILDIN_DEF(setquest, "i"),
-	BUILDIN_DEF(erasequest, "i"),
-	BUILDIN_DEF(completequest, "i"),
-	BUILDIN_DEF(checkquest, "i?"),
-	BUILDIN_DEF(changequest, "ii"),
-	BUILDIN_DEF(showevent, "ii"),
-	{NULL,NULL,NULL},
-};
+void script_defaults(void) {
+	script = &script_s;
+	
+	script->buildin_count = 0;
+	script->buildin = NULL;
+	
+	script->init = do_init_script;
+	script->final = do_final_script;
+	
+	script->parse_builtin = script_parse_builtin;
+	script->addScript = script_hp_add;
+	script->conv_num = conv_num;
+	script->conv_str = conv_str;
+}

@@ -47,6 +47,7 @@
  *  - create a db that organizes itself by splaying
  *
  *  HISTORY:
+ *    2013/04/27 - Added ERS to speed up iterator memory allocation [Ind/Hercules]
  *    2012/03/09 - Added enum for data types (int, uint, void*)
  *    2008/02/19 - Fixed db_obj_get not handling deleted entries correctly.
  *    2007/11/09 - Added an iterator to the database.
@@ -318,6 +319,10 @@ static struct db_stats {
 #else /* !defined(DB_ENABLE_STATS) */
 #define DB_COUNTSTAT(token)
 #endif /* !defined(DB_ENABLE_STATS) */
+
+/* [Ind/Hercules] */
+struct eri *db_iterator_ers;
+struct eri *db_alloc_ers;
 
 /*****************************************************************************\
  *  (2) Section of private functions used by the database system.            *
@@ -1366,7 +1371,7 @@ void dbit_obj_destroy(DBIterator* self)
 	// unlock the database
 	db_free_unlock(it->db);
 	// free iterator
-	aFree(self);
+	ers_free(db_iterator_ers,self);
 }
 
 /**
@@ -1384,7 +1389,7 @@ static DBIterator* db_obj_iterator(DBMap* self)
 	DBIterator_impl* it;
 
 	DB_COUNTSTAT(db_iterator);
-	CREATE(it, struct DBIterator_impl, 1);
+	it = ers_alloc(db_iterator_ers, struct DBIterator_impl);
 	/* Interface of the iterator **/
 	it->vtable.first   = dbit_obj_first;
 	it->vtable.last    = dbit_obj_last;
@@ -2127,7 +2132,7 @@ static int db_obj_vdestroy(DBMap* self, DBApply func, va_list args)
 	db->free_max = 0;
 	ers_destroy(db->nodes);
 	db_free_unlock(db);
-	aFree(db);
+	ers_free(db_alloc_ers, db);
 	return sum;
 }
 
@@ -2409,7 +2414,7 @@ DBMap* db_alloc(const char *file, int line, DBType type, DBOptions options, unsi
 		case DB_ISTRING: DB_COUNTSTAT(db_istring_alloc); break;
 	}
 #endif /* DB_ENABLE_STATS */
-	CREATE(db, struct DBMap_impl, 1);
+	db = ers_alloc(db_alloc_ers, struct DBMap_impl);
 
 	options = db_fix_options(type, options);
 	/* Interface of the database */
@@ -2602,8 +2607,9 @@ void* db_data2ptr(DBData *data)
  * @public
  * @see #db_final(void)
  */
-void db_init(void)
-{
+void db_init(void) {
+	db_iterator_ers = ers_new(sizeof(struct DBIterator_impl),"db.c::db_iterator_ers",ERS_OPT_NONE);
+	db_alloc_ers = ers_new(sizeof(struct DBMap_impl),"db.c::db_alloc_ers",ERS_OPT_NONE);
 	DB_COUNTSTAT(db_init);
 }
 
@@ -2696,6 +2702,8 @@ void db_final(void)
 			stats.db_data2ui,         stats.db_data2ptr,
 			stats.db_init,            stats.db_final);
 #endif /* DB_ENABLE_STATS */
+	ers_destroy(db_iterator_ers);
+	ers_destroy(db_alloc_ers);
 }
 
 // Link DB System - jAthena

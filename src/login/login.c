@@ -360,58 +360,6 @@ int login_lan_config_read(const char *lancfgName)
 	return 0;
 }
 
-//-----------------------
-// Console Command Parser [Wizputer]
-//-----------------------
-int parse_console(const char* command)
-{
-	ShowNotice("Console command: %s\n", command);
-
-	if( strcmpi("shutdown", command) == 0 || strcmpi("exit", command) == 0 || strcmpi("quit", command) == 0 || strcmpi("end", command) == 0 )
-		runflag = 0;
-	else if( strcmpi("alive", command) == 0 || strcmpi("status", command) == 0 )
-		ShowInfo(CL_CYAN"Console: "CL_BOLD"I'm Alive."CL_RESET"\n");
-	else if( strcmpi("help", command) == 0 )
-	{
-		ShowInfo("To shutdown the server:\n");
-		ShowInfo("  'shutdown|exit|quit|end'\n");
-		ShowInfo("To know if server is alive:\n");
-		ShowInfo("  'alive|status'\n");
-		ShowInfo("To create a new account:\n");
-		ShowInfo("  'create'\n");
-	}
-	else
-	{// commands with parameters
-		char cmd[128], params[256];
-
-		if( sscanf(command, "%127s %255[^\r\n]", cmd, params) < 2 )
-		{
-			return 0;
-		}
-
-		if( strcmpi(cmd, "create") == 0 )
-		{
-			char username[NAME_LENGTH], password[NAME_LENGTH], sex;
-
-			if( sscanf(params, "%23s %23s %c", username, password, &sex) < 3 || strnlen(username, sizeof(username)) < 4 || strnlen(password, sizeof(password)) < 1 )
-			{
-				ShowWarning("Console: Invalid parameters for '%s'. Usage: %s <username> <password> <sex:F/M>\n", cmd, cmd);
-				return 0;
-			}
-
-			if( mmo_auth_new(username, password, TOUPPER(sex), "0.0.0.0") != -1 )
-			{
-				ShowError("Console: Account creation failed.\n");
-				return 0;
-			}
-			ShowStatus("Console: Account '%s' created successfully.\n", username);
-		}
-	}
-
-	return 0;
-}
-
-
 //--------------------------------
 // Packet parsing for char-servers
 //--------------------------------
@@ -1836,9 +1784,8 @@ void do_abort(void)
 {
 }
 
-void set_server_type(void)
-{
-	SERVER_TYPE = ATHENA_SERVER_LOGIN;
+void set_server_type(void) {
+	SERVER_TYPE = SERVER_TYPE_LOGIN;
 }
 
 

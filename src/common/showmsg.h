@@ -1,11 +1,13 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _SHOWMSG_H_
 #define _SHOWMSG_H_
 
-#include "libconfig.h"
-
+#ifndef _HPMi_H_
+	#include "libconfig.h"
+#endif
 // for help with the console colors look here:
 // http://www.edoceo.com/liberum/?doc=printf-with-color
 // some code explanation (used here):
@@ -85,15 +87,17 @@ enum msg_type {
 };
 
 extern void ClearScreen(void);
-extern void ShowMessage(const char *, ...);
-extern void ShowStatus(const char *, ...);
-extern void ShowSQL(const char *, ...);
-extern void ShowInfo(const char *, ...);
-extern void ShowNotice(const char *, ...);
-extern void ShowWarning(const char *, ...);
-extern void ShowDebug(const char *, ...);
-extern void ShowError(const char *, ...);
-extern void ShowFatalError(const char *, ...);
-extern void ShowConfigWarning(config_setting_t *config, const char *string, ...);
+#ifndef _HPMi_H_
+	extern void ShowMessage(const char *, ...);
+	extern void ShowStatus(const char *, ...);
+	extern void ShowSQL(const char *, ...);
+	extern void ShowInfo(const char *, ...);
+	extern void ShowNotice(const char *, ...);
+	extern void ShowWarning(const char *, ...);
+	extern void ShowDebug(const char *, ...);
+	extern void ShowError(const char *, ...);
+	extern void ShowFatalError(const char *, ...);
+	extern void ShowConfigWarning(config_setting_t *config, const char *string, ...);
+#endif
 
 #endif /* _SHOWMSG_H_ */

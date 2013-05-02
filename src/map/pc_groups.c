@@ -14,7 +14,6 @@
 #include "pc_groups.h"
 #include "pc.h" // e_pc_permission
 
-
 typedef struct GroupSettings GroupSettings;
 
 // Cached config settings/pointers for quick lookup
@@ -278,16 +277,18 @@ static void read_config(void) {
 	if( ( pc_group_max = group_count ) ) {
 		DBIterator *iter = db_iterator(pc_group_db);
 		GroupSettings *group_settings = NULL;
-		int* group_ids = aMalloc( pc_group_max * sizeof(int) );
+		unsigned int* group_ids = aMalloc( pc_group_max * sizeof(unsigned int) );
 		int i = 0;
 		for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
 			group_ids[i++] = group_settings->id;
 		}
 		
-		atcommand->load_groups(group_ids);
+		if( atcommand->group_ids )
+			aFree(atcommand->group_ids);
+		atcommand->group_ids = group_ids;
 		
-		aFree(group_ids);
-		
+		atcommand->load_groups();
+				
 		dbi_destroy(iter);
 	}
 	

@@ -52,10 +52,10 @@ void netbuffer_init(){
 	
 	// Set localsection name according to running serverype.
 	switch(SERVER_TYPE){
-		case ATHENA_SERVER_LOGIN:	strcpy(localsection, "login-netbuffer");		break;
-		case ATHENA_SERVER_CHAR:	strcpy(localsection, "char-netbuffer");			break;
-		case ATHENA_SERVER_INTER:	strcpy(localsection, "inter-netbuffer");		break;
-		case ATHENA_SERVER_MAP:		strcpy(localsection, "map-netbuffer");			break;
+		case SERVER_TYPE_LOGIN:	strcpy(localsection, "login-netbuffer");		break;
+		case SERVER_TYPE_CHAR:	strcpy(localsection, "char-netbuffer");			break;
+		//case ATHENA_SERVER_INTER:	strcpy(localsection, "inter-netbuffer");		break;
+		case SERVER_TYPE_MAP:		strcpy(localsection, "map-netbuffer");			break;
 		default:					strcpy(localsection, "unsupported_type");		break;
 	}
 	
