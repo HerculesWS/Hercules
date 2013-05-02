@@ -5640,7 +5640,6 @@ void clif_status_change(struct block_list *bl,int type,int flag,int tick,int val
 	p.val2 = val2;
 	p.val3 = val3;
 #endif
-	ShowDebug("Sending type %d; aid %d; state %d; total %d; left %d; v1 %d; v2 %d; v3 %d;\n",p.index,p.AID,p.state,p.Total,p.Left,p.val1,p.val2,p.val3);
 	clif->send(&p,sizeof(p), bl, (sd && sd->status.option&OPTION_INVISIBLE) ? SELF : AREA);
 }
 
@@ -16882,8 +16881,6 @@ int clif_parse(int fd) {
 		}
 		// determine real packet length
 		packet_len = packet_db[cmd].len;
-		if(sd)
-			ShowWarning("clif_parse: Received packet 0x%04x with packet_len = %d (%d).\n", cmd, packet_len,RFIFOREST(fd));
 		if (packet_len == -1) { // variable-length packet
 			if (RFIFOREST(fd) < 4)
 				return 0;
