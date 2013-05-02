@@ -138,10 +138,13 @@
     <ClInclude Include="..\3rdparty\libconfig\wincompat.h" />
     <ClInclude Include="..\3rdparty\mt19937ar\mt19937ar.h" />
     <ClInclude Include="..\src\common\cbasetypes.h" />
+    <ClInclude Include="..\src\common\conf.h" />
     <ClInclude Include="..\src\common\core.h" />
-	<ClInclude Include="..\src\common\console.h" />
+    <ClInclude Include="..\src\common\console.h" />
     <ClInclude Include="..\src\common\db.h" />
     <ClInclude Include="..\src\common\ers.h" />
+    <ClInclude Include="..\src\common\HPM.h" />
+    <ClInclude Include="..\src\common\HPMi.h" />
     <ClInclude Include="..\src\common\malloc.h" />
     <ClInclude Include="..\src\common\mapindex.h" />
     <ClInclude Include="..\src\common\mempool.h" />
@@ -169,7 +172,7 @@
     <ClInclude Include="..\src\char\int_quest.h" />
     <ClInclude Include="..\src\char\int_storage.h" />
     <ClInclude Include="..\src\char\inter.h" />
-	<ClInclude Include="..\src\char\pincode.h" />
+    <ClInclude Include="..\src\char\pincode.h" />
     <ClInclude Include="..\src\common\winapi.h" />
   </ItemGroup>
   <ItemGroup>
@@ -179,10 +182,12 @@
     <ClCompile Include="..\3rdparty\libconfig\scanner.c" />
     <ClCompile Include="..\3rdparty\libconfig\strbuf.c" />
     <ClCompile Include="..\3rdparty\mt19937ar\mt19937ar.c" />
+    <ClCompile Include="..\src\common\conf.c" />
     <ClCompile Include="..\src\common\core.c" />
-	<ClCompile Include="..\src\common\console.c" />
+    <ClCompile Include="..\src\common\console.c" />
     <ClCompile Include="..\src\common\db.c" />
     <ClCompile Include="..\src\common\ers.c" />
+    <ClCompile Include="..\src\common\HPM.c" />
     <ClCompile Include="..\src\common\malloc.c" />
     <ClCompile Include="..\src\common\mapindex.c" />
     <ClCompile Include="..\src\common\mempool.c" />
@@ -209,7 +214,7 @@
     <ClCompile Include="..\src\char\int_quest.c" />
     <ClCompile Include="..\src\char\int_storage.c" />
     <ClCompile Include="..\src\char\inter.c" />
-	<ClCompile Include="..\src\char\pincode.c" />
+    <ClCompile Include="..\src\char\pincode.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

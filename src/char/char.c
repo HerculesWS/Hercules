@@ -4349,26 +4349,6 @@ int parse_char(int fd)
 	return 0;
 }
 
-// Console Command Parser [Wizputer]
-int parse_console(const char* command)
-{
-	ShowNotice("Console command: %s\n", command);
-
-	if( strcmpi("shutdown", command) == 0 || strcmpi("exit", command) == 0 || strcmpi("quit", command) == 0 || strcmpi("end", command) == 0 )
-		runflag = 0;
-	else if( strcmpi("alive", command) == 0 || strcmpi("status", command) == 0 )
-		ShowInfo(CL_CYAN"Console: "CL_BOLD"I'm Alive."CL_RESET"\n");
-	else if( strcmpi("help", command) == 0 )
-	{
-		ShowInfo("To shutdown the server:\n");
-		ShowInfo("  'shutdown|exit|quit|end'\n");
-		ShowInfo("To know if server is alive:\n");
-		ShowInfo("  'alive|status'\n");
-	}
-
-	return 0;
-}
-
 int mapif_sendall(unsigned char *buf, unsigned int len)
 {
 	int i, c;
@@ -4904,9 +4884,8 @@ void do_abort(void)
 {
 }
 
-void set_server_type(void)
-{
-	SERVER_TYPE = ATHENA_SERVER_CHAR;
+void set_server_type(void) {
+	SERVER_TYPE = SERVER_TYPE_CHAR;
 }
 
 

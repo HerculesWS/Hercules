@@ -5640,38 +5640,26 @@ void clif_status_change(struct block_list *bl,int type,int flag,int tick,int val
 	p.val2 = val2;
 	p.val3 = val3;
 #endif
-
 	clif->send(&p,sizeof(p), bl, (sd && sd->status.option&OPTION_INVISIBLE) ? SELF : AREA);
 }
 
 /// Send message (modified by [Yor]) (ZC_NOTIFY_PLAYERCHAT).
 /// 008e <packet len>.W <message>.?B
-void clif_displaymessage(const int fd, const char* mes)
-{
+void clif_displaymessage(const int fd, const char* mes) {
 	nullpo_retv(mes);
 
-	//Scrapped, as these are shared by disconnected players =X [Skotlex]
-	if (fd == 0)
-		;
-	else {
-		char *message, *line;
-
-		message = aStrdup(mes);
-		line = strtok(message, "\n");
-		while(line != NULL) {
-			// Limit message to 255+1 characters (otherwise it causes a buffer overflow in the client)
-			int len = strnlen(line, 255);
-
-			if (len > 0) { // don't send a void message (it's not displaying on the client chat). @help can send void line.
-				WFIFOHEAD(fd, 5 + len);
-				WFIFOW(fd,0) = 0x8e;
-				WFIFOW(fd,2) = 5 + len; // 4 + len + NULL teminate
-                safestrncpy((char *)WFIFOP(fd,4), line, len + 1);
-				WFIFOSET(fd, 5 + len);
-			}
-			line = strtok(NULL, "\n");
+	if( fd == -2 ) {
+		ShowInfo("HCP: %s\n",mes);
+	} else if ( fd > 0 ) {
+		int len;
+		
+		if ( ( len = strnlen(mes, 255) ) > 0 ) { // don't send a void message (it's not displaying on the client chat). @help can send void line.
+			WFIFOHEAD(fd, 5 + len);
+			WFIFOW(fd,0) = 0x8e;
+			WFIFOW(fd,2) = 5 + len; // 4 + len + NULL teminate
+			safestrncpy((char *)WFIFOP(fd,4), mes, len + 1);
+			WFIFOSET(fd, 5 + len);
 		}
-		aFree(message);
 	}
 }
 
@@ -16891,7 +16879,6 @@ int clif_parse(int fd) {
 			set_eof(fd);
 			return 0;
 		}
-		
 		// determine real packet length
 		packet_len = packet_db[cmd].len;
 		if (packet_len == -1) { // variable-length packet
@@ -16910,7 +16897,7 @@ int clif_parse(int fd) {
 		}
 		if ((int)RFIFOREST(fd) < packet_len)
 			return 0; // not enough data received to form the packet
-		
+
 		if( packet_db[cmd].func == clif->pDebug )
 			packet_db[cmd].func(fd, sd);
 		else if( packet_db[cmd].func != NULL ) {

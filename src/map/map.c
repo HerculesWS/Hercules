@@ -15,6 +15,8 @@
 #include "../common/strlib.h"
 #include "../common/utils.h"
 #include "../common/conf.h"
+#include "../common/console.h"
+#include "../common/HPM.h"
 
 #include "map.h"
 #include "path.h"
@@ -159,6 +161,9 @@ char wisp_server_name[NAME_LENGTH] = "Server"; // can be modified in char-server
 
 int enable_spy = 0; //To enable/disable @spy commands, which consume too much cpu time when sending packets. [Skotlex]
 int enable_grf = 0;	//To enable/disable reading maps from GRF files, bypassing mapcache [blackhole89]
+
+/* [Ind/Hercules] */
+struct eri *map_iterator_ers;
 
 /*==========================================
  * server player count (of all mapservers)
@@ -2040,7 +2045,7 @@ struct s_mapiterator* mapit_alloc(enum e_mapitflags flags, enum bl_type types)
 {
 	struct s_mapiterator* mapit;
 
-	CREATE(mapit, struct s_mapiterator, 1);
+	mapit = ers_alloc(map_iterator_ers, struct s_mapiterator);
 	mapit->flags = flags;
 	mapit->types = types;
 	if( types == BL_PC )       mapit->dbi = db_iterator(pc_db);
@@ -2057,7 +2062,7 @@ void mapit_free(struct s_mapiterator* mapit)
 	nullpo_retv(mapit);
 
 	dbi_destroy(mapit->dbi);
-	aFree(mapit);
+	ers_free(map_iterator_ers, mapit);
 }
 
 /// Returns the first block_list that matches the description.
@@ -3262,80 +3267,6 @@ int map_readallmaps (void)
 ////////////////////////////////////////////////////////////////////////
 static int map_ip_set = 0;
 static int char_ip_set = 0;
-
-/*==========================================
- * Console Command Parser [Wizputer]
- *------------------------------------------*/
-int parse_console(const char* buf)
-{
-	char type[64];
-	char command[64];
-	char map[64];
-	int16 x = 0;
-	int16 y = 0;
-	int16 m;
-	int n;
-	struct map_session_data sd;
-
-	memset(&sd, 0, sizeof(struct map_session_data));
-	strcpy(sd.status.name, "console");
-
-	if( ( n = sscanf(buf, "%63[^:]:%63[^:]:%63s %hd %hd[^\n]", type, command, map, &x, &y) ) < 5 )
-	{
-		if( ( n = sscanf(buf, "%63[^:]:%63[^\n]", type, command) ) < 2 )
-		{
-			n = sscanf(buf, "%63[^\n]", type);
-		}
-	}
-
-	if( n == 5 )
-	{
-		m = map_mapname2mapid(map);
-		if( m < 0 )
-		{
-			ShowWarning("Console: Unknown map.\n");
-			return 0;
-		}
-		sd.bl.m = m;
-		map_search_freecell(&sd.bl, m, &sd.bl.x, &sd.bl.y, -1, -1, 0);
-		if( x > 0 )
-			sd.bl.x = x;
-		if( y > 0 )
-			sd.bl.y = y;
-	}
-	else
-	{
-		map[0] = '\0';
-		if( n < 2 )
-			command[0] = '\0';
-		if( n < 1 )
-			type[0] = '\0';
-	}
-
-	ShowNotice("Type of command: '%s' || Command: '%s' || Map: '%s' Coords: %d %d\n", type, command, map, x, y);
-
-	if( n == 5 && strcmpi("admin",type) == 0 ) {
-		if( !atcommand->parse(sd.fd, &sd, command, 0) )
-			ShowInfo("Console: not atcommand\n");
-	} else if( n == 2 && strcmpi("server", type) == 0 ) {
-		if( strcmpi("shutdown", command) == 0 || strcmpi("exit", command) == 0 || strcmpi("quit", command) == 0 ) {
-			runflag = 0;
-		}
-	} else if( strcmpi("ers_report", type) == 0 )
-		ers_report();	
-	else if( strcmpi("help", type) == 0 ) {
-		ShowInfo("To use GM commands:\n");
-		ShowInfo("  admin:<gm command>:<map of \"gm\"> <x> <y>\n");
-		ShowInfo("You can use any GM command that doesn't require the GM.\n");
-		ShowInfo("No using @item or @warp however you can use @charwarp\n");
-		ShowInfo("The <map of \"gm\"> <x> <y> is for commands that need coords of the GM\n");
-		ShowInfo("IE: @spawn\n");
-		ShowInfo("To shutdown the server:\n");
-		ShowInfo("  server:shutdown\n");
-	}
-
-	return 0;
-}
 
 /*==========================================
  * Read map server configuration files (conf/map_server.conf...)
@@ -4999,6 +4930,7 @@ void do_final(void)
 
 	ShowStatus("Terminating...\n");
 	hChSys.closing = true;
+	HPM->event(HPET_FINAL);
 
 	//Ladies and babies first.
 	iter = mapit_getallusers();
@@ -5027,7 +4959,7 @@ void do_final(void)
 	ircbot->final();/* before clif. */
 	clif->final();
 	do_final_npc();
-	do_final_script();
+	script->final();
 	do_final_instance();
 	do_final_itemdb();
 	do_final_storage();
@@ -5062,6 +4994,7 @@ void do_final(void)
 	regen_db->destroy(regen_db, NULL);
 
     map_sql_close();
+	ers_destroy(map_iterator_ers);
 
 	ShowStatus("Finished.\n");
 }
@@ -5123,22 +5056,19 @@ static void map_helpscreen(bool do_exit)
 /*======================================================
  * Map-Server Version Screen [MC Cameri]
  *------------------------------------------------------*/
-static void map_versionscreen(bool do_exit)
-{
-	ShowInfo(CL_WHITE"rAthena SVN version: %s" CL_RESET"\n", get_svn_revision());
-	ShowInfo(CL_GREEN"Website/Forum:"CL_RESET"\thttp://rathena.org/\n");
-	ShowInfo(CL_GREEN"IRC Channel:"CL_RESET"\tirc://irc.rathena.net/#rathena\n");
+static void map_versionscreen(bool do_exit) {
+	const char *svn = get_svn_revision();
+	const char *git = get_git_hash();
+	ShowInfo(CL_WHITE"Hercules version: %s" CL_RESET"\n", git[0] != HERC_UNKNOWN_VER ? git : svn[0] != HERC_UNKNOWN_VER ? svn : "Unknown");
+	ShowInfo(CL_GREEN"Website/Forum:"CL_RESET"\thttp://hercules.ws/\n");
+	ShowInfo(CL_GREEN"IRC Channel:"CL_RESET"\tirc://irc.rizon.net/#Hercules\n");
 	ShowInfo("Open "CL_WHITE"readme.txt"CL_RESET" for more information.\n");
 	if( do_exit )
 		exit(EXIT_SUCCESS);
 }
 
-/*======================================================
- * Map-Server Init and Command-line Arguments [Valaris]
- *------------------------------------------------------*/
-void set_server_type(void)
-{
-	SERVER_TYPE = ATHENA_SERVER_MAP;
+void set_server_type(void) {
+	SERVER_TYPE = SERVER_TYPE_MAP;
 }
 
 
@@ -5163,13 +5093,79 @@ void do_shutdown(void)
 
 static bool map_arg_next_value(const char* option, int i, int argc)
 {
-	if( i >= argc-1 )
-	{
+	if( i >= argc-1 ) {
 		ShowWarning("Missing value for option '%s'.\n", option);
 		return false;
 	}
 
 	return true;
+}
+struct map_session_data cpsd;
+CPCMD(gm_position) {
+	int x = 0, y = 0, m = 0;
+	char map_name[25];
+
+	if( line == NULL || sscanf(line, "%d %d %24s",&x,&y,map_name) < 3 ) {
+		ShowError("gm:info invalid syntax. use '"CL_WHITE"gm:info xCord yCord map_name"CL_RESET"'\n");
+		return;
+	}
+
+	if ( (m = map_mapname2mapid(map_name) <= 0 ) ) {
+		ShowError("gm:info '"CL_WHITE"%s"CL_RESET"' is not a known map\n",map_name);
+		return;
+	}
+	
+	if( x < 0 || x >= map[m].xs || y < 0 || y >= map[m].ys ) {
+		ShowError("gm:info '"CL_WHITE"%d %d"CL_RESET"' is out of '"CL_WHITE"%s"CL_RESET"' map bounds!\n",x,y,map_name);
+		return;
+	}
+	
+	ShowInfo("HCP: updated console's game position to '"CL_WHITE"%d %d %s"CL_RESET"'\n",x,y,map_name);
+	cpsd.bl.x = x;
+	cpsd.bl.y = y;
+	cpsd.bl.m = m;
+}
+CPCMD(gm_use) {
+	
+	if( line == NULL ) {
+		ShowError("gm:use invalid syntax. use '"CL_WHITE"gm:use @command <optional params>"CL_RESET"'\n");
+		return;
+	}
+	cpsd.fd = -2;
+	if( !atcommand->parse(cpsd.fd, &cpsd, line, 0) )
+		ShowInfo("HCP: '"CL_WHITE"%s"CL_RESET"' failed\n",line);
+	else
+		ShowInfo("HCP: '"CL_WHITE"%s"CL_RESET"' was used\n",line);
+	cpsd.fd = 0;
+	
+}
+/* Hercules Console Parser */
+void map_cp_defaults(void) {
+	/* default HCP data */
+	memset(&cpsd, 0, sizeof(struct map_session_data));
+	strcpy(cpsd.status.name, "Hercules Console");
+	cpsd.bl.x = 150;
+	cpsd.bl.y = 150;
+	cpsd.bl.m = map_mapname2mapid("prontera");
+
+	console->addCommand("gm:info",CPCMD_A(gm_position));
+	console->addCommand("gm:use",CPCMD_A(gm_use));
+}
+/* Hercules Plugin Mananger */
+void map_hp_symbols(void) {
+	/* full interfaces */
+	HPM->share(atcommand,"atcommand");
+	HPM->share(buyingstore,"buyingstore");
+	HPM->share(clif,"clif");
+	HPM->share(ircbot,"ircbot");
+	HPM->share(logs,"logs");
+	HPM->share(script,"script");
+	HPM->share(searchstore,"searchstore");
+	HPM->share(skill,"skill");
+	HPM->share(vending,"vending");
+	/* specific */
+	HPM->share(atcommand->create,"addCommand");
+	HPM->share(script->addScript,"addScript");
 }
 void load_defaults(void) {
 	atcommand_defaults();
@@ -5178,6 +5174,7 @@ void load_defaults(void) {
 	clif_defaults();
 	ircbot_defaults();
 	log_defaults();
+	script_defaults();
 	searchstore_defaults();
 	skill_defaults();
 	vending_defaults();
@@ -5332,6 +5329,7 @@ int do_init(int argc, char *argv[])
 	iwall_db = strdb_alloc(DB_OPT_RELEASE_DATA,2*NAME_LENGTH+2+1); // [Zephyrus] Invisible Walls
 	zone_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, MAP_ZONE_NAME_LENGTH);
 
+	map_iterator_ers = ers_new(sizeof(struct s_mapiterator),"map.c::map_iterator_ers",ERS_OPT_NONE);
 	
 	map_sql_init();
 	if (logs->config.sql_logs)
@@ -5347,14 +5345,18 @@ int do_init(int argc, char *argv[])
 	add_timer_func_list(map_clearflooritem_timer, "map_clearflooritem_timer");
 	add_timer_func_list(map_removemobs_timer, "map_removemobs_timer");
 	add_timer_interval(gettick()+1000, map_freeblock_timer, 0, 0, 60*1000);
-
+	
+	HPM->symbol_defaults_sub = map_hp_symbols;
+	HPM->config_read();
+	HPM->event(HPET_INIT);
+	
 	atcommand->init();
 	battle->init();
 	do_init_instance();
 	do_init_chrif();
 	clif->init();
 	ircbot->init();
-	do_init_script();
+	script->init();
 	do_init_itemdb();
 	skill->init();
 	read_map_zone_db();/* read after item and skill initalization */
@@ -5384,15 +5386,14 @@ int do_init(int argc, char *argv[])
 	
 	ShowStatus("Server is '"CL_GREEN"ready"CL_RESET"' and listening on port '"CL_WHITE"%d"CL_RESET"'.\n\n", map_port);
 	
-	if( runflag != CORE_ST_STOP )
-	{
+	if( runflag != CORE_ST_STOP ) {
 		shutdown_callback = do_shutdown;
 		runflag = MAPSERVER_ST_RUNNING;
 	}
-#if defined(BUILDBOT)
-	if( buildbotflag )
-		exit(EXIT_FAILURE);
-#endif
-
+	
+	map_cp_defaults();
+	
+	HPM->event(HPET_READY);
+	
 	return 0;
 }

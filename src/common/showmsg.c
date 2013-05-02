@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/strlib.h" // StringBuf
@@ -687,22 +688,12 @@ int _vShowMessage(enum msg_type flag, const char *string, va_list ap)
 		ShowError("Empty string passed to _vShowMessage().\n");
 		return 1;
 	}
-	/**
-	 * For the buildbot, these result in a EXIT_FAILURE from core.c when done reading the params.
-	 **/
-#if defined(BUILDBOT)
-	if( flag == MSG_WARNING ||
-	    flag == MSG_ERROR ||
-	    flag == MSG_SQL ) {
-		buildbotflag = 1;
-	}
-#endif
 	if(
 		( flag == MSG_WARNING && console_msg_log&1 ) ||
 		( ( flag == MSG_ERROR || flag == MSG_SQL ) && console_msg_log&2 ) ||
 		( flag == MSG_DEBUG && console_msg_log&4 ) ) {//[Ind]
 		FILE *log = NULL;
-		if( (log = fopen(SERVER_TYPE == ATHENA_SERVER_MAP ? "./log/map-msg_log.log" : "./log/unknown.log","a+")) ) {
+		if( (log = fopen(SERVER_TYPE == SERVER_TYPE_MAP ? "./log/map-msg_log.log" : "./log/unknown.log","a+")) ) {
 			char timestring[255];
 			time_t curtime;
 			time(&curtime);
