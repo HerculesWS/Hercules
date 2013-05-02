@@ -377,7 +377,7 @@ void console_init (void) {
 }
 void console_final(void) {
 #ifdef CONSOLE_INPUT
-	int i;
+	unsigned int i;
 	console->parse_final();
 	for( i = 0; i < console->cmd_count; i++ ) {
 		if( console->cmds[i]->next_count )

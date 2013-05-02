@@ -87,6 +87,7 @@
 /vcproj-12/mapcache
 /vcproj-12/map-server_sql
 /vcproj-12/*.user
+/vcproj-12/plugin-sample/
 
 # /vcproj-10/
 /vcproj-10/map-server
@@ -97,6 +98,7 @@
 /vcproj-10/mapcache
 /vcproj-10/map-server_sql
 /vcproj-10/*.user
+/vcproj-10/plugin-sample/
 
 # /vcproj-9/
 /vcproj-9/*.user
@@ -107,3 +109,4 @@
 /vcproj-9/login-server_sql
 /vcproj-9/map-server_sql
 /vcproj-9/mapcache
+/vcproj-9/plugin-sample/
