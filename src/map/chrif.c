@@ -1648,3 +1648,4 @@ int do_init_chrif(void) {
 
 	return 0;
 }
+
