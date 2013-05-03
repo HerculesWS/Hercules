@@ -13,6 +13,9 @@
     <ClCompile Include="..\src\login\loginlog_sql.c">
       <Filter>login_sql</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\common\conf.c">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\common\core.c">
       <Filter>common</Filter>
     </ClCompile>
@@ -103,6 +106,9 @@
       <Filter>login_sql</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\cbasetypes.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\conf.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\core.h">
