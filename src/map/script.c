@@ -8245,10 +8245,9 @@ BUILDIN(guildopenstorage)
 /*==========================================
  * Make player use a skill trought item usage
  *------------------------------------------*/
-/// itemskill <skill id>,<level>
-/// itemskill "<skill name>",<level>
-BUILDIN(itemskill)
-{
+/// itemskill <skill id>,<level>{,flag
+/// itemskill "<skill name>",<level>{,flag
+BUILDIN(itemskill) {
 	int id;
 	int lv;
 	TBL_PC* sd;
@@ -8259,6 +8258,11 @@ BUILDIN(itemskill)
 	
 	id = ( script_isstring(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	lv = script_getnum(st,3);
+	
+	if( !script_hasdata(st, 4) ) {
+		if( !skill->check_condition_castbegin(sd,id,lv) )
+			return true;
+	}
 	
 	sd->skillitem=id;
 	sd->skillitemlv=lv;
@@ -17155,7 +17159,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(gettimestr,"si"),
 		BUILDIN_DEF(openstorage,""),
 		BUILDIN_DEF(guildopenstorage,""),
-		BUILDIN_DEF(itemskill,"vi"),
+		BUILDIN_DEF(itemskill,"vi?"),
 		BUILDIN_DEF(produce,"i"),
 		BUILDIN_DEF(cooking,"i"),
 		BUILDIN_DEF(monster,"siisii???"),

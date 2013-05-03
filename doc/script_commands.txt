@@ -4454,13 +4454,14 @@ except for those have been set with 'disable_items'.
 
 ---------------------------------------
 
-*itemskill <skill id>,<skill level>;
-*itemskill "<skill name>",<skill level>;
+*itemskill <skill id>,<skill level>,{flag};
+*itemskill "<skill name>",<skill level>,{flag};
 
 This command meant for item scripts to replicate single-use skills in usable
-items. It will not work properly, if there is a visible dialog window or menu.
-If the skill is self or auto-targeting, it will be used immediately otherwise a
+items. It will not work properly if there is a visible dialog window or menu.
+If the skill is self or auto-targeting it will be used immediately otherwise a
 target cursor is shown.
+Flag is a optional param and when present the command will not check for skill requirements
 
 // When Anodyne is used, it will cast Endure (8), Level 1, as if the actual
 // skill has been used from skill tree.
