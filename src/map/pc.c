@@ -4087,6 +4087,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		return 0;
 
 	if( (item->item_usage.flag&NOUSE_SITTING) && (pc_issit(sd) == 1) && (pc_get_group_level(sd) < item->item_usage.override) ) {
+		clif->colormes(sd->fd,COLOR_WHITE,msg_txt(1474));
 		return 0; // You cannot use this item while sitting.
 	}
 

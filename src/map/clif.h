@@ -324,6 +324,7 @@ enum clif_messages {
 enum clif_colors {
 	COLOR_RED,
 	COLOR_DEFAULT,
+	COLOR_WHITE,
 	COLOR_MAX
 };
 
