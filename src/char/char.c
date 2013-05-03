@@ -3834,6 +3834,15 @@ int parse_char(int fd)
 					}
 				}
 #endif
+        		
+				if(slot > sd->char_slots) { // reject premium character if slots < maximum available to play.
+						WFIFOHEAD(fd,3);
+						WFIFOW(fd,0) = 0x6e;
+						WFIFOB(fd,2) = 0x03;
+						WFIFOSET(fd,3);
+						break;
+				}
+                
 				if ( SQL_SUCCESS != Sql_Query(sql_handle, "SELECT `char_id` FROM `%s` WHERE `account_id`='%d' AND `char_num`='%d'", char_db, sd->account_id, slot)
 				  || SQL_SUCCESS != Sql_NextRow(sql_handle)
 				  || SQL_SUCCESS != Sql_GetData(sql_handle, 0, &data, NULL) )
