@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/des.h"
@@ -250,8 +251,12 @@ int decode_zip(void* dest, unsigned long* destLen, const void* source, unsigned 
 
 
 /// zlib compress
-int encode_zip(void* dest, unsigned long* destLen, const void* source, unsigned long sourceLen)
-{
+int encode_zip(void* dest, unsigned long* destLen, const void* source, unsigned long sourceLen) {
+	if( *destLen == 0 ) /* [Ind/Hercules] */
+		*destLen = compressBound(sourceLen);
+	if( dest == NULL ) { /* [Ind/Hercules] */
+		CREATE(dest, unsigned char, *destLen);
+	}
 	return compress((Bytef*)dest, destLen, (const Bytef*)source, sourceLen);
 }
 

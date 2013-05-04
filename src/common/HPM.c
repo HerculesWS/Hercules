@@ -53,7 +53,7 @@ bool hplugin_iscompatible(char* version) {
 	if( version == NULL )
 		return false;
 	
-	sscanf(version, "%d.%d", &req_major, &req_minor);
+	sscanf(version, "%u.%u", &req_major, &req_minor);
 	
 	return ( req_major == HPM->version[0] && req_minor <= HPM->version[1] ) ? true : false;
 }

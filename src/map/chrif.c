@@ -1577,19 +1577,19 @@ int chrif_removefriend(int char_id, int friend_id) {
 }
 
 void chrif_send_report(char* buf, int len) {
-
 #ifndef STATS_OPT_OUT
-	WFIFOHEAD(char_fd,len + 2);
-	
-	WFIFOW(char_fd,0) = 0x3008;
-	
-	memcpy(WFIFOP(char_fd,2), buf, len);
-	
-	WFIFOSET(char_fd,len + 2);
-	
-	flush_fifo(char_fd); /* ensure it's sent now. */
+	if( char_fd ) {
+		WFIFOHEAD(char_fd,len + 2);
+		
+		WFIFOW(char_fd,0) = 0x3008;
+		
+		memcpy(WFIFOP(char_fd,2), buf, len);
+		
+		WFIFOSET(char_fd,len + 2);
+		
+		flush_fifo(char_fd); /* ensure it's sent now. */
+	}
 #endif
-
 }
 
 /**

@@ -5940,9 +5940,10 @@ static const struct _battle_data {
  * Hercules anonymous statistic usage report -- packet is built here, and sent to char server to report.
  **/
 void Hercules_report(char* date, char *time_c) {
-	int i, rev = 0, bd_size = ARRAYLENGTH(battle_data);
+	int i, bd_size = ARRAYLENGTH(battle_data);
 	unsigned int config = 0;
-	const char* rev_str;
+	const char *svn = get_svn_revision();
+	const char *git = get_git_hash();
 	char timestring[25];
 	time_t curtime;
 	char* buf;
@@ -5950,7 +5951,7 @@ void Hercules_report(char* date, char *time_c) {
 	enum config_table {
 		C_CIRCULAR_AREA         = 0x0001,
 		C_CELLNOSTACK           = 0x0002,
-		//C_BETA_THREAD_TEST      = 0x0004, (free slot)
+		C_CONSOLE_INPUT			= 0x0004,
 		C_SCRIPT_CALLFUNC_CHECK = 0x0008,
 		C_OFFICIAL_WALKPATH     = 0x0010,
 		C_RENEWAL               = 0x0020,
@@ -5963,16 +5964,16 @@ void Hercules_report(char* date, char *time_c) {
 		C_SECURE_NPCTIMEOUT     = 0x1000,
 		C_SQL_DBS               = 0x2000,
 		C_SQL_LOGS              = 0x4000,
+		C_MEMWATCH				= 0x8000,
+		C_DMALLOC				= 0x10000,
+		C_GCOLLECT				= 0x20000,
+		C_SEND_SHORTLIST		= 0x40000,
 	};
-
-	if( (rev_str = get_svn_revision()) != 0 )
-		rev = atoi(rev_str);
 
 	/* we get the current time */
 	time(&curtime);
 	strftime(timestring, 24, "%Y-%m-%d %H:%M:%S", localtime(&curtime));
-
-
+	
 #ifdef CIRCULAR_AREA
 	config |= C_CIRCULAR_AREA;
 #endif
@@ -5981,6 +5982,10 @@ void Hercules_report(char* date, char *time_c) {
 	config |= C_CELLNOSTACK;
 #endif
 
+#ifdef CONSOLE_INPUT
+	config |= C_CONSOLE_INPUT;
+#endif
+	
 #ifdef SCRIPT_CALLFUNC_CHECK
 	config |= C_SCRIPT_CALLFUNC_CHECK;
 #endif
@@ -6028,32 +6033,46 @@ void Hercules_report(char* date, char *time_c) {
 	if( logs->config.sql_logs )
 		config |= C_SQL_LOGS;
 
+#ifdef MEMWATCH
+	config |= C_MEMWATCH;
+#endif
+#ifdef DMALLOC
+	config |= C_DMALLOC;
+#endif
+#ifdef GCOLLECT
+	config |= C_GCOLLECT;
+#endif
+
+#ifdef SEND_SHORTLIST
+	config |= C_SEND_SHORTLIST;
+#endif
+
 #define BFLAG_LENGTH 35
 
-	CREATE(buf, char, 6 + 12 + 9 + 24 + 4 + 4 + 4 + 4 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) + 1 );
+	CREATE(buf, char, 6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) + 1 );
 
 	/* build packet */
 
 	WBUFW(buf,0) = 0x3000;
-	WBUFW(buf,2) = 6 + 12 + 9 + 24 + 4 + 4 + 4 + 4 + ( bd_size * ( BFLAG_LENGTH + 4 ) );
-	WBUFW(buf,4) = 0x9c;
+	WBUFW(buf,2) = 6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + ( bd_size * ( BFLAG_LENGTH + 4 ) );
+	WBUFW(buf,4) = 0x9e;
 
 	safestrncpy((char*)WBUFP(buf,6), date, 12);
 	safestrncpy((char*)WBUFP(buf,6 + 12), time_c, 9);
 	safestrncpy((char*)WBUFP(buf,6 + 12 + 9), timestring, 24);
 
-	WBUFL(buf,6 + 12 + 9 + 24)         = rev;
-	WBUFL(buf,6 + 12 + 9 + 24 + 4)     = map_getusers();
+	safestrncpy((char*)WBUFP(buf,6 + 12 + 9 + 24), git[0] != HERC_UNKNOWN_VER ? git : svn[0] != HERC_UNKNOWN_VER ? svn : "Unknown", 41);
+	WBUFL(buf,6 + 12 + 9 + 24 + 41)     = map_getusers();
 
-	WBUFL(buf,6 + 12 + 9 + 24 + 4 + 4) = config;
-	WBUFL(buf,6 + 12 + 9 + 24 + 4 + 4 + 4) = bd_size;
+	WBUFL(buf,6 + 12 + 9 + 24 + 41 + 4) = config;
+	WBUFL(buf,6 + 12 + 9 + 24 + 41 + 4 + 4) = bd_size;
 
 	for( i = 0; i < bd_size; i++ ) {
-		safestrncpy((char*)WBUFP(buf,6 + 12 + 9+ 24  + 4 + 4 + 4 + 4 + ( i * ( BFLAG_LENGTH + 4 ) ) ), battle_data[i].str, 35);
-		WBUFL(buf,6 + 12 + 9 + 24 + 4 + 4 + 4 + 4 + BFLAG_LENGTH + ( i * ( BFLAG_LENGTH + 4 )  )  ) = *battle_data[i].val;
+		safestrncpy((char*)WBUFP(buf,6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + ( i * ( BFLAG_LENGTH + 4 ) ) ), battle_data[i].str, 35);
+		WBUFL(buf,6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + BFLAG_LENGTH + ( i * ( BFLAG_LENGTH + 4 )  )  ) = *battle_data[i].val;
 	}
 
-	chrif_send_report(buf,  6 + 12 + 9 + 24 + 4 + 4 + 4 + 4 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) );
+	chrif_send_report(buf,  6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) );
 
 	aFree(buf);
 
