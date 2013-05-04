@@ -1,8 +1,18 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _MAPREG_H_
 #define _MAPREG_H_
+
+struct mapreg_save {
+	int uid;
+	union {
+		int i;
+		char *str;
+	} u;
+	bool save;
+};
 
 void mapreg_reload(void);
 void mapreg_final(void);

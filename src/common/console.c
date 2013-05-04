@@ -337,15 +337,16 @@ int console_parse_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	return 0;
 }
 void console_parse_final(void) {
-	InterlockedDecrement(&console->ptstate);
-	racond_signal(console->ptcond);
-	
-	/* wait for thread to close */
-	rathread_wait(console->pthread, NULL);
-	
-	racond_destroy(console->ptcond);
-	ramutex_destroy(console->ptmutex);
-	
+	if( console->ptstate ) {
+		InterlockedDecrement(&console->ptstate);
+		racond_signal(console->ptcond);
+		
+		/* wait for thread to close */
+		rathread_wait(console->pthread, NULL);
+		
+		racond_destroy(console->ptcond);
+		ramutex_destroy(console->ptmutex);
+	}
 }
 void console_parse_init(void) {
 	cinput.count = 0;
