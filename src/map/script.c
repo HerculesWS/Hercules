@@ -8260,7 +8260,7 @@ BUILDIN(itemskill) {
 	lv = script_getnum(st,3);
 	
 	if( !script_hasdata(st, 4) ) {
-		if( !skill->check_condition_castbegin(sd,id,lv) )
+		if( !skill->check_condition_castbegin(sd,id,lv) || !skill->check_condition_castend(sd,id,lv) )
 			return true;
 	}
 	
