@@ -50,7 +50,8 @@ extern char mapindex_cfgfile[80];
 const char* mapindex_getmapname(const char* string, char* output);
 const char* mapindex_getmapname_ext(const char* string, char* output);
 unsigned short mapindex_name2id(const char*);
-const char* mapindex_id2name(unsigned short);
+#define mapindex_id2name(n) mapindex_id2name_sub(n,__FILE__, __LINE__, __func__)
+const char* mapindex_id2name_sub(unsigned short,const char *file, int line, const char *func);
 void mapindex_init(void);
 void mapindex_final(void);
 
