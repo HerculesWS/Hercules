@@ -1170,6 +1170,18 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	p->last_point.map = mapindex_name2id(last_map);
 	p->save_point.map = mapindex_name2id(save_map);
 
+	if( p->last_point.map == 0 ) {
+		p->last_point.map = strdb_iget(mapindex_db, MAP_DEFAULT);
+		p->last_point.x = MAP_DEFAULT_X;
+		p->last_point.y = MAP_DEFAULT_Y;
+	}
+	
+	if( p->save_point.map == 0 ) {
+		p->save_point.map = strdb_iget(mapindex_db, MAP_DEFAULT);
+		p->save_point.x = MAP_DEFAULT_X;
+		p->save_point.y = MAP_DEFAULT_Y;
+	}
+	
 	strcat(t_msg, " status");
 
 	if (!load_everything) // For quick selection of data when displaying the char menu
@@ -1188,8 +1200,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	||	SQL_ERROR == SqlStmt_BindColumn(stmt, 2, SQLDT_SHORT,  &tmp_point.y, 0, NULL, NULL) )
 		SqlStmt_ShowDebug(stmt);
 
-	for( i = 0; i < MAX_MEMOPOINTS && SQL_SUCCESS == SqlStmt_NextRow(stmt); ++i )
-	{
+	for( i = 0; i < MAX_MEMOPOINTS && SQL_SUCCESS == SqlStmt_NextRow(stmt); ++i ) {
 		tmp_point.map = mapindex_name2id(point_map);
 		memcpy(&p->memo_point[i], &tmp_point, sizeof(tmp_point));
 	}
@@ -3294,7 +3305,6 @@ int parse_frommap(int fd)
 				WFIFOW(fd,0) = 0x2b24;
 				WFIFOSET(fd,2);
 				RFIFOSKIP(fd,2);
-				ShowDebug("Received 2b23, sending 2b24\n");
 			break;
 
 			case 0x2b26: // auth request from map-server
