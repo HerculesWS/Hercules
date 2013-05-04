@@ -1,4 +1,4 @@
-//===== Hercules Documentation ================================
+﻿//===== Hercules Documentation ================================
 //= Hercules Script Commands
 //===== By: ==================================================
 //= Hercules Dev Team
@@ -540,9 +540,9 @@ If you try to set Zeny to a negative number, the script will be terminated with 
 Assigning variables
 --------- ---------
 
-As of rAthena revision 15982, variables can be accessed and assigned values directly
-without the use of the built-in 'set' function. This means that variables can be
-accessed and modified much like other programming languages.
+Variables can be accessed and assigned values directly without the use of the built-in 
+'set' function. This means that variables can be accessed and modified much like other 
+programming languages.
 
     @x = 100;
     @x = @y = 100;
@@ -1475,8 +1475,8 @@ generally cleaner:
 		return 1;// it's odd
 	}
 
-Alternately, as of rAthena revision 15979 and 15981, user-defined functions
-may be called directly without the use of the 'callfunc' script command.
+Alternately, user-defined functions may be called directly without the use of 
+the 'callfunc' script command.
 
 	function<TAB>script<TAB>SayHello<TAB>{
 		mes "Hello " + getarg(0);
@@ -4125,12 +4125,13 @@ wall), the character is pushed only up to the obstacle.
 
 ---------------------------------------
 
-*get_revision()
+*get_version()
 
-This command will return the SVN revision number that the server is
-currently running on.
+This command will return the SVN revision number or Git SHA-1 hash that the server 
+is currently running on (depends on whether you used a SVN or Git client for 
+getting Hercules.
 
-    if ( get_revision() >= 15000 )
+    if ( get_version() >= 15000 )
         mes "Welcome Hercules!";
 
 ---------------------------------------
@@ -6959,7 +6960,7 @@ uppercase/lowercase. Otherwise, 0. Characters not of the alphabelt will return 0
 
 Example:
 	
-	charisupper("Hercules", 1); //returns 1
+	charisupper("Hercules", 0); //returns 1
 	
 ---------------------------------------
 

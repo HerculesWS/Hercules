@@ -4,8 +4,7 @@
 #define _CONFIG_GENERAL_H_
 
 /**
- * rAthena configuration file (http://rathena.org)
- * For detailed guidance on these check http://rathena.org/wiki/SRC/config/
+ * Hercules configuration file (http://hercules.ws)
  **/
 
 /**
