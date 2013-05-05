@@ -596,8 +596,7 @@ struct clif_interface {
 	int (*poison_list) (struct map_session_data *sd, uint16 skill_lv);
 	int (*autoshadowspell_list) (struct map_session_data *sd);
 	int (*skill_itemlistwindow) ( struct map_session_data *sd, uint16 skill_id, uint16 skill_lv );
-	int (*sc_notick) (struct block_list *bl,int type,int flag,int val1, int val2, int val3);
-	int (*sc_single) (int fd, int id,int type,int flag,int val1, int val2, int val3);
+	void (*sc_load) (struct block_list *bl, int tid, enum send_target target, int type, int val1, int val2, int val3);
 	void (*initialstatus) (struct map_session_data *sd);
 	/* player-unit-specific-related */
 	void (*updatestatus) (struct map_session_data *sd,int type);

@@ -1354,18 +1354,13 @@ int clif_spawn(struct block_list *bl)
 					clif->specialeffect(bl,421,AREA);
 				if( sd->bg_id && map[sd->bl.m].flag.battleground )
 					clif->sendbgemblem_area(sd);
-				if( sd->sc.data[SC_ALL_RIDING] ) {
-					//New Mounts are not complaint to the original method, so we gotta tell this guy that he is mounting.
-					clif->sc_notick(&sd->bl,SI_ALL_RIDING,2,1,0,0);
+				for( i = 0; i < sd->sc_display_count; i++ ) {
+					clif->sc_load(&sd->bl, sd->bl.id,AREA,StatusIconChangeTable[sd->sc_display[i]->type],sd->sc_display[i]->val1,sd->sc_display[i]->val2,sd->sc_display[i]->val3);
 				}
 				for(i = 1; i < 5; i++){
 					if( sd->talisman[i] > 0 )
 						clif->talisman(sd, i);
 				}
-			#ifdef NEW_CARTS
-				if( sd->sc.data[SC_PUSH_CART] )
-					clif->sc_notick(&sd->bl, SI_ON_PUSH_CART, 2, sd->sc.data[SC_PUSH_CART]->val1, 0, 0);
-			#endif
 				if (sd->status.robe)
 					clif->refreshlook(bl,bl->id,LOOK_ROBE,sd->status.robe,AREA);
 			}
@@ -4306,14 +4301,9 @@ void clif_getareachar_pc(struct map_session_data* sd,struct map_session_data* ds
 		if( dstsd->talisman[i] > 0 )
 			clif->talisman_single(sd->fd, dstsd, i);
 	}
-	if( dstsd->sc.data[SC_ALL_RIDING] ) {
-		//New Mounts are not complaint to the original method, so we gotta tell this guy that I'm mounting.
-		clif->sc_single(sd->fd,dstsd->bl.id,SI_ALL_RIDING,2,1,0,0);
+	for( i = 0; i < dstsd->sc_display_count; i++ ) {
+		clif->sc_load(&sd->bl,dstsd->bl.id,SELF,StatusIconChangeTable[dstsd->sc_display[i]->type],dstsd->sc_display[i]->val1,dstsd->sc_display[i]->val2,dstsd->sc_display[i]->val3);
 	}
-#ifdef NEW_CARTS
-	if( dstsd->sc.data[SC_PUSH_CART] )
-		clif->sc_single(sd->fd, dstsd->bl.id, SI_ON_PUSH_CART, 2, dstsd->sc.data[SC_PUSH_CART]->val1, 0, 0);
-#endif
 	if( (sd->status.party_id && dstsd->status.party_id == sd->status.party_id) || //Party-mate, or hpdisp setting.
 		(sd->bg_id && sd->bg_id == dstsd->bg_id) || //BattleGround
 		pc_has_permission(sd, PC_PERM_VIEW_HPMETER)
@@ -16455,40 +16445,6 @@ int clif_skill_itemlistwindow( struct map_session_data *sd, uint16 skill_id, uin
 	return 1;
 
 }
-/**
- * Sends a new status without a tick (currently used by the new mounts)
- **/
-int clif_status_load_notick(struct block_list *bl,int type,int flag,int val1, int val2, int val3) {
-	unsigned char buf[32];
-
-	nullpo_ret(bl);
-
-	WBUFW(buf,0)=0x043f;
-	WBUFW(buf,2)=type;
-	WBUFL(buf,4)=bl->id;
-	WBUFB(buf,8)=flag;
-	WBUFL(buf,9)  = 0;
-	WBUFL(buf,13) = val1;
-	WBUFL(buf,17) = val2;
-	WBUFL(buf,21) = val3;
-
-	clif->send(buf,packet_len(0x043f),bl,AREA);
-	return 0;
-}
-//Notifies FD of ID's type
-int clif_status_load_single(int fd, int id,int type,int flag,int val1, int val2, int val3) {
-	WFIFOHEAD(fd, packet_len(0x043f));
-	WFIFOW(fd,0)=0x043f;
-	WFIFOW(fd,2)=type;
-	WFIFOL(fd,4)=id;
-	WFIFOB(fd,8)=flag;
-	WFIFOL(fd,9)  = 0;
-	WFIFOL(fd,13) = val1;
-	WFIFOL(fd,17) = val2;
-	WFIFOL(fd,21) = val3;
-	WFIFOSET(fd, packet_len(0x043f));
-	return 0;
-}
 // msgstringtable.txt
 // 0x291 <line>.W
 void clif_msgtable(int fd, int line) {
@@ -16816,6 +16772,21 @@ void clif_maptypeproperty2(struct block_list *bl,enum send_target t) {
 	
 	clif->send(&p,sizeof(p),bl,t);
 #endif
+}
+
+void clif_status_change2(struct block_list *bl, int tid, enum send_target target, int type, int val1, int val2, int val3) {
+	struct packet_status_change2 p;
+	
+	p.PacketType = status_change2Type;
+	p.index = type;
+	p.AID = tid;
+	p.state = 1;
+	p.Left = -1;// officially its 9999 but -1 is a explicit "no-duration" which behaves best [Ind/Hercules]
+	p.val1 = val1;
+	p.val2 = val2;
+	p.val3 = val3;
+	
+	clif->send(&p,sizeof(p), bl, target);
 }
 
 void clif_partytickack(struct map_session_data* sd, bool flag) {
@@ -17227,8 +17198,7 @@ void clif_defaults(void) {
 	clif->poison_list = clif_poison_list;
 	clif->autoshadowspell_list = clif_autoshadowspell_list;
 	clif->skill_itemlistwindow = clif_skill_itemlistwindow;
-	clif->sc_notick = clif_status_load_notick;
-	clif->sc_single = clif_status_load_single;
+	clif->sc_load = clif_status_change2;
 	clif->initialstatus = clif_initialstatus;
 	/* player-unit-specific-related */
 	clif->updatestatus = clif_updatestatus;

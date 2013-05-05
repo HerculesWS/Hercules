@@ -1096,7 +1096,11 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	 * Check if player have any item cooldowns on
 	 **/
 	pc_itemcd_do(sd,true);
-
+	
+	/* [Ind/Hercules] */
+	sd->sc_display = NULL;
+	sd->sc_display_count = 0;
+	
 	// Request all registries (auth is considered completed whence they arrive)
 	intif_request_registry(sd,7);
 	return true;
@@ -1572,16 +1576,11 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 			pc_setglobalreg (sd, "jobchange_level", sd->change_level_2nd);
 		}
 
-		if (skill_point < novice_skills + (sd->change_level_2nd - 1))
-		{
+		if (skill_point < novice_skills + (sd->change_level_2nd - 1)) {
 			c &= MAPID_BASEMASK;
-		}
-		// limit 3rd class to 2nd class/trans job levels
-		else if(sd->class_&JOBL_THIRD)
-		{
+		} else if(sd->class_&JOBL_THIRD) { // limit 3rd class to 2nd class/trans job levels
 			// regenerate change_level_3rd
-			if (!sd->change_level_3rd)
-			{
+			if (!sd->change_level_3rd) {
 					sd->change_level_3rd = 1 + skill_point + sd->status.skill_point
 						- (sd->status.job_level - 1)
 						- (sd->change_level_2nd - 1)
@@ -7718,7 +7717,7 @@ int pc_setcart(struct map_session_data *sd,int type) {
 				clif->cartlist(sd);
 			clif->updatestatus(sd, SP_CARTINFO);
 			sc_start(&sd->bl, SC_PUSH_CART, 100, type, 0);
-			clif->sc_notick(&sd->bl, SI_ON_PUSH_CART,   2 , type, 0, 0);
+			clif->sc_load(&sd->bl, sd->bl.id, AREA, SI_ON_PUSH_CART, type, 0, 0);
 			if( sd->sc.data[SC_PUSH_CART] )/* forcefully update */
 				sd->sc.data[SC_PUSH_CART]->val1 = type;
 			break;
@@ -9822,6 +9821,8 @@ void do_final_pc(void) {
 	db_destroy(itemcd_db);
 
 	do_final_pc_groups();
+	
+	ers_destroy(pc_sc_display_ers);
 	return;
 }
 
@@ -9859,6 +9860,8 @@ int do_init_pc(void) {
 	}
 
 	do_init_pc_groups();
+	
+	pc_sc_display_ers = ers_new(sizeof(struct sc_display_entry), "pc.c:pc_sc_display_ers", ERS_OPT_NONE);
 
 	return 0;
 }

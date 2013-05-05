@@ -2294,8 +2294,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 	if( bl->prev )	//Players are supposed to logout with a "warp" effect.
 		unit_remove_map(bl, clrtype);
 
-	switch( bl->type )
-	{
+	switch( bl->type ) {
 		case BL_PC:
 		{
 			struct map_session_data *sd = (struct map_session_data*)bl;
@@ -2331,7 +2330,6 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 				sd->reg_num = 0;
 			}
 			if( sd->regstr ) {
-				int i;
 				for( i = 0; i < sd->regstr_num; ++i )
 					if( sd->regstr[i].data )
 						aFree(sd->regstr[i].data);
@@ -2348,6 +2346,15 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 				aFree(sd->combos.bonus);
 				aFree(sd->combos.id);
 				sd->combos.count = 0;
+			}
+			/* [Ind/Hercules] */
+			if( sd->sc_display_count ) {
+				for(i = 0; i < sd->sc_display_count; i++) {
+					ers_free(pc_sc_display_ers, sd->sc_display[i]);
+				}
+				sd->sc_display_count = 0;
+				aFree(sd->sc_display);
+				sd->sc_display = NULL;
 			}
 			break;
 		}

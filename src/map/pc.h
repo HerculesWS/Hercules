@@ -6,6 +6,7 @@
 #define _PC_H_
 
 #include "../common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus
+#include "../common/ers.h"
 #include "../common/timer.h" // INVALID_TIMER
 #include "atcommand.h" // AtCommandType
 #include "battle.h" // battle_config
@@ -513,11 +514,17 @@ struct map_session_data {
 	unsigned char fontcolor;
 	unsigned int hchsysch_tick;
 	
+	/* [Ind/Hercules] */
+	struct sc_display_entry **sc_display;
+	unsigned char sc_display_count;
+	
 	// temporary debugging of bug #3504
 	const char* delunit_prevfile;
 	int delunit_prevline;
 
 };
+
+struct eri *pc_sc_display_ers;
 
 //Update this max as necessary. 55 is the value needed for Super Baby currently
 //Raised to 84 since Expanded Super Novice needs it.

@@ -16,9 +16,9 @@ struct status_change;
  * Changing this limit requires edits to refine_db.txt
  **/
 #ifdef RENEWAL
-#	define MAX_REFINE 20
+	#define MAX_REFINE 20
 #else
-#	define MAX_REFINE 10
+	#define MAX_REFINE 10
 #endif
 
 enum refine_type {
@@ -1563,6 +1563,13 @@ struct weapon_atk {
 #endif
 };
 
+sc_type SkillStatusChangeTable[MAX_SKILL];  // skill  -> status
+int StatusIconChangeTable[SC_MAX];          // status -> "icon" (icon is a bit of a misnomer, since there exist values with no icon associated)
+unsigned int StatusChangeFlagTable[SC_MAX]; // status -> flags
+int StatusSkillChangeTable[SC_MAX];         // status -> skill
+int StatusRelevantBLTypes[SI_MAX];          // "icon" -> enum bl_type (for clif->status_change to identify for which bl types to send packets)
+bool StatusDisplayType[SC_MAX];
+
 
 //For holding basic status (which can be modified by status changes)
 struct status_data {
@@ -1637,6 +1644,11 @@ struct regen_data {
 
 	//skill-regen, sitting-skill-regen (since not all chars with regen need it)
 	struct regen_data_sub *sregen, *ssregen;
+};
+
+struct sc_display_entry {
+	enum sc_type type;
+	int val1,val2,val3;
 };
 
 struct status_change_entry {
