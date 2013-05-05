@@ -2030,32 +2030,29 @@ packet(0x020d,-1);
 	packet(0x0960,5,clif->pChangeDir,2,4);
 #endif
 
+//2012-07-10
 #if PACKETVER >= 20120710
 	packet(0x0886,2,clif->pReqCloseBuyingStore,0);
 #endif
+
 //2012-07-16aRagExe (special thanks to Yommy!)
 #if PACKETVER >= 20120716
 	packet(0x0364,8,clif->pMoveFromKafra,2,4);
 #endif
 
+//2013-03-13 (special thanks to Yommy!)
 #if PACKETVER >= 20130313
-	packet(0x035f,6,clif->pReqClickBuyingStore,2);
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);
 #endif
 
-//2013-03-20Ragexe (Judas)
+//2013-03-20Ragexe (Judas + Yommy)
 #if PACKETVER >= 20130320
-	packet(0x01FD,15,clif->pRepairItem,2);
-	packet(0x086D,26,clif->pFriendsListAdd,2);
-	packet(0x0897,5,clif->pHomMenu,2,4);
-	packet(0x0947,36,clif->pStoragePassword,0);
-	//packet(0x0288,-1,clif->pcashshop_buy,4,8);
-	packet(0x086F,26,clif->pPartyInvite2,2);
-	packet(0x0888,19,clif->pWantToConnection,2,6,10,14,18);
+	// Shuffle Start
 	packet(0x088E,7,clif->pActionRequest,2,6);
 	packet(0x089B,10,clif->pUseSkillToId,2,4,6);
 	packet(0x0881,5,clif->pWalkToXY,2);
 	packet(0x0363,6,clif->pTickSend,2);
-	packet(0x093F,5,clif->pChangeDir,2,4);
+	packet(0x0897,5,clif->pChangeDir,2,4);
 	packet(0x0933,6,clif->pTakeItem,2);
 	packet(0x0438,6,clif->pDropItem,2,4);
 	packet(0x08AC,8,clif->pMoveToKafra,2,4);
@@ -2064,17 +2061,28 @@ packet(0x020d,-1);
 	packet(0x085A,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
 	packet(0x0898,6,clif->pGetCharNameRequest,2);
 	packet(0x094C,6,clif->pSolveCharName,2);
-	packet(0x0907,5,clif->pMoveItem,2,4);
-	packet(0x0908,5);
-	packet(0x08d2,10);
-	packet(0x0998,8,clif->pEquipItem,2,4);
-	//packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
-	packet(0x0938,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
-	packet(0x0922,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0365,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x092E,2,clif->pSearchStoreInfoNextPage,0);
 	packet(0x094E,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
-	//packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
-	//packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
-	packet(0x0447,2);
+	packet(0x0922,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x035F,6,clif->pReqClickBuyingStore,2);
+	packet(0x0886,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0938,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x085D,41,clif->pPartyBookingRegisterReq,2,4);
+	//packet(0x095A,8); // unknown usage
+	packet(0x0868,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x0888,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x086D,26,clif->pPartyInvite2,2);
+	//packet(0x0890,4); // unknown usage
+	packet(0x086F,26,clif->pFriendsListAdd,2);
+	packet(0x093F,5,clif->pHomMenu,2,4);
+	packet(0x0947,36,clif->pStoragePassword,0);
+	// Shuffle End
+
+	// New Packets
+	packet(0x0998,8,clif->pEquipItem,2,4);
+	packet(0x0447,2); // PACKET_CZ_BLOCKING_PLAY_CANCEL
+	// New Packets End
 #endif
 
 #endif /* _PACKETS_H_ */
