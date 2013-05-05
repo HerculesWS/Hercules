@@ -986,6 +986,8 @@ void initChangeTables(void) {
 	StatusChangeFlagTable[SC_VITATA_500] |= SCB_REGEN;
 	StatusChangeFlagTable[SC_EXTRACT_SALAMINE_JUICE] |= SCB_ASPD;
 
+	StatusChangeFlagTable[SC_ALL_RIDING] = SCB_SPEED;
+	
 #ifdef RENEWAL_EDP
 	// renewal EDP increases your weapon atk
 	StatusChangeFlagTable[SC_EDP] |= SCB_WATK;
