@@ -79,7 +79,7 @@
 #define MAX_ZENY 1000000000
 #define MAX_FAME 1000000000
 #define MAX_CART 100
-#define MAX_SKILL 1460
+#define MAX_SKILL 1477
 #define MAX_SKILL_ID 10015 //[Ind/Hercules] max used skill id
 #define GLOBAL_REG_NUM 256   // max permanent character variables per char
 #define ACCOUNT_REG_NUM 64   // max permanent local account variables per account

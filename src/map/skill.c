@@ -156,14 +156,16 @@ int skill_get_index( uint16 skill_id ) {
 		skill_id = HM_SKILLRANGEMIN + skill_id - HM_SKILLBASE;
 	//[Ind/Hercules] GO GO GO LESS! - http://hercules.ws/board/topic/512-skill-id-processing-overhaul/
 	else if( skill_id > 1019 && skill_id < 8001 ) {
-		if( skill_id < 2057 ) // 1020 - 2000 are empty
+		if( skill_id < 2058 ) // 1020 - 2000 are empty
 			skill_id = 1020 + skill_id - 2001;
-		else if( skill_id < 2549 ) // 2057 - 2200 are empty
-			skill_id = (1020+57) + skill_id - 2201;
+		else if( skill_id < 2549 ) // 2058 - 2200 are empty
+			skill_id = (1020+56) + skill_id - 2201;
 		else if ( skill_id < 3036 ) // 2549 - 3000 are empty
-			skill_id = (1020+57+348) + skill_id - 3001;
-		else if ( skill_id < 5019 ) //3036 - 5000 are empty
-			skill_id = (1020+57+348+1966) + skill_id - 5001;
+			skill_id = (1020+56+348) + skill_id - 3001;
+		else if ( skill_id < 5019 ) // 3036 - 5000 are empty
+			skill_id = (1020+56+348+35) + skill_id - 5001;
+		else
+			ShowWarning("skill_get_index: skill id '%d' is not being handled!\n",skill_id);
 	}
 	
 	// validate result
@@ -17412,7 +17414,7 @@ bool skill_parse_row_skilldb(char* split[], int columns, int current) {
 	safestrncpy(skill_db[idx].name, trim(split[15]), sizeof(skill_db[idx].name));
 	safestrncpy(skill_db[idx].desc, trim(split[16]), sizeof(skill_db[idx].desc));
 	strdb_iput(skilldb_name2id, skill_db[idx].name, skill_id);
-
+	
 	return true;
 }
 
