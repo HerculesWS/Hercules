@@ -6320,8 +6320,8 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		if( (sd->class_&MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc_famerank(sd->status.char_id, MAPID_TAEKWON) )
 			return 0;
 
-		if( pc_checkskill(sd, SG_DEVIL) &&  !pc_nextjobexp(sd) )
-			clif->status_change(&sd->bl, SI_DEVIL, 0, 0, 0, 0, 0); //Remove perma blindness due to skill-reset. [Skotlex]
+		if( pc_checkskill(sd, SG_DEVIL) &&  !pc_nextjobexp(sd) ) //Remove perma blindness due to skill-reset. [Skotlex]
+			clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_DEVIL);
 		i = sd->sc.option;
 		if( i&OPTION_RIDING && (!pc_checkskill(sd, KN_RIDING) || (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT) )
 			i &= ~OPTION_RIDING;
@@ -6619,7 +6619,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 
 	/* e.g. not killed thru pc_damage */
 	if( pc_issit(sd) ) {
-		clif->status_change(&sd->bl, SI_SIT, 0, 0, 0, 0, 0);
+		clif->sc_end(&sd->bl,sd->bl.id,SELF,SI_SIT);
 	}
 
 	pc_setdead(sd);
@@ -7604,14 +7604,13 @@ int pc_setoption(struct map_session_data *sd,int type)
 	sd->sc.option=type;
 	clif->changeoption(&sd->bl);
 
-	if( (type&OPTION_RIDING && !(p_type&OPTION_RIDING)) || (type&OPTION_DRAGON && !(p_type&OPTION_DRAGON) && pc_checkskill(sd,RK_DRAGONTRAINING) > 0) )
-	{ // Mounting
-		clif->status_change(&sd->bl, SI_RIDING, 1, 0, 0, 0, 0);
+	if( (type&OPTION_RIDING && !(p_type&OPTION_RIDING)) || (type&OPTION_DRAGON && !(p_type&OPTION_DRAGON) && pc_checkskill(sd,RK_DRAGONTRAINING) > 0) ) {
+		// Mounting
+		clif->sc_load(&sd->bl,sd->bl.id,AREA,SI_RIDING, 0, 0, 0);
 		status_calc_pc(sd,0);
-	}
-	else if( (!(type&OPTION_RIDING) && p_type&OPTION_RIDING) || (!(type&OPTION_DRAGON) && p_type&OPTION_DRAGON) )
-	{ // Dismount
-		clif->status_change(&sd->bl, SI_RIDING, 0, 0, 0, 0, 0);
+	} else if( (!(type&OPTION_RIDING) && p_type&OPTION_RIDING) || (!(type&OPTION_DRAGON) && p_type&OPTION_DRAGON) ) {
+		// Dismount
+		clif->sc_end(&sd->bl,sd->bl.id,AREA,SI_RIDING);
 		status_calc_pc(sd,0);
 	}
 
@@ -7629,16 +7628,16 @@ int pc_setoption(struct map_session_data *sd,int type)
 #endif
 
 	if (type&OPTION_FALCON && !(p_type&OPTION_FALCON)) //Falcon ON
-		clif->status_change(&sd->bl, SI_FALCON, 1, 0, 0, 0, 0);
+		clif->sc_load(&sd->bl,sd->bl.id,AREA,SI_FALCON, 0, 0, 0);
 	else if (!(type&OPTION_FALCON) && p_type&OPTION_FALCON) //Falcon OFF
-		clif->status_change(&sd->bl, SI_FALCON, 0, 0, 0, 0, 0);
+		clif->sc_end(&sd->bl,sd->bl.id,AREA,SI_FALCON);
 
 	if( (sd->class_&MAPID_THIRDMASK) == MAPID_RANGER ) {
 		if( type&OPTION_WUGRIDER && !(p_type&OPTION_WUGRIDER) ) { // Mounting
-			clif->status_change(&sd->bl, SI_WUGRIDER, 1, 0, 0, 0, 0);
+			clif->sc_load(&sd->bl,sd->bl.id,AREA,SI_WUGRIDER, 0, 0, 0);
 			status_calc_pc(sd,0);
 		} else if( !(type&OPTION_WUGRIDER) && p_type&OPTION_WUGRIDER ) { // Dismount
-			clif->status_change(&sd->bl, SI_WUGRIDER, 0, 0, 0, 0, 0);
+			clif->sc_end(&sd->bl,sd->bl.id,AREA,SI_WUGRIDER);
 			status_calc_pc(sd,0);
 		}
 	}
@@ -7711,6 +7710,7 @@ int pc_setcart(struct map_session_data *sd,int type) {
 				return 0;
 			status_change_end(&sd->bl,SC_PUSH_CART,INVALID_TIMER);
 			clif->clearcart(sd->fd);
+			clif->updatestatus(sd, SP_CARTINFO);
 			break;
 		default:/* everything else is an allowed ID so we can move on */
 			if( !sd->sc.data[SC_PUSH_CART] ) /* first time, so fill cart data */
@@ -9188,7 +9188,7 @@ void pc_setstand(struct map_session_data *sd){
 	nullpo_retv(sd);
 
 	status_change_end(&sd->bl, SC_TENSIONRELAX, INVALID_TIMER);
-	clif->status_change(&sd->bl, SI_SIT, 0, 0, 0, 0, 0);
+	clif->sc_end(&sd->bl,sd->bl.id,SELF,SI_SIT);
 	//Reset sitting tick.
 	sd->ssregen.tick.hp = sd->ssregen.tick.sp = 0;
 	sd->state.dead_sit = sd->vd.dead_sit = 0;

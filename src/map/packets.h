@@ -2040,11 +2040,6 @@ packet(0x020d,-1);
 	packet(0x0364,8,clif->pMoveFromKafra,2,4);
 #endif
 
-//2013-03-13 (special thanks to Yommy!)
-#if PACKETVER >= 20130313
-	packet(0x0360,6,clif->pReqClickBuyingStore,2);
-#endif
-
 //2013-03-20Ragexe (Judas + Yommy)
 #if PACKETVER >= 20130320
 	// Shuffle Start

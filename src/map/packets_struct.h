@@ -51,6 +51,7 @@ enum packet_headers {
 	status_changeType = sc_notickType,/* 0x196 */
 #endif
 	status_change2Type = 0x43f,
+	status_change_endType = 0x196,
 #if PACKETVER < 4
 	spawn_unitType = 0x79,
 #elif PACKETVER < 7
@@ -351,6 +352,13 @@ struct packet_status_change {
 	int val2;
 	int val3;
 #endif
+} __attribute__((packed));
+
+struct packet_status_change_end {
+	short PacketType;
+	short index;
+	unsigned int AID;
+	unsigned char state;
 } __attribute__((packed));
 
 struct packet_status_change2 {

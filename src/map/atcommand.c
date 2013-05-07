@@ -2244,7 +2244,10 @@ ACMD(displaystatus)
 	if (i < 2) flag = 1;
 	if (i < 3) tick = 0;
 	
-	clif->status_change(&sd->bl, type, flag, tick, val1, val2, val3);
+	if( flag == 0 )
+		clif->sc_end(&sd->bl,sd->bl.id,AREA,type);
+	else
+		clif->status_change(&sd->bl, type, flag, tick, val1, val2, val3);
 	
 	return true;
 }

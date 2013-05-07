@@ -4353,8 +4353,6 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 					clif->specialeffect_single(bl,421,sd->fd);
 				if( tsd->bg_id && map[tsd->bl.m].flag.battleground )
 					clif->sendbgemblem_single(sd->fd,tsd);
-				if( tsd->sc.data[SC_CAMOUFLAGE] )
-					clif->status_change(bl, SI_CAMOUFLAGE, 1, 0, 0, 0, 0);
 				if ( tsd->status.robe )
 					clif->refreshlook(&sd->bl,bl->id,LOOK_ROBE,tsd->status.robe,SELF);
 			}
@@ -9432,7 +9430,6 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 
 		if (sd->sc.option&OPTION_FALCON)
 			clif->status_change(&sd->bl, SI_FALCON, 1, 0, 0, 0, 0);
-
 		if (sd->sc.option&OPTION_RIDING)
 			clif->status_change(&sd->bl, SI_RIDING, 1, 0, 0, 0, 0);
 		else if (sd->sc.option&OPTION_WUGRIDER)
@@ -9495,11 +9492,11 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 		if( night_flag && map[sd->bl.m].flag.nightenabled ) { //Display night.
 			if( !sd->state.night ) {
 				sd->state.night = 1;
-				clif->status_change(&sd->bl, SI_NIGHT, 1, 0, 0, 0, 0);
+				clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_NIGHT);
 			}
 		} else if( sd->state.night ) { //Clear night display.
 			sd->state.night = 0;
-			clif->status_change(&sd->bl, SI_NIGHT, 0, 0, 0, 0, 0);
+			clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_NIGHT);
 		}
 
 		if( map[sd->bl.m].flag.battleground ) {
@@ -9543,8 +9540,8 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 	if(map[sd->bl.m].flag.loadevent) // Lance
 		npc_script_event(sd, NPCE_LOADMAP);
 
-	if (pc_checkskill(sd, SG_DEVIL) && !pc_nextjobexp(sd))
-		clif->status_change(&sd->bl, SI_DEVIL, 0, 0, 0, 0, 0); //blindness [Komurka]
+	if (pc_checkskill(sd, SG_DEVIL) && !pc_nextjobexp(sd)) //blindness [Komurka]
+		clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_DEVIL);
 
 	if (sd->sc.opt2) //Client loses these on warp.
 		clif->changeoption(&sd->bl);
@@ -16797,6 +16794,17 @@ void clif_partytickack(struct map_session_data* sd, bool flag) {
 	WFIFOSET(sd->fd, packet_len(0x2c9));
 }
 
+void clif_status_change_end(struct block_list *bl, int tid, enum send_target target, int type) {
+	struct packet_status_change_end p;
+	
+	p.PacketType = status_change_endType;
+	p.index = type;
+	p.AID = tid;
+	p.state = 0;
+	
+	clif->send(&p,sizeof(p), bl, target);
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -17199,6 +17207,7 @@ void clif_defaults(void) {
 	clif->autoshadowspell_list = clif_autoshadowspell_list;
 	clif->skill_itemlistwindow = clif_skill_itemlistwindow;
 	clif->sc_load = clif_status_change2;
+	clif->sc_end = clif_status_change_end;
 	clif->initialstatus = clif_initialstatus;
 	/* player-unit-specific-related */
 	clif->updatestatus = clif_updatestatus;

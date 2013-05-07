@@ -158,12 +158,12 @@ int skill_get_index( uint16 skill_id ) {
 	else if( skill_id > 1019 && skill_id < 8001 ) {
 		if( skill_id < 2058 ) // 1020 - 2000 are empty
 			skill_id = 1020 + skill_id - 2001;
-		else if( skill_id < 2549 ) // 2058 - 2200 are empty
-			skill_id = (1020+56) + skill_id - 2201;
-		else if ( skill_id < 3036 ) // 2549 - 3000 are empty
-			skill_id = (1020+56+348) + skill_id - 3001;
-		else if ( skill_id < 5019 ) // 3036 - 5000 are empty
-			skill_id = (1020+56+348+35) + skill_id - 5001;
+		else if( skill_id < 2549 ) // 2058 - 2200 are empty - 1020+57
+			skill_id = (1077) + skill_id - 2201;
+		else if ( skill_id < 3036 ) // 2549 - 3000 are empty - 1020+57+348
+			skill_id = (1425) + skill_id - 3001;
+		else if ( skill_id < 5019 ) // 3036 - 5000 are empty - 1020+57+348+35
+			skill_id = (1460) + skill_id - 5001;
 		else
 			ShowWarning("skill_get_index: skill id '%d' is not being handled!\n",skill_id);
 	}
@@ -14382,9 +14382,9 @@ int skill_sit (struct map_session_data *sd, int type)
 	}
 
 	if( type ) {
-		clif->status_change(&sd->bl, SI_SIT, 1, 0, 0, 0, 0);
+		clif->sc_load(&sd->bl,sd->bl.id,SELF,SI_SIT,0,0,0);
 	} else {
-		clif->status_change(&sd->bl, SI_SIT, 0, 0, 0, 0, 0);
+		clif->sc_end(&sd->bl,sd->bl.id,SELF,SI_SIT);
 	}
 
 	if (!flag) return 0;

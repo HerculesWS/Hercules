@@ -2353,7 +2353,7 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 	memset (&sd->left_weapon.overrefine, 0, sizeof(sd->left_weapon) - sizeof(sd->left_weapon.atkmods));
 
 	if (sd->special_state.intravision && !sd->sc.data[SC_INTRAVISION]) //Clear intravision as long as nothing else is using it
-		clif->status_change(&sd->bl, SI_INTRAVISION, 0, 0, 0, 0, 0);
+		clif->sc_end(&sd->bl,sd->bl.id,SELF,SI_INTRAVISION);
 
 	memset(&sd->special_state,0,sizeof(sd->special_state));
 	memset(&status->max_hp, 0, sizeof(struct status_data)-(sizeof(status->hp)+sizeof(status->sp)));
@@ -8629,31 +8629,9 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			case SC_ALL_RIDING:
 				dval1 = 1;
 				break;
-			case SC_SPHERE_1:
-			case SC_SPHERE_2:
-			case SC_SPHERE_3:
-			case SC_SPHERE_4:
-			case SC_SPHERE_5:
-			case SC_PUSH_CART:
-			case SC_CAMOUFLAGE:
-			case SC_DUPLELIGHT:
-			case SC_ORATIO:
-			case SC_FREEZING:
-			case SC_VENOMIMPRESS:
-			case SC_HALLUCINATIONWALK:
-			case SC_ROLLINGCUTTER:
-			case SC_BANDING:
-			case SC_CRYSTALIZE:
-			case SC_DEEPSLEEP:
-			case SC_CURSEDCIRCLE_ATKER:
-			case SC_CURSEDCIRCLE_TARGET:
-			case SC_BLOODSUCKER:
-			case SC__SHADOWFORM:
-			case SC__MANHOLE:
+			default: /* all others: just copy val1 */
 				dval1 = val1;
 				break;
-				/* handle */
-			default: break;
 		}
 		status_display_add(sd,type,dval1,dval2,dval3);
 	}
@@ -9325,7 +9303,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 				}
 
 				if((sce->val1&0xFFFF) == CG_MOONLIT)
-					clif->status_change(bl,SI_MOONLIT,0,0,0,0,0);
+					clif->sc_end(bl,bl->id,AREA,SI_MOONLIT);
 
 				status_change_end(bl, SC_LONGING, INVALID_TIMER);
 			}
@@ -9580,8 +9558,8 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			}
 			break;
 		case SC_KYOUGAKU:
-			clif->status_change(bl, SI_KYOUGAKU, 0, 0, 0, 0, 0); // Avoid client crash
-			clif->status_change(bl, SI_ACTIVE_MONSTER_TRANSFORM, 0, 0, 0, 0, 0);
+			clif->sc_end(&sd->bl,sd->bl.id,AREA,SI_KYOUGAKU);
+			clif->sc_end(&sd->bl,sd->bl.id,AREA,SI_ACTIVE_MONSTER_TRANSFORM);
 			break;
 		case SC_INTRAVISION:
 			calc_flag = SCB_ALL;/* required for overlapping */
@@ -9761,7 +9739,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 	}
 
 	//On Aegis, when turning off a status change, first goes the sc packet, then the option packet.
-	clif->status_change(bl,StatusIconChangeTable[type],0,0,0,0,0);
+	clif->sc_end(bl,bl->id,AREA,StatusIconChangeTable[type]);
 
 	if( opt_flag&8 ) //bugreport:681
 		clif->changeoption2(bl);
