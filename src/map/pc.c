@@ -4837,7 +4837,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		sd->pd->ud.dir = sd->ud.dir;
 	}
 
-	if( merc_is_hom_active(sd->hd) )
+	if( homun_alive(sd->hd) )
 	{
 		sd->hd->bl.m = m;
 		sd->hd->bl.x = sd->hd->ud.to_x = x;
@@ -6058,7 +6058,7 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 	}
 
 	if( skill_id >= HM_SKILLBASE && skill_id < HM_SKILLBASE+MAX_HOMUNSKILL && sd->hd ) {
-		merc_hom_skillup(sd->hd, skill_id);
+		homun->skillup(sd->hd, skill_id);
 		return 0;
 	}
 
@@ -6345,8 +6345,8 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		if( i != sd->sc.option )
 			pc_setoption(sd, i);
 
-		if( merc_is_hom_active(sd->hd) && pc_checkskill(sd, AM_CALLHOMUN) )
-			merc_hom_vaporize(sd, 0);
+		if( homun_alive(sd->hd) && pc_checkskill(sd, AM_CALLHOMUN) )
+			homun->vaporize(sd, 0);
 	}
 
 	for( i = 1; i < MAX_SKILL; i++ ) {
@@ -6572,7 +6572,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 
 	if (sd->status.hom_id > 0){
 	    if(battle_config.homunculus_auto_vapor && sd->hd && !sd->hd->sc.data[SC_LIGHT_OF_REGENE])
-		    merc_hom_vaporize(sd, 0);
+		    homun->vaporize(sd, 0);
 	}
 
 	if( sd->md )
@@ -7487,8 +7487,8 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	if(i != sd->sc.option)
 		pc_setoption(sd, i);
 
-	if(merc_is_hom_active(sd->hd) && !pc_checkskill(sd, AM_CALLHOMUN))
-		merc_hom_vaporize(sd, 0);
+	if(homun_alive(sd->hd) && !pc_checkskill(sd, AM_CALLHOMUN))
+		homun->vaporize(sd, 0);
 
 	if(sd->status.manner < 0)
 		clif->changestatus(sd,SP_MANNER,sd->status.manner);

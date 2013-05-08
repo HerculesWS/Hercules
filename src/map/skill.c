@@ -405,7 +405,7 @@ int skill_calc_heal(struct block_list *src, struct block_list *target, uint16 sk
 		#endif
 			if( sd && ((skill = pc_checkskill(sd, HP_MEDITATIO)) > 0) )
 				hp += hp * skill * 2 / 100;
-			else if( src->type == BL_HOM && (skill = merc_hom_checkskill(((TBL_HOM*)src), HLIF_BRAIN)) > 0 )
+			else if( src->type == BL_HOM && (skill = homun->checkskill(((TBL_HOM*)src), HLIF_BRAIN)) > 0 )
 				hp += hp * skill * 2 / 100;
 			break;
 	}
@@ -7292,13 +7292,13 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			break;
 
 		case AM_CALLHOMUN:	//[orn]
-			if (sd && !merc_call_homunculus(sd))
+			if (sd && homun->call(sd))
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			break;
 
 		case AM_REST:
 			if (sd) {
-				if (merc_hom_vaporize(sd,1))
+				if (homun->vaporize(sd,1))
 					clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 				else
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
@@ -10005,10 +10005,8 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			break;
 
 		case AM_RESURRECTHOMUN:	//[orn]
-			if (sd)
-			{
-				if (!merc_resurrect_homunculus(sd, 20*skill_lv, x, y))
-				{
+			if (sd) {
+				if (!homun->ressurect(sd, 20*skill_lv, x, y)) {
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					break;
 				}
@@ -12760,7 +12758,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			}
 			break;
 		case AM_REST: //Can't vapo homun if you don't have an active homunc or it's hp is < 80%
-			if (!merc_is_hom_active(sd->hd) || sd->hd->battle_status.hp < (sd->hd->battle_status.max_hp*80/100))
+			if (!homun_alive(sd->hd) || sd->hd->battle_status.hp < (sd->hd->battle_status.max_hp*80/100))
 			{
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;
@@ -15986,9 +15984,9 @@ int skill_produce_mix (struct map_session_data *sd, uint16 skill_id, int nameid,
 				make_per = pc_checkskill(sd,AM_LEARNINGPOTION)*50
 					+ pc_checkskill(sd,AM_PHARMACY)*300 + sd->status.job_level*20
 					+ (status->int_/2)*10 + status->dex*10+status->luk*10;
-				if(merc_is_hom_active(sd->hd)) {//Player got a homun
+				if(homun_alive(sd->hd)) {//Player got a homun
 					int skill;
-					if((skill=merc_hom_checkskill(sd->hd,HVAN_INSTRUCT)) > 0) //His homun is a vanil with instruction change
+					if((skill=homun->checkskill(sd->hd,HVAN_INSTRUCT)) > 0) //His homun is a vanil with instruction change
 						make_per += skill*100; //+1% bonus per level
 				}
 				switch(nameid){

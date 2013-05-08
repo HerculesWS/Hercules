@@ -1134,7 +1134,7 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 			pc_addspiritball(sd,skill->get_time(LG_FORCEOFVANGUARD,sce->val1),sce->val3);
 		if (sc->data[SC_STYLE_CHANGE] && rnd()%2) {
                     TBL_HOM *hd = BL_CAST(BL_HOM,bl);
-                    if (hd) hom_addspiritball(hd, 10); //add a sphere
+                    if (hd) homun->addspiritball(hd, 10); //add a sphere
                 }
 
 		if( sc->data[SC__DEADLYINFECT] && damage > 0 && rnd()%100 < 65 + 5 * sc->data[SC__DEADLYINFECT]->val1 )
@@ -1195,7 +1195,7 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 			status_change_spread(src, bl);
                 if (sc->data[SC_STYLE_CHANGE] && rnd()%2) {
                     TBL_HOM *hd = BL_CAST(BL_HOM,bl);
-                    if (hd) hom_addspiritball(hd, 10);
+                    if (hd) homun->addspiritball(hd, 10);
                 }
 	}
 	/* no data claims these settings affect anything other than players */

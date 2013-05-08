@@ -9739,10 +9739,9 @@ BUILDIN(homunculus_evolution)
 	if( sd == NULL )
 		return true;
 	
-	if(merc_is_hom_active(sd->hd))
-	{
+	if(homun_alive(sd->hd)) {
 		if (sd->hd->homunculus.intimacy > 91000)
-			merc_hom_evolution(sd->hd);
+			homun->evolve(sd->hd);
 		else
 			clif->emotion(&sd->hd->bl, E_SWT);
 	}
@@ -9752,9 +9751,9 @@ BUILDIN(homunculus_evolution)
 /*==========================================
  * [Xantara]
  *------------------------------------------*/
-BUILDIN(homunculus_mutate)
-{
-	int homun_id, m_class, m_id;
+BUILDIN(homunculus_mutate) {
+	int homun_id;
+	enum homun_type m_class, m_id;
 	TBL_PC *sd;
 	
 	sd = script_rid2sd(st);
@@ -9766,12 +9765,12 @@ BUILDIN(homunculus_mutate)
 	else
 		homun_id = 6048 + (rnd() % 4);
 	
-	if(merc_is_hom_active(sd->hd)) {
-		m_class = hom_class2mapid(sd->hd->homunculus.class_);
-		m_id    = hom_class2mapid(homun_id);
+	if(homun_alive(sd->hd)) {
+		m_class = homun->class2type(sd->hd->homunculus.class_);
+		m_id    = homun->class2type(homun_id);
 		
-		if ( m_class != -1 && m_id != -1 && m_class&HOM_EVO && m_id&HOM_S && sd->hd->homunculus.level >= 99 )
-			hom_mutate(sd->hd, homun_id);
+		if ( m_class != -1 && m_id != -1 && m_class == HT_EVO && m_id == HT_S && sd->hd->homunculus.level >= 99 )
+			homun->mutate(sd->hd, homun_id);
 		else
 			clif->emotion(&sd->hd->bl, E_SWT);
 	}
@@ -9779,16 +9778,15 @@ BUILDIN(homunculus_mutate)
 }
 
 // [Zephyrus]
-BUILDIN(homunculus_shuffle)
-{
+BUILDIN(homunculus_shuffle) {
 	TBL_PC *sd;
 	
 	sd=script_rid2sd(st);
 	if( sd == NULL )
 		return true;
 	
-	if(merc_is_hom_active(sd->hd))
-		merc_hom_shuffle(sd->hd);
+	if(homun_alive(sd->hd))
+		homun->shuffle(sd->hd);
 	
 	return true;
 }
@@ -12362,7 +12360,7 @@ BUILDIN(gethominfo)
 	int type=script_getnum(st,2);
 	
 	hd = sd?sd->hd:NULL;
-	if(!merc_is_hom_active(hd))
+	if(!homun_alive(hd))
 	{
 		if (type == 2)
 			script_pushconststr(st,"null");

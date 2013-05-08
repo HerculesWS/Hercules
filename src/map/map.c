@@ -4968,6 +4968,7 @@ void do_final(void)
 	do_final_pc();
 	do_final_pet();
 	do_final_mob();
+	homun->final();
 	atcommand->final_msg();
 	skill->final();
 	do_final_status();
@@ -5172,6 +5173,7 @@ void load_defaults(void) {
 	battle_defaults();
 	buyingstore_defaults();
 	clif_defaults();
+	homunculus_defaults();
 	ircbot_defaults();
 	log_defaults();
 	script_defaults();
@@ -5367,7 +5369,7 @@ int do_init(int argc, char *argv[])
 	do_init_guild();
 	do_init_storage();
 	do_init_pet();
-	do_init_merc();
+	homun->init();
 	do_init_mercenary();
 	do_init_elemental();
 	do_init_quest();

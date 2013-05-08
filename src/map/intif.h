@@ -71,7 +71,7 @@ int intif_rename(struct map_session_data *sd, int type, char *name);
 #define intif_rename_pet(sd, name) intif_rename(sd, 1, name)
 #define intif_rename_hom(sd, name) intif_rename(sd, 2, name)
 int intif_homunculus_create(int account_id, struct s_homunculus *sh);
-int intif_homunculus_requestload(int account_id, int homun_id);
+bool intif_homunculus_requestload(int account_id, int homun_id);
 int intif_homunculus_requestsave(int account_id, struct s_homunculus* sh);
 int intif_homunculus_requestdelete(int homun_id);
 

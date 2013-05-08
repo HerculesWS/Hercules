@@ -2264,7 +2264,7 @@ void unit_remove_map_pc(struct map_session_data *sd, clr_type clrtype)
 
 	if(sd->pd)
 		unit_remove_map(&sd->pd->bl, clrtype);
-	if(merc_is_hom_active(sd->hd))
+	if(homun_alive(sd->hd))
 		unit_remove_map(&sd->hd->bl, clrtype);
 	if(sd->md)
 		unit_remove_map(&sd->md->bl, clrtype);
@@ -2474,11 +2474,10 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 		{
 			struct homun_data *hd = (TBL_HOM*)bl;
 			struct map_session_data *sd = hd->master;
-			merc_hom_hungry_timer_delete(hd);
+			homun->hunger_timer_delete(hd);
 			if( hd->homunculus.intimacy > 0 )
-				merc_save(hd);
-			else
-			{
+				homun->save(hd);
+			else {
 				intif_homunculus_requestdelete(hd->homunculus.hom_id);
 				if( sd )
 					sd->status.hom_id = 0;
