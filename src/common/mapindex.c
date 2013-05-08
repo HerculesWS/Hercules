@@ -121,7 +121,7 @@ unsigned short mapindex_name2id(const char* name) {
 	
 	mapindex_getmapname(name, map_name);
 
-	if( (i = strdb_iget(mapindex_db, name)) )
+	if( (i = strdb_iget(mapindex_db, map_name)) )
 		return i;
 	
 	ShowDebug("mapindex_name2id: Map \"%s\" not found in index list!\n", map_name);
