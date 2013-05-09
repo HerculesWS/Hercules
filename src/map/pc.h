@@ -512,6 +512,7 @@ struct map_session_data {
 	struct hChSysCh *gcbind;
 	bool stealth;
 	unsigned char fontcolor;
+	unsigned int fontcolor_tid;
 	unsigned int hchsysch_tick;
 	
 	/* [Ind/Hercules] */

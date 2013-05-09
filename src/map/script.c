@@ -11788,7 +11788,7 @@ BUILDIN(undisguise)
 	if (sd == NULL) return true;
 	
 	if (sd->disguise) {
-		pc_disguise(sd, 0);
+		pc_disguise(sd, -1);
 		script_pushint(st,0);
 	} else {
 		script_pushint(st,1);

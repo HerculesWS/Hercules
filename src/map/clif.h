@@ -879,6 +879,7 @@ struct clif_interface {
 	void (*chsys_gjoin) (struct guild *g1,struct guild *g2);
 	void (*chsys_gleave) (struct guild *g1,struct guild *g2);
 	void (*bc_ready) (void);
+	int (*undisguise_timer) (int tid, unsigned int tick, int id, intptr_t data);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/

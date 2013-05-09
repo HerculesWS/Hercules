@@ -150,7 +150,7 @@ static inline void RFIFOPOS2(int fd, unsigned short pos, short* x0, short* y0, s
 
 //To idenfity disguised characters.
 static inline bool disguised(struct block_list* bl) {
-	return (bool)( bl->type == BL_PC && ((TBL_PC*)bl)->disguise );
+	return (bool)( bl->type == BL_PC && ((TBL_PC*)bl)->disguise != -1 );
 }
 
 
@@ -5751,7 +5751,7 @@ void clif_resurrection(struct block_list *bl,int type)
 	unsigned char buf[16];
 
 	nullpo_retv(bl);
-
+	
 	WBUFW(buf,0)=0x148;
 	WBUFL(buf,2)=bl->id;
 	WBUFW(buf,6)=0;
@@ -8494,7 +8494,7 @@ void clif_refresh(struct map_session_data *sd)
 	
 	if( disguised(&sd->bl) ) {/* refresh-da */
 		short disguise = sd->disguise;
-		pc_disguise(sd, 0);
+		pc_disguise(sd, -1);
 		pc_disguise(sd, disguise);
 	}
 	
@@ -9794,7 +9794,14 @@ void clif_parse_GetCharNameRequest(int fd, struct map_session_data *sd)
 
 	clif->charnameack(fd, bl);
 }
-
+int clif_undisguise_timer(int tid, unsigned int tick, int id, intptr_t data) {
+	struct map_session_data * sd;
+	if( (sd = map_id2sd(id)) && sd->fontcolor && sd->disguise == sd->status.class_ ) {
+		pc_disguise(sd,-1);
+	}
+	sd->fontcolor_tid = INVALID_TIMER;
+	return 0;
+}
 
 /// Validates and processes global messages
 /// 008c <packet len>.W <text>.?B (<name> : <message>) 00 (CZ_REQUEST_CHAT)
@@ -9831,6 +9838,18 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 	} else if ( sd->fontcolor && !sd->chatID ) {
 		char mout[200];
 		unsigned char mylen = 1;
+		ShowDebug("Hi1:%d\n",sd->disguise);
+
+		if( sd->disguise == -1 ) {
+			pc_disguise(sd,sd->status.class_);
+			ShowDebug("Hi2:%d\n",sd->disguise);
+			sd->fontcolor_tid = add_timer(gettick()+5000, clif->undisguise_timer, sd->bl.id, 0);
+		} else if ( sd->disguise == sd->status.class_ && sd->fontcolor_tid != INVALID_TIMER ) {
+			const struct TimerData *timer;
+			if( (timer = get_timer(sd->fontcolor_tid)) ) {
+				settick_timer(sd->fontcolor_tid, timer->tick+5000);
+			}
+		}
 		
 		mylen += snprintf(mout, 200, "%s : %s",sd->fakename[0]?sd->fakename:sd->status.name,message);
 		
@@ -9845,7 +9864,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 		WFIFOSET(fd, mylen + 12);
 		return;
 	}
-	
+		
 	/**
 	 * Fake Name Design by FatalEror (bug report #9)
 	 **/
@@ -10341,7 +10360,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 					struct guild *g = sd->guild, *sg = NULL;
 					int k;
 					for (k = 0; k < MAX_GUILDALLIANCE; k++) {
-						if( g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild_search(g->alliance[i].guild_id) ) ) {
+						if( g->alliance[k].opposition == 0 && g->alliance[k].guild_id && (sg = guild_search(g->alliance[k].guild_id) ) ) {
 							if( !(((struct hChSysCh*)sg->channel)->banned && idb_exists(((struct hChSysCh*)sg->channel)->banned, sd->status.account_id)))
 								clif->chsys_join((struct hChSysCh *)sg->channel,sd);
 						}
@@ -17553,6 +17572,7 @@ void clif_defaults(void) {
 	clif->chsys_gleave = clif_hercules_chsys_gleave;
 	clif->cashshop_load = clif_cashshop_db;
 	clif->bc_ready = clif_bc_ready;
+	clif->undisguise_timer = clif_undisguise_timer;
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/ 

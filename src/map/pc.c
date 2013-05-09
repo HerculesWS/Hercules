@@ -958,6 +958,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	sd->invincible_timer = INVALID_TIMER;
 	sd->npc_timer_id = INVALID_TIMER;
 	sd->pvp_timer = INVALID_TIMER;
+	sd->fontcolor_tid = INVALID_TIMER;
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/
@@ -1015,6 +1016,8 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	sd->guild_x = -1;
 	sd->guild_y = -1;
 
+	sd->disguise = -1;
+	
 	// Event Timers
 	for( i = 0; i < MAX_EVENTTIMER; i++ )
 		sd->eventtimer[i] = INVALID_TIMER;
@@ -1637,15 +1640,13 @@ int pc_updateweightstatus(struct map_session_data *sd)
 	return 0;
 }
 
-int pc_disguise(struct map_session_data *sd, int class_)
-{
-	if (!class_ && !sd->disguise)
+int pc_disguise(struct map_session_data *sd, int class_) {
+	if (class_ == -1 && sd->disguise == -1)
 		return 0;
-	if (class_ && sd->disguise == class_)
+	if (class_ >= 0 && sd->disguise == class_)
 		return 0;
 
-	if(sd->sc.option&OPTION_INVISIBLE)
-  	{	//Character is invisible. Stealth class-change. [Skotlex]
+	if(sd->sc.option&OPTION_INVISIBLE) { //Character is invisible. Stealth class-change. [Skotlex]
 		sd->disguise = class_; //viewdata is set on uncloaking.
 		return 2;
 	}
@@ -1655,19 +1656,19 @@ int pc_disguise(struct map_session_data *sd, int class_)
 		clif->clearunit_area(&sd->bl, CLR_OUTSIGHT);
 	}
 
-	if (!class_) {
-		sd->disguise = 0;
+	if (class_ == -1) {
+		sd->disguise = -1;
 		class_ = sd->status.class_;
 	} else
-		sd->disguise=class_;
+		sd->disguise = class_;
 
 	status_set_viewdata(&sd->bl, class_);
 	clif->changeoption(&sd->bl);
 
 	if (sd->bl.prev != NULL) {
 		clif->spawn(&sd->bl);
-		if (class_ == sd->status.class_ && pc_iscarton(sd))
-		{	//It seems the cart info is lost on undisguise.
+		if (class_ == sd->status.class_ && pc_iscarton(sd)) {
+			//It seems the cart info is lost on undisguise.
 			clif->cartlist(sd);
 			clif->updatestatus(sd,SP_CARTINFO);
 		}
@@ -7453,7 +7454,7 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	//Change look, if disguised, you need to undisguise
 	//to correctly calculate new job sprite without
 	if (sd->disguise)
-		pc_disguise(sd, 0);
+		pc_disguise(sd, -1);
 
 	status_set_viewdata(&sd->bl, job);
 	clif->changelook(&sd->bl,LOOK_BASE,sd->vd.class_); // move sprite update to prevent client crashes with incompatible equipment [Valaris]

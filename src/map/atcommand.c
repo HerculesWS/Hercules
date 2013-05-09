@@ -4845,7 +4845,7 @@ ACMD(undisguise)
 {
 	nullpo_retr(-1, sd);
 	if (sd->disguise) {
-		pc_disguise(sd, 0);
+		pc_disguise(sd, -1);
 		clif->message(fd, msg_txt(124)); // Undisguise applied.
 	} else {
 		clif->message(fd, msg_txt(125)); // You're not disguised.
@@ -4858,8 +4858,7 @@ ACMD(undisguise)
 /*==========================================
  * UndisguiseAll
  *------------------------------------------*/
-ACMD(undisguiseall)
-{
+ACMD(undisguiseall) {
 	struct map_session_data *pl_sd;
 	struct s_mapiterator* iter;
 	nullpo_retr(-1, sd);
@@ -4867,7 +4866,7 @@ ACMD(undisguiseall)
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
 		if( pl_sd->disguise )
-			pc_disguise(pl_sd, 0);
+			pc_disguise(pl_sd, -1);
 	mapit_free(iter);
 	
 	clif->message(fd, msg_txt(124)); // Undisguise applied.
@@ -4900,7 +4899,7 @@ ACMD(undisguiseguild)
 	
 	for(i = 0; i < g->max_member; i++)
 		if( (pl_sd = g->member[i].sd) && pl_sd->disguise )
-			pc_disguise(pl_sd, 0);
+			pc_disguise(pl_sd, -1);
 	
 	clif->message(fd, msg_txt(124)); // Undisguise applied.
 	
@@ -9340,11 +9339,11 @@ ACMD(channel) {
 /* debug only, delete after */
 ACMD(fontcolor) {
 	unsigned char k;
-	
+	unsigned short msg_len = 1;
+	char mout[40];
+
 	if( !message || !*message ) {
-		char mout[40];
 		for( k = 0; k < hChSys.colors_count; k++ ) {
-			unsigned short msg_len = 1;
 			msg_len += sprintf(mout, "[ %s ] : %s",command,hChSys.colors_name[k]);
 			
 			WFIFOHEAD(fd,msg_len + 12);
@@ -9360,7 +9359,6 @@ ACMD(fontcolor) {
 	
 	if( message[0] == '0' ) {
 		sd->fontcolor = 0;
-		pc_disguise(sd,0);
 		return true;
 	}
 	
@@ -9375,8 +9373,15 @@ ACMD(fontcolor) {
 	}
 	
 	sd->fontcolor = k + 1;
-	pc_disguise(sd,sd->status.class_);
+	msg_len += sprintf(mout, "Color changed to '%s'",hChSys.colors_name[k]);
 	
+	WFIFOHEAD(fd,msg_len + 12);
+	WFIFOW(fd,0) = 0x2C1;
+	WFIFOW(fd,2) = msg_len + 12;
+	WFIFOL(fd,4) = 0;
+	WFIFOL(fd,8) = hChSys.colors[k];
+	safestrncpy((char*)WFIFOP(fd,12), mout, msg_len);
+	WFIFOSET(fd, msg_len + 12);
 	return true;
 }
 ACMD(searchstore){
