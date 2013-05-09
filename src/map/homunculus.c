@@ -471,14 +471,11 @@ int homunculus_gainexp(struct homun_data *hd,unsigned int exp) {
 
 	if(hd->homunculus.vaporize)
 		return 1;
-
+	
 	if((htype = homun->class2type(hd->homunculus.class_)) == -1) {
 		ShowError("homunculus_gainexp: Invalid class %d. \n", hd->homunculus.class_);
 		return 0;
 	}
-	
-	if( !hd->exp_next || hd->homunculus.exp < hd->exp_next )
-		return 0;
 	
 	switch( htype ) {
 		case HT_REG:
