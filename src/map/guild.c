@@ -515,25 +515,36 @@ int guild_recv_info(struct guild *sg) {
 			clif->chsys_create(channel,NULL,NULL,hChSys.ally_color);
 			if( hChSys.ally_autojoin ) {
 				struct s_mapiterator* iter = mapit_getallusers();
+				struct guild *tg[MAX_GUILDALLIANCE];
 				
+				for (i = 0; i < MAX_GUILDALLIANCE; i++) {
+					tg[i] = NULL;
+					if( sg->alliance[i].opposition == 0 && sg->alliance[i].guild_id )
+						tg[i] = guild_search(sg->alliance[i].guild_id);
+				}
+
 				for( sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); sd = (TBL_PC*)mapit_next(iter) ) {
 					if( sd->status.guild_id ) {
 						if( sd->status.guild_id == sg->guild_id ) {
 							clif->chsys_join(channel,sd);
 							sd->guild = g;
-							continue;
 						}
 						
 						for (i = 0; i < MAX_GUILDALLIANCE; i++) {
-							if(	sg->alliance[i].guild_id == sd->status.guild_id ) {
-								clif->chsys_join(channel,sd);
-								break;
+							if( sg->alliance[i].opposition == 0 && sg->alliance[i].guild_id ) {
+								if( sg->alliance[i].guild_id == sd->status.guild_id ) {
+									clif->chsys_join(channel,sd);
+								} else if( tg[i] != NULL ) {
+									if( !(((struct hChSysCh*)tg[i]->channel)->banned && idb_exists(((struct hChSysCh*)tg[i]->channel)->banned, sd->status.account_id)))
+										clif->chsys_join((struct hChSysCh*)tg[i]->channel,sd);
+								}
 							}
 						}
 					}
 				}
-
+				
 				mapit_free(iter);
+				
 			}
 			
 			aChSysSave = (void*)channel;
@@ -756,12 +767,11 @@ void guild_member_joined(struct map_session_data *sd)
 		if( hChSys.ally && hChSys.ally_autojoin ) {
 			struct guild* sg = NULL;
 			struct hChSysCh *channel = (struct hChSysCh*)g->channel;
-			
+
 			if( !(channel->banned && idb_exists(channel->banned, sd->status.account_id) ) )
 				clif->chsys_join(channel,sd);
-
 			for (i = 0; i < MAX_GUILDALLIANCE; i++) {
-				if(	g->alliance[i].guild_id && (sg = guild_search(g->alliance[i].guild_id) ) ) {
+				if( g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild_search(g->alliance[i].guild_id) ) ) {
 					if( !(((struct hChSysCh*)sg->channel)->banned && idb_exists(((struct hChSysCh*)sg->channel)->banned, sd->status.account_id)))
 						clif->chsys_join((struct hChSysCh*)sg->channel,sd);
 				}
@@ -1627,14 +1637,20 @@ int guild_allianceack(int guild_id1,int guild_id2,int account_id1,int account_id
 		return 0;
 	}
 
+	if( g[0] && g[1] && hChSys.ally && ( flag & 1 ) == 0 ) {
+		if( !(flag & 0x08) ) {
+			if( hChSys.ally_autojoin )
+				clif->chsys_gjoin(g[0],g[1]);
+		} else {
+			clif->chsys_gleave(g[0],g[1]);
+		}
+	}
+	
     if (!(flag & 0x08)) { // new relationship
-		for(i=0;i<2-(flag&1);i++)
-		{
-			if(g[i]!=NULL)
-			{
+		for(i=0;i<2-(flag&1);i++) {
+			if(g[i]!=NULL) {
 				ARR_FIND( 0, MAX_GUILDALLIANCE, j, g[i]->alliance[j].guild_id == 0 );
-				if( j < MAX_GUILDALLIANCE )
-				{
+				if( j < MAX_GUILDALLIANCE ) {
 					g[i]->alliance[j].guild_id=guild_id[1-i];
 					memcpy(g[i]->alliance[j].name,guild_name[1-i],NAME_LENGTH);
 					g[i]->alliance[j].opposition=flag&1;
@@ -1642,10 +1658,8 @@ int guild_allianceack(int guild_id1,int guild_id2,int account_id1,int account_id
 			}
 		}
     } else { // remove relationship
-		for(i=0;i<2-(flag&1);i++)
-		{
-			if(g[i]!=NULL)
-			{
+		for(i=0;i<2-(flag&1);i++) {
+			if( g[i] != NULL ) {
 				ARR_FIND( 0, MAX_GUILDALLIANCE, j, g[i]->alliance[j].guild_id == guild_id[1-i] && g[i]->alliance[j].opposition == (flag&1) );
 				if( j < MAX_GUILDALLIANCE )
 					g[i]->alliance[j].guild_id = 0;

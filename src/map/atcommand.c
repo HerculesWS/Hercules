@@ -8790,7 +8790,7 @@ ACMD(join) {
 	}
 	
 	if( idb_exists(channel->users, sd->status.char_id) ) {
-		sprintf(atcmd_output, msg_txt(1434),name); // You're already in the '%s' channel
+		sprintf(atcmd_output, msg_txt(1475),name); // You're already in the '%s' channel
 		clif->message(fd, atcmd_output);
 		return false;
 	}
@@ -8814,7 +8814,17 @@ ACMD(join) {
 		sprintf(atcmd_output, msg_txt(1403),name); // You're now in the '%s' channel
 		clif->message(fd, atcmd_output);
 	}
-	
+	if( channel->type == hChSys_ALLY ) {
+		struct guild *g = sd->guild, *sg = NULL;
+		int i;
+		for (i = 0; i < MAX_GUILDALLIANCE; i++) {
+			if( g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild_search(g->alliance[i].guild_id) ) ) {
+				if( !(((struct hChSysCh*)sg->channel)->banned && idb_exists(((struct hChSysCh*)sg->channel)->banned, sd->status.account_id))) {
+					clif->chsys_join((struct hChSysCh *)sg->channel,sd);
+				}
+			}
+		}
+	}
 	clif->chsys_join(channel,sd);
 	
 	return true;
@@ -8988,7 +8998,6 @@ ACMD(channel) {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
 			return false;
 		}
-		
 		for(k = 0; k < sd->channel_count; k++) {
 			if( strcmpi(sub1+1,sd->channels[k]->name) == 0 )
 				break;
@@ -8998,8 +9007,18 @@ ACMD(channel) {
 			clif->message(fd, atcmd_output);
 			return false;
 		}
-		clif->chsys_left(sd->channels[k],sd);
-		sprintf(atcmd_output, msg_txt(1425),sub1); // You've left the '%s' channel
+		if( sd->channels[k]->type == hChSys_ALLY ) {
+			do {
+				for(k = 0; k < sd->channel_count; k++) {
+					if( sd->channels[k]->type == hChSys_ALLY ) {
+						clif->chsys_left(sd->channels[k],sd);
+						break;
+					}
+				}
+			} while( k != sd->channel_count );
+		} else
+			clif->chsys_left(sd->channels[k],sd);
+		sprintf(atcmd_output, msg_txt(1426),sub1); // You've left the '%s' channel
 		clif->message(fd, atcmd_output);
 	} else if ( strcmpi(key,"bindto") == 0 ) {
 		
