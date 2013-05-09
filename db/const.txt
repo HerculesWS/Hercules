@@ -412,6 +412,7 @@ BaseJob	119	1
 BaseClass	120	1
 killerrid	121 1
 killedrid	122 1
+SlotChange	123	1
 
 bMaxHP	6
 bMaxSP	8

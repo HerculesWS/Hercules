@@ -6938,6 +6938,7 @@ int pc_readparam(struct map_session_data* sd,int type)
 		case SP_FAME:            val = sd->status.fame; break;
 		case SP_KILLERRID:       val = sd->killerrid; break;
 		case SP_KILLEDRID:       val = sd->killedrid; break;
+		case SP_SLOTCHANGE:		 val = sd->status.slotchange;
 		case SP_CRITICAL:        val = sd->battle_status.cri/10; break;
 		case SP_ASPD:            val = (2000-sd->battle_status.amotion)/10; break;
 		case SP_BASE_ATK:	     val = sd->battle_status.batk; break;
@@ -7178,6 +7179,9 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 		return 1;
 	case SP_KILLEDRID:
 		sd->killedrid = val;
+		return 1;
+	case SP_SLOTCHANGE:
+		sd->status.slotchange = val;
 		return 1;
 	default:
 		ShowError("pc_setparam: Attempted to set unknown parameter '%d'.\n", type);
