@@ -1881,13 +1881,18 @@ int mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p)
 
 	return 106+offset;
 }
-	int mmo_char_send006b(int fd, struct char_session_data* sd);
+/* Made Possible by Yommy~! <3 */
+void mmo_char_send099d(int fd, struct char_session_data *sd) {
+	WFIFOHEAD(fd,4 + (MAX_CHARS*MAX_CHAR_BUF));
+	WFIFOW(fd,0) = 0x99d;
+	WFIFOW(fd,2) = mmo_chars_fromsql(sd, WFIFOP(fd,4)) + 4;
+	WFIFOSET(fd,WFIFOW(fd,2));
+}
+int mmo_char_send006b(int fd, struct char_session_data* sd);
 //----------------------------------------
 // [Ind/Hercules] notify client about charselect window data
 //----------------------------------------
 void mmo_char_send082d(int fd, struct char_session_data* sd) {
-	if (save_log)
-		ShowInfo("Loading Char Data ("CL_BOLD"%d"CL_RESET")\n",sd->account_id);
 	
 	WFIFOHEAD(fd,29);
 	WFIFOW(fd,0) = 0x82d;
@@ -4338,7 +4343,7 @@ int parse_char(int fd)
 					/* for some stupid reason it requires the char data again (gravity -_-) */
 					if( ret )
 #if PACKETVER >= 20130000
-						mmo_char_send082d(fd, sd);
+						mmo_char_send099d(fd, sd);
 #else
 						mmo_char_send006b(fd, sd);
 #endif
