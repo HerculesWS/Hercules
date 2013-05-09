@@ -677,6 +677,7 @@ struct clif_interface {
 	void (*msgtable) (int fd, int line);
 	void (*msgtable_num) (int fd, int line, int num);
 	void (*message) (const int fd, const char* mes);
+	void (*messageln) (const int fd, const char* mes);
 	int (*colormes) (int fd, enum clif_colors color, const char* msg);
 	bool (*process_message) (struct map_session_data* sd, int format, char** name_, int* namelen_, char** message_, int* messagelen_);
 	void (*wisexin) (struct map_session_data *sd,int type,int flag);

@@ -876,9 +876,8 @@ ACMD(option)
 		// notify the user of the requirement to enter an option
 		clif->message(fd, msg_txt(921)); // Please enter at least one option.
 		
-		if( text )
-		{// send the help text associated with this command
-			clif->message( fd, text );
+		if( text ) {// send the help text associated with this command
+			clif->messageln( fd, text );
 		}
 		
 		return false;
@@ -969,7 +968,7 @@ ACMD(jobchange)
 		if (!found) {
 			text = atcommand_help_string(info);
             if (text)
-                clif->message(fd, text);
+                clif->messageln(fd, text);
 			return false;
 		}
 	}
@@ -992,7 +991,7 @@ ACMD(jobchange)
 	} else {
 		text = atcommand_help_string(info);
         if (text)
-            clif->message(fd, text);
+            clif->messageln(fd, text);
 		return false;
 	}
 	
@@ -1767,9 +1766,8 @@ ACMD(go)
 		
 		clif->message(fd, msg_txt(38)); // Invalid location number, or name.
 		
-		if( text )
-		{// send the text to the client
-			clif->message( fd, text );
+		if( text ) {// send the text to the client
+			clif->messageln( fd, text );
 		}
 		
 		return false;
@@ -3122,9 +3120,8 @@ ACMD(questskill)
 		// send the error message as always
 		clif->message(fd, msg_txt(1027)); // Please enter a quest skill number.
 		
-		if( text )
-		{// send the skill ID list associated with this command
-			clif->message( fd, text );
+		if( text ) {// send the skill ID list associated with this command
+			clif->messageln( fd, text );
 		}
 		
 		return false;
@@ -3166,9 +3163,8 @@ ACMD(lostskill)
 		// send the error message as always
 		clif->message(fd, msg_txt(1027)); // Please enter a quest skill number.
 		
-		if( text )
-		{// send the skill ID list associated with this command
-			clif->message( fd, text );
+		if( text ) {// send the skill ID list associated with this command
+			clif->messageln( fd, text );
 		}
 		
 		return false;

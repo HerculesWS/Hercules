@@ -5657,6 +5657,39 @@ void clif_displaymessage(const int fd, const char* mes) {
 		}
 	}
 }
+void clif_displaymessage2(const int fd, const char* mes) {
+	// invalid pointer?
+	nullpo_retv(mes);
+	
+	//Scrapped, as these are shared by disconnected players =X [Skotlex]
+	if (fd == 0)
+		;
+	else {
+		// Limit message to 255+1 characters (otherwise it causes a buffer overflow in the client)
+		char *message, *line;
+		
+		message = aStrdup(mes);
+		line = strtok(message, "\n");
+		while(line != NULL) {
+			// Limit message to 255+1 characters (otherwise it causes a buffer overflow in the client)
+			int len = strnlen(line, 255);
+			
+			if (len > 0) { // don't send a void message (it's not displaying on the client chat). @help can send void line.
+				if( fd == -2 ) {
+					ShowInfo("HCP: %s\n",line);
+				} else {
+					WFIFOHEAD(fd, 5 + len);
+					WFIFOW(fd,0) = 0x8e;
+					WFIFOW(fd,2) = 5 + len; // 4 + len + NULL teminate
+					safestrncpy((char *)WFIFOP(fd,4), line, len + 1);
+					WFIFOSET(fd, 5 + len);
+				}
+			}
+			line = strtok(NULL, "\n");
+		}
+		aFree(message);		
+	}
+}
 
 /// Send broadcast message in yellow or blue without font formatting (ZC_BROADCAST).
 /// 009a <packet len>.W <message>.?B
@@ -9838,11 +9871,9 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 	} else if ( sd->fontcolor && !sd->chatID ) {
 		char mout[200];
 		unsigned char mylen = 1;
-		ShowDebug("Hi1:%d\n",sd->disguise);
 
 		if( sd->disguise == -1 ) {
 			pc_disguise(sd,sd->status.class_);
-			ShowDebug("Hi2:%d\n",sd->disguise);
 			sd->fontcolor_tid = add_timer(gettick()+5000, clif->undisguise_timer, sd->bl.id, 0);
 		} else if ( sd->disguise == sd->status.class_ && sd->fontcolor_tid != INVALID_TIMER ) {
 			const struct TimerData *timer;
@@ -17369,6 +17400,7 @@ void clif_defaults(void) {
 	clif->msgtable = clif_msgtable;
 	clif->msgtable_num = clif_msgtable_num;
 	clif->message = clif_displaymessage;
+	clif->messageln = clif_displaymessage2;
 	clif->colormes = clif_colormes;
 	clif->process_message = clif_process_message;
 	clif->wisexin = clif_wisexin;
