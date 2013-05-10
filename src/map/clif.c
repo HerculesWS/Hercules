@@ -5847,7 +5847,7 @@ void clif_pvpset(struct map_session_data *sd,int pvprank,int pvpnum,int type)
 		else
 			WBUFL(buf,6) = pvprank;
 		WBUFL(buf,10) = pvpnum;
-		if(sd->sc.option&OPTION_INVISIBLE || sd->disguise) //Causes crashes when a 'mob' with pvp info dies.
+		if(sd->sc.option&OPTION_INVISIBLE || sd->disguise != -1) //Causes crashes when a 'mob' with pvp info dies.
 			clif->send(buf,packet_len(0x19a),&sd->bl,SELF);
 		else if(!type)
 			clif->send(buf,packet_len(0x19a),&sd->bl,AREA);
@@ -8555,7 +8555,7 @@ void clif_charnameack (int fd, struct block_list *bl)
 				struct guild *g = NULL;
 
 				//Requesting your own "shadow" name. [Skotlex]
-				if (ssd->fd == fd && ssd->disguise)
+				if (ssd->fd == fd && ssd->disguise != -1)
 					WBUFL(buf,2) = -bl->id;
 
 				if( ssd->fakename[0] ) {

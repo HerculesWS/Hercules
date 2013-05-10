@@ -7453,7 +7453,7 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 
 	//Change look, if disguised, you need to undisguise
 	//to correctly calculate new job sprite without
-	if (sd->disguise)
+	if (sd->disguise != -1)
 		pc_disguise(sd, -1);
 
 	status_set_viewdata(&sd->bl, job);
@@ -7675,7 +7675,7 @@ int pc_setoption(struct map_session_data *sd,int type)
 	else if (!(type&OPTION_FLYING) && p_type&OPTION_FLYING)
 		new_look = -1;
 	
-	if (sd->disguise || !new_look)
+	if (sd->disguise != -1 || !new_look)
 		return 0; //Disguises break sprite changes
 
 	if (new_look < 0) { //Restore normal look.

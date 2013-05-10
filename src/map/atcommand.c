@@ -900,7 +900,7 @@ ACMD(hide)
 	nullpo_retr(-1, sd);
 	if (sd->sc.option & OPTION_INVISIBLE) {
 		sd->sc.option &= ~OPTION_INVISIBLE;
-		if (sd->disguise)
+		if (sd->disguise != -1 )
 			status_set_viewdata(&sd->bl, sd->disguise);
 		else
 			status_set_viewdata(&sd->bl, sd->status.class_);
@@ -4006,7 +4006,7 @@ ACMD(mount_peco)
 {
 	nullpo_retr(-1, sd);
 	
-	if (sd->disguise) {
+	if (sd->disguise != -1) {
 		clif->message(fd, msg_txt(212)); // Cannot mount while in disguise.
 		return false;
 	}
@@ -4840,7 +4840,7 @@ ACMD(disguiseguild)
 ACMD(undisguise)
 {
 	nullpo_retr(-1, sd);
-	if (sd->disguise) {
+	if (sd->disguise != -1) {
 		pc_disguise(sd, -1);
 		clif->message(fd, msg_txt(124)); // Undisguise applied.
 	} else {
@@ -4861,7 +4861,7 @@ ACMD(undisguiseall) {
 	
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
-		if( pl_sd->disguise )
+		if( pl_sd->disguise != -1 )
 			pc_disguise(pl_sd, -1);
 	mapit_free(iter);
 	
@@ -4894,7 +4894,7 @@ ACMD(undisguiseguild)
 	}
 	
 	for(i = 0; i < g->max_member; i++)
-		if( (pl_sd = g->member[i].sd) && pl_sd->disguise )
+		if( (pl_sd = g->member[i].sd) && pl_sd->disguise != -1 )
 			pc_disguise(pl_sd, -1);
 	
 	clif->message(fd, msg_txt(124)); // Undisguise applied.
