@@ -13,6 +13,9 @@
 /*.sdf
 /*.stackdump
 /*.suo
+/*.exp
+/*.lib
+/start-log.txt
 /char-server
 /config.log
 /config.status
@@ -77,6 +80,10 @@
 /tools/*.exe
 /tools/*.ilk
 /tools/*.pdb
+
+# /plugins/
+/plugins/*.dll
+/plugins/*.pdb
 
 # /vcproj-12/
 /vcproj-12/map-server

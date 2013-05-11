@@ -1,10 +1,5 @@
-# Auto detect text files and perform LF normalization
 *        text=auto
 *.c      diff=cpp
-# Custom for Visual Studio
-*.cs     diff=csharp
 *.sln    merge=union
-*.csproj merge=union
-*.vbproj merge=union
-*.fsproj merge=union
-*.dbproj merge=union
+*.vcproj merge=union
+*.vcxproj merge=union
