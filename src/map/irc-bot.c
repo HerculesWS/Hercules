@@ -172,7 +172,7 @@ void irc_join(int fd, char *cmd, char *source, char *target, char *msg) {
 void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 	if( strcmpi(target,hChSys.irc_nick) == 0 ) {
 		if( msg[0] == ':' ) msg++;
-		if( strncmpi(msg,"VERSION") == 0 ) {
+		if( strcmpi(msg,"VERSION") == 0 ) {
 			char source_nick[40], source_ident[40], source_host[100];
 			
 			source_nick[0] = source_ident[0] = source_host[0] = '\0';
