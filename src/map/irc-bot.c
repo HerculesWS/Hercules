@@ -26,10 +26,12 @@ int irc_connect_timer(int tid, unsigned int tick, int id, intptr_t data) {
 		return 0;
 	
 	ircbot->last_try = gettick();
+
 	if( ( ircbot->fd = make_connection(ircbot->ip,hChSys.irc_server_port,true) ) > 0 ){
 		session[ircbot->fd]->func_parse = ircbot->parse;
 		session[ircbot->fd]->flag.server = 1;
 		add_timer(gettick() + 3000, ircbot->identify_timer, 0, 0);
+		ircbot->isOn = true;
 	}
 	return 0;
 }
@@ -140,7 +142,7 @@ void irc_parse_sub(int fd, char *str) {
 		return;
 		
 	if( !(func = ircbot->func_search(command)) && !(func = ircbot->func_search(source)) ) {
-		ShowWarning("Unknown command received %s from %s\n",command,source);
+		//ShowWarning("Unknown command received %s from %s\n",command,source);
 		return;
 	}
 	func->func(fd,command,source,target,message);
@@ -169,8 +171,16 @@ void irc_join(int fd, char *cmd, char *source, char *target, char *msg) {
 
 void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 	if( strcmpi(target,hChSys.irc_nick) == 0 ) {
-		if( strcmpi(msg,"VERSION") == 0 ) {
-			sprintf(send_string, "Hercules.ws IRC Bridge");
+		if( msg[0] == ':' ) msg++;
+		if( strncmpi(msg,"VERSION") == 0 ) {
+			char source_nick[40], source_ident[40], source_host[100];
+			
+			source_nick[0] = source_ident[0] = source_host[0] = '\0';
+			
+			if( source[0] != '\0' )
+				ircbot->parse_source(source,source_nick,source_ident,source_host);
+
+			sprintf(send_string, "NOTICE %s :Hercules.ws IRC Bridge",source_nick);
 			ircbot->send(send_string);
 			return;
 		}
@@ -182,8 +192,10 @@ void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 		if( source[0] != '\0' )
 			ircbot->parse_source(source,source_nick,source_ident,source_host);
 
-		snprintf(send_string, 150, "[ #%s ] IRC.%s : %s",ircbot->channel->name,source_nick,msg);
-		clif->chsys_msg2(ircbot->channel,send_string);
+		if( ircbot->channel ) {
+			snprintf(send_string, 150, "[ #%s ] IRC.%s : %s",ircbot->channel->name,source_nick,msg);
+			clif->chsys_msg2(ircbot->channel,send_string);
+		}
 	}
 }
 
@@ -193,7 +205,6 @@ void irc_relay (char *name, char *msg) {
 	sprintf(send_string,"PRIVMSG %s :[ %s ] : %s",hChSys.irc_channel,name,msg);
 	ircbot->send(send_string);
 }
-
 void irc_bot_init(void) {
 	const struct irc_func irc_func_base[] = {
 		{ "PING" , ircbot->pong },
@@ -204,7 +215,7 @@ void irc_bot_init(void) {
 
 	if( !hChSys.irc )
 		return;
-	
+
 	if (!(ircbot->ip = host2ip(hChSys.irc_server))) {
 		ShowError("Unable to resolve '%s' (irc server), disabling irc channel...\n", hChSys.irc_server);
 		hChSys.irc = false;
@@ -252,6 +263,9 @@ void irc_bot_final(void) {
 
 void ircbot_defaults(void) {
 	ircbot = &irc_bot_s;
+	
+	ircbot->channel = NULL;
+	
 	ircbot->init = irc_bot_init;
 	ircbot->final = irc_bot_final;
 	
