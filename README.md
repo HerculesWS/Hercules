@@ -59,7 +59,7 @@ relevant to your Operation System, please refer to the Wiki (links at the end of
 * Linux
 	* (For CentOS)
 		* Step 1: yum install gcc make mysql mysql-devel mysql-server pcre-devel zlib-devel
-			* Step 2: rpm -Uvhhttp://repo.webtatic.com/yum/centos/5/latest.rpm
+			* Step 2: rpm -Uvh http://repo.webtatic.com/yum/centos/5/latest.rpm
 			* Step 3: yum install --enablerepo=webtatic git-all
 			* Step 4: yum install --enablerepo=webtatic --disableexcludes=main git-all
 	* (For Debian/Others)
