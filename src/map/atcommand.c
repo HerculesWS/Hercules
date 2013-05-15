@@ -10202,12 +10202,11 @@ bool atcommand_hp_add(char *name, AtCommandFunc func) {
 	safestrncpy(cmd->command, name, sizeof(cmd->command));
 	cmd->func = func;
 	cmd->help = NULL;/* start as null dear */
-	
+
 	strdb_put(atcommand->db, cmd->command, cmd);
 	return true;
 }
 void atcommand_db_clear(void) {
-
 	if (atcommand->db != NULL) {
 		DBIterator *iter = db_iterator(atcommand->db);
 		AtCommandInfo* cmd;
@@ -10239,8 +10238,6 @@ void atcommand_doload(void) {
 }
 
 void do_init_atcommand(void) {
-	atcommand->db = NULL;
-	atcommand->alias_db = NULL;
 	atcommand->at_symbol = '@';
 	atcommand->char_symbol = '#';
 	atcommand->binding_count = 0;
@@ -10258,6 +10255,7 @@ void atcommand_defaults(void) {
 	atcommand = &atcommand_s;
 	
 	atcommand->db = NULL;
+	atcommand->alias_db = NULL;
 	
 	atcommand->init = do_init_atcommand;
 	atcommand->final = do_final_atcommand;
