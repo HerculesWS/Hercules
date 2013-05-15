@@ -12463,7 +12463,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 	}
 	if( skill_lv < 1 || skill_lv > MAX_SKILL_LEVEL )
 		return 0;
-
+	
 	require = skill->get_requirement(sd,skill_id,skill_lv);
 
 	//Can only update state when weapon/arrow info is checked.
@@ -12533,8 +12533,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 	//			return 0;
 			if( sc && (sc->data[SC_BLADESTOP] || sc->data[SC_CURSEDCIRCLE_ATKER]) )
 				break;
-			if( sc && sc->data[SC_COMBO] )
-			{
+			if( sc && sc->data[SC_COMBO] ) {
 				switch(sc->data[SC_COMBO]->val1) {
 					case MO_COMBOFINISH:
 					case CH_TIGERFIST:
@@ -12997,145 +12996,145 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 	}
 
 	switch(require.state) {
-	case ST_HIDING:
-		if(!(sc && sc->option&OPTION_HIDE)) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
-	case ST_CLOAKING:
-		if(!pc_iscloaking(sd)) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
-	case ST_HIDDEN:
-		if(!pc_ishiding(sd)) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
-	case ST_RIDING:
-		if(!pc_isriding(sd) && !pc_isridingdragon(sd)) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
-	case ST_FALCON:
-		if(!pc_isfalcon(sd)) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
-	case ST_CARTBOOST:
-		if(!(sc && sc->data[SC_CARTBOOST])) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-	case ST_CART:
-		if(!pc_iscarton(sd)) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
-	case ST_SHIELD:
-		if(sd->status.shield <= 0) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
-	case ST_SIGHT:
-		if(!(sc && sc->data[SC_SIGHT])) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
-	case ST_EXPLOSIONSPIRITS:
-		if(!(sc && sc->data[SC_EXPLOSIONSPIRITS])) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
-	case ST_RECOV_WEIGHT_RATE:
-		if(battle_config.natural_heal_weight_rate <= 100 && sd->weight*100/sd->max_weight >= (unsigned int)battle_config.natural_heal_weight_rate) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
-	case ST_MOVE_ENABLE:
-		if (sc && sc->data[SC_COMBO] && sc->data[SC_COMBO]->val1 == skill_id)
-			sd->ud.canmove_tick = gettick(); //When using a combo, cancel the can't move delay to enable the skill. [Skotlex]
+		case ST_HIDING:
+			if(!(sc && sc->option&OPTION_HIDE)) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
+		case ST_CLOAKING:
+			if(!pc_iscloaking(sd)) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
+		case ST_HIDDEN:
+			if(!pc_ishiding(sd)) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
+		case ST_RIDING:
+			if(!pc_isriding(sd) && !pc_isridingdragon(sd)) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
+		case ST_FALCON:
+			if(!pc_isfalcon(sd)) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
+		case ST_CARTBOOST:
+			if(!(sc && sc->data[SC_CARTBOOST])) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+		case ST_CART:
+			if(!pc_iscarton(sd)) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
+		case ST_SHIELD:
+			if(sd->status.shield <= 0) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
+		case ST_SIGHT:
+			if(!(sc && sc->data[SC_SIGHT])) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
+		case ST_EXPLOSIONSPIRITS:
+			if(!(sc && sc->data[SC_EXPLOSIONSPIRITS])) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
+		case ST_RECOV_WEIGHT_RATE:
+			if(battle_config.natural_heal_weight_rate <= 100 && sd->weight*100/sd->max_weight >= (unsigned int)battle_config.natural_heal_weight_rate) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
+		case ST_MOVE_ENABLE:
+			if (sc && sc->data[SC_COMBO] && sc->data[SC_COMBO]->val1 == skill_id)
+				sd->ud.canmove_tick = gettick(); //When using a combo, cancel the can't move delay to enable the skill. [Skotlex]
 
-		if (!unit_can_move(&sd->bl)) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
-	case ST_WATER:
-		if (sc && (sc->data[SC_DELUGE] || sc->data[SC_SUITON]))
+			if (!unit_can_move(&sd->bl)) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
 			break;
-		if (map_getcell(sd->bl.m,sd->bl.x,sd->bl.y,CELL_CHKWATER))
+		case ST_WATER:
+			if (sc && (sc->data[SC_DELUGE] || sc->data[SC_SUITON]))
+				break;
+			if (map_getcell(sd->bl.m,sd->bl.x,sd->bl.y,CELL_CHKWATER))
+				break;
+			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+			return 0;
+		case ST_RIDINGDRAGON:
+			if( !pc_isridingdragon(sd) ) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
 			break;
-		clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-		return 0;
-	case ST_RIDINGDRAGON:
-		if( !pc_isridingdragon(sd) ) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
-	case ST_WUG:
-		if( !pc_iswug(sd) ) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
-	case ST_RIDINGWUG:
-		if( !pc_isridingwug(sd) ){
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
-	case ST_MADO:
-		if( !pc_ismadogear(sd) ) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
-	case ST_ELEMENTALSPIRIT:
-		if(!sd->ed) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_EL_SUMMON,0);
-			return 0;
-		}
-		break;
-	case ST_POISONINGWEAPON:
-		if (!(sc && sc->data[SC_POISONINGWEAPON])) {
-			clif->skill_fail(sd, skill_id, USESKILL_FAIL_GC_POISONINGWEAPON, 0);
-			return 0;
-		}
-		break;
-	case ST_ROLLINGCUTTER:
-		if (!(sc && sc->data[SC_ROLLINGCUTTER])) {
-			clif->skill_fail(sd, skill_id, USESKILL_FAIL_CONDITION, 0);
-			return 0;
-		}
-		break;
-	case ST_MH_FIGHTING:
-		if (!(sc && sc->data[SC_STYLE_CHANGE] && sc->data[SC_STYLE_CHANGE]->val2 == MH_MD_FIGHTING)){
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-	case ST_MH_GRAPPLING:
-		if (!(sc && sc->data[SC_STYLE_CHANGE] && sc->data[SC_STYLE_CHANGE]->val2 == MH_MD_GRAPPLING)){
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-	case ST_PECO:
-		if(!pc_isriding(sd)) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		break;
+		case ST_WUG:
+			if( !pc_iswug(sd) ) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
+		case ST_RIDINGWUG:
+			if( !pc_isridingwug(sd) ){
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
+		case ST_MADO:
+			if( !pc_ismadogear(sd) ) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
+		case ST_ELEMENTALSPIRIT:
+			if(!sd->ed) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_EL_SUMMON,0);
+				return 0;
+			}
+			break;
+		case ST_POISONINGWEAPON:
+			if (!(sc && sc->data[SC_POISONINGWEAPON])) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL_GC_POISONINGWEAPON, 0);
+				return 0;
+			}
+			break;
+		case ST_ROLLINGCUTTER:
+			if (!(sc && sc->data[SC_ROLLINGCUTTER])) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL_CONDITION, 0);
+				return 0;
+			}
+			break;
+		case ST_MH_FIGHTING:
+			if (!(sc && sc->data[SC_STYLE_CHANGE] && sc->data[SC_STYLE_CHANGE]->val2 == MH_MD_FIGHTING)){
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+		case ST_MH_GRAPPLING:
+			if (!(sc && sc->data[SC_STYLE_CHANGE] && sc->data[SC_STYLE_CHANGE]->val2 == MH_MD_GRAPPLING)){
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+		case ST_PECO:
+			if(!pc_isriding(sd)) {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return 0;
+			}
+			break;
 	}
 
 	if(require.mhp > 0 && get_percentage(status->hp, status->max_hp) > require.mhp) {
@@ -13165,6 +13164,26 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		return 0;
 	}
 
+	if( sd->sc.data[SC_COMBO] ) {
+		switch( skill_id ) {
+			case MO_CHAINCOMBO:
+			case MO_COMBOFINISH:
+			case CH_TIGERFIST:
+			case CH_CHAINCRUSH:
+			case MO_EXTREMITYFIST:
+			case TK_TURNKICK:
+			case TK_STORMKICK:
+			case TK_DOWNKICK:
+			case TK_COUNTER:
+			case HT_POWER:
+			case GC_COUNTERSLASH:
+			case GC_WEAPONCRUSH:
+			case SR_FALLENEMPIRE:
+				break;
+			default: return 0;
+		}
+	}
+			
 	return 1;
 }
 
@@ -13427,14 +13446,13 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 	if( !sc->count )
 		sc = NULL;
 
-	switch( skill_id )
-	{ // Turn off check.
-	case BS_MAXIMIZE:		case NV_TRICKDEAD:	case TF_HIDING:			case AS_CLOAKING:		case CR_AUTOGUARD:
-	case ML_AUTOGUARD:		case CR_DEFENDER:	case ML_DEFENDER:		case ST_CHASEWALK:		case PA_GOSPEL:
-	case CR_SHRINK:			case TK_RUN:		case GS_GATLINGFEVER:	case TK_READYCOUNTER:	case TK_READYDOWN:
-	case TK_READYSTORM:		case TK_READYTURN:	case SG_FUSION:			case KO_YAMIKUMO:
-		if( sc && sc->data[status_skill2sc(skill_id)] )
-			return req;
+	switch( skill_id ) { // Turn off check.
+		case BS_MAXIMIZE:		case NV_TRICKDEAD:	case TF_HIDING:			case AS_CLOAKING:		case CR_AUTOGUARD:
+		case ML_AUTOGUARD:		case CR_DEFENDER:	case ML_DEFENDER:		case ST_CHASEWALK:		case PA_GOSPEL:
+		case CR_SHRINK:			case TK_RUN:		case GS_GATLINGFEVER:	case TK_READYCOUNTER:	case TK_READYDOWN:
+		case TK_READYSTORM:		case TK_READYTURN:	case SG_FUSION:			case KO_YAMIKUMO:
+			if( sc && sc->data[status_skill2sc(skill_id)] )
+				return req;
 	}
 
 	idx = skill->get_index(skill_id);

@@ -1077,8 +1077,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		if( skill->get_inf(skill_id)&INF_SELF_SKILL && skill->get_nk(skill_id)&NK_NO_DAMAGE )// exploit fix
 			target_id = src->id;
 		temp = 1;
-	} else
-	if ( target_id == src->id &&
+	} else if ( target_id == src->id &&
 		skill->get_inf(skill_id)&INF_SELF_SKILL &&
 		skill->get_inf2(skill_id)&INF2_NO_TARGET_SELF )
 	{
@@ -1091,38 +1090,37 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		if(skill->not_ok(skill_id, sd)) // [MouseJstr]
 			return 0;
 
-		switch(skill_id)
-		{	//Check for skills that auto-select target
-		case MO_CHAINCOMBO:
-			if (sc && sc->data[SC_BLADESTOP]){
-				if ((target=map_id2bl(sc->data[SC_BLADESTOP]->val4)) == NULL)
+		switch(skill_id) {	//Check for skills that auto-select target
+			case MO_CHAINCOMBO:
+				if (sc && sc->data[SC_BLADESTOP]){
+					if ((target=map_id2bl(sc->data[SC_BLADESTOP]->val4)) == NULL)
+						return 0;
+				}
+				break;
+			case WE_MALE:
+			case WE_FEMALE:
+				if (!sd->status.partner_id)
 					return 0;
-			}
-			break;
-		case WE_MALE:
-		case WE_FEMALE:
-			if (!sd->status.partner_id)
-				return 0;
-			target = (struct block_list*)map_charid2sd(sd->status.partner_id);
-			if (!target) {
-				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-				return 0;
-			}
-			break;
+				target = (struct block_list*)map_charid2sd(sd->status.partner_id);
+				if (!target) {
+					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+					return 0;
+				}
+				break;
 		}
 		if (target)
 			target_id = target->id;
 	}
+
 	if (src->type==BL_HOM)
-	switch(skill_id)
-	{ //Homun-auto-target skills.
-		case HLIF_HEAL:
-		case HLIF_AVOID:
-		case HAMI_DEFENCE:
-		case HAMI_CASTLE:
-			target = battle->get_master(src);
-			if (!target) return 0;
-			target_id = target->id;
+		switch(skill_id) { //Homun-auto-target skills.
+			case HLIF_HEAL:
+			case HLIF_AVOID:
+			case HAMI_DEFENCE:
+			case HAMI_CASTLE:
+				target = battle->get_master(src);
+				if (!target) return 0;
+				target_id = target->id;
 	}
 
 	if( !target ) // choose default target
