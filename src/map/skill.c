@@ -13207,10 +13207,13 @@ int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, 
 				return 0;
 			break;
 	}
-
+	/* temporarily disabled, awaiting for kenpachi to detail this so we can make it work properly */
+#if 0
 	if( sd->state.abra_flag ) // Casting finished (Hocus-Pocus)
 		return 1;
-
+#endif
+	if( sd->skillitem == skill_id )
+		return 1;
 	if( pc_is90overweight(sd) ) {
 		clif->skill_fail(sd,skill_id,USESKILL_FAIL_WEIGHTOVER,0);
 		return 0;
@@ -13412,8 +13415,12 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 
 	if( !sd )
 		return req;
-
+	/* temporarily disabled, awaiting for kenpachi to detail this so we can make it work properly */
+#if 0
 	if( sd->state.abra_flag )
+#else
+	if( sd->skillitem == skill_id )
+#endif
 		return req; // Hocus-Pocus don't have requirements.
 
 	sc = &sd->sc;

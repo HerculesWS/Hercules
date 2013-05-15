@@ -9007,58 +9007,59 @@ int status_change_clear(struct block_list* bl, int type) {
 		if(!sc->data[i])
 		  continue;
 
-		if(type == 0)
-		switch (i) {	//Type 0: PC killed -> Place here statuses that do not dispel on death.
-			case SC_ELEMENTALCHANGE://Only when its Holy or Dark that it doesn't dispell on death
-				if( sc->data[i]->val2 != ELE_HOLY && sc->data[i]->val2 != ELE_DARK )
-					break;
-			case SC_WEIGHT50:
-			case SC_WEIGHT90:
-			case SC_EDP:
-			case SC_MELTDOWN:
-			case SC_XMAS:
-			case SC_SUMMER:
-			case SC_HANBOK:
-			case SC_NOCHAT:
-			case SC_FUSION:
-			case SC_EARTHSCROLL:
-			case SC_READYSTORM:
-			case SC_READYDOWN:
-			case SC_READYCOUNTER:
-			case SC_READYTURN:
-			case SC_DODGE:
-			case SC_JAILED:
-			case SC_EXPBOOST:
-			case SC_ITEMBOOST:
-			case SC_HELLPOWER:
-			case SC_JEXPBOOST:
-			case SC_AUTOTRADE:
-			case SC_WHISTLE:
-			case SC_ASSNCROS:
-			case SC_POEMBRAGI:
-			case SC_APPLEIDUN:
-			case SC_HUMMING:
-			case SC_DONTFORGETME:
-			case SC_FORTUNE:
-			case SC_SERVICE4U:
-			case SC_FOOD_STR_CASH:
-			case SC_FOOD_AGI_CASH:
-			case SC_FOOD_VIT_CASH:
-			case SC_FOOD_DEX_CASH:
-			case SC_FOOD_INT_CASH:
-			case SC_FOOD_LUK_CASH:
-			case SC_DEF_RATE:
-			case SC_MDEF_RATE:
-			case SC_INCHEALRATE:
-			case SC_INCFLEE2:
-			case SC_INCHIT:
-			case SC_ATKPOTION:
-			case SC_MATKPOTION:
-			case SC_S_LIFEPOTION:
-			case SC_L_LIFEPOTION:
-			case SC_PUSH_CART:
-			case SC_ALL_RIDING:
-				continue;
+		if(type == 0) {
+			switch (i) {	//Type 0: PC killed -> Place here statuses that do not dispel on death.
+				case SC_ELEMENTALCHANGE://Only when its Holy or Dark that it doesn't dispell on death
+					if( sc->data[i]->val2 != ELE_HOLY && sc->data[i]->val2 != ELE_DARK )
+						break;
+				case SC_WEIGHT50:
+				case SC_WEIGHT90:
+				case SC_EDP:
+				case SC_MELTDOWN:
+				case SC_XMAS:
+				case SC_SUMMER:
+				case SC_HANBOK:
+				case SC_NOCHAT:
+				case SC_FUSION:
+				case SC_EARTHSCROLL:
+				case SC_READYSTORM:
+				case SC_READYDOWN:
+				case SC_READYCOUNTER:
+				case SC_READYTURN:
+				case SC_DODGE:
+				case SC_JAILED:
+				case SC_EXPBOOST:
+				case SC_ITEMBOOST:
+				case SC_HELLPOWER:
+				case SC_JEXPBOOST:
+				case SC_AUTOTRADE:
+				case SC_WHISTLE:
+				case SC_ASSNCROS:
+				case SC_POEMBRAGI:
+				case SC_APPLEIDUN:
+				case SC_HUMMING:
+				case SC_DONTFORGETME:
+				case SC_FORTUNE:
+				case SC_SERVICE4U:
+				case SC_FOOD_STR_CASH:
+				case SC_FOOD_AGI_CASH:
+				case SC_FOOD_VIT_CASH:
+				case SC_FOOD_DEX_CASH:
+				case SC_FOOD_INT_CASH:
+				case SC_FOOD_LUK_CASH:
+				case SC_DEF_RATE:
+				case SC_MDEF_RATE:
+				case SC_INCHEALRATE:
+				case SC_INCFLEE2:
+				case SC_INCHIT:
+				case SC_ATKPOTION:
+				case SC_MATKPOTION:
+				case SC_S_LIFEPOTION:
+				case SC_L_LIFEPOTION:
+				case SC_PUSH_CART:
+				case SC_ALL_RIDING:
+					continue;
+			}
 		}
 
 		if( type == 3 ) {

@@ -8256,12 +8256,13 @@ BUILDIN(itemskill) {
 	
 	id = ( script_isstring(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	lv = script_getnum(st,3);
-	
+/* temporarily disabled, awaiting for kenpachi to detail this so we can make it work properly */
+#if 0
 	if( !script_hasdata(st, 4) ) {
 		if( !skill->check_condition_castbegin(sd,id,lv) || !skill->check_condition_castend(sd,id,lv) )
 			return true;
 	}
-	
+#endif
 	sd->skillitem=id;
 	sd->skillitemlv=lv;
 	clif->item_skill(sd,id,lv);
