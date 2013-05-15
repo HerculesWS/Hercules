@@ -1,5 +1,6 @@
-// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 #ifndef _CONFIG_GENERAL_H_
 #define _CONFIG_GENERAL_H_
 
@@ -14,6 +15,11 @@
  * @values 1 (enabled) or 0 (disabled)
  **/
 #define MAGIC_REFLECTION_TYPE 1
+
+/**
+ * Spirit Sphere Limitation
+ **/
+#define MAX_SPIRITBALL 15
 
 /**
  * No settings past this point
