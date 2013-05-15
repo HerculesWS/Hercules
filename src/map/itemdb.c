@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/nullpo.h"
 #include "../common/malloc.h"
@@ -1236,19 +1237,19 @@ static int itemdb_read_sqldb(void) {
 		uint32 lines = 0, count = 0;
 
 		// retrieve all rows from the item database
-		if( SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", item_db_name[fi]) ) {
+		if( SQL_ERROR == SQL->Query(mmysql_handle, "SELECT * FROM `%s`", item_db_name[fi]) ) {
 			Sql_ShowDebug(mmysql_handle);
 			continue;
 		}
 
 		// process rows one by one
-		while( SQL_SUCCESS == Sql_NextRow(mmysql_handle) ) {// wrap the result into a TXT-compatible format
+		while( SQL_SUCCESS == SQL->NextRow(mmysql_handle) ) {// wrap the result into a TXT-compatible format
 			char* str[22];
 			char* dummy = "";
 			int i;
 			++lines;
 			for( i = 0; i < 22; ++i ) {
-				Sql_GetData(mmysql_handle, i, &str[i], NULL);
+				SQL->GetData(mmysql_handle, i, &str[i], NULL);
 				if( str[i] == NULL )
 					str[i] = dummy; // get rid of NULL columns
 			}
@@ -1259,7 +1260,7 @@ static int itemdb_read_sqldb(void) {
 		}
 
 		// free the query result
-		Sql_FreeResult(mmysql_handle);
+		SQL->FreeResult(mmysql_handle);
 
 		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, item_db_name[fi]);
 	}
@@ -1295,19 +1296,19 @@ uint64 itemdb_unique_id(int8 flag, int64 value) {
 int itemdb_uid_load(){
 
 	char * uid;
-	if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT `value` FROM `interreg` WHERE `varname`='unique_id'"))
+	if (SQL_ERROR == SQL->Query(mmysql_handle, "SELECT `value` FROM `interreg` WHERE `varname`='unique_id'"))
 		Sql_ShowDebug(mmysql_handle);
 
-	if( SQL_SUCCESS != Sql_NextRow(mmysql_handle) )
+	if( SQL_SUCCESS != SQL->NextRow(mmysql_handle) )
 	{
 		ShowError("itemdb_uid_load: Unable to fetch unique_id data\n");
-		Sql_FreeResult(mmysql_handle);
+		SQL->FreeResult(mmysql_handle);
 		return -1;
 	}
 
-	Sql_GetData(mmysql_handle, 0, &uid, NULL);
+	SQL->GetData(mmysql_handle, 0, &uid, NULL);
 	itemdb_unique_id(1, (uint64)strtoull(uid, NULL, 10));
-	Sql_FreeResult(mmysql_handle);
+	SQL->FreeResult(mmysql_handle);
 
 	return 0;
 }
@@ -1324,12 +1325,12 @@ static void itemdb_read(void) {
 	
 	itemdb_read_combos();
 	itemdb_read_itemgroup();
-	sv_readdb(db_path, "item_avail.txt",         ',', 2, 2, -1, &itemdb_read_itemavail);
-	sv_readdb(db_path, DBPATH"item_trade.txt",   ',', 3, 3, -1, &itemdb_read_itemtrade);
-	sv_readdb(db_path, "item_delay.txt",         ',', 2, 2, -1, &itemdb_read_itemdelay);
-	sv_readdb(db_path, "item_stack.txt",         ',', 3, 3, -1, &itemdb_read_stack);
-	sv_readdb(db_path, DBPATH"item_buyingstore.txt",   ',', 1, 1, -1, &itemdb_read_buyingstore);
-	sv_readdb(db_path, "item_nouse.txt",		 ',', 3, 3, -1, &itemdb_read_nouse);
+	sv->readdb(db_path, "item_avail.txt",         ',', 2, 2, -1, &itemdb_read_itemavail);
+	sv->readdb(db_path, DBPATH"item_trade.txt",   ',', 3, 3, -1, &itemdb_read_itemtrade);
+	sv->readdb(db_path, "item_delay.txt",         ',', 2, 2, -1, &itemdb_read_itemdelay);
+	sv->readdb(db_path, "item_stack.txt",         ',', 3, 3, -1, &itemdb_read_stack);
+	sv->readdb(db_path, DBPATH"item_buyingstore.txt",   ',', 1, 1, -1, &itemdb_read_buyingstore);
+	sv->readdb(db_path, "item_nouse.txt",		 ',', 3, 3, -1, &itemdb_read_nouse);
 	
 	itemdb_uid_load();
 }
@@ -1432,7 +1433,7 @@ void itemdb_reload(void)
 
 	// readjust itemdb pointer cache for each player
 	iter = mapit_geteachpc();
-	for( sd = (struct map_session_data*)mapit_first(iter); mapit_exists(iter); sd = (struct map_session_data*)mapit_next(iter) ) {
+	for( sd = (struct map_session_data*)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data*)mapit->next(iter) ) {
 		memset(sd->item_delay, 0, sizeof(sd->item_delay));  // reset item delays
 		pc_setinventorydata(sd);
 		/* clear combo bonuses */
@@ -1447,7 +1448,7 @@ void itemdb_reload(void)
 		}
 
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 }
 
 void do_final_itemdb(void)

@@ -693,7 +693,7 @@ int map_getcellp(struct map_data* m,int16 x,int16 y,cell_chk cellchk);
 void map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag);
 void map_setgatcell(int16 m, int16 x, int16 y, int gat);
 
-extern struct map_data map[];
+struct map_data *map;
 extern int map_num;
 
 extern int autosave_interval;
@@ -776,11 +776,13 @@ int map_eraseipport(unsigned short map, uint32 ip, uint16 port);
 int map_eraseallipport(void);
 void map_addiddb(struct block_list *);
 void map_deliddb(struct block_list *bl);
-void map_foreachpc(int (*func)(struct map_session_data* sd, va_list args), ...);
-void map_foreachmob(int (*func)(struct mob_data* md, va_list args), ...);
-void map_foreachnpc(int (*func)(struct npc_data* nd, va_list args), ...);
-void map_foreachregen(int (*func)(struct block_list* bl, va_list args), ...);
-void map_foreachiddb(int (*func)(struct block_list* bl, va_list args), ...);
+/* temporary until the map.c "Hercules Renewal Phase One" design is complete. */
+void (*map_foreachpc) (int (*func)(struct map_session_data* sd, va_list args), ...);
+void (*map_foreachmob) (int (*func)(struct mob_data* md, va_list args), ...);
+void (*map_foreachnpc) (int (*func)(struct npc_data* nd, va_list args), ...);
+void (*map_foreachregen) (int (*func)(struct block_list* bl, va_list args), ...);
+void (*map_foreachiddb) (int (*func)(struct block_list* bl, va_list args), ...);
+/* */
 struct map_session_data * map_nick2sd(const char*);
 struct mob_data * map_getmob_boss(int16 m);
 struct mob_data * map_id2boss(int id);
@@ -789,24 +791,27 @@ struct mob_data * map_id2boss(int id);
 void map_reloadnpc(bool clear);
 
 /// Bitfield of flags for the iterator.
-enum e_mapitflags
-{
+enum e_mapitflags {
 	MAPIT_NORMAL = 0,
 //	MAPIT_PCISPLAYING = 1,// Unneeded as pc_db/id_db will only hold auth'ed, active players.
 };
 struct s_mapiterator;
-struct s_mapiterator*   mapit_alloc(enum e_mapitflags flags, enum bl_type types);
-void                    mapit_free(struct s_mapiterator* mapit);
-struct block_list*      mapit_first(struct s_mapiterator* mapit);
-struct block_list*      mapit_last(struct s_mapiterator* mapit);
-struct block_list*      mapit_next(struct s_mapiterator* mapit);
-struct block_list*      mapit_prev(struct s_mapiterator* mapit);
-bool                    mapit_exists(struct s_mapiterator* mapit);
-#define mapit_getallusers() mapit_alloc(MAPIT_NORMAL,BL_PC)
-#define mapit_geteachpc()   mapit_alloc(MAPIT_NORMAL,BL_PC)
-#define mapit_geteachmob()  mapit_alloc(MAPIT_NORMAL,BL_MOB)
-#define mapit_geteachnpc()  mapit_alloc(MAPIT_NORMAL,BL_NPC)
-#define mapit_geteachiddb() mapit_alloc(MAPIT_NORMAL,BL_ALL)
+/* temporary until the map.c "Hercules Renewal Phase One" design is complete. */
+struct mapit_interface {
+	struct s_mapiterator*   (*alloc) (enum e_mapitflags flags, enum bl_type types);
+	void                    (*free) (struct s_mapiterator* mapit);
+	struct block_list*      (*first) (struct s_mapiterator* mapit);
+	struct block_list*      (*last) (struct s_mapiterator* mapit);
+	struct block_list*      (*next) (struct s_mapiterator* mapit);
+	struct block_list*      (*prev) (struct s_mapiterator* mapit);
+	bool                    (*exists) (struct s_mapiterator* mapit);
+} mapit_s;
+struct mapit_interface *mapit;
+#define mapit_getallusers() mapit->alloc(MAPIT_NORMAL,BL_PC)
+#define mapit_geteachpc()   mapit->alloc(MAPIT_NORMAL,BL_PC)
+#define mapit_geteachmob()  mapit->alloc(MAPIT_NORMAL,BL_MOB)
+#define mapit_geteachnpc()  mapit->alloc(MAPIT_NORMAL,BL_NPC)
+#define mapit_geteachiddb() mapit->alloc(MAPIT_NORMAL,BL_ALL)
 
 int map_check_dir(int s_dir,int t_dir);
 uint8 map_calc_dir( struct block_list *src,int16 x,int16 y);

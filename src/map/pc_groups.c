@@ -452,10 +452,10 @@ void pc_groups_reload(void) {
 	
 	/* refresh online users permissions */
 	iter = mapit_getallusers();
-	for (sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); sd = (TBL_PC*)mapit_next(iter))	{
+	for (sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter))	{
 		pc_group_pc_load(sd);
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 
 	
 }

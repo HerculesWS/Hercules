@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/timer.h"
@@ -457,7 +458,7 @@ int guild_check_member(struct guild *g)
 	nullpo_ret(g);
 
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); sd = (TBL_PC*)mapit_next(iter) )
+	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
 	{
 		if( sd->status.guild_id != g->guild_id )
 			continue;
@@ -469,7 +470,7 @@ int guild_check_member(struct guild *g)
 			ShowWarning("guild: check_member %d[%s] is not member\n",sd->status.account_id,sd->status.name);
 		}
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 
 	return 0;
 }
@@ -481,11 +482,11 @@ int guild_recv_noinfo(int guild_id)
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); sd = (TBL_PC*)mapit_next(iter) ) {
+	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
 		if( sd->status.guild_id == guild_id )
 			sd->status.guild_id = 0; // erase guild
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 
 	return 0;
 }
@@ -523,7 +524,7 @@ int guild_recv_info(struct guild *sg) {
 						tg[i] = guild_search(sg->alliance[i].guild_id);
 				}
 
-				for( sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); sd = (TBL_PC*)mapit_next(iter) ) {
+				for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
 					if( sd->status.guild_id ) {
 						if( sd->status.guild_id == sg->guild_id ) {
 							clif->chsys_join(channel,sd);
@@ -543,7 +544,7 @@ int guild_recv_info(struct guild *sg) {
 					}
 				}
 				
-				mapit_free(iter);
+				mapit->free(iter);
 				
 			}
 			
@@ -2197,10 +2198,10 @@ void do_init_guild(void) {
 	
 	guild_flags_count = 0;
 	
-	sv_readdb(db_path, "castle_db.txt", ',', 4, 5, -1, &guild_read_castledb);
+	sv->readdb(db_path, "castle_db.txt", ',', 4, 5, -1, &guild_read_castledb);
 
 	memset(guild_skill_tree,0,sizeof(guild_skill_tree));
-	sv_readdb(db_path, "guild_skill_tree.txt", ',', 2+MAX_GUILD_SKILL_REQUIRE*2, 2+MAX_GUILD_SKILL_REQUIRE*2, -1, &guild_read_guildskill_tree_db); //guild skill tree [Komurka]
+	sv->readdb(db_path, "guild_skill_tree.txt", ',', 2+MAX_GUILD_SKILL_REQUIRE*2, 2+MAX_GUILD_SKILL_REQUIRE*2, -1, &guild_read_guildskill_tree_db); //guild skill tree [Komurka]
 
 	add_timer_func_list(guild_payexp_timer,"guild_payexp_timer");
 	add_timer_func_list(guild_send_xy_timer, "guild_send_xy_timer");

@@ -581,70 +581,70 @@ ACMD(who)
 		display_type = 3;
 	
 	level = pc_get_group_level(sd);
-	StringBuf_Init(&buf);
+	StrBuf->Init(&buf);
 	
 	iter = mapit_getallusers();
-	for (pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter))	{
+	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter))	{
 		if (!((pc_has_permission(pl_sd, PC_PERM_HIDE_SESSION) || (pl_sd->sc.option & OPTION_INVISIBLE)) && pc_get_group_level(pl_sd) > level)) { // you can look only lower or same level
 			if (stristr(pl_sd->status.name, player_name) == NULL // search with no case sensitive
 				|| (map_id >= 0 && pl_sd->bl.m != map_id))
 				continue;
 			switch (display_type) {
 				case 2: {
-					StringBuf_Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
+					StrBuf->Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
-						StringBuf_Printf(&buf, msg_txt(344), pc_group_id2name(pc_get_group_id(pl_sd))); // "(%s) "
-					StringBuf_Printf(&buf, msg_txt(347), pl_sd->status.base_level, pl_sd->status.job_level,
+						StrBuf->Printf(&buf, msg_txt(344), pc_group_id2name(pc_get_group_id(pl_sd))); // "(%s) "
+					StrBuf->Printf(&buf, msg_txt(347), pl_sd->status.base_level, pl_sd->status.job_level,
 									 job_name(pl_sd->status.class_)); // "| Lv:%d/%d | Job: %s"
 					break;
 				}
 				case 3: {
 					if (pc_has_permission(sd, PC_PERM_WHO_DISPLAY_AID))
-						StringBuf_Printf(&buf, msg_txt(912), pl_sd->status.char_id, pl_sd->status.account_id);	// "(CID:%d/AID:%d) "
-					StringBuf_Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
+						StrBuf->Printf(&buf, msg_txt(912), pl_sd->status.char_id, pl_sd->status.account_id);	// "(CID:%d/AID:%d) "
+					StrBuf->Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
-						StringBuf_Printf(&buf, msg_txt(344), pc_group_id2name(pc_get_group_id(pl_sd))); // "(%s) "
-					StringBuf_Printf(&buf, msg_txt(348), mapindex_id2name(pl_sd->mapindex), pl_sd->bl.x, pl_sd->bl.y); // "| Location: %s %d %d"
+						StrBuf->Printf(&buf, msg_txt(344), pc_group_id2name(pc_get_group_id(pl_sd))); // "(%s) "
+					StrBuf->Printf(&buf, msg_txt(348), mapindex_id2name(pl_sd->mapindex), pl_sd->bl.x, pl_sd->bl.y); // "| Location: %s %d %d"
 					break;
 				}
 				default: {
 					struct party_data *p = party_search(pl_sd->status.party_id);
 					struct guild *g = pl_sd->guild;
 					
-					StringBuf_Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
+					StrBuf->Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
-						StringBuf_Printf(&buf, msg_txt(344), pc_group_id2name(pc_get_group_id(pl_sd))); // "(%s) "
+						StrBuf->Printf(&buf, msg_txt(344), pc_group_id2name(pc_get_group_id(pl_sd))); // "(%s) "
 					if (p != NULL)
-						StringBuf_Printf(&buf, msg_txt(345), p->party.name); // " | Party: '%s'"
+						StrBuf->Printf(&buf, msg_txt(345), p->party.name); // " | Party: '%s'"
 					if (g != NULL)
-						StringBuf_Printf(&buf, msg_txt(346), g->name); // " | Guild: '%s'"
+						StrBuf->Printf(&buf, msg_txt(346), g->name); // " | Guild: '%s'"
 					break;
 				}
 			}
-			clif->message(fd, StringBuf_Value(&buf));
-			StringBuf_Clear(&buf);
+			clif->message(fd, StrBuf->Value(&buf));
+			StrBuf->Clear(&buf);
 			count++;
 		}
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	if (map_id < 0) {
 		if (count == 0)
-			StringBuf_Printf(&buf, msg_txt(28)); // No player found.
+			StrBuf->Printf(&buf, msg_txt(28)); // No player found.
 		else if (count == 1)
-			StringBuf_Printf(&buf, msg_txt(29)); // 1 player found.
+			StrBuf->Printf(&buf, msg_txt(29)); // 1 player found.
 		else
-			StringBuf_Printf(&buf, msg_txt(30), count); // %d players found.
+			StrBuf->Printf(&buf, msg_txt(30), count); // %d players found.
 	} else {
 		if (count == 0)
-			StringBuf_Printf(&buf, msg_txt(54), map[map_id].name); // No player found in map '%s'.
+			StrBuf->Printf(&buf, msg_txt(54), map[map_id].name); // No player found in map '%s'.
 		else if (count == 1)
-			StringBuf_Printf(&buf, msg_txt(55), map[map_id].name); // 1 player found in map '%s'.
+			StrBuf->Printf(&buf, msg_txt(55), map[map_id].name); // 1 player found in map '%s'.
 		else
-			StringBuf_Printf(&buf, msg_txt(56), count, map[map_id].name); // %d players found in map '%s'.
+			StrBuf->Printf(&buf, msg_txt(56), count, map[map_id].name); // %d players found in map '%s'.
 	}
-	clif->message(fd, StringBuf_Value(&buf));
-	StringBuf_Destroy(&buf);
+	clif->message(fd, StrBuf->Value(&buf));
+	StrBuf->Destroy(&buf);
 	return true;
 }
 
@@ -677,7 +677,7 @@ ACMD(whogm)
 	level = pc_get_group_level(sd);
 	
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
+	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
 		pl_level = pc_get_group_level(pl_sd);
 		if (!pl_level)
@@ -720,7 +720,7 @@ ACMD(whogm)
 		clif->message(fd, atcmd_output);
 		count++;
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	if (count == 0)
 		clif->message(fd, msg_txt(150)); // No GM found.
@@ -1427,20 +1427,20 @@ ACMD(help) {
 		StringBuf buf;
 		bool has_aliases = false;
 		
-		StringBuf_Init(&buf);
-		StringBuf_AppendStr(&buf, msg_txt(990)); // Available aliases:
+		StrBuf->Init(&buf);
+		StrBuf->AppendStr(&buf, msg_txt(990)); // Available aliases:
 		command_info = get_atcommandinfo_byname(command_name);
 		iter = db_iterator(atcommand->alias_db);
 		for (alias_info = dbi_first(iter); dbi_exists(iter); alias_info = dbi_next(iter)) {
 			if (alias_info->command == command_info) {
-				StringBuf_Printf(&buf, " %s", alias_info->alias);
+				StrBuf->Printf(&buf, " %s", alias_info->alias);
 				has_aliases = true;
 			}
 		}
 		dbi_destroy(iter);
 		if (has_aliases)
-			clif->message(fd, StringBuf_Value(&buf));
-		StringBuf_Destroy(&buf);
+			clif->message(fd, StrBuf->Value(&buf));
+		StrBuf->Destroy(&buf);
 	}
 	
 	// Display help contents
@@ -2936,7 +2936,7 @@ ACMD(doom)
 	nullpo_retr(-1, sd);
 	
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
+	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
 		if (pl_sd->fd != fd && pc_get_group_level(sd) >= pc_get_group_level(pl_sd))
 		{
@@ -2945,7 +2945,7 @@ ACMD(doom)
 			clif->message(pl_sd->fd, msg_txt(61)); // The holy messenger has given judgement.
 		}
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	clif->message(fd, msg_txt(62)); // Judgement was made.
 	
@@ -2963,7 +2963,7 @@ ACMD(doommap)
 	nullpo_retr(-1, sd);
 	
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
+	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
 		if (pl_sd->fd != fd && sd->bl.m == pl_sd->bl.m && pc_get_group_level(sd) >= pc_get_group_level(pl_sd))
 		{
@@ -2972,7 +2972,7 @@ ACMD(doommap)
 			clif->message(pl_sd->fd, msg_txt(61)); // The holy messenger has given judgement.
 		}
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	clif->message(fd, msg_txt(62)); // Judgement was made.
 	
@@ -3001,10 +3001,10 @@ ACMD(raise)
 	nullpo_retr(-1, sd);
 	
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
+	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 		if( pc_isdead(pl_sd) )
 			atcommand_raise_sub(pl_sd);
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	clif->message(fd, msg_txt(64)); // Mercy has been granted.
 	
@@ -3022,10 +3022,10 @@ ACMD(raisemap)
 	nullpo_retr(-1, sd);
 	
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
+	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 		if (sd->bl.m == pl_sd->bl.m && pc_isdead(pl_sd) )
 			atcommand_raise_sub(pl_sd);
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	clif->message(fd, msg_txt(64)); // Mercy has been granted.
 	
@@ -3074,14 +3074,14 @@ ACMD(kickall)
 	nullpo_retr(-1, sd);
 	
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
+	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
 		if (pc_get_group_level(sd) >= pc_get_group_level(pl_sd)) { // you can kick only lower or same gm level
 			if (sd->status.account_id != pl_sd->status.account_id)
 				clif->GM_kick(NULL, pl_sd);
 		}
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	clif->message(fd, msg_txt(195)); // All players have been kicked!
 	
@@ -3431,7 +3431,7 @@ ACMD(recallall)
 	
 	count = 0;
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
+	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
 		if (sd->status.account_id != pl_sd->status.account_id && pc_get_group_level(sd) >= pc_get_group_level(pl_sd))
 		{
@@ -3448,7 +3448,7 @@ ACMD(recallall)
 			}
 		}
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	clif->message(fd, msg_txt(92)); // All characters recalled!
 	if (count) {
@@ -3494,7 +3494,7 @@ ACMD(guildrecall)
 	count = 0;
 	
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
+	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
 		if (sd->status.account_id != pl_sd->status.account_id && pl_sd->status.guild_id == g->guild_id)
 		{
@@ -3506,7 +3506,7 @@ ACMD(guildrecall)
 				pc_setpos(pl_sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_RESPAWN);
 		}
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	sprintf(atcmd_output, msg_txt(93), g->name); // All online characters of the %s guild have been recalled to your position.
 	clif->message(fd, atcmd_output);
@@ -3553,7 +3553,7 @@ ACMD(partyrecall)
 	count = 0;
 	
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
+	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
 		if (sd->status.account_id != pl_sd->status.account_id && pl_sd->status.party_id == p->party.party_id)
 		{
@@ -3565,7 +3565,7 @@ ACMD(partyrecall)
 				pc_setpos(pl_sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_RESPAWN);
 		}
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	sprintf(atcmd_output, msg_txt(95), p->party.name); // All online characters of the %s party have been recalled to your position.
 	clif->message(fd, atcmd_output);
@@ -3792,7 +3792,7 @@ ACMD(mapinfo) {
 	// count chats (for initial message)
 	chat_num = 0;
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) ) {
+	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) ) {
 		if( pl_sd->mapindex == m_index ) {
 			if( pl_sd->state.vending )
 				vend_num++;
@@ -3800,7 +3800,7 @@ ACMD(mapinfo) {
 				chat_num++;
 		}
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	sprintf(atcmd_output, msg_txt(1040), mapname, map[m_id].zone->name, map[m_id].users, map[m_id].npc_num, chat_num, vend_num); // Map: %s (Zone:%s) | Players: %d | NPCs: %d | Chats: %d | Vendings: %d
 	clif->message(fd, atcmd_output);
@@ -3935,7 +3935,7 @@ ACMD(mapinfo) {
 		case 1:
 			clif->message(fd, msg_txt(1098)); // ----- Players in Map -----
 			iter = mapit_getallusers();
-			for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
+			for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 			{
 				if (pl_sd->mapindex == m_index) {
 					sprintf(atcmd_output, msg_txt(1099), // Player '%s' (session #%d) | Location: %d,%d
@@ -3943,7 +3943,7 @@ ACMD(mapinfo) {
 					clif->message(fd, atcmd_output);
 				}
 			}
-			mapit_free(iter);
+			mapit->free(iter);
 			break;
 		case 2:
 			clif->message(fd, msg_txt(1100)); // ----- NPCs in Map -----
@@ -3974,7 +3974,7 @@ ACMD(mapinfo) {
 		case 3:
 			clif->message(fd, msg_txt(1113)); // ----- Chats in Map -----
 			iter = mapit_getallusers();
-			for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
+			for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 			{
 				if ((cd = (struct chat_data*)map_id2bl(pl_sd->chatID)) != NULL &&
 					pl_sd->mapindex == m_index &&
@@ -3988,7 +3988,7 @@ ACMD(mapinfo) {
 					clif->message(fd, atcmd_output);
 				}
 			}
-			mapit_free(iter);
+			mapit->free(iter);
 			break;
 		default: // normally impossible to arrive here
 			clif->message(fd, msg_txt(1118)); // Please enter at least one valid list number (usage: @mapinfo <0-3> <map>).
@@ -4778,9 +4778,9 @@ ACMD(disguiseall)
 	}
 	
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
+	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 		pc_disguise(pl_sd, mob_id);
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	clif->message(fd, msg_txt(122)); // Disguise applied.
 	return true;
@@ -4860,10 +4860,10 @@ ACMD(undisguiseall) {
 	nullpo_retr(-1, sd);
 	
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) )
+	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 		if( pl_sd->disguise != -1 )
 			pc_disguise(pl_sd, -1);
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	clif->message(fd, msg_txt(124)); // Undisguise applied.
 	
@@ -6088,7 +6088,7 @@ ACMD(mobsearch)
 	it = mapit_geteachmob();
 	for(;;)
 	{
-		TBL_MOB* md = (TBL_MOB*)mapit_next(it);
+		TBL_MOB* md = (TBL_MOB*)mapit->next(it);
 		if( md == NULL )
 			break;// no more mobs
 		
@@ -6104,7 +6104,7 @@ ACMD(mobsearch)
 			snprintf(atcmd_output, sizeof(atcmd_output), "%2d[%s] %s", number, "dead", md->name);
 		clif->message(fd, atcmd_output);
 	}
-	mapit_free(it);
+	mapit->free(it);
 	
 	return true;
 }
@@ -6270,7 +6270,7 @@ ACMD(users)
 	iter = mapit_getallusers();
 	for(;;)
 	{
-		struct map_session_data* sd2 = (struct map_session_data*)mapit_next(iter);
+		struct map_session_data* sd2 = (struct map_session_data*)mapit->next(iter);
 		if( sd2 == NULL )
 			break;// no more users
 		
@@ -6280,7 +6280,7 @@ ACMD(users)
 		if( users[sd2->mapindex] < INT_MAX ) ++users[sd2->mapindex];
 		if( users_all < INT_MAX ) ++users_all;
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	// display results for each map
 	for( i = 0; i < MAX_MAPINDEX; ++i )
@@ -6564,9 +6564,9 @@ ACMD(refreshall)
 	nullpo_retr(-1, sd);
 	
 	iter = mapit_getallusers();
-	for (iter_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); iter_sd = (TBL_PC*)mapit_next(iter))
+	for (iter_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); iter_sd = (TBL_PC*)mapit->next(iter))
 		clif->refresh(iter_sd);
-	mapit_free(iter);
+	mapit->free(iter);
 	return true;
 }
 
@@ -6808,7 +6808,7 @@ ACMD(showmobs)
 	it = mapit_geteachmob();
 	for(;;)
 	{
-		TBL_MOB* md = (TBL_MOB*)mapit_next(it);
+		TBL_MOB* md = (TBL_MOB*)mapit->next(it);
 		if( md == NULL )
 			break;// no more mobs
 		
@@ -6824,7 +6824,7 @@ ACMD(showmobs)
 		++number;
 		clif->viewpoint(sd, 1, 0, md->bl.x, md->bl.y, number, 0xFFFFFF);
 	}
-	mapit_free(it);
+	mapit->free(it);
 	
 	return true;
 }
@@ -7444,7 +7444,7 @@ ACMD(sizeall)
 	size = cap_value(size,0,2);
 	
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); pl_sd = (TBL_PC*)mapit_next(iter) ) {
+	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) ) {
 		if( pl_sd->state.size != size ) {
 			if( pl_sd->state.size ) {
 				pl_sd->state.size = SZ_SMALL;
@@ -7458,7 +7458,7 @@ ACMD(sizeall)
 				clif->specialeffect(&pl_sd->bl,422,AREA);
 		}
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	clif->message(fd, msg_txt(1303)); // Size change applied.
 	return true;
@@ -8124,7 +8124,7 @@ ACMD(itemlist)
 			else
 				return 1;
 	
-	StringBuf_Init(&buf);
+	StrBuf->Init(&buf);
 	
 	count = 0; // total slots occupied
 	counter = 0; // total items found
@@ -8141,15 +8141,15 @@ ACMD(itemlist)
 		
 		if( count == 1 )
 		{
-			StringBuf_Printf(&buf, msg_txt(1332), location, sd->status.name); // ------ %s items list of '%s' ------
-			clif->message(fd, StringBuf_Value(&buf));
-			StringBuf_Clear(&buf);
+			StrBuf->Printf(&buf, msg_txt(1332), location, sd->status.name); // ------ %s items list of '%s' ------
+			clif->message(fd, StrBuf->Value(&buf));
+			StrBuf->Clear(&buf);
 		}
 		
 		if( it->refine )
-			StringBuf_Printf(&buf, "%d %s %+d (%s, id: %d)", it->amount, itd->jname, it->refine, itd->name, it->nameid);
+			StrBuf->Printf(&buf, "%d %s %+d (%s, id: %d)", it->amount, itd->jname, it->refine, itd->name, it->nameid);
 		else
-			StringBuf_Printf(&buf, "%d %s (%s, id: %d)", it->amount, itd->jname, itd->name, it->nameid);
+			StrBuf->Printf(&buf, "%d %s (%s, id: %d)", it->amount, itd->jname, itd->name, it->nameid);
 		
 		if( it->equip )
 		{
@@ -8185,28 +8185,28 @@ ACMD(itemlist)
 				strcat(equipstr, msg_txt(1347)); // lower/mid/top head,
 			// remove final ', '
 			equipstr[strlen(equipstr) - 2] = '\0';
-			StringBuf_AppendStr(&buf, equipstr);
+			StrBuf->AppendStr(&buf, equipstr);
 		}
 		
-		clif->message(fd, StringBuf_Value(&buf));
-		StringBuf_Clear(&buf);
+		clif->message(fd, StrBuf->Value(&buf));
+		StrBuf->Clear(&buf);
 		
 		if( it->card[0] == CARD0_PET )
 		{// pet egg
 			if (it->card[3])
-				StringBuf_Printf(&buf, msg_txt(1348), (unsigned int)MakeDWord(it->card[1], it->card[2])); //  -> (pet egg, pet id: %u, named)
+				StrBuf->Printf(&buf, msg_txt(1348), (unsigned int)MakeDWord(it->card[1], it->card[2])); //  -> (pet egg, pet id: %u, named)
 			else
-				StringBuf_Printf(&buf, msg_txt(1349), (unsigned int)MakeDWord(it->card[1], it->card[2])); //  -> (pet egg, pet id: %u, unnamed)
+				StrBuf->Printf(&buf, msg_txt(1349), (unsigned int)MakeDWord(it->card[1], it->card[2])); //  -> (pet egg, pet id: %u, unnamed)
 		}
 		else
 			if(it->card[0] == CARD0_FORGE)
 			{// forged item
-				StringBuf_Printf(&buf, msg_txt(1350), (unsigned int)MakeDWord(it->card[2], it->card[3]), it->card[1]>>8, it->card[1]&0x0f); //  -> (crafted item, creator id: %u, star crumbs %d, element %d)
+				StrBuf->Printf(&buf, msg_txt(1350), (unsigned int)MakeDWord(it->card[2], it->card[3]), it->card[1]>>8, it->card[1]&0x0f); //  -> (crafted item, creator id: %u, star crumbs %d, element %d)
 			}
 			else
 				if(it->card[0] == CARD0_CREATE)
 				{// created item
-					StringBuf_Printf(&buf, msg_txt(1351), (unsigned int)MakeDWord(it->card[2], it->card[3])); //  -> (produced item, creator id: %u)
+					StrBuf->Printf(&buf, msg_txt(1351), (unsigned int)MakeDWord(it->card[2], it->card[3])); //  -> (produced item, creator id: %u)
 				}
 				else
 				{// normal item
@@ -8222,32 +8222,32 @@ ACMD(itemlist)
 						counter2++;
 						
 						if( counter2 == 1 )
-							StringBuf_AppendStr(&buf, msg_txt(1352)); //  -> (card(s):
+							StrBuf->AppendStr(&buf, msg_txt(1352)); //  -> (card(s):
 						
 						if( counter2 != 1 )
-							StringBuf_AppendStr(&buf, ", ");
+							StrBuf->AppendStr(&buf, ", ");
 						
-						StringBuf_Printf(&buf, "#%d %s (id: %d)", counter2, card->jname, card->nameid);
+						StrBuf->Printf(&buf, "#%d %s (id: %d)", counter2, card->jname, card->nameid);
 					}
 					
 					if( counter2 > 0 )
-						StringBuf_AppendStr(&buf, ")");
+						StrBuf->AppendStr(&buf, ")");
 				}
 		
-		if( StringBuf_Length(&buf) > 0 )
-			clif->message(fd, StringBuf_Value(&buf));
+		if( StrBuf->Length(&buf) > 0 )
+			clif->message(fd, StrBuf->Value(&buf));
 		
-		StringBuf_Clear(&buf);
+		StrBuf->Clear(&buf);
 	}
 	
 	if( count == 0 )
-		StringBuf_Printf(&buf, msg_txt(1353), location); // No item found in this player's %s.
+		StrBuf->Printf(&buf, msg_txt(1353), location); // No item found in this player's %s.
 	else
-		StringBuf_Printf(&buf, msg_txt(1354), counter, count, location); // %d item(s) found in %d %s slots.
+		StrBuf->Printf(&buf, msg_txt(1354), counter, count, location); // %d item(s) found in %d %s slots.
 	
-	clif->message(fd, StringBuf_Value(&buf));
+	clif->message(fd, StrBuf->Value(&buf));
 	
-	StringBuf_Destroy(&buf);
+	StrBuf->Destroy(&buf);
 	
 	return true;
 }

@@ -22,8 +22,7 @@ int mysql_reconnect_type;
 unsigned int mysql_reconnect_count;
 
 /// Sql handle
-struct Sql
-{
+struct Sql {
 	StringBuf buf;
 	MYSQL handle;
 	MYSQL_RES* result;
@@ -36,8 +35,7 @@ struct Sql
 
 // Column length receiver.
 // Takes care of the possible size missmatch between uint32 and unsigned long.
-struct s_column_length
-{
+struct s_column_length {
 	uint32* out_length;
 	unsigned long length;
 };
@@ -46,8 +44,7 @@ typedef struct s_column_length s_column_length;
 
 
 /// Sql statement
-struct SqlStmt
-{
+struct SqlStmt {
 	StringBuf buf;
 	MYSQL_STMT* stmt;
 	MYSQL_BIND* params;
@@ -74,7 +71,7 @@ Sql* Sql_Malloc(void)
 
 	CREATE(self, Sql, 1);
 	mysql_init(&self->handle);
-	StringBuf_Init(&self->buf);
+	StrBuf->Init(&self->buf);
 	self->lengths = NULL;
 	self->result = NULL;
 	self->keepalive = INVALID_TIMER;
@@ -92,7 +89,7 @@ int Sql_Connect(Sql* self, const char* user, const char* passwd, const char* hos
 	if( self == NULL )
 		return SQL_ERROR;
 
-	StringBuf_Clear(&self->buf);
+	StrBuf->Clear(&self->buf);
 	if( !mysql_real_connect(&self->handle, host, user, passwd, db, (unsigned int)port, NULL/*unix_socket*/, 0/*clientflag*/) )
 	{
 		ShowSQL("%s\n", mysql_error(&self->handle));
@@ -114,18 +111,16 @@ int Sql_Connect(Sql* self, const char* user, const char* passwd, const char* hos
 /// Retrieves the timeout of the connection.
 int Sql_GetTimeout(Sql* self, uint32* out_timeout)
 {
-	if( self && out_timeout && SQL_SUCCESS == Sql_Query(self, "SHOW VARIABLES LIKE 'wait_timeout'") )
-	{
+	if( self && out_timeout && SQL_SUCCESS == SQL->Query(self, "SHOW VARIABLES LIKE 'wait_timeout'") ) {
 		char* data;
 		size_t len;
-		if( SQL_SUCCESS == Sql_NextRow(self) &&
-			SQL_SUCCESS == Sql_GetData(self, 1, &data, &len) )
-		{
+		if( SQL_SUCCESS == SQL->NextRow(self) &&
+			SQL_SUCCESS == SQL->GetData(self, 1, &data, &len) ) {
 			*out_timeout = (uint32)strtoul(data, NULL, 10);
-			Sql_FreeResult(self);
+			SQL->FreeResult(self);
 			return SQL_SUCCESS;
 		}
-		Sql_FreeResult(self);
+		SQL->FreeResult(self);
 	}
 	return SQL_ERROR;
 }
@@ -139,12 +134,11 @@ int Sql_GetColumnNames(Sql* self, const char* table, char* out_buf, size_t buf_l
 	size_t len;
 	size_t off = 0;
 
-	if( self == NULL || SQL_ERROR == Sql_Query(self, "EXPLAIN `%s`", table) )
+	if( self == NULL || SQL_ERROR == SQL->Query(self, "EXPLAIN `%s`", table) )
 		return SQL_ERROR;
 
 	out_buf[off] = '\0';
-	while( SQL_SUCCESS == Sql_NextRow(self) && SQL_SUCCESS == Sql_GetData(self, 0, &data, &len) )
-	{
+	while( SQL_SUCCESS == SQL->NextRow(self) && SQL_SUCCESS == SQL->GetData(self, 0, &data, &len) ) {
 		len = strnlen(data, len);
 		if( off + len + 2 > buf_len )
 		{
@@ -157,7 +151,7 @@ int Sql_GetColumnNames(Sql* self, const char* table, char* out_buf, size_t buf_l
 		out_buf[off++] = sep;
 	}
 	out_buf[off] = '\0';
-	Sql_FreeResult(self);
+	SQL->FreeResult(self);
 	return SQL_SUCCESS;
 }
 
@@ -250,7 +244,7 @@ int Sql_Query(Sql* self, const char* query, ...)
 	va_list args;
 
 	va_start(args, query);
-	res = Sql_QueryV(self, query, args);
+	res = SQL->QueryV(self, query, args);
 	va_end(args);
 
 	return res;
@@ -264,10 +258,10 @@ int Sql_QueryV(Sql* self, const char* query, va_list args)
 	if( self == NULL )
 		return SQL_ERROR;
 
-	Sql_FreeResult(self);
-	StringBuf_Clear(&self->buf);
-	StringBuf_Vprintf(&self->buf, query, args);
-	if( mysql_real_query(&self->handle, StringBuf_Value(&self->buf), (unsigned long)StringBuf_Length(&self->buf)) )
+	SQL->FreeResult(self);
+	StrBuf->Clear(&self->buf);
+	StrBuf->Vprintf(&self->buf, query, args);
+	if( mysql_real_query(&self->handle, StrBuf->Value(&self->buf), (unsigned long)StrBuf->Length(&self->buf)) )
 	{
 		ShowSQL("DB error - %s\n", mysql_error(&self->handle));
 		hercules_mysql_error_handler(mysql_errno(&self->handle));
@@ -291,10 +285,10 @@ int Sql_QueryStr(Sql* self, const char* query)
 	if( self == NULL )
 		return SQL_ERROR;
 
-	Sql_FreeResult(self);
-	StringBuf_Clear(&self->buf);
-	StringBuf_AppendStr(&self->buf, query);
-	if( mysql_real_query(&self->handle, StringBuf_Value(&self->buf), (unsigned long)StringBuf_Length(&self->buf)) )
+	SQL->FreeResult(self);
+	StrBuf->Clear(&self->buf);
+	StrBuf->AppendStr(&self->buf, query);
+	if( mysql_real_query(&self->handle, StrBuf->Value(&self->buf), (unsigned long)StrBuf->Length(&self->buf)) )
 	{
 		ShowSQL("DB error - %s\n", mysql_error(&self->handle));
 		hercules_mysql_error_handler(mysql_errno(&self->handle));
@@ -344,13 +338,10 @@ uint64 Sql_NumRows(Sql* self)
 
 
 /// Fetches the next row.
-int Sql_NextRow(Sql* self)
-{
-	if( self && self->result )
-	{
+int Sql_NextRow(Sql* self) {
+	if( self && self->result ) {
 		self->row = mysql_fetch_row(self->result);
-		if( self->row )
-		{
+		if( self->row ) {
 			self->lengths = mysql_fetch_lengths(self->result);
 			return SQL_SUCCESS;
 		}
@@ -366,15 +357,11 @@ int Sql_NextRow(Sql* self)
 /// Gets the data of a column.
 int Sql_GetData(Sql* self, size_t col, char** out_buf, size_t* out_len)
 {
-	if( self && self->row )
-	{
-		if( col < Sql_NumColumns(self) )
-		{
+	if( self && self->row ) {
+		if( col < SQL->NumColumns(self) ) {
 			if( out_buf ) *out_buf = self->row[col];
 			if( out_len ) *out_len = (size_t)self->lengths[col];
-		}
-		else
-		{// out of range - ignore
+		} else {// out of range - ignore
 			if( out_buf ) *out_buf = NULL;
 			if( out_len ) *out_len = 0;
 		}
@@ -386,10 +373,8 @@ int Sql_GetData(Sql* self, size_t col, char** out_buf, size_t* out_len)
 
 
 /// Frees the result of the query.
-void Sql_FreeResult(Sql* self)
-{
-	if( self && self->result )
-	{
+void Sql_FreeResult(Sql* self) {
+	if( self && self->result ) {
 		mysql_free_result(self->result);
 		self->result = NULL;
 		self->row = NULL;
@@ -404,8 +389,8 @@ void Sql_ShowDebug_(Sql* self, const char* debug_file, const unsigned long debug
 {
 	if( self == NULL )
 		ShowDebug("at %s:%lu - self is NULL\n", debug_file, debug_line);
-	else if( StringBuf_Length(&self->buf) > 0 )
-		ShowDebug("at %s:%lu - %s\n", debug_file, debug_line, StringBuf_Value(&self->buf));
+	else if( StrBuf->Length(&self->buf) > 0 )
+		ShowDebug("at %s:%lu - %s\n", debug_file, debug_line, StrBuf->Value(&self->buf));
 	else
 		ShowDebug("at %s:%lu\n", debug_file, debug_line);
 }
@@ -417,8 +402,8 @@ void Sql_Free(Sql* self)
 {
 	if( self )
 	{
-		Sql_FreeResult(self);
-		StringBuf_Destroy(&self->buf);
+		SQL->FreeResult(self);
+		StrBuf->Destroy(&self->buf);
 		if( self->keepalive != INVALID_TIMER ) delete_timer(self->keepalive, Sql_P_KeepaliveTimer);
 		aFree(self);
 	}
@@ -590,8 +575,7 @@ static void SqlStmt_P_ShowDebugTruncatedColumn(SqlStmt* self, size_t i)
 
 
 /// Allocates and initializes a new SqlStmt handle.
-SqlStmt* SqlStmt_Malloc(Sql* sql)
-{
+SqlStmt* SqlStmt_Malloc(Sql* sql) {
 	SqlStmt* self;
 	MYSQL_STMT* stmt;
 
@@ -599,13 +583,12 @@ SqlStmt* SqlStmt_Malloc(Sql* sql)
 		return NULL;
 
 	stmt = mysql_stmt_init(&sql->handle);
-	if( stmt == NULL )
-	{
+	if( stmt == NULL ) {
 		ShowSQL("DB error - %s\n", mysql_error(&sql->handle));
 		return NULL;
 	}
 	CREATE(self, SqlStmt, 1);
-	StringBuf_Init(&self->buf);
+	StrBuf->Init(&self->buf);
 	self->stmt = stmt;
 	self->params = NULL;
 	self->columns = NULL;
@@ -642,9 +625,9 @@ int SqlStmt_PrepareV(SqlStmt* self, const char* query, va_list args)
 		return SQL_ERROR;
 
 	SqlStmt_FreeResult(self);
-	StringBuf_Clear(&self->buf);
-	StringBuf_Vprintf(&self->buf, query, args);
-	if( mysql_stmt_prepare(self->stmt, StringBuf_Value(&self->buf), (unsigned long)StringBuf_Length(&self->buf)) )
+	StrBuf->Clear(&self->buf);
+	StrBuf->Vprintf(&self->buf, query, args);
+	if( mysql_stmt_prepare(self->stmt, StrBuf->Value(&self->buf), (unsigned long)StrBuf->Length(&self->buf)) )
 	{
 		ShowSQL("DB error - %s\n", mysql_stmt_error(self->stmt));
 		hercules_mysql_error_handler(mysql_stmt_errno(self->stmt));
@@ -664,9 +647,9 @@ int SqlStmt_PrepareStr(SqlStmt* self, const char* query)
 		return SQL_ERROR;
 
 	SqlStmt_FreeResult(self);
-	StringBuf_Clear(&self->buf);
-	StringBuf_AppendStr(&self->buf, query);
-	if( mysql_stmt_prepare(self->stmt, StringBuf_Value(&self->buf), (unsigned long)StringBuf_Length(&self->buf)) )
+	StrBuf->Clear(&self->buf);
+	StrBuf->AppendStr(&self->buf, query);
+	if( mysql_stmt_prepare(self->stmt, StrBuf->Value(&self->buf), (unsigned long)StrBuf->Length(&self->buf)) )
 	{
 		ShowSQL("DB error - %s\n", mysql_stmt_error(self->stmt));
 		hercules_mysql_error_handler(mysql_stmt_errno(self->stmt));
@@ -933,8 +916,8 @@ void SqlStmt_ShowDebug_(SqlStmt* self, const char* debug_file, const unsigned lo
 {
 	if( self == NULL )
 		ShowDebug("at %s:%lu -  self is NULL\n", debug_file, debug_line);
-	else if( StringBuf_Length(&self->buf) > 0 )
-		ShowDebug("at %s:%lu - %s\n", debug_file, debug_line, StringBuf_Value(&self->buf));
+	else if( StrBuf->Length(&self->buf) > 0 )
+		ShowDebug("at %s:%lu - %s\n", debug_file, debug_line, StrBuf->Value(&self->buf));
 	else
 		ShowDebug("at %s:%lu\n", debug_file, debug_line);
 }
@@ -947,7 +930,7 @@ void SqlStmt_Free(SqlStmt* self)
 	if( self )
 	{
 		SqlStmt_FreeResult(self);
-		StringBuf_Destroy(&self->buf);
+		StrBuf->Destroy(&self->buf);
 		mysql_stmt_close(self->stmt);
 		if( self->params )
 			aFree(self->params);
@@ -1048,7 +1031,7 @@ void Sql_HerculesUpdateCheck(Sql* self) {
 		
 		if( fgets(timestamp,sizeof(timestamp),ufp) ) {
 			unsigned int timestampui = atol(timestamp);
-			if( SQL_ERROR == Sql_Query(self, "SELECT 1 FROM `sql_updates` WHERE `timestamp` = '%u' LIMIT 1", timestampui) )
+			if( SQL_ERROR == SQL->Query(self, "SELECT 1 FROM `sql_updates` WHERE `timestamp` = '%u' LIMIT 1", timestampui) )
 				Sql_ShowDebug(self);
 			if( Sql_NumRows(self) != 1 ) {
 				ShowSQL("'"CL_WHITE"%s"CL_RESET"' wasn't applied to the database\n",path);
@@ -1068,4 +1051,27 @@ void Sql_HerculesUpdateCheck(Sql* self) {
 
 void Sql_Init(void) {
 	Sql_inter_server_read("conf/inter-server.conf",true);
+}
+void sql_defaults(void) {
+	SQL = &sql_s;
+	
+	SQL->Connect = Sql_Connect;
+	SQL->GetTimeout = Sql_GetTimeout;
+	SQL->GetColumnNames = Sql_GetColumnNames;
+	SQL->SetEncoding = Sql_SetEncoding;
+	SQL->Ping = Sql_Ping;
+	SQL->EscapeString = Sql_EscapeString;
+	SQL->EscapeStringLen = Sql_EscapeStringLen;
+	SQL->Query = Sql_Query;
+	SQL->QueryV = Sql_QueryV;
+	SQL->QueryStr = Sql_QueryStr;
+	SQL->LastInsertId = Sql_LastInsertId;
+	SQL->NumColumns = Sql_NumColumns;
+	SQL->NumRows = Sql_NumRows;
+	SQL->NextRow = Sql_NextRow;
+	SQL->GetData = Sql_GetData;
+	SQL->FreeResult = Sql_FreeResult;
+	SQL->ShowDebug_ = Sql_ShowDebug_;
+	SQL->Free = Sql_Free;
+	SQL->Malloc = Sql_Malloc;
 }

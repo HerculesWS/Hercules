@@ -11,6 +11,8 @@
 #include "../common/conf.h"
 #include "../common/utils.h"
 #include "../common/console.h"
+#include "../common/strlib.h"
+#include "../common/sql.h"
 #include "HPM.h"
 
 #include <stdio.h>
@@ -73,39 +75,34 @@ struct hplugin *hplugin_create(void) {
 	HPM->plugins[HPM->plugin_count - 1]->filename = NULL;
 	return HPM->plugins[HPM->plugin_count - 1];
 }
-bool hplugin_showmsg_populate(struct hplugin *plugin, const char *filename) {
-	void **ShowSub;
-	const char* ShowSubNames[9] = {
-		"ShowMessage",
-		"ShowStatus",
-		"ShowSQL",
-		"ShowInfo",
-		"ShowNotice",
-		"ShowWarning",
-		"ShowDebug",
-		"ShowError",
-		"ShowFatalError",
+#define HPM_POP(x) { #x , x }
+bool hplugin_populate(struct hplugin *plugin, const char *filename) {
+	void **Link;
+	struct {
+		const char* name;
+		void *Ref;
+	} ToLink[] = {
+		HPM_POP(ShowMessage),
+		HPM_POP(ShowStatus),
+		HPM_POP(ShowSQL),
+		HPM_POP(ShowInfo),
+		HPM_POP(ShowNotice),
+		HPM_POP(ShowWarning),
+		HPM_POP(ShowDebug),
+		HPM_POP(ShowError),
+		HPM_POP(ShowFatalError),
 	};
-	void* ShowSubRef[9] = {
-		ShowMessage,
-		ShowStatus,
-		ShowSQL,
-		ShowInfo,
-		ShowNotice,
-		ShowWarning,
-		ShowDebug,
-		ShowError,
-		ShowFatalError,
-	};
-	int i;
-	for(i = 0; i < 9; i++) {
-		if( !( ShowSub = plugin_import(plugin->dll, ShowSubNames[i],void **) ) ) {
-			ShowWarning("HPM:plugin_load: failed to retrieve '%s' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", ShowSubNames[i], filename);
+	int i, length = ARRAYLENGTH(ToLink);
+	
+	for(i = 0; i < length; i++) {
+		if( !( Link = plugin_import(plugin->dll, ToLink[i].name,void **) ) ) {
+			ShowWarning("HPM:plugin_load: failed to retrieve '%s' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", ToLink[i].name, filename);
 			HPM->unload(plugin);
 			return false;
 		}
-		*ShowSub = ShowSubRef[i];
+		*Link = ToLink[i].Ref;
 	}
+	
 	return true;
 }
 void hplugin_load(const char* filename) {
@@ -114,6 +111,7 @@ void hplugin_load(const char* filename) {
 	struct HPMi_interface **HPMi;
 	bool anyEvent = false;
 	void **import_symbol_ref;
+	Sql **sql_handle;
 		
 	if( HPM->exists(filename) ) {
 		ShowWarning("HPM:plugin_load: attempting to load duplicate '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
@@ -153,6 +151,14 @@ void hplugin_load(const char* filename) {
 	
 	*import_symbol_ref = HPM->import_symbol;
 	
+	if( !( sql_handle = plugin_import(plugin->dll, "mysql_handle",Sql **) ) ) {
+		ShowWarning("HPM:plugin_load: failed to retrieve 'mysql_handle' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
+		HPM->unload(plugin);
+		return;
+	}
+	
+	*sql_handle = HPM->import_symbol("sql_handle");
+
 	if( !( HPMi = plugin_import(plugin->dll, "HPMi",struct HPMi_interface **) ) ) {
 		ShowWarning("HPM:plugin_load: failed to retrieve 'HPMi' for '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
 		HPM->unload(plugin);
@@ -181,7 +187,7 @@ void hplugin_load(const char* filename) {
 		return;
 	}
 	
-	if( !HPM->showmsg_pop(plugin,filename) )
+	if( !HPM->populate(plugin,filename) )
 		return;
 	
 	if( SERVER_TYPE == SERVER_TYPE_MAP ) {
@@ -266,6 +272,12 @@ void hplugins_share_defaults(void) {
 	HPM->share(session,"session");
 	HPM->share(&fd_max,"fd_max");
 	HPM->share(addr_,"addr");
+	/* strlib */
+	HPM->share(strlib,"strlib");
+	HPM->share(sv,"sv");
+	HPM->share(StrBuf,"StrBuf");
+	/* sql */
+	HPM->share(SQL,"SQL");
 	/* timer */
 	HPM->share(gettick,"gettick");
 	HPM->share(add_timer,"add_timer");
@@ -343,6 +355,6 @@ void hpm_defaults(void) {
 	HPM->share = hplugin_export_symbol;
 	HPM->symbol_defaults = hplugins_share_defaults;
 	HPM->config_read = hplugins_config_read;
-	HPM->showmsg_pop = hplugin_showmsg_populate;
+	HPM->populate = hplugin_populate;
 	HPM->symbol_defaults_sub = NULL;
 }

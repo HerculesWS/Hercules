@@ -72,7 +72,7 @@ struct HPM_interface {
 	void (*share) (void *, char *);
 	void (*symbol_defaults) (void);
 	void (*config_read) (void);
-	bool (*showmsg_pop) (struct hplugin *plugin,const char *filename);
+	bool (*populate) (struct hplugin *plugin,const char *filename);
 	void (*symbol_defaults_sub) (void);
 } HPM_s;
 

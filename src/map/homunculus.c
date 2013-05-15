@@ -1134,7 +1134,7 @@ void homunculus_read_db(void) {
 			}
 		}
 
-		sv_readdb(db_path, filename[i], ',', 50, 50, MAX_HOMUNCULUS_CLASS, homun->read_db_sub);
+		sv->readdb(db_path, filename[i], ',', 50, 50, MAX_HOMUNCULUS_CLASS, homun->read_db_sub);
 	}
 
 }
@@ -1180,7 +1180,7 @@ bool homunculus_read_skill_db_sub(char* split[], int columns, int current) {
 
 void homunculus_skill_db_read(void) {
 	memset(homun->skill_tree,0,sizeof(homun->skill_tree));
-	sv_readdb(db_path, "homun_skill_tree.txt", ',', 13, 15, -1, homun->read_skill_db_sub);
+	sv->readdb(db_path, "homun_skill_tree.txt", ',', 13, 15, -1, homun->read_skill_db_sub);
 
 }
 

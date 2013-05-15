@@ -278,27 +278,32 @@ void usercheck(void) {
     }
 #endif
 }
-
+void core_defaults(void) {
+#ifndef MINICORE
+	hpm_defaults();
+#endif
+	console_defaults();
+#ifndef MINICORE
+	strlib_defaults();
+	sql_defaults();
+	timer_defaults();
+#endif
+}
 /*======================================
  *	CORE : MAINROUTINE
  *--------------------------------------*/
-int main (int argc, char **argv)
-{
+int main (int argc, char **argv) {
 	{// initialize program arguments
 		char *p1 = SERVER_NAME = argv[0];
 		char *p2 = p1;
-		while ((p1 = strchr(p2, '/')) != NULL || (p1 = strchr(p2, '\\')) != NULL)
-		{
+		while ((p1 = strchr(p2, '/')) != NULL || (p1 = strchr(p2, '\\')) != NULL) {
 			SERVER_NAME = ++p1;
 			p2 = p1;
 		}
 		arg_c = argc;
 		arg_v = argv;
 	}
-#ifndef MINICORE
-	hpm_defaults();
-#endif
-	console_defaults();
+	core_defaults();
 	
 	malloc_init();// needed for Show* in display_title() [FlavioJS]
 	

@@ -1509,13 +1509,13 @@ int send_users_tochar(void) {
 	
 	iter = mapit_getallusers();
 	
-	for( sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); sd = (TBL_PC*)mapit_next(iter) ) {
+	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
 		WFIFOL(char_fd,6+8*i) = sd->status.account_id;
 		WFIFOL(char_fd,6+8*i+4) = sd->status.char_id;
 		i++;
 	}
 	
-	mapit_free(iter);
+	mapit->free(iter);
 	
 	WFIFOW(char_fd,2) = 6 + 8*users;
 	WFIFOW(char_fd,4) = users;

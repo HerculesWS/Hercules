@@ -3907,7 +3907,7 @@ static void mob_readdb(void)
 			}
 		}
 
-		sv_readdb(db_path, filename[fi], ',', 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP, 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP, -1, &mob_readdb_sub);
+		sv->readdb(db_path, filename[fi], ',', 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP, 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP, -1, &mob_readdb_sub);
 	}
 }
 
@@ -3923,13 +3923,13 @@ static int mob_read_sqldb(void)
 		uint32 lines = 0, count = 0;
 
 		// retrieve all rows from the mob database
-		if( SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", mob_db_name[fi]) ) {
+		if( SQL_ERROR == SQL->Query(mmysql_handle, "SELECT * FROM `%s`", mob_db_name[fi]) ) {
 			Sql_ShowDebug(mmysql_handle);
 			continue;
 		}
 
 		// process rows one by one
-		while( SQL_SUCCESS == Sql_NextRow(mmysql_handle) ) {
+		while( SQL_SUCCESS == SQL->NextRow(mmysql_handle) ) {
 			// wrap the result into a TXT-compatible format
 			char line[1024];
 			char* str[31+2*MAX_MVP_DROP+2*MAX_MOB_DROP];
@@ -3941,7 +3941,7 @@ static int mob_read_sqldb(void)
 			{
 				char* data;
 				size_t len;
-				Sql_GetData(mmysql_handle, i, &data, &len);
+				SQL->GetData(mmysql_handle, i, &data, &len);
 
 				strcpy(p, data);
 				str[i] = p;
@@ -3955,7 +3955,7 @@ static int mob_read_sqldb(void)
 		}
 
 		// free the query result
-		Sql_FreeResult(mmysql_handle);
+		SQL->FreeResult(mmysql_handle);
 
 		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, mob_db_name[fi]);
 	}
@@ -4471,7 +4471,7 @@ static void mob_readskilldb(void) {
 			}
 		}
 
-		sv_readdb(db_path, filename[fi], ',', 19, 19, -1, &mob_parse_row_mobskilldb);
+		sv->readdb(db_path, filename[fi], ',', 19, 19, -1, &mob_parse_row_mobskilldb);
 	}
 }
 
@@ -4495,13 +4495,13 @@ static int mob_read_sqlskilldb(void)
 		uint32 lines = 0, count = 0;
 
 		// retrieve all rows from the mob skill database
-		if( SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", mob_skill_db_name[fi]) ) {
+		if( SQL_ERROR == SQL->Query(mmysql_handle, "SELECT * FROM `%s`", mob_skill_db_name[fi]) ) {
 			Sql_ShowDebug(mmysql_handle);
 			continue;
 		}
 
 		// process rows one by one
-		while( SQL_SUCCESS == Sql_NextRow(mmysql_handle) ) {
+		while( SQL_SUCCESS == SQL->NextRow(mmysql_handle) ) {
 			// wrap the result into a TXT-compatible format
 			char* str[19];
 			char* dummy = "";
@@ -4509,7 +4509,7 @@ static int mob_read_sqlskilldb(void)
 			++lines;
 			for( i = 0; i < 19; ++i )
 			{
-				Sql_GetData(mmysql_handle, i, &str[i], NULL);
+				SQL->GetData(mmysql_handle, i, &str[i], NULL);
 				if( str[i] == NULL ) str[i] = dummy; // get rid of NULL columns
 			}
 
@@ -4520,7 +4520,7 @@ static int mob_read_sqlskilldb(void)
 		}
 
 		// free the query result
-		Sql_FreeResult(mmysql_handle);
+		SQL->FreeResult(mmysql_handle);
 
 		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, mob_skill_db_name[fi]);
 	}
@@ -4586,7 +4586,7 @@ static bool mob_readdb_itemratio(char* str[], int columns, int current)
  */
 static void mob_load(void)
 {
-	sv_readdb(db_path, "mob_item_ratio.txt", ',', 2, 2+MAX_ITEMRATIO_MOBS, -1, &mob_readdb_itemratio); // must be read before mobdb
+	sv->readdb(db_path, "mob_item_ratio.txt", ',', 2, 2+MAX_ITEMRATIO_MOBS, -1, &mob_readdb_itemratio); // must be read before mobdb
 	mob_readchatdb();
 	if (db_use_sqldbs)
 	{
@@ -4598,9 +4598,9 @@ static void mob_load(void)
 		mob_readdb();
 		mob_readskilldb();
 	}
-	sv_readdb(db_path, "mob_avail.txt", ',', 2, 12, -1, &mob_readdb_mobavail);
+	sv->readdb(db_path, "mob_avail.txt", ',', 2, 12, -1, &mob_readdb_mobavail);
 	mob_read_randommonster();
-	sv_readdb(db_path, DBPATH"mob_race2_db.txt", ',', 2, 20, -1, &mob_readdb_race2);
+	sv->readdb(db_path, DBPATH"mob_race2_db.txt", ',', 2, 20, -1, &mob_readdb_race2);
 }
 
 void mob_reload(void) {

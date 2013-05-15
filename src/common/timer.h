@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef	_TIMER_H_
 #define	_TIMER_H_
@@ -35,23 +36,26 @@ struct TimerData {
 
 // Function prototype declaration
 
-unsigned int gettick(void);
-unsigned int gettick_nocache(void);
-
-int add_timer(unsigned int tick, TimerFunc func, int id, intptr_t data);
-int add_timer_interval(unsigned int tick, TimerFunc func, int id, intptr_t data, int interval);
-const struct TimerData* get_timer(int tid);
-int delete_timer(int tid, TimerFunc func);
-
-int addtick_timer(int tid, unsigned int tick);
-int settick_timer(int tid, unsigned int tick);
-
-int add_timer_func_list(TimerFunc func, char* name);
-
-unsigned long get_uptime(void);
-
 int do_timer(unsigned int tick);
 void timer_init(void);
 void timer_final(void);
+
+/* Hercules Renewal Phase One */
+unsigned int (*gettick) (void);
+unsigned int (*gettick_nocache) (void);
+
+int (*add_timer) (unsigned int tick, TimerFunc func, int id, intptr_t data);
+int (*add_timer_interval) (unsigned int tick, TimerFunc func, int id, intptr_t data, int interval);
+const struct TimerData *(*get_timer) (int tid);
+int (*delete_timer) (int tid, TimerFunc func);
+
+int (*addtick_timer) (int tid, unsigned int tick);
+int (*settick_timer) (int tid, unsigned int tick);
+
+int (*add_timer_func_list) (TimerFunc func, char* name);
+
+unsigned long (*get_uptime) (void);
+
+void timer_defaults(void);
 
 #endif /* _TIMER_H_ */

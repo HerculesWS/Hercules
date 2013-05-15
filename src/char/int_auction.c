@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/mmo.h"
 #include "../common/malloc.h"
@@ -48,15 +49,15 @@ void auction_save(struct auction_data *auction)
 	if( !auction )
 		return;
 
-	StringBuf_Init(&buf);
-	StringBuf_Printf(&buf, "UPDATE `%s` SET `seller_id` = '%d', `seller_name` = ?, `buyer_id` = '%d', `buyer_name` = ?, `price` = '%d', `buynow` = '%d', `hours` = '%d', `timestamp` = '%lu', `nameid` = '%d', `item_name` = ?, `type` = '%d', `refine` = '%d', `attribute` = '%d'",
+	StrBuf->Init(&buf);
+	StrBuf->Printf(&buf, "UPDATE `%s` SET `seller_id` = '%d', `seller_name` = ?, `buyer_id` = '%d', `buyer_name` = ?, `price` = '%d', `buynow` = '%d', `hours` = '%d', `timestamp` = '%lu', `nameid` = '%d', `item_name` = ?, `type` = '%d', `refine` = '%d', `attribute` = '%d'",
 		auction_db, auction->seller_id, auction->buyer_id, auction->price, auction->buynow, auction->hours, (unsigned long)auction->timestamp, auction->item.nameid, auction->type, auction->item.refine, auction->item.attribute);
 	for( j = 0; j < MAX_SLOTS; j++ )
-		StringBuf_Printf(&buf, ", `card%d` = '%d'", j, auction->item.card[j]);
-	StringBuf_Printf(&buf, " WHERE `auction_id` = '%d'", auction->auction_id);
+		StrBuf->Printf(&buf, ", `card%d` = '%d'", j, auction->item.card[j]);
+	StrBuf->Printf(&buf, " WHERE `auction_id` = '%d'", auction->auction_id);
 
 	stmt = SqlStmt_Malloc(sql_handle);
-	if( SQL_SUCCESS != SqlStmt_PrepareStr(stmt, StringBuf_Value(&buf))
+	if( SQL_SUCCESS != SqlStmt_PrepareStr(stmt, StrBuf->Value(&buf))
 	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 0, SQLDT_STRING, auction->seller_name, strnlen(auction->seller_name, NAME_LENGTH))
 	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 1, SQLDT_STRING, auction->buyer_name, strnlen(auction->buyer_name, NAME_LENGTH))
 	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 2, SQLDT_STRING, auction->item_name, strnlen(auction->item_name, ITEM_NAME_LENGTH))
@@ -66,7 +67,7 @@ void auction_save(struct auction_data *auction)
 	}
 
 	SqlStmt_Free(stmt);
-	StringBuf_Destroy(&buf);
+	StrBuf->Destroy(&buf);
 }
 
 unsigned int auction_create(struct auction_data *auction)
@@ -80,22 +81,22 @@ unsigned int auction_create(struct auction_data *auction)
 
 	auction->timestamp = time(NULL) + (auction->hours * 3600);
 
-	StringBuf_Init(&buf);
-	StringBuf_Printf(&buf, "INSERT INTO `%s` (`seller_id`,`seller_name`,`buyer_id`,`buyer_name`,`price`,`buynow`,`hours`,`timestamp`,`nameid`,`item_name`,`type`,`refine`,`attribute`,`unique_id`", auction_db);
+	StrBuf->Init(&buf);
+	StrBuf->Printf(&buf, "INSERT INTO `%s` (`seller_id`,`seller_name`,`buyer_id`,`buyer_name`,`price`,`buynow`,`hours`,`timestamp`,`nameid`,`item_name`,`type`,`refine`,`attribute`,`unique_id`", auction_db);
 	for( j = 0; j < MAX_SLOTS; j++ )
-		StringBuf_Printf(&buf, ",`card%d`", j);
-	StringBuf_Printf(&buf, ") VALUES ('%d',?,'%d',?,'%d','%d','%d','%lu','%d',?,'%d','%d','%d','%"PRIu64"'",
+		StrBuf->Printf(&buf, ",`card%d`", j);
+	StrBuf->Printf(&buf, ") VALUES ('%d',?,'%d',?,'%d','%d','%d','%lu','%d',?,'%d','%d','%d','%"PRIu64"'",
 		auction->seller_id, auction->buyer_id, auction->price, auction->buynow, auction->hours, (unsigned long)auction->timestamp, auction->item.nameid, auction->type, auction->item.refine, auction->item.attribute, auction->item.unique_id);
 	for( j = 0; j < MAX_SLOTS; j++ )
-		StringBuf_Printf(&buf, ",'%d'", auction->item.card[j]);
-	StringBuf_AppendStr(&buf, ")");
+		StrBuf->Printf(&buf, ",'%d'", auction->item.card[j]);
+	StrBuf->AppendStr(&buf, ")");
 	
 	//Unique Non Stackable Item ID
 	updateLastUid(auction->item.unique_id);
 	dbUpdateUid(sql_handle);
 
 	stmt = SqlStmt_Malloc(sql_handle);
-	if( SQL_SUCCESS != SqlStmt_PrepareStr(stmt, StringBuf_Value(&buf))
+	if( SQL_SUCCESS != SqlStmt_PrepareStr(stmt, StrBuf->Value(&buf))
 	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 0, SQLDT_STRING, auction->seller_name, strnlen(auction->seller_name, NAME_LENGTH))
 	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 1, SQLDT_STRING, auction->buyer_name, strnlen(auction->buyer_name, NAME_LENGTH))
 	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 2, SQLDT_STRING, auction->item_name, strnlen(auction->item_name, ITEM_NAME_LENGTH))
@@ -123,7 +124,7 @@ unsigned int auction_create(struct auction_data *auction)
 	}
 
 	SqlStmt_Free(stmt);
-	StringBuf_Destroy(&buf);
+	StrBuf->Destroy(&buf);
 
 	return auction->auction_id;
 }
@@ -165,7 +166,7 @@ void auction_delete(struct auction_data *auction)
 {
 	unsigned int auction_id = auction->auction_id;
 
-	if( SQL_ERROR == Sql_Query(sql_handle, "DELETE FROM `%s` WHERE `auction_id` = '%d'", auction_db, auction_id) )
+	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `auction_id` = '%d'", auction_db, auction_id) )
 		Sql_ShowDebug(sql_handle);
 
 	if( auction->auction_end_timer != INVALID_TIMER )
@@ -184,39 +185,39 @@ void inter_auctions_fromsql(void)
 	unsigned int tick = gettick(), endtick;
 	time_t now = time(NULL);
 
-	StringBuf_Init(&buf);
-	StringBuf_AppendStr(&buf, "SELECT `auction_id`,`seller_id`,`seller_name`,`buyer_id`,`buyer_name`,"
+	StrBuf->Init(&buf);
+	StrBuf->AppendStr(&buf, "SELECT `auction_id`,`seller_id`,`seller_name`,`buyer_id`,`buyer_name`,"
 		"`price`,`buynow`,`hours`,`timestamp`,`nameid`,`item_name`,`type`,`refine`,`attribute`,`unique_id`");
 	for( i = 0; i < MAX_SLOTS; i++ )
-		StringBuf_Printf(&buf, ",`card%d`", i);
-	StringBuf_Printf(&buf, " FROM `%s` ORDER BY `auction_id` DESC", auction_db);
+		StrBuf->Printf(&buf, ",`card%d`", i);
+	StrBuf->Printf(&buf, " FROM `%s` ORDER BY `auction_id` DESC", auction_db);
 
-	if( SQL_ERROR == Sql_Query(sql_handle, StringBuf_Value(&buf)) )
+	if( SQL_ERROR == SQL->Query(sql_handle, StrBuf->Value(&buf)) )
 		Sql_ShowDebug(sql_handle);
 
-	StringBuf_Destroy(&buf);
+	StrBuf->Destroy(&buf);
 
-	while( SQL_SUCCESS == Sql_NextRow(sql_handle) )
+	while( SQL_SUCCESS == SQL->NextRow(sql_handle) )
 	{
 		CREATE(auction, struct auction_data, 1);
-		Sql_GetData(sql_handle, 0, &data, NULL); auction->auction_id = atoi(data);
-		Sql_GetData(sql_handle, 1, &data, NULL); auction->seller_id = atoi(data);
-		Sql_GetData(sql_handle, 2, &data, NULL); safestrncpy(auction->seller_name, data, NAME_LENGTH);
-		Sql_GetData(sql_handle, 3, &data, NULL); auction->buyer_id = atoi(data);
-		Sql_GetData(sql_handle, 4, &data, NULL); safestrncpy(auction->buyer_name, data, NAME_LENGTH);
-		Sql_GetData(sql_handle, 5, &data, NULL); auction->price	= atoi(data);
-		Sql_GetData(sql_handle, 6, &data, NULL); auction->buynow = atoi(data);
-		Sql_GetData(sql_handle, 7, &data, NULL); auction->hours = atoi(data);
-		Sql_GetData(sql_handle, 8, &data, NULL); auction->timestamp = atoi(data);
+		SQL->GetData(sql_handle, 0, &data, NULL); auction->auction_id = atoi(data);
+		SQL->GetData(sql_handle, 1, &data, NULL); auction->seller_id = atoi(data);
+		SQL->GetData(sql_handle, 2, &data, NULL); safestrncpy(auction->seller_name, data, NAME_LENGTH);
+		SQL->GetData(sql_handle, 3, &data, NULL); auction->buyer_id = atoi(data);
+		SQL->GetData(sql_handle, 4, &data, NULL); safestrncpy(auction->buyer_name, data, NAME_LENGTH);
+		SQL->GetData(sql_handle, 5, &data, NULL); auction->price	= atoi(data);
+		SQL->GetData(sql_handle, 6, &data, NULL); auction->buynow = atoi(data);
+		SQL->GetData(sql_handle, 7, &data, NULL); auction->hours = atoi(data);
+		SQL->GetData(sql_handle, 8, &data, NULL); auction->timestamp = atoi(data);
 
 		item = &auction->item;
-		Sql_GetData(sql_handle, 9, &data, NULL); item->nameid = atoi(data);
-		Sql_GetData(sql_handle,10, &data, NULL); safestrncpy(auction->item_name, data, ITEM_NAME_LENGTH);
-		Sql_GetData(sql_handle,11, &data, NULL); auction->type = atoi(data);
+		SQL->GetData(sql_handle, 9, &data, NULL); item->nameid = atoi(data);
+		SQL->GetData(sql_handle,10, &data, NULL); safestrncpy(auction->item_name, data, ITEM_NAME_LENGTH);
+		SQL->GetData(sql_handle,11, &data, NULL); auction->type = atoi(data);
 
-		Sql_GetData(sql_handle,12, &data, NULL); item->refine = atoi(data);
-		Sql_GetData(sql_handle,13, &data, NULL); item->attribute = atoi(data);
-		Sql_GetData(sql_handle,14, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
+		SQL->GetData(sql_handle,12, &data, NULL); item->refine = atoi(data);
+		SQL->GetData(sql_handle,13, &data, NULL); item->attribute = atoi(data);
+		SQL->GetData(sql_handle,14, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
 
 		item->identify = 1;
 		item->amount = 1;
@@ -224,7 +225,7 @@ void inter_auctions_fromsql(void)
 
 		for( i = 0; i < MAX_SLOTS; i++ )
 		{
-			Sql_GetData(sql_handle, 15 + i, &data, NULL);
+			SQL->GetData(sql_handle, 15 + i, &data, NULL);
 			item->card[i] = atoi(data);
 		}
 
@@ -237,7 +238,7 @@ void inter_auctions_fromsql(void)
 		idb_put(auction_db_, auction->auction_id, auction);
 	}
 
-	Sql_FreeResult(sql_handle);
+	SQL->FreeResult(sql_handle);
 }
 
 static void mapif_Auction_sendlist(int fd, int char_id, short count, short pages, unsigned char *buf)

@@ -7,6 +7,7 @@
 #include "../common/cbasetypes.h"
 #include "../common/core.h"
 #include "../common/console.h"
+#include "../common/sql.h"
 
 struct script_state;
 struct AtCommandInfo;
@@ -42,6 +43,8 @@ struct hplugin_info {
 };
 
 HPExport void *(*import_symbol) (char *name);
+HPExport Sql *mysql_handle;
+
 #define GET_SYMBOL(n) import_symbol(n)
 
 #define SERVER_TYPE_ALL SERVER_TYPE_LOGIN|SERVER_TYPE_CHAR|SERVER_TYPE_MAP

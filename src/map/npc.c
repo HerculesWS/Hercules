@@ -1852,7 +1852,7 @@ int npc_unload(struct npc_data* nd, bool single) {
 			ev_db->foreach(ev_db,npc_unload_ev,nd->exname); //Clean up all events related
 
 		iter = mapit_geteachpc();
-		for( bl = (struct block_list*)mapit_first(iter); mapit_exists(iter); bl = (struct block_list*)mapit_next(iter) ) {
+		for( bl = (struct block_list*)mapit->first(iter); mapit->exists(iter); bl = (struct block_list*)mapit->next(iter) ) {
 			struct map_session_data *sd = ((TBL_PC*)bl);
 			if( sd && sd->npc_timer_id != INVALID_TIMER ) {
 				const struct TimerData *td = get_timer(sd->npc_timer_id);
@@ -1866,7 +1866,7 @@ int npc_unload(struct npc_data* nd, bool single) {
 				sd->npc_timer_id = INVALID_TIMER;
 			}
 		}
-		mapit_free(iter);
+		mapit->free(iter);
 
 		if (nd->u.scr.timerid != INVALID_TIMER) {
 			const struct TimerData *td;
@@ -3606,7 +3606,7 @@ void npc_parsesrcfile(const char* filepath, bool runOnInit)
 		lines++;
 
 		// w1<TAB>w2<TAB>w3<TAB>w4
-		count = sv_parse(p, len+buffer-p, 0, '\t', pos, ARRAYLENGTH(pos), (e_svopt)(SV_TERMINATE_LF|SV_TERMINATE_CRLF));
+		count = sv->parse(p, len+buffer-p, 0, '\t', pos, ARRAYLENGTH(pos), (e_svopt)(SV_TERMINATE_LF|SV_TERMINATE_CRLF));
 		if( count < 0 )
 		{
 			ShowError("npc_parsesrcfile: Parse error in file '%s', line '%d'. Stopping...\n", filepath, strline(buffer,p-buffer));
@@ -3836,7 +3836,7 @@ int npc_reload(void) {
 	//Remove all npcs/mobs. [Skotlex]
 
 	iter = mapit_geteachiddb();
-	for( bl = (struct block_list*)mapit_first(iter); mapit_exists(iter); bl = (struct block_list*)mapit_next(iter) ) {
+	for( bl = (struct block_list*)mapit->first(iter); mapit->exists(iter); bl = (struct block_list*)mapit->next(iter) ) {
 		switch(bl->type) {
 		case BL_NPC:
 			if( bl->id != fake_nd->bl.id )// don't remove fake_nd
@@ -3847,7 +3847,7 @@ int npc_reload(void) {
 			break;
 		}
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 
 	if(battle_config.dynamic_mobs)
 	{// dynamic check by [random]

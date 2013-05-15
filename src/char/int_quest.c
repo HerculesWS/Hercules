@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/mmo.h"
 #include "../common/db.h"
@@ -55,7 +56,7 @@ int mapif_quests_fromsql(int char_id, struct quest questlog[])
 //Delete a quest
 bool mapif_quest_delete(int char_id, int quest_id)
 {
-	if ( SQL_ERROR == Sql_Query(sql_handle, "DELETE FROM `%s` WHERE `quest_id` = '%d' AND `char_id` = '%d'", quest_db, quest_id, char_id) )
+	if ( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `quest_id` = '%d' AND `char_id` = '%d'", quest_db, quest_id, char_id) )
 	{
 		Sql_ShowDebug(sql_handle);
 		return false;
@@ -67,7 +68,7 @@ bool mapif_quest_delete(int char_id, int quest_id)
 //Add a quest to a questlog
 bool mapif_quest_add(int char_id, struct quest qd)
 {
-	if ( SQL_ERROR == Sql_Query(sql_handle, "INSERT INTO `%s`(`quest_id`, `char_id`, `state`, `time`, `count1`, `count2`, `count3`) VALUES ('%d', '%d', '%d','%d', '%d', '%d', '%d')", quest_db, qd.quest_id, char_id, qd.state, qd.time, qd.count[0], qd.count[1], qd.count[2]) ) 
+	if ( SQL_ERROR == SQL->Query(sql_handle, "INSERT INTO `%s`(`quest_id`, `char_id`, `state`, `time`, `count1`, `count2`, `count3`) VALUES ('%d', '%d', '%d','%d', '%d', '%d', '%d')", quest_db, qd.quest_id, char_id, qd.state, qd.time, qd.count[0], qd.count[1], qd.count[2]) ) 
 	{
 		Sql_ShowDebug(sql_handle);
 		return false;
@@ -79,7 +80,7 @@ bool mapif_quest_add(int char_id, struct quest qd)
 //Update a questlog
 bool mapif_quest_update(int char_id, struct quest qd)
 {
-	if ( SQL_ERROR == Sql_Query(sql_handle, "UPDATE `%s` SET `state`='%d', `count1`='%d', `count2`='%d', `count3`='%d' WHERE `quest_id` = '%d' AND `char_id` = '%d'", quest_db, qd.state, qd.count[0], qd.count[1], qd.count[2], qd.quest_id, char_id) ) 
+	if ( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `state`='%d', `count1`='%d', `count2`='%d', `count3`='%d' WHERE `quest_id` = '%d' AND `char_id` = '%d'", quest_db, qd.state, qd.count[0], qd.count[1], qd.count[2], qd.quest_id, char_id) ) 
 	{
 		Sql_ShowDebug(sql_handle);
 		return false;
