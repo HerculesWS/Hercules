@@ -2415,8 +2415,7 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 				break;
 		}	//Switch End
 		if (flag) { //Possible to chain
-			flag = DIFF_TICK(sd->ud.canact_tick, tick);
-			if (flag < 1) flag = 1;
+			if ( (flag = DIFF_TICK(sd->ud.canact_tick, tick)) < 50 ) flag = 50;/* less is a waste. */
 			sc_start2(src,SC_COMBO,100,skill_id,bl->id,flag);
 			clif->combo_delay(src, flag);
 		}
@@ -13179,6 +13178,8 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			case GC_COUNTERSLASH:
 			case GC_WEAPONCRUSH:
 			case SR_FALLENEMPIRE:
+			case SR_DRAGONCOMBO:
+			case SR_TIGERCANNON:
 				break;
 			default: return 0;
 		}
