@@ -1179,7 +1179,12 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 				sd->skill_lv_old = skill_lv;
 				break;
 		}
+		/* temporarily disabled, awaiting for kenpachi to detail this so we can make it work properly */
+#if 0
 		if ( sd->skillitem != skill_id && !skill->check_condition_castbegin(sd, skill_id, skill_lv) )
+#else
+		if ( !skill->check_condition_castbegin(sd, skill_id, skill_lv) )
+#endif
 			return 0;
 	}
 
