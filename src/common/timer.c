@@ -281,13 +281,13 @@ const struct TimerData* timer_get(int tid) {
 /// Marks a timer specified by 'id' for immediate deletion once it expires.
 /// Param 'func' is used for debug/verification purposes.
 /// Returns 0 on success, < 0 on failure.
-int timer_delete(int tid, TimerFunc func) {
+int timer_do_delete(int tid, TimerFunc func) {
 	if( tid < 0 || tid >= timer_data_num ) {
-		ShowError("timer_delete error : no such timer %d (%p(%s))\n", tid, func, search_timer_func_list(func));
+		ShowError("timer_do_delete error : no such timer %d (%p(%s))\n", tid, func, search_timer_func_list(func));
 		return -1;
 	}
 	if( timer_data[tid].func != func ) {
-		ShowError("timer_delete error : function mismatch %p(%s) != %p(%s)\n", timer_data[tid].func, search_timer_func_list(timer_data[tid].func), func, search_timer_func_list(func));
+		ShowError("timer_do_delete error : function mismatch %p(%s) != %p(%s)\n", timer_data[tid].func, search_timer_func_list(timer_data[tid].func), func, search_timer_func_list(func));
 		return -2;
 	}
 
@@ -416,7 +416,7 @@ void timer_defaults(void) {
 	add_timer_interval = timer_add_interval;
 	add_timer_func_list = timer_add_func_list;
 	get_timer = timer_get;
-	delete_timer = timer_delete;
+	delete_timer = timer_do_delete;
 	addtick_timer = timer_addtick;
 	settick_timer = timer_settick;
 	get_uptime = timer_get_uptime;
