@@ -1849,6 +1849,7 @@ packet(0x020d,-1);
 #if PACKETVER >= 20110718
 	packet(0x0844,2,clif->pCashShopOpen,2);/* tell server cashshop window is being open */
 	packet(0x084a,2,clif->pCashShopClose,2);/* tell server cashshop window is being closed */
+	packet(0x0846,4,clif->pCashShopReqTab,2);
 	packet(0x08c9,2,clif->pCashShopSchedule,0);
 	packet(0x0848,-1,clif->pCashShopBuy,2);
 #endif
@@ -1889,6 +1890,11 @@ packet(0x020d,-1);
 	packet(0x08ab,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
 	packet(0x088b,2,clif->pSearchStoreInfoNextPage,0);
 	packet(0x08a2,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	#ifndef PACKETVER_RE
+		packet(0x0835,19,clif->pWantToConnection,2,6,10,14,18);
+		packet(0x0892,5,clif->pWalkToXY,2);
+		packet(0x0899,6,clif->pTickSend,2);
+	#endif
 #endif
 
 //2012-03-07fRagexeRE

@@ -16869,7 +16869,27 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 
 	}
 }
+/* [Ind/Hercules] */
+void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd) {
+	short tab = RFIFOW(fd, 2);
+	int j;
 
+	if( tab < 0 || tab > CASHSHOP_TAB_MAX )
+		return;
+
+	WFIFOHEAD(fd, 10 + ( clif->cs.item_count[tab] * 6 ) );
+	WFIFOW(fd, 0) = 0x8c0;
+	WFIFOW(fd, 2) = 10 + ( clif->cs.item_count[tab] * 6 );
+	WFIFOL(fd, 4) = tab;
+	WFIFOW(fd, 8) = clif->cs.item_count[tab];
+	
+	for( j = 0; j < clif->cs.item_count[tab]; j++ ) {
+		WFIFOW(fd, 10 + ( 6 * j ) ) = clif->cs.data[tab][j]->id;
+		WFIFOL(fd, 12 + ( 6 * j ) ) = clif->cs.data[tab][j]->price;
+	}
+	
+	WFIFOSET(fd, 10 + ( clif->cs.item_count[tab] * 6 ));
+}
 /* [Ind/Hercules] */
 void clif_maptypeproperty2(struct block_list *bl,enum send_target t) {
 #if PACKETVER >= 20121010
@@ -16970,7 +16990,6 @@ int clif_parse(int fd) {
 			return 0;
 		
 		cmd = RFIFOW(fd,0);
-		
 		// filter out invalid / unsupported packets
 		if (cmd > MAX_PACKET_DB || packet_db[cmd].len == 0) {
 			ShowWarning("clif_parse: Received unsupported packet (packet 0x%04x, %d bytes received), disconnecting session #%d.\n", cmd, RFIFOREST(fd), fd);
@@ -17813,6 +17832,7 @@ void clif_defaults(void) {
 	/* RagExe Cash Shop [Ind/Hercules] */
 	clif->pCashShopOpen = clif_parse_CashShopOpen;
 	clif->pCashShopClose = clif_parse_CashShopClose;
+	clif->pCashShopReqTab = clif_parse_CashShopReqTab;
 	clif->pCashShopSchedule = clif_parse_CashShopSchedule;
 	clif->pCashShopBuy = clif_parse_CashShopBuy;
 	/*  */

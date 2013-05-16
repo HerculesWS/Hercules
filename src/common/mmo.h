@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef	_MMO_H_
 #define	_MMO_H_
@@ -49,6 +50,9 @@
 #ifndef PACKETVER
 	#define PACKETVER 20120418
 #endif
+
+/// uncomment if your client is NOT ragexeRE (required because of conflicting packets in ragexe vs ragexeRE)
+#define PACKETVER_RE
 
 //Remove/Comment this line to disable sc_data saving. [Skotlex]
 #define ENABLE_SC_SAVING

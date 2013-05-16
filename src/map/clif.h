@@ -1081,6 +1081,7 @@ struct clif_interface {
 	/* RagExe Cash Shop [Ind/Hercules] */
 	void (*pCashShopOpen) (int fd, struct map_session_data *sd);
 	void (*pCashShopClose) (int fd, struct map_session_data *sd);
+	void (*pCashShopReqTab) (int fd, struct map_session_data *sd);
 	void (*pCashShopSchedule) (int fd, struct map_session_data *sd);
 	void (*pCashShopBuy) (int fd, struct map_session_data *sd);
 	void (*pPartyTick) (int fd, struct map_session_data *sd);
