@@ -1588,7 +1588,7 @@ int make_new_char_sql(struct char_session_data* sd, char* name_, int str, int ag
 	}
 #endif
 	//Retrieve the newly auto-generated char id
-	char_id = (int)SQL->NumRows(sql_handle);
+	char_id = (int)SQL->LastInsertId(sql_handle);
 	//Give the char the default items
 	
 	for (k = 0; k < ARRAYLENGTH(start_items) && start_items[k] != 0; k += 2) {

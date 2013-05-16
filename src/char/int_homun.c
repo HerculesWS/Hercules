@@ -104,7 +104,7 @@ bool mapif_homunculus_save(struct s_homunculus* hd)
 		}
 		else
 		{
-			hd->hom_id = (int)SQL->NumRows(sql_handle);
+			hd->hom_id = (int)SQL->LastInsertId(sql_handle);
 		}
 	}
 	else

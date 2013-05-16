@@ -81,7 +81,7 @@ bool mapif_mercenary_save(struct s_mercenary* merc)
 			flag = false;
 		}
 		else
-			merc->mercenary_id = (int)SQL->NumRows(sql_handle);
+			merc->mercenary_id = (int)SQL->LastInsertId(sql_handle);
 	}
 	else if( SQL_ERROR == SQL->Query(sql_handle,
 		"UPDATE `%s` SET `char_id` = '%d', `class` = '%d', `hp` = '%d', `sp` = '%d', `kill_counter` = '%u', `life_time` = '%u' WHERE `mer_id` = '%d'",

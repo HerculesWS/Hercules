@@ -150,7 +150,7 @@ int inter_party_tosql(struct party *p, int flag, int index)
 			Sql_ShowDebug(sql_handle);
 			return 0;
 		}
-		party_id = p->party_id = (int)SQL->NumRows(sql_handle);
+		party_id = p->party_id = (int)SQL->LastInsertId(sql_handle);
 	}
 
 	if( flag & PS_BASIC )
@@ -295,8 +295,7 @@ struct party_data* search_partyname(char* str)
 	SQL->EscapeStringLen(sql_handle, esc_name, str, safestrnlen(str, NAME_LENGTH));
 	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `party_id` FROM `%s` WHERE `name`='%s'", party_db, esc_name) )
 		Sql_ShowDebug(sql_handle);
-	else if( SQL_SUCCESS == SQL->NextRow(sql_handle) )
-	{
+	else if( SQL_SUCCESS == SQL->NextRow(sql_handle) ) {
 		SQL->GetData(sql_handle, 0, &data, NULL);
 		p = inter_party_fromsql(atoi(data));
 	}

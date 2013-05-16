@@ -29,7 +29,7 @@ bool mapif_elemental_save(struct s_elemental* ele) {
 			flag = false;
 		}
 		else
-			ele->elemental_id = (int)SQL->NumRows(sql_handle);
+			ele->elemental_id = (int)SQL->LastInsertId(sql_handle);
 	} else if( SQL_ERROR == SQL->Query(sql_handle,
 									"UPDATE `elemental` SET `char_id` = '%d', `class` = '%d', `mode` = '%d', `hp` = '%d', `sp` = '%d',"
 									"`max_hp` = '%d', `max_sp` = '%d', `atk1` = '%d', `atk2` = '%d', `matk` = '%d', `aspd` = '%d', `def` = '%d',"

@@ -39,7 +39,7 @@ int inter_pet_tosql(int pet_id, struct s_pet* p)
 			Sql_ShowDebug(sql_handle);
 			return 0;
 		}
-		p->pet_id = (int)SQL->NumRows(sql_handle);
+		p->pet_id = (int)SQL->LastInsertId(sql_handle);
 	}
 	else
 	{// Update pet.

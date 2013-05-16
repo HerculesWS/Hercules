@@ -150,7 +150,7 @@ int inter_guild_tosql(struct guild *g,int flag)
 		}
 		else
 		{
-			g->guild_id = (int)SQL->NumRows(sql_handle);
+			g->guild_id = (int)SQL->LastInsertId(sql_handle);
 			new_guild = 1;
 		}
 	}
