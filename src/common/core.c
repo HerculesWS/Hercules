@@ -5,6 +5,7 @@
 #include "../common/mmo.h"
 #include "../common/showmsg.h"
 #include "../common/malloc.h"
+#include "../common/strlib.h"
 #include "core.h"
 #include "../common/console.h"
 
@@ -16,7 +17,6 @@
 	#include "../common/mempool.h"
 	#include "../common/sql.h"
 	#include "../config/core.h"
-	#include "../common/strlib.h"
 	#include "../common/HPM.h"
 #endif
 
@@ -283,8 +283,8 @@ void core_defaults(void) {
 	hpm_defaults();
 #endif
 	console_defaults();
-#ifndef MINICORE
 	strlib_defaults();
+#ifndef MINICORE
 	sql_defaults();
 	timer_defaults();
 #endif
