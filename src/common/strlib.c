@@ -991,7 +991,7 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 // @author MouseJstr (original)
 
 /// Allocates a StringBuf
-StringBuf* StringBuf_Malloc()  {
+StringBuf* StringBuf_Malloc(void)  {
 	StringBuf* self;
 	CREATE(self, StringBuf, 1);
 	StrBuf->Init(self);

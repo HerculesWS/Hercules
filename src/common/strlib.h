@@ -15,7 +15,7 @@
 #ifdef WIN32
 	#define HAVE_STRTOK_R
 	#define strtok_r(s,delim,save_ptr) _strtok_r((s),(delim),(save_ptr))
-	char _strtok_r(char* s1, const char* s2, char** lasts);
+	char *_strtok_r(char* s1, const char* s2, char** lasts);
 #endif
 
 /// Bitfield determining the behaviour of sv_parse and sv_split.
