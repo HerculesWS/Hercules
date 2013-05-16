@@ -3243,20 +3243,20 @@ ACMD(party)
  *------------------------------------------*/
 ACMD(guild)
 {
-	char guild[NAME_LENGTH];
+	char guild_name[NAME_LENGTH];
 	int prev;
 	nullpo_retr(-1, sd);
 	
-	memset(guild, '\0', sizeof(guild));
+	memset(guild_name, '\0', sizeof(guild_name));
 	
-	if (!message || !*message || sscanf(message, "%23[^\n]", guild) < 1) {
+	if (!message || !*message || sscanf(message, "%23[^\n]", guild_name) < 1) {
 		clif->message(fd, msg_txt(1030)); // Please enter a guild name (usage: @guild <guild_name>).
 		return false;
 	}
 	
 	prev = battle_config.guild_emperium_check;
 	battle_config.guild_emperium_check = 0;
-	guild_create(sd, guild);
+	guild->create(sd, guild_name);
 	battle_config.guild_emperium_check = prev;
 	
 	return true;
@@ -3272,7 +3272,7 @@ ACMD(breakguild)
 		if (g) { // Check if guild was found
 			if (sd->state.gmaster_flag) { // Check if player is guild master
 				int ret = 0;
-				ret = guild_break(sd, g->name); // Break guild
+				ret = guild->dobreak(sd, g->name); // Break guild
 				if (ret) { // Check if anything went wrong
 					return true; // Guild was broken
 				} else {
@@ -3305,7 +3305,7 @@ ACMD(agitstart)
 	}
 	
 	agit_flag = 1;
-	guild_agit_start();
+	guild->agit_start();
 	clif->message(fd, msg_txt(72)); // War of Emperium has been initiated.
 	
 	return true;
@@ -3323,7 +3323,7 @@ ACMD(agitstart2)
 	}
 	
 	agit2_flag = 1;
-	guild_agit2_start();
+	guild->agit2_start();
 	clif->message(fd, msg_txt(403)); // "War of Emperium SE has been initiated."
 	
 	return true;
@@ -3341,7 +3341,7 @@ ACMD(agitend)
 	}
 	
 	agit_flag = 0;
-	guild_agit_end();
+	guild->agit_end();
 	clif->message(fd, msg_txt(74)); // War of Emperium has been ended.
 	
 	return true;
@@ -3359,7 +3359,7 @@ ACMD(agitend2)
 	}
 	
 	agit2_flag = 0;
-	guild_agit2_end();
+	guild->agit2_end();
 	clif->message(fd, msg_txt(405)); // "War of Emperium SE has been ended."
 	
 	return true;
@@ -3484,8 +3484,8 @@ ACMD(guildrecall)
 		return false;
 	}
 	
-	if ((g = guild_searchname(guild_name)) == NULL && // name first to avoid error when name begin with a number
-	    (g = guild_search(atoi(message))) == NULL)
+	if ((g = guild->searchname(guild_name)) == NULL && // name first to avoid error when name begin with a number
+	    (g = guild->search(atoi(message))) == NULL)
 	{
 		clif->message(fd, msg_txt(94)); // Incorrect name/ID, or no one from the guild is online.
 		return false;
@@ -4080,8 +4080,8 @@ ACMD(guildspy)
 		return false;
 	}
 	
-	if ((g = guild_searchname(guild_name)) != NULL || // name first to avoid error when name begin with a number
-	    (g = guild_search(atoi(message))) != NULL) {
+	if ((g = guild->searchname(guild_name)) != NULL || // name first to avoid error when name begin with a number
+	    (g = guild->search(atoi(message))) != NULL) {
 		if (sd->guildspy == g->guild_id) {
 			sd->guildspy = 0;
 			sprintf(atcmd_output, msg_txt(103), g->name); // No longer spying on the %s guild.
@@ -4792,14 +4792,14 @@ ACMD(disguiseall)
 ACMD(disguiseguild)
 {
 	int id = 0, i;
-	char monster[NAME_LENGTH], guild[NAME_LENGTH];
+	char monster[NAME_LENGTH], guild_name[NAME_LENGTH];
 	struct map_session_data *pl_sd;
 	struct guild *g;
 	
 	memset(monster, '\0', sizeof(monster));
-	memset(guild, '\0', sizeof(guild));
+	memset(guild_name, '\0', sizeof(guild_name));
 	
-	if( !message || !*message || sscanf(message, "%23[^,], %23[^\r\n]", monster, guild) < 2 ) {
+	if( !message || !*message || sscanf(message, "%23[^,], %23[^\r\n]", monster, guild_name) < 2 ) {
 		clif->message(fd, msg_txt(1146)); // Please enter a mob name/ID and guild name/ID (usage: @disguiseguild <mob name/ID>, <guild name/ID>).
 		return false;
 	}
@@ -4820,7 +4820,7 @@ ACMD(disguiseguild)
 		return false;
 	}
 	
-	if( (g = guild_searchname(guild)) == NULL && (g = guild_search(atoi(guild))) == NULL ) {
+	if( (g = guild->searchname(guild_name)) == NULL && (g = guild->search(atoi(guild_name))) == NULL ) {
 		clif->message(fd, msg_txt(94)); // Incorrect name/ID, or no one from the guild is online.
 		return false;
 	}
@@ -4888,7 +4888,7 @@ ACMD(undisguiseguild)
 		return false;
 	}
 	
-	if( (g = guild_searchname(guild_name)) == NULL && (g = guild_search(atoi(message))) == NULL ) {
+	if( (g = guild->searchname(guild_name)) == NULL && (g = guild->search(atoi(message))) == NULL ) {
 		clif->message(fd, msg_txt(94)); // Incorrect name/ID, or no one from the guild is online.
 		return false;
 	}
@@ -5662,7 +5662,7 @@ ACMD(changegm)
 		return false;
 	}
 	
-	guild_gm_change(sd->status.guild_id, pl_sd);
+	guild->gm_change(sd->status.guild_id, pl_sd);
 	return true;
 }
 
@@ -7467,19 +7467,19 @@ ACMD(sizeall)
 ACMD(sizeguild)
 {
 	int size = 0, i;
-	char guild[NAME_LENGTH];
+	char guild_name[NAME_LENGTH];
 	struct map_session_data *pl_sd;
 	struct guild *g;
 	nullpo_retr(-1, sd);
 	
 	memset(guild, '\0', sizeof(guild));
 	
-	if( !message || !*message || sscanf(message, "%d %23[^\n]", &size, guild) < 2 ) {
+	if( !message || !*message || sscanf(message, "%d %23[^\n]", &size, guild_name) < 2 ) {
 		clif->message(fd, msg_txt(1304)); // Please enter guild name/ID (usage: @sizeguild <size> <guild name/ID>).
 		return false;
 	}
 	
-	if( (g = guild_searchname(guild)) == NULL && (g = guild_search(atoi(guild))) == NULL ) {
+	if( (g = guild->searchname(guild_name)) == NULL && (g = guild->search(atoi(guild_name))) == NULL ) {
 		clif->message(fd, msg_txt(94)); // Incorrect name/ID, or no one from the guild is online.
 		return false;
 	}
@@ -8813,7 +8813,7 @@ ACMD(join) {
 		struct guild *g = sd->guild, *sg = NULL;
 		int i;
 		for (i = 0; i < MAX_GUILDALLIANCE; i++) {
-			if( g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild_search(g->alliance[i].guild_id) ) ) {
+			if( g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild->search(g->alliance[i].guild_id) ) ) {
 				if( !(((struct hChSysCh*)sg->channel)->banned && idb_exists(((struct hChSysCh*)sg->channel)->banned, sd->status.account_id))) {
 					clif->chsys_join((struct hChSysCh *)sg->channel,sd);
 				}

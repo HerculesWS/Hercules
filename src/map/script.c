@@ -4817,7 +4817,7 @@ BUILDIN(warpguild)
 	int y           = script_getnum(st,4);
 	int gid         = script_getnum(st,5);
 	
-	g = guild_search(gid);
+	g = guild->search(gid);
 	if( g == NULL )
 		return true;
 	
@@ -6759,7 +6759,7 @@ BUILDIN(getguildname)
 	
 	guild_id = script_getnum(st,2);
 	
-	if( ( g = guild_search(guild_id) ) != NULL )
+	if( ( g = guild->search(guild_id) ) != NULL )
 	{
 		script_pushstrcopy(st,g->name);
 	}
@@ -6781,7 +6781,7 @@ BUILDIN(getguildmaster)
 	
 	guild_id = script_getnum(st,2);
 	
-	if( ( g = guild_search(guild_id) ) != NULL )
+	if( ( g = guild->search(guild_id) ) != NULL )
 	{
 		script_pushstrcopy(st,g->member[0].name);
 	}
@@ -6799,7 +6799,7 @@ BUILDIN(getguildmasterid)
 	
 	guild_id = script_getnum(st,2);
 	
-	if( ( g = guild_search(guild_id) ) != NULL )
+	if( ( g = guild->search(guild_id) ) != NULL )
 	{
 		script_pushint(st,g->member[0].char_id);
 	}
@@ -7693,7 +7693,7 @@ BUILDIN(guildskill)
 	id = ( script_isstring(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	level = script_getnum(st,3);
 	for( i=0; i < level; i++ )
-		guild_skillup(sd, id);
+		guild->skillup(sd, id);
 	
 	return true;
 }
@@ -7729,11 +7729,11 @@ BUILDIN(getgdskilllv)
 	
 	guild_id = script_getnum(st,2);
 	skill_id = ( script_isstring(st,3) ? skill->name2id(script_getstr(st,3)) : script_getnum(st,3) );
-	g = guild_search(guild_id);
+	g = guild->search(guild_id);
 	if( g == NULL )
 		script_pushint(st, -1);
 	else
-		script_pushint(st, guild_checkskill(g,skill_id));
+		script_pushint(st, guild->checkskill(g,skill_id));
 	
 	return true;
 }
@@ -8372,7 +8372,7 @@ BUILDIN(guildgetexp)
 	if(exp < 0)
 		return true;
 	if(sd && sd->status.guild_id > 0)
-		guild_getexp (sd, exp);
+		guild->getexp (sd, exp);
 	
 	return true;
 }
@@ -8393,7 +8393,7 @@ BUILDIN(guildchangegm)
 	if (!sd)
 		script_pushint(st,0);
 	else
-		script_pushint(st,guild_gm_change(guild_id, sd));
+		script_pushint(st,guild->gm_change(guild_id, sd));
 	
 	return true;
 }
@@ -9322,7 +9322,7 @@ BUILDIN(getmapguildusers)
 		script_pushint(st,-1);
 		return true;
 	}
-	g = guild_search(gid);
+	g = guild->search(gid);
 	
 	if (g){
 		for(i = 0; i < g->max_member; i++)
@@ -10743,7 +10743,7 @@ BUILDIN(agitstart)
 {
 	if(agit_flag==1) return true;      // Agit already Start.
 	agit_flag=1;
-	guild_agit_start();
+	guild->agit_start();
 	return true;
 }
 
@@ -10751,7 +10751,7 @@ BUILDIN(agitend)
 {
 	if(agit_flag==0) return true;      // Agit already End.
 	agit_flag=0;
-	guild_agit_end();
+	guild->agit_end();
 	return true;
 }
 
@@ -10759,7 +10759,7 @@ BUILDIN(agitstart2)
 {
 	if(agit2_flag==1) return true;      // Agit2 already Start.
 	agit2_flag=1;
-	guild_agit2_start();
+	guild->agit2_start();
 	return true;
 }
 
@@ -10767,7 +10767,7 @@ BUILDIN(agitend2)
 {
 	if(agit2_flag==0) return true;      // Agit2 already End.
 	agit2_flag=0;
-	guild_agit2_end();
+	guild->agit2_end();
 	return true;
 }
 
@@ -10810,9 +10810,9 @@ BUILDIN(flagemblem)
 		clif->guild_emblem_area(&nd->bl);
 		/* guild flag caching */
 		if( g_id ) /* adding a id */
-			guild_flag_add(nd);
+			guild->flag_add(nd);
 		else if( changed ) /* removing a flag */
-			guild_flag_remove(nd);
+			guild->flag_remove(nd);
 	}
 	return true;
 }
@@ -10820,7 +10820,7 @@ BUILDIN(flagemblem)
 BUILDIN(getcastlename)
 {
 	const char* mapname = mapindex_getmapname(script_getstr(st,2),NULL);
-	struct guild_castle* gc = guild_mapname2gc(mapname);
+	struct guild_castle* gc = guild->mapname2gc(mapname);
 	const char* name = (gc) ? gc->castle_name : "";
 	script_pushstrcopy(st,name);
 	return true;
@@ -10830,7 +10830,7 @@ BUILDIN(getcastledata)
 {
 	const char *mapname = mapindex_getmapname(script_getstr(st,2),NULL);
 	int index = script_getnum(st,3);
-	struct guild_castle *gc = guild_mapname2gc(mapname);
+	struct guild_castle *gc = guild->mapname2gc(mapname);
 	
 	if (gc == NULL) {
 		script_pushint(st,0);
@@ -10874,7 +10874,7 @@ BUILDIN(setcastledata)
 	const char *mapname = mapindex_getmapname(script_getstr(st,2),NULL);
 	int index = script_getnum(st,3);
 	int value = script_getnum(st,4);
-	struct guild_castle *gc = guild_mapname2gc(mapname);
+	struct guild_castle *gc = guild->mapname2gc(mapname);
 	
 	if (gc == NULL) {
 		ShowWarning("buildin_setcastledata: guild castle for map '%s' not found\n", mapname);
@@ -10886,7 +10886,7 @@ BUILDIN(setcastledata)
 		return false;
 	}
 	
-	guild_castledatasave(gc->castle_id, index, value);
+	guild->castledatasave(gc->castle_id, index, value);
 	return true;
 }
 
@@ -10903,7 +10903,7 @@ BUILDIN(requestguildinfo)
 	}
 	
 	if(guild_id>0)
-		guild_npc_request_info(guild_id,event);
+		guild->npc_request_info(guild_id,event);
 	return true;
 }
 
@@ -11105,7 +11105,7 @@ BUILDIN(mapwarp)	// Added by RoVeRT
 	
 	switch(check_val){
 		case 1:
-			g = guild_search(check_ID);
+			g = guild->search(check_ID);
 			if (g){
 				for( i=0; i < g->max_member; i++)
 				{
@@ -11425,7 +11425,7 @@ BUILDIN(guardianinfo)
 	int id = script_getnum(st,3);
 	int type = script_getnum(st,4);
 	
-	struct guild_castle* gc = guild_mapname2gc(mapname);
+	struct guild_castle* gc = guild->mapname2gc(mapname);
 	struct mob_data* gd;
 	
 	if( gc == NULL || id < 0 || id >= MAX_GUARDIANS )

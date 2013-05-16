@@ -358,7 +358,7 @@ static DBData create_guildstorage(DBKey key, va_list args)
 struct guild_storage *guild2storage(int guild_id)
 {
 	struct guild_storage *gs = NULL;
-	if(guild_search(guild_id) != NULL)
+	if(guild->search(guild_id) != NULL)
 		gs = idb_ensure(guild_storage_db,guild_id,create_guildstorage);
 	return gs;
 }

@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/timer.h"
@@ -92,7 +93,7 @@ int bg_team_join(int bg_id, struct map_session_data *sd)
 	bg->members[i].y = sd->bl.y;
 	bg->count++;
 
-	guild_send_dot_remove(sd);
+	guild->send_dot_remove(sd);
 
 	for( i = 0; i < MAX_BG_MEMBERS; i++ )
 	{

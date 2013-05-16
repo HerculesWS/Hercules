@@ -7194,7 +7194,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					src,skill_id,skill_lv,tick, flag|BCT_GUILD|1,
 					skill->castend_nodamage_id);
 				if (sd)
-					guild_block_skill(sd,skill->get_time2(skill_id,skill_lv));
+					guild->block_skill(sd,skill->get_time2(skill_id,skill_lv));
 			}
 			break;
 		case GD_REGENERATION:
@@ -7208,7 +7208,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					src,skill_id,skill_lv,tick, flag|BCT_GUILD|1,
 					skill->castend_nodamage_id);
 				if (sd)
-					guild_block_skill(sd,skill->get_time2(skill_id,skill_lv));
+					guild->block_skill(sd,skill->get_time2(skill_id,skill_lv));
 			}
 			break;
 		case GD_RESTORE:
@@ -7222,7 +7222,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					src,skill_id,skill_lv,tick, flag|BCT_GUILD|1,
 					skill->castend_nodamage_id);
 				if (sd)
-					guild_block_skill(sd,skill->get_time2(skill_id,skill_lv));
+					guild->block_skill(sd,skill->get_time2(skill_id,skill_lv));
 			}
 			break;
 		case GD_EMERGENCYCALL:
@@ -7232,7 +7232,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				int j = 0;
 				struct guild *g;
 				// i don't know if it actually summons in a circle, but oh well. ;P
-				g = sd?sd->state.gmaster_flag:guild_search(status_get_guild_id(src));
+				g = sd?sd->state.gmaster_flag:guild->search(status_get_guild_id(src));
 				if (!g)
 					break;
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
@@ -7247,7 +7247,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					}
 				}
 				if (sd)
-					guild_block_skill(sd,skill->get_time2(skill_id,skill_lv));
+					guild->block_skill(sd,skill->get_time2(skill_id,skill_lv));
 			}
 			break;
 

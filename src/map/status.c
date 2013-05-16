@@ -2096,7 +2096,7 @@ int status_calc_mob_(struct mob_data* md, bool first)
 	if(flag&4)
 	{	// Strengthen Guardians - custom value +10% / lv
 		struct guild_castle *gc;
-		gc=guild_mapname2gc(map[md->bl.m].name);
+		gc=guild->mapname2gc(map[md->bl.m].name);
 		if (!gc)
 			ShowError("status_calc_mob: No castle set at map %s\n", map[md->bl.m].name);
 		else
@@ -5876,7 +5876,7 @@ int status_get_emblem_id(struct block_list *bl) {
 			break;
 		case BL_NPC:
 			if (((TBL_NPC*)bl)->subtype == SCRIPT && ((TBL_NPC*)bl)->u.scr.guild_id > 0) {
-				struct guild *g = guild_search(((TBL_NPC*)bl)->u.scr.guild_id);
+				struct guild *g = guild->search(((TBL_NPC*)bl)->u.scr.guild_id);
 				if (g)
 					return g->emblem_id;
 			}

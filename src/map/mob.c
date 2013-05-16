@@ -483,8 +483,8 @@ int mob_once_spawn(struct map_session_data* sd, int16 m, int16 x, int16 y, const
 
 		if (class_ == MOBID_EMPERIUM)
 		{
-			struct guild_castle* gc = guild_mapindex2gc(map[m].index);
-			struct guild* g = (gc) ? guild_search(gc->guild_id) : NULL;
+			struct guild_castle* gc = guild->mapindex2gc(map[m].index);
+			struct guild* g = (gc) ? guild->search(gc->guild_id) : NULL;
 			if (gc)
 			{
 				md->guardian_data = (struct guardian_data*)aCalloc(1, sizeof(struct guardian_data));
@@ -587,7 +587,7 @@ static int mob_spawn_guardian_sub(int tid, unsigned int tick, int id, intptr_t d
 
 	md = (struct mob_data*)bl;
 	nullpo_ret(md->guardian_data);
-	g = guild_search((int)data);
+	g = guild->search((int)data);
 
 	if (g == NULL)
 	{	//Liberate castle, if the guild is not found this is an error! [Skotlex]
@@ -598,16 +598,16 @@ static int mob_spawn_guardian_sub(int tid, unsigned int tick, int id, intptr_t d
 			if (md->guardian_data->castle->guild_id) //Free castle up.
 			{
 				ShowNotice("Clearing ownership of castle %d (%s)\n", md->guardian_data->castle->castle_id, md->guardian_data->castle->castle_name);
-				guild_castledatasave(md->guardian_data->castle->castle_id, 1, 0);
+				guild->castledatasave(md->guardian_data->castle->castle_id, 1, 0);
 			}
 		} else {
 			if (md->guardian_data->number >= 0 && md->guardian_data->number < MAX_GUARDIANS && md->guardian_data->castle->guardian[md->guardian_data->number].visible)
-				guild_castledatasave(md->guardian_data->castle->castle_id, 10+md->guardian_data->number,0);
+				guild->castledatasave(md->guardian_data->castle->castle_id, 10+md->guardian_data->number,0);
 			unit_free(&md->bl,CLR_OUTSIGHT); //Remove guardian.
 		}
 		return 0;
 	}
-	guardup_lv = guild_checkskill(g,GD_GUARDUP);
+	guardup_lv = guild->checkskill(g,GD_GUARDUP);
 	md->guardian_data->emblem_id = g->emblem_id;
 	memcpy(md->guardian_data->guild_name, g->name, NAME_LENGTH);
 	md->guardian_data->guardup_lv = guardup_lv;
@@ -667,7 +667,7 @@ int mob_spawn_guardian(const char* mapname, short x, short y, const char* mobnam
 	if (!mob_parse_dataset(&data))
 		return 0;
 
-	gc=guild_mapname2gc(map[m].name);
+	gc=guild->mapname2gc(map[m].name);
 	if (gc == NULL)
 	{
 		ShowError("mob_spawn_guardian: No castle set at map %s\n", map[m].name);
@@ -676,7 +676,7 @@ int mob_spawn_guardian(const char* mapname, short x, short y, const char* mobnam
 	if (!gc->guild_id)
 		ShowWarning("mob_spawn_guardian: Spawning guardian %d on a castle with no guild (castle map %s)\n", class_, map[m].name);
 	else
-		g = guild_search(gc->guild_id);
+		g = guild->search(gc->guild_id);
 
 	if( has_index && gc->guardian[guardian].id )
   	{	//Check if guardian already exists, refuse to spawn if so.
@@ -713,7 +713,7 @@ int mob_spawn_guardian(const char* mapname, short x, short y, const char* mobnam
 	{
 		md->guardian_data->emblem_id = g->emblem_id;
 		memcpy (md->guardian_data->guild_name, g->name, NAME_LENGTH);
-		md->guardian_data->guardup_lv = guild_checkskill(g,GD_GUARDUP);
+		md->guardian_data->guardup_lv = guild->checkskill(g,GD_GUARDUP);
 	} else if (md->guardian_data->guild_id)
 		add_timer(gettick()+5000,mob_spawn_guardian_sub,md->bl.id,md->guardian_data->guild_id);
 	mob_spawn(md);
@@ -2114,7 +2114,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 	}
 
 	if( md->guardian_data && md->guardian_data->number >= 0 && md->guardian_data->number < MAX_GUARDIANS )
-		guild_castledatasave(md->guardian_data->castle->castle_id, 10+md->guardian_data->number,0);
+		guild->castledatasave(md->guardian_data->castle->castle_id, 10+md->guardian_data->number,0);
 
 	if( src )
 	{ // Use Dead skill only if not killed by Script or Command
@@ -2675,25 +2675,25 @@ int mob_guardian_guildchange(struct mob_data *md)
 			md->guardian_data->guild_name[0] = '\0';
 		} else {
 			if (md->guardian_data->number >= 0 && md->guardian_data->number < MAX_GUARDIANS && md->guardian_data->castle->guardian[md->guardian_data->number].visible)
-				guild_castledatasave(md->guardian_data->castle->castle_id, 10+md->guardian_data->number, 0);
+				guild->castledatasave(md->guardian_data->castle->castle_id, 10+md->guardian_data->number, 0);
 			unit_free(&md->bl,CLR_OUTSIGHT); //Remove guardian.
 		}
 		return 0;
 	}
 
-	g = guild_search(md->guardian_data->castle->guild_id);
+	g = guild->search(md->guardian_data->castle->guild_id);
 	if (g == NULL)
 	{	//Properly remove guardian info from Castle data.
 		ShowError("mob_guardian_guildchange: New Guild (id %d) does not exists!\n", md->guardian_data->guild_id);
 		if (md->guardian_data->number >= 0 && md->guardian_data->number < MAX_GUARDIANS)
-			guild_castledatasave(md->guardian_data->castle->castle_id, 10+md->guardian_data->number, 0);
+			guild->castledatasave(md->guardian_data->castle->castle_id, 10+md->guardian_data->number, 0);
 		unit_free(&md->bl,CLR_OUTSIGHT);
 		return 0;
 	}
 
 	md->guardian_data->guild_id = g->guild_id;
 	md->guardian_data->emblem_id = g->emblem_id;
-	md->guardian_data->guardup_lv = guild_checkskill(g,GD_GUARDUP);
+	md->guardian_data->guardup_lv = guild->checkskill(g,GD_GUARDUP);
 	memcpy(md->guardian_data->guild_name, g->name, NAME_LENGTH);
 
 	return 1;

@@ -466,7 +466,7 @@ int chrif_connectack(int fd) {
 	if( !char_init_done ) {
 		char_init_done = true;
 		ShowStatus("Event '"CL_WHITE"OnInterIfInitOnce"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n", npc_event_doall("OnInterIfInitOnce"));
-		guild_castle_map_init();
+		guild->castle_map_init();
 	}
 	
 	socket_datasync(fd, true);
@@ -529,7 +529,7 @@ void chrif_on_ready(void) {
 	do_reconnect_storage();
 
 	//Re-save any guild castles that were modified in the disconnection time.
-	guild_castle_reconnect(-1, 0, 0);
+	guild->castle_reconnect(-1, 0, 0);
 }
 
 

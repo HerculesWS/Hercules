@@ -1115,7 +1115,7 @@ int intif_parse_PartyMessage(int fd)
 // ACK guild creation
 int intif_parse_GuildCreated(int fd)
 {
-	guild_created(RFIFOL(fd,2),RFIFOL(fd,6));
+	guild->created(RFIFOL(fd,2),RFIFOL(fd,6));
 	return 0;
 }
 
@@ -1124,12 +1124,12 @@ int intif_parse_GuildInfo(int fd)
 {
 	if(RFIFOW(fd,2) == 8) {
 		ShowWarning("intif: guild noinfo %d\n",RFIFOL(fd,4));
-		guild_recv_noinfo(RFIFOL(fd,4));
+		guild->recv_noinfo(RFIFOL(fd,4));
 		return 0;
 	}
 	if( RFIFOW(fd,2)!=sizeof(struct guild)+4 )
 		ShowError("intif: guild info : data size error Gid: %d recv size: %d Expected size: %d\n",RFIFOL(fd,4),RFIFOW(fd,2),sizeof(struct guild)+4);
-	guild_recv_info((struct guild *)RFIFOP(fd,4));
+	guild->recv_info((struct guild *)RFIFOP(fd,4));
 	return 0;
 }
 
@@ -1138,28 +1138,28 @@ int intif_parse_GuildMemberAdded(int fd)
 {
 	if(battle_config.etc_log)
 		ShowInfo("intif: guild member added %d %d %d %d\n",RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14));
-	guild_member_added(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14));
+	guild->member_added(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14));
 	return 0;
 }
 
 // ACK member leaving guild
 int intif_parse_GuildMemberWithdraw(int fd)
 {
-	guild_member_withdraw(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),(char *)RFIFOP(fd,55),(char *)RFIFOP(fd,15));
+	guild->member_withdraw(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),(char *)RFIFOP(fd,55),(char *)RFIFOP(fd,15));
 	return 0;
 }
 
 // ACK guild member basic info
 int intif_parse_GuildMemberInfoShort(int fd)
 {
-	guild_recv_memberinfoshort(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOW(fd,17));
+	guild->recv_memberinfoshort(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOW(fd,17));
 	return 0;
 }
 
 // ACK guild break
 int intif_parse_GuildBroken(int fd)
 {
-	guild_broken(RFIFOL(fd,2),RFIFOB(fd,6));
+	guild->broken(RFIFOL(fd,2),RFIFOB(fd,6));
 	return 0;
 }
 
@@ -1172,7 +1172,7 @@ int intif_parse_GuildBasicInfoChanged(int fd)
 	int type = RFIFOW(fd,8);
 	//void* data = RFIFOP(fd,10);
 
-	struct guild* g = guild_search(guild_id);
+	struct guild* g = guild->search(guild_id);
 	if( g == NULL )
 		return 0;
 
@@ -1199,16 +1199,16 @@ int intif_parse_GuildMemberInfoChanged(int fd)
 	struct guild* g;
 	int idx;
 
-	g = guild_search(guild_id);
+	g = guild->search(guild_id);
 	if( g == NULL )
 		return 0;
 
-	idx = guild_getindex(g,account_id,char_id);
+	idx = guild->getindex(g,account_id,char_id);
 	if( idx == -1 )
 		return 0;
 
 	switch( type ) {
-	case GMI_POSITION:   g->member[idx].position   = RFIFOW(fd,18); guild_memberposition_changed(g,idx,RFIFOW(fd,18)); break;
+	case GMI_POSITION:   g->member[idx].position   = RFIFOW(fd,18); guild->memberposition_changed(g,idx,RFIFOW(fd,18)); break;
 	case GMI_EXP:        g->member[idx].exp        = RFIFOQ(fd,18); break;
 	case GMI_HAIR:       g->member[idx].hair       = RFIFOW(fd,18); break;
 	case GMI_HAIR_COLOR: g->member[idx].hair_color = RFIFOW(fd,18); break;
@@ -1224,55 +1224,55 @@ int intif_parse_GuildPosition(int fd)
 {
 	if( RFIFOW(fd,2)!=sizeof(struct guild_position)+12 )
 		ShowError("intif: guild info : data size error\n %d %d %d",RFIFOL(fd,4),RFIFOW(fd,2),sizeof(struct guild_position)+12);
-	guild_position_changed(RFIFOL(fd,4),RFIFOL(fd,8),(struct guild_position *)RFIFOP(fd,12));
+	guild->position_changed(RFIFOL(fd,4),RFIFOL(fd,8),(struct guild_position *)RFIFOP(fd,12));
 	return 0;
 }
 
 // ACK change of guild skill update
 int intif_parse_GuildSkillUp(int fd)
 {
-	guild_skillupack(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
+	guild->skillupack(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
 	return 0;
 }
 
 // ACK change of guild relationship
 int intif_parse_GuildAlliance(int fd)
 {
-	guild_allianceack(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOL(fd,14),RFIFOB(fd,18),(char *) RFIFOP(fd,19),(char *) RFIFOP(fd,43));
+	guild->allianceack(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOL(fd,14),RFIFOB(fd,18),(char *) RFIFOP(fd,19),(char *) RFIFOP(fd,43));
 	return 0;
 }
 
 // ACK change of guild notice
 int intif_parse_GuildNotice(int fd)
 {
-	guild_notice_changed(RFIFOL(fd,2),(char *) RFIFOP(fd,6),(char *) RFIFOP(fd,66));
+	guild->notice_changed(RFIFOL(fd,2),(char *) RFIFOP(fd,6),(char *) RFIFOP(fd,66));
 	return 0;
 }
 
 // ACK change of guild emblem
 int intif_parse_GuildEmblem(int fd)
 {
-	guild_emblem_changed(RFIFOW(fd,2)-12,RFIFOL(fd,4),RFIFOL(fd,8), (char *)RFIFOP(fd,12));
+	guild->emblem_changed(RFIFOW(fd,2)-12,RFIFOL(fd,4),RFIFOL(fd,8), (char *)RFIFOP(fd,12));
 	return 0;
 }
 
 // ACK guild message
 int intif_parse_GuildMessage(int fd)
 {
-	guild_recv_message(RFIFOL(fd,4),RFIFOL(fd,8),(char *) RFIFOP(fd,12),RFIFOW(fd,2)-12);
+	guild->recv_message(RFIFOL(fd,4),RFIFOL(fd,8),(char *) RFIFOP(fd,12),RFIFOW(fd,2)-12);
 	return 0;
 }
 
 // Reply guild castle data request
 int intif_parse_GuildCastleDataLoad(int fd)
 {
-	return guild_castledataloadack(RFIFOW(fd,2), (struct guild_castle *)RFIFOP(fd,4));
+	return guild->castledataloadack(RFIFOW(fd,2), (struct guild_castle *)RFIFOP(fd,4));
 }
 
 // ACK change of guildmaster
 int intif_parse_GuildMasterChanged(int fd)
 {
-	return guild_gm_changed(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
+	return guild->gm_changed(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
 }
 
 // Request pet creation
