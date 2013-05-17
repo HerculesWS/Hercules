@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Cash Shop NPCs
 //===== By: ================================================== 
 //= L0ne_W0lf
 //===== Current Version: ===================================== 
 //= 1.1
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= Sell Cash shop items.
 //= Based on iRO's Cash shop. Headgears omitted.

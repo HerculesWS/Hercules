@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Airports & Airplanes Warp Script
 //===== By: ==================================================
 //= Sara-chan (1.0), SSUNNY@YOUNG(1.6)
 //===== Current Version: =====================================
 //= 1.7
-//===== Compatible With: =====================================
-//= Any Athena Version; RO Episode 8+
 //===== Description: =========================================
 //= Warp Points for All Airplanes and Airports
 //===== Additional Comments: =================================

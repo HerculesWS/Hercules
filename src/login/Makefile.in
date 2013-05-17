@@ -31,11 +31,11 @@ endif
 
 all: sql
 
-sql: obj_sql login-server_sql
+sql: obj_sql login-server
 
 clean:
 	@echo "	CLEAN	login"
-	@rm -rf *.o obj_sql ../../login-server@EXEEXT@ ../../login-server_sql@EXEEXT@
+	@rm -rf *.o obj_sql ../../login-server@EXEEXT@ ../../login-server@EXEEXT@
 
 help:
 	@echo "possible targets are 'sql' 'all' 'clean' 'help'"
@@ -58,9 +58,9 @@ obj_sql:
 
 #executables
 
-login-server_sql: $(LOGIN_SERVER_SQL_DEPENDS)
+login-server: $(LOGIN_SERVER_SQL_DEPENDS)
 	@echo "	LD	$@"
-	@@CC@ @LDFLAGS@ -o ../../login-server_sql@EXEEXT@ $(LOGIN_SQL_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
+	@@CC@ @LDFLAGS@ -o ../../login-server@EXEEXT@ $(LOGIN_SQL_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
 	    
 
 # login object files

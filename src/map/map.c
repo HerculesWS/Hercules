@@ -1,9 +1,11 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/core.h"
 #include "../common/timer.h"
+#include "../common/ers.h"
 #include "../common/grfio.h"
 #include "../common/malloc.h"
 #include "../common/socket.h" // WFIFO*()
@@ -12,6 +14,9 @@
 #include "../common/random.h"
 #include "../common/strlib.h"
 #include "../common/utils.h"
+#include "../common/conf.h"
+#include "../common/console.h"
+#include "../common/HPM.h"
 
 #include "map.h"
 #include "path.h"
@@ -45,6 +50,8 @@
 #include "atcommand.h"
 #include "log.h"
 #include "mail.h"
+#include "irc-bot.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -80,10 +87,6 @@ char log_db_pw[32] = "ragnarok";
 char log_db_db[32] = "log";
 Sql* logmysql_handle;
 
-// This param using for sending mainchat
-// messages like whispers to this nick. [LuzZza]
-char main_chat_nick[16] = "Main";
-
 char *INTER_CONF_NAME;
 char *LOG_CONF_NAME;
 char *MAP_CONF_NAME;
@@ -114,7 +117,6 @@ static int block_free_count = 0, block_free_lock = 0;
 static struct block_list *bl_list[BL_LIST_MAX];
 static int bl_list_count = 0;
 
-struct map_data map[MAX_MAP_PER_SERVER];
 int map_num = 0;
 int map_port=0;
 
@@ -156,9 +158,11 @@ char charhelp_txt[256] = "conf/charhelp.txt";
 
 char wisp_server_name[NAME_LENGTH] = "Server"; // can be modified in char-server configuration file
 
-int console = 0;
 int enable_spy = 0; //To enable/disable @spy commands, which consume too much cpu time when sending packets. [Skotlex]
 int enable_grf = 0;	//To enable/disable reading maps from GRF files, bypassing mapcache [blackhole89]
+
+/* [Ind/Hercules] */
+struct eri *map_iterator_ers;
 
 /*==========================================
  * server player count (of all mapservers)
@@ -365,7 +369,7 @@ int map_delblock(struct block_list* bl)
 
 /*==========================================
  * Moves a block a x/y target position. [Skotlex]
- * Pass flag as 1 to prevent doing skill_unit_move checks
+ * Pass flag as 1 to prevent doing skill->unit_move checks
  * (which are executed by default on BL_CHAR types)
  *------------------------------------------*/
 int map_moveblock(struct block_list *bl, int x1, int y1, unsigned int tick)
@@ -385,14 +389,14 @@ int map_moveblock(struct block_list *bl, int x1, int y1, unsigned int tick)
 	if (bl->type&BL_CHAR) {
 		sc = status_get_sc(bl);
 
-		skill_unit_move(bl,tick,2);
+		skill->unit_move(bl,tick,2);
 		status_change_end(bl, SC_CLOSECONFINE, INVALID_TIMER);
 		status_change_end(bl, SC_CLOSECONFINE2, INVALID_TIMER);
 //		status_change_end(bl, SC_BLADESTOP, INVALID_TIMER); //Won't stop when you are knocked away, go figure...
 		status_change_end(bl, SC_TATAMIGAESHI, INVALID_TIMER);
 		status_change_end(bl, SC_MAGICROD, INVALID_TIMER);
 		if (sc->data[SC_PROPERTYWALK] &&
-			sc->data[SC_PROPERTYWALK]->val3 >= skill_get_maxcount(sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2) )
+			sc->data[SC_PROPERTYWALK]->val3 >= skill->get_maxcount(sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2) )
 			status_change_end(bl,SC_PROPERTYWALK,INVALID_TIMER);
 	} else
 	if (bl->type == BL_NPC)
@@ -411,11 +415,11 @@ int map_moveblock(struct block_list *bl, int x1, int y1, unsigned int tick)
 
 	if (bl->type&BL_CHAR) {
 
-		skill_unit_move(bl,tick,3);
+		skill->unit_move(bl,tick,3);
 
 		if( bl->type == BL_PC && ((TBL_PC*)bl)->shadowform_id ) {//Shadow Form Target Moving
 			struct block_list *d_bl;
-			if( (d_bl = map_id2bl(((TBL_PC*)bl)->shadowform_id)) == NULL || bl->m != d_bl->m || !check_distance_bl(bl,d_bl,10) ) {
+			if( (d_bl = map_id2bl(((TBL_PC*)bl)->shadowform_id)) == NULL || !check_distance_bl(bl,d_bl,10) ) {
 				if( d_bl )
 					status_change_end(d_bl,SC__SHADOWFORM,INVALID_TIMER);
 				((TBL_PC*)bl)->shadowform_id = 0;
@@ -424,31 +428,31 @@ int map_moveblock(struct block_list *bl, int x1, int y1, unsigned int tick)
 
 		if (sc && sc->count) {
 			if (sc->data[SC_DANCING])
-				skill_unit_move_unit_group(skill_id2group(sc->data[SC_DANCING]->val2), bl->m, x1-x0, y1-y0);
+				skill->unit_move_unit_group(skill->id2group(sc->data[SC_DANCING]->val2), bl->m, x1-x0, y1-y0);
 			else {
 				if (sc->data[SC_CLOAKING])
-					skill_check_cloaking(bl, sc->data[SC_CLOAKING]);
+					skill->check_cloaking(bl, sc->data[SC_CLOAKING]);
 				if (sc->data[SC_WARM])
-					skill_unit_move_unit_group(skill_id2group(sc->data[SC_WARM]->val4), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_WARM]->val4), bl->m, x1-x0, y1-y0);
 				if (sc->data[SC_BANDING])
-					skill_unit_move_unit_group(skill_id2group(sc->data[SC_BANDING]->val4), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_BANDING]->val4), bl->m, x1-x0, y1-y0);
 
 				if (sc->data[SC_NEUTRALBARRIER_MASTER])
-					skill_unit_move_unit_group(skill_id2group(sc->data[SC_NEUTRALBARRIER_MASTER]->val2), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_NEUTRALBARRIER_MASTER]->val2), bl->m, x1-x0, y1-y0);
 				else if (sc->data[SC_STEALTHFIELD_MASTER])
-					skill_unit_move_unit_group(skill_id2group(sc->data[SC_STEALTHFIELD_MASTER]->val2), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_STEALTHFIELD_MASTER]->val2), bl->m, x1-x0, y1-y0);
 
 				if( sc->data[SC__SHADOWFORM] ) {//Shadow Form Caster Moving
 					struct block_list *d_bl;
-					if( (d_bl = map_id2bl(sc->data[SC__SHADOWFORM]->val2)) == NULL || bl->m != d_bl->m || !check_distance_bl(bl,d_bl,10) )
+					if( (d_bl = map_id2bl(sc->data[SC__SHADOWFORM]->val2)) == NULL || !check_distance_bl(bl,d_bl,10) )
 						status_change_end(bl,SC__SHADOWFORM,INVALID_TIMER);
 				}
 
 				if (sc->data[SC_PROPERTYWALK]
-					&& sc->data[SC_PROPERTYWALK]->val3 < skill_get_maxcount(sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2)
+					&& sc->data[SC_PROPERTYWALK]->val3 < skill->get_maxcount(sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2)
 					&& map_find_skill_unit_oncell(bl,bl->x,bl->y,SO_ELECTRICWALK,NULL,0) == NULL
 					&& map_find_skill_unit_oncell(bl,bl->x,bl->y,SO_FIREWALK,NULL,0) == NULL
-					&& skill_unitsetting(bl,sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2,x0, y0,0)) {
+					&& skill->unitsetting(bl,sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2,x0, y0,0)) {
 						sc->data[SC_PROPERTYWALK]->val3++;
 				}
 
@@ -457,13 +461,13 @@ int map_moveblock(struct block_list *bl, int x1, int y1, unsigned int tick)
 			/* Guild Aura Moving */
 			if( bl->type == BL_PC && ((TBL_PC*)bl)->state.gmaster_flag ) {
 				if (sc->data[SC_LEADERSHIP])
-					skill_unit_move_unit_group(skill_id2group(sc->data[SC_LEADERSHIP]->val4), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_LEADERSHIP]->val4), bl->m, x1-x0, y1-y0);
 				if (sc->data[SC_GLORYWOUNDS])
-					skill_unit_move_unit_group(skill_id2group(sc->data[SC_GLORYWOUNDS]->val4), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_GLORYWOUNDS]->val4), bl->m, x1-x0, y1-y0);
 				if (sc->data[SC_SOULCOLD])
-					skill_unit_move_unit_group(skill_id2group(sc->data[SC_SOULCOLD]->val4), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_SOULCOLD]->val4), bl->m, x1-x0, y1-y0);
 				if (sc->data[SC_HAWKEYES])
-					skill_unit_move_unit_group(skill_id2group(sc->data[SC_HAWKEYES]->val4), bl->m, x1-x0, y1-y0);
+					skill->unit_move_unit_group(skill->id2group(sc->data[SC_HAWKEYES]->val4), bl->m, x1-x0, y1-y0);
 			}
 		}
 	} else
@@ -524,7 +528,7 @@ struct skill_unit* map_find_skill_unit_oncell(struct block_list* target,int16 x,
 		unit = (struct skill_unit *) bl;
 		if( unit == out_unit || !unit->alive || !unit->group || unit->group->skill_id != skill_id )
 			continue;
-		if( !(flag&1) || battle_check_target(&unit->bl,target,unit->group->target_flag) > 0 )
+		if( !(flag&1) || battle->check_target(&unit->bl,target,unit->group->target_flag) > 0 )
 			return unit;
 	}
 	return NULL;
@@ -1280,7 +1284,7 @@ int map_clearflooritem_timer(int tid, unsigned int tick, int id, intptr_t data)
 	if (search_petDB_index(fitem->item_data.nameid, PET_EGG) >= 0)
 		intif_delete_petdata(MakeDWord(fitem->item_data.card[1], fitem->item_data.card[2]));
 
-	clif_clearflooritem(fitem, 0);
+	clif->clearflooritem(fitem, 0);
 	map_deliddb(&fitem->bl);
 	map_delblock(&fitem->bl);
 	map_freeblock(&fitem->bl);
@@ -1296,7 +1300,7 @@ void map_clearflooritem(struct block_list *bl) {
 	if( fitem->cleartimer )
 		delete_timer(fitem->cleartimer,map_clearflooritem_timer);
 
-	clif_clearflooritem(fitem, 0);
+	clif->clearflooritem(fitem, 0);
 	map_deliddb(&fitem->bl);
 	map_delblock(&fitem->bl);
 	map_freeblock(&fitem->bl);
@@ -1463,7 +1467,7 @@ int map_addflooritem(struct item *item_data,int amount,int16 m,int16 x,int16 y,i
 
 	map_addiddb(&fitem->bl);
 	map_addblock(&fitem->bl);
-	clif_dropflooritem(fitem);
+	clif->dropflooritem(fitem);
 
 	return fitem->bl.id;
 }
@@ -1475,7 +1479,7 @@ static DBData create_charid2nick(DBKey key, va_list args)
 {
 	struct charid2nick *p;
 	CREATE(p, struct charid2nick, 1);
-	return db_ptr2data(p);
+	return DB->ptr2data(p);
 }
 
 /// Adds(or replaces) the nick of charid to nick_db and fullfils pending requests.
@@ -1492,13 +1496,12 @@ void map_addnickdb(int charid, const char* nick)
 	p = idb_ensure(nick_db, charid, create_charid2nick);
 	safestrncpy(p->nick, nick, sizeof(p->nick));
 
-	while( p->requests )
-	{
+	while( p->requests ) {
 		req = p->requests;
 		p->requests = req->next;
 		sd = map_charid2sd(req->charid);
 		if( sd )
-			clif_solved_charname(sd->fd, charid, p->nick);
+			clif->solved_charname(sd->fd, charid, p->nick);
 		aFree(req);
 	}
 }
@@ -1512,16 +1515,15 @@ void map_delnickdb(int charid, const char* name)
 	struct map_session_data* sd;
 	DBData data;
 
-	if (!nick_db->remove(nick_db, db_i2key(charid), &data) || (p = db_data2ptr(&data)) == NULL)
+	if (!nick_db->remove(nick_db, DB->i2key(charid), &data) || (p = DB->data2ptr(&data)) == NULL)
 		return;
 
-	while( p->requests )
-	{
+	while( p->requests ) {
 		req = p->requests;
 		p->requests = req->next;
 		sd = map_charid2sd(req->charid);
 		if( sd )
-			clif_solved_charname(sd->fd, charid, name);
+			clif->solved_charname(sd->fd, charid, name);
 		aFree(req);
 	}
 	aFree(p);
@@ -1539,16 +1541,14 @@ void map_reqnickdb(struct map_session_data * sd, int charid)
 	nullpo_retv(sd);
 
 	tsd = map_charid2sd(charid);
-	if( tsd )
-	{
-		clif_solved_charname(sd->fd, charid, tsd->status.name);
+	if( tsd ) {
+		clif->solved_charname(sd->fd, charid, tsd->status.name);
 		return;
 	}
 
 	p = idb_ensure(nick_db, charid, create_charid2nick);
-	if( *p->nick )
-	{
-		clif_solved_charname(sd->fd, charid, p->nick);
+	if( *p->nick ) {
+		clif->solved_charname(sd->fd, charid, p->nick);
 		return;
 	}
 	// not in cache, request it
@@ -1698,15 +1698,22 @@ int map_quit(struct map_session_data *sd) {
 
 	if( sd->state.storage_flag == 1 ) sd->state.storage_flag = 0; // No need to Double Save Storage on Quit.
 
+	if (sd->state.permanent_speed == 1) sd->state.permanent_speed = 0; // Remove lock so speed is set back to normal at login.
+
 	if( sd->ed ) {
 		elemental_clean_effect(sd->ed);
 		unit_remove_map(&sd->ed->bl,CLR_TELEPORT);
 	}
 
+	if( hChSys.local && map[sd->bl.m].channel && idb_exists(map[sd->bl.m].channel->users, sd->status.char_id) ) {
+		clif->chsys_left(map[sd->bl.m].channel,sd);
+	}
+	
+	clif->chsys_quit(sd);
+		
 	unit_remove_map_pc(sd,CLR_TELEPORT);
 
-	if( map[sd->bl.m].instance_id )
-	{ // Avoid map conflicts and warnings on next login
+	if( map[sd->bl.m].instance_id ) { // Avoid map conflicts and warnings on next login
 		int16 m;
 		struct point *pt;
 		if( map[sd->bl.m].save.map )
@@ -1818,7 +1825,7 @@ struct map_session_data * map_nick2sd(const char *nick)
 	iter = mapit_getallusers();
 
 	found_sd = NULL;
-	for( sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); sd = (TBL_PC*)mapit_next(iter) )
+	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
 	{
 		if( battle_config.partial_name_scan )
 		{// partial name search
@@ -1841,7 +1848,7 @@ struct map_session_data * map_nick2sd(const char *nick)
 			break;
 		}
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 
 	if( battle_config.partial_name_scan && qty != 1 )
 		found_sd = NULL;
@@ -1894,8 +1901,7 @@ struct mob_data * map_id2boss(int id)
 
 /// Applies func to all the players in the db.
 /// Stops iterating if func returns -1.
-void map_foreachpc(int (*func)(struct map_session_data* sd, va_list args), ...)
-{
+void map_map_foreachpc(int (*func)(struct map_session_data* sd, va_list args), ...) {
 	DBIterator* iter;
 	struct map_session_data* sd;
 
@@ -1916,7 +1922,7 @@ void map_foreachpc(int (*func)(struct map_session_data* sd, va_list args), ...)
 
 /// Applies func to all the mobs in the db.
 /// Stops iterating if func returns -1.
-void map_foreachmob(int (*func)(struct mob_data* md, va_list args), ...)
+void map_map_foreachmob(int (*func)(struct mob_data* md, va_list args), ...)
 {
 	DBIterator* iter;
 	struct mob_data* md;
@@ -1938,7 +1944,7 @@ void map_foreachmob(int (*func)(struct mob_data* md, va_list args), ...)
 
 /// Applies func to all the npcs in the db.
 /// Stops iterating if func returns -1.
-void map_foreachnpc(int (*func)(struct npc_data* nd, va_list args), ...)
+void map_map_foreachnpc(int (*func)(struct npc_data* nd, va_list args), ...)
 {
 	DBIterator* iter;
 	struct block_list* bl;
@@ -1964,7 +1970,7 @@ void map_foreachnpc(int (*func)(struct npc_data* nd, va_list args), ...)
 
 /// Applies func to everything in the db.
 /// Stops iteratin gif func returns -1.
-void map_foreachregen(int (*func)(struct block_list* bl, va_list args), ...)
+void map_map_foreachregen(int (*func)(struct block_list* bl, va_list args), ...)
 {
 	DBIterator* iter;
 	struct block_list* bl;
@@ -1986,7 +1992,7 @@ void map_foreachregen(int (*func)(struct block_list* bl, va_list args), ...)
 
 /// Applies func to everything in the db.
 /// Stops iterating if func returns -1.
-void map_foreachiddb(int (*func)(struct block_list* bl, va_list args), ...)
+void map_map_foreachiddb(int (*func)(struct block_list* bl, va_list args), ...)
 {
 	DBIterator* iter;
 	struct block_list* bl;
@@ -2037,7 +2043,7 @@ struct s_mapiterator* mapit_alloc(enum e_mapitflags flags, enum bl_type types)
 {
 	struct s_mapiterator* mapit;
 
-	CREATE(mapit, struct s_mapiterator, 1);
+	mapit = ers_alloc(map_iterator_ers, struct s_mapiterator);
 	mapit->flags = flags;
 	mapit->types = types;
 	if( types == BL_PC )       mapit->dbi = db_iterator(pc_db);
@@ -2054,7 +2060,7 @@ void mapit_free(struct s_mapiterator* mapit)
 	nullpo_retv(mapit);
 
 	dbi_destroy(mapit->dbi);
-	aFree(mapit);
+	ers_free(map_iterator_ers, mapit);
 }
 
 /// Returns the first block_list that matches the description.
@@ -2308,7 +2314,7 @@ int16 map_mapindex2mapid(unsigned short mapindex)
  *------------------------------------------*/
 int map_mapname2ipport(unsigned short name, uint32* ip, uint16* port)
 {
-	struct map_data_other_server *mdos=NULL;
+	struct map_data_other_server *mdos;
 
 	mdos = (struct map_data_other_server*)uidb_get(map_db,(unsigned int)name);
 	if(mdos==NULL || mdos->cell) //If gat isn't null, this is a local map.
@@ -2633,7 +2639,7 @@ bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool shootable
 		map_setcell(m, x1, y1, CELL_WALKABLE, false);
 		map_setcell(m, x1, y1, CELL_SHOOTABLE, shootable);
 
-		clif_changemapcell(0, m, x1, y1, map_getcell(m, x1, y1, CELL_GETTYPE), ALL_SAMEMAP);
+		clif->changemapcell(0, m, x1, y1, map_getcell(m, x1, y1, CELL_GETTYPE), ALL_SAMEMAP);
 	}
 
 	iwall->size = i;
@@ -2644,8 +2650,7 @@ bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool shootable
 	return true;
 }
 
-void map_iwall_get(struct map_session_data *sd)
-{
+void map_iwall_get(struct map_session_data *sd) {
 	struct iwall_data *iwall;
 	DBIterator* iter;
 	int16 x1, y1;
@@ -2655,15 +2660,13 @@ void map_iwall_get(struct map_session_data *sd)
 		return;
 
 	iter = db_iterator(iwall_db);
-	for( iwall = dbi_first(iter); dbi_exists(iter); iwall = dbi_next(iter) )
-	{
+	for( iwall = dbi_first(iter); dbi_exists(iter); iwall = dbi_next(iter) ) {
 		if( iwall->m != sd->bl.m )
 			continue;
 
-		for( i = 0; i < iwall->size; i++ )
-		{
+		for( i = 0; i < iwall->size; i++ ) {
 			map_iwall_nextxy(iwall->x, iwall->y, iwall->dir, i, &x1, &y1);
-			clif_changemapcell(sd->fd, iwall->m, x1, y1, map_getcell(iwall->m, x1, y1, CELL_GETTYPE), SELF);
+			clif->changemapcell(sd->fd, iwall->m, x1, y1, map_getcell(iwall->m, x1, y1, CELL_GETTYPE), SELF);
 		}
 	}
 	dbi_destroy(iter);
@@ -2677,14 +2680,13 @@ void map_iwall_remove(const char *wall_name)
 	if( (iwall = (struct iwall_data *)strdb_get(iwall_db, wall_name)) == NULL )
 		return; // Nothing to do
 
-	for( i = 0; i < iwall->size; i++ )
-	{
+	for( i = 0; i < iwall->size; i++ ) {
 		map_iwall_nextxy(iwall->x, iwall->y, iwall->dir, i, &x1, &y1);
 
 		map_setcell(iwall->m, x1, y1, CELL_SHOOTABLE, true);
 		map_setcell(iwall->m, x1, y1, CELL_WALKABLE, true);
 
-		clif_changemapcell(0, iwall->m, x1, y1, map_getcell(iwall->m, x1, y1, CELL_GETTYPE), ALL_SAMEMAP);
+		clif->changemapcell(0, iwall->m, x1, y1, map_getcell(iwall->m, x1, y1, CELL_GETTYPE), ALL_SAMEMAP);
 	}
 
 	map[iwall->m].iwall_num--;
@@ -2701,7 +2703,7 @@ static DBData create_map_data_other_server(DBKey key, va_list args)
 	mdos=(struct map_data_other_server *)aCalloc(1,sizeof(struct map_data_other_server));
 	mdos->index = mapindex;
 	memcpy(mdos->name, mapindex_id2name(mapindex), MAP_NAME_LENGTH);
-	return db_ptr2data(mdos);
+	return DB->ptr2data(mdos);
 }
 
 /*==========================================
@@ -2709,13 +2711,13 @@ static DBData create_map_data_other_server(DBKey key, va_list args)
  *------------------------------------------*/
 int map_setipport(unsigned short mapindex, uint32 ip, uint16 port)
 {
-	struct map_data_other_server *mdos=NULL;
+	struct map_data_other_server *mdos;
 
 	mdos= uidb_ensure(map_db,(unsigned int)mapindex, create_map_data_other_server);
 
 	if(mdos->cell) //Local map,Do nothing. Give priority to our own local maps over ones from another server. [Skotlex]
 		return 0;
-	if(ip == clif_getip() && port == clif_getport()) {
+	if(ip == clif->map_ip && port == clif->map_port) {
 		//That's odd, we received info that we are the ones with this map, but... we don't have it.
 		ShowFatalError("map_setipport : received info that this map-server SHOULD have map '%s', but it is not loaded.\n",mapindex_id2name(mapindex));
 		exit(EXIT_FAILURE);
@@ -2731,7 +2733,7 @@ int map_setipport(unsigned short mapindex, uint32 ip, uint16 port)
  */
 int map_eraseallipport_sub(DBKey key, DBData *data, va_list va)
 {
-	struct map_data_other_server *mdos = db_data2ptr(data);
+	struct map_data_other_server *mdos = DB->data2ptr(data);
 	if(mdos->cell == NULL) {
 		db_remove(map_db,key);
 		aFree(mdos);
@@ -2892,27 +2894,186 @@ int map_delmap(char* mapname)
 	}
 	return 0;
 }
-
-/// Initializes map flags and adjusts them depending on configuration.
-void map_flags_init(void)
-{
+void map_zone_db_clear(void) {
+	struct map_zone_data *zone;
 	int i;
+	
+	DBIterator *iter = db_iterator(zone_db);
+	for(zone = dbi_first(iter); dbi_exists(iter); zone = dbi_next(iter)) {
+		for(i = 0; i < zone->disabled_skills_count; i++) {
+			aFree(zone->disabled_skills[i]);
+		}
+		aFree(zone->disabled_skills);
+		aFree(zone->disabled_items);
+		for(i = 0; i < zone->mapflags_count; i++) {
+			aFree(zone->mapflags[i]);
+		}
+		aFree(zone->mapflags);
+		for(i = 0; i < zone->disabled_commands_count; i++) {
+			aFree(zone->disabled_commands[i]);
+		}
+		aFree(zone->disabled_commands);
+		for(i = 0; i < zone->capped_skills_count; i++) {
+			aFree(zone->capped_skills[i]);
+		}
+		aFree(zone->capped_skills);
+	}
+	dbi_destroy(iter);
+	
+	db_destroy(zone_db);/* will aFree(zone) */
+	
+	/* clear the pk zone stuff */
+	for(i = 0; i < map_zone_pk.disabled_skills_count; i++) {
+		aFree(map_zone_pk.disabled_skills[i]);
+	}
+	aFree(map_zone_pk.disabled_skills);
+	aFree(map_zone_pk.disabled_items);
+	for(i = 0; i < map_zone_pk.mapflags_count; i++) {
+		aFree(map_zone_pk.mapflags[i]);
+	}
+	aFree(map_zone_pk.mapflags);
+	for(i = 0; i < map_zone_pk.disabled_commands_count; i++) {
+		aFree(map_zone_pk.disabled_commands[i]);
+	}
+	aFree(map_zone_pk.disabled_commands);
+	for(i = 0; i < map_zone_pk.capped_skills_count; i++) {
+		aFree(map_zone_pk.capped_skills[i]);
+	}
+	aFree(map_zone_pk.capped_skills);
+	/* clear the main zone stuff */
+	for(i = 0; i < map_zone_all.disabled_skills_count; i++) {
+		aFree(map_zone_all.disabled_skills[i]);
+	}
+	aFree(map_zone_all.disabled_skills);
+	aFree(map_zone_all.disabled_items);
+	for(i = 0; i < map_zone_all.mapflags_count; i++) {
+		aFree(map_zone_all.mapflags[i]);
+	}
+	aFree(map_zone_all.mapflags);
+	for(i = 0; i < map_zone_all.disabled_commands_count; i++) {
+		aFree(map_zone_all.disabled_commands[i]);
+	}
+	aFree(map_zone_all.disabled_commands);
+	for(i = 0; i < map_zone_all.capped_skills_count; i++) {
+		aFree(map_zone_all.capped_skills[i]);
+	}
+	aFree(map_zone_all.capped_skills);
+}
 
-	for( i = 0; i < map_num; i++ )
-	{
+void do_final_maps(void) {
+	int i, v = 0;
+
+	for( i = 0; i < map_num; i++ ) {
+		
+		if(map[i].cell) aFree(map[i].cell);
+		if(map[i].block) aFree(map[i].block);
+		if(map[i].block_mob) aFree(map[i].block_mob);
+		
+		if(battle_config.dynamic_mobs) { //Dynamic mobs flag by [random]
+			int j;
+			if(map[i].mob_delete_timer != INVALID_TIMER)
+				delete_timer(map[i].mob_delete_timer, map_removemobs_timer);
+			for (j=0; j<MAX_MOB_LIST_PER_MAP; j++)
+				if (map[i].moblist[j]) aFree(map[i].moblist[j]);
+		}
+
+		if( map[i].unit_count ) {
+			for(v = 0; v < map[i].unit_count; v++) {
+				aFree(map[i].units[v]);
+			}
+			if( map[i].units ) {
+				aFree(map[i].units);
+				map[i].units = NULL;
+			}
+			map[i].unit_count = 0;
+		}
+		
+		if( map[i].skill_count ) {
+			for(v = 0; v < map[i].skill_count; v++) {
+				aFree(map[i].skills[v]);
+			}
+			if( map[i].skills ) {
+				aFree(map[i].skills);
+				map[i].skills = NULL;
+			}
+			map[i].skill_count = 0;
+		}
+		
+		if( map[i].zone_mf_count ) {
+			for(v = 0; v < map[i].zone_mf_count; v++) {
+				aFree(map[i].zone_mf[v]);
+			}
+			if( map[i].zone_mf ) {
+				aFree(map[i].zone_mf);
+				map[i].zone_mf = NULL;
+			}
+			map[i].zone_mf_count = 0;
+		}
+		
+		if( map[i].channel )
+			clif->chsys_delete(map[i].channel);
+	}
+	
+	map_zone_db_clear();
+	
+}
+/// Initializes map flags and adjusts them depending on configuration.
+void map_flags_init(void) {
+	int i, v = 0;
+
+	for( i = 0; i < map_num; i++ ) {
 		// mapflags
 		memset(&map[i].flag, 0, sizeof(map[i].flag));
 
 		// additional mapflag data
-		map[i].zone      = 0;  // restricted mapflag zone
 		map[i].nocommand = 0;  // nocommand mapflag level
 		map[i].bexp      = 100;  // per map base exp multiplicator
 		map[i].jexp      = 100;  // per map job exp multiplicator
 		memset(map[i].drop_list, 0, sizeof(map[i].drop_list));  // pvp nightmare drop list
 
+		if( map[i].unit_count ) {
+			for(v = 0; v < map[i].unit_count; v++) {
+				aFree(map[i].units[v]);
+			}
+			aFree(map[i].units);
+		}
+		map[i].units = NULL;
+		map[i].unit_count = 0;
+		
+		if( map[i].skill_count ) {
+			for(v = 0; v < map[i].skill_count; v++) {
+				aFree(map[i].skills[v]);
+			}
+			aFree(map[i].skills);
+		}
+		map[i].skills = NULL;
+		map[i].skill_count = 0;
+				
 		// adjustments
-		if( battle_config.pk_mode )
+		if( battle_config.pk_mode ) {
 			map[i].flag.pvp = 1; // make all maps pvp for pk_mode [Valaris]
+			map[i].zone = &map_zone_pk;
+		} else /* align with 'All' zone */
+			map[i].zone = &map_zone_all;
+		
+		if( map[i].zone_mf_count ) {
+			for(v = 0; v < map[i].zone_mf_count; v++) {
+				aFree(map[i].zone_mf[v]);
+			}
+			aFree(map[i].zone_mf);
+		}
+		
+		map[i].zone_mf = NULL;
+		map[i].zone_mf_count = 0;
+		map[i].prev_zone = map[i].zone;
+		
+		map[i].invincible_time_inc = 0;
+		
+		map[i].weapon_damage_rate = 100;
+		map[i].magic_damage_rate  = 100;
+		map[i].misc_damage_rate   = 100;
+		map[i].short_damage_rate  = 100;
+		map[i].long_damage_rate   = 100;
 	}
 }
 
@@ -3006,14 +3167,13 @@ void map_removemapdb(struct map_data *m)
 /*======================================
  * Initiate maps loading stage
  *--------------------------------------*/
-int map_readallmaps (void)
-{
+int map_readallmaps (void) {
 	int i;
 	FILE* fp=NULL;
 	int maps_removed = 0;
 	char *map_cache_buffer = NULL; // Has the uncompressed gat data of all maps, so just one allocation has to be made
 	char map_cache_decode_buffer[MAX_MAP_SIZE];
-
+	
 	if( enable_grf )
 		ShowStatus("Loading maps (using GRF files)...\n");
 	else {
@@ -3106,84 +3266,6 @@ static int map_ip_set = 0;
 static int char_ip_set = 0;
 
 /*==========================================
- * Console Command Parser [Wizputer]
- *------------------------------------------*/
-int parse_console(const char* buf)
-{
-	char type[64];
-	char command[64];
-	char map[64];
-	int16 x = 0;
-	int16 y = 0;
-	int16 m;
-	int n;
-	struct map_session_data sd;
-
-	memset(&sd, 0, sizeof(struct map_session_data));
-	strcpy(sd.status.name, "console");
-
-	if( ( n = sscanf(buf, "%63[^:]:%63[^:]:%63s %hd %hd[^\n]", type, command, map, &x, &y) ) < 5 )
-	{
-		if( ( n = sscanf(buf, "%63[^:]:%63[^\n]", type, command) ) < 2 )
-		{
-			n = sscanf(buf, "%63[^\n]", type);
-		}
-	}
-
-	if( n == 5 )
-	{
-		m = map_mapname2mapid(map);
-		if( m < 0 )
-		{
-			ShowWarning("Console: Unknown map.\n");
-			return 0;
-		}
-		sd.bl.m = m;
-		map_search_freecell(&sd.bl, m, &sd.bl.x, &sd.bl.y, -1, -1, 0);
-		if( x > 0 )
-			sd.bl.x = x;
-		if( y > 0 )
-			sd.bl.y = y;
-	}
-	else
-	{
-		map[0] = '\0';
-		if( n < 2 )
-			command[0] = '\0';
-		if( n < 1 )
-			type[0] = '\0';
-	}
-
-	ShowNotice("Type of command: '%s' || Command: '%s' || Map: '%s' Coords: %d %d\n", type, command, map, x, y);
-
-	if( n == 5 && strcmpi("admin",type) == 0 )
-	{
-		if( !is_atcommand(sd.fd, &sd, command, 0) )
-			ShowInfo("Console: not atcommand\n");
-	}
-	else if( n == 2 && strcmpi("server", type) == 0 )
-	{
-		if( strcmpi("shutdown", command) == 0 || strcmpi("exit", command) == 0 || strcmpi("quit", command) == 0 )
-		{
-			runflag = 0;
-		}
-	}
-	else if( strcmpi("help", type) == 0 )
-	{
-		ShowInfo("To use GM commands:\n");
-		ShowInfo("  admin:<gm command>:<map of \"gm\"> <x> <y>\n");
-		ShowInfo("You can use any GM command that doesn't require the GM.\n");
-		ShowInfo("No using @item or @warp however you can use @charwarp\n");
-		ShowInfo("The <map of \"gm\"> <x> <y> is for commands that need coords of the GM\n");
-		ShowInfo("IE: @spawn\n");
-		ShowInfo("To shutdown the server:\n");
-		ShowInfo("  server:shutdown\n");
-	}
-
-	return 0;
-}
-
-/*==========================================
  * Read map server configuration files (conf/map_server.conf...)
  *------------------------------------------*/
 int map_config_read(char *cfgName)
@@ -3216,7 +3298,7 @@ int map_config_read(char *cfgName)
 		*ptr = '\0';
 
 		if(strcmpi(w1,"timestamp_format")==0)
-			strncpy(timestamp_format, w2, 20);
+			safestrncpy(timestamp_format, w2, 20);
 		else if(strcmpi(w1,"stdout_with_ansisequence")==0)
 			stdout_with_ansisequence = config_switch(w2);
 		else if(strcmpi(w1,"console_silent")==0) {
@@ -3232,11 +3314,11 @@ int map_config_read(char *cfgName)
 		else if (strcmpi(w1, "char_port") == 0)
 			chrif_setport(atoi(w2));
 		else if (strcmpi(w1, "map_ip") == 0)
-			map_ip_set = clif_setip(w2);
+			map_ip_set = clif->setip(w2);
 		else if (strcmpi(w1, "bind_ip") == 0)
-			clif_setbindip(w2);
+			clif->setbindip(w2);
 		else if (strcmpi(w1, "map_port") == 0) {
-			clif_setport(atoi(w2));
+			clif->setport(atoi(w2));
 			map_port = (atoi(w2));
 		} else if (strcmpi(w1, "map") == 0)
 			map_addmap(w2);
@@ -3267,12 +3349,8 @@ int map_config_read(char *cfgName)
 		else if (strcmpi(w1, "charhelp_txt") == 0)
 			strcpy(charhelp_txt, w2);
 		else if(strcmpi(w1,"db_path") == 0)
-			strncpy(db_path,w2,255);
-		else if (strcmpi(w1, "console") == 0) {
-			console = config_switch(w2);
-			if (console)
-				ShowNotice("Console Commands are enabled.\n");
-		} else if (strcmpi(w1, "enable_spy") == 0)
+			safestrncpy(db_path,w2,255);
+		else if (strcmpi(w1, "enable_spy") == 0)
 			enable_spy = config_switch(w2);
 		else if (strcmpi(w1, "use_grf") == 0)
 			enable_grf = config_switch(w2);
@@ -3357,9 +3435,6 @@ int inter_config_read(char *cfgName)
 		if( sscanf(line,"%[^:]: %[^\r\n]",w1,w2) < 2 )
 			continue;
 
-		if(strcmpi(w1, "main_chat_nick")==0)
-			safestrncpy(main_chat_nick, w2, sizeof(main_chat_nick));
-		else
 		if(strcmpi(w1,"item_db_db")==0)
 			strcpy(item_db_db,w2);
 		else
@@ -3431,15 +3506,15 @@ int inter_config_read(char *cfgName)
 int map_sql_init(void)
 {
 	// main db connection
-	mmysql_handle = Sql_Malloc();
+	mmysql_handle = SQL->Malloc();
 
 	ShowInfo("Connecting to the Map DB Server....\n");
-	if( SQL_ERROR == Sql_Connect(mmysql_handle, map_server_id, map_server_pw, map_server_ip, map_server_port, map_server_db) )
+	if( SQL_ERROR == SQL->Connect(mmysql_handle, map_server_id, map_server_pw, map_server_ip, map_server_port, map_server_db) )
 		exit(EXIT_FAILURE);
 	ShowStatus("connect success! (Map Server Connection)\n");
 
 	if( strlen(default_codepage) > 0 )
-		if ( SQL_ERROR == Sql_SetEncoding(mmysql_handle, default_codepage) )
+		if ( SQL_ERROR == SQL->SetEncoding(mmysql_handle, default_codepage) )
 			Sql_ShowDebug(mmysql_handle);
 
 	return 0;
@@ -3448,35 +3523,1330 @@ int map_sql_init(void)
 int map_sql_close(void)
 {
 	ShowStatus("Close Map DB Connection....\n");
-	Sql_Free(mmysql_handle);
+	SQL->Free(mmysql_handle);
 	mmysql_handle = NULL;
-#ifndef BETA_THREAD_TEST
-	if (log_config.sql_logs)
-	{
+	if (logs->config.sql_logs) {
 		ShowStatus("Close Log DB Connection....\n");
-		Sql_Free(logmysql_handle);
+		SQL->Free(logmysql_handle);
 		logmysql_handle = NULL;
 	}
-#endif
 	return 0;
 }
 
 int log_sql_init(void)
 {
-#ifndef BETA_THREAD_TEST
 	// log db connection
-	logmysql_handle = Sql_Malloc();
+	logmysql_handle = SQL->Malloc();
 
 	ShowInfo(""CL_WHITE"[SQL]"CL_RESET": Connecting to the Log Database "CL_WHITE"%s"CL_RESET" At "CL_WHITE"%s"CL_RESET"...\n",log_db_db,log_db_ip);
-	if ( SQL_ERROR == Sql_Connect(logmysql_handle, log_db_id, log_db_pw, log_db_ip, log_db_port, log_db_db) )
+	if ( SQL_ERROR == SQL->Connect(logmysql_handle, log_db_id, log_db_pw, log_db_ip, log_db_port, log_db_db) )
 		exit(EXIT_FAILURE);
 	ShowStatus(""CL_WHITE"[SQL]"CL_RESET": Successfully '"CL_GREEN"connected"CL_RESET"' to Database '"CL_WHITE"%s"CL_RESET"'.\n", log_db_db);
 
 	if( strlen(default_codepage) > 0 )
-		if ( SQL_ERROR == Sql_SetEncoding(logmysql_handle, default_codepage) )
+		if ( SQL_ERROR == SQL->SetEncoding(logmysql_handle, default_codepage) )
 			Sql_ShowDebug(logmysql_handle);
-#endif
 	return 0;
+}
+void map_zone_change2(int m, struct map_zone_data *zone) {
+	char empty[1] = "\0";
+	
+	map[m].prev_zone = map[m].zone;
+
+	if( map[m].zone_mf_count )
+		map_zone_remove(m);
+	
+	map_zone_apply(m,zone,empty,empty,empty);
+}
+/* when changing from a mapflag to another during runtime */
+void map_zone_change(int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath) {
+	map[m].prev_zone = map[m].zone;
+	
+	if( map[m].zone_mf_count )
+		map_zone_remove(m);
+	map_zone_apply(m,zone,start,buffer,filepath);
+}
+/* removes previous mapflags from this map */
+void map_zone_remove(int m) {
+	char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
+	unsigned short k;
+	char empty[1] = "\0";
+	for(k = 0; k < map[m].zone_mf_count; k++) {
+		int len = strlen(map[m].zone_mf[k]),j;
+		params[0] = '\0';
+		memcpy(flag, map[m].zone_mf[k], MAP_ZONE_MAPFLAG_LENGTH);
+		for(j = 0; j < len; j++) {
+			if( flag[j] == '\t' ) {
+				memcpy(params, &flag[j+1], len - j);
+				flag[j] = '\0';
+				break;
+			}
+		}
+		
+		npc_parse_mapflag(map[m].name,empty,flag,params,empty,empty,empty);
+		aFree(map[m].zone_mf[k]);
+		map[m].zone_mf[k] = NULL;
+	}
+	
+	aFree(map[m].zone_mf);
+	map[m].zone_mf = NULL;
+	map[m].zone_mf_count = 0;
+}
+static inline void map_zone_mf_cache_add(int m, char *rflag) {
+	RECREATE(map[m].zone_mf, char *, ++map[m].zone_mf_count);
+	CREATE(map[m].zone_mf[map[m].zone_mf_count - 1], char, MAP_ZONE_MAPFLAG_LENGTH);
+	safestrncpy(map[m].zone_mf[map[m].zone_mf_count - 1], rflag, MAP_ZONE_MAPFLAG_LENGTH);
+}
+/* TODO: introduce enumerations to each mapflag so instead of reading the string a number of times we read it only once and use its value wherever we need */
+/* cache previous values to revert */
+bool map_zone_mf_cache(int m, char *flag, char *params) {
+	char rflag[MAP_ZONE_MAPFLAG_LENGTH];
+	int state = 1;
+	
+	if (params[0] != '\0' && !strcmpi(params, "off"))
+		state = 0;
+	
+	if (!strcmpi(flag, "nosave")) {
+		;/* not yet supported to be reversed */
+		/*
+		char savemap[32];
+		int savex, savey;
+		if (state == 0) {
+			if( map[m].flag.nosave ) {
+				sprintf(rflag, "nosave	SavePoint");
+				map_zone_mf_cache_add(m,nosave);
+			}
+		} else if (!strcmpi(params, "SavePoint")) {
+			if( map[m].save.map ) {
+				sprintf(rflag, "nosave	%s,%d,%d",mapindex_id2name(map[m].save.map),map[m].save.x,map[m].save.y);
+			} else
+				sprintf(rflag, "nosave	%s,%d,%d",mapindex_id2name(map[m].save.map),map[m].save.x,map[m].save.y);
+				map_zone_mf_cache_add(m,nosave);
+		} else if (sscanf(params, "%31[^,],%d,%d", savemap, &savex, &savey) == 3) {
+			if( map[m].save.map ) {
+				sprintf(rflag, "nosave	%s,%d,%d",mapindex_id2name(map[m].save.map),map[m].save.x,map[m].save.y);
+				map_zone_mf_cache_add(m,nosave);
+			}
+		}*/
+	} else if (!strcmpi(flag,"autotrade")) {
+		if( state && map[m].flag.autotrade )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"autotrade	off");
+			else if( !map[m].flag.autotrade )
+				map_zone_mf_cache_add(m,"autotrade");
+		}
+	} else if (!strcmpi(flag,"allowks")) {
+		if( state && map[m].flag.allowks )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"allowks	off");
+			else if( !map[m].flag.allowks )
+				map_zone_mf_cache_add(m,"allowks");
+		}
+	} else if (!strcmpi(flag,"town")) {
+		if( state && map[m].flag.town )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"town	off");
+			else if( !map[m].flag.town )
+				map_zone_mf_cache_add(m,"town");
+		}
+	} else if (!strcmpi(flag,"nomemo")) {
+		if( state && map[m].flag.nomemo )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nomemo	off");
+			else if( !map[m].flag.nomemo )
+				map_zone_mf_cache_add(m,"nomemo");
+		}
+	} else if (!strcmpi(flag,"noteleport")) {
+		if( state && map[m].flag.noteleport )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noteleport	off");
+			else if( !map[m].flag.noteleport )
+				map_zone_mf_cache_add(m,"noteleport");
+		}
+	} else if (!strcmpi(flag,"nowarp")) {
+		if( state && map[m].flag.nowarp )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nowarp	off");
+			else if( !map[m].flag.nowarp )
+				map_zone_mf_cache_add(m,"nowarp");
+		}
+	} else if (!strcmpi(flag,"nowarpto")) {
+		if( state && map[m].flag.nowarpto )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nowarpto	off");
+			else if( !map[m].flag.nowarpto )
+				map_zone_mf_cache_add(m,"nowarpto");
+		}
+	} else if (!strcmpi(flag,"noreturn")) {
+		if( state && map[m].flag.noreturn )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noreturn	off");
+			else if( map[m].flag.noreturn )
+				map_zone_mf_cache_add(m,"noreturn");
+		}
+	} else if (!strcmpi(flag,"monster_noteleport")) {
+		if( state && map[m].flag.monster_noteleport )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"monster_noteleport	off");
+			else if( map[m].flag.monster_noteleport )
+				map_zone_mf_cache_add(m,"monster_noteleport");
+		}
+	} else if (!strcmpi(flag,"nobranch")) {
+		if( state && map[m].flag.nobranch )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nobranch	off");
+			else if( map[m].flag.nobranch )
+				map_zone_mf_cache_add(m,"nobranch");
+		}
+	} else if (!strcmpi(flag,"nopenalty")) {
+		if( state && map[m].flag.noexppenalty ) /* they are applied together, no need to check both */
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nopenalty	off");
+			else if( map[m].flag.noexppenalty )
+				map_zone_mf_cache_add(m,"nopenalty");
+		}
+	} else if (!strcmpi(flag,"pvp")) {
+		if( state && map[m].flag.pvp )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"pvp	off");
+			else if( map[m].flag.pvp )
+				map_zone_mf_cache_add(m,"pvp");
+		}
+	}
+	else if (!strcmpi(flag,"pvp_noparty")) {
+		if( state && map[m].flag.pvp_noparty )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"pvp_noparty	off");
+			else if( map[m].flag.pvp_noparty )
+				map_zone_mf_cache_add(m,"pvp_noparty");
+		}
+	} else if (!strcmpi(flag,"pvp_noguild")) {
+		if( state && map[m].flag.pvp_noguild )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"pvp_noguild	off");
+			else if( map[m].flag.pvp_noguild )
+				map_zone_mf_cache_add(m,"pvp_noguild");
+		}
+	} else if (!strcmpi(flag, "pvp_nightmaredrop")) {
+		if( state && map[m].flag.pvp_nightmaredrop )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"pvp_nightmaredrop	off");
+			else if( map[m].flag.pvp_nightmaredrop )
+				map_zone_mf_cache_add(m,"pvp_nightmaredrop");
+		}
+		/* not yet fully supported */
+		/*char drop_arg1[16], drop_arg2[16];
+		int drop_per = 0;
+		if (sscanf(w4, "%[^,],%[^,],%d", drop_arg1, drop_arg2, &drop_per) == 3) {
+			int drop_id = 0, drop_type = 0;
+			if (!strcmpi(drop_arg1, "random"))
+				drop_id = -1;
+			else if (itemdb_exists((drop_id = atoi(drop_arg1))) == NULL)
+				drop_id = 0;
+			if (!strcmpi(drop_arg2, "inventory"))
+				drop_type = 1;
+			else if (!strcmpi(drop_arg2,"equip"))
+				drop_type = 2;
+			else if (!strcmpi(drop_arg2,"all"))
+				drop_type = 3;
+			
+			if (drop_id != 0){
+				int i;
+				for (i = 0; i < MAX_DROP_PER_MAP; i++) {
+					if (map[m].drop_list[i].drop_id == 0){
+						map[m].drop_list[i].drop_id = drop_id;
+						map[m].drop_list[i].drop_type = drop_type;
+						map[m].drop_list[i].drop_per = drop_per;
+						break;
+					}
+				}
+				map[m].flag.pvp_nightmaredrop = 1;
+			}
+		} else if (!state) //Disable
+			map[m].flag.pvp_nightmaredrop = 0;
+		 */
+	} else if (!strcmpi(flag,"pvp_nocalcrank")) {
+		if( state && map[m].flag.pvp_nocalcrank )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"pvp_nocalcrank	off");
+			else if( map[m].flag.pvp_nocalcrank )
+				map_zone_mf_cache_add(m,"pvp_nocalcrank");
+		}
+	} else if (!strcmpi(flag,"gvg")) {
+		if( state && map[m].flag.gvg )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"gvg	off");
+			else if( map[m].flag.gvg )
+				map_zone_mf_cache_add(m,"gvg");
+		}
+	} else if (!strcmpi(flag,"gvg_noparty")) {
+		if( state && map[m].flag.gvg_noparty )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"gvg_noparty	off");
+			else if( map[m].flag.gvg_noparty )
+				map_zone_mf_cache_add(m,"gvg_noparty");
+		}
+	} else if (!strcmpi(flag,"gvg_dungeon")) {
+		if( state && map[m].flag.gvg_dungeon )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"gvg_dungeon	off");
+			else if( map[m].flag.gvg_dungeon )
+				map_zone_mf_cache_add(m,"gvg_dungeon");
+		}
+	}
+	else if (!strcmpi(flag,"gvg_castle")) {
+		if( state && map[m].flag.gvg_castle )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"gvg_castle	off");
+			else if( map[m].flag.gvg_castle )
+				map_zone_mf_cache_add(m,"gvg_castle");
+		}
+	}
+	else if (!strcmpi(flag,"battleground")) {
+		if( state && map[m].flag.battleground )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"battleground	off");
+			else if( map[m].flag.battleground )
+				map_zone_mf_cache_add(m,"battleground");
+		}
+	} else if (!strcmpi(flag,"noexppenalty")) {
+		if( state && map[m].flag.noexppenalty )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noexppenalty	off");
+			else if( map[m].flag.noexppenalty )
+				map_zone_mf_cache_add(m,"noexppenalty");
+		}
+	} else if (!strcmpi(flag,"nozenypenalty")) {
+		if( state && map[m].flag.nozenypenalty )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nozenypenalty	off");
+			else if( map[m].flag.nozenypenalty )
+				map_zone_mf_cache_add(m,"nozenypenalty");
+		}
+	} else if (!strcmpi(flag,"notrade")) {
+		if( state && map[m].flag.notrade )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"notrade	off");
+			else if( map[m].flag.notrade )
+				map_zone_mf_cache_add(m,"notrade");
+		}
+	} else if (!strcmpi(flag,"novending")) {
+		if( state && map[m].flag.novending )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"novending	off");
+			else if( map[m].flag.novending )
+				map_zone_mf_cache_add(m,"novending");
+		}
+	} else if (!strcmpi(flag,"nodrop")) {
+		if( state && map[m].flag.nodrop )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nodrop	off");
+			else if( map[m].flag.nodrop )
+				map_zone_mf_cache_add(m,"nodrop");
+		}
+	} else if (!strcmpi(flag,"noskill")) {
+		if( state && map[m].flag.noskill )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noskill	off");
+			else if( map[m].flag.noskill )
+				map_zone_mf_cache_add(m,"noskill");
+		}
+	} else if (!strcmpi(flag,"noicewall")) {
+		if( state && map[m].flag.noicewall )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noicewall	off");
+			else if( map[m].flag.noicewall )
+				map_zone_mf_cache_add(m,"noicewall");
+		}
+	} else if (!strcmpi(flag,"snow")) {
+		if( state && map[m].flag.snow )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"snow	off");
+			else if( map[m].flag.snow )
+				map_zone_mf_cache_add(m,"snow");
+		}
+	} else if (!strcmpi(flag,"clouds")) {
+		if( state && map[m].flag.clouds )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"clouds	off");
+			else if( map[m].flag.clouds )
+				map_zone_mf_cache_add(m,"clouds");
+		}
+	} else if (!strcmpi(flag,"clouds2")) {
+		if( state && map[m].flag.clouds2 )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"clouds2	off");
+			else if( map[m].flag.clouds2 )
+				map_zone_mf_cache_add(m,"clouds2");
+		}
+	} else if (!strcmpi(flag,"fog")) {
+		if( state && map[m].flag.fog )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"fog	off");
+			else if( map[m].flag.fog )
+				map_zone_mf_cache_add(m,"fog");
+		}
+	} else if (!strcmpi(flag,"fireworks")) {
+		if( state && map[m].flag.fireworks )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"fireworks	off");
+			else if( map[m].flag.fireworks )
+				map_zone_mf_cache_add(m,"fireworks");
+		}
+	} else if (!strcmpi(flag,"sakura")) {
+		if( state && map[m].flag.sakura )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"sakura	off");
+			else if( map[m].flag.sakura )
+				map_zone_mf_cache_add(m,"sakura");
+		}
+	} else if (!strcmpi(flag,"leaves")) {
+		if( state && map[m].flag.leaves )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"leaves	off");
+			else if( map[m].flag.leaves )
+				map_zone_mf_cache_add(m,"leaves");
+		}
+	} else if (!strcmpi(flag,"nightenabled")) {
+		if( state && map[m].flag.nightenabled )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nightenabled	off");
+			else if( map[m].flag.nightenabled )
+				map_zone_mf_cache_add(m,"nightenabled");
+		}
+	} else if (!strcmpi(flag,"noexp")) {
+		if( state && map[m].flag.nobaseexp )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noexp	off");
+			else if( map[m].flag.nobaseexp )
+				map_zone_mf_cache_add(m,"noexp");
+		}
+	}
+	else if (!strcmpi(flag,"nobaseexp")) {
+		if( state && map[m].flag.nobaseexp )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nobaseexp	off");
+			else if( map[m].flag.nobaseexp )
+				map_zone_mf_cache_add(m,"nobaseexp");
+		}
+	} else if (!strcmpi(flag,"nojobexp")) {
+		if( state && map[m].flag.nojobexp )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nojobexp	off");
+			else if( map[m].flag.nojobexp )
+				map_zone_mf_cache_add(m,"nojobexp");
+		}
+	} else if (!strcmpi(flag,"noloot")) {
+		if( state && map[m].flag.nomobloot )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noloot	off");
+			else if( map[m].flag.nomobloot )
+				map_zone_mf_cache_add(m,"noloot");
+		}
+	} else if (!strcmpi(flag,"nomobloot")) {
+		if( state && map[m].flag.nomobloot )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nomobloot	off");
+			else if( map[m].flag.nomobloot )
+				map_zone_mf_cache_add(m,"nomobloot");
+		}
+	} else if (!strcmpi(flag,"nomvploot")) {
+		if( state && map[m].flag.nomvploot )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nomvploot	off");
+			else if( map[m].flag.nomvploot )
+				map_zone_mf_cache_add(m,"nomvploot");
+		}
+	} else if (!strcmpi(flag,"nocommand")) {
+		/* implementation may be incomplete */
+		if( state && sscanf(params, "%d", &state) == 1 ) {
+			sprintf(rflag, "nocommand	%s",params);
+			map_zone_mf_cache_add(m,rflag);
+		} else if( !state && map[m].nocommand ) {
+			sprintf(rflag, "nocommand	%d",map[m].nocommand);
+			map_zone_mf_cache_add(m,rflag);
+		} else if( map[m].nocommand ) {
+			map_zone_mf_cache_add(m,"nocommand	off");
+		}
+	} else if (!strcmpi(flag,"jexp")) {
+		if( !state ) {
+			if( map[m].jexp != 100 ) {
+				sprintf(rflag,"jexp	%d",map[m].jexp);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].jexp ) {
+				sprintf(rflag,"jexp	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	} else if (!strcmpi(flag,"bexp")) {
+		if( !state ) {
+			if( map[m].bexp != 100 ) {
+				sprintf(rflag,"bexp	%d",map[m].jexp);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].bexp ) {
+				sprintf(rflag,"bexp	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	} else if (!strcmpi(flag,"loadevent")) {
+		if( state && map[m].flag.loadevent )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"loadevent	off");
+			else if( map[m].flag.loadevent )
+				map_zone_mf_cache_add(m,"loadevent");
+		}
+	} else if (!strcmpi(flag,"nochat")) {
+		if( state && map[m].flag.nochat )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nochat	off");
+			else if( map[m].flag.nochat )
+				map_zone_mf_cache_add(m,"nochat");
+		}
+	} else if (!strcmpi(flag,"partylock")) {
+		if( state && map[m].flag.partylock )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"partylock	off");
+			else if( map[m].flag.partylock )
+				map_zone_mf_cache_add(m,"partylock");
+		}
+	} else if (!strcmpi(flag,"guildlock")) {
+		if( state && map[m].flag.guildlock )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"guildlock	off");
+			else if( map[m].flag.guildlock )
+				map_zone_mf_cache_add(m,"guildlock");
+		}
+	} else if (!strcmpi(flag,"reset")) {
+		if( state && map[m].flag.reset )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"reset	off");
+			else if( map[m].flag.reset )
+				map_zone_mf_cache_add(m,"reset");
+		}
+	} else if (!strcmpi(flag,"adjust_unit_duration")) {
+		int skill_id, k;
+		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
+		int len = strlen(params);
+		
+		modifier[0] = '\0';
+		memcpy(skill_name, params, MAP_ZONE_MAPFLAG_LENGTH);
+		
+		for(k = 0; k < len; k++) {
+			if( skill_name[k] == '\t' ) {
+				memcpy(modifier, &skill_name[k+1], len - k);
+				skill_name[k] = '\0';
+				break;
+			}
+		}
+		
+		if( modifier[0] == '\0' || !( skill_id = skill->name2id(skill_name) ) || !skill->get_unit_id( skill->name2id(skill_name), 0) || atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
+			;/* we dont mind it, the server will take care of it next. */
+		} else {
+			int idx = map[m].unit_count;
+			
+			k = 0;
+			ARR_FIND(0, idx, k, map[m].units[k]->skill_id == skill_id);
+			
+			if( k < idx ) {
+				if( atoi(modifier) != map[m].units[k]->modifier ) {
+					sprintf(rflag,"adjust_unit_duration	%s	%d",skill_name,map[m].units[k]->modifier);
+					map_zone_mf_cache_add(m,rflag);
+				}
+			} else {
+				sprintf(rflag,"adjust_unit_duration	%s	100",skill_name);
+				map_zone_mf_cache_add(m,rflag);
+			}			
+		}
+	} else if (!strcmpi(flag,"adjust_skill_damage")) {
+		int skill_id, k;
+		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
+		int len = strlen(params);
+		
+		modifier[0] = '\0';
+		memcpy(skill_name, params, MAP_ZONE_MAPFLAG_LENGTH);
+		
+		for(k = 0; k < len; k++) {
+			if( skill_name[k] == '\t' ) {
+				memcpy(modifier, &skill_name[k+1], len - k);
+				skill_name[k] = '\0';
+				break;
+			}
+		}
+		
+		if( modifier[0] == '\0' || !( skill_id = skill->name2id(skill_name) ) || atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
+			;/* we dont mind it, the server will take care of it next. */
+		} else {
+			int idx = map[m].skill_count;
+			
+			k = 0;
+			ARR_FIND(0, idx, k, map[m].skills[k]->skill_id == skill_id);
+			
+			if( k < idx ) {
+				if( atoi(modifier) != map[m].skills[k]->modifier ) {
+					sprintf(rflag,"adjust_skill_damage	%s	%d",skill_name,map[m].skills[k]->modifier);
+					map_zone_mf_cache_add(m,rflag);
+				}
+			} else {
+				sprintf(rflag,"adjust_skill_damage	%s	100",skill_name);
+				map_zone_mf_cache_add(m,rflag);
+			}
+			
+		}
+	} else if (!strcmpi(flag,"zone")) {
+		ShowWarning("You can't add a zone through a zone! ERROR, skipping for '%s'...\n",map[m].name);
+		return true;
+	} else if ( !strcmpi(flag,"nomapchannelautojoin") ) {
+		if( state && map[m].flag.chsysnolocalaj )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nomapchannelautojoin	off");
+			else if( map[m].flag.chsysnolocalaj )
+				map_zone_mf_cache_add(m,"nomapchannelautojoin");
+		}
+	} else if ( !strcmpi(flag,"invincible_time_inc") ) {
+		if( !state ) {
+			if( map[m].invincible_time_inc != 0 ) {
+				sprintf(rflag,"invincible_time_inc	%d",map[m].invincible_time_inc);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].invincible_time_inc ) {
+				sprintf(rflag,"invincible_time_inc	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	} else if ( !strcmpi(flag,"noknockback") ) {
+		if( state && map[m].flag.noknockback )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"noknockback	off");
+			else if( map[m].flag.noknockback )
+				map_zone_mf_cache_add(m,"noknockback");
+		}
+	} else if ( !strcmpi(flag,"weapon_damage_rate") ) {
+		if( !state ) {
+			if( map[m].weapon_damage_rate != 100 ) {
+				sprintf(rflag,"weapon_damage_rate	%d",map[m].weapon_damage_rate);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].weapon_damage_rate ) {
+				sprintf(rflag,"weapon_damage_rate	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	} else if ( !strcmpi(flag,"magic_damage_rate") ) {
+		if( !state ) {
+			if( map[m].magic_damage_rate != 100 ) {
+				sprintf(rflag,"magic_damage_rate	%d",map[m].magic_damage_rate);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].magic_damage_rate ) {
+				sprintf(rflag,"magic_damage_rate	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	} else if ( !strcmpi(flag,"misc_damage_rate") ) {
+		if( !state ) {
+			if( map[m].misc_damage_rate != 100 ) {
+				sprintf(rflag,"misc_damage_rate	%d",map[m].misc_damage_rate);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].misc_damage_rate ) {
+				sprintf(rflag,"misc_damage_rate	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	} else if ( !strcmpi(flag,"short_damage_rate") ) {
+		if( !state ) {
+			if( map[m].short_damage_rate != 100 ) {
+				sprintf(rflag,"short_damage_rate	%d",map[m].short_damage_rate);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].short_damage_rate ) {
+				sprintf(rflag,"short_damage_rate	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	} else if ( !strcmpi(flag,"long_damage_rate") ) {
+		if( !state ) {
+			if( map[m].long_damage_rate != 100 ) {
+				sprintf(rflag,"long_damage_rate	%d",map[m].long_damage_rate);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		} if( sscanf(params, "%d", &state) == 1 ) {
+			if( state != map[m].long_damage_rate ) {
+				sprintf(rflag,"long_damage_rate	%s",params);
+				map_zone_mf_cache_add(m,rflag);
+			}
+		}
+	}
+	return false;
+}
+void map_zone_apply(int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath) {
+	int i;
+	char empty[1] = "\0";
+	char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
+	map[m].zone = zone;
+	for(i = 0; i < zone->mapflags_count; i++) {
+		int len = strlen(zone->mapflags[i]);
+		int k;
+		params[0] = '\0';
+		memcpy(flag, zone->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
+		for(k = 0; k < len; k++) {
+			if( flag[k] == '\t' ) {
+				memcpy(params, &flag[k+1], len - k);
+				flag[k] = '\0';
+				break;
+			}
+		}
+		
+		if( map_zone_mf_cache(m,flag,params) )
+			continue;
+		
+		npc_parse_mapflag(map[m].name,empty,flag,params,start,buffer,filepath);
+	}
+}
+/* used on npc load and reload to apply all "Normal" and "PK Mode" zones */
+void map_zone_init(void) {
+	char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
+	struct map_zone_data *zone;
+	char empty[1] = "\0";
+	int i,k,j;
+	
+	zone = &map_zone_all;
+	
+	for(i = 0; i < zone->mapflags_count; i++) {
+		int len = strlen(zone->mapflags[i]);
+		params[0] = '\0';
+		memcpy(flag, zone->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
+		for(k = 0; k < len; k++) {
+			if( flag[k] == '\t' ) {
+				memcpy(params, &flag[k+1], len - k);
+				flag[k] = '\0';
+				break;
+			}
+		}
+		
+		for(j = 0; j < map_num; j++) {
+			if( map[j].zone == zone ) {
+				if( map_zone_mf_cache(j,flag,params) )
+					break;
+				npc_parse_mapflag(map[j].name,empty,flag,params,empty,empty,empty);
+			}
+		}
+	}
+	
+	if( battle_config.pk_mode ) {
+		zone = &map_zone_pk;
+		for(i = 0; i < zone->mapflags_count; i++) {
+			int len = strlen(zone->mapflags[i]);
+			params[0] = '\0';
+			memcpy(flag, zone->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
+			for(k = 0; k < len; k++) {
+				if( flag[k] == '\t' ) {
+					memcpy(params, &flag[k+1], len - k);
+					flag[k] = '\0';
+					break;
+				}
+			}
+			for(j = 0; j < map_num; j++) {
+				if( map[j].zone == zone ) {
+					if( map_zone_mf_cache(j,flag,params) )
+						break;
+					npc_parse_mapflag(map[j].name,empty,flag,params,empty,empty,empty);
+				}
+			}
+		}
+	}
+		
+}
+unsigned short map_zone_str2itemid(const char *name) {
+	struct item_data *data;
+	
+	if( !name )
+		return 0;
+	if( name[0] == 'I' && name[1] == 'D' && strlen(name) <= 7 ) {
+		if( !( data = itemdb_exists(atoi(name+2))) ) {
+			return 0;
+		}
+	} else {
+		if( !( data = itemdb_searchname(name) ) ) {
+			return 0;
+		}
+	}
+	return data->nameid;
+}
+unsigned short map_zone_str2skillid(const char *name) {
+	unsigned short nameid = 0;
+	
+	if( !name )
+		return 0;
+	
+	if( name[0] == 'I' && name[1] == 'D' && strlen(name) <= 7 ) {
+		if( !skill->get_index((nameid = atoi(name+2))) )
+			return 0;
+	} else {
+		if( !( nameid = strdb_iget(skilldb_name2id, name) ) ) {
+			return 0;
+		}
+	}
+	return nameid;
+}
+enum bl_type map_zone_bl_type(const char *entry, enum map_zone_skill_subtype *subtype) {
+	char temp[200], *parse;
+	enum bl_type bl = BL_NUL;
+	*subtype = MZS_NONE;
+
+	if( !entry )
+		return BL_NUL;
+	
+	safestrncpy(temp, entry, 200);
+	
+	parse = strtok(temp,"|");
+		
+	while (parse != NULL) {
+		normalize_name(parse," ");
+		if( strcmpi(parse,"player") == 0 )
+			bl |= BL_PC;
+		else if( strcmpi(parse,"homun") == 0 )
+			bl |= BL_HOM;
+		else if( strcmpi(parse,"mercenary") == 0 )
+			bl |= BL_MER;
+		else if( strcmpi(parse,"monster") == 0 )
+			bl |= BL_MOB;
+		else if( strcmpi(parse,"clone") == 0 ) {
+			bl |= BL_MOB;
+			*subtype |= MZS_CLONE;
+		} else if( strcmpi(parse,"mob_boss") == 0 ) {
+			bl |= BL_MOB;
+			*subtype |= MZS_BOSS;
+		} else if( strcmpi(parse,"elemental") == 0 )
+			bl |= BL_ELEM;
+		else if( strcmpi(parse,"pet") == 0 )
+			bl |= BL_PET;
+		else if( strcmpi(parse,"all") == 0 ) {
+			bl |= BL_ALL;
+			*subtype |= MZS_ALL;
+		} else if( strcmpi(parse,"none") == 0 ) {
+			bl = BL_NUL;
+		} else {
+			ShowError("map_zone_db: '%s' unknown type, skipping...\n",parse);
+		}
+		parse = strtok(NULL,"|");
+	}
+	return bl;
+}
+/* [Ind/Hercules] */
+void read_map_zone_db(void) {
+	config_t map_zone_db;
+	config_setting_t *zones = NULL;
+	/* TODO: #ifndef required for re/pre-re */
+#ifdef RENEWAL
+	const char *config_filename = "db/re/map_zone_db.conf"; // FIXME hardcoded name
+#else
+	const char *config_filename = "db/pre-re/map_zone_db.conf"; // FIXME hardcoded name
+#endif
+	if (conf_read_file(&map_zone_db, config_filename))
+		return;
+	
+	zones = config_lookup(&map_zone_db, "zones");
+	
+	if (zones != NULL) {
+		struct map_zone_data *zone;
+		config_setting_t *zone_e;
+		config_setting_t *skills;
+		config_setting_t *items;
+		config_setting_t *mapflags;
+		config_setting_t *commands;
+		config_setting_t *caps;
+		const char *name;
+		const char *zonename;
+		int i,h,v;
+		int zone_count = 0, disabled_skills_count = 0, disabled_items_count = 0, mapflags_count = 0,
+			disabled_commands_count = 0, capped_skills_count = 0;
+		enum map_zone_skill_subtype subtype;
+		
+		zone_count = config_setting_length(zones);
+		for (i = 0; i < zone_count; ++i) {
+			bool is_all = false;
+			
+			zone_e = config_setting_get_elem(zones, i);
+			
+			if (!config_setting_lookup_string(zone_e, "name", &zonename)) {
+				ShowError("map_zone_db: missing zone name, skipping... (%s:%d)\n",
+						  config_setting_source_file(zone_e), config_setting_source_line(zone_e));
+				config_setting_remove_elem(zones,i);/* remove from the tree */
+				--zone_count;
+				--i;
+				continue;
+			}
+			
+			if( strdb_exists(zone_db, zonename) ) {
+				ShowError("map_zone_db: duplicate zone name '%s', skipping...\n",zonename);
+				config_setting_remove_elem(zones,i);/* remove from the tree */
+				--zone_count;
+				--i;
+				continue;
+			}
+			
+			/* is this the global template? */
+			if( strncmpi(zonename,MAP_ZONE_NORMAL_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
+				zone = &map_zone_all;
+				is_all = true;
+			} else if( strncmpi(zonename,MAP_ZONE_PK_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
+				zone = &map_zone_pk;
+				is_all = true;
+			} else {
+				CREATE( zone, struct map_zone_data, 1 );
+				zone->disabled_skills_count = 0;
+				zone->disabled_items_count  = 0;
+			}
+			safestrncpy(zone->name, zonename, MAP_ZONE_NAME_LENGTH);
+			
+			if( (skills = config_setting_get_member(zone_e, "disabled_skills")) != NULL ) {
+				disabled_skills_count = config_setting_length(skills);
+				/* validate */
+				for(h = 0; h < config_setting_length(skills); h++) {
+					config_setting_t *skill = config_setting_get_elem(skills, h);
+					name = config_setting_name(skill);
+					if( !map_zone_str2skillid(name) ) {
+						ShowError("map_zone_db: unknown skill (%s) in disabled_skills for zone '%s', skipping skill...\n",name,zone->name);
+						config_setting_remove_elem(skills,h);
+						--disabled_skills_count;
+						--h;
+						continue;
+					}
+					if( !map_zone_bl_type(config_setting_get_string_elem(skills,h),&subtype) )/* we dont remove it from the three due to inheritance */
+						--disabled_skills_count;
+				}
+				/* all ok, process */
+				CREATE( zone->disabled_skills, struct map_zone_disabled_skill_entry *, disabled_skills_count );
+				for(h = 0, v = 0; h < config_setting_length(skills); h++) {
+					config_setting_t *skill = config_setting_get_elem(skills, h);
+					struct map_zone_disabled_skill_entry * entry;
+					enum bl_type type;
+					name = config_setting_name(skill);
+					
+					if( (type = map_zone_bl_type(config_setting_get_string_elem(skills,h),&subtype)) ) { /* only add if enabled */
+						CREATE( entry, struct map_zone_disabled_skill_entry, 1 );
+						
+						entry->nameid = map_zone_str2skillid(name);
+						entry->type = type;
+						entry->subtype = subtype;
+						
+						zone->disabled_skills[v++] = entry;
+					}
+					
+				}
+				zone->disabled_skills_count = disabled_skills_count;
+			}
+			
+			if( (items = config_setting_get_member(zone_e, "disabled_items")) != NULL ) {
+				disabled_items_count = config_setting_length(items);
+				/* validate */
+				for(h = 0; h < config_setting_length(items); h++) {
+					config_setting_t *item = config_setting_get_elem(items, h);
+					name = config_setting_name(item);
+					if( !map_zone_str2itemid(name) ) {
+						ShowError("map_zone_db: unknown item (%s) in disabled_items for zone '%s', skipping item...\n",name,zone->name);
+						config_setting_remove_elem(items,h);
+						--disabled_items_count;
+						--h;
+						continue;
+					}
+					if( !config_setting_get_bool(item) )/* we dont remove it from the three due to inheritance */
+						--disabled_items_count;
+				}
+				/* all ok, process */
+				CREATE( zone->disabled_items, int, disabled_items_count );
+				for(h = 0, v = 0; h < config_setting_length(items); h++) {
+					config_setting_t *item = config_setting_get_elem(items, h);
+					
+					if( config_setting_get_bool(item) ) { /* only add if enabled */
+						name = config_setting_name(item);
+						zone->disabled_items[v++] = map_zone_str2itemid(name);
+					}
+					
+				}
+				zone->disabled_items_count = disabled_items_count;
+			}
+			
+			if( (mapflags = config_setting_get_member(zone_e, "mapflags")) != NULL ) {
+				mapflags_count = config_setting_length(mapflags);
+				/* mapflags are not validated here, so we save all anyway */
+				CREATE( zone->mapflags, char *, mapflags_count );
+				for(h = 0; h < mapflags_count; h++) {
+					CREATE( zone->mapflags[h], char, MAP_ZONE_MAPFLAG_LENGTH );
+					
+					name = config_setting_get_string_elem(mapflags, h);
+					
+					safestrncpy(zone->mapflags[h], name, MAP_ZONE_MAPFLAG_LENGTH);
+					
+				}
+				zone->mapflags_count = mapflags_count;
+			}
+			
+			if( (commands = config_setting_get_member(zone_e, "disabled_commands")) != NULL ) {
+				disabled_commands_count = config_setting_length(commands);
+				/* validate */
+				for(h = 0; h < config_setting_length(commands); h++) {
+					config_setting_t *command = config_setting_get_elem(commands, h);
+					name = config_setting_name(command);
+					if( !atcommand->exists(name) ) {
+						ShowError("map_zone_db: unknown command '%s' in disabled_commands for zone '%s', skipping entry...\n",name,zone->name);
+						config_setting_remove_elem(commands,h);
+						--disabled_commands_count;
+						--h;
+						continue;
+					}
+					if( !config_setting_get_int(command) )/* we dont remove it from the three due to inheritance */
+						--disabled_commands_count;
+				}
+				/* all ok, process */
+				CREATE( zone->disabled_commands, struct map_zone_disabled_command_entry *, disabled_commands_count );
+				for(h = 0, v = 0; h < config_setting_length(commands); h++) {
+					config_setting_t *command = config_setting_get_elem(commands, h);
+					struct map_zone_disabled_command_entry * entry;
+					int group_lv;
+					name = config_setting_name(command);
+					
+					if( (group_lv = config_setting_get_int(command)) ) { /* only add if enabled */
+						CREATE( entry, struct map_zone_disabled_command_entry, 1 );
+						
+						entry->cmd  = atcommand->exists(name)->func;
+						entry->group_lv = group_lv;
+						
+						zone->disabled_commands[v++] = entry;
+					}					
+				}
+				zone->disabled_commands_count = disabled_commands_count;
+			}
+			
+			if( (caps = config_setting_get_member(zone_e, "skill_damage_cap")) != NULL ) {
+				capped_skills_count = config_setting_length(caps);
+				/* validate */
+				for(h = 0; h < config_setting_length(caps); h++) {
+					config_setting_t *cap = config_setting_get_elem(caps, h);
+					name = config_setting_name(cap);
+					if( !map_zone_str2skillid(name) ) {
+						ShowError("map_zone_db: unknown skill (%s) in skill_damage_cap for zone '%s', skipping skill...\n",name,zone->name);
+						config_setting_remove_elem(caps,h);
+						--capped_skills_count;
+						--h;
+						continue;
+					}
+					if( !map_zone_bl_type(config_setting_get_string_elem(cap,1),&subtype) )/* we dont remove it from the three due to inheritance */
+						--capped_skills_count;
+				}
+				/* all ok, process */
+				CREATE( zone->capped_skills, struct map_zone_skill_damage_cap_entry *, capped_skills_count );
+				for(h = 0, v = 0; h < config_setting_length(caps); h++) {
+					config_setting_t *cap = config_setting_get_elem(caps, h);
+					struct map_zone_skill_damage_cap_entry * entry;
+					enum bl_type type;
+					name = config_setting_name(cap);
+					
+					if( (type = map_zone_bl_type(config_setting_get_string_elem(cap,1),&subtype)) ) { /* only add if enabled */
+						CREATE( entry, struct map_zone_skill_damage_cap_entry, 1 );
+						
+						entry->nameid = map_zone_str2skillid(name);
+						entry->cap = config_setting_get_int_elem(cap,0);
+						entry->type = type;
+						entry->subtype = subtype;
+						zone->capped_skills[v++] = entry;
+					}
+				}
+				zone->capped_skills_count = capped_skills_count;
+			}			
+			
+			if( !is_all ) /* global template doesn't go into db -- since it isn't a alloc'd piece of data */
+				strdb_put(zone_db, zonename, zone);
+			
+		}
+				
+		/* process inheritance, aka loop through the whole thing again :P */
+		for (i = 0; i < zone_count; ++i) {
+			config_setting_t *inherit_tree = NULL;
+			config_setting_t *new_entry = NULL;
+			int inherit_count;
+			
+			zone_e = config_setting_get_elem(zones, i);
+			config_setting_lookup_string(zone_e, "name", &zonename);
+
+			if( strncmpi(zonename,MAP_ZONE_ALL_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
+				continue;/* all zone doesn't inherit anything (if it did, everything would link to each other and boom endless loop) */
+			}
+			
+			if( (inherit_tree = config_setting_get_member(zone_e, "inherit")) != NULL ) {
+				/* append global zone to this */
+				new_entry = config_setting_add(inherit_tree,MAP_ZONE_ALL_NAME,CONFIG_TYPE_STRING);
+				config_setting_set_string(new_entry,MAP_ZONE_ALL_NAME);
+			} else {
+				/* create inherit member and add global zone to it */
+				inherit_tree = config_setting_add(zone_e, "inherit",CONFIG_TYPE_ARRAY);
+				new_entry = config_setting_add(inherit_tree,MAP_ZONE_ALL_NAME,CONFIG_TYPE_STRING);
+				config_setting_set_string(new_entry,MAP_ZONE_ALL_NAME);
+			}
+			inherit_count = config_setting_length(inherit_tree);
+			for(h = 0; h < inherit_count; h++) {
+				struct map_zone_data *izone; /* inherit zone */
+				int disabled_skills_count_i = 0; /* disabled skill count from inherit zone */
+				int disabled_items_count_i = 0; /* disabled item count from inherit zone */
+				int mapflags_count_i = 0; /* mapflag count from inherit zone */
+				int disabled_commands_count_i = 0; /* commands count from inherit zone */
+				int capped_skills_count_i = 0; /* skill capped count from inherit zone */
+				int j;
+				
+				name = config_setting_get_string_elem(inherit_tree, h);
+				config_setting_lookup_string(zone_e, "name", &zonename);/* will succeed for we validated it earlier */
+
+				if( !(izone = strdb_get(zone_db, name)) ) {
+					ShowError("map_zone_db: Unknown zone '%s' being inherit by zone '%s', skipping...\n",name,zonename);
+					continue;
+				}
+				
+				if( strncmpi(zonename,MAP_ZONE_NORMAL_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
+					zone = &map_zone_all;
+				} else if( strncmpi(zonename,MAP_ZONE_PK_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
+					zone = &map_zone_pk;
+				} else
+					zone = strdb_get(zone_db, zonename);/* will succeed for we just put it in here */
+								
+				disabled_skills_count_i = izone->disabled_skills_count;
+				disabled_items_count_i = izone->disabled_items_count;
+				mapflags_count_i = izone->mapflags_count;
+				disabled_commands_count_i = izone->disabled_commands_count;
+				capped_skills_count_i = izone->capped_skills_count;
+				
+				/* process everything to override, paying attention to config_setting_get_bool */
+				if( disabled_skills_count_i ) {
+					if( (skills = config_setting_get_member(zone_e, "disabled_skills")) == NULL )
+						skills = config_setting_add(zone_e, "disabled_skills",CONFIG_TYPE_GROUP);
+					disabled_skills_count = config_setting_length(skills);
+					for(j = 0; j < disabled_skills_count_i; j++) {
+						int k;
+						for(k = 0; k < disabled_skills_count; k++) {
+							config_setting_t *skill = config_setting_get_elem(skills, k);
+							if( map_zone_str2skillid(config_setting_name(skill)) == izone->disabled_skills[j]->nameid ) {
+								break;
+							}
+						}
+						if( k == disabled_skills_count ) {/* we didn't find it */
+							struct map_zone_disabled_skill_entry *entry;
+							RECREATE( zone->disabled_skills, struct map_zone_disabled_skill_entry *, ++zone->disabled_skills_count );
+							CREATE( entry, struct map_zone_disabled_skill_entry, 1 );
+							entry->nameid = izone->disabled_skills[j]->nameid;
+							entry->type = izone->disabled_skills[j]->type;
+							zone->disabled_skills[zone->disabled_skills_count-1] = entry;
+						}
+					}
+				}
+				
+				if( disabled_items_count_i ) {
+					if( (items = config_setting_get_member(zone_e, "disabled_items")) == NULL )
+						items = config_setting_add(zone_e, "disabled_items",CONFIG_TYPE_GROUP);
+					disabled_items_count = config_setting_length(items);
+					for(j = 0; j < disabled_items_count_i; j++) {
+						int k;
+						for(k = 0; k < disabled_items_count; k++) {
+							config_setting_t *item = config_setting_get_elem(items, k);
+							
+							name = config_setting_name(item);
+							
+							if( map_zone_str2itemid(name) == izone->disabled_items[j] ) {
+								if( config_setting_get_bool(item) )
+									continue;
+								break;
+							}
+						}
+						if( k == disabled_items_count ) {/* we didn't find it */
+							RECREATE( zone->disabled_items, int, ++zone->disabled_items_count );
+							zone->disabled_items[zone->disabled_items_count-1] = izone->disabled_items[j];
+						}
+					}
+				}
+				
+				if( mapflags_count_i ) {
+					if( (mapflags = config_setting_get_member(zone_e, "mapflags")) == NULL )
+						mapflags = config_setting_add(zone_e, "mapflags",CONFIG_TYPE_ARRAY);
+					mapflags_count = config_setting_length(mapflags);
+					for(j = 0; j < mapflags_count_i; j++) {
+						int k;
+						for(k = 0; k < mapflags_count; k++) {
+							name = config_setting_get_string_elem(mapflags, k);
+							
+							if( strcmpi(name,izone->mapflags[j]) == 0 ) {
+								break;
+							}
+						}
+						if( k == mapflags_count ) {/* we didn't find it */
+							RECREATE( zone->mapflags, char*, ++zone->mapflags_count );
+							CREATE( zone->mapflags[zone->mapflags_count-1], char, MAP_ZONE_MAPFLAG_LENGTH );
+							safestrncpy(zone->mapflags[zone->mapflags_count-1], izone->mapflags[j], MAP_ZONE_MAPFLAG_LENGTH);
+						}
+					}
+				}
+				
+				if( disabled_commands_count_i ) {
+					if( (commands = config_setting_get_member(zone_e, "disabled_commands")) == NULL )
+						commands = config_setting_add(zone_e, "disabled_commands",CONFIG_TYPE_GROUP);
+
+					disabled_commands_count = config_setting_length(commands);
+					for(j = 0; j < disabled_commands_count_i; j++) {
+						int k;
+						for(k = 0; k < disabled_commands_count; k++) {
+							config_setting_t *command = config_setting_get_elem(commands, k);
+							if( atcommand->exists(config_setting_name(command))->func == izone->disabled_commands[j]->cmd ) {
+								break;
+							}
+						}
+						if( k == disabled_commands_count ) {/* we didn't find it */
+							struct map_zone_disabled_command_entry *entry;
+							RECREATE( zone->disabled_commands, struct map_zone_disabled_command_entry *, ++zone->disabled_commands_count );
+							CREATE( entry, struct map_zone_disabled_command_entry, 1 );
+							entry->cmd = izone->disabled_commands[j]->cmd;
+							entry->group_lv = izone->disabled_commands[j]->group_lv;
+							zone->disabled_commands[zone->disabled_commands_count-1] = entry;
+						}
+					}
+				}
+				
+				if( capped_skills_count_i ) {
+					if( (caps = config_setting_get_member(zone_e, "skill_damage_cap")) == NULL )
+						caps = config_setting_add(zone_e, "skill_damage_cap",CONFIG_TYPE_GROUP);
+					
+					capped_skills_count = config_setting_length(caps);
+					for(j = 0; j < capped_skills_count_i; j++) {
+						int k;
+						for(k = 0; k < capped_skills_count; k++) {
+							config_setting_t *cap = config_setting_get_elem(caps, k);
+							if( map_zone_str2skillid(config_setting_name(cap)) == izone->capped_skills[j]->nameid ) {
+								break;
+							}
+						}
+						if( k == capped_skills_count ) {/* we didn't find it */
+							struct map_zone_skill_damage_cap_entry *entry;
+							RECREATE( zone->capped_skills, struct map_zone_skill_damage_cap_entry *, ++zone->capped_skills_count );
+							CREATE( entry, struct map_zone_skill_damage_cap_entry, 1 );
+							entry->nameid = izone->capped_skills[j]->nameid;
+							entry->cap = izone->capped_skills[j]->cap;
+							entry->type = izone->capped_skills[j]->type;
+							zone->capped_skills[zone->capped_skills_count-1] = entry;
+						}
+					}
+				}
+
+			}
+		}
+		
+		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' zones in '"CL_WHITE"%s"CL_RESET"'.\n", zone_count, config_filename);
+		/* not supposed to go in here but in skill_final whatever */
+		config_destroy(&map_zone_db);
+	}
 }
 
 /**
@@ -3484,7 +4854,7 @@ int log_sql_init(void)
  */
 int map_db_final(DBKey key, DBData *data, va_list ap)
 {
-	struct map_data_other_server *mdos = db_data2ptr(data);
+	struct map_data_other_server *mdos = DB->data2ptr(data);
 	if(mdos && mdos->cell == NULL)
 		aFree(mdos);
 	return 0;
@@ -3495,7 +4865,7 @@ int map_db_final(DBKey key, DBData *data, va_list ap)
  */
 int nick_db_final(DBKey key, DBData *data, va_list args)
 {
-	struct charid2nick* p = db_data2ptr(data);
+	struct charid2nick* p = DB->data2ptr(data);
 	struct charid_request* req;
 
 	if( p == NULL )
@@ -3531,7 +4901,7 @@ int cleanup_sub(struct block_list *bl, va_list ap)
 			map_clearflooritem(bl);
 			break;
 		case BL_SKILL:
-			skill_delunit((struct skill_unit *) bl);
+			skill->delunit((struct skill_unit *) bl);
 			break;
 	}
 
@@ -3543,7 +4913,7 @@ int cleanup_sub(struct block_list *bl, va_list ap)
  */
 static int cleanup_db_sub(DBKey key, DBData *data, va_list va)
 {
-	return cleanup_sub(db_data2ptr(data), va);
+	return cleanup_sub(DB->data2ptr(data), va);
 }
 
 /*==========================================
@@ -3551,17 +4921,19 @@ static int cleanup_db_sub(DBKey key, DBData *data, va_list va)
  *------------------------------------------*/
 void do_final(void)
 {
-	int i, j;
+	int i;
 	struct map_session_data* sd;
 	struct s_mapiterator* iter;
 
 	ShowStatus("Terminating...\n");
+	hChSys.closing = true;
+	HPM->event(HPET_FINAL);
 
 	//Ladies and babies first.
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); sd = (TBL_PC*)mapit_next(iter) )
+	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
 		map_quit(sd);
-	mapit_free(iter);
+	mapit->free(iter);
 
 	/* prepares npcs for a faster shutdown process */
 	do_clear_npc();
@@ -3577,43 +4949,35 @@ void do_final(void)
 	id_db->foreach(id_db,cleanup_db_sub);
 	chrif_char_reset_offline();
 	chrif_flush_fifo();
-
-	do_final_atcommand();
-	do_final_battle();
+	
+	atcommand->final();
+	battle->final();
 	do_final_chrif();
-	do_final_clif();
+	ircbot->final();/* before clif. */
+	clif->final();
 	do_final_npc();
-	do_final_script();
+	script->final();
 	do_final_instance();
 	do_final_itemdb();
 	do_final_storage();
-	do_final_guild();
+	guild->final();
 	do_final_party();
 	do_final_pc();
 	do_final_pet();
 	do_final_mob();
-	do_final_msg();
-	do_final_skill();
+	homun->final();
+	atcommand->final_msg();
+	skill->final();
 	do_final_status();
 	do_final_unit();
 	do_final_battleground();
 	do_final_duel();
 	do_final_elemental();
-
+	do_final_maps();
+	vending->final();
+	
 	map_db->destroy(map_db, map_db_final);
-
-	for (i=0; i<map_num; i++) {
-		if(map[i].cell) aFree(map[i].cell);
-		if(map[i].block) aFree(map[i].block);
-		if(map[i].block_mob) aFree(map[i].block_mob);
-		if(battle_config.dynamic_mobs) { //Dynamic mobs flag by [random]
-			if(map[i].mob_delete_timer != INVALID_TIMER)
-				delete_timer(map[i].mob_delete_timer, map_removemobs_timer);
-			for (j=0; j<MAX_MOB_LIST_PER_MAP; j++)
-				if (map[i].moblist[j]) aFree(map[i].moblist[j]);
-		}
-	}
-
+	
 	mapindex_final();
 	if(enable_grf)
 		grfio_final();
@@ -3628,6 +4992,9 @@ void do_final(void)
 	regen_db->destroy(regen_db, NULL);
 
     map_sql_close();
+	ers_destroy(map_iterator_ers);
+	
+	aFree(map);
 
 	ShowStatus("Finished.\n");
 }
@@ -3689,22 +5056,19 @@ static void map_helpscreen(bool do_exit)
 /*======================================================
  * Map-Server Version Screen [MC Cameri]
  *------------------------------------------------------*/
-static void map_versionscreen(bool do_exit)
-{
-	ShowInfo(CL_WHITE"rAthena SVN version: %s" CL_RESET"\n", get_svn_revision());
-	ShowInfo(CL_GREEN"Website/Forum:"CL_RESET"\thttp://rathena.org/\n");
-	ShowInfo(CL_GREEN"IRC Channel:"CL_RESET"\tirc://irc.rathena.net/#rathena\n");
+static void map_versionscreen(bool do_exit) {
+	const char *svn = get_svn_revision();
+	const char *git = get_git_hash();
+	ShowInfo(CL_WHITE"Hercules version: %s" CL_RESET"\n", git[0] != HERC_UNKNOWN_VER ? git : svn[0] != HERC_UNKNOWN_VER ? svn : "Unknown");
+	ShowInfo(CL_GREEN"Website/Forum:"CL_RESET"\thttp://hercules.ws/\n");
+	ShowInfo(CL_GREEN"IRC Channel:"CL_RESET"\tirc://irc.rizon.net/#Hercules\n");
 	ShowInfo("Open "CL_WHITE"readme.txt"CL_RESET" for more information.\n");
 	if( do_exit )
 		exit(EXIT_SUCCESS);
 }
 
-/*======================================================
- * Map-Server Init and Command-line Arguments [Valaris]
- *------------------------------------------------------*/
-void set_server_type(void)
-{
-	SERVER_TYPE = ATHENA_SERVER_MAP;
+void set_server_type(void) {
+	SERVER_TYPE = SERVER_TYPE_MAP;
 }
 
 
@@ -3718,9 +5082,9 @@ void do_shutdown(void)
 		{
 			struct map_session_data* sd;
 			struct s_mapiterator* iter = mapit_getallusers();
-			for( sd = (TBL_PC*)mapit_first(iter); mapit_exists(iter); sd = (TBL_PC*)mapit_next(iter) )
-				clif_GM_kick(NULL, sd);
-			mapit_free(iter);
+			for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
+				clif->GM_kick(NULL, sd);
+			mapit->free(iter);
 			flush_fifos();
 		}
 		chrif_check_shutdown();
@@ -3729,15 +5093,124 @@ void do_shutdown(void)
 
 static bool map_arg_next_value(const char* option, int i, int argc)
 {
-	if( i >= argc-1 )
-	{
+	if( i >= argc-1 ) {
 		ShowWarning("Missing value for option '%s'.\n", option);
 		return false;
 	}
 
 	return true;
 }
+struct map_session_data cpsd;
+CPCMD(gm_position) {
+	int x = 0, y = 0, m = 0;
+	char map_name[25];
 
+	if( line == NULL || sscanf(line, "%d %d %24s",&x,&y,map_name) < 3 ) {
+		ShowError("gm:info invalid syntax. use '"CL_WHITE"gm:info xCord yCord map_name"CL_RESET"'\n");
+		return;
+	}
+
+	if ( (m = map_mapname2mapid(map_name) <= 0 ) ) {
+		ShowError("gm:info '"CL_WHITE"%s"CL_RESET"' is not a known map\n",map_name);
+		return;
+	}
+	
+	if( x < 0 || x >= map[m].xs || y < 0 || y >= map[m].ys ) {
+		ShowError("gm:info '"CL_WHITE"%d %d"CL_RESET"' is out of '"CL_WHITE"%s"CL_RESET"' map bounds!\n",x,y,map_name);
+		return;
+	}
+	
+	ShowInfo("HCP: updated console's game position to '"CL_WHITE"%d %d %s"CL_RESET"'\n",x,y,map_name);
+	cpsd.bl.x = x;
+	cpsd.bl.y = y;
+	cpsd.bl.m = m;
+}
+CPCMD(gm_use) {
+	
+	if( line == NULL ) {
+		ShowError("gm:use invalid syntax. use '"CL_WHITE"gm:use @command <optional params>"CL_RESET"'\n");
+		return;
+	}
+	cpsd.fd = -2;
+	if( !atcommand->parse(cpsd.fd, &cpsd, line, 0) )
+		ShowInfo("HCP: '"CL_WHITE"%s"CL_RESET"' failed\n",line);
+	else
+		ShowInfo("HCP: '"CL_WHITE"%s"CL_RESET"' was used\n",line);
+	cpsd.fd = 0;
+	
+}
+/* Hercules Console Parser */
+void map_cp_defaults(void) {
+	/* default HCP data */
+	memset(&cpsd, 0, sizeof(struct map_session_data));
+	strcpy(cpsd.status.name, "Hercules Console");
+	cpsd.bl.x = 150;
+	cpsd.bl.y = 150;
+	cpsd.bl.m = map_mapname2mapid("prontera");
+
+	console->addCommand("gm:info",CPCMD_A(gm_position));
+	console->addCommand("gm:use",CPCMD_A(gm_use));
+}
+/* Hercules Plugin Mananger */
+void map_hp_symbols(void) {
+	/* full interfaces */
+	HPM->share(atcommand,"atcommand");
+	HPM->share(buyingstore,"buyingstore");
+	HPM->share(clif,"clif");
+	HPM->share(ircbot,"ircbot");
+	HPM->share(logs,"logs");
+	HPM->share(script,"script");
+	HPM->share(searchstore,"searchstore");
+	HPM->share(skill,"skill");
+	HPM->share(vending,"vending");
+	/* partial */
+	HPM->share(mapit,"mapit");
+	HPM->share(map_foreachpc,"map_foreachpc");
+	HPM->share(map_foreachmob,"map_foreachmob");
+	HPM->share(map_foreachnpc,"map_foreachnpc");
+	HPM->share(map_foreachregen,"map_foreachregen");
+	HPM->share(map_foreachiddb,"map_foreachiddb");
+	/* sql link */
+	HPM->share(mmysql_handle,"sql_handle");
+	/* specific */
+	HPM->share(atcommand->create,"addCommand");
+	HPM->share(script->addScript,"addScript");
+	/* vars */
+	HPM->share(map,"map");
+}
+/* temporary until the map.c "Hercules Renewal Phase One" design is complete. */
+void map_defaults(void) {
+	mapit = &mapit_s;
+	
+	mapit->alloc = mapit_alloc;
+	mapit->free = mapit_free;
+	mapit->first = mapit_first;
+	mapit->last = mapit_last;
+	mapit->next = mapit_next;
+	mapit->prev = mapit_prev;
+	mapit->exists = mapit_exists;
+
+	map_foreachpc = map_map_foreachpc;
+	map_foreachmob = map_map_foreachmob;
+	map_foreachnpc = map_map_foreachnpc;
+	map_foreachregen = map_map_foreachregen;
+	map_foreachiddb = map_map_foreachiddb;
+}
+void load_defaults(void) {
+	atcommand_defaults();
+	battle_defaults();
+	buyingstore_defaults();
+	clif_defaults();
+	guild_defaults();
+	homunculus_defaults();
+	ircbot_defaults();
+	log_defaults();
+	map_defaults();
+	script_defaults();
+	searchstore_defaults();
+	skill_defaults();
+	vending_defaults();
+}
 int do_init(int argc, char *argv[])
 {
 	int i;
@@ -3842,15 +5315,17 @@ int do_init(int argc, char *argv[])
 				exit(EXIT_FAILURE);
 		}
 	}
-
+	
+	CREATE(map,struct map_data,MAX_MAP_PER_SERVER);
+	
+	load_defaults();
+	
 	map_config_read(MAP_CONF_NAME);
-	/* only temporary until sirius's datapack patch is complete  */
-
 	// loads npcs
 	map_reloadnpc(false);
 
 	chrif_checkdefaultlogin();
-
+	
 	if (!map_ip_set || !char_ip_set) {
 		char ip_str[16];
 		ip2str(addr_[0], ip_str);
@@ -3865,16 +5340,16 @@ int do_init(int argc, char *argv[])
 		ShowInfo("Defaulting to %s as our IP address\n", ip_str);
 
 		if (!map_ip_set)
-			clif_setip(ip_str);
+			clif->setip(ip_str);
 		if (!char_ip_set)
 			chrif_setip(ip_str);
 	}
-
-	battle_config_read(BATTLE_CONF_FILENAME);
-	msg_config_read(MSG_CONF_NAME);
+	
+	battle->config_read(BATTLE_CONF_FILENAME);
+	atcommand->msg_read(MSG_CONF_NAME);
 	script_config_read(SCRIPT_CONF_NAME);
 	inter_config_read(INTER_CONF_NAME);
-	log_config_read(LOG_CONF_NAME);
+	logs->config_read(LOG_CONF_NAME);
 
 	id_db = idb_alloc(DB_OPT_BASE);
 	pc_db = idb_alloc(DB_OPT_BASE);	//Added for reliable map_id2sd() use. [Skotlex]
@@ -3886,38 +5361,47 @@ int do_init(int argc, char *argv[])
 	regen_db = idb_alloc(DB_OPT_BASE); // efficient status_natural_heal processing
 
 	iwall_db = strdb_alloc(DB_OPT_RELEASE_DATA,2*NAME_LENGTH+2+1); // [Zephyrus] Invisible Walls
+	zone_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, MAP_ZONE_NAME_LENGTH);
 
+	map_iterator_ers = ers_new(sizeof(struct s_mapiterator),"map.c::map_iterator_ers",ERS_OPT_NONE);
+	
 	map_sql_init();
-	if (log_config.sql_logs)
+	if (logs->config.sql_logs)
 		log_sql_init();
 
 	mapindex_init();
 	if(enable_grf)
 		grfio_init(GRF_PATH_FILENAME);
-
+	
 	map_readallmaps();
 
 	add_timer_func_list(map_freeblock_timer, "map_freeblock_timer");
 	add_timer_func_list(map_clearflooritem_timer, "map_clearflooritem_timer");
 	add_timer_func_list(map_removemobs_timer, "map_removemobs_timer");
 	add_timer_interval(gettick()+1000, map_freeblock_timer, 0, 0, 60*1000);
-
-	do_init_atcommand();
-	do_init_battle();
+	
+	HPM->symbol_defaults_sub = map_hp_symbols;
+	HPM->config_read();
+	HPM->event(HPET_INIT);
+	
+	atcommand->init();
+	battle->init();
 	do_init_instance();
 	do_init_chrif();
-	do_init_clif();
-	do_init_script();
+	clif->init();
+	ircbot->init();
+	script->init();
 	do_init_itemdb();
-	do_init_skill();
+	skill->init();
+	read_map_zone_db();/* read after item and skill initalization */
 	do_init_mob();
 	do_init_pc();
 	do_init_status();
 	do_init_party();
-	do_init_guild();
+	guild->init();
 	do_init_storage();
 	do_init_pet();
-	do_init_merc();
+	homun->init();
 	do_init_mercenary();
 	do_init_elemental();
 	do_init_quest();
@@ -3925,28 +5409,25 @@ int do_init(int argc, char *argv[])
 	do_init_unit();
 	do_init_battleground();
 	do_init_duel();
+	vending->init();
 
 	npc_event_do_oninit();	// Init npcs (OnInit)
-
-	if( console )
-	{
-		//##TODO invoke a CONSOLE_START plugin event
-	}
 
 	if (battle_config.pk_mode)
 		ShowNotice("Server is running on '"CL_WHITE"PK Mode"CL_RESET"'.\n");
 
+	Sql_HerculesUpdateCheck(mmysql_handle);
+	
 	ShowStatus("Server is '"CL_GREEN"ready"CL_RESET"' and listening on port '"CL_WHITE"%d"CL_RESET"'.\n\n", map_port);
-
-	if( runflag != CORE_ST_STOP )
-	{
+	
+	if( runflag != CORE_ST_STOP ) {
 		shutdown_callback = do_shutdown;
 		runflag = MAPSERVER_ST_RUNNING;
 	}
-#if defined(BUILDBOT)
-	if( buildbotflag )
-		exit(EXIT_FAILURE);
-#endif
-
+	
+	map_cp_defaults();
+	
+	HPM->event(HPET_READY);
+	
 	return 0;
 }

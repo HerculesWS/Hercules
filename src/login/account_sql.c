@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/malloc.h"
 #include "../common/mmo.h"
@@ -125,7 +126,7 @@ static bool account_db_sql_init(AccountDB* self)
 	const char* database;
 	const char* codepage;
 
-	db->accounts = Sql_Malloc();
+	db->accounts = SQL->Malloc();
 	sql_handle = db->accounts;
 
 	if( db->db_hostname[0] != '\0' )
@@ -147,15 +148,15 @@ static bool account_db_sql_init(AccountDB* self)
 		codepage = db->global_codepage;
 	}
 
-	if( SQL_ERROR == Sql_Connect(sql_handle, username, password, hostname, port, database) )
+	if( SQL_ERROR == SQL->Connect(sql_handle, username, password, hostname, port, database) )
 	{
 		Sql_ShowDebug(sql_handle);
-		Sql_Free(db->accounts);
+		SQL->Free(db->accounts);
 		db->accounts = NULL;
 		return false;
 	}
 
-	if( codepage[0] != '\0' && SQL_ERROR == Sql_SetEncoding(sql_handle, codepage) )
+	if( codepage[0] != '\0' && SQL_ERROR == SQL->SetEncoding(sql_handle, codepage) )
 		Sql_ShowDebug(sql_handle);
 
 	return true;
@@ -166,7 +167,7 @@ static void account_db_sql_destroy(AccountDB* self)
 {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
 
-	Sql_Free(db->accounts);
+	SQL->Free(db->accounts);
 	db->accounts = NULL;
 	aFree(db);
 }
@@ -348,21 +349,21 @@ static bool account_db_sql_create(AccountDB* self, struct mmo_account* acc)
 		char* data;
 		size_t len;
 
-		if( SQL_SUCCESS != Sql_Query(sql_handle, "SELECT MAX(`account_id`)+1 FROM `%s`", db->account_db) )
+		if( SQL_SUCCESS != SQL->Query(sql_handle, "SELECT MAX(`account_id`)+1 FROM `%s`", db->account_db) )
 		{
 			Sql_ShowDebug(sql_handle);
 			return false;
 		}
-		if( SQL_SUCCESS != Sql_NextRow(sql_handle) )
+		if( SQL_SUCCESS != SQL->NextRow(sql_handle) )
 		{
 			Sql_ShowDebug(sql_handle);
-			Sql_FreeResult(sql_handle);
+			SQL->FreeResult(sql_handle);
 			return false;
 		}
 
-		Sql_GetData(sql_handle, 0, &data, &len);
+		SQL->GetData(sql_handle, 0, &data, &len);
 		account_id = ( data != NULL ) ? atoi(data) : 0;
-		Sql_FreeResult(sql_handle);
+		SQL->FreeResult(sql_handle);
 
 		if( account_id < START_ACCOUNT_NUM )
 			account_id = START_ACCOUNT_NUM;
@@ -389,14 +390,14 @@ static bool account_db_sql_remove(AccountDB* self, const int account_id)
 	Sql* sql_handle = db->accounts;
 	bool result = false;
 
-	if( SQL_SUCCESS != Sql_QueryStr(sql_handle, "START TRANSACTION")
-	||  SQL_SUCCESS != Sql_Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = %d", db->account_db, account_id)
-	||  SQL_SUCCESS != Sql_Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = %d", db->accreg_db, account_id) )
+	if( SQL_SUCCESS != SQL->QueryStr(sql_handle, "START TRANSACTION")
+	||  SQL_SUCCESS != SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = %d", db->account_db, account_id)
+	||  SQL_SUCCESS != SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = %d", db->accreg_db, account_id) )
 		Sql_ShowDebug(sql_handle);
 	else
 		result = true;
 
-	result &= ( SQL_SUCCESS == Sql_QueryStr(sql_handle, (result == true) ? "COMMIT" : "ROLLBACK") );
+	result &= ( SQL_SUCCESS == SQL->QueryStr(sql_handle, (result == true) ? "COMMIT" : "ROLLBACK") );
 
 	return result;
 }
@@ -424,30 +425,30 @@ static bool account_db_sql_load_str(AccountDB* self, struct mmo_account* acc, co
 	int account_id;
 	char* data;
 
-	Sql_EscapeString(sql_handle, esc_userid, userid);
+	SQL->EscapeString(sql_handle, esc_userid, userid);
 
 	// get the list of account IDs for this user ID
-	if( SQL_ERROR == Sql_Query(sql_handle, "SELECT `account_id` FROM `%s` WHERE `userid`= %s '%s'",
+	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `account_id` FROM `%s` WHERE `userid`= %s '%s'",
 		db->account_db, (db->case_sensitive ? "BINARY" : ""), esc_userid) )
 	{
 		Sql_ShowDebug(sql_handle);
 		return false;
 	}
 
-	if( Sql_NumRows(sql_handle) > 1 )
+	if( SQL->NumRows(sql_handle) > 1 )
 	{// serious problem - duplicit account
 		ShowError("account_db_sql_load_str: multiple accounts found when retrieving data for account '%s'!\n", userid);
-		Sql_FreeResult(sql_handle);
+		SQL->FreeResult(sql_handle);
 		return false;
 	}
 
-	if( SQL_SUCCESS != Sql_NextRow(sql_handle) )
+	if( SQL_SUCCESS != SQL->NextRow(sql_handle) )
 	{// no such entry
-		Sql_FreeResult(sql_handle);
+		SQL->FreeResult(sql_handle);
 		return false;
 	}
 
-	Sql_GetData(sql_handle, 0, &data, NULL);
+	SQL->GetData(sql_handle, 0, &data, NULL);
 	account_id = atoi(data);
 
 	return account_db_sql_load_num(self, acc, account_id);
@@ -486,30 +487,30 @@ static bool account_db_sql_iter_next(AccountDBIterator* self, struct mmo_account
 	AccountDBIterator_SQL* iter = (AccountDBIterator_SQL*)self;
 	AccountDB_SQL* db = (AccountDB_SQL*)iter->db;
 	Sql* sql_handle = db->accounts;
-	int account_id;
 	char* data;
 
 	// get next account ID
-	if( SQL_ERROR == Sql_Query(sql_handle, "SELECT `account_id` FROM `%s` WHERE `account_id` > '%d' ORDER BY `account_id` ASC LIMIT 1",
+	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `account_id` FROM `%s` WHERE `account_id` > '%d' ORDER BY `account_id` ASC LIMIT 1",
 		db->account_db, iter->last_account_id) )
 	{
 		Sql_ShowDebug(sql_handle);
 		return false;
 	}
 
-	if( SQL_SUCCESS == Sql_NextRow(sql_handle) &&
-		SQL_SUCCESS == Sql_GetData(sql_handle, 0, &data, NULL) &&
+	if( SQL_SUCCESS == SQL->NextRow(sql_handle) &&
+		SQL_SUCCESS == SQL->GetData(sql_handle, 0, &data, NULL) &&
 		data != NULL )
 	{// get account data
+		int account_id;
 		account_id = atoi(data);
 		if( mmo_auth_fromsql(db, acc, account_id) )
 		{
 			iter->last_account_id = account_id;
-			Sql_FreeResult(sql_handle);
+			SQL->FreeResult(sql_handle);
 			return true;
 		}
 	}
-	Sql_FreeResult(sql_handle);
+	SQL->FreeResult(sql_handle);
 	return false;
 }
 
@@ -521,54 +522,57 @@ static bool mmo_auth_fromsql(AccountDB_SQL* db, struct mmo_account* acc, int acc
 	int i = 0;
 
 	// retrieve login entry for the specified account
-	if( SQL_ERROR == Sql_Query(sql_handle,
-	    "SELECT `account_id`,`userid`,`user_pass`,`sex`,`email`,`group_id`,`state`,`unban_time`,`expiration_time`,`logincount`,`lastlogin`,`last_ip`,`birthdate` FROM `%s` WHERE `account_id` = %d",
+	if( SQL_ERROR == SQL->Query(sql_handle,
+	    "SELECT `account_id`,`userid`,`user_pass`,`sex`,`email`,`group_id`,`state`,`unban_time`,`expiration_time`,`logincount`,`lastlogin`,`last_ip`,`birthdate`,`character_slots`,`pincode`,`pincode_change` FROM `%s` WHERE `account_id` = %d",
 		db->account_db, account_id )
 	) {
 		Sql_ShowDebug(sql_handle);
 		return false;
 	}
 
-	if( SQL_SUCCESS != Sql_NextRow(sql_handle) )
+	if( SQL_SUCCESS != SQL->NextRow(sql_handle) )
 	{// no such entry
-		Sql_FreeResult(sql_handle);
+		SQL->FreeResult(sql_handle);
 		return false;
 	}
 
-	Sql_GetData(sql_handle,  0, &data, NULL); acc->account_id = atoi(data);
-	Sql_GetData(sql_handle,  1, &data, NULL); safestrncpy(acc->userid, data, sizeof(acc->userid));
-	Sql_GetData(sql_handle,  2, &data, NULL); safestrncpy(acc->pass, data, sizeof(acc->pass));
-	Sql_GetData(sql_handle,  3, &data, NULL); acc->sex = data[0];
-	Sql_GetData(sql_handle,  4, &data, NULL); safestrncpy(acc->email, data, sizeof(acc->email));
-	Sql_GetData(sql_handle,  5, &data, NULL); acc->group_id = atoi(data);
-	Sql_GetData(sql_handle,  6, &data, NULL); acc->state = strtoul(data, NULL, 10);
-	Sql_GetData(sql_handle,  7, &data, NULL); acc->unban_time = atol(data);
-	Sql_GetData(sql_handle,  8, &data, NULL); acc->expiration_time = atol(data);
-	Sql_GetData(sql_handle,  9, &data, NULL); acc->logincount = strtoul(data, NULL, 10);
-	Sql_GetData(sql_handle, 10, &data, NULL); safestrncpy(acc->lastlogin, data, sizeof(acc->lastlogin));
-	Sql_GetData(sql_handle, 11, &data, NULL); safestrncpy(acc->last_ip, data, sizeof(acc->last_ip));
-	Sql_GetData(sql_handle, 12, &data, NULL); safestrncpy(acc->birthdate, data, sizeof(acc->birthdate));
-
-	Sql_FreeResult(sql_handle);
+	SQL->GetData(sql_handle,  0, &data, NULL); acc->account_id = atoi(data);
+	SQL->GetData(sql_handle,  1, &data, NULL); safestrncpy(acc->userid, data, sizeof(acc->userid));
+	SQL->GetData(sql_handle,  2, &data, NULL); safestrncpy(acc->pass, data, sizeof(acc->pass));
+	SQL->GetData(sql_handle,  3, &data, NULL); acc->sex = data[0];
+	SQL->GetData(sql_handle,  4, &data, NULL); safestrncpy(acc->email, data, sizeof(acc->email));
+	SQL->GetData(sql_handle,  5, &data, NULL); acc->group_id = atoi(data);
+	SQL->GetData(sql_handle,  6, &data, NULL); acc->state = strtoul(data, NULL, 10);
+	SQL->GetData(sql_handle,  7, &data, NULL); acc->unban_time = atol(data);
+	SQL->GetData(sql_handle,  8, &data, NULL); acc->expiration_time = atol(data);
+	SQL->GetData(sql_handle,  9, &data, NULL); acc->logincount = strtoul(data, NULL, 10);
+	SQL->GetData(sql_handle, 10, &data, NULL); safestrncpy(acc->lastlogin, data, sizeof(acc->lastlogin));
+	SQL->GetData(sql_handle, 11, &data, NULL); safestrncpy(acc->last_ip, data, sizeof(acc->last_ip));
+	SQL->GetData(sql_handle, 12, &data, NULL); safestrncpy(acc->birthdate, data, sizeof(acc->birthdate));
+	SQL->GetData(sql_handle, 13, &data, NULL); acc->char_slots = atoi(data);
+	SQL->GetData(sql_handle, 14, &data, NULL); safestrncpy(acc->pincode, data, sizeof(acc->pincode));
+	SQL->GetData(sql_handle, 15, &data, NULL); acc->pincode_change = atol(data);
+	
+	SQL->FreeResult(sql_handle);
 
 
 	// retrieve account regs for the specified user
-	if( SQL_ERROR == Sql_Query(sql_handle, "SELECT `str`,`value` FROM `%s` WHERE `type`='1' AND `account_id`='%d'", db->accreg_db, acc->account_id) )
+	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `str`,`value` FROM `%s` WHERE `type`='1' AND `account_id`='%d'", db->accreg_db, acc->account_id) )
 	{
 		Sql_ShowDebug(sql_handle);
 		return false;
 	}
 
-	acc->account_reg2_num = (int)Sql_NumRows(sql_handle);
+	acc->account_reg2_num = (int)SQL->NumRows(sql_handle);
 
-	while( SQL_SUCCESS == Sql_NextRow(sql_handle) )
+	while( SQL_SUCCESS == SQL->NextRow(sql_handle) )
 	{
 		char* data;
-		Sql_GetData(sql_handle, 0, &data, NULL); safestrncpy(acc->account_reg2[i].str, data, sizeof(acc->account_reg2[i].str));
-		Sql_GetData(sql_handle, 1, &data, NULL); safestrncpy(acc->account_reg2[i].value, data, sizeof(acc->account_reg2[i].value));
+		SQL->GetData(sql_handle, 0, &data, NULL); safestrncpy(acc->account_reg2[i].str, data, sizeof(acc->account_reg2[i].str));
+		SQL->GetData(sql_handle, 1, &data, NULL); safestrncpy(acc->account_reg2[i].value, data, sizeof(acc->account_reg2[i].value));
 		++i;
 	}
-	Sql_FreeResult(sql_handle);
+	SQL->FreeResult(sql_handle);
 
 	if( i != acc->account_reg2_num )
 		return false;
@@ -587,7 +591,7 @@ static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, boo
 	do
 	{
 
-	if( SQL_SUCCESS != Sql_QueryStr(sql_handle, "START TRANSACTION") )
+	if( SQL_SUCCESS != SQL->QueryStr(sql_handle, "START TRANSACTION") )
 	{
 		Sql_ShowDebug(sql_handle);
 		break;
@@ -596,7 +600,7 @@ static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, boo
 	if( is_new )
 	{// insert into account table
 		if( SQL_SUCCESS != SqlStmt_Prepare(stmt,
-			"INSERT INTO `%s` (`account_id`, `userid`, `user_pass`, `sex`, `email`, `group_id`, `state`, `unban_time`, `expiration_time`, `logincount`, `lastlogin`, `last_ip`, `birthdate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			"INSERT INTO `%s` (`account_id`, `userid`, `user_pass`, `sex`, `email`, `group_id`, `state`, `unban_time`, `expiration_time`, `logincount`, `lastlogin`, `last_ip`, `birthdate`, `character_slots`, `pincode`, `pincode_change`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			db->account_db)
 		||  SQL_SUCCESS != SqlStmt_BindParam(stmt,  0, SQLDT_INT,    (void*)&acc->account_id,      sizeof(acc->account_id))
 		||  SQL_SUCCESS != SqlStmt_BindParam(stmt,  1, SQLDT_STRING, (void*)acc->userid,           strlen(acc->userid))
@@ -611,15 +615,16 @@ static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, boo
 		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 10, SQLDT_STRING, (void*)&acc->lastlogin,       strlen(acc->lastlogin))
 		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 11, SQLDT_STRING, (void*)&acc->last_ip,         strlen(acc->last_ip))
 		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 12, SQLDT_STRING, (void*)&acc->birthdate,       strlen(acc->birthdate))
+		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 13, SQLDT_UCHAR,  (void*)&acc->char_slots,      sizeof(acc->char_slots))
+		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 14, SQLDT_STRING, (void*)&acc->pincode,         strlen(acc->pincode))
+		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 15, SQLDT_LONG,   (void*)&acc->pincode_change,  sizeof(acc->pincode_change))
 		||  SQL_SUCCESS != SqlStmt_Execute(stmt)
 		) {
 			SqlStmt_ShowDebug(stmt);
 			break;
 		}
-	}
-	else
-	{// update account table
-		if( SQL_SUCCESS != SqlStmt_Prepare(stmt, "UPDATE `%s` SET `userid`=?,`user_pass`=?,`sex`=?,`email`=?,`group_id`=?,`state`=?,`unban_time`=?,`expiration_time`=?,`logincount`=?,`lastlogin`=?,`last_ip`=?,`birthdate`=? WHERE `account_id` = '%d'", db->account_db, acc->account_id)
+	} else {// update account table
+		if( SQL_SUCCESS != SqlStmt_Prepare(stmt, "UPDATE `%s` SET `userid`=?,`user_pass`=?,`sex`=?,`email`=?,`group_id`=?,`state`=?,`unban_time`=?,`expiration_time`=?,`logincount`=?,`lastlogin`=?,`last_ip`=?,`birthdate`=?,`character_slots`=?,`pincode`=?,`pincode_change`=? WHERE `account_id` = '%d'", db->account_db, acc->account_id)
 		||  SQL_SUCCESS != SqlStmt_BindParam(stmt,  0, SQLDT_STRING, (void*)acc->userid,           strlen(acc->userid))
 		||  SQL_SUCCESS != SqlStmt_BindParam(stmt,  1, SQLDT_STRING, (void*)acc->pass,             strlen(acc->pass))
 		||  SQL_SUCCESS != SqlStmt_BindParam(stmt,  2, SQLDT_ENUM,   (void*)&acc->sex,             sizeof(acc->sex))
@@ -632,6 +637,9 @@ static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, boo
 		||  SQL_SUCCESS != SqlStmt_BindParam(stmt,  9, SQLDT_STRING, (void*)&acc->lastlogin,       strlen(acc->lastlogin))
 		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 10, SQLDT_STRING, (void*)&acc->last_ip,         strlen(acc->last_ip))
 		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 11, SQLDT_STRING, (void*)&acc->birthdate,       strlen(acc->birthdate))
+		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 12, SQLDT_UCHAR,  (void*)&acc->char_slots,      sizeof(acc->char_slots))
+		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 13, SQLDT_STRING, (void*)&acc->pincode,         strlen(acc->pincode))
+		||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 14, SQLDT_LONG,   (void*)&acc->pincode_change,  sizeof(acc->pincode_change))
 		||  SQL_SUCCESS != SqlStmt_Execute(stmt)
 		) {
 			SqlStmt_ShowDebug(stmt);
@@ -640,7 +648,7 @@ static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, boo
 	}
 
 	// remove old account regs
-	if( SQL_SUCCESS != Sql_Query(sql_handle, "DELETE FROM `%s` WHERE `type`='1' AND `account_id`='%d'", db->accreg_db, acc->account_id) )
+	if( SQL_SUCCESS != SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `type`='1' AND `account_id`='%d'", db->accreg_db, acc->account_id) )
 	{
 		Sql_ShowDebug(sql_handle);
 		break;
@@ -673,8 +681,12 @@ static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, boo
 	} while(0);
 	// finally
 
-	result &= ( SQL_SUCCESS == Sql_QueryStr(sql_handle, (result == true) ? "COMMIT" : "ROLLBACK") );
+	result &= ( SQL_SUCCESS == SQL->QueryStr(sql_handle, (result == true) ? "COMMIT" : "ROLLBACK") );
 	SqlStmt_Free(stmt);
 
 	return result;
+}
+void account_db_sql_up(AccountDB* self) {
+	AccountDB_SQL* db = (AccountDB_SQL*)self;
+	Sql_HerculesUpdateCheck(db->accounts);
 }

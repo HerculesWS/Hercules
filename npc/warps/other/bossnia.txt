@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Bossnia Warps
 //===== By: ==================================================
 //= Masao
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= Any rAthena Version
 //===== Description: =========================================
 //= Back Warp Points related to the Bossnia event.
 //===== Additional Comments: =================================

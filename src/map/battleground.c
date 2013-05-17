@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/timer.h"
@@ -71,7 +72,7 @@ int bg_team_warp(int bg_id, unsigned short mapindex, short x, short y)
 int bg_send_dot_remove(struct map_session_data *sd)
 {
 	if( sd && sd->bg_id )
-		clif_bg_xy_remove(sd);
+		clif->bg_xy_remove(sd);
 	return 0;
 }
 
@@ -92,16 +93,16 @@ int bg_team_join(int bg_id, struct map_session_data *sd)
 	bg->members[i].y = sd->bl.y;
 	bg->count++;
 
-	guild_send_dot_remove(sd);
+	guild->send_dot_remove(sd);
 
 	for( i = 0; i < MAX_BG_MEMBERS; i++ )
 	{
 		if( (pl_sd = bg->members[i].sd) != NULL && pl_sd != sd )
-			clif_hpmeter_single(sd->fd, pl_sd->bl.id, pl_sd->battle_status.hp, pl_sd->battle_status.max_hp);
+			clif->hpmeter_single(sd->fd, pl_sd->bl.id, pl_sd->battle_status.hp, pl_sd->battle_status.max_hp);
 	}
 
-	clif_bg_hp(sd);
-	clif_bg_xy(sd);
+	clif->bg_hp(sd);
+	clif->bg_xy(sd);
 	return 1;
 }
 
@@ -130,7 +131,7 @@ int bg_team_leave(struct map_session_data *sd, int flag)
 		sprintf(output, "Server : %s has quit the game...", sd->status.name);
 	else
 		sprintf(output, "Server : %s is leaving the battlefield...", sd->status.name);
-	clif_bg_message(bg, 0, "Server", output, strlen(output) + 1);
+	clif->bg_message(bg, 0, "Server", output, strlen(output) + 1);
 
 	if( bg->logout_event[0] && flag )
 		npc_event(sd, bg->logout_event, 0);
@@ -212,7 +213,7 @@ int bg_send_message(struct map_session_data *sd, const char *mes, int len)
 	nullpo_ret(sd);
 	if( sd->bg_id == 0 || (bg = bg_team_search(sd->bg_id)) == NULL )
 		return 0;
-	clif_bg_message(bg, sd->bl.id, sd->status.name, mes, len);
+	clif->bg_message(bg, sd->bl.id, sd->status.name, mes, len);
 	return 0;
 }
 
@@ -221,7 +222,7 @@ int bg_send_message(struct map_session_data *sd, const char *mes, int len)
  */
 int bg_send_xy_timer_sub(DBKey key, DBData *data, va_list ap)
 {
-	struct battleground_data *bg = db_data2ptr(data);
+	struct battleground_data *bg = DB->data2ptr(data);
 	struct map_session_data *sd;
 	int i;
 	nullpo_ret(bg);
@@ -233,7 +234,7 @@ int bg_send_xy_timer_sub(DBKey key, DBData *data, va_list ap)
 		{ // xy update
 			bg->members[i].x = sd->bl.x;
 			bg->members[i].y = sd->bl.y;
-			clif_bg_xy(sd);
+			clif->bg_xy(sd);
 		}
 	}
 	return 0;

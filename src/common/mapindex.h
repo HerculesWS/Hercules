@@ -1,8 +1,17 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _MAPINDEX_H_
 #define _MAPINDEX_H_
+
+#include "../common/db.h"
+
+/* when a map index search fails, return results from what map? default:prontera */
+#define MAP_DEFAULT "prontera"
+#define MAP_DEFAULT_X 150
+#define MAP_DEFAULT_Y 150
+DBMap *mapindex_db;
 
 //File in charge of assigning a numberic ID to each map in existance for space saving when passing map info between servers.
 extern char mapindex_cfgfile[80];
@@ -50,7 +59,8 @@ extern char mapindex_cfgfile[80];
 const char* mapindex_getmapname(const char* string, char* output);
 const char* mapindex_getmapname_ext(const char* string, char* output);
 unsigned short mapindex_name2id(const char*);
-const char* mapindex_id2name(unsigned short);
+#define mapindex_id2name(n) mapindex_id2name_sub(n,__FILE__, __LINE__, __func__)
+const char* mapindex_id2name_sub(unsigned short,const char *file, int line, const char *func);
 void mapindex_init(void);
 void mapindex_final(void);
 

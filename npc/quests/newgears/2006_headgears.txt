@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= 2006 Headgear
 //===== By: ==================================================
 //= DiviniaRO members, cleaned by reddozen
 //===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Censor Bar, Feather Beret, Valk. Helm, Hahoe Mask,

@@ -1,16 +1,23 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/mmo.h"
 #include "../common/showmsg.h"
 #include "../common/malloc.h"
+#include "../common/strlib.h"
 #include "core.h"
+#include "../common/console.h"
+
 #ifndef MINICORE
-#include "../common/db.h"
-#include "../common/socket.h"
-#include "../common/timer.h"
-#include "../common/thread.h"
-#include "../common/mempool.h"
+	#include "../common/db.h"
+	#include "../common/socket.h"
+	#include "../common/timer.h"
+	#include "../common/thread.h"
+	#include "../common/mempool.h"
+	#include "../common/sql.h"
+	#include "../config/core.h"
+	#include "../common/HPM.h"
 #endif
 
 #include <stdio.h>
@@ -23,20 +30,14 @@
 #include "../common/winapi.h" // Console close event handling
 #endif
 
-
 /// Called when a terminate signal is received.
 void (*shutdown_callback)(void) = NULL;
-
-#if defined(BUILDBOT)
-	int buildbotflag = 0;
-#endif
 
 int runflag = CORE_ST_RUN;
 int arg_c = 0;
 char **arg_v = NULL;
 
 char *SERVER_NAME = NULL;
-char SERVER_TYPE = ATHENA_SERVER_NONE;
 
 #ifndef MINICORE	// minimalist Core
 // Added by Gabuzomeu
@@ -52,8 +53,7 @@ char SERVER_TYPE = ATHENA_SERVER_NONE;
 #ifndef POSIX
 #define compat_signal(signo, func) signal(signo, func)
 #else
-sigfunc *compat_signal(int signo, sigfunc *func)
-{
+sigfunc *compat_signal(int signo, sigfunc *func) {
 	struct sigaction sact, oact;
 
 	sact.sa_handler = func;
@@ -74,26 +74,23 @@ sigfunc *compat_signal(int signo, sigfunc *func)
  *	CORE : Console events for Windows
  *--------------------------------------*/
 #ifdef _WIN32
-static BOOL WINAPI console_handler(DWORD c_event)
-{
-    switch(c_event)
-    {
-    case CTRL_CLOSE_EVENT:
-    case CTRL_LOGOFF_EVENT:
-    case CTRL_SHUTDOWN_EVENT:
-		if( shutdown_callback != NULL )
-			shutdown_callback();
-		else
-			runflag = CORE_ST_STOP;// auto-shutdown
-        break;
-	default:
-		return FALSE;
+static BOOL WINAPI console_handler(DWORD c_event) {
+    switch(c_event) {
+		case CTRL_CLOSE_EVENT:
+		case CTRL_LOGOFF_EVENT:
+		case CTRL_SHUTDOWN_EVENT:
+			if( shutdown_callback != NULL )
+				shutdown_callback();
+			else
+				runflag = CORE_ST_STOP;// auto-shutdown
+			break;
+		default:
+			return FALSE;
     }
     return TRUE;
 }
 
-static void cevents_init()
-{
+static void cevents_init() {
 	if (SetConsoleCtrlHandler(console_handler,TRUE)==FALSE)
 		ShowWarning ("Unable to install the console handler!\n");
 }
@@ -102,42 +99,40 @@ static void cevents_init()
 /*======================================
  *	CORE : Signal Sub Function
  *--------------------------------------*/
-static void sig_proc(int sn)
-{
+static void sig_proc(int sn) {
 	static int is_called = 0;
 
 	switch (sn) {
-	case SIGINT:
-	case SIGTERM:
-		if (++is_called > 3)
-			exit(EXIT_SUCCESS);
-		if( shutdown_callback != NULL )
-			shutdown_callback();
-		else
-			runflag = CORE_ST_STOP;// auto-shutdown
-		break;
-	case SIGSEGV:
-	case SIGFPE:
-		do_abort();
-		// Pass the signal to the system's default handler
-		compat_signal(sn, SIG_DFL);
-		raise(sn);
-		break;
-#ifndef _WIN32
-	case SIGXFSZ:
-		// ignore and allow it to set errno to EFBIG
-		ShowWarning ("Max file size reached!\n");
-		//run_flag = 0;	// should we quit?
-		break;
-	case SIGPIPE:
-		//ShowInfo ("Broken pipe found... closing socket\n");	// set to eof in socket.c
-		break;	// does nothing here
-#endif
+		case SIGINT:
+		case SIGTERM:
+			if (++is_called > 3)
+				exit(EXIT_SUCCESS);
+			if( shutdown_callback != NULL )
+				shutdown_callback();
+			else
+				runflag = CORE_ST_STOP;// auto-shutdown
+			break;
+		case SIGSEGV:
+		case SIGFPE:
+			do_abort();
+			// Pass the signal to the system's default handler
+			compat_signal(sn, SIG_DFL);
+			raise(sn);
+			break;
+	#ifndef _WIN32
+		case SIGXFSZ:
+			// ignore and allow it to set errno to EFBIG
+			ShowWarning ("Max file size reached!\n");
+			//run_flag = 0;	// should we quit?
+			break;
+		case SIGPIPE:
+			//ShowInfo ("Broken pipe found... closing socket\n");	// set to eof in socket.c
+			break;	// does nothing here
+	#endif
 	}
 }
 
-void signals_init (void)
-{
+void signals_init (void) {
 	compat_signal(SIGTERM, sig_proc);
 	compat_signal(SIGINT, sig_proc);
 #ifndef _DEBUG // need unhandled exceptions to debug on Windows
@@ -155,13 +150,11 @@ void signals_init (void)
 #endif
 
 #ifdef SVNVERSION
-	const char *get_svn_revision(void)
-	{
-		return EXPAND_AND_QUOTE(SVNVERSION);
-	}
+const char *get_svn_revision(void) {
+	return EXPAND_AND_QUOTE(SVNVERSION);
+}
 #else// not SVNVERSION
-const char* get_svn_revision(void)
-{
+const char* get_svn_revision(void) {
 	static char svn_version_buffer[16] = "";
 	FILE *fp;
 
@@ -196,12 +189,10 @@ const char* get_svn_revision(void)
 		fclose(fp);
 
 		// parse buffer
-		for( i = prefix_len + 1; i + postfix_len <= len; ++i )
-		{
+		for( i = prefix_len + 1; i + postfix_len <= len; ++i ) {
 			if( buffer[i] != postfix[0] || memcmp(buffer + i, postfix, postfix_len) != 0 )
 				continue; // postfix missmatch
-			for( j = i; j > 0; --j )
-			{// skip digits
+			for( j = i; j > 0; --j ) {// skip digits
 				if( !ISDIGIT(buffer[j - 1]) )
 					break;
 			}
@@ -218,29 +209,23 @@ const char* get_svn_revision(void)
 	}
 
 	// subversion 1.6 and older?
-	if ((fp = fopen(".svn/entries", "r")) != NULL)
-	{
+	if ((fp = fopen(".svn/entries", "r")) != NULL) {
 		char line[1024];
 		int rev;
 		// Check the version
-		if (fgets(line, sizeof(line), fp))
-		{
-			if(!ISDIGIT(line[0]))
-			{
+		if (fgets(line, sizeof(line), fp)) {
+			if(!ISDIGIT(line[0])) {
 				// XML File format
 				while (fgets(line,sizeof(line),fp))
 					if (strstr(line,"revision=")) break;
 				if (sscanf(line," %*[^\"]\"%d%*[^\n]", &rev) == 1) {
 					snprintf(svn_version_buffer, sizeof(svn_version_buffer), "%d", rev);
 				}
-			}
-			else
-			{
+			} else {
 				// Bin File format
 				if ( fgets(line, sizeof(line), fp) == NULL ) { printf("Can't get bin name\n"); } // Get the name
 				if ( fgets(line, sizeof(line), fp) == NULL ) { printf("Can't get entries kind\n"); } // Get the entries kind
-				if(fgets(line, sizeof(line), fp)) // Get the rev numver
-				{
+				if(fgets(line, sizeof(line), fp)) { // Get the rev numver
 					snprintf(svn_version_buffer, sizeof(svn_version_buffer), "%d", atoi(line));
 				}
 			}
@@ -252,86 +237,109 @@ const char* get_svn_revision(void)
 	}
 
 	// fallback
-	snprintf(svn_version_buffer, sizeof(svn_version_buffer), "Unknown");
+	svn_version_buffer[0] = HERC_UNKNOWN_VER;
 	return svn_version_buffer;
 }
 #endif
-
-/*======================================
- *	CORE : Display title
- *  ASCII By CalciumKid 1/12/2011
- *--------------------------------------*/
-static void display_title(void) {
-	//ClearScreen(); // clear screen and go up/left (0, 0 position in text)
-
-	ShowMessage("\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"                                                                 "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"       "CL_BT_WHITE"            rAthena Development Team presents                  "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"                 ___   __  __                                    "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"           _____/   | / /_/ /_  ___  ____  ____ _                "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"          / ___/ /| |/ __/ __ \\/ _ \\/ __ \\/ __ `/                "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"         / /  / ___ / /_/ / / /  __/ / / / /_/ /                 "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"        /_/  /_/  |_\\__/_/ /_/\\___/_/ /_/\\__,_/                  "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"                                                                 "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"       "CL_GREEN"              http://rathena.org/board/                        "CL_PASS""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_PASS"     "CL_BOLD"                                                                 "CL_PASS""CL_CLL""CL_NORMAL"\n");
-
-	ShowInfo("SVN Revision: '"CL_WHITE"%s"CL_RESET"'.\n", get_svn_revision());
+/* whats our origin */
+#define GIT_ORIGIN "refs/remotes/origin/master"
+/* Grabs the hash from the last time the user updated his working copy (last pull)  */
+const char *get_git_hash (void) {
+	static char HerculesGitHash[41] = "";//Sha(40) + 1
+	FILE *fp;
+	
+	if( HerculesGitHash[0] != '\0' )
+		return HerculesGitHash;
+	
+	if ( (fp = fopen (".git/"GIT_ORIGIN, "r")) != NULL) {
+		char line[64];
+		char *rev = malloc (sizeof (char) * 50);
+		
+		if (fgets (line, sizeof (line), fp) && sscanf (line, "%50s", rev))
+			snprintf (HerculesGitHash, sizeof (HerculesGitHash), "%s", rev);
+		
+		free (rev);
+		fclose (fp);
+	} else {
+		HerculesGitHash[0] = HERC_UNKNOWN_VER;
+	}
+	
+	if (! (*HerculesGitHash)) {
+		HerculesGitHash[0] = HERC_UNKNOWN_VER;
+	}
+	
+	return HerculesGitHash;
 }
-
 // Warning if executed as superuser (root)
-void usercheck(void)
-{
+void usercheck(void) {
 #ifndef _WIN32
     if (geteuid() == 0) {
-		ShowWarning ("You are running rAthena with root privileges, it is not necessary.\n");
+		ShowWarning ("You are running Hercules with root privileges, it is not necessary.\n");
     }
 #endif
 }
-
+void core_defaults(void) {
+#ifndef MINICORE
+	hpm_defaults();
+#endif
+	console_defaults();
+	strlib_defaults();
+	malloc_defaults();
+#ifndef MINICORE
+	sql_defaults();
+	timer_defaults();
+	db_defaults();
+#endif
+}
 /*======================================
  *	CORE : MAINROUTINE
  *--------------------------------------*/
-int main (int argc, char **argv)
-{
+int main (int argc, char **argv) {
 	{// initialize program arguments
 		char *p1 = SERVER_NAME = argv[0];
 		char *p2 = p1;
-		while ((p1 = strchr(p2, '/')) != NULL || (p1 = strchr(p2, '\\')) != NULL)
-		{
+		while ((p1 = strchr(p2, '/')) != NULL || (p1 = strchr(p2, '\\')) != NULL) {
 			SERVER_NAME = ++p1;
 			p2 = p1;
 		}
 		arg_c = argc;
 		arg_v = argv;
 	}
-
-	malloc_init();// needed for Show* in display_title() [FlavioJS]
-
+	core_defaults();
+	
+	malloclib->init();// needed for Show* in display_title() [FlavioJS]
+	
+	console->display_title();
+	
 #ifdef MINICORE // minimalist Core
-	display_title();
 	usercheck();
 	do_init(argc,argv);
 	do_final();
 #else// not MINICORE
 	set_server_type();
-	display_title();
 	usercheck();
 
+	Sql_Init();
 	rathread_init();
 	mempool_init();
-	db_init();
+	DB->init();
 	signals_init();
-
+	
 #ifdef _WIN32
 	cevents_init();
 #endif
 
 	timer_init();
+
+	console->init();
+
+#ifndef MINICORE
+	HPM->init();
+#endif
+		
 	socket_init();
 
 	do_init(argc,argv);
-
 	{// Main runtime cycle
 		int next;
 		while (runflag != CORE_ST_STOP) {
@@ -340,16 +348,20 @@ int main (int argc, char **argv)
 		}
 	}
 
+	console->final();
+	
 	do_final();
-
+#ifndef MINICORE
+	HPM->final();
+#endif
 	timer_final();
 	socket_final();
-	db_final();
+	DB->final();
 	mempool_final();
 	rathread_final();
 #endif
 
-	malloc_final();
+	malloclib->final();
 
 	return 0;
 }

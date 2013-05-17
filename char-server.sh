@@ -5,10 +5,10 @@ ulimit -Sc unlimited
 
 while [ 3 ] ; do
 if [ -f .stopserver3 ] ; then
-echo server marked down >> servlog.txt
+echo server marked down >> server-log.txt
 else
-echo restarting server at time at `date +"%m-%d-%H:%M-%S"`>> startlog.txt
-./char-server_sql
+echo restarting server at time at `date +"%m-%d-%H:%M-%S"`>> start-log.txt
+./char-server
 fi
 
 sleep 5

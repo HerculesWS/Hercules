@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Cluck! Cluck! Boom!
 //===== By: ==================================================
 //= Keale
 //===== Current Version: =====================================
 //= 1.2a
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= Click the chicken and try retrieve the item at a low 
 //= chance. If you fail he will nuke, freeze, stone, 
@@ -108,6 +106,7 @@ OnTimer30000:
 	end;
 OnTimer40000:
 	announce "GO! Click the chicken to get the prize!",bc_blue;
+	stopnpctimer;
 	if (!$cluck_item_id) set $cluck_item_id,512;
 	if (!$cluck_item_amount) set $cluck_item_amount,1;
 	set .startcluck,1;

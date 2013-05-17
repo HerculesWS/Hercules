@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= 3rd Item Seller
 //===== By: ================================================== 
 //= Masao, Mercurial
 //===== Current Version: ===================================== 
 //= 1.2
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Sells some 3rd Job related items.

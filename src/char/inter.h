@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _INTER_SQL_H_
 #define _INTER_SQL_H_
@@ -23,8 +24,6 @@ extern unsigned int party_share_level;
 extern Sql* sql_handle;
 extern Sql* lsql_handle;
 
-extern char main_chat_nick[16];
-
 int inter_accreg_tosql(int account_id, int char_id, struct accreg *reg, int type);
 
 uint64 inter_chk_lastuid(int8 flag, uint64 value);
@@ -33,7 +32,7 @@ uint64 inter_chk_lastuid(int8 flag, uint64 value);
 	#define dbUpdateUid(handler_)\
 	{ \
 		uint64 unique_id_ = inter_chk_lastuid(0, 0); \
-		if (unique_id_ && SQL_ERROR == Sql_Query(handler_, "UPDATE `interreg` SET `value`='%"PRIu64"' WHERE `varname`='unique_id'", unique_id_)) \
+		if (unique_id_ && SQL_ERROR == SQL->Query(handler_, "UPDATE `interreg` SET `value`='%"PRIu64"' WHERE `varname`='unique_id'", unique_id_)) \
 				Sql_ShowDebug(handler_);\
 	}
 #else

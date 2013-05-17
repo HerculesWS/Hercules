@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Veins Quests
 //===== By: ================================================== 
 //= L0ne_W0lf
 //===== Current Version: ===================================== 
-//= 2.1
-//===== Compatible With: ===================================== 
-//= rAthena SVN
+//= 2.2
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Collection of Veins Quests 
@@ -45,11 +43,12 @@
 //=     - Thor Volcano Base Quest
 //= 2.0 Removed level requirement. (bugreport:4678) [L0ne_W0lf]
 //= 2.1 Added missing changequest (3071-3076). [Joseph]
+//= 2.2 Added renewal checks for exp distribution [Streusel]
 //============================================================ 
 
 // Stone Quest
 //============================================================ 
-ve_fild05,257,130,4	script	Wincing Old Man#ve	945,{
+ve_fild05,257,130,4	script	::WincingOldMan_veins	945,{
 	if ((MaxWeight - Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you are carrying -";
@@ -289,7 +288,10 @@ ve_fild05,257,130,4	script	Wincing Old Man#ve	945,{
 		mes "find these useful. Anyway,";
 		mes "I hope you like these rocks...";
 		set veins_stone,8;
-		getexp 30000,0;
+		if(checkre(0))
+			getexp 30000,0;
+		else
+			getexp 300000,0;
 		getitem 985,3; //Elunium
 		close;
 	}
@@ -973,7 +975,10 @@ prt_church,89,108,6	script	Bard#sch	741,{
 		mes "reward with our sincere thanks.";
 		set que_sch,26;
 		getitem 12106,1; //Accessory_Box
-		getexp 60000,0;
+		if(checkre(0))
+			getexp 60000,0;
+		else
+			getexp 600000,0;
 		close;
 	}
 	else {
@@ -3042,7 +3047,10 @@ veins,327,185,3	script	Kid#camelcamel	944,{
 			completequest 3083;
 			set rachel_camel,25;
 			specialeffect2 EF_ABSORBSPIRITS;
-			getexp 100000,70000;
+			if(checkre(0))
+				getexp 100000,70000;
+			else
+				getexp 1000000,700000;
 			close;
 		}
 		else {
@@ -6083,7 +6091,10 @@ ve_in,281,214,3	script	Bookshelf#vol	111,{
 		else {
 			getitem 12103,1; //Bloody_Dead_Branch
 		}
-		getexp 80000,0;
+		if(checkre(0))
+			getexp 80000,0;
+		else
+			getexp 800000,0;
 		mes "^3355FFWell, you've done all";
 		mes "that you could here.";
 		mes "Now would be a good time";

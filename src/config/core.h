@@ -1,12 +1,8 @@
-// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 #ifndef _CONFIG_CORE_H_
 #define _CONFIG_CORE_H_
-
-/**
- * rAthena configuration file (http://rathena.org)
- * For detailed guidance on these check http://rathena.org/wiki/SRC/config/
- **/
 
 /// Max number of items on @autolootid list
 #define AUTOLOOTITEM_SIZE 10
@@ -27,14 +23,16 @@
 /// your map-server using more resources while this is active, comment the line
 #define SCRIPT_CALLFUNC_CHECK
 
-/// Uncomment to disable rAthena's anonymous stat report
-/// We kindly ask you to consider keeping it enabled, it helps us improve rAthena.
-//#define STATS_OPT_OUT
+/// Comment to disable Hercules' console_parse
+/// CONSOLE_INPUT allows you to type commands into the server's console,
+/// Disabling it saves one thread.
+#define CONSOLE_INPUT
+/// Maximum number of caracters 'CONSOLE_INPUT' will support per line.
+#define MAX_CONSOLE_INPUT 150
 
-/// uncomment to enable query_sql script command and mysql logs to function on it's own thread
-/// be aware this feature is under tests and you should use at your own risk, we however
-/// welcome any feedback you may have regarding this feature, please send us all bug reports.
-//#define BETA_THREAD_TEST
+/// Uncomment to disable Hercules' anonymous stat report
+/// We kindly ask you to consider keeping it enabled, it helps us improve Hercules.
+//#define STATS_OPT_OUT
 
 /// Uncomment to enable the Cell Stack Limit mod.
 /// It's only config is the battle_config cell_stack_limit.
@@ -47,6 +45,17 @@
 /// Enabling this changes such checks to circular checks, which is more realistic,
 /// - but is not the official behaviour.
 //#define CIRCULAR_AREA
+
+//This is the distance at which @autoloot works,
+//if the item drops farther from the player than this,
+//it will not be autolooted. [Skotlex]
+//Note: The range is unlimited unless this define is set.
+//#define AUTOLOOT_DISTANCE AREA_SIZE
+
+/// Uncomment to switch the way map zones' "skill_damage_cap" functions.
+/// When commented the cap takes place before modifiers, as to have them be useful.
+/// When uncommented the cap takes place after modifiers.
+//#define HMAP_ZONE_DAMAGE_CAP_TYPE
 
 /// Uncomment to enable Non Stackable items unique ID
 /// By enabling it, the system will create an unique id for each new non stackable item created

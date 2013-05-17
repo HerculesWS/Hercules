@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Mapflag: Battleground map setting.
 //===== By: ==================================================
 //= Epoque
 //===== Current Version: =====================================
 //= 1.0a
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: ========================================= 
 //= Defines a Battleground map.
 //= Additional parameter '2' shows scoreboard.

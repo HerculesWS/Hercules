@@ -8,7 +8,7 @@ AC_CONFIG_SRCDIR([src/common/cbasetypes.h])
 AC_CONFIG_FILES([Makefile src/common/Makefile])
 AC_CONFIG_FILES([3rdparty/mt19937ar/Makefile 3rdparty/libconfig/Makefile])
 AC_CONFIG_FILES([src/char/Makefile src/login/Makefile])
-AC_CONFIG_FILES([src/map/Makefile src/tool/Makefile])
+AC_CONFIG_FILES([src/map/Makefile src/plugins/Makefile src/tool/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
 
 AC_GNU_SOURCE
@@ -520,6 +520,110 @@ AC_COMPILE_IFELSE(
 	]
 )
 CFLAGS="$OLD_CFLAGS"
+
+#
+# option for shared objects
+#
+AC_MSG_CHECKING([how to make shared objects])
+OLD_CFLAGS="$CFLAGS"
+compiler_shared_objects=""
+if test "$compiler_supports_pic" = "yes" ; then
+	my_shared_test_flags="$CFLAGS -fPIC"
+fi
+# default
+CFLAGS="$my_shared_test_flags -shared"
+AC_LINK_IFELSE(
+	[[
+		int bar = 0;
+
+		int foo(void)
+		{
+			return bar;
+		}
+	]],
+	[
+		compiler_shared_objects="-shared"
+	]
+)
+# BeOS specific
+CFLAGS="$my_shared_test_flags -nostart"
+AC_LINK_IFELSE(
+	[[
+		int bar = 0;
+
+		int foo(void)
+		{
+			return bar;
+		}
+	]],
+	[
+		compiler_shared_objects="-nostart"
+	]
+)
+my_shared_test_flags=""
+CFLAGS="$OLD_CFLAGS"
+if test "$compiler_supports_shared_objects" = "no" ; then
+	AC_MSG_RESULT([not supported])
+	AC_MSG_NOTICE([compiler is unable to generate shared objects, disabled plugins (optional)])
+	WITH_PLUGINS="no"
+else
+	AC_MSG_RESULT([$compiler_shared_objects])
+	SOFLAGS="$SOFLAGS $compiler_shared_objects"
+
+#
+# shared objects need position independent code; some platforms emit
+# it always, others need -fPIC
+#
+AC_MSG_CHECKING([whether $CC needs -fPIC for shared objects])
+OLD_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS $SOFLAGS"
+WITH_PLUGINS="yes"
+AC_LINK_IFELSE(
+	[[
+		int bar = 0;
+
+		int foo(void)
+		{
+			return bar;
+		}
+	]],
+	[
+		AC_MSG_RESULT([no])
+		CFLAGS="$OLD_CFLAGS"
+	],
+	[
+		if test "$compiler_supports_pic" = "yes" ; then
+			# Verify if -shared really fails due to lack of -fPIC or something else
+			CFLAGS="$CFLAGS -fPIC"
+			AC_LINK_IFELSE(
+				[[
+					int bar = 0;
+
+					int foo(void)
+					{
+						return bar;
+					}
+				]],
+				[
+					AC_MSG_RESULT([yes])
+					CFLAGS="$OLD_CFLAGS -fPIC"
+				],
+				[
+					AC_MSG_RESULT([no, but fails for another reason])
+					AC_MSG_ERROR([compiler is unable to compile shared objects for an unhandled reason, please report this with attached config.log... stopping])
+				]
+			)
+		else
+			# Disable compilation of plugins (optional), so 'make all' does not fail
+			AC_MSG_RESULT([yes, but unsupported])
+			AC_MSG_NOTICE([compiler is unable to generate position independent code, disabled plugins (optional)])
+			WITH_PLUGINS="no"
+		fi
+	]
+)
+
+fi
+AC_SUBST([WITH_PLUGINS])
 
 
 #

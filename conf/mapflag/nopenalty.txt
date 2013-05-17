@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Mapflag: Disable death penalty.
 //===== By: ==================================================
-//= rAthena Dev Team
+//= Hercules Dev Team
 //===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: ========================================= 
 //= Same as 'noexppenalty' and 'nozenypenalty' combined.
 //===== Additional Comments: ================================= 

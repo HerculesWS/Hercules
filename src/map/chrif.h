@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _CHRIF_H_
 #define _CHRIF_H_
@@ -65,5 +66,6 @@ int do_final_chrif(void);
 int do_init_chrif(void);
 
 int chrif_flush_fifo(void);
+void chrif_skillid2idx(int fd);
 
 #endif /* _CHRIF_H_ */

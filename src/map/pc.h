@@ -1,10 +1,12 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _PC_H_
 #define _PC_H_
 
 #include "../common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus
+#include "../common/ers.h"
 #include "../common/timer.h" // INVALID_TIMER
 #include "atcommand.h" // AtCommandType
 #include "battle.h" // battle_config
@@ -23,6 +25,27 @@
 #define MAX_PC_BONUS 10
 #define MAX_PC_SKILL_REQUIRE 5
 #define MAX_PC_FEELHATE 3
+
+//Equip indexes constants. (eg: sd->equip_index[EQI_AMMO] returns the index
+//where the arrows are equipped)
+enum equip_index {
+	EQI_ACC_L = 0,
+	EQI_ACC_R,
+	EQI_SHOES,
+	EQI_GARMENT,
+	EQI_HEAD_LOW,
+	EQI_HEAD_MID,
+	EQI_HEAD_TOP,
+	EQI_ARMOR,
+	EQI_HAND_L,
+	EQI_HAND_R,
+	EQI_COSTUME_TOP,
+	EQI_COSTUME_MID,
+	EQI_COSTUME_LOW,
+	EQI_COSTUME_GARMENT,
+	EQI_AMMO,
+	EQI_MAX
+};
 
 struct weapon_data {
 	int atkmods[3];
@@ -87,6 +110,12 @@ struct s_autobonus {
 	unsigned short pos;
 };
 
+enum npc_timeout_type {
+	NPCT_INPUT = 0,
+	NPCT_MENU  = 1,
+	NPCT_WAIT  = 2,
+};
+
 struct map_session_data {
 	struct block_list bl;
 	struct unit_data ud;
@@ -115,7 +144,6 @@ struct map_session_data {
 		unsigned int showdelay :1;
 		unsigned int showexp :1;
 		unsigned int showzeny :1;
-		unsigned int mainchat :1; //[LuzZza]
 		unsigned int noask :1; // [LuzZza]
 		unsigned int trading :1; //[Skotlex] is 1 only after a trade has started.
 		unsigned int deal_locked :2; //1: Clicked on OK. 2: Clicked on TRADE
@@ -144,6 +172,7 @@ struct map_session_data {
 		struct guild *gmaster_flag;
 		unsigned int prevend : 1;//used to flag wheather you've spent 40sp to open the vending or not.
 		unsigned int warping : 1;//states whether you're in the middle of a warp processing
+		unsigned int permanent_speed : 1; // When 1, speed cannot be changed through status_calc_pc().
 	} state;
 	struct {
 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;
@@ -161,13 +190,13 @@ struct map_session_data {
 	unsigned short class_;	//This is the internal job ID used by the map server to simplify comparisons/queries/etc. [Skotlex]
 	int group_id, group_pos, group_level;
 	unsigned int permissions;/* group permissions */
-
-	int packet_ver;  // 5: old, 6: 7july04, 7: 13july04, 8: 26july04, 9: 9aug04/16aug04/17aug04, 10: 6sept04, 11: 21sept04, 12: 18oct04, 13: 25oct04 ... 18
+	bool group_log_command;
+	
 	struct mmo_charstatus status;
 	struct registry save_reg;
 
 	struct item_data* inventory_data[MAX_INVENTORY]; // direct pointers to itemdb entries (faster than doing item_id lookups)
-	short equip_index[14];
+	short equip_index[EQI_MAX];
 	unsigned int weight,max_weight;
 	int cart_weight,cart_num,cart_weight_max;
 	int fd;
@@ -262,7 +291,7 @@ struct map_session_data {
 	struct { //skillatk raises bonus dmg% of skills, skillheal increases heal%, skillblown increases bonus blewcount for some skills.
 		unsigned short id;
 		short val;
-	} skillatk[MAX_PC_BONUS], skillusesprate[MAX_PC_BONUS], skillusesp[MAX_PC_BONUS], skillheal[5], skillheal2[5], skillblown[MAX_PC_BONUS], skillcast[MAX_PC_BONUS], skillcooldown[MAX_PC_BONUS], skillfixcast[MAX_PC_BONUS], skillvarcast[MAX_PC_BONUS];
+	} skillatk[MAX_PC_BONUS], skillusesprate[MAX_PC_BONUS], skillusesp[MAX_PC_BONUS], skillheal[5], skillheal2[5], skillblown[MAX_PC_BONUS], skillcast[MAX_PC_BONUS], skillcooldown[MAX_PC_BONUS], skillfixcast[MAX_PC_BONUS], skillvarcast[MAX_PC_BONUS], skillfixcastrate[MAX_PC_BONUS];
 	struct {
 		short value;
 		int rate;
@@ -319,6 +348,7 @@ struct map_session_data {
 		unsigned short unbreakable_equip; //100% break resistance on certain equipment
 		unsigned short unstripable_equip;
 		int fixcastrate,varcastrate;
+		int add_fixcast,add_varcast;
 		int ematk; // matk bonus from equipment
 //		int eatk; // atk bonus from equipment
 	} bonus;
@@ -336,7 +366,7 @@ struct map_session_data {
 	short catch_target_class; // pet catching, stores a pet class to catch (short now) [zzo]
 
 	short spiritball, spiritball_old;
-	int spirit_timer[MAX_SKILL_LEVEL];
+	int spirit_timer[MAX_SPIRITBALL];
 	short talisman[ELE_POISON+1]; // There are actually 5 talisman Fire, Ice, Wind, Earth & Poison maybe because its color violet.
 	int talisman_timer[ELE_POISON+1][10];
 
@@ -363,15 +393,15 @@ struct map_session_data {
 	bool party_joining; // whether the char is accepting party invitation
 	int party_invite, party_invite_account; // for handling party invitation (holds party id and account id)
 	int adopt_invite; // Adoption
-
+	struct guild *guild;/* [Ind/Hercules] speed everything up */
 	int guild_invite,guild_invite_account;
 	int guild_emblem_id,guild_alliance,guild_alliance_account;
 	short guild_x,guild_y; // For guildmate position display. [Skotlex] should be short [zzo]
 	int guildspy; // [Syrus22]
 	int partyspy; // [Syrus22]
 
-	int vended_id;
-	int vender_id;
+	unsigned int vended_id;
+	unsigned int vender_id;
 	int vend_num;
 	char message[MESSAGE_SIZE];
 	struct s_vending vending[MAX_VENDING];
@@ -445,7 +475,7 @@ struct map_session_data {
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/
-#if SECURE_NPCTIMEOUT
+#ifdef SECURE_NPCTIMEOUT
 	/**
 	 * ID of the timer
 	 * @info
@@ -459,6 +489,8 @@ struct map_session_data {
 	 * - It is updated on every NPC iteration as mentioned above
 	 **/
 	unsigned int npc_idle_tick;
+	/* */
+	enum npc_timeout_type npc_idle_type;
 #endif
 
 	struct {
@@ -473,12 +505,27 @@ struct map_session_data {
 	int friend_req;
 
 	int shadowform_id;
-
+	
+	/* [Ind/Hercules] */
+	struct hChSysCh **channels;
+	unsigned char channel_count;
+	struct hChSysCh *gcbind;
+	bool stealth;
+	unsigned char fontcolor;
+	unsigned int fontcolor_tid;
+	unsigned int hchsysch_tick;
+	
+	/* [Ind/Hercules] */
+	struct sc_display_entry **sc_display;
+	unsigned char sc_display_count;
+	
 	// temporary debugging of bug #3504
 	const char* delunit_prevfile;
 	int delunit_prevline;
 
 };
+
+struct eri *pc_sc_display_ers;
 
 //Update this max as necessary. 55 is the value needed for Super Baby currently
 //Raised to 84 since Expanded Super Novice needs it.
@@ -535,20 +582,21 @@ enum ammo_type {
 
 //Equip position constants
 enum equip_pos {
-	EQP_HEAD_LOW = 0x0001,
-	EQP_HEAD_MID = 0x0200, //512
-	EQP_HEAD_TOP = 0x0100, //256
-	EQP_HAND_R   = 0x0002,
-	EQP_HAND_L   = 0x0020, //32
-	EQP_ARMOR    = 0x0010, //16
-	EQP_SHOES    = 0x0040, //64
-	EQP_GARMENT  = 0x0004,
-	EQP_ACC_L    = 0x0008,
-	EQP_ACC_R    = 0x0080, //128
-	EQP_COSTUME_HEAD_TOP = 0x0400,
-	EQP_COSTUME_HEAD_MID = 0x0800,
-	EQP_COSTUME_HEAD_LOW = 0x1000,
-	EQP_AMMO     = 0x8000, //32768
+	EQP_HEAD_LOW         = 0x0001,
+	EQP_HEAD_MID         = 0x0200, //512
+	EQP_HEAD_TOP         = 0x0100, //256
+	EQP_HAND_R           = 0x0002, //2
+	EQP_HAND_L           = 0x0020, //32
+	EQP_ARMOR            = 0x0010, //16
+	EQP_SHOES            = 0x0040, //64
+	EQP_GARMENT          = 0x0004, //4
+	EQP_ACC_L            = 0x0008, //8
+	EQP_ACC_R            = 0x0080, //128
+	EQP_COSTUME_HEAD_TOP = 0x0400, //1024
+	EQP_COSTUME_HEAD_MID = 0x0800, //2048
+	EQP_COSTUME_HEAD_LOW = 0x1000, //4096
+	EQP_COSTUME_GARMENT	 = 0x2000, //8192
+	EQP_AMMO             = 0x8000, //32768
 };
 
 #define EQP_WEAPON EQP_HAND_R
@@ -556,7 +604,7 @@ enum equip_pos {
 #define EQP_ARMS (EQP_HAND_R|EQP_HAND_L)
 #define EQP_HELM (EQP_HEAD_LOW|EQP_HEAD_MID|EQP_HEAD_TOP)
 #define EQP_ACC (EQP_ACC_L|EQP_ACC_R)
-#define EQP_COSTUME (EQP_COSTUME_HEAD_TOP|EQP_COSTUME_HEAD_MID|EQP_COSTUME_HEAD_LOW)
+#define EQP_COSTUME (EQP_COSTUME_HEAD_TOP|EQP_COSTUME_HEAD_MID|EQP_COSTUME_HEAD_LOW|EQP_COSTUME_GARMENT)
 
 /// Equip positions that use a visible sprite
 #if PACKETVER < 20110111
@@ -565,33 +613,17 @@ enum equip_pos {
 	#define EQP_VISIBLE (EQP_HELM|EQP_GARMENT|EQP_COSTUME)
 #endif
 
-//Equip indexes constants. (eg: sd->equip_index[EQI_AMMO] returns the index
-//where the arrows are equipped)
-enum equip_index {
-	EQI_ACC_L = 0,
-	EQI_ACC_R,
-	EQI_SHOES,
-	EQI_GARMENT,
-	EQI_HEAD_LOW,
-	EQI_HEAD_MID,
-	EQI_HEAD_TOP,
-	EQI_ARMOR,
-	EQI_HAND_L,
-	EQI_HAND_R,
-	EQI_COSTUME_TOP,
-	EQI_COSTUME_MID,
-	EQI_COSTUME_LOW,
-	EQI_AMMO,
-	EQI_MAX
-};
-
 #define pc_setdead(sd)        ( (sd)->state.dead_sit = (sd)->vd.dead_sit = 1 )
 #define pc_setsit(sd)         ( (sd)->state.dead_sit = (sd)->vd.dead_sit = 2 )
 #define pc_isdead(sd)         ( (sd)->state.dead_sit == 1 )
 #define pc_issit(sd)          ( (sd)->vd.dead_sit == 2 )
 #define pc_isidle(sd)         ( (sd)->chatID || (sd)->state.vending || (sd)->state.buyingstore || DIFF_TICK(last_tick, (sd)->idletime) >= battle_config.idle_no_share )
 #define pc_istrading(sd)      ( (sd)->npc_id || (sd)->state.vending || (sd)->state.buyingstore || (sd)->state.trading )
-#define pc_cant_act(sd)       ( (sd)->npc_id || (sd)->state.vending || (sd)->state.buyingstore || (sd)->chatID || ((sd)->sc.opt1 && (sd)->sc.opt1 != OPT1_BURNING) || (sd)->state.trading || (sd)->state.storage_flag )
+#define pc_cant_act(sd)       ( (sd)->npc_id || (sd)->state.vending || (sd)->state.buyingstore || (sd)->chatID || ((sd)->sc.opt1 && (sd)->sc.opt1 != OPT1_BURNING) || (sd)->state.trading || (sd)->state.storage_flag || (sd)->state.prevend )
+
+/* equals pc_cant_act except it doesn't check for chat rooms */
+#define pc_cant_act2(sd)       ( (sd)->npc_id || (sd)->state.vending || (sd)->state.buyingstore || ((sd)->sc.opt1 && (sd)->sc.opt1 != OPT1_BURNING) || (sd)->state.trading || (sd)->state.storage_flag || (sd)->state.prevend )
+
 #define pc_setdir(sd,b,h)     ( (sd)->ud.dir = (b) ,(sd)->head_dir = (h) )
 #define pc_setchatid(sd,n)    ( (sd)->chatID = n )
 #define pc_ishiding(sd)       ( (sd)->sc.option&(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK) )
@@ -672,13 +704,13 @@ enum equip_index {
 
 int pc_class2idx(int class_);
 int pc_get_group_level(struct map_session_data *sd);
-int pc_get_group_id(struct map_session_data *sd);
+#define pc_get_group_id(sd) ( (sd)->group_id )
 int pc_getrefinebonus(int lv,int type);
 bool pc_can_give_items(struct map_session_data *sd);
 
-bool pc_can_use_command(struct map_session_data *sd, const char *command, AtCommandType type);
+bool pc_can_use_command(struct map_session_data *sd, const char *command);
 #define pc_has_permission(sd, permission) ( ((sd)->permissions&permission) != 0 )
-bool pc_should_log_commands(struct map_session_data *sd);
+#define pc_should_log_commands(sd) ( (sd)->group_log_command != false )
 
 int pc_setrestartvalue(struct map_session_data *sd,int type);
 int pc_makesavestatus(struct map_session_data *);
@@ -693,6 +725,7 @@ int pc_equippoint(struct map_session_data *sd,int n);
 int pc_setinventorydata(struct map_session_data *sd);
 
 int pc_checkskill(struct map_session_data *sd,uint16 skill_id);
+int pc_checkskill2(struct map_session_data *sd,uint16 index);
 int pc_checkallowskill(struct map_session_data *sd);
 int pc_checkequip(struct map_session_data *sd,int pos);
 
@@ -855,10 +888,12 @@ const char * job_name(int class_);
 
 struct skill_tree_entry {
 	short id;
+	unsigned short idx;
 	unsigned char max;
 	unsigned char joblv;
 	struct {
 		short id;
+		unsigned short idx;
 		unsigned char lv;
 	} need[MAX_PC_SKILL_REQUIRE];
 }; // Celest

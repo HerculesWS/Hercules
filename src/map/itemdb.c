@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/nullpo.h"
 #include "../common/malloc.h"
@@ -20,8 +21,6 @@
 static struct item_data* itemdb_array[MAX_ITEMDB];
 static DBMap*            itemdb_other;// int nameid -> struct item_data*
 
-static struct item_group itemgroup_db[MAX_ITEMGROUP];
-
 struct item_data dummy_item; //This is the default dummy item used for non-existant items. [Skotlex]
 
 /**
@@ -31,7 +30,7 @@ struct item_data dummy_item; //This is the default dummy item used for non-exist
  */
 static int itemdb_searchname_sub(DBKey key, DBData *data, va_list ap)
 {
-	struct item_data *item = db_data2ptr(data), **dst, **dst2;
+	struct item_data *item = DB->data2ptr(data), **dst, **dst2;
 	char *str;
 	str=va_arg(ap,char *);
 	dst=va_arg(ap,struct item_data **);
@@ -84,7 +83,7 @@ struct item_data* itemdb_searchname(const char *str)
  */
 static int itemdb_searchname_array_sub(DBKey key, DBData data, va_list ap)
 {
-	struct item_data *item = db_data2ptr(&data);
+	struct item_data *item = DB->data2ptr(&data);
 	char *str;
 	str=va_arg(ap,char *);
 	if (item == &dummy_item)
@@ -128,7 +127,7 @@ int itemdb_searchname_array(struct item_data** data, int size, const char *str)
 		size -= count;
 		db_count = itemdb_other->getall(itemdb_other, (DBData**)&db_data, size, itemdb_searchname_array_sub, str);
 		for (i = 0; i < db_count; i++)
-			data[count++] = db_data2ptr(db_data[i]);
+			data[count++] = DB->data2ptr(db_data[i]);
 		count += db_count;
 	}
 	return count;
@@ -466,8 +465,7 @@ int itemdb_isrestricted(struct item* item, int gmlv, int gmlv2, int (*func)(stru
 /*==========================================
  *	Specifies if item-type should drop unidentified.
  *------------------------------------------*/
-int itemdb_isidentified(int nameid)
-{
+int itemdb_isidentified(int nameid) {
 	int type=itemdb_type(nameid);
 	switch (type) {
 		case IT_WEAPON:
@@ -478,6 +476,18 @@ int itemdb_isidentified(int nameid)
 			return 1;
 	}
 }
+/* same as itemdb_isidentified but without a lookup */
+int itemdb_isidentified2(struct item_data *data) {
+	switch (data->type) {
+		case IT_WEAPON:
+		case IT_ARMOR:
+		case IT_PETARMOR:
+			return 0;
+		default:
+			return 1;
+	}
+}
+
 
 /*==========================================
  * Search by name for the override flags available items
@@ -514,18 +524,18 @@ static bool itemdb_read_itemavail(char* str[], int columns, int current)
 /*==========================================
  * read item group data
  *------------------------------------------*/
-static void itemdb_read_itemgroup_sub(const char* filename)
-{
+static unsigned int itemdb_read_itemgroup_sub(const char* filename) {
 	FILE *fp;
 	char line[1024];
 	int ln=0;
+	unsigned int count = 0;
 	int groupid,j,k,nameid;
 	char *str[3],*p;
 	char w1[1024], w2[1024];
 	
 	if( (fp=fopen(filename,"r"))==NULL ){
 		ShowError("can't read %s\n", filename);
-		return;
+		return 0;
 	}
 
 	while(fgets(line, sizeof(line), fp))
@@ -536,7 +546,7 @@ static void itemdb_read_itemgroup_sub(const char* filename)
 		if(strstr(line,"import")) {
 			if (sscanf(line, "%[^:]: %[^\r\n]", w1, w2) == 2 &&
 				strcmpi(w1, "import") == 0) {
-				itemdb_read_itemgroup_sub(w2);
+				count += itemdb_read_itemgroup_sub(w2);
 				continue;
 			}
 		}
@@ -570,40 +580,21 @@ static void itemdb_read_itemgroup_sub(const char* filename)
 		}
 		for(j=0;j<k;j++)
 			itemgroup_db[groupid].nameid[itemgroup_db[groupid].qty++] = nameid;
+		count++;
 	}
 	fclose(fp);
-	return;
+	return count;
 }
 
 static void itemdb_read_itemgroup(void)
 {
 	char path[256];
+	unsigned int count;
 	snprintf(path, 255, "%s/"DBPATH"item_group_db.txt", db_path);
 	memset(&itemgroup_db, 0, sizeof(itemgroup_db));
-	itemdb_read_itemgroup_sub(path);
-	ShowStatus("Done reading '"CL_WHITE"%s"CL_RESET"'.\n", "item_group_db.txt");
+	count = itemdb_read_itemgroup_sub(path);
+	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, "item_group_db.txt");
 	return;
-}
-
-/*==========================================
- * Read item forbidden by mapflag (can't equip item)
- *------------------------------------------*/
-static bool itemdb_read_noequip(char* str[], int columns, int current)
-{// <nameid>,<mode>
-	int nameid;
-	struct item_data *id;
-
-	nameid = atoi(str[0]);
-
-	if( ( id = itemdb_exists(nameid) ) == NULL )
-	{
-		ShowWarning("itemdb_read_noequip: Invalid item id %d.\n", nameid);
-		return false;
-	}
-
-	id->flag.no_equip |= atoi(str[1]);
-
-	return true;
 }
 
 /*==========================================
@@ -737,6 +728,31 @@ static bool itemdb_read_buyingstore(char* fields[], int columns, int current)
 
 	return true;
 }
+
+/*******************************************
+** Item usage restriction (item_nouse.txt)
+********************************************/
+static bool itemdb_read_nouse(char* fields[], int columns, int current)
+{// <nameid>,<flag>,<override>
+	int nameid, flag, override;
+	struct item_data* id;
+
+	nameid = atoi(fields[0]);
+	
+	if( ( id = itemdb_exists(nameid) ) == NULL ) {
+		ShowWarning("itemdb_read_nouse: Invalid item id %d.\n", nameid);
+		return false;
+	}
+	
+	flag = atoi(fields[1]);
+	override = atoi(fields[2]);
+
+	id->item_usage.flag = flag;
+	id->item_usage.override = override;
+
+	return true;
+}
+
 /**
  * @return: amount of retrieved entries.
  **/
@@ -867,7 +883,7 @@ void itemdb_read_combos() {
 			
 			/* populate the children to refer to this combo */
 			for( v = 1; v < retcount; v++ ) {
-				struct item_data * it = NULL;
+				struct item_data * it;
 				int index;
 				
 				it = itemdb_exists(items[v]);
@@ -1221,19 +1237,19 @@ static int itemdb_read_sqldb(void) {
 		uint32 lines = 0, count = 0;
 
 		// retrieve all rows from the item database
-		if( SQL_ERROR == Sql_Query(mmysql_handle, "SELECT * FROM `%s`", item_db_name[fi]) ) {
+		if( SQL_ERROR == SQL->Query(mmysql_handle, "SELECT * FROM `%s`", item_db_name[fi]) ) {
 			Sql_ShowDebug(mmysql_handle);
 			continue;
 		}
 
 		// process rows one by one
-		while( SQL_SUCCESS == Sql_NextRow(mmysql_handle) ) {// wrap the result into a TXT-compatible format
+		while( SQL_SUCCESS == SQL->NextRow(mmysql_handle) ) {// wrap the result into a TXT-compatible format
 			char* str[22];
 			char* dummy = "";
 			int i;
 			++lines;
 			for( i = 0; i < 22; ++i ) {
-				Sql_GetData(mmysql_handle, i, &str[i], NULL);
+				SQL->GetData(mmysql_handle, i, &str[i], NULL);
 				if( str[i] == NULL )
 					str[i] = dummy; // get rid of NULL columns
 			}
@@ -1244,7 +1260,7 @@ static int itemdb_read_sqldb(void) {
 		}
 
 		// free the query result
-		Sql_FreeResult(mmysql_handle);
+		SQL->FreeResult(mmysql_handle);
 
 		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, item_db_name[fi]);
 	}
@@ -1280,19 +1296,19 @@ uint64 itemdb_unique_id(int8 flag, int64 value) {
 int itemdb_uid_load(){
 
 	char * uid;
-	if (SQL_ERROR == Sql_Query(mmysql_handle, "SELECT `value` FROM `interreg` WHERE `varname`='unique_id'"))
+	if (SQL_ERROR == SQL->Query(mmysql_handle, "SELECT `value` FROM `interreg` WHERE `varname`='unique_id'"))
 		Sql_ShowDebug(mmysql_handle);
 
-	if( SQL_SUCCESS != Sql_NextRow(mmysql_handle) )
+	if( SQL_SUCCESS != SQL->NextRow(mmysql_handle) )
 	{
 		ShowError("itemdb_uid_load: Unable to fetch unique_id data\n");
-		Sql_FreeResult(mmysql_handle);
+		SQL->FreeResult(mmysql_handle);
 		return -1;
 	}
 
-	Sql_GetData(mmysql_handle, 0, &uid, NULL);
+	SQL->GetData(mmysql_handle, 0, &uid, NULL);
 	itemdb_unique_id(1, (uint64)strtoull(uid, NULL, 10));
-	Sql_FreeResult(mmysql_handle);
+	SQL->FreeResult(mmysql_handle);
 
 	return 0;
 }
@@ -1309,12 +1325,12 @@ static void itemdb_read(void) {
 	
 	itemdb_read_combos();
 	itemdb_read_itemgroup();
-	sv_readdb(db_path, "item_avail.txt",         ',', 2, 2, -1, &itemdb_read_itemavail);
-	sv_readdb(db_path, DBPATH"item_noequip.txt", ',', 2, 2, -1, &itemdb_read_noequip);
-	sv_readdb(db_path, DBPATH"item_trade.txt",   ',', 3, 3, -1, &itemdb_read_itemtrade);
-	sv_readdb(db_path, "item_delay.txt",         ',', 2, 2, -1, &itemdb_read_itemdelay);
-	sv_readdb(db_path, "item_stack.txt",         ',', 3, 3, -1, &itemdb_read_stack);
-	sv_readdb(db_path, DBPATH"item_buyingstore.txt",   ',', 1, 1, -1, &itemdb_read_buyingstore);
+	sv->readdb(db_path, "item_avail.txt",         ',', 2, 2, -1, &itemdb_read_itemavail);
+	sv->readdb(db_path, DBPATH"item_trade.txt",   ',', 3, 3, -1, &itemdb_read_itemtrade);
+	sv->readdb(db_path, "item_delay.txt",         ',', 2, 2, -1, &itemdb_read_itemdelay);
+	sv->readdb(db_path, "item_stack.txt",         ',', 3, 3, -1, &itemdb_read_stack);
+	sv->readdb(db_path, DBPATH"item_buyingstore.txt",   ',', 1, 1, -1, &itemdb_read_buyingstore);
+	sv->readdb(db_path, "item_nouse.txt",		 ',', 3, 3, -1, &itemdb_read_nouse);
 	
 	itemdb_uid_load();
 }
@@ -1360,7 +1376,7 @@ static void destroy_item_data(struct item_data* self, int free_self)
  */
 static int itemdb_final_sub(DBKey key, DBData *data, va_list ap)
 {
-	struct item_data *id = db_data2ptr(data);
+	struct item_data *id = DB->data2ptr(data);
 
 	if( id != &dummy_item )
 		destroy_item_data(id, 1);
@@ -1417,7 +1433,7 @@ void itemdb_reload(void)
 
 	// readjust itemdb pointer cache for each player
 	iter = mapit_geteachpc();
-	for( sd = (struct map_session_data*)mapit_first(iter); mapit_exists(iter); sd = (struct map_session_data*)mapit_next(iter) ) {
+	for( sd = (struct map_session_data*)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data*)mapit->next(iter) ) {
 		memset(sd->item_delay, 0, sizeof(sd->item_delay));  // reset item delays
 		pc_setinventorydata(sd);
 		/* clear combo bonuses */
@@ -1432,7 +1448,7 @@ void itemdb_reload(void)
 		}
 
 	}
-	mapit_free(iter);
+	mapit->free(iter);
 }
 
 void do_final_itemdb(void)
@@ -1452,6 +1468,7 @@ int do_init_itemdb(void) {
 	itemdb_other = idb_alloc(DB_OPT_BASE);
 	create_dummy_data(); //Dummy data item.
 	itemdb_read();
+	clif->cashshop_load();
 
 	return 0;
 }

@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/mmo.h"
 #include "../common/malloc.h"
@@ -19,7 +20,7 @@ bool mapif_elemental_save(struct s_elemental* ele) {
 	bool flag = true;
 	
 	if( ele->elemental_id == 0 ) { // Create new DB entry
-		if( SQL_ERROR == Sql_Query(sql_handle,
+		if( SQL_ERROR == SQL->Query(sql_handle,
 								   "INSERT INTO `elemental` (`char_id`,`class`,`mode`,`hp`,`sp`,`max_hp`,`max_sp`,`atk1`,`atk2`,`matk`,`aspd`,`def`,`mdef`,`flee`,`hit`,`life_time`)"
 								   "VALUES ('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%u')",
 								   ele->char_id, ele->class_, ele->mode, ele->hp, ele->sp, ele->max_hp, ele->max_sp, ele->atk, ele->atk2, ele->matk, ele->amotion, ele->def, ele->mdef, ele->flee, ele->hit, ele->life_time) )
@@ -28,8 +29,8 @@ bool mapif_elemental_save(struct s_elemental* ele) {
 			flag = false;
 		}
 		else
-			ele->elemental_id = (int)Sql_LastInsertId(sql_handle);
-	} else if( SQL_ERROR == Sql_Query(sql_handle,
+			ele->elemental_id = (int)SQL->LastInsertId(sql_handle);
+	} else if( SQL_ERROR == SQL->Query(sql_handle,
 									"UPDATE `elemental` SET `char_id` = '%d', `class` = '%d', `mode` = '%d', `hp` = '%d', `sp` = '%d',"
 									"`max_hp` = '%d', `max_sp` = '%d', `atk1` = '%d', `atk2` = '%d', `matk` = '%d', `aspd` = '%d', `def` = '%d',"
 									"`mdef` = '%d', `flee` = '%d', `hit` = '%d', `life_time` = '%u' WHERE `ele_id` = '%d'",
@@ -49,34 +50,34 @@ bool mapif_elemental_load(int ele_id, int char_id, struct s_elemental *ele) {
 	ele->elemental_id = ele_id;
 	ele->char_id = char_id;
 	
-	if( SQL_ERROR == Sql_Query(sql_handle, "SELECT `class`, `mode`, `hp`, `sp`, `max_hp`, `max_sp`, `atk1`, `atk2`, `matk`, `aspd`,"
+	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `class`, `mode`, `hp`, `sp`, `max_hp`, `max_sp`, `atk1`, `atk2`, `matk`, `aspd`,"
 							   "`def`, `mdef`, `flee`, `hit`, `life_time` FROM `elemental` WHERE `ele_id` = '%d' AND `char_id` = '%d'",
 							   ele_id, char_id) ) {
 		Sql_ShowDebug(sql_handle);
 		return false;
 	}
 	
-	if( SQL_SUCCESS != Sql_NextRow(sql_handle) ) {
-		Sql_FreeResult(sql_handle);
+	if( SQL_SUCCESS != SQL->NextRow(sql_handle) ) {
+		SQL->FreeResult(sql_handle);
 		return false;
 	}
 	
-	Sql_GetData(sql_handle,  0, &data, NULL); ele->class_ = atoi(data);
-	Sql_GetData(sql_handle,  1, &data, NULL); ele->mode = atoi(data);
-	Sql_GetData(sql_handle,  2, &data, NULL); ele->hp = atoi(data);
-	Sql_GetData(sql_handle,  3, &data, NULL); ele->sp = atoi(data);
-	Sql_GetData(sql_handle,  4, &data, NULL); ele->max_hp = atoi(data);
-	Sql_GetData(sql_handle,  5, &data, NULL); ele->max_sp = atoi(data);
-	Sql_GetData(sql_handle,  6, &data, NULL); ele->atk = atoi(data);
-	Sql_GetData(sql_handle,  7, &data, NULL); ele->atk2 = atoi(data);
-	Sql_GetData(sql_handle,  8, &data, NULL); ele->matk = atoi(data);
-	Sql_GetData(sql_handle,  9, &data, NULL); ele->amotion = atoi(data);
-	Sql_GetData(sql_handle, 10, &data, NULL); ele->def = atoi(data);
-	Sql_GetData(sql_handle, 11, &data, NULL); ele->mdef = atoi(data);
-	Sql_GetData(sql_handle, 12, &data, NULL); ele->flee = atoi(data);
-	Sql_GetData(sql_handle, 13, &data, NULL); ele->hit = atoi(data);
-	Sql_GetData(sql_handle, 14, &data, NULL); ele->life_time = atoi(data);
-	Sql_FreeResult(sql_handle);
+	SQL->GetData(sql_handle,  0, &data, NULL); ele->class_ = atoi(data);
+	SQL->GetData(sql_handle,  1, &data, NULL); ele->mode = atoi(data);
+	SQL->GetData(sql_handle,  2, &data, NULL); ele->hp = atoi(data);
+	SQL->GetData(sql_handle,  3, &data, NULL); ele->sp = atoi(data);
+	SQL->GetData(sql_handle,  4, &data, NULL); ele->max_hp = atoi(data);
+	SQL->GetData(sql_handle,  5, &data, NULL); ele->max_sp = atoi(data);
+	SQL->GetData(sql_handle,  6, &data, NULL); ele->atk = atoi(data);
+	SQL->GetData(sql_handle,  7, &data, NULL); ele->atk2 = atoi(data);
+	SQL->GetData(sql_handle,  8, &data, NULL); ele->matk = atoi(data);
+	SQL->GetData(sql_handle,  9, &data, NULL); ele->amotion = atoi(data);
+	SQL->GetData(sql_handle, 10, &data, NULL); ele->def = atoi(data);
+	SQL->GetData(sql_handle, 11, &data, NULL); ele->mdef = atoi(data);
+	SQL->GetData(sql_handle, 12, &data, NULL); ele->flee = atoi(data);
+	SQL->GetData(sql_handle, 13, &data, NULL); ele->hit = atoi(data);
+	SQL->GetData(sql_handle, 14, &data, NULL); ele->life_time = atoi(data);
+	SQL->FreeResult(sql_handle);
 	if( save_log )
 		ShowInfo("Elemental loaded (%d - %d).\n", ele->elemental_id, ele->char_id);
 	
@@ -84,7 +85,7 @@ bool mapif_elemental_load(int ele_id, int char_id, struct s_elemental *ele) {
 }
 
 bool mapif_elemental_delete(int ele_id) {
-	if( SQL_ERROR == Sql_Query(sql_handle, "DELETE FROM `elemental` WHERE `ele_id` = '%d'", ele_id) ) {
+	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `elemental` WHERE `ele_id` = '%d'", ele_id) ) {
 		Sql_ShowDebug(sql_handle);
 		return false;
 	}

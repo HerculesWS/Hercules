@@ -1,18 +1,14 @@
-﻿//===== rAthena Documentation ================================
-//= rAthena Script Commands
+﻿//===== Hercules Documentation ================================
+//= Hercules Script Commands
 //===== By: ==================================================
-//= rAthena Dev Team
-//===== Current Version: =====================================
-//= $Revision$
-//===== Last Updated: ========================================
-//= $LastChangedDate$
+//= Hercules Dev Team
 //===== Description: =========================================
-//= A reference manual for the rAthena scripting language.
+//= A reference manual for the Hercules scripting language.
 //= Commands are sorted depending on their functionality.
 //============================================================
 
 This document is a reference manual for all the scripting commands and functions 
-available in current rAthena SVN. It is not a simple tutorial. When people tell 
+available in current Hercules GIT. It is not a simple tutorial. When people tell 
 you to "Read The F***ing Manual", they mean this.
 
 The information was mostly acquired through looking up how things actually work 
@@ -75,7 +71,7 @@ Wherever you refer to a map name, it's always 'mapname' or 'mapname.gat'
 Script loading structure
 ------------------------
 
-Scripts are loaded by the map server as referenced in the 'conf/map_athena.conf' 
+Scripts are loaded by the map server as referenced in the 'conf/map-server.conf' 
 configuration file, but in the default configuration, it doesn't load any script 
 files itself. Instead, it loads the file 'npc/scripts_main.conf' which itself 
 contains references to other files. The actual scripts are loaded from txt 
@@ -83,7 +79,7 @@ files, which are linked up like this:
 
 npc: <path to a filename>
 
-Any line like this, invoked, ultimately, by 'map_athena.conf' will load up the 
+Any line like this, invoked, ultimately, by 'map-server.conf' will load up the 
 script contained in this file, which will make the script available. No file 
 will get loaded twice, to prevent possible errors.
 
@@ -101,7 +97,7 @@ place it.
 // This line will be ignored when processing the script.
 
 Block comments can also be used, where you can place /* and */ between any text you 
-wish rAthena to ignore.
+wish Hercules to ignore.
 
 Example:
 /* This text,
@@ -122,7 +118,7 @@ expect commands, command name first, but rather, normally start with a map name.
 What's more confusing about the top-level commands is that most of them use a 
 tab symbol to divide their arguments.
 
-To prevent problems and confusion, the tab symbols are written as '%TAB%' 
+To prevent problems and confusion, the tab symbols are written as '%TAB%' or '<TAB>'
 throughout this document, even though this makes the text a bit less readable. 
 Using an invisible symbol to denote arguments is one of the bad things about 
 this language, but we're stuck with it for now. :)
@@ -154,12 +150,12 @@ Monster name is the name the monsters will have on screen, and has no relation
 whatsoever to their names anywhere else. It's the mob id that counts, which 
 identifies monster record in 'mob_db.txt' database of monsters. If the mob name 
 is given as "--ja--", the 'japanese name' field from the monster database is 
-used, (which, in rAthena, actually contains an English name) if it's "--en--", 
+used, (which, in Hercules, actually contains an English name) if it's "--en--", 
 it's the 'english name' from the monster database (which contains an uppercase 
 name used to summon the monster with a GM command).
 
 Amount is the amount of monsters that will be spawned when this command is 
-executed, it is affected by spawn rates in 'battle_athena.conf'.
+executed, it is affected by spawn rates in 'battle.conf'.
 
 Delay1 and delay2 control monster respawn delays - the first one is the fixed
 base respawn time, and the second is random variance on top of the base time.
@@ -286,9 +282,9 @@ to -1, the 'buy price' given in the item database will be used. Otherwise, the
 price you gave will be used for this item, which is how you create differing 
 prices for items in different shops.
 
-Since trunk r12264 you can alternatively use "cashshop" in place of "shop"
-to use the Cash Shop interface, allowing you to buy items with special points
-(Currently stored as account vars in global_reg #CASHPOINTS and #KAFRAPOINTS.)
+You can alternatively use "cashshop" in place of "shop" to use the Cash Shop 
+interface, allowing you to buy items with special points (Currently stored as 
+account vars in global_reg #CASHPOINTS and #KAFRAPOINTS).
 This type of shop will not allow you to sell items at it, you may only
 purchase items here. The layout used to define sale items still count, and
 "<price>" refers to how many points will be spent purchasing the them.
@@ -407,7 +403,7 @@ Variables
 The meat of every programming language is variables - places where you store 
 data.
 
-In the rAthena scripting language, variable names are not case sensitive.
+In the Hercules scripting language, variable names are not case sensitive.
 
 Variables are divided into and uniquely identified by the combination of:
 prefix  - determines the scope and extent (or lifetime) of the variable
@@ -544,9 +540,9 @@ If you try to set Zeny to a negative number, the script will be terminated with 
 Assigning variables
 --------- ---------
 
-As of rAthena revision 15982, variables can be accessed and assigned values directly
-without the use of the built-in 'set' function. This means that variables can be
-accessed and modified much like other programming languages.
+Variables can be accessed and assigned values directly without the use of the built-in 
+'set' function. This means that variables can be accessed and modified much like other 
+programming languages.
 
     @x = 100;
     @x = @y = 100;
@@ -584,7 +580,7 @@ To include symbol '"' in a string you should use prefix '\"'
 Arrays
 ------
 
-Arrays (in rAthena at least) are essentially a set of variables going under the 
+Arrays (in Hercules at least) are essentially a set of variables going under the 
 same name. You can tell between the specific variables of an array with an 
 'array index', a number of a variable in that array:
 
@@ -731,7 +727,7 @@ Logical bitwise operators work only on numbers, and they are the following:
  |  - Or.
 	The bitwise operator AND (&) is used to test two values against each other, 
 	and results in setting bits which are active in both arguments. This can
-	be used for a few things, but in rAthena this operator is usually used to
+	be used for a few things, but in Hercules this operator is usually used to
 	create bit-masks in scripts. 
 	
 	The bitwise operator OR (|)sets to 1 a binary position if the binary position
@@ -1143,7 +1139,7 @@ will make @x equal 100.
 will compute 1+5/8+9 (which is, surprisingly, 10 - remember, all numbers are 
 integer in this language) and make @x equal it.
 
-Returns the variable reference (since trunk r12870).
+Returns the variable reference.
 
 ---------------------------------------
 
@@ -1427,9 +1423,9 @@ This is done to prevent exploits in badly written scripts, which would
 let people, for example, put negative amounts of Zeny into a bank script and 
 receive free Zeny as a result.
 
-Since trunk r12192 the command has two optional arguments and a return value.
+The command has two optional arguments and a return value. 
 The default value of 'min' and 'max' can be set with 'input_min_value' and 
-'input_max_value' in script_athena.conf.
+'input_max_value' in script.conf.
 For numeric inputs the value is capped to the range [min,max]. Returns 1 if 
 the value was higher than 'max', -1 if lower than 'min' and 0 otherwise.
 For string inputs it returns 1 if the string was longer than 'max', -1 is 
@@ -1479,15 +1475,15 @@ generally cleaner:
 		return 1;// it's odd
 	}
 
-Alternately, as of rAthena revision 15979 and 15981, user-defined functions
-may be called directly without the use of the 'callfunc' script command.
+Alternately, user-defined functions may be called directly without the use of 
+the 'callfunc' script command.
 
-	function<tab>script<tab>SayHello<tab>{
+	function<TAB>script<TAB>SayHello<TAB>{
 		mes "Hello " + getarg(0);
 		return 0;
 	}
 
-	place,50,50,6<tab>script<tab>Man<tab>115,{
+	place,50,50,6<TAB>script<TAB>Man<TAB>115,{
 		mes "[Man]";
 		SayHello strcharinfo(0);
 		close;
@@ -1603,7 +1599,7 @@ You can pass multiple arguments in a function call:
 
 getarg(0) would be 5, getarg(1) would be 4 and getarg(2) would be 3.
 
-Getarg has an optional argument since trunk r10773 and stable r10958.
+Getarg has an optional argument:
 If the target argument exists, it is returned.
 Otherwise, if <default_value> is present it is returned instead, 
 if not the script terminates immediately.
@@ -1995,7 +1991,7 @@ Example:
 	for ( set .@i,0; .@i<.@bigloop; set .@i, .@i+1 ) {
 		dothis;
 		// will sleep the script for 1ms when detect an infinity loop to 
-		// let rAthena do what it need to do (socket, timer, process, etc.)
+		// let Hercules do what it need to do (socket, timer, process, etc.)
 	}
 
 	freeloop(0); // disable
@@ -2166,7 +2162,7 @@ This function will return the basic stats of an invoking character, referred to
 by the parameter number. Instead of a number, you can use a parameter name if it 
 is defined in 'db/const.txt'.
 
-For reference, these things are defined:
+Example parameters:
 
 StatusPoint, BaseLevel, SkillPoint, Class, Upper, Zeny, Sex, Weight, MaxWeight,
 JobLevel, BaseExp, JobExp, NextBaseExp, NextJobExp, Hp, MaxHp, Sp, MaxSp,
@@ -2453,16 +2449,19 @@ This function returns the item ID of the item equipped in the equipment slot
 specified on the invoking character. If nothing is equipped there, it returns -1. 
 Valid equipment slots are:
 
-EQI_HEAD_TOP (1)  - Upper head gear
-EQI_ARMOR (2)     - Armor (Where you keep your Jackets and Robes)
-EQI_HAND_L (3)    - What is in your Left hand.
-EQI_HAND_R (4)    - What is in your Right hand.
-EQI_GARMENT (5)   - The garment slot (Mufflers, Hoods, Manteaus)
-EQI_SHOES (6)     - What foot gear the player has on.
-EQI_ACC_L (7)     - Accessory 1.
-EQI_ACC_R (8)     - Accessory 2.
-EQI_HEAD_MID (9)  - Middle Headgear (masks and glasses)
-EQI_HEAD_LOW (10) - Lower Headgear (beards, some masks)
+EQI_HEAD_TOP (1)          - Upper head gear
+EQI_ARMOR (2)             - Armor (Where you keep your Jackets and Robes)
+EQI_HAND_L (3)            - What is in your Left hand.
+EQI_HAND_R (4)            - What is in your Right hand.
+EQI_GARMENT (5)           - The garment slot (Mufflers, Hoods, Manteaus)
+EQI_SHOES (6)             - What foot gear the player has on.
+EQI_ACC_L (7)             - Accessory 1.
+EQI_ACC_R (8)             - Accessory 2.
+EQI_HEAD_MID (9)          - Middle Headgear (masks and glasses)
+EQI_HEAD_LOW (10)         - Lower Headgear (beards, some masks)
+EQI_COSTUME_HEAD_LOW (11) - Lower Costume Headgear
+EQI_COSTUME_HEAD_MID (12) - Middle Costume Headgear
+EQI_COSTUME_HEAD_TOP (13) - Upper Costume Headgear
 
 Notice that a few items occupy several equipment slots, and if the character is 
 wearing such an item, 'getequipid' will return it's ID number for either slot.
@@ -2516,7 +2515,7 @@ See 'getequipid' for a full list of valid equipment slots.
 *getitemname(<item id>)
 
 Given the database ID number of an item, this function will return the text 
-stored in the 'japanese name' field (which, in rAthena, stores an English name 
+stored in the 'japanese name' field (which, in Hercules, stores an English name 
 the players would normally see on screen.)
 
 ---------------------------------------
@@ -2904,7 +2903,7 @@ http://www.delorie.com/gnu/docs/glibc/libc_437.html
 All the format characters given in there should properly work.
 Max length is the maximum length of a time string to generate.
 
-The example given in rAthena sample scripts works like this:
+The example given in Hercules sample scripts works like this:
 
   mes gettimestr("%Y-%m/%d %H:%M:%S",21);
   
@@ -3295,6 +3294,7 @@ Example:
 	if (skillPointCount() > 20)
 		mes "Wow, you have more then 20 Skill Points in total!";
 
+This command does not count skills which are set as flag 3 (permamently granted) (e.g. ALL_BUYING_STORE/ALL_INCCARRY) 
 ---------------------------------------
 
 *getscrate(<effect type>,<base rate>{,<GID>})
@@ -3375,7 +3375,7 @@ Example 2:
 *basicskillcheck()
 
 This function will return the state of the configuration option 
-'basic_skill_check' in 'battle_athena.conf'. It returns 1 if the option is 
+'basic_skill_check' in 'battle.conf'. It returns 1 if the option is 
 enabled and 0 if it isn't. If the 'basic_skill_check' option is enabled, which 
 it is by default, characters must have a certain number of basic skill levels to 
 sit, request a trade, use emotions, etc. Making your script behave differently 
@@ -3549,7 +3549,7 @@ warg and 0 if they don't.
 
 ---------------------------------------
 
-*checkvending({"<player name>"})
+*checkvending({"<Player Name>"})
 *checkchatting({"<Player Name>"})
 
 Checks if the player is vending or in a chatroom.
@@ -3571,6 +3571,13 @@ Examples:
 	//This will check if the attached player in a chat room or not.
 	if (checkchatting())
 		mes "You are currently in a chat room!";
+
+---------------------------------------
+
+*checkidle({"<Player Name>"})
+
+	Returns the time, in seconds, that the specified player has been idle.
+	Name is optional, and defaults to the attached player if omitted.
 
 ---------------------------------------
 
@@ -3924,7 +3931,7 @@ changing jobs, which can be checked for later in scripts.
 
 *jobname (<job number>)
 
-This command retrieves the name of the given job using the msg_athena entries 550->650.
+This command retrieves the name of the given job using the messages.conf entries 550->650.
 
 	mes "[Kid]";
 	mes "I never thought I'd met a "+jobname(Class)+" here of all places.";
@@ -3934,15 +3941,15 @@ This command retrieves the name of the given job using the msg_athena entries 55
 
 *eaclass ({<job number>})
 
-This commands returns the "eA job-number" corresponding to the given class (if none is given, it returns uses
-the invoking player's class as argument). The eA job-number is also a class number system, but it's one that
-comes with constants which make it easy to convert among classes. The command will return -1 if you pass it a
-job number which doesn't has a eA Job value equivalent.
+This commands returns the "eA job-number" corresponding to the given class, and
+uses the invoking player's class if none is given. The eA job-number is also a
+class number system, but it's one that comes with constants which make it easy
+to convert among classes. The command will return -1 if you pass it a job number
+which doesn't have an eA job-number equivalent.
 
 	set @eac, eaclass();
 	if ((@eac&EAJ_BASEMASK) == EAJ_SWORDMAN)
-		mes "You must be a swordman, knight, crusader, paladin, high swordman, lord knight, baby swordman,";
-		mes "baby knight or baby crusader.";
+		mes "Your base job is Swordman.";
 	if (@eac&EAJL_UPPER)
 		mes "You are a rebirth job.";
 	if ((@eac&EAJ_UPPERMASK) == EAJ_SWORDMAN)
@@ -3953,11 +3960,12 @@ For more information on the eA Job System, see the docs/ea_job_system.txt file.
 ---------------------------------------
 *roclass <job number> {,<gender>}
 
-Does the opposite of eaclass. That is, given a eA Job class, it returns which is the corresponding RO class number. 
-A gender is required because both Bard and Dancers share the same eA Job value (EAJ_BARDDANCER), if it isn't given, the
-gender of the executing player is taken (if there's no player running the script, male will be used by default).
-The command returns -1 when there isn't a valid class to represent the required job (for example, if you try to get the
-baby version of a Taekwon class).
+Does the opposite of eaclass. That is, given an eA job-number, it returns the
+corresponding RO class number. A gender is required because both Bard and Dancers
+share the same eA job-number (EAJ_BARDDANCER), and uses the invoking player's
+gender if none is given (if no player is attached, male will be used by default).
+The command will return -1 if there is no valid class to represent the specified
+job (for example, if you try to get the baby version of a Taekwon class).
 
 	set @eac, eaclass();
 	//Check if class is already rebirth
@@ -3976,14 +3984,16 @@ baby version of a Taekwon class).
 
 *changebase <job ID number>;
 
-This will change the appearance of the invoking character to that of a specified 
-job class. Nothing but appearance will change. This command is used in item 
-scripts for "Wedding Dress" and "Tuxedo" so the character like job 22, which is 
-the job number of the wedding sprites.
+This command will change the appearance of the invoking character to that of a
+specified job class. Nothing but appearance will change.
 
-It would be entered in the equip bonus section of an item
+Examples:
 
 2338,Wedding_Dress,Wedding Dress,5,43000,,500,,0,,0,119529470,7,0,16,,0,1,0,{ bonus bMdef,15; changebase 22; }
+
+changebase Job_Novice; // Changes player to Novice sprite.
+
+changebase Class; // Changes player back to default sprite.
 
 ---------------------------------------
 
@@ -4094,7 +4104,7 @@ sprites, which is essential for making custom headgear.
 
 Since a lot of people have different palettes for hair and clothes, it's 
 impossible to tell you what all the color numbers are. If you want a serious 
-example, there is a Stylist script inside the default rAthena installation that 
+example, there is a Stylist script inside the default Hercules installation that 
 you can look at: 'npc/custom/stylist.txt'
 
 ---------------------------------------
@@ -4115,13 +4125,14 @@ wall), the character is pushed only up to the obstacle.
 
 ---------------------------------------
 
-*get_revision()
+*get_version()
 
-This command will return the SVN revision number that the server is
-currently running on.
+This command will return the SVN revision number or Git SHA-1 hash that the server 
+is currently running on (depends on whether you used a SVN or Git client for 
+getting Hercules.
 
-    if ( get_revision() >= 15000 )
-        mes "Welcome rAthena!";
+    if ( get_version() >= 15000 )
+        mes "Welcome Hercules!";
 
 ---------------------------------------
 \\
@@ -4349,14 +4360,11 @@ the results array is limited to 10 items.
 *delitem <item id>,<amount>{,<account ID>};
 *delitem "<item name>",<amount>{,<account ID>};
 
-This command will take a specified amount of items from the invoking/target character. 
-As all the item commands, this one uses the ID of the item found inside 
-'db/(pre-)re/item_db.txt'. The items are destroyed - there is no way an NPC can simply 
-own items and have an inventory of them, other as by destroying and recreating 
-them when needed.
+This command will remove a specified amount of items from the invoking/target character. 
+Like all the item commands, it uses the item ID found inside 'db/(pre-)re/item_db.txt'.
 
-    delitem 502,10 // The person will lose 10 apples
-    delitem 617,1  // The person will lose 1 Old Violet Box
+    delitem 502,10; // The person will lose 10 apples
+    delitem 617,1;  // The person will lose 1 Old Violet Box
 
 It is always a good idea to check if the player actually has the items before you delete them.
 If you try to delete more items that the player has, the player will lose the ones he/she has 
@@ -4370,7 +4378,7 @@ database. If the name is not found, nothing will be deleted.
 *delitem2 <item id>,<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>{,<account ID>};
 *delitem2 "<item name>",<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>{,<account ID>};
 
-This command will take a specified amount of items from the invoking/target character. 
+This command will remove a specified amount of items from the invoking/target character. 
 Check 'getitem2' to understand its expanded parameters.
 
 ---------------------------------------
@@ -4435,28 +4443,40 @@ getrandgroupitem(1,3);
 *enable_items;
 *disable_items;
 
-These commands enable item usage while an NPC is running. When enable_items is
-run, items can be used during scripts until disable_items is called. 
-To avoid possible exploits, when enable_items is invoked, it will only enable
-item usage while running that script in particular. Note that if a different
-script also calls enable_items, it will override the last call (so you may
+These commands enable/disable changing of equipments while an NPC is running. When disable_items is
+run, equipments cannot be changed during scripts until enable_items is called or the script has terminated. 
+To avoid possible exploits, when disable_items is invoked, it will only disable
+changing equips while running that script in particular. Note that if a different
+script also calls disable_items, it will override the last call (so you may
 want to call this command at the start of your script without assuming the
 effect is still in effect).
+If 'item_enabled_npc' option is set to Yes in 'items.conf' all NPC are allowing changing of equipment by default
+except for those have been set with 'disable_items'.
 
 ---------------------------------------
 
-*itemskill <skill id>,<skill level>;
-*itemskill "<skill name>",<skill level>;
+*itemskill <skill id>,<skill level>,{flag};
+*itemskill "<skill name>",<skill level>,{flag};
 
 This command meant for item scripts to replicate single-use skills in usable
-items. It will not work properly, if there is a visible dialog window or menu.
-If the skill is self or auto-targeting, it will be used immediately otherwise a
+items. It will not work properly if there is a visible dialog window or menu.
+If the skill is self or auto-targeting it will be used immediately otherwise a
 target cursor is shown.
+Flag is a optional param and when present the command will not check for skill requirements
 
 // When Anodyne is used, it will cast Endure (8), Level 1, as if the actual
 // skill has been used from skill tree.
 605,Anodyne,Anodyne,11,2000,0,100,,,,,10477567,2,,,,,{ itemskill 8,1; },{}
 
+---------------------------------------
+
+itemeffect <item id>;
+itemeffect "<item name>";
+
+This command will run the item script of the specified item on the invoking
+character. The character does not need to posess the item, and the item will
+not be deleted. While this command is intended for usable items, it will run
+for any item type.
 
 ---------------------------------------
 
@@ -4830,7 +4850,7 @@ Used in reset NPC's (duh!)
 This command takes off all the skill points on the invoking character, so they 
 only have Basic Skill blanked out (lvl 0) left, and returns the points for them 
 to spend again. Nothing else will change but the skills. Quest skills will also 
-reset if 'quest_skill_reset' option is set to Yes in 'battle_athena.conf'. If 
+reset if 'quest_skill_reset' option is set to Yes in 'battle.conf'. If 
 the 'quest_skill_learn' option is set in there, the points in the quest skills 
 will also count towards the total.
 
@@ -5098,6 +5118,8 @@ previously, they will now at 0+the level given.
 // level 1.
     skill 152,1,0;
 
+Flag 3 is the same as flag 0 in that it saves to the database.  However, these skills
+are ignored when any action is taken that adjusts the skill tree (reset/job change).
 ---------------------------------------
 
 *nude;
@@ -5310,23 +5332,17 @@ command, and all monsters summoned with GM commands, but no other ones - that
 is, all non-permanent monsters) on the specified map will be killed regardless 
 of the event label value.
 
-As of r12876 killmonster now supports an optional argument type. Using 1 for type
-will make the command fire "OnMyMobDead" events from any monsters that do die
-as a result of this command.
+killmonster supports an optional argument type. Using 1 for type will make the command 
+fire "OnMyMobDead" events from any monsters that do die as a result of this command.
 
 ---------------------------------------
 
 *killmonsterall "<map name>"{,<type>};
 
 This command will kill all monsters on a specified map name, regardless of how 
-they were spawned or what they are. As of r12873, The behavior has changed slightly.
-In light of a label behavior fix for mob spawning commands that will now allow the label to 
-trigger when there is no player, killmonsterall has also been modified to support this.
-
-Using this the normal/old way means labels don't trigger when a player didn't
-attack/kill a monster. This is because it breaks compatibility with older scripts if
-forced to use the new method. However, if you wish to use the new label type with this
-command, simply use 1 for type. Any other number won't be recognized.
+they were spawned or what they are without triggering any event label attached to them, 
+unless you specify 1 for type parameter. In this case, mob death labels will be allowed to
+trigger when there is no player. Any other number for this parameter won't be recognized.
 
 ---------------------------------------
 
@@ -5570,7 +5586,7 @@ the invoking NPC's actions, such as using an emotion or talking.
 Whichever of the both NPCs is talked to, both will show a random emotion at the
 same time. 
 
-As of r16564, command now returns 1 or 0 on success and failure.
+Command returns 1 or 0 on success and failure.
 A debug message also shows on the console when no events are triggered.
 
 ---------------------------------------
@@ -5897,7 +5913,7 @@ hold information about the name id (item id) sold and the amount sold of it. Sam
 goes for the OnSellItem label, only the variables are named different 
 (@sold_nameid, @sold_quantity, @sold_refine, @sold_attribute, @sold_identify,
 @sold_card1, @sold_card2, @sold_card3, @sold_card4). An example on a shop comes
-with rAthena, and can be found in the doc/sample/npc_dynamic_shop.txt file.
+with Hercules, and can be found in the doc/sample/npc_dynamic_shop.txt file.
  
 This example shows how to use the labels and their set variables to create a dynamic shop.
 
@@ -6032,7 +6048,7 @@ characters are present in the room to mess up the script.
 
 The 'enablearena'/'disablearena' commands are just aliases with no parameter.
 These are supposedly left here for compatibility with official server scripts,
-but no rAthena script uses these at the moment.
+but no Hercules script uses these at the moment.
 
 ---------------------------------------
 
@@ -6106,7 +6122,7 @@ specified.
 
 ---------------------------------------
 
-*setmapflag "<map name>",<flag>{,<zone>};
+*setmapflag "<map name>",<flag>{,<val>};
 
 This command marks a specified map with a map flag given. Map flags alter the 
 behavior of the map, you can see the list of the available ones in 
@@ -6121,7 +6137,8 @@ skills or open up trade deals (mf_notrade, mf_novending, mf_noskill, mf_noicewal
 current weather effects (mf_snow, mf_fog, mf_sakura, mf_leaves, mf_rain, mf_clouds, 
 mf_fireworks) and whether night will be in effect on this map (mf_nightenabled).
 
-The zone optional parameter is used to set the zone for restricted mapflags.
+The val optional parameter is as the mapflags variable when one exists,
+it may be a number or a string depending on the mapflag in question.
 
 ---------------------------------------
 
@@ -6265,7 +6282,6 @@ castle guardian monsters and will only work with them. It will set the guardian
 characteristics up according to the castle's investment values and otherwise 
 set the things up that only castle guardians need.
 
-Since trunk r12524:
 Returns the id of the mob or 0 if an error occurred.
 When 'guardian index' isn't supplied it produces a temporary guardian.
 Temporary guardians are not saved with the castle and can't be accessed by guardianinfo.
@@ -6350,7 +6366,7 @@ will not be displayed anywhere else.
 *logmes "<message>";
 
 This command will write the message given to the map server NPC log file, as 
-specified in 'conf/log_athena.conf'. In the TXT version of the server, the log 
+specified in 'conf/logs.conf'. In the TXT version of the server, the log 
 file is 'log/npclog.log' by default. In the SQL version, if SQL logging is 
 enabled, the message will go to the 'npclog' table, otherwise, it will go to the 
 same log file.
@@ -6576,11 +6592,18 @@ The commands can also run without an attached rid.
 
 ---------------------------------------
 
-*bindatcmd "command","<NPC object name>::<event label>"{,<atcommand level>,<charcommand level>};
+*bindatcmd "command","<NPC object name>::<event label>"{,<group level>,<group level char>,<log>};
 
 This command will bind a NPC event label to an atcommand. Upon execution of the
 atcommand, the user will invoke the NPC event label. Each atcommand is only allowed
-one binding. If you rebind, it will override the original binding.
+one binding. If you rebind, it will override the original binding. If group level is provided,
+only users of that group level or above will be able to access the command, if not provided,
+everyone will be able to access the command.
+"group level char" is the minimum group level required for the label to be used on others,
+like a char command would, e.g. "#command "target" params" , when not provided,
+"group level char" defaults to 99.
+"log" whether to log the usages of this command with the atcommand log (1 = log, 0 = no log),
+default is to not log.
 
 The following variables are set upon execution:
 	.@atcmd_command$       =  The name of the @command used.
@@ -6937,7 +6960,7 @@ uppercase/lowercase. Otherwise, 0. Characters not of the alphabelt will return 0
 
 Example:
 	
-	charisupper("rAthena", 1); //returns 1
+	charisupper("Hercules", 0); //returns 1
 	
 ---------------------------------------
 
@@ -7154,7 +7177,7 @@ at the maximum possible.
 
 The behavior modified with the above mentioned commands will only be exhibited if 
 the pet is loyal and appropriate configuration options are set in 
-'battle_athena.conf'.
+'battle.conf'.
 
 Pet scripts in the database normally run whenever a pet of that type hatches 
 from the egg. Other commands usable in item scripts (see 'bonus') will also 

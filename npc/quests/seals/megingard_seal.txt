@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Megingjard seal unlocking NPCs.
 //===== By: ================================================== 
 //= SinSloth
 //===== Current Version: ===================================== 
 //= 1.9
-//===== Compatible With: ===================================== 
-//= rAthena
 //===== Description: ========================================= 
 //= Quest for breaking the seal of Megingjard.
 //===== Additional Comments: =================================

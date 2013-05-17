@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _MAP_H_
 #define _MAP_H_
@@ -10,18 +11,17 @@
 #include "../common/mapindex.h"
 #include "../common/db.h"
 
-/**
- * [rAthena.org]
- **/
 #include "../config/core.h"
+
+#include "atcommand.h"
 
 #include <stdarg.h>
 
 struct npc_data;
 struct item_data;
+struct hChSysCh;
 
-enum E_MAPSERVER_ST
-{
+enum E_MAPSERVER_ST {
 	MAPSERVER_ST_RUNNING = CORE_ST_LAST,
 	MAPSERVER_ST_SHUTDOWN,
 	MAPSERVER_ST_LAST
@@ -108,7 +108,7 @@ enum {
 	MAPID_ASSASSIN,
 	MAPID_STAR_GLADIATOR,
 	MAPID_KAGEROUOBORO = JOBL_2_1|0x0A,
-	MAPID_DEATH_KNIGHT = JOBL_2_1|0x0D,
+	MAPID_DEATH_KNIGHT = JOBL_2_1|0x0E,
 //2-2 Jobs
 	MAPID_CRUSADER = JOBL_2_2|0x1,
 	MAPID_SAGE,
@@ -360,6 +360,8 @@ enum _sp {
 	SP_BASECLASS=120,	//Hmm.. why 100+19? I just use the next one... [Skotlex]
 	SP_KILLERRID=121,
 	SP_KILLEDRID=122,
+	SP_SLOTCHANGE=123,
+	SP_CHARRENAME=124,
 
 	// Mercenaries
 	SP_MERCFLEE=165, SP_MERCKILLS=189, SP_MERCFAITH=190,
@@ -406,7 +408,7 @@ enum _sp {
 	SP_ADD_SKILL_BLOW, SP_SP_VANISH_RATE, SP_MAGIC_SP_GAIN_VALUE, SP_MAGIC_HP_GAIN_VALUE, SP_ADD_CLASS_DROP_ITEM, //2041-2045
 	SP_EMATK, SP_SP_GAIN_RACE_ATTACK, SP_HP_GAIN_RACE_ATTACK, SP_SKILL_USE_SP_RATE, //2046-2049
 	SP_SKILL_COOLDOWN,SP_SKILL_FIXEDCAST, SP_SKILL_VARIABLECAST, SP_FIXCASTRATE, SP_VARCASTRATE, //2050-2054
-	SP_SKILL_USE_SP,SP_MAGIC_ATK_ELE  //2055-2056
+	SP_SKILL_USE_SP,SP_MAGIC_ATK_ELE, SP_ADD_FIXEDCAST, SP_ADD_VARIABLECAST  //2055-2058
 };
 
 enum _look {
@@ -495,6 +497,68 @@ struct iwall_data {
 	bool shootable;
 };
 
+struct mapflag_skill_adjust {
+	unsigned short skill_id;
+	unsigned short modifier;
+};
+
+enum map_zone_skill_subtype {
+	MZS_NONE	= 0x0,
+	MZS_CLONE	= 0x01,
+	MZS_BOSS	= 0x02,
+	
+	MZS_ALL		= 0xFFF,
+};
+
+struct map_zone_disabled_skill_entry {
+	unsigned short nameid;
+	enum bl_type type;
+	enum map_zone_skill_subtype subtype;
+};
+struct map_zone_disabled_command_entry {
+	AtCommandFunc cmd;
+	int group_lv;
+};
+
+struct map_zone_skill_damage_cap_entry {
+	unsigned short nameid;
+	unsigned int cap;
+	enum bl_type type;
+	enum map_zone_skill_subtype subtype;
+};
+
+#define MAP_ZONE_NAME_LENGTH 30
+#define MAP_ZONE_ALL_NAME "All"
+#define MAP_ZONE_NORMAL_NAME "Normal"
+#define MAP_ZONE_PVP_NAME "PvP"
+#define MAP_ZONE_GVG_NAME "GvG"
+#define MAP_ZONE_BG_NAME "Battlegrounds"
+#define MAP_ZONE_PK_NAME "PK Mode"
+#define MAP_ZONE_MAPFLAG_LENGTH 50
+DBMap *zone_db;/* string => struct map_zone_data */
+struct map_zone_data {
+	char name[MAP_ZONE_NAME_LENGTH];/* 20'd */
+	struct map_zone_disabled_skill_entry **disabled_skills;
+	int disabled_skills_count;
+	int *disabled_items;
+	int disabled_items_count;
+	char **mapflags;
+	int mapflags_count;
+	struct map_zone_disabled_command_entry **disabled_commands;
+	int disabled_commands_count;
+	struct map_zone_skill_damage_cap_entry **capped_skills;
+	int capped_skills_count;
+};
+void map_zone_init(void);
+void map_zone_remove(int m);
+void map_zone_apply(int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath);
+void map_zone_change(int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath);
+void map_zone_change2(int m, struct map_zone_data *zone);
+
+struct map_zone_data map_zone_all;/* used as a base on all maps */
+struct map_zone_data map_zone_pk;/* used for (pk_mode) */
+
+
 struct map_data {
 	char name[MAP_NAME_LENGTH];
 	uint16 index; // The map index used by the mapindex* functions.
@@ -543,17 +607,11 @@ struct map_data {
 		unsigned fireworks : 1;
 		unsigned sakura : 1; // [Valaris]
 		unsigned leaves : 1; // [Valaris]
-		/**
-		 * No longer available, keeping here just in case it's back someday. [Ind]
-		 **/
-		//unsigned rain : 1; // [Valaris]
-		unsigned nogo : 1; // [Valaris]
 		unsigned nobaseexp	: 1; // [Lorky] added by Lupus
 		unsigned nojobexp	: 1; // [Lorky]
 		unsigned nomobloot	: 1; // [Lorky]
 		unsigned nomvploot	: 1; // [Lorky]
 		unsigned nightenabled :1; //For night display. [Skotlex]
-		unsigned restricted	: 1; // [Komurka]
 		unsigned nodrop : 1;
 		unsigned novending : 1;
 		unsigned loadevent : 1;
@@ -562,6 +620,8 @@ struct map_data {
 		unsigned guildlock :1;
 		unsigned src4instance : 1; // To flag this map when it's used as a src map for instances
 		unsigned reset :1; // [Daegaladh]
+		unsigned chsysnolocalaj : 1;
+		unsigned noknockback : 1;
 	} flag;
 	struct point save;
 	struct npc_data *npc[MAX_NPC_PER_MAP];
@@ -573,7 +633,6 @@ struct map_data {
 
 	struct spawn_data *moblist[MAX_MOB_LIST_PER_MAP]; // [Wizputer]
 	int mob_delete_timer;	// [Skotlex]
-	int zone;	// zone number (for item/skill restrictions)
 	int jexp;	// map experience multiplicator
 	int bexp;	// map experience multiplicator
 	int nocommand; //Blocks @/# commands for non-gms. [Skotlex]
@@ -587,6 +646,36 @@ struct map_data {
 	// Instance Variables
 	int instance_id;
 	int instance_src_map;
+	
+	/* adjust_unit_duration mapflag */
+	struct mapflag_skill_adjust **units;
+	unsigned short unit_count;
+	/* adjust_skill_damage mapflag */
+	struct mapflag_skill_adjust **skills;
+	unsigned short skill_count;
+	
+	/* Hercules nocast db overhaul */
+	struct map_zone_data *zone;
+	char **zone_mf;/* used to store this map's zone mapflags that should be re-applied once zone is removed */
+	unsigned short zone_mf_count;
+	struct map_zone_data *prev_zone;
+	
+	/* Hercules Local Chat */
+	struct hChSysCh *channel;
+	
+	/* invincible_time_inc mapflag */
+	unsigned int invincible_time_inc;
+	
+	/* weapon_damage_rate mapflag */
+	unsigned short weapon_damage_rate;
+	/* magic_damage_rate mapflag */
+	unsigned short magic_damage_rate;
+	/* misc_damage_rate mapflag */
+	unsigned short misc_damage_rate;
+	/* short_damage_rate mapflag */
+	unsigned short short_damage_rate;
+	/* long_damage_rate mapflag */
+	unsigned short long_damage_rate;
 };
 
 /// Stores information about a remote map (for multi-mapserver setups).
@@ -604,7 +693,7 @@ int map_getcellp(struct map_data* m,int16 x,int16 y,cell_chk cellchk);
 void map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag);
 void map_setgatcell(int16 m, int16 x, int16 y, int gat);
 
-extern struct map_data map[];
+struct map_data *map;
 extern int map_num;
 
 extern int autosave_interval;
@@ -687,11 +776,13 @@ int map_eraseipport(unsigned short map, uint32 ip, uint16 port);
 int map_eraseallipport(void);
 void map_addiddb(struct block_list *);
 void map_deliddb(struct block_list *bl);
-void map_foreachpc(int (*func)(struct map_session_data* sd, va_list args), ...);
-void map_foreachmob(int (*func)(struct mob_data* md, va_list args), ...);
-void map_foreachnpc(int (*func)(struct npc_data* nd, va_list args), ...);
-void map_foreachregen(int (*func)(struct block_list* bl, va_list args), ...);
-void map_foreachiddb(int (*func)(struct block_list* bl, va_list args), ...);
+/* temporary until the map.c "Hercules Renewal Phase One" design is complete. */
+void (*map_foreachpc) (int (*func)(struct map_session_data* sd, va_list args), ...);
+void (*map_foreachmob) (int (*func)(struct mob_data* md, va_list args), ...);
+void (*map_foreachnpc) (int (*func)(struct npc_data* nd, va_list args), ...);
+void (*map_foreachregen) (int (*func)(struct block_list* bl, va_list args), ...);
+void (*map_foreachiddb) (int (*func)(struct block_list* bl, va_list args), ...);
+/* */
 struct map_session_data * map_nick2sd(const char*);
 struct mob_data * map_getmob_boss(int16 m);
 struct mob_data * map_id2boss(int id);
@@ -700,24 +791,27 @@ struct mob_data * map_id2boss(int id);
 void map_reloadnpc(bool clear);
 
 /// Bitfield of flags for the iterator.
-enum e_mapitflags
-{
+enum e_mapitflags {
 	MAPIT_NORMAL = 0,
 //	MAPIT_PCISPLAYING = 1,// Unneeded as pc_db/id_db will only hold auth'ed, active players.
 };
 struct s_mapiterator;
-struct s_mapiterator*   mapit_alloc(enum e_mapitflags flags, enum bl_type types);
-void                    mapit_free(struct s_mapiterator* mapit);
-struct block_list*      mapit_first(struct s_mapiterator* mapit);
-struct block_list*      mapit_last(struct s_mapiterator* mapit);
-struct block_list*      mapit_next(struct s_mapiterator* mapit);
-struct block_list*      mapit_prev(struct s_mapiterator* mapit);
-bool                    mapit_exists(struct s_mapiterator* mapit);
-#define mapit_getallusers() mapit_alloc(MAPIT_NORMAL,BL_PC)
-#define mapit_geteachpc()   mapit_alloc(MAPIT_NORMAL,BL_PC)
-#define mapit_geteachmob()  mapit_alloc(MAPIT_NORMAL,BL_MOB)
-#define mapit_geteachnpc()  mapit_alloc(MAPIT_NORMAL,BL_NPC)
-#define mapit_geteachiddb() mapit_alloc(MAPIT_NORMAL,BL_ALL)
+/* temporary until the map.c "Hercules Renewal Phase One" design is complete. */
+struct mapit_interface {
+	struct s_mapiterator*   (*alloc) (enum e_mapitflags flags, enum bl_type types);
+	void                    (*free) (struct s_mapiterator* mapit);
+	struct block_list*      (*first) (struct s_mapiterator* mapit);
+	struct block_list*      (*last) (struct s_mapiterator* mapit);
+	struct block_list*      (*next) (struct s_mapiterator* mapit);
+	struct block_list*      (*prev) (struct s_mapiterator* mapit);
+	bool                    (*exists) (struct s_mapiterator* mapit);
+} mapit_s;
+struct mapit_interface *mapit;
+#define mapit_getallusers() mapit->alloc(MAPIT_NORMAL,BL_PC)
+#define mapit_geteachpc()   mapit->alloc(MAPIT_NORMAL,BL_PC)
+#define mapit_geteachmob()  mapit->alloc(MAPIT_NORMAL,BL_MOB)
+#define mapit_geteachnpc()  mapit->alloc(MAPIT_NORMAL,BL_NPC)
+#define mapit_geteachiddb() mapit->alloc(MAPIT_NORMAL,BL_ALL)
 
 int map_check_dir(int s_dir,int t_dir);
 uint8 map_calc_dir( struct block_list *src,int16 x,int16 y);
@@ -762,26 +856,6 @@ typedef struct elemental_data	TBL_ELEM;
 
 #define BL_CAST(type_, bl) \
 	( ((bl) == (struct block_list*)NULL || (bl)->type != (type_)) ? (T ## type_ *)NULL : (T ## type_ *)(bl) )
-
-
-extern char main_chat_nick[16];
-
-#ifdef BETA_THREAD_TEST
-
-extern char default_codepage[32];
-extern int map_server_port;
-extern char map_server_ip[32];
-extern char map_server_id[32];
-extern char map_server_pw[32];
-extern char map_server_db[32];
-
-extern char log_db_ip[32];
-extern int log_db_port;
-extern char log_db_id[32];
-extern char log_db_pw[32];
-extern char log_db_db[32];
-
-#endif
 
 #include "../common/sql.h"
 

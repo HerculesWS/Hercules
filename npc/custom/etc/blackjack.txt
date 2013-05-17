@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Black Jack
 //===== By: ==================================================
 //= kobra_k88
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= Black Jack card game.  Gameplay based off standard casino
 //= black jack rules.  Dealer must have at least 17 to stay and will

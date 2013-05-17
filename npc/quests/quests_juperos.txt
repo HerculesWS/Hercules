@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Juperos Dungeon Quests
 //===== By ===================================================
 //= MasterOfMuppets
 //===== Version ==============================================
 //= 1.7
-//===== Compatible With ======================================
-//= rAthena SVN
 //===== Description ==========================================
 //= [Partial Aegis COnversion]
 //= Juperos Ruins related Quests/Events

@@ -53,8 +53,8 @@ int quest_pc_login(TBL_PC * sd)
 	if(sd->avail_quests == 0)
 		return 1;
 
-	clif_quest_send_list(sd);
-	clif_quest_send_mission(sd);
+	clif->quest_send_list(sd);
+	clif->quest_send_mission(sd);
 
 	return 0;
 }
@@ -97,7 +97,7 @@ int quest_add(TBL_PC * sd, int quest_id)
 	sd->avail_quests++;
 	sd->save_quest = true;
 
-	clif_quest_add(sd, &sd->quest_log[i], sd->quest_index[i]);
+	clif->quest_add(sd, &sd->quest_log[i], sd->quest_index[i]);
 
 	if( save_settings&64 )
 		chrif_save(sd,0);
@@ -144,8 +144,8 @@ int quest_change(TBL_PC * sd, int qid1, int qid2)
 	sd->quest_index[i] = j;
 	sd->save_quest = true;
 
-	clif_quest_delete(sd, qid1);
-	clif_quest_add(sd, &sd->quest_log[i], sd->quest_index[i]);
+	clif->quest_delete(sd, qid1);
+	clif->quest_add(sd, &sd->quest_log[i], sd->quest_index[i]);
 
 	if( save_settings&64 )
 		chrif_save(sd,0);
@@ -176,7 +176,7 @@ int quest_delete(TBL_PC * sd, int quest_id)
 	sd->quest_index[sd->num_quests] = 0;
 	sd->save_quest = true;
 
-	clif_quest_delete(sd, quest_id);
+	clif->quest_delete(sd, quest_id);
 
 	if( save_settings&64 )
 		chrif_save(sd,0);
@@ -217,7 +217,7 @@ void quest_update_objective(TBL_PC * sd, int mob) {
 			if( quest_db[sd->quest_index[i]].mob[j] == mob && sd->quest_log[i].count[j] < quest_db[sd->quest_index[i]].count[j] )  {
 				sd->quest_log[i].count[j]++;
 				sd->save_quest = true;
-				clif_quest_update_objective(sd,&sd->quest_log[i],sd->quest_index[i]);
+				clif->quest_update_objective(sd,&sd->quest_log[i],sd->quest_index[i]);
 			}
 	}
 }
@@ -236,7 +236,7 @@ int quest_update_status(TBL_PC * sd, int quest_id, quest_state status) {
 	sd->save_quest = true;
 
 	if( status < Q_COMPLETE ) {
-		clif_quest_update_status(sd, quest_id, (bool)status);
+		clif->quest_update_status(sd, quest_id, (bool)status);
 		return 0;
 	}
 
@@ -247,7 +247,7 @@ int quest_update_status(TBL_PC * sd, int quest_id, quest_state status) {
 		memcpy(&sd->quest_log[sd->avail_quests], &tmp_quest,sizeof(struct quest));
 	}
 
-	clif_quest_delete(sd, quest_id);
+	clif->quest_delete(sd, quest_id);
 
 	if( save_settings&64 )
 		chrif_save(sd,0);

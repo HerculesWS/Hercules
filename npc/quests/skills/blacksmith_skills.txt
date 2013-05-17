@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Blacksmith Skills Quests
 //===== By: ================================================== 
 //= Lupus, Reddozen, Samuray22
 //===== Current Version: ===================================== 
 //= 1.6
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Quests for skills: Dubious Salesmanship, Greed

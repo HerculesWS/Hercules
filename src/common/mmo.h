@@ -1,10 +1,12 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef	_MMO_H_
 #define	_MMO_H_
 
 #include "cbasetypes.h"
+#include "../common/db.h"
 #include <time.h>
 
 // server->client protocol version
@@ -46,9 +48,11 @@
 // 20120307 - 2012-03-07aRagexeRE+ - 0x970
 
 #ifndef PACKETVER
-	#define PACKETVER 20120410
-	//#define PACKETVER 20111116
+	#define PACKETVER 20120418
 #endif
+
+/// comment following line if your client is NOT ragexeRE (required because of conflicting packets in ragexe vs ragexeRE)
+#define PACKETVER_RE
 
 //Remove/Comment this line to disable sc_data saving. [Skotlex]
 #define ENABLE_SC_SAVING
@@ -79,7 +83,8 @@
 #define MAX_ZENY 1000000000
 #define MAX_FAME 1000000000
 #define MAX_CART 100
-#define MAX_SKILL 3100
+#define MAX_SKILL 1477
+#define MAX_SKILL_ID 10015 //[Ind/Hercules] max used skill id
 #define GLOBAL_REG_NUM 256   // max permanent character variables per char
 #define ACCOUNT_REG_NUM 64   // max permanent local account variables per account
 #define ACCOUNT_REG2_NUM 16  // max permanent global account variables per account
@@ -98,8 +103,9 @@
 #define MAX_GUILDSKILL	15 // increased max guild skills because of new skills [Sara-chan]
 #define MAX_GUILDLEVEL 50
 #define MAX_GUARDIANS 8	//Local max per castle. [Skotlex]
-#define MAX_QUEST_DB 2200 //Max quests that the server will load
+#define MAX_QUEST_DB 2400 //Max quests that the server will load
 #define MAX_QUEST_OBJECTIVES 3 //Max quest objectives for a quest
+#define MAX_START_ITEMS 32	//Max number of items allowed to be given to a char whenever it's created. [mkbu95]
 
 // for produce
 #define MIN_ATTRIBUTE 0
@@ -152,7 +158,7 @@
 //Mercenary System
 #define MC_SKILLBASE 8201
 #define MAX_MERCSKILL 40
-#define MAX_MERCENARY_CLASS 44
+#define MAX_MERCENARY_CLASS 61
 
 //Elemental System
 #define MAX_ELEMENTALSKILL 42
@@ -217,6 +223,12 @@ enum e_skill_flag
 	SKILL_FLAG_REPLACED_LV_0, // temporary skill overshadowing permanent skill of level 'N - SKILL_FLAG_REPLACED_LV_0',
 	SKILL_FLAG_PERM_GRANTED, // permanent, granted through someway e.g. script
 	//...
+};
+
+enum e_mmo_charstatus_opt {
+	OPT_NONE		= 0x0,
+	OPT_SHOW_EQUIP	= 0x1,
+	OPT_ALLOW_PARTY	= 0x2,
 };
 
 struct s_skill {
@@ -378,8 +390,9 @@ struct mmo_charstatus {
 #ifdef HOTKEY_SAVING
 	struct hotkey hotkeys[MAX_HOTKEYS];
 #endif
-	bool show_equip;
-	short rename;
+	bool show_equip, allow_party;
+	unsigned short rename;
+	unsigned short slotchange;
 
 	time_t delete_date;
 };
@@ -510,8 +523,10 @@ struct guild {
 	struct guild_alliance alliance[MAX_GUILDALLIANCE];
 	struct guild_expulsion expulsion[MAX_GUILDEXPULSION];
 	struct guild_skill skill[MAX_GUILDSKILL];
-
+	
+	/* TODO: still used for something?|: */
 	unsigned short save_flag; // for TXT saving
+	void *channel;
 };
 
 struct guild_castle {

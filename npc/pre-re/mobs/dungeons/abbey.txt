@@ -1,11 +1,9 @@
-//===== rAthena Script ========================================
+//===== Hercules Script ======================================
 //= Abbey Dungeon Monster Spawn Script
 //===== By: ==================================================
 //= $ephiroth
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Additional Comments: =================================
 //= 1.0 Initial version [$ephiroth]
 //= 1.1 Updated spawns [Playtester]

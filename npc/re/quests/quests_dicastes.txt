@@ -308,7 +308,7 @@ OnTouch:
 		donpcevent "Suspicious Guy#ep133_::OnDisable";
 		mes "The guy in all black disappeared suddenly.";
 		mes "Who was that?";
-		close2;
+		close;
 	}
 	end;
 }
@@ -339,7 +339,7 @@ OnEnable:
 		mes "[Capital City Guard]";
 		mes "Access to the city is restricted from other races without permits.";
 		mes "Please go back.";
-		close2;
+		close;
 	}
 	else if (ep13_3_invite == 5) {
 		mes "[Capital City Guard]";
@@ -383,7 +383,7 @@ OnEnable:
 	mes "[Capital City Guard]";
 	mes "Unknown situation occurred. Case " + strnpcinfo(2);
 	mes "Please inquiry with a GM.";
-	close2;
+	close;
 }
 dic_fild01,146,281,5	duplicate(Guard#ep133_11)	Capital City Guard#1	492
 dic_fild01,153,281,3	duplicate(Guard#ep133_11)	Capital City Guard#2	450
@@ -436,11 +436,11 @@ function	script	que_dic	{
 		delitem getarg(3), getarg(4); 
 	}
 	else if (getarg(0) == 2) {
-		for(set .@size, getargcount(); .@i <= .@size; set .@i, .@i + 1) {
+		for(.@i = 1; .@i < getargcount(); .@i++) {
 			if (checkquest(getarg(.@i)) >= 0)
 				erasequest getarg(.@i);
 		}
-		return; 
+		return;
 	}
 	getexp getarg(2),0;
 	erasequest getarg(1);
@@ -597,7 +597,7 @@ dic_in01,51,270,7	script	Supply Dept. 1 Manager	449,{
 		mes "Cannot proceed because the weight of your items is too heavy. Let's try again after you get rid of some weight.";
 		close;
 	}
-	if (!isequipped(2782) < 1) {
+	if (!isequipped(2782)) {
 		mes "¡õ¢£¡ô";
 		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
 		next;
@@ -878,7 +878,7 @@ dic_in01,40,193,1	script	Papyrus#0001	453,{
 		mes "Your inventory is too heavy.";
 		close;
 	}
-	if (isequipped(2782)) {
+	if (!isequipped(2782)) {
 		mes "¡õ¢£¡ô";
 		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
 		next;
@@ -6941,8 +6941,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	453,{
 			mes "But of course, since this is adding spells on top of its original magic, I cannot guarantee that you will get what you want on one try.";
 			close;
 		}
-		if (countitem(2844) < 1) //Luz de El Dicastes
-		{
+		if (countitem(2844) < 1) { //Light of El Dicastes
 			mes "[Kareka]";
 			mes "Either you are not wearing or don't have the equipment to upgrade on you.";
 			close;

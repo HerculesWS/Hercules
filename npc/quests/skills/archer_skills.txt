@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Archer Skill Quest
 //===== By: ==================================================
-//= rAthena dev team
+//= rAthena Dev Team
 //===== Current Version: =====================================
 //= 1.7
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= Quest for skills: Arrow Crafting, Arrow Repel
 //===== Additional Comments: ================================= 

@@ -1,12 +1,10 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Juno Monster Museum
 //===== By: ================================================== 
 //= Muad_Dib (The Prometheus Project)
 //= L0ne_W0lf
 //===== Current Version: ===================================== 
 //= 1.4
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Juno Monster Museum - Non Player Character Locations

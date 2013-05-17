@@ -105,13 +105,14 @@ CREATE TABLE IF NOT EXISTS `char` (
   `child` int(11) unsigned NOT NULL default '0',
   `fame` int(11) unsigned NOT NULL default '0',
   `rename` SMALLINT(3) unsigned NOT NULL default '0',
-  `delete_date` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  `delete_date` INT(11) unsigned NOT NULL DEFAULT '0',
+  `slotchange` SMALLINT(3) unsigned NOT NULL default '0',
+  `char_opt` INT( 11 ) unsigned NOT NULL default '0',
   PRIMARY KEY  (`char_id`),
   UNIQUE KEY `name_key` (`name`),
   KEY `account_id` (`account_id`),
   KEY `party_id` (`party_id`),
   KEY `guild_id` (`guild_id`),
-  KEY `name` (`name`),
   KEY `online` (`online`)
 ) ENGINE=MyISAM AUTO_INCREMENT=150000; 
 
@@ -181,8 +182,7 @@ CREATE TABLE IF NOT EXISTS `hotkey` (
 	`type` TINYINT(1) unsigned NOT NULL default '0',
 	`itemskill_id` INT(11) unsigned NOT NULL default '0',
 	`skill_lvl` TINYINT(4) unsigned NOT NULL default '0',
-	PRIMARY KEY (`char_id`,`hotkey`),
-	INDEX (`char_id`)
+	PRIMARY KEY (`char_id`,`hotkey`)
 ) ENGINE=MyISAM;
 
 --
@@ -196,8 +196,7 @@ CREATE TABLE IF NOT EXISTS `global_reg_value` (
   `type` tinyint(1) NOT NULL default '3',
   `account_id` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`char_id`,`str`,`account_id`),
-  KEY `account_id` (`account_id`),
-  KEY `char_id` (`char_id`)
+  KEY `account_id` (`account_id`)
 ) ENGINE=MyISAM;
 
 --
@@ -310,8 +309,7 @@ CREATE TABLE IF NOT EXISTS `guild_position` (
   `name` varchar(24) NOT NULL default '',
   `mode` tinyint(11) unsigned NOT NULL default '0',
   `exp_mode` tinyint(11) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`guild_id`,`position`),
-  KEY `guild_id` (`guild_id`)
+  PRIMARY KEY  (`guild_id`,`position`)
 ) ENGINE=MyISAM;
 
 --
@@ -442,6 +440,9 @@ CREATE TABLE IF NOT EXISTS `login` (
   `lastlogin` datetime NOT NULL default '0000-00-00 00:00:00',
   `last_ip` varchar(100) NOT NULL default '',
   `birthdate` DATE NOT NULL DEFAULT '0000-00-00',
+  `character_slots` TINYINT( 3 ) unsigned NOT NULL default '0',
+  `pincode` varchar(4) NOT NULL default '',
+  `pincode_change` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`account_id`),
   KEY `name` (`userid`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2000000; 
@@ -622,8 +623,8 @@ CREATE TABLE IF NOT EXISTS `skill` (
   `char_id` int(11) unsigned NOT NULL default '0',
   `id` smallint(11) unsigned NOT NULL default '0',
   `lv` tinyint(4) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`char_id`,`id`),
-  KEY `char_id` (`char_id`)
+  `flag` TINYINT(1) UNSIGNED NOT NULL default 0,
+  PRIMARY KEY  (`char_id`,`id`)
 ) ENGINE=MyISAM;
 
 --
@@ -634,9 +635,28 @@ CREATE TABLE IF NOT EXISTS `skill_homunculus` (
   `homun_id` int(11) NOT NULL,
   `id` int(11) NOT NULL,
   `lv` smallint(6) NOT NULL,
-  PRIMARY KEY  (`homun_id`,`id`),
-  KEY `homun_id` (`homun_id`)
+  PRIMARY KEY  (`homun_id`,`id`)
 ) ENGINE=MyISAM;
+
+--
+-- Table structure for table `sql_updates`
+--
+
+CREATE TABLE IF NOT EXISTS `sql_updates` (
+  `timestamp` int(11) unsigned NOT NULL,
+  `ignored` enum('Yes','No') NOT NULL DEFAULT 'No',
+  PRIMARY KEY (`timestamp`)
+) ENGINE=MyISAM;
+
+-- Existent updates to enter
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1360858500);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1360951560);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1362445531);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1362528000);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1362794218);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1364409316);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1366075474);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1366078541);
 
 --
 -- Table structure for table `sstatus`

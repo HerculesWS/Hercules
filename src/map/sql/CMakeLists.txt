@@ -3,7 +3,7 @@
 # map sql
 #
 if( BUILD_SQL_SERVERS )
-message( STATUS "Creating target map-server_sql" )
+message( STATUS "Creating target map-server" )
 set( SQL_MAP_HEADERS
 	"${SQL_MAP_SOURCE_DIR}/atcommand.h"
 	"${SQL_MAP_SOURCE_DIR}/battle.h"
@@ -17,8 +17,9 @@ set( SQL_MAP_HEADERS
 	"${SQL_MAP_SOURCE_DIR}/elemental.h"
 	"${SQL_MAP_SOURCE_DIR}/guild.h"
 	"${SQL_MAP_SOURCE_DIR}/homunculus.h"
-	"${SQL_MAP_SOURCE_DIR}/instance.h"
+	"${SQL_MAP_SOURCE_DIR}/instance.h"	
 	"${SQL_MAP_SOURCE_DIR}/intif.h"
+	"${SQL_MAP_SOURCE_DIR}/irc-bot.h"
 	"${SQL_MAP_SOURCE_DIR}/itemdb.h"
 	"${SQL_MAP_SOURCE_DIR}/log.h"
 	"${SQL_MAP_SOURCE_DIR}/mail.h"
@@ -27,6 +28,8 @@ set( SQL_MAP_HEADERS
 	"${SQL_MAP_SOURCE_DIR}/mercenary.h"
 	"${SQL_MAP_SOURCE_DIR}/mob.h"
 	"${SQL_MAP_SOURCE_DIR}/npc.h"
+	"${SQL_MAP_SOURCE_DIR}/packets.h"
+	"${SQL_MAP_SOURCE_DIR}/packets_struct.h"
 	"${SQL_MAP_SOURCE_DIR}/party.h"
 	"${SQL_MAP_SOURCE_DIR}/path.h"
 	"${SQL_MAP_SOURCE_DIR}/pc.h"
@@ -57,6 +60,7 @@ set( SQL_MAP_SOURCES
 	"${SQL_MAP_SOURCE_DIR}/homunculus.c"
 	"${SQL_MAP_SOURCE_DIR}/instance.c"
 	"${SQL_MAP_SOURCE_DIR}/intif.c"
+	"${SQL_MAP_SOURCE_DIR}/irc-bot.c"
 	"${SQL_MAP_SOURCE_DIR}/itemdb.c"
 	"${SQL_MAP_SOURCE_DIR}/log.c"
 	"${SQL_MAP_SOURCE_DIR}/mail.c"
@@ -97,16 +101,16 @@ set( SOURCE_FILES ${COMMON_BASE_HEADERS} ${COMMON_SQL_HEADERS} ${SQL_MAP_HEADERS
 source_group( common FILES ${COMMON_BASE_HEADERS} ${COMMON_SQL_HEADERS} )
 source_group( map FILES ${SQL_MAP_HEADERS} ${SQL_MAP_SOURCES} )
 include_directories( ${INCLUDE_DIRS} )
-add_executable( map-server_sql ${SOURCE_FILES} )
-add_dependencies( map-server_sql ${DEPENDENCIES} )
-target_link_libraries( map-server_sql ${LIBRARIES} ${DEPENDENCIES} )
-set_target_properties( map-server_sql PROPERTIES COMPILE_FLAGS "${DEFINITIONS}" )
+add_executable( map-server ${SOURCE_FILES} )
+add_dependencies( map-server ${DEPENDENCIES} )
+target_link_libraries( map-server ${LIBRARIES} ${DEPENDENCIES} )
+set_target_properties( map-server PROPERTIES COMPILE_FLAGS "${DEFINITIONS}" )
 if( INSTALL_COMPONENT_RUNTIME )
-	cpack_add_component( Runtime_mapserver_sql DESCRIPTION "map-server (sql version)" DISPLAY_NAME "map-server_sql" GROUP Runtime )
-	install( TARGETS map-server_sql
+	cpack_add_component( Runtime_mapserver_sql DESCRIPTION "map-server (sql version)" DISPLAY_NAME "map-server" GROUP Runtime )
+	install( TARGETS map-server
 		DESTINATION "."
 		COMPONENT Runtime_mapserver_sql )
 endif( INSTALL_COMPONENT_RUNTIME )
-set( TARGET_LIST ${TARGET_LIST} map-server_sql  CACHE INTERNAL "" )
-message( STATUS "Creating target map-server_sql - done" )
+set( TARGET_LIST ${TARGET_LIST} map-server  CACHE INTERNAL "" )
+message( STATUS "Creating target map-server - done" )
 endif( BUILD_SQL_SERVERS )

@@ -1,11 +1,12 @@
-// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
-#ifndef _RRCONFIGS_CONST_
-#define _RRCONFIGS_CONST_
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
+#ifndef _H_CONSTANTS_
+#define _H_CONSTANTS_
 
 /**
- * rAthena configuration file (http://rathena.org)
- * For detailed guidance on these check http://rathena.org/wiki/SRC/config/
+ * Hercules configuration file (http://hercules.ws)
+ * For detailed guidance on these check http://hercules.ws/wiki/SRC/config/
  **/
 
 /**
@@ -18,8 +19,14 @@
 #if SECURE_NPCTIMEOUT_INTERVAL <= 0
 	#error SECURE_NPCTIMEOUT_INTERVAL should be at least 1 (1s)
 #endif
-#if SECURE_NPCTIMEOUT < 0
-	#error SECURE_NPCTIMEOUT cannot be lower than 0
+#if NPC_SECURE_TIMEOUT_INPUT < 0
+	#error NPC_SECURE_TIMEOUT_INPUT cannot be lower than 0
+#endif
+#if NPC_SECURE_TIMEOUT_MENU < 0
+	#error NPC_SECURE_TIMEOUT_MENU cannot be lower than 0
+#endif
+#if NPC_SECURE_TIMEOUT_NEXT < 0
+	#error NPC_SECURE_TIMEOUT_NEXT cannot be lower than 0
 #endif
 
 /**
@@ -46,9 +53,9 @@
 
 /* pointer size fix which fixes several gcc warnings */
 #ifdef __64BIT__
-	#define __64BPRTSIZE(y) (intptr)y
+	#define __64BPTRSIZE(y) (intptr)y
 #else
-	#define __64BPRTSIZE(y) y
+	#define __64BPTRSIZE(y) y
 #endif
 
 /* ATCMD_FUNC(mobinfo) HIT and FLEE calculations */
@@ -93,7 +100,13 @@
 			time = time * (1 - (float)min(val, 100) / 100); \
 	}
 #endif
+
+/* console_input doesn't go well with minicore */
+#ifdef MINICORE
+	#undef CONSOLE_INPUT
+#endif
+
 /**
  * End of File
  **/
-#endif
+#endif /* _H_CONSTANTS_ */

@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Banker Script 
 //===== By: ================================================== 
 //= Syrus22 (1.0)
 //===== Current Version: ===================================== 
 //= 2.0
-//===== Compatible With: ===================================== 
-//= Any rAthena version with Account variables.
 //===== Description: ========================================= 
 //= An account wide Banker to store Zeny
 //===== Additional Comments: ================================= 

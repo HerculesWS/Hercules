@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Alchemist Job Quest
 //===== By: ==================================================
 //= nestor_zulueta (Fusion), converted by Darkchild
 //===== Current Version: ===================================== 
 //= 3.0
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Job quest for Alchemist classes

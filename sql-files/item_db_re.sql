@@ -585,7 +585,7 @@ REPLACE INTO `item_db_re` VALUES (1194,'F_Executioner_C','Executioner',4,2,NULL,
 REPLACE INTO `item_db_re` VALUES (1195,'E_Executioner_C','Executioner',4,2,NULL,0,'190',NULL,1,NULL,0x00004082,7,2,34,4,NULL,NULL,3,'bonus bAtkEle,Ele_Dark;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1196,'Chrome_Twohand_Sword','Chrome Two-Handed Sword',4,20,NULL,400,'280',NULL,1,NULL,0x00004082,7,2,34,3,'110',1,3,'bonus bUnbreakableWeapon,0; bonus bAgi,3; bonus bMaxHPRate,-10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1197,'P_Slayer3','Eden Slayer III',4,NULL,NULL,0,'200',NULL,1,NULL,0x00004082,7,2,34,3,'60',NULL,3,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (1198,'Cutlass','Cutlass',4,NULL,NULL,0,'220',NULL,3,NULL,0x00004082,7,2,34,1,'50',NULL,3,'bonus bUnbreakableWeapon,0; bonus bCritical,20; bonus bCritAtkRate,50; if(BaseLevel>99) { bonus bBaseAtk,50; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1198,'Hairtail','Cutlass',4,NULL,NULL,0,'220',NULL,3,NULL,0x00004082,7,2,34,1,'50',NULL,3,'bonus bUnbreakableWeapon,0; bonus bCritical,20; bonus bCritAtkRate,50; if(BaseLevel>99) { bonus bBaseAtk,50; }',NULL,NULL);
 # Daggers
 REPLACE INTO `item_db_re` VALUES (1201,'Knife','Knife',4,50,NULL,400,'17',NULL,1,3,0xFE9F7EEF,7,2,2,1,'1',1,1,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1202,'Knife_','Knife',4,50,NULL,400,'17',NULL,1,4,0xFE9F7EEF,7,2,2,1,'1',1,1,NULL,NULL,NULL);
@@ -680,8 +680,9 @@ REPLACE INTO `item_db_re` VALUES (1289,'P_Katar1','Eden Katar I',4,NULL,NULL,0,'
 REPLACE INTO `item_db_re` VALUES (1290,'Agent_Katar','Agent Katar',4,41000,NULL,1200,'170',NULL,1,1,0x00001000,7,2,34,3,'100',1,16,'bonus bHit,readparam(bLuk)/2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1291,'Guillotine_Katar','Guillotine Katar',4,56000,NULL,1500,'200',NULL,1,NULL,0x00001000,7,2,34,4,'140',1,16,'bonus bDex,2; bonus bFlee,-30; bonus2 bAddRace,RC_DemiHuman,50; bonus2 bSkillAtk,"GC_CROSSIMPACT",30;',NULL,NULL);
 #1292,
-REPLACE INTO `item_db_re` VALUES (1293,'Bellum_Jahmadar','Bellum Jahmadar',4,20,NULL,1200,'170',NULL,1,NULL,0x00001000,7,2,34,4,'95',1,16,'bonus bAspdRate,getrefine();',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (1294,'Bellum_Scale','Bellum Scale',4,20,NULL,1200,'50',NULL,1,NULL,0x00001000,7,2,34,4,'95',1,16,'bonus2 bSPVanishRate,10000,10;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1292,'Upg_Katar','Upg Katar',4,20,NULL,1000,'80',NULL,1,1,0x00001000,7,2,34,3,'1',1,16,'bonus bBaseAtk,(getrefine()*10); bonus bCritAtkRate,(getrefine()*2); if(BaseLevel>70) bonus bBaseAtk,(((BaseLevel-70)/10)*10);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1293,'Velum_Jahmadar','Vellum Jahmadar',4,20,NULL,1200,'170',NULL,1,NULL,0x00001000,7,2,34,4,'95',1,16,'bonus bAspdRate,getrefine();',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1294,'Velum_Scale','Vellum Scale',4,20,NULL,1200,'50',NULL,1,NULL,0x00001000,7,2,34,4,'95',1,16,'bonus2 bSPVanishRate,10000,10;',NULL,NULL);
 # 1-Handed Axes
 REPLACE INTO `item_db_re` VALUES (1301,'Axe','Axe',4,500,NULL,800,'38',NULL,1,3,0x000654E3,7,2,2,1,'3',1,6,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1302,'Axe_','Axe',4,500,NULL,800,'38',NULL,1,4,0x000654E3,7,2,2,1,'3',1,6,NULL,NULL,NULL);
@@ -742,9 +743,9 @@ REPLACE INTO `item_db_re` VALUES (1390,'E_Right_Epsilon_C','Light Epsilon',4,1,N
 REPLACE INTO `item_db_re` VALUES (1391,'P_Two_Handed_Axe1','Eden Two-Handed Axe I',4,NULL,NULL,0,'195',NULL,1,NULL,0x000444A2,7,2,34,3,'60',NULL,7,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1392,'Ignus_Steel','Ignus Steel',4,56000,NULL,1900,'250',NULL,1,1,0x000444A2,7,2,34,4,'95',1,7,'bonus bAtkEle,Ele_Fire; bonus bUnbreakableWeapon,0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1393,'End_Sectora','End Sectora',4,56000,NULL,1900,'250',NULL,1,1,0x000444A2,7,2,34,4,'95',1,7,'bonus bAtkEle,Ele_Water; bonus bUnbreakableWeapon,0;',NULL,NULL);
-#1394,
-REPLACE INTO `item_db_re` VALUES (1395,'Bellum_Buster','Bellum Buster',4,20,NULL,2500,'50',NULL,1,NULL,0x000444A2,7,2,34,4,'95',1,7,'bonus bUnbreakableWeapon,0; bonus2 bSPVanishRate,10000,10;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (1396,'Bellum_Guillotine','Bellum Guillotine',4,20,NULL,5500,'300',NULL,1,NULL,0x000444A2,7,2,34,4,'95',1,7,'bonus bUnbreakableWeapon,0; bonus2 bAddRace,RC_DemiHuman,40; bonus2 bIgnoreDefRate,RC_DemiHuman,30; if(getrefine()>=6) { bonus2 bSkillAtk,"NC_AXEBOOMERANG",80; bonus2 bSkillAtk,"NC_POWERSWING",80; } if(getrefine()>=9) { bonus2 bAddRace,RC_DemiHuman,60; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1394,'Upg_Two_Handed_Axe','Upg Two Handed Axe',4,20,NULL,2000,'110',NULL,1,1,0x000444A2,7,2,34,3,'1',1,7,'bonus bBaseAtk,(getrefine()*14); if(BaseLevel>70) bonus bBaseAtk,(((BaseLevel-70)/10)*10);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1395,'Velum_Buster','Vellum Buster',4,20,NULL,2500,'50',NULL,1,NULL,0x000444A2,7,2,34,4,'95',1,7,'bonus bUnbreakableWeapon,0; bonus2 bSPVanishRate,10000,10;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1396,'Velum_Guillotine','Vellum Guillotine',4,20,NULL,5500,'300',NULL,1,NULL,0x000444A2,7,2,34,4,'95',1,7,'bonus bUnbreakableWeapon,0; bonus2 bAddRace,RC_DemiHuman,40; bonus2 bIgnoreDefRate,RC_DemiHuman,30; if(getrefine()>=6) { bonus2 bSkillAtk,"NC_AXEBOOMERANG",80; bonus2 bSkillAtk,"NC_POWERSWING",80; } if(getrefine()>=9) { bonus2 bAddRace,RC_DemiHuman,60; }',NULL,NULL);
 # 1-Handed Spears
 REPLACE INTO `item_db_re` VALUES (1401,'Javelin','Javelin',4,150,NULL,700,'28',NULL,3,3,0x00004082,7,2,2,1,'4',1,4,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1402,'Javelin_','Javelin',4,150,NULL,700,'28',NULL,3,4,0x00004082,7,2,2,1,'4',1,4,NULL,NULL,NULL);
@@ -781,7 +782,7 @@ REPLACE INTO `item_db_re` VALUES (1432,'E_Pole_Axe_C','Pole Axe',4,1,NULL,4800,'
 REPLACE INTO `item_db_re` VALUES (1433,'Imperial_Spear','Imperial Spear',4,20,NULL,1800,'180:50',NULL,3,1,0x00004082,7,2,2,3,'102',1,4,'bonus2 bSkillAtk,"LG_CANNONSPEAR",20+getrefine()/2; bonus2 bSkillAtk,"LG_BANISHINGPOINT",20+getrefine()/2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1434,'P_Spear1','Eden Spear I',4,NULL,NULL,0,'165',NULL,3,NULL,0x00004082,7,2,2,3,'60',NULL,4,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1435,'Cannon_Spear','Cannon Spear',4,56000,NULL,1600,'180',NULL,3,1,0x00004000,7,2,2,4,'100',1,4,'bonus bMaxSP,-100; bonus2 bSkillAtk,"LG_CANNONSPEAR",10; bonus bBaseAtk,(getrefine()/3);',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (1436,'Bellum_Spear','Bellum Spear',4,20,NULL,850,'150',NULL,3,NULL,0x00004082,7,2,2,4,'95',1,4,'bonus2 bAddRace,RC_DemiHuman,60; if(getrefine()>=6) { bonus2 bSkillAtk,"RK_HUNDREDSPEAR",80; bonus2 bSkillAtk,"LG_PINPOINTATTACK",80; } if(getrefine()>=9) { bonus2 bAddRace,RC_DemiHuman,30; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1436,'Velum_Spear','Vellum Spear',4,20,NULL,850,'150',NULL,3,NULL,0x00004082,7,2,2,4,'95',1,4,'bonus2 bAddRace,RC_DemiHuman,60; if(getrefine()>=6) { bonus2 bSkillAtk,"RK_HUNDREDSPEAR",80; bonus2 bSkillAtk,"LG_PINPOINTATTACK",80; } if(getrefine()>=9) { bonus2 bAddRace,RC_DemiHuman,30; }',NULL,NULL);
 # 2-Handed Spears
 REPLACE INTO `item_db_re` VALUES (1451,'Guisarme','Guisarme',4,13000,NULL,1000,'84',NULL,3,2,0x00004082,7,2,34,2,'18',1,5,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1452,'Guisarme_','Guisarme',4,13000,NULL,1000,'84',NULL,3,3,0x00004082,7,2,34,2,'18',1,5,NULL,NULL,NULL);
@@ -824,9 +825,9 @@ REPLACE INTO `item_db_re` VALUES (1486,'Krieger_Twohand_Spear1','Glorious Lance'
 REPLACE INTO `item_db_re` VALUES (1487,'Lance_C','Lance',4,NULL,NULL,0,'220',NULL,3,NULL,0x00004082,7,2,34,3,'1',NULL,5,'bonus2 bAddSize,Size_Small,50; bonus2 bAddSize,Size_Medium,50; bonus2 bAddSize,Size_Large,50;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1488,'Ahlspiess_C','Ahlspiess',4,20,NULL,0,'135',NULL,3,NULL,0x00004080,7,2,34,4,'1',1,5,'bonus bIgnoreDefRace,RC_NonBoss; bonus bIgnoreDefRace,RC_Boss; bonus2 bAddRace,RC_DemiHuman,10; bonus3 bAutoSpell,"KN_PIERCE",5,30;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1489,'Marlin','Marlin',4,NULL,NULL,0,'220',NULL,3,NULL,0x00004082,2,2,34,1,'50',NULL,5,'bonus bUnbreakableWeapon,0; bonus3 bAddEffOnSkill,"KN_PIERCE",Eff_Bleeding,1000; bonus3 bAddEffOnSkill,"LK_SPIRALPIERCE",Eff_Bleeding,1000; bonus2 bSkillAtk,"LK_SPIRALPIERCE",100; bonus2 bSkillAtk,"LG_INSPIRATION",50; if(BaseLevel>99) { bonus bBaseAtk,30; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (1490,'Gigantic_Lance','Gigantic Lance',4,20,NULL,20000,'20',NULL,3,NULL,0x00000080,7,2,34,4,'140',1,5,'bonus bAspd,-10; if(readparam(bStr)>=120){ bonus bBaseAtk,300; }',NULL,'heal 0,-600;');
-#1491,
-REPLACE INTO `item_db_re` VALUES (1492,'Bellum_Glave','Bellum Glave',4,20,NULL,4500,'250',NULL,3,NULL,0x00004082,7,2,34,4,'95',1,5,'bonus2 bAddRace,RC_DemiHuman,80; if(getrefine()>=6) { bonus2 bSkillAtk,"LK_SPIRALPIERCE",100; bonus2 bSkillAtk,"KN_SPEARBOOMERANG",50; } if(getrefine()>=9) { autobonus2 "{bonus bShortWeaponDamageReturn,20; bonus bMagicDamageReturn,20;}",100,2000,BF_WEAPON|BF_MAGIC,"{specialeffect2 EF_REFLECTSHIELD;}"; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1490,'Gigantic_Lance','Gigantic Lance',4,20,NULL,20000,'20',NULL,3,NULL,0x00000080,7,2,34,4,'140',1,5,'bonus bAspd,-10; bonus2 bSkillFixedCast,"LK_SPIRALPIERCE",4000; bonus2 bSkillCooldown,"LK_SPIRALPIERCE",20000; if(readparam(bStr)>=120){ bonus bBaseAtk,300; }',NULL,'heal 0,-600;');
+REPLACE INTO `item_db_re` VALUES (1491,'Upg_Lance','Upg Lance',4,20,NULL,1500,'105',NULL,3,1,0x00004082,7,2,34,3,'1',1,5,'bonus bBaseAtk,(getrefine()*12); if(BaseLevel>70) bonus bBaseAtk,(((BaseLevel-70)/10)*10);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1492,'Velum_Glave','Vellum Glave',4,20,NULL,4500,'250',NULL,3,NULL,0x00004082,7,2,34,4,'95',1,5,'bonus2 bAddRace,RC_DemiHuman,80; if(getrefine()>=6) { bonus2 bSkillAtk,"LK_SPIRALPIERCE",100; bonus2 bSkillAtk,"KN_SPEARBOOMERANG",50; } if(getrefine()>=9) { autobonus2 "{bonus bShortWeaponDamageReturn,20; bonus bMagicDamageReturn,20;}",100,2000,BF_WEAPON|BF_MAGIC,"{specialeffect2 EF_REFLECTSHIELD;}"; }',NULL,NULL);
 # Maces
 REPLACE INTO `item_db_re` VALUES (1501,'Club','Club',4,120,NULL,700,'23',NULL,1,3,0x0004C5B3,7,2,2,1,'2',1,8,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1502,'Club_','Club',4,120,NULL,700,'23',NULL,1,4,0x0004C5B3,7,2,2,1,'2',1,8,NULL,NULL,NULL);
@@ -913,9 +914,9 @@ REPLACE INTO `item_db_re` VALUES (1581,'F_Diary_Of_Great_Sage_C','Diary Of Great
 REPLACE INTO `item_db_re` VALUES (1582,'E_Diary_Of_Great_Sage_C','Diary Of Great Sage',4,1,NULL,0,'135',NULL,1,2,0x00410100,7,2,2,3,'1',NULL,15,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1583,'P_Book1','Eden Book I',4,NULL,NULL,0,'135:110',NULL,1,NULL,0x00410100,7,2,2,3,'60',NULL,15,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1584,'Cold_Magic_Book','Cold Magic Book',4,56000,NULL,1000,'100:160',NULL,1,2,0x00010000,7,2,2,4,'100',1,15,'bonus bAtkEle,Ele_Water; bonus bUnbreakableWeapon,0; bonus bDex,1; bonus2 bSkillAtk,"MG_COLDBOLT",(getrefine()/3); bonus2 bSkillAtk,"SO_DIAMONDDUST",(getrefine()/3); bonus bUseSPrate,getrefine();',NULL,NULL);
-#1585,
-REPLACE INTO `item_db_re` VALUES (1586,'Bellum_Bible','Bellum Bible',4,20,NULL,600,'110:125',NULL,1,NULL,0x00410100,7,2,2,4,'95',1,15,'if(BaseLevel>104) { bonus bHealPower,(BaseLevel/5)-20; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (1587,'Bellum_Great_Encyclopedia','Bellum Great Encyclopedia',4,20,NULL,1000,'130',NULL,1,NULL,0x00410100,7,2,2,4,'95',1,15,'bonus2 bAddRace,RC_DemiHuman,80+getrefine(); bonus2 bIgnoreDefRate,RC_DemiHuman,30; autobonus "{bonus bBaseAtk,200;}",10,3000,BF_WEAPON,"{specialeffect2 EF_ENHANCE;}";',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1585,'Upg_Book','Upg Book',4,20,NULL,600,'45:20',NULL,1,1,0x00410100,7,2,2,3,'1',1,15,'bonus bBaseAtk,(getrefine()*10); bonus bMatk,(getrefine()*5); if(BaseLevel>70) bonus bMatk,(((BaseLevel-70)/10)*5);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1586,'Velum_Bible','Vellum Bible',4,20,NULL,600,'110:125',NULL,1,NULL,0x00410100,7,2,2,4,'95',1,15,'if(BaseLevel>104) { bonus bHealPower,(BaseLevel/5)-20; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1587,'Velum_Great_Encyclopedia','Vellum Great Encyclopedia',4,20,NULL,1000,'130',NULL,1,NULL,0x00410100,7,2,2,4,'95',1,15,'bonus2 bAddRace,RC_DemiHuman,80+getrefine(); bonus2 bIgnoreDefRate,RC_DemiHuman,30; autobonus "{bonus bBaseAtk,200;}",10,3000,BF_WEAPON,"{specialeffect2 EF_ENHANCE;}";',NULL,NULL);
 # GM Weapon
 REPLACE INTO `item_db_re` VALUES (1599,'Angra_Manyu','Angra Manyu',4,1,NULL,10,'10000:10000',NULL,2,NULL,0xFFFFFFFF,7,2,2,1,'1',1,8,'bonus bAllStats,50; bonus bBaseAtk,3300; bonus bMatkRate,200; bonus2 bHPDrainRate,1000,100; bonus2 bSPDrainRate,1000,20; bonus bHealPower,200; bonus2 bAddRace,RC_NonBoss,100; bonus2 bAddRace,RC_Boss,100; skill "WZ_STORMGUST",10; Skill "WZ_METEOR",10; Skill "WZ_VERMILION",10; skill "GM_SANDMAN",1; bonus bVariableCastrate,-100; bonus bFixedCastrate,-100;',NULL,NULL);
 # Staffs
@@ -1053,11 +1054,11 @@ REPLACE INTO `item_db_re` VALUES (1769,'Silence_Arrow','Mute Arrow',10,10,NULL,3
 REPLACE INTO `item_db_re` VALUES (1770,'Iron_Arrow','Iron Arrow',10,2,NULL,1,'30',NULL,NULL,NULL,0x000A1848,7,2,32768,NULL,'1',NULL,1,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1771,'Venom_Knife','Venom Knife',10,50,NULL,5,'30',NULL,NULL,NULL,0x00001000,7,2,32768,NULL,'1',NULL,2,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1772,'Holy_Arrow','Holy Arrow',10,3,NULL,2,'50',NULL,NULL,NULL,0x000A1848,7,2,32768,NULL,'1',NULL,1,'bonus bAtkEle,Ele_Holy; bonus2 bAddRace,RC_Demon,5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (1773,'Arrow_Of_Elf','Elven Arrow',10,10,NULL,1,'45',NULL,NULL,NULL,0x000A1848,7,2,32768,NULL,'100',NULL,1,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (1774,'Hunting_Arrow','Hunting Arrow',10,10,NULL,1,'35',NULL,NULL,NULL,0x000A1848,7,2,32768,NULL,'100',NULL,1,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (1775,'Siege_Craft_Arrow_S','Siege Craft Arrow S',10,NULL,NULL,1,'45',NULL,NULL,NULL,0x000A1848,7,2,32768,NULL,'130',NULL,1,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (1776,'Siege_Craft_Arrow_A','Siege Craft Arrow A',10,NULL,NULL,1,'30',NULL,NULL,NULL,0x000A1848,7,2,32768,NULL,'95',NULL,1,NULL,NULL,NULL);
-# Knuckles
+REPLACE INTO `item_db_re` VALUES (1773,'Arrow_Of_Elf','Elven Arrow',10,5,NULL,1,'45',NULL,NULL,NULL,0x000A1848,7,2,32768,NULL,'100',NULL,1,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1774,'Hunting_Arrow','Hunting Arrow',10,5,NULL,1,'35',NULL,NULL,NULL,0x000A1848,7,2,32768,NULL,'100',NULL,1,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1775,'Siege_Arrow_A','Siege Arrow A',10,10,NULL,1,'45',NULL,NULL,NULL,0x000A1848,7,2,32768,NULL,'130',NULL,1,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1776,'Siege_Arrow_S','Siege Arrow S',10,10,NULL,1,'30',NULL,NULL,NULL,0x000A1848,7,2,32768,NULL,'95',NULL,1,NULL,NULL,NULL);
+# Knuckles# Knuckles
 REPLACE INTO `item_db_re` VALUES (1801,'Waghnakh','Waghnak',4,8000,NULL,400,'30',NULL,1,3,0x00008100,7,2,2,1,'1',1,12,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1802,'Waghnakh_','Waghnak',4,8000,NULL,400,'30',NULL,1,4,0x00008100,7,2,2,1,'1',1,12,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1803,'Knuckle_Duster','Knuckle Dusters',4,25000,NULL,450,'50',NULL,1,2,0x00008100,7,2,2,2,'12',1,12,NULL,NULL,NULL);
@@ -1089,7 +1090,7 @@ REPLACE INTO `item_db_re` VALUES (1828,'Monk_Knuckle','Monk Knuckle',4,20,NULL,0
 REPLACE INTO `item_db_re` VALUES (1829,'Fist_C','Fist',4,NULL,NULL,0,'150',NULL,1,NULL,0x00008100,7,2,2,3,'1',NULL,12,'bonus2 bAddSize,Size_Small,40; bonus2 bAddSize,Size_Medium,40; bonus2 bAddSize,Size_Large,40;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1830,'Sura_Rampage','Sura Rampage',4,20,NULL,500,'142',NULL,1,1,0x00008100,7,2,2,3,'102',1,12,' bonus2 bSkillAtk,"SR_EARTHSHAKER",20; bonus2 bSkillAtk,"SR_SKYNETBLOW",20; bonus bUseSPrate,5; if(getrefine()>6) { bonus bUseSPrate,-1*(getrefine()-6); }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1831,'P_Knuckle1','Eden Knuckle I',4,NULL,NULL,0,'120',NULL,1,NULL,0x00008100,7,2,2,3,'60',NULL,12,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (1832,'Bellum_Claw','Bellum Claw',4,20,NULL,650,'160',NULL,1,NULL,0x00008100,7,2,2,4,'95',1,12,'bonus2 bAddRace,RC_DemiHuman,100; if(getrefine()>7) { bonus2 bAddRace,RC_DemiHuman,20; } if(getrefine()>9) { bonus2 bVariableCastrate,271,-100; bonus4 bAutoSpellOnSkill,"MO_EXPLOSIONSPIRITS","CH_SOULCOLLECT",1,10000; bonus2 bHPLossRate,500,3000; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1832,'Velum_Claw','Vellum Claw',4,20,NULL,650,'160',NULL,1,NULL,0x00008100,7,2,2,4,'95',1,12,'bonus2 bAddRace,RC_DemiHuman,100; if(getrefine()>7) { bonus2 bAddRace,RC_DemiHuman,20; } if(getrefine()>9) { bonus2 bVariableCastrate,271,-100; bonus4 bAutoSpellOnSkill,"MO_EXPLOSIONSPIRITS","CH_SOULCOLLECT",1,10000; bonus2 bHPLossRate,500,3000; }',NULL,NULL);
 # Instruments
 REPLACE INTO `item_db_re` VALUES (1901,'Violin','Violin',4,4000,NULL,700,'50',NULL,1,3,0x00080000,7,1,2,1,'2',1,13,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1902,'Violin_','Violin',4,4000,NULL,700,'50',NULL,1,4,0x00080000,7,1,2,1,'2',1,13,NULL,NULL,NULL);
@@ -1120,7 +1121,7 @@ REPLACE INTO `item_db_re` VALUES (1926,'Harp_Of_Nepenthes','Harp of Nepenthes',4
 REPLACE INTO `item_db_re` VALUES (1927,'Krieger_Instrument1','Glorious Guitar',4,20,NULL,0,'50',NULL,1,NULL,0x00080000,7,1,2,4,'80',1,13,'bonus2 bAddRace,RC_DemiHuman,95; bonus2 bIgnoreDefRate,RC_DemiHuman,20; bonus bUnbreakableWeapon,0; if(getrefine()>5) { bonus2 bAddRace,RC_DemiHuman,pow(((getrefine()>14)?14:getrefine())-4,2); bonus2 bIgnoreDefRate,RC_DemiHuman,5; } if(getrefine()>8) bonus4 bAutoSpellOnSkill,"CG_ARROWVULCAN","CG_TAROTCARD",5,100;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1928,'Berserk_Guitar_I','Spirited Guitar',4,NULL,NULL,0,'40',NULL,1,NULL,0x00080000,2,1,2,4,NULL,NULL,13,'bonus bAspdRate,100; bonus bHPrecovRate,-100; bonus2 bHPLossRate,50,5000; bonus bDex,-readparam(bDex);',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1929,'Guitar_C','Guitar',4,NULL,NULL,0,'177',NULL,1,NULL,0x00080000,7,1,2,3,'1',NULL,13,'bonus2 bAddSize,Size_Small,40; bonus2 bAddSize,Size_Medium,40; bonus2 bAddSize,Size_Large,40;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (1930,'Green_Whistle','Green Whistle',4,20,NULL,800,'170:50',NULL,1,1,0x00080000,7,1,2,3,'102',1,13,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1930,'Green_Whistle','Green Whistle',4,20,NULL,800,'170:50',NULL,1,1,0x00080000,7,1,2,3,'102',1,13,'if(getrefine()>5) { bonus2 bSkillUseSP,"MI_RUSH_WINDMILL",(getrefine()-5)*4; bonus2 bSkillUseSP,"WM_LULLABY_DEEPSLEEP",(getrefine()-5)*4; } bonus2 bSkillVariableCast,"MI_RUSH_WINDMILL",-2000; bonus2 bSkillVariableCast,"WM_LULLABY_DEEPSLEEP",-2000;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1931,'P_Guitar1','Eden Guitar I',4,NULL,NULL,0,'125',NULL,1,NULL,0x00080000,7,1,2,3,'60',NULL,13,NULL,NULL,NULL);
 # Whips
 REPLACE INTO `item_db_re` VALUES (1950,'Rope','Rope',4,2500,NULL,400,'45',NULL,2,3,0x00080000,7,NULL,2,1,'3',1,14,NULL,NULL,NULL);
@@ -1157,7 +1158,7 @@ REPLACE INTO `item_db_re` VALUES (1980,'Whip_Of_Balance','Whip of Balance',4,20,
 REPLACE INTO `item_db_re` VALUES (1981,'Krieger_Whip1','Glorious Lariat',4,20,NULL,0,'50',NULL,2,NULL,0x00080000,7,NULL,2,4,'80',1,14,'bonus2 bAddRace,RC_DemiHuman,95; bonus2 bIgnoreDefRate,RC_DemiHuman,20; bonus bUnbreakableWeapon,0; if(getrefine()>5) { bonus2 bAddRace,RC_DemiHuman,pow(((getrefine()>14)?14:getrefine())-4,2); bonus2 bIgnoreDefRate,RC_DemiHuman,5; } if(getrefine()>8) bonus4 bAutoSpellOnSkill,"CG_ARROWVULCAN","CG_TAROTCARD",5,100;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1982,'Phenomena_Whip','Phenomena Whip',4,20,NULL,0,'160',NULL,2,NULL,0x00080000,7,NULL,2,4,NULL,NULL,14,'bonus bDex,2; bonus2 bSkillAtk,"DC_THROWARROW",25;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1983,'Rante_C','Rante Whip',4,NULL,NULL,0,'170',NULL,2,NULL,0x00080000,7,NULL,2,3,'1',NULL,14,'bonus2 bAddSize,Size_Small,40; bonus2 bAddSize,Size_Medium,40; bonus2 bAddSize,Size_Large,40;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (1984,'Stem_Whip','Stem Whip',4,20,NULL,800,'170:50',NULL,1,1,0x00080000,7,NULL,2,3,'102',1,14,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (1984,'Stem_Whip','Stem Whip',4,20,NULL,800,'170:50',NULL,1,1,0x00080000,7,NULL,2,3,'102',1,14,'if(getrefine()>5) { bonus2 bSkillUseSP,"WA_SWING_DANCE",(getrefine()-5)*4; bonus2 bSkillUseSP,"WM_LULLABY_DEEPSLEEP",(getrefine()-5)*4; } bonus2 bSkillVariableCast,"WA_SWING_DANCE",-2000; bonus2 bSkillVariableCast,"WM_LULLABY_DEEPSLEEP",-2000;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1985,'Rosebine','Rosebine',4,20,NULL,1000,'100:130',NULL,1,NULL,0x00080000,7,NULL,2,4,'110',1,14,'bonus bInt,2; bonus bAgi,-2; bonus3 bAutoSpell,"WM_VOICEOFSIREN",1,20;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (1986,'P_Tail1','Eden Tail I',4,NULL,NULL,0,'125',NULL,2,NULL,0x00080000,7,NULL,2,3,'60',NULL,14,NULL,NULL,NULL);
 # Additional 2-Handed Staffs
@@ -1176,8 +1177,8 @@ REPLACE INTO `item_db_re` VALUES (2011,'Golden_Rod_Staff2','Golden Rod Staff II'
 REPLACE INTO `item_db_re` VALUES (2012,'Aqua_Staff2','Aqua Staff II',4,20,NULL,900,'30:270',NULL,1,1,0x00000200,7,2,34,4,'130',1,10,'bonus bAtkEle,Ele_Water; bonus bInt,5; bonus2 bSkillAtk,"MG_COLDBOLT",30; bonus2 bSkillAtk,"MG_FROSTDIVER",30;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2013,'Crimson_Staff2','Crimson Staff II',4,20,NULL,900,'30:270',NULL,1,1,0x00000200,7,2,34,4,'130',1,10,'bonus bAtkEle,Ele_Fire; bonus bInt,5; bonus2 bSkillAtk,"MG_FIREBOLT",30; bonus2 bSkillAtk,"MG_FIREBALL",30;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2014,'Forest_Staff2','Forest Staff II',4,20,NULL,900,'30:270',NULL,1,1,0x00000200,7,2,34,4,'130',1,10,'bonus bAtkEle,Ele_Earth; bonus bInt,5; bonus2 bSkillAtk,"WZ_EARTHSPIKE",30; bonus2 bSkillAtk,"WZ_HEAVENDRIVE",30;',NULL,NULL);
-#2015,
-REPLACE INTO `item_db_re` VALUES (2016,'Bellum_Arcwand','Bellum Arcwand',4,20,NULL,800,'110:220',NULL,1,NULL,0x00818314,7,2,34,4,'95',1,10,'bonus bUnbreakableWeapon,0; bonus2 bMagicAddRace,RC_DemiHuman,25; bonus bIgnoreMdefRate,25; if(getrefine()>5) { bonus2 bMagicAddRace,RC_DemiHuman,15; } if(getrefine()>8) { bonus bVariableCastrate,-20; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2015,'Upg_Staff','Upg Staff',4,20,NULL,1000,'50:70',NULL,1,1,0x00818314,7,2,34,3,'1',1,10,'bonus bMatk,(getrefine()*10); bonus bHealPower,getrefine(); if(BaseJob==Job_Wizard) bonus bMatk,30; else if(BaseJob==Job_Sage) bonus bMatk,20; if(BaseLevel>70) bonus bMatk,(((BaseLevel-70)/10)*10);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2016,'Velum_Arcwand','Vellum Arcwand',4,20,NULL,800,'110:220',NULL,1,NULL,0x00818314,7,2,34,4,'95',1,10,'bonus bUnbreakableWeapon,0; bonus2 bMagicAddRace,RC_DemiHuman,25; bonus bIgnoreMdefRate,25; if(getrefine()>5) { bonus2 bMagicAddRace,RC_DemiHuman,15; } if(getrefine()>8) { bonus bVariableCastrate,-20; }',NULL,NULL);
 # Shields
 # ===================================================================
 REPLACE INTO `item_db_re` VALUES (2101,'Guard','Guard',5,500,NULL,300,NULL,20,NULL,NULL,0xFFFFFFFF,7,2,32,NULL,NULL,1,1,NULL,NULL,NULL);
@@ -1215,7 +1216,7 @@ REPLACE INTO `item_db_re` VALUES (2132,'Shelter_Resistance','Shell Of Resistance
 REPLACE INTO `item_db_re` VALUES (2133,'Tournament_Shield','Tournament Shield',5,20,NULL,1000,NULL,105,NULL,1,0x00004082,2,2,32,NULL,'50',1,4,'bonus2 bAddRace,RC_NonBoss,1; bonus2 bAddRace,RC_Boss,1; if( Class == Job_Lord_Knight ) bonus bAspdRate,-5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2134,'Shield_Of_Naga','Shield of Naga',5,20,NULL,500,NULL,35,NULL,1,0x00CFFF80,2,2,32,NULL,'70',1,2,'bonus bMdef,3; autobonus2 "{bonus bShortWeaponDamageReturn,(getrefine()*3);}",10,5000,BF_WEAPON,"{specialeffect2 EF_GUARD;}";',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2135,'Shadow_Guard','Shadow Guard',5,20,NULL,800,NULL,52,NULL,1,0x00020000,2,2,32,NULL,'70',1,2,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2136,'Cracked_Buckler','Cracked Buckler',5,NULL,NULL,0,NULL,5,NULL,NULL,0xFFFFFFFF,7,2,32,NULL,NULL,NULL,2,'bonus bAgi,2; bonus2 bAddEle,Ele_Neutral,-10; bonus3 bAutoSpellWhenHit,"PR_KYRIE",1,50; bonus bMdef,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2136,'Cracked_Buckler','Cracked Buckler',5,NULL,NULL,0,NULL,5,NULL,NULL,0xFFFFFFFF,7,2,32,NULL,NULL,NULL,2,'bonus bAgi,2; bonus2 bAddEle,Ele_Neutral,-10; bonus3 bAutoSpellWhenHit,"PR_KYRIE",10,10; bonus bMdef,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2137,'Valkyrja\'s_Shield_C','Neo Valkyrja\'s Shield',5,NULL,NULL,0,NULL,5,NULL,NULL,0xFFFFFFFE,2,2,32,NULL,'95',NULL,4,'bonus2 bSubEle,Ele_Water,20; bonus2 bSubEle,Ele_Fire,20; bonus2 bSubEle,Ele_Dark,20; bonus2 bSubEle,Ele_Undead,20; bonus bMdef,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2138,'Bradium_Shield','Bradium Shield',5,20,NULL,1800,NULL,98,NULL,1,0x00CFFF80,2,2,32,NULL,'65',1,3,'bonus2 bSkillAtk,CR_SHIELDBOOMERANG,60; bonus bAgi,-1; bonus bMaxHP,500;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2139,'Flame_Thrower','Flame Thrower',5,20000,NULL,2000,NULL,60,NULL,NULL,0xFFFFFFFF,7,2,32,NULL,'99',NULL,1,NULL,NULL,NULL);
@@ -1247,12 +1248,12 @@ REPLACE INTO `item_db_re` VALUES (2162,'Bible_Of_Promise2','Bible Of Promise Vol
 #2165,
 #2166,
 #2167,
-REPLACE INTO `item_db_re` VALUES (2168,'Immune_Shield','Immune Shield',5,20,NULL,700,NULL,55,NULL,1,0xFFFFFFFF,7,2,32,NULL,'1',1,1,'if(getrefine()>=5){ bonus2 bSubEle,Ele_Neutral,getrefine()-4; } if(getrefine()>=7){ bonus2 bSubEle,Ele_Neutral,5; } if(getrefine()>=9){ bonus2 bSubEle,Ele_Water,10; bonus2 bSubEle,Ele_Wind,10; bonus2 bSubEle,Ele_Earth,10; bonus2 bSubEle,Ele_Fire,10; } if(getrefine()>=13){ bonus2 bSubEle,Ele_Neutral,12-getrefine(); }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2169,'Kalasag','Kalasag',5,20,NULL,400,NULL,40,NULL,NULL,0xFFFFFFFF,7,2,32,NULL,'1',1,1,'bonus2 bSubRace,RC_Boss,getrefine()/3;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2170,'Bayani_Kalasag','Bayani Kalasag',5,20,NULL,400,NULL,40,NULL,1,0xFFFFFFFF,7,2,32,NULL,'1',1,1,'bonus2 bSubRace,RC_Boss,getrefine()/3;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2171,'Fox_Wrist_Guard','Fox Wrist Guard',5,40000,NULL,200,NULL,45,NULL,1,0x02000000,7,2,32,NULL,'100',1,1,'bonus bFlee,5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2172,'Wolf_Wrist_Guard','Wolf Wrist Guard',5,45000,NULL,250,NULL,70,NULL,1,0x02000000,7,2,32,NULL,'100',1,1,'autobonus "{bonus bBaseAtk,100; bonus bFlee,-50;}",10,5000,BF_WEAPON,"{specialeffect2 EF_ENHANCE;}";',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2173,'Crescent_Wrist_Guard','Crescent Wrist Guard',5,45000,NULL,250,NULL,45,NULL,1,0x02000000,7,2,32,NULL,'100',1,1,'bonus bDelayRate,-2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2168,'Immuned_Shield','Immune Shield',5,20,NULL,700,NULL,55,NULL,1,0xFFFFFFFF,7,2,32,NULL,'1',1,1,'if(getrefine()>=5){ bonus2 bSubEle,Ele_Neutral,getrefine()-4; } if(getrefine()>=7){ bonus2 bSubEle,Ele_Neutral,5; } if(getrefine()>=9){ bonus2 bSubEle,Ele_Water,10; bonus2 bSubEle,Ele_Wind,10; bonus2 bSubEle,Ele_Earth,10; bonus2 bSubEle,Ele_Fire,10; } if(getrefine()>=13){ bonus2 bSubEle,Ele_Neutral,12-getrefine(); }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2169,'Kalasak','Kalasag',5,20,NULL,400,NULL,40,NULL,NULL,0xFFFFFFFF,7,2,32,NULL,'1',1,1,'bonus2 bSubRace,RC_Boss,getrefine()/3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2170,'Bayani_Kalasak','Bayani Kalasag',5,20,NULL,400,NULL,40,NULL,1,0xFFFFFFFF,7,2,32,NULL,'1',1,1,'bonus2 bSubRace,RC_Boss,getrefine()/3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2171,'Fox_Armguard','Fox Wrist Guard',5,40000,NULL,200,NULL,45,NULL,1,0x02000000,7,2,32,NULL,'100',1,1,'bonus bFlee,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2172,'Wolf_Armguard','Wolf Wrist Guard',5,45000,NULL,250,NULL,70,NULL,1,0x02000000,7,2,32,NULL,'100',1,1,'autobonus "{bonus bBaseAtk,100; bonus bFlee,-50;}",10,5000,BF_WEAPON,"{specialeffect2 EF_ENHANCE;}";',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2173,'Crescent_Armguard','Crescent Wrist Guard',5,45000,NULL,250,NULL,45,NULL,1,0x02000000,7,2,32,NULL,'100',1,1,'bonus bDelayRate,-2;',NULL,NULL);
 # GM Shield
 REPLACE INTO `item_db_re` VALUES (2199,'Ahura_Mazda','Ahura Mazdah',5,1,NULL,10,NULL,10000,NULL,NULL,0xFFFFFFFF,7,2,32,NULL,'1',1,0,'bonus bAllStats,50; bonus bMdef,99; bonus bShortWeaponDamageReturn,100; bonus2 bSubRace,RC_DemiHuman,95; skill "CR_FULLPROTECTION",5; skill "WZ_ESTIMATION",1; skill "ST_FULLSTRIP",5; skill "HW_MAGICPOWER", 10; bonus bMaxHPRate,200; bonus bNoKnockback,0; bonus bDelayRate,-20; bonus bSpeedRate,25; bonus bIntravision,0;','sc_start4 SC_ENDURE,60000,10,0,0,1;','sc_end SC_ENDURE;');
 # Headgears
@@ -1500,7 +1501,7 @@ REPLACE INTO `item_db_re` VALUES (2438,'Paw_Of_Cat','Paw Of Cat',5,10,NULL,300,N
 REPLACE INTO `item_db_re` VALUES (2439,'Refresh_Shoes','Refresh Shoes',5,20,NULL,0,NULL,9,NULL,NULL,0xFFFFFFFF,7,2,64,NULL,NULL,NULL,0,'bonus bMaxHPRate,17; bonus bMaxSPRate,8; bonus2 bHPRegenRate,20,10000; bonus2 bSPRegenRate,3,10000;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2440,'Sprint_Shoes','Sprint Shoes',5,20,NULL,300,NULL,10,NULL,1,0x00CFFF80,2,2,64,NULL,'70',1,0,'bonus bAgi,1; bonus bSPrecovRate,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2441,'Beach_Sandal','Beach Sandals',5,20,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,64,NULL,NULL,1,0,'bonus bStr,1; bonus bInt,1; bonus bAgi,1; bonus2 bSubEle,Ele_Fire,10;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2442,'Boots_Perforated','Red Stocking Boots',5,NULL,NULL,0,NULL,7,NULL,NULL,0xFFFFFFFF,7,2,64,NULL,NULL,NULL,0,'bonus bLuk,2; bonus bHPrecovRate,10; bonus bSPrecovRate,10; bonus3 bAutoSpellWhenHit,"WZ_QUAGMIRE",3,20; bonus bMdef,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2442,'Boots_Perforated','Red Stocking Boots',5,NULL,NULL,0,NULL,7,NULL,NULL,0xFFFFFFFF,7,2,64,NULL,NULL,NULL,0,'bonus bLuk,2; bonus bHPrecovRate,10; bonus bSPrecovRate,10; bonus3 bAutoSpellWhenHit,"WZ_QUAGMIRE",3,30; bonus bMdef,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2443,'Fish_Shoes','Fisher\'s Boots',5,10,NULL,250,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,64,NULL,NULL,NULL,0,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2444,'Krieger_Shoes1','Glorious Shoes',5,20,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,64,NULL,'81',1,0,'bonus bMaxHPRate,10; bonus2 bSubRace,RC_DemiHuman,4; bonus3 bAutoSpellWhenHit,"AL_INCAGI",1,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2445,'Krieger_Shoes2','Glorious Popularized Shoes',5,20,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,64,NULL,'61',1,0,'bonus bMaxHPRate,5; bonus bMaxSPRate,5;',NULL,NULL);
@@ -1523,7 +1524,7 @@ REPLACE INTO `item_db_re` VALUES (2461,'Upg_Greave','Upg Greaves',5,20,NULL,400,
 REPLACE INTO `item_db_re` VALUES (2462,'Sleipnir_C','Sleipnir',5,20,NULL,0,NULL,40,NULL,NULL,0xFFFFFFFF,7,2,64,NULL,'94',NULL,0,'bonus bMdef,10; bonus bMaxHPrate,20; bonus bMaxSPrate,20; bonus bSPrecovRate,15; bonus bSpeedRate,25;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2463,'Feral_Boots','Feral Boots',5,20,NULL,0,NULL,12,NULL,NULL,0xFFFFFFFF,7,2,64,NULL,'75',NULL,0,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2464,'No_Fear_Shoes','No Fear Shoes',5,NULL,NULL,0,NULL,6,NULL,NULL,0xFFFFFFFF,7,2,64,NULL,'20',NULL,0,'bonus bStr,1; bonus bInt,1; bonus bDex,1;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2465,'Dance_Shoes','Dance Shoes',5,20,NULL,300,NULL,15,NULL,1,0x00080000,7,2,64,NULL,'105',1,0,'bonus bAgi,1; bonus bAspdRate,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2465,'Dance_Shoes','Dance Shoes',5,20,NULL,300,NULL,15,NULL,1,0x00080000,7,2,64,NULL,'105',1,0,'bonus bAgi,1; bonus bAspdRate,2; bonus2 bSkillUseSP,"WA_SWING_DANCE",32;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2466,'Training_Shoes','Training Shoes',5,20,NULL,300,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,64,NULL,'1',1,0,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2467,'Golden_Rod_Shoes','Golden Rod Shoes',5,20,NULL,500,NULL,12,NULL,1,0x00000200,7,2,64,NULL,'100',1,0,'bonus bMdef,2; bonus bMaxHP,500; bonus2 bSubEle,Ele_Wind,15;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2468,'Aqua_Shoes','Aqua Shoes',5,20,NULL,500,NULL,12,NULL,1,0x00000200,7,2,64,NULL,'100',1,0,'bonus bMdef,2; bonus bMaxHP,500; bonus2 bSubEle,Ele_Water,15;',NULL,NULL);
@@ -1533,15 +1534,15 @@ REPLACE INTO `item_db_re` VALUES (2471,'Mercy_Shoes','Mercy Shoes',5,20,NULL,300
 REPLACE INTO `item_db_re` VALUES (2472,'Judgement_Shoes','Judgement Shoes',5,20,NULL,300,NULL,12,NULL,NULL,0x00000100,7,2,64,NULL,'100',1,0,'bonus bMaxSP,150; bonus2 bSkillAtk,"AB_JUDEX",30;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2473,'Para_Team_Boots4','Eden Team Boots IV',5,NULL,NULL,0,NULL,20,NULL,NULL,0xFFFFFFFF,7,2,64,NULL,'60',NULL,0,'bonus bAgi,1; bonus bVit,1; bonus bHPrecovRate,28; bonus bSPrecovRate,12;',NULL,NULL);
 #2474,
-REPLACE INTO `item_db_re` VALUES (2475,'Urj_Greaves','Urj Greaves',5,20,NULL,900,NULL,32,NULL,1,0x00000080,8,2,64,NULL,'100',1,0,'bonus bMaxSP,40; if(getequiprefinerycnt(EQI_SHOES)>7) bonus bMaxHPRate,getequiprefinerycnt(EQI_SHOES)-7;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2476,'Pertz_Greaves','Pertz Greaves',5,20,NULL,900,NULL,32,NULL,1,0x00000080,8,2,64,NULL,'100',1,0,'bonus bMaxSP,40; bonus bAgi,-7+(getequiprefinerycnt(EQI_SHOES)>8)?8:getequiprefinerycnt(EQI_SHOES);',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2477,'Sabath_Shoes','Sabath Shoes',5,20,NULL,400,NULL,18,NULL,1,0x00001000,7,2,64,NULL,'100',1,0,'bonus bMaxSP,30; bonus bLuk,3;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2478,'Nabeu\'s_Shoes','Nabeu\'s Shoes',5,20,NULL,400,NULL,18,NULL,1,0x00001000,7,2,64,NULL,'100',1,0,'bonus bFlee,3; bonus bInt,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2475,'Ur_Greave','Urj Greaves',5,20,NULL,900,NULL,32,NULL,1,0x00000080,8,2,64,NULL,'100',1,0,'bonus bMaxSP,40; if(getequiprefinerycnt(EQI_SHOES)>7) bonus bMaxHPRate,getequiprefinerycnt(EQI_SHOES)-7;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2476,'Peuz_Greave','Pertz Greaves',5,20,NULL,900,NULL,32,NULL,1,0x00000080,8,2,64,NULL,'100',1,0,'bonus bMaxSP,40; bonus bAgi,-7+(getequiprefinerycnt(EQI_SHOES)>8)?8:getequiprefinerycnt(EQI_SHOES);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2477,'Sabah_Shoes','Sabath Shoes',5,20,NULL,400,NULL,18,NULL,1,0x00001000,7,2,64,NULL,'100',1,0,'bonus bMaxSP,30; bonus bLuk,3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2478,'Nab_Shoes','Nabeu\'s Shoes',5,20,NULL,400,NULL,18,NULL,1,0x00001000,7,2,64,NULL,'100',1,0,'bonus bFlee,3; bonus bInt,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2479,'White_Wing_Boots','White Wing Boots',5,20,NULL,400,NULL,18,NULL,1,0x00000800,7,2,64,NULL,'100',1,0,'bonus bAgi,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2480,'Black_Wing_Boots','Black Wing Boots',5,20,NULL,400,NULL,18,NULL,1,0x00000800,8,2,64,NULL,'100',1,0,'bonus bInt,2; bonus bMaxSPRate,5;',NULL,NULL);
 #2481,
 #2482,
-REPLACE INTO `item_db_re` VALUES (2483,'Siege_Greaves','Siege Greaves',5,NULL,NULL,750,NULL,30,NULL,1,0x006444A2,7,2,64,NULL,'95',1,0,'bonus bMdef,1; bonus2 bSubRace,RC_DemiHuman,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2483,'Siege_Greave','Siege Greaves',5,NULL,NULL,750,NULL,30,NULL,1,0x006444A2,7,2,64,NULL,'95',1,0,'bonus bMdef,1; bonus2 bSubRace,RC_DemiHuman,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2484,'Siege_Boots','Siege Boots',5,NULL,NULL,500,NULL,20,NULL,1,0x036E5CEA,7,2,64,NULL,'95',1,0,'bonus bMdef,5; bonus2 bSubRace,RC_DemiHuman,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2485,'Siege_Shoes','Siege Shoes',5,NULL,NULL,350,NULL,15,NULL,1,0x00818315,7,2,64,NULL,'95',1,0,'bonus bMdef,10; bonus2 bSubRace,RC_DemiHuman,1;',NULL,NULL);
 #2486,
@@ -1549,8 +1550,8 @@ REPLACE INTO `item_db_re` VALUES (2485,'Siege_Shoes','Siege Shoes',5,NULL,NULL,3
 #2488,
 #2489,
 #2490,
-REPLACE INTO `item_db_re` VALUES (2491,'Nightmare_Bangungot_Boots','Nightmare Bangungot Boots',5,20,NULL,600,NULL,10,NULL,NULL,0xFFFFFFFF,7,2,64,NULL,'1',1,0,'bonus bMdef,getrefine(); if(getrefine()>=14){ bonus bSpeedRate,25; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2492,'Bayani_Nightmare_Bangungot_Boots','Bayani Nightmare Bangungot Boots',5,20,NULL,600,NULL,10,NULL,1,0xFFFFFFFF,7,2,64,NULL,'1',1,0,'bonus bMdef,getrefine(); if(getrefine()>=12){ bonus bSpeedRate,25; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2491,'Bangungot_Boots','Nightmare Bangungot Boots',5,20,NULL,600,NULL,10,NULL,NULL,0xFFFFFFFF,7,2,64,NULL,'1',1,0,'bonus bMdef,getrefine(); if(getrefine()>=14){ bonus bSpeedRate,25; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2492,'Bayani_Bangungot_Boots','Bayani Nightmare Bangungot Boots',5,20,NULL,600,NULL,10,NULL,1,0xFFFFFFFF,7,2,64,NULL,'1',1,0,'bonus bMdef,getrefine(); if(getrefine()>=12){ bonus bSpeedRate,25; }',NULL,NULL);
 # Garments
 # ===================================================================
 REPLACE INTO `item_db_re` VALUES (2501,'Hood','Hood',5,1000,NULL,200,NULL,4,NULL,NULL,0xFFFFFFFF,7,2,4,NULL,NULL,1,0,NULL,NULL,NULL);
@@ -1583,7 +1584,7 @@ REPLACE INTO `item_db_re` VALUES (2527,'Dragon_Breath','Dragon Breath',5,20,NULL
 REPLACE INTO `item_db_re` VALUES (2528,'Wool_Scarf','Wool Scarf',5,20,NULL,500,NULL,11,NULL,1,0xFFFFFFFE,2,2,4,NULL,'55',1,0,'bonus bMdef,4;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2529,'Rider_Insignia','Rider Insignia',5,20,NULL,500,NULL,13,NULL,NULL,0xFFFFFFFE,2,2,4,NULL,'55',1,0,'bonus bAgi,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2530,'Rider_Insignia_','Rider Insignia',5,20,NULL,500,NULL,13,NULL,1,0xFFFFFFFE,2,2,4,NULL,'55',1,0,'bonus bAgi,2;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2531,'Ulfhedinn','Ulfhedinn',5,20,NULL,700,NULL,13,NULL,1,0x000654E2,2,2,4,NULL,'70',1,0,'bonus3 bAutoSpellWhenHit,NPC_STONESKIN,1,20;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2531,'Ulfhedinn','Ulfhedinn',5,20,NULL,700,NULL,13,NULL,1,0x000654E2,2,2,4,NULL,'70',1,0,'bonus3 bAutoSpellWhenHit,NPC_STONESKIN,6,20;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2532,'Mithril_Magic_Cape','Mithril Magic Cape',5,20,NULL,400,NULL,8,NULL,1,0x00098B1C,2,2,4,NULL,'70',1,0,'bonus bMdef,3; bonus5 bAutoSpellWhenHit,NPC_ANTIMAGIC,1,200,BF_MAGIC,0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2533,'Freyja_Cape','Freyja Cape',5,NULL,NULL,200,NULL,10,NULL,NULL,0xFFFFFFFE,7,2,4,NULL,NULL,NULL,0,'bonus2 bSubRace,RC_DemiHuman,15;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2534,'Ruffler','Ruffler',5,20,NULL,0,NULL,10,NULL,NULL,0xFFFFFFFF,7,2,4,NULL,NULL,NULL,0,'bonus2 bSubEle,Ele_Neutral,17; bonus bFlee,17;',NULL,NULL);
@@ -1625,7 +1626,7 @@ REPLACE INTO `item_db_re` VALUES (2569,'Mercy_Shawl','Mercy Shawl',5,20,NULL,400
 REPLACE INTO `item_db_re` VALUES (2570,'Judgement_Shawl','Judgement Shawl',5,20,NULL,400,NULL,12,NULL,NULL,0x00000100,7,2,4,NULL,'100',1,0,'bonus bFlee,5; bonus3 bAutoSpellWhenHit,"AB_ORATIO",getskilllv("AB_ORATIO") ? getskilllv("AB_ORATIO") : 2,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2571,'Para_Team_Manteau2','Eden Team Manteau II',5,NULL,NULL,0,NULL,18,NULL,NULL,0xFFFFFFFF,7,2,4,NULL,'60',NULL,0,'bonus bFlee,12; bonus2 bSubEle,Ele_Neutral,10;',NULL,NULL);
 #2572,
-REPLACE INTO `item_db_re` VALUES (2573,'Archangel_Wings','Archangel Wings',5,NULL,NULL,200,NULL,18,NULL,1,0xFFFFFFFF,7,2,4,NULL,NULL,1,1,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2573,'Archangel_Wing','Archangel Wings',5,NULL,NULL,200,NULL,18,NULL,1,0xFFFFFFFF,7,2,4,NULL,NULL,1,1,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2574,'Urj_Manteau','Urj Manteau',5,20,NULL,600,NULL,20,NULL,NULL,0x00000080,8,2,4,NULL,'100',1,0,'bonus bMaxHPRate,2; bonus2 bSubEle,Ele_Neutral,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2575,'Pertz_Manteau','Pertz Manteau',5,20,NULL,600,NULL,16,NULL,NULL,0x00000080,8,2,4,NULL,'100',1,0,'bonus bFlee,10; bonus bCritical,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2576,'Adventurer\'s_Backpack','Adventurer\'s Backpack',5,NULL,NULL,200,NULL,20,NULL,1,0xFFFFFFFF,7,2,4,NULL,NULL,1,2,'skill "BS_GREED",1; if(getrefine()>6) { if(readparam(bStr)>=90){ bonus bBaseAtk,20; } if(readparam(bInt)>=90){ bonus bMatk,30; } if(readparam(bVit)>=90){ bonus2 bSubEle,Ele_Neutral,10; } if(readparam(bAgi)>=90){ bonus bAspdRate,8; } if(readparam(bDex)>=90){ bonus bLongAtkRate,5; } if(readparam(bLuk)>=90){ bonus bCritAtkRate,10; } } if(getrefine()>8) { if(readparam(bStr)>=90){ bonus bBaseAtk,10; } if(readparam(bInt)>=90){ bonus bMatk,20; } if(readparam(bVit)>=90){ bonus2 bSubEle,Ele_Neutral,5; } if(readparam(bAgi)>=90){ bonus bAspd,1; } if(readparam(bDex)>=90){ bonus bLongAtkRate,5; } if(readparam(bLuk)>=90){ bonus bCritAtkRate,5; } }',NULL,NULL);
@@ -1885,7 +1886,7 @@ REPLACE INTO `item_db_re` VALUES (2837,'F_Safety_Ring_C','Safety Ring',5,1,NULL,
 REPLACE INTO `item_db_re` VALUES (2838,'F_Necklace_C','Necklace',5,1,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,136,NULL,'1',NULL,0,'bonus bVit,4;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2839,'F_Ring_C','Ring',5,1,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,136,NULL,'1',NULL,0,'bonus bStr,4;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2840,'F_Rosary_C','Rosary',5,1,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,136,NULL,'1',NULL,0,'bonus bLuk,4; bonus bMdef,5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2841,'Caracas_Ring','Caracas Ring',5,NULL,NULL,0,NULL,2,NULL,NULL,0xFFFFFFFE,7,2,136,NULL,'99',NULL,0,'bonus bInt,2; bonus bDex,2; bonus bMdef,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2841,'Caracas_Ring','Caracas Ring',5,NULL,NULL,0,NULL,2,NULL,NULL,0xFFFFFFFE,7,2,136,NULL,'99',NULL,0,'bonus bInt,2; bonus bDex,2; bonus bMdef,2; bonus2 bExpAddRace,RC_Boss,10; bonus2 bExpAddRace,RC_NonBoss,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2842,'F_Earing_C','Earring',5,1,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,136,NULL,'1',NULL,0,'bonus bInt,3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2843,'Gold_Trickle','Gold Trickle',5,20,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'75',NULL,0,'bonus bMaxSP,50;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2844,'El_Dicastes_Light','Light Of El Discastes',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'80',NULL,0,'skill "RETURN_TO_ELDICASTES",1;',NULL,NULL);
@@ -1897,31 +1898,34 @@ REPLACE INTO `item_db_re` VALUES (2849,'E_Safety_Ring_C','Safety Ring',5,1,NULL,
 REPLACE INTO `item_db_re` VALUES (2850,'E_Ring_C','Ring',5,1,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,136,NULL,'1',NULL,0,'bonus bVit,4;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2851,'E_Necklace_C','Necklace',5,1,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,136,NULL,'1',NULL,0,'bonus bStr,4;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2852,'E_Rosary_C','Rosary',5,1,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,136,NULL,'1',NULL,0,'bonus bLuk,4; bonus bMdef,5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2853,'Telekinetic_Orb','Telekinetic Orb',5,20,NULL,200,NULL,2,NULL,NULL,0xFFFFFFFE,7,2,136,NULL,'110',NULL,0,'bonus bMdef,1; bonus bInt,3; bonus bMaxSP,30; bonus2 bSkillAtk,"SO_PSYCHIC_WAVE",10;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2853,'Telekinetic_Orb','Telekinetic Orb',5,20,NULL,200,NULL,2,NULL,NULL,0xFFFFFFFE,7,2,136,NULL,'110',NULL,0,'bonus bMdef,1; bonus bInt,3; bonus bMaxSP,30; bonus2 bSkillAtk,"WL_SOULEXPANSION",10; bonus2 bSkillAtk,"SO_PSYCHIC_WAVE",10; bonus2 bSkillUseSP,"WL_SOULEXPANSION",-50; bonus2 bSkillUseSP,"SO_PSYCHIC_WAVE",-50;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2854,'Alchemy_Glove','Alchemy Glove',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFE,7,2,136,NULL,'125',NULL,0,'bonus bMdef,2; bonus bInt,1; bonus3 bAutoSpell,"MG_FIREBALL",5,10; bonus5 bAutoSpell,"MG_FIREBOLT",5,10,BF_MAGIC,1; bonus2 bSubEle,Ele_Water,-30;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2855,'Whike_Black_Tail','Whike Black Tail',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'45',NULL,0,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2855,'Whike_Black_Tail','Whike Black Tail',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'45',NULL,0,'bonus bCritical,70; bonus bAspdRate,3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2856,'Half_Megin','Half Megingjard',5,20,NULL,0,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'47',NULL,0,'bonus bMdef,3; bonus bStr,20;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2857,'Half_Brysing','Half Brisingamen',5,20,NULL,0,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'47',NULL,0,'bonus bStr,3; bonus bInt,5; bonus bVit,3; bonus bDex,3; bonus bAgi,3; bonus bLuk,5; bonus bMdef,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2858,'Pendant_Of_Guardian','Guardian Pendant',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'70',NULL,0,'skill "ALL_GUARDIAN_RECALL",1;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2859,'Golden_Rod_Orb','Golden Rod Orb',5,20,NULL,200,NULL,2,NULL,1,0x00000200,7,2,136,NULL,'100',NULL,0,'bonus bMdef,2; bonus bInt,1; bonus2 bSubEle,Ele_Wind,15; bonus3 bAutoSpellWhenHit,"WZ_JUPITEL",3,10;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2860,'Aqua_Orb','Aqua Orb',5,20,NULL,200,NULL,2,NULL,1,0x00000200,7,2,136,NULL,'100',NULL,0,'bonus bMdef,2; bonus bInt,1; bonus2 bSubEle,Ele_Water,15; bonus3 bAutoSpellWhenHit,"WZ_FROSTNOVA",3,10;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2861,'Crimson_Orb','Crismon Orb',5,20,NULL,200,NULL,2,NULL,1,0x00000200,7,2,136,NULL,'100',NULL,0,'bonus bMdef,2; bonus bInt,1; bonus2 bSubEle,Ele_Fire,15; bonus3 bAutoSpellWhenHit,"WZ_SIGHTRASHER",3,10;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2862,'Forest_Orb','Forest Orb',5,20,NULL,200,NULL,2,NULL,1,0x00000200,7,2,136,NULL,'100',NULL,0,'bonus bMdef,2; bonus bInt,1; bonus2 bSubEle,Ele_Earth,15; bonus3 bAutoSpellWhenHit,"WZ_QUAGMIRE",3,10;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2863,'Ring_Of_Valkyrie','Ring Of Valkyrie',5,NULL,NULL,0,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'1',NULL,0,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2859,'Golden_Rod_Orb','Golden Rod Orb',5,20,NULL,200,NULL,2,NULL,NULL,0x00000200,7,2,136,NULL,'100',NULL,0,'bonus bMdef,2; bonus bInt,1; bonus2 bSubEle,Ele_Wind,15; bonus3 bAutoSpellWhenHit,"WZ_JUPITEL",3,30;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2860,'Aqua_Orb','Aqua Orb',5,20,NULL,200,NULL,2,NULL,NULL,0x00000200,7,2,136,NULL,'100',NULL,0,'bonus bMdef,2; bonus bInt,1; bonus2 bSubEle,Ele_Water,15; bonus3 bAutoSpellWhenHit,"WZ_FROSTNOVA",3,30;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2861,'Crimson_Orb','Crismon Orb',5,20,NULL,200,NULL,2,NULL,NULL,0x00000200,7,2,136,NULL,'100',NULL,0,'bonus bMdef,2; bonus bInt,1; bonus2 bSubEle,Ele_Fire,15; bonus3 bAutoSpellWhenHit,"WZ_SIGHTRASHER",3,30;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2862,'Forest_Orb','Forest Orb',5,20,NULL,200,NULL,2,NULL,NULL,0x00000200,7,2,136,NULL,'100',NULL,0,'bonus bMdef,2; bonus bInt,1; bonus2 bSubEle,Ele_Earth,15; bonus3 bAutoSpellWhenHit,"WZ_QUAGMIRE",3,30;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2863,'Ring_Of_Valkyrie','Ring Of Valkyrie',5,NULL,NULL,0,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'1',NULL,0,'bonus2 bExpAddRace,RC_Boss,5; bonus2 bExpAddRace,RC_NonBoss,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2864,'Light_Of_Cure','Liht Of Cure',5,20,NULL,0,NULL,NULL,NULL,NULL,0x00000100,7,2,136,NULL,'110',NULL,0,'bonus bVit,2; bonus bHealPower,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2865,'Seal_Of_Cathedral','Seal Of Cathedral',5,20,NULL,0,NULL,NULL,NULL,NULL,0x00000100,7,2,136,NULL,'110',NULL,0,'bonus bInt,2; bonus bHealPower,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2866,'Ring_Of_Archbishop','Ring Of Archbishop',5,20,NULL,0,NULL,NULL,NULL,NULL,0x00000100,7,2,136,NULL,'110',NULL,0,'bonus bDex,2; bonus bHealPower,2;',NULL,NULL);
 #
-REPLACE INTO `item_db_re` VALUES (2883,'Urj_Seal','Urj Seal',5,20,NULL,200,NULL,4,NULL,1,0x00000080,8,2,136,NULL,'100',NULL,0,'bonus bMaxHPrate,2; bonus2 bSkillUseSP,"LK_SPIRALPIERCE",5; bonus2 bSkillUseSP,"RK_HUNDREDSPEAR",5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2884,'Pertz_Seal','Pertz Seal',5,20,NULL,200,NULL,3,NULL,1,0x00000080,8,2,136,NULL,'100',NULL,0,'bonus bBaseAtk,20; bonus bMaxSP,20;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2872,'G_Honor_Certificate','G Honor Certificate',5,NULL,NULL,0,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'1',NULL,0,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2873,'Cat_Hand_Glove','Cat Hand Glove',5,20,NULL,100,NULL,2,NULL,1,0xFFFFFFFF,7,2,136,NULL,'1',NULL,0,'bonus bAgi,1; bonus bVit,1; bonus bDex,1; bonus bLuk,1;',NULL,NULL);
+#
+REPLACE INTO `item_db_re` VALUES (2883,'Ur_Seal','Urj Seal',5,20,NULL,200,NULL,4,NULL,1,0x00000080,8,2,136,NULL,'100',NULL,0,'bonus bMaxHPrate,2; bonus2 bSkillUseSP,"LK_SPIRALPIERCE",5; bonus2 bSkillUseSP,"RK_HUNDREDSPEAR",5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2884,'Peuz_Seal','Pertz Seal',5,20,NULL,200,NULL,3,NULL,1,0x00000080,8,2,136,NULL,'100',NULL,0,'bonus bBaseAtk,20; bonus bMaxSP,20;',NULL,NULL);
 #2885,
-REPLACE INTO `item_db_re` VALUES (2886,'Sabath_Seal','Sabath Seal',5,20,NULL,100,NULL,NULL,NULL,NULL,0x00001000,7,2,136,NULL,'100',NULL,0,'bonus bCritical,3;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2887,'Nabeu\'s_Seal','Nabeu\'s Seal',5,20,NULL,100,NULL,NULL,NULL,NULL,0x00001000,7,2,136,NULL,'100',NULL,0,'bonus bBaseAtk,10; bonus bMatk,20;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2886,'Sabah_Ring','Sabath Seal',5,20,NULL,100,NULL,NULL,NULL,NULL,0x00001000,7,2,136,NULL,'100',NULL,0,'bonus bCritical,3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2887,'Nab_Ring','Nabeu\'s Seal',5,20,NULL,100,NULL,NULL,NULL,NULL,0x00001000,7,2,136,NULL,'100',NULL,0,'bonus bBaseAtk,10; bonus bMatk,20;',NULL,NULL);
 #2888,
 #2889,
 REPLACE INTO `item_db_re` VALUES (2890,'White_Wing_Brooch','White Wing Brooch',5,20,NULL,100,NULL,NULL,NULL,NULL,0x00000800,7,2,136,NULL,'100',NULL,0,'bonus bDex,2; bonus bLongAtkRate,3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (2891,'Black_Wing_Brooch','Black Wing Brooch',5,20,NULL,100,NULL,NULL,NULL,NULL,0x00000800,8,2,136,NULL,'100',NULL,0,'bonus bInt,2; bonus bFlee2,3;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2892,'Assassin\'s_Glove','Assassin\'s Glove',5,56000,NULL,400,NULL,3,NULL,NULL,0x00001000,7,2,136,NULL,'100',NULL,0,'bonus bMaxSP,20; bonus bCritical,3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2892,'Assassin\'s_Glove','Assassin\'s Glove',5,56000,NULL,400,NULL,3,NULL,1,0x00001000,7,2,136,NULL,'100',NULL,0,'bonus bMaxSP,20; bonus bCritical,3;',NULL,NULL);
 #2893,
 REPLACE INTO `item_db_re` VALUES (2894,'Sura_Gauntlet','Sura Gauntlet',5,20,NULL,400,NULL,1,NULL,NULL,0x00008000,7,2,136,NULL,'130',NULL,0,'bonus bStr,5; bonus bMaxSPRate,6; bonus bMaxHPRate,-6; if(readparam(bStr)>=120){ bonus bBaseAtk,30; }',NULL,NULL);
 #2895,
@@ -1933,8 +1937,8 @@ REPLACE INTO `item_db_re` VALUES (2899,'Sound_Amplification_Device','Sound Ampli
 REPLACE INTO `item_db_re` VALUES (2907,'Bawaya_Symbol_Tattoo','Bawaya Symbol Tattoo',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'1',NULL,0,'bonus bMatkRate,7; bonus bFixedCastrate,-7;',NULL,NULL);
 #2908,
 #2909,
-REPLACE INTO `item_db_re` VALUES (2910,'Bakunawa_Symbol_Tattoo','Bakunawa Symbol Tattoo',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'1',NULL,0,'bonus2 bAddRace,RC_NonBoss,7; bonus2 bAddRace,RC_Boss,7; bonus bAspdRate,10;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (2911,'Bangungot_Symbol_Tattoo','Bangungot Symbol Tattoo',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'1',NULL,0,'bonus bHealPower,4; bonus bHealPower2,7;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2910,'Bakonawa_Tattoo','Bakunawa Symbol Tattoo',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'1',NULL,0,'bonus2 bAddRace,RC_NonBoss,7; bonus2 bAddRace,RC_Boss,7; bonus bAspdRate,10;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (2911,'Bangungot_Tattoo','Bangungot Symbol Tattoo',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'1',NULL,0,'bonus bHealPower,4; bonus bHealPower2,7;',NULL,NULL);
 # Cards
 # ===================================================================
 REPLACE INTO `item_db_re` VALUES (4001,'Poring_Card','Poring Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bLuk,2; bonus bFlee2,1;',NULL,NULL);
@@ -2088,7 +2092,7 @@ REPLACE INTO `item_db_re` VALUES (4148,'Pharaoh_Card','Pharaoh Card',6,20,NULL,1
 REPLACE INTO `item_db_re` VALUES (4149,'Gargoyle_Card','Gargoyle Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,136,NULL,NULL,NULL,NULL,'bonus3 bAddMonsterDropItem,12028,RC_Insect,100;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4150,'Goat_Card','Goat Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'if(getrefine()<6) { bonus bDef,2; bonus bMdef,5; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4151,'Gajomart_Card','Gajomart Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,64,NULL,NULL,NULL,NULL,'bonus2 bSubRace,RC_Plant,-20; bonus2 bExpAddRace,RC_Plant,10;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (4152,'Galapago_Card','Galapago Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,136,NULL,NULL,NULL,NULL,'bonus2 bAddItemHealRate,IG_Juice,50; bonus3 bAddMonsterDropItem,531,RC_Insect,300; bonus3 bAddMonsterDropItem,532,RC_Insect,300; bonus3 bAddMonsterDropItem,533,RC_Insect,300;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4152,'Galapago_Card','Galapago Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,136,NULL,NULL,NULL,NULL,'bonus2 bAddItemHealRate,IG_Juice,50; bonus3 bAddMonsterDropItem,531,RC_Insect,300; bonus3 bAddMonsterDropItem,532,RC_Insect,300; bonus3 bAddMonsterDropItem,534,RC_Insect,300;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4153,'Crab_Card','Crab Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus bBaseAtk,5; bonus2 bAddDamageClass,1266,30;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4154,'Rice_Cake_Boy_Card','Dumpling Child Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,136,NULL,NULL,NULL,NULL,'bonus2 bAddItemHealRate,IG_Candy,50; bonus3 bAddMonsterDropItem,529,RC_DemiHuman,300; bonus3 bAddMonsterDropItem,530,RC_DemiHuman,100;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4155,'Goblin_Leader_Card','Goblin Leader Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus2 bAddRace2,1,30;',NULL,NULL);
@@ -2299,11 +2303,11 @@ REPLACE INTO `item_db_re` VALUES (4359,'B_Eremes_Card','Assassin Cross Card',6,2
 REPLACE INTO `item_db_re` VALUES (4360,'Eremes_Card','Eremes Guile Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus2 bCriticalAddRace,RC_DemiHuman,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4361,'B_Harword_Card','MasterSmith Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus bBreakWeaponRate,1000; bonus bBreakArmorRate,700;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4362,'Harword_Card','Howard Alt-Eisen Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus bAspdRate,-5; bonus bHit,30;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (4363,'B_Magaleta_Card','High Priest Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus5 bAutoSpellWhenHit,"HP_ASSUMPTIO",5,50,BF_WEAPON|BF_MAGIC,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4363,'B_Magaleta_Card','High Priest Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus5 bAutoSpellWhenHit,"HP_ASSUMPTIO",1,50,BF_WEAPON|BF_MAGIC,0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4364,'Magaleta_Card','Margaretha Sorin Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,769,NULL,NULL,NULL,NULL,'bonus bInt,1; bonus5 bAutoSpellWhenHit,"PR_LEXDIVINA",5,150,BF_MAGIC,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4365,'B_Katrinn_Card','High Wizard Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,769,NULL,NULL,NULL,NULL,'bonus bIgnoreMDefRace,RC_NonBoss; bonus bVariableCastrate,100; bonus bSPrecovRate,-100;',NULL,'heal 0,-2000;');
 REPLACE INTO `item_db_re` VALUES (4366,'Katrinn_Card','Kathryne Keyron Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,769,NULL,NULL,NULL,NULL,'bonus bVariableCastrate,getrefine()*-1; if(getrefine()>=9) { bonus bMatkRate,2; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (4367,'B_Shecil_Card','Sniper Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus2 bHpDrainRate,50,20; bonus bHPrecovRate,-10;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4367,'B_Shecil_Card','Sniper Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus2 bHpDrainRate,10,20; bonus bHPrecovRate,-10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4368,'Shecil_Card','Cecil Damon Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus bAspdRate,5; bonus bHit,-30;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4369,'Venatu_Card','Venatu Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bLuk,readparam(bAgi)/18;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4370,'Dimik_Card','Dimik Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bVit,getrefine()-5;',NULL,NULL);
@@ -2366,7 +2370,7 @@ REPLACE INTO `item_db_re` VALUES (4426,'Byorgue_Card','Byorgue Card',6,20,NULL,1
 REPLACE INTO `item_db_re` VALUES (4427,'Sword_Guardian_Card','Sword Guardian Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'if(getiteminfo(getequipid(EQI_HAND_R),11)==2||getiteminfo(getequipid(EQI_HAND_R),11)==3) { bonus bHit,5; bonus bCritical,5; bonus2 bSkillAtk,62,25; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4428,'Bow_Guardian_Card','Bow Guardian Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'if(getiteminfo(getequipid(EQI_HAND_R),11)==11) { bonus bHit,5; bonus bCritical,5; bonus2 bSkillAtk,47,50; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4429,'Salamander_Card','Salamander Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,NULL,NULL,'bonus2 bSkillAtk,"WZ_FIREPILLAR",40; bonus2 bSkillAtk,"WZ_METEOR",40;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (4430,'Ifrit_Card','Ifrit Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,136,NULL,NULL,NULL,NULL,'bonus bBaseAtk,(JobLevel/10); bonus bCritical,(JobLevel/10); bonus bHit,(JobLevel/10); bonus3 bAutoSpellWhenHit,"NPC_EARTHQUAKE",2,10;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4430,'Ifrit_Card','Ifrit Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,136,NULL,NULL,NULL,NULL,'bonus bBaseAtk,(JobLevel/10); bonus bCritical,(JobLevel/10); bonus bHit,(JobLevel/10); bonus3 bAutoSpellWhenHit,"NPC_EARTHQUAKE",10,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4431,'Kasa_Card','Kasa Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,NULL,NULL,'bonus3 bAutoSpell,"MG_FIREBALL",5,20; bonus3 bAutoSpell,"MG_FIREBOLT",5,20;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4432,'Magmaring_Card','Magmaring Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,4,NULL,NULL,NULL,NULL,'bonus bBaseAtk,5; bonus2 bAddEle,Ele_Earth,10; bonus2 bCriticalAddRace,RC_Brute,15;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4433,'Imp_Card','Imp Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,136,NULL,NULL,NULL,NULL,'bonus2 bSkillAtk,"MG_FIREBOLT",25; bonus2 bVariableCastrate,"MG_FIREBOLT",-25;',NULL,NULL);
@@ -2414,6 +2418,31 @@ REPLACE INTO `item_db_re` VALUES (4475,'Cobalt_Mineral_Card','Cobalt Mineral Car
 REPLACE INTO `item_db_re` VALUES (4476,'Pinguicula_Card','Pinguicula Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus2 bMagicAddRace,RC_Insect,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4477,'Hell_Apocalypse_Card','Hell_Apocalypse Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus2 bMagicAddRace,RC_Demon,10;',NULL,NULL);
 #
+REPLACE INTO `item_db_re` VALUES (4480,'Sealed_Kiel_Card','Sealed Kiel Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,769,NULL,NULL,NULL,NULL,'bonus bDelayRate,((getrefine()>14)?-20:-15);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4481,'Sealed_Ktullanux_Card','Sealed Ktullanux Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus2 bAddEle,Ele_Fire,((getrefine()>14)?35:25); bonus5 bAutoSpellWhenHit,"WZ_FROSTNOVA",10,10,BF_WEAPON|BF_MAGIC,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4482,'Sealed_B_Ygnizem_Card','Sealed Egnigem Cenia Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,64,NULL,NULL,NULL,NULL,'set .@rate,((getrefine()>14)?7:5); bonus bMaxHPrate,.@rate; bonus bMaxSPrate,.@rate; bonus2 bHPRegenRate,50,10000; bonus2 bSPRegenRate,10,10000;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4483,'Sealed_Dracula_Card','Sealed Dracula Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus2 bSpDrainRate,((getrefine()>14)?70:50),5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4484,'Sealed_Mistress_Card','Sealed Mistress Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,769,NULL,NULL,NULL,NULL,'bonus bNoGemStone,0; bonus bUseSPrate,((getrefine()>14)?35:50);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4485,'Sealed_Gloom_Card','Sealed Gloom Under Night Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'set .@rate,((getrefine()>14)?30:20); bonus2 bAddEle,Ele_Holy,.@rate; bonus2 bAddEle,Ele_Dark,.@rate; bonus2 bAddRace,RC_Angel,.@rate; bonus2 bAddRace,RC_Demon,.@rate;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4486,'Sealed_Berz_Card','Sealed Berzebub Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,136,NULL,NULL,NULL,NULL,'bonus bVariableCastrate,-15;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4487,'Sealed_Ifrit_Card','Sealed Ifrit Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,136,NULL,NULL,NULL,NULL,'bonus bBaseAtk,(JobLevel/20); bonus bCritical,(JobLevel/20); bonus bHit,(JobLevel/20); bonus3 bAutoSpellWhenHit,"NPC_EARTHQUAKE",5,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4488,'Sealed_D_Lord_Card','Sealed Dark Lord Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,64,NULL,NULL,NULL,NULL,'bonus3 bAutoSpellWhenHit,"WZ_METEOR",5,50;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4489,'Sealed_Pharaoh_Card','Sealed Pharaoh Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,769,NULL,NULL,NULL,NULL,'bonus bUseSPrate,-15;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4490,'Sealed_M_Flower_Card','Sealed Moonlight Flower Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,64,NULL,NULL,NULL,NULL,'skill "AL_INCAGI",((getrefine()>14)?5:1);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4491,'Sealed_B_Shecil_Card','Sealed Sniper Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus bHPrecovRate,-100; bonus2 bHpDrainRate,5,((getrefine()>14)?15:10);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4492,'Sealed_Orc_Hero_Card','Sealed Orc Hero Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,769,NULL,NULL,NULL,NULL,'bonus bVit,3; bonus2 bResEff,Eff_Stun,((getrefine()>14)?6000:4000);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4493,'Sealed_Tao_Card','Sealed Tao Gunka Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bMaxHPrate,((getrefine()>14)?75:50); bonus bDefRate,-50; bonus bMdefRate,-50;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4494,'Sealed_TurtleG_Card','Sealed Turtle General Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'set .@rate, ((getrefine()>14)?15:10); bonus2 bAddRace,RC_NonBoss,.@rate; bonus2 bAddRace,RC_Boss,.@rate; bonus3 bAutoSpell,"SM_MAGNUM",10,15;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4495,'Sealed_Amon_Ra_Card','Sealed Amon Ra Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,64,NULL,NULL,NULL,NULL,'bonus bAllStats,1; bonus3 bAutoSpellWhenHit,"PR_KYRIE",((getrefine()>14)?8:5),(15+35*(readparam(bInt)>=99));',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4496,'Sealed_Drake_Card','Sealed Drake Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4497,'Sealed_Knight_WS_Card','Sealed Stormy Knight Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus3 bAutoSpell,"WZ_STORMGUST",1,10; bonus2 bAddEff,Eff_Freeze, ((getrefine()>14)?1500:1000);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4498,'Sealed_Lady_Tanee_Card','Sealed Lady Tanee Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,64,NULL,NULL,NULL,NULL,'bonus bMaxHPrate,((getrefine()>14)?-50:-60); bonus bMaxSPrate,50; bonus2 bAddMonsterDropItem,513,100; bonus2 bAddItemHealRate,513,((getrefine()>14)?80:50);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4499,'Sealed_Samurai_Card','Sealed Samurai Spector Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus bIgnoreDefRace,RC_NonBoss; bonus bHPrecovRate,-100; if (getrefine()>14) bonus2 bHPLossRate,777,8000; else bonus2 bHPLossRate,888,5000;',NULL,'if((Hp<=999) && !getmapflag(strcharinfo(3),mf_pvp) && !getmapflag(strcharinfo(3),mf_pvp_noparty) && !getmapflag(strcharinfo(3),mf_pvp_noguild)) { heal(1-Hp),0; } else { heal -999,0; }');
+REPLACE INTO `item_db_re` VALUES (4500,'Sealed_Orc_Load_Card','Sealed Orc Lord Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bShortWeaponDamageReturn,((getrefine()>14)?25:15);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4501,'Sealed_B_Magaleta_Card','Sealed High Priest Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus5 bAutoSpellWhenHit,"HP_ASSUMPTIO",1,((getrefine()>14)?35:25),BF_WEAPON|BF_MAGIC,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4502,'Sealed_B_Harword_Card','Sealed MasterSmith Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'if (getrefine()>14) { bonus bBreakWeaponRate,800; bonus bBreakArmorRate,600; } else { bonus bBreakWeaponRate,500; bonus bBreakArmorRate,400; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4503,'Sealed_Apocalips_H_Card','Sealed Vesper Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,769,NULL,NULL,NULL,NULL,'bonus bDex,2; bonus2 bIgnoreMdefRate,RC_Boss,((getrefine()>14)?25:15);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4504,'Sealed_Eddga_Card','Sealed Eddga Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,64,NULL,NULL,NULL,NULL,'bonus bMaxHPrate,((getrefine()>14)?-35:-50);','sc_start4 SC_ENDURE,60000,10,0,0,1;','sc_end SC_ENDURE;');
 REPLACE INTO `item_db_re` VALUES (4505,'Scaraba_Card','Scaraba Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,136,NULL,NULL,NULL,NULL,'bonus bMatk,20; bonus bMaxSPrate,-1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4506,'Dolomedes_Card','Dolomedes Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,769,NULL,NULL,NULL,NULL,'bonus bDex,2; if(BaseClass==Job_Archer){ bonus bDex,getrefine()/3; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4507,'Queen_Scaraba_Card','Queen Scaraba Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
@@ -2444,6 +2473,16 @@ REPLACE INTO `item_db_re` VALUES (4531,'Red_Eruma_Card','Red Eruma Card',6,20,NU
 REPLACE INTO `item_db_re` VALUES (4532,'Wild_Rider_Card','Wild Rider Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,64,NULL,NULL,NULL,NULL,'bonus3 bAutoSpellWhenHit,"AL_INCAGI",1,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4533,'Octopus_Card','Octopus Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus3 bAddEff,Eff_Blind,500,ATF_SKILL;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4534,'Giant_Octopus_Card','Giant Octopus Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bMaxHPrate,12; skill "WZ_WATERBALL",5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4535,'Sealed_Rand_Card','Sealed Randgris Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4536,'Sealed_Atroce_Card','Sealed Atroce Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus bBaseAtk,((getrefine()>14)?25:15); autobonus "{ bonus bAspdRate,((getrefine()>14)?75:50); }",5,10000,0,"{ specialeffect2 EF_POTION_BERSERK; }";',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4537,'Sealed_Phreeoni_Card','Sealed Phreeoni Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'bonus bHit,((getrefine()>14)?75:50);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4538,'Sealed_Bacsojin_Card','Sealed White Lady Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,769,NULL,NULL,NULL,NULL,'if (getrefine()>14) { bonus bHealPower,25; bonus bUseSPrate,20; } else { bonus bHealPower,15; bonus bUseSPrate,30; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4539,'Sealed_F_Bishop_Card','Sealed Fallen Bishop Hibram Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,64,NULL,NULL,NULL,NULL,'bonus bMatkRate,((getrefine()>14)?8:5); bonus bMaxSPrate,-50; set .@rate,((getrefine()>14)?33:25); bonus2 bMagicAddRace,RC_Angel,.@rate; bonus2 bMagicAddRace,RC_DemiHuman,.@rate;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4540,'SLD_Lord_Of_Death_Card','Sealed Lord of The Dead Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,NULL,NULL,'set .@rate, ((getrefine()>14)?350:250); bonus3 bAddEff,Eff_Stun,.@rate,ATF_SHORT; bonus3 bAddEff,Eff_Curse,.@rate,ATF_SHORT; bonus3 bAddEff,Eff_Silence,.@rate,ATF_SHORT; bonus3 bAddEff,Eff_Poison,.@rate,ATF_SHORT; bonus3 bAddEff,Eff_Bleeding,.@rate,ATF_SHORT; bonus2 bWeaponComaRace,RC_NonBoss,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4541,'SLD_B_Katrinn_Card','Sealed High Wizard Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,769,NULL,NULL,NULL,NULL,'bonus bIgnoreMDefRace,RC_NonBoss; if (getrefine()>14) { bonus bVariableCastrate,120; bonus bSPrecovRate,-120; } else { bonus bVariableCastrate,150; bonus bSPrecovRate,-150; }',NULL,'heal 0,((getrefine()>14)?-2000:-3000);');
+REPLACE INTO `item_db_re` VALUES (4542,'SLD_Detale_Card','Sealed Detale Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4543,'SLD_Garm_Card','Sealed Hatii Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus2 bAddEffWhenHit,Eff_Freeze,((getrefine()>14)?4000:2500);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4544,'SLD_Dark_Snake_Card','Sealed Evil Snake Lord Card',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,769,NULL,NULL,NULL,NULL,'bonus bInt,3; if (getrefine()>14) { bonus2 bResEff,Eff_Blind,7500; bonus2 bResEff,Eff_Curse,7500; } else { bonus2 bResEff,Eff_Blind,5000; bonus2 bResEff,Eff_Curse,5000; }',NULL,NULL);
 # Armor Enchant System
 # ===================================================================
 REPLACE INTO `item_db_re` VALUES (4700,'Strength1','STR+1',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bStr,1;',NULL,NULL);
@@ -2591,22 +2630,29 @@ REPLACE INTO `item_db_re` VALUES (4841,'Archer_Lv10','Archer Lv10',6,20,NULL,10,
 REPLACE INTO `item_db_re` VALUES (4842,'AttackSpeed+2','ASPD+2',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bAspd,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4843,'Sharp_Lv4','Sharp Lv4',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bCritical,14; bonus bHit,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4844,'Sharp_Lv5','Sharp Lv5',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bCritical,15; bonus bHit,6;',NULL,NULL);
-#
+#4845,
+REPLACE INTO `item_db_re` VALUES (4846,'2011val_Angel','Fully Loved Stone',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bBaseAtk,10; bonus bMatk,10;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4847,'2011val_Devil','Spelled Stone',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bBaseAtk,10; bonus bMatk,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4848,'Immune_Lv1','Immune Lv1',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus2 bSubEle,Ele_Neutral,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4849,'Crescent_Lv1','Crescent Lv1',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus2 bSubRace,RC_DemiHuman,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4850,'Archbishop_Lv2','Archbishop Lv2',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bHealPower,6; bonus bSPrecovRate,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4851,'Archbishop_Lv3','Archbishop Lv3',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bHealPower,12; bonus bSPrecovRate,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4852,'Archbishop_Lv4','Archbishop Lv4',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bHealPower,20; bonus bSPrecovRate,15;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (4853,'Special_STR','Special STR',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bStr,1; if(getrefine()>7) { bonus bStr,3; } if(getrefine()>8) { bonus2 bAddRace,RC_NonBoss,1; bonus2 bAddRace,RC_Boss,1; } if(getrefine()>11) { bonus bAspd,1; bonus bFixedCastrate,-7; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (4854,'Special_AGI','Special AGI',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bAgi,1; if(getrefine()>7) { bonus bAgi,3; } if(getrefine()>8) { bonus2 bAddRace,RC_NonBoss,1; bonus2 bAddRace,RC_Boss,1; } if(getrefine()>11) { bonus bAspd,1; bonus bFixedCastrate,-7; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (4855,'Special_VIT','Special VIT',2,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bVit,1; if(getrefine()>7) { bonus bVit,3; } if(getrefine()>8) { bonus bMaxSPrate,1; } if(getrefine()>11) { bonus bAspd,1; bonus bFixedCastrate,-7; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (4856,'Special_INT','Special INT',2,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bInt,1; if(getrefine()>7) { bonus bInt,3; } if(getrefine()>8) { bonus bMatkRate,1; } if(getrefine()>11) { bonus bAspd,1; bonus bFixedCastrate,-7; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (4857,'Special_DEX','Special DEX',2,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bDex,1; if(getrefine()>7) { bonus bDex,3; } if(getrefine()>8) { bonus bMatkRate,1; } if(getrefine()>11) { bonus bAspd,1; bonus bFixedCastrate,-7; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (4858,'Special_LUK','Special LUK',2,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bLuk,1; if(getrefine()>7) { bonus bLuk,3; } if(getrefine()>8) { bonus bMaxHPrate,1; } if(getrefine()>11) { bonus bAspd,1; bonus bFixedCastrate,-7; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4853,'S_Str','Special STR',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bStr,1; if(getrefine()>7) { bonus bStr,3; } if(getrefine()>8) { bonus2 bAddRace,RC_NonBoss,1; bonus2 bAddRace,RC_Boss,1; } if(getrefine()>11) { bonus bAspd,1; bonus bFixedCastrate,-7; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4854,'S_Agi','Special AGI',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bAgi,1; if(getrefine()>7) { bonus bAgi,3; } if(getrefine()>8) { bonus2 bAddRace,RC_NonBoss,1; bonus2 bAddRace,RC_Boss,1; } if(getrefine()>11) { bonus bAspd,1; bonus bFixedCastrate,-7; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4855,'S_Vital','Special VIT',2,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bVit,1; if(getrefine()>7) { bonus bVit,3; } if(getrefine()>8) { bonus bMaxSPrate,1; } if(getrefine()>11) { bonus bAspd,1; bonus bFixedCastrate,-7; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4856,'S_Int','Special INT',2,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bInt,1; if(getrefine()>7) { bonus bInt,3; } if(getrefine()>8) { bonus bMatkRate,1; } if(getrefine()>11) { bonus bAspd,1; bonus bFixedCastrate,-7; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4857,'S_Dex','Special DEX',2,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bDex,1; if(getrefine()>7) { bonus bDex,3; } if(getrefine()>8) { bonus bMatkRate,1; } if(getrefine()>11) { bonus bAspd,1; bonus bFixedCastrate,-7; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4858,'S_Luck','Special LUK',2,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bLuk,1; if(getrefine()>7) { bonus bLuk,3; } if(getrefine()>8) { bonus bMaxHPrate,1; } if(getrefine()>11) { bonus bAspd,1; bonus bFixedCastrate,-7; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4859,'FLEE+1','Flee+1',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bFlee,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4860,'FLEE+3','Flee+3',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bFlee,3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4861,'MHP+1%','MaxHP+1%',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bMaxHPrate,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (4862,'MHP+2%','MaxHP+2%',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bMaxHPrate,2;',NULL,NULL);
+#
+REPLACE INTO `item_db_re` VALUES (4867,'MHP3','MaxHP+3%',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bMaxHPrate,3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4868,'MHP4','MaxHP+4%',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bMaxHPrate,4;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4870,'SP25','SP+25',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bMaxSP,25;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (4871,'SP75','SP+75',6,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16,NULL,NULL,NULL,NULL,'bonus bMaxSP,75;',NULL,NULL);
 # More Headgears
 # ===================================================================
 REPLACE INTO `item_db_re` VALUES (5001,'Headset','Headset',5,20,NULL,200,NULL,3,NULL,NULL,0xFFFFFFFE,7,2,256,NULL,'1',1,87,'bonus2 bResEff,Eff_Curse,1000;',NULL,NULL);
@@ -3002,7 +3048,7 @@ REPLACE INTO `item_db_re` VALUES (5390,'Santa_Hat_2','Frozen Twin Pompom',5,20,N
 REPLACE INTO `item_db_re` VALUES (5391,'Toast_C','Toast',5,20,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,NULL,NULL,188,'bonus bMaxHP,100; bonus2 bAddMonsterDropItem,617,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5392,'Louyang_Cap','Louyang NewYear Hat',5,20,NULL,300,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,NULL,1,396,'bonus bLuk,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5393,'Valentine_Hat','Love Valentine\'s Hat',5,20,NULL,200,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,NULL,397,'bonus bMaxSPrate,7; bonus bMaxHPrate,7;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5394,'Bubblegum_Lower','Bubblegum',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,NULL,NULL,0,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5394,'Bubblegum_Lower','Bubblegum',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,NULL,NULL,0,'bonus2 bExpAddRace,RC_Boss,100; bonus2 bExpAddRace,RC_NonBoss,100;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5395,'Tiraya_Bonnet','Striped Hat',5,20,NULL,500,NULL,2,NULL,1,0xFFFFFFFF,7,2,256,NULL,'50',1,398,'bonus bMaxHP,100+(getrefine()*20); bonus bLuk,3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5396,'Jasper_Crest','Jasper Crest',5,20,NULL,700,NULL,2,NULL,1,0xFFFFFFFF,7,2,256,NULL,NULL,1,399,'bonus bDex,3; bonus bVit,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5397,'Scuba_Mask','Scuba Gear',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,NULL,NULL,400,'bonus2 bSubEle,Ele_Water,10; bonus bUnbreakableHelm,0;',NULL,NULL);
@@ -3056,8 +3102,8 @@ REPLACE INTO `item_db_re` VALUES (5444,'Hair_Brush','Hair Brush',5,20,NULL,100,N
 REPLACE INTO `item_db_re` VALUES (5445,'Candy_Cane_In_The_Mouth','Candy Cane In Mouth',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,NULL,NULL,446,'bonus bMaxSP,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5446,'Cat_Foot_Hairpin','Catfoot Hairpin',5,20,NULL,200,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,256,NULL,NULL,1,447,'bonus bFlee,5; bonus bFlee2,3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5447,'Frog_Cap','Frog Hat',5,20,NULL,500,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'70',1,448,'bonus bMdef,1; bonus2 bAddRace,RC_Insect,12; bonus2 bMagicAddRace,RC_Insect,12;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5448,'Solo_Play_Box1','Soloplay Box1',5,NULL,NULL,300,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,769,NULL,NULL,1,449,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5449,'Solo_Play_Box2','Soloplay Box2',5,NULL,NULL,300,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,769,NULL,NULL,1,450,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5448,'Solo_Play_Box1','Soloplay Box1',5,NULL,NULL,300,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,769,NULL,NULL,1,449,'skill "RG_GRAFFITI",1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5449,'Solo_Play_Box2','Soloplay Box2',5,NULL,NULL,300,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,769,NULL,NULL,1,450,'skill "RG_GRAFFITI",1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5450,'Sun_Cap','Solar Hat',5,20,NULL,1000,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,256,NULL,'20',1,451,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5451,'Dragonhelm_Gold','RWC 2008 Dragon Helm Gold',5,20,NULL,2500,NULL,7,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',NULL,452,'bonus bAspdRate,10; bonus bAllStats,3; bonus2 bAddRace,RC_DemiHuman,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5452,'Dragonhelm_Silver','RWC 2008 Dragon Helm Silver',5,20,NULL,2500,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',NULL,453,'bonus bAspdRate,7; bonus bAllStats,2; bonus2 bAddRace,RC_DemiHuman,3;',NULL,NULL);
@@ -3066,7 +3112,7 @@ REPLACE INTO `item_db_re` VALUES (5454,'Dog_Cap_','Puppy Hat',5,20,NULL,500,NULL
 REPLACE INTO `item_db_re` VALUES (5455,'Geographer_Band_','Decorative Geographer',5,20,NULL,500,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,NULL,1,238,'bonus bInt,1; bonus3 bAutoSpell,"AL_HEAL",5,50; bonus3 bAutoSpellWhenHit,"AL_HEAL",5,30;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5456,'Vacation_Hat_','Summer Hat',5,20,NULL,200,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,256,NULL,NULL,1,315,'bonus bVit,5; bonus bHPrecovRate,20; bonus bSPrecovRate,15;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5457,'Spring_Rabbit_Hat','Moon Rabbit Hat',5,20,NULL,300,NULL,2,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,455,'bonus bAgi,3; bonus bBaseAtk,5; bonus bMatkRate,5; if(getrefine()>4) { bonus bBaseAtk,getrefine()-4; bonus bMatkRate,getrefine()-4; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5458,'Pinwheel_Cap','Pinwheel Hat',5,20,NULL,200,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,456,'bonus bHPrecovRate,5; bonus bHPrecovRate,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5458,'Pinwheel_Cap','Pinwheel Hat',5,20,NULL,200,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,456,'bonus bMaxHPrate,5; bonus bMaxSPrate,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5459,'Drooping_Bunny_Chusuk','Drooping Bunny',5,NULL,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,249,'bonus bDex,1; bonus bFlee,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5460,'Adv_Dragon_Skull','Evolved Dragon Skull Hat',5,20,NULL,1000,NULL,7,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'60',1,457,'bonus bAllStats,2; bonus bMaxHPrate,3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5461,'Adv_Whisper_Mask','Evolved Whisper Mask',5,20,NULL,300,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,769,NULL,'50',1,458,'bonus bDex,3; bonus2 bSubEle,Ele_Ghost,20;',NULL,NULL);
@@ -3080,12 +3126,12 @@ REPLACE INTO `item_db_re` VALUES (5468,'Parade_Cap','Parade Hat',5,20,NULL,800,N
 REPLACE INTO `item_db_re` VALUES (5469,'Noble_Hat','Musketeer Hat',5,20,NULL,300,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'30',1,466,'bonus bStr,2; bonus3 bAutoSpellWhenHit,"BS_ADRENALINE",1,7;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5470,'Eyes_Of_Darkness','Eye Of Darkness',5,20,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'50',NULL,467,'bonus bDex,1; bonus2 bResEff,Eff_Blind,10000;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5471,'Hairband_Of_Reginleif','Hairband Of Reginleif',5,20,NULL,800,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'50',NULL,468,'bonus2 bSubEle,Ele_Water,3; bonus2 bSubEle,Ele_Fire,3; bonus2 bSubEle,Ele_Undead,3; bonus2 bSubEle,Ele_Ghost,3;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5472,'Red_White_Hat','Red Hat',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,469,'bonus3 bAddMonsterDropItem,550,RC_DemiHuman,3;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5473,'Forceps_Hairpin','Nipper Crab Hairpin',5,20,NULL,500,NULL,4,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'30',1,470,'bonus3 bAutoSpellWhenHit,"MG_COLDBOLT",1,100; bonus3 bAddMonsterDropItem,991,RC_Fish,3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5472,'Red_White_Hat','Red Hat',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,469,'bonus3 bAddMonsterDropItem,554,RC_DemiHuman,200;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5473,'Forceps_Hairpin','Nipper Crab Hairpin',5,20,NULL,500,NULL,4,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'30',1,470,'bonus3 bAutoSpellWhenHit,"MG_COLDBOLT",1,30; bonus3 bAddMonsterDropItem,991,RC_Fish,100;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5474,'Notice_Board','AFK Hat',5,20,NULL,700,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'10',NULL,471,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5475,'Cube_Mask','Mask Cube',5,20,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,513,NULL,NULL,NULL,472,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5476,'Hairband_Of_Grandpeco','Grand Peco Hairband',5,20,NULL,800,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,768,NULL,'30',1,473,'bonus bStr,2; bonus bMaxHPrate,-10; bonus2 bAddRace2,3,15;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5477,'Bro_Flag','Brazilian Flag Hat',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,'30',1,474,'skill "SM_BASH",1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5477,'Bro_Flag','Brazilian Flag Hat',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,'30',1,474,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5478,'Classic_Hat','Classic Hat',5,20,NULL,500,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,475,'bonus bStr,2; bonus bMaxHP,300;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5479,'Shaman\'s_Hair_Ornament','Shaman\'s Hair Decoration',5,20,NULL,300,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'30',1,476,'bonus bMdef,3; bonus bMaxHP,50; bonus2 bSubEle,Ele_Neutral,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5480,'Bizofnil_Wing_Deco','Bijofnil Wings',5,20,NULL,1000,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'30',1,477,' bonus bAllStats,2; bonus3 bAutoSpell,"PR_IMPOSITIO",3,3;',NULL,NULL);
@@ -3124,7 +3170,7 @@ REPLACE INTO `item_db_re` VALUES (5512,'Aquarius_Diadem','Aquarius Diadem',5,20,
 REPLACE INTO `item_db_re` VALUES (5513,'Aquarius_Crown','Aquarius Crown',5,20,NULL,300,NULL,6,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'70',1,510,'bonus bStr,2; bonus bFlee,10; bonus2 bSubEle,Ele_Wind,5; if(getrefine()>6) { bonus bDef,1; bonus bBaseAtk,15; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5514,'Pisces_Diadem','Pisces Diadem',5,20,NULL,300,NULL,6,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'70',1,511,'bonus bInt,2; bonus bMdef,5; bonus2 bSubEle,Ele_water,5; if(getrefine()>6) { bonus bDef,1; bonus bMatkRate,2; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5515,'Pisces_Crown','Pisces Crown',5,20,NULL,300,NULL,6,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'70',1,512,'bonus bInt,2; bonus bMdef,5; bonus2 bSubEle,Ele_water,5; if(getrefine()>6) { bonus bDef,1; bonus bMatkRate,2; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5516,'Hawk_Eyes01','hawk Eyes',5,10,NULL,100,NULL,NULL,NULL,NULL,0x00000800,2,2,512,NULL,'60',NULL,23,'bonus bDex,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5516,'Hawk_Eyes01','Hawk Eyes',5,10,NULL,100,NULL,NULL,NULL,NULL,0x00000800,2,2,512,NULL,'60',NULL,23,'bonus bDex,1; bonus bLongAtkRate,3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5517,'Hawk_Eyes02','Hawk Eyes',5,10,NULL,100,NULL,NULL,NULL,NULL,0x00080808,7,2,512,NULL,'60',NULL,23,'bonus bDex,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5518,'L_Magestic_Goat2','Gigantic Majestic Goat',5,20,NULL,800,NULL,5,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'50',1,513,'bonus2 bSubRace,RC_DemiHuman,12; bonus bBaseAtk,(JobLevel*2)/7;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5519,'Peacock_Feather','Peacock Feather',5,20,NULL,800,NULL,4,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,514,'bonus bInt,2;',NULL,NULL);
@@ -3144,9 +3190,9 @@ REPLACE INTO `item_db_re` VALUES (5532,'Pirate_Dagger_J','Pirate Dagger',5,20,NU
 REPLACE INTO `item_db_re` VALUES (5533,'Emperor_Wreath_J','Emperor Wreath',5,20,NULL,800,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,'80',1,261,'bonus bAllStats,1;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5534,'Fox_Hat_J','Fox Hat',5,20,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,513,NULL,'70',NULL,403,'bonus bAgi,1; bonus bFlee2,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5535,'Side_Cap','Side Cap',5,NULL,NULL,500,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,529,'bonus bVit,1; bonus bDex,1; bonus bMdef,3; bonus2 bSubRace,RC_DemiHuman,5; bonus2 bAddRace,RC_DemiHuman,3;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5536,'Spare_Card','Spare Card',5,20,NULL,10,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,526,'bonus2 bAddMonsterDropItem,6187,1000;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5537,'Quati_Hat','Kwati Hat',5,20,NULL,700,NULL,2,NULL,1,0xFFFFFFFF,7,2,256,NULL,'45',NULL,527,'bonus bAgi,3;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5538,'Tucan_Hat','Tucan Hat',5,20,NULL,600,NULL,2,NULL,1,0xFFFFFFFF,7,2,768,NULL,'45',NULL,528,'bonus bDex,3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5536,'Spare_Card','Spare Card',5,20,NULL,10,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,526,'bonus2 bAddMonsterDropItem,6187,1000; bonus bFlee2,10; bonus2 bAddMonsterDropItem,617,5; bonus2 bAddMonsterDropItem,12132,30; bonus2 bAddMonsterDropItem,12130,30;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5537,'Quati_Hat','Kwati Hat',5,20,NULL,700,NULL,2,NULL,1,0xFFFFFFFF,7,2,256,NULL,'45',NULL,527,'bonus bAgi,3; bonus2 bAddRace,RC_Plant,10;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5538,'Tucan_Hat','Tucan Hat',5,20,NULL,600,NULL,2,NULL,1,0xFFFFFFFF,7,2,768,NULL,'45',NULL,528,'bonus bDex,3; bonus bCritical,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5539,'Jaguar_Hat','Jaguar Hat',5,20,NULL,400,NULL,4,NULL,1,0xFFFFFFFF,7,2,769,NULL,'25',1,530,'bonus bMdef,2; skill "MC_LOUD",1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5540,'Freyja_SCirclet7','Freyja SCirclet7',5,20,NULL,700,NULL,8,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'20',NULL,18,'bonus bStr,1; bonus bInt,1; bonus bDex,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5541,'Freyja_SCirclet30','Freyja SCirclet30',5,20,NULL,700,NULL,8,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'20',NULL,18,'bonus bStr,1; bonus bInt,1; bonus bDex,1;',NULL,NULL);
@@ -3171,17 +3217,17 @@ REPLACE INTO `item_db_re` VALUES (5559,'Piece_Of_White_Cloth_E','Piece Of White 
 REPLACE INTO `item_db_re` VALUES (5560,'Bullock_Helm_J','Bullock Helm',5,20,NULL,3000,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'75',1,322,'bonus bMaxHP,100; bonus bNoKnockback,0; bonus2 bSubEle,Ele_Neutral,-20; bonus2 bSubEle,Ele_Fire,-20; bonus2 bSubEle,Ele_Water,-20; bonus2 bSubEle,Ele_Wind,-20; bonus2 bSubEle,Ele_Earth,-20; bonus2 bSubEle,Ele_Dark,-20; bonus2 bSubEle,Ele_Holy,-20; bonus2 bSubEle,Ele_Ghost,-20;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5561,'Rabbit_Magic_Hat_J','Magic Rabbit Hat',5,NULL,NULL,800,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,497,'bonus bInt,1; bonus bMaxSP,50; bonus4 bAutoSpellWhenHit,"MG_FIREBOLT",3,10,3; bonus4 bAutoSpellWhenHit,"MG_COLDBOLT",3,10,3; bonus4 bAutoSpellWhenHit,"MG_LIGHTNINGBOLT",3,10,3; bonus3 bAutoSpellWhenHit,"AL_HEAL",1,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5562,'Good_Wedding_Veil_J','Luxurious Wedding Veil',5,NULL,NULL,500,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,768,NULL,'45',NULL,489,'bonus bMdef,10; bonus bVariableCastrate,-3; bonus bUseSPrate,-5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5563,'Dolor_Hat','Dolor Hat',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,NULL,NULL,547,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5563,'Dolor_Hat','Dolor Hat',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,NULL,NULL,547,'bonus3 bAutoSpell,"PR_LEXAETERNA",1,15;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5564,'Crown_Of_Deceit','Crown of Deceit',5,20,NULL,300,NULL,3,NULL,1,0xFFFFFFFF,7,2,768,NULL,'85',1,544,'bonus bInt,4; bonus bVariableCastrate,-10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5565,'Dragon_Arhat_Mask','Dragon Arhat Mask',5,NULL,NULL,0,NULL,5,NULL,NULL,0xFFFFFFFF,7,2,513,NULL,'1',NULL,545,'bonus2 bAddRace,RC_DemiHuman,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5566,'Tiger_Arhat_Mask','Tiger Arhat Mask',5,NULL,NULL,0,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,513,NULL,'1',NULL,546,'bonus2 bAddRace,RC_DemiHuman,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5567,'Bright_Fury','Bright Fury',5,20,NULL,300,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,548,'bonus bStr,1; bonus2 bAddRace,RC_NonBoss,2; bonus2 bAddRace,RC_Boss,2; bonus bAspdRate,2;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5568,'Rabbit_Bonnet','Rabbit Bonnet',5,20,NULL,1000,NULL,1,NULL,1,0xFFFFFFFF,7,2,768,NULL,NULL,1,549,'bonus bInt,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5568,'Rabbit_Bonnet','Rabbit Bonnet',5,20,NULL,1000,NULL,1,NULL,1,0xFFFFFFFF,7,2,768,NULL,NULL,1,549,'bonus bInt,2; bonus bDelayRate,-3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5569,'Gemini_Diadem','Gemini Diadem',5,20,NULL,300,NULL,4,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'70',1,550,'bonus bAgi,2; bonus bMatkRate,2; if(getrefine()>6) { bonus bMdef,7; bonus bMAtkRate,8; bonus2 bSubEle,Ele_Wind,5; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5570,'Gemini_Crown','Gemini Crown',5,20,NULL,300,NULL,4,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'70',1,551,'bonus bAgi,2; bonus bAtk,2; bonus bMdef,5; if(getrefine()>6) { bonus bDef,1; bonus bMatk,15; bonus bFlee,10; bonus2 bSubEle,Ele_Wind,5; }',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5571,'Rasta_Wig','Rasta_Wig',5,20,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,552,'bonus bStr,1;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5572,'Savage_Baby_Hat','Savage Babe Hat',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,553,'bonus bVit,2;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5573,'Bogy_Horn','Dokebi Horn',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,NULL,1,554,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5572,'Savage_Baby_Hat','Savage Babe Hat',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,553,'bonus bVit,2; bonus2 bAddEff,Eff_Stun,500; bonus2 bSubRace,RC_Brute,-10;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5573,'Bogy_Horn','Dokebi Horn',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,NULL,1,554,'bonus2 bAddMonsterDropItemGroup,IG_Jewel,100; bonus3 bAutoSpell,"MC_MAMMONITE",5,70;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5574,'Pencil_in_Mouth','Well-Chewed Pencil',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'10',NULL,555,'bonus bdex,2; bonus bHitRate,3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5575,'Onigiri_Hat','Rice Ball Hat',5,20,NULL,100,NULL,6,NULL,1,0xFFFFFFFF,7,2,256,NULL,'30',NULL,556,NULL,NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5576,'Japan_Winecup','Wine Cup',5,20,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,NULL,NULL,557,NULL,NULL,NULL);
@@ -3198,28 +3244,28 @@ REPLACE INTO `item_db_re` VALUES (5586,'Mosquito_Coil','Mosquito Coil',5,20,NULL
 REPLACE INTO `item_db_re` VALUES (5587,'Mosquito_Coil_1Use','Mosquito Coil',5,NULL,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,563,NULL,NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5588,'Leo_Crown','Leo Crown',5,20,NULL,300,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'70',1,565,'bonus bStr,2; bonus2 bSubEle,Ele_Fire,5; if(getrefine()>6) { bonus bDef,1; bonus bFlee,10; bonus3 bAutoSpell,"TK_SEVENWIND",4,50; }',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5589,'Leo_Diadem','Leo Diadem',5,20,NULL,300,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'70',1,566,'bonus bDex,2; bonus2 bSubEle,Ele_Fire,5; if(getrefine()>6) { bonus bFlee,10; bonus bAspdRate,3; autobonus "{bonus bSplashRange,1;}",10,10000,BF_WEAPON,"{specialeffect2 EF_ENHANCE;}"; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5590,'K_Poring_Cake_Cap','Poring Cake Hat',5,20,NULL,200,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,417,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5590,'K_Poring_Cake_Cap','Poring Cake Hat',5,20,NULL,200,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,417,'bonus bMaxHP,BaseLevel*2; bonus bMaxSP,50;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5591,'Desert_Prince','Desert Prince',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,'30',NULL,567,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5592,'Sigrun\'s_Wings','Sigrun\'s Wings',5,20,NULL,100,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'80',NULL,568,'if(BaseClass==Job_Swordman||BaseClass==Job_Merchant||BaseClass==Job_Thief||(BaseJob==Job_Taekwon&&Class!=Job_Soul_Linker)) bonus bStr,1; else if(BaseClass==Job_Mage||BaseClass==Job_Acolyte||class==Job_Ninja||class==Job_Soul_Linker) bonus bInt,1; else if(BaseClass==Job_Archer||BaseClass==Job_Gunslinger) bonus bDex,1; else if(BaseJob==Job_Novice||BaseJob==Job_SuperNovice) { bonus bMaxHP,80; bonus bMaxSP,30; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5593,'Rabbit_Bonnet_','Rabbit Bonnet',5,20,NULL,200,NULL,1,NULL,1,0xFFFFFFFF,7,2,768,NULL,'1',1,549,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5594,'Donut_In_Mouth','Donut In Mouth',5,20,NULL,50,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,569,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5593,'Rabbit_Bonnet_','Rabbit Bonnet',5,20,NULL,200,NULL,1,NULL,1,0xFFFFFFFF,7,2,768,NULL,'1',1,549,'bonus bAtk,10; bonus bMatk,10; bonus2 bSubRace,RC_DemiHuman,3; bonus bDelayRate,-3; if(getrefine()>6) { bonus2 bSubEle,Ele_Neutral,5; bonus2 bSubEle,Ele_Water,5; bonus2 bSubEle,Ele_Earth,5; bonus2 bSubEle,Ele_Fire,5; bonus2 bSubEle,Ele_Wind,5; bonus2 bSubEle,Ele_Holy,5; bonus2 bSubEle,Ele_Dark,5; bonus2 bSubEle,Ele_Ghost,5; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5594,'Donut_In_Mouth','Donut In Mouth',5,20,NULL,50,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,569,'bonus2 bHPRegenRate,1,10000; bonus bMaxHP,100;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5595,'Eye_Of_Juno','Eye Of Juno',5,20,NULL,400,NULL,2,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,570,'bonus bMdef,2;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5596,'4Leaf_Clover_In_Mouth','4Leaf Clover In Mouth',5,20,NULL,0,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,571,'bonus bMdef,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5596,'4Leaf_Clover_In_Mouth','4Leaf Clover In Mouth',5,20,NULL,0,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,571,'bonus bMdef,2; bonus2 bAddMonsterDropItem,12245,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5597,'Bubble_Gum_In_Mouth','Bubble Gum In Mouth',5,20,NULL,0,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,572,'bonus bMdef,2;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5598,'Virgo_Crown','Virgo Crown',5,20,NULL,300,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,'70',1,573,'bonus bDex,2; bonus bAspdRate,1; if(getrefine()>6) { bonus2 bSubEle,Ele_Earth,5; autobonus "{bonus bDex,20;}",10,6000,BF_WEAPON,"{specialeffect2 EF_ENHANCE;}"; }',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5599,'Virgo_Diadem','Virgo Diadem',5,20,NULL,300,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,'70',1,574,'bonus bAspdRate,3; bonus2 bSubEle,Ele_Earth,5; if(getrefine()>6) bonus3 bAutoSpell,"MO_BALKYOUNG",1,50;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5600,'Br_Twin_Ribbon','Brazil Twin Ribbon',5,20,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,575,'bonus bAllStats,3; bonus bMdef,1;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5601,'Br_Beret','Brazil Beret',5,20,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,576,'bonus bAllStats,3; bonus bMdef,1;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5602,'Jaguar_Hat_J','Jaguar Hat J',5,20,NULL,300,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,513,NULL,'50',NULL,530,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5603,'RTC_Winner_Only','RTC First Place',5,NULL,NULL,250,NULL,8,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,577,'bonus bAllStats,3;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5604,'RTC_Second_Best','RTC Second Place',5,NULL,NULL,250,NULL,6,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,578,'bonus bAllStats,2;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5605,'RTC_Third_Best','RTC Third Place',5,NULL,NULL,250,NULL,4,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,579,'bonus bAllStats,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5603,'RTC_Winner_Only','RTC First Place',5,NULL,NULL,250,NULL,8,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,577,'bonus bAllStats,3; bonus bAspdRate,10; bonus2 bAddRace,RC_DemiHuman,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5604,'RTC_Second_Best','RTC Second Place',5,NULL,NULL,250,NULL,6,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,578,'bonus bAllStats,2; bonus bAspdRate,7; bonus2 bAddRace,RC_DemiHuman,3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5605,'RTC_Third_Best','RTC Third Place',5,NULL,NULL,250,NULL,4,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,579,'bonus bAllStats,1; bonus bAspdRate,5; bonus2 bAddRace,RC_DemiHuman,1;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5606,'Campume_Hat','Champune Hat',5,500,NULL,1200,NULL,4,NULL,1,0xFFFFFFFF,7,2,256,NULL,'3',1,580,'bonus bAllStats,1;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5607,'Lyria_Doll_Hat','Lyria Doll Hat',5,NULL,NULL,500,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,256,NULL,'60',NULL,581,NULL,NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5608,'Dorothy_Doll_Hat','Dorothy Doll Hat',5,NULL,NULL,500,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,256,NULL,'60',NULL,582,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5609,'Chung_Hairband','Chung Hairband',5,NULL,NULL,500,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,'60',NULL,583,'bonus bLuk,3; bonus bMdef,4;',NULL,NULL);
-# REPLACE INTO `item_db_re` VALUES (5610,'Ice_Wing_Ear','Ice Wing Ear',5,NULL,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'10',NULL,584,'bonus bLuk,1;',NULL,NULL);
-# REPLACE INTO `item_db_re` VALUES (5611,'Turtle_Hat','Turtle_Hat',5,NULL,NULL,300,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'10',1,585,'bonus bAgi,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5609,'Chung_Hairband','Chung Hairband',5,NULL,NULL,500,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,'60',NULL,583,'bonus bLuk,3; bonus bMdef,4; bonus3 bAutoSpellWhenHit,"MC_MAMMONITE",5,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5610,'Ice_Wing_Ear','Ice Wing Ear',5,NULL,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'10',NULL,584,'bonus bLuk,1; bonus3 bAutoSpellWhenHit,"MG_COLDBOLT",5,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5611,'Turtle_Hat','Turtle_Hat',5,NULL,NULL,300,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'10',1,585,'bonus bAgi,1; bonus3 bAutoSpellWhenHit,"AL_DECAGI",3,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5612,'F_Blue_Drooping_Kitty','F Blue Drooping Kitty',5,250000,NULL,500,NULL,1,NULL,NULL,0xFFFFFFFE,7,2,256,NULL,NULL,1,277,'bonus bMdef,15;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5613,'F_Flying_Angel','F Flying Angel',5,20,NULL,300,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'10',1,264,'bonus bInt,1; bonus bAgi,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5614,'F_Smoking_Pipe_','F Smoking Pipe',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,1,NULL,NULL,NULL,55,'bonus bVit,1;',NULL,NULL);
@@ -3266,9 +3312,9 @@ REPLACE INTO `item_db_re` VALUES (5654,'Holy_Marching_Hat_J','Holy Marching Hat'
 REPLACE INTO `item_db_re` VALUES (5655,'Dark_Snake_Lord_Hat_J','Evil Snake Lord Hat',5,20,NULL,500,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'60',1,372,'bonus bInt,2; bonus bAgi,2; bonus bDex,-2; autobonus "{bonus bVariableCastrate,-50; bonus bFlee,30;}",50,5000,BF_MAGIC,"{specialeffect2 EF_SUFFRAGIUM;}";',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5656,'Scooter_Hat_J','Scooter Helmet',5,20,NULL,1000,NULL,7,NULL,1,0xFFFFFFFF,7,2,256,NULL,'50',1,588,'bonus bUnbreakableHelm,0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5657,'Antique_Pipe_J','Captain\'s Pipe',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'30',NULL,383,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5658,'Imp_Hat','Imp Hat',5,20,NULL,400,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,589,'bonus3 bAutoSpell,"SA_FLAMELAUNCHER",1,10;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5659,'Sleeper_Hat','Sleeper Hat',5,20,NULL,400,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,590,'bonus3 bAutoSpell,"SA_SEISMICWEAPON",1,10;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5660,'Gryphon_Hat','Gryphon Hat',5,20,NULL,400,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,591,'bonus3 bAutoSpell,"SA_LIGHTNINGLOADER",1,10;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5658,'Imp_Hat','Imp Hat',5,20,NULL,400,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,589,'bonus3 bAutoSpell,"SA_FLAMELAUNCHER",1,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5659,'Sleeper_Hat','Sleeper Hat',5,20,NULL,400,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,590,'bonus3 bAutoSpell,"SA_SEISMICWEAPON",1,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5660,'Gryphon_Hat','Gryphon Hat',5,20,NULL,400,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,591,'bonus3 bAutoSpell,"SA_LIGHTNINGLOADER",1,5;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5661,'Red_Pirate_Bandana','Red Pirate Banada',5,NULL,NULL,0,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'10',1,592,'bonus bStr,1; bonus bDex,1; bonus bAspdRate,2; bonus bVariableCastrate,-2; bonus3 bAutoSpell,"MO_EXTREMITYFIST",1,30;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5662,'Libra_Crown','Libra Crown',5,10,NULL,300,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,593,'bonus bDex,3;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5663,'Libra_Diadem','Libra Diadem',5,10,NULL,300,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,594,'bonus bDex,3;',NULL,NULL);
@@ -3276,10 +3322,10 @@ REPLACE INTO `item_db_re` VALUES (5664,'Filir_Wing','Filir\'s Pinions',5,20,NULL
 REPLACE INTO `item_db_re` VALUES (5665,'Shaman_Hat','Shaman Hat',5,20,NULL,400,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,596,'bonus2 bSubEle,Ele_Neutral,3; bonus2 bSubEle,Ele_Water,3; bonus2 bSubEle,Ele_Earth,3; bonus2 bSubEle,Ele_Fire,3; bonus2 bSubEle,Ele_Wind,3; bonus2 bSubEle,Ele_Poison,3; bonus2 bSubEle,Ele_Holy,3; bonus2 bSubEle,Ele_Dark,3; bonus2 bSubEle,Ele_Ghost,3; bonus2 bSubEle,Ele_Undead,3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5666,'Golden_Crown','Golden Crown',5,20,NULL,500,NULL,8,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,597,'bonus bInt,1; bonus bDex,1; bonus bLuk,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5667,'Skull_Hood','Skull Hood',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,768,NULL,'30',1,598,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5668,'Weird_Pumpkin_Hat','Weird Pumpkin Hat',5,20,NULL,0,NULL,5,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,206,'bonus bMdef,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5668,'Weird_Pumpkin_Hat','Weird Pumpkin Hat',5,20,NULL,0,NULL,5,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,206,'bonus bMdef,5; bonus2 bAddMonsterDropItem,6097,100;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5669,'Poring_Party_Hat_J','Poring Party Hat J',5,20,NULL,300,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,340,NULL,NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5670,'Aniv_Star_Hat','Aniv Star Hat',5,20,NULL,300,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,599,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5671,'Drooping_Morocc_Minion','Drooping Morocc Minion',5,20,NULL,300,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,256,NULL,'70',NULL,600,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5671,'Drooping_Morocc_Minion','Drooping Morocc Minion',5,20,NULL,300,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,256,NULL,'70',NULL,600,'bonus bSPGainValue,2; bonus3 bAutoSpellWhenHit,"NPC_CRITICALWOUND",2,2;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5672,'Southern_Cross','Southern Cross',5,20,NULL,600,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,'50',1,601,'bonus bInt,1;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5673,'Home_Cherry_Blossom','Home Cherry Blossom',5,20,NULL,100,NULL,2,NULL,1,0xFFFFFFFF,7,2,256,NULL,'30',1,602,NULL,NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5674,'Pig_Moneybox','Pig Moneybox',5,20,NULL,1000,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'10',NULL,603,NULL,NULL,NULL);
@@ -3372,41 +3418,41 @@ REPLACE INTO `item_db_re` VALUES (5760,'Driver_Band_','Driver Band',5,20,NULL,10
 # REPLACE INTO `item_db_re` VALUES (5761,'Sloth_Hat','Sloth Hat',5,20,NULL,800,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,638,'bonus bAgi,2;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5762,'Duneyrr_Helm','Duneyrr Helm',5,20,NULL,100,NULL,5,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,639,'bonus bAllStats,1; bonus bMdef,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5763,'Red_Bunny_Band','Red Bunny Band',5,NULL,NULL,200,NULL,4,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,640,'bonus bAgi,2; bonus bMdef,3;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5765,'Black_Tail_Ribbon','Black Tail Ribbon',5,20,NULL,100,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,256,NULL,'10',1,642,'bonus bMdef,5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5766,'Amistr_Cap','Amistr Cap',5,20,NULL,500,NULL,4,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'50',1,643,'bonus bVit,5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5767,'Samurai_Mask','Samurai Mask',5,20,NULL,300,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'50',NULL,644,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5768,'Sakura_Coronet','Sakura Coronet',5,20,NULL,800,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,645,'bonus bMdef,3;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5769,'Gold_Angel_Sculpture','Gold Angel Sculpture',5,100,NULL,0,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'70',NULL,646,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5765,'Black_Tail_Ribbon','Black Tail Ribbon',5,20,NULL,100,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,256,NULL,'10',1,642,'bonus bMdef,5; bonus bLongAtkDef,10; bonus2 bSubEle,Ele_Neutral,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5766,'Amistr_Cap','Amistr Cap',5,20,NULL,500,NULL,4,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'50',1,643,'bonus bVit,5; bonus3 bAutoSpellWhenHit,"NPC_STONESKIN",6,20;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5767,'Samurai_Mask','Samurai Mask',5,20,NULL,300,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'50',NULL,644,'bonus2 bAddRace,RC_NonBoss,1; bonus2 bAddRace,RC_Boss,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5768,'Sakura_Coronet','Sakura Coronet',5,20,NULL,800,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,645,'bonus bMdef,3; bonus bMaxSP,25;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5769,'Gold_Angel_Sculpture','Gold Angel Sculpture',5,100,NULL,0,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'70',NULL,646,'skill "RG_GRAFFITI",1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5770,'Splash_Hat','Splash Hat',5,20,NULL,100,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,349,'autobonus "{sc_start SC_WINDWEAPON,180000,1;}",3,180000,BF_WEAPON,"{specialeffect2 EF_ENHANCE;}";',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5771,'Family_Hat','Family Hat',5,20,NULL,100,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,109,'bonus bDex,1; bonus bMdef,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5771,'Family_Hat','Family Hat',5,20,NULL,100,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,109,'bonus bDex,1; bonus bMdef,1; bonus bMaxHPrate,2; bonus bMaxSPrate,2; skill "PR_MAGNIFICAT",1;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5772,'Red_Navy_Hat','Red Navy Hat',5,3000,NULL,500,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'95',1,651,NULL,NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5773,'Navy_Beret','Navy Beret',5,3000,NULL,500,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'95',1,652,NULL,NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5774,'Red_Pirate_Hat','Red Pirate Hat',5,3000,NULL,500,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'95',1,496,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5775,'Choco_Donut_In_Mouth','Choco Donut In Mouth',5,20,NULL,50,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,653,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5776,'Blazing_Sun','Blazing Sun',5,NULL,NULL,500,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,654,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5775,'Choco_Donut_In_Mouth','Choco Donut In Mouth',5,20,NULL,50,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,653,'bonus bMaxHP,50;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5776,'Blazing_Sun','Blazing Sun',5,NULL,NULL,500,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,654,'bonus2 bVariableCastrate,"MG_FIREBOLT",-5; bonus2 bSkillAtk,"MG_FIREBOLT",5; bonus2 bVariableCastrate,"MG_FIREBALL",-5; bonus2 bSkillAtk,"MG_FIREBALL",5; bonus2 bSkillAtk,"MG_FIREWALL",3; bonus2 bSkillAtk,"WZ_METEOR",3; bonus bUseSPrate,5;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5777,'Remover_Hat','Remover Hat',5,20,NULL,800,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'30',NULL,655,'bonus bMdef,1;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5778,'Blue_Arara_Hat','Blue Arara Hat',5,20,NULL,100,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,656,'bonus bStr,2;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5779,'Drooping_Boto','Drooping Boto',5,20,NULL,100,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,657,'bonus bInt,2;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5780,'Tendrilion_Hat','Tendrilion Hat',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,658,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5781,'Persika','Persika',5,20,NULL,100,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,256,NULL,NULL,NULL,659,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5781,'Persika','Persika',5,20,NULL,100,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,256,NULL,NULL,NULL,659,'bonus bFlee,1; bonus bMaxSP,20;',NULL,NULL);
 #
 # REPLACE INTO `item_db_re` VALUES (5783,'YellowBunny_Hairband','YellowBunny Hairband',5,20,NULL,200,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,662,'bonus bStr,1; bonus bInt,1; bonus bDex,2;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5784,'PinkBunny_Hairband','PinkBunny Hairband',5,20,NULL,200,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,663,'bonus bStr,1; bonus bInt,2; bonus bDex,1;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5785,'Green_Bunny_Hairband','Green Bunny Hairband',5,20,NULL,200,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,664,'bonus bStr,2; bonus bInt,1; bonus bDex,1;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5786,'Ancient_Elven_Ear','Ancient Elven Ear',5,10,NULL,200,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'1',NULL,665,'bonus bLuk,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5786,'Ancient_Elven_Ear','Ancient Elven Ear',5,10,NULL,200,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'1',NULL,665,'bonus bLuk,1; bonus bMaxHP,100; bonus bMaxSP,30;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5787,'Tha_Maero_Mask','Tha Maero Mask',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,513,NULL,'30',NULL,666,'bonus bMdef,2;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5788,'3D_Glasses','3D Glasses',5,20,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'1',NULL,661,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5788,'3D_Glasses','3D Glasses',5,20,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'1',NULL,661,'bonus2 bSubEle,Ele_Neutral,5; bonus2 bMagicAddRace,RC_Formless,4;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5789,'Thanatos_Mal_Mask','Thanatos Mal Mask',5,20,NULL,100,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,513,NULL,'30',NULL,667,'bonus bVit,1;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5790,'Holy_Mom_Love','TM',5,20,NULL,500,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,768,NULL,'45',1,610,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5790,'Holy_Mom_Love','TM',5,20,NULL,500,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,768,NULL,'45',1,610,'bonus2 bSubRace,RC_Demon,-5; bonus2 bSubRace,RC_Undead,-5; bonus3 bAutoSpell,"MG_COLDBOLT",1,20;',NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5791,'Tenkaippin_Ramen','Tenkaippin Ramen',5,20,NULL,500,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'30',NULL,668,'bonus bInt,-1; bonus bDex,4;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5792,'Fish_Pin','Fish Pin',5,20,NULL,100,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,669,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5793,'Ribbon_Of_Life','Ribbon Of Life',5,20,NULL,0,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'1',NULL,575,'bonus bInt,1; bonus bMdef,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5794,'3D_Glasses_','3D Glasses',5,20,NULL,0,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'1',NULL,661,NULL,NULL,NULL);
 # REPLACE INTO `item_db_re` VALUES (5795,'Red_Dress_Hat','Red Dress Hat',5,20,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,670,'bonus bMdef,7;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5796,'Cheer_Scarf','Cheer Scarf',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,369,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5797,'Cheer_Scarf2','Cheer Scarf2',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,369,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5798,'Cheer_Scarf3','Cheer Scarf3',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,369,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5799,'Cheer_Scarf4','Cheer Scarf4',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,369,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5796,'Cheer_Scarf','Cheer Scarf',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,369,'bonus2 bExpAddRace,RC_Boss,10; bonus2 bExpAddRace,RC_NonBoss,10;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5797,'Cheer_Scarf2','Cheer Scarf2',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,369,'bonus2 bExpAddRace,RC_Boss,20; bonus2 bExpAddRace,RC_NonBoss,20;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5798,'Cheer_Scarf3','Cheer Scarf3',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,369,'bonus2 bExpAddRace,RC_Boss,30; bonus2 bExpAddRace,RC_NonBoss,30;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5799,'Cheer_Scarf4','Cheer Scarf4',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,369,'bonus2 bExpAddRace,RC_Boss,40; bonus2 bExpAddRace,RC_NonBoss,40;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5800,'Blush_Of_Groom','Blush of Groom',5,20,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,NULL,NULL,125,'bonus2 bSubRace,RC_DemiHuman,3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5801,'Ribbon_Of_Bride','Red Tailed Ribbon',5,20,NULL,100,NULL,5,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,167,'bonus bAllStats,2; bonus2 bSubRace,RC_DemiHuman,10; if(getskilllv("AL_HEAL")==10) { bonus3 bAutoSpellWhenHit,"AL_HEAL",10,20; } else { bonus3 bAutoSpellWhenHit,"AL_HEAL",5,20; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5802,'Upgrade_Elephant_Hat','Upgraded Elephant Hat',5,NULL,NULL,500,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,NULL,1,215,NULL,NULL,NULL);
@@ -3416,20 +3462,20 @@ REPLACE INTO `item_db_re` VALUES (5805,'Victorious_Coronet','Victorious Coronet'
 REPLACE INTO `item_db_re` VALUES (5806,'Poem_Natalia_Hat','Poet Natalie\'s Hat',5,20,NULL,300,NULL,5,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,NULL,67,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5807,'October_Fest_Cap','October Fest Cap',5,20,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFE,7,2,256,NULL,'50',1,104,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5808,'Diabolus_Helmet','Dark Bacilium',5,20,NULL,250,NULL,5,NULL,1,0x000FDF80,2,2,769,NULL,NULL,1,364,'bonus2 bResEff,Eff_Stone,2000+(getrefine()*200); bonus2 bResEff,Eff_Freeze,2000+(getrefine()*200); bonus2 bResEff,Eff_Stun,2000+(getrefine()*200);',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5809,'Boom_Boom_Hat','Boom Boom Hat',5,NULL,NULL,100,NULL,6,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,NULL,216,'bonus bAllStats,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5809,'Boom_Boom_Hat','Boom Boom Hat',5,NULL,NULL,100,NULL,6,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,NULL,216,'bonus bAllStats,5; bonus bSpeedRate,25;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5810,'Ph.D_Hat_V','Ph.D Hat V',5,20,NULL,100,NULL,3,NULL,NULL,0xFFFFFFFE,7,2,256,NULL,NULL,1,98,'bonus bInt,5; bonus bVit,3; bonus bDex,3;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5811,'Santa_Beard','Santa\'s Beard',5,20,NULL,100,NULL,5,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,NULL,NULL,25,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5812,'Hat_Of_Expert','Hat Of Expert',5,NULL,NULL,0,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,16,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5811,'Santa_Beard','Santa\'s Beard',5,20,NULL,100,NULL,5,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,NULL,NULL,25,'bonus2 bSubRace,RC_Brute,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5812,'Hat_Of_Expert','Hat Of Expert',5,NULL,NULL,0,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,16,'bonus3 bAddEffWhenHit,Eff_Bleeding,500,ATF_TARGET|ATF_SELF; bonus3 bAddEffWhenHit,Eff_Silence,500,ATF_TARGET|ATF_SELF; bonus3 bAddEffWhenHit,Eff_Confusion,500,ATF_TARGET|ATF_SELF; bonus3 bAddEffWhenHit,Eff_Curse,500,ATF_TARGET|ATF_SELF; bonus3 bAddEffWhenHit,Eff_Blind,500,ATF_TARGET|ATF_SELF;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5813,'Red_Ph.D_Hat','Red Ph.D Hat',5,1000,NULL,500,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,481,'bonus bInt,1;',NULL,NULL);
 #5814,Ati_Atihan_Hat3
 REPLACE INTO `item_db_re` VALUES (5815,'Cowboy_Hat_J','Purple Cowboy Hat',5,20,NULL,500,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,475,'bonus bStr,1; bonus2 bSubSize,Size_Small,5; bonus2 bSubSize,Size_Medium,5; bonus2 bSubSize,Size_Large,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5816,'Classic_Hat_J','Classic Hat',5,20,NULL,500,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,411,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5817,'Valentine_Pledge','Valentine Pledge',5,20,NULL,0,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,NULL,NULL,0,'bonus bAllStats,2; bonus bMdef,3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5817,'Valentine_Pledge','Valentine Pledge',5,20,NULL,0,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,NULL,NULL,0,'bonus bAllStats,2; bonus bMdef,3; bonus bHealPower,10; bonus2 bAddRace,RC_NonBoss,3; bonus2 bAddRace,RC_Boss,3; bonus bMatkRate,3; bonus bFlee,10; bonus bAspdRate,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5818,'Carnival_Hat','Carnival Hat',5,NULL,NULL,0,NULL,6,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,505,'bonus bAllStats,3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5819,'Carnival_Circlet','Carnival Circlet',5,NULL,NULL,0,NULL,6,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,506,'bonus bAllStats,3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5820,'Black_Elven_Ears','Black Elven Ears',5,10,NULL,100,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,NULL,NULL,498,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5821,'Gold_Tulip_Hairpin','Gold Tulip Hairpin',5,10,NULL,100,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,499,'bonus2 bExpAddRace,RC_Boss,5; bonus2 bExpAddRace,RC_NonBoss,5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5822,'Love_Chick_Hat','Love Chick Hat',5,10000,NULL,100,NULL,4,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,500,'bonus bLuk,4; bonus bMaxHP,100; bonus bMaxSP,100; bonus2 bSubRace,RC_DemiHuman,7; bonus2 bSubRace,RC_Undead,7;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5822,'Love_Chick_Hat','Love Chick Hat',5,10000,NULL,100,NULL,4,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,NULL,1,500,'bonus bLuk,4; bonus bMaxHP,100; bonus bMaxSP,100; bonus2 bSubRace,RC_Brute,7; bonus2 bSubRace,RC_DemiHuman,7;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5823,'Love_Arrow','Love Arrow',5,5000,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,NULL,NULL,0,'bonus bDex,5; bonus bAgi,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5824,'Fools_Day_Hat','Fools Day Hat',5,20,NULL,300,NULL,6,NULL,1,0xFFFFFFFF,7,2,256,NULL,'30',1,265,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5825,'Badge_Of_Order_Grace','Badge Of Order Grace',5,NULL,NULL,0,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,NULL,NULL,0,'bonus bMdef,1;',NULL,NULL);
@@ -3448,7 +3494,7 @@ REPLACE INTO `item_db_re` VALUES (5837,'Woe_Sunglass','Woe Sunglass',5,20,NULL,1
 REPLACE INTO `item_db_re` VALUES (5838,'Woe_Fin_Helm','Woe Fin Helm',5,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'70',NULL,100,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5839,'Woe_Blush','Woe Blush',5,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'70',NULL,125,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5840,'Woe_Elven_Ears','Woe Elven Ears',5,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'70',NULL,73,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (5841,'Shaman_Hat_','Shaman_Hat',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,'30',1,596,'bonus bLuk,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (5841,'Shaman_Hat_','Shaman_Hat',5,20,NULL,100,NULL,1,NULL,1,0xFFFFFFFF,7,2,256,NULL,'30',1,596,'bonus bLuk,2; bonus3 bSubEle,Ele_Neutral,3,BF_MAGIC; bonus3 bSubEle,Ele_Water,3,BF_MAGIC; bonus3 bSubEle,Ele_Earth,3,BF_MAGIC; bonus3 bSubEle,Ele_Fire,3,BF_MAGIC; bonus3 bSubEle,Ele_Wind,3,BF_MAGIC; bonus3 bSubEle,Ele_Poison,3,BF_MAGIC; bonus3 bSubEle,Ele_Holy,3,BF_MAGIC; bonus3 bSubEle,Ele_Dark,3,BF_MAGIC; bonus3 bSubEle,Ele_Ghost,3,BF_MAGIC; bonus3 bSubEle,Ele_Undead,3,BF_MAGIC;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5842,'Loyal_Ring1','Loyal Ring1',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'1',1,0,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5843,'Loyal_Ring2','Loyal Ring2',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'1',1,0,'bonus bAllStats,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (5844,'Loyal_Ring3','Loyal Ring3',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,136,NULL,'1',1,0,'bonus bAllStats,3;',NULL,NULL);
@@ -3809,7 +3855,7 @@ REPLACE INTO `item_db_re` VALUES (6341,'Fade_Notation_Red','Fade Notation Red',3
 REPLACE INTO `item_db_re` VALUES (6342,'Fade_Notation_Purple','Fade Notation Purple',3,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6343,'Fade_Notation_Blue','Fade Notation Blue',3,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6344,'Muscle_Story','Muscle Story',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6345,'Love_Ball','Love Ball',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6345,'Love_Ball','Love Lump',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6346,'Seagate_Mark','Seagate Mark',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6347,'Bless_Word_Paper1','Bless Word Paper',3,4020,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6348,'Bless_Word_Paper2','Bless Word Paper',3,4020,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
@@ -3852,89 +3898,110 @@ REPLACE INTO `item_db_re` VALUES (6389,'Puddle_R_Sample','Pool Sample',3,20,NULL
 REPLACE INTO `item_db_re` VALUES (6390,'Small_Pocket','Small Pocket',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6391,'Splendid_Supply_Kit','Splendid Supply Kit',3,20,NULL,2000,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6392,'Bradium_Box','Bradium Box',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6393,'Round_Feather','Round Feather',3,524,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6394,'Golden_Feather','Golden Feather',3,486,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6395,'Angel_Magic_Power','Angel Magic Power',3,614,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6393,'Round_Feather','Round Feather',3,525,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6394,'Golden_Feather','Golden Feather',3,487,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6395,'Angel_Magic_Power','Angel Magic Power',3,615,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6396,'Auger_Of_Spirit','Auger Of Spirit',3,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-#
-REPLACE INTO `item_db_re` VALUES (6401,'Palm_Oil','Palm_Oil',3,20,NULL,500,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6402,'Coconut_Oil','Coconut_Oil',3,20,NULL,50,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6403,'Comodo_Leather','Comodo Leather',3,4,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6404,'Kris_Hilt','Kris Hilt',3,20,NULL,100,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6405,'Cendrawasih_Feather','Cendrawasih Feather',3,2,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6406,'Shining_Cendrawasih_Feather','Shining Cendrawasih Feather',3,10,NULL,100,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6407,'Raw_Crystal_Stone_Fragment','Raw Crystal Stone Fragment',3,820,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6408,'Raw_Crystal_Stone','Raw Crystal Stone',3,820,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6409,'Raw_Crystal_Stone_Mass','Raw Crystal Stone Mass',3,820,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-#
+REPLACE INTO `item_db_re` VALUES (6397,'PR_Team_Ticket','PR Team Ticket',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6398,'Develop_Team_Ticket','Develop Team Ticket',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6399,'Marketing_Team_Ticket','Marketing Team Ticket',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6400,'Operating_Team_Ticket','Operating Team Ticket',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6401,'Palm_O','Palm Oil',3,NULL,NULL,500,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6402,'Oil_Palm_F','Palm Oil Fruit',3,NULL,NULL,50,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6403,'Comodo_L','Comodo Leather',3,5,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6404,'Caress_H','Keris Hilt',3,NULL,NULL,100,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6405,'Cendrawasih_F','Cendrawasih Feather',3,3,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6406,'Cendrawasih_SF','Shining Cendrawasih Feather',3,10,NULL,100,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6407,'Sang_Stone_Fragment','Raw Crystal Stone Fragment',3,10,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6408,'Sang_Stone','Raw Crystal Stone',3,10,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6409,'Sang_Stone_Mass','Raw Crystal Stone Mass',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6410,'Idul_Fitri_Card','Idul Fitri Card',3,10,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6411,'Ripe_Watermelon','Ripe Watermelon',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-#
+REPLACE INTO `item_db_re` VALUES (6412,'Special_Medal','Special Medal',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6413,'New_Insurance','New Insurance',3,2,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6414,'Ragunta_Card','Ragunta Card',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-#
+REPLACE INTO `item_db_re` VALUES (6415,'Strange_Embryo','Strange Embryo',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6416,'Pet_Exchange','Pet Exchange',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6417,'Garderie_Fruit','Garderie Fruit',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6418,'A_Grade_Coin','A Grade Coin',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6419,'B_Grade_Coin','B Grade Coin',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6420,'C_Grade_Coin','C Grade Coin',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6421,'D_Grade_Coin','D Grade Coin',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6422,'E_Grade_Coin','E Grade Coin',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6423,'Sea_God\'s_Wrath','Sea God\'s Wrath',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-#
-REPLACE INTO `item_db_re` VALUES (6426,'Bad_Canned_Food','Bad Canned Food',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-#
-REPLACE INTO `item_db_re` VALUES (6428,'Adventure_Card_A','Adventure Card A',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6429,'Adventure_Card_B','Adventure Card B',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6430,'Figure_Sculpture','Figure Sculpture',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6431,'Pail','Pail',3,20,NULL,100,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-#
-REPLACE INTO `item_db_re` VALUES (6433,'Cleaning_Brush','Cleaning Brush',3,20,NULL,300,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-#
-REPLACE INTO `item_db_re` VALUES (6436,'Sea_God\'s_Call','Sea God\'s Call',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6423,'Anger_Seagod','Sea God\'s Wrath',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6424,'Halloween_Fragment','Spirit Piece',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6425,'Halloween_Certificate','Halloween Certificate',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6426,'Bad_Can','Bad Canned Food',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6427,'Bad_Can_Sack','Bad Canned Food Sack',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6428,'Bravery_Card_A','Adventure Card A',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6429,'Bravery_Card_B','Adventure Card B',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6430,'Picture_Piece','Figure Sculpture',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6431,'Bucket','Pail',3,NULL,NULL,100,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6432,'Full_Bucket','Full Pail',3,NULL,NULL,3000,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6433,'Clean_Brush','Cleaning Brush',3,NULL,NULL,300,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6434,'Fix_Kit','Fix Kit',3,NULL,NULL,1000,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6435,'Fresh_Fruit','Fresh Fruit',3,NULL,NULL,100,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6436,'Ptotection_Seagod','Sea God\'s Call',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6437,'Scaraba_Perfume','Scaraba Perfume',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 #
 REPLACE INTO `item_db_re` VALUES (6440,'General_Lubrication','General Lubrication',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6441,'Advanced_Lubrication','Advanced Lubrication',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6442,'Octopus_Hunting_Skewer','Octopus Hunting Skewer',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6441,'High_RankLubricant','High Ranked Lubricant',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6442,'Octopus_Hunt_Stick','Octopus Hunting Stick',3,0,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6443,'Sillit_Pong_Bottle','Sillit Pong Bottle',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 #
 REPLACE INTO `item_db_re` VALUES (6451,'Unknown_Fish','Unknown Fish',3,20,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 #
-REPLACE INTO `item_db_re` VALUES (6469,'Warrior\'s_Will','Warrior\'s Will',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6470,'Blood_Thirst','Blood Thirst',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6471,'Chills_Of_Death','Chills Of Death',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6464,'Hate_Bundle','Hate Crate',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6465,'Guard_Coin','Guard Coin',3,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6466,'Clean_Water','Clean Water',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6467,'Perfume','Perfume',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6468,'Thai_Perfume','Thai Perfume',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6469,'Will_Of_Warrior','Warrior\'s Will',3,1000,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6470,'Blood_Thirst','Blood Thirst',3,1200,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6471,'Goast_Chill','Chills Of Death',3,1600,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6472,'Holy_Mom_Blaze','Holy Mom Blaze',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 #
-REPLACE INTO `item_db_re` VALUES (6485,'Blue_Card_2','Blue 2 Card',3,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6486,'Blue_Card_0','Blue 0 Card',3,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6487,'Blue_Card_1','Blue 1 Card',3,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-#
+REPLACE INTO `item_db_re` VALUES (6485,'BlueCard_2','Blue 2 Card',3,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6486,'BlueCard_0','Blue 0 Card',3,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6487,'BlueCard_1','Blue 1 Card',3,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6488,'Thanks_Invest_Ticket','Thanks Invest Ticket',3,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6489,'Cats_Invest_Certif','Cats Invest Certificate',3,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6490,'Magic_Clay_Fragment','Magic Clay Fragment',3,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6491,'Magic_Clay','Magic Clay',3,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6492,'Magic_Clay_Lump','Magic Clay Lump',3,NULL,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6493,'Makibi','Makibi',3,30,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-#
-REPLACE INTO `item_db_re` VALUES (6496,'Tikbalang_Thick_Spine','Tikbalang Thick Spine',3,300,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6497,'Small_Amulet','Small Amulet',3,20,NULL,50,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6494,'Kafra_Coin2','Kafra Coin',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6495,'Para_Logro_Badge','Eden Merit Badge',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6496,'Tikbalang_Thick_Spine','Tikbalang\'s Thick Spine',3,300,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6497,'Lesser_Agimat','Lesser Agimat',3,20,NULL,50,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6498,'Jejellopy','Jejellopy',3,200,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6499,'Ancient_Talisman','Ancient Talisman',3,500,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-#
-REPLACE INTO `item_db_re` VALUES (6501,'Lost_Belongings','Lost Belongings',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6502,'The_Cross','The Cross',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6503,'Ward','Ward',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6504,'Cast_Iron_Pot','Cast Iron Pot',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-#
-REPLACE INTO `item_db_re` VALUES (6506,'Memorial_Bouquet','Memorial Bouquet',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-#
+REPLACE INTO `item_db_re` VALUES (6499,'Ancient_Grudge','Ancient Grudge',3,500,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6500,'Sharp_Bamboo','Sharpened Bamboo',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6501,'Salt_Bag','Salt Bag',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6502,'Silver_Cross','The Cross',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6503,'Soul_Protection','Spiritual Protection',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6504,'Cast_Iron_Caldron','Cast-Iron Caldron',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6505,'Purified_Bone','Purified Spirit Bone',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6506,'Memorial_Bouquet','Offering Bouquet',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6507,'Evil_Bone','Evil Spirit Bone',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6508,'Silver_Bracelet','Silver Bracelet',3,300,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (6509,'Mysterious_Flower','Mysterious Flower',3,500,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6510,'Pretty_Flower','Pretty Flower',3,300,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6511,'Graceful_Flower','Graceful Flower',3,300,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6512,'Fire_Amulet','Fire Amulet',3,100,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6513,'Ice_Amulet','Ice Amulet',3,100,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6514,'Wind_Amulet','Wind Amulet',3,100,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6515,'Earth_Amulet','Earth Amulet',3,100,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6516,'Bakonawa_Doll','Bakonawa Doll',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6517,'Bangungot_Doll','Bangungot Doll',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6518,'Buwaya_Doll','Buwaya Doll',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6519,'Collected_Samples','Collected_Samples',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-#
-REPLACE INTO `item_db_re` VALUES (6523,'Bakonawa_Soul_Fragments','Bakonawa Soul Fragments',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6524,'Bangungot_Soul_Fragments','Bangungot Soul Fragments',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (6525,'Buwaya_Soul_Fragments','Buwaya Soul Fragments',3,20,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6510,'Elegant_Flower','Elegant Flower',3,300,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6511,'Beautiful_Flower','Beautiful Flower',3,300,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6512,'Charm_Fire','Fire Amulet',3,100,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6513,'Charm_Ice','Ice Amulet',3,100,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6514,'Charm_Wind','Wind Amulet',3,100,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6515,'Charm_Earth','Earth Amulet',3,100,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6516,'Bakonawa_Doll','Bakonawa Doll',3,3000,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6517,'Bangungot_Doll','Bangungot Doll',3,3000,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6518,'Buwaya_Doll','Buwaya Doll',3,3000,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6519,'Collected_Samples','Collected Sample',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6520,'Lost_Belongings','Lost Belongings',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6521,'Royal_Certificate','Royal Certificate',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6522,'Royal_Certificate_','Royal Certificate',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6523,'Bakonawa_Spirit_Piece','Piece of Bakonawa\'s Spirit',3,3000,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6524,'Bangungot_Spirit_Piece','Piece of Bangungot\'s Spirit',3,3000,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (6525,'Buwaya_Spirit_Piece','Piece of Buwaya\'s Spirit',3,3000,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 #
 REPLACE INTO `item_db_re` VALUES (7001,'Mould_Powder','Mould Powder',3,466,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (7002,'Ogre_Tooth','Ogre Tooth',3,658,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
@@ -4566,7 +4633,10 @@ REPLACE INTO `item_db_re` VALUES (7628,'Idiot_Key','Idiot Key',3,NULL,NULL,0,NUL
 REPLACE INTO `item_db_re` VALUES (7629,'Pink_Gift_Box','Pink Gift Box',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (7630,'Clean_Beach_Brush','Clean Beach Brush',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (7631,'Trash_Debris','Trash Debris',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (7635,'Sachet','Sachet',3,100,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (7632,'To_Afterworld_Record','Terrible Report Card',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (7633,'To_Heaven_Record','Heavensent Report Card',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (7634,'Rose_Of_Father','Father Rose',3,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (7635,'Perfume_Pouch','Incense Bag',3,100,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 #
 REPLACE INTO `item_db_re` VALUES (7701,'Dragon_Spirit','Soul',3,2,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (7702,'Special_Cogwheel','Special Cogwheel',3,2,NULL,10,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
@@ -5043,30 +5113,41 @@ REPLACE INTO `item_db_re` VALUES (11516,'Asai_Fruit','Asai Fruit',0,15,NULL,20,N
 REPLACE INTO `item_db_re` VALUES (11517,'Puri_Potion','Puri Potion',0,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(400,600),0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (11518,'N_Blue_Potion','Blue Potion',0,NULL,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 0,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (11519,'Beef_Toast','Beef Toast',0,1200,NULL,40,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(170,250),0;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (11520,'Mora_Mandarin','Mora Mandar',0,500,NULL,20,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 0,rand(50,80);',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (11521,'Pingui_Berry_Juice','Pingui Berry Juice',0,500,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(400,800),rand(50,80);',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (11522,'Red_Raffle_Sap','Red Raffle Sap',0,2500,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(400,800),0;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (11523,'Yellow_Raffle_Sap','Yellow Raffle Sap',0,3000,NULL,120,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(600,1000),0;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (11524,'White_Raffle_Sap','White Raffle Sap',0,3500,NULL,140,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(800,1200),0;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (11525,'Mora_Hip_Tea','Mora Hip Tea',0,20,NULL,150,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(1500,2000),0;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (11526,'Rafflecino','Rafflecino',0,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 0,rand(120,160);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11520,'Mora_Mandarin','Mora Mandar',0,500,NULL,20,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,100,NULL,NULL,'itemheal 0,rand(50,80);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11521,'Pingui_Berry_Juice','Pingui Berry Juice',0,500,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,100,NULL,NULL,'itemheal rand(400,800),rand(50,80);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11522,'Red_Raffle_Sap','Red Raffle Sap',0,2500,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,100,NULL,NULL,'itemheal rand(400,800),0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11523,'Yellow_Raffle_Sap','Yellow Raffle Sap',0,3000,NULL,120,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,110,NULL,NULL,'itemheal rand(600,1000),0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11524,'White_Raffle_Sap','White Raffle Sap',0,3500,NULL,140,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,120,NULL,NULL,'itemheal rand(800,1200),0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11525,'Mora_Hip_Tea','Mora Hip Tea',0,20,NULL,150,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,120,NULL,NULL,'itemheal rand(1500,2000),0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11526,'Rafflecino','Rafflecino',0,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,120,NULL,NULL,'itemheal 0,rand(120,160);',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (11527,'Baklava','Baklava',0,3500,NULL,600,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 1200,440;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (11528,'Kanafeh','Kanafeh',0,1500,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 300,240;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (11529,'MAAMOUL_','Maamoul',0,500,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 120,60;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (11530,'Jujube','Jujube',0,10,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 30,0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (11531,'Coffee','Coffee',0,10,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 0,10;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (11532,'Nasi_Goreng','Nasi_Goreng',0,15,NULL,20,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(17,23),0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11532,'Nasi_Goreng','Nasi Goreng',0,15,NULL,20,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(17,23),0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (11533,'Satay','Satay',0,15,NULL,20,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(17,23),0;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (11534,'Coconut_Juice','Coconut Juice',0,20,NULL,20,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(17,23),0;',NULL,NULL);
-#
-REPLACE INTO `item_db_re` VALUES (11536,'Cat_Hard_Biscuit','Cat Biscuit',0,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(70,110),0;',NULL,NULL);
-#
+REPLACE INTO `item_db_re` VALUES (11534,'Coco_Juice','Coconut Juice',0,20,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(17,23),0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11535,'Almond_Chocolate','Almond Chocolate',0,190,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 0,rand(8,16);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11536,'Cat_Hard_Biscuit','Cat Biscuit',0,0,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(70,110),0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11537,'Rice_Weevil_Bug','Rice Weevil Bug',0,0,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(100,150),0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (11538,'Fresh_Octopus_Legs','Fresh Octopus Legs',0,20,NULL,30,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(35,60),rand(5,10);',NULL,NULL);
-#
-REPLACE INTO `item_db_re` VALUES (11547,'Siege_Purple_Potion','Siege Purple Potion',0,20,NULL,120,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(500,600),rand(60,80);',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (11548,'Siege_White_Potion','Siege White Potion',0,20,NULL,80,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal 10,0;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (11549,'Siege_Blue_Potion','Siege Blue Potion',0,20,NULL,80,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal 0,10;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (11550,'Pumpkin_Cake','Pumpkin Cake',0,20,NULL,40,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal 5,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11539,'Athale_Choco','Athale Choco',0,1,NULL,80,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 50,50;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11540,'Shyai_Choco','Shyai Choco',0,1,NULL,80,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 50,50;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11541,'Mid_Choco','Mid Choco',0,1,NULL,80,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 50,50;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11542,'Zonda_Choco','Zonda Choco',0,1,NULL,80,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 50,50;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11543,'Goedo_Choco','Goedo Choco',0,1,NULL,80,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 50,50;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11544,'Huike_Choco','Huike Choco',0,1,NULL,80,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 50,50;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11545,'Rune_Choco','Rune Choco',0,1,NULL,80,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 50,50;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11546,'Pope_Choco','Pope Choco',0,1,NULL,80,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal 50,50;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11547,'Siege_Purple_Potion','Siege Purple Potion',0,0,NULL,120,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(500,600),rand(60,80);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11548,'Siege_White_Potion','Siege White Potion',0,0,NULL,80,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal 10,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11549,'Siege_Blue_Potion','Siege Blue Potion',0,0,NULL,80,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal 0,10;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11550,'Pumpkin_Cake','Pumpkin Cake',0,10,NULL,80,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal 5,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11551,'Savory_Herb_Salad','Savory Herb Salad',0,0,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal rand(20,30),0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11552,'Apple_Carrot_Salad','Apple Carrot Salad',0,0,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal rand(20,30),0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11553,'Casual_Stew','Casual Stew',0,0,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal rand(20,30),0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11554,'Golden_Roasted_Apple','Golden Roasted Apple',0,0,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal rand(20,30),0;',NULL,NULL);
 #
 REPLACE INTO `item_db_re` VALUES (11701,'Girl_Bunch_Of_Flower','Girl\'s Bouquet',0,20,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(105,145),0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (11702,'Moon_Cookie','Moon Cookie',0,NULL,NULL,300,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'',NULL,NULL);
@@ -5080,6 +5161,8 @@ REPLACE INTO `item_db_re` VALUES (11709,'Fanta_Zero_Lemon','Fanta Zero Lemon',0,
 REPLACE INTO `item_db_re` VALUES (11710,'Sakura_Mist','Sakura Mist',0,800,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(50,70),rand(10,12);',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (11711,'Sakura_Milk_Tea','Sakura Milk Tea',0,800,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(50,70),rand(10,12);',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (11712,'First_Leaf_Tea','Flower',0,800,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(50,70),rand(10,12);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (11713,'Julia\'s_Candy','Julia\'s Candy',0,0,NULL,30,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemheal rand(40,45),0;',NULL,NULL);
+#
 REPLACE INTO `item_db_re` VALUES (12000,'Cold_Scroll_2_5','Level 5 Frost Diver',11,2000,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemskill "MG_FROSTDIVER",5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12001,'Holy_Scroll_1_3','Level 3 Heal',11,2000,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemskill "AL_HEAL",3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12002,'Holy_Scroll_1_5','Level 5 Heal',11,2000,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemskill "AL_HEAL",5;',NULL,NULL);
@@ -5299,9 +5382,9 @@ REPLACE INTO `item_db_re` VALUES (12214,'Convex_Mirror','Convex Mirror',2,2,NULL
 REPLACE INTO `item_db_re` VALUES (12215,'Blessing_10_Scroll','LV10 Blessing Scroll',2,2,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'skilleffect "AL_BLESSING",0; sc_start SC_BLESSING,240000,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12216,'Inc_Agi_10_Scroll','LV10 Agil Scroll',2,2,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'if(Hp>15) { skilleffect "AL_INCAGI",0; sc_start SC_INCREASEAGI,240000,10; heal -15,0; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12217,'Aspersio_5_Scroll','LV5 Aspersio Scroll',2,2,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'if(countitem(523)>0) { skilleffect "PR_ASPERSIO",0; sc_start SC_ASPERSIO,180000,5; delitem 523,1; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (12218,'Assumptio_5_Scroll','LV5 Assumptio Scroll',2,2,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'skilleffect "HP_ASSUMPTIO",0; sc_start SC_ASSUMPTIO,100000,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (12218,'Assumptio_5_Scroll','LV5 Assumptio Scroll',2,2,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_start SC_ASSUMPTIO,100000,5; skilleffect "HP_ASSUMPTIO",0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12219,'Wind_Walk_10_Scroll','LV10 Wind Walker Scroll',2,2,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'skilleffect "SN_WINDWALK",0; sc_start SC_WINDWALK,250000,5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (12220,'Adrenaline_Scroll','LV5 Adrenaline Scroll',2,2,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'if(getiteminfo(getequipid(EQI_HAND_R),14)==6||getiteminfo(getequipid(EQI_HAND_R),14)==7) { skilleffect "BS_ADRENALINE",0; sc_start SC_ADRENALINE,150000,5; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (12220,'Adrenaline_Scroll','LV5 Adrenaline Scroll',2,2,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'set .@type,getiteminfo(getequipid(EQI_HAND_R),11); if (.@type==6||.@type==7||.@type==8) { skilleffect "BS_ADRENALINE",0; sc_start SC_ADRENALINE,150000,5; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12221,'Megaphone_','Megaphone',2,2,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'input @megaphone$; announce strcharinfo(0) + ": " + @megaphone$,bc_all,0xFF0000; end;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12225,'Sweet_Candy_Striper','Sweet Candy Cane',2,20,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'pet 1245;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12226,'Examination1','Examination 1',0,20,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_start SC_SpeedUp0,5400000,0; percentheal 100,100; sc_start SC_STRFOOD,5400000,10; sc_start SC_DEXFOOD,5400000,5; sc_start SC_ATKPOTION,5400000,22; sc_start SC_MATKFOOD,5400000,15;',NULL,NULL);
@@ -5310,7 +5393,7 @@ REPLACE INTO `item_db_re` VALUES (12228,'Examination3','Examination 3',0,20,NULL
 REPLACE INTO `item_db_re` VALUES (12229,'Examination4','Examination 4',0,20,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_start SC_SpeedUp0,5400000,0; percentheal 100,100; sc_start SC_STRFOOD,5400000,3; sc_start SC_AGIFOOD,5400000,5; sc_start SC_VITFOOD,5400000,10; sc_start SC_MATKFOOD,5400000,52;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12230,'Examination5','Examination 5',0,20,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_start SC_SpeedUp0,5400000,0; percentheal 100,100; sc_start SC_INTFOOD,5400000,3; sc_start SC_DEXFOOD,5400000,12; sc_start SC_ATKPOTION,5400000,20; sc_start SC_MATKFOOD,5400000,20;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12231,'Examination6','Examination 6',0,20,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal 100,100; sc_start SC_SpeedUp0,5400000,0; sc_start SC_STRFOOD,5400000,6; sc_start SC_DEXFOOD,5400000,6; sc_start SC_AGIFOOD,5400000,6; sc_start SC_INTFOOD,5400000,6; sc_start SC_VITFOOD,5400000,6; sc_start SC_LUKFOOD,5400000,6; sc_start SC_ATKPOTION,5400000,24; sc_start SC_MATKFOOD,5400000,24;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (12232,'Gingerbread','Ginger Bread',2,20,NULL,150,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (12232,'Gingerbread','Ginger Bread',2,20,NULL,150,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_start SC_ASPDPOTION1,900000,0; sc_start SC_SpeedUp0,900000,0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12233,'Kvass','Kvass',0,20,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal 100,100;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12234,'Cacao99','Fierce Cacao 99%',0,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal 25,0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12235,'Strawberry_Choco','Chocolate Strawberry',2,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal 0,5; skilleffect "AL_BLESSING",0; sc_start SC_BLESSING,240000,10;',NULL,NULL);
@@ -5492,9 +5575,9 @@ REPLACE INTO `item_db_re` VALUES (12410,'Spareribs_H','Spareribs H',2,NULL,NULL,
 REPLACE INTO `item_db_re` VALUES (12411,'HE_Battle_Manual','HE Battle Manual',2,2,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_start SC_EXPBOOST,900000,200;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12412,'HE_Bubble_Gum','HE Bubble Gum',2,2,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_start SC_ITEMBOOST,900000,300;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12413,'PCBang_Coupon_Box2','PCBang Coupon Box2',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (12414,'Guarana_Candy','Guarana Candy',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_start SC_INCASPDRATE,1800000,10; sc_start SC_INCREASEAGI,140000,5; skilleffect "AL_INCAGI",0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (12414,'Guarana_Candy','Guarana Candy',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_start SC_ASPDPOTION0,1800000,0; sc_start SC_INCREASEAGI,140000,5; skilleffect "AL_INCAGI",0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12415,'Siege_Teleport_Scroll2','Siege Teleport Scroll2',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (12416,'LUcky_Egg_C3','LUcky Egg C3',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (12416,'Lucky_Egg_C3','Lucky Egg C3',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12417,'Boost500','Boost500',2,100,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12418,'Full_SwingK','Full SwingK',2,100,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12419,'Mana_Plus','Mana Plus',2,100,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
@@ -5767,6 +5850,8 @@ REPLACE INTO `item_db_re` VALUES (12773,'Victory_Hat_Box2','Victory Hat Box2',2,
 #
 REPLACE INTO `item_db_re` VALUES (12775,'Ancient_Spirit_Amulet','Ancient Spirit Amulet',2,20,NULL,600,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 #
+REPLACE INTO `item_db_re` VALUES (12786,'Change_Slot_Card','Character Position Change Coupon',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'set CharMoves, CharMoves + 1;',NULL,NULL);
+#
 REPLACE INTO `item_db_re` VALUES (12848,'Falcon_Flute','Falcon Flute',11,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'if(getskilllv("HT_FALCON")) { if(checkoption(Option_Wug)||checkoption(Option_Wugrider)) end; if(checkfalcon()==1) { setfalcon 0; } else { setfalcon 1; } }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12900,'Battle_Manual_Box','Battle Manual Box',18,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 12208,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (12901,'Insurance_Package','Insurance Package',18,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 12209,10;',NULL,NULL);
@@ -5938,12 +6023,12 @@ REPLACE INTO `item_db_re` VALUES (13062,'Ancient_Dagger','Ancient Dagger',4,20,N
 #13064,
 #13065,
 REPLACE INTO `item_db_re` VALUES (13066,'P_Dagger3','Eden Dagger III',4,NULL,NULL,0,'165:80',NULL,1,NULL,0xFE9F7EEF,7,2,2,3,'60',NULL,1,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (13067,'Kris','Kris',4,20,NULL,700,'107:70',NULL,1,1,0xFE9F7EEF,2,2,2,3,'30',1,1,'bonus2 bHpDrainRate,50,10;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (13067,'Caress','Keris',4,20,NULL,700,'107:70',NULL,1,1,0xFE9F7EEF,2,2,2,3,'30',1,1,'bonus2 bHpDrainRate,20,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13068,'Pompano','Pompano',4,NULL,NULL,0,'160:100',NULL,3,NULL,0xFE9F7EEF,7,2,2,1,'50',NULL,1,'bonus bUnbreakableWeapon,0; autobonus "{bonus bBaseAtk,30;}",10,7000,BF_WEAPON,"{specialeffect2 EF_ENHANCE;}"; autobonus "{bonus bMatk,20;}",10,7000,BF_MAGIC,"{specialeffect2 EF_SUFFRAGIUM;}"; if(BaseLevel>99) { bonus bBaseAtk,10; bonus bMatk,10; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13069,'As-nail','As-nail',4,56000,NULL,500,'160:80',NULL,1,NULL,0x000654E2,7,2,2,4,'110',1,1,'bonus bAtkEle,Ele_Wind; bonus2 bAddEff,Eff_Freeze,100+(getrefine()*50);',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13070,'Scarlet-nail','Scarlet-nail',4,56000,NULL,500,'160:80',NULL,1,NULL,0x000654E2,7,2,2,4,'110',1,1,'bonus bAtkEle,Ele_Fire; bonus2 bAddEff,Eff_Stone,100+(getrefine()*50);',NULL,NULL);
-#13071,
-REPLACE INTO `item_db_re` VALUES (13072,'Bellum_Damascus','Bellum Damascus',4,20,NULL,1000,'180',NULL,1,NULL,0xFE9F7EEF,7,2,2,4,'95',1,1,'bonus bAspdRate,getrefine();',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (13071,'Upg_Dagger','Upg Dagger',4,20,NULL,600,'55',NULL,1,1,0xFE9F7EEF,7,2,2,3,'1',1,1,'bonus bBaseAtk,(getrefine()*10); bonus bMatk,(getrefine()*5); if(BaseLevel>70) bonus bBaseAtk,(((BaseLevel-70)/10)*5);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (13072,'Velum_Damascus','Vellum Damascus',4,20,NULL,1000,'180',NULL,1,NULL,0xFE9F7EEF,7,2,2,4,'95',1,1,'bonus bAspdRate,getrefine();',NULL,NULL);
 #13073,
 REPLACE INTO `item_db_re` VALUES (13074,'Ninja_Sword_Prototype','Ninja Sword Prototype',4,NULL,NULL,0,NULL,NULL,1,NULL,0x02000000,7,2,2,4,'99',NULL,1,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13075,'Kurenai','Kurenai',4,5000,NULL,700,'130',NULL,1,NULL,0x02000000,7,2,2,3,'99',1,1,'bonus bInt,3;',NULL,NULL);
@@ -5966,6 +6051,8 @@ REPLACE INTO `item_db_re` VALUES (13111,'Sharpshooter_Revolver','Sharpshooter Re
 REPLACE INTO `item_db_re` VALUES (13112,'P_Revolver1','Eden Revlover I',4,NULL,NULL,0,'44',NULL,7,NULL,0x01000000,7,2,34,1,'26',NULL,17,'bonus bHit,-5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13113,'P_Revolver2','Eden Revlover II',4,NULL,NULL,0,'60',NULL,7,NULL,0x01000000,7,2,34,1,'40',NULL,17,'bonus bHit,-5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13114,'P_Revolver3','Eden Revolver III',4,NULL,NULL,0,'76',NULL,7,NULL,0x01000000,7,2,34,3,'60',NULL,17,'bonus bHit,-5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (13115,'Upg_Revolver','Upg Revolver',4,20,NULL,500,'35',NULL,7,1,0x01000000,7,2,34,3,'1',1,17,'bonus bBaseAtk,(getrefine()*5); bonus bLongAtkRate,(getrefine()*2); if(BaseLevel>70) bonus bBaseAtk,(((BaseLevel-70)/10)*5);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (13116,'Novice_Revolver','Novice Revolver',4,0,NULL,500,'20',NULL,7,0,0x01000000,7,2,34,1,'1',0,17,NULL,NULL,NULL);
 # Guns
 REPLACE INTO `item_db_re` VALUES (13150,'Branch','Branch',4,3000,NULL,500,'50',NULL,9,3,0x01000000,7,2,34,1,'1',1,18,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13151,'The_Cyclone','Cyclone',4,17500,NULL,700,'120',NULL,9,1,0x01000000,7,2,34,2,'24',1,18,'bonus bHit,10; bonus bCritical,10;',NULL,NULL);
@@ -5992,11 +6079,16 @@ REPLACE INTO `item_db_re` VALUES (13171,'BF_Rifle1','Soldier Rifle',4,NULL,NULL,
 REPLACE INTO `item_db_re` VALUES (13172,'BF_Gatling_Gun1','Soldier Gatling Gun',4,NULL,NULL,0,'80',NULL,9,NULL,0x01000000,7,2,34,3,'80',1,19,'bonus bDex,2; bonus2 bAddRace,RC_DemiHuman,35; bonus2 bIgnoreDefRate,RC_DemiHuman,20; autobonus "{bonus bBaseAtk,80; bonus2 bHPLossRate,120,1000;}",10,6000,BF_WEAPON,"{specialeffect2 EF_BASH3D;}"; bonus bUnbreakableWeapon,0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13173,'BF_Shotgun1','Soldier Shotgun',4,NULL,NULL,0,'100',NULL,9,NULL,0x01000000,7,2,34,3,'80',1,20,'bonus bDex,2; bonus bSplashRange,1; bonus2 bAddRace,RC_DemiHuman,55; bonus2 bIgnoreDefRate,RC_DemiHuman,20; autobonus "{bonus bBaseAtk,80; bonus2 bHPLossRate,100,1000;}",30,6000,BF_WEAPON,"{specialeffect2 EF_BASH3D;}"; bonus bUnbreakableWeapon,0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13174,'BF_Launcher1','Soldier Grenade Launcher',4,NULL,NULL,0,'300',NULL,9,NULL,0x01000000,7,2,34,3,'80',1,21,'bonus bDex,2; bonus bSplashRange,1; bonus2 bAddRace,RC_DemiHuman,55; bonus2 bIgnoreDefRate,RC_DemiHuman,20; autobonus "{bonus bBaseAtk,300; bonus2 bHPLossRate,120,1000;}",30,9000,BF_WEAPON,"{specialeffect2 EF_BASH3D;}"; bonus bUnbreakableWeapon,0;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (13175,'Lever_Action_Rifle_C','Lever Action Rifle',4,20,NULL,0,'170',NULL,9,NULL,0x01000000,7,2,34,3,NULL,NULL,18,'bonus bHit,20; bonus bCritical,50; bonus bAspdRate,-5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (13175,'Lever_Action_Rifle_C','Lever Action Rifle',4,20,NULL,0,'170',NULL,9,NULL,0x01000000,7,2,34,3,'1',NULL,18,'bonus bHit,20; bonus bCritical,50; bonus bAspdRate,-5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13176,'Krieger_Rifle1','Glorious Rifle',4,NULL,NULL,0,'90',NULL,9,NULL,0x01000000,7,2,34,4,'80',1,18,'bonus2 bAddRace,RC_DemiHuman,75; bonus2 bIgnoreDefRate,RC_DemiHuman,20; bonus2 bSkillAtk,"GS_TRIPLEACTION",30; bonus bUnbreakableWeapon,0; if(getrefine()>5) { bonus2 bAddRace,RC_DemiHuman,pow(((getrefine()>14)?14:getrefine())-4,2); bonus2 bIgnoreDefRate,RC_DemiHuman,5; } if(getrefine()>8) { bonus2 bVariableCastrate,"GS_TRACKING",25; bonus2 bSkillAtk,"GS_TRACKING",getrefine() * 3; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13177,'Krieger_Gatling1','Glorious Gatling Gun',4,NULL,NULL,0,'90',NULL,9,NULL,0x01000000,7,2,34,4,'80',1,19,'bonus2 bAddRace,RC_DemiHuman,35; bonus2 bIgnoreDefRate,RC_DemiHuman,20; bonus2 bSkillAtk,"GS_TRIPLEACTION",30; bonus bUnbreakableWeapon,0; if(getrefine()>5) { bonus2 bAddRace,RC_DemiHuman,pow(((getrefine()>10)?10:getrefine())-4,2); bonus2 bIgnoreDefRate,RC_DemiHuman,5; } if(getrefine()>8) {bonus2 bAddRace,RC_Boss,getrefine(); bonus2 bAddRace,RC_NonBoss,getrefine(); }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13178,'Krieger_Shotgun1','Glorious Shotgun',4,NULL,NULL,0,'110',NULL,9,NULL,0x01000000,7,2,34,4,'80',1,20,'bonus2 bAddRace,RC_DemiHuman,55; bonus2 bIgnoreDefRate,RC_DemiHuman,20; bonus bSplashRange,1; bonus2 bSkillAtk,"GS_TRIPLEACTION",30; bonus bUnbreakableWeapon,0; if(getrefine()>5) { bonus2 bAddRace,RC_DemiHuman,pow(((getrefine()>10)?10:getrefine())-4,2); bonus2 bIgnoreDefRate,RC_DemiHuman,5; } if(getrefine()>8) { bonus2 bSkillAtk,"GS_SPREADATTACK",getrefine() * 2; bonus3 bAddEffOnSkill,"GS_SPREADATTACK",Eff_Stun,2000; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13179,'Krieger_Launcher1','Glorious Grenade Launcher',4,NULL,NULL,0,'330',NULL,9,NULL,0x01000000,7,2,34,4,'80',1,21,'bonus2 bAddRace,RC_DemiHuman,35; bonus2 bIgnoreDefRate,RC_DemiHuman,20; bonus2 bSkillAtk,"GS_TRIPLEACTION",30; bonus bUnbreakableWeapon,0; if(getrefine()>5) { bonus2 bAddRace,RC_DemiHuman,pow(((getrefine()>10)?10:getrefine())-4,2); bonus2 bIgnoreDefRate,RC_DemiHuman,5; } if(getrefine()>8) { bonus2 bSkillAtk,"GS_GROUNDDRIFT",getrefine() * 2; bonus3 bAddEffOnSkill,"GS_SPREADATTACK",Eff_Stun,2000; autobonus "{bonus bAspdRate,20;}",200,20000,BF_WEAPON,"{specialeffect2 EF_POTION_BERSERK;}"; }',NULL,NULL);
+# Novice Guns
+REPLACE INTO `item_db_re` VALUES (13180,'Novice_Rifle','Novice Rifle',4,0,NULL,500,'50',NULL,9,3,0x01000000,7,2,34,4,'1',0,18,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (13181,'Novice_Shotgun','Novice Shotgun',4,0,NULL,1000,'80',NULL,9,0,0x01000000,7,2,34,4,'1',0,20,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (13182,'Novice_Gatling','Novice Gatling',4,0,NULL,1500,'40',NULL,9,0,0x01000000,7,2,34,4,'1',0,19,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (13183,'Novice_Grenade_Launcher','Novice Grenade Launcher',4,0,NULL,1500,'40',NULL,9,0,0x01000000,7,2,34,4,'1',0,21,NULL,NULL,NULL);
 # Bullets
 REPLACE INTO `item_db_re` VALUES (13200,'Bullet','Bullet',10,1,NULL,2,'10',NULL,NULL,NULL,0x01000000,7,2,32768,NULL,'1',NULL,3,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13201,'Silver_Bullet','Silver Bullet',10,15,NULL,2,'15',NULL,NULL,NULL,0x01000000,7,2,32768,NULL,'1',NULL,3,'bonus bAtkEle,Ele_Holy;',NULL,NULL);
@@ -6050,7 +6142,10 @@ REPLACE INTO `item_db_re` VALUES (13288,'Drocera_Stew_To_Throw','Throwing Droser
 REPLACE INTO `item_db_re` VALUES (13289,'Petti_Noodle_To_Throw','Throwing Petite Tail Soup',10,100,NULL,50,NULL,NULL,NULL,NULL,0x00040000,8,2,32768,NULL,'99',NULL,9,'sc_start SC_PUTTI_TAILS_NOODLES,300000,20;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13290,'Black_Thing_To_Throw','Throwing Black Mass',10,100,NULL,50,NULL,NULL,NULL,NULL,0x00040000,8,2,32768,NULL,'99',NULL,9,'sc_start SC_STOMACHACHE,60000,rand(5,10);',NULL,NULL);
 # More Shurikens & Kunais
-REPLACE INTO `item_db_re` VALUES (13294,'Explosive_Kunai','Explosive Kunai',10,100,NULL,50,'30',NULL,NULL,NULL,0x02000000,7,2,32768,NULL,'100',NULL,7,'bonus bAtkEle,Ele_Neutral;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (13291,'Starfish','Starfish',10,NULL,NULL,5,'110',NULL,NULL,NULL,0x02000000,7,2,32768,NULL,'50',NULL,7,'bonus bAtkEle,Ele_Neutral; /* bonus2 bAddEff,Eff_Stun,?; */',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (13292,'Dried_Squid','Dried Squid',10,10,NULL,20,'50',NULL,NULL,NULL,0x02000000,7,2,32768,NULL,'1',NULL,7,'bonus bAtkEle,Ele_Neutral; /* bonus2 bAddEff,Eff_Blind,?; */',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (13293,'Flying_Fish','Flying_Fish',10,10,NULL,20,'50',NULL,NULL,NULL,0x02000000,7,2,32768,NULL,'1',NULL,6,'bonus bAtkEle,Ele_Neutral; /* bonus2 bAddEff,Eff_Bleeding,?; */',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (13294,'Explosive_Kunai','Explosive Kunai',10,100,NULL,30,'50',NULL,NULL,NULL,0x02000000,7,2,32768,NULL,'100',NULL,7,'bonus bAtkEle,Ele_Neutral;',NULL,NULL);
 # Ninja Fuuma Shurikens
 REPLACE INTO `item_db_re` VALUES (13300,'Huuma_Bird_Wing','Huuma Wing Shuriken',4,90000,NULL,3000,'150',NULL,1,NULL,0x02000000,7,2,34,4,'65',1,22,'bonus bUnbreakableWeapon,0; bonus bAtkEle,Ele_Wind; bonus bDex,-2; bonus bAgi,-1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13301,'Huuma_Giant_Wheel','Huuma Giant Wheel Shuriken',4,40000,NULL,2500,'50',NULL,1,3,0x02000000,7,2,34,4,'42',1,22,'bonus bUnbreakableWeapon,0; bonus2 bAddEff,Eff_Bleeding,100;',NULL,NULL);
@@ -6068,7 +6163,7 @@ REPLACE INTO `item_db_re` VALUES (13312,'Prototype_Huuma_Shuriken','Prototype Hu
 REPLACE INTO `item_db_re` VALUES (13313,'Flower_Huuma_Shuriken','Flower Huuma Shuriken',4,100000,NULL,1500,'150',NULL,1,2,0x02000000,8,2,34,3,'110',1,22,' bonus bMatk,50; bonus bAtkEle,Ele_Fire;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13314,'Wave_Huuma_Shuriken','Wave Huuma Shuriken',4,100000,NULL,1500,'200',NULL,1,NULL,0x02000000,8,2,34,4,'110',1,22,' bonus bMatk,50; bonus bAtkEle,Ele_Water;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13315,'Thunderstorm_Huuma_Shuriken','Thunderstorm Huuma Shuriken',4,100000,NULL,1500,'200',NULL,1,NULL,0x02000000,8,2,34,4,'110',1,22,' bonus bMatk,50; bonus bAtkEle,Ele_Wind;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (13316,'Enhance_Huuma_Shuriken','Enhance Huuma Shuriken',4,20,NULL,1500,'55',NULL,1,1,0x02000000,7,2,34,3,'1',1,22,'bonus bUnbreakableWeapon,0; bonus bBaseAtk,10*getrefine(); bonus bMatk,5*getrefine(); bonus bLongAtkRate,getrefine(); if(BaseLevel>=70) { bonus bBaseAtk,5*((BaseLevel-60)/10); }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (13316,'Upg_Huuma_Shuriken','Enhance Huuma Shuriken',4,20,NULL,1500,'55',NULL,1,1,0x02000000,7,2,34,3,'1',1,22,'bonus bUnbreakableWeapon,0; bonus bBaseAtk,10*getrefine(); bonus bMatk,5*getrefine(); bonus bLongAtkRate,getrefine(); if(BaseLevel>=70) { bonus bBaseAtk,5*((BaseLevel-60)/10); }',NULL,NULL);
 # More 1-Handed Swords
 REPLACE INTO `item_db_re` VALUES (13400,'Cutlas_','Cutlus',4,20,NULL,900,'150',NULL,1,1,0x000654E2,7,2,2,4,'40',1,2,'skill "SM_BASH",5; bonus bStr,2; bonus bDef,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (13401,'Excalibur_C','Excalibur',4,1,NULL,0,'199',NULL,1,NULL,0x000654E2,7,2,2,4,'1',NULL,2,'bonus bInt,10; bonus bLuk,10; bonus bAtkEle,Ele_Holy;',NULL,NULL);
@@ -6944,10 +7039,10 @@ REPLACE INTO `item_db_re` VALUES (14513,'Storm_10_Scroll','Storm Gust Scroll',11
 REPLACE INTO `item_db_re` VALUES (14514,'Vermilion_10_Scroll','Lord of Vermilion Scroll',11,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemskill "WZ_VERMILION",10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (14515,'Lex_Aeterna_Scroll','Lex Aeterna Scroll',11,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemskill "PR_LEXAETERNA",1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (14516,'Magnificat_5_Scroll','Magnificat Scroll',11,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'itemskill "PR_MAGNIFICAT",5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (14517,'CP_Helm_Scroll','Chemical Protection Helm Scroll',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_end SC_STRIPHELM; skilleffect "AM_CP_HELM",0; sc_start SC_CP_HELM,600000,5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (14518,'CP_Shield_Scroll','Chemical Protection Shield Scrol',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_end SC_STRIPSHIELD; skilleffect "AM_CP_SHIELD",0; sc_start SC_CP_SHIELD,600000,5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (14519,'CP_Armor_Scroll','Chemical Protection Armor Scroll',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_end SC_STRIPARMOR; skilleffect "AM_CP_ARMOR",0; sc_start SC_CP_ARMOR,600000,5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (14520,'CP_Weapon_Scroll','Chemical Protection Weapon Scroll',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'sc_end SC_STRIPWEAPON; skilleffect "AM_CP_WEAPON",0; sc_start SC_CP_WEAPON,600000,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (14517,'CP_Helm_Scroll','Chemical Protection Helm Scroll',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'unitskilluseid getcharid(3),237,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (14518,'CP_Shield_Scroll','Chemical Protection Shield Scrol',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'unitskilluseid getcharid(3),235,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (14519,'CP_Armor_Scroll','Chemical Protection Armor Scroll',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'unitskilluseid getcharid(3),236,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (14520,'CP_Weapon_Scroll','Chemical Protection Weapon Scroll',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'unitskilluseid getcharid(3),234,5;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (14521,'Repair_Scroll','Repair Weapon Scroll',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'unitskilluseid getcharid(3),108,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (14522,'Big_Bun','Big Bun',0,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal 100,0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (14523,'Pill_','Pill',0,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'percentheal 0,100;',NULL,NULL);
@@ -7068,16 +7163,16 @@ REPLACE INTO `item_db_re` VALUES (15026,'Aqua_Robe','Aqua Robe',5,20,NULL,500,NU
 REPLACE INTO `item_db_re` VALUES (15027,'Crimson_Robe','Crimson Robe',5,20,NULL,500,NULL,40,NULL,NULL,0x00000200,7,2,16,NULL,'100',1,0,'bonus bDefEle,Ele_Fire; bonus bMdef,10; bonus bInt,1; if(readparam(bInt)>=120){ bonus bInt,1; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (15028,'Forest_Robe','Forest Robe',5,20,NULL,500,NULL,40,NULL,NULL,0x00000200,7,2,16,NULL,'100',1,0,'bonus bDefEle,Ele_Earth; bonus bMdef,10; bonus bInt,1; if(readparam(bInt)>=120){ bonus bInt,1; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (15029,'Mercy_Robe','Mercy Robe',5,20,NULL,300,NULL,22,NULL,NULL,0x00000100,2,2,16,NULL,'100',1,0,'bonus bDefEle,Ele_Holy; bonus bMdef,10; bonus bInt,1;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (15030,'Judgement_Robe','Judgement Robe',5,20,NULL,300,NULL,22,NULL,NULL,0x00000100,2,2,16,NULL,'100',1,0,'bonus bDefEle,Ele_Dark; bonus bMdef,10; bonus bStr,2; bonus2 bSubRace,RC_Demon,10; bonus2 bSubRace,RC_Undead,10; bonus2 bSubRace,RC_Formless,-10; bonus2 bSubRace,RC_Brute,-10; bonus2 bSubRace,RC_DemiHuman,-10; bonus2 bSubRace,RC_Plant,-10; bonus2 bSubRace,RC_Insect,-10; bonus2 bSubRace,RC_Fish,-10; bonus2 bSubRace,RC_Angel,-10; bonus2 bSubRace,RC_Dragon,-10;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (15030,'Judgement_Robe','Judgement Robe',5,20,NULL,300,NULL,22,NULL,NULL,0x00000100,2,2,16,NULL,'100',1,0,'bonus bDefEle,Ele_Dark; bonus bMdef,10; bonus bStr,2; bonus bInt,1; bonus2 bSubRace,RC_Demon,10; bonus2 bSubRace,RC_Undead,10; bonus2 bSubRace,RC_Formless,-10; bonus2 bSubRace,RC_Brute,-10; bonus2 bSubRace,RC_DemiHuman,-10; bonus2 bSubRace,RC_Plant,-10; bonus2 bSubRace,RC_Insect,-10; bonus2 bSubRace,RC_Fish,-10; bonus2 bSubRace,RC_Angel,-10; bonus2 bSubRace,RC_Dragon,-10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (15031,'Paradise_Uniform4','Paradise Uniform IV',5,NULL,NULL,0,NULL,58,NULL,NULL,0xFFFFFFFF,7,2,16,NULL,'60',NULL,0,'bonus bMdef,5; bonus bMaxHP,500; bonus bMaxSP,50; bonus bStr,1; bonus bInt,1; bonus bDex,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (15032,'Tidon','Tidon',5,20,NULL,500,NULL,2,NULL,1,0xFFFFFFFE,7,2,16,NULL,'1',1,0,'bonus bMdef,10; bonus2 bResEff,Eff_Stun,1500; bonus2 bResEff,Eff_Freeze,1500; bonus2 bSubRace,RC_NonBoss,5; bonus2 bSubRace,RC_Boss,5;',NULL,NULL);
 #15033,
 #15034,
 #15035,
-REPLACE INTO `item_db_re` VALUES (15036,'Urj_Plate','Urj Plate',5,20,NULL,3000,NULL,110,NULL,NULL,0x00000080,8,2,16,NULL,'100',1,0,'bonus bMdef,10; bonus bMaxHPRate,getequiprefinerycnt(EQI_ARMOR); bonus2 bSubRace,RC_DemiHuman,5; bonus2 bSubEle,Ele_Neutral,5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (15037,'Pertz_Plate','Pertz Plate',5,20,NULL,3000,NULL,110,NULL,NULL,0x00000080,8,2,16,NULL,'100',1,0,'bonus bMdef,10; bonus bBaseAtk,20; bonus bFlee,17;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (15038,'Sabath\'s_Cloth','Sabath\'s Cloth',5,20,NULL,100,NULL,45,NULL,1,0x00001000,7,2,16,NULL,'100',1,0,'bonus bLuk,3; bonus3 bAutoSpell,"ASC_METEORASSAULT",getskilllv("ASC_METEORASSAULT"),10;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (15039,'Nabeu\'s_Cloth','Nabeu\'s Cloth',5,20,NULL,100,NULL,45,NULL,1,0x00001000,7,2,16,NULL,'100',1,0,'bonus bStr,2; bonus bInt,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (15036,'Ur_Plate','Urj Plate',5,20,NULL,3000,NULL,110,NULL,NULL,0x00000080,8,2,16,NULL,'100',1,0,'bonus bMdef,10; bonus bMaxHPRate,getequiprefinerycnt(EQI_ARMOR); bonus2 bSubRace,RC_DemiHuman,5; bonus2 bSubEle,Ele_Neutral,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (15037,'Peuz_Plate','Pertz Plate',5,20,NULL,3000,NULL,110,NULL,NULL,0x00000080,8,2,16,NULL,'100',1,0,'bonus bMdef,10; bonus bBaseAtk,20; bonus bFlee,17;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (15038,'Sabah_Cloth','Sabath\'s Cloth',5,20,NULL,100,NULL,45,NULL,1,0x00001000,7,2,16,NULL,'100',1,0,'bonus bLuk,3; bonus3 bAutoSpell,"ASC_METEORASSAULT",getskilllv("ASC_METEORASSAULT"),10;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (15039,'Nab_Cloth','Nabeu\'s Cloth',5,20,NULL,100,NULL,45,NULL,1,0x00001000,7,2,16,NULL,'100',1,0,'bonus bStr,2; bonus bInt,2;',NULL,NULL);
 #15040,
 #15041,
 REPLACE INTO `item_db_re` VALUES (15042,'White_Wing_Suit','White Wing Suit',5,20,NULL,100,NULL,45,NULL,1,0x00000800,7,2,16,NULL,'100',1,0,'bonus bLongAtkRate,getrefine()*2; bonus bFlee,getrefine();',NULL,NULL);
@@ -7085,12 +7180,12 @@ REPLACE INTO `item_db_re` VALUES (15043,'Black_Wing_Suit','Black Wing Suit',5,20
 REPLACE INTO `item_db_re` VALUES (15044,'Green_Surgical_Gown','Green Surgical Gown',5,56000,NULL,660,NULL,66,NULL,1,0x00040000,7,2,16,NULL,'100',1,0,'bonus bDex,1; bonus bMaxSP,30;',NULL,NULL);
 #15045,
 REPLACE INTO `item_db_re` VALUES (15046,'Siege_Plate','Siege Plate',5,NULL,NULL,3300,NULL,85,NULL,1,0x006444A2,7,2,16,NULL,'95',1,0,'bonus bMdef,5; bonus2 bSubRace,RC_DemiHuman,2; if(getrefine()>5) { bonus bHealpower2,12; bonus bAddItemHealRate,12; } if(getrefine()>8) { bonus bMaxHPRate,25; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (15047,'Siege_Suit','Siege Suit',5,NULL,NULL,750,NULL,50,NULL,1,0x036E5CEA,7,2,16,NULL,'95',1,0,'bonus bMdef,10; bonus2 bSubRace,RC_DemiHuman,2; if(getrefine()>5) { bonus bFlee2,5; bonus bLongAtkDef,20; } if(getrefine()>8) { bonus bMaxHPRate,15; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (15047,'Siege_Suits','Siege Suit',5,NULL,NULL,750,NULL,50,NULL,1,0x036E5CEA,7,2,16,NULL,'95',1,0,'bonus bMdef,10; bonus2 bSubRace,RC_DemiHuman,2; if(getrefine()>5) { bonus bFlee2,5; bonus bLongAtkDef,20; } if(getrefine()>8) { bonus bMaxHPRate,15; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (15048,'Siege_Robe','Siege Robe',5,NULL,NULL,500,NULL,40,NULL,1,0x00818315,7,2,16,NULL,'95',1,0,'bonus bMdef,20; bonus2 bSubRace,RC_DemiHuman,2; if(getrefine()>5) { bonus bFlee,5; bonus bLongAtkDef,15; } if(getrefine()>8) { bonus bMaxHP,1000; bonus bMaxSP,100; }',NULL,NULL);
 #15049,
 #15050,
-REPLACE INTO `item_db_re` VALUES (15051,'Bakunawa_Scale_Armor','Bakunawa Scale Armor',5,20,NULL,500,NULL,55,NULL,NULL,0xFFFFFFFF,7,2,16,NULL,'1',1,0,'bonus2 bSubRace,RC_Boss,getrefine()/2; bonus bAllStats,1;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (15052,'Bayani_Bakunawa_Scale_Armor','Bayani Bakunawa Scale Armor',5,20,NULL,500,NULL,55,NULL,1,0xFFFFFFFF,7,2,16,NULL,'1',1,0,'bonus2 bSubRace,RC_Boss,getrefine()/2; bonus bAllStats,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (15051,'Bakonawa_Armor','Bakunawa Scale Armor',5,20,NULL,500,NULL,55,NULL,NULL,0xFFFFFFFF,7,2,16,NULL,'1',1,0,'bonus2 bSubRace,RC_Boss,getrefine()/2; bonus bAllStats,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (15052,'Bayani_Bakonawa_Armor','Bayani Bakunawa Scale Armor',5,20,NULL,500,NULL,55,NULL,1,0xFFFFFFFF,7,2,16,NULL,'1',1,0,'bonus2 bSubRace,RC_Boss,getrefine()/2; bonus bAllStats,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (15053,'Special_Ninja_Suit','Special Ninja Suit',5,10000,NULL,1200,NULL,70,NULL,NULL,0x02000000,7,2,16,NULL,'100',1,0,'bonus bAgi,1+(getrefine()/3);',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (15054,'Ninja_Scale_Armor','Ninja Scale Armor',5,10000,NULL,1800,NULL,90,NULL,1,0x02000000,7,2,16,NULL,'100',1,0,'bonus bMaxHPRate,15; bonus bMaxSPRate,-30;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (15055,'Armor_of_Nothingness','Armor of Nothingness',5,10000,NULL,1500,NULL,60,NULL,1,0x02000000,7,2,16,NULL,'100',1,0,'bonus bAgi,1;',NULL,NULL);
@@ -7111,13 +7206,13 @@ REPLACE INTO `item_db_re` VALUES (16010,'Red_Ether_Bag','Red Ether Bag',4,20,NUL
 #16012,
 REPLACE INTO `item_db_re` VALUES (16013,'Judgement_Mace1','Judgement Mace I',4,20,NULL,1200,'140:180',NULL,1,2,0x00000100,2,2,2,3,'100',1,8,'bonus bStr,1; bonus bInt,1; autobonus "{bonus2 bAddRace,RC_Demon,20;}",10,7000,BF_WEAPON|BF_MAGIC,"{specialeffect2 EF_BLOODDRAIN;}";',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (16014,'P_Mace3','Eden Mace III',4,NULL,NULL,0,'172',NULL,1,NULL,0x0004C5B3,7,2,2,3,'60',NULL,8,NULL,NULL,NULL);
-#16015,
+REPLACE INTO `item_db_re` VALUES (16015,'Cat_Club','Cat Club',4,20,NULL,700,'88',NULL,3,NULL,0x0004C5B3,7,2,2,1,'1',1,8,'bonus2 bAddRace,RC_Brute,15;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (16016,'Tuna','Tuna',4,NULL,NULL,0,'180',NULL,1,NULL,0x0004C5B3,7,2,2,1,'50',NULL,8,'bonus bUnbreakableWeapon,0; bonus2 bAddEff,Eff_Stun,100; bonus3 bAutoSpell,"SM_BASH",5+5*(getskilllv("SM_BASH")==10),10; if(BaseLevel>99) { bonus bBaseAtk,20; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (16017,'Bloody_Cross','Bloody Cross',4,20,NULL,1500,'170',NULL,1,NULL,0x00008110,7,2,2,4,'100',1,8,'bonus bAtkEle,Ele_Dark; bonus3 bAutoSpell,"WL_HELLINFERNO",1,10+(getrefine()*5);',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (16018,'Judgement_Mace2','Judgement Mace II',4,20,NULL,1200,'170:180',NULL,1,1,0x00000100,2,2,2,3,'130',1,8,'bonus bStr,2; bonus bInt,2; autobonus "{bonus2 bAddRace,RC_Demon,40;}",10,7000,BF_WEAPON|BF_MAGIC,"{specialeffect2 EF_BLOODDRAIN;}";',NULL,NULL);
-#16019,
-REPLACE INTO `item_db_re` VALUES (16020,'Bellum_Stunner','Bellum Stunner',4,20,NULL,1500,'170',NULL,1,NULL,0x0004C5B3,7,2,2,4,'95',1,8,'bonus bUnbreakableWeapon,0; bonus2 bAddEff,Eff_Stun,1000+getrefine(); bonus bAspdRate,getrefine();',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16021,'Bellum_Flail','Bellum Flail',4,20,NULL,1500,'170',NULL,1,NULL,0x0004C5B3,7,2,2,4,'95',1,8,'bonus bUnbreakableWeapon,0; bonus3 bAutoSpell,"NPC_CRITICALWOUND",5,10; bonus bHit,getrefine(); bonus bCritical,getrefine();',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16019,'Upg_Mace','Upg Mace',4,20,NULL,800,'80',NULL,1,1,0x0004C5B3,7,2,2,3,'1',1,8,'bonus bBaseAtk,(getrefine()*10); bonus bHealPower,getrefine(); if(BaseLevel>70) bonus bBaseAtk,(((BaseLevel-70)/10)*5);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16020,'Velum_Stunner','Vellum Stunner',4,20,NULL,1500,'170',NULL,1,NULL,0x0004C5B3,7,2,2,4,'95',1,8,'bonus bUnbreakableWeapon,0; bonus2 bAddEff,Eff_Stun,1000+getrefine(); bonus bAspdRate,getrefine();',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16021,'Velum_Flail','Vellum Flail',4,20,NULL,1500,'170',NULL,1,NULL,0x0004C5B3,7,2,2,4,'95',1,8,'bonus bUnbreakableWeapon,0; bonus3 bAutoSpell,"NPC_CRITICALWOUND",5,10; bonus bHit,getrefine(); bonus bCritical,getrefine();',NULL,NULL);
 # More Rental Boxes
 REPLACE INTO `item_db_re` VALUES (16134,'King_Frog_Hat_Box','Frog King Hat Box',18,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 5528,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (16135,'Evil\'s_Bone_Hat_Box','Satanic Bone Helm Box',18,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 5529,1;',NULL,NULL);
@@ -7201,32 +7296,44 @@ REPLACE INTO `item_db_re` VALUES (16678,'Universal_Catalog_Gold_Box50','Universa
 REPLACE INTO `item_db_re` VALUES (16679,'Universal_Catalog_Gold_Box10','Universal Catalog Gold 10 Box',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 12581,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (16680,'Universal_Catalog_Gold_Box50','Universal Catalog Gold 50 Box',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 12581,50;',NULL,NULL);
 #
-REPLACE INTO `item_db_re` VALUES (16740,'The_Sea_God\'s_Call_23_Hour_Box','The Sea God\'s Call 23 Hour Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 6436,86400;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16741,'Cutlass_1_Day_Box','Cutlass 1 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 1198,86400;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16742,'Cutlass_7_Day_Box','Cutlass 7 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 1198,604800;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16743,'Marlin_1_Day_Box','Marlin 1 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 1489,86400;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16744,'Marlin_7_Day_Box','Marlin 7 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 1489,604800;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16745,'Pompano_1_Day_Box','Pompano 1 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 13068,86400;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16746,'Pompano_7_Day_Box','Pompano 7 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 13068,604800;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16747,'Tuna_1_Day_Box','Tuna 1 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 16016,86400;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16748,'Tuna_7_Day_Box','Tuna 7 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 16016,604800;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16749,'Malangdo_Crab_1_Day_Box','Malangdo Crab 1 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 18107,86400;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16750,'Malangdo_Crab_7_Day_Box','Malangdo Crab 7 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 18107,604800;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16751,'Zebra_Eel_1_Day_Box','Zebra Eel 1 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 18108,86400;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16752,'Zebra_Eel_7_Day_Box','Zebra Eel 7 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 18108,604800;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16740,'Ptotection_Seagod_Box','The Sea God\'s Call 23 Hour Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 6436,86400;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16741,'Hairtail_Box1','Cutlass 1 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 1198,86400;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16742,'Hairtail_Box2','Cutlass 7 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 1198,604800;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16743,'Spearfish_Box1','Marlin 1 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 1489,86400;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16744,'Spearfish_Box2','Marlin 7 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 1489,604800;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16745,'Saurel_Box1','Pompano 1 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 13068,86400;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16746,'Saurel_Box2','Pompano 7 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 13068,604800;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16747,'Tuna_Box1','Tuna 1 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 16016,86400;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16748,'Tuna_Box2','Tuna 7 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 16016,604800;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16749,'Malang_Crab_Box1','Malangdo Crab 1 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 18107,86400;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16750,'Malang_Crab_Box2','Malangdo Crab 7 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 18107,604800;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16751,'Brindle_Eel_Box1','Zebra Eel 1 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 18108,86400;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16752,'Brindle_Eel_Box2','Zebra Eel 7 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 18108,604800;',NULL,NULL);
 #
-REPLACE INTO `item_db_re` VALUES (16763,'The_Sea_God\'s_Call_7_Day_Box','The Sea God\'s Call 7 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 6436,604800;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16764,'The_Sea_God\'s_Call_15_Day_Box','The Sea God\'s Call 15 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 6436,1209600;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16765,'Octopus_Hunting_Skewer_23_Hour_Box','Octopus Hunting Skewer 23 Hour Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 6442,86400;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16766,'Octopus_Hunting_Skewer_3_Day_Box','Octopus Hunting Skewer 3 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 6442,259200;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (16767,'Octopus_Hunting_Skewer_7_Day_Box','Octopus Hunting Skewer 7 Day Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 6442,604800;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16770,'Silvervine_Fruit_Box10','Silvervine 10 Box',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 6417,10; getitem 12636,30;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16771,'Silvervine_Fruit_Box40','Silvervine 40 Box',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 6417,40; getitem 12636,120;',NULL,NULL);
 #
 REPLACE INTO `item_db_re` VALUES (16776,'Universal_Catalog_Gold_Box10','Universal Catalog Gold 10 Box',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 12581,10;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (16777,'Universal_Catalog_Gold_Box50','Universal Catalog Gold 50 Box',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 12581,50;',NULL,NULL);
 #
-REPLACE INTO `item_db_re` VALUES (16998,'Archangel_Wings_Box','Archangel Wings Box',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 2573,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16979,'Silvervine_Fruit_Box4','Silvervine 4 Box',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 6417,4; getitem 12636,12;',NULL,NULL);
 #
-REPLACE INTO `item_db_re` VALUES (17155,'Enhance_Huuma_Shuriken_Box','Enhance Huuma Shuriken Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 13316,86400;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (16998,'Archangel_Wing_Box','Archangel Wings Box',2,NULL,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 2573,1;',NULL,NULL);
+#
+REPLACE INTO `item_db_re` VALUES (17013,'Malang_Woe_Encard_Box','Malang Woe Encard Box',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 16740,1; getitem 16765,1;',NULL,NULL);
+#
+REPLACE INTO `item_db_re` VALUES (17084,'Upg_Katar_Box','Upg Katar Box',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 1292,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (17085,'Upg_Two_Handed_Axe_Box','Upg Two Handed Axe Box',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 1394,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (17086,'Upg_Lance_Box','Upg Lance Box',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 1491,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (17087,'Upg_Book_Box','Upg Book Box',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 1585,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (17088,'Upg_Staff_Box','Upg Staff Box',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 2015,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (17089,'Upg_Dagger_Box','Upg Dagger Box',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 13071,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (17090,'Upg_Revolver_Box','Upg Revolver',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 13115,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (17091,'Upg_Mace_Box','Upg Mace Box',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 16019,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (17092,'Upg_Bow_Box','Upg Bow Box',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 18112,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (17093,'Upg_Twohand_Sword_Box','Upg Two-Handed Sword Box',2,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'getitem 21000,1;',NULL,NULL);
+#
+REPLACE INTO `item_db_re` VALUES (17155,'Upg_Huuma_Shuriken_Box','Upg Huuma Shuriken Box',2,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,NULL,NULL,NULL,NULL,NULL,'rentitem 13316,86400;',NULL,NULL);
 # Mechanic/Genetic Cannonballs
 REPLACE INTO `item_db_re` VALUES (18000,'Cannon_Ball','Cannon Ball',10,100,NULL,10,'100',NULL,NULL,NULL,0x00040400,8,2,32768,NULL,'99',NULL,8,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (18001,'Holy_Cannon_Ball','Holy Cannon Ball',10,200,NULL,10,'120',NULL,NULL,NULL,0x00040400,8,2,32768,NULL,'99',NULL,8,'bonus bAtkEle,Ele_Holy;',NULL,NULL);
@@ -7237,7 +7344,7 @@ REPLACE INTO `item_db_re` VALUES (18004,'Iron_Cannon_Ball','Iron Cannon Ball',10
 REPLACE INTO `item_db_re` VALUES (18100,'Shooting_Star','Shooting Star',4,20,NULL,0,'190',NULL,5,NULL,0x00080800,7,2,34,4,'1',1,11,'bonus bLongAtkRate,20;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (18101,'F_Bow_Of_Rudra_C','Rudra Bow',4,2,NULL,0,'185',NULL,5,NULL,0x000A0848,7,2,34,4,NULL,NULL,11,'bonus bAtkEle,Ele_Holy; bonus bInt,5; skill "AL_CURE",1; skill "AL_HEAL",1; bonus2 bResEff,Eff_Poison,5000; bonus2 bResEff,Eff_Curse,5000; bonus2 bResEff,Eff_Silence,5000; bonus2 bResEff,Eff_Confusion,5000; bonus2 bResEff,Eff_Blind,5000;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (18102,'E_Bow_Of_Rudra_C','Rudra Bow',4,2,NULL,0,'185',NULL,5,NULL,0x000A0848,7,2,34,4,NULL,NULL,11,'bonus bAtkEle,Ele_Holy; bonus bInt,5; skill "AL_CURE",1; skill "AL_HEAL",1; bonus2 bResEff,Eff_Poison,5000; bonus2 bResEff,Eff_Curse,5000; bonus2 bResEff,Eff_Silence,5000; bonus2 bResEff,Eff_Confusion,5000; bonus2 bResEff,Eff_Blind,5000;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (18103,'Mystic_Bow','Mystic Bow',4,NULL,NULL,1700,'75',NULL,5,NULL,0x00000400,8,2,34,3,'105',1,11,' bonus bMatk,100; bonus bInt,4;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18103,'Mystic_Bow','Mystic Bow',4,NULL,NULL,1700,'75',NULL,5,NULL,0x00080800,8,2,34,3,'105',1,11,' bonus bMatk,100; bonus bInt,4; bonus2 bSkillUseSP,"WM_SEVERE_RAINSTORM",10;',NULL,NULL);
 #18104,
 #18105,
 REPLACE INTO `item_db_re` VALUES (18106,'P_Bow3','Eden Bow III',4,NULL,NULL,0,'140',NULL,5,NULL,0x000A0848,7,2,34,3,'60',NULL,11,NULL,NULL,NULL);
@@ -7246,15 +7353,15 @@ REPLACE INTO `item_db_re` VALUES (18108,'Zebra_Eel','Zebra Eel',4,NULL,NULL,0,'1
 REPLACE INTO `item_db_re` VALUES (18109,'Thief_Crossbow','Thief Crossbow',4,56000,NULL,1100,'150',NULL,5,2,0x00020000,7,2,34,4,'100',1,11,' bonus2 bSkillAtk,"SC_TRIANGLESHOT",(getrefine()/2);',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (18110,'Giant_Crossbow','Giant Crossbow',4,56000,NULL,900,'160',NULL,5,2,0x00000800,7,2,34,4,'110',1,11,' bonus2 bSkillAtk,"RA_ARROWSTORM",(getrefine()/5); if(readparam(bAgi)>=120){ bonus bAspd,1; }',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (18111,'Creeper_Bow','Creeper Bow',4,56000,NULL,1500,'150',NULL,5,2,0x00080800,7,2,34,3,'120',1,11,'bonus bDex,1; bonus3 bAutoSpell,"PF_SPIDERWEB",1,10;',NULL,NULL);
-#18112,
-REPLACE INTO `item_db_re` VALUES (18113,'Bellum_Balista','Bellum Balista',4,20,NULL,1100,'50',NULL,5,NULL,0x000A0848,7,2,34,4,'95',1,11,'bonus2 bSPVanishRate,10000,4; bonus bAspd,-5;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (18114,'Bellum_Crossbow','Bellum Crossbow',4,20,NULL,1100,'110',NULL,5,NULL,0x000A0848,7,2,34,4,'95',1,11,'bonus2 bAddRace,RC_DemiHuman,30+getrefine(); bonus2 bIgnoreDefRate,RC_DemiHuman,30;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18112,'Upg_Bow','Upg Bow',4,20,NULL,600,'60',NULL,5,1,0x000A0848,7,2,34,3,'1',0,11,'bonus bBaseAtk,(getrefine()*7); bonus bLongAtkRate,(getrefine()*2); if(BaseJob==Job_Hunter) bonus bBaseAtk,20; if(BaseLevel>70) bonus bBaseAtk,(((BaseLevel-70)/10)*10);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18113,'Velum_Balista','Vellum Balista',4,20,NULL,1100,'50',NULL,5,NULL,0x000A0848,7,2,34,4,'95',1,11,'bonus2 bSPVanishRate,10000,4; bonus bAspd,-5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18114,'Velum_Crossbow','Vellum Crossbow',4,20,NULL,1100,'110',NULL,5,NULL,0x000A0848,7,2,34,4,'95',1,11,'bonus2 bAddRace,RC_DemiHuman,30+getrefine(); bonus2 bIgnoreDefRate,RC_DemiHuman,30;',NULL,NULL);
 # More Headgears
-REPLACE INTO `item_db_re` VALUES (18500,'Cheer_Scarf6','Cheer Scarf6',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,369,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (18501,'Cheer_Scarf8','Cheer Scarf8',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,369,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (18502,'Cheer_Scarf10','Cheer Scarf10',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,369,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18500,'Cheer_Scarf6','Cheer Scarf6',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,369,'bonus2 bExpAddRace,RC_Boss,60; bonus2 bExpAddRace,RC_NonBoss,60;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18501,'Cheer_Scarf8','Cheer Scarf8',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,369,'bonus2 bExpAddRace,RC_Boss,80; bonus2 bExpAddRace,RC_NonBoss,80;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18502,'Cheer_Scarf10','Cheer Scarf10',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,369,'bonus2 bExpAddRace,RC_Boss,100; bonus2 bExpAddRace,RC_NonBoss,100;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (18503,'Majestic_Devil','Small Devil Horns',5,20,NULL,100,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'1',NULL,562,'bonus bAtkRate,5; bonus bMatkRate,5; bonus bMaxHPRate,10; bonus bMaxSPRate,10;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (18505,'Umbala_Spirit','Umbala Spirit',5,NULL,NULL,200,NULL,1,NULL,1,0xFFFFFFFF,7,2,1,NULL,'30',NULL,675,'bonus bVit,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18505,'Umbala_Spirit','Umbala Spirit',5,NULL,NULL,200,NULL,1,NULL,1,0xFFFFFFFF,7,2,1,NULL,'30',NULL,675,'bonus bVit,1; bonus bMaxHPrate,1; bonus2 bAddMonsterDropItem,517,500;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (18506,'Hattah_Black','Hattah Black',5,12000,NULL,4000,NULL,2,NULL,1,0xFFFFFFFF,7,2,769,NULL,'1',1,676,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (18507,'Elven_Ears_','Elven Ears',5,20,NULL,100,NULL,NULL,NULL,1,0xFFFFFFFE,7,2,512,NULL,'70',NULL,73,NULL,NULL,NULL);
 #
@@ -7264,13 +7371,13 @@ REPLACE INTO `item_db_re` VALUES (18516,'RTC_2nd_Winner_Hat','RTC 2nd Winner Hat
 REPLACE INTO `item_db_re` VALUES (18517,'RTC_3rd_Winner_Hat','RTC 3rd Winner Hat',5,20,NULL,100,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'1',NULL,685,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (18518,'Angelwing_Ear_S','Angel Wing Ears',5,20,NULL,100,NULL,3,NULL,1,0xFFFFFFFF,7,2,512,NULL,'70',NULL,158,'bonus bStr,1;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (18519,'Devilwing_Ear_S','Evil Wing Ears',5,20,NULL,100,NULL,3,NULL,1,0xFFFFFFFF,7,2,512,NULL,'70',NULL,152,'bonus bStr,1;',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (18520,'Jati_Crown','Jati Crown',5,20,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,686,'bonus2 bSubRace,RC_Plant,5; bonus2 bSubRace,RC_Brute,5; bonus2 bAddRace,RC_Plant,5; bonus2 bAddRace,RC_Brute,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18520,'Jaty_C','Jaty Crown',5,20,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,686,'bonus2 bSubRace,RC_Plant,5; bonus2 bSubRace,RC_Brute,5; bonus2 bAddRace,RC_Plant,5; bonus2 bAddRace,RC_Brute,5;',NULL,NULL);
 #
 REPLACE INTO `item_db_re` VALUES (18523,'Thunderstorm_Cloud','Thunderstorm Cloud',5,20,NULL,100,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'1',NULL,688,NULL,NULL,NULL);
 #
 REPLACE INTO `item_db_re` VALUES (18525,'Watermelon_Hat','Watermelon Cap',5,20,NULL,100,NULL,4,NULL,1,0xFFFFFFFF,7,2,256,NULL,'30',1,690,'bonus bMdef,4; bonus2 bAddEle,Ele_Fire,3;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (18526,'Candy_Cane_In_Mouth','Candy Cane In Mouth',5,20,NULL,100,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'1',NULL,446,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (18527,'Dark_Pumpkin_Hat','Dark Pumpkin-head',5,20,NULL,500,NULL,5,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'45',1,691,'bonus2 bAddMonsterDropItem,12192,20; bonus bMdef,5; bonus bAllStats,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18527,'Dark_Pumpkin_Hat','Dark Pumpkin-head',5,20,NULL,500,NULL,5,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'45',1,691,'bonus2 bAddMonsterDropItem,12192,10; bonus bMdef,5; bonus bAllStats,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (18539,'Skull_Cap','Skull Cap',5,40,NULL,200,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,'10',1,713,'bonus bMatkRate,2; if(getrefine() >= 5) { bonus bMatkRate,3; } if(getrefine() >= 7) { bonus bMatkRate,3; }',NULL,NULL);
 #
 REPLACE INTO `item_db_re` VALUES (18570,'Ancient_Gold_Ornament','Ancient Gold Ornament',5,20,NULL,400,NULL,7,NULL,1,0xFFFFFFFE,7,2,256,NULL,'100',1,739,'if(BaseLevel >= 150) { bonus bAllStats,2; } if(BaseClass==Job_Swordman||BaseClass==Job_Merchant||BaseClass==Job_Thief){ bonus2 bAddRace,RC_Boss,8; bonus2 bAddRace,RC_NonBoss,8; } if(BaseClass==Job_Mage||BaseClass==Job_Acolyte){ bonus bMatk,8; } if(BaseClass==Job_Archer){ bonus bDex,3; bonus bLongAtkRate,10; }',NULL,NULL);
@@ -7294,8 +7401,89 @@ REPLACE INTO `item_db_re` VALUES (18613,'Black_Musang_Hat','Black Musang Hat',5,
 #
 REPLACE INTO `item_db_re` VALUES (18620,'Heart_Eye_Patch','Heart Eyepatch',5,5,NULL,200,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'20',1,779,NULL,NULL,NULL);
 #
+REPLACE INTO `item_db_re` VALUES (18622,'Rocket_Helm_1','Rocket Helm 1',5,20,NULL,1000,NULL,20,NULL,1,0xFFFFFFFF,7,2,256,NULL,'95',1,764,'bonus bAllStats,5; bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18623,'Rocket_Helm_2','Rocket Helm 2',5,20,NULL,1000,NULL,20,NULL,1,0xFFFFFFFF,7,2,256,NULL,'95',1,765,'bonus bAllStats,4; bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18624,'Rocket_Helm_3','Rocket Helm 3',5,20,NULL,1000,NULL,20,NULL,1,0xFFFFFFFF,7,2,256,NULL,'95',1,768,'bonus bAllStats,3; bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18625,'Rocket_Helm_RWC','Rocket Helm RWC',5,10000,NULL,1000,NULL,20,NULL,1,0xFFFFFFFF,7,2,256,NULL,'95',1,769,'bonus bAllStats,2; bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18626,'Gelato_Hat','Gelato Hat',5,20,NULL,200,NULL,2,NULL,1,0xFFFFFFFF,7,2,256,NULL,'40',1,777,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18627,'Dried_Leaf','Dried Leaf',5,20,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'10',NULL,711,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18628,'Tare_Brownie','Tare Brownie',5,20,NULL,500,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,'50',NULL,781,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18629,'B_Desert_Wolf_Hat','B Desert Wolf Hat',5,10,NULL,300,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,392,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18630,'Dep_Alice_Hat','Drooping Alicel',5,20,NULL,500,NULL,6,NULL,NULL,0xFFFFFFFE,7,2,256,NULL,'70',1,784,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18631,'Ribbon_Chef_Hat','Ribbon Chef Hat',5,20,NULL,300,NULL,5,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'70',1,785,'bonus bDex,3; bonus bLuk,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18632,'Yellow_Poring_Hairpin','Yellow Poring Hairpin',5,20,NULL,100,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,786,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18633,'Pink_Poring_Hairpin','Pink Poring Hairpin',5,20,NULL,100,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,787,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18634,'Green_Poring_Hairpin','Green Poring Hairpin',5,20,NULL,100,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,788,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18635,'Blue_Poring_Hairpin','Blue Poring Hairpin',5,20,NULL,100,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,789,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18636,'Bridal_Ribbon','Bridal Ribbon',5,20,NULL,200,NULL,6,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'30',1,790,'bonus bDex,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18638,'Citron_Hat','Citron Hat',5,20,NULL,400,NULL,3,NULL,NULL,0xFFFFFFFE,7,2,256,NULL,'1',1,791,'bonus bLuk,3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18639,'Naval_Officer_Hat','Naval Officer Hat',5,20,NULL,200,NULL,2,NULL,NULL,0xFFFFFFFE,7,2,256,NULL,'1',1,792,'bonus bLuk,3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18640,'Starfish_Headband','Starfish Headband',5,20,NULL,200,NULL,2,NULL,NULL,0xFFFFFFFE,7,2,256,NULL,'1',1,793,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18641,'Ribbon_Magic_Hat','Ribbon Magic Hat',5,20,NULL,200,NULL,2,NULL,NULL,0xFFFFFFFE,7,2,256,NULL,'1',1,794,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18642,'Scissorhand_Model','Scissorhand Model',5,20,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,1,NULL,'20',NULL,795,'bonus bAgi,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18643,'Rockhand_Model','Rockhand Model',5,20,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,1,NULL,'20',NULL,796,'bonus bStr,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18644,'Paperhand_Model','Paperhand Model',5,20,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,1,NULL,'20',NULL,797,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18645,'Sailor_Hat','Sailor Hat',5,20,NULL,200,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,798,'bonus bInt,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18646,'Cow_Hat','Cow Hat',5,20,NULL,300,NULL,4,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,799,'bonus bDex,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18647,'Star_Eyepatch','Star Eyepatch',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',NULL,800,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18648,'Tongue_Charm','Tongue Charm',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,801,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18650,'RWC_Shouting_Mouth','RWC Shouting Mouth',5,20,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,194,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18651,'Ignis_Cap','Ignis Cap',5,20,NULL,800,NULL,8,NULL,1,0xFFFFFFFF,7,2,256,NULL,'40',1,7,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18652,'Vanargandr_Helm','Vanargandr Helm',5,20,NULL,1500,NULL,10,NULL,1,0xFFFFFFFF,7,2,256,NULL,'80',1,7,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18653,'Deviruchi_Headphone','Deviruchi Headphone',5,20,NULL,200,NULL,8,NULL,1,0xFFFFFFFF,7,2,256,NULL,'30',1,7,'bonus bAgi,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18655,'Goedo_Monocle','Goedo Monocle',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'50',NULL,23,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (18656,'Witch\'s_Pumpkin_Hat','Witch\'s Pumpkin Hat',5,20,NULL,300,NULL,10,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'20',1,717,'bonus bMdef,10; bonus bStr,2; bonus bInt,2; bonus2 bMagicAddRace,RC_Undead,15; bonus2 bMagicAddRace,RC_Demon,15;',NULL,NULL);
-
+REPLACE INTO `item_db_re` VALUES (18657,'Pegasus_Wing_Ears','Pegasus Wing Ears',5,20,NULL,500,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'80',NULL,568,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18658,'Holy_Santa_Beard','Holy Santa Beard',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,25,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18661,'Trident_Helm','Trident Helm',5,20,NULL,400,NULL,3,NULL,1,0xFFFFFFFE,7,2,256,NULL,'20',1,810,'bonus bStr,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18662,'Antler_Fedora','Antler Fedora',5,20,NULL,400,NULL,3,NULL,NULL,0xFFFFFFFE,7,2,256,NULL,'1',1,811,'bonus bInt,3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18664,'Blind_Glasses','Blind Glasses',5,20,NULL,400,NULL,3,NULL,NULL,0xFFFFFFFE,7,2,512,NULL,'20',1,813,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18665,'Orange_In_Mouth','Orange In Mouth',5,20,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,1,NULL,'20',NULL,814,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18666,'CD_In_Mouth','CD In Mouth',5,20,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,1,NULL,'20',NULL,815,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18667,'Cat_Lace_Hairband','Cat Lace Hairband',5,20,NULL,500,NULL,2,NULL,NULL,0xFFFFFFFE,7,2,256,NULL,'60',NULL,816,'bonus bDex,3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18668,'Droopy_Turtle_Hat','Droopy Turtle Hat',5,20,NULL,300,NULL,1,NULL,1,0xFFFFFFFE,7,2,256,NULL,'1',1,694,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18669,'Cowhide_Hat','Cowhide Hat',5,20,NULL,200,NULL,3,NULL,1,0xFFFFFFFE,7,2,256,NULL,'1',1,11,'bonus bDex,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18670,'Hankie_In_Mouth','Hankie In Mouth',5,20,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'12',NULL,818,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18671,'Rudolf_Hairband','Rudolf Hairband',5,20,NULL,200,NULL,5,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'30',1,836,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18672,'Tare_Pope','Tare Pope',5,20,NULL,300,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',NULL,817,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18673,'Tare_Pope_','Tare Pope',5,20,NULL,300,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',NULL,817,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18674,'Planewing_Hat','Planewing Hat',5,20,NULL,200,NULL,3,NULL,1,0xFFFFFFFE,7,2,256,NULL,'1',1,11,'bonus bAgi,3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18675,'Green_Apple_Hat','Green Apple Hat',5,20,NULL,200,NULL,3,NULL,1,0xFFFFFFFE,7,2,256,NULL,'20',1,11,'bonus bDex,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18677,'Cherry_Twig_In_Mouth','Cherry Twig In Mouth',5,20,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,1,NULL,'20',NULL,823,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18678,'Leek_In_Mouth','Leek In Mouth',5,20,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,1,NULL,'20',NULL,824,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18679,'Abacus_In_Mouth','Abacus In Mouth',5,20,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,1,NULL,'20',NULL,825,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18680,'Tw_Frog_Hat','Tw Frog Hat',5,20,NULL,200,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'35',NULL,11,'bonus bAgi,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18681,'Puppy_Ears_Hat','Puppy Ears Hat',5,20,NULL,200,NULL,2,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,11,'bonus bVit,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18683,'Carrot_In_Mouth','Carrot In Mouth',5,20,NULL,200,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,829,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18684,'Showy_High_Cap','Showy High Cap',5,20,NULL,200,NULL,3,NULL,1,0xFFFFFFFE,7,2,256,NULL,'1',1,11,'bonus bStr,3; bonus bInt,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18685,'Stardust_Hairband','Stardust Hairband',5,20,NULL,1000,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'10',NULL,831,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18686,'2011_RMSC_1','2011 RMSC 1',5,20,NULL,2500,NULL,20,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',NULL,832,'bonus bUnbreakableHelm,0; bonus bAllStats,5;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18687,'2011_RMSC_2','2011 RMSC 2',5,20,NULL,2500,NULL,20,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',NULL,832,'bonus bUnbreakableHelm,0; bonus bAllStats,3;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18688,'2011_RMSC_3','2011 RMSC 3',5,20,NULL,2500,NULL,20,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',NULL,832,'bonus bUnbreakableHelm,0; bonus bAllStats,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18689,'2011_RMSC_4','2011 RMSC 4',5,20,NULL,10,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',NULL,832,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18690,'Sirt_Evil_Eye','Sirt Evil Eye',5,20,NULL,400,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,512,NULL,'50',NULL,345,'bonus bUnbreakableHelm,0; bonus bStr,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18691,'Rising_Black_Dragon','Rising Black Dragon',5,20,NULL,100,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,166,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18692,'Mike_Hat','Mike Hat',5,20,NULL,200,NULL,3,NULL,1,0xFFFFFFFE,7,2,256,NULL,'1',1,837,'bonus bDex,2; bonus bLuk,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18693,'Sleeping_Kitty_Cat','Sleeping Kitty Cat',5,20,NULL,200,NULL,4,NULL,1,0xFFFFFFFE,7,2,256,NULL,'20',1,838,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18694,'Red_Hood','Red Hood',5,20,NULL,200,NULL,3,NULL,1,0xFFFFFFFE,7,2,256,NULL,'20',1,839,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18695,'Phoenix_Crown','Phoenix Crown',5,20,NULL,400,NULL,3,NULL,1,0xFFFFFFFE,7,2,256,NULL,'20',1,840,'bonus bInt,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18696,'Orange_Hat','Orange Hat',5,20,NULL,200,NULL,3,NULL,NULL,0xFFFFFFFE,7,2,256,NULL,'20',1,841,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18697,'Syringe_In_Mouth','Syringe In Mouth',5,20,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,1,NULL,'20',NULL,842,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18698,'Cheesy_Snack_In_Mouth','Cheesy Snack In Mouth',5,20,NULL,200,NULL,NULL,NULL,NULL,0xFFFFFFFE,7,2,1,NULL,'20',NULL,843,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18699,'Starving_Fish_Hat','Starving Fish Hat',5,20,NULL,1200,NULL,3,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',NULL,844,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18700,'Rabbit_Ribbon','Rabbit Ribbon',5,20,NULL,500,NULL,3,NULL,1,0xFFFFFFFF,7,2,256,NULL,'50',1,845,'bonus bInt,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18701,'Ancient_Civil_Man','Ancient Civil Man',5,20,NULL,500,NULL,2,NULL,NULL,0xFFFFFFFE,7,2,256,NULL,'70',NULL,846,'bonus bInt,3; bonus bDex,2; bonus bLuk,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18702,'Shaving_Cream','Shaving Cream',5,20,NULL,50,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'10',NULL,847,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18703,'Stem_In_Mouth','Stem In Mouth',5,20,NULL,50,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1,NULL,'1',NULL,848,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18727,'Sedora_Hat','Sedora Hat',5,20,NULL,300,NULL,13,NULL,1,0xFFFFFFFF,7,2,256,NULL,'10',1,869,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18728,'Egir_Helm','Egir Helm',5,200000,NULL,800,NULL,10,NULL,1,0xFFFFFFFF,7,2,256,NULL,'110',1,870,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18729,'MVP_Basketball','MVP Basketball',5,20,NULL,150,NULL,6,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,871,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18785,'King_Poring_Hat','King Poring Hat',5,20,NULL,600,NULL,10,NULL,1,0xFFFFFFFF,7,2,256,NULL,'10',1,905,'bonus bDex,1; bonus bLuk,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18821,'Rainbow_Feather_Deco','Rainbow Feather Deco',5,20,NULL,300,NULL,5,NULL,1,0xFFFFFFFF,7,2,256,NULL,'1',1,934,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18839,'Poring_Sunglasses','Poring Sunglasses',5,0,NULL,100,NULL,10,NULL,1,0xFFFFFFFF,7,2,512,NULL,'1',NULL,954,'bonus bDex,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18850,'Polar_Bear_Cap','Polar Bear Cap',5,20,NULL,300,NULL,7,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',NULL,966,'bonus bUnbreakableHelm,0; bonus bDex,1; bonus bAgi,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18851,'C_Polar_Bear_Cap','Costume Polar Bear Cap',5,20,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',1,966,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (18873,'Sweet_Valentine_Out','Sweet Valentine Out',5,20,NULL,100,NULL,1,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',1,965,NULL,NULL,NULL);
 # Costume System
 REPLACE INTO `item_db_re` VALUES (19500,'T_Mr_Smile','T Mr Smile',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,6144,NULL,NULL,NULL,65,'bonus bStr,2;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (19501,'T_Spinx_Helm','T Spinx Helm',5,NULL,NULL,0,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,5120,NULL,NULL,NULL,137,NULL,NULL,NULL);
@@ -7303,13 +7491,14 @@ REPLACE INTO `item_db_re` VALUES (19501,'T_Spinx_Helm','T Spinx Helm',5,NULL,NUL
 REPLACE INTO `item_db_re` VALUES (19504,'T_Sunglasses','T Sunglasses',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,2048,NULL,NULL,NULL,12,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (19505,'T_Cigarette','T Cigarette',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,4096,NULL,NULL,NULL,54,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (19506,'T_Valkyrie_Feather_Band','T Valkyrie Feather Band',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,NULL,1,300,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (19507,'Clear_Sun','Clear Sun',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,654,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (19508,'T_Gemmed_Sallet','T Gemmed Sallet',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,NULL,1,0,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (19509,'Butterfly_Wing_Ears','Butterfly Wing Ears',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,2048,NULL,'1',NULL,695,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (19510,'Screw_Stuck_in_Head','Screw Stuck in Head',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,2048,NULL,'1',NULL,696,NULL,NULL,NULL);
-#
-REPLACE INTO `item_db_re` VALUES (19513,'Chicken_Bill','Chicken Bill',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,4096,NULL,'1',NULL,699,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (19514,'Charlies_Beard','Charlies Beard',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,4096,NULL,'1',NULL,700,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19507,'Clear_Sun','Clear Sun',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,654,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19508,'T_Gemmed_Sallet','T Gemmed Sallet',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'0',1,NULL,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19509,'Butterfly_Wing_Ears','Butterfly Wing Ears',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,2048,NULL,'1',NULL,695,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19510,'Screw_Stuck_in_Head','Screw Stuck in Head',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,2048,NULL,'1',NULL,696,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19511,'Heart_Eye_Patch1','Heart Eye Patch 1',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,2048,NULL,'1',NULL,697,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19512,'Heart_Eye_Patch2','Heart Eye Patch 2',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,2048,NULL,'1',NULL,698,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19513,'Chicken_Bill','Chicken Bill',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,4096,NULL,'1',NULL,699,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19514,'Charlies_Beard','Charlies Beard',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,4096,NULL,'1',NULL,700,'bonus bUnbreakableHelm,0;',NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (19515,'Yellow_Hat','Yellow Hat',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,701,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (19516,'Singing_Bird','Singing Bird',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,702,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (19517,'Chicken_Crest','Chicken Crest',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,703,NULL,NULL,NULL);
@@ -7319,13 +7508,43 @@ REPLACE INTO `item_db_re` VALUES (19520,'Rain_Cloud','Rain Cloud',5,NULL,NULL,0,
 REPLACE INTO `item_db_re` VALUES (19521,'Charlies_Hat','Charlies Hat',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,706,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (19522,'Mini_Crown','Mini Crown',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,707,NULL,NULL,NULL);
 REPLACE INTO `item_db_re` VALUES (19523,'Green_Ribbon','Green Ribbon',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,244,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (19524,'Costume_Green_Feeler','Costume Green Feeler',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,85,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (19525,'Costume_Mini_Glasses','Costume Mini Glasses',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,2048,NULL,'1',NULL,47,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (19526,'Costume_Helm','Costume Helm',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,40,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (19527,'Costume_Spiky_Band','Costume Spiky Band',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,43,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (19528,'Costume_Iron_Cain','Costume Iron Cain',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,4096,NULL,'1',NULL,53,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (19529,'Costume_Angel_Wing','Costume Angel Wing',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,38,NULL,NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (19530,'Costume_Wild_Rose','Costume Wild Rose',5,20,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,541,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19524,'C_Green_Feeler','Costume Green Feeler',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,85,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19525,'C_Mini_Glasses','Costume Mini Glasses',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,2048,NULL,'1',NULL,47,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19526,'C_Helm','Costume Helm',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,40,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19527,'C_Spiky_Band','Costume Spiky Band',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,43,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19528,'C_Iron_Cain','Costume Iron Cain',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,4096,NULL,'1',NULL,53,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19529,'C_Angel_Wing','Costume Angel Wing',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,38,'bonus bUnbreakableHelm,0; bonus bVit,1; bonus bAgi,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19530,'C_Wild_Rose','Costume Wild Rose',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,541,'bonus bUnbreakableHelm,0; bonus bAtk,2; bonus bMatk,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19532,'C_Red_Bunny_Band','Red Bunny Band',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,640,'bonus bUnbreakableHelm,0; bonus bDex,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19533,'C_Spore_Hat','Costume Spore Hat',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,114,'bonus bUnbreakableHelm,0; bonus bVit,1; bonus2 bExpAddRace,RC_NonBoss,1; bonus2 bExpAddRace,RC_Boss,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19534,'C_Tha_Despero_Mask','Costume Thanatos Despero Mask',5,20,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,513,NULL,'1',NULL,693,'bonus bAtkRate,1; bonus bMatkRate,1; bonus bHealPower,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19535,'C_Sinsuncho_Hat','Costume Sinsuncho Hat',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,730,'bonus bUnbreakableHelm,0; bonus bStr,1; bonus2 bExpAddRace,RC_NonBoss,1; bonus2 bExpAddRace,RC_Boss,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19536,'C_Rose_Corsage','Costume Rose Corsage',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,533,'bonus bUnbreakableHelm,0; bonus bInt,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19537,'C_Gryphon_Hat','Costume Gryphon Hat',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,591,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19538,'Full_Moon','Full Moon',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,780,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19539,'C_Hairband_Of_Reginleif','Hairband Of Reginleif',5,20,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,256,NULL,'1',NULL,468,'bonus bAllStats,1;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19540,'C_Rabbit_Earplugs','Costume Rabbit Earplugs',5,20,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,768,NULL,'1',NULL,515,'bonus bAgi,1; bonus bFlee,2;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19541,'C_Romantic_White_Flower','Costume Romantic White Flower',5,20,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,4096,NULL,'1',NULL,259,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19542,'C_Devil_Whisper','Costume Devil Whisper',5,20,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,2048,NULL,'1',NULL,712,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19543,'Oliver_Wolf_Hood','Oliver Wold Hood',5,20,NULL,300,NULL,NULL,NULL,1,0xFFFFFFFF,7,2,1024,NULL,'70',NULL,849,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19544,'C_Tare_Neko_Cru','Costume Tare Neko Cru',5,20,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,692,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19545,'C_Boys_Cap','Costume Boys Hat',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'100',NULL,102,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19546,'C_Valkyrie_Helm','Costume Valkyrie Helm',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'100',NULL,225,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19547,'C_Deviruchi_Cap','Costume Deviruchi Cap',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'100',NULL,123,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19548,'C_Frog_Cap','Costume Frog Cap',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'100',NULL,448,NULL,'bonus bUnbreakableHelm,0;',NULL);
+REPLACE INTO `item_db_re` VALUES (19549,'C_Magestic_Goat','Costume Magestic Goat',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'100',NULL,41,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19550,'C_Blush','Costume Blush',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,2048,NULL,'100',NULL,125,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19551,'C_Elven_Ears','Costume Elven Ears',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,2048,NULL,'100',NULL,73,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19552,'C_Centimental_Flower','Costume Centimental Flower',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,4096,NULL,'100',NULL,56,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19553,'C_Assassin_Mask_','Costume Assassin Mask',5,20,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,4096,NULL,'100',NULL,180,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19573,'C_Heart_Wing_Hairband','Costume Heart Wing Hairband',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',1,733,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19587,'C_King_Poring_Hat','Costume King Poring Hat',5,NULL,NULL,100,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',NULL,905,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (19650,'C_Rainbow_Feather_Deco','Costume Rainbow Feather Deco',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,1024,NULL,'1',1,934,NULL,NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (20500,'T_Archangel_Wing','Archangel Wing',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,8192,NULL,'1',NULL,1,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (20600,'Fantastic_Aura','Fantastic Aura',5,NULL,NULL,0,NULL,NULL,NULL,NULL,0xFFFFFFFF,7,2,16384,NULL,'1',NULL,NULL,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (20700,'Egir_Manteau','Egir Manteau',5,200000,NULL,300,NULL,10,NULL,1,0xFFFFFFFF,7,2,4,NULL,'110',1,NULL,'bonus bUnbreakableHelm,0;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (20724,'Love_Dad_Wings_2012','Love Dad Wings 2012',5,NULL,NULL,100,NULL,15,NULL,1,0xFFFFFFFF,7,2,4,NULL,'1',1,5,NULL,NULL,NULL);
 # More 2-Handed Swords
-REPLACE INTO `item_db_re` VALUES (21001,'Bellum_Claymore','Bellum Claymore',4,20,NULL,3500,'260',NULL,1,NULL,0x00004082,7,2,34,4,'95',1,3,'bonus2 bAddRace,RC_DemiHuman,80; bonus2 bIgnoreDefRate,RC_DemiHuman,30; if(getrefine()>=6) { bonus2 bAddRace,RC_DemiHuman,40; } if(getrefine()>=9) { autobonus2 "{bonus bShortWeaponDamageReturn,20; bonus bMagicDamageReturn,20;}",200,1000,BF_WEAPON,"{specialeffect2 EF_REFLECTSHIELD;}"; }',NULL,NULL);
-REPLACE INTO `item_db_re` VALUES (21002,'Bellum_Katzbalger','Bellum Katzbalger',4,20,NULL,2500,'100',NULL,1,NULL,0x00004082,7,2,34,4,'95',1,3,'bonus2 bSPVanishRate,10000,8;',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (21000,'Upg_Twohand_Sword','Upg Two-Handed Sword',4,20,NULL,1500,'100',NULL,1,1,0x00004082,7,2,34,3,'1',1,3,'bonus bBaseAtk,(getrefine()*12); bonus bMatk,(getrefine()*5); if(BaseLevel>70) bonus bBaseAtk,(((BaseLevel-70)/10)*10);',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (21001,'Velum_Claymore','Vellum Claymore',4,20,NULL,3500,'260',NULL,1,NULL,0x00004082,7,2,34,4,'95',1,3,'bonus2 bAddRace,RC_DemiHuman,80; bonus2 bIgnoreDefRate,RC_DemiHuman,30; if(getrefine()>=6) { bonus2 bAddRace,RC_DemiHuman,40; } if(getrefine()>=9) { autobonus2 "{bonus bShortWeaponDamageReturn,20; bonus bMagicDamageReturn,20;}",200,1000,BF_WEAPON,"{specialeffect2 EF_REFLECTSHIELD;}"; }',NULL,NULL);
+REPLACE INTO `item_db_re` VALUES (21002,'Velum_Katzbalger','Vellum Katzbalger',4,20,NULL,2500,'100',NULL,1,NULL,0x00004082,7,2,34,4,'95',1,3,'bonus2 bSPVanishRate,10000,8;',NULL,NULL);

@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/mmo.h"
@@ -812,7 +813,7 @@ int do_sockets(int next)
 			continue;
 
 		// after parse, check client's RFIFO size to know if there is an invalid packet (too big and not parsed)
-		if (session[i]->rdata_size == RFIFO_SIZE && session[i]->max_rdata == RFIFO_SIZE) {
+		if (session[i]->rdata_size == session[i]->max_rdata) {
 			set_eof(i);
 			continue;
 		}
@@ -1017,14 +1018,14 @@ int access_ipmask(const char* str, AccessControl* acc)
 {
 	uint32 ip;
 	uint32 mask;
-	unsigned int a[4];
-	unsigned int m[4];
-	int n;
 
 	if( strcmp(str,"all") == 0 ) {
 		ip   = 0;
 		mask = 0;
 	} else {
+		unsigned int a[4];
+		unsigned int m[4];
+		int n;
 		if( ((n=sscanf(str,"%u.%u.%u.%u/%u.%u.%u.%u",a,a+1,a+2,a+3,m,m+1,m+2,m+3)) != 8 && // not an ip + standard mask
 				(n=sscanf(str,"%u.%u.%u.%u/%u",a,a+1,a+2,a+3,m)) != 5 && // not an ip + bit mask
 				(n=sscanf(str,"%u.%u.%u.%u",a,a+1,a+2,a+3)) != 4 ) || // not an ip
@@ -1337,7 +1338,6 @@ void socket_init(void)
 	ShowInfo("Server supports up to '"CL_WHITE"%u"CL_RESET"' concurrent connections.\n", rlim_cur);
 }
 
-
 bool session_isValid(int fd)
 {
 	return ( fd > 0 && fd < FD_SETSIZE && session[fd] != NULL );
@@ -1375,6 +1375,72 @@ uint32 str2ip(const char* ip_str)
 uint16 ntows(uint16 netshort)
 {
 	return ((netshort & 0xFF) << 8) | ((netshort & 0xFF00) >> 8);
+}
+
+/* [Ind/Hercules] - socket_datasync */
+void socket_datasync(int fd, bool send) {
+	struct {
+		unsigned int length;/* short is not enough for some */
+	} data_list[] = {
+		{ sizeof(struct mmo_charstatus) },
+		{ sizeof(struct quest) },
+		{ sizeof(struct item) },
+		{ sizeof(struct point) },
+		{ sizeof(struct s_skill) },
+		{ sizeof(struct global_reg) },
+		{ sizeof(struct accreg) },
+		{ sizeof(struct status_change_data) },
+		{ sizeof(struct storage_data) },
+		{ sizeof(struct guild_storage) },
+		{ sizeof(struct s_pet) },
+		{ sizeof(struct s_mercenary) },
+		{ sizeof(struct s_homunculus) },
+		{ sizeof(struct s_elemental) },
+		{ sizeof(struct s_friend) },
+		{ sizeof(struct mail_message) },
+		{ sizeof(struct mail_data) },
+		{ sizeof(struct registry) },
+		{ sizeof(struct party_member) },
+		{ sizeof(struct party) },
+		{ sizeof(struct guild_member) },
+		{ sizeof(struct guild_position) },
+		{ sizeof(struct guild_alliance) },
+		{ sizeof(struct guild_expulsion) },
+		{ sizeof(struct guild_skill) },
+		{ sizeof(struct guild) },
+		{ sizeof(struct guild_castle) },
+		{ sizeof(struct fame_list) },
+	};
+	unsigned short i;
+	unsigned int alen = ARRAYLENGTH(data_list);
+	if( send ) {
+		unsigned short p_len = ( alen * 4 ) + 4;
+		WFIFOHEAD(fd, p_len);
+
+		WFIFOW(fd, 0) = 0x2b0a;
+		WFIFOW(fd, 2) = p_len;
+		
+		for( i = 0; i < alen; i++ ) {
+			WFIFOL(fd, 4 + ( i * 4 ) ) = data_list[i].length;
+		}
+		
+		WFIFOSET(fd, p_len);
+	} else {
+		for( i = 0; i < alen; i++ ) {
+			if( RFIFOL(fd, 4 + (i * 4) ) != data_list[i].length ) {
+				/* force the other to go wrong too so both are taken down */
+				WFIFOHEAD(fd, 8);
+				WFIFOW(fd, 0) = 0x2b0a;
+				WFIFOW(fd, 2) = 8;
+				WFIFOL(fd, 4) = 0;
+				WFIFOSET(fd, 8);
+				flush_fifo(fd);
+				/* shut down */
+				ShowFatalError("Servers are out of sync! recompile from scratch (%d)\n",i);
+				exit(EXIT_FAILURE);
+			}
+		}
+	}
 }
 
 #ifdef SEND_SHORTLIST

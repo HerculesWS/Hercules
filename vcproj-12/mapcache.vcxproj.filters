@@ -4,6 +4,9 @@
     <ClCompile Include="..\src\common\core.c">
       <Filter>common</Filter>
     </ClCompile>
+	<ClCompile Include="..\src\common\console.c">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\common\des.c">
       <Filter>common</Filter>
     </ClCompile>
@@ -31,6 +34,9 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\core.h">
+      <Filter>common</Filter>
+    </ClInclude>
+	<ClInclude Include="..\src\common\console.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\des.h">

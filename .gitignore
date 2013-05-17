@@ -13,19 +13,22 @@
 /*.sdf
 /*.stackdump
 /*.suo
-/char-server_sql
+/*.exp
+/*.lib
+/start-log.txt
+/char-server
 /config.log
 /config.status
 /core
 /ipch
-/login-server_sql
+/login-server
 /Makefile
 /Makefile.cache
-/map-server_sql
+/map-server
 /mapcache
-/rAthena
 
-# /3rdparty/cmake/
+#OSX Xcode project user-sensitive-stuff
+/Hercules
 
 # /3rdparty/libconfig/
 /3rdparty/libconfig/Makefile
@@ -40,36 +43,7 @@
 
 # /log/
 /log/*.log
-/log/map-server_sql.leaks
-
-# /npc/airports/
-
-# /npc/cities/
-
-# /npc/jobs/
-
-# /npc/kafras/
-
-# /npc/merchants/
-
-# /npc/mobs/
-
-# /npc/other/
-
-# /npc/quests/
-
-# /npc/re/quests/eden/
-/npc/re/quests/eden/55-70.txt
-
-# /npc/warps/
-
-# /npc/warps/cities/
-
-# /npc/warps/dungeons/
-
-# /npc/warps/fields/
-
-# /npc/warps/other/
+/log/*.leaks
 
 # /src/char/
 /src/char/Makefile
@@ -86,15 +60,11 @@
 /src/login/obj_txt
 /src/login/obj_sql
 
-# /src/login/sql/
-
 # /src/map/
 /src/map/Makefile
 /src/map/obj_sql
 /src/map/obj_txt
 /src/map/pcre.h
-
-# /src/map/sql/
 
 # /src/test/
 /src/test/Makefile
@@ -111,22 +81,39 @@
 /tools/*.ilk
 /tools/*.pdb
 
+# /plugins/
+/plugins/*.dll
+/plugins/*.pdb
+
+# /vcproj-12/
+/vcproj-12/map-server
+/vcproj-12/char-server
+/vcproj-12/login-server
+/vcproj-12/char-server_sql
+/vcproj-12/login-server_sql
+/vcproj-12/mapcache
+/vcproj-12/map-server_sql
+/vcproj-12/*.user
+/vcproj-12/plugin-sample/
+
 # /vcproj-10/
+/vcproj-10/map-server
+/vcproj-10/char-server
+/vcproj-10/login-server
 /vcproj-10/char-server_sql
 /vcproj-10/login-server_sql
 /vcproj-10/mapcache
 /vcproj-10/map-server_sql
-/vcproj-10/txt-converter-char
-/vcproj-10/txt-converter-login
 /vcproj-10/*.user
+/vcproj-10/plugin-sample/
 
 # /vcproj-9/
 /vcproj-9/*.user
+/vcproj-9/char-server
+/vcproj-9/login-server
+/vcproj-9/map-server
 /vcproj-9/char-server_sql
 /vcproj-9/login-server_sql
 /vcproj-9/map-server_sql
 /vcproj-9/mapcache
-/vcproj-9/plugin-console
-/vcproj-9/plugin-pid
-/vcproj-9/txt-converter-char
-/vcproj-9/txt-converter-login
+/vcproj-9/plugin-sample/

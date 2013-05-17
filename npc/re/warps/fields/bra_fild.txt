@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Brasilis Fild Warps Script
 //===== By: ==================================================
 //= Protimus
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Warp Points for Brasilis

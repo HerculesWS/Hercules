@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Juperos Dungeon Monster Spawn Script
 //===== By: ==================================================
-// The Prometheus Project, rAthena dev team
+// The Prometheus Project, rAthena Dev Team
 //===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: =====================================
-//= Any Athena/Freya Version
 //===== Additional Comments: =================================
 //= 0.1 Added 1st version. [Muad_Dib]
 //= 0.2 Updated the spawns according to current info [MasterOfMuppets]

@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Comodo Gambling
 //===== By: ==================================================
 //= Reddozen, Cypress, Zefris
 //===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: =====================================
-//= Any rAthena SVN
 //===== Description: =========================================
 //= Comodo Gambling: Win random Items with 3 Carat Diamonds.
 //===== Additional Comments: =================================

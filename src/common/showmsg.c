@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/strlib.h" // StringBuf
@@ -77,9 +78,9 @@ int console_msg_log = 0;//[Ind] msg error logging
 	}													\
 	else												\
 	{/* dynamic buffer */								\
-		buf.d_ = StringBuf_Malloc();					\
-		buf.l_ = StringBuf_Vprintf(buf.d_, fmt, args);	\
-		buf.v_ = StringBuf_Value(buf.d_);				\
+		buf.d_ = StrBuf->Malloc();					\
+		buf.l_ = StrBuf->Vprintf(buf.d_, fmt, args);	\
+		buf.v_ = StrBuf->Value(buf.d_);				\
 		ShowDebug("showmsg: dynamic buffer used, increase the static buffer size to %d or more.\n", buf.l_+1);\
 	}													\
 //define BUFVPRINTF
@@ -90,7 +91,7 @@ int console_msg_log = 0;//[Ind] msg error logging
 #define FREEBUF(buf)			\
 	if( buf.d_ )				\
 	{							\
-		StringBuf_Free(buf.d_);	\
+		StrBuf->Free(buf.d_);	\
 		buf.d_ = NULL;			\
 	}							\
 	buf.v_ = NULL;				\
@@ -687,22 +688,12 @@ int _vShowMessage(enum msg_type flag, const char *string, va_list ap)
 		ShowError("Empty string passed to _vShowMessage().\n");
 		return 1;
 	}
-	/**
-	 * For the buildbot, these result in a EXIT_FAILURE from core.c when done reading the params.
-	 **/
-#if defined(BUILDBOT)
-	if( flag == MSG_WARNING ||
-	    flag == MSG_ERROR ||
-	    flag == MSG_SQL ) {
-		buildbotflag = 1;
-	}
-#endif
 	if(
 		( flag == MSG_WARNING && console_msg_log&1 ) ||
 		( ( flag == MSG_ERROR || flag == MSG_SQL ) && console_msg_log&2 ) ||
 		( flag == MSG_DEBUG && console_msg_log&4 ) ) {//[Ind]
 		FILE *log = NULL;
-		if( (log = fopen(SERVER_TYPE == ATHENA_SERVER_MAP ? "./log/map-msg_log.log" : "./log/unknown.log","a+")) ) {
+		if( (log = fopen(SERVER_TYPE == SERVER_TYPE_MAP ? "./log/map-msg_log.log" : "./log/unknown.log","a+")) ) {
 			char timestring[255];
 			time_t curtime;
 			time(&curtime);
@@ -864,13 +855,13 @@ void ShowConfigWarning(config_setting_t *config, const char *string, ...)
 {
 	StringBuf buf;
 	va_list ap;
-	StringBuf_Init(&buf);
-	StringBuf_AppendStr(&buf, string);
-	StringBuf_Printf(&buf, " (%s:%d)\n", config_setting_source_file(config), config_setting_source_line(config));
+	StrBuf->Init(&buf);
+	StrBuf->AppendStr(&buf, string);
+	StrBuf->Printf(&buf, " (%s:%d)\n", config_setting_source_file(config), config_setting_source_line(config));
 	va_start(ap, string);
-	_vShowMessage(MSG_WARNING, StringBuf_Value(&buf), ap);
+	_vShowMessage(MSG_WARNING, StrBuf->Value(&buf), ap);
 	va_end(ap);
-	StringBuf_Destroy(&buf);
+	StrBuf->Destroy(&buf);
 }
 void ShowDebug(const char *string, ...) {
 	va_list ap;

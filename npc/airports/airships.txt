@@ -1,9 +1,7 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= The Airship System Script
 //===== By: ================================================== 
 //= rAthena Dev Team
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= The Airship System used in the official servers.
 //===== Additional Comments: ================================= 

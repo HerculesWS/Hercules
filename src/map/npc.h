@@ -88,10 +88,15 @@ enum actor_classes
 	INVISIBLE_CLASS = 32767,
 };
 
+// Old NPC range
 #define MAX_NPC_CLASS 1000
+// New NPC range
+#define MAX_NPC_CLASS2_START 10000
+#define MAX_NPC_CLASS2_END 10049
+
 //Checks if a given id is a valid npc id. [Skotlex]
 //Since new npcs are added all the time, the max valid value is the one before the first mob (Scorpion = 1001)
-#define npcdb_checkid(id) ( ( (id) >= 46 && (id) <= 125) || (id) == HIDDEN_WARP_CLASS || ( (id) > 400 && (id) < MAX_NPC_CLASS ) || (id) == INVISIBLE_CLASS )
+#define npcdb_checkid(id) ( ( (id) >= 46 && (id) <= 125) || (id) == HIDDEN_WARP_CLASS || ( (id) > 400 && (id) < MAX_NPC_CLASS ) || (id) == INVISIBLE_CLASS || ( (id) > 10000 && (id) < 10049 ) )
 
 #ifdef PCRE_SUPPORT
 void npc_chat_finalize(struct npc_data* nd);
@@ -118,12 +123,13 @@ int npc_touch_areanpc2(struct mob_data *md); // [Skotlex]
 int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range);
 int npc_touchnext_areanpc(struct map_session_data* sd,bool leavemap);
 int npc_click(struct map_session_data* sd, struct npc_data* nd);
-int npc_scriptcont(struct map_session_data* sd, int id);
+int npc_scriptcont(struct map_session_data* sd, int id, bool closing);
 struct npc_data* npc_checknear(struct map_session_data* sd, struct block_list* bl);
 int npc_buysellsel(struct map_session_data* sd, int id, int type);
 int npc_buylist(struct map_session_data* sd,int n, unsigned short* item_list);
 int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list);
 void npc_parse_mob2(struct spawn_data* mob);
+const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath);
 struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y);
 int npc_globalmessage(const char* name,const char* mes);
 
@@ -134,6 +140,7 @@ int npc_enable(const char* name, int flag);
 void npc_setdisplayname(struct npc_data* nd, const char* newname);
 void npc_setclass(struct npc_data* nd, short class_);
 struct npc_data* npc_name2id(const char* name);
+bool npc_isnear(struct block_list * bl);
 
 int npc_get_new_npc_id(void);
 
@@ -172,7 +179,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 /**
  * For the Secure NPC Timeout option (check config/Secure.h) [RR]
  **/
-#if SECURE_NPCTIMEOUT
+#ifdef SECURE_NPCTIMEOUT
 	int npc_rr_secure_timeout_timer(int tid, unsigned int tick, int id, intptr_t data);
 #endif
 

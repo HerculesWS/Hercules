@@ -1,11 +1,17 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _HOMUNCULUS_H_
 #define _HOMUNCULUS_H_
 
 #include "status.h" // struct status_data, struct status_change
 #include "unit.h" // struct unit_data
+#include "pc.h"
+
+#define MAX_HOM_SKILL_REQUIRE 5
+#define homdb_checkid(id) (id >=  HM_CLASS_BASE && id <= HM_CLASS_MAX)
+#define homun_alive(x) ((x) && (x)->homunculus.vaporize != 1 && (x)->battle_status.hp > 0)
 
 struct h_stats {
 	unsigned int HP, SP;
@@ -23,9 +29,16 @@ struct s_homunculus_db {
 };
 
 extern struct s_homunculus_db homunculus_db[MAX_HOMUNCULUS_CLASS];
-enum { HOMUNCULUS_CLASS, HOMUNCULUS_FOOD };
 
-enum { MH_MD_FIGHTING=1, MH_MD_GRAPPLING };
+enum {
+	HOMUNCULUS_CLASS,
+	HOMUNCULUS_FOOD
+};
+
+enum {
+	MH_MD_FIGHTING = 1,
+	MH_MD_GRAPPLING
+};
 
 enum {
 	SP_ACK      = 0x0,
@@ -49,7 +62,6 @@ struct homun_data {
 	char blockskill[MAX_SKILL];	// [orn]
 };
 
-#define MAX_HOM_SKILL_REQUIRE 5
 struct homun_skill_tree_entry {
 	short id;
 	unsigned char max;
@@ -61,72 +73,70 @@ struct homun_skill_tree_entry {
 	} need[MAX_HOM_SKILL_REQUIRE];
 }; // Celest
 
-#define HOM_EVO 0x100 //256
-#define HOM_S 0x200 //512
-
-#define HOM_REG 0x1000 //4096
-
-enum {
-// Normal Homunculus
-	MAPID_LIF = HOM_REG|0x0,
-	MAPID_AMISTR,
-	MAPID_FILIR,
-	MAPID_VANILMIRTH,
-// Evolved Homunulus
-	MAPID_LIF_E = HOM_REG|HOM_EVO|0x0,
-	MAPID_AMISTR_E,
-	MAPID_FILIR_E,
-	MAPID_VANILMIRTH_E,
-// Homunculus S
-	MAPID_EIRA = HOM_S|0x0,
-	MAPID_BAYERI,
-	MAPID_SERA,
-	MAPID_DIETER,
-	MAPID_ELANOR,
+enum homun_type {
+	HT_REG	= 0x1,
+	HT_EVO	= 0x2,
+	HT_S	= 0x4,
 };
 
-#define homdb_checkid(id) (id >=  HM_CLASS_BASE && id <= HM_CLASS_MAX)
+/* homunculus.c interface */
+struct homunculus_interface {
+	unsigned int exptable[MAX_LEVEL];
+	struct view_data viewdb[MAX_HOMUNCULUS_CLASS];
+	struct s_homunculus_db db[MAX_HOMUNCULUS_CLASS];
+	struct homun_skill_tree_entry skill_tree[MAX_HOMUNCULUS_CLASS][MAX_SKILL_TREE];
+	/* */
+	void (*init) (void);
+	void (*final) (void);
+	void (*reload) (void);
+	void (*reload_skill) (void);
+	/* */
+	struct view_data* (*get_viewdata) (int class_);
+	enum homun_type (*class2type) (int class_);
+	void (*damaged) (struct homun_data *hd);
+	int (*dead) (struct homun_data *hd);
+	int (*vaporize) (struct map_session_data *sd, int flag);
+	int (*delete) (struct homun_data *hd, int emote);
+	int (*checkskill) (struct homun_data *hd, uint16 skill_id);
+	int (*calc_skilltree) (struct homun_data *hd, int flag_evolve);
+	int (*skill_tree_get_max) (int id, int b_class);
+	void (*skillup) (struct homun_data *hd, uint16 skill_id);
+	bool (*levelup) (struct homun_data *hd);
+	int (*change_class) (struct homun_data *hd, short class_);
+	bool (*evolve) (struct homun_data *hd);
+	bool (*mutate) (struct homun_data *hd, int homun_id);
+	int (*gainexp) (struct homun_data *hd, unsigned int exp);
+	unsigned int (*add_intimacy) (struct homun_data * hd, unsigned int value);
+	unsigned int (*consume_intimacy) (struct homun_data *hd, unsigned int value);
+	void (*healed) (struct homun_data *hd);
+	void (*save) (struct homun_data *hd);
+	unsigned char (*menu) (struct map_session_data *sd,unsigned char menu_num);
+	bool (*feed) (struct map_session_data *sd, struct homun_data *hd);
+	int (*hunger_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	void (*hunger_timer_delete) (struct homun_data *hd);
+	int (*change_name) (struct map_session_data *sd,char *name);
+	bool (*change_name_ack) (struct map_session_data *sd, char* name, int flag);
+	int (*db_search) (int key,int type);
+	bool (*create) (struct map_session_data *sd, struct s_homunculus *hom);
+	void (*init_timers) (struct homun_data * hd);
+	bool (*call) (struct map_session_data *sd);
+	bool (*recv_data) (int account_id, struct s_homunculus *sh, int flag);
+	bool (*creation_request) (struct map_session_data *sd, int class_);
+	bool (*ressurect) (struct map_session_data* sd, unsigned char per, short x, short y);
+	void (*revive) (struct homun_data *hd, unsigned int hp, unsigned int sp);
+	void (*stat_reset) (struct homun_data *hd);
+	bool (*shuffle) (struct homun_data *hd);
+	bool (*read_db_sub) (char* str[], int columns, int current);
+	void (*read_db) (void);
+	bool (*read_skill_db_sub) (char* split[], int columns, int current);
+	void (*skill_db_read) (void);
+	void (*exp_db_read) (void);
+	void (*addspiritball) (struct homun_data *hd, int max);
+	void (*delspiritball) (struct homun_data *hd, int count, int type);
+} homunculus_s;
 
-// merc_is_hom_alive(struct homun_data *)
-#define merc_is_hom_active(x) (x && x->homunculus.vaporize != 1 && x->battle_status.hp > 0)
-int do_init_merc(void);
-int merc_hom_recv_data(int account_id, struct s_homunculus *sh, int flag); //albator
-struct view_data* merc_get_hom_viewdata(int class_);
-int hom_class2mapid(int hom_class);
-void merc_damage(struct homun_data *hd);
-int merc_hom_dead(struct homun_data *hd);
-void merc_hom_skillup(struct homun_data *hd,uint16 skill_id);
-int merc_hom_calc_skilltree(struct homun_data *hd, int flag_evolve);
-int merc_hom_checkskill(struct homun_data *hd,uint16 skill_id);
-int merc_hom_gainexp(struct homun_data *hd,int exp);
-int merc_hom_levelup(struct homun_data *hd);
-int merc_hom_evolution(struct homun_data *hd);
-int hom_mutate(struct homun_data *hd,int homun_id);
-void merc_hom_heal(struct homun_data *hd);
-int merc_hom_vaporize(struct map_session_data *sd, int flag);
-int merc_resurrect_homunculus(struct map_session_data *sd, unsigned char per, short x, short y);
-void merc_hom_revive(struct homun_data *hd, unsigned int hp, unsigned int sp);
-void merc_reset_stats(struct homun_data *hd);
-int merc_hom_shuffle(struct homun_data *hd); // [Zephyrus]
-void merc_save(struct homun_data *hd);
-int merc_call_homunculus(struct map_session_data *sd);
-int merc_create_homunculus_request(struct map_session_data *sd, int class_);
-int search_homunculusDB_index(int key,int type);
-int merc_menu(struct map_session_data *sd,int menunum);
-int merc_hom_food(struct map_session_data *sd, struct homun_data *hd);
-int merc_hom_hungry_timer_delete(struct homun_data *hd);
-int merc_hom_change_name(struct map_session_data *sd,char *name);
-int merc_hom_change_name_ack(struct map_session_data *sd, char* name, int flag);
-#define merc_stop_walking(hd, type) unit_stop_walking(&(hd)->bl, type)
-#define merc_stop_attack(hd) unit_stop_attack(&(hd)->bl)
-int merc_hom_increase_intimacy(struct homun_data * hd, unsigned int value);
-int merc_hom_decrease_intimacy(struct homun_data * hd, unsigned int value);
-int merc_skill_tree_get_max(int id, int b_class);
-void merc_hom_init_timers(struct homun_data * hd);
-void merc_skill_reload(void);
-void merc_reload(void);
+struct homunculus_interface *homun;
 
-int hom_addspiritball(TBL_HOM *hd, int max);
-int hom_delspiritball(TBL_HOM *hd, int count, int type);
+void homunculus_defaults(void);
 
 #endif /* _HOMUNCULUS_H_ */

@@ -66,7 +66,11 @@ enum {
 	ITEMID_CAMOUFLAGE_GENERATOR,
 	ITEMID_HIGH_QUALITY_COOLER,
 	ITEMID_SPECIAL_COOLER,
-	} mecha_item_list;
+} mecha_item_list;
+
+enum {
+	NOUSE_SITTING = 0x01,
+} item_nouse_list;
 
 //The only item group required by the code to be known. See const.txt for the full list.
 #define IG_FINDINGORE 6
@@ -123,7 +127,6 @@ struct item_data {
 	struct script_code *unequip_script;//Script executed once when unequipping.
 	struct {
 		unsigned available : 1;
-		short no_equip;
 		unsigned no_refine : 1;	// [celest]
 		unsigned delay_consume : 1;	// Signifies items that are not consumed immediately upon double-click [Skotlex]
 		unsigned trade_restriction : 9;	//Item restrictions mask [Skotlex]
@@ -137,6 +140,10 @@ struct item_data {
 		unsigned int storage:1;
 		unsigned int guildstorage:1;
 	} stack;
+	struct {// used by item_nouse.txt
+		unsigned int flag;
+		unsigned short override;
+	} item_usage;
 	short gm_lv_trade_override;	//GM-level to override trade_restriction
 	/* bugreport:309 */
 	struct item_combo **combos;
@@ -155,6 +162,8 @@ struct item_combo {
 	unsigned short id;/* id of this combo */
 	bool isRef;/* whether this struct is a reference or the master */
 };
+
+struct item_group itemgroup_db[MAX_ITEMGROUP];
 
 struct item_data* itemdb_searchname(const char *name);
 int itemdb_searchname_array(struct item_data** data, int size, const char *str);
@@ -217,6 +226,7 @@ int itemdb_isrestricted(struct item* item, int gmlv, int gmlv2, int (*func)(stru
 int itemdb_isequip(int);
 int itemdb_isequip2(struct item_data *);
 int itemdb_isidentified(int);
+int itemdb_isidentified2(struct item_data *data);
 int itemdb_isstackable(int);
 int itemdb_isstackable2(struct item_data *);
 uint64 itemdb_unique_id(int8 flag, int64 value); // Unique Item ID

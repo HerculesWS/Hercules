@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Ayothaya Town Warps Script
 //===== By: ==================================================
 //= Muad_Dib, L0ne_W0lf (1.0)
 //===== Current Version: =====================================
 //= 1.5a
-//===== Compatible With: =====================================
-//= Any Athena Version; RO Episode 8+
 //===== Description: =========================================
 //= Warp Points for Ayothaya
 //===== Additional Comments: =================================

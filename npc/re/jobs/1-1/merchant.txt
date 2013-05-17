@@ -3,13 +3,15 @@
 //===== By: ================================================== 
 //= Kisuka
 //===== Current Version: ===================================== 
-//= 1.0
+//= 1.2
 //===== Compatible With: ===================================== 
 //= rAthena SVN
 //===== Description: ========================================= 
 //= Job Change to Merchant Class
 //===== Additional Comments: ================================= 
 //= 1.0 First Version. [Kisuka]
+//= 1.1 Added Baby Job compatibility [Streusel]
+//= 1.2 Rewrote bits [Euphy]
 //============================================================ 
 alberta_in,53,43,6	script	Merchant#mer	86,{
 	if (Upper == 1) {
@@ -57,9 +59,9 @@ alberta_in,53,43,6	script	Merchant#mer	86,{
 	next;
 	switch(select("I want to be a merchant.:I want to know more about merchants.:Ask him the requirements to be a merchant.:Nothing.")) {
 	case 1:
-		if(Class != Job_Novice) {
+		if(BaseJob != Job_Novice) {
 			mes "[Guildsman Mahnsoo]";
-			if(Class == Job_Merchant) {
+			if(BaseJob == Job_Merchant) {
 				mes ".....? Sorry? What are you saying?";
 				mes "You are already a merchant. Oh my..";
 				mes "Huh?! ...Do I need to laugh right now?!";

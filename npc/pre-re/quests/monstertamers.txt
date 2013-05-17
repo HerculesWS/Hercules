@@ -1,0 +1,15 @@
+//===== Hercules Script =======================================
+//= Monster Tamers
+//===== By: ==================================================
+//= Streusel
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= Hercules
+//===== Description: =========================================
+//= Cute pet quest items
+//===== Additional Comments: =================================
+//= 1.0 Duplicates for Monster Tamer [Streusel]
+//============================================================
+
+izlude_in,129,64,4	duplicate(Monster_Tamer#izu)	Monster Tamer#izlude	125

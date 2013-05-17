@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/malloc.h"
@@ -10,6 +11,7 @@
 #include "../common/showmsg.h"
 #include "../common/utils.h"
 #include "../common/random.h"
+#include "../common/strlib.h"
 
 #include "log.h"
 #include "clif.h"
@@ -270,11 +272,11 @@ int elemental_data_received(struct s_elemental *ele, bool flag) {
 
 	if( ed->bl.prev == NULL && sd->bl.prev != NULL ) {
 		map_addblock(&ed->bl);
-		clif_spawn(&ed->bl);
-		clif_elemental_info(sd);
-		clif_elemental_updatestatus(sd,SP_HP);
-		clif_hpmeter_single(sd->fd,ed->bl.id,ed->battle_status.hp,ed->battle_status.max_hp);
-		clif_elemental_updatestatus(sd,SP_SP);
+		clif->spawn(&ed->bl);
+		clif->elemental_info(sd);
+		clif->elemental_updatestatus(sd,SP_HP);
+		clif->hpmeter_single(sd->fd,ed->bl.id,ed->battle_status.hp,ed->battle_status.max_hp);
+		clif->elemental_updatestatus(sd,SP_SP);
 	}
 
 	return 1;
@@ -286,7 +288,7 @@ int elemental_clean_single_effect(struct elemental_data *ed, uint16 skill_id) {
 
 	nullpo_ret(ed);
 
-	bl = battle_get_master(&ed->bl);
+	bl = battle->get_master(&ed->bl);
 
 	if( type ) {
 		switch( type ) {
@@ -420,20 +422,20 @@ int elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned 
 	ed->last_thinktime = tick;
 
 	// Not in skill range.
-	if( !battle_check_range(&ed->bl,bl,skill_get_range(skill_id,skill_lv)) ) {
+	if( !battle->check_range(&ed->bl,bl,skill->get_range(skill_id,skill_lv)) ) {
 		// Try to walk to the target.
-		if( !unit_walktobl(&ed->bl, bl, skill_get_range(skill_id,skill_lv), 2) )
+		if( !unit_walktobl(&ed->bl, bl, skill->get_range(skill_id,skill_lv), 2) )
 			elemental_unlocktarget(ed);
 		else {
 			// Walking, waiting to be in range. Client don't handle it, then we must handle it here.
-			int walk_dist = distance_bl(&ed->bl,bl) - skill_get_range(skill_id,skill_lv);
+			int walk_dist = distance_bl(&ed->bl,bl) - skill->get_range(skill_id,skill_lv);
 			ed->ud.skill_id = skill_id;
 			ed->ud.skill_lv = skill_lv;
 
-			if( skill_get_inf(skill_id) & INF_GROUND_SKILL )
-				ed->ud.skilltimer = add_timer( tick+status_get_speed(&ed->bl)*walk_dist, skill_castend_pos, ed->bl.id, 0 );
+			if( skill->get_inf(skill_id) & INF_GROUND_SKILL )
+				ed->ud.skilltimer = add_timer( tick+status_get_speed(&ed->bl)*walk_dist, skill->castend_pos, ed->bl.id, 0 );
 			else
-				ed->ud.skilltimer = add_timer( tick+status_get_speed(&ed->bl)*walk_dist, skill_castend_id, ed->bl.id, 0 );
+				ed->ud.skilltimer = add_timer( tick+status_get_speed(&ed->bl)*walk_dist, skill->castend_id, ed->bl.id, 0 );
 		}
 		return 1;
 
@@ -442,7 +444,7 @@ int elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned 
 	req = elemental_skill_get_requirements(skill_id, skill_lv);
 
 	if(req.hp || req.sp){
-		struct map_session_data *sd = BL_CAST(BL_PC, battle_get_master(&ed->bl));
+		struct map_session_data *sd = BL_CAST(BL_PC, battle->get_master(&ed->bl));
 		if( sd ){
 			if( sd->skill_id_old != SO_EL_ACTION && //regardless of remaining HP/SP it can be cast
 				(status_get_hp(&ed->bl) < req.hp || status_get_sp(&ed->bl) < req.sp) )
@@ -453,7 +455,7 @@ int elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned 
 	}
 
 	//Otherwise, just cast the skill.
-	if( skill_get_inf(skill_id) & INF_GROUND_SKILL )
+	if( skill->get_inf(skill_id) & INF_GROUND_SKILL )
 		unit_skilluse_pos(&ed->bl, bl->x, bl->y, skill_id, skill_lv);
 	else
 		unit_skilluse_id(&ed->bl, bl->id, skill_id, skill_lv);
@@ -497,7 +499,7 @@ int elemental_change_mode_ack(struct elemental_data *ed, int mode) {
 	ed->target_id = bl->id;	// Set new target
 	ed->last_thinktime = gettick();
 
-	if( skill_get_inf(skill_id) & INF_GROUND_SKILL )
+	if( skill->get_inf(skill_id) & INF_GROUND_SKILL )
 		unit_skilluse_pos(&ed->bl, bl->x, bl->y, skill_id, skill_lv);
 	else
 		unit_skilluse_id(&ed->bl,bl->id,skill_id,skill_lv);
@@ -534,9 +536,9 @@ int elemental_change_mode(struct elemental_data *ed, int mode) {
 
 void elemental_heal(struct elemental_data *ed, int hp, int sp) {
 	if( hp )
-		clif_elemental_updatestatus(ed->master, SP_HP);
+		clif->elemental_updatestatus(ed->master, SP_HP);
 	if( sp )
-		clif_elemental_updatestatus(ed->master, SP_SP);
+		clif->elemental_updatestatus(ed->master, SP_SP);
 }
 
 int elemental_dead(struct elemental_data *ed) {
@@ -554,18 +556,18 @@ int elemental_unlocktarget(struct elemental_data *ed) {
 }
 
 int elemental_skillnotok(uint16 skill_id, struct elemental_data *ed) {
-	int idx = skill_get_index(skill_id);
+	int idx = skill->get_index(skill_id);
 	nullpo_retr(1,ed);
 
 	if (idx == 0)
 		return 1; // invalid skill id
 
-	return skillnotok(skill_id, ed->master);
+	return skill->not_ok(skill_id, ed->master);
 }
 
 struct skill_condition elemental_skill_get_requirements(uint16 skill_id, uint16 skill_lv){
 	struct skill_condition req;
-	int idx = skill_get_index(skill_id);
+	int idx = skill->get_index(skill_id);
 
 	memset(&req,0,sizeof(req));
 
@@ -613,7 +615,7 @@ static int elemental_ai_sub_timer_activesearch(struct block_list *bl, va_list ap
 	if( (*target) == bl || !status_check_skilluse(&ed->bl, bl, 0, 0) )
 		return 0;
 
-	if( battle_check_target(&ed->bl,bl,BCT_ENEMY) <= 0 )
+	if( battle->check_target(&ed->bl,bl,BCT_ENEMY) <= 0 )
 		return 0;
 
 	switch( bl->type ) {
@@ -622,7 +624,7 @@ static int elemental_ai_sub_timer_activesearch(struct block_list *bl, va_list ap
 				return 0;
 		default:
 			dist = distance_bl(&ed->bl, bl);
-			if( ((*target) == NULL || !check_distance_bl(&ed->bl, *target, dist)) && battle_check_range(&ed->bl,bl,ed->db->range2) ) { //Pick closest target?
+			if( ((*target) == NULL || !check_distance_bl(&ed->bl, *target, dist)) && battle->check_range(&ed->bl,bl,ed->db->range2) ) { //Pick closest target?
 				(*target) = bl;
 				ed->target_id = bl->id;
 				ed->min_chase = dist + ed->db->range3;
@@ -694,8 +696,8 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 	if( master_dist > AREA_SIZE ) {	// Master out of vision range.
 		elemental_unlocktarget(ed);
 		unit_warp(&ed->bl,sd->bl.m,sd->bl.x,sd->bl.y,CLR_TELEPORT);
-		clif_elemental_updatestatus(sd,SP_HP);
-		clif_elemental_updatestatus(sd,SP_SP);
+		clif->elemental_updatestatus(sd,SP_HP);
+		clif->elemental_updatestatus(sd,SP_SP);
 		return 0;
 	} else if( master_dist > MAX_ELEDISTANCE ) {	// Master too far, chase.
 		short x = sd->bl.x, y = sd->bl.y;
@@ -721,7 +723,7 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 			return 1;
 		}
 
-		if( battle_check_range(&ed->bl,target,view_range) && rnd()%100 < 2 ) { // 2% chance to cast attack skill.
+		if( battle->check_range(&ed->bl,target,view_range) && rnd()%100 < 2 ) { // 2% chance to cast attack skill.
 			if(	elemental_action(ed,target,tick) )
 				return 1;
 		}
@@ -731,7 +733,7 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 		if( ed->ud.target == target->id && ed->ud.attacktimer != INVALID_TIMER ) //Already locked.
 			return 1;
 
-		if( battle_check_range(&ed->bl, target, ed->base_status.rhw.range) ) {//Target within range, engage
+		if( battle->check_range(&ed->bl, target, ed->base_status.rhw.range) ) {//Target within range, engage
 			unit_attack(&ed->bl,target->id,1);
 			return 1;
 		}
@@ -795,8 +797,8 @@ int read_elementaldb(void) {
 
 		db = &elemental_db[j];
 		db->class_ = atoi(str[0]);
-		strncpy(db->sprite, str[1], NAME_LENGTH);
-		strncpy(db->name, str[2], NAME_LENGTH);
+		safestrncpy(db->sprite, str[1], NAME_LENGTH);
+		safestrncpy(db->name, str[2], NAME_LENGTH);
 		db->lv = atoi(str[3]);
 
 		status = &db->status;

@@ -1,10 +1,10 @@
 
 COMMON_OBJ = ../common/obj_all/minicore.o ../common/obj_all/malloc.o \
 	../common/obj_all/showmsg.o ../common/obj_all/strlib.o \
-	../common/obj_all/utils.o ../common/obj_all/des.o ../common/obj_all/grfio.o
+	../common/obj_all/utils.o ../common/obj_all/des.o ../common/obj_all/grfio.o ../common/obj_all/miniconsole.o
 COMMON_H = ../common/core.h ../common/mmo.h \
 	../common/malloc.h ../common/showmsg.h ../common/strlib.h \
-	../common/utils.h ../common/cbasetypes.h ../common/des.h ../common/grfio.h ../config/renewal.h
+	../common/utils.h ../common/cbasetypes.h ../common/des.h ../common/grfio.h ../common/console.h ../config/renewal.h
 
 LIBCONFIG_OBJ = ../../3rdparty/libconfig/libconfig.o ../../3rdparty/libconfig/grammar.o \
 	../../3rdparty/libconfig/scanctx.o ../../3rdparty/libconfig/scanner.o ../../3rdparty/libconfig/strbuf.o
@@ -42,7 +42,8 @@ help:
 #####################################################################
 
 obj_all:
-	-mkdir obj_all
+	@echo "	MKDIR	obj_all"
+	@-mkdir obj_all
 
 obj_all/%.o: %.c $(COMMON_H) $(OTHER_H) $(LIBCONFIG_H)
 	@echo "	CC	$<"
@@ -50,10 +51,10 @@ obj_all/%.o: %.c $(COMMON_H) $(OTHER_H) $(LIBCONFIG_H)
 
 # missing common object files
 ../common/obj_all/%.o:
-	@$(MAKE) -C ../common txt
+	@$(MAKE) -C ../common sql
 
 ../common/obj_all/mini%.o:
-	@$(MAKE) -C ../common txt
+	@$(MAKE) -C ../common sql
 
 LIBCONFIG_OBJ:
 	@$(MAKE) -C ../../3rdparty/libconfig

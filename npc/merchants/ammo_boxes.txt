@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Magazine Dealer Kenny
 //===== By: ==================================================
-//= rAthena dev team
+//= rAthena Dev Team
 //===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= Turns bullets into magazines/packs.
 //===== Additional Comments: =================================

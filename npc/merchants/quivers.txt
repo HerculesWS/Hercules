@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Arrow Quiver Event
 //===== By: ==================================================
 //= Muad_Dib (Prometheus Project); L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Aegis COnversion]
 //= Turns arrows into Arrow Quivers.

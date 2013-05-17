@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Bunny Band Quest
 //===== By: ================================================== 
 //= rAthena Dev Team
 //===== Current Version: ===================================== 
 //= 1.6
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Quest to obtain a Bunny Band headgear.

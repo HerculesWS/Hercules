@@ -114,7 +114,7 @@ struct script_stack {
 //
 // Script state
 //
-enum e_script_state { RUN,STOP,END,RERUNLINE,GOTO,RETFUNC };
+enum e_script_state { RUN,STOP,END,RERUNLINE,GOTO,RETFUNC,CLOSE };
 
 struct script_state {
 	struct script_stack* stack;
@@ -132,6 +132,7 @@ struct script_state {
 	int bk_npcid;
 	unsigned freeloop : 1;// used by buildin_freeloop
 	unsigned op2ref : 1;// used by op_2
+	unsigned npc_item_flag : 1;
 };
 
 struct script_reg {
@@ -158,8 +159,6 @@ void run_script_sub(struct script_code *rootscript,int pos,int rid,int oid, char
 void run_script(struct script_code*,int,int,int);
 
 int set_var(struct map_session_data *sd, char *name, void *val);
-int conv_num(struct script_state *st,struct script_data *data);
-const char* conv_str(struct script_state *st,struct script_data *data);
 int run_script_timer(int tid, unsigned int tick, int id, intptr_t data);
 void run_script_main(struct script_state *st);
 
@@ -181,17 +180,134 @@ void script_cleararray_pc(struct map_session_data* sd, const char* varname, void
 void script_setarray_pc(struct map_session_data* sd, const char* varname, uint8 idx, void* value, int* refcache);
 
 int script_config_read(char *cfgName);
-int do_init_script(void);
-int do_final_script(void);
 int add_str(const char* p);
 const char* get_str(int id);
 int script_reload(void);
 
 // @commands (script based)
-void setd_sub(struct script_state *st, TBL_PC *sd, const char *varname, int elem, void *value, struct DBMap **ref);
+void setd_sub(struct script_state *st, struct map_session_data *sd, const char *varname, int elem, void *value, struct DBMap **ref);
 
-#ifdef BETA_THREAD_TEST
-void queryThread_log(char * entry, int length);
-#endif
+///////////////////////////////////////////////////////////////////////////////
+//## TODO possible enhancements: [FlavioJS]
+// - 'callfunc' supporting labels in the current npc "::LabelName"
+// - 'callfunc' supporting labels in other npcs "NpcName::LabelName"
+// - 'function FuncName;' function declarations reverting to global functions
+//   if local label isn't found
+// - join callfunc and callsub's functionality
+// - remove dynamic allocation in add_word()
+// - remove GETVALUE / SETVALUE
+// - clean up the set_reg / set_val / setd_sub mess
+// - detect invalid label references at parse-time
+
+//
+// struct script_state* st;
+//
+
+/// Returns the script_data at the target index
+#define script_getdata(st,i) ( &((st)->stack->stack_data[(st)->start + (i)]) )
+/// Returns if the stack contains data at the target index
+#define script_hasdata(st,i) ( (st)->end > (st)->start + (i) )
+/// Returns the index of the last data in the stack
+#define script_lastdata(st) ( (st)->end - (st)->start - 1 )
+/// Pushes an int into the stack
+#define script_pushint(st,val) push_val((st)->stack, C_INT, (val))
+/// Pushes a string into the stack (script engine frees it automatically)
+#define script_pushstr(st,val) push_str((st)->stack, C_STR, (val))
+/// Pushes a copy of a string into the stack
+#define script_pushstrcopy(st,val) push_str((st)->stack, C_STR, aStrdup(val))
+/// Pushes a constant string into the stack (must never change or be freed)
+#define script_pushconststr(st,val) push_str((st)->stack, C_CONSTSTR, (val))
+/// Pushes a nil into the stack
+#define script_pushnil(st) push_val((st)->stack, C_NOP, 0)
+/// Pushes a copy of the data in the target index
+#define script_pushcopy(st,i) push_copy((st)->stack, (st)->start + (i))
+
+#define script_isstring(st,i) data_isstring(script_getdata(st,i))
+#define script_isint(st,i) data_isint(script_getdata(st,i))
+
+#define script_getnum(st,val) script->conv_num(st, script_getdata(st,val))
+#define script_getstr(st,val) script->conv_str(st, script_getdata(st,val))
+#define script_getref(st,val) ( script_getdata(st,val)->ref )
+
+// Note: "top" functions/defines use indexes relative to the top of the stack
+//       -1 is the index of the data at the top
+
+/// Returns the script_data at the target index relative to the top of the stack
+#define script_getdatatop(st,i) ( &((st)->stack->stack_data[(st)->stack->sp + (i)]) )
+/// Pushes a copy of the data in the target index relative to the top of the stack
+#define script_pushcopytop(st,i) push_copy((st)->stack, (st)->stack->sp + (i))
+/// Removes the range of values [start,end[ relative to the top of the stack
+#define script_removetop(st,start,end) ( pop_stack((st), ((st)->stack->sp + (start)), (st)->stack->sp + (end)) )
+
+//
+// struct script_data* data;
+//
+
+/// Returns if the script data is a string
+#define data_isstring(data) ( (data)->type == C_STR || (data)->type == C_CONSTSTR )
+/// Returns if the script data is an int
+#define data_isint(data) ( (data)->type == C_INT )
+/// Returns if the script data is a reference
+#define data_isreference(data) ( (data)->type == C_NAME )
+/// Returns if the script data is a label
+#define data_islabel(data) ( (data)->type == C_POS )
+/// Returns if the script data is an internal script function label
+#define data_isfunclabel(data) ( (data)->type == C_USERFUNC_POS )
+
+/// Returns if this is a reference to a constant
+#define reference_toconstant(data) ( str_data[reference_getid(data)].type == C_INT )
+/// Returns if this a reference to a param
+#define reference_toparam(data) ( str_data[reference_getid(data)].type == C_PARAM )
+/// Returns if this a reference to a variable
+//##TODO confirm it's C_NAME [FlavioJS]
+#define reference_tovariable(data) ( str_data[reference_getid(data)].type == C_NAME )
+/// Returns the unique id of the reference (id and index)
+#define reference_getuid(data) ( (data)->u.num )
+/// Returns the id of the reference
+#define reference_getid(data) ( (int32)(reference_getuid(data) & 0x00ffffff) )
+/// Returns the array index of the reference
+#define reference_getindex(data) ( (int32)(((uint32)(reference_getuid(data) & 0xff000000)) >> 24) )
+/// Returns the name of the reference
+#define reference_getname(data) ( str_buf + str_data[reference_getid(data)].str )
+/// Returns the linked list of uid-value pairs of the reference (can be NULL)
+#define reference_getref(data) ( (data)->ref )
+/// Returns the value of the constant
+#define reference_getconstant(data) ( str_data[reference_getid(data)].val )
+/// Returns the type of param
+#define reference_getparamtype(data) ( str_data[reference_getid(data)].val )
+
+/// Composes the uid of a reference from the id and the index
+#define reference_uid(id,idx) ( (int32)((((uint32)(id)) & 0x00ffffff) | (((uint32)(idx)) << 24)) )
+
+#define not_server_variable(prefix) ( (prefix) != '$' && (prefix) != '.' && (prefix) != '\'')
+#define not_array_variable(prefix) ( (prefix) != '$' && (prefix) != '@' && (prefix) != '.' && (prefix) != '\'' )
+#define is_string_variable(name) ( (name)[strlen(name) - 1] == '$' )
+
+#define BUILDIN(x) bool buildin_ ## x (struct script_state* st)
+#define BUILDIN_A(x) buildin_ ## x 
+
+struct script_function {
+	bool (*func)(struct script_state *st);
+	char *name;
+	char *arg;
+};
+/* script.c interface (incomplete) */
+struct script_interface {
+	/*  */
+	char **buildin;
+	unsigned int buildin_count;
+	/*  */
+	void (*init) (void);
+	void (*final) (void);
+	/*  */
+	void (*parse_builtin) (void);
+	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st));
+	int (*conv_num) (struct script_state *st,struct script_data *data);
+	const char* (*conv_str) (struct script_state *st,struct script_data *data);
+} script_s;
+
+struct script_interface *script;
+
+void script_defaults(void);
 
 #endif /* _SCRIPT_H_ */

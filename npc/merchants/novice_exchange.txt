@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Novice Goods Exchanger
 //===== By: ==================================================
-//= ???, rAthena Team
+//= ???, rAthena Dev Team
 //===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Aegis COnversion]
 //= Exchanges your Basic Monster drops for Red Potions.

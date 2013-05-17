@@ -142,7 +142,7 @@ int intif_broadcast(const char* mes, int len, int type)
 	int lp = type ? 4 : 0;
 
 	// Send to the local players
-	clif_broadcast(NULL, mes, len, type, ALL_CLIENT);
+	clif->broadcast(NULL, mes, len, type, ALL_CLIENT);
 
 	if (CheckForCharServer())
 		return 0;
@@ -170,10 +170,7 @@ int intif_broadcast(const char* mes, int len, int type)
 int intif_broadcast2(const char* mes, int len, unsigned long fontColor, short fontType, short fontSize, short fontAlign, short fontY)
 {
 	// Send to the local players
-	if (fontColor == 0xFE000000) // This is main chat message [LuzZza]
-		clif_MainChatMessage(mes);
-	else
-		clif_broadcast2(NULL, mes, len, fontColor, fontType, fontSize, fontAlign, fontY, ALL_CLIENT);
+	clif->broadcast2(NULL, mes, len, fontColor, fontType, fontSize, fontAlign, fontY, ALL_CLIENT);
 
 	if (CheckForCharServer())
 		return 0;
@@ -210,7 +207,7 @@ int intif_main_message(struct map_session_data* sd, const char* message)
 	intif_broadcast2( output, strlen(output) + 1, 0xFE000000, 0, 0, 0, 0 );
 
 	// log the chat message
-	log_chat( LOG_CHAT_MAINCHAT, 0, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, message );
+	logs->chat( LOG_CHAT_MAINCHAT, 0, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, message );
 
 	return 0;
 }
@@ -224,7 +221,7 @@ int intif_wis_message(struct map_session_data *sd, char *nick, char *mes, int me
 
 	if (other_mapserver_count < 1)
 	{	//Character not found.
-		clif_wis_end(sd->fd, 1);
+		clif->wis_end(sd->fd, 1);
 		return 0;
 	}
 
@@ -813,16 +810,15 @@ int intif_homunculus_create(int account_id, struct s_homunculus *sh)
 	return 0;
 }
 
-int intif_homunculus_requestload(int account_id, int homun_id)
-{
+bool intif_homunculus_requestload(int account_id, int homun_id) {
 	if (CheckForCharServer())
-		return 0;
+		return false;
 	WFIFOHEAD(inter_fd, 10);
 	WFIFOW(inter_fd,0) = 0x3091;
 	WFIFOL(inter_fd,2) = account_id;
 	WFIFOL(inter_fd,6) = homun_id;
 	WFIFOSET(inter_fd, 10);
-	return 1;
+	return true;
 }
 
 int intif_homunculus_requestsave(int account_id, struct s_homunculus* sh)
@@ -888,7 +884,7 @@ int intif_parse_WisMessage(int fd)
 		return 0;
 	}
 	//Success to send whisper.
-	clif_wis_message(sd->fd, wisp_source, (char*)RFIFOP(fd,56),RFIFOW(fd,2)-56);
+	clif->wis_message(sd->fd, wisp_source, (char*)RFIFOP(fd,56),RFIFOW(fd,2)-56);
 	intif_wis_replay(id,0);   // succes
 	return 0;
 }
@@ -902,7 +898,7 @@ int intif_parse_WisEnd(int fd)
 		ShowInfo("intif_parse_wisend: player: %s, flag: %d\n", RFIFOP(fd,2), RFIFOB(fd,26)); // flag: 0: success to send wisper, 1: target character is not loged in?, 2: ignored by target
 	sd = (struct map_session_data *)map_nick2sd((char *) RFIFOP(fd,2));
 	if (sd != NULL)
-		clif_wis_end(sd->fd, RFIFOB(fd,26));
+		clif->wis_end(sd->fd, RFIFOB(fd,26));
 
 	return 0;
 }
@@ -919,7 +915,7 @@ static int mapif_parse_WisToGM_sub(struct map_session_data* sd,va_list va)
 	wisp_name = va_arg(va, char*);
 	message = va_arg(va, char*);
 	len = va_arg(va, int);
-	clif_wis_message(sd->fd, wisp_name, message, len);
+	clif->wis_message(sd->fd, wisp_name, message, len);
 	return 1;
 }
 
@@ -1119,7 +1115,7 @@ int intif_parse_PartyMessage(int fd)
 // ACK guild creation
 int intif_parse_GuildCreated(int fd)
 {
-	guild_created(RFIFOL(fd,2),RFIFOL(fd,6));
+	guild->created(RFIFOL(fd,2),RFIFOL(fd,6));
 	return 0;
 }
 
@@ -1128,12 +1124,12 @@ int intif_parse_GuildInfo(int fd)
 {
 	if(RFIFOW(fd,2) == 8) {
 		ShowWarning("intif: guild noinfo %d\n",RFIFOL(fd,4));
-		guild_recv_noinfo(RFIFOL(fd,4));
+		guild->recv_noinfo(RFIFOL(fd,4));
 		return 0;
 	}
 	if( RFIFOW(fd,2)!=sizeof(struct guild)+4 )
 		ShowError("intif: guild info : data size error Gid: %d recv size: %d Expected size: %d\n",RFIFOL(fd,4),RFIFOW(fd,2),sizeof(struct guild)+4);
-	guild_recv_info((struct guild *)RFIFOP(fd,4));
+	guild->recv_info((struct guild *)RFIFOP(fd,4));
 	return 0;
 }
 
@@ -1142,28 +1138,28 @@ int intif_parse_GuildMemberAdded(int fd)
 {
 	if(battle_config.etc_log)
 		ShowInfo("intif: guild member added %d %d %d %d\n",RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14));
-	guild_member_added(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14));
+	guild->member_added(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14));
 	return 0;
 }
 
 // ACK member leaving guild
 int intif_parse_GuildMemberWithdraw(int fd)
 {
-	guild_member_withdraw(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),(char *)RFIFOP(fd,55),(char *)RFIFOP(fd,15));
+	guild->member_withdraw(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),(char *)RFIFOP(fd,55),(char *)RFIFOP(fd,15));
 	return 0;
 }
 
 // ACK guild member basic info
 int intif_parse_GuildMemberInfoShort(int fd)
 {
-	guild_recv_memberinfoshort(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOW(fd,17));
+	guild->recv_memberinfoshort(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOW(fd,17));
 	return 0;
 }
 
 // ACK guild break
 int intif_parse_GuildBroken(int fd)
 {
-	guild_broken(RFIFOL(fd,2),RFIFOB(fd,6));
+	guild->broken(RFIFOL(fd,2),RFIFOB(fd,6));
 	return 0;
 }
 
@@ -1176,7 +1172,7 @@ int intif_parse_GuildBasicInfoChanged(int fd)
 	int type = RFIFOW(fd,8);
 	//void* data = RFIFOP(fd,10);
 
-	struct guild* g = guild_search(guild_id);
+	struct guild* g = guild->search(guild_id);
 	if( g == NULL )
 		return 0;
 
@@ -1203,16 +1199,16 @@ int intif_parse_GuildMemberInfoChanged(int fd)
 	struct guild* g;
 	int idx;
 
-	g = guild_search(guild_id);
+	g = guild->search(guild_id);
 	if( g == NULL )
 		return 0;
 
-	idx = guild_getindex(g,account_id,char_id);
+	idx = guild->getindex(g,account_id,char_id);
 	if( idx == -1 )
 		return 0;
 
 	switch( type ) {
-	case GMI_POSITION:   g->member[idx].position   = RFIFOW(fd,18); guild_memberposition_changed(g,idx,RFIFOW(fd,18)); break;
+	case GMI_POSITION:   g->member[idx].position   = RFIFOW(fd,18); guild->memberposition_changed(g,idx,RFIFOW(fd,18)); break;
 	case GMI_EXP:        g->member[idx].exp        = RFIFOQ(fd,18); break;
 	case GMI_HAIR:       g->member[idx].hair       = RFIFOW(fd,18); break;
 	case GMI_HAIR_COLOR: g->member[idx].hair_color = RFIFOW(fd,18); break;
@@ -1228,55 +1224,55 @@ int intif_parse_GuildPosition(int fd)
 {
 	if( RFIFOW(fd,2)!=sizeof(struct guild_position)+12 )
 		ShowError("intif: guild info : data size error\n %d %d %d",RFIFOL(fd,4),RFIFOW(fd,2),sizeof(struct guild_position)+12);
-	guild_position_changed(RFIFOL(fd,4),RFIFOL(fd,8),(struct guild_position *)RFIFOP(fd,12));
+	guild->position_changed(RFIFOL(fd,4),RFIFOL(fd,8),(struct guild_position *)RFIFOP(fd,12));
 	return 0;
 }
 
 // ACK change of guild skill update
 int intif_parse_GuildSkillUp(int fd)
 {
-	guild_skillupack(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
+	guild->skillupack(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
 	return 0;
 }
 
 // ACK change of guild relationship
 int intif_parse_GuildAlliance(int fd)
 {
-	guild_allianceack(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOL(fd,14),RFIFOB(fd,18),(char *) RFIFOP(fd,19),(char *) RFIFOP(fd,43));
+	guild->allianceack(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOL(fd,14),RFIFOB(fd,18),(char *) RFIFOP(fd,19),(char *) RFIFOP(fd,43));
 	return 0;
 }
 
 // ACK change of guild notice
 int intif_parse_GuildNotice(int fd)
 {
-	guild_notice_changed(RFIFOL(fd,2),(char *) RFIFOP(fd,6),(char *) RFIFOP(fd,66));
+	guild->notice_changed(RFIFOL(fd,2),(char *) RFIFOP(fd,6),(char *) RFIFOP(fd,66));
 	return 0;
 }
 
 // ACK change of guild emblem
 int intif_parse_GuildEmblem(int fd)
 {
-	guild_emblem_changed(RFIFOW(fd,2)-12,RFIFOL(fd,4),RFIFOL(fd,8), (char *)RFIFOP(fd,12));
+	guild->emblem_changed(RFIFOW(fd,2)-12,RFIFOL(fd,4),RFIFOL(fd,8), (char *)RFIFOP(fd,12));
 	return 0;
 }
 
 // ACK guild message
 int intif_parse_GuildMessage(int fd)
 {
-	guild_recv_message(RFIFOL(fd,4),RFIFOL(fd,8),(char *) RFIFOP(fd,12),RFIFOW(fd,2)-12);
+	guild->recv_message(RFIFOL(fd,4),RFIFOL(fd,8),(char *) RFIFOP(fd,12),RFIFOW(fd,2)-12);
 	return 0;
 }
 
 // Reply guild castle data request
 int intif_parse_GuildCastleDataLoad(int fd)
 {
-	return guild_castledataloadack(RFIFOW(fd,2), (struct guild_castle *)RFIFOP(fd,4));
+	return guild->castledataloadack(RFIFOW(fd,2), (struct guild_castle *)RFIFOP(fd,4));
 }
 
 // ACK change of guildmaster
 int intif_parse_GuildMasterChanged(int fd)
 {
-	return guild_gm_changed(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
+	return guild->gm_changed(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
 }
 
 // Request pet creation
@@ -1337,7 +1333,7 @@ int intif_parse_ChangeNameOk(int fd)
 		pet_change_name_ack(sd, (char*)RFIFOP(fd,12), RFIFOB(fd,11));
 		break;
 	case 2: //Hom
-		merc_hom_change_name_ack(sd, (char*)RFIFOP(fd,12), RFIFOB(fd,11));
+		homun->change_name_ack(sd, (char*)RFIFOP(fd,12), RFIFOB(fd,11));
 		break;
 	}
 	return 0;
@@ -1355,7 +1351,7 @@ int intif_parse_CreateHomunculus(int fd)
 			ShowError("intif: create homun data: data size error %d != %d\n",sizeof(struct s_homunculus),len);
 		return 0;
 	}
-	merc_hom_recv_data(RFIFOL(fd,4), (struct s_homunculus*)RFIFOP(fd,9), RFIFOB(fd,8)) ;
+	homun->recv_data(RFIFOL(fd,4), (struct s_homunculus*)RFIFOP(fd,9), RFIFOB(fd,8)) ;
 	return 0;
 }
 
@@ -1370,7 +1366,7 @@ int intif_parse_RecvHomunculusData(int fd)
 			ShowError("intif: homun data: data size error %d %d\n",sizeof(struct s_homunculus),len);
 		return 0;
 	}
-	merc_hom_recv_data(RFIFOL(fd,4), (struct s_homunculus*)RFIFOP(fd,9), RFIFOB(fd,8));
+	homun->recv_data(RFIFOL(fd,4), (struct s_homunculus*)RFIFOP(fd,9), RFIFOB(fd,8));
 	return 0;
 }
 
@@ -1523,12 +1519,12 @@ int intif_parse_Mail_inboxreceived(int fd)
 	sd->mail.changed = false; // cache is now in sync
 
 	if (flag)
-		clif_Mail_refreshinbox(sd);
+		clif->mail_refreshinbox(sd);
 	else if( battle_config.mail_show_status && ( battle_config.mail_show_status == 1 || sd->mail.inbox.unread ) )
 	{
 		char output[128];
 		sprintf(output, msg_txt(510), sd->mail.inbox.unchecked, sd->mail.inbox.unread + sd->mail.inbox.unchecked);
-		clif_disp_onlyself(sd, output, strlen(output));
+		clif->disp_onlyself(sd, output, strlen(output));
 	}
 	return 0;
 }
@@ -1633,7 +1629,7 @@ int intif_parse_Mail_delete(int fd)
 			intif_Mail_requestinbox(sd->status.char_id, 1); // Free space is available for new mails
 	}
 
-	clif_Mail_delete(sd->fd, mail_id, failed);
+	clif->mail_delete(sd->fd, mail_id, failed);
 	return 0;
 }
 /*------------------------------------------
@@ -1679,7 +1675,7 @@ int intif_parse_Mail_return(int fd)
 			intif_Mail_requestinbox(sd->status.char_id, 1); // Free space is available for new mails
 	}
 
-	clif_Mail_return(sd->fd, mail_id, fail);
+	clif->mail_return(sd->fd, mail_id, fail);
 	return 0;
 }
 /*------------------------------------------
@@ -1725,7 +1721,7 @@ static void intif_parse_Mail_send(int fd)
 			mail_deliveryfail(sd, &msg);
 		else
 		{
-			clif_Mail_send(sd->fd, false);
+			clif->mail_send(sd->fd, false);
 			if( save_settings&16 )
 				chrif_save(sd, 0);
 		}
@@ -1743,7 +1739,7 @@ static void intif_parse_Mail_new(int fd)
 		return;
 
 	sd->mail.changed = true;
-	clif_Mail_new(sd->fd, mail_id, sender_name, title);
+	clif->mail_new(sd->fd, mail_id, sender_name, title);
 }
 
 /*==========================================
@@ -1780,7 +1776,7 @@ static void intif_parse_Auction_results(int fd)
 	if( sd == NULL )
 		return;
 
-	clif_Auction_results(sd, count, pages, data);
+	clif->auction_results(sd, count, pages, data);
 }
 
 int intif_Auction_register(struct auction_data *auction)
@@ -1816,7 +1812,7 @@ static void intif_parse_Auction_register(int fd)
 
 	if( auction.auction_id > 0 )
 	{
-		clif_Auction_message(sd->fd, 1); // Confirmation Packet ??
+		clif->auction_message(sd->fd, 1); // Confirmation Packet ??
 		if( save_settings&32 )
 			chrif_save(sd,0);
 	}
@@ -1824,7 +1820,7 @@ static void intif_parse_Auction_register(int fd)
 	{
 		int zeny = auction.hours*battle_config.auction_feeperhour;
 
-		clif_Auction_message(sd->fd, 4);
+		clif->auction_message(sd->fd, 4);
 		pc_additem(sd, &auction.item, auction.item.amount, LOG_TYPE_AUCTION);
 
 		pc_getzeny(sd, zeny, LOG_TYPE_AUCTION, NULL);
@@ -1855,10 +1851,10 @@ static void intif_parse_Auction_cancel(int fd)
 
 	switch( result )
 	{
-	case 0: clif_Auction_message(sd->fd, 2); break;
-	case 1: clif_Auction_close(sd->fd, 2); break;
-	case 2: clif_Auction_close(sd->fd, 1); break;
-	case 3: clif_Auction_message(sd->fd, 3); break;
+	case 0: clif->auction_message(sd->fd, 2); break;
+	case 1: clif->auction_close(sd->fd, 2); break;
+	case 2: clif->auction_close(sd->fd, 1); break;
+	case 3: clif->auction_message(sd->fd, 3); break;
 	}
 }
 
@@ -1884,11 +1880,11 @@ static void intif_parse_Auction_close(int fd)
 	if( sd == NULL )
 		return;
 
-	clif_Auction_close(sd->fd, result);
+	clif->auction_close(sd->fd, result);
 	if( result == 0 )
 	{
 		// FIXME: Leeching off a parse function
-		clif_parse_Auction_cancelreg(fd, sd);
+		clif->pAuction_cancelreg(fd, sd);
 		intif_Auction_requestlist(sd->status.char_id, 6, 0, "", 1);
 	}
 }
@@ -1921,14 +1917,12 @@ static void intif_parse_Auction_bid(int fd)
 	if( sd == NULL )
 		return;
 
-	clif_Auction_message(sd->fd, result);
-	if( bid > 0 )
-	{
+	clif->auction_message(sd->fd, result);
+	if( bid > 0 ) {
 		pc_getzeny(sd, bid, LOG_TYPE_AUCTION,NULL);
 	}
-	if( result == 1 )
-	{ // To update the list, display your buy list
-		clif_parse_Auction_cancelreg(fd, sd);
+	if( result == 1 ) { // To update the list, display your buy list
+		clif->pAuction_cancelreg(fd, sd);
 		intif_Auction_requestlist(sd->status.char_id, 7, 0, "", 1);
 	}
 }
@@ -1942,7 +1936,7 @@ static void intif_parse_Auction_message(int fd)
 	if( sd == NULL )
 		return;
 
-	clif_Auction_message(sd->fd, result);
+	clif->auction_message(sd->fd, result);
 }
 
 /*==========================================
@@ -2121,7 +2115,7 @@ int intif_parse_elemental_saved(int fd)
 	return 0;
 }
 
-void intif_request_accinfo( int u_fd, int aid, int group_id, char* query ) {
+void intif_request_accinfo( int u_fd, int aid, int group_lv, char* query ) {
 
 
 	WFIFOHEAD(inter_fd,2 + 4 + 4 + 4 + NAME_LENGTH);
@@ -2129,7 +2123,7 @@ void intif_request_accinfo( int u_fd, int aid, int group_id, char* query ) {
 	WFIFOW(inter_fd,0) = 0x3007;
 	WFIFOL(inter_fd,2) = u_fd;
 	WFIFOL(inter_fd,6) = aid;
-	WFIFOL(inter_fd,10) = group_id;
+	WFIFOL(inter_fd,10) = group_lv;
     safestrncpy((char *)WFIFOP(inter_fd,14), query, NAME_LENGTH);
 
 	WFIFOSET(inter_fd,2 + 4 + 4 + 4 + NAME_LENGTH);
@@ -2147,7 +2141,7 @@ void intif_parse_MessageToFD(int fd) {
 		if( sd->bl.id == aid ) {
 			char msg[512];
 			safestrncpy(msg, (char*)RFIFOP(fd,12), RFIFOW(fd,2) - 12);
-			clif_displaymessage(u_fd,msg);
+			clif->message(u_fd,msg);
 		}
 
 	}
@@ -2182,11 +2176,9 @@ int intif_parse(int fd)
 	switch(cmd){
 	case 0x3800:
 		if (RFIFOL(fd,4) == 0xFF000000) //Normal announce.
-			clif_broadcast(NULL, (char *) RFIFOP(fd,16), packet_len-16, 0, ALL_CLIENT);
-		else if (RFIFOL(fd,4) == 0xFE000000) //Main chat message [LuzZza]
-			clif_MainChatMessage((char *)RFIFOP(fd,16));
+			clif->broadcast(NULL, (char *) RFIFOP(fd,16), packet_len-16, 0, ALL_CLIENT);
 		else //Color announce.
-			clif_broadcast2(NULL, (char *) RFIFOP(fd,16), packet_len-16, RFIFOL(fd,4), RFIFOW(fd,8), RFIFOW(fd,10), RFIFOW(fd,12), RFIFOW(fd,14), ALL_CLIENT);
+			clif->broadcast2(NULL, (char *) RFIFOP(fd,16), packet_len-16, RFIFOL(fd,4), RFIFOW(fd,8), RFIFOW(fd,10), RFIFOW(fd,12), RFIFOW(fd,14), ALL_CLIENT);
 		break;
 	case 0x3801:	intif_parse_WisMessage(fd); break;
 	case 0x3802:	intif_parse_WisEnd(fd); break;

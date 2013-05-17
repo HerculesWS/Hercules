@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Brasilis Town Warps Script
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Any Athena Version; RO Episode 13.1+
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Warp Points for Brasilis

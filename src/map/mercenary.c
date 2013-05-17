@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/malloc.h"
@@ -156,7 +157,7 @@ int mercenary_set_faith(struct mercenary_data *md, int value)
 
 	*faith += value;
 	*faith = cap_value(*faith, 0, SHRT_MAX);
-	clif_mercenary_updatestatus(sd, SP_MERCFAITH);
+	clif->mercenary_updatestatus(sd, SP_MERCFAITH);
 
 	return 0;
 }
@@ -260,7 +261,7 @@ int merc_delete(struct mercenary_data *md, int reply)
 		case 1: mercenary_set_faith(md, -1); break; // -1 Loyalty on Mercenary killed
 	}
 
-	clif_mercenary_message(sd, reply);
+	clif->mercenary_message(sd, reply);
 	return unit_remove_map(&md->bl, CLR_OUTSIGHT);
 }
 
@@ -336,9 +337,9 @@ int merc_data_received(struct s_mercenary *merc, bool flag)
 	if( md && md->bl.prev == NULL && sd->bl.prev != NULL )
 	{
 		map_addblock(&md->bl);
-		clif_spawn(&md->bl);
-		clif_mercenary_info(sd);
-		clif_mercenary_skillblock(sd);
+		clif->spawn(&md->bl);
+		clif->mercenary_info(sd);
+		clif->mercenary_skillblock(sd);
 	}
 
 	return 1;
@@ -347,9 +348,9 @@ int merc_data_received(struct s_mercenary *merc, bool flag)
 void mercenary_heal(struct mercenary_data *md, int hp, int sp)
 {
 	if( hp )
-		clif_mercenary_updatestatus(md->master, SP_HP);
+		clif->mercenary_updatestatus(md->master, SP_HP);
 	if( sp )
-		clif_mercenary_updatestatus(md->master, SP_SP);
+		clif->mercenary_updatestatus(md->master, SP_SP);
 }
 
 int mercenary_dead(struct mercenary_data *md)
@@ -379,7 +380,7 @@ int mercenary_kills(struct mercenary_data *md)
 	}
 
 	if( md->master )
-		clif_mercenary_updatestatus(md->master, SP_MERCKILLS);
+		clif->mercenary_updatestatus(md->master, SP_MERCKILLS);
 
 	return 0;
 }
@@ -404,8 +405,8 @@ static bool read_mercenarydb_sub(char* str[], int columns, int current)
 
 	db = &mercenary_db[current];
 	db->class_ = atoi(str[0]);
-	strncpy(db->sprite, str[1], NAME_LENGTH);
-	strncpy(db->name, str[2], NAME_LENGTH);
+	safestrncpy(db->sprite, str[1], NAME_LENGTH);
+	safestrncpy(db->name, str[2], NAME_LENGTH);
 	db->lv = atoi(str[3]);
 
 	status = &db->status;
@@ -455,7 +456,7 @@ static bool read_mercenarydb_sub(char* str[], int columns, int current)
 int read_mercenarydb(void)
 {
 	memset(mercenary_db,0,sizeof(mercenary_db));
-	sv_readdb(db_path, "mercenary_db.txt", ',', 26, 26, MAX_MERCENARY_CLASS, &read_mercenarydb_sub);
+	sv->readdb(db_path, "mercenary_db.txt", ',', 26, 26, MAX_MERCENARY_CLASS, &read_mercenarydb_sub);
 
 	return 0;
 }
@@ -493,7 +494,7 @@ static bool read_mercenary_skilldb_sub(char* str[], int columns, int current)
 
 int read_mercenary_skilldb(void)
 {
-	sv_readdb(db_path, "mercenary_skill_db.txt", ',', 3, 3, -1, &read_mercenary_skilldb_sub);
+	sv->readdb(db_path, "mercenary_skill_db.txt", ',', 3, 3, -1, &read_mercenary_skilldb_sub);
 
 	return 0;
 }

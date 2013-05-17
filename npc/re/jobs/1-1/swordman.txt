@@ -3,13 +3,15 @@
 //===== By: ================================================== 
 //= Kisuka
 //===== Current Version: ===================================== 
-//= 1.0
+//= 1.2
 //===== Compatible With: ===================================== 
 //= rAthena SVN
 //===== Description: ========================================= 
 //= Job Change to Swordman Class
 //===== Additional Comments: ================================= 
 //= 1.0 First Version. [Kisuka]
+//= 1.1 Added Baby Job compatibility [Streusel]
+//= 1.2 Rewrote bits [Euphy]
 //============================================================ 
 izlude_in,74,172,4	script	Swordman#swd	119,{
 	if (Upper == 1) {
@@ -80,9 +82,9 @@ izlude_in,74,172,4	script	Swordman#swd	119,{
 		mes "In my opinion, Swordman is the best job ever!";
 		close;
 	case 2:
-		if(Class != Job_Novice) {
+		if(BaseJob != Job_Novice) {
 			mes "[Swordman Guildsman]";
-			if(Class == Job_Swordman) {
+			if(BaseJob == Job_Swordman) {
 				mes "You are already an excellent Swordman, aren't you?";
 				mes "Just devote yourself to be a great Swordman.";
 			}else{

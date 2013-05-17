@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _PC_GROUPS_H_
 #define _PC_GROUPS_H_
@@ -43,6 +44,7 @@ enum e_pc_permission {
 	PC_PERM_DISABLE_PVM			= 0x040000,
 	PC_PERM_DISABLE_PVP			= 0x080000,
 	PC_PERM_DISABLE_CMD_DEAD    = 0x100000,
+	PC_PERM_HCHSYS_ADMIN		= 0x200000,
 };
 
 static const struct {
@@ -70,6 +72,7 @@ static const struct {
 	{ "disable_pvm", PC_PERM_DISABLE_PVM },
 	{ "disable_pvp", PC_PERM_DISABLE_PVP },
 	{ "disable_commands_when_dead", PC_PERM_DISABLE_CMD_DEAD },
+	{ "hchsys_admin", PC_PERM_HCHSYS_ADMIN },
 };
 
 #endif // _PC_GROUPS_H_

@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/mmo.h"
@@ -125,14 +126,14 @@ int inter_party_tosql(struct party *p, int flag, int index)
 #ifdef NOISY
 	ShowInfo("Save party request ("CL_BOLD"%d"CL_RESET" - %s).\n", party_id, p->name);
 #endif
-	Sql_EscapeStringLen(sql_handle, esc_name, p->name, strnlen(p->name, NAME_LENGTH));
+	SQL->EscapeStringLen(sql_handle, esc_name, p->name, strnlen(p->name, NAME_LENGTH));
 
 	if( flag & PS_BREAK )
 	{// Break the party
 		// we'll skip name-checking and just reset everyone with the same party id [celest]
-		if( SQL_ERROR == Sql_Query(sql_handle, "UPDATE `%s` SET `party_id`='0' WHERE `party_id`='%d'", char_db, party_id) )
+		if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `party_id`='0' WHERE `party_id`='%d'", char_db, party_id) )
 			Sql_ShowDebug(sql_handle);
-		if( SQL_ERROR == Sql_Query(sql_handle, "DELETE FROM `%s` WHERE `party_id`='%d'", party_db, party_id) )
+		if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `party_id`='%d'", party_db, party_id) )
 			Sql_ShowDebug(sql_handle);
 		//Remove from memory
 		idb_remove(party_db_, party_id);
@@ -141,7 +142,7 @@ int inter_party_tosql(struct party *p, int flag, int index)
 
 	if( flag & PS_CREATE )
 	{// Create party
-		if( SQL_ERROR == Sql_Query(sql_handle, "INSERT INTO `%s` "
+		if( SQL_ERROR == SQL->Query(sql_handle, "INSERT INTO `%s` "
 			"(`name`, `exp`, `item`, `leader_id`, `leader_char`) "
 			"VALUES ('%s', '%d', '%d', '%d', '%d')",
 			party_db, esc_name, p->exp, p->item, p->member[index].account_id, p->member[index].char_id) )
@@ -149,33 +150,33 @@ int inter_party_tosql(struct party *p, int flag, int index)
 			Sql_ShowDebug(sql_handle);
 			return 0;
 		}
-		party_id = p->party_id = (int)Sql_LastInsertId(sql_handle);
+		party_id = p->party_id = (int)SQL->LastInsertId(sql_handle);
 	}
 
 	if( flag & PS_BASIC )
 	{// Update party info.
-		if( SQL_ERROR == Sql_Query(sql_handle, "UPDATE `%s` SET `name`='%s', `exp`='%d', `item`='%d' WHERE `party_id`='%d'",
+		if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `name`='%s', `exp`='%d', `item`='%d' WHERE `party_id`='%d'",
 			party_db, esc_name, p->exp, p->item, party_id) )
 			Sql_ShowDebug(sql_handle);
 	}
 
 	if( flag & PS_LEADER )
 	{// Update leader
-		if( SQL_ERROR == Sql_Query(sql_handle, "UPDATE `%s`  SET `leader_id`='%d', `leader_char`='%d' WHERE `party_id`='%d'",
+		if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s`  SET `leader_id`='%d', `leader_char`='%d' WHERE `party_id`='%d'",
 			party_db, p->member[index].account_id, p->member[index].char_id, party_id) )
 			Sql_ShowDebug(sql_handle);
 	}
 	
 	if( flag & PS_ADDMEMBER )
 	{// Add one party member.
-		if( SQL_ERROR == Sql_Query(sql_handle, "UPDATE `%s` SET `party_id`='%d' WHERE `account_id`='%d' AND `char_id`='%d'",
+		if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `party_id`='%d' WHERE `account_id`='%d' AND `char_id`='%d'",
 			char_db, party_id, p->member[index].account_id, p->member[index].char_id) )
 			Sql_ShowDebug(sql_handle);
 	}
 
 	if( flag & PS_DELMEMBER )
 	{// Remove one party member.
-		if( SQL_ERROR == Sql_Query(sql_handle, "UPDATE `%s` SET `party_id`='0' WHERE `party_id`='%d' AND `account_id`='%d' AND `char_id`='%d'",
+		if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `party_id`='0' WHERE `party_id`='%d' AND `account_id`='%d' AND `char_id`='%d'",
 			char_db, party_id, p->member[index].account_id, p->member[index].char_id) )
 			Sql_ShowDebug(sql_handle);
 	}
@@ -210,42 +211,42 @@ struct party_data *inter_party_fromsql(int party_id)
 	p = party_pt;
 	memset(p, 0, sizeof(struct party_data));
 
-	if( SQL_ERROR == Sql_Query(sql_handle, "SELECT `party_id`, `name`,`exp`,`item`, `leader_id`, `leader_char` FROM `%s` WHERE `party_id`='%d'", party_db, party_id) )
+	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `party_id`, `name`,`exp`,`item`, `leader_id`, `leader_char` FROM `%s` WHERE `party_id`='%d'", party_db, party_id) )
 	{
 		Sql_ShowDebug(sql_handle);
 		return NULL;
 	}
 
-	if( SQL_SUCCESS != Sql_NextRow(sql_handle) )
+	if( SQL_SUCCESS != SQL->NextRow(sql_handle) )
 		return NULL;
 
 	p->party.party_id = party_id;
-	Sql_GetData(sql_handle, 1, &data, &len); memcpy(p->party.name, data, min(len, NAME_LENGTH));
-	Sql_GetData(sql_handle, 2, &data, NULL); p->party.exp = (atoi(data) ? 1 : 0);
-	Sql_GetData(sql_handle, 3, &data, NULL); p->party.item = atoi(data);
-	Sql_GetData(sql_handle, 4, &data, NULL); leader_id = atoi(data);
-	Sql_GetData(sql_handle, 5, &data, NULL); leader_char = atoi(data);
-	Sql_FreeResult(sql_handle);
+	SQL->GetData(sql_handle, 1, &data, &len); memcpy(p->party.name, data, min(len, NAME_LENGTH));
+	SQL->GetData(sql_handle, 2, &data, NULL); p->party.exp = (atoi(data) ? 1 : 0);
+	SQL->GetData(sql_handle, 3, &data, NULL); p->party.item = atoi(data);
+	SQL->GetData(sql_handle, 4, &data, NULL); leader_id = atoi(data);
+	SQL->GetData(sql_handle, 5, &data, NULL); leader_char = atoi(data);
+	SQL->FreeResult(sql_handle);
 
 	// Load members
-	if( SQL_ERROR == Sql_Query(sql_handle, "SELECT `account_id`,`char_id`,`name`,`base_level`,`last_map`,`online`,`class` FROM `%s` WHERE `party_id`='%d'", char_db, party_id) )
+	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `account_id`,`char_id`,`name`,`base_level`,`last_map`,`online`,`class` FROM `%s` WHERE `party_id`='%d'", char_db, party_id) )
 	{
 		Sql_ShowDebug(sql_handle);
 		return NULL;
 	}
-	for( i = 0; i < MAX_PARTY && SQL_SUCCESS == Sql_NextRow(sql_handle); ++i )
+	for( i = 0; i < MAX_PARTY && SQL_SUCCESS == SQL->NextRow(sql_handle); ++i )
 	{
 		m = &p->party.member[i];
-		Sql_GetData(sql_handle, 0, &data, NULL); m->account_id = atoi(data);
-		Sql_GetData(sql_handle, 1, &data, NULL); m->char_id = atoi(data);
-		Sql_GetData(sql_handle, 2, &data, &len); memcpy(m->name, data, min(len, NAME_LENGTH));
-		Sql_GetData(sql_handle, 3, &data, NULL); m->lv = atoi(data);
-		Sql_GetData(sql_handle, 4, &data, NULL); m->map = mapindex_name2id(data);
-		Sql_GetData(sql_handle, 5, &data, NULL); m->online = (atoi(data) ? 1 : 0);
-		Sql_GetData(sql_handle, 6, &data, NULL); m->class_ = atoi(data);
+		SQL->GetData(sql_handle, 0, &data, NULL); m->account_id = atoi(data);
+		SQL->GetData(sql_handle, 1, &data, NULL); m->char_id = atoi(data);
+		SQL->GetData(sql_handle, 2, &data, &len); memcpy(m->name, data, min(len, NAME_LENGTH));
+		SQL->GetData(sql_handle, 3, &data, NULL); m->lv = atoi(data);
+		SQL->GetData(sql_handle, 4, &data, NULL); m->map = mapindex_name2id(data);
+		SQL->GetData(sql_handle, 5, &data, NULL); m->online = (atoi(data) ? 1 : 0);
+		SQL->GetData(sql_handle, 6, &data, NULL); m->class_ = atoi(data);
 		m->leader = (m->account_id == leader_id && m->char_id == leader_char ? 1 : 0);
 	}
-	Sql_FreeResult(sql_handle);
+	SQL->FreeResult(sql_handle);
 
 	if( save_log )
 		ShowInfo("Party loaded (%d - %s).\n", party_id, p->party.name);
@@ -270,7 +271,7 @@ int inter_party_sql_init(void)
 
 	/* Uncomment the following if you want to do a party_db cleanup (remove parties with no members) on startup.[Skotlex]
 	ShowStatus("cleaning party table...\n");
-	if( SQL_ERROR == Sql_Query(sql_handle, "DELETE FROM `%s` USING `%s` LEFT JOIN `%s` ON `%s`.leader_id =`%s`.account_id AND `%s`.leader_char = `%s`.char_id WHERE `%s`.account_id IS NULL",
+	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` USING `%s` LEFT JOIN `%s` ON `%s`.leader_id =`%s`.account_id AND `%s`.leader_char = `%s`.char_id WHERE `%s`.account_id IS NULL",
 		party_db, party_db, char_db, party_db, char_db, party_db, char_db, char_db) )
 		Sql_ShowDebug(sql_handle);
 	*/
@@ -291,15 +292,14 @@ struct party_data* search_partyname(char* str)
 	char* data;
 	struct party_data* p = NULL;
 
-	Sql_EscapeStringLen(sql_handle, esc_name, str, safestrnlen(str, NAME_LENGTH));
-	if( SQL_ERROR == Sql_Query(sql_handle, "SELECT `party_id` FROM `%s` WHERE `name`='%s'", party_db, esc_name) )
+	SQL->EscapeStringLen(sql_handle, esc_name, str, safestrnlen(str, NAME_LENGTH));
+	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `party_id` FROM `%s` WHERE `name`='%s'", party_db, esc_name) )
 		Sql_ShowDebug(sql_handle);
-	else if( SQL_SUCCESS == Sql_NextRow(sql_handle) )
-	{
-		Sql_GetData(sql_handle, 0, &data, NULL);
+	else if( SQL_SUCCESS == SQL->NextRow(sql_handle) ) {
+		SQL->GetData(sql_handle, 0, &data, NULL);
 		p = inter_party_fromsql(atoi(data));
 	}
-	Sql_FreeResult(sql_handle);
+	SQL->FreeResult(sql_handle);
 
 	return p;
 }
@@ -476,6 +476,11 @@ int mapif_parse_CreateParty(int fd, char *name, int item, int item2, struct part
 	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorised
 		for (i = 0; i < NAME_LENGTH && name[i]; i++)
 			if (strchr(char_name_letters, name[i]) == NULL) {
+				if( name[i] == '"' ) { /* client-special-char */
+					normalize_name(name,"\"");
+					mapif_parse_CreateParty(fd,name,item,item2,leader);
+					return 0;
+				}
 				mapif_party_created(fd,leader->account_id,leader->char_id,NULL);
 				return 0;
 			}
@@ -592,7 +597,7 @@ int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 	p = inter_party_fromsql(party_id);
 	if( p == NULL )
 	{// Party does not exists?
-		if( SQL_ERROR == Sql_Query(sql_handle, "UPDATE `%s` SET `party_id`='0' WHERE `party_id`='%d'", char_db, party_id) )
+		if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `party_id`='0' WHERE `party_id`='%d'", char_db, party_id) )
 			Sql_ShowDebug(sql_handle);
 		return 0;
 	}
@@ -777,18 +782,18 @@ int inter_party_CharOnline(int char_id, int party_id)
 	{// Get party_id from the database
 		char* data;
 
-		if( SQL_ERROR == Sql_Query(sql_handle, "SELECT party_id FROM `%s` WHERE char_id='%d'", char_db, char_id) )
+		if( SQL_ERROR == SQL->Query(sql_handle, "SELECT party_id FROM `%s` WHERE char_id='%d'", char_db, char_id) )
 		{
 			Sql_ShowDebug(sql_handle);
 			return 0;
 		}
 
-		if( SQL_SUCCESS != Sql_NextRow(sql_handle) )
+		if( SQL_SUCCESS != SQL->NextRow(sql_handle) )
 			return 0; //Eh? No party?
 
-		Sql_GetData(sql_handle, 0, &data, NULL);
+		SQL->GetData(sql_handle, 0, &data, NULL);
 		party_id = atoi(data);
-		Sql_FreeResult(sql_handle);
+		SQL->FreeResult(sql_handle);
 	}
 	if (party_id == 0)
 		return 0; //No party...
@@ -823,18 +828,18 @@ int inter_party_CharOffline(int char_id, int party_id) {
 	{// Get guild_id from the database
 		char* data;
 
-		if( SQL_ERROR == Sql_Query(sql_handle, "SELECT party_id FROM `%s` WHERE char_id='%d'", char_db, char_id) )
+		if( SQL_ERROR == SQL->Query(sql_handle, "SELECT party_id FROM `%s` WHERE char_id='%d'", char_db, char_id) )
 		{
 			Sql_ShowDebug(sql_handle);
 			return 0;
 		}
 
-		if( SQL_SUCCESS != Sql_NextRow(sql_handle) )
+		if( SQL_SUCCESS != SQL->NextRow(sql_handle) )
 			return 0; //Eh? No party?
 
-		Sql_GetData(sql_handle, 0, &data, NULL);
+		SQL->GetData(sql_handle, 0, &data, NULL);
 		party_id = atoi(data);
-		Sql_FreeResult(sql_handle);
+		SQL->FreeResult(sql_handle);
 	}
 	if (party_id == 0)
 		return 0; //No party...
