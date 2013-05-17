@@ -264,6 +264,8 @@ void hplugins_share_defaults(void) {
 	HPM->share(&SERVER_TYPE,"SERVER_TYPE");
 	HPM->share((void*)get_svn_revision,"get_svn_revision");
 	HPM->share((void*)get_git_hash,"get_git_hash");
+	HPM->share(DB, "DB");
+	HPM->share(malloclib, "malloclib");
 	/* socket */
 	HPM->share(RFIFOSKIP,"RFIFOSKIP");
 	HPM->share(WFIFOSET,"WFIFOSET");
@@ -284,7 +286,7 @@ void hplugins_share_defaults(void) {
 	HPM->share(add_timer_interval,"add_timer_interval");
 	HPM->share(add_timer_func_list,"add_timer_func_list");
 	HPM->share(delete_timer,"delete_timer");
-	HPM->share(get_uptime,"get_uptime");
+	HPM->share(get_uptime,"get_uptime");	
 }
 CPCMD(plugins) {
 	if( HPM->plugin_count == 0 ) {

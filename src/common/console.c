@@ -98,7 +98,7 @@ CPCMD(help) {
 }
 /* [Ind/Hercules] */
 CPCMD(malloc_usage) {
-	unsigned int val = (unsigned int)malloc_usage();
+	unsigned int val = (unsigned int)malloclib->usage();
 	ShowInfo("malloc_usage: %.2f MB\n",(double)(val)/1024);
 }
 #define CP_DEF_C(x) { #x , NULL , NULL, NULL }

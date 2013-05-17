@@ -73,7 +73,7 @@ void do_final_storage(void) // by [MC Cameri]
  */
 static int storage_reconnect_sub(DBKey key, DBData *data, va_list ap)
 {
-	struct guild_storage *stor = db_data2ptr(data);
+	struct guild_storage *stor = DB->data2ptr(data);
 	if (stor->dirty && stor->storage_status == 0) //Save closed storages.
 		storage_guild_storagesave(0, stor->guild_id,0);
 
@@ -352,7 +352,7 @@ static DBData create_guildstorage(DBKey key, va_list args)
 	struct guild_storage *gs = NULL;
 	gs = (struct guild_storage *) aCalloc(sizeof(struct guild_storage), 1);
 	gs->guild_id=key.i;
-	return db_ptr2data(gs);
+	return DB->ptr2data(gs);
 }
 
 struct guild_storage *guild2storage(int guild_id)
