@@ -7422,7 +7422,7 @@ ACMD(sizeguild)
 	struct guild *g;
 	nullpo_retr(-1, sd);
 	
-	memset(guild, '\0', sizeof(guild));
+	memset(guild_name, '\0', sizeof(guild_name));
 	
 	if( !message || !*message || sscanf(message, "%d %23[^\n]", &size, guild_name) < 2 ) {
 		clif->message(fd, msg_txt(1304)); // Please enter guild name/ID (usage: @sizeguild <size> <guild name/ID>).
