@@ -51,7 +51,7 @@
 	#define PACKETVER 20120418
 #endif
 
-/// uncomment if your client is NOT ragexeRE (required because of conflicting packets in ragexe vs ragexeRE)
+/// comment following line if your client is NOT ragexeRE (required because of conflicting packets in ragexe vs ragexeRE)
 #define PACKETVER_RE
 
 //Remove/Comment this line to disable sc_data saving. [Skotlex]

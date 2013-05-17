@@ -7550,6 +7550,9 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 	nullpo_ret(sd);
 
 	switch(type){
+		case LOOK_BASE:
+			sd->vd.class_ = val;
+			break;
 		case LOOK_HAIR:	//Use the battle_config limits! [Skotlex]
 			val = cap_value(val, MIN_HAIR_STYLE, MAX_HAIR_STYLE);
 
