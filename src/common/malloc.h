@@ -71,7 +71,7 @@ struct malloc_interface {
 	void* (*calloc	)(size_t num, size_t size, const char *file, int line, const char *func);
 	void* (*realloc	)(void *p, size_t size, const char *file, int line, const char *func);
 	char* (*astrdup	)(const char *p, const char *file, int line, const char *func);
-	void  (*free	)	(void *p, const char *file, int line, const char *func);
+	void  (*free	)(void *p, const char *file, int line, const char *func);
 
 	void	(*memory_check)(void);
 	bool	(*verify_ptr)(void* ptr);
