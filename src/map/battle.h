@@ -322,7 +322,6 @@ struct Battle_Config {
 	int mobs_level_up_exp_rate; // [Valaris]
 	int pk_min_level; // [celest]
 	int skill_steal_max_tries; //max steal skill tries on a mob. if 0, then w/o limit [Lupus]
-	int motd_type; // [celest]
 	int finding_ore_rate; // orn
 	int exp_calc_type;
 	int exp_bonus_attacker;

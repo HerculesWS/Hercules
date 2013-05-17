@@ -1245,7 +1245,7 @@ int chrif_load_scdata(int fd) {
 }
 
 /*==========================================
- * Send rates and motd to char server [Wizputer]
+ * Send rates to char server [Wizputer]
  * S 2b16 <base rate>.L <job rate>.L <drop rate>.L
  *------------------------------------------*/
 int chrif_ragsrvinfo(int base_rate, int job_rate, int drop_rate) {

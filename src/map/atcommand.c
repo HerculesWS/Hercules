@@ -3714,16 +3714,6 @@ ACMD(reloadpcdb)
 }
 
 /*==========================================
- * @reloadmotd - reloads motd.txt
- *------------------------------------------*/
-ACMD(reloadmotd)
-{
-	pc_read_motd();
-	clif->message(fd, msg_txt(268));
-	return true;
-}
-
-/*==========================================
  * @reloadscript - reloads all scripts (npcs, warps, mob spawns, ...)
  *------------------------------------------*/
 ACMD(reloadscript)
@@ -6593,47 +6583,7 @@ ACMD(identify)
 	return true;
 }
 
-/*==========================================
- * @gmotd (Global MOTD)
- * by davidsiaw :P
- *------------------------------------------*/
-ACMD(gmotd)
-{
-	FILE* fp;
-	
-	if( ( fp = fopen(motd_txt, "r") ) != NULL )
-	{
-		char buf[CHAT_SIZE_MAX];
-		size_t len;
-		
-		while( fgets(buf, sizeof(buf), fp) )
-		{
-			if( buf[0] == '/' && buf[1] == '/' )
-			{
-				continue;
-			}
-			
-			len = strlen(buf);
-			
-			while( len && ( buf[len-1] == '\r' || buf[len-1] == '\n' ) )
-			{// strip trailing EOL characters
-				len--;
-			}
-			
-			if( len )
-			{
-				buf[len] = 0;
-				
-				intif_broadcast(buf, len+1, 0);
-			}
-		}
-		fclose(fp);
-	}
-	return true;
-}
-
-ACMD(misceffect)
-{
+ACMD(misceffect) {
 	int effect = 0;
 	nullpo_retr(-1, sd);
 	if (!message || !*message)
@@ -9553,7 +9503,6 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(reloadbattleconf),
 		ACMD_DEF(reloadstatusdb),
 		ACMD_DEF(reloadpcdb),
-		ACMD_DEF(reloadmotd),
 		ACMD_DEF(mapinfo),
 		ACMD_DEF(dye),
 		ACMD_DEF2("hairstyle", hair_style),
@@ -9615,7 +9564,6 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(refresh),
 		ACMD_DEF(refreshall),
 		ACMD_DEF(identify),
-		ACMD_DEF(gmotd),
 		ACMD_DEF(misceffect),
 		ACMD_DEF(mobsearch),
 		ACMD_DEF(cleanmap),

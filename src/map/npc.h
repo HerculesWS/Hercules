@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _NPC_H_
 #define _NPC_H_
@@ -187,5 +188,16 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const char* message, const char* eventname);
 
 bool npc_unloadfile( const char* path );
+
+/* npc.c interface (barely started/WIP) */
+struct npc_interface {
+	/* */
+	struct npc_data *motd;
+	/* */
+} npc_s;
+
+struct npc_interface *npc;
+
+void npc_defaults(void);
 
 #endif /* _NPC_H_ */

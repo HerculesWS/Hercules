@@ -3899,6 +3899,8 @@ int npc_reload(void) {
 
 	map_zone_init();
 	
+	npc->motd = npc_name2id("HerculesMOTD"); /* [Ind/Hercules] */
+	
 	//Re-read the NPC Script Events cache.
 	npc_read_event_script();
 
@@ -4031,6 +4033,8 @@ int do_init_npc(void)
 
 	map_zone_init();
 	
+	npc->motd = npc_name2id("HerculesMOTD"); /* [Ind/Hercules] */
+	
 	// set up the events cache
 	memset(script_event, 0, sizeof(script_event));
 	npc_read_event_script();
@@ -4061,4 +4065,9 @@ int do_init_npc(void)
 	// End of initialization
 
 	return 0;
+}
+void npc_defaults(void) {
+	npc = &npc_s;
+	
+	npc->motd = NULL;
 }

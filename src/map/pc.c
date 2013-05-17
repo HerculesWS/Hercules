@@ -68,9 +68,6 @@ struct fame_list taekwon_fame_list[MAX_FAME_LIST];
 
 static unsigned short equip_pos[EQI_MAX]={EQP_ACC_L,EQP_ACC_R,EQP_SHOES,EQP_GARMENT,EQP_HEAD_LOW,EQP_HEAD_MID,EQP_HEAD_TOP,EQP_ARMOR,EQP_HAND_L,EQP_HAND_R,EQP_COSTUME_HEAD_TOP,EQP_COSTUME_HEAD_MID,EQP_COSTUME_HEAD_LOW,EQP_COSTUME_GARMENT,EQP_AMMO};
 
-#define MOTD_LINE_SIZE 128
-static char motd_text[MOTD_LINE_SIZE][CHAT_SIZE_MAX]; // Message of the day buffer [Valaris]
-
 //Links related info to the sd->hate_mob[]/sd->feel_map[] entries
 const struct sg_data sg_info[MAX_PC_FEELHATE] = {
 		{ SG_SUN_ANGER, SG_SUN_BLESS, SG_SUN_COMFORT, "PC_FEEL_SUN", "PC_HATE_MOB_SUN", is_day_of_sun },
@@ -1067,15 +1064,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 				sprintf(buf,"Unknown Version");
 			clif->message(sd->fd, buf);
 		}
-
-		// Message of the Day [Valaris]
-		for(i=0; motd_text[i][0] && i < MOTD_LINE_SIZE; i++) {
-			if (battle_config.motd_type)
-				clif->disp_onlyself(sd,motd_text[i],strlen(motd_text[i]));
-			else
-				clif->message(sd->fd, motd_text[i]);
-		}
-
+		
 		// message of the limited time of the account
 		if (expiration_time != 0) { // don't display if it's unlimited or unknow value
 			char tmpstr[1024];
@@ -1254,6 +1243,8 @@ int pc_reg_received(struct map_session_data *sd)
 		clif->changeoption(&sd->bl);
 	}
 
+	if( npc->motd ) /* [Ind/Hercules] */
+		run_script(npc->motd->u.scr.script, 0, sd->bl.id, fake_nd->bl.id);
 
 	return 1;
 }
@@ -9732,66 +9723,6 @@ int pc_readdb(void)
 	return 0;
 }
 
-// Read MOTD on startup. [Valaris]
-int pc_read_motd(void)
-{
-	FILE* fp;
-
-	// clear old MOTD
-	memset(motd_text, 0, sizeof(motd_text));
-
-	// read current MOTD
-	if( ( fp = fopen(motd_txt, "r") ) != NULL )
-	{
-		char* buf, * ptr;
-		unsigned int lines = 0, entries = 0;
-		size_t len;
-
-		while( entries < MOTD_LINE_SIZE && fgets(motd_text[entries], sizeof(motd_text[entries]), fp) )
-		{
-			lines++;
-
-			buf = motd_text[entries];
-
-			if( buf[0] == '/' && buf[1] == '/' )
-			{
-				continue;
-			}
-
-			len = strlen(buf);
-
-			while( len && ( buf[len-1] == '\r' || buf[len-1] == '\n' ) )
-			{// strip trailing EOL characters
-				len--;
-			}
-
-			if( len )
-			{
-				buf[len] = 0;
-
-				if( ( ptr = strstr(buf, " :") ) != NULL && ptr-buf >= NAME_LENGTH )
-				{// crashes newer clients
-					ShowWarning("Found sequence '"CL_WHITE" :"CL_RESET"' on line '"CL_WHITE"%u"CL_RESET"' in '"CL_WHITE"%s"CL_RESET"'. This can cause newer clients to crash.\n", lines, motd_txt);
-				}
-			}
-			else
-			{// empty line
-				buf[0] = ' ';
-				buf[1] = 0;
-			}
-			entries++;
-		}
-		fclose(fp);
-
-		ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", entries, motd_txt);
-	}
-	else
-	{
-		ShowWarning("File '"CL_WHITE"%s"CL_RESET"' not found.\n", motd_txt);
-	}
-
-	return 0;
-}
 void pc_itemcd_do(struct map_session_data *sd, bool load) {
 	int i,cursor = 0;
 	struct item_cd* cd = NULL;
@@ -9843,7 +9774,6 @@ int do_init_pc(void) {
 	itemcd_db = idb_alloc(DB_OPT_RELEASE_DATA);
 
 	pc_readdb();
-	pc_read_motd(); // Read MOTD [Valaris]
 
 	add_timer_func_list(pc_invincible_timer, "pc_invincible_timer");
 	add_timer_func_list(pc_eventtimer, "pc_eventtimer");

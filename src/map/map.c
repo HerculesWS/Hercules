@@ -151,7 +151,6 @@ struct map_cache_map_info {
 };
 
 char db_path[256] = "db";
-char motd_txt[256] = "conf/motd.txt";
 char help_txt[256] = "conf/help.txt";
 char help2_txt[256] = "conf/help2.txt";
 char charhelp_txt[256] = "conf/charhelp.txt";
@@ -3340,8 +3339,6 @@ int map_config_read(char *cfgName)
 				minsave_interval = 1;
 		} else if (strcmpi(w1, "save_settings") == 0)
 			save_settings = atoi(w2);
-		else if (strcmpi(w1, "motd_txt") == 0)
-			strcpy(motd_txt, w2);
 		else if (strcmpi(w1, "help_txt") == 0)
 			strcpy(help_txt, w2);
 		else if (strcmpi(w1, "help2_txt") == 0)
@@ -5206,6 +5203,7 @@ void load_defaults(void) {
 	ircbot_defaults();
 	log_defaults();
 	map_defaults();
+	npc_defaults();
 	script_defaults();
 	searchstore_defaults();
 	skill_defaults();
