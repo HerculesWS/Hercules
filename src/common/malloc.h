@@ -27,13 +27,13 @@
 
 // no logging for minicore
 #if defined(MINICORE) && defined(LOG_MEMMGR)
-#undef LOG_MEMMGR
+	#undef LOG_MEMMGR
 #endif
 
 #	define aMalloc(n)		malloclib->malloc (n,ALC_MARK)
 #	define aCalloc(m,n)		malloclib->calloc (m,n,ALC_MARK)
 #	define aRealloc(p,n)	malloclib->realloc	(p,n,ALC_MARK)
-#	define aStrdup(p)		malloclib->strdup (p,ALC_MARK)
+#	define aStrdup(p)		malloclib->astrdup (p,ALC_MARK)
 #	define aFree(p)			malloclib->free   (p,ALC_MARK)
 
 /////////////// Buffer Creation /////////////////
@@ -70,8 +70,8 @@ struct malloc_interface {
 	void* (*malloc	)(size_t size, const char *file, int line, const char *func);
 	void* (*calloc	)(size_t num, size_t size, const char *file, int line, const char *func);
 	void* (*realloc	)(void *p, size_t size, const char *file, int line, const char *func);
-	char* (*strdup	)(const char *p, const char *file, int line, const char *func);
-	void  (*free	)	(void *p, const char *file, int line, const char *func);
+	char* (*astrdup	)(const char *p, const char *file, int line, const char *func);
+	void  (*free	)(void *p, const char *file, int line, const char *func);
 
 	void	(*memory_check)(void);
 	bool	(*verify_ptr)(void* ptr);

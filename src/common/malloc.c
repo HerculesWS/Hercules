@@ -734,13 +734,13 @@ void malloc_defaults()
 	malloclib->malloc  =	 _mmalloc;
 	malloclib->calloc  =	 _mcalloc;
 	malloclib->realloc =	 _mrealloc;
-	malloclib->strdup  =	 _mstrdup;
+	malloclib->astrdup =	 _mstrdup;
 	malloclib->free    =	 _mfree;
 #else
 	malloclib->malloc  =	aMalloc_;
 	malloclib->calloc  =	aCalloc_;
 	malloclib->realloc =	aRealloc_;
-	malloclib->strdup  =	aStrdup_;
+	malloclib->astrdup =	aStrdup_;
 	malloclib->free    =	aFree_;
 #endif
 }
