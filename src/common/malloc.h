@@ -22,57 +22,32 @@
 
 
 //////////////////////////////////////////////////////////////////////
-// Athena's built-in Memory Manager
-#ifdef USE_MEMMGR
-
 // Enable memory manager logging by default
 #define LOG_MEMMGR
 
 // no logging for minicore
 #if defined(MINICORE) && defined(LOG_MEMMGR)
-#undef LOG_MEMMGR
+	#undef LOG_MEMMGR
 #endif
 
-#	define aMalloc(n)		_mmalloc(n,ALC_MARK)
-#	define aCalloc(m,n)		_mcalloc(m,n,ALC_MARK)
-#	define aRealloc(p,n)	_mrealloc(p,n,ALC_MARK)
-#	define aStrdup(p)		_mstrdup(p,ALC_MARK)
-#	define aFree(p)			_mfree(p,ALC_MARK)
-
-	void* _mmalloc	(size_t size, const char *file, int line, const char *func);
-	void* _mcalloc	(size_t num, size_t size, const char *file, int line, const char *func);
-	void* _mrealloc	(void *p, size_t size, const char *file, int line, const char *func);
-	char* _mstrdup	(const char *p, const char *file, int line, const char *func);
-	void  _mfree	(void *p, const char *file, int line, const char *func);
-
-#else
-
-#	define aMalloc(n)		aMalloc_((n),ALC_MARK)
-#	define aCalloc(m,n)		aCalloc_((m),(n),ALC_MARK)
-#	define aRealloc(p,n)	aRealloc_(p,n,ALC_MARK)
-#	define aStrdup(p)		aStrdup_(p,ALC_MARK)
-#	define aFree(p)			aFree_(p,ALC_MARK)
-
-	void* aMalloc_	(size_t size, const char *file, int line, const char *func);
-	void* aCalloc_	(size_t num, size_t size, const char *file, int line, const char *func);
-	void* aRealloc_	(void *p, size_t size, const char *file, int line, const char *func);
-	char* aStrdup_	(const char *p, const char *file, int line, const char *func);
-	void  aFree_	(void *p, const char *file, int line, const char *func);
-
-#endif
+#	define aMalloc(n)		malloclib->malloc (n,ALC_MARK)
+#	define aCalloc(m,n)		malloclib->calloc (m,n,ALC_MARK)
+#	define aRealloc(p,n)	malloclib->realloc	(p,n,ALC_MARK)
+#	define aStrdup(p)		malloclib->astrdup (p,ALC_MARK)
+#	define aFree(p)			malloclib->free   (p,ALC_MARK)
 
 /////////////// Buffer Creation /////////////////
 // Full credit for this goes to Shinomori [Ajarn]
 
 #ifdef __GNUC__ // GCC has variable length arrays
 
-	#define CREATE_BUFFER(name, type, size) type name[size]
-	#define DELETE_BUFFER(name)
+#define CREATE_BUFFER(name, type, size) type name[size]
+#define DELETE_BUFFER(name)
 
 #else // others don't, so we emulate them
 
-	#define CREATE_BUFFER(name, type, size) type *name = (type *) aCalloc (size, sizeof(type))
-	#define DELETE_BUFFER(name) aFree(name)
+#define CREATE_BUFFER(name, type, size) type *name = (type *) aCalloc (size, sizeof(type))
+#define DELETE_BUFFER(name) aFree(name)
 
 #endif
 
@@ -83,10 +58,27 @@
 
 ////////////////////////////////////////////////
 
-void malloc_memory_check(void);
-bool malloc_verify_ptr(void* ptr);
-size_t malloc_usage (void);
-void malloc_init (void);
-void malloc_final (void);
+//void malloc_memory_check(void);
+//bool malloc_verify_ptr(void* ptr);
+//size_t malloc_usage (void);
+//void malloc_init (void);
+//void malloc_final (void);
 
+void malloc_defaults(void);
+
+struct malloc_interface {
+	void* (*malloc	)(size_t size, const char *file, int line, const char *func);
+	void* (*calloc	)(size_t num, size_t size, const char *file, int line, const char *func);
+	void* (*realloc	)(void *p, size_t size, const char *file, int line, const char *func);
+	char* (*astrdup	)(const char *p, const char *file, int line, const char *func);
+	void  (*free	)(void *p, const char *file, int line, const char *func);
+
+	void	(*memory_check)(void);
+	bool	(*verify_ptr)(void* ptr);
+	size_t	(*usage) (void);
+	void	(*init) (void);
+	void	(*final) (void);
+} malloclib_s;
+
+struct malloc_interface *malloclib;
 #endif /* _MALLOC_H_ */

@@ -3658,7 +3658,7 @@ int script_config_read(char *cfgName)
  */
 static int db_script_free_code_sub(DBKey key, DBData *data, va_list ap)
 {
-	struct script_code *code = db_data2ptr(data);
+	struct script_code *code = DB->data2ptr(data);
 	if (code)
 		script_free_code(code);
 	return 0;
