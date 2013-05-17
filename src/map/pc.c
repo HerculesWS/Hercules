@@ -1642,8 +1642,12 @@ int pc_disguise(struct map_session_data *sd, int class_) {
 	}
 
 	if (sd->bl.prev != NULL) {
-		pc_stop_walking(sd, 0);
-		clif->clearunit_area(&sd->bl, CLR_OUTSIGHT);
+		if( class_ == -1 && sd->disguise == sd->status.class_ ) {
+			clif->clearunit_single(-sd->bl.id,CLR_OUTSIGHT,sd->fd);
+		} else if ( class_ != sd->status.class_ ) {
+			pc_stop_walking(sd, 0);
+			clif->clearunit_area(&sd->bl, CLR_OUTSIGHT);
+		}
 	}
 
 	if (class_ == -1) {

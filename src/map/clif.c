@@ -1136,9 +1136,9 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 		p.isBoss = 0;
 	}
 #endif
-	clif->send(&p,sizeof(p),bl,target);
-
 	if( disguised(bl) ) {
+		if( sd->status.class_ != sd->disguise )
+			clif->send(&p,sizeof(p),bl,target);
 #if PACKETVER >= 20071106
 		p.objecttype = pcdb_checkid(status_get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
 		p.GID = -bl->id;
@@ -1146,7 +1146,8 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 		p.GID = -bl->id;
 #endif
 		clif->send(&p,sizeof(p),bl,SELF);
-	}
+	} else
+		clif->send(&p,sizeof(p),bl,target);
 
 }
 
@@ -9836,10 +9837,11 @@ void clif_parse_GetCharNameRequest(int fd, struct map_session_data *sd)
 }
 int clif_undisguise_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	struct map_session_data * sd;
-	if( (sd = map_id2sd(id)) && sd->fontcolor && sd->disguise == sd->status.class_ ) {
-		pc_disguise(sd,-1);
+	if( (sd = map_id2sd(id)) ) {
+		sd->fontcolor_tid = INVALID_TIMER;
+		if( sd->fontcolor && sd->disguise == sd->status.class_ )
+			pc_disguise(sd,-1);
 	}
-	sd->fontcolor_tid = INVALID_TIMER;
 	return 0;
 }
 
@@ -9880,10 +9882,10 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 		unsigned char mylen = 1;
 
 		if( sd->disguise == -1 ) {
+			sd->fontcolor_tid = add_timer(gettick()+5000, clif->undisguise_timer, sd->bl.id, 0);
 			pc_disguise(sd,sd->status.class_);
 			if( pc_isdead(sd) )
 				clif_clearunit_single(-sd->bl.id, CLR_DEAD, sd->fd);
-			sd->fontcolor_tid = add_timer(gettick()+5000, clif->undisguise_timer, sd->bl.id, 0);
 		} else if ( sd->disguise == sd->status.class_ && sd->fontcolor_tid != INVALID_TIMER ) {
 			const struct TimerData *timer;
 			if( (timer = get_timer(sd->fontcolor_tid)) ) {
