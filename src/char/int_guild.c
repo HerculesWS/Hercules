@@ -57,7 +57,7 @@ static int guild_save_timer(int tid, unsigned int tick, int id, intptr_t data)
 	if( last_id == 0 ) //Save the first guild in the list.
 		state = 1;
 
-	for( g = db_data2ptr(iter->first(iter, &key)); dbi_exists(iter); g = db_data2ptr(iter->next(iter, &key)) )
+	for( g = DB->data2ptr(iter->first(iter, &key)); dbi_exists(iter); g = DB->data2ptr(iter->next(iter, &key)) )
 	{
 		if( state == 0 && g->guild_id == last_id )
 			state++; //Save next guild in the list.
@@ -739,7 +739,7 @@ int inter_guild_sql_init(void)
  */
 static int guild_db_final(DBKey key, DBData *data, va_list ap)
 {
-	struct guild *g = db_data2ptr(data);
+	struct guild *g = DB->data2ptr(data);
 	if (g->save_flag&GS_MASK) {
 		inter_guild_tosql(g, g->save_flag&GS_MASK);
 		return 1;

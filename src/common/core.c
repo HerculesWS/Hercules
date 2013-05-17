@@ -284,9 +284,11 @@ void core_defaults(void) {
 #endif
 	console_defaults();
 	strlib_defaults();
+	malloc_defaults();
 #ifndef MINICORE
 	sql_defaults();
 	timer_defaults();
+	db_defaults();
 #endif
 }
 /*======================================
@@ -305,7 +307,7 @@ int main (int argc, char **argv) {
 	}
 	core_defaults();
 	
-	malloc_init();// needed for Show* in display_title() [FlavioJS]
+	malloclib->init();// needed for Show* in display_title() [FlavioJS]
 	
 	console->display_title();
 	
@@ -320,7 +322,7 @@ int main (int argc, char **argv) {
 	Sql_Init();
 	rathread_init();
 	mempool_init();
-	db_init();
+	DB->init();
 	signals_init();
 	
 #ifdef _WIN32
@@ -354,12 +356,12 @@ int main (int argc, char **argv) {
 #endif
 	timer_final();
 	socket_final();
-	db_final();
+	DB->final();
 	mempool_final();
 	rathread_final();
 #endif
 
-	malloc_final();
+	malloclib->final();
 
 	return 0;
 }

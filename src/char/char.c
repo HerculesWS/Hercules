@@ -187,7 +187,7 @@ static DBData create_online_char_data(DBKey key, va_list args)
 	character->pincode_enable = -1;
 	character->fd = -1;
 	character->waiting_disconnect = INVALID_TIMER;
-	return db_ptr2data(character);
+	return DB->ptr2data(character);
 }
 
 void set_char_charselect(int account_id)
@@ -321,7 +321,7 @@ void set_char_offline(int char_id, int account_id)
  */
 static int char_db_setoffline(DBKey key, DBData *data, va_list ap)
 {
-	struct online_char_data* character = (struct online_char_data*)db_data2ptr(data);
+	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
 	int server = va_arg(ap, int);
 	if (server == -1) {
 		character->char_id = -1;
@@ -340,7 +340,7 @@ static int char_db_setoffline(DBKey key, DBData *data, va_list ap)
  */
 static int char_db_kickoffline(DBKey key, DBData *data, va_list ap)
 {
-	struct online_char_data* character = (struct online_char_data*)db_data2ptr(data);
+	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
 	int server_id = va_arg(ap, int);
 
 	if (server_id > -1 && character->server != server_id)
@@ -392,7 +392,7 @@ static DBData create_charstatus(DBKey key, va_list args)
 	struct mmo_charstatus *cp;
 	cp = (struct mmo_charstatus *) aCalloc(1,sizeof(struct mmo_charstatus));
 	cp->char_id = key.i;
-	return db_ptr2data(cp);
+	return DB->ptr2data(cp);
 }
 
 int inventory_to_sql(const struct item items[], int max, int id);
@@ -4450,7 +4450,7 @@ int broadcast_user_count(int tid, unsigned int tick, int id, intptr_t data)
  */
 static int send_accounts_tologin_sub(DBKey key, DBData *data, va_list ap)
 {
-	struct online_char_data* character = db_data2ptr(data);
+	struct online_char_data* character = DB->data2ptr(data);
 	int* i = va_arg(ap, int*);
 
 	if(character->server > -1)
@@ -4532,7 +4532,7 @@ static int chardb_waiting_disconnect(int tid, unsigned int tick, int id, intptr_
  */
 static int online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
 {
-	struct online_char_data *character= db_data2ptr(data);
+	struct online_char_data *character= DB->data2ptr(data);
 	if (character->fd != -1)
 		return 0; //Character still connected
 	if (character->server == -2) //Unknown server.. set them offline
