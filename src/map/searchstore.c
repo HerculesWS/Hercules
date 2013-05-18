@@ -150,9 +150,7 @@ void searchstore_query(struct map_session_data* sd, unsigned char type, unsigned
 	}
 
 	if( max_price < min_price ) {
-		__asm xor min_price, max_price
-		__asm xor max_price, min_price
-		__asm xor min_price, max_price
+		swap(min_price, max_price);
 	}
 
 	sd->searchstore.uses--;
