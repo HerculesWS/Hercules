@@ -599,73 +599,73 @@ struct DBMap {
 // For easy access to the common functions.
 
 #define db_exists(db,k)    ( (db)->exists((db),(k)) )
-#define idb_exists(db,k)   ( (db)->exists((db),db_i2key(k)) )
-#define uidb_exists(db,k)  ( (db)->exists((db),db_ui2key(k)) )
-#define strdb_exists(db,k) ( (db)->exists((db),db_str2key(k)) )
+#define idb_exists(db,k)   ( (db)->exists((db),DB->i2key(k)) )
+#define uidb_exists(db,k)  ( (db)->exists((db),DB->ui2key(k)) )
+#define strdb_exists(db,k) ( (db)->exists((db),DB->str2key(k)) )
 
 // Get pointer-type data from DBMaps of various key types
-#define db_get(db,k)    ( db_data2ptr((db)->get((db),(k))) )
-#define idb_get(db,k)   ( db_data2ptr((db)->get((db),db_i2key(k))) )
-#define uidb_get(db,k)  ( db_data2ptr((db)->get((db),db_ui2key(k))) )
-#define strdb_get(db,k) ( db_data2ptr((db)->get((db),db_str2key(k))) )
+#define db_get(db,k)    ( DB->data2ptr((db)->get((db),(k))) )
+#define idb_get(db,k)   ( DB->data2ptr((db)->get((db),DB->i2key(k))) )
+#define uidb_get(db,k)  ( DB->data2ptr((db)->get((db),DB->ui2key(k))) )
+#define strdb_get(db,k) ( DB->data2ptr((db)->get((db),DB->str2key(k))) )
 
 // Get int-type data from DBMaps of various key types
-#define db_iget(db,k)    ( db_data2i((db)->get((db),(k))) )
-#define idb_iget(db,k)   ( db_data2i((db)->get((db),db_i2key(k))) )
-#define uidb_iget(db,k)  ( db_data2i((db)->get((db),db_ui2key(k))) )
-#define strdb_iget(db,k) ( db_data2i((db)->get((db),db_str2key(k))) )
+#define db_iget(db,k)    ( DB->data2i((db)->get((db),(k))) )
+#define idb_iget(db,k)   ( DB->data2i((db)->get((db),DB->i2key(k))) )
+#define uidb_iget(db,k)  ( DB->data2i((db)->get((db),DB->ui2key(k))) )
+#define strdb_iget(db,k) ( DB->data2i((db)->get((db),DB->str2key(k))) )
 
 // Get uint-type data from DBMaps of various key types
-#define db_uiget(db,k)    ( db_data2ui((db)->get((db),(k))) )
-#define idb_uiget(db,k)   ( db_data2ui((db)->get((db),db_i2key(k))) )
-#define uidb_uiget(db,k)  ( db_data2ui((db)->get((db),db_ui2key(k))) )
-#define strdb_uiget(db,k) ( db_data2ui((db)->get((db),db_str2key(k))) )
+#define db_uiget(db,k)    ( DB->data2ui((db)->get((db),(k))) )
+#define idb_uiget(db,k)   ( DB->data2ui((db)->get((db),DB->i2key(k))) )
+#define uidb_uiget(db,k)  ( DB->data2ui((db)->get((db),DB->ui2key(k))) )
+#define strdb_uiget(db,k) ( DB->data2ui((db)->get((db),DB->str2key(k))) )
 
 // Put pointer-type data into DBMaps of various key types
-#define db_put(db,k,d)    ( (db)->put((db),(k),db_ptr2data(d),NULL) )
-#define idb_put(db,k,d)   ( (db)->put((db),db_i2key(k),db_ptr2data(d),NULL) )
-#define uidb_put(db,k,d)  ( (db)->put((db),db_ui2key(k),db_ptr2data(d),NULL) )
-#define strdb_put(db,k,d) ( (db)->put((db),db_str2key(k),db_ptr2data(d),NULL) )
+#define db_put(db,k,d)    ( (db)->put((db),(k),DB->ptr2data(d),NULL) )
+#define idb_put(db,k,d)   ( (db)->put((db),DB->i2key(k),DB->ptr2data(d),NULL) )
+#define uidb_put(db,k,d)  ( (db)->put((db),DB->ui2key(k),DB->ptr2data(d),NULL) )
+#define strdb_put(db,k,d) ( (db)->put((db),DB->str2key(k),DB->ptr2data(d),NULL) )
 
 // Put int-type data into DBMaps of various key types
-#define db_iput(db,k,d)    ( (db)->put((db),(k),db_i2data(d),NULL) )
-#define idb_iput(db,k,d)   ( (db)->put((db),db_i2key(k),db_i2data(d),NULL) )
-#define uidb_iput(db,k,d)  ( (db)->put((db),db_ui2key(k),db_i2data(d),NULL) )
-#define strdb_iput(db,k,d) ( (db)->put((db),db_str2key(k),db_i2data(d),NULL) )
+#define db_iput(db,k,d)    ( (db)->put((db),(k),DB->i2data(d),NULL) )
+#define idb_iput(db,k,d)   ( (db)->put((db),DB->i2key(k),DB->i2data(d),NULL) )
+#define uidb_iput(db,k,d)  ( (db)->put((db),DB->ui2key(k),DB->i2data(d),NULL) )
+#define strdb_iput(db,k,d) ( (db)->put((db),DB->str2key(k),DB->i2data(d),NULL) )
 
 // Put uint-type data into DBMaps of various key types
-#define db_uiput(db,k,d)    ( (db)->put((db),(k),db_ui2data(d),NULL) )
-#define idb_uiput(db,k,d)   ( (db)->put((db),db_i2key(k),db_ui2data(d),NULL) )
-#define uidb_uiput(db,k,d)  ( (db)->put((db),db_ui2key(k),db_ui2data(d),NULL) )
-#define strdb_uiput(db,k,d) ( (db)->put((db),db_str2key(k),db_ui2data(d),NULL) )
+#define db_uiput(db,k,d)    ( (db)->put((db),(k),DB->ui2data(d),NULL) )
+#define idb_uiput(db,k,d)   ( (db)->put((db),DB->i2key(k),DB->ui2data(d),NULL) )
+#define uidb_uiput(db,k,d)  ( (db)->put((db),DB->ui2key(k),DB->ui2data(d),NULL) )
+#define strdb_uiput(db,k,d) ( (db)->put((db),DB->str2key(k),DB->ui2data(d),NULL) )
 
 // Remove entry from DBMaps of various key types
 #define db_remove(db,k)    ( (db)->remove((db),(k),NULL) )
-#define idb_remove(db,k)   ( (db)->remove((db),db_i2key(k),NULL) )
-#define uidb_remove(db,k)  ( (db)->remove((db),db_ui2key(k),NULL) )
-#define strdb_remove(db,k) ( (db)->remove((db),db_str2key(k),NULL) )
+#define idb_remove(db,k)   ( (db)->remove((db),DB->i2key(k),NULL) )
+#define uidb_remove(db,k)  ( (db)->remove((db),DB->ui2key(k),NULL) )
+#define strdb_remove(db,k) ( (db)->remove((db),DB->str2key(k),NULL) )
 
 //These are discarding the possible vargs you could send to the function, so those
 //that require vargs must not use these defines.
-#define db_ensure(db,k,f)    ( db_data2ptr((db)->ensure((db),(k),(f))) )
-#define idb_ensure(db,k,f)   ( db_data2ptr((db)->ensure((db),db_i2key(k),(f))) )
-#define uidb_ensure(db,k,f)  ( db_data2ptr((db)->ensure((db),db_ui2key(k),(f))) )
-#define strdb_ensure(db,k,f) ( db_data2ptr((db)->ensure((db),db_str2key(k),(f))) )
+#define db_ensure(db,k,f)    ( DB->data2ptr((db)->ensure((db),(k),(f))) )
+#define idb_ensure(db,k,f)   ( DB->data2ptr((db)->ensure((db),DB->i2key(k),(f))) )
+#define uidb_ensure(db,k,f)  ( DB->data2ptr((db)->ensure((db),DB->ui2key(k),(f))) )
+#define strdb_ensure(db,k,f) ( DB->data2ptr((db)->ensure((db),DB->str2key(k),(f))) )
 
 // Database creation and destruction macros
-#define idb_alloc(opt)            db_alloc(__FILE__,__func__,__LINE__,DB_INT,(opt),sizeof(int))
-#define uidb_alloc(opt)           db_alloc(__FILE__,__func__,__LINE__,DB_UINT,(opt),sizeof(unsigned int))
-#define strdb_alloc(opt,maxlen)   db_alloc(__FILE__,__func__,__LINE__,DB_STRING,(opt),(maxlen))
-#define stridb_alloc(opt,maxlen)  db_alloc(__FILE__,__func__,__LINE__,DB_ISTRING,(opt),(maxlen))
+#define idb_alloc(opt)            DB->alloc(__FILE__,__func__,__LINE__,DB_INT,(opt),sizeof(int))
+#define uidb_alloc(opt)           DB->alloc(__FILE__,__func__,__LINE__,DB_UINT,(opt),sizeof(unsigned int))
+#define strdb_alloc(opt,maxlen)   DB->alloc(__FILE__,__func__,__LINE__,DB_STRING,(opt),(maxlen))
+#define stridb_alloc(opt,maxlen)  DB->alloc(__FILE__,__func__,__LINE__,DB_ISTRING,(opt),(maxlen))
 #define db_destroy(db)            ( (db)->destroy((db),NULL) )
 // Other macros
 #define db_clear(db)        ( (db)->clear(db,NULL) )
 #define db_size(db)         ( (db)->size(db) )
 #define db_iterator(db)     ( (db)->iterator(db) )
-#define dbi_first(dbi)      ( db_data2ptr((dbi)->first(dbi,NULL)) )
-#define dbi_last(dbi)       ( db_data2ptr((dbi)->last(dbi,NULL)) )
-#define dbi_next(dbi)       ( db_data2ptr((dbi)->next(dbi,NULL)) )
-#define dbi_prev(dbi)       ( db_data2ptr((dbi)->prev(dbi,NULL)) )
+#define dbi_first(dbi)      ( DB->data2ptr((dbi)->first(dbi,NULL)) )
+#define dbi_last(dbi)       ( DB->data2ptr((dbi)->last(dbi,NULL)) )
+#define dbi_next(dbi)       ( DB->data2ptr((dbi)->next(dbi,NULL)) )
+#define dbi_prev(dbi)       ( DB->data2ptr((dbi)->prev(dbi,NULL)) )
 #define dbi_remove(dbi)     ( (dbi)->remove(dbi,NULL) )
 #define dbi_exists(dbi)     ( (dbi)->exists(dbi) )
 #define dbi_destroy(dbi)    ( (dbi)->destroy(dbi) )
@@ -692,6 +692,7 @@ struct DBMap {
  *  db_final           - Finalizes the database system.                      *
 \*****************************************************************************/
 
+struct db_interface {
 /**
  * Returns the fixed options according to the database type.
  * Sets required options and unsets unsupported options.
@@ -704,7 +705,7 @@ struct DBMap {
  * @see #DBOptions
  * @see #db_default_release(DBType,DBOptions)
  */
-DBOptions db_fix_options(DBType type, DBOptions options);
+DBOptions (*fix_options) (DBType type, DBOptions options);
 
 /**
  * Returns the default comparator for the type of database.
@@ -714,7 +715,7 @@ DBOptions db_fix_options(DBType type, DBOptions options);
  * @see #DBType
  * @see #DBComparator
  */
-DBComparator db_default_cmp(DBType type);
+DBComparator (*default_cmp) (DBType type);
 
 /**
  * Returns the default hasher for the specified type of database.
@@ -724,7 +725,7 @@ DBComparator db_default_cmp(DBType type);
  * @see #DBType
  * @see #DBHasher
  */
-DBHasher db_default_hash(DBType type);
+DBHasher (*default_hash) (DBType type);
 
 /**
  * Returns the default releaser for the specified type of database with the 
@@ -741,7 +742,7 @@ DBHasher db_default_hash(DBType type);
  * @see #db_fix_options(DBType,DBOptions)
  * @see #db_custom_release(DBRelease)
  */
-DBReleaser db_default_release(DBType type, DBOptions options);
+DBReleaser (*default_release) (DBType type, DBOptions options);
 
 /**
  * Returns the releaser that behaves as <code>which</code> specifies.
@@ -752,7 +753,7 @@ DBReleaser db_default_release(DBType type, DBOptions options);
  * @see #DBReleaser
  * @see #db_default_release(DBType,DBOptions)
  */
-DBReleaser db_custom_release(DBRelease which);
+DBReleaser (*custom_release)  (DBRelease which);
 
 /**
  * Allocate a new database of the specified type.
@@ -775,7 +776,7 @@ DBReleaser db_custom_release(DBRelease which);
  * @see #db_default_release(DBType,DBOptions)
  * @see #db_fix_options(DBType,DBOptions)
  */
-DBMap* db_alloc(const char *file, const char *func, int line, DBType type, DBOptions options, unsigned short maxlen);
+DBMap* (*alloc) (const char *file, const char *func, int line, DBType type, DBOptions options, unsigned short maxlen);
 
 /**
  * Manual cast from 'int' to the union DBKey.
@@ -783,7 +784,7 @@ DBMap* db_alloc(const char *file, const char *func, int line, DBType type, DBOpt
  * @return The key as a DBKey union
  * @public
  */
-DBKey db_i2key(int key);
+DBKey (*i2key) (int key);
 
 /**
  * Manual cast from 'unsigned int' to the union DBKey.
@@ -791,7 +792,7 @@ DBKey db_i2key(int key);
  * @return The key as a DBKey union
  * @public
  */
-DBKey db_ui2key(unsigned int key);
+DBKey (*ui2key) (unsigned int key);
 
 /**
  * Manual cast from 'unsigned char *' to the union DBKey.
@@ -799,7 +800,7 @@ DBKey db_ui2key(unsigned int key);
  * @return The key as a DBKey union
  * @public
  */
-DBKey db_str2key(const char *key);
+DBKey (*str2key) (const char *key);
 
 /**
  * Manual cast from 'int' to the struct DBData.
@@ -807,7 +808,7 @@ DBKey db_str2key(const char *key);
  * @return The data as a DBData struct
  * @public
  */
-DBData db_i2data(int data);
+DBData (*i2data) (int data);
 
 /**
  * Manual cast from 'unsigned int' to the struct DBData.
@@ -815,7 +816,7 @@ DBData db_i2data(int data);
  * @return The data as a DBData struct
  * @public
  */
-DBData db_ui2data(unsigned int data);
+DBData (*ui2data) (unsigned int data);
 
 /**
  * Manual cast from 'void *' to the struct DBData.
@@ -823,7 +824,7 @@ DBData db_ui2data(unsigned int data);
  * @return The data as a DBData struct
  * @public
  */
-DBData db_ptr2data(void *data);
+DBData (*ptr2data) (void *data);
 
 /**
  * Gets int type data from struct DBData.
@@ -832,7 +833,7 @@ DBData db_ptr2data(void *data);
  * @return Integer value of the data.
  * @public
  */
-int db_data2i(DBData *data);
+int (*data2i) (DBData *data);
 
 /**
  * Gets unsigned int type data from struct DBData.
@@ -841,7 +842,7 @@ int db_data2i(DBData *data);
  * @return Unsigned int value of the data.
  * @public
  */
-unsigned int db_data2ui(DBData *data);
+unsigned int (*data2ui) (DBData *data);
 
 /**
  * Gets void* type data from struct DBData.
@@ -850,14 +851,14 @@ unsigned int db_data2ui(DBData *data);
  * @return Void* value of the data.
  * @public
  */
-void* db_data2ptr(DBData *data);
+void* (*data2ptr) (DBData *data);
 
 /**
  * Initialize the database system.
  * @public
  * @see #db_final(void)
  */
-void db_init(void);
+void (*init) (void);
 
 /**
  * Finalize the database system.
@@ -865,8 +866,12 @@ void db_init(void);
  * @public
  * @see #db_init(void)
  */
-void db_final(void);
+void (*final) (void);
+} DB_s;
 
+struct db_interface *DB;
+
+void db_defaults(void);
 // Link DB System - From jAthena
 struct linkdb_node {
 	struct linkdb_node *next;

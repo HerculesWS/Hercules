@@ -15363,7 +15363,7 @@ int skill_unit_timer_sub_onplace (struct block_list* bl, va_list ap) {
  * @see DBApply
  */
 int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap) {
-	struct skill_unit* unit = db_data2ptr(data);
+	struct skill_unit* unit = DB->data2ptr(data);
 	struct skill_unit_group* group = unit->group;
 	unsigned int tick = va_arg(ap,unsigned int);
   	bool dissonance;

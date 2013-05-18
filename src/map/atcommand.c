@@ -5340,12 +5340,12 @@ ACMD(skillid) {
 	iter = db_iterator(skilldb_name2id);
 	
 	for( data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key) ) {
-		idx = skill->get_index(db_data2i(data));
+		idx = skill->get_index(DB->data2i(data));
 		if (strnicmp(key.str, message, skillen) == 0 || strnicmp(skill_db[idx].desc, message, skillen) == 0) {
-			sprintf(atcmd_output, msg_txt(1164), db_data2i(data), skill_db[idx].desc, key.str); // skill %d: %s (%s)
+			sprintf(atcmd_output, msg_txt(1164), DB->data2i(data), skill_db[idx].desc, key.str); // skill %d: %s (%s)
 			clif->message(fd, atcmd_output);
 		} else if ( found < MAX_SKILLID_PARTIAL_RESULTS && ( stristr(key.str,message) || stristr(skill_db[idx].desc,message) ) ) {
-			snprintf(partials[found++], MAX_SKILLID_PARTIAL_RESULTS_LEN, msg_txt(1164), db_data2i(data), skill_db[idx].desc, key.str);
+			snprintf(partials[found++], MAX_SKILLID_PARTIAL_RESULTS_LEN, msg_txt(1164), DB->data2i(data), skill_db[idx].desc, key.str);
 		}
 	}
 	
@@ -9156,7 +9156,7 @@ ACMD(channel) {
 		iter = db_iterator(channel->banned);
 		
 		for( data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key) ) {
-			struct hChSysBanEntry * entry = db_data2ptr(data);
+			struct hChSysBanEntry * entry = DB->data2ptr(data);
 			
 			if( !isA )
 				sprintf(atcmd_output, msg_txt(1444), entry->name);// - %s %s
