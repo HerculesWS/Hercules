@@ -250,7 +250,7 @@ void* _mmalloc(size_t size, const char *file, int line, const char *func )
 			p->unit_head.block = NULL;
 			p->unit_head.size  = 0;
 			p->unit_head.file  = file;
-			p->unit_head.line  = line;
+			p->unit_head.line  = (unsigned short)line;
 			p->prev = NULL;
 			if (unit_head_large_first == NULL)
 				p->next = NULL;
@@ -324,7 +324,7 @@ void* _mmalloc(size_t size, const char *file, int line, const char *func )
 
 	head->block = block;
 	head->file  = file;
-	head->line  = line;
+	head->line  = (unsigned short)line;
 	head->size  = (unsigned short)size;
 	*(long*)((char*)head + sizeof(struct unit_head) - sizeof(long) + size) = 0xdeadbeaf;
 	return (char *)head + sizeof(struct unit_head) - sizeof(long);
@@ -422,7 +422,7 @@ void _mfree(void *ptr, const char *file, int line, const char *func )
 #ifdef DEBUG_MEMMGR
 			memset(ptr, 0xfd, block->unit_size - sizeof(struct unit_head) + sizeof(long) );
 			head->file = file;
-			head->line = line;
+			head->line = (unsigned short)line;
 #endif
 			memmgr_assert( block->unit_used > 0 );
 			if(--block->unit_used == 0) {

@@ -1171,13 +1171,13 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	p->save_point.map = mapindex_name2id(save_map);
 
 	if( p->last_point.map == 0 ) {
-		p->last_point.map = strdb_iget(mapindex_db, MAP_DEFAULT);
+		p->last_point.map = (unsigned short)strdb_iget(mapindex_db, MAP_DEFAULT);
 		p->last_point.x = MAP_DEFAULT_X;
 		p->last_point.y = MAP_DEFAULT_Y;
 	}
 	
 	if( p->save_point.map == 0 ) {
-		p->save_point.map = strdb_iget(mapindex_db, MAP_DEFAULT);
+		p->save_point.map = (unsigned short)strdb_iget(mapindex_db, MAP_DEFAULT);
 		p->save_point.x = MAP_DEFAULT_X;
 		p->save_point.y = MAP_DEFAULT_Y;
 	}

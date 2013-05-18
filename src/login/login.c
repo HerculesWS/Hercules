@@ -467,7 +467,7 @@ int parse_fromchar(int fd)
 			{
 				ShowStatus("set users %s : %d\n", server[id].name, users);
 
-				server[id].users = users;
+				server[id].users = (uint16)users;
 			}
 		}
 		break;
@@ -1083,7 +1083,7 @@ int mmo_auth(struct login_session_data* sd, bool isServer) {
 	sd->login_id2 = rnd() + 1;
 	safestrncpy(sd->lastlogin, acc.lastlogin, sizeof(sd->lastlogin));
 	sd->sex = acc.sex;
-	sd->group_id = acc.group_id;
+	sd->group_id = (uint8)acc.group_id;
 
 	// update account data
 	timestamp2string(acc.lastlogin, sizeof(acc.lastlogin), time(NULL), "%Y-%m-%d %H:%M:%S");
