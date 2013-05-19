@@ -7,7 +7,7 @@
 
 #include "../common/db.h"
 
-/* when a map index search fails, return results from what map? default:prontera */
+// When a map index search fails, return results from what map? default:prontera
 #define MAP_DEFAULT "prontera"
 #define MAP_DEFAULT_X 150
 #define MAP_DEFAULT_Y 150

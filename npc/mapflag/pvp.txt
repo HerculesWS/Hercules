@@ -1,4 +1,4 @@
-//===== Hercules Script =======================================
+//===== Hercules Script ======================================
 //= Mapflag: Player versus Player mode.
 //===== By: ==================================================
 //= Hercules Dev Team

@@ -1,4 +1,4 @@
-//===== Hercules Script =======================================
+//===== Hercules Script ======================================
 //= Mapflag: Disable Warp Portal memory.
 //===== By: ==================================================
 //= Hercules Dev Team
