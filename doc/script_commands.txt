@@ -1059,9 +1059,9 @@ will terminate.
 *close;
 
 This command will create a 'close' button in the message window for the invoking 
-character. If no window is currently on screen, the script execution will end. This is one 
-of the ways to end a speech from an NPC. Once the button is clicked, the NPC 
-script execution will end, and the message box will disappear.
+character. If no window is currently on screen, the script command 'end;' must be used.
+This is one of the ways to end a speech from an NPC. Once the button is clicked,
+the NPC script execution will end, and the message box will disappear.
 
     mes "[Woman]";
     mes "I am finished talking to you, click the close button";
@@ -1091,9 +1091,8 @@ Don't expect things to run smoothly if you don't make your scripts 'end'.
 
 *end;
 
-This command will stop the execution for this particular script. The two 
-versions are perfectly equivalent. It is the normal way to end a script which 
-does not use 'mes'.
+This command will stop the execution for this particular script.
+It is required for any script not using 'mes'.
 
         if (BaseLevel<=10) goto L_Lvl10;
         if (BaseLevel<=20) goto L_Lvl20;
