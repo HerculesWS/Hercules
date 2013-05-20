@@ -11,20 +11,23 @@
 //===== Additional Comments: ================================= 
 //= 1.0 First Version. Still missing many new NPCs and their dialogues. [Masao]
 //= 1.1 Added bullet NPC duplicates. [Euphy]
+//= 1.2 Added new NPCs, Captain Carew & coordinates  [Streusel]
+//= 1.3 Added some NPC locations [Streusel]
 //============================================================
 
 izlude,197,205,1	duplicate(Sailor_izlude)	Sailor#izlude	100
 izlude,71,92,2	duplicate(Bonne_izlude)	Bonne#izlude	90
 izlude,172,215,4	duplicate(Charfri_izlude)	Charfri#izlude	91
-izlude,127,175,4	duplicate(Cuskoal_izlude)	Cuskoal#izlude	124
+izlude,174,164,3	duplicate(Cuskoal_izlude)	Cuskoal#izlude	124
 izlude,85,103,4	duplicate(Dega_izlude)	Dega#izlude	84
-izlude,141,185,4	duplicate(Kylick_izlude)	Kylick#izlude	97
+izlude,140,186,4	duplicate(Kylick_izlude)	Kylick#izlude	97
 izlude,56,156,2	duplicate(Red_izlude)	Red#izlude	85
 izlude,58,156,2	duplicate(Cebalis_izlude)	Cebalis#izlude	98
 izlude,165,156,2	duplicate(Soldier_izlude)	Soldier#izlude	105
 izlude,158,130,3	duplicate(bdt)	Bullet Dealer Tony#iz	86
 izlude,155,132,3	duplicate(mdk)	Magazine Dealer Kenny	83
-
+izlude,198,213,4	duplicate(Captain_Carew)	Captain Carew#izlude	873
+izlude_in,57,92,3	duplicate(Dorian)	Dorian#izlude	878	
 izlude,147,131,6	script	Blacksmith#izlude	726,{
 	end;
 }
@@ -33,4 +36,63 @@ prt_fild08,350,219,4	script	Guard#izlude	105,{
 	mes "[Izlude Guard]";
 	mes "Welcome to Izlude.";
 	close;
+}
+
+izlude,136,160,0	script	Traces of Fish#izlude	111,{
+	mes "There are signs of someone digging.";
+	close;
+}
+
+izlude,207,167,3	script	Arena#izlude	858,{
+	mes "";
+	close;
+}
+
+izlude,45,94,3	script	Milestone#izlude	858,{
+	mes "==== Information  ====";
+	mes "";
+	mes "Access to Prontera Field.";
+	mes "Prontera in the North.";
+	mes "If you wish got to Prontera.";
+	close;
+}
+
+izlude,179,75,3	script	Non-Process#izlude	858,{
+	mes "====End of Path====";
+	mes "";
+	mes "Airshop to Rachel";
+	mes "";
+	mes "Feel free to explore, however be reminded that you are a guest.";
+	mes "";
+	close;
+}
+
+izlude,141,251,1	script	Full-Grown Red Plant#iz	1078,{
+	end;
+}
+
+izlude,102,150,1	script	Sinchon Helper#izlude	71,{
+	end;
+}
+
+izlude,205,155,2	script	Nain#izlude	102,{
+	mes "[Nine]";
+	mes "Swords, no matter how strong";
+	mes "they are once they strike you're";
+	mes "a dead man. And though that's creepy,";
+	mes "I just can't throw them away.";
+	close;
+}
+
+izlude,143,205,7	script	Magpies Adventurer#iz-01	703,{
+	end;
+}
+
+
+izlude,146,205,7	script	Magpies Adventurer#iz-02	706,{
+	end;
+}
+
+izlude,120,254,0	script	Siege Monument#izlude	111,{
+	end;
 }
