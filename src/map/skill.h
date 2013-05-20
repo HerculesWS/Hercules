@@ -81,14 +81,14 @@ enum e_skill_nk {
 //Constants to identify a skill's inf2 value.
 enum e_skill_inf2 {
 	INF2_QUEST_SKILL    = 0x0001,
-	INF2_NPC_SKILL      = 0x0002, //NPC skills are those that players can't have in their skill tree.
+	INF2_NPC_SKILL      = 0x0002, // NPC skills are those that players can't have in their skill tree.
 	INF2_WEDDING_SKILL  = 0x0004,
 	INF2_SPIRIT_SKILL   = 0x0008,
 	INF2_GUILD_SKILL    = 0x0010,
 	INF2_SONG_DANCE     = 0x0020,
 	INF2_ENSEMBLE_SKILL = 0x0040,
 	INF2_TRAP           = 0x0080,
-	INF2_TARGET_SELF    = 0x0100, //Refers to ground placed skills that will target the caster as well (like Grandcross)
+	INF2_TARGET_SELF    = 0x0100, // Refers to ground placed skills that will target the caster as well (like Grandcross)
 	INF2_NO_TARGET_SELF = 0x0200,
 	INF2_PARTY_ONLY     = 0x0400,
 	INF2_GUILD_ONLY     = 0x0800,
@@ -107,19 +107,19 @@ enum e_skill_display {
 };
 
 enum {
-	UF_DEFNOTENEMY   = 0x0001,	// If 'defunit_not_enemy' is set, the target is changed to 'friend'
-	UF_NOREITERATION = 0x0002,	// Spell cannot be stacked
-	UF_NOFOOTSET     = 0x0004,	// Spell cannot be cast near/on targets
-	UF_NOOVERLAP     = 0x0008,	// Spell effects do not overlap
-	UF_PATHCHECK     = 0x0010,	// Only cells with a shootable path will be placed
-	UF_NOPC          = 0x0020,	// May not target players
-	UF_NOMOB         = 0x0040,	// May not target mobs
-	UF_SKILL         = 0x0080,	// May target skills
-	UF_DANCE         = 0x0100,	// Dance
-	UF_ENSEMBLE      = 0x0200,	// Duet
-	UF_SONG          = 0x0400,	// Song
-	UF_DUALMODE      = 0x0800,	// Spells should trigger both ontimer and onplace/onout/onleft effects.
-    UF_RANGEDSINGLEUNIT = 0x2000 // hack for ranged layout, only display center
+	UF_DEFNOTENEMY   = 0x0001,	 // If 'defunit_not_enemy' is set, the target is changed to 'friend'
+	UF_NOREITERATION = 0x0002,	 // Spell cannot be stacked
+	UF_NOFOOTSET     = 0x0004,	 // Spell cannot be cast near/on targets
+	UF_NOOVERLAP     = 0x0008,	 // Spell effects do not overlap
+	UF_PATHCHECK     = 0x0010,	 // Only cells with a shootable path will be placed
+	UF_NOPC          = 0x0020,	 // May not target players
+	UF_NOMOB         = 0x0040,	 // May not target mobs
+	UF_SKILL         = 0x0080,	 // May target skills
+	UF_DANCE         = 0x0100,	 // Dance
+	UF_ENSEMBLE      = 0x0200,	 // Duet
+	UF_SONG          = 0x0400,	 // Song
+	UF_DUALMODE      = 0x0800,	 // Spells should trigger both ontimer and onplace/onout/onleft effects.
+    UF_RANGEDSINGLEUNIT = 0x2000 // Hack for ranged layout, only display center
 };
 
 //Returns the cast type of the skill: ground cast, castend damage, castend no damage

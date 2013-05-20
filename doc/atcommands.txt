@@ -1,4 +1,4 @@
-//===== Hercules Documentation ================================
+//===== Hercules Documentation ===============================
 //= Atcommand List
 //===== By: ==================================================
 //= Hercules Dev Team

@@ -1,4 +1,4 @@
-//===== Hercules Documentation ================================
+//===== Hercules Documentation ===============================
 //= Hercules Monster Modes Reference
 //===== By: ==================================================
 //= Hercules Dev Team

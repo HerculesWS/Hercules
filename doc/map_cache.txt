@@ -1,4 +1,4 @@
-//===== Hercules Documentation ================================
+//===== Hercules Documentation ===============================
 //= Hercules Map Cache Builder and Format Documentation
 //===== By: ==================================================
 //= DracoRPG

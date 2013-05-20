@@ -1,4 +1,4 @@
-//===== Hercules Documentation ================================
+//===== Hercules Documentation ===============================
 //= Permission List
 //===== By: ==================================================
 //= Hercules Dev Team

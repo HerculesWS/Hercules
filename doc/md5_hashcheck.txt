@@ -1,4 +1,4 @@
-//===== Hercules Documentation ================================ 
+//===== Hercules Documentation ===============================
 //= MD5 Hash Check
 //===== By: ==================================================
 //= Hercules Dev Team

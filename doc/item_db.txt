@@ -1,4 +1,4 @@
-//===== Hercules Documentation ================================
+//===== Hercules Documentation ===============================
 //= Item Database
 //===== By: ==================================================
 //= Hercules Dev Team

@@ -1,4 +1,4 @@
-//===== Hercules Documentation ================================
+//===== Hercules Documentation ===============================
 //= Client Effects List
 //===== By: ==================================================
 //= Hercules Dev Team
