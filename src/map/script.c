@@ -8417,6 +8417,7 @@ BUILDIN(monster)
 	const char* event	= "";
 	unsigned int size	= SZ_SMALL;
 	unsigned int ai		= AI_NONE;
+	int mob_id;
 	
 	struct map_session_data* sd;
 	int16 m;
@@ -8470,7 +8471,8 @@ BUILDIN(monster)
 		}
 	}
 	
-	mob_once_spawn(sd, m, x, y, str, class_, amount, event, size, ai);
+	mob_id = mob_once_spawn(sd, m, x, y, str, class_, amount, event, size, ai);
+	script_pushint(st, mob_id);
 	return true;
 }
 /*==========================================
@@ -8524,6 +8526,7 @@ BUILDIN(areamonster)
 	const char* event	= "";
 	unsigned int size	= SZ_SMALL;
 	unsigned int ai		= AI_NONE;
+	int mob_id;
 	
 	struct map_session_data* sd;
 	int16 m;
@@ -8571,7 +8574,9 @@ BUILDIN(areamonster)
 		}
 	}
 	
-	mob_once_spawn_area(sd, m, x0, y0, x1, y1, str, class_, amount, event, size, ai);
+	mob_id = mob_once_spawn_area(sd, m, x0, y0, x1, y1, str, class_, amount, event, size, ai);
+	script_pushint(st, mob_id);
+	
 	return true;
 }
 /*==========================================
