@@ -1079,7 +1079,7 @@ and the script will terminate.
     mes "[Woman]";
     mes "This would appear on the page";
     next;
-    // This is needed cause it is a new page and the top will now be blank
+    // This is needed since it is a new page and the top will now be blank
     mes "[Woman]";
     mes "This would appear on the 2nd page";
 
@@ -1094,9 +1094,9 @@ an NPC. Once the button is clicked, the NPC script execution will end, and
 the message box will disappear.
 
     mes "[Woman]";
-    mes "I am finished talking to you, click the close button";
+    mes "I am finished talking to you, click the close button.";
     close;
-    mes "This command will not run at all, cause the script has ended.";
+    mes "This command will not run at all, since the script has ended.";
 
 ---------------------------------------
 
@@ -1111,7 +1111,7 @@ will still run, meaning an 'end' has to be used to stop the script, unless
 you make it stop in some other manner.
 
     mes "[Woman]";
-    mes "I will warp you now";
+    mes "I will warp you now.";
     close2;
     warp "place",50,50;
     end;
@@ -1405,7 +1405,7 @@ contain the option the user picked.
 And like 'menu', the selected option is consistent with grouped options 
 and empty options.
 
-prompt works almost the same as select, except that when a character 
+'prompt' works almost the same as select, except that when a character 
 clicks the Cancel button, this function will return 255 instead.
 
 ---------------------------------------
@@ -2779,9 +2779,8 @@ While this function was meant for item scripts, it will work outside them:
 
 *getrefine()
 
-This function will return the number of pluses the weapon currently 
-equipped on the invoking character has been refined for.
-While this function was meant for item scripts, it will work outside them:
+This function will return the refine count of the equipment from which 
+the function is called. This function is intended for use in item scripts.
 
     if (getrefine()==10) mes "Wow. That's a murder weapon.";
 
@@ -3235,19 +3234,6 @@ character currently has active. Valid types are:
  3 - Pet friendly level (intimacy score). 1000 is full loyalty.
  4 - Pet hungry level. 100 is completely full.
  5 - Pet rename flag. 0 means this pet has not been named yet.
-
----------------------------------------
-
-*gethominfo(<type>)
-
-This function works as a direct counterpart of 'getpetinfo':
- 0 - Homunculus unique ID
- 1 - Homunculus Class
- 2 - Name
- 3 - Friendly level (intimacy score). 100000 is full loyalty.
- 4 - Hungry level. 100 is completely full.
- 5 - Rename flag. 0 means this homunculus has not been named yet.
- 6 - Homunculus level
 
 ---------------------------------------
 
@@ -5274,6 +5260,11 @@ skill previously, they will now at 0+the level given.
 Flag 3 is the same as flag 0 in that it saves to the database. However, 
 these skills are ignored when any action is taken that adjusts the skill 
 tree (reset/job change).
+
+Flag 4 is the same as flag 1 in that it saves to the database. However, 
+these skills are ignored when any action is taken that adjusts the skill 
+tree (reset/job change).
+
 ---------------------------------------
 
 *nude;
@@ -5630,15 +5621,31 @@ above 91000 intimacy with its owner.
 
 *hommutate {<ID>};
 
-This command will try to evolve the current player's homunculus into the 
-new Homunculus S. If it doesn't work, the /swt emotion is shown.
+This command will try to mutate the invoking player's Homunculus into a 
+Homunculus S. The Strange Embryo (ID 6415) is deleted upon success.
 
-To mutate a homunculus, the invoking player must have an evolved 
-homunculus and it must be at least level 99.
+The command will fail if the invoking player does not have an evolved 
+Homunculus at level 99 or above, if it is not in the embryo state (from 
+the 'morphembryo' command), or if the invoking player does not possess a 
+Strange Embryo. The /swt emotion is shown upon failure.
 
-If the optional parameter <ID> is set, the invoking player's homunculus 
-will change into the given homunculus ID. Otherwise, a random Homunculus S 
-will be chosen.
+If the optional parameter <ID> is set, the invoking player's Homunculus 
+will change into the specified Homunculus ID. Otherwise, a random 
+Homunculus S will be chosen. See 'db/homunculus_db.txt' for a full list of 
+IDs.
+
+Returns 1 upon success and 0 for all failures.
+
+*gethominfo(<type>)
+
+This function works as a direct counterpart of 'getpetinfo':
+ 0 - Homunculus unique ID
+ 1 - Homunculus Class
+ 2 - Name
+ 3 - Friendly level (intimacy score). 100000 is full loyalty.
+ 4 - Hungry level. 100 is completely full.
+ 5 - Rename flag. 0 means this homunculus has not been named yet.
+ 6 - Homunculus level
 
 ---------------------------------------
 
@@ -6562,11 +6569,12 @@ more than making an NPC move randomly around the map.
 fastest possible (instant motion). 100 is the default character walking 
 speed.
 'npcwalkto' will start the NPC sprite moving towards the specified 
-coordinates on the same map as it is currently on.
+coordinates on the same map as it is currently on. The script proceeds 
+immediately after the NPC begins moving.
 'npcstop' will stop the motion.
 
 While in transit, the NPC will be clickable, but invoking it will cause it 
-to stop motion, which will make it's coordinates different from what the 
+to stop moving, which will make it's coordinates different from what the 
 client computed based on the speed and motion coordinates. The effect is 
 rather unnerving.
 
