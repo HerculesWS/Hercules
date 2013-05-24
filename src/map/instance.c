@@ -56,7 +56,7 @@ int instance_create(int party_id, const char *name)
 	int i;
 	struct party_data* p;
 
-	if( ( p = party_search(party_id) ) == NULL )
+	if( ( p = party->search(party_id) ) == NULL )
 	{
 		ShowError("instance_create: party %d not found for instance '%s'.\n", party_id, name);
 		return -2;
@@ -250,7 +250,7 @@ int instance_del_load(struct map_session_data* sd, va_list args)
 	if( !sd || sd->bl.m != m )
 		return 0;
 
-	pc_setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_OUTSIGHT);
+	pc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_OUTSIGHT);
 	return 1;
 }
 
@@ -375,7 +375,7 @@ void instance_destroy(int instance_id)
 
 	instance[instance_id].vars = NULL;
 
-	if( instance[instance_id].party_id && (p = party_search(instance[instance_id].party_id)) != NULL )
+	if( instance[instance_id].party_id && (p = party->search(instance[instance_id].party_id)) != NULL )
 		p->instance_id = 0; // Update Party information
 
 	ShowInfo("[Instance] Destroyed %s.\n", instance[instance_id].name);
@@ -467,9 +467,9 @@ void instance_check_kick(struct map_session_data *sd)
 	if( map[m].instance_id )
 	{ // User was on the instance map
 		if( map[m].save.map )
-			pc_setpos(sd, map[m].save.map, map[m].save.x, map[m].save.y, CLR_TELEPORT);
+			pc->setpos(sd, map[m].save.map, map[m].save.x, map[m].save.y, CLR_TELEPORT);
 		else
-			pc_setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
+			pc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 	}
 }
 

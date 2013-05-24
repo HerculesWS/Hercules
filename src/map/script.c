@@ -2334,7 +2334,7 @@ void get_val(struct script_state* st, struct script_data* data)
 		switch( prefix )
 		{
 		case '@':
-			data->u.str = pc_readregstr(sd, data->u.num);
+			data->u.str = pc->readregstr(sd, data->u.num);
 			break;
 		case '$':
 			data->u.str = mapreg_readregstr(data->u.num);
@@ -2393,13 +2393,13 @@ void get_val(struct script_state* st, struct script_data* data)
 		}
 		else if( reference_toparam(data) )
 		{
-			data->u.num = pc_readparam(sd, reference_getparamtype(data));
+			data->u.num = pc->readparam(sd, reference_getparamtype(data));
 		}
 		else
 		switch( prefix )
 		{
 		case '@':
-			data->u.num = pc_readreg(sd, data->u.num);
+			data->u.num = pc->readreg(sd, data->u.num);
 			break;
 		case '$':
 			data->u.num = mapreg_readreg(data->u.num);
@@ -2466,7 +2466,7 @@ static int set_reg(struct script_state* st, TBL_PC* sd, int num, const char* nam
 		const char* str = (const char*)value;
 		switch (prefix) {
 		case '@':
-			return pc_setregstr(sd, num, str);
+			return pc->setregstr(sd, num, str);
 		case '$':
 			return mapreg_setregstr(num, str);
 		case '#':
@@ -2498,7 +2498,7 @@ static int set_reg(struct script_state* st, TBL_PC* sd, int num, const char* nam
 		int val = (int)__64BPTRSIZE(value);
 		if(str_data[num&0x00ffffff].type == C_PARAM)
 		{
-			if( pc_setparam(sd, str_data[num&0x00ffffff].val, val) == 0 )
+			if( pc->setparam(sd, str_data[num&0x00ffffff].val, val) == 0 )
 			{
 				if( st != NULL )
 				{
@@ -2513,7 +2513,7 @@ static int set_reg(struct script_state* st, TBL_PC* sd, int num, const char* nam
 
 		switch (prefix) {
 		case '@':
-			return pc_setreg(sd, num, val);
+			return pc->setreg(sd, num, val);
 		case '$':
 			return mapreg_setreg(num, val);
 		case '#':
@@ -3705,14 +3705,14 @@ void script_cleararray_pc(struct map_session_data* sd, const char* varname, void
 	{
 		for( idx = 0; idx < SCRIPT_MAX_ARRAYSIZE; idx++ )
 		{
-			pc_setregstr(sd, reference_uid(key, idx), (const char*)value);
+			pc->setregstr(sd, reference_uid(key, idx), (const char*)value);
 		}
 	}
 	else
 	{
 		for( idx = 0; idx < SCRIPT_MAX_ARRAYSIZE; idx++ )
 		{
-			pc_setreg(sd, reference_uid(key, idx), (int)__64BPTRSIZE(value));
+			pc->setreg(sd, reference_uid(key, idx), (int)__64BPTRSIZE(value));
 		}
 	}
 }
@@ -3740,11 +3740,11 @@ void script_setarray_pc(struct map_session_data* sd, const char* varname, uint8 
 
 	if( is_string_variable(varname) )
 	{
-		pc_setregstr(sd, reference_uid(key, idx), (const char*)value);
+		pc->setregstr(sd, reference_uid(key, idx), (const char*)value);
 	}
 	else
 	{
-		pc_setreg(sd, reference_uid(key, idx), (int)__64BPTRSIZE(value));
+		pc->setreg(sd, reference_uid(key, idx), (int)__64BPTRSIZE(value));
 	}
 
 	if( refcache )
@@ -4149,7 +4149,7 @@ BUILDIN(menu)
 			st->state = END;
 			return false;
 		}
-		pc_setreg(sd, add_str("@menu"), menu);
+		pc->setreg(sd, add_str("@menu"), menu);
 		st->pos = script_getnum(st, i + 1);
 		st->state = GOTO;
 	}
@@ -4226,7 +4226,7 @@ BUILDIN(select)
 			if( sd->npc_menu <= 0 )
 				break;// entry found
 		}
-		pc_setreg(sd, add_str("@menu"), menu);
+		pc->setreg(sd, add_str("@menu"), menu);
 		script_pushint(st, menu);
 		st->state = RUN;
 	}
@@ -4297,7 +4297,7 @@ BUILDIN(prompt)
 	else if( sd->npc_menu == 0xff )
 	{// Cancel was pressed
 		sd->state.menu_or_input = 0;
-		pc_setreg(sd, add_str("@menu"), 0xff);
+		pc->setreg(sd, add_str("@menu"), 0xff);
 		script_pushint(st, 0xff);
 		st->state = RUN;
 	}
@@ -4313,7 +4313,7 @@ BUILDIN(prompt)
 			if( sd->npc_menu <= 0 )
 				break;// entry found
 		}
-		pc_setreg(sd, add_str("@menu"), menu);
+		pc->setreg(sd, add_str("@menu"), menu);
 		script_pushint(st, menu);
 		st->state = RUN;
 	}
@@ -4559,11 +4559,11 @@ BUILDIN(warp)
 	y = script_getnum(st,4);
 	
 	if(strcmp(str,"Random")==0)
-		ret = pc_randomwarp(sd,CLR_TELEPORT);
+		ret = pc->randomwarp(sd,CLR_TELEPORT);
 	else if(strcmp(str,"SavePoint")==0 || strcmp(str,"Save")==0)
-		ret = pc_setpos(sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
+		ret = pc->setpos(sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
 	else
-		ret = pc_setpos(sd,mapindex_name2id(str),x,y,CLR_OUTSIGHT);
+		ret = pc->setpos(sd,mapindex_name2id(str),x,y,CLR_OUTSIGHT);
 	
 	if( ret ) {
 		ShowError("buildin_warp: moving player '%s' to \"%s\",%d,%d failed.\n", sd->status.name, str, x, y);
@@ -4587,7 +4587,7 @@ static int buildin_areawarp_sub(struct block_list *bl,va_list ap)
 	y3 = va_arg(ap,int);
 	
 	if(index == 0)
-		pc_randomwarp((TBL_PC *)bl,CLR_TELEPORT);
+		pc->randomwarp((TBL_PC *)bl,CLR_TELEPORT);
 	else if(x3 && y3) {
 		int max, tx, ty, j = 0;
 		
@@ -4602,10 +4602,10 @@ static int buildin_areawarp_sub(struct block_list *bl,va_list ap)
 			j++;
 		} while( map_getcell(index,tx,ty,CELL_CHKNOPASS) && j < max );
 		
-		pc_setpos((TBL_PC *)bl,index,tx,ty,CLR_OUTSIGHT);
+		pc->setpos((TBL_PC *)bl,index,tx,ty,CLR_OUTSIGHT);
 	}
 	else
-		pc_setpos((TBL_PC *)bl,index,x2,y2,CLR_OUTSIGHT);
+		pc->setpos((TBL_PC *)bl,index,x2,y2,CLR_OUTSIGHT);
 	return 0;
 }
 BUILDIN(areawarp)
@@ -4655,7 +4655,7 @@ static int buildin_areapercentheal_sub(struct block_list *bl,va_list ap)
 	int hp, sp;
 	hp = va_arg(ap, int);
 	sp = va_arg(ap, int);
-	pc_percentheal((TBL_PC *)bl,hp,sp);
+	pc->percentheal((TBL_PC *)bl,hp,sp);
 	return 0;
 }
 BUILDIN(areapercentheal)
@@ -4701,12 +4701,12 @@ BUILDIN(warpchar)
 		return true;
 	
 	if(strcmp(str, "Random") == 0)
-		pc_randomwarp(sd, CLR_TELEPORT);
+		pc->randomwarp(sd, CLR_TELEPORT);
 	else
 		if(strcmp(str, "SavePoint") == 0)
-			pc_setpos(sd, sd->status.save_point.map,sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
+			pc->setpos(sd, sd->status.save_point.map,sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 		else
-			pc_setpos(sd, mapindex_name2id(str), x, y, CLR_TELEPORT);
+			pc->setpos(sd, mapindex_name2id(str), x, y, CLR_TELEPORT);
 	
 	return true;
 }
@@ -4732,7 +4732,7 @@ BUILDIN(warpparty)
 	if ( script_hasdata(st,6) )
 		str2 = script_getstr(st,6);
 	
-	p = party_search(p_id);
+	p = party->search(p_id);
 	if(!p)
 		return true;
 	
@@ -4780,20 +4780,20 @@ BUILDIN(warpparty)
 		{
 			case 0: // Random
 				if(!map[pl_sd->bl.m].flag.nowarp)
-					pc_randomwarp(pl_sd,CLR_TELEPORT);
+					pc->randomwarp(pl_sd,CLR_TELEPORT);
 				break;
 			case 1: // SavePointAll
 				if(!map[pl_sd->bl.m].flag.noreturn)
-					pc_setpos(pl_sd,pl_sd->status.save_point.map,pl_sd->status.save_point.x,pl_sd->status.save_point.y,CLR_TELEPORT);
+					pc->setpos(pl_sd,pl_sd->status.save_point.map,pl_sd->status.save_point.x,pl_sd->status.save_point.y,CLR_TELEPORT);
 				break;
 			case 2: // SavePoint
 				if(!map[pl_sd->bl.m].flag.noreturn)
-					pc_setpos(pl_sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
+					pc->setpos(pl_sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
 				break;
 			case 3: // Leader
 			case 4: // m,x,y
 				if(!map[pl_sd->bl.m].flag.noreturn && !map[pl_sd->bl.m].flag.nowarp)
-					pc_setpos(pl_sd,mapindex,x,y,CLR_TELEPORT);
+					pc->setpos(pl_sd,mapindex,x,y,CLR_TELEPORT);
 				break;
 		}
 	}
@@ -4841,19 +4841,19 @@ BUILDIN(warpguild)
 		{
 			case 0: // Random
 				if(!map[pl_sd->bl.m].flag.nowarp)
-					pc_randomwarp(pl_sd,CLR_TELEPORT);
+					pc->randomwarp(pl_sd,CLR_TELEPORT);
 				break;
 			case 1: // SavePointAll
 				if(!map[pl_sd->bl.m].flag.noreturn)
-					pc_setpos(pl_sd,pl_sd->status.save_point.map,pl_sd->status.save_point.x,pl_sd->status.save_point.y,CLR_TELEPORT);
+					pc->setpos(pl_sd,pl_sd->status.save_point.map,pl_sd->status.save_point.x,pl_sd->status.save_point.y,CLR_TELEPORT);
 				break;
 			case 2: // SavePoint
 				if(!map[pl_sd->bl.m].flag.noreturn)
-					pc_setpos(pl_sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
+					pc->setpos(pl_sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
 				break;
 			case 3: // m,x,y
 				if(!map[pl_sd->bl.m].flag.noreturn && !map[pl_sd->bl.m].flag.nowarp)
-					pc_setpos(pl_sd,mapindex_name2id(str),x,y,CLR_TELEPORT);
+					pc->setpos(pl_sd,mapindex_name2id(str),x,y,CLR_TELEPORT);
 				break;
 		}
 	}
@@ -4896,7 +4896,7 @@ BUILDIN(itemheal)
 	
 	sd = script_rid2sd(st);
 	if (!sd) return true;
-	pc_itemheal(sd,sd->itemid,hp,sp);
+	pc->itemheal(sd,sd->itemid,hp,sp);
 	return true;
 }
 /*==========================================
@@ -4923,7 +4923,7 @@ BUILDIN(percentheal)
 	if( sd->sc.data[SC_EXTREMITYFIST2] )
 		sp = 0;
 #endif
-	pc_percentheal(sd,hp,sp);
+	pc->percentheal(sd,hp,sp);
 	return true;
 }
 
@@ -4946,7 +4946,7 @@ BUILDIN(jobchange)
 		if( sd == NULL )
 			return true;
 		
-		pc_jobchange(sd, job, upper);
+		pc->jobchange(sd, job, upper);
 	}
 	
 	return true;
@@ -4958,7 +4958,7 @@ BUILDIN(jobchange)
 BUILDIN(jobname)
 {
 	int class_=script_getnum(st,2);
-	script_pushconststr(st, (char*)job_name(class_));
+	script_pushconststr(st, (char*)pc->job_name(class_));
 	return true;
 }
 
@@ -5520,7 +5520,7 @@ BUILDIN(setlook)
 	if( sd == NULL )
 		return true;
 	
-	pc_changelook(sd,type,val);
+	pc->changelook(sd,type,val);
 	
 	return true;
 }
@@ -5709,7 +5709,7 @@ BUILDIN(checkweight)
 	    script_pushint(st,0);
 	    return false;
 	}
-	slots = pc_inventoryblank(sd); //nb of empty slot
+	slots = pc->inventoryblank(sd); //nb of empty slot
 	
 	for(i=2; i<nbargs; i=i+2){
 	    data = script_getdata(st,i);
@@ -5740,7 +5740,7 @@ BUILDIN(checkweight)
 		    return true;
 	    }
 		
-	    switch( pc_checkadditem(sd, nameid, amount) )
+	    switch( pc->checkadditem(sd, nameid, amount) )
 	    {
 		    case ADDITEM_EXIST:
 			    // item is already in inventory, but there is still space for the requested amount
@@ -5823,7 +5823,7 @@ BUILDIN(checkweight2)
 		fail = 1;
 	}
 	
-	slots = pc_inventoryblank(sd);
+	slots = pc->inventoryblank(sd);
 	for(i=0; i<nb_it; i++){
 		nameid = (int32)__64BPTRSIZE(get_val2(st,reference_uid(id_it,idx_it+i),reference_getref(data_it)));
 	    script_removetop(st, -1, 0);
@@ -5846,7 +5846,7 @@ BUILDIN(checkweight2)
 			fail = 1;
 			continue;
 	    }
-	    switch( pc_checkadditem(sd, nameid, amount) ) {
+	    switch( pc->checkadditem(sd, nameid, amount) ) {
 		    case ADDITEM_EXIST:
 				// item is already in inventory, but there is still space for the requested amount
 			    break;
@@ -5940,10 +5940,10 @@ BUILDIN(getitem)
 		// if not pet egg
 		if (!pet_create_egg(sd, nameid))
 		{
-			if ((flag = pc_additem(sd, &it, get_count, LOG_TYPE_SCRIPT)))
+			if ((flag = pc->additem(sd, &it, get_count, LOG_TYPE_SCRIPT)))
 			{
 				clif->additem(sd, 0, 0, flag);
-				if( pc_candrop(sd,&it) )
+				if( pc->candrop(sd,&it) )
 					map_addflooritem(&it,get_count,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 			}
 		}
@@ -6038,10 +6038,10 @@ BUILDIN(getitem2)
 			// if not pet egg
 			if (!pet_create_egg(sd, nameid))
 			{
-				if ((flag = pc_additem(sd, &item_tmp, get_count, LOG_TYPE_SCRIPT)))
+				if ((flag = pc->additem(sd, &item_tmp, get_count, LOG_TYPE_SCRIPT)))
 				{
 					clif->additem(sd, 0, 0, flag);
-					if( pc_candrop(sd,&item_tmp) )
+					if( pc->candrop(sd,&item_tmp) )
 						map_addflooritem(&item_tmp,get_count,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 				}
 			}
@@ -6101,7 +6101,7 @@ BUILDIN(rentitem)
 	it.identify = 1;
 	it.expire_time = (unsigned int)(time(NULL) + seconds);
 	
-	if( (flag = pc_additem(sd, &it, 1, LOG_TYPE_SCRIPT)) )
+	if( (flag = pc->additem(sd, &it, 1, LOG_TYPE_SCRIPT)) )
 	{
 		clif->additem(sd, 0, 0, flag);
 		return false;
@@ -6170,7 +6170,7 @@ BUILDIN(getnameditem)
 	item_tmp.card[0]=CARD0_CREATE; //we don't use 255! because for example SIGNED WEAPON shouldn't get TOP10 BS Fame bonus [Lupus]
 	item_tmp.card[2]=tsd->status.char_id;
 	item_tmp.card[3]=tsd->status.char_id >> 16;
-	if(pc_additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT)) {
+	if(pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT)) {
 		script_pushint(st,0);
 		return true;	//Failed to add item, we will not drop if they don't fit
 	}
@@ -6262,7 +6262,7 @@ static void buildin_delitem_delete(struct map_session_data* sd, int idx, int* am
 		{// delete associated pet
 			intif_delete_petdata(MakeDWord(inv->card[1], inv->card[2]));
 		}
-		pc_delitem(sd, idx, delamount, 0, 0, LOG_TYPE_SCRIPT);
+		pc->delitem(sd, idx, delamount, 0, 0, LOG_TYPE_SCRIPT);
 	}
 	
 	amount[0]-= delamount;
@@ -6556,7 +6556,7 @@ BUILDIN(disableitemuse)
 
 /*==========================================
  * return the basic stats of sd
- * chk pc_readparam for available type
+ * chk pc->readparam for available type
  *------------------------------------------*/
 BUILDIN(readparam)
 {
@@ -6574,7 +6574,7 @@ BUILDIN(readparam)
 		return true;
 	}
 	
-	script_pushint(st,pc_readparam(sd,type));
+	script_pushint(st,pc->readparam(sd,type));
 	
 	return true;
 }
@@ -6660,7 +6660,7 @@ BUILDIN(getpartyname)
 	
 	party_id = script_getnum(st,2);
 	
-	if( ( p = party_search(party_id) ) != NULL )
+	if( ( p = party->search(party_id) ) != NULL )
 	{
 		script_pushstrcopy(st,p->party.name);
 	}
@@ -6684,7 +6684,7 @@ BUILDIN(getpartymember)
 	struct party_data *p;
 	int i,j=0,type=0;
 	
-	p=party_search(script_getnum(st,2));
+	p=party->search(script_getnum(st,2));
 	
 	if( script_hasdata(st,3) )
  		type=script_getnum(st,3);
@@ -6724,7 +6724,7 @@ BUILDIN(getpartyleader)
 	if( script_hasdata(st,3) )
  		type=script_getnum(st,3);
 	
-	p=party_search(party_id);
+	p=party->search(party_id);
 	
 	if (p) //Search leader
 		for(i = 0; i < MAX_PARTY && !p->party.member[i].leader; i++);
@@ -6837,7 +6837,7 @@ BUILDIN(strcharinfo)
 			script_pushstrcopy(st,sd->status.name);
 			break;
 		case 1:
-			if( ( p = party_search(sd->status.party_id) ) != NULL ) {
+			if( ( p = party->search(sd->status.party_id) ) != NULL ) {
 				script_pushstrcopy(st,p->party.name);
 			} else {
 				script_pushconststr(st,"");
@@ -6941,7 +6941,7 @@ BUILDIN(getequipid)
 	}
 	
 	// get inventory position of item
-	i = pc_checkequip(sd,equip[num]);
+	i = pc->checkequip(sd,equip[num]);
 	if( i < 0 )
 	{
 		script_pushint(st,-1);
@@ -6979,7 +6979,7 @@ BUILDIN(getequipname)
 	}
 	
 	// get inventory position of item
-	i = pc_checkequip(sd,equip[num]);
+	i = pc->checkequip(sd,equip[num]);
 	if( i < 0 )
 	{
 		script_pushconststr(st,"");
@@ -7098,7 +7098,7 @@ BUILDIN(getequipisequiped)
 		return true;
 	
 	if (num > 0 && num <= ARRAYLENGTH(equip))
-		i=pc_checkequip(sd,equip[num-1]);
+		i=pc->checkequip(sd,equip[num-1]);
 	
 	if(i >= 0)
 		script_pushint(st,1);
@@ -7125,7 +7125,7 @@ BUILDIN(getequipisenableref)
 		return true;
 	
 	if( num > 0 && num <= ARRAYLENGTH(equip) )
-		i = pc_checkequip(sd,equip[num-1]);
+		i = pc->checkequip(sd,equip[num-1]);
 	if( i >= 0 && sd->inventory_data[i] && !sd->inventory_data[i]->flag.no_refine && !sd->status.inventory[i].expire_time )
 		script_pushint(st,1);
 	else
@@ -7151,7 +7151,7 @@ BUILDIN(getequipisidentify)
 		return true;
 	
 	if (num > 0 && num <= ARRAYLENGTH(equip))
-		i=pc_checkequip(sd,equip[num-1]);
+		i=pc->checkequip(sd,equip[num-1]);
 	if(i >= 0)
 		script_pushint(st,sd->status.inventory[i].identify);
 	else
@@ -7177,7 +7177,7 @@ BUILDIN(getequiprefinerycnt)
 		return true;
 	
 	if (num > 0 && num <= ARRAYLENGTH(equip))
-		i=pc_checkequip(sd,equip[num-1]);
+		i=pc->checkequip(sd,equip[num-1]);
 	if(i >= 0)
 		script_pushint(st,sd->status.inventory[i].refine);
 	else
@@ -7204,7 +7204,7 @@ BUILDIN(getequipweaponlv)
 		return true;
 	
 	if (num > 0 && num <= ARRAYLENGTH(equip))
-		i=pc_checkequip(sd,equip[num-1]);
+		i=pc->checkequip(sd,equip[num-1]);
 	if(i >= 0 && sd->inventory_data[i])
 		script_pushint(st,sd->inventory_data[i]->wlv);
 	else
@@ -7230,7 +7230,7 @@ BUILDIN(getequippercentrefinery)
 		return true;
 	
 	if (num > 0 && num <= ARRAYLENGTH(equip))
-		i=pc_checkequip(sd,equip[num-1]);
+		i=pc->checkequip(sd,equip[num-1]);
 	if(i >= 0 && sd->status.inventory[i].nameid && sd->status.inventory[i].refine < MAX_REFINE)
 		script_pushint(st,status_get_refine_chance(itemdb_wlv(sd->status.inventory[i].nameid), (int)sd->status.inventory[i].refine));
 	else
@@ -7253,7 +7253,7 @@ BUILDIN(successrefitem)
 		return true;
 	
 	if (num > 0 && num <= ARRAYLENGTH(equip))
-		i=pc_checkequip(sd,equip[num-1]);
+		i=pc->checkequip(sd,equip[num-1]);
 	if(i >= 0) {
 		ep=sd->status.inventory[i].equip;
 		
@@ -7261,7 +7261,7 @@ BUILDIN(successrefitem)
 		logs->pick_pc(sd, LOG_TYPE_SCRIPT, -1, &sd->status.inventory[i],sd->inventory_data[i]);
 		
 		sd->status.inventory[i].refine++;
-		pc_unequipitem(sd,i,2); // status calc will happen in pc_equipitem() below
+		pc->unequipitem(sd,i,2); // status calc will happen in pc->equipitem() below
 		
 		clif->refine(sd->fd,0,i,sd->status.inventory[i].refine);
 		clif->delitem(sd,i,1,3);
@@ -7270,7 +7270,7 @@ BUILDIN(successrefitem)
 		logs->pick_pc(sd, LOG_TYPE_SCRIPT, 1, &sd->status.inventory[i],sd->inventory_data[i]);
 		
 		clif->additem(sd,i,1,0);
-		pc_equipitem(sd,i,ep);
+		pc->equipitem(sd,i,ep);
 		clif->misceffect(&sd->bl,3);
 		if(sd->status.inventory[i].refine == MAX_REFINE &&
 		   sd->status.inventory[i].card[0] == CARD0_FORGE &&
@@ -7278,13 +7278,13 @@ BUILDIN(successrefitem)
 		   ){ // Fame point system [DracoRPG]
 	 		switch (sd->inventory_data[i]->wlv){
 				case 1:
-					pc_addfame(sd,1); // Success to refine to +10 a lv1 weapon you forged = +1 fame point
+					pc->addfame(sd,1); // Success to refine to +10 a lv1 weapon you forged = +1 fame point
 					break;
 				case 2:
-					pc_addfame(sd,25); // Success to refine to +10 a lv2 weapon you forged = +25 fame point
+					pc->addfame(sd,25); // Success to refine to +10 a lv2 weapon you forged = +25 fame point
 					break;
 				case 3:
-					pc_addfame(sd,1000); // Success to refine to +10 a lv3 weapon you forged = +1000 fame point
+					pc->addfame(sd,1000); // Success to refine to +10 a lv3 weapon you forged = +1000 fame point
 					break;
 			}
 		}
@@ -7307,13 +7307,13 @@ BUILDIN(failedrefitem)
 		return true;
 	
 	if (num > 0 && num <= ARRAYLENGTH(equip))
-		i=pc_checkequip(sd,equip[num-1]);
+		i=pc->checkequip(sd,equip[num-1]);
 	if(i >= 0) {
 		sd->status.inventory[i].refine = 0;
-		pc_unequipitem(sd,i,3); //recalculate bonus
+		pc->unequipitem(sd,i,3); //recalculate bonus
 		clif->refine(sd->fd,1,i,sd->status.inventory[i].refine); //notify client of failure
 		
-		pc_delitem(sd,i,1,0,2,LOG_TYPE_SCRIPT);
+		pc->delitem(sd,i,1,0,2,LOG_TYPE_SCRIPT);
 		
 		clif->misceffect(&sd->bl,2); 	// display failure effect
 	}
@@ -7335,7 +7335,7 @@ BUILDIN(downrefitem)
 		return true;
 	
 	if (num > 0 && num <= ARRAYLENGTH(equip))
-		i = pc_checkequip(sd,equip[num-1]);
+		i = pc->checkequip(sd,equip[num-1]);
 	if(i >= 0) {
 		ep = sd->status.inventory[i].equip;
 		
@@ -7343,7 +7343,7 @@ BUILDIN(downrefitem)
 		logs->pick_pc(sd, LOG_TYPE_SCRIPT, -1, &sd->status.inventory[i],sd->inventory_data[i]);
 		
 		sd->status.inventory[i].refine++;
-		pc_unequipitem(sd,i,2); // status calc will happen in pc_equipitem() below
+		pc->unequipitem(sd,i,2); // status calc will happen in pc->equipitem() below
 		
 		clif->refine(sd->fd,2,i,sd->status.inventory[i].refine = sd->status.inventory[i].refine - 2);
 		clif->delitem(sd,i,1,3);
@@ -7352,7 +7352,7 @@ BUILDIN(downrefitem)
 		logs->pick_pc(sd, LOG_TYPE_SCRIPT, 1, &sd->status.inventory[i],sd->inventory_data[i]);
 		
 		clif->additem(sd,i,1,0);
-		pc_equipitem(sd,i,ep);
+		pc->equipitem(sd,i,ep);
 		clif->misceffect(&sd->bl,2);
 	}
 	
@@ -7373,10 +7373,10 @@ BUILDIN(delequip)
 		return true;
 	
 	if (num > 0 && num <= ARRAYLENGTH(equip))
-		i=pc_checkequip(sd,equip[num-1]);
+		i=pc->checkequip(sd,equip[num-1]);
 	if(i >= 0) {
-		pc_unequipitem(sd,i,3); //recalculate bonus
-		pc_delitem(sd,i,1,0,2,LOG_TYPE_SCRIPT);
+		pc->unequipitem(sd,i,3); //recalculate bonus
+		pc->delitem(sd,i,1,0,2,LOG_TYPE_SCRIPT);
 	}
 	
 	return true;
@@ -7395,7 +7395,7 @@ BUILDIN(statusup)
 	if( sd == NULL )
 		return true;
 	
-	pc_statusup(sd,type);
+	pc->statusup(sd,type);
 	
 	return true;
 }
@@ -7413,7 +7413,7 @@ BUILDIN(statusup2)
 	if( sd == NULL )
 		return true;
 	
-	pc_statusup2(sd,type,val);
+	pc->statusup2(sd,type,val);
 	
 	return true;
 }
@@ -7467,16 +7467,16 @@ BUILDIN(bonus)
 	
 	switch( script_lastdata(st)-2 ) {
 		case 1:
-			pc_bonus(sd, type, val1);
+			pc->bonus(sd, type, val1);
 			break;
 		case 2:
 			val2 = script_getnum(st,4);
-			pc_bonus2(sd, type, val1, val2);
+			pc->bonus2(sd, type, val1, val2);
 			break;
 		case 3:
 			val2 = script_getnum(st,4);
 			val3 = script_getnum(st,5);
-			pc_bonus3(sd, type, val1, val2, val3);
+			pc->bonus3(sd, type, val1, val2, val3);
 			break;
 		case 4:
 			if( type == SP_AUTOSPELL_ONSKILL && script_isstring(st,4) )
@@ -7486,7 +7486,7 @@ BUILDIN(bonus)
 			
 			val3 = script_getnum(st,5);
 			val4 = script_getnum(st,6);
-			pc_bonus4(sd, type, val1, val2, val3, val4);
+			pc->bonus4(sd, type, val1, val2, val3, val4);
 			break;
 		case 5:
 			if( type == SP_AUTOSPELL_ONSKILL && script_isstring(st,4) )
@@ -7497,7 +7497,7 @@ BUILDIN(bonus)
 			val3 = script_getnum(st,5);
 			val4 = script_getnum(st,6);
 			val5 = script_getnum(st,7);
-			pc_bonus5(sd, type, val1, val2, val3, val4, val5);
+			pc->bonus5(sd, type, val1, val2, val3, val4, val5);
 			break;
 		default:
 			ShowDebug("buildin_bonus: unexpected number of arguments (%d)\n", (script_lastdata(st) - 1));
@@ -7533,7 +7533,7 @@ BUILDIN(autobonus)
 	if( script_hasdata(st,6) )
 		other_script = script_getstr(st,6);
 	
-	if( pc_addautobonus(sd->autobonus,ARRAYLENGTH(sd->autobonus),
+	if( pc->addautobonus(sd->autobonus,ARRAYLENGTH(sd->autobonus),
 						bonus_script,rate,dur,atk_type,other_script,sd->status.inventory[current_equip_item_index].equip,false) )
 	{
 		script_add_autobonus(bonus_script);
@@ -7570,7 +7570,7 @@ BUILDIN(autobonus2)
 	if( script_hasdata(st,6) )
 		other_script = script_getstr(st,6);
 	
-	if( pc_addautobonus(sd->autobonus2,ARRAYLENGTH(sd->autobonus2),
+	if( pc->addautobonus(sd->autobonus2,ARRAYLENGTH(sd->autobonus2),
 						bonus_script,rate,dur,atk_type,other_script,sd->status.inventory[current_equip_item_index].equip,false) )
 	{
 		script_add_autobonus(bonus_script);
@@ -7605,7 +7605,7 @@ BUILDIN(autobonus3)
 	if( script_hasdata(st,6) )
 		other_script = script_getstr(st,6);
 	
-	if( pc_addautobonus(sd->autobonus3,ARRAYLENGTH(sd->autobonus3),
+	if( pc->addautobonus(sd->autobonus3,ARRAYLENGTH(sd->autobonus3),
 						bonus_script,rate,dur,atk_type,other_script,sd->status.inventory[current_equip_item_index].equip,true) )
 	{
 		script_add_autobonus(bonus_script);
@@ -7641,7 +7641,7 @@ BUILDIN(skill)
 	level = script_getnum(st,3);
 	if( script_hasdata(st,4) )
 		flag = script_getnum(st,4);
-	pc_skill(sd, id, level, flag);
+	pc->skill(sd, id, level, flag);
 	
 	return true;
 }
@@ -7670,7 +7670,7 @@ BUILDIN(addtoskill)
 	level = script_getnum(st,3);
 	if( script_hasdata(st,4) )
 		flag = script_getnum(st,4);
-	pc_skill(sd, id, level, flag);
+	pc->skill(sd, id, level, flag);
 	
 	return true;
 }
@@ -7712,7 +7712,7 @@ BUILDIN(getskilllv)
 		return true;// no player attached, report source
 	
 	id = ( script_isstring(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
-	script_pushint(st, pc_checkskill(sd,id));
+	script_pushint(st, pc->checkskill(sd,id));
 	
 	return true;
 }
@@ -7760,7 +7760,7 @@ BUILDIN(getgmlevel)
 	if( sd == NULL )
 		return true;// no player attached, report source
 	
-	script_pushint(st, pc_get_group_level(sd));
+	script_pushint(st, pc->get_group_level(sd));
 	
 	return true;
 }
@@ -7882,9 +7882,9 @@ BUILDIN(setoption)
 	if( flag ){// Add option
 		if( option&OPTION_WEDDING && !battle_config.wedding_modifydisplay )
 			option &= ~OPTION_WEDDING;// Do not show the wedding sprites
-		pc_setoption(sd, sd->sc.option|option);
+		pc->setoption(sd, sd->sc.option|option);
 	} else// Remove option
-		pc_setoption(sd, sd->sc.option&~option);
+		pc->setoption(sd, sd->sc.option&~option);
 	
 	return true;
 }
@@ -7932,7 +7932,7 @@ BUILDIN(setcart)
 	
 	if( script_hasdata(st,2) )
 		type = script_getnum(st,2);
-	pc_setcart(sd, type);
+	pc->setcart(sd, type);
 	
 	return true;
 }
@@ -7975,7 +7975,7 @@ BUILDIN(setfalcon)
 	if( script_hasdata(st,2) )
 		flag = script_getnum(st,2);
 	
-	pc_setfalcon(sd, flag);
+	pc->setfalcon(sd, flag);
 	
 	return true;
 }
@@ -8017,7 +8017,7 @@ BUILDIN(setriding)
 	
 	if( script_hasdata(st,2) )
 		flag = script_getnum(st,2);
-	pc_setriding(sd, flag);
+	pc->setriding(sd, flag);
 	
 	return true;
 }
@@ -8078,7 +8078,7 @@ BUILDIN(setmadogear)
 	
 	if( script_hasdata(st,2) )
 		flag = script_getnum(st,2);
-	pc_setmadogear(sd, flag);
+	pc->setmadogear(sd, flag);
 	
 	return true;
 }
@@ -8104,7 +8104,7 @@ BUILDIN(savepoint)
 	y   = script_getnum(st,4);
 	map = mapindex_name2id(str);
 	if( map )
-		pc_setsavepoint(sd, map, x, y);
+		pc->setsavepoint(sd, map, x, y);
 	
 	return true;
 }
@@ -8351,7 +8351,7 @@ BUILDIN(getexp)
 	base = (int) cap_value(base * bonus, 0, INT_MAX);
 	job = (int) cap_value(job * bonus, 0, INT_MAX);
 	
-	pc_gainexp(sd, NULL, base, job, true);
+	pc->gainexp(sd, NULL, base, job, true);
 	
 	return true;
 }
@@ -8791,7 +8791,7 @@ BUILDIN(addtimer)
 	if( sd == NULL )
 		return true;
 	
-	pc_addeventtimer(sd,tick,event);
+	pc->addeventtimer(sd,tick,event);
 	return true;
 }
 /*==========================================
@@ -8807,7 +8807,7 @@ BUILDIN(deltimer)
 		return true;
 	
 	check_event(st, event);
-	pc_deleventtimer(sd,event);
+	pc->deleventtimer(sd,event);
 	return true;
 }
 /*==========================================
@@ -8825,7 +8825,7 @@ BUILDIN(addtimercount)
 		return true;
 	
 	check_event(st, event);
-	pc_addeventtimercount(sd,event,tick);
+	pc->addeventtimercount(sd,event,tick);
 	return true;
 }
 
@@ -9294,11 +9294,11 @@ BUILDIN(getusersname)
 	sd = script_rid2sd(st);
 	if (!sd) return true;
 	
-	group_level = pc_get_group_level(sd);
+	group_level = pc->get_group_level(sd);
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
-		if (pc_has_permission(pl_sd, PC_PERM_HIDE_SESSION) && pc_get_group_level(pl_sd) > group_level)
+		if (pc_has_permission(pl_sd, PC_PERM_HIDE_SESSION) && pc->get_group_level(pl_sd) > group_level)
 			continue; // skip hidden sessions
 		
 		/* Temporary fix for bugreport:1023.
@@ -9810,7 +9810,7 @@ BUILDIN(eaclass)
 		}
 		class_ = sd->status.class_;
 	}
-	script_pushint(st,pc_jobid2mapid(class_));
+	script_pushint(st,pc->jobid2mapid(class_));
 	return true;
 }
 
@@ -9827,7 +9827,7 @@ BUILDIN(roclass)
 		else
 			sex = 1; //Just use male when not found.
 	}
-	script_pushint(st,pc_mapid2jobid(class_, sex));
+	script_pushint(st,pc->mapid2jobid(class_, sex));
 	return true;
 }
 
@@ -9868,7 +9868,7 @@ BUILDIN(resetlvl)
 	if( sd == NULL )
 		return true;
 	
-	pc_resetlvl(sd,type);
+	pc->resetlvl(sd,type);
 	return true;
 }
 /*==========================================
@@ -9878,7 +9878,7 @@ BUILDIN(resetstatus)
 {
 	TBL_PC *sd;
 	sd=script_rid2sd(st);
-	pc_resetstate(sd);
+	pc->resetstate(sd);
 	return true;
 }
 
@@ -9889,7 +9889,7 @@ BUILDIN(resetskill)
 {
 	TBL_PC *sd;
 	sd=script_rid2sd(st);
-	pc_resetskill(sd,1);
+	pc->resetskill(sd,1);
 	return true;
 }
 
@@ -9900,7 +9900,7 @@ BUILDIN(skillpointcount)
 {
 	TBL_PC *sd;
 	sd=script_rid2sd(st);
-	script_pushint(st,sd->status.skill_point + pc_resetskill(sd,2));
+	script_pushint(st,sd->status.skill_point + pc->resetskill(sd,2));
 	return true;
 }
 
@@ -9951,10 +9951,10 @@ BUILDIN(changesex)
 	TBL_PC *sd = NULL;
 	sd = script_rid2sd(st);
 	
-	pc_resetskill(sd,4);
+	pc->resetskill(sd,4);
 	// to avoid any problem with equipment and invalid sex, equipment is unequiped.
 	for( i=0; i<EQI_MAX; i++ )
-		if( sd->equip_index[i] >= 0 ) pc_unequipitem(sd, sd->equip_index[i], 3);
+		if( sd->equip_index[i] >= 0 ) pc->unequipitem(sd, sd->equip_index[i], 3);
 	chrif_changesex(sd);
 	return true;
 }
@@ -10179,17 +10179,17 @@ BUILDIN(warpwaitingpc)
 			{// no zeny to cover set fee
 				break;
 			}
-			pc_payzeny(sd, cd->zeny, LOG_TYPE_NPC, NULL);
+			pc->payzeny(sd, cd->zeny, LOG_TYPE_NPC, NULL);
 		}
 		
 		mapreg_setreg(reference_uid(add_str("$@warpwaitingpc"), i), sd->bl.id);
 		
 		if( strcmp(map_name,"Random") == 0 )
-			pc_randomwarp(sd,CLR_TELEPORT);
+			pc->randomwarp(sd,CLR_TELEPORT);
 		else if( strcmp(map_name,"SavePoint") == 0 )
-			pc_setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
+			pc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 		else
-			pc_setpos(sd, mapindex_name2id(map_name), x, y, CLR_OUTSIGHT);
+			pc->setpos(sd, mapindex_name2id(map_name), x, y, CLR_OUTSIGHT);
 	}
 	mapreg_setreg(add_str("$@warpwaitingpcnum"), i);
 	return true;
@@ -10345,7 +10345,7 @@ BUILDIN(getmapflag)
 static int script_mapflag_pvp_sub(struct block_list *bl,va_list ap) {
 	TBL_PC* sd = (TBL_PC*)bl;
 	if (sd->pvp_timer == INVALID_TIMER) {
-		sd->pvp_timer = add_timer(gettick() + 200, pc_calc_pvprank_timer, sd->bl.id, 0);
+		sd->pvp_timer = add_timer(gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0);
 		sd->pvp_rank = 0;
 		sd->pvp_lastusers = 0;
 		sd->pvp_point = 5;
@@ -10576,7 +10576,7 @@ BUILDIN(pvpon)
 		if( sd->bl.m != m || sd->pvp_timer != INVALID_TIMER )
 			continue; // not applicable
 		
-		sd->pvp_timer = add_timer(gettick()+200,pc_calc_pvprank_timer,sd->bl.id,0);
+		sd->pvp_timer = add_timer(gettick()+200,pc->calc_pvprank_timer,sd->bl.id,0);
 		sd->pvp_rank = 0;
 		sd->pvp_lastusers = 0;
 		sd->pvp_point = 5;
@@ -10593,7 +10593,7 @@ static int buildin_pvpoff_sub(struct block_list *bl,va_list ap)
 	TBL_PC* sd = (TBL_PC*)bl;
 	clif->pvpset(sd, 0, 0, 2);
 	if (sd->pvp_timer != INVALID_TIMER) {
-		delete_timer(sd->pvp_timer, pc_calc_pvprank_timer);
+		delete_timer(sd->pvp_timer, pc->calc_pvprank_timer);
 		sd->pvp_timer = INVALID_TIMER;
 	}
 	return 0;
@@ -10712,7 +10712,7 @@ static int buildin_maprespawnguildid_sub_pc(struct map_session_data* sd, va_list
 	   (sd->status.guild_id != g_id && flag&2) || //Warp out outsiders
 	   (sd->status.guild_id == 0)	// Warp out players not in guild [Valaris]
 	   )
-		pc_setpos(sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
+		pc->setpos(sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
 	return 1;
 }
 
@@ -10923,7 +10923,7 @@ BUILDIN(getequipcardcnt)
 	num=script_getnum(st,2);
 	sd=script_rid2sd(st);
 	if (num > 0 && num <= ARRAYLENGTH(equip))
-		i=pc_checkequip(sd,equip[num-1]);
+		i=pc->checkequip(sd,equip[num-1]);
 	
 	if (i < 0 || !sd->inventory_data[i]) {
 		script_pushint(st,0);
@@ -10955,7 +10955,7 @@ BUILDIN(successremovecards) {
 	int num = script_getnum(st,2);
 	
 	if (num > 0 && num <= ARRAYLENGTH(equip))
-		i=pc_checkequip(sd,equip[num-1]);
+		i=pc->checkequip(sd,equip[num-1]);
 	
 	if (i < 0 || !sd->inventory_data[i]) {
 		return true;
@@ -10973,7 +10973,7 @@ BUILDIN(successremovecards) {
 			item_tmp.nameid   = sd->status.inventory[i].card[c];
 			item_tmp.identify = 1;
 			
-			if((flag=pc_additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))){	// get back the cart in inventory
+			if((flag=pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))){	// get back the cart in inventory
 				clif->additem(sd,0,0,flag);
 				map_addflooritem(&item_tmp,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 			}
@@ -10994,8 +10994,8 @@ BUILDIN(successremovecards) {
 		for (j = sd->inventory_data[i]->slot; j < MAX_SLOTS; j++)
 			item_tmp.card[j]=sd->status.inventory[i].card[j];
 		
-		pc_delitem(sd,i,1,0,3,LOG_TYPE_SCRIPT);
-		if((flag=pc_additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))){	//chk if can be spawn in inventory otherwise put on floor
+		pc->delitem(sd,i,1,0,3,LOG_TYPE_SCRIPT);
+		if((flag=pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))){	//chk if can be spawn in inventory otherwise put on floor
 			clif->additem(sd,0,0,flag);
 			map_addflooritem(&item_tmp,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 		}
@@ -11019,7 +11019,7 @@ BUILDIN(failedremovecards) {
 	int typefail = script_getnum(st,3);
 	
 	if (num > 0 && num <= ARRAYLENGTH(equip))
-		i=pc_checkequip(sd,equip[num-1]);
+		i=pc->checkequip(sd,equip[num-1]);
 	
 	if (i < 0 || !sd->inventory_data[i])
 		return true;
@@ -11040,7 +11040,7 @@ BUILDIN(failedremovecards) {
 				item_tmp.nameid   = sd->status.inventory[i].card[c];
 				item_tmp.identify = 1;
 				
-				if((flag=pc_additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))){
+				if((flag=pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))){
 					clif->additem(sd,0,0,flag);
 					map_addflooritem(&item_tmp,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 				}
@@ -11050,7 +11050,7 @@ BUILDIN(failedremovecards) {
 	
 	if(cardflag == 1) {
 		if(typefail == 0 || typefail == 2){	// destroy the item
-			pc_delitem(sd,i,1,0,2,LOG_TYPE_SCRIPT);
+			pc->delitem(sd,i,1,0,2,LOG_TYPE_SCRIPT);
 		}
 		if(typefail == 1){	// destroy the card
 			int flag;
@@ -11067,9 +11067,9 @@ BUILDIN(failedremovecards) {
 			for (j = sd->inventory_data[i]->slot; j < MAX_SLOTS; j++)
 				item_tmp.card[j]=sd->status.inventory[i].card[j];
 			
-			pc_delitem(sd,i,1,0,2,LOG_TYPE_SCRIPT);
+			pc->delitem(sd,i,1,0,2,LOG_TYPE_SCRIPT);
 			
-			if((flag=pc_additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))){
+			if((flag=pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT))){
 				clif->additem(sd,0,0,flag);
 				map_addflooritem(&item_tmp,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 			}
@@ -11115,17 +11115,17 @@ BUILDIN(mapwarp)	// Added by RoVeRT
 				for( i=0; i < g->max_member; i++)
 				{
 					if(g->member[i].sd && g->member[i].sd->bl.m==m){
-						pc_setpos(g->member[i].sd,index,x,y,CLR_TELEPORT);
+						pc->setpos(g->member[i].sd,index,x,y,CLR_TELEPORT);
 					}
 				}
 			}
 			break;
 		case 2:
-			p = party_search(check_ID);
+			p = party->search(check_ID);
 			if(p){
 				for(i=0;i<MAX_PARTY; i++){
 					if(p->data[i].sd && p->data[i].sd->bl.m == m){
-						pc_setpos(p->data[i].sd,index,x,y,CLR_TELEPORT);
+						pc->setpos(p->data[i].sd,index,x,y,CLR_TELEPORT);
 					}
 				}
 			}
@@ -11190,7 +11190,7 @@ BUILDIN(marriage)
 	TBL_PC *sd=script_rid2sd(st);
 	TBL_PC *p_sd=map_nick2sd(partner);
 	
-	if(sd==NULL || p_sd==NULL || pc_marriage(sd,p_sd) < 0){
+	if(sd==NULL || p_sd==NULL || pc->marriage(sd,p_sd) < 0){
 		script_pushint(st,0);
 		return true;
 	}
@@ -11212,7 +11212,7 @@ BUILDIN(wedding_effect)
 BUILDIN(divorce)
 {
 	TBL_PC *sd=script_rid2sd(st);
-	if(sd==NULL || pc_divorce(sd) < 0){
+	if(sd==NULL || pc->divorce(sd) < 0){
 		script_pushint(st,0);
 		return true;
 	}
@@ -11224,7 +11224,7 @@ BUILDIN(ispartneron)
 {
 	TBL_PC *sd=script_rid2sd(st);
 	
-	if(sd==NULL || !pc_ismarried(sd) ||
+	if(sd==NULL || !pc->ismarried(sd) ||
 	   map_charid2sd(sd->status.partner_id) == NULL) {
 		script_pushint(st,0);
 		return true;
@@ -11290,7 +11290,7 @@ BUILDIN(warppartner)
 	TBL_PC *sd=script_rid2sd(st);
 	TBL_PC *p_sd=NULL;
 	
-	if(sd==NULL || !pc_ismarried(sd) ||
+	if(sd==NULL || !pc->ismarried(sd) ||
 	   (p_sd=map_charid2sd(sd->status.partner_id)) == NULL) {
 		script_pushint(st,0);
 		return true;
@@ -11302,7 +11302,7 @@ BUILDIN(warppartner)
 	
 	mapindex = mapindex_name2id(str);
 	if (mapindex) {
-		pc_setpos(p_sd,mapindex,x,y,CLR_OUTSIGHT);
+		pc->setpos(p_sd,mapindex,x,y,CLR_OUTSIGHT);
 		script_pushint(st,1);
 	} else
 		script_pushint(st,0);
@@ -11616,7 +11616,7 @@ BUILDIN(getequipcardid)
 	slot=script_getnum(st,3);
 	sd=script_rid2sd(st);
 	if (num > 0 && num <= ARRAYLENGTH(equip))
-		i=pc_checkequip(sd,equip[num-1]);
+		i=pc->checkequip(sd,equip[num-1]);
 	if(i >= 0 && slot>=0 && slot<4)
 		script_pushint(st,sd->status.inventory[i].card[slot]);
 	else
@@ -11714,22 +11714,22 @@ BUILDIN(getinventorylist)
 	if(!sd) return true;
 	for(i=0;i<MAX_INVENTORY;i++){
 		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].amount > 0){
-			pc_setreg(sd,reference_uid(add_str("@inventorylist_id"), j),sd->status.inventory[i].nameid);
-			pc_setreg(sd,reference_uid(add_str("@inventorylist_amount"), j),sd->status.inventory[i].amount);
-			pc_setreg(sd,reference_uid(add_str("@inventorylist_equip"), j),sd->status.inventory[i].equip);
-			pc_setreg(sd,reference_uid(add_str("@inventorylist_refine"), j),sd->status.inventory[i].refine);
-			pc_setreg(sd,reference_uid(add_str("@inventorylist_identify"), j),sd->status.inventory[i].identify);
-			pc_setreg(sd,reference_uid(add_str("@inventorylist_attribute"), j),sd->status.inventory[i].attribute);
+			pc->setreg(sd,reference_uid(add_str("@inventorylist_id"), j),sd->status.inventory[i].nameid);
+			pc->setreg(sd,reference_uid(add_str("@inventorylist_amount"), j),sd->status.inventory[i].amount);
+			pc->setreg(sd,reference_uid(add_str("@inventorylist_equip"), j),sd->status.inventory[i].equip);
+			pc->setreg(sd,reference_uid(add_str("@inventorylist_refine"), j),sd->status.inventory[i].refine);
+			pc->setreg(sd,reference_uid(add_str("@inventorylist_identify"), j),sd->status.inventory[i].identify);
+			pc->setreg(sd,reference_uid(add_str("@inventorylist_attribute"), j),sd->status.inventory[i].attribute);
 			for (k = 0; k < MAX_SLOTS; k++)
 			{
 				sprintf(card_var, "@inventorylist_card%d",k+1);
-				pc_setreg(sd,reference_uid(add_str(card_var), j),sd->status.inventory[i].card[k]);
+				pc->setreg(sd,reference_uid(add_str(card_var), j),sd->status.inventory[i].card[k]);
 			}
-			pc_setreg(sd,reference_uid(add_str("@inventorylist_expire"), j),sd->status.inventory[i].expire_time);
+			pc->setreg(sd,reference_uid(add_str("@inventorylist_expire"), j),sd->status.inventory[i].expire_time);
 			j++;
 		}
 	}
-	pc_setreg(sd,add_str("@inventorylist_count"),j);
+	pc->setreg(sd,add_str("@inventorylist_count"),j);
 	return true;
 }
 
@@ -11740,13 +11740,13 @@ BUILDIN(getskilllist)
 	if(!sd) return true;
 	for(i=0;i<MAX_SKILL;i++){
 		if(sd->status.skill[i].id > 0 && sd->status.skill[i].lv > 0){
-			pc_setreg(sd,reference_uid(add_str("@skilllist_id"), j),sd->status.skill[i].id);
-			pc_setreg(sd,reference_uid(add_str("@skilllist_lv"), j),sd->status.skill[i].lv);
-			pc_setreg(sd,reference_uid(add_str("@skilllist_flag"), j),sd->status.skill[i].flag);
+			pc->setreg(sd,reference_uid(add_str("@skilllist_id"), j),sd->status.skill[i].id);
+			pc->setreg(sd,reference_uid(add_str("@skilllist_lv"), j),sd->status.skill[i].lv);
+			pc->setreg(sd,reference_uid(add_str("@skilllist_flag"), j),sd->status.skill[i].flag);
 			j++;
 		}
 	}
-	pc_setreg(sd,add_str("@skilllist_count"),j);
+	pc->setreg(sd,add_str("@skilllist_count"),j);
 	return true;
 }
 
@@ -11757,7 +11757,7 @@ BUILDIN(clearitem)
 	if(sd==NULL) return true;
 	for (i=0; i<MAX_INVENTORY; i++) {
 		if (sd->status.inventory[i].amount) {
-			pc_delitem(sd, i, sd->status.inventory[i].amount, 0, 0, LOG_TYPE_SCRIPT);
+			pc->delitem(sd, i, sd->status.inventory[i].amount, 0, 0, LOG_TYPE_SCRIPT);
 		}
 	}
 	return true;
@@ -11775,7 +11775,7 @@ BUILDIN(disguise)
 	id = script_getnum(st,2);
 	
 	if (mobdb_checkid(id) || npcdb_checkid(id)) {
-		pc_disguise(sd, id);
+		pc->disguise(sd, id);
 		script_pushint(st,id);
 	} else
 		script_pushint(st,0);
@@ -11792,7 +11792,7 @@ BUILDIN(undisguise)
 	if (sd == NULL) return true;
 	
 	if (sd->disguise != -1) {
-		pc_disguise(sd, -1);
+		pc->disguise(sd, -1);
 		script_pushint(st,0);
 	} else {
 		script_pushint(st,1);
@@ -12236,7 +12236,7 @@ BUILDIN(nude)
 		if( sd->equip_index[ i ] >= 0 ) {
 			if( !calcflag )
 				calcflag = 1;
-			pc_unequipitem( sd , sd->equip_index[ i ] , 2);
+			pc->unequipitem( sd , sd->equip_index[ i ] , 2);
 		}
 	}
 	
@@ -13087,12 +13087,12 @@ BUILDIN(getrefine)
  *-------------------------------------------------------*/
 BUILDIN(night)
 {
-	if (night_flag != 1) map_night_timer(night_timer_tid, 0, 0, 1);
+	if (night_flag != 1) pc->map_night_timer(pc->night_timer_tid, 0, 0, 1);
 	return true;
 }
 BUILDIN(day)
 {
-	if (night_flag != 0) map_day_timer(day_timer_tid, 0, 0, 1);
+	if (night_flag != 0) pc->map_day_timer(pc->day_timer_tid, 0, 0, 1);
 	return true;
 }
 
@@ -13109,9 +13109,9 @@ BUILDIN(unequip)
 	sd = script_rid2sd(st);
 	if( sd != NULL && num >= 1 && num <= ARRAYLENGTH(equip) )
 	{
-		i = pc_checkequip(sd,equip[num-1]);
+		i = pc->checkequip(sd,equip[num-1]);
 		if (i >= 0)
-			pc_unequipitem(sd,i,1|2);
+			pc->unequipitem(sd,i,1|2);
 	}
 	return true;
 }
@@ -13132,7 +13132,7 @@ BUILDIN(equip)
 	}
 	ARR_FIND( 0, MAX_INVENTORY, i, sd->status.inventory[i].nameid == nameid );
 	if( i < MAX_INVENTORY )
-		pc_equipitem(sd,i,item_data->equip);
+		pc->equipitem(sd,i,item_data->equip);
 	
 	return true;
 }
@@ -14806,7 +14806,7 @@ BUILDIN(pcfollow)
 		sd = script_rid2sd(st);
 	
 	if(sd)
-		pc_follow(sd, targetid);
+		pc->follow(sd, targetid);
 	
     return true;
 }
@@ -14825,7 +14825,7 @@ BUILDIN(pcstopfollow)
 		sd = script_rid2sd(st);
 	
 	if(sd)
-		pc_stop_following(sd);
+		pc->stop_following(sd);
 	
 	return true;
 }
@@ -15699,7 +15699,7 @@ BUILDIN(waitingroom2bg_single)
 	
 	if( bg_team_join(bg_id, sd) )
 	{
-		pc_setpos(sd, mapindex, x, y, CLR_TELEPORT);
+		pc->setpos(sd, mapindex, x, y, CLR_TELEPORT);
 		script_pushint(st,1);
 	}
 	else
@@ -15913,7 +15913,7 @@ BUILDIN(instance_destroy)
 		instance_id = script_getnum(st, 2);
 	else if( st->instance_id )
 		instance_id = st->instance_id;
-	else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id )
+	else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party->search(sd->status.party_id)) != NULL && p->instance_id )
 		instance_id = p->instance_id;
 	else return true;
 	
@@ -15963,7 +15963,7 @@ BUILDIN(instance_detachmap)
 		instance_id = script_getnum(st, 3);
 	else if( st->instance_id )
 		instance_id = st->instance_id;
-	else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id )
+	else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party->search(sd->status.party_id)) != NULL && p->instance_id )
 		instance_id = p->instance_id;
 	else return true;
 	
@@ -16001,7 +16001,7 @@ BUILDIN(instance_id)
 		type = script_getnum(st, 2);
 		if( type == 0 )
 			instance_id = st->instance_id;
-		else if( type == 1 && (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL )
+		else if( type == 1 && (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party->search(sd->status.party_id)) != NULL )
 			instance_id = p->instance_id;
 		else
 			instance_id = 0;
@@ -16027,7 +16027,7 @@ BUILDIN(instance_set_timeout)
 		instance_id = script_getnum(st, 4);
 	else if( st->instance_id )
 		instance_id = st->instance_id;
-	else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id )
+	else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party->search(sd->status.party_id)) != NULL && p->instance_id )
 		instance_id = p->instance_id;
 	else return true;
 	
@@ -16070,7 +16070,7 @@ BUILDIN(instance_announce)
 	{
 		if( st->instance_id )
 			instance_id = st->instance_id;
-		else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id )
+		else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party->search(sd->status.party_id)) != NULL && p->instance_id )
 			instance_id = p->instance_id;
 		else return true;
 	}
@@ -16099,7 +16099,7 @@ BUILDIN(instance_npcname)
 		instance_id = script_getnum(st, 3);
 	else if( st->instance_id )
 		instance_id = st->instance_id;
-	else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id )
+	else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party->search(sd->status.party_id)) != NULL && p->instance_id )
 		instance_id = p->instance_id;
 	
 	if( instance_id && (nd = npc_name2id(str)) != NULL )
@@ -16131,7 +16131,7 @@ BUILDIN(has_instance)
 		instance_id = script_getnum(st, 3);
 	else if( st->instance_id )
 		instance_id = st->instance_id;
-	else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id )
+	else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party->search(sd->status.party_id)) != NULL && p->instance_id )
 		instance_id = p->instance_id;
 	
 	if( !instance_id || (m = map_mapname2mapid(str)) < 0 || (m = instance_map2imap(m, instance_id)) < 0 )
@@ -16161,19 +16161,19 @@ BUILDIN(instance_warpall)
 		instance_id = script_getnum(st,5);
 	else if( st->instance_id )
 		instance_id = st->instance_id;
-	else if( (pl_sd = script_rid2sd(st)) != NULL && pl_sd->status.party_id && (p = party_search(pl_sd->status.party_id)) != NULL && p->instance_id )
+	else if( (pl_sd = script_rid2sd(st)) != NULL && pl_sd->status.party_id && (p = party->search(pl_sd->status.party_id)) != NULL && p->instance_id )
 		instance_id = p->instance_id;
 	else return true;
 	
 	if( (m = map_mapname2mapid(mapn)) < 0 || (map[m].flag.src4instance && (m = instance_mapid2imapid(m, instance_id)) < 0) )
 		return true;
 	
-	if( !(p = party_search(instance[instance_id].party_id)) )
+	if( !(p = party->search(instance[instance_id].party_id)) )
 		return true;
 	
 	mapindex = map_id2index(m);
 	for( i = 0; i < MAX_PARTY; i++ )
-		if( (pl_sd = p->data[i].sd) && map[pl_sd->bl.m].instance_id == st->instance_id ) pc_setpos(pl_sd,mapindex,x,y,CLR_TELEPORT);
+		if( (pl_sd = p->data[i].sd) && map[pl_sd->bl.m].instance_id == st->instance_id ) pc->setpos(pl_sd,mapindex,x,y,CLR_TELEPORT);
 	
 	return true;
 }
@@ -16210,7 +16210,7 @@ BUILDIN(instance_check_party)
 		party_id = script_getnum(st,2);
 	else return true;
 	
-	if( !(p = party_search(party_id)) ){
+	if( !(p = party->search(party_id)) ){
 		script_pushint(st, 0); // Returns false if party does not exist.
 		return true;
 	}
@@ -16505,10 +16505,10 @@ BUILDIN(setdragon) {
 	
 	if( (sd = script_rid2sd(st)) == NULL )
 		return true;
-	if( !pc_checkskill(sd,RK_DRAGONTRAINING) || (sd->class_&MAPID_THIRDMASK) != MAPID_RUNE_KNIGHT )
+	if( !pc->checkskill(sd,RK_DRAGONTRAINING) || (sd->class_&MAPID_THIRDMASK) != MAPID_RUNE_KNIGHT )
 		script_pushint(st,0);//Doesn't have the skill or it's not a Rune Knight
 	else if ( pc_isridingdragon(sd) ) {//Is mounted; release
-		pc_setoption(sd, sd->sc.option&~OPTION_DRAGON);
+		pc->setoption(sd, sd->sc.option&~OPTION_DRAGON);
 		script_pushint(st,1);
 	} else {//Not mounted; Mount now.
 		unsigned int option = OPTION_DRAGON1;
@@ -16523,7 +16523,7 @@ BUILDIN(setdragon) {
 				option = OPTION_DRAGON1;
 			}
 		}
-		pc_setoption(sd, sd->sc.option|option);
+		pc->setoption(sd, sd->sc.option|option);
 		script_pushint(st,1);
 	}
 	return true;
@@ -16902,9 +16902,9 @@ BUILDIN(getrandgroupitem) {
 	for (i = 0; i < qty; i += get_count) {
 		// if not pet egg
 		if (!pet_create_egg(sd, nameid)) {
-			if ((flag = pc_additem(sd, &item_tmp, get_count, LOG_TYPE_SCRIPT))) {
+			if ((flag = pc->additem(sd, &item_tmp, get_count, LOG_TYPE_SCRIPT))) {
 				clif->additem(sd, 0, 0, flag);
-				if( pc_candrop(sd,&item_tmp) )
+				if( pc->candrop(sd,&item_tmp) )
 					map_addflooritem(&item_tmp,get_count,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 			}
 		}

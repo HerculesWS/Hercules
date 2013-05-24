@@ -31,7 +31,7 @@ int mail_removeitem(struct map_session_data *sd, short flag)
 	if( sd->mail.amount )
 	{
 		if (flag) // Item send
-			pc_delitem(sd, sd->mail.index, sd->mail.amount, 1, 0, LOG_TYPE_MAIL);
+			pc->delitem(sd, sd->mail.index, sd->mail.amount, 1, 0, LOG_TYPE_MAIL);
 		else
 			clif->additem(sd, sd->mail.index, sd->mail.amount, 0);
 	}
@@ -48,7 +48,7 @@ int mail_removezeny(struct map_session_data *sd, short flag)
 
 	if (flag && sd->mail.zeny > 0)
 	{  //Zeny send
-		pc_payzeny(sd,sd->mail.zeny,LOG_TYPE_MAIL, NULL);
+		pc->payzeny(sd,sd->mail.zeny,LOG_TYPE_MAIL, NULL);
 	}
 	sd->mail.zeny = 0;
 
@@ -61,7 +61,7 @@ unsigned char mail_setitem(struct map_session_data *sd, int idx, int amount) {
 		return 1;
 
 	if( idx == 0 ) { // Zeny Transfer
-		if( amount < 0 || !pc_can_give_items(sd) )
+		if( amount < 0 || !pc->can_give_items(sd) )
 			return 1;
 
 		if( amount > sd->status.zeny )
@@ -78,8 +78,8 @@ unsigned char mail_setitem(struct map_session_data *sd, int idx, int amount) {
 			return 1;
 		if( amount < 0 || amount > sd->status.inventory[idx].amount )
 			return 1;
-		if( !pc_can_give_items(sd) || sd->status.inventory[idx].expire_time ||
-				!itemdb_canmail(&sd->status.inventory[idx],pc_get_group_level(sd)) )
+		if( !pc->can_give_items(sd) || sd->status.inventory[idx].expire_time ||
+				!itemdb_canmail(&sd->status.inventory[idx],pc->get_group_level(sd)) )
 			return 1;
 
 		sd->mail.index = idx;
@@ -131,13 +131,13 @@ void mail_getattachment(struct map_session_data* sd, int zeny, struct item* item
 {
 	if( item->nameid > 0 && item->amount > 0 )
 	{
-		pc_additem(sd, item, item->amount, LOG_TYPE_MAIL);
+		pc->additem(sd, item, item->amount, LOG_TYPE_MAIL);
 		clif->mail_getattachment(sd->fd, 0);
 	}
 
 	if( zeny > 0 )
 	{  //Zeny receive
-		pc_getzeny(sd, zeny,LOG_TYPE_MAIL, NULL);
+		pc->getzeny(sd, zeny,LOG_TYPE_MAIL, NULL);
 	}
 }
 
@@ -161,12 +161,12 @@ void mail_deliveryfail(struct map_session_data *sd, struct mail_message *msg)
 	if( msg->item.amount > 0 )
 	{
 		// Item receive (due to failure)
-		pc_additem(sd, &msg->item, msg->item.amount, LOG_TYPE_MAIL);
+		pc->additem(sd, &msg->item, msg->item.amount, LOG_TYPE_MAIL);
 	}
 
 	if( msg->zeny > 0 )
 	{
-		pc_getzeny(sd,msg->zeny,LOG_TYPE_MAIL, NULL); //Zeny receive (due to failure)
+		pc->getzeny(sd,msg->zeny,LOG_TYPE_MAIL, NULL); //Zeny receive (due to failure)
 	}
 
 	clif->mail_send(sd->fd, true);
@@ -175,7 +175,7 @@ void mail_deliveryfail(struct map_session_data *sd, struct mail_message *msg)
 // This function only check if the mail operations are valid
 bool mail_invalid_operation(struct map_session_data *sd)
 {
-	if( !map[sd->bl.m].flag.town && !pc_can_use_command(sd, "@mail") )
+	if( !map[sd->bl.m].flag.town && !pc->can_use_command(sd, "@mail") )
 	{
 		ShowWarning("clif->parse_Mail: char '%s' trying to do invalid mail operations.\n", sd->status.name);
 		return true;

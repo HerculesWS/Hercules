@@ -53,7 +53,7 @@ static const int packet_len_table[0x3d] = { // U - used, F - free
 //2af9: Incoming, chrif_connectack -> 'answer of the 2af8 login(ok / fail)'
 //2afa: Outgoing, chrif_sendmap -> 'sending our maps'
 //2afb: Incoming, chrif_sendmapack -> 'Maps received successfully / or not ..'
-//2afc: Outgoing, chrif_scdata_request -> request sc_data for pc_authok'ed char. <- new command reuses previous one.
+//2afc: Outgoing, chrif_scdata_request -> request sc_data for pc->authok'ed char. <- new command reuses previous one.
 //2afd: Incoming, chrif_authok -> 'client authentication ok'
 //2afe: Outgoing, send_usercount_tochar -> 'sends player count of this map server to charserver'
 //2aff: Outgoing, send_users_tochar -> 'sends all actual connected character ids to charserver'
@@ -272,7 +272,7 @@ int chrif_isconnected(void) {
 int chrif_save(struct map_session_data *sd, int flag) {
 	nullpo_retr(-1, sd);
 
-	pc_makesavestatus(sd);
+	pc->makesavestatus(sd);
 
 	if (flag && sd->state.active) { //Store player data which is quitting
 		//FIXME: SC are lost if there's no connection at save-time because of the way its related data is cleared immediately after this function. [Skotlex]
@@ -484,7 +484,7 @@ static int chrif_reconnect(DBKey key, DBData *data, va_list ap) {
 	switch (node->state) {
 		case ST_LOGIN:
 			if ( node->sd && node->char_dat == NULL ) {//Since there is no way to request the char auth, make it fail.
-				pc_authfail(node->sd);
+				pc->authfail(node->sd);
 				chrif_char_offline(node->sd);
 				chrif_auth_delete(node->account_id, node->char_id, ST_LOGIN);
 			}
@@ -645,10 +645,10 @@ void chrif_authok(int fd) {
 		node->char_id == char_id &&
 		node->login_id1 == login_id1 )
 	{ //Auth Ok
-		if (pc_authok(sd, login_id2, expiration_time, group_id, status, changing_mapservers))
+		if (pc->authok(sd, login_id2, expiration_time, group_id, status, changing_mapservers))
 			return;
 	} else { //Auth Failed
-		pc_authfail(sd);
+		pc->authfail(sd);
 	}
 	
 	chrif_char_offline(sd); //Set him offline, the char server likely has it set as online already.
@@ -949,14 +949,14 @@ int chrif_divorceack(int char_id, int partner_id) {
 		sd->status.partner_id = 0;
 		for(i = 0; i < MAX_INVENTORY; i++)
 			if (sd->status.inventory[i].nameid == WEDDING_RING_M || sd->status.inventory[i].nameid == WEDDING_RING_F)
-				pc_delitem(sd, i, 1, 0, 0, LOG_TYPE_OTHER);
+				pc->delitem(sd, i, 1, 0, 0, LOG_TYPE_OTHER);
 	}
 
 	if( ( sd = map_charid2sd(partner_id) ) != NULL && sd->status.partner_id == char_id ) {
 		sd->status.partner_id = 0;
 		for(i = 0; i < MAX_INVENTORY; i++)
 			if (sd->status.inventory[i].nameid == WEDDING_RING_M || sd->status.inventory[i].nameid == WEDDING_RING_F)
-				pc_delitem(sd, i, 1, 0, 0, LOG_TYPE_OTHER);
+				pc->delitem(sd, i, 1, 0, 0, LOG_TYPE_OTHER);
 	}
 	
 	return 0;
@@ -1103,14 +1103,14 @@ int chrif_recvfamelist(int fd) {
 	int num, size;
 	int total = 0, len = 8;
 
-	memset (smith_fame_list, 0, sizeof(smith_fame_list));
-	memset (chemist_fame_list, 0, sizeof(chemist_fame_list));
-	memset (taekwon_fame_list, 0, sizeof(taekwon_fame_list));
+	memset (pc->smith_fame_list, 0, sizeof(pc->smith_fame_list));
+	memset (pc->chemist_fame_list, 0, sizeof(pc->chemist_fame_list));
+	memset (pc->taekwon_fame_list, 0, sizeof(pc->taekwon_fame_list));
 
 	size = RFIFOW(fd, 6); //Blacksmith block size
 	
 	for (num = 0; len < size && num < MAX_FAME_LIST; num++) {
-		memcpy(&smith_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
+		memcpy(&pc->smith_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
  		len += sizeof(struct fame_list);
 	}
 	
@@ -1119,7 +1119,7 @@ int chrif_recvfamelist(int fd) {
 	size = RFIFOW(fd, 4); //Alchemist block size
 	
 	for (num = 0; len < size && num < MAX_FAME_LIST; num++) {
-		memcpy(&chemist_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
+		memcpy(&pc->chemist_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
  		len += sizeof(struct fame_list);
 	}
 	
@@ -1128,7 +1128,7 @@ int chrif_recvfamelist(int fd) {
 	size = RFIFOW(fd, 2); //Total packet length
 	
 	for (num = 0; len < size && num < MAX_FAME_LIST; num++) {
-		memcpy(&taekwon_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
+		memcpy(&pc->taekwon_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
  		len += sizeof(struct fame_list);
 	}
 	
@@ -1146,9 +1146,9 @@ int chrif_updatefamelist_ack(int fd) {
 	uint8 index;
 	
 	switch (RFIFOB(fd,2)) {
-		case 1: list = smith_fame_list;   break;
-		case 2: list = chemist_fame_list; break;
-		case 3: list = taekwon_fame_list; break;
+		case 1: list = pc->smith_fame_list;   break;
+		case 2: list = pc->chemist_fame_list; break;
+		case 3: list = pc->taekwon_fame_list; break;
 		default: return 0;
 	}
 	

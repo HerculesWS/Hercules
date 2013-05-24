@@ -305,7 +305,7 @@ int npc_event_dequeue(struct map_session_data* sd)
 	if (!sd->eventqueue[0][0])
 		return 0; //Nothing to dequeue
 
-	if (!pc_addeventtimer(sd,100,sd->eventqueue[0]))
+	if (!pc->addeventtimer(sd,100,sd->eventqueue[0]))
 	{	//Failed to dequeue, couldn't set a timer.
 		ShowWarning("npc_event_dequeue: event timer is full !\n");
 		return 0;
@@ -961,7 +961,7 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 		case WARP:
 			if( pc_ishiding(sd) || (sd->sc.count && sd->sc.data[SC_CAMOUFLAGE]) )
 				break; // hidden chars cannot use warps
-			pc_setpos(sd,map[m].npc[i]->u.warp.mapindex,map[m].npc[i]->u.warp.x,map[m].npc[i]->u.warp.y,CLR_OUTSIGHT);
+			pc->setpos(sd,map[m].npc[i]->u.warp.mapindex,map[m].npc[i]->u.warp.x,map[m].npc[i]->u.warp.y,CLR_OUTSIGHT);
 			break;
 		case SCRIPT:
 			for (j = i; j < map[m].npc_num; j++) {
@@ -973,7 +973,7 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 					(sd->bl.y >= (map[m].npc[j]->bl.y - map[m].npc[j]->u.warp.ys) && sd->bl.y <= (map[m].npc[j]->bl.y + map[m].npc[j]->u.warp.ys))) {
 					if( pc_ishiding(sd) || (sd->sc.count && sd->sc.data[SC_CAMOUFLAGE]) )
 						break; // hidden chars cannot use warps
-					pc_setpos(sd,map[m].npc[j]->u.warp.mapindex,map[m].npc[j]->u.warp.x,map[m].npc[j]->u.warp.y,CLR_OUTSIGHT);
+					pc->setpos(sd,map[m].npc[j]->u.warp.mapindex,map[m].npc[j]->u.warp.x,map[m].npc[j]->u.warp.y,CLR_OUTSIGHT);
 					found_warp = 1;
 					break;
 				}
@@ -1346,7 +1346,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
             amount = item_list[i*2+0] = 1;
         }
 
-        switch( pc_checkadditem(sd,nameid,amount) )
+        switch( pc->checkadditem(sd,nameid,amount) )
         {
             case ADDITEM_NEW:
                 new_++;
@@ -1361,14 +1361,14 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 
     if( w + sd->weight > sd->max_weight )
         return 3;
-    if( pc_inventoryblank(sd) < new_ )
+    if( pc->inventoryblank(sd) < new_ )
         return 3;
     if( points > vt ) points = vt;
 
     // Payment Process ----------------------------------------------------
     if( sd->kafraPoints < points || sd->cashPoints < (vt - points) )
         return 6;
-    pc_paycash(sd,vt,points);
+    pc->paycash(sd,vt,points);
 
     // Delivery Process ----------------------------------------------------
     for( i = 0; i < count; i++ )
@@ -1384,7 +1384,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
         {
             item_tmp.nameid = nameid;
             item_tmp.identify = 1;
-            pc_additem(sd,&item_tmp,amount,LOG_TYPE_NPC);
+            pc->additem(sd,&item_tmp,amount,LOG_TYPE_NPC);
         }
     }
 
@@ -1454,10 +1454,10 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 		amount = 1;
 	}
 
-	switch( pc_checkadditem(sd, nameid, amount) )
+	switch( pc->checkadditem(sd, nameid, amount) )
 	{
 		case ADDITEM_NEW:
-			if( pc_inventoryblank(sd) == 0 )
+			if( pc->inventoryblank(sd) == 0 )
 				return 3;
 			break;
 		case ADDITEM_OVERAMOUNT:
@@ -1483,7 +1483,7 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	if( (sd->kafraPoints < points) || (sd->cashPoints < price - points) )
 		return 6;
 
-	pc_paycash(sd, price, points);
+	pc->paycash(sd, price, points);
 
 	if( !pet_create_egg(sd, nameid) )
 	{
@@ -1492,7 +1492,7 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 		item_tmp.nameid = nameid;
 		item_tmp.identify = 1;
 
-		pc_additem(sd,&item_tmp, amount, LOG_TYPE_NPC);
+		pc->additem(sd,&item_tmp, amount, LOG_TYPE_NPC);
 	}
 
 	return 0;
@@ -1552,7 +1552,7 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list)
 			continue;
 		}
 
-		switch( pc_checkadditem(sd,nameid,amount) ) {
+		switch( pc->checkadditem(sd,nameid,amount) ) {
 			case ADDITEM_EXIST:
 				break;
 
@@ -1564,7 +1564,7 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list)
 				return 2;
 		}
 
-		value = pc_modifybuyvalue(sd,value);
+		value = pc->modifybuyvalue(sd,value);
 
 		z += (double)value * amount;
 		w += itemdb_weight(nameid) * amount;
@@ -1577,10 +1577,10 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list)
 		return 1;	// Not enough Zeny
 	if( w + sd->weight > sd->max_weight )
 		return 2;	// Too heavy
-	if( pc_inventoryblank(sd) < new_ )
+	if( pc->inventoryblank(sd) < new_ )
 		return 3;	// Not enough space to store items
 
-	pc_payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
+	pc->payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
 
 	for( i = 0; i < n; ++i ) {
 		int nameid = item_list[i*2+1];
@@ -1594,12 +1594,12 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list)
 			item_tmp.nameid = nameid;
 			item_tmp.identify = 1;
 
-			pc_additem(sd,&item_tmp,amount,LOG_TYPE_NPC);
+			pc->additem(sd,&item_tmp,amount,LOG_TYPE_NPC);
 		}
 	}
 
 	// custom merchant shop exp bonus
-	if( battle_config.shop_exp > 0 && z > 0 && (skill_t = pc_checkskill2(sd,idx)) > 0 ) {
+	if( battle_config.shop_exp > 0 && z > 0 && (skill_t = pc->checkskill2(sd,idx)) > 0 ) {
 		if( sd->status.skill[idx].flag >= SKILL_FLAG_REPLACED_LV_0 )
 			skill_t = sd->status.skill[idx].flag - SKILL_FLAG_REPLACED_LV_0;
 
@@ -1607,7 +1607,7 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list)
 			z = z * (double)skill_t * (double)battle_config.shop_exp/10000.;
 			if( z < 1 )
 				z = 1;
-			pc_gainexp(sd,NULL,0,(int)z, false);
+			pc->gainexp(sd,NULL,0,(int)z, false);
 		}
 	}
 
@@ -1711,7 +1711,7 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list)
 			continue;
 		}
 
-		value = pc_modifysellvalue(sd, sd->inventory_data[idx]->value_sell);
+		value = pc->modifysellvalue(sd, sd->inventory_data[idx]->value_sell);
 
 		z+= (double)value*amount;
 	}
@@ -1733,16 +1733,16 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list)
 			}
 		}
 
-		pc_delitem(sd, idx, amount, 0, 6, LOG_TYPE_NPC);
+		pc->delitem(sd, idx, amount, 0, 6, LOG_TYPE_NPC);
 	}
 
 	if( z > MAX_ZENY )
 		z = MAX_ZENY;
 
-	pc_getzeny(sd, (int)z, LOG_TYPE_NPC, NULL);
+	pc->getzeny(sd, (int)z, LOG_TYPE_NPC, NULL);
 
 	// custom merchant shop exp bonus
-	if( battle_config.shop_exp > 0 && z > 0 && ( skill_t = pc_checkskill2(sd,idx) ) > 0) {
+	if( battle_config.shop_exp > 0 && z > 0 && ( skill_t = pc->checkskill2(sd,idx) ) > 0) {
 		if( sd->status.skill[idx].flag >= SKILL_FLAG_REPLACED_LV_0 )
 			skill_t = sd->status.skill[idx].flag - SKILL_FLAG_REPLACED_LV_0;
 
@@ -1750,7 +1750,7 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list)
 			z = z * (double)skill_t * (double)battle_config.shop_exp/10000.;
 			if( z < 1 )
 				z = 1;
-			pc_gainexp(sd, NULL, 0, (int)z, false);
+			pc->gainexp(sd, NULL, 0, (int)z, false);
 		}
 	}
 

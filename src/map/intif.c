@@ -993,7 +993,7 @@ int intif_parse_Registers(int fd)
 	*qty = j;
 
 	if (flag && sd->save_reg.global_num > -1 && sd->save_reg.account_num > -1 && sd->save_reg.account2_num > -1)
-		pc_reg_received(sd); //Received all registry values, execute init scripts and what-not. [Skotlex]
+		pc->reg_received(sd); //Received all registry values, execute init scripts and what-not. [Skotlex]
 	return 1;
 }
 
@@ -1047,7 +1047,7 @@ int intif_parse_PartyCreated(int fd)
 {
 	if(battle_config.etc_log)
 		ShowInfo("intif: party created by account %d\n\n", RFIFOL(fd,2));
-	party_created(RFIFOL(fd,2), RFIFOL(fd,6),RFIFOB(fd,10),RFIFOL(fd,11), (char *)RFIFOP(fd,15));
+	party->created(RFIFOL(fd,2), RFIFOL(fd,6),RFIFOB(fd,10),RFIFOL(fd,11), (char *)RFIFOP(fd,15));
 	return 0;
 }
 
@@ -1056,13 +1056,13 @@ int intif_parse_PartyInfo(int fd)
 {
 	if( RFIFOW(fd,2) == 12 ){
 		ShowWarning("intif: party noinfo (char_id=%d party_id=%d)\n", RFIFOL(fd,4), RFIFOL(fd,8));
-		party_recv_noinfo(RFIFOL(fd,8), RFIFOL(fd,4));
+		party->recv_noinfo(RFIFOL(fd,8), RFIFOL(fd,4));
 		return 0;
 	}
 
 	if( RFIFOW(fd,2) != 8+sizeof(struct party) )
 		ShowError("intif: party info : data size error (char_id=%d party_id=%d packet_len=%d expected_len=%d)\n", RFIFOL(fd,4), RFIFOL(fd,8), RFIFOW(fd,2), 8+sizeof(struct party));
-	party_recv_info((struct party *)RFIFOP(fd,8), RFIFOL(fd,4));
+	party->recv_info((struct party *)RFIFOP(fd,8), RFIFOL(fd,4));
 	return 0;
 }
 
@@ -1071,14 +1071,14 @@ int intif_parse_PartyMemberAdded(int fd)
 {
 	if(battle_config.etc_log)
 		ShowInfo("intif: party member added Party (%d), Account(%d), Char(%d)\n",RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
-	party_member_added(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10), RFIFOB(fd, 14));
+	party->member_added(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10), RFIFOB(fd, 14));
 	return 0;
 }
 
 // ACK changing party option
 int intif_parse_PartyOptionChanged(int fd)
 {
-	party_optionchanged(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOW(fd,10),RFIFOW(fd,12),RFIFOB(fd,14));
+	party->optionchanged(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOW(fd,10),RFIFOW(fd,12),RFIFOB(fd,14));
 	return 0;
 }
 
@@ -1087,28 +1087,28 @@ int intif_parse_PartyMemberWithdraw(int fd)
 {
 	if(battle_config.etc_log)
 		ShowInfo("intif: party member withdraw: Party(%d), Account(%d), Char(%d)\n",RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
-	party_member_withdraw(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
+	party->member_withdraw(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
 	return 0;
 }
 
 // ACK party break
 int intif_parse_PartyBroken(int fd)
 {
-	party_broken(RFIFOL(fd,2));
+	party->broken(RFIFOL(fd,2));
 	return 0;
 }
 
 // ACK party on new map
 int intif_parse_PartyMove(int fd)
 {
-	party_recv_movemap(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOW(fd,14),RFIFOB(fd,16),RFIFOW(fd,17));
+	party->recv_movemap(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOW(fd,14),RFIFOB(fd,16),RFIFOW(fd,17));
 	return 0;
 }
 
 // ACK party messages
 int intif_parse_PartyMessage(int fd)
 {
-	party_recv_message(RFIFOL(fd,4),RFIFOL(fd,8),(char *) RFIFOP(fd,12),RFIFOW(fd,2)-12);
+	party->recv_message(RFIFOL(fd,4),RFIFOL(fd,8),(char *) RFIFOP(fd,12),RFIFOW(fd,2)-12);
 	return 0;
 }
 
@@ -1821,9 +1821,9 @@ static void intif_parse_Auction_register(int fd)
 		int zeny = auction.hours*battle_config.auction_feeperhour;
 
 		clif->auction_message(sd->fd, 4);
-		pc_additem(sd, &auction.item, auction.item.amount, LOG_TYPE_AUCTION);
+		pc->additem(sd, &auction.item, auction.item.amount, LOG_TYPE_AUCTION);
 
-		pc_getzeny(sd, zeny, LOG_TYPE_AUCTION, NULL);
+		pc->getzeny(sd, zeny, LOG_TYPE_AUCTION, NULL);
 	}
 }
 
@@ -1919,7 +1919,7 @@ static void intif_parse_Auction_bid(int fd)
 
 	clif->auction_message(sd->fd, result);
 	if( bid > 0 ) {
-		pc_getzeny(sd, bid, LOG_TYPE_AUCTION,NULL);
+		pc->getzeny(sd, bid, LOG_TYPE_AUCTION,NULL);
 	}
 	if( result == 1 ) { // To update the list, display your buy list
 		clif->pAuction_cancelreg(fd, sd);

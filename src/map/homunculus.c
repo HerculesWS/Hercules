@@ -573,12 +573,12 @@ bool homunculus_feed(struct map_session_data *sd, struct homun_data *hd) {
 		return false;
 
 	foodID = hd->homunculusDB->foodID;
-	i = pc_search_inventory(sd,foodID);
+	i = pc->search_inventory(sd,foodID);
 	if(i < 0) {
 		clif->hom_food(sd,foodID,0);
 		return false;
 	}
-	pc_delitem(sd,i,1,0,0,LOG_TYPE_CONSUME);
+	pc->delitem(sd,i,1,0,0,LOG_TYPE_CONSUME);
 
 	if ( hd->homunculus.hunger >= 91 ) {
 		homun->consume_intimacy(hd, 50);

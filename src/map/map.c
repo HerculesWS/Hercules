@@ -1635,7 +1635,7 @@ int map_quit(struct map_session_data *sd) {
 	if( sd->bg_id )
 		bg_team_leave(sd,1);
 
-	pc_itemcd_do(sd,false);
+	pc->itemcd_do(sd,false);
 
 	npc_script_event(sd, NPCE_LOGOUT);
 
@@ -1688,8 +1688,8 @@ int map_quit(struct map_session_data *sd) {
 
 	for( i = 0; i < EQI_MAX; i++ ) {
 		if( sd->equip_index[ i ] >= 0 )
-			if( !pc_isequip( sd , sd->equip_index[ i ] ) )
-				pc_unequipitem( sd , sd->equip_index[ i ] , 2 );
+			if( !pc->isequip( sd , sd->equip_index[ i ] ) )
+				pc->unequipitem( sd , sd->equip_index[ i ] , 2 );
 	}
 
 	// Return loot to owner
@@ -1729,9 +1729,9 @@ int map_quit(struct map_session_data *sd) {
 		}
 	}
 
-	party_booking_delete(sd); // Party Booking [Spiria]
-	pc_makesavestatus(sd);
-	pc_clean_skilltree(sd);
+	party->booking_delete(sd); // Party Booking [Spiria]
+	pc->makesavestatus(sd);
+	pc->clean_skilltree(sd);
 	chrif_save(sd,1);
 	unit_free_pc(sd);
 	return 0;
@@ -4958,8 +4958,8 @@ void do_final(void)
 	do_final_itemdb();
 	do_final_storage();
 	guild->final();
-	do_final_party();
-	do_final_pc();
+	party->do_final_party();
+	pc->do_final_pc();
 	do_final_pet();
 	do_final_mob();
 	homun->final();
@@ -5160,6 +5160,8 @@ void map_hp_symbols(void) {
 	HPM->share(searchstore,"searchstore");
 	HPM->share(skill,"skill");
 	HPM->share(vending,"vending");
+	HPM->share(party, "party");
+	HPM->share(pc, "pc");
 	/* partial */
 	HPM->share(mapit,"mapit");
 	HPM->share(map_foreachpc,"map_foreachpc");
@@ -5208,6 +5210,8 @@ void load_defaults(void) {
 	searchstore_defaults();
 	skill_defaults();
 	vending_defaults();
+	party_defaults();
+	pc_defaults();
 }
 int do_init(int argc, char *argv[])
 {
@@ -5393,9 +5397,9 @@ int do_init(int argc, char *argv[])
 	skill->init();
 	read_map_zone_db();/* read after item and skill initalization */
 	do_init_mob();
-	do_init_pc();
+	pc->do_init_pc();
 	do_init_status();
-	do_init_party();
+	party->do_init_party();
 	guild->init();
 	do_init_storage();
 	do_init_pet();
