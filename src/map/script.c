@@ -7272,7 +7272,7 @@ BUILDIN(successrefitem)
 		clif->additem(sd,i,1,0);
 		pc_equipitem(sd,i,ep);
 		clif->misceffect(&sd->bl,3);
-		if(sd->status.inventory[i].refine == MAX_REFINE &&
+		if(sd->status.inventory[i].refine == 10 &&
 		   sd->status.inventory[i].card[0] == CARD0_FORGE &&
 		   sd->status.char_id == (int)MakeDWord(sd->status.inventory[i].card[2],sd->status.inventory[i].card[3])
 		   ){ // Fame point system [DracoRPG]
