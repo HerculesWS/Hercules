@@ -925,7 +925,7 @@ struct pc_interface {
 	int (*candrop) (struct map_session_data *sd,struct item *item);
 	int (*jobid2mapid) (unsigned short b_class);
 	int (*mapid2jobid) (unsigned short class_, int sex);
-	char * (*job_name) (int class_);
+	const char * (*job_name) (int class_);
 	void (*setinvincibletimer) (struct map_session_data* sd, int val);
 	void (*delinvincibletimer) (struct map_session_data* sd);
 	int (*addspiritball) (struct map_session_data *sd,int,int);

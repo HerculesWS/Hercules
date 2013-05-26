@@ -8466,7 +8466,7 @@ ACMD(accinfo) {
 	//remove const type
 	safestrncpy(query, message, NAME_LENGTH);
 	
-	intif_request_accinfo( sd->fd, sd->bl.id, pc_get_group_level(sd), query );
+	intif_request_accinfo( sd->fd, sd->bl.id, pc->get_group_level(sd), query );
 	
 	return true;
 }
