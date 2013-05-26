@@ -1,15 +1,13 @@
-//===== Hercules Script =======================================
+//===== Hercules Script ======================================
 //= Sage Quest Skill's related NPCs
 //===== By: ==================================================
 //= Zopokx
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Morocc/Payon Solution duplicate NPCs for Sage Quest Skill
 //===== Additional Comments: =================================
-//= 1.0 First version. [Zopokx]
+//= 1.0 First version
 //============================================================
 
 moc_ruins,91,150,0	script	Ponka-Hontas	93,{

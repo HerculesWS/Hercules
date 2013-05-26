@@ -1,13 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Poring War
 //===== By: ================================================== 
 //= Kisuka
 //===== Current Version: ===================================== 
 //= 1.2
-//===== Compatible With: ===================================== 
-//= rAthena SVN
 //===== Description: ========================================= 
-//= [Official Conversion]
+//= [Aegis Conversion]
 //= Poring War
 //===== Additional Comments: ================================= 
 //= 1.0 First version. [Kisuka][5511]
