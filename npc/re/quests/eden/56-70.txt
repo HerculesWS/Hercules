@@ -15,7 +15,7 @@
 //= 2.0 Optimised [Zopokx]
 //============================================================
 
-moc_para01,42,38,3	script	Misión [56 - 70]	857,{
+moc_para01,42,38,3	script	Mission [56 - 70]	857,{
 	if (countitem(6219) < 1) {
 		mes "To get these missions, I need to Join the Eden Group first. I must find Secretary Lime Evenor and become a member.";
 		close;
