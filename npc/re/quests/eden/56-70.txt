@@ -61,7 +61,7 @@ L_Quest:
 		mes "Would you like to accept this mission?";
 		next;
 		if(select("Accept the mission.:Do not accept the mission.") == 2) {
-			if ((BaseLevel < 56) && (BaseLevel > 70)) {
+			if ((BaseLevel < 56) || (BaseLevel > 70)) {
 				mes "These missions are not fit for my level. I should look for other missions.";
 				close;
 			}
@@ -97,7 +97,7 @@ L_HuntingQuest:
 		mes "Would you like to accept this mission?";
 		next;
 		if(select("Accept the mission.:Do not accept the mission.") == 2) {
-			if ((BaseLevel < 56) && (BaseLevel > 70)) {
+			if ((BaseLevel < 56) || (BaseLevel > 70)) {
 				mes "These missions are not fit for my level. I should look for other missions.";
 				close;
 			}
