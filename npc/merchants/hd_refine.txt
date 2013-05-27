@@ -1,0 +1,211 @@
+//===== Hercules Script ======================================
+//= HD Refiner
+//===== By: ==================================================
+//= Masao
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= Hercules
+//===== Description: =========================================
+//= Dwarf Mighty Hammer is an refining NPC which allows you
+//= to upgrade your weapon or gear up to +10 without breaking
+//= the weapon or gear but instead downgrading it by -1 using
+//= the HD Ores which are usually only obtainable through the
+//= *RO cashshops.
+//=
+//= Even at +0 refine, if you use the HD stones, the weapon
+//= or gear will not break but stay at +0 if it fails.
+//===== Additional Comments: =================================
+//= 1.0 First Version, dialogue and coordinations are custom.
+//============================================================
+
+// Dwarf Mighty Hammer Locations (Custom)
+//============================================================
+prontera,145,170,6	script	Dwarf Mighty Hammer#prt	826,{
+	callfunc "refinehd","Dwarf Mighty Hammer";
+	end;
+}
+moc_para01,175,115,5	script	Dwarf Mighty Hammer#moc	826,{
+	callfunc "refinehd","Dwarf Mighty Hammer";
+	end;
+}
+payon,140,175,6	script	Dwarf Mighty Hammer#pay	826,{
+	callfunc "refinehd","Dwarf Mighty Hammer";
+	end;
+}
+
+//============================================================
+// +7 to +10 Refiner Function
+//============================================================
+function	script	refinehd	{
+	disable_items;
+	mes "["+ getarg(0) +"]";
+	mes "I am the best Blacksmith ever!";
+	mes "I don't work with normal, boring items.";
+	mes "But only with items that are level 7 or higher!";
+	next;
+	mes "["+ getarg(0) +"]";
+	mes "Anyway, you may use my services if your item is lv 7 or higher.";
+	mes "What do you want to have refined?";
+	next;
+	setarray .@position$[1],"Head","Body","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
+	set .@menu$,"";
+	for(set .@i,1; .@i<=10; set .@i,.@i+1) {
+		if(getequipisequiped(.@i))
+			set .@menu$, .@menu$ + .@position$[.@i] + "-" + "[" + getequipname(.@i) + "]";
+		set .@menu$, .@menu$ + ":";
+	}
+	set .@part,select(.@menu$);
+	if(!getequipisequiped(.@part)) {
+		mes "[" + getarg(0) + "]";
+		mes "You're not wearing";
+		mes "anything there that";
+		mes "I can refine.";
+		emotion e_an;
+		close;
+	}
+	//Check if the item is refinable...
+	if(!getequipisenableref(.@part)) {
+		mes "[" + getarg(0) + "]";
+		mes "I don't think I can";
+		mes "refine this item at all...";
+		close;
+	}
+	//Check if the item is identified... (Don't know why this is in here... but kept it anyway)
+	if(!getequipisidentify(.@part)) {
+		mes "[" + getarg(0) + "]";
+		mes "You can't refine this";
+		mes "if you haven't appraised";
+		mes "it first. Make sure your";
+		mes "stuff is identified before";
+		mes "I can refine it.";
+		close;
+	}
+	//Check to see if the item is at least +7
+	if(getequiprefinerycnt(.@part) < 7) {
+		mes "["+ getarg(0) +"]";
+		mes "I said I don't work with Equipment under lv. 7.";
+		close;
+	}
+	if(getequiprefinerycnt(.@part) >= 10) {
+		mes "["+ getarg(0) +"]";
+		mes "I can't refine this";
+		mes "any more. This is as";
+		mes "refined as it gets!";
+		close;
+	}
+	set .@refineitemid, getequipid(.@part); // save id of the item
+	set .@refinerycnt, getequiprefinerycnt(.@part); //save refinery count
+	if ((getequipweaponlv(.@part) >= 1) && (getequipweaponlv(.@part) <= 4)) {
+		set .@material,6240;
+		mes "["+ getarg(0) +"]";
+		mes "Hmm a weapon, is that ok?";
+		mes "If you want to refine this weapon,";
+		mes "I will need 1 ^003366Purified Oridecon^000000.";
+		mes "Are you sure you want to continue?";
+	} else {
+		set .@material,6241;
+		mes "["+ getarg(0) +"]";
+		mes "Hmm an armor, is that ok?";
+		mes "If you want to refine this armor,";
+		mes "I will need 1 ^003366Purified Elunium^000000.";
+		mes "Are you sure you want to continue?";
+	}
+	next;
+	if(select("Yes:No") == 2){
+		mes "["+ getarg(0) +"]";
+		mes "Well, no challenge is one way...";
+		mes "No risk... that could be wise.";
+		close;
+	}
+	set .@continue,1;
+	while(.@continue == 1){
+		if(getequiprefinerycnt(.@part) >= 10) {
+			mes "["+ getarg(0) +"]";
+			mes "I can't refine this";
+			mes "any more. This is as";
+			mes "refined as it gets!";
+			close;
+		}
+		if ((getequipweaponlv(.@part) >= 1) && (getequipweaponlv(.@part) <= 4)) {
+			mes "["+ getarg(0) +"]";
+			mes "This weapon already has been refined serveral times.";
+			mes "You could have the upgrade level of the weapon decreased.";
+		} else {
+			mes "["+ getarg(0) +"]";
+			mes "This armor already has been refined serveral times.";
+			mes "You could have the upgrade level of the armor decreased.";
+		}
+		next;
+		mes "["+ getarg(0) +"]";
+		mes "Do you want me to refine it?";
+		mes "I think I gave you enough warnings.";
+		next;
+		if(select("Yes.:No.") == 2) {
+			mes "["+ getarg(0) +"]";
+			mes "Well, no challenge is one way..";
+			mes "No risk.. that could be wise.";
+			close;
+		}
+		if(countitem(.@material) < 1) {
+			mes "["+ getarg(0) +"]";
+			mes "Hm, it seems you don't have enough materials.";
+			mes "Please check it out.";
+			close;
+		}
+		delitem .@material,1;
+		if(getequipisequiped(.@part) == 0) { // hacker has removed the item (not changed, why?)
+			mes "[" + getarg(0) + "]";
+			mes "Look here... you don't have any items on...";
+			close;
+		}
+		set .@rand,rand(100);
+		if (getequippercentrefinery(.@part) > .@rand) {
+			mes "Clang! Clang! Clang! Clang!";
+			successrefitem .@part;
+			next;
+			emotion e_no1;
+			mes "["+ getarg(0) +"]";
+			mes "Good! Succes!!!";
+			mes "I am the best Blacksmith.";
+			next;
+			mes "["+ getarg(0) +"]";
+			mes "Ould you like to continue?";
+			if(select("No:Yes") == 1){
+				mes "[" + getarg(0) + "]";
+				mes "All finished... Come again soon.";
+				close;
+			}
+			next;
+		}
+		if (getequippercentrefinery(.@part) < .@rand) {
+			mes "["+ getarg(0) +"]";
+			mes "Clang! Clang! Clang! Clang!";
+			if(getequiprefinerycnt(.@part) >= 1) {
+				downrefitem .@part;
+			}
+			next;
+			emotion (!rand(5))?e_cash:e_omg;
+			mes "["+ getarg(0) +"]";
+			mes "Ahhh!!!";
+			next;
+			mes "["+ getarg(0) +"]";
+			mes "Oh my!";
+			mes "The upgrade level has dropped...";
+			mes "There could've been made an mistake even though I am the best ever.";
+			mes "It was out of my hands.";
+			next;
+			mes "["+ getarg(0) +"]";
+			mes "I will do a better job next time! Don't worry!";
+			next;
+			mes "["+ getarg(0) +"]";
+			mes "Ould you like to continue?";
+			if(select("No:Yes") == 1){
+				mes "[" + getarg(0) + "]";
+				mes "All finished... Come again soon.";
+				close;
+			}
+			next;
+		}
+	}
+}
