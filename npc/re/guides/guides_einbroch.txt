@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Einbroch, and Einbech Guides
 //===== By: ================================================== 
 //= L0ne_W0lf
 //===== Current Version: ===================================== 
 //= 1.0
 //===== Compatible With: ===================================== 
-//= rAthena  SVN
+//= Hercules
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Guides for the city of Einbroch, and Einbech

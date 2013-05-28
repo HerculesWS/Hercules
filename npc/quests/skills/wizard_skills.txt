@@ -1,15 +1,15 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Wizard Skills Quests
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Lupus, Reddozen
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Compatible With: =====================================
+//= Hercules
+//===== Description: =========================================
 //= [Aegis Conversion]
 //= Quests for skills: Sight Blaster
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.4 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //= 1.5 Replaced effect numerics with constants. [L0ne_W0lf]
 //============================================================

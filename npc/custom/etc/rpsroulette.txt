@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Rock Scissors Roulette
 //===== By: ==================================================
 //= acky
 //===== Current Version: =====================================
 //= 1.2
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= Plays a hybrid Russian Roulette Rock Scissors Paper game.
 //===== Additional Comments: =================================

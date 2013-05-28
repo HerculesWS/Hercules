@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Balmung & Lord Kaho's Horns Quest
 //===== By: ==================================================
 //= MagicalTux
 //===== Current Version: =====================================
 //= 1.1
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= Custom quests for Balmung and Lord Kaho's Horns.
 //= WARNING: The quests are very easy, so be careful!

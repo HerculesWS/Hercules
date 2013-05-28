@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Sphinx Mask Quest (custom)
 //===== By: ================================================== 
 //= sabernet09
 //===== Current Version: ===================================== 
 //= 1.3
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= This quest is related to Umbalian Chief.
 //= 1.1 Removed it from official Umbala quests [Lupus]

@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Job Quest Renewal Warp Script
 //===== By: ==================================================
 //= Athena (1.0)
 //===== Current Version: =====================================
 //= 2.2
 //===== Compatible With: =====================================
-//= Any Athena Version; RO Version Ep4+
+//= Hercules; RO Version Ep4+
 //===== Description: =========================================
 //= Warp Points for Job Quest Maps
 //===== Additional Comments: =================================
