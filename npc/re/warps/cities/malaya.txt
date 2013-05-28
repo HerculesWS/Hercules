@@ -1,15 +1,16 @@
 //===== rAthena Script ======================================= 
-//= Mayala Town Warps
+//= Mayala Port Town Warps
 //===== By: ================================================== 
-//= Masao
+//= Chilly
 //===== Current Version: ===================================== 
-//= 1.0
+//= 1.0a
 //===== Compatible With: ===================================== 
-//= Hecules
+//= rAthena SVN
 //===== Description: ========================================= 
-//= Warps for Mayala Town.
+//= Warps for Mayala Port Town.
 //===== Additional Comments: ================================= 
-//= 1.0 First Version.
+//= 1.0 First Version [Chilly].
+//= 1.0a Updated the file with new / missing warps [Masao].
 //============================================================ 
 
 malaya,178,211,0	script	malaya_inn	45,1,1,{
@@ -66,7 +67,7 @@ malaya,300,211,0	script	malaya_house01	45,1,1,{
 OnTouch:
 	if (malaya_hi < 10) {
 		mes "Door is closed. It seems keeping its eyes on you.";
-		close2;
+		close;
     }
 	warp "ma_in01",36,152;
 	end;
