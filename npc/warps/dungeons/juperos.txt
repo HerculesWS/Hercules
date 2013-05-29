@@ -5,7 +5,7 @@
 //===== Current Version: =====================================
 //= 1.7
 //===== Compatible With: =====================================
-//= Hercules with independant npctimer support; RO Episode 8+
+//= Hercules with independent npctimer support; RO Episode 8+
 //===== Description: =========================================
 //= Warp Points for Juperos Dungeon
 //===== Additional Comments: =================================
