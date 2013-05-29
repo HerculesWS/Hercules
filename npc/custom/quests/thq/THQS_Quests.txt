@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Treasure Hunter Quests
 //===== By: ==================================================
 //= Fredzilla
 //===== Current Version: =====================================
 //= 1.6
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= Start for Treasure hunter quests
 //===== Additional Comments: =================================

@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Disguise Event
 //===== By: ==================================================
 //= GmOcean
 //===== Current Version: =====================================
 //= 5.1
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Additional Comments: =================================  
 //= Note: This script requires PCRE to run properly.
 //= 5.0 Last update by GmOcean.

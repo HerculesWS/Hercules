@@ -72,5 +72,5 @@
 
 //Official view id 639
 iz_int01,91,81,4	script	::Rumin	99,{
-close;
+end;
 }

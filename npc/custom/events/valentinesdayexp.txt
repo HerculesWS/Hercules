@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Valentine Event Script + EXP bonus
 //===== By: ==================================================
 //= Lupus (based on Muad_Dib's work)
 //===== Current Version: =====================================
 //= 1.1
 //===== Compatible With: =====================================
-//= rAthena SVN; 4500+
+//= Hercules
 //===== Description: =========================================
 // Close to other official stValentine event (added white chocolate)
 // Custom: Handmade choco gives some EXP bonuses to married people

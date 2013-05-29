@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Dewata Quest NPCs
 //===== By: ==================================================
 //= Gennosuke Kouga, Muad_Dib
 //===== Current Version: =====================================
 //= 1.2
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= Quest NPCs related to Dewata:
 //== "Dewata Legend"

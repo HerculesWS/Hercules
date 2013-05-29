@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Doomed Swords Quest Part 3
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.0
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= - Creation of Doomed Swords: Grimtooth, Mysteltain, and
