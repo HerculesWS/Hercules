@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Paradise Group Warp Script
 //===== By: ==================================================
 //= Chilly
 //===== Current Version: =====================================
 //= 1.0
 //===== Compatible With: =====================================
-//= rAthena SVN;
+//= Hercules
 //===== Description: =========================================
 //= Warp Points for Paradise Group
 //===== Additional Comments: =================================

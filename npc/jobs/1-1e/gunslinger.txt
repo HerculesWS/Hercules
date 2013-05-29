@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================= 
 //= Gunslinger Job Quest
 //===== By: ================================================== 
 //= erKURITA, RockmanEXE, Kisuka
 //===== Current Version: ===================================== 
 //= 2.2
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= Gunslinger Job Change Quest
 //===== Additional Comments: ================================= 

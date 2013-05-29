@@ -1,4 +1,4 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Prontera Maze(Hidden Temple) Dungeon Monster Spawn Script
 //===== By: ==================================================
 //= Athena (1.0)

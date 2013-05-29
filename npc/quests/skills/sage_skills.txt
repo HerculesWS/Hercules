@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================= 
 //= Sage Skills Quests
 //===== By: ================================================== 
 //= Lupus, Reddozen
 //===== Current Version: ===================================== 
 //= 1.4
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Quests for skills: Create Converter, Elemental Change

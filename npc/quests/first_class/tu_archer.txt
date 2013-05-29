@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================= 
 //= Archer Class Tutorial and Job Specific Quest
 //===== By: ================================================== 
 //= Fix up by Jukka
 //===== Current Version: ===================================== 
 //= 1.9a
 //===== Compatible With: ===================================== 
-//= rAthena SVN (Testet in Trunk 88xx)
+//= Hercules (Testet in Trunk 88xx)
 //===== Description: ========================================= 
 //=
 //===== Additional Comments: ================================= 

@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Quest NPCs related to Ayothaya
 //===== By ===================================================
 //= Fredzilla, MasterOfMuppets
 //===== Version ==============================================
 //= 2.3
 //===== Compatible With ======================================
-//= rAthena SVN
+//= Hercules
 //===== Description ==========================================
 //= [Aegis Conversion]
 //= Ayothaya Ring Quest

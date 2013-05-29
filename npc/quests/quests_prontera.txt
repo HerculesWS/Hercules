@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================= 
 //= Quest NPCs related to Prontera
 //===== By: ================================================== 
 //= kobra_k88; L0ne_W0lf
 //===== Current Version: ===================================== 
 //= 2.8
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= Collection of Prontera-based quests.
 //= * Culvert Access

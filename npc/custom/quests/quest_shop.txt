@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Euphy's Quest Shop
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
 //= 1.6
 //===== Compatible With: =====================================
-//= rAthena SVN r16862+
+//= Hercules
 //===== Description: =========================================
 //= A dynamic quest shop based on Lunar's, with easier config.
 //= Includes support for multiple shops & cashpoints.

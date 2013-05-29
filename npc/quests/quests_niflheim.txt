@@ -1,7 +1,7 @@
 //===== Hercules Script ======================================
 //= Quest NPCs related to Niflheim
 //===== By: ================================================== 
-//= The rAthena Dev Team
+//= The Hercules Dev Team
 //===== Current Version: ===================================== 
 //= 1.5
 //===== Description: ========================================= 

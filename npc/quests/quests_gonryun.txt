@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================= 
 //= Quest NPCs related to Gonryun
 //===== By: ==================================================
 //= KarLaeda
 //===== Current Version: ===================================== 
 //= 1.2
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Broken Sword Quest (Kept old mechanics)

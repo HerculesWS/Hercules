@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Malangdo Quest NPCs
 //===== By: ==================================================
 //= Muad_Dib
 //===== Current Version: =====================================
 //= 1.4
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= Quest NPCs related to Malangdo:
 //== Malangdo Island, Help the Bad Cats in Danger,

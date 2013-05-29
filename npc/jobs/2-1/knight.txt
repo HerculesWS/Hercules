@@ -1,4 +1,4 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================= 
 //= Knight Job Quest
 //===== By: ================================================== 
 //= PGRO TEAM (Aegis).
@@ -7,7 +7,7 @@
 //===== Current Version: ===================================== 
 //= 3.3
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Job Change quest for Knight class.

@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Wedding Script
 //===== By: ==================================================
 //= AppleGirl, Evera
 //===== Current Version: =====================================
 //= 2.9
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= Fully working wedding script for all kind of weddings
 //===== Additional Comments: =================================

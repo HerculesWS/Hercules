@@ -1,4 +1,4 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Prontera Sewers(Culvert) Dungeon Monster Spawn Script
 //===== By: ==================================================
 //= Athena (1.0)
