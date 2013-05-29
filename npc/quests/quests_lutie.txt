@@ -5,7 +5,7 @@
 //===== Current Version: ===================================== 
 //= 1.3b
 //===== Compatible With: ===================================== 
-//= Hercules 1.0
+//= Hercules
 //===== Description: ========================================= 
 //= Blush, Cake Hat, Candle, Chef Hat, Raccoon Hat, Rainbow Eggshell,
 //= Spore Hat, Wonder Nutshell Quests

@@ -5,7 +5,7 @@
 //===== Current Version: ===================================== 
 //= 1.7
 //===== Compatible With: ===================================== 
-//= Hercules 7.15 +
+//= Hercules
 //===== Description: ========================================= 
 //= Pretend Murder, Ear Muffs, Oxygen, Derivuchi Cap, Helm of Angel Quests.
 //===== Additional Comments: ================================= 
