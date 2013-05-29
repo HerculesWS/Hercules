@@ -1,13 +1,13 @@
-//===== rAthena Script =======================================
-//= Geffen Warp Script
+//===== Hercules Script ======================================
+//= Geffen Field Warps
 //===== By: ==================================================
 //= Nana (1.0)
 //===== Current Version: =====================================
 //= 1.0
 //===== Compatible With: =====================================
-//= Any Athena Version
+//= Hercules
 //===== Description: =========================================
-//= Warp Points for Geffen Field's
+//= Warp Points for Geffen Field
 //===== Additional Comments: =================================
 //= No comment!
 //============================================================

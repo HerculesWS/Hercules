@@ -1,7 +1,7 @@
 //===== Hercules Script ======================================
 //= Quest NPCs related to Louyang
 //===== By: ================================================== 
-//= Evera and The rAthena Dev Team
+//= Evera and Hercules Dev Team
 //===== Current Version: ===================================== 
 //= 2.2
 //===== Description: ========================================= 

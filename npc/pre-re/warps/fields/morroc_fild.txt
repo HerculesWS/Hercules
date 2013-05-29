@@ -1,13 +1,13 @@
-//===== rAthena Script =======================================
-//= Morroc Field Warp Script
+//===== Hercules Script ======================================
+//= Morroc Field Warps
 //===== By: ==================================================
 //= Nana (1.0)
 //===== Current Version: =====================================
 //= 1.4b
 //===== Compatible With: =====================================
-//= Any Athena Version
+//= Hercules
 //===== Description: =========================================
-//= Warp Points for Morroc Fields
+//= Warp Points for Morroc Field
 //===== Additional Comments: =================================
 //= 1.1 changed 'anthell' to @anthell [Lupus]
 //= 1.2 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]

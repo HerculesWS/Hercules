@@ -1,4 +1,4 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Umbala Warp Script
 //===== By: ==================================================
 //= Darkchild (1.0v A) 
@@ -8,7 +8,7 @@
 //===== Current Version: =====================================
 //= 1.2 
 //===== Compatible With: =====================================
-//= Any Athena Version; RO Episode 6+
+//= Hercules; RO Episode 6+
 //===== Description: =========================================
 //= [Aegis COnversion]
 //= Warp Points for Umbala

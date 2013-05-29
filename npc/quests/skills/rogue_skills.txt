@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Rogue Skills Quests
 //===== By: ================================================== 
 //= Lupus, Reddozen
 //===== Current Version: ===================================== 
 //= 1.7
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Quests for skills: CLose Confine

@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Glastheim Warp Script
 //===== By: ==================================================
 //= Athena (1.0)
 //===== Current Version: =====================================
 //= 1.4
 //===== Compatible With: =====================================
-//= Any Athena Version; RO Episode 2.x
+//= Hercules; RO Episode 2.x
 //===== Description: =========================================
 //= Warp Points for Glastheim
 //===== Additional Comments: =================================

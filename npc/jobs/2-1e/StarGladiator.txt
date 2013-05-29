@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Star Gladiator Job Quest
 //===== By: ================================================== 
 //= Celestria, Samuray22
 //===== Current Version: ===================================== 
 //= 1.3
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Job Change quest for Star Gladiator class.

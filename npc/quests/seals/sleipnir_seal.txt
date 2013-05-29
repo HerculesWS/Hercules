@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Sleipnir seal unlocking NPCs.
 //===== By: ================================================== 
 //= MasterOfMuppets
 //===== Current Version: ===================================== 
 //= 1.3
 //===== Compatible With: ===================================== 
-//= rAthena
+//= Hercules
 //===== Description: ========================================= 
 //= Quest for breaking the seal of Sleipnir.
 //===== Additional Comments: =================================

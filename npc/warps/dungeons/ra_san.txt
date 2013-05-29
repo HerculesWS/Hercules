@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Rachel Sanctuary Dungeon Warp Script
 //===== By ===================================================
 //= Playtester
 //===== Current Version :=====================================
 //= 1.4
 //===== Compatible With :=====================================
-//= Any Athena Version
+//= Hercules
 //===== Description :=========================================
 //= Warp Points For Rachel Sanctuary Dungeon
 //===== Additional Comment:===================================

@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Umbala Dungeon (Yggdrasil Cave) Warp Script
 //===== By: ==================================================
 //= Darkchild (1.0vA); Athena (1.0vB)
 //===== Current Version: =====================================
 //= 1.4 (Akaru)
 //===== Compatible With: =====================================
-//= Any Athena Version; RO Episode 6+
+//= Hercules; RO Episode 6+
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Warp Points for Umbala Dungeon (Yggdrasil Cave)

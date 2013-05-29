@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Ep 10+ Novice Training Grounds
 //===== By: ================================================== 
 //= Dr.Evil & MasterOfMuppets
 //===== Current Version: ===================================== 
 //= 2.4
 //===== Compatible With: ===================================== 
-//= rAthena SVN 3422+(Requires jA Script System)
+//= Hercules 3422+(Requires jA Script System)
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Novice Training Grounds

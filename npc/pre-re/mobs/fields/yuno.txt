@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Yuno Fields Monster Spawn Script
 //===== By: ==================================================
 //= Athena (1.0)
 //===== Current Version: =====================================
 //= 1.9
 //===== Compatible With: =====================================
-//= Any Athena Version
+//= Hercules
 //===== Additional Comments: =================================
 //= 1.1 fixed tabs, names [Lupus]
 //= 1.2 New/Better Spawn [Muad_Dib]

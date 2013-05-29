@@ -1,13 +1,13 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Payon Field Warps
 //===== By: ================================================== 
 //= Nana (1.0)
 //===== Current Version: ===================================== 
 //= 1.2
 //===== Compatible With: ===================================== 
-//= Any rAthena Mod
+//= Hercules
 //===== Description: ========================================= 
-//= Payon Field Warps
+//= Warp Points for Payon Field
 //===== Additional Comments: ================================= 
 //= 1.1 Refixed payon field08 -> payon warp
 //= 1.2 Changed trigger area of pay_fild08 -> payon warp. [L0ne_W0lf]

@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Veins City Warp Script
 //===== By: ==================================================
 //= $ephiroth
 //===== Current Version: =====================================
 //= 1.4
 //===== Compatible With: =====================================
-//= Any Athena Version
+//= Hercules
 //===== Description: =========================================
 //= [Aegis COnversion]
 //= Warp Points for Veins

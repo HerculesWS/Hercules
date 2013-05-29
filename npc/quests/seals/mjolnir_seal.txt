@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Mjolnir seal unlocking NPCs.
 //===== By: ================================================== 
 //= SinSloth
 //===== Current Version: ===================================== 
 //= 1.8a
 //===== Compatible With: ===================================== 
-//= rAthena
+//= Hercules
 //===== Description: ========================================= 
 //= Quest for breaking the seal of Mjolnir.
 //===== Additional Comments: =================================

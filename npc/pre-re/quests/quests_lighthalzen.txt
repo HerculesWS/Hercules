@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Quest NPCs located in Lighthalzen
 //===== By: ================================================== 
 //= Daegaladh
 //===== Current Version: ===================================== 
 //= 1.0
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= Quests related to Lighthalzen City.
 //===== Additional Comments: ================================= 

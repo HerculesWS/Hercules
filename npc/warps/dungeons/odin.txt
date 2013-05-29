@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Odin Temple Warp Script
 //===== By: ==================================================
 //= birkiczd  (1.0)
 //===== Current Version: =====================================
 //= 1.4
 //===== Compatible With: =====================================
-//= Any Athena Version
+//= Hercules
 //===== Description: =========================================
 //= Warp Points for Odin Temple
 //===== Additional Comments: =================================

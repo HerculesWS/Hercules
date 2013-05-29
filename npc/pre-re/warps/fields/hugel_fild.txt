@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
-//= Hugel Field Warp Script
+//===== Hercules Script ======================================
+//= Hugel Field Warps
 //===== By: ==================================================
 //= Sara-chan (1.0)
 //===== Current Version: =====================================
 //= 1.2
 //===== Compatible With: =====================================
-//= Any Athena Version; RO Episode 10+
+//= Hercules
 //===== Description: =========================================
 //= Warp Points for Hugel Field
 //===== Additional Comments: =================================

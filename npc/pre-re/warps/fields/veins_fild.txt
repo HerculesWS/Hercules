@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
-//= Veins Field Warp Script
+//===== Hercules Script ======================================
+//= Veins Field Warps
 //===== By: ==================================================
 //= $ephiroth
 //===== Current Version: =====================================
 //= 1.4
 //===== Compatible With: =====================================
-//= Any Athena Version
+//= Hercules
 //===== Description: =========================================
 //= Warp Points for Veins Field
 //===== Additional Comments: =================================

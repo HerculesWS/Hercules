@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Kunlun Town Warp Script
 //===== By: ==================================================
 //= Nana (1.0)
 //===== Current Version: =====================================
 //= 1.1
 //===== Compatible With: =====================================
-//= Any Athena Version; RO Episode 5+
+//= Hercules; RO Episode 5+
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Warp Points for Kunlun

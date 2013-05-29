@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Super Novice Job Quest
 //===== By: ================================================== 
 //= Darkchild
 //===== Current Version: ===================================== 
 //= 2.4
 //===== Compatible With: ===================================== 
-//= rAthena SVN r15340+
+//= Hercules r15340+
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Super Novice Job Change Npc
