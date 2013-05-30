@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================= 
 //= Thief Skills Quests
 //===== By: ================================================== 
 //= kobra_k88
 //===== Current Version: ===================================== 
 //= 1.8
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= Quests for skills: Sand Attack, Back Slide, Find Stone, 
 //= Stone Fling.

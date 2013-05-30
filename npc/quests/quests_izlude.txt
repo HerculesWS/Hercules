@@ -1,7 +1,7 @@
 //===== Hercules Script ======================================
 //= Quest NPCs related to Izlude
 //===== By: ================================================== 
-//= Evera and The rAthena Dev Team
+//= Evera and The Hercules Dev Team
 //= L0ne_W0lf
 //===== Current Version: ===================================== 
 //= 1.1

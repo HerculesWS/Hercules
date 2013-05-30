@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script =======================================
 //= Collection of episode 13.2 quests.
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 2.5
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Cat Hand Addition. (Leads to 13.2 areas)

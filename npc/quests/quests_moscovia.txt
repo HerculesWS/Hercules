@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================= 
 //= Moscovia Quests
 //===== By: ================================================== 
 //= Kisuka
 //===== Current Version: ===================================== 
 //= 2.0a
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= Quests for Moscovia.
 //= The Moving Island, Help Mikhail, Acorn Exchange,

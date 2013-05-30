@@ -1,4 +1,4 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================= 
 //= Hunter Job Quest
 //===== By: ================================================== 
 //= EREMES THE CANIVALIZER (Aegis)Translated by yoshiki (Aegis)
@@ -7,7 +7,7 @@
 //===== Current Version: ===================================== 
 //= 3.7
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Job Change quest for Hunter class.

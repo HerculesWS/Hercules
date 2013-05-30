@@ -6,7 +6,7 @@
 //= Dino9021, roughly translated by Celest (1.2)
 //= Mass Zero (1.3)
 //= MasterOfMuppets (2.0)
-//= rAthena Dev Team
+//= Hercules Dev Team
 //===== Current Version: ===================================== 
 //= 3.0
 //===== Description: ========================================= 

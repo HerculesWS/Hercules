@@ -1,7 +1,7 @@
 //===== Hercules Script ======================================
 //= Quest NPCs related to Einbroch and Einbech
 //===== By: ================================================== 
-//= Evera and The rAthena Dev Team
+//= Evera and The Hercules Dev Team
 //===== Current Version: ===================================== 
 //= 2.6
 //===== Description: ========================================= 
