@@ -264,8 +264,8 @@ void hplugins_share_defaults(void) {
 	HPM->share(&SERVER_TYPE,"SERVER_TYPE");
 	HPM->share((void*)get_svn_revision,"get_svn_revision");
 	HPM->share((void*)get_git_hash,"get_git_hash");
-	HPM->share(DB, "DB");
-	HPM->share(malloclib, "malloclib");
+	HPM->share(iDB, "iDB");
+	HPM->share(iMalloc, "iMalloc");
 	/* socket */
 	HPM->share(RFIFOSKIP,"RFIFOSKIP");
 	HPM->share(WFIFOSET,"WFIFOSET");

@@ -77,27 +77,27 @@ int elemental_create(struct map_session_data *sd, int class_, unsigned int lifet
 	ele.mode = EL_MODE_PASSIVE; // Initial mode
 	i = db->status.size+1; // summon level
 
-	//[(Caster’s Max HP/ 3 ) + (Caster’s INT x 10 )+ (Caster’s Job Level x 20 )] x [(Elemental Summon Level + 2) / 3]
+	//[(Casterï¿½s Max HP/ 3 ) + (Casterï¿½s INT x 10 )+ (Casterï¿½s Job Level x 20 )] x [(Elemental Summon Level + 2) / 3]
 	ele.hp = ele.max_hp = (sd->battle_status.max_hp/3 + sd->battle_status.int_*10 + sd->status.job_level) * ((i + 2) / 3);
-	//Caster’s Max SP /4
+	//Casterï¿½s Max SP /4
 	ele.sp = ele.max_sp = sd->battle_status.max_sp/4;
-	//Caster’s [ Max SP / (18 / Elemental Summon Skill Level) 1- 100 ]
+	//Casterï¿½s [ Max SP / (18 / Elemental Summon Skill Level) 1- 100 ]
 	ele.atk = (sd->battle_status.max_sp / (18 / i)  * 1 - 100);
-	//Caster’s [ Max SP / (18 / Elemental Summon Skill Level) ]
+	//Casterï¿½s [ Max SP / (18 / Elemental Summon Skill Level) ]
 	ele.atk2 = sd->battle_status.max_sp / 18;
-	//Caster’s HIT + (Caster’s Base Level )
+	//Casterï¿½s HIT + (Casterï¿½s Base Level )
 	ele.hit = sd->battle_status.hit + sd->status.base_level;
-	//[Elemental Summon Skill Level x (Caster’s INT / 2 + Caster’s DEX / 4)]
+	//[Elemental Summon Skill Level x (Casterï¿½s INT / 2 + Casterï¿½s DEX / 4)]
 	ele.matk = i * (sd->battle_status.int_ / 2 + sd->battle_status.dex / 4);
-	//150 + [Caster’s DEX / 10] + [Elemental Summon Skill Level x 3 ]
+	//150 + [Casterï¿½s DEX / 10] + [Elemental Summon Skill Level x 3 ]
 	ele.amotion = 150 + sd->battle_status.dex / 10 + i * 3;
-	//Caster’s DEF + (Caster’s Base Level / (5 – Elemental Summon Skill Level)
+	//Casterï¿½s DEF + (Casterï¿½s Base Level / (5 ï¿½ Elemental Summon Skill Level)
 	ele.def = sd->battle_status.def + sd->status.base_level / (5-i);
-	//Caster’s MDEF + (Caster’s INT / (5 - Elemental Summon Skill Level)
+	//Casterï¿½s MDEF + (Casterï¿½s INT / (5 - Elemental Summon Skill Level)
 	ele.mdef = sd->battle_status.mdef + sd->battle_status.int_ / (5-i);
-	//Caster’s FLEE + (Caster’s Base Level / (5 – Elemental Summon Skill Level)
+	//Casterï¿½s FLEE + (Casterï¿½s Base Level / (5 ï¿½ Elemental Summon Skill Level)
 	ele.flee = sd->status.base_level / (5-i);
-	//Caster’s HIT + (Caster’s Base Level )
+	//Casterï¿½s HIT + (Casterï¿½s Base Level )
 	ele.hit = sd->battle_status.hit + sd->status.base_level;
 
 	//per individual bonuses
@@ -126,7 +126,7 @@ int elemental_create(struct map_session_data *sd, int class_, unsigned int lifet
 		break;
 	}
 
-	if( (i=pc_checkskill(sd,SO_EL_SYMPATHY)) > 0 ){
+	if( (i=iPc->checkskill(sd,SO_EL_SYMPATHY)) > 0 ){
 		ele.hp = ele.max_hp = ele.max_hp * 5 * i / 100;
 		ele.sp = ele.max_sp = ele.max_sp * 5 * i / 100;
 		ele.atk += 25 * i;
@@ -173,7 +173,7 @@ static int elemental_summon_end(int tid, unsigned int tick, int id, intptr_t dat
 	struct map_session_data *sd;
 	struct elemental_data *ed;
 
-	if( (sd = map_id2sd(id)) == NULL )
+	if( (sd = iMap->id2sd(id)) == NULL )
 		return 1;
 	if( (ed = sd->ed) == NULL )
 		return 1;
@@ -229,7 +229,7 @@ int elemental_data_received(struct s_elemental *ele, bool flag) {
 	struct s_elemental_db *db;
 	int i = elemental_search_index(ele->class_);
 
-	if( (sd = map_charid2sd(ele->char_id)) == NULL )
+	if( (sd = iMap->charid2sd(ele->char_id)) == NULL )
 		return 0;
 
 	if( !flag || i < 0 ) { // Not created - loaded - DB info
@@ -258,7 +258,7 @@ int elemental_data_received(struct s_elemental *ele, bool flag) {
 		ed->bl.x = ed->ud.to_x;
 		ed->bl.y = ed->ud.to_y;
 
-		map_addiddb(&ed->bl);
+		iMap->addiddb(&ed->bl);
 		status_calc_elemental(ed,1);
 		ed->last_spdrain_time = ed->last_thinktime = gettick();
 		ed->summon_timer = INVALID_TIMER;
@@ -271,7 +271,7 @@ int elemental_data_received(struct s_elemental *ele, bool flag) {
 	sd->status.ele_id = ele->elemental_id;
 
 	if( ed->bl.prev == NULL && sd->bl.prev != NULL ) {
-		map_addblock(&ed->bl);
+		iMap->addblock(&ed->bl);
 		clif->spawn(&ed->bl);
 		clif->elemental_info(sd);
 		clif->elemental_updatestatus(sd,SP_HP);
@@ -707,16 +707,16 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 			return 0; //Already walking to him
 		if( DIFF_TICK(tick, ed->ud.canmove_tick) < 0 )
 			return 0; //Can't move yet.
-		if( map_search_freecell(&ed->bl, sd->bl.m, &x, &y, MIN_ELEDISTANCE, MIN_ELEDISTANCE, 1)
+		if( iMap->search_freecell(&ed->bl, sd->bl.m, &x, &y, MIN_ELEDISTANCE, MIN_ELEDISTANCE, 1)
 		   && unit_walktoxy(&ed->bl, x, y, 0) )
 			return 0;
 	}
 
 	if( mode == EL_MODE_AGGRESSIVE ) {
-		target = map_id2bl(ed->ud.target);
+		target = iMap->id2bl(ed->ud.target);
 
 		if( !target )
-			map_foreachinrange(elemental_ai_sub_timer_activesearch, &ed->bl, view_range, BL_CHAR, ed, &target, status_get_mode(&ed->bl));
+			iMap->foreachinrange(elemental_ai_sub_timer_activesearch, &ed->bl, view_range, BL_CHAR, ed, &target, status_get_mode(&ed->bl));
 
 		if( !target ) { //No targets available.
 			elemental_unlocktarget(ed);
@@ -755,7 +755,7 @@ static int elemental_ai_sub_foreachclient(struct map_session_data *sd, va_list a
 }
 
 static int elemental_ai_timer(int tid, unsigned int tick, int id, intptr_t data) {
-	map_foreachpc(elemental_ai_sub_foreachclient,tick);
+	iMap->map_foreachpc(elemental_ai_sub_foreachclient,tick);
 	return 0;
 }
 
@@ -767,7 +767,7 @@ int read_elementaldb(void) {
 	struct s_elemental_db *db;
 	struct status_data *status;
 
-	sprintf(line, "%s/%s", db_path, "elemental_db.txt");
+	sprintf(line, "%s/%s", iMap->db_path, "elemental_db.txt");
 	memset(elemental_db,0,sizeof(elemental_db));
 
 	fp = fopen(line, "r");
@@ -858,7 +858,7 @@ int read_elemental_skilldb(void) {
 	uint16 skill_id, skill_lv;
 	int skillmode;
 
-	sprintf(line, "%s/%s", db_path, "elemental_skill_db.txt");
+	sprintf(line, "%s/%s", iMap->db_path, "elemental_skill_db.txt");
 	fp = fopen(line, "r");
 	if( !fp ) {
 		ShowError("read_elemental_skilldb : can't read elemental_skill_db.txt\n");

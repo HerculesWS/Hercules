@@ -99,7 +99,7 @@ int quest_add(TBL_PC * sd, int quest_id)
 
 	clif->quest_add(sd, &sd->quest_log[i], sd->quest_index[i]);
 
-	if( save_settings&64 )
+	if( iMap->save_settings&64 )
 		chrif_save(sd,0);
 
 	return 0;
@@ -147,7 +147,7 @@ int quest_change(TBL_PC * sd, int qid1, int qid2)
 	clif->quest_delete(sd, qid1);
 	clif->quest_add(sd, &sd->quest_log[i], sd->quest_index[i]);
 
-	if( save_settings&64 )
+	if( iMap->save_settings&64 )
 		chrif_save(sd,0);
 
 	return 0;
@@ -178,7 +178,7 @@ int quest_delete(TBL_PC * sd, int quest_id)
 
 	clif->quest_delete(sd, quest_id);
 
-	if( save_settings&64 )
+	if( iMap->save_settings&64 )
 		chrif_save(sd,0);
 
 	return 0;
@@ -249,7 +249,7 @@ int quest_update_status(TBL_PC * sd, int quest_id, quest_state status) {
 
 	clif->quest_delete(sd, quest_id);
 
-	if( save_settings&64 )
+	if( iMap->save_settings&64 )
 		chrif_save(sd,0);
 
 	return 0;
@@ -293,7 +293,7 @@ int quest_read_db(void) {
 	int i,j,k = 0;
 	char *str[20],*p,*np;
 
-	sprintf(line, "%s/quest_db.txt", db_path);
+	sprintf(line, "%s/quest_db.txt", iMap->db_path);
 	if( (fp=fopen(line,"r"))==NULL ){
 		ShowError("can't read %s\n", line);
 		return -1;
@@ -302,7 +302,7 @@ int quest_read_db(void) {
 	while(fgets(line, sizeof(line), fp)) {
 		
 		if (k == MAX_QUEST_DB) {
-			ShowError("quest_read_db: Too many entries specified in %s/quest_db.txt!\n", db_path);
+			ShowError("quest_read_db: Too many entries specified in %s/quest_db.txt!\n", iMap->db_path);
 			break;
 		}
 		

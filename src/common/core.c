@@ -307,7 +307,7 @@ int main (int argc, char **argv) {
 	}
 	core_defaults();
 	
-	malloclib->init();// needed for Show* in display_title() [FlavioJS]
+	iMalloc->init();// needed for Show* in display_title() [FlavioJS]
 	
 	console->display_title();
 	
@@ -322,7 +322,7 @@ int main (int argc, char **argv) {
 	Sql_Init();
 	rathread_init();
 	mempool_init();
-	DB->init();
+	iDB->init();
 	signals_init();
 	
 #ifdef _WIN32
@@ -356,12 +356,12 @@ int main (int argc, char **argv) {
 #endif
 	timer_final();
 	socket_final();
-	DB->final();
+	iDB->final();
 	mempool_final();
 	rathread_final();
 #endif
 
-	malloclib->final();
+	iMalloc->final();
 
 	return 0;
 }
