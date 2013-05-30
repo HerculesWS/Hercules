@@ -65,7 +65,7 @@ int bg_team_warp(int bg_id, unsigned short mapindex, short x, short y)
 	struct battleground_data *bg = bg_team_search(bg_id);
 	if( bg == NULL ) return 0;
 	for( i = 0; i < MAX_BG_MEMBERS; i++ )
-		if( bg->members[i].sd != NULL ) pc->setpos(bg->members[i].sd, mapindex, x, y, CLR_TELEPORT);
+		if( bg->members[i].sd != NULL ) iPc->setpos(bg->members[i].sd, mapindex, x, y, CLR_TELEPORT);
 	return 1;
 }
 
@@ -146,7 +146,7 @@ int bg_member_respawn(struct map_session_data *sd)
 		return 0;
 	if( bg->mapindex == 0 )
 		return 0; // Respawn not handled by Core
-	pc->setpos(sd, bg->mapindex, bg->x, bg->y, CLR_OUTSIGHT);
+	iPc->setpos(sd, bg->mapindex, bg->x, bg->y, CLR_OUTSIGHT);
 	status_revive(&sd->bl, 1, 100);
 
 	return 1; // Warped
@@ -187,7 +187,7 @@ int bg_team_get_id(struct block_list *bl)
 		{
 			struct map_session_data *msd;
 			struct mob_data *md = (TBL_MOB*)bl;
-			if( md->special_state.ai && (msd = map_id2sd(md->master_id)) != NULL )
+			if( md->special_state.ai && (msd = iMap->id2sd(md->master_id)) != NULL )
 				return msd->bg_id;
 			return md->bg_id;
 		}
@@ -222,7 +222,7 @@ int bg_send_message(struct map_session_data *sd, const char *mes, int len)
  */
 int bg_send_xy_timer_sub(DBKey key, DBData *data, va_list ap)
 {
-	struct battleground_data *bg = DB->data2ptr(data);
+	struct battleground_data *bg = iDB->data2ptr(data);
 	struct map_session_data *sd;
 	int i;
 	nullpo_ret(bg);

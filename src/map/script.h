@@ -37,7 +37,7 @@ typedef enum c_op {
 	C_NOP, // end of script/no value (nil)
 	C_POS,
 	C_INT, // number
-	C_PARAM, // parameter variable (see pc->readparam/pc->setparam)
+	C_PARAM, // parameter variable (see iPc->readparam/iPc->setparam)
 	C_FUNC, // buildin function call
 	C_STR, // string (free'd automatically)
 	C_CONSTSTR, // string (not free'd)

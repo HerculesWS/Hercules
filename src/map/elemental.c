@@ -126,7 +126,7 @@ int elemental_create(struct map_session_data *sd, int class_, unsigned int lifet
 		break;
 	}
 
-	if( (i=pc->checkskill(sd,SO_EL_SYMPATHY)) > 0 ){
+	if( (i=iPc->checkskill(sd,SO_EL_SYMPATHY)) > 0 ){
 		ele.hp = ele.max_hp = ele.max_hp * 5 * i / 100;
 		ele.sp = ele.max_sp = ele.max_sp * 5 * i / 100;
 		ele.atk += 25 * i;
@@ -173,7 +173,7 @@ static int elemental_summon_end(int tid, unsigned int tick, int id, intptr_t dat
 	struct map_session_data *sd;
 	struct elemental_data *ed;
 
-	if( (sd = map_id2sd(id)) == NULL )
+	if( (sd = iMap->id2sd(id)) == NULL )
 		return 1;
 	if( (ed = sd->ed) == NULL )
 		return 1;
@@ -229,7 +229,7 @@ int elemental_data_received(struct s_elemental *ele, bool flag) {
 	struct s_elemental_db *db;
 	int i = elemental_search_index(ele->class_);
 
-	if( (sd = map_charid2sd(ele->char_id)) == NULL )
+	if( (sd = iMap->charid2sd(ele->char_id)) == NULL )
 		return 0;
 
 	if( !flag || i < 0 ) { // Not created - loaded - DB info
@@ -258,7 +258,7 @@ int elemental_data_received(struct s_elemental *ele, bool flag) {
 		ed->bl.x = ed->ud.to_x;
 		ed->bl.y = ed->ud.to_y;
 
-		map_addiddb(&ed->bl);
+		iMap->addiddb(&ed->bl);
 		status_calc_elemental(ed,1);
 		ed->last_spdrain_time = ed->last_thinktime = gettick();
 		ed->summon_timer = INVALID_TIMER;
@@ -271,7 +271,7 @@ int elemental_data_received(struct s_elemental *ele, bool flag) {
 	sd->status.ele_id = ele->elemental_id;
 
 	if( ed->bl.prev == NULL && sd->bl.prev != NULL ) {
-		map_addblock(&ed->bl);
+		iMap->addblock(&ed->bl);
 		clif->spawn(&ed->bl);
 		clif->elemental_info(sd);
 		clif->elemental_updatestatus(sd,SP_HP);
@@ -707,16 +707,16 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 			return 0; //Already walking to him
 		if( DIFF_TICK(tick, ed->ud.canmove_tick) < 0 )
 			return 0; //Can't move yet.
-		if( map_search_freecell(&ed->bl, sd->bl.m, &x, &y, MIN_ELEDISTANCE, MIN_ELEDISTANCE, 1)
+		if( iMap->search_freecell(&ed->bl, sd->bl.m, &x, &y, MIN_ELEDISTANCE, MIN_ELEDISTANCE, 1)
 		   && unit_walktoxy(&ed->bl, x, y, 0) )
 			return 0;
 	}
 
 	if( mode == EL_MODE_AGGRESSIVE ) {
-		target = map_id2bl(ed->ud.target);
+		target = iMap->id2bl(ed->ud.target);
 
 		if( !target )
-			map_foreachinrange(elemental_ai_sub_timer_activesearch, &ed->bl, view_range, BL_CHAR, ed, &target, status_get_mode(&ed->bl));
+			iMap->foreachinrange(elemental_ai_sub_timer_activesearch, &ed->bl, view_range, BL_CHAR, ed, &target, status_get_mode(&ed->bl));
 
 		if( !target ) { //No targets available.
 			elemental_unlocktarget(ed);
@@ -755,7 +755,7 @@ static int elemental_ai_sub_foreachclient(struct map_session_data *sd, va_list a
 }
 
 static int elemental_ai_timer(int tid, unsigned int tick, int id, intptr_t data) {
-	map_foreachpc(elemental_ai_sub_foreachclient,tick);
+	iMap->map_foreachpc(elemental_ai_sub_foreachclient,tick);
 	return 0;
 }
 
@@ -767,7 +767,7 @@ int read_elementaldb(void) {
 	struct s_elemental_db *db;
 	struct status_data *status;
 
-	sprintf(line, "%s/%s", db_path, "elemental_db.txt");
+	sprintf(line, "%s/%s", iMap->db_path, "elemental_db.txt");
 	memset(elemental_db,0,sizeof(elemental_db));
 
 	fp = fopen(line, "r");
@@ -858,7 +858,7 @@ int read_elemental_skilldb(void) {
 	uint16 skill_id, skill_lv;
 	int skillmode;
 
-	sprintf(line, "%s/%s", db_path, "elemental_skill_db.txt");
+	sprintf(line, "%s/%s", iMap->db_path, "elemental_skill_db.txt");
 	fp = fopen(line, "r");
 	if( !fp ) {
 		ShowError("read_elemental_skilldb : can't read elemental_skill_db.txt\n");

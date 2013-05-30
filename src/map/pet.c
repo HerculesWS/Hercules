@@ -76,7 +76,7 @@ int pet_create_egg(struct map_session_data *sd, int item_id)
 {
 	int pet_id = search_petDB_index(item_id, PET_EGG);
 	if (pet_id < 0) return 0; //No pet egg here.
-	if (!pc->inventoryblank(sd)) return 0; // Inventory full
+	if (!iPc->inventoryblank(sd)) return 0; // Inventory full
 	sd->catch_target_class = pet_db[pet_id].class_;
 	intif_create_pet(sd->status.account_id, sd->status.char_id,
 		(short)pet_db[pet_id].class_,
@@ -114,7 +114,7 @@ int pet_attackskill(struct pet_data *pd, int target_id)
 		int inf;
 		struct block_list *bl;
 
-		bl=map_id2bl(target_id);
+		bl=iMap->id2bl(target_id);
 		if(bl == NULL || pd->bl.m != bl->m || bl->prev == NULL || status_isdead(bl) ||
 			!check_distance_bl(&pd->bl, bl, pd->db->range3))
 			return 0;
@@ -198,7 +198,7 @@ static int pet_hungry(int tid, unsigned int tick, int id, intptr_t data)
 	struct pet_data *pd;
 	int interval;
 
-	sd=map_id2sd(id);
+	sd=iMap->id2sd(id);
 	if(!sd)
 		return 1;
 
@@ -304,9 +304,9 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	tmp_item.card[1] = GetWord(pd->pet.pet_id,0);
 	tmp_item.card[2] = GetWord(pd->pet.pet_id,1);
 	tmp_item.card[3] = pd->pet.rename_flag;
-	if((flag = pc->additem(sd,&tmp_item,1,LOG_TYPE_OTHER))) {
+	if((flag = iPc->additem(sd,&tmp_item,1,LOG_TYPE_OTHER))) {
 		clif->additem(sd,0,0,flag);
-		map_addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+		iMap->addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 	}
 	pd->pet.incuvate = 1;
 	unit_free(&pd->bl,CLR_OUTSIGHT);
@@ -366,7 +366,7 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *pet)
 	pd->bl.x = pd->ud.to_x;
 	pd->bl.y = pd->ud.to_y;
 
-	map_addiddb(&pd->bl);
+	iMap->addiddb(&pd->bl);
 	status_calc_pet(pd,1);
 
 	pd->last_thinktime = gettick();
@@ -407,11 +407,11 @@ int pet_birth_process(struct map_session_data *sd, struct s_pet *pet)
 	}
 
 	intif_save_petdata(sd->status.account_id,pet);
-	if (save_settings&8)
+	if (iMap->save_settings&8)
 		chrif_save(sd,0); //is it REALLY Needed to save the char for hatching a pet? [Skotlex]
 
 	if(sd->bl.prev != NULL) {
-		map_addblock(&sd->pd->bl);
+		iMap->addblock(&sd->pd->bl);
 		clif->spawn(&sd->pd->bl);
 		clif->send_petdata(sd,sd->pd, 0,0);
 		clif->send_petdata(sd,sd->pd, 5,battle_config.pet_hair_style);
@@ -427,7 +427,7 @@ int pet_recv_petdata(int account_id,struct s_pet *p,int flag)
 {
 	struct map_session_data *sd;
 
-	sd = map_id2sd(account_id);
+	sd = iMap->id2sd(account_id);
 	if(sd == NULL)
 		return 1;
 	if(flag == 1) {
@@ -448,11 +448,11 @@ int pet_recv_petdata(int account_id,struct s_pet *p,int flag)
 			return 1;
 		}
 		if (!pet_birth_process(sd,p)) //Pet hatched. Delete egg.
-			pc->delitem(sd,i,1,0,0,LOG_TYPE_OTHER);
+			iPc->delitem(sd,i,1,0,0,LOG_TYPE_OTHER);
 	} else {
 		pet_data_init(sd,p);
 		if(sd->pd && sd->bl.prev != NULL) {
-			map_addblock(&sd->pd->bl);
+			iMap->addblock(&sd->pd->bl);
 			clif->spawn(&sd->pd->bl);
 			clif->send_petdata(sd,sd->pd,0,0);
 			clif->send_petdata(sd,sd->pd,5,battle_config.pet_hair_style);
@@ -496,7 +496,7 @@ int pet_catch_process2(struct map_session_data* sd, int target_id)
 
 	nullpo_retr(1, sd);
 
-	md = (struct mob_data*)map_id2bl(target_id);
+	md = (struct mob_data*)iMap->id2bl(target_id);
 	if(!md || md->bl.type != BL_MOB || md->bl.prev == NULL)
 	{	// Invalid inputs/state, abort capture.
 		clif->pet_roulette(sd,0);
@@ -550,7 +550,7 @@ int pet_get_egg(int account_id,int pet_id,int flag)
 	if(flag)
 		return 0;
 		
-	sd = map_id2sd(account_id);
+	sd = iMap->id2sd(account_id);
 	if(sd == NULL)
 		return 0;
 
@@ -569,9 +569,9 @@ int pet_get_egg(int account_id,int pet_id,int flag)
 	tmp_item.card[1] = GetWord(pet_id,0);
 	tmp_item.card[2] = GetWord(pet_id,1);
 	tmp_item.card[3] = 0; //New pets are not named.
-	if((ret = pc->additem(sd,&tmp_item,1,LOG_TYPE_PICKDROP_PLAYER))) {
+	if((ret = iPc->additem(sd,&tmp_item,1,LOG_TYPE_PICKDROP_PLAYER))) {
 		clif->additem(sd,0,0,ret);
-		map_addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+		iMap->addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 	}
 
 	return 1;
@@ -594,7 +594,7 @@ int pet_menu(struct map_session_data *sd,int menunum)
 		
 	egg_id = itemdb_exists(sd->pd->petDB->EggID);
 	if (egg_id) {
-		if ((egg_id->flag.trade_restriction&0x01) && !pc->inventoryblank(sd)) {
+		if ((egg_id->flag.trade_restriction&0x01) && !iPc->inventoryblank(sd)) {
 			clif->message(sd->fd, msg_txt(451)); // You can't return your pet because your inventory is full.
 			return 1;
 		}
@@ -674,7 +674,7 @@ int pet_equipitem(struct map_session_data *sd,int index)
 		return 1;
 	}
 
-	pc->delitem(sd,index,1,0,0,LOG_TYPE_OTHER);
+	iPc->delitem(sd,index,1,0,0,LOG_TYPE_OTHER);
 	pd->pet.equip = nameid;
 	status_set_viewdata(&pd->bl, pd->pet.class_); //Updates view_data.
 	clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
@@ -710,9 +710,9 @@ static int pet_unequipitem(struct map_session_data *sd, struct pet_data *pd)
 	memset(&tmp_item,0,sizeof(tmp_item));
 	tmp_item.nameid = nameid;
 	tmp_item.identify = 1;
-	if((flag = pc->additem(sd,&tmp_item,1,LOG_TYPE_OTHER))) {
+	if((flag = iPc->additem(sd,&tmp_item,1,LOG_TYPE_OTHER))) {
 		clif->additem(sd,0,0,flag);
-		map_addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+		iMap->addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 	}
 	if( battle_config.pet_equip_required )
 	{ // Skotlex: halt support timers if needed
@@ -744,12 +744,12 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 	int i,k;
 
 	k=pd->petDB->FoodID;
-	i=pc->search_inventory(sd,k);
+	i=iPc->search_inventory(sd,k);
 	if(i < 0) {
 		clif->pet_food(sd,k,0);
 		return 1;
 	}
-	pc->delitem(sd,i,1,0,0,LOG_TYPE_CONSUME);
+	iPc->delitem(sd,i,1,0,0,LOG_TYPE_CONSUME);
 
 	if( pd->pet.hungry > 90 )
 		pet_set_intimate(pd, pd->pet.intimate - pd->petDB->r_full);
@@ -801,7 +801,7 @@ static int pet_randomwalk(struct pet_data *pd,unsigned int tick)
 			int r=rnd();
 			x=pd->bl.x+r%(d*2+1)-d;
 			y=pd->bl.y+r/(d*2+1)%(d*2+1)-d;
-			if(map_getcell(pd->bl.m,x,y,CELL_CHKPASS) && unit_walktoxy(&pd->bl,x,y,0)){
+			if(iMap->getcell(pd->bl.m,x,y,CELL_CHKPASS) && unit_walktoxy(&pd->bl,x,y,0)){
 				pd->move_fail_count=0;
 				break;
 			}
@@ -876,7 +876,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, uns
 	}
 	
 	if (pd->target_id) {
-		target= map_id2bl(pd->target_id);
+		target= iMap->id2bl(pd->target_id);
 		if (!target || pd->bl.m != target->m || status_isdead(target) ||
 			!check_distance_bl(&pd->bl, target, pd->db->range3))
 		{
@@ -887,7 +887,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, uns
 	
 	if(!target && pd->loot && pd->msd && pc_has_permission(pd->msd, PC_PERM_TRADE) && pd->loot->count < pd->loot->max && DIFF_TICK(tick,pd->ud.canact_tick)>0) {
 		//Use half the pet's range of sight.
-		map_foreachinrange(pet_ai_sub_hard_lootsearch,&pd->bl,
+		iMap->foreachinrange(pet_ai_sub_hard_lootsearch,&pd->bl,
 			pd->db->range2/2, BL_ITEM,pd,&target);
 	}
 	
@@ -931,7 +931,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, uns
 			if(pd->loot->count < pd->loot->max){
 				memcpy(&pd->loot->item[pd->loot->count++],&fitem->item_data,sizeof(pd->loot->item[0]));
 				pd->loot->weight += itemdb_weight(fitem->item_data.nameid)*fitem->item_data.amount;
-				map_clearflooritem(target);
+				iMap->clearflooritem(target);
 			} 
 			//Target is unlocked regardless of whether it was picked or not.
 			pet_unlocktarget(pd);
@@ -951,7 +951,7 @@ static int pet_ai_sub_foreachclient(struct map_session_data *sd,va_list ap)
 
 static int pet_ai_hard(int tid, unsigned int tick, int id, intptr_t data)
 {
-	map_foreachpc(pet_ai_sub_foreachclient,tick);
+	iMap->map_foreachpc(pet_ai_sub_foreachclient,tick);
 
 	return 0;
 }
@@ -990,7 +990,7 @@ static int pet_delay_item_drop(int tid, unsigned int tick, int id, intptr_t data
 	list=(struct item_drop_list *)data;
 	ditem = list->item;
 	while (ditem) {
-		map_addflooritem(&ditem->item_data,ditem->item_data.amount,
+		iMap->addflooritem(&ditem->item_data,ditem->item_data.amount,
 			list->m,list->x,list->y,
 			list->first_charid,list->second_charid,list->third_charid,0);
 		ditem_prev = ditem;
@@ -1021,7 +1021,7 @@ int pet_lootitem_drop(struct pet_data *pd,struct map_session_data *sd)
 	for(i=0;i<pd->loot->count;i++) {
 		it = &pd->loot->item[i];
 		if(sd){
-			if((flag = pc->additem(sd,it,it->amount,LOG_TYPE_PICKDROP_PLAYER))){
+			if((flag = iPc->additem(sd,it,it->amount,LOG_TYPE_PICKDROP_PLAYER))){
 				clif->additem(sd,0,0,flag);
 				ditem = ers_alloc(item_drop_ers, struct item_drop);
 				memcpy(&ditem->item_data, it, sizeof(struct item));
@@ -1054,7 +1054,7 @@ int pet_lootitem_drop(struct pet_data *pd,struct map_session_data *sd)
  *------------------------------------------*/ 
 int pet_skill_bonus_timer(int tid, unsigned int tick, int id, intptr_t data)
 {
-	struct map_session_data *sd=map_id2sd(id);
+	struct map_session_data *sd=iMap->id2sd(id);
 	struct pet_data *pd;
 	int bonus;
 	int timer = 0;
@@ -1096,7 +1096,7 @@ int pet_skill_bonus_timer(int tid, unsigned int tick, int id, intptr_t data)
  *------------------------------------------*/ 
 int pet_recovery_timer(int tid, unsigned int tick, int id, intptr_t data)
 {
-	struct map_session_data *sd=map_id2sd(id);
+	struct map_session_data *sd=iMap->id2sd(id);
 	struct pet_data *pd;
 	
 	if(sd==NULL || sd->pd == NULL || sd->pd->recovery == NULL)
@@ -1124,7 +1124,7 @@ int pet_recovery_timer(int tid, unsigned int tick, int id, intptr_t data)
 
 int pet_heal_timer(int tid, unsigned int tick, int id, intptr_t data)
 {
-	struct map_session_data *sd=map_id2sd(id);
+	struct map_session_data *sd=iMap->id2sd(id);
 	struct status_data *status;
 	struct pet_data *pd;
 	unsigned int rate = 100;
@@ -1162,7 +1162,7 @@ int pet_heal_timer(int tid, unsigned int tick, int id, intptr_t data)
  *------------------------------------------*/ 
 int pet_skill_support_timer(int tid, unsigned int tick, int id, intptr_t data)
 {
-	struct map_session_data *sd=map_id2sd(id);
+	struct map_session_data *sd=iMap->id2sd(id);
 	struct pet_data *pd;
 	struct status_data *status;
 	short rate = 100;
@@ -1238,7 +1238,7 @@ int read_petdb()
 		char line[1024];
 		int lines, entries;
 
-		sprintf(line, "%s/%s", db_path, filename[i]);
+		sprintf(line, "%s/%s", iMap->db_path, filename[i]);
 		fp=fopen(line,"r");
 		if( fp == NULL )
 		{

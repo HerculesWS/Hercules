@@ -56,7 +56,7 @@ int instance_create(int party_id, const char *name)
 	int i;
 	struct party_data* p;
 
-	if( ( p = party->search(party_id) ) == NULL )
+	if( ( p = iParty->search(party_id) ) == NULL )
 	{
 		ShowError("instance_create: party %d not found for instance '%s'.\n", party_id, name);
 		return -2;
@@ -98,7 +98,7 @@ int instance_create(int party_id, const char *name)
  *--------------------------------------*/
 int instance_add_map(const char *name, int instance_id, bool usebasename)
 {
-	int16 m = map_mapname2mapid(name);
+	int16 m = iMap->mapname2mapid(name);
 	int i, im = -1;
 	size_t num_cell, size;
 
@@ -121,14 +121,14 @@ int instance_add_map(const char *name, int instance_id, bool usebasename)
 		return -4;
 	}
 
-	ARR_FIND( instance_start, map_num, i, !map[i].name[0] ); // Searching for a Free Map
-	if( i < map_num ) im = i; // Unused map found (old instance)
-	else if( map_num - 1 >= MAX_MAP_PER_SERVER )
+	ARR_FIND( instance_start, iMap->map_num, i, !map[i].name[0] ); // Searching for a Free Map
+	if( i < iMap->map_num ) im = i; // Unused map found (old instance)
+	else if( iMap->map_num - 1 >= MAX_MAP_PER_SERVER )
 	{ // No more free maps
 		ShowError("instance_add_map: no more free space to create maps on this server.\n");
 		return -5;
 	}
-	else im = map_num++; // Using next map index
+	else im = iMap->map_num++; // Using next map index
 
 	memcpy( &map[im], &map[m], sizeof(struct map_data) ); // Copy source map
 	snprintf(map[im].name, MAP_NAME_LENGTH, (usebasename ? "%.3d#%s" : "%.3d%s"), instance_id, name); // Generate Name for Instance Map
@@ -162,7 +162,7 @@ int instance_add_map(const char *name, int instance_id, bool usebasename)
 	map[m].flag.src4instance = 1; // Flag this map as a src map for instances
 
 	instance[instance_id].map[instance[instance_id].num_map++] = im; // Attach to actual instance
-	map_addmap2db(&map[im]);
+	iMap->addmap2db(&map[im]);
 
 	return im;
 }
@@ -234,7 +234,7 @@ void instance_init(int instance_id)
 		return; // nothing to do
 
 	for( i = 0; i < instance[instance_id].num_map; i++ )
-		map_foreachinmap(instance_map_npcsub, map[instance[instance_id].map[i]].instance_src_map, BL_NPC, instance[instance_id].map[i]);
+		iMap->foreachinmap(instance_map_npcsub, map[instance[instance_id].map[i]].instance_src_map, BL_NPC, instance[instance_id].map[i]);
 
 	instance[instance_id].state = INSTANCE_BUSY;
 	ShowInfo("[Instance] Initialized %s.\n", instance[instance_id].name);
@@ -250,7 +250,7 @@ int instance_del_load(struct map_session_data* sd, va_list args)
 	if( !sd || sd->bl.m != m )
 		return 0;
 
-	pc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_OUTSIGHT);
+	iPc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_OUTSIGHT);
 	return 1;
 }
 
@@ -260,7 +260,7 @@ int instance_cleanup_sub(struct block_list *bl, va_list ap) {
 
 	switch(bl->type) {
 		case BL_PC:
-			map_quit((struct map_session_data *) bl);
+			iMap->quit((struct map_session_data *) bl);
 			break;
 		case BL_NPC:
 			npc_unload((struct npc_data *)bl,true);
@@ -272,7 +272,7 @@ int instance_cleanup_sub(struct block_list *bl, va_list ap) {
 			//There is no need for this, the pet is removed together with the player. [Skotlex]
 			break;
 		case BL_ITEM:
-			map_clearflooritem(bl);
+			iMap->clearflooritem(bl);
 			break;
 		case BL_SKILL:
 			skill->delunit((struct skill_unit *) bl);
@@ -294,11 +294,11 @@ void instance_del_map(int16 m)
 		return;
 	}
 
-	map_foreachpc(instance_del_load, m);
-	map_foreachinmap(instance_cleanup_sub, m, BL_ALL);
+	iMap->map_foreachpc(instance_del_load, m);
+	iMap->foreachinmap(instance_cleanup_sub, m, BL_ALL);
 
 	if( map[m].mob_delete_timer != INVALID_TIMER )
-		delete_timer(map[m].mob_delete_timer, map_removemobs_timer);
+		delete_timer(map[m].mob_delete_timer, iMap->removemobs_timer);
 
 	mapindex_removemap( map[m].index );
 
@@ -322,7 +322,7 @@ void instance_del_map(int16 m)
 	if( i == instance[map[m].instance_id].num_map )
 		ShowError("map_instance_del: failed to remove %s from instance list (%s): %d\n", map[m].name, instance[map[m].instance_id].name, m);
 
-	map_removemapdb(&map[m]);
+	iMap->removemapdb(&map[m]);
 	memset(&map[m], 0x00, sizeof(map[0]));
 
 	/* for it is default and makes it not try to delete a non-existent timer since we did not delete this entry. */
@@ -375,7 +375,7 @@ void instance_destroy(int instance_id)
 
 	instance[instance_id].vars = NULL;
 
-	if( instance[instance_id].party_id && (p = party->search(instance[instance_id].party_id)) != NULL )
+	if( instance[instance_id].party_id && (p = iParty->search(instance[instance_id].party_id)) != NULL )
 		p->instance_id = 0; // Update Party information
 
 	ShowInfo("[Instance] Destroyed %s.\n", instance[instance_id].name);
@@ -467,9 +467,9 @@ void instance_check_kick(struct map_session_data *sd)
 	if( map[m].instance_id )
 	{ // User was on the instance map
 		if( map[m].save.map )
-			pc->setpos(sd, map[m].save.map, map[m].save.x, map[m].save.y, CLR_TELEPORT);
+			iPc->setpos(sd, map[m].save.map, map[m].save.x, map[m].save.y, CLR_TELEPORT);
 		else
-			pc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
+			iPc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 	}
 }
 
