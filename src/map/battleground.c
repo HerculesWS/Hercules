@@ -249,8 +249,8 @@ int bg_send_xy_timer(int tid, unsigned int tick, int id, intptr_t data)
 void do_init_battleground(void)
 {
 	bg_team_db = idb_alloc(DB_OPT_RELEASE_DATA);
-	add_timer_func_list(bg_send_xy_timer, "bg_send_xy_timer");
-	add_timer_interval(gettick() + battle_config.bg_update_interval, bg_send_xy_timer, 0, 0, battle_config.bg_update_interval);
+	iTimer->add_timer_func_list(bg_send_xy_timer, "bg_send_xy_timer");
+	iTimer->add_timer_interval(iTimer->gettick() + battle_config.bg_update_interval, bg_send_xy_timer, 0, 0, battle_config.bg_update_interval);
 }
 
 void do_final_battleground(void)

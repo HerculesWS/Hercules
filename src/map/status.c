@@ -1109,7 +1109,7 @@ int status_damage(struct block_list *src,struct block_list *target,int hp, int s
 	}
 
 	if (target->type == BL_SKILL)
-		return skill->unit_ondamaged((struct skill_unit *)target, src, hp, gettick());
+		return skill->unit_ondamaged((struct skill_unit *)target, src, hp, iTimer->gettick());
 
 	status = status_get_status_data(target);
 	if( status == &dummy_status )
@@ -1213,7 +1213,7 @@ int status_damage(struct block_list *src,struct block_list *target,int hp, int s
 	if( status->hp || (flag&8) )
   	{	//Still lives or has been dead before this damage.
 		if (walkdelay)
-			unit_set_walkdelay(target, gettick(), walkdelay, 0);
+			unit_set_walkdelay(target, iTimer->gettick(), walkdelay, 0);
 		return hp+sp;
 	}
 
@@ -1303,7 +1303,7 @@ int status_damage(struct block_list *src,struct block_list *target,int hp, int s
 		unit_stop_walking(target,1);
 		unit_skillcastcancel(target,0);
 		clif->clearunit_area(target,CLR_DEAD);
-		skill->unit_move(target,gettick(),4);
+		skill->unit_move(target,iTimer->gettick(),4);
 		skill->cleartimerskill(target);
 	}
 
@@ -7141,7 +7141,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				//Kaahi overwrites previous level regardless of existing level.
 				//Delete timer if it exists.
 				if (sce->val4 != INVALID_TIMER) {
-					delete_timer(sce->val4,kaahi_heal_timer);
+					iTimer->delete_timer(sce->val4,kaahi_heal_timer);
 					sce->val4 = INVALID_TIMER;
 				}
 				break;
@@ -7714,8 +7714,8 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 						sc_start4(src,SC_CLOSECONFINE,100,val1,1,0,0,tick+1000);
 					else { //Increase count of locked enemies and refresh time.
 						(sce2->val2)++;
-						delete_timer(sce2->timer, status_change_timer);
-						sce2->timer = add_timer(gettick()+tick+1000, status_change_timer, src->id, SC_CLOSECONFINE);
+						iTimer->delete_timer(sce2->timer, status_change_timer);
+						sce2->timer = iTimer->add_timer(iTimer->gettick()+tick+1000, status_change_timer, src->id, SC_CLOSECONFINE);
 					}
 				} else //Status failed.
 					return 0;
@@ -7749,8 +7749,8 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 					struct unit_data *ud = unit_bl2ud(bl);
 					if (ud && !val3) {
 						tick += 300 * battle_config.combo_delay_rate/100;
-						ud->attackabletime = gettick()+tick;
-						unit_set_walkdelay(bl, gettick(), tick, 1);
+						ud->attackabletime = iTimer->gettick()+tick;
+						unit_set_walkdelay(bl, iTimer->gettick(), tick, 1);
 					}
 					val3 = 0;
 					val4 = tick;
@@ -7760,7 +7760,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				val2 = 11-val1; //Chance to consume: 11-skill_lv%
 				break;
 			case SC_RUN:
-				val4 = gettick(); //Store time at which you started running.
+				val4 = iTimer->gettick(); //Store time at which you started running.
 				tick = -1;
 				break;
 			case SC_KAAHI:
@@ -8154,7 +8154,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				tick_time = 1000; // [GodLesZ] tick time
 				break;
 			case SC_WUGDASH:
-				val4 = gettick(); //Store time at which you started running.
+				val4 = iTimer->gettick(); //Store time at which you started running.
 				tick = -1;
 				break;
 			case SC__SHADOWFORM: {
@@ -8880,7 +8880,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 	//Don't trust the previous sce assignment, in case the SC ended somewhere between there and here.
 	if((sce=sc->data[type])) {// reuse old sc
 		if( sce->timer != INVALID_TIMER )
-			delete_timer(sce->timer, status_change_timer);
+			iTimer->delete_timer(sce->timer, status_change_timer);
 	} else {// new sc
 		++(sc->count);
 		sce = sc->data[type] = ers_alloc(sc_data_ers, struct status_change_entry);
@@ -8890,7 +8890,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 	sce->val3 = val3;
 	sce->val4 = val4;
 	if (tick >= 0)
-		sce->timer = add_timer(gettick() + tick, status_change_timer, bl->id, type);
+		sce->timer = iTimer->add_timer(iTimer->gettick() + tick, status_change_timer, bl->id, type);
 	else
 		sce->timer = INVALID_TIMER; //Infinite duration
 
@@ -9079,7 +9079,7 @@ int status_change_clear(struct block_list* bl, int type) {
 			//If for some reason status_change_end decides to still keep the status when quitting. [Skotlex]
 			(sc->count)--;
 			if (sc->data[i]->timer != INVALID_TIMER)
-				delete_timer(sc->data[i]->timer, status_change_timer);
+				iTimer->delete_timer(sc->data[i]->timer, status_change_timer);
 			ers_free(sc_data_ers, sc->data[i]);
 			sc->data[i] = NULL;
 		}
@@ -9127,7 +9127,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			//Do not end infinite endure.
 			return 0;
 		if (sce->timer != INVALID_TIMER) //Could be a SC with infinite duration
-			delete_timer(sce->timer,status_change_timer);
+			iTimer->delete_timer(sce->timer,status_change_timer);
 		if (sc->opt1)
 		switch (type) {
 			//"Ugly workaround"  [Skotlex]
@@ -9143,7 +9143,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 				//since these SC are not affected by it, and it lets us know
 				//if we have already delayed this attack or not.
 				sce->val1 = 0;
-				sce->timer = add_timer(gettick()+10, status_change_timer, bl->id, type);
+				sce->timer = iTimer->add_timer(iTimer->gettick()+10, status_change_timer, bl->id, type);
 				return 1;
 			}
 		}
@@ -9183,7 +9183,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 					unit_stop_walking(bl,1);
 			}
 			if (begin_spurt && sce->val1 >= 7 &&
-				DIFF_TICK(gettick(), sce->val4) <= 1000 &&
+				DIFF_TICK(iTimer->gettick(), sce->val4) <= 1000 &&
 				(!sd || (sd->weapontype1 == 0 && sd->weapontype2 == 0))
 			)
 				sc_start(bl,SC_SPURT,100,sce->val1,skill->get_time2(status_sc2skill(type), sce->val1));
@@ -9323,7 +9323,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			{
 				struct block_list *src=iMap->id2bl(sce->val3);
 				if(src && tid != INVALID_TIMER)
-					skill->castend_damage_id(src, bl, sce->val2, sce->val1, gettick(), SD_LEVEL );
+					skill->castend_damage_id(src, bl, sce->val2, sce->val1, iTimer->gettick(), SD_LEVEL );
 			}
 			break;
 		case SC_CLOSECONFINE2:
@@ -9344,7 +9344,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 					+skill->get_range2(bl, status_sc2skill(type), sce->val1)
 					+skill->get_range2(bl, TF_BACKSLIDING, 1); //Since most people use this to escape the hold....
 				iMap->foreachinarea(status_change_timer_sub,
-					bl->m, bl->x-range, bl->y-range, bl->x+range,bl->y+range,BL_CHAR,bl,sce,type,gettick());
+					bl->m, bl->x-range, bl->y-range, bl->x+range,bl->y+range,BL_CHAR,bl,sce,type,iTimer->gettick());
 			}
 			break;
 		case SC_COMBO:
@@ -9429,7 +9429,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		case SC_KAAHI:
 			//Delete timer if it exists.
 			if (sce->val4 != INVALID_TIMER)
-				delete_timer(sce->val4,kaahi_heal_timer);
+				iTimer->delete_timer(sce->val4,kaahi_heal_timer);
 			break;
 		case SC_JAILED:
 			if(tid == INVALID_TIMER)
@@ -9478,7 +9478,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 				struct block_list* src = iMap->id2bl(sce->val2);
 				if( tid == -1 || !src)
 					break; // Terminated by Damage
-				status_fix_damage(src,bl,400*sce->val1,clif->damage(bl,bl,gettick(),0,0,400*sce->val1,0,0,0));
+				status_fix_damage(src,bl,400*sce->val1,clif->damage(bl,bl,iTimer->gettick(),0,0,400*sce->val1,0,0,0));
 			}
 			break;
 		case SC_WUGDASH:
@@ -9526,7 +9526,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			break;
 		case SC_CURSEDCIRCLE_ATKER:
 			if( sce->val2 ) // used the default area size cause there is a chance the caster could knock back and can't clear the target.
-				iMap->foreachinrange(status_change_timer_sub, bl, battle_config.area_size,BL_CHAR, bl, sce, SC_CURSEDCIRCLE_TARGET, gettick());
+				iMap->foreachinrange(status_change_timer_sub, bl, battle_config.area_size,BL_CHAR, bl, sce, SC_CURSEDCIRCLE_TARGET, iTimer->gettick());
 			break;
 		case SC_RAISINGDRAGON:
 			if( sd && sce->val2 && !pc_isdead(sd) ) {
@@ -9760,7 +9760,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		status_calc_bl(bl,calc_flag);
 
 	if(opt_flag&4) //Out of hiding, invoke on place.
-		skill->unit_move(bl,gettick(),1);
+		skill->unit_move(bl,iTimer->gettick(),1);
 
 	if(opt_flag&2 && sd && iMap->getcell(bl->m,bl->x,bl->y,CELL_CHKNPC))
 		npc_touch_areanpc(sd,bl->m,bl->x,bl->y); //Trigger on-touch event.
@@ -9842,7 +9842,7 @@ int status_change_timer(int tid, unsigned int tick, int id, intptr_t data)
 // set the next timer of the sce (don't assume the status still exists)
 #define sc_timer_next(t,f,i,d) \
 	if( (sce=sc->data[type]) ) \
-		sce->timer = add_timer(t,f,i,d); \
+		sce->timer = iTimer->add_timer(t,f,i,d); \
 	else \
 		ShowError("status_change_timer: Unexpected NULL status change id: %d data: %d\n", id, data)
 
@@ -10845,7 +10845,7 @@ int status_change_spread( struct block_list *src, struct block_list *bl ) {
 	if( !sc || !sc->count )
 		return 0;
 
-	tick = gettick();
+	tick = iTimer->gettick();
 
 	for( i = SC_COMMON_MIN; i < SC_MAX; i++ ) {
 		if( !sc->data[i] || i == SC_COMMON_MAX )
@@ -10878,7 +10878,7 @@ int status_change_spread( struct block_list *src, struct block_list *bl ) {
 			case SC_DEATHHURT:
 			case SC_PARALYSE:
 				if( sc->data[i]->timer != INVALID_TIMER ) {
-					timer = get_timer(sc->data[i]->timer);
+					timer = iTimer->get_timer(sc->data[i]->timer);
 					if (timer == NULL || timer->func != status_change_timer || DIFF_TICK(timer->tick,tick) < 0)
 						continue;
 					data.tick = DIFF_TICK(timer->tick,tick);
@@ -11302,16 +11302,16 @@ int status_readdb(void)
  *------------------------------------------*/
 int do_init_status(void)
 {
-	add_timer_func_list(status_change_timer,"status_change_timer");
-	add_timer_func_list(kaahi_heal_timer,"kaahi_heal_timer");
-	add_timer_func_list(status_natural_heal_timer,"status_natural_heal_timer");
+	iTimer->add_timer_func_list(status_change_timer,"status_change_timer");
+	iTimer->add_timer_func_list(kaahi_heal_timer,"kaahi_heal_timer");
+	iTimer->add_timer_func_list(status_natural_heal_timer,"status_natural_heal_timer");
 	initChangeTables();
 	initDummyData();
 	status_readdb();
 	status_calc_sigma();
-	natural_heal_prev_tick = gettick();
+	natural_heal_prev_tick = iTimer->gettick();
 	sc_data_ers = ers_new(sizeof(struct status_change_entry),"status.c::sc_data_ers",ERS_OPT_NONE);
-	add_timer_interval(natural_heal_prev_tick + NATURAL_HEAL_INTERVAL, status_natural_heal_timer, 0, 0, NATURAL_HEAL_INTERVAL);
+	iTimer->add_timer_interval(natural_heal_prev_tick + NATURAL_HEAL_INTERVAL, status_natural_heal_timer, 0, 0, NATURAL_HEAL_INTERVAL);
 	return 0;
 }
 void do_final_status(void)

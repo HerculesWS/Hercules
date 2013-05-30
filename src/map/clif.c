@@ -562,7 +562,7 @@ void clif_authok(struct map_session_data *sd)
 	struct packet_authok p;
 	
 	p.PacketType = authokType;
-	p.startTime = gettick();
+	p.startTime = iTimer->gettick();
 	WBUFPOS(&p.PosDir[0],0,sd->bl.x,sd->bl.y,sd->ud.dir); /* do the stupid client math */
 	p.xSize = p.ySize = 5; /* not-used */
 	
@@ -764,7 +764,7 @@ void clif_clearunit_delayed(struct block_list* bl, clr_type type, unsigned int t
 {
 	struct block_list *tbl = ers_alloc(clif->delay_clearunit_ers, struct block_list);
 	memcpy (tbl, bl, sizeof (struct block_list));
-	add_timer(tick, clif->clearunit_delayed_sub, (int)type, (intptr_t)tbl);
+	iTimer->add_timer(tick, clif->clearunit_delayed_sub, (int)type, (intptr_t)tbl);
 }
 
 void clif_get_weapon_view(struct map_session_data* sd, unsigned short *rhand, unsigned short *lhand)
@@ -1177,7 +1177,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
 	p.accessory = vd->head_bottom;
-	p.moveStartTime = gettick();
+	p.moveStartTime = iTimer->gettick();
 #if PACKETVER < 7
 	p.shield = vd->shield;
 #endif
@@ -1555,7 +1555,7 @@ void clif_walkok(struct map_session_data *sd)
 
 	WFIFOHEAD(fd, packet_len(0x87));
 	WFIFOW(fd,0)=0x87;
-	WFIFOL(fd,2)=gettick();
+	WFIFOL(fd,2)=iTimer->gettick();
 	WFIFOPOS2(fd,6,sd->bl.x,sd->bl.y,sd->ud.to_x,sd->ud.to_y,8,8);
 	WFIFOSET(fd,packet_len(0x87));
 }
@@ -1626,7 +1626,7 @@ void clif_move(struct unit_data *ud)
 	WBUFW(buf,0)=0x86;
 	WBUFL(buf,2)=bl->id;
 	WBUFPOS2(buf,6,bl->x,bl->y,ud->to_x,ud->to_y,8,8);
-	WBUFL(buf,12)=gettick();
+	WBUFL(buf,12)=iTimer->gettick();
 	clif->send(buf, packet_len(0x86), bl, AREA_WOS);
 	if (disguised(bl))
 	{
@@ -1653,14 +1653,14 @@ int clif_delayquit(int tid, unsigned int tick, int id, intptr_t data) {
  *------------------------------------------*/
 void clif_quitsave(int fd,struct map_session_data *sd) {
 	if (!battle_config.prevent_logout ||
-		DIFF_TICK(gettick(), sd->canlog_tick) > battle_config.prevent_logout)
+		DIFF_TICK(iTimer->gettick(), sd->canlog_tick) > battle_config.prevent_logout)
 		iMap->quit(sd);
 	else if (sd->fd) {
 		//Disassociate session from player (session is deleted after this function was called)
 		//And set a timer to make him quit later.
 		session[sd->fd]->session_data = NULL;
 		sd->fd = 0;
-		add_timer(gettick() + 10000, clif->delayquit, sd->bl.id, 0);
+		iTimer->add_timer(iTimer->gettick() + 10000, clif->delayquit, sd->bl.id, 0);
 	}
 }
 
@@ -3749,7 +3749,7 @@ void clif_useitemack(struct map_session_data *sd,int index,int amount,bool ok)
 }
 
 void clif_hercules_chsys_send(struct hChSysCh *channel, struct map_session_data *sd, char *msg) {
-	if( channel->msg_delay != 0 && DIFF_TICK(sd->hchsysch_tick + ( channel->msg_delay * 1000 ), gettick()) > 0 && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
+	if( channel->msg_delay != 0 && DIFF_TICK(sd->hchsysch_tick + ( channel->msg_delay * 1000 ), iTimer->gettick()) > 0 && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
 		clif->colormes(sd->fd,COLOR_RED,msg_txt(1455));
 		return;
 	} else {
@@ -3759,7 +3759,7 @@ void clif_hercules_chsys_send(struct hChSysCh *channel, struct map_session_data 
 		if( channel->type == hChSys_IRC )
 			ircbot->relay(sd->status.name,msg);
 		if( channel->msg_delay != 0 )
-			sd->hchsysch_tick = gettick();
+			sd->hchsysch_tick = iTimer->gettick();
 	}
 }
 
@@ -9396,7 +9396,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 	if(map[sd->bl.m].flag.pvp && !(sd->sc.option&OPTION_INVISIBLE)) {
 		if(!battle_config.pk_mode) { // remove pvp stuff for pk_mode [Valaris]
 			if (!map[sd->bl.m].flag.pvp_nocalcrank)
-				sd->pvp_timer = add_timer(gettick()+200, iPc->calc_pvprank_timer, sd->bl.id, 0);
+				sd->pvp_timer = iTimer->add_timer(iTimer->gettick()+200, iPc->calc_pvprank_timer, sd->bl.id, 0);
 			sd->pvp_rank = 0;
 			sd->pvp_lastusers = 0;
 			sd->pvp_point = 5;
@@ -9443,7 +9443,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 		if( battle_config.hom_setting&0x8 )
 			status_calc_bl(&sd->hd->bl, SCB_SPEED); //Homunc mimic their master's speed on each map change
 		if( !(battle_config.hom_setting&0x2) )
-			skill->unit_move(&sd->hd->bl,gettick(),1); // apply land skills immediately
+			skill->unit_move(&sd->hd->bl,iTimer->gettick(),1); // apply land skills immediately
 	}
 
 	if( sd->md ) {
@@ -9616,7 +9616,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 
 // Trigger skill effects if you appear standing on them
 	if(!battle_config.pc_invincible_time)
-		skill->unit_move(&sd->bl,gettick(),1);
+		skill->unit_move(&sd->bl,iTimer->gettick(),1);
 }
 
 
@@ -9640,7 +9640,7 @@ void clif_parse_TickSend(int fd, struct map_session_data *sd)
 {
 	sd->client_tick = RFIFOL(fd,packet_db[RFIFOW(fd,0)].pos[0]);
 
-	clif->notify_time(sd, gettick());
+	clif->notify_time(sd, iTimer->gettick());
 }
 
 
@@ -9720,7 +9720,7 @@ void clif_parse_progressbar(int fd, struct map_session_data * sd)
 {
 	int npc_id = sd->progressbar.npc_id;
 
-	if( gettick() < sd->progressbar.timeout && sd->st )
+	if( iTimer->gettick() < sd->progressbar.timeout && sd->st )
 		sd->st->state = END;
 
 	sd->progressbar.npc_id = sd->progressbar.timeout = 0;
@@ -9787,7 +9787,7 @@ void clif_parse_QuitGame(int fd, struct map_session_data *sd)
 {
 	/*	Rovert's prevent logout option fixed [Valaris]	*/
 	if( !sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] &&
-		(!battle_config.prevent_logout || DIFF_TICK(gettick(), sd->canlog_tick) > battle_config.prevent_logout) )
+		(!battle_config.prevent_logout || DIFF_TICK(iTimer->gettick(), sd->canlog_tick) > battle_config.prevent_logout) )
 	{
 		set_eof(fd);
 		clif->disconnect_ack(sd, 0);
@@ -9869,9 +9869,9 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 		return;
 
 	if( battle_config.min_chat_delay ) { //[Skotlex]
-		if (DIFF_TICK(sd->cantalk_tick, gettick()) > 0)
+		if (DIFF_TICK(sd->cantalk_tick, iTimer->gettick()) > 0)
 			return;
-		sd->cantalk_tick = gettick() + battle_config.min_chat_delay;
+		sd->cantalk_tick = iTimer->gettick() + battle_config.min_chat_delay;
 	}
 	
 	if( sd->gcbind ) {
@@ -9882,14 +9882,14 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 		unsigned char mylen = 1;
 
 		if( sd->disguise == -1 ) {
-			sd->fontcolor_tid = add_timer(gettick()+5000, clif->undisguise_timer, sd->bl.id, 0);
+			sd->fontcolor_tid = iTimer->add_timer(iTimer->gettick()+5000, clif->undisguise_timer, sd->bl.id, 0);
 			iPc->disguise(sd,sd->status.class_);
 			if( pc_isdead(sd) )
 				clif_clearunit_single(-sd->bl.id, CLR_DEAD, sd->fd);
 		} else if ( sd->disguise == sd->status.class_ && sd->fontcolor_tid != INVALID_TIMER ) {
 			const struct TimerData *timer;
-			if( (timer = get_timer(sd->fontcolor_tid)) ) {
-				settick_timer(sd->fontcolor_tid, timer->tick+5000);
+			if( (timer = iTimer->get_timer(sd->fontcolor_tid)) ) {
+				iTimer->settick_timer(sd->fontcolor_tid, timer->tick+5000);
 			}
 		}
 		
@@ -10276,7 +10276,7 @@ void clif_parse_ActionRequest(int fd, struct map_session_data *sd)
 	clif->pActionRequest_sub(sd,
 		RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[1]),
 		RFIFOL(fd,packet_db[RFIFOW(fd,0)].pos[0]),
-		gettick()
+		iTimer->gettick()
 	);
 }
 
@@ -10294,7 +10294,7 @@ void clif_parse_Restart(int fd, struct map_session_data *sd) {
 		case 0x01:
 			/*	Rovert's Prevent logout option - Fixed [Valaris]	*/
 			if( !sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] &&
-				(!battle_config.prevent_logout || DIFF_TICK(gettick(), sd->canlog_tick) > battle_config.prevent_logout) )
+				(!battle_config.prevent_logout || DIFF_TICK(iTimer->gettick(), sd->canlog_tick) > battle_config.prevent_logout) )
 			{	//Send to char-server for character selection.
 				chrif_charselectreq(sd, session[fd]->client_addr);
 			} else {
@@ -10326,10 +10326,10 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 		return;
 
 	if (battle_config.min_chat_delay) { //[Skotlex]
-		if (DIFF_TICK(sd->cantalk_tick, gettick()) > 0) {
+		if (DIFF_TICK(sd->cantalk_tick, iTimer->gettick()) > 0) {
 			return;
 		}
-		sd->cantalk_tick = gettick() + battle_config.min_chat_delay;
+		sd->cantalk_tick = iTimer->gettick() + battle_config.min_chat_delay;
 	}
 
 	// Chat logging type 'W' / Whisper
@@ -10761,7 +10761,7 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 	switch (bl->type) {
 		case BL_MOB:
 		case BL_PC:
-			clif->pActionRequest_sub(sd, 0x07, bl->id, gettick());
+			clif->pActionRequest_sub(sd, 0x07, bl->id, iTimer->gettick());
 			break;
 		case BL_NPC:
 			if( bl->m != -1 )// the user can't click floating npcs directly (hack attempt)
@@ -11244,7 +11244,7 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 {
 	uint16 skill_id, skill_lv;
 	int tmp, target_id;
-	unsigned int tick = gettick();
+	unsigned int tick = iTimer->gettick();
 
 	skill_lv = RFIFOW(fd,packet_db[RFIFOW(fd,0)].pos[0]);
 	skill_id = RFIFOW(fd,packet_db[RFIFOW(fd,0)].pos[1]);
@@ -11344,7 +11344,7 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
  *------------------------------------------*/
 void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uint16 skill_lv, uint16 skill_id, short x, short y, int skillmoreinfo)
 {
-	unsigned int tick = gettick();
+	unsigned int tick = iTimer->gettick();
 
 	if( !(skill->get_inf(skill_id)&INF_GROUND_SKILL) )
 		return; //Using a target skill on the ground? WRONG.
@@ -12100,9 +12100,9 @@ void clif_parse_PartyMessage(int fd, struct map_session_data* sd)
 
 	if( battle_config.min_chat_delay )
 	{	//[Skotlex]
-		if (DIFF_TICK(sd->cantalk_tick, gettick()) > 0)
+		if (DIFF_TICK(sd->cantalk_tick, iTimer->gettick()) > 0)
 			return;
-		sd->cantalk_tick = gettick() + battle_config.min_chat_delay;
+		sd->cantalk_tick = iTimer->gettick() + battle_config.min_chat_delay;
 	}
 
 	iParty->send_message(sd, text, textlen);
@@ -12637,9 +12637,9 @@ void clif_parse_GuildMessage(int fd, struct map_session_data* sd)
 
 	if( battle_config.min_chat_delay )
 	{	//[Skotlex]
-		if (DIFF_TICK(sd->cantalk_tick, gettick()) > 0)
+		if (DIFF_TICK(sd->cantalk_tick, iTimer->gettick()) > 0)
 			return;
-		sd->cantalk_tick = gettick() + battle_config.min_chat_delay;
+		sd->cantalk_tick = iTimer->gettick() + battle_config.min_chat_delay;
 	}
 
 	if( sd->bg_id )
@@ -14362,7 +14362,7 @@ void clif_parse_Mail_send(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	if( DIFF_TICK(sd->cansendmail_tick, gettick()) > 0 ) {
+	if( DIFF_TICK(sd->cansendmail_tick, iTimer->gettick()) > 0 ) {
 		clif->message(sd->fd,msg_txt(675)); //"Cannot send mails too fast!!."
 		clif->mail_send(fd, true); // fail
 		return;
@@ -14400,7 +14400,7 @@ void clif_parse_Mail_send(int fd, struct map_session_data *sd)
 	if( !intif_Mail_send(sd->status.account_id, &msg) )
 		mail_deliveryfail(sd, &msg);
 
-	sd->cansendmail_tick = gettick() + 1000; // 1 Second flood Protection
+	sd->cansendmail_tick = iTimer->gettick() + 1000; // 1 Second flood Protection
 }
 
 
@@ -14939,11 +14939,11 @@ void clif_bossmapinfo(int fd, struct mob_data *md, short flag)
 			} else
 				WFIFOB(fd,2) = 2; // First Time
 		} else if (md->spawn_timer != INVALID_TIMER) { // Boss is Dead
-			const struct TimerData * timer_data = get_timer(md->spawn_timer);
+			const struct TimerData * timer_data = iTimer->get_timer(md->spawn_timer);
 			unsigned int seconds;
 			int hours, minutes;
 
-			seconds = DIFF_TICK(timer_data->tick, gettick()) / 1000 + 60;
+			seconds = DIFF_TICK(timer_data->tick, iTimer->gettick()) / 1000 + 60;
 			hours = seconds / (60 * 60);
 			seconds = seconds - (60 * 60 * hours);
 			minutes = seconds / 60;
@@ -15489,9 +15489,9 @@ void clif_parse_BattleChat(int fd, struct map_session_data* sd)
 		return;
 
 	if( battle_config.min_chat_delay ) {
-		if( DIFF_TICK(sd->cantalk_tick, gettick()) > 0 )
+		if( DIFF_TICK(sd->cantalk_tick, iTimer->gettick()) > 0 )
 			return;
-		sd->cantalk_tick = gettick() + battle_config.min_chat_delay;
+		sd->cantalk_tick = iTimer->gettick() + battle_config.min_chat_delay;
 	}
 
 	bg_send_message(sd, text, textlen);
@@ -17140,8 +17140,8 @@ int do_init_clif(void) {
 		exit(EXIT_FAILURE);
 	}
 
-	add_timer_func_list(clif->clearunit_delayed_sub, "clif_clearunit_delayed_sub");
-	add_timer_func_list(clif->delayquit, "clif_delayquit");
+	iTimer->add_timer_func_list(clif->clearunit_delayed_sub, "clif_clearunit_delayed_sub");
+	iTimer->add_timer_func_list(clif->delayquit, "clif_delayquit");
 
 	clif->delay_clearunit_ers = ers_new(sizeof(struct block_list),"clif.c::delay_clearunit_ers",ERS_OPT_CLEAR);
 

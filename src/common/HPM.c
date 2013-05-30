@@ -281,12 +281,7 @@ void hplugins_share_defaults(void) {
 	/* sql */
 	HPM->share(SQL,"SQL");
 	/* timer */
-	HPM->share(gettick,"gettick");
-	HPM->share(add_timer,"add_timer");
-	HPM->share(add_timer_interval,"add_timer_interval");
-	HPM->share(add_timer_func_list,"add_timer_func_list");
-	HPM->share(delete_timer,"delete_timer");
-	HPM->share(get_uptime,"get_uptime");	
+	HPM->share(iTimer,"iTimer");
 }
 CPCMD(plugins) {
 	if( HPM->plugin_count == 0 ) {

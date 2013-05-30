@@ -2830,7 +2830,7 @@ void script_free_state(struct script_state* st)
 		ShowDebug("script_free_state: Previous script state lost (rid=%d, oid=%d, state=%d, bk_npcid=%d).\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
 	}
 	if( st->sleep.timer != INVALID_TIMER )
-		delete_timer(st->sleep.timer, run_script_timer);
+		iTimer->delete_timer(st->sleep.timer, run_script_timer);
 	script_free_vars(st->stack->var_function);
 	pop_stack(st, 0, st->stack->sp);
 	aFree(st->stack->stack_data);
@@ -3442,8 +3442,8 @@ static void script_attach_state(struct script_state* st)
  **/
 #ifdef SECURE_NPCTIMEOUT
 		if( sd->npc_idle_timer == INVALID_TIMER )
-			sd->npc_idle_timer = add_timer(gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc_rr_secure_timeout_timer,sd->bl.id,0);
-		sd->npc_idle_tick = gettick();
+			sd->npc_idle_timer = add_timer(iTimer->gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc_rr_secure_timeout_timer,sd->bl.id,0);
+		sd->npc_idle_tick = iTimer->gettick();
 #endif
 	}
 }
@@ -3566,7 +3566,7 @@ void run_script_main(struct script_state *st)
 		//Delay execution
 		sd = iMap->id2sd(st->rid); // Get sd since script might have attached someone while running. [Inkfish]
 		st->sleep.charid = sd?sd->status.char_id:0;
-		st->sleep.timer  = add_timer(gettick()+st->sleep.tick,
+		st->sleep.timer  = iTimer->add_timer(iTimer->gettick()+st->sleep.tick,
 			run_script_timer, st->sleep.charid, (intptr_t)st);
 		linkdb_insert(&sleep_db, (void*)__64BPTRSIZE(st->oid), st);
 	}
@@ -8135,7 +8135,7 @@ BUILDIN(gettimetick)	/* Asgard Version */
 		case 0:
 		default:
 			//type 0:(System Ticks)
-			script_pushint(st,gettick());
+			script_pushint(st,iTimer->gettick());
 			break;
 	}
 	return true;
@@ -9691,11 +9691,11 @@ BUILDIN(getstatus)
 		case 4:  script_pushint(st, sd->sc.data[id]->val4);	break;
 		case 5:
 		{
-			struct TimerData* timer = (struct TimerData*)get_timer(sd->sc.data[id]->timer);
+			struct TimerData* timer = (struct TimerData*)iTimer->get_timer(sd->sc.data[id]->timer);
 			
 			if( timer )
 			{// return the amount of time remaining
-				script_pushint(st, timer->tick - gettick());
+				script_pushint(st, timer->tick - iTimer->gettick());
 			}
 		}
 			break;
@@ -10345,7 +10345,7 @@ BUILDIN(getmapflag)
 static int script_mapflag_pvp_sub(struct block_list *bl,va_list ap) {
 	TBL_PC* sd = (TBL_PC*)bl;
 	if (sd->pvp_timer == INVALID_TIMER) {
-		sd->pvp_timer = add_timer(gettick() + 200, iPc->calc_pvprank_timer, sd->bl.id, 0);
+		sd->pvp_timer = iTimer->add_timer(iTimer->gettick() + 200, iPc->calc_pvprank_timer, sd->bl.id, 0);
 		sd->pvp_rank = 0;
 		sd->pvp_lastusers = 0;
 		sd->pvp_point = 5;
@@ -10576,7 +10576,7 @@ BUILDIN(pvpon)
 		if( sd->bl.m != m || sd->pvp_timer != INVALID_TIMER )
 			continue; // not applicable
 		
-		sd->pvp_timer = add_timer(gettick()+200,iPc->calc_pvprank_timer,sd->bl.id,0);
+		sd->pvp_timer = iTimer->add_timer(iTimer->gettick()+200,iPc->calc_pvprank_timer,sd->bl.id,0);
 		sd->pvp_rank = 0;
 		sd->pvp_lastusers = 0;
 		sd->pvp_point = 5;
@@ -10593,7 +10593,7 @@ static int buildin_pvpoff_sub(struct block_list *bl,va_list ap)
 	TBL_PC* sd = (TBL_PC*)bl;
 	clif->pvpset(sd, 0, 0, 2);
 	if (sd->pvp_timer != INVALID_TIMER) {
-		delete_timer(sd->pvp_timer, iPc->calc_pvprank_timer);
+		iTimer->delete_timer(sd->pvp_timer, iPc->calc_pvprank_timer);
 		sd->pvp_timer = INVALID_TIMER;
 	}
 	return 0;
@@ -11641,7 +11641,7 @@ BUILDIN(petskillbonus)
 	if (pd->bonus)
 	{ //Clear previous bonus
 		if (pd->bonus->timer != INVALID_TIMER)
-			delete_timer(pd->bonus->timer, pet_skill_bonus_timer);
+			iTimer->delete_timer(pd->bonus->timer, pet_skill_bonus_timer);
 	} else //init
 		pd->bonus = (struct pet_bonus *) aMalloc(sizeof(struct pet_bonus));
 	
@@ -11657,7 +11657,7 @@ BUILDIN(petskillbonus)
 	if (battle_config.pet_equip_required && pd->pet.equip == 0)
 		pd->bonus->timer = INVALID_TIMER;
 	else
-		pd->bonus->timer = add_timer(gettick()+pd->bonus->delay*1000, pet_skill_bonus_timer, sd->bl.id, 0);
+		pd->bonus->timer = iTimer->add_timer(iTimer->gettick()+pd->bonus->delay*1000, pet_skill_bonus_timer, sd->bl.id, 0);
 	
 	return true;
 }
@@ -11992,7 +11992,7 @@ BUILDIN(petrecovery)
 	if (pd->recovery)
 	{ //Halt previous bonus
 		if (pd->recovery->timer != INVALID_TIMER)
-			delete_timer(pd->recovery->timer, pet_recovery_timer);
+			iTimer->delete_timer(pd->recovery->timer, pet_recovery_timer);
 	} else //Init
 		pd->recovery = (struct pet_recovery *)aMalloc(sizeof(struct pet_recovery));
 	
@@ -12020,9 +12020,9 @@ BUILDIN(petheal)
 		if (pd->s_skill->timer != INVALID_TIMER)
 		{
 			if (pd->s_skill->id)
-				delete_timer(pd->s_skill->timer, pet_skill_support_timer);
+				iTimer->delete_timer(pd->s_skill->timer, pet_skill_support_timer);
 			else
-				delete_timer(pd->s_skill->timer, pet_heal_timer);
+				iTimer->delete_timer(pd->s_skill->timer, pet_heal_timer);
 		}
 	} else //init memory
 		pd->s_skill = (struct pet_skill_support *) aMalloc(sizeof(struct pet_skill_support));
@@ -12038,7 +12038,7 @@ BUILDIN(petheal)
 	if (battle_config.pet_equip_required && pd->pet.equip == 0)
 		pd->s_skill->timer = INVALID_TIMER;
 	else
-		pd->s_skill->timer = add_timer(gettick()+pd->s_skill->delay*1000,pet_heal_timer,sd->bl.id,0);
+		pd->s_skill->timer = iTimer->add_timer(iTimer->gettick()+pd->s_skill->delay*1000,pet_heal_timer,sd->bl.id,0);
 	
 	return true;
 }
@@ -12114,9 +12114,9 @@ BUILDIN(petskillsupport)
 		if (pd->s_skill->timer != INVALID_TIMER)
 		{
 			if (pd->s_skill->id)
-				delete_timer(pd->s_skill->timer, pet_skill_support_timer);
+				iTimer->delete_timer(pd->s_skill->timer, pet_skill_support_timer);
 			else
-				delete_timer(pd->s_skill->timer, pet_heal_timer);
+				iTimer->delete_timer(pd->s_skill->timer, pet_heal_timer);
 		}
 	} else //init memory
 		pd->s_skill = (struct pet_skill_support *) aMalloc(sizeof(struct pet_skill_support));
@@ -12131,7 +12131,7 @@ BUILDIN(petskillsupport)
 	if (battle_config.pet_equip_required && pd->pet.equip == 0)
 		pd->s_skill->timer = INVALID_TIMER;
 	else
-		pd->s_skill->timer = add_timer(gettick()+pd->s_skill->delay*1000,pet_skill_support_timer,sd->bl.id,0);
+		pd->s_skill->timer = iTimer->add_timer(iTimer->gettick()+pd->s_skill->delay*1000,pet_skill_support_timer,sd->bl.id,0);
 	
 	return true;
 }
@@ -12169,7 +12169,7 @@ BUILDIN(npcskilleffect)
 	int y=script_getnum(st,5);
 	
 	if (bl)
-		clif->skill_poseffect(bl,skill_id,skill_lv,x,y,gettick());
+		clif->skill_poseffect(bl,skill_id,skill_lv,x,y,iTimer->gettick());
 	
 	return true;
 }
@@ -12846,7 +12846,7 @@ BUILDIN(summon)
 	const char *str,*event="";
 	TBL_PC *sd;
 	struct mob_data *md;
-	int tick = gettick();
+	int tick = iTimer->gettick();
 	
 	sd=script_rid2sd(st);
 	if (!sd) return true;
@@ -12867,8 +12867,8 @@ BUILDIN(summon)
 		md->master_id=sd->bl.id;
 		md->special_state.ai = AI_ATTACK;
 		if( md->deletetimer != INVALID_TIMER )
-			delete_timer(md->deletetimer, mob_timer_delete);
-		md->deletetimer = add_timer(tick+(timeout>0?timeout*1000:60000),mob_timer_delete,md->bl.id,0);
+			iTimer->delete_timer(md->deletetimer, mob_timer_delete);
+		md->deletetimer = iTimer->add_timer(tick+(timeout>0?timeout*1000:60000),mob_timer_delete,md->bl.id,0);
 		mob_spawn (md); //Now it is ready for spawning.
 		clif->specialeffect(&md->bl,344,AREA);
 		sc_start4(&md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 60000);
@@ -14954,7 +14954,7 @@ BUILDIN(unitattack)
 	switch( unit_bl->type )
 	{
 		case BL_PC:
-			clif->pActionRequest_sub(((TBL_PC *)unit_bl), actiontype > 0 ? 0x07 : 0x00, target_bl->id, gettick());
+			clif->pActionRequest_sub(((TBL_PC *)unit_bl), actiontype > 0 ? 0x07 : 0x00, target_bl->id, iTimer->gettick());
 			script_pushint(st, 1);
 			return true;
 		case BL_MOB:
@@ -15181,7 +15181,7 @@ BUILDIN(awake)
 				tst->rid = 0;
 			}
 			
-			delete_timer(tst->sleep.timer, run_script_timer);
+			iTimer->delete_timer(tst->sleep.timer, run_script_timer);
 			node = script_erase_sleepdb(node);
 			tst->sleep.timer = INVALID_TIMER;
 			if(tst->state != RERUNLINE)
@@ -16344,7 +16344,7 @@ BUILDIN(progressbar)
 	second = script_getnum(st,3);
 	
 	sd->progressbar.npc_id = st->oid;
-	sd->progressbar.timeout = gettick() + second*1000;
+	sd->progressbar.timeout = iTimer->gettick() + second*1000;
 	
 	clif->progressbar(sd, strtol(color, (char **)NULL, 0), second);
     return true;

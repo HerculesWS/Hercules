@@ -287,7 +287,7 @@ void core_defaults(void) {
 	malloc_defaults();
 #ifndef MINICORE
 	sql_defaults();
-	timer_defaults();
+	iTimer->defaults();
 	db_defaults();
 #endif
 }
@@ -329,7 +329,7 @@ int main (int argc, char **argv) {
 	cevents_init();
 #endif
 
-	timer_init();
+	iTimer->init();
 
 	console->init();
 
@@ -343,7 +343,7 @@ int main (int argc, char **argv) {
 	{// Main runtime cycle
 		int next;
 		while (runflag != CORE_ST_STOP) {
-			next = do_timer(gettick_nocache());
+			next = iTimer->do_timer(iTimer->gettick_nocache());
 			do_sockets(next);
 		}
 	}
@@ -354,7 +354,7 @@ int main (int argc, char **argv) {
 #ifndef MINICORE
 	HPM->final();
 #endif
-	timer_final();
+	iTimer->final();
 	socket_final();
 	iDB->final();
 	mempool_final();

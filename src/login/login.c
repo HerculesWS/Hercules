@@ -119,7 +119,7 @@ struct online_login_data* add_online_user(int char_server, int account_id)
 	p->char_server = char_server;
 	if( p->waiting_disconnect != INVALID_TIMER )
 	{
-		delete_timer(p->waiting_disconnect, waiting_disconnect_timer);
+		iTimer->delete_timer(p->waiting_disconnect, waiting_disconnect_timer);
 		p->waiting_disconnect = INVALID_TIMER;
 	}
 	return p;
@@ -132,7 +132,7 @@ void remove_online_user(int account_id)
 	if( p == NULL )
 		return;
 	if( p->waiting_disconnect != INVALID_TIMER )
-		delete_timer(p->waiting_disconnect, waiting_disconnect_timer);
+		iTimer->delete_timer(p->waiting_disconnect, waiting_disconnect_timer);
 
 	idb_remove(online_db, account_id);
 }
@@ -161,7 +161,7 @@ static int online_db_setoffline(DBKey key, DBData *data, va_list ap)
 		p->char_server = -1;
 		if( p->waiting_disconnect != INVALID_TIMER )
 		{
-			delete_timer(p->waiting_disconnect, waiting_disconnect_timer);
+			iTimer->delete_timer(p->waiting_disconnect, waiting_disconnect_timer);
 			p->waiting_disconnect = INVALID_TIMER;
 		}
 	}
@@ -804,7 +804,7 @@ int parse_fromchar(int fd)
 					p->char_server = id;
 					if (p->waiting_disconnect != INVALID_TIMER)
 					{
-						delete_timer(p->waiting_disconnect, waiting_disconnect_timer);
+						iTimer->delete_timer(p->waiting_disconnect, waiting_disconnect_timer);
 						p->waiting_disconnect = INVALID_TIMER;
 					}
 				}
@@ -913,12 +913,12 @@ int parse_fromchar(int fd)
 int mmo_auth_new(const char* userid, const char* pass, const char sex, const char* last_ip) {
 	static int num_regs = 0; // registration counter
 	static unsigned int new_reg_tick = 0;
-	unsigned int tick = gettick();
+	unsigned int tick = iTimer->gettick();
 	struct mmo_account acc;
 
 	//Account Registration Flood Protection by [Kevin]
 	if( new_reg_tick == 0 )
-		new_reg_tick = gettick();
+		new_reg_tick = iTimer->gettick();
 	if( DIFF_TICK(tick, new_reg_tick) < 0 && num_regs >= allowed_regs ) {
 		ShowNotice("Account registration denied (registration limit exceeded)\n");
 		return 3;
@@ -1162,7 +1162,7 @@ void login_auth_ok(struct login_session_data* sd)
 				WBUFL(buf,2) = sd->account_id;
 				charif_sendallwos(-1, buf, 6);
 				if( data->waiting_disconnect == INVALID_TIMER )
-					data->waiting_disconnect = add_timer(gettick()+AUTH_TIMEOUT, waiting_disconnect_timer, sd->account_id, 0);
+					data->waiting_disconnect = iTimer->add_timer(iTimer->gettick()+AUTH_TIMEOUT, waiting_disconnect_timer, sd->account_id, 0);
 
 				WFIFOHEAD(fd,3);
 				WFIFOW(fd,0) = 0x81;
@@ -1229,7 +1229,7 @@ void login_auth_ok(struct login_session_data* sd)
 		data = add_online_user(-1, sd->account_id);
 
 		// schedule deletion of this node
-		data->waiting_disconnect = add_timer(gettick()+AUTH_TIMEOUT, waiting_disconnect_timer, sd->account_id, 0);
+		data->waiting_disconnect = iTimer->add_timer(iTimer->gettick()+AUTH_TIMEOUT, waiting_disconnect_timer, sd->account_id, 0);
 	}
 }
 
@@ -1836,7 +1836,7 @@ int do_init(int argc, char** argv)
 
 	// Online user database init
 	online_db = idb_alloc(DB_OPT_RELEASE_DATA);
-	add_timer_func_list(waiting_disconnect_timer, "waiting_disconnect_timer");
+	iTimer->add_timer_func_list(waiting_disconnect_timer, "waiting_disconnect_timer");
 
 	// Interserver auth init
 	auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
@@ -1845,13 +1845,13 @@ int do_init(int argc, char** argv)
 	set_defaultparse(parse_login);
 
 	// every 10 minutes cleanup online account db.
-	add_timer_func_list(online_data_cleanup, "online_data_cleanup");
-	add_timer_interval(gettick() + 600*1000, online_data_cleanup, 0, 0, 600*1000);
+	iTimer->add_timer_func_list(online_data_cleanup, "online_data_cleanup");
+	iTimer->add_timer_interval(iTimer->gettick() + 600*1000, online_data_cleanup, 0, 0, 600*1000);
 
 	// add timer to detect ip address change and perform update
 	if (login_config.ip_sync_interval) {
-		add_timer_func_list(sync_ip_addresses, "sync_ip_addresses");
-		add_timer_interval(gettick() + login_config.ip_sync_interval, sync_ip_addresses, 0, 0, login_config.ip_sync_interval);
+		iTimer->add_timer_func_list(sync_ip_addresses, "sync_ip_addresses");
+		iTimer->add_timer_interval(iTimer->gettick() + login_config.ip_sync_interval, sync_ip_addresses, 0, 0, login_config.ip_sync_interval);
 	}
 
 	// Account database init

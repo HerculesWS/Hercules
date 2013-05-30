@@ -266,9 +266,9 @@ int battle_delay_damage (unsigned int tick, int amotion, struct block_list *src,
 		iMap->freeblock_lock();
 		status_fix_damage(src, target, damage, ddelay); // We have to seperate here between reflect damage and others [icescope]
 		if( attack_type && !status_isdead(target) && additional_effects )
-			skill->additional_effect(src, target, skill_id, skill_lv, attack_type, dmg_lv, gettick());
+			skill->additional_effect(src, target, skill_id, skill_lv, attack_type, dmg_lv, iTimer->gettick());
 		if( dmg_lv > ATK_BLOCK && attack_type )
-			skill->counter_additional_effect(src, target, skill_id, skill_lv, attack_type, gettick());
+			skill->counter_additional_effect(src, target, skill_id, skill_lv, attack_type, iTimer->gettick());
 		iMap->freeblock_unlock();
 		return 0;
 	}
@@ -286,7 +286,7 @@ int battle_delay_damage (unsigned int tick, int amotion, struct block_list *src,
 	if (src->type != BL_PC && amotion > 1000)
 		amotion = 1000; //Aegis places a damage-delay cap of 1 sec to non player attacks. [Skotlex]
 
-	add_timer(tick+amotion, battle->delay_damage_sub, 0, (intptr_t)dat);
+	iTimer->add_timer(tick+amotion, battle->delay_damage_sub, 0, (intptr_t)dat);
 
 	return 0;
 }
@@ -349,7 +349,7 @@ int battle_attr_fix(struct block_list *src, struct block_list *target, int damag
 				y = sg->val3 & 0xffff;
 				skill->unitsetting(src,su->group->skill_id,su->group->skill_lv,x,y,1);
 				sg->val3 = -1;
-				sg->limit = DIFF_TICK(gettick(),sg->tick)+300;
+				sg->limit = DIFF_TICK(iTimer->gettick(),sg->tick)+300;
 			}
 		}
 	}
@@ -848,7 +848,7 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 				delay = 200;
 			else
 				delay = 100;
-			unit_set_walkdelay(bl, gettick(), delay, 1);
+			unit_set_walkdelay(bl, iTimer->gettick(), delay, 1);
 
 			if(sc->data[SC_SHRINK] && rnd()%100<5*sce->val1)
 				skill->blown(bl,src,skill->get_blewcount(CR_SHRINK,1),-1,0);
@@ -918,9 +918,9 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 		if (((sce=sc->data[SC_UTSUSEMI]) || sc->data[SC_BUNSINJYUTSU])
 		&& flag&BF_WEAPON && !(skill->get_nk(skill_id)&NK_NO_CARDFIX_ATK)) {
 
-			skill->additional_effect (src, bl, skill_id, skill_lv, flag, ATK_BLOCK, gettick() );
+			skill->additional_effect (src, bl, skill_id, skill_lv, flag, ATK_BLOCK, iTimer->gettick() );
 			if( !status_isdead(src) )
-				skill->counter_additional_effect( src, bl, skill_id, skill_lv, flag, gettick() );
+				skill->counter_additional_effect( src, bl, skill_id, skill_lv, flag, iTimer->gettick() );
 			if (sce) {
 				clif->specialeffect(bl, 462, AREA);
 				skill->blown(src,bl,sce->val3,-1,0);
@@ -1057,7 +1057,7 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 			damage -= damage * sc->data[SC_PAIN_KILLER]->val3 / 100;
 		}
 		if((sce=sc->data[SC_MAGMA_FLOW]) && (rnd()%100 <= sce->val2) ){
-			skill->castend_damage_id(bl,src,MH_MAGMA_FLOW,sce->val1,gettick(),0);
+			skill->castend_damage_id(bl,src,MH_MAGMA_FLOW,sce->val1,iTimer->gettick(),0);
 		}
 
 		if( (sce = sc->data[SC_STONEHARDSKIN]) && flag&BF_WEAPON && damage > 0 ) {
@@ -1154,7 +1154,7 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 					if( s_bl->type == BL_PC )
 						((TBL_PC*)s_bl)->shadowform_id = 0;
 				} else {
-					status_damage(bl, s_bl, damage, 0, clif->damage(s_bl, s_bl, gettick(), 500, 500, damage, -1, 0, 0), 0);
+					status_damage(bl, s_bl, damage, 0, clif->damage(s_bl, s_bl, iTimer->gettick(), 500, 500, damage, -1, 0, 0), 0);
 					return ATK_NONE;
 				}
 			}
@@ -1236,9 +1236,9 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 
 	if( bl->type == BL_MOB && !status_isdead(bl) && src != bl) {
 	  if (damage > 0 )
-			mobskill_event((TBL_MOB*)bl,src,gettick(),flag);
+			mobskill_event((TBL_MOB*)bl,src,iTimer->gettick(),flag);
 	  if (skill_id)
-			mobskill_event((TBL_MOB*)bl,src,gettick(),MSC_SKILLUSED|(skill_id<<16));
+			mobskill_event((TBL_MOB*)bl,src,iTimer->gettick(),MSC_SKILLUSED|(skill_id<<16));
 	}
 	if( sd ) {
 		if( pc_ismadogear(sd) && rnd()%100 < 50 ) {
@@ -3523,7 +3523,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		rnd()%100 < tsc->data[SC_REJECTSWORD]->val2
 		) {
 		ATK_RATER(50)
-		status_fix_damage(target,src,wd.damage,clif->damage(target,src,gettick(),0,0,wd.damage,0,0,0));
+		status_fix_damage(target,src,wd.damage,clif->damage(target,src,iTimer->gettick(),0,0,wd.damage,0,0,0));
 		clif->skill_nodamage(target,target,ST_REJECTSWORD,tsc->data[SC_REJECTSWORD]->val1,1);
 		if( --(tsc->data[SC_REJECTSWORD]->val3) <= 0 )
 			status_change_end(target, SC_REJECTSWORD, INVALID_TIMER);
@@ -4633,9 +4633,9 @@ int battle_calc_return_damage(struct block_list* bl, struct block_list *src, int
 		if (ratio > 5000) ratio = 5000; // Maximum of 5000% ATK
 		rdamage = rdamage * ratio / 100 + (*dmg) * (10 + sc->data[SC_CRESCENTELBOW]->val1 * 20 / 10) / 10;
 		skill->blown(bl, src, skill->get_blewcount(SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1), unit_getdir(src), 0);
-		clif->skill_damage(bl, src, gettick(), status_get_amotion(src), 0, rdamage,
+		clif->skill_damage(bl, src, iTimer->gettick(), status_get_amotion(src), 0, rdamage,
 			1, SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1, 6); // This is how official does
-		clif->damage(src, bl, gettick(), status_get_amotion(src)+1000, 0, rdamage/10, 1, 0, 0);
+		clif->damage(src, bl, iTimer->gettick(), status_get_amotion(src)+1000, 0, rdamage/10, 1, 0, 0);
 		status_damage(src, bl, status_damage(bl, src, rdamage, 0, 0, 1)/10, 0, 0, 1);
 		status_change_end(bl, SC_CRESCENTELBOW, INVALID_TIMER);
 		return 0; // Just put here to minimize redundancy
@@ -4657,7 +4657,7 @@ int battle_calc_return_damage(struct block_list* bl, struct block_list *src, int
 					int	rd1 = 0;
 					rd1 = min(damage,status_get_max_hp(bl)) * sc->data[SC_DEATHBOUND]->val2 / 100; // Amplify damage.
 					*dmg = rd1 * 30 / 100; // Received damage = 30% of amplifly damage.
-					clif->skill_damage(src,bl,gettick(), status_get_amotion(src), 0, -30000, 1, RK_DEATHBOUND, sc->data[SC_DEATHBOUND]->val1,6);
+					clif->skill_damage(src,bl,iTimer->gettick(), status_get_amotion(src), 0, -30000, 1, RK_DEATHBOUND, sc->data[SC_DEATHBOUND]->val1,6);
 					status_change_end(bl,SC_DEATHBOUND,INVALID_TIMER);
 					rdamage += rd1;
 					if (rdamage < 1) rdamage = 1;
@@ -4921,7 +4921,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 	}
 
 	if(tsc && tsc->data[SC_KAAHI] && tsc->data[SC_KAAHI]->val4 == INVALID_TIMER && tstatus->hp < tstatus->max_hp)
-		tsc->data[SC_KAAHI]->val4 = add_timer(tick + skill->get_time2(SL_KAAHI,tsc->data[SC_KAAHI]->val1), kaahi_heal_timer, target->id, SC_KAAHI); //Activate heal.
+		tsc->data[SC_KAAHI]->val4 = iTimer->add_timer(tick + skill->get_time2(SL_KAAHI,tsc->data[SC_KAAHI]->val1), kaahi_heal_timer, target->id, SC_KAAHI); //Activate heal.
 
 	wd = battle->calc_attack(BF_WEAPON, src, target, 0, 0, flag);
 
@@ -4996,7 +4996,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 				(d_bl->type == BL_PC && ((TBL_PC*)d_bl)->devotion[sce->val2] == target->id)
 				) && check_distance_bl(target, d_bl, sce->val3) )
 			{
-				clif->damage(d_bl, d_bl, gettick(), 0, 0, damage, 0, 0, 0);
+				clif->damage(d_bl, d_bl, iTimer->gettick(), 0, 0, damage, 0, 0, 0);
 				status_fix_damage(NULL, d_bl, damage, 0);
 			}
 			else
@@ -6206,11 +6206,11 @@ int battle_config_read(const char* cfgName)
 
 void do_init_battle(void) {
 	delay_damage_ers = ers_new(sizeof(struct delay_damage),"battle.c::delay_damage_ers",ERS_OPT_CLEAR);
-	add_timer_func_list(battle_delay_damage_sub, "battle_delay_damage_sub");
+	iTimer->add_timer_func_list(battle_delay_damage_sub, "battle_delay_damage_sub");
 
 #ifndef STATS_OPT_OUT
-	add_timer_func_list(Hercules_report_timer, "Hercules_report_timer");
-	add_timer_interval(gettick()+30000, Hercules_report_timer, 0, 0, 60000 * 30);
+	iTimer->add_timer_func_list(Hercules_report_timer, "Hercules_report_timer");
+	iTimer->add_timer_interval(iTimer->gettick()+30000, Hercules_report_timer, 0, 0, 60000 * 30);
 #endif
 
 }
