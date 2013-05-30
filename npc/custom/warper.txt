@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Warper
 //===== By: ================================================== 
 //= Euphy
 //===== Current Version: =====================================
 //= 1.2
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= A complete - but very condensed - warper script.
 //= Coordinates written largely by Tekno-Kanix and ToastOfDoom.

@@ -1,15 +1,15 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Genetic Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Muad_Dib, Aeomin
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3a
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Compatible With: =====================================
+//= Hercules
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job change Quest from Alchemist / Creator -> Genetic.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Masao]
 //= 1.1 Fixed Scatter Stuff NPCs [JayPee].
 //= 1.2 Updated dialogue. Credits to Muad_Dib. [Joseph]

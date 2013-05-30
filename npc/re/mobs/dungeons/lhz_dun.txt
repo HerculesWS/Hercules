@@ -1,7 +1,7 @@
 //===== Hercules Script ======================================
 //= Lighthalzen Dungeon(Biolabs) Monster Spawn Script
 //===== By: ==================================================
-// The Prometheus Project, rAthena Dev Team
+// The Prometheus Project, Hercules Dev Team
 //===== Current Version: =====================================
 //= 1.9
 //===== Additional Comments: =================================

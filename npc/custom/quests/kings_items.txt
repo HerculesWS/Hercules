@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Event King Items
 //===== By: ================================================== 
 //= $ephiroth
 //===== Current Version: ===================================== 
 //= 1.1
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= Grand Circlet Quest combined with Excalibur Quest.
 //===== Additional Comments: =================================

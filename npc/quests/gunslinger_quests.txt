@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Gunslinger quests
 //===== By: ==================================================
 //= Playtester
 //===== Current Version: =====================================
 //= 1.6c
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= Gunslinger guns and bullet quests
 //===== Additional Comments: =================================

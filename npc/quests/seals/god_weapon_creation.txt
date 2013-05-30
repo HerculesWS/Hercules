@@ -1,13 +1,13 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= God items creation NPCs
-//===== By: ================================================== 
+//===== By: ==================================================
 //= SinSloth
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: ===================================== 
-//= rAthena
-//===== Description: ========================================= 
-//= 
+//===== Compatible With: =====================================
+//= Hercules
+//===== Description: =========================================
+//= NPC that creates God Items
 //===== Additional Comments: =================================
 //= 1.0 First version. Thanks to SinSloth for scripting it. [MasterOfMuppets]
 //= 1.1 Updated several aspects of the script. [L0ne_W0lf]

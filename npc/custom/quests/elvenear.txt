@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Daily Job Quest For Elven Ears
 //===== By: ==================================================
 //= someone
 //===== Current Version: =====================================
 //= 1.2
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= Elven Ears (require 75+ Base Level)
 //===== Additional Comments: =================================

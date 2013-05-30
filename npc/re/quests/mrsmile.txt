@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Mr. Smile Quest
 //===== By: ================================================== 
 //= Daegaladh, Masao
 //===== Current Version: ===================================== 
 //= 1.0
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Trade Clover, Fluff and Jellopy for a Mr. Smile mask.

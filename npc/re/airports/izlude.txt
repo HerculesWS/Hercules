@@ -1,7 +1,7 @@
 //===== Hercules Script ======================================
 //= Izlude Airport NPCs
 //===== By: ================================================== 
-//= rAthena Dev Team
+//= Hercules Dev Team
 //===== Description: ========================================= 
 //= Izlude Airport NPCs
 //===== Additional Comments: ================================= 
