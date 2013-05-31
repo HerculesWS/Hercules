@@ -9804,6 +9804,31 @@ BUILDIN(homunculus_shuffle) {
 	return true;
 }
 
+/*==========================================
+ * Check for homunculus state.
+ * Return: -1 = No homunculus
+ *          0 = Homunculus is active
+ *          1 = Homunculus is vaporized (rest)
+ *          2 = Homunculus is in morph state
+ *------------------------------------------*/
+BUILDIN(checkhomcall)
+{
+	TBL_PC *sd = script_rid2sd(st);
+	TBL_HOM *hd;
+
+	if( sd == NULL )
+		return false;
+
+	hd = sd->hd;
+
+	if( !hd )
+		script_pushint(st, -1);
+	else
+		script_pushint(st, hd->homunculus.vaporize);
+
+	return true;
+}
+
 //These two functions bring the eA MAPID_* class functionality to scripts.
 BUILDIN(eaclass)
 {
@@ -17710,6 +17735,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(homunculus_evolution,"homevolution",""),	//[orn]
 		BUILDIN_DEF2(homunculus_mutate,"hommutate","?"),
 		BUILDIN_DEF2(homunculus_shuffle,"homshuffle",""),	//[Zephyrus]
+		BUILDIN_DEF(checkhomcall,""),
 		BUILDIN_DEF(eaclass,"?"),	//[Skotlex]
 		BUILDIN_DEF(roclass,"i?"),	//[Skotlex]
 		BUILDIN_DEF(checkvending,"?"),
