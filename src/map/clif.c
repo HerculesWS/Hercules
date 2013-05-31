@@ -2746,6 +2746,9 @@ void read_channels_config(void) {
 				} else {
 					unsigned char d = 0, dlen = strlen(irc_server);
 					char server[40];
+					
+					memset(server, '\0', sizeof(server));
+					
 					for(d = 0; d < dlen; d++) {
 						if(irc_server[d] == ':') {
 							memcpy(server, irc_server, d);
