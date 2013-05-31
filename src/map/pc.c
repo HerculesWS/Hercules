@@ -518,8 +518,7 @@ int pc_makesavestatus(struct map_session_data *sd)
 #else
 	sd->status.option = sd->sc.option&(OPTION_INVISIBLE|OPTION_CART|OPTION_FALCON|OPTION_RIDING|OPTION_DRAGON|OPTION_WUG|OPTION_WUGRIDER|OPTION_MADOGEAR);
 #endif
-	if (sd->sc.data[SC_JAILED])
-	{	//When Jailed, do not move last point.
+	if (sd->sc.data[SC_JAILED]) { //When Jailed, do not move last point.
 		if(pc_isdead(sd)){
 			pc_setrestartvalue(sd,0);
 		} else {
@@ -543,13 +542,25 @@ int pc_makesavestatus(struct map_session_data *sd)
 		sd->status.last_point.y = sd->bl.y;
 	}
 
-	if(map[sd->bl.m].flag.nosave){
+	if(map[sd->bl.m].flag.nosave || map[sd->bl.m].instance_id >= 0){
 		struct map_data *m=&map[sd->bl.m];
 		if(m->save.map)
 			memcpy(&sd->status.last_point,&m->save,sizeof(sd->status.last_point));
 		else
 			memcpy(&sd->status.last_point,&sd->status.save_point,sizeof(sd->status.last_point));
 	}
+	if( sd->status.last_point.map == 0 ) {
+		sd->status.last_point.map = 1;
+		sd->status.last_point.x = 0;
+		sd->status.last_point.y = 0;
+	}
+	
+	if( sd->status.save_point.map == 0 ) {
+		sd->status.save_point.map = 1;
+		sd->status.save_point.x = 0;
+		sd->status.save_point.y = 0;
+	}
+
 
 	return 0;
 }
@@ -905,8 +916,7 @@ int pc_isequip(struct map_session_data *sd,int n)
  * No problem with the session id
  * set the status that has been sent from char server
  *------------------------------------------*/
-bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_time, int group_id, struct mmo_charstatus *st, bool changing_mapservers)
-{
+bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_time, int group_id, struct mmo_charstatus *st, bool changing_mapservers) {
 	int i;
 	unsigned long tick = gettick();
 	uint32 ip = session[sd->fd]->client_addr;
@@ -1014,6 +1024,17 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 
 	sd->disguise = -1;
 	
+	sd->instance = NULL;
+	sd->instances = 0;
+	
+	sd->bg_queue.arena = NULL;
+	sd->bg_queue.ready = 0;
+	sd->bg_queue.client_has_bg_data = 0;
+	sd->bg_queue.type = 0;
+	
+	sd->queues = NULL;
+	sd->queues_count = 0;
+	
 	// Event Timers
 	for( i = 0; i < MAX_EVENTTIMER; i++ )
 		sd->eventtimer[i] = INVALID_TIMER;
@@ -1075,7 +1096,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 		/**
 		 * Fixes login-without-aura glitch (the screen won't blink at this point, don't worry :P)
 		 **/
-		clif->changemap(sd,sd->mapindex,sd->bl.x,sd->bl.y);
+		clif->changemap(sd,sd->bl.m,sd->bl.x,sd->bl.y);
 	}
 
 	/**
@@ -4680,36 +4701,62 @@ int pc_steal_coin(struct map_session_data *sd,struct block_list *target)
  * 1 - Invalid map index.
  * 2 - Map not in this map-server, and failed to locate alternate map-server.
  *------------------------------------------*/
-int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y, clr_type clrtype)
-{
-	struct party_data *p;
+int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y, clr_type clrtype) {
 	int16 m;
 
 	nullpo_ret(sd);
 
-	if( !mapindex || !mapindex_id2name(mapindex) )
-	{
+	if( !mapindex || !mapindex_id2name(mapindex) ) {
 		ShowDebug("pc_setpos: Passed mapindex(%d) is invalid!\n", mapindex);
 		return 1;
 	}
 
-	if( pc_isdead(sd) )
-	{ //Revive dead people before warping them
+	if( pc_isdead(sd) ) { //Revive dead people before warping them
 		pc_setstand(sd);
 		pc_setrestartvalue(sd,1);
 	}
-
 	m = map_mapindex2mapid(mapindex);
-	if( map[m].flag.src4instance && sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id )
-	{
-		// Request the mapid of this src map into the instance of the party
-		int im = instance_map2imap(m, p->instance_id);
-		if( im < 0 )
-			; // Player will enter the src map for instances
-		else
-		{ // Changes destiny to the instance map, not the source map
-			m = im;
-			mapindex = map_id2index(m);
+
+	if( map[m].flag.src4instance ) {
+		struct party_data *p;
+		bool stop = false;
+		int i = 0, j = 0;
+
+		if( sd->instances ) {
+			for( i = 0; i < sd->instances; i++ ) {
+				ARR_FIND(0, instances[sd->instance[i]].num_map, j, map[instances[sd->instance[i]].map[j]].instance_src_map == m && !map[instances[sd->instance[i]].map[j]].cName);
+				if( j != instances[sd->instance[i]].num_map )
+					break;
+			}
+			if( i != sd->instances ) {
+				m = instances[sd->instance[i]].map[j];
+				mapindex = map[m].index;
+				stop = true;
+			}
+		}
+		if ( !stop && sd->status.party_id && (p = party_search(sd->status.party_id)) && p->instances ) {
+			for( i = 0; i < p->instances; i++ ) {
+				ARR_FIND(0, instances[p->instance[i]].num_map, j, map[instances[p->instance[i]].map[j]].instance_src_map == m && !map[instances[p->instance[i]].map[j]].cName);
+				if( j != instances[p->instance[i]].num_map )
+					break;
+			}
+			if( i != p->instances ) {
+				m = instances[p->instance[i]].map[j];
+				mapindex = map[m].index;
+				stop = true;
+			}
+		}
+		if ( !stop && sd->status.guild_id && sd->guild && sd->guild->instances ) {
+			for( i = 0; i < sd->guild->instances; i++ ) {
+				ARR_FIND(0, instances[sd->guild->instance[i]].num_map, j, map[instances[sd->guild->instance[i]].map[j]].instance_src_map == m && !map[instances[sd->guild->instance[i]].map[j]].cName);
+				if( j != instances[sd->guild->instance[i]].num_map )
+					break;
+			}
+			if( i != sd->guild->instances ) {
+				m = instances[sd->guild->instance[i]].map[j];
+				mapindex = map[m].index;
+				stop = true;
+			}
 		}
 	}
 
@@ -4718,6 +4765,17 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 	if( sd->state.changemap ) { // Misc map-changing settings
 		int i;
 		sd->state.pmap = sd->bl.m;
+		
+		for( i = 0; i < sd->queues_count; i++ ) {
+			struct hQueue *queue;
+			if( (queue = script->queue(sd->queues[i])) && queue->onMapChange[0] != '\0' ) {
+				pc_setregstr(sd, add_str("QMapChangeTo"), map[m].name);
+				npc_event(sd, queue->onMapChange, 0);
+			}
+		}
+		
+		if( map[m].cell == (struct mapcell *)0xdeadbeaf )
+			map_cellfromcache(&map[m]);
 		if (sd->sc.count) { // Cancel some map related stuff.
 			if (sd->sc.data[SC_JAILED])
 				return 1; //You may not get out!
@@ -4761,8 +4819,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		
 	}
 
-	if( m < 0 )
-	{
+	if( m < 0 ) {
 		uint32 ip;
 		uint16 port;
 		//if can't find any map-servers, just abort setting position.
@@ -4787,14 +4844,12 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		return 0;
 	}
 
-	if( x < 0 || x >= map[m].xs || y < 0 || y >= map[m].ys )
-	{
+	if( x < 0 || x >= map[m].xs || y < 0 || y >= map[m].ys ) {
 		ShowError("pc_setpos: attempt to place player %s (%d:%d) on invalid coordinates (%s-%d,%d)\n", sd->status.name, sd->status.account_id, sd->status.char_id, mapindex_id2name(mapindex),x,y);
 		x = y = 0; // make it random
 	}
 
-	if( x == 0 && y == 0 )
-	{// pick a random walkable cell
+	if( x == 0 && y == 0 ) {// pick a random walkable cell
 		do {
 			x=rnd()%(map[m].xs-2)+1;
 			y=rnd()%(map[m].ys-2)+1;
@@ -4808,7 +4863,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 
 	if(sd->bl.prev != NULL){
 		unit_remove_map_pc(sd,clrtype);
-		clif->changemap(sd,map[m].index,x,y); // [MouseJstr]
+		clif->changemap(sd,m,x,y); // [MouseJstr]
 	} else if(sd->state.active)
 		//Tag player for rewarping after map-loading is done. [Skotlex]
 		sd->state.rewarp = 1;
@@ -4818,31 +4873,27 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 	sd->bl.x = sd->ud.to_x = x;
 	sd->bl.y = sd->ud.to_y = y;
 
-	if( sd->status.guild_id > 0 && map[m].flag.gvg_castle )
-	{	// Increased guild castle regen [Valaris]
+	if( sd->status.guild_id > 0 && map[m].flag.gvg_castle ) { // Increased guild castle regen [Valaris]
 		struct guild_castle *gc = guild->mapindex2gc(sd->mapindex);
 		if(gc && gc->guild_id == sd->status.guild_id)
 			sd->regen.state.gc = 1;
 	}
 
-	if( sd->status.pet_id > 0 && sd->pd && sd->pd->pet.intimate > 0 )
-	{
+	if( sd->status.pet_id > 0 && sd->pd && sd->pd->pet.intimate > 0 ) {
 		sd->pd->bl.m = m;
 		sd->pd->bl.x = sd->pd->ud.to_x = x;
 		sd->pd->bl.y = sd->pd->ud.to_y = y;
 		sd->pd->ud.dir = sd->ud.dir;
 	}
 
-	if( homun_alive(sd->hd) )
-	{
+	if( homun_alive(sd->hd) ) {
 		sd->hd->bl.m = m;
 		sd->hd->bl.x = sd->hd->ud.to_x = x;
 		sd->hd->bl.y = sd->hd->ud.to_y = y;
 		sd->hd->ud.dir = sd->ud.dir;
 	}
 
-	if( sd->md )
-	{
+	if( sd->md ) {
 		sd->md->bl.m = m;
 		sd->md->bl.x = sd->md->ud.to_x = x;
 		sd->md->bl.y = sd->md->ud.to_y = y;
@@ -6588,15 +6639,22 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 	pc_setglobalreg(sd,"PC_DIE_COUNTER",sd->die_counter+1);
 	pc_setparam(sd, SP_KILLERRID, src?src->id:0);
 
-	if( sd->bg_id ) {
+	if( sd->bg_id ) {/* TODO: purge when bgqueue is deemed ok */
 		struct battleground_data *bg;
 		if( (bg = bg_team_search(sd->bg_id)) != NULL && bg->die_event[0] )
 			npc_event(sd, bg->die_event, 0);
 	}
-
+	
+	for( i = 0; i < sd->queues_count; i++ ) {
+		struct hQueue *queue;
+		if( (queue = script->queue(sd->queues[i])) && queue->onDeath[0] != '\0' )
+			npc_event(sd, queue->onDeath, 0);
+	}
+	
+	npc_script_event(sd,NPCE_DIE);
+		
 	// Clear anything NPC-related when you die and was interacting with one.
-	if (sd->npc_id)
-	{
+	if (sd->npc_id) {
 		if (sd->state.using_fake_npc) {
 			clif->clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
 			sd->state.using_fake_npc = 0;
@@ -6610,8 +6668,6 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 		if (sd->st && sd->st->state != END)
 			sd->st->state = END;
 	}
-
-	npc_script_event(sd,NPCE_DIE);
 
 	/* e.g. not killed thru pc_damage */
 	if( pc_issit(sd) ) {
@@ -6788,7 +6844,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 
 	if(map[sd->bl.m].flag.pvp_nightmaredrop)
 	{ // Moved this outside so it works when PVP isn't enabled and during pk mode [Ancyker]
-		for(j=0;j<MAX_DROP_PER_MAP;j++){
+		for(j=0;j<map[sd->bl.m].drop_list_count;j++){
 			int id = map[sd->bl.m].drop_list[j].drop_id;
 			int type = map[sd->bl.m].drop_list[j].drop_type;
 			int per = map[sd->bl.m].drop_list[j].drop_per;

@@ -81,7 +81,8 @@ struct mmo_map_server {
 	uint32 ip;
 	uint16 port;
 	int users;
-	unsigned short map[MAX_MAP_PER_SERVER];
+	unsigned short *map;
+	unsigned short maps;
 } server[MAX_MAP_SERVERS];
 
 int char_fd=-1;
@@ -2628,7 +2629,7 @@ int search_mapserver(unsigned short map, uint32 ip, uint16 port);
 /// Initializes a server structure.
 void mapif_server_init(int id)
 {
-	memset(&server[id], 0, sizeof(server[id]));
+	//memset(&server[id], 0, sizeof(server[id]));
 	server[id].fd = -1;
 }
 
@@ -2655,7 +2656,7 @@ void mapif_server_reset(int id)
 	WBUFL(buf,4) = htonl(server[id].ip);
 	WBUFW(buf,8) = htons(server[id].port);
 	j = 0;
-	for(i = 0; i < MAX_MAP_PER_SERVER; i++)
+	for(i = 0; i < server[id].maps; i++)
 		if (server[id].map[i])
 			WBUFW(buf,10+(j++)*4) = server[id].map[i];
 	if (j > 0) {
@@ -2725,8 +2726,11 @@ int parse_frommap(int fd)
 			case 0x2afa: // Receiving map names list from the map-server
 				if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd,2))
 					return 0;
-
-				memset(server[id].map, 0, sizeof(server[id].map));
+				if( server[id].map != NULL ) { aFree(server[id].map); server[id].map = NULL; }
+				
+				server[id].maps = ( RFIFOW(fd, 2) - 4 ) / 4;
+				CREATE(server[id].map, unsigned short, server[id].maps);
+				
 				j = 0;
 				for(i = 4; i < RFIFOW(fd,2); i += 4) {
 					server[id].map[j] = RFIFOW(fd,i);
@@ -3392,10 +3396,14 @@ int parse_frommap(int fd)
 				if( RFIFOREST(fd) < RFIFOW(fd,4) )
 					return 0;/* packet wasn't fully received yet (still fragmented) */
 				else {
-					int sfd;/* stat server fd */					
+					int sfd;/* stat server fd */
+					struct hSockOpt opt;
 					RFIFOSKIP(fd, 2);/* we skip first 2 bytes which are the 0x3008, so we end up with a buffer equal to the one we send */
 
-					if( (sfd = make_connection(host2ip("stats.hercules.ws"),(uint16)25427,true) ) == -1 ) {
+					opt.silent = 1;
+					opt.setTimeo = 1;
+					
+					if( (sfd = make_connection(host2ip("stats.hercules.ws"),(uint16)25427,&opt) ) == -1 ) {
 						RFIFOSKIP(fd, RFIFOW(fd,2) );/* skip this packet */
 						RFIFOFLUSH(fd);
 						break;/* connection not possible, we drop the report */
@@ -4275,7 +4283,6 @@ int parse_char(int fd)
 					server[i].ip = ntohl(RFIFOL(fd,54));
 					server[i].port = ntohs(RFIFOW(fd,58));
 					server[i].users = 0;
-					memset(server[i].map, 0, sizeof(server[i].map));
 					session[fd]->func_parse = parse_frommap;
 					session[fd]->flag.server = 1;
 					realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
@@ -4486,12 +4493,12 @@ int check_connect_login_server(int tid, unsigned int tick, int id, intptr_t data
 		return 0;
 
 	ShowInfo("Attempt to connect to login-server...\n");
-	login_fd = make_connection(login_ip, login_port, false);
-	if (login_fd == -1)
-	{	//Try again later. [Skotlex]
+
+	if ( (login_fd = make_connection(login_ip, login_port, NULL)) == -1) { //Try again later. [Skotlex]
 		login_fd = 0;
 		return 0;
 	}
+	
 	session[login_fd]->func_parse = parse_fromlogin;
 	session[login_fd]->flag.server = 1;
 	realloc_fifo(login_fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
@@ -4858,8 +4865,8 @@ int char_config_read(const char* cfgName)
 	return 0;
 }
 
-void do_final(void)
-{
+void do_final(void) {
+	int i;
 	ShowStatus("Terminating...\n");
 
 	set_all_offline(-1);
@@ -4879,8 +4886,7 @@ void do_final(void)
 	online_char_db->destroy(online_char_db, NULL);
 	auth_db->destroy(auth_db, NULL);
 
-	if( char_fd != -1 )
-	{
+	if( char_fd != -1 ) {
 		do_close(char_fd);
 		char_fd = -1;
 	}
@@ -4888,6 +4894,10 @@ void do_final(void)
 	SQL->Free(sql_handle);
 	mapindex_final();
 
+	for(i = 0; i < MAX_MAP_SERVERS; i++ )
+		if( server[i].map )
+			aFree(server[i].map);
+	
 	ShowStatus("Finished.\n");
 }
 
@@ -4923,11 +4933,17 @@ void do_shutdown(void)
 
 
 int do_init(int argc, char **argv) {
+	int i;
 	memset(&skillid2idx, 0, sizeof(skillid2idx));
+
+	for(i = 0; i < MAX_MAP_SERVERS; i++ )
+		server[i].map = NULL;
+
 	//Read map indexes
 	mapindex_init();
 	start_point.map = mapindex_name2id("new_zone01");
 
+	
 	pincode_defaults();
 	
 	char_config_read((argc < 2) ? CHAR_CONF_NAME : argv[1]);

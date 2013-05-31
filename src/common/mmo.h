@@ -71,7 +71,6 @@
         #define MAX_HOTKEYS 38
 #endif
 
-#define MAX_MAP_PER_SERVER 1500 // Increased to allow creation of Instance Maps
 #define MAX_INVENTORY 100
 //Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
 #define MAX_CHARS 9
@@ -526,6 +525,10 @@ struct guild {
 	
 	/* TODO: still used for something?|: */
 	unsigned short save_flag; // for TXT saving
+	
+	unsigned short *instance;
+	unsigned short instances;
+	
 	void *channel;
 };
 

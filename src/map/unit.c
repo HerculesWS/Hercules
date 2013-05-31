@@ -50,7 +50,7 @@ struct unit_data* unit_bl2ud(struct block_list *bl)
 	if( bl->type == BL_PC)  return &((struct map_session_data*)bl)->ud;
 	if( bl->type == BL_MOB) return &((struct mob_data*)bl)->ud;
 	if( bl->type == BL_PET) return &((struct pet_data*)bl)->ud;
-	if( bl->type == BL_NPC) return &((struct npc_data*)bl)->ud;
+	if( bl->type == BL_NPC) return ((struct npc_data*)bl)->ud;
 	if( bl->type == BL_HOM) return &((struct homun_data*)bl)->ud;
 	if( bl->type == BL_MER) return &((struct mercenary_data*)bl)->ud;
 	if( bl->type == BL_ELEM) return &((struct elemental_data*)bl)->ud;
@@ -678,10 +678,12 @@ int unit_setdir(struct block_list *bl,unsigned char dir)
 	return 0;
 }
 
-uint8 unit_getdir(struct block_list *bl)
-{
+uint8 unit_getdir(struct block_list *bl) {
 	struct unit_data *ud;
-	nullpo_ret(bl );
+	nullpo_ret(bl);
+	
+	if( bl->type == BL_NPC )
+		return ((TBL_NPC*)bl)->dir;
 	ud = unit_bl2ud(bl);
 	if (!ud) return 0;
 	return ud->dir;
@@ -1961,8 +1963,7 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 }
 
 // unit_data initialization process
-void unit_dataset(struct block_list *bl)
-{
+void unit_dataset(struct block_list *bl) {
 	struct unit_data *ud;
 	nullpo_retv(ud = unit_bl2ud(bl));
 
@@ -2121,8 +2122,7 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 				npc_touchnext_areanpc(sd,true);
 
 			// Check if warping and not changing the map.
-			if ( sd->state.warping && !sd->state.changemap )
-			{
+			if ( sd->state.warping && !sd->state.changemap ) {
 				status_change_end(bl, SC_CLOAKING, INVALID_TIMER);
 				status_change_end(bl, SC_CLOAKINGEXCEED, INVALID_TIMER);
 			}
@@ -2163,18 +2163,15 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 					sd->state.active, sd->state.connect_new, sd->state.rewarp, sd->state.changemap, sd->state.debug_remove_map,
 					map[bl->m].name, map[bl->m].users,
 					sd->debug_file, sd->debug_line, sd->debug_func, file, line, func);
-			}
-			else
-			if (--map[bl->m].users == 0 && battle_config.dynamic_mobs)	//[Skotlex]
+			} else if (--map[bl->m].users == 0 && battle_config.dynamic_mobs)	//[Skotlex]
 				map_removemobs(bl->m);
 			if( !(sd->sc.option&OPTION_INVISIBLE) )
 			{// decrement the number of active pvp players on the map
 				--map[bl->m].users_pvp;
 			}
-			if( map[bl->m].instance_id )
-			{
-				instance[map[bl->m].instance_id].users--;
-				instance_check_idle(map[bl->m].instance_id);
+			if( map[bl->m].instance_id >= 0 ) {
+				instances[map[bl->m].instance_id].users--;
+				instance->check_idle(map[bl->m].instance_id);
 			}
 			sd->state.debug_remove_map = 1; // temporary state to track double remove_map's [FlavioJS]
 			sd->debug_file = file;
@@ -2356,8 +2353,18 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 					ers_free(pc_sc_display_ers, sd->sc_display[i]);
 				}
 				sd->sc_display_count = 0;
+			}
+			if( sd->sc_display != NULL ) {
 				aFree(sd->sc_display);
 				sd->sc_display = NULL;
+			}
+			if( sd->instance != NULL ) {
+				aFree(sd->instance);
+				sd->instance = NULL;
+			}
+			if( sd->queues != NULL ) {
+				aFree(sd->queues);
+				sd->queues = NULL;
 			}
 			break;
 		}

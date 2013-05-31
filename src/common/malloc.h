@@ -80,5 +80,7 @@ struct malloc_interface {
 	void	(*final) (void);
 } malloclib_s;
 
+void memmgr_report (int extra);
+
 struct malloc_interface *malloclib;
 #endif /* _MALLOC_H_ */

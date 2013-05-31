@@ -1869,6 +1869,10 @@ packet(0x020d,-1);
 	packet(0x0838,6,clif->pSolveCharName,2);
 	packet(0x0439,8,clif->pUseItem,2,4);
 	packet(0x08d2,10);
+	packet(0x08d7,28,clif->pBGQueueRegister,2);
+	packet(0x090a,26,clif->pBGQueueCheckState,2);
+	packet(0x08da,26,clif->pBGQueueRevokeReq,2);
+	packet(0x08e0,51,clif->pBGQueueBattleBeginAck,2);
 #endif
 
 //2011-11-02aRagexe
@@ -1985,7 +1989,6 @@ packet(0x020d,-1);
 	packet(0x08FB,6,clif->pDull,2); //bookingcanceljoinparty
 	packet(0x0907,5,clif->pMoveItem,2,4);
 	packet(0x0908,5);
-	packet(0x08D7,28,clif->pDull,2,4); //battlegroundreg
 	packet(0x08CF,10);//Amulet spirits
 	packet(0x0977,14);//Monster HP Bar
 #endif

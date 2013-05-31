@@ -10,6 +10,7 @@
 #include "../common/timer.h" // INVALID_TIMER
 #include "atcommand.h" // AtCommandType
 #include "battle.h" // battle_config
+#include "battleground.h"
 #include "buyingstore.h"  // struct s_buyingstore
 #include "itemdb.h" // MAX_ITEMGROUP
 #include "map.h" // RC_MAX
@@ -518,6 +519,20 @@ struct map_session_data {
 	/* [Ind/Hercules] */
 	struct sc_display_entry **sc_display;
 	unsigned char sc_display_count;
+	
+	unsigned short *instance;
+	unsigned short instances;
+	
+	/* Possible Thanks to Yommy~! */
+	struct {
+		unsigned int ready : 1;/* did he accept the 'match is about to start, enter' dialog? */
+		unsigned int client_has_bg_data : 1; /* flags whether the client has the "in queue" window (aka the client knows it is in a queue) */
+		struct bg_arena *arena;
+		enum bg_queue_types type;
+	} bg_queue;
+
+	int *queues;
+	unsigned int queues_count;
 	
 	// temporary debugging of bug #3504
 	const char* delunit_prevfile;

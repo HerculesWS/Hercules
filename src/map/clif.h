@@ -8,6 +8,7 @@
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
 #include "../common/mmo.h"
+#include "../common/socket.h"
 #include <stdarg.h>
 
 /**
@@ -42,6 +43,7 @@ struct eri;
  * Defines
  **/
 #define packet_len(cmd) packet_db[cmd].len
+#define P2PTR(fd,cmd) RFIFO2PTR(fd,packet_db[cmd].len)
 #define clif_menuskill_clear(sd) (sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0;
 #define HCHSYS_NAME_LENGTH 20
 
@@ -86,6 +88,8 @@ typedef enum send_target {
 	BG_SAMEMAP_WOS,
 	BG_AREA,
 	BG_AREA_WOS,
+	
+	BG_QUEUE,
 } send_target;
 
 typedef enum emotion_type {
@@ -365,6 +369,29 @@ enum CASH_SHOP_BUY_RESULT {
 	CSBR_UNKNOWN					= 0xb,
 };
 
+enum BATTLEGROUNDS_QUEUE_ACK {
+	BGQA_SUCCESS = 1,
+	BGQA_FAIL_QUEUING_FINISHED,
+	BGQA_FAIL_BGNAME_INVALID,
+	BGQA_FAIL_TYPE_INVALID,
+	BGQA_FAIL_PPL_OVERAMOUNT,
+	BGQA_FAIL_LEVEL_INCORRECT,
+	BGQA_DUPLICATE_REQUEST,
+	BGQA_PLEASE_RELOGIN,
+	BGQA_NOT_PARTY_GUILD_LEADER,
+	BGQA_FAIL_CLASS_INVALID,
+	/* not official way to respond (gotta find packet?) */
+	BGQA_FAIL_DESERTER,
+	BGQA_FAIL_COOLDOWN,
+	BGQA_FAIL_TEAM_COUNT,
+};
+
+enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED {
+	BGQND_CLOSEWINDOW = 1,
+	BGQND_FAIL_BGNAME_WRONG = 3,
+	BGQND_FAIL_NOT_QUEUING = 11,
+};
+
 /**
  * Structures
  **/
@@ -499,7 +526,7 @@ struct clif_interface {
 	/* main unit spawn */
 	int (*spawn) (struct block_list *bl);
 	/* map-related */
-	void (*changemap) (struct map_session_data *sd, short map, int x, int y);
+	void (*changemap) (struct map_session_data *sd, short m, int x, int y);
 	void (*changemapcell) (int fd, int16 m, int x, int y, int type, enum send_target target);
 	void (*map_property) (struct map_session_data* sd, enum map_property property);
 	void (*pvpset) (struct map_session_data *sd, int pvprank, int pvpnum,int type);
@@ -860,6 +887,13 @@ struct clif_interface {
 	/* elemental-related */
 	void (*elemental_info) (struct map_session_data *sd);
 	void (*elemental_updatestatus) (struct map_session_data *sd, int type);
+	/* bgqueue */
+	void (*bgqueue_ack) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, unsigned char arena_id);
+	void (*bgqueue_notice_delete) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, unsigned char arena_id);
+	void (*bgqueue_update_info) (struct map_session_data *sd, unsigned char arena_id, int position);
+	void (*bgqueue_joined) (struct map_session_data *sd, int pos);
+	void (*bgqueue_pcleft) (struct map_session_data *sd);
+	void (*bgqueue_battlebegins) (struct map_session_data *sd, unsigned char arena_id, enum send_target target);
 	/* misc-handling */
 	void (*adopt_reply) (struct map_session_data *sd, int type);
 	void (*adopt_request) (struct map_session_data *sd, struct map_session_data *src, int p_id);
@@ -1078,6 +1112,11 @@ struct clif_interface {
 	void (*pSkillSelectMenu) (int fd, struct map_session_data *sd);
 	void (*pMoveItem) (int fd, struct map_session_data *sd);
 	void (*pDull) (int fd, struct map_session_data *sd);
+	/* BGQueue */
+	void (*pBGQueueRegister) (int fd, struct map_session_data *sd);
+	void (*pBGQueueCheckState) (int fd, struct map_session_data *sd);
+	void (*pBGQueueRevokeReq) (int fd, struct map_session_data *sd);
+	void (*pBGQueueBattleBeginAck) (int fd, struct map_session_data *sd);
 	/* RagExe Cash Shop [Ind/Hercules] */
 	void (*pCashShopOpen) (int fd, struct map_session_data *sd);
 	void (*pCashShopClose) (int fd, struct map_session_data *sd);

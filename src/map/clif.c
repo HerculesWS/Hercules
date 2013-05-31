@@ -1333,7 +1333,7 @@ int clif_spawn(struct block_list *bl)
 	/**
 	* Hide NPC from maya purple card.
 	**/
-	if(bl->type == BL_NPC && !((TBL_NPC*)bl)->chat_id && (((TBL_NPC*)bl)->sc.option&OPTION_INVISIBLE))
+	if(bl->type == BL_NPC && !((TBL_NPC*)bl)->chat_id && (((TBL_NPC*)bl)->option&OPTION_INVISIBLE))
 		return 0;
 
 	clif->spawn_unit(bl,AREA_WOS);
@@ -1612,7 +1612,7 @@ void clif_move(struct unit_data *ud)
 	/**
 	* Hide NPC from maya purple card.
 	**/
-	if(bl->type == BL_NPC && !((TBL_NPC*)bl)->chat_id && (((TBL_NPC*)bl)->sc.option&OPTION_INVISIBLE))
+	if(bl->type == BL_NPC && !((TBL_NPC*)bl)->chat_id && (((TBL_NPC*)bl)->option&OPTION_INVISIBLE))
 		return;
 
 	if (ud->state.speed_changed) {
@@ -1666,15 +1666,14 @@ void clif_quitsave(int fd,struct map_session_data *sd) {
 
 /// Notifies the client of a position change to coordinates on given map (ZC_NPCACK_MAPMOVE).
 /// 0091 <map name>.16B <x>.W <y>.W
-void clif_changemap(struct map_session_data *sd, short map, int x, int y)
-{
+void clif_changemap(struct map_session_data *sd, short m, int x, int y) {
 	int fd;
 	nullpo_retv(sd);
 	fd = sd->fd;
 
 	WFIFOHEAD(fd,packet_len(0x91));
 	WFIFOW(fd,0) = 0x91;
-	mapindex_getmapname_ext(mapindex_id2name(map), (char*)WFIFOP(fd,2));
+	mapindex_getmapname_ext(map[m].cName ? map[m].cName : map[m].name, (char*)WFIFOP(fd,2));
 	WFIFOW(fd,18) = x;
 	WFIFOW(fd,20) = y;
 	WFIFOSET(fd,packet_len(0x91));
@@ -1683,8 +1682,7 @@ void clif_changemap(struct map_session_data *sd, short map, int x, int y)
 
 /// Notifies the client of a position change to coordinates on given map, which is on another map-server (ZC_NPCACK_SERVERMOVE).
 /// 0092 <map name>.16B <x>.W <y>.W <ip>.L <port>.W
-void clif_changemapserver(struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port)
-{
+void clif_changemapserver(struct map_session_data* sd, unsigned short map_index, int x, int y, uint32 ip, uint16 port) {
 	int fd;
 	nullpo_retv(sd);
 	fd = sd->fd;
@@ -4344,7 +4342,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 	/**
 	* Hide NPC from maya purple card.
 	**/
-	if(bl->type == BL_NPC && !((TBL_NPC*)bl)->chat_id && (((TBL_NPC*)bl)->sc.option&OPTION_INVISIBLE))
+	if(bl->type == BL_NPC && !((TBL_NPC*)bl)->chat_id && (((TBL_NPC*)bl)->option&OPTION_INVISIBLE))
 		return;
 
 	if ( ( ud = unit_bl2ud(bl) ) && ud->walktimer != INVALID_TIMER )
@@ -4601,16 +4599,13 @@ void clif_changemapcell(int fd, int16 m, int x, int y, int type, enum send_targe
 	WBUFW(buf,2) = x;
 	WBUFW(buf,4) = y;
 	WBUFW(buf,6) = type;
-	mapindex_getmapname_ext(map[m].name,(char*)WBUFP(buf,8));
+	mapindex_getmapname_ext(map[m].cName ? map[m].cName : map[m].name,(char*)WBUFP(buf,8));
 
-	if( fd )
-	{
+	if( fd ) {
 		WFIFOHEAD(fd,packet_len(0x192));
 		memcpy(WFIFOP(fd,0), buf, packet_len(0x192));
 		WFIFOSET(fd,packet_len(0x192));
-	}
-	else
-	{
+	} else {
 		struct block_list dummy_bl;
 		dummy_bl.type = BL_NUL;
 		dummy_bl.x = x;
@@ -4799,7 +4794,7 @@ int clif_outsight(struct block_list *bl,va_list ap)
 				clif->clearchar_skillunit((struct skill_unit *)bl,tsd->fd);
 				break;
 			case BL_NPC:
-				if( !(((TBL_NPC*)bl)->sc.option&OPTION_INVISIBLE) )
+				if( !(((TBL_NPC*)bl)->option&OPTION_INVISIBLE) )
 					clif->clearunit_single(bl->id,CLR_OUTSIGHT,tsd->fd);
 				break;
 			default:
@@ -4810,7 +4805,7 @@ int clif_outsight(struct block_list *bl,va_list ap)
 	}
 	if (sd && sd->fd) { //sd is watching tbl go out of view.
 		if (((vd=status_get_viewdata(tbl)) && vd->class_ != INVISIBLE_CLASS) &&
-			!(tbl->type == BL_NPC && (((TBL_NPC*)tbl)->sc.option&OPTION_INVISIBLE)))
+			!(tbl->type == BL_NPC && (((TBL_NPC*)tbl)->option&OPTION_INVISIBLE)))
 			clif->clearunit_single(tbl->id,CLR_OUTSIGHT,sd->fd);
 	}
 	return 0;
@@ -6529,7 +6524,7 @@ void clif_party_member_info(struct party_data *p, struct map_session_data *sd)
 	WBUFB(buf,14) = (p->party.member[i].online)?0:1;
 	memcpy(WBUFP(buf,15), p->party.name, NAME_LENGTH);
 	memcpy(WBUFP(buf,39), sd->status.name, NAME_LENGTH);
-	mapindex_getmapname_ext(map[sd->bl.m].name, (char*)WBUFP(buf,63));
+	mapindex_getmapname_ext(map[sd->bl.m].cName ? map[sd->bl.m].cName : map[sd->bl.m].name, (char*)WBUFP(buf,63));
 	WBUFB(buf,79) = (p->party.item&1)?1:0;
 	WBUFB(buf,80) = (p->party.item&2)?1:0;
 	clif->send(buf,packet_len(0x1e9),&sd->bl,PARTY);
@@ -8485,7 +8480,7 @@ void clif_refresh(struct map_session_data *sd)
 	int i;
 	nullpo_retv(sd);
 
-	clif->changemap(sd,sd->mapindex,sd->bl.x,sd->bl.y);
+	clif->changemap(sd,sd->bl.m,sd->bl.x,sd->bl.y);
 	clif->inventorylist(sd);
 	if(pc_iscarton(sd)) {
 		clif->cartlist(sd);
@@ -9328,7 +9323,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 
 	if (sd->state.rewarp) { //Rewarp player.
 		sd->state.rewarp = 0;
-		clif->changemap(sd, sd->mapindex, sd->bl.x, sd->bl.y);
+		clif->changemap(sd, sd->bl.m, sd->bl.x, sd->bl.y);
 		return;
 	}
 
@@ -9372,9 +9367,9 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 	if( !(sd->sc.option&OPTION_INVISIBLE) ) { // increment the number of pvp players on the map
 		map[sd->bl.m].users_pvp++;
 	}
-	if( map[sd->bl.m].instance_id ) {
-		instance[map[sd->bl.m].instance_id].users++;
-		instance_check_idle(map[sd->bl.m].instance_id);
+	if( map[sd->bl.m].instance_id >= 0 ) {
+		instances[map[sd->bl.m].instance_id].users++;
+		instance->check_idle(map[sd->bl.m].instance_id);
 	}
 	sd->state.debug_remove_map = 0; // temporary state to track double remove_map's [FlavioJS]
 
@@ -15573,48 +15568,61 @@ void clif_font(struct map_session_data *sd)
 /*==========================================
  * Instancing Window
  *------------------------------------------*/
-int clif_instance(int instance_id, int type, int flag)
-{
+int clif_instance(int instance_id, int type, int flag) {
 	struct map_session_data *sd;
-	struct party_data *p;
 	unsigned char buf[255];
+	enum send_target target = PARTY;
+	
+	switch( instances[instance_id].owner_type ) {
+		case IOT_NONE:
+			return 0;
+		case IOT_GUILD:
+			target = GUILD;
+			sd = guild->getavailablesd(guild->search(instances[instance_id].owner_id));
+			break;
+		case IOT_PARTY:
+			/* default is already PARTY */
+			sd = party_getavailablesd(party_search(instances[instance_id].owner_id));
+			break;
+		case IOT_CHAR:
+			target = SELF;
+			sd = map_id2sd(instances[instance_id].owner_id);
+			break;
+	}
 
-	if( (p = party_search(instance[instance_id].party_id)) == NULL || (sd = party_getavailablesd(p)) == NULL )
+	if( !sd )
 		return 0;
-
+	
 	switch( type ) {
 		case 1:
 			// S 0x2cb <Instance name>.61B <Standby Position>.W
 			// Required to start the instancing information window on Client
 			// This window re-appear each "refresh" of client automatically until type 4 is send to client.
 			WBUFW(buf,0) = 0x02CB;
-			memcpy(WBUFP(buf,2),instance[instance_id].name,INSTANCE_NAME_LENGTH);
+			memcpy(WBUFP(buf,2),instances[instance_id].name,INSTANCE_NAME_LENGTH);
 			WBUFW(buf,63) = flag;
-			clif->send(buf,packet_len(0x02CB),&sd->bl,PARTY);
+			clif->send(buf,packet_len(0x02CB),&sd->bl,target);
 			break;
 		case 2:
 			// S 0x2cc <Standby Position>.W
 			// To announce Instancing queue creation if no maps available
 			WBUFW(buf,0) = 0x02CC;
 			WBUFW(buf,2) = flag;
-			clif->send(buf,packet_len(0x02CC),&sd->bl,PARTY);
+			clif->send(buf,packet_len(0x02CC),&sd->bl,target);
 			break;
 		case 3:
 		case 4:
 			// S 0x2cd <Instance Name>.61B <Instance Remaining Time>.L <Instance Noplayers close time>.L
 			WBUFW(buf,0) = 0x02CD;
-			memcpy(WBUFP(buf,2),instance[instance_id].name,61);
-			if( type == 3 )
-			{
-				WBUFL(buf,63) = (uint32)instance[instance_id].progress_timeout;
+			memcpy(WBUFP(buf,2),instances[instance_id].name,61);
+			if( type == 3 ) {
+				WBUFL(buf,63) = instances[instance_id].progress_timeout;
 				WBUFL(buf,67) = 0;
-			}
-			else
-			{
+			} else {
 				WBUFL(buf,63) = 0;
-				WBUFL(buf,67) = (uint32)instance[instance_id].idle_timeout;
+				WBUFL(buf,67) = instances[instance_id].idle_timeout;
 			}
-			clif->send(buf,packet_len(0x02CD),&sd->bl,PARTY);
+			clif->send(buf,packet_len(0x02CD),&sd->bl,target);
 			break;
 		case 5:
 			// S 0x2ce <Message ID>.L
@@ -15626,7 +15634,7 @@ int clif_instance(int instance_id, int type, int flag)
 			WBUFW(buf,0) = 0x02CE;
 			WBUFL(buf,2) = flag;
 			//WBUFL(buf,6) = EnterLimitDate;
-			clif->send(buf,packet_len(0x02CE),&sd->bl,PARTY);
+			clif->send(buf,packet_len(0x02CE),&sd->bl,target);
 			break;
 	}
 	return 0;
@@ -15634,24 +15642,24 @@ int clif_instance(int instance_id, int type, int flag)
 
 void clif_instance_join(int fd, int instance_id)
 {
-	if( instance[instance_id].idle_timer != INVALID_TIMER ) {
+	if( instances[instance_id].idle_timer != INVALID_TIMER ) {
 		WFIFOHEAD(fd,packet_len(0x02CD));
 		WFIFOW(fd,0) = 0x02CD;
-		memcpy(WFIFOP(fd,2),instance[instance_id].name,61);
+		memcpy(WFIFOP(fd,2),instances[instance_id].name,61);
 		WFIFOL(fd,63) = 0;
-		WFIFOL(fd,67) = (uint32)instance[instance_id].idle_timeout;
+		WFIFOL(fd,67) = instances[instance_id].idle_timeout;
 		WFIFOSET(fd,packet_len(0x02CD));
-	} else if( instance[instance_id].progress_timer != INVALID_TIMER ) {
+	} else if( instances[instance_id].progress_timer != INVALID_TIMER ) {
 		WFIFOHEAD(fd,packet_len(0x02CD));
 		WFIFOW(fd,0) = 0x02CD;
-		memcpy(WFIFOP(fd,2),instance[instance_id].name,61);
-		WFIFOL(fd,63) = (uint32)instance[instance_id].progress_timeout;;
+		memcpy(WFIFOP(fd,2),instances[instance_id].name,61);
+		WFIFOL(fd,63) = instances[instance_id].progress_timeout;
 		WFIFOL(fd,67) = 0;
 		WFIFOSET(fd,packet_len(0x02CD));
 	} else {
 		WFIFOHEAD(fd,packet_len(0x02CB));
 		WFIFOW(fd,0) = 0x02CB;
-		memcpy(WFIFOP(fd,2),instance[instance_id].name,61);
+		memcpy(WFIFOP(fd,2),instances[instance_id].name,61);
 		WFIFOW(fd,63) = 0;
 		WFIFOSET(fd,packet_len(0x02CB));
 	}
@@ -16949,6 +16957,124 @@ void clif_status_change_end(struct block_list *bl, int tid, enum send_target tar
 	clif->send(&p,sizeof(p), bl, target);
 }
 
+void clif_bgqueue_ack(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, unsigned char arena_id) {
+	
+	switch (response) {
+		case BGQA_FAIL_COOLDOWN:
+		case BGQA_FAIL_DESERTER:
+		case BGQA_FAIL_TEAM_COUNT:
+			break;
+		default: {
+			struct packet_bgqueue_ack p;
+			
+			p.PacketType = bgqueue_ackType;
+			p.type = response;
+			safestrncpy(p.bg_name, bg->arena[arena_id]->name, sizeof(p.bg_name));
+			
+			clif->send(&p,sizeof(p), &sd->bl, SELF);
+		}
+			break;
+	}	
+}
+
+
+void clif_bgqueue_notice_delete(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, unsigned char arena_id) {
+	struct packet_bgqueue_notice_delete p;
+	
+	p.PacketType = bgqueue_notice_deleteType;
+	p.type = response;
+	safestrncpy(p.bg_name, bg->arena[arena_id]->name, sizeof(p.bg_name));
+	
+	clif->send(&p,sizeof(p), &sd->bl, SELF);
+}
+
+void clif_parse_bgqueue_register(int fd, struct map_session_data *sd) {
+	struct packet_bgqueue_register *p = P2PTR(fd, bgqueue_registerType);
+	struct bg_arena *arena = NULL;
+
+	if( !bg->queue_on ) return; /* temp, until feature is complete */
+	
+	if( !(arena = bg->name2arena(p->bg_name)) ) {
+		clif->bgqueue_ack(sd,BGQA_FAIL_BGNAME_INVALID,0);
+		return;
+	}
+	
+	switch( (enum bg_queue_types)p->type ) {
+		case BGQT_INDIVIDUAL:
+		case BGQT_PARTY:
+		case BGQT_GUILD:
+			break;
+		default:
+			clif->bgqueue_ack(sd,BGQA_FAIL_TYPE_INVALID, arena->id);
+			return;
+	}	
+	
+	bg->queue_add(sd, arena, (enum bg_queue_types)p->type);
+}
+
+void clif_bgqueue_update_info(struct map_session_data *sd, unsigned char arena_id, int position) {
+	struct packet_bgqueue_update_info p;
+	
+	p.PacketType = bgqueue_updateinfoType;
+	safestrncpy(p.bg_name, bg->arena[arena_id]->name, sizeof(p.bg_name));
+	p.position = position;
+	
+	sd->bg_queue.client_has_bg_data = true;	// Client creates bg data when this packet arrives
+	
+	clif->send(&p,sizeof(p), &sd->bl, SELF);
+}
+
+void clif_parse_bgqueue_checkstate(int fd, struct map_session_data *sd) {
+	//struct packet_bgqueue_checkstate *p = P2PTR(fd, bgqueue_checkstateType); /* TODO: bgqueue_notice_delete should use this p->bg_name */
+	if( !bg->queue_on ) return; /* temp, until feature is complete */
+	if ( sd->bg_queue.arena && sd->bg_queue.type ) {
+		sd->bg_queue.client_has_bg_data = true;
+		clif->bgqueue_update_info(sd,sd->bg_queue.arena->id,bg->id2pos(sd->bg_queue.arena->queue_id,sd->status.account_id));
+	} else
+		clif->bgqueue_notice_delete(sd, BGQND_FAIL_NOT_QUEUING,0);/* TODO: wrong response, should respond with p->bg_name not id 0 */
+}
+
+void clif_parse_bgqueue_revoke_req(int fd, struct map_session_data *sd) {
+	//struct packet_bgqueue_revoke_req *p = P2PTR(fd, bgqueue_revokereqType);
+	return;
+	//bg->queue_leave(sd, p->bg_name);
+}
+
+void clif_parse_bgqueue_battlebegin_ack(int fd, struct map_session_data *sd) {
+	//struct packet_bgqueue_battlebegin_ack *p = P2PTR(fd, bgqueue_checkstateType);
+	return;
+	//if ( p->result == 1 )
+	//	bg->queue_pc_ready(sd);
+	//else
+	//	bg->queue_leave(sd, p->bg_name);
+}
+
+void clif_bgqueue_joined(struct map_session_data *sd, int pos) {
+	struct packet_bgqueue_notify_entry p;
+	
+	p.PacketType = bgqueue_notify_entryType;
+	safestrncpy(p.name,sd->status.name,sizeof(p.name));
+	p.position = pos;
+
+	clif->send(&p,sizeof(p), &sd->bl, BG_QUEUE);
+}
+
+void clif_bgqueue_pcleft(struct map_session_data *sd) {
+	/* no idea */
+	return;
+}
+
+// Sends BG ready req to all with same bg arena/type as sd
+void clif_bgqueue_battlebegins(struct map_session_data *sd, unsigned char arena_id, enum send_target target) {
+	struct packet_bgqueue_battlebegins p;
+	
+	p.PacketType = bgqueue_battlebegins;
+	safestrncpy(p.bg_name, bg->arena[arena_id]->name, sizeof(p.bg_name));
+	safestrncpy(p.game_name, bg->arena[arena_id]->name, sizeof(p.game_name));
+	
+	clif->send(&p,sizeof(p), &sd->bl, target);
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -17124,6 +17250,7 @@ void clif_bc_ready(void) {
 int do_init_clif(void) {
 	const char* colors[COLOR_MAX] = { "0xFF0000", "0x00ff00", "0xffffff" };
 	int i;
+	
 	/**
 	 * Setup Color Table (saves unnecessary load of strtoul on every call)
 	 **/
@@ -17613,13 +17740,7 @@ void clif_defaults(void) {
 	/* elemental-related */ 
 	clif->elemental_info = clif_elemental_info;
 	clif->elemental_updatestatus = clif_elemental_updatestatus;
-	/* misc-handling */ 
-	clif->adopt_reply = clif_Adopt_reply;
-	clif->adopt_request = clif_Adopt_request;
-	clif->readbook = clif_readbook;
-	clif->notify_time = clif_notify_time;
-	clif->user_count = clif_user_count;
-	clif->noask_sub = clif_noask_sub;
+	/* Hercules Channel System */
 	clif->chsys_create = clif_hercules_chsys_create;
 	clif->chsys_msg = clif_hercules_chsys_msg;
 	clif->chsys_msg2 = clif_hercules_chsys_msg2;
@@ -17632,6 +17753,20 @@ void clif_defaults(void) {
 	clif->chsys_quitg = clif_hercules_chsys_quitg;
 	clif->chsys_gjoin = clif_hercules_chsys_gjoin;
 	clif->chsys_gleave = clif_hercules_chsys_gleave;
+	/* bgqueue */
+	clif->bgqueue_ack = clif_bgqueue_ack;
+	clif->bgqueue_notice_delete = clif_bgqueue_notice_delete;
+	clif->bgqueue_update_info = clif_bgqueue_update_info;
+	clif->bgqueue_joined = clif_bgqueue_joined;
+	clif->bgqueue_pcleft = clif_bgqueue_pcleft;
+	clif->bgqueue_battlebegins = clif_bgqueue_battlebegins;
+	/* misc-handling */ 
+	clif->adopt_reply = clif_Adopt_reply;
+	clif->adopt_request = clif_Adopt_request;
+	clif->readbook = clif_readbook;
+	clif->notify_time = clif_notify_time;
+	clif->user_count = clif_user_count;
+	clif->noask_sub = clif_noask_sub;
 	clif->cashshop_load = clif_cashshop_db;
 	clif->bc_ready = clif_bc_ready;
 	clif->undisguise_timer = clif_undisguise_timer;
@@ -17837,6 +17972,11 @@ void clif_defaults(void) {
 	clif->pCashShopReqTab = clif_parse_CashShopReqTab;
 	clif->pCashShopSchedule = clif_parse_CashShopSchedule;
 	clif->pCashShopBuy = clif_parse_CashShopBuy;
+	/* BGQueue */
+	clif->pBGQueueRegister = clif_parse_bgqueue_register;
+	clif->pBGQueueCheckState = clif_parse_bgqueue_checkstate;
+	clif->pBGQueueRevokeReq = clif_parse_bgqueue_revoke_req;
+	clif->pBGQueueBattleBeginAck = clif_parse_bgqueue_battlebegin_ack;
 	/*  */
 	clif->pPartyTick = clif_parse_PartyTick;
 	clif->pGuildInvite2 = clif_parse_GuildInvite2;

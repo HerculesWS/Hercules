@@ -137,7 +137,7 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 
 	nd->bl.id = md->tomb_nid = npc_get_new_npc_id();
 
-    nd->ud.dir = md->ud.dir;
+    nd->dir = md->ud.dir;
 	nd->bl.m = md->bl.m;
 	nd->bl.x = md->bl.x;
 	nd->bl.y = md->bl.y;
@@ -262,8 +262,7 @@ int mob_parse_dataset(struct spawn_data *data)
 /*==========================================
  * Generates the basic mob data using the spawn_data provided.
  *------------------------------------------*/
-struct mob_data* mob_spawn_dataset(struct spawn_data *data)
-{
+struct mob_data* mob_spawn_dataset(struct spawn_data *data) {
 	struct mob_data *md = (struct mob_data*)aCalloc(1, sizeof(struct mob_data));
 	md->bl.id= npc_get_new_npc_id();
 	md->bl.type = BL_MOB;
@@ -290,7 +289,7 @@ struct mob_data* mob_spawn_dataset(struct spawn_data *data)
 	status_set_viewdata(&md->bl, md->class_);
 	status_change_init(&md->bl);
 	unit_dataset(&md->bl);
-
+	
 	map_addiddb(&md->bl);
 	return md;
 }

@@ -27,20 +27,18 @@ enum E_MAPSERVER_ST {
 	MAPSERVER_ST_LAST
 };
 
-
 #define MAX_NPC_PER_MAP 512
 #define AREA_SIZE battle_config.area_size
 #define DAMAGELOG_SIZE 30
 #define LOOTITEM_SIZE 10
 #define MAX_MOBSKILL 50	//Max 128, see mob skill_idx type if need this higher
-#define MAX_MOB_LIST_PER_MAP 128
+#define MAX_MOB_LIST_PER_MAP 100
 #define MAX_EVENTQUEUE 2
 #define MAX_EVENTTIMER 32
 #define NATURAL_HEAL_INTERVAL 500
 #define MIN_FLOORITEM 2
 #define MAX_FLOORITEM START_ACCOUNT_NUM
 #define MAX_LEVEL 150
-#define MAX_DROP_PER_MAP 48
 #define MAX_IGNORE_LIST 20 // official is 14
 #define MAX_VENDING 12
 #define MAX_MAP_SIZE 512*512 // Wasn't there something like this already? Can't find it.. [Shinryo]
@@ -558,6 +556,12 @@ void map_zone_change2(int m, struct map_zone_data *zone);
 struct map_zone_data map_zone_all;/* used as a base on all maps */
 struct map_zone_data map_zone_pk;/* used for (pk_mode) */
 
+struct map_drop_list {
+	int drop_id;
+	int drop_type;
+	int drop_per;
+};
+
 
 struct map_data {
 	char name[MAP_NAME_LENGTH];
@@ -625,11 +629,8 @@ struct map_data {
 	} flag;
 	struct point save;
 	struct npc_data *npc[MAX_NPC_PER_MAP];
-	struct {
-		int drop_id;
-		int drop_type;
-		int drop_per;
-	} drop_list[MAX_DROP_PER_MAP];
+	struct map_drop_list *drop_list;
+	unsigned short drop_list_count;
 
 	struct spawn_data *moblist[MAX_MOB_LIST_PER_MAP]; // [Wizputer]
 	int mob_delete_timer;	// [Skotlex]
@@ -676,6 +677,14 @@ struct map_data {
 	unsigned short short_damage_rate;
 	/* long_damage_rate mapflag */
 	unsigned short long_damage_rate;
+	
+	/* instance unique name */
+	char *cName;
+	
+	/* */
+	int (*getcellp)(struct map_data* m,int16 x,int16 y,cell_chk cellchk);
+	void (*setcell) (int16 m, int16 x, int16 y, cell_t cell, bool flag);
+	char *cellPos;
 };
 
 /// Stores information about a remote map (for multi-mapserver setups).
@@ -689,8 +698,6 @@ struct map_data_other_server {
 };
 
 int map_getcell(int16 m,int16 x,int16 y,cell_chk cellchk);
-int map_getcellp(struct map_data* m,int16 x,int16 y,cell_chk cellchk);
-void map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag);
 void map_setgatcell(int16 m, int16 x, int16 y, int gat);
 
 struct map_data *map;
@@ -710,6 +717,8 @@ extern char help2_txt[];
 extern char charhelp_txt[];
 
 extern char wisp_server_name[];
+
+void map_cellfromcache(struct map_data *m);
 
 // users
 void map_setusers(int);
@@ -733,6 +742,7 @@ int map_foreachinmovearea(int (*func)(struct block_list*,va_list), struct block_
 int map_foreachincell(int (*func)(struct block_list*,va_list), int16 m, int16 x, int16 y, int type, ...);
 int map_foreachinpath(int (*func)(struct block_list*,va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, ...);
 int map_foreachinmap(int (*func)(struct block_list*,va_list), int16 m, int type, ...);
+int map_foreachininstance(int (*func)(struct block_list*,va_list), int16 instance_id, int type,...);
 //blocklist nb in one cell
 int map_count_oncell(int16 m,int16 x,int16 y,int type);
 struct skill_unit *map_find_skill_unit_oncell(struct block_list *,int16 x,int16 y,uint16 skill_id,struct skill_unit *, int flag);
@@ -831,6 +841,7 @@ void map_removemobs(int16 m); // [Wizputer]
 void do_reconnect_map(void); //Invoked on map-char reconnection [Skotlex]
 void map_addmap2db(struct map_data *m);
 void map_removemapdb(struct map_data *m);
+void map_clean(int i);
 
 extern char *INTER_CONF_NAME;
 extern char *LOG_CONF_NAME;

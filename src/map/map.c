@@ -101,7 +101,7 @@ static DBMap* id_db=NULL; // int id -> struct block_list*
 static DBMap* pc_db=NULL; // int id -> struct map_session_data*
 static DBMap* mobid_db=NULL; // int id -> struct mob_data*
 static DBMap* bossid_db=NULL; // int id -> struct mob_data* (MVP db)
-static DBMap* map_db=NULL; // unsigned int mapindex -> struct map_data*
+static DBMap* map_db=NULL; // unsigned int mapindex -> struct map_data_other_server*
 static DBMap* nick_db=NULL; // int char_id -> struct charid2nick* (requested names of offline characters)
 static DBMap* charid_db=NULL; // int char_id -> struct map_session_data*
 static DBMap* regen_db=NULL; // int id -> struct block_list* (status_natural_heal processing)
@@ -150,6 +150,8 @@ struct map_cache_map_info {
 	int32 len;
 };
 
+uint16 index2mapid[MAX_MAPINDEX];
+
 char db_path[256] = "db";
 char help_txt[256] = "conf/help.txt";
 char help2_txt[256] = "conf/help2.txt";
@@ -162,6 +164,7 @@ int enable_grf = 0;	//To enable/disable reading maps from GRF files, bypassing m
 
 /* [Ind/Hercules] */
 struct eri *map_iterator_ers;
+char *map_cache_buffer = NULL; // Has the uncompressed gat data of all maps, so just one allocation has to be made
 
 /*==========================================
  * server player count (of all mapservers)
@@ -397,8 +400,7 @@ int map_moveblock(struct block_list *bl, int x1, int y1, unsigned int tick)
 		if (sc->data[SC_PROPERTYWALK] &&
 			sc->data[SC_PROPERTYWALK]->val3 >= skill->get_maxcount(sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2) )
 			status_change_end(bl,SC_PROPERTYWALK,INVALID_TIMER);
-	} else
-	if (bl->type == BL_NPC)
+	} else if (bl->type == BL_NPC)
 		npc_unsetcells((TBL_NPC*)bl);
 
 	if (moveblock) map_delblock(bl);
@@ -469,8 +471,7 @@ int map_moveblock(struct block_list *bl, int x1, int y1, unsigned int tick)
 					skill->unit_move_unit_group(skill->id2group(sc->data[SC_HAWKEYES]->val4), bl->m, x1-x0, y1-y0);
 			}
 		}
-	} else
-	if (bl->type == BL_NPC)
+	} else if (bl->type == BL_NPC)
 		npc_setcells((TBL_NPC*)bl);
 
 	return 0;
@@ -1194,8 +1195,7 @@ int map_foreachinpath(int (*func)(struct block_list*,va_list),int16 m,int16 x0,i
 }
 
 // Copy of map_foreachincell, but applied to the whole map. [Skotlex]
-int map_foreachinmap(int (*func)(struct block_list*,va_list), int16 m, int type,...)
-{
+int map_foreachinmap(int (*func)(struct block_list*,va_list), int16 m, int type,...) {
 	int b, bsize;
 	int returnCount = 0;  //total sum of returned values of func() [Skotlex]
 	struct block_list *bl;
@@ -1230,6 +1230,52 @@ int map_foreachinmap(int (*func)(struct block_list*,va_list), int16 m, int type,
 
 	map_freeblock_unlock();
 
+	bl_list_count = blockcount;
+	return returnCount;
+}
+// Copy of map_foreachinmap, but applied to all maps in a instance id. [Ind/Hercules]
+int map_foreachininstance(int (*func)(struct block_list*,va_list), int16 instance_id, int type,...) {
+	int b, bsize;
+	int returnCount = 0;  //total sum of returned values of func() [Skotlex]
+	struct block_list *bl;
+	int blockcount = bl_list_count, i, j;
+	int16 m;
+	va_list ap;
+	
+	for( j = 0; j < instances[instance_id].num_map; j++ ) {
+
+		m = instances[instance_id].map[j];
+		
+		bsize = map[ m ].bxs * map[ m ].bys;
+		
+		if( type&~BL_MOB )
+			for( b = 0; b < bsize; b++ )
+				for( bl = map[ m ].block[ b ]; bl != NULL; bl = bl->next )
+					if( bl->type&type && bl_list_count < BL_LIST_MAX )
+						bl_list[ bl_list_count++ ] = bl;
+		
+		if( type&BL_MOB )
+			for( b = 0; b < bsize; b++ )
+				for( bl = map[ m ].block_mob[ b ]; bl != NULL; bl = bl->next )
+					if( bl_list_count < BL_LIST_MAX )
+						bl_list[ bl_list_count++ ] = bl;
+		
+		if( bl_list_count >= BL_LIST_MAX )
+			ShowWarning("map_foreachininstance: block count too many!\n");
+		
+		map_freeblock_lock();
+		
+		for( i = blockcount; i < bl_list_count ; i++ )
+			if( bl_list[ i ]->prev ) { //func() may delete this bl_list[] slot, checking for prev ensures it wasnt queued for deletion.
+				va_start(ap, type);
+				returnCount += func(bl_list[ i ], ap);
+				va_end(ap);
+			}
+		
+		map_freeblock_unlock();
+		
+	}
+		
 	bl_list_count = blockcount;
 	return returnCount;
 }
@@ -1637,8 +1683,19 @@ int map_quit(struct map_session_data *sd) {
 
 	pc_itemcd_do(sd,false);
 
+	for( i = 0; i < sd->queues_count; i++ ) {
+		struct hQueue *queue;
+		if( (queue = script->queue(sd->queues[i])) && queue->onLogOut[0] != '\0' ) {
+			npc_event(sd, queue->onLogOut, 0);
+		}
+	}
+	/* two times, the npc event above may assign a new one or delete others */
+	for( i = 0; i < sd->queues_count; i++ ) {
+		script->queue_remove(sd->queues[i],sd->status.account_id);
+	}
+	
 	npc_script_event(sd, NPCE_LOGOUT);
-
+	
 	//Unit_free handles clearing the player related data,
 	//map_quit handles extra specific data which is related to quitting normally
 	//(changing map-servers invokes unit_free but bypasses map_quit)
@@ -1712,7 +1769,7 @@ int map_quit(struct map_session_data *sd) {
 		
 	unit_remove_map_pc(sd,CLR_TELEPORT);
 
-	if( map[sd->bl.m].instance_id ) { // Avoid map conflicts and warnings on next login
+	if( map[sd->bl.m].instance_id >= 0 ) { // Avoid map conflicts and warnings on next login
 		int16 m;
 		struct point *pt;
 		if( map[sd->bl.m].save.map )
@@ -1720,8 +1777,7 @@ int map_quit(struct map_session_data *sd) {
 		else
 			pt = &sd->status.save_point;
 
-		if( (m=map_mapindex2mapid(pt->map)) >= 0 )
-		{
+		if( (m=map_mapindex2mapid(pt->map)) >= 0 ) {
 			sd->bl.m = m;
 			sd->bl.x = pt->x;
 			sd->bl.y = pt->y;
@@ -2160,8 +2216,7 @@ bool mapit_exists(struct s_mapiterator* mapit)
 /*==========================================
  * Add npc-bl to id_db, basically register npc to map
  *------------------------------------------*/
-bool map_addnpc(int16 m,struct npc_data *nd)
-{
+bool map_addnpc(int16 m,struct npc_data *nd) {
 	nullpo_ret(nd);
 
 	if( m < 0 || m >= map_num )
@@ -2188,8 +2243,7 @@ int map_addmobtolist(unsigned short m, struct spawn_data *spawn)
 {
 	size_t i;
 	ARR_FIND( 0, MAX_MOB_LIST_PER_MAP, i, map[m].moblist[i] == NULL );
-	if( i < MAX_MOB_LIST_PER_MAP )
-	{
+	if( i < MAX_MOB_LIST_PER_MAP ) {
 		map[m].moblist[i] = spawn;
 		return i;
 	}
@@ -2250,13 +2304,11 @@ int map_removemobs_timer(int tid, unsigned int tick, int id, intptr_t data)
 	int count;
 	const int16 m = id;
 
-	if (m < 0 || m >= MAX_MAP_PER_SERVER)
-	{	//Incorrect map id!
+	if (m < 0 || m >= map_num) { //Incorrect map id!
 		ShowError("map_removemobs_timer error: timer %d points to invalid map %d\n",tid, m);
 		return 0;
 	}
-	if (map[m].mob_delete_timer != tid)
-	{	//Incorrect timer call!
+	if (map[m].mob_delete_timer != tid) { //Incorrect timer call!
 		ShowError("map_removemobs_timer mismatch: %d != %d (map %s)\n",map[m].mob_delete_timer, tid, map[m].name);
 		return 0;
 	}
@@ -2283,8 +2335,7 @@ void map_removemobs(int16 m)
 /*==========================================
  * Hookup, get map_id from map_name
  *------------------------------------------*/
-int16 map_mapname2mapid(const char* name)
-{
+int16 map_mapname2mapid(const char* name) {
 	unsigned short map_index;
 	map_index = mapindex_name2id(name);
 	if (!map_index)
@@ -2295,24 +2346,18 @@ int16 map_mapname2mapid(const char* name)
 /*==========================================
  * Returns the map of the given mapindex. [Skotlex]
  *------------------------------------------*/
-int16 map_mapindex2mapid(unsigned short mapindex)
-{
-	struct map_data *md=NULL;
+int16 map_mapindex2mapid(unsigned short mapindex) {
 
-	if (!mapindex)
+	if (!mapindex || mapindex > MAX_MAPINDEX)
 		return -1;
 
-	md = (struct map_data*)uidb_get(map_db,(unsigned int)mapindex);
-	if(md==NULL || md->cell==NULL)
-		return -1;
-	return md->m;
+	return index2mapid[mapindex] == 0 ? -1 : index2mapid[mapindex];
 }
 
 /*==========================================
  * Switching Ip, port ? (like changing map_server) get ip/port from map_name
  *------------------------------------------*/
-int map_mapname2ipport(unsigned short name, uint32* ip, uint16* port)
-{
+int map_mapname2ipport(unsigned short name, uint32* ip, uint16* port) {
 	struct map_data_other_server *mdos;
 
 	mdos = (struct map_data_other_server*)uidb_get(map_db,(unsigned int)name);
@@ -2443,8 +2488,7 @@ inline static struct mapcell map_gat2cell(int gat) {
 	return cell;
 }
 
-static int map_cell2gat(struct mapcell cell)
-{
+static int map_cell2gat(struct mapcell cell) {
 	if( cell.walkable == 1 && cell.shootable == 1 && cell.water == 0 ) return 0;
 	if( cell.walkable == 0 && cell.shootable == 0 && cell.water == 0 ) return 1;
 	if( cell.walkable == 1 && cell.shootable == 1 && cell.water == 1 ) return 3;
@@ -2453,17 +2497,42 @@ static int map_cell2gat(struct mapcell cell)
 	ShowWarning("map_cell2gat: cell has no matching gat type\n");
 	return 1; // default to 'wall'
 }
+int map_getcellp(struct map_data* m,int16 x,int16 y,cell_chk cellchk);
+void map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag);
+void map_cellfromcache(struct map_data *m) {
+	char decode_buffer[MAX_MAP_SIZE];
+	struct map_cache_map_info *info = NULL;
+	
+	if( (info = (struct map_cache_map_info *)m->cellPos) ) {
+		unsigned long size, xy;
+		int i;
+		
+		size = (unsigned long)info->xs*(unsigned long)info->ys;
+		
+		// TO-DO: Maybe handle the scenario, if the decoded buffer isn't the same size as expected? [Shinryo]
+		decode_zip(decode_buffer, &size, m->cellPos+sizeof(struct map_cache_map_info), info->len);
+		CREATE(m->cell, struct mapcell, size);
+		
+		for( xy = 0; xy < size; ++xy )
+			m->cell[xy] = map_gat2cell(decode_buffer[xy]);
+		
+		m->getcellp = map_getcellp;
+		m->setcell  = map_setcell;
+		
+		for(i = 0; i < m->npc_num; i++) {
+			npc_setcells(m->npc[i]);
+		}
+	}
+}
 
 /*==========================================
  * Confirm if celltype in (m,x,y) match the one given in cellchk
  *------------------------------------------*/
-int map_getcell(int16 m,int16 x,int16 y,cell_chk cellchk)
-{
-	return (m < 0 || m >= MAX_MAP_PER_SERVER) ? 0 : map_getcellp(&map[m],x,y,cellchk);
+int map_getcell(int16 m,int16 x,int16 y,cell_chk cellchk) {
+	return (m < 0 || m >= map_num) ? 0 : map[m].getcellp(&map[m],x,y,cellchk);
 }
 
-int map_getcellp(struct map_data* m,int16 x,int16 y,cell_chk cellchk)
-{
+int map_getcellp(struct map_data* m,int16 x,int16 y,cell_chk cellchk) {
 	struct mapcell cell;
 
 	nullpo_ret(m);
@@ -2474,8 +2543,7 @@ int map_getcellp(struct map_data* m,int16 x,int16 y,cell_chk cellchk)
 
 	cell = m->cell[x + y*m->xs];
 
-	switch(cellchk)
-	{
+	switch(cellchk) {
 		// gat type retrieval
 		case CELL_GETTYPE:
 			return map_cell2gat(cell);
@@ -2534,13 +2602,19 @@ int map_getcellp(struct map_data* m,int16 x,int16 y,cell_chk cellchk)
 	}
 }
 
+/* [Ind/Hercules] */
+int map_sub_getcellp(struct map_data* m,int16 x,int16 y,cell_chk cellchk) {
+	map_cellfromcache(m);
+	m->getcellp = map_getcellp;
+	m->setcell  = map_setcell;
+	return m->getcellp(m,x,y,cellchk);
+}
 /*==========================================
  * Change the type/flags of a map cell
  * 'cell' - which flag to modify
  * 'flag' - true = on, false = off
  *------------------------------------------*/
-void map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag)
-{
+void map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag) {
 	int j;
 
 	if( m < 0 || m >= map_num || x < 0 || x >= map[m].xs || y < 0 || y >= map[m].ys )
@@ -2565,7 +2639,16 @@ void map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag)
 			break;
 	}
 }
-
+void map_sub_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag) {
+	
+	if( m < 0 || m >= map_num || x < 0 || x >= map[m].xs || y < 0 || y >= map[m].ys )
+		return;
+	
+	map_cellfromcache(&map[m]);
+	map[m].setcell = map_setcell;
+	map[m].getcellp = map_getcellp;
+	map[m].setcell(m,x,y,cell,flag);
+}
 void map_setgatcell(int16 m, int16 x, int16 y, int gat)
 {
 	int j;
@@ -2635,8 +2718,8 @@ bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool shootable
 		if( map_getcell(m, x1, y1, CELL_CHKNOREACH) )
 			break; // Collision
 
-		map_setcell(m, x1, y1, CELL_WALKABLE, false);
-		map_setcell(m, x1, y1, CELL_SHOOTABLE, shootable);
+		map[m].setcell(m, x1, y1, CELL_WALKABLE, false);
+		map[m].setcell(m, x1, y1, CELL_SHOOTABLE, shootable);
 
 		clif->changemapcell(0, m, x1, y1, map_getcell(m, x1, y1, CELL_GETTYPE), ALL_SAMEMAP);
 	}
@@ -2682,8 +2765,8 @@ void map_iwall_remove(const char *wall_name)
 	for( i = 0; i < iwall->size; i++ ) {
 		map_iwall_nextxy(iwall->x, iwall->y, iwall->dir, i, &x1, &y1);
 
-		map_setcell(iwall->m, x1, y1, CELL_SHOOTABLE, true);
-		map_setcell(iwall->m, x1, y1, CELL_WALKABLE, true);
+		map[iwall->m].setcell(iwall->m, x1, y1, CELL_SHOOTABLE, true);
+		map[iwall->m].setcell(iwall->m, x1, y1, CELL_WALKABLE, true);
 
 		clif->changemapcell(0, iwall->m, x1, y1, map_getcell(iwall->m, x1, y1, CELL_GETTYPE), ALL_SAMEMAP);
 	}
@@ -2740,8 +2823,7 @@ int map_eraseallipport_sub(DBKey key, DBData *data, va_list va)
 	return 0;
 }
 
-int map_eraseallipport(void)
-{
+int map_eraseallipport(void) {
 	map_db->foreach(map_db,map_eraseallipport_sub);
 	return 1;
 }
@@ -2749,8 +2831,7 @@ int map_eraseallipport(void)
 /*==========================================
  * Delete mapindex from db of another map server
  *------------------------------------------*/
-int map_eraseipport(unsigned short mapindex, uint32 ip, uint16 port)
-{
+int map_eraseipport(unsigned short mapindex, uint32 ip, uint16 port) {
 	struct map_data_other_server *mdos;
 
 	mdos = (struct map_data_other_server*)uidb_get(map_db,(unsigned int)mapindex);
@@ -2800,13 +2881,12 @@ static char *map_init_mapcache(FILE *fp)
  * Map cache reading
  * [Shinryo]: Optimized some behaviour to speed this up
  *==========================================*/
-int map_readfromcache(struct map_data *m, char *buffer, char *decode_buffer)
-{
+int map_readfromcache(struct map_data *m, char *buffer) {
 	int i;
 	struct map_cache_main_header *header = (struct map_cache_main_header *)buffer;
 	struct map_cache_map_info *info = NULL;
 	char *p = buffer + sizeof(struct map_cache_main_header);
-
+	
 	for(i = 0; i < header->map_count; i++) {
 		info = (struct map_cache_map_info *)p;
 
@@ -2818,8 +2898,8 @@ int map_readfromcache(struct map_data *m, char *buffer, char *decode_buffer)
 	}
 
 	if( info && i < header->map_count ) {
-		unsigned long size, xy;
-
+		unsigned long size;
+		
 		if( info->xs <= 0 || info->ys <= 0 )
 			return 0;// Invalid
 
@@ -2831,51 +2911,30 @@ int map_readfromcache(struct map_data *m, char *buffer, char *decode_buffer)
 			ShowWarning("map_readfromcache: %s exceeded MAX_MAP_SIZE of %d\n", info->name, MAX_MAP_SIZE);
 			return 0; // Say not found to remove it from list.. [Shinryo]
 		}
-
-		// TO-DO: Maybe handle the scenario, if the decoded buffer isn't the same size as expected? [Shinryo]
-		decode_zip(decode_buffer, &size, p+sizeof(struct map_cache_map_info), info->len);
-
-		CREATE(m->cell, struct mapcell, size);
-
-
-		for( xy = 0; xy < size; ++xy )
-			m->cell[xy] = map_gat2cell(decode_buffer[xy]);
-
+		
+		m->cellPos = p;
+		m->cell = (struct mapcell *)0xdeadbeaf;
+		
 		return 1;
 	}
 
 	return 0; // Not found
 }
 
-int map_addmap(char* mapname)
-{
-	if( strcmpi(mapname,"clear")==0 )
-	{
-		map_num = 0;
-		instance_start = 0;
-		return 0;
-	}
 
-	if( map_num >= MAX_MAP_PER_SERVER - 1 )
-	{
-		ShowError("Could not add map '"CL_WHITE"%s"CL_RESET"', the limit of maps has been reached.\n",mapname);
-		return 1;
-	}
-
-	mapindex_getmapname(mapname, map[map_num].name);
-	map_num++;
+int map_addmap(char* mapname) {
+	map[map_num].instance_id = -1;
+	mapindex_getmapname(mapname, map[map_num++].name);
 	return 0;
 }
 
-static void map_delmapid(int id)
-{
+static void map_delmapid(int id) {
 	ShowNotice("Removing map [ %s ] from maplist"CL_CLL"\n",map[id].name);
 	memmove(map+id, map+id+1, sizeof(map[0])*(map_num-id-1));
 	map_num--;
 }
 
-int map_delmap(char* mapname)
-{
+int map_delmap(char* mapname) {
 	int i;
 	char map_name[MAP_NAME_LENGTH];
 
@@ -2958,13 +3017,62 @@ void map_zone_db_clear(void) {
 	}
 	aFree(map_zone_all.capped_skills);
 }
-
+void map_clean(int i) {
+	int v;
+	if(map[i].cell && map[i].cell != (struct mapcell *)0xdeadbeaf) aFree(map[i].cell);
+	if(map[i].block) aFree(map[i].block);
+	if(map[i].block_mob) aFree(map[i].block_mob);
+	
+	if(battle_config.dynamic_mobs) { //Dynamic mobs flag by [random]
+		int j;
+		if(map[i].mob_delete_timer != INVALID_TIMER)
+			delete_timer(map[i].mob_delete_timer, map_removemobs_timer);
+		for (j=0; j<MAX_MOB_LIST_PER_MAP; j++)
+			if (map[i].moblist[j]) aFree(map[i].moblist[j]);
+	}
+	
+	if( map[i].unit_count ) {
+		for(v = 0; v < map[i].unit_count; v++) {
+			aFree(map[i].units[v]);
+		}
+		if( map[i].units ) {
+			aFree(map[i].units);
+			map[i].units = NULL;
+		}
+		map[i].unit_count = 0;
+	}
+	
+	if( map[i].skill_count ) {
+		for(v = 0; v < map[i].skill_count; v++) {
+			aFree(map[i].skills[v]);
+		}
+		if( map[i].skills ) {
+			aFree(map[i].skills);
+			map[i].skills = NULL;
+		}
+		map[i].skill_count = 0;
+	}
+	
+	if( map[i].zone_mf_count ) {
+		for(v = 0; v < map[i].zone_mf_count; v++) {
+			aFree(map[i].zone_mf[v]);
+		}
+		if( map[i].zone_mf ) {
+			aFree(map[i].zone_mf);
+			map[i].zone_mf = NULL;
+		}
+		map[i].zone_mf_count = 0;
+	}
+	
+	if( map[i].channel )
+		clif->chsys_delete(map[i].channel);
+}
 void do_final_maps(void) {
 	int i, v = 0;
 
 	for( i = 0; i < map_num; i++ ) {
 		
-		if(map[i].cell) aFree(map[i].cell);
+		if(map[i].cell && map[i].cell != (struct mapcell *)0xdeadbeaf ) aFree(map[i].cell);
 		if(map[i].block) aFree(map[i].block);
 		if(map[i].block_mob) aFree(map[i].block_mob);
 		
@@ -3009,6 +3117,12 @@ void do_final_maps(void) {
 			map[i].zone_mf_count = 0;
 		}
 		
+		if( map[i].drop_list_count ) {
+			map[i].drop_list_count = 0;
+		}
+		if( map[i].drop_list != NULL )
+			aFree(map[i].drop_list);
+		
 		if( map[i].channel )
 			clif->chsys_delete(map[i].channel);
 	}
@@ -3028,7 +3142,10 @@ void map_flags_init(void) {
 		map[i].nocommand = 0;  // nocommand mapflag level
 		map[i].bexp      = 100;  // per map base exp multiplicator
 		map[i].jexp      = 100;  // per map job exp multiplicator
-		memset(map[i].drop_list, 0, sizeof(map[i].drop_list));  // pvp nightmare drop list
+		if( map[i].drop_list != NULL )
+			aFree(map[i].drop_list);
+		map[i].drop_list = NULL;
+		map[i].drop_list_count = 0;
 
 		if( map[i].unit_count ) {
 			for(v = 0; v < map[i].unit_count; v++) {
@@ -3153,14 +3270,12 @@ int map_readgat (struct map_data* m)
 /*======================================
  * Add/Remove map to the map_db
  *--------------------------------------*/
-void map_addmap2db(struct map_data *m)
-{
-	uidb_put(map_db, (unsigned int)m->index, m);
+void map_addmap2db(struct map_data *m) {
+	index2mapid[m->index] = m->m;
 }
 
-void map_removemapdb(struct map_data *m)
-{
-	uidb_remove(map_db, (unsigned int)m->index);
+void map_removemapdb(struct map_data *m) {
+	index2mapid[m->index] = 0;
 }
 
 /*======================================
@@ -3170,8 +3285,6 @@ int map_readallmaps (void) {
 	int i;
 	FILE* fp=NULL;
 	int maps_removed = 0;
-	char *map_cache_buffer = NULL; // Has the uncompressed gat data of all maps, so just one allocation has to be made
-	char map_cache_decode_buffer[MAX_MAP_SIZE];
 	
 	if( enable_grf )
 		ShowStatus("Loading maps (using GRF files)...\n");
@@ -3203,7 +3316,7 @@ int map_readallmaps (void) {
 		if( !
 			(enable_grf?
 				 map_readgat(&map[i])
-				:map_readfromcache(&map[i], map_cache_buffer, map_cache_decode_buffer))
+				:map_readfromcache(&map[i], map_cache_buffer))
 			) {
 			map_delmapid(i);
 			maps_removed++;
@@ -3213,10 +3326,9 @@ int map_readallmaps (void) {
 
 		map[i].index = mapindex_name2id(map[i].name);
 
-		if (uidb_get(map_db,(unsigned int)map[i].index) != NULL)
-		{
+		if ( index2mapid[map[i].index] != 0 ) {
 			ShowWarning("Map %s already loaded!"CL_CLL"\n", map[i].name);
-			if (map[i].cell) {
+			if (map[i].cell && map[i].cell != (struct mapcell *)0xdeadbeaf) {
 				aFree(map[i].cell);
 				map[i].cell = NULL;
 			}
@@ -3225,10 +3337,10 @@ int map_readallmaps (void) {
 			i--;
 			continue;
 		}
-
+		
+		map[i].m = i;
 		map_addmap2db(&map[i]);
 
-		map[i].m = i;
 		memset(map[i].moblist, 0, sizeof(map[i].moblist));	//Initialize moblist [Skotlex]
 		map[i].mob_delete_timer = INVALID_TIMER;	//Initialize timer [Skotlex]
 
@@ -3238,6 +3350,9 @@ int map_readallmaps (void) {
 		size = map[i].bxs * map[i].bys * sizeof(struct block_list*);
 		map[i].block = (struct block_list**)aCalloc(size, 1);
 		map[i].block_mob = (struct block_list**)aCalloc(size, 1);
+		
+		map[i].getcellp = map_sub_getcellp;
+		map[i].setcell  = map_sub_setcell;
 	}
 
 	// intialization and configuration-dependent adjustments of mapflags
@@ -3245,14 +3360,11 @@ int map_readallmaps (void) {
 
 	if( !enable_grf ) {
 		fclose(fp);
-
-		// The cache isn't needed anymore, so free it.. [Shinryo]
-		aFree(map_cache_buffer);
 	}
 
 	// finished map loading
 	ShowInfo("Successfully loaded '"CL_WHITE"%d"CL_RESET"' maps."CL_CLL"\n",map_num);
-	instance_start = map_num; // Next Map Index will be instances
+	instance->start_id = map_num; // Next Map Index will be instances
 
 	if (maps_removed)
 		ShowNotice("Maps removed: '"CL_WHITE"%d"CL_RESET"'\n",maps_removed);
@@ -3267,20 +3379,17 @@ static int char_ip_set = 0;
 /*==========================================
  * Read map server configuration files (conf/map_server.conf...)
  *------------------------------------------*/
-int map_config_read(char *cfgName)
-{
+int map_config_read(char *cfgName) {
 	char line[1024], w1[1024], w2[1024];
 	FILE *fp;
 
 	fp = fopen(cfgName,"r");
-	if( fp == NULL )
-	{
+	if( fp == NULL ) {
 		ShowError("Map configuration file not found at: %s\n", cfgName);
 		return 1;
 	}
 
-	while( fgets(line, sizeof(line), fp) )
-	{
+	while( fgets(line, sizeof(line), fp) ) {
 		char* ptr;
 
 		if( line[0] == '/' && line[1] == '/' )
@@ -3320,9 +3429,9 @@ int map_config_read(char *cfgName)
 			clif->setport(atoi(w2));
 			map_port = (atoi(w2));
 		} else if (strcmpi(w1, "map") == 0)
-			map_addmap(w2);
+			map_num++;
 		else if (strcmpi(w1, "delmap") == 0)
-			map_delmap(w2);
+			map_num--;
 		else if (strcmpi(w1, "npc") == 0)
 			npc_addsrcfile(w2);
 		else if (strcmpi(w1, "delnpc") == 0)
@@ -3362,7 +3471,43 @@ int map_config_read(char *cfgName)
 	fclose(fp);
 	return 0;
 }
-
+int map_config_read_sub(char *cfgName) {
+	char line[1024], w1[1024], w2[1024];
+	FILE *fp;
+	
+	fp = fopen(cfgName,"r");
+	if( fp == NULL ) {
+		ShowError("Map configuration file not found at: %s\n", cfgName);
+		return 1;
+	}
+	
+	while( fgets(line, sizeof(line), fp) ) {
+		char* ptr;
+		
+		if( line[0] == '/' && line[1] == '/' )
+			continue;
+		if( (ptr = strstr(line, "//")) != NULL )
+			*ptr = '\n'; //Strip comments
+		if( sscanf(line, "%[^:]: %[^\t\r\n]", w1, w2) < 2 )
+			continue;
+		
+		//Strip trailing spaces
+		ptr = w2 + strlen(w2);
+		while (--ptr >= w2 && *ptr == ' ');
+		ptr++;
+		*ptr = '\0';
+		
+		if (strcmpi(w1, "map") == 0)
+			map_addmap(w2);
+		else if (strcmpi(w1, "delmap") == 0)
+			map_delmap(w2);
+		else if (strcmpi(w1, "import") == 0)
+			map_config_read_sub(w2);
+	}
+	
+	fclose(fp);
+	return 0;
+}
 void map_reloadnpc_sub(char *cfgName)
 {
 	char line[1024], w1[1024], w2[1024];
@@ -4849,11 +4994,12 @@ void read_map_zone_db(void) {
 /**
  * @see DBApply
  */
-int map_db_final(DBKey key, DBData *data, va_list ap)
-{
+int map_db_final(DBKey key, DBData *data, va_list ap) {
 	struct map_data_other_server *mdos = DB->data2ptr(data);
-	if(mdos && mdos->cell == NULL)
+
+	if(mdos && malloclib->verify_ptr(mdos) && mdos->cell == NULL)
 		aFree(mdos);
+	
 	return 0;
 }
 
@@ -4877,8 +5023,7 @@ int nick_db_final(DBKey key, DBData *data, va_list args)
 	return 0;
 }
 
-int cleanup_sub(struct block_list *bl, va_list ap)
-{
+int cleanup_sub(struct block_list *bl, va_list ap) {
 	nullpo_ret(bl);
 
 	switch(bl->type) {
@@ -4932,6 +5077,8 @@ void do_final(void)
 		map_quit(sd);
 	mapit->free(iter);
 
+	instance->final();
+	
 	/* prepares npcs for a faster shutdown process */
 	do_clear_npc();
 
@@ -4954,7 +5101,6 @@ void do_final(void)
 	clif->final();
 	do_final_npc();
 	script->final();
-	do_final_instance();
 	do_final_itemdb();
 	do_final_storage();
 	guild->final();
@@ -4992,6 +5138,9 @@ void do_final(void)
 	ers_destroy(map_iterator_ers);
 	
 	aFree(map);
+
+	if( !enable_grf )
+		aFree(map_cache_buffer);
 
 	ShowStatus("Finished.\n");
 }
@@ -5196,10 +5345,12 @@ void map_defaults(void) {
 void load_defaults(void) {
 	atcommand_defaults();
 	battle_defaults();
+	battleground_defaults();
 	buyingstore_defaults();
 	clif_defaults();
 	guild_defaults();
 	homunculus_defaults();
+	instance_defaults();
 	ircbot_defaults();
 	log_defaults();
 	map_defaults();
@@ -5228,79 +5379,50 @@ int do_init(int argc, char *argv[])
 
 	rnd_init();
 
-	for( i = 1; i < argc ; i++ )
-	{
+	for( i = 1; i < argc ; i++ ) {
 		const char* arg = argv[i];
 
-		if( arg[0] != '-' && ( arg[0] != '/' || arg[1] == '-' ) )
-		{// -, -- and /
+		if( arg[0] != '-' && ( arg[0] != '/' || arg[1] == '-' ) ) {// -, -- and /
 			ShowError("Unknown option '%s'.\n", argv[i]);
 			exit(EXIT_FAILURE);
-		}
-		else if( (++arg)[0] == '-' )
-		{// long option
+		} else if( (++arg)[0] == '-' ) {// long option
 			arg++;
 
-			if( strcmp(arg, "help") == 0 )
-			{
+			if( strcmp(arg, "help") == 0 ) {
 				map_helpscreen(true);
-			}
-			else if( strcmp(arg, "version") == 0 )
-			{
+			} else if( strcmp(arg, "version") == 0 ) {
 				map_versionscreen(true);
-			}
-			else if( strcmp(arg, "map-config") == 0 )
-			{
+			} else if( strcmp(arg, "map-config") == 0 ) {
 				if( map_arg_next_value(arg, i, argc) )
 					MAP_CONF_NAME = argv[++i];
-			}
-			else if( strcmp(arg, "battle-config") == 0 )
-			{
+			} else if( strcmp(arg, "battle-config") == 0 ) {
 				if( map_arg_next_value(arg, i, argc) )
 					BATTLE_CONF_FILENAME = argv[++i];
-			}
-			else if( strcmp(arg, "atcommand-config") == 0 )
-			{
+			} else if( strcmp(arg, "atcommand-config") == 0 ) {
 				if( map_arg_next_value(arg, i, argc) )
 					ATCOMMAND_CONF_FILENAME = argv[++i];
-			}
-			else if( strcmp(arg, "script-config") == 0 )
-			{
+			} else if( strcmp(arg, "script-config") == 0 ) {
 				if( map_arg_next_value(arg, i, argc) )
 					SCRIPT_CONF_NAME = argv[++i];
-			}
-			else if( strcmp(arg, "msg-config") == 0 )
-			{
+			} else if( strcmp(arg, "msg-config") == 0 ) {
 				if( map_arg_next_value(arg, i, argc) )
 					MSG_CONF_NAME = argv[++i];
-			}
-			else if( strcmp(arg, "grf-path-file") == 0 )
-			{
+			} else if( strcmp(arg, "grf-path-file") == 0 ) {
 				if( map_arg_next_value(arg, i, argc) )
 					GRF_PATH_FILENAME = argv[++i];
-			}
-			else if( strcmp(arg, "inter-config") == 0 )
-			{
+			} else if( strcmp(arg, "inter-config") == 0 ) {
 				if( map_arg_next_value(arg, i, argc) )
 					INTER_CONF_NAME = argv[++i];
-			}
-			else if( strcmp(arg, "log-config") == 0 )
-			{
+			} else if( strcmp(arg, "log-config") == 0 ) {
 				if( map_arg_next_value(arg, i, argc) )
 					LOG_CONF_NAME = argv[++i];
-			}
-			else if( strcmp(arg, "run-once") == 0 ) // close the map-server as soon as its done.. for testing [Celest]
-			{
+			} else if( strcmp(arg, "run-once") == 0 ) { // close the map-server as soon as its done.. for testing [Celest]
 				runflag = CORE_ST_STOP;
-			}
-			else
-			{
+			} else {
 				ShowError("Unknown option '%s'.\n", argv[i]);
 				exit(EXIT_FAILURE);
 			}
-		}
-		else switch( arg[0] )
-		{// short option
+		} else switch( arg[0] ) {// short option
 			case '?':
 			case 'h':
 				map_helpscreen(true);
@@ -5313,12 +5435,13 @@ int do_init(int argc, char *argv[])
 				exit(EXIT_FAILURE);
 		}
 	}
-	
-	CREATE(map,struct map_data,MAX_MAP_PER_SERVER);
-	
+	memset(&index2mapid, 0, sizeof(index2mapid));
+
 	load_defaults();
-	
 	map_config_read(MAP_CONF_NAME);
+	CREATE(map,struct map_data,map_num);
+	map_num = 0;
+	map_config_read_sub(MAP_CONF_NAME);
 	// loads npcs
 	map_reloadnpc(false);
 
@@ -5384,7 +5507,7 @@ int do_init(int argc, char *argv[])
 	
 	atcommand->init();
 	battle->init();
-	do_init_instance();
+	instance->init();
 	do_init_chrif();
 	clif->init();
 	ircbot->init();

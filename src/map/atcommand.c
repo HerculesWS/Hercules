@@ -3940,7 +3940,7 @@ ACMD(mapinfo) {
 			for (i = 0; i < map[m_id].npc_num;)
 			{
 				nd = map[m_id].npc[i];
-				switch(nd->ud.dir) {
+				switch(nd->dir) {
 					case 0:  strcpy(direction, msg_txt(1101)); break; // North
 					case 1:  strcpy(direction, msg_txt(1102)); break; // North West
 					case 2:  strcpy(direction, msg_txt(1103)); break; // West

@@ -85,6 +85,9 @@ CPCMD(exit) {
 CPCMD(ers_report) {
 	ers_report();
 }
+CPCMD(mem_report) {
+	memmgr_report(line?atoi(line):0);
+}
 CPCMD(help) {
 	unsigned int i = 0;
 	for ( i = 0; i < console->cmd_list_count; i++ ) {
@@ -115,6 +118,7 @@ void console_load_defaults(void) {
 		CP_DEF(help),
 		CP_DEF_C(server),
 		CP_DEF_S(ers_report,server),
+		CP_DEF_S(mem_report,server),
 		CP_DEF_S(malloc_usage,server),
 		CP_DEF_S(exit,server),
 	};
@@ -227,8 +231,10 @@ void console_parse_sub(char *line) {
 	char *tok;
 	char sublist[CP_CMD_LENGTH * 5];
 	unsigned int i, len = 0;
+	
 	memcpy(bline, line, 200);
 	tok = strtok(line, " ");
+	
 	for ( i = 0; i < console->cmd_list_count; i++ ) {
 		if( strcmpi(tok,console->cmd_list[i]->cmd) == 0 )
 			break;

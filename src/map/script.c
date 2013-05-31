@@ -816,10 +816,12 @@ const char* parse_callfunc(const char* p, int require_paren, int is_custom)
 
 	func = add_word(p);
 	if( str_data[func].type == C_FUNC ){
+		char argT = 0;
 		// buildin function
 		add_scriptl(func);
 		add_scriptc(C_ARG);
 		arg = script->buildin[str_data[func].val];
+		if( !arg ) arg = &argT;
 	} else if( str_data[func].type == C_USERFUNC || str_data[func].type == C_USERFUNC_POS ){
 		// script defined function
 		add_scriptl(buildin_callsub_ref);
@@ -2358,8 +2360,8 @@ void get_val(struct script_state* st, struct script_data* data)
 			}
 			break;
 		case '\'':
-				if (st->instance_id) {
-					data->u.str = (char*)idb_get(instance[st->instance_id].vars,reference_getuid(data));
+				if ( st->instance_id >= 0 ) {
+					data->u.str = (char*)idb_get(instances[st->instance_id].vars,reference_getuid(data));
 				} else {
 					ShowWarning("script:get_val: cannot access instance variable '%s', defaulting to \"\"\n", name);
 					data->u.str = NULL;
@@ -2423,8 +2425,8 @@ void get_val(struct script_state* st, struct script_data* data)
 			}
 			break;
 		case '\'':
-				if( st->instance_id )
-					data->u.num = (int)idb_iget(instance[st->instance_id].vars,reference_getuid(data));
+				if( st->instance_id >= 0 )
+					data->u.num = (int)idb_iget(instances[st->instance_id].vars,reference_getuid(data));
 				else {
 					ShowWarning("script:get_val: cannot access instance variable '%s', defaulting to 0\n", name);
 					data->u.num = 0;
@@ -2484,9 +2486,9 @@ static int set_reg(struct script_state* st, TBL_PC* sd, int num, const char* nam
 			}
 			return 1;
 		case '\'':
-			if( st->instance_id ) {
-				idb_remove(instance[st->instance_id].vars, num);
-				if( str[0] ) idb_put(instance[st->instance_id].vars, num, aStrdup(str));
+			if( st->instance_id >= 0 ) {
+				idb_remove(instances[st->instance_id].vars, num);
+				if( str[0] ) idb_put(instances[st->instance_id].vars, num, aStrdup(str));
 			}
 			return 1;
 		default:
@@ -2532,10 +2534,10 @@ static int set_reg(struct script_state* st, TBL_PC* sd, int num, const char* nam
 			}
 			return 1;
 		case '\'':
-			if( st->instance_id ) {
-				idb_remove(instance[st->instance_id].vars, num);
+			if( st->instance_id >= 0 ) {
+				idb_remove(instances[st->instance_id].vars, num);
 				if( val != 0 )
-					idb_iput(instance[st->instance_id].vars, num, val);
+					idb_iput(instances[st->instance_id].vars, num, val);
 			}
 			return 1;
 		default:
@@ -3462,7 +3464,7 @@ void run_script_main(struct script_state *st)
 	script_attach_state(st);
 
 	nd = map_id2nd(st->oid);
-	if( nd && map[nd->bl.m].instance_id > 0 )
+	if( nd )
 		st->instance_id = map[nd->bl.m].instance_id;
 
 	if(st->state == RERUNLINE) {
@@ -3845,9 +3847,25 @@ void do_final_script(void) {
 			script->buildin[i] = NULL;
 		}
 	}
-	
-	aFree(script->buildin);
 
+	aFree(script->buildin);
+	
+	if( script->hqs ) {
+		for( i = 0; i < script->hqs; i++ ) {
+			if( script->hq[i].item != NULL )
+				aFree(script->hq[i].item);
+		}
+	}
+	if( script->hqis ) {
+		for( i = 0; i < script->hqis; i++ ) {
+			if( script->hqi[i].item != NULL )
+				aFree(script->hqi[i].item);
+		}
+	}
+	if( script->hq != NULL )
+		aFree(script->hq);
+	if( script->hqi != NULL )
+		aFree(script->hqi);
 }
 /*==========================================
  * Initialization
@@ -8457,13 +8475,10 @@ BUILDIN(monster)
 	
 	if (sd && strcmp(mapn, "this") == 0)
 		m = sd->bl.m;
-	else
-	{
+	else {
 		m = map_mapname2mapid(mapn);
-		if (map[m].flag.src4instance && st->instance_id)
-		{ // Try to redirect to the instance map, not the src map
-			if ((m = instance_mapid2imapid(m, st->instance_id)) < 0)
-			{
+		if (map[m].flag.src4instance && st->instance_id >= 0) { // Try to redirect to the instance map, not the src map
+			if ((m = instance->mapid2imapid(m, st->instance_id)) < 0) {
 				ShowError("buildin_monster: Trying to spawn monster (%d) on instance map (%s) without instance attached.\n", class_, mapn);
 				return false;
 			}
@@ -8528,27 +8543,22 @@ BUILDIN(areamonster)
 	struct map_session_data* sd;
 	int16 m;
 	
-	if (script_hasdata(st,10))
-	{
+	if (script_hasdata(st,10)) {
 		event = script_getstr(st, 10);
 		check_event(st, event);
 	}
 	
-	if (script_hasdata(st, 11))
-	{
+	if (script_hasdata(st, 11)) {
 		size = script_getnum(st, 11);
-		if (size > 3)
-		{
+		if (size > 3) {
 			ShowWarning("buildin_monster: Attempted to spawn non-existing size %d for monster class %d\n", size, class_);
 			return false;
 		}
 	}
 	
-	if (script_hasdata(st, 12))
-	{
+	if (script_hasdata(st, 12)) {
 		ai = script_getnum(st, 12);
-		if (ai > 4)
-		{
+		if (ai > 4) {
 			ShowWarning("buildin_monster: Attempted to spawn non-existing ai %d for monster class %d\n", ai, class_);
 			return false;
 		}
@@ -8558,13 +8568,10 @@ BUILDIN(areamonster)
 	
 	if (sd && strcmp(mapn, "this") == 0)
 		m = sd->bl.m;
-	else
-	{
+	else {
 		m = map_mapname2mapid(mapn);
-		if (map[m].flag.src4instance && st->instance_id)
-		{ // Try to redirect to the instance map, not the src map
-			if ((m = instance_mapid2imapid(m, st->instance_id)) < 0)
-			{
+		if (map[m].flag.src4instance && st->instance_id >= 0) { // Try to redirect to the instance map, not the src map
+			if ((m = instance->mapid2imapid(m, st->instance_id)) < 0) {
 				ShowError("buildin_areamonster: Trying to spawn monster (%d) on instance map (%s) without instance attached.\n", class_, mapn);
 				return false;
 			}
@@ -8624,7 +8631,7 @@ BUILDIN(killmonster)
 	if( (m=map_mapname2mapid(mapname))<0 )
 		return true;
 	
-	if( map[m].flag.src4instance && st->instance_id && (m = instance_mapid2imapid(m, st->instance_id)) < 0 )
+	if( map[m].flag.src4instance && st->instance_id >= 0 && (m = instance->mapid2imapid(m, st->instance_id)) < 0 )
 		return true;
 	
 	if( script_hasdata(st,4) ) {
@@ -8665,7 +8672,7 @@ BUILDIN(killmonsterall)
 	if( (m = map_mapname2mapid(mapname))<0 )
 		return true;
 	
-	if( map[m].flag.src4instance && st->instance_id && (m = instance_mapid2imapid(m, st->instance_id)) < 0 )
+	if( map[m].flag.src4instance && st->instance_id >= 0 && (m = instance->mapid2imapid(m, st->instance_id)) < 0 )
 		return true;
 	
 	if( script_hasdata(st,3) ) {
@@ -11168,8 +11175,7 @@ BUILDIN(mobcount)	// Added by RoVeRT
 		return true;
 	}
 	
-	if( map[m].flag.src4instance && map[m].instance_id == 0 && st->instance_id && (m = instance_mapid2imapid(m, st->instance_id)) < 0 )
-	{
+	if( map[m].flag.src4instance && map[m].instance_id >= 0 && st->instance_id >= 0 && (m = instance->mapid2imapid(m, st->instance_id)) < 0 ) {
 		script_pushint(st,-1);
 		return true;
 	}
@@ -12491,8 +12497,7 @@ BUILDIN(jump_zero)
 /*==========================================
  * movenpc [MouseJstr]
  *------------------------------------------*/
-BUILDIN(movenpc)
-{
+BUILDIN(movenpc) {
 	TBL_NPC *nd = NULL;
 	const char *npc;
 	int x,y;
@@ -12505,7 +12510,7 @@ BUILDIN(movenpc)
 		return -1;
 	
 	if (script_hasdata(st,5))
-		nd->ud.dir = script_getnum(st,5) % 8;
+		nd->dir = script_getnum(st,5) % 8;
 	npc_movenpc(nd, x, y);
 	return true;
 }
@@ -12559,17 +12564,20 @@ BUILDIN(npcspeed)
 	speed = script_getnum(st,2);
 	nd =(struct npc_data *)map_id2bl(st->oid);
 	
-	if( nd )
-	{
+	if( nd ) {
+		if( nd->ud == &npc_base_ud ) {
+			nd->ud = NULL;
+			CREATE(nd->ud, struct unit_data, 1);
+			unit_dataset(&nd->bl);
+		}
 		nd->speed = speed;
-		nd->ud.state.speed_changed = 1;
+		nd->ud->state.speed_changed = 1;
 	}
 	
 	return true;
 }
 // make an npc walk to a position [Valaris]
-BUILDIN(npcwalkto)
-{
+BUILDIN(npcwalkto) {
 	struct npc_data *nd=(struct npc_data *)map_id2bl(st->oid);
 	int x=0,y=0;
 	
@@ -12577,6 +12585,12 @@ BUILDIN(npcwalkto)
 	y=script_getnum(st,3);
 	
 	if(nd) {
+		if( nd->ud == &npc_base_ud ) {
+			nd->ud = NULL;
+			CREATE(nd->ud, struct unit_data, 1);
+			unit_dataset(&nd->bl);
+		}
+		
 		if (!nd->status.hp) {
 			status_calc_npc(nd, true);
 		} else {
@@ -15341,7 +15355,7 @@ BUILDIN(setcell)
 	
 	for( y = y1; y <= y2; ++y )
 		for( x = x1; x <= x2; ++x )
-			map_setcell(m, x, y, type, flag);
+			map[m].setcell(m, x, y, type, flag);
 	
 	return true;
 }
@@ -15865,25 +15879,28 @@ BUILDIN(bg_get_data)
  * Instancing Script Commands
  *------------------------------------------*/
 
-BUILDIN(instance_create)
-{
+BUILDIN(instance_create) {
 	const char *name;
-	int party_id, res;
+	int owner_id, res;
+	int type = IOT_PARTY;
 	
 	name = script_getstr(st, 2);
-	party_id = script_getnum(st, 3);
+	owner_id = script_getnum(st, 3);
+	if( script_hasdata(st,4) ) {
+		type = script_getnum(st, 4);
+		if( type < IOT_NONE || type >= IOT_MAX ) {
+			ShowError("buildin_instance_create: unknown instance type %d for '%s'\n",type,name);
+			return true;
+		}
+	}
 	
-	res = instance_create(party_id, name);
-	if( res == -4 ) // Already exists
-	{
+	res = instance->create(owner_id, name, (enum instance_owner_type) type);
+	if( res == -4 ) { // Already exists 
 		script_pushint(st, -1);
 		return true;
-	}
-	else if( res < 0 )
-	{
+	} else if( res < 0 ) {
 		const char *err;
-		switch(res)
-		{
+		switch(res) {
 			case -3: err = "No free instances"; break;
 			case -2: err = "Invalid party ID"; break;
 			case -1: err = "Invalid type"; break;
@@ -15898,44 +15915,39 @@ BUILDIN(instance_create)
 	return true;
 }
 
-BUILDIN(instance_destroy)
-{
-	int instance_id;
-	struct map_session_data *sd;
-	struct party_data *p;
+BUILDIN(instance_destroy) {
+	int instance_id = -1;
 	
 	if( script_hasdata(st, 2) )
 		instance_id = script_getnum(st, 2);
-	else if( st->instance_id )
+	else if( st->instance_id >= 0 )
 		instance_id = st->instance_id;
-	else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id )
-		instance_id = p->instance_id;
 	else return true;
 	
-	if( instance_id <= 0 || instance_id >= MAX_INSTANCE )
-	{
+	if( !instance->valid(instance_id) ) {
 		ShowError("buildin_instance_destroy: Trying to destroy invalid instance %d.\n", instance_id);
 		return true;
 	}
 	
-	instance_destroy(instance_id);
+	instance->destroy(instance_id);
 	return true;
 }
 
-BUILDIN(instance_attachmap)
-{
-	const char *name;
+BUILDIN(instance_attachmap) {
+	const char *name, *map_name = NULL;
 	int16 m;
-	int instance_id;
+	int instance_id = -1;
 	bool usebasename = false;
 	
 	name = script_getstr(st,2);
 	instance_id = script_getnum(st,3);
-	if( script_hasdata(st,4) && script_getnum(st,4) > 0)
+	if( script_hasdata(st,4) && script_getnum(st,4) > 0 )
 		usebasename = true;
 	
-	if( (m = instance_add_map(name, instance_id, usebasename)) < 0 ) // [Saithis]
-	{
+	if( script_hasdata(st, 5) )
+		map_name = script_getstr(st, 5);
+	
+	if( (m = instance->add_map(name, instance_id, usebasename, map_name)) < 0 ) { // [Saithis]
 		ShowError("buildin_instance_attachmap: instance creation failed (%s): %d\n", name, m);
 		script_pushconststr(st, "");
 		return true;
@@ -15945,109 +15957,81 @@ BUILDIN(instance_attachmap)
 	return true;
 }
 
-BUILDIN(instance_detachmap)
-{
-	struct map_session_data *sd;
-	struct party_data *p;
+BUILDIN(instance_detachmap) {
 	const char *str;
 	int16 m;
-	int instance_id;
+	int instance_id = -1;
 	
 	str = script_getstr(st, 2);
 	if( script_hasdata(st, 3) )
 		instance_id = script_getnum(st, 3);
-	else if( st->instance_id )
+	else if( st->instance_id >= 0 )
 		instance_id = st->instance_id;
-	else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id )
-		instance_id = p->instance_id;
 	else return true;
 	
-	if( (m = map_mapname2mapid(str)) < 0 || (m = instance_map2imap(m,instance_id)) < 0 )
-	{
+	if( (m = map_mapname2mapid(str)) < 0 || (m = instance->map2imap(m,instance_id)) < 0 ) {
 		ShowError("buildin_instance_detachmap: Trying to detach invalid map %s\n", str);
 		return true;
 	}
 	
-	instance_del_map(m);
+	instance->del_map(m);
 	return true;
 }
 
-BUILDIN(instance_attach)
-{
-	int instance_id;
+BUILDIN(instance_attach) {
+	int instance_id = -1;
 	
 	instance_id = script_getnum(st, 2);
-	if( instance_id <= 0 || instance_id >= MAX_INSTANCE )
+	if( !instance->valid(instance_id) )
 		return true;
 	
 	st->instance_id = instance_id;
 	return true;
 }
 
-BUILDIN(instance_id)
-{
-	int instance_id;
-	
-	if( script_hasdata(st, 2) )
-	{
-		struct party_data *p;
-		struct map_session_data *sd;
-		int type;
-		type = script_getnum(st, 2);
-		if( type == 0 )
-			instance_id = st->instance_id;
-		else if( type == 1 && (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL )
-			instance_id = p->instance_id;
-		else
-			instance_id = 0;
-	}
-	else
-		instance_id = st->instance_id;
-	
-	script_pushint(st, instance_id);
+BUILDIN(instance_id) {
+	script_pushint(st, st->instance_id);
 	return true;
 }
 
 BUILDIN(instance_set_timeout)
 {
 	int progress_timeout, idle_timeout;
-	int instance_id;
-	struct map_session_data *sd;
-	struct party_data *p;
+	int instance_id = -1;
 	
 	progress_timeout = script_getnum(st, 2);
 	idle_timeout = script_getnum(st, 3);
 	
 	if( script_hasdata(st, 4) )
 		instance_id = script_getnum(st, 4);
-	else if( st->instance_id )
+	else if( st->instance_id >= 0 )
 		instance_id = st->instance_id;
-	else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id )
-		instance_id = p->instance_id;
 	else return true;
 	
-	if( instance_id > 0 )
-		instance_set_timeout(instance_id, progress_timeout, idle_timeout);
+	if( instance_id >= 0 )
+		instance->set_timeout(instance_id, progress_timeout, idle_timeout);
 	
 	return true;
 }
 
-BUILDIN(instance_init)
-{
+BUILDIN(instance_init) {
 	int instance_id = script_getnum(st, 2);
 	
-	if( instance[instance_id].state != INSTANCE_IDLE )
-	{
+	if( !instance->valid(instance_id) ) {
+		ShowError("instance_init: invalid instance id %d.\n",instance_id);
+		return true;
+	}
+	
+	if( instances[instance_id].state != INSTANCE_IDLE ) {
 		ShowError("instance_init: instance already initialized.\n");
 		return true;
 	}
 	
-	instance_init(instance_id);
+	instance->start(instance_id);
 	return true;
 }
 
-BUILDIN(instance_announce)
-{
+BUILDIN(instance_announce) {
 	int         instance_id = script_getnum(st,2);
 	const char *mes         = script_getstr(st,3);
 	int         flag        = script_getnum(st,4);
@@ -16058,53 +16042,40 @@ BUILDIN(instance_announce)
 	int         fontY       = script_hasdata(st,9) ? script_getnum(st,9) : 0;     // default fontY
 	
 	int i;
-	struct map_session_data *sd;
-	struct party_data *p;
 	
-	if( instance_id == 0 )
-	{
-		if( st->instance_id )
+	if( instance_id == -1 ) {
+		if( st->instance_id >= 0 )
 			instance_id = st->instance_id;
-		else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id )
-			instance_id = p->instance_id;
-		else return true;
+		else
+			return true;
 	}
 	
-	if( instance_id <= 0 || instance_id >= MAX_INSTANCE )
+	if( !instance->valid(instance_id) )
 		return true;
 	
-	for( i = 0; i < instance[instance_id].num_map; i++ )
-		map_foreachinmap(buildin_announce_sub, instance[instance_id].map[i], BL_PC,
+	for( i = 0; i < instances[instance_id].num_map; i++ )
+		map_foreachinmap(buildin_announce_sub, instances[instance_id].map[i], BL_PC,
 						 mes, strlen(mes)+1, flag&0xf0, fontColor, fontType, fontSize, fontAlign, fontY);
 	
 	return true;
 }
 
-BUILDIN(instance_npcname)
-{
+BUILDIN(instance_npcname) {
 	const char *str;
-	int instance_id = 0;
-	
-	struct map_session_data *sd;
-	struct party_data *p;
+	int instance_id = -1;
 	struct npc_data *nd;
 	
 	str = script_getstr(st, 2);
 	if( script_hasdata(st, 3) )
 		instance_id = script_getnum(st, 3);
-	else if( st->instance_id )
+	else if( st->instance_id >= 0 )
 		instance_id = st->instance_id;
-	else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id )
-		instance_id = p->instance_id;
 	
-	if( instance_id && (nd = npc_name2id(str)) != NULL )
- 	{
+	if( instance_id >= 0 && (nd = npc_name2id(str)) != NULL ) {
 		static char npcname[NAME_LENGTH];
 		snprintf(npcname, sizeof(npcname), "dup_%d_%d", instance_id, nd->bl.id);
  		script_pushconststr(st,npcname);
-	}
-	else
-	{
+	} else {
 		ShowError("script:instance_npcname: invalid instance NPC (instance_id: %d, NPC name: \"%s\".)\n", instance_id, str);
 		st->state = END;
 		return false;
@@ -16113,24 +16084,56 @@ BUILDIN(instance_npcname)
 	return true;
 }
 
-BUILDIN(has_instance)
-{
+BUILDIN(has_instance) {
 	struct map_session_data *sd;
-	struct party_data *p;
  	const char *str;
 	int16 m;
-	int instance_id = 0;
+	int instance_id = -1;
 	
  	str = script_getstr(st, 2);
+	
+	if( (m = map_mapname2mapid(str)) < 0 ) {
+		script_pushconststr(st, "");
+		return true;
+	}
+	
 	if( script_hasdata(st, 3) )
 		instance_id = script_getnum(st, 3);
-	else if( st->instance_id )
+	else if( st->instance_id >= 0 )
 		instance_id = st->instance_id;
-	else if( (sd = script_rid2sd(st)) != NULL && sd->status.party_id && (p = party_search(sd->status.party_id)) != NULL && p->instance_id )
-		instance_id = p->instance_id;
+	else if( (sd = script_rid2sd(st)) != NULL ) {
+		struct party_data *p;
+		int i = 0, j = 0;
+		if( sd->instances ) {
+			for( i = 0; i < sd->instances; i++ ) {
+				ARR_FIND(0, instances[sd->instance[i]].num_map, j, map[instances[sd->instance[i]].map[j]].instance_src_map == m);
+				if( j != instances[sd->instance[i]].num_map )
+					break;
+			}
+			if( i != sd->instances )
+				instance_id = sd->instance[i];
+		}
+		if( instance_id == -1 && sd->status.party_id && (p = party_search(sd->status.party_id)) && p->instances ) {
+			for( i = 0; i < p->instances; i++ ) {
+				ARR_FIND(0, instances[p->instance[i]].num_map, j, map[instances[p->instance[i]].map[j]].instance_src_map == m);
+				if( j != instances[p->instance[i]].num_map )
+					break;
+			}
+			if( i != p->instances )
+				instance_id = p->instance[i];
+		}
+		if( instance_id == -1 && sd->guild && sd->guild->instances ) {
+			for( i = 0; i < sd->guild->instances; i++ ) {
+				ARR_FIND(0, instances[sd->guild->instance[i]].num_map, j, map[instances[sd->guild->instance[i]].map[j]].instance_src_map == m);
+				if( j != instances[sd->guild->instance[i]].num_map )
+					break;
+			}
+			if( i != sd->guild->instances )
+				instance_id = sd->guild->instance[i];
+		}
+	}
 	
-	if( !instance_id || (m = map_mapname2mapid(str)) < 0 || (m = instance_map2imap(m, instance_id)) < 0 )
-	{
+	if( !instance->valid(instance_id) || (m = instance->map2imap(m, instance_id)) < 0 ) {
 		script_pushconststr(st, "");
 		return true;
 	}
@@ -16138,38 +16141,41 @@ BUILDIN(has_instance)
 	script_pushconststr(st, map[m].name);
 	return true;
 }
-
-BUILDIN(instance_warpall)
-{
-	struct map_session_data *pl_sd;
-	int16 m, i;
-	int instance_id;
+static int buildin_instance_warpall_sub(struct block_list *bl,va_list ap) {
+	struct map_session_data *sd = ((TBL_PC*)bl);
+	int mapindex = va_arg(ap,int);
+	int x = va_arg(ap,int);
+	int y = va_arg(ap,int);
+	
+	pc_setpos(sd,mapindex,x,y,CLR_TELEPORT);
+	
+	return 0;
+}
+BUILDIN(instance_warpall) {
+	int16 m;
+	int instance_id = -1;
 	const char *mapn;
 	int x, y;
-	unsigned short mapindex;
-	struct party_data *p = NULL;
+	int mapindex;
 	
 	mapn = script_getstr(st,2);
 	x    = script_getnum(st,3);
 	y    = script_getnum(st,4);
+	
 	if( script_hasdata(st,5) )
 		instance_id = script_getnum(st,5);
-	else if( st->instance_id )
+	else if( st->instance_id >= 0 )
 		instance_id = st->instance_id;
-	else if( (pl_sd = script_rid2sd(st)) != NULL && pl_sd->status.party_id && (p = party_search(pl_sd->status.party_id)) != NULL && p->instance_id )
-		instance_id = p->instance_id;
-	else return true;
-	
-	if( (m = map_mapname2mapid(mapn)) < 0 || (map[m].flag.src4instance && (m = instance_mapid2imapid(m, instance_id)) < 0) )
+	else
 		return true;
 	
-	if( !(p = party_search(instance[instance_id].party_id)) )
+	if( (m = map_mapname2mapid(mapn)) < 0 || (map[m].flag.src4instance && (m = instance->mapid2imapid(m, instance_id)) < 0) )
 		return true;
-	
+		
 	mapindex = map_id2index(m);
-	for( i = 0; i < MAX_PARTY; i++ )
-		if( (pl_sd = p->data[i].sd) && map[pl_sd->bl.m].instance_id == st->instance_id ) pc_setpos(pl_sd,mapindex,x,y,CLR_TELEPORT);
 	
+	map_foreachininstance(buildin_instance_warpall_sub, instance_id, BL_PC,mapindex,x,y);
+
 	return true;
 }
 
@@ -16183,8 +16189,7 @@ BUILDIN(instance_warpall)
  * Example: instance_check_party (getcharid(1){,amount}{,min}{,max});
  * Example 2: instance_check_party (getcharid(1),1,1,99);
  *------------------------------------------*/
-BUILDIN(instance_check_party)
-{
+BUILDIN(instance_check_party) {
 	struct map_session_data *pl_sd;
 	int amount, min, max, i, party_id, c = 0;
 	struct party_data *p = NULL;
@@ -16298,13 +16303,12 @@ BUILDIN(areamobuseskill)
 	int16 m;
 	int range,mobid,skill_id,skill_lv,casttime,emotion,target,cancel;
 	
-	if( (m = map_mapname2mapid(script_getstr(st,2))) < 0 )
-	{
+	if( (m = map_mapname2mapid(script_getstr(st,2))) < 0 ) {
 		ShowError("areamobuseskill: invalid map name.\n");
 		return true;
 	}
 	
-	if( map[m].flag.src4instance && st->instance_id && (m = instance_mapid2imapid(m, st->instance_id)) < 0 )
+	if( map[m].flag.src4instance && st->instance_id >= 0 && (m = instance->mapid2imapid(m, st->instance_id)) < 0 )
 		return true;
 	
 	center.m = m;
@@ -16994,6 +16998,309 @@ BUILDIN(npcskill)
 	
 	return true;
 }
+struct hQueue *script_hqueue_get(int idx) {
+	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 )
+		return NULL;
+	return &script->hq[idx];
+}
+/* set .@id,queue(); */
+/* creates queue, returns created queue id */
+BUILDIN(queue) {
+	int idx = script->hqs;
+	int i;
+	
+	for(i = 0; i < script->hqs; i++) {
+		if( script->hq[i].items == -1 ) {
+			break;
+		}
+	}
+	
+	if( i == script->hqs ) {
+		RECREATE(script->hq, struct hQueue, ++script->hqs);
+		script->hq[ idx ].item = NULL;
+	} else
+		idx = i;
+	
+	script->hq[ idx ].id = idx;
+	script->hq[ idx ].items = 0;
+	script->hq[ idx ].onDeath[0] = '\0';
+	script->hq[ idx ].onLogOut[0] = '\0';
+	script->hq[ idx ].onMapChange[0] = '\0';
+
+	script_pushint(st,idx);
+	return true;
+}
+/* set .@length,queuesize(.@queue_id); */
+/* returns queue length */
+BUILDIN(queuesize) {
+	int idx = script_getnum(st, 2);
+	
+	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 ) {
+		ShowWarning("buildin_queuesize: unknown queue id %d\n",idx);
+		script_pushint(st, 0);
+	} else
+		script_pushint(st, script->hq[ idx ].items );
+		
+	return true;
+}
+bool script_hqueue_add(int idx, int var) {
+	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 ) {
+		ShowWarning("script_hqueue_add: unknown queue id %d\n",idx);
+		return true;
+	} else {
+		struct map_session_data *sd;
+		int i;
+		
+		for(i = 0; i < script->hq[idx].items; i++) {
+			if( script->hq[idx].item[i] == var ) {
+				return true;
+			}
+		}
+		
+		if( i == script->hq[idx].items ) {
+			
+			for(i = 0; i < script->hq[idx].items; i++) {
+				if( script->hq[idx].item[i] == 0 ) {
+					break;
+				}
+			}
+			
+			if( i == script->hq[idx].items )
+				RECREATE(script->hq[idx].item, int, ++script->hq[idx].items);
+			
+			script->hq[idx].item[i] = var;
+			
+			if( var >= START_ACCOUNT_NUM && (sd = map_id2sd(var)) ) {
+				for(i = 0; i < sd->queues_count; i++) {
+					if( sd->queues[i] == -1 ) {
+						break;
+					}
+				}
+				
+				if( i == sd->queues_count )
+					RECREATE(sd->queues, int, ++sd->queues_count);
+				
+				sd->queues[i] = idx;
+			}
+			
+		}
+	}
+	return false;
+}
+/* queueadd(.@queue_id,.@var_id); */
+/* adds a new entry to the queue, returns 1 if already in queue, 0 otherwise */
+BUILDIN(queueadd) {
+	int idx = script_getnum(st, 2);
+	int var = script_getnum(st, 3);
+	
+	script_pushint(st,script->queue_add(idx,var)?1:0);
+	
+	return true;
+}
+bool script_hqueue_remove(int idx, int var) {
+	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 ) {
+		ShowWarning("script_hqueue_remove: unknown queue id %d (used with var %d)\n",idx,var);
+		return true;
+	} else {
+		int i;
+		
+		for(i = 0; i < script->hq[idx].items; i++) {
+			if( script->hq[idx].item[i] == var ) {
+				return true;
+			}
+		}
+		
+		if( i != script->hq[idx].items ) {
+			struct map_session_data *sd;
+			script->hq[idx].item[i] = 0;
+			
+			if( var >= START_ACCOUNT_NUM && (sd = map_id2sd(var)) ) {
+				for(i = 0; i < sd->queues_count; i++) {
+					if( sd->queues[i] == var ) {
+						break;
+					}
+				}
+				
+				if( i != sd->queues_count )
+					sd->queues[i] = -1;
+			}
+			
+		}
+	}
+	return false;
+}
+/* queueremove(.@queue_id,.@var_id); */
+/* removes a entry from the queue, returns 1 if not in queue, 0 otherwise */
+BUILDIN(queueremove) {
+	int idx = script_getnum(st, 2);
+	int var = script_getnum(st, 3);
+
+	script_pushint(st, script->queue_remove(idx,var)?1:0);
+	
+	return true;
+}
+
+/* queueopt(.@queue_id,optionType,<optional val>); */
+/* modifies the queue's options, when val is not provided the option is removed */
+/* when OnMapChange event is triggered, it sets a temp char var @QMapChangeTo$ with the destination map name */
+/* returns 1 when fails, 0 on success */
+BUILDIN(queueopt) {
+	int idx = script_getnum(st, 2);
+	int var = script_getnum(st, 3);
+	
+	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 ) {
+		ShowWarning("buildin_queueopt: unknown queue id %d\n",idx);
+		script_pushint(st, 1);
+	} else if( var <= HQO_NONE || var >= HQO_MAX ) {
+		ShowWarning("buildin_queueopt: unknown optionType %d\n",var);
+		script_pushint(st, 1);
+	} else {
+		switch( (enum hQueueOpt)var ) {
+			case HQO_OnDeath:
+				if( script_hasdata(st, 4) )
+					safestrncpy(script->hq[idx].onDeath, script_getstr(st, 4), EVENT_NAME_LENGTH);
+				else
+					script->hq[idx].onDeath[0] = '\0';
+				break;
+			case HQO_onLogOut:
+				if( script_hasdata(st, 4) )
+					safestrncpy(script->hq[idx].onLogOut, script_getstr(st, 4), EVENT_NAME_LENGTH);
+				else
+					script->hq[idx].onLogOut[0] = '\0';
+				break;
+			case HQO_OnMapChange:
+				if( script_hasdata(st, 4) )
+					safestrncpy(script->hq[idx].onMapChange, script_getstr(st, 4), EVENT_NAME_LENGTH);
+				else
+					script->hq[idx].onMapChange[0] = '\0';
+				break;
+			default:
+				ShowWarning("buildin_queueopt: unsupported optionType %d\n",var);
+				script_pushint(st, 1);
+				break;
+		}
+	}
+	
+	return true;
+}
+bool script_hqueue_del(int idx) {
+	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 ) {
+		ShowWarning("script_queue_del: unknown queue id %d\n",idx);
+		return true;
+	} else {
+		struct map_session_data *sd;
+		int i;
+		
+		for(i = 0; i < script->hq[idx].items; i++) {
+			if( script->hq[idx].item[i] >= START_ACCOUNT_NUM && (sd = map_id2sd(script->hq[idx].item[i])) ) {
+				int j;
+				for(j = 0; j < sd->queues_count; j++) {
+					if( sd->queues[j] == script->hq[idx].item[i] ) {
+						break;
+					}
+				}
+				
+				if( j != sd->queues_count )
+					sd->queues[j] = -1;
+			}
+		}
+		
+		script->hq[idx].items = -1;
+	}
+	return false;
+}
+/* queuedel(.@queue_id); */
+/* deletes queue of id .@queue_id, returns 1 if id not found, 0 otherwise */
+BUILDIN(queuedel) {
+	int idx = script_getnum(st, 2);
+	
+	script_pushint(st,script->queue_del(idx)?1:0);
+	
+	return true;
+}
+
+/* set .@id, queueiterator(.@queue_id); */
+/* creates a new queue iterator, returns its id */
+BUILDIN(queueiterator) {
+	int qid = script_getnum(st, 2);
+	struct hQueue *queue = NULL;
+	int idx = script->hqis;
+	int i;
+	
+	if( qid < 0 || qid >= script->hqs || script->hq[idx].items == -1 || !(queue = script->queue(qid)) ) {
+		ShowWarning("queueiterator: invalid queue id %d\n",qid);
+		return true;
+	}
+	
+	for(i = 0; i < script->hqis; i++) {
+		if( script->hqi[i].items == -1 ) {
+			break;
+		}
+	}
+	
+	if( i == script->hqis )
+		RECREATE(script->hqi, struct hQueueIterator, ++script->hqis);
+	else
+		idx = i;
+	
+	RECREATE(script->hqi[ idx ].item, int, queue->items);
+	
+	memcpy(&script->hqi[idx].item, &queue->item, sizeof(int)*queue->items);
+	
+	script->hqi[ idx ].items = queue->items;
+	script->hqi[ idx ].pos = 0;
+	
+	script_pushint(st,idx);
+	return true;
+}
+/* Queue Iterator Get Next */
+/* returns next/first member in the iterator, 0 if none */
+BUILDIN(qiget) {
+	int idx = script_getnum(st, 2);
+	
+	if( idx < 0 || idx >= script->hqis ) {
+		ShowWarning("buildin_qiget: unknown queue iterator id %d\n",idx);
+		script_pushint(st, 0);
+	} else if ( script->hqi[idx].pos == script->hqi[idx].items ) {
+		script_pushint(st, 0);
+	} else {
+		struct hQueueIterator *it = &script->hqi[idx];
+		script_pushint(st, it->item[it->pos++]);
+	}
+
+	return true;
+}
+/* Queue Iterator Check */
+/* returns 1:0 if there is a next member in the iterator */
+BUILDIN(qicheck) {
+	int idx = script_getnum(st, 2);
+	
+	if( idx < 0 || idx >= script->hqis ) {
+		ShowWarning("buildin_qicheck: unknown queue iterator id %d\n",idx);
+		script_pushint(st, 0);
+	} else if ( script->hqi[idx].pos == script->hqi[idx].items ) {
+		script_pushint(st, 0);
+	} else {
+		script_pushint(st, 1);
+	}
+	
+	return true;
+}
+/* Queue Iterator Check */
+BUILDIN(qiclear) {
+	int idx = script_getnum(st, 2);
+	
+	if( idx < 0 || idx >= script->hqis ) {
+		ShowWarning("buildin_qiclear: unknown queue iterator id %d\n",idx);
+		script_pushint(st, 1);
+	} else {
+		script->hqi[idx].items = -1;
+		script_pushint(st, 0);
+	}
+	
+	return true;
+}
+
 // declarations that were supposed to be exported from npc_chat.c
 #ifdef PCRE_SUPPORT
 	BUILDIN(defpattern);
@@ -17442,12 +17749,12 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(bg_updatescore,"sii"),
 		
 		// Instancing
-		BUILDIN_DEF(instance_create,"si"),
+		BUILDIN_DEF(instance_create,"si?"),
 		BUILDIN_DEF(instance_destroy,"?"),
-		BUILDIN_DEF(instance_attachmap,"si?"),
+		BUILDIN_DEF(instance_attachmap,"si??"),
 		BUILDIN_DEF(instance_detachmap,"s?"),
 		BUILDIN_DEF(instance_attach,"i"),
-		BUILDIN_DEF(instance_id,"?"),
+		BUILDIN_DEF(instance_id,""),
 		BUILDIN_DEF(instance_set_timeout,"ii?"),
 		BUILDIN_DEF(instance_init,"i"),
 		BUILDIN_DEF(instance_announce,"isi?????"),
@@ -17492,6 +17799,20 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(checkquest, "i?"),
 		BUILDIN_DEF(changequest, "ii"),
 		BUILDIN_DEF(showevent, "ii"),
+		
+		/**
+		 * hQueue [Ind/Hercules]
+		 **/
+		BUILDIN_DEF(queue,""),
+		BUILDIN_DEF(queuesize,"i"),
+		BUILDIN_DEF(queueadd,"ii"),
+		BUILDIN_DEF(queueremove,"ii"),
+		BUILDIN_DEF(queueopt,"ii?"),
+		BUILDIN_DEF(queuedel,"i"),
+		BUILDIN_DEF(queueiterator,"i"),
+		BUILDIN_DEF(qicheck,"i"),
+		BUILDIN_DEF(qiget,"i"),
+		BUILDIN_DEF(qiclear,"i"),
 	};
 	int i,n, len = ARRAYLENGTH(BUILDIN), start = script->buildin_count;
 	char* p;
@@ -17545,6 +17866,11 @@ void script_parse_builtin(void) {
 void script_defaults(void) {
 	script = &script_s;
 	
+	script->hq = NULL;
+	script->hqi = NULL;
+	script->hqs = script->hqis = 0;
+	memset(&script->hqe, 0, sizeof(script->hqe));
+	
 	script->buildin_count = 0;
 	script->buildin = NULL;
 	
@@ -17555,4 +17881,9 @@ void script_defaults(void) {
 	script->addScript = script_hp_add;
 	script->conv_num = conv_num;
 	script->conv_str = conv_str;
+	
+	script->queue = script_hqueue_get;
+	script->queue_add = script_hqueue_add;
+	script->queue_del = script_hqueue_del;
+	script->queue_remove = script_hqueue_remove;
 }

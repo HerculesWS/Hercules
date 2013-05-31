@@ -22,12 +22,16 @@
 char send_string[200];
 
 int irc_connect_timer(int tid, unsigned int tick, int id, intptr_t data) {
+	struct hSockOpt opt;
 	if( ircbot->isOn || ++ircbot->fails >= 3 )
 		return 0;
 	
+	opt.silent = 1;
+	opt.setTimeo = 0;
+	
 	ircbot->last_try = gettick();
 
-	if( ( ircbot->fd = make_connection(ircbot->ip,hChSys.irc_server_port,true) ) > 0 ){
+	if( ( ircbot->fd = make_connection(ircbot->ip,hChSys.irc_server_port,&opt) ) > 0 ){
 		session[ircbot->fd]->func_parse = ircbot->parse;
 		session[ircbot->fd]->flag.server = 1;
 		add_timer(gettick() + 3000, ircbot->identify_timer, 0, 0);

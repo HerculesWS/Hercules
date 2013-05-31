@@ -167,12 +167,10 @@ int path_blownpos(int16 m,int16 x0,int16 y0,int16 dx,int16 dy,int count)
 		dy=(dy>0)?1:((dy<0)?-1:0);
 	}
 
-	while( count > 0 && (dx != 0 || dy != 0) )
-	{
-		if( !map_getcellp(md,x0+dx,y0+dy,CELL_CHKPASS) )
-		{// attempt partial movement
-			int fx = ( dx != 0 && map_getcellp(md,x0+dx,y0,CELL_CHKPASS) );
-			int fy = ( dy != 0 && map_getcellp(md,x0,y0+dy,CELL_CHKPASS) );
+	while( count > 0 && (dx != 0 || dy != 0) ) {
+		if( !md->getcellp(md,x0+dx,y0+dy,CELL_CHKPASS) ) {// attempt partial movement
+			int fx = ( dx != 0 && md->getcellp(md,x0+dx,y0,CELL_CHKPASS) );
+			int fy = ( dy != 0 && md->getcellp(md,x0,y0+dy,CELL_CHKPASS) );
 			if( fx && fy )
 			{
 				if(rnd()&1)
@@ -225,7 +223,7 @@ bool path_search_long(struct shootpath_data *spd,int16 m,int16 x0,int16 y0,int16
 	spd->x[0] = x0;
 	spd->y[0] = y0;
 
-	if (map_getcellp(md,x1,y1,cell))
+	if (md->getcellp(md,x1,y1,cell))
 		return false;
 
 	if (dx > abs(dy)) {
@@ -238,7 +236,7 @@ bool path_search_long(struct shootpath_data *spd,int16 m,int16 x0,int16 y0,int16
 
 	while (x0 != x1 || y0 != y1)
 	{
-		if (map_getcellp(md,x0,y0,cell))
+		if (md->getcellp(md,x0,y0,cell))
 			return false;
 		wx += dx;
 		wy += dy;
@@ -290,10 +288,10 @@ bool path_search(struct walkpath_data *wpd,int16 m,int16 x0,int16 y0,int16 x1,in
 	//Do not check starting cell as that would get you stuck.
 	if( x0 < 0 || x0 >= md->xs || y0 < 0 || y0 >= md->ys )
 #else
-	if( x0 < 0 || x0 >= md->xs || y0 < 0 || y0 >= md->ys /*|| map_getcellp(md,x0,y0,cell)*/ )
+	if( x0 < 0 || x0 >= md->xs || y0 < 0 || y0 >= md->ys /*|| md->getcellp(md,x0,y0,cell)*/ )
 #endif
 		return false;
-	if( x1 < 0 || x1 >= md->xs || y1 < 0 || y1 >= md->ys || map_getcellp(md,x1,y1,cell) )
+	if( x1 < 0 || x1 >= md->xs || y1 < 0 || y1 >= md->ys || md->getcellp(md,x1,y1,cell) )
 		return false;
 
 	// calculate (sgn(x1-x0), sgn(y1-y0))
@@ -317,7 +315,7 @@ bool path_search(struct walkpath_data *wpd,int16 m,int16 x0,int16 y0,int16 x1,in
 
 		if( dx == 0 && dy == 0 )
 			break; // success
-		if( map_getcellp(md,x,y,cell) )
+		if( md->getcellp(md,x,y,cell) )
 			break; // obstacle = failure
 	}
 
@@ -365,29 +363,29 @@ bool path_search(struct walkpath_data *wpd,int16 m,int16 x0,int16 y0,int16 x1,in
 		// dc[2] : y--
 		// dc[3] : x++
 
-		if(y < ys && !map_getcellp(md,x  ,y+1,cell)) {
+		if(y < ys && !md->getcellp(md,x  ,y+1,cell)) {
 			f |= 1; dc[0] = (y >= y1 ? 20 : 0);
 			e+=add_path(heap,tp,x  ,y+1,dist,rp,cost+dc[0]); // (x,   y+1)
 		}
-		if(x > 0  && !map_getcellp(md,x-1,y  ,cell)) {
+		if(x > 0  && !md->getcellp(md,x-1,y  ,cell)) {
 			f |= 2; dc[1] = (x <= x1 ? 20 : 0);
 			e+=add_path(heap,tp,x-1,y  ,dist,rp,cost+dc[1]); // (x-1, y  )
 		}
-		if(y > 0  && !map_getcellp(md,x  ,y-1,cell)) {
+		if(y > 0  && !md->getcellp(md,x  ,y-1,cell)) {
 			f |= 4; dc[2] = (y <= y1 ? 20 : 0);
 			e+=add_path(heap,tp,x  ,y-1,dist,rp,cost+dc[2]); // (x  , y-1)
 		}
-		if(x < xs && !map_getcellp(md,x+1,y  ,cell)) {
+		if(x < xs && !md->getcellp(md,x+1,y  ,cell)) {
 			f |= 8; dc[3] = (x >= x1 ? 20 : 0);
 			e+=add_path(heap,tp,x+1,y  ,dist,rp,cost+dc[3]); // (x+1, y  )
 		}
-		if( (f & (2+1)) == (2+1) && !map_getcellp(md,x-1,y+1,cell))
+		if( (f & (2+1)) == (2+1) && !md->getcellp(md,x-1,y+1,cell))
 			e+=add_path(heap,tp,x-1,y+1,dist+4,rp,cost+dc[1]+dc[0]-6);		// (x-1, y+1)
-		if( (f & (2+4)) == (2+4) && !map_getcellp(md,x-1,y-1,cell))
+		if( (f & (2+4)) == (2+4) && !md->getcellp(md,x-1,y-1,cell))
 			e+=add_path(heap,tp,x-1,y-1,dist+4,rp,cost+dc[1]+dc[2]-6);		// (x-1, y-1)
-		if( (f & (8+4)) == (8+4) && !map_getcellp(md,x+1,y-1,cell))
+		if( (f & (8+4)) == (8+4) && !md->getcellp(md,x+1,y-1,cell))
 			e+=add_path(heap,tp,x+1,y-1,dist+4,rp,cost+dc[3]+dc[2]-6);		// (x+1, y-1)
-		if( (f & (8+1)) == (8+1) && !map_getcellp(md,x+1,y+1,cell))
+		if( (f & (8+1)) == (8+1) && !md->getcellp(md,x+1,y+1,cell))
 			e+=add_path(heap,tp,x+1,y+1,dist+4,rp,cost+dc[3]+dc[0]-6);		// (x+1, y+1)
 		tp[rp].flag=1;
 		if(e || heap[0]>=MAX_HEAP-5)

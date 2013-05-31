@@ -200,6 +200,8 @@ static struct unit_head_large *unit_head_large_first = NULL;
 static struct block* block_malloc(unsigned short hash);
 static void          block_free(struct block* p);
 static size_t        memmgr_usage_bytes;
+static size_t        memmgr_usage_bytes_t;
+
 
 #define block2unit(p, n) ((struct unit_head*)(&(p)->data[ p->unit_size * (n) ]))
 #define memmgr_assert(v) do { if(!(v)) { ShowError("Memory manager: assertion '" #v "' failed!\n"); } } while(0)
@@ -245,6 +247,7 @@ void* _mmalloc(size_t size, const char *file, int line, const char *func )
 	/* At that time, the distinction by assigning NULL to unit_head.block */
 	if(hash2size(size_hash) > BLOCK_DATA_SIZE - sizeof(struct unit_head)) {
 		struct unit_head_large* p = (struct unit_head_large*)MALLOC(sizeof(struct unit_head_large)+size,file,line,func);
+		memmgr_usage_bytes_t += size+sizeof(struct unit_head_large);
 		if(p != NULL) {
 			p->size            = size;
 			p->unit_head.block = NULL;
@@ -401,6 +404,7 @@ void _mfree(void *ptr, const char *file, int line, const char *func )
 				head_large->next->prev = head_large->prev;
 			}
 			memmgr_usage_bytes -= head_large->size;
+			memmgr_usage_bytes_t -= head_large->size + sizeof(struct unit_head_large);
 #ifdef DEBUG_MEMMGR
 			// set freed memory to 0xfd
 			memset(ptr, 0xfd, head_large->size);
@@ -457,6 +461,7 @@ static struct block* block_malloc(unsigned short hash)
 	} else {
 		/* Newly allocated space for the block */
 		p = (struct block*)MALLOC(sizeof(struct block) * (BLOCK_ALLOC), __FILE__, __LINE__, __func__ );
+		memmgr_usage_bytes_t += sizeof(struct block) * (BLOCK_ALLOC);
 		if(p == NULL) {
 			ShowFatalError("Memory manager::block_alloc failed.\n");
 			exit(EXIT_FAILURE);
@@ -650,6 +655,86 @@ static void memmgr_final (void)
 	}
 #endif /* LOG_MEMMGR */
 }
+/* [Ind/Hercules] */
+void memmgr_report (int extra) {
+	struct block *block = block_first;
+	struct unit_head_large *large = unit_head_large_first;
+	unsigned int count = 0, size = 0;
+	int j;
+	unsigned short msize = 1024;
+	struct {
+		const char *file;
+		unsigned short line;
+		unsigned int size;
+		unsigned int count;
+	} data[100];
+	memset(&data, 0, sizeof(data));
+	
+	if( extra != 0 )
+		msize = extra;
+	
+	while (block) {
+		if (block->unit_used) {
+			int i;
+			for (i = 0; i < block->unit_maxused; i++) {
+				struct unit_head *head = block2unit(block, i);
+				if( head->block != NULL && head->size > msize ) {
+					for( j = 0; j < 100; j++ ) {
+						if( data[j].file == head->file && data[j].line == head->line ) {
+							data[j].size += head->size;
+							data[j].count += 1;
+							break;
+						} else if( data[j].size == 0 ) {
+							data[j].file = head->file;
+							data[j].line = head->line;
+							data[j].size = head->size;
+							data[j].count += 1;
+							break;
+						}
+					}
+					size += (unsigned int)head->size;
+					count++;
+				}
+			}
+		}
+		block = block->block_next;
+	}
+	
+	while(large) {
+		if( large->size > msize ) {
+			for( j = 0; j < 100; j++ ) {
+				if( data[j].file == large->unit_head.file && data[j].line == large->unit_head.line ) {
+					data[j].size += large->size;
+					data[j].count += 1;
+					break;
+				} else if( data[j].size == 0 ) {
+					data[j].file = large->unit_head.file;
+					data[j].line = large->unit_head.line;
+					data[j].size = large->size;
+					data[j].count += 1;
+					break;
+				}
+			}
+			size += (unsigned int)large->size;
+			count++;
+		}
+		large = large->next;
+	}
+	for( j = 0; j < 100; j++ ) {
+		if( data[j].size != 0 ) {
+			ShowMessage("[malloc] : "CL_WHITE"%s"CL_RESET":"CL_WHITE"%d"CL_RESET" %d instances => %.2f MB\n",data[j].file,data[j].line,data[j].count,(double)((data[j].size)/1024)/1024);
+		}
+	}
+	ShowMessage("[malloc] : reporting %u instances | %.2f MB\n",count,(double)((size)/1024)/1024);
+	ShowMessage("[malloc] : internal usage %.2f MB | %.2f MB\n",(double)((memmgr_usage_bytes_t-memmgr_usage_bytes)/1024)/1024,(double)((memmgr_usage_bytes_t)/1024)/1024);
+	
+	if( extra ) {
+		ShowMessage("[malloc] : unit_head_large: %d bytes\n",sizeof(struct unit_head_large));
+		ShowMessage("[malloc] : unit_head: %d bytes\n",sizeof(struct unit_head));
+		ShowMessage("[malloc] : block: %d bytes\n",sizeof(struct block));
+	}
+
+}
 
 static void memmgr_init (void)
 {
@@ -677,8 +762,7 @@ void malloc_memory_check(void)
 
 /// Returns true if a pointer is valid.
 /// The check is best-effort, false positives are possible.
-bool malloc_verify_ptr(void* ptr)
-{
+bool malloc_verify_ptr(void* ptr) {
 #ifdef USE_MEMMGR
 	return memmgr_verify(ptr) && MEMORY_VERIFY(ptr);
 #else
@@ -687,8 +771,7 @@ bool malloc_verify_ptr(void* ptr)
 }
 
 
-size_t malloc_usage (void)
-{
+size_t malloc_usage (void) {
 #ifdef USE_MEMMGR
 	return memmgr_usage ();
 #else
@@ -696,16 +779,16 @@ size_t malloc_usage (void)
 #endif
 }
 
-void malloc_final (void)
-{
+void malloc_final (void) {
 #ifdef USE_MEMMGR
 	memmgr_final ();
 #endif
 	MEMORY_CHECK();
 }
 
-void malloc_init (void)
-{
+void malloc_init (void) {
+	memmgr_usage_bytes_t = 0;
+	memmgr_usage_bytes = 0;
 #if defined(DMALLOC) && defined(CYGWIN)
 	// http://dmalloc.com/docs/latest/online/dmalloc_19.html
 	dmalloc_debug_setup(getenv("DMALLOC_OPTIONS"));
@@ -720,8 +803,7 @@ void malloc_init (void)
 #endif
 }
 
-void malloc_defaults()
-{
+void malloc_defaults(void) {
 	malloclib = &malloclib_s;
 	malloclib->init = malloc_init;
 	malloclib->final = malloc_final;

@@ -4,6 +4,8 @@
 #ifndef _SCRIPT_H_
 #define _SCRIPT_H_
 
+#include "map.h" //EVENT_NAME_LENGTH
+
 #define NUM_WHISPER_VAR 10
 
 struct map_session_data;
@@ -110,6 +112,30 @@ struct script_stack {
 	struct DBMap* var_function;// scope variables
 };
 
+enum hQueueOpt {
+	HQO_NONE,
+	HQO_onLogOut,
+	HQO_OnDeath,
+	HQO_OnMapChange,
+	HQO_MAX,
+};
+
+/* [Ind/Hercules] */
+struct hQueue {
+	int id;
+	int *item;
+	int items;
+	/* events */
+	char onLogOut[EVENT_NAME_LENGTH];
+	char onDeath[EVENT_NAME_LENGTH];
+	char onMapChange[EVENT_NAME_LENGTH];
+};
+
+struct hQueueIterator {
+	int *item;
+	int items;
+	int pos;
+};
 
 //
 // Script state
@@ -129,6 +155,7 @@ struct script_state {
 	int instance_id;
 	//For backing up purposes
 	struct script_state *bk_st;
+	unsigned char hIterator;
 	int bk_npcid;
 	unsigned freeloop : 1;// used by buildin_freeloop
 	unsigned op2ref : 1;// used by op_2
@@ -291,8 +318,14 @@ struct script_function {
 	char *name;
 	char *arg;
 };
+
 /* script.c interface (incomplete) */
 struct script_interface {
+	/* */
+	struct hQueue *hq;
+	struct hQueueIterator *hqi;
+	int hqs, hqis;
+	int hqe[HQO_MAX];
 	/*  */
 	char **buildin;
 	unsigned int buildin_count;
@@ -304,6 +337,11 @@ struct script_interface {
 	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st));
 	int (*conv_num) (struct script_state *st,struct script_data *data);
 	const char* (*conv_str) (struct script_state *st,struct script_data *data);
+	/* */
+	struct hQueue *(*queue) (int idx);
+	bool (*queue_add) (int idx, int var);
+	bool (*queue_del) (int idx);
+	bool (*queue_remove) (int idx, int var);
 } script_s;
 
 struct script_interface *script;
