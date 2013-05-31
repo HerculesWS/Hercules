@@ -15,7 +15,7 @@
 //============================================================ 
 
 prt_in,234,133,4	script	Nami	66,{
-	if ((Class == Job_Novice) && (JobLevel > 3 || BaseLevel > 11) && (skill_nov < 3)) {
+	if ((Class == Job_Novice || Class == Job_Baby) && (JobLevel > 3 || BaseLevel > 11) && (skill_nov < 3)) {
 		mes "[Nami]";
 		mes "Hello!";
 		mes "I want to be a nurse so bad!";
@@ -189,7 +189,7 @@ prt_in,234,133,4	script	Nami	66,{
 }
 
 prt_in,73,87,4	script	Chivalry Member	65,{
-	if ((Class == Job_Novice) && (JobLevel > 6) && ((skill_nov >= 3) && (skill_nov <= 5))) {
+	if ((Class == Job_Novice || Class == Job_Baby) && (JobLevel > 6) && ((skill_nov >= 3) && (skill_nov <= 5))) {
 		mes "[Bulma]";
 		mes "Yeah. . . I look great. . .";
 		mes "I am a knight in the knight's";
