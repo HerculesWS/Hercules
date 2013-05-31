@@ -287,7 +287,7 @@ void core_defaults(void) {
 	malloc_defaults();
 #ifndef MINICORE
 	sql_defaults();
-	iTimer->defaults();
+	timer_defaults();
 	db_defaults();
 #endif
 }
