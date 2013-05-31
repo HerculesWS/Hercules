@@ -553,6 +553,7 @@ struct clif_interface {
 	void (*scriptinputstr) (struct map_session_data *sd, int npcid);
 	void (*cutin) (struct map_session_data* sd, const char* image, int type);
 	void (*sendfakenpc) (struct map_session_data *sd, int npcid);
+	void (*scriptclear) (struct map_session_data *sd, int npcid);
 	/* client-user-interface-related */
 	void (*viewpoint) (struct map_session_data *sd, int npc_id, int type, int x, int y, int id, int color);
 	int (*damage) (struct block_list* src, struct block_list* dst, unsigned int tick, int sdelay, int ddelay, int damage, int div, int type, int damage2);

@@ -72,6 +72,7 @@ enum packet_headers {
 #else
 	authokType = 0x2eb,
 #endif
+	script_clearType = 0x8d6,
 #if PACKETVER < 4
 	unit_walkingType = 0x7b,
 #elif PACKETVER < 7
@@ -452,6 +453,12 @@ struct packet_bgqueue_battlebegins {
 	char bg_name[NAME_LENGTH];
 	char game_name[NAME_LENGTH];
 } __attribute__((packed));
+
+struct packet_script_clear {
+	short PacketType;
+	unsigned int NpcID;
+} __attribute__((packed));
+
 
 #pragma pack(pop)
 

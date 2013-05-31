@@ -17079,6 +17079,15 @@ void clif_bgqueue_battlebegins(struct map_session_data *sd, unsigned char arena_
 	clif->send(&p,sizeof(p), &sd->bl, target);
 }
 
+void clif_scriptclear(struct map_session_data *sd, int npcid) {
+	struct packet_script_clear p;
+	
+	p.PacketType = script_clearType;
+	p.NpcID = npcid;
+	
+	clif->send(&p,sizeof(p), &sd->bl, SELF);
+}
+
 /*==========================================
  * Main client packet processing function
  *------------------------------------------*/
@@ -17410,6 +17419,7 @@ void clif_defaults(void) {
 	clif->scriptinputstr = clif_scriptinputstr;
 	clif->cutin = clif_cutin;
 	clif->sendfakenpc = clif_sendfakenpc;
+	clif->scriptclear = clif_scriptclear;
 	/* client-user-interface-related */
 	clif->viewpoint = clif_viewpoint;
 	clif->damage = clif_damage;

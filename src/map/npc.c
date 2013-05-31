@@ -270,11 +270,12 @@ int npc_rr_secure_timeout_timer(int tid, unsigned int tick, int id, intptr_t dat
 			sd->st->state = END;
 		sd->state.menu_or_input = 0;
 		sd->npc_menu = 0;
-
+		clif->scriptmes(sd, sd->npc_id, " ");
 		/**
 		 * This guy's been idle for longer than allowed, close him.
 		 **/
 		clif->scriptclose(sd,sd->npc_id);
+		clif->scriptclear(sd,sd->npc_id);
 		sd->npc_idle_timer = INVALID_TIMER;
 	} else //Create a new instance of ourselves to continue
 		sd->npc_idle_timer = add_timer(gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc_rr_secure_timeout_timer,sd->bl.id,0);
@@ -289,8 +290,7 @@ int npc_event_dequeue(struct map_session_data* sd)
 {
 	nullpo_ret(sd);
 
-	if(sd->npc_id)
-	{	//Current script is aborted.
+	if(sd->npc_id) { //Current script is aborted.
 		if(sd->state.using_fake_npc){
 			clif->clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
 			sd->state.using_fake_npc = 0;
