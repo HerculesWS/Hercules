@@ -1628,8 +1628,7 @@ void clif_move(struct unit_data *ud)
 	WBUFPOS2(buf,6,bl->x,bl->y,ud->to_x,ud->to_y,8,8);
 	WBUFL(buf,12)=gettick();
 	clif->send(buf, packet_len(0x86), bl, AREA_WOS);
-	if (disguised(bl))
-	{
+	if (disguised(bl)) {
 		WBUFL(buf,2)=-bl->id;
 		clif->send(buf, packet_len(0x86), bl, SELF);
 	}
@@ -9884,6 +9883,8 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 			pc_disguise(sd,sd->status.class_);
 			if( pc_isdead(sd) )
 				clif_clearunit_single(-sd->bl.id, CLR_DEAD, sd->fd);
+			if( unit_is_walking(&sd->bl) )
+				clif->move(&sd->ud);
 		} else if ( sd->disguise == sd->status.class_ && sd->fontcolor_tid != INVALID_TIMER ) {
 			const struct TimerData *timer;
 			if( (timer = get_timer(sd->fontcolor_tid)) ) {
