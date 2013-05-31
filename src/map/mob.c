@@ -160,8 +160,6 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 	map_addnpc(nd->bl.m, nd);
 	map_addblock(&nd->bl);
 	status_set_viewdata(&nd->bl, nd->class_);
-    status_change_init(&nd->bl);
-    unit_dataset(&nd->bl);
     clif->spawn(&nd->bl);
 
 }
