@@ -2584,7 +2584,7 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 					continue;
 				
 				for(k = 0; k < map[sd->bl.m].zone->disabled_items_count; k++) {
-					if( map[sd->bl.m].zone->disabled_items[k] == sd->inventory_data[index]->nameid ) {
+					if( map[sd->bl.m].zone->disabled_items[k] == data->nameid ) {
 						break;
 					}
 				}
