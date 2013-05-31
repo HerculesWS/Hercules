@@ -1021,6 +1021,8 @@ From here on, we will have the commands sorted as follow:
 8.- Quest Log commands.
 9.- Battleground commands.
 10.- Mercenary commands.
+11.- Queue commands.
+
 
 =====================
 |1.- Basic commands.|
