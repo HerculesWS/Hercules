@@ -7292,7 +7292,7 @@ BUILDIN(successrefitem)
 		clif->additem(sd,i,1,0);
 		pc_equipitem(sd,i,ep);
 		clif->misceffect(&sd->bl,3);
-		if(sd->status.inventory[i].refine == MAX_REFINE &&
+		if(sd->status.inventory[i].refine == 10 &&
 		   sd->status.inventory[i].card[0] == CARD0_FORGE &&
 		   sd->status.char_id == (int)MakeDWord(sd->status.inventory[i].card[2],sd->status.inventory[i].card[3])
 		   ){ // Fame point system [DracoRPG]
@@ -9801,6 +9801,31 @@ BUILDIN(homunculus_shuffle) {
 	if(homun_alive(sd->hd))
 		homun->shuffle(sd->hd);
 	
+	return true;
+}
+
+/*==========================================
+ * Check for homunculus state.
+ * Return: -1 = No homunculus
+ *          0 = Homunculus is active
+ *          1 = Homunculus is vaporized (rest)
+ *          2 = Homunculus is in morph state
+ *------------------------------------------*/
+BUILDIN(checkhomcall)
+{
+	TBL_PC *sd = script_rid2sd(st);
+	TBL_HOM *hd;
+
+	if( sd == NULL )
+		return false;
+
+	hd = sd->hd;
+
+	if( !hd )
+		script_pushint(st, -1);
+	else
+		script_pushint(st, hd->homunculus.vaporize);
+
 	return true;
 }
 
@@ -17710,6 +17735,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(homunculus_evolution,"homevolution",""),	//[orn]
 		BUILDIN_DEF2(homunculus_mutate,"hommutate","?"),
 		BUILDIN_DEF2(homunculus_shuffle,"homshuffle",""),	//[Zephyrus]
+		BUILDIN_DEF(checkhomcall,""),
 		BUILDIN_DEF(eaclass,"?"),	//[Skotlex]
 		BUILDIN_DEF(roclass,"i?"),	//[Skotlex]
 		BUILDIN_DEF(checkvending,"?"),
