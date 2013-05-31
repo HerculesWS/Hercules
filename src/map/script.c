@@ -3464,8 +3464,10 @@ void run_script_main(struct script_state *st)
 	script_attach_state(st);
 
 	nd = map_id2nd(st->oid);
-	if( nd )
+	if( nd && nd->bl.m >= 0 )
 		st->instance_id = map[nd->bl.m].instance_id;
+	else
+		st->instance_id = -1;
 
 	if(st->state == RERUNLINE) {
 		run_func(st);
