@@ -15569,7 +15569,7 @@ void clif_font(struct map_session_data *sd)
  * Instancing Window
  *------------------------------------------*/
 int clif_instance(int instance_id, int type, int flag) {
-	struct map_session_data *sd;
+	struct map_session_data *sd = NULL;
 	unsigned char buf[255];
 	enum send_target target = PARTY;
 	

@@ -491,7 +491,7 @@ void instance_check_idle(int instance_id) {
  *--------------------------------------*/
 void instance_set_timeout(int instance_id, unsigned int progress_timeout, unsigned int idle_timeout)
 {
-	unsigned int now = time(0);
+	unsigned int now = (unsigned int)time(0);
 
 	if( !instance->valid(instance_id) )
 		return;

@@ -598,7 +598,7 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 	if ( !(sd->class_&JOBL_2) ) /* TODO: maybe make this a per-arena setting, so users may make custom arenas like baby-only,whatever. */
 		return BGQA_FAIL_CLASS_INVALID;
 	
-	tsec = time(NULL);
+	tsec = (unsigned int)time(NULL);
 	
 	if ( ( tick = pc_readglobalreg(sd, bg->gdelay_var) ) && tsec < tick ) {
 		char response[100];
