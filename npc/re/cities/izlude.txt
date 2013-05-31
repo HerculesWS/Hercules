@@ -26,7 +26,7 @@ izlude,58,156,2	duplicate(Cebalis_izlude)	Cebalis#izlude	98
 izlude,165,156,2	duplicate(Soldier_izlude)	Soldier#izlude	105
 izlude,158,130,3	duplicate(bdt)	Bullet Dealer Tony#iz	86
 izlude,155,132,3	duplicate(mdk)	Magazine Dealer Kenny	83
-izlude,198,213,4	duplicate(Captain_Carew)	Captain Carew#izlude	873
+//izlude,198,213,4	duplicate(Captain_Carew)	Captain Carew#izlude	873
 izlude_in,57,92,3	duplicate(Dorian)	Dorian#izlude	878	
 izlude,147,131,6	script	Blacksmith#izlude	726,{
 	end;
