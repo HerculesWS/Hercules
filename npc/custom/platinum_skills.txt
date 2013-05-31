@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Platinum Skills
 //===== By: ==================================================
 //= Keichii, DarkChild
 //===== Current Version: =====================================
 //= 2.8
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= Single NPC that assigns quests skills for all classes
 //===== Additional Comments: =================================

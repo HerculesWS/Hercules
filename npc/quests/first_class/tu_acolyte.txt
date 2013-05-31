@@ -1,13 +1,13 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Acolyte Class Tutorial and Job Specific Quest
 //===== By: ================================================== 
 //= Fix up by Jukka
 //===== Current Version: ===================================== 
 //= 1.6a
 //===== Compatible With: ===================================== 
-//= rAthena SVN (Testet in Trunk 88xx)
+//= Hercules
 //===== Description: ========================================= 
-//=
+//= Tutorial for Acolyte Class
 //===== Additional Comments: ================================= 
 //= 1.0 Fully working
 //= 1.1 optimized [Lupus]

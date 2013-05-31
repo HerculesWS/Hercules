@@ -1,15 +1,15 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Cooking Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Reddozen; L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.8a
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Compatible With: =====================================
+//= Hercules
+//===== Description: =========================================
 //= [Aegis Conversion]
 //= Official Cooking Quest (10.3)
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.1 Fixed wrong item ID, added missing ";, optimized [Lupus]
 //= 1.1a minor bugfix, thx 2 Irmin [Lupus]
 //= 1.2 Fixed exploit, some typos [Lupus]
@@ -27,7 +27,7 @@
 //= 1.7 Replaced effect numerics with constants. [L0ne_W0lf]
 //= 1.8 Renamed the variable cooking to cooking_q [ultramage]
 //= 1.8a Minor cleaning. [Euphy]
-//============================================================ 
+//============================================================
 
 prt_castle,43,30,3	script	Charles Orleans#cook	878,{
 	set .@now_weight,MaxWeight-Weight;

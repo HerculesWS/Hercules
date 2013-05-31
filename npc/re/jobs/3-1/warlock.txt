@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Warlock Job Quest
 //===== By: ================================================== 
 //= Muad_Dib, Gepard & L0ne_W0lf
 //===== Current Version: ===================================== 
 //= 1.3a
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Job change Quest from Wizard / High Wizard -> Warlock.

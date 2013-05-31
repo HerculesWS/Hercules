@@ -3,15 +3,16 @@
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
-//= 1.0
+//= 1.1
 //===== Description: =========================================
 //= One-click automatic mount rentals.
+//= Replaced 'close' with 'end' [Streusel]
 //============================================================
 
 prontera,124,201,1	script	Universal Rental NPC	726,{
 	if (ismounting()) {
 		message strcharinfo(0),"You must first remove your mount.";
-		close; }
+		end; }
 	else if ((eaclass()&EAJ_THIRDMASK==EAJ_RANGER) && !countitem(6124)) {
 		if (!checkfalcon() && getskilllv("HT_FALCON") && !checkoption(Option_Wug) && !checkoption(Option_Wugrider)) {
 			if(select(" ~ Falcon: ~ Warg")==1) setfalcon;
@@ -30,7 +31,7 @@ prontera,124,201,1	script	Universal Rental NPC	726,{
 	else if (!checkmadogear() && getskilllv("NC_MADOLICENCE")) setmadogear;
 	else {
 		message strcharinfo(0),"You do not meet requirements to rent.";
-		close; }
+		end; }
 	specialeffect2 EF_TEIHIT3;
 	end;
 }

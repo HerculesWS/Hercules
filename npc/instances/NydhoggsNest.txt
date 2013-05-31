@@ -2134,6 +2134,7 @@ OnTimer180000:
 	switch(select("Please let me out.:I want to look around for a while.")) {
 	case 1:
 		set 'ins_nyd2,0;
+		set ins_nyd,203;
 		//setquest 3135;
 		warp "nyd_dun02",98,196;
 		end;

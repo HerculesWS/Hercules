@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Prontera Field Warp Script
 //===== By: ==================================================
 //= Nana (1.0)
 //===== Current Version: =====================================
 //= 1.3
 //===== Compatible With: =====================================
-//= Any Athena Version
+//= Hercules
 //===== Description: =========================================
 //= Warp Points for Prontera Field
 //===== Additional Comments: =================================

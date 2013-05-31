@@ -1,9 +1,9 @@
-//===== Hercules Documentation ================================
+//===== Hercules Documentation ===============================
 //= Permission List
 //===== By: ==================================================
 //= Hercules Dev Team
 //===== Current Version: =====================================
-//= 20130330
+//= 20130528
 //===== Description: =========================================
 //= Player group permissions, configured in /conf/groups.conf.
 //============================================================
@@ -31,4 +31,4 @@ show_bossmobs : Ability to see boss mobs with @showmobs.
 disable_pvm : Ability to disable Player vs. Monster.
 disable_pvp : Ability to disable Player vs. Player.
 disable_commands_when_dead : Ability to disable @command usage when dead.
-hchsys_admin : Hercules Chat System Admin (can modify channels settings regardless of ownership and join password-protected channels without password)
+hchsys_admin : Hercules Chat System Admin (Ability to modify channel settings regardless of ownership and join password-protected channels without requiring a password.)
