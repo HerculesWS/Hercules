@@ -150,7 +150,7 @@ struct map_cache_map_info {
 	int32 len;
 };
 
-uint16 index2mapid[MAX_MAPINDEX];
+int16 index2mapid[MAX_MAPINDEX];
 
 char db_path[256] = "db";
 char help_txt[256] = "conf/help.txt";
@@ -2351,7 +2351,7 @@ int16 map_mapindex2mapid(unsigned short mapindex) {
 	if (!mapindex || mapindex > MAX_MAPINDEX)
 		return -1;
 
-	return index2mapid[mapindex] == 0 ? -1 : index2mapid[mapindex];
+	return index2mapid[mapindex];
 }
 
 /*==========================================
@@ -3275,7 +3275,7 @@ void map_addmap2db(struct map_data *m) {
 }
 
 void map_removemapdb(struct map_data *m) {
-	index2mapid[m->index] = 0;
+	index2mapid[m->index] = -1;
 }
 
 /*======================================
@@ -3326,7 +3326,7 @@ int map_readallmaps (void) {
 
 		map[i].index = mapindex_name2id(map[i].name);
 
-		if ( index2mapid[map[i].index] != 0 ) {
+		if ( index2mapid[map[i].index] != -1 ) {
 			ShowWarning("Map %s already loaded!"CL_CLL"\n", map[i].name);
 			if (map[i].cell && map[i].cell != (struct mapcell *)0xdeadbeaf) {
 				aFree(map[i].cell);
@@ -5435,7 +5435,7 @@ int do_init(int argc, char *argv[])
 				exit(EXIT_FAILURE);
 		}
 	}
-	memset(&index2mapid, 0, sizeof(index2mapid));
+	memset(&index2mapid, -1, sizeof(index2mapid));
 
 	load_defaults();
 	map_config_read(MAP_CONF_NAME);
