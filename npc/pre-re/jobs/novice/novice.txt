@@ -5,7 +5,7 @@
 //===== Current Version: ===================================== 
 //= 2.4
 //===== Compatible With: ===================================== 
-//= Hercules 3422+(Requires jA Script System)
+//= Hercules
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Novice Training Grounds
