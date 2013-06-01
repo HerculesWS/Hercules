@@ -11191,7 +11191,7 @@ BUILDIN(mobcount)	// Added by RoVeRT
 		event = NULL;
 	else
 		check_event(st, event);
-	
+
 	if( strcmp(mapname, "this") == 0 ) {
 		struct map_session_data *sd = script_rid2sd(st);
 		if( sd )
@@ -11200,17 +11200,16 @@ BUILDIN(mobcount)	// Added by RoVeRT
 			script_pushint(st,-1);
 			return true;
 		}
-	}
-	else if( (m = map_mapname2mapid(mapname)) < 0 ) {
+	} else if( (m = map_mapname2mapid(mapname)) < 0 ) {
 		script_pushint(st,-1);
 		return true;
 	}
-	
-	if( map[m].flag.src4instance && map[m].instance_id >= 0 && st->instance_id >= 0 && (m = instance->mapid2imapid(m, st->instance_id)) < 0 ) {
+
+	if( map[m].flag.src4instance && map[m].instance_id == -1 && st->instance_id >= 0 && (m = instance->mapid2imapid(m, st->instance_id)) < 0 ) {
 		script_pushint(st,-1);
 		return true;
 	}
-	
+
 	script_pushint(st,map_foreachinmap(buildin_mobcount_sub, m, BL_MOB, event));
 	
 	return true;
