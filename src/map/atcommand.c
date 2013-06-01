@@ -9672,6 +9672,7 @@ void atcommand_basecommands(void) {
 		safestrncpy(cmd->command, atcommand_base[i].command, sizeof(cmd->command));
 		cmd->func = atcommand_base[i].func;
 		cmd->help = NULL;/* start as null dear */
+		cmd->log = true;
 		strdb_put(atcommand->db, cmd->command, cmd);
 	}
 	return;
@@ -10150,6 +10151,7 @@ bool atcommand_hp_add(char *name, AtCommandFunc func) {
 	safestrncpy(cmd->command, name, sizeof(cmd->command));
 	cmd->func = func;
 	cmd->help = NULL;/* start as null dear */
+	cmd->log = true;
 
 	strdb_put(atcommand->db, cmd->command, cmd);
 	return true;
