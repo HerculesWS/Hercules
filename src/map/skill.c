@@ -2570,7 +2570,7 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 			if( sc && sc->data[SC__REPRODUCE] && (lv = sc->data[SC__REPRODUCE]->val1) ) {
 				//Level dependent and limitation.
 				lv = min(lv,skill->get_max(copy_skill));
-				idx = skill->get_index(tsd->reproduceskill_id);
+
 				if( tsd->reproduceskill_id ) {
 					idx = skill->get_index(tsd->reproduceskill_id);
 					if(tsd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED ) {
@@ -2608,9 +2608,9 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 				pc_setglobalreg(tsd, "CLONE_SKILL", copy_skill);
 				pc_setglobalreg(tsd, "CLONE_SKILL_LV", lv);
 
-				tsd->status.skill[idx].id = copy_skill;
-				tsd->status.skill[idx].lv = lv;
-				tsd->status.skill[idx].flag = SKILL_FLAG_PLAGIARIZED;
+				tsd->status.skill[cidx].id = copy_skill;
+				tsd->status.skill[cidx].lv = lv;
+				tsd->status.skill[cidx].flag = SKILL_FLAG_PLAGIARIZED;
 				clif->addskill(tsd,copy_skill);
 			}
 		}
