@@ -1021,6 +1021,8 @@ From here on, we will have the commands sorted as follow:
 8.- Quest Log commands.
 9.- Battleground commands.
 10.- Mercenary commands.
+11.- Queue commands.
+
 
 =====================
 |1.- Basic commands.|
@@ -7625,9 +7627,10 @@ This will open a book item at the specified page.
 
 *instance_create("<instance name>",<owner id>{,<optional owner_type>});
 
-Create an instance using the name "<instance name>" for the <owner_id> of owner_type (when not provided, defaults to IOT_PARTY)
-Most instance_* commands are used in conjunction with this command and 
-depend on the ID this command returns.
+Create an instance using the name "<instance name>" for the <owner_id> of
+owner_type (when not provided, defaults to IOT_PARTY). Most instance_*
+commands are used in conjunction with this command and depend on the
+ID this command returns.
 
 Example:
 	// Store the Party ID of the invoking character.
@@ -8084,50 +8087,79 @@ for name and 0 for all other types.
 
 ----------------------------------------
 
-==========================
-|11.- Queue Commands    .|
-==========================
+======================
+|11.- Queue Commands.|
+======================
 ---------------------------------------
-Queue Author's note: the following sucks, probably breaks formatting, please fix if you're willing to (you may remove this note)
----------------------------------------
-*queue()
-creates a new queue instance, returns created queue id
+
+*queue();
+
+Creates a new queue instance and returns the created queue id.
 
 ---------------------------------------
-*queuesize(<queue_id>)
-returns the amount of entries in queue instance of <queue_id>.
+
+*queuesize(<queue_id>);
+
+Returns the amount of entries in the queue instance of <queue_id>.
 
 ---------------------------------------
-*queueadd(<queue_id>,<var_id>)
-adds <var_id> to queue of <queue_id>, returns 1 if <var_id> is already present in the queue, 0 otherwise.
+
+*queueadd(<queue_id>,<var_id>);
+
+Adds <var_id> to queue of <queue_id>, returning 1 if <var_id> is already
+present in the queue, otherwise returning 0.
 
 ---------------------------------------
-*queueremove(<queue_id>,<var_id>)
-removes <var_id> from queue of <queue_id>, returns 1 if <var_id> is not present in the queue, 0 otherwise.
+
+*queueremove(<queue_id>,<var_id>);
+
+Removes <var_id> from queue of <queue_id>, returning 1 if <var_id> is not
+present in the queue, otherwise returning 0.
 
 ---------------------------------------
-*queueopt(<queue_id>,<optionType>,{Optional <option val>})
-modifies <queue_id>'s <optionType>, when <option val> is not present, <optionType> is removed from <queue_id>, when present it modifies <queue_id>'s <optionType> with the new <option val> value.
-Currently 3 options are available, HQO_OnDeath (0), HQO_OnLogout (1), HQO_OnMapChange (2) (the constant names are not final).
+
+*queueopt(<queue_id>,<optionType>,{Optional <option val>});
+
+Modifies <queue_id>'s <optionType>. When <option val> is not present
+<optionType> is removed from <queue_id>. When present it modifies
+<queue_id>'s <optionType> with the new <option val> value.
+
+Currently 3 options are available:
+HQO_OnDeath (0), HQO_OnLogout (1), HQO_OnMapChange (2)
+
+Note: The constant names are not final.
 
 Example:
 	queueopt(.@queue_id,0,"MyNPC::MyOnQueueMemberDeathEventName");
 	
 ---------------------------------------
-*queuedel(<queue_id>)
-deletes <queue_id> returns 1 when <queue_id> is not found, 0 otherwise.
+
+*queuedel(<queue_id>);
+
+Deletes <queue_id> and returns 1 when <queue_id> is not found, otherwise
+0 is returned.
 
 ---------------------------------------
-*queueiterator(<queue_id>)
-creates a new queue iterator instance, a queue iterator is not a reference to a queue's actual members, it copies the queues members when initialized, this way you can loop through them even if you remove them from the queue
+
+*queueiterator(<queue_id>);
+
+Creates a new queue iterator instance.
+A queue iterator is not a reference to a queue's actual members, it copies
+the queues members when initialized, this way you can loop through them
+even if you remove them from the queue.
 
 ---------------------------------------
-*qicheck(<queue_iterator_id>)
-checks whether there is a next member in the iterator's queue, 1 when it does, 0 otherwise.
+
+*qicheck(<queue_iterator_id>);
+checks whether there is a next member in the iterator's queue, 1 when
+it does, 0 otherwise.
 
 ---------------------------------------
-*qiget(<queue_iterator_id>)
-obtains the next member in the iterator's queue, returns the next member's id or 0 when it doesnt exist.
+
+*qiget(<queue_iterator_id>);
+
+obtains the next member in the iterator's queue, returns the next member's
+id or 0 when it doesnt exist.
 
 Example:
 	for( set .@elem,qiget(.@queue_iterator_id); qicheck(.@queue_iterator_id); set .@elem,qiget(.@queue_iterator_id) ) {
@@ -8135,7 +8167,10 @@ Example:
 	}
 
 ---------------------------------------
-*qiclear(<queue_iterator_id>)
-deletes a queue iterator from memory, returns 1 when it fails, 0 otherwise.
+
+*qiclear(<queue_iterator_id>);
+
+Deletes a queue iterator from memory and returns 1 when it fails,
+otherwise 0 is returned.
 
 ---------------------------------------
