@@ -214,6 +214,8 @@ int script_reload(void);
 // @commands (script based)
 void setd_sub(struct script_state *st, struct map_session_data *sd, const char *varname, int elem, void *value, struct DBMap **ref);
 
+TBL_PC *script_rid2sd(struct script_state *st);
+
 ///////////////////////////////////////////////////////////////////////////////
 //## TODO possible enhancements: [FlavioJS]
 // - 'callfunc' supporting labels in the current npc "::LabelName"
