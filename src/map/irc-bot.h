@@ -6,6 +6,9 @@
 #ifndef _IRC_BOT_H_
 #define _IRC_BOT_H_
 
+#define IRC_NICK_LENGTH 40
+#define IRC_IDENT_LENGTH 40
+#define IRC_HOST_LENGTH 63
 #define IRC_FUNC_LENGTH 30
 
 struct hChSysCh;

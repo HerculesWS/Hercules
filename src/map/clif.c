@@ -2762,7 +2762,7 @@ void read_channels_config(void) {
 				ShowWarning("channels.conf : irc channel enabled but irc_channel_network wasn't found, disabling irc channel...\n");
 			}
 			if( config_setting_lookup_string(settings, "irc_channel_channel", &irc_channel) )
-				safestrncpy(hChSys.irc_channel, irc_channel, 20);
+				safestrncpy(hChSys.irc_channel, irc_channel, 50);
 			else {
 				hChSys.irc = false;
 				ShowWarning("channels.conf : irc channel enabled but irc_channel_channel wasn't found, disabling irc channel...\n");
@@ -2771,7 +2771,7 @@ void read_channels_config(void) {
 				if( strcmpi(irc_nick,"Hercules_chSysBot") == 0 ) {
 					sprintf(hChSys.irc_nick, "Hercules_chSysBot%d",rand()%777);
 				} else
-					safestrncpy(hChSys.irc_nick, irc_nick, 30);
+					safestrncpy(hChSys.irc_nick, irc_nick, 40);
 			} else {
 				hChSys.irc = false;
 				ShowWarning("channels.conf : irc channel enabled but irc_channel_nick wasn't found, disabling irc channel...\n");
