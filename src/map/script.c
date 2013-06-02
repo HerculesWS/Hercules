@@ -17912,6 +17912,7 @@ void script_defaults(void) {
 	script->addScript = script_hp_add;
 	script->conv_num = conv_num;
 	script->conv_str = conv_str;
+	script->rid2sd = script_rid2sd;
 	
 	script->queue = script_hqueue_get;
 	script->queue_add = script_hqueue_add;
