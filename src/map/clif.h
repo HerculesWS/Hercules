@@ -412,7 +412,7 @@ struct {
 	unsigned char local_color, ally_color, irc_color;
 	bool closing;
 	bool allow_user_channel_creation;
-	char irc_server[40], irc_channel[20], irc_nick[30], irc_nick_pw[30];
+	char irc_server[40], irc_channel[50], irc_nick[40], irc_nick_pw[30];
 	unsigned short irc_server_port;
 } hChSys;
 

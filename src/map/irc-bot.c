@@ -118,14 +118,14 @@ void irc_parse_source(char *source, char *nick, char *ident, char *host) {
 	
 	for(i = 0; i < len; i++) {
 		if( stage == 0 && source[i] == '!' ) {
-			memcpy(nick, &source[0], len - i);
+			memcpy(nick, &source[0], min(i,IRC_NICK_LENGTH));
 			nick[i] = '\0';
 			pos = i+1;
 			stage = 1;
 		} else if( stage == 1 && source[i] == '@' ) {
-			memcpy(ident, &source[pos], i - pos);
+			memcpy(ident, &source[pos], min(i - pos,IRC_IDENT_LENGTH));
 			ident[i-pos] = '\0';
-			memcpy(host, &source[i+1], len);
+			memcpy(host, &source[i+1], min(len - i,IRC_HOST_LENGTH));
 			host[len] = '\0';
 			break;
 		}
@@ -177,7 +177,7 @@ void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 	if( strcmpi(target,hChSys.irc_nick) == 0 ) {
 		if( msg[0] == ':' ) msg++;
 		if( strcmpi(msg,"VERSION") == 0 ) {
-			char source_nick[40], source_ident[40], source_host[100];
+			char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
 			
 			source_nick[0] = source_ident[0] = source_host[0] = '\0';
 			
@@ -189,13 +189,13 @@ void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 			return;
 		}
 	} else if( strcmpi(target,hChSys.irc_channel) == 0 ) {
-		char source_nick[40], source_ident[40], source_host[100];
+		char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
 
 		source_nick[0] = source_ident[0] = source_host[0] = '\0';
 
 		if( source[0] != '\0' )
 			ircbot->parse_source(source,source_nick,source_ident,source_host);
-
+				
 		if( ircbot->channel ) {
 			snprintf(send_string, 150, "[ #%s ] IRC.%s : %s",ircbot->channel->name,source_nick,msg);
 			clif->chsys_msg2(ircbot->channel,send_string);
