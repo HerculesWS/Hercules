@@ -3647,8 +3647,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 			flag.infdef = 1;
 	}
 
-	switch(skill_id)
-	{
+	switch(skill_id) {
 		case MG_FIREWALL:
 		case NJ_KAENSIN:
 			ad.dmotion = 0; //No flinch animation.
