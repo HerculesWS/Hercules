@@ -6164,7 +6164,8 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 		case AM_BERSERKPITCHER:
 		case AM_POTIONPITCHER: {
-				int i,hp = 0,sp = 0;
+				int i,sp = 0;
+				int64 hp = 0;
 				if( dstmd && dstmd->class_ == MOBID_EMPERIUM ) {
 					map_freeblock_unlock();
 					return 1;
@@ -6254,14 +6255,14 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				}
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 				if( hp > 0 || (skill_id == AM_POTIONPITCHER && sp <= 0) )
-					clif->skill_nodamage(NULL,bl,AL_HEAL,hp,1);
+					clif->skill_nodamage(NULL,bl,AL_HEAL,(int)hp,1);
 				if( sp > 0 )
 					clif->skill_nodamage(NULL,bl,MG_SRECOVERY,sp,1);
 		#ifdef RENEWAL
 				if( tsc && tsc->data[SC_EXTREMITYFIST2] )
 					sp = 0;
 		#endif
-				status_heal(bl,hp,sp,0);
+				status_heal(bl,(int)hp,sp,0);
 			}
 			break;
 		case AM_CP_WEAPON:
