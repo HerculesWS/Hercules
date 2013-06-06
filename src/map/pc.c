@@ -6594,8 +6594,7 @@ void pc_damage(struct map_session_data *sd,struct block_list *src,unsigned int h
 /*==========================================
  * Invoked when a player has negative current hp
  *------------------------------------------*/
-int pc_dead(struct map_session_data *sd,struct block_list *src)
-{
+int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	int i=0,j=0,k=0;
 	unsigned int tick = gettick();
 
@@ -6638,6 +6637,9 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 			duel_reject(sd->duel_invite, sd);
 	}
 
+	if (sd->npc_id)
+		npc_event_dequeue(sd);
+	
 	pc_setglobalreg(sd,"PC_DIE_COUNTER",sd->die_counter+1);
 	pc_setparam(sd, SP_KILLERRID, src?src->id:0);
 
@@ -6691,43 +6693,43 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 	for(i = 1; i < 5; i++)
 		pc_del_talisman(sd, sd->talisman[i], i);
 
-	if (src)
-	switch (src->type) {
-	case BL_MOB:
-	{
-		struct mob_data *md=(struct mob_data *)src;
-		if(md->target_id==sd->bl.id)
-			mob_unlocktarget(md,tick);
-		if(battle_config.mobs_level_up && md->status.hp &&
-			(unsigned int)md->level < pc_maxbaselv(sd) &&
-			!md->guardian_data && !md->special_state.ai// Guardians/summons should not level. [Skotlex]
-		) { 	// monster level up [Valaris]
-			clif->misceffect(&md->bl,0);
-			md->level++;
-			status_calc_mob(md, 0);
-			status_percent_heal(src,10,0);
+	if (src) {
+		switch (src->type) {
+			case BL_MOB:
+			{
+				struct mob_data *md=(struct mob_data *)src;
+				if(md->target_id==sd->bl.id)
+					mob_unlocktarget(md,tick);
+				if(battle_config.mobs_level_up && md->status.hp &&
+					(unsigned int)md->level < pc_maxbaselv(sd) &&
+					!md->guardian_data && !md->special_state.ai// Guardians/summons should not level. [Skotlex]
+				) { 	// monster level up [Valaris]
+					clif->misceffect(&md->bl,0);
+					md->level++;
+					status_calc_mob(md, 0);
+					status_percent_heal(src,10,0);
 
-			if( battle_config.show_mob_info&4 )
-			{// update name with new level
-				clif->charnameack(0, &md->bl);
+					if( battle_config.show_mob_info&4 )
+					{// update name with new level
+						clif->charnameack(0, &md->bl);
+					}
+				}
+				src = battle->get_master(src); // Maybe Player Summon
 			}
+			break;
+			case BL_PET: //Pass on to master...
+				src = &((TBL_PET*)src)->msd->bl;
+			break;
+			case BL_HOM:
+				src = &((TBL_HOM*)src)->master->bl;
+			break;
+			case BL_MER:
+				src = &((TBL_MER*)src)->master->bl;
+			break;
 		}
-		src = battle->get_master(src); // Maybe Player Summon
-	}
-	break;
-	case BL_PET: //Pass on to master...
-		src = &((TBL_PET*)src)->msd->bl;
-	break;
-	case BL_HOM:
-		src = &((TBL_HOM*)src)->master->bl;
-	break;
-	case BL_MER:
-		src = &((TBL_MER*)src)->master->bl;
-	break;
 	}
 
-	if (src && src->type == BL_PC)
-	{
+	if (src && src->type == BL_PC) {
 		struct map_session_data *ssd = (struct map_session_data *)src;
 		pc_setparam(ssd, SP_KILLEDRID, sd->bl.id);
 		npc_script_event(ssd, NPCE_KILLPC);
