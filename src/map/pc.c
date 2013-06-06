@@ -1035,6 +1035,8 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	sd->queues = NULL;
 	sd->queues_count = 0;
 	
+	sd->state.dialog = 0;
+	
 	// Event Timers
 	for( i = 0; i < MAX_EVENTTIMER; i++ )
 		sd->eventtimer[i] = INVALID_TIMER;
