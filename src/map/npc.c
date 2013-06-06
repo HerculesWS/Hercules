@@ -303,8 +303,7 @@ int npc_event_dequeue(struct map_session_data* sd)
 	if (!sd->eventqueue[0][0])
 		return 0; //Nothing to dequeue
 
-	if (!pc_addeventtimer(sd,100,sd->eventqueue[0]))
-	{	//Failed to dequeue, couldn't set a timer.
+	if (!pc_addeventtimer(sd,100,sd->eventqueue[0])) { //Failed to dequeue, couldn't set a timer.
 		ShowWarning("npc_event_dequeue: event timer is full !\n");
 		return 0;
 	}

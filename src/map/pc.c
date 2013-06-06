@@ -6637,7 +6637,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			duel_reject(sd->duel_invite, sd);
 	}
 
-	if (sd->npc_id)
+	if (sd->npc_id && sd->st && sd->st->state != RUN)
 		npc_event_dequeue(sd);
 	
 	pc_setglobalreg(sd,"PC_DIE_COUNTER",sd->die_counter+1);
