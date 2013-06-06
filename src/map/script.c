@@ -12815,7 +12815,7 @@ BUILDIN(getmapxy)
 			script_pushint(st,-1);
 			return false;
 	}
-	if (!bl) { //No object found.
+	if (!bl || bl->m == -1) { //No object found.
 		script_pushint(st,-1);
 		return true;
 	}
