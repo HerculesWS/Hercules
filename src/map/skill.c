@@ -15336,7 +15336,7 @@ struct skill_unit_group_tickset *skill_unitgrouptickset_search (struct block_lis
 	}
 
 	if (j == -1) {
-		ShowWarning ("skill_unitgrouptickset_search: tickset is full\n");
+		ShowWarning ("skill_unitgrouptickset_search: tickset is full. ( failed for skill '%s' on unit %d )\n",skill->get_name(group->skill_id),bl->type);
 		j = id % MAX_SKILLUNITGROUPTICKSET;
 	}
 
