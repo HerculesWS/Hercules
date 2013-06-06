@@ -3387,6 +3387,7 @@ static void script_detach_state(struct script_state* st, bool dequeue_event)
 	if(st->rid && (sd = map_id2sd(st->rid))!=NULL) {
 		sd->st = st->bk_st;
 		sd->npc_id = st->bk_npcid;
+		sd->state.dialog = 0;
 		if(st->bk_st) {
 			//Remove tag for removal.
 			st->bk_st = NULL;
@@ -3406,9 +3407,7 @@ static void script_detach_state(struct script_state* st, bool dequeue_event)
 #endif
 			npc_event_dequeue(sd);
 		}
-	}
-	else if(st->bk_st)
-	{// rid was set to 0, before detaching the script state
+	} else if(st->bk_st) { // rid was set to 0, before detaching the script state
 		ShowError("script_detach_state: Found previous script state without attached player (rid=%d, oid=%d, state=%d, bk_npcid=%d)\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
 		script_reportsrc(st->bk_st);
 
@@ -3588,8 +3587,7 @@ void run_script_main(struct script_state *st)
 		}
 	} else {
 		//Dispose of script.
-		if ((sd = map_id2sd(st->rid))!=NULL)
-		{	//Restore previous stack and save char.
+		if ((sd = map_id2sd(st->rid))!=NULL) { //Restore previous stack and save char.
 			if(sd->state.using_fake_npc){
 				clif->clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
 				sd->state.using_fake_npc = 0;
@@ -3923,22 +3921,17 @@ int script_reload() {
 /// If a dialog doesn't exist yet, one is created.
 ///
 /// mes "<message>";
-BUILDIN(mes)
-{
+BUILDIN(mes) {
 	TBL_PC* sd = script_rid2sd(st);
 	if( sd == NULL )
 		return true;
 	
-	if( !script_hasdata(st, 3) )
-	{// only a single line detected in the script
+	if( !script_hasdata(st, 3) ) {// only a single line detected in the script
 		clif->scriptmes(sd, st->oid, script_getstr(st, 2));
-	}
-	else
-	{// parse multiple lines as they exist
+	} else {// parse multiple lines as they exist
 		int i;
 		
-		for( i = 2; script_hasdata(st, i); i++ )
-		{
+		for( i = 2; script_hasdata(st, i); i++ ) {
 			// send the message to the client
 			clif->scriptmes(sd, st->oid, script_getstr(st, i));
 		}
@@ -3970,15 +3963,14 @@ BUILDIN(next)
 /// The dialog is closed when the button is pressed.
 ///
 /// close;
-BUILDIN(close)
-{
+BUILDIN(close) {
 	TBL_PC* sd;
 	
 	sd = script_rid2sd(st);
 	if( sd == NULL )
 		return true;
 	
-	st->state = CLOSE;
+	st->state = sd->state.dialog == 1 ? CLOSE : END;
 	clif->scriptclose(sd, st->oid);
 	return true;
 }
@@ -3987,8 +3979,7 @@ BUILDIN(close)
 /// The dialog is closed and the script continues when the button is pressed.
 ///
 /// close2;
-BUILDIN(close2)
-{
+BUILDIN(close2) {
 	TBL_PC* sd;
 	
 	sd = script_rid2sd(st);
@@ -7802,8 +7793,7 @@ BUILDIN(getgroupid)
 /// Terminates the execution of this script instance.
 ///
 /// end
-BUILDIN(end)
-{
+BUILDIN(end) {
 	st->state = END;
 	return true;
 }

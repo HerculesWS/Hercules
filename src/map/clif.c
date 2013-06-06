@@ -1834,11 +1834,12 @@ void clif_selllist(struct map_session_data *sd)
 /// - set npcid of dialog window (0 by default)
 /// - if set to clear on next mes, clear contents
 /// - append this text
-void clif_scriptmes(struct map_session_data *sd, int npcid, const char *mes)
-{
+void clif_scriptmes(struct map_session_data *sd, int npcid, const char *mes) {
 	int fd = sd->fd;
 	int slen = strlen(mes) + 9;
 
+	sd->state.dialog = 1;
+	
 	WFIFOHEAD(fd, slen);
 	WFIFOW(fd,0)=0xb4;
 	WFIFOW(fd,2)=slen;
@@ -9328,6 +9329,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 	}
 
 	sd->state.warping = 0;
+	sd->state.dialog = 0;/* reset when warping, client dialog will go missing */
 
 	// look
 #if PACKETVER < 4
