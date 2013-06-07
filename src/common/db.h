@@ -599,73 +599,73 @@ struct DBMap {
 // For easy access to the common functions.
 
 #define db_exists(db,k)    ( (db)->exists((db),(k)) )
-#define idb_exists(db,k)   ( (db)->exists((db),DB->i2key(k)) )
-#define uidb_exists(db,k)  ( (db)->exists((db),DB->ui2key(k)) )
-#define strdb_exists(db,k) ( (db)->exists((db),DB->str2key(k)) )
+#define idb_exists(db,k)   ( (db)->exists((db),iDB->i2key(k)) )
+#define uidb_exists(db,k)  ( (db)->exists((db),iDB->ui2key(k)) )
+#define strdb_exists(db,k) ( (db)->exists((db),iDB->str2key(k)) )
 
 // Get pointer-type data from DBMaps of various key types
-#define db_get(db,k)    ( DB->data2ptr((db)->get((db),(k))) )
-#define idb_get(db,k)   ( DB->data2ptr((db)->get((db),DB->i2key(k))) )
-#define uidb_get(db,k)  ( DB->data2ptr((db)->get((db),DB->ui2key(k))) )
-#define strdb_get(db,k) ( DB->data2ptr((db)->get((db),DB->str2key(k))) )
+#define db_get(db,k)    ( iDB->data2ptr((db)->get((db),(k))) )
+#define idb_get(db,k)   ( iDB->data2ptr((db)->get((db),iDB->i2key(k))) )
+#define uidb_get(db,k)  ( iDB->data2ptr((db)->get((db),iDB->ui2key(k))) )
+#define strdb_get(db,k) ( iDB->data2ptr((db)->get((db),iDB->str2key(k))) )
 
 // Get int-type data from DBMaps of various key types
-#define db_iget(db,k)    ( DB->data2i((db)->get((db),(k))) )
-#define idb_iget(db,k)   ( DB->data2i((db)->get((db),DB->i2key(k))) )
-#define uidb_iget(db,k)  ( DB->data2i((db)->get((db),DB->ui2key(k))) )
-#define strdb_iget(db,k) ( DB->data2i((db)->get((db),DB->str2key(k))) )
+#define db_iget(db,k)    ( iDB->data2i((db)->get((db),(k))) )
+#define idb_iget(db,k)   ( iDB->data2i((db)->get((db),iDB->i2key(k))) )
+#define uidb_iget(db,k)  ( iDB->data2i((db)->get((db),iDB->ui2key(k))) )
+#define strdb_iget(db,k) ( iDB->data2i((db)->get((db),iDB->str2key(k))) )
 
 // Get uint-type data from DBMaps of various key types
-#define db_uiget(db,k)    ( DB->data2ui((db)->get((db),(k))) )
-#define idb_uiget(db,k)   ( DB->data2ui((db)->get((db),DB->i2key(k))) )
-#define uidb_uiget(db,k)  ( DB->data2ui((db)->get((db),DB->ui2key(k))) )
-#define strdb_uiget(db,k) ( DB->data2ui((db)->get((db),DB->str2key(k))) )
+#define db_uiget(db,k)    ( iDB->data2ui((db)->get((db),(k))) )
+#define idb_uiget(db,k)   ( iDB->data2ui((db)->get((db),iDB->i2key(k))) )
+#define uidb_uiget(db,k)  ( iDB->data2ui((db)->get((db),iDB->ui2key(k))) )
+#define strdb_uiget(db,k) ( iDB->data2ui((db)->get((db),iDB->str2key(k))) )
 
 // Put pointer-type data into DBMaps of various key types
-#define db_put(db,k,d)    ( (db)->put((db),(k),DB->ptr2data(d),NULL) )
-#define idb_put(db,k,d)   ( (db)->put((db),DB->i2key(k),DB->ptr2data(d),NULL) )
-#define uidb_put(db,k,d)  ( (db)->put((db),DB->ui2key(k),DB->ptr2data(d),NULL) )
-#define strdb_put(db,k,d) ( (db)->put((db),DB->str2key(k),DB->ptr2data(d),NULL) )
+#define db_put(db,k,d)    ( (db)->put((db),(k),iDB->ptr2data(d),NULL) )
+#define idb_put(db,k,d)   ( (db)->put((db),iDB->i2key(k),iDB->ptr2data(d),NULL) )
+#define uidb_put(db,k,d)  ( (db)->put((db),iDB->ui2key(k),iDB->ptr2data(d),NULL) )
+#define strdb_put(db,k,d) ( (db)->put((db),iDB->str2key(k),iDB->ptr2data(d),NULL) )
 
 // Put int-type data into DBMaps of various key types
-#define db_iput(db,k,d)    ( (db)->put((db),(k),DB->i2data(d),NULL) )
-#define idb_iput(db,k,d)   ( (db)->put((db),DB->i2key(k),DB->i2data(d),NULL) )
-#define uidb_iput(db,k,d)  ( (db)->put((db),DB->ui2key(k),DB->i2data(d),NULL) )
-#define strdb_iput(db,k,d) ( (db)->put((db),DB->str2key(k),DB->i2data(d),NULL) )
+#define db_iput(db,k,d)    ( (db)->put((db),(k),iDB->i2data(d),NULL) )
+#define idb_iput(db,k,d)   ( (db)->put((db),iDB->i2key(k),iDB->i2data(d),NULL) )
+#define uidb_iput(db,k,d)  ( (db)->put((db),iDB->ui2key(k),iDB->i2data(d),NULL) )
+#define strdb_iput(db,k,d) ( (db)->put((db),iDB->str2key(k),iDB->i2data(d),NULL) )
 
 // Put uint-type data into DBMaps of various key types
-#define db_uiput(db,k,d)    ( (db)->put((db),(k),DB->ui2data(d),NULL) )
-#define idb_uiput(db,k,d)   ( (db)->put((db),DB->i2key(k),DB->ui2data(d),NULL) )
-#define uidb_uiput(db,k,d)  ( (db)->put((db),DB->ui2key(k),DB->ui2data(d),NULL) )
-#define strdb_uiput(db,k,d) ( (db)->put((db),DB->str2key(k),DB->ui2data(d),NULL) )
+#define db_uiput(db,k,d)    ( (db)->put((db),(k),iDB->ui2data(d),NULL) )
+#define idb_uiput(db,k,d)   ( (db)->put((db),iDB->i2key(k),iDB->ui2data(d),NULL) )
+#define uidb_uiput(db,k,d)  ( (db)->put((db),iDB->ui2key(k),iDB->ui2data(d),NULL) )
+#define strdb_uiput(db,k,d) ( (db)->put((db),iDB->str2key(k),iDB->ui2data(d),NULL) )
 
 // Remove entry from DBMaps of various key types
 #define db_remove(db,k)    ( (db)->remove((db),(k),NULL) )
-#define idb_remove(db,k)   ( (db)->remove((db),DB->i2key(k),NULL) )
-#define uidb_remove(db,k)  ( (db)->remove((db),DB->ui2key(k),NULL) )
-#define strdb_remove(db,k) ( (db)->remove((db),DB->str2key(k),NULL) )
+#define idb_remove(db,k)   ( (db)->remove((db),iDB->i2key(k),NULL) )
+#define uidb_remove(db,k)  ( (db)->remove((db),iDB->ui2key(k),NULL) )
+#define strdb_remove(db,k) ( (db)->remove((db),iDB->str2key(k),NULL) )
 
 //These are discarding the possible vargs you could send to the function, so those
 //that require vargs must not use these defines.
-#define db_ensure(db,k,f)    ( DB->data2ptr((db)->ensure((db),(k),(f))) )
-#define idb_ensure(db,k,f)   ( DB->data2ptr((db)->ensure((db),DB->i2key(k),(f))) )
-#define uidb_ensure(db,k,f)  ( DB->data2ptr((db)->ensure((db),DB->ui2key(k),(f))) )
-#define strdb_ensure(db,k,f) ( DB->data2ptr((db)->ensure((db),DB->str2key(k),(f))) )
+#define db_ensure(db,k,f)    ( iDB->data2ptr((db)->ensure((db),(k),(f))) )
+#define idb_ensure(db,k,f)   ( iDB->data2ptr((db)->ensure((db),iDB->i2key(k),(f))) )
+#define uidb_ensure(db,k,f)  ( iDB->data2ptr((db)->ensure((db),iDB->ui2key(k),(f))) )
+#define strdb_ensure(db,k,f) ( iDB->data2ptr((db)->ensure((db),iDB->str2key(k),(f))) )
 
 // Database creation and destruction macros
-#define idb_alloc(opt)            DB->alloc(__FILE__,__func__,__LINE__,DB_INT,(opt),sizeof(int))
-#define uidb_alloc(opt)           DB->alloc(__FILE__,__func__,__LINE__,DB_UINT,(opt),sizeof(unsigned int))
-#define strdb_alloc(opt,maxlen)   DB->alloc(__FILE__,__func__,__LINE__,DB_STRING,(opt),(maxlen))
-#define stridb_alloc(opt,maxlen)  DB->alloc(__FILE__,__func__,__LINE__,DB_ISTRING,(opt),(maxlen))
+#define idb_alloc(opt)            iDB->alloc(__FILE__,__func__,__LINE__,DB_INT,(opt),sizeof(int))
+#define uidb_alloc(opt)           iDB->alloc(__FILE__,__func__,__LINE__,DB_UINT,(opt),sizeof(unsigned int))
+#define strdb_alloc(opt,maxlen)   iDB->alloc(__FILE__,__func__,__LINE__,DB_STRING,(opt),(maxlen))
+#define stridb_alloc(opt,maxlen)  iDB->alloc(__FILE__,__func__,__LINE__,DB_ISTRING,(opt),(maxlen))
 #define db_destroy(db)            ( (db)->destroy((db),NULL) )
 // Other macros
 #define db_clear(db)        ( (db)->clear(db,NULL) )
 #define db_size(db)         ( (db)->size(db) )
 #define db_iterator(db)     ( (db)->iterator(db) )
-#define dbi_first(dbi)      ( DB->data2ptr((dbi)->first(dbi,NULL)) )
-#define dbi_last(dbi)       ( DB->data2ptr((dbi)->last(dbi,NULL)) )
-#define dbi_next(dbi)       ( DB->data2ptr((dbi)->next(dbi,NULL)) )
-#define dbi_prev(dbi)       ( DB->data2ptr((dbi)->prev(dbi,NULL)) )
+#define dbi_first(dbi)      ( iDB->data2ptr((dbi)->first(dbi,NULL)) )
+#define dbi_last(dbi)       ( iDB->data2ptr((dbi)->last(dbi,NULL)) )
+#define dbi_next(dbi)       ( iDB->data2ptr((dbi)->next(dbi,NULL)) )
+#define dbi_prev(dbi)       ( iDB->data2ptr((dbi)->prev(dbi,NULL)) )
 #define dbi_remove(dbi)     ( (dbi)->remove(dbi,NULL) )
 #define dbi_exists(dbi)     ( (dbi)->exists(dbi) )
 #define dbi_destroy(dbi)    ( (dbi)->destroy(dbi) )
@@ -867,9 +867,9 @@ void (*init) (void);
  * @see #db_init(void)
  */
 void (*final) (void);
-} DB_s;
+} iDB_s;
 
-struct db_interface *DB;
+struct db_interface *iDB;
 
 void db_defaults(void);
 // Link DB System - From jAthena

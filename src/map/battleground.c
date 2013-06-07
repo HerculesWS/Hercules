@@ -65,7 +65,7 @@ int bg_team_warp(int bg_id, unsigned short mapindex, short x, short y)
 	struct battleground_data *bg = bg_team_search(bg_id);
 	if( bg == NULL ) return 0;
 	for( i = 0; i < MAX_BG_MEMBERS; i++ )
-		if( bg->members[i].sd != NULL ) pc_setpos(bg->members[i].sd, mapindex, x, y, CLR_TELEPORT);
+		if( bg->members[i].sd != NULL ) iPc->setpos(bg->members[i].sd, mapindex, x, y, CLR_TELEPORT);
 	return 1;
 }
 
@@ -145,7 +145,7 @@ int bg_member_respawn(struct map_session_data *sd)
 		return 0;
 	if( bg->mapindex == 0 )
 		return 0; // Respawn not handled by Core
-	pc_setpos(sd, bg->mapindex, bg->x, bg->y, CLR_OUTSIGHT);
+	iPc->setpos(sd, bg->mapindex, bg->x, bg->y, CLR_OUTSIGHT);
 	status_revive(&sd->bl, 1, 100);
 
 	return 1; // Warped
@@ -185,7 +185,7 @@ int bg_team_get_id(struct block_list *bl)
 		{
 			struct map_session_data *msd;
 			struct mob_data *md = (TBL_MOB*)bl;
-			if( md->special_state.ai && (msd = map_id2sd(md->master_id)) != NULL )
+			if( md->special_state.ai && (msd = iMap->id2sd(md->master_id)) != NULL )
 				return msd->bg_id;
 			return md->bg_id;
 		}
@@ -220,7 +220,7 @@ int bg_send_message(struct map_session_data *sd, const char *mes, int len)
  */
 int bg_send_xy_timer_sub(DBKey key, DBData *data, va_list ap)
 {
-	struct battleground_data *bg = DB->data2ptr(data);
+	struct battleground_data *bg = iDB->data2ptr(data);
 	struct map_session_data *sd;
 	int i;
 	nullpo_ret(bg);
@@ -439,7 +439,7 @@ void bg_match_over(struct bg_arena *arena, bool canceled) {
 	for( i = 0; i < queue->items; i++ ) {
 		struct map_session_data * sd = NULL;
 		
-		if( ( sd = map_id2sd(queue->item[i]) ) ) {
+		if( ( sd = iMap->id2sd(queue->item[i]) ) ) {
 			bg->queue_pc_cleanup(sd);
 			clif->colormes(sd->fd,COLOR_RED,"BG Match Cancelled: not enough players");
 		}
@@ -456,7 +456,7 @@ void bg_begin(struct bg_arena *arena) {
 	for( i = 0; i < queue->items; i++ ) {
 		struct map_session_data * sd = NULL;
 		
-		if( ( sd = map_id2sd(queue->item[i]) ) ) {
+		if( ( sd = iMap->id2sd(queue->item[i]) ) ) {
 			if( sd->bg_queue.ready == 1 )
 				count++;
 			else
@@ -485,11 +485,11 @@ void bg_queue_pregame(struct bg_arena *arena) {
 	for( i = 0; i < queue->items; i++ ) {
 		struct map_session_data * sd = NULL;
 		
-		if( ( sd = map_id2sd(queue->item[i]) ) ) {
+		if( ( sd = iMap->id2sd(queue->item[i]) ) ) {
 			clif->bgqueue_battlebegins(sd,arena->id,SELF);
 		}
 	}
-	arena->begin_timer = add_timer( gettick() + (arena->pregame_duration*1000), bg->begin_timer, arena->id, 0 );
+	arena->begin_timer = iTimer->add_timer( iTimer->gettick() + (arena->pregame_duration*1000), bg->begin_timer, arena->id, 0 );
 }
 int bg_fillup_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	bg->queue_pregame(bg->arena[id]);
@@ -501,12 +501,12 @@ void bg_queue_check(struct bg_arena *arena) {
 	
 	if( count == arena->max_players ) {
 		if( arena->fillup_timer != INVALID_TIMER ) {
-			delete_timer(arena->fillup_timer,bg_fillup_timer);
+			iTimer->delete_timer(arena->fillup_timer,bg_fillup_timer);
 			arena->fillup_timer = INVALID_TIMER;
 		}
 		bg->queue_pregame(arena);
 	} else if( count >= arena->min_players && arena->fillup_timer == INVALID_TIMER ) {
-		arena->fillup_timer = add_timer( gettick() + (arena->fillup_duration*1000), bg->fillup_timer, arena->id, 0 );
+		arena->fillup_timer = iTimer->add_timer( iTimer->gettick() + (arena->fillup_duration*1000), bg->fillup_timer, arena->id, 0 );
 	}
 }
 void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type) {
@@ -526,7 +526,7 @@ void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, enum bg_q
 		
 	switch( type ) { /* guild/party already validated in can_queue */
 		case BGQT_PARTY: {
-			struct party_data *p = party_search(sd->status.party_id);
+			struct party_data *p = iParty->search(sd->status.party_id);
 			for( i = 0; i < MAX_PARTY; i++ ) {
 				if( !p->data[i].sd || p->data[i].sd->bg_queue.arena != NULL ) continue;
 				count++;
@@ -560,7 +560,7 @@ void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, enum bg_q
 			clif->bgqueue_update_info(sd,arena->id,script->hq[arena->queue_id].items);
 			break;
 		case BGQT_PARTY: {
-			struct party_data *p = party_search(sd->status.party_id);
+			struct party_data *p = iParty->search(sd->status.party_id);
 			for( i = 0; i < MAX_PARTY; i++ ) {
 				if( !p->data[i].sd || p->data[i].sd->bg_queue.arena != NULL ) continue;
 				p->data[i].sd->bg_queue.type = type;
@@ -650,7 +650,7 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 				return BGQA_NOT_PARTY_GUILD_LEADER;
 			else {
 				struct party_data *p;
-				if( (p = party_search(sd->status.party_id) ) ) {
+				if( (p = iParty->search(sd->status.party_id) ) ) {
 					int i, count = 0;
 					bool is_leader = false;
 
@@ -691,8 +691,8 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 }
 void do_init_battleground(void) {
 	bg_team_db = idb_alloc(DB_OPT_RELEASE_DATA);
-	add_timer_func_list(bg_send_xy_timer, "bg_send_xy_timer");
-	add_timer_interval(gettick() + battle_config.bg_update_interval, bg_send_xy_timer, 0, 0, battle_config.bg_update_interval);
+	iTimer->add_timer_func_list(bg_send_xy_timer, "bg_send_xy_timer");
+	iTimer->add_timer_interval(iTimer->gettick() + battle_config.bg_update_interval, bg_send_xy_timer, 0, 0, battle_config.bg_update_interval);
 }
 
 void do_final_battleground(void) {
