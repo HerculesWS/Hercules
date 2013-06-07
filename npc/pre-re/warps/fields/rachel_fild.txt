@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
-//= Rachel Field Warp Script
+//===== Hercules Script ======================================
+//= Rachel Field Warps
 //===== By: ==================================================
 //= Playtester
 //===== Current Version: =====================================
 //= 1.2
 //===== Compatible With: =====================================
-//= Any Athena Version
+//= Hercules
 //===== Description: =========================================
 //= Warp Points for Rachel Field
 //===== Additional Comments: =================================

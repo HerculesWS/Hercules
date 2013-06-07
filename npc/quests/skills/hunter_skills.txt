@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Hunter Skills Quests
 //===== By: ================================================== 
 //= Lupus, Reddozen, Kisuka
 //===== Current Version: ===================================== 
 //= 1.4
 //===== Compatible With: ===================================== 
-//= rAthena Revision 3800+
+//= Hercules Revision 3800+
 //===== Description: ========================================= 
 //= Temp quests for new skills for 2nd classes
 //===== Additional Comments: ================================= 

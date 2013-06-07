@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Taekwon Job Quest
 //===== By: ================================================== 
 //= Tsuyuki & Samuray22
 //===== Current Version: ===================================== 
 //= 1.4
 //===== Compatible With: ===================================== 
-//= rAthena/Freya
+//= Hercules
 //===== Description: ========================================= 
 //= Official iRO TaeKwon Job Change Quest
 //===== Additional Comments: ================================= 

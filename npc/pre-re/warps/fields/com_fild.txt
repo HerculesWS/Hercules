@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
-//= Comodo Field Warp Script
+//===== Hercules Script ======================================
+//= Comodo Field Warps
 //===== By: ==================================================
 //= Nana
 //===== Current Version: =====================================
 //= 1.1
 //===== Compatible With: =====================================
-//= Any Athena Version
+//= Hercules
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Warp Points for Comodo Fields

@@ -1,7 +1,7 @@
 //===== Hercules Script ======================================
 //= Quest NPCs related to Amatsu
 //===== By: ================================================== 
-//= rAthena team & others? & MasterOfMuppets
+//= Hercules Dev Team & others? & MasterOfMuppets
 //===== Current Version: ===================================== 
 //= 1.4a
 //===== Description: ========================================= 

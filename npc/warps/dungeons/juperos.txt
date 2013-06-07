@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Juperos Dungeon Warp Script
 //===== By: ==================================================
 //= Muad-Dib (1.0)
 //===== Current Version: =====================================
 //= 1.7
 //===== Compatible With: =====================================
-//= rAthena with independant npctimer support; RO Episode 8+
+//= Hercules with independent npctimer support; RO Episode 8+
 //===== Description: =========================================
 //= Warp Points for Juperos Dungeon
 //===== Additional Comments: =================================

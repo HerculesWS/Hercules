@@ -1,7 +1,7 @@
 //===== Hercules Script ======================================
 //= Kafra Functions
 //===== By: ================================================== 
-//= rAthena Dev Team
+//= Hercules Dev Team
 //= Darlskies, Darkchild, Syrus22, Lupus, kobra_k88 (2.0)
 //= L0ne_W0lf
 //===== Current Version: ===================================== 

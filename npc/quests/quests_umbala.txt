@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Quest NPCs related to Umbala
 //===== By: ================================================== 
-//= sabernet09 & rAthena Team
+//= sabernet09 & Hercules Team
 //===== Current Version: ===================================== 
 //= 2.2a
 //===== Compatible With: ===================================== 
-//= rAthena 7.15 +
+//= Hercules
 //===== Description: ========================================= 
 //= [Aegis Conversion]
 //= Umbalian Language Quest, Umbala Skeletal Gate Quest,

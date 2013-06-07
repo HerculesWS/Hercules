@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Airship Related Quests
 //===== By: ================================================== 
 // Samuray22
 //===== Current Version: ===================================== 
 //= 1.9
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= Quest from the airplane to einbroch and einbech.
 //= Reward: -Free Ticket for Flyship.

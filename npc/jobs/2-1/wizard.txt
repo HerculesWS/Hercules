@@ -1,4 +1,4 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Wizard Job Quest
 //===== By: ================================================== 
 //= (Aegis) Translated by yoshiki, converted by kobra_k88
@@ -6,7 +6,7 @@
 //===== Current Version: ===================================== 
 //= 3.3
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Job Change quest for Wizard class.

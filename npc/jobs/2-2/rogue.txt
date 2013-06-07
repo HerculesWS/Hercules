@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Rogue Job Quest
 //===== By: ================================================== 
 //= kobra_k88
 //===== Current Version: ===================================== 
 //= 2.9
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Job quest for Rogue classes

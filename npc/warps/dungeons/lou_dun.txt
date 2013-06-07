@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Louyang Dungeon Warp Script
 //===== By: ==================================================
 //= Nana (1.0)
 //===== Current Version: =====================================
 //= 1.1
 //===== Compatible With: =====================================
-//= Any Athena Version 6.0+
+//= Hercules
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Warp Points for Louyang

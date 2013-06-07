@@ -1,4 +1,4 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ====================================== 
 //= Crusader Job Quest
 //===== By: ================================================== 
 //= Made by: Black Dragon
@@ -6,7 +6,7 @@
 //===== Current Version: ===================================== 
 //= 3.3
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= [Official Conversion]
 //= Job quest for Crusader classes

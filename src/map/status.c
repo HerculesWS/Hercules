@@ -6602,10 +6602,6 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			return 0;
 
 	case SC_INCREASEAGI:
-		 if(sd && pc_issit(sd)){
-			 pc_setstand(sd);
-		 }
-
 	case SC_CONCENTRATE:
 	case SC_SPEARQUICKEN:
 	case SC_TRUESIGHT:

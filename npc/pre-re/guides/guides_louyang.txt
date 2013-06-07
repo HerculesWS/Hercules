@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Louyang Guides
 //===== By: ==================================================
 //= jAthena/Tsuyuki; L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.2
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= Guides for the City of Louyang
 //===== Additional Comments: =================================
