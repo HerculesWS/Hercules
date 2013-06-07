@@ -46,12 +46,12 @@ void vending_vendinglistreq(struct map_session_data* sd, unsigned int id) {
 	struct map_session_data* vsd;
 	nullpo_retv(sd);
 
-	if( (vsd = map_id2sd(id)) == NULL )
+	if( (vsd = iMap->id2sd(id)) == NULL )
 		return;
 	if( !vsd->state.vending )
 		return; // not vending
 
-	if (!pc_can_give_items(sd) || !pc_can_give_items(vsd)) { //check if both GMs are allowed to trade
+	if (!iPc->can_give_items(sd) || !iPc->can_give_items(vsd)) { //check if both GMs are allowed to trade
 		// GM is not allowed to trade
 		clif->message(sd->fd, msg_txt(246));
 		return;
@@ -69,7 +69,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 	int i, j, cursor, w, new_ = 0, blank, vend_list[MAX_VENDING];
 	double z;
 	struct s_vending vend[MAX_VENDING]; // against duplicate packets
-	struct map_session_data* vsd = map_id2sd(aid);
+	struct map_session_data* vsd = iMap->id2sd(aid);
 
 	nullpo_retv(sd);
 	if( vsd == NULL || !vsd->state.vending || vsd->bl.id == sd->bl.id )
@@ -88,7 +88,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 	if( count < 1 || count > MAX_VENDING || count > vsd->vend_num )
 		return; // invalid amount of purchased items
 
-	blank = pc_inventoryblank(sd); //number of free cells in the buyer's inventory
+	blank = iPc->inventoryblank(sd); //number of free cells in the buyer's inventory
 
 	// duplicate item in vending to check hacker with multiple packets
 	memcpy(&vend, &vsd->vending, sizeof(vsd->vending)); // copy vending list
@@ -144,7 +144,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 		
 		vend[j].amount -= amount;
 
-		switch( pc_checkadditem(sd, vsd->status.cart[idx].nameid, amount) ) {
+		switch( iPc->checkadditem(sd, vsd->status.cart[idx].nameid, amount) ) {
 			case ADDITEM_EXIST:
 				break;	//We'd add this item to the existing one (in buyers inventory)
 			case ADDITEM_NEW:
@@ -157,10 +157,10 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 		}
 	}
 
-	pc_payzeny(sd, (int)z, LOG_TYPE_VENDING, vsd);
+	iPc->payzeny(sd, (int)z, LOG_TYPE_VENDING, vsd);
 	if( battle_config.vending_tax )
 		z -= z * (battle_config.vending_tax/10000.);
-	pc_getzeny(vsd, (int)z, LOG_TYPE_VENDING, sd);
+	iPc->getzeny(vsd, (int)z, LOG_TYPE_VENDING, sd);
 
 	for( i = 0; i < count; i++ ) {
 		short amount = *(uint16*)(data + 4*i + 0);
@@ -168,9 +168,9 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 		idx -= 2;
 
 		// vending item
-		pc_additem(sd, &vsd->status.cart[idx], amount, LOG_TYPE_VENDING);
+		iPc->additem(sd, &vsd->status.cart[idx], amount, LOG_TYPE_VENDING);
 		vsd->vending[vend_list[i]].amount -= amount;
-		pc_cart_delitem(vsd, idx, amount, 0, LOG_TYPE_VENDING);
+		iPc->cart_delitem(vsd, idx, amount, 0, LOG_TYPE_VENDING);
 		clif->vendingreport(vsd, idx, amount);
 
 		//print buyer's name
@@ -197,7 +197,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 	vsd->vend_num = cursor;
 
 	//Always save BOTH: buyer and customer
-	if( save_settings&2 ) {
+	if( iMap->save_settings&2 ) {
 		chrif_save(sd,0);
 		chrif_save(vsd,0);
 	}
@@ -209,7 +209,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 		if( i == vsd->vend_num ) {
 			//Close Vending (this was automatically done by the client, we have to do it manually for autovenders) [Skotlex]
 			vending->close(vsd);
-			map_quit(vsd);	//They have no reason to stay around anymore, do they?
+			iMap->quit(vsd);	//They have no reason to stay around anymore, do they?
 		}
 	}
 }
@@ -226,7 +226,7 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 	if ( pc_isdead(sd) || !sd->state.prevend || pc_istrading(sd))
 		return; // can't open vendings lying dead || didn't use via the skill (wpe/hack) || can't have 2 shops at once
 
-	vending_skill_lvl = pc_checkskill(sd, MC_VENDING);
+	vending_skill_lvl = iPc->checkskill(sd, MC_VENDING);
 	// skill level and cart check
 	if( !vending_skill_lvl || !pc_iscarton(sd) ) {
 		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0);
@@ -250,12 +250,12 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 		index -= 2; // offset adjustment (client says that the first cart position is 2)
 
 		if( index < 0 || index >= MAX_CART // invalid position
-		||  pc_cartitem_amount(sd, index, amount) < 0 // invalid item or insufficient quantity
+		||  iPc->cartitem_amount(sd, index, amount) < 0 // invalid item or insufficient quantity
 		//NOTE: official server does not do any of the following checks!
 		||  !sd->status.cart[index].identify // unidentified item
 		||  sd->status.cart[index].attribute == 1 // broken item
 		||  sd->status.cart[index].expire_time // It should not be in the cart but just in case
-		||  !itemdb_cantrade(&sd->status.cart[index], pc_get_group_level(sd), pc_get_group_level(sd)) ) // untradeable item
+		||  !itemdb_cantrade(&sd->status.cart[index], iPc->get_group_level(sd), iPc->get_group_level(sd)) ) // untradeable item
 			continue;
 
 		sd->vending[i].index = index;

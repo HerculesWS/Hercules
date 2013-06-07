@@ -467,7 +467,7 @@ int intif_party_changemap(struct map_session_data *sd,int online)
 	if(!sd)
 		return 0;
 
-	if( (m=map_mapindex2mapid(sd->mapindex)) >= 0 && map[m].instance_id >= 0 )
+	if( (m=iMap->mapindex2mapid(sd->mapindex)) >= 0 && map[m].instance_id >= 0 )
 		mapindex = map[map[m].instance_src_map].index;
 	else
 		mapindex = sd->mapindex;
@@ -862,7 +862,7 @@ int intif_parse_WisMessage(int fd)
 	id=RFIFOL(fd,4);
 
 	safestrncpy(name, (char*)RFIFOP(fd,32), NAME_LENGTH);
-	sd = map_nick2sd(name);
+	sd = iMap->nick2sd(name);
 	if(sd == NULL || strcmp(sd->status.name, name) != 0)
 	{	//Not found
 		intif_wis_replay(id,1);
@@ -896,7 +896,7 @@ int intif_parse_WisEnd(int fd)
 
 	if (battle_config.etc_log)
 		ShowInfo("intif_parse_wisend: player: %s, flag: %d\n", RFIFOP(fd,2), RFIFOB(fd,26)); // flag: 0: success to send wisper, 1: target character is not loged in?, 2: ignored by target
-	sd = (struct map_session_data *)map_nick2sd((char *) RFIFOP(fd,2));
+	sd = (struct map_session_data *)iMap->nick2sd((char *) RFIFOP(fd,2));
 	if (sd != NULL)
 		clif->wis_end(sd->fd, RFIFOB(fd,26));
 
@@ -935,7 +935,7 @@ int mapif_parse_WisToGM(int fd)
 	safestrncpy(Wisp_name, (char*)RFIFOP(fd,4), NAME_LENGTH);
 	safestrncpy(message, (char*)RFIFOP(fd,32), mes_len);
 	// information is sent to all online GM
-	map_foreachpc(mapif_parse_WisToGM_sub, permission, Wisp_name, message, mes_len);
+	iMap->map_foreachpc(mapif_parse_WisToGM_sub, permission, Wisp_name, message, mes_len);
 
 	if (message != mbuf)
 		aFree(message);
@@ -954,7 +954,7 @@ int intif_parse_Registers(int fd)
 	if (node)
 		sd = node->sd;
 	else { //Normally registries should arrive for in log-in chars.
-		sd = map_id2sd(account_id);
+		sd = iMap->id2sd(account_id);
 		if (sd && RFIFOB(fd,12) == 3 && sd->status.char_id != char_id)
 			sd = NULL; //Character registry from another character.
 	}
@@ -993,7 +993,7 @@ int intif_parse_Registers(int fd)
 	*qty = j;
 
 	if (flag && sd->save_reg.global_num > -1 && sd->save_reg.account_num > -1 && sd->save_reg.account2_num > -1)
-		pc_reg_received(sd); //Received all registry values, execute init scripts and what-not. [Skotlex]
+		iPc->reg_received(sd); //Received all registry values, execute init scripts and what-not. [Skotlex]
 	return 1;
 }
 
@@ -1006,7 +1006,7 @@ int intif_parse_LoadGuildStorage(int fd)
 	guild_id = RFIFOL(fd,8);
 	if(guild_id <= 0)
 		return 1;
-	sd=map_id2sd( RFIFOL(fd,4) );
+	sd=iMap->id2sd( RFIFOL(fd,4) );
 	if(sd==NULL){
 		ShowError("intif_parse_LoadGuildStorage: user not found %d\n",RFIFOL(fd,4));
 		return 1;
@@ -1047,7 +1047,7 @@ int intif_parse_PartyCreated(int fd)
 {
 	if(battle_config.etc_log)
 		ShowInfo("intif: party created by account %d\n\n", RFIFOL(fd,2));
-	party_created(RFIFOL(fd,2), RFIFOL(fd,6),RFIFOB(fd,10),RFIFOL(fd,11), (char *)RFIFOP(fd,15));
+	iParty->created(RFIFOL(fd,2), RFIFOL(fd,6),RFIFOB(fd,10),RFIFOL(fd,11), (char *)RFIFOP(fd,15));
 	return 0;
 }
 
@@ -1056,13 +1056,13 @@ int intif_parse_PartyInfo(int fd)
 {
 	if( RFIFOW(fd,2) == 12 ){
 		ShowWarning("intif: party noinfo (char_id=%d party_id=%d)\n", RFIFOL(fd,4), RFIFOL(fd,8));
-		party_recv_noinfo(RFIFOL(fd,8), RFIFOL(fd,4));
+		iParty->recv_noinfo(RFIFOL(fd,8), RFIFOL(fd,4));
 		return 0;
 	}
 
 	if( RFIFOW(fd,2) != 8+sizeof(struct party) )
 		ShowError("intif: party info : data size error (char_id=%d party_id=%d packet_len=%d expected_len=%d)\n", RFIFOL(fd,4), RFIFOL(fd,8), RFIFOW(fd,2), 8+sizeof(struct party));
-	party_recv_info((struct party *)RFIFOP(fd,8), RFIFOL(fd,4));
+	iParty->recv_info((struct party *)RFIFOP(fd,8), RFIFOL(fd,4));
 	return 0;
 }
 
@@ -1071,14 +1071,14 @@ int intif_parse_PartyMemberAdded(int fd)
 {
 	if(battle_config.etc_log)
 		ShowInfo("intif: party member added Party (%d), Account(%d), Char(%d)\n",RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
-	party_member_added(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10), RFIFOB(fd, 14));
+	iParty->member_added(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10), RFIFOB(fd, 14));
 	return 0;
 }
 
 // ACK changing party option
 int intif_parse_PartyOptionChanged(int fd)
 {
-	party_optionchanged(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOW(fd,10),RFIFOW(fd,12),RFIFOB(fd,14));
+	iParty->optionchanged(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOW(fd,10),RFIFOW(fd,12),RFIFOB(fd,14));
 	return 0;
 }
 
@@ -1087,28 +1087,28 @@ int intif_parse_PartyMemberWithdraw(int fd)
 {
 	if(battle_config.etc_log)
 		ShowInfo("intif: party member withdraw: Party(%d), Account(%d), Char(%d)\n",RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
-	party_member_withdraw(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
+	iParty->member_withdraw(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
 	return 0;
 }
 
 // ACK party break
 int intif_parse_PartyBroken(int fd)
 {
-	party_broken(RFIFOL(fd,2));
+	iParty->broken(RFIFOL(fd,2));
 	return 0;
 }
 
 // ACK party on new map
 int intif_parse_PartyMove(int fd)
 {
-	party_recv_movemap(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOW(fd,14),RFIFOB(fd,16),RFIFOW(fd,17));
+	iParty->recv_movemap(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOW(fd,14),RFIFOB(fd,16),RFIFOW(fd,17));
 	return 0;
 }
 
 // ACK party messages
 int intif_parse_PartyMessage(int fd)
 {
-	party_recv_message(RFIFOL(fd,4),RFIFOL(fd,8),(char *) RFIFOP(fd,12),RFIFOW(fd,2)-12);
+	iParty->recv_message(RFIFOL(fd,4),RFIFOL(fd,8),(char *) RFIFOP(fd,12),RFIFOW(fd,2)-12);
 	return 0;
 }
 
@@ -1322,7 +1322,7 @@ int intif_parse_DeletePetOk(int fd)
 int intif_parse_ChangeNameOk(int fd)
 {
 	struct map_session_data *sd = NULL;
-	if((sd=map_id2sd(RFIFOL(fd,2)))==NULL ||
+	if((sd=iMap->id2sd(RFIFOL(fd,2)))==NULL ||
 		sd->status.char_id != RFIFOL(fd,6))
 		return 0;
 
@@ -1405,7 +1405,7 @@ int intif_parse_questlog(int fd)
 {
 	int char_id = RFIFOL(fd, 4);
 	int i;
-	TBL_PC * sd = map_charid2sd(char_id);
+	TBL_PC * sd = iMap->charid2sd(char_id);
 
 	//User not online anymore
 	if(!sd)
@@ -1442,7 +1442,7 @@ int intif_parse_questlog(int fd)
 int intif_parse_questsave(int fd)
 {
 	int cid = RFIFOL(fd, 2);
-	TBL_PC *sd = map_id2sd(cid);
+	TBL_PC *sd = iMap->id2sd(cid);
 
 	if( !RFIFOB(fd, 6) )
 		ShowError("intif_parse_questsave: Failed to save quest(s) for character %d!\n", cid);
@@ -1500,7 +1500,7 @@ int intif_parse_Mail_inboxreceived(int fd)
 	struct map_session_data *sd;
 	unsigned char flag = RFIFOB(fd,8);
 
-	sd = map_charid2sd(RFIFOL(fd,4));
+	sd = iMap->charid2sd(RFIFOL(fd,4));
 
 	if (sd == NULL)
 	{
@@ -1566,7 +1566,7 @@ int intif_parse_Mail_getattach(int fd)
 	struct item item;
 	int zeny = RFIFOL(fd,8);
 
-	sd = map_charid2sd( RFIFOL(fd,4) );
+	sd = iMap->charid2sd( RFIFOL(fd,4) );
 
 	if (sd == NULL)
 	{
@@ -1608,7 +1608,7 @@ int intif_parse_Mail_delete(int fd)
 	int mail_id = RFIFOL(fd,6);
 	bool failed = RFIFOB(fd,10);
 
-	struct map_session_data *sd = map_charid2sd(char_id);
+	struct map_session_data *sd = iMap->charid2sd(char_id);
 	if (sd == NULL)
 	{
 		ShowError("intif_parse_Mail_delete: char not found %d\n", char_id);
@@ -1651,7 +1651,7 @@ int intif_Mail_return(int char_id, int mail_id)
 
 int intif_parse_Mail_return(int fd)
 {
-	struct map_session_data *sd = map_charid2sd(RFIFOL(fd,2));
+	struct map_session_data *sd = iMap->charid2sd(RFIFOL(fd,2));
 	int mail_id = RFIFOL(fd,6);
 	short fail = RFIFOB(fd,10);
 
@@ -1714,7 +1714,7 @@ static void intif_parse_Mail_send(int fd)
 	fail = (msg.id == 0);
 
 	// notify sender
-	sd = map_charid2sd(msg.send_id);
+	sd = iMap->charid2sd(msg.send_id);
 	if( sd != NULL )
 	{
 		if( fail )
@@ -1722,7 +1722,7 @@ static void intif_parse_Mail_send(int fd)
 		else
 		{
 			clif->mail_send(sd->fd, false);
-			if( save_settings&16 )
+			if( iMap->save_settings&16 )
 				chrif_save(sd, 0);
 		}
 	}
@@ -1730,7 +1730,7 @@ static void intif_parse_Mail_send(int fd)
 
 static void intif_parse_Mail_new(int fd)
 {
-	struct map_session_data *sd = map_charid2sd(RFIFOL(fd,2));
+	struct map_session_data *sd = iMap->charid2sd(RFIFOL(fd,2));
 	int mail_id = RFIFOL(fd,6);
 	const char* sender_name = (char*)RFIFOP(fd,10);
 	const char* title = (char*)RFIFOP(fd,34);
@@ -1768,7 +1768,7 @@ int intif_Auction_requestlist(int char_id, short type, int price, const char* se
 
 static void intif_parse_Auction_results(int fd)
 {
-	struct map_session_data *sd = map_charid2sd(RFIFOL(fd,4));
+	struct map_session_data *sd = iMap->charid2sd(RFIFOL(fd,4));
 	short count = RFIFOW(fd,8);
 	short pages = RFIFOW(fd,10);
 	uint8* data = RFIFOP(fd,12);
@@ -1807,13 +1807,13 @@ static void intif_parse_Auction_register(int fd)
 	}
 
 	memcpy(&auction, RFIFOP(fd,4), sizeof(struct auction_data));
-	if( (sd = map_charid2sd(auction.seller_id)) == NULL )
+	if( (sd = iMap->charid2sd(auction.seller_id)) == NULL )
 		return;
 
 	if( auction.auction_id > 0 )
 	{
 		clif->auction_message(sd->fd, 1); // Confirmation Packet ??
-		if( save_settings&32 )
+		if( iMap->save_settings&32 )
 			chrif_save(sd,0);
 	}
 	else
@@ -1821,9 +1821,9 @@ static void intif_parse_Auction_register(int fd)
 		int zeny = auction.hours*battle_config.auction_feeperhour;
 
 		clif->auction_message(sd->fd, 4);
-		pc_additem(sd, &auction.item, auction.item.amount, LOG_TYPE_AUCTION);
+		iPc->additem(sd, &auction.item, auction.item.amount, LOG_TYPE_AUCTION);
 
-		pc_getzeny(sd, zeny, LOG_TYPE_AUCTION, NULL);
+		iPc->getzeny(sd, zeny, LOG_TYPE_AUCTION, NULL);
 	}
 }
 
@@ -1843,7 +1843,7 @@ int intif_Auction_cancel(int char_id, unsigned int auction_id)
 
 static void intif_parse_Auction_cancel(int fd)
 {
-	struct map_session_data *sd = map_charid2sd(RFIFOL(fd,2));
+	struct map_session_data *sd = iMap->charid2sd(RFIFOL(fd,2));
 	int result = RFIFOB(fd,6);
 
 	if( sd == NULL )
@@ -1874,7 +1874,7 @@ int intif_Auction_close(int char_id, unsigned int auction_id)
 
 static void intif_parse_Auction_close(int fd)
 {
-	struct map_session_data *sd = map_charid2sd(RFIFOL(fd,2));
+	struct map_session_data *sd = iMap->charid2sd(RFIFOL(fd,2));
 	unsigned char result = RFIFOB(fd,6);
 
 	if( sd == NULL )
@@ -1910,7 +1910,7 @@ int intif_Auction_bid(int char_id, const char* name, unsigned int auction_id, in
 
 static void intif_parse_Auction_bid(int fd)
 {
-	struct map_session_data *sd = map_charid2sd(RFIFOL(fd,2));
+	struct map_session_data *sd = iMap->charid2sd(RFIFOL(fd,2));
 	int bid = RFIFOL(fd,6);
 	unsigned char result = RFIFOB(fd,10);
 
@@ -1919,7 +1919,7 @@ static void intif_parse_Auction_bid(int fd)
 
 	clif->auction_message(sd->fd, result);
 	if( bid > 0 ) {
-		pc_getzeny(sd, bid, LOG_TYPE_AUCTION,NULL);
+		iPc->getzeny(sd, bid, LOG_TYPE_AUCTION,NULL);
 	}
 	if( result == 1 ) { // To update the list, display your buy list
 		clif->pAuction_cancelreg(fd, sd);
@@ -1930,7 +1930,7 @@ static void intif_parse_Auction_bid(int fd)
 // Used to send 'You have won the auction' and 'You failed to won the auction' messages
 static void intif_parse_Auction_message(int fd)
 {
-	struct map_session_data *sd = map_charid2sd(RFIFOL(fd,2));
+	struct map_session_data *sd = iMap->charid2sd(RFIFOL(fd,2));
 	unsigned char result = RFIFOB(fd,6);
 
 	if( sd == NULL )
