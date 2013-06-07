@@ -5303,6 +5303,7 @@ void map_hp_symbols(void) {
 	HPM->share(atcommand,"atcommand");
 	HPM->share(buyingstore,"buyingstore");
 	HPM->share(clif,"clif");
+	HPM->share(guild,"guild");
 	HPM->share(ircbot,"ircbot");
 	HPM->share(logs,"logs");
 	HPM->share(script,"script");
