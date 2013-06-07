@@ -463,6 +463,8 @@ extern int attr_fix_table[4][10][10];
  * Battle.c Interface
  **/
 struct battle_interface {
+	/* */
+	struct Battle_Config *bc;
 	/* init */
 	void (*init) (void);
 	/* final */
