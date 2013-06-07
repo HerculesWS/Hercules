@@ -93,8 +93,8 @@ int mercenary_get_lifetime(struct mercenary_data *md)
 	if( md == NULL || md->contract_timer == INVALID_TIMER )
 		return 0;
 
-	td = get_timer(md->contract_timer);
-	return (td != NULL) ? DIFF_TICK(td->tick, gettick()) : 0;
+	td = iTimer->get_timer(md->contract_timer);
+	return (td != NULL) ? DIFF_TICK(td->tick, iTimer->gettick()) : 0;
 }
 
 int mercenary_get_guild(struct mercenary_data *md)
@@ -222,7 +222,7 @@ static int merc_contract_end(int tid, unsigned int tick, int id, intptr_t data)
 	struct map_session_data *sd;
 	struct mercenary_data *md;
 
-	if( (sd = map_id2sd(id)) == NULL )
+	if( (sd = iMap->id2sd(id)) == NULL )
 		return 1;
 	if( (md = sd->md) == NULL )
 		return 1;
@@ -269,14 +269,14 @@ void merc_contract_stop(struct mercenary_data *md)
 {
 	nullpo_retv(md);
 	if( md->contract_timer != INVALID_TIMER )
-		delete_timer(md->contract_timer, merc_contract_end);
+		iTimer->delete_timer(md->contract_timer, merc_contract_end);
 	md->contract_timer = INVALID_TIMER;
 }
 
 void merc_contract_init(struct mercenary_data *md)
 {
 	if( md->contract_timer == INVALID_TIMER )
-		md->contract_timer = add_timer(gettick() + md->mercenary.life_time, merc_contract_end, md->master->bl.id, 0);
+		md->contract_timer = iTimer->add_timer(iTimer->gettick() + md->mercenary.life_time, merc_contract_end, md->master->bl.id, 0);
 
 	md->regen.state.block = 0;
 }
@@ -288,7 +288,7 @@ int merc_data_received(struct s_mercenary *merc, bool flag)
 	struct s_mercenary_db *db;
 	int i = merc_search_index(merc->class_);
 
-	if( (sd = map_charid2sd(merc->char_id)) == NULL )
+	if( (sd = iMap->charid2sd(merc->char_id)) == NULL )
 		return 0;
 	if( !flag || i < 0 )
 	{ // Not created - loaded - DB info
@@ -319,7 +319,7 @@ int merc_data_received(struct s_mercenary *merc, bool flag)
 		md->bl.x = md->ud.to_x;
 		md->bl.y = md->ud.to_y;
 
-		map_addiddb(&md->bl);
+		iMap->addiddb(&md->bl);
 		status_calc_mercenary(md,1);
 		md->contract_timer = INVALID_TIMER;
 		merc_contract_init(md);
@@ -336,7 +336,7 @@ int merc_data_received(struct s_mercenary *merc, bool flag)
 
 	if( md && md->bl.prev == NULL && sd->bl.prev != NULL )
 	{
-		map_addblock(&md->bl);
+		iMap->addblock(&md->bl);
 		clif->spawn(&md->bl);
 		clif->mercenary_info(sd);
 		clif->mercenary_skillblock(sd);
@@ -456,7 +456,7 @@ static bool read_mercenarydb_sub(char* str[], int columns, int current)
 int read_mercenarydb(void)
 {
 	memset(mercenary_db,0,sizeof(mercenary_db));
-	sv->readdb(db_path, "mercenary_db.txt", ',', 26, 26, MAX_MERCENARY_CLASS, &read_mercenarydb_sub);
+	sv->readdb(iMap->db_path, "mercenary_db.txt", ',', 26, 26, MAX_MERCENARY_CLASS, &read_mercenarydb_sub);
 
 	return 0;
 }
@@ -494,7 +494,7 @@ static bool read_mercenary_skilldb_sub(char* str[], int columns, int current)
 
 int read_mercenary_skilldb(void)
 {
-	sv->readdb(db_path, "mercenary_skill_db.txt", ',', 3, 3, -1, &read_mercenary_skilldb_sub);
+	sv->readdb(iMap->db_path, "mercenary_skill_db.txt", ',', 3, 3, -1, &read_mercenary_skilldb_sub);
 
 	return 0;
 }

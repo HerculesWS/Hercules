@@ -2349,7 +2349,7 @@ DBHasher db_default_hash(DBType type)
 DBReleaser db_default_release(DBType type, DBOptions options)
 {
 	DB_COUNTSTAT(db_default_release);
-	options = DB->fix_options(type, options);
+	options = iDB->fix_options(type, options);
 	if (options&DB_OPT_RELEASE_DATA) { // Release data, what about the key?
 		if (options&(DB_OPT_DUP_KEY|DB_OPT_RELEASE_KEY))
 			return &db_release_both; // Release both key and data
@@ -2416,7 +2416,7 @@ DBMap* db_alloc(const char *file, const char *func, int line, DBType type, DBOpt
 #endif /* DB_ENABLE_STATS */
 	db = ers_alloc(db_alloc_ers, struct DBMap_impl);
 
-	options = DB->fix_options(type, options);
+	options = iDB->fix_options(type, options);
 	/* Interface of the database */
 	db->vtable.iterator = db_obj_iterator;
 	db->vtable.exists   = db_obj_exists;
@@ -2447,9 +2447,9 @@ DBMap* db_alloc(const char *file, const char *func, int line, DBType type, DBOpt
 	/* Other */
 	snprintf(ers_name, 50, "db_alloc:nodes:%s:%s:%d",func,file,line);
 	db->nodes = ers_new(sizeof(struct dbn),ers_name,ERS_OPT_WAIT|ERS_OPT_FREE_NAME);
-	db->cmp = DB->default_cmp(type);
-	db->hash = DB->default_hash(type);
-	db->release = DB->default_release(type, options);
+	db->cmp = iDB->default_cmp(type);
+	db->hash = iDB->default_hash(type);
+	db->release = iDB->default_release(type, options);
 	for (i = 0; i < HASH_SIZE; i++)
 		db->ht[i] = NULL;
 	db->cache = NULL;
@@ -2830,22 +2830,22 @@ void linkdb_final( struct linkdb_node** head )
 	*head = NULL;
 }
 void db_defaults(void) {
-	DB = &DB_s;
-	DB->alloc = db_alloc;
-	DB->custom_release = db_custom_release;
-	DB->data2i = db_data2i;
-	DB->data2ptr = db_data2ptr;
-	DB->data2ui = db_data2ui;
-	DB->default_cmp = db_default_cmp;
-	DB->default_hash = db_default_hash;
-	DB->default_release = db_default_release;
-	DB->final = db_final;
-	DB->fix_options = db_fix_options;
-	DB->i2data = db_i2data;
-	DB->i2key = db_i2key;
-	DB->init = db_init;
-	DB->ptr2data = db_ptr2data;
-	DB->str2key = db_str2key;
-	DB->ui2data = db_ui2data;
-	DB->ui2key = db_ui2key;
+	iDB = &iDB_s;
+	iDB->alloc = db_alloc;
+	iDB->custom_release = db_custom_release;
+	iDB->data2i = db_data2i;
+	iDB->data2ptr = db_data2ptr;
+	iDB->data2ui = db_data2ui;
+	iDB->default_cmp = db_default_cmp;
+	iDB->default_hash = db_default_hash;
+	iDB->default_release = db_default_release;
+	iDB->final = db_final;
+	iDB->fix_options = db_fix_options;
+	iDB->i2data = db_i2data;
+	iDB->i2key = db_i2key;
+	iDB->init = db_init;
+	iDB->ptr2data = db_ptr2data;
+	iDB->str2key = db_str2key;
+	iDB->ui2data = db_ui2data;
+	iDB->ui2key = db_ui2key;
 }

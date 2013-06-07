@@ -101,7 +101,7 @@ CPCMD(help) {
 }
 /* [Ind/Hercules] */
 CPCMD(malloc_usage) {
-	unsigned int val = (unsigned int)malloclib->usage();
+	unsigned int val = (unsigned int)iMalloc->usage();
 	ShowInfo("malloc_usage: %.2f MB\n",(double)(val)/1024);
 }
 #define CP_DEF_C(x) { #x , NULL , NULL, NULL }
@@ -369,8 +369,8 @@ void console_parse_init(void) {
 		exit(EXIT_FAILURE);
 	}
 	
-	add_timer_func_list(console->parse_timer, "console_parse_timer");
-	add_timer_interval(gettick() + 1000, console->parse_timer, 0, 0, 500);/* start listening in 1s; re-try every 0.5s */
+	iTimer->add_timer_func_list(console->parse_timer, "console_parse_timer");
+	iTimer->add_timer_interval(iTimer->gettick() + 1000, console->parse_timer, 0, 0, 500);/* start listening in 1s; re-try every 0.5s */
 	
 }
 #endif /* CONSOLE_INPUT */
