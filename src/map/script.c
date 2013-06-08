@@ -11598,7 +11598,7 @@ BUILDIN(setiteminfo)
  Useful for such quests as "Sign this refined item with players name" etc
  Hat[0] +4 -> Player's Hat[0] +4
  *------------------------------------------*/
-BUILDIN(getequpcardid)
+BUILDIN(getequipcardid)
 {
 	int i=-1,num,slot;
 	TBL_PC *sd;
@@ -17638,7 +17638,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(compare,"ss"), // Lordalfa - To bring strstr to scripting Engine.
 		BUILDIN_DEF(getiteminfo,"ii"), //[Lupus] returns Items Buy / sell Price, etc info
 		BUILDIN_DEF(setiteminfo,"iii"), //[Lupus] set Items Buy / sell Price, etc info
-		BUILDIN_DEF(getequpcardid,"ii"), //[Lupus] returns CARD ID or other info from CARD slot N of equipped item
+		BUILDIN_DEF(getequipcardid,"ii"), //[Lupus] returns CARD ID or other info from CARD slot N of equipped item
 		// [zBuffer] List of mathematics commands --->
 		BUILDIN_DEF(sqrt,"i"),
 		BUILDIN_DEF(pow,"ii"),
