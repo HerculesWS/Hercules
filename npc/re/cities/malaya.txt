@@ -43,7 +43,7 @@ malaya,276,55,4	script	Optamara Crew#malaya	100,{
 	}
 }
 
-alberta,237,71,3	script	Optamara Crew#alberta	100,{
+alberta,196,202,3	script	Optamara Crew#alberta	100,{
 
 	mes "[Optamara Crew]";
 	mes "Hey, there!";
@@ -85,6 +85,9 @@ alberta,237,71,3	script	Optamara Crew#alberta	100,{
 		mes "Adventurers these days act like they are busy. Come back when you have the time and we could go visit Port Malaya together.";
 		close;
 	}
+OnInit:
+	waitingroom "To Port Malaya",0;
+	end;
 }
 
 ma_in01,30,94,4	script	Inn Keeper#ma	583,{
@@ -1327,7 +1330,7 @@ malaya,363,283,4	script	Local#ma06	582,{
 		close;
 	} else if (.@name_tak02 == 2) {
 		mes "[Local]";
-		mes "" + .@name$ + "is said to successfully tame a Tikbalang. This person must be courageous. Wonder if Ill get to see this tamed Tikbalang? ÇÑ¹ø º¸°í ½ÍÀºµ¥..";
+		mes "" + .@name$ + "is said to successfully tame a Tikbalang. This person must be courageous. Wonder if Ill get to see this tamed Tikbalang? ï¿½Ñ¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½..";
 		close;
 	} else if (.@name_tak02 == 3) {
 		mes "[Local]";
