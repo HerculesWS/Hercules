@@ -56,7 +56,7 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 		case IOT_NONE:
 			break;
 		case IOT_CHAR:
-			if( ( sd = map_id2sd(owner_id) ) == NULL ) {
+			if( ( sd = iMap->id2sd(owner_id) ) == NULL ) {
 				ShowError("instance_create: character %d not found for instance '%s'.\n", owner_id, name);
 				return -2;
 			}
@@ -64,7 +64,7 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 			icptr = &sd->instances;
 			break;
 		case IOT_PARTY:
-			if( ( p = party_search(owner_id) ) == NULL ) {
+			if( ( p = iParty->search(owner_id) ) == NULL ) {
 				ShowError("instance_create: party %d not found for instance '%s'.\n", owner_id, name);
 				return -2;
 			}
@@ -140,7 +140,7 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
  * Add a map to the instance using src map "name"
  *--------------------------------------*/
 int instance_add_map(const char *name, int instance_id, bool usebasename, const char *map_name) {
-	int16 m = map_mapname2mapid(name);
+	int16 m = iMap->mapname2mapid(name);
 	int i, im = -1;
 	size_t num_cell, size;
 
@@ -162,17 +162,17 @@ int instance_add_map(const char *name, int instance_id, bool usebasename, const 
 		return -4;
 	}
 	
-	ARR_FIND( instance->start_id, map_num, i, !map[i].name[0] ); // Searching for a Free Map
+	ARR_FIND( instance->start_id, iMap->map_num, i, !map[i].name[0] ); // Searching for a Free Map
 
-	if( i < map_num )
+	if( i < iMap->map_num )
 		im = i; // Unused map found (old instance)
 	else {
-		im = map_num; // Using next map index
-		RECREATE(map,struct map_data,++map_num);
+		im = iMap->map_num; // Using next map index
+		RECREATE(map,struct map_data,++iMap->map_num);
 	}
 	
 	if( map[m].cell == (struct mapcell *)0xdeadbeaf )
-		map_cellfromcache(&map[m]);
+		iMap->cellfromcache(&map[m]);
 
 	memcpy( &map[im], &map[m], sizeof(struct map_data) ); // Copy source map
 	if( map_name != NULL ) {
@@ -213,7 +213,7 @@ int instance_add_map(const char *name, int instance_id, bool usebasename, const 
 	RECREATE(instances[instance_id].map, unsigned short, ++instances[instance_id].num_map);
 
 	instances[instance_id].map[instances[instance_id].num_map - 1] = im; // Attach to actual instance
-	map_addmap2db(&map[im]);
+	iMap->addmap2db(&map[im]);
 	
 	return im;
 }
@@ -280,7 +280,7 @@ void instance_init(int instance_id) {
 		return; // nothing to do
 
 	for( i = 0; i < instances[instance_id].num_map; i++ )
-		map_foreachinmap(instance_map_npcsub, map[instances[instance_id].map[i]].instance_src_map, BL_NPC, instances[instance_id].map[i]);
+		iMap->foreachinmap(instance_map_npcsub, map[instances[instance_id].map[i]].instance_src_map, BL_NPC, instances[instance_id].map[i]);
 
 	instances[instance_id].state = INSTANCE_BUSY;
 }
@@ -295,7 +295,7 @@ int instance_del_load(struct map_session_data* sd, va_list args) {
 	if( !sd || sd->bl.m != m )
 		return 0;
 
-	pc_setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_OUTSIGHT);
+	iPc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_OUTSIGHT);
 	return 1;
 }
 
@@ -305,7 +305,7 @@ int instance_cleanup_sub(struct block_list *bl, va_list ap) {
 
 	switch(bl->type) {
 		case BL_PC:
-			map_quit((struct map_session_data *) bl);
+			iMap->quit((struct map_session_data *) bl);
 			break;
 		case BL_NPC:
 			npc_unload((struct npc_data *)bl,true);
@@ -317,7 +317,7 @@ int instance_cleanup_sub(struct block_list *bl, va_list ap) {
 			//There is no need for this, the pet is removed together with the player. [Skotlex]
 			break;
 		case BL_ITEM:
-			map_clearflooritem(bl);
+			iMap->clearflooritem(bl);
 			break;
 		case BL_SKILL:
 			skill->delunit((struct skill_unit *) bl);
@@ -338,11 +338,11 @@ void instance_del_map(int16 m) {
 		return;
 	}
 
-	map_foreachpc(instance_del_load, m);
-	map_foreachinmap(instance_cleanup_sub, m, BL_ALL);
+	iMap->map_foreachpc(instance_del_load, m);
+	iMap->foreachinmap(instance_cleanup_sub, m, BL_ALL);
 
 	if( map[m].mob_delete_timer != INVALID_TIMER )
-		delete_timer(map[m].mob_delete_timer, map_removemobs_timer);
+		iTimer->delete_timer(map[m].mob_delete_timer, iMap->removemobs_timer);
 	
 	mapindex_removemap( map[m].index );
 
@@ -368,7 +368,7 @@ void instance_del_map(int16 m) {
 	if( map[m].channel )
 		clif->chsys_delete(map[m].channel);
 
-	map_removemapdb(&map[m]);
+	iMap->removemapdb(&map[m]);
 	memset(&map[m], 0x00, sizeof(map[0]));
 	map[m].instance_id = -1;
 	map[m].mob_delete_timer = INVALID_TIMER;
@@ -409,14 +409,14 @@ void instance_destroy(int instance_id) {
 		case IOT_NONE:
 			break;
 		case IOT_CHAR:
-			if( ( sd = map_id2sd(instances[instance_id].owner_id) ) == NULL ) {
+			if( ( sd = iMap->id2sd(instances[instance_id].owner_id) ) == NULL ) {
 				break;
 			}
 			iptr = sd->instance;
 			icptr = &sd->instances;
 			break;
 		case IOT_PARTY:
-			if( ( p = party_search(instances[instance_id].owner_id) ) == NULL ) {
+			if( ( p = iParty->search(instances[instance_id].owner_id) ) == NULL ) {
 				break;
 			}
 			iptr = p->instance;
@@ -449,9 +449,9 @@ void instance_destroy(int instance_id) {
 		db_destroy(instances[instance_id].vars);
 
 	if( instances[instance_id].progress_timer != INVALID_TIMER )
-		delete_timer( instances[instance_id].progress_timer, instance_destroy_timer);
+		iTimer->delete_timer( instances[instance_id].progress_timer, instance_destroy_timer);
 	if( instances[instance_id].idle_timer != INVALID_TIMER )
-		delete_timer( instances[instance_id].idle_timer, instance_destroy_timer);
+		iTimer->delete_timer( instances[instance_id].idle_timer, instance_destroy_timer);
 
 	instances[instance_id].vars = NULL;
 
@@ -475,13 +475,13 @@ void instance_check_idle(int instance_id) {
 		idle = false;
 
 	if( instances[instance_id].idle_timer != INVALID_TIMER && !idle ) {
-		delete_timer(instances[instance_id].idle_timer, instance_destroy_timer);
+		iTimer->delete_timer(instances[instance_id].idle_timer, instance_destroy_timer);
 		instances[instance_id].idle_timer = INVALID_TIMER;
 		instances[instance_id].idle_timeout = 0;
 		clif->instance(instance_id, 3, 0); // Notify instance users normal instance expiration
 	} else if( instances[instance_id].idle_timer == INVALID_TIMER && idle ) {
 		instances[instance_id].idle_timeout = now + instances[instance_id].idle_timeoutval;
-		instances[instance_id].idle_timer = add_timer( gettick() + instances[instance_id].idle_timeoutval * 1000, instance_destroy_timer, instance_id, 0);
+		instances[instance_id].idle_timer = iTimer->add_timer( iTimer->gettick() + instances[instance_id].idle_timeoutval * 1000, instance_destroy_timer, instance_id, 0);
 		clif->instance(instance_id, 4, 0); // Notify instance users it will be destroyed of no user join it again in "X" time
 	}
 }
@@ -497,13 +497,13 @@ void instance_set_timeout(int instance_id, unsigned int progress_timeout, unsign
 		return;
 
 	if( instances[instance_id].progress_timer != INVALID_TIMER )
-		delete_timer( instances[instance_id].progress_timer, instance_destroy_timer);
+		iTimer->delete_timer( instances[instance_id].progress_timer, instance_destroy_timer);
 	if( instances[instance_id].idle_timer != INVALID_TIMER )
-		delete_timer( instances[instance_id].idle_timer, instance_destroy_timer);
+		iTimer->delete_timer( instances[instance_id].idle_timer, instance_destroy_timer);
 
 	if( progress_timeout ) {
 		instances[instance_id].progress_timeout = now + progress_timeout;
-		instances[instance_id].progress_timer = add_timer( gettick() + progress_timeout * 1000, instance_destroy_timer, instance_id, 0);
+		instances[instance_id].progress_timer = iTimer->add_timer( iTimer->gettick() + progress_timeout * 1000, instance_destroy_timer, instance_id, 0);
 	} else {
 		instances[instance_id].progress_timeout = 0;
 		instances[instance_id].progress_timer = INVALID_TIMER;
@@ -532,9 +532,9 @@ void instance_check_kick(struct map_session_data *sd) {
 	clif->instance_leave(sd->fd);
 	if( map[m].instance_id >= 0 ) { // User was on the instance map
 		if( map[m].save.map )
-			pc_setpos(sd, map[m].save.map, map[m].save.x, map[m].save.y, CLR_TELEPORT);
+			iPc->setpos(sd, map[m].save.map, map[m].save.x, map[m].save.y, CLR_TELEPORT);
 		else
-			pc_setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
+			iPc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 	}
 }
 
@@ -549,7 +549,7 @@ void do_final_instance(void) {
 }
 
 void do_init_instance(void) {
-	add_timer_func_list(instance_destroy_timer, "instance_destroy_timer");
+	iTimer->add_timer_func_list(instance_destroy_timer, "instance_destroy_timer");
 }
 
 void instance_defaults(void) {

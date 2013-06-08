@@ -30,11 +30,11 @@
 	#undef LOG_MEMMGR
 #endif
 
-#	define aMalloc(n)		malloclib->malloc (n,ALC_MARK)
-#	define aCalloc(m,n)		malloclib->calloc (m,n,ALC_MARK)
-#	define aRealloc(p,n)	malloclib->realloc	(p,n,ALC_MARK)
-#	define aStrdup(p)		malloclib->astrdup (p,ALC_MARK)
-#	define aFree(p)			malloclib->free   (p,ALC_MARK)
+#	define aMalloc(n)		iMalloc->malloc (n,ALC_MARK)
+#	define aCalloc(m,n)		iMalloc->calloc (m,n,ALC_MARK)
+#	define aRealloc(p,n)	iMalloc->realloc	(p,n,ALC_MARK)
+#	define aStrdup(p)		iMalloc->astrdup (p,ALC_MARK)
+#	define aFree(p)			iMalloc->free   (p,ALC_MARK)
 
 /////////////// Buffer Creation /////////////////
 // Full credit for this goes to Shinomori [Ajarn]
@@ -78,9 +78,9 @@ struct malloc_interface {
 	size_t	(*usage) (void);
 	void	(*init) (void);
 	void	(*final) (void);
-} malloclib_s;
+} iMalloc_s;
 
 void memmgr_report (int extra);
 
-struct malloc_interface *malloclib;
+struct malloc_interface *iMalloc;
 #endif /* _MALLOC_H_ */

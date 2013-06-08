@@ -188,7 +188,7 @@ static DBData create_online_char_data(DBKey key, va_list args)
 	character->pincode_enable = -1;
 	character->fd = -1;
 	character->waiting_disconnect = INVALID_TIMER;
-	return DB->ptr2data(character);
+	return iDB->ptr2data(character);
 }
 
 void set_char_charselect(int account_id)
@@ -207,7 +207,7 @@ void set_char_charselect(int account_id)
 		character->pincode_enable = *pincode->charselect + *pincode->enabled;
 
 	if(character->waiting_disconnect != INVALID_TIMER) {
-		delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
+		iTimer->delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
 		character->waiting_disconnect = INVALID_TIMER;
 	}
 
@@ -248,7 +248,7 @@ void set_char_online(int map_id, int char_id, int account_id)
 
 	//Get rid of disconnect timer
 	if(character->waiting_disconnect != INVALID_TIMER) {
-		delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
+		iTimer->delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
 		character->waiting_disconnect = INVALID_TIMER;
 	}
 
@@ -293,7 +293,7 @@ void set_char_offline(int char_id, int account_id)
 				server[character->server].users--;
 
 		if(character->waiting_disconnect != INVALID_TIMER){
-			delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
+			iTimer->delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
 			character->waiting_disconnect = INVALID_TIMER;
 		}
 
@@ -322,13 +322,13 @@ void set_char_offline(int char_id, int account_id)
  */
 static int char_db_setoffline(DBKey key, DBData *data, va_list ap)
 {
-	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
+	struct online_char_data* character = (struct online_char_data*)iDB->data2ptr(data);
 	int server = va_arg(ap, int);
 	if (server == -1) {
 		character->char_id = -1;
 		character->server = -1;
 		if(character->waiting_disconnect != INVALID_TIMER){
-			delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
+			iTimer->delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
 			character->waiting_disconnect = INVALID_TIMER;
 		}
 	} else if (character->server == server)
@@ -341,7 +341,7 @@ static int char_db_setoffline(DBKey key, DBData *data, va_list ap)
  */
 static int char_db_kickoffline(DBKey key, DBData *data, va_list ap)
 {
-	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
+	struct online_char_data* character = (struct online_char_data*)iDB->data2ptr(data);
 	int server_id = va_arg(ap, int);
 
 	if (server_id > -1 && character->server != server_id)
@@ -393,7 +393,7 @@ static DBData create_charstatus(DBKey key, va_list args)
 	struct mmo_charstatus *cp;
 	cp = (struct mmo_charstatus *) aCalloc(1,sizeof(struct mmo_charstatus));
 	cp->char_id = key.i;
-	return DB->ptr2data(cp);
+	return iDB->ptr2data(cp);
 }
 
 int inventory_to_sql(const struct item items[], int max, int id);
@@ -2025,7 +2025,7 @@ static void char_auth_ok(int fd, struct char_session_data *sd)
 		{	//Character already online. KICK KICK KICK
 			mapif_disconnectplayer(server[character->server].fd, character->account_id, character->char_id, 2);
 			if (character->waiting_disconnect == INVALID_TIMER)
-				character->waiting_disconnect = add_timer(gettick()+20000, chardb_waiting_disconnect, character->account_id, 0);
+				character->waiting_disconnect = iTimer->add_timer(iTimer->gettick()+20000, chardb_waiting_disconnect, character->account_id, 0);
 			WFIFOHEAD(fd,3);
 			WFIFOW(fd,0) = 0x81;
 			WFIFOB(fd,2) = 8;
@@ -2102,7 +2102,7 @@ void loginif_on_ready(void)
 	loginif_check_shutdown();
 
 	//Send online accounts to login server.
-	send_accounts_tologin(INVALID_TIMER, gettick(), 0, 0);
+	send_accounts_tologin(INVALID_TIMER, iTimer->gettick(), 0, 0);
 
 	// if no map-server already connected, display a message...
 	ARR_FIND( 0, ARRAYLENGTH(server), i, server[i].fd > 0 && server[i].map[0] );
@@ -2383,7 +2383,7 @@ int parse_fromlogin(int fd) {
 					{	//Kick it from the map server it is on.
 						mapif_disconnectplayer(server[character->server].fd, character->account_id, character->char_id, 2);
 						if (character->waiting_disconnect == INVALID_TIMER)
-							character->waiting_disconnect = add_timer(gettick()+AUTH_TIMEOUT, chardb_waiting_disconnect, character->account_id, 0);
+							character->waiting_disconnect = iTimer->add_timer(iTimer->gettick()+AUTH_TIMEOUT, chardb_waiting_disconnect, character->account_id, 0);
 					}
 					else
 					{// Manual kick from char server.
@@ -2452,12 +2452,12 @@ int send_accounts_tologin(int tid, unsigned int tick, int id, intptr_t data);
 void do_init_loginif(void)
 {
 	// establish char-login connection if not present
-	add_timer_func_list(check_connect_login_server, "check_connect_login_server");
-	add_timer_interval(gettick() + 1000, check_connect_login_server, 0, 0, 10 * 1000);
+	iTimer->add_timer_func_list(check_connect_login_server, "check_connect_login_server");
+	iTimer->add_timer_interval(iTimer->gettick() + 1000, check_connect_login_server, 0, 0, 10 * 1000);
 
 	// send a list of all online account IDs to login server
-	add_timer_func_list(send_accounts_tologin, "send_accounts_tologin");
-	add_timer_interval(gettick() + 1000, send_accounts_tologin, 0, 0, 3600 * 1000); //Sync online accounts every hour
+	iTimer->add_timer_func_list(send_accounts_tologin, "send_accounts_tologin");
+	iTimer->add_timer_interval(iTimer->gettick() + 1000, send_accounts_tologin, 0, 0, 3600 * 1000); //Sync online accounts every hour
 }
 
 void do_final_loginif(void)
@@ -4457,7 +4457,7 @@ int broadcast_user_count(int tid, unsigned int tick, int id, intptr_t data)
  */
 static int send_accounts_tologin_sub(DBKey key, DBData *data, va_list ap)
 {
-	struct online_char_data* character = DB->data2ptr(data);
+	struct online_char_data* character = iDB->data2ptr(data);
 	int* i = va_arg(ap, int*);
 
 	if(character->server > -1)
@@ -4539,7 +4539,7 @@ static int chardb_waiting_disconnect(int tid, unsigned int tick, int id, intptr_
  */
 static int online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
 {
-	struct online_char_data *character= DB->data2ptr(data);
+	struct online_char_data *character= iDB->data2ptr(data);
 	if (character->fd != -1)
 		return 0; //Character still connected
 	if (character->server == -2) //Unknown server.. set them offline
@@ -4985,15 +4985,15 @@ int do_init(int argc, char **argv) {
 	do_init_mapif();
 
 	// periodically update the overall user count on all mapservers + login server
-	add_timer_func_list(broadcast_user_count, "broadcast_user_count");
-	add_timer_interval(gettick() + 1000, broadcast_user_count, 0, 0, 5 * 1000);
+	iTimer->add_timer_func_list(broadcast_user_count, "broadcast_user_count");
+	iTimer->add_timer_interval(iTimer->gettick() + 1000, broadcast_user_count, 0, 0, 5 * 1000);
 
 	// Timer to clear (online_char_db)
-	add_timer_func_list(chardb_waiting_disconnect, "chardb_waiting_disconnect");
+	iTimer->add_timer_func_list(chardb_waiting_disconnect, "chardb_waiting_disconnect");
 
 	// Online Data timers (checking if char still connected)
-	add_timer_func_list(online_data_cleanup, "online_data_cleanup");
-	add_timer_interval(gettick() + 1000, online_data_cleanup, 0, 0, 600 * 1000);
+	iTimer->add_timer_func_list(online_data_cleanup, "online_data_cleanup");
+	iTimer->add_timer_interval(iTimer->gettick() + 1000, online_data_cleanup, 0, 0, 600 * 1000);
 
 	//Cleaning the tables for NULL entrys @ startup [Sirius]
 	//Chardb clean

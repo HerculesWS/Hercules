@@ -935,7 +935,7 @@ int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason)
 int check_ttl_wisdata_sub(DBKey key, DBData *data, va_list ap)
 {
 	unsigned long tick;
-	struct WisData *wd = DB->data2ptr(data);
+	struct WisData *wd = iDB->data2ptr(data);
 	tick = va_arg(ap, unsigned long);
 
 	if (DIFF_TICK(tick, wd->tick) > WISDATA_TTL && wis_delnum < WISDELLIST_MAX)
@@ -946,7 +946,7 @@ int check_ttl_wisdata_sub(DBKey key, DBData *data, va_list ap)
 
 int check_ttl_wisdata(void)
 {
-	unsigned long tick = gettick();
+	unsigned long tick = iTimer->gettick();
 	int i;
 
 	do {
@@ -1039,7 +1039,7 @@ int mapif_parse_WisRequest(int fd)
 			memcpy(wd->src, RFIFOP(fd, 4), NAME_LENGTH);
 			memcpy(wd->dst, RFIFOP(fd,28), NAME_LENGTH);
 			memcpy(wd->msg, RFIFOP(fd,52), wd->len);
-			wd->tick = gettick();
+			wd->tick = iTimer->gettick();
 			idb_put(wis_db, wd->id, wd);
 			mapif_wis_message(wd);
 		}

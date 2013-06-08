@@ -29,12 +29,12 @@ int irc_connect_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	opt.silent = 1;
 	opt.setTimeo = 0;
 	
-	ircbot->last_try = gettick();
+	ircbot->last_try = iTimer->gettick();
 
 	if( ( ircbot->fd = make_connection(ircbot->ip,hChSys.irc_server_port,&opt) ) > 0 ){
 		session[ircbot->fd]->func_parse = ircbot->parse;
 		session[ircbot->fd]->flag.server = 1;
-		add_timer(gettick() + 3000, ircbot->identify_timer, 0, 0);
+		iTimer->add_timer(iTimer->gettick() + 3000, ircbot->identify_timer, 0, 0);
 		ircbot->isOn = true;
 	}
 	return 0;
@@ -49,7 +49,7 @@ int irc_identify_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	sprintf(send_string, "NICK %s", hChSys.irc_nick);
 	ircbot->send(send_string);
 
-	add_timer(gettick() + 3000, ircbot->join_timer, 0, 0);
+	iTimer->add_timer(iTimer->gettick() + 3000, ircbot->join_timer, 0, 0);
 	
 	return 0;
 }
@@ -90,7 +90,7 @@ int irc_parse(int fd) {
 		ircbot->isIn = false;
 		ircbot->fails = 0;
 		ircbot->ip = host2ip(hChSys.irc_server);
-		add_timer(gettick() + 120000, ircbot->connect_timer, 0, 0);
+		iTimer->add_timer(iTimer->gettick() + 120000, ircbot->connect_timer, 0, 0);
       	return 0;
 	}
 	
@@ -245,8 +245,8 @@ void irc_bot_init(void) {
 	ircbot->isIn = false;
 	ircbot->isOn = false;
 	
-	add_timer_func_list(ircbot->connect_timer, "irc_connect_timer");
-	add_timer(gettick() + 7000, ircbot->connect_timer, 0, 0);
+	iTimer->add_timer_func_list(ircbot->connect_timer, "irc_connect_timer");
+	iTimer->add_timer(iTimer->gettick() + 7000, ircbot->connect_timer, 0, 0);
 }
 
 void irc_bot_final(void) {

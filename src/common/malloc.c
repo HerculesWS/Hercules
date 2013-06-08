@@ -335,7 +335,7 @@ void* _mmalloc(size_t size, const char *file, int line, const char *func )
 
 void* _mcalloc(size_t num, size_t size, const char *file, int line, const char *func )
 {
-	void *p = malloclib->malloc(num * size,file,line,func);
+	void *p = iMalloc->malloc(num * size,file,line,func);
 	memset(p,0,num * size);
 	return p;
 }
@@ -344,7 +344,7 @@ void* _mrealloc(void *memblock, size_t size, const char *file, int line, const c
 {
 	size_t old_size;
 	if(memblock == NULL) {
-		return malloclib->malloc(size,file,line,func);
+		return iMalloc->malloc(size,file,line,func);
 	}
 
 	old_size = ((struct unit_head *)((char *)memblock - sizeof(struct unit_head) + sizeof(long)))->size;
@@ -356,11 +356,11 @@ void* _mrealloc(void *memblock, size_t size, const char *file, int line, const c
 		return memblock;
 	}  else {
 		// Size Large
-		void *p = malloclib->malloc(size,file,line,func);
+		void *p = iMalloc->malloc(size,file,line,func);
 		if(p != NULL) {
 			memcpy(p,memblock,old_size);
 		}
-		malloclib->free(memblock,file,line,func);
+		iMalloc->free(memblock,file,line,func);
 		return p;
 	}
 }
@@ -371,7 +371,7 @@ char* _mstrdup(const char *p, const char *file, int line, const char *func )
 		return NULL;
 	} else {
 		size_t len = strlen(p);
-		char *string  = (char *)malloclib->malloc(len + 1,file,line,func);
+		char *string  = (char *)iMalloc->malloc(len + 1,file,line,func);
 		memcpy(string,p,len+1);
 		return string;
 	}
@@ -626,7 +626,7 @@ static void memmgr_final (void)
 					memmgr_log (buf);
 #endif /* LOG_MEMMGR */
 					// get block pointer and free it [celest]
-					malloclib->free(ptr, ALC_MARK);
+					iMalloc->free(ptr, ALC_MARK);
 				}
 			}
 		}
@@ -804,25 +804,25 @@ void malloc_init (void) {
 }
 
 void malloc_defaults(void) {
-	malloclib = &malloclib_s;
-	malloclib->init = malloc_init;
-	malloclib->final = malloc_final;
-	malloclib->memory_check = malloc_memory_check;
-	malloclib->usage = malloc_usage;
-	malloclib->verify_ptr = malloc_verify_ptr;
+	iMalloc = &iMalloc_s;
+	iMalloc->init = malloc_init;
+	iMalloc->final = malloc_final;
+	iMalloc->memory_check = malloc_memory_check;
+	iMalloc->usage = malloc_usage;
+	iMalloc->verify_ptr = malloc_verify_ptr;
 
 // Athena's built-in Memory Manager
 #ifdef USE_MEMMGR
-	malloclib->malloc  =	 _mmalloc;
-	malloclib->calloc  =	 _mcalloc;
-	malloclib->realloc =	 _mrealloc;
-	malloclib->astrdup =	 _mstrdup;
-	malloclib->free    =	 _mfree;
+	iMalloc->malloc  =	 _mmalloc;
+	iMalloc->calloc  =	 _mcalloc;
+	iMalloc->realloc =	 _mrealloc;
+	iMalloc->astrdup =	 _mstrdup;
+	iMalloc->free    =	 _mfree;
 #else
-	malloclib->malloc  =	aMalloc_;
-	malloclib->calloc  =	aCalloc_;
-	malloclib->realloc =	aRealloc_;
-	malloclib->astrdup =	aStrdup_;
-	malloclib->free    =	aFree_;
+	iMalloc->malloc  =	aMalloc_;
+	iMalloc->calloc  =	aCalloc_;
+	iMalloc->realloc =	aRealloc_;
+	iMalloc->astrdup =	aStrdup_;
+	iMalloc->free    =	aFree_;
 #endif
 }

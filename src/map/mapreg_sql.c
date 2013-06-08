@@ -302,8 +302,8 @@ void mapreg_init(void) {
 
 	script_load_mapreg();
 
-	add_timer_func_list(script_autosave_mapreg, "script_autosave_mapreg");
-	add_timer_interval(gettick() + MAPREG_AUTOSAVE_INTERVAL, script_autosave_mapreg, 0, 0, MAPREG_AUTOSAVE_INTERVAL);
+	iTimer->add_timer_func_list(script_autosave_mapreg, "script_autosave_mapreg");
+	iTimer->add_timer_interval(iTimer->gettick() + MAPREG_AUTOSAVE_INTERVAL, script_autosave_mapreg, 0, 0, MAPREG_AUTOSAVE_INTERVAL);
 }
 
 bool mapreg_config_read(const char* w1, const char* w2) {
