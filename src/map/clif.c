@@ -403,7 +403,7 @@ int clif_send(const void* buf, int len, struct block_list* bl, enum send_target 
 		case PARTY_SAMEMAP:
 		case PARTY_SAMEMAP_WOS:
 			if (sd && sd->status.party_id)
-				p = iParty->search(sd->status.party_id);
+				p = party->search(sd->status.party_id);
 
 			if (p) {
 				for(i=0;i<MAX_PARTY;i++){
@@ -6610,7 +6610,7 @@ void clif_party_invite(struct map_session_data *sd,struct map_session_data *tsd)
 
 	fd=tsd->fd;
 
-	if( (p=iParty->search(sd->status.party_id))==NULL )
+	if( (p=party->search(sd->status.party_id))==NULL )
 		return;
 
 	WFIFOHEAD(fd,packet_len(cmd));
@@ -8571,7 +8571,7 @@ void clif_charnameack (int fd, struct block_list *bl)
 				memcpy(WBUFP(buf,6), ssd->status.name, NAME_LENGTH);
 
 				if( ssd->status.party_id ) {
-					p = iParty->search(ssd->status.party_id);
+					p = party->search(ssd->status.party_id);
 				}
 				if( ssd->status.guild_id ) {
 					if( ( g = ssd->guild ) != NULL ) {
@@ -8695,10 +8695,10 @@ void clif_charnameupdate (struct map_session_data *ssd)
 
 	if (!battle_config.display_party_name) {
 		if (ssd->status.party_id > 0 && ssd->status.guild_id > 0 && (g = ssd->guild) != NULL)
-			p = iParty->search(ssd->status.party_id);
+			p = party->search(ssd->status.party_id);
 	}else{
 		if (ssd->status.party_id > 0)
-			p = iParty->search(ssd->status.party_id);
+			p = party->search(ssd->status.party_id);
 	}
 
 	if( ssd->status.guild_id > 0 && (g = ssd->guild) != NULL )
@@ -9384,7 +9384,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 	// Party
 	// (needs to go after clif_spawn() to show hp bars correctly)
 	if(sd->status.party_id) {
-		iParty->send_movemap(sd);
+		party->send_movemap(sd);
 		clif->party_hp(sd); // Show hp after displacement [LuzZza]
 	}
 
@@ -11938,7 +11938,7 @@ void clif_parse_CreateParty(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	iParty->create(sd,name,0,0);
+	party->create(sd,name,0,0);
 }
 
 void clif_parse_CreateParty2(int fd, struct map_session_data *sd)
@@ -11957,7 +11957,7 @@ void clif_parse_CreateParty2(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	iParty->create(sd,name,item1,item2);
+	party->create(sd,name,item1,item2);
 }
 
 
@@ -11980,7 +11980,7 @@ void clif_parse_PartyInvite(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	iParty->invite(sd, t_sd);
+	party->invite(sd, t_sd);
 }
 
 void clif_parse_PartyInvite2(int fd, struct map_session_data *sd)
@@ -12001,7 +12001,7 @@ void clif_parse_PartyInvite2(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	iParty->invite(sd, t_sd);
+	party->invite(sd, t_sd);
 }
 
 
@@ -12013,12 +12013,12 @@ void clif_parse_PartyInvite2(int fd, struct map_session_data *sd)
 ///     1 = accept
 void clif_parse_ReplyPartyInvite(int fd,struct map_session_data *sd)
 {
-	iParty->reply_invite(sd,RFIFOL(fd,2),RFIFOL(fd,6));
+	party->reply_invite(sd,RFIFOL(fd,2),RFIFOL(fd,6));
 }
 
 void clif_parse_ReplyPartyInvite2(int fd,struct map_session_data *sd)
 {
-	iParty->reply_invite(sd,RFIFOL(fd,2),RFIFOB(fd,6));
+	party->reply_invite(sd,RFIFOL(fd,2),RFIFOB(fd,6));
 }
 
 
@@ -12030,7 +12030,7 @@ void clif_parse_LeaveParty(int fd, struct map_session_data *sd)
 		clif->message(fd, msg_txt(227));
 		return;
 	}
-	iParty->leave(sd);
+	party->leave(sd);
 }
 
 
@@ -12042,7 +12042,7 @@ void clif_parse_RemovePartyMember(int fd, struct map_session_data *sd)
 		clif->message(fd, msg_txt(227));
 		return;
 	}
-	iParty->removemember(sd,RFIFOL(fd,2),(char*)RFIFOP(fd,6));
+	party->removemember(sd,RFIFOL(fd,2),(char*)RFIFOP(fd,6));
 }
 
 
@@ -12057,7 +12057,7 @@ void clif_parse_PartyChangeOption(int fd, struct map_session_data *sd)
 	if( !sd->status.party_id )
 		return;
 
-	p = iParty->search(sd->status.party_id);
+	p = party->search(sd->status.party_id);
 	if( p == NULL )
 		return;
 
@@ -12070,9 +12070,9 @@ void clif_parse_PartyChangeOption(int fd, struct map_session_data *sd)
 
 #if PACKETVER < 20090603
 	//Client can't change the item-field
-	iParty->changeoption(sd, RFIFOL(fd,2), p->party.item);
+	party->changeoption(sd, RFIFOL(fd,2), p->party.item);
 #else
-	iParty->changeoption(sd, RFIFOL(fd,2), ((RFIFOB(fd,6)?1:0)|(RFIFOB(fd,7)?2:0)));
+	party->changeoption(sd, RFIFOL(fd,2), ((RFIFOB(fd,6)?1:0)|(RFIFOB(fd,7)?2:0)));
 #endif
 }
 
@@ -12104,7 +12104,7 @@ void clif_parse_PartyMessage(int fd, struct map_session_data* sd)
 		sd->cantalk_tick = iTimer->gettick() + battle_config.min_chat_delay;
 	}
 
-	iParty->send_message(sd, text, textlen);
+	party->send_message(sd, text, textlen);
 }
 
 
@@ -12112,7 +12112,7 @@ void clif_parse_PartyMessage(int fd, struct map_session_data* sd)
 /// 07da <account id>.L
 void clif_parse_PartyChangeLeader(int fd, struct map_session_data* sd)
 {
-	iParty->changeleader(sd, iMap->id2sd(RFIFOL(fd,2)));
+	party->changeleader(sd, iMap->id2sd(RFIFOL(fd,2)));
 }
 
 
@@ -12131,7 +12131,7 @@ void clif_parse_PartyBookingRegisterReq(int fd, struct map_session_data* sd)
 	for(i=0; i<PARTY_BOOKING_JOBS; i++)
 		job[i] = RFIFOB(fd,6+i*2);
 
-	iParty->booking_register(sd, level, mapid, job);
+	party->booking_register(sd, level, mapid, job);
 }
 
 
@@ -12162,7 +12162,7 @@ void clif_parse_PartyBookingSearchReq(int fd, struct map_session_data* sd)
 	unsigned long lastindex = RFIFOL(fd,8);
 	short resultcount = RFIFOW(fd,12);
 
-	iParty->booking_search(sd, level, mapid, job, lastindex, resultcount);
+	party->booking_search(sd, level, mapid, job, lastindex, resultcount);
 }
 
 
@@ -12199,7 +12199,7 @@ void clif_PartyBookingSearchAck(int fd, struct party_booking_ad_info** results, 
 /// 0806
 void clif_parse_PartyBookingDeleteReq(int fd, struct map_session_data* sd)
 {
-	if(iParty->booking_delete(sd))
+	if(party->booking_delete(sd))
 		clif->PartyBookingDeleteAck(sd, 0);
 }
 
@@ -12232,7 +12232,7 @@ void clif_parse_PartyBookingUpdateReq(int fd, struct map_session_data* sd)
 	for(i=0; i<PARTY_BOOKING_JOBS; i++)
 		job[i] = RFIFOW(fd,2+i*2);
 
-	iParty->booking_update(sd, job);
+	party->booking_update(sd, job);
 }
 
 
@@ -15586,7 +15586,7 @@ int clif_instance(int instance_id, int type, int flag) {
 			break;
 		case IOT_PARTY:
 			/* default is already PARTY */
-			sd = iParty->getavailablesd(iParty->search(instances[instance_id].owner_id));
+			sd = party->getavailablesd(party->search(instances[instance_id].owner_id));
 			break;
 		case IOT_CHAR:
 			target = SELF;

@@ -33,7 +33,7 @@
 #include "elemental.h"
 #include "npc.h" // fake_nd
 #include "pet.h" // pet_unlocktarget()
-#include "party.h" // iParty->search()
+#include "party.h" // party->search()
 #include "guild.h" // guild->search(), guild_request_info()
 #include "script.h" // script_config
 #include "skill.h"
@@ -1217,7 +1217,7 @@ int pc_reg_received(struct map_session_data *sd)
 	sd->state.active = 1;
 
 	if (sd->status.party_id)
-		iParty->member_joined(sd);
+		party->member_joined(sd);
 	if (sd->status.guild_id)
 		guild->member_joined(sd);
 
@@ -4028,7 +4028,7 @@ int pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 		return 0;	// Distance is too far
 
 	if (sd->status.party_id)
-		p = iParty->search(sd->status.party_id);
+		p = party->search(sd->status.party_id);
 
 	if(fitem->first_get_charid > 0 && fitem->first_get_charid != sd->status.char_id)
   	{
@@ -4067,7 +4067,7 @@ int pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 	}
 
 	//This function takes care of giving the item to whoever should have it, considering party-share options.
-	if ((flag = iParty->share_loot(p,sd,&fitem->item_data, fitem->first_get_charid))) {
+	if ((flag = party->share_loot(p,sd,&fitem->item_data, fitem->first_get_charid))) {
 		clif->additem(sd,0,0,flag);
 		return 1;
 	}
@@ -4736,7 +4736,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 				stop = true;
 			}
 		}
-		if ( !stop && sd->status.party_id && (p = iParty->search(sd->status.party_id)) && p->instances ) {
+		if ( !stop && sd->status.party_id && (p = party->search(sd->status.party_id)) && p->instances ) {
 			for( i = 0; i < p->instances; i++ ) {
 				ARR_FIND(0, instances[p->instance[i]].num_map, j, map[instances[p->instance[i]].map[j]].instance_src_map == m && !map[instances[p->instance[i]].map[j]].cName);
 				if( j != instances[p->instance[i]].num_map )
@@ -4804,7 +4804,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		}
 		if (battle_config.clear_unit_onwarp&BL_PC)
 			skill->clear_unitgroup(&sd->bl);
-		iParty->send_dot_remove(sd); //minimap dot fix [Kevin]
+		party->send_dot_remove(sd); //minimap dot fix [Kevin]
 		guild->send_dot_remove(sd);
 		bg_send_dot_remove(sd);
 		if (sd->regen.state.gc)
@@ -5711,7 +5711,7 @@ int pc_checkbaselevelup(struct map_session_data *sd) {
 	npc_script_event(sd, NPCE_BASELVUP); //LORDALFA - LVLUPEVENT
 
 	if(sd->status.party_id)
-		iParty->send_levelup(sd);
+		party->send_levelup(sd);
 
 	pc->baselevelchanged(sd);
 	return 1;
@@ -6275,7 +6275,7 @@ int pc_resetlvl(struct map_session_data* sd,int type)
 	}
 
 	if ((type == 1 || type == 2 || type == 3) && sd->status.party_id)
-		iParty->send_levelup(sd);
+		party->send_levelup(sd);
 
 	status_calc_pc(sd,0);
 	clif->skillinfoblock(sd);
@@ -7131,7 +7131,7 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 		status_calc_pc(sd, 0);
 		if(sd->status.party_id)
 		{
-			iParty->send_levelup(sd);
+			party->send_levelup(sd);
 		}
 		break;
 	case SP_JOBLEVEL:

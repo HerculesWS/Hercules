@@ -1854,7 +1854,7 @@ static void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, str
 		&& check_distance_blxy(&sd->bl, dlist->x, dlist->y, AUTOLOOT_DISTANCE)
 #endif
 	) {	//Autoloot.
-		if (iParty->share_loot(iParty->search(sd->status.party_id),
+		if (party->share_loot(party->search(sd->status.party_id),
 			sd, &ditem->item_data, sd->status.char_id) == 0
 		) {
 			ers_free(item_drop_ers, ditem);
@@ -2255,7 +2255,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			for( j = 0; j < pnum && pt[j].id != temp; j++ ); //Locate party.
 
 			if( j == pnum ){ //Possibly add party.
-				pt[pnum].p = iParty->search(temp);
+				pt[pnum].p = party->search(temp);
 				if(pt[pnum].p && pt[pnum].p->party.exp) {
 					pt[pnum].id = temp;
 					pt[pnum].base_exp = base_exp;
@@ -2298,7 +2298,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 	}
 
 	for( i = 0; i < pnum; i++ ) //Party share.
-		iParty->exp_share(pt[i].p, &md->bl, pt[i].base_exp,pt[i].job_exp,pt[i].zeny);
+		party->exp_share(pt[i].p, &md->bl, pt[i].base_exp,pt[i].job_exp,pt[i].zeny);
 
 	} //End EXP giving.
 

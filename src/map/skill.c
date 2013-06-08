@@ -2380,7 +2380,7 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 				break;
 			case MO_COMBOFINISH:
 				if (sd->status.party_id>0) //bonus from SG_FRIEND [Komurka]
-					iParty->skill_check(sd, sd->status.party_id, MO_COMBOFINISH, skill_lv);
+					party->skill_check(sd, sd->status.party_id, MO_COMBOFINISH, skill_lv);
 				if (pc->checkskill(sd, CH_TIGERFIST) > 0 && sd->spiritball > 0)
 					flag=1;
 			case CH_TIGERFIST:
@@ -2402,7 +2402,7 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 			{	//bonus from SG_FRIEND [Komurka]
 				int level;
 				if(sd->status.party_id>0 && (level = pc->checkskill(sd,SG_FRIEND)))
-					iParty->skill_check(sd, sd->status.party_id, TK_COUNTER,level);
+					party->skill_check(sd, sd->status.party_id, TK_COUNTER,level);
 			}
 				break;
 			case SL_STIN:
@@ -12671,7 +12671,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			}
 		case AM_TWILIGHT2:
 		case AM_TWILIGHT3:
-			if (!iParty->skill_check(sd, sd->status.party_id, skill_id, skill_lv))
+			if (!party->skill_check(sd, sd->status.party_id, skill_id, skill_lv))
 			{
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;

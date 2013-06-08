@@ -608,7 +608,7 @@ ACMD(who)
 					break;
 				}
 				default: {
-					struct party_data *p = iParty->search(pl_sd->status.party_id);
+					struct party_data *p = party->search(pl_sd->status.party_id);
 					struct guild *g = pl_sd->guild;
 					
 					StrBuf->Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
@@ -711,7 +711,7 @@ ACMD(whogm)
 				pc->job_name(pl_sd->status.class_), pl_sd->status.job_level);
 		clif->message(fd, atcmd_output);
 		
-		p = iParty->search(pl_sd->status.party_id);
+		p = party->search(pl_sd->status.party_id);
 		g = pl_sd->guild;
 		
 		sprintf(atcmd_output,msg_txt(916),	// Party: '%s' | Guild: '%s'
@@ -1327,7 +1327,7 @@ ACMD(baselevelup)
 	status_calc_pc(sd, 0);
 	pc->baselevelchanged(sd);
 	if(sd->status.party_id)
-		iParty->send_levelup(sd);
+		party->send_levelup(sd);
 	return true;
 }
 
@@ -3223,17 +3223,17 @@ ACMD(spiritball)
  *------------------------------------------*/
 ACMD(party)
 {
-	char party[NAME_LENGTH];
+	char party_name[NAME_LENGTH];
 	nullpo_retr(-1, sd);
 	
-	memset(party, '\0', sizeof(party));
+	memset(party_name, '\0', sizeof(party_name));
 	
-	if (!message || !*message || sscanf(message, "%23[^\n]", party) < 1) {
+	if (!message || !*message || sscanf(message, "%23[^\n]", party_name) < 1) {
 		clif->message(fd, msg_txt(1029)); // Please enter a party name (usage: @party <party_name>).
 		return false;
 	}
 	
-	iParty->create(sd, party, 0, 0);
+	party->create(sd, party_name, 0, 0);
 	
 	return true;
 }
@@ -3543,8 +3543,8 @@ ACMD(partyrecall)
 		return false;
 	}
 	
-	if ((p = iParty->searchname(party_name)) == NULL && // name first to avoid error when name begin with a number
-	    (p = iParty->search(atoi(message))) == NULL)
+	if ((p = party->searchname(party_name)) == NULL && // name first to avoid error when name begin with a number
+	    (p = party->search(atoi(message))) == NULL)
 	{
 		clif->message(fd, msg_txt(96)); // Incorrect name or ID, or no one from the party is online.
 		return false;
@@ -4112,8 +4112,8 @@ ACMD(partyspy)
 		return false;
 	}
 	
-	if ((p = iParty->searchname(party_name)) != NULL || // name first to avoid error when name begin with a number
-	    (p = iParty->search(atoi(message))) != NULL) {
+	if ((p = party->searchname(party_name)) != NULL || // name first to avoid error when name begin with a number
+	    (p = party->search(atoi(message))) != NULL) {
 		if (sd->partyspy == p->party.party_id) {
 			sd->partyspy = 0;
 			sprintf(atcmd_output, msg_txt(105), p->party.name); // No longer spying on the %s party.
@@ -5670,7 +5670,7 @@ ACMD(changeleader)
 		return false;
 	}
 	
-	if (iParty->changeleader(sd, iMap->nick2sd((char *) message)))
+	if (party->changeleader(sd, iMap->nick2sd((char *) message)))
 		return true;
 	return false;
 }
@@ -5686,7 +5686,7 @@ ACMD(partyoption)
 	char w1[16], w2[16];
 	nullpo_retr(-1, sd);
 	
-	if (sd->status.party_id == 0 || (p = iParty->search(sd->status.party_id)) == NULL)
+	if (sd->status.party_id == 0 || (p = party->search(sd->status.party_id)) == NULL)
 	{
 		clif->message(fd, msg_txt(282));
 		return false;
@@ -5712,7 +5712,7 @@ ACMD(partyoption)
 	
 	//Change item share type.
 	if (option != p->party.item)
-		iParty->changeoption(sd, p->party.exp, option);
+		party->changeoption(sd, p->party.exp, option);
 	else
 		clif->message(fd, msg_txt(286));
 	

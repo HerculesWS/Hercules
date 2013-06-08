@@ -2148,7 +2148,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 						ATK_ADDRATE(sd->bonus.crit_atk_rate);
 
 					if(sd->status.party_id && (temp=pc->checkskill(sd,TK_POWER)) > 0){
-						if( (i = party_foreachsamemap(iParty->sub_count, sd, 0)) > 1 ) // exclude the player himself [Inkfish]
+						if( (i = party_foreachsamemap(party->sub_count, sd, 0)) > 1 ) // exclude the player himself [Inkfish]
 							ATK_ADDRATE(2*temp*i);
 					}
 				}

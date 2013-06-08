@@ -64,7 +64,7 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 			icptr = &sd->instances;
 			break;
 		case IOT_PARTY:
-			if( ( p = iParty->search(owner_id) ) == NULL ) {
+			if( ( p = party->search(owner_id) ) == NULL ) {
 				ShowError("instance_create: party %d not found for instance '%s'.\n", owner_id, name);
 				return -2;
 			}
@@ -416,7 +416,7 @@ void instance_destroy(int instance_id) {
 			icptr = &sd->instances;
 			break;
 		case IOT_PARTY:
-			if( ( p = iParty->search(instances[instance_id].owner_id) ) == NULL ) {
+			if( ( p = party->search(instances[instance_id].owner_id) ) == NULL ) {
 				break;
 			}
 			iptr = p->instance;

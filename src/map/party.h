@@ -101,9 +101,9 @@ struct party_interface {
 	void (*booking_update) (struct map_session_data *sd, short* job);
 	void (*booking_search) (struct map_session_data *sd, short level, short mapid, short job, unsigned long lastindex, short resultcount);
 	bool (*booking_delete) (struct map_session_data *sd);
-} iParty_s;
+} party_s;
 
-struct party_interface *iParty;
+struct party_interface *party;
 
 void party_defaults(void);
 

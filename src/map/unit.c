@@ -2111,7 +2111,7 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 				storage_guild_storage_quit(sd,0);
 			sd->state.storage_flag = 0; //Force close it when being warped.
 			if(sd->party_invite>0)
-				iParty->reply_invite(sd,sd->party_invite,0);
+				party->reply_invite(sd,sd->party_invite,0);
 			if(sd->guild_invite>0)
 				guild->reply_invite(sd,sd->guild_invite,0);
 			if(sd->guild_alliance>0)
@@ -2142,7 +2142,7 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 				pc->setstand(sd);
 				skill->sit(sd,0);
 			}
-			iParty->send_dot_remove(sd);//minimap dot fix [Kevin]
+			party->send_dot_remove(sd);//minimap dot fix [Kevin]
 			guild->send_dot_remove(sd);
 			bg_send_dot_remove(sd);
 
@@ -2316,7 +2316,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 
 			// Notify friends that this char logged out. [Skotlex]
 			iMap->map_foreachpc(clif->friendslist_toggle_sub, sd->status.account_id, sd->status.char_id, 0);
-			iParty->send_logout(sd);
+			party->send_logout(sd);
 			guild->send_memberinfoshort(sd,0);
 			pc->cleareventtimer(sd);
 			pc->inventory_rental_clear(sd);
