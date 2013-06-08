@@ -76,7 +76,7 @@ int pet_create_egg(struct map_session_data *sd, int item_id)
 {
 	int pet_id = search_petDB_index(item_id, PET_EGG);
 	if (pet_id < 0) return 0; //No pet egg here.
-	if (!iPc->inventoryblank(sd)) return 0; // Inventory full
+	if (!pc->inventoryblank(sd)) return 0; // Inventory full
 	sd->catch_target_class = pet_db[pet_id].class_;
 	intif_create_pet(sd->status.account_id, sd->status.char_id,
 		(short)pet_db[pet_id].class_,
@@ -304,7 +304,7 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	tmp_item.card[1] = GetWord(pd->pet.pet_id,0);
 	tmp_item.card[2] = GetWord(pd->pet.pet_id,1);
 	tmp_item.card[3] = pd->pet.rename_flag;
-	if((flag = iPc->additem(sd,&tmp_item,1,LOG_TYPE_OTHER))) {
+	if((flag = pc->additem(sd,&tmp_item,1,LOG_TYPE_OTHER))) {
 		clif->additem(sd,0,0,flag);
 		iMap->addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 	}
@@ -448,7 +448,7 @@ int pet_recv_petdata(int account_id,struct s_pet *p,int flag)
 			return 1;
 		}
 		if (!pet_birth_process(sd,p)) //Pet hatched. Delete egg.
-			iPc->delitem(sd,i,1,0,0,LOG_TYPE_OTHER);
+			pc->delitem(sd,i,1,0,0,LOG_TYPE_OTHER);
 	} else {
 		pet_data_init(sd,p);
 		if(sd->pd && sd->bl.prev != NULL) {
@@ -569,7 +569,7 @@ int pet_get_egg(int account_id,int pet_id,int flag)
 	tmp_item.card[1] = GetWord(pet_id,0);
 	tmp_item.card[2] = GetWord(pet_id,1);
 	tmp_item.card[3] = 0; //New pets are not named.
-	if((ret = iPc->additem(sd,&tmp_item,1,LOG_TYPE_PICKDROP_PLAYER))) {
+	if((ret = pc->additem(sd,&tmp_item,1,LOG_TYPE_PICKDROP_PLAYER))) {
 		clif->additem(sd,0,0,ret);
 		iMap->addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 	}
@@ -594,7 +594,7 @@ int pet_menu(struct map_session_data *sd,int menunum)
 		
 	egg_id = itemdb_exists(sd->pd->petDB->EggID);
 	if (egg_id) {
-		if ((egg_id->flag.trade_restriction&0x01) && !iPc->inventoryblank(sd)) {
+		if ((egg_id->flag.trade_restriction&0x01) && !pc->inventoryblank(sd)) {
 			clif->message(sd->fd, msg_txt(451)); // You can't return your pet because your inventory is full.
 			return 1;
 		}
@@ -674,7 +674,7 @@ int pet_equipitem(struct map_session_data *sd,int index)
 		return 1;
 	}
 
-	iPc->delitem(sd,index,1,0,0,LOG_TYPE_OTHER);
+	pc->delitem(sd,index,1,0,0,LOG_TYPE_OTHER);
 	pd->pet.equip = nameid;
 	status_set_viewdata(&pd->bl, pd->pet.class_); //Updates view_data.
 	clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
@@ -710,7 +710,7 @@ static int pet_unequipitem(struct map_session_data *sd, struct pet_data *pd)
 	memset(&tmp_item,0,sizeof(tmp_item));
 	tmp_item.nameid = nameid;
 	tmp_item.identify = 1;
-	if((flag = iPc->additem(sd,&tmp_item,1,LOG_TYPE_OTHER))) {
+	if((flag = pc->additem(sd,&tmp_item,1,LOG_TYPE_OTHER))) {
 		clif->additem(sd,0,0,flag);
 		iMap->addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 	}
@@ -744,12 +744,12 @@ static int pet_food(struct map_session_data *sd, struct pet_data *pd)
 	int i,k;
 
 	k=pd->petDB->FoodID;
-	i=iPc->search_inventory(sd,k);
+	i=pc->search_inventory(sd,k);
 	if(i < 0) {
 		clif->pet_food(sd,k,0);
 		return 1;
 	}
-	iPc->delitem(sd,i,1,0,0,LOG_TYPE_CONSUME);
+	pc->delitem(sd,i,1,0,0,LOG_TYPE_CONSUME);
 
 	if( pd->pet.hungry > 90 )
 		pet_set_intimate(pd, pd->pet.intimate - pd->petDB->r_full);
@@ -1021,7 +1021,7 @@ int pet_lootitem_drop(struct pet_data *pd,struct map_session_data *sd)
 	for(i=0;i<pd->loot->count;i++) {
 		it = &pd->loot->item[i];
 		if(sd){
-			if((flag = iPc->additem(sd,it,it->amount,LOG_TYPE_PICKDROP_PLAYER))){
+			if((flag = pc->additem(sd,it,it->amount,LOG_TYPE_PICKDROP_PLAYER))){
 				clif->additem(sd,0,0,flag);
 				ditem = ers_alloc(item_drop_ers, struct item_drop);
 				memcpy(&ditem->item_data, it, sizeof(struct item));

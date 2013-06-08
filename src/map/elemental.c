@@ -126,7 +126,7 @@ int elemental_create(struct map_session_data *sd, int class_, unsigned int lifet
 		break;
 	}
 
-	if( (i=iPc->checkskill(sd,SO_EL_SYMPATHY)) > 0 ){
+	if( (i=pc->checkskill(sd,SO_EL_SYMPATHY)) > 0 ){
 		ele.hp = ele.max_hp = ele.max_hp * 5 * i / 100;
 		ele.sp = ele.max_sp = ele.max_sp * 5 * i / 100;
 		ele.atk += 25 * i;

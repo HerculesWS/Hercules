@@ -993,7 +993,7 @@ int intif_parse_Registers(int fd)
 	*qty = j;
 
 	if (flag && sd->save_reg.global_num > -1 && sd->save_reg.account_num > -1 && sd->save_reg.account2_num > -1)
-		iPc->reg_received(sd); //Received all registry values, execute init scripts and what-not. [Skotlex]
+		pc->reg_received(sd); //Received all registry values, execute init scripts and what-not. [Skotlex]
 	return 1;
 }
 
@@ -1821,9 +1821,9 @@ static void intif_parse_Auction_register(int fd)
 		int zeny = auction.hours*battle_config.auction_feeperhour;
 
 		clif->auction_message(sd->fd, 4);
-		iPc->additem(sd, &auction.item, auction.item.amount, LOG_TYPE_AUCTION);
+		pc->additem(sd, &auction.item, auction.item.amount, LOG_TYPE_AUCTION);
 
-		iPc->getzeny(sd, zeny, LOG_TYPE_AUCTION, NULL);
+		pc->getzeny(sd, zeny, LOG_TYPE_AUCTION, NULL);
 	}
 }
 
@@ -1919,7 +1919,7 @@ static void intif_parse_Auction_bid(int fd)
 
 	clif->auction_message(sd->fd, result);
 	if( bid > 0 ) {
-		iPc->getzeny(sd, bid, LOG_TYPE_AUCTION,NULL);
+		pc->getzeny(sd, bid, LOG_TYPE_AUCTION,NULL);
 	}
 	if( result == 1 ) { // To update the list, display your buy list
 		clif->pAuction_cancelreg(fd, sd);

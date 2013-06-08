@@ -707,18 +707,18 @@ enum equip_pos {
 
 
 
-#define pc_readglobalreg(sd,reg) iPc->readregistry(sd,reg,3)
-#define pc_setglobalreg(sd,reg,val) iPc->setregistry(sd,reg,val,3)
-#define pc_readglobalreg_str(sd,reg) iPc->readregistry_str(sd,reg,3)
-#define pc_setglobalreg_str(sd,reg,val) iPc->setregistry_str(sd,reg,val,3)
-#define pc_readaccountreg(sd,reg) iPc->readregistry(sd,reg,2)
-#define pc_setaccountreg(sd,reg,val) iPc->setregistry(sd,reg,val,2)
-#define pc_readaccountregstr(sd,reg) iPc->readregistry_str(sd,reg,2)
-#define pc_setaccountregstr(sd,reg,val) iPc->setregistry_str(sd,reg,val,2)
-#define pc_readaccountreg2(sd,reg) iPc->readregistry(sd,reg,1)
-#define pc_setaccountreg2(sd,reg,val) iPc->setregistry(sd,reg,val,1)
-#define pc_readaccountreg2str(sd,reg) iPc->readregistry_str(sd,reg,1)
-#define pc_setaccountreg2str(sd,reg,val) iPc->setregistry_str(sd,reg,val,1)
+#define pc_readglobalreg(sd,reg) pc->readregistry(sd,reg,3)
+#define pc_setglobalreg(sd,reg,val) pc->setregistry(sd,reg,val,3)
+#define pc_readglobalreg_str(sd,reg) pc->readregistry_str(sd,reg,3)
+#define pc_setglobalreg_str(sd,reg,val) pc->setregistry_str(sd,reg,val,3)
+#define pc_readaccountreg(sd,reg) pc->readregistry(sd,reg,2)
+#define pc_setaccountreg(sd,reg,val) pc->setregistry(sd,reg,val,2)
+#define pc_readaccountregstr(sd,reg) pc->readregistry_str(sd,reg,2)
+#define pc_setaccountregstr(sd,reg,val) pc->setregistry_str(sd,reg,val,2)
+#define pc_readaccountreg2(sd,reg) pc->readregistry(sd,reg,1)
+#define pc_setaccountreg2(sd,reg,val) pc->setregistry(sd,reg,val,1)
+#define pc_readaccountreg2str(sd,reg) pc->readregistry_str(sd,reg,1)
+#define pc_setaccountreg2str(sd,reg,val) pc->setregistry_str(sd,reg,val,1)
 
 
 
@@ -982,9 +982,9 @@ struct pc_interface {
 	
 	void (*baselevelchanged) (struct map_session_data *sd);
 	int (*level_penalty_mod) (struct map_session_data *sd, struct mob_data * md, int type);
-} iPc_s;
+} pc_s;
 
-struct pc_interface *iPc;
+struct pc_interface *pc;
 
 void pc_defaults(void);
 

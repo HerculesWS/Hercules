@@ -295,7 +295,7 @@ int instance_del_load(struct map_session_data* sd, va_list args) {
 	if( !sd || sd->bl.m != m )
 		return 0;
 
-	iPc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_OUTSIGHT);
+	pc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_OUTSIGHT);
 	return 1;
 }
 
@@ -532,9 +532,9 @@ void instance_check_kick(struct map_session_data *sd) {
 	clif->instance_leave(sd->fd);
 	if( map[m].instance_id >= 0 ) { // User was on the instance map
 		if( map[m].save.map )
-			iPc->setpos(sd, map[m].save.map, map[m].save.x, map[m].save.y, CLR_TELEPORT);
+			pc->setpos(sd, map[m].save.map, map[m].save.x, map[m].save.y, CLR_TELEPORT);
 		else
-			iPc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
+			pc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 	}
 }
 

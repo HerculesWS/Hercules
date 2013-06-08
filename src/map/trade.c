@@ -69,7 +69,7 @@ void trade_traderequest(struct map_session_data *sd, struct map_session_data *ta
 		return;
 	}
 
-	if (!iPc->can_give_items(sd) || !iPc->can_give_items(target_sd)) //check if both GMs are allowed to trade
+	if (!pc->can_give_items(sd) || !pc->can_give_items(target_sd)) //check if both GMs are allowed to trade
 	{
 		clif->message(sd->fd, msg_txt(246));
 		clif->tradestart(sd, 2); // GM is not allowed to trade
@@ -77,7 +77,7 @@ void trade_traderequest(struct map_session_data *sd, struct map_session_data *ta
 	}
 
 	// Players can not request trade from far away, unless they are allowed to use @trade.
-	if (!iPc->can_use_command(sd, "@trade") &&
+	if (!pc->can_use_command(sd, "@trade") &&
 	    (sd->bl.m != target_sd->bl.m || !check_distance_bl(&sd->bl, &target_sd->bl, TRADE_DISTANCE))) {
 		clif->tradestart(sd, 0); // too far
 		return ;
@@ -135,7 +135,7 @@ void trade_tradeack(struct map_session_data *sd, int type)
 
 	// Players can not request trade from far away, unless they are allowed to use @trade.
 	// Check here as well since the original character could had warped.
-	if (!iPc->can_use_command(sd, "@trade") &&
+	if (!pc->can_use_command(sd, "@trade") &&
 	    (sd->bl.m != tsd->bl.m || !check_distance_bl(&sd->bl, &tsd->bl, TRADE_DISTANCE))) {
 		clif->tradestart(sd, 0); // too far
 		sd->trade_partner=0;
@@ -350,10 +350,10 @@ void trade_tradeadditem(struct map_session_data *sd, short index, short amount)
 		return;
 
 	item = &sd->status.inventory[index];
-	src_lv = iPc->get_group_level(sd);
-	dst_lv = iPc->get_group_level(target_sd);
+	src_lv = pc->get_group_level(sd);
+	dst_lv = pc->get_group_level(target_sd);
 	if( !itemdb_cantrade(item, src_lv, dst_lv) && //Can't trade
-		(iPc->get_partner(sd) != target_sd || !itemdb_canpartnertrade(item, src_lv, dst_lv)) ) //Can't partner-trade
+		(pc->get_partner(sd) != target_sd || !itemdb_canpartnertrade(item, src_lv, dst_lv)) ) //Can't partner-trade
 	{
 		clif->message (sd->fd, msg_txt(260));
 		clif->tradeitemok(sd, index+2, 1);
@@ -555,9 +555,9 @@ void trade_tradecommit(struct map_session_data *sd)
 		{
 			n = sd->deal.item[trade_i].index;
 
-			flag = iPc->additem(tsd, &sd->status.inventory[n], sd->deal.item[trade_i].amount,LOG_TYPE_TRADE);
+			flag = pc->additem(tsd, &sd->status.inventory[n], sd->deal.item[trade_i].amount,LOG_TYPE_TRADE);
 			if (flag == 0)
-				iPc->delitem(sd, n, sd->deal.item[trade_i].amount, 1, 6, LOG_TYPE_TRADE);
+				pc->delitem(sd, n, sd->deal.item[trade_i].amount, 1, 6, LOG_TYPE_TRADE);
 			else
 				clif->additem(sd, n, sd->deal.item[trade_i].amount, 0);
 			sd->deal.item[trade_i].index = 0;
@@ -567,9 +567,9 @@ void trade_tradecommit(struct map_session_data *sd)
 		{
 			n = tsd->deal.item[trade_i].index;
 
-			flag = iPc->additem(sd, &tsd->status.inventory[n], tsd->deal.item[trade_i].amount,LOG_TYPE_TRADE);
+			flag = pc->additem(sd, &tsd->status.inventory[n], tsd->deal.item[trade_i].amount,LOG_TYPE_TRADE);
 			if (flag == 0)
-				iPc->delitem(tsd, n, tsd->deal.item[trade_i].amount, 1, 6, LOG_TYPE_TRADE);
+				pc->delitem(tsd, n, tsd->deal.item[trade_i].amount, 1, 6, LOG_TYPE_TRADE);
 			else
 				clif->additem(tsd, n, tsd->deal.item[trade_i].amount, 0);
 			tsd->deal.item[trade_i].index = 0;
@@ -578,14 +578,14 @@ void trade_tradecommit(struct map_session_data *sd)
 	}
 
 	if( sd->deal.zeny ) {
-		iPc->payzeny(sd ,sd->deal.zeny, LOG_TYPE_TRADE, tsd);
-		iPc->getzeny(tsd,sd->deal.zeny,LOG_TYPE_TRADE, sd);
+		pc->payzeny(sd ,sd->deal.zeny, LOG_TYPE_TRADE, tsd);
+		pc->getzeny(tsd,sd->deal.zeny,LOG_TYPE_TRADE, sd);
 		sd->deal.zeny = 0;
 
 	}
 	if ( tsd->deal.zeny) {
-		iPc->payzeny(tsd,tsd->deal.zeny,LOG_TYPE_TRADE, sd);
-		iPc->getzeny(sd ,tsd->deal.zeny,LOG_TYPE_TRADE, tsd);
+		pc->payzeny(tsd,tsd->deal.zeny,LOG_TYPE_TRADE, sd);
+		pc->getzeny(sd ,tsd->deal.zeny,LOG_TYPE_TRADE, tsd);
 		tsd->deal.zeny = 0;
 	}
 

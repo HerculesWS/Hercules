@@ -1846,7 +1846,7 @@ static void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, str
 	if( sd == NULL ) sd = iMap->charid2sd(dlist->third_charid);
 
 	if( sd
-		&& (drop_rate <= sd->state.autoloot || iPc->isautolooting(sd, ditem->item_data.nameid))
+		&& (drop_rate <= sd->state.autoloot || pc->isautolooting(sd, ditem->item_data.nameid))
 		&& (battle_config.idle_no_autoloot == 0 || DIFF_TICK(last_tick, sd->idletime) < battle_config.idle_no_autoloot)
 		&& (battle_config.homunculus_autoloot?1:!flag)
 #ifdef AUTOLOOT_DISTANCE
@@ -2189,7 +2189,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			else
 			ARR_FIND(0, MAX_PC_FEELHATE, i, temp == sd->hate_mob[i] &&
 				(battle_config.allow_skill_without_day || sg_info[i].day_func()));
-			if(i<MAX_PC_FEELHATE && (temp=iPc->checkskill(sd,sg_info[i].bless_id)))
+			if(i<MAX_PC_FEELHATE && (temp=pc->checkskill(sd,sg_info[i].bless_id)))
 				bonus += (i==2?20:10)*temp;
 		}
 		if(battle_config.mobs_level_up && md->level > md->db->lv) // [Valaris]
@@ -2285,15 +2285,15 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			if(base_exp || job_exp) {
 				if( md->dmglog[i].flag != MDLF_PET || battle_config.pet_attack_exp_to_master ) {
 #ifdef RENEWAL_EXP
-					int rate = iPc->level_penalty_mod(tmpsd[i], md, 1);
+					int rate = pc->level_penalty_mod(tmpsd[i], md, 1);
 					base_exp = (unsigned int)cap_value(base_exp * rate / 100, 1, UINT_MAX);
 					job_exp = (unsigned int)cap_value(job_exp * rate / 100, 1, UINT_MAX);
 #endif
-					iPc->gainexp(tmpsd[i], &md->bl, base_exp, job_exp, false);
+					pc->gainexp(tmpsd[i], &md->bl, base_exp, job_exp, false);
 				}
 			}
 			if(zeny) // zeny from mobs [Valaris]
-				iPc->getzeny(tmpsd[i], zeny, LOG_TYPE_PICKDROP_MONSTER, NULL);
+				pc->getzeny(tmpsd[i], zeny, LOG_TYPE_PICKDROP_MONSTER, NULL);
 		}
 	}
 
@@ -2313,9 +2313,9 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		struct item_data* it = NULL;
 		int drop_rate;
 #ifdef RENEWAL_DROP
-		int drop_modifier = mvp_sd    ? iPc->level_penalty_mod(mvp_sd, md, 2)   :
-							second_sd ? iPc->level_penalty_mod(second_sd, md, 2):
-							third_sd  ? iPc->level_penalty_mod(third_sd, md, 2) :
+		int drop_modifier = mvp_sd    ? pc->level_penalty_mod(mvp_sd, md, 2)   :
+							second_sd ? pc->level_penalty_mod(second_sd, md, 2):
+							third_sd  ? pc->level_penalty_mod(third_sd, md, 2) :
 							100;/* no player was attached, we dont use any modifier (100 = rates are not touched) */
 #endif
 		dlist->m = md->bl.m;
@@ -2394,7 +2394,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		}
 
 		// Ore Discovery [Celest]
-		if (sd == mvp_sd && iPc->checkskill(sd,BS_FINDINGORE)>0 && battle_config.finding_ore_rate/10 >= rnd()%10000) {
+		if (sd == mvp_sd && pc->checkskill(sd,BS_FINDINGORE)>0 && battle_config.finding_ore_rate/10 >= rnd()%10000) {
 			ditem = mob_setdropitem(itemdb_searchrandomid(IG_FINDINGORE), 1, NULL);
 			mob_item_drop(md, dlist, ditem, 0, battle_config.finding_ore_rate/10, homkillonly);
 		}
@@ -2433,7 +2433,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			if( sd->bonus.get_zeny_num && rnd()%100 < sd->bonus.get_zeny_rate ) {
 				i = sd->bonus.get_zeny_num > 0 ? sd->bonus.get_zeny_num : -md->level * sd->bonus.get_zeny_num;
 				if (!i) i = 1;
-				iPc->getzeny(sd, 1+rnd()%i, LOG_TYPE_PICKDROP_MONSTER, NULL);
+				pc->getzeny(sd, 1+rnd()%i, LOG_TYPE_PICKDROP_MONSTER, NULL);
 			}
 		}
 
@@ -2479,7 +2479,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 		clif->mvp_effect(mvp_sd);
 		clif->mvp_exp(mvp_sd,mexp);
-		iPc->gainexp(mvp_sd, &md->bl, mexp,0, false);
+		pc->gainexp(mvp_sd, &md->bl, mexp,0, false);
 		log_mvp[1] = mexp;
 
 		if( !(map[m].flag.nomvploot || type&1) ) {
@@ -2527,7 +2527,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 					intif_broadcast(message,strlen(message)+1,0);
 				}
 
-				if((temp = iPc->additem(mvp_sd,&item,1,LOG_TYPE_PICKDROP_PLAYER)) != 0) {
+				if((temp = pc->additem(mvp_sd,&item,1,LOG_TYPE_PICKDROP_PLAYER)) != 0) {
 					clif->additem(mvp_sd,0,0,temp);
 					iMap->addflooritem(&item,1,mvp_sd->bl.m,mvp_sd->bl.x,mvp_sd->bl.y,mvp_sd->status.char_id,(second_sd?second_sd->status.char_id:0),(third_sd?third_sd->status.char_id:0),1);
 				}
@@ -2560,7 +2560,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		if( sd ) {
 			if( sd->mission_mobid == md->class_) { //TK_MISSION [Skotlex]
 				if( ++sd->mission_count >= 100 && (temp = mob_get_random_id(0, 0xE, sd->status.base_level)) ) {
-					iPc->addfame(sd, 1);
+					pc->addfame(sd, 1);
 					sd->mission_mobid = temp;
 					pc_setglobalreg(sd,"TK_MISSION_ID", temp);
 					sd->mission_count = 0;
@@ -2580,15 +2580,15 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 		if( md->npc_event[0] && !md->state.npc_killmonster ) {
 			if( sd && battle_config.mob_npc_event_type ) {
-				iPc->setparam(sd, SP_KILLERRID, sd->bl.id);
+				pc->setparam(sd, SP_KILLERRID, sd->bl.id);
 				npc_event(sd,md->npc_event,0);
 			} else if( mvp_sd ) {
-				iPc->setparam(mvp_sd, SP_KILLERRID, sd?sd->bl.id:0);
+				pc->setparam(mvp_sd, SP_KILLERRID, sd?sd->bl.id:0);
 				npc_event(mvp_sd,md->npc_event,0);
 			} else
 				npc_event_do(md->npc_event);
 		} else if( mvp_sd && !md->state.npc_killmonster ) {
-			iPc->setparam(mvp_sd, SP_KILLEDRID, md->class_);
+			pc->setparam(mvp_sd, SP_KILLEDRID, md->class_);
 			npc_script_event(mvp_sd, NPCE_KILLNPC); // PCKillNPC [Lance]
 		}
 
@@ -3384,8 +3384,8 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 
 	//Go Backwards to give better priority to advanced skills.
 	for (i=0,j = MAX_SKILL_TREE-1;j>=0 && i< MAX_MOBSKILL ;j--) {
-		int idx = skill_tree[iPc->class2idx(sd->status.class_)][j].idx;
-		skill_id = skill_tree[iPc->class2idx(sd->status.class_)][j].id;
+		int idx = skill_tree[pc->class2idx(sd->status.class_)][j].idx;
+		skill_id = skill_tree[pc->class2idx(sd->status.class_)][j].id;
 		if (!skill_id || sd->status.skill[idx].lv < 1 ||
 			(skill_db[idx].inf2&(INF2_WEDDING_SKILL|INF2_GUILD_SKILL))
 		)

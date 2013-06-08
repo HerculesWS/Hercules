@@ -410,8 +410,8 @@ ACMD(mapmove)
 		return false;
 	}
 	
-	if ((x || y) && iMap->getcell(m, x, y, CELL_CHKNOPASS) && iPc->get_group_level(sd) < battle_config.gm_ignore_warpable_area)
-  	{	//This is to prevent the iPc->setpos call from printing an error.
+	if ((x || y) && iMap->getcell(m, x, y, CELL_CHKNOPASS) && pc->get_group_level(sd) < battle_config.gm_ignore_warpable_area)
+  	{	//This is to prevent the pc->setpos call from printing an error.
 		clif->message(fd, msg_txt(2));
 		if (!iMap->search_freecell(NULL, m, &x, &y, 10, 10, 1))
 			x = y = 0; //Invalid cell, use random spot.
@@ -424,7 +424,7 @@ ACMD(mapmove)
 		clif->message(fd, msg_txt(248));
 		return false;
 	}
-	if (iPc->setpos(sd, mapindex, x, y, CLR_TELEPORT) != 0) {
+	if (pc->setpos(sd, mapindex, x, y, CLR_TELEPORT) != 0) {
 		clif->message(fd, msg_txt(1)); // Map not found.
 		return false;
 	}
@@ -451,7 +451,7 @@ ACMD(where)
 	pl_sd = iMap->nick2sd(atcmd_player_name);
 	if (pl_sd == NULL ||
 	    strncmp(pl_sd->status.name, atcmd_player_name, NAME_LENGTH) != 0 ||
-	    (pc_has_permission(pl_sd, PC_PERM_HIDE_SESSION) && iPc->get_group_level(pl_sd) > iPc->get_group_level(sd) && !pc_has_permission(sd, PC_PERM_WHO_DISPLAY_AID))
+	    (pc_has_permission(pl_sd, PC_PERM_HIDE_SESSION) && pc->get_group_level(pl_sd) > pc->get_group_level(sd) && !pc_has_permission(sd, PC_PERM_WHO_DISPLAY_AID))
 		) {
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
@@ -501,7 +501,7 @@ ACMD(jumpto)
 		return false;
 	}
 	
-	iPc->setpos(sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
+	pc->setpos(sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
 	sprintf(atcmd_output, msg_txt(4), pl_sd->status.name); // Jumped to %s
  	clif->message(fd, atcmd_output);
 	
@@ -533,13 +533,13 @@ ACMD(jump)
 	}
 	
 	if ((x || y) && iMap->getcell(sd->bl.m, x, y, CELL_CHKNOPASS))
-  	{	//This is to prevent the iPc->setpos call from printing an error.
+  	{	//This is to prevent the pc->setpos call from printing an error.
 		clif->message(fd, msg_txt(2));
 		if (!iMap->search_freecell(NULL, sd->bl.m, &x, &y, 10, 10, 1))
 			x = y = 0; //Invalid cell, use random spot.
 	}
 	
-	iPc->setpos(sd, sd->mapindex, x, y, CLR_TELEPORT);
+	pc->setpos(sd, sd->mapindex, x, y, CLR_TELEPORT);
 	sprintf(atcmd_output, msg_txt(5), sd->bl.x, sd->bl.y); // Jumped to %d %d
 	clif->message(fd, atcmd_output);
 	return true;
@@ -580,12 +580,12 @@ ACMD(who)
 	else if (strstr(command, "3") != NULL)
 		display_type = 3;
 	
-	level = iPc->get_group_level(sd);
+	level = pc->get_group_level(sd);
 	StrBuf->Init(&buf);
 	
 	iter = mapit_getallusers();
 	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter))	{
-		if (!((pc_has_permission(pl_sd, PC_PERM_HIDE_SESSION) || (pl_sd->sc.option & OPTION_INVISIBLE)) && iPc->get_group_level(pl_sd) > level)) { // you can look only lower or same level
+		if (!((pc_has_permission(pl_sd, PC_PERM_HIDE_SESSION) || (pl_sd->sc.option & OPTION_INVISIBLE)) && pc->get_group_level(pl_sd) > level)) { // you can look only lower or same level
 			if (stristr(pl_sd->status.name, player_name) == NULL // search with no case sensitive
 				|| (map_id >= 0 && pl_sd->bl.m != map_id))
 				continue;
@@ -595,7 +595,7 @@ ACMD(who)
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
 						StrBuf->Printf(&buf, msg_txt(344), pc_group_id2name(pc_get_group_id(pl_sd))); // "(%s) "
 					StrBuf->Printf(&buf, msg_txt(347), pl_sd->status.base_level, pl_sd->status.job_level,
-									 iPc->job_name(pl_sd->status.class_)); // "| Lv:%d/%d | Job: %s"
+									 pc->job_name(pl_sd->status.class_)); // "| Lv:%d/%d | Job: %s"
 					break;
 				}
 				case 3: {
@@ -674,12 +674,12 @@ ACMD(whogm)
 		match_text[j] = TOLOWER(match_text[j]);
 	
 	count = 0;
-	level = iPc->get_group_level(sd);
+	level = pc->get_group_level(sd);
 	
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
-		pl_level = iPc->get_group_level(pl_sd);
+		pl_level = pc->get_group_level(pl_sd);
 		if (!pl_level)
 			continue;
 		
@@ -708,7 +708,7 @@ ACMD(whogm)
 		
 		sprintf(atcmd_output, msg_txt(915), // BLvl: %d | Job: %s (Lvl: %d)
 				pl_sd->status.base_level,
-				iPc->job_name(pl_sd->status.class_), pl_sd->status.job_level);
+				pc->job_name(pl_sd->status.class_), pl_sd->status.job_level);
 		clif->message(fd, atcmd_output);
 		
 		p = iParty->search(pl_sd->status.party_id);
@@ -741,7 +741,7 @@ ACMD(save)
 {
 	nullpo_retr(-1, sd);
 	
-	iPc->setsavepoint(sd, sd->mapindex, sd->bl.x, sd->bl.y);
+	pc->setsavepoint(sd, sd->mapindex, sd->bl.x, sd->bl.y);
 	if (sd->status.pet_id > 0 && sd->pd)
 		intif_save_petdata(sd->status.account_id, &sd->pd->pet);
 	
@@ -771,7 +771,7 @@ ACMD(load)
 		return false;
 	}
 	
-	iPc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_OUTSIGHT);
+	pc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_OUTSIGHT);
 	clif->message(fd, msg_txt(7)); // Warping to save point..
 	
 	return true;
@@ -885,7 +885,7 @@ ACMD(option)
 	
 	sd->sc.opt1 = param1;
 	sd->sc.opt2 = param2;
-	iPc->setoption(sd, param3);
+	pc->setoption(sd, param3);
 	
 	clif->message(fd, msg_txt(9)); // Options changed.
 	
@@ -911,7 +911,7 @@ ACMD(hide)
 		
 		if( map[sd->bl.m].flag.pvp && !map[sd->bl.m].flag.pvp_nocalcrank )
 		{// register the player for ranking calculations
-			sd->pvp_timer = iTimer->add_timer( iTimer->gettick() + 200, iPc->calc_pvprank_timer, sd->bl.id, 0 );
+			sd->pvp_timer = iTimer->add_timer( iTimer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0 );
 		}
 		//bugreport:2266
 		iMap->foreachinmovearea(clif->insight, &sd->bl, AREA_SIZE, sd->bl.x, sd->bl.y, BL_ALL, &sd->bl);
@@ -925,7 +925,7 @@ ACMD(hide)
 		
 		if( map[sd->bl.m].flag.pvp && !map[sd->bl.m].flag.pvp_nocalcrank && sd->pvp_timer != INVALID_TIMER )
 		{// unregister the player for ranking
-			iTimer->delete_timer( sd->pvp_timer, iPc->calc_pvprank_timer );
+			iTimer->delete_timer( sd->pvp_timer, pc->calc_pvprank_timer );
 			sd->pvp_timer = INVALID_TIMER;
 		}
 	}
@@ -951,7 +951,7 @@ ACMD(jobchange)
 		
 		// Normal Jobs
 		for( i = JOB_NOVICE; i < JOB_MAX_BASIC && !found; i++ ){
-			if (strncmpi(message, iPc->job_name(i), 16) == 0) {
+			if (strncmpi(message, pc->job_name(i), 16) == 0) {
 				job = i;
 				found = true;
 			}
@@ -959,7 +959,7 @@ ACMD(jobchange)
 		
 		// High Jobs, Babys and Third
 		for( i = JOB_NOVICE_HIGH; i < JOB_MAX && !found; i++ ){
-			if (strncmpi(message, iPc->job_name(i), 16) == 0) {
+			if (strncmpi(message, pc->job_name(i), 16) == 0) {
 				job = i;
 				found = true;
 			}
@@ -982,7 +982,7 @@ ACMD(jobchange)
 	
 	if (pcdb_checkid(job))
 	{
-		if (iPc->jobchange(sd, job, upper) == 0)
+		if (pc->jobchange(sd, job, upper) == 0)
 			clif->message(fd, msg_txt(12)); // Your job has been changed.
 		else {
 			clif->message(fd, msg_txt(155)); // You are unable to change your job.
@@ -1166,7 +1166,7 @@ ACMD(item)
 			item_tmp.nameid = item_id;
 			item_tmp.identify = 1;
 			
-			if ((flag = iPc->additem(sd, &item_tmp, get_count, LOG_TYPE_COMMAND)))
+			if ((flag = pc->additem(sd, &item_tmp, get_count, LOG_TYPE_COMMAND)))
 				clif->additem(sd, 0, 0, flag);
 		}
 	}
@@ -1239,7 +1239,7 @@ ACMD(item2)
 			item_tmp.card[1] = c2;
 			item_tmp.card[2] = c3;
 			item_tmp.card[3] = c4;
-			if ((flag = iPc->additem(sd, &item_tmp, get_count, LOG_TYPE_COMMAND)))
+			if ((flag = pc->additem(sd, &item_tmp, get_count, LOG_TYPE_COMMAND)))
 				clif->additem(sd, 0, 0, flag);
 		}
 		
@@ -1263,7 +1263,7 @@ ACMD(itemreset)
 	
 	for (i = 0; i < MAX_INVENTORY; i++) {
 		if (sd->status.inventory[i].amount && sd->status.inventory[i].equip == 0) {
-			iPc->delitem(sd, i, sd->status.inventory[i].amount, 0, 0, LOG_TYPE_COMMAND);
+			pc->delitem(sd, i, sd->status.inventory[i].amount, 0, 0, LOG_TYPE_COMMAND);
 		}
 	}
 	clif->message(fd, msg_txt(20)); // All of your items have been removed.
@@ -1286,14 +1286,14 @@ ACMD(baselevelup)
 	}
 	
 	if (level > 0) {
-		if (sd->status.base_level >= iPc->maxbaselv(sd)) { // check for max level by Valaris
+		if (sd->status.base_level >= pc->maxbaselv(sd)) { // check for max level by Valaris
 			clif->message(fd, msg_txt(47)); // Base level can't go any higher.
 			return false;
 		} // End Addition
-		if ((unsigned int)level > iPc->maxbaselv(sd) || (unsigned int)level > iPc->maxbaselv(sd) - sd->status.base_level) // fix positiv overflow
-			level = iPc->maxbaselv(sd) - sd->status.base_level;
+		if ((unsigned int)level > pc->maxbaselv(sd) || (unsigned int)level > pc->maxbaselv(sd) - sd->status.base_level) // fix positiv overflow
+			level = pc->maxbaselv(sd) - sd->status.base_level;
 		for (i = 0; i < level; i++)
-			status_point += iPc->gets_status_point(sd->status.base_level + i);
+			status_point += pc->gets_status_point(sd->status.base_level + i);
 		
 		sd->status.status_point += status_point;
 		sd->status.base_level += (unsigned int)level;
@@ -1309,9 +1309,9 @@ ACMD(baselevelup)
 		if ((unsigned int)level >= sd->status.base_level)
 			level = sd->status.base_level-1;
 		for (i = 0; i > -level; i--)
-			status_point += iPc->gets_status_point(sd->status.base_level + i - 1);
+			status_point += pc->gets_status_point(sd->status.base_level + i - 1);
 		if (sd->status.status_point < status_point)
-			iPc->resetstate(sd);
+			pc->resetstate(sd);
 		if (sd->status.status_point < status_point)
 			sd->status.status_point = 0;
 		else
@@ -1325,7 +1325,7 @@ ACMD(baselevelup)
 	clif->updatestatus(sd, SP_BASEEXP);
 	clif->updatestatus(sd, SP_NEXTBASEEXP);
 	status_calc_pc(sd, 0);
-	iPc->baselevelchanged(sd);
+	pc->baselevelchanged(sd);
 	if(sd->status.party_id)
 		iParty->send_levelup(sd);
 	return true;
@@ -1346,12 +1346,12 @@ ACMD(joblevelup)
 		return false;
 	}
 	if (level > 0) {
-		if (sd->status.job_level >= iPc->maxjoblv(sd)) {
+		if (sd->status.job_level >= pc->maxjoblv(sd)) {
 			clif->message(fd, msg_txt(23)); // Job level can't go any higher.
 			return false;
 		}
-		if ((unsigned int)level > iPc->maxjoblv(sd) || (unsigned int)level > iPc->maxjoblv(sd) - sd->status.job_level) // fix positiv overflow
-			level = iPc->maxjoblv(sd) - sd->status.job_level;
+		if ((unsigned int)level > pc->maxjoblv(sd) || (unsigned int)level > pc->maxjoblv(sd) - sd->status.job_level) // fix positiv overflow
+			level = pc->maxjoblv(sd) - sd->status.job_level;
 		sd->status.job_level += (unsigned int)level;
 		sd->status.skill_point += level;
 		clif->misceffect(&sd->bl, 1);
@@ -1366,7 +1366,7 @@ ACMD(joblevelup)
 			level = sd->status.job_level-1;
 		sd->status.job_level -= (unsigned int)level;
 		if (sd->status.skill_point < level)
-			iPc->resetskill(sd,0);	//Reset skills since we need to substract more points.
+			pc->resetskill(sd,0);	//Reset skills since we need to substract more points.
 		if (sd->status.skill_point < level)
 			sd->status.skill_point = 0;
 		else
@@ -1469,7 +1469,7 @@ static int atcommand_pvpoff_sub(struct block_list *bl,va_list ap)
 	TBL_PC* sd = (TBL_PC*)bl;
 	clif->pvpset(sd, 0, 0, 2);
 	if (sd->pvp_timer != INVALID_TIMER) {
-		iTimer->delete_timer(sd->pvp_timer, iPc->calc_pvprank_timer);
+		iTimer->delete_timer(sd->pvp_timer, pc->calc_pvprank_timer);
 		sd->pvp_timer = INVALID_TIMER;
 	}
 	return 0;
@@ -1504,7 +1504,7 @@ static int atcommand_pvpon_sub(struct block_list *bl,va_list ap)
 {
 	TBL_PC* sd = (TBL_PC*)bl;
 	if (sd->pvp_timer == INVALID_TIMER) {
-		sd->pvp_timer = iTimer->add_timer(iTimer->gettick() + 200, iPc->calc_pvprank_timer, sd->bl.id, 0);
+		sd->pvp_timer = iTimer->add_timer(iTimer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0);
 		sd->pvp_rank = 0;
 		sd->pvp_lastusers = 0;
 		sd->pvp_point = 5;
@@ -1600,9 +1600,9 @@ ACMD(model)
 	if (hair_style >= MIN_HAIR_STYLE && hair_style <= MAX_HAIR_STYLE &&
 		hair_color >= MIN_HAIR_COLOR && hair_color <= MAX_HAIR_COLOR &&
 		cloth_color >= MIN_CLOTH_COLOR && cloth_color <= MAX_CLOTH_COLOR) {
-		iPc->changelook(sd, LOOK_HAIR, hair_style);
-		iPc->changelook(sd, LOOK_HAIR_COLOR, hair_color);
-		iPc->changelook(sd, LOOK_CLOTHES_COLOR, cloth_color);
+		pc->changelook(sd, LOOK_HAIR, hair_style);
+		pc->changelook(sd, LOOK_HAIR_COLOR, hair_color);
+		pc->changelook(sd, LOOK_CLOTHES_COLOR, cloth_color);
 		clif->message(fd, msg_txt(36)); // Appearence changed.
 	} else {
 		clif->message(fd, msg_txt(37)); // An invalid number was specified.
@@ -1629,7 +1629,7 @@ ACMD(dye)
 	}
 	
 	if (cloth_color >= MIN_CLOTH_COLOR && cloth_color <= MAX_CLOTH_COLOR) {
-		iPc->changelook(sd, LOOK_CLOTHES_COLOR, cloth_color);
+		pc->changelook(sd, LOOK_CLOTHES_COLOR, cloth_color);
 		clif->message(fd, msg_txt(36)); // Appearence changed.
 	} else {
 		clif->message(fd, msg_txt(37)); // An invalid number was specified.
@@ -1656,7 +1656,7 @@ ACMD(hair_style)
 	}
 	
 	if (hair_style >= MIN_HAIR_STYLE && hair_style <= MAX_HAIR_STYLE) {
-		iPc->changelook(sd, LOOK_HAIR, hair_style);
+		pc->changelook(sd, LOOK_HAIR, hair_style);
 		clif->message(fd, msg_txt(36)); // Appearence changed.
 	} else {
 		clif->message(fd, msg_txt(37)); // An invalid number was specified.
@@ -1683,7 +1683,7 @@ ACMD(hair_color)
 	}
 	
 	if (hair_color >= MIN_HAIR_COLOR && hair_color <= MAX_HAIR_COLOR) {
-		iPc->changelook(sd, LOOK_HAIR_COLOR, hair_color);
+		pc->changelook(sd, LOOK_HAIR_COLOR, hair_color);
 		clif->message(fd, msg_txt(36)); // Appearence changed.
 	} else {
 		clif->message(fd, msg_txt(37)); // An invalid number was specified.
@@ -1873,7 +1873,7 @@ ACMD(go)
 			clif->message(fd, msg_txt(248));
 			return false;
 		}
-		if (iPc->setpos(sd, mapindex_name2id(data[town].map), data[town].x, data[town].y, CLR_TELEPORT) == 0) {
+		if (pc->setpos(sd, mapindex_name2id(data[town].map), data[town].x, data[town].y, CLR_TELEPORT) == 0) {
 			clif->message(fd, msg_txt(0)); // Warped.
 		} else {
 			clif->message(fd, msg_txt(1)); // Map not found.
@@ -2085,11 +2085,11 @@ ACMD(refine)
 		if (sd->status.inventory[i].refine != final_refine) {
 			sd->status.inventory[i].refine = final_refine;
 			current_position = sd->status.inventory[i].equip;
-			iPc->unequipitem(sd, i, 3);
+			pc->unequipitem(sd, i, 3);
 			clif->refine(fd, 0, i, sd->status.inventory[i].refine);
 			clif->delitem(sd, i, 1, 3);
 			clif->additem(sd, i, 1, 0);
-			iPc->equipitem(sd, i, current_position);
+			pc->equipitem(sd, i, current_position);
 			clif->misceffect(&sd->bl, 3);
 			count++;
 		}
@@ -2155,7 +2155,7 @@ ACMD(produce)
 		clif->produce_effect(sd, 0, item_id);
 		clif->misceffect(&sd->bl, 3);
 		
-		if ((flag = iPc->additem(sd, &tmp_item, 1, LOG_TYPE_COMMAND)))
+		if ((flag = pc->additem(sd, &tmp_item, 1, LOG_TYPE_COMMAND)))
 			clif->additem(sd, 0, 0, flag);
 	} else {
 		sprintf(atcmd_output, msg_txt(169), item_id, item_data->name); // The item (%d: '%s') is not equipable.
@@ -2198,7 +2198,7 @@ ACMD(memo)
 		return false;
 	}
 	
-	iPc->memo(sd, position);
+	pc->memo(sd, position);
 	return true;
 }
 
@@ -2361,12 +2361,12 @@ ACMD(zeny)
 	}
 	
 	if(zeny > 0){
-	    if((ret=iPc->getzeny(sd,zeny,LOG_TYPE_COMMAND,NULL)) == 1)
+	    if((ret=pc->getzeny(sd,zeny,LOG_TYPE_COMMAND,NULL)) == 1)
 			clif->message(fd, msg_txt(149)); // Unable to increase the number/value.
 	}
 	else {
 	    if( sd->status.zeny < -zeny ) zeny = -sd->status.zeny;
-	    if((ret=iPc->payzeny(sd,-zeny,LOG_TYPE_COMMAND,NULL)) == 1)
+	    if((ret=pc->payzeny(sd,-zeny,LOG_TYPE_COMMAND,NULL)) == 1)
 			clif->message(fd, msg_txt(41)); // Unable to decrease the number/value.
 	}
 	if(!ret) clif->message(fd, msg_txt(176)); //ret=0 mean cmd success
@@ -2707,7 +2707,7 @@ ACMD(recall) {
 		return false;
 	}
 	
-	if ( iPc->get_group_level(sd) < iPc->get_group_level(pl_sd) )
+	if ( pc->get_group_level(sd) < pc->get_group_level(pl_sd) )
 	{
 		clif->message(fd, msg_txt(81)); // Your GM level doesn't authorize you to preform this action on the specified player.
 		return false;
@@ -2724,7 +2724,7 @@ ACMD(recall) {
 	if (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y) {
 		return false;
 	}
-	iPc->setpos(pl_sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_RESPAWN);
+	pc->setpos(pl_sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_RESPAWN);
 	sprintf(atcmd_output, msg_txt(46), pl_sd->status.name); // %s recalled!
 	clif->message(fd, atcmd_output);
 	
@@ -2838,7 +2838,7 @@ ACMD(char_ban)
 	tmtime->tm_min  = tmtime->tm_min + minute;
 	tmtime->tm_sec  = tmtime->tm_sec + second;
 	timestamp = mktime(tmtime);
-	if( timestamp <= time(NULL) && !iPc->can_use_command(sd, "@unban") ) {
+	if( timestamp <= time(NULL) && !pc->can_use_command(sd, "@unban") ) {
 		clif->message(fd,msg_txt(1023)); // You are not allowed to reduce the length of a ban.
 		return false;
 	}
@@ -2899,7 +2899,7 @@ ACMD(night)
 	nullpo_retr(-1, sd);
 	
 	if (iMap->night_flag != 1) {
-		iPc->map_night_timer(iPc->night_timer_tid, 0, 0, 1);
+		pc->map_night_timer(pc->night_timer_tid, 0, 0, 1);
 	} else {
 		clif->message(fd, msg_txt(89)); // Night mode is already enabled.
 		return false;
@@ -2916,7 +2916,7 @@ ACMD(day)
 	nullpo_retr(-1, sd);
 	
 	if (iMap->night_flag != 0) {
-		iPc->map_day_timer(iPc->day_timer_tid, 0, 0, 1);
+		pc->map_day_timer(pc->day_timer_tid, 0, 0, 1);
 	} else {
 		clif->message(fd, msg_txt(90)); // Day mode is already enabled.
 		return false;
@@ -2938,7 +2938,7 @@ ACMD(doom)
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
-		if (pl_sd->fd != fd && iPc->get_group_level(sd) >= iPc->get_group_level(pl_sd))
+		if (pl_sd->fd != fd && pc->get_group_level(sd) >= pc->get_group_level(pl_sd))
 		{
 			status_kill(&pl_sd->bl);
 			clif->specialeffect(&pl_sd->bl,450,AREA);
@@ -2965,7 +2965,7 @@ ACMD(doommap)
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
-		if (pl_sd->fd != fd && sd->bl.m == pl_sd->bl.m && iPc->get_group_level(sd) >= iPc->get_group_level(pl_sd))
+		if (pl_sd->fd != fd && sd->bl.m == pl_sd->bl.m && pc->get_group_level(sd) >= pc->get_group_level(pl_sd))
 		{
 			status_kill(&pl_sd->bl);
 			clif->specialeffect(&pl_sd->bl,450,AREA);
@@ -3053,7 +3053,7 @@ ACMD(kick)
 		return false;
 	}
 	
-	if ( iPc->get_group_level(sd) < iPc->get_group_level(pl_sd) )
+	if ( pc->get_group_level(sd) < pc->get_group_level(pl_sd) )
 	{
 		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
 		return false;
@@ -3076,7 +3076,7 @@ ACMD(kickall)
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
-		if (iPc->get_group_level(sd) >= iPc->get_group_level(pl_sd)) { // you can kick only lower or same gm level
+		if (pc->get_group_level(sd) >= pc->get_group_level(pl_sd)) { // you can kick only lower or same gm level
 			if (sd->status.account_id != pl_sd->status.account_id)
 				clif->GM_kick(NULL, pl_sd);
 		}
@@ -3094,7 +3094,7 @@ ACMD(kickall)
 ACMD(allskill)
 {
 	nullpo_retr(-1, sd);
-	iPc->allskillup(sd); // all skills
+	pc->allskillup(sd); // all skills
 	sd->status.skill_point = 0; // 0 skill points
 	clif->updatestatus(sd, SP_SKILLPOINT); // update
 	clif->message(fd, msg_txt(76)); // All skills have been added to your skill tree.
@@ -3134,12 +3134,12 @@ ACMD(questskill)
 		clif->message(fd, msg_txt(197)); // This skill number doesn't exist or isn't a quest skill.
 		return false;
 	}
-	if (iPc->checkskill2(sd, index) > 0) {
+	if (pc->checkskill2(sd, index) > 0) {
 		clif->message(fd, msg_txt(196)); // You already have this quest skill.
 		return false;
 	}
 	
-	iPc->skill(sd, skill_id, 1, 0);
+	pc->skill(sd, skill_id, 1, 0);
 	clif->message(fd, msg_txt(70)); // You have learned the skill.
 	
 	return true;
@@ -3177,7 +3177,7 @@ ACMD(lostskill)
 		clif->message(fd, msg_txt(197)); // This skill number doesn't exist or isn't a quest skill.
 		return false;
 	}
-	if (iPc->checkskill2(sd, index) == 0) {
+	if (pc->checkskill2(sd, index) == 0) {
 		clif->message(fd, msg_txt(201)); // You don't have this quest skill.
 		return false;
 	}
@@ -3210,7 +3210,7 @@ ACMD(spiritball)
 	}
 	
 	if( sd->spiritball > 0 )
-		iPc->delspiritball(sd, sd->spiritball, 1);
+		pc->delspiritball(sd, sd->spiritball, 1);
 	sd->spiritball = number;
 	clif->spiritball(&sd->bl);
 	// no message, player can look the difference
@@ -3433,7 +3433,7 @@ ACMD(recallall)
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
-		if (sd->status.account_id != pl_sd->status.account_id && iPc->get_group_level(sd) >= iPc->get_group_level(pl_sd))
+		if (sd->status.account_id != pl_sd->status.account_id && pc->get_group_level(sd) >= pc->get_group_level(pl_sd))
 		{
 			if (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y)
 				continue; // Don't waste time warping the character to the same place.
@@ -3441,10 +3441,10 @@ ACMD(recallall)
 				count++;
 			else {
 				if (pc_isdead(pl_sd)) { //Wake them up
-					iPc->setstand(pl_sd);
-					iPc->setrestartvalue(pl_sd,1);
+					pc->setstand(pl_sd);
+					pc->setrestartvalue(pl_sd,1);
 				}
-				iPc->setpos(pl_sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_RESPAWN);
+				pc->setpos(pl_sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_RESPAWN);
 			}
 		}
 	}
@@ -3498,12 +3498,12 @@ ACMD(guildrecall)
 	{
 		if (sd->status.account_id != pl_sd->status.account_id && pl_sd->status.guild_id == g->guild_id)
 		{
-			if (iPc->get_group_level(pl_sd) > iPc->get_group_level(sd) || (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y))
+			if (pc->get_group_level(pl_sd) > pc->get_group_level(sd) || (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y))
 				continue; // Skip GMs greater than you...             or chars already on the cell
 			if (pl_sd->bl.m >= 0 && map[pl_sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE))
 				count++;
 			else
-				iPc->setpos(pl_sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_RESPAWN);
+				pc->setpos(pl_sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_RESPAWN);
 		}
 	}
 	mapit->free(iter);
@@ -3557,12 +3557,12 @@ ACMD(partyrecall)
 	{
 		if (sd->status.account_id != pl_sd->status.account_id && pl_sd->status.party_id == p->party.party_id)
 		{
-			if (iPc->get_group_level(pl_sd) > iPc->get_group_level(sd) || (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y))
+			if (pc->get_group_level(pl_sd) > pc->get_group_level(sd) || (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y))
 				continue; // Skip GMs greater than you...             or chars already on the cell
 			if (pl_sd->bl.m >= 0 && map[pl_sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE))
 				count++;
 			else
-				iPc->setpos(pl_sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_RESPAWN);
+				pc->setpos(pl_sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_RESPAWN);
 		}
 	}
 	mapit->free(iter);
@@ -3708,7 +3708,7 @@ ACMD(reloadstatusdb)
  *------------------------------------------*/
 ACMD(reloadpcdb)
 {
-	iPc->readdb();
+	pc->readdb();
 	clif->message(fd, msg_txt(257));
 	return true;
 }
@@ -4001,47 +4001,47 @@ ACMD(mount_peco)
 		return false;
 	}
 	
-	if( (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT && iPc->checkskill(sd,RK_DRAGONTRAINING) > 0 ) {
+	if( (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT && pc->checkskill(sd,RK_DRAGONTRAINING) > 0 ) {
 		if( !(sd->sc.option&OPTION_DRAGON1) ) {
 			clif->message(sd->fd,msg_txt(1119)); // You have mounted your Dragon.
-			iPc->setoption(sd, sd->sc.option|OPTION_DRAGON1);
+			pc->setoption(sd, sd->sc.option|OPTION_DRAGON1);
 		} else {
 			clif->message(sd->fd,msg_txt(1120)); // You have released your Dragon.
-			iPc->setoption(sd, sd->sc.option&~OPTION_DRAGON1);
+			pc->setoption(sd, sd->sc.option&~OPTION_DRAGON1);
 		}
 		return true;
 	}
-	if( (sd->class_&MAPID_THIRDMASK) == MAPID_RANGER && iPc->checkskill(sd,RA_WUGRIDER) > 0 ) {
+	if( (sd->class_&MAPID_THIRDMASK) == MAPID_RANGER && pc->checkskill(sd,RA_WUGRIDER) > 0 ) {
 		if( !pc_isridingwug(sd) ) {
 			clif->message(sd->fd,msg_txt(1121)); // You have mounted your Warg.
-			iPc->setoption(sd, sd->sc.option|OPTION_WUGRIDER);
+			pc->setoption(sd, sd->sc.option|OPTION_WUGRIDER);
 		} else {
 			clif->message(sd->fd,msg_txt(1122)); // You have released your Warg.
-			iPc->setoption(sd, sd->sc.option&~OPTION_WUGRIDER);
+			pc->setoption(sd, sd->sc.option&~OPTION_WUGRIDER);
 		}
 		return true;
 	}
 	if( (sd->class_&MAPID_THIRDMASK) == MAPID_MECHANIC ) {
 		if( !pc_ismadogear(sd) ) {
 			clif->message(sd->fd,msg_txt(1123)); // You have mounted your Mado Gear.
-			iPc->setoption(sd, sd->sc.option|OPTION_MADOGEAR);
+			pc->setoption(sd, sd->sc.option|OPTION_MADOGEAR);
 		} else {
 			clif->message(sd->fd,msg_txt(1124)); // You have released your Mado Gear.
-			iPc->setoption(sd, sd->sc.option&~OPTION_MADOGEAR);
+			pc->setoption(sd, sd->sc.option&~OPTION_MADOGEAR);
 		}
 		return true;
 	}
 	if (!pc_isriding(sd)) { // if actually no peco
 		
-		if (!iPc->checkskill(sd, KN_RIDING)) {
+		if (!pc->checkskill(sd, KN_RIDING)) {
 			clif->message(fd, msg_txt(213)); // You can not mount a Peco Peco with your current job.
 			return false;
 		}
 		
-		iPc->setoption(sd, sd->sc.option | OPTION_RIDING);
+		pc->setoption(sd, sd->sc.option | OPTION_RIDING);
 		clif->message(fd, msg_txt(102)); // You have mounted a Peco Peco.
 	} else {//Dismount
-		iPc->setoption(sd, sd->sc.option & ~OPTION_RIDING);
+		pc->setoption(sd, sd->sc.option & ~OPTION_RIDING);
 		clif->message(fd, msg_txt(214)); // You have released your Peco Peco.
 	}
 	
@@ -4176,7 +4176,7 @@ ACMD(nuke)
 	}
 	
 	if ((pl_sd = iMap->nick2sd(atcmd_player_name)) != NULL) {
-		if (iPc->get_group_level(sd) >= iPc->get_group_level(pl_sd)) { // you can kill only lower or same GM level
+		if (pc->get_group_level(sd) >= pc->get_group_level(pl_sd)) { // you can kill only lower or same GM level
 			skill->castend_nodamage_id(&pl_sd->bl, &pl_sd->bl, NPC_SELFDESTRUCTION, 99, iTimer->gettick(), 0);
 			clif->message(fd, msg_txt(109)); // Player has been nuked!
 		} else {
@@ -4209,7 +4209,7 @@ ACMD(tonpc)
 	}
 	
 	if ((nd = npc_name2id(npcname)) != NULL) {
-		if (iPc->setpos(sd, map_id2index(nd->bl.m), nd->bl.x, nd->bl.y, CLR_TELEPORT) == 0)
+		if (pc->setpos(sd, map_id2index(nd->bl.m), nd->bl.x, nd->bl.y, CLR_TELEPORT) == 0)
 			clif->message(fd, msg_txt(0)); // Warped.
 		else
 			return false;
@@ -4390,7 +4390,7 @@ ACMD(servertime)
 			clif->message(fd, msg_txt(232)); // Game time: The game is in permanent night.
 	} else if (battle_config.night_duration == 0)
 		if (iMap->night_flag == 1) { // we start with night
-			timer_data = iTimer->get_timer(iPc->day_timer_tid);
+			timer_data = iTimer->get_timer(pc->day_timer_tid);
 			sprintf(temp, msg_txt(233), txt_time(DIFF_TICK(timer_data->tick,iTimer->gettick())/1000)); // Game time: The game is actualy in night for %s.
 			clif->message(fd, temp);
 			clif->message(fd, msg_txt(234)); // Game time: After, the game will be in permanent daylight.
@@ -4398,7 +4398,7 @@ ACMD(servertime)
 			clif->message(fd, msg_txt(231)); // Game time: The game is in permanent daylight.
 		else if (battle_config.day_duration == 0)
 			if (iMap->night_flag == 0) { // we start with day
-				timer_data = iTimer->get_timer(iPc->night_timer_tid);
+				timer_data = iTimer->get_timer(pc->night_timer_tid);
 				sprintf(temp, msg_txt(235), txt_time(DIFF_TICK(timer_data->tick,iTimer->gettick())/1000)); // Game time: The game is actualy in daylight for %s.
 				clif->message(fd, temp);
 				clif->message(fd, msg_txt(236)); // Game time: After, the game will be in permanent night.
@@ -4406,8 +4406,8 @@ ACMD(servertime)
 				clif->message(fd, msg_txt(232)); // Game time: The game is in permanent night.
 			else {
 				if (iMap->night_flag == 0) {
-					timer_data = iTimer->get_timer(iPc->night_timer_tid);
-					timer_data2 = iTimer->get_timer(iPc->day_timer_tid);
+					timer_data = iTimer->get_timer(pc->night_timer_tid);
+					timer_data2 = iTimer->get_timer(pc->day_timer_tid);
 					sprintf(temp, msg_txt(235), txt_time(DIFF_TICK(timer_data->tick,iTimer->gettick())/1000)); // Game time: The game is actualy in daylight for %s.
 					clif->message(fd, temp);
 					if (DIFF_TICK(timer_data->tick, timer_data2->tick) > 0)
@@ -4418,8 +4418,8 @@ ACMD(servertime)
 					sprintf(temp, msg_txt(238), txt_time(timer_data->interval / 1000)); // Game time: A day cycle has a normal duration of %s.
 					clif->message(fd, temp);
 				} else {
-					timer_data = iTimer->get_timer(iPc->day_timer_tid);
-					timer_data2 = iTimer->get_timer(iPc->night_timer_tid);
+					timer_data = iTimer->get_timer(pc->day_timer_tid);
+					timer_data2 = iTimer->get_timer(pc->night_timer_tid);
 					sprintf(temp, msg_txt(233), txt_time(DIFF_TICK(timer_data->tick,iTimer->gettick()) / 1000)); // Game time: The game is actualy in night for %s.
 					clif->message(fd, temp);
 					if (DIFF_TICK(timer_data->tick,timer_data2->tick) > 0)
@@ -4486,7 +4486,7 @@ ACMD(jail)
 		return false;
 	}
 	
-	if (iPc->get_group_level(sd) < iPc->get_group_level(pl_sd))
+	if (pc->get_group_level(sd) < pc->get_group_level(pl_sd))
   	{ // you can jail only lower or same GM
 		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
 		return false;
@@ -4538,7 +4538,7 @@ ACMD(unjail)
 		return false;
 	}
 	
-	if (iPc->get_group_level(sd) < iPc->get_group_level(pl_sd)) { // you can jail only lower or same GM
+	if (pc->get_group_level(sd) < pc->get_group_level(pl_sd)) { // you can jail only lower or same GM
 		
 		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
 		return false;
@@ -4618,7 +4618,7 @@ ACMD(jailfor)
 		return false;
 	}
 	
-	if (iPc->get_group_level(pl_sd) > iPc->get_group_level(sd)) {
+	if (pc->get_group_level(pl_sd) > pc->get_group_level(sd)) {
 		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
 		return false;
 	}
@@ -4738,7 +4738,7 @@ ACMD(disguise)
 		return false;
 	}
 	
-	iPc->disguise(sd, id);
+	pc->disguise(sd, id);
 	clif->message(fd, msg_txt(122)); // Disguise applied.
 	
 	return true;
@@ -4769,7 +4769,7 @@ ACMD(disguiseall)
 	
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
-		iPc->disguise(pl_sd, mob_id);
+		pc->disguise(pl_sd, mob_id);
 	mapit->free(iter);
 	
 	clif->message(fd, msg_txt(122)); // Disguise applied.
@@ -4817,7 +4817,7 @@ ACMD(disguiseguild)
 	
 	for( i = 0; i < g->max_member; i++ )
 		if( (pl_sd = g->member[i].sd) && !pc_isriding(pl_sd) )
-			iPc->disguise(pl_sd, id);
+			pc->disguise(pl_sd, id);
 	
 	clif->message(fd, msg_txt(122)); // Disguise applied.
 	return true;
@@ -4831,7 +4831,7 @@ ACMD(undisguise)
 {
 	nullpo_retr(-1, sd);
 	if (sd->disguise != -1) {
-		iPc->disguise(sd, -1);
+		pc->disguise(sd, -1);
 		clif->message(fd, msg_txt(124)); // Undisguise applied.
 	} else {
 		clif->message(fd, msg_txt(125)); // You're not disguised.
@@ -4852,7 +4852,7 @@ ACMD(undisguiseall) {
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 		if( pl_sd->disguise != -1 )
-			iPc->disguise(pl_sd, -1);
+			pc->disguise(pl_sd, -1);
 	mapit->free(iter);
 	
 	clif->message(fd, msg_txt(124)); // Undisguise applied.
@@ -4885,7 +4885,7 @@ ACMD(undisguiseguild)
 	
 	for(i = 0; i < g->max_member; i++)
 		if( (pl_sd = g->member[i].sd) && pl_sd->disguise != -1 )
-			iPc->disguise(pl_sd, -1);
+			pc->disguise(pl_sd, -1);
 	
 	clif->message(fd, msg_txt(124)); // Undisguise applied.
 	
@@ -4902,11 +4902,11 @@ ACMD(exp)
 	nullpo_retr(-1, sd);
 	memset(output, '\0', sizeof(output));
 	
-	nextb = iPc->nextbaseexp(sd);
+	nextb = pc->nextbaseexp(sd);
 	if (nextb)
 		nextb = sd->status.base_exp*100.0/nextb;
 	
-	nextj = iPc->nextjobexp(sd);
+	nextj = pc->nextjobexp(sd);
 	if (nextj)
 		nextj = sd->status.job_exp*100.0/nextj;
 	
@@ -5158,7 +5158,7 @@ ACMD(follow)
 		if (sd->followtarget == -1)
 			return false;
 		
-		iPc->stop_following (sd);
+		pc->stop_following (sd);
 		clif->message(fd, msg_txt(1159)); // Follow mode OFF.
 		return true;
 	}
@@ -5170,10 +5170,10 @@ ACMD(follow)
 	}
 	
 	if (sd->followtarget == pl_sd->bl.id) {
-		iPc->stop_following (sd);
+		pc->stop_following (sd);
 		clif->message(fd, msg_txt(1159)); // Follow mode OFF.
 	} else {
-		iPc->follow(sd, pl_sd->bl.id);
+		pc->follow(sd, pl_sd->bl.id);
 		clif->message(fd, msg_txt(1160)); // Follow mode ON.
 	}
 	
@@ -5192,8 +5192,8 @@ ACMD(dropall)
 	for (i = 0; i < MAX_INVENTORY; i++) {
 		if (sd->status.inventory[i].amount) {
 			if(sd->status.inventory[i].equip != 0)
-				iPc->unequipitem(sd, i, 3);
-			iPc->dropitem(sd,  i, sd->status.inventory[i].amount);
+				pc->unequipitem(sd, i, 3);
+			pc->dropitem(sd,  i, sd->status.inventory[i].amount);
 		}
 	}
 	return true;
@@ -5219,7 +5219,7 @@ ACMD(storeall)
 	for (i = 0; i < MAX_INVENTORY; i++) {
 		if (sd->status.inventory[i].amount) {
 			if(sd->status.inventory[i].equip != 0)
-				iPc->unequipitem(sd, i, 3);
+				pc->unequipitem(sd, i, 3);
 			storage_storageadd(sd,  i, sd->status.inventory[i].amount);
 		}
 	}
@@ -5306,7 +5306,7 @@ ACMD(clearcart)
 	
 	for( i = 0; i < MAX_CART; i++ )
 		if(sd->status.cart[i].nameid > 0)
-			iPc->cart_delitem(sd, i, sd->status.cart[i].amount, 1, LOG_TYPE_OTHER);
+			pc->cart_delitem(sd, i, sd->status.cart[i].amount, 1, LOG_TYPE_OTHER);
 	
 	clif->clearcart(fd);
 	clif->updatestatus(sd,SP_CARTINFO);
@@ -5387,7 +5387,7 @@ ACMD(useskill)
 		return false;
 	}
 	
-	if ( iPc->get_group_level(sd) < iPc->get_group_level(pl_sd) )
+	if ( pc->get_group_level(sd) < pc->get_group_level(pl_sd) )
 	{
 		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
 		return false;
@@ -5457,10 +5457,10 @@ ACMD(skilltree)
 		return false;
 	}
 	
-	c = iPc->calc_skilltree_normalize_job(pl_sd);
-	c = iPc->mapid2jobid(c, pl_sd->status.sex);
+	c = pc->calc_skilltree_normalize_job(pl_sd);
+	c = pc->mapid2jobid(c, pl_sd->status.sex);
 	
-	sprintf(atcmd_output, msg_txt(1168), iPc->job_name(c), iPc->checkskill(pl_sd, NV_BASIC)); // Player is using %s skill tree (%d basic points).
+	sprintf(atcmd_output, msg_txt(1168), pc->job_name(c), pc->checkskill(pl_sd, NV_BASIC)); // Player is using %s skill tree (%d basic points).
 	clif->message(fd, atcmd_output);
 	
 	ARR_FIND( 0, MAX_SKILL_TREE, j, skill_tree[c][j].id == 0 || skill_tree[c][j].id == skill_id );
@@ -5475,7 +5475,7 @@ ACMD(skilltree)
 	meets = 1;
 	for(j=0;j<MAX_PC_SKILL_REQUIRE;j++)
 	{
-		if( ent->need[j].id && iPc->checkskill(sd,ent->need[j].id) < ent->need[j].lv)
+		if( ent->need[j].id && pc->checkskill(sd,ent->need[j].id) < ent->need[j].lv)
 		{
 			sprintf(atcmd_output, msg_txt(1170), ent->need[j].lv, skill_db[ent->need[j].id].desc); // Player requires level %d of skill %s.
 			clif->message(fd, atcmd_output);
@@ -5503,7 +5503,7 @@ void getring (struct map_session_data* sd)
 	item_tmp.card[2] = sd->status.partner_id;
 	item_tmp.card[3] = sd->status.partner_id >> 16;
 	
-	if((flag = iPc->additem(sd,&item_tmp,1,LOG_TYPE_COMMAND))) {
+	if((flag = pc->additem(sd,&item_tmp,1,LOG_TYPE_COMMAND))) {
 		clif->additem(sd,0,0,flag);
 		iMap->addflooritem(&item_tmp,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 	}
@@ -5530,7 +5530,7 @@ ACMD(marry)
 		return false;
 	}
 	
-	if (iPc->marriage(sd, pl_sd) == 0) {
+	if (pc->marriage(sd, pl_sd) == 0) {
 		clif->message(fd, msg_txt(1173)); // They are married... wish them well.
 		clif->wedding_effect(&pl_sd->bl); //wedding effect and music [Lupus]
 		getring(sd); // Auto-give named rings (Aru)
@@ -5550,7 +5550,7 @@ ACMD(divorce)
 {
 	nullpo_retr(-1, sd);
 	
-	if (iPc->divorce(sd) != 0) {
+	if (pc->divorce(sd) != 0) {
 		sprintf(atcmd_output, msg_txt(1175), sd->status.name); // '%s' is not married.
 		clif->message(fd, atcmd_output);
 		return false;
@@ -6294,8 +6294,8 @@ ACMD(users)
  *------------------------------------------*/
 ACMD(reset)
 {
-	iPc->resetstate(sd);
-	iPc->resetskill(sd,1);
+	pc->resetstate(sd);
+	pc->resetskill(sd,1);
 	sprintf(atcmd_output, msg_txt(208), sd->status.name); // '%s' skill and stats points reseted!
 	clif->message(fd, atcmd_output);
 	return true;
@@ -6487,10 +6487,10 @@ ACMD(changesex)
 {
 	int i;
 	nullpo_retr(-1, sd);
-	iPc->resetskill(sd,4);
+	pc->resetskill(sd,4);
 	// to avoid any problem with equipment and invalid sex, equipment is unequiped.
 	for( i=0; i<EQI_MAX; i++ )
-		if( sd->equip_index[i] >= 0 ) iPc->unequipitem(sd, sd->equip_index[i], 3);
+		if( sd->equip_index[i] >= 0 ) pc->unequipitem(sd, sd->equip_index[i], 3);
 	chrif_changesex(sd);
 	return true;
 }
@@ -6515,7 +6515,7 @@ ACMD(mute)
 		return false;
 	}
 	
-	if ( iPc->get_group_level(sd) < iPc->get_group_level(pl_sd) )
+	if ( pc->get_group_level(sd) < pc->get_group_level(pl_sd) )
 	{
 		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
 		return false;
@@ -7276,7 +7276,7 @@ static int atcommand_mutearea_sub(struct block_list *bl,va_list ap)
 	id = va_arg(ap, int);
 	time = va_arg(ap, int);
 	
-	if (id != bl->id && !iPc->get_group_level(pl_sd)) {
+	if (id != bl->id && !pc->get_group_level(pl_sd)) {
 		pl_sd->status.manner -= time;
 		if (pl_sd->status.manner < 0)
 			sc_start(&pl_sd->bl,SC_NOCHAT,100,0,0);
@@ -7371,7 +7371,7 @@ ACMD(size)
 	
 	if(sd->state.size) {
 		sd->state.size = SZ_SMALL;
-		iPc->setpos(sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_TELEPORT);
+		pc->setpos(sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_TELEPORT);
 	}
 	
 	sd->state.size = size;
@@ -7398,7 +7398,7 @@ ACMD(sizeall)
 		if( pl_sd->state.size != size ) {
 			if( pl_sd->state.size ) {
 				pl_sd->state.size = SZ_SMALL;
-				iPc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
+				pc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
 			}
 			
 			pl_sd->state.size = size;
@@ -7440,7 +7440,7 @@ ACMD(sizeguild)
 		if( (pl_sd = g->member[i].sd) && pl_sd->state.size != size ) {
 			if( pl_sd->state.size ) {
 				pl_sd->state.size = SZ_SMALL;
-				iPc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
+				pc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
 			}
 			
 			pl_sd->state.size = size;
@@ -7820,13 +7820,13 @@ ACMD(cash)
 	if( !strcmpi(command+1,"cash") )
 	{
 		if( value > 0 ) {
-			if( (ret=iPc->getcash(sd, value, 0)) >= 0){
+			if( (ret=pc->getcash(sd, value, 0)) >= 0){
 			    sprintf(output, msg_txt(505), ret, sd->cashPoints);
 			    clif->disp_onlyself(sd, output, strlen(output));
 			}
 			else clif->message(fd, msg_txt(149)); // Unable to decrease the number/value.
 		} else {
-			if( (ret=iPc->paycash(sd, -value, 0)) >= 0){
+			if( (ret=pc->paycash(sd, -value, 0)) >= 0){
 			    sprintf(output, msg_txt(410), ret, sd->cashPoints);
 			    clif->disp_onlyself(sd, output, strlen(output));
 			}
@@ -7836,13 +7836,13 @@ ACMD(cash)
 	else
 	{ // @points
 		if( value > 0 ) {
-			if( (ret=iPc->getcash(sd, 0, value)) >= 0){
+			if( (ret=pc->getcash(sd, 0, value)) >= 0){
 			    sprintf(output, msg_txt(506), ret, sd->kafraPoints);
 			    clif->disp_onlyself(sd, output, strlen(output));
 			}
 			else clif->message(fd, msg_txt(149)); // Unable to decrease the number/value.
 		} else {
-			if( (ret=iPc->paycash(sd, -value, -value)) >= 0){
+			if( (ret=pc->paycash(sd, -value, -value)) >= 0){
 			    sprintf(output, msg_txt(411), ret, sd->kafraPoints);
 			    clif->disp_onlyself(sd, output, strlen(output));
 			}
@@ -7869,7 +7869,7 @@ ACMD(clone)
 		return true;
 	}
 	
-	if(iPc->get_group_level(pl_sd) > iPc->get_group_level(sd)) {
+	if(pc->get_group_level(pl_sd) > pc->get_group_level(sd)) {
 		clif->message(fd, msg_txt(126));	// Cannot clone a player of higher GM level than yourself.
 		return true;
 	}
@@ -7948,7 +7948,7 @@ ACMD(request)
  *------------------------------------------*/
 ACMD(feelreset)
 {
-	iPc->resetfeel(sd);
+	pc->resetfeel(sd);
 	clif->message(fd, msg_txt(1324)); // Reset 'Feeling' maps.
 	
 	return true;
@@ -8020,7 +8020,7 @@ ACMD(resetstat)
 {
 	nullpo_retr(-1, sd);
 	
-	iPc->resetstate(sd);
+	pc->resetstate(sd);
 	sprintf(atcmd_output, msg_txt(207), sd->status.name);
 	clif->message(fd, atcmd_output);
 	return true;
@@ -8030,7 +8030,7 @@ ACMD(resetskill)
 {
 	nullpo_retr(-1,sd);
 	
-	iPc->resetskill(sd,1);
+	pc->resetskill(sd,1);
 	sprintf(atcmd_output, msg_txt(206), sd->status.name);
 	clif->message(fd, atcmd_output);
 	return true;
@@ -8252,7 +8252,7 @@ ACMD(stats)
 	output_table[14].value = sd->change_level_2nd;
 	output_table[15].value = sd->change_level_3rd;
 	
-	sprintf(job_jobname, "Job - %s %s", iPc->job_name(sd->status.class_), "(level %d)");
+	sprintf(job_jobname, "Job - %s %s", pc->job_name(sd->status.class_), "(level %d)");
 	sprintf(output, msg_txt(53), sd->status.name); // '%s' stats:
 	
 	clif->message(fd, output);
@@ -8292,7 +8292,7 @@ ACMD(delitem)
 	total = amount;
 	
 	// delete items
-	while( amount && ( idx = iPc->search_inventory(sd, nameid) ) != -1 )
+	while( amount && ( idx = pc->search_inventory(sd, nameid) ) != -1 )
 	{
 		int delamount = ( amount < sd->status.inventory[idx].amount ) ? amount : sd->status.inventory[idx].amount;
 		
@@ -8300,7 +8300,7 @@ ACMD(delitem)
 		{// delete pet
 			intif_delete_petdata(MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]));
 		}
-		iPc->delitem(sd, idx, delamount, 0, 0, LOG_TYPE_COMMAND);
+		pc->delitem(sd, idx, delamount, 0, 0, LOG_TYPE_COMMAND);
 		
 		amount-= delamount;
 	}
@@ -8466,7 +8466,7 @@ ACMD(accinfo) {
 	//remove const type
 	safestrncpy(query, message, NAME_LENGTH);
 	
-	intif_request_accinfo( sd->fd, sd->bl.id, iPc->get_group_level(sd), query );
+	intif_request_accinfo( sd->fd, sd->bl.id, pc->get_group_level(sd), query );
 	
 	return true;
 }
@@ -8519,7 +8519,7 @@ ACMD(set) {
 		
 		switch( reg[0] ) {
 			case '@':
-				data->u.str = iPc->readregstr(sd, add_str(reg));
+				data->u.str = pc->readregstr(sd, add_str(reg));
 				break;
 			case '$':
 				data->u.str = mapreg_readregstr(add_str(reg));
@@ -8548,7 +8548,7 @@ ACMD(set) {
 		data->type = C_INT;
 		switch( reg[0] ) {
 			case '@':
-				data->u.num = iPc->readreg(sd, add_str(reg));
+				data->u.num = pc->readreg(sd, add_str(reg));
 				break;
 			case '$':
 				data->u.num = mapreg_readreg(add_str(reg));
@@ -8674,7 +8674,7 @@ sd->status.skill[idx].lv = x?1:0; \
 sd->status.skill[idx].flag = x?1:0;
 	
 	int val = atoi(message);
-	bool need_skill = iPc->checkskill(sd, MC_PUSHCART) ? false : true;
+	bool need_skill = pc->checkskill(sd, MC_PUSHCART) ? false : true;
 	unsigned int index = skill->get_index(MC_PUSHCART);
 	
 	if( !message || !*message || val < 0 || val > MAX_CARTS ) {
@@ -8692,7 +8692,7 @@ sd->status.skill[idx].flag = x?1:0;
 		MC_CART_MDFY(1,index);
 	}
 	
-	if( iPc->setcart(sd, val) ) {
+	if( pc->setcart(sd, val) ) {
 		if( need_skill ) {
 			MC_CART_MDFY(0,index);
 		}
@@ -9808,7 +9808,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 	// 1 = player invoked
 	if ( type == 1) {
 		//Commands are disabled on maps flagged as 'nocommand'
-		if ( map[sd->bl.m].nocommand && iPc->get_group_level(sd) < map[sd->bl.m].nocommand ) {
+		if ( map[sd->bl.m].nocommand && pc->get_group_level(sd) < map[sd->bl.m].nocommand ) {
 			clif->message(fd, msg_txt(143));
 			return false;
 		}
@@ -9843,7 +9843,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 				break;
 			}
 
-			if( !iPc->get_group_level(sd) ) {
+			if( !pc->get_group_level(sd) ) {
 				if( x >= 1 || y >= 1 ) { /* we have command */
 					info = get_atcommandinfo_byname(atcommand_checkalias(command + 1));
 					if( !info || info->char_groups[sd->group_pos] == 0 ) /* if we can't use or doesn't exist: don't even display the command failed message */
@@ -9881,8 +9881,8 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 
 		// Check if the binding isn't NULL and there is a NPC event, level of usage met, et cetera
 		if( binding != NULL && binding->npc_event[0] &&
-			((*atcmd_msg == atcommand->at_symbol && iPc->get_group_level(sd) >= binding->group_lv) ||
-			 (*atcmd_msg == atcommand->char_symbol && iPc->get_group_level(sd) >= binding->group_lv_char)))
+			((*atcmd_msg == atcommand->at_symbol && pc->get_group_level(sd) >= binding->group_lv) ||
+			 (*atcmd_msg == atcommand->char_symbol && pc->get_group_level(sd) >= binding->group_lv_char)))
 		{
 			// Check if self or character invoking; if self == character invoked, then self invoke.
 			bool invokeFlag = ((*atcmd_msg == atcommand->at_symbol) ? 1 : 0);
@@ -9906,7 +9906,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 	//Grab the command information and check for the proper GM level required to use it or if the command exists
 	info = get_atcommandinfo_byname(atcommand_checkalias(command + 1));
 	if (info == NULL) {
-		if( iPc->get_group_level(sd) ) { // TODO: remove or replace with proper permission
+		if( pc->get_group_level(sd) ) { // TODO: remove or replace with proper permission
 			sprintf(output, msg_txt(153), command); // "%s is Unknown Command."
 			clif->message(fd, output);
 			atcommand_get_suggestions(sd, command + 1, *message == atcommand->at_symbol);
