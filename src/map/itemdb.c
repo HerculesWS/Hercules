@@ -1435,7 +1435,7 @@ void itemdb_reload(void)
 	iter = mapit_geteachpc();
 	for( sd = (struct map_session_data*)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data*)mapit->next(iter) ) {
 		memset(sd->item_delay, 0, sizeof(sd->item_delay));  // reset item delays
-		iPc->setinventorydata(sd);
+		pc->setinventorydata(sd);
 		/* clear combo bonuses */
 		if( sd->combos.count ) {
 			aFree(sd->combos.bonus);
@@ -1443,7 +1443,7 @@ void itemdb_reload(void)
 			sd->combos.bonus = NULL;
 			sd->combos.id = NULL;
 			sd->combos.count = 0;
-			if( iPc->load_combo(sd) > 0 )
+			if( pc->load_combo(sd) > 0 )
 				status_calc_pc(sd,0);
 		}
 

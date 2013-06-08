@@ -754,7 +754,7 @@ int unit_blown(struct block_list* bl, int dx, int dy, int count, int flag)
 }
 
 //Warps a unit/ud to a given map/position.
-//In the case of players, iPc->setpos is used.
+//In the case of players, pc->setpos is used.
 //it respects the no warp flags, so it is safe to call this without doing nowarpto/nowarp checks.
 int unit_warp(struct block_list *bl,short m,short x,short y,clr_type type)
 {
@@ -804,7 +804,7 @@ int unit_warp(struct block_list *bl,short m,short x,short y,clr_type type)
 	}
 
 	if (bl->type == BL_PC) //Use pc_setpos
-		return iPc->setpos((TBL_PC*)bl, map_id2index(m), x, y, type);
+		return pc->setpos((TBL_PC*)bl, map_id2index(m), x, y, type);
 
 	if (!unit_remove_map(bl, type))
 		return 3;
@@ -908,7 +908,7 @@ int unit_can_move(struct block_list *bl) {
 	if (!ud)
 		return 0;
 
-	if (ud->skilltimer != INVALID_TIMER && ud->skill_id != LG_EXEEDBREAK && (!sd || !iPc->checkskill(sd, SA_FREECAST) || skill->get_inf2(ud->skill_id)&INF2_GUILD_SKILL))
+	if (ud->skilltimer != INVALID_TIMER && ud->skill_id != LG_EXEEDBREAK && (!sd || !pc->checkskill(sd, SA_FREECAST) || skill->get_inf2(ud->skill_id)&INF2_GUILD_SKILL))
 		return 0; // prevent moving while casting
 
 	if (DIFF_TICK(ud->canmove_tick, iTimer->gettick()) > 0)
@@ -968,7 +968,7 @@ int unit_can_move(struct block_list *bl) {
 		if (sc->opt1 > 0 && sc->opt1 != OPT1_STONEWAIT && sc->opt1 != OPT1_BURNING && !(sc->opt1 == OPT1_CRYSTALIZE && bl->type == BL_MOB))
 			return 0;
 
-		if ((sc->option & OPTION_HIDE) && (!sd || iPc->checkskill(sd, RG_TUNNELDRIVE) <= 0))
+		if ((sc->option & OPTION_HIDE) && (!sd || pc->checkskill(sd, RG_TUNNELDRIVE) <= 0))
 			return 0;
 
 	}
@@ -1162,7 +1162,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 				break;
 			case BD_ENCORE:
 				//Prevent using the dance skill if you no longer have the skill in your tree.
-				if(!sd->skill_id_dance || iPc->checkskill(sd,sd->skill_id_dance)<=0){
+				if(!sd->skill_id_dance || pc->checkskill(sd,sd->skill_id_dance)<=0){
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					return 0;
 				}
@@ -1277,7 +1277,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		}
 	break;
 	case GD_EMERGENCYCALL: //Emergency Call double cast when the user has learned Leap [Daegaladh]
-		if( sd && iPc->checkskill(sd,TK_HIGHJUMP) )
+		if( sd && pc->checkskill(sd,TK_HIGHJUMP) )
 			casttime *= 2;
 		break;
 	case RA_WUGDASH:
@@ -1386,7 +1386,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 
 	if( casttime > 0 ) {
 		ud->skilltimer = iTimer->add_timer( tick+casttime, skill->castend_id, src->id, 0 );
-		if( sd && (iPc->checkskill(sd,SA_FREECAST) > 0 || skill_id == LG_EXEEDBREAK) )
+		if( sd && (pc->checkskill(sd,SA_FREECAST) > 0 || skill_id == LG_EXEEDBREAK) )
 			status_calc_bl(&sd->bl, SCB_SPEED);
 	} else
 		skill->castend_id(ud->skilltimer,tick,src->id,0);
@@ -1517,7 +1517,7 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 	clif->skillcasting(src, src->id, 0, skill_x, skill_y, skill_id, skill->get_ele(skill_id, skill_lv), casttime);
 	if( casttime > 0 ) {
 		ud->skilltimer = iTimer->add_timer( tick+casttime, skill->castend_pos, src->id, 0 );
-		if( (sd && iPc->checkskill(sd,SA_FREECAST) > 0) || skill_id == LG_EXEEDBREAK)
+		if( (sd && pc->checkskill(sd,SA_FREECAST) > 0) || skill_id == LG_EXEEDBREAK)
 			status_calc_bl(&sd->bl, SCB_SPEED);
 	} else {
 		ud->skilltimer = INVALID_TIMER;
@@ -1804,10 +1804,10 @@ static int unit_attack_timer_sub(struct block_list* src, int tid, unsigned int t
 		return 0;
 	}
 
-	if( ud->skilltimer != INVALID_TIMER && !(sd && iPc->checkskill(sd,SA_FREECAST) > 0) )
+	if( ud->skilltimer != INVALID_TIMER && !(sd && pc->checkskill(sd,SA_FREECAST) > 0) )
 		return 0; // can't attack while casting
 
-	if( !battle_config.sdelay_attack_enable && DIFF_TICK(ud->canact_tick,tick) > 0 && !(sd && iPc->checkskill(sd,SA_FREECAST) > 0) )
+	if( !battle_config.sdelay_attack_enable && DIFF_TICK(ud->canact_tick,tick) > 0 && !(sd && pc->checkskill(sd,SA_FREECAST) > 0) )
 	{ // attacking when under cast delay has restrictions:
 		if( tid == INVALID_TIMER )
 		{ //requested attack.
@@ -1945,7 +1945,7 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 
 	ud->skilltimer = INVALID_TIMER;
 
-	if( sd && iPc->checkskill(sd,SA_FREECAST) > 0 )
+	if( sd && pc->checkskill(sd,SA_FREECAST) > 0 )
 		status_calc_bl(&sd->bl, SCB_SPEED);
 
 	if( sd ) {
@@ -2131,7 +2131,7 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 			sd->adopt_invite = 0;
 
 			if(sd->pvp_timer != INVALID_TIMER) {
-				iTimer->delete_timer(sd->pvp_timer,iPc->calc_pvprank_timer);
+				iTimer->delete_timer(sd->pvp_timer,pc->calc_pvprank_timer);
 				sd->pvp_timer = INVALID_TIMER;
 				sd->pvp_rank = 0;
 			}
@@ -2139,7 +2139,7 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 				duel_leave(sd->duel_group, sd);
 
 			if(pc_issit(sd)) {
-				iPc->setstand(sd);
+				pc->setstand(sd);
 				skill->sit(sd,0);
 			}
 			iParty->send_dot_remove(sd);//minimap dot fix [Kevin]
@@ -2301,15 +2301,15 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 			int i;
 
 			if( status_isdead(bl) )
-				iPc->setrestartvalue(sd,2);
+				pc->setrestartvalue(sd,2);
 
-			iPc->delinvincibletimer(sd);
-			iPc->delautobonus(sd,sd->autobonus,ARRAYLENGTH(sd->autobonus),false);
-			iPc->delautobonus(sd,sd->autobonus2,ARRAYLENGTH(sd->autobonus2),false);
-			iPc->delautobonus(sd,sd->autobonus3,ARRAYLENGTH(sd->autobonus3),false);
+			pc->delinvincibletimer(sd);
+			pc->delautobonus(sd,sd->autobonus,ARRAYLENGTH(sd->autobonus),false);
+			pc->delautobonus(sd,sd->autobonus2,ARRAYLENGTH(sd->autobonus2),false);
+			pc->delautobonus(sd,sd->autobonus3,ARRAYLENGTH(sd->autobonus3),false);
 
 			if( sd->followtimer != INVALID_TIMER )
-				iPc->stop_following(sd);
+				pc->stop_following(sd);
 
 			if( sd->duel_invite > 0 )
 				duel_reject(sd->duel_invite, sd);
@@ -2318,11 +2318,11 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 			iMap->map_foreachpc(clif->friendslist_toggle_sub, sd->status.account_id, sd->status.char_id, 0);
 			iParty->send_logout(sd);
 			guild->send_memberinfoshort(sd,0);
-			iPc->cleareventtimer(sd);
-			iPc->inventory_rental_clear(sd);
-			iPc->delspiritball(sd,sd->spiritball,1);
+			pc->cleareventtimer(sd);
+			pc->inventory_rental_clear(sd);
+			pc->delspiritball(sd,sd->spiritball,1);
 			for(i = 1; i < 5; i++)
-				iPc->del_talisman(sd, sd->talisman[i], i);
+				pc->del_talisman(sd, sd->talisman[i], i);
 
 			if( sd->reg ) {	//Double logout already freed pointer fix... [Skotlex]
 				aFree(sd->reg);

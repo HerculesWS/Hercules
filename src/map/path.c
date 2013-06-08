@@ -419,7 +419,7 @@ bool path_search(struct walkpath_data *wpd,int16 m,int16 x0,int16 y0,int16 x1,in
 }
 
 
-//Distance functions, taken from http://www.flipcode.com/articles/article_fastdistance.shtml
+//Distance functions, taken from http://www.flpcode.com/articles/article_fastdistance.shtml
 int check_distance(int dx, int dy, int distance)
 {
 #ifdef CIRCULAR_AREA

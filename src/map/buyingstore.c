@@ -100,7 +100,7 @@ void buyingstore_create(struct map_session_data* sd, int zenylimit, unsigned cha
 		return;
 	}
 
-	if( !iPc->can_give_items(sd) )
+	if( !pc->can_give_items(sd) )
 	{// custom: GM is not allowed to buy (give zeny)
 		sd->buyingstore.slots = 0;
 		clif->message(sd->fd, msg_txt(246));
@@ -147,7 +147,7 @@ void buyingstore_create(struct map_session_data* sd, int zenylimit, unsigned cha
 			break;
 		}
 
-		if( !id->flag.buyingstore || !itemdb_cantrade_sub(id, iPc->get_group_level(sd), iPc->get_group_level(sd)) || ( idx = iPc->search_inventory(sd, nameid) ) == -1 )
+		if( !id->flag.buyingstore || !itemdb_cantrade_sub(id, pc->get_group_level(sd), pc->get_group_level(sd)) || ( idx = pc->search_inventory(sd, nameid) ) == -1 )
 		{// restrictions: allowed, no character-bound items and at least one must be owned
 			break;
 		}
@@ -221,7 +221,7 @@ void buyingstore_open(struct map_session_data* sd, int account_id)
 		return;
 	}
 
-	if( !iPc->can_give_items(sd) )
+	if( !pc->can_give_items(sd) )
 	{// custom: GM is not allowed to sell
 		clif->message(sd->fd, msg_txt(246));
 		return;
@@ -259,7 +259,7 @@ void buyingstore_trade(struct map_session_data* sd, int account_id, unsigned int
 		return;
 	}
 
-	if( !iPc->can_give_items(sd) )
+	if( !pc->can_give_items(sd) )
 	{// custom: GM is not allowed to sell
 		clif->message(sd->fd, msg_txt(246));
 		clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, 0);
@@ -314,7 +314,7 @@ void buyingstore_trade(struct map_session_data* sd, int account_id, unsigned int
 			return;
 		}
 
-		if( sd->status.inventory[index].expire_time || !itemdb_cantrade(&sd->status.inventory[index], iPc->get_group_level(sd), iPc->get_group_level(pl_sd)) || memcmp(sd->status.inventory[index].card, buyingstore_blankslots, sizeof(buyingstore_blankslots)) )
+		if( sd->status.inventory[index].expire_time || !itemdb_cantrade(&sd->status.inventory[index], pc->get_group_level(sd), pc->get_group_level(pl_sd)) || memcmp(sd->status.inventory[index].card, buyingstore_blankslots, sizeof(buyingstore_blankslots)) )
 		{// non-tradable item
 			clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, nameid);
 			return;
@@ -333,7 +333,7 @@ void buyingstore_trade(struct map_session_data* sd, int account_id, unsigned int
 			return;
 		}
 
-		if( iPc->checkadditem(pl_sd, nameid, amount) == ADDITEM_OVERAMOUNT )
+		if( pc->checkadditem(pl_sd, nameid, amount) == ADDITEM_OVERAMOUNT )
 		{// buyer does not have enough space for this item
 			clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, nameid);
 			return;
@@ -369,13 +369,13 @@ void buyingstore_trade(struct map_session_data* sd, int account_id, unsigned int
 		zeny = amount*pl_sd->buyingstore.items[listidx].price;
 
 		// move item
-		iPc->additem(pl_sd, &sd->status.inventory[index], amount, LOG_TYPE_BUYING_STORE);
-		iPc->delitem(sd, index, amount, 1, 0, LOG_TYPE_BUYING_STORE);
+		pc->additem(pl_sd, &sd->status.inventory[index], amount, LOG_TYPE_BUYING_STORE);
+		pc->delitem(sd, index, amount, 1, 0, LOG_TYPE_BUYING_STORE);
 		pl_sd->buyingstore.items[listidx].amount-= amount;
 
 		// pay up
-		iPc->payzeny(pl_sd, zeny, LOG_TYPE_BUYING_STORE, sd);
-		iPc->getzeny(sd, zeny, LOG_TYPE_BUYING_STORE, pl_sd);
+		pc->payzeny(pl_sd, zeny, LOG_TYPE_BUYING_STORE, sd);
+		pc->getzeny(sd, zeny, LOG_TYPE_BUYING_STORE, pl_sd);
 		pl_sd->buyingstore.zenylimit-= zeny;
 
 		// notify clients

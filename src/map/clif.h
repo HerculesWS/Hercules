@@ -612,7 +612,7 @@ struct clif_interface {
 	void (*equiptickack) (struct map_session_data* sd, int flag);
 	void (*viewequip_ack) (struct map_session_data* sd, struct map_session_data* tsd);
 	void (*viewequip_fail) (struct map_session_data* sd);
-	void (*equipcheckbox) (struct map_session_data* sd);
+	void (*equpcheckbox) (struct map_session_data* sd);
 	void (*displayexp) (struct map_session_data *sd, unsigned int exp, char type, bool quest);
 	void (*font) (struct map_session_data *sd);
 	void (*progressbar) (struct map_session_data * sd, unsigned long color, unsigned int second);

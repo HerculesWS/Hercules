@@ -832,7 +832,7 @@ int party_skill_check(struct map_session_data *sd, int party_id, uint16 skill_id
 		switch(skill_id) {
 			case TK_COUNTER: //Increase Triple Attack rate of Monks.
 				if((p_sd->class_&MAPID_UPPERMASK) == MAPID_MONK
-					&& iPc->checkskill(p_sd,MO_TRIPLEATTACK)) {
+					&& pc->checkskill(p_sd,MO_TRIPLEATTACK)) {
 					sc_start4(&p_sd->bl,SC_SKILLRATE_UP,100,MO_TRIPLEATTACK,
 						50+50*skill_lv, //+100/150/200% rate
 						0,0,skill->get_time(SG_FRIEND, 1));
@@ -841,9 +841,9 @@ int party_skill_check(struct map_session_data *sd, int party_id, uint16 skill_id
 			case MO_COMBOFINISH: //Increase Counter rate of Star Gladiators
 				if((p_sd->class_&MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
 					&& sd->sc.data[SC_READYCOUNTER]
-					&& iPc->checkskill(p_sd,SG_FRIEND)) {
+					&& pc->checkskill(p_sd,SG_FRIEND)) {
 					sc_start4(&p_sd->bl,SC_SKILLRATE_UP,100,TK_COUNTER,
-						50+50*iPc->checkskill(p_sd,SG_FRIEND), //+100/150/200% rate
+						50+50*pc->checkskill(p_sd,SG_FRIEND), //+100/150/200% rate
 						0,0,skill->get_time(SG_FRIEND, 1));
 				}
 				break;
@@ -948,15 +948,15 @@ int party_exp_share(struct party_data* p, struct block_list* src, unsigned int b
 	for (i = 0; i < c; i++) {
 #ifdef RENEWAL_EXP
 		if( !(src && src->type == BL_MOB && ((TBL_MOB*)src)->db->mexp) ){
-			int rate = iPc->level_penalty_mod(sd[i], (TBL_MOB*)src, 1);
+			int rate = pc->level_penalty_mod(sd[i], (TBL_MOB*)src, 1);
 			base_exp = (unsigned int)cap_value(base_exp_bonus * rate / 100, 1, UINT_MAX);
 			job_exp = (unsigned int)cap_value(job_exp_bonus * rate / 100, 1, UINT_MAX);
 		}
 #endif
-		iPc->gainexp(sd[i], src, base_exp, job_exp, false);
+		pc->gainexp(sd[i], src, base_exp, job_exp, false);
 
 		if (zeny) // zeny from mobs [Valaris]
-			iPc->getzeny(sd[i],zeny,LOG_TYPE_PICKDROP_MONSTER,NULL);
+			pc->getzeny(sd[i],zeny,LOG_TYPE_PICKDROP_MONSTER,NULL);
 	}
 	return 0;
 }
@@ -981,7 +981,7 @@ int party_share_loot(struct party_data* p, struct map_session_data* sd, struct i
 				if( (psd = p->data[i].sd) == NULL || sd->bl.m != psd->bl.m || pc_isdead(psd) || (battle_config.idle_no_share && pc_isidle(psd)) )
 					continue;
 
-				if (iPc->additem(psd,item_data,item_data->amount,LOG_TYPE_PICKDROP_PLAYER))
+				if (pc->additem(psd,item_data,item_data->amount,LOG_TYPE_PICKDROP_PLAYER))
 					continue; //Chosen char can't pick up loot.
 
 				//Successful pick.
@@ -1003,7 +1003,7 @@ int party_share_loot(struct party_data* p, struct map_session_data* sd, struct i
 			}
 			while (count > 0) { //Pick a random member.
 				i = rnd()%count;
-				if (iPc->additem(psd[i],item_data,item_data->amount,LOG_TYPE_PICKDROP_PLAYER))
+				if (pc->additem(psd[i],item_data,item_data->amount,LOG_TYPE_PICKDROP_PLAYER))
 				{	//Discard this receiver.
 					psd[i] = psd[count-1];
 					count--;
@@ -1017,7 +1017,7 @@ int party_share_loot(struct party_data* p, struct map_session_data* sd, struct i
 
 	if (!target) {
 		target = sd; //Give it to the char that picked it up
-		if ((i=iPc->additem(sd,item_data,item_data->amount,LOG_TYPE_PICKDROP_PLAYER)))
+		if ((i=pc->additem(sd,item_data,item_data->amount,LOG_TYPE_PICKDROP_PLAYER)))
 			return i;
 	}
 
