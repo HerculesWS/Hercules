@@ -683,29 +683,8 @@ enum equip_pos {
 #define pc_has_permission(sd, permission) ( ((sd)->permissions&permission) != 0 )
 #define pc_should_log_commands(sd) ( (sd)->group_log_command != false )
 
-
-
-
-
 #define pc_checkoverhp(sd) ((sd)->battle_status.hp == (sd)->battle_status.max_hp)
 #define pc_checkoversp(sd) ((sd)->battle_status.sp == (sd)->battle_status.max_sp)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #define pc_readglobalreg(sd,reg) pc->readregistry(sd,reg,3)
 #define pc_setglobalreg(sd,reg,val) pc->setregistry(sd,reg,val,3)
@@ -719,13 +698,6 @@ enum equip_pos {
 #define pc_setaccountreg2(sd,reg,val) pc->setregistry(sd,reg,val,1)
 #define pc_readaccountreg2str(sd,reg) pc->readregistry_str(sd,reg,1)
 #define pc_setaccountreg2str(sd,reg,val) pc->setregistry_str(sd,reg,val,1)
-
-
-
-
-
-
-
 
 struct skill_tree_entry {
 	short id;
@@ -757,15 +729,6 @@ extern struct fame_list chemist_fame_list[MAX_FAME_LIST];
 extern struct fame_list taekwon_fame_list[MAX_FAME_LIST];
 
 enum {ADDITEM_EXIST,ADDITEM_NEW,ADDITEM_OVERAMOUNT};
-
-
-
-
-
-
-
-
-
 
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 #endif
@@ -981,7 +944,9 @@ struct pc_interface {
 	int (*del_talisman) (struct map_session_data *sd,int count,int type);
 	
 	void (*baselevelchanged) (struct map_session_data *sd);
+#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	int (*level_penalty_mod) (struct map_session_data *sd, struct mob_data * md, int type);
+#endif
 } pc_s;
 
 struct pc_interface *pc;

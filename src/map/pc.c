@@ -10091,5 +10091,7 @@ void pc_defaults(void) {
 	pc->del_talisman = pc_del_talisman;
 	
 	pc->baselevelchanged = pc_baselevelchanged;
+#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	pc->level_penalty_mod = pc_level_penalty_mod;
+#endif
 }
