@@ -1811,7 +1811,7 @@ OnEnable:
 	monster "1@nyd",255,255,"Nidhoggur's Guardian#10",2021,1,instance_npcname("nyd_call_mon_1", instance_id())+"::OnMyMobDead";
 	monster "1@nyd",225,245,"Nidhoggur's Guardian#11",2021,1,instance_npcname("nyd_call_mon_1", instance_id())+"::OnMyMobDead";
 	monster "1@nyd",230,280,"Nidhoggur's Guardian#12",2021,1,instance_npcname("nyd_call_mon_1", instance_id())+"::OnMyMobDead";
-	instance_announce 0, "Nidhoggur's Guardian : Protect the Guardian's Sanctuary. Get rid of the intruders.",bc_map,"0x00ff99";
+	instance_announce -1, "Nidhoggur's Guardian : Protect the Guardian's Sanctuary. Get rid of the intruders.",bc_map,"0x00ff99";
 	end;
 
 OnDisable:
@@ -1822,7 +1822,7 @@ OnDisable:
 OnMyMobDead:
 	set .@mob_dead_num,mobcount("1@nyd", instance_npcname("nyd_call_mon_1", instance_id())+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
-		instance_announce 0, "All of Nidhoggur's Guardians have been defeated!",bc_map,"0x00ff99";
+		instance_announce -1, "All of Nidhoggur's Guardians have been defeated!",bc_map,"0x00ff99";
 		donpcevent instance_npcname("ins_nyd_1f_timer", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_to2f_warp", instance_id())+"::OnEnable";
 		set 'ins_nyd2,2;
@@ -1848,23 +1848,23 @@ OnDisable:
 	end;
 
 OnTimer900000:
-	instance_announce 0, "World Tree Yggdrasil : There's not much time left. Please hurry.",bc_map,"0xFFFF00";
+	instance_announce -1, "World Tree Yggdrasil : There's not much time left. Please hurry.",bc_map,"0xFFFF00";
 	end;
 
 OnTimer1200000:
-	instance_announce 0, "World Tree Yggdrasil : My powers are slowly disappearing. Please hurry.",bc_map,"0xFFFF00";
+	instance_announce -1, "World Tree Yggdrasil : My powers are slowly disappearing. Please hurry.",bc_map,"0xFFFF00";
 	end;
 
 OnTimer1500000:
-	instance_announce 0, "World Tree Yggdrasil : I'm... almost at my limit... please hurry up."	,bc_map,"0xFFFF00";
+	instance_announce -1, "World Tree Yggdrasil : I'm... almost at my limit... please hurry up."	,bc_map,"0xFFFF00";
 	end;
 
 OnTimer1800000:
-	instance_announce 0, "World Tree Yggdrasil : You've failed... but I will use what power I have left... to send you out of here.",bc_map,"0xFFFF00";
+	instance_announce -1, "World Tree Yggdrasil : You've failed... but I will use what power I have left... to send you out of here.",bc_map,"0xFFFF00";
 	end;
 
 OnTimer1830000:
-	instance_announce 0, "Opening of the Gate has failed.",bc_map,"0xFFFF00";
+	instance_announce -1, "Opening of the Gate has failed.",bc_map,"0xFFFF00";
 	end;
 
 OnTimer1850000:
@@ -1933,15 +1933,15 @@ OnDisable:
 	end;
 
 OnTimer12000:
-	instance_announce 0, "Nidhoggur's Shadow : No more...I can't stand this anymore...",bc_map,"0xFFFF00";
+	instance_announce -1, "Nidhoggur's Shadow : No more...I can't stand this anymore...",bc_map,"0xFFFF00";
 	end;
 
 OnTimer15000:
-	instance_announce 0, "Nidhoggur's Shadow : I need...I need the World Tree Yggdrasil's powers...",bc_map,"0xFFFF00";
+	instance_announce -1, "Nidhoggur's Shadow : I need...I need the World Tree Yggdrasil's powers...",bc_map,"0xFFFF00";
 	end;
 
 OnTimer18000:
-	instance_announce 0, "Nidhoggur's Shadow : Destroy...everything...",bc_map,"0xFFFF00";
+	instance_announce -1, "Nidhoggur's Shadow : Destroy...everything...",bc_map,"0xFFFF00";
 	end;
 	/*
 	stopnpctimer;
@@ -1983,7 +1983,7 @@ OnInstanceInit:
 OnEnable:
 	enablenpc instance_npcname("nyd_2f_boss_enter_call", instance_id());
 	monster "2@nyd",199,327,"Nidhoggur's Shadow#",2022,1,instance_npcname("nyd_2f_boss_enter_call", instance_id())+"::OnMyMobDead";
-	instance_announce 0, "Nidhoggur's Shadow : I will devour all of you...you and the World Tree Yggdrasil.",bc_map,"0x00ff99";
+	instance_announce -1, "Nidhoggur's Shadow : I will devour all of you...you and the World Tree Yggdrasil.",bc_map,"0x00ff99";
 	//donpcevent instance_npcname("nyd_2f_boss_enter_call", instance_id())+"::Ongo";
 	initnpctimer;
 	end;
@@ -1996,7 +1996,7 @@ OnDisable:
 OnTimer180000:
 	set .@rullet,rand(1,4);
 	if (.@rullet == 1) {
-		instance_announce 0, "Nidhoggur's Shadow : In this chaos... your blood is just what I need.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : In this chaos... your blood is just what I need.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2005,7 +2005,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 2) {
-		instance_announce 0, "Nidhoggur's Shadow : I will freeze every last drop of your blood.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : I will freeze every last drop of your blood.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2014,7 +2014,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 3) {
-		instance_announce 0, "Nidhoggur's Shadow : Sleep for eternity in an empty illusion.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : Sleep for eternity in an empty illusion.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2023,7 +2023,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 4) {
-		instance_announce 0, "Nidhoggur's Shadow : I'll let you enjoy the pain of dying slowly.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : I'll let you enjoy the pain of dying slowly.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
@@ -2037,7 +2037,7 @@ OnTimer180000:
 OnMyMobDead:
 	set .@mob_dead_num,mobcount("2@nyd",instance_npcname("nyd_2f_boss_enter_call", instance_id())+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
-		instance_announce 0, "Nidhoggur's Shadow : World Tree Yggdrasil's guardian... his powers are disappearing...",bc_map,"0x00ff99";
+		instance_announce -1, "Nidhoggur's Shadow : World Tree Yggdrasil's guardian... his powers are disappearing...",bc_map,"0x00ff99";
 		donpcevent instance_npcname("World Tree Yggdrasil#2F", instance_id())+"::OnEnable";
 		donpcevent instance_npcname("nyd_2f_boss_enter_call", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_boss_enter_logic", instance_id())+"::OnDisable";
@@ -2070,7 +2070,7 @@ OnDisable:
 OnTimer180000:
 	set .@rullet,rand(1,4);
 	if (.@rullet == 1) {
-		instance_announce 0, "Nidhoggur's Shadow : In this chaos... your blood is just what I need.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : In this chaos... your blood is just what I need.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2079,7 +2079,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 2) {
-		instance_announce 0, "Nidhoggur's Shadow : I will freeze every last drop of your blood.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : I will freeze every last drop of your blood.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2088,7 +2088,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 3) {
-		instance_announce 0, "Nidhoggur's Shadow : Sleep for eternity in an empty illusion.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : Sleep for eternity in an empty illusion.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2097,7 +2097,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 4) {
-		instance_announce 0, "Nidhoggur's Shadow : I'll let you enjoy the pain of dying slowly.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : I'll let you enjoy the pain of dying slowly.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
@@ -2134,6 +2134,7 @@ OnTimer180000:
 	switch(select("Please let me out.:I want to look around for a while.")) {
 	case 1:
 		set 'ins_nyd2,0;
+		set ins_nyd,203;
 		//setquest 3135;
 		warp "nyd_dun02",98,196;
 		end;
@@ -2149,7 +2150,7 @@ OnInstanceInit:
 
 OnEnable:
 	enablenpc instance_npcname("World Tree Yggdrasil#2F", instance_id());
-	instance_announce 0, "World Tree Yggdrasil : You did good. Have everyone go to the Magic Circle in the middle, and get ready for the destruction of the nest.",bc_map,"0x00ff99";
+	instance_announce -1, "World Tree Yggdrasil : You did good. Have everyone go to the Magic Circle in the middle, and get ready for the destruction of the nest.",bc_map,"0x00ff99";
 	end;
 
 OnDisable:
@@ -2208,7 +2209,7 @@ OnEnable:
 OnMyMobDead:
 	set .@mob_dead_num,mobcount("2@nyd",instance_npcname("nyd_2f_red_c", instance_id())+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
-		instance_announce 0, "Nidhoggur's Shadow : You're not bad... but I will be your opponent this time.",bc_map,"0x00ff99";
+		instance_announce -1, "Nidhoggur's Shadow : You're not bad... but I will be your opponent this time.",bc_map,"0x00ff99";
 		donpcevent instance_npcname("nyd_2f_red_c", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_boss_enter_logic", instance_id())+"::OnEnable";
 		end;
@@ -2226,7 +2227,7 @@ OnTimer180000:
 	stopnpctimer;
 	set .@rullet,rand(1,4);
 	if (.@rullet == 1) {
-		instance_announce 0, "Nidhoggur's Shadow : In this chaos... your blood is just what I need.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : In this chaos... your blood is just what I need.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2235,7 +2236,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 2) {
-		instance_announce 0, "Nidhoggur's Shadow : I will freeze every last drop of your blood.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : I will freeze every last drop of your blood.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2244,7 +2245,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 3) {
-		instance_announce 0, "Nidhoggur's Shadow : Sleep for eternity in an empty illusion.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : Sleep for eternity in an empty illusion.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2253,7 +2254,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 4) {
-		instance_announce 0, "Nidhoggur's Shadow : I'll let you enjoy the pain of dying slowly.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : I'll let you enjoy the pain of dying slowly.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
@@ -2368,7 +2369,7 @@ OnEnable:
 OnMyMobDead:
 	set .@mob_dead_num,mobcount("2@nyd",instance_npcname("nyd_2f_white_c", instance_id())+"::OnMyMobDead");
 	 if (.@mob_dead_num < 1) {
-		instance_announce 0, "Nidhoggur's Shadow : You're not bad... but I will be your opponent this time.",bc_map,"0x00ff99";
+		instance_announce -1, "Nidhoggur's Shadow : You're not bad... but I will be your opponent this time.",bc_map,"0x00ff99";
 		donpcevent instance_npcname("nyd_2f_white_c", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_boss_enter_logic", instance_id())+"::OnEnable";
 		end;
@@ -2386,7 +2387,7 @@ OnTimer180000:
 	stopnpctimer;
 	set .@rullet,rand(1,4);
 	if (.@rullet == 1) {
-		instance_announce 0, "Nidhoggur's Shadow : In this chaos... your blood is just what I need.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : In this chaos... your blood is just what I need.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2395,7 +2396,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 2) {
-		instance_announce 0, "Nidhoggur's Shadow : I will freeze every last drop of your blood.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : I will freeze every last drop of your blood.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2404,7 +2405,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 3) {
-		instance_announce 0, "Nidhoggur's Shadow : Sleep for eternity in an empty illusion.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : Sleep for eternity in an empty illusion.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2413,7 +2414,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 4) {
-		instance_announce 0, "Nidhoggur's Shadow : I'll let you enjoy the pain of dying slowly.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : I'll let you enjoy the pain of dying slowly.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
@@ -2529,7 +2530,7 @@ OnEnable:
 OnMyMobDead:
 	set .@mob_dead_num,mobcount("2@nyd",instance_npcname("nyd_2f_yellow_c", instance_id())+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
-		instance_announce 0, "Nidhoggur's Shadow : You're not bad...but I will be your opponent this time.",bc_map,"0x00ff99";
+		instance_announce -1, "Nidhoggur's Shadow : You're not bad...but I will be your opponent this time.",bc_map,"0x00ff99";
 		donpcevent instance_npcname("nyd_2f_yellow_c", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_boss_enter_logic", instance_id())+"::OnEnable";
 		end;
@@ -2554,7 +2555,7 @@ OnTimer180000:
 	stopnpctimer;
 	set .@rullet,rand(1,4);
 	if (.@rullet == 1) {
-		instance_announce 0, "Nidhoggur's Shadow : In this chaos... your blood is just what I need.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : In this chaos... your blood is just what I need.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2563,7 +2564,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 2) {
-		instance_announce 0, "Nidhoggur's Shadow : I will freeze every last drop of your blood.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : I will freeze every last drop of your blood.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2572,7 +2573,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 3) {
-		instance_announce 0, "Nidhoggur's Shadow : Sleep for eternity in an empty illusion.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : Sleep for eternity in an empty illusion.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2581,7 +2582,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 4) {
-		instance_announce 0, "Nidhoggur's Shadow : I'll let you enjoy the pain of dying slowly.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : I'll let you enjoy the pain of dying slowly.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
@@ -2696,7 +2697,7 @@ OnEnable:
 OnMyMobDead:
 	set .@mob_dead_num,mobcount("2@nyd",instance_npcname("nyd_2f_green_c", instance_id())+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
-		instance_announce 0, "Nidhoggur's Shadow : You're not bad... but I will be your opponent this time.",bc_map,"0x00ff99";
+		instance_announce -1, "Nidhoggur's Shadow : You're not bad... but I will be your opponent this time.",bc_map,"0x00ff99";
 		donpcevent instance_npcname("nyd_2f_green_c", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_boss_enter_logic", instance_id())+"::OnEnable";
 		end;
@@ -2721,7 +2722,7 @@ OnTimer180000:
 	stopnpctimer;
 	set .@rullet,rand(1,4);
 	if (.@rullet == 1) {
-		instance_announce 0, "Nidhoggur's Shadow : In this chaos... your blood is just what I need.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : In this chaos... your blood is just what I need.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2730,7 +2731,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 2) {
-		instance_announce 0, "Nidhoggur's Shadow : I will freeze every last drop of your blood.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : I will freeze every last drop of your blood.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2739,7 +2740,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 3) {
-		instance_announce 0, "Nidhoggur's Shadow : Sleep for eternity in an empty illusion.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : Sleep for eternity in an empty illusion.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green", instance_id())+"::OnDisable";
@@ -2748,7 +2749,7 @@ OnTimer180000:
 		end;
 	}
 	else if (.@rullet == 4) {
-		instance_announce 0, "Nidhoggur's Shadow : I'll let you enjoy the pain of dying slowly.",bc_map,"0xFFFF00";
+		instance_announce -1, "Nidhoggur's Shadow : I'll let you enjoy the pain of dying slowly.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("nyd_2f_red", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_white", instance_id())+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow", instance_id())+"::OnDisable";

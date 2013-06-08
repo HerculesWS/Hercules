@@ -81,7 +81,8 @@ struct mmo_map_server {
 	uint32 ip;
 	uint16 port;
 	int users;
-	unsigned short map[MAX_MAP_PER_SERVER];
+	unsigned short *map;
+	unsigned short maps;
 } server[MAX_MAP_SERVERS];
 
 int char_fd=-1;
@@ -187,7 +188,7 @@ static DBData create_online_char_data(DBKey key, va_list args)
 	character->pincode_enable = -1;
 	character->fd = -1;
 	character->waiting_disconnect = INVALID_TIMER;
-	return DB->ptr2data(character);
+	return iDB->ptr2data(character);
 }
 
 void set_char_charselect(int account_id)
@@ -206,7 +207,7 @@ void set_char_charselect(int account_id)
 		character->pincode_enable = *pincode->charselect + *pincode->enabled;
 
 	if(character->waiting_disconnect != INVALID_TIMER) {
-		delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
+		iTimer->delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
 		character->waiting_disconnect = INVALID_TIMER;
 	}
 
@@ -247,7 +248,7 @@ void set_char_online(int map_id, int char_id, int account_id)
 
 	//Get rid of disconnect timer
 	if(character->waiting_disconnect != INVALID_TIMER) {
-		delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
+		iTimer->delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
 		character->waiting_disconnect = INVALID_TIMER;
 	}
 
@@ -292,7 +293,7 @@ void set_char_offline(int char_id, int account_id)
 				server[character->server].users--;
 
 		if(character->waiting_disconnect != INVALID_TIMER){
-			delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
+			iTimer->delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
 			character->waiting_disconnect = INVALID_TIMER;
 		}
 
@@ -321,13 +322,13 @@ void set_char_offline(int char_id, int account_id)
  */
 static int char_db_setoffline(DBKey key, DBData *data, va_list ap)
 {
-	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
+	struct online_char_data* character = (struct online_char_data*)iDB->data2ptr(data);
 	int server = va_arg(ap, int);
 	if (server == -1) {
 		character->char_id = -1;
 		character->server = -1;
 		if(character->waiting_disconnect != INVALID_TIMER){
-			delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
+			iTimer->delete_timer(character->waiting_disconnect, chardb_waiting_disconnect);
 			character->waiting_disconnect = INVALID_TIMER;
 		}
 	} else if (character->server == server)
@@ -340,7 +341,7 @@ static int char_db_setoffline(DBKey key, DBData *data, va_list ap)
  */
 static int char_db_kickoffline(DBKey key, DBData *data, va_list ap)
 {
-	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
+	struct online_char_data* character = (struct online_char_data*)iDB->data2ptr(data);
 	int server_id = va_arg(ap, int);
 
 	if (server_id > -1 && character->server != server_id)
@@ -392,7 +393,7 @@ static DBData create_charstatus(DBKey key, va_list args)
 	struct mmo_charstatus *cp;
 	cp = (struct mmo_charstatus *) aCalloc(1,sizeof(struct mmo_charstatus));
 	cp->char_id = key.i;
-	return DB->ptr2data(cp);
+	return iDB->ptr2data(cp);
 }
 
 int inventory_to_sql(const struct item items[], int max, int id);
@@ -1171,13 +1172,13 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	p->save_point.map = mapindex_name2id(save_map);
 
 	if( p->last_point.map == 0 ) {
-		p->last_point.map = strdb_iget(mapindex_db, MAP_DEFAULT);
+		p->last_point.map = (unsigned short)strdb_iget(mapindex_db, MAP_DEFAULT);
 		p->last_point.x = MAP_DEFAULT_X;
 		p->last_point.y = MAP_DEFAULT_Y;
 	}
 	
 	if( p->save_point.map == 0 ) {
-		p->save_point.map = strdb_iget(mapindex_db, MAP_DEFAULT);
+		p->save_point.map = (unsigned short)strdb_iget(mapindex_db, MAP_DEFAULT);
 		p->save_point.x = MAP_DEFAULT_X;
 		p->save_point.y = MAP_DEFAULT_Y;
 	}
@@ -2024,7 +2025,7 @@ static void char_auth_ok(int fd, struct char_session_data *sd)
 		{	//Character already online. KICK KICK KICK
 			mapif_disconnectplayer(server[character->server].fd, character->account_id, character->char_id, 2);
 			if (character->waiting_disconnect == INVALID_TIMER)
-				character->waiting_disconnect = add_timer(gettick()+20000, chardb_waiting_disconnect, character->account_id, 0);
+				character->waiting_disconnect = iTimer->add_timer(iTimer->gettick()+20000, chardb_waiting_disconnect, character->account_id, 0);
 			WFIFOHEAD(fd,3);
 			WFIFOW(fd,0) = 0x81;
 			WFIFOB(fd,2) = 8;
@@ -2101,7 +2102,7 @@ void loginif_on_ready(void)
 	loginif_check_shutdown();
 
 	//Send online accounts to login server.
-	send_accounts_tologin(INVALID_TIMER, gettick(), 0, 0);
+	send_accounts_tologin(INVALID_TIMER, iTimer->gettick(), 0, 0);
 
 	// if no map-server already connected, display a message...
 	ARR_FIND( 0, ARRAYLENGTH(server), i, server[i].fd > 0 && server[i].map[0] );
@@ -2382,7 +2383,7 @@ int parse_fromlogin(int fd) {
 					{	//Kick it from the map server it is on.
 						mapif_disconnectplayer(server[character->server].fd, character->account_id, character->char_id, 2);
 						if (character->waiting_disconnect == INVALID_TIMER)
-							character->waiting_disconnect = add_timer(gettick()+AUTH_TIMEOUT, chardb_waiting_disconnect, character->account_id, 0);
+							character->waiting_disconnect = iTimer->add_timer(iTimer->gettick()+AUTH_TIMEOUT, chardb_waiting_disconnect, character->account_id, 0);
 					}
 					else
 					{// Manual kick from char server.
@@ -2451,12 +2452,12 @@ int send_accounts_tologin(int tid, unsigned int tick, int id, intptr_t data);
 void do_init_loginif(void)
 {
 	// establish char-login connection if not present
-	add_timer_func_list(check_connect_login_server, "check_connect_login_server");
-	add_timer_interval(gettick() + 1000, check_connect_login_server, 0, 0, 10 * 1000);
+	iTimer->add_timer_func_list(check_connect_login_server, "check_connect_login_server");
+	iTimer->add_timer_interval(iTimer->gettick() + 1000, check_connect_login_server, 0, 0, 10 * 1000);
 
 	// send a list of all online account IDs to login server
-	add_timer_func_list(send_accounts_tologin, "send_accounts_tologin");
-	add_timer_interval(gettick() + 1000, send_accounts_tologin, 0, 0, 3600 * 1000); //Sync online accounts every hour
+	iTimer->add_timer_func_list(send_accounts_tologin, "send_accounts_tologin");
+	iTimer->add_timer_interval(iTimer->gettick() + 1000, send_accounts_tologin, 0, 0, 3600 * 1000); //Sync online accounts every hour
 }
 
 void do_final_loginif(void)
@@ -2628,7 +2629,7 @@ int search_mapserver(unsigned short map, uint32 ip, uint16 port);
 /// Initializes a server structure.
 void mapif_server_init(int id)
 {
-	memset(&server[id], 0, sizeof(server[id]));
+	//memset(&server[id], 0, sizeof(server[id]));
 	server[id].fd = -1;
 }
 
@@ -2655,7 +2656,7 @@ void mapif_server_reset(int id)
 	WBUFL(buf,4) = htonl(server[id].ip);
 	WBUFW(buf,8) = htons(server[id].port);
 	j = 0;
-	for(i = 0; i < MAX_MAP_PER_SERVER; i++)
+	for(i = 0; i < server[id].maps; i++)
 		if (server[id].map[i])
 			WBUFW(buf,10+(j++)*4) = server[id].map[i];
 	if (j > 0) {
@@ -2725,8 +2726,11 @@ int parse_frommap(int fd)
 			case 0x2afa: // Receiving map names list from the map-server
 				if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd,2))
 					return 0;
-
-				memset(server[id].map, 0, sizeof(server[id].map));
+				if( server[id].map != NULL ) { aFree(server[id].map); server[id].map = NULL; }
+				
+				server[id].maps = ( RFIFOW(fd, 2) - 4 ) / 4;
+				CREATE(server[id].map, unsigned short, server[id].maps);
+				
 				j = 0;
 				for(i = 4; i < RFIFOW(fd,2); i += 4) {
 					server[id].map[j] = RFIFOW(fd,i);
@@ -3392,10 +3396,14 @@ int parse_frommap(int fd)
 				if( RFIFOREST(fd) < RFIFOW(fd,4) )
 					return 0;/* packet wasn't fully received yet (still fragmented) */
 				else {
-					int sfd;/* stat server fd */					
+					int sfd;/* stat server fd */
+					struct hSockOpt opt;
 					RFIFOSKIP(fd, 2);/* we skip first 2 bytes which are the 0x3008, so we end up with a buffer equal to the one we send */
 
-					if( (sfd = make_connection(host2ip("stats.hercules.ws"),(uint16)25427,true) ) == -1 ) {
+					opt.silent = 1;
+					opt.setTimeo = 1;
+					
+					if( (sfd = make_connection(host2ip("stats.hercules.ws"),(uint16)25427,&opt) ) == -1 ) {
 						RFIFOSKIP(fd, RFIFOW(fd,2) );/* skip this packet */
 						RFIFOFLUSH(fd);
 						break;/* connection not possible, we drop the report */
@@ -4275,7 +4283,6 @@ int parse_char(int fd)
 					server[i].ip = ntohl(RFIFOL(fd,54));
 					server[i].port = ntohs(RFIFOW(fd,58));
 					server[i].users = 0;
-					memset(server[i].map, 0, sizeof(server[i].map));
 					session[fd]->func_parse = parse_frommap;
 					session[fd]->flag.server = 1;
 					realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
@@ -4450,7 +4457,7 @@ int broadcast_user_count(int tid, unsigned int tick, int id, intptr_t data)
  */
 static int send_accounts_tologin_sub(DBKey key, DBData *data, va_list ap)
 {
-	struct online_char_data* character = DB->data2ptr(data);
+	struct online_char_data* character = iDB->data2ptr(data);
 	int* i = va_arg(ap, int*);
 
 	if(character->server > -1)
@@ -4486,12 +4493,12 @@ int check_connect_login_server(int tid, unsigned int tick, int id, intptr_t data
 		return 0;
 
 	ShowInfo("Attempt to connect to login-server...\n");
-	login_fd = make_connection(login_ip, login_port, false);
-	if (login_fd == -1)
-	{	//Try again later. [Skotlex]
+
+	if ( (login_fd = make_connection(login_ip, login_port, NULL)) == -1) { //Try again later. [Skotlex]
 		login_fd = 0;
 		return 0;
 	}
+	
 	session[login_fd]->func_parse = parse_fromlogin;
 	session[login_fd]->flag.server = 1;
 	realloc_fifo(login_fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
@@ -4532,7 +4539,7 @@ static int chardb_waiting_disconnect(int tid, unsigned int tick, int id, intptr_
  */
 static int online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
 {
-	struct online_char_data *character= DB->data2ptr(data);
+	struct online_char_data *character= iDB->data2ptr(data);
 	if (character->fd != -1)
 		return 0; //Character still connected
 	if (character->server == -2) //Unknown server.. set them offline
@@ -4858,8 +4865,8 @@ int char_config_read(const char* cfgName)
 	return 0;
 }
 
-void do_final(void)
-{
+void do_final(void) {
+	int i;
 	ShowStatus("Terminating...\n");
 
 	set_all_offline(-1);
@@ -4879,8 +4886,7 @@ void do_final(void)
 	online_char_db->destroy(online_char_db, NULL);
 	auth_db->destroy(auth_db, NULL);
 
-	if( char_fd != -1 )
-	{
+	if( char_fd != -1 ) {
 		do_close(char_fd);
 		char_fd = -1;
 	}
@@ -4888,6 +4894,10 @@ void do_final(void)
 	SQL->Free(sql_handle);
 	mapindex_final();
 
+	for(i = 0; i < MAX_MAP_SERVERS; i++ )
+		if( server[i].map )
+			aFree(server[i].map);
+	
 	ShowStatus("Finished.\n");
 }
 
@@ -4923,11 +4933,17 @@ void do_shutdown(void)
 
 
 int do_init(int argc, char **argv) {
+	int i;
 	memset(&skillid2idx, 0, sizeof(skillid2idx));
+
+	for(i = 0; i < MAX_MAP_SERVERS; i++ )
+		server[i].map = NULL;
+
 	//Read map indexes
 	mapindex_init();
 	start_point.map = mapindex_name2id("new_zone01");
 
+	
 	pincode_defaults();
 	
 	char_config_read((argc < 2) ? CHAR_CONF_NAME : argv[1]);
@@ -4969,15 +4985,15 @@ int do_init(int argc, char **argv) {
 	do_init_mapif();
 
 	// periodically update the overall user count on all mapservers + login server
-	add_timer_func_list(broadcast_user_count, "broadcast_user_count");
-	add_timer_interval(gettick() + 1000, broadcast_user_count, 0, 0, 5 * 1000);
+	iTimer->add_timer_func_list(broadcast_user_count, "broadcast_user_count");
+	iTimer->add_timer_interval(iTimer->gettick() + 1000, broadcast_user_count, 0, 0, 5 * 1000);
 
 	// Timer to clear (online_char_db)
-	add_timer_func_list(chardb_waiting_disconnect, "chardb_waiting_disconnect");
+	iTimer->add_timer_func_list(chardb_waiting_disconnect, "chardb_waiting_disconnect");
 
 	// Online Data timers (checking if char still connected)
-	add_timer_func_list(online_data_cleanup, "online_data_cleanup");
-	add_timer_interval(gettick() + 1000, online_data_cleanup, 0, 0, 600 * 1000);
+	iTimer->add_timer_func_list(online_data_cleanup, "online_data_cleanup");
+	iTimer->add_timer_interval(iTimer->gettick() + 1000, online_data_cleanup, 0, 0, 600 * 1000);
 
 	//Cleaning the tables for NULL entrys @ startup [Sirius]
 	//Chardb clean

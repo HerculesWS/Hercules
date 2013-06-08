@@ -1,4 +1,4 @@
-//===== Hercules Documentation ================================
+//===== Hercules Documentation ===============================
 //= Hercules Item Bonuses List
 //===== By: ==================================================
 //= Hercules Dev Team

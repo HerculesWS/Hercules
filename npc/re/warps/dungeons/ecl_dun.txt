@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Eclage Dungeon Warp Script
 //===== By: ==================================================
 //= Chilly
 //===== Current Version: =====================================
 //= 1.0
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= Warp Points for Eclage Dungeon
 //===== Additional Comments: =================================

@@ -1,4 +1,4 @@
-//===== Hercules Documentation ================================
+//===== Hercules Documentation ===============================
 //= WoE Time Explanation
 //===== By: ==================================================
 //= erKURITA

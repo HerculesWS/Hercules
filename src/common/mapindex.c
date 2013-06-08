@@ -148,7 +148,7 @@ void mapindex_init(void) {
 		exit(EXIT_FAILURE); //Server can't really run without this file.
 	}
 	memset (&indexes, 0, sizeof (indexes));
-	mapindex_db = strdb_alloc(DB_RELEASE_KEY, MAP_NAME_LENGTH);
+	mapindex_db = strdb_alloc(DB_OPT_DUP_KEY, MAP_NAME_LENGTH);
 	while(fgets(line, sizeof(line), fp)) {
 		if(line[0] == '/' && line[1] == '/')
 			continue;

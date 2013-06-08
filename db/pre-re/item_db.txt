@@ -5203,7 +5203,7 @@
 12772,Cool_Hat_Box2,Cool Hat Box2,2,0,,0,,,,,0xFFFFFFFF,7,2,,,,,,{},{},{}
 12773,Victory_Hat_Box2,Victory Hat Box2,2,0,,0,,,,,0xFFFFFFFF,7,2,,,,,,{},{},{}
 12786,Change_Slot_Card,Character Position Change Coupon,2,,,,,,,,0xFFFFFFFF,7,2,,,,,,{ set SlotChange, SlotChange + 1; },{},{}
-12790,Char_Rename_Card,Character Name Change Coupon,2,,,,,,,,0xFFFFFFFF,7,2,,,,,,{ set CharRename, CharRename + 1; },{},{}
+12790,Change_Name_Card,Name Change Coupon,2,,,,,,,,0xFFFFFFFF,7,2,,,,,,{ set CharRename, CharRename + 1; },{},{}
 12848,Falcon_Flute,Falcon Flute,11,0,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ if(getskilllv("HT_FALCON")) { if(checkoption(Option_Wug)||checkoption(Option_Wugrider)) end; if(checkfalcon()==1) { setfalcon 0; } else { setfalcon 1; } } },{},{}
 12900,Battle_Manual_Box,Battle Manual Box,18,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 12208,10; },{},{}
 12901,Insurance_Package,Insurance Package,18,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 12209,10; },{},{}

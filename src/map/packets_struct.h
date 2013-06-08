@@ -72,6 +72,7 @@ enum packet_headers {
 #else
 	authokType = 0x2eb,
 #endif
+	script_clearType = 0x8d6,
 #if PACKETVER < 4
 	unit_walkingType = 0x7b,
 #elif PACKETVER < 7
@@ -87,6 +88,15 @@ enum packet_headers {
 #else
 	unit_walkingType = 0x914,
 #endif
+	bgqueue_ackType = 0x8d8,
+	bgqueue_notice_deleteType = 0x8db,
+	bgqueue_registerType = 0x8d7,
+	bgqueue_updateinfoType = 0x8d9,
+	bgqueue_checkstateType = 0x90a,
+	bgqueue_revokereqType = 0x8da,
+	bgqueue_battlebeginackType = 0x8e0,
+	bgqueue_notify_entryType = 0x8d9,
+	bgqueue_battlebegins = 0x8df,
 #if PACKETVER > 20130000 /* not sure date */
 	dropflooritemType = 0x84b,
 #else
@@ -390,6 +400,65 @@ struct packet_maptypeproperty2 {
 		unsigned int SpareBits				: 15;
 	} flag;
 } __attribute__((packed));
+
+struct packet_bgqueue_ack {
+	short PacketType;
+	short type;
+	char bg_name[NAME_LENGTH];
+} __attribute__((packed));
+
+struct packet_bgqueue_notice_delete {
+	short PacketType;
+	short type;
+	char bg_name[NAME_LENGTH];
+} __attribute__((packed));
+
+struct packet_bgqueue_register {
+	short PacketType;
+	short type;
+	char bg_name[NAME_LENGTH];
+} __attribute__((packed));
+
+struct packet_bgqueue_update_info {
+	short PacketType;
+	char bg_name[NAME_LENGTH];
+	int	position;
+} __attribute__((packed));
+
+struct packet_bgqueue_checkstate {
+	short PacketType;
+	char bg_name[NAME_LENGTH];
+} __attribute__((packed));
+
+struct packet_bgqueue_revoke_req {
+	short PacketType;
+	char bg_name[NAME_LENGTH];
+} __attribute__((packed));
+
+struct packet_bgqueue_battlebegin_ack {
+	short PacketType;
+	short result;
+	char bg_name[NAME_LENGTH];
+	char game_name[NAME_LENGTH];
+} __attribute__((packed));
+
+struct packet_bgqueue_notify_entry {
+	short PacketType;
+	char name[NAME_LENGTH];
+	int position;
+} __attribute__((packed));
+
+struct packet_bgqueue_battlebegins {
+	short PacketType;
+	char bg_name[NAME_LENGTH];
+	char game_name[NAME_LENGTH];
+} __attribute__((packed));
+
+struct packet_script_clear {
+	short PacketType;
+	unsigned int NpcID;
+} __attribute__((packed));
+
 
 #pragma pack(pop)
 

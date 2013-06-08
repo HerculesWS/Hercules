@@ -1,14 +1,14 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= El Dicastes Town
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Gennosuke Kouga, Muad_Dib
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.2a
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Compatible With: =====================================
+//= Hercules
+//===== Description: =========================================
 //= El Dicastes Town Script
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version.
 //= 1.1 Standardized. [Euphy]
 //= 1.2 Updated to match the official script. [Joseph]

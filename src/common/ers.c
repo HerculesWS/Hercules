@@ -50,10 +50,13 @@
 
 #define ERS_BLOCK_ENTRIES 2048
 
+
 struct ers_list
 {
 	struct ers_list *Next;
 };
+
+struct ers_instance_t;
 
 typedef struct ers_cache
 {
@@ -75,21 +78,23 @@ typedef struct ers_cache
 	// Free objects count
 	unsigned int Free;
 	
-	// Used objects count
+	// Used blocks count
 	unsigned int Used;
-
+	
+	// Objects in-use count
+	unsigned int UsedObjs;
+	
 	// Linked list
 	struct ers_cache *Next, *Prev;
 } ers_cache_t;
 
-typedef struct
-{
+struct ers_instance_t {
 	// Interface to ERS
 	struct eri VTable;
 	
 	// Name, used for debbuging purpouses
 	char *Name;
-
+		
 	// Misc options
 	enum ERSOptions Options;
 
@@ -98,11 +103,21 @@ typedef struct
 
 	// Count of objects in use, used for detecting memory leaks
 	unsigned int Count;
-} ers_instance_t;
+	
+#ifdef DEBUG
+	/* for data analysis [Ind/Hercules] */
+	unsigned int Peak;
+	struct ers_instance_t *Next, *Prev;
+#endif
+
+};
 
 
 // Array containing a pointer for all ers_cache structures
-static ers_cache_t *CacheList;
+static ers_cache_t *CacheList = NULL;
+#ifdef DEBUG
+	static struct ers_instance_t *InstanceList = NULL;
+#endif
 
 static ers_cache_t *ers_find_cache(unsigned int size)
 {
@@ -119,6 +134,7 @@ static ers_cache_t *ers_find_cache(unsigned int size)
 	cache->Blocks = NULL;
 	cache->Free = 0;
 	cache->Used = 0;
+	cache->UsedObjs = 0;
 	cache->Max = 0;
 	
 	if (CacheList == NULL)
@@ -157,7 +173,7 @@ static void ers_free_cache(ers_cache_t *cache, bool remove)
 
 static void *ers_obj_alloc_entry(ERS self)
 {
-	ers_instance_t *instance = (ers_instance_t *)self;
+	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 	void *ret;
 
 	if (instance == NULL) 
@@ -192,13 +208,19 @@ static void *ers_obj_alloc_entry(ERS self)
 	}
 
 	instance->Count++;
+	instance->Cache->UsedObjs++;
+	
+#ifdef DEBUG
+	if( instance->Count > instance->Peak )
+		instance->Peak = instance->Count;
+#endif
 
 	return ret;
 }
 
 static void ers_obj_free_entry(ERS self, void *entry)
 {
-	ers_instance_t *instance = (ers_instance_t *)self;
+	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 	struct ers_list *reuse = (struct ers_list *)((unsigned char *)entry - sizeof(struct ers_list));
 
 	if (instance == NULL) 
@@ -215,11 +237,12 @@ static void ers_obj_free_entry(ERS self, void *entry)
 	reuse->Next = instance->Cache->ReuseList;
 	instance->Cache->ReuseList = reuse;
 	instance->Count--;
+	instance->Cache->UsedObjs--;
 }
 
 static size_t ers_obj_entry_size(ERS self)
 {
-	ers_instance_t *instance = (ers_instance_t *)self;
+	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 
 	if (instance == NULL) 
 	{
@@ -232,7 +255,7 @@ static size_t ers_obj_entry_size(ERS self)
 
 static void ers_obj_destroy(ERS self)
 {
-	ers_instance_t *instance = (ers_instance_t *)self;
+	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 
 	if (instance == NULL) 
 	{
@@ -247,13 +270,26 @@ static void ers_obj_destroy(ERS self)
 	if (--instance->Cache->ReferenceCount <= 0)
 		ers_free_cache(instance->Cache, true);
 
+#ifdef DEBUG
+	if (instance->Next)
+		instance->Next->Prev = instance->Prev;
+	
+	if (instance->Prev)
+		instance->Prev->Next = instance->Next;
+	else
+		InstanceList = instance->Next;
+#endif
+	
+	if( instance->Options & ERS_OPT_FREE_NAME )
+		aFree(instance->Name);
+	
 	aFree(instance);
 }
 
 ERS ers_new(uint32 size, char *name, enum ERSOptions options)
 {
-	ers_instance_t *instance;
-	CREATE(instance, ers_instance_t, 1);
+	struct ers_instance_t *instance;
+	CREATE(instance,struct ers_instance_t, 1);
 
 	size += sizeof(struct ers_list);
 	if (size % ERS_ALIGNED)
@@ -264,29 +300,66 @@ ERS ers_new(uint32 size, char *name, enum ERSOptions options)
 	instance->VTable.entry_size = ers_obj_entry_size;
 	instance->VTable.destroy = ers_obj_destroy;
 
-	instance->Name = name;
+	instance->Name = ( options & ERS_OPT_FREE_NAME ) ? aStrdup(name) : name;
 	instance->Options = options;
 
 	instance->Cache = ers_find_cache(size);
 	instance->Cache->ReferenceCount++;
+#ifdef DEBUG
+	if (InstanceList == NULL) {
+		InstanceList = instance;
+	} else {
+		instance->Next = InstanceList;
+		instance->Next->Prev = instance;
+		InstanceList = instance;
+		InstanceList->Prev = NULL;
+	}
+#endif
 
 	instance->Count = 0;
 
 	return &instance->VTable;
 }
 
-void ers_report(void)
-{
+void ers_report(void) {
 	ers_cache_t *cache;
-	int i = 0;
-	for (cache = CacheList; cache; cache = cache->Next) {
-		ShowMessage(CL_BOLD"[Entry manager #%u report]\n"CL_NORMAL, ++i);
-		ShowMessage("\tinstances          : %u\n", cache->ReferenceCount);
-		ShowMessage("\tblock array size   : %u\n", cache->ObjectSize);
-		ShowMessage("\tallocated blocks   : %u\n", cache->Free+cache->Used);
-		ShowMessage("\tentries being used : %u\n", cache->Used);
-		ShowMessage("\tunused entries     : %u\n", cache->Free);
+	unsigned int cache_c = 0, blocks_u = 0, blocks_a = 0, memory_b = 0, memory_t = 0;
+#ifdef DEBUG
+	struct ers_instance_t *instance;
+	unsigned int instance_c = 0, instance_c_d = 0;
+
+	for (instance = InstanceList; instance; instance = instance->Next) {
+		instance_c++;
+		if( (instance->Options & ERS_OPT_WAIT) && !instance->Count )
+			continue;
+		instance_c_d++;
+		ShowMessage(CL_BOLD"[ERS Instance "CL_NORMAL""CL_WHITE"%s"CL_NORMAL""CL_BOLD" report]\n"CL_NORMAL, instance->Name);
+		ShowMessage("\tblock size        : %u\n", instance->Cache->ObjectSize);
+		ShowMessage("\tblocks being used : %u\n", instance->Count);
+		ShowMessage("\tpeak blocks       : %u\n", instance->Peak);
+		ShowMessage("\tmemory in use     : %.2f MB\n", instance->Count == 0 ? 0. : (double)((instance->Count * instance->Cache->ObjectSize)/1024)/1024);
 	}
+#endif
+
+	for (cache = CacheList; cache; cache = cache->Next) {
+		cache_c++;
+		ShowMessage(CL_BOLD"[ERS Cache of size '"CL_NORMAL""CL_WHITE"%u"CL_NORMAL""CL_BOLD"' report]\n"CL_NORMAL, cache->ObjectSize);
+		ShowMessage("\tinstances          : %u\n", cache->ReferenceCount);
+		ShowMessage("\tblocks in use      : %u/%u\n", cache->UsedObjs, cache->UsedObjs+cache->Free);
+		ShowMessage("\tblocks unused      : %u\n", cache->Free);
+		ShowMessage("\tmemory in use      : %.2f MB\n", cache->UsedObjs == 0 ? 0. : (double)((cache->UsedObjs * cache->ObjectSize)/1024)/1024);
+		ShowMessage("\tmemory allocated   : %.2f MB\n", (cache->Free+cache->UsedObjs) == 0 ? 0. : (double)(((cache->UsedObjs+cache->Free) * cache->ObjectSize)/1024)/1024);
+		blocks_u += cache->UsedObjs;
+		blocks_a += cache->UsedObjs + cache->Free;
+		memory_b += cache->UsedObjs * cache->ObjectSize;
+		memory_t += (cache->UsedObjs+cache->Free) * cache->ObjectSize;
+	}
+#ifdef DEBUG
+	ShowInfo("ers_report: '"CL_WHITE"%u"CL_NORMAL"' instances in use, '"CL_WHITE"%u"CL_NORMAL"' displayed\n",instance_c,instance_c_d);
+#endif
+	ShowInfo("ers_report: '"CL_WHITE"%u"CL_NORMAL"' caches in use\n",cache_c);
+	ShowInfo("ers_report: '"CL_WHITE"%u"CL_NORMAL"' blocks in use, consuming '"CL_WHITE"%.2f MB"CL_NORMAL"'\n",blocks_u,(double)((memory_b)/1024)/1024);
+	ShowInfo("ers_report: '"CL_WHITE"%u"CL_NORMAL"' blocks total, consuming '"CL_WHITE"%.2f MB"CL_NORMAL"' \n",blocks_a,(double)((memory_t)/1024)/1024);
 }
 
 void ers_force_destroy_all(void)

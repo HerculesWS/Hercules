@@ -1,14 +1,14 @@
-//===== rAthena Script ============================================
+//===== Hercules Script ======================================
 //= Quest Warper Script
-//===== By: =======================================================
+//===== By: ==================================================
 //= DZeroX, Darkchild, Neouni
-//===== Current Version: ==========================================
+//===== Current Version: =====================================
 //= 2.3
-//===== Compatible With: ==========================================
-//= rAthena SVN
-//===== Description: ==============================================
+//===== Compatible With: =====================================
+//= Hercules
+//===== Description: =========================================
 //= Warper that works only after locations are unlocked.
-//===== Additional Comments: ======================================
+//===== Additional Comments: =================================
 //= 1.0 - NPCs created
 //= 1.1 - Add Dungeons by sturm
 //= 1.2 - Add All char in account unlocked by ace_killer
@@ -66,7 +66,7 @@
 //= 2.3 - Added new town maps, cleanup, and removed pre-1.8 backwards fix. [Euphy]
 //=================================================================
 
-//========================Function=&=Script========================
+//========================Function & Script========================
 
 function	script	Q_Warpra	{
 	mes "[Warpra]";

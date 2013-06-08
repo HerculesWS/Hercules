@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Sign Your Items
 //===== By: ==================================================
 //= Lupus
 //===== Current Version: =====================================
 //= 1.1a
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= Write you name on your rare equipment or weapon ^_-
 //===== Additional Comments: =================================

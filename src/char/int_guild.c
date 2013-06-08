@@ -57,7 +57,7 @@ static int guild_save_timer(int tid, unsigned int tick, int id, intptr_t data)
 	if( last_id == 0 ) //Save the first guild in the list.
 		state = 1;
 
-	for( g = DB->data2ptr(iter->first(iter, &key)); dbi_exists(iter); g = DB->data2ptr(iter->next(iter, &key)) )
+	for( g = iDB->data2ptr(iter->first(iter, &key)); dbi_exists(iter); g = iDB->data2ptr(iter->next(iter, &key)) )
 	{
 		if( state == 0 && g->guild_id == last_id )
 			state++; //Save next guild in the list.
@@ -86,7 +86,7 @@ static int guild_save_timer(int tid, unsigned int tick, int id, intptr_t data)
 
 	state = guild_db_->size(guild_db_);
 	if( state < 1 ) state = 1; //Calculate the time slot for the next save.
-	add_timer(tick  + autosave_interval/state, guild_save_timer, 0, 0);
+	iTimer->add_timer(tick  + autosave_interval/state, guild_save_timer, 0, 0);
 	return 0;
 }
 
@@ -729,8 +729,8 @@ int inter_guild_sql_init(void)
 	//Read exp file
 	sv->readdb("db", DBPATH"exp_guild.txt", ',', 1, 1, 100, exp_guild_parse_row);
 
-	add_timer_func_list(guild_save_timer, "guild_save_timer");
-	add_timer(gettick() + 10000, guild_save_timer, 0, 0);
+	iTimer->add_timer_func_list(guild_save_timer, "guild_save_timer");
+	iTimer->add_timer(iTimer->gettick() + 10000, guild_save_timer, 0, 0);
 	return 0;
 }
 
@@ -739,7 +739,7 @@ int inter_guild_sql_init(void)
  */
 static int guild_db_final(DBKey key, DBData *data, va_list ap)
 {
-	struct guild *g = DB->data2ptr(data);
+	struct guild *g = iDB->data2ptr(data);
 	if (g->save_flag&GS_MASK) {
 		inter_guild_tosql(g, g->save_flag&GS_MASK);
 		return 1;

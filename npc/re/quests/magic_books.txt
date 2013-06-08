@@ -1,4 +1,4 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Magic Book Seller
 //===== By: ================================================== 
 //= Masao
@@ -6,7 +6,7 @@
 //===== Current Version: ===================================== 
 //= 1.1
 //===== Compatible With: ===================================== 
-//= rAthena
+//= Hercules
 //===== Description: ========================================= 
 //= An NPC which sells you different kinds of Magic Books.
 //===== Additional Comments: ================================= 

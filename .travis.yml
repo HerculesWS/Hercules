@@ -1,11 +1,10 @@
 language: c
 compiler:
-  - gcc
   - clang
-# Change this to your needs
-script: ./configure --enable-debug && make
+  - gcc
 
-# Disallow 'rathena' branch to be compiled by Travis
+script: uname -a && ./configure --enable-debug && make
+
 branches:
   only:
     - master

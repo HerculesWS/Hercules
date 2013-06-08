@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _NPC_H_
 #define _NPC_H_
@@ -11,6 +12,7 @@ struct block_list;
 struct npc_data;
 struct view_data;
 
+struct unit_data npc_base_ud;
 
 struct npc_timerevent_list {
 	int timer,pos;
@@ -25,9 +27,9 @@ struct npc_item_list {
 
 struct npc_data {
 	struct block_list bl;
-	struct unit_data  ud; //Because they need to be able to move....
+	struct unit_data *ud;
 	struct view_data *vd;
-	struct status_change sc; //They can't have status changes, but.. they want the visual opt values.
+	unsigned int option;
 	struct npc_data *master_nd;
 	short class_;
 	short speed;
@@ -36,12 +38,13 @@ struct npc_data {
 	int chat_id;
 	int touching_id;
 	unsigned int next_walktime;
-
+	uint8 dir;
+	
 	unsigned size : 2;
 
 	struct status_data status;
-	unsigned int level;
-	unsigned int stat_point;
+	unsigned short level;
+	unsigned short stat_point;
 
 	void* chatdb; // pointer to a npc_parse struct (see npc_chat.c)
 	char* path;/* path dir */
@@ -187,5 +190,16 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const char* message, const char* eventname);
 
 bool npc_unloadfile( const char* path );
+
+/* npc.c interface (barely started/WIP) */
+struct npc_interface {
+	/* */
+	struct npc_data *motd;
+	/* */
+} npc_s;
+
+struct npc_interface *npc;
+
+void npc_defaults(void);
 
 #endif /* _NPC_H_ */

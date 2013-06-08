@@ -45,7 +45,7 @@ struct online_char_data {
 
 DBMap* online_char_db; // int account_id -> struct online_char_data*
 
-#define MAX_MAP_SERVERS 30
+#define MAX_MAP_SERVERS 2
 
 #define DEFAULT_AUTOSAVE_INTERVAL 300*1000
 
