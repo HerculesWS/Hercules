@@ -59,6 +59,7 @@ struct timer_interface {
 	unsigned long (*get_uptime) (void);
 
 	int (*do_timer) (unsigned int tick);
+	
 	void (*init) (void);
 	void (*final) (void);
 } iTimer_s;

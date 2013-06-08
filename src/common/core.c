@@ -322,7 +322,7 @@ int main (int argc, char **argv) {
 	Sql_Init();
 	rathread_init();
 	mempool_init();
-	iDB->init();
+	DB->init();
 	signals_init();
 	
 #ifdef _WIN32
@@ -356,7 +356,7 @@ int main (int argc, char **argv) {
 #endif
 	iTimer->final();
 	socket_final();
-	iDB->final();
+	DB->final();
 	mempool_final();
 	rathread_final();
 #endif
