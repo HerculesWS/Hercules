@@ -1490,7 +1490,7 @@ static DBData create_charid2nick(DBKey key, va_list args)
 {
 	struct charid2nick *p;
 	CREATE(p, struct charid2nick, 1);
-	return iDB->ptr2data(p);
+	return DB->ptr2data(p);
 }
 
 /// Adds(or replaces) the nick of charid to nick_db and fullfils pending requests.
@@ -1526,7 +1526,7 @@ void map_delnickdb(int charid, const char* name)
 	struct map_session_data* sd;
 	DBData data;
 
-	if (!nick_db->remove(nick_db, iDB->i2key(charid), &data) || (p = iDB->data2ptr(&data)) == NULL)
+	if (!nick_db->remove(nick_db, DB->i2key(charid), &data) || (p = DB->data2ptr(&data)) == NULL)
 		return;
 
 	while( p->requests ) {
@@ -2751,7 +2751,7 @@ static DBData create_map_data_other_server(DBKey key, va_list args)
 	mdos=(struct map_data_other_server *)aCalloc(1,sizeof(struct map_data_other_server));
 	mdos->index = mapindex;
 	memcpy(mdos->name, mapindex_id2name(mapindex), MAP_NAME_LENGTH);
-	return iDB->ptr2data(mdos);
+	return DB->ptr2data(mdos);
 }
 
 /*==========================================
@@ -2781,7 +2781,7 @@ int map_setipport(unsigned short mapindex, uint32 ip, uint16 port)
 */
 int map_eraseallipport_sub(DBKey key, DBData *data, va_list va)
 {
-	struct map_data_other_server *mdos = iDB->data2ptr(data);
+	struct map_data_other_server *mdos = DB->data2ptr(data);
 	if(mdos->cell == NULL) {
 		db_remove(map_db,key);
 		aFree(mdos);
@@ -4961,7 +4961,7 @@ void read_map_zone_db(void) {
 * @see DBApply
 */
 int map_db_final(DBKey key, DBData *data, va_list ap) {
-	struct map_data_other_server *mdos = iDB->data2ptr(data);
+	struct map_data_other_server *mdos = DB->data2ptr(data);
 
 	if(mdos && iMalloc->verify_ptr(mdos) && mdos->cell == NULL)
 		aFree(mdos);
@@ -4974,7 +4974,7 @@ int map_db_final(DBKey key, DBData *data, va_list ap) {
 */
 int nick_db_final(DBKey key, DBData *data, va_list args)
 {
-	struct charid2nick* p = iDB->data2ptr(data);
+	struct charid2nick* p = DB->data2ptr(data);
 	struct charid_request* req;
 
 	if( p == NULL )
@@ -5021,7 +5021,7 @@ int cleanup_sub(struct block_list *bl, va_list ap) {
 */
 static int cleanup_db_sub(DBKey key, DBData *data, va_list va)
 {
-	return iMap->cleanup_sub(iDB->data2ptr(data), va);
+	return iMap->cleanup_sub(DB->data2ptr(data), va);
 }
 
 /*==========================================
