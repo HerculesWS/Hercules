@@ -4742,7 +4742,7 @@ BUILDIN(warpparty)
 	if ( script_hasdata(st,6) )
 		str2 = script_getstr(st,6);
 	
-	p = iParty->search(p_id);
+	p = party->search(p_id);
 	if(!p)
 		return true;
 	
@@ -6670,7 +6670,7 @@ BUILDIN(getpartyname)
 	
 	party_id = script_getnum(st,2);
 	
-	if( ( p = iParty->search(party_id) ) != NULL )
+	if( ( p = party->search(party_id) ) != NULL )
 	{
 		script_pushstrcopy(st,p->party.name);
 	}
@@ -6694,7 +6694,7 @@ BUILDIN(getpartymember)
 	struct party_data *p;
 	int i,j=0,type=0;
 	
-	p=iParty->search(script_getnum(st,2));
+	p=party->search(script_getnum(st,2));
 	
 	if( script_hasdata(st,3) )
  		type=script_getnum(st,3);
@@ -6734,7 +6734,7 @@ BUILDIN(getpartyleader)
 	if( script_hasdata(st,3) )
  		type=script_getnum(st,3);
 	
-	p=iParty->search(party_id);
+	p=party->search(party_id);
 	
 	if (p) //Search leader
 		for(i = 0; i < MAX_PARTY && !p->party.member[i].leader; i++);
@@ -6847,7 +6847,7 @@ BUILDIN(strcharinfo)
 			script_pushstrcopy(st,sd->status.name);
 			break;
 		case 1:
-			if( ( p = iParty->search(sd->status.party_id) ) != NULL ) {
+			if( ( p = party->search(sd->status.party_id) ) != NULL ) {
 				script_pushstrcopy(st,p->party.name);
 			} else {
 				script_pushconststr(st,"");
@@ -11144,7 +11144,7 @@ BUILDIN(mapwarp)	// Added by RoVeRT
 			}
 			break;
 		case 2:
-			p = iParty->search(check_ID);
+			p = party->search(check_ID);
 			if(p){
 				for(i=0;i<MAX_PARTY; i++){
 					if(p->data[i].sd && p->data[i].sd->bl.m == m){
@@ -16133,7 +16133,7 @@ BUILDIN(has_instance) {
 			if( i != sd->instances )
 				instance_id = sd->instance[i];
 		}
-		if( instance_id == -1 && sd->status.party_id && (p = iParty->search(sd->status.party_id)) && p->instances ) {
+		if( instance_id == -1 && sd->status.party_id && (p = party->search(sd->status.party_id)) && p->instances ) {
 			for( i = 0; i < p->instances; i++ ) {
 				ARR_FIND(0, instances[p->instance[i]].num_map, j, map[instances[p->instance[i]].map[j]].instance_src_map == m);
 				if( j != instances[p->instance[i]].num_map )
@@ -16230,7 +16230,7 @@ BUILDIN(instance_check_party) {
 		party_id = script_getnum(st,2);
 	else return true;
 	
-	if( !(p = iParty->search(party_id)) ){
+	if( !(p = party->search(party_id)) ){
 		script_pushint(st, 0); // Returns false if party does not exist.
 		return true;
 	}

@@ -209,7 +209,7 @@ int party_request_info(int party_id, int char_id)
 /// Invoked (from char-server) when the party info is not found.
 int party_recv_noinfo(int party_id, int char_id)
 {
-	iParty->broken(party_id);
+	party->broken(party_id);
 	if( char_id != 0 )// requester
 	{
 		struct map_session_data* sd;
@@ -297,7 +297,7 @@ int party_recv_info(struct party* sp, int char_id)
 		sd = p->data[member_id].sd;
 		if( sd == NULL )
 			continue;// not online
-		iParty->member_withdraw(sp->party_id, sd->status.account_id, sd->status.char_id);
+		party->member_withdraw(sp->party_id, sd->status.account_id, sd->status.char_id);
 	}
 	memcpy(&p->party, sp, sizeof(struct party));
 	memset(&p->state, 0, sizeof(p->state));
@@ -328,7 +328,7 @@ int party_recv_info(struct party* sp, int char_id)
 	if( char_id != 0 )// requester
 	{
 		sd = iMap->charid2sd(char_id);
-		if( sd && sd->status.party_id == sp->party_id && iParty->getmemberid(p,sd) == -1 )
+		if( sd && sd->status.party_id == sp->party_id && party->getmemberid(p,sd) == -1 )
 			sd->status.party_id = 0;// was not in the party
 	}
 	return 0;
@@ -341,7 +341,7 @@ int party_invite(struct map_session_data *sd,struct map_session_data *tsd)
 
 	nullpo_ret(sd);
 
-	if( ( p = iParty->search(sd->status.party_id) ) == NULL )
+	if( ( p = party->search(sd->status.party_id) ) == NULL )
 		return 0;
 
 	// confirm if this player is a party leader
@@ -430,10 +430,10 @@ void party_reply_invite(struct map_session_data *sd,int party_id,int flag)
 //- Player must be authed/active and belong to a party before calling this method
 void party_member_joined(struct map_session_data *sd)
 {
-	struct party_data* p = iParty->search(sd->status.party_id);
+	struct party_data* p = party->search(sd->status.party_id);
 	int i;
 	if (!p) {
-		iParty->request_info(sd->status.party_id, sd->status.char_id);
+		party->request_info(sd->status.party_id, sd->status.char_id);
 		return;
 	}
 	ARR_FIND( 0, MAX_PARTY, i, p->party.member[i].account_id == sd->status.account_id && p->party.member[i].char_id == sd->status.char_id );
@@ -455,7 +455,7 @@ void party_member_joined(struct map_session_data *sd)
 int party_member_added(int party_id,int account_id,int char_id, int flag)
 {
 	struct map_session_data *sd = iMap->id2sd(account_id),*sd2;
-	struct party_data *p = iParty->search(party_id);
+	struct party_data *p = party->search(party_id);
 	int i, j;
 
 	if(sd == NULL || sd->status.char_id != char_id || !sd->party_joining ) {
@@ -517,7 +517,7 @@ int party_removemember(struct map_session_data* sd, int account_id, char* name)
 	struct party_data *p;
 	int i;
 
-	p = iParty->search(sd->status.party_id);
+	p = party->search(sd->status.party_id);
 	if( p == NULL )
 		return 0;
 
@@ -542,7 +542,7 @@ int party_leave(struct map_session_data *sd)
 	struct party_data *p;
 	int i;
 
-	p = iParty->search(sd->status.party_id);
+	p = party->search(sd->status.party_id);
 	if( p == NULL )
 		return 0;
 
@@ -558,7 +558,7 @@ int party_leave(struct map_session_data *sd)
 int party_member_withdraw(int party_id, int account_id, int char_id)
 {
 	struct map_session_data* sd = iMap->id2sd(account_id);
-	struct party_data* p = iParty->search(party_id);
+	struct party_data* p = party->search(party_id);
 
 	if( p ) {
 		int i;
@@ -589,7 +589,7 @@ int party_broken(int party_id)
 	struct party_data* p;
 	int i, j;
 
-	p = iParty->search(party_id);
+	p = party->search(party_id);
 	if( p == NULL )
 		return 0;
 
@@ -623,7 +623,7 @@ int party_optionchanged(int party_id,int account_id,int exp,int item,int flag)
 {
 	struct party_data *p;
 	struct map_session_data *sd=iMap->id2sd(account_id);
-	if( (p=iParty->search(party_id))==NULL)
+	if( (p=party->search(party_id))==NULL)
 		return 0;
 
 	//Flag&1: Exp change denied. Flag&2: Item change denied.
@@ -656,7 +656,7 @@ bool party_changeleader(struct map_session_data *sd, struct map_session_data *ts
 		return false;
 	}
 
-	if ((p = iParty->search(sd->status.party_id)) == NULL)
+	if ((p = party->search(sd->status.party_id)) == NULL)
 		return false;
 
 	ARR_FIND( 0, MAX_PARTY, mi, p->data[mi].sd == sd );
@@ -698,7 +698,7 @@ int party_recv_movemap(int party_id,int account_id,int char_id, unsigned short m
 	struct party_data* p;
 	int i;
 
-	p = iParty->search(party_id);
+	p = party->search(party_id);
 	if( p == NULL )
 		return 0;
 
@@ -729,7 +729,7 @@ void party_send_movemap(struct map_session_data *sd)
 
 	intif_party_changemap(sd,1);
 
-	p=iParty->search(sd->status.party_id);
+	p=party->search(sd->status.party_id);
 	if (!p) return;
 
 	if(sd->state.connect_new) {
@@ -767,7 +767,7 @@ int party_send_logout(struct map_session_data *sd)
 		return 0;
 
 	intif_party_changemap(sd,0);
-	p=iParty->search(sd->status.party_id);
+	p=party->search(sd->status.party_id);
 	if(!p) return 0;
 
 	ARR_FIND( 0, MAX_PARTY, i, p->data[i].sd == sd );
@@ -784,7 +784,7 @@ int party_send_message(struct map_session_data *sd,const char *mes,int len)
 	if(sd->status.party_id==0)
 		return 0;
 	intif_party_message(sd->status.party_id,sd->status.account_id,mes,len);
-	iParty->recv_message(sd->status.party_id,sd->status.account_id,mes,len);
+	party->recv_message(sd->status.party_id,sd->status.account_id,mes,len);
 
 	// Chat logging type 'P' / Party Chat
 	logs->chat(LOG_CHAT_PARTY, sd->status.party_id, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);
@@ -795,7 +795,7 @@ int party_send_message(struct map_session_data *sd,const char *mes,int len)
 int party_recv_message(int party_id,int account_id,const char *mes,int len)
 {
 	struct party_data *p;
-	if( (p=iParty->search(party_id))==NULL)
+	if( (p=party->search(party_id))==NULL)
 		return 0;
 	clif->party_message(p,account_id,mes,len);
 	return 0;
@@ -807,7 +807,7 @@ int party_skill_check(struct map_session_data *sd, int party_id, uint16 skill_id
 	struct map_session_data *p_sd;
 	int i;
 
-	if(!party_id || (p=iParty->search(party_id))==NULL)
+	if(!party_id || (p=party->search(party_id))==NULL)
 		return 0;
 	switch(skill_id) {
 		case TK_COUNTER: //Increase Triple Attack rate of Monks.
@@ -1036,7 +1036,7 @@ int party_send_dot_remove(struct map_session_data *sd)
 
 // To use for Taekwon's "Fighting Chant"
 // int c = 0;
-// party_foreachsamemap(iParty->sub_count, sd, 0, &c);
+// party_foreachsamemap(party->sub_count, sd, 0, &c);
 int party_sub_count(struct block_list *bl, va_list ap)
 {
 	struct map_session_data *sd = (TBL_PC *)bl;
@@ -1062,7 +1062,7 @@ int party_foreachsamemap(int (*func)(struct block_list*,va_list),struct map_sess
 
 	nullpo_ret(sd);
 
-	if((p=iParty->search(sd->status.party_id))==NULL)
+	if((p=party->search(sd->status.party_id))==NULL)
 		return 0;
 
 	x0=sd->bl.x-range;
@@ -1217,47 +1217,47 @@ bool party_booking_delete(struct map_session_data *sd)
 * created by Susu
 *-------------------------------------*/
 void party_defaults(void) {
-	iParty = &iParty_s;
+	party = &party_s;
 
 	/* funcs */
 	
-	iParty->do_init_party = do_init_party;
-	iParty->do_final_party = do_final_party;
-	iParty->search = party_search;
-	iParty->searchname = party_searchname;
-	iParty->getmemberid = party_getmemberid;
-	iParty->getavailablesd = party_getavailablesd;
+	party->do_init_party = do_init_party;
+	party->do_final_party = do_final_party;
+	party->search = party_search;
+	party->searchname = party_searchname;
+	party->getmemberid = party_getmemberid;
+	party->getavailablesd = party_getavailablesd;
 	
-	iParty->create = party_create;
-	iParty->created = party_created;
-	iParty->request_info = party_request_info;
-	iParty->invite = party_invite;
-	iParty->member_joined = party_member_joined;
-	iParty->member_added = party_member_added;
-	iParty->leave = party_leave;
-	iParty->removemember = party_removemember;
-	iParty->member_withdraw = party_member_withdraw;
-	iParty->reply_invite = party_reply_invite;
-	iParty->recv_noinfo = party_recv_noinfo;
-	iParty->recv_info = party_recv_info;
-	iParty->recv_movemap = party_recv_movemap;
-	iParty->broken = party_broken;
-	iParty->optionchanged = party_optionchanged;
-	iParty->changeoption = party_changeoption;
-	iParty->changeleader = party_changeleader;
-	iParty->send_movemap = party_send_movemap;
-	iParty->send_levelup = party_send_levelup;
-	iParty->send_logout = party_send_logout;
-	iParty->send_message = party_send_message;
-	iParty->recv_message = party_recv_message;
-	iParty->skill_check = party_skill_check;
-	iParty->send_xy_clear = party_send_xy_clear;
-	iParty->exp_share = party_exp_share;
-	iParty->share_loot = party_share_loot;
-	iParty->send_dot_remove = party_send_dot_remove;
-	iParty->sub_count = party_sub_count;
-	iParty->booking_register = party_booking_register;
-	iParty->booking_update = party_booking_update;
-	iParty->booking_search = party_booking_search;
-	iParty->booking_delete = party_booking_delete;
+	party->create = party_create;
+	party->created = party_created;
+	party->request_info = party_request_info;
+	party->invite = party_invite;
+	party->member_joined = party_member_joined;
+	party->member_added = party_member_added;
+	party->leave = party_leave;
+	party->removemember = party_removemember;
+	party->member_withdraw = party_member_withdraw;
+	party->reply_invite = party_reply_invite;
+	party->recv_noinfo = party_recv_noinfo;
+	party->recv_info = party_recv_info;
+	party->recv_movemap = party_recv_movemap;
+	party->broken = party_broken;
+	party->optionchanged = party_optionchanged;
+	party->changeoption = party_changeoption;
+	party->changeleader = party_changeleader;
+	party->send_movemap = party_send_movemap;
+	party->send_levelup = party_send_levelup;
+	party->send_logout = party_send_logout;
+	party->send_message = party_send_message;
+	party->recv_message = party_recv_message;
+	party->skill_check = party_skill_check;
+	party->send_xy_clear = party_send_xy_clear;
+	party->exp_share = party_exp_share;
+	party->share_loot = party_share_loot;
+	party->send_dot_remove = party_send_dot_remove;
+	party->sub_count = party_sub_count;
+	party->booking_register = party_booking_register;
+	party->booking_update = party_booking_update;
+	party->booking_search = party_booking_search;
+	party->booking_delete = party_booking_delete;
 }

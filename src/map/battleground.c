@@ -526,7 +526,7 @@ void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, enum bg_q
 		
 	switch( type ) { /* guild/party already validated in can_queue */
 		case BGQT_PARTY: {
-			struct party_data *p = iParty->search(sd->status.party_id);
+			struct party_data *p = party->search(sd->status.party_id);
 			for( i = 0; i < MAX_PARTY; i++ ) {
 				if( !p->data[i].sd || p->data[i].sd->bg_queue.arena != NULL ) continue;
 				count++;
@@ -560,7 +560,7 @@ void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, enum bg_q
 			clif->bgqueue_update_info(sd,arena->id,script->hq[arena->queue_id].items);
 			break;
 		case BGQT_PARTY: {
-			struct party_data *p = iParty->search(sd->status.party_id);
+			struct party_data *p = party->search(sd->status.party_id);
 			for( i = 0; i < MAX_PARTY; i++ ) {
 				if( !p->data[i].sd || p->data[i].sd->bg_queue.arena != NULL ) continue;
 				p->data[i].sd->bg_queue.type = type;
@@ -650,7 +650,7 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 				return BGQA_NOT_PARTY_GUILD_LEADER;
 			else {
 				struct party_data *p;
-				if( (p = iParty->search(sd->status.party_id) ) ) {
+				if( (p = party->search(sd->status.party_id) ) ) {
 					int i, count = 0;
 					bool is_leader = false;
 

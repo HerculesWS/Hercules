@@ -1751,7 +1751,7 @@ int map_quit(struct map_session_data *sd) {
 		}
 	}
 
-	iParty->booking_delete(sd); // Party Booking [Spiria]
+	party->booking_delete(sd); // Party Booking [Spiria]
 	pc->makesavestatus(sd);
 	pc->clean_skilltree(sd);
 	chrif_save(sd,1);
@@ -5070,7 +5070,7 @@ void do_final(void)
 	do_final_itemdb();
 	do_final_storage();
 	guild->final();
-	iParty->do_final_party();
+	party->do_final_party();
 	pc->do_final_pc();
 	do_final_pet();
 	do_final_mob();
@@ -5277,7 +5277,7 @@ void map_hp_symbols(void) {
 	HPM->share(skill,"skill");
 	HPM->share(vending,"vending");
 	HPM->share(pc,"pc");
-	HPM->share(iParty,"iParty");
+	HPM->share(party,"party");
 	HPM->share(iMap,"iMap");
 	/* partial */
 	HPM->share(mapit,"mapit");
@@ -5495,7 +5495,7 @@ int do_init(int argc, char *argv[])
 	do_init_mob();
 	pc->do_init_pc();
 	do_init_status();
-	iParty->do_init_party();
+	party->do_init_party();
 	guild->init();
 	do_init_storage();
 	do_init_pet();
