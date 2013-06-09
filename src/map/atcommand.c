@@ -6867,18 +6867,24 @@ ACMD(hommutate) {
 ACMD(makehomun) {
 	int homunid;
 	nullpo_retr(-1, sd);
-	
-	if ( sd->status.hom_id ) {
-		clif->message(fd, msg_txt(450));
-		return false;
-	}
-	
+		
 	if (!message || !*message) {
 		clif->message(fd, msg_txt(1256)); // Please enter a homunculus ID (usage: @makehomun <homunculus id>).
 		return false;
 	}
 	
 	homunid = atoi(message);
+	
+	if( homunid == -1 && sd->status.hom_id && !homun_alive(sd->hd) ) {
+		homun->call(sd);
+		return true;
+	}
+		
+	if ( sd->status.hom_id ) {
+		clif->message(fd, msg_txt(450));
+		return false;
+	}
+	
 	if( homunid < HM_CLASS_BASE || homunid > HM_CLASS_BASE + MAX_HOMUNCULUS_CLASS - 1 )
 	{
 		clif->message(fd, msg_txt(1257)); // Invalid Homunculus ID.
