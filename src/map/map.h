@@ -796,6 +796,7 @@ struct map_interface {
 	char mob_db2_db[32];
 	char mob_skill_db_db[32];
 	char mob_skill_db2_db[32];
+	char interreg_db[32];
 
 	/* funcs */
 	void (*zone_init) (void);

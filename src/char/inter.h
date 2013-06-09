@@ -7,6 +7,7 @@
 
 struct accreg;
 #include "../common/sql.h"
+#include "char.h"
 
 int inter_init_sql(const char *file);
 void inter_final(void);
@@ -32,7 +33,7 @@ uint64 inter_chk_lastuid(int8 flag, uint64 value);
 	#define dbUpdateUid(handler_)\
 	{ \
 		uint64 unique_id_ = inter_chk_lastuid(0, 0); \
-		if (unique_id_ && SQL_ERROR == SQL->Query(handler_, "UPDATE `interreg` SET `value`='%"PRIu64"' WHERE `varname`='unique_id'", unique_id_)) \
+		if (unique_id_ && SQL_ERROR == SQL->Query(handler_, "UPDATE `%s` SET `value`='%"PRIu64"' WHERE `varname`='unique_id'", interreg_db, unique_id_)) \
 				Sql_ShowDebug(handler_);\
 	}
 #else

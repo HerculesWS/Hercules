@@ -3526,82 +3526,71 @@ void map_reloadnpc(bool clear)
 #endif
 }
 
-int inter_config_read(char *cfgName)
-{
+int inter_config_read(char *cfgName) {
 	char line[1024],w1[1024],w2[1024];
 	FILE *fp;
 
-	fp=fopen(cfgName,"r");
-	if(fp==NULL){
+	if( !( fp = fopen(cfgName,"r") ) ){
 		ShowError("File not found: %s\n",cfgName);
 		return 1;
 	}
-	while(fgets(line, sizeof(line), fp))
-	{
+	while(fgets(line, sizeof(line), fp)) {
 		if(line[0] == '/' && line[1] == '/')
 			continue;
+		
 		if( sscanf(line,"%[^:]: %[^\r\n]",w1,w2) < 2 )
 			continue;
-
+		/* table names */
 		if(strcmpi(w1,"item_db_db")==0)
 			strcpy(iMap->item_db_db,w2);
-		else
-			if(strcmpi(w1,"mob_db_db")==0)
-				strcpy(iMap->mob_db_db,w2);
-			else
-				if(strcmpi(w1,"item_db2_db")==0)
-					strcpy(iMap->item_db2_db,w2);
-				else
-					if(strcmpi(w1,"item_db_re_db")==0)
-						strcpy(iMap->item_db_re_db,w2);
-					else
-						if(strcmpi(w1,"mob_db2_db")==0)
-							strcpy(iMap->mob_db2_db,w2);
-						else
-							//Map Server SQL DB
-							if(strcmpi(w1,"map_server_ip")==0)
-								strcpy(map_server_ip, w2);
-							else
-								if(strcmpi(w1,"map_server_port")==0)
-									map_server_port=atoi(w2);
-								else
-									if(strcmpi(w1,"map_server_id")==0)
-										strcpy(map_server_id, w2);
-									else
-										if(strcmpi(w1,"map_server_pw")==0)
-											strcpy(map_server_pw, w2);
-										else
-											if(strcmpi(w1,"map_server_db")==0)
-												strcpy(map_server_db, w2);
-											else
-												if(strcmpi(w1,"default_codepage")==0)
-													strcpy(default_codepage, w2);
-												else
-													if(strcmpi(w1,"use_sql_db")==0) {
-														iMap->db_use_sqldbs = config_switch(w2);
-														ShowStatus ("Using SQL dbs: %s\n",w2);
-													} else
-														if(strcmpi(w1,"log_db_ip")==0)
-															strcpy(log_db_ip, w2);
-														else
-															if(strcmpi(w1,"log_db_id")==0)
-																strcpy(log_db_id, w2);
-															else
-																if(strcmpi(w1,"log_db_pw")==0)
-																	strcpy(log_db_pw, w2);
-																else
-																	if(strcmpi(w1,"log_db_port")==0)
-																		log_db_port = atoi(w2);
-																	else
-																		if(strcmpi(w1,"log_db_db")==0)
-																			strcpy(log_db_db, w2);
-																		else
-																			if( mapreg_config_read(w1,w2) )
-																				continue;
-													//support the import command, just like any other config
-																			else
-																				if(strcmpi(w1,"import")==0)
-																					inter_config_read(w2);
+		else if(strcmpi(w1,"mob_db_db")==0)
+			strcpy(iMap->mob_db_db,w2);
+		else if(strcmpi(w1,"item_db2_db")==0)
+			strcpy(iMap->item_db2_db,w2);
+		else if(strcmpi(w1,"item_db_re_db")==0)
+			strcpy(iMap->item_db_re_db,w2);
+		else if(strcmpi(w1,"mob_db2_db")==0)
+			strcpy(iMap->mob_db2_db,w2);
+		else if(strcmpi(w1,"mob_skill_db_db")==0)
+			strcpy(iMap->mob_skill_db_db,w2);
+		else if(strcmpi(w1,"mob_skill_db2_db")==0)
+			strcpy(iMap->mob_skill_db2_db,w2);
+		else if(strcmpi(w1,"interreg_db")==0)
+			strcpy(iMap->interreg_db,w2);
+		/* map sql stuff */
+		else if(strcmpi(w1,"map_server_ip")==0)
+			strcpy(map_server_ip, w2);
+		else if(strcmpi(w1,"map_server_port")==0)
+			map_server_port=atoi(w2);
+		else if(strcmpi(w1,"map_server_id")==0)
+			strcpy(map_server_id, w2);
+		else if(strcmpi(w1,"map_server_pw")==0)
+			strcpy(map_server_pw, w2);
+		else if(strcmpi(w1,"map_server_db")==0)
+			strcpy(map_server_db, w2);
+		else if(strcmpi(w1,"default_codepage")==0)
+			strcpy(default_codepage, w2);
+		else if(strcmpi(w1,"use_sql_db")==0) {
+			iMap->db_use_sqldbs = config_switch(w2);
+			ShowStatus ("Using SQL dbs: %s\n",w2);
+		}
+		/* sql log db */
+		else if(strcmpi(w1,"log_db_ip")==0)
+			strcpy(log_db_ip, w2);
+		else if(strcmpi(w1,"log_db_id")==0)
+			strcpy(log_db_id, w2);
+		else if(strcmpi(w1,"log_db_pw")==0)
+			strcpy(log_db_pw, w2);
+		else if(strcmpi(w1,"log_db_port")==0)
+			log_db_port = atoi(w2);
+		else if(strcmpi(w1,"log_db_db")==0)
+			strcpy(log_db_db, w2);
+		/* mapreg */
+		else if( mapreg_config_read(w1,w2) )
+			continue;
+		/* import */
+		else if(strcmpi(w1,"import")==0)
+			inter_config_read(w2);
 	}
 	fclose(fp);
 
