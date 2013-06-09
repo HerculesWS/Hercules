@@ -12462,6 +12462,7 @@ void clif_parse_PartyBookingSubFilteringList(int fd, struct map_session_data *sd
 void clif_parse_PartyBookingReqVolunteer(int fd, struct map_session_data *sd)
 {
 	int index = RFIFOL(fd, 2);
+
 	clif->PartyBookingVolunteerInfo(index, sd);
 }
 
@@ -12470,8 +12471,6 @@ void clif_parse_PartyBookingReqVolunteer(int fd, struct map_session_data *sd)
 void clif_PartyBookingVolunteerInfo(int index, struct map_session_data *sd)
 {
 	unsigned char buf[2+4+4+2+24+1];
-
-	//sd->pb_index = index;
 	
 	WBUFW(buf, 0) = 0x8f2;
 	WBUFL(buf, 2) = sd->status.account_id;
@@ -12499,11 +12498,13 @@ void clif_parse_PartyBookingReqRecall(int fd, struct map_session_data *sd)
 }
 
 /// 08f6 <money>.L <map name>.16B
-void clif_PartyBookingRecallCost(int fd, struct map_session_data *sd) {
+void clif_PartyBookingRecallCost(int fd, struct map_session_data *sd)
+{
 }
 
 /// 08f7 <result>.B
-void clif_parse_PartyBookingAckRecall(int fd, struct map_session_data *sd) {
+void clif_parse_PartyBookingAckRecall(int fd, struct map_session_data *sd)
+{
 }
 
 /// 08f8 <caller AID>.L <reason>.B
@@ -12530,13 +12531,9 @@ void clif_parse_PartyBookingRefuseVolunteer(int fd, struct map_session_data *sd)
 void clif_PartyBookingRefuseVolunteer(unsigned long aid, struct map_session_data *sd)
 {
 	unsigned char buf[2+6];
-
-	//handle
-	//if (aid != sd->status.account_id)
-	//	;
 	
 	WBUFW(buf, 0) = 0x8fa;
-	WBUFL(buf, 2) = aid;//sd->pb_index;
+	WBUFL(buf, 2) = aid;
 	
 	clif->send(buf, packet_len(0x8fa), &sd->bl, ALL_CLIENT);
 }
@@ -12564,9 +12561,7 @@ void clif_PartyBookingCancelVolunteer(int index, struct map_session_data *sd)
 void clif_PartyBookingAddFilteringList(int index, struct map_session_data *sd)
 {
 	unsigned char buf[2+6+24+1];
-	
-	//sd->pb_index = index;
-	
+
 	WBUFW(buf, 0) = 0x90b;
 	WBUFL(buf, 2) = sd->bl.id;
 	memcpy(WBUFP(buf, 6), sd->status.name, NAME_LENGTH);
@@ -12577,7 +12572,6 @@ void clif_PartyBookingAddFilteringList(int index, struct map_session_data *sd)
 /// 090c <gid>.L <char name>.24B
 void clif_PartyBookingSubFilteringList(int gid, struct map_session_data *sd)
 {
-	//struct map_session_data *ssd = mapid2sd(gid);
 	unsigned char buf[2+6+24+1];
 
 	WBUFW(buf, 0) = 0x90c;
@@ -12591,15 +12585,11 @@ void clif_PartyBookingSubFilteringList(int gid, struct map_session_data *sd)
 /// 091c <aid>.L
 void clif_PartyBookingCancelVolunteerToPM(struct map_session_data *sd)
 {
-	/* this+0x0 */ short PacketType;
-	/* this+0x2 */ unsigned long AID;
 }
 
 /// 0971 <pm_aid>.L
 void clif_PartyBookingRefuseVolunteerToPM(struct map_session_data *sd)
 {
-	/* this+0x0 */ short PacketType;
-	/* this+0x2 */ unsigned long PM_AID;
 }
 #endif //if 0
 #endif

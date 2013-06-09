@@ -67,7 +67,7 @@ enum e_battle_check_target { //New definitions [Skotlex]
 	BCT_NOPARTY		=	0x1b0000,	// This should be (~BCT_PARTY&BCT_ALL)
 	BCT_NOENEMY		=	0x1d0000,	// This should be (~BCT_ENEMY&BCT_ALL)
 	
-	BCT_ALL			=	0x1f0000,	// Sum of BCT_NOONE to BCT_GUILD
+	BCT_ALL			=	0x1f0000,	// Sum of BCT_NOONE to BCT_NEUTRAL
 };
 
 /**
