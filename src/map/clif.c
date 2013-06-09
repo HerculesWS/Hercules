@@ -10747,22 +10747,24 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 {
 	struct block_list *bl;
 
-	if(pc_isdead(sd)) {
+	if( pc_isdead(sd) ) {
 		clif_clearunit_area(&sd->bl,CLR_DEAD);
 		return;
 	}
 
-	if ( pc_cant_act2(sd) )
+	if ( pc_cant_act2(sd) || !(bl = iMap->id2bl(RFIFOL(fd,2))) )
 		return;
-
-	bl = iMap->id2bl(RFIFOL(fd,2));
-	if (!bl) return;
+	
 	switch (bl->type) {
 		case BL_MOB:
 		case BL_PC:
 			clif->pActionRequest_sub(sd, 0x07, bl->id, iTimer->gettick());
 			break;
 		case BL_NPC:
+			if( sd->ud.skilltimer != INVALID_TIMER ) {
+				clif->colormes(fd,COLOR_WHITE,msg_txt(1476));
+				break;
+			}
 			if( bl->m != -1 )// the user can't click floating npcs directly (hack attempt)
 				npc_click(sd,(TBL_NPC*)bl);
 			break;
