@@ -728,7 +728,7 @@ const char* skip_space(const char* p)
 }
 
 /// Skips a word.
-/// A word consists of undercores and/or alfanumeric characters,
+/// A word consists of undercores and/or alphanumeric characters,
 /// and valid variable prefixes/postfixes.
 static
 const char* skip_word(const char* p)
@@ -771,7 +771,7 @@ int add_word(const char* p)
 	// Check for a word
 	len = skip_word(p) - p;
 	if( len == 0 )
-		disp_error_message("script:add_word: invalid word. A word consists of undercores and/or alfanumeric characters, and valid variable prefixes/postfixes.", p);
+		disp_error_message("script:add_word: invalid word. A word consists of undercores and/or alphanumeric characters, and valid variable prefixes/postfixes.", p);
 
 	// Duplicate the word
 	word = (char*)aMalloc(len+1);
@@ -809,7 +809,7 @@ const char* parse_callfunc(const char* p, int require_paren, int is_custom)
 		add_scriptl(func);
 		arg = script->buildin[script->str_data[buildin_callsub_ref].val];
 		if( *arg == 0 )
-			disp_error_message("parse_callfunc: callsub has no arguments, please review it's definition",p);
+			disp_error_message("parse_callfunc: callsub has no arguments, please review its definition",p);
 		if( *arg != '*' )
 			++arg; // count func as argument
 	} else {
@@ -1049,7 +1049,7 @@ const char* parse_simpleexpr(const char *p)
 	p=skip_space(p);
 
 	if(*p==';' || *p==',')
-		disp_error_message("parse_simpleexpr: unexpected expr end",p);
+		disp_error_message("parse_simpleexpr: unexpected end of expression",p);
 	if(*p=='('){
 		if( (i=syntax.curly_count-1) >= 0 && syntax.curly[i].type == TYPE_ARGLIST )
 			++syntax.curly[i].count;
@@ -1065,7 +1065,7 @@ const char* parse_simpleexpr(const char *p)
 				syntax.curly[i].flag = ARGLIST_NO_PAREN;
 		}
 		if( *p != ')' )
-			disp_error_message("parse_simpleexpr: unmatch ')'",p);
+			disp_error_message("parse_simpleexpr: unmatched ')'",p);
 		++p;
 	} else if(ISDIGIT(*p) || ((*p=='-' || *p=='+') && ISDIGIT(p[1]))){
 		char *np;
@@ -1091,7 +1091,7 @@ const char* parse_simpleexpr(const char *p)
 			add_scriptb(*p++);
 		}
 		if(!*p)
-			disp_error_message("parse_simpleexpr: unexpected eof @ string",p);
+			disp_error_message("parse_simpleexpr: unexpected end of file @ string",p);
 		add_scriptb(0);
 		p++;	//'"'
 	} else {
@@ -1129,7 +1129,7 @@ const char* parse_simpleexpr(const char *p)
 			p=parse_subexpr(p+1,-1);
 			p=skip_space(p);
 			if( *p != ']' )
-				disp_error_message("parse_simpleexpr: unmatch ']'",p);
+				disp_error_message("parse_simpleexpr: unmatched ']'",p);
 			++p;
 			add_scriptc(C_FUNC);
 		}else
@@ -1330,8 +1330,8 @@ const char* parse_curly_close(const char* p)
 }
 
 // Syntax-related processing
-//	 break, case, continue, default, do, for, function,
-//	 if, switch, while ? will handle this internally.
+// break, case, continue, default, do, for, function,
+// if, switch, while ? will handle this internally.
 const char* parse_syntax(const char* p)
 {
 	const char *p2 = skip_word(p);
@@ -1411,14 +1411,14 @@ const char* parse_syntax(const char* p)
 					memcpy(label,p,v);
 					label[v]='\0';
 					if( !script_get_constant(label, &v) )
-						disp_error_message("parse_syntax: 'case' label not integer",p);
+						disp_error_message("parse_syntax: 'case' label is not an integer",p);
 					p = skip_word(p);
 				} else { //Numeric value
 					if((*p == '-' || *p == '+') && ISDIGIT(p[1]))	// pre-skip because '-' can not skip_word
 						p++;
 					p = skip_word(p);
 					if(np != p)
-						disp_error_message("parse_syntax: 'case' label not integer",np);
+						disp_error_message("parse_syntax: 'case' label is not an integer",np);
 				}
 				p = skip_space(p);
 				if(*p != ':')
@@ -14007,7 +14007,7 @@ BUILDIN(setnpcdisplay)
  		class_ = script->conv_num(st,data);
 	else
 	{
-		ShowError("script:setnpcdisplay: expected a string or number\n");
+		ShowError("script:setnpcdisplay: expected string or number\n");
 		script_reportdata(data);
 		return false;
 	}
