@@ -16875,7 +16875,7 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick,
 	}
 
 	if( battle_config.display_status_timers )
-		clif->skill_cooldown(sd, idx, tick);
+		clif->skill_cooldown(sd, skill_id, tick);
 
 	if( !load ) {// not being loaded initially so ensure the skill delay is recorded
 		if( !(cd = idb_get(skillcd_db,sd->status.char_id)) ) {// create a new skill cooldown object for map storage
