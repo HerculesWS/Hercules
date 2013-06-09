@@ -6604,6 +6604,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 	case SC_INCREASEAGI:
 		 if(sd && pc_issit(sd)){
 			 pc->setstand(sd);
+			 clif->standing(&sd->bl);
 		 }
 
 	case SC_CONCENTRATE:
