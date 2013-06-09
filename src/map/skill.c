@@ -6006,8 +6006,15 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			break;
 
 		case MC_IDENTIFY:
-			if(sd)
+			if(sd) {
 				clif->item_identify_list(sd);
+				if( sd->menuskill_id != MC_IDENTIFY ) {/* failed, dont consume anything, return */
+					clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+					iMap->freeblock_unlock();
+					return 1;
+				}
+				status_zap(src,0,skill_db[skill->get_index(skill_id)].sp[skill_lv]); // consume sp only if succeeded
+			}
 			break;
 
 		// Weapon Refining [Celest]
@@ -13361,18 +13368,26 @@ int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, 
 
 // type&2: consume items (after skill was used)
 // type&1: consume the others (before skill was used)
-int skill_consume_requirement( struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, short type)
-{
+int skill_consume_requirement( struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, short type) {
 	struct skill_condition req;
 
 	nullpo_ret(sd);
 
 	req = skill->get_requirement(sd,skill_id,skill_lv);
 
-	if( type&1 )
-	{
-		if( skill_id == CG_TAROTCARD || sd->state.autocast )
-			req.sp = 0; // TarotCard will consume sp in skill_cast_nodamage_id [Inkfish]
+	if( type&1 ) {
+		
+		switch( skill_id ) {
+			case CG_TAROTCARD: // TarotCard will consume sp in skill_cast_nodamage_id [Inkfish]
+			case MC_IDENTIFY:
+				req.sp = 0;
+				break;
+			default:
+				if( sd->state.autocast )
+					req.sp = 0;
+				break;
+		}
+		
 		if(req.hp || req.sp)
 			status_zap(&sd->bl, req.hp, req.sp);
 
