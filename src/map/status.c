@@ -1516,7 +1516,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 
 	if( skill_id ) {
 		
-		if( src && !((TBL_PC*)src)->skillitem) { // Items that cast skills using 'itemskill' will not be handled by map_zone_db.
+		if( src && !(src->type == BL_PC && ((TBL_PC*)src)->skillitem)) { // Items that cast skills using 'itemskill' will not be handled by map_zone_db.
 			int i;
 			
 			for(i = 0; i < map[src->m].zone->disabled_skills_count; i++) {
