@@ -10095,14 +10095,15 @@ void atcommand_db_load_groups(void) {
 		cmd->at_groups = aMalloc( pc_group_max * sizeof(char) );
 		cmd->char_groups = aMalloc( pc_group_max * sizeof(char) );
 		for(i = 0; i < pc_group_max; i++) {
+			int idx = pc_group_id2idx(atcommand->group_ids[i]);
 			if( pc_group_can_use_command(atcommand->group_ids[i], cmd->command, COMMAND_ATCOMMAND ) )
-			   cmd->at_groups[i] = 1;
+			   cmd->at_groups[idx] = 1;
 			else
-			   cmd->at_groups[i] = 0;
+			   cmd->at_groups[idx] = 0;
 		   if( pc_group_can_use_command(atcommand->group_ids[i], cmd->command, COMMAND_CHARCOMMAND ) )
-			  cmd->char_groups[i] = 1;
+			  cmd->char_groups[idx] = 1;
 			else
-			  cmd->char_groups[i] = 0;
+			  cmd->char_groups[idx] = 0;
 		}
 	}
 
