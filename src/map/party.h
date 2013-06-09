@@ -3,6 +3,7 @@
 #ifndef _PARTY_H_
 #define _PARTY_H_
 #include "../common/mmo.h" // struct party
+#include "../config/core.h"
 struct block_list;
 struct map_session_data;
 struct party;
