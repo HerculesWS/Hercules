@@ -5256,9 +5256,12 @@ void map_cp_defaults(void) {
 void map_hp_symbols(void) {
 	/* full interfaces */
 	HPM->share(atcommand,"atcommand");
+	HPM->share(battle,"battle");
+	HPM->share(bg,"battlegrounds");
 	HPM->share(buyingstore,"buyingstore");
 	HPM->share(clif,"clif");
 	HPM->share(guild,"guild");
+	HPM->share(homun,"homun");
 	HPM->share(ircbot,"ircbot");
 	HPM->share(logs,"logs");
 	HPM->share(script,"script");
