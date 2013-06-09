@@ -9020,21 +9020,25 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					int summons[5] = {1004, 1303, 1303, 1994, 1994};
 					int qty[5] =     {3   , 3   , 4   , 4   , 5};
 					struct mob_data *md;
-					int i;
+					int i, dummy = 0;
 
+					i = iMap->foreachinmap(skill->check_condition_mob_master_sub ,hd->bl.m, BL_MOB, hd->bl.id, summons[skill_lv-1], skill_id, &dummy);
+					if(i >= qty[skill_lv-1])
+						break;
+					
 					for(i=0; i<qty[skill_lv - 1]; i++){ //easy way
 						md = mob_once_spawn_sub(src, src->m, src->x, src->y, status_get_name(src), summons[skill_lv - 1], "", SZ_SMALL, AI_ATTACK);
 						if (md) {
-							md->master_id =  src->id;
+							md->master_id = src->id;
 							if (md->deletetimer != INVALID_TIMER)
 								iTimer->delete_timer(md->deletetimer, mob_timer_delete);
 							md->deletetimer = iTimer->add_timer(iTimer->gettick() + skill->get_time(skill_id, skill_lv), mob_timer_delete, md->bl.id, 0);
 							mob_spawn(md); //Now it is ready for spawning.
-							sc_start4(&md->bl, SC_MODECHANGE, 100, 1, 0, MD_ASSIST, 0, 60000);
+							sc_start4(&md->bl, SC_MODECHANGE, 100, 1, 0, MD_CANATTACK|MD_AGGRESSIVE, 0, 60000);
 						}
 					}
-			if (hd)
-				skill->blockhomun_start(hd, skill_id, skill->get_cooldown(skill_id, skill_lv));
+					if (hd)
+						skill->blockhomun_start(hd, skill_id, skill->get_cooldown(skill_id, skill_lv));
 				}
 				break;
 		default:
@@ -12329,10 +12333,8 @@ int skill_check_condition_mob_master_sub (struct block_list *bl, va_list ap) {
 	mob_class=va_arg(ap,int);
 	skill=va_arg(ap,int);
 	c=va_arg(ap,int *);
-
-	if( md->master_id != src_id || md->special_state.ai != (unsigned)(skill == AM_SPHEREMINE?2:skill == KO_ZANZOU?4:3) )
+	if( md->master_id != src_id || md->special_state.ai != (unsigned)(skill == AM_SPHEREMINE?2:skill == KO_ZANZOU?4:skill == MH_SUMMON_LEGION?1:3) )
 		return 0; //Non alchemist summoned mobs have nothing to do here.
-
 	if(md->class_==mob_class)
 		(*c)++;
 
