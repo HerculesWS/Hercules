@@ -17591,6 +17591,7 @@ bool skill_parse_row_unitdb(char* split[], int columns, int current) {
 	else if( strcmpi(split[6],"all")==0 ) skill_db[idx].unit_target = BCT_ALL;
 	else if( strcmpi(split[6],"enemy")==0 ) skill_db[idx].unit_target = BCT_ENEMY;
 	else if( strcmpi(split[6],"self")==0 ) skill_db[idx].unit_target = BCT_SELF;
+	else if( strcmpi(split[6],"sameguild")==0 ) skill_db[idx].unit_target = BCT_GUILD|BCT_SAMEGUILD;
 	else if( strcmpi(split[6],"noone")==0 ) skill_db[idx].unit_target = BCT_NOONE;
 	else skill_db[idx].unit_target = strtol(split[6],NULL,16);
 

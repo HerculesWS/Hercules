@@ -55,16 +55,19 @@ typedef enum damage_lv {
 } damage_lv;
 
 enum e_battle_check_target { //New definitions [Skotlex]
-	BCT_ENEMY   = 0x020000,
-	BCT_NOENEMY = 0x1d0000, //This should be (~BCT_ENEMY&BCT_ALL)
-	BCT_PARTY	= 0x040000,
-	BCT_NOPARTY = 0x1b0000, //This should be (~BCT_PARTY&BCT_ALL)
-	BCT_GUILD	= 0x080000,
-	BCT_NOGUILD = 0x170000, //This should be (~BCT_GUILD&BCT_ALL)
-	BCT_ALL     = 0x1f0000,
-	BCT_NOONE   = 0x000000,
-	BCT_SELF    = 0x010000,
-	BCT_NEUTRAL = 0x100000,
+	BCT_NOONE		=	0x000000,
+	BCT_SELF		=	0x010000,
+	BCT_ENEMY		=	0x020000,
+	BCT_PARTY		=	0x040000,
+	BCT_GUILD		=	0x080000,
+	BCT_NEUTRAL		=	0x100000,
+	BCT_SAMEGUILD	=	0x200000,	// No Guild Allies
+
+	BCT_NOGUILD		=	0x170000,	// This should be (~BCT_GUILD&BCT_ALL)
+	BCT_NOPARTY		=	0x1b0000,	// This should be (~BCT_PARTY&BCT_ALL)
+	BCT_NOENEMY		=	0x1d0000,	// This should be (~BCT_ENEMY&BCT_ALL)
+	
+	BCT_ALL			=	0x1f0000,	// Sum of BCT_NOONE to BCT_GUILD
 };
 
 /**
