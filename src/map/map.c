@@ -5634,7 +5634,7 @@ void map_defaults(void) {
 	iMap->map_foreachregen = map_map_foreachregen;
 	iMap->map_foreachiddb = map_map_foreachiddb;
 
-	iMap->foreachinrange = iMap->foreachinrange;
+	iMap->foreachinrange = map_foreachinrange;
 	iMap->foreachinshootrange = map_foreachinshootrange;
 	iMap->foreachinarea=map_foreachinarea;
 	iMap->forcountinrange=map_forcountinrange;
