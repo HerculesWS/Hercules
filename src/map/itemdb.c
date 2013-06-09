@@ -1293,14 +1293,13 @@ uint64 itemdb_unique_id(int8 flag, int64 value) {
 
 	return ++item_uid;
 }
-int itemdb_uid_load(){
+int itemdb_uid_load() {
 
 	char * uid;
-	if (SQL_ERROR == SQL->Query(mmysql_handle, "SELECT `value` FROM `interreg` WHERE `varname`='unique_id'"))
+	if (SQL_ERROR == SQL->Query(mmysql_handle, "SELECT `value` FROM `%s` WHERE `varname`='unique_id'",iMap->interreg_db))
 		Sql_ShowDebug(mmysql_handle);
 
-	if( SQL_SUCCESS != SQL->NextRow(mmysql_handle) )
-	{
+	if( SQL_SUCCESS != SQL->NextRow(mmysql_handle) ) {
 		ShowError("itemdb_uid_load: Unable to fetch unique_id data\n");
 		SQL->FreeResult(mmysql_handle);
 		return -1;

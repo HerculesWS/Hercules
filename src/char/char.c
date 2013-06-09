@@ -66,6 +66,7 @@ char skill_homunculus_db[256] = "skill_homunculus";
 char mercenary_db[256] = "mercenary";
 char mercenary_owner_db[256] = "mercenary_owner";
 char ragsrvinfo_db[256] = "ragsrvinfo";
+char interreg_db[32] = "interreg";
 
 // show loading/saving messages
 int save_log = 1;
@@ -4686,6 +4687,10 @@ void sql_config_read(const char* cfgName)
 			safestrncpy(mercenary_db,w2,sizeof(mercenary_db));
 		else if(!strcmpi(w1,"mercenary_owner_db"))
 			safestrncpy(mercenary_owner_db,w2,sizeof(mercenary_owner_db));
+		else if(!strcmpi(w1,"ragsrvinfo_db"))
+			safestrncpy(ragsrvinfo_db,w2,sizeof(ragsrvinfo_db));
+		else if(!strcmpi(w1,"interreg_db"))
+			safestrncpy(interreg_db,w2,sizeof(interreg_db));
 		//support the import command, just like any other config
 		else if(!strcmpi(w1,"import"))
 			sql_config_read(w2);
