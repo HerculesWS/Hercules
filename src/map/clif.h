@@ -867,6 +867,14 @@ struct clif_interface {
 	void (*PartyBookingUpdateNotify) (struct map_session_data* sd, struct party_booking_ad_info* pb_ad);
 	void (*PartyBookingDeleteNotify) (struct map_session_data* sd, int index);
 	void (*PartyBookingInsertNotify) (struct map_session_data* sd, struct party_booking_ad_info* pb_ad);
+	/* Group Search System Update */
+#ifdef PARTY_RECRUIT
+	void (*PartyBookingVolunteerInfo) (int index, struct map_session_data *sd);
+	void (*PartyBookingRefuseVolunteer) (unsigned long aid, struct map_session_data *sd);
+	void (*PartyBookingCancelVolunteer) (int index, struct map_session_data *sd);
+	void (*PartyBookingAddFilteringList) (int index, struct map_session_data *sd);
+	void (*PartyBookingSubFilteringList) (int gid, struct map_session_data *sd);
+#endif
 	/* buying store-related */
 	void (*buyingstore_open) (struct map_session_data* sd);
 	void (*buyingstore_open_failed) (struct map_session_data* sd, unsigned short result, unsigned int weight);
@@ -1126,6 +1134,14 @@ struct clif_interface {
 	void (*pCashShopBuy) (int fd, struct map_session_data *sd);
 	void (*pPartyTick) (int fd, struct map_session_data *sd);
 	void (*pGuildInvite2) (int fd, struct map_session_data *sd);
+	/* Group Search System Update */
+#ifdef PARTY_RECRUIT
+	void (*pPartyBookingAddFilter) (int fd, struct map_session_data *sd);
+	void (*pPartyBookingSubFilter) (int fd, struct map_session_data *sd);
+	void (*pPartyBookingReqVolunteer) (int fd, struct map_session_data *sd);
+	void (*pPartyBookingRefuseVolunteer) (int fd, struct map_session_data *sd);
+	void (*pPartyBookingCancelVolunteer) (int fd, struct map_session_data *sd);
+#endif
 } clif_s;
 
 struct clif_interface *clif;

@@ -33,6 +33,7 @@ struct party_data {
 	} state;
 };
 
+#ifndef PARTY_RECRUIT
 struct party_booking_detail {
 	short level;
     short mapid;
@@ -42,9 +43,23 @@ struct party_booking_detail {
 struct party_booking_ad_info {
 	unsigned long index;
 	char charname[NAME_LENGTH];
-	long starttime;
+	long expiretime;
 	struct party_booking_detail p_detail;
 };
+#else
+#define PB_NOTICE_LENGTH (36 + 1)
+struct party_booking_detail {
+	short level;
+	char notice[PB_NOTICE_LENGTH];
+};
+
+struct party_booking_ad_info {
+	unsigned long index;
+	long expiretime;
+	char charname[NAME_LENGTH];
+	struct party_booking_detail p_detail;
+};
+#endif
 
 
 int party_foreachsamemap(int (*func)(struct block_list *,va_list),struct map_session_data *sd,int range,...);
@@ -97,9 +112,15 @@ struct party_interface {
 	int (*share_loot) (struct party_data* p, struct map_session_data* sd, struct item* item_data, int first_charid);
 	int (*send_dot_remove) (struct map_session_data *sd);
 	int (*sub_count) (struct block_list *bl, va_list ap);
+#ifndef PARTY_RECRUIT
 	void (*booking_register) (struct map_session_data *sd, short level, short mapid, short* job);
 	void (*booking_update) (struct map_session_data *sd, short* job);
 	void (*booking_search) (struct map_session_data *sd, short level, short mapid, short job, unsigned long lastindex, short resultcount);
+#else
+	void (*booking_register) (struct map_session_data *sd, short level, const char *notice);
+	void (*booking_update) (struct map_session_data *sd, const char *notice);
+	void (*booking_search) (struct map_session_data *sd, short level, short mapid, unsigned long lastindex, short resultcount);
+#endif
 	bool (*booking_delete) (struct map_session_data *sd);
 } party_s;
 
