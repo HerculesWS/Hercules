@@ -122,20 +122,20 @@ int mail_savemessage(struct mail_message* msg)
 	dbUpdateUid(sql_handle);
 
 	// prepare and execute query
-	stmt = SqlStmt_Malloc(sql_handle);
-	if( SQL_SUCCESS != SqlStmt_PrepareStr(stmt, StrBuf->Value(&buf))
-	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 0, SQLDT_STRING, msg->send_name, strnlen(msg->send_name, NAME_LENGTH))
-	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 1, SQLDT_STRING, msg->dest_name, strnlen(msg->dest_name, NAME_LENGTH))
-	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 2, SQLDT_STRING, msg->title, strnlen(msg->title, MAIL_TITLE_LENGTH))
-	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 3, SQLDT_STRING, msg->body, strnlen(msg->body, MAIL_BODY_LENGTH))
-	||  SQL_SUCCESS != SqlStmt_Execute(stmt) )
+	stmt = SQL->StmtMalloc(sql_handle);
+	if( SQL_SUCCESS != SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
+	||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, msg->send_name, strnlen(msg->send_name, NAME_LENGTH))
+	||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, msg->dest_name, strnlen(msg->dest_name, NAME_LENGTH))
+	||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 2, SQLDT_STRING, msg->title, strnlen(msg->title, MAIL_TITLE_LENGTH))
+	||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 3, SQLDT_STRING, msg->body, strnlen(msg->body, MAIL_BODY_LENGTH))
+	||  SQL_SUCCESS != SQL->StmtExecute(stmt) )
 	{
 		SqlStmt_ShowDebug(stmt);
 		msg->id = 0;
 	} else
-		msg->id = (int)SqlStmt_LastInsertId(stmt);
+		msg->id = (int)SQL->StmtLastInsertId(stmt);
 
-	SqlStmt_Free(stmt);
+	SQL->StmtFree(stmt);
 	StrBuf->Destroy(&buf);
 
 	return msg->id;
