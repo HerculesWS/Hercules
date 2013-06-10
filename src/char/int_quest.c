@@ -26,7 +26,7 @@ int mapif_quests_fromsql(int char_id, struct quest questlog[])
 	struct quest tmp_quest;
 	SqlStmt * stmt;
 
-	stmt = SqlStmt_Malloc(sql_handle);
+	stmt = SQL->StmtMalloc(sql_handle);
 	if( stmt == NULL )
 	{
 		SqlStmt_ShowDebug(stmt);
@@ -35,21 +35,21 @@ int mapif_quests_fromsql(int char_id, struct quest questlog[])
 
 	memset(&tmp_quest, 0, sizeof(struct quest));
 
-	if( SQL_ERROR == SqlStmt_Prepare(stmt, "SELECT `quest_id`, `state`, `time`, `count1`, `count2`, `count3` FROM `%s` WHERE `char_id`=? LIMIT %d", quest_db, MAX_QUEST_DB)
-	||	SQL_ERROR == SqlStmt_BindParam(stmt, 0, SQLDT_INT, &char_id, 0)
-	||	SQL_ERROR == SqlStmt_Execute(stmt)
-	||	SQL_ERROR == SqlStmt_BindColumn(stmt, 0, SQLDT_INT,    &tmp_quest.quest_id, 0, NULL, NULL)
-	||	SQL_ERROR == SqlStmt_BindColumn(stmt, 1, SQLDT_INT,    &tmp_quest.state, 0, NULL, NULL)
-	||	SQL_ERROR == SqlStmt_BindColumn(stmt, 2, SQLDT_UINT,   &tmp_quest.time, 0, NULL, NULL)
-	||	SQL_ERROR == SqlStmt_BindColumn(stmt, 3, SQLDT_INT,    &tmp_quest.count[0], 0, NULL, NULL)
-	||	SQL_ERROR == SqlStmt_BindColumn(stmt, 4, SQLDT_INT,    &tmp_quest.count[1], 0, NULL, NULL)
-	||	SQL_ERROR == SqlStmt_BindColumn(stmt, 5, SQLDT_INT,    &tmp_quest.count[2], 0, NULL, NULL) )
+	if( SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `quest_id`, `state`, `time`, `count1`, `count2`, `count3` FROM `%s` WHERE `char_id`=? LIMIT %d", quest_db, MAX_QUEST_DB)
+	||	SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, 0)
+	||	SQL_ERROR == SQL->StmtExecute(stmt)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT,    &tmp_quest.quest_id, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_INT,    &tmp_quest.state, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_UINT,   &tmp_quest.time, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_INT,    &tmp_quest.count[0], 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 4, SQLDT_INT,    &tmp_quest.count[1], 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 5, SQLDT_INT,    &tmp_quest.count[2], 0, NULL, NULL) )
 		SqlStmt_ShowDebug(stmt);
 
-	for( i = 0; i < MAX_QUEST_DB && SQL_SUCCESS == SqlStmt_NextRow(stmt); ++i )
+	for( i = 0; i < MAX_QUEST_DB && SQL_SUCCESS == SQL->StmtNextRow(stmt); ++i )
 		memcpy(&questlog[i], &tmp_quest, sizeof(tmp_quest));
 
-	SqlStmt_Free(stmt);
+	SQL->StmtFree(stmt);
 	return i;
 }
 
