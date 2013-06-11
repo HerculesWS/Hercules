@@ -10906,8 +10906,8 @@ BUILDIN(requestguildinfo)
 }
 
 /// Returns the number of cards that have been compounded onto the specified equipped item.
-/// getequpcardcnt(<equipment slot>);
-BUILDIN(getequpcardcnt)
+/// getequipcardcnt(<equipment slot>);
+BUILDIN(getequipcardcnt)
 {
 	int i=-1,j,num;
 	TBL_PC *sd;
@@ -16191,7 +16191,7 @@ BUILDIN(instance_check_party) {
 	if( min < 1 || min > MAX_LEVEL){
 		ShowError("instance_check_party: Invalid min level, %d\n", min);
 		return true;
-	}else if(  max < 1 || max > MAX_LEVEL){
+	} else if(  max < 1 || max > MAX_LEVEL){
 		ShowError("instance_check_party: Invalid max level, %d\n", max);
 		return true;
 	}
@@ -17533,7 +17533,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getcastledata,"si"),
 		BUILDIN_DEF(setcastledata,"sii"),
 		BUILDIN_DEF(requestguildinfo,"i?"),
-		BUILDIN_DEF(getequpcardcnt,"i"),
+		BUILDIN_DEF(getequipcardcnt,"i"),
 		BUILDIN_DEF(successremovecards,"i"),
 		BUILDIN_DEF(failedremovecards,"ii"),
 		BUILDIN_DEF(marriage,"s"),
