@@ -2091,6 +2091,7 @@ packet(0x020d,-1);
 	// New Packets
 	packet(0x0998,8,clif->pEquipItem,2,4);
 	packet(0x0447,2); // PACKET_CZ_BLOCKING_PLAY_CANCEL
+	packet(0x099f,24);
 	// New Packets End
 #endif
 

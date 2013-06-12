@@ -26,7 +26,7 @@
 	}
 	specialeffect2 313; percentheal 100,100;
 	if (.@Buffs) {
-		specialeffect2 EF_INCAGILITY; sc_start SC_INCREASEAGI,240000,10;
+		specialeffect2 EF_INCAGILITY; sc_start SC_INC_AGI,240000,10;
 		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
 	}
 	if (.@Delay) set @HD, gettimetick(2)+.@Delay;

@@ -840,7 +840,7 @@ int party_skill_check(struct map_session_data *sd, int party_id, uint16 skill_id
 				break;
 			case MO_COMBOFINISH: //Increase Counter rate of Star Gladiators
 				if((p_sd->class_&MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
-					&& sd->sc.data[SC_READYCOUNTER]
+					&& sd->sc.data[SC_COUNTERKICK_READY]
 					&& pc->checkskill(p_sd,SG_FRIEND)) {
 					sc_start4(&p_sd->bl,SC_SKILLRATE_UP,100,TK_COUNTER,
 						50+50*pc->checkskill(p_sd,SG_FRIEND), //+100/150/200% rate

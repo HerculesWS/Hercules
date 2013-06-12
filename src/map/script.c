@@ -9581,8 +9581,8 @@ BUILDIN(sc_end)
 		
 		switch (type)
 		{
-			case SC_WEIGHT50:
-			case SC_WEIGHT90:
+			case SC_WEIGHTOVER50:
+			case SC_WEIGHTOVER90:
 			case SC_NOCHAT:
 			case SC_PUSH_CART:
 				return true;

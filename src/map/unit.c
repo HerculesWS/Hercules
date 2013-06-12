@@ -491,7 +491,7 @@ int unit_run(struct block_list *bl)
 
 	if( (to_x == bl->x && to_y == bl->y ) || (to_x == (bl->x+1) || to_y == (bl->y+1)) || (to_x == (bl->x-1) || to_y == (bl->y-1))) {
 		//If you can't run forward, you must be next to a wall, so bounce back. [Skotlex]
-		clif->sc_load(bl,bl->id,AREA,SI_BUMP,0,0,0);
+		clif->sc_load(bl,bl->id,AREA,SI_TING,0,0,0);
 
 		//Set running to 0 beforehand so status_change_end knows not to enable spurt [Kevin]
 		unit_bl2ud(bl)->state.running = 0;
@@ -499,7 +499,7 @@ int unit_run(struct block_list *bl)
 
 		skill->blown(bl,bl,skill->get_blewcount(TK_RUN,lv),unit_getdir(bl),0);
 		clif->fixpos(bl); //Why is a clif->slide (skill->blown) AND a fixpos needed? Ask Aegis.
-		clif->sc_end(bl,bl->id,AREA,SI_BUMP);
+		clif->sc_end(bl,bl->id,AREA,SI_TING);
 		return 0;
 	}
 	if (unit_walktoxy(bl, to_x, to_y, 1))
@@ -511,7 +511,7 @@ int unit_run(struct block_list *bl)
 	} while (--i > 0 && !unit_walktoxy(bl, to_x, to_y, 1));
 	if ( i == 0 ) {
 		// copy-paste from above
-		clif->sc_load(bl,bl->id,AREA,SI_BUMP,0,0,0);
+		clif->sc_load(bl,bl->id,AREA,SI_TING,0,0,0);
 
 		//Set running to 0 beforehand so status_change_end knows not to enable spurt [Kevin]
 		unit_bl2ud(bl)->state.running = 0;
@@ -519,7 +519,7 @@ int unit_run(struct block_list *bl)
 
 		skill->blown(bl,bl,skill->get_blewcount(TK_RUN,lv),unit_getdir(bl),0);
 		clif->fixpos(bl);
-		clif->sc_end(bl,bl->id,AREA,SI_BUMP);
+		clif->sc_end(bl,bl->id,AREA,SI_TING);
 		return 0;
 	}
 	return 1;
@@ -924,7 +924,7 @@ int unit_can_move(struct block_list *bl) {
 
 	if (sc) {
 		if( sc->count && (
-						    sc->data[SC_ANKLE]
+						    sc->data[SC_ANKLESNARE]
 						||  sc->data[SC_AUTOCOUNTER]
 						||  sc->data[SC_TRICKDEAD]
 						||  sc->data[SC_BLADESTOP]
@@ -932,14 +932,14 @@ int unit_can_move(struct block_list *bl) {
 						|| (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF) // cannot move while gospel is in effect
 						|| (sc->data[SC_BASILICA] && sc->data[SC_BASILICA]->val4 == bl->id) // Basilica caster cannot move
 						||  sc->data[SC_STOP]
-						||  sc->data[SC_CLOSECONFINE]
-						||  sc->data[SC_CLOSECONFINE2]
-						||  sc->data[SC_MADNESSCANCEL]
+						||  sc->data[SC_RG_CCONFINE_M]
+						||  sc->data[SC_RG_CCONFINE_S]
+						||  sc->data[SC_GS_MADNESSCANCEL]
 						|| (sc->data[SC_GRAVITATION] && sc->data[SC_GRAVITATION]->val3 == BCT_SELF)
 						||  sc->data[SC_WHITEIMPRISON]
 						||  sc->data[SC_ELECTRICSHOCKER]
-						||  sc->data[SC_BITE]
-						||  sc->data[SC_THORNSTRAP]
+						||  sc->data[SC_WUGBITE]
+						||  sc->data[SC_THORNS_TRAP]
 						||  sc->data[SC_MAGNETICFIELD]
 						||  sc->data[SC__MANHOLE]
 						||  sc->data[SC_CURSEDCIRCLE_ATKER]
@@ -948,9 +948,9 @@ int unit_can_move(struct block_list *bl) {
 						||  sc->data[SC_NETHERWORLD]
 						|| (sc->data[SC_CAMOUFLAGE] && sc->data[SC_CAMOUFLAGE]->val1 < 3 && !(sc->data[SC_CAMOUFLAGE]->val3&1))
 						||  sc->data[SC_MEIKYOUSISUI]
-						||  sc->data[SC_KAGEHUMI]
+						||  sc->data[SC_KG_KAGEHUMI]
 						||  sc->data[SC_KYOUGAKU]
-						||  sc->data[SC_PARALYSIS]
+						||  sc->data[SC_NEEDLE_OF_PARALYZE]
 						||  sc->data[SC_VACUUM_EXTREME]
 						|| (sc->data[SC_FEAR] && sc->data[SC_FEAR]->val2 > 0)
 						|| (sc->data[SC_SPIDERWEB] && sc->data[SC_SPIDERWEB]->val1)
@@ -1069,10 +1069,10 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		sc = NULL; //Unneeded
 
 	//temp: used to signal combo-skills right now.
-	if (sc && sc->data[SC_COMBO] && (sc->data[SC_COMBO]->val1 == skill_id ||
+	if (sc && sc->data[SC_COMBOATTACK] && (sc->data[SC_COMBOATTACK]->val1 == skill_id ||
 		(sd?skill->check_condition_castbegin(sd,skill_id,skill_lv):0) )) {
-		if (sc->data[SC_COMBO]->val2)
-			target_id = sc->data[SC_COMBO]->val2;
+		if (sc->data[SC_COMBOATTACK]->val2)
+			target_id = sc->data[SC_COMBOATTACK]->val2;
 		else
 			target_id = ud->target;
 
@@ -1240,17 +1240,17 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 			casttime += casttime * min(skill_lv, sd->spiritball);
 	break;
 	case MO_EXTREMITYFIST:
-		if (sc && sc->data[SC_COMBO] &&
-		   (sc->data[SC_COMBO]->val1 == MO_COMBOFINISH ||
-			sc->data[SC_COMBO]->val1 == CH_TIGERFIST ||
-			sc->data[SC_COMBO]->val1 == CH_CHAINCRUSH))
+		if (sc && sc->data[SC_COMBOATTACK] &&
+		   (sc->data[SC_COMBOATTACK]->val1 == MO_COMBOFINISH ||
+			sc->data[SC_COMBOATTACK]->val1 == CH_TIGERFIST ||
+			sc->data[SC_COMBOATTACK]->val1 == CH_CHAINCRUSH))
 			casttime = -1;
 		temp = 1;
 	break;
 	case SR_GATEOFHELL:
 	case SR_TIGERCANNON:
-		if (sc && sc->data[SC_COMBO] &&
-		   sc->data[SC_COMBO]->val1 == SR_FALLENEMPIRE)
+		if (sc && sc->data[SC_COMBOATTACK] &&
+		   sc->data[SC_COMBOATTACK]->val1 == SR_FALLENEMPIRE)
 			casttime = -1;
 		temp = 1;
 	break;
@@ -1317,10 +1317,11 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 
 	if(!ud->state.running) //need TK_RUN or WUGDASH handler to be done before that, see bugreport:6026
 		unit_stop_walking(src,1);// eventhough this is not how official works but this will do the trick. bugreport:6829
+	
 	// in official this is triggered even if no cast time.
 	clif->skillcasting(src, src->id, target_id, 0,0, skill_id, skill->get_ele(skill_id, skill_lv), casttime);
 	if( casttime > 0 || temp )
-	{
+	{		
 		if (sd && target->type == BL_MOB)
 		{
 			TBL_MOB *md = (TBL_MOB*)target;
@@ -1518,7 +1519,7 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 	if( casttime > 0 ) {
 		ud->skilltimer = iTimer->add_timer( tick+casttime, skill->castend_pos, src->id, 0 );
 		if( (sd && pc->checkskill(sd,SA_FREECAST) > 0) || skill_id == LG_EXEEDBREAK)
-			status_calc_bl(&sd->bl, SCB_SPEED);
+			status_calc_bl(&sd->bl, SCB_SPEED);	
 	} else {
 		ud->skilltimer = INVALID_TIMER;
 		skill->castend_pos(ud->skilltimer,tick,src->id,0);
@@ -1638,7 +1639,7 @@ int unit_cancel_combo(struct block_list *bl)
 {
 	struct unit_data  *ud;
 
-	if (!status_change_end(bl, SC_COMBO, INVALID_TIMER))
+	if (!status_change_end(bl, SC_COMBOATTACK, INVALID_TIMER))
 		return 0; //Combo wasn't active.
 
 	ud = unit_bl2ud(bl);
@@ -1925,7 +1926,7 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 			return 0;
 
 		if (sd && (sd->special_state.no_castcancel2 ||
-                ((sd->sc.data[SC_UNLIMITEDHUMMINGVOICE] || sd->special_state.no_castcancel) && !map_flag_gvg(bl->m) && !map[bl->m].flag.battleground))) //fixed flags being read the wrong way around [blackhole89]
+                ((sd->sc.data[SC_UNLIMITED_HUMMING_VOICE] || sd->special_state.no_castcancel) && !map_flag_gvg(bl->m) && !map[bl->m].flag.battleground))) //fixed flags being read the wrong way around [blackhole89]
 			return 0;
 	}
 
@@ -2053,17 +2054,17 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 	if(sc && sc->count ) { //map-change/warp dispells.
 		status_change_end(bl, SC_BLADESTOP, INVALID_TIMER);
 		status_change_end(bl, SC_BASILICA, INVALID_TIMER);
-		status_change_end(bl, SC_ANKLE, INVALID_TIMER);
+		status_change_end(bl, SC_ANKLESNARE, INVALID_TIMER);
 		status_change_end(bl, SC_TRICKDEAD, INVALID_TIMER);
 		status_change_end(bl, SC_BLADESTOP_WAIT, INVALID_TIMER);
 		status_change_end(bl, SC_RUN, INVALID_TIMER);
 		status_change_end(bl, SC_DANCING, INVALID_TIMER);
 		status_change_end(bl, SC_WARM, INVALID_TIMER);
 		status_change_end(bl, SC_DEVOTION, INVALID_TIMER);
+		status_change_end(bl, SC_MARIONETTE_MASTER, INVALID_TIMER);
 		status_change_end(bl, SC_MARIONETTE, INVALID_TIMER);
-		status_change_end(bl, SC_MARIONETTE2, INVALID_TIMER);
-		status_change_end(bl, SC_CLOSECONFINE, INVALID_TIMER);
-		status_change_end(bl, SC_CLOSECONFINE2, INVALID_TIMER);
+		status_change_end(bl, SC_RG_CCONFINE_M, INVALID_TIMER);
+		status_change_end(bl, SC_RG_CCONFINE_S, INVALID_TIMER);
 		status_change_end(bl, SC_HIDING, INVALID_TIMER);
 		// Ensure the bl is a PC; if so, we'll handle the removal of cloaking and cloaking exceed later
 		if ( bl->type != BL_PC )
@@ -2074,7 +2075,7 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 		status_change_end(bl, SC_CHASEWALK, INVALID_TIMER);
 		if (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF)
 			status_change_end(bl, SC_GOSPEL, INVALID_TIMER);
-		status_change_end(bl, SC_CHANGE, INVALID_TIMER);
+		status_change_end(bl, SC_HLIF_CHANGE, INVALID_TIMER);
 		status_change_end(bl, SC_STOP, INVALID_TIMER);
 		status_change_end(bl, SC_WUGDASH, INVALID_TIMER);
 		status_change_end(bl, SC_CAMOUFLAGE, INVALID_TIMER);
@@ -2322,7 +2323,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 			pc->inventory_rental_clear(sd);
 			pc->delspiritball(sd,sd->spiritball,1);
 			for(i = 1; i < 5; i++)
-				pc->del_talisman(sd, sd->talisman[i], i);
+				pc->del_charm(sd, sd->charm[i], i);
 
 			if( sd->reg ) {	//Double logout already freed pointer fix... [Skotlex]
 				aFree(sd->reg);

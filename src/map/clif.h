@@ -231,7 +231,7 @@ enum map_type { // clif_map_type
 	MAPTYPE_UNUSED               = 29,
 };
 
-enum useskill_fail_cause { // clif_skill_fail
+typedef enum useskill_fail_cause { // clif_skill_fail
 	USESKILL_FAIL_LEVEL = 0,
 	USESKILL_FAIL_SP_INSUFFICIENT = 1,
 	USESKILL_FAIL_HP_INSUFFICIENT = 2,
@@ -272,7 +272,7 @@ enum useskill_fail_cause { // clif_skill_fail
 	USESKILL_FAIL_CANONBALL = 37,
 	//XXX_USESKILL_FAIL_II_MADOGEAR_ACCELERATION = 38,
 	//XXX_USESKILL_FAIL_II_MADOGEAR_HOVERING_BOOSTER = 39,
-	USESKILL_FAIL_MADOGEAR_HOVERING = 40,
+	//XXX_USESKILL_FAIL_MADOGEAR_HOVERING = 40,
 	//XXX_USESKILL_FAIL_II_MADOGEAR_SELFDESTRUCTION_DEVICE = 41,
 	//XXX_USESKILL_FAIL_II_MADOGEAR_SHAPESHIFTER = 42,
 	USESKILL_FAIL_GUILLONTINE_POISON = 43,
@@ -316,7 +316,7 @@ enum useskill_fail_cause { // clif_skill_fail
 	USESKILL_FAIL_STYLE_CHANGE_FIGHTER = 81,
 	USESKILL_FAIL_STYLE_CHANGE_GRAPPLER = 82,
 	USESKILL_FAIL_THERE_ARE_NPC_AROUND = 83,
-};
+}useskill_fail_cause;
 
 enum clif_messages {
 	SKILL_CANT_USE_AREA = 0x536,
@@ -571,7 +571,7 @@ struct clif_interface {
 	void (*skill_fail) (struct map_session_data *sd,uint16 skill_id,enum useskill_fail_cause cause,int btype);
 	void (*skill_cooldown) (struct map_session_data *sd, uint16 skill_id, unsigned int tick);
 	void (*skill_memomessage) (struct map_session_data* sd, int type);
-	void (*skill_teleportmessage) (struct map_session_data *sd, int type);
+	void (*skill_mapinfomessage) (struct map_session_data *sd, int type);
 	void (*skill_produce_mix_list) (struct map_session_data *sd, int skill_id, int trigger);
 	void (*cooking_list) (struct map_session_data *sd, int trigger, uint16 skill_id, int qty, int list_type);
 	void (*autospell) (struct map_session_data *sd,uint16 skill_lv);
@@ -672,8 +672,8 @@ struct clif_interface {
 	void (*specialeffect_single) (struct block_list* bl, int type, int fd);
 	void (*specialeffect_value) (struct block_list* bl, int effect_id, int num, send_target target);
 	void (*millenniumshield) (struct map_session_data *sd, short shields );
-	void (*talisman) (struct map_session_data *sd, short type);
-	void (*talisman_single) (int fd, struct map_session_data *sd, short type);
+	void (*charm) (struct map_session_data *sd, short type);
+	void (*charm_single) (int fd, struct map_session_data *sd, short type);
 	void (*snap) ( struct block_list *bl, short x, short y );
 	void (*weather_check) (struct map_session_data *sd);
 	/* sound effects client-side */
