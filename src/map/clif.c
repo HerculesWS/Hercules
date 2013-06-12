@@ -1259,12 +1259,12 @@ void clif_spiritball_single(int fd, struct map_session_data *sd) {
 /*==========================================
  * Kagerou/Oboro amulet spirit
  *------------------------------------------*/
-void clif_talisman_single(int fd, struct map_session_data *sd, short type) {
+void clif_charm_single(int fd, struct map_session_data *sd, short type) {
 	WFIFOHEAD(fd, packet_len(0x08cf));
 	WFIFOW(fd,0)=0x08cf;
 	WFIFOL(fd,2)=sd->bl.id;
 	WFIFOW(fd,6)=type;
-	WFIFOW(fd,8)=sd->talisman[type];
+	WFIFOW(fd,8)=sd->charm[type];
 	WFIFOSET(fd, packet_len(0x08cf));
 }
 
@@ -1358,8 +1358,8 @@ int clif_spawn(struct block_list *bl)
 					clif->sc_load(&sd->bl, sd->bl.id,AREA,StatusIconChangeTable[sd->sc_display[i]->type],sd->sc_display[i]->val1,sd->sc_display[i]->val2,sd->sc_display[i]->val3);
 				}
 				for(i = 1; i < 5; i++){
-					if( sd->talisman[i] > 0 )
-						clif->talisman(sd, i);
+					if( sd->charm[i] > 0 )
+						clif->charm(sd, i);
 				}
 				if (sd->status.robe)
 					clif->refreshlook(bl,bl->id,LOOK_ROBE,sd->status.robe,AREA);
@@ -3461,7 +3461,9 @@ void clif_arrowequip(struct map_session_data *sd,int val)
 	nullpo_retv(sd);
 
 	pc_stop_attack(sd); // [Valaris]
-
+#if PACKETVER >= 20121128
+	clif->status_change(&sd->bl, SI_CLIENT_ONLY_EQUIP_ARROW, 1, INVALID_TIMER, 0, 0, 0);
+#endif
 	fd=sd->fd;
 	WFIFOHEAD(fd, packet_len(0x013c));
 	WFIFOW(fd,0)=0x013c;
@@ -4309,8 +4311,8 @@ void clif_getareachar_pc(struct map_session_data* sd,struct map_session_data* ds
 	if(dstsd->spiritball > 0)
 		clif->spiritball_single(sd->fd, dstsd);
 	for(i = 1; i < 5; i++){
-		if( dstsd->talisman[i] > 0 )
-			clif->talisman_single(sd->fd, dstsd, i);
+		if( dstsd->charm[i] > 0 )
+			clif->charm_single(sd->fd, dstsd, i);
 	}
 	for( i = 0; i < dstsd->sc_display_count; i++ ) {
 		clif->sc_load(&sd->bl,dstsd->bl.id,SELF,StatusIconChangeTable[dstsd->sc_display[i]->type],dstsd->sc_display[i]->val1,dstsd->sc_display[i]->val2,dstsd->sc_display[i]->val3);
@@ -4471,9 +4473,9 @@ int clif_damage(struct block_list* src, struct block_list* dst, unsigned int tic
 	type = clif_calc_delay(type,div,damage+damage2,ddelay);
 	sc = status_get_sc(dst);
 	if(sc && sc->count) {
-		if(sc->data[SC_HALLUCINATION]) {
-			if(damage) damage = damage*(sc->data[SC_HALLUCINATION]->val2) + rnd()%100;
-			if(damage2) damage2 = damage2*(sc->data[SC_HALLUCINATION]->val2) + rnd()%100;
+		if(sc->data[SC_ILLUSION]) {
+			if(damage) damage = damage*(sc->data[SC_ILLUSION]->val2) + rnd()%100;
+			if(damage2) damage2 = damage2*(sc->data[SC_ILLUSION]->val2) + rnd()%100;
 		}
 	}
 
@@ -4643,11 +4645,20 @@ void clif_getareachar_item(struct map_session_data* sd,struct flooritem_data* fi
 /// Notifies the client of a skill unit.
 /// 011f <id>.L <creator id>.L <x>.W <y>.W <unit id>.B <visible>.B (ZC_SKILL_ENTRY)
 /// 01c9 <id>.L <creator id>.L <x>.W <y>.W <unit id>.B <visible>.B <has msg>.B <msg>.80B (ZC_SKILL_ENTRY2)
+/// 08c7 <lenght>.W <id> L <creator id>.L <x>.W <y>.W <unit id>.B <range>.W <visible>.B (ZC_SKILL_ENTRY3)
+/// 099f <lenght>.W <id> L <creator id>.L <x>.W <y>.W <unit id>.L <range>.W <visible>.B (ZC_SKILL_ENTRY4)
 void clif_getareachar_skillunit(struct map_session_data *sd, struct skill_unit *unit) {
-	int fd = sd->fd;
+	int fd = sd->fd, header = 0x11f, pos=0;
 
 	if( unit->group->state.guildaura )
 		return;
+
+#if PACKETVER >= 20130320
+	if(unit->group->unit_id > UCHAR_MAX){
+		header = 0x99f;
+		pos = 2;
+	}
+#endif
 
 #if PACKETVER >= 3
 	if(unit->group->unit_id==UNT_GRAFFITI)	{ // Graffiti [Valaris]
@@ -4665,20 +4676,26 @@ void clif_getareachar_skillunit(struct map_session_data *sd, struct skill_unit *
 		return;
 	}
 #endif
-	WFIFOHEAD(fd,packet_len(0x11f));
-	WFIFOW(fd, 0)=0x11f;
-	WFIFOL(fd, 2)=unit->bl.id;
-	WFIFOL(fd, 6)=unit->group->src_id;
-	WFIFOW(fd,10)=unit->bl.x;
-	WFIFOW(fd,12)=unit->bl.y;
+	WFIFOHEAD(fd,packet_len(header));
+	WFIFOW(fd, 0)=header;
+	if(pos > 0)
+		WFIFOL(fd, pos)=packet_len(header);
+	WFIFOL(fd, 2 + pos)=unit->bl.id;
+	WFIFOL(fd, 6 + pos)=unit->group->src_id;
+	WFIFOW(fd,10 + pos)=unit->bl.x;
+	WFIFOW(fd,12 + pos)=unit->bl.y;
 	if (battle_config.traps_setting&1 && skill->get_inf2(unit->group->skill_id)&INF2_TRAP)
 		WFIFOB(fd,14)=UNT_DUMMYSKILL; //Use invisible unit id for traps.
     else if (skill->get_unit_flag(unit->group->skill_id) & UF_RANGEDSINGLEUNIT && !(unit->val2 & UF_RANGEDSINGLEUNIT))
 		WFIFOB(fd,14)=UNT_DUMMYSKILL; //Use invisible unit id for traps.
-	else
+	else if(pos > 0){
+		WFIFOL(fd,16)=unit->group->unit_id;
+		WFIFOW(fd,20)=unit->range;
+		pos += 5;
+	}else
 		WFIFOB(fd,14)=unit->group->unit_id;
-	WFIFOB(fd,15)=1; // ignored by client (always gets set to 1)
-	WFIFOSET(fd,packet_len(0x11f));
+	WFIFOB(fd,15 + pos)=1; // ignored by client (always gets set to 1)
+	WFIFOSET(fd,packet_len(header));
 
 	if(unit->group->skill_id == WZ_ICEWALL)
 		clif->changemapcell(fd,unit->bl.m,unit->bl.x,unit->bl.y,5,SELF);
@@ -5134,8 +5151,8 @@ int clif_skill_damage(struct block_list *src,struct block_list *dst,unsigned int
 	type = clif_calc_delay(type,div,damage,ddelay);
 	sc = status_get_sc(dst);
 	if(sc && sc->count) {
-		if(sc->data[SC_HALLUCINATION] && damage)
-			damage = damage*(sc->data[SC_HALLUCINATION]->val2) + rnd()%100;
+		if(sc->data[SC_ILLUSION] && damage)
+			damage = damage*(sc->data[SC_ILLUSION]->val2) + rnd()%100;
 	}
 
 #if PACKETVER < 3
@@ -5223,8 +5240,8 @@ int clif_skill_damage2(struct block_list *src,struct block_list *dst,unsigned in
 	sc = status_get_sc(dst);
 
 	if(sc && sc->count) {
-		if(sc->data[SC_HALLUCINATION] && damage)
-			damage = damage*(sc->data[SC_HALLUCINATION]->val2) + rnd()%100;
+		if(sc->data[SC_ILLUSION] && damage)
+			damage = damage*(sc->data[SC_ILLUSION]->val2) + rnd()%100;
 	}
 
 	WBUFW(buf,0)=0x115;
@@ -5330,11 +5347,19 @@ void clif_skill_poseffect(struct block_list *src,uint16 skill_id,int val,int x,i
 void clif_skill_setunit(struct skill_unit *unit)
 {
 	unsigned char buf[128];
+	int header = 0x11f, pos = 0;
 
 	nullpo_retv(unit);
 
 	if( unit->group->state.guildaura )
 		return;
+
+#if PACKETVER >= 20130320
+	if(unit->group->unit_id > UCHAR_MAX){
+		header = 0x99f;
+		pos = 2;
+	}
+#endif
 
 #if PACKETVER >= 3
 	if(unit->group->unit_id==UNT_GRAFFITI)	{ // Graffiti [Valaris]
@@ -5351,19 +5376,25 @@ void clif_skill_setunit(struct skill_unit *unit)
 		return;
 	}
 #endif
-	WBUFW(buf, 0)=0x11f;
-	WBUFL(buf, 2)=unit->bl.id;
-	WBUFL(buf, 6)=unit->group->src_id;
-	WBUFW(buf,10)=unit->bl.x;
-	WBUFW(buf,12)=unit->bl.y;
+	WBUFW(buf, 0)=header;
+	if(pos > 0)
+		WBUFW(buf, pos)=packet_len(header);
+	WBUFL(buf, 2 + pos)=unit->bl.id;
+	WBUFL(buf, 6 + pos)=unit->group->src_id;
+	WBUFW(buf,10 + pos)=unit->bl.x;
+	WBUFW(buf,12 + pos)=unit->bl.y;
 	if (unit->group->state.song_dance&0x1 && unit->val2&UF_ENSEMBLE)
 		WBUFB(buf,14)=unit->val2&UF_SONG?UNT_DISSONANCE:UNT_UGLYDANCE;
     else if (skill->get_unit_flag(unit->group->skill_id) & UF_RANGEDSINGLEUNIT && !(unit->val2 & UF_RANGEDSINGLEUNIT))
         WBUFB(buf, 14) = UNT_DUMMYSKILL; // Only display the unit at center.
-	else
+	else if(pos > 0){
+		WBUFL(buf,16)=unit->group->unit_id;
+		WBUFW(buf,20)=unit->range;
+		pos += 5;
+	}else
 		WBUFB(buf,14)=unit->group->unit_id;
-	WBUFB(buf,15)=1; // ignored by client (always gets set to 1)
-	clif->send(buf,packet_len(0x11f),&unit->bl,AREA);
+	WBUFB(buf,15 + pos)=1; // ignored by client (always gets set to 1)
+	clif->send(buf,packet_len(header),&unit->bl,AREA);
 }
 
 
@@ -5388,9 +5419,10 @@ void clif_skill_warppoint(struct map_session_data* sd, uint16 skill_id, uint16 s
 	WFIFOSET(fd,packet_len(0x11c));
 
 	sd->menuskill_id = skill_id;
-	if (skill_id == AL_WARP)
+	if (skill_id == AL_WARP){
 		sd->menuskill_val = (sd->ud.skillx<<16)|sd->ud.skilly; //Store warp position here.
-	else
+		sd->state.workinprogress = 3;
+	}else
 		sd->menuskill_val = skill_lv;
 }
 
@@ -5423,10 +5455,11 @@ void clif_skill_memomessage(struct map_session_data* sd, int type)
 /// type:
 ///     0 = "Unable to Teleport in this area" in color 0xFFFF00 (cyan)
 ///     1 = "Saved point cannot be memorized." in color 0x0000FF (red)
+///		2 = "This skill cannot be used within this area." in color 0xFFFF00 (cyan)
 ///
 /// @param sd Who receives the message
 /// @param type What message
-void clif_skill_teleportmessage(struct map_session_data *sd, int type)
+void clif_skill_mapinfomessage(struct map_session_data *sd, int type)
 {
 	int fd;
 
@@ -5620,6 +5653,9 @@ void clif_status_change(struct block_list *bl,int type,int flag,int tick,int val
 
 	if (!(status_type2relevant_bl_types(type)&bl->type)) // only send status changes that actually matter to the client
 		return;
+
+	if ( tick < 0 )
+		tick = 9999;
 
 	sd = BL_CAST(BL_PC, bl);
 
@@ -6061,6 +6097,7 @@ void clif_item_identify_list(struct map_session_data *sd)
 		WFIFOSET(fd,WFIFOW(fd,2));
 		sd->menuskill_id = MC_IDENTIFY;
 		sd->menuskill_val = c;
+		sd->state.workinprogress = 3;
 	}
 }
 
@@ -6163,25 +6200,20 @@ void clif_item_refine_list(struct map_session_data *sd)
 	int fd;
 	uint16 skill_lv;
 	int wlv;
-	int refine_item[5];
 
 	nullpo_retv(sd);
 
 	skill_lv = pc->checkskill(sd,WS_WEAPONREFINE);
 
 	fd=sd->fd;
-
-	refine_item[0] = -1;
-	refine_item[1] = pc->search_inventory(sd,1010);
-	refine_item[2] = pc->search_inventory(sd,1011);
-	refine_item[3] = refine_item[4] = pc->search_inventory(sd,984);
-
+	
 	WFIFOHEAD(fd, MAX_INVENTORY * 13 + 4);
 	WFIFOW(fd,0)=0x221;
 	for(i=c=0;i<MAX_INVENTORY;i++){
-		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].refine < skill_lv &&
-			sd->status.inventory[i].identify && (wlv=itemdb_wlv(sd->status.inventory[i].nameid)) >=1 &&
-			refine_item[wlv]!=-1 && !(sd->status.inventory[i].equip&EQP_ARMS)){
+		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].identify 
+			&& (wlv=itemdb_wlv(sd->status.inventory[i].nameid)) >=1
+			&& !sd->inventory_data[i]->flag.no_refine
+			&& !(sd->status.inventory[i].equip&EQP_ARMS)){
 			WFIFOW(fd,c*13+ 4)=i+2;
 			WFIFOW(fd,c*13+ 6)=sd->status.inventory[i].nameid;
 			WFIFOB(fd,c*13+ 8)=sd->status.inventory[i].refine;
@@ -8498,8 +8530,8 @@ void clif_refresh(struct map_session_data *sd)
 	if (sd->spiritball)
 		clif->spiritball_single(sd->fd, sd);
 	for(i = 1; i < 5; i++){
-		if( sd->talisman[i] > 0 )
-			clif->talisman_single(sd->fd, sd, i);
+		if( sd->charm[i] > 0 )
+			clif->charm_single(sd->fd, sd, i);
 	}
 	if (sd->vd.cloth_color)
 		clif->refreshlook(&sd->bl,sd->bl.id,LOOK_CLOTHES_COLOR,sd->vd.cloth_color,SELF);
@@ -9499,7 +9531,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 
 		if (iMap->night_flag && map[sd->bl.m].flag.nightenabled) {
 			sd->state.night = 1;
-			clif->status_change(&sd->bl, SI_NIGHT, 1, 0, 0, 0, 0);
+			clif->status_change(&sd->bl, SI_SKE, 1, 0, 0, 0, 0);
 		}
 
 		// Notify everyone that this char logged in [Skotlex].
@@ -9537,11 +9569,11 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 		if( iMap->night_flag && map[sd->bl.m].flag.nightenabled ) { //Display night.
 			if( !sd->state.night ) {
 				sd->state.night = 1;
-				clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_NIGHT);
+				clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_SKE);
 			}
 		} else if( sd->state.night ) { //Clear night display.
 			sd->state.night = 0;
-			clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_NIGHT);
+			clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_SKE);
 		}
 
 		if( map[sd->bl.m].flag.battleground ) {
@@ -9586,7 +9618,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 		npc_script_event(sd, NPCE_LOADMAP);
 
 	if (pc->checkskill(sd, SG_DEVIL) && !pc->nextjobexp(sd)) //blindness [Komurka]
-		clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_DEVIL);
+		clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_DEVIL1);
 
 	if (sd->sc.opt2) //Client loses these on warp.
 		clif->changeoption(&sd->bl);
@@ -9862,7 +9894,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 	if( atcommand->parse(fd, sd, message, 1)  )
 		return;
 
-	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEPSLEEP] || sd->sc.data[SC__BLOODYLUST] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
+	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC__BLOODYLUST] || sd->sc.data[SC_DEEP_SLEEP] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
 		return;
 
 	if( battle_config.min_chat_delay ) { //[Skotlex]
@@ -10321,7 +10353,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 	if ( atcommand->parse(fd, sd, message, 1) )
 		return;
 
-	if (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEPSLEEP] || sd->sc.data[SC__BLOODYLUST] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT))
+	if (sd->sc.data[SC_BERSERK] || sd->sc.data[SC__BLOODYLUST] || sd->sc.data[SC_DEEP_SLEEP] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT))
 		return;
 
 	if (battle_config.min_chat_delay) { //[Skotlex]
@@ -10602,7 +10634,7 @@ void clif_parse_EquipItem(int fd,struct map_session_data *sd)
 			return;
 	} else if ( sd->state.storage_flag || sd->sc.opt1 )
 		; //You can equip/unequip stuff while storage is open/under status changes
-	else if ( pc_cant_act2(sd) )
+	else if ( pc_cant_act2(sd) || sd->state.prerefining )
 		return;
 
 	if(!sd->status.inventory[index].identify) {
@@ -10730,7 +10762,7 @@ void clif_parse_UnequipItem(int fd,struct map_session_data *sd)
 			return;
 	} else if ( sd->state.storage_flag || sd->sc.opt1 )
 		; //You can equip/unequip stuff while storage is open/under status changes
-	else if ( pc_cant_act2(sd) )
+	else if ( pc_cant_act2(sd) || sd->state.prerefining )
 		return;
 
 	index = RFIFOW(fd,2)-2;
@@ -10751,7 +10783,12 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 		clif_clearunit_area(&sd->bl,CLR_DEAD);
 		return;
 	}
-
+	if( sd->npc_id || sd->state.workinprogress&2 ){
+#ifdef RENEWAL
+		clif->msg(sd, 0x783); // TODO look for the client date that has this message.
+#endif
+		return;
+	}
 	if ( pc_cant_act2(sd) || !(bl = iMap->id2bl(RFIFOL(fd,2))) )
 		return;
 	
@@ -10761,8 +10798,10 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 			clif->pActionRequest_sub(sd, 0x07, bl->id, iTimer->gettick());
 			break;
 		case BL_NPC:
-			if( sd->ud.skilltimer != INVALID_TIMER ) {
-				clif->colormes(fd,COLOR_WHITE,msg_txt(1476));
+			if( sd->ud.skill_id < RK_ENCHANTBLADE && sd->ud.skilltimer != INVALID_TIMER ) {// TODO: should only work with none 3rd job skills
+#ifdef RENEWAL
+				clif->msg(sd, 0x783);
+#endif
 				break;
 			}
 			if( bl->m != -1 )// the user can't click floating npcs directly (hack attempt)
@@ -11270,7 +11309,7 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 	// Whether skill fails or not is irrelevant, the char ain't idle. [Skotlex]
 	sd->idletime = last_tick;
 
-	if( sd->npc_id ){
+	if( sd->npc_id || sd->state.workinprogress&1 ){
 #ifdef RENEWAL
 		clif->msg(sd, 0x783); // TODO look for the client date that has this message.
 #endif
@@ -11563,6 +11602,8 @@ void clif_parse_WeaponRefine(int fd, struct map_session_data *sd)
 {
 	int idx;
 
+	sd->state.prerefining = 0;
+
 	if (sd->menuskill_id != WS_WEAPONREFINE) //Packet exploit?
 		return;
 	if (pc_istrading(sd)) {
@@ -11664,6 +11705,8 @@ void clif_parse_ItemIdentify(int fd,struct map_session_data *sd)
 	if (sd->menuskill_id != MC_IDENTIFY)
 		return;
 	if( idx == -1 ) {// cancel pressed
+		sd->state.workinprogress = 0;
+		clif->item_identified(sd,idx-2,1);
 		clif_menuskill_clear(sd);
 		return;
 	}
@@ -12096,7 +12139,7 @@ void clif_parse_PartyMessage(int fd, struct map_session_data* sd)
 	if( atcommand->parse(fd, sd, message, 1)  )
 		return;
 
-	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEPSLEEP] || sd->sc.data[SC__BLOODYLUST] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
+	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC__BLOODYLUST] || sd->sc.data[SC_DEEP_SLEEP] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
 		return;
 
 	if( battle_config.min_chat_delay )
@@ -12658,7 +12701,7 @@ void clif_parse_OpenVending(int fd, struct map_session_data* sd)
 	const uint8* data = (uint8*)RFIFOP(fd,85);
 	
 	if( !flag )
-		sd->state.prevend = 0;
+		sd->state.prevend = sd->state.workinprogress = 0;
 
 	if( sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOROOM )
 		return;
@@ -12937,7 +12980,7 @@ void clif_parse_GuildMessage(int fd, struct map_session_data* sd)
 	if( atcommand->parse(fd, sd, message, 1) )
 		return;
 
-	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEPSLEEP] || sd->sc.data[SC__BLOODYLUST] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
+	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC__BLOODYLUST] || sd->sc.data[SC_DEEP_SLEEP] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
 		return;
 
 	if( battle_config.min_chat_delay )
@@ -15790,7 +15833,7 @@ void clif_parse_BattleChat(int fd, struct map_session_data* sd)
 	if( atcommand->parse(fd, sd, message, 1) )
 		return;
 
-	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEPSLEEP] || sd->sc.data[SC__BLOODYLUST] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
+	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC__BLOODYLUST] || sd->sc.data[SC_DEEP_SLEEP] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
 		return;
 
 	if( battle_config.min_chat_delay ) {
@@ -16735,7 +16778,7 @@ int clif_spellbook_list(struct map_session_data *sd)
 		if( itemdb_is_spellbook(sd->status.inventory[i].nameid) )
 		{
 			WFIFOW(fd, c * 2 + 4) = sd->status.inventory[i].nameid;
-			c ++;
+			c++;
 		}
 	}
 
@@ -16926,7 +16969,7 @@ void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd) {
 /*==========================================
  * Kagerou/Oboro amulet spirit
  *------------------------------------------*/
-void clif_talisman(struct map_session_data *sd,short type)
+void clif_charm(struct map_session_data *sd,short type)
 {
 	unsigned char buf[10];
 
@@ -16935,7 +16978,7 @@ void clif_talisman(struct map_session_data *sd,short type)
 	WBUFW(buf,0)=0x08cf;
 	WBUFL(buf,2)=sd->bl.id;
 	WBUFW(buf,6)=type;
-	WBUFW(buf,8)=sd->talisman[type];
+	WBUFW(buf,8)=sd->charm[type];
 	clif->send(buf,packet_len(0x08cf),&sd->bl,AREA);
 }
 /// Move Item from or to Personal Tab (CZ_WHATSOEVER) [FE]
@@ -17744,7 +17787,7 @@ void clif_defaults(void) {
 	clif->skill_fail = clif_skill_fail;
 	clif->skill_cooldown = clif_skill_cooldown;
 	clif->skill_memomessage = clif_skill_memomessage;
-	clif->skill_teleportmessage = clif_skill_teleportmessage;
+	clif->skill_mapinfomessage = clif_skill_mapinfomessage;
 	clif->skill_produce_mix_list = clif_skill_produce_mix_list;
 	clif->cooking_list = clif_cooking_list;
 	clif->autospell = clif_autospell;
@@ -17845,8 +17888,8 @@ void clif_defaults(void) {
 	clif->specialeffect_single = clif_specialeffect_single;
 	clif->specialeffect_value = clif_specialeffect_value;
 	clif->millenniumshield = clif_millenniumshield;
-	clif->talisman = clif_talisman;
-	clif->talisman_single = clif_talisman_single;
+	clif->charm = clif_charm;
+	clif->charm_single = clif_charm_single;
 	clif->snap = clif_snap;
 	clif->weather_check = clif_weather_check;
 	/* sound effects client-side */

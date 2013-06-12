@@ -758,7 +758,7 @@ OnTouch:
 				mes "the coffin bit your";
 				mes "hand really hard!^000000";
 				sc_start SC_Poison,30000,0;
-				sc_start SC_Bleeding,10000,0;
+				sc_start SC_BLOODING,10000,0;
 				Emotion e_omg,1;
 				close;
 			case 2:
@@ -830,7 +830,7 @@ OnTouch:
 					mes "the coffin bit your";
 					mes "hand really hard!^000000";
 					sc_start SC_Poison,30000,0;
-					sc_start SC_Bleeding,10000,0;
+					sc_start SC_BLOODING,10000,0;
 					Emotion e_omg,1;
 					close;
 				}

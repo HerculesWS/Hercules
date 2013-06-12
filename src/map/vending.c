@@ -272,7 +272,7 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0); // custom reply packet
 		return;
 	}
-	sd->state.prevend = 0;
+	sd->state.prevend = sd->state.workinprogress = 0;
 	sd->state.vending = true;
 	sd->vender_id = getid();
 	sd->vend_num = i;

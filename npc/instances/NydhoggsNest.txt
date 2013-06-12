@@ -2182,7 +2182,7 @@ OnDisable:
 OnTouch:
 	percentheal -50,0;
 	percentheal -30,0;
-	sc_start SC_BLEEDING,60000,0;
+	sc_start SC_BLOODING,60000,0;
 	end;
 
 OnTimer10000:

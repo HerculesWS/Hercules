@@ -1,4 +1,4 @@
-//===== Hercules Documentation ===============================
+﻿//===== Hercules Documentation ===============================
 //= Hercules Script Commands
 //===== By: ==================================================
 //= Hercules Dev Team
@@ -183,9 +183,8 @@ There are two optional fields for monster size and AI. Size can be 0
 (medium), 1 (small), or 2 (big). AI can be 0 (default), 1 
 (attack/friendly), 2 (sphere), 3 (flora), or 4 (zanzou).
 
-Alternately, a monster spawned using 'boss_monster' instead of 'monster' 
-is able to be detected on the map with the SC_BOSSMAPINFO status (used by 
-Convex Mirror, item ID# 12214).
+Alternately, a monster spawned using 'boss_monster' instead of 'monster' is able
+to be detected on the map with the SC_CASH_BOSS_ALARM status (used by Convex Mirror,  item ID# 12214).
 
 ** NPC names
 
