@@ -1267,11 +1267,12 @@ int battle_calc_defense(int attack_type, struct block_list *src, struct block_li
 			if( flag&2 )
 				damage += def1 >> 1;
 
-			if( !(flag&1) && !(flag&2) )
+			if( !(flag&1) && !(flag&2) ) {
 				if( flag&4 )
 					damage -= (def1 + vit_def);
 				else
 					damage = damage * (4000+def1) / (4000+10*def1) - vit_def;
+			}
 		
 		#else
 				if( def1 > 100 ) def1 = 100;
@@ -3583,7 +3584,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 			short tdef = status_get_total_def(target);
 			short tmdef =  status_get_total_mdef(target);
 			int targetVit = min(120, status_get_vit(target));
-			short totaldef = (tmdef + tdef - ((unsigned _int64)(tmdef + tdef) >> 32)) >> 1;
+			short totaldef = (tmdef + tdef - ((uint64)(tmdef + tdef) >> 32)) >> 1;
 
 			matk = battle->calc_magic_attack(src, target, skill_id, skill_lv, mflag).damage;
 			atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), md.flag);
@@ -5094,7 +5095,7 @@ int battle_calc_return_damage(struct block_list* bl, struct block_list *src, int
 			}
 			if( sc->data[SC_LG_REFLECTDAMAGE] && rand()%100 < (30 + 10*sc->data[SC_LG_REFLECTDAMAGE]->val1) ) {
 				if( skill_id != HT_LANDMINE && skill_id  != HT_CLAYMORETRAP
-					&& skill_id  != RA_CLUSTERBOMB && (skill_id <= RA_VERDURETRAP || skill_id  > RA_ICEBOUNDTRAP && skill_id != MA_LANDMINE) ){
+					&& skill_id  != RA_CLUSTERBOMB && (skill_id <= RA_VERDURETRAP || skill_id  > RA_ICEBOUNDTRAP) && skill_id != MA_LANDMINE ){
 					NORMALIZE_RDAMAGE((*dmg) * sc->data[SC_LG_REFLECTDAMAGE]->val2 / 100);
 					rdelay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
 				}
@@ -5221,7 +5222,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 	struct map_session_data *sd = NULL, *tsd = NULL;
 	struct status_data *sstatus, *tstatus;
 	struct status_change *sc, *tsc;
-	int damage,rdamage=0,rdelay=0;
+	int damage;
 	int skillv;
 	struct Damage wd;
 
