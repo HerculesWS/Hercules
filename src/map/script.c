@@ -10176,10 +10176,8 @@ BUILDIN(warpwaitingpc)
 /// Detaches a character from a script.
 ///
 /// @param st Script state to detach the character from.
-static void script_detach_rid(struct script_state* st)
-{
-	if(st->rid)
-	{
+void script_detach_rid(struct script_state* st) {
+	if(st->rid) {
 		script_detach_state(st, false);
 		st->rid = 0;
 	}
@@ -17864,6 +17862,7 @@ void script_defaults(void) {
 	script->conv_num = conv_num;
 	script->conv_str = conv_str;
 	script->rid2sd = script_rid2sd;
+	script->detach_rid = script_detach_rid;
 	script->push_val = push_val;
 	script->get_val = get_val;
 	script->get_val2 = get_val2;
