@@ -10818,7 +10818,6 @@ int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int fl
 	int min = 0, max = 0, dstr;
 	float strdex_bonus, variance;
 	struct status_change *sc = status_get_sc(bl);
-	struct status_data *status = status_get_status_data(bl);
 	
 	if ( bl->type == BL_PC && watk->atk ){
 		if ( flag&16 )
