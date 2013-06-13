@@ -1183,8 +1183,8 @@ int battle_calc_defense(int attack_type, struct block_list *src, struct block_li
 			  *	def1 = equip def
 			  *	def2 = status def
 			 **/
-			defType def1 = status_get_def(target); //Don't use tstatus->def1 due to skill timer reductions.
-			short def2 = tstatus->def2, vit_def;
+			defType def1 = status_get_def(target), def2 = tstatus->def2; //Don't use tstatus->def1 due to skill timer reductions.
+			short vit_def;
 			
 			def1 = status_calc_def2(target, tsc, def1, false); // equip def(RE)
 			def2 = status_calc_def(target, tsc, def2, false); // status def(RE)
@@ -1289,8 +1289,7 @@ int battle_calc_defense(int attack_type, struct block_list *src, struct block_li
 
 		case BF_MAGIC:
 			{
-			defType mdef = tstatus->mdef;
-			short mdef2= tstatus->mdef2;
+			defType mdef = tstatus->mdef, mdef2 = tstatus->mdef2;
 
 			mdef2 = status_calc_mdef(target, tsc, mdef2, false); // status mdef(RE)
 			mdef = status_calc_mdef2(target, tsc, mdef, false); // equip mde(RE)
