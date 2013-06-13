@@ -84,6 +84,9 @@ typedef struct ers_cache
 	// Objects in-use count
 	unsigned int UsedObjs;
 	
+	// Default = ERS_BLOCK_ENTRIES, can be adjusted for performance for individual cache sizes.
+	unsigned int ChunkSize;
+	
 	// Linked list
 	struct ers_cache *Next, *Prev;
 } ers_cache_t;
@@ -136,6 +139,7 @@ static ers_cache_t *ers_find_cache(unsigned int size)
 	cache->Used = 0;
 	cache->UsedObjs = 0;
 	cache->Max = 0;
+	cache->ChunkSize = ERS_BLOCK_ENTRIES;
 	
 	if (CacheList == NULL)
 	{
@@ -200,10 +204,10 @@ static void *ers_obj_alloc_entry(ERS self)
 			RECREATE(instance->Cache->Blocks, unsigned char *, instance->Cache->Max);
 		}
 
-		CREATE(instance->Cache->Blocks[instance->Cache->Used], unsigned char, instance->Cache->ObjectSize * ERS_BLOCK_ENTRIES);
+		CREATE(instance->Cache->Blocks[instance->Cache->Used], unsigned char, instance->Cache->ObjectSize * instance->Cache->ChunkSize);
 		instance->Cache->Used++;
 
-		instance->Cache->Free = ERS_BLOCK_ENTRIES -1;
+		instance->Cache->Free = instance->Cache->ChunkSize -1;
 		ret = &instance->Cache->Blocks[instance->Cache->Used - 1][instance->Cache->Free * instance->Cache->ObjectSize + sizeof(struct ers_list)];
 	}
 
@@ -286,6 +290,18 @@ static void ers_obj_destroy(ERS self)
 	aFree(instance);
 }
 
+void ers_cache_size(ERS self, unsigned int new_size) {
+	struct ers_instance_t *instance = (struct ers_instance_t *)self;
+	
+	if (instance == NULL) {
+		ShowError("ers_cache_size: NULL object, skipping...\n");
+		return;
+	}
+	
+	instance->Cache->ChunkSize = new_size;
+}
+
+
 ERS ers_new(uint32 size, char *name, enum ERSOptions options)
 {
 	struct ers_instance_t *instance;
@@ -299,6 +315,7 @@ ERS ers_new(uint32 size, char *name, enum ERSOptions options)
 	instance->VTable.free = ers_obj_free_entry;
 	instance->VTable.entry_size = ers_obj_entry_size;
 	instance->VTable.destroy = ers_obj_destroy;
+	instance->VTable.chunk_size = ers_cache_size;
 
 	instance->Name = ( options & ERS_OPT_FREE_NAME ) ? aStrdup(name) : name;
 	instance->Options = options;

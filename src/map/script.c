@@ -2241,7 +2241,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 	CREATE(code,struct script_code,1);
 	code->script_buf  = script_buf;
 	code->script_size = script_size;
-	code->script_vars = idb_alloc(DB_OPT_RELEASE_DATA);
+	code->script_vars = NULL;
 	return code;
 }
 
@@ -2277,19 +2277,14 @@ void get_val(struct script_state* st, struct script_data* data)
 	postfix = name[strlen(name) - 1];
 
 	//##TODO use reference_tovariable(data) when it's confirmed that it works [FlavioJS]
-	if( !reference_toconstant(data) && not_server_variable(prefix) )
-	{
+	if( !reference_toconstant(data) && not_server_variable(prefix) ) {
 		sd = script_rid2sd(st);
-		if( sd == NULL )
-		{// needs player attached
-			if( postfix == '$' )
-			{// string variable
+		if( sd == NULL ) {// needs player attached
+			if( postfix == '$' ) {// string variable
 				ShowWarning("script:script->get_val: cannot access player variable '%s', defaulting to \"\"\n", name);
 				data->type = C_CONSTSTR;
 				data->u.str = "";
-			}
-			else
-			{// integer variable
+			} else {// integer variable
 				ShowWarning("script:script->get_val: cannot access player variable '%s', defaulting to 0\n", name);
 				data->type = C_INT;
 				data->u.num = 0;
@@ -2298,112 +2293,100 @@ void get_val(struct script_state* st, struct script_data* data)
 		}
 	}
 
-	if( postfix == '$' )
-	{// string variable
+	if( postfix == '$' ) {// string variable
 
-		switch( prefix )
-		{
-		case '@':
-			data->u.str = pc->readregstr(sd, data->u.num);
-			break;
-		case '$':
-			data->u.str = mapreg_readregstr(data->u.num);
-			break;
-		case '#':
-			if( name[1] == '#' )
-				data->u.str = pc_readaccountreg2str(sd, name);// global
-			else
-				data->u.str = pc_readaccountregstr(sd, name);// local
-			break;
-		case '.':
-			{
-				struct DBMap* n =
-					data->ref      ? *data->ref:
-					name[1] == '@' ?  st->stack->var_function:// instance/scope variable
-					                  st->script->script_vars;// npc variable
-				if( n )
-					data->u.str = (char*)idb_get(n,reference_getuid(data));
+		switch( prefix ) {
+			case '@':
+				data->u.str = pc->readregstr(sd, data->u.num);
+				break;
+			case '$':
+				data->u.str = mapreg_readregstr(data->u.num);
+				break;
+			case '#':
+				if( name[1] == '#' )
+					data->u.str = pc_readaccountreg2str(sd, name);// global
 				else
-					data->u.str = NULL;
-			}
-			break;
-		case '\'':
-				if ( st->instance_id >= 0 ) {
-					data->u.str = (char*)idb_get(instances[st->instance_id].vars,reference_getuid(data));
-				} else {
-					ShowWarning("script:script->get_val: cannot access instance variable '%s', defaulting to \"\"\n", name);
-					data->u.str = NULL;
+					data->u.str = pc_readaccountregstr(sd, name);// local
+				break;
+			case '.':
+				{
+					struct DBMap* n =
+						data->ref      ? *data->ref:
+						name[1] == '@' ?  st->stack->var_function:// instance/scope variable
+										  st->script->script_vars;// npc variable
+					if( n )
+						data->u.str = (char*)idb_get(n,reference_getuid(data));
+					else
+						data->u.str = NULL;
 				}
-			break;
-		default:
-			data->u.str = pc_readglobalreg_str(sd, name);
-			break;
+				break;
+			case '\'':
+					if ( st->instance_id >= 0 ) {
+						data->u.str = (char*)idb_get(instances[st->instance_id].vars,reference_getuid(data));
+					} else {
+						ShowWarning("script:script->get_val: cannot access instance variable '%s', defaulting to \"\"\n", name);
+						data->u.str = NULL;
+					}
+				break;
+			default:
+				data->u.str = pc_readglobalreg_str(sd, name);
+				break;
 		}
 
-		if( data->u.str == NULL || data->u.str[0] == '\0' )
-		{// empty string
+		if( data->u.str == NULL || data->u.str[0] == '\0' ) {// empty string
 			data->type = C_CONSTSTR;
 			data->u.str = "";
-		}
-		else
-		{// duplicate string
+		} else {// duplicate string
 			data->type = C_STR;
 			data->u.str = aStrdup(data->u.str);
 		}
 
-	}
-	else
-	{// integer variable
+	} else {// integer variable
 
 		data->type = C_INT;
 
-		if( reference_toconstant(data) )
-		{
+		if( reference_toconstant(data) ) {
 			data->u.num = reference_getconstant(data);
-		}
-		else if( reference_toparam(data) )
-		{
+		} else if( reference_toparam(data) ) {
 			data->u.num = pc->readparam(sd, reference_getparamtype(data));
-		}
-		else
-		switch( prefix )
-		{
-		case '@':
-			data->u.num = pc->readreg(sd, data->u.num);
-			break;
-		case '$':
-			data->u.num = mapreg_readreg(data->u.num);
-			break;
-		case '#':
-			if( name[1] == '#' )
-				data->u.num = pc_readaccountreg2(sd, name);// global
-			else
-				data->u.num = pc_readaccountreg(sd, name);// local
-			break;
-		case '.':
-			{
-				struct DBMap* n =
-					data->ref      ? *data->ref:
-					name[1] == '@' ?  st->stack->var_function:// instance/scope variable
-					                  st->script->script_vars;// npc variable
-				if( n )
-					data->u.num = (int)idb_iget(n,reference_getuid(data));
-				else
-					data->u.num = 0;
+		} else
+			switch( prefix ) {
+				case '@':
+					data->u.num = pc->readreg(sd, data->u.num);
+					break;
+				case '$':
+					data->u.num = mapreg_readreg(data->u.num);
+					break;
+				case '#':
+					if( name[1] == '#' )
+						data->u.num = pc_readaccountreg2(sd, name);// global
+					else
+						data->u.num = pc_readaccountreg(sd, name);// local
+					break;
+				case '.':
+					{
+						struct DBMap* n =
+							data->ref      ? *data->ref:
+							name[1] == '@' ?  st->stack->var_function:// instance/scope variable
+											  st->script->script_vars;// npc variable
+						if( n )
+							data->u.num = (int)idb_iget(n,reference_getuid(data));
+						else
+							data->u.num = 0;
+					}
+					break;
+				case '\'':
+						if( st->instance_id >= 0 )
+							data->u.num = (int)idb_iget(instances[st->instance_id].vars,reference_getuid(data));
+						else {
+							ShowWarning("script:script->get_val: cannot access instance variable '%s', defaulting to 0\n", name);
+							data->u.num = 0;
+						}
+					break;
+				default:
+					data->u.num = pc_readglobalreg(sd, name);
+					break;
 			}
-			break;
-		case '\'':
-				if( st->instance_id >= 0 )
-					data->u.num = (int)idb_iget(instances[st->instance_id].vars,reference_getuid(data));
-				else {
-					ShowWarning("script:script->get_val: cannot access instance variable '%s', defaulting to 0\n", name);
-					data->u.num = 0;
-				}
-			break;
-		default:
-			data->u.num = pc_readglobalreg(sd, name);
-			break;
-		}
 
 	}
 
@@ -2777,6 +2760,10 @@ struct script_state* script_alloc_state(struct script_code* script, int pos, int
 	st->oid = oid;
 	st->sleep.timer = INVALID_TIMER;
 	st->npc_item_flag = battle_config.item_enabled_npc;
+	
+	if( !st->script->script_vars )
+		st->script->script_vars = idb_alloc(DB_OPT_RELEASE_DATA);
+	
 	return st;
 }
 
@@ -2785,16 +2772,20 @@ struct script_state* script_alloc_state(struct script_code* script, int pos, int
 /// @param st Script state
 void script_free_state(struct script_state* st)
 {
-	if(st->bk_st)
-	{// backup was not restored
+	if(st->bk_st) {// backup was not restored
 		ShowDebug("script_free_state: Previous script state lost (rid=%d, oid=%d, state=%d, bk_npcid=%d).\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
 	}
+
 	if( st->sleep.timer != INVALID_TIMER )
 		iTimer->delete_timer(st->sleep.timer, run_script_timer);
 	script_free_vars(st->stack->var_function);
 	script->pop_stack(st, 0, st->stack->sp);
 	aFree(st->stack->stack_data);
 	aFree(st->stack);
+	if( st->script->script_vars && !db_size(st->script->script_vars) ) {
+		script_free_vars(st->script->script_vars);
+		st->script->script_vars = NULL;
+	}
 	st->stack = NULL;
 	st->pos = -1;
 	aFree(st);
@@ -3261,17 +3252,17 @@ int run_func(struct script_state *st)
 /*==========================================
  * script execution
  *------------------------------------------*/
-void run_script(struct script_code *rootscript,int pos,int rid,int oid)
-{
+void run_script(struct script_code *rootscript,int pos,int rid,int oid) {
 	struct script_state *st;
 
 	if( rootscript == NULL || pos < 0 )
 		return;
-
+	
 	// TODO In jAthena, this function can take over the pending script in the player. [FlavioJS]
 	//      It is unclear how that can be triggered, so it needs the be traced/checked in more detail.
 	// NOTE At the time of this change, this function wasn't capable of taking over the script state because st->scriptroot was never set.
 	st = script_alloc_state(rootscript, pos, rid, oid);
+		
 	run_script_main(st);
 }
 
@@ -3415,7 +3406,7 @@ void run_script_main(struct script_state *st)
 	int cmdcount = script_config.check_cmdcount;
 	int gotocount = script_config.check_gotocount;
 	TBL_PC *sd;
-	struct script_stack *stack=st->stack;
+	struct script_stack *stack = st->stack;
 	struct npc_data *nd;
 
 	script_attach_state(st);
@@ -3433,86 +3424,85 @@ void run_script_main(struct script_state *st)
 	} else if(st->state != END)
 		st->state = RUN;
 
-	while(st->state == RUN)
-	{
+	while( st->state == RUN ){
 		enum c_op c = get_com(st->script->script_buf,&st->pos);
 		switch(c){
-		case C_EOL:
-			if( stack->defsp > stack->sp )
-				ShowError("script:run_script_main: unexpected stack position (defsp=%d sp=%d). please report this!!!\n", stack->defsp, stack->sp);
-			else
-				script->pop_stack(st, stack->defsp, stack->sp);// pop unused stack data. (unused return value)
-			break;
-		case C_INT:
-			script->push_val(stack,C_INT,get_num(st->script->script_buf,&st->pos),NULL);
-			break;
-		case C_POS:
-		case C_NAME:
-			script->push_val(stack,c,GETVALUE(st->script->script_buf,st->pos),NULL);
-			st->pos+=3;
-			break;
-		case C_ARG:
-			script->push_val(stack,c,0,NULL);
-			break;
-		case C_STR:
-			script->push_str(stack,C_CONSTSTR,(char*)(st->script->script_buf+st->pos));
-			while(st->script->script_buf[st->pos++]);
-			break;
-		case C_FUNC:
-			run_func(st);
-			if(st->state==GOTO){
-				st->state = RUN;
-				if( !st->freeloop && gotocount>0 && (--gotocount)<=0 ){
-					ShowError("run_script: infinity loop !\n");
-					script_reportsrc(st);
-					st->state=END;
+			case C_EOL:
+				if( stack->defsp > stack->sp )
+					ShowError("script:run_script_main: unexpected stack position (defsp=%d sp=%d). please report this!!!\n", stack->defsp, stack->sp);
+				else
+					script->pop_stack(st, stack->defsp, stack->sp);// pop unused stack data. (unused return value)
+				break;
+			case C_INT:
+				script->push_val(stack,C_INT,get_num(st->script->script_buf,&st->pos),NULL);
+				break;
+			case C_POS:
+			case C_NAME:
+				script->push_val(stack,c,GETVALUE(st->script->script_buf,st->pos),NULL);
+				st->pos+=3;
+				break;
+			case C_ARG:
+				script->push_val(stack,c,0,NULL);
+				break;
+			case C_STR:
+				script->push_str(stack,C_CONSTSTR,(char*)(st->script->script_buf+st->pos));
+				while(st->script->script_buf[st->pos++]);
+				break;
+			case C_FUNC:
+				run_func(st);
+				if(st->state==GOTO){
+					st->state = RUN;
+					if( !st->freeloop && gotocount>0 && (--gotocount)<=0 ){
+						ShowError("run_script: infinity loop !\n");
+						script_reportsrc(st);
+						st->state=END;
+					}
 				}
-			}
-			break;
+				break;
 
-		case C_REF:
-			st->op2ref = 1;
-			break;
+			case C_REF:
+				st->op2ref = 1;
+				break;
 
-		case C_NEG:
-		case C_NOT:
-		case C_LNOT:
-			op_1(st ,c);
-			break;
+			case C_NEG:
+			case C_NOT:
+			case C_LNOT:
+				op_1(st ,c);
+				break;
 
-		case C_ADD:
-		case C_SUB:
-		case C_MUL:
-		case C_DIV:
-		case C_MOD:
-		case C_EQ:
-		case C_NE:
-		case C_GT:
-		case C_GE:
-		case C_LT:
-		case C_LE:
-		case C_AND:
-		case C_OR:
-		case C_XOR:
-		case C_LAND:
-		case C_LOR:
-		case C_R_SHIFT:
-		case C_L_SHIFT:
-			op_2(st, c);
-			break;
+			case C_ADD:
+			case C_SUB:
+			case C_MUL:
+			case C_DIV:
+			case C_MOD:
+			case C_EQ:
+			case C_NE:
+			case C_GT:
+			case C_GE:
+			case C_LT:
+			case C_LE:
+			case C_AND:
+			case C_OR:
+			case C_XOR:
+			case C_LAND:
+			case C_LOR:
+			case C_R_SHIFT:
+			case C_L_SHIFT:
+				op_2(st, c);
+				break;
 
-		case C_OP3:
-			op_3(st, c);
-			break;
+			case C_OP3:
+				op_3(st, c);
+				break;
 
-		case C_NOP:
-			st->state=END;
-			break;
+			case C_NOP:
+				st->state=END;
+				break;
 
-		default:
-			ShowError("unknown command : %d @ %d\n",c,st->pos);
-			st->state=END;
-			break;
+			default:
+				ShowError("unknown command : %d @ %d\n",c,st->pos);
+				st->state=END;
+				break;
 		}
 		if( !st->freeloop && cmdcount>0 && (--cmdcount)<=0 ){
 			ShowError("run_script: infinity loop !\n");
