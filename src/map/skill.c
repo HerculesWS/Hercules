@@ -6289,7 +6289,6 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			if(sd) {
 				clif->item_identify_list(sd);
 				if( sd->menuskill_id != MC_IDENTIFY ) {/* failed, dont consume anything, return */
-					clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 					iMap->freeblock_unlock();
 					return 1;
 				}
