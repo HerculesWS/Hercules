@@ -349,6 +349,9 @@ struct script_interface {
 	char *str_buf;
 	int str_size; // size of the buffer
 	int str_pos; // next position to be assigned
+	//
+	char *word_buf;
+	int word_size;
 	/*  */
 	void (*init) (void);
 	void (*final) (void);
