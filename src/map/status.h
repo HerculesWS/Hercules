@@ -1848,9 +1848,9 @@ int status_check_visibility(struct block_list *src, struct block_list *target); 
 int status_change_spread( struct block_list *src, struct block_list *bl );
 
 defType status_calc_def(struct block_list *bl, struct status_change *sc, int, bool);
-defType status_calc_def2(struct block_list *,struct status_change *, int, bool);
+signed short status_calc_def2(struct block_list *,struct status_change *, int, bool);
 defType status_calc_mdef(struct block_list *bl, struct status_change *sc, int, bool);
-defType status_calc_mdef2(struct block_list *,struct status_change *, int, bool);
+signed short status_calc_mdef2(struct block_list *,struct status_change *, int, bool);
 
 #ifdef RENEWAL
 unsigned short status_base_matk(const struct status_data* status, int level);

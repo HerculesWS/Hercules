@@ -4913,10 +4913,14 @@ defType status_calc_def(struct block_list *bl, struct status_change *sc, int def
 	return (defType)cap_value(def,DEFTYPE_MIN,DEFTYPE_MAX);
 }
 
-defType status_calc_def2(struct block_list *bl, struct status_change *sc, int def2, bool viewable)
+signed short status_calc_def2(struct block_list *bl, struct status_change *sc, int def2, bool viewable)
 {
 	if(!sc || !sc->count)
-		return (defType)cap_value(def2,DEFTYPE_MIN,DEFTYPE_MAX);
+#ifdef RENEWAL
+		return (short)cap_value(def2,SHRT_MIN,SHRT_MAX);
+#else
+		return (short)cap_value(def2,1,SHRT_MAX);
+#endif
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
@@ -4976,7 +4980,11 @@ defType status_calc_def2(struct block_list *bl, struct status_change *sc, int de
 	if (sc->data[SC_NEEDLE_OF_PARALYZE])
 		def2 -= def2 * sc->data[SC_NEEDLE_OF_PARALYZE]->val2 / 100;
 
-	return (defType)cap_value(def2,DEFTYPE_MIN,DEFTYPE_MAX);
+#ifdef RENEWAL
+	return (short)cap_value(def2,SHRT_MIN,SHRT_MAX);
+#else
+	return (short)cap_value(def2,1,SHRT_MAX);
+#endif
 }
 
 
@@ -5028,17 +5036,24 @@ defType status_calc_mdef(struct block_list *bl, struct status_change *sc, int md
 	return (defType)cap_value(mdef,DEFTYPE_MIN,DEFTYPE_MAX);
 }
 
-defType status_calc_mdef2(struct block_list *bl, struct status_change *sc, int mdef2, bool viewable) {
+signed short status_calc_mdef2(struct block_list *bl, struct status_change *sc, int mdef2, bool viewable)
+{
 	if(!sc || !sc->count)
-		return (defType)cap_value(mdef2,DEFTYPE_MIN,DEFTYPE_MAX);
+#ifdef RENEWAL
+		return (short)cap_value(mdef2,SHRT_MIN,SHRT_MAX);
+#else
+		return (short)cap_value(mdef2,1,SHRT_MAX);
+#endif
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
 #ifdef RENEWAL
 		if(sc && sc->data[SC_ASSUMPTIO])
 			mdef2 <<= 1;
+		return (short)cap_value(mdef2,SHRT_MIN,SHRT_MAX);
+#else
+		return (short)cap_value(mdef2,1,SHRT_MAX);
 #endif
-		return (defType)cap_value(mdef2,DEFTYPE_MIN,DEFTYPE_MAX);
 	}
 
 	if (sc->data[SC_BERSERK] || sc->data[SC__BLOODYLUST])
@@ -5050,7 +5065,11 @@ defType status_calc_mdef2(struct block_list *bl, struct status_change *sc, int m
 	if(sc->data[SC_ANALYZE])
 		mdef2 -= mdef2 * ( 14 * sc->data[SC_ANALYZE]->val1 ) / 100;
 
-	return (defType)cap_value(mdef2,DEFTYPE_MIN,DEFTYPE_MAX);
+#ifdef RENEWAL
+	return (short)cap_value(mdef2,SHRT_MIN,SHRT_MAX);
+#else
+	return (short)cap_value(mdef2,1,SHRT_MAX);
+#endif
 }
 
 static unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc, int speed)
