@@ -537,14 +537,10 @@ int add_str(const char* p)
 
 	h = calc_hash(p);
 
-	if( str_hash[h] == 0 )
-	{// empty bucket, add new node here
+	if( str_hash[h] == 0 ) {// empty bucket, add new node here
 		str_hash[h] = script->str_num;
-	}
-	else
-	{// scan for end of list, or occurence of identical string
-		for( i = str_hash[h]; ; i = script->str_data[i].next )
-		{
+	} else {// scan for end of list, or occurence of identical string
+		for( i = str_hash[h]; ; i = script->str_data[i].next ) {
 			if( strcasecmp(get_str(i),p) == 0 )
 				return i; // string already in list
 			if( script->str_data[i].next == 0 )
@@ -556,21 +552,19 @@ int add_str(const char* p)
 	}
 
 	// grow list if neccessary
-	if( script->str_num >= script->str_data_size )
-	{
-		script->str_data_size += 128;
+	if( script->str_num >= script->str_data_size ) {
+		script->str_data_size += 1280;
 		RECREATE(script->str_data,struct str_data_struct,script->str_data_size);
-		memset(script->str_data + (script->str_data_size - 128), '\0', 128);
+		memset(script->str_data + (script->str_data_size - 1280), '\0', 1280);
 	}
 
 	len=(int)strlen(p);
 
 	// grow string buffer if neccessary
-	while( script->str_pos+len+1 >= script->str_size )
-	{
-		script->str_size += 256;
+	while( script->str_pos+len+1 >= script->str_size ) {
+		script->str_size += 10240;
 		RECREATE(script->str_buf,char,script->str_size);
-		memset(script->str_buf + (script->str_size - 256), '\0', 256);
+		memset(script->str_buf + (script->str_size - 10240), '\0', 10240);
 	}
 
 	safestrncpy(script->str_buf+script->str_pos, p, len+1);
@@ -730,22 +724,19 @@ const char* skip_space(const char* p)
 /// Skips a word.
 /// A word consists of undercores and/or alphanumeric characters,
 /// and valid variable prefixes/postfixes.
-static
-const char* skip_word(const char* p)
-{
+static const char* skip_word(const char* p) {
 	// prefix
-	switch( *p )
-	{
-	case '@':// temporary char variable
-		++p; break;
-	case '#':// account variable
-		p += ( p[1] == '#' ? 2 : 1 ); break;
-	case '\'':// instance variable
-		++p; break;
-	case '.':// npc variable
-		p += ( p[1] == '@' ? 2 : 1 ); break;
-	case '$':// global variable
-		p += ( p[1] == '@' ? 2 : 1 ); break;
+	switch( *p ) {
+		case '@':// temporary char variable
+			++p; break;
+		case '#':// account variable
+			p += ( p[1] == '#' ? 2 : 1 ); break;
+		case '\'':// instance variable
+			++p; break;
+		case '.':// npc variable
+			p += ( p[1] == '@' ? 2 : 1 ); break;
+		case '$':// global variable
+			p += ( p[1] == '@' ? 2 : 1 ); break;
 	}
 
 	while( ISALNUM(*p) || *p == '_' )
@@ -757,14 +748,10 @@ const char* skip_word(const char* p)
 
 	return p;
 }
-
 /// Adds a word to script->str_data.
 /// @see skip_word
 /// @see add_str
-static
-int add_word(const char* p)
-{
-	char* word;
+static int add_word(const char* p) {
 	int len;
 	int i;
 
@@ -774,13 +761,15 @@ int add_word(const char* p)
 		disp_error_message("script:add_word: invalid word. A word consists of undercores and/or alphanumeric characters, and valid variable prefixes/postfixes.", p);
 
 	// Duplicate the word
-	word = (char*)aMalloc(len+1);
-	memcpy(word, p, len);
-	word[len] = 0;
+	if( len+1 > script->word_size )
+		RECREATE(script->word_buf, char, (script->word_size = (len+1)));
+	
+	memcpy(script->word_buf, p, len);
+	script->word_buf[len] = 0;
 
 	// add the word
-	i = add_str(word);
-	aFree(word);
+	i = add_str(script->word_buf);
+	
 	return i;
 }
 
@@ -3835,6 +3824,8 @@ void do_final_script(void) {
 		aFree(script->hq);
 	if( script->hqi != NULL )
 		aFree(script->hqi);
+	if( script->word_buf != NULL )
+		aFree(script->word_buf);
 }
 /*==========================================
  * Initialization
@@ -17871,6 +17862,9 @@ void script_defaults(void) {
 	script->str_buf = NULL;
 	script->str_size = 0;
 	script->str_pos = 0;
+	
+	script->word_buf = NULL;
+	script->word_size = 0;
 	
 	script->init = do_init_script;
 	script->final = do_final_script;
