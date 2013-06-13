@@ -361,6 +361,7 @@ struct script_interface {
 	int (*conv_num) (struct script_state *st,struct script_data *data);
 	const char* (*conv_str) (struct script_state *st,struct script_data *data);
 	TBL_PC *(*rid2sd) (struct script_state *st);
+	void (*detach_rid) (struct script_state* st);
 	struct script_data* (*push_val)(struct script_stack* stack, enum c_op type, int val, struct DBMap** ref);
 	void (*get_val) (struct script_state* st, struct script_data* data);
 	void* (*get_val2) (struct script_state* st, int uid, struct DBMap** ref);
