@@ -410,7 +410,7 @@ int battle_attr_fix(struct block_list *src, struct block_list *target, int damag
 	}
 	return damage*ratio/100;
 }
-
+#ifdef RENEWAL
 int battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, struct weapon_atk *watk, int nk, bool n_ele, short s_ele, short s_ele_, int size, int type, int flag, int flag2){ // [malufett]
 	int damage, eatk = 0;
 	struct status_change *sc;
@@ -422,7 +422,7 @@ int battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, uin
 	sc = status_get_sc(src);
 	sd = BL_CAST(BL_PC, src);
 
-	damage =  status_get_weapon_atk(src, watk, flag);
+	damage = status_get_weapon_atk(src, watk, flag);
 	
 	if( sd ){
 		if( type == EQI_HAND_R )
@@ -475,6 +475,7 @@ int battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, uin
 	
 	return damage;
 }
+#endif
 /*==========================================
  * Calculates the standard damage of a normal attack assuming it hits,
  * it calculates nothing extra fancy, is needed for magnum break's WATK_ELEMENT bonus. [Skotlex]
@@ -558,9 +559,7 @@ static int battle_calc_base_damage(struct status_data *status, struct weapon_atk
 
 		//SizeFix only for players
 		if (!(sd->special_state.no_sizefix || (flag&8)))
-			DAMAGE_RATE(type==EQI_HAND_L?
-				sd->left_weapon.atkmods[t_size]:
-				sd->right_weapon.atkmods[t_size])
+			damage = damage * ( type == EQI_HAND_L ? sd->left_weapon.atkmods[t_size] : sd->right_weapon.atkmods[t_size] ) / 100;
 	}
 
 	//Finally, add baseatk
@@ -576,12 +575,12 @@ static int battle_calc_base_damage(struct status_data *status, struct weapon_atk
 			if(sd->left_weapon.overrefine)
 				damage += rnd()%sd->left_weapon.overrefine+1;
 			if (sd->weapon_atk_rate[sd->weapontype2])
-				DAMAGE_ADDRATE(sd->weapon_atk_rate[sd->weapontype2])
+				damage += damage * sd->weapon_atk_rate[sd->weapontype2] / 100;
 		} else { //Right hand
 			if(sd->right_weapon.overrefine)
 				damage += rnd()%sd->right_weapon.overrefine+1;
 			if (sd->weapon_atk_rate[sd->weapontype1])
-				DAMAGE_ADDRATE(sd->weapon_atk_rate[sd->weapontype1])
+				damage += damage * sd->weapon_atk_rate[sd->weapontype1] / 100;
 		}
 	}
 #endif
@@ -1860,7 +1859,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 	#ifndef RENEWAL
 				case MO_EXTREMITYFIST:
 					{	//Overflow check. [Skotlex]
-						unsigned int ratio = skillratio + 100*(8 + sstatus->sp/10);
+						unsigned int ratio = skillratio + 100*(8 + status->sp/10);
 						//You'd need something like 6K SP to reach this max, so should be fine for most purposes.
 						if (ratio > 60000) ratio = 60000; //We leave some room here in case skillratio gets further increased.
 						skillratio = (unsigned short)ratio;
@@ -3476,8 +3475,10 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	struct status_data *sstatus = status_get_status_data(src);
 	struct status_data *tstatus = status_get_status_data(target);
 	struct status_change *tsc = status_get_sc(target);
+#ifdef RENEWAL
 	struct status_change *sc = status_get_sc(src);
-
+#endif
+	
 	memset(&md,0,sizeof(md));
 
 	if( src == NULL || target == NULL ){
@@ -3701,7 +3702,11 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	 **/
 	case NC_SELFDESTRUCTION:
 		{
+#ifdef RENEWAL
 			short totaldef = status_get_total_def(target);
+#else
+			short totaldef = tstatus->def2 + (short)status_get_def(target);
+#endif
 			md.damage = ( (sd?pc->checkskill(sd,NC_MAINFRAME):10) + 8 ) * ( skill_lv + 1 ) * ( status_get_sp(src) + sstatus->vit );
 			RE_LVL_MDMOD(100);
 			md.damage += status_get_hp(src) - totaldef;
@@ -3720,7 +3725,11 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	case KO_HAPPOKUNAI:
 		{
 			struct Damage wd = battle->calc_weapon_attack(src,target,skill_id,skill_lv,mflag);
+#ifdef RENEWAL
 			short totaldef = status_get_total_def(target);
+#else
+			short totaldef = tstatus->def2 + (short)status_get_def(target);
+#endif
 			md.damage = 3 * wd.damage * (5 + skill_lv) / 5;
 			md.damage -= totaldef;
 		}
@@ -3933,8 +3942,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		nk |= NK_NO_CARDFIX_ATK|NK_IGNORE_FLEE;
 	flag.hit = nk&NK_IGNORE_FLEE?1:0;
 	flag.idef = flag.idef2 = nk&NK_IGNORE_DEF?1:0;
+#ifdef RENEWAL
 	flag.tdef = 0;
-
+#endif
 	if (sc && !sc->count)
 		sc = NULL; //Skip checking as there are no status changes active.
 	if (tsc && !tsc->count)
@@ -4686,9 +4696,19 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		}
 
 		if(!flag.idef || !flag.idef2) { //Defense reduction
-			wd.damage = battle->calc_defense(BF_WEAPON, src, target, skill_id, skill_lv, wd.damage, (flag.idef?1:0)|(flag.pdef?2:0)|(flag.tdef?4:0), flag.pdef);
+			wd.damage = battle->calc_defense(BF_WEAPON, src, target, skill_id, skill_lv, wd.damage,
+											 (flag.idef?1:0)|(flag.pdef?2:0)
+#ifdef RENEWAL
+											 |(flag.tdef?4:0)
+#endif
+											 , flag.pdef);
 			if( wd.damage2 )
-				wd.damage2 = battle->calc_defense(BF_WEAPON, src, target, skill_id, skill_lv, wd.damage2, (flag.idef2?1:0)|(flag.pdef2?2:0)|(flag.tdef?4:0), flag.pdef2);
+				wd.damage2 = battle->calc_defense(BF_WEAPON, src, target, skill_id, skill_lv, wd.damage2,
+												  (flag.idef2?1:0)|(flag.pdef2?2:0)
+#ifdef RENEWAL
+												  |(flag.tdef?4:0)
+#endif
+												  , flag.pdef2);
 		}
 
 #ifdef RENEWAL
@@ -6679,7 +6699,9 @@ void battle_defaults(void) {
 	battle->drain = battle_drain;
 	battle->calc_return_damage = battle_calc_return_damage;
 	battle->calc_weapon_attack = battle_calc_weapon_attack;
+#ifdef RENEWAL
 	battle->calc_weapon_damage = battle_calc_weapon_damage;
+#endif
 	battle->calc_defense = battle_calc_defense;
 	battle->attr_ratio = battle_attr_ratio;
 	battle->attr_fix = battle_attr_fix;

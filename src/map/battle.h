@@ -503,8 +503,10 @@ struct battle_interface {
 	int (*calc_skillratio) (int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int skillratio, int flag);
 	/* applies size modifiers */
 	int (*calc_sizefix) (struct map_session_data *sd, int damage, int type, int size,  bool ignore);
+#ifdef RENEWAL
 	/* get weapon damage */
 	int (*calc_weapon_damage) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, struct weapon_atk *watk, int nk, bool n_ele, short s_ele, short s_ele_, int size, int type, int flag, int flag2);
+#endif
 	/* applies defense reductions */
 	int (*calc_defense) (int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int damage, int flag, int pdef);
 	/* get master (who does this unit respond to?) */
