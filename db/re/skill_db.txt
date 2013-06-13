@@ -9,8 +9,8 @@
 //             -2 - use endowed element, -3 - use random element.)
 // 06 nk (skill damage properties):
 //    0x01 - No damage skill
-//    0x02 - Has splash area
-//    0x04 - Damage should be split among targets
+//    0x02 - Has splash area (requires source modification)
+//    0x04 - Damage should be split among targets (requires 0x02 in order to work)
 //    0x08 - Skill ignores caster's % damage cards (misc type always ignores)
 //    0x10 - Skill ignores elemental adjustments
 //    0x20 - Skill ignores target's defense (misc type always ignores)
