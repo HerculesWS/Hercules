@@ -2786,7 +2786,7 @@ void script_free_state(struct script_state* st)
 	script->pop_stack(st, 0, st->stack->sp);
 	aFree(st->stack->stack_data);
 	aFree(st->stack);
-	if( st->script->script_vars && !db_size(st->script->script_vars) ) {
+	if( st->script && st->script->script_vars && !db_size(st->script->script_vars) ) {
 		script_free_vars(st->script->script_vars);
 		st->script->script_vars = NULL;
 	}

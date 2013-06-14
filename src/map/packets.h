@@ -2246,7 +2246,7 @@ packet(0x020d,-1);
 #endif
 
 #if PACKETVER >= 20130612
-	packetKeys(0x295B0FCB, 0x3C000FCF, 0x6D166F66); /* Thanks to Shakto */
+	packetKeys(0x6D166F66, 0x3C000FCF, 0x295B0FCB); /* Thanks to Shakto */
 #endif
 
 #endif /* _PACKETS_H_ */
