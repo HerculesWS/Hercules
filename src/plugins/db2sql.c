@@ -1,18 +1,18 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "../config/core.h"
-#include "../common/HPMi.h"
+#include "../common/cbasetypes.h"
 #include "../common/strlib.h"
-#include "../common/SQL.h"
 #include "../common/timer.h"
+#include "../common/HPMi.h"
+#include "../common/mmo.h"
+#include "../config/core.h"
 #include "../map/clif.h"
 #include "../map/pc.h"
 #include "../map/map.h"
 #include "../map/itemdb.h"
-
+#include <stdio.h>
+#include <stdlib.h>
 
 HPExport struct hplugin_info pinfo = {
 	"DB2SQL",		// Plugin name
