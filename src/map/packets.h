@@ -1968,7 +1968,11 @@ packet(0x020d,-1);
 	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
 	packet(0x0889,6,clif->pGetCharNameRequest,2);
 	packet(0x0884,6,clif->pSolveCharName,2);
+#ifndef PACKETVER_RE
+	packet(0x091D,18,clif->pPartyBookingRegisterReq,2,4,6);
+#else
 	packet(0x08E5,41,clif->pPartyBookingRegisterReq,2,4);
+#endif
 	packet(0x08E6,4);
 	packet(0x08E7,10,clif->pPartyBookingSearchReq,2);
 	packet(0x08E8,-1);
