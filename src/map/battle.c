@@ -5134,10 +5134,10 @@ int battle_calc_return_damage(struct block_list* bl, struct block_list *src, int
 					rdelay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
 				}
 			}
-		}
-		if( sc->data[SC_SHIELDSPELL_DEF] && sc->data[SC_SHIELDSPELL_DEF]->val1 == 2 && !is_boss(src) ){
-			NORMALIZE_RDAMAGE(damage * sc->data[SC_SHIELDSPELL_DEF]->val2 / 100);
-			rdelay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
+			if( sc->data[SC_SHIELDSPELL_DEF] && sc->data[SC_SHIELDSPELL_DEF]->val1 == 2 && !is_boss(src) ){
+				NORMALIZE_RDAMAGE(damage * sc->data[SC_SHIELDSPELL_DEF]->val2 / 100);
+				rdelay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
+			}
 		}
 	} else {
 		if (sd && sd->bonus.long_weapon_damage_return){ 
