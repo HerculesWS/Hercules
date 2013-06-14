@@ -2025,6 +2025,12 @@ packet(0x020d,-1);
 
 #endif
 
+#ifndef PACKETVER_RE
+#if PACKETVER >= 20120604
+	packet(0x0861,18,clif->pPartyBookingRegisterReq,2,4,6);
+#endif
+#endif
+
 //2012-06-18aRagexeRE
 #if PACKETVER >= 20120618
 	packet(0x0983,29);

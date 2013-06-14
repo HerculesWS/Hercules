@@ -10916,7 +10916,7 @@ int status_get_matk(struct block_list *bl, int flag){
 	}
 
 	if ((bl->type&BL_HOM && battle_config.hom_setting&0x20)  //Hom Min Matk is always the same as Max Matk
-		|| sc->data[SC_RECOGNIZEDSPELL])
+		|| (sc && sc->data[SC_RECOGNIZEDSPELL]))
 		status->matk_min = status->matk_max;
 
 #ifdef RENEWAL

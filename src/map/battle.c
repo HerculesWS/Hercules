@@ -1185,9 +1185,13 @@ int battle_calc_defense(int attack_type, struct block_list *src, struct block_li
 			 **/
 			defType def1 = status_get_def(target); //Don't use tstatus->def1 due to skill timer reductions.
 			short def2 = tstatus->def2, vit_def;
-			
+#ifdef RENEWAL			
 			def1 = status_calc_def2(target, tsc, def1, false); // equip def(RE)
 			def2 = status_calc_def(target, tsc, def2, false); // status def(RE)
+#else
+			def1 = status_calc_def(target, tsc, def1, false); // equip def(RE)
+			def2 = status_calc_def2(target, tsc, def2, false); // status def(RE)
+#endif
 
 			if( sd ){
 				i = sd->ignore_def[is_boss(target)?RC_BOSS:RC_NONBOSS];
@@ -1291,10 +1295,13 @@ int battle_calc_defense(int attack_type, struct block_list *src, struct block_li
 			{
 			defType mdef = tstatus->mdef;
 			short mdef2= tstatus->mdef2;
-
+#ifdef RENEWAL
 			mdef2 = status_calc_mdef(target, tsc, mdef2, false); // status mdef(RE)
 			mdef = status_calc_mdef2(target, tsc, mdef, false); // equip mde(RE)
-
+#else
+			mdef2 = status_calc_mdef2(target, tsc, mdef2, false); // status mdef(RE)
+			mdef = status_calc_mdef(target, tsc, mdef, false); // equip mde(RE)
+#endif
 			if( flag&1 )
 				mdef = 0;
 
@@ -5134,10 +5141,10 @@ int battle_calc_return_damage(struct block_list* bl, struct block_list *src, int
 					rdelay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
 				}
 			}
-		}
-		if( sc->data[SC_SHIELDSPELL_DEF] && sc->data[SC_SHIELDSPELL_DEF]->val1 == 2 && !is_boss(src) ){
-			NORMALIZE_RDAMAGE(damage * sc->data[SC_SHIELDSPELL_DEF]->val2 / 100);
-			rdelay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
+			if( sc->data[SC_SHIELDSPELL_DEF] && sc->data[SC_SHIELDSPELL_DEF]->val1 == 2 && !is_boss(src) ){
+				NORMALIZE_RDAMAGE(damage * sc->data[SC_SHIELDSPELL_DEF]->val2 / 100);
+				rdelay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
+			}
 		}
 	} else {
 		if (sd && sd->bonus.long_weapon_damage_return){ 
