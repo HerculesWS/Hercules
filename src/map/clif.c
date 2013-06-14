@@ -632,6 +632,7 @@ void clif_authfail_fd(int fd, int type)
 	WFIFOB(fd,2) = type;
 	WFIFOSET(fd,packet_len(0x81));
 	set_eof(fd);
+
 }
 
 
@@ -9288,6 +9289,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 		WFIFOB(fd,2) = 3; // Rejected by server
 		WFIFOSET(fd,packet_len(0x6a));
 		set_eof(fd);
+
 		return;
 	}
 
@@ -9301,6 +9303,8 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 
 	CREATE(sd, TBL_PC, 1);
 	sd->fd = fd;
+	sd->cryptKey = (( clif->cryptKey[0] * clif->cryptKey[1] ) + clif->cryptKey[2]) & 0xFFFFFFFF;
+	
 	session[fd]->session_data = sd;
 
 	pc->setnewpc(sd, account_id, char_id, login_id1, client_tick, sex, fd);
@@ -9819,6 +9823,7 @@ void clif_parse_QuitGame(int fd, struct map_session_data *sd)
 		(!battle_config.prevent_logout || DIFF_TICK(iTimer->gettick(), sd->canlog_tick) > battle_config.prevent_logout) )
 	{
 		set_eof(fd);
+
 		clif->disconnect_ack(sd, 0);
 	} else {
 		clif->disconnect_ack(sd, 1);
@@ -17436,6 +17441,47 @@ void clif_scriptclear(struct map_session_data *sd, int npcid) {
 	
 	clif->send(&p,sizeof(p), &sd->bl, SELF);
 }
+unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
+	if( sd ) {
+		sd->cryptKey = (( sd->cryptKey * clif->cryptKey[1] ) + clif->cryptKey[2]) & 0xFFFFFFFF;
+		return (cmd ^ ((sd->cryptKey >> 16) & 0x7FFF));
+	}
+	return (cmd ^ (((( clif->cryptKey[0] * clif->cryptKey[1] ) + clif->cryptKey[2]) >> 16) & 0x7FFF));
+}
+unsigned short clif_parse_cmd_normal ( int fd, struct map_session_data *sd ) {
+	unsigned short cmd = RFIFOW(fd,0);
+	// filter out invalid / unsupported packets
+	if (cmd > MAX_PACKET_DB || packet_db[cmd].len == 0)
+		return 0;
+
+	return cmd;
+}
+unsigned short clif_parse_cmd_optional ( int fd, struct map_session_data *sd ) {
+	unsigned short cmd = RFIFOW(fd,0);
+
+	// filter out invalid / unsupported packets
+	if (cmd > MAX_PACKET_DB || packet_db[cmd].len == 0) {
+		cmd = clif->decrypt_cmd( cmd, sd );
+		if( cmd > MAX_PACKET_DB || packet_db[cmd].len == 0 )
+			return 0;
+		RFIFOW(fd, 0) = cmd;
+	}
+
+	return cmd;
+}
+unsigned short clif_parse_cmd_decrypt ( int fd, struct map_session_data *sd ) {
+	unsigned short cmd = RFIFOW(fd,0);
+
+	cmd = clif->decrypt_cmd( cmd, sd );
+	
+	// filter out invalid / unsupported packets
+	if (cmd > MAX_PACKET_DB || packet_db[cmd].len == 0 )
+		return 0;
+	
+	RFIFOW(fd, 0) = cmd;
+
+	return cmd;
+}
 
 /*==========================================
  * Main client packet processing function
@@ -17479,20 +17525,18 @@ int clif_parse(int fd) {
 		if (RFIFOREST(fd) < 2)
 			return 0;
 		
-		cmd = RFIFOW(fd,0);
-				
-		// filter out invalid / unsupported packets
-		if (cmd > MAX_PACKET_DB || packet_db[cmd].len == 0) {
-			ShowWarning("clif_parse: Received unsupported packet (packet 0x%04x, %d bytes received), disconnecting session #%d.\n", cmd, RFIFOREST(fd), fd);
+		if( !( cmd = clif->parse_cmd(fd,sd) ) ) {
+			ShowWarning("clif_parse: Received unsupported packet (packet 0x%04x, %d bytes received), disconnecting session #%d.\n", RFIFOW(fd,0), RFIFOREST(fd), fd);
 #ifdef DUMP_INVALID_PACKET
 			ShowDump(RFIFOP(fd,0), RFIFOREST(fd));
 #endif
 			set_eof(fd);
 			return 0;
 		}
+				
 		// determine real packet length
-		packet_len = packet_db[cmd].len;
-		if (packet_len == -1) { // variable-length packet
+		if ( ( packet_len = packet_db[cmd].len ) == -1) { // variable-length packet
+
 			if (RFIFOREST(fd) < 4)
 				return 0;
 			
@@ -17503,9 +17547,11 @@ int clif_parse(int fd) {
 				ShowDump(RFIFOP(fd,0), RFIFOREST(fd));
 #endif
 				set_eof(fd);
+
 				return 0;
 			}
 		}
+
 		if ((int)RFIFOREST(fd) < packet_len)
 			return 0; // not enough data received to form the packet
 
@@ -17598,14 +17644,29 @@ void packetdb_loaddb(void) {
 	memset(packet_db,0,sizeof(packet_db));
 	
 	#define packet(id, size, ...) packetdb_addpacket(id, size, ##__VA_ARGS__, 0xFFFF)
+	#define packetKeys(a,b,c) { clif->cryptKey[0] = a; clif->cryptKey[1] = b; clif->cryptKey[2] = c; }
 	#include "packets.h" /* load structure data */
 	#undef packet
+	#undef packetKeys
 }
 void clif_bc_ready(void) {
 	if( battle_config.display_status_timers )
 		clif->status_change = clif_status_change;
 	else
 		clif->status_change = clif_status_change_notick;
+	
+	switch( battle_config.packet_obfuscation ) {
+		case 0:
+			clif->parse_cmd = clif_parse_cmd_normal;
+			break;
+		default:
+		case 1:
+			clif->parse_cmd = clif_parse_cmd_optional;
+			break;
+		case 2:
+			clif->parse_cmd = clif_parse_cmd_decrypt;
+			break;
+	}
 }
 /*==========================================
  *
@@ -17689,6 +17750,8 @@ void clif_defaults(void) {
 	clif->send = clif_send;
 	clif->send_sub = clif_send_sub;
 	clif->parse = clif_parse;
+	clif->parse_cmd = clif_parse_cmd_optional;
+	clif->decrypt_cmd = clif_decrypt_cmd;
 	/* auth */
 	clif->authok = clif_authok;
 	clif->authrefuse = clif_authrefuse;

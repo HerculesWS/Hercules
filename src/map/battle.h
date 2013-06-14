@@ -449,6 +449,7 @@ struct Battle_Config {
 	int item_restricted_consumption_type;
 	int max_walk_path;
 	int item_enabled_npc;
+	int packet_obfuscation;
 	
 	int gm_ignore_warpable_area;
 	
