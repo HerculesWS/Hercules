@@ -10,6 +10,10 @@
 	#define packet(a,b,...)
 #endif
 
+#ifndef packetKeys
+	#define packetKeys(a,b,c)
+#endif
+
 /*
  * packet syntax
  * - packet(packet_id,length)
@@ -2017,6 +2021,8 @@ packet(0x020d,-1);
 	packet(0x08E5,41,clif->pPartyBookingRegisterReq,2,4);
 	packet(0x08d2,10);
 	packet(0x0916,26,clif->pGuildInvite2,2);
+	packetKeys(0x1540e48,0x13041224,0x31247924);
+
 #endif
 
 //2012-06-18aRagexeRE
@@ -2052,6 +2058,7 @@ packet(0x020d,-1);
 //2012-07-16aRagExe (special thanks to Yommy!)
 #if PACKETVER >= 20120716
 	packet(0x0364,8,clif->pMoveFromKafra,2,4);
+	packetKeys(0x76052205, 0x22052205, 0x22052205);
 #endif
 
 //2013-03-20Ragexe (Judas + Yommy)
@@ -2086,6 +2093,7 @@ packet(0x020d,-1);
 	packet(0x086F,26,clif->pFriendsListAdd,2);
 	packet(0x093F,5,clif->pHomMenu,2,4);
 	packet(0x0947,36,clif->pStoragePassword,0);
+	packetKeys(0x3F094C49, 0x55F86C1E, 0x58AA359A);
 	// Shuffle End
 
 	// New Packets

@@ -462,6 +462,8 @@ struct clif_interface {
 		struct hCSData **data[CASHSHOP_TAB_MAX];
 		unsigned int item_count[CASHSHOP_TAB_MAX];
 	} cs;
+	/* */
+	unsigned int cryptKey[3];
 	/* core */
 	int (*init) (void);
 	void (*final) (void);
@@ -472,6 +474,8 @@ struct clif_interface {
 	int (*send) (const void* buf, int len, struct block_list* bl, enum send_target type);
 	int (*send_sub) (struct block_list *bl, va_list ap);
 	int (*parse) (int fd);
+	unsigned short (*parse_cmd) ( int fd, struct map_session_data *sd );
+	unsigned short (*decrypt_cmd) ( int cmd, struct map_session_data *sd );
 	/* auth */
 	void (*authok) (struct map_session_data *sd);
 	void (*authrefuse) (int fd, uint8 error_code);

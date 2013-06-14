@@ -6368,7 +6368,7 @@ static const struct _battle_data {
 	{ "cashshop_show_points",               &battle_config.cashshop_show_points,            0,      0,      1,              },
 	{ "mail_show_status",                   &battle_config.mail_show_status,                0,      0,      2,              },
 	{ "client_limit_unit_lv",               &battle_config.client_limit_unit_lv,            0,      0,      BL_ALL,         },
-// BattleGround Settings
+	// BattleGround Settings
 	{ "bg_update_interval",                 &battle_config.bg_update_interval,              1000,   100,    INT_MAX,        },
 	{ "bg_flee_penalty",                    &battle_config.bg_flee_penalty,                 20,     0,      INT_MAX,        },
 	/**
@@ -6393,6 +6393,7 @@ static const struct _battle_data {
 	{ "max_walk_path",						&battle_config.max_walk_path,					17,     1,      MAX_WALKPATH,   },
 	{ "item_enabled_npc",					&battle_config.item_enabled_npc,				1,      0,      1,				},
 	{ "gm_ignore_warpable_area",			&battle_config.gm_ignore_warpable_area,			0,		2,		100,			},
+	{ "packet_obfuscation",					&battle_config.packet_obfuscation,				1,		0,		3,				},
 };
 #ifndef STATS_OPT_OUT
 /**
@@ -6617,7 +6618,7 @@ void battle_adjust_conf(void) {
 
 #ifndef CELL_NOSTACK
 	if (battle_config.cell_stack_limit != 1)
-		ShowWarning("Battle setting 'cell_stack_limit' takes no effect as this server was compiled without Cell Stack Limit support.\n");
+		ShowWarning("Battle setting 'cell_stack_limit' takes no effect as this server was compiled without Cell Stack Limit support (CELL_NOSTACK).\n");
 #endif
 }
 
