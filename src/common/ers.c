@@ -293,7 +293,7 @@ static void ers_obj_destroy(ERS self)
 void ers_cache_size(ERS self, unsigned int new_size) {
 	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 	
-	if (instance == NULL) {
+	if (instance == NULL) {//change as per piotrhalaczkiewicz comment
 		ShowError("ers_cache_size: NULL object, skipping...\n");
 		return;
 	}

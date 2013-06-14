@@ -296,8 +296,7 @@ static struct item_data* create_item_data(int nameid)
 /*==========================================
  * Loads (and creates if not found) an item from the db.
  *------------------------------------------*/
-struct item_data* itemdb_load(int nameid)
-{
+struct item_data* itemdb_load(int nameid) {
 	struct item_data *id;
 
 	if( nameid >= 0 && nameid < ARRAYLENGTH(itemdb_array) )
@@ -967,7 +966,7 @@ void itemdb_re_split_atoi(char *str, int *atk, int *matk) {
 /*==========================================
  * processes one itemdb entry
  *------------------------------------------*/
-static bool itemdb_parse_dbrow(char** str, const char* source, int line, int scriptopt) {
+int itemdb_parse_dbrow(char** str, const char* source, int line, int scriptopt) {
 	/*
 		+----+--------------+---------------+------+-----------+------------+--------+--------+---------+-------+-------+------------+-------------+---------------+-----------------+--------------+-------------+------------+------+--------+--------------+----------------+
 		| 00 |      01      |       02      |  03  |     04    |     05     |   06   |   07   |    08   |   09  |   10  |     11     |      12     |       13      |        14       |      15      |      16     |     17     |  18  |   19   |      20      |        21      |
@@ -977,12 +976,12 @@ static bool itemdb_parse_dbrow(char** str, const char* source, int line, int scr
 	*/
 	int nameid;
 	struct item_data* id;
+	unsigned char offset = 0;
 	
 	nameid = atoi(str[0]);
-	if( nameid <= 0 )
-	{
+	if( nameid <= 0 ) {
 		ShowWarning("itemdb_parse_dbrow: Invalid id %d in line %d of \"%s\", skipping.\n", nameid, line, source);
-		return false;
+		return 0;
 	}
 
 	//ID,Name,Jname,Type,Price,Sell,Weight,ATK,DEF,Range,Slot,Job,Job Upper,Gender,Loc,wLV,eLV,refineable,View
@@ -1030,39 +1029,47 @@ static bool itemdb_parse_dbrow(char** str, const char* source, int line, int scr
 
 	id->weight = atoi(str[6]);
 #ifdef RENEWAL
-	itemdb_re_split_atoi(str[7],&id->atk,&id->matk);
+	if( iMap->db_use_sqldbs ) {
+		id->atk = atoi(str[7]);
+		id->matk = atoi(str[8]);
+		offset += 1;
+	} else
+		itemdb_re_split_atoi(str[7],&id->atk,&id->matk);
 #else
 	id->atk = atoi(str[7]);
 #endif
-	id->def = atoi(str[8]);
-	id->range = atoi(str[9]);
-	id->slot = atoi(str[10]);
+	id->def = atoi(str[8+offset]);
+	id->range = atoi(str[9+offset]);
+	id->slot = atoi(str[10+offset]);
 
-	if (id->slot > MAX_SLOTS)
-	{
+	if (id->slot > MAX_SLOTS) {
 		ShowWarning("itemdb_parse_dbrow: Item %d (%s) specifies %d slots, but the server only supports up to %d. Using %d slots.\n", nameid, id->jname, id->slot, MAX_SLOTS, MAX_SLOTS);
 		id->slot = MAX_SLOTS;
 	}
 
-	itemdb_jobid2mapid(id->class_base, (unsigned int)strtoul(str[11],NULL,0));
-	id->class_upper = atoi(str[12]);
-	id->sex	= atoi(str[13]);
-	id->equip = atoi(str[14]);
+	itemdb_jobid2mapid(id->class_base, (unsigned int)strtoul(str[11+offset],NULL,0));
+	id->class_upper = atoi(str[12+offset]);
+	id->sex	= atoi(str[13+offset]);
+	id->equip = atoi(str[14+offset]);
 
-	if (!id->equip && itemdb_isequip2(id))
-	{
+	if (!id->equip && itemdb_isequip2(id)) {
 		ShowWarning("Item %d (%s) is an equipment with no equip-field! Making it an etc item.\n", nameid, id->jname);
 		id->type = IT_ETC;
 	}
 
-	id->wlv = cap_value(atoi(str[15]), REFINE_TYPE_ARMOR, REFINE_TYPE_MAX);
+	id->wlv = cap_value(atoi(str[15+offset]), REFINE_TYPE_ARMOR, REFINE_TYPE_MAX);
 #ifdef RENEWAL
-	itemdb_re_split_atoi(str[16],&id->elv,&id->elvmax);
+	if( iMap->db_use_sqldbs ) {
+		id->elv = atoi(str[16+offset]);
+		id->elvmax = atoi(str[17+offset]);
+		offset += 1;
+	} else
+		itemdb_re_split_atoi(str[16],&id->elv,&id->elvmax);
 #else
 	id->elv = atoi(str[16]);
 #endif
-	id->flag.no_refine = atoi(str[17]) ? 0 : 1; //FIXME: verify this
-	id->look = atoi(str[18]);
+	id->flag.no_refine = atoi(str[17+offset]) ? 0 : 1; //FIXME: verify this
+	id->look = atoi(str[18+offset]);
 
 	id->flag.available = 1;
 	id->view_id = 0;
@@ -1081,14 +1088,14 @@ static bool itemdb_parse_dbrow(char** str, const char* source, int line, int scr
 		id->unequip_script = NULL;
 	}
 
-	if (*str[19])
-		id->script = parse_script(str[19], source, line, scriptopt);
-	if (*str[20])
-		id->equip_script = parse_script(str[20], source, line, scriptopt);
-	if (*str[21])
-		id->unequip_script = parse_script(str[21], source, line, scriptopt);
+	if (*str[19+offset])
+		id->script = parse_script(str[19+offset], source, line, scriptopt);
+	if (*str[20+offset])
+		id->equip_script = parse_script(str[20+offset], source, line, scriptopt);
+	if (*str[21+offset])
+		id->unequip_script = parse_script(str[21+offset], source, line, scriptopt);
 
-	return true;
+	return id->nameid;
 }
 
 /*==========================================
@@ -1205,7 +1212,7 @@ static int itemdb_readdb(void)
 				}
 			}
 
-			if (!itemdb_parse_dbrow(str, path, lines, 0))
+			if (!itemdb->parse_dbrow(str, path, lines, 0))
 				continue;
 			
 			count++;
@@ -1218,7 +1225,6 @@ static int itemdb_readdb(void)
 
 	return 0;
 }
-
 /*======================================
  * item_db table reading
  *======================================*/
@@ -1234,7 +1240,7 @@ static int itemdb_read_sqldb(void) {
 	int fi;
 	
 	for( fi = 0; fi < ARRAYLENGTH(item_db_name); ++fi ) {
-		uint32 lines = 0, count = 0;
+		uint32 count = 0;
 
 		// retrieve all rows from the item database
 		if( SQL_ERROR == SQL->Query(mmysql_handle, "SELECT * FROM `%s`", item_db_name[fi]) ) {
@@ -1244,17 +1250,16 @@ static int itemdb_read_sqldb(void) {
 
 		// process rows one by one
 		while( SQL_SUCCESS == SQL->NextRow(mmysql_handle) ) {// wrap the result into a TXT-compatible format
-			char* str[22];
+			char* str[ITEMDB_SQL_COLUMNS];
 			char* dummy = "";
 			int i;
-			++lines;
-			for( i = 0; i < 22; ++i ) {
+			for( i = 0; i < ITEMDB_SQL_COLUMNS; ++i ) {
 				SQL->GetData(mmysql_handle, i, &str[i], NULL);
 				if( str[i] == NULL )
 					str[i] = dummy; // get rid of NULL columns
 			}
 
-			if (!itemdb_parse_dbrow(str, item_db_name[fi], lines, SCRIPT_IGNORE_EXTERNAL_BRACKETS))
+			if (!itemdb->parse_dbrow(str, item_db_name[fi], -(atoi(str[0])), SCRIPT_IGNORE_EXTERNAL_BRACKETS))
 				continue;
 			++count;
 		}
@@ -1470,4 +1475,13 @@ int do_init_itemdb(void) {
 	clif->cashshop_load();
 
 	return 0;
+}
+/* incomplete */
+void itemdb_defaults(void) {
+	itemdb = &itemdb_s;
+	
+	itemdb->reload = itemdb_reload;//incomplet=e
+	/* */
+	itemdb->parse_dbrow = itemdb_parse_dbrow;
+	itemdb->exists = itemdb_exists;//incomplete
 }
