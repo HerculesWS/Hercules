@@ -2045,7 +2045,11 @@ void script_error(const char* src, const char* file, int start_line, const char*
 
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, "\a\n");
-	StrBuf->Printf(&buf, "script error on %s line %d\n", file, line);
+	if( line >= 0 )
+		StrBuf->Printf(&buf, "script error on %s line %d\n", file, line);
+	else
+		StrBuf->Printf(&buf, "script error on %s item ID %d\n", file, -line);
+
 	StrBuf->Printf(&buf, "    %s\n", error_msg);
 	for(j = 0; j < 5; j++ ) {
 		script_print_line(&buf, linestart[j], NULL, line + j - 5);

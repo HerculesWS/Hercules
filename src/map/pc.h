@@ -497,6 +497,9 @@ struct map_session_data {
 	int *queues;
 	unsigned int queues_count;
 	
+	/* Made Possible Thanks to Yommy~! */
+	unsigned int cryptKey;
+	
 	// temporary debugging of bug #3504
 	const char* delunit_prevfile;
 	int delunit_prevline;

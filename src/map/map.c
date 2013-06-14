@@ -5237,6 +5237,7 @@ void map_hp_symbols(void) {
 	HPM->share(guild,"guild");
 	HPM->share(homun,"homun");
 	HPM->share(ircbot,"ircbot");
+	HPM->share(itemdb,"itemdb");
 	HPM->share(logs,"logs");
 	HPM->share(script,"script");
 	HPM->share(searchstore,"searchstore");
@@ -5266,6 +5267,7 @@ void load_defaults(void) {
 	homunculus_defaults();
 	instance_defaults();
 	ircbot_defaults();
+	itemdb_defaults();
 	log_defaults();
 	npc_defaults();
 	script_defaults();

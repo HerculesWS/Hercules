@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _ITEMDB_H_
 #define _ITEMDB_H_
@@ -238,5 +239,17 @@ void itemdb_reload(void);
 
 void do_final_itemdb(void);
 int do_init_itemdb(void);
+
+/* incomplete */
+struct itemdb_interface {
+	void (*reload) (void);
+	/* */
+	int (*parse_dbrow) (char** str, const char* source, int line, int scriptopt);
+	struct item_data* (*exists) (int nameid);
+} itemdb_s;
+
+struct itemdb_interface *itemdb;
+
+void itemdb_defaults(void);
 
 #endif /* _ITEMDB_H_ */

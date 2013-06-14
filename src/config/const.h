@@ -111,6 +111,13 @@
 	#undef CONSOLE_INPUT
 #endif
 
+#ifdef RENEWAL
+	#define ITEMDB_SQL_COLUMNS 24
+#else
+	#define ITEMDB_SQL_COLUMNS 22
+#endif
+
+
 /**
  * End of File
  **/
