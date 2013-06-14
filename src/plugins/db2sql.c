@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "../config/core.h"
 #include "../common/HPMi.h"
 #include "../common/strlib.h"
