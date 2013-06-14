@@ -276,7 +276,7 @@ int npc_rr_secure_timeout_timer(int tid, unsigned int tick, int id, intptr_t dat
 		clif->scriptclear(sd,sd->npc_id);
 		sd->npc_idle_timer = INVALID_TIMER;
 	} else //Create a new instance of ourselves to continue
-		sd->npc_idle_timer = add_timer(gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc_rr_secure_timeout_timer,sd->bl.id,0);
+		sd->npc_idle_timer = iTimer->add_timer(iTimer->gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc_rr_secure_timeout_timer,sd->bl.id,0);
 	return 0;
 }
 #endif
@@ -1245,7 +1245,7 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing)
 	/**
 	 * Update the last NPC iteration
 	 **/
-	sd->npc_idle_tick = gettick();
+	sd->npc_idle_tick = iTimer->gettick();
 #endif
 
 	/**
