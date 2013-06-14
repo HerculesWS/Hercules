@@ -5313,6 +5313,7 @@ int do_init(int argc, char *argv[])
 	sprintf(iMap->mob_db2_db, "mob_db2");
 	sprintf(iMap->mob_skill_db_db, "mob_skill_db");
 	sprintf(iMap->mob_skill_db2_db, "mob_skill_db2");
+	sprintf(iMap->interreg_db, "interreg");
 
 	iMap->INTER_CONF_NAME="conf/inter-server.conf";
 	iMap->LOG_CONF_NAME="conf/logs.conf";
