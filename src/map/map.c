@@ -5239,6 +5239,7 @@ void map_hp_symbols(void) {
 	HPM->share(ircbot,"ircbot");
 	HPM->share(itemdb,"itemdb");
 	HPM->share(logs,"logs");
+	HPM->share(mail,"mail");
 	HPM->share(script,"script");
 	HPM->share(searchstore,"searchstore");
 	HPM->share(skill,"skill");
@@ -5269,6 +5270,7 @@ void load_defaults(void) {
 	ircbot_defaults();
 	itemdb_defaults();
 	log_defaults();
+	mail_defaults();
 	npc_defaults();
 	script_defaults();
 	searchstore_defaults();

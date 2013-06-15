@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _MAIL_H_
 #define _MAIL_H_
@@ -19,5 +20,7 @@ struct mail_interface {
 } mail_s;
 
 struct mail_interface *mail;
+
+void mail_defaults(void);
 
 #endif /* _MAIL_H_ */
