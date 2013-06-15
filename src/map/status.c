@@ -1023,6 +1023,7 @@ void initChangeTables(void) {
 	StatusDisplayType[SC_BLOOD_SUCKER]		= true;
 	StatusDisplayType[SC__SHADOWFORM]		= true;
 	StatusDisplayType[SC__MANHOLE]			= true;
+	StatusDisplayType[SC_MONSTER_TRANSFORM] = true;
 	
 #ifdef RENEWAL_EDP
 	// renewal EDP increases your weapon atk
