@@ -11041,7 +11041,7 @@ void clif_parse_TradeRequest(int fd,struct map_session_data *sd)
 		return;
 	}
 
-	trade_traderequest(sd,t_sd);
+	trade->request(sd,t_sd);
 }
 
 
@@ -11052,7 +11052,7 @@ void clif_parse_TradeRequest(int fd,struct map_session_data *sd)
 ///     4 = rejected
 void clif_parse_TradeAck(int fd,struct map_session_data *sd)
 {
-	trade_tradeack(sd,RFIFOB(fd,2));
+	trade->ack(sd,RFIFOB(fd,2));
 }
 
 
@@ -11064,9 +11064,9 @@ void clif_parse_TradeAddItem(int fd,struct map_session_data *sd)
 	int amount = RFIFOL(fd,4);
 
 	if( index == 0 )
-		trade_tradeaddzeny(sd, amount);
+		trade->addzeny(sd, amount);
 	else
-		trade_tradeadditem(sd, index, (short)amount);
+		trade->additem(sd, index, (short)amount);
 }
 
 
@@ -11074,7 +11074,7 @@ void clif_parse_TradeAddItem(int fd,struct map_session_data *sd)
 /// 00eb
 void clif_parse_TradeOk(int fd,struct map_session_data *sd)
 {
-	trade_tradeok(sd);
+	trade->ok(sd);
 }
 
 
@@ -11082,7 +11082,7 @@ void clif_parse_TradeOk(int fd,struct map_session_data *sd)
 /// 00ed
 void clif_parse_TradeCancel(int fd,struct map_session_data *sd)
 {
-	trade_tradecancel(sd);
+	trade->cancel(sd);
 }
 
 
@@ -11090,7 +11090,7 @@ void clif_parse_TradeCancel(int fd,struct map_session_data *sd)
 /// 00ef
 void clif_parse_TradeCommit(int fd,struct map_session_data *sd)
 {
-	trade_tradecommit(sd);
+	trade->commit(sd);
 }
 
 

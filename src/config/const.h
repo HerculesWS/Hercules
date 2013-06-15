@@ -92,12 +92,7 @@
 #else
 	#define MAX_CARTS 5
 #endif
-/* Client Supports Party Recruit or Party Booking? */
-#ifdef PACKETVER_RE
-#if (PACKETVER == 20120410) || (PACKETVER == 20120418)
-	#define	PARTY_RECRUIT
-#endif
-#endif
+
 // Renewal variable cast time reduction
 #ifdef RENEWAL_CAST
 	#define VARCAST_REDUCTION(val){ \

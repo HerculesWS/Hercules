@@ -2104,7 +2104,7 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 			if(sd->chatID)
 				chat_leavechat(sd,0);
 			if(sd->trade_partner)
-				trade_tradecancel(sd);
+				trade->cancel(sd);
 			buyingstore->close(sd);
 			searchstore->close(sd);
 			if(sd->state.storage_flag == 1)
