@@ -8560,7 +8560,7 @@ void clif_refresh(struct map_session_data *sd)
 	// unlike vending, resuming buyingstore crashes the client.
 	buyingstore->close(sd);
 
-	mail_clear(sd);
+	mail->clear(sd);
 	
 	if( disguised(&sd->bl) ) {/* refresh-da */
 		short disguise = sd->disguise;
@@ -9601,7 +9601,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 		}
 	}
 
-	mail_clear(sd);
+	mail->clear(sd);
 
 	clif->maptypeproperty2(&sd->bl,SELF);
 	
@@ -11041,7 +11041,7 @@ void clif_parse_TradeRequest(int fd,struct map_session_data *sd)
 		return;
 	}
 
-	trade_traderequest(sd,t_sd);
+	trade->request(sd,t_sd);
 }
 
 
@@ -11052,7 +11052,7 @@ void clif_parse_TradeRequest(int fd,struct map_session_data *sd)
 ///     4 = rejected
 void clif_parse_TradeAck(int fd,struct map_session_data *sd)
 {
-	trade_tradeack(sd,RFIFOB(fd,2));
+	trade->ack(sd,RFIFOB(fd,2));
 }
 
 
@@ -11064,9 +11064,9 @@ void clif_parse_TradeAddItem(int fd,struct map_session_data *sd)
 	int amount = RFIFOL(fd,4);
 
 	if( index == 0 )
-		trade_tradeaddzeny(sd, amount);
+		trade->addzeny(sd, amount);
 	else
-		trade_tradeadditem(sd, index, (short)amount);
+		trade->additem(sd, index, (short)amount);
 }
 
 
@@ -11074,7 +11074,7 @@ void clif_parse_TradeAddItem(int fd,struct map_session_data *sd)
 /// 00eb
 void clif_parse_TradeOk(int fd,struct map_session_data *sd)
 {
-	trade_tradeok(sd);
+	trade->ok(sd);
 }
 
 
@@ -11082,7 +11082,7 @@ void clif_parse_TradeOk(int fd,struct map_session_data *sd)
 /// 00ed
 void clif_parse_TradeCancel(int fd,struct map_session_data *sd)
 {
-	trade_tradecancel(sd);
+	trade->cancel(sd);
 }
 
 
@@ -11090,7 +11090,7 @@ void clif_parse_TradeCancel(int fd,struct map_session_data *sd)
 /// 00ef
 void clif_parse_TradeCommit(int fd,struct map_session_data *sd)
 {
-	trade_tradecommit(sd);
+	trade->commit(sd);
 }
 
 
@@ -14471,8 +14471,8 @@ void clif_parse_Mail_refreshinbox(int fd, struct map_session_data *sd)
 	else
 		clif->mail_refreshinbox(sd);
 
-	mail_removeitem(sd, 0);
-	mail_removezeny(sd, 0);
+	mail->removeitem(sd, 0);
+	mail->removezeny(sd, 0);
 }
 
 
@@ -14546,7 +14546,7 @@ void clif_parse_Mail_read(int fd, struct map_session_data *sd)
 
 	if( mail_id <= 0 )
 		return;
-	if( mail_invalid_operation(sd) )
+	if( mail->invalid_operation(sd) )
 		return;
 
 	clif->mail_read(sd, RFIFOL(fd,2));
@@ -14565,7 +14565,7 @@ void clif_parse_Mail_getattach(int fd, struct map_session_data *sd)
 		return;
 	if( mail_id <= 0 )
 		return;
-	if( mail_invalid_operation(sd) )
+	if( mail->invalid_operation(sd) )
 		return;
 
 	ARR_FIND(0, MAIL_MAX_INBOX, i, sd->mail.inbox.msg[i].id == mail_id);
@@ -14626,7 +14626,7 @@ void clif_parse_Mail_delete(int fd, struct map_session_data *sd)
 		return;
 	if( mail_id <= 0 )
 		return;
-	if( mail_invalid_operation(sd) )
+	if( mail->invalid_operation(sd) )
 		return;
 
 	ARR_FIND(0, MAIL_MAX_INBOX, i, sd->mail.inbox.msg[i].id == mail_id);
@@ -14652,7 +14652,7 @@ void clif_parse_Mail_return(int fd, struct map_session_data *sd)
 
 	if( mail_id <= 0 )
 		return;
-	if( mail_invalid_operation(sd) )
+	if( mail->invalid_operation(sd) )
 		return;
 
 	ARR_FIND(0, MAIL_MAX_INBOX, i, sd->mail.inbox.msg[i].id == mail_id);
@@ -14676,7 +14676,7 @@ void clif_parse_Mail_setattach(int fd, struct map_session_data *sd)
 	if (idx < 0 || amount < 0)
 		return;
 
-	flag = mail_setitem(sd, idx, amount);
+	flag = mail->setitem(sd, idx, amount);
 	clif->mail_setattachment(fd,idx,flag);
 }
 
@@ -14692,9 +14692,9 @@ void clif_parse_Mail_winopen(int fd, struct map_session_data *sd)
 	int flag = RFIFOW(fd,2);
 
 	if (flag == 0 || flag == 1)
-		mail_removeitem(sd, 0);
+		mail->removeitem(sd, 0);
 	if (flag == 0 || flag == 2)
-		mail_removezeny(sd, 0);
+		mail->removezeny(sd, 0);
 }
 
 
@@ -14726,10 +14726,10 @@ void clif_parse_Mail_send(int fd, struct map_session_data *sd)
 	if (body_len > MAIL_BODY_LENGTH)
 		body_len = MAIL_BODY_LENGTH;
 
-	if( !mail_setattachment(sd, &msg) ) { // Invalid Append condition
+	if( !mail->setattachment(sd, &msg) ) { // Invalid Append condition
 		clif->mail_send(sd->fd, true); // fail
-		mail_removeitem(sd,0);
-		mail_removezeny(sd,0);
+		mail->removeitem(sd,0);
+		mail->removezeny(sd,0);
 		return;
 	}
 
@@ -14751,7 +14751,7 @@ void clif_parse_Mail_send(int fd, struct map_session_data *sd)
 
 	msg.timestamp = time(NULL);
 	if( !intif_Mail_send(sd->status.account_id, &msg) )
-		mail_deliveryfail(sd, &msg);
+		mail->deliveryfail(sd, &msg);
 
 	sd->cansendmail_tick = iTimer->gettick() + 1000; // 1 Second flood Protection
 }

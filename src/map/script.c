@@ -7223,6 +7223,9 @@ BUILDIN(successrefitem)
 		//Logs items, got from (N)PC scripts [Lupus]
 		logs->pick_pc(sd, LOG_TYPE_SCRIPT, -1, &sd->status.inventory[i],sd->inventory_data[i]);
 		
+		if (sd->status.inventory[i].refine >= MAX_REFINE)
+			return true;
+		
 		sd->status.inventory[i].refine++;
 		pc->unequipitem(sd,i,2); // status calc will happen in pc->equipitem() below
 		
@@ -15263,7 +15266,7 @@ BUILDIN(openmail)
 	if( sd == NULL )
 		return true;
 	
-	mail_openmail(sd);
+	mail->openmail(sd);
 	
 	return true;
 }

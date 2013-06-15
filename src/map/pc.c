@@ -6667,7 +6667,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	npc_script_event(sd,NPCE_DIE);
 		
 	// Clear anything NPC-related when you die and was interacting with one.
-	if (sd->npc_id) {
+	if (sd->npc_id || sd->npc_shopid) {
 		if (sd->state.using_fake_npc) {
 			clif->clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
 			sd->state.using_fake_npc = 0;
@@ -6678,6 +6678,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			sd->npc_menu = 0;
 
 		sd->npc_id = 0;
+		sd->npc_shopid = 0;
 		if (sd->st && sd->st->state != END)
 			sd->st->state = END;
 	}
