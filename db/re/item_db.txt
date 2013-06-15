@@ -5899,6 +5899,14 @@
 12646,Fried_Octopus_Legs,Fried Octopus Legs,2,20,,30,,,,,,,,,,,,,{},{},{}
 12647,Sea_Ink,Sea Ink,2,20,,30,,,,,,,,,,,,,{},{},{}
 //
+12658,Transformation_Scroll(Deviruchi),Transformation Scroll(Deviruchi),2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ sc_start4 SC_MONSTER_TRANSFORM,1200000,1109,0,0,0; },{},{}
+12659,Transformation_Scroll(Raydric),Transformation Scroll(Raydric),2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ sc_start4 SC_MONSTER_TRANSFORM,1200000,1276,0,0,0; },{},{}
+12660,Transformation_Scroll(Mavka),Transformation Scroll(Mavka),2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ sc_start4 SC_MONSTER_TRANSFORM,1200000,1884,0,0,0; },{},{}
+12661,Transformation_Scroll(Marduk),Transformation Scroll(Marduk),2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ sc_start4 SC_MONSTER_TRANSFORM,1200000,1140,0,0,0; },{},{}
+12662,Transformation_Scroll(Banshee),Transformation Scroll(Banshee),2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ sc_start4 SC_MONSTER_TRANSFORM,1200000,1867,0,0,0; },{},{}
+12663,Transformation_Scroll(Poring),Transformation Scroll(Poring),2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ sc_start4 SC_MONSTER_TRANSFORM,1200000,1002,0,0,0; },{},{}
+12664,Transformation_Scroll(Golem),Transformation Scroll(Golem),2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ sc_start4 SC_MONSTER_TRANSFORM,1200000,1040,0,0,0; },{},{}
+//
 12699,Tikbalang_Belt,Tikbalang Belt,2,20,,50,,,,,0xFFFFFFFF,7,2,,,,,,{ pet 2313; },{},{}
 12700,Upside_Down_Shirt,Upside Down Shirt,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ warp "malaya",242,211; },{},{}
 12701,Old_Blue_Box_F,Old Blue Box,2,0,,10,,,,,0xFFFFFFFF,7,2,,,,,,{},{},{}
@@ -7586,13 +7594,13 @@
 17030,St_Pat_Hat_box,St Pat Hat box,18,20,,100,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 18565,1; },{},{}
 17035,Energetic_Pisces_Scroll,Energetic Pisces Scroll,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{},{},{}
 17036,Energetic_Pisces_Box,Energetic Pisces Box,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{},{},{}
-17037,Trans_Box_Devi,Trans Box Devi,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{},{},{}
-17038,Trans_Box_Ray_Arch,Trans Box Ray Arch,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{},{},{}
-17039,Trans_Box_Mavka,Trans Box Mavka,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{},{},{}
-17040,Trans_Box_Marduk,Trans Box Marduk,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{},{},{}
-17041,Trans_Box_Banshee,Trans Box Banshee,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{},{},{}
+17037,Trans_Box_Devi,Trans Box Devi,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 12658,10; },{},{}
+17038,Trans_Box_Ray_Arch,Trans Box Ray Arch,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 12659,10; },{},{}
+17039,Trans_Box_Mavka,Trans Box Mavka,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 12660,10; },{},{}
+17040,Trans_Box_Marduk,Trans Box Marduk,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 12661,10; },{},{}
+17041,Trans_Box_Banshee,Trans Box Banshee,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 12662,10; },{},{}
 17042,Trans_Box_Poring,Trans Box Poring,18,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 12663,10; },{},{}
-17043,Trans_Box_Golem,Trans Box Golem,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{},{},{}
+17043,Trans_Box_Golem,Trans Box Golem,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 12664,10; },{},{}
 17050,Aries_Scroll,Aries Scroll,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{},{},{}
 17051,Aries_Scroll_Box,Aries Scroll Box,2,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{},{},{}
 17052,Holy_Mom_Blaze_Box,Holy Mom Blaze Box,18,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 6472,1; },{},{}
