@@ -15274,7 +15274,7 @@ BUILDIN(openmail)
 	if( sd == NULL )
 		return true;
 	
-	mail_openmail(sd);
+	mail->openmail(sd);
 	
 	return true;
 }

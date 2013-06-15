@@ -1582,7 +1582,7 @@ int intif_parse_Mail_getattach(int fd)
 
 	memcpy(&item, RFIFOP(fd,12), sizeof(struct item));
 
-	mail_getattachment(sd, zeny, &item);
+	mail->getattachment(sd, zeny, &item);
 	return 0;
 }
 /*------------------------------------------
@@ -1718,7 +1718,7 @@ static void intif_parse_Mail_send(int fd)
 	if( sd != NULL )
 	{
 		if( fail )
-			mail_deliveryfail(sd, &msg);
+			mail->deliveryfail(sd, &msg);
 		else
 		{
 			clif->mail_send(sd->fd, false);

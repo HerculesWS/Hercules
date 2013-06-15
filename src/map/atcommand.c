@@ -3729,7 +3729,7 @@ ACMD(reloadscript)
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) ) {
 		if (pl_sd->npc_id || pl_sd->npc_shopid) {
 			if (pl_sd->state.using_fake_npc) {
-				clif->clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
+				clif->clearunit_single(pl_sd->npc_id, CLR_OUTSIGHT, pl_sd->fd);
 				pl_sd->state.using_fake_npc = 0;
 			}
 			if (pl_sd->state.menu_or_input)
@@ -6624,7 +6624,7 @@ ACMD(misceffect) {
 ACMD(mail)
 {
 	nullpo_ret(sd);
-	mail_openmail(sd);
+	mail->openmail(sd);
 	return true;
 }
 
