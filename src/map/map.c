@@ -5246,6 +5246,7 @@ void map_hp_symbols(void) {
 	HPM->share(vending,"vending");
 	HPM->share(pc,"pc");
 	HPM->share(party,"party");
+	HPM->share(trade,"trade");
 	HPM->share(iMap,"iMap");
 	/* partial */
 	HPM->share(mapit,"mapit");
@@ -5278,6 +5279,7 @@ void load_defaults(void) {
 	vending_defaults();
 	pc_defaults();
 	party_defaults();
+	trade_defaults();
 }
 int do_init(int argc, char *argv[])
 {
