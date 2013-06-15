@@ -9,6 +9,7 @@
 #define NUM_WHISPER_VAR 10
 
 struct map_session_data;
+struct eri;
 
 extern int potion_flag; //For use on Alchemist improved potions/Potion Pitcher. [Skotlex]
 extern int potion_hp, potion_per_hp, potion_sp, potion_per_sp;
@@ -160,6 +161,7 @@ struct script_state {
 	unsigned freeloop : 1;// used by buildin_freeloop
 	unsigned op2ref : 1;// used by op_2
 	unsigned npc_item_flag : 1;
+	unsigned int id;
 };
 
 struct script_reg {
@@ -189,11 +191,11 @@ int set_var(struct map_session_data *sd, char *name, void *val);
 int run_script_timer(int tid, unsigned int tick, int id, intptr_t data);
 void run_script_main(struct script_state *st);
 
-void script_stop_sleeptimers(int id);
+void script_stop_instances(int id);
 struct linkdb_node* script_erase_sleepdb(struct linkdb_node *n);
 void script_free_code(struct script_code* code);
 void script_free_vars(struct DBMap *storage);
-struct script_state* script_alloc_state(struct script_code* script, int pos, int rid, int oid);
+struct script_state* script_alloc_state(struct script_code* rootscript, int pos, int rid, int oid);
 void script_free_state(struct script_state* st);
 
 struct DBMap* script_get_label_db(void);
@@ -333,6 +335,12 @@ struct str_data_struct {
 
 /* script.c interface (incomplete) */
 struct script_interface {
+	/* */
+	DBMap *st_db;
+	unsigned int active_scripts;
+	unsigned int next_id;
+	struct eri *st_ers;
+	struct eri *stack_ers;
 	/* */
 	struct hQueue *hq;
 	struct hQueueIterator *hqi;

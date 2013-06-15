@@ -181,8 +181,6 @@ int potion_target=0;
 c_op get_com(unsigned char *script,int *pos);
 int get_num(unsigned char *script,int *pos);
 
-static struct linkdb_node* sleep_db;// int oid -> struct script_state*
-
 /*==========================================
  * (Only those needed) local declaration prototype
  *------------------------------------------*/
@@ -2746,19 +2744,18 @@ void script_free_code(struct script_code* code)
 /// @param rid Who is running the script (attached player)
 /// @param oid Where the code is being run (npc 'object')
 /// @return Script state
-struct script_state* script_alloc_state(struct script_code* script, int pos, int rid, int oid)
-{
+struct script_state* script_alloc_state(struct script_code* rootscript, int pos, int rid, int oid) {
 	struct script_state* st;
-	CREATE(st, struct script_state, 1);
-	st->stack = (struct script_stack*)aMalloc(sizeof(struct script_stack));
+	
+	st = ers_alloc(script->st_ers, struct script_state);
+	st->stack = ers_alloc(script->stack_ers, struct script_stack);
 	st->stack->sp = 0;
 	st->stack->sp_max = 64;
 	CREATE(st->stack->stack_data, struct script_data, st->stack->sp_max);
 	st->stack->defsp = st->stack->sp;
 	st->stack->var_function = idb_alloc(DB_OPT_RELEASE_DATA);
 	st->state = RUN;
-	st->script = script;
-	//st->scriptroot = script;
+	st->script = rootscript;
 	st->pos = pos;
 	st->rid = rid;
 	st->oid = oid;
@@ -2767,6 +2764,11 @@ struct script_state* script_alloc_state(struct script_code* script, int pos, int
 	
 	if( !st->script->script_vars )
 		st->script->script_vars = idb_alloc(DB_OPT_RELEASE_DATA);
+	
+	st->id = script->next_id++;
+	script->active_scripts++;
+
+	idb_put(script->st_db, st->id, st);
 	
 	return st;
 }
@@ -2785,14 +2787,18 @@ void script_free_state(struct script_state* st)
 	script_free_vars(st->stack->var_function);
 	script->pop_stack(st, 0, st->stack->sp);
 	aFree(st->stack->stack_data);
-	aFree(st->stack);
+	ers_free(script->stack_ers, st->stack);
 	if( st->script && st->script->script_vars && !db_size(st->script->script_vars) ) {
 		script_free_vars(st->script->script_vars);
 		st->script->script_vars = NULL;
 	}
 	st->stack = NULL;
 	st->pos = -1;
-	aFree(st);
+	idb_remove(script->st_db, st->id);
+	ers_free(script->st_ers, st);
+	if( --script->active_scripts == 0 ) {
+		script->next_id = 0;
+	}
 }
 
 //
@@ -3270,60 +3276,36 @@ void run_script(struct script_code *rootscript,int pos,int rid,int oid) {
 	run_script_main(st);
 }
 
-void script_stop_sleeptimers(int id)
-{
+void script_stop_instances(int id) {
+	DBIterator *iter;
 	struct script_state* st;
-	for(;;)
-	{
-		st = (struct script_state*)linkdb_erase(&sleep_db,(void*)__64BPTRSIZE(id));
-		if( st == NULL )
-			break; // no more sleep timers
-		script_free_state(st);
+	
+	if( !script->active_scripts )
+		return;//dont even bother.
+	
+	iter = db_iterator(script->st_db);
+	
+	for( st = dbi_first(iter); dbi_exists(iter); st = dbi_next(iter) ) {
+		if( st->oid == id ) {
+			script_free_state(st);
+		}
 	}
-}
-
-/*==========================================
- * Delete the specified node from sleep_db
- *------------------------------------------*/
-struct linkdb_node* script_erase_sleepdb(struct linkdb_node *n)
-{
-	struct linkdb_node *retnode;
-
-	if( n == NULL)
-		return NULL;
-	if( n->prev == NULL )
-		sleep_db = n->next;
-	else
-		n->prev->next = n->next;
-	if( n->next )
-		n->next->prev = n->prev;
-	retnode = n->next;
-	aFree( n );
-	return retnode;		// The following; return retnode
+	
+	dbi_destroy(iter);
 }
 
 /*==========================================
  * Timer function for sleep
  *------------------------------------------*/
-int run_script_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+int run_script_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	struct script_state *st     = (struct script_state *)data;
-	struct linkdb_node *node    = (struct linkdb_node *)sleep_db;
 	TBL_PC *sd = iMap->id2sd(st->rid);
 
-	if((sd && sd->status.char_id != id) || (st->rid && !sd))
-	{	//Character mismatch. Cancel execution.
+	if((sd && sd->status.char_id != id) || (st->rid && !sd)) { //Character mismatch. Cancel execution.
 		st->rid = 0;
 		st->state = END;
 	}
-	while( node && st->sleep.timer != INVALID_TIMER ) {
-		if( (int)__64BPTRSIZE(node->key) == st->oid && ((struct script_state *)node->data)->sleep.timer == st->sleep.timer ) {
-			script_erase_sleepdb(node);
-			st->sleep.timer = INVALID_TIMER;
-			break;
-		}
-		node = node->next;
-	}
+	st->sleep.timer = INVALID_TIMER;
 	if(st->state != RERUNLINE)
 		st->sleep.tick = 0;
 	run_script_main(st);
@@ -3523,9 +3505,7 @@ void run_script_main(struct script_state *st)
 		st->sleep.charid = sd?sd->status.char_id:0;
 		st->sleep.timer  = iTimer->add_timer(iTimer->gettick()+st->sleep.tick,
 			run_script_timer, st->sleep.charid, (intptr_t)st);
-		linkdb_insert(&sleep_db, (void*)__64BPTRSIZE(st->oid), st);
-	}
-	else if(st->state != END && st->rid){
+	} else if(st->state != END && st->rid){
 		//Resume later (st is already attached to player).
 		if(st->bk_st) {
 			ShowWarning("Unable to restore stack! Double continuation!\n");
@@ -3711,6 +3691,9 @@ void script_setarray_pc(struct map_session_data* sd, const char* varname, uint8 
  *------------------------------------------*/
 void do_final_script(void) {
 	int i;
+	DBIterator *iter;
+	struct script_state *st;
+	
 #ifdef DEBUG_HASH
 	if (battle_config.etc_log)
 	{
@@ -3771,16 +3754,15 @@ void do_final_script(void) {
 	db_destroy(scriptlabel_db);
 	userfunc_db->destroy(userfunc_db, db_script_free_code_sub);
 	autobonus_db->destroy(autobonus_db, db_script_free_code_sub);
-	if(sleep_db) {
-		struct linkdb_node *n = (struct linkdb_node *)sleep_db;
-		while(n) {
-			struct script_state *st = (struct script_state *)n->data;
-			script_free_state(st);
-			n = n->next;
-		}
-		linkdb_final(&sleep_db);
-	}
 
+	iter = db_iterator(script->st_db);
+	
+	for( st = dbi_first(iter); dbi_exists(iter); st = dbi_next(iter) ) {
+		script_free_state(st);
+	}
+	
+	dbi_destroy(iter);
+	
 	if (script->str_data)
 		aFree(script->str_data);
 	if (script->str_buf)
@@ -3820,14 +3802,27 @@ void do_final_script(void) {
 		aFree(script->hqi);
 	if( script->word_buf != NULL )
 		aFree(script->word_buf);
+	
+	ers_destroy(script->st_ers);
+	ers_destroy(script->stack_ers);
+	
+	db_destroy(script->st_db);
 }
 /*==========================================
  * Initialization
  *------------------------------------------*/
 void do_init_script(void) {
+	script->st_db = idb_alloc(DB_OPT_BASE);
 	userfunc_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 	scriptlabel_db = strdb_alloc(DB_OPT_DUP_KEY,50);
 	autobonus_db = strdb_alloc(DB_OPT_DUP_KEY,0);
+
+	script->st_ers = ers_new(sizeof(struct script_state), "script.c::st_ers", ERS_OPT_NONE);
+	script->stack_ers = ers_new(sizeof(struct script_stack), "script.c::script_stack", ERS_OPT_NONE);
+
+	ers_chunk_size(script->st_ers, 10);
+	ers_chunk_size(script->stack_ers, 10);
+	
 	script->parse_builtin();
 	read_constdb();
 	mapreg_init();
@@ -3835,6 +3830,8 @@ void do_init_script(void) {
 
 int script_reload() {
 	int i;
+	DBIterator *iter;
+	struct script_state *st;
 
 	userfunc_db->clear(userfunc_db, db_script_free_code_sub);
 	db_clear(scriptlabel_db);
@@ -3848,15 +3845,16 @@ int script_reload() {
 
 	atcommand->binding_count = 0;
 
-	if(sleep_db) {
-		struct linkdb_node *n = (struct linkdb_node *)sleep_db;
-		while(n) {
-			struct script_state *st = (struct script_state *)n->data;
-			script_free_state(st);
-			n = n->next;
-		}
-		linkdb_final(&sleep_db);
+	iter = db_iterator(script->st_db);
+	
+	for( st = dbi_first(iter); dbi_exists(iter); st = dbi_next(iter) ) {
+		script_free_state(st);
 	}
+	
+	dbi_destroy(iter);
+	
+	db_clear(script->st_db);
+	
 	mapreg_reload();
 	return 0;
 }
@@ -15137,47 +15135,41 @@ BUILDIN(sleep2)
 /// Awakes all the sleep timers of the target npc
 ///
 /// awake "<npc name>";
-BUILDIN(awake)
-{
+BUILDIN(awake) {
+	DBIterator *iter;
+	struct script_state *tst;
 	struct npc_data* nd;
-	struct linkdb_node *node = (struct linkdb_node *)sleep_db;
 	
-	nd = npc_name2id(script_getstr(st, 2));
-	if( nd == NULL ) {
+	if( ( nd = npc_name2id(script_getstr(st, 2)) ) == NULL ) {
 		ShowError("awake: NPC \"%s\" not found\n", script_getstr(st, 2));
 		return false;
 	}
 	
-	while( node )
-	{
-		if( (int)__64BPTRSIZE(node->key) == nd->bl.id )
-		{// sleep timer for the npc
-			struct script_state* tst = (struct script_state*)node->data;
+	iter = db_iterator(script->st_db);
+	
+	for( tst = dbi_first(iter); dbi_exists(iter); tst = dbi_next(iter) ) {
+		if( tst->oid == nd->bl.id ) {
 			TBL_PC* sd = iMap->id2sd(tst->rid);
 			
-			if( tst->sleep.timer == INVALID_TIMER )
-			{// already awake ???
-				node = node->next;
+			if( tst->sleep.timer == INVALID_TIMER ) {// already awake ???
 				continue;
 			}
-			if( (sd && sd->status.char_id != tst->sleep.charid) || (tst->rid && !sd))
-			{// char not online anymore / another char of the same account is online - Cancel execution
+			if( (sd && sd->status.char_id != tst->sleep.charid) || (tst->rid && !sd)) {
+				// char not online anymore / another char of the same account is online - Cancel execution
 				tst->state = END;
 				tst->rid = 0;
 			}
 			
 			iTimer->delete_timer(tst->sleep.timer, run_script_timer);
-			node = script_erase_sleepdb(node);
 			tst->sleep.timer = INVALID_TIMER;
 			if(tst->state != RERUNLINE)
 				tst->sleep.tick = 0;
 			run_script_main(tst);
 		}
-		else
-		{
-			node = node->next;
-		}
 	}
+	
+	dbi_destroy(iter);
+	
 	return true;
 }
 
@@ -17842,6 +17834,12 @@ void script_parse_builtin(void) {
 
 void script_defaults(void) {
 	script = &script_s;
+	
+	script->st_db = NULL;
+	script->active_scripts = 0;
+	script->next_id = 0;
+	script->st_ers = NULL;
+	script->stack_ers = NULL;
 	
 	script->hq = NULL;
 	script->hqi = NULL;
