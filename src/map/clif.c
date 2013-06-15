@@ -17399,8 +17399,14 @@ void clif_parse_bgqueue_revoke_req(int fd, struct map_session_data *sd) {
 }
 
 void clif_parse_bgqueue_battlebegin_ack(int fd, struct map_session_data *sd) {
-	//struct packet_bgqueue_battlebegin_ack *p = P2PTR(fd, bgqueue_checkstateType);
-	return;
+	struct packet_bgqueue_battlebegin_ack *p = P2PTR(fd, bgqueue_checkstateType);
+	struct bg_arena *arena;
+	if( !bg->queue_on ) return; /* temp, until feature is complete */
+	if( ( arena = bg->name2arena(p->bg_name) ) ) {
+		bg->queue_ready_ack(arena,sd, ( p->result == 1 ) ? true : false);
+	} else {
+		clif->bgqueue_ack(sd,BGQA_FAIL_BGNAME_INVALID, 0);
+	}
 	//if ( p->result == 1 )
 	//	bg->queue_pc_ready(sd);
 	//else

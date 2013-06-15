@@ -96,6 +96,7 @@ struct battleground_interface {
 	int (*begin_timer) (int tid, unsigned int tick, int id, intptr_t data);
 	void (*queue_pregame) (struct bg_arena *arena);
 	int (*fillup_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	void (*queue_ready_ack) (struct bg_arena *arena, struct map_session_data *sd, bool response);
 	/* */
 	void (*config_read) (void);
 } bg_s;
