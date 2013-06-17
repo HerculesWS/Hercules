@@ -4255,7 +4255,7 @@ int pc_useitem(struct map_session_data *sd,int n)
 
 	nullpo_ret(sd);
 
-	if( sd->npc_id ){
+	if( sd->npc_id || sd->state.workinprogress&1 ){
 		/* TODO: add to clif->messages enum */
 #ifdef RENEWAL
 		clif->msg(sd, 0x783); // TODO look for the client date that has this message.

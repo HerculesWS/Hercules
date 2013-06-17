@@ -16312,6 +16312,7 @@ BUILDIN(progressbar)
 	
 	sd->progressbar.npc_id = st->oid;
 	sd->progressbar.timeout = iTimer->gettick() + second*1000;
+	sd->state.workinprogress = 3;
 	
 	clif->progressbar(sd, strtol(color, (char **)NULL, 0), second);
     return true;

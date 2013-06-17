@@ -9757,7 +9757,7 @@ void clif_parse_progressbar(int fd, struct map_session_data * sd)
 	if( iTimer->gettick() < sd->progressbar.timeout && sd->st )
 		sd->st->state = END;
 
-	sd->progressbar.npc_id = sd->progressbar.timeout = 0;
+	sd->state.workinprogress = sd->progressbar.npc_id = sd->progressbar.timeout = 0;
 	npc_scriptcont(sd, npc_id, false);
 }
 
@@ -9777,8 +9777,8 @@ void clif_parse_WalkToXY(int fd, struct map_session_data *sd)
 
 	if (sd->sc.opt1 && ( sd->sc.opt1 == OPT1_STONEWAIT || sd->sc.opt1 == OPT1_BURNING ))
 		; //You CAN walk on this OPT1 value.
-	else if( sd->progressbar.npc_id )
-		clif->progressbar_abort(sd);
+	/*else if( sd->progressbar.npc_id )
+		clif->progressbar_abort(sd);*/
 	else if (pc_cant_act(sd))
 		return;
 

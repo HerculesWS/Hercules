@@ -753,8 +753,8 @@ int battle_calc_masteryfix(struct block_list *src, struct block_list *target, ui
 		int ratio = sd->status.base_level + status_get_dex(src) + status_get_luk(src);
 		if ( i == 2 ) ratio += status_get_str(src); //Star Anger
 		if  (skill < 4 )
-			ratio /= 12 - 3 * skill;
-		damage += damage * ratio;
+			ratio /= (12 - 3 * skill);
+		damage += damage * ratio / 100;
 	}
 	
 	if( sc ){
