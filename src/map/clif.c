@@ -10573,7 +10573,7 @@ void clif_parse_DropItem(int fd, struct map_session_data *sd)
 		if (pc_isdead(sd))
 			break;
 
-		if ( pc_cant_act2(sd) )
+		if ( pc_cant_act2(sd) || sd->state.vending )
 			break;
 
 		if (sd->sc.count && (
@@ -10795,7 +10795,7 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 #endif
 		return;
 	}
-	if ( pc_cant_act2(sd) || !(bl = iMap->id2bl(RFIFOL(fd,2))) )
+	if ( pc_cant_act2(sd) || !(bl = iMap->id2bl(RFIFOL(fd,2))) || sd->state.vending )
 		return;
 	
 	switch (bl->type) {
