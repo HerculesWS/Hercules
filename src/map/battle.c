@@ -4345,15 +4345,11 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				wd.damage = sstatus->max_hp* 9/100;
 				wd.damage2 = 0;
 				break;
-				
-#ifdef RENEWAL
-			case MO_EXTREMITYFIST:	// [malufett]
-				wd.damage = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|8, wd.flag);
-				// first value is still not confirm.
-				wd.damage = status_get_sp(src) + 10 * status_get_sp(src) * wd.damage / 100 + 8 * wd.damage;
-				flag.tdef = 1;
-				break;
 			case NJ_ISSEN: // [malufett]
+#ifndef RENEWAL
+				wd.damage = 40*sstatus->str +skill_lv*(sstatus->hp/10 + 35);
+				wd.damage2 = 0;
+#else
 				{
 					short totaldef = status_get_total_def(target);
 					i = 0;
@@ -4367,12 +4363,14 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 						ATK_RATE(50);
 					flag.idef = 1;
 				}
-#else
-				
-				wd.damage = 40*sstatus->str +skill_lv*(sstatus->hp/10 + 35);
-				wd.damage2 = 0;
-#endif
 				break;	
+			case MO_EXTREMITYFIST:	// [malufett]
+				wd.damage = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|8, wd.flag);
+				// first value is still not confirm.
+				wd.damage = status_get_sp(src) + 10 * status_get_sp(src) * wd.damage / 100 + 8 * wd.damage;
+				flag.tdef = 1;
+#endif
+				break;
 #ifndef RENEWAL
 			case LK_SPIRALPIERCE:
 			case ML_SPIRALPIERCE:

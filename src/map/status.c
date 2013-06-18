@@ -8329,10 +8329,10 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				break;
 			case SC_BLOOD_SUCKER:
 				{
-					struct block_list *src = iMap->id2bl(sce->val2);
+					struct block_list *src = iMap->id2bl(val2);
 					val3 = 1;
 					if(src)
-						val3 = 200 + 100 * sce->val1 + status_get_int(src);
+						val3 = 200 + 100 * val1 + status_get_int(src);
 					val4 = tick / 1000;
 					tick_time = 1000; // [GodLesZ] tick time
 				}
