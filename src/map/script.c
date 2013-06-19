@@ -16312,6 +16312,7 @@ BUILDIN(progressbar)
 	
 	sd->progressbar.npc_id = st->oid;
 	sd->progressbar.timeout = iTimer->gettick() + second*1000;
+	sd->state.workinprogress = 3;
 	
 	clif->progressbar(sd, strtol(color, (char **)NULL, 0), second);
     return true;
@@ -16520,9 +16521,10 @@ BUILDIN(setmounting) {
 	TBL_PC* sd;
 	if( (sd = script_rid2sd(st)) == NULL )
 		return true;
-	if( sd->sc.option&(OPTION_WUGRIDER|OPTION_RIDING|OPTION_DRAGON|OPTION_MADOGEAR) )
+	if( sd->sc.option&(OPTION_WUGRIDER|OPTION_RIDING|OPTION_DRAGON|OPTION_MADOGEAR) ){
+		clif->msgtable(sd->fd, 0X78b);
 		script_pushint(st,0);//can't mount with one of these
-	else {
+	}else {
 		if( sd->sc.data[SC_ALL_RIDING] )
 			status_change_end(&sd->bl, SC_ALL_RIDING, INVALID_TIMER);
 		else

@@ -5964,12 +5964,13 @@ void clif_wis_message(int fd, const char* nick, const char* mes, int mes_len)
 	safestrncpy((char*)WFIFOP(fd,28), mes, mes_len);
 	WFIFOSET(fd,WFIFOW(fd,2));
 #else
+	struct map_session_data *ssd = iMap->nick2sd(nick);
+
 	WFIFOHEAD(fd, mes_len + NAME_LENGTH + 8);
 	WFIFOW(fd,0) = 0x97;
 	WFIFOW(fd,2) = mes_len + NAME_LENGTH + 8;
 	safestrncpy((char*)WFIFOP(fd,4), nick, NAME_LENGTH);
-	WFIFOL(fd,28) = 0; // isAdmin; if nonzero, also displays text above char
-	// TODO: WFIFOL(fd,28) = pc->get_group_level(ssd);
+	WFIFOL(fd,28) = (pc->get_group_level(ssd) == 99) ? 1 : 0; // isAdmin; if nonzero, also displays text above char
 	safestrncpy((char*)WFIFOP(fd,32), mes, mes_len);
 	WFIFOSET(fd,WFIFOW(fd,2));
 #endif
@@ -9756,7 +9757,7 @@ void clif_parse_progressbar(int fd, struct map_session_data * sd)
 	if( iTimer->gettick() < sd->progressbar.timeout && sd->st )
 		sd->st->state = END;
 
-	sd->progressbar.npc_id = sd->progressbar.timeout = 0;
+	sd->state.workinprogress = sd->progressbar.npc_id = sd->progressbar.timeout = 0;
 	npc_scriptcont(sd, npc_id, false);
 }
 
@@ -9776,8 +9777,8 @@ void clif_parse_WalkToXY(int fd, struct map_session_data *sd)
 
 	if (sd->sc.opt1 && ( sd->sc.opt1 == OPT1_STONEWAIT || sd->sc.opt1 == OPT1_BURNING ))
 		; //You CAN walk on this OPT1 value.
-	else if( sd->progressbar.npc_id )
-		clif->progressbar_abort(sd);
+	/*else if( sd->progressbar.npc_id )
+		clif->progressbar_abort(sd);*/
 	else if (pc_cant_act(sd))
 		return;
 
@@ -10572,7 +10573,7 @@ void clif_parse_DropItem(int fd, struct map_session_data *sd)
 		if (pc_isdead(sd))
 			break;
 
-		if ( pc_cant_act2(sd) )
+		if ( pc_cant_act2(sd) || sd->state.vending )
 			break;
 
 		if (sd->sc.count && (
@@ -10794,7 +10795,7 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 #endif
 		return;
 	}
-	if ( pc_cant_act2(sd) || !(bl = iMap->id2bl(RFIFOL(fd,2))) )
+	if ( pc_cant_act2(sd) || !(bl = iMap->id2bl(RFIFOL(fd,2))) || sd->state.vending )
 		return;
 	
 	switch (bl->type) {

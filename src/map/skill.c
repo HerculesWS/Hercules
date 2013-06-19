@@ -2395,6 +2395,10 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 				//Can't attack nor use items until skill's delay expires. [Skotlex]
 				sd->ud.attackabletime = sd->canuseitem_tick = sd->ud.canact_tick;
 				break;
+			case TK_DODGE:
+				if( pc->checkskill(sd, TK_JUMPKICK) > 0 )
+					flag = 1;
+				break;
 			case SR_DRAGONCOMBO:
 				if( pc->checkskill(sd, SR_FALLENEMPIRE) > 0 )
 					flag = 1;
@@ -3761,7 +3765,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 				int sflag = skill_area_temp[0] & 0xFFF, heal;
 				if( flag&SD_LEVEL )
 					sflag |= SD_LEVEL; // -1 will be used in packets instead of the skill level
-				if( skill_area_temp[1] != bl->id && !(skill->get_inf2(skill_id)&INF2_NPC_SKILL) )
+				if( (skill_area_temp[1] != bl->id && !(skill->get_inf2(skill_id)&INF2_NPC_SKILL)) || flag&SD_ANIMATION )
 					sflag |= SD_ANIMATION; // original target gets no animation (as well as all NPC skills)
 
 				heal = skill->attack(skill->get_type(skill_id), src, src, bl, skill_id, skill_lv, tick, sflag);
@@ -3776,6 +3780,8 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 					case GN_CARTCANNON:
 						clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 						break;
+					case SR_TIGERCANNON:
+						flag |= SD_ANIMATION;
 					case LG_MOONSLASHER:
 						clif->skill_damage(src,bl,tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, 6);
 						break;
@@ -7965,12 +7971,11 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					break;
 				for(i = 0; i < SC_MAX; i++)
 				{
-					if( SC_COMMON_MAX > i ){
-						if ( !tsc->data[i] || !status_get_sc_type(i) )
-							continue;
+					if ( !tsc->data[i] )
+						continue;
+					if( SC_COMMON_MAX > i )
 						if ( status_get_sc_type(i)&SC_NO_CLEARANCE )
 							continue;
-					}
 					switch (i) {
 						case SC_ASSUMPTIO:
 							if( bl->type == BL_MOB )
@@ -8551,7 +8556,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		case SR_FLASHCOMBO:
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			for(i = SR_FLASHCOMBO_ATK_STEP1; i <= SR_FLASHCOMBO_ATK_STEP4; i++)
-				skill->addtimerskill(src, tick + 600 * (i - SR_FLASHCOMBO_ATK_STEP1), bl->id, 0, 0, i, skill_lv, BF_WEAPON, flag|SD_LEVEL);
+				skill->addtimerskill(src, tick + 500 * (i - SR_FLASHCOMBO_ATK_STEP1), bl->id, 0, 0, i, skill_lv, BF_WEAPON, flag|SD_LEVEL);
 			break;
 		case WA_SWING_DANCE:
 		case WA_MOONLIT_SERENADE:
@@ -13101,12 +13106,14 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			case TK_STORMKICK:
 			case TK_DOWNKICK:
 			case TK_COUNTER:
+			case TK_JUMPKICK:
 			case HT_POWER:
 			case GC_COUNTERSLASH:
 			case GC_WEAPONCRUSH:
 			case SR_FALLENEMPIRE:
 			case SR_DRAGONCOMBO:
 			case SR_TIGERCANNON:
+			case SR_GATEOFHELL:
 				break;
 			default: return 0;
 		}

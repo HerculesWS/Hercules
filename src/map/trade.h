@@ -20,6 +20,6 @@ struct trade_interface {
 } trade_s;
 
 struct trade_interface *trade;
-void trade_interface(void);
+void trade_defaults(void);
 
 #endif /* _TRADE_H_ */

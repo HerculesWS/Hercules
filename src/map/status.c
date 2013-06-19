@@ -915,6 +915,7 @@ void initChangeTables(void) {
 	StatusIconChangeTable[SC_PUSH_CART] = SI_ON_PUSH_CART;
 	StatusIconChangeTable[SC_REBOUND] = SI_REBOUND;
 	StatusIconChangeTable[SC_ALL_RIDING] = SI_ALL_RIDING;
+	StatusIconChangeTable[SC_MONSTER_TRANSFORM] = SI_MONSTER_TRANSFORM;
 
 	//Other SC which are not necessarily associated to skills.
 	StatusChangeFlagTable[SC_ATTHASTE_POTION1] = SCB_ASPD;
@@ -1022,6 +1023,7 @@ void initChangeTables(void) {
 	StatusDisplayType[SC_BLOOD_SUCKER]		= true;
 	StatusDisplayType[SC__SHADOWFORM]		= true;
 	StatusDisplayType[SC__MANHOLE]			= true;
+	StatusDisplayType[SC_MONSTER_TRANSFORM] = true;
 	
 #ifdef RENEWAL_EDP
 	// renewal EDP increases your weapon atk
@@ -2500,7 +2502,7 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 #ifdef RENEWAL
             wa->matk += sd->inventory_data[index]->matk;
             wa->wlv = wlv;
-            if( r ) // renewal magic attack refine bonus
+			if( r && sd->weapontype1 != W_BOW ) // renewal magic attack refine bonus
                 wa->matk += refine_info[wlv].bonus[r-1] / 100;
 #endif
 
@@ -8327,10 +8329,10 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				break;
 			case SC_BLOOD_SUCKER:
 				{
-					struct block_list *src = iMap->id2bl(sce->val2);
+					struct block_list *src = iMap->id2bl(val2);
 					val3 = 1;
 					if(src)
-						val3 = 200 + 100 * sce->val1 + status_get_int(src);
+						val3 = 200 + 100 * val1 + status_get_int(src);
 					val4 = tick / 1000;
 					tick_time = 1000; // [GodLesZ] tick time
 				}
@@ -8712,6 +8714,11 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				tick_time = 10000;
 				val4 = tick / tick_time;
 				break;
+			case SC_MONSTER_TRANSFORM:
+				if( !mobdb_checkid(val1) )
+					val1 = 1002; // default poring
+				val_flag |= 1;
+				break;
 		default:
 			if( calc_flag == SCB_NONE && StatusSkillChangeTable[type] == 0 && StatusIconChangeTable[type] == 0 )
 			{	//Status change with no calc, no icon, and no skill associated...?
@@ -8739,7 +8746,11 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			case SC_SUMMON3:
 			case SC_SUMMON4:
 			case SC_SUMMON5:
+			case SC_MONSTER_TRANSFORM:
 				val_flag |= 1;
+				break;
+			case SC_KYOUGAKU:
+				clif->status_change(bl, SI_ACTIVE_MONSTER_TRANSFORM, 1, 0, 1002, 0, 0); // Poring in disguise
 				break;
 		}
 	}
@@ -9646,7 +9657,6 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			}
 			break;
 		case SC_KYOUGAKU:
-			clif->sc_end(&sd->bl,sd->bl.id,AREA,SI_KYOUGAKU);
 			clif->sc_end(&sd->bl,sd->bl.id,AREA,SI_ACTIVE_MONSTER_TRANSFORM);
 			break;
 		case SC_CLAIRVOYANCE:
