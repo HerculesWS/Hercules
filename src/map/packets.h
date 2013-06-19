@@ -10,6 +10,10 @@
 	#define packet(a,b,...)
 #endif
 
+#ifndef packetKeys
+	#define packetKeys(a,b,c)
+#endif
+
 /*
  * packet syntax
  * - packet(packet_id,length)
@@ -1869,6 +1873,10 @@ packet(0x020d,-1);
 	packet(0x0838,6,clif->pSolveCharName,2);
 	packet(0x0439,8,clif->pUseItem,2,4);
 	packet(0x08d2,10);
+	packet(0x08d7,28,clif->pBGQueueRegister,2);
+	packet(0x090a,26,clif->pBGQueueCheckState,2);
+	packet(0x08da,26,clif->pBGQueueRevokeReq,2);
+	packet(0x08e0,51,clif->pBGQueueBattleBeginAck,2);
 #endif
 
 //2011-11-02aRagexe
@@ -1918,7 +1926,7 @@ packet(0x020d,-1);
 	packet(0x0885,7,clif->pActionRequest,2,6);
 	packet(0x0889,10,clif->pUseSkillToId,2,4,6);
 	packet(0x0870,-1,clif->pItemListWindowSelected,2,4,8);
-	packet(0x0926,18,clif->pPartyBookingRegisterReq,2,4,6);
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4,6);
 	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
 	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0360,6,clif->pReqClickBuyingStore,2);
@@ -1960,7 +1968,11 @@ packet(0x020d,-1);
 	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
 	packet(0x0889,6,clif->pGetCharNameRequest,2);
 	packet(0x0884,6,clif->pSolveCharName,2);
+#ifndef PACKETVER_RE
+	packet(0x091D,18,clif->pPartyBookingRegisterReq,2,4,6);
+#else
 	packet(0x08E5,41,clif->pPartyBookingRegisterReq,2,4);
+#endif
 	packet(0x08E6,4);
 	packet(0x08E7,10,clif->pPartyBookingSearchReq,2);
 	packet(0x08E8,-1);
@@ -1970,9 +1982,11 @@ packet(0x020d,-1);
 	packet(0x08EC,73);
 	packet(0x08ED,43);
 	packet(0x08EE,6);
+#ifdef PARTY_RECRUIT
 	packet(0x08EF,6,clif->pDull,2); //bookingignorereq
-	packet(0x08F0,6);
+	packet(0x08F0,6,clif->pDull,2);
 	packet(0x08F1,6,clif->pDull,2); //bookingjoinpartyreq
+#endif
 	packet(0x08F2,36);
 	packet(0x08F3,-1);
 	packet(0x08F4,6);
@@ -1981,11 +1995,13 @@ packet(0x020d,-1);
 	packet(0x08F7,3);
 	packet(0x08F8,7);
 	packet(0x08F9,6);
+#ifdef PARTY_RECRUIT
+	packet(0x08F9,6,clif->pDull,2);
+#endif
 	packet(0x08FA,6);
 	packet(0x08FB,6,clif->pDull,2); //bookingcanceljoinparty
 	packet(0x0907,5,clif->pMoveItem,2,4);
 	packet(0x0908,5);
-	packet(0x08D7,28,clif->pDull,2,4); //battlegroundreg
 	packet(0x08CF,10);//Amulet spirits
 	packet(0x0977,14);//Monster HP Bar
 #endif
@@ -2009,6 +2025,14 @@ packet(0x020d,-1);
 	packet(0x08E5,41,clif->pPartyBookingRegisterReq,2,4);
 	packet(0x08d2,10);
 	packet(0x0916,26,clif->pGuildInvite2,2);
+	packetKeys(0x1540e48,0x13041224,0x31247924);
+
+#endif
+
+#ifndef PACKETVER_RE
+#if PACKETVER >= 20120604
+	packet(0x0861,18,clif->pPartyBookingRegisterReq,2,4,6);
+#endif
 #endif
 
 //2012-06-18aRagexeRE
@@ -2044,6 +2068,7 @@ packet(0x020d,-1);
 //2012-07-16aRagExe (special thanks to Yommy!)
 #if PACKETVER >= 20120716
 	packet(0x0364,8,clif->pMoveFromKafra,2,4);
+	packetKeys(0x76052205, 0x22052205, 0x22052205);
 #endif
 
 //2013-03-20Ragexe (Judas + Yommy)
@@ -2078,11 +2103,13 @@ packet(0x020d,-1);
 	packet(0x086F,26,clif->pFriendsListAdd,2);
 	packet(0x093F,5,clif->pHomMenu,2,4);
 	packet(0x0947,36,clif->pStoragePassword,0);
+	packetKeys(0x3F094C49, 0x55F86C1E, 0x58AA359A);
 	// Shuffle End
 
 	// New Packets
 	packet(0x0998,8,clif->pEquipItem,2,4);
 	packet(0x0447,2); // PACKET_CZ_BLOCKING_PLAY_CANCEL
+	packet(0x099f,24);
 	// New Packets End
 #endif
 
@@ -2154,6 +2181,76 @@ packet(0x020d,-1);
 	packet(0x0926,5,clif->pHomMenu,2,4);
 	packet(0x088E,36,clif->pStoragePassword,0);
 	// Shuffle End
+#endif
+
+//2013-05-29Ragexe (Shakto)
+#if PACKETVER >= 20130529
+	packet(0x0890,7,clif->pActionRequest,2,6);
+	packet(0x0438,10,clif->pUseSkillToId,2,4,6);
+	packet(0x0876,5,clif->pWalkToXY,2);
+	packet(0x0897,6,clif->pTickSend,2);
+	packet(0x0951,5,clif->pChangeDir,2,4);
+	packet(0x0895,6,clif->pTakeItem,2);
+	packet(0x08A7,6,clif->pDropItem,2,4);
+	packet(0x0938,8,clif->pMoveToKafra,2,4);
+	packet(0x0957,8,clif->pMoveFromKafra,2,4);
+	packet(0x0917,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x085E,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x0863,6,clif->pGetCharNameRequest,2);
+	packet(0x0937,6,clif->pSolveCharName,2);
+	packet(0x085A,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0941,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0918,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0936,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0892,6,clif->pReqClickBuyingStore,2);
+	packet(0x0964,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0869,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0874,41,clif->pPartyBookingRegisterReq,2,4);
+	// packet(0x088E,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0958,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x0919,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x08A8,26,clif->pPartyInvite2,2);
+	// packet(0x0888,4); // CZ_GANGSI_RANK
+	packet(0x0877,26,clif->pFriendsListAdd,2);
+	packet(0x023B,5,clif->pHomMenu,2,4);
+	packet(0x0956,36,clif->pStoragePassword,0);
+#endif
+
+//2013-06-05Ragexe (Shakto)
+#if PACKETVER >= 20130605
+	packet(0x0369,7,clif->pActionRequest,2,6);
+	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
+	packet(0x0437,5,clif->pWalkToXY,2);
+	packet(0x035F,6,clif->pTickSend,2);
+	packet(0x0202,5,clif->pChangeDir,2,4);
+	packet(0x07E4,6,clif->pTakeItem,2);
+	packet(0x0362,6,clif->pDropItem,2,4);
+	packet(0x07EC,8,clif->pMoveToKafra,2,4);
+	packet(0x0364,8,clif->pMoveFromKafra,2,4);
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x096A,6,clif->pGetCharNameRequest,2);
+	packet(0x0368,6,clif->pSolveCharName,2);
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0811,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0365,41,clif->pPartyBookingRegisterReq,2,4);
+	// packet(0x0363,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x022D,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x0802,26,clif->pPartyInvite2,2);
+	// packet(0x0436,4); // CZ_GANGSI_RANK
+	packet(0x023B,26,clif->pFriendsListAdd,2);
+	packet(0x0361,5,clif->pHomMenu,2,4);
+	packet(0x0883,36,clif->pStoragePassword,0);
+#endif
+
+#if PACKETVER >= 20130612
+	packetKeys(0x6D166F66, 0x3C000FCF, 0x295B0FCB); /* Thanks to Shakto */
 #endif
 
 #endif /* _PACKETS_H_ */

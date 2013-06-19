@@ -7,12 +7,19 @@
 //#include "map.h"
 struct map_session_data;
 
-void trade_traderequest(struct map_session_data *sd, struct map_session_data *target_sd);
-void trade_tradeack(struct map_session_data *sd,int type);
-void trade_tradeadditem(struct map_session_data *sd,short index,short amount);
-void trade_tradeaddzeny(struct map_session_data *sd,int amount);
-void trade_tradeok(struct map_session_data *sd);
-void trade_tradecancel(struct map_session_data *sd);
-void trade_tradecommit(struct map_session_data *sd);
+struct trade_interface {
+	void (*request) (struct map_session_data *sd, struct map_session_data *target_sd);
+	void (*ack) (struct map_session_data *sd,int type);
+	int (*check_impossible) (struct map_session_data *sd);
+	int (*check) (struct map_session_data *sd, struct map_session_data *tsd);
+	void (*additem) (struct map_session_data *sd,short index,short amount);
+	void (*addzeny) (struct map_session_data *sd,int amount);
+	void (*ok) (struct map_session_data *sd);
+	void (*cancel) (struct map_session_data *sd);
+	void (*commit) (struct map_session_data *sd);
+} trade_s;
+
+struct trade_interface *trade;
+void trade_defaults(void);
 
 #endif /* _TRADE_H_ */

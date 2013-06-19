@@ -98,7 +98,7 @@ int storage_storageopen(struct map_session_data *sd)
 	if(sd->state.storage_flag)
 		return 1; //Already open?
 	
-	if( !pc_can_give_items(sd) )
+	if( !pc->can_give_items(sd) )
   	{ //check is this GM level is allowed to put items to storage
 		clif->message(sd->fd, msg_txt(246));
 		return 1;
@@ -148,7 +148,7 @@ static int storage_additem(struct map_session_data* sd, struct item* item_data, 
 		return 1;
 	}
 
-	if( !itemdb_canstore(item_data, pc_get_group_level(sd)) )
+	if( !itemdb_canstore(item_data, pc->get_group_level(sd)) )
 	{	//Check if item is storable. [Skotlex]
 		clif->message (sd->fd, msg_txt(264));
 		return 1;
@@ -227,7 +227,7 @@ int storage_storageadd(struct map_session_data* sd, int index, int amount)
   		return 0;
 
 	if( storage_additem(sd,&sd->status.inventory[index],amount) == 0 )
-		pc_delitem(sd,index,amount,0,4,LOG_TYPE_STORAGE);
+		pc->delitem(sd,index,amount,0,4,LOG_TYPE_STORAGE);
 
 	return 1;
 }
@@ -252,7 +252,7 @@ int storage_storageget(struct map_session_data* sd, int index, int amount)
 	if( amount < 1 || amount > sd->status.storage.items[index].amount )
 		return 0;
 
-	if( (flag = pc_additem(sd,&sd->status.storage.items[index],amount,LOG_TYPE_STORAGE)) == 0 )
+	if( (flag = pc->additem(sd,&sd->status.storage.items[index],amount,LOG_TYPE_STORAGE)) == 0 )
 		storage_delitem(sd,index,amount);
 	else
 		clif->additem(sd,0,0,flag);
@@ -284,7 +284,7 @@ int storage_storageaddfromcart(struct map_session_data* sd, int index, int amoun
 		return 0;
 
 	if( storage_additem(sd,&sd->status.cart[index],amount) == 0 )
-		pc_cart_delitem(sd,index,amount,0,LOG_TYPE_STORAGE);
+		pc->cart_delitem(sd,index,amount,0,LOG_TYPE_STORAGE);
 
 	return 1;
 }
@@ -309,7 +309,7 @@ int storage_storagegettocart(struct map_session_data* sd, int index, int amount)
 	if( amount < 1 || amount > sd->status.storage.items[index].amount )
 		return 0;
 	
-	if( pc_cart_additem(sd,&sd->status.storage.items[index],amount,LOG_TYPE_STORAGE) == 0 )
+	if( pc->cart_additem(sd,&sd->status.storage.items[index],amount,LOG_TYPE_STORAGE) == 0 )
 		storage_delitem(sd,index,amount);
 
 	return 1;
@@ -325,7 +325,7 @@ void storage_storageclose(struct map_session_data* sd)
 
 	clif->storageclose(sd);
 
-	if( save_settings&4 )
+	if( iMap->save_settings&4 )
 		chrif_save(sd,0); //Invokes the storage saving as well.
 
 	sd->state.storage_flag = 0;
@@ -338,7 +338,7 @@ void storage_storage_quit(struct map_session_data* sd, int flag)
 {
 	nullpo_retv(sd);
 	
-	if (save_settings&4)
+	if (iMap->save_settings&4)
 		chrif_save(sd, flag); //Invokes the storage saving as well.
 
 	sd->state.storage_flag = 0;
@@ -394,7 +394,7 @@ int storage_guild_storageopen(struct map_session_data* sd)
 	if(sd->state.storage_flag)
 		return 1; //Can't open both storages at a time.
 	
-	if( !pc_can_give_items(sd) ) { //check is this GM level can open guild storage and store items [Lupus]
+	if( !pc->can_give_items(sd) ) { //check is this GM level can open guild storage and store items [Lupus]
 		clif->message(sd->fd, msg_txt(246));
 		return 1;
 	}
@@ -442,7 +442,7 @@ int guild_storage_additem(struct map_session_data* sd, struct guild_storage* sto
 		return 1;
 	}
 
-	if( !itemdb_canguildstore(item_data, pc_get_group_level(sd)) || item_data->expire_time )
+	if( !itemdb_canguildstore(item_data, pc->get_group_level(sd)) || item_data->expire_time )
 	{	//Check if item is storable. [Skotlex]
 		clif->message (sd->fd, msg_txt(264));
 		return 1;
@@ -532,7 +532,7 @@ int storage_guild_storageadd(struct map_session_data* sd, int index, int amount)
 	}
 
 	if(guild_storage_additem(sd,stor,&sd->status.inventory[index],amount)==0)
-		pc_delitem(sd,index,amount,0,4,LOG_TYPE_GSTORAGE);
+		pc->delitem(sd,index,amount,0,4,LOG_TYPE_GSTORAGE);
 
 	return 1;
 }
@@ -569,7 +569,7 @@ int storage_guild_storageget(struct map_session_data* sd, int index, int amount)
 		return 0;
 	}
 
-	if((flag = pc_additem(sd,&stor->items[index],amount,LOG_TYPE_GSTORAGE)) == 0)
+	if((flag = pc->additem(sd,&stor->items[index],amount,LOG_TYPE_GSTORAGE)) == 0)
 		guild_storage_delitem(sd,stor,index,amount);
 	else //inform fail
 		clif->additem(sd,0,0,flag);
@@ -605,7 +605,7 @@ int storage_guild_storageaddfromcart(struct map_session_data* sd, int index, int
 		return 0;
 
 	if(guild_storage_additem(sd,stor,&sd->status.cart[index],amount)==0)
-		pc_cart_delitem(sd,index,amount,0,LOG_TYPE_GSTORAGE);
+		pc->cart_delitem(sd,index,amount,0,LOG_TYPE_GSTORAGE);
 
 	return 1;
 }
@@ -636,7 +636,7 @@ int storage_guild_storagegettocart(struct map_session_data* sd, int index, int a
 	if(amount < 1 || amount > stor->items[index].amount)
 		return 0;
 
-	if(pc_cart_additem(sd,&stor->items[index],amount,LOG_TYPE_GSTORAGE)==0)
+	if(pc->cart_additem(sd,&stor->items[index],amount,LOG_TYPE_GSTORAGE)==0)
 		guild_storage_delitem(sd,stor,index,amount);
 
 	return 1;
@@ -694,7 +694,7 @@ int storage_guild_storageclose(struct map_session_data* sd)
 	clif->storageclose(sd);
 	if (stor->storage_status)
 	{
-		if (save_settings&4)
+		if (iMap->save_settings&4)
 			chrif_save(sd, 0); //This one also saves the storage. [Skotlex]
 		else
 			storage_guild_storagesave(sd->status.account_id, sd->status.guild_id,0);
@@ -717,13 +717,13 @@ int storage_guild_storage_quit(struct map_session_data* sd, int flag)
 		sd->state.storage_flag = 0;
 		stor->storage_status = 0;
 		clif->storageclose(sd);
-		if (save_settings&4)
+		if (iMap->save_settings&4)
 			chrif_save(sd,0);
 		return 0;
 	}
 
 	if(stor->storage_status) {
-		if (save_settings&4)
+		if (iMap->save_settings&4)
 			chrif_save(sd,0);
 		else
 			storage_guild_storagesave(sd->status.account_id,sd->status.guild_id,1);

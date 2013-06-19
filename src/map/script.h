@@ -4,9 +4,12 @@
 #ifndef _SCRIPT_H_
 #define _SCRIPT_H_
 
+#include "map.h" //EVENT_NAME_LENGTH
+
 #define NUM_WHISPER_VAR 10
 
 struct map_session_data;
+struct eri;
 
 extern int potion_flag; //For use on Alchemist improved potions/Potion Pitcher. [Skotlex]
 extern int potion_hp, potion_per_hp, potion_sp, potion_per_sp;
@@ -110,6 +113,30 @@ struct script_stack {
 	struct DBMap* var_function;// scope variables
 };
 
+enum hQueueOpt {
+	HQO_NONE,
+	HQO_onLogOut,
+	HQO_OnDeath,
+	HQO_OnMapChange,
+	HQO_MAX,
+};
+
+/* [Ind/Hercules] */
+struct hQueue {
+	int id;
+	int *item;
+	int items;
+	/* events */
+	char onLogOut[EVENT_NAME_LENGTH];
+	char onDeath[EVENT_NAME_LENGTH];
+	char onMapChange[EVENT_NAME_LENGTH];
+};
+
+struct hQueueIterator {
+	int *item;
+	int items;
+	int pos;
+};
 
 //
 // Script state
@@ -129,10 +156,12 @@ struct script_state {
 	int instance_id;
 	//For backing up purposes
 	struct script_state *bk_st;
+	unsigned char hIterator;
 	int bk_npcid;
 	unsigned freeloop : 1;// used by buildin_freeloop
 	unsigned op2ref : 1;// used by op_2
 	unsigned npc_item_flag : 1;
+	unsigned int id;
 };
 
 struct script_reg {
@@ -162,11 +191,11 @@ int set_var(struct map_session_data *sd, char *name, void *val);
 int run_script_timer(int tid, unsigned int tick, int id, intptr_t data);
 void run_script_main(struct script_state *st);
 
-void script_stop_sleeptimers(int id);
+void script_stop_instances(int id);
 struct linkdb_node* script_erase_sleepdb(struct linkdb_node *n);
 void script_free_code(struct script_code* code);
 void script_free_vars(struct DBMap *storage);
-struct script_state* script_alloc_state(struct script_code* script, int pos, int rid, int oid);
+struct script_state* script_alloc_state(struct script_code* rootscript, int pos, int rid, int oid);
 void script_free_state(struct script_state* st);
 
 struct DBMap* script_get_label_db(void);
@@ -186,6 +215,24 @@ int script_reload(void);
 
 // @commands (script based)
 void setd_sub(struct script_state *st, struct map_session_data *sd, const char *varname, int elem, void *value, struct DBMap **ref);
+
+struct script_function {
+	bool (*func)(struct script_state *st);
+	char *name;
+	char *arg;
+};
+
+// String buffer structures.
+// str_data stores string information
+struct str_data_struct {
+	enum c_op type;
+	int str;
+	int backpatch;
+	int label;
+	bool (*func)(struct script_state *st);
+	int val;
+	int next;
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 //## TODO possible enhancements: [FlavioJS]
@@ -210,17 +257,17 @@ void setd_sub(struct script_state *st, struct map_session_data *sd, const char *
 /// Returns the index of the last data in the stack
 #define script_lastdata(st) ( (st)->end - (st)->start - 1 )
 /// Pushes an int into the stack
-#define script_pushint(st,val) push_val((st)->stack, C_INT, (val))
+#define script_pushint(st,val) script->push_val((st)->stack, C_INT, (val),NULL)
 /// Pushes a string into the stack (script engine frees it automatically)
-#define script_pushstr(st,val) push_str((st)->stack, C_STR, (val))
+#define script_pushstr(st,val) script->push_str((st)->stack, C_STR, (val))
 /// Pushes a copy of a string into the stack
-#define script_pushstrcopy(st,val) push_str((st)->stack, C_STR, aStrdup(val))
+#define script_pushstrcopy(st,val) script->push_str((st)->stack, C_STR, aStrdup(val))
 /// Pushes a constant string into the stack (must never change or be freed)
-#define script_pushconststr(st,val) push_str((st)->stack, C_CONSTSTR, (val))
+#define script_pushconststr(st,val) script->push_str((st)->stack, C_CONSTSTR, (val))
 /// Pushes a nil into the stack
-#define script_pushnil(st) push_val((st)->stack, C_NOP, 0)
+#define script_pushnil(st) script->push_val((st)->stack, C_NOP, 0,NULL)
 /// Pushes a copy of the data in the target index
-#define script_pushcopy(st,i) push_copy((st)->stack, (st)->start + (i))
+#define script_pushcopy(st,i) script->push_copy((st)->stack, (st)->start + (i))
 
 #define script_isstring(st,i) data_isstring(script_getdata(st,i))
 #define script_isint(st,i) data_isint(script_getdata(st,i))
@@ -235,9 +282,9 @@ void setd_sub(struct script_state *st, struct map_session_data *sd, const char *
 /// Returns the script_data at the target index relative to the top of the stack
 #define script_getdatatop(st,i) ( &((st)->stack->stack_data[(st)->stack->sp + (i)]) )
 /// Pushes a copy of the data in the target index relative to the top of the stack
-#define script_pushcopytop(st,i) push_copy((st)->stack, (st)->stack->sp + (i))
+#define script_pushcopytop(st,i) script->push_copy((st)->stack, (st)->stack->sp + (i))
 /// Removes the range of values [start,end[ relative to the top of the stack
-#define script_removetop(st,start,end) ( pop_stack((st), ((st)->stack->sp + (start)), (st)->stack->sp + (end)) )
+#define script_removetop(st,start,end) ( script->pop_stack((st), ((st)->stack->sp + (start)), (st)->stack->sp + (end)) )
 
 //
 // struct script_data* data;
@@ -255,12 +302,12 @@ void setd_sub(struct script_state *st, struct map_session_data *sd, const char *
 #define data_isfunclabel(data) ( (data)->type == C_USERFUNC_POS )
 
 /// Returns if this is a reference to a constant
-#define reference_toconstant(data) ( str_data[reference_getid(data)].type == C_INT )
+#define reference_toconstant(data) ( script->str_data[reference_getid(data)].type == C_INT )
 /// Returns if this a reference to a param
-#define reference_toparam(data) ( str_data[reference_getid(data)].type == C_PARAM )
+#define reference_toparam(data) ( script->str_data[reference_getid(data)].type == C_PARAM )
 /// Returns if this a reference to a variable
 //##TODO confirm it's C_NAME [FlavioJS]
-#define reference_tovariable(data) ( str_data[reference_getid(data)].type == C_NAME )
+#define reference_tovariable(data) ( script->str_data[reference_getid(data)].type == C_NAME )
 /// Returns the unique id of the reference (id and index)
 #define reference_getuid(data) ( (data)->u.num )
 /// Returns the id of the reference
@@ -268,13 +315,13 @@ void setd_sub(struct script_state *st, struct map_session_data *sd, const char *
 /// Returns the array index of the reference
 #define reference_getindex(data) ( (int32)(((uint32)(reference_getuid(data) & 0xff000000)) >> 24) )
 /// Returns the name of the reference
-#define reference_getname(data) ( str_buf + str_data[reference_getid(data)].str )
+#define reference_getname(data) ( script->str_buf + script->str_data[reference_getid(data)].str )
 /// Returns the linked list of uid-value pairs of the reference (can be NULL)
 #define reference_getref(data) ( (data)->ref )
 /// Returns the value of the constant
-#define reference_getconstant(data) ( str_data[reference_getid(data)].val )
+#define reference_getconstant(data) ( script->str_data[reference_getid(data)].val )
 /// Returns the type of param
-#define reference_getparamtype(data) ( str_data[reference_getid(data)].val )
+#define reference_getparamtype(data) ( script->str_data[reference_getid(data)].val )
 
 /// Composes the uid of a reference from the id and the index
 #define reference_uid(id,idx) ( (int32)((((uint32)(id)) & 0x00ffffff) | (((uint32)(idx)) << 24)) )
@@ -286,16 +333,33 @@ void setd_sub(struct script_state *st, struct map_session_data *sd, const char *
 #define BUILDIN(x) bool buildin_ ## x (struct script_state* st)
 #define BUILDIN_A(x) buildin_ ## x 
 
-struct script_function {
-	bool (*func)(struct script_state *st);
-	char *name;
-	char *arg;
-};
 /* script.c interface (incomplete) */
 struct script_interface {
+	/* */
+	DBMap *st_db;
+	unsigned int active_scripts;
+	unsigned int next_id;
+	struct eri *st_ers;
+	struct eri *stack_ers;
+	/* */
+	struct hQueue *hq;
+	struct hQueueIterator *hqi;
+	int hqs, hqis;
+	int hqe[HQO_MAX];
 	/*  */
 	char **buildin;
 	unsigned int buildin_count;
+	/* */
+	struct str_data_struct *str_data;
+	int str_data_size; // size of the data
+	int str_num; // next id to be assigned
+	// str_buf holds the strings themselves
+	char *str_buf;
+	int str_size; // size of the buffer
+	int str_pos; // next position to be assigned
+	//
+	char *word_buf;
+	int word_size;
 	/*  */
 	void (*init) (void);
 	void (*final) (void);
@@ -304,6 +368,19 @@ struct script_interface {
 	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st));
 	int (*conv_num) (struct script_state *st,struct script_data *data);
 	const char* (*conv_str) (struct script_state *st,struct script_data *data);
+	TBL_PC *(*rid2sd) (struct script_state *st);
+	void (*detach_rid) (struct script_state* st);
+	struct script_data* (*push_val)(struct script_stack* stack, enum c_op type, int val, struct DBMap** ref);
+	void (*get_val) (struct script_state* st, struct script_data* data);
+	void* (*get_val2) (struct script_state* st, int uid, struct DBMap** ref);
+	struct script_data* (*push_str) (struct script_stack* stack, enum c_op type, char* str);
+	struct script_data* (*push_copy) (struct script_stack* stack, int pos);
+	void (*pop_stack) (struct script_state* st, int start, int end);
+	/* */
+	struct hQueue *(*queue) (int idx);
+	bool (*queue_add) (int idx, int var);
+	bool (*queue_del) (int idx);
+	bool (*queue_remove) (int idx, int var);
 } script_s;
 
 struct script_interface *script;

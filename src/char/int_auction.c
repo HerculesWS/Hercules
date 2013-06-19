@@ -56,17 +56,17 @@ void auction_save(struct auction_data *auction)
 		StrBuf->Printf(&buf, ", `card%d` = '%d'", j, auction->item.card[j]);
 	StrBuf->Printf(&buf, " WHERE `auction_id` = '%d'", auction->auction_id);
 
-	stmt = SqlStmt_Malloc(sql_handle);
-	if( SQL_SUCCESS != SqlStmt_PrepareStr(stmt, StrBuf->Value(&buf))
-	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 0, SQLDT_STRING, auction->seller_name, strnlen(auction->seller_name, NAME_LENGTH))
-	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 1, SQLDT_STRING, auction->buyer_name, strnlen(auction->buyer_name, NAME_LENGTH))
-	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 2, SQLDT_STRING, auction->item_name, strnlen(auction->item_name, ITEM_NAME_LENGTH))
-	||  SQL_SUCCESS != SqlStmt_Execute(stmt) )
+	stmt = SQL->StmtMalloc(sql_handle);
+	if( SQL_SUCCESS != SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
+	||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, auction->seller_name, strnlen(auction->seller_name, NAME_LENGTH))
+	||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, auction->buyer_name, strnlen(auction->buyer_name, NAME_LENGTH))
+	||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 2, SQLDT_STRING, auction->item_name, strnlen(auction->item_name, ITEM_NAME_LENGTH))
+	||  SQL_SUCCESS != SQL->StmtExecute(stmt) )
 	{
 		SqlStmt_ShowDebug(stmt);
 	}
 
-	SqlStmt_Free(stmt);
+	SQL->StmtFree(stmt);
 	StrBuf->Destroy(&buf);
 }
 
@@ -95,12 +95,12 @@ unsigned int auction_create(struct auction_data *auction)
 	updateLastUid(auction->item.unique_id);
 	dbUpdateUid(sql_handle);
 
-	stmt = SqlStmt_Malloc(sql_handle);
-	if( SQL_SUCCESS != SqlStmt_PrepareStr(stmt, StrBuf->Value(&buf))
-	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 0, SQLDT_STRING, auction->seller_name, strnlen(auction->seller_name, NAME_LENGTH))
-	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 1, SQLDT_STRING, auction->buyer_name, strnlen(auction->buyer_name, NAME_LENGTH))
-	||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 2, SQLDT_STRING, auction->item_name, strnlen(auction->item_name, ITEM_NAME_LENGTH))
-	||  SQL_SUCCESS != SqlStmt_Execute(stmt) )
+	stmt = SQL->StmtMalloc(sql_handle);
+	if( SQL_SUCCESS != SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
+	||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, auction->seller_name, strnlen(auction->seller_name, NAME_LENGTH))
+	||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, auction->buyer_name, strnlen(auction->buyer_name, NAME_LENGTH))
+	||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 2, SQLDT_STRING, auction->item_name, strnlen(auction->item_name, ITEM_NAME_LENGTH))
+	||  SQL_SUCCESS != SQL->StmtExecute(stmt) )
 	{
 		SqlStmt_ShowDebug(stmt);
 		auction->auction_id = 0;
@@ -114,8 +114,8 @@ unsigned int auction_create(struct auction_data *auction)
 		auction->item.identify = 1;
 		auction->item.expire_time = 0;
 
-		auction->auction_id = (unsigned int)SqlStmt_LastInsertId(stmt);
-		auction->auction_end_timer = add_timer( gettick() + tick , auction_end_timer, auction->auction_id, 0);
+		auction->auction_id = (unsigned int)SQL->StmtLastInsertId(stmt);
+		auction->auction_end_timer = iTimer->add_timer( iTimer->gettick() + tick , auction_end_timer, auction->auction_id, 0);
 		ShowInfo("New Auction %u | time left %u ms | By %s.\n", auction->auction_id, tick, auction->seller_name);
 
 		CREATE(auction_, struct auction_data, 1);
@@ -123,7 +123,7 @@ unsigned int auction_create(struct auction_data *auction)
 		idb_put(auction_db_, auction_->auction_id, auction_);
 	}
 
-	SqlStmt_Free(stmt);
+	SQL->StmtFree(stmt);
 	StrBuf->Destroy(&buf);
 
 	return auction->auction_id;
@@ -170,7 +170,7 @@ void auction_delete(struct auction_data *auction)
 		Sql_ShowDebug(sql_handle);
 
 	if( auction->auction_end_timer != INVALID_TIMER )
-		delete_timer(auction->auction_end_timer, auction_end_timer);
+		iTimer->delete_timer(auction->auction_end_timer, auction_end_timer);
 
 	idb_remove(auction_db_, auction_id);
 }
@@ -182,7 +182,7 @@ void inter_auctions_fromsql(void)
 	struct item *item;
 	char *data;
 	StringBuf buf;
-	unsigned int tick = gettick(), endtick;
+	unsigned int tick = iTimer->gettick(), endtick;
 	time_t now = time(NULL);
 
 	StrBuf->Init(&buf);
@@ -234,7 +234,7 @@ void inter_auctions_fromsql(void)
 		else
 			endtick = tick + 10000; // 10 Second's to process ended auctions
 
-		auction->auction_end_timer = add_timer(endtick, auction_end_timer, auction->auction_id, 0);
+		auction->auction_end_timer = iTimer->add_timer(endtick, auction_end_timer, auction->auction_id, 0);
 		idb_put(auction_db_, auction->auction_id, auction);
 	}
 

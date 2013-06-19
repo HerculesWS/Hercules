@@ -12,6 +12,7 @@ struct block_list;
 struct npc_data;
 struct view_data;
 
+struct unit_data npc_base_ud;
 
 struct npc_timerevent_list {
 	int timer,pos;
@@ -26,9 +27,9 @@ struct npc_item_list {
 
 struct npc_data {
 	struct block_list bl;
-	struct unit_data  ud; //Because they need to be able to move....
+	struct unit_data *ud;
 	struct view_data *vd;
-	struct status_change sc; //They can't have status changes, but.. they want the visual opt values.
+	unsigned int option;
 	struct npc_data *master_nd;
 	short class_;
 	short speed;
@@ -37,12 +38,13 @@ struct npc_data {
 	int chat_id;
 	int touching_id;
 	unsigned int next_walktime;
-
+	uint8 dir;
+	
 	unsigned size : 2;
 
 	struct status_data status;
-	unsigned int level;
-	unsigned int stat_point;
+	unsigned short level;
+	unsigned short stat_point;
 
 	void* chatdb; // pointer to a npc_parse struct (see npc_chat.c)
 	char* path;/* path dir */

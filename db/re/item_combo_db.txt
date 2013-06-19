@@ -115,7 +115,7 @@
 2472:2570:15030:16013,{ bonus2 bAddRace,RC_Undead,15; bonus2 bMagicAddRace,RC_Undead,15; bonus2 bSkillAtk,"AB_ADORAMUS",100; }
 2472:2570:15030:16018,{ bonus2 bAddRace,RC_Undead,30; bonus2 bMagicAddRace,RC_Undead,30; bonus2 bSkillAtk,"AB_ADORAMUS",200; bonus bVariableCastrate,-50; }
 2475:2574:2883:15036,{ bonus bMaxHPRate,14; bonus2 bSkillAtk,"RK_HUNDREDSPEAR",50; skill "CR_AUTOGUARD",1; }
-2476:2575:2884:15037,{ bonus2 bAddRace,RC_NonBoss,10; bonus2 bAddRace,RC_Boss,10; bonus2 bSkillAtk,"RK_SONICWAVE",100; bonus2 bSkillAtk,"RK_WINDCUTTER",100; autobonus "{ sc_start SC_CONCENTRATION,10000,getskilllv(\"LK_CONCENTRATION\")?getskilllv(\"LK_CONCENTRATION\"):1; bonus bAspd,2; }",1,10000,BF_WEAPON,"{}"; }
+2476:2575:2884:15037,{ bonus2 bAddRace,RC_NonBoss,10; bonus2 bAddRace,RC_Boss,10; bonus2 bSkillAtk,"RK_SONICWAVE",100; bonus2 bSkillAtk,"RK_WINDCUTTER",100; autobonus "{ sc_start SC_LKCONCENTRATION,10000,getskilllv(\"LK_CONCENTRATION\")?getskilllv(\"LK_CONCENTRATION\"):1; bonus bAspd,2; }",1,10000,BF_WEAPON,"{}"; }
 2477:2577:2886:15038,{ bonus bCritical,15; bonus bFlee,10; bonus bCritAtkRate,40; bonus2 bSkillAtk,"GC_CROSSIMPACT",20; }
 2478:2578:2887:15039,{ bonus2 bAddRace,RC_NonBoss,10; bonus2 bAddRace,RC_Boss,10; bonus bMatk,10; if(readparam(bStr)>119) { bonus bBaseAtk,30; } bonus3 bAutoSpell,"ASC_BREAKER",getskilllv("ASC_BREAKER"),10; bonus bCritical,-20; }
 2479:2580:2890:15042,{ bonus bAspd,2; bonus bLongAtkRate,30; bonus3 bAutoSpell,"AC_DOUBLE",3,10; bonus2 bSkillAtk,"RA_ARROWSTORM",50; }

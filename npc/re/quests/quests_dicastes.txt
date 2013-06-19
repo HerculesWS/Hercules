@@ -1,9 +1,11 @@
-//===== Hercules Script =======================================
+//===== Hercules Script ======================================
 //= El Dicastes Quest NPCs
 //===== By: ==================================================
 //= Gennosuke Kouga, Muad_Dib
 //===== Current Version: =====================================
 //= 1.9a
+//===== Compatible With: =====================================
+//= Hercules
 //===== Description: =========================================
 //= Quest NPCs related to Dewata:
 //== Sapha's Visit, Doha's Secrect Order, Frede's Request,

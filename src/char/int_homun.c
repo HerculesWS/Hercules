@@ -121,25 +121,25 @@ bool mapif_homunculus_save(struct s_homunculus* hd)
 			SqlStmt* stmt;
 			int i;
 
-			stmt = SqlStmt_Malloc(sql_handle);
-			if( SQL_ERROR == SqlStmt_Prepare(stmt, "REPLACE INTO `%s` (`homun_id`, `id`, `lv`) VALUES (%d, ?, ?)", skill_homunculus_db, hd->hom_id) )
+			stmt = SQL->StmtMalloc(sql_handle);
+			if( SQL_ERROR == SQL->StmtPrepare(stmt, "REPLACE INTO `%s` (`homun_id`, `id`, `lv`) VALUES (%d, ?, ?)", skill_homunculus_db, hd->hom_id) )
 				SqlStmt_ShowDebug(stmt);
 			for( i = 0; i < MAX_HOMUNSKILL; ++i )
 			{
 				if( hd->hskill[i].id > 0 && hd->hskill[i].lv != 0 )
 				{
-					SqlStmt_BindParam(stmt, 0, SQLDT_USHORT, &hd->hskill[i].id, 0);
-					SqlStmt_BindParam(stmt, 1, SQLDT_USHORT, &hd->hskill[i].lv, 0);
-					if( SQL_ERROR == SqlStmt_Execute(stmt) )
+					SQL->StmtBindParam(stmt, 0, SQLDT_USHORT, &hd->hskill[i].id, 0);
+					SQL->StmtBindParam(stmt, 1, SQLDT_USHORT, &hd->hskill[i].lv, 0);
+					if( SQL_ERROR == SQL->StmtExecute(stmt) )
 					{
 						SqlStmt_ShowDebug(stmt);
-						SqlStmt_Free(stmt);
+						SQL->StmtFree(stmt);
 						flag = false;
 						break;
 					}
 				}
 			}
-			SqlStmt_Free(stmt);
+			SQL->StmtFree(stmt);
 		}
 	}
 

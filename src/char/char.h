@@ -45,7 +45,7 @@ struct online_char_data {
 
 DBMap* online_char_db; // int account_id -> struct online_char_data*
 
-#define MAX_MAP_SERVERS 30
+#define MAX_MAP_SERVERS 2
 
 #define DEFAULT_AUTOSAVE_INTERVAL 300*1000
 
@@ -103,6 +103,7 @@ extern char skill_homunculus_db[256];
 extern char mercenary_db[256];
 extern char mercenary_owner_db[256];
 extern char ragsrvinfo_db[256];
+extern char interreg_db[32];
 
 extern int db_use_sqldbs; // added for sql item_db read for char server [Valaris]
 

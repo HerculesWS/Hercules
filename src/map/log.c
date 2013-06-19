@@ -118,16 +118,16 @@ static bool should_log_item(int nameid, int amount, int refine, struct item_data
 }
 void log_branch_sub_sql(struct map_session_data* sd) {
 	SqlStmt* stmt;
-	stmt = SqlStmt_Malloc(logmysql_handle);
-	if( SQL_SUCCESS != SqlStmt_Prepare(stmt, LOG_QUERY " INTO `%s` (`branch_date`, `account_id`, `char_id`, `char_name`, `map`) VALUES (NOW(), '%d', '%d', ?, '%s')", logs->config.log_branch, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
-	   ||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
-	   ||  SQL_SUCCESS != SqlStmt_Execute(stmt) )
+	stmt = SQL->StmtMalloc(logmysql_handle);
+	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`branch_date`, `account_id`, `char_id`, `char_name`, `map`) VALUES (NOW(), '%d', '%d', ?, '%s')", logs->config.log_branch, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
+	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
+	   ||  SQL_SUCCESS != SQL->StmtExecute(stmt) )
 	{
 		SqlStmt_ShowDebug(stmt);
-		SqlStmt_Free(stmt);
+		SQL->StmtFree(stmt);
 		return;
 	}
-	SqlStmt_Free(stmt);
+	SQL->StmtFree(stmt);
 }
 void log_branch_sub_txt(struct map_session_data* sd) {
 	char timestring[255];
@@ -260,17 +260,17 @@ void log_mvpdrop(struct map_session_data* sd, int monster_id, int* log_mvp)
 void log_atcommand_sub_sql(struct map_session_data* sd, const char* message) {
 	SqlStmt* stmt;
 	
-	stmt = SqlStmt_Malloc(logmysql_handle);
-	if( SQL_SUCCESS != SqlStmt_Prepare(stmt, LOG_QUERY " INTO `%s` (`atcommand_date`, `account_id`, `char_id`, `char_name`, `map`, `command`) VALUES (NOW(), '%d', '%d', ?, '%s', ?)", logs->config.log_gm, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
-	   ||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
-	   ||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 1, SQLDT_STRING, (char*)message, safestrnlen(message, 255))
-	   ||  SQL_SUCCESS != SqlStmt_Execute(stmt) )
+	stmt = SQL->StmtMalloc(logmysql_handle);
+	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`atcommand_date`, `account_id`, `char_id`, `char_name`, `map`, `command`) VALUES (NOW(), '%d', '%d', ?, '%s', ?)", logs->config.log_gm, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
+	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
+	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, (char*)message, safestrnlen(message, 255))
+	   ||  SQL_SUCCESS != SQL->StmtExecute(stmt) )
 	{
 		SqlStmt_ShowDebug(stmt);
-		SqlStmt_Free(stmt);
+		SQL->StmtFree(stmt);
 		return;
 	}
-	SqlStmt_Free(stmt);
+	SQL->StmtFree(stmt);
 }
 void log_atcommand_sub_txt(struct map_session_data* sd, const char* message) {
 	char timestring[255];
@@ -298,17 +298,17 @@ void log_atcommand(struct map_session_data* sd, const char* message)
 
 void log_npc_sub_sql(struct map_session_data *sd, const char *message) {
 	SqlStmt* stmt;
-	stmt = SqlStmt_Malloc(logmysql_handle);
-	if( SQL_SUCCESS != SqlStmt_Prepare(stmt, LOG_QUERY " INTO `%s` (`npc_date`, `account_id`, `char_id`, `char_name`, `map`, `mes`) VALUES (NOW(), '%d', '%d', ?, '%s', ?)", logs->config.log_npc, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
-	   ||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
-	   ||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 1, SQLDT_STRING, (char*)message, safestrnlen(message, 255))
-	   ||  SQL_SUCCESS != SqlStmt_Execute(stmt) )
+	stmt = SQL->StmtMalloc(logmysql_handle);
+	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`npc_date`, `account_id`, `char_id`, `char_name`, `map`, `mes`) VALUES (NOW(), '%d', '%d', ?, '%s', ?)", logs->config.log_npc, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
+	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
+	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, (char*)message, safestrnlen(message, 255))
+	   ||  SQL_SUCCESS != SQL->StmtExecute(stmt) )
 	{
 		SqlStmt_ShowDebug(stmt);
-		SqlStmt_Free(stmt);
+		SQL->StmtFree(stmt);
 		return;
 	}
-	SqlStmt_Free(stmt);
+	SQL->StmtFree(stmt);
 }
 void log_npc_sub_txt(struct map_session_data *sd, const char *message) {
 	char timestring[255];
@@ -336,17 +336,17 @@ void log_npc(struct map_session_data* sd, const char* message)
 void log_chat_sub_sql(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char* map, int x, int y, const char* dst_charname, const char* message) {
 	SqlStmt* stmt;
 	
-	stmt = SqlStmt_Malloc(logmysql_handle);
-	if( SQL_SUCCESS != SqlStmt_Prepare(stmt, LOG_QUERY " INTO `%s` (`time`, `type`, `type_id`, `src_charid`, `src_accountid`, `src_map`, `src_map_x`, `src_map_y`, `dst_charname`, `message`) VALUES (NOW(), '%c', '%d', '%d', '%d', '%s', '%d', '%d', ?, ?)", logs->config.log_chat, log_chattype2char(type), type_id, src_charid, src_accid, map, x, y)
-	   ||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 0, SQLDT_STRING, (char*)dst_charname, safestrnlen(dst_charname, NAME_LENGTH))
-	   ||  SQL_SUCCESS != SqlStmt_BindParam(stmt, 1, SQLDT_STRING, (char*)message, safestrnlen(message, CHAT_SIZE_MAX))
-	   ||  SQL_SUCCESS != SqlStmt_Execute(stmt) )
+	stmt = SQL->StmtMalloc(logmysql_handle);
+	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`time`, `type`, `type_id`, `src_charid`, `src_accountid`, `src_map`, `src_map_x`, `src_map_y`, `dst_charname`, `message`) VALUES (NOW(), '%c', '%d', '%d', '%d', '%s', '%d', '%d', ?, ?)", logs->config.log_chat, log_chattype2char(type), type_id, src_charid, src_accid, map, x, y)
+	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, (char*)dst_charname, safestrnlen(dst_charname, NAME_LENGTH))
+	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, (char*)message, safestrnlen(message, CHAT_SIZE_MAX))
+	   ||  SQL_SUCCESS != SQL->StmtExecute(stmt) )
 	{
 		SqlStmt_ShowDebug(stmt);
-		SqlStmt_Free(stmt);
+		SQL->StmtFree(stmt);
 		return;
 	}
-	SqlStmt_Free(stmt);
+	SQL->StmtFree(stmt);
 }
 void log_chat_sub_txt(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char* map, int x, int y, const char* dst_charname, const char* message) {
 	char timestring[255];
@@ -369,7 +369,7 @@ void log_chat(e_log_chat_type type, int type_id, int src_charid, int src_accid, 
 		return;
 	}
 
-	if( logs->config.log_chat_woe_disable && ( agit_flag || agit2_flag ) )
+	if( logs->config.log_chat_woe_disable && ( iMap->agit_flag || iMap->agit2_flag ) )
 	{// no chat logging during woe
 		return;
 	}

@@ -116,9 +116,9 @@ int Sql_GetTimeout(Sql* self, uint32* out_timeout)
 		size_t len;
 		if( SQL_SUCCESS == SQL->NextRow(self) &&
 			SQL_SUCCESS == SQL->GetData(self, 1, &data, &len) ) {
-			*out_timeout = (uint32)strtoul(data, NULL, 10);
-			SQL->FreeResult(self);
-			return SQL_SUCCESS;
+				*out_timeout = (uint32)strtoul(data, NULL, 10);
+				SQL->FreeResult(self);
+				return SQL_SUCCESS;
 		}
 		SQL->FreeResult(self);
 	}
@@ -210,7 +210,7 @@ static int Sql_P_Keepalive(Sql* self)
 	// establish keepalive
 	ping_interval = timeout - 30; // 30-second reserve
 	//add_timer_func_list(Sql_P_KeepaliveTimer, "Sql_P_KeepaliveTimer");
-	return add_timer_interval(gettick() + ping_interval*1000, Sql_P_KeepaliveTimer, 0, (intptr_t)self, ping_interval*1000);
+	return iTimer->add_timer_interval(iTimer->gettick() + ping_interval*1000, Sql_P_KeepaliveTimer, 0, (intptr_t)self, ping_interval*1000);
 }
 
 
@@ -404,7 +404,7 @@ void Sql_Free(Sql* self)
 	{
 		SQL->FreeResult(self);
 		StrBuf->Destroy(&self->buf);
-		if( self->keepalive != INVALID_TIMER ) delete_timer(self->keepalive, Sql_P_KeepaliveTimer);
+		if( self->keepalive != INVALID_TIMER ) iTimer->delete_timer(self->keepalive, Sql_P_KeepaliveTimer);
 		aFree(self);
 	}
 }
@@ -447,7 +447,7 @@ static int Sql_P_BindSqlDataType(MYSQL_BIND* bind, enum SqlDataType buffer_type,
 	case SQLDT_NULL: bind->buffer_type = MYSQL_TYPE_NULL;
 		buffer_len = 0;// FIXME length = ? [FlavioJS]
 		break;
-	// fixed size
+		// fixed size
 	case SQLDT_UINT8: bind->is_unsigned = 1;
 	case SQLDT_INT8: bind->buffer_type = MYSQL_TYPE_TINY;
 		buffer_len = 1;
@@ -464,7 +464,7 @@ static int Sql_P_BindSqlDataType(MYSQL_BIND* bind, enum SqlDataType buffer_type,
 	case SQLDT_INT64: bind->buffer_type = MYSQL_TYPE_LONGLONG;
 		buffer_len = 8;
 		break;
-	// platform dependent size
+		// platform dependent size
 	case SQLDT_UCHAR: bind->is_unsigned = 1;
 	case SQLDT_CHAR: bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(char));
 		buffer_len = sizeof(char);
@@ -485,14 +485,14 @@ static int Sql_P_BindSqlDataType(MYSQL_BIND* bind, enum SqlDataType buffer_type,
 	case SQLDT_LONGLONG: bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(int64));
 		buffer_len = sizeof(int64);
 		break;
-	// floating point
+		// floating point
 	case SQLDT_FLOAT: bind->buffer_type = MYSQL_TYPE_FLOAT;
 		buffer_len = 4;
 		break;
 	case SQLDT_DOUBLE: bind->buffer_type = MYSQL_TYPE_DOUBLE;
 		buffer_len = 8;
 		break;
-	// other
+		// other
 	case SQLDT_STRING:
 	case SQLDT_ENUM: bind->buffer_type = MYSQL_TYPE_STRING;
 		break;
@@ -524,25 +524,25 @@ static void Sql_P_ShowDebugMysqlFieldInfo(const char* prefix, enum enum_field_ty
 		ShowDebug("%stype=%s%u, length=%d\n", prefix, sign, type, length);
 		return;
 #define SHOW_DEBUG_OF(x) case x: type_string = #x; break
-	SHOW_DEBUG_OF(MYSQL_TYPE_TINY);
-	SHOW_DEBUG_OF(MYSQL_TYPE_SHORT);
-	SHOW_DEBUG_OF(MYSQL_TYPE_LONG);
-	SHOW_DEBUG_OF(MYSQL_TYPE_INT24);
-	SHOW_DEBUG_OF(MYSQL_TYPE_LONGLONG);
-	SHOW_DEBUG_OF(MYSQL_TYPE_DECIMAL);
-	SHOW_DEBUG_OF(MYSQL_TYPE_FLOAT);
-	SHOW_DEBUG_OF(MYSQL_TYPE_DOUBLE);
-	SHOW_DEBUG_OF(MYSQL_TYPE_TIMESTAMP);
-	SHOW_DEBUG_OF(MYSQL_TYPE_DATE);
-	SHOW_DEBUG_OF(MYSQL_TYPE_TIME);
-	SHOW_DEBUG_OF(MYSQL_TYPE_DATETIME);
-	SHOW_DEBUG_OF(MYSQL_TYPE_YEAR);
-	SHOW_DEBUG_OF(MYSQL_TYPE_STRING);
-	SHOW_DEBUG_OF(MYSQL_TYPE_VAR_STRING);
-	SHOW_DEBUG_OF(MYSQL_TYPE_BLOB);
-	SHOW_DEBUG_OF(MYSQL_TYPE_SET);
-	SHOW_DEBUG_OF(MYSQL_TYPE_ENUM);
-	SHOW_DEBUG_OF(MYSQL_TYPE_NULL);
+		SHOW_DEBUG_OF(MYSQL_TYPE_TINY);
+		SHOW_DEBUG_OF(MYSQL_TYPE_SHORT);
+		SHOW_DEBUG_OF(MYSQL_TYPE_LONG);
+		SHOW_DEBUG_OF(MYSQL_TYPE_INT24);
+		SHOW_DEBUG_OF(MYSQL_TYPE_LONGLONG);
+		SHOW_DEBUG_OF(MYSQL_TYPE_DECIMAL);
+		SHOW_DEBUG_OF(MYSQL_TYPE_FLOAT);
+		SHOW_DEBUG_OF(MYSQL_TYPE_DOUBLE);
+		SHOW_DEBUG_OF(MYSQL_TYPE_TIMESTAMP);
+		SHOW_DEBUG_OF(MYSQL_TYPE_DATE);
+		SHOW_DEBUG_OF(MYSQL_TYPE_TIME);
+		SHOW_DEBUG_OF(MYSQL_TYPE_DATETIME);
+		SHOW_DEBUG_OF(MYSQL_TYPE_YEAR);
+		SHOW_DEBUG_OF(MYSQL_TYPE_STRING);
+		SHOW_DEBUG_OF(MYSQL_TYPE_VAR_STRING);
+		SHOW_DEBUG_OF(MYSQL_TYPE_BLOB);
+		SHOW_DEBUG_OF(MYSQL_TYPE_SET);
+		SHOW_DEBUG_OF(MYSQL_TYPE_ENUM);
+		SHOW_DEBUG_OF(MYSQL_TYPE_NULL);
 #undef SHOW_DEBUG_TYPE_OF
 	}
 	ShowDebug("%stype=%s%s, length=%d%s\n", prefix, sign, type_string, length, length_postfix); 
@@ -610,7 +610,7 @@ int SqlStmt_Prepare(SqlStmt* self, const char* query, ...)
 	va_list args;
 
 	va_start(args, query);
-	res = SqlStmt_PrepareV(self, query, args);
+	res = SQL->StmtPrepareV(self, query, args);
 	va_end(args);
 
 	return res;
@@ -624,7 +624,7 @@ int SqlStmt_PrepareV(SqlStmt* self, const char* query, va_list args)
 	if( self == NULL )
 		return SQL_ERROR;
 
-	SqlStmt_FreeResult(self);
+	SQL->StmtFreeResult(self);
 	StrBuf->Clear(&self->buf);
 	StrBuf->Vprintf(&self->buf, query, args);
 	if( mysql_stmt_prepare(self->stmt, StrBuf->Value(&self->buf), (unsigned long)StrBuf->Length(&self->buf)) )
@@ -646,7 +646,7 @@ int SqlStmt_PrepareStr(SqlStmt* self, const char* query)
 	if( self == NULL )
 		return SQL_ERROR;
 
-	SqlStmt_FreeResult(self);
+	SQL->StmtFreeResult(self);
 	StrBuf->Clear(&self->buf);
 	StrBuf->AppendStr(&self->buf, query);
 	if( mysql_stmt_prepare(self->stmt, StrBuf->Value(&self->buf), (unsigned long)StrBuf->Length(&self->buf)) )
@@ -677,14 +677,14 @@ size_t SqlStmt_NumParams(SqlStmt* self)
 int SqlStmt_BindParam(SqlStmt* self, size_t idx, enum SqlDataType buffer_type, void* buffer, size_t buffer_len)
 {
 	if( self == NULL )
-		return SQL_ERROR;
+	return SQL_ERROR;
 
 	if( !self->bind_params )
 	{// initialize the bindings
 		size_t i;
 		size_t count;
 
-		count = SqlStmt_NumParams(self);
+		count = SQL->StmtNumParams(self);
 		if( self->max_params < count )
 		{
 			self->max_params = count;
@@ -709,7 +709,7 @@ int SqlStmt_Execute(SqlStmt* self)
 	if( self == NULL )
 		return SQL_ERROR;
 
-	SqlStmt_FreeResult(self);
+	SQL->StmtFreeResult(self);
 	if( (self->bind_params && mysql_stmt_bind_param(self->stmt, self->params)) ||
 		mysql_stmt_execute(self->stmt) )
 	{
@@ -772,7 +772,7 @@ int SqlStmt_BindColumn(SqlStmt* self, size_t idx, enum SqlDataType buffer_type, 
 		size_t i;
 		size_t cols;
 
-		cols = SqlStmt_NumColumns(self);
+		cols = SQL->StmtNumColumns(self);
 		if( self->max_columns < cols )
 		{
 			self->max_columns = cols;
@@ -843,7 +843,7 @@ int SqlStmt_NextRow(SqlStmt* self)
 		}
 
 		// find truncated column
-		cols = SqlStmt_NumColumns(self);
+		cols = SQL->StmtNumColumns(self);
 		for( i = 0; i < cols; ++i )
 		{
 			column = &self->columns[i];
@@ -868,7 +868,7 @@ int SqlStmt_NextRow(SqlStmt* self)
 	}
 
 	// propagate column lengths and clear unused parts of string/enum/blob buffers
-	cols = SqlStmt_NumColumns(self);
+	cols = SQL->StmtNumColumns(self);
 	for( i = 0; i < cols; ++i )
 	{
 		length = self->column_lengths[i].length;
@@ -946,21 +946,21 @@ void SqlStmt_Free(SqlStmt* self)
 void hercules_mysql_error_handler(unsigned int ecode) {
 	static unsigned int retry = 1;
 	switch( ecode ) {
-		case 2003:/* Can't connect to MySQL (this error only happens here when failing to reconnect) */
-			if( mysql_reconnect_type == 1 ) {
-				if( ++retry > mysql_reconnect_count ) {
-					ShowFatalError("MySQL has been unreachable for too long, %d reconnects were attempted. Shutting Down\n", retry);
-					exit(EXIT_FAILURE);
-				}
+	case 2003:/* Can't connect to MySQL (this error only happens here when failing to reconnect) */
+		if( mysql_reconnect_type == 1 ) {
+			if( ++retry > mysql_reconnect_count ) {
+				ShowFatalError("MySQL has been unreachable for too long, %d reconnects were attempted. Shutting Down\n", retry);
+				exit(EXIT_FAILURE);
 			}
-			break;
+		}
+		break;
 	}
 }
 void Sql_inter_server_read(const char* cfgName, bool first) {
 	int i;
 	char line[1024], w1[1024], w2[1024];
 	FILE* fp;
-	
+
 	fp = fopen(cfgName, "r");
 	if(fp == NULL) {
 		if( first ) {
@@ -970,22 +970,22 @@ void Sql_inter_server_read(const char* cfgName, bool first) {
 			ShowError("File not found: %s\n", cfgName);
 		return;
 	}
-	
+
 	while(fgets(line, sizeof(line), fp)) {
 		i = sscanf(line, "%[^:]: %[^\r\n]", w1, w2);
 		if(i != 2)
 			continue;
-		
+
 		if(!strcmpi(w1,"mysql_reconnect_type")) {
 			mysql_reconnect_type = atoi(w2);
 			switch( mysql_reconnect_type ) {
-				case 1:
-				case 2:
-					break;
-				default:
-					ShowError("%s::mysql_reconnect_type is set to %d which is not valid, defaulting to 1...\n", cfgName, mysql_reconnect_type);
-					mysql_reconnect_type = 1;
-					break;
+			case 1:
+			case 2:
+				break;
+			default:
+				ShowError("%s::mysql_reconnect_type is set to %d which is not valid, defaulting to 1...\n", cfgName, mysql_reconnect_type);
+				mysql_reconnect_type = 1;
+				break;
 			}
 		} else if(!strcmpi(w1,"mysql_reconnect_count")) {
 			mysql_reconnect_count = atoi(w2);
@@ -995,7 +995,7 @@ void Sql_inter_server_read(const char* cfgName, bool first) {
 			Sql_inter_server_read(w2,false);
 	}
 	fclose(fp);
-		
+
 	return;
 }
 
@@ -1003,7 +1003,7 @@ void Sql_HerculesUpdateCheck(Sql* self) {
 	char line[22];// "yyyy-mm-dd--hh-mm" (17) + ".sql" (4) + 1
 	FILE* ifp;/* index fp */
 	unsigned int performed = 0;
-	
+
 	if( !( ifp = fopen("sql-files/upgrades/index.txt", "r") ) ) {
 		ShowError("SQL upgrade index was not found!\n");
 		return;
@@ -1013,22 +1013,22 @@ void Sql_HerculesUpdateCheck(Sql* self) {
 		char path[41];// "sql-files/upgrades/" (19) + "yyyy-mm-dd--hh-mm" (17) + ".sql" (4) + 1
 		char timestamp[11];// "1360186680" (10) + 1
 		FILE* ufp;/* upgrade fp */
-		
+
 		if( line[0] == '\n' || ( line[0] == '/' && line[1] == '/' ) )/* skip \n and "//" comments */
 			continue;
-		
+
 		sprintf(path,"sql-files/upgrades/%s",line);
-		
+
 		if( !( ufp = fopen(path, "r") ) ) {
 			ShowError("SQL upgrade file %s was not found!\n",path);
 			continue;
 		}
-		
+
 		if( fgetc(ufp) != '#' )
 			continue;
-		
+
 		fseek (ufp,1,SEEK_SET);/* woo. skip the # */
-		
+
 		if( fgets(timestamp,sizeof(timestamp),ufp) ) {
 			unsigned int timestampui = atol(timestamp);
 			if( SQL_ERROR == SQL->Query(self, "SELECT 1 FROM `sql_updates` WHERE `timestamp` = '%u' LIMIT 1", timestampui) )
@@ -1038,12 +1038,12 @@ void Sql_HerculesUpdateCheck(Sql* self) {
 				performed++;
 			}
 		}
-		
+
 		fclose(ufp);
 	}
-	
+
 	fclose(ifp);
-	
+
 	if( performed ) {
 		ShowSQL("If you did apply these updates or would like to be skip, insert a new entry in your sql_updates table with the timestamp of each file\n");
 	}
@@ -1054,7 +1054,7 @@ void Sql_Init(void) {
 }
 void sql_defaults(void) {
 	SQL = &sql_s;
-	
+
 	SQL->Connect = Sql_Connect;
 	SQL->GetTimeout = Sql_GetTimeout;
 	SQL->GetColumnNames = Sql_GetColumnNames;
@@ -1074,4 +1074,21 @@ void sql_defaults(void) {
 	SQL->ShowDebug_ = Sql_ShowDebug_;
 	SQL->Free = Sql_Free;
 	SQL->Malloc = Sql_Malloc;
+
+	/* SqlStmt defaults [Susu] */
+	SQL->StmtBindColumn = SqlStmt_BindColumn;
+	SQL->StmtBindParam = SqlStmt_BindParam;
+	SQL->StmtExecute = SqlStmt_Execute;
+	SQL->StmtFree = SqlStmt_Free;
+	SQL->StmtFreeResult = SqlStmt_FreeResult;
+	SQL->StmtLastInsertId = SqlStmt_LastInsertId;
+	SQL->StmtMalloc = SqlStmt_Malloc;
+	SQL->StmtNextRow = SqlStmt_NextRow;
+	SQL->StmtNumColumns = SqlStmt_NumColumns;
+	SQL->StmtNumParams = SqlStmt_NumParams;
+	SQL->StmtNumRows = SqlStmt_NumRows;
+	SQL->StmtPrepare = SqlStmt_Prepare;
+	SQL->StmtPrepareStr = SqlStmt_PrepareStr;
+	SQL->StmtPrepareV = SqlStmt_PrepareV;
+	SQL->StmtShowDebug_ = SqlStmt_ShowDebug_;
 }

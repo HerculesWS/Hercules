@@ -118,13 +118,13 @@ OnTouch:
 				mes "[Trick or Treater]";
 				mes "Yay thank you!";
 				mes "Here, take this for being so nice!";
-				sc_start SC_STRFood, 1800000, 5;
-				sc_start SC_INTFood, 1800000, 5;
-				sc_start SC_VITFood, 1800000, 5;
-				sc_start SC_AGIFood, 1800000, 5;
-				sc_start SC_DEXFood, 1800000, 5;
-				sc_start SC_LUKFood, 1800000, 5;
-				sc_start SC_FLEEFOOD, 1800000, 15;
+				sc_start SC_FOOD_STR, 1800000, 5;
+				sc_start SC_FOOD_INT, 1800000, 5;
+				sc_start SC_FOOD_VIT, 1800000, 5;
+				sc_start SC_FOOD_AGI, 1800000, 5;
+				sc_start SC_FOOD_DEX, 1800000, 5;
+				sc_start SC_FOOD_LUK, 1800000, 5;
+				sc_start SC_FOOD_BASICAVOIDANCE, 1800000, 15;
 				delitem 529,1;	// Candy
 				close;
 			}else{
@@ -139,13 +139,13 @@ OnTouch:
 				mes "[Trick or Treater]";
 				mes "Yay thank you!";
 				mes "Here, take this for being so nice!";
-				sc_start SC_STRFood, 1800000, 5;
-				sc_start SC_INTFood, 1800000, 5;
-				sc_start SC_VITFood, 1800000, 5;
-				sc_start SC_AGIFood, 1800000, 5;
-				sc_start SC_DEXFood, 1800000, 5;
-				sc_start SC_LUKFood, 1800000, 5;
-				sc_start SC_FLEEFOOD, 1800000, 15;
+				sc_start SC_FOOD_STR, 1800000, 5;
+				sc_start SC_FOOD_INT, 1800000, 5;
+				sc_start SC_FOOD_VIT, 1800000, 5;
+				sc_start SC_FOOD_AGI, 1800000, 5;
+				sc_start SC_FOOD_DEX, 1800000, 5;
+				sc_start SC_FOOD_LUK, 1800000, 5;
+				sc_start SC_FOOD_BASICAVOIDANCE, 1800000, 15;
 				delitem 530,1;	// Candy Cane
 				close;
 			}else{
@@ -160,13 +160,13 @@ OnTouch:
 				mes "[Trick or Treater]";
 				mes "Yay thank you!";
 				mes "Here, take this for being so nice!";
-				sc_start SC_STRFood, 1800000, 5;
-				sc_start SC_INTFood, 1800000, 5;
-				sc_start SC_VITFood, 1800000, 5;
-				sc_start SC_AGIFood, 1800000, 5;
-				sc_start SC_DEXFood, 1800000, 5;
-				sc_start SC_LUKFood, 1800000, 5;
-				sc_start SC_FLEEFOOD, 1800000, 15;
+				sc_start SC_FOOD_STR, 1800000, 5;
+				sc_start SC_FOOD_INT, 1800000, 5;
+				sc_start SC_FOOD_VIT, 1800000, 5;
+				sc_start SC_FOOD_AGI, 1800000, 5;
+				sc_start SC_FOOD_DEX, 1800000, 5;
+				sc_start SC_FOOD_LUK, 1800000, 5;
+				sc_start SC_FOOD_BASICAVOIDANCE, 1800000, 15;
 				delitem 538,1;	// Well-baked Cookie
 				close;
 			}else{

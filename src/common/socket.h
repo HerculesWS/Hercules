@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef	_SOCKET_H_
 #define _SOCKET_H_
@@ -48,6 +49,9 @@
 		} \
 	} while(0)
 
+/* [Ind/Hercules] */
+#define RFIFO2PTR(fd,len) (void*)(session[fd]->rdata + len)
+
 // buffer I/O macros
 #define RBUFP(p,pos) (((uint8*)(p)) + (pos))
 #define RBUFB(p,pos) (*(uint8*)RBUFP((p),(pos)))
@@ -94,6 +98,10 @@ struct socket_data
 	void* session_data; // stores application-specific data related to the session
 };
 
+struct hSockOpt {
+	unsigned int silent : 1;
+	unsigned int setTimeo : 1;
+};
 
 // Data prototype declaration
 
@@ -113,7 +121,7 @@ extern bool session_isActive(int fd);
 // Function prototype declaration
 
 int make_listen_bind(uint32 ip, uint16 port);
-int make_connection(uint32 ip, uint16 port, bool silent);
+int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt);
 int realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size);
 int realloc_writefifo(int fd, size_t addition);
 int WFIFOSET(int fd, size_t len);

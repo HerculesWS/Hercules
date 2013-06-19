@@ -22,15 +22,19 @@
 char send_string[200];
 
 int irc_connect_timer(int tid, unsigned int tick, int id, intptr_t data) {
+	struct hSockOpt opt;
 	if( ircbot->isOn || ++ircbot->fails >= 3 )
 		return 0;
 	
-	ircbot->last_try = gettick();
+	opt.silent = 1;
+	opt.setTimeo = 0;
+	
+	ircbot->last_try = iTimer->gettick();
 
-	if( ( ircbot->fd = make_connection(ircbot->ip,hChSys.irc_server_port,true) ) > 0 ){
+	if( ( ircbot->fd = make_connection(ircbot->ip,hChSys.irc_server_port,&opt) ) > 0 ){
 		session[ircbot->fd]->func_parse = ircbot->parse;
 		session[ircbot->fd]->flag.server = 1;
-		add_timer(gettick() + 3000, ircbot->identify_timer, 0, 0);
+		iTimer->add_timer(iTimer->gettick() + 3000, ircbot->identify_timer, 0, 0);
 		ircbot->isOn = true;
 	}
 	return 0;
@@ -45,7 +49,7 @@ int irc_identify_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	sprintf(send_string, "NICK %s", hChSys.irc_nick);
 	ircbot->send(send_string);
 
-	add_timer(gettick() + 3000, ircbot->join_timer, 0, 0);
+	iTimer->add_timer(iTimer->gettick() + 3000, ircbot->join_timer, 0, 0);
 	
 	return 0;
 }
@@ -86,7 +90,7 @@ int irc_parse(int fd) {
 		ircbot->isIn = false;
 		ircbot->fails = 0;
 		ircbot->ip = host2ip(hChSys.irc_server);
-		add_timer(gettick() + 120000, ircbot->connect_timer, 0, 0);
+		iTimer->add_timer(iTimer->gettick() + 120000, ircbot->connect_timer, 0, 0);
       	return 0;
 	}
 	
@@ -114,14 +118,14 @@ void irc_parse_source(char *source, char *nick, char *ident, char *host) {
 	
 	for(i = 0; i < len; i++) {
 		if( stage == 0 && source[i] == '!' ) {
-			memcpy(nick, &source[0], len - i);
+			memcpy(nick, &source[0], min(i,IRC_NICK_LENGTH));
 			nick[i] = '\0';
 			pos = i+1;
 			stage = 1;
 		} else if( stage == 1 && source[i] == '@' ) {
-			memcpy(ident, &source[pos], i - pos);
+			memcpy(ident, &source[pos], min(i - pos,IRC_IDENT_LENGTH));
 			ident[i-pos] = '\0';
-			memcpy(host, &source[i+1], len);
+			memcpy(host, &source[i+1], min(len - i,IRC_HOST_LENGTH));
 			host[len] = '\0';
 			break;
 		}
@@ -173,7 +177,7 @@ void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 	if( strcmpi(target,hChSys.irc_nick) == 0 ) {
 		if( msg[0] == ':' ) msg++;
 		if( strcmpi(msg,"VERSION") == 0 ) {
-			char source_nick[40], source_ident[40], source_host[100];
+			char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
 			
 			source_nick[0] = source_ident[0] = source_host[0] = '\0';
 			
@@ -185,13 +189,13 @@ void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 			return;
 		}
 	} else if( strcmpi(target,hChSys.irc_channel) == 0 ) {
-		char source_nick[40], source_ident[40], source_host[100];
+		char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
 
 		source_nick[0] = source_ident[0] = source_host[0] = '\0';
 
 		if( source[0] != '\0' )
 			ircbot->parse_source(source,source_nick,source_ident,source_host);
-
+				
 		if( ircbot->channel ) {
 			snprintf(send_string, 150, "[ #%s ] IRC.%s : %s",ircbot->channel->name,source_nick,msg);
 			clif->chsys_msg2(ircbot->channel,send_string);
@@ -241,8 +245,8 @@ void irc_bot_init(void) {
 	ircbot->isIn = false;
 	ircbot->isOn = false;
 	
-	add_timer_func_list(ircbot->connect_timer, "irc_connect_timer");
-	add_timer(gettick() + 7000, ircbot->connect_timer, 0, 0);
+	iTimer->add_timer_func_list(ircbot->connect_timer, "irc_connect_timer");
+	iTimer->add_timer(iTimer->gettick() + 7000, ircbot->connect_timer, 0, 0);
 }
 
 void irc_bot_final(void) {

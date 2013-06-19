@@ -307,7 +307,7 @@ int main (int argc, char **argv) {
 	}
 	core_defaults();
 	
-	malloclib->init();// needed for Show* in display_title() [FlavioJS]
+	iMalloc->init();// needed for Show* in display_title() [FlavioJS]
 	
 	console->display_title();
 	
@@ -329,7 +329,7 @@ int main (int argc, char **argv) {
 	cevents_init();
 #endif
 
-	timer_init();
+	iTimer->init();
 
 	console->init();
 
@@ -343,7 +343,7 @@ int main (int argc, char **argv) {
 	{// Main runtime cycle
 		int next;
 		while (runflag != CORE_ST_STOP) {
-			next = do_timer(gettick_nocache());
+			next = iTimer->do_timer(iTimer->gettick_nocache());
 			do_sockets(next);
 		}
 	}
@@ -354,14 +354,14 @@ int main (int argc, char **argv) {
 #ifndef MINICORE
 	HPM->final();
 #endif
-	timer_final();
+	iTimer->final();
 	socket_final();
 	DB->final();
 	mempool_final();
 	rathread_final();
 #endif
 
-	malloclib->final();
+	iMalloc->final();
 
 	return 0;
 }

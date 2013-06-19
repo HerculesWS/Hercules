@@ -54,6 +54,13 @@
 // Comment the following line if your client is NOT ragexeRE (required because of conflicting packets in ragexe vs ragexeRE).
 #define PACKETVER_RE
 
+// Client support for experimental RagexeRE UI present in 2012-04-10 and 2012-04-18
+#ifdef PACKETVER_RE
+#if (PACKETVER == 20120410) || (PACKETVER == 20120418)
+	#define	PARTY_RECRUIT
+#endif
+#endif
+
 // Comment the following line to disable sc_data saving. [Skotlex]
 #define ENABLE_SC_SAVING
 
@@ -72,7 +79,6 @@
         #define MAX_HOTKEYS 38
 #endif
 
-#define MAX_MAP_PER_SERVER 1500 // Increased to allow creation of Instance Maps
 #define MAX_INVENTORY 100
 //Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
 #define MAX_CHARS 9
@@ -84,7 +90,7 @@
 #define MAX_ZENY 1000000000
 #define MAX_FAME 1000000000
 #define MAX_CART 100
-#define MAX_SKILL 1477
+#define MAX_SKILL 1478
 #define MAX_SKILL_ID 10015   // [Ind/Hercules] max used skill ID
 #define GLOBAL_REG_NUM 256   // Max permanent character variables per char
 #define ACCOUNT_REG_NUM 64   // Max permanent local account variables per account
@@ -104,7 +110,7 @@
 #define MAX_GUILDSKILL	15      // Increased max guild skills because of new skills [Sara-chan]
 #define MAX_GUILDLEVEL 50
 #define MAX_GUARDIANS 8         // Local max per castle. [Skotlex]
-#define MAX_QUEST_DB 2400       // Max quests that the server will load
+#define MAX_QUEST_DB 2410       // Max quests that the server will load
 #define MAX_QUEST_OBJECTIVES 3  // Max quest objectives for a quest
 #define MAX_START_ITEMS 32	    // Max number of items allowed to be given to a char whenever it's created. [mkbu95]
 
@@ -527,6 +533,10 @@ struct guild {
 	
 	/* TODO: still used for something?|: */
 	unsigned short save_flag; // for TXT saving
+	
+	unsigned short *instance;
+	unsigned short instances;
+	
 	void *channel;
 };
 

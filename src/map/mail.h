@@ -1,19 +1,26 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _MAIL_H_
 #define _MAIL_H_
 
 #include "../common/mmo.h"
 
-void mail_clear(struct map_session_data *sd);
-int mail_removeitem(struct map_session_data *sd, short flag);
-int mail_removezeny(struct map_session_data *sd, short flag);
-unsigned char mail_setitem(struct map_session_data *sd, int idx, int amount);
-bool mail_setattachment(struct map_session_data *sd, struct mail_message *msg);
-void mail_getattachment(struct map_session_data* sd, int zeny, struct item* item);
-int mail_openmail(struct map_session_data *sd);
-void mail_deliveryfail(struct map_session_data *sd, struct mail_message *msg);
-bool mail_invalid_operation(struct map_session_data *sd);
+struct mail_interface {
+	void (*clear) (struct map_session_data *sd);
+	int (*removeitem) (struct map_session_data *sd, short flag);
+	int (*removezeny) (struct map_session_data *sd, short flag);
+	unsigned char (*setitem) (struct map_session_data *sd, int idx, int amount);
+	bool (*setattachment) (struct map_session_data *sd, struct mail_message *msg);
+	void (*getattachment) (struct map_session_data* sd, int zeny, struct item* item);
+	int (*openmail) (struct map_session_data *sd);
+	void (*deliveryfail) (struct map_session_data *sd, struct mail_message *msg);
+	bool (*invalid_operation) (struct map_session_data *sd);
+} mail_s;
+
+struct mail_interface *mail;
+
+void mail_defaults(void);
 
 #endif /* _MAIL_H_ */
