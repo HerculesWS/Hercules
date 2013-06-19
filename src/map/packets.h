@@ -2422,4 +2422,9 @@ packet(0x020d,-1);
 	packetKeys(0x6D166F66,0x3C000FCF,0x295B0FCB); /* Thanks to Shakto */
 #endif
 
+#if PACKETVER >= 20130618
+	packetKeys(0x434115DE,0x34A10FE9,0x6791428E); /* Thanks to Shakto */
+#endif
+
+
 #endif /* _PACKETS_H_ */
