@@ -820,7 +820,7 @@ int battle_calc_elefix(struct block_list *src, struct block_list *target, uint16
 	{ // Descriptions indicate this means adding a percent of a normal attack in another element. [Skotlex]
 			damage = 
 #ifndef RENEWAL
-				battle->calc_base_damage(sstatus, &sstatus->rhw, sc, tstatus->size, ((TBL_PC*)src), (flag?2:0))
+				battle->calc_base_damage(sstatus, &sstatus->rhw, sc, tstatus->size, BL_CAST(BL_PC, src), (flag?2:0))
 #else
 				battle->calc_base_damage(src, target, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_R, (flag?2:0)|(sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), 0)
 #endif
@@ -830,7 +830,7 @@ int battle_calc_elefix(struct block_list *src, struct block_list *target, uint16
 			if( left ){
 				damage = 
 #ifndef RENEWAL
-					battle->calc_base_damage(sstatus, &sstatus->lhw, sc, tstatus->size, ((TBL_PC*)src), (flag?2:0))
+					battle->calc_base_damage(sstatus, &sstatus->lhw, sc, tstatus->size, BL_CAST(BL_PC, src), (flag?2:0))
 #else
 					battle->calc_base_damage(src, target, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_L, (flag?2:0)|(sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), 0)
 #endif
