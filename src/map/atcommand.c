@@ -816,8 +816,7 @@ ACMD(storage)
 	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.trading || sd->state.storage_flag)
 		return false;
 	
-	if (storage_storageopen(sd) == 1)
-	{	//Already open.
+	if (storage->open(sd) == 1) { //Already open.
 		clif->message(fd, msg_txt(250));
 		return false;
 	}
@@ -853,7 +852,7 @@ ACMD(guildstorage)
 		return false;
 	}
 	
-	storage_guild_storageopen(sd);
+	gstorage->open(sd);
 	clif->message(fd, msg_txt(920)); // Guild storage opened.
 	return true;
 }
@@ -5233,7 +5232,7 @@ ACMD(storeall)
 	
 	if (sd->state.storage_flag != 1)
   	{	//Open storage.
-		if( storage_storageopen(sd) == 1 ) {
+		if( storage->open(sd) == 1 ) {
 			clif->message(fd, msg_txt(1161)); // You currently cannot open your storage.
 			return false;
 		}
@@ -5243,10 +5242,10 @@ ACMD(storeall)
 		if (sd->status.inventory[i].amount) {
 			if(sd->status.inventory[i].equip != 0)
 				pc->unequipitem(sd, i, 3);
-			storage_storageadd(sd,  i, sd->status.inventory[i].amount);
+			storage->add(sd,  i, sd->status.inventory[i].amount);
 		}
 	}
-	storage_storageclose(sd);
+	storage->close(sd);
 	
 	clif->message(fd, msg_txt(1162)); // All items stored.
 	return true;
@@ -5264,9 +5263,9 @@ ACMD(clearstorage)
 	
 	j = sd->status.storage.storage_amount;
 	for (i = 0; i < j; ++i) {
-		storage_delitem(sd, i, sd->status.storage.items[i].amount);
+		storage->delitem(sd, i, sd->status.storage.items[i].amount);
 	}
-	storage_storageclose(sd);
+	storage->close(sd);
 	
 	clif->message(fd, msg_txt(1394)); // Your storage was cleaned.
 	return true;
@@ -5276,7 +5275,7 @@ ACMD(cleargstorage)
 {
 	int i, j;
 	struct guild *g;
-	struct guild_storage *gstorage;
+	struct guild_storage *guild_storage;
 	nullpo_retr(-1, sd);
 	
 	g = sd->guild;
@@ -5296,18 +5295,18 @@ ACMD(cleargstorage)
 		return false;
 	}
 	
-	gstorage = guild2storage2(sd->status.guild_id);
-	if (gstorage == NULL) {// Doesn't have opened @gstorage yet, so we skip the deletion since *shouldn't* have any item there.
+	guild_storage = gstorage->id2storage2(sd->status.guild_id);
+	if (guild_storage == NULL) {// Doesn't have opened @gstorage yet, so we skip the deletion since *shouldn't* have any item there.
 		return false;
 	}
 	
-	j = gstorage->storage_amount;
-	gstorage->lock = 1; // Lock @gstorage: do not allow any item to be retrieved or stored from any guild member
+	j = guild_storage->storage_amount;
+	guild_storage->lock = 1; // Lock @gstorage: do not allow any item to be retrieved or stored from any guild member
 	for (i = 0; i < j; ++i) {
-		guild_storage_delitem(sd, gstorage, i, gstorage->items[i].amount);
+		gstorage->delitem(sd, guild_storage, i, guild_storage->items[i].amount);
 	}
-	storage_guild_storageclose(sd);
-	gstorage->lock = 0; // Cleaning done, release lock
+	gstorage->close(sd);
+	guild_storage->lock = 0; // Cleaning done, release lock
 	
 	clif->message(fd, msg_txt(1395)); // Your guild storage was cleaned.
 	return true;

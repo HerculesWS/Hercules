@@ -8179,20 +8179,18 @@ BUILDIN(gettimestr)
 /*==========================================
  * Open player storage
  *------------------------------------------*/
-BUILDIN(openstorage)
-{
+BUILDIN(openstorage) {
 	TBL_PC* sd;
 	
 	sd = script_rid2sd(st);
 	if( sd == NULL )
 		return true;
 	
-	storage_storageopen(sd);
+	storage->open(sd);
 	return true;
 }
 
-BUILDIN(guildopenstorage)
-{
+BUILDIN(guildopenstorage) {
 	TBL_PC* sd;
 	int ret;
 	
@@ -8200,7 +8198,7 @@ BUILDIN(guildopenstorage)
 	if( sd == NULL )
 		return true;
 	
-	ret = storage_guild_storageopen(sd);
+	ret = gstorage->open(sd);
 	script_pushint(st,ret);
 	return true;
 }
