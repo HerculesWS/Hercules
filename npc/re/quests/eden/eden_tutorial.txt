@@ -103,6 +103,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	904,{
 			mes "[Tutorial Instructor]";
 			mes "Now... Hurry and employ";
 			mes "a ^006400Mercenary^000000 and come back to me!";
+			close;
 		}
 		mes "[Tutorial Instructor]";
 		mes "Seeing you with a ^006400Mercenary^000000 definitely makes me trust you more.";
