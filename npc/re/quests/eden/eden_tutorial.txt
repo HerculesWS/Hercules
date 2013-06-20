@@ -991,7 +991,7 @@ L_Info:
 	next;
 	mes "[Party Recruiting Expert]";
 	mes "There are 2 parts to Party Recruiting.";
-	mes "1st step is ^0000FRegistering Party Recruiting^000000,";
+	mes "1st step is ^0000FFRegistering Party Recruiting^000000,";
 	mes "and the 2nd step is ^0000FFParty Search^000000.";
 	next;
 	mes "[Party Recruiting Expert]";
