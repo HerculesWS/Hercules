@@ -5235,13 +5235,9 @@ void map_hp_symbols(void) {
 	HPM->share(buyingstore,"buyingstore");
 	HPM->share(clif,"clif");
 	HPM->share(guild,"guild");
-<<<<<<< HEAD
-	HPM->share(homun,"homun");
-=======
 	HPM->share(gstorage,"gstorage");
 	HPM->share(homun,"homun");
 	HPM->share(iMap,"iMap");
->>>>>>> upstream/master
 	HPM->share(ircbot,"ircbot");
 	HPM->share(itemdb,"itemdb");
 	HPM->share(logs,"logs");
@@ -5252,12 +5248,8 @@ void map_hp_symbols(void) {
 	HPM->share(vending,"vending");
 	HPM->share(pc,"pc");
 	HPM->share(party,"party");
-<<<<<<< HEAD
-	HPM->share(iMap,"iMap");
-=======
 	HPM->share(storage,"storage");
 	HPM->share(trade,"trade");
->>>>>>> upstream/master
 	/* partial */
 	HPM->share(mapit,"mapit");
 	/* sql link */
@@ -5290,11 +5282,8 @@ void load_defaults(void) {
 	vending_defaults();
 	pc_defaults();
 	party_defaults();
-<<<<<<< HEAD
-=======
 	storage_defaults();
 	trade_defaults();
->>>>>>> upstream/master
 }
 int do_init(int argc, char *argv[])
 {

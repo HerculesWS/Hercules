@@ -253,11 +253,7 @@ int storage_storageget(struct map_session_data* sd, int index, int amount)
 		return 0;
 
 	if( (flag = pc->additem(sd,&sd->status.storage.items[index],amount,LOG_TYPE_STORAGE)) == 0 )
-<<<<<<< HEAD
-		storage_delitem(sd,index,amount);
-=======
 		storage->delitem(sd,index,amount);
->>>>>>> upstream/master
 	else
 		clif->additem(sd,0,0,flag);
 
@@ -314,11 +310,7 @@ int storage_storagegettocart(struct map_session_data* sd, int index, int amount)
 		return 0;
 	
 	if( pc->cart_additem(sd,&sd->status.storage.items[index],amount,LOG_TYPE_STORAGE) == 0 )
-<<<<<<< HEAD
-		storage_delitem(sd,index,amount);
-=======
 		storage->delitem(sd,index,amount);
->>>>>>> upstream/master
 
 	return 1;
 }
@@ -539,11 +531,7 @@ int storage_guild_storageadd(struct map_session_data* sd, int index, int amount)
 		return 0;
 	}
 
-<<<<<<< HEAD
-	if(guild_storage_additem(sd,stor,&sd->status.inventory[index],amount)==0)
-=======
 	if(gstorage->additem(sd,stor,&sd->status.inventory[index],amount)==0)
->>>>>>> upstream/master
 		pc->delitem(sd,index,amount,0,4,LOG_TYPE_GSTORAGE);
 
 	return 1;
@@ -582,11 +570,7 @@ int storage_guild_storageget(struct map_session_data* sd, int index, int amount)
 	}
 
 	if((flag = pc->additem(sd,&stor->items[index],amount,LOG_TYPE_GSTORAGE)) == 0)
-<<<<<<< HEAD
-		guild_storage_delitem(sd,stor,index,amount);
-=======
 		gstorage->delitem(sd,stor,index,amount);
->>>>>>> upstream/master
 	else //inform fail
 		clif->additem(sd,0,0,flag);
 //	log_fromstorage(sd, index, 1);
@@ -620,11 +604,7 @@ int storage_guild_storageaddfromcart(struct map_session_data* sd, int index, int
 	if( amount < 1 || amount > sd->status.cart[index].amount )
 		return 0;
 
-<<<<<<< HEAD
-	if(guild_storage_additem(sd,stor,&sd->status.cart[index],amount)==0)
-=======
 	if(gstorage->additem(sd,stor,&sd->status.cart[index],amount)==0)
->>>>>>> upstream/master
 		pc->cart_delitem(sd,index,amount,0,LOG_TYPE_GSTORAGE);
 
 	return 1;
@@ -657,11 +637,7 @@ int storage_guild_storagegettocart(struct map_session_data* sd, int index, int a
 		return 0;
 
 	if(pc->cart_additem(sd,&stor->items[index],amount,LOG_TYPE_GSTORAGE)==0)
-<<<<<<< HEAD
-		guild_storage_delitem(sd,stor,index,amount);
-=======
 		gstorage->delitem(sd,stor,index,amount);
->>>>>>> upstream/master
 
 	return 1;
 }

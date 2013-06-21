@@ -5242,11 +5242,7 @@ ACMD(storeall)
 		if (sd->status.inventory[i].amount) {
 			if(sd->status.inventory[i].equip != 0)
 				pc->unequipitem(sd, i, 3);
-<<<<<<< HEAD
-			storage_storageadd(sd,  i, sd->status.inventory[i].amount);
-=======
 			storage->add(sd,  i, sd->status.inventory[i].amount);
->>>>>>> upstream/master
 		}
 	}
 	storage->close(sd);

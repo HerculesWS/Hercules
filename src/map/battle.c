@@ -753,13 +753,8 @@ int battle_calc_masteryfix(struct block_list *src, struct block_list *target, ui
 		int ratio = sd->status.base_level + status_get_dex(src) + status_get_luk(src);
 		if ( i == 2 ) ratio += status_get_str(src); //Star Anger
 		if  (skill < 4 )
-<<<<<<< HEAD
-			ratio /= 12 - 3 * skill;
-		damage += damage * ratio;
-=======
 			ratio /= (12 - 3 * skill);
 		damage += damage * ratio / 100;
->>>>>>> upstream/master
 	}
 	
 	if( sc ){
@@ -825,11 +820,7 @@ int battle_calc_elefix(struct block_list *src, struct block_list *target, uint16
 	{ // Descriptions indicate this means adding a percent of a normal attack in another element. [Skotlex]
 			damage = 
 #ifndef RENEWAL
-<<<<<<< HEAD
-				battle->calc_base_damage(sstatus, &sstatus->rhw, sc, tstatus->size, ((TBL_PC*)src), (flag?2:0))
-=======
 				battle->calc_base_damage(sstatus, &sstatus->rhw, sc, tstatus->size, BL_CAST(BL_PC, src), (flag?2:0))
->>>>>>> upstream/master
 #else
 				battle->calc_base_damage(src, target, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_R, (flag?2:0)|(sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), 0)
 #endif
@@ -839,11 +830,7 @@ int battle_calc_elefix(struct block_list *src, struct block_list *target, uint16
 			if( left ){
 				damage = 
 #ifndef RENEWAL
-<<<<<<< HEAD
-					battle->calc_base_damage(sstatus, &sstatus->lhw, sc, tstatus->size, ((TBL_PC*)src), (flag?2:0))
-=======
 					battle->calc_base_damage(sstatus, &sstatus->lhw, sc, tstatus->size, BL_CAST(BL_PC, src), (flag?2:0))
->>>>>>> upstream/master
 #else
 					battle->calc_base_damage(src, target, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_L, (flag?2:0)|(sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), 0)
 #endif
@@ -4358,23 +4345,11 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				wd.damage = sstatus->max_hp* 9/100;
 				wd.damage2 = 0;
 				break;
-<<<<<<< HEAD
-				
-#ifdef RENEWAL
-			case MO_EXTREMITYFIST:	// [malufett]
-				wd.damage = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|8, wd.flag);
-				// first value is still not confirm.
-				wd.damage = status_get_sp(src) + 10 * status_get_sp(src) * wd.damage / 100 + 8 * wd.damage;
-				flag.tdef = 1;
-				break;
-			case NJ_ISSEN: // [malufett]
-=======
 			case NJ_ISSEN: // [malufett]
 #ifndef RENEWAL
 				wd.damage = 40*sstatus->str +skill_lv*(sstatus->hp/10 + 35);
 				wd.damage2 = 0;
 #else
->>>>>>> upstream/master
 				{
 					short totaldef = status_get_total_def(target);
 					i = 0;
@@ -4388,14 +4363,6 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 						ATK_RATE(50);
 					flag.idef = 1;
 				}
-<<<<<<< HEAD
-#else
-				
-				wd.damage = 40*sstatus->str +skill_lv*(sstatus->hp/10 + 35);
-				wd.damage2 = 0;
-#endif
-				break;	
-=======
 				break;	
 			case MO_EXTREMITYFIST:	// [malufett]
 				wd.damage = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|8, wd.flag);
@@ -4404,7 +4371,6 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				flag.tdef = 1;
 #endif
 				break;
->>>>>>> upstream/master
 #ifndef RENEWAL
 			case LK_SPIRALPIERCE:
 			case ML_SPIRALPIERCE:

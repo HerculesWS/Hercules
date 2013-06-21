@@ -9751,18 +9751,9 @@ void pc_read_skill_tree(void) {
 							
 				ARR_FIND( 0, MAX_SKILL_TREE, d, skill_tree[fidx][d].id == 0 );
 
-<<<<<<< HEAD
-	if(!pcdb_checkid(class_))
-	{
-		ShowWarning("pc_readdb_skilltree: Invalid job class %d specified.\n", class_);
-		return false;
-	}
-	idx = pc->class2idx(class_);
-=======
 				for( f = 0; f < d; f++ ) {
 					
 					ARR_FIND( 0, MAX_SKILL_TREE, a, skill_tree[idx][a].id == 0 || skill_tree[idx][a].id == skill_tree[fidx][f].id );
->>>>>>> upstream/master
 
 					if( a == MAX_SKILL_TREE ) {
 						ShowWarning("pc_read_skill_tree: '%s' can't inherit '%s', skill tree is full!\n", name,iname);
@@ -9911,12 +9902,7 @@ int pc_readdb(void)
 	count = 0;
 	// Reset and read skilltree
 	memset(skill_tree,0,sizeof(skill_tree));
-<<<<<<< HEAD
-	sv->readdb(iMap->db_path, DBPATH"skill_tree.txt", ',', 3+MAX_PC_SKILL_REQUIRE*2, 4+MAX_PC_SKILL_REQUIRE*2, -1, &pc_readdb_skilltree);
-
-=======
 	pc_read_skill_tree();
->>>>>>> upstream/master
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	sv->readdb(iMap->db_path, "re/level_penalty.txt", ',', 4, 4, -1, &pc_readdb_levelpenalty);
 	for( k=1; k < 3; k++ ){ // fill in the blanks

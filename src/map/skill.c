@@ -7971,20 +7971,11 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					break;
 				for(i = 0; i < SC_MAX; i++)
 				{
-<<<<<<< HEAD
-					if( SC_COMMON_MAX > i ){
-						if ( !tsc->data[i] || !status_get_sc_type(i) )
-							continue;
-						if ( status_get_sc_type(i)&SC_NO_CLEARANCE )
-							continue;
-					}
-=======
 					if ( !tsc->data[i] )
 						continue;
 					if( SC_COMMON_MAX > i )
 						if ( status_get_sc_type(i)&SC_NO_CLEARANCE )
 							continue;
->>>>>>> upstream/master
 					switch (i) {
 						case SC_ASSUMPTIO:
 							if( bl->type == BL_MOB )
@@ -8565,11 +8556,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		case SR_FLASHCOMBO:
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			for(i = SR_FLASHCOMBO_ATK_STEP1; i <= SR_FLASHCOMBO_ATK_STEP4; i++)
-<<<<<<< HEAD
-				skill->addtimerskill(src, tick + 600 * (i - SR_FLASHCOMBO_ATK_STEP1), bl->id, 0, 0, i, skill_lv, BF_WEAPON, flag|SD_LEVEL);
-=======
 				skill->addtimerskill(src, tick + 500 * (i - SR_FLASHCOMBO_ATK_STEP1), bl->id, 0, 0, i, skill_lv, BF_WEAPON, flag|SD_LEVEL);
->>>>>>> upstream/master
 			break;
 		case WA_SWING_DANCE:
 		case WA_MOONLIT_SERENADE:

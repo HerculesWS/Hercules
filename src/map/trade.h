@@ -20,11 +20,7 @@ struct trade_interface {
 } trade_s;
 
 struct trade_interface *trade;
-<<<<<<< HEAD
-void trade_interface(void);
-=======
 
 void trade_defaults(void);
->>>>>>> upstream/master
 
 #endif /* _TRADE_H_ */
