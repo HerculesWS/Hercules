@@ -67,8 +67,7 @@ expression, like a bunch of functions or operators returning a value, in
 (round brackets) instead of most numbers. Round brackets will not always 
 be required, but they're often a good idea.
 
-Wherever you refer to a map name, it's always 'mapname' or 'mapname.gat' 
-(Please, don't use .gat suffix anymore. It's useless.) 
+Wherever you refer to a map, use 'mapname' instead of 'mapname.gat'.
 
 
 Script loading structure
@@ -780,7 +779,7 @@ Logical bitwise operators work only on numbers, and they are the following:
     hand, it sets to 1 if they have different values in the said binary 
     position. This is another way of setting and unsetting bits in 
     bit-masks.
-	
+
 	Example:
 	- First let's set the quests that are currently in progress:
 		set inProgress,1|8|16; // quest 1,8 and 16 are in progress
@@ -1793,93 +1792,93 @@ above.
 Anything that is returned by a function can be used in a condition check 
 without bothering to store it in a specific variable:
 
-    if (strcharinfo(0)=="Daniel Jackson") mes "It is true, you are Daniel!";
+	if (strcharinfo(0)=="Daniel Jackson") mes "It is true, you are Daniel!";
 
 More examples of using the 'if' command in the real world:
 
 Example 1:
 
-        set @var1,1;
-        input @var2;
-        if(@var1==@var2) goto L_Same;
-        mes "Sorry that is wrong";
-        close;
-    L_Same:
-        close;
+		set @var1,1;
+		input @var2;
+		if(@var1==@var2) goto L_Same;
+		mes "Sorry that is wrong";
+		close;
+	L_Same:
+		close;
 
 Example 2:
-    
-    set @var1,1;
-    input @var2;
-    if(@var1!=@var2) mes "Sorry that is wrong";
-    close;
+
+	set @var1,1;
+	input @var2;
+	if(@var1!=@var2) mes "Sorry that is wrong";
+	close;
 
 (Notice examples 1 and 2 have the same effect.)
 
 Example 3:
 
-    set @var1,@var1+1;
-    mes "[Forgetfull Man]";
-    if (@var==1) mes "This is the first time you have talked to me";
-    if (@var==2) mes "This is the second time you have talked to me";
-    if (@var==3) mes "This is the third time you have talked to me";
-    if (@var==4) mes "This is the forth time you have talked to me, but I think I am getting amnesia, I have forgotten about you";
-    if (@var==4) set @var,0;
-    close;
+	set @var1,@var1+1;
+	mes "[Forgetfull Man]";
+	if (@var==1) mes "This is the first time you have talked to me";
+	if (@var==2) mes "This is the second time you have talked to me";
+	if (@var==3) mes "This is the third time you have talked to me";
+	if (@var==4) mes "This is the forth time you have talked to me, but I think I am getting amnesia, I have forgotten about you";
+	if (@var==4) set @var,0;
+	close;
 
 Example 4:
 
-        mes "[Quest Person]";
-        if(countitem(512)>=1) goto L_GiveApple;
-        // The number 512 was found from item_db, it is the item number 
-        // for the Apple.
-        mes "Can you please bring me an apple?";
-        close;
-    L_GiveApple:
-        mes "Oh an apple, I didn't want it, I just wanted to see one";
-        close;
+		mes "[Quest Person]";
+		if(countitem(512)>=1) goto L_GiveApple;
+		// The number 512 was found from item_db, it is the item number 
+		// for the Apple.
+		mes "Can you please bring me an apple?";
+		close;
+	L_GiveApple:
+		mes "Oh an apple, I didn't want it, I just wanted to see one";
+		close;
 
 Example 5:
 
-        mes "[Person Checker]";
-        if($name$!=null) goto L_Check;
-        mes "Please tell me someones name";
-        next;
-        input $name$;
-        set $name2$,strcharinfo(0);
-        mes "[Person Checker]";
-        mes "Thank you";
-    L_Check:
-        if($name$==strcharinfo(0) ) goto L_SameName;
-        mes "[Person Checker]";
-        mes "You are not the person that " +$name2$+ " mentioned";
-    L_End:
-        set $name$,null;
-        set $name2$,null;
-        close;
-    L_SameName:
-        mes "[Person Checker]";
-        mes "You are the person that " +$name2$+ " just mentioned";
-        mes "nice to meet you";
-        goto L_End;
+		mes "[Person Checker]";
+		if($name$!=null) goto L_Check;
+		mes "Please tell me someones name";
+		next;
+		input $name$;
+		set $name2$,strcharinfo(0);
+		mes "[Person Checker]";
+		mes "Thank you";
+	L_Check:
+		if($name$==strcharinfo(0) ) goto L_SameName;
+		mes "[Person Checker]";
+		mes "You are not the person that " +$name2$+ " mentioned";
+	L_End:
+		set $name$,null;
+		set $name2$,null;
+		close;
+	L_SameName:
+		mes "[Person Checker]";
+		mes "You are the person that " +$name2$+ " just mentioned";
+		mes "nice to meet you";
+		goto L_End;
 
 See 'strcharinfo' for explanation of what this function does.
 
 Example 6: Using complex conditions.
 
-        mes "[Multi Checker]";
-        if( (@queststarted==1) && (countitem(512)>=5) ) goto L_MultiCheck;
-        // Only if the quest has been started AND You have 5 apples will it goto "L_MultiCheck"
-        mes "Please get me 5 apples";
-        set @queststarted,1;
-        close;
-    L_MultiCheck:
-        mes "[Multi Checker]";
-        mes "Well done you have started the quest of got me 5 apples";
-        mes "Thank you";
-        set @queststarted,0;
-        delitem 512,5;
-        close;
+		mes "[Multi Checker]";
+		if( (@queststarted==1) && (countitem(512)>=5) ) goto L_MultiCheck;
+		// Only if the quest has been started AND You have 5 apples will it goto "L_MultiCheck"
+		mes "Please get me 5 apples";
+		set @queststarted,1;
+		close;
+	L_MultiCheck:
+		mes "[Multi Checker]";
+		mes "Well done you have started the quest of got me 5 apples";
+	mes "Thank you";
+		set @queststarted,0;
+		delitem 512,5;
+		close;
 
 With the Advanced scripting engine, we got nested if's. That is:
 
@@ -2042,7 +2041,7 @@ Example:
 		dothis;
 		// will sleep the script for 1ms when detect an infinity loop to 
 		// let Hercules do what it need to do (socket, timer, process, 
-        // etc.)
+		// etc.)
 	}
 
 	freeloop(0); // disable
@@ -2059,14 +2058,14 @@ Example:
 This command will allow you to quickly fill up an array in one go. Check 
 the Kafra scripts in the distribution to see this used a lot.
 
-    setarray @array[0], 100, 200, 300, 400, 500, 600;
+	setarray @array[0], 100, 200, 300, 400, 500, 600;
 
 First value is the index of the first element of the array to alter. For 
 example:
 
-    setarray @array[0],200,200,200;
-    setarray @array[1],300,150;
-    
+	setarray @array[0],200,200,200;
+	setarray @array[1],300,150;
+
 will produce:
 
  @array[0]=200
@@ -2080,13 +2079,13 @@ will produce:
 This command will change many array values at the same time to the same 
 value.
 
-    setarray @array[0], 100, 200, 300, 400, 500, 600;
-    // This will make all 6 values 0
-    cleararray @array[0],0,6;
-    // This will make array element 0 change to 245
-    cleararray @array[0],245,1;
-    // This will make elements 1 and 2 change to 345
-    cleararray @array[1],345,2;
+	setarray @array[0], 100, 200, 300, 400, 500, 600;
+	// This will make all 6 values 0
+	cleararray @array[0],0,6;
+	// This will make array element 0 change to 245
+	cleararray @array[0],245,1;
+	// This will make elements 1 and 2 change to 345
+	cleararray @array[1],345,2;
 
 See 'setarray'.
 
@@ -2097,12 +2096,12 @@ See 'setarray'.
 This command lets you quickly shuffle a lot of data between arrays, which 
 is in some cases invaluable.
 
-    setarray @array[0], 100, 200, 300, 400, 500, 600;
-    // So we have made @array[]
-    copyarray @array2[0],@array[2],2;
-    
-    // Now, @array2[0] will be equal to @array[2] (300) and 
-    // @array2[1] will be equal to @array[3].
+	setarray @array[0], 100, 200, 300, 400, 500, 600;
+	// So we have made @array[]
+	copyarray @array2[0],@array[2],2;
+
+	// Now, @array2[0] will be equal to @array[2] (300) and 
+	// @array2[1] will be equal to @array[3].
 
 So using the examples above:
  @array[0] = 100
@@ -2128,14 +2127,13 @@ and it will return a 0.
 This command will delete a specified number of array elements totally from 
 an array, shifting all the elements beyond this towards the beginning.
 
-    // This will delete array element 0, and move all the other array 
-    // elements up one place.
-    deletearray @array[0],1
+	// This will delete array element 0, and move all the other array 
+	// elements up one place.
+	deletearray @array[0],1
 
-// This would delete array elements numbered 1, 2 and 3, leave element 0 
-// in its place, and move the other elements ups, so there are no gaps.
-
-    deletearray @array[1],3
+	// This would delete array elements numbered 1, 2 and 3, leave element 0 
+	// in its place, and move the other elements ups, so there are no gaps.
+	deletearray @array[1],3
 
 ---------------------------------------
 
@@ -2180,14 +2178,14 @@ array are not counted towards this number.
 
 For example:
 
-    setarray @array[0], 100, 200, 300, 400, 500, 600;
-    set @arraysize,getarraysize(@array);
+	setarray @array[0], 100, 200, 300, 400, 500, 600;
+	set @arraysize,getarraysize(@array);
 
 This will make @arraysize == 6. But if you try this:
 
-    setarray @array[0], 100, 200, 300, 400, 500, 600, 0;
-    set @arraysize,getarraysize(@array);
-    
+	setarray @array[0], 100, 200, 300, 400, 500, 600, 0;
+	set @arraysize,getarraysize(@array);
+
 @arraysize will still equal 6, even though you've set 7 values.    
 
 ---------------------------------------
@@ -2197,15 +2195,15 @@ This will make @arraysize == 6. But if you try this:
 This command retrieves the value of the element of given array at given 
 index. This is equivalent to using:
 
-    <array name>[<index>]
+	<array name>[<index>]
 
 The reason for this is, that this short form is internally converted into 
 a call to getelementofarray, when the script is loaded.
 
 Also useful when passing arrays to functions or accessing another npc's 
 arrays: 
-    getelementofarray(getarg(0),<index>)
-    getelementofarray(getvariableofnpc(.var, "testNPC"),<index>)
+	getelementofarray(getarg(0),<index>)
+	getelementofarray(getvariableofnpc(.var, "testNPC"),<index>)
 
 ---------------------------------------
 
@@ -2226,20 +2224,20 @@ All of these also behave as variables, but don't expect to be able to just
 
 Example 1:
 
-    // Returns how many status points you haven't spent yet.
-    mes "Unused status points: "+readparam(9);
+	// Returns how many status points you haven't spent yet.
+	mes "Unused status points: "+readparam(9);
 
 Using this particular information as a function call is not required. 
 Typing this will return the same result:
 
-    mes "Unused status points: "+StatusPoint;
+	mes "Unused status points: "+StatusPoint;
 
 Example 2:
 
 You can also use this command to get stat values.
 
-    if (readparam(bVit) > 77)
-        mes "Only people with over 77 Vit are reading this!";
+	if (readparam(bVit) > 77)
+		mes "Only people with over 77 Vit are reading this!";
 
 ---------------------------------------
 
@@ -2278,7 +2276,7 @@ Retrieves IDs of the currently invoked NPC. If a unique npc name is given,
 IDs of that NPC are retrieved instead. Type specifies what ID to retrieve 
 and can be one of the following:
 
-    0 - Unit ID (GID)
+	0 - Unit ID (GID)
 
 If an invalid type is given or the NPC does not exist, 0 is returned.
 
@@ -2291,7 +2289,7 @@ If an invalid type is given or the NPC does not exist, 0 is returned.
 These functions return the character ID of the attached player's child, 
 mother, mother, or father, respectively. It returns 0 if no ID is found.
 
-    if (getmotherid()) mes "Your mother's ID is: "+getmotherid();
+	if (getmotherid()) mes "Your mother's ID is: "+getmotherid();
 
 ---------------------------------------
 
@@ -2308,8 +2306,8 @@ This function returns the character ID of the invoking character's
 marriage partner, if any. If the invoking character is not married, it 
 will return 0, which is a quick way to see if they are married:
 
-    if (!getpartnerid()) mes "I'm not going to be your girlfriend!";
-    if (getpartnerid()) mes "You're married already!";
+	if (!getpartnerid()) mes "I'm not going to be your girlfriend!";
+	if (getpartnerid()) mes "You're married already!";
 
 ---------------------------------------
 
@@ -2320,9 +2318,9 @@ number. If there is no such party ID, "null" will be returned.
 
 Lets say the ID of a party was saved as a global variable:
 
-    // This would return the name of the party from the ID stored in a 
-    // variable
-    mes "You're in the '"+getpartyname($@var)+"' party, I know!";
+	// This would return the name of the party from the ID stored in a 
+	// variable
+	mes "You're in the '"+getpartyname($@var)+"' party, I know!";
 
 ---------------------------------------
 
@@ -2371,9 +2369,9 @@ Example 1: list party member names
 	
 	// It's a good idea to copy the global temporary $@partymember***** 
 	// variables to your own scope variables because if you have pauses in 
-    // this script (sleep, sleep2, next, close2, input, menu, select, or 
-    // prompt), another player could click this NPC, trigger 
-    // 'getpartymember', and overwrite the $@partymember***** variables.
+	// this script (sleep, sleep2, next, close2, input, menu, select, or 
+	// prompt), another player could click this NPC, trigger 
+	// 'getpartymember', and overwrite the $@partymember***** variables.
 	set .@count, $@partymembercount;
 	copyarray .@name$[0], $@partymembername$[0], $@partymembercount;
 	
@@ -2402,10 +2400,10 @@ Example 2: check party count (with a 'next' pause), before warping to event
 		if ( isloggedin( $@partymemberaid[.@i], $@partymembercid[.@i] ) )
 			set .@count_online, .@count_online +1 ;
 	// We search accountID & charID because a single party can have 
-    // multiple characters from the same account. Without searching 
-    // through the charID, if a player has 2 characters from the same 
-    // account inside the party but only 1 char online, it would count 
-    // their online char twice.
+	// multiple characters from the same account. Without searching 
+	// through the charID, if a player has 2 characters from the same 
+	// account inside the party but only 1 char online, it would count 
+	// their online char twice.
 	
 	if ( .@count_online != .register_num ) {
 		mes "All your party members must be online to continue";
@@ -2420,9 +2418,9 @@ Example 2: check party count (with a 'next' pause), before warping to event
 	select "Yes";
 	
 	// When a script hits a next, menu, sleep or input that pauses the 
-    // script, players can invite or /leave and make changes in their 
-    // party. To prevent this, we call getpartymember again and compare 
-    // with the original values.
+	// script, players can invite or /leave and make changes in their 
+	// party. To prevent this, we call getpartymember again and compare 
+	// with the original values.
 	
 	getpartymember getcharid(1), 1;
 	if ( $@partymembercount != .register_num ) {
@@ -2529,33 +2527,33 @@ for either slot.
 Can be used to check if you have something equipped, or if you haven't got 
 something equipped:
 
-        if(getequipid(EQI_HEAD_TOP)==2234) goto L_WearingTiara;
-        mes "Come back when you have a Tiara on";
-        close;
-    L_WearingTiara:
-        mes "What a lovely Tiara you have on";
-        close;
+		if(getequipid(EQI_HEAD_TOP)==2234) goto L_WearingTiara;
+		mes "Come back when you have a Tiara on";
+		close;
+	L_WearingTiara:
+		mes "What a lovely Tiara you have on";
+		close;
 
 You can also use it to make sure people don't pass a point before removing 
 an item totally from them. Let's say you don't want people to wear Legion 
 Plate armor, but also don't want them to equip if after the check, you 
 would do this:
 
-        if ((getequipid(EQI_ARMOR) == 2341) || (getequipid(EQI_ARMOR) == 2342) goto L_EquipedLegionPlate;
-    // the || is used as an or argument, there is 2341 and 2342 cause 
-    // there are two different legion plate armors, one with a slot one 
-    // without.
-        if ((countitem(2341) > 0) || (countitem(2432) > 0) goto L_InventoryLegionPlate;
-        mes "I will lets you pass";
-        close2;
-        warp "place",50,50;
-        end;
-    L_EquipedLegionPlate:
-        mes "You are wearing some Legion Plate Armor, please drop that in your stash before continuing";
-        close;
-    L_InventoryLegionPlate:
-        mes "You have some Legion Plate Armor in your inventory, please drop that in your stash before continuing";
-        close;
+		if ((getequipid(EQI_ARMOR) == 2341) || (getequipid(EQI_ARMOR) == 2342) goto L_EquipedLegionPlate;
+	// the || is used as an or argument, there is 2341 and 2342 cause 
+	// there are two different legion plate armors, one with a slot one 
+	// without.
+		if ((countitem(2341) > 0) || (countitem(2432) > 0) goto L_InventoryLegionPlate;
+		mes "I will lets you pass";
+		close2;
+		warp "place",50,50;
+		end;
+	L_EquipedLegionPlate:
+		mes "You are wearing some Legion Plate Armor, please drop that in your stash before continuing";
+		close;
+	L_InventoryLegionPlate:
+		mes "You have some Legion Plate Armor in your inventory, please drop that in your stash before continuing";
+		close;
 
 ---------------------------------------
 
@@ -2568,10 +2566,10 @@ Does the same thing as getitemname(getequipid()). Useful for an NPC to
 state what your are wearing, or maybe saving as a string variable.
 See 'getequipid' for a full list of valid equipment slots.
 
-        if( getequipname(EQI_HEAD_TOP) != "" )
-	        mes "So you are wearing a "+getequipname(EQI_HEAD_TOP)+" on your head";
+		if( getequipname(EQI_HEAD_TOP) != "" )
+			mes "So you are wearing a "+getequipname(EQI_HEAD_TOP)+" on your head";
 	else
-	        mes "You are not wearing any head gear";
+			mes "You are not wearing any head gear";
 
 ---------------------------------------
 
@@ -2591,12 +2589,12 @@ may have several broken items, 1 given as an argument will return the
 first one found, 2 will return the second one, etc. Will return 0 if no 
 such item is found.
 
-    // Let's see if they have anything broken:
-        if (getbrokenid(1)==0) goto Skip;
-    // They do, so let's print the name of the first broken item:
-        mes "Oh, I see you have a broken "+getitemname(getbrokenid(1))+" here!";
-    Skip:
-        mes "You don't have anything broken, quit bothering me.";
+	// Let's see if they have anything broken:
+		if (getbrokenid(1)==0) goto Skip;
+	// They do, so let's print the name of the first broken item:
+		mes "Oh, I see you have a broken "+getitemname(getbrokenid(1))+" here!";
+	Skip:
+		mes "You don't have anything broken, quit bothering me.";
 
 ---------------------------------------
 
@@ -2606,14 +2604,14 @@ This functions will return 1 if there is an equipment placed on the
 specified equipment slot and 0 otherwise. For a list of equipment slots 
 see 'getequipid'. Function originally used by the refining NPCs:
 
-    if (getequipisequiped(EQI_HEAD_TOP)) goto L_equipped;
-        mes "[Refiner]";
-        mes "Do you want me to refine your dumb head?";
-        close;
-    L_equipped:
-        mes "[Refiner]";
-        mes "That's a fine hat you are wearing there...";
-        close;
+	if (getequipisequiped(EQI_HEAD_TOP)) goto L_equipped;
+		mes "[Refiner]";
+		mes "Do you want me to refine your dumb head?";
+		close;
+	L_equipped:
+		mes "[Refiner]";
+		mes "That's a fine hat you are wearing there...";
+		close;
 
 ---------------------------------------
 
@@ -2623,14 +2621,14 @@ Will return 1 if the item equipped on the invoking character in the
 specified equipment slot is refinable, and 0 if it isn't. For a list of 
 equipment slots see 'getequipid'.
 
-        if (getequipisenableref(EQI_HEAD_TOP)) goto L_Refine;
-        mes "[Refiner]";
-        mes "I can't refine this hat!...";
-        close;
-    L_Refine:
-        mes "[Refiner]";
-        mes "Ok I can refine this";
-        close;
+		if (getequipisenableref(EQI_HEAD_TOP)) goto L_Refine;
+		mes "[Refiner]";
+		mes "I can't refine this hat!...";
+		close;
+	L_Refine:
+		mes "[Refiner]";
+		mes "Ok I can refine this";
+		close;
 
 ---------------------------------------
 
@@ -2642,11 +2640,11 @@ equipment slot. For a list of equipment slots see 'getequipid'.
 Can be used to check if you have reached a maximum refine value, default 
 for this is +10:
 
-        if(getequiprefinerycnt(EQI_HEAD_TOP) < 10) goto L_Refine_HeadGear;
-        mes "Sorry, it's not possible to refine hats better than +10";
-        close;
-    L_Refine_HeadGear:
-        mes "I will now upgrade your "+getequipname(EQI_HEAD_TOP);
+		if(getequiprefinerycnt(EQI_HEAD_TOP) < 10) goto L_Refine_HeadGear;
+		mes "Sorry, it's not possible to refine hats better than +10";
+		close;
+	L_Refine_HeadGear:
+		mes "I will now upgrade your "+getequipname(EQI_HEAD_TOP);
 
 ---------------------------------------
 
@@ -2666,28 +2664,28 @@ according to the database, 0 will be returned.
 Examples:
 
 // Right hand can only contain a weapon.
-    switch (getequipweaponlv(EQI_HAND_R)) {
-      case 1: mes "You are holding a lvl 1 weapon."; break;
-      case 2: mes "You are holding a lvl 2 weapon."; break;
-      case 3: mes "You are holding a lvl 3 weapon."; break;
-      case 4: mes "You are holding a lvl 4 weapon."; break;
-      case 5: mes "You are holding a lvl 5 weapon, hm, must be a custom design..."; break;
-      default: mes "Seems you don't have a weapon on."; break;
-    }
+	switch (getequipweaponlv(EQI_HAND_R)) {
+		case 1: mes "You are holding a lvl 1 weapon."; break;
+		case 2: mes "You are holding a lvl 2 weapon."; break;
+		case 3: mes "You are holding a lvl 3 weapon."; break;
+		case 4: mes "You are holding a lvl 4 weapon."; break;
+		case 5: mes "You are holding a lvl 5 weapon, hm, must be a custom design..."; break;
+		default: mes "Seems you don't have a weapon on."; break;
+	}
 
 // Left hand can hold either a weapon or shield.
-    if (getequipid(EQI_HAND_R) == 0) {
-        mes "Seems you have nothing equipped here.";
-        close;
-    }
-    switch (getequipweaponlv(EQI_HAND_L)) {
-      case 0: mes "You are holding a shield, so it doesn't have a level."; break;
-      case 1: mes "You are holding a lvl 1 weapon."; break;
-      case 2: mes "You are holding a lvl 2 weapon."; break;
-      case 3: mes "You are holding a lvl 3 weapon."; break;
-      case 4: mes "You are holding a lvl 4 weapon."; break;
-      case 5: mes "You are holding a lvl 5 weapon, hm, must be a custom design..."; break;
-    }
+	if (getequipid(EQI_HAND_R) == 0) {
+		mes "Seems you have nothing equipped here.";
+		close;
+	}
+	switch (getequipweaponlv(EQI_HAND_L)) {
+		case 0: mes "You are holding a shield, so it doesn't have a level."; break;
+		case 1: mes "You are holding a lvl 1 weapon."; break;
+		case 2: mes "You are holding a lvl 2 weapon."; break;
+		case 3: mes "You are holding a lvl 3 weapon."; break;
+		case 4: mes "You are holding a lvl 4 weapon."; break;
+		case 5: mes "You are holding a lvl 5 weapon, hm, must be a custom design..."; break;
+	}
 
 ---------------------------------------
 
@@ -2705,7 +2703,7 @@ with it (which is what the official NPC refinery scripts use it for).
 
 // This will find a random number from 0 - 99 and if that is equal to or 
 // more than the value recovered by this command it will go to L_Fail
-    if (getequippercentrefinery(EQI_HAND_L)<=rand(100)) goto L_Fail;
+	if (getequippercentrefinery(EQI_HAND_L)<=rand(100)) goto L_Fail;
 
 ---------------------------------------
 
@@ -2774,7 +2772,7 @@ This function will return the number of cards inserted into the weapon
 currently equipped on the invoking character.
 While this function was meant for item scripts, it will work outside them:
 
-    if (cardscnt()==4) mes "So you've stuck four cards into that weapon, think you're cool now?";
+	if (cardscnt()==4) mes "So you've stuck four cards into that weapon, think you're cool now?";
 
 ---------------------------------------
 
@@ -2783,7 +2781,7 @@ While this function was meant for item scripts, it will work outside them:
 This function will return the refine count of the equipment from which 
 the function is called. This function is intended for use in item scripts.
 
-    if (getrefine()==10) mes "Wow. That's a murder weapon.";
+	if (getrefine()==10) mes "Wow. That's a murder weapon.";
 
 ---------------------------------------
 
@@ -2864,14 +2862,14 @@ parameters given were not variables or the search was not successful.
 
 Type is the type of object to search for:
 
-  0 - Character object
-  1 - NPC object
-  2 - Pet object
-  3 - Monster object
-  4 - Homunculus object
-  5 - Mercenary object
-  6 - Elemental object
-  
+	0 - Character object
+	1 - NPC object
+	2 - Pet object
+	3 - Monster object
+	4 - Homunculus object
+	5 - Mercenary object
+	6 - Elemental object
+
 While 3 is meant to look for a monster object, no searching will be done 
 if you specify type 3, and the function will always return -1.
 
@@ -2885,22 +2883,22 @@ string, it will NOT locate a pet by name.
 
 What a mess. Example, a working and tested one now:
 
-    prontera,164,301,3%TAB%script%TAB%Meh%TAB%730,{
-        mes "My name is Meh. I'm here so that Nyah can find me.";
-        close;
-    }
+	prontera,164,301,3%TAB%script%TAB%Meh%TAB%730,{
+		mes "My name is Meh. I'm here so that Nyah can find me.";
+		close;
+	}
 
-    prontera,164,299,3%TAB%script%TAB%Nyah%TAB%730,{
-        mes "My name is Nyah.";
-        mes "I will now search for Meh all across the world!";
-        if (getmapxy(@mapname$,@mapx,@mapy,1,"Meh")!=0) goto Notfound;
-        mes "And I found him on map "+@mapname$+" at X:"+@mapx+" Y:"+@mapy+" !";
-        close;
-    Notfound:
-        mes "I can't seem to find Meh anywhere!";
-        close;
-   }
-   
+	prontera,164,299,3%TAB%script%TAB%Nyah%TAB%730,{
+		mes "My name is Nyah.";
+		mes "I will now search for Meh all across the world!";
+		if (getmapxy(@mapname$,@mapx,@mapy,1,"Meh")!=0) goto Notfound;
+		mes "And I found him on map "+@mapname$+" at X:"+@mapx+" Y:"+@mapy+" !";
+		close;
+	Notfound:
+		mes "I can't seem to find Meh anywhere!";
+		close;
+	}
+
 Notice that NPC objects disabled with 'disablenpc' will still be located.
 
 ---------------------------------------
@@ -2915,8 +2913,8 @@ account has no GM level.
 This allows you to make NPC's only accessible for certain GM levels, or 
 behave specially when talked to by GMs.
 
-   if (getgmlevel()) mes "What is your command, your godhood?";
-   if (getgmlevel()) goto Wherever;
+	if (getgmlevel()) mes "What is your command, your godhood?";
+	if (getgmlevel()) goto Wherever;
 
 ---------------------------------------
 
@@ -2959,7 +2957,7 @@ This function returns specified information about the current system time.
 
 It will only return numbers.
 
-    if (gettime(4)==6) mes "It's a Saturday. I don't work on Saturdays.";
+	if (gettime(4)==6) mes "It's a Saturday. I don't work on Saturdays.";
 
 ---------------------------------------
 
@@ -2976,8 +2974,8 @@ Max length is the maximum length of a time string to generate.
 
 The example given in Hercules sample scripts works like this:
 
-  mes gettimestr("%Y-%m/%d %H:%M:%S",21);
-  
+	mes gettimestr("%Y-%m/%d %H:%M:%S",21);
+
 This will print a full date and time like 'YYYY-MM/DD HH:MM:SS'.
 
 ---------------------------------------
@@ -2989,10 +2987,10 @@ What it returns is specified by Type.
 
 Type can be one of the following values, which control what is returned:
 
-    0 - Count of all characters on the map of the invoking character.
-    1 - Count of all characters in the entire server.
-    8 - Count of all characters on the map of the NPC the script is
-        running in.
+	0 - Count of all characters on the map of the invoking character.
+	1 - Count of all characters in the entire server.
+	8 - Count of all characters on the map of the NPC the script is
+		running in.
 
 ---------------------------------------
 
@@ -3036,12 +3034,12 @@ You need to put a 'close' after that yourself.
 This function returns a guild's name given an ID number. If there is no 
 such guild, "null" will be returned;
 
-   // Would print whatever guild 10007 name is.
-   mes "The guild "+GetGuildName(10007)+" are all nice people.";
+	// Would print whatever guild 10007 name is.
+	mes "The guild "+GetGuildName(10007)+" are all nice people.";
 
-   // This will do the same as above:
-   set @var,10007;
-   mes "We have some friends in "+GetGuildName(@var)+", you know.";
+	// This will do the same as above:
+	set @var,10007;
+	mes "We have some friends in "+GetGuildName(@var)+", you know.";
 
 This is used all over the WoE controlling scripts. You could also use it 
 for a guild-based event.
@@ -3054,24 +3052,24 @@ This function return the name of the master of the guild which has the
 specified ID number. If there is no such guild, "null" will be returned.
 
 // Would return the guild master of guild 10007, whatever that might be.
-    mes getguildmaster(10007)+" runs "+getguildname(10007);
+	mes getguildmaster(10007)+" runs "+getguildname(10007);
 
 Can be used to check if the character is the guild master of the specified 
 guild.
 
 Maybe you want to make a room only guild masters can enter:
 
-        set @GID,getcharid(2);
-        if(@GID==0) goto L_NoGuild;
-        if(strcharinfo(0)==getguildmaster(@GID)) goto L_GuildMaster;
-        mes "Sorry you don't own the guild you are in";
-        close;
-    L_NoGuild:
-        mes "Sorry you are not in a guild";
-        close;
-    L_GuildMaster:
-        mes "Welcome guild master of "+GetGuildName(@GID);
-        close;
+		set @GID,getcharid(2);
+		if(@GID==0) goto L_NoGuild;
+		if(strcharinfo(0)==getguildmaster(@GID)) goto L_GuildMaster;
+		mes "Sorry you don't own the guild you are in";
+		close;
+	L_NoGuild:
+		mes "Sorry you are not in a guild";
+		close;
+	L_GuildMaster:
+		mes "Welcome guild master of "+GetGuildName(@GID);
+		close;
 
 
 ---------------------------------------
@@ -3182,25 +3180,25 @@ enough.
 
 Example 1:
 
-        if (getskilllv(152)) goto L_HasSkillThrowStone;
-        mes "You don't have Throw Stone";
-        close;
-    L_HasSkillThrowStone:
-        mes "You have got the skill Throw Stone";
-        close;
+		if (getskilllv(152)) goto L_HasSkillThrowStone;
+		mes "You don't have Throw Stone";
+		close;
+	L_HasSkillThrowStone:
+		mes "You have got the skill Throw Stone";
+		close;
 
 Example 2:
 
-        if (getskilllv(28) >= 5) goto L_HasSkillHeallvl5orMore;
-        if (getskilllv(28) == 10) goto L_HasSkillHealMaxed;
-        mes "You heal skill is below lvl 5";
-        close;
-    L_HasSkillHeallvl6orMore:
-        mes "Your heal lvl is 5 or more";
-        close;
-    L_HasSkillHealMaxed:
-        mes "Your heal lvl has been maxed";
-        close;
+		if (getskilllv(28) >= 5) goto L_HasSkillHeallvl5orMore;
+		if (getskilllv(28) == 10) goto L_HasSkillHealMaxed;
+		mes "You heal skill is below lvl 5";
+		close;
+	L_HasSkillHeallvl6orMore:
+		mes "Your heal lvl is 5 or more";
+		close;
+	L_HasSkillHealMaxed:
+		mes "Your heal lvl has been maxed";
+		close;
 
 ---------------------------------------
 
@@ -3325,9 +3323,9 @@ Example:
 	
 	if (getmobdrops(.@mob_id)) {	// 'getmobdrops' returns 1 on success
 		// immediately copy global temporary variables into scope 
-        // variables, since we don't know when 'getmobdrops' will get 
-        // called again for another mob, overwriting your global temporary 
-        // variables.
+		// variables, since we don't know when 'getmobdrops' will get 
+		// called again for another mob, overwriting your global temporary 
+		// variables.
 		set .@count, $@MobDrop_count;
 		copyarray .@item[0],$@MobDrop_item[0],.@count;
 		copyarray .@rate[0],$@MobDrop_rate[0],.@count;
@@ -3373,8 +3371,8 @@ invoking character, in percent, modified by the their current defense
 against said status. The 'base rate' is the base chance of the status 
 effect being inflicted, in percent.
 
-    if (rand(100) > getscrate(Eff_Blind, 50)) goto BlindHimNow;
-  
+	if (rand(100) > getscrate(Eff_Blind, 50)) goto BlindHimNow;
+
 You can see the full list of available effect types you can possibly 
 inflict in 'db/const.txt' under 'Eff_'.
 
@@ -3551,7 +3549,7 @@ Note: the character needs to have the skill HT_FALCON to gain a falcon.
 The accompanying function will return 1 if the invoking character has a 
 falcon and 0 if they don't.
 
-    if (checkfalcon()) mes "But you already have a falcon!";
+	if (checkfalcon()) mes "But you already have a falcon!";
 
 ---------------------------------------
 
@@ -3568,7 +3566,7 @@ Note: the character needs to have the skill KN_RIDING to gain a mount.
 The accompanying function will return 1 if the invoking character is 
 riding a bird and 0 if they aren't.
 
-    if (checkriding()) mes "PLEASE leave your bird outside! No riding birds on the floor here!";
+	if (checkriding()) mes "PLEASE leave your bird outside! No riding birds on the floor here!";
 
 ---------------------------------------
 
@@ -3586,7 +3584,7 @@ If the character can mount a dragon, the <color> options are:
  5 - Red Dragon
 
 Note: the character must be a Rune Knight and have the skill 
-      RK_DRAGONTRAINING to gain a mount.
+	  RK_DRAGONTRAINING to gain a mount.
 
 The accompanying function will return 1 if the invoking character is 
 riding a dragon and 0 if they aren't.
@@ -3611,7 +3609,7 @@ The 'setmounting' function toggles cash mount for the invoking character.
 It will return 1 if successful, 0 otherwise.
 
 Note: Character must not be mounting a non-cash mount (eg. dragon, peco, 
-      wug, etc.)
+	  wug, etc.)
 
 The accompanying function will return 1 if the invoking character has a 
 cash mount and 0 if they don't.
@@ -3640,7 +3638,7 @@ Return values for 'checkvending' are
 
 Examples:
 	//This will check if Aaron is vending, and if so, put a message in 
-    //front of the attached player saying Aaron is vending.
+	//front of the attached player saying Aaron is vending.
 	if (checkvending("Aaron"))
 		mes "Aaron is currently vending!";
 
@@ -3674,9 +3672,9 @@ night mode or day mode. 'isnight' returns 1 if it's night and 0 if it
 isn't, 'isday' the other way around. They can be used interchangeably, 
 pick the one you like more:
 
-    // These two are equivalent:
-    if (isday()) mes "I only prowl in the night.";
-    if (isnight()!=1) mes "I only prowl in the night.";
+	// These two are equivalent:
+	if (isday()) mes "I only prowl in the night.";
+	if (isnight()!=1) mes "I only prowl in the night.";
 
 ---------------------------------------
 
@@ -3708,11 +3706,11 @@ Theoretically there is no limit to the number of items that may be tested
 for at the same time. 
 If even one of the items given is not equipped, 0 will be returned.
 
-    // (Poring,Santa Poring,Poporing,Marin)
-    if (isequipped(4001,4005,4033,4196)) mes "Wow! You're wearing a full complement of possible poring cards!";
-    // (Poring)
-    if (isequipped(4001)) mes "A poring card is useful, don't you think?";
-    
+	// (Poring,Santa Poring,Poporing,Marin)
+	if (isequipped(4001,4005,4033,4196)) mes "Wow! You're wearing a full complement of possible poring cards!";
+	// (Poring)
+	if (isequipped(4001)) mes "A poring card is useful, don't you think?";
+
 The function was meant for item scripts to support the cards released by 
 Gravity in February 2005, but it will work just fine in normal NPC scripts.
 
@@ -3724,7 +3722,7 @@ This function is similar to 'isequipped', but instead of 1 or 0, it will
 return the number of cards in the list given that were found on the 
 invoking character.
 
-    if (isequippedcnt(4001,4005,4033,4196) == 4) mes "Finally got all four poring cards?";
+	if (isequippedcnt(4001,4005,4033,4196) == 4) mes "Finally got all four poring cards?";
 
 ---------------------------------------
 
@@ -3801,13 +3799,13 @@ chat window.
 This command will take the invoking character to the specified map, and if 
 wanted, specified coordinates too, but these can be random.
 
-    warp "place",50,55;
+	warp "place",50,55;
 
 This would take them to X 50 Y 55 on the map called "place". If your X and 
 Y coordinates land on an unwalkable map square, it will send the warped 
 character to a random place. Same will happen if they are both zero:
 
-    warp "place",0,0;
+	warp "place",0,0;
 
 Notice that while warping people to coordinates 0,0 will normally get them 
 into a random place, it's not certain to always be so. Darned if I know 
@@ -3829,19 +3827,19 @@ defined by the x1/y1-x2/y2 square, will be warped. Nobody outside the area
 will be affected, including the activating character, if they are outside 
 the area.
 
-    areawarp "place",10,10,120,120,"place2",150,150;
+	areawarp "place",10,10,120,120,"place2",150,150;
 
 Everyone that is in the area between X 10 Y 10 and X 120 Y 120, in a 
 square shape, on the map called "place", will be affected, and warped to 
 "place2" X 150 Y 150.
 
-    areawarp "place",10,10,120,120,"place2",0,0;
+	areawarp "place",10,10,120,120,"place2",0,0;
 
 By using ,0,0; as the destination coordinates it will take all the 
 characters in the affected area to a random set of co-ordinates on the 
 "place2" map.
 
-    areawarp "place",10,10,120,120,"place2",150,150,200,200;
+	areawarp "place",10,10,120,120,"place2",150,150,200,200;
 
 By using the optional x4 and y4 parameters, the destination coordinates 
 will be a random place within the defined x3/y3-x4/y4 square.
@@ -3860,15 +3858,15 @@ you can get with getcharid(1). You can also request another party id given
 a member's name with getcharid(1,<player_name>).
 
 You can use the following "map names" for special warping behavior:
-Random:       All party members are randomly warped in their current map 
-              (as if they all used a fly wing).
-SavePointAll: All party members are warped to their respective save point.
-SavePoint:    All party members are warped to the save point of the 
-              currently attached player (will fail if there's no player 
-              attached).
-Leader:       All party members are warped to the leader's position. The 
-              leader must be online and in the current map-server for this 
-              to work.
+Random:			All party members are randomly warped in their current map 
+				(as if they all used a fly wing).
+SavePointAll:	All party members are warped to their respective save point.
+SavePoint:		All party members are warped to the save point of the 
+				currently attached player (will fail if there's no player 
+				attached).
+Leader:			All party members are warped to the leader's position. The 
+				leader must be online and in the current map-server for this 
+				to work.
 
 If you specify a from_mapname, warpparty will only affect those on that 
 map.
@@ -3881,38 +3879,38 @@ close2;
 set @id,getcharid(1);
 warpparty "prontera",150,100,@id;
 close;
- 
+
 ---------------------------------------
- 
+
 *warpchar "<mapname>",<x>,<y>,<char_id>;
- 
+
 Warps another player to specified map and coordinate given the char id, 
 which you can get with getcharid(0,<player_name>). Obviously this is 
 useless if you want to warp the same player that is executing this script, 
 unless it's some kind of "chosen" script.
- 
+
 Example:
- 
+
 warpchar "prontera",150,100,150001;
- 
+
 ---------------------------------------
- 
+
 *warpguild "<mapname>",<x>,<y>,<guild_id>;
- 
+
 Warps a guild to specified map and coordinate given the guild id, which 
 you can get with getcharid(2). You can also request another guild id given 
 the member's name with getcharid(2,<player_name>).
- 
+
 You can use the following "map names" for special warping behavior:
-Random:       All guild members are randomly warped in their current map 
-              (as if they all used a fly wing)
-SavePointAll: All guild members are warped to their respective save point.
-SavePoint:    All guild members are warped to the save point of the 
-              currently attached player (will fail if there's no player 
-              attached).
+Random:			All guild members are randomly warped in their current map 
+				(as if they all used a fly wing)
+SavePointAll:	All guild members are warped to their respective save point.
+SavePoint:		All guild members are warped to the save point of the 
+				currently attached player (will fail if there's no player 
+				attached).
 
 Example:
- 
+
 warpguild "prontera",x,y,Guild_ID;
 
 ---------------------------------------
@@ -3936,7 +3934,7 @@ are equivalent. Map name, X coordinate and Y coordinate should be
 perfectly obvious. This ignores any and all map flags, and can make a 
 character respawn where no teleportation is otherwise possible.
 
-    savepoint "place",350,75;
+	savepoint "place",350,75;
 
 ---------------------------------------
 
@@ -3945,9 +3943,9 @@ character respawn where no teleportation is otherwise possible.
 This command will heal a set amount of HP and/or SP on the invoking 
 character.
 
-    heal 30000,0; // This will heal 30,000 HP
-    heal 0,30000; // This will heal 30,000 SP
-    heal 300,300; // This will heal 300 HP and 300 SP
+	heal 30000,0; // This will heal 30,000 HP
+	heal 0,30000; // This will heal 30,000 SP
+	heal 300,300; // This will heal 300 HP and 300 SP
 
 This command just alters the hit points and spell points of the invoking 
 character and produces no other output whatsoever.
@@ -3965,8 +3963,8 @@ omitted.
 There is also a nice example on using this with the 'rand' function, to 
 give you a random amount of healing.
 
-    // This will heal anything thing from 100 to 150 HP and no SP
-    itemheal rand(100,150),0;
+	// This will heal anything thing from 100 to 150 HP and no SP
+	itemheal rand(100,150),0;
 
 ---------------------------------------
 
@@ -3975,9 +3973,9 @@ give you a random amount of healing.
 This command will heal the invoking character. It heals the character, but 
 not by a set value - it adds percent of their maximum HP/SP.
 
-    percentheal 100,0; // This will heal 100% HP
-    percentheal 0,100; // This will heal 100% SP
-    percentheal 50,50; // This will heal 50% HP and 50% SP
+	percentheal 100,0; // This will heal 100% HP
+	percentheal 0,100; // This will heal 100% SP
+	percentheal 50,50; // This will heal 50% HP and 50% SP
 
 So the amount that this will heal will depend on the total amount of HP or 
 SP you have maximum. Like 'heal', this will not call up any animations or 
@@ -3996,17 +3994,17 @@ currently connected to the server.
 
 This command will change the job class of the invoking character.
 
-    jobchange 1; // This would change your player into a Swordman
-    jobchange 4002; // This would change your player into a Swordman High
+	jobchange 1; // This would change your player into a Swordman
+	jobchange 4002; // This would change your player into a Swordman High
 
 This command does work with numbers, but you can also use job names. The 
 full list of job names and the numbers they correspond to can be found in 
 'db/const.txt'.
 
-    // This would change your player into a Swordman
-    jobchange Job_Swordman;
-    // This would change your player into a Swordman High
-    jobchange Job_Swordman_High;
+	// This would change your player into a Swordman
+	jobchange Job_Swordman;
+	// This would change your player into a Swordman High
+	jobchange Job_Swordman_High;
 
 'upper flag' can alternatively be used to specify the type of job one 
 changes to. For example, jobchange Job_Swordman,1; will change the 
@@ -4137,18 +4135,18 @@ This command will give the invoking character a specified number of base
 and job experience points. Can be used as a quest reward. Negative values 
 won't work.
 
-    getexp 10000,5000;
+	getexp 10000,5000;
 
 You can also use the "set" command with the constants defined in 
 'db/const.txt':
 
-    // These 2 combined has the same effect as the above command
-    set BaseExp,BaseExp+10000;
-    set JobExp,JobExp+5000;
+	// These 2 combined has the same effect as the above command
+	set BaseExp,BaseExp+10000;
+	set JobExp,JobExp+5000;
 
 You can also reduce the amount of experience points:
 
-    set BaseExp,BaseExp-10000;
+	set BaseExp,BaseExp-10000;
 
 Note that 'getexp' is now subject to the 'quest_exp_rate' config option, 
 which adjusts the gained value. If you want to bypass this, use the 'set' 
@@ -4166,19 +4164,19 @@ sure you specify a palette number that exists/is usable by the client you
 use. 'changelook' works the same, but is only client side (it doesn't save 
 the look value).
 
-    // This will change your hair(6), so that it uses palette 8, what ever 
-    // your palette 8 is, your hair will use that color.
+	// This will change your hair(6), so that it uses palette 8, what ever 
+	// your palette 8 is, your hair will use that color.
 
-    setlook 6,8;
+	setlook 6,8;
 
-    // This will change your clothes(7), so they are using palette 1, 
-    // whatever your palette 1 is, your clothes will then use that set of 
-    // colors.
-    
-    setlook 7,1;
+	// This will change your clothes(7), so they are using palette 1, 
+	// whatever your palette 1 is, your clothes will then use that set of 
+	// colors.
+
+	setlook 7,1;
 
 Here are the possible look types:
- 
+
  0 - Base sprite
  1 - Hairstyle
  2 - Weapon
@@ -4224,9 +4222,9 @@ The knock-back is not restricted by items or map flags, only obstacles are
 taken into account. If there is not enough space to perform the push (e.g. 
 due to a wall), the character is pushed only up to the obstacle.
 
-    // pushes the character 5 cells in 3 o'clock direction from it's
-    // current position.
-    pushpc DIR_EAST, 5;
+	// pushes the character 5 cells in 3 o'clock direction from it's
+	// current position.
+	pushpc DIR_EAST, 5;
 
 ---------------------------------------
 
@@ -4236,8 +4234,8 @@ This command will return the SVN revision number or Git SHA-1 hash the
 server is currently running on (depends on whether you used a SVN or Git 
 client for getting Hercules).
 
-    if ( get_version() >= 15000 )
-        mes "Welcome Hercules!";
+	if ( get_version() >= 15000 )
+		mes "Welcome Hercules!";
 
 ---------------------------------------
 \\
@@ -4256,8 +4254,8 @@ character inventory instead.
 In the first and most commonly used version of this command, items are 
 referred to by their database ID number found in 'db/(pre-)re/item_db.txt'.
 
-    getitem 502,10 // The person will receive 10 apples
-    getitem 617,1  // The person will receive 1 Old Violet Box
+	getitem 502,10 // The person will receive 10 apples
+	getitem 617,1  // The person will receive 1 Old Violet Box
 
 Giving an item ID of -1 will give a specified number of random items from 
 the list of those that fall out of Old Blue Box. Unlike in all other 
@@ -4303,12 +4301,12 @@ but is a lot more flexible.
 
 Those parameters that are different from 'getitem' are:
 
-identify    - Whether you want the item to be identified (1) or not (0).
-refine      - For how many pluses will it be refined. It will not let you 
-              refine an item higher than the max refine.
-attribute   - Whether the item is broken (1) or not (0).
-card1,2,3,4 - If you want a card compound to it, place the card ID number 
-              into the specific card slot.
+identify	- Whether you want the item to be identified (1) or not (0).
+refine		- For how many pluses will it be refined. It will not let you 
+			  refine an item higher than the max refine.
+attribute	- Whether the item is broken (1) or not (0).
+card1,2,3,4	- If you want a card compound to it, place the card ID number 
+			  into the specific card slot.
 
 Card1-card4 values are also used to store name information for named 
 items, as well as the elemental property of weapons and armor. You can 
@@ -4323,64 +4321,64 @@ If you still want to try creating a named item with this command because
 'getnameditem' won't do it for you cause it's too limited, you can do it 
 like this. Careful, minor magic ahead.
 
-    // First, let's get an ID of a character who's name will be on the 
-    // item. Only an existing character's name may be there.
-    // Let's assume our character is 'Adam' and find his ID.
-    
-    set @charid,getcharid(0,"Adam");
+	// First, let's get an ID of a character who's name will be on the 
+	// item. Only an existing character's name may be there.
+	// Let's assume our character is 'Adam' and find his ID.
 
-    // Now we split the character ID number into two portions with a 
-    // binary shift operation. If you don't understand what this does, 
-    // just copy it.
-    
-    set @card3, @charid & 65535;
-    set @card4, @charid >> 16;
+	set @charid,getcharid(0,"Adam");
 
-    // If you're inscribing non-equipment, @card1 must be 254.
-    // Arrows are also not equipment. :)
-    set @card1,254;
-    
-    // For named equipment, card2 means the Star Crumbs and elemental 
-    // crystals used to make this equipment. For everything else, it's 0.
-     
-    set @card2,0;
-    
-    // Now, let's give the character who invoked the script some 
-    // Adam's Apples:
-    
-    getitem2 512,1,1,0,0,@card1,@card2,@card3,@card4;
+	// Now we split the character ID number into two portions with a 
+	// binary shift operation. If you don't understand what this does, 
+	// just copy it.
+
+	set @card3, @charid & 65535;
+	set @card4, @charid >> 16;
+
+	// If you're inscribing non-equipment, @card1 must be 254.
+	// Arrows are also not equipment. :)
+	set @card1,254;
+
+	// For named equipment, card2 means the Star Crumbs and elemental 
+	// crystals used to make this equipment. For everything else, it's 0.
+
+	set @card2,0;
+
+	// Now, let's give the character who invoked the script some 
+	// Adam's Apples:
+
+	getitem2 512,1,1,0,0,@card1,@card2,@card3,@card4;
 
 This wasn't tested with all possible items, so I can't give any promises, 
 experiment first before relying on it.
 
 To create equipment, continue this example it like this:
 
-    // We've already have card3 and card4 loaded with correct
-    // values so we'll just set up card1 and card2 with data
-    // for an Ice Stiletto.
+	// We've already have card3 and card4 loaded with correct
+	// values so we'll just set up card1 and card2 with data
+	// for an Ice Stiletto.
 
-    // If you're inscribing equipment, @card1 must be 255.
-    set @card1,255;
-    
-    // That's the number of star crumbs in a weapon.
-    set @sc,2;
-    
-    // That's the number of elemental property of the weapon.
-    set @ele,1;
+	// If you're inscribing equipment, @card1 must be 255.
+	set @card1,255;
 
-    // And that's the wacky formula that makes them into
-    // a single number.    
-    set @card2,@ele+((@sc*5)<<8);
+	// That's the number of star crumbs in a weapon.
+	set @sc,2;
 
-    // That will make us an Adam's +2 VVS Ice Stiletto:
-    
-    getitem2 1216,1,1,2,0,@card1,@card2,@card3,@card4;
+	// That's the number of elemental property of the weapon.
+	set @ele,1;
+
+	// And that's the wacky formula that makes them into
+	// a single number.    
+	set @card2,@ele+((@sc*5)<<8);
+
+	// That will make us an Adam's +2 VVS Ice Stiletto:
+
+	getitem2 1216,1,1,2,0,@card1,@card2,@card3,@card4;
 
 Experiment with the number of star crumbs - I'm not certain just how much 
 will work most and what it depends on. The valid element numbers are:
 
  1 - Ice, 2 - Earth 3 - Fire 4 - Wind.
-    
+
 You can, apparently, even create duplicates of the same pet egg with this 
 command, creating a pet which is the same, but simultaneously exists in 
 two eggs, and may hatch from either, although, I'm not sure what kind of a 
@@ -4434,11 +4432,11 @@ Note: 'delitem' in an NPC script can still remove rental items.
 This command will create an item lying around on a specified map in the 
 specified location.
 
- itemid   - Found in 'db/(pre-)re/item_db.txt'
- amount   - Amount you want produced
- map name - The map name
- X        - The X coordinate
- Y        - The Y coordinate.
+	itemid   - Found in 'db/(pre-)re/item_db.txt'
+	amount   - Amount you want produced
+	map name - The map name
+	X        - The X coordinate
+	Y        - The Y coordinate.
 
 This item will still disappear just like any other dropped item. Like 
 'getitem', it also accepts an 'english name' field from the database and 
@@ -4479,8 +4477,8 @@ This command will remove a specified amount of items from the invoking or
 target character. Like all the item commands, it uses the item ID found 
 inside 'db/(pre-)re/item_db.txt'.
 
-    delitem 502,10; // The person will lose 10 apples
-    delitem 617,1;  // The person will lose 1 Old Violet Box
+	delitem 502,10; // The person will lose 10 apples
+	delitem 617,1;  // The person will lose 1 Old Violet Box
 
 It is always a good idea to check if the player actually has the items 
 before you delete them. If you try to delete more items that the player 
@@ -4507,9 +4505,9 @@ Check 'getitem2' to understand its expanded parameters.
 This function will return the number of items for the specified item ID 
 that the invoking character has in the inventory.
 
-    mes "[Item Checker]";
-    mes "Hmmm, it seems you have "+countitem(502)+" apples";
-    close;
+	mes "[Item Checker]";
+	mes "Hmmm, it seems you have "+countitem(502)+" apples";
+	close;
 
 Like 'getitem', this function will also accept an 'english name' from the 
 database as an argument.
@@ -4517,10 +4515,10 @@ database as an argument.
 If you want to state the number at the end of a sentence, you can do it by 
 adding up strings:
 
-    mes "[Item Checker]";
-    mes "Hmmm, the total number of apples you are holding is "+countitem("APPLE");
-    close;
-    
+	mes "[Item Checker]";
+	mes "Hmmm, the total number of apples you are holding is "+countitem("APPLE");
+	close;
+
 ---------------------------------------
 
 *countitem2(<item id>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>)
@@ -4826,8 +4824,8 @@ happens when a result item is double-clicked and can be one of the
 following:
 
 	0 = Shows the store's position on the mini-map and highlights the shop 
-        sign with yellow color, when the store is on same map as the 
-        invoking player.
+		sign with yellow color, when the store is on same map as the 
+		invoking player.
 	1 = Directly opens the shop, regardless of distance.
 
 Example:
@@ -4851,10 +4849,10 @@ The storage window opens regardless of whether there are open NPC dialogs
 or not, but it is preferred to close the dialog before displaying the 
 storage window, to avoid any disruption when both windows overlap.
 
-    mes "I will now open your stash for you";
-    close2;
-    openstorage;
-    end;
+	mes "I will now open your stash for you";
+	close2;
+	openstorage;
+	end;
 
 ---------------------------------------
 
@@ -4863,10 +4861,10 @@ storage window, to avoid any disruption when both windows overlap.
 This will open a character's Mail window on the client connected to the 
 invoking character.
 
-    mes "Close this window to open your mail inbox.";
-    close2;
-    openmail;
-    end;
+	mes "Close this window to open your mail inbox.";
+	close2;
+	openmail;
+	end;
 
 ---------------------------------------
 
@@ -4875,10 +4873,10 @@ invoking character.
 This will open the Auction window on the client connected to the invoking 
 character.
 
-    mes "Close this window to open the Auction window.";
-    close2;
-    openauction;
-    end;
+	mes "Close this window to open the Auction window.";
+	close2;
+	openauction;
+	end;
 
 ---------------------------------------
 \\
@@ -4934,7 +4932,7 @@ possible maximum. The full list of guild skills is available in
 // (GD_APPROVAL ID 10000). Notice that if you try to add two levels of 
 // Approval, or add Approval when the guild already has it, it will only 
 // have one level of Approval afterwards.
-    guildskill 10000,1;
+	guildskill 10000,1;
 
 You might want to make a quest for getting a certain guild skill, make it 
 hard enough that all the guild needs to help or something. Doing this for 
@@ -5001,16 +4999,16 @@ Used in reset NPC's (duh!).
 These command bestow a status effect on the invoking character. This 
 command is used a lot in the item scripts.
 
-    // This would poison them for 10 min
-    sc_start SC_Poison,600000,0;
+	// This would poison them for 10 min
+	sc_start SC_Poison,600000,0;
 
 Effect type is a number of effect, 'db/const.txt' lists the common (mostly 
 negative) status effect types as constants, starting with 'SC_'. You can 
 also use this to give someone an effect of a player-cast spell:
 
-    // This will bless someone as if with Bless 10:
-    sc_start 10,240000,10;
-    
+	// This will bless someone as if with Bless 10:
+	sc_start 10,240000,10;
+
 Extra argument's meaning differs depending on the effect type, for most 
 effects caused by a player skill the extra argument means the level of the 
 skill that would have been used to create that effect, for others it might 
@@ -5073,16 +5071,16 @@ command will not actually use the skill: it is intended for scripts which
 simulate skill usage by the NPC, such as buffs, by setting appropriate 
 status and displaying the skill's effect.
 
-    mes "Be blessed!";
-    // Heal of 2000 HP
-    heal 2000,0;
-    skilleffect 28,2000;
-    // Blessing Level 10
-    sc_start 10,240000,10;
-    skilleffect 34,0;
-    // Increase AGI Level 5
-    sc_start 12,140000,5;
-    skilleffect 29,0;
+	mes "Be blessed!";
+	// Heal of 2000 HP
+	heal 2000,0;
+	skilleffect 28,2000;
+	// Blessing Level 10
+	sc_start 10,240000,10;
+	skilleffect 34,0;
+	// Increase AGI Level 5
+	sc_start 12,140000,5;
+	skilleffect 29,0;
 
 This will heal the character with 2000 HP, buff it with Blessing Lv 10 and 
 Increase AGI Lv 5, and display appropriate effects.
@@ -5155,7 +5153,7 @@ This command will bump a specified stat of the invoking character up by
 the specified amount permanently. Amount can be negative. See 'statusup'.
 
 // This will decrease a character's Vit forever.
-    statusup bVit,-1;
+	statusup bVit,-1;
 
 ---------------------------------------
 
@@ -5412,7 +5410,7 @@ the RID of the killing character.
 	3 = flora (Alchemist skill)
 	4 = zanzou (Kagerou/Oboro skill)
 
-    monster "place",60,100,"Poring",1002,1,"NPCNAME::OnLabel";
+	monster "place",60,100,"Poring",1002,1,"NPCNAME::OnLabel";
 
 The coordinates of 0,0 will spawn the monster on a random place on the 
 map. Both 'monster' and 'areamonster' return the GID of the monster 
@@ -5420,19 +5418,19 @@ spawned if there was ONLY ONE monster to be spawned. This is useful for
 controlling each of the spawned mobs with the unit* commands shown below.
 For example:
 
-    // We'll make a poring which will automatically attack invoking player:
-    set .@mobGID, monster "Prontera",150,150,"Poring",1002,1;
-    unitattack .@mobGID, getcharid(3); // Attacker GID, attacked GID
+	// We'll make a poring which will automatically attack invoking player:
+	set .@mobGID, monster "Prontera",150,150,"Poring",1002,1;
+	unitattack .@mobGID, getcharid(3); // Attacker GID, attacked GID
 
 The way you can get the GID of more than only one monster is looping 
 through all the summons to get their individual GIDs and do whatever you 
 want with them. For example:
 
-    // We want to summon .mobnumber porings which will give us a kiss
-    for (set .@i, 0; .@i < .mobnumber; set .@i, .@i + 1){
-        set .@mobGID, monster "map",.x,.y,"Kisser Poring",1002,1;
-        unitemote .@mobGID, e_kis;
-    }
+	// We want to summon .mobnumber porings which will give us a kiss
+	for (set .@i, 0; .@i < .mobnumber; set .@i, .@i + 1){
+		set .@mobGID, monster "map",.x,.y,"Kisser Poring",1002,1;
+		unitemote .@mobGID, e_kis;
+	}
 
 Refer to the unit* commands below.
 
@@ -5442,29 +5440,29 @@ by x1/y1-x2/y2.
 
 Simple monster killing script:
 
-        <NPC object definition. Let's assume you called him NPCNAME.>
-        mes "[Summon Man]";
-        mes "Want to start the kill?";
-        next;
-        menu "Yes",L_Yes,"No",-;
-        mes "[Summon Man]";
-        mes "Come back later";
-        close;
-    L_Yes:
-        monster "prontera",0,0,"Quest Poring",1002,10,"NPCNAME::OnPoringKilled";
-        // By using 0,0 it will spawn them in a random place.
-        mes "[Summon Man]";
-        mes "Now go and kill all the Poring I summoned";
-        // He summoned ten.
-        close;
-    OnPoringKilled:
-        set $PoringKilled,$PoringKilled+1;
-        if ($PoringKilled==10) goto L_AllDead;
-        end;
-    L_AllDead:
-        announce "Summon Man: Well done all the poring are dead",3;
-        set $PoringKilled,0;
-        end;
+	<NPC object definition. Let's assume you called him NPCNAME.>
+	mes "[Summon Man]";
+	mes "Want to start the kill?";
+	next;
+	menu "Yes",L_Yes,"No",-;
+		mes "[Summon Man]";
+		mes "Come back later";
+		close;
+	L_Yes:
+		monster "prontera",0,0,"Quest Poring",1002,10,"NPCNAME::OnPoringKilled";
+		// By using 0,0 it will spawn them in a random place.
+		mes "[Summon Man]";
+		mes "Now go and kill all the Poring I summoned";
+		// He summoned ten.
+		close;
+	OnPoringKilled:
+		set $PoringKilled,$PoringKilled+1;
+		if ($PoringKilled==10) goto L_AllDead;
+		end;
+	L_AllDead:
+		announce "Summon Man: Well done all the poring are dead",3;
+		set $PoringKilled,0;
+		end;
 
 For more examples see just about any official 2-1 or 2-2 job quest script.
 
@@ -5747,17 +5745,17 @@ The script of the NPC object invoked in this manner will run as if it's
 been invoked by the RID that was active in the script that issued a 
 'doevent'. As such, the command will not work if an RID is not attached.
 
-    place,100,100,1%TAB%script%TAB%NPC%TAB%53,{
-        mes "This is what you will see when you click me";
-        close;
-    OnLabel:
-        mes "This is what you will see if the doevent is activated";
-        close;
-    }
+	place,100,100,1%TAB%script%TAB%NPC%TAB%53,{
+		mes "This is what you will see when you click me";
+		close;
+	OnLabel:
+		mes "This is what you will see if the doevent is activated";
+		close;
+	}
 
-    ....
+	....
 
-    doevent "NPC::OnLabel";
+	doevent "NPC::OnLabel";
 
 ---------------------------------------
 
@@ -5779,25 +5777,25 @@ This command can be used to make other NPCs act, as if they were
 responding to the invoking NPC's actions, such as using an emotion or 
 talking.
 
-    place,100,100,1%TAB%script%TAB%NPC%TAB%53,{
-        mes "Hey NPC2 copy what I do";
-        close2;
-        set .@emote, rand(1,30);
-        donpcevent "NPC2::OnEmote";
-    OnEmote:
-        emotion .@emote;
-        end;
-    }
+	place,100,100,1%TAB%script%TAB%NPC%TAB%53,{
+		mes "Hey NPC2 copy what I do";
+		close2;
+		set .@emote, rand(1,30);
+		donpcevent "NPC2::OnEmote";
+	OnEmote:
+		emotion .@emote;
+		end;
+	}
 
-    place,102,100,1%TAB%script%TAB%NPC2%TAB%53,{
-        mes "Hey NPC copy what I do";
-        close2;
-        set .@emote, rand(1,30);
-        donpcevent "NPC::OnEmote";
-    OnEmote:
-        emotion .@emote;
-        end;
-    }
+	place,102,100,1%TAB%script%TAB%NPC2%TAB%53,{
+		mes "Hey NPC copy what I do";
+		close2;
+		set .@emote, rand(1,30);
+		donpcevent "NPC::OnEmote";
+	OnEmote:
+		emotion .@emote;
+		end;
+	}
 
 Whichever of the both NPCs is talked to, both will show a random emotion 
 at the same time. 
@@ -5821,9 +5819,9 @@ object running it was a player talking - that is, above their head and in
 the chat window. The display name of the NPC will get appended in front of 
 the message to complete the effect.
 
-    // This will make everyone in the area see the NPC greet the character
-    // who just invoked it.
-    npctalk "Hello "+strcharinfo(0)+", how are you?";
+	// This will make everyone in the area see the NPC greet the character
+	// who just invoked it.
+	npctalk "Hello "+strcharinfo(0)+", how are you?";
 
 ---------------------------------------
 
@@ -5875,16 +5873,16 @@ On5secs:
 
 ---------------------------------------
 
-*initnpctimer{ "<NPC name>" {, <Attach Flag>} } |
-             { "<NPC name>" | <Attach Flag> };
-*stopnpctimer{ "<NPC name>" {, <Detach Flag>}  } |
-             { "<NPC name>" | <Detach Flag> };
-*startnpctimer{ "<NPC name>" {, <Attach Flag>} } |
-              { "<NPC name>" | <Attach Flag> };
-*setnpctimer <tick>{,"<NPC name>"};
-*getnpctimer(<type of information>{,"<NPC name>"})
-*attachnpctimer {"<character name>"};
-*detachnpctimer {"<NPC name>"};
+*initnpctimer	{ "<NPC name>" {, <Attach Flag>} } |
+				{ "<NPC name>" | <Attach Flag> };
+*stopnpctimer	{ "<NPC name>" {, <Detach Flag>}  } |
+				{ "<NPC name>" | <Detach Flag> };
+*startnpctimer	{ "<NPC name>" {, <Attach Flag>} } |
+				{ "<NPC name>" | <Attach Flag> };
+*setnpctimer	<tick>{,"<NPC name>"};
+*getnpctimer	(<type of information>{,"<NPC name>"})
+*attachnpctimer	{"<character name>"};
+*detachnpctimer	{"<NPC name>"};
 
 This set of commands and functions will create and manage an NPC-based 
 timer. The NPC name may be omitted, in which case the calling NPC is used 
@@ -5930,80 +5928,80 @@ The 'setnpctimer' command will explicitly set the timer to a given tick.
 
  0 - Will return the current tick count of the timer.
  1 - Will return 1 if there are remaining "OnTimer<ticks>:" labels in the 
-     specified NPC waiting for execution.
+	 specified NPC waiting for execution.
  2 - Will return the number of times the timer has triggered and will 
-     trigger an "OnTimer<tick>:"  label in the specified NPC.
+	 trigger an "OnTimer<tick>:"  label in the specified NPC.
 
 Example 1:
 
-    <NPC Header> {
-        // We need to use attachnpctimer because the mes command below 
-        // needs RID attach
-        attachnpctimer;
-        initnpctimer;
-        npctalk "I cant talk right now, give me 10 seconds";
-        end;
-    OnTimer5000:
-        npctalk "Ok 5 seconds more";
-        end;
-    OnTimer6000:
-        npctalk "4";
-        end;
-    OnTimer7000:
-        npctalk "3";
-        end;
-    OnTimer8000:
-        npctalk "2";
-        end;
-    OnTimer9000:
-        npctalk "1";
-        end;
-    OnTimer10000:
-        stopnpctimer;
-        mes "[Man]";
-        mes "Ok we can talk now";
-        detachnpctimer;
-        // and remember attachnpctimer and detachnpctimer can only be used 
-        // while the NPC timer is not running!
-    }
+	<NPC Header> {
+		// We need to use attachnpctimer because the mes command below 
+		// needs RID attach
+		attachnpctimer;
+		initnpctimer;
+		npctalk "I cant talk right now, give me 10 seconds";
+		end;
+	OnTimer5000:
+		npctalk "Ok 5 seconds more";
+		end;
+	OnTimer6000:
+		npctalk "4";
+		end;
+	OnTimer7000:
+		npctalk "3";
+		end;
+	OnTimer8000:
+		npctalk "2";
+		end;
+	OnTimer9000:
+		npctalk "1";
+		end;
+	OnTimer10000:
+		stopnpctimer;
+		mes "[Man]";
+		mes "Ok we can talk now";
+		detachnpctimer;
+		// and remember attachnpctimer and detachnpctimer can only be used 
+		// while the NPC timer is not running!
+	}
 
 Example 2:
 
-    OnTimer15000:
-        npctalk "Another 15 seconds have passed.";
+	OnTimer15000:
+		npctalk "Another 15 seconds have passed.";
 
-        // You have to use 'initnpctimer' instead of 'setnpctimer 0'.
-        // This is equal to 'setnpctimer 0' + 'startnpctimer'.
-        // Alternatively, you can also insert another 'OnTimer15001' label 
-        // so that the timer won't stop.
-        initnpctimer;
-        end;
-       
-    // This OnInit label will run when the script is loaded, so that the 
-    // timer is initialized immediately as the server starts. It is 
-    // dropped back to 0 every time the NPC says something, so it will 
-    // cycle continuously.
-    OnInit:
-        initnpctimer;
-        end;
+		// You have to use 'initnpctimer' instead of 'setnpctimer 0'.
+		// This is equal to 'setnpctimer 0' + 'startnpctimer'.
+		// Alternatively, you can also insert another 'OnTimer15001' label 
+		// so that the timer won't stop.
+		initnpctimer;
+		end;
+
+	// This OnInit label will run when the script is loaded, so that the 
+	// timer is initialized immediately as the server starts. It is 
+	// dropped back to 0 every time the NPC says something, so it will 
+	// cycle continuously.
+	OnInit:
+		initnpctimer;
+		end;
 
 Example 3:
 
-    mes "[Man]";
-    mes "I have been waiting "+(getnpctimer(0)/1000)+" seconds for you.";
-    // We divide the timer returned by 1000 to convert milliseconds to 
-    // seconds.
-    close;
+	mes "[Man]";
+	mes "I have been waiting "+(getnpctimer(0)/1000)+" seconds for you.";
+	// We divide the timer returned by 1000 to convert milliseconds to 
+	// seconds.
+	close;
 
 Example 4:
 
-    mes "[Man]";
-    mes "Ok, I will let you have 30 more seconds...";
-    close2;
-    setnpctimer (getnpctimer(0)-30000);
-    // Notice the 'close2'. If there were a 'next' there the timer would 
-    // be changed only after the player pressed the 'next' button.
-    end;
+	mes "[Man]";
+	mes "Ok, I will let you have 30 more seconds...";
+	close2;
+	setnpctimer (getnpctimer(0)-30000);
+	// Notice the 'close2'. If there were a 'next' there the timer would 
+	// be changed only after the player pressed the 'next' button.
+	end;
  
 ---------------------------------------
  
@@ -6021,11 +6019,11 @@ will not keep the rid, while sleep2 does.
 
 Examples:
 	// This will pause the script for 10 seconds and ditch the RID 
-    // (so no player is attached anymore)
-    sleep 10000; 
-    // Pauses the script for 5 seconds, and continue with the RID attached.
+	// (so no player is attached anymore)
+	sleep 10000; 
+	// Pauses the script for 5 seconds, and continue with the RID attached.
 	sleep2 5000; 
-    //Cancels any running sleep timers on the NPC 'NPC'.
+	//Cancels any running sleep timers on the NPC 'NPC'.
 	awake "NPC"; 
 
 ---------------------------------------
@@ -6049,7 +6047,7 @@ client and appears always green.
 This command will broadcast a message to all or most players, similar to 
 @kami/@kamib GM commands.
 
-    announce "This will be shown to everyone at all in yellow.",0;
+	announce "This will be shown to everyone at all in yellow.",0;
 
 The region the broadcast is heard in (target), source of the broadcast and 
 the color the message will come up as is determined by the flags.
@@ -6058,25 +6056,25 @@ The flag values are coded as constants in db/const.txt to make them easier
 to use.
 
 Target flags:
-- bc_all:  Broadcast message is sent server-wide (default).
-- bc_map:  Message is sent to everyone in the same map as the source of 
-           the broadcast (see below).
-- bc_area: Message is sent to players in the vicinity of the source.
-- bc_self: Message is sent only to current player.
-You cannot use more than one target flag.
+- bc_all:	Broadcast message is sent server-wide (default).
+- bc_map:	Message is sent to everyone in the same map as the source of 
+			the broadcast (see below).
+- bc_area:	Message is sent to players in the vicinity of the source.
+- bc_self:	Message is sent only to current player.
+You cannot	use more than one target flag.
 
 Source flags:
-- bc_pc:  Broadcast source is the attached player (default).
-- bc_npc: Broadcast source is the NPC, not the player attached to the 
-          script (useful when a player is not attached or the message 
-          should be sent to those nearby the NPC).
+- bc_pc:	Broadcast source is the attached player (default).
+- bc_npc:	Broadcast source is the NPC, not the player attached to the 
+			script (useful when a player is not attached or the message 
+			should be sent to those nearby the NPC).
 You cannot use more than one source flag.
 
 Special flags:
-- bc_yellow: Broadcast will be displayed in yellow color (default).
-- bc_blue:   Broadcast will be displayed in blue color.
-- bc_woe:    Indicates that this broadcast is 'WoE Information' that can 
-             be disabled client-side.
+- bc_yellow:Broadcast will be displayed in yellow color (default).
+- bc_blue:	Broadcast will be displayed in blue color.
+- bc_woe:	Indicates that this broadcast is 'WoE Information' that can 
+			be disabled client-side.
 Due to the way client handles broadcasts, it is impossible to set both 
 bc_blue and bc_woe.
 
@@ -6089,7 +6087,7 @@ The color parameter is a single number which can be in hexadecimal
 notation.
 
 For example:
-    announce "This will be shown to everyone at all in green.",bc_all,0x00FF00;
+	announce "This will be shown to everyone at all in green.",bc_all,0x00FF00;
 Will display a global announce in green. The color format is in RGB 
 (0xRRGGBB).
 
@@ -6102,12 +6100,12 @@ Default font size is 12.
 Using this for private messages to players is probably not that good an 
 idea, but it can be used instead in NPCs to "preview" an announce.
 
-    // This will be a private message to the player using the NPC that 
-    // made the announcement
-    announce "This is my message just for you",bc_blue|bc_self;
+	// This will be a private message to the player using the NPC that 
+	// made the announcement
+	announce "This is my message just for you",bc_blue|bc_self;
 
-    // This will be shown on everyones screen that is in sight of the NPC.
-    announce "This is my message just for you people here",bc_npc|bc_area;
+	// This will be shown on everyones screen that is in sight of the NPC.
+	announce "This is my message just for you people here",bc_npc|bc_area;
 
 ---------------------------------------
 
@@ -6127,7 +6125,7 @@ residing in the specified x1/y1-x2/y2 rectangle on the map given. The
 flags and optional parameters are the same as in 'announce', but target 
 and source flags are ignored.
 
-    areaannounce "prt_church",0,0,350,350,"God's in his heaven, all right with the world",0;
+	areaannounce "prt_church",0,0,350,350,"God's in his heaven, all right with the world",0;
 
 ---------------------------------------
 
@@ -6241,7 +6239,7 @@ amount.
 
 // The NPC will just show a box above its head that says "Hello World", 
 // clicking it will do nothing, since the limit is zero.
-    waitingroom "Hello World",0;
+	waitingroom "Hello World",0;
 
 // The NPC will have a box above its head, with "Disco - Waiting Room"
 // written on it, and will have 8 waiting slots. Clicking this will enter 
@@ -6249,7 +6247,7 @@ amount.
 // accumulate. Once this happens, it will cause the NPC "Bouncer" run the 
 // label "OnStart".
 
-    waitingroom "Disco - Waiting Room",8,"Bouncer::OnStart",7;
+	waitingroom "Disco - Waiting Room",8,"Bouncer::OnStart",7;
 
 // The NPC will have a box above its head, with "Party - Waiting Room" 
 // written on it, and will have 8 waiting slots. Clicking this will allow 
@@ -6257,7 +6255,7 @@ amount.
 // the player will be able to wait until 7 players accumulate. Once this 
 // happens, it will cause the NPC "Bouncer" run the label "OnStart".
 
-    waitingroom "Party - Waiting Room",8,"Bouncer::OnStart",7,5000,50,99;
+	waitingroom "Party - Waiting Room",8,"Bouncer::OnStart",7,5000,50,99;
 
 Creating a waiting room does not stop the execution of the script and it 
 will continue to the next line.
@@ -6534,7 +6532,7 @@ which returns a guild id:
 // This will change the emblem on the flag to that of the guild that owns
 // "guildcastle"
 
-    flagemblem GetCastleData("guildcastle",1);
+	flagemblem GetCastleData("guildcastle",1);
 
 ---------------------------------------
 
@@ -6614,7 +6612,7 @@ Example:
 // This will move Bugga from to the coordinates 100,20 (if those 
 // coordinates are legit).
 	moveNPC "Bugga",100,20;
-	
+
 ---------------------------------------
 
 =====================
@@ -6627,8 +6625,8 @@ Example:
 This command will send the message to the server console (map-server 
 window). It will not be displayed anywhere else.
 
-    // Displays "NAME has clicked me!" in the map-server window.
-    debugmes strcharinfo(0)+" has clicked me!";
+	// Displays "NAME has clicked me!" in the map-server window.
+	debugmes strcharinfo(0)+" has clicked me!";
 
 ---------------------------------------
 
@@ -6681,23 +6679,23 @@ Point number is the number of the point - you can have several. If more
 than one point is drawn at the same coordinates, they will cycle, which 
 can be used to create flashing marks.
 
-    // This command will show a mark at coordinates X 30 Y 40, is mark 
-    // number 1, and will be red.
-    
-    viewpoint 1,30,40,1,0xFF0000;
+	// This command will show a mark at coordinates X 30 Y 40, is mark 
+	// number 1, and will be red.
+
+	viewpoint 1,30,40,1,0xFF0000;
 
 This will create three points:
 
-    viewpoint 1,30,40,1,0xFF0000;
-    viewpoint 1,35,45,2,0xFF0000;
-    viewpoint 1,40,50,3,0xFF0000;
+	viewpoint 1,30,40,1,0xFF0000;
+	viewpoint 1,35,45,2,0xFF0000;
+	viewpoint 1,40,50,3,0xFF0000;
 
 And this is how you remove them:
 
-    viewpoint 2,30,40,1,0xFF0000;
-    viewpoint 2,35,45,2,0xFF0000;
-    viewpoint 2,40,50,3,0xFF0000;
-    
+	viewpoint 2,30,40,1,0xFF0000;
+	viewpoint 2,35,45,2,0xFF0000;
+	viewpoint 2,40,50,3,0xFF0000;
+
 The client determines what it does with the points entirely, the server 
 keeps no memory of where the points are set whatsoever.
 
@@ -6709,11 +6707,11 @@ This command will display a picture, usually an NPC illustration, also
 called cutin, for the currently attached client. The position parameter 
 determines the placement of the illustration and takes following values:
 
-    0 - bottom left corner 
-    1 - bottom middle 
-    2 - bottom right corner 
-    3 - middle of screen in a movable window with an empty title bar 
-    4 - middle of screen without the window header, but still movable 
+	0 - bottom left corner 
+	1 - bottom middle 
+	2 - bottom right corner 
+	3 - middle of screen in a movable window with an empty title bar 
+	4 - middle of screen without the window header, but still movable 
 
 The picture is read from data\texture\???????\illust, from both the 
 GRF archive and data folder, and is required to be a bitmap. The file 
@@ -6729,15 +6727,15 @@ one will cause the old one to disappear. To delete the currently displayed
 illustration without displaying a new one, an empty file name and position 
 255 must be used.
 
-    // Displays the Comodo Kafra illustration in lower right corner.
-    cutin "kafra_07",2;
+	// Displays the Comodo Kafra illustration in lower right corner.
+	cutin "kafra_07",2;
 
-    // Typical way to end a script, which displayed an illustration during a
-    // dialog with a player.
-    mes "See you.";
-    close2;
-    cutin "",255;
-    end;
+	// Typical way to end a script, which displayed an illustration during a
+	// dialog with a player.
+	mes "See you.";
+	close2;
+	cutin "",255;
+	end;
 
 ---------------------------------------
 
@@ -6842,10 +6840,10 @@ This command will run the given command line exactly as if it was typed in
 from the keyboard by the player connected to the invoking character, and 
 that character belonged to an account which had GM level 99.
 
-    // This will ask the invoker for a character name and then use the 
-    // '@nuke' GM command on them, killing them mercilessly.
-    input @player$;
-    atcommand "@nuke "+@player$;
+	// This will ask the invoker for a character name and then use the 
+	// '@nuke' GM command on them, killing them mercilessly.
+	input @player$;
+	atcommand "@nuke "+@player$;
 
 This command has a lot of good uses, I am sure you can have some fun with 
 this one.
@@ -6860,9 +6858,9 @@ GM level 99.
 
 The commands can also run without an attached rid.
 
-    // This would do the same as above, but now
-    // it doesn't need a player attached by default.
-    charcommand "#option 0 0 0 Roy";
+	// This would do the same as above, but now
+	// it doesn't need a player attached by default.
+	charcommand "#option 0 0 0 Roy";
 
 ---------------------------------------
 
@@ -6940,9 +6938,9 @@ value, and "NPC level" is the temporary level of the NPC (used in some
 skills). Neither value can be greater than the max level defined in 
 config, and will not work properly if the NPC has a mob sprite.
 
-    // Casts Level 10 Heal on the attached player, calculated with
-    // all stats 99 and base level 60.
-    npcskill "AL_HEAL",10,99,60;
+	// Casts Level 10 Heal on the attached player, calculated with
+	// all stats 99 and base level 60.
+	npcskill "AL_HEAL",10,99,60;
 
 ---------------------------------------
 
@@ -7183,47 +7181,47 @@ The first letter is position 0.
 
 Returns char at specified index. If index is out of range, returns an  
 empty string.
-	
+
 Example:
-	
+
 	charat("This is a string", 10); //returns "s"
-	
+
 ---------------------------------------
-	
+
 *setchar(<string>,<char>,<index>)
 
 Returns the original string with the char at the specified index set to 
 the specified char. If index is out of range, the original string will be 
 returned. Only the 1st char in the <char> parameter will be used.
-	
+
 Example:
 	
 	setchar("Cat", "B", 0); //returns "Bat"
-	
+
 ---------------------------------------
 
 *insertchar(<string>,<char>,<index>)
-	
+
 Returns the original string with the specified char inserted at the 
 specified index. If index is out of range, the char will be inserted on 
 the end of the string that it is closest. Only the 1st char in the <char> 
 parameter will be used.
-	
+
 Example:
-	
+
 	insertchar("laughter", "s", 0); //returns "slaughter"
-	
+
 ---------------------------------------
 
 *delchar(<string>,<index>)
 
 Returns the original string with the char at the specified index removed.
 If index is out of range, original string will be returned.
-	
+
 Example:
-	
+
 	delchar("Diet", 3); //returns "Die"
-	
+
 ---------------------------------------
 
 *strtoupper(<string>)
@@ -7231,9 +7229,9 @@ Example:
 
 Returns the specified string in it's uppercase/lowercase form.
 All non-alpha characters will be preserved.
-	
+
 Example:
-	
+
 	strtoupper("The duck is blue!!"); //returns "THE DUCK IS BLUE!!"
 
 ---------------------------------------
@@ -7246,21 +7244,21 @@ uppercase for 'charisupper' or lowercase for 'charislower'. Otherwise, 0.
 Characters not of the alphabelt will return 0.
 
 Example:
-	
+
 	charisupper("Hercules", 0); //returns 1
-	
+
 ---------------------------------------
 
 *substr(<string>,<start_index>,<end_index>)
-	
+
 Returns the sub-string of the specified string inclusively between the set 
 indexes. If indexes are out of range, or the start index is after the end 
 index, an empty string will be returned.
 
 Example:
-	
+
 	substr("foobar", 3, 5); //returns "bar"
-	
+
 ---------------------------------------
 
 *explode(<dest_array>,<string>,<delimiter>)
@@ -7272,7 +7270,7 @@ as a delimiter, the string will be placed in the array in its original
 form, without any changes.
 
 Example:
-	
+
 	explode(.@my_array$, "Explode:Test:1965:red:PIE", ":");
 	//.@my_array$ contents will be...
 	//.@my_array$[0]: "Explode"
@@ -7288,7 +7286,7 @@ Example:
 Combines all substrings within the specified string array into a single 
 string. If the glue parameter is specified, it will be inserted inbetween 
 each substring.
-	
+
 Example:
 	setarray .@my_array$[0], "This", "is", "a", "test";
 	implode(.@my_array$, " "); //returns "This is a test"
@@ -7305,11 +7303,11 @@ Number of params is only limited by Hercules' script engine.
 Example:
 	.@format$ = 'The %s contains %d monkeys';
 	dispbottom(sprintf(.@format$, "zoo", 5));
-    //prints "The zoo contains 5 monkeys"
+	//prints "The zoo contains 5 monkeys"
 
-    dispbottom(sprintf(.@format$, "barrel", 82));
-    //prints "The barrel contains 82 monkeys"
-	
+	dispbottom(sprintf(.@format$, "barrel", 82));
+	//prints "The barrel contains 82 monkeys"
+
 ---------------------------------------
 
 *sscanf(<string>,<format>[,param[,param[,...]]])
@@ -7321,7 +7319,7 @@ limited by Hercules' script engine.
 Example:
 	sscanf("This is a test: 42 foobar", "This is a test: %d %s", .@num, .@str$);
 	dispbottom(.@num + " " + .@str$); //prints "42 foobar"
-	
+
 ---------------------------------------
 
 *strpos(<haystack>,<needle>{,<offset>})
@@ -7335,7 +7333,7 @@ Example:
 	strpos("foobar", "bar", 0); //returns 3
 	strpos("foobarfoo", "foo", 0); //returns 0
 	strpos("foobarfoo", "foo", 1); //returns 6
-	
+
 ---------------------------------------
 
 *replacestr(<input>, <search>, <replace>{, <usecase>{, <count>}})
@@ -7349,7 +7347,7 @@ Example:
 	replacestr("testing tester", "test", "dash"); //returns "dashing dasher"
 	replacestr("Donkey", "don", "mon", 0);	//returns "monkey"
 	replacestr("test test test test test", "yay", 0, 3); //returns "yay yay yay test test"
-	
+
 ---------------------------------------
 
 *countstr(<input>, <search>{, <usecase>})
@@ -7369,16 +7367,16 @@ This command sets the current RO client interface font to one of the fonts
 stored in data\*.eot by using an ID of the font. When the ID of the 
 currently used font is used, default interface font is used again.
 
-    0 - Default
-    1 - RixLoveangel
-    2 - RixSquirrel
-    3 - NHCgogo
-    4 - RixDiary
-    5 - RixMiniHeart
-    6 - RixFreshman
-    7 - RixKid
-    8 - RixMagic
-    9 - RixJJangu
+	0 - Default
+	1 - RixLoveangel
+	2 - RixSquirrel
+	3 - NHCgogo
+	4 - RixDiary
+	5 - RixMiniHeart
+	6 - RixFreshman
+	7 - RixKid
+	8 - RixMagic
+	9 - RixJJangu
 
 ---------------------------------------
 
@@ -7388,12 +7386,12 @@ Displays given numeric 'value' in large digital clock font on top of the
 screen. The optional parameter 'type' specifies visual aspects of the 
 "clock" and can be one of the following values:
 
-    0 - Displays the value for 5 seconds (default).
-    1 - Incremental counter (1 tick/second).
-    2 - Decremental counter (1 tick/second). Does not stop at zero, but 
-        overflows.
-    3 - Decremental counter (1 tick/second). Two digits only, stops at 
-        zero.
+	0 - Displays the value for 5 seconds (default).
+	1 - Incremental counter (1 tick/second).
+	2 - Decremental counter (1 tick/second). Does not stop at zero, but 
+		overflows.
+	3 - Decremental counter (1 tick/second). Two digits only, stops at 
+		zero.
 
 For type 1 and 2 the start value is set by using negative number of the 
 one intended to set (ex. -10 starts the counter at 10 seconds). Except for 
@@ -7401,11 +7399,11 @@ type 3 the value is interpreted as seconds and formatted as time in days,
 hours, minutes and seconds. Note, that the official script command does 
 not have the optional parameter.
 
-    // displays 23:59:59 for 5 seconds
-    showdigit 86399;
+	// displays 23:59:59 for 5 seconds
+	showdigit 86399;
 
-    // counter that starts at 60 and runs for 60 seconds
-    showdigit 60,3;
+	// counter that starts at 60 and runs for 60 seconds
+	showdigit 60,3;
 
 ---------------------------------------
 
@@ -7504,8 +7502,8 @@ inventory. The kind of pet is specified by pet ID numbers listed in
 'db/pet_db.txt'. The egg is created exactly as if the character just 
 successfully caught a pet in the normal way.
 
-    // This will make you a poring:
-    makepet 1002;
+	// This will make you a poring:
+	makepet 1002;
 
 Notice that you absolutely have to create pet eggs with this command. If 
 you try to give a pet egg with 'getitem', pet data will not be created by 
@@ -7821,21 +7819,21 @@ If no additional argument supplied, return the state of the quest:
 	0  = Quest has been given, but the state is "inactive"
 	1  = Quest has been given, and the state is "active"
 	2  = Quest completed
-	
+
 If parameter "PLAYTIME" is supplied:
 	-1 = Quest not started (not in quest log)
 	0  = the time limit has not yet been reached
 	1  = the time limit has not been reached but the quest is marked as 
-         complete
+		 complete
 	2  = the time limit has been reached
-	
+
 If parameter "HUNTING" is supplied:
-	-1 = Quest not started (not in quest log)
-	0  = you haven't killed all of the target monsters and the time limit 
-         has not been reached.
-	1  = you haven't killed all of the target monsters but the time limit 
-         has been reached.
-	2  = you've killed all of the target monsters
+   -1 = Quest not started (not in quest log)
+	0 = you haven't killed all of the target monsters and the time limit 
+		has not been reached.
+	1 = you haven't killed all of the target monsters but the time limit 
+		has been reached.
+	2 = you've killed all of the target monsters
 
 ---------------------------------------
 
@@ -7847,11 +7845,11 @@ certain player/s.
 
 state can be:
 	0 = disable ( Used to disable and remove the mark and the emotion from 
-        the NPC. )
+		the NPC. )
 	1 = exclamation emotion ( Used to show an important quest event to 
-        certain player. )
+		certain player. )
 	2 = interrogation emotion ( Used to show an non-important quest event 
-        to certain player. )
+		to certain player. )
 Other value may cause client crashes.
 
 color can be:
@@ -7893,8 +7891,8 @@ If the option parameter is left out, the waiting room of the current NPC
 is used.
 
 Example:
-    // Battle Group will be referred to as $@KvM01BG_id1, and when they 
-    // die, respawn at bat_c01,52,129.
+	// Battle Group will be referred to as $@KvM01BG_id1, and when they 
+	// die, respawn at bat_c01,52,129.
 	set $@KvM01BG_id1, waitingroom2bg("bat_c01",52,129,"KvM01_BG::OnGuillaumeQuit","KvM01_BG::OnGuillaumeDie");
 	end;
 
@@ -7996,7 +7994,7 @@ Example:
 Retrieves data related to given battle group. Type can be one of the 
 following:
 
-    0 - Amount of players currently belonging to the group.
+	0 - Amount of players currently belonging to the group.
 
 ----------------------------------------
 
@@ -8047,9 +8045,9 @@ currently attached character.
 Sets or gets the mercenary calls value for given guild for currently 
 attached character. Guild can be one or the following constants:
 
-    ARCH_MERC_GUILD
-    SPEAR_MERC_GUILD
-    SWORD_MERC_GUILD
+	ARCH_MERC_GUILD
+	SPEAR_MERC_GUILD
+	SWORD_MERC_GUILD
 
 ----------------------------------------
 
@@ -8059,9 +8057,9 @@ attached character. Guild can be one or the following constants:
 Sets or gets the mercenary faith value for given guild for currently 
 attached character. Guild can be one or the following constants:
 
-    ARCH_MERC_GUILD
-    SPEAR_MERC_GUILD
-    SWORD_MERC_GUILD
+	ARCH_MERC_GUILD
+	SPEAR_MERC_GUILD
+	SWORD_MERC_GUILD
 
 ---------------------------------------
 
@@ -8072,14 +8070,14 @@ If char id is given, the information of that character is retrieved
 instead. Type specifies what information to retrieve and can be one of the 
 following:
 
-    0 - Database ID
-    1 - Class
-    2 - Name
-    3 - Faith value for this mercenary's guild, if any
-    4 - Calls value for this mercenary's guild, if any
-    5 - Kill count
-    6 - Remaining life time in msec
-    7 - Level
+	0 - Database ID
+	1 - Class
+	2 - Name
+	3 - Faith value for this mercenary's guild, if any
+	4 - Calls value for this mercenary's guild, if any
+	5 - Kill count
+	6 - Remaining life time in msec
+	7 - Level
 
 If the character does not have a mercenary, the command returns ""
 for name and 0 for all other types.

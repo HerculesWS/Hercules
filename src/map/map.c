@@ -5031,7 +5031,7 @@ void do_final(void)
 	do_final_npc();
 	script->final();
 	do_final_itemdb();
-	do_final_storage();
+	storage->final();
 	guild->final();
 	party->do_final_party();
 	pc->do_final_pc();
@@ -5235,7 +5235,13 @@ void map_hp_symbols(void) {
 	HPM->share(buyingstore,"buyingstore");
 	HPM->share(clif,"clif");
 	HPM->share(guild,"guild");
+<<<<<<< HEAD
 	HPM->share(homun,"homun");
+=======
+	HPM->share(gstorage,"gstorage");
+	HPM->share(homun,"homun");
+	HPM->share(iMap,"iMap");
+>>>>>>> upstream/master
 	HPM->share(ircbot,"ircbot");
 	HPM->share(itemdb,"itemdb");
 	HPM->share(logs,"logs");
@@ -5246,7 +5252,12 @@ void map_hp_symbols(void) {
 	HPM->share(vending,"vending");
 	HPM->share(pc,"pc");
 	HPM->share(party,"party");
+<<<<<<< HEAD
 	HPM->share(iMap,"iMap");
+=======
+	HPM->share(storage,"storage");
+	HPM->share(trade,"trade");
+>>>>>>> upstream/master
 	/* partial */
 	HPM->share(mapit,"mapit");
 	/* sql link */
@@ -5265,6 +5276,7 @@ void load_defaults(void) {
 	buyingstore_defaults();
 	clif_defaults();
 	guild_defaults();
+	gstorage_defaults();
 	homunculus_defaults();
 	instance_defaults();
 	ircbot_defaults();
@@ -5278,6 +5290,11 @@ void load_defaults(void) {
 	vending_defaults();
 	pc_defaults();
 	party_defaults();
+<<<<<<< HEAD
+=======
+	storage_defaults();
+	trade_defaults();
+>>>>>>> upstream/master
 }
 int do_init(int argc, char *argv[])
 {
@@ -5468,7 +5485,7 @@ int do_init(int argc, char *argv[])
 	do_init_status();
 	party->do_init_party();
 	guild->init();
-	do_init_storage();
+	storage->init();
 	do_init_pet();
 	homun->init();
 	do_init_mercenary();

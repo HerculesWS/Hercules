@@ -2035,6 +2035,12 @@ packet(0x020d,-1);
 #endif
 #endif
 
+#ifndef PACKETVER_RE
+#if PACKETVER >= 20120604
+	packet(0x0861,18,clif->pPartyBookingRegisterReq,2,4,6);
+#endif
+#endif
+
 //2012-06-18aRagexeRE
 #if PACKETVER >= 20120618
 	packet(0x0983,29);
@@ -2249,8 +2255,193 @@ packet(0x020d,-1);
 	packet(0x0883,36,clif->pStoragePassword,0);
 #endif
 
+<<<<<<< HEAD
 #if PACKETVER >= 20130612
 	packetKeys(0x6D166F66, 0x3C000FCF, 0x295B0FCB); /* Thanks to Shakto */
 #endif
 
+=======
+/* PacketKeys: http://hercules.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
+#if PACKETVER >= 20110817
+	packetKeys(0x053D5CED,0x3DED6DED,0x6DED6DED); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20110824
+	packetKeys(0x35C91401,0x262A5556,0x28FA03AA); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20110831
+	packetKeys(0x3AD67ED0,0x44703C69,0x6F876809); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20110906
+	packetKeys(0x3AD67ED0,0x44703C69,0x6F876809); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20111005
+	packetKeys(0x291E6762,0x77CD391A,0x60AC2F16); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20111012
+	packetKeys(0x7F3C2D29,0x59B01DE6,0x1DBB44CA); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20111021
+	packetKeys(0x357D55DC,0x5A8D759F,0x245C30F5); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20111025
+	packetKeys(0x50AE1A63,0x3CE579B5,0x29C10406); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20111102
+	packetKeys(0x5324329D,0x5D545D52,0x06137269); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20111109
+	packetKeys(0x0B642BDA,0x6ECB1D1C,0x61C7454B); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20111122
+	packetKeys(0x3B550F07,0x1F666C7C,0x60304EF5); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20111207
+	packetKeys(0x2A610886,0x3E09165E,0x57C11888); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20111214
+	packetKeys(0x5151306B,0x7AE32886,0x53060628); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20111220
+	packetKeys(0x05D53871,0x7D0027B4,0x29975333); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20111228
+	packetKeys(0x0FF87E93,0x6CFF7860,0x3A3D1DEC); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120104
+	packetKeys(0x262034A1,0x674542A5,0x73A50BA5); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120111
+	packetKeys(0x2B412AFC,0x4FF94487,0x6705339D); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120120
+	packetKeys(0x504345D0,0x3D427B1B,0x794C2DCC); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120202
+	packetKeys(0x2CFC0A71,0x2BA91D8D,0x087E39E0); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120207
+	packetKeys(0x1D373F5D,0x5ACD604D,0x1C4D7C4D); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120214
+	packetKeys(0x7A255EFA,0x30977276,0x2D4A0448); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120229
+	packetKeys(0x520B4C64,0x2800407D,0x47651458); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120307
+	packetKeys(0x382A6DEF,0x5CBE7202,0x61F46637); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120314
+	packetKeys(0x689C1729,0x11812639,0x60F82967); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120321
+	packetKeys(0x21F9683F,0x710C5CA5,0x1FD910E9); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120328
+	packetKeys(0x75B8553B,0x37F20B12,0x385C2B40); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120404
+	packetKeys(0x0036310C,0x2DCD0BED,0x1EE62A78); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120410
+	packetKeys(0x01581359,0x452D6FFA,0x6AFB6E2E); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120418
+	packetKeys(0x01540E48,0x13041224,0x31247924); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120424
+	packetKeys(0x411D1DBB,0x4CBA4848,0x1A432FC4); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120509
+	packetKeys(0x16CF3301,0x1F472B9B,0x0B4A3CD2); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120515
+	packetKeys(0x4A715EF9,0x79103E4F,0x405C1238); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120525
+	packetKeys(0x70EB4CCB,0x0487713C,0x398D4B08); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120605
+	packetKeys(0x68CA3080,0x31B74BDD,0x505208F1); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120612
+	packetKeys(0x32E45D64,0x35643564,0x35643564); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120618
+	packetKeys(0x261F261F,0x261F261F,0x261F261F); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120702
+	packetKeys(0x25733B31,0x53486CFD,0x398649BD); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20120716
+	packetKeys(0x76052205,0x22052205,0x22052205); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20130320
+	packetKeys(0x3F094C49,0x55F86C1E,0x58AA359A); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20130514
+	packetKeys(0x75794A38,0x58A96BC1,0x296E6FB8); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20130522
+	packetKeys(0x6948050B,0x06511D9D,0x725D4DF1); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20130529
+	packetKeys(0x023A6C87,0x14BF1F1E,0x5CC70CC9); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20130605
+	packetKeys(0x646E08D9,0x5F153AB5,0x61B509B5); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20130612
+	packetKeys(0x6D166F66,0x3C000FCF,0x295B0FCB); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20130618
+	packetKeys(0x434115DE,0x34A10FE9,0x6791428E); /* Thanks to Shakto */
+#endif
+
+
+>>>>>>> upstream/master
 #endif /* _PACKETS_H_ */

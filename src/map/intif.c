@@ -1011,7 +1011,7 @@ int intif_parse_LoadGuildStorage(int fd)
 		ShowError("intif_parse_LoadGuildStorage: user not found %d\n",RFIFOL(fd,4));
 		return 1;
 	}
-	gstor=guild2storage(guild_id);
+	gstor=gstorage->id2storage(guild_id);
 	if(!gstor) {
 		ShowWarning("intif_parse_LoadGuildStorage: error guild_id %d not exist\n",guild_id);
 		return 1;
@@ -1031,14 +1031,14 @@ int intif_parse_LoadGuildStorage(int fd)
 	}
 
 	memcpy(gstor,RFIFOP(fd,12),sizeof(struct guild_storage));
-	storage_guild_storageopen(sd);
+	gstorage->open(sd);
 	return 0;
 }
 
 // ACK guild_storage saved
 int intif_parse_SaveGuildStorage(int fd)
 {
-	storage_guild_storagesaved(/*RFIFOL(fd,2), */RFIFOL(fd,6));
+	gstorage->saved(/*RFIFOL(fd,2), */RFIFOL(fd,6));
 	return 0;
 }
 

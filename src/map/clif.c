@@ -5964,12 +5964,18 @@ void clif_wis_message(int fd, const char* nick, const char* mes, int mes_len)
 	safestrncpy((char*)WFIFOP(fd,28), mes, mes_len);
 	WFIFOSET(fd,WFIFOW(fd,2));
 #else
+	struct map_session_data *ssd = iMap->nick2sd(nick);
+
 	WFIFOHEAD(fd, mes_len + NAME_LENGTH + 8);
 	WFIFOW(fd,0) = 0x97;
 	WFIFOW(fd,2) = mes_len + NAME_LENGTH + 8;
 	safestrncpy((char*)WFIFOP(fd,4), nick, NAME_LENGTH);
+<<<<<<< HEAD
 	WFIFOL(fd,28) = 0; // isAdmin; if nonzero, also displays text above char
 	// TODO: WFIFOL(fd,28) = pc->get_group_level(ssd);
+=======
+	WFIFOL(fd,28) = (ssd && pc->get_group_level(ssd) == 99) ? 1 : 0; // isAdmin; if nonzero, also displays text above char
+>>>>>>> upstream/master
 	safestrncpy((char*)WFIFOP(fd,32), mes, mes_len);
 	WFIFOSET(fd,WFIFOW(fd,2));
 #endif
@@ -9756,7 +9762,7 @@ void clif_parse_progressbar(int fd, struct map_session_data * sd)
 	if( iTimer->gettick() < sd->progressbar.timeout && sd->st )
 		sd->st->state = END;
 
-	sd->progressbar.npc_id = sd->progressbar.timeout = 0;
+	sd->state.workinprogress = sd->progressbar.npc_id = sd->progressbar.timeout = 0;
 	npc_scriptcont(sd, npc_id, false);
 }
 
@@ -9776,8 +9782,8 @@ void clif_parse_WalkToXY(int fd, struct map_session_data *sd)
 
 	if (sd->sc.opt1 && ( sd->sc.opt1 == OPT1_STONEWAIT || sd->sc.opt1 == OPT1_BURNING ))
 		; //You CAN walk on this OPT1 value.
-	else if( sd->progressbar.npc_id )
-		clif->progressbar_abort(sd);
+	/*else if( sd->progressbar.npc_id )
+		clif->progressbar_abort(sd);*/
 	else if (pc_cant_act(sd))
 		return;
 
@@ -10572,7 +10578,7 @@ void clif_parse_DropItem(int fd, struct map_session_data *sd)
 		if (pc_isdead(sd))
 			break;
 
-		if ( pc_cant_act2(sd) )
+		if ( pc_cant_act2(sd) || sd->state.vending )
 			break;
 
 		if (sd->sc.count && (
@@ -10794,7 +10800,11 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 #endif
 		return;
 	}
+<<<<<<< HEAD
 	if ( pc_cant_act2(sd) || !(bl = iMap->id2bl(RFIFOL(fd,2))) )
+=======
+	if ( pc_cant_act2(sd) || !(bl = iMap->id2bl(RFIFOL(fd,2))) || sd->state.vending )
+>>>>>>> upstream/master
 		return;
 	
 	switch (bl->type) {
@@ -11848,10 +11858,9 @@ void clif_parse_MoveToKafra(int fd, struct map_session_data *sd)
 		return;
 
 	if (sd->state.storage_flag == 1)
-		storage_storageadd(sd, item_index, item_amount);
-	else
-	if (sd->state.storage_flag == 2)
-		storage_guild_storageadd(sd, item_index, item_amount);
+		storage->add(sd, item_index, item_amount);
+	else if (sd->state.storage_flag == 2)
+		gstorage->add(sd, item_index, item_amount);
 }
 
 
@@ -11867,9 +11876,9 @@ void clif_parse_MoveFromKafra(int fd,struct map_session_data *sd)
 	item_amount = RFIFOL(fd,packet_db[RFIFOW(fd,0)].pos[1]);
 
 	if (sd->state.storage_flag == 1)
-		storage_storageget(sd, item_index, item_amount);
+		storage->get(sd, item_index, item_amount);
 	else if(sd->state.storage_flag == 2)
-		storage_guild_storageget(sd, item_index, item_amount);
+		gstorage->get(sd, item_index, item_amount);
 }
 
 
@@ -11883,10 +11892,9 @@ void clif_parse_MoveToKafraFromCart(int fd, struct map_session_data *sd)
 		return;
 
 	if (sd->state.storage_flag == 1)
-		storage_storageaddfromcart(sd, RFIFOW(fd,2) - 2, RFIFOL(fd,4));
-	else
-	if (sd->state.storage_flag == 2)
-		storage_guild_storageaddfromcart(sd, RFIFOW(fd,2) - 2, RFIFOL(fd,4));
+		storage->addfromcart(sd, RFIFOW(fd,2) - 2, RFIFOL(fd,4));
+	else if (sd->state.storage_flag == 2)
+		gstorage->addfromcart(sd, RFIFOW(fd,2) - 2, RFIFOL(fd,4));
 }
 
 
@@ -11900,10 +11908,9 @@ void clif_parse_MoveFromKafraToCart(int fd, struct map_session_data *sd)
 		return;
 
 	if (sd->state.storage_flag == 1)
-		storage_storagegettocart(sd, RFIFOW(fd,2)-1, RFIFOL(fd,4));
-	else
-	if (sd->state.storage_flag == 2)
-		storage_guild_storagegettocart(sd, RFIFOW(fd,2)-1, RFIFOL(fd,4));
+		storage->gettocart(sd, RFIFOW(fd,2)-1, RFIFOL(fd,4));
+	else if (sd->state.storage_flag == 2)
+		gstorage->gettocart(sd, RFIFOW(fd,2)-1, RFIFOL(fd,4));
 }
 
 
@@ -11912,9 +11919,9 @@ void clif_parse_MoveFromKafraToCart(int fd, struct map_session_data *sd)
 void clif_parse_CloseKafra(int fd, struct map_session_data *sd)
 {
 	if( sd->state.storage_flag == 1 )
-		storage_storageclose(sd);
+		storage->close(sd);
 	else if( sd->state.storage_flag == 2 )
-		storage_guild_storageclose(sd);
+		gstorage->close(sd);
 }
 
 
@@ -17399,8 +17406,14 @@ void clif_parse_bgqueue_revoke_req(int fd, struct map_session_data *sd) {
 }
 
 void clif_parse_bgqueue_battlebegin_ack(int fd, struct map_session_data *sd) {
-	//struct packet_bgqueue_battlebegin_ack *p = P2PTR(fd, bgqueue_checkstateType);
-	return;
+	struct packet_bgqueue_battlebegin_ack *p = P2PTR(fd, bgqueue_checkstateType);
+	struct bg_arena *arena;
+	if( !bg->queue_on ) return; /* temp, until feature is complete */
+	if( ( arena = bg->name2arena(p->bg_name) ) ) {
+		bg->queue_ready_ack(arena,sd, ( p->result == 1 ) ? true : false);
+	} else {
+		clif->bgqueue_ack(sd,BGQA_FAIL_BGNAME_INVALID, 0);
+	}
 	//if ( p->result == 1 )
 	//	bg->queue_pc_ready(sd);
 	//else

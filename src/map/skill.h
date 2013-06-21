@@ -37,6 +37,7 @@ struct square;
 #define MAX_SKILLUNITGROUP 25
 #define MAX_SKILL_ITEM_REQUIRE	10
 #define MAX_SKILLUNITGROUPTICKSET 25
+#define MAX_SKILL_NAME_LENGTH 30
 
 // (Epoque:) To-do: replace this macro with some sort of skill tree check (rather than hard-coded skill names)
 #define skill_ischangesex(id) ( \
@@ -1599,7 +1600,7 @@ struct skill_condition {
 // Database skills
 struct s_skill_db {
 	unsigned short nameid;
-	char name[NAME_LENGTH];
+	char name[MAX_SKILL_NAME_LENGTH];
 	char desc[40];
 	int range[MAX_SKILL_LEVEL],hit,inf,element[MAX_SKILL_LEVEL],nk,splash[MAX_SKILL_LEVEL],max;
 	int num[MAX_SKILL_LEVEL];

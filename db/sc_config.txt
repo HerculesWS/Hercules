@@ -3,6 +3,7 @@
 // Structure of Database:
 // SC_NAME, flag
 //
+<<<<<<< HEAD
 // flag    0x1  - SC cannot be removed by death.
 //         0x2  - SC cannot be saved.
 //         0x4  - SC cannot be reset by dispell.
@@ -10,6 +11,17 @@
 //         0x10 - SC considered as buff and be removed by Hermode and etc.
 //         0x20 - SC considered as debuff and be removed by Gospel and etc.
 //         0x40 - SC cannot be reset when MADO Gear is taken off.
+=======
+// flag    1  - SC cannot be removed by death.
+//         2  - SC cannot be saved.
+//         4  - SC cannot be reset by dispell.
+//         8  - SC cannot be reset by clearance.
+//         16 - SC considered as buff and be removed by Hermode and etc.
+//         32 - SC considered as debuff and be removed by Gospel and etc.
+//         64 - SC cannot be reset when MADO Gear is taken off.
+//Example:
+//SC_ENDURE, 21 //SC_ENDURE: cannot be removed by death and dispell and cosidered as buff. (16 + 4 + 1 = 21)
+>>>>>>> upstream/master
 
 SC_PROVOKE, 32	
 SC_ENDURE, 21	

@@ -420,9 +420,20 @@ int bg_id2pos ( int queue_id, int account_id ) {
 	}
 	return 0;
 }
+void bg_queue_ready_ack (struct bg_arena *arena, struct map_session_data *sd, bool response) {
+	if( arena->begin_timer == INVALID_TIMER || !sd->bg_queue.arena || sd->bg_queue.arena != arena ) {
+		bg->queue_pc_cleanup(sd);
+		return;
+	}
+	if( response ) {
+		sd->bg_queue.ready = 1;
+		/* check if all are ready then cancell timer, and start game  */
+	} else
+		bg->queue_pc_cleanup(sd);
+}
 void bg_queue_player_cleanup(struct map_session_data *sd) {
 	if ( sd->bg_queue.client_has_bg_data ) {
-		clif->bgqueue_notice_delete(sd,BGQND_CLOSEWINDOW, sd->bg_queue.arena->id);
+		clif->bgqueue_notice_delete(sd,BGQND_CLOSEWINDOW, sd->bg_queue.arena ? sd->bg_queue.arena->id : 0);
 	}
 	script->queue_remove(sd->bg_queue.arena->queue_id,sd->status.account_id);
 	sd->bg_queue.arena = NULL;
@@ -726,6 +737,7 @@ void battleground_defaults(void) {
 	bg->begin_timer = bg_begin_timer;
 	bg->queue_pregame = bg_queue_pregame;
 	bg->fillup_timer = bg_fillup_timer;
+	bg->queue_ready_ack = bg_queue_ready_ack;
 	/* */
 	bg->config_read = bg_config_read;
 }

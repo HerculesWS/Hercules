@@ -1,11 +1,12 @@
 --
--- rAthena Database Converter ( InnoDB -> MyISAM )
+-- Hercules Database Converter ( InnoDB -> MyISAM )
 --
 
 ALTER TABLE `auction` ENGINE = MyISAM;
 ALTER TABLE `cart_inventory` ENGINE = MyISAM;
 ALTER TABLE `char` ENGINE = MyISAM;
 ALTER TABLE `charlog` ENGINE = MyISAM;
+ALTER TABLE `elemental` ENGINE = MyISAM;
 ALTER TABLE `friends` ENGINE = MyISAM;
 ALTER TABLE `global_reg_value` ENGINE = MyISAM;
 ALTER TABLE `guild` ENGINE = MyISAM;
@@ -19,6 +20,7 @@ ALTER TABLE `guild_storage` ENGINE = MyISAM;
 ALTER TABLE `homunculus` ENGINE = MyISAM;
 ALTER TABLE `hotkey` ENGINE = MyISAM;
 ALTER TABLE `interlog` ENGINE = MyISAM;
+ALTER TABLE `intereg` ENGINE = MyISAM;
 ALTER TABLE `inventory` ENGINE = MyISAM;
 ALTER TABLE `ipbanlist` ENGINE = MyISAM;
 #ALTER TABLE `item_db` ENGINE = MyISAM;
@@ -38,5 +40,6 @@ ALTER TABLE `ragsrvinfo` ENGINE = MyISAM;
 ALTER TABLE `sc_data` ENGINE = MyISAM;
 ALTER TABLE `skill` ENGINE = MyISAM;
 ALTER TABLE `skill_homunculus` ENGINE = MyISAM;
+ALTER TABLE `sql_updates` ENGINE = MyISAM;
 ALTER TABLE `sstatus` ENGINE = MyISAM;
 ALTER TABLE `storage` ENGINE = MyISAM;

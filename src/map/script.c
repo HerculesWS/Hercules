@@ -8179,20 +8179,18 @@ BUILDIN(gettimestr)
 /*==========================================
  * Open player storage
  *------------------------------------------*/
-BUILDIN(openstorage)
-{
+BUILDIN(openstorage) {
 	TBL_PC* sd;
 	
 	sd = script_rid2sd(st);
 	if( sd == NULL )
 		return true;
 	
-	storage_storageopen(sd);
+	storage->open(sd);
 	return true;
 }
 
-BUILDIN(guildopenstorage)
-{
+BUILDIN(guildopenstorage) {
 	TBL_PC* sd;
 	int ret;
 	
@@ -8200,7 +8198,7 @@ BUILDIN(guildopenstorage)
 	if( sd == NULL )
 		return true;
 	
-	ret = storage_guild_storageopen(sd);
+	ret = gstorage->open(sd);
 	script_pushint(st,ret);
 	return true;
 }
@@ -16312,6 +16310,10 @@ BUILDIN(progressbar)
 	
 	sd->progressbar.npc_id = st->oid;
 	sd->progressbar.timeout = iTimer->gettick() + second*1000;
+<<<<<<< HEAD
+=======
+	sd->state.workinprogress = 3;
+>>>>>>> upstream/master
 	
 	clif->progressbar(sd, strtol(color, (char **)NULL, 0), second);
     return true;
@@ -16520,9 +16522,10 @@ BUILDIN(setmounting) {
 	TBL_PC* sd;
 	if( (sd = script_rid2sd(st)) == NULL )
 		return true;
-	if( sd->sc.option&(OPTION_WUGRIDER|OPTION_RIDING|OPTION_DRAGON|OPTION_MADOGEAR) )
+	if( sd->sc.option&(OPTION_WUGRIDER|OPTION_RIDING|OPTION_DRAGON|OPTION_MADOGEAR) ){
+		clif->msgtable(sd->fd, 0X78b);
 		script_pushint(st,0);//can't mount with one of these
-	else {
+	}else {
 		if( sd->sc.data[SC_ALL_RIDING] )
 			status_change_end(&sd->bl, SC_ALL_RIDING, INVALID_TIMER);
 		else
