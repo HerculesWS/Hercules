@@ -1811,7 +1811,7 @@ static int pc_bonus_addeff_onskill(struct s_addeffectonskill* effect, int max, e
 
 static int pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id, short group, int race, int rate) {
 	int i;
-	ShowDebug("Adding %s (%d) with rate %d\n",id?itemdb_name(id):"NONE",id,rate);
+
 	//Apply config rate adjustment settings.
 	if (rate >= 0) { //Absolute drop.
 		if (battle_config.item_rate_adddrop != 100)
@@ -1851,8 +1851,6 @@ static int pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id
 		ShowWarning("pc_bonus: Reached max (%d) number of added drops per character!\n", max);
 		return 0;
 	}
-	if( id )
-	ShowDebug("Adding %s (%d) with rate %d\n",itemdb_name(id),id,rate);
 	drop[i].id = id;
 	drop[i].group = group;
 	drop[i].race |= race;
