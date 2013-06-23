@@ -3,60 +3,60 @@
 //===== By: ==================================================
 //= Hercules Dev Team
 //===== Current Version: =====================================
-//= 20121219
+//= 20130623
 //===== Description: =========================================
 //= List of script instructions used in item bonuses,
 //= mainly bonus/bonus2/bonus3/bonus4/bonus5 arguments.
 //============================================================
 
-skill i,n;				Gives skill #i at level n (supports skill names)
+skill i,n;                      Gives skill #i at level n (supports skill names)
 
-bonus bStr,n;				STR + n
-bonus bAgi,n;				AGI + n
-bonus bVit,n;				VIT + n
-bonus bInt,n;				INT + n
-bonus bDex,n;				DEX + n
-bonus bLuk,n;				LUK + n
-bonus bAllStats,n;			STR + n, AGI + n, VIT + n, INT + n, DEX + n, LUK + n
-bonus bAgiVit,n;			AGI + n, VIT + n
-bonus bAgiDexStr,n;			STR + n, AGI + n, DEX + n
-bonus bMaxHP,n;				MaxHP + n
-bonus bMaxSP,n;				MaxSP + n
-bonus bMaxHPrate,n;			MaxHP + n% 
-bonus bMaxSPrate,n;			MaxSP + n%
-bonus bAtk,n;				ATK + n
-bonus bAtk2,n;				ATK2 + n
-bonus bAtkRate,n;			Attack power + n%
-bonus bBaseAtk,n;			Basic attack power + n
-bonus bMatk,n;				Magical attack power + n
-bonus bMatkRate,n;			Magical attack power + n%
-bonus bDef,n;				Equipment DEF + n
-bonus bDef2,n;				VIT based DEF + n
-bonus bDefRate,n;			Equipment DEF + n%
-bonus bDef2Rate,n;			VIT based DEF + n%
-bonus bMdef,n;				Equipment MDEF + n
-bonus bMdef2,n;				INT based MDEF + n
-bonus bMdefRate,n;			Equipment MDEF + n%
-bonus bMdef2Rate,n;			INT based MDEF + n%
-bonus bHit,n;				Hit + n
-bonus bHitRate,n;			Hit + n%
-bonus bCritical,n;			Critical + n
-bonus bCriticalRate,n;			Critical + n%
-bonus bFlee,n;				Flee + n
-bonus bFleeRate,n;			Flee + n%
-bonus bFlee2,n;				Perfect Dodge + n
-bonus bFlee2Rate,n;			Perfect Dodge + n%
-bonus bSpeedRate,n;			Moving speed + n% (only the highest among all is applied)
-bonus bSpeedAddRate,n;			Moving speed + n%
-bonus bAspd,n;				Attack speed + n
-bonus bAspdRate,n;			Attack speed + n%
-bonus bAtkRange,n;			Attack range + n
-bonus bCastrate,n;			Skill casting time rate + n%
-bonus bUseSPrate,n;			SP consumption + n%
-bonus bHPrecovRate,n;			Natural HP recovery ratio + n%
-bonus bSPrecovRate,n;			Natural SP recovery ratio + n%
-bonus bDoubleRate,n;			Double Attack probability n% (works with all weapons | only the highest among all is applied)
-bonus bDoubleAddRate,n;			Double Attack probability + n% (works with all weapons)
+bonus bStr,n;                   STR + n
+bonus bAgi,n;                   AGI + n
+bonus bVit,n;                   VIT + n
+bonus bInt,n;                   INT + n
+bonus bDex,n;                   DEX + n
+bonus bLuk,n;                   LUK + n
+bonus bAllStats,n;              STR + n, AGI + n, VIT + n, INT + n, DEX + n, LUK + n
+bonus bAgiVit,n;                AGI + n, VIT + n
+bonus bAgiDexStr,n;             STR + n, AGI + n, DEX + n
+bonus bMaxHP,n;                 MaxHP + n
+bonus bMaxSP,n;                 MaxSP + n
+bonus bMaxHPrate,n;             MaxHP + n% 
+bonus bMaxSPrate,n;             MaxSP + n%
+bonus bAtk,n;                   ATK + n
+bonus bAtk2,n;                  ATK2 + n
+bonus bAtkRate,n;               Attack power + n%
+bonus bBaseAtk,n;               Basic attack power + n
+bonus bMatk,n;                  Magical attack power + n
+bonus bMatkRate,n;              Magical attack power + n%
+bonus bDef,n;                   Equipment DEF + n
+bonus bDef2,n;                  VIT based DEF + n
+bonus bDefRate,n;               Equipment DEF + n%
+bonus bDef2Rate,n;              VIT based DEF + n%
+bonus bMdef,n;                  Equipment MDEF + n
+bonus bMdef2,n;                 INT based MDEF + n
+bonus bMdefRate,n;              Equipment MDEF + n%
+bonus bMdef2Rate,n;             INT based MDEF + n%
+bonus bHit,n;                   Hit + n
+bonus bHitRate,n;               Hit + n%
+bonus bCritical,n;              Critical + n
+bonus bCriticalRate,n;          Critical + n%
+bonus bFlee,n;                  Flee + n
+bonus bFleeRate,n;              Flee + n%
+bonus bFlee2,n;                 Perfect Dodge + n
+bonus bFlee2Rate,n;             Perfect Dodge + n%
+bonus bSpeedRate,n;             Moving speed + n% (only the highest among all is applied)
+bonus bSpeedAddRate,n;          Moving speed + n%
+bonus bAspd,n;                  Attack speed + n
+bonus bAspdRate,n;              Attack speed + n%
+bonus bAtkRange,n;              Attack range + n
+bonus bCastrate,n;              Skill casting time rate + n%
+bonus bUseSPrate,n;             SP consumption + n%
+bonus bHPrecovRate,n;           Natural HP recovery ratio + n%
+bonus bSPrecovRate,n;           Natural SP recovery ratio + n%
+bonus bDoubleRate,n;            Double Attack probability n% (works with all weapons | only the highest among all is applied)
+bonus bDoubleAddRate,n;         Double Attack probability + n% (works with all weapons)
 bonus bPerfectHitRate,n;		On-target impact attack probability n% (only the highest among all is applied)
 bonus bPerfectHitAddRate,n;		On-target impact attack probability + n%
 bonus bCriticalDef,n;			Critical ? and others the trap it is, probability + n%
@@ -89,70 +89,70 @@ bonus bDefEle,n;			Gives the player's defense element n
 					n:	0=Neutral, 1=Water, 2=Earth, 3=Fire, 4=Wind, 5=Poison, 6=Holy, 7=Dark, 8=Spirit, 9=Undead
 bonus bSplashRange,n;			Splash attack radius + n (e.g. n=1 makes a 3*3 cells area, n=2 a 5*5 area, etc)
 					Only the highest among all is applied
-bonus bSplashAddRange,n;		Splash attack radius + n (e.g. n=1 makes a 3*3 cells area, n=2 a 5*5 area, etc)
-bonus bRestartFullRecover,n;		When reviving, HP and SP are fully healed (n is meaningless)
-bonus bNoCastCancel,n;			Prevents casting from being interrupted when hit (does not work in GvG | n is meaningless)
-bonus bNoCastCancel2,n;			Prevents casting from being interrupted when hit (works even in GvG | n is meaningless)
-bonus bNoSizeFix,n;			The attack revision with the size of the monster is not received (n is meaningless)
-bonus bNoWeaponDamage,n;		Prevents from receiving n% physical damage
-bonus bNoMagicDamage,n;			Prevents from receiving n% magical effect (Attack, Healing, Support spells are all blocked)
-bonus bNoGemStone,n;			Skills requiring Gemstones do no require them (Hocus Pocus will still require 1 Yellow Gemstone | n is meaningless)
-bonus bIntravision,n;			Always see Hiding and Cloaking players/mobs (n is meaningless)
-bonus bHealPower,n;			Increase heal amount of all heal skills by n%
-bonus bHealPower2,n;			Increase heal amount if you are healed by any skills by n%
-bonus2 bAddEff,e,x;			Adds a x/100 chance to cause effect e to the target when attacking (e.g. x=100 makes 1% chance, x=10000 makes 100% chance, etc)
+bonus bSplashAddRange,n;        Splash attack radius + n (e.g. n=1 makes a 3*3 cells area, n=2 a 5*5 area, etc)
+bonus bRestartFullRecover,n;    When reviving, HP and SP are fully healed (n is meaningless)
+bonus bNoCastCancel,n;          Prevents casting from being interrupted when hit (does not work in GvG | n is meaningless)
+bonus bNoCastCancel2,n;         Prevents casting from being interrupted when hit (works even in GvG | n is meaningless)
+bonus bNoSizeFix,n;             The attack revision with the size of the monster is not received (n is meaningless)
+bonus bNoWeaponDamage,n;        Prevents from receiving n% physical damage
+bonus bNoMagicDamage,n;         Prevents from receiving n% magical effect (Attack, Healing, Support spells are all blocked)
+bonus bNoGemStone,n;            Skills requiring Gemstones do no require them (Hocus Pocus will still require 1 Yellow Gemstone | n is meaningless)
+bonus bIntravision,n;           Always see Hiding and Cloaking players/mobs (n is meaningless)
+bonus bHealPower,n;             Increase heal amount of all heal skills by n%
+bonus bHealPower2,n;            Increase heal amount if you are healed by any skills by n%
+bonus2 bAddEff,e,x;             Adds a x/100 chance to cause effect e to the target when attacking (e.g. x=100 makes 1% chance, x=10000 makes 100% chance, etc)
 					e:	Eff_Blind, Eff_Sleep, Eff_Poison, Eff_Freeze, Eff_Silence, Eff_Stun, Eff_Curse, Eff_Confusion, Eff_Stone, Eff_Bleeding
-bonus2 bResEff,e,x;			Adds a x/100 tolerance to effect e (e.g. x=100 makes 1% tolerance, x=10000 makes 100% tolerance, etc)
+bonus2 bResEff,e,x;             Adds a x/100 tolerance to effect e (e.g. x=100 makes 1% tolerance, x=10000 makes 100% tolerance, etc)
 					e:	Eff_Blind, Eff_Sleep, Eff_Poison, Eff_Freeze, Eff_Silence, Eff_Stun, Eff_Curse, Eff_Confusion, Eff_Stone, Eff_Bleeding
-bonus2 bCastrate,n,x;			Adjust casting time of skill n by x% (supports skill names)
-bonus2 bAddSize,n,x;			+x% physical damage against size n.
+bonus2 bCastrate,n,x;           Adjust casting time of skill n by x% (supports skill names)
+bonus2 bAddSize,n,x;            +x% physical damage against size n.
 					n:	0=Small  1=Medium  2=Large
-bonus2 bMagicAddSize,n,x;		+x% magical damage against size n.
+bonus2 bMagicAddSize,n,x;       +x% magical damage against size n.
 					n:	0=Small  1=Medium  2=Large
-bonus2 bSubSize,n,x;			x% Damage reduction against size n.
+bonus2 bSubSize,n,x;            x% Damage reduction against size n.
 					n:	0=Small  1=Medium  2=Large
-bonus2 bAddRace,n,x;			+x% physical damage against race n
+bonus2 bAddRace,n,x;            +x% physical damage against race n
 					n: 	0=Formless, 1=Undead, 2=Brute, 3=Plant, 4=Insect,
 						5=Fish, 6=Demon, 7=Demi-Human, 8=Angel, 9=Dragon, 
 						10=Boss monster, 11=Other than (normal monster) boss monster
-bonus2 bMagicAddRace,n,x;		+x% magical damage against race n
+bonus2 bMagicAddRace,n,x;       +x% magical damage against race n
 					n: 	0=Formless, 1=Undead, 2=Brute, 3=Plant, 4=Insect,
 						5=Fish, 6=Demon, 7=Demi-Human, 8=Angel, 9=Dragon, 
 						10=Boss monster, 11=Other than (normal monster) boss monster
-bonus2 bSubRace,n,x;			+x% damage reduction against race n
+bonus2 bSubRace,n,x;            +x% damage reduction against race n
 					n: 	0=Formless, 1=Undead, 2=Brute, 3=Plant, 4=Insect,
 						5=Fish, 6=Demon, 7=Demi-Human, 8=Angel, 9=Dragon, 
 						10=Boss monster, 11=Other than (normal monster) boss monster
-bonus2 bAddEle,n,x;			+x% physical damage against element n
+bonus2 bAddEle,n,x;             +x% physical damage against element n
 					n: 	0=Neutral, 1=Water, 2=Earth, 3=Fire, 4=Wind, 5=Poison,
 						6=Holy, 7=Dark, 8=Spirit, 9=Undead
-bonus2 bMagicAddEle,n,x; 		+x% magical damage against element n
+bonus2 bMagicAddEle,n,x;        +x% magical damage against element n
 					n: 	0=Neutral, 1=Water, 2=Earth, 3=Fire, 4=Wind, 5=Poison,
 						6=Holy, 7=Dark, 8=Spirit, 9=Undead
-bonus2 bSubEle,n,x;			x% Damage reduction against element n.
+bonus2 bSubEle,n,x;             x% Damage reduction against element n.
 					n: 	0=Neutral, 1=Water, 2=Earth, 3=Fire, 4=Wind, 5=Poison,
 						6=Holy, 7=Dark, 8=Spirit, 9=Undead
-bonus2 bMagicAtkEle,n,x; 		Increases damage of n element magic by x%.
+bonus2 bMagicAtkEle,n,x;        Increases damage of n element magic by x%.
 					n: 	0=Neutral, 1=Water, 2=Earth, 3=Fire, 4=Wind, 5=Poison,
 						6=Holy, 7=Dark, 8=Spirit, 9=Undead
-bonus2 bAddDamageClass,n,x;		+x% extra physical damage against monsters of class n
+bonus2 bAddDamageClass,n,x;         +x% extra physical damage against monsters of class n
 					Against players, n is their job id
-bonus2 bAddMagicDamageClass,n,x;	+x% extra magical damage against monsters of class n
+bonus2 bAddMagicDamageClass,n,x;     +x% extra magical damage against monsters of class n
 					Against players, n is their job id.
-bonus2 bAddDefClass,n,x;		x% physical damage reduction against monsters of class n
+bonus2 bAddDefClass,n,x;             x% physical damage reduction against monsters of class n
 					Against players, n is their job id.
-bonus2 bAddMDefClass,n,x;		x% magical damage reduction against monsters of class n
+bonus2 bAddMDefClass,n,x;            x% magical damage reduction against monsters of class n
 					Against players, n is their job id.
-bonus2 bIgnoreMdefRate,n,x;		Disregard x% of the target's MDEF if the target belongs to race n;
-bonus2 bHPDrainRate,n,x;		n/10 % probability to drain x% HP when attacking
-bonus2 bSPDrainRate,n,x;		n/10 % probability to drain x% SP when attacking
-bonus2 bSPVanishRate,n,x;		Add the (n/10)% chance of decreasing enemy's SP (player) amount by x% when attacking
-bonus2 bAddMonsterDropItem,n,x;		Adds a x/100% chance for item n to be dropped, when killing any monster.
+bonus2 bIgnoreMdefRate,n,x;          Disregard x% of the target's MDEF if the target belongs to race n;
+bonus2 bHPDrainRate,n,x;             n/10 % probability to drain x% HP when attacking
+bonus2 bSPDrainRate,n,x;             n/10 % probability to drain x% SP when attacking
+bonus2 bSPVanishRate,n,x;            Add the (n/10)% chance of decreasing enemy's SP (player) amount by x% when attacking
+bonus2 bAddMonsterDropItem,n,x;      Adds a x/100% chance for item n to be dropped, when killing any monster.
 					If 'x' is negative value, then it's a part of formula
 						chance = -x*(killed_mob_level/10)+1
-bonus2 bGetZenyNum,n,x;			When killing a monster, there is a x% chance of gaining 1~n zeny (only the highest among all is applied).
+bonus2 bGetZenyNum,n,x;              When killing a monster, there is a x% chance of gaining 1~n zeny (only the highest among all is applied).
 					If n < 0, the max zeny to gain is -n*monster level.
-bonus2 bAddGetZenyNum,n,x;		Same as bGetZenyNum, but the rates and zeny to gain stack.
+bonus2 bAddGetZenyNum,n,x;           Same as bGetZenyNum, but the rates and zeny to gain stack.
 
 bonus3 bAddMonsterDropItem,n,x,y;	Adds a y/100% chance for item n to be dropped, when killing any monster of race x.
 						0=Formless, 1=Undead, 2=Brute, 3=Plant, 4=Insect,
@@ -170,27 +170,27 @@ bonus3 bAutoSpell,n,x,y;		Auto Spell casting on attack of spell n at level x wit
 
 //---- 2/15 new card effects ----
 
-bonus bCritAtkRate,n;			Increase critical damage by +n%
-bonus bNoRegen,n;			Stops regeneration for n
-					n:	1=HP, 2=SP
-bonus bUnstripableWeapon,n;		Weapon cannot be taken off via Strip skills (n is meaningless)
-bonus bUnstripableArmor,n;		Armor cannot be taken off via Strip skills (n is meaningless)
-bonus bUnstripableHelm,n;		Helm cannot be taken off via Strip skills (n is meaningless)
-bonus bUnstripableShield,n;		Shield cannot be taken off via Strip skills (n is meaningless)
-bonus bSPGainValue,n;			When killing a monster by physical attack, you gain n SP
-bonus bHPGainValue,n;			When killing a monster by physical attack, you gain n HP
-bonus2 bCriticalAddRace,r,n;		Critical + n vs. enemies of race r
+bonus bCritAtkRate,n;             Increase critical damage by +n%
+bonus bNoRegen,n;                 Stops regeneration for n
+                                n:	1=HP, 2=SP
+bonus bUnstripableWeapon,n;       Weapon cannot be taken off via Strip skills (n is meaningless)
+bonus bUnstripableArmor,n;        Armor cannot be taken off via Strip skills (n is meaningless)
+bonus bUnstripableHelm,n;         Helm cannot be taken off via Strip skills (n is meaningless)
+bonus bUnstripableShield,n;       Shield cannot be taken off via Strip skills (n is meaningless)
+bonus bSPGainValue,n;             When killing a monster by physical attack, you gain n SP
+bonus bHPGainValue,n;             When killing a monster by physical attack, you gain n HP
+bonus2 bCriticalAddRace,r,n;      Critical + n vs. enemies of race r
 					r:
 						0=Formless, 1=Undead, 2=Brute, 3=Plant, 4=Insect,
 						5=Fish, 6=Demon, 7=Demi-Human, 8=Angel, 9=Dragon, 
 						10=Boss monster, 11=Other than (normal monster) boss monster
-bonus2 bHPRegenRate,n,x;		Gain n HP every x milliseconds
-bonus2 bHPLossRate,n,x;			Lose n HP every x milliseconds
-bonus2 bAddEffWhenHit,n,x;		x/100% chance to cause n state to the enemy when being hit by physical damage
-bonus2 bSkillAtk,n,x;			Increase damage of skill n by x% (supports skill names)
-bonus2 bSkillHeal,n,x;			Increase heal amount of skill n by x% (supports skill names)
-bonus2 bSkillHeal2,n,x;			Increase heal amount if you are healed by skill n by x% (supports skill names)
-bonus2 bAddRace2,n,x;			Increase damage by x% vs. enemies of race n (Check db/mob_race2_db.txt)
+bonus2 bHPRegenRate,n,x;          Gain n HP every x milliseconds
+bonus2 bHPLossRate,n,x;           Lose n HP every x milliseconds
+bonus2 bAddEffWhenHit,n,x;        x/100% chance to cause n state to the enemy when being hit by physical damage
+bonus2 bSkillAtk,n,x;             Increase damage of skill n by x% (supports skill names)
+bonus2 bSkillHeal,n,x;            Increase heal amount of skill n by x% (supports skill names)
+bonus2 bSkillHeal2,n,x;           Increase heal amount if you are healed by skill n by x% (supports skill names)
+bonus2 bAddRace2,n,x;             Increase damage by x% vs. enemies of race n (Check db/mob_race2_db.txt)
 					y:	0=Don't show damage 1=Show damage
 bonus3 bAutoSpellWhenHit,x,y,n;		n/10% chance to cast skill x of level y on attacker (unless it is a self or support skill) when being hit by a
 					direct attack. (supports skill names)
@@ -257,21 +257,19 @@ bonus5 bAutoSpellWhenHit,x,y,n,t,i;	n/10% chance to cast skill x of level y when
 //---- 2/22 new card effects ----
 
 bonus2 bAddItemHealRate,n,x;		Increases HP recovered by n type items by x%, you can also use direct item IDs instead of group values.
-					(Check db/item_group_db.txt)
+					(Check db/(pre-)re/item_group.conf)
 
 //---- 3/15 new card effects ----
 
-bonus2 bSPRegenRate,n,x;		Gain n SP every x milliseconds
-bonus2 bSPLossRate,n,x;			Lose n SP every x milliseconds
-bonus2 bExpAddRace,n,x;			Increase exp gained by x% vs. enemies of race n
-bonus2 bSPGainRace,n,x;			When killing a monster of race n by physical attack gain x amount of sp
-bonus2 bSubRace2,n,x;			Damage x% reduction from enemies of race n (Check db/mob_race2_db.txt)
+bonus2 bSPRegenRate,n,x;        Gain n SP every x milliseconds
+bonus2 bSPLossRate,n,x;         Lose n SP every x milliseconds
+bonus2 bExpAddRace,n,x;         Increase exp gained by x% vs. enemies of race n
+bonus2 bSPGainRace,n,x;         When killing a monster of race n by physical attack gain x amount of sp
+bonus2 bSubRace2,n,x;           Damage x% reduction from enemies of race n (Check db/(Pre-Re)RE/mob_race2_db.txt)
 
-bonus2 bAddMonsterDropItemGroup,n,x;	Adds a x/100% chance to get an item of group type n when you kill a monster (Check db/item_group_db.txt)
-					If 'x' is negative value, then it's a part of formula
-						chance = -x*(killed_mob_level/10)+1
+bonus bAddMonsterDropChainItem,n;     Able to get item of chain type n (only constant applicable) when you kill a monster (Check db/(pre-)re/item_group.conf)
 
-bonus3 bAddEff,n,x,y;			Adds a x/100 chance to cause effect n to the target when attacking (e.g. x=100 makes 1% chance, x=10000 makes 100% chance, etc).
+bonus3 bAddEff,n,x,y;     Adds a x/100 chance to cause effect n to the target when attacking (e.g. x=100 makes 1% chance, x=10000 makes 100% chance, etc).
 					y is the trigger criteria:
 						ATF_SELF: Trigger effect on self.
 						ATF_TARGET: Trigger effect on target (default)
@@ -285,12 +283,10 @@ bonus3 bAddEffWhenHit,n,x,y;		x/100 chance to cause n state to the enemy when be
 						ATF_SHORT: Trigger on melee attacks
 						ATF_LONG: Trigger in ranged attacks (default: trigger on all attacks)
 
-bonus3 bAddMonsterDropItemGroup,n,x,y;	Adds a y/100% chance to get an item of group type n when you kill a monster of race x (Check db/item_group_db.txt)
+bonus2 bAddMonsterDropChainItem,n,x;	Able to get item of chain type n (only constant applicable) when you kill a monster of race x (Check db/(pre-)re/item_group.conf)
 						0=Formless, 1=Undead, 2=Brute, 3=Plant, 4=Insect,
 						5=Fish, 6=Demon, 7=Demi-Human, 8=Angel, 9=Dragon, 
 						10=Boss monster, 11=Other than (normal monster) boss monster
-					If 'y' is negative value, then it's a part of formula
-						chance = -y*(killed_mob_level/10)+1
 
 bonus2 bWeaponComaRace,x,y;		y/100% chance to cause Coma when attacking a monster of race x with a normal attack
 						0=Formless, 1=Undead, 2=Brute, 3=Plant, 4=Insect,
