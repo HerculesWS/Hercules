@@ -2783,28 +2783,31 @@ struct script_state* script_alloc_state(struct script_code* rootscript, int pos,
 /// Frees a script state.
 ///
 /// @param st Script state
-void script_free_state(struct script_state* st)
-{
-	if(st->bk_st) {// backup was not restored
-		ShowDebug("script_free_state: Previous script state lost (rid=%d, oid=%d, state=%d, bk_npcid=%d).\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
-	}
+void script_free_state(struct script_state* st) {
+	if( idb_exists(script->st_db,st->id) ) {
+		if(st->bk_st) {// backup was not restored
+			ShowDebug("script_free_state: Previous script state lost (rid=%d, oid=%d, state=%d, bk_npcid=%d).\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
+		}
 
-	if( st->sleep.timer != INVALID_TIMER )
-		iTimer->delete_timer(st->sleep.timer, run_script_timer);
-	script_free_vars(st->stack->var_function);
-	script->pop_stack(st, 0, st->stack->sp);
-	aFree(st->stack->stack_data);
-	ers_free(script->stack_ers, st->stack);
-	if( st->script && st->script->script_vars && !db_size(st->script->script_vars) ) {
-		script_free_vars(st->script->script_vars);
-		st->script->script_vars = NULL;
-	}
-	st->stack = NULL;
-	st->pos = -1;
-	idb_remove(script->st_db, st->id);
-	ers_free(script->st_ers, st);
-	if( --script->active_scripts == 0 ) {
-		script->next_id = 0;
+		if( st->sleep.timer != INVALID_TIMER )
+			iTimer->delete_timer(st->sleep.timer, run_script_timer);
+		if( st->stack ) {
+			script_free_vars(st->stack->var_function);
+			script->pop_stack(st, 0, st->stack->sp);
+			aFree(st->stack->stack_data);
+			ers_free(script->stack_ers, st->stack);
+			st->stack = NULL;
+		}
+		if( st->script && st->script->script_vars && !db_size(st->script->script_vars) ) {
+			script_free_vars(st->script->script_vars);
+			st->script->script_vars = NULL;
+		}
+		st->pos = -1;
+		idb_remove(script->st_db, st->id);
+		ers_free(script->st_ers, st);
+		if( --script->active_scripts == 0 ) {
+			script->next_id = 0;
+		}
 	}
 }
 
