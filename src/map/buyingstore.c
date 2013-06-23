@@ -137,7 +137,7 @@ void buyingstore_create(struct map_session_data* sd, int zenylimit, unsigned cha
 		amount = RBUFW(itemlist,i*8+2);
 		price  = RBUFL(itemlist,i*8+4);
 
-		if( ( id = itemdb_exists(nameid) ) == NULL || amount == 0 )
+		if( ( id = itemdb->exists(nameid) ) == NULL || amount == 0 )
 		{// invalid input
 			break;
 		}

@@ -501,6 +501,7 @@ struct clif_interface {
 	void (*item_sub) (unsigned char *buf, int n, struct item *i, struct item_data *id, int equip);
 	void (*getareachar_item) (struct map_session_data* sd,struct flooritem_data* fitem);
 	void (*cashshop_load) (void);
+	void (*package_announce) (struct map_session_data *sd, unsigned short nameid, unsigned short containerid);
 	/* unit-related */
 	void (*clearunit_single) (int id, clr_type type, int fd);
 	void (*clearunit_area) (struct block_list* bl, clr_type type);

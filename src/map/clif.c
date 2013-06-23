@@ -1759,7 +1759,7 @@ void clif_buylist(struct map_session_data *sd, struct npc_data *nd)
 	c = 0;
 	for( i = 0; i < nd->u.shop.count; i++ )
 	{
-		struct item_data* id = itemdb_exists(nd->u.shop.shop_item[i].nameid);
+		struct item_data* id = itemdb->exists(nd->u.shop.shop_item[i].nameid);
 		int val = nd->u.shop.shop_item[i].value;
 		if( id == NULL )
 			continue;
@@ -2497,7 +2497,7 @@ void clif_storagelist(struct map_session_data* sd, struct item* items, int items
 	{
 		if( items[i].nameid <= 0 )
 			continue;
-		id = itemdb_search(items[i].nameid);
+		id = itemdb->search(items[i].nameid);
 		if( !itemdb_isstackable2(id) )
 		{ //Equippable
 			WBUFW(bufe,ne*cmd+4)=i+1;
@@ -2577,7 +2577,7 @@ void clif_cartlist(struct map_session_data *sd)
 	{
 		if( sd->status.cart[i].nameid <= 0 )
 			continue;
-		id = itemdb_search(sd->status.cart[i].nameid);
+		id = itemdb->search(sd->status.cart[i].nameid);
 		if( !itemdb_isstackable2(id) )
 		{ //Equippable
 			WBUFW(bufe,ne*cmd+4)=i+2;
@@ -6416,7 +6416,7 @@ void clif_vendinglist(struct map_session_data* sd, unsigned int id, struct s_ven
 	for( i = 0; i < count; i++ )
 	{
 		int index = vending[i].index;
-		struct item_data* data = itemdb_search(vsd->status.cart[index].nameid);
+		struct item_data* data = itemdb->search(vsd->status.cart[index].nameid);
 		WFIFOL(fd,offset+ 0+i*22) = vending[i].value;
 		WFIFOW(fd,offset+ 4+i*22) = vending[i].amount;
 		WFIFOW(fd,offset+ 6+i*22) = vending[i].index + 2;
@@ -6475,7 +6475,7 @@ void clif_openvending(struct map_session_data* sd, int id, struct s_vending* ven
 	WFIFOL(fd,4) = id;
 	for( i = 0; i < count; i++ ) {
 		int index = vending[i].index;
-		struct item_data* data = itemdb_search(sd->status.cart[index].nameid);
+		struct item_data* data = itemdb->search(sd->status.cart[index].nameid);
 		WFIFOL(fd, 8+i*22) = vending[i].value;
 		WFIFOW(fd,12+i*22) = vending[i].index + 2;
 		WFIFOW(fd,14+i*22) = vending[i].amount;
@@ -9574,7 +9574,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 		if( iMap->night_flag && map[sd->bl.m].flag.nightenabled ) { //Display night.
 			if( !sd->state.night ) {
 				sd->state.night = 1;
-				clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_SKE);
+				clif->status_change(&sd->bl, SI_SKE, 1, 0, 0, 0, 0);
 			}
 		} else if( sd->state.night ) { //Clear night display.
 			sd->state.night = 0;
@@ -9651,6 +9651,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 // Trigger skill effects if you appear standing on them
 	if(!battle_config.pc_invincible_time)
 		skill->unit_move(&sd->bl,iTimer->gettick(),1);
+	
 }
 
 
@@ -13334,7 +13335,7 @@ void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd)
 	// FIXME: Stackables have a quantity of 20.
 	// FIXME: Equips are supposed to be unidentified.
 
-	if( itemdb_searchname(monster_item_name) ) {
+	if( itemdb->search_name(monster_item_name) ) {
 		snprintf(command, sizeof(command)-1, "%citem %s", atcommand->at_symbol, monster_item_name);
 		atcommand->parse(fd, sd, command, 1);
 		return;
@@ -14509,7 +14510,7 @@ void clif_Mail_read(struct map_session_data *sd, int mail_id)
 		WFIFOL(fd,72) = 0;
 		WFIFOL(fd,76) = msg->zeny;
 
-		if( item->nameid && (data = itemdb_exists(item->nameid)) != NULL ) {
+		if( item->nameid && (data = itemdb->exists(item->nameid)) != NULL ) {
 			WFIFOL(fd,80) = item->amount;
 			WFIFOW(fd,84) = (data->view_id)?data->view_id:item->nameid;
 			WFIFOW(fd,86) = data->type;
@@ -14582,7 +14583,7 @@ void clif_parse_Mail_getattach(int fd, struct map_session_data *sd)
 		struct item_data *data;
 		unsigned int weight;
 
-		if ((data = itemdb_exists(sd->mail.inbox.msg[i].item.nameid)) == NULL)
+		if ((data = itemdb->exists(sd->mail.inbox.msg[i].item.nameid)) == NULL)
 			return;
 
 		switch( pc->checkadditem(sd, data->nameid, sd->mail.inbox.msg[i].item.amount) ) {
@@ -14800,7 +14801,7 @@ void clif_Auction_results(struct map_session_data *sd, short count, short pages,
 		WFIFOL(fd,k) = auction.auction_id;
 		safestrncpy((char*)WFIFOP(fd,4+k), auction.seller_name, NAME_LENGTH);
 
-		if( (item = itemdb_exists(auction.item.nameid)) != NULL && item->view_id > 0 )
+		if( (item = itemdb->exists(auction.item.nameid)) != NULL && item->view_id > 0 )
 			WFIFOW(fd,28+k) = item->view_id;
 		else
 			WFIFOW(fd,28+k) = auction.item.nameid;
@@ -14873,7 +14874,7 @@ void clif_parse_Auction_setitem(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	if( (item = itemdb_exists(sd->status.inventory[idx].nameid)) != NULL && !(item->type == IT_ARMOR || item->type == IT_PETARMOR || item->type == IT_WEAPON || item->type == IT_CARD || item->type == IT_ETC) )
+	if( (item = itemdb->exists(sd->status.inventory[idx].nameid)) != NULL && !(item->type == IT_ARMOR || item->type == IT_PETARMOR || item->type == IT_WEAPON || item->type == IT_CARD || item->type == IT_ETC) )
 	{ // Consumable or pets are not allowed
 		clif->auction_setitem(sd->fd, idx, true);
 		return;
@@ -14980,7 +14981,7 @@ void clif_parse_Auction_register(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	if( (item = itemdb_exists(sd->status.inventory[sd->auction.index].nameid)) == NULL )
+	if( (item = itemdb->exists(sd->status.inventory[sd->auction.index].nameid)) == NULL )
 	{ // Just in case
 		clif->auction_message(fd, 2); // The auction has been canceled
 		return;
@@ -15116,7 +15117,7 @@ void clif_cashshop_show(struct map_session_data *sd, struct npc_data *nd)
 #endif
 
 	for( i = 0; i < nd->u.shop.count; i++ ) {
-		struct item_data* id = itemdb_search(nd->u.shop.shop_item[i].nameid);
+		struct item_data* id = itemdb->search(nd->u.shop.shop_item[i].nameid);
 		WFIFOL(fd,offset+0+i*11) = nd->u.shop.shop_item[i].value;
 		WFIFOL(fd,offset+4+i*11) = nd->u.shop.shop_item[i].value; // Discount Price
 		WFIFOB(fd,offset+8+i*11) = itemtype(id->type);
@@ -16036,7 +16037,7 @@ void clif_party_show_picker(struct map_session_data * sd, struct item * item_dat
 {
 #if PACKETVER >= 20071002
 	unsigned char buf[22];
-	struct item_data* id = itemdb_search(item_data->nameid);
+	struct item_data* id = itemdb->search(item_data->nameid);
 
 	WBUFW(buf,0) = 0x2b8;
 	WBUFL(buf,2) = sd->status.account_id;
@@ -17058,12 +17059,12 @@ void clif_cashshop_db(void) {
 					}
 										
 					if( name[0] == 'I' && name[1] == 'D' && strlen(name) <= 7 ) {
-						if( !( data = itemdb_exists(atoi(name+2))) ) {
+						if( !( data = itemdb->exists(atoi(name+2))) ) {
 							ShowWarning("cashshop_db: unknown item id '%s' in category '%s'\n", name+2, entry_name);
 							continue;
 						}
 					} else {
-						if( !( data = itemdb_searchname(name) ) ) {
+						if( !( data = itemdb->search_name(name) ) ) {
 							ShowWarning("cashshop_db: unknown item name '%s' in category '%s'\n", name, entry_name);
 							continue;
 						}
@@ -17123,7 +17124,6 @@ void clif_monster_hp_bar( struct mob_data* md, struct map_session_data *sd ) {
 void __attribute__ ((unused)) clif_parse_dull(int fd,struct map_session_data *sd) {
 	return;
 }
-
 void clif_parse_CashShopOpen(int fd, struct map_session_data *sd) {
 	WFIFOHEAD(fd, 10);
 	WFIFOW(fd, 0) = 0x845;
@@ -17177,7 +17177,7 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 				result = CSBR_SHORTTAGE_CASH;
 			} else if( (sd->cashPoints+kafra_pay) < (clif->cs.data[tab][j]->price * qty) ) {
 				result = CSBR_SHORTTAGE_CASH;
-			} else if ( !( data = itemdb_exists(clif->cs.data[tab][j]->id) ) ) {
+			} else if ( !( data = itemdb->exists(clif->cs.data[tab][j]->id) ) ) {
 				result = CSBR_UNKONWN_ITEM;
 			} else {
 				struct item item_tmp;
@@ -17445,6 +17445,20 @@ void clif_scriptclear(struct map_session_data *sd, int npcid) {
 	
 	clif->send(&p,sizeof(p), &sd->bl, SELF);
 }
+
+void clif_package_item_announce(struct map_session_data *sd, unsigned short nameid, unsigned short containerid) {
+	struct packet_package_item_announce p;
+	
+	p.PacketType = package_item_announceType;
+	p.PacketLength = 10+NAME_LENGTH;
+	p.type = 0x0;
+	p.ItemID = containerid;
+	p.len = NAME_LENGTH;
+	safestrncpy(p.Name, sd->status.name, sizeof(p.Name));
+	p.BoxItemID = nameid;
+	clif->send(&p,p.PacketLength, &sd->bl, ALL_CLIENT);
+}
+/* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 	if( sd ) {
 		sd->cryptKey = (( sd->cryptKey * clif->cryptKey[1] ) + clif->cryptKey[2]) & 0xFFFFFFFF;
@@ -18207,6 +18221,7 @@ void clif_defaults(void) {
 	clif->user_count = clif_user_count;
 	clif->noask_sub = clif_noask_sub;
 	clif->cashshop_load = clif_cashshop_db;
+	clif->package_announce = clif_package_item_announce;
 	clif->bc_ready = clif_bc_ready;
 	clif->undisguise_timer = clif_undisguise_timer;
 	/*------------------------

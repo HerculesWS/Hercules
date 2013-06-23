@@ -3842,7 +3842,7 @@ bool map_zone_mf_cache(int m, char *flag, char *params) {
 		int drop_id = 0, drop_type = 0;
 		if (!strcmpi(drop_arg1, "random"))
 		drop_id = -1;
-		else if (itemdb_exists((drop_id = atoi(drop_arg1))) == NULL)
+		else if (itemdb->exists((drop_id = atoi(drop_arg1))) == NULL)
 		drop_id = 0;
 		if (!strcmpi(drop_arg2, "inventory"))
 		drop_type = 1;
@@ -4441,11 +4441,11 @@ unsigned short map_zone_str2itemid(const char *name) {
 	if( !name )
 		return 0;
 	if( name[0] == 'I' && name[1] == 'D' && strlen(name) <= 7 ) {
-		if( !( data = itemdb_exists(atoi(name+2))) ) {
+		if( !( data = itemdb->exists(atoi(name+2))) ) {
 			return 0;
 		}
 	} else {
-		if( !( data = itemdb_searchname(name) ) ) {
+		if( !( data = itemdb->search_name(name) ) ) {
 			return 0;
 		}
 	}
@@ -5030,7 +5030,7 @@ void do_final(void)
 	clif->final();
 	do_final_npc();
 	script->final();
-	do_final_itemdb();
+	itemdb->final();
 	storage->final();
 	guild->final();
 	party->do_final_party();
@@ -5466,7 +5466,7 @@ int do_init(int argc, char *argv[])
 	clif->init();
 	ircbot->init();
 	script->init();
-	do_init_itemdb();
+	itemdb->init();
 	skill->init();
 	read_map_zone_db();/* read after item and skill initalization */
 	do_init_mob();

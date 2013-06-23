@@ -9,18 +9,29 @@
 #include "../common/mmo.h" // ITEM_NAME_LENGTH
 #include "map.h"
 
-// 32k array entries in array (the rest goes to the db)
-#define MAX_ITEMDB 0x8000
+/**
+ * Declarations
+ **/
+struct item_group;
+struct item_package;
 
-#define MAX_RANDITEM	11000
+/**
+ * Defines
+ **/
+#define MAX_ITEMDB 0x8000 // 32k array entries in array (the rest goes to the db)
+#define MAX_ITEMDELAYS 10 // The maximum number of item delays
+#define MAX_SEARCH 5 //Designed for search functions, species max number of matches to display.
+#define MAX_ITEMS_PER_COMBO 6 /* maximum amount of items a combo may require */
 
-// The maximum number of item delays
-#define MAX_ITEMDELAYS	10
+#define CARD0_FORGE 0x00FF
+#define CARD0_CREATE 0x00FE
+#define CARD0_PET ((short)0xFF00)
 
-#define MAX_SEARCH	5  //Designed for search functions, species max number of matches to display.
+//Marks if the card0 given is "special" (non-item id used to mark pets/created items. [Skotlex]
+#define itemdb_isspecial(i) (i == CARD0_FORGE || i == CARD0_CREATE || i == CARD0_PET)
 
-/* maximum amount of items a combo may require */
-#define MAX_ITEMS_PER_COMBO 6
+//Use apple for unknown items.
+#define UNKNOWN_ITEM_ID 512
 
 enum item_itemid {
 	ITEMID_HOLY_WATER = 523,
@@ -76,21 +87,12 @@ enum {
 	NOUSE_SITTING = 0x01,
 } item_nouse_list;
 
-//The only item group required by the code to be known. See const.txt for the full list.
-#define IG_FINDINGORE 6
-#define IG_POTION 37
-//The max. item group count (increase this when needed).
-#define MAX_ITEMGROUP 63
-
-#define CARD0_FORGE 0x00FF
-#define CARD0_CREATE 0x00FE
-#define CARD0_PET ((short)0xFF00)
-
-//Marks if the card0 given is "special" (non-item id used to mark pets/created items. [Skotlex]
-#define itemdb_isspecial(i) (i == CARD0_FORGE || i == CARD0_CREATE || i == CARD0_PET)
-
-//Use apple for unknown items.
-#define UNKNOWN_ITEM_ID 512
+//
+enum e_chain_cache {
+	ECC_ORE,
+	/* */
+	ECC_MAX,
+};
 
 struct item_data {
 	uint16 nameid;
@@ -152,11 +154,9 @@ struct item_data {
 	/* bugreport:309 */
 	struct item_combo **combos;
 	unsigned char combos_count;
-};
-
-struct item_group {
-	int nameid[MAX_RANDITEM];
-	int qty; //Counts amount of items in the group.
+	/* TODO add a pointer to some sort of (struct extra) and gather all the not-common vals into it to save memory */
+	struct item_group *group;
+	struct item_package *package;
 };
 
 struct item_combo {
@@ -167,29 +167,65 @@ struct item_combo {
 	bool isRef;/* whether this struct is a reference or the master */
 };
 
-struct item_group itemgroup_db[MAX_ITEMGROUP];
+struct item_group {
+	unsigned short id;
+	unsigned short *nameid;
+	unsigned short qty;
+};
 
-struct item_data* itemdb_searchname(const char *name);
-int itemdb_searchname_array(struct item_data** data, int size, const char *str);
-struct item_data* itemdb_load(int nameid);
-struct item_data* itemdb_search(int nameid);
-struct item_data* itemdb_exists(int nameid);
-#define itemdb_name(n) itemdb_search(n)->name
-#define itemdb_jname(n) itemdb_search(n)->jname
-#define itemdb_type(n) itemdb_search(n)->type
-#define itemdb_atk(n) itemdb_search(n)->atk
-#define itemdb_def(n) itemdb_search(n)->def
-#define itemdb_look(n) itemdb_search(n)->look
-#define itemdb_weight(n) itemdb_search(n)->weight
-#define itemdb_equip(n) itemdb_search(n)->equip
-#define itemdb_usescript(n) itemdb_search(n)->script
-#define itemdb_equipscript(n) itemdb_search(n)->script
-#define itemdb_wlv(n) itemdb_search(n)->wlv
-#define itemdb_range(n) itemdb_search(n)->range
-#define itemdb_slot(n) itemdb_search(n)->slot
-#define itemdb_available(n) (itemdb_search(n)->flag.available)
-#define itemdb_viewid(n) (itemdb_search(n)->view_id)
-#define itemdb_autoequip(n) (itemdb_search(n)->flag.autoequip)
+struct item_chain_entry {
+	unsigned short id;
+	unsigned short rate;
+	struct item_chain_entry *next;
+};
+
+struct item_chain {
+	struct item_chain_entry *items;
+	unsigned short qty;
+};
+
+struct item_package_rand_entry {
+	unsigned short id;
+	unsigned short qty;
+	unsigned short rate;
+	unsigned short hours;
+	unsigned int announce : 1;
+	unsigned int named : 1;
+	struct item_package_rand_entry *next;
+};
+
+struct item_package_must_entry {
+	unsigned short id;
+	unsigned short qty;
+	unsigned short hours;
+	unsigned int announce : 1;
+	unsigned int named : 1;
+};
+
+struct item_package {
+	unsigned short id;
+	struct item_package_rand_entry *random_list;
+	struct item_package_must_entry *must_items;
+	unsigned short random_qty;
+	unsigned short must_qty;
+};
+
+#define itemdb_name(n) itemdb->search(n)->name
+#define itemdb_jname(n) itemdb->search(n)->jname
+#define itemdb_type(n) itemdb->search(n)->type
+#define itemdb_atk(n) itemdb->search(n)->atk
+#define itemdb_def(n) itemdb->search(n)->def
+#define itemdb_look(n) itemdb->search(n)->look
+#define itemdb_weight(n) itemdb->search(n)->weight
+#define itemdb_equip(n) itemdb->search(n)->equip
+#define itemdb_usescript(n) itemdb->search(n)->script
+#define itemdb_equipscript(n) itemdb->search(n)->script
+#define itemdb_wlv(n) itemdb->search(n)->wlv
+#define itemdb_range(n) itemdb->search(n)->range
+#define itemdb_slot(n) itemdb->search(n)->slot
+#define itemdb_available(n) (itemdb->search(n)->flag.available)
+#define itemdb_viewid(n) (itemdb->search(n)->view_id)
+#define itemdb_autoequip(n) (itemdb->search(n)->flag.autoequip)
 #define itemdb_is_rune(n) (n >= ITEMID_NAUTHIZ && n <= ITEMID_HAGALAZ)
 #define itemdb_is_element(n) (n >= 990 && n <= 993)
 #define itemdb_is_spellbook(n) (n >= 6188 && n <= 6205)
@@ -200,12 +236,9 @@ struct item_data* itemdb_exists(int nameid);
 #define itemdb_is_GNthrowable(n) (n >= 13268 && n <= 13290)
 const char* itemdb_typename(int type);
 
-int itemdb_group_bonus(struct map_session_data* sd, int itemid);
-int itemdb_searchrandomid(int flags);
-
-#define itemdb_value_buy(n) itemdb_search(n)->value_buy
-#define itemdb_value_sell(n) itemdb_search(n)->value_sell
-#define itemdb_canrefine(n) (!itemdb_search(n)->flag.no_refine)
+#define itemdb_value_buy(n) itemdb->search(n)->value_buy
+#define itemdb_value_sell(n) itemdb->search(n)->value_sell
+#define itemdb_canrefine(n) (!itemdb->search(n)->flag.no_refine)
 //Item trade restrictions [Skotlex]
 int itemdb_isdropable_sub(struct item_data *, int, int);
 int itemdb_cantrade_sub(struct item_data*, int, int);
@@ -235,17 +268,40 @@ int itemdb_isstackable(int);
 int itemdb_isstackable2(struct item_data *);
 uint64 itemdb_unique_id(int8 flag, int64 value); // Unique Item ID
 
-void itemdb_reload(void);
-
-void do_final_itemdb(void);
-int do_init_itemdb(void);
-
 /* incomplete */
 struct itemdb_interface {
+	void (*init) (void);
+	void (*final) (void);
 	void (*reload) (void);
+	void (*name_constants) (void);
 	/* */
+	struct item_group *groups;
+	unsigned short group_count;
+	/* */
+	struct item_chain *chains;
+	unsigned short chain_count;
+	unsigned short chain_cache[ECC_MAX];
+	/* */
+	struct item_package *packages;
+	unsigned short package_count;
+	/* */
+	DBMap *names;
+	/* */
+	void (*read_groups) (void);
+	void (*read_chains) (void);
+	void (*read_packages) (void);
+	/* */
+	struct item_data* (*name2id) (const char *str);
+	struct item_data* (*search_name) (const char *name);
+	int (*search_name_array) (struct item_data** data, int size, const char *str);
+	struct item_data* (*load)(int nameid);
+	struct item_data* (*search)(int nameid);
 	int (*parse_dbrow) (char** str, const char* source, int line, int scriptopt);
 	struct item_data* (*exists) (int nameid);
+	bool (*in_group) (struct item_group *group, int nameid);
+	int (*group_item) (struct item_group *group);
+	int (*chain_item) (unsigned short chain_id, int *rate);
+	void (*package_item) (struct map_session_data *sd, struct item_package *package);
 } itemdb_s;
 
 struct itemdb_interface *itemdb;

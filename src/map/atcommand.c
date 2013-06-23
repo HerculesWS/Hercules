@@ -1145,8 +1145,8 @@ ACMD(item)
 	if (number <= 0)
 		number = 1;
 	
-	if ((item_data = itemdb_searchname(item_name)) == NULL &&
-	    (item_data = itemdb_exists(atoi(item_name))) == NULL)
+	if ((item_data = itemdb->search_name(item_name)) == NULL &&
+	    (item_data = itemdb->exists(atoi(item_name))) == NULL)
 	{
 		clif->message(fd, msg_txt(19)); // Invalid item ID or name.
 		return false;
@@ -1203,8 +1203,8 @@ ACMD(item2)
 		number = 1;
 	
 	item_id = 0;
-	if ((item_data = itemdb_searchname(item_name)) != NULL ||
-	    (item_data = itemdb_exists(atoi(item_name))) != NULL)
+	if ((item_data = itemdb->search_name(item_name)) != NULL ||
+	    (item_data = itemdb->exists(atoi(item_name))) != NULL)
 		item_id = item_data->nameid;
 	
 	if (item_id > 500) {
@@ -2128,8 +2128,8 @@ ACMD(produce)
 		return false;
 	}
 	
-	if ( (item_data = itemdb_searchname(item_name)) == NULL &&
-		(item_data = itemdb_exists(atoi(item_name))) == NULL ) {
+	if ( (item_data = itemdb->search_name(item_name)) == NULL &&
+		(item_data = itemdb->exists(atoi(item_name))) == NULL ) {
 		clif->message(fd, msg_txt(170)); //This item is not an equipment.
 		return false;
 	}
@@ -2548,7 +2548,7 @@ ACMD(makeegg)
 		return false;
 	}
 	
-	if ((item_data = itemdb_searchname(message)) != NULL) // for egg name
+	if ((item_data = itemdb->search_name(message)) != NULL) // for egg name
 		id = item_data->nameid;
 	else
 		if ((id = mobdb_searchname(message)) != 0) // for monster name
@@ -3395,7 +3395,7 @@ ACMD(idsearch)
 	
 	sprintf(atcmd_output, msg_txt(77), item_name); // The reference result of '%s' (name: id):
 	clif->message(fd, atcmd_output);
-	match = itemdb_searchname_array(item_array, MAX_SEARCH, item_name);
+	match = itemdb->search_name_array(item_array, MAX_SEARCH, item_name);
 	if (match > MAX_SEARCH) {
 		sprintf(atcmd_output, msg_txt(269), MAX_SEARCH, match);
 		clif->message(fd, atcmd_output);
@@ -3582,7 +3582,7 @@ ACMD(partyrecall)
 ACMD(reloaditemdb)
 {
 	nullpo_retr(-1, sd);
-	itemdb_reload();
+	itemdb->reload();
 	clif->message(fd, msg_txt(97)); // Item database has been reloaded.
 	
 	return true;
@@ -5798,8 +5798,8 @@ ACMD(autolootitem)
 	
 	if (action < 3) // add or remove
 	{
-		if ((item_data = itemdb_exists(atoi(message))) == NULL)
-			item_data = itemdb_searchname(message);
+		if ((item_data = itemdb->exists(atoi(message))) == NULL)
+			item_data = itemdb->search_name(message);
 		if (!item_data) {
 			// No items founds in the DB with Id or Name
 			clif->message(fd, msg_txt(1189)); // Item not found.
@@ -5852,7 +5852,7 @@ ACMD(autolootitem)
 				{
 					if (sd->state.autolootid[i] == 0)
 						continue;
-					if (!(item_data = itemdb_exists(sd->state.autolootid[i]))) {
+					if (!(item_data = itemdb->exists(sd->state.autolootid[i]))) {
 						ShowDebug("Non-existant item %d on autolootitem list (account_id: %d, char_id: %d)", sd->state.autolootid[i], sd->status.account_id, sd->status.char_id);
 						continue;
 					}
@@ -6695,7 +6695,7 @@ ACMD(mobinfo)
 		j = 0;
 		for (i = 0; i < MAX_MOB_DROP; i++) {
 			int droprate;
-			if (mob->dropitem[i].nameid <= 0 || mob->dropitem[i].p < 1 || (item_data = itemdb_exists(mob->dropitem[i].nameid)) == NULL)
+			if (mob->dropitem[i].nameid <= 0 || mob->dropitem[i].p < 1 || (item_data = itemdb->exists(mob->dropitem[i].nameid)) == NULL)
 				continue;
 			droprate = mob->dropitem[i].p;
 			
@@ -6720,7 +6720,7 @@ ACMD(mobinfo)
 			strcpy(atcmd_output, msg_txt(1248)); //  MVP Items:
 			j = 0;
 			for (i = 0; i < MAX_MVP_DROP; i++) {
-				if (mob->mvpitem[i].nameid <= 0 || (item_data = itemdb_exists(mob->mvpitem[i].nameid)) == NULL)
+				if (mob->mvpitem[i].nameid <= 0 || (item_data = itemdb->exists(mob->mvpitem[i].nameid)) == NULL)
 					continue;
 				if (mob->mvpitem[i].p > 0) {
 					j++;
@@ -7142,8 +7142,8 @@ ACMD(iteminfo)
 		clif->message(fd, msg_txt(1276)); // Please enter an item name/ID (usage: @ii/@iteminfo <item name/ID>).
 		return false;
 	}
-	if ((item_array[0] = itemdb_exists(atoi(message))) == NULL)
-		count = itemdb_searchname_array(item_array, MAX_SEARCH, message);
+	if ((item_array[0] = itemdb->exists(atoi(message))) == NULL)
+		count = itemdb->search_name_array(item_array, MAX_SEARCH, message);
 	
 	if (!count) {
 		clif->message(fd, msg_txt(19));	// Invalid item ID or name.
@@ -7191,8 +7191,8 @@ ACMD(whodrops)
 		clif->message(fd, msg_txt(1284)); // Please enter item name/ID (usage: @whodrops <item name/ID>).
 		return false;
 	}
-	if ((item_array[0] = itemdb_exists(atoi(message))) == NULL)
-		count = itemdb_searchname_array(item_array, MAX_SEARCH, message);
+	if ((item_array[0] = itemdb->exists(atoi(message))) == NULL)
+		count = itemdb->search_name_array(item_array, MAX_SEARCH, message);
 	
 	if (!count) {
 		clif->message(fd, msg_txt(19));	// Invalid item ID or name.
@@ -8111,7 +8111,7 @@ ACMD(itemlist)
 		const struct item* it = &items[i];
 		struct item_data* itd;
 		
-		if( it->nameid == 0 || (itd = itemdb_exists(it->nameid)) == NULL )
+		if( it->nameid == 0 || (itd = itemdb->exists(it->nameid)) == NULL )
 			continue;
 		
 		counter += it->amount;
@@ -8194,7 +8194,7 @@ ACMD(itemlist)
 					{
 						struct item_data* card;
 						
-						if( it->card[j] == 0 || (card = itemdb_exists(it->card[j])) == NULL )
+						if( it->card[j] == 0 || (card = itemdb->exists(it->card[j])) == NULL )
 							continue;
 						
 						counter2++;
@@ -8307,7 +8307,7 @@ ACMD(delitem)
 		return false;
 	}
 	
-	if( ( id = itemdb_searchname(item_name) ) != NULL || ( id = itemdb_exists(atoi(item_name)) ) != NULL )
+	if( ( id = itemdb->search_name(item_name) ) != NULL || ( id = itemdb->exists(atoi(item_name)) ) != NULL )
 	{
 		nameid = id->nameid;
 	}

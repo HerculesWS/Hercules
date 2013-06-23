@@ -2371,7 +2371,6 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 		+ sizeof(sd->expaddrace)
 		+ sizeof(sd->ignore_mdef)
 		+ sizeof(sd->ignore_def)
-		+ sizeof(sd->itemgrouphealrate)
 		+ sizeof(sd->sp_gain_race)
 		+ sizeof(sd->sp_gain_race_attack)
 		+ sizeof(sd->hp_gain_race_attack)
@@ -2600,15 +2599,8 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 				current_equip_card_id= c= sd->status.inventory[index].card[j];
 				if(!c)
 					continue;
-				data = itemdb_exists(c);
+				data = itemdb->exists(c);
 				if(!data)
-					continue;
-				if(first && data->equip_script) {//Execute equip-script on login
-					run_script(data->equip_script,0,sd->bl.id,0);
-					if (!calculating)
-						return 1;
-				}
-				if(!data->script)
 					continue;
 				
 				for(k = 0; k < map[sd->bl.m].zone->disabled_items_count; k++) {
@@ -2620,6 +2612,15 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 				if( k < map[sd->bl.m].zone->disabled_items_count )
 					continue;
 				
+				if(first && data->equip_script) {//Execute equip-script on login
+					run_script(data->equip_script,0,sd->bl.id,0);
+					if (!calculating)
+						return 1;
+				}
+				
+				if(!data->script)
+					continue;
+								
 				if(i == EQI_HAND_L && sd->status.inventory[index].equip == EQP_HAND_L) { //Left hand status.
 					sd->state.lr_flag = 1;
 					run_script(data->script,0,sd->bl.id,0);
@@ -2632,15 +2633,13 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 		}
 	}
 
-	if( sc->count && sc->data[SC_ITEMSCRIPT] )
-	{
-		struct item_data *data = itemdb_exists(sc->data[SC_ITEMSCRIPT]->val1);
+	if( sc->count && sc->data[SC_ITEMSCRIPT] ) {
+		struct item_data *data = itemdb->exists(sc->data[SC_ITEMSCRIPT]->val1);
 		if( data && data->script )
 			run_script(data->script,0,sd->bl.id,0);
 	}
 
-	if( sd->pd )
-	{ // Pet Bonus
+	if( sd->pd ) { // Pet Bonus
 		struct pet_data *pd = sd->pd;
 		if( pd && pd->petDB && pd->petDB->equip_script && pd->pet.intimate >= battle_config.pet_equip_min_friendly )
 			run_script(pd->petDB->equip_script,0,sd->bl.id,0);
@@ -3871,8 +3870,7 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag)
 
 	if(flag&SCB_DSPD) {
 		int dmotion;
-		if( bl->type&BL_PC )
-		{
+		if( bl->type&BL_PC ) {
 			if (b_status->agi == status->agi)
 				status->dmotion = status_calc_dmotion(bl, sc, b_status->dmotion);
 			else {
@@ -3883,16 +3881,11 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag)
 				//It's safe to ignore b_status->dmotion since no bonus affects it.
 				status->dmotion = status_calc_dmotion(bl, sc, status->dmotion);
 			}
-		}
-		else
-		if( bl->type&BL_HOM )
-		{
+		} else if( bl->type&BL_HOM ) {
 			dmotion = 800-status->agi*4;
 			status->dmotion = cap_value(dmotion, 400, 800);
 			status->dmotion = status_calc_dmotion(bl, sc, b_status->dmotion);
-		}
-		else // mercenary and mobs
-		{
+		} else { // mercenary and mobs
 			status->dmotion = status_calc_dmotion(bl, sc, b_status->dmotion);
 		}
 	}
@@ -3918,13 +3911,13 @@ void status_calc_bl_(struct block_list* bl, enum scb_flag flag, bool first)
 
 	if( flag&SCB_BASE ) {// calculate the object's base status too
 		switch( bl->type ) {
-		case BL_PC:  status_calc_pc_(BL_CAST(BL_PC,bl), first);          break;
-		case BL_MOB: status_calc_mob_(BL_CAST(BL_MOB,bl), first);        break;
-		case BL_PET: status_calc_pet_(BL_CAST(BL_PET,bl), first);        break;
-		case BL_HOM: status_calc_homunculus_(BL_CAST(BL_HOM,bl), first); break;
-		case BL_MER: status_calc_mercenary_(BL_CAST(BL_MER,bl), first);  break;
-		case BL_ELEM: status_calc_elemental_(BL_CAST(BL_ELEM,bl), first);  break;
-		case BL_NPC: status_calc_npc_(BL_CAST(BL_NPC,bl), first); break;
+			case BL_PC:  status_calc_pc_(BL_CAST(BL_PC,bl), first);          break;
+			case BL_MOB: status_calc_mob_(BL_CAST(BL_MOB,bl), first);        break;
+			case BL_PET: status_calc_pet_(BL_CAST(BL_PET,bl), first);        break;
+			case BL_HOM: status_calc_homunculus_(BL_CAST(BL_HOM,bl), first); break;
+			case BL_MER: status_calc_mercenary_(BL_CAST(BL_MER,bl), first);  break;
+			case BL_ELEM: status_calc_elemental_(BL_CAST(BL_ELEM,bl), first);  break;
+			case BL_NPC: status_calc_npc_(BL_CAST(BL_NPC,bl), first); break;
 		}
 	}
 
@@ -6300,43 +6293,43 @@ int status_get_sc_def(struct block_list *bl, enum sc_type type, int rate, int ti
 		else
 			tick -= (status->vit + status->luk) / 20 * 1000;
 		break;
-	case SC_BURNING:
-		tick -= 75 * status->luk + 125 * status->agi;
-		tick = max(tick,5000); // Minimum Duration 5s.
-		break;
-	case SC_FROSTMISTY:
-		tick -= 1000 * ((status->vit + status->dex) / 20);
-		tick = max(tick,6000); // Minimum Duration 10s.
-		break;
-	case SC_OBLIVIONCURSE: // 100% - (100 - 0.8 x INT)
-		sc_def = 100 - ( 100 - status->int_* 8 / 10 );
-		sc_def = max(sc_def, 5); // minimum of 5%
-		break;
-	case SC_WUGBITE: // {(Base Success chance) - (Target's AGI / 4)}
-		rate -= status->agi*100/4;
-		rate = max(rate,5000); // minimum of 50%
-		break;
-	case SC_ELECTRICSHOCKER:
-		if( bl->type == BL_MOB )
-			tick -= 1000 * (status->agi/10);
-		break;
-	case SC_CRYSTALIZE:
-		tick -= (1000*(status->vit/10))+(status_get_lv(bl)/50);
-		break;
-	case SC_MANDRAGORA:
-		sc_def = (status->vit+status->luk)/5;
-		break;
-	case SC_KYOUGAKU:
-		tick -= 1000 * status_get_int(bl) / 20;
-		break;
-    case SC_NEEDLE_OF_PARALYZE:
-        tick -= 50 * (status->vit + status->luk); //(1000/20);
-        break;
-	default:
-		//Effect that cannot be reduced? Likely a buff.
-		if (!(rnd()%10000 < rate))
-			return 0;
-		return tick?tick:1;
+		case SC_BURNING:
+			tick -= 75 * status->luk + 125 * status->agi;
+			tick = max(tick,5000); // Minimum Duration 5s.
+			break;
+		case SC_FROSTMISTY:
+			tick -= 1000 * ((status->vit + status->dex) / 20);
+			tick = max(tick,6000); // Minimum Duration 10s.
+			break;
+		case SC_OBLIVIONCURSE: // 100% - (100 - 0.8 x INT)
+			sc_def = 100 - ( 100 - status->int_* 8 / 10 );
+			sc_def = max(sc_def, 5); // minimum of 5%
+			break;
+		case SC_WUGBITE: // {(Base Success chance) - (Target's AGI / 4)}
+			rate -= status->agi*100/4;
+			rate = max(rate,5000); // minimum of 50%
+			break;
+		case SC_ELECTRICSHOCKER:
+			if( bl->type == BL_MOB )
+				tick -= 1000 * (status->agi/10);
+			break;
+		case SC_CRYSTALIZE:
+			tick -= (1000*(status->vit/10))+(status_get_lv(bl)/50);
+			break;
+		case SC_MANDRAGORA:
+			sc_def = (status->vit+status->luk)/5;
+			break;
+		case SC_KYOUGAKU:
+			tick -= 1000 * status_get_int(bl) / 20;
+			break;
+		case SC_NEEDLE_OF_PARALYZE:
+			tick -= 50 * (status->vit + status->luk); //(1000/20);
+			break;
+		default:
+			//Effect that cannot be reduced? Likely a buff.
+			if (!(rnd()%10000 < rate))
+				return 0;
+			return tick?tick:1;
 	}
 
 	if (sd) {
@@ -6528,27 +6521,26 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		if( type >= SC_COMMON_MIN && type <= SC_COMMON_MAX) // Confirmed.
 			return 0; // Immune to status ailements
 		switch( type ) {
-		case SC_QUAGMIRE://Tester said it protects against this and decrease agi.
-		case SC_DEC_AGI:
-		case SC_BURNING:
-		case SC_FROSTMISTY:
-		//case SC_WHITEIMPRISON://Need confirm. Protected against this in the past. [Rytech]
-		case SC_MARSHOFABYSS:
-		case SC_TOXIN:
-		case SC_PARALYSE:
-		case SC_VENOMBLEED:
-		case SC_MAGICMUSHROOM:
-		case SC_DEATHHURT:
-		case SC_PYREXIA:
-		case SC_OBLIVIONCURSE:
-		case SC_LEECHESEND:
-		case SC_CRYSTALIZE: ////08/31/2011 - Class Balance Changes
-		case SC_DEEP_SLEEP:
-		case SC_MANDRAGORA:
+			case SC_QUAGMIRE://Tester said it protects against this and decrease agi.
+			case SC_DEC_AGI:
+			case SC_BURNING:
+			case SC_FROSTMISTY:
+			//case SC_WHITEIMPRISON://Need confirm. Protected against this in the past. [Rytech]
+			case SC_MARSHOFABYSS:
+			case SC_TOXIN:
+			case SC_PARALYSE:
+			case SC_VENOMBLEED:
+			case SC_MAGICMUSHROOM:
+			case SC_DEATHHURT:
+			case SC_PYREXIA:
+			case SC_OBLIVIONCURSE:
+			case SC_LEECHESEND:
+			case SC_CRYSTALIZE: ////08/31/2011 - Class Balance Changes
+			case SC_DEEP_SLEEP:
+			case SC_MANDRAGORA:
 			return 0;
 		}
-	}
-	else if( sc->data[SC_INSPIRATION] ) {
+	} else if( sc->data[SC_INSPIRATION] ) {
 		if( type >= SC_COMMON_MIN && type <= SC_COMMON_MAX )
 			return 0; // Immune to status ailements
 		switch( type ) {
@@ -6590,286 +6582,286 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
                      || (type==SC_ANGRIFFS_MODUS && sc->data[SC_GOLDENE_FERSE])
                      )
                 return 0;
-	case SC_STONE:
-		if(sc->data[SC_POWER_OF_GAIA])
-			return 0;
-	case SC_FREEZE:
-		//Undead are immune to Freeze/Stone
-		if (undead_flag && !(flag&1))
-			return 0;
-	case SC_DEEP_SLEEP:
-	case SC_SLEEP:
-	case SC_STUN:
-	case SC_FROSTMISTY:
-	case SC_CRYSTALIZE:
-		if (sc->opt1)
-			return 0; //Cannot override other opt1 status changes. [Skotlex]
-		if((type == SC_FREEZE || type == SC_FROSTMISTY || type == SC_CRYSTALIZE) && sc->data[SC_WARMER])
-			return 0; //Immune to Frozen and Freezing status if under Warmer status. [Jobbie]
-	break;
-
-            //There all like berserk, do not everlap each other
-	case SC__BLOODYLUST:
-		if(!sd) return 0; //should only affect player
-	case SC_BERSERK:
-		if (((type == SC_BERSERK) && (sc->data[SC_SATURDAY_NIGHT_FEVER] || sc->data[SC__BLOODYLUST]))
-		|| ((type == SC__BLOODYLUST) && (sc->data[SC_SATURDAY_NIGHT_FEVER] || sc->data[SC_BERSERK]))
-		)
-			return 0;
+		case SC_STONE:
+			if(sc->data[SC_POWER_OF_GAIA])
+				return 0;
+		case SC_FREEZE:
+			//Undead are immune to Freeze/Stone
+			if (undead_flag && !(flag&1))
+				return 0;
+		case SC_DEEP_SLEEP:
+		case SC_SLEEP:
+		case SC_STUN:
+		case SC_FROSTMISTY:
+		case SC_CRYSTALIZE:
+			if (sc->opt1)
+				return 0; //Cannot override other opt1 status changes. [Skotlex]
+			if((type == SC_FREEZE || type == SC_FROSTMISTY || type == SC_CRYSTALIZE) && sc->data[SC_WARMER])
+				return 0; //Immune to Frozen and Freezing status if under Warmer status. [Jobbie]
 		break;
 
-	case SC_BURNING:
-		if(sc->opt1 || sc->data[SC_FROSTMISTY])
-			return 0;
-	break;
+				//There all like berserk, do not everlap each other
+		case SC__BLOODYLUST:
+			if(!sd) return 0; //should only affect player
+		case SC_BERSERK:
+			if (((type == SC_BERSERK) && (sc->data[SC_SATURDAY_NIGHT_FEVER] || sc->data[SC__BLOODYLUST]))
+			|| ((type == SC__BLOODYLUST) && (sc->data[SC_SATURDAY_NIGHT_FEVER] || sc->data[SC_BERSERK]))
+			)
+				return 0;
+			break;
 
-	case SC_CRUCIS:
-		//Only affects demons and undead element (but not players)
-		if((!undead_flag && status->race!=RC_DEMON) || bl->type == BL_PC)
-			return 0;
-	break;
-	case SC_LEXAETERNA:
-		if( (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE) || sc->data[SC_FREEZE] )
-			return 0;
-	break;
-	case SC_KYRIE:
-		if (bl->type == BL_MOB)
-			return 0;
-	break;
-	case SC_OVERTHRUST:
-		if (sc->data[SC_OVERTHRUSTMAX])
-			return 0; //Overthrust can't take effect if under Max Overthrust. [Skotlex]
-	case SC_OVERTHRUSTMAX:
-		if( sc->option&OPTION_MADOGEAR )
-			return 0;//Overthrust and Overthrust Max cannot be used on Mado Gear [Ind]
-	break;
-	case SC_ADRENALINE:
-		if(sd && !pc_check_weapontype(sd,skill->get_weapontype(BS_ADRENALINE)))
-			return 0;
-		if (sc->data[SC_QUAGMIRE] ||
-			sc->data[SC_DEC_AGI] ||
-			sc->option&OPTION_MADOGEAR //Adrenaline doesn't affect Mado Gear [Ind]
-		)
-			return 0;
-	break;
-	case SC_ADRENALINE2:
-		if(sd && !pc_check_weapontype(sd,skill->get_weapontype(BS_ADRENALINE2)))
-			return 0;
-		if (sc->data[SC_QUAGMIRE] ||
-			sc->data[SC_DEC_AGI]
-		)
-			return 0;
-	break;
-	case SC_MAGNIFICAT:
-		if( sc->data[SC_OFFERTORIUM] || sc->option&OPTION_MADOGEAR ) //Mado is immune to magnificat
-			return 0;
+		case SC_BURNING:
+			if(sc->opt1 || sc->data[SC_FROSTMISTY])
+				return 0;
 		break;
-	case SC_ONEHANDQUICKEN:
-	case SC_MER_QUICKEN:
-	case SC_TWOHANDQUICKEN:
-		if(sc->data[SC_DEC_AGI])
-			return 0;
 
-	case SC_INC_AGI:
-		 if(sd && pc_issit(sd)){
-			 pc->setstand(sd);
-			 clif->standing(&sd->bl);
-		 }
-
-	case SC_CONCENTRATION:
-	case SC_SPEARQUICKEN:
-	case SC_TRUESIGHT:
-	case SC_WINDWALK:
-	case SC_CARTBOOST:
-	case SC_ASSNCROS:
-		if (sc->data[SC_QUAGMIRE])
-			return 0;
-		if(sc->option&OPTION_MADOGEAR)
-			return 0;//Mado is immune to increase agi, wind walk, cart boost, etc (others above) [Ind]
-	break;
-	case SC_CLOAKING:
-		//Avoid cloaking with no wall and low skill level. [Skotlex]
-		//Due to the cloaking card, we have to check the wall versus to known
-		//skill level rather than the used one. [Skotlex]
-		//if (sd && val1 < 3 && skill_check_cloaking(bl,NULL))
-		if( sd && pc->checkskill(sd, AS_CLOAKING) < 3 && !skill->check_cloaking(bl,NULL) )
-			return 0;
-	break;
-	case SC_MODECHANGE:
-	{
-		int mode;
-		struct status_data *bstatus = status_get_base_status(bl);
-		if (!bstatus) return 0;
-		if (sc->data[type])
-		{	//Pile up with previous values.
-			if(!val2) val2 = sc->data[type]->val2;
-			val3 |= sc->data[type]->val3;
-			val4 |= sc->data[type]->val4;
-		}
-		mode = val2?val2:bstatus->mode; //Base mode
-		if (val4) mode&=~val4; //Del mode
-		if (val3) mode|= val3; //Add mode
-		if (mode == bstatus->mode) { //No change.
-			if (sc->data[type]) //Abort previous status
-				return status_change_end(bl, type, INVALID_TIMER);
-			return 0;
-		}
-	}
-	break;
-	//Strip skills, need to divest something or it fails.
-	case SC_NOEQUIPWEAPON:
-		if (sd && !(flag&4)) { //apply sc anyway if loading saved sc_data
-			int i;
-			opt_flag = 0; //Reuse to check success condition.
-			if(sd->bonus.unstripable_equip&EQP_WEAPON)
+		case SC_CRUCIS:
+			//Only affects demons and undead element (but not players)
+			if((!undead_flag && status->race!=RC_DEMON) || bl->type == BL_PC)
+				return 0;
+		break;
+		case SC_LEXAETERNA:
+			if( (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE) || sc->data[SC_FREEZE] )
+				return 0;
+		break;
+		case SC_KYRIE:
+			if (bl->type == BL_MOB)
+				return 0;
+		break;
+		case SC_OVERTHRUST:
+			if (sc->data[SC_OVERTHRUSTMAX])
+				return 0; //Overthrust can't take effect if under Max Overthrust. [Skotlex]
+		case SC_OVERTHRUSTMAX:
+			if( sc->option&OPTION_MADOGEAR )
+				return 0;//Overthrust and Overthrust Max cannot be used on Mado Gear [Ind]
+		break;
+		case SC_ADRENALINE:
+			if(sd && !pc_check_weapontype(sd,skill->get_weapontype(BS_ADRENALINE)))
+				return 0;
+			if (sc->data[SC_QUAGMIRE] ||
+				sc->data[SC_DEC_AGI] ||
+				sc->option&OPTION_MADOGEAR //Adrenaline doesn't affect Mado Gear [Ind]
+			)
+				return 0;
+		break;
+		case SC_ADRENALINE2:
+			if(sd && !pc_check_weapontype(sd,skill->get_weapontype(BS_ADRENALINE2)))
+				return 0;
+			if (sc->data[SC_QUAGMIRE] ||
+				sc->data[SC_DEC_AGI]
+			)
+				return 0;
+		break;
+		case SC_MAGNIFICAT:
+			if( sc->data[SC_OFFERTORIUM] || sc->option&OPTION_MADOGEAR ) //Mado is immune to magnificat
+				return 0;
+			break;
+		case SC_ONEHANDQUICKEN:
+		case SC_MER_QUICKEN:
+		case SC_TWOHANDQUICKEN:
+			if(sc->data[SC_DEC_AGI])
 				return 0;
 
-			i = sd->equip_index[EQI_HAND_R];
-			if (i>=0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_WEAPON) {
-				opt_flag|=2;
+		case SC_INC_AGI:
+			 if(sd && pc_issit(sd)){
+				 pc->setstand(sd);
+				 clif->standing(&sd->bl);
+			 }
+
+		case SC_CONCENTRATION:
+		case SC_SPEARQUICKEN:
+		case SC_TRUESIGHT:
+		case SC_WINDWALK:
+		case SC_CARTBOOST:
+		case SC_ASSNCROS:
+			if (sc->data[SC_QUAGMIRE])
+				return 0;
+			if(sc->option&OPTION_MADOGEAR)
+				return 0;//Mado is immune to increase agi, wind walk, cart boost, etc (others above) [Ind]
+		break;
+		case SC_CLOAKING:
+			//Avoid cloaking with no wall and low skill level. [Skotlex]
+			//Due to the cloaking card, we have to check the wall versus to known
+			//skill level rather than the used one. [Skotlex]
+			//if (sd && val1 < 3 && skill_check_cloaking(bl,NULL))
+			if( sd && pc->checkskill(sd, AS_CLOAKING) < 3 && !skill->check_cloaking(bl,NULL) )
+				return 0;
+		break;
+		case SC_MODECHANGE:
+		{
+			int mode;
+			struct status_data *bstatus = status_get_base_status(bl);
+			if (!bstatus) return 0;
+			if (sc->data[type])
+			{	//Pile up with previous values.
+				if(!val2) val2 = sc->data[type]->val2;
+				val3 |= sc->data[type]->val3;
+				val4 |= sc->data[type]->val4;
+			}
+			mode = val2?val2:bstatus->mode; //Base mode
+			if (val4) mode&=~val4; //Del mode
+			if (val3) mode|= val3; //Add mode
+			if (mode == bstatus->mode) { //No change.
+				if (sc->data[type]) //Abort previous status
+					return status_change_end(bl, type, INVALID_TIMER);
+				return 0;
+			}
+		}
+		break;
+		//Strip skills, need to divest something or it fails.
+		case SC_NOEQUIPWEAPON:
+			if (sd && !(flag&4)) { //apply sc anyway if loading saved sc_data
+				int i;
+				opt_flag = 0; //Reuse to check success condition.
+				if(sd->bonus.unstripable_equip&EQP_WEAPON)
+					return 0;
+
+				i = sd->equip_index[EQI_HAND_R];
+				if (i>=0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_WEAPON) {
+					opt_flag|=2;
+					pc->unequipitem(sd,i,3);
+				}
+				if (!opt_flag) return 0;
+			}
+			if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
+		break;
+		case SC_NOEQUIPSHIELD:
+			if( val2 == 1 ) val2 = 0; //GX effect. Do not take shield off..
+			else
+			if (sd && !(flag&4)) {
+				int i;
+				if(sd->bonus.unstripable_equip&EQP_SHIELD)
+					return 0;
+				i = sd->equip_index[EQI_HAND_L];
+				if ( i < 0 || !sd->inventory_data[i] || sd->inventory_data[i]->type != IT_ARMOR )
+					return 0;
 				pc->unequipitem(sd,i,3);
 			}
-			if (!opt_flag) return 0;
-		}
-		if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
-	break;
-	case SC_NOEQUIPSHIELD:
-		if( val2 == 1 ) val2 = 0; //GX effect. Do not take shield off..
-		else
-		if (sd && !(flag&4)) {
-			int i;
-			if(sd->bonus.unstripable_equip&EQP_SHIELD)
-				return 0;
-			i = sd->equip_index[EQI_HAND_L];
-			if ( i < 0 || !sd->inventory_data[i] || sd->inventory_data[i]->type != IT_ARMOR )
-				return 0;
-			pc->unequipitem(sd,i,3);
-		}
-		if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
-	break;
-	case SC_NOEQUIPARMOR:
-		if (sd && !(flag&4)) {
-			int i;
-			if(sd->bonus.unstripable_equip&EQP_ARMOR)
-				return 0;
-			i = sd->equip_index[EQI_ARMOR];
-			if ( i < 0 || !sd->inventory_data[i] )
-				return 0;
-			pc->unequipitem(sd,i,3);
-		}
-		if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
-	break;
-	case SC_NOEQUIPHELM:
-		if (sd && !(flag&4)) {
-			int i;
-			if(sd->bonus.unstripable_equip&EQP_HELM)
-				return 0;
-			i = sd->equip_index[EQI_HEAD_TOP];
-			if ( i < 0 || !sd->inventory_data[i] )
-				return 0;
-			pc->unequipitem(sd,i,3);
-		}
-		if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
-	break;
-	case SC_MER_FLEE:
-	case SC_MER_ATK:
-	case SC_MER_HP:
-	case SC_MER_SP:
-	case SC_MER_HIT:
-		if( bl->type != BL_MER )
-			return 0; // Stats only for Mercenaries
-	break;
-	case SC_FOOD_STR:
-		if (sc->data[SC_FOOD_STR_CASH] && sc->data[SC_FOOD_STR_CASH]->val1 > val1)
-			return 0;
-	break;
-	case SC_FOOD_AGI:
-		if (sc->data[SC_FOOD_AGI_CASH] && sc->data[SC_FOOD_AGI_CASH]->val1 > val1)
-			return 0;
-	break;
-	case SC_FOOD_VIT:
-		if (sc->data[SC_FOOD_VIT_CASH] && sc->data[SC_FOOD_VIT_CASH]->val1 > val1)
-			return 0;
-	break;
-	case SC_FOOD_INT:
-		if (sc->data[SC_FOOD_INT_CASH] && sc->data[SC_FOOD_INT_CASH]->val1 > val1)
-			return 0;
-	break;
-	case SC_FOOD_DEX:
-		if (sc->data[SC_FOOD_DEX_CASH] && sc->data[SC_FOOD_DEX_CASH]->val1 > val1)
-			return 0;
-	break;
-	case SC_FOOD_LUK:
-		if (sc->data[SC_FOOD_LUK_CASH] && sc->data[SC_FOOD_LUK_CASH]->val1 > val1)
-			return 0;
-	break;
-	case SC_FOOD_STR_CASH:
-		if (sc->data[SC_FOOD_STR] && sc->data[SC_FOOD_STR]->val1 > val1)
-			return 0;
-	break;
-	case SC_FOOD_AGI_CASH:
-		if (sc->data[SC_FOOD_AGI] && sc->data[SC_FOOD_AGI]->val1 > val1)
-			return 0;
-	break;
-	case SC_FOOD_VIT_CASH:
-		if (sc->data[SC_FOOD_VIT] && sc->data[SC_FOOD_VIT]->val1 > val1)
-			return 0;
-	break;
-	case SC_FOOD_INT_CASH:
-		if (sc->data[SC_FOOD_INT] && sc->data[SC_FOOD_INT]->val1 > val1)
-			return 0;
-	break;
-	case SC_FOOD_DEX_CASH:
-		if (sc->data[SC_FOOD_DEX] && sc->data[SC_FOOD_DEX]->val1 > val1)
-			return 0;
-	break;
-	case SC_FOOD_LUK_CASH:
-		if (sc->data[SC_FOOD_LUK] && sc->data[SC_FOOD_LUK]->val1 > val1)
-			return 0;
-	break;
-	case SC_CAMOUFLAGE:
-		if( sd && pc->checkskill(sd, RA_CAMOUFLAGE) < 3 && !skill->check_camouflage(bl,NULL) )
-			return 0;
-	break;
-	case SC__STRIPACCESSARY:
-		if( sd ) {
-			int i = -1;
-			if( !(sd->bonus.unstripable_equip&EQI_ACC_L) ) {
-				i = sd->equip_index[EQI_ACC_L];
-				if( i >= 0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_ARMOR )
-					pc->unequipitem(sd,i,3); //L-Accessory
-			} if( !(sd->bonus.unstripable_equip&EQI_ACC_R) ) {
-				i = sd->equip_index[EQI_ACC_R];
-				if( i >= 0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_ARMOR )
-					pc->unequipitem(sd,i,3); //R-Accessory
+			if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
+		break;
+		case SC_NOEQUIPARMOR:
+			if (sd && !(flag&4)) {
+				int i;
+				if(sd->bonus.unstripable_equip&EQP_ARMOR)
+					return 0;
+				i = sd->equip_index[EQI_ARMOR];
+				if ( i < 0 || !sd->inventory_data[i] )
+					return 0;
+				pc->unequipitem(sd,i,3);
 			}
-			if( i < 0 )
+			if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
+		break;
+		case SC_NOEQUIPHELM:
+			if (sd && !(flag&4)) {
+				int i;
+				if(sd->bonus.unstripable_equip&EQP_HELM)
+					return 0;
+				i = sd->equip_index[EQI_HEAD_TOP];
+				if ( i < 0 || !sd->inventory_data[i] )
+					return 0;
+				pc->unequipitem(sd,i,3);
+			}
+			if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
+		break;
+		case SC_MER_FLEE:
+		case SC_MER_ATK:
+		case SC_MER_HP:
+		case SC_MER_SP:
+		case SC_MER_HIT:
+			if( bl->type != BL_MER )
+				return 0; // Stats only for Mercenaries
+		break;
+		case SC_FOOD_STR:
+			if (sc->data[SC_FOOD_STR_CASH] && sc->data[SC_FOOD_STR_CASH]->val1 > val1)
 				return 0;
-		}
-		if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
-	break;
-	case SC_TOXIN:
-	case SC_PARALYSE:
-	case SC_VENOMBLEED:
-	case SC_MAGICMUSHROOM:
-	case SC_DEATHHURT:
-	case SC_PYREXIA:
-	case SC_OBLIVIONCURSE:
-	case SC_LEECHESEND:
-		{ // it doesn't stack or even renewed
-			int i = SC_TOXIN;
-			for(; i<= SC_LEECHESEND; i++)
-				if(sc->data[i])	return 0;
-		}
-	break;
-	case SC_SATURDAY_NIGHT_FEVER:
-		if (sc->data[SC_BERSERK] || sc->data[SC_INSPIRATION] || sc->data[SC__BLOODYLUST])
-			return 0;
 		break;
-	case SC_OFFERTORIUM:
-		if (sc->data[SC_MAGNIFICAT])
-			return 0;
+		case SC_FOOD_AGI:
+			if (sc->data[SC_FOOD_AGI_CASH] && sc->data[SC_FOOD_AGI_CASH]->val1 > val1)
+				return 0;
 		break;
+		case SC_FOOD_VIT:
+			if (sc->data[SC_FOOD_VIT_CASH] && sc->data[SC_FOOD_VIT_CASH]->val1 > val1)
+				return 0;
+		break;
+		case SC_FOOD_INT:
+			if (sc->data[SC_FOOD_INT_CASH] && sc->data[SC_FOOD_INT_CASH]->val1 > val1)
+				return 0;
+		break;
+		case SC_FOOD_DEX:
+			if (sc->data[SC_FOOD_DEX_CASH] && sc->data[SC_FOOD_DEX_CASH]->val1 > val1)
+				return 0;
+		break;
+		case SC_FOOD_LUK:
+			if (sc->data[SC_FOOD_LUK_CASH] && sc->data[SC_FOOD_LUK_CASH]->val1 > val1)
+				return 0;
+		break;
+		case SC_FOOD_STR_CASH:
+			if (sc->data[SC_FOOD_STR] && sc->data[SC_FOOD_STR]->val1 > val1)
+				return 0;
+		break;
+		case SC_FOOD_AGI_CASH:
+			if (sc->data[SC_FOOD_AGI] && sc->data[SC_FOOD_AGI]->val1 > val1)
+				return 0;
+		break;
+		case SC_FOOD_VIT_CASH:
+			if (sc->data[SC_FOOD_VIT] && sc->data[SC_FOOD_VIT]->val1 > val1)
+				return 0;
+		break;
+		case SC_FOOD_INT_CASH:
+			if (sc->data[SC_FOOD_INT] && sc->data[SC_FOOD_INT]->val1 > val1)
+				return 0;
+		break;
+		case SC_FOOD_DEX_CASH:
+			if (sc->data[SC_FOOD_DEX] && sc->data[SC_FOOD_DEX]->val1 > val1)
+				return 0;
+		break;
+		case SC_FOOD_LUK_CASH:
+			if (sc->data[SC_FOOD_LUK] && sc->data[SC_FOOD_LUK]->val1 > val1)
+				return 0;
+		break;
+		case SC_CAMOUFLAGE:
+			if( sd && pc->checkskill(sd, RA_CAMOUFLAGE) < 3 && !skill->check_camouflage(bl,NULL) )
+				return 0;
+		break;
+		case SC__STRIPACCESSARY:
+			if( sd ) {
+				int i = -1;
+				if( !(sd->bonus.unstripable_equip&EQI_ACC_L) ) {
+					i = sd->equip_index[EQI_ACC_L];
+					if( i >= 0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_ARMOR )
+						pc->unequipitem(sd,i,3); //L-Accessory
+				} if( !(sd->bonus.unstripable_equip&EQI_ACC_R) ) {
+					i = sd->equip_index[EQI_ACC_R];
+					if( i >= 0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_ARMOR )
+						pc->unequipitem(sd,i,3); //R-Accessory
+				}
+				if( i < 0 )
+					return 0;
+			}
+			if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
+		break;
+		case SC_TOXIN:
+		case SC_PARALYSE:
+		case SC_VENOMBLEED:
+		case SC_MAGICMUSHROOM:
+		case SC_DEATHHURT:
+		case SC_PYREXIA:
+		case SC_OBLIVIONCURSE:
+		case SC_LEECHESEND:
+			{ // it doesn't stack or even renewed
+				int i = SC_TOXIN;
+				for(; i<= SC_LEECHESEND; i++)
+					if(sc->data[i])	return 0;
+			}
+		break;
+		case SC_SATURDAY_NIGHT_FEVER:
+			if (sc->data[SC_BERSERK] || sc->data[SC_INSPIRATION] || sc->data[SC__BLOODYLUST])
+				return 0;
+			break;
+		case SC_OFFERTORIUM:
+			if (sc->data[SC_MAGNIFICAT])
+				return 0;
+			break;
 	}
 
 	//Check for BOSS resistances
@@ -6915,236 +6907,236 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 
 	//Before overlapping fail, one must check for status cured.
 	switch (type) {
-	case SC_BLESSING:
-		//TO-DO Blessing and Agi up should do 1 damage against players on Undead Status, even on PvM
-		//but cannot be plagiarized (this requires aegis investigation on packets and official behavior) [Brainstorm]
-		if ((!undead_flag && status->race!=RC_DEMON) || bl->type == BL_PC) {
-			status_change_end(bl, SC_CURSE, INVALID_TIMER);
-			if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
-				status_change_end(bl, SC_STONE, INVALID_TIMER);
-		}
-		break;
-	case SC_INC_AGI:
-		status_change_end(bl, SC_DEC_AGI, INVALID_TIMER);
-		break;
-	case SC_QUAGMIRE:
-		status_change_end(bl, SC_CONCENTRATION, INVALID_TIMER);
-		status_change_end(bl, SC_TRUESIGHT, INVALID_TIMER);
-		status_change_end(bl, SC_WINDWALK, INVALID_TIMER);
-		//Also blocks the ones below...
-	case SC_DEC_AGI:
-		status_change_end(bl, SC_CARTBOOST, INVALID_TIMER);
-		//Also blocks the ones below...
-	case SC_DONTFORGETME:
-		status_change_end(bl, SC_INC_AGI, INVALID_TIMER);
-		status_change_end(bl, SC_ADRENALINE, INVALID_TIMER);
-		status_change_end(bl, SC_ADRENALINE2, INVALID_TIMER);
-		status_change_end(bl, SC_SPEARQUICKEN, INVALID_TIMER);
-		status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
-		status_change_end(bl, SC_ONEHANDQUICKEN, INVALID_TIMER);
-		status_change_end(bl, SC_MER_QUICKEN, INVALID_TIMER);
-		status_change_end(bl, SC_ACCELERATION, INVALID_TIMER);
-		break;
-	case SC_ONEHANDQUICKEN:
-	  	//Removes the Aspd potion effect, as reported by Vicious. [Skotlex]
-		status_change_end(bl, SC_ATTHASTE_POTION1, INVALID_TIMER);
-		status_change_end(bl, SC_ATTHASTE_POTION2, INVALID_TIMER);
-		status_change_end(bl, SC_ATTHASTE_POTION3, INVALID_TIMER);
-		status_change_end(bl, SC_ATTHASTE_INFINITY, INVALID_TIMER);
-		break;
-	case SC_OVERTHRUSTMAX:
-	  	//Cancels Normal Overthrust. [Skotlex]
-		status_change_end(bl, SC_OVERTHRUST, INVALID_TIMER);
-		break;
-	case SC_KYRIE:
-		//Cancels Assumptio
-		status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
-		break;
-	case SC_DELUGE:
-		if (sc->data[SC_FOGWALL] && sc->data[SC_BLIND])
-			status_change_end(bl, SC_BLIND, INVALID_TIMER);
-		break;
-	case SC_SILENCE:
-		if (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF)
-			status_change_end(bl, SC_GOSPEL, INVALID_TIMER);
-		break;
-	case SC_HIDING:
-		status_change_end(bl, SC_RG_CCONFINE_M, INVALID_TIMER);
-		status_change_end(bl, SC_RG_CCONFINE_S, INVALID_TIMER);
-		break;
-	case SC__BLOODYLUST:
-	case SC_BERSERK:
-		if(battle_config.berserk_cancels_buffs) {
-			status_change_end(bl, SC_ONEHANDQUICKEN, INVALID_TIMER);
-			status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
-			status_change_end(bl, SC_LKCONCENTRATION, INVALID_TIMER);
-			status_change_end(bl, SC_PARRYING, INVALID_TIMER);
-			status_change_end(bl, SC_AURABLADE, INVALID_TIMER);
-			status_change_end(bl, SC_MER_QUICKEN, INVALID_TIMER);
-		}
-#ifdef RENEWAL
-		else {
-			status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
-		}
-#endif
-		break;
-	case SC_ASSUMPTIO:
-		status_change_end(bl, SC_KYRIE, INVALID_TIMER);
-		status_change_end(bl, SC_KAITE, INVALID_TIMER);
-		break;
-	case SC_KAITE:
-		status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
-		break;
-	case SC_CARTBOOST:
-		if(sc->data[SC_DEC_AGI])
-		{	//Cancel Decrease Agi, but take no further effect [Skotlex]
+		case SC_BLESSING:
+			//TO-DO Blessing and Agi up should do 1 damage against players on Undead Status, even on PvM
+			//but cannot be plagiarized (this requires aegis investigation on packets and official behavior) [Brainstorm]
+			if ((!undead_flag && status->race!=RC_DEMON) || bl->type == BL_PC) {
+				status_change_end(bl, SC_CURSE, INVALID_TIMER);
+				if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
+					status_change_end(bl, SC_STONE, INVALID_TIMER);
+			}
+			break;
+		case SC_INC_AGI:
 			status_change_end(bl, SC_DEC_AGI, INVALID_TIMER);
-			return 0;
-		}
-		break;
-	case SC_FUSION:
-		status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
-		break;
-	case SC_GS_ADJUSTMENT:
-		status_change_end(bl, SC_GS_MADNESSCANCEL, INVALID_TIMER);
-		break;
-	case SC_GS_MADNESSCANCEL:
-		status_change_end(bl, SC_GS_ADJUSTMENT, INVALID_TIMER);
-		break;
-	//NPC_CHANGEUNDEAD will debuff Blessing and Agi Up
-	case SC_PROPERTYUNDEAD:
-		status_change_end(bl, SC_BLESSING, INVALID_TIMER);
-		status_change_end(bl, SC_INC_AGI, INVALID_TIMER);
-		break;
-	case SC_FOOD_STR:
-		status_change_end(bl, SC_FOOD_STR_CASH, INVALID_TIMER);
-		break;
-	case SC_FOOD_AGI:
-		status_change_end(bl, SC_FOOD_AGI_CASH, INVALID_TIMER);
-		break;
-	case SC_FOOD_VIT:
-		status_change_end(bl, SC_FOOD_VIT_CASH, INVALID_TIMER);
-		break;
-	case SC_FOOD_INT:
-		status_change_end(bl, SC_FOOD_INT_CASH, INVALID_TIMER);
-		break;
-	case SC_FOOD_DEX:
-		status_change_end(bl, SC_FOOD_DEX_CASH, INVALID_TIMER);
-		break;
-	case SC_FOOD_LUK:
-		status_change_end(bl, SC_FOOD_LUK_CASH, INVALID_TIMER);
-		break;
-	case SC_FOOD_STR_CASH:
-		status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
-		break;
-	case SC_FOOD_AGI_CASH:
-		status_change_end(bl, SC_FOOD_AGI, INVALID_TIMER);
-		break;
-	case SC_FOOD_VIT_CASH:
-		status_change_end(bl, SC_FOOD_VIT, INVALID_TIMER);
-		break;
-	case SC_FOOD_INT_CASH:
-		status_change_end(bl, SC_FOOD_INT, INVALID_TIMER);
-		break;
-	case SC_FOOD_DEX_CASH:
-		status_change_end(bl, SC_FOOD_DEX, INVALID_TIMER);
-		break;
-	case SC_FOOD_LUK_CASH:
-		status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
-		break;
-	case SC_ENDURE:
-		if( val4 )
-			status_change_end(bl, SC_LKCONCENTRATION, INVALID_TIMER);
-		break;
-	case SC_FIGHTINGSPIRIT:
-		status_change_end(bl, type, INVALID_TIMER); // Remove previous one.
-		break;
-	case SC_MARSHOFABYSS:
-		status_change_end(bl, SC_INCAGI, INVALID_TIMER);
-		status_change_end(bl, SC_WINDWALK, INVALID_TIMER);
-		status_change_end(bl, SC_ATTHASTE_POTION1, INVALID_TIMER);
-		status_change_end(bl, SC_ATTHASTE_POTION2, INVALID_TIMER);
-		status_change_end(bl, SC_ATTHASTE_POTION3, INVALID_TIMER);
-		status_change_end(bl, SC_ATTHASTE_INFINITY, INVALID_TIMER);
-		break;
-	case SC_SWING:
-	case SC_SYMPHONY_LOVE:
-	case SC_MOONLIT_SERENADE:
-	case SC_RUSH_WINDMILL:
-	case SC_ECHOSONG:
-        case SC_HARMONIZE: //group A doesn't overlap
-            if (type != SC_SWING) status_change_end(bl, SC_SWING, INVALID_TIMER);
-            if (type != SC_SYMPHONY_LOVE) status_change_end(bl, SC_SYMPHONY_LOVE, INVALID_TIMER);
-            if (type != SC_MOONLIT_SERENADE) status_change_end(bl, SC_MOONLIT_SERENADE, INVALID_TIMER);
-            if (type != SC_RUSH_WINDMILL) status_change_end(bl, SC_RUSH_WINDMILL, INVALID_TIMER);
-            if (type != SC_ECHOSONG) status_change_end(bl, SC_ECHOSONG, INVALID_TIMER);
-            if (type != SC_HARMONIZE) status_change_end(bl, SC_HARMONIZE, INVALID_TIMER);
-            break;
-        case SC_SIREN:
-        case SC_DEEP_SLEEP:
-        case SC_GLOOMYDAY:
-        case SC_SONG_OF_MANA:
-        case SC_DANCE_WITH_WUG:
-        case SC_SATURDAY_NIGHT_FEVER:
-        case SC_LERADS_DEW:
-        case SC_MELODYOFSINK:
-        case SC_BEYOND_OF_WARCRY:
-        case SC_UNLIMITED_HUMMING_VOICE: //group B
-            if (type != SC_SIREN) status_change_end(bl, SC_SIREN, INVALID_TIMER);
-            if (type != SC_DEEP_SLEEP) status_change_end(bl, SC_DEEP_SLEEP, INVALID_TIMER);
-            if (type != SC_LERADS_DEW) status_change_end(bl, SC_LERADS_DEW, INVALID_TIMER);
-            if (type != SC_MELODYOFSINK) status_change_end(bl, SC_MELODYOFSINK, INVALID_TIMER);
-            if (type != SC_BEYOND_OF_WARCRY) status_change_end(bl, SC_BEYOND_OF_WARCRY, INVALID_TIMER);
-            if (type != SC_UNLIMITED_HUMMING_VOICE) status_change_end(bl, SC_UNLIMITED_HUMMING_VOICE, INVALID_TIMER);
-            if (type != SC_GLOOMYDAY) {
-                status_change_end(bl, SC_GLOOMYDAY, INVALID_TIMER);
-                status_change_end(bl, SC_GLOOMYDAY_SK, INVALID_TIMER);
-            }
-            if (type != SC_SONG_OF_MANA) status_change_end(bl, SC_SONG_OF_MANA, INVALID_TIMER);
-            if (type != SC_DANCE_WITH_WUG) status_change_end(bl, SC_DANCE_WITH_WUG, INVALID_TIMER);
-            if (type != SC_SATURDAY_NIGHT_FEVER) {
-                if (sc->data[SC_SATURDAY_NIGHT_FEVER]) {
-                    sc->data[SC_SATURDAY_NIGHT_FEVER]->val2 = 0; //mark to not lose hp
-                    status_change_end(bl, SC_SATURDAY_NIGHT_FEVER, INVALID_TIMER);
-                }
-            }
-            break;
-	case SC_REFLECTSHIELD:
-		status_change_end(bl, SC_LG_REFLECTDAMAGE, INVALID_TIMER);
-		break;
-	case SC_LG_REFLECTDAMAGE:
-		status_change_end(bl, SC_REFLECTSHIELD, INVALID_TIMER);
-		break;
-	case SC_SHIELDSPELL_DEF:
-	case SC_SHIELDSPELL_MDEF:
-	case SC_SHIELDSPELL_REF:
-		status_change_end(bl, SC_MAGNIFICAT, INVALID_TIMER);
-		if( type != SC_SHIELDSPELL_DEF )
-			status_change_end(bl, SC_SHIELDSPELL_DEF, INVALID_TIMER);
-		if( type != SC_SHIELDSPELL_MDEF )
-			status_change_end(bl, SC_SHIELDSPELL_MDEF, INVALID_TIMER);
-		if( type != SC_SHIELDSPELL_REF )
-			status_change_end(bl, SC_SHIELDSPELL_REF, INVALID_TIMER);
-		break;
-	case SC_GENTLETOUCH_ENERGYGAIN:
-	case SC_GENTLETOUCH_CHANGE:
-	case SC_GENTLETOUCH_REVITALIZE:
-		if( type != SC_GENTLETOUCH_REVITALIZE )
-			status_change_end(bl, SC_GENTLETOUCH_REVITALIZE, INVALID_TIMER);
-		if( type != SC_GENTLETOUCH_ENERGYGAIN )
-			status_change_end(bl, SC_GENTLETOUCH_ENERGYGAIN, INVALID_TIMER);
-		if( type != SC_GENTLETOUCH_CHANGE )
-			status_change_end(bl, SC_GENTLETOUCH_CHANGE, INVALID_TIMER);
-		break;
-	case SC_INVINCIBLE:
-		status_change_end(bl, SC_INVINCIBLEOFF, INVALID_TIMER);
-		break;
-	case SC_INVINCIBLEOFF:
-		status_change_end(bl, SC_INVINCIBLE, INVALID_TIMER);
-		break;
-	case SC_MAGICPOWER:
-		status_change_end(bl, type, INVALID_TIMER);
-		break;
+			break;
+		case SC_QUAGMIRE:
+			status_change_end(bl, SC_CONCENTRATION, INVALID_TIMER);
+			status_change_end(bl, SC_TRUESIGHT, INVALID_TIMER);
+			status_change_end(bl, SC_WINDWALK, INVALID_TIMER);
+			//Also blocks the ones below...
+		case SC_DEC_AGI:
+			status_change_end(bl, SC_CARTBOOST, INVALID_TIMER);
+			//Also blocks the ones below...
+		case SC_DONTFORGETME:
+			status_change_end(bl, SC_INC_AGI, INVALID_TIMER);
+			status_change_end(bl, SC_ADRENALINE, INVALID_TIMER);
+			status_change_end(bl, SC_ADRENALINE2, INVALID_TIMER);
+			status_change_end(bl, SC_SPEARQUICKEN, INVALID_TIMER);
+			status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
+			status_change_end(bl, SC_ONEHANDQUICKEN, INVALID_TIMER);
+			status_change_end(bl, SC_MER_QUICKEN, INVALID_TIMER);
+			status_change_end(bl, SC_ACCELERATION, INVALID_TIMER);
+			break;
+		case SC_ONEHANDQUICKEN:
+			//Removes the Aspd potion effect, as reported by Vicious. [Skotlex]
+			status_change_end(bl, SC_ATTHASTE_POTION1, INVALID_TIMER);
+			status_change_end(bl, SC_ATTHASTE_POTION2, INVALID_TIMER);
+			status_change_end(bl, SC_ATTHASTE_POTION3, INVALID_TIMER);
+			status_change_end(bl, SC_ATTHASTE_INFINITY, INVALID_TIMER);
+			break;
+		case SC_OVERTHRUSTMAX:
+			//Cancels Normal Overthrust. [Skotlex]
+			status_change_end(bl, SC_OVERTHRUST, INVALID_TIMER);
+			break;
+		case SC_KYRIE:
+			//Cancels Assumptio
+			status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
+			break;
+		case SC_DELUGE:
+			if (sc->data[SC_FOGWALL] && sc->data[SC_BLIND])
+				status_change_end(bl, SC_BLIND, INVALID_TIMER);
+			break;
+		case SC_SILENCE:
+			if (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF)
+				status_change_end(bl, SC_GOSPEL, INVALID_TIMER);
+			break;
+		case SC_HIDING:
+			status_change_end(bl, SC_RG_CCONFINE_M, INVALID_TIMER);
+			status_change_end(bl, SC_RG_CCONFINE_S, INVALID_TIMER);
+			break;
+		case SC__BLOODYLUST:
+		case SC_BERSERK:
+			if(battle_config.berserk_cancels_buffs) {
+				status_change_end(bl, SC_ONEHANDQUICKEN, INVALID_TIMER);
+				status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
+				status_change_end(bl, SC_LKCONCENTRATION, INVALID_TIMER);
+				status_change_end(bl, SC_PARRYING, INVALID_TIMER);
+				status_change_end(bl, SC_AURABLADE, INVALID_TIMER);
+				status_change_end(bl, SC_MER_QUICKEN, INVALID_TIMER);
+			}
+	#ifdef RENEWAL
+			else {
+				status_change_end(bl, SC_TWOHANDQUICKEN, INVALID_TIMER);
+			}
+	#endif
+			break;
+		case SC_ASSUMPTIO:
+			status_change_end(bl, SC_KYRIE, INVALID_TIMER);
+			status_change_end(bl, SC_KAITE, INVALID_TIMER);
+			break;
+		case SC_KAITE:
+			status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
+			break;
+		case SC_CARTBOOST:
+			if(sc->data[SC_DEC_AGI])
+			{	//Cancel Decrease Agi, but take no further effect [Skotlex]
+				status_change_end(bl, SC_DEC_AGI, INVALID_TIMER);
+				return 0;
+			}
+			break;
+		case SC_FUSION:
+			status_change_end(bl, SC_SOULLINK, INVALID_TIMER);
+			break;
+		case SC_GS_ADJUSTMENT:
+			status_change_end(bl, SC_GS_MADNESSCANCEL, INVALID_TIMER);
+			break;
+		case SC_GS_MADNESSCANCEL:
+			status_change_end(bl, SC_GS_ADJUSTMENT, INVALID_TIMER);
+			break;
+		//NPC_CHANGEUNDEAD will debuff Blessing and Agi Up
+		case SC_PROPERTYUNDEAD:
+			status_change_end(bl, SC_BLESSING, INVALID_TIMER);
+			status_change_end(bl, SC_INC_AGI, INVALID_TIMER);
+			break;
+		case SC_FOOD_STR:
+			status_change_end(bl, SC_FOOD_STR_CASH, INVALID_TIMER);
+			break;
+		case SC_FOOD_AGI:
+			status_change_end(bl, SC_FOOD_AGI_CASH, INVALID_TIMER);
+			break;
+		case SC_FOOD_VIT:
+			status_change_end(bl, SC_FOOD_VIT_CASH, INVALID_TIMER);
+			break;
+		case SC_FOOD_INT:
+			status_change_end(bl, SC_FOOD_INT_CASH, INVALID_TIMER);
+			break;
+		case SC_FOOD_DEX:
+			status_change_end(bl, SC_FOOD_DEX_CASH, INVALID_TIMER);
+			break;
+		case SC_FOOD_LUK:
+			status_change_end(bl, SC_FOOD_LUK_CASH, INVALID_TIMER);
+			break;
+		case SC_FOOD_STR_CASH:
+			status_change_end(bl, SC_FOOD_STR, INVALID_TIMER);
+			break;
+		case SC_FOOD_AGI_CASH:
+			status_change_end(bl, SC_FOOD_AGI, INVALID_TIMER);
+			break;
+		case SC_FOOD_VIT_CASH:
+			status_change_end(bl, SC_FOOD_VIT, INVALID_TIMER);
+			break;
+		case SC_FOOD_INT_CASH:
+			status_change_end(bl, SC_FOOD_INT, INVALID_TIMER);
+			break;
+		case SC_FOOD_DEX_CASH:
+			status_change_end(bl, SC_FOOD_DEX, INVALID_TIMER);
+			break;
+		case SC_FOOD_LUK_CASH:
+			status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
+			break;
+		case SC_ENDURE:
+			if( val4 )
+				status_change_end(bl, SC_LKCONCENTRATION, INVALID_TIMER);
+			break;
+		case SC_FIGHTINGSPIRIT:
+			status_change_end(bl, type, INVALID_TIMER); // Remove previous one.
+			break;
+		case SC_MARSHOFABYSS:
+			status_change_end(bl, SC_INCAGI, INVALID_TIMER);
+			status_change_end(bl, SC_WINDWALK, INVALID_TIMER);
+			status_change_end(bl, SC_ATTHASTE_POTION1, INVALID_TIMER);
+			status_change_end(bl, SC_ATTHASTE_POTION2, INVALID_TIMER);
+			status_change_end(bl, SC_ATTHASTE_POTION3, INVALID_TIMER);
+			status_change_end(bl, SC_ATTHASTE_INFINITY, INVALID_TIMER);
+			break;
+		case SC_SWING:
+		case SC_SYMPHONY_LOVE:
+		case SC_MOONLIT_SERENADE:
+		case SC_RUSH_WINDMILL:
+		case SC_ECHOSONG:
+			case SC_HARMONIZE: //group A doesn't overlap
+				if (type != SC_SWING) status_change_end(bl, SC_SWING, INVALID_TIMER);
+				if (type != SC_SYMPHONY_LOVE) status_change_end(bl, SC_SYMPHONY_LOVE, INVALID_TIMER);
+				if (type != SC_MOONLIT_SERENADE) status_change_end(bl, SC_MOONLIT_SERENADE, INVALID_TIMER);
+				if (type != SC_RUSH_WINDMILL) status_change_end(bl, SC_RUSH_WINDMILL, INVALID_TIMER);
+				if (type != SC_ECHOSONG) status_change_end(bl, SC_ECHOSONG, INVALID_TIMER);
+				if (type != SC_HARMONIZE) status_change_end(bl, SC_HARMONIZE, INVALID_TIMER);
+				break;
+			case SC_SIREN:
+			case SC_DEEP_SLEEP:
+			case SC_GLOOMYDAY:
+			case SC_SONG_OF_MANA:
+			case SC_DANCE_WITH_WUG:
+			case SC_SATURDAY_NIGHT_FEVER:
+			case SC_LERADS_DEW:
+			case SC_MELODYOFSINK:
+			case SC_BEYOND_OF_WARCRY:
+			case SC_UNLIMITED_HUMMING_VOICE: //group B
+				if (type != SC_SIREN) status_change_end(bl, SC_SIREN, INVALID_TIMER);
+				if (type != SC_DEEP_SLEEP) status_change_end(bl, SC_DEEP_SLEEP, INVALID_TIMER);
+				if (type != SC_LERADS_DEW) status_change_end(bl, SC_LERADS_DEW, INVALID_TIMER);
+				if (type != SC_MELODYOFSINK) status_change_end(bl, SC_MELODYOFSINK, INVALID_TIMER);
+				if (type != SC_BEYOND_OF_WARCRY) status_change_end(bl, SC_BEYOND_OF_WARCRY, INVALID_TIMER);
+				if (type != SC_UNLIMITED_HUMMING_VOICE) status_change_end(bl, SC_UNLIMITED_HUMMING_VOICE, INVALID_TIMER);
+				if (type != SC_GLOOMYDAY) {
+					status_change_end(bl, SC_GLOOMYDAY, INVALID_TIMER);
+					status_change_end(bl, SC_GLOOMYDAY_SK, INVALID_TIMER);
+				}
+				if (type != SC_SONG_OF_MANA) status_change_end(bl, SC_SONG_OF_MANA, INVALID_TIMER);
+				if (type != SC_DANCE_WITH_WUG) status_change_end(bl, SC_DANCE_WITH_WUG, INVALID_TIMER);
+				if (type != SC_SATURDAY_NIGHT_FEVER) {
+					if (sc->data[SC_SATURDAY_NIGHT_FEVER]) {
+						sc->data[SC_SATURDAY_NIGHT_FEVER]->val2 = 0; //mark to not lose hp
+						status_change_end(bl, SC_SATURDAY_NIGHT_FEVER, INVALID_TIMER);
+					}
+				}
+				break;
+		case SC_REFLECTSHIELD:
+			status_change_end(bl, SC_LG_REFLECTDAMAGE, INVALID_TIMER);
+			break;
+		case SC_LG_REFLECTDAMAGE:
+			status_change_end(bl, SC_REFLECTSHIELD, INVALID_TIMER);
+			break;
+		case SC_SHIELDSPELL_DEF:
+		case SC_SHIELDSPELL_MDEF:
+		case SC_SHIELDSPELL_REF:
+			status_change_end(bl, SC_MAGNIFICAT, INVALID_TIMER);
+			if( type != SC_SHIELDSPELL_DEF )
+				status_change_end(bl, SC_SHIELDSPELL_DEF, INVALID_TIMER);
+			if( type != SC_SHIELDSPELL_MDEF )
+				status_change_end(bl, SC_SHIELDSPELL_MDEF, INVALID_TIMER);
+			if( type != SC_SHIELDSPELL_REF )
+				status_change_end(bl, SC_SHIELDSPELL_REF, INVALID_TIMER);
+			break;
+		case SC_GENTLETOUCH_ENERGYGAIN:
+		case SC_GENTLETOUCH_CHANGE:
+		case SC_GENTLETOUCH_REVITALIZE:
+			if( type != SC_GENTLETOUCH_REVITALIZE )
+				status_change_end(bl, SC_GENTLETOUCH_REVITALIZE, INVALID_TIMER);
+			if( type != SC_GENTLETOUCH_ENERGYGAIN )
+				status_change_end(bl, SC_GENTLETOUCH_ENERGYGAIN, INVALID_TIMER);
+			if( type != SC_GENTLETOUCH_CHANGE )
+				status_change_end(bl, SC_GENTLETOUCH_CHANGE, INVALID_TIMER);
+			break;
+		case SC_INVINCIBLE:
+			status_change_end(bl, SC_INVINCIBLEOFF, INVALID_TIMER);
+			break;
+		case SC_INVINCIBLEOFF:
+			status_change_end(bl, SC_INVINCIBLE, INVALID_TIMER);
+			break;
+		case SC_MAGICPOWER:
+			status_change_end(bl, type, INVALID_TIMER);
+			break;
 	}
 
 	//Check for overlapping fails
@@ -9223,24 +9215,24 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		if (sce->timer != INVALID_TIMER) //Could be a SC with infinite duration
 			iTimer->delete_timer(sce->timer,status_change_timer);
 		if (sc->opt1)
-		switch (type) {
-			//"Ugly workaround"  [Skotlex]
-			//delays status change ending so that a skill that sets opt1 fails to
-			//trigger when it also removed one
-			case SC_STONE:
-				sce->val3 = 0; //Petrify time counter.
-			case SC_FREEZE:
-			case SC_STUN:
-			case SC_SLEEP:
-			if (sce->val1) {
-			  	//Removing the 'level' shouldn't affect anything in the code
-				//since these SC are not affected by it, and it lets us know
-				//if we have already delayed this attack or not.
-				sce->val1 = 0;
-				sce->timer = iTimer->add_timer(iTimer->gettick()+10, status_change_timer, bl->id, type);
-				return 1;
+			switch (type) {
+				//"Ugly workaround"  [Skotlex]
+				//delays status change ending so that a skill that sets opt1 fails to
+				//trigger when it also removed one
+				case SC_STONE:
+					sce->val3 = 0; //Petrify time counter.
+				case SC_FREEZE:
+				case SC_STUN:
+				case SC_SLEEP:
+				if (sce->val1) {
+					//Removing the 'level' shouldn't affect anything in the code
+					//since these SC are not affected by it, and it lets us know
+					//if we have already delayed this attack or not.
+					sce->val1 = 0;
+					sce->timer = iTimer->add_timer(iTimer->gettick()+10, status_change_timer, bl->id, type);
+					return 1;
+				}
 			}
-		}
 	}
 
 	(sc->count)--;
@@ -11417,12 +11409,11 @@ static bool status_readdb_refine(char* fields[], int columns, int current)
 	return true;
 }
 
-static bool status_readdb_scconfig(char* fields[], int columns, int current)
-{
+static bool status_readdb_scconfig(char* fields[], int columns, int current) {
 	int val = 0;
 	char* type = fields[0];
 
-	if( !script_get_constant(type, &val) ){
+	if( !script->get_constant(type, &val) ){
 		ShowWarning("status_readdb_sc_conf: Invalid status type %s specified.\n", type);
 		return false;
 	}

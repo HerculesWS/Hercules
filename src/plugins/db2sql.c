@@ -17,7 +17,7 @@
 HPExport struct hplugin_info pinfo = {
 	"DB2SQL",		// Plugin name
 	SERVER_TYPE_MAP,// Which server types this plugin works with?
-	"0.1",			// Plugin version
+	"0.2",			// Plugin version
 	HPM_VERSION,	// HPM Version (don't change, macro is automatically updated)
 };
 
@@ -107,9 +107,12 @@ CPCMD(db2sql) {
 	/* link */
 	parse_dbrow = itemdb->parse_dbrow;
 	itemdb->parse_dbrow = db2sql;
-	
 	/* empty table */
+#ifdef RENEWAL
+	if ( SQL_ERROR == SQL->Query(mysql_handle, "DELETE FROM `%s`", iMap->item_db_re_db ) )
+#else
 	if ( SQL_ERROR == SQL->Query(mysql_handle, "DELETE FROM `%s`", iMap->item_db_db) )
+#endif
 		Sql_ShowDebug(mysql_handle);
 	else {
 		itemdb->reload();

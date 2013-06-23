@@ -10,7 +10,7 @@
 #include "battle.h" // battle_config
 #include "battleground.h"
 #include "buyingstore.h"  // struct s_buyingstore
-#include "itemdb.h" // MAX_ITEMGROUP
+#include "itemdb.h"
 #include "map.h" // RC_MAX
 #include "script.h" // struct script_reg, struct script_regstr
 #include "searchstore.h"  // struct s_search_store_info
@@ -256,7 +256,6 @@ struct map_session_data {
 	int expaddrace[RC_MAX];
 	int ignore_mdef[RC_MAX];
 	int ignore_def[RC_MAX];
-	int itemgrouphealrate[MAX_ITEMGROUP];
 	short sp_gain_race[RC_MAX];
 	short sp_gain_race_attack[RC_MAX];
 	short hp_gain_race_attack[RC_MAX];

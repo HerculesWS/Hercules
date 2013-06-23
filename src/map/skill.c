@@ -6474,7 +6474,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					return 1;
 				}
 				if( sd ) {
-					int x,bonus=100;
+					int x,bonus=100, potion = min(500+skill_lv,505);
 					x = skill_lv%11 - 1;
 					i = pc->search_inventory(sd,skill_db[skill_id].itemid[x]);
 					if( i < 0 || skill_db[skill_id].itemid[x] <= 0 ) {
@@ -6523,11 +6523,14 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 						}
 					}
 
-					if (sd->itemgrouphealrate[IG_POTION]>0) {
-						hp += hp * sd->itemgrouphealrate[IG_POTION] / 100;
-						sp += sp * sd->itemgrouphealrate[IG_POTION] / 100;
+					for(i = 0; i < ARRAYLENGTH(sd->itemhealrate) && sd->itemhealrate[i].nameid; i++) {
+						if (sd->itemhealrate[i].nameid == potion) {
+							hp += hp * sd->itemhealrate[i].rate / 100;
+							sp += sp * sd->itemhealrate[i].rate / 100;
+							break;
+						}
 					}
-
+					
 					if( (i = pc->skillheal_bonus(sd, skill_id)) ) {
 						hp += hp * i / 100;
 						sp += sp * i / 100;
@@ -9936,7 +9939,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 				int i = skill_lv%11 - 1;
 				struct item_data *item;
 				i = skill_db[skill_id].itemid[i];
-				item = itemdb_search(i);
+				item = itemdb->search(i);
 				potion_flag = 1;
 				potion_hp = 0;
 				potion_sp = 0;
@@ -15925,7 +15928,7 @@ int skill_produce_mix (struct map_session_data *sd, uint16 skill_id, int nameid,
 
 	if( skill_id == RK_RUNEMASTERY ) {
 		int temp_qty, skill_lv = pc->checkskill(sd,skill_id);
-		data = itemdb_search(nameid);
+		data = itemdb->search(nameid);
 
 		if( skill_lv == 10 ) temp_qty = 1 + rnd()%3;
 		else if( skill_lv > 5 ) temp_qty = 1 + rnd()%2;

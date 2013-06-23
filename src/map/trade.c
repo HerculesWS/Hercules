@@ -257,7 +257,7 @@ int trade_check(struct map_session_data *sd, struct map_session_data *tsd)
 			if (amount > inventory[n].amount)
 				return 0; //qty Exploit?
 
-			data = itemdb_search(inventory[n].nameid);
+			data = itemdb->search(inventory[n].nameid);
 			i = MAX_INVENTORY;
 			if (itemdb_isstackable2(data)) { //Stackable item.
 				for(i = 0; i < MAX_INVENTORY; i++)
@@ -288,7 +288,7 @@ int trade_check(struct map_session_data *sd, struct map_session_data *tsd)
 		if (amount > inventory2[n].amount)
 			return 0;
 		// search if it's possible to add item (for full inventory)
-		data = itemdb_search(inventory2[n].nameid);
+		data = itemdb->search(inventory2[n].nameid);
 		i = MAX_INVENTORY;
 		if (itemdb_isstackable2(data)) {
 			for(i = 0; i < MAX_INVENTORY; i++)

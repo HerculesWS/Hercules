@@ -24,9 +24,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-static DBMap* guild_storage_db; // int guild_id -> struct guild_storage*
-
 /*==========================================
  * Sort items in the warehouse
  *------------------------------------------*/
@@ -58,14 +55,13 @@ static void storage_sortitem(struct item* items, unsigned int size)
 /*==========================================
  * Init/Terminate
  *------------------------------------------*/
-int do_init_storage(void) // Called from map.c::do_init()
-{
-	guild_storage_db=idb_alloc(DB_OPT_RELEASE_DATA);
+/* ##TODO not really init_storage but init_gstorage, should rename/move */
+int do_init_storage(void) { // Called from map.c::do_init()
+	gstorage->db = idb_alloc(DB_OPT_RELEASE_DATA);
 	return 1;
 }
-void do_final_storage(void) // by [MC Cameri]
-{
-	guild_storage_db->destroy(guild_storage_db,NULL);
+void do_final_storage(void) { // by [MC Cameri]
+	gstorage->db->destroy(gstorage->db,NULL);
 }
 
 /**
@@ -83,7 +79,7 @@ static int storage_reconnect_sub(DBKey key, DBData *data, va_list ap)
 
 //Function to be invoked upon server reconnection to char. To save all 'dirty' storages [Skotlex]
 void do_reconnect_storage(void) {
-	guild_storage_db->foreach(guild_storage_db, storage_reconnect_sub);
+	gstorage->db->foreach(gstorage->db, storage_reconnect_sub);
 }
 
 /*==========================================
@@ -132,8 +128,7 @@ int compare_item(struct item *a, struct item *b)
 /*==========================================
  * Internal add-item function.
  *------------------------------------------*/
-static int storage_additem(struct map_session_data* sd, struct item* item_data, int amount)
-{
+int storage_additem(struct map_session_data* sd, struct item* item_data, int amount) {
 	struct storage_data* stor = &sd->status.storage;
 	struct item_data *data;
 	int i;
@@ -141,7 +136,7 @@ static int storage_additem(struct map_session_data* sd, struct item* item_data, 
 	if( item_data->nameid <= 0 || amount <= 0 )
 		return 1;
 	
-	data = itemdb_search(item_data->nameid);
+	data = itemdb->search(item_data->nameid);
 
 	if( data->stack.storage && amount > data->stack.amount )
 	{// item stack limitation
@@ -226,7 +221,7 @@ int storage_storageadd(struct map_session_data* sd, int index, int amount)
 	if( amount < 1 || amount > sd->status.inventory[index].amount )
   		return 0;
 
-	if( storage_additem(sd,&sd->status.inventory[index],amount) == 0 )
+	if( storage->additem(sd,&sd->status.inventory[index],amount) == 0 )
 		pc->delitem(sd,index,amount,0,4,LOG_TYPE_STORAGE);
 
 	return 1;
@@ -283,7 +278,7 @@ int storage_storageaddfromcart(struct map_session_data* sd, int index, int amoun
 	if( amount < 1 || amount > sd->status.cart[index].amount )
 		return 0;
 
-	if( storage_additem(sd,&sd->status.cart[index],amount) == 0 )
+	if( storage->additem(sd,&sd->status.cart[index],amount) == 0 )
 		pc->cart_delitem(sd,index,amount,0,LOG_TYPE_STORAGE);
 
 	return 1;
@@ -359,19 +354,17 @@ struct guild_storage *guild2storage(int guild_id)
 {
 	struct guild_storage *gs = NULL;
 	if(guild->search(guild_id) != NULL)
-		gs = idb_ensure(guild_storage_db,guild_id,create_guildstorage);
+		gs = idb_ensure(gstorage->db,guild_id,create_guildstorage);
 	return gs;
 }
 
 //For just locating a storage without creating one. [Skotlex]
-struct guild_storage *guild2storage2(int guild_id)
-{	
-	return (struct guild_storage*)idb_get(guild_storage_db,guild_id);
+struct guild_storage *guild2storage2(int guild_id) {
+	return (struct guild_storage*)idb_get(gstorage->db,guild_id);
 }
 
-int guild_storage_delete(int guild_id)
-{
-	idb_remove(guild_storage_db,guild_id);
+int guild_storage_delete(int guild_id) {
+	idb_remove(gstorage->db,guild_id);
 	return 0;
 }
 
@@ -435,7 +428,7 @@ int guild_storage_additem(struct map_session_data* sd, struct guild_storage* sto
 	if(item_data->nameid <= 0 || amount <= 0)
 		return 1;
 
-	data = itemdb_search(item_data->nameid);
+	data = itemdb->search(item_data->nameid);
 
 	if( data->stack.guildstorage && amount > data->stack.amount )
 	{// item stack limitation
@@ -745,6 +738,7 @@ void storage_defaults(void) {
 	storage->delitem = storage_delitem;
 	storage->open = storage_storageopen;
 	storage->add = storage_storageadd;
+	storage->additem = storage_additem;
 	storage->get = storage_storageget;
 	storage->addfromcart = storage_storageaddfromcart;
 	storage->gettocart = storage_storagegettocart;

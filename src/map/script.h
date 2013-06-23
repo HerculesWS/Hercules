@@ -202,9 +202,6 @@ struct DBMap* script_get_label_db(void);
 struct DBMap* script_get_userfunc_db(void);
 void script_run_autobonus(const char *autobonus,int id, int pos);
 
-bool script_get_constant(const char* name, int* value);
-void script_set_constant(const char* name, int value, bool isparameter);
-
 void script_cleararray_pc(struct map_session_data* sd, const char* varname, void* value);
 void script_setarray_pc(struct map_session_data* sd, const char* varname, uint8 idx, void* value, int* refcache);
 
@@ -357,9 +354,11 @@ struct script_interface {
 	char *str_buf;
 	int str_size; // size of the buffer
 	int str_pos; // next position to be assigned
-	//
+	/* */
 	char *word_buf;
 	int word_size;
+	/*  */
+	unsigned short current_item_id;
 	/*  */
 	void (*init) (void);
 	void (*final) (void);
@@ -376,6 +375,9 @@ struct script_interface {
 	struct script_data* (*push_str) (struct script_stack* stack, enum c_op type, char* str);
 	struct script_data* (*push_copy) (struct script_stack* stack, int pos);
 	void (*pop_stack) (struct script_state* st, int start, int end);
+	void (*set_constant) (const char* name, int value, bool isparameter);
+	void (*set_constant2) (const char *name, int value, bool isparameter);
+	bool (*get_constant) (const char* name, int* value);
 	/* */
 	struct hQueue *(*queue) (int idx);
 	bool (*queue_add) (int idx, int var);

@@ -9,6 +9,7 @@ struct storage_data;
 struct guild_storage;
 struct item;
 struct map_session_data;
+struct DBMap;
 
 struct storage_interface {
 	int (*init) (void);
@@ -20,6 +21,7 @@ struct storage_interface {
 	int (*open) (struct map_session_data *sd);
 	int (*add) (struct map_session_data *sd,int index,int amount);
 	int (*get) (struct map_session_data *sd,int index,int amount);
+	int (*additem) (struct map_session_data* sd, struct item* item_data, int amount);
 	int (*addfromcart) (struct map_session_data *sd,int index,int amount);
 	int (*gettocart) (struct map_session_data *sd,int index,int amount);
 	void (*close) (struct map_session_data *sd);
@@ -28,6 +30,8 @@ struct storage_interface {
 struct storage_interface *storage;
 
 struct guild_storage_interface {
+	struct DBMap* db; // int guild_id -> struct guild_storage*
+	/* */
 	struct guild_storage *(*id2storage) (int guild_id);
 	struct guild_storage *(*id2storage2) (int guild_id);
 	int (*delete) (int guild_id);

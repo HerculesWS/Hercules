@@ -73,6 +73,7 @@ enum packet_headers {
 	authokType = 0x2eb,
 #endif
 	script_clearType = 0x8d6,
+	package_item_announceType = 0x7fd,
 #if PACKETVER < 4
 	unit_walkingType = 0x7b,
 #elif PACKETVER < 7
@@ -459,6 +460,15 @@ struct packet_script_clear {
 	unsigned int NpcID;
 } __attribute__((packed));
 
+struct packet_package_item_announce {
+	short PacketType;
+	short PacketLength;
+	unsigned char type;
+	unsigned short ItemID;
+	char len;
+	char Name[NAME_LENGTH];
+	unsigned short BoxItemID;
+} __attribute__((packed));
 
 #pragma pack(pop)
 
