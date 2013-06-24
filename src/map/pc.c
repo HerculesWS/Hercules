@@ -4704,7 +4704,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 
 	nullpo_ret(sd);
 
-	if( !mapindex || !mapindex_id2name(mapindex) ) {
+	if( !mapindex || !mapindex_id2name(mapindex) || ( m = iMap->mapindex2mapid(mapindex) ) == -1 ) {
 		ShowDebug("pc_setpos: Passed mapindex(%d) is invalid!\n", mapindex);
 		return 1;
 	}
@@ -4713,7 +4713,6 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		pc->setstand(sd);
 		pc->setrestartvalue(sd,1);
 	}
-	m = iMap->mapindex2mapid(mapindex);
 
 	if( map[m].flag.src4instance ) {
 		struct party_data *p;
