@@ -17,7 +17,7 @@
 HPExport struct hplugin_info pinfo = {
 	"DB2SQL",		// Plugin name
 	SERVER_TYPE_MAP,// Which server types this plugin works with?
-	"0.2",			// Plugin version
+	"0.3",			// Plugin version
 	HPM_VERSION,	// HPM Version (don't change, macro is automatically updated)
 };
 
@@ -97,6 +97,11 @@ int db2sql(char** str, const char* source, int line, int scriptopt) {
 }
 
 CPCMD(db2sql) {
+	
+	if( iMap->db_use_sqldbs ) {
+		ShowInfo("db2sql: this should not be used with 'db_use_sqldbs' enabled, skipping...\n");
+		return;
+	}
 	
 	stmt = SQL->StmtMalloc(mysql_handle);
 	if( stmt == NULL ) {
