@@ -3,13 +3,14 @@
 //===== By: ================================================== 
 //= Masao
 //===== Current Version: ===================================== 
-//= 1.0
+//= 1.1
 //===== Compatible With: ===================================== 
 //= Hercules
 //===== Description: ========================================= 
 //= Many Port Malaya NPC's & Quests.
 //===== Additional Comments: ================================= 
 //= 1.0 First Version.
+//= 1.1 Added Jeepney script. [DeadlySilence]
 //============================================================ 
 
 malaya,276,55,4	script	Optamara Crew#malaya	100,{
@@ -1517,4 +1518,249 @@ malaya,63,185,4	script	Woman#ma08	583,{
 	mes "[Woman]";
 	mes "there is rumor that the monster came from the soul of a baby that never been born. So sad.";
 	close;
+}
+
+function	script	F_Malaya_Jeepney	{
+	.@mapName$        = getarg(0);
+	.@passengers      = getarg(1);
+
+	// set the other messages of varying amount)
+	for (.@i = 5; .@i < getargcount(); .@i++) {
+		setd(".@msgJeepneyInfo$[" + (.@i - 5) + "]", getarg(.@i));
+	}
+
+	if (malaya_hi < 10) {
+		mes "[Jeepney Driver]";
+		mes getarg(2);
+		close;
+	} else if ((malaya_hi >= 10) && (malaya_hi < 20)) {
+		mes "[Jeepney Driver]";
+		mes getarg(3);
+		close;
+	} else {
+		mes "[Jeepney Driver]";
+		mes getarg(4);
+		next;
+	}
+	switch (select("Board [Passenger " + getmapusers(.@mapName$) + "/" + .@passengers +"]:Jeepney?:Are there any other Jeepneys?:Ah... Yes...")) {
+	case 1:
+		if (getmapusers(.@mapName$) >= .@passengers) {
+			mes "[Jeepney Driver]";
+			mes "I'm afraid the Jeepney is full.";
+			mes "I'm sorry but how about some other Jeepney?";
+			close;
+		} else {
+			mes "[Jeepney Driver]";
+			mes "Have a nice day.";
+			close2;
+			warp .@mapName$,29,24;
+			end;
+		}
+	case 2:
+		// iterate through all the jeepney information for this specific NPC
+		for (.@i = 0; .@i < getarraysize(.@msgJeepneyInfo$); .@i++) {
+			// write the name as well as the individual message
+			mes "[Jeepney Driver]";
+			mes getd(".@msgJeepneyInfo$[" + .@i + "]");
+			
+			if (.@i < (getarraysize(.@msgJeepneyInfo$) - 1)) {
+				next;
+			}
+		}
+		close;
+	case 3:
+		mes "[Jeepney Driver]";
+		mes "Oh! Other Jeepneys are in operation, of course.";
+		next;
+		mes "[Jeepney Driver]";
+		mes "In Port Malaya there are 12, 30 and 60 passenger Jeepneys with 3 each operating.";
+		next;
+		mes "[Jeepney Driver]";
+		mes "Would you like to know the location of other cars?";
+		next;
+		switch (select("I'd like to know where the 12 passenger car is.:I'd like to know where the 30 passenger car is.:I'd like to know where the 60 passenger car is.")) {
+		case 1:
+			viewpoint 1, 237, 240, 1, 0xF7E009;
+			viewpoint 1, 67 , 44 , 2, 0xF7E009;
+			viewpoint 1, 282, 129, 3, 0xF7E009;
+			set .@zif_in, 12;
+			break;
+		case 2:
+			viewpoint 1, 134, 250, 4, 0xF7E009;
+			viewpoint 1, 341, 153, 5, 0xF7E009;
+			viewpoint 1, 293, 290, 6, 0xF7E009;
+			set .@zif_in, 30;
+			break;
+		case 3:
+			viewpoint 1, 242, 221, 7, 0xF7E009;
+			viewpoint 1, 62 , 245, 8, 0xF7E009;
+			viewpoint 1, 257, 58 , 9, 0xF7E009;
+			set .@zif_in, 60;
+			break;
+		}
+		mes "[Jeepney Driver]";
+		mes .@zif_in+" passenger Jeepney's location has been marked on your map.";
+		next;
+		break;
+	}
+	mes "[Jeepney Driver]";
+	mes "Have a nice trip.";
+	close;
+}
+
+malaya,237,240,4	script	Jeepney Driver#01	582,{
+	callfunc(
+		"F_Malaya_Jeepney", // function to call
+		"ma_zif01", // name of the map to warp to
+		12, // amount of possible jeepney passengers
+		
+		"UUrgghhhh.... I'm scared... so scared... what happened to this place?", // message for 10 > malaya_hi
+		"The place is still a mess... I wonder if I can operate a jeepney here...", // message for 10 >= malaya_hi < 20
+		"Ha ha ha Welcome. I am ^1561EAVol^000000, operating the 12 man Jeepney here.", // message for 20 < malaya_hi
+		
+		"Is this your first time in Port Malaya?", // first entry for the monologue of variable length
+		"Jeepney drivers here also promote Jeepneys, so let me explain them to you.",
+		"Jeepneys were first developed to transport goods quickly, but are now used as public transport.",
+		"Since everybody has different tastes, you can see those with cool and elaborate decorations.",
+		"Of course you don't need to drive them yourselves, but you can ride them so please feel free to do so."
+	);
+}
+
+malaya,67,44,4	script	Jeepney Driver#02	582,{
+	callfunc(
+		"F_Malaya_Jeepney", // function to call
+		"ma_zif02", // name of the map to warp to
+		12, // amount of possible jeepney passengers
+		
+		"Wha... What's... Going on in that hospital...", // message for 10 > malaya_hi
+		"I think the moaning coming from the hospital has lessened...", // message for 10 >= malaya_hi < 20
+		"I'm ^1561EAChui^000000, operating a 12 man Jeepney. Hi there~", // message for 20 < malaya_hi
+		
+		"Is this your first time in Port Malaya?", // first entry for the monologue of variable length
+		"Jeepney drivers here also promote Jeepneys, so let me explain them to you.",
+		"Jeepneys were first developed to transport goods quickly, but are now used as public transport.",
+		"I modified my Jeepney myself...",
+		"For safety reasons there's a limit to the number of passengers, and it's safe so no worries..."
+	);
+}
+
+malaya,282,129,4	script	Jeepney Driver#03	582,{
+	callfunc(
+		"F_Malaya_Jeepney", // function to call
+		"ma_zif03", // name of the map to warp to
+		12, // amount of possible jeepney passengers
+		
+		"It's not good for outsiders to have a chat... Perhaps the Mumbaki Leader may have the solution for this.", // message for 10 > malaya_hi
+		"Are you the adventurer who recently met Mumbaki? No wait... Then you shouldn't be here... Yes it's a ghost... Arghhhh...", // message for 10 >= malaya_hi < 20
+		"The name's ^1561EATop^000000, operating one of the 3 12 man Jeepneys in town.", // message for 20 < malaya_hi
+		
+		"First time in town?", // first entry for the monologue of variable length
+		"Jeepney drivers here also promote Jeepneys, so let me explain them to you.",
+		"Jeepneys were first developed to transport goods quickly, but are now used as public transport.",
+		"They all look different depending on their drivers...",
+		"Now it is the fame of Port Malaya."
+	);
+}
+
+malaya,134,250,6	script	Jeepney Driver#04	582,{
+	callfunc(
+		"F_Malaya_Jeepney", // function to call
+		"ma_zif04", // name of the map to warp to
+		30, // amount of possible jeepney passengers
+		
+		"G...Go... Go away...", // message for 10 > malaya_hi
+		"Arghh... Scared the devil out of me... Go away... Shoo...", // message for 10 >= malaya_hi < 20
+		"^1561EABrav^000000, 30 man Jeepney driver at your service, driving as safely as I can since I get scared easily.", // message for 20 < malaya_hi
+		
+		"Is this your first time in Port Malaya?", // first entry for the monologue of variable length
+		"Jeepneys were first developed to transport goods quickly, but are now used as public transport.",
+		"The modified cars are decorated by their operators.",
+		"You come to Port Malaya, you must ride a Jeepney.",
+		"Ha ha ha, of course you can't drive it yourself."
+	);
+}
+
+malaya,341,153,4	script	Jeepney Driver#05	582,{
+	callfunc(
+		"F_Malaya_Jeepney", // function to call
+		"ma_zif05", // name of the map to warp to
+		30, // amount of possible jeepney passengers
+		
+		"G... Ghosts in town... Hey... Do you have one on you?", // message for 10 > malaya_hi
+		"I think there are fewer ghosts now... The town is slightly quieter...", // message for 10 >= malaya_hi < 20
+		"Hi I'm ^1561EALivil^000000 operator for the 30 man Jeepney. Safety is my priority.", // message for 20 < malaya_hi
+		
+		"First time in town?", // first entry for the monologue of variable length
+		"I'll give you a quick guide as a service.",
+		"Jeepneys were first developed to transport goods quickly, but are now used as public transport.",
+		"For safety reasons, Jeepneys have a limit on the number of passengers.",
+		"Some carried 180 people, but there aren't any of those in Port Malaya today."
+	);
+}
+
+malaya,293,290,6	script	Jeepney Driver#06	582,{
+	callfunc(
+		"F_Malaya_Jeepney", // function to call
+		"ma_zif06", // name of the map to warp to
+		30, // amount of possible jeepney passengers
+		
+		"Gu... Guards... What are the guards doing...", // message for 10 > malaya_hi
+		"Did the guards finally do something? Phew... What a rush...", // message for 10 >= malaya_hi < 20
+		"I'm ^1561EAGad^000000, the trustworthy 30 man Jeepney driver.", // message for 20 < malaya_hi
+		
+		"I see you're new to this town.", // first entry for the monologue of variable length
+		"To guide travelers is also my task!! Let me explain.",
+		"Jeepneys were goods transport vehicles, now decorated and modified with Port Malaya's new technology!!",
+		"This Jeepney is my very own handiwork. Ha ha ha... It's cool right? Ha ha ha",
+		"Even though the customer is king, I can't let you drive it... Ha ha ha"
+	);
+}
+
+malaya,242,221,4	script	Jeepney Driver#07	582,{
+	callfunc(
+		"F_Malaya_Jeepney", // function to call
+		"ma_zif07", // name of the map to warp to
+		60, // amount of possible jeepney passengers
+		
+		"Oh no... I think the whole village is bewitched by ghosts... Maybe... I should give the Mumbaki Leader a visit...", // message for 10 > malaya_hi
+		"Ghost... I'm sure the Mumbaki Leader knows how to get rid of these ghosts...", // message for 10 >= malaya_hi < 20
+		"^1561EAHott^000000, at your service, the safest 60 man Jeepney Operator.", // message for 20 < malaya_hi
+		
+		"Jeepney is the public transportation of Port Malaya.", // first entry for the monologue of variable length
+		"Therefore they are everywhere. And it's free! I know they all have different passenger limits, but that's no problem because they're everywhere."
+	);
+}
+
+malaya,62,245,6	script	Jeepney Driver#08	582,{
+	callfunc(
+		"F_Malaya_Jeepney", // function to call
+		"ma_zif08", // name of the map to warp to
+		60, // amount of possible jeepney passengers
+		
+		"Shoo~ Be gone if you're a ghost, and go away even if you're human~ Shoo~", // message for 10 > malaya_hi
+		"Hey... You... Are human right? Right? Huh? Say you are... Please...", // message for 10 >= malaya_hi < 20
+		"Hullo, I'm ^1561EAMuyan^000000, operator of this 60 man Jeepney. Nice to meet you.", // message for 20 < malaya_hi
+		
+		"Jeepneys are public transport, so safety is our priority.", // first entry for the monologue of variable length
+		"My Jeepney received the best class of Port Malaya, a '60 man Jeepney' certificate.",
+		"Meaning!! That it is perfectly safe!! Don't you worry about the ride."
+	);
+}
+
+malaya,257,58,6	script	Jeepney Driver#09	582,{
+	callfunc(
+		"F_Malaya_Jeepney", // function to call
+		"ma_zif09", // name of the map to warp to
+		60, // amount of possible jeepney passengers
+		
+		"...You're an outsider... Don't go touching anything and be careful in town...", // message for 10 > malaya_hi
+		"The town is still quite dangerous. Best not touch anything until it is safe.", // message for 10 >= malaya_hi < 20
+		"Hi there. I'm ^1561EAGramma^000000, Operator of the 60 man Jeepney of Port Malaya.", // message for 20 < malaya_hi
+		
+		"Is this your first time in Port Malaya?", // first entry for the monologue of variable length
+		"We Jeepney drivers here also promote Jeepneys, so let me explain them to you.",
+		"Jeepneys were first developed to transport goods quickly, but are now used as public transport.",
+		"Since everybody have different tastes, you can see those with cool and elaborate decorations.",
+		"Of course you don't need to drive them yourselves, but you can ride them so please feel free to do so."
+	);
 }
