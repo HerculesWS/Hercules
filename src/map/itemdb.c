@@ -760,7 +760,7 @@ void itemdb_read_packages(void) {
 		int r = 0, m = 0;
 		
 		data->package = &itemdb->packages[count];
-				
+		
 		itemdb->packages[count].id  = data->nameid;
 		itemdb->packages[count].random_list = NULL;
 		itemdb->packages[count].must_items = NULL;
@@ -814,7 +814,9 @@ void itemdb_read_packages(void) {
 				
 				itemdb->packages[count].random_list[r].id = data ? data->nameid : 0;
 				itemdb->packages[count].random_list[r].qty = icount;
-				itemdb->packages[count].random_list[r].rate = rate;
+				if( (itemdb->packages[count].random_list[r].rate = rate) == 10000 ) {
+					ShowWarning("itemdb_read_packages: item '%s' in '%s' has 100% drop rate!! set this item as 'Random: false' or other items won't drop!!!\n",itname,config_setting_name(itg));
+				}
 				itemdb->packages[count].random_list[r].hours = expire;
 				itemdb->packages[count].random_list[r].announce = announce == true ? 1 : 0;
 				itemdb->packages[count].random_list[r].named = named == true ? 1 : 0;

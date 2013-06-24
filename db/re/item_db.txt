@@ -6097,12 +6097,12 @@
 12986,Pet_Egg_Scroll_Box9,Adventurer Pack Box,18,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 12992,1; },{},{}
 12987,Pet_Egg_Scroll_Box10,Pet Egg Scroll Box 10,18,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 12993,1; },{},{}
 12988,Pet_Egg_Scroll_Box11,Pet Egg Scroll Box 11,18,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 12994,1; },{},{}
-12989,Pet_Egg_Scroll6,Pet Egg Scroll 6,11,,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ packageitem(); },{},{}
-12990,Pet_Egg_Scroll7,Pet Egg Scroll 7,11,,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ packageitem(); },{},{}
-12991,Pet_Egg_Scroll8,Party Hard Pack,11,,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ packageitem(); },{},{}
-12992,Pet_Egg_Scroll9,Adventurer Pack,11,,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ packageitem(); },{},{}
-12993,Pet_Egg_Scroll10,Pet Egg Scroll 10,11,,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ packageitem(); },{},{}
-12994,Pet_Egg_Scroll11,Pet Egg Scroll 11,11,,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ packageitem(); },{},{}
+12989,Pet_Egg_Scroll6,Pet Egg Scroll 6,2,,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ packageitem(); },{},{}
+12990,Pet_Egg_Scroll7,Pet Egg Scroll 7,2,,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ packageitem(); },{},{}
+12991,Pet_Egg_Scroll8,Party Hard Pack,2,,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ packageitem(); },{},{}
+12992,Pet_Egg_Scroll9,Adventurer Pack,2,,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ packageitem(); },{},{}
+12993,Pet_Egg_Scroll10,Pet Egg Scroll 10,2,,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ packageitem(); },{},{}
+12994,Pet_Egg_Scroll11,Pet Egg Scroll 11,2,,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ packageitem(); },{},{}
 12995,White_Herb_Box,White Herb Box,18,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 509,15; },{},{}
 12996,Blue_Herb_Box,Blue Herb Box,18,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 510,15; },{},{}
 12997,Elunium_Box,Elunium Box,18,20,,10,,,,,0xFFFFFFFF,7,2,,,,,,{ getitem 985,5; },{},{}
