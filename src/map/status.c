@@ -8814,6 +8814,27 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			if (battle_config.sc_castcancel&bl->type)
 				unit_skillcastcancel(bl, 0);
 		break;
+		/* */
+		case SC_ITEMSCRIPT:
+			if( sd ) {
+				switch( val1 ) {
+					//case 4121://Phree
+					//case 4047://Ghostring
+					case 4302://Gunka
+						clif->status_change(bl,SI_MVPCARD_TAOGUNKA,1,tick,0,0,0);
+						break;
+					case 4132://Mistress
+						clif->status_change(bl,SI_MVPCARD_MISTRESS,1,tick,0,0,0);
+						break;
+					case 4143://Orc Hero
+						clif->status_change(bl,SI_MVPCARD_ORCHERO,1,tick,0,0,0);
+						break;
+					case 4135://Orc Lord
+						clif->status_change(bl,SI_MVPCARD_ORCLORD,1,tick,0,0,0);
+						break;
+				}
+			}
+			break;
 	}
 
 	// Set option as needed.
@@ -9245,7 +9266,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 	
 	vd = status_get_viewdata(bl);
 	calc_flag = StatusChangeFlagTable[type];
-	switch(type){
+	switch(type) {
         case SC_GRANITIC_ARMOR:{
             int dammage = status->max_hp*sce->val3/100;
             if(status->hp < dammage) //to not kill him
@@ -9656,6 +9677,26 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			break;
 		case SC_FULL_THROTTLE:
 			sc_start(bl,SC_REBOUND,100,sce->val1,skill->get_time2(ALL_FULL_THROTTLE,sce->val1));
+			break;
+		case SC_ITEMSCRIPT:
+			if( sd ) {
+				switch( sce->val1 ) {
+					//case 4121://Phree
+					//case 4047://Ghostring
+					case 4302://Gunka
+						clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_MVPCARD_TAOGUNKA);
+						break;
+					case 4132://Mistress
+						clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_MVPCARD_MISTRESS);
+						break;
+					case 4143://Orc Hero
+						clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_MVPCARD_ORCHERO);
+						break;
+					case 4135://Orc Lord
+						clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_MVPCARD_ORCLORD);
+						break;
+				}
+			}
 			break;
 		}
 
