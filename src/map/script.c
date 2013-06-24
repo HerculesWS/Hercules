@@ -16105,27 +16105,33 @@ BUILDIN(has_instance) {
 		int i = 0, j = 0;
 		if( sd->instances ) {
 			for( i = 0; i < sd->instances; i++ ) {
-				ARR_FIND(0, instances[sd->instance[i]].num_map, j, map[instances[sd->instance[i]].map[j]].instance_src_map == m);
-				if( j != instances[sd->instance[i]].num_map )
-					break;
+				if( sd->instance[i] >= 0 ) {
+					ARR_FIND(0, instances[sd->instance[i]].num_map, j, map[instances[sd->instance[i]].map[j]].instance_src_map == m);
+					if( j != instances[sd->instance[i]].num_map )
+						break;
+				}
 			}
 			if( i != sd->instances )
 				instance_id = sd->instance[i];
 		}
 		if( instance_id == -1 && sd->status.party_id && (p = party->search(sd->status.party_id)) && p->instances ) {
 			for( i = 0; i < p->instances; i++ ) {
-				ARR_FIND(0, instances[p->instance[i]].num_map, j, map[instances[p->instance[i]].map[j]].instance_src_map == m);
-				if( j != instances[p->instance[i]].num_map )
-					break;
+				if( p->instance[i] >= 0 ) {
+					ARR_FIND(0, instances[p->instance[i]].num_map, j, map[instances[p->instance[i]].map[j]].instance_src_map == m);
+					if( j != instances[p->instance[i]].num_map )
+						break;
+				}
 			}
 			if( i != p->instances )
 				instance_id = p->instance[i];
 		}
 		if( instance_id == -1 && sd->guild && sd->guild->instances ) {
 			for( i = 0; i < sd->guild->instances; i++ ) {
-				ARR_FIND(0, instances[sd->guild->instance[i]].num_map, j, map[instances[sd->guild->instance[i]].map[j]].instance_src_map == m);
-				if( j != instances[sd->guild->instance[i]].num_map )
-					break;
+				if( sd->guild->instance[i] >= 0 ) {
+					ARR_FIND(0, instances[sd->guild->instance[i]].num_map, j, map[instances[sd->guild->instance[i]].map[j]].instance_src_map == m);
+					if( j != instances[sd->guild->instance[i]].num_map )
+						break;
+				}
 			}
 			if( i != sd->guild->instances )
 				instance_id = sd->guild->instance[i];

@@ -482,7 +482,7 @@ struct map_session_data {
 	struct sc_display_entry **sc_display;
 	unsigned char sc_display_count;
 	
-	unsigned short *instance;
+	short *instance;
 	unsigned short instances;
 	
 	/* Possible Thanks to Yommy~! */

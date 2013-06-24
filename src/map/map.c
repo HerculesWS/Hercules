@@ -5006,8 +5006,6 @@ void do_final(void)
 		iMap->quit(sd);
 	mapit->free(iter);
 
-	instance->final();
-
 	/* prepares npcs for a faster shutdown process */
 	do_clear_npc();
 
@@ -5031,6 +5029,7 @@ void do_final(void)
 	do_final_npc();
 	script->final();
 	itemdb->final();
+	instance->final();
 	storage->final();
 	guild->final();
 	party->do_final_party();
