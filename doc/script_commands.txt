@@ -182,8 +182,8 @@ There are two optional fields for monster size and AI. Size can be 0
 (medium), 1 (small), or 2 (big). AI can be 0 (default), 1 
 (attack/friendly), 2 (sphere), 3 (flora), or 4 (zanzou).
 
-Alternately, a monster spawned using 'boss_monster' instead of 'monster' is able
-to be detected on the map with the SC_CASH_BOSS_ALARM status (used by Convex Mirror,  item ID# 12214).
+Alternately, a monster spawned using 'boss_monster' instead of 'monster' is able to be 
+detected on the map with the SC_CASH_BOSS_ALARM status (used by Convex Mirror, item ID# 12214).
 
 ** NPC names
 
@@ -4533,29 +4533,37 @@ Check 'getitem2' to understand the arguments of the function.
     
 ---------------------------------------
 
-*groupranditem <group id>;
+*groupranditem <item_id/constant>;
 
-Returns the item_id of a random item picked from the group specified. The 
-different groups and their group number are specified in 
-'db/(pre-)re/item_group_db.txt'.
+Returns the item_id of a random item picked from the item container specified. There
+are different item containers and they are specified in 'db/(pre-)re/item_group.conf'.
 
-When used in conjunction with other functions, you can get a random item. 
-For example, for a random pet lure:
-
-getitem groupranditem(15),1;
+Example:
+   getitem groupranditem 603,1;
+   getitem groupranditem Old_Blue_Box,1;
 
 ---------------------------------------
 
-*getrandgroupitem <group id>,<quantity>;
+*getrandgroupitem <item_id/constant>,<quantity>;
 
-Similar to the above example, this command allows players to obtain the 
-specified quantity of a random item from the group "<group id>". The 
-different groups and their group number are specified in 
-db/(pre-)re/item_group_db.txt
+Similar to the above example, this command allows players to obtain the specified
+quantity of a random item from the container. The different containers
+are specified in 'db/(pre-)re/item_group.conf'.
 
-For example, obtaining three of the same random item from Old Blue Box:
+Example:
+   getrandgroupitem Old_Blue_Box,1;
+   getrandgroupitem 603,1;
 
-getrandgroupitem(1,3);
+---------------------------------------
+
+*packageitem
+
+This command has only 1 param which is optional. If the package item_id is not provided, it
+will try to use the item id from the item it is being used from (if called from an item script). 
+It runs a item package and grants the items accordingly to the attached player.
+
+Example:
+  12281,Tresure_Box_WoE,Event Treasure Box,2,20,,150,,,,,0xFFFFFFFF,7,2,,,,,,{ packageitem(); },{},{}
 
 ---------------------------------------
 
