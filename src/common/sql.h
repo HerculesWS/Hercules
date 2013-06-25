@@ -142,6 +142,132 @@ struct sql_interface {
 	void (*Free) (Sql* self);
 	/// Allocates and initializes a new Sql handle.
 	struct Sql *(*Malloc) (void);
+
+
+
+	///////////////////////////////////////////////////////////////////////////////
+	// Prepared Statements
+	///////////////////////////////////////////////////////////////////////////////
+	// Parameters are placed in the statement by embedding question mark ('?') 
+	// characters into the query at the appropriate positions.
+	// The markers are legal only in places where they represent data.
+	// The markers cannot be inside quotes. Quotes will be added automatically 
+	// when they are required.
+	//
+	// example queries with parameters:
+	// 1) SELECT col FROM table WHERE id=?
+	// 2) INSERT INTO table(col1,col2) VALUES(?,?)
+
+
+	/*=====================================
+	SQL Statement interface [Susu]
+	*-------------------------------------*/
+
+	/// Allocates and initializes a new SqlStmt handle.
+	/// It uses the connection of the parent Sql handle.
+	/// Queries in Sql and SqlStmt are independent and don't affect each other.
+	///
+	/// @return SqlStmt handle or NULL if an error occured
+	struct SqlStmt* (*StmtMalloc)(Sql* sql);
+
+
+
+	/// Prepares the statement.
+	/// Any previous result is freed and all parameter bindings are removed.
+	/// The query is constructed as if it was sprintf.
+	///
+	/// @return SQL_SUCCESS or SQL_ERROR
+	int (*StmtPrepare)(SqlStmt* self, const char* query, ...);
+
+	/// Prepares the statement.
+	/// Any previous result is freed and all parameter bindings are removed.
+	/// The query is constructed as if it was svprintf.
+	///
+	/// @return SQL_SUCCESS or SQL_ERROR
+	int (*StmtPrepareV)(SqlStmt* self, const char* query, va_list args);
+
+
+
+	/// Prepares the statement.
+	/// Any previous result is freed and all parameter bindings are removed.
+	/// The query is used directly.
+	///
+	/// @return SQL_SUCCESS or SQL_ERROR
+	int (*StmtPrepareStr)(SqlStmt* self, const char* query);
+
+
+
+	/// Returns the number of parameters in the prepared statement.
+	///
+	/// @return Number or paramenters
+	size_t (*StmtNumParams)(SqlStmt* self);
+
+
+
+	/// Binds a parameter to a buffer.
+	/// The buffer data will be used when the statement is executed.
+	/// All parameters should have bindings.
+	///
+	/// @return SQL_SUCCESS or SQL_ERROR
+	int (*StmtBindParam)(SqlStmt* self, size_t idx, SqlDataType buffer_type, void* buffer, size_t buffer_len);
+
+
+
+	/// Executes the prepared statement.
+	/// Any previous result is freed and all column bindings are removed.
+	///
+	/// @return SQL_SUCCESS or SQL_ERROR
+	int (*StmtExecute)(SqlStmt* self);
+
+
+
+	/// Returns the number of the AUTO_INCREMENT column of the last INSERT/UPDATE statement.
+	///
+	/// @return Value of the auto-increment column
+	uint64 (*StmtLastInsertId)(SqlStmt* self);
+
+
+
+	/// Returns the number of columns in each row of the result.
+	///
+	/// @return Number of columns
+	size_t (*StmtNumColumns)(SqlStmt* self);
+
+
+
+	/// Binds the result of a column to a buffer.
+	/// The buffer will be filled with data when the next row is fetched.
+	/// For string/enum buffer types there has to be enough space for the data 
+	/// and the nul-terminator (an extra byte).
+	///
+	/// @return SQL_SUCCESS or SQL_ERROR
+	int (*StmtBindColumn)(SqlStmt* self, size_t idx, SqlDataType buffer_type, void* buffer, size_t buffer_len, uint32* out_length, int8* out_is_null);
+
+
+
+	/// Returns the number of rows in the result.
+	///
+	/// @return Number of rows
+	uint64 (*StmtNumRows)(SqlStmt* self);
+
+
+
+	/// Fetches the next row.
+	/// All column bindings will be filled with data.
+	///
+	/// @return SQL_SUCCESS, SQL_ERROR or SQL_NO_DATA
+	int (*StmtNextRow)(SqlStmt* self);
+
+
+
+	/// Frees the result of the statement execution.
+	void (*StmtFreeResult)(SqlStmt* self);
+
+	/// Frees a SqlStmt returned by SqlStmt_Malloc.
+	void (*StmtFree)(SqlStmt* self);
+
+	void (*StmtShowDebug_)(SqlStmt* self, const char* debug_file, const unsigned long debug_line);
+
 } sql_s;
 
 struct sql_interface *SQL;
@@ -149,138 +275,24 @@ struct sql_interface *SQL;
 void sql_defaults(void);
 
 #if defined(SQL_REMOVE_SHOWDEBUG)
-	#define Sql_ShowDebug(self) (void)0
+#define Sql_ShowDebug(self) (void)0
 #else
-	#define Sql_ShowDebug(self) SQL->ShowDebug_(self, __FILE__, __LINE__)
+#define Sql_ShowDebug(self) SQL->ShowDebug_(self, __FILE__, __LINE__)
 #endif
-
-///////////////////////////////////////////////////////////////////////////////
-// Prepared Statements
-///////////////////////////////////////////////////////////////////////////////
-// Parameters are placed in the statement by embedding question mark ('?') 
-// characters into the query at the appropriate positions.
-// The markers are legal only in places where they represent data.
-// The markers cannot be inside quotes. Quotes will be added automatically 
-// when they are required.
-//
-// example queries with parameters:
-// 1) SELECT col FROM table WHERE id=?
-// 2) INSERT INTO table(col1,col2) VALUES(?,?)
-
-/// Allocates and initializes a new SqlStmt handle.
-/// It uses the connection of the parent Sql handle.
-/// Queries in Sql and SqlStmt are independent and don't affect each other.
-///
-/// @return SqlStmt handle or NULL if an error occured
-struct SqlStmt* SqlStmt_Malloc(Sql* sql);
-
-
-
-/// Prepares the statement.
-/// Any previous result is freed and all parameter bindings are removed.
-/// The query is constructed as if it was sprintf.
-///
-/// @return SQL_SUCCESS or SQL_ERROR
-int SqlStmt_Prepare(SqlStmt* self, const char* query, ...);
-
-/// Prepares the statement.
-/// Any previous result is freed and all parameter bindings are removed.
-/// The query is constructed as if it was svprintf.
-///
-/// @return SQL_SUCCESS or SQL_ERROR
-int SqlStmt_PrepareV(SqlStmt* self, const char* query, va_list args);
-
-
-
-/// Prepares the statement.
-/// Any previous result is freed and all parameter bindings are removed.
-/// The query is used directly.
-///
-/// @return SQL_SUCCESS or SQL_ERROR
-int SqlStmt_PrepareStr(SqlStmt* self, const char* query);
-
-
-
-/// Returns the number of parameters in the prepared statement.
-///
-/// @return Number or paramenters
-size_t SqlStmt_NumParams(SqlStmt* self);
-
-
-
-/// Binds a parameter to a buffer.
-/// The buffer data will be used when the statement is executed.
-/// All parameters should have bindings.
-///
-/// @return SQL_SUCCESS or SQL_ERROR
-int SqlStmt_BindParam(SqlStmt* self, size_t idx, SqlDataType buffer_type, void* buffer, size_t buffer_len);
-
-
-
-/// Executes the prepared statement.
-/// Any previous result is freed and all column bindings are removed.
-///
-/// @return SQL_SUCCESS or SQL_ERROR
-int SqlStmt_Execute(SqlStmt* self);
-
-
-
-/// Returns the number of the AUTO_INCREMENT column of the last INSERT/UPDATE statement.
-///
-/// @return Value of the auto-increment column
-uint64 SqlStmt_LastInsertId(SqlStmt* self);
-
-
-
-/// Returns the number of columns in each row of the result.
-///
-/// @return Number of columns
-size_t SqlStmt_NumColumns(SqlStmt* self);
-
-
-
-/// Binds the result of a column to a buffer.
-/// The buffer will be filled with data when the next row is fetched.
-/// For string/enum buffer types there has to be enough space for the data 
-/// and the nul-terminator (an extra byte).
-///
-/// @return SQL_SUCCESS or SQL_ERROR
-int SqlStmt_BindColumn(SqlStmt* self, size_t idx, SqlDataType buffer_type, void* buffer, size_t buffer_len, uint32* out_length, int8* out_is_null);
-
-
-
-/// Returns the number of rows in the result.
-///
-/// @return Number of rows
-uint64 SqlStmt_NumRows(SqlStmt* self);
-
-
-
-/// Fetches the next row.
-/// All column bindings will be filled with data.
-///
-/// @return SQL_SUCCESS, SQL_ERROR or SQL_NO_DATA
-int SqlStmt_NextRow(SqlStmt* self);
-
-
-
-/// Frees the result of the statement execution.
-void SqlStmt_FreeResult(SqlStmt* self);
 
 void Sql_HerculesUpdateCheck(Sql* self);
 
 #if defined(SQL_REMOVE_SHOWDEBUG)
-	#define SqlStmt_ShowDebug(self) (void)0
+#define SqlStmt_ShowDebug(self) (void)0
 #else
-	#define SqlStmt_ShowDebug(self) SqlStmt_ShowDebug_(self, __FILE__, __LINE__)
+#define SqlStmt_ShowDebug(self) SQL->StmtShowDebug_(self, __FILE__, __LINE__)
 #endif
 /// Shows debug information (with statement).
-void SqlStmt_ShowDebug_(SqlStmt* self, const char* debug_file, const unsigned long debug_line);
 
 
 
-/// Frees a SqlStmt returned by SqlStmt_Malloc.
-void SqlStmt_Free(SqlStmt* self);
+
+
 
 void Sql_Init(void);
 

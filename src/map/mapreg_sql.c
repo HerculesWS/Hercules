@@ -140,25 +140,25 @@ static void script_load_mapreg(void) {
 	   | varname | index | value |
 	   +-------------------------+
 	                                */
-	SqlStmt* stmt = SqlStmt_Malloc(mmysql_handle);
+	SqlStmt* stmt = SQL->StmtMalloc(mmysql_handle);
 	char varname[32+1];
 	int index;
 	char value[255+1];
 	uint32 length;
 
-	if ( SQL_ERROR == SqlStmt_Prepare(stmt, "SELECT `varname`, `index`, `value` FROM `%s`", mapreg_table)
-	  || SQL_ERROR == SqlStmt_Execute(stmt)
+	if ( SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `varname`, `index`, `value` FROM `%s`", mapreg_table)
+	  || SQL_ERROR == SQL->StmtExecute(stmt)
 	  ) {
 		SqlStmt_ShowDebug(stmt);
-		SqlStmt_Free(stmt);
+		SQL->StmtFree(stmt);
 		return;
 	}
 
-	SqlStmt_BindColumn(stmt, 0, SQLDT_STRING, &varname[0], sizeof(varname), &length, NULL);
-	SqlStmt_BindColumn(stmt, 1, SQLDT_INT, &index, 0, NULL, NULL);
-	SqlStmt_BindColumn(stmt, 2, SQLDT_STRING, &value[0], sizeof(value), NULL, NULL);
+	SQL->StmtBindColumn(stmt, 0, SQLDT_STRING, &varname[0], sizeof(varname), &length, NULL);
+	SQL->StmtBindColumn(stmt, 1, SQLDT_INT, &index, 0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 2, SQLDT_STRING, &value[0], sizeof(value), NULL, NULL);
 	
-	while ( SQL_SUCCESS == SqlStmt_NextRow(stmt) ) {
+	while ( SQL_SUCCESS == SQL->StmtNextRow(stmt) ) {
 		struct mapreg_save *m = NULL;
 		int s = add_str(varname);
 		int i = index;
@@ -187,7 +187,7 @@ static void script_load_mapreg(void) {
 		}
 	}
 	
-	SqlStmt_Free(stmt);
+	SQL->StmtFree(stmt);
 
 	mapreg_i_dirty = false;
 	mapreg_str_dirty = false;
@@ -302,8 +302,8 @@ void mapreg_init(void) {
 
 	script_load_mapreg();
 
-	add_timer_func_list(script_autosave_mapreg, "script_autosave_mapreg");
-	add_timer_interval(gettick() + MAPREG_AUTOSAVE_INTERVAL, script_autosave_mapreg, 0, 0, MAPREG_AUTOSAVE_INTERVAL);
+	iTimer->add_timer_func_list(script_autosave_mapreg, "script_autosave_mapreg");
+	iTimer->add_timer_interval(iTimer->gettick() + MAPREG_AUTOSAVE_INTERVAL, script_autosave_mapreg, 0, 0, MAPREG_AUTOSAVE_INTERVAL);
 }
 
 bool mapreg_config_read(const char* w1, const char* w2) {

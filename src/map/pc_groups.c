@@ -414,6 +414,19 @@ int pc_group_id2level(int group_id)
 		return 0;
 	return group->level;
 }
+/**
+ * Group ID -> group level lookup.
+ * @param group id
+ * @return group index
+ * @public
+ */
+int pc_group_id2idx(int group_id)
+{
+	GroupSettings *group = id2group(group_id);
+	if (group == NULL)
+		return 0;
+	return group->group_pos;
+}
 
 /**
  * Initialize PC Groups: allocate DBMaps and read config.

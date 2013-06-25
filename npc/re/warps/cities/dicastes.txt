@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= El Dicastes Warp Script
 //===== By: ==================================================
 //= Chilly, Muad_Dib
 //===== Current Version: =====================================
 //= 1.3
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= Warp Points for El Dicastes
 //===== Additional Comments: =================================

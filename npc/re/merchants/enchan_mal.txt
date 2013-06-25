@@ -1,19 +1,19 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Malangdo Enchants
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Muad_Dib
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.0a
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== Compatible With: =====================================
+//= Hercules
+//===== Description: =========================================
 //= [Official Conversion]
 //= Adds enchantments to many high level weapons in exchange
 //= for Malangdo coins.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Euphy]
 //= 1.0a Added 'delequip' command. [Euphy]
-//============================================================ 
+//============================================================
 
 malangdo,213,167,4	script	Mayomayo#mal	555,{
 	disable_items;

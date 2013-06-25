@@ -1531,14 +1531,10 @@ config_setting_t *config_setting_add(config_setting_t *parent,
   if((parent->type == CONFIG_TYPE_ARRAY) || (parent->type == CONFIG_TYPE_LIST))
     name = NULL;
 
-  if(name)
-  {
+  if(name) {
     if(! __config_validate_name(name))
       return(NULL);
   }
-
-  if(config_setting_get_member(parent, name) != NULL)
-    return(NULL); /* already exists */
 
   return(config_setting_create(parent, name, type));
 }

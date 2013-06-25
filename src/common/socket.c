@@ -280,9 +280,10 @@ void set_nonblocking(int fd, unsigned long yes)
 		ShowError("set_nonblocking: Failed to set socket #%d to non-blocking mode (%s) - Please report this!!!\n", fd, error_msg());
 }
 
-void setsocketopts(int fd)
-{
+void setsocketopts(int fd, struct hSockOpt *opt) {
 	int yes = 1; // reuse fix
+	struct linger lopt;
+		
 #if !defined(WIN32)
 	// set SO_REAUSEADDR to true, unix only. on windows this option causes
 	// the previous owner of the socket to give up, which is not desirable
@@ -297,15 +298,22 @@ void setsocketopts(int fd)
 	// The RO protocol is mainly single-packet request/response, plus the FIFO model already does packet grouping anyway.
 	sSetsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char *)&yes, sizeof(yes));
 
+	if( opt && opt->setTimeo ) {
+		struct timeval timeout;
+		
+		timeout.tv_sec = 5;
+		timeout.tv_usec = 0;
+		
+		sSetsockopt(fd,SOL_SOCKET,SO_RCVTIMEO,(char *)&timeout,sizeof(timeout));
+		sSetsockopt(fd,SOL_SOCKET,SO_SNDTIMEO,(char *)&timeout,sizeof(timeout));
+	}
+	
 	// force the socket into no-wait, graceful-close mode (should be the default, but better make sure)
 	//(http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winsock/winsock/closesocket_2.asp)
-	{
-	struct linger opt;
-	opt.l_onoff = 0; // SO_DONTLINGER
-	opt.l_linger = 0; // Do not care
-	if( sSetsockopt(fd, SOL_SOCKET, SO_LINGER, (char*)&opt, sizeof(opt)) )
+	lopt.l_onoff = 0; // SO_DONTLINGER
+	lopt.l_linger = 0; // Do not care
+	if( sSetsockopt(fd, SOL_SOCKET, SO_LINGER, (char*)&lopt, sizeof(lopt)) )
 		ShowWarning("setsocketopts: Unable to set SO_LINGER mode for connection #%d!\n", fd);
-	}
 }
 
 /*======================================
@@ -404,8 +412,7 @@ void flush_fifos(void)
 /*======================================
  *	CORE : Connection functions
  *--------------------------------------*/
-int connect_client(int listen_fd)
-{
+int connect_client(int listen_fd) {
 	int fd;
 	struct sockaddr_in client_address;
 	socklen_t len;
@@ -417,20 +424,18 @@ int connect_client(int listen_fd)
 		ShowError("connect_client: accept failed (%s)!\n", error_msg());
 		return -1;
 	}
-	if( fd == 0 )
-	{// reserved
+	if( fd == 0 ) { // reserved
 		ShowError("connect_client: Socket #0 is reserved - Please report this!!!\n");
 		sClose(fd);
 		return -1;
 	}
-	if( fd >= FD_SETSIZE )
-	{// socket number too big
+	if( fd >= FD_SETSIZE ) { // socket number too big
 		ShowError("connect_client: New socket #%d is greater than can we handle! Increase the value of FD_SETSIZE (currently %d) for your OS to fix this!\n", fd, FD_SETSIZE);
 		sClose(fd);
 		return -1;
 	}
 
-	setsocketopts(fd);
+	setsocketopts(fd,NULL);
 	set_nonblocking(fd, 1);
 
 #ifndef MINICORE
@@ -457,25 +462,22 @@ int make_listen_bind(uint32 ip, uint16 port)
 
 	fd = sSocket(AF_INET, SOCK_STREAM, 0);
 
-	if( fd == -1 )
-	{
+	if( fd == -1 ) {
 		ShowError("make_listen_bind: socket creation failed (%s)!\n", error_msg());
 		exit(EXIT_FAILURE);
 	}
-	if( fd == 0 )
-	{// reserved
+	if( fd == 0 ) { // reserved
 		ShowError("make_listen_bind: Socket #0 is reserved - Please report this!!!\n");
 		sClose(fd);
 		return -1;
 	}
-	if( fd >= FD_SETSIZE )
-	{// socket number too big
+	if( fd >= FD_SETSIZE ) { // socket number too big
 		ShowError("make_listen_bind: New socket #%d is greater than can we handle! Increase the value of FD_SETSIZE (currently %d) for your OS to fix this!\n", fd, FD_SETSIZE);
 		sClose(fd);
 		return -1;
 	}
 
-	setsocketopts(fd);
+	setsocketopts(fd,NULL);
 	set_nonblocking(fd, 1);
 
 	server_address.sin_family      = AF_INET;
@@ -503,7 +505,7 @@ int make_listen_bind(uint32 ip, uint16 port)
 	return fd;
 }
 
-int make_connection(uint32 ip, uint16 port, bool silent) {
+int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt) {
 	struct sockaddr_in remote_address;
 	int fd;
 	int result;
@@ -514,31 +516,29 @@ int make_connection(uint32 ip, uint16 port, bool silent) {
 		ShowError("make_connection: socket creation failed (%s)!\n", error_msg());
 		return -1;
 	}
-	if( fd == 0 )
-	{// reserved
+	if( fd == 0 ) {// reserved
 		ShowError("make_connection: Socket #0 is reserved - Please report this!!!\n");
 		sClose(fd);
 		return -1;
 	}
-	if( fd >= FD_SETSIZE )
-	{// socket number too big
+	if( fd >= FD_SETSIZE ) {// socket number too big
 		ShowError("make_connection: New socket #%d is greater than can we handle! Increase the value of FD_SETSIZE (currently %d) for your OS to fix this!\n", fd, FD_SETSIZE);
 		sClose(fd);
 		return -1;
 	}
 
-	setsocketopts(fd);
+	setsocketopts(fd,opt);
 
 	remote_address.sin_family      = AF_INET;
 	remote_address.sin_addr.s_addr = htonl(ip);
 	remote_address.sin_port        = htons(port);
 
-	if( !silent )
+	if( !( opt && opt->silent ) )
 		ShowStatus("Connecting to %d.%d.%d.%d:%i\n", CONVIP(ip), port);
 
 	result = sConnect(fd, (struct sockaddr *)(&remote_address), sizeof(struct sockaddr_in));
 	if( result == SOCKET_ERROR ) {
-		if( !silent )
+		if( !( opt && opt->silent ) )
 			ShowError("make_connection: connect failed (socket #%d, %s)!\n", fd, error_msg());
 		do_close(fd);
 		return -1;
@@ -947,9 +947,9 @@ static int connect_check_(uint32 ip)
 			if( hist->ddos )
 			{// flagged as DDoS
 				return (connect_ok == 2 ? 1 : 0);
-			} else if( DIFF_TICK(gettick(),hist->tick) < ddos_interval )
+			} else if( DIFF_TICK(iTimer->gettick(),hist->tick) < ddos_interval )
 			{// connection within ddos_interval
-				hist->tick = gettick();
+				hist->tick = iTimer->gettick();
 				if( hist->count++ >= ddos_count )
 				{// DDoS attack detected
 					hist->ddos = 1;
@@ -959,7 +959,7 @@ static int connect_check_(uint32 ip)
 				return connect_ok;
 			} else
 			{// not within ddos_interval, clear data
-				hist->tick  = gettick();
+				hist->tick  = iTimer->gettick();
 				hist->count = 0;
 				return connect_ok;
 			}
@@ -970,7 +970,7 @@ static int connect_check_(uint32 ip)
 	CREATE(hist, ConnectHistory, 1);
 	memset(hist, 0, sizeof(ConnectHistory));
 	hist->ip   = ip;
-	hist->tick = gettick();
+	hist->tick = iTimer->gettick();
 	hist->next = connect_history[ip&0xFFFF];
 	connect_history[ip&0xFFFF] = hist;
 	return connect_ok;
@@ -1331,8 +1331,8 @@ void socket_init(void)
 #ifndef MINICORE
 	// Delete old connection history every 5 minutes
 	memset(connect_history, 0, sizeof(connect_history));
-	add_timer_func_list(connect_check_clear, "connect_check_clear");
-	add_timer_interval(gettick()+1000, connect_check_clear, 0, 0, 5*60*1000);
+	iTimer->add_timer_func_list(connect_check_clear, "connect_check_clear");
+	iTimer->add_timer_interval(iTimer->gettick()+1000, connect_check_clear, 0, 0, 5*60*1000);
 #endif
 
 	ShowInfo("Server supports up to '"CL_WHITE"%u"CL_RESET"' concurrent connections.\n", rlim_cur);

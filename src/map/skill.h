@@ -37,6 +37,7 @@ struct square;
 #define MAX_SKILLUNITGROUP 25
 #define MAX_SKILL_ITEM_REQUIRE	10
 #define MAX_SKILLUNITGROUPTICKSET 25
+#define MAX_SKILL_NAME_LENGTH 30
 
 // (Epoque:) To-do: replace this macro with some sort of skill tree check (rather than hard-coded skill names)
 #define skill_ischangesex(id) ( \
@@ -1281,7 +1282,26 @@ enum e_skill {
 	ECL_SADAGUI,
 	ECL_SEQUOIADUST,
 	ECLAGE_RECALL,
-	
+
+	GC_DARKCROW = 5001,
+	RA_UNLIMIT,
+	GN_ILLUSIONDOPING,
+	RK_DRAGONBREATH_WATER,
+	RK_LUXANIMA,
+	NC_MAGMA_ERUPTION,
+	WM_FRIGG_SONG,
+	SO_ELEMENTAL_SHIELD,
+	SR_FLASHCOMBO,
+	SC_ESCAPE,
+	AB_OFFERTORIUM,
+	WL_TELEKINESIS_INTENSE,
+	LG_KINGS_GRACE,
+	ALL_FULL_THROTTLE,
+	SR_FLASHCOMBO_ATK_STEP1,
+	SR_FLASHCOMBO_ATK_STEP2,
+	SR_FLASHCOMBO_ATK_STEP3,
+	SR_FLASHCOMBO_ATK_STEP4,
+
 	HLIF_HEAL = 8001,
 	HLIF_AVOID,
 	HLIF_BRAIN,
@@ -1541,6 +1561,10 @@ enum {
 	UNT_ZENKAI_WIND,
 	UNT_MAKIBISHI,
 	UNT_VENOMFOG,
+	UNT_ICEMINE, 
+ 	UNT_FLAMECROSS, 
+ 	UNT_HELLBURNING, 
+ 	UNT_MAGMA_ERUPTION, 
 	
 	/**
 	 * Guild Auras
@@ -1576,7 +1600,7 @@ struct skill_condition {
 // Database skills
 struct s_skill_db {
 	unsigned short nameid;
-	char name[NAME_LENGTH];
+	char name[MAX_SKILL_NAME_LENGTH];
 	char desc[40];
 	int range[MAX_SKILL_LEVEL],hit,inf,element[MAX_SKILL_LEVEL],nk,splash[MAX_SKILL_LEVEL],max;
 	int num[MAX_SKILL_LEVEL];

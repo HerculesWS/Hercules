@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Slotted Sunglasses Quest
 //===== By: ==================================================
 //= amichan
 //===== Current Version: =====================================
 //= 1.8
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= Quest to get Slotted Sunglasses.
 //= Will reset after quest completion.

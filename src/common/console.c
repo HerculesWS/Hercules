@@ -85,6 +85,9 @@ CPCMD(exit) {
 CPCMD(ers_report) {
 	ers_report();
 }
+CPCMD(mem_report) {
+	memmgr_report(line?atoi(line):0);
+}
 CPCMD(help) {
 	unsigned int i = 0;
 	for ( i = 0; i < console->cmd_list_count; i++ ) {
@@ -98,7 +101,7 @@ CPCMD(help) {
 }
 /* [Ind/Hercules] */
 CPCMD(malloc_usage) {
-	unsigned int val = (unsigned int)malloclib->usage();
+	unsigned int val = (unsigned int)iMalloc->usage();
 	ShowInfo("malloc_usage: %.2f MB\n",(double)(val)/1024);
 }
 #define CP_DEF_C(x) { #x , NULL , NULL, NULL }
@@ -115,6 +118,7 @@ void console_load_defaults(void) {
 		CP_DEF(help),
 		CP_DEF_C(server),
 		CP_DEF_S(ers_report,server),
+		CP_DEF_S(mem_report,server),
 		CP_DEF_S(malloc_usage,server),
 		CP_DEF_S(exit,server),
 	};
@@ -227,8 +231,10 @@ void console_parse_sub(char *line) {
 	char *tok;
 	char sublist[CP_CMD_LENGTH * 5];
 	unsigned int i, len = 0;
+	
 	memcpy(bline, line, 200);
 	tok = strtok(line, " ");
+	
 	for ( i = 0; i < console->cmd_list_count; i++ ) {
 		if( strcmpi(tok,console->cmd_list[i]->cmd) == 0 )
 			break;
@@ -363,8 +369,8 @@ void console_parse_init(void) {
 		exit(EXIT_FAILURE);
 	}
 	
-	add_timer_func_list(console->parse_timer, "console_parse_timer");
-	add_timer_interval(gettick() + 1000, console->parse_timer, 0, 0, 500);/* start listening in 1s; re-try every 0.5s */
+	iTimer->add_timer_func_list(console->parse_timer, "console_parse_timer");
+	iTimer->add_timer_interval(iTimer->gettick() + 1000, console->parse_timer, 0, 0, 500);/* start listening in 1s; re-try every 0.5s */
 	
 }
 #endif /* CONSOLE_INPUT */

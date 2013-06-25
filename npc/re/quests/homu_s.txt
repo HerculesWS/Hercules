@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Homunculus S Quest
 //===== By: ================================================== 
 //= Masao
 //===== Current Version: ===================================== 
 //= 1.1
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= Evolves an Homunculus which is at least Level 99 to the
 //= new Homunculus S Class.

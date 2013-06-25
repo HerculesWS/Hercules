@@ -1,11 +1,11 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Expanded Super Novice Job Quest
 //===== By: ================================================== 
 //= Euphy
 //===== Current Version: ===================================== 
 //= 1.1a
 //===== Compatible With: ===================================== 
-//= rAthena SVN
+//= Hercules
 //===== Description: ========================================= 
 //= Job Change quest for Expanded Super Novice class.
 //===== Additional Comments: ================================= 

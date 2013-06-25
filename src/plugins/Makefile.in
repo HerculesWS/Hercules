@@ -1,16 +1,18 @@
 
 COMMON_H = ../common/HPMi.h ../common/cbasetypes.h
 
-PLUGINS = sample
+PLUGINS = sample db2sql
 
 @SET_MAKE@
 
 #####################################################################
-.PHONY : all $(PLUGINS) sample clean help
+.PHONY : all $(PLUGINS) sample db2sql clean help
 
 all: $(PLUGINS)
 
 sample: sample@DLLEXT@
+
+db2sql: db2sql@DLLEXT@
 
 clean:
 	@echo "	CLEAN	plugins"

@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Monster vs Monster
 //===== By: ==================================================
 //= acky
 //===== Current Version: =====================================
 //= 1.2
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= Players train monsters and battle other players.
 //= Experience can be earned and monsters upgraded.

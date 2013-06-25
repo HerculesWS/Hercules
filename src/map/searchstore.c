@@ -135,14 +135,14 @@ void searchstore_query(struct map_session_data* sd, unsigned char type, unsigned
 
 	// validate lists
 	for( i = 0; i < item_count; i++ ) {
-		if( !itemdb_exists(itemlist[i]) ) {
+		if( !itemdb->exists(itemlist[i]) ) {
 			ShowWarning("searchstore_query: Client resolved item %hu is not known.\n", itemlist[i]);
 			clif->search_store_info_failed(sd, SSI_FAILED_NOTHING_SEARCH_ITEM);
 			return;
 		}
 	}
 	for( i = 0; i < card_count; i++ ) {
-		if( !itemdb_exists(cardlist[i]) ) {
+		if( !itemdb->exists(cardlist[i]) ) {
 			ShowWarning("searchstore_query: Client resolved card %hu is not known.\n", cardlist[i]);
 			clif->search_store_info_failed(sd, SSI_FAILED_NOTHING_SEARCH_ITEM);
 			return;
@@ -273,7 +273,7 @@ void searchstore_click(struct map_session_data* sd, int account_id, int store_id
 		return;
 	}
 
-	if( ( pl_sd = map_id2sd(account_id) ) == NULL ) {// no longer online
+	if( ( pl_sd = iMap->id2sd(account_id) ) == NULL ) {// no longer online
 		clif->search_store_info_failed(sd, SSI_FAILED_SSILIST_CLICK_TO_OPEN_STORE);
 		return;
 	}

@@ -1,11 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Cute Pet Manager
 //===== By: ==================================================
 //= Z3R0
 //===== Current Version: =====================================
 //= 1.0
 //===== Compatible With: =====================================
-//= rAthena SVN
+//= Hercules
 //===== Description: =========================================
 //= [Aegis Conversion]
 //= Exchanges Hunted Items for Tames
