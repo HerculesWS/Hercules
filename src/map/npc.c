@@ -3847,9 +3847,6 @@ int npc_reload(void) {
 	
 	npc->motd = npc_name2id("HerculesMOTD"); /* [Ind/Hercules] */
 	
-	/* re-insert */
-	itemdb->name_constants();
-	
 	//Re-read the NPC Script Events cache.
 	npc_read_event_script();
 
