@@ -629,7 +629,7 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 				else if( cardfix != 1000 )
 					damage = damage * cardfix / 1000;
 
-		}else if( tsd && !(nk&NK_NO_CARDFIX_DEF)  && !(left&2 )){
+		}else if( tsd && !(nk&NK_NO_CARDFIX_DEF) ){
 			if( !(nk&NK_NO_ELEFIX) )
 			{
 				int ele_fix = tsd->subele[s_ele];

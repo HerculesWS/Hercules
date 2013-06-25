@@ -9017,17 +9017,11 @@ ACMD(channel) {
 			return false;
 		}
 		
-		if (!message || !*message || sscanf(message, "%s %s %24[^\n]", key, sub1, sub2) < 1) {
-		        sprintf(atcmd_output, msg_txt(1434), sub2);// Player '%s' was not found
-		         clif->message(fd, atcmd_output);
-		         return false;
-		}
-
 		if( sub2[0] == '\0' || ( pl_sd = map_nick2sd(sub2) ) == NULL ) {
-		         sprintf(atcmd_output, msg_txt(1434), sub2);// Player '%s' was not found
-		         clif->message(fd, atcmd_output);
-		         return false;
-		 }
+			sprintf(atcmd_output, msg_txt(1434), sub2);// Player '%s' was not found
+			clif->message(fd, atcmd_output);
+			return false;
+		}
 		
 		if( pc_has_permission(pl_sd, PC_PERM_HCHSYS_ADMIN) ) {
 			clif->message(fd, msg_txt(1464)); // Ban failed, not possible to ban this user.
