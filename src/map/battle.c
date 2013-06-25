@@ -1868,7 +1868,9 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case MO_INVESTIGATE:
 					skillratio += 75 * skill_lv;
 					break;
-	#ifndef RENEWAL
+	/* modifying until malufett can adjust the formula */
+	//#ifndef RENEWAL
+	#if 1
 				case MO_EXTREMITYFIST:
 					{	//Overflow check. [Skotlex]
 						unsigned int ratio = skillratio + 100*(8 + status->sp/10);
@@ -4439,7 +4441,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 #endif
 					?1:0)|
 					(flag.arrow?2:0)|
-#ifndef RENEWAL
+/* modifying until malufett can adjust the formula */
+//#ifndef RENEWAL
+#if 1
 					(skill_id == HW_MAGICCRASHER?4:0)|
 					(skill_id == MO_EXTREMITYFIST?8:0)|
 #endif
