@@ -17445,18 +17445,20 @@ void clif_scriptclear(struct map_session_data *sd, int npcid) {
 	
 	clif->send(&p,sizeof(p), &sd->bl, SELF);
 }
-
+/* Made Possible Thanks to Yommy! */
 void clif_package_item_announce(struct map_session_data *sd, unsigned short nameid, unsigned short containerid) {
 	struct packet_package_item_announce p;
 	
 	p.PacketType = package_item_announceType;
-	p.PacketLength = 10+NAME_LENGTH;
+	p.PacketLength = 11+NAME_LENGTH;
 	p.type = 0x0;
-	p.ItemID = containerid;
+	p.ItemID = nameid;
 	p.len = NAME_LENGTH;
 	safestrncpy(p.Name, sd->status.name, sizeof(p.Name));
-	p.BoxItemID = nameid;
-	clif->send(&p,p.PacketLength, &sd->bl, ALL_CLIENT);
+	p.unknown = 0x2; // some strange byte, IDA shows.. BYTE3(BoxItemIDLength) = 2;
+	p.BoxItemID = containerid;
+	
+	clif->send(&p,sizeof(p), &sd->bl, ALL_CLIENT);
 }
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
