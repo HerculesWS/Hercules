@@ -206,13 +206,13 @@ int impossible_trade_check(struct map_session_data *sd)
 			intif_wis_message_to_gm(iMap->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
 			// if we block people
 			if (battle_config.ban_hack_trade < 0) {
-				chrif_char_ask_name(-1, sd->status.name, 1, 0, 0, 0, 0, 0, 0); // type: 1 - block
+				chrif->char_ask_name(-1, sd->status.name, 1, 0, 0, 0, 0, 0, 0); // type: 1 - block
 				set_eof(sd->fd); // forced to disconnect because of the hack
 				// message about the ban
 				strcpy(message_to_gm, msg_txt(540)); //  This player has been definitively blocked.
 			// if we ban people
 			} else if (battle_config.ban_hack_trade > 0) {
-				chrif_char_ask_name(-1, sd->status.name, 2, 0, 0, 0, 0, battle_config.ban_hack_trade, 0); // type: 2 - ban (year, month, day, hour, minute, second)
+				chrif->char_ask_name(-1, sd->status.name, 2, 0, 0, 0, 0, battle_config.ban_hack_trade, 0); // type: 2 - ban (year, month, day, hour, minute, second)
 				set_eof(sd->fd); // forced to disconnect because of the hack
 				// message about the ban
 				sprintf(message_to_gm, msg_txt(507), battle_config.ban_hack_trade); //  This player has been banned for %d minute(s).
@@ -603,8 +603,8 @@ void trade_tradecommit(struct map_session_data *sd)
 	// save both player to avoid crash: they always have no advantage/disadvantage between the 2 players
 	if (iMap->save_settings&1)
   	{
-		chrif_save(sd,0);
-		chrif_save(tsd,0);
+		chrif->save(sd,0);
+		chrif->save(tsd,0);
 	}
 }
 

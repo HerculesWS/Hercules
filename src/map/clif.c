@@ -9295,7 +9295,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 	}
 
 	if (bl ||
-		((node=chrif_search(account_id)) && //An already existing node is valid only if it is for this login.
+		((node=chrif->search(account_id)) && //An already existing node is valid only if it is for this login.
 			!(node->account_id == account_id && node->char_id == char_id && node->state == ST_LOGIN)))
 	{
 		clif->authfail_fd(fd, 8); //Still recognizes last connection
@@ -9321,7 +9321,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 	WFIFOSET(fd,packet_len(0x283));
 #endif
 
-	chrif_authreq(sd);
+	chrif->authreq(sd);
 }
 void clif_hercules_chsys_mjoin(struct map_session_data *sd) {
 	if( !map[sd->bl.m].channel ) {
@@ -10334,7 +10334,7 @@ void clif_parse_Restart(int fd, struct map_session_data *sd) {
 			if( !sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] &&
 				(!battle_config.prevent_logout || DIFF_TICK(iTimer->gettick(), sd->canlog_tick) > battle_config.prevent_logout) )
 			{	//Send to char-server for character selection.
-				chrif_charselectreq(sd, session[fd]->client_addr);
+				chrif->charselectreq(sd, session[fd]->client_addr);
 			} else {
 				clif->disconnect_ack(sd, 1);
 			}
@@ -13869,7 +13869,7 @@ void clif_parse_FriendsListRemove(int fd, struct map_session_data *sd)
 		}
 
 	} else { //friend not online -- ask char server to delete from his friendlist
-		if(chrif_removefriend(char_id,sd->status.char_id)) { // char-server offline, abort
+		if(chrif->removefriend(char_id,sd->status.char_id)) { // char-server offline, abort
 			clif->message(fd, msg_txt(673)); //"This action can't be performed at the moment. Please try again later."
 			return;
 		}
@@ -14560,7 +14560,7 @@ void clif_parse_Mail_getattach(int fd, struct map_session_data *sd)
 	int i;
 	bool fail = false;
 
-	if( !chrif_isconnected() )
+	if( !chrif->isconnected() )
 		return;
 	if( mail_id <= 0 )
 		return;
@@ -14621,7 +14621,7 @@ void clif_parse_Mail_delete(int fd, struct map_session_data *sd)
 	int mail_id = RFIFOL(fd,2);
 	int i;
 
-	if( !chrif_isconnected() )
+	if( !chrif->isconnected() )
 		return;
 	if( mail_id <= 0 )
 		return;
@@ -14670,7 +14670,7 @@ void clif_parse_Mail_setattach(int fd, struct map_session_data *sd)
 	int amount = RFIFOL(fd,4);
 	unsigned char flag;
 
-	if( !chrif_isconnected() )
+	if( !chrif->isconnected() )
 		return;
 	if (idx < 0 || amount < 0)
 		return;
@@ -14704,7 +14704,7 @@ void clif_parse_Mail_send(int fd, struct map_session_data *sd)
 	struct mail_message msg;
 	int body_len;
 
-	if( !chrif_isconnected() )
+	if( !chrif->isconnected() )
 		return;
 	if( sd->state.trading )
 		return;

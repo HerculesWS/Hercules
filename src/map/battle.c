@@ -1489,7 +1489,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio += 300 + 100 * skill_lv + status_get_int(src);
 					RE_LVL_DMOD(100);
 					break;
-				case WL_FROSTMISTY: // MATK [{( Skill Level x 100 ) + 200 } x ( Caster’s Base Level / 100 )] %
+				case WL_FROSTMISTY: // MATK [{( Skill Level x 100 ) + 200 } x ( Casterï¿½s Base Level / 100 )] %
 					skillratio += 100 + 100 * skill_lv;
 					RE_LVL_DMOD(100);
 					break;
@@ -6536,14 +6536,14 @@ void Hercules_report(char* date, char *time_c) {
 		WBUFL(buf,6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + BFLAG_LENGTH + ( i * ( BFLAG_LENGTH + 4 )  )  ) = *battle_data[i].val;
 	}
 
-	chrif_send_report(buf,  6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) );
+	chrif->send_report(buf,  6 + 12 + 9 + 24 + 41 + 4 + 4 + 4 + ( bd_size * ( BFLAG_LENGTH + 4 ) ) );
 
 	aFree(buf);
 
 #undef BFLAG_LENGTH
 }
 static int Hercules_report_timer(int tid, unsigned int tick, int id, intptr_t data) {
-	if( chrif_isconnected() ) {/* char server relays it, so it must be online. */
+	if( chrif->isconnected() ) {/* char server relays it, so it must be online. */
 		Hercules_report(__DATE__,__TIME__);
 	}
 	return 0;

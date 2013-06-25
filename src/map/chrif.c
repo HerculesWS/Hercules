@@ -53,39 +53,39 @@ static const int packet_len_table[0x3d] = { // U - used, F - free
 //2af9: Incoming, chrif_connectack -> 'answer of the 2af8 login(ok / fail)'
 //2afa: Outgoing, chrif_sendmap -> 'sending our maps'
 //2afb: Incoming, chrif_sendmapack -> 'Maps received successfully / or not ..'
-//2afc: Outgoing, chrif_scdata_request -> request sc_data for pc->authok'ed char. <- new command reuses previous one.
-//2afd: Incoming, chrif_authok -> 'client authentication ok'
+//2afc: Outgoing, chrif->scdata_request -> request sc_data for pc->authok'ed char. <- new command reuses previous one.
+//2afd: Incoming, chrif->authok -> 'client authentication ok'
 //2afe: Outgoing, send_usercount_tochar -> 'sends player count of this map server to charserver'
-//2aff: Outgoing, send_users_tochar -> 'sends all actual connected character ids to charserver'
+//2aff: Outgoing, chrif->send_users_tochar -> 'sends all actual connected character ids to charserver'
 //2b00: Incoming, iMap->setusers -> 'set the actual usercount? PACKET.2B COUNT.L.. ?' (not sure)
-//2b01: Outgoing, chrif_save -> 'charsave of char XY account XY (complete struct)'
-//2b02: Outgoing, chrif_charselectreq -> 'player returns from ingame to charserver to select another char.., this packets includes sessid etc' ? (not 100% sure)
+//2b01: Outgoing, chrif->save -> 'charsave of char XY account XY (complete struct)'
+//2b02: Outgoing, chrif->charselectreq -> 'player returns from ingame to charserver to select another char.., this packets includes sessid etc' ? (not 100% sure)
 //2b03: Incoming, clif_charselectok -> '' (i think its the packet after enterworld?) (not sure)
 //2b04: Incoming, chrif_recvmap -> 'getting maps from charserver of other mapserver's'
-//2b05: Outgoing, chrif_changemapserver -> 'Tell the charserver the mapchange / quest for ok...'
+//2b05: Outgoing, chrif->changemapserver -> 'Tell the charserver the mapchange / quest for ok...'
 //2b06: Incoming, chrif_changemapserverack -> 'awnser of 2b05, ok/fail, data: dunno^^'
-//2b07: Outgoing, chrif_removefriend -> 'Tell charserver to remove friend_id from char_id friend list'
-//2b08: Outgoing, chrif_searchcharid -> '...'
+//2b07: Outgoing, chrif->removefriend -> 'Tell charserver to remove friend_id from char_id friend list'
+//2b08: Outgoing, chrif->searchcharid -> '...'
 //2b09: Incoming, map_addchariddb -> 'Adds a name to the nick db'
 //2b0a: Incoming/Outgoing, socket_datasync()
 //2b0b: Outgoing, update charserv skillid2idx
-//2b0c: Outgoing, chrif_changeemail -> 'change mail address ...'
+//2b0c: Outgoing, chrif->changeemail -> 'change mail address ...'
 //2b0d: Incoming, chrif_changedsex -> 'Change sex of acc XY'
-//2b0e: Outgoing, chrif_char_ask_name -> 'Do some operations (change sex, ban / unban etc)'
+//2b0e: Outgoing, chrif->char_ask_name -> 'Do some operations (change sex, ban / unban etc)'
 //2b0f: Incoming, chrif_char_ask_name_answer -> 'answer of the 2b0e'
-//2b10: Outgoing, chrif_updatefamelist -> 'Update the fame ranking lists and send them'
-//2b11: Outgoing, chrif_divorce -> 'tell the charserver to do divorce'
+//2b10: Outgoing, chrif->updatefamelist -> 'Update the fame ranking lists and send them'
+//2b11: Outgoing, chrif->divorce -> 'tell the charserver to do divorce'
 //2b12: Incoming, chrif_divorceack -> 'divorce chars
 //2b13: FREE
 //2b14: Incoming, chrif_accountban -> 'not sure: kick the player with message XY'
 //2b15: FREE
-//2b16: Outgoing, chrif_ragsrvinfo -> 'sends base / job / drop rates ....'
-//2b17: Outgoing, chrif_char_offline -> 'tell the charserver that the char is now offline'
-//2b18: Outgoing, chrif_char_reset_offline -> 'set all players OFF!'
-//2b19: Outgoing, chrif_char_online -> 'tell the charserver that the char .. is online'
-//2b1a: Outgoing, chrif_buildfamelist -> 'Build the fame ranking lists and send them'
+//2b16: Outgoing, chrif->ragsrvinfo -> 'sends base / job / drop rates ....'
+//2b17: Outgoing, chrif->char_offline -> 'tell the charserver that the char is now offline'
+//2b18: Outgoing, chrif->char_reset_offline -> 'set all players OFF!'
+//2b19: Outgoing, chrif->char_online -> 'tell the charserver that the char .. is online'
+//2b1a: Outgoing, chrif->buildfamelist -> 'Build the fame ranking lists and send them'
 //2b1b: Incoming, chrif_recvfamelist -> 'Receive fame ranking lists'
-//2b1c: Outgoing, chrif_save_scdata -> 'Send sc_data of player for saving.'
+//2b1c: Outgoing, chrif->save_scdata -> 'Send sc_data of player for saving.'
 //2b1d: Incoming, chrif_load_scdata -> 'received sc_data of player for loading.'
 //2b1e: Incoming, chrif_update_ip -> 'Reqest forwarded from char-server for interserver IP sync.' [Lance]
 //2b1f: Incoming, chrif_disconnectplayer -> 'disconnects a player (aid X) with the message XY ... 0x81 ..' [Sirius]
@@ -95,10 +95,9 @@ static const int packet_len_table[0x3d] = { // U - used, F - free
 //2b23: Outgoing, chrif_keepalive. charserver ping.
 //2b24: Incoming, chrif_keepalive_ack. charserver ping reply.
 //2b25: Incoming, chrif_deadopt -> 'Removes baby from Father ID and Mother ID'
-//2b26: Outgoing, chrif_authreq -> 'client authentication request'
+//2b26: Outgoing, chrif->authreq -> 'client authentication request'
 //2b27: Incoming, chrif_authfail -> 'client authentication failed'
 
-int chrif_connected = 0;
 int char_fd = -1;
 int srvinfo;
 static char char_ip_str[128];
@@ -106,14 +105,13 @@ static uint32 char_ip = 0;
 static uint16 char_port = 6121;
 static char userid[NAME_LENGTH], passwd[NAME_LENGTH];
 static int chrif_state = 0;
-int other_mapserver_count=0; //Holds count of how many other map servers are online (apart of this instance) [Skotlex]
 
 //Interval at which map server updates online listing. [Valaris]
 #define CHECK_INTERVAL 3600000
 //Interval at which map server sends number of connected users. [Skotlex]
 #define UPDATE_INTERVAL 10000
 //This define should spare writing the check in every function. [Skotlex]
-#define chrif_check(a) { if(!chrif_isconnected()) return a; }
+#define chrif_check(a) { if(!chrif->isconnected()) return a; }
 
 
 /// Resets all the data.
@@ -139,7 +137,7 @@ struct auth_node* chrif_search(int account_id) {
 }
 
 struct auth_node* chrif_auth_check(int account_id, int char_id, enum sd_state state) {
-	struct auth_node *node = chrif_search(account_id);
+	struct auth_node *node = chrif->search(account_id);
 	
 	return ( node && node->char_id == char_id && node->state == state ) ? node : NULL;
 }
@@ -147,7 +145,7 @@ struct auth_node* chrif_auth_check(int account_id, int char_id, enum sd_state st
 bool chrif_auth_delete(int account_id, int char_id, enum sd_state state) {
 	struct auth_node *node;
 	
-	if ( (node = chrif_auth_check(account_id, char_id, state) ) ) {
+	if ( (node = chrif->auth_check(account_id, char_id, state) ) ) {
 		int fd = node->sd ? node->sd->fd : node->fd;
 		
 		if ( session[fd] && session[fd]->session_data == node->sd )
@@ -171,7 +169,7 @@ bool chrif_auth_delete(int account_id, int char_id, enum sd_state state) {
 static bool chrif_sd_to_auth(TBL_PC* sd, enum sd_state state) {
 	struct auth_node *node;
 	
-	if ( chrif_search(sd->status.account_id) )
+	if ( chrif->search(sd->status.account_id) )
 		return false; //Already exists?
 
 	node = ers_alloc(auth_db_ers, struct auth_node);
@@ -208,12 +206,12 @@ static bool chrif_auth_logout(TBL_PC* sd, enum sd_state state) {
 }
 
 bool chrif_auth_finished(TBL_PC* sd) {
-	struct auth_node *node= chrif_search(sd->status.account_id);
+	struct auth_node *node= chrif->search(sd->status.account_id);
 	
 	if ( node && node->sd == sd && node->state == ST_LOGIN ) {
 		node->sd = NULL;
 		
-		return chrif_auth_delete(node->account_id, node->char_id, ST_LOGIN);
+		return chrif->auth_delete(node->account_id, node->char_id, ST_LOGIN);
 	}
 	
 	return false;
@@ -276,8 +274,8 @@ int chrif_save(struct map_session_data *sd, int flag) {
 
 	if (flag && sd->state.active) { //Store player data which is quitting
 		//FIXME: SC are lost if there's no connection at save-time because of the way its related data is cleared immediately after this function. [Skotlex]
-		if ( chrif_isconnected() )
-			chrif_save_scdata(sd);
+		if ( chrif->isconnected() )
+			chrif->save_scdata(sd);
 		if ( !chrif_auth_logout(sd,flag == 1 ? ST_LOGOUT : ST_MAPCHANGE) )
 			ShowError("chrif_save: Failed to set up player %d:%d for proper quitting!\n", sd->status.account_id, sd->status.char_id);
 	}
@@ -367,7 +365,7 @@ int chrif_recvmap(int fd) {
 	if (battle_config.etc_log)
 		ShowStatus("Received maps from %d.%d.%d.%d:%d (%d maps)\n", CONVIP(ip), port, j);
 
-	other_mapserver_count++;
+	chrif->other_mapserver_count++;
 	
 	return 0;
 }
@@ -381,7 +379,7 @@ int chrif_removemap(int fd) {
 	for(i = 10, j = 0; i < RFIFOW(fd, 2); i += 4, j++)
 		iMap->eraseipport(RFIFOW(fd, i), ip, port);
 
-	other_mapserver_count--;
+	chrif->other_mapserver_count--;
 	
 	if(battle_config.etc_log)
 		ShowStatus("remove map of server %d.%d.%d.%d:%d (%d maps)\n", CONVIP(ip), port, j);
@@ -391,15 +389,15 @@ int chrif_removemap(int fd) {
 
 // received after a character has been "final saved" on the char-server
 static void chrif_save_ack(int fd) {
-	chrif_auth_delete(RFIFOL(fd,2), RFIFOL(fd,6), ST_LOGOUT);
-	chrif_check_shutdown();
+	chrif->auth_delete(RFIFOL(fd,2), RFIFOL(fd,6), ST_LOGOUT);
+	chrif->check_shutdown();
 }
 
 // request to move a character between mapservers
 int chrif_changemapserver(struct map_session_data* sd, uint32 ip, uint16 port) {
 	nullpo_retr(-1, sd);
 
-	if (other_mapserver_count < 1) {//No other map servers are online!
+	if (chrif->other_mapserver_count < 1) {//No other map servers are online!
 		clif->authfail_fd(sd->fd, 0);
 		return -1;
 	}
@@ -430,7 +428,7 @@ int chrif_changemapserver(struct map_session_data* sd, uint32 ip, uint16 port) {
 int chrif_changemapserverack(int account_id, int login_id1, int login_id2, int char_id, short map_index, short x, short y, uint32 ip, uint16 port) {
 	struct auth_node *node;
 	
-	if ( !( node = chrif_auth_check(account_id, char_id, ST_MAPCHANGE) ) )
+	if ( !( node = chrif->auth_check(account_id, char_id, ST_MAPCHANGE) ) )
 		return -1;
 
 	if ( !login_id1 ) {
@@ -440,7 +438,7 @@ int chrif_changemapserverack(int account_id, int login_id1, int login_id2, int c
 		clif->changemapserver(node->sd, map_index, x, y, ntohl(ip), ntohs(port));
 
 	//Player has been saved already, remove him from memory. [Skotlex]
-	chrif_auth_delete(account_id, char_id, ST_MAPCHANGE);
+	chrif->auth_delete(account_id, char_id, ST_MAPCHANGE);
 
 	return 0;
 }
@@ -458,7 +456,7 @@ int chrif_connectack(int fd) {
 
 	ShowStatus("Successfully logged on to Char Server (Connection: '"CL_WHITE"%d"CL_RESET"').\n",fd);
 	chrif_state = 1;
-	chrif_connected = 1;
+	chrif->chrif_connected = 1;
 
 	chrif_sendmap(fd);
 
@@ -470,7 +468,7 @@ int chrif_connectack(int fd) {
 	}
 	
 	socket_datasync(fd, true);
-	chrif_skillid2idx(fd);
+	chrif->skillid2idx(fd);
 
 	return 0;
 }
@@ -485,13 +483,13 @@ static int chrif_reconnect(DBKey key, DBData *data, va_list ap) {
 		case ST_LOGIN:
 			if ( node->sd && node->char_dat == NULL ) {//Since there is no way to request the char auth, make it fail.
 				pc->authfail(node->sd);
-				chrif_char_offline(node->sd);
-				chrif_auth_delete(node->account_id, node->char_id, ST_LOGIN);
+				chrif->char_offline(node->sd);
+				chrif->auth_delete(node->account_id, node->char_id, ST_LOGIN);
 			}
 			break;
 		case ST_LOGOUT:
 			//Re-send final save
-			chrif_save(node->sd, 1);
+			chrif->save(node->sd, 1);
 			break;
 		case ST_MAPCHANGE: { //Re-send map-change request.
 			struct map_session_data *sd = node->sd;
@@ -499,7 +497,7 @@ static int chrif_reconnect(DBKey key, DBData *data, va_list ap) {
 			uint16 port;
 			
 			if( iMap->mapname2ipport(sd->mapindex,&ip,&port) == 0 )
-				chrif_changemapserver(sd, ip, port);
+				chrif->changemapserver(sd, ip, port);
 			else //too much lag/timeout is the closest explanation for this error.
 				clif->authfail_fd(sd->fd, 3);
 			
@@ -517,10 +515,10 @@ void chrif_on_ready(void) {
 	
 	chrif_state = 2;
 	
-	chrif_check_shutdown();
+	chrif->check_shutdown();
 
 	//If there are players online, send them to the char-server. [Skotlex]
-	send_users_tochar();
+	chrif->send_users_tochar();
 
 	//Auth db reconnect handling
 	auth_db->foreach(auth_db,chrif_reconnect);
@@ -572,9 +570,9 @@ int chrif_scdata_request(int account_id, int char_id) {
  * Request auth confirmation
  *------------------------------------------*/
 void chrif_authreq(struct map_session_data *sd) {
-	struct auth_node *node= chrif_search(sd->bl.id);
+	struct auth_node *node= chrif->search(sd->bl.id);
 
-	if( node != NULL || !chrif_isconnected() ) {
+	if( node != NULL || !chrif->isconnected() ) {
 		set_eof(sd->fd);
 		return;
 	}
@@ -622,7 +620,7 @@ void chrif_authok(int fd) {
 	if ( ( sd = iMap->id2sd(account_id) ) != NULL )
 		return;
 	
-	if ( ( node = chrif_search(account_id) ) == NULL )
+	if ( ( node = chrif->search(account_id) ) == NULL )
 		return; // should not happen
 
 	if ( node->state != ST_LOGIN )
@@ -632,7 +630,7 @@ void chrif_authok(int fd) {
 		/*
 		//When we receive double login info and the client has not connected yet,
 		//discard the older one and keep the new one.
-		chrif_auth_delete(node->account_id, node->char_id, ST_LOGIN);
+		chrif->auth_delete(node->account_id, node->char_id, ST_LOGIN);
 		*/
 		return; // should not happen
 	}
@@ -651,8 +649,8 @@ void chrif_authok(int fd) {
 		pc->authfail(sd);
 	}
 	
-	chrif_char_offline(sd); //Set him offline, the char server likely has it set as online already.
-	chrif_auth_delete(account_id, char_id, ST_LOGIN);
+	chrif->char_offline(sd); //Set him offline, the char server likely has it set as online already.
+	chrif->auth_delete(account_id, char_id, ST_LOGIN);
 }
 
 // client authentication failed
@@ -667,7 +665,7 @@ void chrif_authfail(int fd) {/* HELLO WORLD. ip in RFIFOL 15 is not being used (
 	login_id1  = RFIFOL(fd,10);
 	sex        = RFIFOB(fd,14);
 
-	node = chrif_search(account_id);
+	node = chrif->search(account_id);
 	
 	if( node != NULL &&
 		node->account_id == account_id &&
@@ -677,7 +675,7 @@ void chrif_authfail(int fd) {/* HELLO WORLD. ip in RFIFOL 15 is not being used (
 		node->state == ST_LOGIN )
 	{// found a match
 		clif->authfail_fd(node->fd, 0);
-		chrif_auth_delete(account_id, char_id, ST_LOGIN);
+		chrif->auth_delete(account_id, char_id, ST_LOGIN);
 	}
 }
 
@@ -695,13 +693,13 @@ int auth_db_cleanup_sub(DBKey key, DBData *data, va_list ap) {
 			case ST_LOGOUT:
 				//Re-save attempt (->sd should never be null here).
 				node->node_created = iTimer->gettick(); //Refresh tick (avoid char-server load if connection is really bad)
-				chrif_save(node->sd, 1);
+				chrif->save(node->sd, 1);
 				break;
 			default:
 				//Clear data. any connected players should have timed out by now.
 				ShowInfo("auth_db: Node (state %s) timed out for %d:%d\n", states[node->state], node->account_id, node->char_id);
-				chrif_char_offline_nsd(node->account_id, node->char_id);
-				chrif_auth_delete(node->account_id, node->char_id, node->state);
+				chrif->char_offline_nsd(node->account_id, node->char_id);
+				chrif->auth_delete(node->account_id, node->char_id, node->state);
 				break;
 		}
 		return 1;
@@ -825,7 +823,7 @@ int chrif_changesex(struct map_session_data *sd) {
 
 /*==========================================
  * R 2b0f <accid>.l <name>.24B <type>.w <answer>.w
- * Processing a reply to chrif_char_ask_name() (request to modify an account).
+ * Processing a reply to chrif->char_ask_name() (request to modify an account).
  * type of operation:
  *   1: block, 2: ban, 3: unblock, 4: unban, 5: changesex
  * type of answer:
@@ -1037,9 +1035,9 @@ int chrif_disconnectplayer(int fd) {
 
 	sd = iMap->id2sd(account_id);
 	if( sd == NULL ) {
-		struct auth_node* auth = chrif_search(account_id);
+		struct auth_node* auth = chrif->search(account_id);
 		
-		if( auth != NULL && chrif_auth_delete(account_id, auth->char_id, ST_LOGIN) )
+		if( auth != NULL && chrif->auth_delete(account_id, auth->char_id, ST_LOGIN) )
 			return 0;
 		
 		return -1;
@@ -1333,11 +1331,11 @@ int chrif_char_online(struct map_session_data *sd) {
 
 /// Called when the connection to Char Server is disconnected.
 void chrif_on_disconnect(void) {
-	if( chrif_connected != 1 )
+	if( chrif->chrif_connected != 1 )
 		ShowWarning("Connection to Char Server lost.\n\n");
-	chrif_connected = 0;
+	chrif->chrif_connected = 0;
 	
- 	other_mapserver_count = 0; //Reset counter. We receive ALL maps from all map-servers on reconnect.
+ 	chrif->other_mapserver_count = 0; //Reset counter. We receive ALL maps from all map-servers on reconnect.
 	iMap->eraseallipport();
 
 	//Attempt to reconnect in a second. [Skotlex]
@@ -1447,7 +1445,7 @@ int chrif_parse(int fd) {
 		switch(cmd) {
 			case 0x2af9: chrif_connectack(fd); break;
 			case 0x2afb: chrif_sendmapack(fd); break;
-			case 0x2afd: chrif_authok(fd); break;
+			case 0x2afd: chrif->authok(fd); break;
 			case 0x2b00: iMap->setusers(RFIFOL(fd,2)); chrif_keepalive(fd); break;
 			case 0x2b03: clif->charselectok(RFIFOL(fd,2), RFIFOB(fd,6)); break;
 			case 0x2b04: chrif_recvmap(fd); break;
@@ -1546,15 +1544,15 @@ static int check_connect_char_server(int tid, unsigned int tick, int id, intptr_
 		realloc_fifo(char_fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 		chrif_connect(char_fd);
-		chrif_connected = (chrif_state == 2);
+		chrif->chrif_connected = (chrif_state == 2);
 		srvinfo = 0;
 	} else {
 		if (srvinfo == 0) {
-			chrif_ragsrvinfo(battle_config.base_exp_rate, battle_config.job_exp_rate, battle_config.item_rate_common);
+			chrif->ragsrvinfo(battle_config.base_exp_rate, battle_config.job_exp_rate, battle_config.item_rate_common);
 			srvinfo = 1;
 		}
 	}
-	if ( chrif_isconnected() )
+	if ( chrif->isconnected() )
 		displayed = 0;
 	return 0;
 }
@@ -1648,3 +1646,65 @@ int do_init_chrif(void) {
 	return 0;
 }
 
+
+/*=====================================
+* Default Functions : chrif.h 
+* Generated by HerculesInterfaceMaker
+* created by Susu
+*-------------------------------------*/
+void chrif_defaults(void) {
+	chrif = &chrif_s;
+
+	/* vars */
+	
+	chrif->chrif_connected = 0;
+	chrif->other_mapserver_count = 0;
+
+	/* funcs */
+	
+	chrif->setuserid = chrif_setuserid;
+	chrif->setpasswd = chrif_setpasswd;
+	chrif->checkdefaultlogin = chrif_checkdefaultlogin;
+	chrif->setip = chrif_setip;
+	chrif->setport = chrif_setport;
+	
+	chrif->isconnected = chrif_isconnected;
+	chrif->check_shutdown = chrif_check_shutdown;
+	
+	chrif->search = chrif_search;
+	chrif->auth_check = chrif_auth_check;
+	chrif->auth_delete = chrif_auth_delete;
+	chrif->auth_finished = chrif_auth_finished;
+	
+	chrif->authreq = chrif_authreq;
+	chrif->authok = chrif_authok;
+	chrif->scdata_request = chrif_scdata_request;
+	chrif->save = chrif_save;
+	chrif->charselectreq = chrif_charselectreq;
+	chrif->changemapserver = chrif_changemapserver;
+	
+	chrif->searchcharid = chrif_searchcharid;
+	chrif->changeemail = chrif_changeemail;
+	chrif->char_ask_name = chrif_char_ask_name;
+	chrif->updatefamelist = chrif_updatefamelist;
+	chrif->buildfamelist = chrif_buildfamelist;
+	chrif->save_scdata = chrif_save_scdata;
+	chrif->ragsrvinfo = chrif_ragsrvinfo;
+	chrif->char_offline = chrif_char_offline;
+	chrif->char_offline_nsd = chrif_char_offline_nsd;
+	chrif->char_reset_offline = chrif_char_reset_offline;
+	chrif->send_users_tochar = send_users_tochar;
+	chrif->char_online = chrif_char_online;
+	chrif->changesex = chrif_changesex;
+	//chrif->chardisconnect = chrif_chardisconnect;
+	chrif->divorce = chrif_divorce;
+	
+	chrif->removefriend = chrif_removefriend;
+	chrif->send_report = chrif_send_report;
+	
+	chrif->do_final_chrif = do_final_chrif;
+	chrif->do_init_chrif = do_init_chrif;
+	
+	chrif->flush_fifo = chrif_flush_fifo;
+	chrif->skillid2idx = chrif_skillid2idx;
+}
