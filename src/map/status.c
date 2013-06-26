@@ -196,7 +196,7 @@ void initChangeTables(void) {
 	//The main status definitions
 	add_sc( SM_BASH              , SC_STUN            );
 	set_sc( SM_PROVOKE           , SC_PROVOKE         , SI_PROVOKE         , SCB_DEF|SCB_DEF2|SCB_BATK|SCB_WATK );
-	add_sc( SM_MAGNUM            , SC_WATK_ELEMENT    );
+	add_sc( SM_MAGNUM            , SC_SUB_WEAPONPROPERTY    );
 	set_sc( SM_ENDURE            , SC_ENDURE          , SI_ENDURE          , SCB_MDEF|SCB_DSPD );
 	add_sc( MG_SIGHT             , SC_SIGHT           );
 	add_sc( MG_SAFETYWALL        , SC_SAFETYWALL      );
@@ -348,9 +348,9 @@ void initChangeTables(void) {
 	set_sc( LK_AURABLADE         , SC_AURABLADE       , SI_AURABLADE       , SCB_NONE );
 	set_sc( LK_PARRYING          , SC_PARRYING        , SI_PARRYING        , SCB_NONE );
 #ifndef RENEWAL
-	set_sc( LK_CONCENTRATION     , SC_LKCONCENTRATION , SI_CONCENTRATION   , SCB_BATK|SCB_WATK|SCB_HIT|SCB_DEF|SCB_DEF2);
+	set_sc( LK_CONCENTRATION     , SC_LKCONCENTRATION , SI_LKCONCENTRATION   , SCB_BATK|SCB_WATK|SCB_HIT|SCB_DEF|SCB_DEF2);
 #else
-	set_sc( LK_CONCENTRATION     , SC_LKCONCENTRATION , SI_CONCENTRATION   , SCB_HIT|SCB_DEF);
+	set_sc( LK_CONCENTRATION     , SC_LKCONCENTRATION , SI_LKCONCENTRATION   , SCB_HIT|SCB_DEF);
 #endif
 	set_sc( LK_TENSIONRELAX      , SC_TENSIONRELAX    , SI_TENSIONRELAX    , SCB_REGEN );
 	set_sc( LK_BERSERK           , SC_BERSERK         , SI_BERSERK         , SCB_DEF|SCB_DEF2|SCB_MDEF|SCB_MDEF2|SCB_FLEE|SCB_SPEED|SCB_ASPD|SCB_MAXHP|SCB_REGEN );
@@ -511,7 +511,7 @@ void initChangeTables(void) {
 
 	add_sc( MER_CRASH            , SC_STUN            );
 	set_sc( MER_PROVOKE          , SC_PROVOKE         , SI_PROVOKE         , SCB_DEF|SCB_DEF2|SCB_BATK|SCB_WATK );
-	add_sc( MS_MAGNUM            , SC_WATK_ELEMENT    );
+	add_sc( MS_MAGNUM            , SC_SUB_WEAPONPROPERTY    );
 	add_sc( MER_SIGHT            , SC_SIGHT           );
 	set_sc( MER_DECAGI           , SC_DEC_AGI         , SI_DEC_AGI         , SCB_AGI|SCB_SPEED );
 	set_sc( MER_MAGNIFICAT       , SC_MAGNIFICAT      , SI_MAGNIFICAT      , SCB_REGEN );
@@ -756,6 +756,9 @@ void initChangeTables(void) {
 	set_sc( OB_OBOROGENSOU		, SC_GENSOU				 , SI_GENSOU			   , SCB_NONE );
 
 	set_sc( ALL_FULL_THROTTLE   , SC_FULL_THROTTLE       , SI_FULL_THROTTLE        , SCB_SPEED|SCB_STR|SCB_AGI|SCB_VIT|SCB_INT|SCB_DEX|SCB_LUK );
+
+	add_sc( ALL_REVERSEORCISH   , SC_ORCISH          );
+	set_sc( ALL_ANGEL_PROTECT	, SC_ANGEL_PROTECT		 , SI_ANGEL_PROTECT		   , SCB_REGEN );
 
 	// Storing the target job rather than simply SC_SOULLINK simplifies code later on.
 	SkillStatusChangeTable[SL_ALCHEMIST]   = (sc_type)MAPID_ALCHEMIST,
@@ -3295,7 +3298,6 @@ static unsigned short status_calc_vit(struct block_list *,struct status_change *
 static unsigned short status_calc_int(struct block_list *,struct status_change *,int);
 static unsigned short status_calc_dex(struct block_list *,struct status_change *,int);
 static unsigned short status_calc_luk(struct block_list *,struct status_change *,int);
-static unsigned short status_calc_batk(struct block_list *,struct status_change *,int,bool);
 static unsigned short status_calc_watk(struct block_list *,struct status_change *,int,bool);
 static unsigned short status_calc_matk(struct block_list *,struct status_change *,int,bool);
 static signed short status_calc_hit(struct block_list *,struct status_change *,int,bool);
@@ -4398,18 +4400,21 @@ static unsigned short status_calc_luk(struct block_list *bl, struct status_chang
 	return (unsigned short)cap_value(luk,0,USHRT_MAX);
 }
 
-static unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc, int batk, bool viewable)
+unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc, int batk, bool viewable)
 {
 	if(!sc || !sc->count)
 		return cap_value(batk,0,USHRT_MAX);
 	
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
+		if(sc->data[SC_PLUSATTACKPOWER])
+			batk += sc->data[SC_PLUSATTACKPOWER]->val1;
 		return (unsigned short)cap_value(batk,0,USHRT_MAX);
 	}
-
+#ifndef RENEWAL
 	if(sc->data[SC_PLUSATTACKPOWER])
 		batk += sc->data[SC_PLUSATTACKPOWER]->val1;
+#endif
 	if(sc->data[SC_BATKFOOD])
 		batk += sc->data[SC_BATKFOOD]->val1;
 	if(sc->data[SC_GS_GATLINGFEVER])
@@ -10863,7 +10868,7 @@ int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int fl
 	struct status_change *sc = status_get_sc(bl);
 	
 	if ( bl->type == BL_PC && watk->atk ){
-		if ( flag&16 )
+		if ( flag&2 )
 			dstr = status_get_dex(bl);
 		else
 			dstr = status_get_str(bl);
@@ -10884,10 +10889,10 @@ int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int fl
 		else
 			max = min;
 	}
-	
-	if( bl->type == BL_PC && ((TBL_PC*)bl)->right_weapon.overrefine > 0)
-		max += rnd()%((TBL_PC*)bl)->right_weapon.overrefine + 1;
 
+	if( bl->type == BL_PC && ((TBL_PC*)bl)->right_weapon.overrefine > 0 && !(flag&2) )
+			max += rnd()%((TBL_PC*)bl)->right_weapon.overrefine + 1;
+	
 	max = status_calc_watk(bl, sc, max, false);
 
 	return max;
@@ -11000,11 +11005,15 @@ int status_change_clear_buffs (struct block_list* bl, int type)
 		if( !sc->data[i] || !status_get_sc_type(i) )
 			continue;
 
-		if( type&1 && !(status_get_sc_type(i)&SC_BUFF) )
+		if( type&3 && !(status_get_sc_type(i)&SC_BUFF) && !(status_get_sc_type(i)&SC_DEBUFF) )
 			continue;
 
-		if( type&2 && !(status_get_sc_type(i)&SC_DEBUFF) )
-			continue;
+		if( !(type&3) ){
+			if( type&1 && !(status_get_sc_type(i)&SC_BUFF) )
+				continue;
+			if( type&2 && !(status_get_sc_type(i)&SC_DEBUFF) )
+				continue;
+		}
 
 		switch (i) {
 			case SC_DEEP_SLEEP:
