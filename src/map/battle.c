@@ -488,8 +488,9 @@ int battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, uin
  * &8: Skip target size adjustment (Extremity Fist?)
  *&16: Arrow attack but BOW, REVOLVER, RIFLE, SHOTGUN, GATLING or GRENADE type weapon not equipped (i.e. shuriken, kunai and venom knives not affected by DEX)
  */
-
-#ifdef RENEWAL
+/* modifying until malufett is able to adjust the formula */
+//#ifdef RENEWAL
+#if 0
 int battle_calc_base_damage(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, int flag, int flag2)
 {
 	int damage, batk;
@@ -818,8 +819,10 @@ int battle_calc_elefix(struct block_list *src, struct block_list *target, uint16
 	}
 	if( sc && sc->data[SC_WATK_ELEMENT] )
 	{ // Descriptions indicate this means adding a percent of a normal attack in another element. [Skotlex]
-			damage = 
-#ifndef RENEWAL
+			damage =
+/* modifying until malufett can adjust the formula */
+//#ifndef RENEWAL
+#if 1
 				battle->calc_base_damage(sstatus, &sstatus->rhw, sc, tstatus->size, BL_CAST(BL_PC, src), (flag?2:0))
 #else
 				battle->calc_base_damage(src, target, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_R, (flag?2:0)|(sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), 0)
@@ -829,7 +832,9 @@ int battle_calc_elefix(struct block_list *src, struct block_list *target, uint16
 			damage += battle->attr_fix(src, target, damage, sc->data[SC_WATK_ELEMENT]->val1, tstatus->def_ele, tstatus->ele_lv);
 			if( left ){
 				damage = 
-#ifndef RENEWAL
+/* modifying until malufett can adjust the formula */
+//#ifndef RENEWAL
+#if 1
 					battle->calc_base_damage(sstatus, &sstatus->lhw, sc, tstatus->size, BL_CAST(BL_PC, src), (flag?2:0))
 #else
 					battle->calc_base_damage(src, target, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_L, (flag?2:0)|(sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), 0)
@@ -863,7 +868,7 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 	sstatus = status_get_status_data(src);
 	tstatus = status_get_status_data(target);
 	s_race2 = status_get_race2(src);
-
+	
 	switch(attack_type){
 		case BF_MAGIC:
 			if ( sd && !(nk&NK_NO_CARDFIX_ATK) ) {
@@ -1056,7 +1061,7 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 				else if( cardfix != 1000 )
 					damage = damage * cardfix / 1000;
 
-		}else if( tsd && !(nk&NK_NO_CARDFIX_DEF) ){
+		} else if( tsd && !(nk&NK_NO_CARDFIX_DEF) && !(left&2) ){
 			if( !(nk&NK_NO_ELEFIX) )
 			{
 				int ele_fix = tsd->subele[s_ele];
@@ -1863,7 +1868,9 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case MO_INVESTIGATE:
 					skillratio += 75 * skill_lv;
 					break;
-	#ifndef RENEWAL
+	/* modifying until malufett can adjust the formula */
+	//#ifndef RENEWAL
+	#if 1
 				case MO_EXTREMITYFIST:
 					{	//Overflow check. [Skotlex]
 						unsigned int ratio = skillratio + 100*(8 + status->sp/10);
@@ -3373,9 +3380,10 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 			}
 		}
 #endif
-#ifdef RENEWAL
-		ad.damage = battle->calc_cardfix(BF_MAGIC, src, target, nk, s_ele, 0, ad.damage, 0, ad.flag);
-#endif
+/* temporarily disabling until malufett can adjust */
+//#ifdef RENEWAL
+//		ad.damage = battle->calc_cardfix(BF_MAGIC, src, target, nk, s_ele, 0, ad.damage, 0, ad.flag);
+//#endif
 		if(sd) {
 			//Damage bonuses
 			if ((i = pc->skillatk_bonus(sd, skill_id)))
@@ -3439,10 +3447,10 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 					ad.damage = 0;
 			}
 		}
-
-#ifndef RENEWAL
+/* temporarily making global until malufett can adjust */
+//#ifndef RENEWAL
         ad.damage = battle->calc_cardfix(BF_MAGIC, src, target, nk, s_ele, 0, ad.damage, 0, ad.flag);
-#endif
+//#endif
 	}
 
 	damage_div_fix(ad.damage, ad.div_);
@@ -3585,8 +3593,10 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	case PA_GOSPEL:
 		md.damage = 1+rnd()%9999;
 		break;
-	case CR_ACIDDEMONSTRATION: 
-#ifdef RENEWAL
+	case CR_ACIDDEMONSTRATION:
+/* modifying until malufett can adjust the formula */
+//#ifdef RENEWAL
+#if 0
 		{// [malufett]
 			int matk=0, atk;
 			short tdef = status_get_total_def(target);
@@ -3655,7 +3665,9 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 		break ;
 	case ASC_BREAKER:
 		{
-#ifndef RENEWAL
+/* modifying until malufett can adjust the formula */
+//#ifndef RENEWAL
+#if 1
 		md.damage = 500+rnd()%500 + 5*skill_lv * sstatus->int_;
 		nk|=NK_IGNORE_FLEE|NK_NO_ELEFIX; //These two are not properties of the weapon based part.
 #else
@@ -4346,7 +4358,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				wd.damage2 = 0;
 				break;
 			case NJ_ISSEN: // [malufett]
-#ifndef RENEWAL
+/* modifying until malufett can adjust the formula */
+//#ifndef RENEWAL
+#if 1
 				wd.damage = 40*sstatus->str +skill_lv*(sstatus->hp/10 + 35);
 				wd.damage2 = 0;
 #else
@@ -4427,7 +4441,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 #endif
 					?1:0)|
 					(flag.arrow?2:0)|
-#ifndef RENEWAL
+/* modifying until malufett can adjust the formula */
+//#ifndef RENEWAL
+#if 1
 					(skill_id == HW_MAGICCRASHER?4:0)|
 					(skill_id == MO_EXTREMITYFIST?8:0)|
 #endif
@@ -4444,7 +4460,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					default:
 						i |= 16; // for ex. shuriken must not be influenced by DEX
 				}
-#ifdef RENEWAL
+/* modifying until malufett can adjust the formula */
+//#ifdef RENEWAL
+#if 0
 				wd.damage = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_R, i, wd.flag);
 				wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
 				if (flag.lh){
@@ -4771,8 +4789,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 #endif
 	if(skill_id==TF_POISON)
 		ATK_ADD(15*skill_lv);
-
-#ifndef RENEWAL
+/* temp-fix until malufett adjusts */
+//#ifndef RENEWAL
+#if 1
 	wd.damage = battle->calc_elefix(src, target, skill_id, skill_lv, wd.damage, nk, n_ele, s_ele, s_ele_, false, flag.arrow);
 	if( flag.lh )
 		wd.damage2 = battle->calc_elefix(src, target, skill_id, skill_lv, wd.damage2, nk, n_ele, s_ele, s_ele_, true, flag.arrow);
@@ -4799,7 +4818,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		}
 	}
 #endif
-#ifndef RENEWAL
+/* modiftying until malufett adjusts */
+//#ifndef RENEWAL
+#if 1
 	if (sd) {
 		if (skill_id != CR_SHIELDBOOMERANG) //Only Shield boomerang doesn't takes the Star Crumbs bonus.
 			ATK_ADD2(wd.div_*sd->right_weapon.star, wd.div_*sd->left_weapon.star);
@@ -4825,9 +4846,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	}
     //Card Fix, tsd side
     if(tsd){ //if player on player then it was already measured above
-		wd.damage = battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage, 2, wd.flag);
-        if( flag.lh )
-            wd.damage2 = battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage2, 3, wd.flag);
+		wd.damage = battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage, 0, wd.flag);
 	}
 #endif
 	if( flag.infdef ) { //Plants receive 1 damage when hit

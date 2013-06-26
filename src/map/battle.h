@@ -535,7 +535,9 @@ struct battle_interface {
 	/* skill range criteria */
 	int (*range_type) (struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv);
 	int (*calc_base_damage)
-#ifdef RENEWAL
+/* temporary until malufett is able to adjust the formula */
+//#ifdef RENEWAL
+#if 0
 		(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, int flag, int flag2);
 #else
 		(struct status_data *status, struct weapon_atk *wa, struct status_change *sc, unsigned short t_size, struct map_session_data *sd, int flag);

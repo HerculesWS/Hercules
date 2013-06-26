@@ -459,7 +459,7 @@ struct packet_script_clear {
 	short PacketType;
 	unsigned int NpcID;
 } __attribute__((packed));
-
+/* made possible thanks to Yommy!! */
 struct packet_package_item_announce {
 	short PacketType;
 	short PacketLength;
@@ -467,6 +467,7 @@ struct packet_package_item_announce {
 	unsigned short ItemID;
 	char len;
 	char Name[NAME_LENGTH];
+	char unknown;
 	unsigned short BoxItemID;
 } __attribute__((packed));
 
