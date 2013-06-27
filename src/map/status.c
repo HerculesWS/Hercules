@@ -3318,6 +3318,8 @@ static unsigned char status_calc_element_lv(struct block_list *bl, struct status
 static unsigned short status_calc_mode(struct block_list *bl, struct status_change *sc, int mode);
 #ifdef RENEWAL
 static unsigned short status_calc_ematk(struct block_list *,struct status_change *,int);
+#else
+static unsigned short status_calc_batk(struct block_list *,struct status_change *,int,bool);
 #endif
 
 //Calculates base regen values.
@@ -4399,8 +4401,11 @@ static unsigned short status_calc_luk(struct block_list *bl, struct status_chang
 
 	return (unsigned short)cap_value(luk,0,USHRT_MAX);
 }
-
+#ifdef RENEWAL
 unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc, int batk, bool viewable)
+#else
+static unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc, int batk, bool viewable)
+#endif
 {
 	if(!sc || !sc->count)
 		return cap_value(batk,0,USHRT_MAX);
