@@ -9053,7 +9053,7 @@ ACMD(channel) {
 		         return false;
 		}
 
-		if( sub2[0] == '\0' || ( pl_sd = map_nick2sd(sub2) ) == NULL ) {
+		if( sub2[0] == '\0' || ( pl_sd = iMap->nick2sd(sub2) ) == NULL ) {
 		         sprintf(atcmd_output, msg_txt(1434), sub2);// Player '%s' was not found
 		         clif->message(fd, atcmd_output);
 		         return false;
