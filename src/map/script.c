@@ -1968,7 +1968,6 @@ void script_set_constant2(const char *name, int value, bool isparameter) {
 	int n = add_str(name);
 	
 	if( script->str_data[n].type != C_NOP ) {
-		script->str_data[n].next = 0;
 		script->str_data[n].func = NULL;
 		script->str_data[n].backpatch = -1;
 		script->str_data[n].label = -1;
