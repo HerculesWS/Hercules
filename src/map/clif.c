@@ -17305,6 +17305,9 @@ void clif_partytickack(struct map_session_data* sd, bool flag) {
 void clif_status_change_end(struct block_list *bl, int tid, enum send_target target, int type) {
 	struct packet_status_change_end p;
 	
+	if( bl->type == BL_PC && !((TBL_PC*)bl)->state.active )
+		return;
+	
 	p.PacketType = status_change_endType;
 	p.index = type;
 	p.AID = tid;
