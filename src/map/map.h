@@ -605,6 +605,7 @@ struct map_data {
 		unsigned reset :1; // [Daegaladh]
 		unsigned chsysnolocalaj : 1;
 		unsigned noknockback : 1;
+		unsigned notomb : 1;
 	} flag;
 	struct point save;
 	struct npc_data *npc[MAX_NPC_PER_MAP];
