@@ -7568,6 +7568,7 @@ return true;\
 		checkflag(nojobexp);			checkflag(nomobloot);			checkflag(nomvploot);	checkflag(nightenabled);
 		checkflag(nodrop);				checkflag(novending);	checkflag(loadevent);
 		checkflag(nochat);				checkflag(partylock);			checkflag(guildlock);	checkflag(src4instance);
+		checkflag(notomb);
 		clif->message(sd->fd," ");
 		clif->message(sd->fd,msg_txt(1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
 		clif->message(sd->fd,msg_txt(1313)); // Type "@mapflag available" to list the available mapflags.
@@ -7604,6 +7605,7 @@ return true;\
 	setflag(nojobexp);			setflag(nomobloot);			setflag(nomvploot);			setflag(nightenabled);
 	setflag(nodrop);			setflag(novending);			setflag(loadevent);
 	setflag(nochat);			setflag(partylock);			setflag(guildlock);			setflag(src4instance);
+	setflag(notomb);
 	
 	clif->message(sd->fd,msg_txt(1314)); // Invalid flag name or flag.
 	clif->message(sd->fd,msg_txt(1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
@@ -7615,7 +7617,7 @@ return true;\
 	clif->message(sd->fd,"nozenypenalty, notrade, noskill, nowarp, nowarpto, noicewall, snow, clouds, clouds2,");
 	clif->message(sd->fd,"fog, fireworks, sakura, leaves, nobaseexp, nojobexp, nomobloot,");
 	clif->message(sd->fd,"nomvploot, nightenabled, nodrop, novending, loadevent, nochat, partylock,");
-	clif->message(sd->fd,"guildlock, src4instance");
+	clif->message(sd->fd,"guildlock, src4instance, notomb");
 	
 #undef checkflag
 #undef setflag
