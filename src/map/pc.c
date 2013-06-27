@@ -18,6 +18,7 @@
 #include "atcommand.h" // get_atcommand_level()
 #include "battle.h" // battle_config
 #include "battleground.h"
+#include "chat.h"
 #include "chrif.h"
 #include "clif.h"
 #include "date.h" // is_day_of_*()
@@ -1691,6 +1692,13 @@ int pc_disguise(struct map_session_data *sd, int class_) {
 			//It seems the cart info is lost on undisguise.
 			clif->cartlist(sd);
 			clif->updatestatus(sd,SP_CARTINFO);
+		}
+		if (sd->chatID) {
+			struct chat_data* cd;
+			nullpo_retr(1, sd);
+			cd = (struct chat_data*)map_id2bl(sd->chatID);
+			if( cd != NULL || (struct block_list*)sd == cd->owner )
+				clif->dispchat(cd,0);
 		}
 	}
 	return 1;
