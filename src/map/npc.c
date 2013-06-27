@@ -3412,8 +3412,8 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 						if( map[m].units[k] == NULL )
 							continue;
 						
-						memmove(&map[m].units[cursor], &map[m].units[k], sizeof(struct mapflag_skill_adjust));
-						
+						map[m].units[cursor] = map[m].units[k];
+												
 						cursor++;
 					}
 					if( !( map[m].unit_count = cursor ) ) {
@@ -3452,7 +3452,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", atoi(modifier), skill_name, map[m].name, filepath, strline(buffer,start-buffer));
 		} else {
 			int idx = map[m].skill_count;
-						
+			
 			ARR_FIND(0, idx, k, map[m].skills[k]->skill_id == skill_id);
 			
 			if( k < idx ) {
@@ -3466,8 +3466,8 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 						if( map[m].skills[k] == NULL )
 							continue;
 						
-						memmove(&map[m].skills[cursor], &map[m].skills[k], sizeof(struct mapflag_skill_adjust));
-						
+						map[m].skills[cursor] = map[m].skills[k];
+												
 						cursor++;
 					}
 					if( !( map[m].skill_count = cursor ) ) {
