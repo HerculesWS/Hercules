@@ -384,8 +384,8 @@ void buyingstore_trade(struct map_session_data* sd, int account_id, unsigned int
 	}
 
 	if( iMap->save_settings&128 ) {
-		chrif_save(sd, 0);
-		chrif_save(pl_sd, 0);
+		chrif->save(sd, 0);
+		chrif->save(pl_sd, 0);
 	}
 	
 	// check whether or not there is still something to buy

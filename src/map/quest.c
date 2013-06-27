@@ -100,7 +100,7 @@ int quest_add(TBL_PC * sd, int quest_id)
 	clif->quest_add(sd, &sd->quest_log[i], sd->quest_index[i]);
 
 	if( iMap->save_settings&64 )
-		chrif_save(sd,0);
+		chrif->save(sd,0);
 
 	return 0;
 }
@@ -148,7 +148,7 @@ int quest_change(TBL_PC * sd, int qid1, int qid2)
 	clif->quest_add(sd, &sd->quest_log[i], sd->quest_index[i]);
 
 	if( iMap->save_settings&64 )
-		chrif_save(sd,0);
+		chrif->save(sd,0);
 
 	return 0;
 }
@@ -179,7 +179,7 @@ int quest_delete(TBL_PC * sd, int quest_id)
 	clif->quest_delete(sd, quest_id);
 
 	if( iMap->save_settings&64 )
-		chrif_save(sd,0);
+		chrif->save(sd,0);
 
 	return 0;
 }
@@ -250,7 +250,7 @@ int quest_update_status(TBL_PC * sd, int quest_id, quest_state status) {
 	clif->quest_delete(sd, quest_id);
 
 	if( iMap->save_settings&64 )
-		chrif_save(sd,0);
+		chrif->save(sd,0);
 
 	return 0;
 }

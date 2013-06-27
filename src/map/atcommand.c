@@ -745,7 +745,7 @@ ACMD(save)
 	if (sd->status.pet_id > 0 && sd->pd)
 		intif_save_petdata(sd->status.account_id, &sd->pd->pet);
 	
-	chrif_save(sd,0);
+	chrif->save(sd,0);
 	
 	clif->message(fd, msg_txt(6)); // Your save point has been changed.
 	
@@ -2745,7 +2745,7 @@ ACMD(char_block)
 		return false;
 	}
 	
-	chrif_char_ask_name(sd->status.account_id, atcmd_player_name, 1, 0, 0, 0, 0, 0, 0); // type: 1 - block
+	chrif->char_ask_name(sd->status.account_id, atcmd_player_name, 1, 0, 0, 0, 0, 0, 0); // type: 1 - block
 	clif->message(fd, msg_txt(88)); // Character name sent to char-server to ask it.
 	
 	return true;
@@ -2842,7 +2842,7 @@ ACMD(char_ban)
 		return false;
 	}
 	
-	chrif_char_ask_name(sd->status.account_id, atcmd_player_name, 2, year, month, day, hour, minute, second); // type: 2 - ban
+	chrif->char_ask_name(sd->status.account_id, atcmd_player_name, 2, year, month, day, hour, minute, second); // type: 2 - ban
 	clif->message(fd, msg_txt(88)); // Character name sent to char-server to ask it.
 	
 	return true;
@@ -2863,7 +2863,7 @@ ACMD(char_unblock)
 	}
 	
 	// send answer to login server via char-server
-	chrif_char_ask_name(sd->status.account_id, atcmd_player_name, 3, 0, 0, 0, 0, 0, 0); // type: 3 - unblock
+	chrif->char_ask_name(sd->status.account_id, atcmd_player_name, 3, 0, 0, 0, 0, 0, 0); // type: 3 - unblock
 	clif->message(fd, msg_txt(88)); // Character name sent to char-server to ask it.
 	
 	return true;
@@ -2884,7 +2884,7 @@ ACMD(char_unban)
 	}
 	
 	// send answer to login server via char-server
-	chrif_char_ask_name(sd->status.account_id, atcmd_player_name, 4, 0, 0, 0, 0, 0, 0); // type: 4 - unban
+	chrif->char_ask_name(sd->status.account_id, atcmd_player_name, 4, 0, 0, 0, 0, 0, 0); // type: 4 - unban
 	clif->message(fd, msg_txt(88)); // Character name sent to char-server to ask it.
 	
 	return true;
@@ -3688,7 +3688,7 @@ ACMD(reloadbattleconf)
 	   )
   	{	// Exp or Drop rates changed.
 		mob_reload(); //Needed as well so rate changes take effect.
-		chrif_ragsrvinfo(battle_config.base_exp_rate, battle_config.job_exp_rate, battle_config.item_rate_common);
+		chrif->ragsrvinfo(battle_config.base_exp_rate, battle_config.job_exp_rate, battle_config.item_rate_common);
 	}
 	clif->message(fd, msg_txt(255));
 	return true;
@@ -5010,7 +5010,7 @@ ACMD(email)
 		return false;
 	}
 	
-	chrif_changeemail(sd->status.account_id, actual_email, new_email);
+	chrif->changeemail(sd->status.account_id, actual_email, new_email);
 	clif->message(fd, msg_txt(148)); // Information sended to login-server via char-server.
 	return true;
 }
@@ -6513,7 +6513,7 @@ ACMD(changesex)
 	// to avoid any problem with equipment and invalid sex, equipment is unequiped.
 	for( i=0; i<EQI_MAX; i++ )
 		if( sd->equip_index[i] >= 0 ) pc->unequipitem(sd, sd->equip_index[i], 3);
-	chrif_changesex(sd);
+	chrif->changesex(sd);
 	return true;
 }
 
