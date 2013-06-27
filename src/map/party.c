@@ -585,7 +585,12 @@ int party_member_withdraw(int party_id, int account_id, int char_id)
 		if( p->instances )
 			instance->check_kick(sd);
 	}
-
+	if (sd && sd->sc.data[SC_DANCING]) {
+		status_change_end(&sd->bl, SC_DANCING, INVALID_TIMER);
+		status_change_end(&sd->bl, SC_DRUMBATTLE, INVALID_TIMER);
+		status_change_end(&sd->bl, SC_NIBELUNGEN, INVALID_TIMER);
+		status_change_end(&sd->bl, SC_SIEGFRIED, INVALID_TIMER);
+	}
 	return 0;
 }
 
