@@ -408,7 +408,7 @@ int pet_birth_process(struct map_session_data *sd, struct s_pet *pet)
 
 	intif_save_petdata(sd->status.account_id,pet);
 	if (iMap->save_settings&8)
-		chrif_save(sd,0); //is it REALLY Needed to save the char for hatching a pet? [Skotlex]
+		chrif->save(sd,0); //is it REALLY Needed to save the char for hatching a pet? [Skotlex]
 
 	if(sd->bl.prev != NULL) {
 		iMap->addblock(&sd->pd->bl);

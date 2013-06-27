@@ -6586,6 +6586,15 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 	undead_flag = battle->check_undead(status->race,status->def_ele);
 	//Check for inmunities / sc fails
 	switch (type) {
+		case SC_DRUMBATTLE:
+		case SC_NIBELUNGEN:
+		case SC_INTOABYSS:
+		case SC_SIEGFRIED:
+			if( bl->type == BL_PC) { 
+				struct map_session_data *sd = BL_CAST(BL_PC,bl);
+				if (!sd->status.party_id) return 0;
+			}
+			break;
         case SC_ANGRIFFS_MODUS:
         case SC_GOLDENE_FERSE:
              if ((type==SC_GOLDENE_FERSE && sc->data[SC_ANGRIFFS_MODUS])

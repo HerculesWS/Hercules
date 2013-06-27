@@ -18,6 +18,7 @@
 #include "atcommand.h" // get_atcommand_level()
 #include "battle.h" // battle_config
 #include "battleground.h"
+#include "chat.h"
 #include "chrif.h"
 #include "clif.h"
 #include "date.h" // is_day_of_*()
@@ -360,7 +361,7 @@ void pc_addfame(struct map_session_data *sd,int count)
 			clif->fame_taekwon(sd,count);
 			break;
 	}
-	chrif_updatefamelist(sd);
+	chrif->updatefamelist(sd);
 }
 
 // Check whether a player ID is in the fame rankers' list of its job, returns his/her position if so, 0 else
@@ -1238,13 +1239,13 @@ int pc_reg_received(struct map_session_data *sd)
 
 	iMap->addiddb(&sd->bl);
 	iMap->delnickdb(sd->status.char_id, sd->status.name);
-	if (!chrif_auth_finished(sd))
+	if (!chrif->auth_finished(sd))
 		ShowError("pc_reg_received: Failed to properly remove player %d:%d from logging db!\n", sd->status.account_id, sd->status.char_id);
 
 	pc->load_combo(sd);
 
 	status_calc_pc(sd,1);
-	chrif_scdata_request(sd->status.account_id, sd->status.char_id);
+	chrif->scdata_request(sd->status.account_id, sd->status.char_id);
 
 	intif_Mail_requestinbox(sd->status.char_id, 0); // MAIL SYSTEM - Request Mail Inbox
 	intif_request_questlog(sd);
@@ -1691,6 +1692,13 @@ int pc_disguise(struct map_session_data *sd, int class_) {
 			//It seems the cart info is lost on undisguise.
 			clif->cartlist(sd);
 			clif->updatestatus(sd,SP_CARTINFO);
+		}
+		if (sd->chatID) {
+			struct chat_data* cd;
+			nullpo_retr(1, sd);
+			cd = (struct chat_data*)map_id2bl(sd->chatID);
+			if( cd != NULL || (struct block_list*)sd == cd->owner )
+				clif->dispchat(cd,0);
 		}
 	}
 	return 1;
@@ -4838,8 +4846,8 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		sd->bl.x=x;
 		sd->bl.y=y;
 		pc->clean_skilltree(sd);
-		chrif_save(sd,2);
-		chrif_changemapserver(sd, ip, (short)port);
+		chrif->save(sd,2);
+		chrif->changemapserver(sd, ip, (short)port);
 
 		//Free session data from this map server [Kevin]
 		unit_free_pc(sd);
@@ -7580,16 +7588,16 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 
 	//if you were previously famous, not anymore.
 	if (fame_flag) {
-		chrif_save(sd,0);
-		chrif_buildfamelist();
+		chrif->save(sd,0);
+		chrif->buildfamelist();
 	} else if (sd->status.fame > 0) {
 		//It may be that now they are famous?
  		switch (sd->class_&MAPID_UPPERMASK) {
 			case MAPID_BLACKSMITH:
 			case MAPID_ALCHEMIST:
 			case MAPID_TAEKWON:
-				chrif_save(sd,0);
-				chrif_buildfamelist();
+				chrif->save(sd,0);
+				chrif->buildfamelist();
 			break;
 		}
 	}
@@ -9033,7 +9041,7 @@ int pc_divorce(struct map_session_data *sd)
 
 	if( (p_sd = iMap->charid2sd(sd->status.partner_id)) == NULL )
 	{ // Lets char server do the divorce
-		if( chrif_divorce(sd->status.char_id, sd->status.partner_id) )
+		if( chrif->divorce(sd->status.char_id, sd->status.partner_id) )
 			return -1; // No char server connected
 
 		return 0;
@@ -9211,7 +9219,7 @@ int pc_autosave(int tid, unsigned int tick, int id, intptr_t data)
 		last_save_id = sd->bl.id;
 		save_flag = 2;
 
-		chrif_save(sd,0);
+		chrif->save(sd,0);
 		break;
 	}
 	mapit->free(iter);
