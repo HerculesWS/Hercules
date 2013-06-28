@@ -534,7 +534,7 @@ struct guild {
 	/* TODO: still used for something?|: */
 	unsigned short save_flag; // for TXT saving
 	
-	unsigned short *instance;
+	short *instance;
 	unsigned short instances;
 	
 	void *channel;

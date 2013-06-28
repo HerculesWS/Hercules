@@ -921,7 +921,7 @@ int guild_member_withdraw(int guild_id, int account_id, int char_id, int flag, c
 	if(sd != NULL && sd->status.guild_id == guild_id) {
 		// do stuff that needs the guild_id first, BEFORE we wipe it
 		if (sd->state.storage_flag == 2) //Close the guild storage.
-			storage_guild_storageclose(sd);
+			gstorage->close(sd);
 		guild->send_dot_remove(sd);
 		if( hChSys.ally ) {
 			clif->chsys_quitg(sd);
@@ -1752,7 +1752,7 @@ int guild_broken(int guild_id,int flag)
 	for(i=0;i<g->max_member;i++){	// Destroy all relationships
 		if((sd=g->member[i].sd)!=NULL){
 			if(sd->state.storage_flag == 2)
-				storage_guild_storage_quit(sd,1);
+				gstorage->pc_quit(sd,1);
 			sd->status.guild_id=0;
 			sd->guild = NULL;
 			clif->guild_broken(g->member[i].sd,0);
@@ -1762,7 +1762,7 @@ int guild_broken(int guild_id,int flag)
 
 	guild_db->foreach(guild_db,guild_broken_sub,guild_id);
 	castle_db->foreach(castle_db,castle_guild_broken_sub,guild_id);
-	guild_storage_delete(guild_id);
+	gstorage->delete(guild_id);
 	if( hChSys.ally ) {
 		if( g->channel != NULL ) {
 			clif->chsys_delete(( struct hChSysCh * )g->channel);

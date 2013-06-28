@@ -187,14 +187,14 @@ void log_pick(int id, int16 m, e_log_pick_type type, int amount, struct item* it
 /// logs item transactions (players)
 void log_pick_pc(struct map_session_data* sd, e_log_pick_type type, int amount, struct item* itm, struct item_data *data) {
 	nullpo_retv(sd);
-	log_pick(sd->status.char_id, sd->bl.m, type, amount, itm, data ? data : itemdb_exists(itm->nameid));
+	log_pick(sd->status.char_id, sd->bl.m, type, amount, itm, data ? data : itemdb->exists(itm->nameid));
 }
 
 
 /// logs item transactions (monsters)
 void log_pick_mob(struct mob_data* md, e_log_pick_type type, int amount, struct item* itm, struct item_data *data) {
 	nullpo_retv(md);
-	log_pick(md->class_, md->bl.m, type, amount, itm, data ? data : itemdb_exists(itm->nameid));
+	log_pick(md->class_, md->bl.m, type, amount, itm, data ? data : itemdb->exists(itm->nameid));
 }
 void log_zeny_sub_sql(struct map_session_data* sd, e_log_pick_type type, struct map_session_data* src_sd, int amount) {
 	if( SQL_ERROR == SQL->Query(logmysql_handle, LOG_QUERY " INTO `%s` (`time`, `char_id`, `src_id`, `type`, `amount`, `map`) VALUES (NOW(), '%d', '%d', '%c', '%d', '%s')",

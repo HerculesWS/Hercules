@@ -745,7 +745,7 @@ ACMD(save)
 	if (sd->status.pet_id > 0 && sd->pd)
 		intif_save_petdata(sd->status.account_id, &sd->pd->pet);
 	
-	chrif_save(sd,0);
+	chrif->save(sd,0);
 	
 	clif->message(fd, msg_txt(6)); // Your save point has been changed.
 	
@@ -816,8 +816,7 @@ ACMD(storage)
 	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.trading || sd->state.storage_flag)
 		return false;
 	
-	if (storage_storageopen(sd) == 1)
-	{	//Already open.
+	if (storage->open(sd) == 1) { //Already open.
 		clif->message(fd, msg_txt(250));
 		return false;
 	}
@@ -853,7 +852,7 @@ ACMD(guildstorage)
 		return false;
 	}
 	
-	storage_guild_storageopen(sd);
+	gstorage->open(sd);
 	clif->message(fd, msg_txt(920)); // Guild storage opened.
 	return true;
 }
@@ -1146,8 +1145,8 @@ ACMD(item)
 	if (number <= 0)
 		number = 1;
 	
-	if ((item_data = itemdb_searchname(item_name)) == NULL &&
-	    (item_data = itemdb_exists(atoi(item_name))) == NULL)
+	if ((item_data = itemdb->search_name(item_name)) == NULL &&
+	    (item_data = itemdb->exists(atoi(item_name))) == NULL)
 	{
 		clif->message(fd, msg_txt(19)); // Invalid item ID or name.
 		return false;
@@ -1204,8 +1203,8 @@ ACMD(item2)
 		number = 1;
 	
 	item_id = 0;
-	if ((item_data = itemdb_searchname(item_name)) != NULL ||
-	    (item_data = itemdb_exists(atoi(item_name))) != NULL)
+	if ((item_data = itemdb->search_name(item_name)) != NULL ||
+	    (item_data = itemdb->exists(atoi(item_name))) != NULL)
 		item_id = item_data->nameid;
 	
 	if (item_id > 500) {
@@ -2129,8 +2128,8 @@ ACMD(produce)
 		return false;
 	}
 	
-	if ( (item_data = itemdb_searchname(item_name)) == NULL &&
-		(item_data = itemdb_exists(atoi(item_name))) == NULL ) {
+	if ( (item_data = itemdb->search_name(item_name)) == NULL &&
+		(item_data = itemdb->exists(atoi(item_name))) == NULL ) {
 		clif->message(fd, msg_txt(170)); //This item is not an equipment.
 		return false;
 	}
@@ -2549,7 +2548,7 @@ ACMD(makeegg)
 		return false;
 	}
 	
-	if ((item_data = itemdb_searchname(message)) != NULL) // for egg name
+	if ((item_data = itemdb->search_name(message)) != NULL) // for egg name
 		id = item_data->nameid;
 	else
 		if ((id = mobdb_searchname(message)) != 0) // for monster name
@@ -2746,7 +2745,7 @@ ACMD(char_block)
 		return false;
 	}
 	
-	chrif_char_ask_name(sd->status.account_id, atcmd_player_name, 1, 0, 0, 0, 0, 0, 0); // type: 1 - block
+	chrif->char_ask_name(sd->status.account_id, atcmd_player_name, 1, 0, 0, 0, 0, 0, 0); // type: 1 - block
 	clif->message(fd, msg_txt(88)); // Character name sent to char-server to ask it.
 	
 	return true;
@@ -2843,7 +2842,7 @@ ACMD(char_ban)
 		return false;
 	}
 	
-	chrif_char_ask_name(sd->status.account_id, atcmd_player_name, 2, year, month, day, hour, minute, second); // type: 2 - ban
+	chrif->char_ask_name(sd->status.account_id, atcmd_player_name, 2, year, month, day, hour, minute, second); // type: 2 - ban
 	clif->message(fd, msg_txt(88)); // Character name sent to char-server to ask it.
 	
 	return true;
@@ -2864,7 +2863,7 @@ ACMD(char_unblock)
 	}
 	
 	// send answer to login server via char-server
-	chrif_char_ask_name(sd->status.account_id, atcmd_player_name, 3, 0, 0, 0, 0, 0, 0); // type: 3 - unblock
+	chrif->char_ask_name(sd->status.account_id, atcmd_player_name, 3, 0, 0, 0, 0, 0, 0); // type: 3 - unblock
 	clif->message(fd, msg_txt(88)); // Character name sent to char-server to ask it.
 	
 	return true;
@@ -2885,7 +2884,7 @@ ACMD(char_unban)
 	}
 	
 	// send answer to login server via char-server
-	chrif_char_ask_name(sd->status.account_id, atcmd_player_name, 4, 0, 0, 0, 0, 0, 0); // type: 4 - unban
+	chrif->char_ask_name(sd->status.account_id, atcmd_player_name, 4, 0, 0, 0, 0, 0, 0); // type: 4 - unban
 	clif->message(fd, msg_txt(88)); // Character name sent to char-server to ask it.
 	
 	return true;
@@ -3396,7 +3395,7 @@ ACMD(idsearch)
 	
 	sprintf(atcmd_output, msg_txt(77), item_name); // The reference result of '%s' (name: id):
 	clif->message(fd, atcmd_output);
-	match = itemdb_searchname_array(item_array, MAX_SEARCH, item_name);
+	match = itemdb->search_name_array(item_array, MAX_SEARCH, item_name);
 	if (match > MAX_SEARCH) {
 		sprintf(atcmd_output, msg_txt(269), MAX_SEARCH, match);
 		clif->message(fd, atcmd_output);
@@ -3583,7 +3582,7 @@ ACMD(partyrecall)
 ACMD(reloaditemdb)
 {
 	nullpo_retr(-1, sd);
-	itemdb_reload();
+	itemdb->reload();
 	clif->message(fd, msg_txt(97)); // Item database has been reloaded.
 	
 	return true;
@@ -3689,7 +3688,7 @@ ACMD(reloadbattleconf)
 	   )
   	{	// Exp or Drop rates changed.
 		mob_reload(); //Needed as well so rate changes take effect.
-		chrif_ragsrvinfo(battle_config.base_exp_rate, battle_config.job_exp_rate, battle_config.item_rate_common);
+		chrif->ragsrvinfo(battle_config.base_exp_rate, battle_config.job_exp_rate, battle_config.item_rate_common);
 	}
 	clif->message(fd, msg_txt(255));
 	return true;
@@ -4021,6 +4020,11 @@ ACMD(mount_peco)
 	
 	if (sd->disguise != -1) {
 		clif->message(fd, msg_txt(212)); // Cannot mount while in disguise.
+		return false;
+	}
+	
+	if( sd->sc.data[SC_ALL_RIDING] ) {
+		clif->message(fd, msg_txt(1476)); // You are already mounting something else
 		return false;
 	}
 	
@@ -5011,7 +5015,7 @@ ACMD(email)
 		return false;
 	}
 	
-	chrif_changeemail(sd->status.account_id, actual_email, new_email);
+	chrif->changeemail(sd->status.account_id, actual_email, new_email);
 	clif->message(fd, msg_txt(148)); // Information sended to login-server via char-server.
 	return true;
 }
@@ -5233,7 +5237,7 @@ ACMD(storeall)
 	
 	if (sd->state.storage_flag != 1)
   	{	//Open storage.
-		if( storage_storageopen(sd) == 1 ) {
+		if( storage->open(sd) == 1 ) {
 			clif->message(fd, msg_txt(1161)); // You currently cannot open your storage.
 			return false;
 		}
@@ -5243,10 +5247,10 @@ ACMD(storeall)
 		if (sd->status.inventory[i].amount) {
 			if(sd->status.inventory[i].equip != 0)
 				pc->unequipitem(sd, i, 3);
-			storage_storageadd(sd,  i, sd->status.inventory[i].amount);
+			storage->add(sd,  i, sd->status.inventory[i].amount);
 		}
 	}
-	storage_storageclose(sd);
+	storage->close(sd);
 	
 	clif->message(fd, msg_txt(1162)); // All items stored.
 	return true;
@@ -5264,9 +5268,9 @@ ACMD(clearstorage)
 	
 	j = sd->status.storage.storage_amount;
 	for (i = 0; i < j; ++i) {
-		storage_delitem(sd, i, sd->status.storage.items[i].amount);
+		storage->delitem(sd, i, sd->status.storage.items[i].amount);
 	}
-	storage_storageclose(sd);
+	storage->close(sd);
 	
 	clif->message(fd, msg_txt(1394)); // Your storage was cleaned.
 	return true;
@@ -5276,7 +5280,7 @@ ACMD(cleargstorage)
 {
 	int i, j;
 	struct guild *g;
-	struct guild_storage *gstorage;
+	struct guild_storage *guild_storage;
 	nullpo_retr(-1, sd);
 	
 	g = sd->guild;
@@ -5296,18 +5300,18 @@ ACMD(cleargstorage)
 		return false;
 	}
 	
-	gstorage = guild2storage2(sd->status.guild_id);
-	if (gstorage == NULL) {// Doesn't have opened @gstorage yet, so we skip the deletion since *shouldn't* have any item there.
+	guild_storage = gstorage->id2storage2(sd->status.guild_id);
+	if (guild_storage == NULL) {// Doesn't have opened @gstorage yet, so we skip the deletion since *shouldn't* have any item there.
 		return false;
 	}
 	
-	j = gstorage->storage_amount;
-	gstorage->lock = 1; // Lock @gstorage: do not allow any item to be retrieved or stored from any guild member
+	j = guild_storage->storage_amount;
+	guild_storage->lock = 1; // Lock @gstorage: do not allow any item to be retrieved or stored from any guild member
 	for (i = 0; i < j; ++i) {
-		guild_storage_delitem(sd, gstorage, i, gstorage->items[i].amount);
+		gstorage->delitem(sd, guild_storage, i, guild_storage->items[i].amount);
 	}
-	storage_guild_storageclose(sd);
-	gstorage->lock = 0; // Cleaning done, release lock
+	gstorage->close(sd);
+	guild_storage->lock = 0; // Cleaning done, release lock
 	
 	clif->message(fd, msg_txt(1395)); // Your guild storage was cleaned.
 	return true;
@@ -5799,8 +5803,8 @@ ACMD(autolootitem)
 	
 	if (action < 3) // add or remove
 	{
-		if ((item_data = itemdb_exists(atoi(message))) == NULL)
-			item_data = itemdb_searchname(message);
+		if ((item_data = itemdb->exists(atoi(message))) == NULL)
+			item_data = itemdb->search_name(message);
 		if (!item_data) {
 			// No items founds in the DB with Id or Name
 			clif->message(fd, msg_txt(1189)); // Item not found.
@@ -5853,7 +5857,7 @@ ACMD(autolootitem)
 				{
 					if (sd->state.autolootid[i] == 0)
 						continue;
-					if (!(item_data = itemdb_exists(sd->state.autolootid[i]))) {
+					if (!(item_data = itemdb->exists(sd->state.autolootid[i]))) {
 						ShowDebug("Non-existant item %d on autolootitem list (account_id: %d, char_id: %d)", sd->state.autolootid[i], sd->status.account_id, sd->status.char_id);
 						continue;
 					}
@@ -6514,7 +6518,7 @@ ACMD(changesex)
 	// to avoid any problem with equipment and invalid sex, equipment is unequiped.
 	for( i=0; i<EQI_MAX; i++ )
 		if( sd->equip_index[i] >= 0 ) pc->unequipitem(sd, sd->equip_index[i], 3);
-	chrif_changesex(sd);
+	chrif->changesex(sd);
 	return true;
 }
 
@@ -6696,7 +6700,7 @@ ACMD(mobinfo)
 		j = 0;
 		for (i = 0; i < MAX_MOB_DROP; i++) {
 			int droprate;
-			if (mob->dropitem[i].nameid <= 0 || mob->dropitem[i].p < 1 || (item_data = itemdb_exists(mob->dropitem[i].nameid)) == NULL)
+			if (mob->dropitem[i].nameid <= 0 || mob->dropitem[i].p < 1 || (item_data = itemdb->exists(mob->dropitem[i].nameid)) == NULL)
 				continue;
 			droprate = mob->dropitem[i].p;
 			
@@ -6721,7 +6725,7 @@ ACMD(mobinfo)
 			strcpy(atcmd_output, msg_txt(1248)); //  MVP Items:
 			j = 0;
 			for (i = 0; i < MAX_MVP_DROP; i++) {
-				if (mob->mvpitem[i].nameid <= 0 || (item_data = itemdb_exists(mob->mvpitem[i].nameid)) == NULL)
+				if (mob->mvpitem[i].nameid <= 0 || (item_data = itemdb->exists(mob->mvpitem[i].nameid)) == NULL)
 					continue;
 				if (mob->mvpitem[i].p > 0) {
 					j++;
@@ -7143,8 +7147,8 @@ ACMD(iteminfo)
 		clif->message(fd, msg_txt(1276)); // Please enter an item name/ID (usage: @ii/@iteminfo <item name/ID>).
 		return false;
 	}
-	if ((item_array[0] = itemdb_exists(atoi(message))) == NULL)
-		count = itemdb_searchname_array(item_array, MAX_SEARCH, message);
+	if ((item_array[0] = itemdb->exists(atoi(message))) == NULL)
+		count = itemdb->search_name_array(item_array, MAX_SEARCH, message);
 	
 	if (!count) {
 		clif->message(fd, msg_txt(19));	// Invalid item ID or name.
@@ -7192,8 +7196,8 @@ ACMD(whodrops)
 		clif->message(fd, msg_txt(1284)); // Please enter item name/ID (usage: @whodrops <item name/ID>).
 		return false;
 	}
-	if ((item_array[0] = itemdb_exists(atoi(message))) == NULL)
-		count = itemdb_searchname_array(item_array, MAX_SEARCH, message);
+	if ((item_array[0] = itemdb->exists(atoi(message))) == NULL)
+		count = itemdb->search_name_array(item_array, MAX_SEARCH, message);
 	
 	if (!count) {
 		clif->message(fd, msg_txt(19));	// Invalid item ID or name.
@@ -7569,6 +7573,7 @@ return true;\
 		checkflag(nojobexp);			checkflag(nomobloot);			checkflag(nomvploot);	checkflag(nightenabled);
 		checkflag(nodrop);				checkflag(novending);	checkflag(loadevent);
 		checkflag(nochat);				checkflag(partylock);			checkflag(guildlock);	checkflag(src4instance);
+		checkflag(notomb);
 		clif->message(sd->fd," ");
 		clif->message(sd->fd,msg_txt(1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
 		clif->message(sd->fd,msg_txt(1313)); // Type "@mapflag available" to list the available mapflags.
@@ -7605,6 +7610,7 @@ return true;\
 	setflag(nojobexp);			setflag(nomobloot);			setflag(nomvploot);			setflag(nightenabled);
 	setflag(nodrop);			setflag(novending);			setflag(loadevent);
 	setflag(nochat);			setflag(partylock);			setflag(guildlock);			setflag(src4instance);
+	setflag(notomb);
 	
 	clif->message(sd->fd,msg_txt(1314)); // Invalid flag name or flag.
 	clif->message(sd->fd,msg_txt(1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
@@ -7616,7 +7622,7 @@ return true;\
 	clif->message(sd->fd,"nozenypenalty, notrade, noskill, nowarp, nowarpto, noicewall, snow, clouds, clouds2,");
 	clif->message(sd->fd,"fog, fireworks, sakura, leaves, nobaseexp, nojobexp, nomobloot,");
 	clif->message(sd->fd,"nomvploot, nightenabled, nodrop, novending, loadevent, nochat, partylock,");
-	clif->message(sd->fd,"guildlock, src4instance");
+	clif->message(sd->fd,"guildlock, src4instance, notomb");
 	
 #undef checkflag
 #undef setflag
@@ -8112,7 +8118,7 @@ ACMD(itemlist)
 		const struct item* it = &items[i];
 		struct item_data* itd;
 		
-		if( it->nameid == 0 || (itd = itemdb_exists(it->nameid)) == NULL )
+		if( it->nameid == 0 || (itd = itemdb->exists(it->nameid)) == NULL )
 			continue;
 		
 		counter += it->amount;
@@ -8195,7 +8201,7 @@ ACMD(itemlist)
 					{
 						struct item_data* card;
 						
-						if( it->card[j] == 0 || (card = itemdb_exists(it->card[j])) == NULL )
+						if( it->card[j] == 0 || (card = itemdb->exists(it->card[j])) == NULL )
 							continue;
 						
 						counter2++;
@@ -8308,7 +8314,7 @@ ACMD(delitem)
 		return false;
 	}
 	
-	if( ( id = itemdb_searchname(item_name) ) != NULL || ( id = itemdb_exists(atoi(item_name)) ) != NULL )
+	if( ( id = itemdb->search_name(item_name) ) != NULL || ( id = itemdb->exists(atoi(item_name)) ) != NULL )
 	{
 		nameid = id->nameid;
 	}
@@ -8471,6 +8477,11 @@ ACMD(charcommands)
 }
 /* for new mounts */
 ACMD(mount2) {
+	
+	if( sd->sc.option&(OPTION_WUGRIDER|OPTION_RIDING|OPTION_DRAGON|OPTION_MADOGEAR) ) {
+		clif->message(fd, msg_txt(1476)); // You are already mounting something else
+		return false;
+	}
 	
 	clif->message(sd->fd,msg_txt(1362)); // NOTICE: If you crash with mount your LUA is outdated.
 	if( !(sd->sc.data[SC_ALL_RIDING]) ) {
@@ -9046,11 +9057,17 @@ ACMD(channel) {
 			return false;
 		}
 		
-		if( sub2[0] == '\0' || ( pl_sd = iMap->nick2sd(sub2) ) == NULL ) {
-			sprintf(atcmd_output, msg_txt(1434), sub2);// Player '%s' was not found
-			clif->message(fd, atcmd_output);
-			return false;
+		if (!message || !*message || sscanf(message, "%s %s %24[^\n]", key, sub1, sub2) < 1) {
+		        sprintf(atcmd_output, msg_txt(1434), sub2);// Player '%s' was not found
+		         clif->message(fd, atcmd_output);
+		         return false;
 		}
+
+		if( sub2[0] == '\0' || ( pl_sd = iMap->nick2sd(sub2) ) == NULL ) {
+		         sprintf(atcmd_output, msg_txt(1434), sub2);// Player '%s' was not found
+		         clif->message(fd, atcmd_output);
+		         return false;
+		 }
 		
 		if( pc_has_permission(pl_sd, PC_PERM_HCHSYS_ADMIN) ) {
 			clif->message(fd, msg_txt(1464)); // Ban failed, not possible to ban this user.

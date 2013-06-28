@@ -17,7 +17,7 @@
 HPExport struct hplugin_info pinfo = {
 	"DB2SQL",		// Plugin name
 	SERVER_TYPE_MAP,// Which server types this plugin works with?
-	"0.1",			// Plugin version
+	"0.4",			// Plugin version
 	HPM_VERSION,	// HPM Version (don't change, macro is automatically updated)
 };
 
@@ -55,10 +55,10 @@ int db2sql(char** str, const char* source, int line, int scriptopt) {
 	/* renewal has the 'matk' and 'equip_level' is now 'equip_level_min', and there is a new 'equip_level_max' field */
 #ifdef RENEWAL
 		if( SQL_SUCCESS != SQL->StmtPrepare(stmt, "REPLACE INTO `%s` (`id`,`name_english`,`name_japanese`,`type`,`price_buy`,`price_sell`,`weight`,`atk`,`matk`,`defence`,`range`,`slots`,`equip_jobs`,`equip_upper`,`equip_genders`,`equip_locations`,`weapon_level`,`equip_level_min`,`equip_level_max`,`refineable`,`view`,`script`,`equip_script`,`unequip_script`) VALUES ('%u',?,?,'%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u',?,?,?)",iMap->item_db_re_db,
-											it->nameid,it->type,it->value_buy,it->value_sell,it->weight,it->atk,it->matk,it->def,it->range,it->slot,(unsigned int)strtoul(str[11+offset],NULL,0),atoi(str[12+offset]),atoi(str[13+offset]),atoi(str[14+offset]),it->wlv,it->elv,it->elvmax,atoi(str[17+offset]),it->look) )
+											it->nameid,it->flag.delay_consume?IT_DELAYCONSUME:it->type,it->value_buy,it->value_sell,it->weight,it->atk,it->matk,it->def,it->range,it->slot,(unsigned int)strtoul(str[11+offset],NULL,0),atoi(str[12+offset]),atoi(str[13+offset]),atoi(str[14+offset]),it->wlv,it->elv,it->elvmax,atoi(str[17+offset]),it->look) )
 #else
 		if( SQL_SUCCESS != SQL->StmtPrepare(stmt, "REPLACE INTO `%s` (`id`,`name_english`,`name_japanese`,`type`,`price_buy`,`price_sell`,`weight`,`atk`,`defence`,`range`,`slots`,`equip_jobs`,`equip_upper`,`equip_genders`,`equip_locations`,`weapon_level`,`equip_level`,`refineable`,`view`,`script`,`equip_script`,`unequip_script`) VALUES ('%u',?,?,'%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u',?,?,?)",iMap->item_db_db,
-											it->nameid,it->type,it->value_buy,it->value_sell,it->weight,it->atk,it->def,it->range,it->slot,(unsigned int)strtoul(str[11],NULL,0),atoi(str[12]),atoi(str[13]),atoi(str[14]),it->wlv,it->elv,atoi(str[17]),it->look) )
+											it->nameid,it->flag.delay_consume?IT_DELAYCONSUME:it->type,it->value_buy,it->value_sell,it->weight,it->atk,it->def,it->range,it->slot,(unsigned int)strtoul(str[11],NULL,0),atoi(str[12]),atoi(str[13]),atoi(str[14]),it->wlv,it->elv,atoi(str[17]),it->look) )
 #endif
 			SqlStmt_ShowDebug(stmt);
 		else {
@@ -98,6 +98,11 @@ int db2sql(char** str, const char* source, int line, int scriptopt) {
 
 CPCMD(db2sql) {
 	
+	if( iMap->db_use_sqldbs ) {
+		ShowInfo("db2sql: this should not be used with 'db_use_sqldbs' enabled, skipping...\n");
+		return;
+	}
+	
 	stmt = SQL->StmtMalloc(mysql_handle);
 	if( stmt == NULL ) {
 		SqlStmt_ShowDebug(stmt);
@@ -107,9 +112,12 @@ CPCMD(db2sql) {
 	/* link */
 	parse_dbrow = itemdb->parse_dbrow;
 	itemdb->parse_dbrow = db2sql;
-	
 	/* empty table */
+#ifdef RENEWAL
+	if ( SQL_ERROR == SQL->Query(mysql_handle, "DELETE FROM `%s`", iMap->item_db_re_db ) )
+#else
 	if ( SQL_ERROR == SQL->Query(mysql_handle, "DELETE FROM `%s`", iMap->item_db_db) )
+#endif
 		Sql_ShowDebug(mysql_handle);
 	else {
 		itemdb->reload();

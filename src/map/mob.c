@@ -2330,7 +2330,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		{
 			if (md->db->dropitem[i].nameid <= 0)
 				continue;
-			if ( !(it = itemdb_exists(md->db->dropitem[i].nameid)) )
+			if ( !(it = itemdb->exists(md->db->dropitem[i].nameid)) )
 				continue;
 			drop_rate = md->db->dropitem[i].p;
 			if (drop_rate <= 0) {
@@ -2394,9 +2394,11 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		}
 
 		// Ore Discovery [Celest]
-		if (sd == mvp_sd && pc->checkskill(sd,BS_FINDINGORE)>0 && battle_config.finding_ore_rate/10 >= rnd()%10000) {
-			ditem = mob_setdropitem(itemdb_searchrandomid(IG_FINDINGORE), 1, NULL);
-			mob_item_drop(md, dlist, ditem, 0, battle_config.finding_ore_rate/10, homkillonly);
+		if (sd == mvp_sd && pc->checkskill(sd,BS_FINDINGORE) > 0) {
+			if( (temp = itemdb->chain_item(itemdb->chain_cache[ECC_ORE],&i)) ) {
+				ditem = mob_setdropitem(temp, 1, NULL);
+				mob_item_drop(md, dlist, ditem, 0, i, homkillonly);
+			}
 		}
 
 		if(sd) {
@@ -2424,8 +2426,9 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 					if (rnd()%10000 >= drop_rate)
 						continue;
-					itemid = (sd->add_drop[i].id > 0) ? sd->add_drop[i].id : itemdb_searchrandomid(sd->add_drop[i].group);
-					mob_item_drop(md, dlist, mob_setdropitem(itemid,1,NULL), 0, drop_rate, homkillonly);
+					itemid = (sd->add_drop[i].id > 0) ? sd->add_drop[i].id : itemdb->chain_item(sd->add_drop[i].group,&drop_rate);
+					if( itemid )
+						mob_item_drop(md, dlist, mob_setdropitem(itemid,1,NULL), 0, drop_rate, homkillonly);
 				}
 			}
 
@@ -2504,7 +2507,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				struct item_data *data;
 				if(mdrop_id[i] <= 0)
 					continue;
-				if(! (data = itemdb_exists(mdrop_id[i])) )
+				if(! (data = itemdb->exists(mdrop_id[i])) )
 					continue;
 
 				temp = mdrop_p[i];
@@ -2626,7 +2629,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		return 5; // Note: Actually, it's 4. Oh well...
 
 	// MvP tomb [GreenBox]
-	if (battle_config.mvp_tomb_enabled && md->spawn->state.boss)
+	if (battle_config.mvp_tomb_enabled && md->spawn->state.boss && map[md->bl.m].flag.notomb != 1)
 		mvptomb_create(md, mvp_sd ? mvp_sd->status.name : NULL, time(NULL));
 
 	if( !rebirth ) {
@@ -3785,7 +3788,7 @@ static bool mob_parse_dbrow(char** str)
 		//calculate and store Max available drop chance of the MVP item
 		if (db->mvpitem[i].p) {
 			struct item_data *id;
-			id = itemdb_search(db->mvpitem[i].nameid);
+			id = itemdb->search(db->mvpitem[i].nameid);
 			if (id->maxchance == -1 || (id->maxchance < db->mvpitem[i].p/10 + 1) ) {
 				//item has bigger drop chance or sold in shops
 				id->maxchance = db->mvpitem[i].p/10 + 1; //reduce MVP drop info to not spoil common drop rate
@@ -3803,7 +3806,7 @@ static bool mob_parse_dbrow(char** str)
 			db->dropitem[i].p = 0; //No drop.
 			continue;
 		}
-		id = itemdb_search(db->dropitem[i].nameid);
+		id = itemdb->search(db->dropitem[i].nameid);
 		type = id->type;
 		rate = atoi(str[k+1]);
 		if( (class_ >= 1324 && class_ <= 1363) || (class_ >= 1938 && class_ <= 1946) )
@@ -4560,7 +4563,7 @@ static bool mob_readdb_itemratio(char* str[], int columns, int current)
 	int nameid, ratio, i;
 	nameid = atoi(str[0]);
 
-	if( itemdb_exists(nameid) == NULL )
+	if( itemdb->exists(nameid) == NULL )
 	{
 		ShowWarning("itemdb_read_itemratio: Invalid item id %d.\n", nameid);
 		return false;

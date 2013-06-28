@@ -1566,7 +1566,7 @@ void map_reqnickdb(struct map_session_data * sd, int charid)
 	CREATE(req, struct charid_request, 1);
 	req->next = p->requests;
 	p->requests = req;
-	chrif_searchcharid(charid);
+	chrif->searchcharid(charid);
 }
 
 /*==========================================
@@ -1629,11 +1629,11 @@ int map_quit(struct map_session_data *sd) {
 	int i;
 
 	if(!sd->state.active) { //Removing a player that is not active.
-		struct auth_node *node = chrif_search(sd->status.account_id);
+		struct auth_node *node = chrif->search(sd->status.account_id);
 		if (node && node->char_id == sd->status.char_id &&
 			node->state != ST_LOGOUT)
 			//Except when logging out, clear the auth-connect data immediately.
-			chrif_auth_delete(node->account_id, node->char_id, node->state);
+			chrif->auth_delete(node->account_id, node->char_id, node->state);
 		//Non-active players should not have loaded any data yet (or it was cleared already) so no additional cleanups are needed.
 		return 0;
 	}
@@ -1728,7 +1728,7 @@ int map_quit(struct map_session_data *sd) {
 	party->booking_delete(sd); // Party Booking [Spiria]
 	pc->makesavestatus(sd);
 	pc->clean_skilltree(sd);
-	chrif_save(sd,1);
+	chrif->save(sd,1);
 	unit_free_pc(sd);
 	return 0;
 }
@@ -1790,7 +1790,7 @@ const char* map_charid2nick(int charid)
 	if( *p->nick )
 		return p->nick;// name in nick_db
 
-	chrif_searchcharid(charid);// request the name
+	chrif->searchcharid(charid);// request the name
 	return NULL;
 }
 
@@ -3354,13 +3354,13 @@ int map_config_read(char *cfgName) {
 			if( msg_silent ) // only bother if its actually enabled
 				ShowInfo("Console Silent Setting: %d\n", atoi(w2));
 		} else if (strcmpi(w1, "userid")==0)
-			chrif_setuserid(w2);
+			chrif->setuserid(w2);
 		else if (strcmpi(w1, "passwd") == 0)
-			chrif_setpasswd(w2);
+			chrif->setpasswd(w2);
 		else if (strcmpi(w1, "char_ip") == 0)
-			char_ip_set = chrif_setip(w2);
+			char_ip_set = chrif->setip(w2);
 		else if (strcmpi(w1, "char_port") == 0)
-			chrif_setport(atoi(w2));
+			chrif->setport(atoi(w2));
 		else if (strcmpi(w1, "map_ip") == 0)
 			map_ip_set = clif->setip(w2);
 		else if (strcmpi(w1, "bind_ip") == 0)
@@ -3842,7 +3842,7 @@ bool map_zone_mf_cache(int m, char *flag, char *params) {
 		int drop_id = 0, drop_type = 0;
 		if (!strcmpi(drop_arg1, "random"))
 		drop_id = -1;
-		else if (itemdb_exists((drop_id = atoi(drop_arg1))) == NULL)
+		else if (itemdb->exists((drop_id = atoi(drop_arg1))) == NULL)
 		drop_id = 0;
 		if (!strcmpi(drop_arg2, "inventory"))
 		drop_type = 1;
@@ -4441,11 +4441,11 @@ unsigned short map_zone_str2itemid(const char *name) {
 	if( !name )
 		return 0;
 	if( name[0] == 'I' && name[1] == 'D' && strlen(name) <= 7 ) {
-		if( !( data = itemdb_exists(atoi(name+2))) ) {
+		if( !( data = itemdb->exists(atoi(name+2))) ) {
 			return 0;
 		}
 	} else {
-		if( !( data = itemdb_searchname(name) ) ) {
+		if( !( data = itemdb->search_name(name) ) ) {
 			return 0;
 		}
 	}
@@ -5006,8 +5006,6 @@ void do_final(void)
 		iMap->quit(sd);
 	mapit->free(iter);
 
-	instance->final();
-
 	/* prepares npcs for a faster shutdown process */
 	do_clear_npc();
 
@@ -5020,18 +5018,19 @@ void do_final(void)
 	ShowStatus("Cleaned up %d maps."CL_CLL"\n", iMap->map_num);
 
 	id_db->foreach(id_db,cleanup_db_sub);
-	chrif_char_reset_offline();
-	chrif_flush_fifo();
+	chrif->char_reset_offline();
+	chrif->flush_fifo();
 
 	atcommand->final();
 	battle->final();
-	do_final_chrif();
+	chrif->do_final_chrif();
 	ircbot->final();/* before clif. */
 	clif->final();
 	do_final_npc();
 	script->final();
-	do_final_itemdb();
-	do_final_storage();
+	itemdb->final();
+	instance->final();
+	storage->final();
 	guild->final();
 	party->do_final_party();
 	pc->do_final_pc();
@@ -5076,7 +5075,7 @@ void do_final(void)
 
 static int map_abort_sub(struct map_session_data* sd, va_list ap)
 {
-	chrif_save(sd,1);
+	chrif->save(sd,1);
 	return 1;
 }
 
@@ -5094,7 +5093,7 @@ void do_abort(void)
 		return;
 	}
 	run = 1;
-	if (!chrif_isconnected())
+	if (!chrif->isconnected())
 	{
 		if (pc_db->size(pc_db))
 			ShowFatalError("Server has crashed without a connection to the char-server, %u characters can't be saved!\n", pc_db->size(pc_db));
@@ -5102,7 +5101,7 @@ void do_abort(void)
 	}
 	ShowError("Server received crash signal! Attempting to save all online characters!\n");
 	iMap->map_foreachpc(map_abort_sub);
-	chrif_flush_fifo();
+	chrif->flush_fifo();
 }
 
 /*======================================================
@@ -5162,7 +5161,7 @@ void do_shutdown(void)
 			mapit->free(iter);
 			flush_fifos();
 		}
-		chrif_check_shutdown();
+		chrif->check_shutdown();
 	}
 }
 
@@ -5234,8 +5233,11 @@ void map_hp_symbols(void) {
 	HPM->share(bg,"battlegrounds");
 	HPM->share(buyingstore,"buyingstore");
 	HPM->share(clif,"clif");
+	HPM->share(chrif,"chrif");
 	HPM->share(guild,"guild");
+	HPM->share(gstorage,"gstorage");
 	HPM->share(homun,"homun");
+	HPM->share(iMap,"iMap");
 	HPM->share(ircbot,"ircbot");
 	HPM->share(itemdb,"itemdb");
 	HPM->share(logs,"logs");
@@ -5246,8 +5248,8 @@ void map_hp_symbols(void) {
 	HPM->share(vending,"vending");
 	HPM->share(pc,"pc");
 	HPM->share(party,"party");
+	HPM->share(storage,"storage");
 	HPM->share(trade,"trade");
-	HPM->share(iMap,"iMap");
 	/* partial */
 	HPM->share(mapit,"mapit");
 	/* sql link */
@@ -5265,7 +5267,9 @@ void load_defaults(void) {
 	battleground_defaults();
 	buyingstore_defaults();
 	clif_defaults();
+	chrif_defaults();
 	guild_defaults();
+	gstorage_defaults();
 	homunculus_defaults();
 	instance_defaults();
 	ircbot_defaults();
@@ -5279,6 +5283,7 @@ void load_defaults(void) {
 	vending_defaults();
 	pc_defaults();
 	party_defaults();
+	storage_defaults();
 	trade_defaults();
 }
 int do_init(int argc, char *argv[])
@@ -5395,7 +5400,7 @@ int do_init(int argc, char *argv[])
 	// loads npcs
 	iMap->reloadnpc(false);
 
-	chrif_checkdefaultlogin();
+	chrif->checkdefaultlogin();
 
 	if (!map_ip_set || !char_ip_set) {
 		char ip_str[16];
@@ -5413,7 +5418,7 @@ int do_init(int argc, char *argv[])
 		if (!map_ip_set)
 			clif->setip(ip_str);
 		if (!char_ip_set)
-			chrif_setip(ip_str);
+			chrif->setip(ip_str);
 	}
 
 	battle->config_read(iMap->BATTLE_CONF_FILENAME);
@@ -5458,11 +5463,11 @@ int do_init(int argc, char *argv[])
 	atcommand->init();
 	battle->init();
 	instance->init();
-	do_init_chrif();
+	chrif->do_init_chrif();
 	clif->init();
 	ircbot->init();
 	script->init();
-	do_init_itemdb();
+	itemdb->init();
 	skill->init();
 	read_map_zone_db();/* read after item and skill initalization */
 	do_init_mob();
@@ -5470,7 +5475,7 @@ int do_init(int argc, char *argv[])
 	do_init_status();
 	party->do_init_party();
 	guild->init();
-	do_init_storage();
+	storage->init();
 	do_init_pet();
 	homun->init();
 	do_init_mercenary();

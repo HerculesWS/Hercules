@@ -24,7 +24,7 @@ struct party_data {
 	struct party party;
 	struct party_member_data data[MAX_PARTY];
 	uint8 itemc; //For item distribution, position of last picker in party
-	unsigned short *instance;
+	short *instance;
 	unsigned short instances;
 	struct {
 		unsigned monk : 1; //There's at least one monk in party?

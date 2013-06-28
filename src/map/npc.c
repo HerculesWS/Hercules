@@ -610,18 +610,14 @@ int npc_timerevent_start(struct npc_data* nd, int rid)
 		ShowError("npc_timerevent_start: Attached player not found!\n");
 		return 1;
 	}
-
 	// Check if timer is already started.
-	if( sd )
-	{
+	if( sd ) {
 		if( sd->npc_timer_id != INVALID_TIMER )
 			return 0;
-	}
-	else if( nd->u.scr.timerid != INVALID_TIMER || nd->u.scr.timertick )
+	} else if( nd->u.scr.timerid != INVALID_TIMER || nd->u.scr.timertick )
 		return 0;
 
-	if (j < nd->u.scr.timeramount)
-	{
+	if (j < nd->u.scr.timeramount) {
 		int next;
 		struct timer_event_data *ted;
 		// Arrange for the next event
@@ -640,10 +636,10 @@ int npc_timerevent_start(struct npc_data* nd, int rid)
 			nd->u.scr.timertick = tick; // Set when timer is started
 			nd->u.scr.timerid = iTimer->add_timer(tick+next,npc_timerevent,nd->bl.id,(intptr_t)ted);
 		}
-	}
-	else if (!sd)
-	{
+
+	} else if (!sd) {
 		nd->u.scr.timertick = tick;
+
 	}
 
 	return 0;
@@ -664,7 +660,6 @@ int npc_timerevent_stop(struct npc_data* nd)
 		ShowError("npc_timerevent_stop: Attached player not found!\n");
 		return 1;
 	}
-
 	tid = sd?&sd->npc_timer_id:&nd->u.scr.timerid;
 	if( *tid == INVALID_TIMER && (sd || !nd->u.scr.timertick) ) // Nothing to stop
 		return 0;
@@ -785,7 +780,7 @@ int npc_settimerevent_tick(struct npc_data* nd, int newtimer)
 	nd->u.scr.rid = 0;
 
 	// Check if timer is started
-	flag = (nd->u.scr.timerid != INVALID_TIMER);
+	flag = (nd->u.scr.timerid != INVALID_TIMER || nd->u.scr.timertick);
 
 	if( flag ) npc_timerevent_stop(nd);
 	nd->u.scr.timer = newtimer;
@@ -1322,7 +1317,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
         nameid = item_list[i*2+1];
         amount = item_list[i*2+0];
 
-        if( !itemdb_exists(nameid) || amount <= 0 )
+        if( !itemdb->exists(nameid) || amount <= 0 )
             return 5;
 
         ARR_FIND(0,nd->u.shop.count,j,nd->u.shop.shop_item[j].nameid == nameid);
@@ -1427,7 +1422,7 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	if( sd->state.trading )
 		return 4;
 
-	if( (item = itemdb_exists(nameid)) == NULL )
+	if( (item = itemdb->exists(nameid)) == NULL )
 		return 5; // Invalid Item
 
 	ARR_FIND(0, nd->u.shop.count, i, nd->u.shop.shop_item[i].nameid == nameid);
@@ -1526,7 +1521,7 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list)
 		nameid = item_list[i*2+1] = nd->u.shop.shop_item[j].nameid; //item_avail replacement
 		value = nd->u.shop.shop_item[j].value;
 
-		if( !itemdb_exists(nameid) )
+		if( !itemdb->exists(nameid) )
 			return 3; // item no longer in itemdb
 
 		if( !itemdb_isstackable(nameid) && amount > 1 ) {
@@ -2211,7 +2206,7 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 			break;
 		}
 
-		if( (id = itemdb_exists(nameid)) == NULL )
+		if( (id = itemdb->exists(nameid)) == NULL )
 		{
 			ShowWarning("npc_parse_shop: Invalid sell item in file '%s', line '%d' (id '%d').\n", filepath, strline(buffer,start-buffer), nameid);
 			p = strchr(p+1,',');
@@ -3230,7 +3225,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			int drop_id = 0, drop_type = 0;
 			if (!strcmpi(drop_arg1, "random"))
 				drop_id = -1;
-			else if (itemdb_exists((drop_id = atoi(drop_arg1))) == NULL)
+			else if (itemdb->exists((drop_id = atoi(drop_arg1))) == NULL)
 				drop_id = 0;
 			if (!strcmpi(drop_arg2, "inventory"))
 				drop_type = 1;
@@ -3377,6 +3372,8 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		map[m].flag.guildlock=state;
 	else if (!strcmpi(w3,"reset"))
 		map[m].flag.reset=state;
+	else if (!strcmpi(w3,"notomb"))
+		map[m].flag.notomb=state;
 	else if (!strcmpi(w3,"adjust_unit_duration")) {
 		int skill_id, k;
 		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
@@ -3415,8 +3412,8 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 						if( map[m].units[k] == NULL )
 							continue;
 						
-						memmove(&map[m].units[cursor], &map[m].units[k], sizeof(struct mapflag_skill_adjust));
-						
+						map[m].units[cursor] = map[m].units[k];
+												
 						cursor++;
 					}
 					if( !( map[m].unit_count = cursor ) ) {
@@ -3455,7 +3452,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", atoi(modifier), skill_name, map[m].name, filepath, strline(buffer,start-buffer));
 		} else {
 			int idx = map[m].skill_count;
-						
+			
 			ARR_FIND(0, idx, k, map[m].skills[k]->skill_id == skill_id);
 			
 			if( k < idx ) {
@@ -3469,8 +3466,8 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 						if( map[m].skills[k] == NULL )
 							continue;
 						
-						memmove(&map[m].skills[cursor], &map[m].skills[k], sizeof(struct mapflag_skill_adjust));
-						
+						map[m].skills[cursor] = map[m].skills[k];
+												
 						cursor++;
 					}
 					if( !( map[m].skill_count = cursor ) ) {
@@ -3843,8 +3840,10 @@ int npc_reload(void) {
 		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
 		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
 		npc_id - npc_new_min, npc_warp, npc_shop, npc_script, npc_mob, npc_cache_mob, npc_delay_mob);
-	
-	instance->final();
+		
+	for(i = 0; i < instance->instances; i++) {
+		instance->destroy(i);
+	}
 
 	iMap->zone_init();
 	
