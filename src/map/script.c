@@ -17251,11 +17251,12 @@ BUILDIN(queueiterator) {
 		}
 	}
 	
-	if( i == script->hqis )
+	if( i == script->hqis ) {
 		RECREATE(script->hqi, struct hQueueIterator, ++script->hqis);
-	else
+		script->hqi[ idx ].item = NULL;
+	} else
 		idx = i;
-	
+
 	RECREATE(script->hqi[ idx ].item, int, queue->items);
 	
 	memcpy(&script->hqi[idx].item, &queue->item, sizeof(int)*queue->items);
