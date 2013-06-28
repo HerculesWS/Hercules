@@ -456,7 +456,7 @@ int chrif_connectack(int fd) {
 
 	ShowStatus("Successfully logged on to Char Server (Connection: '"CL_WHITE"%d"CL_RESET"').\n",fd);
 	chrif_state = 1;
-	chrif->chrif_connected = 1;
+	chrif->connected = 1;
 
 	chrif_sendmap(fd);
 
@@ -1331,9 +1331,9 @@ int chrif_char_online(struct map_session_data *sd) {
 
 /// Called when the connection to Char Server is disconnected.
 void chrif_on_disconnect(void) {
-	if( chrif->chrif_connected != 1 )
+	if( chrif->connected != 1 )
 		ShowWarning("Connection to Char Server lost.\n\n");
-	chrif->chrif_connected = 0;
+	chrif->connected = 0;
 	
  	chrif->other_mapserver_count = 0; //Reset counter. We receive ALL maps from all map-servers on reconnect.
 	iMap->eraseallipport();
@@ -1544,7 +1544,7 @@ static int check_connect_char_server(int tid, unsigned int tick, int id, intptr_
 		realloc_fifo(char_fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 		chrif_connect(char_fd);
-		chrif->chrif_connected = (chrif_state == 2);
+		chrif->connected = (chrif_state == 2);
 		srvinfo = 0;
 	} else {
 		if (srvinfo == 0) {
@@ -1657,7 +1657,7 @@ void chrif_defaults(void) {
 
 	/* vars */
 	
-	chrif->chrif_connected = 0;
+	chrif->connected = 0;
 	chrif->other_mapserver_count = 0;
 
 	/* funcs */
