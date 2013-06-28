@@ -17016,9 +17016,7 @@ struct hQueue *script_hqueue_get(int idx) {
 		return NULL;
 	return &script->hq[idx];
 }
-/* set .@id,queue(); */
-/* creates queue, returns created queue id */
-BUILDIN(queue) {
+int script_hqueue_create(void) {
 	int idx = script->hqs;
 	int i;
 	
@@ -17039,8 +17037,12 @@ BUILDIN(queue) {
 	script->hq[ idx ].onDeath[0] = '\0';
 	script->hq[ idx ].onLogOut[0] = '\0';
 	script->hq[ idx ].onMapChange[0] = '\0';
-
-	script_pushint(st,idx);
+	return idx;
+}
+/* set .@id,queue(); */
+/* creates queue, returns created queue id */
+BUILDIN(queue) {
+	script_pushint(st,script->queue_create());
 	return true;
 }
 /* set .@length,queuesize(.@queue_id); */
@@ -17135,7 +17137,7 @@ bool script_hqueue_remove(int idx, int var) {
 			
 			if( var >= START_ACCOUNT_NUM && (sd = iMap->id2sd(var)) ) {
 				for(i = 0; i < sd->queues_count; i++) {
-					if( sd->queues[i] == var ) {
+					if( sd->queues[i] == idx ) {
 						break;
 					}
 				}
@@ -17237,7 +17239,33 @@ BUILDIN(queuedel) {
 	
 	return true;
 }
+void script_hqueue_clear(int idx) {
+	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 ) {
+		ShowWarning("script_hqueue_clear: unknown queue id %d\n",idx);
+		return;
+	} else {
+		struct map_session_data *sd;
+		int i, j;
+		
+			for(i = 0; i < script->hq[idx].items; i++) {
+				if( script->hq[idx].item[i] != -1 ) {
 
+					if( script->hq[idx].item[i] >= START_ACCOUNT_NUM && (sd = iMap->id2sd(script->hq[idx].item[i])) ) {
+						for(j = 0; j < sd->queues_count; j++) {
+							if( sd->queues[j] == idx ) {
+								break;
+							}
+						}
+						
+						if( j != sd->queues_count )
+							sd->queues[j] = -1;
+					}
+					script->hq[idx].item[i] = -1;
+				}
+			}
+	}
+	return;
+}
 /* set .@id, queueiterator(.@queue_id); */
 /* creates a new queue iterator, returns its id */
 BUILDIN(queueiterator) {
@@ -17281,7 +17309,7 @@ BUILDIN(qiget) {
 	if( idx < 0 || idx >= script->hqis ) {
 		ShowWarning("buildin_qiget: unknown queue iterator id %d\n",idx);
 		script_pushint(st, 0);
-	} else if ( script->hqi[idx].pos == script->hqi[idx].items ) {
+	} else if ( script->hqi[idx].pos -1 == script->hqi[idx].items ) {
 		script_pushint(st, 0);
 	} else {
 		struct hQueueIterator *it = &script->hqi[idx];
@@ -17298,7 +17326,7 @@ BUILDIN(qicheck) {
 	if( idx < 0 || idx >= script->hqis ) {
 		ShowWarning("buildin_qicheck: unknown queue iterator id %d\n",idx);
 		script_pushint(st, 0);
-	} else if ( script->hqi[idx].pos == script->hqi[idx].items ) {
+	} else if ( script->hqi[idx].pos -1 == script->hqi[idx].items ) {
 		script_pushint(st, 0);
 	} else {
 		script_pushint(st, 1);
@@ -17355,7 +17383,66 @@ BUILDIN(packageitem) {
 	
 	return true;
 }
+/* New Battlegrounds Stuff */
+/* bg_team_create(map_name,respawn_x,respawn_y) */
+/* returns created team id or -1 when fails */
+BUILDIN(bg_create_team) {
+	const char *map_name, *ev = "", *dev = "";//ev and dev will be dropped.
+	int x, y, mapindex = 0, bg_id;
+		
+	map_name = script_getstr(st,2);
+	if( strcmp(map_name,"-") != 0 ) {
+		mapindex = mapindex_name2id(map_name);
+		if( mapindex == 0 ) { // Invalid Map
+			script_pushint(st,0);
+			return true;
+		}
+	}
+	
+	x = script_getnum(st,3);
+	y = script_getnum(st,4);
+	
+	if( (bg_id = bg_create(mapindex, x, y, ev, dev)) == 0 ) { // Creation failed
+		script_pushint(st,-1);
+	} else
+		script_pushint(st,bg_id);
+	
+	return true;
 
+}
+/* bg_join_team(team_id{,optional account id}) */
+/* when account id is not present it tries to autodetect from the attached player (if any) */
+/* returns 0 when successful, 1 otherwise */
+BUILDIN(bg_join_team) {
+	struct map_session_data *sd;
+	int team_id = script_getnum(st, 2);
+	
+	if( script_hasdata(st, 3) )
+		sd = iMap->id2sd(script_getnum(st, 3));
+	else
+		sd = script->rid2sd(st);
+	
+	if( !sd )
+		script_pushint(st, 1);
+	else
+		script_pushint(st,bg_team_join(team_id, sd)?0:1);
+	
+	return true;
+}
+/* bg_match_over( arena_name {, optional canceled } ) */
+/* returns 0 when successful, 1 otherwise */
+BUILDIN(bg_match_over) {
+	bool canceled = script_hasdata(st,3) ? true : false;
+	struct bg_arena *arena = bg->name2arena((char*)script_getstr(st, 2));
+	
+	if( arena ) {
+		bg->match_over(arena,canceled);
+		script_pushint(st, 0);
+	} else
+		script_pushint(st, 1);
+	
+	return true;
+}
 // declarations that were supposed to be exported from npc_chat.c
 #ifdef PCRE_SUPPORT
 	BUILDIN(defpattern);
@@ -17872,6 +17959,10 @@ void script_parse_builtin(void) {
 		
 		BUILDIN_DEF(packageitem,"?"),
 		
+		/* New BG Commands [Hercules] */
+		BUILDIN_DEF(bg_create_team,"sii"),
+		BUILDIN_DEF(bg_join_team,"i?"),
+		BUILDIN_DEF(bg_match_over,"s?"),
 	};
 	int i,n, len = ARRAYLENGTH(BUILDIN), start = script->buildin_count;
 	char* p;
@@ -17974,4 +18065,6 @@ void script_defaults(void) {
 	script->queue_add = script_hqueue_add;
 	script->queue_del = script_hqueue_del;
 	script->queue_remove = script_hqueue_remove;
+	script->queue_create = script_hqueue_create;
+	script->queue_clear = script_hqueue_clear;
 }

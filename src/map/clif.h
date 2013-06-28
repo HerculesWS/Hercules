@@ -43,7 +43,7 @@ struct eri;
  * Defines
  **/
 #define packet_len(cmd) packet_db[cmd].len
-#define P2PTR(fd,cmd) RFIFO2PTR(fd,packet_db[cmd].len)
+#define P2PTR(fd) RFIFO2PTR(fd)
 #define clif_menuskill_clear(sd) (sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0;
 #define HCHSYS_NAME_LENGTH 20
 
