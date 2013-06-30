@@ -255,7 +255,7 @@ void bg_config_read(void) {
 		config_setting_t *settings = config_setting_get_elem(data, 0);
 		config_setting_t *arenas;
 		const char *delay_var;
-		int i, arena_count = 0, total = 0, offline = 0;
+		int i, arena_count = 0, offline = 0;
 		
 		if( !config_setting_lookup_string(settings, "global_delay_var", &delay_var) )
 			delay_var = "BG_Delay_Tick";
@@ -391,13 +391,11 @@ void bg_config_read(void) {
 				bg->arena[i]->fillup_timer = INVALID_TIMER;
 				bg->arena[i]->pregame_duration = pregame_duration;
 				bg->arena[i]->fillup_duration = fillup_duration;
-				
-				total++;
+
 			}
 			bg->arenas = arena_count;
 		}
 		
-		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' arenas in '"CL_WHITE"%s"CL_RESET"'.\n", total, config_filename);
 		config_destroy(&bg_conf);
 	}
 }

@@ -1647,6 +1647,7 @@ int map_quit(struct map_session_data *sd) {
 	if( sd->bg_id )
 		bg_team_leave(sd,1);
 
+	skill->cooldown_save(sd);
 	pc->itemcd_do(sd,false);
 
 	for( i = 0; i < sd->queues_count; i++ ) {

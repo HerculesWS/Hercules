@@ -3,6 +3,7 @@
 // Portions Copyright (c) Athena Dev Teams
 #ifndef _PC_H_
 #define _PC_H_
+
 #include "../common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus
 #include "../common/ers.h"
 #include "../common/timer.h" // INVALID_TIMER
@@ -20,9 +21,11 @@
 #include "mob.h"
 #include "log.h"
 #include "pc_groups.h"
+
 #define MAX_PC_BONUS 10
 #define MAX_PC_SKILL_REQUIRE 5
 #define MAX_PC_FEELHATE 3
+
 //Equip indexes constants. (eg: sd->equip_index[EQI_AMMO] returns the index
 //where the arrows are equipped)
 enum equip_index {
@@ -507,9 +510,6 @@ struct map_session_data {
 
 struct eri *pc_sc_display_ers;
 
-//Update this max as necessary. 55 is the value needed for Super Baby currently
-//Raised to 84 since Expanded Super Novice needs it.
-#define MAX_SKILL_TREE 84
 //Total number of classes (for data storage)
 #define CLASS_COUNT (JOB_MAX - JOB_NOVICE_HIGH + JOB_MAX_BASIC)
 

@@ -17478,6 +17478,41 @@ void clif_package_item_announce(struct map_session_data *sd, unsigned short name
 	
 	clif->send(&p,sizeof(p), &sd->bl, ALL_CLIENT);
 }
+/* [Ind/Hercules] special thanks to Yommy~! */
+void clif_skill_cooldown_list(int fd, struct skill_cd* cd) {
+#if PACKETVER >= 20120604
+	const int offset = 10;
+#else
+	const int offset = 6;
+#endif
+	int i, count = 0;
+	
+	WFIFOHEAD(fd,4+(offset*cd->cursor));
+
+#if PACKETVER >= 20120604
+	WFIFOW(fd,0) = 0x985;
+#else
+	WFIFOW(fd,0) = 0x43e;
+#endif
+	
+	for( i = 0; i < cd->cursor; i++ ) {
+		if( cd->duration[i] < 1 ) continue;
+#if PACKETVER >= 20120604
+		WFIFOW(fd, 4  + (i*10)) = cd->nameid[i];
+		WFIFOL(fd, 6  + (i*10)) = cd->total[i];
+		WFIFOL(fd, 10 + (i*10)) = cd->duration[i];
+#else
+		WFIFOW(fd, 4 + (i*6)) = cd->nameid[i];
+		WFIFOL(fd, 6 + (i*6)) = cd->duration[i];
+#endif
+		count++;
+	}
+	
+	WFIFOW(fd,2) = 4+(offset*count);
+
+	WFIFOSET(fd,4+(offset*count));
+}
+
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 	if( sd ) {
@@ -17944,6 +17979,7 @@ void clif_defaults(void) {
 	clif->sc_load = clif_status_change2;
 	clif->sc_end = clif_status_change_end;
 	clif->initialstatus = clif_initialstatus;
+	clif->cooldown_list = clif_skill_cooldown_list;
 	/* player-unit-specific-related */
 	clif->updatestatus = clif_updatestatus;
 	clif->changestatus = clif_changestatus;

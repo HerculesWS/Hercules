@@ -38,6 +38,7 @@ struct quest;
 struct party_booking_ad_info;
 struct view_data;
 struct eri;
+struct skill_cd;
 
 /**
  * Defines
@@ -632,6 +633,7 @@ struct clif_interface {
 	void (*sc_load) (struct block_list *bl, int tid, enum send_target target, int type, int val1, int val2, int val3);
 	void (*sc_end) (struct block_list *bl, int tid, enum send_target target, int type);
 	void (*initialstatus) (struct map_session_data *sd);
+	void (*cooldown_list) (int fd, struct skill_cd* cd);
 	/* player-unit-specific-related */
 	void (*updatestatus) (struct map_session_data *sd,int type);
 	void (*changestatus) (struct map_session_data* sd,int type,int val);
