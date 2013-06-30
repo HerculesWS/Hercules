@@ -39,7 +39,6 @@ OnPlayerListReady:
 	set .@i, 0;
 	
 	for( set .@member, qiget(.@it); qicheck(.@it); set .@member,qiget(.@it) ) {
-	announce "bg_queue:running_for:"+.@member,8;
 		if( .@i % 2 == 0 ) {
 			bg_join_team($@FlaviusBG1_id1,.@member);
 			queueadd($@Guill_QueueBG1,.@member);
@@ -164,9 +163,7 @@ OnTimer1000:
 	stopnpctimer;
 	initnpctimer;
 	set .@chk_bat_a01,getmapusers("bat_b01");
-	if (.@chk_bat_a01 < 1) {
-	announce "bg_destroy:running_for:"+.@chk_bat_a01,8;
-	
+	if (.@chk_bat_a01 < 1) {	
 		set $@FlaviusBG1, 0;
 		if( $@FlaviusBG1_id1 ) { bg_destroy $@FlaviusBG1_id1; set $@FlaviusBG1_id1, 0; }
 		if( $@FlaviusBG1_id2 ) { bg_destroy $@FlaviusBG1_id2; set $@FlaviusBG1_id2, 0; }
