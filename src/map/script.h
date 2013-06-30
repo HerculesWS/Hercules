@@ -191,14 +191,13 @@ int set_var(struct map_session_data *sd, char *name, void *val);
 int run_script_timer(int tid, unsigned int tick, int id, intptr_t data);
 void run_script_main(struct script_state *st);
 
-void script_stop_instances(int id);
+void script_stop_instances(struct script_code *code);
 struct linkdb_node* script_erase_sleepdb(struct linkdb_node *n);
 void script_free_code(struct script_code* code);
 void script_free_vars(struct DBMap *storage);
 struct script_state* script_alloc_state(struct script_code* rootscript, int pos, int rid, int oid);
 void script_free_state(struct script_state* st);
 
-struct DBMap* script_get_label_db(void);
 struct DBMap* script_get_userfunc_db(void);
 void script_run_autobonus(const char *autobonus,int id, int pos);
 
@@ -229,6 +228,10 @@ struct str_data_struct {
 	bool (*func)(struct script_state *st);
 	int val;
 	int next;
+};
+
+struct script_label_entry {
+	int key,pos;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -359,6 +362,10 @@ struct script_interface {
 	int word_size;
 	/*  */
 	unsigned short current_item_id;
+	/* */
+	struct script_label_entry *labels;
+	int label_count;
+	int labels_size;
 	/*  */
 	void (*init) (void);
 	void (*final) (void);
@@ -378,6 +385,7 @@ struct script_interface {
 	void (*set_constant) (const char* name, int value, bool isparameter);
 	void (*set_constant2) (const char *name, int value, bool isparameter);
 	bool (*get_constant) (const char* name, int* value);
+	void (*label_add)(int key, int pos);
 	/* */
 	struct hQueue *(*queue) (int idx);
 	bool (*queue_add) (int idx, int var);

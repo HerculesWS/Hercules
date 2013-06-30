@@ -97,10 +97,8 @@ int str_hash[SCRIPT_HASH_SIZE];
 //#define SCRIPT_HASH_SDBM
 #define SCRIPT_HASH_ELF
 
-static DBMap* scriptlabel_db=NULL; // const char* label_name -> int script_pos
 static DBMap* userfunc_db=NULL; // const char* func_name -> struct script_code*
 static int parse_options=0;
-DBMap* script_get_label_db(void){ return scriptlabel_db; }
 DBMap* script_get_userfunc_db(void){ return userfunc_db; }
 
 // important buildin function references for usage in scripts
@@ -1650,7 +1648,7 @@ const char* parse_syntax(const char* p)
 					script->str_data[l].type = C_USERFUNC;
 					set_label(l, script_pos, p);
 					if( parse_options&SCRIPT_USE_LABEL_DB )
-						strdb_iput(scriptlabel_db, get_str(l), script_pos);
+						script->label_add(l,script_pos);
 				}
 				else
 					disp_error_message("parse_syntax:function: function name is invalid", func_name);
@@ -2090,7 +2088,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 
 	// who called parse_script is responsible for clearing the database after using it, but just in case... lets clear it here
 	if( options&SCRIPT_USE_LABEL_DB )
-		db_clear(scriptlabel_db);
+		script->label_count = 0;
 	parse_options = options;
 
 	if( setjmp( error_jump ) != 0 ) {
@@ -2164,7 +2162,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			i=add_word(p);
 			set_label(i,script_pos,p);
 			if( parse_options&SCRIPT_USE_LABEL_DB )
-				strdb_iput(scriptlabel_db, get_str(i), script_pos);
+				script->label_add(i,script_pos);
 			p=tmpp+1;
 			p=skip_space(p);
 			continue;
@@ -3286,7 +3284,7 @@ void run_script(struct script_code *rootscript,int pos,int rid,int oid) {
 	run_script_main(st);
 }
 
-void script_stop_instances(int id) {
+void script_stop_instances(struct script_code *code) {
 	DBIterator *iter;
 	struct script_state* st;
 	
@@ -3296,7 +3294,7 @@ void script_stop_instances(int id) {
 	iter = db_iterator(script->st_db);
 	
 	for( st = dbi_first(iter); dbi_exists(iter); st = dbi_next(iter) ) {
-		if( st->oid == id ) {
+		if( st->script == code ) {
 			script_free_state(st);
 		}
 	}
@@ -3308,17 +3306,19 @@ void script_stop_instances(int id) {
  * Timer function for sleep
  *------------------------------------------*/
 int run_script_timer(int tid, unsigned int tick, int id, intptr_t data) {
-	struct script_state *st     = (struct script_state *)data;
-	TBL_PC *sd = iMap->id2sd(st->rid);
+	struct script_state *st     = idb_get(script->st_db,(int)data);
+	if( st ) {
+		TBL_PC *sd = iMap->id2sd(st->rid);
 
-	if((sd && sd->status.char_id != id) || (st->rid && !sd)) { //Character mismatch. Cancel execution.
-		st->rid = 0;
-		st->state = END;
+		if((sd && sd->status.char_id != id) || (st->rid && !sd)) { //Character mismatch. Cancel execution.
+			st->rid = 0;
+			st->state = END;
+		}
+		st->sleep.timer = INVALID_TIMER;
+		if(st->state != RERUNLINE)
+			st->sleep.tick = 0;
+		run_script_main(st);
 	}
-	st->sleep.timer = INVALID_TIMER;
-	if(st->state != RERUNLINE)
-		st->sleep.tick = 0;
-	run_script_main(st);
 	return 0;
 }
 
@@ -3514,7 +3514,7 @@ void run_script_main(struct script_state *st)
 		sd = iMap->id2sd(st->rid); // Get sd since script might have attached someone while running. [Inkfish]
 		st->sleep.charid = sd?sd->status.char_id:0;
 		st->sleep.timer  = iTimer->add_timer(iTimer->gettick()+st->sleep.tick,
-			run_script_timer, st->sleep.charid, (intptr_t)st);
+			run_script_timer, st->sleep.charid, (intptr_t)st->id);
 	} else if(st->state != END && st->rid){
 		//Resume later (st is already attached to player).
 		if(st->bk_st) {
@@ -3761,7 +3761,6 @@ void do_final_script(void) {
 
 	mapreg_final();
 
-	db_destroy(scriptlabel_db);
 	userfunc_db->destroy(userfunc_db, db_script_free_code_sub);
 	autobonus_db->destroy(autobonus_db, db_script_free_code_sub);
 
@@ -3817,6 +3816,9 @@ void do_final_script(void) {
 	ers_destroy(script->stack_ers);
 	
 	db_destroy(script->st_db);
+	
+	if( script->labels != NULL )
+		aFree(script->labels);
 }
 /*==========================================
  * Initialization
@@ -3824,7 +3826,6 @@ void do_final_script(void) {
 void do_init_script(void) {
 	script->st_db = idb_alloc(DB_OPT_BASE);
 	userfunc_db = strdb_alloc(DB_OPT_DUP_KEY,0);
-	scriptlabel_db = strdb_alloc(DB_OPT_DUP_KEY,50);
 	autobonus_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 
 	script->st_ers = ers_new(sizeof(struct script_state), "script.c::st_ers", ERS_OPT_NONE);
@@ -3844,7 +3845,7 @@ int script_reload() {
 	struct script_state *st;
 
 	userfunc_db->clear(userfunc_db, db_script_free_code_sub);
-	db_clear(scriptlabel_db);
+	script->label_count = 0;
 
 	for( i = 0; i < atcommand->binding_count; i++ ) {
 		aFree(atcommand->binding[i]);
@@ -18013,6 +18014,19 @@ void script_parse_builtin(void) {
 	}
 }
 
+void script_label_add(int key, int pos) {
+	int idx = script->label_count;
+	
+	if( script->labels_size == script->label_count ) {
+		script->labels_size += 1024;
+		RECREATE(script->labels, struct script_label_entry, script->labels_size);
+	}
+	
+	script->labels[idx].key = key;
+	script->labels[idx].pos = pos;
+	script->label_count++;
+}
+
 void script_defaults(void) {
 	script = &script_s;
 	
@@ -18042,6 +18056,10 @@ void script_defaults(void) {
 	
 	script->current_item_id = 0;
 	
+	script->labels = NULL;
+	script->label_count = 0;
+	script->labels_size = 0;
+	
 	script->init = do_init_script;
 	script->final = do_final_script;
 	
@@ -18067,4 +18085,6 @@ void script_defaults(void) {
 	script->queue_remove = script_hqueue_remove;
 	script->queue_create = script_hqueue_create;
 	script->queue_clear = script_hqueue_clear;
+	
+	script->label_add = script_label_add;
 }
