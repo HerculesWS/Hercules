@@ -556,7 +556,7 @@ struct battle_interface {
 	struct block_list* (*get_enemy_area) (struct block_list *src, int x, int y, int range, int type, int ignore_id);
 	/* damages area, originally for royal guard's reflect damage */
 	int (*damage_area) ( struct block_list *bl, va_list ap);
-} battle_s;
+};
 
 struct battle_interface *battle;
 

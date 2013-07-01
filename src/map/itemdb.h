@@ -302,7 +302,7 @@ struct itemdb_interface {
 	int (*group_item) (struct item_group *group);
 	int (*chain_item) (unsigned short chain_id, int *rate);
 	void (*package_item) (struct map_session_data *sd, struct item_package *package);
-} itemdb_s;
+};
 
 struct itemdb_interface *itemdb;
 

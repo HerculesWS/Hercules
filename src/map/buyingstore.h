@@ -29,7 +29,7 @@ struct buyingstore_interface {
 	void (*trade) (struct map_session_data* sd, int account_id, unsigned int buyer_id, const uint8* itemlist, unsigned int count);
 	bool (*search) (struct map_session_data* sd, unsigned short nameid);
 	bool (*searchall) (struct map_session_data* sd, const struct s_search_store_search* s);
-} buyingstore_s;
+};
 
 struct buyingstore_interface *buyingstore;
 

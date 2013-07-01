@@ -393,7 +393,7 @@ struct script_interface {
 	bool (*queue_remove) (int idx, int var);
 	int (*queue_create) (void);
 	void (*queue_clear) (int idx);
-} script_s;
+};
 
 struct script_interface *script;
 

@@ -951,7 +951,7 @@ struct pc_interface {
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	int (*level_penalty_mod) (struct map_session_data *sd, struct mob_data * md, int type);
 #endif
-} pc_s;
+};
 
 struct pc_interface *pc;
 

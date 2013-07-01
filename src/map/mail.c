@@ -15,6 +15,8 @@
 #include <time.h>
 #include <string.h>
 
+struct mail_interface mail_s;
+
 void mail_clear(struct map_session_data *sd)
 {
 	sd->mail.nameid = 0;

@@ -26,7 +26,7 @@ struct storage_interface {
 	int (*gettocart) (struct map_session_data *sd,int index,int amount);
 	void (*close) (struct map_session_data *sd);
 	void (*pc_quit) (struct map_session_data *sd, int flag);
-} storage_s;
+};
 struct storage_interface *storage;
 
 struct guild_storage_interface {
@@ -46,7 +46,7 @@ struct guild_storage_interface {
 	int (*pc_quit) (struct map_session_data *sd,int flag);
 	int (*save) (int account_id, int guild_id, int flag);
 	int (*saved) (int guild_id); //Ack from char server that guild store was saved.
-} gstorage_s;
+};
 
 struct guild_storage_interface *gstorage;
 

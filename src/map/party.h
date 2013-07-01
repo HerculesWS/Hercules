@@ -123,7 +123,7 @@ struct party_interface {
 	void (*booking_search) (struct map_session_data *sd, short level, short mapid, unsigned long lastindex, short resultcount);
 #endif
 	bool (*booking_delete) (struct map_session_data *sd);
-} party_s;
+};
 
 struct party_interface *party;
 

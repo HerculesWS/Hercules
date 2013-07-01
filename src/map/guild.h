@@ -104,7 +104,7 @@ struct guild_interface {
 	void (*flags_clear) (void);
 	/* guild aura */
 	void (*aura_refresh) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
-} guild_s;
+};
 
 struct guild_interface *guild;
 

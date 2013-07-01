@@ -906,7 +906,7 @@ struct map_interface {
 	void (*clean) (int i);
 
 	void (*do_shutdown) (void);
-} iMap_s;
+};
 
 struct map_interface *iMap;
 

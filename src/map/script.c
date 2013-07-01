@@ -176,6 +176,8 @@ int potion_hp=0, potion_per_hp=0, potion_sp=0, potion_per_sp=0;
 int potion_target=0;
 
 
+struct script_interface script_s;
+
 c_op get_com(unsigned char *script,int *pos);
 int get_num(unsigned char *script,int *pos);
 

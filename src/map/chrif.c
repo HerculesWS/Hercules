@@ -48,6 +48,8 @@ static const int packet_len_table[0x3d] = { // U - used, F - free
 	-1,10, 8, 2, 2,14,19,19,	// 2b20-2b27: U->2b20, U->2b21, U->2b22, U->2b23, U->2b24, U->2b25, U->2b26, U->2b27
 };
 
+struct chrif_interface chrif_s;
+
 //Used Packets:
 //2af8: Outgoing, chrif_connect -> 'connect to charserver / auth @ charserver'
 //2af9: Incoming, chrif_connectack -> 'answer of the 2af8 login(ok / fail)'

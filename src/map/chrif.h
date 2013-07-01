@@ -79,7 +79,7 @@ struct chrif_interface {
 	
 	int (*flush_fifo) (void);
 	void (*skillid2idx) (int fd);
-} chrif_s;
+};
 
 struct chrif_interface *chrif;
 

@@ -52,7 +52,7 @@ struct searchstore_interface {
 	bool (*queryremote) (struct map_session_data* sd, int account_id);
 	void (*clearremote) (struct map_session_data* sd);
 	bool (*result) (struct map_session_data* sd, unsigned int store_id, int account_id, const char* store_name, unsigned short nameid, unsigned short amount, unsigned int price, const short* card, unsigned char refine);
-} searchstore_s;
+};
 
 struct searchstore_interface *searchstore;
 

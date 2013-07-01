@@ -25,6 +25,8 @@
 #include <stdarg.h>
 #include <time.h>
 
+struct instance_interface instance_s;
+
 /// Checks whether given instance id is valid or not.
 bool instance_is_valid(int instance_id) {
 	if( instance_id < 0 || instance_id >= instance->instances ) {// out of range

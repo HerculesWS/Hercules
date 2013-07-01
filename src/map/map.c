@@ -132,6 +132,8 @@ int enable_grf = 0;	//To enable/disable reading maps from GRF files, bypassing m
 struct eri *map_iterator_ers;
 char *map_cache_buffer = NULL; // Has the uncompressed gat data of all maps, so just one allocation has to be made
 
+struct map_interface iMap_s;
+
 /*==========================================
 * server player count (of all mapservers)
 *------------------------------------------*/

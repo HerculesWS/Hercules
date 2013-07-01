@@ -51,6 +51,8 @@
 #include <string.h>
 #include <math.h>
 
+struct atcommand_interface atcommand_s;
+
 static char* msg_table[MAX_MSG]; // Server messages (0-499 reserved for GM commands, 500-999 reserved for others)
 
 static char atcmd_output[CHAT_SIZE_MAX];

@@ -17,7 +17,7 @@ struct mail_interface {
 	int (*openmail) (struct map_session_data *sd);
 	void (*deliveryfail) (struct map_session_data *sd, struct mail_message *msg);
 	bool (*invalid_operation) (struct map_session_data *sd);
-} mail_s;
+};
 
 struct mail_interface *mail;
 

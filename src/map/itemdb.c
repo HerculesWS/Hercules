@@ -24,6 +24,8 @@ static DBMap*            itemdb_other;// int nameid -> struct item_data*
 
 struct item_data dummy_item; //This is the default dummy item used for non-existant items. [Skotlex]
 
+struct itemdb_interface itemdb_s;
+
 /**
  * Search for item name 
  * name = item alias, so we should find items aliases first. if not found then look for "jname" (full name)

@@ -89,6 +89,8 @@ struct item_cd {
 	short nameid[MAX_ITEMDELAYS];//skill id
 };
 
+struct pc_interface pc_s;
+
 //Converts a class to its array index for CLASS_COUNT defined arrays.
 //Note that it does not do a validity check for speed purposes, where parsing
 //player input make sure to use a pcdb_checkid first!

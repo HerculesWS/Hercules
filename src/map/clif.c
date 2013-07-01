@@ -53,6 +53,8 @@
 #include <stdarg.h>
 #include <time.h>
 
+struct clif_interface clif_s;
+
 //#define DUMP_UNKNOWN_PACKET
 //#define DUMP_INVALID_PACKET
 

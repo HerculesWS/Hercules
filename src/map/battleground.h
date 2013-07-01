@@ -101,7 +101,7 @@ struct battleground_interface {
 	void (*queue_check) (struct bg_arena *arena);
 	/* */
 	void (*config_read) (void);
-} bg_s;
+};
 
 struct battleground_interface *bg;
 

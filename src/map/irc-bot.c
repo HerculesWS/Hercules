@@ -19,6 +19,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct irc_bot_interface irc_bot_s;
+
 char send_string[200];
 
 int irc_connect_timer(int tid, unsigned int tick, int id, intptr_t data) {

@@ -24,6 +24,8 @@
 //Max distance from traders to enable a trade to take place.
 #define TRADE_DISTANCE 2
 
+struct trade_interface trade_s;
+
 /*==========================================
  * Initiates a trade request.
  *------------------------------------------*/
