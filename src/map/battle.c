@@ -958,7 +958,7 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 			break;
 		case BF_WEAPON:
 			t_race2 = status_get_race2(target);
-			if( sd ){
+			if( sd && !tsd ){
 				short cardfix_ = 1000;
 				if( !(nk&NK_NO_CARDFIX_ATK) || !(cflag&2) )
 					break;
@@ -4401,20 +4401,21 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					ATK_ADD(-totaldef);
 					if( is_boss(target) )
 						ATK_RATE(50);
-					flag.idef = 1;
 				}
 				break;	
 			case NJ_SYURIKEN: // [malufett]
 				GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0) );
 				wd.damage += battle->calc_masteryfix(src, target, skill_id, skill_lv, 4 * skill_lv + (sd ? sd->bonus.arrow_atk : 0), wd.div_, 0, flag.weapon) - status_get_total_def(target);
-				flag.idef = 1;
 				break;
 			case MO_EXTREMITYFIST:	// [malufett]
-				GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|8 );
-				// first value is still not confirm.
-				if( wd.damage )
-					wd.damage = status_get_sp(src) + 10 * status_get_sp(src) * wd.damage / 100 + 8 * wd.damage + 250 + 150 * skill_lv;
-				flag.tdef = 1;
+				{
+					short totaldef = status_get_total_def(target);
+					GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|8 );
+					if( wd.damage ){
+						wd.damage = (250 + 150 * skill_lv) + (10 * (status_get_sp(src)+1) * wd.damage / 100) + (8 * wd.damage);
+						ATK_ADD(-totaldef);
+					}
+				}
 #endif
 				break;
 #ifndef RENEWAL
@@ -4514,9 +4515,10 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					if (sd->bonus.atk_rate)
 						ATK_ADDRATE(sd->bonus.atk_rate);
 
+#ifndef RENEWAL
 					if(flag.cri && sd->bonus.crit_atk_rate)
 						ATK_ADDRATE(sd->bonus.crit_atk_rate);
-#ifndef RENEWAL
+
 					if(sd->status.party_id && (temp=pc->checkskill(sd,TK_POWER)) > 0){
 						if( (i = party_foreachsamemap(party->sub_count, sd, 0)) > 1 ) // exclude the player himself [Inkfish]
 							ATK_ADDRATE(2*temp*i);
@@ -4814,8 +4816,8 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		if( flag.lh)
 			wd.damage2 = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage2, wd.div_, 1, flag.weapon);
 #else
-		if( flag.cri )
-			ATK_ADDRATE(40);
+		if( sd && flag.cri )
+			ATK_ADDRATE(sd->bonus.crit_atk_rate >= 100 ? sd->bonus.crit_atk_rate : 40);
 #endif
 	} //Here ends flag.hit section, the rest of the function applies to both hitting and missing attacks
   	else if(wd.div_ < 0) //Since the attack missed...
@@ -4869,10 +4871,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
         wd.damage = battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage, 2, wd.flag);
         if( flag.lh )
             wd.damage2 = battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage2, 3, wd.flag);
-#ifdef RENEWAL
-	    if( flag.cri )
-		    ATK_ADDRATE(sd->bonus.crit_atk_rate>=100?sd->bonus.crit_atk_rate-60:40);
-#endif
+
 		if( skill_id == CR_SHIELDBOOMERANG || skill_id == PA_SHIELDCHAIN )
 		{ //Refine bonus applies after cards and elements.
 			short index= sd->equip_index[EQI_HAND_L];
