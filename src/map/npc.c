@@ -3783,8 +3783,7 @@ int npc_reload(void) {
 	}
 	mapit->free(iter);
 
-	if(battle_config.dynamic_mobs)
-	{// dynamic check by [random]
+	if(battle_config.dynamic_mobs) {// dynamic check by [random]
 		for (m = 0; m < iMap->map_num; m++) {
 			for (i = 0; i < MAX_MOB_LIST_PER_MAP; i++) {
 				if (map[m].moblist[i] != NULL) {
@@ -3797,9 +3796,9 @@ int npc_reload(void) {
 					map[m].mob_delete_timer = INVALID_TIMER;
 				}
 			}
+			if (map[m].npc_num > 0)
+				ShowWarning("npc_reload: %d npcs weren't removed at map %s!\n", map[m].npc_num, map[m].name);
 		}
-		if (map[m].npc_num > 0)
-			ShowWarning("npc_reload: %d npcs weren't removed at map %s!\n", map[m].npc_num, map[m].name);
 	}
 
 	// clear mob spawn lookup index
