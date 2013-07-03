@@ -84,8 +84,6 @@ struct Login_Config {
 	bool use_dnsbl;                                 // dns blacklist blocking ?
 	char dnsbl_servs[1024];                         // comma-separated list of dnsbl servers
 
-	char account_engine[256];                       // name of the engine to use (defaults to auto, for the first available engine)
-
 	int client_hash_check;							// flags for checking client md5
 	struct client_hash_node *client_hash_nodes;		// linked list containg md5 hash for each gm group
 };

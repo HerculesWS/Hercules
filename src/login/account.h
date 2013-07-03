@@ -14,26 +14,6 @@ typedef struct AccountDBIterator AccountDBIterator;
 // standard engines
 AccountDB* account_db_sql(void);
 
-// extra engines (will probably use the other txt functions)
-#define ACCOUNTDB_CONSTRUCTOR_(engine) account_db_##engine
-#define ACCOUNTDB_CONSTRUCTOR(engine) ACCOUNTDB_CONSTRUCTOR_(engine)
-#ifdef ACCOUNTDB_ENGINE_0
-AccountDB* ACCOUNTDB_CONSTRUCTOR(ACCOUNTDB_ENGINE_0)(void);
-#endif
-#ifdef ACCOUNTDB_ENGINE_1
-AccountDB* ACCOUNTDB_CONSTRUCTOR(ACCOUNTDB_ENGINE_1)(void);
-#endif
-#ifdef ACCOUNTDB_ENGINE_2
-AccountDB* ACCOUNTDB_CONSTRUCTOR(ACCOUNTDB_ENGINE_2)(void);
-#endif
-#ifdef ACCOUNTDB_ENGINE_3
-AccountDB* ACCOUNTDB_CONSTRUCTOR(ACCOUNTDB_ENGINE_3)(void);
-#endif
-#ifdef ACCOUNTDB_ENGINE_4
-AccountDB* ACCOUNTDB_CONSTRUCTOR(ACCOUNTDB_ENGINE_4)(void);
-#endif
-
-
 struct mmo_account
 {
 	int account_id;

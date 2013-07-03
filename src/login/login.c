@@ -25,30 +25,13 @@ struct Login_Config login_config;
 int login_fd; // login server socket
 struct mmo_char_server server[MAX_SERVERS]; // char server data
 
-// Account engines available
-static struct{
+static struct account_engine {
 	AccountDB* (*constructor)(void);
 	AccountDB* db;
-} account_engines[] = {
-	{account_db_sql, NULL},
-#ifdef ACCOUNTDB_ENGINE_0
-	{ACCOUNTDB_CONSTRUCTOR(ACCOUNTDB_ENGINE_0), NULL},
-#endif
-#ifdef ACCOUNTDB_ENGINE_1
-	{ACCOUNTDB_CONSTRUCTOR(ACCOUNTDB_ENGINE_1), NULL},
-#endif
-#ifdef ACCOUNTDB_ENGINE_2
-	{ACCOUNTDB_CONSTRUCTOR(ACCOUNTDB_ENGINE_2), NULL},
-#endif
-#ifdef ACCOUNTDB_ENGINE_3
-	{ACCOUNTDB_CONSTRUCTOR(ACCOUNTDB_ENGINE_3), NULL},
-#endif
-#ifdef ACCOUNTDB_ENGINE_4
-	{ACCOUNTDB_CONSTRUCTOR(ACCOUNTDB_ENGINE_4), NULL},
-#endif
-	// end of structure
-	{NULL, NULL}
+} account_engine[] = {
+	{account_db_sql, NULL}
 };
+
 // account database
 AccountDB* accounts = NULL;
 
@@ -1578,7 +1561,6 @@ void login_set_defaults()
 	login_config.dynamic_pass_failure_ban_duration = 5;
 	login_config.use_dnsbl = false;
 	safestrncpy(login_config.dnsbl_servs, "", sizeof(login_config.dnsbl_servs));
-	safestrncpy(login_config.account_engine, "auto", sizeof(login_config.account_engine));
 
 	login_config.client_hash_check = 0;
 	login_config.client_hash_nodes = NULL;
@@ -1685,18 +1667,7 @@ int login_config_read(const char* cfgName)
 		else if(!strcmpi(w1, "import"))
 			login_config_read(w2);
 		else
-		if(!strcmpi(w1, "account.engine"))
-			safestrncpy(login_config.account_engine, w2, sizeof(login_config.account_engine));
-		else
-		{// try the account engines
-			int i;
-			for( i = 0; account_engines[i].constructor; ++i )
-			{
-				AccountDB* db = account_engines[i].db;
-				if( db && db->set_property(db, w1, w2) )
-					break;
-			}
-			// try others
+		{
 			ipban_config_read(w1, w2);
 			loginlog_config_read(w1, w2);
 		}
@@ -1704,28 +1675,6 @@ int login_config_read(const char* cfgName)
 	fclose(fp);
 	ShowInfo("Finished reading %s.\n", cfgName);
 	return 0;
-}
-
-/// Get the engine selected in the config settings.
-/// Updates the config setting with the selected engine if 'auto'.
-static AccountDB* get_account_engine(void)
-{
-	int i;
-	bool get_first = (strcmp(login_config.account_engine,"auto") == 0);
-
-	for( i = 0; account_engines[i].constructor; ++i )
-	{
-		char name[sizeof(login_config.account_engine)];
-		AccountDB* db = account_engines[i].db;
-		if( db && db->get_property(db, "engine.name", name, sizeof(name)) &&
-			(get_first || strcmp(name, login_config.account_engine) == 0) )
-		{
-			if( get_first )
-				safestrncpy(login_config.account_engine, name, sizeof(login_config.account_engine));
-			return db;
-		}
-	}
-	return NULL;
 }
 
 //--------------------------------------
@@ -1751,16 +1700,12 @@ void do_final(void)
 
 	ipban_final();
 
-	for( i = 0; account_engines[i].constructor; ++i )
-	{// destroy all account engines
-		AccountDB* db = account_engines[i].db;
-		if( db )
-		{
-			db->destroy(db);
-			account_engines[i].db = NULL;
-		}
+	if( account_engine[0].db )
+	{// destroy account engine
+		account_engine[0].db->destroy(account_engine[0].db);
+		account_engine[0].db = NULL;
 	}
-	accounts = NULL; // destroyed in account_engines
+	accounts = NULL; // destroyed in account_engine
 	online_db->destroy(online_db, NULL);
 	auth_db->destroy(auth_db, NULL);
 	
@@ -1813,9 +1758,8 @@ int do_init(int argc, char** argv)
 {
 	int i;
 
-	// intialize engines (to accept config settings)
-	for( i = 0; account_engines[i].constructor; ++i )
-		account_engines[i].db = account_engines[i].constructor();
+	// intialize engine (to accept config settings)
+	account_engine[0].db = account_engine[0].constructor();
 
 	// read login-server configuration
 	login_set_defaults();
@@ -1855,14 +1799,14 @@ int do_init(int argc, char** argv)
 	}
 
 	// Account database init
-	accounts = get_account_engine();
+	accounts = account_engine[0].db;
 	if( accounts == NULL ) {
-		ShowFatalError("do_init: account engine '%s' not found.\n", login_config.account_engine);
+		ShowFatalError("do_init: account engine 'sql' not found.\n");
 		exit(EXIT_FAILURE);
 	} else {
 
 		if(!accounts->init(accounts)) {
-			ShowFatalError("do_init: Failed to initialize account engine '%s'.\n", login_config.account_engine);
+			ShowFatalError("do_init: Failed to initialize account engine 'sql'.\n");
 			exit(EXIT_FAILURE);
 		}
 	}
