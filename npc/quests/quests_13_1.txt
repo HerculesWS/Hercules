@@ -45,6 +45,7 @@
 //= 2.6a Added 'npcskill' command. [Euphy]
 //= 2.7 Updated incorrect EXP values & added checkre() checks [Streusel]
 //= 2.7a Modified Promotional Staff for Izlude
+//= 2.8 Fixed a missing variable check. [Joseph]
 //============================================================
 
 // Onward to the New World
@@ -11152,7 +11153,7 @@ prt_castle,88,165,3	script	Laur	57,{
 		if (ep13_1_edq == 9) set ep13_1_edq,101;
 		else if (ep13_1_edq == 111) set ep13_1_edq,112;
 		else if (ep13_1_edq == 121) set ep13_1_edq,122;
-		else if (ep13_1_edq == 113) {
+		else if (ep13_1_edq == 113 || ep13_1_edq == 123) { 
 			set ep13_1_edq,13;
 			changequest 3093,3094;
 		}

@@ -5,7 +5,7 @@
 //===== Current Version: ===================================== 
 //= 2.9
 //===== Description: ========================================= 
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= - Stop Post
 //= - Binoculars Quest
 //= - Assassin Pub NPCs/supporting quest NPCS. [Disabled]

@@ -3,11 +3,11 @@
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
-//= 1.4a
+//= 1.4b
 //===== Compatible With: =====================================
 //= Hercules Git
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Refiner that uses Enriched ores to increase upgrade success.
 //= After a conversation with Doddler, it's been established that
 //= the advanced refiner works similar the the "Bubble Gum" item.
@@ -23,9 +23,10 @@
 //= 1.3 Typo fixes [Yommy]
 //= 1.4 Removed unnecessary dialogs [Zephyrus]
 //= 1.4a Added 'disable_items' command. [Euphy]
+//= 1.4b Fixed coordinates. [Euphy]
 //============================================================
 
-payon,174,138,0	script	Suhnbi#cash	85,{
+payon,157,146,6	script	Suhnbi#cash	85,{
 	disable_items;
 	mes "[Suhnbi]";
 	mes "I am the Armsmith";
@@ -51,12 +52,6 @@ payon,174,138,0	script	Suhnbi#cash	85,{
 	{
 		mes "[Suhnbi]";
 		mes "I don't think I can refine this item at all.";
-		close;
-	}
-	if( !getequipisidentify(.@part) )
-	{
-		mes "[Suhnbi]";
-		mes "This has not been identified. So, it can't be refined...";
 		close;
 	}
 	if( getequiprefinerycnt(.@part) >= 10 )

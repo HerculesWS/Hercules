@@ -3,11 +3,11 @@
 //===== By: ================================================== 
 //= SinSloth(Most of the NPCs), MasterOfMuppets(Some of the NPCs + bug fixes) & Kargha(The quiz NPCs)
 //===== Current Version: ===================================== 
-//= 3.7
+//= 3.8
 //===== Compatible With: ===================================== 
 //= rAthena SVN
 //===== Description: ========================================= 
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Quest for opening the doors to Geffenia.
 //= This script uses sign_01.bmp - sign_04.bmp, these will be
 //= found in the language of your client.
@@ -25,6 +25,7 @@
 //= 3.5 Fixed two bugs. 4230 & 4404 [CalciumKid]
 //= 3.6 Corrected the Level Requirements for 'Standby Room' [tr0n]
 //= 3.7 Massive cleaning/optimization (more can still be done). [Euphy]
+//= 3.8 Corrected an invalid map name. [Joseph]
 //============================================================ 
 
 //============================================================ 
@@ -12348,7 +12349,7 @@ Oncall:
 	end;
 
 OnMyMobDead:
-	if (mobcount("gue_sign01","CallMonster#witch::OnMyMobDead") < 1) {
+	if (mobcount("que_sign01","CallMonster#witch::OnMyMobDead") < 1) {
 		donpcevent "Serin#witch::OnEnable";
 	}
 	end;
