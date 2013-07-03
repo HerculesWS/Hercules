@@ -945,7 +945,7 @@ int unit_can_move(struct block_list *bl) {
 						||  sc->data[SC__MANHOLE]
 						||  sc->data[SC_CURSEDCIRCLE_ATKER]
 						||  sc->data[SC_CURSEDCIRCLE_TARGET]
-						|| (sc->data[SC_CRYSTALIZE] && bl->type != BL_MOB)
+						|| (sc->data[SC_COLD] && bl->type != BL_MOB)
 						||  sc->data[SC_NETHERWORLD]
 						|| (sc->data[SC_CAMOUFLAGE] && sc->data[SC_CAMOUFLAGE]->val1 < 3 && !(sc->data[SC_CAMOUFLAGE]->val3&1))
 						||  sc->data[SC_MEIKYOUSISUI]

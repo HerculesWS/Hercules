@@ -38,12 +38,13 @@ struct quest;
 struct party_booking_ad_info;
 struct view_data;
 struct eri;
+struct skill_cd;
 
 /**
  * Defines
  **/
 #define packet_len(cmd) packet_db[cmd].len
-#define P2PTR(fd,cmd) RFIFO2PTR(fd,packet_db[cmd].len)
+#define P2PTR(fd) RFIFO2PTR(fd)
 #define clif_menuskill_clear(sd) (sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0;
 #define HCHSYS_NAME_LENGTH 20
 
@@ -632,6 +633,7 @@ struct clif_interface {
 	void (*sc_load) (struct block_list *bl, int tid, enum send_target target, int type, int val1, int val2, int val3);
 	void (*sc_end) (struct block_list *bl, int tid, enum send_target target, int type);
 	void (*initialstatus) (struct map_session_data *sd);
+	void (*cooldown_list) (int fd, struct skill_cd* cd);
 	/* player-unit-specific-related */
 	void (*updatestatus) (struct map_session_data *sd,int type);
 	void (*changestatus) (struct map_session_data* sd,int type,int val);
@@ -1147,7 +1149,7 @@ struct clif_interface {
 	void (*pPartyBookingRefuseVolunteer) (int fd, struct map_session_data *sd);
 	void (*pPartyBookingCancelVolunteer) (int fd, struct map_session_data *sd);
 #endif
-} clif_s;
+};
 
 struct clif_interface *clif;
 

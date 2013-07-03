@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct guild_interface guild_s;
 
 static DBMap* guild_db; // int guild_id -> struct guild*
 static DBMap* castle_db; // int castle_id -> struct guild_castle*

@@ -1862,7 +1862,7 @@ int npc_unload(struct npc_data* nd, bool single) {
 			aFree(nd->u.scr.timer_event);
 		if (nd->src_id == 0) {
 			if(nd->u.scr.script) {
-				script_stop_instances(nd->bl.id);
+				script_stop_instances(nd->u.scr.script);
 				script_free_code(nd->u.scr.script);
 				nd->u.scr.script = NULL;
 			}
@@ -2275,52 +2275,34 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 	return strchr(start,'\n');// continue
 }
 
-/**
- * NPC other label
- * Not sure, seem to add label in a chainlink
- * @see DBApply
- */
-int npc_convertlabel_db(DBKey key, DBData *data, va_list ap)
-{
-	const char* lname = (const char*)key.str;
-	int lpos = DB->data2i(data);
-	struct npc_label_list** label_list;
-	int* label_list_num;
-	const char* filepath;
-	struct npc_label_list* label;
-	const char *p;
-	int len;
+void npc_convertlabel_db(struct npc_label_list* label_list, const char *filepath) {
+	int i;
+	
+	for( i = 0; i < script->label_count; i++ ) {
+		const char* lname = get_str(script->labels[i].key);
+		int lpos = script->labels[i].pos;
+		struct npc_label_list* label;
+		const char *p;
+		int len;
+				
+		// In case of labels not terminated with ':', for user defined function support
+		p = lname;
 
-	nullpo_ret(label_list = va_arg(ap,struct npc_label_list**));
-	nullpo_ret(label_list_num = va_arg(ap,int*));
-	nullpo_ret(filepath = va_arg(ap,const char*));
+		while( ISALNUM(*p) || *p == '_' )
+			++p;
+		len = p-lname;
 
-	// In case of labels not terminated with ':', for user defined function support
-	p = lname;
-	while( ISALNUM(*p) || *p == '_' )
-		++p;
-	len = p-lname;
-
-	// here we check if the label fit into the buffer
-	if( len > 23 )
-	{
-		ShowError("npc_parse_script: label name longer than 23 chars! '%s'\n (%s)", lname, filepath);
-		return 0;
+		// here we check if the label fit into the buffer
+		if( len > 23 ) {
+			ShowError("npc_parse_script: label name longer than 23 chars! '%s'\n (%s)", lname, filepath);
+			return;
+		}
+		
+		label = &label_list[i];
+				
+		safestrncpy(label->name, lname, sizeof(label->name));
+		label->pos = lpos;
 	}
-
-	if( *label_list == NULL )
-	{
-		*label_list = (struct npc_label_list *) aCalloc (1, sizeof(struct npc_label_list));
-		*label_list_num = 0;
-	} else
-		*label_list = (struct npc_label_list *) aRealloc (*label_list, sizeof(struct npc_label_list)*(*label_list_num+1));
-	label = *label_list+*label_list_num;
-
-	safestrncpy(label->name, lname, sizeof(label->name));
-	label->pos = lpos;
-	++(*label_list_num);
-
-	return 0;
 }
 
 // Skip the contents of a script.
@@ -2388,7 +2370,7 @@ static const char* npc_skip_script(const char* start, const char* buffer, const 
 static const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, bool runOnInit) {
 	int x, y, dir = 0, m, xs = 0, ys = 0, class_ = 0;	// [Valaris] thanks to fov
 	char mapname[32];
-	struct script_code *script;
+	struct script_code *scriptroot;
 	int i;
 	const char* end;
 	const char* script_start;
@@ -2426,14 +2408,13 @@ static const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, cons
 	if( end == NULL )
 		return NULL;// (simple) parse error, don't continue
 
-	script = parse_script(script_start, filepath, strline(buffer,script_start-buffer), SCRIPT_USE_LABEL_DB);
+	scriptroot = parse_script(script_start, filepath, strline(buffer,script_start-buffer), SCRIPT_USE_LABEL_DB);
 	label_list = NULL;
 	label_list_num = 0;
-	if( script )
-	{
-		DBMap* label_db = script_get_label_db();
-		label_db->foreach(label_db, npc_convertlabel_db, &label_list, &label_list_num, filepath);
-		db_clear(label_db); // not needed anymore, so clear the db
+	if( script->label_count ) {
+		CREATE(label_list,struct npc_label_list,script->label_count);
+		label_list_num = script->label_count;
+		npc_convertlabel_db(label_list,filepath);
 	}
 
 	CREATE(nd, struct npc_data, 1);
@@ -2458,7 +2439,7 @@ static const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, cons
 	nd->bl.id = npc_get_new_npc_id();
 	nd->class_ = class_;
 	nd->speed = 200;
-	nd->u.scr.script = script;
+	nd->u.scr.script = scriptroot;
 	nd->u.scr.label_list = label_list;
 	nd->u.scr.label_list_num = label_list_num;
 
@@ -3782,24 +3763,27 @@ int npc_reload(void) {
 	db_clear(npcname_db);
 	db_clear(ev_db);
 
+	npc_last_npd = NULL;
+	npc_last_path = NULL;
+	npc_last_ref = NULL;
+	
 	//Remove all npcs/mobs. [Skotlex]
 
 	iter = mapit_geteachiddb();
 	for( bl = (struct block_list*)mapit->first(iter); mapit->exists(iter); bl = (struct block_list*)mapit->next(iter) ) {
 		switch(bl->type) {
-		case BL_NPC:
-			if( bl->id != fake_nd->bl.id )// don't remove fake_nd
-				npc_unload((struct npc_data *)bl, false);
-			break;
-		case BL_MOB:
-			unit_free(bl,CLR_OUTSIGHT);
-			break;
+			case BL_NPC:
+				if( bl->id != fake_nd->bl.id )// don't remove fake_nd
+					npc_unload((struct npc_data *)bl, false);
+				break;
+			case BL_MOB:
+				unit_free(bl,CLR_OUTSIGHT);
+				break;
 		}
 	}
 	mapit->free(iter);
 
-	if(battle_config.dynamic_mobs)
-	{// dynamic check by [random]
+	if(battle_config.dynamic_mobs) {// dynamic check by [random]
 		for (m = 0; m < iMap->map_num; m++) {
 			for (i = 0; i < MAX_MOB_LIST_PER_MAP; i++) {
 				if (map[m].moblist[i] != NULL) {
@@ -3812,9 +3796,9 @@ int npc_reload(void) {
 					map[m].mob_delete_timer = INVALID_TIMER;
 				}
 			}
+			if (map[m].npc_num > 0)
+				ShowWarning("npc_reload: %d npcs weren't removed at map %s!\n", map[m].npc_num, map[m].name);
 		}
-		if (map[m].npc_num > 0)
-			ShowWarning("npc_reload: %d npcs weren't removed at map %s!\n", map[m].npc_num, map[m].name);
 	}
 
 	// clear mob spawn lookup index
@@ -3970,10 +3954,14 @@ int do_init_npc(void)
 
 	ev_db = strdb_alloc((DBOptions)(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA),2*NAME_LENGTH+2+1);
 	npcname_db = strdb_alloc(DB_OPT_BASE,NAME_LENGTH);
-	npc_path_db = strdb_alloc(DB_OPT_BASE|DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA,80);
+	npc_path_db = strdb_alloc(DB_OPT_BASE|DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA,0);
 
 	timer_event_ers = ers_new(sizeof(struct timer_event_data),"clif.c::timer_event_ers",ERS_OPT_NONE);
 
+	npc_last_npd = NULL;
+	npc_last_path = NULL;
+	npc_last_ref = NULL;
+	
 	// process all npc files
 	ShowStatus("Loading NPCs...\r");
 	for( file = npc_src_files; file != NULL; file = file->next ) {
@@ -3988,7 +3976,7 @@ int do_init_npc(void)
 		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
 		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
 		npc_id - START_NPC_NUM, npc_warp, npc_shop, npc_script, npc_mob, npc_cache_mob, npc_delay_mob);
-	
+
 	iMap->zone_init();
 	
 	npc->motd = npc_name2id("HerculesMOTD"); /* [Ind/Hercules] */

@@ -62,7 +62,7 @@ struct instance_interface {
 	void (*check_kick) (struct map_session_data *sd);
 	void (*set_timeout) (int instance_id, unsigned int progress_timeout, unsigned int idle_timeout);
 	bool (*valid) (int instance_id);
-} instance_s;
+};
 
 struct instance_interface *instance;
 

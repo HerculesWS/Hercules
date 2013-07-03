@@ -78,7 +78,7 @@ struct log_interface {
 	
 	int (*config_read) (const char* cfgName);
 	void (*config_done) (void);
-} log_s;
+};
 
 struct log_interface *logs;
 

@@ -52,7 +52,7 @@ struct irc_bot_interface {
 	void (*pong) (int fd, char *cmd, char *source, char *target, char *msg);
 	void (*join) (int fd, char *cmd, char *source, char *target, char *msg);
 	void (*privmsg) (int fd, char *cmd, char *source, char *target, char *msg);
-} irc_bot_s;
+};
 
 struct irc_bot_interface *ircbot;
 

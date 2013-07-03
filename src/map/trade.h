@@ -17,7 +17,7 @@ struct trade_interface {
 	void (*ok) (struct map_session_data *sd);
 	void (*cancel) (struct map_session_data *sd);
 	void (*commit) (struct map_session_data *sd);
-} trade_s;
+};
 
 struct trade_interface *trade;
 

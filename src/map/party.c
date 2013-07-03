@@ -33,6 +33,8 @@ static DBMap* party_db; // int party_id -> struct party_data* (releases data)
 static DBMap* party_booking_db; // int char_id -> struct party_booking_ad_info* (releases data) // Party Booking [Spiria]
 static unsigned long party_booking_nextid = 1;
 
+struct party_interface party_s;
+
 int party_send_xy_timer(int tid, unsigned int tick, int id, intptr_t data);
 
 /*==========================================

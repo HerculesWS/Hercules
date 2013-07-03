@@ -40,6 +40,8 @@
 #include <string.h>
 #include <math.h>
 
+struct homunculus_interface homunculus_s;
+
 //Returns the viewdata for homunculus
 struct view_data* homunculus_get_viewdata(int class_) {
 	if (homdb_checkid(class_))

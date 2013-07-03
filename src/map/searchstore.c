@@ -39,6 +39,7 @@ enum e_searchstore_effecttype {
 typedef bool (*searchstore_search_t)(struct map_session_data* sd, unsigned short nameid);
 typedef bool (*searchstore_searchall_t)(struct map_session_data* sd, const struct s_search_store_search* s);
 
+struct searchstore_interface searchstore_s;
 
 /// retrieves search function by type
 static inline searchstore_search_t searchstore_getsearchfunc(unsigned char type) {

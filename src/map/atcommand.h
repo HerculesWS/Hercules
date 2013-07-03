@@ -86,7 +86,7 @@ struct atcommand_interface {
 	void (*final_msg) (void);
 	/* atcommand binding */
 	struct atcmd_binding_data* (*get_bind_byname) (const char* name);
-} atcommand_s;
+};
 
 struct atcommand_interface *atcommand;
 

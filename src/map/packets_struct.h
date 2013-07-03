@@ -404,13 +404,13 @@ struct packet_maptypeproperty2 {
 
 struct packet_bgqueue_ack {
 	short PacketType;
-	short type;
+	unsigned char type;
 	char bg_name[NAME_LENGTH];
 } __attribute__((packed));
 
 struct packet_bgqueue_notice_delete {
 	short PacketType;
-	short type;
+	unsigned char type;
 	char bg_name[NAME_LENGTH];
 } __attribute__((packed));
 
@@ -438,7 +438,7 @@ struct packet_bgqueue_revoke_req {
 
 struct packet_bgqueue_battlebegin_ack {
 	short PacketType;
-	short result;
+	unsigned char result;
 	char bg_name[NAME_LENGTH];
 	char game_name[NAME_LENGTH];
 } __attribute__((packed));

@@ -1,5 +1,6 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _PINCODE_H_
 #define _PINCODE_H_

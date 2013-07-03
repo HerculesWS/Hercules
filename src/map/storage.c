@@ -24,6 +24,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct storage_interface storage_s;
+struct guild_storage_interface gstorage_s;
+
 /*==========================================
  * Sort items in the warehouse
  *------------------------------------------*/

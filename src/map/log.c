@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct log_interface log_s;
 
 /// filters for item logging
 typedef enum e_log_filter {

@@ -29,7 +29,7 @@ struct vending_interface {
 	void (*purchase) (struct map_session_data* sd, int aid, unsigned int uid, const uint8* data, int count);
 	bool (*search) (struct map_session_data* sd, unsigned short nameid);
 	bool (*searchall) (struct map_session_data* sd, const struct s_search_store_search* s);
-} vending_s;
+};
 
 struct vending_interface * vending;
 

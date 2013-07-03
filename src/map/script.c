@@ -97,10 +97,8 @@ int str_hash[SCRIPT_HASH_SIZE];
 //#define SCRIPT_HASH_SDBM
 #define SCRIPT_HASH_ELF
 
-static DBMap* scriptlabel_db=NULL; // const char* label_name -> int script_pos
 static DBMap* userfunc_db=NULL; // const char* func_name -> struct script_code*
 static int parse_options=0;
-DBMap* script_get_label_db(void){ return scriptlabel_db; }
 DBMap* script_get_userfunc_db(void){ return userfunc_db; }
 
 // important buildin function references for usage in scripts
@@ -177,6 +175,8 @@ int potion_flag=0; //For use on Alchemist improved potions/Potion Pitcher. [Skot
 int potion_hp=0, potion_per_hp=0, potion_sp=0, potion_per_sp=0;
 int potion_target=0;
 
+
+struct script_interface script_s;
 
 c_op get_com(unsigned char *script,int *pos);
 int get_num(unsigned char *script,int *pos);
@@ -1650,7 +1650,7 @@ const char* parse_syntax(const char* p)
 					script->str_data[l].type = C_USERFUNC;
 					set_label(l, script_pos, p);
 					if( parse_options&SCRIPT_USE_LABEL_DB )
-						strdb_iput(scriptlabel_db, get_str(l), script_pos);
+						script->label_add(l,script_pos);
 				}
 				else
 					disp_error_message("parse_syntax:function: function name is invalid", func_name);
@@ -2090,7 +2090,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 
 	// who called parse_script is responsible for clearing the database after using it, but just in case... lets clear it here
 	if( options&SCRIPT_USE_LABEL_DB )
-		db_clear(scriptlabel_db);
+		script->label_count = 0;
 	parse_options = options;
 
 	if( setjmp( error_jump ) != 0 ) {
@@ -2164,7 +2164,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			i=add_word(p);
 			set_label(i,script_pos,p);
 			if( parse_options&SCRIPT_USE_LABEL_DB )
-				strdb_iput(scriptlabel_db, get_str(i), script_pos);
+				script->label_add(i,script_pos);
 			p=tmpp+1;
 			p=skip_space(p);
 			continue;
@@ -3286,7 +3286,7 @@ void run_script(struct script_code *rootscript,int pos,int rid,int oid) {
 	run_script_main(st);
 }
 
-void script_stop_instances(int id) {
+void script_stop_instances(struct script_code *code) {
 	DBIterator *iter;
 	struct script_state* st;
 	
@@ -3296,7 +3296,7 @@ void script_stop_instances(int id) {
 	iter = db_iterator(script->st_db);
 	
 	for( st = dbi_first(iter); dbi_exists(iter); st = dbi_next(iter) ) {
-		if( st->oid == id ) {
+		if( st->script == code ) {
 			script_free_state(st);
 		}
 	}
@@ -3308,17 +3308,19 @@ void script_stop_instances(int id) {
  * Timer function for sleep
  *------------------------------------------*/
 int run_script_timer(int tid, unsigned int tick, int id, intptr_t data) {
-	struct script_state *st     = (struct script_state *)data;
-	TBL_PC *sd = iMap->id2sd(st->rid);
+	struct script_state *st     = idb_get(script->st_db,(int)data);
+	if( st ) {
+		TBL_PC *sd = iMap->id2sd(st->rid);
 
-	if((sd && sd->status.char_id != id) || (st->rid && !sd)) { //Character mismatch. Cancel execution.
-		st->rid = 0;
-		st->state = END;
+		if((sd && sd->status.char_id != id) || (st->rid && !sd)) { //Character mismatch. Cancel execution.
+			st->rid = 0;
+			st->state = END;
+		}
+		st->sleep.timer = INVALID_TIMER;
+		if(st->state != RERUNLINE)
+			st->sleep.tick = 0;
+		run_script_main(st);
 	}
-	st->sleep.timer = INVALID_TIMER;
-	if(st->state != RERUNLINE)
-		st->sleep.tick = 0;
-	run_script_main(st);
 	return 0;
 }
 
@@ -3514,7 +3516,7 @@ void run_script_main(struct script_state *st)
 		sd = iMap->id2sd(st->rid); // Get sd since script might have attached someone while running. [Inkfish]
 		st->sleep.charid = sd?sd->status.char_id:0;
 		st->sleep.timer  = iTimer->add_timer(iTimer->gettick()+st->sleep.tick,
-			run_script_timer, st->sleep.charid, (intptr_t)st);
+			run_script_timer, st->sleep.charid, (intptr_t)st->id);
 	} else if(st->state != END && st->rid){
 		//Resume later (st is already attached to player).
 		if(st->bk_st) {
@@ -3761,7 +3763,6 @@ void do_final_script(void) {
 
 	mapreg_final();
 
-	db_destroy(scriptlabel_db);
 	userfunc_db->destroy(userfunc_db, db_script_free_code_sub);
 	autobonus_db->destroy(autobonus_db, db_script_free_code_sub);
 
@@ -3817,6 +3818,9 @@ void do_final_script(void) {
 	ers_destroy(script->stack_ers);
 	
 	db_destroy(script->st_db);
+	
+	if( script->labels != NULL )
+		aFree(script->labels);
 }
 /*==========================================
  * Initialization
@@ -3824,7 +3828,6 @@ void do_final_script(void) {
 void do_init_script(void) {
 	script->st_db = idb_alloc(DB_OPT_BASE);
 	userfunc_db = strdb_alloc(DB_OPT_DUP_KEY,0);
-	scriptlabel_db = strdb_alloc(DB_OPT_DUP_KEY,50);
 	autobonus_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 
 	script->st_ers = ers_new(sizeof(struct script_state), "script.c::st_ers", ERS_OPT_NONE);
@@ -3844,7 +3847,7 @@ int script_reload() {
 	struct script_state *st;
 
 	userfunc_db->clear(userfunc_db, db_script_free_code_sub);
-	db_clear(scriptlabel_db);
+	script->label_count = 0;
 
 	for( i = 0; i < atcommand->binding_count; i++ ) {
 		aFree(atcommand->binding[i]);
@@ -17016,9 +17019,7 @@ struct hQueue *script_hqueue_get(int idx) {
 		return NULL;
 	return &script->hq[idx];
 }
-/* set .@id,queue(); */
-/* creates queue, returns created queue id */
-BUILDIN(queue) {
+int script_hqueue_create(void) {
 	int idx = script->hqs;
 	int i;
 	
@@ -17039,8 +17040,12 @@ BUILDIN(queue) {
 	script->hq[ idx ].onDeath[0] = '\0';
 	script->hq[ idx ].onLogOut[0] = '\0';
 	script->hq[ idx ].onMapChange[0] = '\0';
-
-	script_pushint(st,idx);
+	return idx;
+}
+/* set .@id,queue(); */
+/* creates queue, returns created queue id */
+BUILDIN(queue) {
+	script_pushint(st,script->queue_create());
 	return true;
 }
 /* set .@length,queuesize(.@queue_id); */
@@ -17051,8 +17056,14 @@ BUILDIN(queuesize) {
 	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 ) {
 		ShowWarning("buildin_queuesize: unknown queue id %d\n",idx);
 		script_pushint(st, 0);
-	} else
-		script_pushint(st, script->hq[ idx ].items );
+	} else {
+		/* value of script->hq[].items isn't to be trusted for we dont reduce the size when members are removed to save on memory allocation */
+		int i, count = 0;
+		for( i = 0; i < script->hq[ idx ].items; i++ )
+			if( script->hq[ idx ].item[i] != -1  )
+				count++;
+		script_pushint(st, count);
+	}
 		
 	return true;
 }
@@ -17119,17 +17130,17 @@ bool script_hqueue_remove(int idx, int var) {
 		
 		for(i = 0; i < script->hq[idx].items; i++) {
 			if( script->hq[idx].item[i] == var ) {
-				return true;
+				break;
 			}
 		}
 		
 		if( i != script->hq[idx].items ) {
 			struct map_session_data *sd;
-			script->hq[idx].item[i] = 0;
+			script->hq[idx].item[i] = -1;
 			
 			if( var >= START_ACCOUNT_NUM && (sd = iMap->id2sd(var)) ) {
 				for(i = 0; i < sd->queues_count; i++) {
-					if( sd->queues[i] == var ) {
+					if( sd->queues[i] == idx ) {
 						break;
 					}
 				}
@@ -17231,7 +17242,33 @@ BUILDIN(queuedel) {
 	
 	return true;
 }
+void script_hqueue_clear(int idx) {
+	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 ) {
+		ShowWarning("script_hqueue_clear: unknown queue id %d\n",idx);
+		return;
+	} else {
+		struct map_session_data *sd;
+		int i, j;
+		
+			for(i = 0; i < script->hq[idx].items; i++) {
+				if( script->hq[idx].item[i] != -1 ) {
 
+					if( script->hq[idx].item[i] >= START_ACCOUNT_NUM && (sd = iMap->id2sd(script->hq[idx].item[i])) ) {
+						for(j = 0; j < sd->queues_count; j++) {
+							if( sd->queues[j] == idx ) {
+								break;
+							}
+						}
+						
+						if( j != sd->queues_count )
+							sd->queues[j] = -1;
+					}
+					script->hq[idx].item[i] = -1;
+				}
+			}
+	}
+	return;
+}
 /* set .@id, queueiterator(.@queue_id); */
 /* creates a new queue iterator, returns its id */
 BUILDIN(queueiterator) {
@@ -17240,7 +17277,7 @@ BUILDIN(queueiterator) {
 	int idx = script->hqis;
 	int i;
 	
-	if( qid < 0 || qid >= script->hqs || script->hq[idx].items == -1 || !(queue = script->queue(qid)) ) {
+	if( qid < 0 || qid >= script->hqs || script->hq[qid].items == -1 || !(queue = script->queue(qid)) ) {
 		ShowWarning("queueiterator: invalid queue id %d\n",qid);
 		return true;
 	}
@@ -17258,8 +17295,8 @@ BUILDIN(queueiterator) {
 		idx = i;
 
 	RECREATE(script->hqi[ idx ].item, int, queue->items);
-	
-	memcpy(&script->hqi[idx].item, &queue->item, sizeof(int)*queue->items);
+
+	memcpy(script->hqi[idx].item, queue->item, sizeof(int)*queue->items);
 	
 	script->hqi[ idx ].items = queue->items;
 	script->hqi[ idx ].pos = 0;
@@ -17275,7 +17312,7 @@ BUILDIN(qiget) {
 	if( idx < 0 || idx >= script->hqis ) {
 		ShowWarning("buildin_qiget: unknown queue iterator id %d\n",idx);
 		script_pushint(st, 0);
-	} else if ( script->hqi[idx].pos == script->hqi[idx].items ) {
+	} else if ( script->hqi[idx].pos -1 == script->hqi[idx].items ) {
 		script_pushint(st, 0);
 	} else {
 		struct hQueueIterator *it = &script->hqi[idx];
@@ -17292,7 +17329,7 @@ BUILDIN(qicheck) {
 	if( idx < 0 || idx >= script->hqis ) {
 		ShowWarning("buildin_qicheck: unknown queue iterator id %d\n",idx);
 		script_pushint(st, 0);
-	} else if ( script->hqi[idx].pos == script->hqi[idx].items ) {
+	} else if ( script->hqi[idx].pos -1 == script->hqi[idx].items ) {
 		script_pushint(st, 0);
 	} else {
 		script_pushint(st, 1);
@@ -17349,7 +17386,66 @@ BUILDIN(packageitem) {
 	
 	return true;
 }
+/* New Battlegrounds Stuff */
+/* bg_team_create(map_name,respawn_x,respawn_y) */
+/* returns created team id or -1 when fails */
+BUILDIN(bg_create_team) {
+	const char *map_name, *ev = "", *dev = "";//ev and dev will be dropped.
+	int x, y, mapindex = 0, bg_id;
+		
+	map_name = script_getstr(st,2);
+	if( strcmp(map_name,"-") != 0 ) {
+		mapindex = mapindex_name2id(map_name);
+		if( mapindex == 0 ) { // Invalid Map
+			script_pushint(st,0);
+			return true;
+		}
+	}
+	
+	x = script_getnum(st,3);
+	y = script_getnum(st,4);
+	
+	if( (bg_id = bg_create(mapindex, x, y, ev, dev)) == 0 ) { // Creation failed
+		script_pushint(st,-1);
+	} else
+		script_pushint(st,bg_id);
+	
+	return true;
 
+}
+/* bg_join_team(team_id{,optional account id}) */
+/* when account id is not present it tries to autodetect from the attached player (if any) */
+/* returns 0 when successful, 1 otherwise */
+BUILDIN(bg_join_team) {
+	struct map_session_data *sd;
+	int team_id = script_getnum(st, 2);
+	
+	if( script_hasdata(st, 3) )
+		sd = iMap->id2sd(script_getnum(st, 3));
+	else
+		sd = script->rid2sd(st);
+	
+	if( !sd )
+		script_pushint(st, 1);
+	else
+		script_pushint(st,bg_team_join(team_id, sd)?0:1);
+	
+	return true;
+}
+/* bg_match_over( arena_name {, optional canceled } ) */
+/* returns 0 when successful, 1 otherwise */
+BUILDIN(bg_match_over) {
+	bool canceled = script_hasdata(st,3) ? true : false;
+	struct bg_arena *arena = bg->name2arena((char*)script_getstr(st, 2));
+	
+	if( arena ) {
+		bg->match_over(arena,canceled);
+		script_pushint(st, 0);
+	} else
+		script_pushint(st, 1);
+	
+	return true;
+}
 // declarations that were supposed to be exported from npc_chat.c
 #ifdef PCRE_SUPPORT
 	BUILDIN(defpattern);
@@ -17866,6 +17962,10 @@ void script_parse_builtin(void) {
 		
 		BUILDIN_DEF(packageitem,"?"),
 		
+		/* New BG Commands [Hercules] */
+		BUILDIN_DEF(bg_create_team,"sii"),
+		BUILDIN_DEF(bg_join_team,"i?"),
+		BUILDIN_DEF(bg_match_over,"s?"),
 	};
 	int i,n, len = ARRAYLENGTH(BUILDIN), start = script->buildin_count;
 	char* p;
@@ -17916,6 +18016,19 @@ void script_parse_builtin(void) {
 	}
 }
 
+void script_label_add(int key, int pos) {
+	int idx = script->label_count;
+	
+	if( script->labels_size == script->label_count ) {
+		script->labels_size += 1024;
+		RECREATE(script->labels, struct script_label_entry, script->labels_size);
+	}
+	
+	script->labels[idx].key = key;
+	script->labels[idx].pos = pos;
+	script->label_count++;
+}
+
 void script_defaults(void) {
 	script = &script_s;
 	
@@ -17945,6 +18058,10 @@ void script_defaults(void) {
 	
 	script->current_item_id = 0;
 	
+	script->labels = NULL;
+	script->label_count = 0;
+	script->labels_size = 0;
+	
 	script->init = do_init_script;
 	script->final = do_final_script;
 	
@@ -17968,4 +18085,8 @@ void script_defaults(void) {
 	script->queue_add = script_hqueue_add;
 	script->queue_del = script_hqueue_del;
 	script->queue_remove = script_hqueue_remove;
+	script->queue_create = script_hqueue_create;
+	script->queue_clear = script_hqueue_clear;
+	
+	script->label_add = script_label_add;
 }

@@ -569,6 +569,7 @@ if test "$compiler_supports_shared_objects" = "no" ; then
 else
 	AC_MSG_RESULT([$compiler_shared_objects])
 	SOFLAGS="$SOFLAGS $compiler_shared_objects"
+	AC_SUBST([SOFLAGS])
 
 #
 # shared objects need position independent code; some platforms emit
