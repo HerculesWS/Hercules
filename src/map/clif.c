@@ -13412,14 +13412,42 @@ void clif_parse_GMReqNoChat(int fd,struct map_session_data *sd)
 	if( type == 0 )
 		value = -value;
 
-	//If type is 2 and the ids don't match, this is a crafted hacked packet!
-	//Disabled because clients keep self-muting when you give players public @ commands... [Skotlex]
-	if (type == 2 /* && (pc->get_group_level(sd) > 0 || sd->bl.id != id)*/)
-		return;
+	if (type == 2)
+	{
+		if (!battle_config.client_accept_chatdori)
+			return;
+		if (pc->get_group_level(sd) > 0 || sd->bl.id != id)
+			return;
 
-	dstsd = iMap->id2sd(id);
-	if( dstsd == NULL )
-		return;
+		dstsd = sd;	
+	}
+	else
+	{
+		dstsd = iMap->id2sd(id);
+		if( dstsd == NULL )
+			return;
+	}
+	
+	if (type == 2 || ( (pc->get_group_level(sd)) > pc->get_group_level(dstsd) && !pc->can_use_command(sd, "@mute")))
+	{
+		clif->manner_message(sd, 0);
+		clif->manner_message(dstsd, 5);
+
+		if (dstsd->status.manner < value)
+		{
+			dstsd->status.manner -= value;
+			sc_start(&dstsd->bl,SC_NOCHAT,100,0,0);
+			
+		}
+		else
+		{
+			dstsd->status.manner = 0;
+			status_change_end(&dstsd->bl, SC_NOCHAT, INVALID_TIMER);
+		}
+		
+		if( type != 2 )
+			clif->GM_silence(sd, dstsd, type);
+	}
 
 	sprintf(command, "%cmute %d %s", atcommand->at_symbol, value, dstsd->status.name);
 	atcommand->parse(fd, sd, command, 1);
