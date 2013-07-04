@@ -7892,8 +7892,8 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		case AB_CLEMENTIA:
 		case AB_CANTO:
 			{
-				int bless_lv = pc->checkskill(sd,AL_BLESSING) + (sd->status.job_level / 10);
-				int agi_lv = pc->checkskill(sd,AL_INCAGI) + (sd->status.job_level / 10);
+				int bless_lv = sd ? ( pc->checkskill(sd,AL_BLESSING) + (sd->status.job_level / 10) ) : 10;
+				int agi_lv = sd ? ( pc->checkskill(sd,AL_INCAGI) + (sd->status.job_level / 10) ) : 10;
 				if( sd == NULL || sd->status.party_id == 0 || flag&1 )
 					clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_start(bl,type,100,
 						(skill_id == AB_CLEMENTIA)? bless_lv : (skill_id == AB_CANTO)? agi_lv : skill_lv, skill->get_time(skill_id,skill_lv)));
