@@ -40,6 +40,7 @@
 #include "script.h" // script_config
 #include "skill.h"
 #include "status.h" // struct status_data
+#include "storage.h"
 #include "pc.h"
 #include "pc_groups.h"
 #include "quest.h"
@@ -8918,6 +8919,29 @@ int pc_checkitem(struct map_session_data *sd)
 			if( id && !itemdb_available(id) ) {
 				ShowWarning("Removed invalid/disabled item id %d from cart (amount=%d, char_id=%d).\n", id, sd->status.cart[i].amount, sd->status.char_id);
 				pc->cart_delitem(sd, i, sd->status.cart[i].amount, 0, LOG_TYPE_OTHER);
+			}
+		}
+		
+		for( i = 0; i < MAX_STORAGE; i++ ) {
+			id = sd->status.storage.items[i].nameid;
+			if( id && !itemdb_available(id) ) {
+				ShowWarning("Removed invalid/disabled item id %d from storage (amount=%d, char_id=%d).\n", id, sd->status.storage.items[i].amount, sd->status.char_id);
+				storage->delitem(sd, i, sd->status.storage.items[i].amount);
+				storage->close(sd); // force closing
+			}
+		}
+		
+		if (sd->state.gmaster_flag) {
+			struct guild_storage *guild_storage = gstorage->id2storage2(sd->state.gmaster_flag->guild_id);
+			if (guild_storage) {
+				for( i = 0; i < MAX_GUILD_STORAGE; i++ ) {
+					id = guild_storage->items[i].nameid;
+					if( id && !itemdb_available(id) ) {
+						ShowWarning("Removed invalid/disabled item id %d from guild storage (amount=%d, char_id=%d, guild_id=%d).\n", id, guild_storage->items[i].amount, sd->status.char_id, sd->state.gmaster_flag->guild_id);
+						gstorage->delitem(sd, guild_storage, i, guild_storage->items[i].amount);
+						gstorage->close(sd); // force closing
+					}
+				}
 			}
 		}
 	}
