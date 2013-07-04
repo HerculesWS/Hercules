@@ -105,7 +105,9 @@ extern char mercenary_owner_db[256];
 extern char ragsrvinfo_db[256];
 extern char interreg_db[32];
 
-extern int db_use_sqldbs; // added for sql item_db read for char server [Valaris]
+extern int db_use_sql_item_db;
+extern int db_use_sql_mob_db;
+extern int db_use_sql_mob_skill_db;
 
 extern int guild_exp_rate;
 extern int log_inter;

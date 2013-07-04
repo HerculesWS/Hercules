@@ -4588,7 +4588,7 @@ static void mob_load(void)
 {
 	sv->readdb(iMap->db_path, "mob_item_ratio.txt", ',', 2, 2+MAX_ITEMRATIO_MOBS, -1, &mob_readdb_itemratio); // must be read before mobdb
 	mob_readchatdb();
-	if (iMap->db_use_sqldbs)
+	if (iMap->db_use_sql_mob_db)
 	{
 		mob_read_sqldb();
 		mob_read_sqlskilldb();

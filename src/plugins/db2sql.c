@@ -49,7 +49,7 @@ int db2sql(char** str, const char* source, int line, int scriptopt) {
 	struct item_data *it = NULL;
 	unsigned char offset = 0;
 #ifdef RENEWAL
-	if( iMap->db_use_sqldbs ) offset = 1;
+	if( iMap->db_use_sql_item_db ) offset = 1;
 #endif
 	if( (it = itemdb->exists(parse_dbrow(str,source,line,scriptopt))) ) {
 	/* renewal has the 'matk' and 'equip_level' is now 'equip_level_min', and there is a new 'equip_level_max' field */
@@ -69,7 +69,7 @@ int db2sql(char** str, const char* source, int line, int scriptopt) {
 					SqlStmt_ShowDebug(stmt);
 				else {
 				#ifdef RENEWAL
-					if( iMap->db_use_sqldbs ) offset += 1;
+					if( iMap->db_use_sql_item_db ) offset += 1;
 				#endif
 					if( it->script ) trimbraces(str[19+offset]);
 					if ( SQL_SUCCESS != SQL->StmtBindParam(stmt, 2, SQLDT_STRING, it->script?str[19+offset]:"", it->script?strlen(str[19+offset]):0) )
@@ -98,8 +98,8 @@ int db2sql(char** str, const char* source, int line, int scriptopt) {
 
 CPCMD(db2sql) {
 	
-	if( iMap->db_use_sqldbs ) {
-		ShowInfo("db2sql: this should not be used with 'db_use_sqldbs' enabled, skipping...\n");
+	if( iMap->db_use_sql_item_db ) {
+		ShowInfo("db2sql: this should not be used with 'db_use_sql_item_db' enabled, skipping...\n");
 		return;
 	}
 	

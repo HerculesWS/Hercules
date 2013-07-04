@@ -6554,8 +6554,8 @@ void Hercules_report(char* date, char *time_c) {
 #endif
 	
 	/* non-define part */
-	if( iMap->db_use_sqldbs )
-		config |= C_SQL_DBS;
+	if( iMap->db_use_sql_item_db || iMap->db_use_sql_mob_db || iMap->db_use_sql_mob_skill_db )
+		config |= C_SQL_DBS; //TODO: split this config into three.
 
 	if( logs->config.sql_logs )
 		config |= C_SQL_LOGS;

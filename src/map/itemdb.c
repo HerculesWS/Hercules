@@ -1346,7 +1346,7 @@ int itemdb_parse_dbrow(char** str, const char* source, int line, int scriptopt) 
 
 	id->weight = atoi(str[6]);
 #ifdef RENEWAL
-	if( iMap->db_use_sqldbs ) {
+	if( iMap->db_use_sql_item_db ) {
 		id->atk = atoi(str[7]);
 		id->matk = atoi(str[8]);
 		offset += 1;
@@ -1376,7 +1376,7 @@ int itemdb_parse_dbrow(char** str, const char* source, int line, int scriptopt) 
 
 	id->wlv = cap_value(atoi(str[15+offset]), REFINE_TYPE_ARMOR, REFINE_TYPE_MAX);
 #ifdef RENEWAL
-	if( iMap->db_use_sqldbs ) {
+	if( iMap->db_use_sql_item_db ) {
 		id->elv = atoi(str[16+offset]);
 		id->elvmax = atoi(str[17+offset]);
 		offset += 1;
@@ -1639,7 +1639,7 @@ int itemdb_uid_load() {
  * read all item-related databases
  *------------------------------------*/
 static void itemdb_read(void) {
-	if (iMap->db_use_sqldbs)
+	if (iMap->db_use_sql_item_db)
 		itemdb_read_sqldb();
 	else
 		itemdb_readdb();

@@ -3548,9 +3548,17 @@ int inter_config_read(char *cfgName) {
 			strcpy(map_server_db, w2);
 		else if(strcmpi(w1,"default_codepage")==0)
 			strcpy(default_codepage, w2);
-		else if(strcmpi(w1,"use_sql_db")==0) {
-			iMap->db_use_sqldbs = config_switch(w2);
-			ShowStatus ("Using SQL dbs: %s\n",w2);
+		else if(strcmpi(w1,"use_sql_item_db")==0) {
+			iMap->db_use_sql_item_db = config_switch(w2);
+			ShowStatus ("Using item database as SQL: '%s'\n", w2);
+		}
+		else if(strcmpi(w1,"use_sql_mob_db")==0) {
+			iMap->db_use_sql_mob_db = config_switch(w2);
+			ShowStatus ("Using monster database as SQL: '%s'\n", w2);
+		}
+		else if(strcmpi(w1,"use_sql_mob_skill_db")==0) {
+			iMap->db_use_sql_mob_skill_db = config_switch(w2);
+			ShowStatus ("Using monster skill database as SQL: '%s'\n", w2);
 		}
 		/* sql log db */
 		else if(strcmpi(w1,"log_db_ip")==0)
@@ -5319,7 +5327,9 @@ int do_init(int argc, char *argv[])
 	iMap->night_flag = 0; // 0=day, 1=night [Yor]
 	iMap->enable_spy = 0; //To enable/disable @spy commands, which consume too much cpu time when sending packets. [Skotlex]
 
-	iMap->db_use_sqldbs = 0;
+	iMap->db_use_sql_item_db = 0;
+	iMap->db_use_sql_mob_db = 0;
+	iMap->db_use_sql_mob_skill_db = 0;
 
 	sprintf(iMap->item_db_db, "item_db");
 	sprintf(iMap->item_db2_db, "item_db2");

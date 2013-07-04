@@ -788,7 +788,9 @@ struct map_interface {
 	char *MSG_CONF_NAME;
 	char *GRF_PATH_FILENAME;
 
-	int db_use_sqldbs;
+	int db_use_sql_item_db;
+	int db_use_sql_mob_db;
+	int db_use_sql_mob_skill_db;
 
 	char item_db_db[32];
 	char item_db2_db[32];
