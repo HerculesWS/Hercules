@@ -34,7 +34,7 @@ menu	"Last Warp ^777777["+lastwarp$+"]^000000",-,
 		message strcharinfo(0),"You haven't warped anywhere yet.";
 	else
 		warp lastwarp$,lastwarpx,lastwarpy;
-	end;
+	close;
 
 // ------------------- Functions -------------------
 // * Go("<map>",<x>,<y>);
