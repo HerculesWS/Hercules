@@ -7831,9 +7831,9 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 						}
 					}else if( skill_area_temp[5]&0x20 ){
 						i = status_get_max_hp(bl) * 25 / 100;
-						status_change_clear_buffs(bl,4);
+						iStatus->change_clear_buffs(bl,4);
 						skill_area_temp[5] &= ~0x20;
-						status_heal(bl,i,0,1);
+						iStatus->heal(bl,i,0,1);
 						type = SC_REFRESH;
 					}else if( skill_area_temp[5]&0x40 ){
 						skill_area_temp[5] &= ~0x40;
@@ -7841,7 +7841,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					}else if( skill_area_temp[5]&0x80 ){
 						if( dstsd ){
 							i = sstatus->hp / 4;
-							if( status_charge(bl,i,0) )
+							if( iStatus->charge(bl,i,0) )
 								type = SC_STONEHARDSKIN;
 							skill_area_temp[5] &= ~0x80;
 						}
