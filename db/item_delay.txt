@@ -33,4 +33,5 @@
 12726,30000 // Runstone_Rhydo,Raido Rune
 12727,60000 // Runstone_Verkana,Berkana Rune
 12732,1000 // Runstone_Pertz,Wyrd Rune
+22540,60000 // Runstone_Luxanima,Lux Anima Rune
 

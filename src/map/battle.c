@@ -443,9 +443,8 @@ int battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, uin
 			eatk += 200;
 	#ifdef RENEWAL_EDP	
 		if( sc->data[SC_EDP] && skill_id != AS_GRIMTOOTH && skill_id != AS_VENOMKNIFE && skill_id != ASC_BREAKER ){
-			eatk = eatk * sc->data[SC_EDP]->val3 / 100; // 400%
-			damage = damage * sc->data[SC_EDP]->val4 / 100; // 500%
-			damage--; // temporary until we find the correct formula [malufett]
+			eatk = eatk * sc->data[SC_EDP]->val4 / 100;
+			damage += damage * sc->data[SC_EDP]->val3 / 100; 
 		}
 	#endif
 	}
@@ -4401,11 +4400,13 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					ATK_ADD(-totaldef);
 					if( is_boss(target) )
 						ATK_RATE(50);
+					RE_SKILL_REDUCTION();
 				}
 				break;	
 			case NJ_SYURIKEN: // [malufett]
 				GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0) );
 				wd.damage += battle->calc_masteryfix(src, target, skill_id, skill_lv, 4 * skill_lv + (sd ? sd->bonus.arrow_atk : 0), wd.div_, 0, flag.weapon) - status_get_total_def(target);
+				RE_SKILL_REDUCTION();
 				break;
 			case MO_EXTREMITYFIST:	// [malufett]
 				{
@@ -4415,6 +4416,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 						wd.damage = (250 + 150 * skill_lv) + (10 * (status_get_sp(src)+1) * wd.damage / 100) + (8 * wd.damage);
 						ATK_ADD(-totaldef);
 					}
+					RE_SKILL_REDUCTION();
 				}
 #endif
 				break;
@@ -4708,7 +4710,11 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 
 		if( (i = battle->adjust_skill_damage(src->m,skill_id)) )
 			ATK_RATE(i);
-		
+
+		if( skill_id && (wd.damage+wd.damage2) ){
+			RE_SKILL_REDUCTION();
+		}
+
 		if( sd ) {
 			if (skill_id && (i = pc->skillatk_bonus(sd, skill_id)))
 				ATK_ADDRATE(i);
@@ -4813,7 +4819,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 
 #ifndef RENEWAL
 		wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
-		if( flag.lh)
+		if( flag.lh )
 			wd.damage2 = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage2, wd.div_, 1, flag.weapon);
 #else
 		if( sd && flag.cri )

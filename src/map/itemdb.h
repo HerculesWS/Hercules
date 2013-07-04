@@ -63,6 +63,7 @@ enum {
 	ITEMID_THURISAZ,
 	ITEMID_WYRD,
 	ITEMID_HAGALAZ,
+	ITEMID_LUX_ANIMA = 22540,
 } rune_list;
 
 /**
@@ -226,7 +227,7 @@ struct item_package {
 #define itemdb_available(n) (itemdb->search(n)->flag.available)
 #define itemdb_viewid(n) (itemdb->search(n)->view_id)
 #define itemdb_autoequip(n) (itemdb->search(n)->flag.autoequip)
-#define itemdb_is_rune(n) (n >= ITEMID_NAUTHIZ && n <= ITEMID_HAGALAZ)
+#define itemdb_is_rune(n) ((n >= ITEMID_NAUTHIZ && n <= ITEMID_HAGALAZ) || n == ITEMID_LUX_ANIMA)
 #define itemdb_is_element(n) (n >= 990 && n <= 993)
 #define itemdb_is_spellbook(n) (n >= 6188 && n <= 6205)
 #define itemdb_is_poison(n) (n >= 12717 && n <= 12724)
