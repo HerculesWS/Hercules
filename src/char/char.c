@@ -3683,11 +3683,8 @@ static void char_delete2_accept(int fd, struct char_session_data* sd)
 	}
 
 	// refresh character list cache
-	for(k = i; k < MAX_CHARS-1; k++) {
-		sd->found_char[k] = sd->found_char[k+1];
-	}
-	sd->found_char[MAX_CHARS-1] = -1;
-
+	sd->found_char[i] = -1;
+	
 	char_delete2_accept_ack(fd, char_id, 1);
 }
 
