@@ -4710,10 +4710,11 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 
 		if( (i = battle->adjust_skill_damage(src->m,skill_id)) )
 			ATK_RATE(i);
-
+#ifdef RENEWAL
 		if( skill_id && (wd.damage+wd.damage2) ){
 			RE_SKILL_REDUCTION();
 		}
+#endif
 
 		if( sd ) {
 			if (skill_id && (i = pc->skillatk_bonus(sd, skill_id)))
