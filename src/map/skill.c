@@ -7971,11 +7971,12 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				i = skill_id == AB_CLEMENTIA ? pc->checkskill(sd,AL_BLESSING) : pc->checkskill(sd,AL_INCAGI);
 			if( sd == NULL || sd->status.party_id == 0 || flag&1 )
 				clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_start(bl, type, 100, i + (sd?(sd->status.job_level / 10):0), skill->get_time(skill_id,skill_lv)));
-			else if( sd )
+			else if( sd ) {
 				if( !i )
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL,0);
 				else
 					party_foreachsamemap(skill->area_sub, sd, skill->get_splash(skill_id, skill_lv), src, skill_id, skill_lv, tick, flag|BCT_PARTY|1, skill->castend_nodamage_id);
+			}
 			break;
 
 		case AB_PRAEFATIO:
