@@ -1184,7 +1184,7 @@ int chrif_save_scdata(struct map_session_data *sd) { //parses the sc_data of the
 			continue;
 		if (sc->data[i]->timer != INVALID_TIMER) {
 			timer = iTimer->get_timer(sc->data[i]->timer);
-			if (timer == NULL || timer->func != status_change_timer || DIFF_TICK(timer->tick,tick) < 0)
+			if (timer == NULL || timer->func != iStatus->change_timer || DIFF_TICK(timer->tick,tick) < 0)
 				continue;
 			data.tick = DIFF_TICK(timer->tick,tick); //Duration that is left before ending.
 		} else
@@ -1237,7 +1237,7 @@ int chrif_load_scdata(int fd) {
 	
 	for (i = 0; i < count; i++) {
 		data = (struct status_change_data*)RFIFOP(fd,14 + i*sizeof(struct status_change_data));
-		status_change_start(&sd->bl, (sc_type)data->type, 10000, data->val1, data->val2, data->val3, data->val4, data->tick, 15);
+		iStatus->change_start(&sd->bl, (sc_type)data->type, 10000, data->val1, data->val2, data->val3, data->val4, data->tick, 15);
 	}
 #endif
 	

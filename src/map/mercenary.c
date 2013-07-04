@@ -307,8 +307,8 @@ int merc_data_received(struct s_mercenary *merc, bool flag)
 		md->master = sd;
 		md->db = db;
 		memcpy(&md->mercenary, merc, sizeof(struct s_mercenary));
-		status_set_viewdata(&md->bl, md->mercenary.class_);
-		status_change_init(&md->bl);
+		iStatus->set_viewdata(&md->bl, md->mercenary.class_);
+		iStatus->change_init(&md->bl);
 		unit_dataset(&md->bl);
 		md->ud.dir = sd->ud.dir;
 

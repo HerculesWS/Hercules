@@ -143,7 +143,7 @@ int homunculus_vaporize(struct map_session_data *sd, int flag) {
 	if (!hd || hd->homunculus.vaporize)
 		return 0;
 
-	if (status_isdead(&hd->bl))
+	if (iStatus->isdead(&hd->bl))
 		return 0; //Can't vaporize a dead homun.
 
 	if (flag && get_percentage(hd->battle_status.hp, hd->battle_status.max_hp) < 80)
@@ -364,7 +364,7 @@ int homunculus_change_class(struct homun_data *hd, short class_) {
 		return 0;
 	hd->homunculusDB = &homun->db[i];
 	hd->homunculus.class_ = class_;
-	status_set_viewdata(&hd->bl, class_);
+	iStatus->set_viewdata(&hd->bl, class_);
 	homun->calc_skilltree(hd, 1);
 	return 1;
 }
@@ -743,8 +743,8 @@ bool homunculus_create(struct map_session_data *sd, struct s_homunculus *hom) {
 	memcpy(&hd->homunculus, hom, sizeof(struct s_homunculus));
 	hd->exp_next = homun->exptable[hd->homunculus.level - 1];
 
-	status_set_viewdata(&hd->bl, hd->homunculus.class_);
-	status_change_init(&hd->bl);
+	iStatus->set_viewdata(&hd->bl, hd->homunculus.class_);
+	iStatus->change_init(&hd->bl);
 	unit_dataset(&hd->bl);
 	hd->ud.dir = sd->ud.dir;
 
@@ -911,7 +911,7 @@ bool homunculus_ressurect(struct map_session_data* sd, unsigned char per, short 
   	if (hd->homunculus.vaporize)
 		return false; // vaporized homunculi need to be 'called'
 
-	if (!status_isdead(&hd->bl))
+	if (!iStatus->isdead(&hd->bl))
 		return false; // already alive
 
 	homun->init_timers(hd);
@@ -924,7 +924,7 @@ bool homunculus_ressurect(struct map_session_data* sd, unsigned char per, short 
 		iMap->addblock(&hd->bl);
 		clif->spawn(&hd->bl);
 	}
-	status_revive(&hd->bl, per, 0);
+	iStatus->revive(&hd->bl, per, 0);
 	return true;
 }
 
