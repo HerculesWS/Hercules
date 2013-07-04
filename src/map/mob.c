@@ -159,7 +159,7 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 
 	iMap->addnpc(nd->bl.m, nd);
 	iMap->addblock(&nd->bl);
-	status_set_viewdata(&nd->bl, nd->class_);
+	iStatus->set_viewdata(&nd->bl, nd->class_);
     clif->spawn(&nd->bl);
 
 }
@@ -284,8 +284,8 @@ struct mob_data* mob_spawn_dataset(struct spawn_data *data) {
 	md->spawn_timer = INVALID_TIMER;
 	md->deletetimer = INVALID_TIMER;
 	md->skill_idx = -1;
-	status_set_viewdata(&md->bl, md->class_);
-	status_change_init(&md->bl);
+	iStatus->set_viewdata(&md->bl, md->class_);
+	iStatus->change_init(&md->bl);
 	unit_dataset(&md->bl);
 	
 	iMap->addiddb(&md->bl);
@@ -413,7 +413,7 @@ bool mob_ksprotected (struct block_list *src, struct block_list *target)
 		return true;
 	} while(0);
 
-	status_change_start(target, SC_KSPROTECTED, 10000, sd->bl.id, sd->state.noks, sd->status.party_id, sd->status.guild_id, battle_config.ksprotection, 0);
+	iStatus->change_start(target, SC_KSPROTECTED, 10000, sd->bl.id, sd->state.noks, sd->status.party_id, sd->status.guild_id, battle_config.ksprotection, 0);
 
 	return false;
 }
@@ -908,7 +908,7 @@ int mob_spawn (struct mob_data *md)
 	if (md->spawn && md->class_ != md->spawn->class_)
 	{
 		md->class_ = md->spawn->class_;
-		status_set_viewdata(&md->bl, md->class_);
+		iStatus->set_viewdata(&md->bl, md->class_);
 		md->db = mob_db(md->class_);
 		memcpy(md->name,md->spawn->name,NAME_LENGTH);
 	}
@@ -1031,7 +1031,7 @@ int mob_target(struct mob_data *md,struct block_list *bl,int dist)
 	if(md->target_id && !mob_can_changetarget(md, bl, status_get_mode(&md->bl)))
 		return 0;
 
-	if(!status_check_skilluse(&md->bl, bl, 0, 0))
+	if(!iStatus->check_skilluse(&md->bl, bl, 0, 0))
 		return 0;
 
 	md->target_id = bl->id;	// Since there was no disturbance, it locks on to target.
@@ -1059,10 +1059,10 @@ static int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
 	mode= va_arg(ap,int);
 
 	//If can't seek yet, not an enemy, or you can't attack it, skip.
-	if ((*target) == bl || !status_check_skilluse(&md->bl, bl, 0, 0))
+	if ((*target) == bl || !iStatus->check_skilluse(&md->bl, bl, 0, 0))
 		return 0;
 
-	if ((mode&MD_TARGETWEAK) && status_get_lv(bl) >= md->level-5)
+	if ((mode&MD_TARGETWEAK) && iStatus->get_lv(bl) >= md->level-5)
 		return 0;
 
 	if(battle->check_target(&md->bl,bl,BCT_ENEMY)<=0)
@@ -1120,7 +1120,7 @@ static int mob_ai_sub_hard_changechase(struct block_list *bl,va_list ap)
 	//If can't seek yet, not an enemy, or you can't attack it, skip.
 	if ((*target) == bl ||
 		battle->check_target(&md->bl,bl,BCT_ENEMY)<=0 ||
-	  	!status_check_skilluse(&md->bl, bl, 0, 0))
+	  	!iStatus->check_skilluse(&md->bl, bl, 0, 0))
 		return 0;
 
 	if(battle->check_range (&md->bl, bl, md->status.rhw.range)) {
@@ -1142,7 +1142,7 @@ static int mob_ai_sub_hard_bg_ally(struct block_list *bl,va_list ap) {
 	md=va_arg(ap,struct mob_data *);
 	target= va_arg(ap,struct block_list**);
 
-	if( status_check_skilluse(&md->bl, bl, 0, 0) && battle->check_target(&md->bl,bl,BCT_ENEMY)<=0 ) {
+	if( iStatus->check_skilluse(&md->bl, bl, 0, 0) && battle->check_target(&md->bl,bl,BCT_ENEMY)<=0 ) {
 		(*target) = bl;
 	}
 	return 1;
@@ -1208,7 +1208,7 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md,unsigned int tick)
 
 	bl=iMap->id2bl(md->master_id);
 
-	if (!bl || status_isdead(bl)) {
+	if (!bl || iStatus->isdead(bl)) {
 		status_kill(&md->bl);
 		return 1;
 	}
@@ -1268,7 +1268,7 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md,unsigned int tick)
 				if (tbl && battle->check_target(&md->bl, tbl, BCT_ENEMY) <= 0)
 					tbl = NULL;
 			}
-			if (tbl && status_check_skilluse(&md->bl, tbl, 0, 0)) {
+			if (tbl && iStatus->check_skilluse(&md->bl, tbl, 0, 0)) {
 				md->target_id=tbl->id;
 				md->min_chase=md->db->range3+distance_bl(&md->bl, tbl);
 				if(md->min_chase>MAX_MINCHASE)
@@ -1361,7 +1361,7 @@ int mob_randomwalk(struct mob_data *md,unsigned int tick)
 		}
 		return 0;
 	}
-	speed=status_get_speed(&md->bl);
+	speed=iStatus->get_speed(&md->bl);
 	for(i=c=0;i<md->ud.walkpath.path_len;i++){	// The next walk start time is calculated.
 		if(md->ud.walkpath.path[i]&1)
 			c+=speed*14/10;
@@ -1439,7 +1439,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 	{	//Check validity of current target. [Skotlex]
 		tbl = iMap->id2bl(md->target_id);
 		if (!tbl || tbl->m != md->bl.m ||
-			(md->ud.attacktimer == INVALID_TIMER && !status_check_skilluse(&md->bl, tbl, 0, 0)) ||
+			(md->ud.attacktimer == INVALID_TIMER && !iStatus->check_skilluse(&md->bl, tbl, 0, 0)) ||
 			(md->ud.walktimer != INVALID_TIMER && !(battle_config.mob_ai&0x1) && !check_distance_bl(&md->bl, tbl, md->min_chase)) ||
 			(
 				tbl->type == BL_PC &&
@@ -1480,7 +1480,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 			if( md->bl.m != abl->m || abl->prev == NULL
 				|| (dist = distance_bl(&md->bl, abl)) >= MAX_MINCHASE // Attacker longer than visual area
 				|| battle->check_target(&md->bl, abl, BCT_ENEMY) <= 0 // Attacker is not enemy of mob
-				|| (battle_config.mob_ai&0x2 && !status_check_skilluse(&md->bl, abl, 0, 0)) // Cannot normal attack back to Attacker
+				|| (battle_config.mob_ai&0x2 && !iStatus->check_skilluse(&md->bl, abl, 0, 0)) // Cannot normal attack back to Attacker
 				|| (!battle->check_range(&md->bl, abl, md->status.rhw.range) // Not on Melee Range and ...
 				&& ( // Reach check
 					(!can_move && DIFF_TICK(tick, md->ud.canmove_tick) > 0 && (battle_config.mob_ai&0x2 || (md->sc.data[SC_SPIDERWEB] && md->sc.data[SC_SPIDERWEB]->val1)
@@ -1500,7 +1500,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 				}
 			}
 			else
-			if (!(battle_config.mob_ai&0x2) && !status_check_skilluse(&md->bl, abl, 0, 0))
+			if (!(battle_config.mob_ai&0x2) && !iStatus->check_skilluse(&md->bl, abl, 0, 0))
 			{
 				//Can't attack back, but didn't invoke a rude attacked skill...
 			}
@@ -1917,7 +1917,7 @@ int mob_respawn(int tid, unsigned int tick, int id, intptr_t data)
 	struct block_list *bl = iMap->id2bl(id);
 
 	if(!bl) return 0;
-	status_revive(bl, (uint8)data, 0);
+	iStatus->revive(bl, (uint8)data, 0);
 	return 1;
 }
 
@@ -2184,7 +2184,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		if (md->sc.data[SC_RICHMANKIM])
 			bonus += md->sc.data[SC_RICHMANKIM]->val2;
 		if(sd) {
-			temp = status_get_class(&md->bl);
+			temp = iStatus->get_class(&md->bl);
 			if(sd->sc.data[SC_MIRACLE]) i = 2; //All mobs are Star Targets
 			else
 			ARR_FIND(0, MAX_PC_FEELHATE, i, temp == sd->hate_mob[i] &&
@@ -2625,7 +2625,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 	}
 
-	if(!md->spawn) //Tell status_damage to remove it from memory.
+	if(!md->spawn) //Tell iStatus->damage to remove it from memory.
 		return 5; // Note: Actually, it's 4. Oh well...
 
 	// MvP tomb [GreenBox]
@@ -2633,7 +2633,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		mvptomb_create(md, mvp_sd ? mvp_sd->status.name : NULL, time(NULL));
 
 	if( !rebirth ) {
-		status_change_clear(&md->bl,1);
+		iStatus->change_clear(&md->bl,1);
 		mob_setdelayspawn(md); //Set respawning.
 	}
 	return 3; //Remove from map.
@@ -2761,7 +2761,7 @@ int mob_class_change (struct mob_data *md, int class_)
 	mob_stop_attack(md);
 	mob_stop_walking(md, 0);
 	unit_skillcastcancel(&md->bl, 0);
-	status_set_viewdata(&md->bl, class_);
+	iStatus->set_viewdata(&md->bl, class_);
 	clif->class_change(&md->bl, md->vd->class_, 1);
 	status_calc_mob(md, 1);
 	md->ud.state.speed_changed = 1; //Speed change update.
@@ -3355,7 +3355,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 	strcpy(db->sprite,sd->status.name);
 	strcpy(db->name,sd->status.name);
 	strcpy(db->jname,sd->status.name);
-	db->lv=status_get_lv(&sd->bl);
+	db->lv=iStatus->get_lv(&sd->bl);
 	memcpy(status, &sd->base_status, sizeof(struct status_data));
 	status->rhw.atk2= status->dex + status->rhw.atk + status->rhw.atk2; //Max ATK
 	status->rhw.atk = status->dex; //Min ATK
@@ -3751,7 +3751,7 @@ static bool mob_parse_dbrow(char** str)
 	data.bl.type = BL_MOB;
 	data.level = db->lv;
 	memcpy(&data.status, status, sizeof(struct status_data));
-	status_calc_misc(&data.bl, status, db->lv);
+	iStatus->calc_misc(&data.bl, status, db->lv);
 
 	// MVP EXP Bonus: MEXP
 	// Some new MVP's MEXP multipled by high exp-rate cause overflow. [LuzZza]
