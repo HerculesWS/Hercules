@@ -1,16 +1,13 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
-
 #ifndef _STATUS_H_
 #define _STATUS_H_
-
 struct block_list;
 struct mob_data;
 struct pet_data;
 struct homun_data;
 struct mercenary_data;
 struct status_change;
-
 /**
  * Max Refine available to your server
  * Changing this limit requires edits to refine_db.txt
@@ -20,17 +17,14 @@ struct status_change;
 #else
 	#define MAX_REFINE 10
 #endif
-
 enum refine_type {
 	REFINE_TYPE_ARMOR   = 0,
 	REFINE_TYPE_WEAPON1 = 1,
 	REFINE_TYPE_WEAPON2 = 2,
 	REFINE_TYPE_WEAPON3 = 3,
 	REFINE_TYPE_WEAPON4 = 4,
-
 	REFINE_TYPE_MAX     = 5
 };
-
 typedef enum sc_conf_type {
 	SC_NO_REM_DEATH   = 0x1,
 	SC_NO_SAVE = 0x2,
@@ -40,13 +34,9 @@ typedef enum sc_conf_type {
 	SC_DEBUFF = 0x20,
 	SC_MADO_NO_RESET = 0x40
 } sc_conf_type;
-
-int status_get_refine_chance(enum refine_type wlv, int refine);
-
 // Status changes listing. These code are for use by the server. 
 typedef enum sc_type {
 	SC_NONE = -1,
-
 	//First we enumerate common status ailments which are often used around.
 	SC_STONE = 0,
 	SC_COMMON_MIN = 0, // begin
@@ -323,7 +313,6 @@ typedef enum sc_type {
 	SC_PROTECT_DEF,
 	//SC_SPREGEN,
 	SC_WALKSPEED = 278,
-
 	// Mercenary Only Bonus Effects
 	SC_MER_FLEE,
 	SC_MER_ATK, //280
@@ -331,7 +320,6 @@ typedef enum sc_type {
 	SC_MER_SP,
 	SC_MER_HIT,
 	SC_MER_QUICKEN,
-
 	SC_REBIRTH,
 	//SC_SKILLCASTRATE, //286
 	//SC_DEFRATIOATK,
@@ -670,14 +658,10 @@ typedef enum sc_type {
 	
 	SC_ALL_RIDING,
 	SC_HANBOK,
-
 	SC_MONSTER_TRANSFORM,
 	SC_ANGEL_PROTECT,
-	SC_ILLUSIONDOPING,
-
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
-
 // Official status change ids, used to display status icons on the client.
 enum si_type {
 	SI_BLANK		= -1,
@@ -1406,13 +1390,12 @@ enum si_type {
 	SI_2013_VALENTINE1 = 731,
 	SI_2013_VALENTINE2 = 732,
 	SI_2013_VALENTINE3 = 733,
-	SI_ILLUSIONDOPING = 734,
+	//SI_ = 734,
 	//SI_ = 735,
 	SI_CHILL = 736,
     SI_BURNT = 737,
 	SI_MAX,
 };
-
 // JOINTBEAT stackable ailments
 enum e_joint_break
 {
@@ -1425,8 +1408,6 @@ enum e_joint_break
 	BREAK_FLAGS    = BREAK_ANKLE | BREAK_WRIST | BREAK_KNEE | BREAK_SHOULDER | BREAK_WAIST | BREAK_NECK,
 };
 
-extern int current_equip_item_index;
-extern int current_equip_card_id;
 
 //Mode definitions to clear up code reading. [Skotlex]
 enum e_mode
@@ -1725,149 +1706,183 @@ struct status_change {
 	struct status_change_entry *data[SC_MAX];
 };
 
-// for looking up associated data
-sc_type status_skill2sc(int skill);
-int status_sc2skill(sc_type sc);
-unsigned int status_sc2scb_flag(sc_type sc);
-int status_type2relevant_bl_types(int type);
-int status_get_sc_type(sc_type idx);
 
-int status_damage(struct block_list *src,struct block_list *target,int hp,int sp, int walkdelay, int flag);
 //Define for standard HP damage attacks.
-#define status_fix_damage(src, target, hp, walkdelay) status_damage(src, target, hp, 0, walkdelay, 0)
+#define status_fix_damage(src, target, hp, walkdelay) iStatus->damage(src, target, hp, 0, walkdelay, 0)
 //Define for standard HP/SP damage triggers.
-#define status_zap(bl, hp, sp) status_damage(NULL, bl, hp, sp, 0, 1)
-//Define for standard HP/SP skill-related cost triggers (mobs require no HP/SP to use skills)
-int status_charge(struct block_list* bl, int hp, int sp);
-int status_percent_change(struct block_list *src,struct block_list *target,signed char hp_rate, signed char sp_rate, int flag);
-//Easier handling of status_percent_change
-#define status_percent_heal(bl, hp_rate, sp_rate) status_percent_change(NULL, bl, -(hp_rate), -(sp_rate), 0)
-#define status_percent_damage(src, target, hp_rate, sp_rate, kill) status_percent_change(src, target, hp_rate, sp_rate, (kill)?1:2)
+#define status_zap(bl, hp, sp) iStatus->damage(NULL, bl, hp, sp, 0, 1)
+//Easier handling of iStatus->percent_change
+#define status_percent_heal(bl, hp_rate, sp_rate) iStatus->percent_change(NULL, bl, -(hp_rate), -(sp_rate), 0)
+#define status_percent_damage(src, target, hp_rate, sp_rate, kill) iStatus->percent_change(src, target, hp_rate, sp_rate, (kill)?1:2)
 //Instant kill with no drops/exp/etc
 #define status_kill(bl) status_percent_damage(NULL, bl, 100, 0, true)
-//Used to set the hp/sp of an object to an absolute value (can't kill)
-int status_set_hp(struct block_list *bl, unsigned int hp, int flag);
-int status_set_sp(struct block_list *bl, unsigned int sp, int flag);
-int status_heal(struct block_list *bl,int hp,int sp, int flag);
-int status_revive(struct block_list *bl, unsigned char per_hp, unsigned char per_sp);
 
-struct regen_data *status_get_regen_data(struct block_list *bl);
-struct status_data *status_get_status_data(struct block_list *bl);
-struct status_data *status_get_base_status(struct block_list *bl);
-const char * status_get_name(struct block_list *bl);
-int status_get_class(struct block_list *bl);
-int status_get_lv(struct block_list *bl);
-#define status_get_range(bl) status_get_status_data(bl)->rhw.range
-#define status_get_hp(bl) status_get_status_data(bl)->hp
-#define status_get_max_hp(bl) status_get_status_data(bl)->max_hp
-#define status_get_sp(bl) status_get_status_data(bl)->sp
-#define status_get_max_sp(bl) status_get_status_data(bl)->max_sp
-#define status_get_str(bl) status_get_status_data(bl)->str
-#define status_get_agi(bl) status_get_status_data(bl)->agi
-#define status_get_vit(bl) status_get_status_data(bl)->vit
-#define status_get_int(bl) status_get_status_data(bl)->int_
-#define status_get_dex(bl) status_get_status_data(bl)->dex
-#define status_get_luk(bl) status_get_status_data(bl)->luk
-#define status_get_hit(bl) status_get_status_data(bl)->hit
-#define status_get_flee(bl) status_get_status_data(bl)->flee
-defType status_get_def(struct block_list *bl);
-#define status_get_mdef(bl) status_get_status_data(bl)->mdef
-#define status_get_flee2(bl) status_get_status_data(bl)->flee2
-#define status_get_def2(bl) status_get_status_data(bl)->def2
-#define status_get_mdef2(bl) status_get_status_data(bl)->mdef2
-#define status_get_critical(bl)  status_get_status_data(bl)->cri
-#define status_get_batk(bl) status_get_status_data(bl)->batk
-#define status_get_watk(bl) status_get_status_data(bl)->rhw.atk
-#define status_get_watk2(bl) status_get_status_data(bl)->rhw.atk2
-#define status_get_matk_max(bl) status_get_status_data(bl)->matk_max
-#define status_get_matk_min(bl) status_get_status_data(bl)->matk_min
-#define status_get_lwatk(bl) status_get_status_data(bl)->lhw.atk
-#define status_get_lwatk2(bl) status_get_status_data(bl)->lhw.atk2
-unsigned short status_get_speed(struct block_list *bl);
-#define status_get_adelay(bl) status_get_status_data(bl)->adelay
-#define status_get_amotion(bl) status_get_status_data(bl)->amotion
-#define status_get_dmotion(bl) status_get_status_data(bl)->dmotion
-#define status_get_element(bl) status_get_status_data(bl)->def_ele
-#define status_get_element_level(bl) status_get_status_data(bl)->ele_lv
-unsigned char status_calc_attack_element(struct block_list *bl, struct status_change *sc, int element);
-#define status_get_attack_sc_element(bl, sc) status_calc_attack_element(bl, sc, 0)
-#define status_get_attack_element(bl) status_get_status_data(bl)->rhw.ele
-#define status_get_attack_lelement(bl) status_get_status_data(bl)->lhw.ele
-#define status_get_race(bl) status_get_status_data(bl)->race
-#define status_get_size(bl) status_get_status_data(bl)->size
-#define status_get_mode(bl) status_get_status_data(bl)->mode
-int status_get_party_id(struct block_list *bl);
-int status_get_guild_id(struct block_list *bl);
-int status_get_emblem_id(struct block_list *bl);
-int status_get_mexp(struct block_list *bl);
-int status_get_race2(struct block_list *bl);
+#define status_get_range(bl) iStatus->get_status_data(bl)->rhw.range
+#define status_get_hp(bl) iStatus->get_status_data(bl)->hp
+#define status_get_max_hp(bl) iStatus->get_status_data(bl)->max_hp
+#define status_get_sp(bl) iStatus->get_status_data(bl)->sp
+#define status_get_max_sp(bl) iStatus->get_status_data(bl)->max_sp
+#define status_get_str(bl) iStatus->get_status_data(bl)->str
+#define status_get_agi(bl) iStatus->get_status_data(bl)->agi
+#define status_get_vit(bl) iStatus->get_status_data(bl)->vit
+#define status_get_int(bl) iStatus->get_status_data(bl)->int_
+#define status_get_dex(bl) iStatus->get_status_data(bl)->dex
+#define status_get_luk(bl) iStatus->get_status_data(bl)->luk
+#define status_get_hit(bl) iStatus->get_status_data(bl)->hit
+#define status_get_flee(bl) iStatus->get_status_data(bl)->flee
+#define status_get_mdef(bl) iStatus->get_status_data(bl)->mdef
+#define status_get_flee2(bl) iStatus->get_status_data(bl)->flee2
+#define status_get_def2(bl) iStatus->get_status_data(bl)->def2
+#define status_get_mdef2(bl) iStatus->get_status_data(bl)->mdef2
+#define status_get_critical(bl)  iStatus->get_status_data(bl)->cri
+#define status_get_batk(bl) iStatus->get_status_data(bl)->batk
+#define status_get_watk(bl) iStatus->get_status_data(bl)->rhw.atk
+#define status_get_watk2(bl) iStatus->get_status_data(bl)->rhw.atk2
+#define status_get_matk_max(bl) iStatus->get_status_data(bl)->matk_max
+#define status_get_matk_min(bl) iStatus->get_status_data(bl)->matk_min
+#define status_get_lwatk(bl) iStatus->get_status_data(bl)->lhw.atk
+#define status_get_lwatk2(bl) iStatus->get_status_data(bl)->lhw.atk2
+#define status_get_adelay(bl) iStatus->get_status_data(bl)->adelay
+#define status_get_amotion(bl) iStatus->get_status_data(bl)->amotion
+#define status_get_dmotion(bl) iStatus->get_status_data(bl)->dmotion
+#define status_get_element(bl) iStatus->get_status_data(bl)->def_ele
+#define status_get_element_level(bl) iStatus->get_status_data(bl)->ele_lv
+#define status_get_attack_sc_element(bl, sc) iStatus->calc_attack_element(bl, sc, 0)
+#define status_get_attack_element(bl) iStatus->get_status_data(bl)->rhw.ele
+#define status_get_attack_lelement(bl) iStatus->get_status_data(bl)->lhw.ele
+#define status_get_race(bl) iStatus->get_status_data(bl)->race
+#define status_get_size(bl) iStatus->get_status_data(bl)->size
+#define status_get_mode(bl) iStatus->get_status_data(bl)->mode
 
-struct view_data *status_get_viewdata(struct block_list *bl);
-void status_set_viewdata(struct block_list *bl, int class_);
-void status_change_init(struct block_list *bl);
-struct status_change *status_get_sc(struct block_list *bl);
 
-int status_isdead(struct block_list *bl);
-int status_isimmune(struct block_list *bl);
 
-int status_get_sc_def(struct block_list *bl, enum sc_type type, int rate, int tick, int flag);
 //Short version, receives rate in 1->100 range, and does not uses a flag setting.
-#define sc_start(bl, type, rate, val1, tick) status_change_start(bl,type,100*(rate),val1,0,0,0,tick,0)
-#define sc_start2(bl, type, rate, val1, val2, tick) status_change_start(bl,type,100*(rate),val1,val2,0,0,tick,0)
-#define sc_start4(bl, type, rate, val1, val2, val3, val4, tick) status_change_start(bl,type,100*(rate),val1,val2,val3,val4,tick,0)
+#define sc_start(bl, type, rate, val1, tick) iStatus->change_start(bl,type,100*(rate),val1,0,0,0,tick,0)
+#define sc_start2(bl, type, rate, val1, val2, tick) iStatus->change_start(bl,type,100*(rate),val1,val2,0,0,tick,0)
+#define sc_start4(bl, type, rate, val1, val2, val3, val4, tick) iStatus->change_start(bl,type,100*(rate),val1,val2,val3,val4,tick,0)
 
-int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val1,int val2,int val3,int val4,int tick,int flag);
-int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const char* file, int line);
-#define status_change_end(bl,type,tid) status_change_end_(bl,type,tid,__FILE__,__LINE__)
-int kaahi_heal_timer(int tid, unsigned int tick, int id, intptr_t data);
-int status_change_timer(int tid, unsigned int tick, int id, intptr_t data);
-int status_change_timer_sub(struct block_list* bl, va_list ap);
-int status_change_clear(struct block_list* bl, int type);
-int status_change_clear_buffs(struct block_list* bl, int type);
+#define status_change_end(bl,type,tid) iStatus->change_end_(bl,type,tid,__FILE__,__LINE__)
 
-#define status_calc_bl(bl, flag) status_calc_bl_(bl, (enum scb_flag)(flag), false)
-#define status_calc_mob(md, first) status_calc_bl_(&(md)->bl, SCB_ALL, first)
-#define status_calc_pet(pd, first) status_calc_bl_(&(pd)->bl, SCB_ALL, first)
-#define status_calc_pc(sd, first) status_calc_bl_(&(sd)->bl, SCB_ALL, first)
-#define status_calc_homunculus(hd, first) status_calc_bl_(&(hd)->bl, SCB_ALL, first)
-#define status_calc_mercenary(md, first) status_calc_bl_(&(md)->bl, SCB_ALL, first)
-#define status_calc_elemental(ed, first) status_calc_bl_(&(ed)->bl, SCB_ALL, first)
-#define status_calc_npc(nd, first) status_calc_bl_(&(nd)->bl, SCB_ALL, first)
+#define status_calc_bl(bl, flag) iStatus->calc_bl_(bl, (enum scb_flag)(flag), false)
+#define status_calc_mob(md, first) iStatus->calc_bl_(&(md)->bl, SCB_ALL, first)
+#define status_calc_pet(pd, first) iStatus->calc_bl_(&(pd)->bl, SCB_ALL, first)
+#define status_calc_pc(sd, first) iStatus->calc_bl_(&(sd)->bl, SCB_ALL, first)
+#define status_calc_homunculus(hd, first) iStatus->calc_bl_(&(hd)->bl, SCB_ALL, first)
+#define status_calc_mercenary(md, first) iStatus->calc_bl_(&(md)->bl, SCB_ALL, first)
+#define status_calc_elemental(ed, first) iStatus->calc_bl_(&(ed)->bl, SCB_ALL, first)
+#define status_calc_npc(nd, first) iStatus->calc_bl_(&(nd)->bl, SCB_ALL, first)
 
-void status_calc_bl_(struct block_list *bl, enum scb_flag flag, bool first);
-int status_calc_mob_(struct mob_data* md, bool first);
-int status_calc_pet_(struct pet_data* pd, bool first);
-int status_calc_pc_(struct map_session_data* sd, bool first);
-int status_calc_homunculus_(struct homun_data *hd, bool first);
-int status_calc_mercenary_(struct mercenary_data *md, bool first);
-int status_calc_elemental_(struct elemental_data *ed, bool first);
 
-void status_calc_misc(struct block_list *bl, struct status_data *status, int level);
-void status_calc_regen(struct block_list *bl, struct status_data *status, struct regen_data *regen);
-void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, struct status_change *sc);
 
-int status_check_skilluse(struct block_list *src, struct block_list *target, uint16 skill_id, int flag); // [Skotlex]
-int status_check_visibility(struct block_list *src, struct block_list *target); //[Skotlex]
 
-int status_change_spread( struct block_list *src, struct block_list *bl );
 
-defType status_calc_def(struct block_list *bl, struct status_change *sc, int, bool);
-signed short status_calc_def2(struct block_list *, struct status_change *, int, bool);
-defType status_calc_mdef(struct block_list *bl, struct status_change *sc, int, bool);
-signed short status_calc_mdef2(struct block_list *, struct status_change *, int, bool);
 
 #ifdef RENEWAL
-unsigned short status_calc_batk(struct block_list *, struct status_change *, int, bool);
-unsigned short status_base_matk(const struct status_data* status, int level);
-int status_get_weapon_atk(struct block_list *src, struct weapon_atk *watk, int flag);
-int status_get_total_mdef(struct block_list *src);
-int status_get_total_def(struct block_list *src);
 #endif
 
-int status_get_matk(struct block_list *src, int flag);
 
-int status_readdb(void);
-int do_init_status(void);
-void do_final_status(void);
+
+/*=====================================
+* Interface : status.h 
+* Generated by HerculesInterfaceMaker
+* created by Susu
+*-------------------------------------*/
+struct status_interface {
+
+	/* vars */
+	
+	int current_equip_item_index;
+	int current_equip_card_id;
+
+	/* funcs */
+	
+	int (*get_refine_chance) (enum refine_type wlv, int refine);
+	// for looking up associated data
+	sc_type (*skill2sc) (int skill);
+	int (*sc2skill) (sc_type sc);
+	unsigned int (*sc2scb_flag) (sc_type sc);
+	int (*type2relevant_bl_types) (int type);
+	int (*get_sc_type) (sc_type idx);
+	
+	int (*damage) (struct block_list *src,struct block_list *target,int hp,int sp, int walkdelay, int flag);
+	//Define for standard HP/SP skill-related cost triggers (mobs require no HP/SP to use skills)
+	int (*charge) (struct block_list* bl, int hp, int sp);
+	int (*percent_change) (struct block_list *src,struct block_list *target,signed char hp_rate, signed char sp_rate, int flag);
+	//Used to set the hp/sp of an object to an absolute value (can't kill)
+	int (*set_hp) (struct block_list *bl, unsigned int hp, int flag);
+	int (*set_sp) (struct block_list *bl, unsigned int sp, int flag);
+	int (*heal) (struct block_list *bl,int hp,int sp, int flag);
+	int (*revive) (struct block_list *bl, unsigned char per_hp, unsigned char per_sp);
+	
+	struct regen_data * (*get_regen_data) (struct block_list *bl);
+	struct status_data * (*get_status_data) (struct block_list *bl);
+	struct status_data * (*get_base_status) (struct block_list *bl);
+	const char * (*get_name) (struct block_list *bl);
+	int (*get_class) (struct block_list *bl);
+	int (*get_lv) (struct block_list *bl);
+	defType (*get_def) (struct block_list *bl);
+	unsigned short (*get_speed) (struct block_list *bl);
+	unsigned char (*calc_attack_element) (struct block_list *bl, struct status_change *sc, int element);
+	int (*get_party_id) (struct block_list *bl);
+	int (*get_guild_id) (struct block_list *bl);
+	int (*get_emblem_id) (struct block_list *bl);
+	int (*get_mexp) (struct block_list *bl);
+	int (*get_race2) (struct block_list *bl);
+	
+	struct view_data * (*get_viewdata) (struct block_list *bl);
+	void (*set_viewdata) (struct block_list *bl, int class_);
+	void (*change_init) (struct block_list *bl);
+	struct status_change * (*get_sc) (struct block_list *bl);
+	
+	int (*isdead) (struct block_list *bl);
+	int (*isimmune) (struct block_list *bl);
+	
+	int (*get_sc_def) (struct block_list *bl, enum sc_type type, int rate, int tick, int flag);
+	
+	int (*change_start) (struct block_list* bl,enum sc_type type,int rate,int val1,int val2,int val3,int val4,int tick,int flag);
+	int (*change_end_) (struct block_list* bl, enum sc_type type, int tid, const char* file, int line);
+	int (*kaahi_heal_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*change_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*change_timer_sub) (struct block_list* bl, va_list ap);
+	int (*change_clear) (struct block_list* bl, int type);
+	int (*change_clear_buffs) (struct block_list* bl, int type);
+	
+	void (*calc_bl_) (struct block_list *bl, enum scb_flag flag, bool first);
+	int (*calc_mob_) (struct mob_data* md, bool first);
+	int (*calc_pet_) (struct pet_data* pd, bool first);
+	int (*calc_pc_) (struct map_session_data* sd, bool first);
+	int (*calc_homunculus_) (struct homun_data *hd, bool first);
+	int (*calc_mercenary_) (struct mercenary_data *md, bool first);
+	int (*calc_elemental_) (struct elemental_data *ed, bool first);
+	
+	void (*calc_misc) (struct block_list *bl, struct status_data *status, int level);
+	void (*calc_regen) (struct block_list *bl, struct status_data *status, struct regen_data *regen);
+	void (*calc_regen_rate) (struct block_list *bl, struct regen_data *regen, struct status_change *sc);
+	
+	int (*check_skilluse) (struct block_list *src, struct block_list *target, uint16 skill_id, int flag); // [Skotlex]
+	int (*check_visibility) (struct block_list *src, struct block_list *target); //[Skotlex]
+	
+	int (*change_spread) (struct block_list *src, struct block_list *bl);
+	
+	defType (*calc_def) (struct block_list *bl, struct status_change *sc, int, bool);
+	short (*calc_def2) (struct block_list *, struct status_change *, int, bool);
+	defType (*calc_mdef) (struct block_list *bl, struct status_change *sc, int, bool);
+	short (*calc_mdef2) (struct block_list *, struct status_change *, int, bool);
+	unsigned short (*calc_batk) (struct block_list *, struct status_change *, int, bool);
+	unsigned short (*base_matk) (const struct status_data* status, int level);
+	int (*get_weapon_atk) (struct block_list *src, struct weapon_atk *watk, int flag);
+	int (*get_total_mdef) (struct block_list *src);
+	int (*get_total_def) (struct block_list *src);
+	
+	int (*get_matk) (struct block_list *src, int flag);
+	
+	int (*readdb) (void);
+	int (*do_init_status) (void);
+	void (*do_final_status) (void);
+} iStatus_s;
+
+struct status_interface *iStatus;
+
+void status_defaults(void);
 
 #endif /* _STATUS_H_ */

@@ -115,7 +115,7 @@ int pet_attackskill(struct pet_data *pd, int target_id)
 		struct block_list *bl;
 
 		bl=iMap->id2bl(target_id);
-		if(bl == NULL || pd->bl.m != bl->m || bl->prev == NULL || status_isdead(bl) ||
+		if(bl == NULL || pd->bl.m != bl->m || bl->prev == NULL || iStatus->isdead(bl) ||
 			!check_distance_bl(&pd->bl, bl, pd->db->range3))
 			return 0;
 
@@ -141,14 +141,14 @@ int pet_target_check(struct map_session_data *sd,struct block_list *bl,int type)
 	if(bl == NULL || bl->type != BL_MOB || bl->prev == NULL ||
 		pd->pet.intimate < battle_config.pet_support_min_friendly ||
 		pd->pet.hungry < 1 ||
-		pd->pet.class_ == status_get_class(bl))
+		pd->pet.class_ == iStatus->get_class(bl))
 		return 0;
 
 	if(pd->bl.m != bl->m ||
 		!check_distance_bl(&pd->bl, bl, pd->db->range2))
 		return 0;
 
-	if (!status_check_skilluse(&pd->bl, bl, 0, 0))
+	if (!iStatus->check_skilluse(&pd->bl, bl, 0, 0))
 		return 0;
 
 	if(!type) {
@@ -355,7 +355,7 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *pet)
 	pd->petDB = &pet_db[i];
 	pd->db = mob_db(pet->class_);
 	memcpy(&pd->pet, pet, sizeof(struct s_pet));
-	status_set_viewdata(&pd->bl, pet->class_);
+	iStatus->set_viewdata(&pd->bl, pet->class_);
 	unit_dataset(&pd->bl);
 	pd->ud.dir = sd->ud.dir;
 
@@ -676,7 +676,7 @@ int pet_equipitem(struct map_session_data *sd,int index)
 
 	pc->delitem(sd,index,1,0,0,LOG_TYPE_OTHER);
 	pd->pet.equip = nameid;
-	status_set_viewdata(&pd->bl, pd->pet.class_); //Updates view_data.
+	iStatus->set_viewdata(&pd->bl, pd->pet.class_); //Updates view_data.
 	clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
 	if (battle_config.pet_equip_required)
 	{ 	//Skotlex: start support timers if need
@@ -705,7 +705,7 @@ static int pet_unequipitem(struct map_session_data *sd, struct pet_data *pd)
 
 	nameid = pd->pet.equip;
 	pd->pet.equip = 0;
-	status_set_viewdata(&pd->bl, pd->pet.class_);
+	iStatus->set_viewdata(&pd->bl, pd->pet.class_);
 	clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
 	memset(&tmp_item,0,sizeof(tmp_item));
 	tmp_item.nameid = nameid;
@@ -877,7 +877,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, uns
 	
 	if (pd->target_id) {
 		target= iMap->id2bl(pd->target_id);
-		if (!target || pd->bl.m != target->m || status_isdead(target) ||
+		if (!target || pd->bl.m != target->m || iStatus->isdead(target) ||
 			!check_distance_bl(&pd->bl, target, pd->db->range3))
 		{
 			target = NULL;
@@ -1139,7 +1139,7 @@ int pet_heal_timer(int tid, unsigned int tick, int id, intptr_t data)
 		return 0;
 	}
 	
-	status = status_get_status_data(&sd->bl);
+	status = iStatus->get_status_data(&sd->bl);
 	
 	if(pc_isdead(sd) ||
 		(rate = get_percentage(status->sp, status->max_sp)) > pd->s_skill->sp ||
@@ -1152,7 +1152,7 @@ int pet_heal_timer(int tid, unsigned int tick, int id, intptr_t data)
 	pet_stop_attack(pd);
 	pet_stop_walking(pd,1);
 	clif->skill_nodamage(&pd->bl,&sd->bl,AL_HEAL,pd->s_skill->lv,1);
-	status_heal(&sd->bl, pd->s_skill->lv,0, 0);
+	iStatus->heal(&sd->bl, pd->s_skill->lv,0, 0);
 	pd->s_skill->timer=iTimer->add_timer(tick+pd->s_skill->delay*1000,pet_heal_timer,sd->bl.id,0);
 	return 0;
 }
@@ -1176,7 +1176,7 @@ int pet_skill_support_timer(int tid, unsigned int tick, int id, intptr_t data)
 		return 0;
 	}
 	
-	status = status_get_status_data(&sd->bl);
+	status = iStatus->get_status_data(&sd->bl);
 
 	if (DIFF_TICK(pd->ud.canact_tick, tick) > 0)
 	{	//Wait until the pet can act again.
