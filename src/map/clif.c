@@ -10503,11 +10503,13 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 		return;
 	}
 
-	// if player ignores the source character
-	ARR_FIND(0, MAX_IGNORE_LIST, i, dstsd->ignore[i].name[0] == '\0' || strcmp(dstsd->ignore[i].name, sd->status.name) == 0);
-	if(i < MAX_IGNORE_LIST && dstsd->ignore[i].name[0] != '\0') { // source char present in ignore list
-		clif->wis_end(fd, 2); // 2: ignored by target
-		return;
+	if( pc->get_group_level(sd) <= pc->get_group_level(dstsd) ) {
+		// if player ignores the source character
+		ARR_FIND(0, MAX_IGNORE_LIST, i, dstsd->ignore[i].name[0] == '\0' || strcmp(dstsd->ignore[i].name, sd->status.name) == 0);
+		if(i < MAX_IGNORE_LIST && dstsd->ignore[i].name[0] != '\0') { // source char present in ignore list
+			clif->wis_end(fd, 2); // 2: ignored by target
+			return;
+		}
 	}
 
 	// notify sender of success
