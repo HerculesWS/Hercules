@@ -1,5 +1,5 @@
 //===== Hercules Script ====================================== 
-//= Louyang City NPC's 
+//= Louyang City NPCs 
 //===== By: ================================================== 
 //= Vidar (1.0)
 //= Mass Zero (1.1)
@@ -10,14 +10,14 @@
 //===== Current Version: ===================================== 
 //= 3.0
 //===== Description: ========================================= 
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Louyang Town Script
 //===== Additional Comments: ================================= 
 //= 2.9 Rescripted to Aegis 10.3 Standards. [L0ne_W0lf]
 //= 3.0 Moved Alberta NPC to pre-re/re paths. [Euphy]
 //============================================================
 
-// Louyang Transportaion
+// Louyang Transportation
 //============================================================
 -	script	::Girl_louyang	-1,{
 	mes "[Girl]";

@@ -44,7 +44,7 @@ malaya,276,55,4	script	Optamara Crew#malaya	100,{
 	}
 }
 
-alberta,237,71,3	script	Optamara Crew#alberta	100,{
+alberta,196,202,3	script	Optamara Crew#alberta	100,{
 
 	mes "[Optamara Crew]";
 	mes "Hey, there!";

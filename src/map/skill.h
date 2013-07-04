@@ -1736,7 +1736,6 @@ struct skill_cd {
 extern int enchant_eff[5];
 extern int deluge_eff[5];
 DBMap* skilldb_name2id;
-DBMap* skillcd_db; // char_id -> struct skill_cd
 
 /**
  * Skill.c Interface
@@ -1746,6 +1745,8 @@ struct skill_interface {
 	int (*final) (void);
 	void (*reload) (void);
 	void (*read_db) (void);
+	/* */
+	DBMap* cd_db; // char_id -> struct skill_cd
 	/* accesssors */
 	int	(*get_index) ( uint16 skill_id );
 	int	(*get_type) ( uint16 skill_id );

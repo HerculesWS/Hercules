@@ -3620,7 +3620,7 @@ static void char_delete2_req(int fd, struct char_session_data* sd)
 static void char_delete2_accept(int fd, struct char_session_data* sd)
 {// CH: <0829>.W <char id>.L <birth date:YYMMDD>.6B
 	char birthdate[8+1];
-	int char_id, i, k;
+	int char_id, i;
 	unsigned int base_level;
 	char* data;
 	time_t delete_date;
@@ -3683,11 +3683,8 @@ static void char_delete2_accept(int fd, struct char_session_data* sd)
 	}
 
 	// refresh character list cache
-	for(k = i; k < MAX_CHARS-1; k++) {
-		sd->found_char[k] = sd->found_char[k+1];
-	}
-	sd->found_char[MAX_CHARS-1] = -1;
-
+	sd->found_char[i] = -1;
+	
 	char_delete2_accept_ack(fd, char_id, 1);
 }
 

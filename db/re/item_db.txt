@@ -8051,3 +8051,4 @@
 21003,Muramasa_,Muramasa ,4,20,,1000,155,,1,2,0x00004082,7,2,34,4,48,1,3,{},{},{}
 21004,Alca_Bringer_,Alca Bringer ,4,20,,3400,280,,2,2,125,7,2,34,3,100,1,3,{},{},{}
 21005,Metal_Two_Hand_Sword,Metal Two Hand Sword,4,20,,0,95,,1,1,0x00004082,7,2,34,3,1,1,3,{},{},{}
+22540,Runstone_Luxanima,Lux Anima Rune,11,2,,100,,,,,0xFFFFFFFF,7,2,,,,,,{ itemskill "RK_LUXANIMA",1; },{},{}

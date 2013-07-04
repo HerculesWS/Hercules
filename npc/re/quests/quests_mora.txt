@@ -7,6 +7,7 @@
 //===== Compatible With: =====================================
 //= rAthena SVN
 //===== Description: =========================================
+//= [Official Conversion]
 //= Quest NPCs related to Mora:
 //== Theore's Request, Chesire's New Day,
 //== Helping Lope and Euridi, Mora Daily Quests,
