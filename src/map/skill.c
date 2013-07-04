@@ -10321,15 +10321,13 @@ int skill_dance_overlap_sub(struct block_list* bl, va_list ap) {
 int skill_dance_overlap(struct skill_unit* unit, int flag) {
 	if (!unit || !unit->group || !(unit->group->state.song_dance&0x1))
 		return 0;
-	if (!flag && !(unit->val2&UF_ENSEMBLE))
-		return 0; //Nothing to remove, this unit is not overlapped.
-
+	
 	if (unit->val1 != unit->group->skill_id) {
 		//Reset state
 		unit->val1 = unit->group->skill_id;
 		unit->val2 &= ~UF_ENSEMBLE;
 	}
-
+	
 	return iMap->foreachincell(skill->dance_overlap_sub, unit->bl.m,unit->bl.x,unit->bl.y,BL_SKILL, unit,flag);
 }
 
@@ -16870,7 +16868,7 @@ int skill_blockpc_end(int tid, unsigned int tick, int id, intptr_t data) {
 	if (!sd) return 0;
 	if (sd->blockskill[data] != (0x1|(tid&0xFE))) return 0;
 
-	if( ( cd = idb_get(skillcd_db,sd->status.char_id) ) ) {
+	if( ( cd = idb_get(skill->cd_db,sd->status.char_id) ) ) {
 		int i,cursor;
 		ARR_FIND( 0, cd->cursor+1, cursor, cd->skidx[cursor] == data );
 		cd->duration[cursor] = 0;
@@ -16896,7 +16894,7 @@ int skill_blockpc_end(int tid, unsigned int tick, int id, intptr_t data) {
 			cursor++;
 		}
 		if( cursor == 0 )
-			idb_remove(skillcd_db,sd->status.char_id);
+			idb_remove(skill->cd_db,sd->status.char_id);
 		else
 			cd->cursor = cursor;
 	}
@@ -16931,9 +16929,9 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick,
 		clif->skill_cooldown(sd, skill_id, tick);
 
 	if( !load ) {// not being loaded initially so ensure the skill delay is recorded
-		if( !(cd = idb_get(skillcd_db,sd->status.char_id)) ) {// create a new skill cooldown object for map storage
+		if( !(cd = idb_get(skill->cd_db,sd->status.char_id)) ) {// create a new skill cooldown object for map storage
 			CREATE( cd, struct skill_cd, 1 );
-			idb_put( skillcd_db, sd->status.char_id, cd );
+			idb_put( skill->cd_db, sd->status.char_id, cd );
 		}
 
 		// record the skill duration in the database map
@@ -17447,7 +17445,7 @@ void skill_cooldown_save(struct map_session_data * sd) {
 	// always check to make sure the session properly exists
 	nullpo_retv(sd);
 	
-	if( !(cd = idb_get(skillcd_db, sd->status.char_id)) ) {// no skill cooldown is associated with this character
+	if( !(cd = idb_get(skill->cd_db, sd->status.char_id)) ) {// no skill cooldown is associated with this character
 		return;
 	}
 	
@@ -17471,7 +17469,7 @@ void skill_cooldown_load(struct map_session_data * sd) {
 	// always check to make sure the session properly exists
 	nullpo_retv(sd);
 
-	if( !(cd = idb_get(skillcd_db, sd->status.char_id)) ) {// no skill cooldown is associated with this character
+	if( !(cd = idb_get(skill->cd_db, sd->status.char_id)) ) {// no skill cooldown is associated with this character
 		return;
 	}
 
@@ -17955,7 +17953,7 @@ int do_init_skill (void) {
 
 	group_db = idb_alloc(DB_OPT_BASE);
 	skillunit_db = idb_alloc(DB_OPT_BASE);
-	skillcd_db = idb_alloc(DB_OPT_RELEASE_DATA);
+	skill->cd_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	skillusave_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	skill_unit_ers = ers_new(sizeof(struct skill_unit_group),"skill.c::skill_unit_ers",ERS_OPT_NONE);
 	skill_timer_ers  = ers_new(sizeof(struct skill_timerskill),"skill.c::skill_timer_ers",ERS_OPT_NONE);
@@ -17976,7 +17974,7 @@ int do_final_skill(void)
 	db_destroy(skilldb_name2id);
 	db_destroy(group_db);
 	db_destroy(skillunit_db);
-	db_destroy(skillcd_db);
+	db_destroy(skill->cd_db);
 	db_destroy(skillusave_db);
 	ers_destroy(skill_unit_ers);
 	ers_destroy(skill_timer_ers);
@@ -17989,6 +17987,8 @@ void skill_defaults(void) {
 	skill->final = do_final_skill;
 	skill->reload = skill_reload;
 	skill->read_db = skill_readdb;
+	/* */
+	skill->cd_db = NULL;
 	/* accesssors */
 	skill->get_index = skill_get_index;
 	skill->get_type = skill_get_type;
