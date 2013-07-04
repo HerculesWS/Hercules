@@ -1871,11 +1871,14 @@ struct status_interface {
 	defType (*calc_mdef) (struct block_list *bl, struct status_change *sc, int, bool);
 	short (*calc_mdef2) (struct block_list *, struct status_change *, int, bool);
 	unsigned short (*calc_batk) (struct block_list *, struct status_change *, int, bool);
+	
+#ifdef RENEWAL
 	unsigned short (*base_matk) (const struct status_data* status, int level);
 	int (*get_weapon_atk) (struct block_list *src, struct weapon_atk *watk, int flag);
 	int (*get_total_mdef) (struct block_list *src);
 	int (*get_total_def) (struct block_list *src);
-	
+#endif
+
 	int (*get_matk) (struct block_list *src, int flag);
 	
 	int (*readdb) (void);
