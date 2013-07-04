@@ -4591,6 +4591,9 @@ static void mob_load(void)
 	if (iMap->db_use_sql_mob_db)
 	{
 		mob_read_sqldb();
+	}
+	if (iMap->db_use_sql_mob_skill_db)
+	{
 		mob_read_sqlskilldb();
 	}
 	else

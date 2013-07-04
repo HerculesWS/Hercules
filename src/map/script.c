@@ -16679,6 +16679,61 @@ BUILDIN(freeloop) {
 	return true;
 }
 
+BUILDIN(sit)
+{
+	struct map_session_data *sd = NULL;
+	
+	if (script_hasdata(st, 2))
+		sd = iMap->nick2sd(script_getstr(st, 2));
+	
+	if (sd == NULL)
+		sd = script_rid2sd(st);
+
+	if (!pc_issit(sd))
+	{
+		pc_setsit(sd);
+		skill->sit(sd,1);
+		clif->sitting(&sd->bl);
+	}
+	return true;
+}
+
+BUILDIN(stand)
+{
+	struct map_session_data *sd = NULL;
+	
+	if (script_hasdata(st, 2))
+		sd = iMap->nick2sd(script_getstr(st, 2));
+	
+	if (sd == NULL)
+		sd = script_rid2sd(st);
+	
+	if (pc_issit(sd))
+	{
+		pc->setstand(sd);
+		skill->sit(sd,0);
+		clif->standing(&sd->bl);
+	}
+	return true;
+}
+
+BUILDIN(issit)
+{
+	struct map_session_data *sd = NULL;
+	
+	if (script_hasdata(st, 2))
+		sd = iMap->nick2sd(script_getstr(st, 2));
+	
+	if (sd == NULL)
+		sd = script_rid2sd(st);
+
+	if (pc_issit(sd))
+		script_pushint(st, 1);
+	else
+		script_pushint(st, 0);
+	return true;
+}
+
 /**
  * @commands (script based)
  **/
@@ -17961,6 +18016,10 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(qiclear,"i"),
 		
 		BUILDIN_DEF(packageitem,"?"),
+		
+		BUILDIN_DEF(sit, "?"),
+		BUILDIN_DEF(stand, "?"),
+		BUILDIN_DEF(issit, "?"),
 		
 		/* New BG Commands [Hercules] */
 		BUILDIN_DEF(bg_create_team,"sii"),

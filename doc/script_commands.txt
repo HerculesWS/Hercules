@@ -2493,7 +2493,23 @@ Examples:
 
 // Outputs IP address of character "Silver".
 	mes "Silver's IP: " + getcharip("Silver");
- 
+	
+---------------------------------------
+
+*sit({"<character name>"})
+*stand({"<character name>"})
+
+This function will force a character to sit/stand if it is standing/sitting.
+If no player is specified, the attached player will be used.
+
+---------------------------------------
+
+*issit({"<character name>"})
+
+This function will return a number depending on the character's sitting state.
+If the character is sitting, it will return 1, otherwise (standing) it will return 0.
+In case no player is specified, the function will return the state of the attached player.
+
 ---------------------------------------
 \\
 2,2 Item-related commands
