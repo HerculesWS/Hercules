@@ -1668,6 +1668,9 @@ int login_config_read(const char* cfgName)
 			login_config_read(w2);
 		else
 		{
+			AccountDB* db = account_engine[0].db;
+			if( db )
+				db->set_property(db, w1, w2);
 			ipban_config_read(w1, w2);
 			loginlog_config_read(w1, w2);
 		}
