@@ -7,6 +7,7 @@
 
 #include "../common/cbasetypes.h"
 #include <stdio.h> // FILE*
+#include <time.h>
 
 // generate a hex dump of the first 'length' bytes of 'buffer'
 void WriteDump(FILE* fp, const void* buffer, size_t length);
@@ -37,7 +38,7 @@ struct HCache_interface {
 	bool (*check) (const char *file);
 	FILE *(*open) (const char *file, const char *opt);
 	/* */
-	size_t recompile_time;
+	time_t recompile_time;
 	bool enabled;
 };
 

@@ -13419,6 +13419,7 @@ void clif_parse_GMReqNoChat(int fd,struct map_session_data *sd)
 		if (pc->get_group_level(sd) > 0 || sd->bl.id != id)
 			return;
 
+		value = battle_config.client_accept_chatdori;
 		dstsd = sd;	
 	}
 	else

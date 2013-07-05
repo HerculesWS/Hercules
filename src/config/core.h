@@ -61,6 +61,9 @@
 /// By enabling it, the system will create an unique id for each new non stackable item created
 //#define NSI_UNIQUE_ID
 
+/// Uncomment to enable real-time server stats (in and out data and ram usage). [Ai4rei]
+//#define SHOW_SERVER_STATS
+
 /**
  * No settings past this point
  **/

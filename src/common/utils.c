@@ -292,7 +292,7 @@ bool HCache_check(const char *file) {
 	struct stat bufa, bufb;
 	FILE *first, *second;
 	char s_path[255], dT[1];
-	size_t rtime;
+	time_t rtime;
 
 	if( !(first = fopen(file,"rb")) )
 	   return false;
@@ -316,7 +316,7 @@ bool HCache_check(const char *file) {
 	}
 		
 	fstat(fileno(first), &bufa);
-	fstat(fileno(first), &bufa);
+	fstat(fileno(first), &bufb);
 	
 	fclose(first);
 	fclose(second);

@@ -407,7 +407,7 @@ ACMD(mapmove)
 	if (mapindex)
 		m = iMap->mapindex2mapid(mapindex);
 	
-	if (!mapindex) { // m < 0 means on different server! [Kevin]
+	if (!mapindex || m < 0) { // m < 0 means on different server or that map is disabled! [Kevin]
 		clif->message(fd, msg_txt(1)); // Map not found.
 		return false;
 	}
