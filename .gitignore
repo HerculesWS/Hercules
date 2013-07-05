@@ -60,13 +60,11 @@
 
 # /src/login/
 /src/login/Makefile
-/src/login/obj_txt
 /src/login/obj_sql
 
 # /src/map/
 /src/map/Makefile
 /src/map/obj_sql
-/src/map/obj_txt
 /src/map/pcre.h
 
 # /src/test/
@@ -86,10 +84,6 @@
 /tools/*.exe
 /tools/*.ilk
 /tools/*.pdb
-
-# /plugins/
-/plugins/*.dll
-/plugins/*.pdb
 
 # /vcproj-12/
 /vcproj-12/map-server
