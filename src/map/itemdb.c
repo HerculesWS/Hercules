@@ -670,7 +670,7 @@ void itemdb_read_groups(void) {
 		data->group = &itemdb->groups[count];
 		
 		itemdb->groups[count].id = data->nameid;
-		itemdb->groups[count].qty = config_setting_length(itg);
+		itemdb->groups[count].qty = gsize[ count ];
 
 		CREATE(itemdb->groups[count].nameid, unsigned short, gsize[ count ] + 1);
 		
