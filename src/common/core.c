@@ -18,6 +18,7 @@
 	#include "../common/sql.h"
 	#include "../config/core.h"
 	#include "../common/HPM.h"
+	#include "../common/utils.h"
 #endif
 
 #include <stdio.h>
@@ -281,6 +282,7 @@ void usercheck(void) {
 void core_defaults(void) {
 #ifndef MINICORE
 	hpm_defaults();
+	HCache_defaults();
 #endif
 	console_defaults();
 	strlib_defaults();
@@ -332,7 +334,9 @@ int main (int argc, char **argv) {
 	iTimer->init();
 
 	console->init();
-
+	
+	HCache->init();
+	
 #ifndef MINICORE
 	HPM->init();
 #endif

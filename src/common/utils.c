@@ -1,10 +1,12 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/mmo.h"
 #include "../common/malloc.h"
 #include "../common/showmsg.h"
+#include "../common/core.h"
 #include "socket.h"
 #include "utils.h"
 
@@ -25,6 +27,9 @@
 	#include <sys/stat.h>
 #endif
 
+#include <sys/stat.h> // cache purposes [Ind/Hercules]
+
+struct HCache_interface HCache_s;
 
 /// Dumps given buffer into file pointed to by a handle.
 void WriteDump(FILE* fp, const void* buffer, size_t length)
@@ -280,4 +285,94 @@ unsigned int get_percentage(const unsigned int A, const unsigned int B)
 	}
 
 	return (unsigned int)floor(result);
+}
+
+/* [Ind/Hercules] Caching */
+bool HCache_check(const char *file) {
+	struct stat bufa, bufb;
+	FILE *first, *second;
+	char s_path[255], dT[1];
+	size_t rtime;
+
+	if( !(first = fopen(file,"rb")) )
+	   return false;
+
+	if( file[0] == '.' && file[1] == '/' )
+	   file += 2;
+	else if( file[0] == '.' )
+	   file++;
+	   
+	snprintf(s_path, 255, "./cache/%s", file);
+	   
+	if( !(second = fopen(s_path,"rb")) ) {
+		fclose(first);
+		return false;
+	}
+
+	if( fread(dT,sizeof(dT),1,second) != 1 || fread(&rtime,sizeof(rtime),1,second) != 1 || dT[0] != 'k' || HCache->recompile_time > rtime ) {
+		fclose(first);
+		fclose(second);
+		return false;
+	}
+		
+	fstat(fileno(first), &bufa);
+	fstat(fileno(first), &bufa);
+	
+	fclose(first);
+	fclose(second);
+	   
+	if( bufa.st_mtime > bufb.st_mtime )
+		return false;
+	
+	return true;
+}
+
+FILE *HCache_open(const char *file, const char *opt) {
+	FILE *first;
+	char s_path[255];
+		
+	if( file[0] == '.' && file[1] == '/' )
+		file += 2;
+	else if( file[0] == '.' )
+		file++;
+	
+	snprintf(s_path, 255, "./cache/%s", file);
+	
+	if( !(first = fopen(s_path,opt)) ) {
+		return NULL;
+	}
+	
+	if( opt[0] != 'r' ) {
+		char dT[1] = "k";/* 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
+		fwrite(dT,sizeof(dT),1,first);
+		fwrite(&HCache->recompile_time,sizeof(HCache->recompile_time),1,first);
+	}
+	fseek(first, 20, SEEK_SET);/* skip first 20, might wanna store something else later */
+	
+	return first;
+}
+void HCache_init(void) {
+	FILE *server;
+	
+	if( (server = fopen(SERVER_NAME,"rb")) ) {
+		struct stat buf;
+		
+		fstat(fileno(server), &buf);
+		HCache->recompile_time = buf.st_mtime;
+		fclose(server);
+		
+		HCache->enabled = true;
+	} else
+		ShowWarning("Unable to open '%s', caching capabilities have been disabled!\n",SERVER_NAME);
+}
+void HCache_defaults(void) {
+	
+	HCache = &HCache_s;
+	
+	HCache->init = HCache_init;
+	
+	HCache->check = HCache_check;
+	HCache->open = HCache_open;
+	HCache->recompile_time = 0;
+	HCache->enabled = false;
 }

@@ -203,9 +203,14 @@ struct item_package_must_entry {
 	unsigned int named : 1;
 };
 
+struct item_package_rand_group {
+	struct item_package_rand_entry *random_list;
+	unsigned short random_qty;
+};
+
 struct item_package {
 	unsigned short id;
-	struct item_package_rand_entry *random_list;
+	struct item_package_rand_group *random_groups;
 	struct item_package_must_entry *must_items;
 	unsigned short random_qty;
 	unsigned short must_qty;
@@ -291,6 +296,9 @@ struct itemdb_interface {
 	void (*read_groups) (void);
 	void (*read_chains) (void);
 	void (*read_packages) (void);
+	/* */
+	void (*write_cached_packages) (const char *config_filename);
+	bool (*read_cached_packages) (const char *config_filename);
 	/* */
 	struct item_data* (*name2id) (const char *str);
 	struct item_data* (*search_name) (const char *name);
