@@ -173,7 +173,7 @@ const char* skill_get_desc( uint16 skill_id ) {
 }
 
 // out of bounds error checking [celest]
-void skill_chk(int16* skill_id) {
+void skill_chk(uint16* skill_id) {
 	*skill_id = skill->get_index(*skill_id); // checks/adjusts id
 }
 
@@ -8755,7 +8755,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					sc_start2(bl,type,100,skill_lv,sc->data[type]->val2,skill->get_time(skill_id,skill_lv));
 				}
 			} else if( sd ) {
-				short lv = (short)skill_lv;
+				uint16 lv = skill_lv;
 				int count = skill->check_pc_partner(sd,skill_id,&lv,skill->get_splash(skill_id,skill_lv),1);
 				if( sc_start2(bl,type,100,skill_lv,count,skill->get_time(skill_id,skill_lv)) )
 					party_foreachsamemap(skill->area_sub,sd,skill->get_splash(skill_id,skill_lv),src,skill_id,skill_lv,tick,flag|BCT_PARTY|1,skill->castend_nodamage_id);
@@ -8770,7 +8770,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			if( flag&1 ) {
 				sc_start2(bl,type,100,skill_lv,skill_area_temp[0],skill->get_time(skill_id,skill_lv));
 			} else {	// These affect to all targets arround the caster.
-				short lv = (short)skill_lv;
+				uint16 lv = skill_lv;
 				skill_area_temp[0] = (sd) ? skill->check_pc_partner(sd,skill_id,&lv,skill->get_splash(skill_id,skill_lv),1) : 50; // 50% chance in non BL_PC (clones).
 				iMap->foreachinrange(skill->area_sub, src, skill->get_splash(skill_id,skill_lv),BL_PC, src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill->castend_nodamage_id);
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
@@ -12257,7 +12257,7 @@ int skill_check_condition_char_sub (struct block_list *bl, va_list ap) {
 /*==========================================
  * Checks and stores partners for ensemble skills [Skotlex]
  *------------------------------------------*/
-int skill_check_pc_partner (struct map_session_data *sd, uint16 skill_id, short* skill_lv, int range, int cast_flag) {
+int skill_check_pc_partner (struct map_session_data *sd, uint16 skill_id, uint16* skill_lv, int range, int cast_flag) {
 	static int c=0;
 	static int p_sd[2] = { 0, 0 };
 	int i;

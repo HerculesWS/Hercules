@@ -118,15 +118,15 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 		if( j == *icptr ) {
 			switch( type ) {
 				case IOT_CHAR:
-					RECREATE(sd->instance, unsigned short, ++*icptr);
+					RECREATE(sd->instance, short, ++*icptr);
 					sd->instance[sd->instances-1] = i;
 					break;
 				case IOT_PARTY:
-					RECREATE(p->instance, unsigned short, ++*icptr);
+					RECREATE(p->instance, short, ++*icptr);
 					p->instance[p->instances-1] = i;
 					break;
 				case IOT_GUILD:
-					RECREATE(g->instance, unsigned short, ++*icptr);
+					RECREATE(g->instance, short, ++*icptr);
 					g->instance[g->instances-1] = i;
 					break;
 			}

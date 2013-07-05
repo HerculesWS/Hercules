@@ -1792,7 +1792,7 @@ struct skill_interface {
 	const char*	(*get_name) ( uint16 skill_id );
 	const char*	(*get_desc) ( uint16 skill_id );
 	/* check */
-	void (*chk) (int16* skill_id);
+	void (*chk) (uint16* skill_id);
 	/* whether its CAST_GROUND, CAST_DAMAGE or CAST_NODAMAGE */
 	int (*get_casttype) (uint16 skill_id);
 	int (*get_casttype2) (uint16 index);
@@ -1828,7 +1828,7 @@ struct skill_interface {
 	int (*check_condition_castend) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
 	int (*consume_requirement) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, short type);
 	struct skill_condition (*get_requirement) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
-	int (*check_pc_partner) (struct map_session_data *sd, uint16 skill_id, short* skill_lv, int range, int cast_flag);
+	int (*check_pc_partner) (struct map_session_data *sd, uint16 skill_id, uint16* skill_lv, int range, int cast_flag);
 	int (*unit_move) (struct block_list *bl,unsigned int tick,int flag);
 	int (*unit_onleft) (uint16 skill_id, struct block_list *bl,unsigned int tick);
 	int (*unit_onout) (struct skill_unit *src, struct block_list *bl, unsigned int tick);

@@ -6,6 +6,7 @@
 #define _BATTLEGROUND_H_
 
 #include "../common/mmo.h" // struct party
+#include "clif.h"
 #include "guild.h"
 
 /**

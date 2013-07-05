@@ -1554,7 +1554,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 
 					if( sd && sd->status.party_id ){
 						struct map_session_data* psd;
-						int static p_sd[5] = {0, 0, 0, 0, 0}, c; // just limit it to 5
+						int p_sd[5] = {0, 0, 0, 0, 0}, c; // just limit it to 5
 
 						c = 0;
 						memset (p_sd, 0, sizeof(p_sd));
@@ -1594,7 +1594,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					break;
 				case LG_RAYOFGENESIS:
 				{
-					int16 lv = skill_lv;
+					uint16 lv = skill_lv;
 					int bandingBonus = 0;
 					if( sc && sc->data[SC_BANDING] )
 						bandingBonus = 200 * (sd ? skill->check_pc_partner(sd,skill_id,&lv,skill->get_splash(skill_id,skill_lv),0) : 1);
@@ -2378,7 +2378,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case WM_GREAT_ECHO:
 					skillratio += 800 + 100 * skill_lv;
 					if( sd ) {	// Still need official value [pakpil]
-						short lv = (short)skill_lv;
+						uint16 lv = skill_lv;
 						skillratio += 100 * skill->check_pc_partner(sd,skill_id,&lv,skill->get_splash(skill_id,skill_lv),0);
 					}
 					break;
