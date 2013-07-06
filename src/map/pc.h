@@ -502,6 +502,8 @@ struct map_session_data {
 	/* Made Possible Thanks to Yommy~! */
 	unsigned int cryptKey;
 	
+	unsigned char delayed_damage;//ref. counter bugreport:7307 [Ind/Hercules]
+	
 	// temporary debugging of bug #3504
 	const char* delunit_prevfile;
 	int delunit_prevline;

@@ -226,7 +226,7 @@ int battle_delay_damage_sub(int tid, unsigned int tick, int id, intptr_t data) {
 		}
 
 		src = iMap->id2bl(dat->src_id);
-
+		
 		if( src && target->m == src->m &&
 			(target->type != BL_PC || ((TBL_PC*)target)->invincible_timer == INVALID_TIMER) &&
 			check_distance_bl(src, target, dat->distance) ) //Check to see if you haven't teleported. [Skotlex]
@@ -246,6 +246,9 @@ int battle_delay_damage_sub(int tid, unsigned int tick, int id, intptr_t data) {
 			status_fix_damage(target, target, dat->damage, dat->delay);
 			iMap->freeblock_unlock();
 		}
+		
+		if( src && src->type == BL_PC )
+			((TBL_PC*)src)->delayed_damage--;
 	}
 	ers_free(delay_damage_ers, dat);
 	return 0;
@@ -287,6 +290,9 @@ int battle_delay_damage (unsigned int tick, int amotion, struct block_list *src,
 	if (src->type != BL_PC && amotion > 1000)
 		amotion = 1000; //Aegis places a damage-delay cap of 1 sec to non player attacks. [Skotlex]
 
+	if( src->type == BL_PC )
+		((TBL_PC*)src)->delayed_damage++;
+	
 	iTimer->add_timer(tick+amotion, battle->delay_damage_sub, 0, (intptr_t)dat);
 
 	return 0;
