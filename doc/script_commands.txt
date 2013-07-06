@@ -8146,7 +8146,7 @@ Modifies <queue_id>'s <optionType>. When <option val> is not present
 <queue_id>'s <optionType> with the new <option val> value.
 
 Currently 3 options are available:
-HQO_OnDeath (0), HQO_OnLogout (1), HQO_OnMapChange (2)
+HQO_OnDeath (1), HQO_OnLogout (2), HQO_OnMapChange (3)
 
 Note: The constant names are not final.
 

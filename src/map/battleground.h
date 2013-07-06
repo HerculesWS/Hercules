@@ -67,7 +67,6 @@ struct bg_arena {
 	short min_players;
 	short max_players;
 	short min_team_players;
-	char cooldown_variable[NAME_LENGTH];
 	char delay_var[NAME_LENGTH];
 	unsigned short maxDuration;
 	int queue_id;
@@ -76,6 +75,7 @@ struct bg_arena {
 	int game_timer;
 	unsigned short fillup_duration;
 	unsigned short pregame_duration;
+	bool ongoing;
 };
 
 /* battleground.c interface (incomplete) */

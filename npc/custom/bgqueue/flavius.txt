@@ -74,8 +74,12 @@ OnPlayerListReady:
 	disablenpc "Vintenar#bat_b01_bover";
 	bg_warp $@FlaviusBG1_id1,"bat_b01",87,75;
 	bg_warp $@FlaviusBG1_id2,"bat_b01",311,224;
+	
+	/* after warp */
+	queueopt($@Guill_QueueBG1,HQO_OnMapChange,"start#bat_b01::OnGuillaumeQuit");
+	queueopt($@Croix_QueueBG1,HQO_OnMapChange,"start#bat_b01::OnCroixQuit");
+	
 	donpcevent "countdown#bat_b01::OnEnable";
-	initnpctimer;
 	end;
 
 OnReset:
@@ -98,20 +102,31 @@ OnReset:
 	bg_warp $@FlaviusBG1_id2,"bat_b01",311,224;
 	end;
 
-OnGuillaumeQuit:
 OnCroixQuit:
-	bg_leave;
+	queueremove($@Croix_QueueBG1,getcharid(3));
+	callsub L_OnPlayerQuit;
 	end;
 
-OnTimer10000:
-	stopnpctimer;
-	donpcevent "#bat_b01_timer::OnEnable";
+OnGuillaumeQuit:
+	queueremove($@Guill_QueueBG1,getcharid(3));	
+	callsub L_OnPlayerQuit;
+	end;
+	
+L_OnPlayerQuit:
+	bg_leave;
+	setd $@bg_delay_var$,gettimetick(2);
+	if( queuesize($@Guill_QueueBG1) == 0 || queuesize($@Croix_QueueBG1) == 0 ) /* todo check score and decide a winner if anyone left */
+		callsub OnMatchOver;
 	end;
 	
 OnMatchOver:
-	bg_match_over("Flavius");
-	queuedel($@Croix_QueueBG1);
-	queuedel($@Guill_QueueBG1);
+	if( $@FlaviusBG1_id1 || $@FlaviusBG1_id2 ) {
+		bg_match_over("Flavius");
+		queuedel($@Croix_QueueBG1);
+		queuedel($@Guill_QueueBG1);
+	}
+	if( $@FlaviusBG1_id1 ) { bg_destroy $@FlaviusBG1_id1; set $@FlaviusBG1_id1, 0; }
+	if( $@FlaviusBG1_id2 ) { bg_destroy $@FlaviusBG1_id2; set $@FlaviusBG1_id2, 0; }
 	end;
 }
 
@@ -140,37 +155,12 @@ OnMyMobDead:
 			donpcevent "time#bat_b01::OnEnable";
 			donpcevent "start#bat_b01::onReset";
 		}
-		donpcevent "#bat_b01_timer::OnStop";
 		bg_updatescore "bat_b01",$@Guill_ScoreBG1,$@Croix_ScoreBG1;
 		bg_warp $@FlaviusBG1_id1,"bat_b01",10,290;
 		bg_warp $@FlaviusBG1_id2,"bat_b01",390,10;
-		donpcevent "#bat_b01_timer::OnEnable";
 	}
 	end;
 }
-bat_room,2,151,3	script	#bat_b01_timer	844,{
-	end;
-
-OnEnable:
-	initnpctimer;
-	end;
-
-OnStop:
-	stopnpctimer;
-	end;
-
-OnTimer1000:
-	stopnpctimer;
-	initnpctimer;
-	set .@chk_bat_a01,getmapusers("bat_b01");
-	if (.@chk_bat_a01 < 1) {	
-		set $@FlaviusBG1, 0;
-		if( $@FlaviusBG1_id1 ) { bg_destroy $@FlaviusBG1_id1; set $@FlaviusBG1_id1, 0; }
-		if( $@FlaviusBG1_id2 ) { bg_destroy $@FlaviusBG1_id2; set $@FlaviusBG1_id2, 0; }
-	}
-	end;
-}
-
 bat_b01,1,2,3	script	OBJ#bat_b01_b	844,{
 OnEnable:
 	bg_monster $@FlaviusBG1_id2,"bat_b01",328,150,"Blue Crystal",1914,"OBJ#bat_b01_b::OnMyMobDead";
