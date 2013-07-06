@@ -937,7 +937,7 @@ void itemdb_read_packages(void) {
 		
 		c = 0;
 		while( (it = config_setting_get_elem(itg,c++)) ) {
-			int rval;
+			int rval = 0;
 			if( !( t = config_setting_get_member(it, "Random") ) || (rval = config_setting_get_int(t)) < 0 ) {
 				ShowWarning("itemdb_read_packages: invalid 'Random' value (%d) for item '%s' in package '%s', defaulting to must!\n",rval,config_setting_name(it),name);
 				config_setting_remove(it, config_setting_name(it));
