@@ -6177,7 +6177,7 @@ ACMD(npctalk)
 	unsigned long color=0;
 	
 	if (sd->sc.count && //no "chatting" while muted.
-		(sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] || sd->sc.data[SC__BLOODYLUST] ||
+		(sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] ||
 		 (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT)))
 		return false;
 	
@@ -6228,7 +6228,7 @@ ACMD(pettalk)
 	}
 	
 	if (sd->sc.count && //no "chatting" while muted.
-		(sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] || sd->sc.data[SC__BLOODYLUST] ||
+		(sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] ||
 		 (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT)))
 		return false;
 	
@@ -6994,7 +6994,7 @@ ACMD(homtalk)
 	}
 	
 	if (sd->sc.count && //no "chatting" while muted.
-		(sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] || sd->sc.data[SC__BLOODYLUST] ||
+		(sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] ||
 		 (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT)))
 		return false;
 	
@@ -7377,7 +7377,7 @@ ACMD(me)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 	
 	if (sd->sc.count && //no "chatting" while muted.
-		(sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] || sd->sc.data[SC__BLOODYLUST] ||
+		(sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] ||
 		 (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT)))
 		return false;
 	

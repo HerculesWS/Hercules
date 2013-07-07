@@ -63,9 +63,9 @@
 	#define MOB_FLEE(mob) ( mob->lv + mob->status.agi + 100 )
 	#define MOB_HIT(mob)  ( mob->lv + mob->status.dex + 150 )
 	#define RE_SKILL_REDUCTION(){ \
-			wd.damage = battle->calc_elefix(src, target, skill_id, skill_lv, battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage, 2, wd.flag), nk, n_ele, s_ele, s_ele_, false, flag.arrow); \
+			wd.damage = battle->calc_elefix(src, target, skill_id, skill_lv, battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage, 0, wd.flag), nk, n_ele, s_ele, s_ele_, false, flag.arrow); \
 			if( flag.lh ) \
-				wd.damage2 = battle->calc_elefix(src, target, skill_id, skill_lv, battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage2, 3, wd.flag), nk, n_ele, s_ele, s_ele_, true, flag.arrow); \
+				wd.damage2 = battle->calc_elefix(src, target, skill_id, skill_lv, battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage2, 1, wd.flag), nk, n_ele, s_ele, s_ele_, true, flag.arrow); \
 		}
 #else
 	#define MOB_FLEE(mob) ( mob->lv + mob->status.agi )

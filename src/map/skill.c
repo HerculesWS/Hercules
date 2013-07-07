@@ -5072,7 +5072,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 							dstsd = sd;
 						}
 					}
-					else if (tsc->data[SC_BERSERK] || tsc->data[SC_SATURDAY_NIGHT_FEVER] || tsc->data[SC__BLOODYLUST])
+					else if (tsc->data[SC_BERSERK] || tsc->data[SC_SATURDAY_NIGHT_FEVER])
 						heal = 0; //Needed so that it actually displays 0 when healing.
 				}
 				clif->skill_nodamage (src, bl, skill_id, heal, 1);
@@ -5670,8 +5670,6 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			break;
 
 		case MC_CHANGECART:
-			if( sd )
-				sd->state.workinprogress = 3;
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			break;
 
@@ -9571,7 +9569,7 @@ int skill_castend_map (struct map_session_data *sd, uint16 skill_id, const char 
 		sd->sc.data[SC_AUTOCOUNTER] ||
 		sd->sc.data[SC_STEELBODY] ||
 		(sd->sc.data[SC_DANCING] && skill_id < RK_ENCHANTBLADE && !pc->checkskill(sd, WM_LESSON)) ||
-		sd->sc.data[SC_BERSERK] || sd->sc.data[SC__BLOODYLUST] ||
+		sd->sc.data[SC_BERSERK] ||
 		sd->sc.data[SC_BASILICA] ||
 		sd->sc.data[SC_MARIONETTE_MASTER] ||
 		sd->sc.data[SC_WHITEIMPRISON] ||
@@ -9859,6 +9857,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case SC_DIMENSIONDOOR:
 		case SC_CHAOSPANIC:
 		case SC_MAELSTROM:
+		case SC_BLOODYLUST:
 		case WM_REVERBERATION:
 		case WM_SEVERE_RAINSTORM:
 		case WM_POEMOFNETHERWORLD:
@@ -10348,11 +10347,6 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 								sc_start2(src, type, 100, skill_id, skill_lv, skill->get_time(skill_id, skill_lv)));
 			break;
 
-		case SC_BLOODYLUST: //set in another group so instance will move if recasted
-				flag |= 33;
-				skill->unitsetting(src, skill_id, skill_lv, x, y, 0);
-				break;
-
 		case KO_MAKIBISHI:
 			for( i = 0; i < (skill_lv+2); i++ ) {
 				x = src->x - 1 + rnd()%3;
@@ -10829,9 +10823,6 @@ struct skill_unit_group* skill_unitsetting (struct block_list *src, uint16 skill
 		case SO_VACUUM_EXTREME:
 			range++;
 			break;
-		case SC_BLOODYLUST:
-			skill->clear_group(src, 32);
-			break;
 		case GN_WALLOFTHORN:
 			if( flag&1 )
 				limit = 3000;
@@ -10959,6 +10950,9 @@ struct skill_unit_group* skill_unitsetting (struct block_list *src, uint16 skill
 		if (skill->get_unit_flag(skill_id) & UF_RANGEDSINGLEUNIT && i == (layout->count / 2))
 			val2 |= UF_RANGEDSINGLEUNIT; // center.
 
+		if( sd && iMap->getcell(src->m, ux, uy, CELL_CHKMAELSTROM) ) //Does not recover SP from monster skills
+			iMap->foreachincell(skill->maelstrom_suction,src->m,ux,uy,BL_SKILL,skill_id,skill_lv);
+
 		if( range <= 0 )
 			iMap->foreachincell(skill->cell_overlap,src->m,ux,uy,BL_SKILL,skill_id, &alive, src);
 		if( !alive )
@@ -11019,7 +11013,8 @@ int skill_unit_onplace (struct skill_unit *src, struct block_list *bl, unsigned 
 
 	if( skill->get_type(sg->skill_id) == BF_MAGIC && iMap->getcell(bl->m, bl->x, bl->y, CELL_CHKLANDPROTECTOR) && sg->skill_id != SA_LANDPROTECTOR )
 		return 0; //AoE skills are ineffective. [Skotlex]
-
+	if( iMap->getcell(bl->m, bl->x, bl->y, CELL_CHKMAELSTROM) )
+		return 0;
 	sc = iStatus->get_sc(bl);
 
 	if (sc && sc->option&OPTION_HIDE && sg->skill_id != WZ_HEAVENDRIVE && sg->skill_id != WL_EARTHSTRAIN )
@@ -11053,27 +11048,17 @@ int skill_unit_onplace (struct skill_unit *src, struct block_list *bl, unsigned 
 			if (!sce)
 				sc_start4(bl,type,100,sg->skill_lv,sg->skill_id,sg->group_id,0,sg->limit);
 			break;
-
-		case UNT_PNEUMA:
-		case UNT_CHAOSPANIC:
-		case UNT_MAELSTROM:
-			if (!sce)
-				sc_start4(bl,type,100,sg->skill_lv,sg->group_id,0,0,sg->limit);
-			break;
+			
 		case UNT_BLOODYLUST:
 			if (sg->src_id == bl->id)
 				break; //Does not affect the caster.
-			if (!sce) {
-				TBL_PC *sd = BL_CAST(BL_PC, bl); //prevent fullheal exploit
-				if (sd && sd->bloodylust_tick && DIFF_TICK(iTimer->gettick(), sd->bloodylust_tick) < skill->get_time2(SC_BLOODYLUST, 1))
-					clif->skill_nodamage(&src->bl,bl,sg->skill_id,sg->skill_lv,
-						sc_start4(bl, type, 100, sg->skill_lv, 1, 0, 0, skill->get_time(LK_BERSERK, sg->skill_lv)));
-				else {
-					if (sd) sd->bloodylust_tick = iTimer->gettick();
-						clif->skill_nodamage(&src->bl,bl,sg->skill_id,sg->skill_lv,
-							sc_start4(bl, type, 100, sg->skill_lv, 0, 0, 0, skill->get_time(LK_BERSERK, sg->skill_lv)));
-				}
-			}
+			if( !sce && sc_start4(bl,type,100,sg->skill_lv,0,SC__BLOODYLUST,0,sg->limit) )
+				sc_start(bl,SC__BLOODYLUST,100,sg->skill_lv,sg->limit);
+			break;
+		case UNT_PNEUMA:
+		case UNT_CHAOSPANIC:
+			if (!sce)
+				sc_start4(bl,type,100,sg->skill_lv,sg->group_id,0,0,sg->limit);
 			break;
 
 		case UNT_WARP_WAITING: {
@@ -12041,14 +12026,9 @@ static int skill_unit_onleft (uint16 skill_id, struct block_list *bl, unsigned i
 		case SO_WATER_INSIGNIA:
 		case SO_WIND_INSIGNIA:
 		case SO_EARTH_INSIGNIA:
+		case SC_BLOODYLUST:
 			if (sce)
 				status_change_end(bl, type, INVALID_TIMER);
-			break;
-		case SC_BLOODYLUST:
-			if (sce) {
-				status_change_end(bl, type, INVALID_TIMER);
-				iStatus->set_sp(bl, 0, 0); //set sp to 0 when quitting zone
-			}
 			break;
 
 		case BA_POEMBRAGI:
@@ -14653,10 +14633,6 @@ int skill_clear_group (struct block_list *bl, int flag)
 				if( flag&8 )
 					group[count++]= ud->skillunit[i];
 				break;
-			case SC_BLOODYLUST:
-				if (flag & 32)
-					group[count++] = ud->skillunit[i];
-				break;
 			default:
 				if (flag&2 && skill->get_inf2(ud->skillunit[i]->skill_id)&INF2_TRAP)
 					group[count++]= ud->skillunit[i];
@@ -14686,7 +14662,6 @@ struct skill_unit_group *skill_locate_element_field(struct block_list *bl) {
 			case SA_LANDPROTECTOR:
 			case NJ_SUITON:
 			case SO_WARMER:
-			case SC_BLOODYLUST:
 				return ud->skillunit[i];
 		}
 	}
@@ -14782,9 +14757,9 @@ int skill_cell_overlap(struct block_list *bl, va_list ap) {
 	alive = va_arg(ap,int *);
 	unit = (struct skill_unit *)bl;
 
-	if (unit == NULL || unit->group == NULL || (*alive) == 0)
+	if( unit == NULL || unit->group == NULL || (*alive) == 0 )
 		return 0;
-
+	
 	switch (skill_id) {
 		case SA_LANDPROTECTOR:
 			if( unit->group->skill_id == SA_LANDPROTECTOR ) {//Check for offensive Land Protector to delete both. [Skotlex]
@@ -14996,6 +14971,33 @@ int skill_trap_splash (struct block_list *bl, va_list ap) {
 	return 1;
 }
 
+int skill_maelstrom_suction(struct block_list *bl, va_list ap) {
+	uint16 skill_id, skill_lv;
+	struct skill_unit *unit;
+
+	skill_id = va_arg(ap,int);
+	skill_lv = va_arg(ap,int);
+	unit = (struct skill_unit *)bl;	
+
+	if( unit == NULL || unit->group == NULL )
+		return 0;
+
+	if( skill->get_inf2(skill_id)&INF2_TRAP )
+		return 0;
+
+	if( unit->group->skill_id == SC_MAELSTROM ){
+		struct block_list *src;
+		if( (src = iMap->id2bl(unit->group->src_id)) ){
+			int sp = unit->group->skill_lv * skill_lv;
+			if( src->type == BL_PC )
+				sp += ((TBL_PC*)src)->status.job_level / 5;
+			iStatus->heal(src, 0, sp/2, 1);
+		}
+	}
+
+	return 0;
+}
+
 /*==========================================
  *
  *------------------------------------------*/
@@ -15086,6 +15088,9 @@ struct skill_unit *skill_initunit (struct skill_unit_group *group, int idx, int 
 	nullpo_retr(NULL, group);
 	nullpo_retr(NULL, group->unit); // crash-protection against poor coding
 	nullpo_retr(NULL, unit=&group->unit[idx]);
+
+	if( iMap->getcell(iMap->id2bl(group->src_id)->m, x, y, CELL_CHKMAELSTROM) )
+		return unit;
 
 	if(!unit->alive)
 		group->alive_count++;
@@ -18268,5 +18273,5 @@ void skill_defaults(void) {
 	skill->changematerial = skill_changematerial;
 	skill->get_elemental_type = skill_get_elemental_type;
 	skill->cooldown_save = skill_cooldown_save;
-
+	skill->maelstrom_suction = skill_maelstrom_suction;
 }
