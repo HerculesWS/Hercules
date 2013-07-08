@@ -13,6 +13,7 @@
 #include "../common/strlib.h"
 #include "../common/timer.h"
 #include "../common/utils.h"
+#include "../common/console.h"
 #include "int_guild.h"
 #include "int_homun.h"
 #include "int_mercenary.h"
@@ -5022,6 +5023,7 @@ int do_init(int argc, char **argv) {
 	}
 	
 	Sql_HerculesUpdateCheck(sql_handle);
+	console->setSQL(sql_handle);
 	
 	ShowStatus("The char-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %d).\n\n", char_port);
 	

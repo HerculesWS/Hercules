@@ -8,6 +8,7 @@
 #include "../common/sql.h"
 #include "../common/strlib.h"
 #include "../common/timer.h"
+#include "../common/console.h"
 #include "account.h"
 #include <stdlib.h>
 #include <string.h>
@@ -689,4 +690,5 @@ static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, boo
 void account_db_sql_up(AccountDB* self) {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
 	Sql_HerculesUpdateCheck(db->accounts);
+	console->setSQL(db->accounts);
 }

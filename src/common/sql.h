@@ -281,6 +281,7 @@ void sql_defaults(void);
 #endif
 
 void Sql_HerculesUpdateCheck(Sql* self);
+void Sql_HerculesUpdateSkip(Sql* self,const char *filename);
 
 #if defined(SQL_REMOVE_SHOWDEBUG)
 #define SqlStmt_ShowDebug(self) (void)0

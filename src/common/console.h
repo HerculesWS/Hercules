@@ -7,6 +7,7 @@
 #include "../common/thread.h"
 #include "../common/mutex.h"
 #include "../common/spinlock.h"
+#include "../common/sql.h"
 #include "../config/core.h"
 
 /**
@@ -51,6 +52,8 @@ struct console_interface {
 	unsigned int cmd_count;
 	unsigned int cmd_list_count;
 	/* */
+	Sql *SQL;
+	/* */
 	void (*parse_init) (void);
 	void (*parse_final) (void);
 	int (*parse_timer) (int tid, unsigned int tick, int id, intptr_t data);
@@ -61,6 +64,7 @@ struct console_interface {
 	void (*load_defaults) (void);
 	void (*parse_list_subs) (struct CParseEntry *cmd, unsigned char depth);
 	void (*addCommand) (char *name, CParseFunc func);
+	void (*setSQL) (Sql *SQL);
 #endif
 };
 

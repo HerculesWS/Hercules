@@ -1003,18 +1003,21 @@ void Sql_HerculesUpdateCheck(Sql* self) {
 	char line[22];// "yyyy-mm-dd--hh-mm" (17) + ".sql" (4) + 1
 	FILE* ifp;/* index fp */
 	unsigned int performed = 0;
-
+	StringBuf buf;
+	
 	if( !( ifp = fopen("sql-files/upgrades/index.txt", "r") ) ) {
 		ShowError("SQL upgrade index was not found!\n");
 		return;
 	}
+
+	StrBuf->Init(&buf);
 
 	while(fgets(line, sizeof(line), ifp)) {
 		char path[41];// "sql-files/upgrades/" (19) + "yyyy-mm-dd--hh-mm" (17) + ".sql" (4) + 1
 		char timestamp[11];// "1360186680" (10) + 1
 		FILE* ufp;/* upgrade fp */
 
-		if( line[0] == '\n' || ( line[0] == '/' && line[1] == '/' ) )/* skip \n and "//" comments */
+		if( line[0] == '\n' || line[0] == '\r' || ( line[0] == '/' && line[1] == '/' ) )/* skip \n, \r and "//" comments */
 			continue;
 
 		sprintf(path,"sql-files/upgrades/%s",line);
@@ -1034,7 +1037,7 @@ void Sql_HerculesUpdateCheck(Sql* self) {
 			if( SQL_ERROR == SQL->Query(self, "SELECT 1 FROM `sql_updates` WHERE `timestamp` = '%u' LIMIT 1", timestampui) )
 				Sql_ShowDebug(self);
 			if( Sql_NumRows(self) != 1 ) {
-				ShowSQL("'"CL_WHITE"%s"CL_RESET"' wasn't applied to the database\n",path);
+				StrBuf->Printf(&buf,CL_MAGENTA"[SQL]"CL_RESET": -- '"CL_WHITE"%s"CL_RESET"'\n", path);
 				performed++;
 			}
 		}
@@ -1045,8 +1048,49 @@ void Sql_HerculesUpdateCheck(Sql* self) {
 	fclose(ifp);
 
 	if( performed ) {
-		ShowSQL("If you did apply these updates or would like to be skip, insert a new entry in your sql_updates table with the timestamp of each file\n");
+		ShowSQL("- dected %d new "CL_WHITE"SQL updates"CL_RESET"\n",performed);
+		ShowMessage("%s",StrBuf->Value(&buf));
+		ShowSQL("To manually skip, type: 'sql update skip <file name>'\n");
 	}
+	
+	StrBuf->Destroy(&buf);
+}
+
+void Sql_HerculesUpdateSkip(Sql* self,const char *filename) {
+	char path[41];// "sql-files/upgrades/" (19) + "yyyy-mm-dd--hh-mm" (17) + ".sql" (4) + 1
+	char timestamp[11];// "1360186680" (10) + 1
+	FILE* ifp;/* index fp */
+	
+	if( !self ) {
+		ShowError("SQL not hooked!\n");
+		return;
+	}
+	
+	snprintf(path,41,"sql-files/upgrades/%s",filename);
+	
+	if( !( ifp = fopen(path, "r") ) ) {
+		ShowError("Upgrade file '%s' was not found!\n",filename);
+		return;
+	}
+	
+	fseek (ifp,1,SEEK_SET);/* woo. skip the # */
+	
+	if( fgets(timestamp,sizeof(timestamp),ifp) ) {
+		unsigned int timestampui = atol(timestamp);
+		if( SQL_ERROR == SQL->Query(self, "SELECT 1 FROM `sql_updates` WHERE `timestamp` = '%u' LIMIT 1", timestampui) )
+			Sql_ShowDebug(self);
+		else if( Sql_NumRows(self) == 1 ) {
+			ShowError("Upgrade '%s' has already been skipped\n",filename);
+		} else {
+			if( SQL_ERROR == SQL->Query(self, "INSERT INTO `sql_updates` (`timestamp`,`ignored`) VALUES ('%u','Yes') ", timestampui) )
+				Sql_ShowDebug(self);
+			else {
+				ShowInfo("SQL Upgrade '%s' successfully skipped\n",filename);
+			}
+		}
+	}
+	fclose(ifp);
+	return;
 }
 
 void Sql_Init(void) {

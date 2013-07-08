@@ -5509,6 +5509,7 @@ int do_init(int argc, char *argv[])
 		ShowNotice("Server is running on '"CL_WHITE"PK Mode"CL_RESET"'.\n");
 
 	Sql_HerculesUpdateCheck(mmysql_handle);
+	console->setSQL(mmysql_handle);
 
 	ShowStatus("Server is '"CL_GREEN"ready"CL_RESET"' and listening on port '"CL_WHITE"%d"CL_RESET"'.\n\n", map_port);
 
