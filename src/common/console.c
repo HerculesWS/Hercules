@@ -21,14 +21,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#ifndef WIN32
+#if !defined(WIN32)
 	#include <unistd.h>
+	#include <sys/time.h>
 #else
 	#include "../common/winapi.h" // Console close event handling
 #endif
 
 #ifdef CONSOLE_INPUT
-	#ifdef WIN32
+	#if defined(WIN32)
 		#include <conio.h> /* _kbhit() */
 	#endif
 #endif

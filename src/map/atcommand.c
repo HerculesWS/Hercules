@@ -7581,7 +7581,7 @@ return true;\
 		clif->message(sd->fd,msg_txt(1313)); // Type "@mapflag available" to list the available mapflags.
 		return 1;
 	}
-	for (i = 0; flag_name[i]; i++) flag_name[i] = (char)tolower(flag_name[i]); //lowercase
+	for (i = 0; flag_name[i]; i++) flag_name[i] = TOLOWER(flag_name[i]); //lowercase
 	
 	if ( strcmp( flag_name , "gvg" ) == 0 ) {
 		if( flag && !map[sd->bl.m].flag.gvg )

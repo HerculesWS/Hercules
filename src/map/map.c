@@ -5274,7 +5274,7 @@ void map_hp_symbols(void) {
 	HPM->share(map,"map");
 }
 
-void load_defaults(void) {
+void map_load_defaults(void) {
 	atcommand_defaults();
 	battle_defaults();
 	battleground_defaults();
@@ -5408,7 +5408,7 @@ int do_init(int argc, char *argv[])
 	}
 	memset(&index2mapid, -1, sizeof(index2mapid));
 
-	load_defaults();
+	map_load_defaults();
 	map_config_read(iMap->MAP_CONF_NAME);
 	CREATE(map,struct map_data,iMap->map_num);
 	iMap->map_num = 0;
