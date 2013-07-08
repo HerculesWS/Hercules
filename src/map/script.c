@@ -3761,11 +3761,6 @@ void do_final_script(void) {
 	}
 #endif
 
-	mapreg_final();
-
-	userfunc_db->destroy(userfunc_db, db_script_free_code_sub);
-	autobonus_db->destroy(autobonus_db, db_script_free_code_sub);
-
 	iter = db_iterator(script->st_db);
 	
 	for( st = dbi_first(iter); dbi_exists(iter); st = dbi_next(iter) ) {
@@ -3773,6 +3768,11 @@ void do_final_script(void) {
 	}
 	
 	dbi_destroy(iter);
+	
+	mapreg_final();
+
+	userfunc_db->destroy(userfunc_db, db_script_free_code_sub);
+	autobonus_db->destroy(autobonus_db, db_script_free_code_sub);
 	
 	if (script->str_data)
 		aFree(script->str_data);
@@ -3846,6 +3846,14 @@ int script_reload() {
 	DBIterator *iter;
 	struct script_state *st;
 
+	iter = db_iterator(script->st_db);
+	
+	for( st = dbi_first(iter); dbi_exists(iter); st = dbi_next(iter) ) {
+		script_free_state(st);
+	}
+	
+	dbi_destroy(iter);
+	
 	userfunc_db->clear(userfunc_db, db_script_free_code_sub);
 	script->label_count = 0;
 
@@ -3857,14 +3865,6 @@ int script_reload() {
 		aFree(atcommand->binding);
 
 	atcommand->binding_count = 0;
-
-	iter = db_iterator(script->st_db);
-	
-	for( st = dbi_first(iter); dbi_exists(iter); st = dbi_next(iter) ) {
-		script_free_state(st);
-	}
-	
-	dbi_destroy(iter);
 	
 	db_clear(script->st_db);
 	
