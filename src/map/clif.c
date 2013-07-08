@@ -296,6 +296,13 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 			}
 		}
 		break;
+/* 0x120 crashes the client when warping for this packetver range [Ind/Hercules], thanks to Judas! */
+#if PACKETVER > 20120418 && PACKETVER < 20130000
+		case AREA:
+			if( WBUFW(buf, 0) == 0x120 && sd->state.warping )
+				return 0;
+			break;
+#endif
 	}
 
 	WFIFOHEAD(fd, len);
