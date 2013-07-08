@@ -1815,14 +1815,12 @@ static int unit_attack_timer_sub(struct block_list* src, int tid, unsigned int t
 
 	if( !battle_config.sdelay_attack_enable && DIFF_TICK(ud->canact_tick,tick) > 0 && !(sd && pc->checkskill(sd,SA_FREECAST) > 0) )
 	{ // attacking when under cast delay has restrictions:
-		if( tid == INVALID_TIMER )
-		{ //requested attack.
+		if( tid == INVALID_TIMER ) { //requested attack.
 			if(sd) clif->skill_fail(sd,1,USESKILL_FAIL_SKILLINTERVAL,0);
 			return 0;
 		}
 		//Otherwise, we are in a combo-attack, delay this until your canact time is over. [Skotlex]
-		if( ud->state.attack_continue )
-		{
+		if( ud->state.attack_continue ) {
 			if( DIFF_TICK(ud->canact_tick, ud->attackabletime) > 0 )
 				ud->attackabletime = ud->canact_tick;
 			ud->attacktimer=iTimer->add_timer(ud->attackabletime,unit_attack_timer,src->id,0);
@@ -1892,8 +1890,11 @@ static int unit_attack_timer_sub(struct block_list* src, int tid, unsigned int t
 			unit_set_walkdelay(src, tick, sstatus->amotion, 1);
 	}
 
-	if(ud->state.attack_continue)
+	if(ud->state.attack_continue) {
+		if( src->type == BL_PC )
+			((TBL_PC*)src)->idletime = last_tick;
 		ud->attacktimer = iTimer->add_timer(ud->attackabletime,unit_attack_timer,src->id,0);
+	}
 
 	return 1;
 }
