@@ -5227,6 +5227,7 @@ CPCMD(gm_use) {
 }
 /* Hercules Console Parser */
 void map_cp_defaults(void) {
+#ifdef CONSOLE_INPUT
 	/* default HCP data */
 	memset(&cpsd, 0, sizeof(struct map_session_data));
 	strcpy(cpsd.status.name, "Hercules Console");
@@ -5236,6 +5237,7 @@ void map_cp_defaults(void) {
 
 	console->addCommand("gm:info",CPCMD_A(gm_position));
 	console->addCommand("gm:use",CPCMD_A(gm_use));
+#endif
 }
 /* Hercules Plugin Mananger */
 void map_hp_symbols(void) {
@@ -5509,8 +5511,11 @@ int do_init(int argc, char *argv[])
 		ShowNotice("Server is running on '"CL_WHITE"PK Mode"CL_RESET"'.\n");
 
 	Sql_HerculesUpdateCheck(mmysql_handle);
+	
+#ifdef CONSOLE_INPUT
 	console->setSQL(mmysql_handle);
-
+#endif
+	
 	ShowStatus("Server is '"CL_GREEN"ready"CL_RESET"' and listening on port '"CL_WHITE"%d"CL_RESET"'.\n\n", map_port);
 
 	if( runflag != CORE_ST_STOP ) {

@@ -255,7 +255,9 @@ void hplugins_config_read(void) {
 }
 void hplugins_share_defaults(void) {
 	/* console */
+#ifdef CONSOLE_INPUT
 	HPM->share(console->addCommand,"addCPCommand");
+#endif
 	/* core */
 	HPM->share(&runflag,"runflag");
 	HPM->share(arg_v,"arg_v");
@@ -311,8 +313,9 @@ void hpm_init(void) {
 	}
 	HPM->symbol_defaults();
 	
+#ifdef CONSOLE_INPUT
 	console->addCommand("plugins",CPCMD_A(plugins));
-			
+#endif
 	return;
 }
 
