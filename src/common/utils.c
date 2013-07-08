@@ -316,7 +316,7 @@ bool HCache_check(const char *file) {
 	}
 		
 	fstat(fileno(first), &bufa);
-	fstat(fileno(first), &bufb);
+	fstat(fileno(second), &bufb);
 	
 	fclose(first);
 	fclose(second);
