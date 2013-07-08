@@ -684,7 +684,10 @@ void itemdb_read_groups(void) {
 			} else
 				itname = config_setting_get_string_elem(itg,c - 1);
 			
-			if( !( data = itemdb->name2id(itname) ) )
+			if( itname[0] == 'I' && itname[1] == 'D' && strlen(itname) < 7 ) {
+				if( !( data = itemdb->exists(atoi(itname+2)) ) )
+					ShowWarning("itemdb_read_groups: unknown item ID '%d' in group '%s'!\n",atoi(itname+2),config_setting_name(itg));
+			} else if( !( data = itemdb->name2id(itname) ) )
 				ShowWarning("itemdb_read_groups: unknown item '%s' in group '%s'!\n",itname,config_setting_name(itg));
 			
 			itemdb->groups[count].nameid[ecount] = data ? data->nameid : 0;
@@ -1033,7 +1036,10 @@ void itemdb_read_packages(void) {
 			
 			itname = config_setting_name(it);
 			
-			if( !( data = itemdb->name2id(itname) ) )
+			if( itname[0] == 'I' && itname[1] == 'D' && strlen(itname) < 7 ) {
+				if( !( data = itemdb->exists(atoi(itname+2)) ) )
+					ShowWarning("itemdb_read_packages: unknown item ID '%d' in package '%s'!\n",atoi(itname+2),config_setting_name(itg));
+			} else if( !( data = itemdb->name2id(itname) ) )
 				ShowWarning("itemdb_read_packages: unknown item '%s' in package '%s'!\n",itname,config_setting_name(itg));
 
 			if( ( t = config_setting_get_member(it, "Count")) )
