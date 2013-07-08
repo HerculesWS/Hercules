@@ -1687,7 +1687,6 @@ int itemdb_parse_dbrow(char** str, const char* source, int line, int scriptopt) 
 	if (*str[21+offset])
 		id->unequip_script = parse_script(str[21+offset], source, line, scriptopt);
 
-	strdb_put(itemdb->names, id->name, id);
 	return id->nameid;
 }
 
@@ -1914,10 +1913,16 @@ int itemdb_uid_load() {
  * read all item-related databases
  *------------------------------------*/
 static void itemdb_read(void) {
+	int i;
+	
 	if (iMap->db_use_sql_item_db)
 		itemdb_read_sqldb();
 	else
 		itemdb_readdb();
+	
+	for( i = 0; i < ARRAYLENGTH(itemdb_array); ++i )
+		if( itemdb_array[i] )
+			strdb_put(itemdb->names, itemdb_array[i]->name, itemdb_array[i]);
 	
 	itemdb_read_combos();
 	itemdb->read_groups();
