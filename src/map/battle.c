@@ -461,7 +461,7 @@ int battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, uin
 	}
 
 	// Temporary. [malufett]
-	damage = battle->calc_elefix(src, bl, skill_id, skill_lv, damage, nk, n_ele, s_ele, s_ele_, type == EQI_HAND_L, flag);
+	damage = battle->calc_elefix(src, bl, skill_id, skill_lv, damage + eatk, nk, n_ele, s_ele, s_ele_, type == EQI_HAND_L, flag);
 
 	/**
 	 * In RE Shield Bommerang takes weapon element only for damage calculation,
