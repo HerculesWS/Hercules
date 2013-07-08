@@ -653,13 +653,12 @@ int battle_addmastery(struct map_session_data *sd,struct block_list *target,int 
 		case W_1HSPEAR:
 		case W_2HSPEAR:
 			if((skill = pc->checkskill(sd,KN_SPEARMASTERY)) > 0) {
-				
-				if(!pc_isriding(sd))
-					damage += (skill * 4);
-				else if(pc_isridingdragon(sd))
+				if(pc_isridingdragon(sd))
 					damage += (skill * 10);
-				else
+				else if(pc_isriding(sd))
 					damage += (skill * 5);
+				else 
+					damage += (skill * 4);
 			}
 			break;
 		case W_1HAXE:
@@ -845,7 +844,7 @@ int battle_calc_elefix(struct block_list *src, struct block_list *target, uint16
 	tstatus = iStatus->get_status_data(target);
 	sc = iStatus->get_sc(src);
 
-	if( (nk&NK_NO_ELEFIX) && n_ele )
+	if( (nk&NK_NO_ELEFIX) || n_ele )
 		return damage;
 
 	if( damage > 0 )
@@ -1950,8 +1949,12 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 	#ifndef RENEWAL
 				case ASC_BREAKER:
 					skillratio += 100*skill_lv-100;
-					break;
+	#else
+				case LK_SPIRALPIERCE:
+				case ML_SPIRALPIERCE:
+					skillratio += 50 * skill_lv;
 	#endif
+					break;
 				case PA_SACRIFICE:
 					skillratio += 10 * skill_lv - 10;
 					break;
@@ -2522,7 +2525,9 @@ int battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damag
 		return 0;
 	if( battle_config.ksprotection && mob_ksprotected(src, bl) )
 		return 0;
-
+	if( iMap->getcell(bl->m, bl->x, bl->y, CELL_CHKMAELSTROM) && skill->get_type(skill_id) != BF_MISC 
+			&& skill->get_casttype(skill_id) == CAST_GROUND )
+		return 0;
 	if (bl->type == BL_PC) {
 		sd=(struct map_session_data *)bl;
 		//Special no damage states
@@ -3379,7 +3384,6 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 							ad.flag = BF_WEAPON|BF_SHORT;
 							ad.type = 0;
 						}
-						break;
 					default:
 						MATK_RATE(battle->calc_skillratio(BF_MAGIC, src, target, skill_id, skill_lv, skillratio, mflag));
 				}
@@ -4546,7 +4550,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				skillratio += sc->data[SC_OVERTHRUST]->val3;
 			if(sc->data[SC_OVERTHRUSTMAX])
 				skillratio += sc->data[SC_OVERTHRUSTMAX]->val2;
-			if (sc->data[SC_BERSERK] || sc->data[SC_SATURDAY_NIGHT_FEVER] || sc->data[SC__BLOODYLUST])
+			if(sc->data[SC_BERSERK] || sc->data[SC_SATURDAY_NIGHT_FEVER])
 				skillratio += 100;
 #ifdef RENEWAL
 			if( sc->data[SC_TRUESIGHT] )
@@ -4578,21 +4582,30 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	#endif
 			switch(skill_id){
 	#ifdef RENEWAL
-				case LK_SPIRALPIERCE:
-				case ML_SPIRALPIERCE:
-				{// Formula: Floor[Floor(Weapon Weight/2)*skill level + ATK ]*(100%+50%*s.lvl) * 5 multi-hits
-					short index = sd?sd->equip_index[EQI_HAND_R]:0;
-					int weight = 0;
-
-					if (sd && index >= 0 &&
-						sd->inventory_data[index] &&
-						sd->inventory_data[index]->type == IT_WEAPON)
-							weight = sd->inventory_data[index]->weight/20;
-					ATK_ADD(weight * skill_lv);
-				}
 				case NJ_TATAMIGAESHI:
-					if( skill_id != LK_SPIRALPIERCE && skill_id != ML_SPIRALPIERCE )
 						ATK_RATE(200);
+				case LK_SPIRALPIERCE:
+				case ML_SPIRALPIERCE: // [malufett]
+					if( skill_id != NJ_TATAMIGAESHI ){
+						short index = sd?sd->equip_index[EQI_HAND_R]:0;
+						GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0) );
+						wd.damage = wd.damage * 70 / 100;
+						n_ele = true;
+
+						if (sd && index >= 0 &&
+							sd->inventory_data[index] &&
+							sd->inventory_data[index]->type == IT_WEAPON)
+							ATK_ADD(sd->inventory_data[index]->weight * 7 / 100);
+						
+						switch (tstatus->size) {
+							case SZ_SMALL: //Small: 115%
+								ATK_RATE(115);
+								break;
+							case SZ_BIG: //Large: 85%
+								ATK_RATE(85);
+						}
+						wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
+					}
 	#endif
 				default:
 					ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));

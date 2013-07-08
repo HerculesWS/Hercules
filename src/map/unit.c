@@ -1442,6 +1442,10 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			return 0;
 		}
+		if( (skill_id >= SC_MANHOLE && skill_id <= SC_FEINTBOMB) && iMap->getcell(src->m, skill_x, skill_y, CELL_CHKMAELSTROM) ) {
+			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+			return 0;
+		}
 	}
 
 	if (!iStatus->check_skilluse(src, NULL, skill_id, 0))
