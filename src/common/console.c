@@ -2,6 +2,7 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#include "../common/cbasetypes.h"
 #include "../common/showmsg.h"
 #include "../common/core.h"
 #include "../config/core.h"
@@ -20,14 +21,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#ifndef _WIN32
+#ifndef WIN32
 	#include <unistd.h>
 #else
 	#include "../common/winapi.h" // Console close event handling
 #endif
 
 #ifdef CONSOLE_INPUT
-	#ifdef _WIN32
+	#ifdef WIN32
 		#include <conio.h> /* _kbhit() */
 	#endif
 #endif
@@ -60,11 +61,11 @@ void display_title(void) {
 		ShowInfo("SVN Revision: '"CL_WHITE"%s"CL_RESET"'\n", svn);
 }
 #ifdef CONSOLE_INPUT
-#ifdef _WIN32
+#if defined(WIN32)
 int console_parse_key_pressed(void) {
 	return _kbhit();
 }
-#else /* _WIN32 */
+#else /* WIN32 */
 int console_parse_key_pressed(void) {
 	struct timeval tv;
 	fd_set fds;
