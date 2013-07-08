@@ -791,6 +791,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 
 	for( i = 0; i < pcount; i++ ) {
 		unsigned short id = 0, random_qty = 0, must_qty = 0;
+		struct item_data *data;
 		struct item_package *package = &itemdb->packages[i];
 		unsigned short c;
 		
@@ -800,6 +801,11 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 		fread(&must_qty,sizeof(must_qty),1,file);
 		//next 2 bytes = random count
 		fread(&random_qty,sizeof(random_qty),1,file);
+		
+		if( !(data = itemdb->exists(id)) )
+			ShowWarning("itemdb_read_packages: unknown package item '%d', skipping..\n",id);
+		else
+			data->package = &itemdb->packages[i];
 		
 		package->id = id;
 		package->random_qty = random_qty;
@@ -841,6 +847,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 			CREATE(package->random_groups, struct item_package_rand_group, package->random_qty);
 			for(c = 0; c < package->random_qty; c++) {
 				unsigned short group_qty = 0, h;
+				struct item_package_rand_entry *prev = NULL;
 				
 				//next 2 bytes = how many entries in this group
 				fread(&group_qty,sizeof(group_qty),1,file);
@@ -855,6 +862,8 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 					unsigned char announce = 0, named = 0;
 					struct item_data *data;
 
+					if( prev ) prev->next = entry;
+					
 					//first 2 byte = item id
 					fread(&mid,sizeof(mid),1,file);
 					//next 2 byte = qty
@@ -877,7 +886,11 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 					entry->qty = qty;
 					entry->announce = announce ? 1 : 0;
 					entry->named = named ? 1 : 0;
+					
+					prev = entry;
 				}
+				if( prev )
+					prev->next = &itemdb->packages[i].random_groups[c].random_list[0];
 			}
 		}
 	}
