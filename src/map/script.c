@@ -6228,7 +6228,13 @@ BUILDIN(makeitem)
 		m=sd->bl.m;
 	} else
 		m=iMap->mapname2mapid(mapname);
+	
+	if( m == -1 ) {
+		ShowError("makeitem: creating map on unexistent map '%s'!\n", mapname);
+		return false;
+	}
 		
+	
 	memset(&item_tmp,0,sizeof(item_tmp));
 	item_tmp.nameid=nameid;
 	if(!flag)
@@ -8555,7 +8561,10 @@ BUILDIN(areamonster)
 	if (sd && strcmp(mapn, "this") == 0)
 		m = sd->bl.m;
 	else {
-		m = iMap->mapname2mapid(mapn);
+		if ( ( m = iMap->mapname2mapid(mapn) ) == -1 ) {
+			ShowWarning("buildin_areamonster: Attempted to spawn monster class %d on non-existing map '%s'\n",class_, mapn);
+			return false;
+		}
 		if (map[m].flag.src4instance && st->instance_id >= 0) { // Try to redirect to the instance map, not the src map
 			if ((m = instance->mapid2imapid(m, st->instance_id)) < 0) {
 				ShowError("buildin_areamonster: Trying to spawn monster (%d) on instance map (%s) without instance attached.\n", class_, mapn);
@@ -11901,14 +11910,26 @@ BUILDIN(playBGMall)
 		int y0 = script_getnum(st,5);
 		int x1 = script_getnum(st,6);
 		int y1 = script_getnum(st,7);
+		int m;
 		
-		iMap->foreachinarea(playBGM_sub, iMap->mapname2mapid(map), x0, y0, x1, y1, BL_PC, name);
+		if ( ( m = iMap->mapname2mapid(map) ) == -1 ) {
+			ShowWarning("playBGMall: Attempted to play song '%s' on non-existent map '%s'\n",name, map);
+			return true;
+		}
+		
+		iMap->foreachinarea(playBGM_sub, m, x0, y0, x1, y1, BL_PC, name);
 	}
 	else if( script_hasdata(st,3) )
 	{// entire map
 		const char* map = script_getstr(st,3);
+		int m;
 		
-		iMap->foreachinmap(playBGM_sub, iMap->mapname2mapid(map), BL_PC, name);
+		if ( ( m = iMap->mapname2mapid(map) ) == -1 ) {
+			ShowWarning("playBGMall: Attempted to play song '%s' on non-existent map '%s'\n",name, map);
+			return true;
+		}
+		
+		iMap->foreachinmap(playBGM_sub, m, BL_PC, name);
 	}
 	else
 	{// entire server
@@ -11963,30 +11984,37 @@ BUILDIN(soundeffectall)
 	
 	//FIXME: enumerating map squares (iMap->foreach) is slower than enumerating the list of online players (iMap->foreachpc?) [ultramage]
 	
-	if(!script_hasdata(st,4))
-	{	// area around
+	if(!script_hasdata(st,4)) { // area around
 		clif->soundeffectall(bl, name, type, AREA);
-	}
-	else
-		if(!script_hasdata(st,5))
-		{	// entire map
+	} else {
+		if(!script_hasdata(st,5)) { // entire map
 			const char* map = script_getstr(st,4);
-			iMap->foreachinmap(soundeffect_sub, iMap->mapname2mapid(map), BL_PC, name, type);
+			int m;
+			
+			if ( ( m = iMap->mapname2mapid(map) ) == -1 ) {
+				ShowWarning("soundeffectall: Attempted to play song '%s' (type %d) on non-existent map '%s'\n",name,type, map);
+				return true;
+			}
+			
+			iMap->foreachinmap(soundeffect_sub, m, BL_PC, name, type);
+		} else if(script_hasdata(st,8)) { // specified part of map
+			const char* map = script_getstr(st,4);
+			int x0 = script_getnum(st,5);
+			int y0 = script_getnum(st,6);
+			int x1 = script_getnum(st,7);
+			int y1 = script_getnum(st,8);
+			int m;
+			
+			if ( ( m = iMap->mapname2mapid(map) ) == -1 ) {
+				ShowWarning("soundeffectall: Attempted to play song '%s' (type %d) on non-existent map '%s'\n",name,type, map);
+				return true;
+			}
+			
+			iMap->foreachinarea(soundeffect_sub, m, x0, y0, x1, y1, BL_PC, name, type);
+		} else {
+			ShowError("buildin_soundeffectall: insufficient arguments for specific area broadcast.\n");
 		}
-		else
-			if(script_hasdata(st,8))
-			{	// specified part of map
-				const char* map = script_getstr(st,4);
-				int x0 = script_getnum(st,5);
-				int y0 = script_getnum(st,6);
-				int x1 = script_getnum(st,7);
-				int y1 = script_getnum(st,8);
-				iMap->foreachinarea(soundeffect_sub, iMap->mapname2mapid(map), x0, y0, x1, y1, BL_PC, name, type);
-			}
-			else
-			{
-				ShowError("buildin_soundeffectall: insufficient arguments for specific area broadcast.\n");
-			}
+	}
 	
 	return true;
 }
@@ -15335,6 +15363,11 @@ BUILDIN(checkcell)
 	int16 y = script_getnum(st,4);
 	cell_chk type = (cell_chk)script_getnum(st,5);
 	
+	if ( m == -1 ) {
+		ShowWarning("checkcell: Attempted to run on unexsitent map '%s', type %d, x/y %d,%d\n",script_getstr(st,2),type,x,y);
+		return true;
+	}
+	
 	script_pushint(st, iMap->getcell(m, x, y, type));
 	
 	return true;
@@ -15356,6 +15389,11 @@ BUILDIN(setcell)
 	bool flag = (bool)script_getnum(st,8);
 	
 	int x,y;
+	
+	if ( m == -1 ) {
+		ShowWarning("setcell: Attempted to run on unexistent map '%s', type %d, x1/y1 - %d,%d | x2/y2 - %d,%d\n",script_getstr(st, 2),type,x1,y1,x2,y2);
+		return true;
+	}
 	
 	if( x1 > x2 ) swap(x1,x2);
 	if( y1 > y2 ) swap(y1,y2);
@@ -17003,7 +17041,7 @@ BUILDIN(cleanmap)
 	
     map = script_getstr(st, 2);
     m = iMap->mapname2mapid(map);
-    if (!m)
+    if ( m == -1 )
         return false;
 	
 	if ((script_lastdata(st) - 2) < 4) {
