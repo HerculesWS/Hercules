@@ -179,9 +179,9 @@ void skill_chk(uint16* skill_id) {
 #define skill_get2(var,id,lv) { \
 	skill->chk(&id); \
 	if(!id) return 0; \
-	if( lv >= MAX_SKILL_LEVEL && var > 1 ) { \
+	if( lv > MAX_SKILL_LEVEL && var > 1 ) { \
 		int lv2 = lv; lv = skill_db[id].max; \
-		return (var) + (lv2-lv);\
+		return (var) + ((lv2-lv)/2);\
 	} \
 	return var;\
 }
@@ -2655,6 +2655,11 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 				break;
 
 		}
+		
+		/* monsters with skill lv higher than MAX_SKILL_LEVEL may get this value beyond the max depending on conditions, we cap to the system's limit */
+		if( dsrc && dsrc->type == BL_MOB && skill_lv > MAX_SKILL_LEVEL && dmg.blewcount > 25 )
+			dmg.blewcount = 25;
+		
 		//blown-specific handling
 		switch( skill_id ) {
 			case LG_OVERBRAND:
@@ -18087,7 +18092,7 @@ int do_init_skill (void) {
 	iTimer->add_timer_func_list(skill->blockpc_end, "skill_blockpc_end");
 
 	iTimer->add_timer_interval(iTimer->gettick()+SKILLUNITTIMER_INTERVAL,skill->unit_timer,0,0,SKILLUNITTIMER_INTERVAL);
-
+	
 	return 0;
 }
 
