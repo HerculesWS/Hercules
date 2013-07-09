@@ -17565,15 +17565,14 @@ void clif_skill_cooldown_list(int fd, struct skill_cd* cd) {
 #endif
 	
 	for( i = 0; i < cd->cursor; i++ ) {
-		if( cd->duration[i] < 1 ) continue;
+		if( cd->entry[i]->duration < 1 ) continue;
+		
+		WFIFOW(fd, 4 + (count*offset)) = cd->entry[i]->skill_id;
+		WFIFOL(fd, 6 + (count*offset)) = cd->entry[i]->duration;
 #if PACKETVER >= 20120604
-		WFIFOW(fd, 4  + (i*10)) = cd->nameid[i];
-		WFIFOL(fd, 6  + (i*10)) = cd->total[i];
-		WFIFOL(fd, 10 + (i*10)) = cd->duration[i];
-#else
-		WFIFOW(fd, 4 + (i*6)) = cd->nameid[i];
-		WFIFOL(fd, 6 + (i*6)) = cd->duration[i];
+		WFIFOL(fd, 10 + (count*offset)) = cd->entry[i]->duration;
 #endif
+
 		count++;
 	}
 	

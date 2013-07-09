@@ -58,8 +58,6 @@
 #if GD_SKILLRANGEMAX > 999
 	#error GD_SKILLRANGEMAX is greater than 999
 #endif
-static struct eri *skill_unit_ers = NULL; //For handling skill_unit's [Skotlex]
-static struct eri *skill_timer_ers = NULL; //For handling skill_timerskills [Skotlex]
 
 DBMap* skillunit_db = NULL; // int id -> struct skill_unit*
 
@@ -3290,7 +3288,7 @@ int skill_timerskill(int tid, unsigned int tick, int id, intptr_t data) {
 		}
 	} while (0);
 	//Free skl now that it is no longer needed.
-	ers_free(skill_timer_ers, skl);
+	ers_free(skill->timer_ers, skl);
 	return 0;
 }
 
@@ -3310,7 +3308,7 @@ int skill_addtimerskill (struct block_list *src, unsigned int tick, int target, 
 	ARR_FIND( 0, MAX_SKILLTIMERSKILL, i, ud->skilltimerskill[i] == 0 );
 	if( i == MAX_SKILLTIMERSKILL ) return 1;
 
-	ud->skilltimerskill[i] = ers_alloc(skill_timer_ers, struct skill_timerskill);
+	ud->skilltimerskill[i] = ers_alloc(skill->timer_ers, struct skill_timerskill);
 	ud->skilltimerskill[i]->timer = iTimer->add_timer(tick, skill->timerskill, src->id, i);
 	ud->skilltimerskill[i]->src_id = src->id;
 	ud->skilltimerskill[i]->target_id = target;
@@ -3338,7 +3336,7 @@ int skill_cleartimerskill (struct block_list *src)
 	for(i=0;i<MAX_SKILLTIMERSKILL;i++) {
 		if(ud->skilltimerskill[i]) {
 			iTimer->delete_timer(ud->skilltimerskill[i]->timer, skill->timerskill);
-			ers_free(skill_timer_ers, ud->skilltimerskill[i]);
+			ers_free(skill->timer_ers, ud->skilltimerskill[i]);
 			ud->skilltimerskill[i]=NULL;
 		}
 	}
@@ -15268,7 +15266,7 @@ struct skill_unit_group* skill_initunitgroup (struct block_list* src, int count,
 		i = MAX_SKILLUNITGROUP-1;
 	}
 
-	group             = ers_alloc(skill_unit_ers, struct skill_unit_group);
+	group             = ers_alloc(skill->unit_ers, struct skill_unit_group);
 	group->src_id     = src->id;
 	group->party_id   = iStatus->get_party_id(src);
 	group->guild_id   = iStatus->get_guild_id(src);
@@ -15426,7 +15424,7 @@ int skill_delunitgroup(struct skill_unit_group *group, const char* file, int lin
 	if( i < MAX_SKILLUNITGROUP ) {
 		ud->skillunit[i] = ud->skillunit[j];
 		ud->skillunit[j] = NULL;
-		ers_free(skill_unit_ers, group);
+		ers_free(skill->unit_ers, group);
 	} else
 		ShowError("skill_delunitgroup: Group not found! (src_id: %d skill_id: %d)\n", group->src_id, group->skill_id);
 
@@ -16969,34 +16967,35 @@ int skill_blockpc_end(int tid, unsigned int tick, int id, intptr_t data) {
 	if (sd->blockskill[data] != (0x1|(tid&0xFE))) return 0;
 
 	if( ( cd = idb_get(skill->cd_db,sd->status.char_id) ) ) {
-		int i,cursor;
-		ARR_FIND( 0, cd->cursor+1, cursor, cd->skidx[cursor] == data );
-		cd->duration[cursor] = 0;
-#if PACKETVER >= 20120604
-		cd->total[cursor] = 0;
-#endif
-		cd->skidx[cursor] = 0;
-		cd->nameid[cursor] = 0;
-		cd->started[cursor] = 0;
-		// compact the cool down list
-		for( i = 0, cursor = 0; i < cd->cursor; i++ ) {
-			if( cd->duration[i] == 0 )
-				continue;
-			if( cursor != i ) {
-				cd->duration[cursor] = cd->duration[i];
-#if PACKETVER >= 20120604
-				cd->total[cursor] = cd->total[i];
-#endif
-				cd->skidx[cursor] = cd->skidx[i];
-				cd->nameid[cursor] = cd->nameid[i];
-				cd->started[cursor] = cd->started[i];
-			}
-			cursor++;
+		int i;
+		
+		for( i = 0; i < cd->cursor; i++ ) {
+			if( cd->entry[i]->skidx == data )
+				break;
 		}
-		if( cursor == 0 )
-			idb_remove(skill->cd_db,sd->status.char_id);
-		else
-			cd->cursor = cursor;
+		
+		if( i == cd->cursor ) {
+			ShowError("skill_blockpc_end: '%s' : no data found for '%d'\n",sd->status.name,data);
+		} else {
+			int cursor = 0;
+			
+			ers_free(skill->cd_entry_ers, cd->entry[i]);
+			
+			cd->entry[i] = NULL;
+			
+			for( i = 0, cursor = 0; i < cd->cursor; i++ ) {
+				if( !cd->entry[i] )
+					continue;
+				if( cursor != i )
+					cd->entry[cursor] = cd->entry[i];
+				cursor++;
+			}
+			
+			if( (cd->cursor = cursor) == 0 ) {
+				idb_remove(skill->cd_db,sd->status.char_id);
+				ers_free(skill->cd_ers, cd);
+			}
+		}
 	}
 
 	sd->blockskill[data] = 0;
@@ -17012,7 +17011,6 @@ int skill_blockpc_end(int tid, unsigned int tick, int id, intptr_t data) {
  * @return  0 if successful, -1 otherwise
  */
 int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick, bool load) {
-	struct skill_cd* cd = NULL;
 	uint16 idx = skill->get_index(skill_id);
 
 	nullpo_retr (-1, sd);
@@ -17029,20 +17027,38 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick,
 		clif->skill_cooldown(sd, skill_id, tick);
 
 	if( !load ) {// not being loaded initially so ensure the skill delay is recorded
-		if( !(cd = idb_get(skill->cd_db,sd->status.char_id)) ) {// create a new skill cooldown object for map storage
-			CREATE( cd, struct skill_cd, 1 );
+		struct skill_cd* cd = NULL;
+		int i;
+		
+		if( !(cd = idb_get(skill->cd_db,sd->status.char_id)) ) {// create a new skill cooldown object for map storage			
+			cd = ers_alloc(skill->cd_ers, struct skill_cd);
+			
+			cd->cursor = 0;
+			memset(cd->entry, 0, sizeof(cd->entry));
+			
 			idb_put( skill->cd_db, sd->status.char_id, cd );
 		}
 
-		// record the skill duration in the database map
-		cd->duration[cd->cursor] = tick;
+		for(i = 0; i < MAX_SKILL_TREE; i++) {
+			if( !cd->entry[i] )
+				break;
+		}
+		
+		if( i == MAX_SKILL_TREE ) {
+			ShowError("skill_blockpc_start: '%s' got over '%d' skill cooldowns, no room to save!\n",sd->status.name,MAX_SKILL_TREE);
+		} else {
+			cd->entry[i] = ers_alloc(skill->cd_entry_ers,struct skill_cd_entry);
+			
+			cd->entry[i]->duration = tick;
 #if PACKETVER >= 20120604
-		cd->total[cd->cursor] = tick;
+			cd->entry[i]->total = tick;
 #endif
-		cd->skidx[cd->cursor] = idx;
-		cd->nameid[cd->cursor] = skill_id;
-		cd->started[cd->cursor] = iTimer->gettick();
-		cd->cursor++;
+			cd->entry[i]->skidx = idx;
+			cd->entry[i]->skill_id = skill_id;
+			cd->entry[i]->started = iTimer->gettick();
+			
+			cd->cursor++;
+		}				
 	}
 
 	sd->blockskill[idx] = 0x1|(0xFE&iTimer->add_timer(iTimer->gettick()+tick,skill->blockpc_end,sd->bl.id,idx));
@@ -17553,7 +17569,7 @@ void skill_cooldown_save(struct map_session_data * sd) {
 		
 	// process each individual cooldown associated with the character
 	for( i = 0; i < cd->cursor; i++ ) {
-		cd->duration[i] = DIFF_TICK(cd->started[i]+cd->duration[i],now);
+		cd->entry[i]->duration = DIFF_TICK(cd->entry[i]->started+cd->entry[i]->duration,now);
 	}
 }
 	
@@ -17579,9 +17595,9 @@ void skill_cooldown_load(struct map_session_data * sd) {
 	
 	// process each individual cooldown associated with the character
 	for( i = 0; i < cd->cursor; i++ ) {
-		cd->started[i] = now;
+		cd->entry[i]->started = now;
 		// block the skill from usage but ensure it is not recorded (load = true)
-		skill->blockpc_start( sd, cd->nameid[i], cd->duration[i], true );
+		skill->blockpc_start( sd, cd->entry[i]->skill_id, cd->entry[i]->duration, true );
 	}
 }
 
@@ -18053,11 +18069,17 @@ int do_init_skill (void) {
 
 	group_db = idb_alloc(DB_OPT_BASE);
 	skillunit_db = idb_alloc(DB_OPT_BASE);
-	skill->cd_db = idb_alloc(DB_OPT_RELEASE_DATA);
+	skill->cd_db = idb_alloc(DB_OPT_BASE);
 	skillusave_db = idb_alloc(DB_OPT_RELEASE_DATA);
-	skill_unit_ers = ers_new(sizeof(struct skill_unit_group),"skill.c::skill_unit_ers",ERS_OPT_NONE);
-	skill_timer_ers  = ers_new(sizeof(struct skill_timerskill),"skill.c::skill_timer_ers",ERS_OPT_NONE);
+	
+	skill->unit_ers = ers_new(sizeof(struct skill_unit_group),"skill.c::skill_unit_ers",ERS_OPT_NONE);
+	skill->timer_ers  = ers_new(sizeof(struct skill_timerskill),"skill.c::skill_timer_ers",ERS_OPT_NONE);
+	skill->cd_ers = ers_new(sizeof(struct skill_cd),"skill.c::skill_cd_ers",ERS_OPT_CLEAR);
+	skill->cd_entry_ers = ers_new(sizeof(struct skill_cd_entry),"skill.c::skill_cd_entry_ers",ERS_OPT_CLEAR);
 
+	ers_chunk_size(skill->cd_ers, 25);
+	ers_chunk_size(skill->cd_entry_ers, 100);
+	
 	iTimer->add_timer_func_list(skill->unit_timer,"skill_unit_timer");
 	iTimer->add_timer_func_list(skill->castend_id,"skill_castend_id");
 	iTimer->add_timer_func_list(skill->castend_pos,"skill_castend_pos");
@@ -18069,15 +18091,18 @@ int do_init_skill (void) {
 	return 0;
 }
 
-int do_final_skill(void)
-{
+int do_final_skill(void) {
+	
 	db_destroy(skilldb_name2id);
 	db_destroy(group_db);
 	db_destroy(skillunit_db);
 	db_destroy(skill->cd_db);
 	db_destroy(skillusave_db);
-	ers_destroy(skill_unit_ers);
-	ers_destroy(skill_timer_ers);
+	
+	ers_destroy(skill->unit_ers);
+	ers_destroy(skill->timer_ers);
+	ers_destroy(skill->cd_ers);
+	ers_destroy(skill->cd_entry_ers);
 	return 0;
 }
 /* initialize the interface */
@@ -18089,6 +18114,11 @@ void skill_defaults(void) {
 	skill->read_db = skill_readdb;
 	/* */
 	skill->cd_db = NULL;
+	/* */
+	skill->unit_ers = NULL;
+	skill->timer_ers = NULL;
+	skill->cd_ers = NULL;
+	skill->cd_entry_ers = NULL;
 	/* accesssors */
 	skill->get_index = skill_get_index;
 	skill->get_type = skill_get_type;
