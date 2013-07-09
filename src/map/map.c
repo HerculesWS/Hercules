@@ -4452,7 +4452,7 @@ unsigned short map_zone_str2itemid(const char *name) {
 
 	if( !name )
 		return 0;
-	if( name[0] == 'I' && name[1] == 'D' && strlen(name) <= 7 ) {
+	if( name[0] == 'I' && name[1] == 'D' && strlen(name) < 8 ) {
 		if( !( data = itemdb->exists(atoi(name+2))) ) {
 			return 0;
 		}
@@ -4469,7 +4469,7 @@ unsigned short map_zone_str2skillid(const char *name) {
 	if( !name )
 		return 0;
 
-	if( name[0] == 'I' && name[1] == 'D' && strlen(name) <= 7 ) {
+	if( name[0] == 'I' && name[1] == 'D' && strlen(name) < 8 ) {
 		if( !skill->get_index((nameid = atoi(name+2))) )
 			return 0;
 	} else {
