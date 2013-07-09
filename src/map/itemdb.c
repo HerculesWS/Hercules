@@ -720,31 +720,31 @@ void itemdb_write_cached_packages(const char *config_filename) {
 	}
 	
 	// first 2 bytes = package count
-	fwrite(&pcount,sizeof(pcount),1,file);
+	hwrite(&pcount,sizeof(pcount),1,file);
 
 	for(i = 0; i < pcount; i++) {
 		unsigned short id = itemdb->packages[i].id, random_qty = itemdb->packages[i].random_qty, must_qty = itemdb->packages[i].must_qty;
 		unsigned short c;
 		//into a package, first 2 bytes = id.
-		fwrite(&id,sizeof(id),1,file);
+		hwrite(&id,sizeof(id),1,file);
 		//next 2 bytes = must count
-		fwrite(&must_qty,sizeof(must_qty),1,file);
+		hwrite(&must_qty,sizeof(must_qty),1,file);
 		//next 2 bytes = random count
-		fwrite(&random_qty,sizeof(random_qty),1,file);
+		hwrite(&random_qty,sizeof(random_qty),1,file);
 		//now we loop into must
 		for(c = 0; c < must_qty; c++) {
 			struct item_package_must_entry *entry = &itemdb->packages[i].must_items[c];
 			unsigned char announce = entry->announce == 1 ? 1 : 0, named = entry->named == 1 ? 1 : 0;
 			//first 2 byte = item id
-			fwrite(&entry->id,sizeof(entry->id),1,file);
+			hwrite(&entry->id,sizeof(entry->id),1,file);
 			//next 2 byte = qty
-			fwrite(&entry->qty,sizeof(entry->qty),1,file);
+			hwrite(&entry->qty,sizeof(entry->qty),1,file);
 			//next 2 byte = hours
-			fwrite(&entry->hours,sizeof(entry->hours),1,file);
+			hwrite(&entry->hours,sizeof(entry->hours),1,file);
 			//next 1 byte = announce (1:0)
-			fwrite(&announce,sizeof(announce),1,file);
+			hwrite(&announce,sizeof(announce),1,file);
 			//next 1 byte = named (1:0)
-			fwrite(&named,sizeof(announce),1,file);
+			hwrite(&named,sizeof(announce),1,file);
 		}
 		//now we loop into random groups
 		for(c = 0; c < random_qty; c++) {
@@ -752,23 +752,23 @@ void itemdb_write_cached_packages(const char *config_filename) {
 			unsigned short group_qty = group->random_qty, h;
 			
 			//next 2 bytes = how many entries in this group
-			fwrite(&group_qty,sizeof(group_qty),1,file);
+			hwrite(&group_qty,sizeof(group_qty),1,file);
 			//now we loop into the group's list
 			for(h = 0; h < group_qty; h++) {
 				struct item_package_rand_entry *entry = &itemdb->packages[i].random_groups[c].random_list[h];
 				unsigned char announce = entry->announce == 1 ? 1 : 0, named = entry->named == 1 ? 1 : 0;
 				//first 2 byte = item id
-				fwrite(&entry->id,sizeof(entry->id),1,file);
+				hwrite(&entry->id,sizeof(entry->id),1,file);
 				//next 2 byte = qty
-				fwrite(&entry->qty,sizeof(entry->qty),1,file);
+				hwrite(&entry->qty,sizeof(entry->qty),1,file);
 				//next 2 byte = rate
-				fwrite(&entry->rate,sizeof(entry->rate),1,file);
+				hwrite(&entry->rate,sizeof(entry->rate),1,file);
 				//next 2 byte = hours
-				fwrite(&entry->hours,sizeof(entry->hours),1,file);
+				hwrite(&entry->hours,sizeof(entry->hours),1,file);
 				//next 1 byte = announce (1:0)
-				fwrite(&announce,sizeof(announce),1,file);
+				hwrite(&announce,sizeof(announce),1,file);
 				//next 1 byte = named (1:0)
-				fwrite(&named,sizeof(announce),1,file);
+				hwrite(&named,sizeof(announce),1,file);
 			}
 		}
 	}
@@ -787,7 +787,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 	}
 	
 	// first 2 bytes = package count
-	fread(&pcount,sizeof(pcount),1,file);
+	hread(&pcount,sizeof(pcount),1,file);
 
 	CREATE(itemdb->packages, struct item_package, pcount);
 	itemdb->package_count = pcount;
@@ -799,11 +799,11 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 		unsigned short c;
 		
 		//into a package, first 2 bytes = id.
-		fread(&id,sizeof(id),1,file);
+		hread(&id,sizeof(id),1,file);
 		//next 2 bytes = must count
-		fread(&must_qty,sizeof(must_qty),1,file);
+		hread(&must_qty,sizeof(must_qty),1,file);
 		//next 2 bytes = random count
-		fread(&random_qty,sizeof(random_qty),1,file);
+		hread(&random_qty,sizeof(random_qty),1,file);
 		
 		if( !(data = itemdb->exists(id)) )
 			ShowWarning("itemdb_read_packages: unknown package item '%d', skipping..\n",id);
@@ -825,15 +825,15 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 				unsigned char announce = 0, named = 0;
 				struct item_data *data;
 				//first 2 byte = item id
-				fread(&mid,sizeof(mid),1,file);
+				hread(&mid,sizeof(mid),1,file);
 				//next 2 byte = qty
-				fread(&qty,sizeof(qty),1,file);
+				hread(&qty,sizeof(qty),1,file);
 				//next 2 byte = hours
-				fread(&hours,sizeof(hours),1,file);
+				hread(&hours,sizeof(hours),1,file);
 				//next 1 byte = announce (1:0)
-				fread(&announce,sizeof(announce),1,file);
+				hread(&announce,sizeof(announce),1,file);
 				//next 1 byte = named (1:0)
-				fread(&named,sizeof(announce),1,file);
+				hread(&named,sizeof(announce),1,file);
 				
 				if( !(data = itemdb->exists(mid)) )
 					ShowWarning("itemdb_read_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));
@@ -853,7 +853,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 				struct item_package_rand_entry *prev = NULL;
 				
 				//next 2 bytes = how many entries in this group
-				fread(&group_qty,sizeof(group_qty),1,file);
+				hread(&group_qty,sizeof(group_qty),1,file);
 				
 				package->random_groups[c].random_qty = group_qty;
 				CREATE(package->random_groups[c].random_list, struct item_package_rand_entry, package->random_groups[c].random_qty);
@@ -868,17 +868,17 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 					if( prev ) prev->next = entry;
 					
 					//first 2 byte = item id
-					fread(&mid,sizeof(mid),1,file);
+					hread(&mid,sizeof(mid),1,file);
 					//next 2 byte = qty
-					fread(&qty,sizeof(qty),1,file);
+					hread(&qty,sizeof(qty),1,file);
 					//next 2 byte = rate
-					fread(&rate,sizeof(rate),1,file);
+					hread(&rate,sizeof(rate),1,file);
 					//next 2 byte = hours
-					fread(&hours,sizeof(hours),1,file);
+					hread(&hours,sizeof(hours),1,file);
 					//next 1 byte = announce (1:0)
-					fread(&announce,sizeof(announce),1,file);
+					hread(&announce,sizeof(announce),1,file);
 					//next 1 byte = named (1:0)
-					fread(&named,sizeof(announce),1,file);
+					hread(&named,sizeof(announce),1,file);
 					
 					if( !(data = itemdb->exists(mid)) )
 						ShowWarning("itemdb_read_packages: unknown item '%d' in package '%s'!\n",mid,itemdb_name(package->id));

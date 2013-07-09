@@ -838,21 +838,17 @@ int battle_calc_masteryfix(struct block_list *src, struct block_list *target, ui
  * Elemental attribute fix.
  *------------------------------------------*/
 int battle_calc_elefix(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int damage, int nk, int n_ele, int s_ele, int s_ele_, bool left, int flag){
-	struct status_data *sstatus, *tstatus;
-	struct status_change *sc;
-
+	struct status_data *tstatus;
+	
 	nullpo_ret(src);
 	nullpo_ret(target);
 
-	sstatus = iStatus->get_status_data(src);
 	tstatus = iStatus->get_status_data(target);
-	sc = iStatus->get_sc(src);
-
+	
 	if( (nk&NK_NO_ELEFIX) || n_ele )
 		return damage;
 
-	if( damage > 0 )
-	{
+	if( damage > 0 ) {
 		if( left )
 			damage = battle->attr_fix(src, target, damage, s_ele_, tstatus->def_ele, tstatus->ele_lv);
 		else{
@@ -863,14 +859,22 @@ int battle_calc_elefix(struct block_list *src, struct block_list *target, uint16
 				damage += battle_attr_fix(src,target,50*skill_lv,ELE_NEUTRAL,tstatus->def_ele, tstatus->ele_lv);
 		}
 	}
+	
 #ifndef RENEWAL
-	if( sc && sc->data[SC_SUB_WEAPONPROPERTY] )
-	{ // Descriptions indicate this means adding a percent of a normal attack in another element. [Skotlex]
-		int temp = battle->calc_base_damage(sstatus, &sstatus->rhw, sc, tstatus->size, BL_CAST(BL_PC, src), (flag?2:0)) * sc->data[SC_SUB_WEAPONPROPERTY]->val2 / 100;
-		damage += battle->attr_fix(src, target, temp, sc->data[SC_SUB_WEAPONPROPERTY]->val1, tstatus->def_ele, tstatus->ele_lv);
-		if( left ){
-			temp = battle->calc_base_damage(sstatus, &sstatus->lhw, sc, tstatus->size, BL_CAST(BL_PC, src), (flag?2:0)) * sc->data[SC_SUB_WEAPONPROPERTY]->val2 / 100;
+	{
+		struct status_data *sstatus;
+		struct status_change *sc;
+		
+		sstatus = iStatus->get_status_data(src);
+		sc = iStatus->get_sc(src);
+
+		if( sc && sc->data[SC_SUB_WEAPONPROPERTY] ) { // Descriptions indicate this means adding a percent of a normal attack in another element. [Skotlex]
+			int temp = battle->calc_base_damage(sstatus, &sstatus->rhw, sc, tstatus->size, BL_CAST(BL_PC, src), (flag?2:0)) * sc->data[SC_SUB_WEAPONPROPERTY]->val2 / 100;
 			damage += battle->attr_fix(src, target, temp, sc->data[SC_SUB_WEAPONPROPERTY]->val1, tstatus->def_ele, tstatus->ele_lv);
+			if( left ) {
+				temp = battle->calc_base_damage(sstatus, &sstatus->lhw, sc, tstatus->size, BL_CAST(BL_PC, src), (flag?2:0)) * sc->data[SC_SUB_WEAPONPROPERTY]->val2 / 100;
+				damage += battle->attr_fix(src, target, temp, sc->data[SC_SUB_WEAPONPROPERTY]->val1, tstatus->def_ele, tstatus->ele_lv);
+			}
 		}
 	}
 #endif
@@ -3210,8 +3214,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 	unsigned int skillratio = 100;	//Skill dmg modifiers.
 
     TBL_PC *sd;
-//    TBL_PC *tsd;
-	struct status_change *sc, *tsc;
+	struct status_change *sc;
 	struct Damage ad;
 	struct status_data *sstatus = iStatus->get_status_data(src);
 	struct status_data *tstatus = iStatus->get_status_data(target);
@@ -3240,9 +3243,8 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 	flag.imdef = nk&NK_IGNORE_DEF?1:0;
 
 	sd = BL_CAST(BL_PC, src);
-//    tsd = BL_CAST(BL_PC, target);
+
 	sc = iStatus->get_sc(src);
-	tsc = iStatus->get_sc(target);
 
 	//Initialize variables that will be used afterwards
 	s_ele = skill->get_ele(skill_id, skill_lv);
@@ -3929,7 +3931,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 {
 	unsigned int skillratio = 100;	//Skill dmg modifiers.
 	short temp=0;
-	short s_ele, s_ele_, t_class;
+	short s_ele, s_ele_;
 	int i, nk;
 	bool n_ele = false; // non-elemental
 
@@ -4095,7 +4097,6 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		return wd;
 	}
 
-	t_class = iStatus->get_class(target);
 	s_ele = s_ele_ = skill->get_ele(skill_id, skill_lv);
 	if( !skill_id || s_ele == -1 )
 	{ //Take weapon's element
@@ -5167,7 +5168,7 @@ struct Damage battle_calc_attack(int attack_type,struct block_list *bl,struct bl
 
 //Calculates BF_WEAPON returned damage.
 int battle_calc_return_damage(struct block_list* bl, struct block_list *src, int *dmg, int flag, uint16 skill_id, int *delay){
-	int rdamage = 0, damage = *dmg, rdelay = *delay, trdamage = 0;
+	int rdamage = 0, damage = *dmg, trdamage = 0;
 	struct map_session_data* sd;
 	struct status_change* sc;
 	int max_reflect_damage;
@@ -5194,18 +5195,18 @@ int battle_calc_return_damage(struct block_list* bl, struct block_list *src, int
 	if( flag & BF_SHORT) {//Bounces back part of the damage.
 		if ( sd && sd->bonus.short_weapon_damage_return ){
 			NORMALIZE_RDAMAGE(damage * sd->bonus.short_weapon_damage_return / 100);
-			rdelay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
+			*delay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
 		}
 		if( sc && sc->count ) {
 			if( sc->data[SC_REFLECTSHIELD] && skill_id != WS_CARTTERMINATION ){
 				NORMALIZE_RDAMAGE(damage * sc->data[SC_REFLECTSHIELD]->val2 / 100);
-				rdelay = clif->skill_damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, CR_REFLECTSHIELD, 1, 4);
+				*delay = clif->skill_damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, CR_REFLECTSHIELD, 1, 4);
 			}
 			if( sc->data[SC_LG_REFLECTDAMAGE] && rand()%100 < (30 + 10*sc->data[SC_LG_REFLECTDAMAGE]->val1) ) {
 				if( skill_id != HT_LANDMINE && skill_id  != HT_CLAYMORETRAP
 					&& skill_id  != RA_CLUSTERBOMB && (skill_id <= RA_VERDURETRAP || skill_id  > RA_ICEBOUNDTRAP) && skill_id != MA_LANDMINE ){
 					NORMALIZE_RDAMAGE((*dmg) * sc->data[SC_LG_REFLECTDAMAGE]->val2 / 100);
-					rdelay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
+					*delay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
 				}
 			}
 			if( sc->data[SC_DEATHBOUND] && skill_id != WS_CARTTERMINATION && !is_boss(src) ) {
@@ -5219,18 +5220,18 @@ int battle_calc_return_damage(struct block_list* bl, struct block_list *src, int
 					skill->blown(bl, src, skill->get_blewcount(RK_DEATHBOUND, sc->data[SC_DEATHBOUND]->val1), unit_getdir(src), 0);
 					if( skill_id )
 						status_change_end(bl, SC_DEATHBOUND, INVALID_TIMER);
-					rdelay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
+					*delay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
 				}
 			}
 			if( sc->data[SC_SHIELDSPELL_DEF] && sc->data[SC_SHIELDSPELL_DEF]->val1 == 2 && !is_boss(src) ){
 				NORMALIZE_RDAMAGE(damage * sc->data[SC_SHIELDSPELL_DEF]->val2 / 100);
-				rdelay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
+				*delay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
 			}
 		}
 	} else {
 		if (sd && sd->bonus.long_weapon_damage_return){ 
 			NORMALIZE_RDAMAGE(damage * sd->bonus.long_weapon_damage_return / 100);
-			rdelay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
+			*delay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
 		}
 	}
 		

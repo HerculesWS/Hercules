@@ -344,8 +344,8 @@ FILE *HCache_open(const char *file, const char *opt) {
 	
 	if( opt[0] != 'r' ) {
 		char dT[1] = "k";/* 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
-		fwrite(dT,sizeof(dT),1,first);
-		fwrite(&HCache->recompile_time,sizeof(HCache->recompile_time),1,first);
+		hwrite(dT,sizeof(dT),1,first);
+		hwrite(&HCache->recompile_time,sizeof(HCache->recompile_time),1,first);
 	}
 	fseek(first, 20, SEEK_SET);/* skip first 20, might wanna store something else later */
 	
@@ -365,10 +365,19 @@ void HCache_init(void) {
 	} else
 		ShowWarning("Unable to open '%s', caching capabilities have been disabled!\n",SERVER_NAME);
 }
+/* transit to fread, shields vs warn_unused_result */
+size_t hread(void * ptr, size_t size, size_t count, FILE * stream) {
+	return fread(ptr, size, count, stream);
+}
+/* transit to fwrite, shields vs warn_unused_result */
+size_t hwrite(const void * ptr, size_t size, size_t count, FILE * stream) {
+	return fwrite(ptr, size, count, stream);
+}
+
 void HCache_defaults(void) {
 	
 	HCache = &HCache_s;
-	
+
 	HCache->init = HCache_init;
 	
 	HCache->check = HCache_check;

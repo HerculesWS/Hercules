@@ -150,11 +150,6 @@ void signals_init (void) {
 }
 #endif
 
-#ifdef SVNVERSION
-const char *get_svn_revision(void) {
-	return EXPAND_AND_QUOTE(SVNVERSION);
-}
-#else// not SVNVERSION
 const char* get_svn_revision(void) {
 	static char svn_version_buffer[16] = "";
 	FILE *fp;
@@ -241,7 +236,6 @@ const char* get_svn_revision(void) {
 	svn_version_buffer[0] = HERC_UNKNOWN_VER;
 	return svn_version_buffer;
 }
-#endif
 /* whats our origin */
 #define GIT_ORIGIN "refs/remotes/origin/master"
 /* Grabs the hash from the last time the user updated his working copy (last pull)  */
