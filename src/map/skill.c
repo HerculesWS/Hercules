@@ -17047,18 +17047,18 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick,
 		if( i == MAX_SKILL_TREE ) {
 			ShowError("skill_blockpc_start: '%s' got over '%d' skill cooldowns, no room to save!\n",sd->status.name,MAX_SKILL_TREE);
 		} else {
-			cd->entry[i] = ers_alloc(skill->cd_entry_ers,struct skill_cd_entry);
+			cd->entry[cd->cursor] = ers_alloc(skill->cd_entry_ers,struct skill_cd_entry);
 			
-			cd->entry[i]->duration = tick;
+			cd->entry[cd->cursor]->duration = tick;
 #if PACKETVER >= 20120604
-			cd->entry[i]->total = tick;
+			cd->entry[cd->cursor]->total = tick;
 #endif
-			cd->entry[i]->skidx = idx;
-			cd->entry[i]->skill_id = skill_id;
-			cd->entry[i]->started = iTimer->gettick();
+			cd->entry[cd->cursor]->skidx = idx;
+			cd->entry[cd->cursor]->skill_id = skill_id;
+			cd->entry[cd->cursor]->started = iTimer->gettick();
 			
 			cd->cursor++;
-		}				
+		}
 	}
 
 	sd->blockskill[idx] = 0x1|(0xFE&iTimer->add_timer(iTimer->gettick()+tick,skill->blockpc_end,sd->bl.id,idx));
