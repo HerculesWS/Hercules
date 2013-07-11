@@ -11133,13 +11133,16 @@ void clif_parse_StopAttack(int fd,struct map_session_data *sd)
 
 /// Request to move an item from inventory to cart (CZ_MOVE_ITEM_FROM_BODY_TO_CART).
 /// 0126 <index>.W <amount>.L
-void clif_parse_PutItemToCart(int fd,struct map_session_data *sd)
-{
+void clif_parse_PutItemToCart(int fd,struct map_session_data *sd) {
+	int flag = 0;
 	if (pc_istrading(sd))
 		return;
 	if (!pc_iscarton(sd))
 		return;
-	pc->putitemtocart(sd,RFIFOW(fd,2)-2,RFIFOL(fd,4));
+	if ( (flag = pc->putitemtocart(sd,RFIFOW(fd,2)-2,RFIFOL(fd,4))) ) {
+		clif->dropitem(sd, RFIFOW(fd,2)-2,0);
+		clif->cart_additem_ack(sd,flag == 1?0x0:0x1);
+	}
 }
 
 
@@ -17580,7 +17583,18 @@ void clif_skill_cooldown_list(int fd, struct skill_cd* cd) {
 
 	WFIFOSET(fd,4+(offset*count));
 }
-
+/* [Ind/Hercules] - Data Thanks to Yommy
+ * - ADDITEM_TO_CART_FAIL_WEIGHT = 0x0
+ * - ADDITEM_TO_CART_FAIL_COUNT  = 0x1
+ */
+void clif_cart_additem_ack(struct map_session_data *sd, int flag) {
+	struct packet_cart_additem_ack p;
+	
+	p.PacketType = cart_additem_ackType;
+	p.result = (char)flag;
+	
+	clif->send(&p,sizeof(p), &sd->bl, SELF);
+}
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 	if( sd ) {
@@ -17917,6 +17931,7 @@ void clif_defaults(void) {
 	clif->addcards2 = clif_addcards2;
 	clif->item_sub = clif_item_sub;
 	clif->getareachar_item = clif_getareachar_item;
+	clif->cart_additem_ack = clif_cart_additem_ack;
 	/* unit-related */
 	clif->clearunit_single = clif_clearunit_single;
 	clif->clearunit_area = clif_clearunit_area;

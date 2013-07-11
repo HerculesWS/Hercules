@@ -294,8 +294,8 @@ int storage_storageaddfromcart(struct map_session_data* sd, int index, int amoun
  *	0 : fail
  *	1 : success
  *------------------------------------------*/
-int storage_storagegettocart(struct map_session_data* sd, int index, int amount)
-{
+int storage_storagegettocart(struct map_session_data* sd, int index, int amount) {
+	int flag = 0;
 	nullpo_ret(sd);
 
 	if( index < 0 || index >= MAX_STORAGE )
@@ -307,8 +307,12 @@ int storage_storagegettocart(struct map_session_data* sd, int index, int amount)
 	if( amount < 1 || amount > sd->status.storage.items[index].amount )
 		return 0;
 	
-	if( pc->cart_additem(sd,&sd->status.storage.items[index],amount,LOG_TYPE_STORAGE) == 0 )
+	if( (flag = pc->cart_additem(sd,&sd->status.storage.items[index],amount,LOG_TYPE_STORAGE)) == 0 )
 		storage->delitem(sd,index,amount);
+	else {
+		clif->dropitem(sd, index,0);
+		clif->cart_additem_ack(sd,flag == 1?0x0:0x1);
+	}
 
 	return 1;
 }

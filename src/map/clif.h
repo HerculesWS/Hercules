@@ -501,6 +501,7 @@ struct clif_interface {
 	void (*addcards2) (unsigned short *cards, struct item* item);
 	void (*item_sub) (unsigned char *buf, int n, struct item *i, struct item_data *id, int equip);
 	void (*getareachar_item) (struct map_session_data* sd,struct flooritem_data* fitem);
+	void (*cart_additem_ack) (struct map_session_data *sd, int flag);
 	void (*cashshop_load) (void);
 	void (*package_announce) (struct map_session_data *sd, unsigned short nameid, unsigned short containerid);
 	/* unit-related */

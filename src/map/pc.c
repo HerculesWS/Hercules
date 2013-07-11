@@ -4432,7 +4432,7 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 	if( !itemdb_cancartstore(item_data, pc->get_group_level(sd)) )
 	{ // Check item trade restrictions	[Skotlex]
 		clif->message (sd->fd, msg_txt(264));
-		return 1;
+		return 1;/* TODO: there is no official response to this? */
 	}
 
 	if( (w = data->weight*amount) + sd->cart_weight > sd->cart_weight_max )
@@ -4450,7 +4450,7 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 	if( i < MAX_CART )
 	{// item already in cart, stack it
 		if( amount > MAX_AMOUNT - sd->status.cart[i].amount || ( data->stack.cart && amount > data->stack.amount - sd->status.cart[i].amount ) )
-			return 1; // no room
+			return 2; // no room
 
 		sd->status.cart[i].amount+=amount;
 		clif->cart_additem(sd,i,amount,0);
@@ -4459,7 +4459,7 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 	{// item not stackable or not present, add it
 		ARR_FIND( 0, MAX_CART, i, sd->status.cart[i].nameid == 0 );
 		if( i == MAX_CART )
-			return 1; // no room
+			return 2; // no room
 
 		memcpy(&sd->status.cart[i],item_data,sizeof(sd->status.cart[0]));
 		sd->status.cart[i].amount=amount;
@@ -4513,6 +4513,7 @@ int pc_cart_delitem(struct map_session_data *sd,int n,int amount,int type,e_log_
 int pc_putitemtocart(struct map_session_data *sd,int idx,int amount)
 {
 	struct item *item_data;
+	int flag;
 
 	nullpo_ret(sd);
 
@@ -4524,10 +4525,10 @@ int pc_putitemtocart(struct map_session_data *sd,int idx,int amount)
 	if( item_data->nameid == 0 || amount < 1 || item_data->amount < amount || sd->state.vending )
 		return 1;
 
-	if( pc->cart_additem(sd,item_data,amount,LOG_TYPE_NONE) == 0 )
+	if( (flag = pc->cart_additem(sd,item_data,amount,LOG_TYPE_NONE)) == 0 )
 		return pc->delitem(sd,idx,amount,0,5,LOG_TYPE_NONE);
 
-	return 1;
+	return flag;
 }
 
 /*==========================================
@@ -4569,11 +4570,11 @@ int pc_getitemfromcart(struct map_session_data *sd,int idx,int amount)
 
 	if(item_data->nameid==0 || amount < 1 || item_data->amount<amount || sd->state.vending )
 		return 1;
+	
 	if((flag = pc->additem(sd,item_data,amount,LOG_TYPE_NONE)) == 0)
 		return pc->cart_delitem(sd,idx,amount,0,LOG_TYPE_NONE);
 
-	clif->additem(sd,0,0,flag);
-	return 1;
+	return flag;
 }
 
 /*==========================================
