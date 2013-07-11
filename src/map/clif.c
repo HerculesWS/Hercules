@@ -11861,7 +11861,7 @@ void clif_parse_ResetChar(int fd, struct map_session_data *sd) {
 	if( RFIFOW(fd,2) )
 		sprintf(cmd,"%cskreset",atcommand->at_symbol);
 	else
-		sprintf(cmd,"%streset",atcommand->at_symbol);
+		sprintf(cmd,"%cstreset",atcommand->at_symbol);
 
 	atcommand->parse(fd, sd, cmd, 1);
 }
