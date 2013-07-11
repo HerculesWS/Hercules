@@ -120,15 +120,12 @@ void irc_parse_source(char *source, char *nick, char *ident, char *host) {
 	
 	for(i = 0; i < len; i++) {
 		if( stage == 0 && source[i] == '!' ) {
-			memcpy(nick, &source[0], min(i,IRC_NICK_LENGTH));
-			nick[i] = '\0';
+			safestrncpy(nick, &source[0], min(i + 1, IRC_NICK_LENGTH));
 			pos = i+1;
 			stage = 1;
 		} else if( stage == 1 && source[i] == '@' ) {
-			memcpy(ident, &source[pos], min(i - pos,IRC_IDENT_LENGTH));
-			ident[i-pos] = '\0';
-			memcpy(host, &source[i+1], min(len - i,IRC_HOST_LENGTH));
-			host[len] = '\0';
+			safestrncpy(ident, &source[pos], min(i - pos + 1, IRC_IDENT_LENGTH));
+			safestrncpy(host, &source[i+1], min(len - i, IRC_HOST_LENGTH));
 			break;
 		}
 	}
