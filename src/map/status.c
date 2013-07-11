@@ -4045,6 +4045,10 @@ void status_calc_bl_(struct block_list* bl, enum scb_flag flag, bool first)
 			clif->updatestatus(sd,SP_HP);
 		if(b_status.sp != status->sp)
 			clif->updatestatus(sd,SP_SP);
+#ifdef RENEWAL
+		if(b_status.equip_atk != status->equip_atk)
+			clif->updatestatus(sd,SP_ATK2);
+#endif
 	} else if( bl->type == BL_HOM ) {
 		TBL_HOM* hd = BL_CAST(BL_HOM, bl);
 		if( hd->master && memcmp(&b_status, status, sizeof(struct status_data)) != 0 )
