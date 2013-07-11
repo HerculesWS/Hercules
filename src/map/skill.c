@@ -16969,7 +16969,6 @@ int skill_blockpc_end(int tid, unsigned int tick, int id, intptr_t data) {
 	if (data <= 0 || data >= MAX_SKILL)
 		return 0;
 	if (!sd) return 0;
-	if (sd->blockskill[data] != (0x1|(tid&0xFE))) return 0;
 
 	if( ( cd = idb_get(skill->cd_db,sd->status.char_id) ) ) {
 		int i;
@@ -17002,6 +17001,8 @@ int skill_blockpc_end(int tid, unsigned int tick, int id, intptr_t data) {
 			}
 		}
 	}
+	
+	if (sd->blockskill[data] != (0x1|(tid&0xFE))) return 0;
 
 	sd->blockskill[data] = 0;
 	return 1;
