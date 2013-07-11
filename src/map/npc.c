@@ -74,6 +74,7 @@ int npc_get_new_npc_id(void) {
 }
 
 static DBMap* ev_db; // const char* event_name -> struct event_data*
+static DBMap* ev_label_db; // const char* label_name (without leading "::") -> struct linkdb_node*   (key: struct npc_data*; data: struct event_data*)
 static DBMap* npcname_db; // const char* npc_name -> struct npc_data*
 
 struct event_data {
@@ -323,6 +324,7 @@ static int npc_event_export(struct npc_data *nd, int i)
 	int pos = nd->u.scr.label_list[i].pos;
 	if ((lname[0] == 'O' || lname[0] == 'o') && (lname[1] == 'N' || lname[1] == 'n')) {
 		struct event_data *ev;
+		struct linkdb_node *label_linkdb = NULL;
 		char buf[EVENT_NAME_LENGTH];
 		snprintf(buf, ARRAYLENGTH(buf), "%s::%s", nd->exname, lname);
 		// generate the data and insert it
@@ -331,6 +333,9 @@ static int npc_event_export(struct npc_data *nd, int i)
 		ev->pos = pos;
 		if (strdb_put(ev_db, buf, ev)) // There was already another event of the same name?
 			return 1;
+		label_linkdb = strdb_get(ev_label_db, lname);
+		linkdb_insert(&label_linkdb, nd, ev); // it changes head to the new node so...
+		strdb_put(ev_label_db, lname, label_linkdb); // ...we need to update db to point to new head
 	}
 	return 0;
 }
@@ -340,66 +345,58 @@ int npc_event_sub(struct map_session_data* sd, struct event_data* ev, const char
 /**
  * Exec name (NPC events) on player or global
  * Do on all NPC when called with foreach
- * @see DBApply
  */
-int npc_event_doall_sub(DBKey key, DBData *data, va_list ap)
+void npc_event_doall_sub(void *key, void *data, va_list ap)
 {
-	const char* p = key.str;
-	struct event_data* ev;
+	struct event_data* ev = data;
 	int* c;
 	const char* name;
 	int rid;
 
-	nullpo_ret(ev = DB->data2ptr(data));
-	nullpo_ret(c = va_arg(ap, int *));
-	nullpo_ret(name = va_arg(ap, const char *));
+	nullpo_retv(c = va_arg(ap, int*));
+	nullpo_retv(name = va_arg(ap, const char*));
 	rid = va_arg(ap, int);
 
-	p = strchr(p, ':'); // match only the event name
-	if( p && strcmpi(name, p) == 0 /* && !ev->nd->src_id */ ) // Do not run on duplicates. [Paradox924X]
+	if (ev /* && !ev->nd->src_id */) // Do not run on duplicates. [Paradox924X]
 	{
-		if(rid) // a player may only have 1 script running at the same time
-			npc_event_sub(iMap->id2sd(rid),ev,key.str);
-		else
-			run_script(ev->nd->u.scr.script,ev->pos,rid,ev->nd->bl.id);
+		if(rid) { // a player may only have 1 script running at the same time
+			char buf[EVENT_NAME_LENGTH];
+			snprintf(buf, ARRAYLENGTH(buf), "%s::%s", ev->nd->exname, name);
+			npc_event_sub(iMap->id2sd(rid), ev, buf);
+		}
+		else {
+			run_script(ev->nd->u.scr.script, ev->pos, rid, ev->nd->bl.id);
+		}
 		(*c)++;
 	}
-
-	return 0;
-}
-
-/**
- * @see DBApply
- */
-static int npc_event_do_sub(DBKey key, DBData *data, va_list ap)
-{
-	const char* p = key.str;
-	struct event_data* ev;
-	int* c;
-	const char* name;
-
-	nullpo_ret(ev = DB->data2ptr(data));
-	nullpo_ret(c = va_arg(ap, int *));
-	nullpo_ret(name = va_arg(ap, const char *));
-
-	if( p && strcmpi(name, p) == 0 ) {
-		run_script(ev->nd->u.scr.script,ev->pos,0,ev->nd->bl.id);
-		(*c)++;
-	}
-
-	return 0;
 }
 
 // runs the specified event (supports both single-npc and global events)
 int npc_event_do(const char* name)
 {
+	if( name[0] == ':' && name[1] == ':' ) {
+		return npc_event_doall(name+2); // skip leading "::"
+	}
+	else {
+		struct event_data *ev = strdb_get(ev_db, name);
+		if (ev) {
+			run_script(ev->nd->u.scr.script, ev->pos, 0, ev->nd->bl.id);
+			return 1;
+		}
+	}
+	return 0;
+}
+
+// runs the specified event, with a RID attached (global only)
+int npc_event_doall_id(const char* name, int rid)
+{
 	int c = 0;
+	struct linkdb_node *label_linkdb = strdb_get(ev_label_db, name);
 
-	if( name[0] == ':' && name[1] == ':' )
-		ev_db->foreach(ev_db,npc_event_doall_sub,&c,name,0);
-	else
-		ev_db->foreach(ev_db,npc_event_do_sub,&c,name);
+	if (label_linkdb == NULL)
+		return 0;
 
+	linkdb_foreach(&label_linkdb, npc_event_doall_sub, &c, name, rid);
 	return c;
 }
 
@@ -407,16 +404,6 @@ int npc_event_do(const char* name)
 int npc_event_doall(const char* name)
 {
 	return npc_event_doall_id(name, 0);
-}
-
-// runs the specified event, with a RID attached (global only)
-int npc_event_doall_id(const char* name, int rid)
-{
-	int c = 0;
-	char buf[64];
-	safesnprintf(buf, sizeof(buf), "::%s", name);
-	ev_db->foreach(ev_db,npc_event_doall_sub,&c,buf,rid);
-	return c;
 }
 
 /*==========================================
@@ -799,7 +786,7 @@ int npc_event_sub(struct map_session_data* sd, struct event_data* ev, const char
 		ARR_FIND( 0, MAX_EVENTQUEUE, i, sd->eventqueue[i][0] == '\0' );
 		if( i < MAX_EVENTQUEUE )
 		{
-			safestrncpy(sd->eventqueue[i],eventname,50); //Event enqueued.
+			safestrncpy(sd->eventqueue[i],eventname,EVENT_NAME_LENGTH); //Event enqueued.
 			return 0;
 		}
 
@@ -1778,6 +1765,19 @@ static int npc_unload_ev(DBKey key, DBData *data, va_list ap)
 	return 0;
 }
 
+/**
+ * @see DBApply
+ */
+static int npc_unload_ev_label(DBKey key, DBData *data, va_list ap)
+{
+	struct linkdb_node* label_linkdb = DB->data2ptr(data);
+	struct npc_data* nd = va_arg(ap, struct npc_data *);
+
+	linkdb_erase(&label_linkdb, nd);
+
+	return 0;
+}
+
 //Chk if npc matches src_id, then unload.
 //Sub-function used to find duplicates.
 static int npc_unload_dup_sub(struct npc_data* nd, va_list args)
@@ -1831,8 +1831,10 @@ int npc_unload(struct npc_data* nd, bool single) {
 		struct s_mapiterator* iter;
 		struct block_list* bl;
 
-		if( single )
+		if( single ) {
 			ev_db->foreach(ev_db,npc_unload_ev,nd->exname); //Clean up all events related
+			ev_label_db->foreach(ev_label_db,npc_unload_ev_label,nd);
+		}
 
 		iter = mapit_geteachpc();
 		for( bl = (struct block_list*)mapit->first(iter); mapit->exists(iter); bl = (struct block_list*)mapit->next(iter) ) {
@@ -3732,17 +3734,25 @@ void npc_read_event_script(void)
 	}
 }
 
-void npc_clear_pathlist(void) {
-	struct npc_path_data *npd = NULL;
-	DBIterator *path_list = db_iterator(npc_path_db);
+/**
+ * @see DBApply
+ */
+static int npc_path_db_clear_sub(DBKey key, DBData *data, va_list args)
+{
+	struct npc_path_data *npd = DB->data2ptr(data);
+	if (npd->path)
+		aFree(npd->path);
+	return 0;
+}
 
-	/* free all npc_path_data filepaths */
-	for( npd = dbi_first(path_list); dbi_exists(path_list); npd = dbi_next(path_list) ) {
-		if( npd->path )
-			aFree(npd->path);
-	}
-
-	dbi_destroy(path_list);
+/**
+ * @see DBApply
+ */
+static int ev_label_db_clear_sub(DBKey key, DBData *data, va_list args)
+{
+	struct linkdb_node *label_linkdb = DB->data2ptr(data);
+	linkdb_final(&label_linkdb); // linked data (struct event_data*) is freed when clearing ev_db
+	return 0;
 }
 
 //Clear then reload npcs files
@@ -3756,12 +3766,11 @@ int npc_reload(void) {
 	/* clear guild flag cache */
 	guild->flags_clear();
 
-	npc_clear_pathlist();
-
-	db_clear(npc_path_db);
+	npc_path_db->clear(npc_path_db, npc_path_db_clear_sub);
 
 	db_clear(npcname_db);
 	db_clear(ev_db);
+	ev_label_db->clear(ev_label_db, ev_label_db_clear_sub);
 
 	npc_last_npd = NULL;
 	npc_last_path = NULL;
@@ -3876,16 +3885,17 @@ bool npc_unloadfile( const char* path ) {
 void do_clear_npc(void) {
 	db_clear(npcname_db);
 	db_clear(ev_db);
+	ev_label_db->clear(ev_label_db, ev_label_db_clear_sub);
 }
 
 /*==========================================
  * Destructor
  *------------------------------------------*/
 int do_final_npc(void) {
-	npc_clear_pathlist();
-	ev_db->destroy(ev_db, NULL);
-	npcname_db->destroy(npcname_db, NULL);
-	npc_path_db->destroy(npc_path_db, NULL);
+	db_destroy(ev_db);
+	ev_label_db->destroy(ev_label_db, ev_label_db_clear_sub);
+	db_destroy(npcname_db);
+	npc_path_db->destroy(npc_path_db, npc_path_db_clear_sub);
 	ers_destroy(timer_event_ers);
 	npc_clearsrcfile();
 
@@ -3952,9 +3962,10 @@ int do_init_npc(void)
 	for( i = MAX_NPC_CLASS2_START; i < MAX_NPC_CLASS2_END; i++ )
 		npc_viewdb2[i - MAX_NPC_CLASS2_START].class_ = i;
 
-	ev_db = strdb_alloc((DBOptions)(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA),2*NAME_LENGTH+2+1);
-	npcname_db = strdb_alloc(DB_OPT_BASE,NAME_LENGTH);
-	npc_path_db = strdb_alloc(DB_OPT_BASE|DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA,0);
+	ev_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, EVENT_NAME_LENGTH);
+	ev_label_db = stridb_alloc(DB_OPT_DUP_KEY, NAME_LENGTH); // data is linkdb and is fully released in ev_label_db_clear_sub
+	npcname_db = strdb_alloc(DB_OPT_BASE, NAME_LENGTH);
+	npc_path_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, 0);
 
 	timer_event_ers = ers_new(sizeof(struct timer_event_data),"clif.c::timer_event_ers",ERS_OPT_NONE);
 
