@@ -2091,8 +2091,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val)
 		case SP_BASE_ATK:
 			if(sd->state.lr_flag != 2) {
 #ifdef RENEWAL
-				sd->bonus.eatk += val;
-				clif->updatestatus(sd,SP_ATK2);
+				status->equip_atk += val;
 #else
 				bonus = status->batk + val;
 				status->batk = cap_value(bonus, 0, USHRT_MAX);

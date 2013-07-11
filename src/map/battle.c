@@ -444,8 +444,8 @@ int battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, uin
 		if( flag&2 && sd->bonus.arrow_atk )
 			damage += sd->bonus.arrow_atk;
 
-		if( sd->bonus.eatk > 0 )
-			eatk = sd->bonus.eatk;
+		if( sd->battle_status.equip_atk != 0 )
+			eatk = sd->base_status.equip_atk;
 	}
 
 	if( sc && sc->count ){

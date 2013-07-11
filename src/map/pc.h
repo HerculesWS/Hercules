@@ -327,7 +327,6 @@ struct map_session_data {
 		int fixcastrate,varcastrate;
 		int add_fixcast,add_varcast;
 		int ematk; // matk bonus from equipment
-		int eatk; // atk bonus from equipment
 	} bonus;
 	// zeroed vars end here.
 	int castrate,delayrate,hprate,sprate,dsprate;
@@ -655,7 +654,7 @@ enum equip_pos {
 // clientside display macros (values to the left/right of the "+")
 #ifdef RENEWAL
 	#define pc_leftside_atk(sd) ((sd)->battle_status.batk)
-	#define pc_rightside_atk(sd) ((sd)->battle_status.rhw.atk + (sd)->battle_status.lhw.atk + (sd)->battle_status.rhw.atk2 + (sd)->battle_status.lhw.atk2 + (sd)->bonus.eatk )
+	#define pc_rightside_atk(sd) ((sd)->battle_status.rhw.atk + (sd)->battle_status.lhw.atk + (sd)->battle_status.rhw.atk2 + (sd)->battle_status.lhw.atk2 + (sd)->battle_status.equip_atk )
 	#define pc_leftside_def(sd) ((sd)->battle_status.def2)
 	#define pc_rightside_def(sd) ((sd)->battle_status.def)
 	#define pc_leftside_mdef(sd) ((sd)->battle_status.mdef2)
