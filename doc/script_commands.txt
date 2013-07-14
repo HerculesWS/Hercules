@@ -6417,13 +6417,10 @@ may be a number or a string depending on the mapflag in question.
 
 ---------------------------------------
 
-*removemapflag "<map name>",<flag>{,<zone>};
+*removemapflag "<map name>",<flag>;
 
 This command removes a mapflag from a specified map. 
 See 'setmapflag' for a list of mapflags.
-
-The zone optional parameter is used to remove the zone from restricted 
-mapflags.
 
 ---------------------------------------
 

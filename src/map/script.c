@@ -10486,13 +10486,10 @@ BUILDIN(removemapflag)
 {
 	int16 m,i;
 	const char *str;
-	//int val=0;//warning: variable ‘val’ set but not used" - deprecated?
 	
 	str=script_getstr(st,2);
 	i=script_getnum(st,3);
-	//if(script_hasdata(st,4)){
-	//	val=script_getnum(st,4);
-	//}
+
 	m = iMap->mapname2mapid(str);
 	if(m >= 0) {
 		switch(i) {
@@ -17768,7 +17765,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(setmapflagnosave,"ssii"),
 		BUILDIN_DEF(getmapflag,"si"),
 		BUILDIN_DEF(setmapflag,"si?"),
-		BUILDIN_DEF(removemapflag,"si?"),
+		BUILDIN_DEF(removemapflag,"si"),
 		BUILDIN_DEF(pvpon,"s"),
 		BUILDIN_DEF(pvpoff,"s"),
 		BUILDIN_DEF(gvgon,"s"),
