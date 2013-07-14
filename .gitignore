@@ -15,6 +15,7 @@
 /*.suo
 /*.exp
 /*.lib
+/autom4te.cache/
 /start-log.txt
 /char-server
 /config.log
