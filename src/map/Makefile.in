@@ -59,7 +59,7 @@ sql: $(SQL_DEPENDS)
 
 clean:
 	@echo "	CLEAN	map"
-	@rm -rf *.o obj_txt obj_sql ../../map-server@EXEEXT@ ../../map-server@EXEEXT@
+	@rm -rf *.o obj_txt obj_sql ../../map-server@EXEEXT@
 
 help:
 ifeq ($(HAVE_MYSQL),yes)
@@ -107,8 +107,8 @@ obj_sql/%.o: %.c $(MAP_H) $(COMMON_H)  $(MT19937AR_H) $(LIBCONFIG_H)
 ../common/obj_sql/common_sql.a:
 	@$(MAKE) -C ../common sql
         
-MT19937AR_OBJ:
+$(MT19937AR_OBJ):
 	@$(MAKE) -C ../../3rdparty/mt19937ar
 
-LIBCONFIG_OBJ:
+$(LIBCONFIG_OBJ):
 	@$(MAKE) -C ../../3rdparty/libconfig

@@ -35,7 +35,7 @@ sql: obj_sql login-server
 
 clean:
 	@echo "	CLEAN	login"
-	@rm -rf *.o obj_sql ../../login-server@EXEEXT@ ../../login-server@EXEEXT@
+	@rm -rf *.o obj_sql ../../login-server@EXEEXT@
 
 help:
 	@echo "possible targets are 'sql' 'all' 'clean' 'help'"
@@ -76,8 +76,8 @@ obj_sql/%.o: %.c $(LOGIN_H) $(COMMON_H) $(MT19937AR_H) $(LIBCONFIG_H)
 ../common/obj_sql/common_sql.a:
 	@$(MAKE) -C ../common sql
 
-MT19937AR_OBJ:
+$(MT19937AR_OBJ):
 	@$(MAKE) -C ../../3rdparty/mt19937ar
 
-LIBCONFIG_OBJ:
+$(LIBCONFIG_OBJ):
 	@$(MAKE) -C ../../3rdparty/libconfig
