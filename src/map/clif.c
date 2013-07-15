@@ -10494,9 +10494,9 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 	}
 
 	// if player ignores everyone
-	if (dstsd->state.ignoreAll) {
+	if (dstsd->state.ignoreAll && pc->get_group_level(sd) <= pc->get_group_level(dstsd)) {
 		if (dstsd->sc.option & OPTION_INVISIBLE && pc->get_group_level(sd) < pc->get_group_level(dstsd))
-			clif->wis_end(fd, 1); // 1: target character is not loged in
+			clif->wis_end(fd, 1); // 1: target character is not logged in
 		else
 			clif->wis_end(fd, 3); // 3: everyone ignored by target
 		return;
