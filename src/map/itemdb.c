@@ -2187,13 +2187,13 @@ void itemdb_defaults(void) {
 	itemdb->write_cached_packages = itemdb_write_cached_packages;
 	itemdb->read_cached_packages = itemdb_read_cached_packages;
 	/* */
+	itemdb->name2id = itemdb_name2id;
 	itemdb->search_name = itemdb_searchname;
 	itemdb->search_name_array = itemdb_searchname_array;
 	itemdb->load = itemdb_load;
 	itemdb->search = itemdb_search;
 	itemdb->parse_dbrow = itemdb_parse_dbrow;
 	itemdb->exists = itemdb_exists;//incomplete
-	itemdb->name2id = itemdb_name2id;
 	itemdb->in_group = itemdb_in_group;
 	itemdb->group_item = itemdb_searchrandomid;
 	itemdb->chain_item = itemdb_chain_item;

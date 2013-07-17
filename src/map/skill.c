@@ -18140,6 +18140,7 @@ void skill_defaults(void) {
 	skill->get_mhp = skill_get_mhp;
 	skill->get_sp = skill_get_sp;
 	skill->get_state = skill_get_state;
+	skill->get_spiritball = skill_get_spiritball;
 	skill->get_zeny = skill_get_zeny;
 	skill->get_num = skill_get_num;
 	skill->get_cast = skill_get_cast;
@@ -18162,7 +18163,6 @@ void skill_defaults(void) {
 	skill->get_unit_target = skill_get_unit_target;
 	skill->get_unit_interval = skill_get_unit_interval;
 	skill->get_unit_bl_target = skill_get_unit_bl_target;
-	skill->get_spiritball = skill_get_spiritball;
 	skill->get_unit_layout_type = skill_get_unit_layout_type;
 	skill->get_unit_range = skill_get_unit_range;
 	skill->get_cooldown = skill_get_cooldown;
@@ -18202,14 +18202,13 @@ void skill_defaults(void) {
 	skill->delay_fix = skill_delay_fix;
 	skill->check_condition_castbegin = skill_check_condition_castbegin;
 	skill->check_condition_castend = skill_check_condition_castend;
-	skill->check_condition_char_sub = skill_check_condition_char_sub;
+	skill->consume_requirement = skill_consume_requirement;
 	skill->get_requirement = skill_get_requirement;
 	skill->check_pc_partner = skill_check_pc_partner;
-	skill->consume_requirement = skill_consume_requirement;
 	skill->unit_move = skill_unit_move;
-	skill->unit_move_unit_group = skill_unit_move_unit_group;
 	skill->unit_onleft = skill_unit_onleft;
 	skill->unit_onout = skill_unit_onout;
+	skill->unit_move_unit_group = skill_unit_move_unit_group;
 	skill->guildaura_sub = skill_guildaura_sub;
 	skill->sit = skill_sit;
 	skill->brandishspear = skill_brandishspear;

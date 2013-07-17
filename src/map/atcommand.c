@@ -10260,9 +10260,9 @@ void atcommand_defaults(void) {
 	atcommand->final = do_final_atcommand;
 	
 	atcommand->parse = is_atcommand;
+	atcommand->create = atcommand_hp_add;
 	atcommand->can_use = atcommand_can_use;
 	atcommand->can_use2 = atcommand_can_use2;
-	atcommand->create = atcommand_hp_add;
 	atcommand->load_groups = atcommand_db_load_groups;
 	atcommand->exists = atcommand_exists;
 	atcommand->msg_read = msg_config_read;

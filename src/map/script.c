@@ -18139,8 +18139,8 @@ void script_defaults(void) {
 	script->hqs = script->hqis = 0;
 	memset(&script->hqe, 0, sizeof(script->hqe));
 	
-	script->buildin_count = 0;
 	script->buildin = NULL;
+	script->buildin_count = 0;
 	
 	script->str_data = NULL;
 	script->str_data_size = 0;
@@ -18176,6 +18176,7 @@ void script_defaults(void) {
 	script->set_constant = script_set_constant;
 	script->set_constant2 = script_set_constant2;
 	script->get_constant = 	script_get_constant;
+	script->label_add = script_label_add;
 	
 	script->queue = script_hqueue_get;
 	script->queue_add = script_hqueue_add;
@@ -18183,6 +18184,4 @@ void script_defaults(void) {
 	script->queue_remove = script_hqueue_remove;
 	script->queue_create = script_hqueue_create;
 	script->queue_clear = script_hqueue_clear;
-	
-	script->label_add = script_label_add;
 }

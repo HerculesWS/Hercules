@@ -513,8 +513,6 @@ void log_defaults(void) {
 	logs->atcommand = log_atcommand;
 	logs->branch = log_branch;
 	logs->mvpdrop = log_mvpdrop;
-	logs->config_read = log_config_read;
-	logs->config_done = log_config_complete;
 	
 	/* will be modified in a few seconds once loading is complete. */
 	logs->pick_sub = log_pick_sub_txt;
@@ -524,5 +522,8 @@ void log_defaults(void) {
 	logs->atcommand_sub = log_atcommand_sub_txt;
 	logs->branch_sub = log_branch_sub_txt;
 	logs->mvpdrop_sub = log_mvpdrop_sub_txt;
+
+	logs->config_read = log_config_read;
+	logs->config_done = log_config_complete;
 
 }

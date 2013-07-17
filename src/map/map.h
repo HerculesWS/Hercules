@@ -902,7 +902,7 @@ struct map_interface {
 	int (*addmobtolist) (unsigned short m, struct spawn_data *spawn); // [Wizputer]
 	void (*spawnmobs) (int16 m); // [Wizputer]
 	void (*removemobs) (int16 m); // [Wizputer]
-	void (*do_reconnect_map) (void); //Invoked on map-char reconnection [Skotlex] Note used but still keeping it, just in case
+	//void (*do_reconnect_map) (void); //Invoked on map-char reconnection [Skotlex] Note used but still keeping it, just in case
 	void (*addmap2db) (struct map_data *m);
 	void (*removemapdb) (struct map_data *m);
 	void (*clean) (int i);

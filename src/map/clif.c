@@ -17934,6 +17934,8 @@ void clif_defaults(void) {
 	clif->item_sub = clif_item_sub;
 	clif->getareachar_item = clif_getareachar_item;
 	clif->cart_additem_ack = clif_cart_additem_ack;
+	clif->cashshop_load = clif_cashshop_db;
+	clif->package_announce = clif_package_item_announce;
 	/* unit-related */
 	clif->clearunit_single = clif_clearunit_single;
 	clif->clearunit_area = clif_clearunit_area;
@@ -18334,19 +18336,6 @@ void clif_defaults(void) {
 	/* elemental-related */ 
 	clif->elemental_info = clif_elemental_info;
 	clif->elemental_updatestatus = clif_elemental_updatestatus;
-	/* Hercules Channel System */
-	clif->chsys_create = clif_hercules_chsys_create;
-	clif->chsys_msg = clif_hercules_chsys_msg;
-	clif->chsys_msg2 = clif_hercules_chsys_msg2;
-	clif->chsys_send = clif_hercules_chsys_send;
-	clif->chsys_join = clif_hercules_chsys_join;
-	clif->chsys_left = clif_hercules_chsys_left;
-	clif->chsys_delete = clif_hercules_chsys_delete;
-	clif->chsys_mjoin = clif_hercules_chsys_mjoin;
-	clif->chsys_quit = clif_hercules_chsys_quit;
-	clif->chsys_quitg = clif_hercules_chsys_quitg;
-	clif->chsys_gjoin = clif_hercules_chsys_gjoin;
-	clif->chsys_gleave = clif_hercules_chsys_gleave;
 	/* bgqueue */
 	clif->bgqueue_ack = clif_bgqueue_ack;
 	clif->bgqueue_notice_delete = clif_bgqueue_notice_delete;
@@ -18361,10 +18350,21 @@ void clif_defaults(void) {
 	clif->notify_time = clif_notify_time;
 	clif->user_count = clif_user_count;
 	clif->noask_sub = clif_noask_sub;
-	clif->cashshop_load = clif_cashshop_db;
-	clif->package_announce = clif_package_item_announce;
 	clif->bc_ready = clif_bc_ready;
 	clif->undisguise_timer = clif_undisguise_timer;
+	/* Hercules Channel System */
+	clif->chsys_create = clif_hercules_chsys_create;
+	clif->chsys_msg = clif_hercules_chsys_msg;
+	clif->chsys_msg2 = clif_hercules_chsys_msg2;
+	clif->chsys_send = clif_hercules_chsys_send;
+	clif->chsys_join = clif_hercules_chsys_join;
+	clif->chsys_left = clif_hercules_chsys_left;
+	clif->chsys_delete = clif_hercules_chsys_delete;
+	clif->chsys_mjoin = clif_hercules_chsys_mjoin;
+	clif->chsys_quit = clif_hercules_chsys_quit;
+	clif->chsys_quitg = clif_hercules_chsys_quitg;
+	clif->chsys_gjoin = clif_hercules_chsys_gjoin;
+	clif->chsys_gleave = clif_hercules_chsys_gleave;
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/ 
@@ -18402,6 +18402,7 @@ void clif_defaults(void) {
 	clif->pKickFromChat = clif_parse_KickFromChat;
 	clif->pChatLeave = clif_parse_ChatLeave;
 	clif->pTradeRequest = clif_parse_TradeRequest;
+	clif->chann_config_read = read_channels_config;
 	clif->pTradeAck = clif_parse_TradeAck;
 	clif->pTradeAddItem = clif_parse_TradeAddItem;
 	clif->pTradeOk = clif_parse_TradeOk;
@@ -18456,7 +18457,6 @@ void clif_defaults(void) {
 	clif->pLeaveParty = clif_parse_LeaveParty;
 	clif->pRemovePartyMember = clif_parse_RemovePartyMember;
 	clif->pPartyChangeOption = clif_parse_PartyChangeOption;
-	clif->chann_config_read = read_channels_config;
 	clif->pPartyMessage = clif_parse_PartyMessage;
 	clif->pPartyChangeLeader = clif_parse_PartyChangeLeader;
 	clif->pPartyBookingRegisterReq = clif_parse_PartyBookingRegisterReq;
@@ -18561,17 +18561,19 @@ void clif_defaults(void) {
 	clif->pDebug = clif_parse_debug;
 	clif->pSkillSelectMenu = clif_parse_SkillSelectMenu;
 	clif->pMoveItem = clif_parse_MoveItem;
+	/* dull */
+	clif->pDull = clif_parse_dull;
+	/* BGQueue */
+	clif->pBGQueueRegister = clif_parse_bgqueue_register;
+	clif->pBGQueueCheckState = clif_parse_bgqueue_checkstate;
+	clif->pBGQueueRevokeReq = clif_parse_bgqueue_revoke_req;
+	clif->pBGQueueBattleBeginAck = clif_parse_bgqueue_battlebegin_ack;
 	/* RagExe Cash Shop [Ind/Hercules] */
 	clif->pCashShopOpen = clif_parse_CashShopOpen;
 	clif->pCashShopClose = clif_parse_CashShopClose;
 	clif->pCashShopReqTab = clif_parse_CashShopReqTab;
 	clif->pCashShopSchedule = clif_parse_CashShopSchedule;
 	clif->pCashShopBuy = clif_parse_CashShopBuy;
-	/* BGQueue */
-	clif->pBGQueueRegister = clif_parse_bgqueue_register;
-	clif->pBGQueueCheckState = clif_parse_bgqueue_checkstate;
-	clif->pBGQueueRevokeReq = clif_parse_bgqueue_revoke_req;
-	clif->pBGQueueBattleBeginAck = clif_parse_bgqueue_battlebegin_ack;
 	/*  */
 	clif->pPartyTick = clif_parse_PartyTick;
 	clif->pGuildInvite2 = clif_parse_GuildInvite2;
@@ -18583,6 +18585,4 @@ void clif_defaults(void) {
 	clif->pPartyBookingRefuseVolunteer = clif_parse_PartyBookingRefuseVolunteer;
 	clif->pPartyBookingCancelVolunteer = clif_parse_PartyBookingCancelVolunteer;
 #endif
-	/* dull */
-	clif->pDull = clif_parse_dull;
 }

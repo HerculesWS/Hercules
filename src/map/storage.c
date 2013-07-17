@@ -745,8 +745,8 @@ void storage_defaults(void) {
 	storage->delitem = storage_delitem;
 	storage->open = storage_storageopen;
 	storage->add = storage_storageadd;
-	storage->additem = storage_additem;
 	storage->get = storage_storageget;
+	storage->additem = storage_additem;
 	storage->addfromcart = storage_storageaddfromcart;
 	storage->gettocart = storage_storagegettocart;
 	storage->close = storage_storageclose;

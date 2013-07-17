@@ -68,7 +68,7 @@ struct chrif_interface {
 	int (*send_users_tochar) (void);
 	int (*char_online) (struct map_session_data *sd);
 	int (*changesex) (struct map_session_data *sd);
-	int (*chardisconnect) (struct map_session_data *sd);
+	//int (*chardisconnect) (struct map_session_data *sd); // FIXME: Commented out in clif.c, function does not exist
 	int (*divorce) (int partner_id1, int partner_id2);
 	
 	int (*removefriend) (int char_id, int friend_id);
