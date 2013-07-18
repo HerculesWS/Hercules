@@ -1942,9 +1942,6 @@ static void itemdb_read(void) {
 	sv->readdb(iMap->db_path, DBPATH"item_buyingstore.txt",   ',', 1, 1, -1, &itemdb_read_buyingstore);
 	sv->readdb(iMap->db_path, "item_nouse.txt",		 ',', 3, 3, -1, &itemdb_read_nouse);
 	
-	
-	itemdb->name_constants();
-	
 	itemdb_uid_load();
 }
 
@@ -2111,6 +2108,16 @@ void itemdb_name_constants(void) {
 
 	dbi_destroy(iter);	
 }
+/* used to clear conflicts during script reload */
+void itemdb_force_name_constants(void) {
+	DBIterator *iter = db_iterator(itemdb->names);
+	struct item_data *data;
+	
+	for( data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter) )
+		script->set_constant_force(data->name,data->nameid,0);
+	
+	dbi_destroy(iter);
+}
 void do_final_itemdb(void) {
 	int i;
 
@@ -2168,6 +2175,7 @@ void itemdb_defaults(void) {
 	itemdb->final = do_final_itemdb;
 	itemdb->reload = itemdb_reload;//incomplete
 	itemdb->name_constants = itemdb_name_constants;
+	itemdb->force_name_constants = itemdb_force_name_constants;
 	/* */
 	itemdb->groups = NULL;
 	itemdb->group_count = 0;

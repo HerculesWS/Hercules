@@ -3844,7 +3844,9 @@ int npc_reload(void) {
 		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
 		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
 		npc_id - npc_new_min, npc_warp, npc_shop, npc_script, npc_mob, npc_cache_mob, npc_delay_mob);
-		
+	
+	itemdb->name_constants();
+
 	for(i = 0; i < instance->instances; i++) {
 		instance->destroy(i);
 	}
@@ -3999,6 +4001,8 @@ int do_init_npc(void)
 		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
 		npc_id - START_NPC_NUM, npc_warp, npc_shop, npc_script, npc_mob, npc_cache_mob, npc_delay_mob);
 
+	itemdb->name_constants();
+	
 	iMap->zone_init();
 	
 	npc->motd = npc_name2id("HerculesMOTD"); /* [Ind/Hercules] */

@@ -280,6 +280,7 @@ struct itemdb_interface {
 	void (*final) (void);
 	void (*reload) (void);
 	void (*name_constants) (void);
+	void (*force_name_constants) (void);
 	/* */
 	struct item_group *groups;
 	unsigned short group_count;

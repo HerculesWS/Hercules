@@ -1964,10 +1964,15 @@ void script_set_constant(const char* name, int value, bool isparameter) {
 		ShowError("script_set_constant: Invalid name for %s '%s' (already defined as %s).\n", isparameter ? "parameter" : "constant", name, script_op2name(script->str_data[n].type));
 	}
 }
-/* will override if necessary */
+/* adds data to a existent constant in the database, inserted normally via parse */
 void script_set_constant2(const char *name, int value, bool isparameter) {
 	int n = add_str(name);
-	
+
+	if( ( script->str_data[n].type == C_NAME || script->str_data[n].type == C_PARAM ) && ( script->str_data[n].val != 0 || script->str_data[n].backpatch != -1 ) ) { // existing parameter or constant
+		ShowNotice("Conflicting item/script var '%s', prioritising the script var\n",name);
+		return;
+	}
+
 	if( script->str_data[n].type != C_NOP ) {
 		script->str_data[n].func = NULL;
 		script->str_data[n].backpatch = -1;
@@ -1976,6 +1981,22 @@ void script_set_constant2(const char *name, int value, bool isparameter) {
 
 	script->str_data[n].type = isparameter ? C_PARAM : C_INT;
 	script->str_data[n].val  = value;
+
+}
+/* same as constant2 except it will override if necessary, used to clear conflicts during reload  */
+void script_set_constant_force(const char *name, int value, bool isparameter) {
+	int n = add_str(name);
+	
+	if( script->str_data[n].type == C_PARAM )
+		return;/* the one type we don't mess with, reload doesn't affect it. */
+		
+	if( script->str_data[n].type != C_NOP ) {
+		script->str_data[n].type = C_NOP;
+		script->str_data[n].val = 0;
+		script->str_data[n].func = NULL;
+		script->str_data[n].backpatch = -1;
+		script->str_data[n].label = -1;
+	}
 }
 /*==========================================
  * Reading constant databases
@@ -3869,6 +3890,9 @@ int script_reload() {
 	db_clear(script->st_db);
 	
 	mapreg_reload();
+	
+	itemdb->force_name_constants();
+	
 	return 0;
 }
 
@@ -18175,6 +18199,7 @@ void script_defaults(void) {
 	script->pop_stack = pop_stack;
 	script->set_constant = script_set_constant;
 	script->set_constant2 = script_set_constant2;
+	script->set_constant_force = script_set_constant_force;
 	script->get_constant = 	script_get_constant;
 	script->label_add = script_label_add;
 	
