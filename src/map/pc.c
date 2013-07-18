@@ -6987,10 +6987,10 @@ void pc_revive(struct map_session_data *sd,unsigned int hp, unsigned int sp) {
 		pc->setinvincibletimer(sd, battle_config.pc_invincible_time);
 
 	if( sd->state.gmaster_flag ) {
-		guild->aura_refresh(sd,GD_LEADERSHIP,guild->checkskill(sd->state.gmaster_flag,GD_LEADERSHIP));
-		guild->aura_refresh(sd,GD_GLORYWOUNDS,guild->checkskill(sd->state.gmaster_flag,GD_GLORYWOUNDS));
-		guild->aura_refresh(sd,GD_SOULCOLD,guild->checkskill(sd->state.gmaster_flag,GD_SOULCOLD));
-		guild->aura_refresh(sd,GD_HAWKEYES,guild->checkskill(sd->state.gmaster_flag,GD_HAWKEYES));
+		guild->aura_refresh(sd,GD_LEADERSHIP,guild->checkskill(sd->guild,GD_LEADERSHIP));
+		guild->aura_refresh(sd,GD_GLORYWOUNDS,guild->checkskill(sd->guild,GD_GLORYWOUNDS));
+		guild->aura_refresh(sd,GD_SOULCOLD,guild->checkskill(sd->guild,GD_SOULCOLD));
+		guild->aura_refresh(sd,GD_HAWKEYES,guild->checkskill(sd->guild,GD_HAWKEYES));
 	}
 }
 // script
@@ -8933,12 +8933,12 @@ int pc_checkitem(struct map_session_data *sd)
 		}
 		
 		if (sd->state.gmaster_flag) {
-			struct guild_storage *guild_storage = gstorage->id2storage2(sd->state.gmaster_flag->guild_id);
+			struct guild_storage *guild_storage = gstorage->id2storage2(sd->guild->guild_id);
 			if (guild_storage) {
 				for( i = 0; i < MAX_GUILD_STORAGE; i++ ) {
 					id = guild_storage->items[i].nameid;
 					if( id && !itemdb_available(id) ) {
-						ShowWarning("Removed invalid/disabled item id %d from guild storage (amount=%d, char_id=%d, guild_id=%d).\n", id, guild_storage->items[i].amount, sd->status.char_id, sd->state.gmaster_flag->guild_id);
+						ShowWarning("Removed invalid/disabled item id %d from guild storage (amount=%d, char_id=%d, guild_id=%d).\n", id, guild_storage->items[i].amount, sd->status.char_id, sd->guild->guild_id);
 						gstorage->delitem(sd, guild_storage, i, guild_storage->items[i].amount);
 						gstorage->close(sd); // force closing
 					}

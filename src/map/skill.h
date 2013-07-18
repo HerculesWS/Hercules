@@ -1842,7 +1842,6 @@ struct skill_interface {
 	int (*unit_onleft) (uint16 skill_id, struct block_list *bl,unsigned int tick);
 	int (*unit_onout) (struct skill_unit *src, struct block_list *bl, unsigned int tick);
 	int (*unit_move_unit_group) ( struct skill_unit_group *group, int16 m,int16 dx,int16 dy);
-	int (*guildaura_sub) (struct map_session_data* sd, int id, int strvit, int agidex);
 	int (*sit) (struct map_session_data *sd, int type);
 	void (*brandishspear) (struct block_list* src, struct block_list* bl, uint16 skill_id, uint16 skill_lv, unsigned int tick, int flag);
 	void (*repairweapon) (struct map_session_data *sd, int idx);

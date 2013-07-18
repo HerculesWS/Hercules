@@ -2954,24 +2954,6 @@ int skill_check_unit_range2 (struct block_list *bl, int x, int y, uint16 skill_i
 		type, skill_id);
 }
 
-int skill_guildaura_sub (struct map_session_data* sd, int id, int strvit, int agidex)
-{
-	if(id == sd->bl.id && battle_config.guild_aura&16)
-		return 0;  // Do not affect guild leader
-
-	if (sd->sc.data[SC_GUILDAURA]) {
-		struct status_change_entry *sce = sd->sc.data[SC_GUILDAURA];
-		if( sce->val3 != strvit || sce->val4 != agidex ) {
-			sce->val3 = strvit;
-			sce->val4 = agidex;
-			status_calc_bl(&sd->bl, iStatus->sc2scb_flag(SC_GUILDAURA));
-		}
-		return 0;
-	}
-	sc_start4(&sd->bl, SC_GUILDAURA,100, 1, id, strvit, agidex, 1000);
-	return 1;
-}
-
 /*==========================================
  * Checks that you have the requirements for casting a skill for homunculus/mercenary.
  * Flag:
@@ -7521,7 +7503,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				int j = 0;
 				struct guild *g;
 				// i don't know if it actually summons in a circle, but oh well. ;P
-				g = sd?sd->state.gmaster_flag:guild->search(iStatus->get_guild_id(src));
+				g = sd ? sd->guild : guild->search(iStatus->get_guild_id(src));
 				if (!g)
 					break;
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
@@ -18209,7 +18191,6 @@ void skill_defaults(void) {
 	skill->unit_onleft = skill_unit_onleft;
 	skill->unit_onout = skill_unit_onout;
 	skill->unit_move_unit_group = skill_unit_move_unit_group;
-	skill->guildaura_sub = skill_guildaura_sub;
 	skill->sit = skill_sit;
 	skill->brandishspear = skill_brandishspear;
 	skill->repairweapon = skill_repairweapon;
