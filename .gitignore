@@ -1,5 +1,9 @@
 #Global
+.Apple*
 .DS_Store
+._*
+.clang_complete
+Thumbs.db
 
 # /
 /*.exe

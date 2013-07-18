@@ -28,6 +28,8 @@ else
 	PLUGIN_DEPENDS=no_plugins
 endif
 
+CC = @CC@
+export CC
 
 #####################################################################
 .PHONY: sql  \
