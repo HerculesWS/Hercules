@@ -1146,8 +1146,8 @@ bool homunculus_read_skill_db_sub(char* split[], int columns, int current) {
 	int j;
 	int minJobLevelPresent = 0;
 
-	if( columns == 14 )
-		minJobLevelPresent = 1;	// MinJobLvl has been added
+	if( columns == 15 )
+		minJobLevelPresent = 1;	// MinJobLvl has been added - FIXME: is this extra field even needed anymore?
 
 	// check for bounds [celest]
 	classid = atoi(split[0]) - HM_CLASS_BASE;
