@@ -1063,6 +1063,19 @@ command, use the script command in the following format:
 This will display 3 different lines while only consuming a single line in
 the relevant script file.
 
+If you're using a client from 2011-10-10aRagexe.exe onwards, you can also 
+use automatic navigation and open URLs in browser by using some HTML-like
+labels. For example:
+
+    mes "go to <NAVI>[Hat Maker]<INFO>izlude,131,148,</INFO></NAVI> to make hats";
+
+Will make the [Hat Maker] text clickable in the client and start a navigation 
+to that point.
+
+    mes "You can <URL>Google<INFO>http://www.google.com/</INFO></URL> anything";
+
+Clicking Google will open the browser and point to Google website.
+
 ---------------------------------------
 
 *next;
