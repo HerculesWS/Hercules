@@ -124,6 +124,7 @@ void unit_dataset(struct block_list *bl);
 int unit_fixdamage(struct block_list *src,struct block_list *target,unsigned int tick,int sdelay,int ddelay,int damage,int div,int type,int damage2);
 // ‚»‚Ì‘¼
 struct unit_data* unit_bl2ud(struct block_list *bl);
+struct unit_data* unit_bl2ud2(struct block_list *bl);
 void unit_remove_map_pc(struct map_session_data *sd, clr_type clrtype);
 void unit_free_pc(struct map_session_data *sd);
 #define unit_remove_map(bl,clrtype) unit_remove_map_(bl,clrtype,__FILE__,__LINE__,__func__)

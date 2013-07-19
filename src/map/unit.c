@@ -44,8 +44,13 @@
 const short dirx[8]={0,-1,-1,-1,0,1,1,1};
 const short diry[8]={1,1,0,-1,-1,-1,0,1};
 
-struct unit_data* unit_bl2ud(struct block_list *bl)
-{
+/**
+ * Returns the unit_data for the given block_list. If the object is using
+ * shared unit_data (i.e. in case of BL_NPC), it returns the shared data.
+ * @param bl block_list to process
+ * @return a pointer to the given object's unit_data
+ **/
+struct unit_data* unit_bl2ud(struct block_list *bl) {
 	if( bl == NULL) return NULL;
 	if( bl->type == BL_PC)  return &((struct map_session_data*)bl)->ud;
 	if( bl->type == BL_MOB) return &((struct mob_data*)bl)->ud;
@@ -55,6 +60,23 @@ struct unit_data* unit_bl2ud(struct block_list *bl)
 	if( bl->type == BL_MER) return &((struct mercenary_data*)bl)->ud;
 	if( bl->type == BL_ELEM) return &((struct elemental_data*)bl)->ud;
 	return NULL;
+}
+
+/**
+ * Returns the unit_data for the given block_list. If the object is using
+ * shared unit_data (i.e. in case of BL_NPC), it recreates a copy of the
+ * data so that it's safe to modify.
+ * @param bl block_list to process
+ * @return a pointer to the given object's unit_data
+ */
+struct unit_data* unit_bl2ud2(struct block_list *bl) {
+	if( bl && bl->type == BL_NPC && ((struct npc_data*)bl)->ud == &npc_base_ud ) {
+		struct npc_data *nd = (struct npc_data *)bl;
+		nd->ud = NULL;
+		CREATE(nd->ud, struct unit_data, 1);
+		unit_dataset(&nd->bl);
+	}
+	return unit_bl2ud(bl);
 }
 
 static int unit_attack_timer(int tid, unsigned int tick, int id, intptr_t data);

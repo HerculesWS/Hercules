@@ -12619,20 +12619,15 @@ BUILDIN(npctalk)
 }
 
 // change npc walkspeed [Valaris]
-BUILDIN(npcspeed)
-{
+BUILDIN(npcspeed) {
 	struct npc_data* nd;
 	int speed;
 	
 	speed = script_getnum(st,2);
-	nd =(struct npc_data *)iMap->id2bl(st->oid);
+	nd = (struct npc_data *)iMap->id2bl(st->oid);
 	
 	if( nd ) {
-		if( nd->ud == &npc_base_ud ) {
-			nd->ud = NULL;
-			CREATE(nd->ud, struct unit_data, 1);
-			unit_dataset(&nd->bl);
-		}
+		unit_bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
 		nd->speed = speed;
 		nd->ud->state.speed_changed = 1;
 	}
@@ -12647,13 +12642,8 @@ BUILDIN(npcwalkto) {
 	x=script_getnum(st,2);
 	y=script_getnum(st,3);
 	
-	if(nd) {
-		if( nd->ud == &npc_base_ud ) {
-			nd->ud = NULL;
-			CREATE(nd->ud, struct unit_data, 1);
-			unit_dataset(&nd->bl);
-		}
-		
+	if( nd ) {
+		unit_bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
 		if (!nd->status.hp) {
 			status_calc_npc(nd, true);
 		} else {
@@ -12665,11 +12655,11 @@ BUILDIN(npcwalkto) {
 	return true;
 }
 // stop an npc's movement [Valaris]
-BUILDIN(npcstop)
-{
-	struct npc_data *nd=(struct npc_data *)iMap->id2bl(st->oid);
+BUILDIN(npcstop) {
+	struct npc_data *nd = (struct npc_data *)iMap->id2bl(st->oid);
 	
-	if(nd) {
+	if( nd ) {
+		unit_bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
 		unit_stop_walking(&nd->bl,1|4);
 	}
 	
@@ -14910,23 +14900,23 @@ BUILDIN(pcstopfollow)
 ///
 /// unitwalk(<unit_id>,<x>,<y>) -> <bool>
 /// unitwalk(<unit_id>,<map_id>) -> <bool>
-BUILDIN(unitwalk)
-{
+BUILDIN(unitwalk) {
 	struct block_list* bl;
 	
 	bl = iMap->id2bl(script_getnum(st,2));
-	if( bl == NULL )
-	{
+	if( bl == NULL ) {
 		script_pushint(st, 0);
+		return true;
 	}
-	else if( script_hasdata(st,4) )
-	{
+
+	if( bl->type == BL_NPC ) {
+		unit_bl2ud2(bl); // ensure the ((TBL_NPC*)bl)->ud is safe to edit
+	}
+	if( script_hasdata(st,4) ) {
 		int x = script_getnum(st,3);
 		int y = script_getnum(st,4);
 		script_pushint(st, unit_walktoxy(bl,x,y,0));// We'll use harder calculations.
-	}
-	else
-	{
+	} else {
 		int map_id = script_getnum(st,3);
 		script_pushint(st, unit_walktobl(bl,iMap->id2bl(map_id),65025,1));
 	}
@@ -14950,8 +14940,7 @@ BUILDIN(unitkill)
 /// Returns if it was successfull
 ///
 /// unitwarp(<unit_id>,"<map name>",<x>,<y>) -> <bool>
-BUILDIN(unitwarp)
-{
+BUILDIN(unitwarp) {
 	int unit_id;
 	int map;
 	short x;
@@ -14974,10 +14963,12 @@ BUILDIN(unitwarp)
 	else
 		map = iMap->mapname2mapid(mapname);
 	
-	if( map >= 0 && bl != NULL )
+	if( map >= 0 && bl != NULL ) {
+		unit_bl2ud2(bl); // ensure ((TBL_NPC*)bl)->ud is safe to edit
 		script_pushint(st, unit_warp(bl,map,x,y,CLR_OUTSIGHT));
-	else
+	} else {
 		script_pushint(st, 0);
+	}
 	
 	return true;
 }
@@ -15047,8 +15038,7 @@ BUILDIN(unitattack)
 /// Makes the unit stop attacking and moving
 ///
 /// unitstop <unit_id>;
-BUILDIN(unitstop)
-{
+BUILDIN(unitstop) {
 	int unit_id;
 	struct block_list* bl;
 	
@@ -15057,6 +15047,7 @@ BUILDIN(unitstop)
 	bl = iMap->id2bl(unit_id);
 	if( bl != NULL )
 	{
+		unit_bl2ud2(bl); // ensure ((TBL_NPC*)bl)->ud is safe to edit
 		unit_stop_attack(bl);
 		unit_stop_walking(bl,4);
 		if( bl->type == BL_MOB )
