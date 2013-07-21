@@ -4222,6 +4222,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		return 0;
 
 	if( (item->package || item->group) && pc_is90overweight(sd) ) {
+		//##TODO## find official response to this
 		clif->colormes(sd->fd,COLOR_RED,msg_txt(1477));// Item cannot be open when overweight by 90%
 		return 0;
 	}
