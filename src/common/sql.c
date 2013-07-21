@@ -1048,7 +1048,7 @@ void Sql_HerculesUpdateCheck(Sql* self) {
 	fclose(ifp);
 
 	if( performed ) {
-		ShowSQL("- dected %d new "CL_WHITE"SQL updates"CL_RESET"\n",performed);
+		ShowSQL("- detected %d new "CL_WHITE"SQL updates"CL_RESET"\n",performed);
 		ShowMessage("%s",StrBuf->Value(&buf));
 		ShowSQL("To manually skip, type: 'sql update skip <file name>'\n");
 	}
