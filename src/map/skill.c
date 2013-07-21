@@ -2954,24 +2954,6 @@ int skill_check_unit_range2 (struct block_list *bl, int x, int y, uint16 skill_i
 		type, skill_id);
 }
 
-int skill_guildaura_sub (struct map_session_data* sd, int id, int strvit, int agidex)
-{
-	if(id == sd->bl.id && battle_config.guild_aura&16)
-		return 0;  // Do not affect guild leader
-
-	if (sd->sc.data[SC_GUILDAURA]) {
-		struct status_change_entry *sce = sd->sc.data[SC_GUILDAURA];
-		if( sce->val3 != strvit || sce->val4 != agidex ) {
-			sce->val3 = strvit;
-			sce->val4 = agidex;
-			status_calc_bl(&sd->bl, iStatus->sc2scb_flag(SC_GUILDAURA));
-		}
-		return 0;
-	}
-	sc_start4(&sd->bl, SC_GUILDAURA,100, 1, id, strvit, agidex, 1000);
-	return 1;
-}
-
 /*==========================================
  * Checks that you have the requirements for casting a skill for homunculus/mercenary.
  * Flag:
@@ -7521,7 +7503,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				int j = 0;
 				struct guild *g;
 				// i don't know if it actually summons in a circle, but oh well. ;P
-				g = sd?sd->state.gmaster_flag:guild->search(iStatus->get_guild_id(src));
+				g = sd ? sd->guild : guild->search(iStatus->get_guild_id(src));
 				if (!g)
 					break;
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
@@ -18140,6 +18122,7 @@ void skill_defaults(void) {
 	skill->get_mhp = skill_get_mhp;
 	skill->get_sp = skill_get_sp;
 	skill->get_state = skill_get_state;
+	skill->get_spiritball = skill_get_spiritball;
 	skill->get_zeny = skill_get_zeny;
 	skill->get_num = skill_get_num;
 	skill->get_cast = skill_get_cast;
@@ -18162,7 +18145,6 @@ void skill_defaults(void) {
 	skill->get_unit_target = skill_get_unit_target;
 	skill->get_unit_interval = skill_get_unit_interval;
 	skill->get_unit_bl_target = skill_get_unit_bl_target;
-	skill->get_spiritball = skill_get_spiritball;
 	skill->get_unit_layout_type = skill_get_unit_layout_type;
 	skill->get_unit_range = skill_get_unit_range;
 	skill->get_cooldown = skill_get_cooldown;
@@ -18202,15 +18184,13 @@ void skill_defaults(void) {
 	skill->delay_fix = skill_delay_fix;
 	skill->check_condition_castbegin = skill_check_condition_castbegin;
 	skill->check_condition_castend = skill_check_condition_castend;
-	skill->check_condition_char_sub = skill_check_condition_char_sub;
+	skill->consume_requirement = skill_consume_requirement;
 	skill->get_requirement = skill_get_requirement;
 	skill->check_pc_partner = skill_check_pc_partner;
-	skill->consume_requirement = skill_consume_requirement;
 	skill->unit_move = skill_unit_move;
-	skill->unit_move_unit_group = skill_unit_move_unit_group;
 	skill->unit_onleft = skill_unit_onleft;
 	skill->unit_onout = skill_unit_onout;
-	skill->guildaura_sub = skill_guildaura_sub;
+	skill->unit_move_unit_group = skill_unit_move_unit_group;
 	skill->sit = skill_sit;
 	skill->brandishspear = skill_brandishspear;
 	skill->repairweapon = skill_repairweapon;

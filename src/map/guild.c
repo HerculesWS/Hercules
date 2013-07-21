@@ -564,7 +564,7 @@ int guild_recv_info(struct guild *sg) {
 
 			//Also set the guild master flag.
 			sd->guild = g;
-			sd->state.gmaster_flag = g;
+			sd->state.gmaster_flag = 1;
 			clif->charnameupdate(sd); // [LuzZza]
 			clif->guild_masterormember(sd);
 		}
@@ -754,7 +754,7 @@ void guild_member_joined(struct map_session_data *sd)
 		return;
 	}
 	if (strcmp(sd->status.name,g->master) == 0) {	// set the Guild Master flag
-		sd->state.gmaster_flag = g;
+		sd->state.gmaster_flag = 1;
 		// prevent Guild Skills from being used directly after relog
 		if( battle_config.guild_skill_relog_delay )
 			guild->block_skill(sd, 300000);
@@ -933,6 +933,10 @@ int guild_member_withdraw(int guild_id, int account_id, int char_id, int flag, c
 		if( g->instances )
 			instance->check_kick(sd);
 		clif->charnameupdate(sd); //Update display name [Skotlex]
+		status_change_end(&sd->bl, SC_LEADERSHIP, INVALID_TIMER);
+		status_change_end(&sd->bl, SC_GLORYWOUNDS, INVALID_TIMER);
+		status_change_end(&sd->bl, SC_SOULCOLD, INVALID_TIMER);
+		status_change_end(&sd->bl, SC_HAWKEYES, INVALID_TIMER);
 		//TODO: send emblem update to self and people around
 	}
 	return 0;
@@ -1756,8 +1760,13 @@ int guild_broken(int guild_id,int flag)
 				gstorage->pc_quit(sd,1);
 			sd->status.guild_id=0;
 			sd->guild = NULL;
+			sd->state.gmaster_flag = 0;
 			clif->guild_broken(g->member[i].sd,0);
 			clif->charnameupdate(sd); // [LuzZza]
+			status_change_end(&sd->bl, SC_LEADERSHIP, INVALID_TIMER);
+			status_change_end(&sd->bl, SC_GLORYWOUNDS, INVALID_TIMER);
+			status_change_end(&sd->bl, SC_SOULCOLD, INVALID_TIMER);
+			status_change_end(&sd->bl, SC_HAWKEYES, INVALID_TIMER);
 		}
 	}
 
@@ -1828,7 +1837,7 @@ int guild_gm_changed(int guild_id, int account_id, int char_id)
 	
 	if (g->member[0].sd && g->member[0].sd->fd) {
 		clif->message(g->member[0].sd->fd, msg_txt(679)); //"You have become the Guild Master!"
-		g->member[0].sd->state.gmaster_flag = g;
+		g->member[0].sd->state.gmaster_flag = 1;
 		//Block his skills for 5 minutes to prevent abuse.
 		guild->block_skill(g->member[0].sd, 300000);
 	}
@@ -1849,9 +1858,9 @@ int guild_gm_changed(int guild_id, int account_id, int char_id)
 /*====================================================
  * Guild disbanded
  *---------------------------------------------------*/
-int guild_break(struct map_session_data *sd,char *name)
-{
+int guild_break(struct map_session_data *sd,char *name) {
 	struct guild *g;
+	struct unit_data *ud;
 	int i;
 
 	nullpo_ret(sd);
@@ -1872,7 +1881,30 @@ int guild_break(struct map_session_data *sd,char *name)
 		clif->guild_broken(sd,2);
 		return 0;
 	}
-
+	
+	/* regardless of char server allowing it, we clear the guild master's auras */
+	if( (ud = unit_bl2ud(&sd->bl)) ) {
+		int count = 0;
+		struct skill_unit_group *groups[4];
+		for (i=0;i<MAX_SKILLUNITGROUP && ud->skillunit[i];i++) {
+			switch (ud->skillunit[i]->skill_id) {
+				case GD_LEADERSHIP:
+				case GD_GLORYWOUNDS:
+				case GD_SOULCOLD:
+				case GD_HAWKEYES:
+					if( count == 4 )
+						ShowWarning("guild_break:'%s' got more than 4 guild aura instances! (%d)\n",sd->status.name,ud->skillunit[i]->skill_id);
+					else
+						groups[count++] = ud->skillunit[i];
+					break;
+			}
+			
+		}
+		for(i = 0; i < count; i++) {
+			skill->del_unitgroup(groups[i],ALC_MARK);
+		}
+	}
+	
 	intif_guild_break(g->guild_id);
 	return 1;
 }

@@ -1942,9 +1942,6 @@ static void itemdb_read(void) {
 	sv->readdb(iMap->db_path, DBPATH"item_buyingstore.txt",   ',', 1, 1, -1, &itemdb_read_buyingstore);
 	sv->readdb(iMap->db_path, "item_nouse.txt",		 ',', 3, 3, -1, &itemdb_read_nouse);
 	
-	
-	itemdb->name_constants();
-	
 	itemdb_uid_load();
 }
 
@@ -2111,6 +2108,16 @@ void itemdb_name_constants(void) {
 
 	dbi_destroy(iter);	
 }
+/* used to clear conflicts during script reload */
+void itemdb_force_name_constants(void) {
+	DBIterator *iter = db_iterator(itemdb->names);
+	struct item_data *data;
+	
+	for( data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter) )
+		script->set_constant_force(data->name,data->nameid,0);
+	
+	dbi_destroy(iter);
+}
 void do_final_itemdb(void) {
 	int i;
 
@@ -2168,6 +2175,7 @@ void itemdb_defaults(void) {
 	itemdb->final = do_final_itemdb;
 	itemdb->reload = itemdb_reload;//incomplete
 	itemdb->name_constants = itemdb_name_constants;
+	itemdb->force_name_constants = itemdb_force_name_constants;
 	/* */
 	itemdb->groups = NULL;
 	itemdb->group_count = 0;
@@ -2187,13 +2195,13 @@ void itemdb_defaults(void) {
 	itemdb->write_cached_packages = itemdb_write_cached_packages;
 	itemdb->read_cached_packages = itemdb_read_cached_packages;
 	/* */
+	itemdb->name2id = itemdb_name2id;
 	itemdb->search_name = itemdb_searchname;
 	itemdb->search_name_array = itemdb_searchname_array;
 	itemdb->load = itemdb_load;
 	itemdb->search = itemdb_search;
 	itemdb->parse_dbrow = itemdb_parse_dbrow;
 	itemdb->exists = itemdb_exists;//incomplete
-	itemdb->name2id = itemdb_name2id;
 	itemdb->in_group = itemdb_in_group;
 	itemdb->group_item = itemdb_searchrandomid;
 	itemdb->chain_item = itemdb_chain_item;

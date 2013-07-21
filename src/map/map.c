@@ -5583,6 +5583,23 @@ void map_defaults(void) {
 	iMap->charid2nick = map_charid2nick;
 	iMap->charid2sd = map_charid2sd;
 
+	iMap->map_foreachpc = map_map_foreachpc;
+	iMap->map_foreachmob = map_map_foreachmob;
+	iMap->map_foreachnpc = map_map_foreachnpc;
+	iMap->map_foreachregen = map_map_foreachregen;
+	iMap->map_foreachiddb = map_map_foreachiddb;
+
+	iMap->foreachinrange = map_foreachinrange;
+	iMap->foreachinshootrange = map_foreachinshootrange;
+	iMap->foreachinarea = map_foreachinarea;
+	iMap->forcountinrange = map_forcountinrange;
+	iMap->forcountinarea = map_forcountinarea;
+	iMap->foreachinmovearea = map_foreachinmovearea;
+	iMap->foreachincell = map_foreachincell;
+	iMap->foreachinpath = map_foreachinpath;
+	iMap->foreachinmap = map_foreachinmap;
+	iMap->foreachininstance = map_foreachininstance;
+
 	iMap->id2sd = map_id2sd;
 	iMap->id2md = map_id2md;
 	iMap->id2nd = map_id2nd;
@@ -5627,23 +5644,6 @@ void map_defaults(void) {
 	iMap->clean = map_clean;
 
 	iMap->do_shutdown = do_shutdown;
-
-	iMap->map_foreachpc = map_map_foreachpc;
-	iMap->map_foreachmob = map_map_foreachmob;
-	iMap->map_foreachnpc = map_map_foreachnpc;
-	iMap->map_foreachregen = map_map_foreachregen;
-	iMap->map_foreachiddb = map_map_foreachiddb;
-
-	iMap->foreachinrange = map_foreachinrange;
-	iMap->foreachinshootrange = map_foreachinshootrange;
-	iMap->foreachinarea=map_foreachinarea;
-	iMap->forcountinrange=map_forcountinrange;
-	iMap->forcountinarea=map_forcountinarea;
-	iMap->foreachinmovearea = map_foreachinmovearea;
-	iMap->foreachincell=map_foreachincell;
-	iMap->foreachinpath=map_foreachinpath;
-	iMap->foreachinmap=map_foreachinmap;
-	iMap->foreachininstance=map_foreachininstance;
 
 	/* temporary until the map.c "Hercules Renewal Phase One" design is complete. [Ind] */
 	mapit = &mapit_s;

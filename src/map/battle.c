@@ -6784,18 +6784,11 @@ void battle_defaults(void) {
 	battle->calc_damage = battle_calc_damage;
 	battle->calc_gvg_damage = battle_calc_gvg_damage;
 	battle->calc_bg_damage = battle_calc_bg_damage;
-	battle->calc_base_damage = battle_calc_base_damage;
-	battle->calc_misc_attack = battle_calc_misc_attack;
-	battle->calc_magic_attack = battle_calc_magic_attack;	
 	battle->weapon_attack = battle_weapon_attack;
+	battle->calc_weapon_attack = battle_calc_weapon_attack;
 	battle->delay_damage = battle_delay_damage;
 	battle->drain = battle_drain;
 	battle->calc_return_damage = battle_calc_return_damage;
-	battle->calc_weapon_attack = battle_calc_weapon_attack;
-#ifdef RENEWAL
-	battle->calc_weapon_damage = battle_calc_weapon_damage;
-#endif
-	battle->calc_defense = battle_calc_defense;
 	battle->attr_ratio = battle_attr_ratio;
 	battle->attr_fix = battle_attr_fix;
 	battle->calc_cardfix = battle_calc_cardfix;
@@ -6803,6 +6796,10 @@ void battle_defaults(void) {
 	battle->calc_masteryfix = battle_calc_masteryfix;
 	battle->calc_skillratio = battle_calc_skillratio;
 	battle->calc_sizefix = battle_calc_sizefix;
+#ifdef RENEWAL
+	battle->calc_weapon_damage = battle_calc_weapon_damage;
+#endif
+	battle->calc_defense = battle_calc_defense;
 	battle->get_master = battle_get_master;
 	battle->get_targeted = battle_gettargeted;
 	battle->get_enemy = battle_getenemy;
@@ -6818,6 +6815,9 @@ void battle_defaults(void) {
 	battle->delay_damage_sub = battle_delay_damage_sub;
 	battle->blewcount_bonus = battle_blewcount_bonus;
 	battle->range_type = battle_range_type;
+	battle->calc_base_damage = battle_calc_base_damage;
+	battle->calc_misc_attack = battle_calc_misc_attack;
+	battle->calc_magic_attack = battle_calc_magic_attack;
 	battle->adjust_skill_damage = battle_adjust_skill_damage;
 	battle->add_mastery = battle_addmastery;
 	battle->calc_drain = battle_calc_drain;

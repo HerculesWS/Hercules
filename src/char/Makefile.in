@@ -69,8 +69,8 @@ obj_sql/%.o: %.c $(CHAR_H) $(COMMON_H) $(COMMON_SQL_H) $(MT19937AR_H) $(LIBCONFI
 ../common/obj_sql/common_sql.a:
 	@$(MAKE) -C ../common sql
 
-MT19937AR_OBJ:
+$(MT19937AR_OBJ):
 	@$(MAKE) -C ../../3rdparty/mt19937ar
 
-LIBCONFIG_OBJ:
+$(LIBCONFIG_OBJ):
 	@$(MAKE) -C ../../3rdparty/libconfig

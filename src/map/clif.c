@@ -7379,7 +7379,7 @@ void clif_guild_belonginfo(struct map_session_data *sd, struct guild *g)
 	WFIFOL(fd,2)=g->guild_id;
 	WFIFOL(fd,6)=g->emblem_id;
 	WFIFOL(fd,10)=g->position[ps].mode;
-	WFIFOB(fd,14)=(bool)(sd->state.gmaster_flag==g);
+	WFIFOB(fd,14)=(bool)(sd->state.gmaster_flag == 1);
 	WFIFOL(fd,15)=0;  // InterSID (unknown purpose)
 	memcpy(WFIFOP(fd,19),g->name,NAME_LENGTH);
 	WFIFOSET(fd,packet_len(0x16c));
@@ -9633,10 +9633,10 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 	
 	/* Guild Aura Init */
 	if( sd->state.gmaster_flag ) {
-		guild->aura_refresh(sd,GD_LEADERSHIP,guild->checkskill(sd->state.gmaster_flag,GD_LEADERSHIP));
-		guild->aura_refresh(sd,GD_GLORYWOUNDS,guild->checkskill(sd->state.gmaster_flag,GD_GLORYWOUNDS));
-		guild->aura_refresh(sd,GD_SOULCOLD,guild->checkskill(sd->state.gmaster_flag,GD_SOULCOLD));
-		guild->aura_refresh(sd,GD_HAWKEYES,guild->checkskill(sd->state.gmaster_flag,GD_HAWKEYES));
+		guild->aura_refresh(sd,GD_LEADERSHIP,guild->checkskill(sd->guild,GD_LEADERSHIP));
+		guild->aura_refresh(sd,GD_GLORYWOUNDS,guild->checkskill(sd->guild,GD_GLORYWOUNDS));
+		guild->aura_refresh(sd,GD_SOULCOLD,guild->checkskill(sd->guild,GD_SOULCOLD));
+		guild->aura_refresh(sd,GD_HAWKEYES,guild->checkskill(sd->guild,GD_HAWKEYES));
 	}
 
 	if( sd->state.vending ) { /* show we have a vending */
@@ -10494,9 +10494,9 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 	}
 
 	// if player ignores everyone
-	if (dstsd->state.ignoreAll) {
+	if (dstsd->state.ignoreAll && pc->get_group_level(sd) <= pc->get_group_level(dstsd)) {
 		if (dstsd->sc.option & OPTION_INVISIBLE && pc->get_group_level(sd) < pc->get_group_level(dstsd))
-			clif->wis_end(fd, 1); // 1: target character is not loged in
+			clif->wis_end(fd, 1); // 1: target character is not logged in
 		else
 			clif->wis_end(fd, 3); // 3: everyone ignored by target
 		return;
@@ -11133,13 +11133,16 @@ void clif_parse_StopAttack(int fd,struct map_session_data *sd)
 
 /// Request to move an item from inventory to cart (CZ_MOVE_ITEM_FROM_BODY_TO_CART).
 /// 0126 <index>.W <amount>.L
-void clif_parse_PutItemToCart(int fd,struct map_session_data *sd)
-{
+void clif_parse_PutItemToCart(int fd,struct map_session_data *sd) {
+	int flag = 0;
 	if (pc_istrading(sd))
 		return;
 	if (!pc_iscarton(sd))
 		return;
-	pc->putitemtocart(sd,RFIFOW(fd,2)-2,RFIFOL(fd,4));
+	if ( (flag = pc->putitemtocart(sd,RFIFOW(fd,2)-2,RFIFOL(fd,4))) ) {
+		clif->dropitem(sd, RFIFOW(fd,2)-2,0);
+		clif->cart_additem_ack(sd,flag == 1?0x0:0x1);
+	}
 }
 
 
@@ -11405,7 +11408,7 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 
 	if( skill_id >= GD_SKILLBASE ) {
 		if( sd->state.gmaster_flag )
-			skill_lv = guild->checkskill(sd->state.gmaster_flag, skill_id);
+			skill_lv = guild->checkskill(sd->guild, skill_id);
 		else
 			skill_lv = 0;
 	} else {
@@ -11861,7 +11864,7 @@ void clif_parse_ResetChar(int fd, struct map_session_data *sd) {
 	if( RFIFOW(fd,2) )
 		sprintf(cmd,"%cskreset",atcommand->at_symbol);
 	else
-		sprintf(cmd,"%streset",atcommand->at_symbol);
+		sprintf(cmd,"%cstreset",atcommand->at_symbol);
 
 	atcommand->parse(fd, sd, cmd, 1);
 }
@@ -17582,7 +17585,18 @@ void clif_skill_cooldown_list(int fd, struct skill_cd* cd) {
 
 	WFIFOSET(fd,4+(offset*count));
 }
-
+/* [Ind/Hercules] - Data Thanks to Yommy
+ * - ADDITEM_TO_CART_FAIL_WEIGHT = 0x0
+ * - ADDITEM_TO_CART_FAIL_COUNT  = 0x1
+ */
+void clif_cart_additem_ack(struct map_session_data *sd, int flag) {
+	struct packet_cart_additem_ack p;
+	
+	p.PacketType = cart_additem_ackType;
+	p.result = (char)flag;
+	
+	clif->send(&p,sizeof(p), &sd->bl, SELF);
+}
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 	if( sd ) {
@@ -17919,6 +17933,9 @@ void clif_defaults(void) {
 	clif->addcards2 = clif_addcards2;
 	clif->item_sub = clif_item_sub;
 	clif->getareachar_item = clif_getareachar_item;
+	clif->cart_additem_ack = clif_cart_additem_ack;
+	clif->cashshop_load = clif_cashshop_db;
+	clif->package_announce = clif_package_item_announce;
 	/* unit-related */
 	clif->clearunit_single = clif_clearunit_single;
 	clif->clearunit_area = clif_clearunit_area;
@@ -18319,19 +18336,6 @@ void clif_defaults(void) {
 	/* elemental-related */ 
 	clif->elemental_info = clif_elemental_info;
 	clif->elemental_updatestatus = clif_elemental_updatestatus;
-	/* Hercules Channel System */
-	clif->chsys_create = clif_hercules_chsys_create;
-	clif->chsys_msg = clif_hercules_chsys_msg;
-	clif->chsys_msg2 = clif_hercules_chsys_msg2;
-	clif->chsys_send = clif_hercules_chsys_send;
-	clif->chsys_join = clif_hercules_chsys_join;
-	clif->chsys_left = clif_hercules_chsys_left;
-	clif->chsys_delete = clif_hercules_chsys_delete;
-	clif->chsys_mjoin = clif_hercules_chsys_mjoin;
-	clif->chsys_quit = clif_hercules_chsys_quit;
-	clif->chsys_quitg = clif_hercules_chsys_quitg;
-	clif->chsys_gjoin = clif_hercules_chsys_gjoin;
-	clif->chsys_gleave = clif_hercules_chsys_gleave;
 	/* bgqueue */
 	clif->bgqueue_ack = clif_bgqueue_ack;
 	clif->bgqueue_notice_delete = clif_bgqueue_notice_delete;
@@ -18346,10 +18350,21 @@ void clif_defaults(void) {
 	clif->notify_time = clif_notify_time;
 	clif->user_count = clif_user_count;
 	clif->noask_sub = clif_noask_sub;
-	clif->cashshop_load = clif_cashshop_db;
-	clif->package_announce = clif_package_item_announce;
 	clif->bc_ready = clif_bc_ready;
 	clif->undisguise_timer = clif_undisguise_timer;
+	/* Hercules Channel System */
+	clif->chsys_create = clif_hercules_chsys_create;
+	clif->chsys_msg = clif_hercules_chsys_msg;
+	clif->chsys_msg2 = clif_hercules_chsys_msg2;
+	clif->chsys_send = clif_hercules_chsys_send;
+	clif->chsys_join = clif_hercules_chsys_join;
+	clif->chsys_left = clif_hercules_chsys_left;
+	clif->chsys_delete = clif_hercules_chsys_delete;
+	clif->chsys_mjoin = clif_hercules_chsys_mjoin;
+	clif->chsys_quit = clif_hercules_chsys_quit;
+	clif->chsys_quitg = clif_hercules_chsys_quitg;
+	clif->chsys_gjoin = clif_hercules_chsys_gjoin;
+	clif->chsys_gleave = clif_hercules_chsys_gleave;
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/ 
@@ -18387,6 +18402,7 @@ void clif_defaults(void) {
 	clif->pKickFromChat = clif_parse_KickFromChat;
 	clif->pChatLeave = clif_parse_ChatLeave;
 	clif->pTradeRequest = clif_parse_TradeRequest;
+	clif->chann_config_read = read_channels_config;
 	clif->pTradeAck = clif_parse_TradeAck;
 	clif->pTradeAddItem = clif_parse_TradeAddItem;
 	clif->pTradeOk = clif_parse_TradeOk;
@@ -18441,7 +18457,6 @@ void clif_defaults(void) {
 	clif->pLeaveParty = clif_parse_LeaveParty;
 	clif->pRemovePartyMember = clif_parse_RemovePartyMember;
 	clif->pPartyChangeOption = clif_parse_PartyChangeOption;
-	clif->chann_config_read = read_channels_config;
 	clif->pPartyMessage = clif_parse_PartyMessage;
 	clif->pPartyChangeLeader = clif_parse_PartyChangeLeader;
 	clif->pPartyBookingRegisterReq = clif_parse_PartyBookingRegisterReq;
@@ -18546,17 +18561,19 @@ void clif_defaults(void) {
 	clif->pDebug = clif_parse_debug;
 	clif->pSkillSelectMenu = clif_parse_SkillSelectMenu;
 	clif->pMoveItem = clif_parse_MoveItem;
+	/* dull */
+	clif->pDull = clif_parse_dull;
+	/* BGQueue */
+	clif->pBGQueueRegister = clif_parse_bgqueue_register;
+	clif->pBGQueueCheckState = clif_parse_bgqueue_checkstate;
+	clif->pBGQueueRevokeReq = clif_parse_bgqueue_revoke_req;
+	clif->pBGQueueBattleBeginAck = clif_parse_bgqueue_battlebegin_ack;
 	/* RagExe Cash Shop [Ind/Hercules] */
 	clif->pCashShopOpen = clif_parse_CashShopOpen;
 	clif->pCashShopClose = clif_parse_CashShopClose;
 	clif->pCashShopReqTab = clif_parse_CashShopReqTab;
 	clif->pCashShopSchedule = clif_parse_CashShopSchedule;
 	clif->pCashShopBuy = clif_parse_CashShopBuy;
-	/* BGQueue */
-	clif->pBGQueueRegister = clif_parse_bgqueue_register;
-	clif->pBGQueueCheckState = clif_parse_bgqueue_checkstate;
-	clif->pBGQueueRevokeReq = clif_parse_bgqueue_revoke_req;
-	clif->pBGQueueBattleBeginAck = clif_parse_bgqueue_battlebegin_ack;
 	/*  */
 	clif->pPartyTick = clif_parse_PartyTick;
 	clif->pGuildInvite2 = clif_parse_GuildInvite2;
@@ -18568,6 +18585,4 @@ void clif_defaults(void) {
 	clif->pPartyBookingRefuseVolunteer = clif_parse_PartyBookingRefuseVolunteer;
 	clif->pPartyBookingCancelVolunteer = clif_parse_PartyBookingCancelVolunteer;
 #endif
-	/* dull */
-	clif->pDull = clif_parse_dull;
 }

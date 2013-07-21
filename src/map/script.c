@@ -1964,10 +1964,15 @@ void script_set_constant(const char* name, int value, bool isparameter) {
 		ShowError("script_set_constant: Invalid name for %s '%s' (already defined as %s).\n", isparameter ? "parameter" : "constant", name, script_op2name(script->str_data[n].type));
 	}
 }
-/* will override if necessary */
+/* adds data to a existent constant in the database, inserted normally via parse */
 void script_set_constant2(const char *name, int value, bool isparameter) {
 	int n = add_str(name);
-	
+
+	if( ( script->str_data[n].type == C_NAME || script->str_data[n].type == C_PARAM ) && ( script->str_data[n].val != 0 || script->str_data[n].backpatch != -1 ) ) { // existing parameter or constant
+		ShowNotice("Conflicting item/script var '%s', prioritising the script var\n",name);
+		return;
+	}
+
 	if( script->str_data[n].type != C_NOP ) {
 		script->str_data[n].func = NULL;
 		script->str_data[n].backpatch = -1;
@@ -1976,6 +1981,22 @@ void script_set_constant2(const char *name, int value, bool isparameter) {
 
 	script->str_data[n].type = isparameter ? C_PARAM : C_INT;
 	script->str_data[n].val  = value;
+
+}
+/* same as constant2 except it will override if necessary, used to clear conflicts during reload  */
+void script_set_constant_force(const char *name, int value, bool isparameter) {
+	int n = add_str(name);
+	
+	if( script->str_data[n].type == C_PARAM )
+		return;/* the one type we don't mess with, reload doesn't affect it. */
+		
+	if( script->str_data[n].type != C_NOP ) {
+		script->str_data[n].type = C_NOP;
+		script->str_data[n].val = 0;
+		script->str_data[n].func = NULL;
+		script->str_data[n].backpatch = -1;
+		script->str_data[n].label = -1;
+	}
 }
 /*==========================================
  * Reading constant databases
@@ -3869,6 +3890,9 @@ int script_reload() {
 	db_clear(script->st_db);
 	
 	mapreg_reload();
+	
+	itemdb->force_name_constants();
+	
 	return 0;
 }
 
@@ -10486,13 +10510,10 @@ BUILDIN(removemapflag)
 {
 	int16 m,i;
 	const char *str;
-	//int val=0;//warning: variable ‘val’ set but not used" - deprecated?
 	
 	str=script_getstr(st,2);
 	i=script_getnum(st,3);
-	//if(script_hasdata(st,4)){
-	//	val=script_getnum(st,4);
-	//}
+
 	m = iMap->mapname2mapid(str);
 	if(m >= 0) {
 		switch(i) {
@@ -17768,7 +17789,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(setmapflagnosave,"ssii"),
 		BUILDIN_DEF(getmapflag,"si"),
 		BUILDIN_DEF(setmapflag,"si?"),
-		BUILDIN_DEF(removemapflag,"si?"),
+		BUILDIN_DEF(removemapflag,"si"),
 		BUILDIN_DEF(pvpon,"s"),
 		BUILDIN_DEF(pvpoff,"s"),
 		BUILDIN_DEF(gvgon,"s"),
@@ -18142,8 +18163,8 @@ void script_defaults(void) {
 	script->hqs = script->hqis = 0;
 	memset(&script->hqe, 0, sizeof(script->hqe));
 	
-	script->buildin_count = 0;
 	script->buildin = NULL;
+	script->buildin_count = 0;
 	
 	script->str_data = NULL;
 	script->str_data_size = 0;
@@ -18178,7 +18199,9 @@ void script_defaults(void) {
 	script->pop_stack = pop_stack;
 	script->set_constant = script_set_constant;
 	script->set_constant2 = script_set_constant2;
+	script->set_constant_force = script_set_constant_force;
 	script->get_constant = 	script_get_constant;
+	script->label_add = script_label_add;
 	
 	script->queue = script_hqueue_get;
 	script->queue_add = script_hqueue_add;
@@ -18186,6 +18209,4 @@ void script_defaults(void) {
 	script->queue_remove = script_hqueue_remove;
 	script->queue_create = script_hqueue_create;
 	script->queue_clear = script_hqueue_clear;
-	
-	script->label_add = script_label_add;
 }

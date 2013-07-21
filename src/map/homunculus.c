@@ -1295,4 +1295,6 @@ void homunculus_defaults(void) {
 	homun->read_skill_db_sub = homunculus_read_skill_db_sub;
 	homun->skill_db_read = homunculus_skill_db_read;
 	homun->exp_db_read = homunculus_exp_db_read;
+	homun->addspiritball = homunculus_addspiritball;
+	homun->delspiritball = homunculus_delspiritball;
 }

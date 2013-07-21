@@ -501,6 +501,7 @@ struct clif_interface {
 	void (*addcards2) (unsigned short *cards, struct item* item);
 	void (*item_sub) (unsigned char *buf, int n, struct item *i, struct item_data *id, int equip);
 	void (*getareachar_item) (struct map_session_data* sd,struct flooritem_data* fitem);
+	void (*cart_additem_ack) (struct map_session_data *sd, int flag);
 	void (*cashshop_load) (void);
 	void (*package_announce) (struct map_session_data *sd, unsigned short nameid, unsigned short containerid);
 	/* unit-related */
@@ -917,6 +918,9 @@ struct clif_interface {
 	void (*notify_time) (struct map_session_data* sd, unsigned long time);
 	void (*user_count) (struct map_session_data* sd, int count);
 	void (*noask_sub) (struct map_session_data *src, struct map_session_data *target, int type);
+	void (*bc_ready) (void);
+	int (*undisguise_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	/* Hercules Channel System */
 	void (*chsys_create) (struct hChSysCh *channel, char *name, char *pass, unsigned char color);
 	void (*chsys_msg) (struct hChSysCh *channel, struct map_session_data *sd, char *msg);
 	void (*chsys_msg2) (struct hChSysCh *channel, char *msg);
@@ -929,8 +933,6 @@ struct clif_interface {
 	void (*chsys_quitg) (struct map_session_data *sd);
 	void (*chsys_gjoin) (struct guild *g1,struct guild *g2);
 	void (*chsys_gleave) (struct guild *g1,struct guild *g2);
-	void (*bc_ready) (void);
-	int (*undisguise_timer) (int tid, unsigned int tick, int id, intptr_t data);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/
