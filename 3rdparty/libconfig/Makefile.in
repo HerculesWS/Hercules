@@ -4,6 +4,9 @@ LIBCONFIG_H = libconfig.h grammar.h parsectx.h scanctx.h scanner.h strbuf.h winc
 
 @SET_MAKE@
 
+CC = @CC@
+export CC
+
 #####################################################################
 .PHONY : all clean help
 
@@ -23,4 +26,4 @@ help:
 
 %.o: %.c $(LIBCONFIG_H)
 	@echo "	CC	$<"
-	@@CC@ @CFLAGS@ @DEFS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+	@$(CC) @CFLAGS@ @DEFS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<

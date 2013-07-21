@@ -5,6 +5,9 @@ PLUGINS = sample db2sql
 
 @SET_MAKE@
 
+CC = @CC@
+export CC
+
 #####################################################################
 .PHONY : all $(PLUGINS) sample db2sql clean help
 
@@ -27,4 +30,4 @@ help:
 
 %@DLLEXT@: %.c $(COMMON_H)
 	@echo "	CC	$<"
-	@@CC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o ../../plugins/$@ $<
+	@$(CC) @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o ../../plugins/$@ $<
