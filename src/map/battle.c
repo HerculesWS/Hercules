@@ -1133,7 +1133,7 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 					if( wflag&BF_SHORT )
 						cardfix = cardfix * (100 - tsd->bonus.near_attack_def_rate) / 100;
 					else // BF_LONG (there's no other choice)
-						cardfix = cardfix * (100 - tsd->bonus.near_attack_def_rate) / 100;
+						cardfix = cardfix * (100 - tsd->bonus.long_attack_def_rate) / 100;
 
 					if( tsd->sc.data[SC_PROTECT_DEF] )
 						cardfix = cardfix * (100 - tsd->sc.data[SC_PROTECT_DEF]->val1) / 100;
