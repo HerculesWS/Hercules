@@ -569,6 +569,7 @@ int add_str(const char* p)
 	safestrncpy(script->str_buf+script->str_pos, p, len+1);
 	script->str_data[script->str_num].type = C_NOP;
 	script->str_data[script->str_num].str = script->str_pos;
+	script->str_data[script->str_num].val = 0;
 	script->str_data[script->str_num].next = 0;
 	script->str_data[script->str_num].func = NULL;
 	script->str_data[script->str_num].backpatch = -1;
