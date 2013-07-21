@@ -1445,7 +1445,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 					continue; //Cannot be learned via normal means. Note this check DOES allows raising already known skills.
 
 				sd->status.skill[idx].id = id;
-
+				
 				if(inf2&INF2_SPIRIT_SKILL) { //Spirit skills cannot be learned, they will only show up on your tree when you get buffed.
 					sd->status.skill[idx].lv = 1; // need to manually specify a skill level
 					sd->status.skill[idx].flag = SKILL_FLAG_TEMPORARY; //So it is not saved, and tagged as a "bonus" skill.
@@ -1536,6 +1536,7 @@ static void pc_check_skilltree(struct map_session_data *sd, int skill_id)
 				continue; //Cannot be learned via normal means.
 
 			sd->status.skill[idx].id = id;
+
 			flag = 1;
 		}
 	} while(flag);
@@ -6139,7 +6140,74 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 
 	if( !(index = skill->get_index(skill_id)) )
 		return 0;
+	
+	if( battle_config.skillup_limit ) {
+		/* [Ind/Hercules] */
+		if( (sd->class_&JOBL_2) && (sd->class_&MAPID_UPPERMASK) != MAPID_SUPER_NOVICE ){
+			while(1) {
+				int c, i = 0, k = 0, pts = 0, pts_second = 0, id = 0;
+				bool can_skip = false;
+								
+				c = sd->class_ & MAPID_BASEMASK;
+				
+				k = pc_class2idx(pc_mapid2jobid(c, sd->status.sex));
 
+				for(i = 0; i < MAX_SKILL_TREE && (id=skill_tree[k][i].id) > 0 ; i++){
+					int inf2 = skill->get_inf2(id), idx = skill_tree[k][i].idx;
+					
+					if( skill_id == id ) {
+						can_skip = true;
+						break;/* its oki we can skip */
+					}
+					
+					if ( inf2&INF2_QUEST_SKILL || (inf2&(INF2_WEDDING_SKILL|INF2_SPIRIT_SKILL)) || id == NV_BASIC )
+						continue;
+					
+					if( sd->status.skill[idx].id && sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT )
+						pts += pc_checkskill(sd, id);
+				}
+
+				if( can_skip ) break;
+				
+				if( pts < 40 ) {
+					clif->msg_value(sd, 0x61E, 40 - pts);
+					return 0;
+				}
+				
+				if( sd->class_&JOBL_THIRD ) {
+					bool is_trans = sd->class_&JOBL_UPPER? true : false;
+					
+					c = is_trans ? (sd->class_ &~ JOBL_THIRD)/* find fancy way */ : sd->class_ & MAPID_UPPERMASK;
+
+					k = pc_class2idx(pc_mapid2jobid(c, sd->status.sex));
+
+					for(i = 0; i < MAX_SKILL_TREE && (id=skill_tree[k][i].id) > 0 ; i++){
+						int inf2 = skill->get_inf2(id), idx = skill_tree[k][i].idx;
+						
+						if( skill_id == id ) {
+							can_skip = true;
+							break;/* its oki we can skip */
+						}
+						
+						if ( inf2&INF2_QUEST_SKILL || (inf2&(INF2_WEDDING_SKILL|INF2_SPIRIT_SKILL)) || id == NV_BASIC )
+							continue;
+						
+						if( sd->status.skill[idx].id && sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT )
+							pts_second += pc_checkskill(sd, id);
+					}
+					
+					if( can_skip ) break;
+					
+					if( pts_second - pts < ( is_trans ? 70 : 50 ) ) {
+						clif->msg_value(sd, 0x61F, ( is_trans ? 70 : 50 ) - (pts_second - pts));
+						return 0;
+					}
+				}
+				break;
+			}
+		}
+	}
+	
 	if( sd->status.skill_point > 0 &&
 		sd->status.skill[index].id &&
 		sd->status.skill[index].flag == SKILL_FLAG_PERMANENT && //Don't allow raising while you have granted skills. [Skotlex]
@@ -6160,21 +6228,7 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 			clif->updatestatus(sd,SP_CARTINFO);
 		if (!pc_has_permission(sd, PC_PERM_ALL_SKILL)) // may skill everything at any time anyways, and this would cause a huge slowdown
 			clif->skillinfoblock(sd);
-	}else if( battle_config.skillup_limit ){
-		int pts = 0, i, id;
-		for(i = 0; i < MAX_SKILL_TREE && (id=skill_tree[pc_class2idx(sd->status.class_)][i].id) > 0 ; i++){
-			int inf2 = skill->get_inf2(id);
-			if ( inf2&INF2_QUEST_SKILL || (inf2&(INF2_WEDDING_SKILL|INF2_SPIRIT_SKILL)) || id == NV_BASIC )
-				continue;
-			if( sd->status.skill[id].id && sd->status.skill[id].flag == SKILL_FLAG_PERMANENT )
-				pts += pc_checkskill(sd, id);
-		}
-		if( pts < sd->change_level_2nd )
-			clif->msg_value(sd, 0x61E, sd->change_level_2nd-pts);
-		else if( pts < (sd->change_level_3rd + sd->change_level_2nd) )
-			clif->msg_value(sd, 0x61F, sd->change_level_3rd - (pts - sd->change_level_2nd));
 	}
-
 	return 0;
 }
 
