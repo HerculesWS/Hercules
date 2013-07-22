@@ -195,7 +195,7 @@ unsigned int timer_gettick(void) {
 /// Adds a timer to the timer_heap
 static void push_timer_heap(int tid) {
 	BHEAP_ENSURE(timer_heap, 1, 256);
-	BHEAP_PUSH(timer_heap, tid, DIFFTICK_MINTOPCMP);
+	BHEAP_PUSH(timer_heap, tid, DIFFTICK_MINTOPCMP, swap);
 }
 
 /*==========================
@@ -322,9 +322,9 @@ int timer_settick(int tid, unsigned int tick) {
 		return (int)tick;// nothing to do, already in propper position
 
 	// pop and push adjusted timer
-	BHEAP_POPINDEX(timer_heap, i, DIFFTICK_MINTOPCMP);
+	BHEAP_POPINDEX(timer_heap, i, DIFFTICK_MINTOPCMP, swap);
 	timer_data[tid].tick = tick;
-	BHEAP_PUSH(timer_heap, tid, DIFFTICK_MINTOPCMP);
+	BHEAP_PUSH(timer_heap, tid, DIFFTICK_MINTOPCMP, swap);
 	return (int)tick;
 }
 
@@ -342,7 +342,7 @@ int do_timer(unsigned int tick) {
 			break; // no more expired timers to process
 
 		// remove timer
-		BHEAP_POP(timer_heap, DIFFTICK_MINTOPCMP);
+		BHEAP_POP(timer_heap, DIFFTICK_MINTOPCMP, swap);
 		timer_data[tid].type |= TIMER_REMOVE_HEAP;
 
 		if( timer_data[tid].func ) {
