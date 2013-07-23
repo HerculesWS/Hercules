@@ -546,8 +546,19 @@ struct map_data {
 	char name[MAP_NAME_LENGTH];
 	uint16 index; // The map index used by the mapindex* functions.
 	struct mapcell* cell; // Holds the information of each map cell (NULL if the map is not on this map-server).
-	struct block_list **block;
-	struct block_list **block_mob;
+	
+	/* 2D Orthogonal Range Search: Grid Implementation
+	   "Algorithms in Java, Parts 1-4" 3.18, Robert Sedgewick
+	   Map is divided into squares, called blocks (side length = BLOCK_SIZE).
+	   For each block there is a linked list of objects in that block (block_list).
+	   Array provides capability to access immediately the set of objects close 
+	   to a given object.
+	   The linked lists provide the flexibility to store the objects without 
+	   knowing ahead how many objects fall into each block.
+	*/
+	struct block_list **block; // Grid array of block_lists containing only non-BL_MOB objects
+	struct block_list **block_mob; // Grid array of block_lists containing only BL_MOB objects
+	
 	int16 m;
 	int16 xs,ys; // map dimensions (in cells)
 	int16 bxs,bys; // map dimensions (in blocks)
