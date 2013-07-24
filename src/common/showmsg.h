@@ -6,7 +6,7 @@
 #define _SHOWMSG_H_
 
 #ifndef _HPMi_H_
-	#include "libconfig.h"
+	#include "../../3rdparty/libconfig/libconfig.h"
 #endif
 // for help with the console colors look here:
 // http://www.edoceo.com/liberum/?doc=printf-with-color

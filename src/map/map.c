@@ -134,6 +134,8 @@ char *map_cache_buffer = NULL; // Has the uncompressed gat data of all maps, so 
 
 struct map_interface iMap_s;
 
+struct map_session_data *cpsd;
+
 /*==========================================
 * server player count (of all mapservers)
 *------------------------------------------*/
@@ -4901,6 +4903,7 @@ void do_final(void)
 	ShowStatus("Terminating...\n");
 	hChSys.closing = true;
 	HPM->event(HPET_FINAL);
+	if (cpsd) aFree(cpsd);
 
 	//Ladies and babies first.
 	iter = mapit_getallusers();
@@ -5076,7 +5079,7 @@ static bool map_arg_next_value(const char* option, int i, int argc)
 
 	return true;
 }
-struct map_session_data cpsd;
+
 CPCMD(gm_position) {
 	int x = 0, y = 0, m = 0;
 	char map_name[25];
@@ -5097,9 +5100,9 @@ CPCMD(gm_position) {
 	}
 
 	ShowInfo("HCP: updated console's game position to '"CL_WHITE"%d %d %s"CL_RESET"'\n",x,y,map_name);
-	cpsd.bl.x = x;
-	cpsd.bl.y = y;
-	cpsd.bl.m = m;
+	cpsd->bl.x = x;
+	cpsd->bl.y = y;
+	cpsd->bl.m = m;
 }
 CPCMD(gm_use) {
 
@@ -5107,23 +5110,23 @@ CPCMD(gm_use) {
 		ShowError("gm:use invalid syntax. use '"CL_WHITE"gm:use @command <optional params>"CL_RESET"'\n");
 		return;
 	}
-	cpsd.fd = -2;
-	if( !atcommand->parse(cpsd.fd, &cpsd, line, 0) )
+	cpsd->fd = -2;
+	if( !atcommand->parse(cpsd->fd, cpsd, line, 0) )
 		ShowInfo("HCP: '"CL_WHITE"%s"CL_RESET"' failed\n",line);
 	else
 		ShowInfo("HCP: '"CL_WHITE"%s"CL_RESET"' was used\n",line);
-	cpsd.fd = 0;
+	cpsd->fd = 0;
 
 }
 /* Hercules Console Parser */
 void map_cp_defaults(void) {
 #ifdef CONSOLE_INPUT
 	/* default HCP data */
-	memset(&cpsd, 0, sizeof(struct map_session_data));
-	strcpy(cpsd.status.name, "Hercules Console");
-	cpsd.bl.x = 150;
-	cpsd.bl.y = 150;
-	cpsd.bl.m = iMap->mapname2mapid("prontera");
+	cpsd = pc->get_dummy_sd();
+	strcpy(cpsd->status.name, "Hercules Console");
+	cpsd->bl.x = MAP_DEFAULT_X;
+	cpsd->bl.y = MAP_DEFAULT_Y;
+	cpsd->bl.m = iMap->mapname2mapid(MAP_DEFAULT);
 
 	console->addCommand("gm:info",CPCMD_A(gm_position));
 	console->addCommand("gm:use",CPCMD_A(gm_use));

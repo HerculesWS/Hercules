@@ -418,11 +418,11 @@ ACMD(mapmove)
 		if (!iMap->search_freecell(NULL, m, &x, &y, 10, 10, 1))
 			x = y = 0; //Invalid cell, use random spot.
 	}
-	if (map[m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
+	if (map[m].flag.nowarpto && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 		clif->message(fd, msg_txt(247));
 		return false;
 	}
-	if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
+	if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarp && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 		clif->message(fd, msg_txt(248));
 		return false;
 	}
@@ -453,7 +453,7 @@ ACMD(where)
 	pl_sd = iMap->nick2sd(atcmd_player_name);
 	if (pl_sd == NULL ||
 	    strncmp(pl_sd->status.name, atcmd_player_name, NAME_LENGTH) != 0 ||
-	    (pc_has_permission(pl_sd, PC_PERM_HIDE_SESSION) && pc->get_group_level(pl_sd) > pc->get_group_level(sd) && !pc_has_permission(sd, PC_PERM_WHO_DISPLAY_AID))
+	    (pc->has_permission(pl_sd, PC_PERM_HIDE_SESSION) && pc->get_group_level(pl_sd) > pc->get_group_level(sd) && !pc->has_permission(sd, PC_PERM_WHO_DISPLAY_AID))
 		) {
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
@@ -485,13 +485,13 @@ ACMD(jumpto)
 		return false;
 	}
 	
-	if (pl_sd->bl.m >= 0 && map[pl_sd->bl.m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE))
+	if (pl_sd->bl.m >= 0 && map[pl_sd->bl.m].flag.nowarpto && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE))
 	{
 		clif->message(fd, msg_txt(247));	// You are not authorized to warp to this map.
 		return false;
 	}
 	
-	if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE))
+	if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarp && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE))
 	{
 		clif->message(fd, msg_txt(248));	// You are not authorized to warp from your current map.
 		return false;
@@ -523,7 +523,7 @@ ACMD(jump)
 	
 	sscanf(message, "%hd %hd", &x, &y);
 	
-	if (map[sd->bl.m].flag.noteleport && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
+	if (map[sd->bl.m].flag.noteleport && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 		clif->message(fd, msg_txt(248));	// You are not authorized to warp from your current map.
 		return false;
 	}
@@ -587,7 +587,7 @@ ACMD(who)
 	
 	iter = mapit_getallusers();
 	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter))	{
-		if (!((pc_has_permission(pl_sd, PC_PERM_HIDE_SESSION) || (pl_sd->sc.option & OPTION_INVISIBLE)) && pc->get_group_level(pl_sd) > level)) { // you can look only lower or same level
+		if (!((pc->has_permission(pl_sd, PC_PERM_HIDE_SESSION) || (pl_sd->sc.option & OPTION_INVISIBLE)) && pc->get_group_level(pl_sd) > level)) { // you can look only lower or same level
 			if (stristr(pl_sd->status.name, player_name) == NULL // search with no case sensitive
 				|| (map_id >= 0 && pl_sd->bl.m != map_id))
 				continue;
@@ -595,17 +595,17 @@ ACMD(who)
 				case 2: {
 					StrBuf->Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
-						StrBuf->Printf(&buf, msg_txt(344), pc_group_id2name(pc_get_group_id(pl_sd))); // "(%s) "
+						StrBuf->Printf(&buf, msg_txt(344), pc_group_get_name(pl_sd->group)); // "(%s) "
 					StrBuf->Printf(&buf, msg_txt(347), pl_sd->status.base_level, pl_sd->status.job_level,
 									 pc->job_name(pl_sd->status.class_)); // "| Lv:%d/%d | Job: %s"
 					break;
 				}
 				case 3: {
-					if (pc_has_permission(sd, PC_PERM_WHO_DISPLAY_AID))
+					if (pc->has_permission(sd, PC_PERM_WHO_DISPLAY_AID))
 						StrBuf->Printf(&buf, msg_txt(912), pl_sd->status.char_id, pl_sd->status.account_id);	// "(CID:%d/AID:%d) "
 					StrBuf->Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
-						StrBuf->Printf(&buf, msg_txt(344), pc_group_id2name(pc_get_group_id(pl_sd))); // "(%s) "
+						StrBuf->Printf(&buf, msg_txt(344), pc_group_get_name(pl_sd->group)); // "(%s) "
 					StrBuf->Printf(&buf, msg_txt(348), mapindex_id2name(pl_sd->mapindex), pl_sd->bl.x, pl_sd->bl.y); // "| Location: %s %d %d"
 					break;
 				}
@@ -615,7 +615,7 @@ ACMD(who)
 					
 					StrBuf->Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
-						StrBuf->Printf(&buf, msg_txt(344), pc_group_id2name(pc_get_group_id(pl_sd))); // "(%s) "
+						StrBuf->Printf(&buf, msg_txt(344), pc_group_get_name(pl_sd->group)); // "(%s) "
 					if (p != NULL)
 						StrBuf->Printf(&buf, msg_txt(345), p->party.name); // " | Party: '%s'"
 					if (g != NULL)
@@ -764,11 +764,11 @@ ACMD(load)
 	nullpo_retr(-1, sd);
 	
 	m = iMap->mapindex2mapid(sd->status.save_point.map);
-	if (m >= 0 && map[m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
+	if (m >= 0 && map[m].flag.nowarpto && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 		clif->message(fd, msg_txt(249));	// You are not authorized to warp to your save map.
 		return false;
 	}
-	if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
+	if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarp && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 		clif->message(fd, msg_txt(248));	// You are not authorized to warp from your current map.
 		return false;
 	}
@@ -1866,11 +1866,11 @@ ACMD(go)
 	if (town >= 0 && town < ARRAYLENGTH(data))
 	{
 		m = iMap->mapname2mapid(data[town].map);
-		if (m >= 0 && map[m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
+		if (m >= 0 && map[m].flag.nowarpto && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 			clif->message(fd, msg_txt(247));
 			return false;
 		}
-		if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
+		if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarp && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 			clif->message(fd, msg_txt(248));
 			return false;
 		}
@@ -2714,11 +2714,11 @@ ACMD(recall) {
 		return false;
 	}
 	
-	if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
+	if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarpto && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 		clif->message(fd, msg_txt(1019)); // You are not authorized to warp someone to this map.
 		return false;
 	}
-	if (pl_sd->bl.m >= 0 && map[pl_sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
+	if (pl_sd->bl.m >= 0 && map[pl_sd->bl.m].flag.nowarp && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 		clif->message(fd, msg_txt(1020)); // You are not authorized to warp this player from their map.
 		return false;
 	}
@@ -3425,7 +3425,7 @@ ACMD(recallall)
 	
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 	
-	if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
+	if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarpto && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 		clif->message(fd, msg_txt(1032)); // You are not authorized to warp somenone to your current map.
 		return false;
 	}
@@ -3438,7 +3438,7 @@ ACMD(recallall)
 		{
 			if (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y)
 				continue; // Don't waste time warping the character to the same place.
-			if (pl_sd->bl.m >= 0 && map[pl_sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE))
+			if (pl_sd->bl.m >= 0 && map[pl_sd->bl.m].flag.nowarp && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE))
 				count++;
 			else {
 				if (pc_isdead(pl_sd)) { //Wake them up
@@ -3480,7 +3480,7 @@ ACMD(guildrecall)
 		return false;
 	}
 	
-	if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
+	if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarpto && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 		clif->message(fd, msg_txt(1032)); // You are not authorized to warp somenone to your current map.
 		return false;
 	}
@@ -3501,7 +3501,7 @@ ACMD(guildrecall)
 		{
 			if (pc->get_group_level(pl_sd) > pc->get_group_level(sd) || (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y))
 				continue; // Skip GMs greater than you...             or chars already on the cell
-			if (pl_sd->bl.m >= 0 && map[pl_sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE))
+			if (pl_sd->bl.m >= 0 && map[pl_sd->bl.m].flag.nowarp && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE))
 				count++;
 			else
 				pc->setpos(pl_sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_RESPAWN);
@@ -3539,7 +3539,7 @@ ACMD(partyrecall)
 		return false;
 	}
 	
-	if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
+	if (sd->bl.m >= 0 && map[sd->bl.m].flag.nowarpto && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 		clif->message(fd, msg_txt(1032)); // You are not authorized to warp somenone to your current map.
 		return false;
 	}
@@ -3560,7 +3560,7 @@ ACMD(partyrecall)
 		{
 			if (pc->get_group_level(pl_sd) > pc->get_group_level(sd) || (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y))
 				continue; // Skip GMs greater than you...             or chars already on the cell
-			if (pl_sd->bl.m >= 0 && map[pl_sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE))
+			if (pl_sd->bl.m >= 0 && map[pl_sd->bl.m].flag.nowarp && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE))
 				count++;
 			else
 				pc->setpos(pl_sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_RESPAWN);
@@ -6394,13 +6394,11 @@ ACMD(adjgroup)
 		return false;
 	}
 	
-	if (!pc_group_exists(new_group)) {
+	if (pc->set_group(sd, new_group) != 0) {
 		clif->message(fd, msg_txt(1227)); // Specified group does not exist.
 		return false;
 	}
-	
-	sd->group_id = new_group;
-	pc_group_pc_load(sd);/* update cache */
+
 	clif->message(fd, msg_txt(1228)); // Group changed successfully.
 	clif->message(sd->fd, msg_txt(1229)); // Your group has changed.
 	return true;
@@ -6771,7 +6769,7 @@ ACMD(showmobs)
 		return true;
 	}
 	
-	if(mob_db(mob_id)->status.mode&MD_BOSS && !pc_has_permission(sd, PC_PERM_SHOW_BOSS)){	// If player group does not have access to boss mobs.
+	if(mob_db(mob_id)->status.mode&MD_BOSS && !pc->has_permission(sd, PC_PERM_SHOW_BOSS)){	// If player group does not have access to boss mobs.
 		clif->message(fd, msg_txt(1251)); // Can't show boss mobs!
 		return true;
 	}
@@ -8423,11 +8421,11 @@ static void atcommand_commands_sub(struct map_session_data* sd, const int fd, At
 		
 		switch( type ) {
 			case COMMAND_CHARCOMMAND:
-				if( cmd->char_groups[sd->group_pos] == 0 )
+				if( cmd->char_groups[pc_group_get_idx(sd->group)] == 0 )
 					continue;
 				break;
 			case COMMAND_ATCOMMAND:
-				if( cmd->at_groups[sd->group_pos] == 0 )
+				if( cmd->at_groups[pc_group_get_idx(sd->group)] == 0 )
 					continue;
 				break;
 			default:
@@ -8664,17 +8662,17 @@ ACMD(addperm) {
 		return false;
 	}
 	
-	if( add && (sd->permissions&pc_g_permission_name[i].permission) ) {
+	if( add && (sd->extra_temp_permissions&pc_g_permission_name[i].permission) ) {
 		sprintf(atcmd_output,  msg_txt(1381),sd->status.name,pc_g_permission_name[i].name); // User '%s' already possesses the '%s' permission.
 		clif->message(fd, atcmd_output);
 		return false;
-	} else if ( !add && !(sd->permissions&pc_g_permission_name[i].permission) ) {
+	} else if ( !add && !(sd->extra_temp_permissions&pc_g_permission_name[i].permission) ) {
 		sprintf(atcmd_output,  msg_txt(1382),sd->status.name,pc_g_permission_name[i].name); // User '%s' doesn't possess the '%s' permission.
 		clif->message(fd, atcmd_output);
 		sprintf(atcmd_output,msg_txt(1383),sd->status.name); // -- User '%s' Permissions
 		clif->message(fd, atcmd_output);
 		for( i = 0; i < perm_size; i++ ) {
-			if( sd->permissions&pc_g_permission_name[i].permission ) {
+			if( sd->extra_temp_permissions&pc_g_permission_name[i].permission ) {
 				sprintf(atcmd_output,"- %s",pc_g_permission_name[i].name);
 				clif->message(fd, atcmd_output);
 			}
@@ -8684,9 +8682,9 @@ ACMD(addperm) {
 	}
 	
 	if( add )
-		sd->permissions |= pc_g_permission_name[i].permission;
+		sd->extra_temp_permissions |= pc_g_permission_name[i].permission;
 	else
-		sd->permissions &=~ pc_g_permission_name[i].permission;
+		sd->extra_temp_permissions &=~ pc_g_permission_name[i].permission;
 	
 	
 	sprintf(atcmd_output, msg_txt(1384),sd->status.name); // User '%s' permissions updated successfully. The changes are temporary.
@@ -8782,7 +8780,7 @@ ACMD(join) {
 		return false;
 	}
 	if( channel->pass[0] != '\0'  && strcmp(channel->pass,pass) != 0 ) {
-		if( pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
+		if( pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
 			sd->stealth = true;
 		} else {
 			sprintf(atcmd_output, msg_txt(1401),name,command); // '%s' Channel is password protected (usage: %s <#channel_name> <password>)
@@ -8875,11 +8873,11 @@ ACMD(channel) {
 	sub1[0] = sub2[0] = sub3[0] = '\0';
 	
 	if( !message || !*message || sscanf(message, "%s %s %s %s", key, sub1, sub2, sub3) < 1 ) {
-		atcmd_channel_help(fd,command,( hChSys.allow_user_channel_creation || pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ));
+		atcmd_channel_help(fd,command,( hChSys.allow_user_channel_creation || pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ));
 		return true;
 	}
 	
-	if( strcmpi(key,"create") == 0 && ( hChSys.allow_user_channel_creation || pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) ) {
+	if( strcmpi(key,"create") == 0 && ( hChSys.allow_user_channel_creation || pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) ) {
 		if( sub1[0] != '#' ) {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
 			return false;
@@ -8928,7 +8926,7 @@ ACMD(channel) {
 			}
 		} else {
 			DBIterator *iter = db_iterator(clif->channel_db);
-			bool show_all = pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ? true : false;
+			bool show_all = pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ? true : false;
 			clif->message(fd, msg_txt(1410)); // -- Public Channels
 			if( hChSys.local ) {
 				sprintf(atcmd_output, msg_txt(1409), hChSys.local_name, map[sd->bl.m].channel ? db_size(map[sd->bl.m].channel->users) : 0);// - #%s ( %d users )
@@ -8961,7 +8959,7 @@ ACMD(channel) {
 			return false;
 		}
 		
-		if( channel->owner != sd->status.char_id && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
+		if( channel->owner != sd->status.char_id && !pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
 			sprintf(atcmd_output, msg_txt(1412), sub1);// You're not the owner of channel '%s'
 			clif->message(fd, atcmd_output);
 			return false;
@@ -9053,7 +9051,7 @@ ACMD(channel) {
 			return false;
 		}
 		
-		if( channel->owner != sd->status.char_id && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
+		if( channel->owner != sd->status.char_id && !pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
 			sprintf(atcmd_output, msg_txt(1412), sub1);// You're not the owner of channel '%s'
 			clif->message(fd, atcmd_output);
 			return false;
@@ -9071,7 +9069,7 @@ ACMD(channel) {
 		         return false;
 		 }
 		
-		if( pc_has_permission(pl_sd, PC_PERM_HCHSYS_ADMIN) ) {
+		if( pc->has_permission(pl_sd, PC_PERM_HCHSYS_ADMIN) ) {
 			clif->message(fd, msg_txt(1464)); // Ban failed, not possible to ban this user.
 			return false;
 		}
@@ -9109,7 +9107,7 @@ ACMD(channel) {
 			return false;
 		}
 		
-		if( channel->owner != sd->status.char_id && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
+		if( channel->owner != sd->status.char_id && !pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
 			sprintf(atcmd_output, msg_txt(1412), sub1);// You're not the owner of channel '%s'
 			clif->message(fd, atcmd_output);
 			return false;
@@ -9154,7 +9152,7 @@ ACMD(channel) {
 			return false;
 		}
 		
-		if( channel->owner != sd->status.char_id && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
+		if( channel->owner != sd->status.char_id && !pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
 			sprintf(atcmd_output, msg_txt(1412), sub1);// You're not the owner of channel '%s'
 			clif->message(fd, atcmd_output);
 			return false;
@@ -9175,7 +9173,7 @@ ACMD(channel) {
 		DBIterator *iter = NULL;
 		DBKey key;
 		DBData *data;
-		bool isA = pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN)?true:false;
+		bool isA = pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN)?true:false;
 		if( sub1[0] != '#' ) {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
 			return false;
@@ -9234,7 +9232,7 @@ ACMD(channel) {
 			return false;
 		}
 		
-		if( channel->owner != sd->status.char_id && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
+		if( channel->owner != sd->status.char_id && !pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
 			sprintf(atcmd_output, msg_txt(1412), sub1);// You're not the owner of channel '%s'
 			clif->message(fd, atcmd_output);
 			return false;
@@ -9325,7 +9323,7 @@ ACMD(channel) {
 		}
 		
 	} else {
-		atcmd_channel_help(fd,command,( hChSys.allow_user_channel_creation || pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ));
+		atcmd_channel_help(fd,command,( hChSys.allow_user_channel_creation || pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ));
 	}
 	
 	return true;
@@ -9894,7 +9892,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 			if( !pc->get_group_level(sd) ) {
 				if( x >= 1 || y >= 1 ) { /* we have command */
 					info = get_atcommandinfo_byname(atcommand_checkalias(command + 1));
-					if( !info || info->char_groups[sd->group_pos] == 0 ) /* if we can't use or doesn't exist: don't even display the command failed message */
+					if( !info || info->char_groups[pc_group_get_idx(sd->group)] == 0 ) /* if we can't use or doesn't exist: don't even display the command failed message */
 							return false;
 				} else
 					return false;/* display as normal message */
@@ -9966,17 +9964,17 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 	// type == 1 : player invoked
 	if (type == 1) {
 		int i;
-		if ((*command == atcommand->at_symbol && info->at_groups[sd->group_pos] == 0) ||
-		    (*command == atcommand->char_symbol && info->char_groups[sd->group_pos] == 0) ) {
+		if ((*command == atcommand->at_symbol && info->at_groups[pc_group_get_idx(sd->group)] == 0) ||
+		    (*command == atcommand->char_symbol && info->char_groups[pc_group_get_idx(sd->group)] == 0) ) {
 			return false;
 		}
-		if( pc_isdead(sd) && pc_has_permission(sd,PC_PERM_DISABLE_CMD_DEAD) ) {
+		if( pc_isdead(sd) && pc->has_permission(sd,PC_PERM_DISABLE_CMD_DEAD) ) {
 			clif->message(fd, msg_txt(1393)); // You can't use commands while dead
 			return true;
 		}
 		for(i = 0; i < map[sd->bl.m].zone->disabled_commands_count; i++) {
 			if( info->func == map[sd->bl.m].zone->disabled_commands[i]->cmd ) {
-				if( sd->group_level < map[sd->bl.m].zone->disabled_commands[i]->group_lv ) {
+				if( pc->get_group_level(sd) < map[sd->bl.m].zone->disabled_commands[i]->group_lv ) {
 					clif->colormes(sd->fd,COLOR_RED,"This command is disabled in this area");
 					return true;
 				} else
@@ -10128,39 +10126,87 @@ static void atcommand_config_read(const char* config_filename) {
 	config_destroy(&atcommand_config);
 	return;
 }
-void atcommand_db_load_groups(void) {
-	DBIterator *iter = db_iterator(atcommand->db);
-	AtCommandInfo* cmd;
-	int i;
 
-	for (cmd = dbi_first(iter); dbi_exists(iter); cmd = dbi_next(iter)) {
-		cmd->at_groups = aMalloc( pc_group_max * sizeof(char) );
-		cmd->char_groups = aMalloc( pc_group_max * sizeof(char) );
-		for(i = 0; i < pc_group_max; i++) {
-			int idx = pc_group_id2idx(atcommand->group_ids[i]);
-			if( pc_group_can_use_command(atcommand->group_ids[i], cmd->command, COMMAND_ATCOMMAND ) )
-			   cmd->at_groups[idx] = 1;
-			else
-			   cmd->at_groups[idx] = 0;
-		   if( pc_group_can_use_command(atcommand->group_ids[i], cmd->command, COMMAND_CHARCOMMAND ) )
-			  cmd->char_groups[idx] = 1;
-			else
-			  cmd->char_groups[idx] = 0;
+/**
+ * In group configuration file, setting for each command is either
+ * <commandname> : <bool> (only atcommand), or
+ * <commandname> : [ <bool>, <bool> ] ([ atcommand, charcommand ])
+ * Maps AtCommandType enums to indexes of <commandname> value array,
+ * COMMAND_ATCOMMAND (1) being index 0, COMMAND_CHARCOMMAND (2) being index 1.
+ * @private
+ */
+static inline int AtCommandType2idx(AtCommandType type) { return (type-1); }
+
+/**
+ * Loads permissions for groups to use commands.
+ * 
+ */
+void atcommand_db_load_groups(GroupSettings **groups, config_setting_t **commands_, size_t sz)
+{
+	DBIterator *iter = db_iterator(atcommand->db);
+	AtCommandInfo *atcmd;
+
+	for (atcmd = dbi_first(iter); dbi_exists(iter); atcmd = dbi_next(iter)) {
+		int i;
+		CREATE(atcmd->at_groups, char, sz);
+		CREATE(atcmd->char_groups, char, sz);
+		for (i = 0; i < sz; i++) {
+			GroupSettings *group = groups[i];
+			config_setting_t *commands = commands_[i];
+			int result = 0;
+			int idx = -1;
+			
+			if (group == NULL) {
+				ShowError("atcommand_db_load_groups: group is NULL\n");
+				continue;
+			}
+
+			idx = pc_group_get_idx(group);
+			if (idx < 0 || idx >= sz) {
+				ShowError("atcommand_db_load_groups: index (%d) out of bounds [0,%d]\n", idx, sz - 1);
+				continue;
+			}
+			
+			if (pc_group_has_permission(group, PC_PERM_USE_ALL_COMMANDS)) {
+				atcmd->at_groups[idx] = atcmd->char_groups[idx] = 1;
+				continue;
+			}
+			
+			if (commands != NULL) {
+				config_setting_t *cmd = NULL;
+
+				// <commandname> : <bool> (only atcommand)
+				if (config_setting_lookup_bool(commands, atcmd->command, &result) && result) {
+					atcmd->at_groups[idx] = 1;
+				}
+				else
+				// <commandname> : [ <bool>, <bool> ] ([ atcommand, charcommand ])
+				if ((cmd = config_setting_get_member(commands, atcmd->command)) != NULL &&
+				    config_setting_is_aggregate(cmd) &&
+				    config_setting_length(cmd) == 2
+				) {
+					if (config_setting_get_bool_elem(cmd, AtCommandType2idx(COMMAND_ATCOMMAND))) {
+						atcmd->at_groups[idx] = 1;
+					}
+					if (config_setting_get_bool_elem(cmd, AtCommandType2idx(COMMAND_CHARCOMMAND))) {
+						atcmd->char_groups[idx] = 1;
+					}
+				}
+			}
 		}
 	}
-
 	dbi_destroy(iter);
-
 	return;
 }
+
 bool atcommand_can_use(struct map_session_data *sd, const char *command) {
 	AtCommandInfo *info = get_atcommandinfo_byname(atcommand_checkalias(command + 1));
 	
 	if (info == NULL)
 		return false;
 	
-	if ((*command == atcommand->at_symbol && info->at_groups[sd->group_pos] != 0) ||
-		(*command == atcommand->char_symbol && info->char_groups[sd->group_pos] != 0) ) {
+	if ((*command == atcommand->at_symbol && info->at_groups[pc_group_get_idx(sd->group)] != 0) ||
+		(*command == atcommand->char_symbol && info->char_groups[pc_group_get_idx(sd->group)] != 0) ) {
 		return true;
 	}
 	
@@ -10172,8 +10218,8 @@ bool atcommand_can_use2(struct map_session_data *sd, const char *command, AtComm
 	if (info == NULL)
 		return false;
 	
-	if ((type == COMMAND_ATCOMMAND && info->at_groups[sd->group_pos] != 0) ||
-		(type == COMMAND_CHARCOMMAND && info->char_groups[sd->group_pos] != 0) ) {
+	if ((type == COMMAND_ATCOMMAND && info->at_groups[pc_group_get_idx(sd->group)] != 0) ||
+		(type == COMMAND_CHARCOMMAND && info->char_groups[pc_group_get_idx(sd->group)] != 0) ) {
 		return true;
 	}
 	
@@ -10205,23 +10251,24 @@ bool atcommand_hp_add(char *name, AtCommandFunc func) {
 	strdb_put(atcommand->db, cmd->command, cmd);
 	return true;
 }
-void atcommand_db_clear(void) {
-	if (atcommand->db != NULL) {
-		DBIterator *iter = db_iterator(atcommand->db);
-		AtCommandInfo* cmd;
 
-		for (cmd = dbi_first(iter); dbi_exists(iter); cmd = dbi_next(iter)) {
-			aFree(cmd->at_groups);
-			aFree(cmd->char_groups);
-			if( cmd->help != NULL )
-				aFree(cmd->help);
-		}
+/**
+ * @see DBApply
+ */
+static int atcommand_db_clear_sub(DBKey key, DBData *data, va_list args)
+{
+	AtCommandInfo *cmd = DB->data2ptr(data);
+	aFree(cmd->at_groups);
+	aFree(cmd->char_groups);
+	if (cmd->help != NULL)
+		aFree(cmd->help);
+	return 0;
+}
 
-		dbi_destroy(iter);
-
-		db_destroy(atcommand->db);
-		atcommand->db = NULL;
-	}
+void atcommand_db_clear(void)
+{
+	if (atcommand->db != NULL)
+		atcommand->db->destroy(atcommand->db, atcommand_db_clear_sub);
 	if (atcommand->alias_db != NULL)
 		db_destroy(atcommand->alias_db);
 }
@@ -10246,8 +10293,6 @@ void do_init_atcommand(void) {
 
 void do_final_atcommand(void) {
 	atcommand_db_clear();
-	if( atcommand->group_ids )
-		aFree(atcommand->group_ids);
 }
 
 void atcommand_defaults(void) {

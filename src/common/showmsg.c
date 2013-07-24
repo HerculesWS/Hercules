@@ -13,7 +13,7 @@
 #include <time.h>
 #include <stdlib.h> // atexit
 
-#include "libconfig.h"
+#include "../../3rdparty/libconfig/libconfig.h"
 
 #ifdef WIN32
 	#include "../common/winapi.h"

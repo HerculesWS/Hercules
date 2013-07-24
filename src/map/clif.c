@@ -2948,7 +2948,7 @@ int clif_hpmeter_sub(struct block_list *bl, va_list ap) {
 	if( !tsd->fd || tsd == sd )
 		return 0;
 
-	if( !pc_has_permission(tsd, PC_PERM_VIEW_HPMETER) )
+	if( !pc->has_permission(tsd, PC_PERM_VIEW_HPMETER) )
 		return 0;
 	WFIFOHEAD(tsd->fd,packet_len(cmd));
 	WFIFOW(tsd->fd,0) = cmd;
@@ -3776,7 +3776,7 @@ void clif_useitemack(struct map_session_data *sd,int index,int amount,bool ok)
 }
 
 void clif_hercules_chsys_send(struct hChSysCh *channel, struct map_session_data *sd, char *msg) {
-	if( channel->msg_delay != 0 && DIFF_TICK(sd->hchsysch_tick + ( channel->msg_delay * 1000 ), iTimer->gettick()) > 0 && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
+	if( channel->msg_delay != 0 && DIFF_TICK(sd->hchsysch_tick + ( channel->msg_delay * 1000 ), iTimer->gettick()) > 0 && !pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
 		clif->colormes(sd->fd,COLOR_RED,msg_txt(1455));
 		return;
 	} else {
@@ -4345,7 +4345,7 @@ void clif_getareachar_pc(struct map_session_data* sd,struct map_session_data* ds
 	}
 	if( (sd->status.party_id && dstsd->status.party_id == sd->status.party_id) || //Party-mate, or hpdisp setting.
 		(sd->bg_id && sd->bg_id == dstsd->bg_id) || //BattleGround
-		pc_has_permission(sd, PC_PERM_VIEW_HPMETER)
+		pc->has_permission(sd, PC_PERM_VIEW_HPMETER)
 	)
 		clif->hpmeter_single(sd->fd, dstsd->bl.id, dstsd->battle_status.hp, dstsd->battle_status.max_hp);
 
@@ -13527,7 +13527,7 @@ void clif_parse_GMChangeMapType(int fd, struct map_session_data *sd)
 {
 	int x,y,type;
 
-	if( pc_has_permission(sd, PC_PERM_USE_CHANGEMAPTYPE) )
+	if (!pc->has_permission(sd, PC_PERM_USE_CHANGEMAPTYPE))
 		return;
 
 	x = RFIFOW(fd,2);
@@ -14389,7 +14389,7 @@ void clif_parse_Check(int fd, struct map_session_data *sd)
 	char charname[NAME_LENGTH];
 	struct map_session_data* pl_sd;
 
-	if(!pc_has_permission(sd, PC_PERM_USE_CHECK))
+	if(!pc->has_permission(sd, PC_PERM_USE_CHECK))
 		return;
 
 	safestrncpy(charname, (const char*)RFIFOP(fd,packet_db[RFIFOW(fd,0)].pos[0]), sizeof(charname));
@@ -15411,7 +15411,7 @@ void clif_parse_ViewPlayerEquip(int fd, struct map_session_data* sd)
 	if (!tsd)
 		return;
 
-	if( tsd->status.show_equip || pc_has_permission(sd, PC_PERM_VIEW_EQUIPMENT) )
+	if( tsd->status.show_equip || pc->has_permission(sd, PC_PERM_VIEW_EQUIPMENT) )
 		clif->viewequip_ack(sd, tsd);
 	else
 		clif->viewequip_fail(sd);

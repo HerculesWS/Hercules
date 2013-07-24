@@ -2,7 +2,7 @@
 // For more information, see LICENCE in the main folder
 
 #include "conf.h"
-#include "libconfig.h"
+#include "../../3rdparty/libconfig/libconfig.h"
 
 #include "../common/showmsg.h" // ShowError
 

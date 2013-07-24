@@ -12,15 +12,16 @@
 #include "battleground.h"
 #include "buyingstore.h"  // struct s_buyingstore
 #include "itemdb.h"
+#include "log.h"
 #include "map.h" // RC_MAX
+#include "mob.h"
+#include "pc_groups.h"
 #include "script.h" // struct script_reg, struct script_regstr
 #include "searchstore.h"  // struct s_search_store_info
 #include "status.h" // OPTION_*, struct weapon_atk
 #include "unit.h" // unit_stop_attack(), unit_stop_walking()
 #include "vending.h" // struct s_vending
-#include "mob.h"
-#include "log.h"
-#include "pc_groups.h"
+
 
 #define MAX_PC_BONUS 10
 #define MAX_PC_SKILL_REQUIRE 5
@@ -181,9 +182,11 @@ struct map_session_data {
 	} special_state;
 	int login_id1, login_id2;
 	unsigned short class_;	//This is the internal job ID used by the map server to simplify comparisons/queries/etc. [Skotlex]
-	int group_id, group_pos, group_level;
-	unsigned int permissions;/* group permissions */
-	bool group_log_command;
+	
+	/// Groups & permissions
+	int group_id;
+	GroupSettings *group;
+	unsigned int extra_temp_permissions; /* permissions from @addperm */
 	
 	struct mmo_charstatus status;
 	struct registry save_reg;
@@ -685,9 +688,6 @@ enum equip_pos {
 
 #define pc_get_group_id(sd) ( (sd)->group_id )
 
-#define pc_has_permission(sd, permission) ( ((sd)->permissions&permission) != 0 )
-#define pc_should_log_commands(sd) ( (sd)->group_log_command != false )
-
 #define pc_checkoverhp(sd) ((sd)->battle_status.hp == (sd)->battle_status.max_hp)
 #define pc_checkoversp(sd) ((sd)->battle_status.sp == (sd)->battle_status.max_sp)
 
@@ -751,13 +751,17 @@ struct pc_interface {
 
 	/* funcs */
 	
+	struct map_session_data* (*get_dummy_sd) (void);
 	int (*class2idx) (int class_);
 	int (*get_group_level) (struct map_session_data *sd);
 	//int (*getrefinebonus) (int lv,int type); FIXME: This function does not exist, nor it is ever called
 	bool (*can_give_items) (struct map_session_data *sd);
 	
 	bool (*can_use_command) (struct map_session_data *sd, const char *command);
-	
+	bool (*has_permission) (struct map_session_data *sd, enum e_pc_permission permission);
+	int (*set_group) (struct map_session_data *sd, int group_id);
+	bool (*should_log_commands) (struct map_session_data *sd);
+
 	int (*setrestartvalue) (struct map_session_data *sd,int type);
 	int (*makesavestatus) (struct map_session_data *);
 	void (*respawn) (struct map_session_data* sd, clr_type clrtype);
