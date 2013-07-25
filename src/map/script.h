@@ -6,36 +6,20 @@
 
 #include "map.h" //EVENT_NAME_LENGTH
 
-#define NUM_WHISPER_VAR 10
-
+/**
+ * Declarations
+ **/
 struct map_session_data;
 struct eri;
 
-extern int potion_flag; //For use on Alchemist improved potions/Potion Pitcher. [Skotlex]
-extern int potion_hp, potion_per_hp, potion_sp, potion_per_sp;
-extern int potion_target;
+/**
+ * Defines
+ **/
+#define NUM_WHISPER_VAR 10
 
-extern struct Script_Config {
-	unsigned warn_func_mismatch_argtypes : 1;
-	unsigned warn_func_mismatch_paramnum : 1;
-	int check_cmdcount;
-	int check_gotocount;
-	int input_min_value;
-	int input_max_value;
-
-	const char *die_event_name;
-	const char *kill_pc_event_name;
-	const char *kill_mob_event_name;
-	const char *login_event_name;
-	const char *logout_event_name;
-	const char *loadmap_event_name;
-	const char *baselvup_event_name;
-	const char *joblvup_event_name;
-
-	const char* ontouch_name;
-	const char* ontouch2_name;
-} script_config;
-
+/**
+ * Enumerations
+ **/
 typedef enum c_op {
 	C_NOP, // end of script/no value (nil)
 	C_POS,
@@ -51,7 +35,7 @@ typedef enum c_op {
 	C_USERFUNC, // internal script function
 	C_USERFUNC_POS, // internal script function label
 	C_REF, // the next call to c_op2 should push back a ref to the left operand
-
+	
 	// operators
 	C_OP3, // a ? b : c
 	C_LOR, // a || b
@@ -78,6 +62,47 @@ typedef enum c_op {
 	C_ADD_PP, // ++a
 	C_SUB_PP, // --a
 } c_op;
+
+enum hQueueOpt {
+	HQO_NONE,
+	HQO_onLogOut,
+	HQO_OnDeath,
+	HQO_OnMapChange,
+	HQO_MAX,
+};
+
+enum e_script_state { RUN,STOP,END,RERUNLINE,GOTO,RETFUNC,CLOSE };
+
+enum script_parse_options {
+	SCRIPT_USE_LABEL_DB = 0x1,// records labels in scriptlabel_db
+	SCRIPT_IGNORE_EXTERNAL_BRACKETS = 0x2,// ignores the check for {} brackets around the script
+	SCRIPT_RETURN_EMPTY_SCRIPT = 0x4// returns the script object instead of NULL for empty scripts
+};
+
+/**
+ * Structures
+ **/
+
+struct Script_Config {
+	unsigned warn_func_mismatch_argtypes : 1;
+	unsigned warn_func_mismatch_paramnum : 1;
+	int check_cmdcount;
+	int check_gotocount;
+	int input_min_value;
+	int input_max_value;
+
+	const char *die_event_name;
+	const char *kill_pc_event_name;
+	const char *kill_mob_event_name;
+	const char *login_event_name;
+	const char *logout_event_name;
+	const char *loadmap_event_name;
+	const char *baselvup_event_name;
+	const char *joblvup_event_name;
+
+	const char* ontouch_name;
+	const char* ontouch2_name;
+};
 
 struct script_retinfo {
 	struct DBMap* var_function;// scope variables
@@ -113,14 +138,6 @@ struct script_stack {
 	struct DBMap* var_function;// scope variables
 };
 
-enum hQueueOpt {
-	HQO_NONE,
-	HQO_onLogOut,
-	HQO_OnDeath,
-	HQO_OnMapChange,
-	HQO_MAX,
-};
-
 /* [Ind/Hercules] */
 struct hQueue {
 	int id;
@@ -137,11 +154,6 @@ struct hQueueIterator {
 	int items;
 	int pos;
 };
-
-//
-// Script state
-//
-enum e_script_state { RUN,STOP,END,RERUNLINE,GOTO,RETFUNC,CLOSE };
 
 struct script_state {
 	struct script_stack* stack;
@@ -173,44 +185,6 @@ struct script_regstr {
 	int index;
 	char* data;
 };
-
-enum script_parse_options {
-	SCRIPT_USE_LABEL_DB = 0x1,// records labels in scriptlabel_db
-	SCRIPT_IGNORE_EXTERNAL_BRACKETS = 0x2,// ignores the check for {} brackets around the script
-	SCRIPT_RETURN_EMPTY_SCRIPT = 0x4// returns the script object instead of NULL for empty scripts
-};
-
-const char* skip_space(const char* p);
-void script_error(const char* src, const char* file, int start_line, const char* error_msg, const char* error_pos);
-
-struct script_code* parse_script(const char* src,const char* file,int line,int options);
-void run_script_sub(struct script_code *rootscript,int pos,int rid,int oid, char* file, int lineno);
-void run_script(struct script_code*,int,int,int);
-
-int set_var(struct map_session_data *sd, char *name, void *val);
-int run_script_timer(int tid, unsigned int tick, int id, intptr_t data);
-void run_script_main(struct script_state *st);
-
-void script_stop_instances(struct script_code *code);
-struct linkdb_node* script_erase_sleepdb(struct linkdb_node *n);
-void script_free_code(struct script_code* code);
-void script_free_vars(struct DBMap *storage);
-struct script_state* script_alloc_state(struct script_code* rootscript, int pos, int rid, int oid);
-void script_free_state(struct script_state* st);
-
-struct DBMap* script_get_userfunc_db(void);
-void script_run_autobonus(const char *autobonus,int id, int pos);
-
-void script_cleararray_pc(struct map_session_data* sd, const char* varname, void* value);
-void script_setarray_pc(struct map_session_data* sd, const char* varname, uint8 idx, void* value, int* refcache);
-
-int script_config_read(char *cfgName);
-int add_str(const char* p);
-const char* get_str(int id);
-int script_reload(void);
-
-// @commands (script based)
-void setd_sub(struct script_state *st, struct map_session_data *sd, const char *varname, int elem, void *value, struct DBMap **ref);
 
 struct script_function {
 	bool (*func)(struct script_state *st);
@@ -366,11 +340,28 @@ struct script_interface {
 	struct script_label_entry *labels;
 	int label_count;
 	int labels_size;
+	/* */
+	struct Script_Config config;
+	/* */
+	/* Caches compiled autoscript item code. */
+	/* Note: This is not cleared when reloading itemdb. */
+	DBMap* autobonus_db; // char* script -> char* bytecode
+	DBMap* userfunc_db; // const char* func_name -> struct script_code*
+	/* */
+	int potion_flag; //For use on Alchemist improved potions/Potion Pitcher. [Skotlex]
+	int potion_hp, potion_per_hp, potion_sp, potion_per_sp;
+	int potion_target;
 	/*  */
 	void (*init) (void);
 	void (*final) (void);
-	/*  */
+	int  (*reload) (void);
+	/* parse */
+	struct script_code* (*parse) (const char* src,const char* file,int line,int options);
 	void (*parse_builtin) (void);
+	const char* (*parse_subexpr) (const char* p,int limit);
+	const char* (*skip_space) (const char* p);
+	void (*error) (const char* src, const char* file, int start_line, const char* error_msg, const char* error_pos);
+	/* */
 	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st));
 	int (*conv_num) (struct script_state *st,struct script_data *data);
 	const char* (*conv_str) (struct script_state *st,struct script_data *data);
@@ -387,6 +378,24 @@ struct script_interface {
 	void (*set_constant_force) (const char *name, int value, bool isparameter);
 	bool (*get_constant) (const char* name, int* value);
 	void (*label_add)(int key, int pos);
+	void (*run) (struct script_code *rootscript,int pos,int rid,int oid);
+	void (*run_main) (struct script_state *st);
+	int (*run_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*set_var) (struct map_session_data *sd, char *name, void *val);
+	void (*stop_instances) (struct script_code *code);
+	void (*free_code) (struct script_code* code);
+	void (*free_vars) (struct DBMap *storage);
+	struct script_state* (*alloc_state) (struct script_code* rootscript, int pos, int rid, int oid);
+	void (*free_state) (struct script_state* st);
+	void (*run_autobonus) (const char *autobonus,int id, int pos);
+	void (*cleararray_pc) (struct map_session_data* sd, const char* varname, void* value);
+	void (*setarray_pc) (struct map_session_data* sd, const char* varname, uint8 idx, void* value, int* refcache);
+	int (*config_read) (char *cfgName);
+	int (*add_str) (const char* p);
+	const char* (*get_str) (int id);
+	int (*search_str) (const char* p);
+	void (*setd_sub) (struct script_state *st, struct map_session_data *sd, const char *varname, int elem, void *value, struct DBMap **ref);
+	void (*attach_state) (struct script_state* st);
 	/* */
 	struct hQueue *(*queue) (int idx);
 	bool (*queue_add) (int idx, int var);

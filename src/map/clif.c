@@ -10428,7 +10428,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 
 			for( i = 0; i < NUM_WHISPER_VAR; ++i ) {
 				sprintf(output, "@whispervar%d$", i);
-				set_var(sd,output,(char *) split_data[i]);
+				script->set_var(sd,output,(char *) split_data[i]);
 			}
 
 			sprintf(output, "%s::OnWhisperGlobal", npc->exname);

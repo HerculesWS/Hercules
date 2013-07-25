@@ -44,7 +44,7 @@ bool mapreg_setreg(int uid, int val) {
 	struct mapreg_save *m;
 	int num = (uid & 0x00ffffff);
 	int i   = (uid & 0xff000000) >> 24;
-	const char* name = get_str(num);
+	const char* name = script->get_str(num);
 
 	if( val != 0 ) {
 		if( (m = idb_get(mapreg_db,uid)) ) {
@@ -88,7 +88,7 @@ bool mapreg_setregstr(int uid, const char* str) {
 	struct mapreg_save *m;
 	int num = (uid & 0x00ffffff);
 	int i   = (uid & 0xff000000) >> 24;
-	const char* name = get_str(num);
+	const char* name = script->get_str(num);
 	
 	if( str == NULL || *str == 0 ) {
 		if(name[1] != '@') {
@@ -160,7 +160,7 @@ static void script_load_mapreg(void) {
 	
 	while ( SQL_SUCCESS == SQL->StmtNextRow(stmt) ) {
 		struct mapreg_save *m = NULL;
-		int s = add_str(varname);
+		int s = script->add_str(varname);
 		int i = index;
 
 		if( varname[length-1] == '$' ) {
@@ -204,7 +204,7 @@ static void script_save_mapreg(void) {
 			if( m->save ) {
 				int num = (m->uid & 0x00ffffff);
 				int i   = (m->uid & 0xff000000) >> 24;
-				const char* name = get_str(num);
+				const char* name = script->get_str(num);
 
 				if( SQL_ERROR == SQL->Query(mmysql_handle, "UPDATE `%s` SET `value`='%d' WHERE `varname`='%s' AND `index`='%d' LIMIT 1", mapreg_table, m->u.i, name, i) )
 					Sql_ShowDebug(mmysql_handle);
@@ -221,7 +221,7 @@ static void script_save_mapreg(void) {
 			if( m->save ) {
 				int num = (m->uid & 0x00ffffff);
 				int i   = (m->uid & 0xff000000) >> 24;
-				const char* name = get_str(num);
+				const char* name = script->get_str(num);
 				char tmp_str2[2*255+1];
 
 				SQL->EscapeStringLen(mmysql_handle, tmp_str2, m->u.str, safestrnlen(m->u.str, 255));

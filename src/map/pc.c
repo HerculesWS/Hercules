@@ -1280,7 +1280,7 @@ int pc_reg_received(struct map_session_data *sd)
 	}
 
 	if( npc->motd ) /* [Ind/Hercules] */
-		run_script(npc->motd->u.scr.script, 0, sd->bl.id, fake_nd->bl.id);
+		script->run(npc->motd->u.scr.script, 0, sd->bl.id, fake_nd->bl.id);
 
 	return 1;
 }
@@ -1928,7 +1928,7 @@ int pc_delautobonus(struct map_session_data* sd, struct s_autobonus *autobonus,c
 					int j;
 					ARR_FIND( 0, EQI_MAX-1, j, sd->equip_index[j] >= 0 && sd->status.inventory[sd->equip_index[j]].equip == autobonus[i].pos );
 					if( j < EQI_MAX-1 )
-						script_run_autobonus(autobonus[i].bonus_script,sd->bl.id,sd->equip_index[j]);
+						script->run_autobonus(autobonus[i].bonus_script,sd->bl.id,sd->equip_index[j]);
 				}
 				continue;
 			}
@@ -1959,7 +1959,7 @@ int pc_exeautobonus(struct map_session_data *sd,struct s_autobonus *autobonus)
 		int j;
 		ARR_FIND( 0, EQI_MAX-1, j, sd->equip_index[j] >= 0 && sd->status.inventory[sd->equip_index[j]].equip == autobonus->pos );
 		if( j < EQI_MAX-1 )
-			script_run_autobonus(autobonus->other_script,sd->bl.id,sd->equip_index[j]);
+			script->run_autobonus(autobonus->other_script,sd->bl.id,sd->equip_index[j]);
 	}
 
 	autobonus->active = iTimer->add_timer(iTimer->gettick()+autobonus->duration, pc->endautobonus, sd->bl.id, (intptr_t)autobonus);
@@ -2948,7 +2948,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->skillatk), i, sd->skillatk[i].id == 0 || sd->skillatk[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillatk))
 			{	//Better mention this so the array length can be updated. [Skotlex]
-				ShowDebug("run_script: bonus2 bSkillAtk reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillatk), type2, val);
+				ShowDebug("script->run: bonus2 bSkillAtk reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillatk), type2, val);
 				break;
 			}
 			if (sd->skillatk[i].id == type2)
@@ -2964,7 +2964,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->skillheal), i, sd->skillheal[i].id == 0 || sd->skillheal[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillheal))
 			{ // Better mention this so the array length can be updated. [Skotlex]
-				ShowDebug("run_script: bonus2 bSkillHeal reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillheal), type2, val);
+				ShowDebug("script->run: bonus2 bSkillHeal reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillheal), type2, val);
 				break;
 			}
 			if (sd->skillheal[i].id == type2)
@@ -2980,7 +2980,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->skillheal2), i, sd->skillheal2[i].id == 0 || sd->skillheal2[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillheal2))
 			{ // Better mention this so the array length can be updated. [Skotlex]
-				ShowDebug("run_script: bonus2 bSkillHeal2 reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillheal2), type2, val);
+				ShowDebug("script->run: bonus2 bSkillHeal2 reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillheal2), type2, val);
 				break;
 			}
 			if (sd->skillheal2[i].id == type2)
@@ -2996,7 +2996,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->skillblown), i, sd->skillblown[i].id == 0 || sd->skillblown[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillblown))
 			{	//Better mention this so the array length can be updated. [Skotlex]
-				ShowDebug("run_script: bonus2 bSkillBlown reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillblown), type2, val);
+				ShowDebug("script->run: bonus2 bSkillBlown reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillblown), type2, val);
 				break;
 			}
 			if(sd->skillblown[i].id == type2)
@@ -3015,7 +3015,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->skillcast), i, sd->skillcast[i].id == 0 || sd->skillcast[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillcast))
 			{	//Better mention this so the array length can be updated. [Skotlex]
-				ShowDebug("run_script: bonus2 %s reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
+				ShowDebug("script->run: bonus2 %s reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",
 
 	#ifndef RENEWAL_CAST
 					"bCastRate",
@@ -3044,7 +3044,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 
 			{
 
-				ShowDebug("run_script: bonus2 bFixedCastrate reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillfixcastrate), type2, val);
+				ShowDebug("script->run: bonus2 bFixedCastrate reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillfixcastrate), type2, val);
 				break;
 			}
 
@@ -3161,7 +3161,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			ARR_FIND(0, ARRAYLENGTH(sd->skillusesprate), i, sd->skillusesprate[i].id == 0 || sd->skillusesprate[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillusesprate)) {
-				ShowDebug("run_script: bonus2 bSkillUseSPrate reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillusesprate), type2, val);
+				ShowDebug("script->run: bonus2 bSkillUseSPrate reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillusesprate), type2, val);
 				break;
 			}
 			if (sd->skillusesprate[i].id == type2)
@@ -3177,7 +3177,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->skillcooldown), i, sd->skillcooldown[i].id == 0 || sd->skillcooldown[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillcooldown))
 			{
-				ShowDebug("run_script: bonus2 bSkillCoolDown reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillcooldown), type2, val);
+				ShowDebug("script->run: bonus2 bSkillCoolDown reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillcooldown), type2, val);
 				break;
 			}
 			if (sd->skillcooldown[i].id == type2)
@@ -3193,7 +3193,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->skillfixcast), i, sd->skillfixcast[i].id == 0 || sd->skillfixcast[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillfixcast))
 			{
-				ShowDebug("run_script: bonus2 bSkillFixedCast reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillfixcast), type2, val);
+				ShowDebug("script->run: bonus2 bSkillFixedCast reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillfixcast), type2, val);
 				break;
 			}
 			if (sd->skillfixcast[i].id == type2)
@@ -3209,7 +3209,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->skillvarcast), i, sd->skillvarcast[i].id == 0 || sd->skillvarcast[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillvarcast))
 			{
-				ShowDebug("run_script: bonus2 bSkillVariableCast reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillvarcast), type2, val);
+				ShowDebug("script->run: bonus2 bSkillVariableCast reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillvarcast), type2, val);
 				break;
 			}
 			if (sd->skillvarcast[i].id == type2)
@@ -3226,7 +3226,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			ARR_FIND(0, ARRAYLENGTH(sd->skillcast), i, sd->skillcast[i].id == 0 || sd->skillcast[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillcast))
 			{
-				ShowDebug("run_script: bonus2 bVariableCastrate reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",ARRAYLENGTH(sd->skillcast), type2, val);
+				ShowDebug("script->run: bonus2 bVariableCastrate reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n",ARRAYLENGTH(sd->skillcast), type2, val);
 				break;
 			}
 			if(sd->skillcast[i].id == type2)
@@ -3242,7 +3242,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				break;
 			ARR_FIND(0, ARRAYLENGTH(sd->skillusesp), i, sd->skillusesp[i].id == 0 || sd->skillusesp[i].id == type2);
 			if (i == ARRAYLENGTH(sd->skillusesp)) {
-				ShowDebug("run_script: bonus2 bSkillUseSP reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillusesp), type2, val);
+				ShowDebug("script->run: bonus2 bSkillUseSP reached it's limit (%d skills per character), bonus skill %d (+%d%%) lost.\n", ARRAYLENGTH(sd->skillusesp), type2, val);
 				break;
 			}
 			if (sd->skillusesp[i].id == type2)
@@ -4392,9 +4392,9 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	if(sd->status.inventory[n].card[0]==CARD0_CREATE &&
 		pc->famerank(MakeDWord(sd->status.inventory[n].card[2],sd->status.inventory[n].card[3]), MAPID_ALCHEMIST))
 	{
-	    potion_flag = 2; // Famous player's potions have 50% more efficiency
+	    script->potion_flag = 2; // Famous player's potions have 50% more efficiency
 		 if (sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_ROGUE)
-			 potion_flag = 3; //Even more effective potions.
+			 script->potion_flag = 3; //Even more effective potions.
 	}
 
 	//Update item use time.
@@ -4404,10 +4404,10 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	
 	script->current_item_id = nameid;
 	
-	run_script(item_script,0,sd->bl.id,fake_nd->bl.id);
+	script->run(item_script,0,sd->bl.id,fake_nd->bl.id);
 	
 	script->current_item_id = 0;
-	potion_flag = 0;
+	script->potion_flag = 0;
 	
 	return 1;
 }
@@ -4801,7 +4801,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		for( i = 0; i < sd->queues_count; i++ ) {
 			struct hQueue *queue;
 			if( (queue = script->queue(sd->queues[i])) && queue->onMapChange[0] != '\0' ) {
-				pc->setregstr(sd, add_str("QMapChangeTo"), map[m].name);
+				pc->setregstr(sd, script->add_str("QMapChangeTo"), map[m].name);
 				npc_event(sd, queue->onMapChange, 0);
 			}
 		}
@@ -7388,8 +7388,8 @@ int pc_itemheal(struct map_session_data *sd,int itemid, int hp,int sp)
 			+ pc->checkskill(sd,SM_RECOVERY)*10
 			+ pc->checkskill(sd,AM_LEARNINGPOTION)*5;
 		// A potion produced by an Alchemist in the Fame Top 10 gets +50% effect [DracoRPG]
-		if (potion_flag > 1)
-			bonus += bonus*(potion_flag-1)*50/100;
+		if (script->potion_flag > 1)
+			bonus += bonus*(script->potion_flag-1)*50/100;
 		//All item bonuses.
 		bonus += sd->bonus.itemhealrate2;
 		//Individual item bonuses.
@@ -7411,8 +7411,8 @@ int pc_itemheal(struct map_session_data *sd,int itemid, int hp,int sp)
 		bonus = 100 + (sd->battle_status.int_<<1)
 			+ pc->checkskill(sd,MG_SRECOVERY)*10
 			+ pc->checkskill(sd,AM_LEARNINGPOTION)*5;
-		if (potion_flag > 1)
-			bonus += bonus*(potion_flag-1)*50/100;
+		if (script->potion_flag > 1)
+			bonus += bonus*(script->potion_flag-1)*50/100;
 		if(bonus != 100)
 			sp = sp * bonus / 100;
 	}
@@ -8762,7 +8762,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 	//OnEquip script [Skotlex]
 	if (id) {
 		if (id->equip_script)
-			run_script(id->equip_script,0,sd->bl.id,fake_nd->bl.id);
+			script->run(id->equip_script,0,sd->bl.id,fake_nd->bl.id);
 		if(itemdb_isspecial(sd->status.inventory[n].card[0]))
 			; //No cards
 		else {
@@ -8772,7 +8772,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 					continue;
 				if ( ( data = itemdb->exists(sd->status.inventory[n].card[i]) ) != NULL ) {
 					if( data->equip_script )
-						run_script(data->equip_script,0,sd->bl.id,fake_nd->bl.id);
+						script->run(data->equip_script,0,sd->bl.id,fake_nd->bl.id);
 				}
 			}
 		}
@@ -8929,7 +8929,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 	//OnUnEquip script [Skotlex]
 	if (sd->inventory_data[n]) {
 		if (sd->inventory_data[n]->unequip_script)
-			run_script(sd->inventory_data[n]->unequip_script,0,sd->bl.id,fake_nd->bl.id);
+			script->run(sd->inventory_data[n]->unequip_script,0,sd->bl.id,fake_nd->bl.id);
 		if(itemdb_isspecial(sd->status.inventory[n].card[0]))
 			; //No cards
 		else {
@@ -8940,7 +8940,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 
 				if ( ( data = itemdb->exists(sd->status.inventory[n].card[i]) ) != NULL ) {
 					if( data->unequip_script )
-						run_script(data->unequip_script,0,sd->bl.id,fake_nd->bl.id);
+						script->run(data->unequip_script,0,sd->bl.id,fake_nd->bl.id);
 				}
 
 			}

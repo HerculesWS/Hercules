@@ -383,7 +383,7 @@ int npc_chat_sub(struct block_list* bl, va_list ap)
 					char var[6], val[255];
 					snprintf(var, sizeof(var), "$@p%i$", i);
 					pcre_copy_substring(msg, offsets, r, i, val, sizeof(val));
-					set_var(sd, var, val);
+					script->set_var(sd, var, val);
 				}
 				
 				// find the target label.. this sucks..
@@ -395,7 +395,7 @@ int npc_chat_sub(struct block_list* bl, va_list ap)
 				}
 				
 				// run the npc script
-				run_script(nd->u.scr.script,lst[i].pos,sd->bl.id,nd->bl.id);
+				script->run(nd->u.scr.script,lst[i].pos,sd->bl.id,nd->bl.id);
 				return 0;
 			}
 		}

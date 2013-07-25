@@ -508,8 +508,8 @@ void bg_begin(struct bg_arena *arena) {
 		bg->match_over(arena,true);
 	} else {
 		arena->ongoing = true;
-		mapreg_setreg(add_str("$@bg_queue_id"),arena->queue_id);/* TODO: make this a arena-independant var? or just .@? */
-		mapreg_setregstr(add_str("$@bg_delay_var$"),bg->gdelay_var);
+		mapreg_setreg(script->add_str("$@bg_queue_id"),arena->queue_id);/* TODO: make this a arena-independant var? or just .@? */
+		mapreg_setregstr(script->add_str("$@bg_delay_var$"),bg->gdelay_var);
 		npc_event_do(arena->npc_event);
 		/* we split evenly? */
 		/* but if a party of say 10 joins, it cant be split evenly unless by luck there are 10 soloers in the queue besides them */

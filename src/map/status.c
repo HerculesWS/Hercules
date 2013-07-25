@@ -2491,7 +2491,7 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 
 		if(first && sd->inventory_data[index]->equip_script)
 		{	//Execute equip-script on login
-			run_script(sd->inventory_data[index]->equip_script,0,sd->bl.id,0);
+			script->run(sd->inventory_data[index]->equip_script,0,sd->bl.id,0);
 			if (!calculating)
 				return 1;
 		}
@@ -2532,11 +2532,11 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 			if(sd->inventory_data[index]->script) {
 				if (wd == &sd->left_weapon) {
 					sd->state.lr_flag = 1;
-					run_script(sd->inventory_data[index]->script,0,sd->bl.id,0);
+					script->run(sd->inventory_data[index]->script,0,sd->bl.id,0);
 					sd->state.lr_flag = 0;
 				} else
-					run_script(sd->inventory_data[index]->script,0,sd->bl.id,0);
-				if (!calculating) //Abort, run_script retriggered this. [Skotlex]
+					script->run(sd->inventory_data[index]->script,0,sd->bl.id,0);
+				if (!calculating) //Abort, script->run retriggered this. [Skotlex]
 					return 1;
 			}
 
@@ -2558,10 +2558,10 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 			if(sd->inventory_data[index]->script) {
 				if( i == EQI_HAND_L ) //Shield
 					sd->state.lr_flag = 3;
-				run_script(sd->inventory_data[index]->script,0,sd->bl.id,0);
+				script->run(sd->inventory_data[index]->script,0,sd->bl.id,0);
 				if( i == EQI_HAND_L ) //Shield
 					sd->state.lr_flag = 0;
-				if (!calculating) //Abort, run_script retriggered this. [Skotlex]
+				if (!calculating) //Abort, script->run retriggered this. [Skotlex]
 					return 1;
 			}
 		}
@@ -2573,9 +2573,9 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 			sd->bonus.arrow_atk += sd->inventory_data[index]->atk;
 			sd->state.lr_flag = 2;
 			if( !itemdb_is_GNthrowable(sd->inventory_data[index]->nameid) ) //don't run scripts on throwable items
-				run_script(sd->inventory_data[index]->script,0,sd->bl.id,0);
+				script->run(sd->inventory_data[index]->script,0,sd->bl.id,0);
 			sd->state.lr_flag = 0;
-			if (!calculating) //Abort, run_script retriggered status_calc_pc. [Skotlex]
+			if (!calculating) //Abort, script->run retriggered status_calc_pc. [Skotlex]
 				return 1;
 		}
 	}
@@ -2583,8 +2583,8 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 	/* we've got combos to process */
 	if( sd->combos.count ) {
 		for( i = 0; i < sd->combos.count; i++ ) {
-			run_script(sd->combos.bonus[i],0,sd->bl.id,0);
-			if (!calculating) //Abort, run_script retriggered this.
+			script->run(sd->combos.bonus[i],0,sd->bl.id,0);
+			if (!calculating) //Abort, script->run retriggered this.
 				return 1;
 		}
 	}
@@ -2632,7 +2632,7 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 					continue;
 
 				if(first && data->equip_script) {//Execute equip-script on login
-					run_script(data->equip_script,0,sd->bl.id,0);
+					script->run(data->equip_script,0,sd->bl.id,0);
 					if (!calculating)
 						return 1;
 				}
@@ -2642,11 +2642,11 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 
 				if(i == EQI_HAND_L && sd->status.inventory[index].equip == EQP_HAND_L) { //Left hand status.
 					sd->state.lr_flag = 1;
-					run_script(data->script,0,sd->bl.id,0);
+					script->run(data->script,0,sd->bl.id,0);
 					sd->state.lr_flag = 0;
 				} else
-					run_script(data->script,0,sd->bl.id,0);
-				if (!calculating) //Abort, run_script his function. [Skotlex]
+					script->run(data->script,0,sd->bl.id,0);
+				if (!calculating) //Abort, script->run his function. [Skotlex]
 					return 1;
 			}
 		}
@@ -2655,13 +2655,13 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 	if( sc->count && sc->data[SC_ITEMSCRIPT] ) {
 		struct item_data *data = itemdb->exists(sc->data[SC_ITEMSCRIPT]->val1);
 		if( data && data->script )
-			run_script(data->script,0,sd->bl.id,0);
+			script->run(data->script,0,sd->bl.id,0);
 	}
 
 	if( sd->pd ) { // Pet Bonus
 		struct pet_data *pd = sd->pd;
 		if( pd && pd->petDB && pd->petDB->equip_script && pd->pet.intimate >= battle_config.pet_equip_min_friendly )
-			run_script(pd->petDB->equip_script,0,sd->bl.id,0);
+			script->run(pd->petDB->equip_script,0,sd->bl.id,0);
 		if( pd && pd->pet.intimate > 0 && (!battle_config.pet_equip_required || pd->pet.equip > 0) && pd->state.skillbonus == 1 && pd->bonus )
 			pc->bonus(sd,pd->bonus->type, pd->bonus->val);
 	}

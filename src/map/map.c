@@ -5441,7 +5441,7 @@ int do_init(int argc, char *argv[])
 
 	battle->config_read(iMap->BATTLE_CONF_FILENAME);
 	atcommand->msg_read(iMap->MSG_CONF_NAME);
-	script_config_read(iMap->SCRIPT_CONF_NAME);
+	script->config_read(iMap->SCRIPT_CONF_NAME);
 	inter_config_read(iMap->INTER_CONF_NAME);
 	logs->config_read(iMap->LOG_CONF_NAME);
 

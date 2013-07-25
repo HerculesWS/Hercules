@@ -1470,7 +1470,7 @@ void itemdb_read_combos() {
 			
 			id->combos[idx]->nameid = aMalloc( retcount * sizeof(unsigned short) );
 			id->combos[idx]->count = retcount;
-			id->combos[idx]->script = parse_script(str[1], path, lines, 0);
+			id->combos[idx]->script = script->parse(str[1], path, lines, 0);
 			id->combos[idx]->id = count;
 			id->combos[idx]->isRef = false;
 			/* populate ->nameid field */
@@ -1674,24 +1674,24 @@ int itemdb_parse_dbrow(char** str, const char* source, int line, int scriptopt) 
 	id->sex = itemdb_gendercheck(id); //Apply gender filtering.
 
 	if (id->script) {
-		script_free_code(id->script);
+		script->free_code(id->script);
 		id->script = NULL;
 	}
 	if (id->equip_script) {
-		script_free_code(id->equip_script);
+		script->free_code(id->equip_script);
 		id->equip_script = NULL;
 	}
 	if (id->unequip_script) {
-		script_free_code(id->unequip_script);
+		script->free_code(id->unequip_script);
 		id->unequip_script = NULL;
 	}
 
 	if (*str[19+offset])
-		id->script = parse_script(str[19+offset], source, line, scriptopt);
+		id->script = script->parse(str[19+offset], source, line, scriptopt);
 	if (*str[20+offset])
-		id->equip_script = parse_script(str[20+offset], source, line, scriptopt);
+		id->equip_script = script->parse(str[20+offset], source, line, scriptopt);
 	if (*str[21+offset])
-		id->unequip_script = parse_script(str[21+offset], source, line, scriptopt);
+		id->unequip_script = script->parse(str[21+offset], source, line, scriptopt);
 
 	return id->nameid;
 }
@@ -1956,17 +1956,17 @@ static void destroy_item_data(struct item_data* self, int free_self)
 		return;
 	// free scripts
 	if( self->script )
-		script_free_code(self->script);
+		script->free_code(self->script);
 	if( self->equip_script )
-		script_free_code(self->equip_script);
+		script->free_code(self->equip_script);
 	if( self->unequip_script )
-		script_free_code(self->unequip_script);
+		script->free_code(self->unequip_script);
 	if( self->combos_count ) {
 		int i;
 		for( i = 0; i < self->combos_count; i++ ) {
 			if( !self->combos[i]->isRef ) {
 				aFree(self->combos[i]->nameid);
-				script_free_code(self->combos[i]->script);
+				script->free_code(self->combos[i]->script);
 			}
 			aFree(self->combos[i]);
 		}

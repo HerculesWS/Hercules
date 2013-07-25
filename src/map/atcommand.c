@@ -3748,7 +3748,7 @@ ACMD(reloadscript)
 	
 	flush_fifos();
 	iMap->reloadnpc(true); // reload config files seeking for npcs
-	script_reload();
+	script->reload();
 	npc_reload();
 	
 	clif->message(fd, msg_txt(100)); // Scripts have been reloaded.
@@ -8548,9 +8548,9 @@ ACMD(set) {
 	
 	if( toset >= 2 ) {/* we only set the var if there is an val, otherwise we only output the value */
 		if( is_str )
-			set_var(sd, reg, (void*) val);
+			script->set_var(sd, reg, (void*) val);
 		else
-			set_var(sd, reg, (void*)__64BPTRSIZE((atoi(val))));
+			script->set_var(sd, reg, (void*)__64BPTRSIZE((atoi(val))));
 		
 	}
 	
@@ -8561,10 +8561,10 @@ ACMD(set) {
 		
 		switch( reg[0] ) {
 			case '@':
-				data->u.str = pc->readregstr(sd, add_str(reg));
+				data->u.str = pc->readregstr(sd, script->add_str(reg));
 				break;
 			case '$':
-				data->u.str = mapreg_readregstr(add_str(reg));
+				data->u.str = mapreg_readregstr(script->add_str(reg));
 				break;
 			case '#':
 				if( reg[1] == '#' )
@@ -8590,10 +8590,10 @@ ACMD(set) {
 		data->type = C_INT;
 		switch( reg[0] ) {
 			case '@':
-				data->u.num = pc->readreg(sd, add_str(reg));
+				data->u.num = pc->readreg(sd, script->add_str(reg));
 				break;
 			case '$':
-				data->u.num = mapreg_readreg(add_str(reg));
+				data->u.num = mapreg_readreg(script->add_str(reg));
 				break;
 			case '#':
 				if( reg[1] == '#' )
