@@ -1334,7 +1334,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 		if( sd->status.skill[i].flag == SKILL_FLAG_PERMANENT ) {
 			switch( skill_db[i].nameid ) {
 				case NV_TRICKDEAD:
-					if( (sd->class_&MAPID_UPPERMASK) != MAPID_NOVICE ) {
+					if( (sd->class_&MAPID_BASEMASK) != MAPID_NOVICE ) {
 							sd->status.skill[i].id = 0;
 							sd->status.skill[i].lv = 0;
 							sd->status.skill[i].flag = 0;
@@ -6510,14 +6510,14 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		skill_id = skill_db[i].nameid;
 		
 		// Don't reset trick dead if not a novice/baby
-		if( skill_id == NV_TRICKDEAD && (sd->class_&MAPID_UPPERMASK) != MAPID_NOVICE ) {
+		if( skill_id == NV_TRICKDEAD && (sd->class_&MAPID_BASEMASK) != MAPID_NOVICE ) {
 			sd->status.skill[i].lv = 0;
 			sd->status.skill[i].flag = 0;
 			continue;
 		}
 
 		// do not reset basic skill
-		if( skill_id == NV_BASIC && (sd->class_&MAPID_UPPERMASK) != MAPID_NOVICE )
+		if( skill_id == NV_BASIC && (sd->class_&MAPID_BASEMASK) != MAPID_NOVICE )
 			continue;
 
 		if( sd->status.skill[i].flag == SKILL_FLAG_PERM_GRANTED )
@@ -9869,7 +9869,7 @@ void pc_read_skill_tree(void) {
 					if( a == MAX_SKILL_TREE ) {
 						ShowWarning("pc_read_skill_tree: '%s' can't inherit '%s', skill tree is full!\n", name,iname);
 						break;
-					} else if ( skill_tree[idx][a].id || ( skill_tree[idx][a].id == NV_TRICKDEAD && ((pc->jobid2mapid(jnames[k].id)&MAPID_UPPERMASK)!=MAPID_NOVICE) ) ) /* we skip trickdead for non-novices */
+					} else if ( skill_tree[idx][a].id || ( skill_tree[idx][a].id == NV_TRICKDEAD && ((pc->jobid2mapid(jnames[k].id)&MAPID_BASEMASK)!=MAPID_NOVICE) ) ) /* we skip trickdead for non-novices */
 						continue;/* skip */
 					
 					memcpy(&skill_tree[idx][a],&skill_tree[fidx][f],sizeof(skill_tree[fidx][f]));
