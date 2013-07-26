@@ -3929,19 +3929,24 @@ void status_calc_bl_(struct block_list* bl, enum scb_flag flag, bool first)
 	struct status_data b_status; // previous battle status
 	struct status_data* status; // pointer to current battle status
 
+	if( bl->type == BL_PC && ((TBL_PC*)bl)->delayed_damage != 0 ) {
+		((TBL_PC*)bl)->state.hold_recalc = 1;
+		return;
+	}
+	
 	// remember previous values
 	status = iStatus->get_status_data(bl);
 	memcpy(&b_status, status, sizeof(struct status_data));
 
 	if( flag&SCB_BASE ) {// calculate the object's base status too
 		switch( bl->type ) {
-		case BL_PC:  iStatus->calc_pc_(BL_CAST(BL_PC,bl), first);          break;
-		case BL_MOB: iStatus->calc_mob_(BL_CAST(BL_MOB,bl), first);        break;
-		case BL_PET: iStatus->calc_pet_(BL_CAST(BL_PET,bl), first);        break;
-		case BL_HOM: iStatus->calc_homunculus_(BL_CAST(BL_HOM,bl), first); break;
-		case BL_MER: iStatus->calc_mercenary_(BL_CAST(BL_MER,bl), first);  break;
-		case BL_ELEM: iStatus->calc_elemental_(BL_CAST(BL_ELEM,bl), first);  break;
-		case BL_NPC: status_calc_npc_(BL_CAST(BL_NPC,bl), first); break;
+			case BL_PC:  iStatus->calc_pc_(BL_CAST(BL_PC,bl), first);          break;
+			case BL_MOB: iStatus->calc_mob_(BL_CAST(BL_MOB,bl), first);        break;
+			case BL_PET: iStatus->calc_pet_(BL_CAST(BL_PET,bl), first);        break;
+			case BL_HOM: iStatus->calc_homunculus_(BL_CAST(BL_HOM,bl), first); break;
+			case BL_MER: iStatus->calc_mercenary_(BL_CAST(BL_MER,bl), first);  break;
+			case BL_ELEM: iStatus->calc_elemental_(BL_CAST(BL_ELEM,bl), first);  break;
+			case BL_NPC: status_calc_npc_(BL_CAST(BL_NPC,bl), first); break;
 		}
 	}
 

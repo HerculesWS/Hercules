@@ -165,6 +165,7 @@ struct map_session_data {
 		unsigned int dialog : 1;
 		unsigned int prerefining : 1;
 		unsigned int workinprogress : 3; // 1 = disable skill/item, 2 = disable npc interaction, 3 = disable both
+		unsigned int hold_recalc : 1;
 	} state;
 	struct {
 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;
