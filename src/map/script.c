@@ -3828,7 +3828,7 @@ void do_init_script(void) {
 	mapreg_init();
 }
 
-int script_reload() {
+int script_reload(void) {
 	int i;
 	DBIterator *iter;
 	struct script_state *st;
