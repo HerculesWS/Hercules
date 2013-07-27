@@ -45,17 +45,17 @@ void display_title(void) {
 	const char* git = get_git_hash();
 
 	ShowMessage("\n");
-	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"                                                                 "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED"       "CL_BT_WHITE"                Hercules Development Team presents                  "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"                _   _                     _           "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"               | | | |                   | |          "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"               | |_| | ___ _ __ ___ _   _| | ___  ___ "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"               |  _  |/ _ \\ '__/ __| | | | |/ _ \\/ __|"CL_BG_RED""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"               | | | |  __/ | | (__| |_| | |  __/\\__ \\"CL_BG_RED""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"               \\_| |_/\\___|_|  \\___|\\__,_|_|\\___||___/"CL_BG_RED""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"                                                                 "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED"       "CL_BT_WHITE"                   http://hercules.ws/board/                        "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED"     "CL_BT_WHITE"                                                                 "CL_BG_RED""CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                 Hercules Development Team presents                   "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                _   _                     _                           "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               | | | |                   | |                          "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               | |_| | ___ _ __ ___ _   _| | ___  ___                 "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               |  _  |/ _ \\ '__/ __| | | | |/ _ \\/ __|                "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               | | | |  __/ | | (__| |_| | |  __/\\__ \\                "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               \\_| |_/\\___|_|  \\___|\\__,_|_|\\___||___/                "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                    http://hercules.ws/board/                         "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
 
 	if( git[0] != HERC_UNKNOWN_VER )
 		ShowInfo("Git Hash: '"CL_WHITE"%s"CL_RESET"'\n", git);
