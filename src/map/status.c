@@ -6711,17 +6711,17 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		if(sc->data[SC_DEC_AGI])
 			return 0;
 
-	case SC_INC_AGI:
 	case SC_CONCENTRATION:
 	case SC_SPEARQUICKEN:
 	case SC_TRUESIGHT:
 	case SC_WINDWALK:
 	case SC_CARTBOOST:
 	case SC_ASSNCROS:
-		if (sc->data[SC_QUAGMIRE])
-			return 0;
 		if(sc->option&OPTION_MADOGEAR)
-			return 0;//Mado is immune to increase agi, wind walk, cart boost, etc (others above) [Ind]
+			return 0;//Mado is immune to wind walk, cart boost, etc (others above) [Ind]
+	case SC_INC_AGI:	
+		if (sc->data[SC_QUAGMIRE])
+			return 0;		
 		break;
 	case SC_CLOAKING:
 		//Avoid cloaking with no wall and low skill level. [Skotlex]
