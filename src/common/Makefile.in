@@ -22,7 +22,7 @@ LIBCONFIG_H = ../../3rdparty/libconfig/libconfig.h ../../3rdparty/libconfig/gram
 	../../3rdparty/libconfig/strbuf.h ../../3rdparty/libconfig/wincompat.h
 LIBCONFIG_INCLUDE = -I../../3rdparty/libconfig
 
-BCRYPT_OBJ = ../../3rdparty/crypt_blowfish/crypt_blowfish.o
+BCRYPT_OBJ = ../../3rdparty/crypt_blowfish/crypt_blowfish.o ../../3rdparty/crypt_blowfish/x86.S.o
 BCRYPT_H = ../../3rdparty/crypt_blowfish/crypt_blowfish.h
 BCRYPT_INCLUDE = -I../../3rdparty/crypt_blowfish
 

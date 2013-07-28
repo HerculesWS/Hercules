@@ -1,11 +1,12 @@
 
-BCRYPT_OBJ = crypt_blowfish.o
+BCRYPT_OBJ = crypt_blowfish.o x86.S.o
 BCRYPT_H = crypt_blowfish.h
 
 @SET_MAKE@
 
 CC = @CC@
 export CC
+AS = $(CC)
 
 #####################################################################
 .PHONY : all clean help
@@ -27,3 +28,7 @@ help:
 %.o: %.c $(BCRYPT_H)
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+
+%.S.o: %.S
+	@echo "	AS	$<"
+	@$(AS) -c $(OUTPUT_OPTION) -o $@ $<
