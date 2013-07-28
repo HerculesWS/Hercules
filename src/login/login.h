@@ -6,6 +6,7 @@
 
 #include "../common/mmo.h" // NAME_LENGTH,SEX_*
 #include "../common/core.h" // CORE_ST_LAST
+#include "../common/md5calc.h" // MD5_HASHSIZE
 
 enum E_LOGINSERVER_ST
 {
@@ -27,7 +28,7 @@ struct login_session_data {
 	char sex;// 'F','M','S'
 
 	char userid[NAME_LENGTH];
-	char passwd[32+1]; // 23+1 for plaintext, 32+1 for md5-ed passwords
+	char passwd[MD5_HASHSIZE]; // 23+1 for plaintext, 32+1 for md5-ed passwords
 	int passwdenc;
 	char md5key[20];
 	uint16 md5keylen;

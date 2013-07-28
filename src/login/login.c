@@ -250,7 +250,8 @@ static int sync_ip_addresses(int tid, unsigned int tick, int id, intptr_t data)
 //-----------------------------------------------------
 bool check_encrypted(const char* str1, const char* str2, const char* passwd)
 {
-	char tmpstr[64+1], md5str[32+1];
+	char tmpstr[64+1] = "";
+	char md5str[MD5_HASHSIZE] = "";
 
 	safesnprintf(tmpstr, sizeof(tmpstr), "%s%s", str1, str2);
 	MD5_String(tmpstr, md5str);
@@ -263,13 +264,14 @@ static bool check_password(const char *md5key, int passwdenc, const char *passwd
 	if(passwdenc == 0)
 	{
 		if (login_config.pass_store_method == PASS_STORE_MD5) {
-			char md5hash[32];
+			char md5hash[MD5_HASHSIZE] = "";
 			MD5_String(passwd, md5hash);
 			return (0 == strcmp(refpass, md5hash));
 		}
 		else if (login_config.pass_store_method == PASS_STORE_BCRYPT) {
-			char hash[BCRYPT_HASHSIZE];
-			bcrypt_hashpw(passwd, refpass, hash);
+			char hash[BCRYPT_HASHSIZE] = "";
+			if (bcrypt_hashpw(passwd, refpass, hash) != 0)
+				return false;
 			return (0 == strcmp(refpass, hash));
 		}
 		else {
@@ -1090,7 +1092,7 @@ int mmo_auth(struct login_session_data* sd, bool isServer) {
 		}
 
 		if( !match ) {
-			char smd5[33];
+			char smd5[MD5_HASHSIZE] = "";
 			int i;
 
 			for( i = 0; i < 16; i++ )
@@ -1744,7 +1746,7 @@ int login_config_read(const char* cfgName)
 			login_config.client_hash_check = config_switch(w2);
 		else if(!strcmpi(w1, "client_hash")) {
 			int group = 0;
-			char md5[33];
+			char md5[MD5_HASHSIZE] = "";
 
 			if (sscanf(w2, "%d, %32s", &group, md5) == 2) {
 				struct client_hash_node *nnode;

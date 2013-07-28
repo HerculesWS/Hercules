@@ -14163,7 +14163,7 @@ BUILDIN(md5)
 	char *md5str;
 	
 	tmpstr = script_getstr(st,2);
-	md5str = (char *)aMalloc((32+1)*sizeof(char));
+	md5str = aMalloc(MD5_HASHSIZE * sizeof(char));
 	MD5_String(tmpstr, md5str);
 	script_pushstr(st, md5str);
 	return true;
