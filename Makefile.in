@@ -5,7 +5,7 @@ ifeq ($(HAVE_MYSQL),yes)
 	ALL_DEPENDS=common_sql login_sql char_sql map_sql tools import
 	SQL_DEPENDS=common_sql login_sql char_sql map_sql import
 	COMMON_SQL_DEPENDS=mt19937ar libconfig
-	LOGIN_SQL_DEPENDS=mt19937ar libconfig common_sql
+	LOGIN_SQL_DEPENDS=mt19937ar libconfig crypt_blowfish common_sql
 	CHAR_SQL_DEPENDS=mt19937ar libconfig common_sql
 	MAP_SQL_DEPENDS=mt19937ar libconfig common_sql
 	TOOLS_DEPENDS=mt19937ar libconfig common_sql
@@ -35,6 +35,8 @@ export CC
 .PHONY: sql  \
 	common_sql \
 	mt19937ar \
+	libconfig \
+	crypt_blowfish \
 	login_sql \
 	char_sql \
 	map_sql \
@@ -56,6 +58,9 @@ mt19937ar:
 
 libconfig:
 	@$(MAKE) -C 3rdparty/libconfig
+
+crypt_blowfish:
+	@$(MAKE) -C 3rdparty/crypt_blowfish
 
 login_sql: $(LOGIN_SQL_DEPENDS)
 	@$(MAKE) -C src/login sql
@@ -86,6 +91,7 @@ clean:
 	@$(MAKE) -C src/common $@
 	@$(MAKE) -C 3rdparty/mt19937ar $@
 	@$(MAKE) -C 3rdparty/libconfig $@
+	@$(MAKE) -C 3rdparty/crypt_blowfish $@
 	@$(MAKE) -C src/login $@
 	@$(MAKE) -C src/char $@
 	@$(MAKE) -C src/map $@
@@ -96,20 +102,22 @@ clean:
 help:
 	@echo "most common targets are 'all' 'sql' 'conf' 'clean' 'help'"
 	@echo "possible targets are:"
-	@echo "'common_sql'  - builds object files used in SQL servers"
-	@echo "'mt19937ar'   - builds object file of Mersenne Twister MT19937"
-	@echo "'libconfig'   - builds object files of libconfig"
-	@echo "'login_sql'   - builds login server (SQL version)"
-	@echo "'char_sql'    - builds char server (SQL version)"
-	@echo "'map_sql'     - builds map server (SQL version)"
-	@echo "'tools'       - builds all the tools in src/tools"
-	@echo "'import'      - builds conf/import folder from the template conf/import-tmpl"
-	@echo "'all'         - builds all the above targets"
-	@echo "'sql'         - builds sql servers (targets 'common_sql' 'login_sql' 'char_sql'"
-	@echo "                'map_sql' and 'import')"
-	@echo "'test'        - builds tests"
-	@echo "'clean'       - cleans builds and objects"
-	@echo "'help'        - outputs this message"
+	@echo "'common_sql'     - builds object files used in SQL servers"
+	@echo "'mt19937ar'      - builds object file of Mersenne Twister MT19937"
+	@echo "'libconfig'      - builds object files of libconfig"
+	@echo "'crypt_blowfish' - builds object file of Openwall's bcrypt"
+	@echo "'login_sql'      - builds login server (SQL version)"
+	@echo "'char_sql'       - builds char server (SQL version)"
+	@echo "'map_sql'        - builds map server (SQL version)"
+	@echo "'tools'          - builds all the tools in src/tools"
+	@echo "'import'         - builds conf/import folder from the template"
+	@echo "                   conf/import-tmpl"
+	@echo "'all'            - builds all the above targets"
+	@echo "'sql'            - builds sql servers (targets 'common_sql' 'login_sql'"
+	@echo "                   'char_sql' 'map_sql' and 'import')"
+	@echo "'test'           - builds tests"
+	@echo "'clean'          - cleans builds and objects"
+	@echo "'help'           - outputs this message"
 
 #####################################################################
 

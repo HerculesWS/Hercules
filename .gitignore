@@ -38,6 +38,10 @@ Thumbs.db
 #OSX Xcode project user-sensitive-stuff
 /Hercules
 
+# /3rdparty/crypt_blowfish/
+/3rdparty/crypt_blowfish/Makefile
+/3rdparty/crypt_blowfish/*.o
+
 # /3rdparty/libconfig/
 /3rdparty/libconfig/Makefile
 /3rdparty/libconfig/*.o

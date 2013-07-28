@@ -1,0 +1,29 @@
+
+BCRYPT_OBJ = crypt_blowfish.o
+BCRYPT_H = crypt_blowfish.h
+
+@SET_MAKE@
+
+CC = @CC@
+export CC
+
+#####################################################################
+.PHONY : all clean help
+
+all: $(BCRYPT_OBJ)
+
+clean:
+	@echo "	CLEAN	crypt_blowfish"
+	@rm -rf *.o
+
+help:
+	@echo "possible targets are 'all' 'clean' 'help'"
+	@echo "'all'    - builds $(BCRYPT_OBJ)"
+	@echo "'clean'  - deletes $(BCRYPT_OBJ)"
+	@echo "'help'   - outputs this message"
+
+#####################################################################
+
+%.o: %.c $(BCRYPT_H)
+	@echo "	CC	$<"
+	@$(CC) @CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
