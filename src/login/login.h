@@ -60,6 +60,14 @@ struct client_hash_node {
 	struct client_hash_node *next;
 };
 
+enum pass_store {
+	PASS_STORE_MIN = -1,
+	PASS_STORE_PLAINTEXT,
+	PASS_STORE_MD5,
+	PASS_STORE_BCRYPT,
+	PASS_STORE_MAX
+};
+
 struct Login_Config {
 
 	uint32 login_ip;                                // the address to bind to
@@ -70,7 +78,8 @@ struct Login_Config {
 	char date_format[32];                           // date format used in messages
 	bool new_account_flag,new_acc_length_limit;     // autoregistration via _M/_F ? / if yes minimum length is 4?
 	int start_limited_time;                         // new account expiration time (-1: unlimited)
-	bool use_md5_passwds;                           // work with password hashes instead of plaintext passwords?
+	enum pass_store pass_store_method;              // work with password hashes instead of plaintext passwords?
+	int bcrypt_rounds;                              // number of bcrypt rounds
 	int group_id_to_connect;                        // required group id to connect
 	int min_group_id_to_connect;                    // minimum group id to connect
 	bool check_client_version;                      // check the clientversion set in the clientinfo ?

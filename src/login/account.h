@@ -6,10 +6,12 @@
 
 #include "../common/cbasetypes.h"
 #include "../common/mmo.h" // ACCOUNT_REG2_NUM
+#include "../common/bcrypt.h"
 
 typedef struct AccountDB AccountDB;
 typedef struct AccountDBIterator AccountDBIterator;
 
+#define PASSWORD_LENGTH BCRYPT_HASHSIZE // bcrypt has longest hash
 
 // standard engines
 AccountDB* account_db_sql(void);
@@ -18,7 +20,7 @@ struct mmo_account
 {
 	int account_id;
 	char userid[NAME_LENGTH];
-	char pass[32+1];            // 23+1 for plaintext, 32+1 for md5-ed passwords
+	char pass[PASSWORD_LENGTH]; // 23+1 for plaintext, 32+1 for md5-ed passwords, 60+1 for bcrypt-ed passwords
 	char sex;                   // gender (M/F/S)
 	char email[40];             // e-mail (by default: a@a.com)
 	int group_id;               // player group id

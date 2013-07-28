@@ -2,6 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#include "../common/bcrypt.h"
+#include "../common/console.h"
 #include "../common/core.h"
 #include "../common/db.h"
 #include "../common/malloc.h"
@@ -256,11 +258,23 @@ bool check_encrypted(const char* str1, const char* str2, const char* passwd)
 	return (0==strcmp(passwd, md5str));
 }
 
-bool check_password(const char* md5key, int passwdenc, const char* passwd, const char* refpass)
+static bool check_password(const char *md5key, int passwdenc, const char *passwd, const char *refpass)
 {
 	if(passwdenc == 0)
 	{
-		return (0==strcmp(passwd, refpass));
+		if (login_config.pass_store_method == PASS_STORE_MD5) {
+			char md5hash[32];
+			MD5_String(passwd, md5hash);
+			return (0 == strcmp(refpass, md5hash));
+		}
+		else if (login_config.pass_store_method == PASS_STORE_BCRYPT) {
+			char hash[BCRYPT_HASHSIZE];
+			bcrypt_hashpw(passwd, refpass, hash);
+			return (0 == strcmp(refpass, hash));
+		}
+		else {
+			return (0 == strcmp(refpass, passwd));
+		}
 	}
 	else
 	{
@@ -272,6 +286,31 @@ bool check_password(const char* md5key, int passwdenc, const char* passwd, const
 	}
 }
 
+
+/**
+ * Creates new password hash using password storage method
+ * defined in login-server configuration file.
+ * Used when creating new account with _M/_F.
+ * @param password plain-text password to hash
+ * @param output
+ * @returns 0 on success, -1 on error
+ */
+static int password_hash(const char *password, char *output)
+{
+	switch (login_config.pass_store_method) {
+		case PASS_STORE_MD5:
+			MD5_String(password, output);
+			break;
+		case PASS_STORE_BCRYPT:
+			if (bcrypt_hashnew(password, output, login_config.bcrypt_rounds) != 0)
+				return -1;
+			break;
+		default:
+			strcpy(output, password);
+			break;
+	}
+	return 0;
+}
 
 //-----------------------------------------------------
 // custom timestamp formatting (from eApp)
@@ -898,6 +937,7 @@ int mmo_auth_new(const char* userid, const char* pass, const char sex, const cha
 	static unsigned int new_reg_tick = 0;
 	unsigned int tick = iTimer->gettick();
 	struct mmo_account acc;
+	char password[PASSWORD_LENGTH];
 
 	//Account Registration Flood Protection by [Kevin]
 	if( new_reg_tick == 0 )
@@ -920,10 +960,13 @@ int mmo_auth_new(const char* userid, const char* pass, const char sex, const cha
 		return 1; // 1 = Incorrect Password
 	}
 
+	if( password_hash(pass, password) != 0 )
+		return 0;
+
 	memset(&acc, '\0', sizeof(acc));
 	acc.account_id = -1; // assigned by account db
 	safestrncpy(acc.userid, userid, sizeof(acc.userid));
-	safestrncpy(acc.pass, pass, sizeof(acc.pass));
+	safestrncpy(acc.pass, password, sizeof(acc.pass));
 	acc.sex = sex;
 	safestrncpy(acc.email, "a@a.com", sizeof(acc.email));
 	acc.expiration_time = ( login_config.start_limited_time != -1 ) ? time(NULL) + login_config.start_limited_time : 0;
@@ -1421,8 +1464,6 @@ int parse_login(int fd)
 			{
 				ShowStatus("Request for connection of %s (ip: %s).\n", sd->userid, ip);
 				safestrncpy(sd->passwd, password, NAME_LENGTH);
-				if( login_config.use_md5_passwds )
-					MD5_String(sd->passwd, sd->passwd);
 				sd->passwdenc = 0;
 			}
 			else
@@ -1432,7 +1473,7 @@ int parse_login(int fd)
 				sd->passwdenc = PASSWORDENC;
 			}
 
-			if( sd->passwdenc != 0 && login_config.use_md5_passwds )
+			if( sd->passwdenc != 0 && login_config.pass_store_method != PASS_STORE_PLAINTEXT )
 			{
 				login_auth_failed(sd, 3); // send "rejected from server"
 				return 0;
@@ -1475,8 +1516,6 @@ int parse_login(int fd)
 
 			safestrncpy(sd->userid, (char*)RFIFOP(fd,2), NAME_LENGTH);
 			safestrncpy(sd->passwd, (char*)RFIFOP(fd,26), NAME_LENGTH);
-			if( login_config.use_md5_passwds )
-				MD5_String(sd->passwd, sd->passwd);
 			sd->passwdenc = 0;
 			sd->version = login_config.client_version_to_connect; // hack to skip version check
 			server_ip = ntohl(RFIFOL(fd,54));
@@ -1537,6 +1576,65 @@ int parse_login(int fd)
 	return 0;
 }
 
+/**
+ * Console command to calculate bcrypt hashes.
+ * Number of rounds is defined in login-server configuration file.
+ */
+CPCMD(bcrypt_hash)
+{
+	char password[NAME_LENGTH] = "";
+	char hash[BCRYPT_HASHSIZE] = "";
+
+	if (line == NULL || sscanf(line, "%23s", password) != 1) {
+		ShowNotice("bcrypt hash: missing password. Use '"CL_WHITE"bcrypt hash PASSWORD"CL_RESET"'\n");
+		return;
+	}
+
+	if (bcrypt_hashnew(password, hash, login_config.bcrypt_rounds) != 0) {
+		ShowError("bcrypt hash: error calculating password hash\n");
+		return;
+	}
+
+	ShowStatus("bcrypt hash: '%s' => '%s'\n", password, hash);
+	return;
+}
+
+/**
+ * Console command to benchmark bcrypt.h
+ */
+CPCMD(bcrypt_benchmark)
+{
+	char password[NAME_LENGTH] = "benchmark";
+	char hash[BCRYPT_HASHSIZE] = "";
+	clock_t starttime;
+	clock_t endtime;
+	int time_limit;
+	int i;
+
+	if (line == NULL || sscanf(line, "%d", &time_limit) != 1) {
+		ShowNotice("bcrypt benchmark: missing parameter. Use '"CL_WHITE"bcrypt benchmark TIME_LIMIT"CL_RESET"' (in ms)\n");
+		return;
+	}
+	
+	for (i = 4; i <= 31; i++) {
+		int ret;
+		starttime = clock();
+		ret = bcrypt_hashnew(password, hash, i);
+		endtime = clock();
+		if (ret != 0)
+			break;
+		ShowStatus("bcrypt benchmark: %2d rounds - %5d ms\n", i, endtime - starttime);
+		if (endtime - starttime > time_limit / 2)
+			break;
+	}
+	ShowStatus("bcrypt benchmark: done\n");
+}
+
+static void console_init(void)
+{
+	console->addCommand("bcrypt:benchmark", CPCMD_A(bcrypt_benchmark));
+	console->addCommand("bcrypt:hash", CPCMD_A(bcrypt_hash));
+}
 
 void login_set_defaults()
 {
@@ -1548,7 +1646,7 @@ void login_set_defaults()
 	safestrncpy(login_config.date_format, "%Y-%m-%d %H:%M:%S", sizeof(login_config.date_format));
 	login_config.new_account_flag = true;
 	login_config.new_acc_length_limit = true;
-	login_config.use_md5_passwds = false;
+	login_config.pass_store_method = PASS_STORE_PLAINTEXT;
 	login_config.group_id_to_connect = -1;
 	login_config.min_group_id_to_connect = -1;
 	login_config.check_client_version = false;
@@ -1616,8 +1714,14 @@ int login_config_read(const char* cfgName)
 			login_config.check_client_version = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "client_version_to_connect"))
 			login_config.client_version_to_connect = strtoul(w2, NULL, 10);
-		else if(!strcmpi(w1, "use_MD5_passwords"))
-			login_config.use_md5_passwds = (bool)config_switch(w2);
+		else if(!strcmpi(w1, "use_MD5_passwords")) {
+			login_config.pass_store_method = atoi(w2); //TODO: validate values like in map-server battle_config
+			if(login_config.pass_store_method <= PASS_STORE_MIN ||
+			   login_config.pass_store_method >= PASS_STORE_MAX) {
+					ShowWarning("Value for setting '%s': %s is invalid (min:%i max:%i)! Defaulting to %i...\n", w1, w2, PASS_STORE_MIN + 1, PASS_STORE_MAX - 1, PASS_STORE_BCRYPT);
+					login_config.pass_store_method = PASS_STORE_BCRYPT;
+			}
+		}
 		else if(!strcmpi(w1, "group_id_to_connect"))
 			login_config.group_id_to_connect = atoi(w2);
 		else if(!strcmpi(w1, "min_group_id_to_connect"))
@@ -1770,7 +1874,7 @@ int do_init(int argc, char** argv)
 	login_lan_config_read((argc > 2) ? argv[2] : LAN_CONF_NAME);
 
 	rnd_init();
-	
+
 	for( i = 0; i < ARRAYLENGTH(server); ++i )
 		chrif_server_init(i);
 
@@ -1826,6 +1930,7 @@ int do_init(int argc, char** argv)
 	}
 
 	account_db_sql_up(accounts);
+	console_init();
 	
 	ShowStatus("The login-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %u).\n\n", login_config.login_port);
 	login_log(0, "login server", 100, "login server started");

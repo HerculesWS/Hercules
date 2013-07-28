@@ -91,6 +91,12 @@
     <ClCompile Include="..\src\common\conf.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\common\bcrypt.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\crypt_blowfish\crypt_blowfish.c">
+      <Filter>3rdparty\crypt_blowfish</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\login\account.h">
@@ -201,6 +207,12 @@
     <ClInclude Include="..\src\common\conf.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\common\bcrypt.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\crypt_blowfish\crypt_blowfish.h">
+      <Filter>3rdparty\crypt_blowfish</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -217,6 +229,9 @@
     </Filter>
     <Filter Include="3rdparty\libconfig">
       <UniqueIdentifier>{779e8145-9bb2-4a88-9149-60586ab0bdd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdparty\crypt_blowfish">
+      <UniqueIdentifier>{9332cfd7-f676-4fbf-869f-d57ef96e56dd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
