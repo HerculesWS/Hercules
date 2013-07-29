@@ -544,7 +544,7 @@ void homunculus_save(struct homun_data *hd) {
 	//calculation on login)
 	hd->homunculus.hp = hd->battle_status.hp;
 	hd->homunculus.sp = hd->battle_status.sp;
-	intif_homunculus_requestsave(sd->status.account_id, &hd->homunculus);
+	intif->homunculus_requestsave(sd->status.account_id, &hd->homunculus);
 }
 
 unsigned char homunculus_menu(struct map_session_data *sd,unsigned char menu_num) {
@@ -731,7 +731,7 @@ bool homunculus_create(struct map_session_data *sd, struct s_homunculus *hom) {
 	if(i < 0) {
 		ShowError("homunculus_create: unknown class [%d] for homunculus '%s', requesting deletion.\n", hom->class_, hom->name);
 		sd->status.hom_id = 0;
-		intif_homunculus_requestdelete(hom->hom_id);
+		intif->homunculus_requestdelete(hom->hom_id);
 		return false;
 	}
 	sd->hd = hd = (struct homun_data*)aCalloc(1,sizeof(struct homun_data));
@@ -777,7 +777,7 @@ bool homunculus_call(struct map_session_data *sd) {
 
 	// If homunc not yet loaded, load it
 	if (!sd->hd)
-		return intif_homunculus_requestload(sd->status.account_id, sd->status.hom_id);
+		return intif->homunculus_requestload(sd->status.account_id, sd->status.hom_id);
 
 	hd = sd->hd;
 
@@ -892,7 +892,7 @@ bool homunculus_creation_request(struct map_session_data *sd, int class_) {
 	hom.luk = base->luk *10;
 
 	// Request homunculus creation
-	intif_homunculus_create(sd->status.account_id, &hom);
+	intif->homunculus_create(sd->status.account_id, &hom);
 	return true;
 }
 
@@ -904,7 +904,7 @@ bool homunculus_ressurect(struct map_session_data* sd, unsigned char per, short 
 		return false; // no homunculus
 
 	if (!sd->hd) //Load homun data;
-		return intif_homunculus_requestload(sd->status.account_id, sd->status.hom_id);
+		return intif->homunculus_requestload(sd->status.account_id, sd->status.hom_id);
 
 	hd = sd->hd;
 

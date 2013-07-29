@@ -9889,7 +9889,7 @@ void clif_parse_GetCharNameRequest(int fd, struct map_session_data *sd)
 		sprintf(gm_msg, "Hack on NameRequest: character '%s' (account: %d) requested the name of an invisible target (id: %d).\n", sd->status.name, sd->status.account_id, id);
 		ShowWarning(gm_msg);
 		// information is sent to all online GMs
-		intif_wis_message_to_gm(iMap->wisp_server_name, battle_config.hack_info_GM_level, gm_msg);
+		intif->wis_message_to_gm(iMap->wisp_server_name, battle_config.hack_info_GM_level, gm_msg);
 		return;
 	}
 	*/
@@ -10489,7 +10489,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 		// if there are 'Test' player on an other map-server and 'test' player on this map-server,
 		// and if we ask for 'Test', we must not contact 'test' player
 		// so, we send information to inter-server, which is the only one which decide (and copy correct name).
-		intif_wis_message(sd, target, message, messagelen);
+		intif->wis_message(sd, target, message, messagelen);
 		return;
 	}
 
@@ -14556,7 +14556,7 @@ void clif_parse_Mail_refreshinbox(int fd, struct map_session_data *sd)
 	struct mail_data* md = &sd->mail.inbox;
 
 	if( md->amount < MAIL_MAX_INBOX && (md->full || sd->mail.changed) )
-		intif_Mail_requestinbox(sd->status.char_id, 1);
+		intif->Mail_requestinbox(sd->status.char_id, 1);
 	else
 		clif->mail_refreshinbox(sd);
 
@@ -14620,7 +14620,7 @@ void clif_Mail_read(struct map_session_data *sd, int mail_id)
 
 		if (msg->status == MAIL_UNREAD) {
 			msg->status = MAIL_READ;
-			intif_Mail_read(mail_id);
+			intif->Mail_read(mail_id);
 			clif->pMail_refreshinbox(fd, sd);
 		}
 	}
@@ -14700,7 +14700,7 @@ void clif_parse_Mail_getattach(int fd, struct map_session_data *sd)
 	memset(&sd->mail.inbox.msg[i].item, 0, sizeof(struct item));
 	clif->mail_read(sd, mail_id);
 
-	intif_Mail_getattach(sd->status.char_id, mail_id);
+	intif->Mail_getattach(sd->status.char_id, mail_id);
 }
 
 
@@ -14727,7 +14727,7 @@ void clif_parse_Mail_delete(int fd, struct map_session_data *sd)
 			return;
 		}
 
-		intif_Mail_delete(sd->status.char_id, mail_id);
+		intif->Mail_delete(sd->status.char_id, mail_id);
 	}
 }
 
@@ -14746,7 +14746,7 @@ void clif_parse_Mail_return(int fd, struct map_session_data *sd)
 
 	ARR_FIND(0, MAIL_MAX_INBOX, i, sd->mail.inbox.msg[i].id == mail_id);
 	if( i < MAIL_MAX_INBOX && sd->mail.inbox.msg[i].send_id != 0 )
-		intif_Mail_return(sd->status.char_id, mail_id);
+		intif->Mail_return(sd->status.char_id, mail_id);
 	else
 		clif->mail_return(sd->fd, mail_id, 1);
 }
@@ -14839,7 +14839,7 @@ void clif_parse_Mail_send(int fd, struct map_session_data *sd)
 		memset(msg.body, 0x00, MAIL_BODY_LENGTH);
 
 	msg.timestamp = time(NULL);
-	if( !intif_Mail_send(sd->status.account_id, &msg) )
+	if( !intif->Mail_send(sd->status.account_id, &msg) )
 		mail->deliveryfail(sd, &msg);
 
 	sd->cansendmail_tick = iTimer->gettick() + 1000; // 1 Second flood Protection
@@ -15083,7 +15083,7 @@ void clif_parse_Auction_register(int fd, struct map_session_data *sd)
 	auction.item.amount = 1;
 	auction.timestamp = 0;
 
-	if( !intif_Auction_register(&auction) )
+	if( !intif->Auction_register(&auction) )
 		clif->auction_message(fd, 4); // No Char Server? lets say something to the client
 	else
 	{
@@ -15103,7 +15103,7 @@ void clif_parse_Auction_cancel(int fd, struct map_session_data *sd)
 {
 	unsigned int auction_id = RFIFOL(fd,2);
 
-	intif_Auction_cancel(sd->status.char_id, auction_id);
+	intif->Auction_cancel(sd->status.char_id, auction_id);
 }
 
 
@@ -15113,7 +15113,7 @@ void clif_parse_Auction_close(int fd, struct map_session_data *sd)
 {
 	unsigned int auction_id = RFIFOL(fd,2);
 
-	intif_Auction_close(sd->status.char_id, auction_id);
+	intif->Auction_close(sd->status.char_id, auction_id);
 }
 
 
@@ -15133,11 +15133,11 @@ void clif_parse_Auction_bid(int fd, struct map_session_data *sd)
 		clif->auction_message(fd, 0); // You have failed to bid into the auction
 	else if( bid > sd->status.zeny )
 		clif->auction_message(fd, 8); // You do not have enough zeny
-	else if ( CheckForCharServer() ) // char server is down (bugreport:1138)
+	else if ( intif->CheckForCharServer() ) // char server is down (bugreport:1138)
 		clif->auction_message(fd, 0); // You have failed to bid into the auction
 	else {
 		pc->payzeny(sd, bid, LOG_TYPE_AUCTION, NULL);
-		intif_Auction_bid(sd->status.char_id, sd->status.name, auction_id, bid);
+		intif->Auction_bid(sd->status.char_id, sd->status.name, auction_id, bid);
 	}
 }
 
@@ -15160,7 +15160,7 @@ void clif_parse_Auction_search(int fd, struct map_session_data* sd)
 	clif->pAuction_cancelreg(fd, sd);
 
 	safestrncpy(search_text, (char*)RFIFOP(fd,8), sizeof(search_text));
-	intif_Auction_requestlist(sd->status.char_id, type, price, search_text, page);
+	intif->Auction_requestlist(sd->status.char_id, type, price, search_text, page);
 }
 
 
@@ -15174,7 +15174,7 @@ void clif_parse_Auction_buysell(int fd, struct map_session_data* sd)
 	short type = RFIFOW(fd,2) + 6;
 	clif->pAuction_cancelreg(fd, sd);
 
-	intif_Auction_requestlist(sd->status.char_id, type, 0, "", 1);
+	intif->Auction_requestlist(sd->status.char_id, type, 0, "", 1);
 }
 
 

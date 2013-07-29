@@ -3532,9 +3532,9 @@ void run_script_main(struct script_state *st)
 			//Restore previous script if any.
 			script_detach_state(st, true);
 			if (sd->state.reg_dirty&2)
-				intif_saveregistry(sd,2);
+				intif->saveregistry(sd,2);
 			if (sd->state.reg_dirty&1)
-				intif_saveregistry(sd,1);
+				intif->saveregistry(sd,1);
 		}
 		script->free_state(st);
 		st = NULL;
@@ -6252,7 +6252,7 @@ static void buildin_delitem_delete(struct map_session_data* sd, int idx, int* am
 	{
 		if( sd->inventory_data[idx]->type == IT_PETEGG && inv->card[0] == CARD0_PET )
 		{// delete associated pet
-			intif_delete_petdata(MakeDWord(inv->card[1], inv->card[2]));
+			intif->delete_petdata(MakeDWord(inv->card[1], inv->card[2]));
 		}
 		pc->delitem(sd, idx, delamount, 0, 0, LOG_TYPE_SCRIPT);
 	}
@@ -6316,7 +6316,7 @@ static bool buildin_delitem_search(struct map_session_data* sd, struct item* it,
 			{
 				if( sd->inventory_data[i]->type == IT_PETEGG )
 				{
-					if( inv->card[0] == CARD0_PET && CheckForCharServer() )
+					if( inv->card[0] == CARD0_PET && intif->CheckForCharServer() )
 					{// pet which cannot be deleted
 						continue;
 					}
@@ -6346,7 +6346,7 @@ static bool buildin_delitem_search(struct map_session_data* sd, struct item* it,
 				continue;
 			}
 			
-			if( sd->inventory_data[i]->type == IT_PETEGG && inv->card[0] == CARD0_PET && CheckForCharServer() )
+			if( sd->inventory_data[i]->type == IT_PETEGG && inv->card[0] == CARD0_PET && intif->CheckForCharServer() )
 			{// pet which cannot be deleted
 				continue;
 			}
@@ -8311,7 +8311,7 @@ BUILDIN(makepet)
 		pet_id = search_petDB_index(id, PET_EGG);
 	if (pet_id >= 0 && sd) {
 		sd->catch_target_class = pet_db[pet_id].class_;
-		intif_create_pet(
+		intif->create_pet(
 						 sd->status.account_id, sd->status.char_id,
 						 (short)pet_db[pet_id].class_, (short)mob_db(pet_db[pet_id].class_)->lv,
 						 (short)pet_db[pet_id].EggID, 0, (short)pet_db[pet_id].intimate,
@@ -9124,9 +9124,9 @@ BUILDIN(announce)
 	else
 	{
 		if (fontColor)
-			intif_broadcast2(mes, (int)strlen(mes)+1, strtol(fontColor, (char **)NULL, 0), fontType, fontSize, fontAlign, fontY);
+			intif->broadcast2(mes, (int)strlen(mes)+1, strtol(fontColor, (char **)NULL, 0), fontType, fontSize, fontAlign, fontY);
 		else
-			intif_broadcast(mes, (int)strlen(mes)+1, flag&0xf0);
+			intif->broadcast(mes, (int)strlen(mes)+1, flag&0xf0);
 	}
 	return true;
 }

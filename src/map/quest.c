@@ -23,7 +23,6 @@
 #include "log.h"
 #include "clif.h"
 #include "quest.h"
-#include "intif.h"
 #include "chrif.h"
 
 #include <stdio.h>

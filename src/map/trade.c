@@ -203,9 +203,9 @@ int impossible_trade_check(struct map_session_data *sd)
 		if (inventory[index].amount < sd->deal.item[i].amount)
 		{ // if more than the player have -> hack
 			sprintf(message_to_gm, msg_txt(538), sd->status.name, sd->status.account_id); // Hack on trade: character '%s' (account: %d) try to trade more items that he has.
-			intif_wis_message_to_gm(iMap->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
+			intif->wis_message_to_gm(iMap->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
 			sprintf(message_to_gm, msg_txt(539), inventory[index].amount, inventory[index].nameid, sd->deal.item[i].amount); // This player has %d of a kind of item (id: %d), and try to trade %d of them.
-			intif_wis_message_to_gm(iMap->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
+			intif->wis_message_to_gm(iMap->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
 			// if we block people
 			if (battle_config.ban_hack_trade < 0) {
 				chrif->char_ask_name(-1, sd->status.name, 1, 0, 0, 0, 0, 0, 0); // type: 1 - block
@@ -222,7 +222,7 @@ int impossible_trade_check(struct map_session_data *sd)
 				// message about the ban
 				strcpy(message_to_gm, msg_txt(508)); //  This player hasn't been banned (Ban option is disabled).
 
-			intif_wis_message_to_gm(iMap->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
+			intif->wis_message_to_gm(iMap->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
 			return 1;
 		}
 		inventory[index].amount -= sd->deal.item[i].amount; // remove item from inventory

@@ -135,7 +135,7 @@ int elemental_create(struct map_session_data *sd, int class_, unsigned int lifet
 	ele.life_time = lifetime;
 
 	// Request Char Server to create this elemental
-	intif_elemental_create(&ele);
+	intif->elemental_create(&ele);
 
 	return 1;
 }
@@ -163,7 +163,7 @@ int elemental_save(struct elemental_data *ed) {
 	ed->elemental.flee = ed->battle_status.flee;
 	ed->elemental.hit = ed->battle_status.hit;
 	ed->elemental.life_time = elemental->get_lifetime(ed);
-	intif_elemental_save(&ed->elemental);
+	intif->elemental_save(&ed->elemental);
 	return 1;
 }
 

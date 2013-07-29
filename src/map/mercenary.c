@@ -82,7 +82,7 @@ int merc_create(struct map_session_data *sd, int class_, unsigned int lifetime)
 	merc.life_time = lifetime;
 
 	// Request Char Server to create this mercenary
-	intif_mercenary_create(&merc);
+	intif->mercenary_create(&merc);
 
 	return 1;
 }
@@ -213,7 +213,7 @@ int mercenary_save(struct mercenary_data *md)
 	md->mercenary.sp = md->battle_status.sp;
 	md->mercenary.life_time = mercenary_get_lifetime(md);
 
-	intif_mercenary_save(&md->mercenary);
+	intif->mercenary_save(&md->mercenary);
 	return 1;
 }
 

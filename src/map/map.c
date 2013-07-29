@@ -1185,7 +1185,7 @@ int map_clearflooritem_timer(int tid, unsigned int tick, int id, intptr_t data)
 
 
 	if (search_petDB_index(fitem->item_data.nameid, PET_EGG) >= 0)
-		intif_delete_petdata(MakeDWord(fitem->item_data.card[1], fitem->item_data.card[2]));
+		intif->delete_petdata(MakeDWord(fitem->item_data.card[1], fitem->item_data.card[2]));
 
 	clif->clearflooritem(fitem, 0);
 	iMap->deliddb(&fitem->bl);
@@ -5158,6 +5158,7 @@ void map_hp_symbols(void) {
 	HPM->share(chat, "chat");
 	HPM->share(iDuel,"iDuel");
 	HPM->share(elemental,"elemental");
+	HPM->share(intif,"intif");
 
 
 	/* partial */
@@ -5199,6 +5200,7 @@ void map_load_defaults(void) {
 	chat_defaults();
 	iDuel_defaults();
 	elemental_defaults();
+	intif_defaults();
 }
 int do_init(int argc, char *argv[])
 {

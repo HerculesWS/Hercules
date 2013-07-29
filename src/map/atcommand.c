@@ -745,7 +745,7 @@ ACMD(save)
 	
 	pc->setsavepoint(sd, sd->mapindex, sd->bl.x, sd->bl.y);
 	if (sd->status.pet_id > 0 && sd->pd)
-		intif_save_petdata(sd->status.account_id, &sd->pd->pet);
+		intif->save_petdata(sd->status.account_id, &sd->pd->pet);
 	
 	chrif->save(sd,0);
 	
@@ -1048,7 +1048,7 @@ ACMD(kami)
 		if (strstr(command, "l") != NULL)
 			clif->broadcast(&sd->bl, atcmd_output, strlen(atcmd_output) + 1, 0, ALL_SAMEMAP);
 		else
-			intif_broadcast(atcmd_output, strlen(atcmd_output) + 1, (*(command + 5) == 'b' || *(command + 5) == 'B') ? 0x10 : 0);
+			intif->broadcast(atcmd_output, strlen(atcmd_output) + 1, (*(command + 5) == 'b' || *(command + 5) == 'B') ? 0x10 : 0);
 	} else {
 		if(!message || !*message || (sscanf(message, "%lx %199[^\n]", &color, atcmd_output) < 2)) {
 			clif->message(fd, msg_txt(981)); // Please enter color and message (usage: @kamic <color> <message>).
@@ -1059,7 +1059,7 @@ ACMD(kami)
 			clif->message(fd, msg_txt(982)); // Invalid color.
 			return false;
 		}
-		intif_broadcast2(atcmd_output, strlen(atcmd_output) + 1, color, 0x190, 12, 0, 0);
+		intif->broadcast2(atcmd_output, strlen(atcmd_output) + 1, color, 0x190, 12, 0, 0);
 	}
 	return true;
 }
@@ -2526,7 +2526,7 @@ ACMD(guildlevelup)
 		added_level = 1 - guild_info->guild_lv;
 	
 	if (added_level != 0) {
-		intif_guild_change_basicinfo(guild_info->guild_id, GBI_GUILDLV, &added_level, sizeof(added_level));
+		intif->guild_change_basicinfo(guild_info->guild_id, GBI_GUILDLV, &added_level, sizeof(added_level));
 		clif->message(fd, msg_txt(179)); // Guild level changed.
 	} else {
 		clif->message(fd, msg_txt(45)); // Guild level change failed.
@@ -2563,7 +2563,7 @@ ACMD(makeegg)
 		pet_id = search_petDB_index(id, PET_EGG);
 	if (pet_id >= 0) {
 		sd->catch_target_class = pet_db[pet_id].class_;
-		intif_create_pet(
+		intif->create_pet(
 						 sd->status.account_id, sd->status.char_id,
 						 (short)pet_db[pet_id].class_, (short)mob_db(pet_db[pet_id].class_)->lv,
 						 (short)pet_db[pet_id].EggID, 0, (short)pet_db[pet_id].intimate,
@@ -2682,7 +2682,7 @@ ACMD(petrename)
 	}
 	
 	pd->pet.rename_flag = 0;
-	intif_save_petdata(sd->status.account_id, &pd->pet);
+	intif->save_petdata(sd->status.account_id, &pd->pet);
 	clif->send_petstatus(sd);
 	clif->message(fd, msg_txt(187)); // You can now rename your pet.
 	
@@ -4960,7 +4960,7 @@ ACMD(broadcast)
 	}
 	
 	sprintf(atcmd_output, "%s: %s", sd->status.name, message);
-	intif_broadcast(atcmd_output, strlen(atcmd_output) + 1, 0);
+	intif->broadcast(atcmd_output, strlen(atcmd_output) + 1, 0);
 	
 	return true;
 }
@@ -7974,7 +7974,7 @@ ACMD(request)
 	}
 	
 	sprintf(atcmd_output, msg_txt(278), message);	// (@request): %s
-	intif_wis_message_to_gm(sd->status.name, PC_PERM_RECEIVE_REQUESTS, atcmd_output);
+	intif->wis_message_to_gm(sd->status.name, PC_PERM_RECEIVE_REQUESTS, atcmd_output);
 	clif->disp_onlyself(sd, atcmd_output, strlen(atcmd_output));
 	clif->message(sd->fd,msg_txt(279));	// @request sent.
 	return true;
@@ -8335,7 +8335,7 @@ ACMD(delitem)
 		
 		if( sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET )
 		{// delete pet
-			intif_delete_petdata(MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]));
+			intif->delete_petdata(MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]));
 		}
 		pc->delitem(sd, idx, delamount, 0, 0, LOG_TYPE_COMMAND);
 		
@@ -8508,7 +8508,7 @@ ACMD(accinfo) {
 	//remove const type
 	safestrncpy(query, message, NAME_LENGTH);
 	
-	intif_request_accinfo( sd->fd, sd->bl.id, pc->get_group_level(sd), query );
+	intif->request_accinfo( sd->fd, sd->bl.id, pc->get_group_level(sd), query );
 	
 	return true;
 }
