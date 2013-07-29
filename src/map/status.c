@@ -6055,8 +6055,8 @@ void status_set_viewdata(struct block_list *bl, int class_)
 		vd = npc_get_viewdata(class_);
 	else if (homdb_checkid(class_))
 		vd = homun->get_viewdata(class_);
-	else if (mercenary->merc_class(class_))
-		vd = mercenary->merc_get_viewdata(class_);
+	else if (mercenary->class(class_))
+		vd = mercenary->get_viewdata(class_);
 	else if (elemental->class(class_))
 		vd = elemental->get_viewdata(class_);
 	else
@@ -8331,7 +8331,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				if( pc_isfalcon(sd) ) pc->setoption(sd, sd->sc.option&~OPTION_FALCON);
 				if( sd->status.pet_id > 0 ) pet_menu(sd, 3);
 				if( homun_alive(sd->hd) ) homun->vaporize(sd,1);
-				if( sd->md ) mercenary->merc_delete(sd->md,3);
+				if( sd->md ) mercenary->delete(sd->md,3);
 			}
 			break;
 		case SC__LAZINESS:
@@ -8349,7 +8349,6 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			// bypasses coating protection and MADO
 			sc_start(bl,SC_NOEQUIPWEAPON,100,val1,tick);
 			sc_start(bl,SC_NOEQUIPSHIELD,100,val1,tick);
-			break;
 			break;
 		case SC_GN_CARTBOOST:
 			if( val1 < 3 )

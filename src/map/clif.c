@@ -15773,7 +15773,7 @@ void clif_parse_mercenary_action(int fd, struct map_session_data* sd)
 	if( sd->md == NULL )
 		return;
 
-	if( option == 2 ) mercenary->merc_delete(sd->md, 2);
+	if( option == 2 ) mercenary->delete(sd->md, 2);
 }
 
 

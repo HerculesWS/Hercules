@@ -15396,11 +15396,11 @@ BUILDIN(mercenary_create)
 	
 	class_ = script_getnum(st,2);
 	
-	if( !mercenary->merc_class(class_) )
+	if( !mercenary->class(class_) )
 		return true;
 	
 	contract_time = script_getnum(st,3);
-	mercenary->merc_create(sd, class_, contract_time);
+	mercenary->create(sd, class_, contract_time);
 	return true;
 }
 

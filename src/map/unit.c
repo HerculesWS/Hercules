@@ -2542,7 +2542,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 			if( sd )
 				sd->md = NULL;
 
-			mercenary->merc_contract_stop(md);
+			mercenary->contract_stop(md);
 			break;
 		}
 		case BL_ELEM: {

@@ -6739,7 +6739,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	}
 
 	if( sd->md )
-		mercenary->merc_delete(sd->md, 3); // Your mercenary soldier has ran away.
+		mercenary->delete(sd->md, 3); // Your mercenary soldier has ran away.
 
 	if( sd->ed )
 		elemental->delete(sd->ed, 0);

@@ -3598,7 +3598,7 @@ ACMD(reloadmobdb) {
 	mob_reload();
 	read_petdb();
 	homun->reload();
-	mercenary->read_mercenarydb();
+	mercenary->read_db();
 	mercenary->read_skilldb();
 	elemental->reload_elementaldb();
 	clif->message(fd, msg_txt(98)); // Monster database has been reloaded.

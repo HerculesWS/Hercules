@@ -1967,7 +1967,7 @@ int intif_parse_mercenary_received(int fd)
 		return 0;
 	}
 
-	mercenary->merc_data_received((struct s_mercenary*)RFIFOP(fd,5), RFIFOB(fd,4));
+	mercenary->data_received((struct s_mercenary*)RFIFOP(fd,5), RFIFOB(fd,4));
 	return 0;
 }
 

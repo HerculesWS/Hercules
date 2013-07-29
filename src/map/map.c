@@ -5398,7 +5398,7 @@ int do_init(int argc, char *argv[])
 	storage->init();
 	do_init_pet();
 	homun->init();
-	mercenary->do_init_mercenary();
+	mercenary->init();
 	elemental->do_init_elemental();
 	do_init_quest();
 	do_init_npc();
