@@ -142,7 +142,8 @@ struct script_stack {
 struct hQueue {
 	int id;
 	int *item;
-	int items;
+	int items;/* how many actual items are in the array */
+	int size;/* size of the *item array, not the current amount of items in it since it can have empty slots */
 	/* events */
 	char onLogOut[EVENT_NAME_LENGTH];
 	char onDeath[EVENT_NAME_LENGTH];

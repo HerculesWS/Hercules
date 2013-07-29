@@ -1536,7 +1536,7 @@ int map_quit(struct map_session_data *sd) {
 	if (sd->npc_id)
 		npc_event_dequeue(sd);
 
-	if( sd->bg_id )
+	if( sd->bg_id && !sd->bg_queue.arena ) /* TODO: dump this chunk after bg_queue is fully enabled */
 		bg_team_leave(sd,1);
 
 	skill->cooldown_save(sd);

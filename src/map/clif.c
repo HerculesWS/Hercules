@@ -558,10 +558,10 @@ int clif_send(const void* buf, int len, struct block_list* bl, enum send_target 
 			if( sd && sd->bg_queue.arena ) {
 				struct hQueue *queue = &script->hq[sd->bg_queue.arena->queue_id];
 				
-				for( i = 0; i < queue->items; i++ ) {
+				for( i = 0; i < queue->size; i++ ) {
 					struct map_session_data * sd = NULL;
 					
-					if( ( sd = iMap->id2sd(queue->item[i]) ) ) {
+					if( queue->item[i] > 0 && ( sd = iMap->id2sd(queue->item[i]) ) ) {
 						WFIFOHEAD(sd->fd,len);
 						memcpy(WFIFOP(sd->fd,0), buf, len);
 						WFIFOSET(sd->fd,len);
@@ -15894,7 +15894,7 @@ void clif_bg_message(struct battleground_data *bg, int src_id, const char *name,
 {
 	struct map_session_data *sd;
 	unsigned char *buf;
-	if( (sd = bg_getavailablesd(bg)) == NULL )
+	if( !bg->count || (sd = bg_getavailablesd(bg)) == NULL )
 		return;
 
 	buf = (unsigned char*)aMalloc((len + NAME_LENGTH + 8)*sizeof(unsigned char));
@@ -17426,12 +17426,12 @@ void clif_bgqueue_ack(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK 
 }
 
 
-void clif_bgqueue_notice_delete(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, unsigned char arena_id) {
+void clif_bgqueue_notice_delete(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, char *name) {
 	struct packet_bgqueue_notice_delete p;
 	
 	p.PacketType = bgqueue_notice_deleteType;
 	p.type = response;
-	safestrncpy(p.bg_name, bg->arena[arena_id]->name, sizeof(p.bg_name));
+	safestrncpy(p.bg_name, name, sizeof(p.bg_name));
 	
 	clif->send(&p,sizeof(p), &sd->bl, SELF);
 }
@@ -17474,33 +17474,34 @@ void clif_bgqueue_update_info(struct map_session_data *sd, unsigned char arena_i
 }
 
 void clif_parse_bgqueue_checkstate(int fd, struct map_session_data *sd) {
-	//struct packet_bgqueue_checkstate *p = P2PTR(fd, bgqueue_checkstateType); /* TODO: bgqueue_notice_delete should use this p->bg_name */
-	if( !bg->queue_on ) return; /* temp, until feature is complete */
+	struct packet_bgqueue_checkstate *p = P2PTR(fd);
+
 	if ( sd->bg_queue.arena && sd->bg_queue.type ) {
 		clif->bgqueue_update_info(sd,sd->bg_queue.arena->id,bg->id2pos(sd->bg_queue.arena->queue_id,sd->status.account_id));
 	} else
-		clif->bgqueue_notice_delete(sd, BGQND_FAIL_NOT_QUEUING,0);/* TODO: wrong response, should respond with p->bg_name not id 0 */
+		clif->bgqueue_notice_delete(sd, BGQND_FAIL_NOT_QUEUING,p->bg_name);
 }
 
 void clif_parse_bgqueue_revoke_req(int fd, struct map_session_data *sd) {
-	//struct packet_bgqueue_revoke_req *p = P2PTR(fd, bgqueue_revokereqType);
-	return;
-	//bg->queue_leave(sd, p->bg_name);
+	struct packet_bgqueue_revoke_req *p = P2PTR(fd);
+
+	if( sd->bg_queue.arena )
+		bg->queue_pc_cleanup(sd);
+	else
+		clif->bgqueue_notice_delete(sd, BGQND_FAIL_NOT_QUEUING,p->bg_name);
 }
 
 void clif_parse_bgqueue_battlebegin_ack(int fd, struct map_session_data *sd) {
 	struct packet_bgqueue_battlebegin_ack *p = P2PTR(fd);
 	struct bg_arena *arena;
+
 	if( !bg->queue_on ) return; /* temp, until feature is complete */
+	
 	if( ( arena = bg->name2arena(p->bg_name) )  ) {
 		bg->queue_ready_ack(arena,sd, ( p->result == 1 ) ? true : false);
 	} else {
 		clif->bgqueue_ack(sd,BGQA_FAIL_BGNAME_INVALID, 0);
 	}
-	//if ( p->result == 1 )
-	//	bg->queue_pc_ready(sd);
-	//else
-	//	bg->queue_leave(sd, p->bg_name);
 }
 
 void clif_bgqueue_joined(struct map_session_data *sd, int pos) {

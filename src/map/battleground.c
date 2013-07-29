@@ -93,6 +93,15 @@ int bg_team_join(int bg_id, struct map_session_data *sd)
 	bg->members[i].sd = sd;
 	bg->members[i].x = sd->bl.x;
 	bg->members[i].y = sd->bl.y;
+	/* populate 'where i came from' */
+	if(map[sd->bl.m].flag.nosave || map[sd->bl.m].instance_id >= 0){
+		struct map_data *m=&map[sd->bl.m];
+		if(m->save.map)
+			memcpy(&bg->members[i].source,&m->save,sizeof(struct point));
+		else
+			memcpy(&bg->members[i].source,&sd->status.save_point,sizeof(struct point));
+	} else
+		memcpy(&bg->members[i].source,&sd->status.last_point,sizeof(struct point));
 	bg->count++;
 
 	guild->send_dot_remove(sd);
@@ -115,7 +124,6 @@ int bg_team_leave(struct map_session_data *sd, int flag)
 
 	if( sd == NULL || !sd->bg_id )
 		return 0;
-
 	bg_send_dot_remove(sd);
 	bg_id = sd->bg_id;
 	sd->bg_id = 0;
@@ -124,21 +132,28 @@ int bg_team_leave(struct map_session_data *sd, int flag)
 		return 0;
 
 	ARR_FIND(0, MAX_BG_MEMBERS, i, bg_data->members[i].sd == sd);
-	if( i < MAX_BG_MEMBERS ) // Removes member from BG
+	if( i < MAX_BG_MEMBERS ) { // Removes member from BG
+		if( sd->bg_queue.arena ) {
+			bg->queue_pc_cleanup(sd);
+			pc->setpos(sd,bg_data->members[i].source.map, bg_data->members[i].source.x, bg_data->members[i].source.y, CLR_OUTSIGHT);
+		}
 		memset(&bg_data->members[i], 0, sizeof(bg_data->members[0]));
-	bg_data->count--;
+	}
 
-	if( flag )
-		sprintf(output, "Server : %s has quit the game...", sd->status.name);
-	else
-		sprintf(output, "Server : %s is leaving the battlefield...", sd->status.name);
-	clif->bg_message(bg_data, 0, "Server", output, strlen(output) + 1);
+	if( --bg_data->count != 0 ) {
+		if( flag )
+			sprintf(output, "Server : %s has quit the game...", sd->status.name);
+		else
+			sprintf(output, "Server : %s is leaving the battlefield...", sd->status.name);
+		clif->bg_message(bg_data, 0, "Server", output, strlen(output) + 1);
+	}
 
 	if( bg_data->logout_event[0] && flag )
 		npc_event(sd, bg_data->logout_event, 0);
-
-	if( sd->bg_queue.arena )
+	
+	if( sd->bg_queue.arena ) {
 		bg->queue_pc_cleanup(sd);
+	}
 	
 	return bg_data->count;
 }
@@ -415,10 +430,13 @@ struct bg_arena *bg_name2arena (char *name) {
 int bg_id2pos ( int queue_id, int account_id ) {
 	struct hQueue *queue = script->queue(queue_id);
 	if( queue ) {
-		int i;
-		for(i = 0; i < queue->items; i++ ) {
-			if( queue->item[i] == account_id ) {
-				return i;
+		int i, pos = 1;
+		for(i = 0; i < queue->size; i++ ) {
+			if( queue->item[i] > 0 ) {
+				if( queue->item[i] == account_id ) {
+					return pos;
+				}
+				pos++;
 			}
 		}
 	}
@@ -436,14 +454,14 @@ void bg_queue_ready_ack (struct bg_arena *arena, struct map_session_data *sd, bo
 		int i, count = 0;
 		sd->bg_queue.ready = 1;
 		
-		for( i = 0; i < queue->items; i++ ) {
-			if( ( sd = iMap->id2sd(queue->item[i]) ) ) {
+		for( i = 0; i < queue->size; i++ ) {
+			if( queue->item[i] > 0 && ( sd = iMap->id2sd(queue->item[i]) ) ) {
 				if( sd->bg_queue.ready == 1 )
 					count++;
 			}
 		}
 		/* check if all are ready then cancell timer, and start game  */
-		if( count == i ) {
+		if( count == queue->items ) {
 			iTimer->delete_timer(arena->begin_timer,bg->begin_timer);
 			arena->begin_timer = INVALID_TIMER;
 			bg->begin(arena);
@@ -454,7 +472,10 @@ void bg_queue_ready_ack (struct bg_arena *arena, struct map_session_data *sd, bo
 }
 void bg_queue_player_cleanup(struct map_session_data *sd) {
 	if ( sd->bg_queue.client_has_bg_data ) {
-		clif->bgqueue_notice_delete(sd,BGQND_CLOSEWINDOW, sd->bg_queue.arena ? sd->bg_queue.arena->id : 0);
+		if( sd->bg_queue.arena )
+			clif->bgqueue_notice_delete(sd,BGQND_CLOSEWINDOW,sd->bg_queue.arena->name);
+		else
+			clif->bgqueue_notice_delete(sd,BGQND_FAIL_NOT_QUEUING,bg->arena[0]->name);
 	}
 	if( sd->bg_queue.arena )
 		script->queue_remove(sd->bg_queue.arena->queue_id,sd->status.account_id);
@@ -469,12 +490,16 @@ void bg_match_over(struct bg_arena *arena, bool canceled) {
 	
 	if( !arena->ongoing )
 		return;
-	
-	for( i = 0; i < queue->items; i++ ) {
+	arena->ongoing = false;
+
+	for( i = 0; i < queue->size; i++ ) {
 		struct map_session_data * sd = NULL;
 		
-		if( ( sd = iMap->id2sd(queue->item[i]) ) ) {
-			bg->queue_pc_cleanup(sd);
+		if( queue->item[i] > 0 && ( sd = iMap->id2sd(queue->item[i]) ) ) {
+			if( sd->bg_queue.arena ) {
+				bg_team_leave(sd, 0);
+				bg->queue_pc_cleanup(sd);
+			}
 			if( canceled )
 				clif->colormes(sd->fd,COLOR_RED,"BG Match Cancelled: not enough players");
 			else {
@@ -485,7 +510,6 @@ void bg_match_over(struct bg_arena *arena, bool canceled) {
 
 	arena->begin_timer = INVALID_TIMER;
 	arena->fillup_timer = INVALID_TIMER;
-	arena->ongoing = false;
 	/* reset queue */
 	script->queue_clear(arena->queue_id);
 }
@@ -493,10 +517,10 @@ void bg_begin(struct bg_arena *arena) {
 	struct hQueue *queue = &script->hq[arena->queue_id];
 	int i, count = 0;
 
-	for( i = 0; i < queue->items; i++ ) {
+	for( i = 0; i < queue->size; i++ ) {
 		struct map_session_data * sd = NULL;
 		
-		if( ( sd = iMap->id2sd(queue->item[i]) ) ) {
+		if( queue->item[i] > 0 && ( sd = iMap->id2sd(queue->item[i]) ) ) {
 			if( sd->bg_queue.ready == 1 )
 				count++;
 			else
@@ -527,10 +551,10 @@ void bg_queue_pregame(struct bg_arena *arena) {
 	struct hQueue *queue = &script->hq[arena->queue_id];
 	int i;
 	
-	for( i = 0; i < queue->items; i++ ) {
+	for( i = 0; i < queue->size; i++ ) {
 		struct map_session_data * sd = NULL;
 		
-		if( ( sd = iMap->id2sd(queue->item[i]) ) ) {
+		if( queue->item[i] > 0 && ( sd = iMap->id2sd(queue->item[i]) ) ) {
 			clif->bgqueue_battlebegins(sd,arena->id,SELF);
 		}
 	}
@@ -594,7 +618,7 @@ void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, enum bg_q
 		clif->bgqueue_ack(sd,BGQA_FAIL_PPL_OVERAMOUNT,arena->id);
 		return;
 	}
-		
+
 	switch( type ) {
 		case BGQT_INDIVIDUAL:
 			sd->bg_queue.type = type;
@@ -630,7 +654,7 @@ void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, enum bg_q
 			}
 			break;
 	}
-		
+
 	clif->bgqueue_ack(sd,BGQA_SUCCESS,arena->id);
 	
 	bg->queue_check(arena);

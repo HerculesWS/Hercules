@@ -17088,7 +17088,7 @@ BUILDIN(npcskill)
 	return true;
 }
 struct hQueue *script_hqueue_get(int idx) {
-	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 )
+	if( idx < 0 || idx >= script->hqs || script->hq[idx].size == -1 )
 		return NULL;
 	return &script->hq[idx];
 }
@@ -17097,7 +17097,7 @@ int script_hqueue_create(void) {
 	int i;
 	
 	for(i = 0; i < script->hqs; i++) {
-		if( script->hq[i].items == -1 ) {
+		if( script->hq[i].size == -1 ) {
 			break;
 		}
 	}
@@ -17109,6 +17109,7 @@ int script_hqueue_create(void) {
 		idx = i;
 	
 	script->hq[ idx ].id = idx;
+	script->hq[ idx ].size = 0;
 	script->hq[ idx ].items = 0;
 	script->hq[ idx ].onDeath[0] = '\0';
 	script->hq[ idx ].onLogOut[0] = '\0';
@@ -17126,47 +17127,42 @@ BUILDIN(queue) {
 BUILDIN(queuesize) {
 	int idx = script_getnum(st, 2);
 	
-	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 ) {
+	if( idx < 0 || idx >= script->hqs || script->hq[idx].size == -1 ) {
 		ShowWarning("buildin_queuesize: unknown queue id %d\n",idx);
 		script_pushint(st, 0);
 	} else {
-		/* value of script->hq[].items isn't to be trusted for we dont reduce the size when members are removed to save on memory allocation */
-		int i, count = 0;
-		for( i = 0; i < script->hq[ idx ].items; i++ )
-			if( script->hq[ idx ].item[i] != -1  )
-				count++;
-		script_pushint(st, count);
+		script_pushint(st, script->hq[ idx ].items);
 	}
 		
 	return true;
 }
 bool script_hqueue_add(int idx, int var) {
-	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 ) {
+	if( idx < 0 || idx >= script->hqs || script->hq[idx].size == -1 ) {
 		ShowWarning("script_hqueue_add: unknown queue id %d\n",idx);
 		return true;
 	} else {
 		struct map_session_data *sd;
 		int i;
 		
-		for(i = 0; i < script->hq[idx].items; i++) {
+		for(i = 0; i < script->hq[idx].size; i++) {
 			if( script->hq[idx].item[i] == var ) {
 				return true;
 			}
 		}
 		
-		if( i == script->hq[idx].items ) {
+		if( i == script->hq[idx].size ) {
 			
-			for(i = 0; i < script->hq[idx].items; i++) {
+			for(i = 0; i < script->hq[idx].size; i++) {
 				if( script->hq[idx].item[i] == 0 ) {
 					break;
 				}
 			}
 			
-			if( i == script->hq[idx].items )
-				RECREATE(script->hq[idx].item, int, ++script->hq[idx].items);
+			if( i == script->hq[idx].size )
+				RECREATE(script->hq[idx].item, int, ++script->hq[idx].size);
 			
 			script->hq[idx].item[i] = var;
-			
+			script->hq[idx].items++;
 			if( var >= START_ACCOUNT_NUM && (sd = iMap->id2sd(var)) ) {
 				for(i = 0; i < sd->queues_count; i++) {
 					if( sd->queues[i] == -1 ) {
@@ -17195,21 +17191,23 @@ BUILDIN(queueadd) {
 	return true;
 }
 bool script_hqueue_remove(int idx, int var) {
-	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 ) {
+	if( idx < 0 || idx >= script->hqs || script->hq[idx].size == -1 ) {
 		ShowWarning("script_hqueue_remove: unknown queue id %d (used with var %d)\n",idx,var);
 		return true;
 	} else {
 		int i;
 		
-		for(i = 0; i < script->hq[idx].items; i++) {
+		for(i = 0; i < script->hq[idx].size; i++) {
 			if( script->hq[idx].item[i] == var ) {
 				break;
 			}
 		}
 		
-		if( i != script->hq[idx].items ) {
+		if( i != script->hq[idx].size ) {
 			struct map_session_data *sd;
+			
 			script->hq[idx].item[i] = -1;
+			script->hq[idx].items--;
 			
 			if( var >= START_ACCOUNT_NUM && (sd = iMap->id2sd(var)) ) {
 				for(i = 0; i < sd->queues_count; i++) {
@@ -17245,7 +17243,7 @@ BUILDIN(queueopt) {
 	int idx = script_getnum(st, 2);
 	int var = script_getnum(st, 3);
 	
-	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 ) {
+	if( idx < 0 || idx >= script->hqs || script->hq[idx].size == -1 ) {
 		ShowWarning("buildin_queueopt: unknown queue id %d\n",idx);
 		script_pushint(st, 1);
 	} else if( var <= HQO_NONE || var >= HQO_MAX ) {
@@ -17281,14 +17279,14 @@ BUILDIN(queueopt) {
 	return true;
 }
 bool script_hqueue_del(int idx) {
-	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 ) {
+	if( idx < 0 || idx >= script->hqs || script->hq[idx].size == -1 ) {
 		ShowWarning("script_queue_del: unknown queue id %d\n",idx);
 		return true;
 	} else {
 		struct map_session_data *sd;
 		int i;
 		
-		for(i = 0; i < script->hq[idx].items; i++) {
+		for(i = 0; i < script->hq[idx].size; i++) {
 			if( script->hq[idx].item[i] >= START_ACCOUNT_NUM && (sd = iMap->id2sd(script->hq[idx].item[i])) ) {
 				int j;
 				for(j = 0; j < sd->queues_count; j++) {
@@ -17300,9 +17298,11 @@ bool script_hqueue_del(int idx) {
 				if( j != sd->queues_count )
 					sd->queues[j] = -1;
 			}
+			script->hq[idx].item[i] = 0;
 		}
 		
-		script->hq[idx].items = -1;
+		script->hq[idx].size = -1;
+		script->hq[idx].items = 0;
 	}
 	return false;
 }
@@ -17316,29 +17316,30 @@ BUILDIN(queuedel) {
 	return true;
 }
 void script_hqueue_clear(int idx) {
-	if( idx < 0 || idx >= script->hqs || script->hq[idx].items == -1 ) {
+	if( idx < 0 || idx >= script->hqs || script->hq[idx].size == -1 ) {
 		ShowWarning("script_hqueue_clear: unknown queue id %d\n",idx);
 		return;
 	} else {
 		struct map_session_data *sd;
 		int i, j;
 		
-			for(i = 0; i < script->hq[idx].items; i++) {
-				if( script->hq[idx].item[i] != -1 ) {
+		for(i = 0; i < script->hq[idx].size; i++) {
+			if( script->hq[idx].item[i] > 0 ) {
 
-					if( script->hq[idx].item[i] >= START_ACCOUNT_NUM && (sd = iMap->id2sd(script->hq[idx].item[i])) ) {
-						for(j = 0; j < sd->queues_count; j++) {
-							if( sd->queues[j] == idx ) {
-								break;
-							}
+				if( script->hq[idx].item[i] >= START_ACCOUNT_NUM && (sd = iMap->id2sd(script->hq[idx].item[i])) ) {
+					for(j = 0; j < sd->queues_count; j++) {
+						if( sd->queues[j] == idx ) {
+							break;
 						}
-						
-						if( j != sd->queues_count )
-							sd->queues[j] = -1;
 					}
-					script->hq[idx].item[i] = -1;
+					
+					if( j != sd->queues_count )
+						sd->queues[j] = -1;
 				}
+				script->hq[idx].item[i] = 0;
 			}
+		}
+		script->hq[idx].items = 0;
 	}
 	return;
 }
@@ -17350,8 +17351,14 @@ BUILDIN(queueiterator) {
 	int idx = script->hqis;
 	int i;
 	
-	if( qid < 0 || qid >= script->hqs || script->hq[qid].items == -1 || !(queue = script->queue(qid)) ) {
+	if( qid < 0 || qid >= script->hqs || script->hq[qid].size == -1 || !(queue = script->queue(qid)) ) {
 		ShowWarning("queueiterator: invalid queue id %d\n",qid);
+		return true;
+	}
+	
+	/* what if queue->size is 0? (iterating a empty queue?) */
+	if( queue->size <= 0 ) {
+		ShowWarning("queueiterator: attempting to iterate on on empty queue id %d!\n",qid);
 		return true;
 	}
 	
@@ -17366,12 +17373,12 @@ BUILDIN(queueiterator) {
 		script->hqi[ idx ].item = NULL;
 	} else
 		idx = i;
-
-	RECREATE(script->hqi[ idx ].item, int, queue->items);
-
-	memcpy(script->hqi[idx].item, queue->item, sizeof(int)*queue->items);
 	
-	script->hqi[ idx ].items = queue->items;
+	RECREATE(script->hqi[ idx ].item, int, queue->size);
+
+	memcpy(script->hqi[idx].item, queue->item, sizeof(int)*queue->size);
+	
+	script->hqi[ idx ].items = queue->size;
 	script->hqi[ idx ].pos = 0;
 	
 	script_pushint(st,idx);

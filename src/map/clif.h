@@ -906,7 +906,7 @@ struct clif_interface {
 	void (*elemental_updatestatus) (struct map_session_data *sd, int type);
 	/* bgqueue */
 	void (*bgqueue_ack) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, unsigned char arena_id);
-	void (*bgqueue_notice_delete) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, unsigned char arena_id);
+	void (*bgqueue_notice_delete) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, char *name);
 	void (*bgqueue_update_info) (struct map_session_data *sd, unsigned char arena_id, int position);
 	void (*bgqueue_joined) (struct map_session_data *sd, int pos);
 	void (*bgqueue_pcleft) (struct map_session_data *sd);

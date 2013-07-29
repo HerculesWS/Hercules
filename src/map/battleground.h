@@ -29,6 +29,7 @@ struct battleground_member_data {
 	unsigned short x, y;
 	struct map_session_data *sd;
 	unsigned afk : 1;
+	struct point source;/* where did i come from before i join? */
 };
 
 struct battleground_data {

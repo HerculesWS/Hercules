@@ -26,6 +26,7 @@ OnInit:
 
 //$@bg_queue_id is cleared after this event ends
 OnPlayerListReady:
+	
  	set $@FlaviusBG1_id1, bg_create_team("bat_b01",10,290);
 	set $@FlaviusBG1_id2, bg_create_team("bat_b01",390,10);
 
@@ -121,9 +122,9 @@ L_OnPlayerQuit:
 	
 OnMatchOver:
 	if( $@FlaviusBG1_id1 || $@FlaviusBG1_id2 ) {
-		bg_match_over("Flavius");
 		queuedel($@Croix_QueueBG1);
 		queuedel($@Guill_QueueBG1);
+		bg_match_over("Flavius");
 	}
 	if( $@FlaviusBG1_id1 ) { bg_destroy $@FlaviusBG1_id1; set $@FlaviusBG1_id1, 0; }
 	if( $@FlaviusBG1_id2 ) { bg_destroy $@FlaviusBG1_id2; set $@FlaviusBG1_id2, 0; }
@@ -186,11 +187,9 @@ OnMyMobDead:
 			donpcevent "time#bat_b01::OnEnable";
 			donpcevent "start#bat_b01::onReset";
 		}
-		donpcevent "#bat_b01_timer::OnStop";
 		bg_updatescore "bat_b01",$@Guill_ScoreBG1,$@Croix_ScoreBG1;
 		bg_warp $@FlaviusBG1_id1,"bat_b01",10,290;
 		bg_warp $@FlaviusBG1_id2,"bat_b01",390,10;
-		donpcevent "#bat_b01_timer::OnEnable";
 	}
 	end;
 }
