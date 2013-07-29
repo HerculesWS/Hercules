@@ -1920,15 +1920,21 @@ int itemdb_uid_load() {
  *------------------------------------*/
 static void itemdb_read(void) {
 	int i;
+	DBData prev;
 	
 	if (iMap->db_use_sql_item_db)
 		itemdb_read_sqldb();
 	else
 		itemdb_readdb();
 	
-	for( i = 0; i < ARRAYLENGTH(itemdb_array); ++i )
-		if( itemdb_array[i] )
-			strdb_put(itemdb->names, itemdb_array[i]->name, itemdb_array[i]);
+	for( i = 0; i < ARRAYLENGTH(itemdb_array); ++i ) {
+		if( itemdb_array[i] ) {
+			if( itemdb->names->put(itemdb->names,DB->str2key(itemdb_array[i]->name),DB->ptr2data(itemdb_array[i]),&prev) ) {
+				struct item_data *data = DB->data2ptr(&prev);
+				ShowError("itemdb_read: duplicate AegisName '%s' in item ID %d and %d\n",itemdb_array[i]->name,itemdb_array[i]->nameid,data->nameid);
+			}
+		}
+	}
 	
 	itemdb_read_combos();
 	itemdb->read_groups();

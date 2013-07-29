@@ -82,6 +82,9 @@ Upper: Equippable upper-types. Uses the following bitmasks:
 	2: Upper jobs
 	4: Baby jobs
 	8: Third jobs
+	16: Upper Third jobs
+	32: Baby Third jobs
+Under pre-re mode third classes are considered upper, making use of the 8 and above masks is therefore not necessary unless in renewal mode.
 
 Gender: Gender restriction. 0 is female, 1 is male, 2 for both.
 

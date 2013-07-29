@@ -1791,9 +1791,9 @@ static int db_obj_put(DBMap* self, DBKey key, DBData data, DBData *out_data)
 			if (node->deleted) {
 				db_free_remove(db, node);
 			} else {
-				db->release(node->key, node->data, DB_RELEASE_BOTH);
 				if (out_data)
 					memcpy(out_data, &node->data, sizeof(*out_data));
+				db->release(node->key, node->data, DB_RELEASE_BOTH);
 				retval = 1;
 			}
 			break;
