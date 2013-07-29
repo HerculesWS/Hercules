@@ -4957,15 +4957,21 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				break ;
 			}
  		case AL_HEAL:
-		case ALL_RESURRECTION:
-		case PR_ASPERSIO:
+
 		/**
 		 * Arch Bishop
 		 **/
 		case AB_RENOVATIO:
 		case AB_HIGHNESSHEAL:
+		case AL_INCAGI:	
+			if( sd && dstsd && pc_ismadogear(dstsd) ){
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_TOTARGET,0);
+				return 0;
+			}
+		case ALL_RESURRECTION:
+		case PR_ASPERSIO:
 			//Apparently only player casted skills can be offensive like this.
-			if (sd && battle->check_undead(tstatus->race,tstatus->def_ele)) {
+			if (sd && battle->check_undead(tstatus->race,tstatus->def_ele) && skill_id != AL_INCAGI) {
 				if (battle->check_target(src, bl, BCT_ENEMY) < 1) {
 				  	//Offensive heal does not works on non-enemies. [Skotlex]
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
@@ -5037,8 +5043,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					heal = heal * ( 15 + 5 * skill_lv ) / 10;
 				}
 				if( iStatus->isimmune(bl) ||
-						(dstmd && (dstmd->class_ == MOBID_EMPERIUM || mob_is_battleground(dstmd))) ||
-						(dstsd && pc_ismadogear(dstsd)) )//Mado is immune to heal
+						(dstmd && (dstmd->class_ == MOBID_EMPERIUM || mob_is_battleground(dstmd))) )
 					heal=0;
 
 				if( sd && dstsd && sd->status.partner_id == dstsd->status.char_id && (sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->status.sex == 0 )
