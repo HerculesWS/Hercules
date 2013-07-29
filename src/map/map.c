@@ -4944,7 +4944,7 @@ void do_final(void)
 	iStatus->do_final_status();
 	do_final_unit();
 	do_final_battleground();
-	do_final_duel();
+	iDuel->do_final_duel();
 	do_final_elemental();
 	do_final_maps();
 	vending->final();
@@ -5392,7 +5392,7 @@ int do_init(int argc, char *argv[])
 	do_init_npc();
 	do_init_unit();
 	do_init_battleground();
-	do_init_duel();
+	iDuel->do_init_duel();
 	vending->init();
 
 	npc_event_do_oninit();	// Init npcs (OnInit)

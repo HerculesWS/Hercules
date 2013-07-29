@@ -7694,8 +7694,8 @@ ACMD(invite)
 		return true;
 	}
 	
-	if(duel_list[did].max_players_limit > 0 &&
-	   duel_list[did].members_count >= duel_list[did].max_players_limit) {
+	if(iDuel->duel_list[did].max_players_limit > 0 &&
+	   iDuel->duel_list[did].members_count >= iDuel->duel_list[did].max_players_limit) {
 		
 		// "Duel: Limit of players is reached."
 		clif->message(fd, msg_txt(351));
@@ -7721,7 +7721,7 @@ ACMD(invite)
 		return true;
 	}
 	
-	duel_invite(did, sd, target_sd);
+	iDuel->invite(did, sd, target_sd);
 	// "Duel: Invitation has been sent."
 	clif->message(fd, msg_txt(354));
 	return true;
@@ -7732,7 +7732,7 @@ ACMD(duel)
 	unsigned int maxpl = 0;
 	
 	if(sd->duel_group > 0) {
-		duel_showinfo(sd->duel_group, sd);
+		iDuel->showinfo(sd->duel_group, sd);
 		return true;
 	}
 	
@@ -7742,7 +7742,7 @@ ACMD(duel)
 		return true;
 	}
 	
-	if(!duel_checktime(sd)) {
+	if(!iDuel->checktime(sd)) {
 		char output[CHAT_SIZE_MAX];
 		// "Duel: You can take part in duel only one time per %d minutes."
 		sprintf(output, msg_txt(356), battle_config.duel_time_interval);
@@ -7756,18 +7756,18 @@ ACMD(duel)
 				clif->message(fd, msg_txt(357)); // "Duel: Invalid value."
 				return true;
 			}
-			duel_create(sd, maxpl);
+			iDuel->create(sd, maxpl);
 		} else {
 			struct map_session_data *target_sd;
 			target_sd = iMap->nick2sd((char *)message);
 			if(target_sd != NULL) {
 				unsigned int newduel;
-				if((newduel = duel_create(sd, 2)) != -1) {
+				if((newduel = iDuel->create(sd, 2)) != -1) {
 					if(target_sd->duel_group > 0 ||	target_sd->duel_invite > 0) {
 						clif->message(fd, msg_txt(353)); // "Duel: Player already in duel."
 						return true;
 					}
-					duel_invite(newduel, sd, target_sd);
+					iDuel->invite(newduel, sd, target_sd);
 					clif->message(fd, msg_txt(354)); // "Duel: Invitation has been sent."
 				}
 			} else {
@@ -7777,7 +7777,7 @@ ACMD(duel)
 			}
 		}
 	} else
-		duel_create(sd, 0);
+		iDuel->create(sd, 0);
 	
 	return true;
 }
@@ -7791,14 +7791,14 @@ ACMD(leave)
 		return true;
 	}
 	
-	duel_leave(sd->duel_group, sd);
+	iDuel->leave(sd->duel_group, sd);
 	clif->message(fd, msg_txt(359)); // "Duel: You left the duel."
 	return true;
 }
 
 ACMD(accept)
 {
-	if(!duel_checktime(sd)) {
+	if(!iDuel->checktime(sd)) {
 		char output[CHAT_SIZE_MAX];
 		// "Duel: You can take part in duel only one time per %d minutes."
 		sprintf(output, msg_txt(356), battle_config.duel_time_interval);
@@ -7812,14 +7812,14 @@ ACMD(accept)
 		return true;
 	}
 	
-	if( duel_list[sd->duel_invite].max_players_limit > 0 && duel_list[sd->duel_invite].members_count >= duel_list[sd->duel_invite].max_players_limit )
+	if( iDuel->duel_list[sd->duel_invite].max_players_limit > 0 && iDuel->duel_list[sd->duel_invite].members_count >= iDuel->duel_list[sd->duel_invite].max_players_limit )
 	{
 		// "Duel: Limit of players is reached."
 		clif->message(fd, msg_txt(351));
 		return true;
 	}
 	
-	duel_accept(sd->duel_invite, sd);
+	iDuel->accept(sd->duel_invite, sd);
 	// "Duel: Invitation has been accepted."
 	clif->message(fd, msg_txt(361));
 	return true;
@@ -7833,7 +7833,7 @@ ACMD(reject)
 		return true;
 	}
 	
-	duel_reject(sd->duel_invite, sd);
+	iDuel->reject(sd->duel_invite, sd);
 	// "Duel: Invitation has been rejected."
 	clif->message(fd, msg_txt(363));
 	return true;

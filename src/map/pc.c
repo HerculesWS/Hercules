@@ -6733,9 +6733,9 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	// Leave duel if you die [LuzZza]
 	if(battle_config.duel_autoleave_when_die) {
 		if(sd->duel_group > 0)
-			duel_leave(sd->duel_group, sd);
+			iDuel->leave(sd->duel_group, sd);
 		if(sd->duel_invite > 0)
-			duel_reject(sd->duel_invite, sd);
+			iDuel->reject(sd->duel_invite, sd);
 	}
 
 	if (sd->npc_id && sd->st && sd->st->state != RUN)
