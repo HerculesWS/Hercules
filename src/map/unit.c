@@ -2131,7 +2131,7 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 			}
 			//Leave/reject all invitations.
 			if(sd->chatID)
-				chat_leavechat(sd,0);
+				chat->leavechat(sd,0);
 			if(sd->trade_partner)
 				trade->cancel(sd);
 			buyingstore->close(sd);

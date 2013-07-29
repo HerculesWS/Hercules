@@ -10017,7 +10017,7 @@ BUILDIN(waitingroom)
 	
 	nd = (struct npc_data *)iMap->id2bl(st->oid);
 	if( nd != NULL )
-		chat_createnpcchat(nd, title, limit, pub, trigger, ev, zeny, minLvl, maxLvl);
+		chat->createnpcchat(nd, title, limit, pub, trigger, ev, zeny, minLvl, maxLvl);
 	
 	return true;
 }
@@ -10034,7 +10034,7 @@ BUILDIN(delwaitingroom)
 	else
 		nd = (struct npc_data *)iMap->id2bl(st->oid);
 	if( nd != NULL )
-		chat_deletenpcchat(nd);
+		chat->deletenpcchat(nd);
 	return true;
 }
 
@@ -10053,7 +10053,7 @@ BUILDIN(waitingroomkickall)
 		nd = (struct npc_data *)iMap->id2bl(st->oid);
 	
 	if( nd != NULL && (cd=(struct chat_data *)iMap->id2bl(nd->chat_id)) != NULL )
-		chat_npckickall(cd);
+		chat->npckickall(cd);
 	return true;
 }
 
@@ -10072,7 +10072,7 @@ BUILDIN(enablewaitingroomevent)
 		nd = (struct npc_data *)iMap->id2bl(st->oid);
 	
 	if( nd != NULL && (cd=(struct chat_data *)iMap->id2bl(nd->chat_id)) != NULL )
-		chat_enableevent(cd);
+		chat->enableevent(cd);
 	return true;
 }
 
@@ -10091,7 +10091,7 @@ BUILDIN(disablewaitingroomevent)
 		nd = (struct npc_data *)iMap->id2bl(st->oid);
 	
 	if( nd != NULL && (cd=(struct chat_data *)iMap->id2bl(nd->chat_id)) != NULL )
-		chat_disableevent(cd);
+		chat->disableevent(cd);
 	return true;
 }
 
