@@ -5159,6 +5159,7 @@ void map_hp_symbols(void) {
 	HPM->share(iDuel,"iDuel");
 	HPM->share(elemental,"elemental");
 	HPM->share(intif,"intif");
+	HPM->share(mercenary,"mercenary");
 
 
 	/* partial */
@@ -5201,6 +5202,7 @@ void map_load_defaults(void) {
 	iDuel_defaults();
 	elemental_defaults();
 	intif_defaults();
+	mercenary_defaults();
 }
 int do_init(int argc, char *argv[])
 {
@@ -5396,7 +5398,7 @@ int do_init(int argc, char *argv[])
 	storage->init();
 	do_init_pet();
 	homun->init();
-	do_init_mercenary();
+	mercenary->do_init_mercenary();
 	elemental->do_init_elemental();
 	do_init_quest();
 	do_init_npc();

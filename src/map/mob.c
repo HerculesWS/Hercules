@@ -2578,7 +2578,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				quest_update_objective(sd, md->class_);
 
 			if( sd->md && src && src->type != BL_HOM && mob_db(md->class_)->lv > sd->status.base_level/2 )
-				mercenary_kills(sd->md);
+				mercenary->kills(sd->md);
 		}
 
 		if( md->npc_event[0] && !md->state.npc_killmonster ) {

@@ -12459,10 +12459,10 @@ BUILDIN(getmercinfo)
 			else
 				script_pushconststr(st,"");
 			break;
-		case 3: script_pushint(st,md ? mercenary_get_faith(md) : 0); break;
-		case 4: script_pushint(st,md ? mercenary_get_calls(md) : 0); break;
+		case 3: script_pushint(st,md ? mercenary->get_faith(md) : 0); break;
+		case 4: script_pushint(st,md ? mercenary->get_calls(md) : 0); break;
 		case 5: script_pushint(st,md ? md->mercenary.kill_count : 0); break;
-		case 6: script_pushint(st,md ? mercenary_get_lifetime(md) : 0); break;
+		case 6: script_pushint(st,md ? mercenary->get_lifetime(md) : 0); break;
 		case 7: script_pushint(st,md ? md->db->lv : 0); break;
 		default:
 			ShowError("buildin_getmercinfo: Invalid type %d (char_id=%d).\n", type, sd->status.char_id);
@@ -15396,11 +15396,11 @@ BUILDIN(mercenary_create)
 	
 	class_ = script_getnum(st,2);
 	
-	if( !merc_class(class_) )
+	if( !mercenary->merc_class(class_) )
 		return true;
 	
 	contract_time = script_getnum(st,3);
-	merc_create(sd, class_, contract_time);
+	mercenary->merc_create(sd, class_, contract_time);
 	return true;
 }
 
@@ -15551,7 +15551,7 @@ BUILDIN(mercenary_set_faith)
 	
 	*calls += value;
 	*calls = cap_value(*calls, 0, INT_MAX);
-	if( mercenary_get_guild(sd->md) == guild )
+	if( mercenary->get_guild(sd->md) == guild )
 		clif->mercenary_updatestatus(sd,SP_MERCFAITH);
 	
 	return true;

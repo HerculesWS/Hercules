@@ -7197,7 +7197,7 @@ void clif_devotion(struct block_list *src, struct map_session_data *tsd)
 		if( md && md->master && md->devotion_flag )
 			WBUFL(buf,6) = md->master->bl.id;
 
-		WBUFW(buf,26) = skill->get_range2(src, ML_DEVOTION, mercenary_checkskill(md, ML_DEVOTION));
+		WBUFW(buf,26) = skill->get_range2(src, ML_DEVOTION, mercenary->checkskill(md, ML_DEVOTION));
 	}
 	else
 	{
@@ -11289,7 +11289,7 @@ void clif_parse_UseSkillToId_mercenary(struct mercenary_data *md, struct map_ses
 	} else if( DIFF_TICK(tick, md->ud.canact_tick) < 0 )
 		return;
 
-	lv = mercenary_checkskill(md, skill_id);
+	lv = mercenary->checkskill(md, skill_id);
 	if( skill_lv > lv )
 		skill_lv = lv;
 	if( skill_lv )
@@ -11312,7 +11312,7 @@ void clif_parse_UseSkillToPos_mercenary(struct mercenary_data *md, struct map_se
 
 	if( md->sc.data[SC_BASILICA] )
 		return;
-	lv = mercenary_checkskill(md, skill_id);
+	lv = mercenary->checkskill(md, skill_id);
 	if( skill_lv > lv )
 		skill_lv = lv;
 	if( skill_lv )
@@ -15677,7 +15677,7 @@ void clif_mercenary_updatestatus(struct map_session_data *sd, int type)
 			WFIFOL(fd,4) = md->mercenary.kill_count;
 			break;
 		case SP_MERCFAITH:
-			WFIFOL(fd,4) = mercenary_get_faith(md);
+			WFIFOL(fd,4) = mercenary->get_faith(md);
 			break;
 	}
 	WFIFOSET(fd,packet_len(0x2a2));
@@ -15721,9 +15721,9 @@ void clif_mercenary_info(struct map_session_data *sd)
 	WFIFOL(fd,52) = status->max_hp;
 	WFIFOL(fd,56) = status->sp;
 	WFIFOL(fd,60) = status->max_sp;
-	WFIFOL(fd,64) = (int)time(NULL) + (mercenary_get_lifetime(md) / 1000);
-	WFIFOW(fd,68) = mercenary_get_faith(md);
-	WFIFOL(fd,70) = mercenary_get_calls(md);
+	WFIFOL(fd,64) = (int)time(NULL) + (mercenary->get_lifetime(md) / 1000);
+	WFIFOW(fd,68) = mercenary->get_faith(md);
+	WFIFOL(fd,70) = mercenary->get_calls(md);
 	WFIFOL(fd,74) = md->mercenary.kill_count;
 	WFIFOW(fd,78) = md->battle_status.rhw.range;
 	WFIFOSET(fd,packet_len(0x29b));
@@ -15773,7 +15773,7 @@ void clif_parse_mercenary_action(int fd, struct map_session_data* sd)
 	if( sd->md == NULL )
 		return;
 
-	if( option == 2 ) merc_delete(sd->md, 2);
+	if( option == 2 ) mercenary->merc_delete(sd->md, 2);
 }
 
 

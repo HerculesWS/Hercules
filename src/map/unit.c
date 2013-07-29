@@ -2252,7 +2252,7 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 		case BL_MER: {
 			struct mercenary_data *md = (struct mercenary_data *)bl;
 			ud->canact_tick = ud->canmove_tick;
-			if( mercenary_get_lifetime(md) <= 0 && !(md->master && !md->master->state.active) )
+			if( mercenary->get_lifetime(md) <= 0 && !(md->master && !md->master->state.active) )
 			{
 				clif->clearunit_area(bl,clrtype);
 				iMap->delblock(bl);
@@ -2531,8 +2531,8 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 		{
 			struct mercenary_data *md = (TBL_MER*)bl;
 			struct map_session_data *sd = md->master;
-			if( mercenary_get_lifetime(md) > 0 )
-				mercenary_save(md);
+			if( mercenary->get_lifetime(md) > 0 )
+				mercenary->save(md);
 			else
 			{
 				intif->mercenary_delete(md->mercenary.mercenary_id);
@@ -2542,7 +2542,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 			if( sd )
 				sd->md = NULL;
 
-			merc_contract_stop(md);
+			mercenary->merc_contract_stop(md);
 			break;
 		}
 		case BL_ELEM: {

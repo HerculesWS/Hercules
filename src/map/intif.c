@@ -1967,7 +1967,7 @@ int intif_parse_mercenary_received(int fd)
 		return 0;
 	}
 
-	merc_data_received((struct s_mercenary*)RFIFOP(fd,5), RFIFOB(fd,4));
+	mercenary->merc_data_received((struct s_mercenary*)RFIFOP(fd,5), RFIFOB(fd,4));
 	return 0;
 }
 
@@ -2265,7 +2265,8 @@ int intif_parse(int fd)
 *-------------------------------------*/
 void intif_defaults(void) {
 	intif = &intif_s;
-	/* funcs */
+
+	/* funcs */
 	
 	intif->parse = intif_parse;
 	

@@ -1242,7 +1242,7 @@ int status_damage(struct block_list *src,struct block_list *target,int hp, int s
 	case BL_PC:  pc->damage((TBL_PC*)target,src,hp,sp); break;
 	case BL_MOB: mob_damage((TBL_MOB*)target, src, hp); break;
 	case BL_HOM: homun->damaged((TBL_HOM*)target); break;
-	case BL_MER: mercenary_heal((TBL_MER*)target,hp,sp); break;
+	case BL_MER: mercenary->heal((TBL_MER*)target,hp,sp); break;
 	case BL_ELEM: elemental->heal((TBL_ELEM*)target,hp,sp); break;
 	}
 
@@ -1267,7 +1267,7 @@ int status_damage(struct block_list *src,struct block_list *target,int hp, int s
 	case BL_PC:  flag = pc->dead((TBL_PC*)target,src); break;
 	case BL_MOB: flag = mob_dead((TBL_MOB*)target, src, flag&4?3:0); break;
 	case BL_HOM: flag = homun->dead((TBL_HOM*)target); break;
-	case BL_MER: flag = mercenary_dead((TBL_MER*)target); break;
+	case BL_MER: flag = mercenary->dead((TBL_MER*)target); break;
 	case BL_ELEM: flag = elemental->dead((TBL_ELEM*)target); break;
 	default:	//Unhandled case, do nothing to object.
 		flag = 0;
@@ -1413,7 +1413,7 @@ int status_heal(struct block_list *bl,int hp,int sp, int flag)
 	case BL_PC:  pc->heal((TBL_PC*)bl,hp,sp,flag&2?1:0); break;
 	case BL_MOB: mob_heal((TBL_MOB*)bl,hp); break;
 	case BL_HOM: homun->healed((TBL_HOM*)bl); break;
-	case BL_MER: mercenary_heal((TBL_MER*)bl,hp,sp); break;
+	case BL_MER: mercenary->heal((TBL_MER*)bl,hp,sp); break;
 	case BL_ELEM: elemental->heal((TBL_ELEM*)bl,hp,sp); break;
 	}
 
@@ -6055,8 +6055,8 @@ void status_set_viewdata(struct block_list *bl, int class_)
 		vd = npc_get_viewdata(class_);
 	else if (homdb_checkid(class_))
 		vd = homun->get_viewdata(class_);
-	else if (merc_class(class_))
-		vd = merc_get_viewdata(class_);
+	else if (mercenary->merc_class(class_))
+		vd = mercenary->merc_get_viewdata(class_);
 	else if (elemental->class(class_))
 		vd = elemental->get_viewdata(class_);
 	else
@@ -8331,7 +8331,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				if( pc_isfalcon(sd) ) pc->setoption(sd, sd->sc.option&~OPTION_FALCON);
 				if( sd->status.pet_id > 0 ) pet_menu(sd, 3);
 				if( homun_alive(sd->hd) ) homun->vaporize(sd,1);
-				if( sd->md ) merc_delete(sd->md,3);
+				if( sd->md ) mercenary->merc_delete(sd->md,3);
 			}
 			break;
 		case SC__LAZINESS:
