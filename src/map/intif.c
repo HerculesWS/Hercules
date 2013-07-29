@@ -2269,6 +2269,8 @@ void intif_defaults(void) {
 	/* funcs */
 	
 	intif->parse = intif_parse;
+
+	intif->create_pet = intif_create_pet;
 	
 	intif->broadcast = intif_broadcast;
 	intif->broadcast2 = intif_broadcast2;
