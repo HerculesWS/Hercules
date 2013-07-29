@@ -1129,7 +1129,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	sd->sc_display_count = 0;
 	
 	// Request all registries (auth is considered completed whence they arrive)
-	intif_request_registry(sd,7);
+	intif->request_registry(sd,7);
 	return true;
 }
 
@@ -1236,15 +1236,15 @@ int pc_reg_received(struct map_session_data *sd)
 
 	// pet
 	if (sd->status.pet_id > 0)
-		intif_request_petdata(sd->status.account_id, sd->status.char_id, sd->status.pet_id);
+		intif->request_petdata(sd->status.account_id, sd->status.char_id, sd->status.pet_id);
 
 	// Homunculus [albator]
 	if( sd->status.hom_id > 0 )
-		intif_homunculus_requestload(sd->status.account_id, sd->status.hom_id);
+		intif->homunculus_requestload(sd->status.account_id, sd->status.hom_id);
 	if( sd->status.mer_id > 0 )
-		intif_mercenary_request(sd->status.mer_id, sd->status.char_id);
+		intif->mercenary_request(sd->status.mer_id, sd->status.char_id);
 	if( sd->status.ele_id > 0 )
-		intif_elemental_request(sd->status.ele_id, sd->status.char_id);
+		intif->elemental_request(sd->status.ele_id, sd->status.char_id);
 
 	iMap->addiddb(&sd->bl);
 	iMap->delnickdb(sd->status.char_id, sd->status.name);
@@ -1256,8 +1256,8 @@ int pc_reg_received(struct map_session_data *sd)
 	status_calc_pc(sd,1);
 	chrif->scdata_request(sd->status.account_id, sd->status.char_id);
 
-	intif_Mail_requestinbox(sd->status.char_id, 0); // MAIL SYSTEM - Request Mail Inbox
-	intif_request_questlog(sd);
+	intif->Mail_requestinbox(sd->status.char_id, 0); // MAIL SYSTEM - Request Mail Inbox
+	intif->request_questlog(sd);
 
 	if (sd->state.connect_new == 0 && sd->fd) { //Character already loaded map! Gotta trigger LoadEndAck manually.
 		sd->state.connect_new = 1;
@@ -4695,7 +4695,7 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 		char message[128];
 		sprintf (message, msg_txt(542), (sd->status.name != NULL)?sd->status.name :"GM", md->db->jname, data->jname, (float)md->db->dropitem[i].p/100);
 		//MSG: "'%s' stole %s's %s (chance: %0.02f%%)"
-		intif_broadcast(message,strlen(message)+1,0);
+		intif->broadcast(message,strlen(message)+1,0);
 	}
 	return 1;
 }
@@ -6701,7 +6701,7 @@ void pc_damage(struct map_session_data *sd,struct block_list *src,unsigned int h
 		pet_target_check(sd,src,1);
 
 	if( sd->status.ele_id > 0 )
-		elemental_set_target(sd,src);
+		elemental->set_target(sd,src);
 
 	sd->canlog_tick = iTimer->gettick();
 }
@@ -6739,17 +6739,17 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	}
 
 	if( sd->md )
-		merc_delete(sd->md, 3); // Your mercenary soldier has ran away.
+		mercenary->merc_delete(sd->md, 3); // Your mercenary soldier has ran away.
 
 	if( sd->ed )
-		elemental_delete(sd->ed, 0);
+		elemental->delete(sd->ed, 0);
 
 	// Leave duel if you die [LuzZza]
 	if(battle_config.duel_autoleave_when_die) {
 		if(sd->duel_group > 0)
-			duel_leave(sd->duel_group, sd);
+			iDuel->leave(sd->duel_group, sd);
 		if(sd->duel_invite > 0)
-			duel_reject(sd->duel_invite, sd);
+			iDuel->reject(sd->duel_invite, sd);
 	}
 
 	if (sd->npc_id && sd->st && sd->st->state != RUN)
@@ -7635,7 +7635,7 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	clif->skillinfoblock(sd);
 
 	if (sd->ed)
-		elemental_delete(sd->ed, 0);
+		elemental->delete(sd->ed, 0);
 	if (sd->state.vending)
 		vending->close(sd);
 
@@ -7734,7 +7734,7 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 			if (sd->status.hair != val) {
 				sd->status.hair=val;
 				if (sd->status.guild_id) //Update Guild Window. [Skotlex]
-					intif_guild_change_memberinfo(sd->status.guild_id,sd->status.account_id,sd->status.char_id,
+					intif->guild_change_memberinfo(sd->status.guild_id,sd->status.account_id,sd->status.char_id,
 					GMI_HAIR,&sd->status.hair,sizeof(sd->status.hair));
 			}
 			break;
@@ -7756,7 +7756,7 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 			if (sd->status.hair_color != val) {
 				sd->status.hair_color=val;
 				if (sd->status.guild_id) //Update Guild Window. [Skotlex]
-					intif_guild_change_memberinfo(sd->status.guild_id,sd->status.account_id,sd->status.char_id,
+					intif->guild_change_memberinfo(sd->status.guild_id,sd->status.account_id,sd->status.char_id,
 					GMI_HAIR_COLOR,&sd->status.hair_color,sizeof(sd->status.hair_color));
 			}
 			break;
@@ -8108,7 +8108,7 @@ int pc_readregistry(struct map_session_data *sd,const char *reg,int type)
 	if (max == -1) {
 		ShowError("pc_readregistry: Trying to read reg value %s (type %d) before it's been loaded!\n", reg, type);
 		//This really shouldn't happen, so it's possible the data was lost somewhere, we should request it again.
-		intif_request_registry(sd,type==3?4:type);
+		intif->request_registry(sd,type==3?4:type);
 		return 0;
 	}
 
@@ -8141,7 +8141,7 @@ char* pc_readregistry_str(struct map_session_data *sd,const char *reg,int type)
 	if (max == -1) {
 		ShowError("pc_readregistry: Trying to read reg value %s (type %d) before it's been loaded!\n", reg, type);
 		//This really shouldn't happen, so it's possible the data was lost somewhere, we should request it again.
-		intif_request_registry(sd,type==3?4:type);
+		intif->request_registry(sd,type==3?4:type);
 		return NULL;
 	}
 
@@ -8286,7 +8286,7 @@ int pc_setregistry_str(struct map_session_data *sd,const char *reg,const char *v
 			memset(&sd_reg[*max - 1], 0, sizeof(struct global_reg));
 			(*max)--;
 			sd->state.reg_dirty |= 1<<(type-1); //Mark this registry as "need to be saved"
-			if (type!=3) intif_saveregistry(sd,type);
+			if (type!=3) intif->saveregistry(sd,type);
 		}
 		return 1;
 	}
@@ -8297,7 +8297,7 @@ int pc_setregistry_str(struct map_session_data *sd,const char *reg,const char *v
 	{
 		safestrncpy(sd_reg[i].value, val, sizeof(sd_reg[i].value));
 		sd->state.reg_dirty |= 1<<(type-1); //Mark this registry as "need to be saved"
-		if (type!=3) intif_saveregistry(sd,type);
+		if (type!=3) intif->saveregistry(sd,type);
 		return 1;
 	}
 
@@ -8308,7 +8308,7 @@ int pc_setregistry_str(struct map_session_data *sd,const char *reg,const char *v
 		safestrncpy(sd_reg[i].value, val, sizeof(sd_reg[i].value));
 		(*max)++;
 		sd->state.reg_dirty |= 1<<(type-1); //Mark this registry as "need to be saved"
-		if (type!=3) intif_saveregistry(sd,type);
+		if (type!=3) intif->saveregistry(sd,type);
 		return 1;
 	}
 
@@ -9370,7 +9370,7 @@ int map_day_timer(int tid, unsigned int tick, int id, intptr_t data)
 	iMap->night_flag = 0; // 0=day, 1=night [Yor]
 	iMap->map_foreachpc(pc_daynight_timer_sub);
 	strcpy(tmp_soutput, (data == 0) ? msg_txt(502) : msg_txt(60)); // The day has arrived!
-	intif_broadcast(tmp_soutput, strlen(tmp_soutput) + 1, 0);
+	intif->broadcast(tmp_soutput, strlen(tmp_soutput) + 1, 0);
 	return 0;
 }
 
@@ -9391,7 +9391,7 @@ int map_night_timer(int tid, unsigned int tick, int id, intptr_t data)
 	iMap->night_flag = 1; // 0=day, 1=night [Yor]
 	iMap->map_foreachpc(pc_daynight_timer_sub);
 	strcpy(tmp_soutput, (data == 0) ? msg_txt(503) : msg_txt(59)); // The night has fallen...
-	intif_broadcast(tmp_soutput, strlen(tmp_soutput) + 1, 0);
+	intif->broadcast(tmp_soutput, strlen(tmp_soutput) + 1, 0);
 	return 0;
 }
 

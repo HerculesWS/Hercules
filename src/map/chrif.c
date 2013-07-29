@@ -293,11 +293,11 @@ int chrif_save(struct map_session_data *sd, int flag) {
 
 	//Saving of registry values. 
 	if (sd->state.reg_dirty&4)
-		intif_saveregistry(sd, 3); //Save char regs
+		intif->saveregistry(sd, 3); //Save char regs
 	if (sd->state.reg_dirty&2)
-		intif_saveregistry(sd, 2); //Save account regs
+		intif->saveregistry(sd, 2); //Save account regs
 	if (sd->state.reg_dirty&1)
-		intif_saveregistry(sd, 1); //Save account2 regs
+		intif->saveregistry(sd, 1); //Save account2 regs
 
 	WFIFOHEAD(char_fd, sizeof(sd->status) + 13);
 	WFIFOW(char_fd,0) = 0x2b01;
@@ -309,15 +309,15 @@ int chrif_save(struct map_session_data *sd, int flag) {
 	WFIFOSET(char_fd, WFIFOW(char_fd,2));
 
 	if( sd->status.pet_id > 0 && sd->pd )
-		intif_save_petdata(sd->status.account_id,&sd->pd->pet);
+		intif->save_petdata(sd->status.account_id,&sd->pd->pet);
 	if( sd->hd && homun_alive(sd->hd) )
 		homun->save(sd->hd);
-	if( sd->md && mercenary_get_lifetime(sd->md) > 0 )
-		mercenary_save(sd->md);
-	if( sd->ed && elemental_get_lifetime(sd->ed) > 0 )
-		elemental_save(sd->ed);	
+	if( sd->md && mercenary->get_lifetime(sd->md) > 0 )
+		mercenary->save(sd->md);
+	if( sd->ed && elemental->get_lifetime(sd->ed) > 0 )
+		elemental->save(sd->ed);	
 	if( sd->save_quest )
-		intif_quest_save(sd);
+		intif->quest_save(sd);
 
 	return 0;
 }
@@ -1423,12 +1423,12 @@ int chrif_parse(int fd) {
 	while ( RFIFOREST(fd) >= 2 ) {
 		cmd = RFIFOW(fd,0);
 		if (cmd < 0x2af8 || cmd >= 0x2af8 + ARRAYLENGTH(packet_len_table) || packet_len_table[cmd-0x2af8] == 0) {
-			int r = intif_parse(fd); // Passed on to the intif
+			int r = intif->parse(fd); // Passed on to the intif
 
 			if (r == 1) continue;	// Treated in intif 
 			if (r == 2) return 0;	// Didn't have enough data (len==-1)
 
-			ShowWarning("chrif_parse: session #%d, intif_parse failed (unrecognized command 0x%.4x).\n", fd, cmd);
+			ShowWarning("chrif_parse: session #%d, intif->parse failed (unrecognized command 0x%.4x).\n", fd, cmd);
 			set_eof(fd);
 			return 0;
 		}

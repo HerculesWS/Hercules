@@ -78,7 +78,7 @@ int pet_create_egg(struct map_session_data *sd, int item_id)
 	if (pet_id < 0) return 0; //No pet egg here.
 	if (!pc->inventoryblank(sd)) return 0; // Inventory full
 	sd->catch_target_class = pet_db[pet_id].class_;
-	intif_create_pet(sd->status.account_id, sd->status.char_id,
+	intif->create_pet(sd->status.account_id, sd->status.char_id,
 		(short)pet_db[pet_id].class_,
 		(short)mob_db(pet_db[pet_id].class_)->lv,
 		(short)pet_db[pet_id].EggID, 0,
@@ -334,7 +334,7 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *pet)
 		if (sd->status.pet_id) {
 			//Wrong pet?? Set incuvate to no and send it back for saving.
 			pet->incuvate = 1;
-			intif_save_petdata(sd->status.account_id,pet);
+			intif->save_petdata(sd->status.account_id,pet);
 			sd->status.pet_id = 0;
 			return 1;
 		}
@@ -406,7 +406,7 @@ int pet_birth_process(struct map_session_data *sd, struct s_pet *pet)
 		return 1;
 	}
 
-	intif_save_petdata(sd->status.account_id,pet);
+	intif->save_petdata(sd->status.account_id,pet);
 	if (iMap->save_settings&8)
 		chrif->save(sd,0); //is it REALLY Needed to save the char for hatching a pet? [Skotlex]
 
@@ -472,7 +472,7 @@ int pet_select_egg(struct map_session_data *sd,short egg_index)
 		return 0; //Forged packet!
 
 	if(sd->status.inventory[egg_index].card[0] == CARD0_PET)
-		intif_request_petdata(sd->status.account_id, sd->status.char_id, MakeDWord(sd->status.inventory[egg_index].card[1], sd->status.inventory[egg_index].card[2]) );
+		intif->request_petdata(sd->status.account_id, sd->status.char_id, MakeDWord(sd->status.inventory[egg_index].card[1], sd->status.inventory[egg_index].card[2]) );
 	else
 		ShowError("wrong egg item inventory %d\n",egg_index);
 
@@ -529,7 +529,7 @@ int pet_catch_process2(struct map_session_data* sd, int target_id)
 		unit_remove_map(&md->bl,CLR_OUTSIGHT);
 		status_kill(&md->bl);
 		clif->pet_roulette(sd,1);
-		intif_create_pet(sd->status.account_id,sd->status.char_id,pet_db[i].class_,mob_db(pet_db[i].class_)->lv,
+		intif->create_pet(sd->status.account_id,sd->status.char_id,pet_db[i].class_,mob_db(pet_db[i].class_)->lv,
 			pet_db[i].EggID,0,pet_db[i].intimate,100,0,1,pet_db[i].jname);
 	}
 	else
@@ -558,7 +558,7 @@ int pet_get_egg(int account_id,int pet_id,int flag)
 	sd->catch_target_class = -1;
 	
 	if(i < 0) {
-		intif_delete_petdata(pet_id);
+		intif->delete_petdata(pet_id);
 		return 0;
 	}
 

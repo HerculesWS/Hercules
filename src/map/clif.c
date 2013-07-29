@@ -7197,7 +7197,7 @@ void clif_devotion(struct block_list *src, struct map_session_data *tsd)
 		if( md && md->master && md->devotion_flag )
 			WBUFL(buf,6) = md->master->bl.id;
 
-		WBUFW(buf,26) = skill->get_range2(src, ML_DEVOTION, mercenary_checkskill(md, ML_DEVOTION));
+		WBUFW(buf,26) = skill->get_range2(src, ML_DEVOTION, mercenary->checkskill(md, ML_DEVOTION));
 	}
 	else
 	{
@@ -8573,7 +8573,7 @@ void clif_refresh(struct map_session_data *sd)
 	iMap->foreachinrange(clif->getareachar,&sd->bl,AREA_SIZE,BL_ALL,sd);
 	clif->weather_check(sd);
 	if( sd->chatID )
-		chat_leavechat(sd,0);
+		chat->leavechat(sd,0);
 	if( sd->state.vending )
 		clif->openvending(sd, sd->bl.id, sd->vending);
 	if( pc_issit(sd) )
@@ -9889,7 +9889,7 @@ void clif_parse_GetCharNameRequest(int fd, struct map_session_data *sd)
 		sprintf(gm_msg, "Hack on NameRequest: character '%s' (account: %d) requested the name of an invisible target (id: %d).\n", sd->status.name, sd->status.account_id, id);
 		ShowWarning(gm_msg);
 		// information is sent to all online GMs
-		intif_wis_message_to_gm(iMap->wisp_server_name, battle_config.hack_info_GM_level, gm_msg);
+		intif->wis_message_to_gm(iMap->wisp_server_name, battle_config.hack_info_GM_level, gm_msg);
 		return;
 	}
 	*/
@@ -10489,7 +10489,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 		// if there are 'Test' player on an other map-server and 'test' player on this map-server,
 		// and if we ask for 'Test', we must not contact 'test' player
 		// so, we send information to inter-server, which is the only one which decide (and copy correct name).
-		intif_wis_message(sd, target, message, messagelen);
+		intif->wis_message(sd, target, message, messagelen);
 		return;
 	}
 
@@ -10966,7 +10966,7 @@ void clif_parse_CreateChatRoom(int fd, struct map_session_data* sd)
 	safestrncpy(s_password, password, CHATROOM_PASS_SIZE);
 	safestrncpy(s_title, title, min(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
 
-	chat_createpcchat(sd, s_title, s_password, limit, pub);
+	chat->createpcchat(sd, s_title, s_password, limit, pub);
 }
 
 
@@ -10977,7 +10977,7 @@ void clif_parse_ChatAddMember(int fd, struct map_session_data* sd)
 	int chatid = RFIFOL(fd,2);
 	const char* password = (char*)RFIFOP(fd,6); // not zero-terminated
 
-	chat_joinchat(sd,chatid,password);
+	chat->joinchat(sd,chatid,password);
 }
 
 
@@ -11002,7 +11002,7 @@ void clif_parse_ChatRoomStatusChange(int fd, struct map_session_data* sd)
 	safestrncpy(s_password, password, CHATROOM_PASS_SIZE);
 	safestrncpy(s_title, title, min(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
 
-	chat_changechatstatus(sd, s_title, s_password, limit, pub);
+	chat->changechatstatus(sd, s_title, s_password, limit, pub);
 }
 
 
@@ -11013,7 +11013,7 @@ void clif_parse_ChatRoomStatusChange(int fd, struct map_session_data* sd)
 ///     1 = normal
 void clif_parse_ChangeChatOwner(int fd, struct map_session_data* sd)
 {
-	chat_changechatowner(sd,(char*)RFIFOP(fd,6));
+	chat->changechatowner(sd,(char*)RFIFOP(fd,6));
 }
 
 
@@ -11021,7 +11021,7 @@ void clif_parse_ChangeChatOwner(int fd, struct map_session_data* sd)
 /// 00e2 <name>.24B
 void clif_parse_KickFromChat(int fd,struct map_session_data *sd)
 {
-	chat_kickchat(sd,(char*)RFIFOP(fd,2));
+	chat->kickchat(sd,(char*)RFIFOP(fd,2));
 }
 
 
@@ -11029,7 +11029,7 @@ void clif_parse_KickFromChat(int fd,struct map_session_data *sd)
 /// 00e3
 void clif_parse_ChatLeave(int fd, struct map_session_data* sd)
 {
-	chat_leavechat(sd,0);
+	chat->leavechat(sd,0);
 }
 
 
@@ -11289,7 +11289,7 @@ void clif_parse_UseSkillToId_mercenary(struct mercenary_data *md, struct map_ses
 	} else if( DIFF_TICK(tick, md->ud.canact_tick) < 0 )
 		return;
 
-	lv = mercenary_checkskill(md, skill_id);
+	lv = mercenary->checkskill(md, skill_id);
 	if( skill_lv > lv )
 		skill_lv = lv;
 	if( skill_lv )
@@ -11312,7 +11312,7 @@ void clif_parse_UseSkillToPos_mercenary(struct mercenary_data *md, struct map_se
 
 	if( md->sc.data[SC_BASILICA] )
 		return;
-	lv = mercenary_checkskill(md, skill_id);
+	lv = mercenary->checkskill(md, skill_id);
 	if( skill_lv > lv )
 		skill_lv = lv;
 	if( skill_lv )
@@ -14556,7 +14556,7 @@ void clif_parse_Mail_refreshinbox(int fd, struct map_session_data *sd)
 	struct mail_data* md = &sd->mail.inbox;
 
 	if( md->amount < MAIL_MAX_INBOX && (md->full || sd->mail.changed) )
-		intif_Mail_requestinbox(sd->status.char_id, 1);
+		intif->Mail_requestinbox(sd->status.char_id, 1);
 	else
 		clif->mail_refreshinbox(sd);
 
@@ -14620,7 +14620,7 @@ void clif_Mail_read(struct map_session_data *sd, int mail_id)
 
 		if (msg->status == MAIL_UNREAD) {
 			msg->status = MAIL_READ;
-			intif_Mail_read(mail_id);
+			intif->Mail_read(mail_id);
 			clif->pMail_refreshinbox(fd, sd);
 		}
 	}
@@ -14700,7 +14700,7 @@ void clif_parse_Mail_getattach(int fd, struct map_session_data *sd)
 	memset(&sd->mail.inbox.msg[i].item, 0, sizeof(struct item));
 	clif->mail_read(sd, mail_id);
 
-	intif_Mail_getattach(sd->status.char_id, mail_id);
+	intif->Mail_getattach(sd->status.char_id, mail_id);
 }
 
 
@@ -14727,7 +14727,7 @@ void clif_parse_Mail_delete(int fd, struct map_session_data *sd)
 			return;
 		}
 
-		intif_Mail_delete(sd->status.char_id, mail_id);
+		intif->Mail_delete(sd->status.char_id, mail_id);
 	}
 }
 
@@ -14746,7 +14746,7 @@ void clif_parse_Mail_return(int fd, struct map_session_data *sd)
 
 	ARR_FIND(0, MAIL_MAX_INBOX, i, sd->mail.inbox.msg[i].id == mail_id);
 	if( i < MAIL_MAX_INBOX && sd->mail.inbox.msg[i].send_id != 0 )
-		intif_Mail_return(sd->status.char_id, mail_id);
+		intif->Mail_return(sd->status.char_id, mail_id);
 	else
 		clif->mail_return(sd->fd, mail_id, 1);
 }
@@ -14839,7 +14839,7 @@ void clif_parse_Mail_send(int fd, struct map_session_data *sd)
 		memset(msg.body, 0x00, MAIL_BODY_LENGTH);
 
 	msg.timestamp = time(NULL);
-	if( !intif_Mail_send(sd->status.account_id, &msg) )
+	if( !intif->Mail_send(sd->status.account_id, &msg) )
 		mail->deliveryfail(sd, &msg);
 
 	sd->cansendmail_tick = iTimer->gettick() + 1000; // 1 Second flood Protection
@@ -15083,7 +15083,7 @@ void clif_parse_Auction_register(int fd, struct map_session_data *sd)
 	auction.item.amount = 1;
 	auction.timestamp = 0;
 
-	if( !intif_Auction_register(&auction) )
+	if( !intif->Auction_register(&auction) )
 		clif->auction_message(fd, 4); // No Char Server? lets say something to the client
 	else
 	{
@@ -15103,7 +15103,7 @@ void clif_parse_Auction_cancel(int fd, struct map_session_data *sd)
 {
 	unsigned int auction_id = RFIFOL(fd,2);
 
-	intif_Auction_cancel(sd->status.char_id, auction_id);
+	intif->Auction_cancel(sd->status.char_id, auction_id);
 }
 
 
@@ -15113,7 +15113,7 @@ void clif_parse_Auction_close(int fd, struct map_session_data *sd)
 {
 	unsigned int auction_id = RFIFOL(fd,2);
 
-	intif_Auction_close(sd->status.char_id, auction_id);
+	intif->Auction_close(sd->status.char_id, auction_id);
 }
 
 
@@ -15133,11 +15133,11 @@ void clif_parse_Auction_bid(int fd, struct map_session_data *sd)
 		clif->auction_message(fd, 0); // You have failed to bid into the auction
 	else if( bid > sd->status.zeny )
 		clif->auction_message(fd, 8); // You do not have enough zeny
-	else if ( CheckForCharServer() ) // char server is down (bugreport:1138)
+	else if ( intif->CheckForCharServer() ) // char server is down (bugreport:1138)
 		clif->auction_message(fd, 0); // You have failed to bid into the auction
 	else {
 		pc->payzeny(sd, bid, LOG_TYPE_AUCTION, NULL);
-		intif_Auction_bid(sd->status.char_id, sd->status.name, auction_id, bid);
+		intif->Auction_bid(sd->status.char_id, sd->status.name, auction_id, bid);
 	}
 }
 
@@ -15160,7 +15160,7 @@ void clif_parse_Auction_search(int fd, struct map_session_data* sd)
 	clif->pAuction_cancelreg(fd, sd);
 
 	safestrncpy(search_text, (char*)RFIFOP(fd,8), sizeof(search_text));
-	intif_Auction_requestlist(sd->status.char_id, type, price, search_text, page);
+	intif->Auction_requestlist(sd->status.char_id, type, price, search_text, page);
 }
 
 
@@ -15174,7 +15174,7 @@ void clif_parse_Auction_buysell(int fd, struct map_session_data* sd)
 	short type = RFIFOW(fd,2) + 6;
 	clif->pAuction_cancelreg(fd, sd);
 
-	intif_Auction_requestlist(sd->status.char_id, type, 0, "", 1);
+	intif->Auction_requestlist(sd->status.char_id, type, 0, "", 1);
 }
 
 
@@ -15677,7 +15677,7 @@ void clif_mercenary_updatestatus(struct map_session_data *sd, int type)
 			WFIFOL(fd,4) = md->mercenary.kill_count;
 			break;
 		case SP_MERCFAITH:
-			WFIFOL(fd,4) = mercenary_get_faith(md);
+			WFIFOL(fd,4) = mercenary->get_faith(md);
 			break;
 	}
 	WFIFOSET(fd,packet_len(0x2a2));
@@ -15721,9 +15721,9 @@ void clif_mercenary_info(struct map_session_data *sd)
 	WFIFOL(fd,52) = status->max_hp;
 	WFIFOL(fd,56) = status->sp;
 	WFIFOL(fd,60) = status->max_sp;
-	WFIFOL(fd,64) = (int)time(NULL) + (mercenary_get_lifetime(md) / 1000);
-	WFIFOW(fd,68) = mercenary_get_faith(md);
-	WFIFOL(fd,70) = mercenary_get_calls(md);
+	WFIFOL(fd,64) = (int)time(NULL) + (mercenary->get_lifetime(md) / 1000);
+	WFIFOW(fd,68) = mercenary->get_faith(md);
+	WFIFOL(fd,70) = mercenary->get_calls(md);
 	WFIFOL(fd,74) = md->mercenary.kill_count;
 	WFIFOW(fd,78) = md->battle_status.rhw.range;
 	WFIFOSET(fd,packet_len(0x29b));
@@ -15773,7 +15773,7 @@ void clif_parse_mercenary_action(int fd, struct map_session_data* sd)
 	if( sd->md == NULL )
 		return;
 
-	if( option == 2 ) merc_delete(sd->md, 2);
+	if( option == 2 ) mercenary->merc_delete(sd->md, 2);
 }
 
 

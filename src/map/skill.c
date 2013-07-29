@@ -4481,7 +4481,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 				clif->skill_nodamage(src,battle->get_master(src),skill_id,skill_lv,1);
 				clif->skill_damage(src, src, tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, 6);
 				if( (sc && sc->data[type2]) || (tsc && tsc->data[type]) ) {
-					elemental_clean_single_effect(ele, skill_id);
+					elemental->clean_single_effect(ele, skill_id);
 				}
 				if( rnd()%100 < 50 )
 					skill->attack(skill->get_type(skill_id),src,src,bl,skill_id,skill_lv,tick,flag);
@@ -8885,10 +8885,10 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 				// Remove previous elemental fisrt.
 				if( sd->ed )
-					elemental_delete(sd->ed,0);
+					elemental->delete(sd->ed,0);
 
 				// Summoning the new one.
-				if( !elemental_create(sd,elemental_class,skill->get_time(skill_id,skill_lv)) ) {
+				if( !elemental->create(sd,elemental_class,skill->get_time(skill_id,skill_lv)) ) {
 					clif->skill_fail(sd,skill_id,0,0);
 					break;
 				}
@@ -8903,14 +8903,14 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				if( !sd->ed )	break;
 
 				if( skill_lv == 4 ) {// At level 4 delete elementals.
-					elemental_delete(sd->ed, 0);
+					elemental->delete(sd->ed, 0);
 					break;
 				}
 				switch( skill_lv ) {// Select mode bassed on skill level used.
 					case 2: mode = EL_MODE_ASSIST; break;
 					case 3: mode = EL_MODE_AGGRESSIVE; break;
 				}
-				if( !elemental_change_mode(sd->ed,mode) ) {
+				if( !elemental->change_mode(sd->ed,mode) ) {
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					break;
 				}
@@ -8923,7 +8923,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				int duration = 3000;
 				if( !sd->ed )	break;
 				sd->skill_id_old = skill_id;
-				elemental_action(sd->ed, bl, tick);
+				elemental->action(sd->ed, bl, tick);
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 					switch(sd->ed->db->class_){
 						case 2115:case 2124:
@@ -8959,7 +8959,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 		case SO_ELEMENTAL_SHIELD:
 			if( !sd->ed )	break;
-			elemental_delete(sd->ed, 0);
+			elemental->delete(sd->ed, 0);
 			if( sd == NULL || sd->status.party_id == 0 || flag&1 )
 				skill->unitsetting(src,MG_SAFETYWALL,skill_lv,bl->x,bl->y,0);
 			else if( sd )
@@ -9073,7 +9073,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					struct status_change *sc = iStatus->get_sc(&ele->bl);
 
 					if( (sc && sc->data[type2]) || (tsc && tsc->data[type]) ) {
-						elemental_clean_single_effect(ele, skill_id);
+						elemental->clean_single_effect(ele, skill_id);
 					} else {
 						clif->skill_nodamage(src,src,skill_id,skill_lv,1);
 						clif->skill_damage(src, ( skill_id == EL_GUST || skill_id == EL_BLAST || skill_id == EL_WILD_STORM )?src:bl, tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, 6);
@@ -9103,7 +9103,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 					clif->skill_nodamage(src,src,skill_id,skill_lv,1);
 					if( (sc && sc->data[type2]) || (tsc && tsc->data[type]) ) {
-						elemental_clean_single_effect(ele, skill_id);
+						elemental->clean_single_effect(ele, skill_id);
 					} else {
 						// This not heals at the end.
 						clif->skill_damage(src, src, tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, 6);
