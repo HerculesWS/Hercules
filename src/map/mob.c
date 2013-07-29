@@ -1605,7 +1605,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 			memcpy (&md->lootitem[md->lootitem_count++], &fitem->item_data, sizeof(md->lootitem[0]));
 		} else {	//Destroy first looted item...
 			if (md->lootitem[0].card[0] == CARD0_PET)
-				intif_delete_petdata( MakeDWord(md->lootitem[0].card[1],md->lootitem[0].card[2]) );
+				intif->delete_petdata( MakeDWord(md->lootitem[0].card[1],md->lootitem[0].card[2]) );
 			memmove(&md->lootitem[0], &md->lootitem[1], (LOOTITEM_SIZE-1)*sizeof(md->lootitem[0]));
 			memcpy (&md->lootitem[LOOTITEM_SIZE-1], &fitem->item_data, sizeof(md->lootitem[0]));
 		}
@@ -2386,7 +2386,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				char message[128];
 				sprintf (message, msg_txt(541), mvp_sd->status.name, md->name, it->jname, (float)drop_rate/100);
 				//MSG: "'%s' won %s's %s (chance: %0.02f%%)"
-				intif_broadcast(message,strlen(message)+1,0);
+				intif->broadcast(message,strlen(message)+1,0);
 			}
 			// Announce first, or else ditem will be freed. [Lance]
 			// By popular demand, use base drop rate for autoloot code. [Skotlex]
@@ -2527,7 +2527,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 					char message[128];
 					sprintf (message, msg_txt(541), mvp_sd->status.name, md->name, data->jname, temp/100.);
 					//MSG: "'%s' won %s's %s (chance: %0.02f%%)"
-					intif_broadcast(message,strlen(message)+1,0);
+					intif->broadcast(message,strlen(message)+1,0);
 				}
 
 				if((temp = pc->additem(mvp_sd,&item,1,LOG_TYPE_PICKDROP_PLAYER)) != 0) {
@@ -2578,7 +2578,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				quest_update_objective(sd, md->class_);
 
 			if( sd->md && src && src->type != BL_HOM && mob_db(md->class_)->lv > sd->status.base_level/2 )
-				mercenary_kills(sd->md);
+				mercenary->kills(sd->md);
 		}
 
 		if( md->npc_event[0] && !md->state.npc_killmonster ) {

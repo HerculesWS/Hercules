@@ -2131,7 +2131,7 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 			}
 			//Leave/reject all invitations.
 			if(sd->chatID)
-				chat_leavechat(sd,0);
+				chat->leavechat(sd,0);
 			if(sd->trade_partner)
 				trade->cancel(sd);
 			buyingstore->close(sd);
@@ -2167,7 +2167,7 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 				sd->pvp_rank = 0;
 			}
 			if(sd->duel_group > 0)
-				duel_leave(sd->duel_group, sd);
+				iDuel->leave(sd->duel_group, sd);
 
 			if(pc_issit(sd)) {
 				pc->setstand(sd);
@@ -2252,7 +2252,7 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 		case BL_MER: {
 			struct mercenary_data *md = (struct mercenary_data *)bl;
 			ud->canact_tick = ud->canmove_tick;
-			if( mercenary_get_lifetime(md) <= 0 && !(md->master && !md->master->state.active) )
+			if( mercenary->get_lifetime(md) <= 0 && !(md->master && !md->master->state.active) )
 			{
 				clif->clearunit_area(bl,clrtype);
 				iMap->delblock(bl);
@@ -2265,7 +2265,7 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 		case BL_ELEM: {
 			struct elemental_data *ed = (struct elemental_data *)bl;
 			ud->canact_tick = ud->canmove_tick;
-			if( elemental_get_lifetime(ed) <= 0 && !(ed->master && !ed->master->state.active) )
+			if( elemental->get_lifetime(ed) <= 0 && !(ed->master && !ed->master->state.active) )
 			{
 				clif->clearunit_area(bl,clrtype);
 				iMap->delblock(bl);
@@ -2343,7 +2343,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 				pc->stop_following(sd);
 
 			if( sd->duel_invite > 0 )
-				duel_reject(sd->duel_invite, sd);
+				iDuel->reject(sd->duel_invite, sd);
 
 			// Notify friends that this char logged out. [Skotlex]
 			iMap->map_foreachpc(clif->friendslist_toggle_sub, sd->status.account_id, sd->status.char_id, 0);
@@ -2443,10 +2443,10 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 				pd->loot = NULL;
 			}
 			if( pd->pet.intimate > 0 )
-				intif_save_petdata(pd->pet.account_id,&pd->pet);
+				intif->save_petdata(pd->pet.account_id,&pd->pet);
 			else
 			{	//Remove pet.
-				intif_delete_petdata(pd->pet.pet_id);
+				intif->delete_petdata(pd->pet.pet_id);
 				if (sd) sd->status.pet_id = 0;
 			}
 			if( sd )
@@ -2519,7 +2519,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 			if( hd->homunculus.intimacy > 0 )
 				homun->save(hd);
 			else {
-				intif_homunculus_requestdelete(hd->homunculus.hom_id);
+				intif->homunculus_requestdelete(hd->homunculus.hom_id);
 				if( sd )
 					sd->status.hom_id = 0;
 			}
@@ -2531,34 +2531,34 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 		{
 			struct mercenary_data *md = (TBL_MER*)bl;
 			struct map_session_data *sd = md->master;
-			if( mercenary_get_lifetime(md) > 0 )
-				mercenary_save(md);
+			if( mercenary->get_lifetime(md) > 0 )
+				mercenary->save(md);
 			else
 			{
-				intif_mercenary_delete(md->mercenary.mercenary_id);
+				intif->mercenary_delete(md->mercenary.mercenary_id);
 				if( sd )
 					sd->status.mer_id = 0;
 			}
 			if( sd )
 				sd->md = NULL;
 
-			merc_contract_stop(md);
+			mercenary->merc_contract_stop(md);
 			break;
 		}
 		case BL_ELEM: {
 			struct elemental_data *ed = (TBL_ELEM*)bl;
 			struct map_session_data *sd = ed->master;
-			if( elemental_get_lifetime(ed) > 0 )
-				elemental_save(ed);
+			if( elemental->get_lifetime(ed) > 0 )
+				elemental->save(ed);
 			else {
-				intif_elemental_delete(ed->elemental.elemental_id);
+				intif->elemental_delete(ed->elemental.elemental_id);
 				if( sd )
 					sd->status.ele_id = 0;
 			}
 			if( sd )
 				sd->ed = NULL;
 
-			elemental_summon_stop(ed);
+			elemental->summon_stop(ed);
 			break;
 		}
 	}
