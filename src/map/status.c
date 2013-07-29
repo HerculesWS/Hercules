@@ -1243,7 +1243,7 @@ int status_damage(struct block_list *src,struct block_list *target,int hp, int s
 	case BL_MOB: mob_damage((TBL_MOB*)target, src, hp); break;
 	case BL_HOM: homun->damaged((TBL_HOM*)target); break;
 	case BL_MER: mercenary_heal((TBL_MER*)target,hp,sp); break;
-	case BL_ELEM: elemental_heal((TBL_ELEM*)target,hp,sp); break;
+	case BL_ELEM: elemental->heal((TBL_ELEM*)target,hp,sp); break;
 	}
 
 	if( src && target->type == BL_PC && (((TBL_PC*)target)->disguise) > 0 ) {// stop walking when attacked in disguise to prevent walk-delay bug
@@ -1268,7 +1268,7 @@ int status_damage(struct block_list *src,struct block_list *target,int hp, int s
 	case BL_MOB: flag = mob_dead((TBL_MOB*)target, src, flag&4?3:0); break;
 	case BL_HOM: flag = homun->dead((TBL_HOM*)target); break;
 	case BL_MER: flag = mercenary_dead((TBL_MER*)target); break;
-	case BL_ELEM: flag = elemental_dead((TBL_ELEM*)target); break;
+	case BL_ELEM: flag = elemental->dead((TBL_ELEM*)target); break;
 	default:	//Unhandled case, do nothing to object.
 		flag = 0;
 		break;
@@ -1414,7 +1414,7 @@ int status_heal(struct block_list *bl,int hp,int sp, int flag)
 	case BL_MOB: mob_heal((TBL_MOB*)bl,hp); break;
 	case BL_HOM: homun->healed((TBL_HOM*)bl); break;
 	case BL_MER: mercenary_heal((TBL_MER*)bl,hp,sp); break;
-	case BL_ELEM: elemental_heal((TBL_ELEM*)bl,hp,sp); break;
+	case BL_ELEM: elemental->heal((TBL_ELEM*)bl,hp,sp); break;
 	}
 
 	return hp+sp;
@@ -6057,8 +6057,8 @@ void status_set_viewdata(struct block_list *bl, int class_)
 		vd = homun->get_viewdata(class_);
 	else if (merc_class(class_))
 		vd = merc_get_viewdata(class_);
-	else if (elemental_class(class_))
-		vd = elemental_get_viewdata(class_);
+	else if (elemental->class(class_))
+		vd = elemental->get_viewdata(class_);
 	else
 		vd = NULL;
 

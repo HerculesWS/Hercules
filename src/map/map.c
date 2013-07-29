@@ -1591,7 +1591,7 @@ int map_quit(struct map_session_data *sd) {
 	if (sd->state.permanent_speed == 1) sd->state.permanent_speed = 0; // Remove lock so speed is set back to normal at login.
 
 	if( sd->ed ) {
-		elemental_clean_effect(sd->ed);
+		elemental->clean_effect(sd->ed);
 		unit_remove_map(&sd->ed->bl,CLR_TELEPORT);
 	}
 
@@ -4945,7 +4945,7 @@ void do_final(void)
 	do_final_unit();
 	do_final_battleground();
 	iDuel->do_final_duel();
-	do_final_elemental();
+	elemental->do_final_elemental();
 	do_final_maps();
 	vending->final();
 
@@ -5155,6 +5155,11 @@ void map_hp_symbols(void) {
 	HPM->share(storage,"storage");
 	HPM->share(trade,"trade");
 	HPM->share(iStatus,"iStatus");
+	HPM->share(chat, "chat");
+	HPM->share(iDuel,"iDuel");
+	HPM->share(elemental,"elemental");
+
+
 	/* partial */
 	HPM->share(mapit,"mapit");
 	/* sql link */
@@ -5191,6 +5196,9 @@ void map_load_defaults(void) {
 	storage_defaults();
 	trade_defaults();
 	status_defaults();
+	chat_defaults();
+	iDuel_defaults();
+	elemental_defaults();
 }
 int do_init(int argc, char *argv[])
 {
@@ -5387,7 +5395,7 @@ int do_init(int argc, char *argv[])
 	do_init_pet();
 	homun->init();
 	do_init_mercenary();
-	do_init_elemental();
+	elemental->do_init_elemental();
 	do_init_quest();
 	do_init_npc();
 	do_init_unit();

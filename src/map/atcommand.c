@@ -3600,7 +3600,7 @@ ACMD(reloadmobdb) {
 	homun->reload();
 	read_mercenarydb();
 	read_mercenary_skilldb();
-	reload_elementaldb();
+	elemental->reload_elementaldb();
 	clif->message(fd, msg_txt(98)); // Monster database has been reloaded.
 	
 	return true;
@@ -3614,7 +3614,7 @@ ACMD(reloadskilldb)
 	nullpo_retr(-1, sd);
 	skill->reload();
 	homun->reload_skill();
-	reload_elemental_skilldb();
+	elemental->reload_skilldb();
 	read_mercenary_skilldb();
 	clif->message(fd, msg_txt(99)); // Skill database has been reloaded.
 	

@@ -40,6 +40,6 @@ struct duel_interface {
 
 struct duel_interface *iDuel;
 
-void duel_defaults(void);
+void iDuel_defaults(void);
 
 #endif /* _DUEL_H_ */

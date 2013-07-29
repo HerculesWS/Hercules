@@ -314,8 +314,8 @@ int chrif_save(struct map_session_data *sd, int flag) {
 		homun->save(sd->hd);
 	if( sd->md && mercenary_get_lifetime(sd->md) > 0 )
 		mercenary_save(sd->md);
-	if( sd->ed && elemental_get_lifetime(sd->ed) > 0 )
-		elemental_save(sd->ed);	
+	if( sd->ed && elemental->get_lifetime(sd->ed) > 0 )
+		elemental->save(sd->ed);	
 	if( sd->save_quest )
 		intif_quest_save(sd);
 

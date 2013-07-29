@@ -2265,7 +2265,7 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 		case BL_ELEM: {
 			struct elemental_data *ed = (struct elemental_data *)bl;
 			ud->canact_tick = ud->canmove_tick;
-			if( elemental_get_lifetime(ed) <= 0 && !(ed->master && !ed->master->state.active) )
+			if( elemental->get_lifetime(ed) <= 0 && !(ed->master && !ed->master->state.active) )
 			{
 				clif->clearunit_area(bl,clrtype);
 				iMap->delblock(bl);
@@ -2548,8 +2548,8 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 		case BL_ELEM: {
 			struct elemental_data *ed = (TBL_ELEM*)bl;
 			struct map_session_data *sd = ed->master;
-			if( elemental_get_lifetime(ed) > 0 )
-				elemental_save(ed);
+			if( elemental->get_lifetime(ed) > 0 )
+				elemental->save(ed);
 			else {
 				intif_elemental_delete(ed->elemental.elemental_id);
 				if( sd )
@@ -2558,7 +2558,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 			if( sd )
 				sd->ed = NULL;
 
-			elemental_summon_stop(ed);
+			elemental->summon_stop(ed);
 			break;
 		}
 	}
