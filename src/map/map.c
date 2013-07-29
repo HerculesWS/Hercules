@@ -1185,7 +1185,7 @@ int map_clearflooritem_timer(int tid, unsigned int tick, int id, intptr_t data)
 
 
 	if (search_petDB_index(fitem->item_data.nameid, PET_EGG) >= 0)
-		intif_delete_petdata(MakeDWord(fitem->item_data.card[1], fitem->item_data.card[2]));
+		intif->delete_petdata(MakeDWord(fitem->item_data.card[1], fitem->item_data.card[2]));
 
 	clif->clearflooritem(fitem, 0);
 	iMap->deliddb(&fitem->bl);
@@ -1591,7 +1591,7 @@ int map_quit(struct map_session_data *sd) {
 	if (sd->state.permanent_speed == 1) sd->state.permanent_speed = 0; // Remove lock so speed is set back to normal at login.
 
 	if( sd->ed ) {
-		elemental_clean_effect(sd->ed);
+		elemental->clean_effect(sd->ed);
 		unit_remove_map(&sd->ed->bl,CLR_TELEPORT);
 	}
 
@@ -4944,8 +4944,8 @@ void do_final(void)
 	iStatus->do_final_status();
 	do_final_unit();
 	do_final_battleground();
-	do_final_duel();
-	do_final_elemental();
+	iDuel->do_final_duel();
+	elemental->do_final_elemental();
 	do_final_maps();
 	vending->final();
 
@@ -5155,6 +5155,13 @@ void map_hp_symbols(void) {
 	HPM->share(storage,"storage");
 	HPM->share(trade,"trade");
 	HPM->share(iStatus,"iStatus");
+	HPM->share(chat, "chat");
+	HPM->share(iDuel,"iDuel");
+	HPM->share(elemental,"elemental");
+	HPM->share(intif,"intif");
+	HPM->share(mercenary,"mercenary");
+
+
 	/* partial */
 	HPM->share(mapit,"mapit");
 	/* sql link */
@@ -5191,6 +5198,11 @@ void map_load_defaults(void) {
 	storage_defaults();
 	trade_defaults();
 	status_defaults();
+	chat_defaults();
+	iDuel_defaults();
+	elemental_defaults();
+	intif_defaults();
+	mercenary_defaults();
 }
 int do_init(int argc, char *argv[])
 {
@@ -5386,13 +5398,13 @@ int do_init(int argc, char *argv[])
 	storage->init();
 	do_init_pet();
 	homun->init();
-	do_init_mercenary();
-	do_init_elemental();
+	mercenary->do_init_mercenary();
+	elemental->do_init_elemental();
 	do_init_quest();
 	do_init_npc();
 	do_init_unit();
 	do_init_battleground();
-	do_init_duel();
+	iDuel->do_init_duel();
 	vending->init();
 
 	npc_event_do_oninit();	// Init npcs (OnInit)

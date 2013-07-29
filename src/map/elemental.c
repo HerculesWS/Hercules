@@ -39,11 +39,9 @@
 #include <string.h>
 #include <math.h>
 
-struct s_elemental_db elemental_db[MAX_ELEMENTAL_CLASS]; // Elemental Database
-
 int elemental_search_index(int class_) {
 	int i;
-	ARR_FIND(0, MAX_ELEMENTAL_CLASS, i, elemental_db[i].class_ == class_);
+	ARR_FIND(0, MAX_ELEMENTAL_CLASS, i, elemental->elemental_db[i].class_ == class_);
 	return (i == MAX_ELEMENTAL_CLASS)?-1:i;
 }
 
@@ -56,7 +54,7 @@ struct view_data * elemental_get_viewdata(int class_) {
 	if( i < 0 )
 		return 0;
 
-	return &elemental_db[i].vd;
+	return &elemental->elemental_db[i].vd;
 }
 
 int elemental_create(struct map_session_data *sd, int class_, unsigned int lifetime) {
@@ -69,7 +67,7 @@ int elemental_create(struct map_session_data *sd, int class_, unsigned int lifet
 	if( (i = elemental_search_index(class_)) < 0 )
 		return 0;
 
-	db = &elemental_db[i];
+	db = &elemental->elemental_db[i];
 	memset(&ele,0,sizeof(struct s_elemental));
 
 	ele.char_id = sd->status.char_id;
@@ -137,7 +135,7 @@ int elemental_create(struct map_session_data *sd, int class_, unsigned int lifet
 	ele.life_time = lifetime;
 
 	// Request Char Server to create this elemental
-	intif_elemental_create(&ele);
+	intif->elemental_create(&ele);
 
 	return 1;
 }
@@ -164,8 +162,8 @@ int elemental_save(struct elemental_data *ed) {
 	ed->elemental.mdef = ed->battle_status.mdef;
 	ed->elemental.flee = ed->battle_status.flee;
 	ed->elemental.hit = ed->battle_status.hit;
-	ed->elemental.life_time = elemental_get_lifetime(ed);
-	intif_elemental_save(&ed->elemental);
+	ed->elemental.life_time = elemental->get_lifetime(ed);
+	intif->elemental_save(&ed->elemental);
 	return 1;
 }
 
@@ -184,7 +182,7 @@ static int elemental_summon_end(int tid, unsigned int tick, int id, intptr_t dat
 	}
 
 	ed->summon_timer = INVALID_TIMER;
-	elemental_delete(ed, 0); // Elemental's summon time is over.
+	elemental->delete(ed, 0); // Elemental's summon time is over.
 
 	return 0;
 }
@@ -203,8 +201,8 @@ int elemental_delete(struct elemental_data *ed, int reply) {
 	sd = ed->master;
 	ed->elemental.life_time = 0;
 
-	elemental_clean_effect(ed);
-	elemental_summon_stop(ed);
+	elemental->clean_effect(ed);
+	elemental->summon_stop(ed);
 
 	if( !sd )
 		return unit_free(&ed->bl, 0);
@@ -236,7 +234,7 @@ int elemental_data_received(struct s_elemental *ele, bool flag) {
 		return 0;
 	}
 
-	db = &elemental_db[i];
+	db = &elemental->elemental_db[i];
 	if( !sd->ed ) {	// Initialize it after first summon.
 		sd->ed = ed = (struct elemental_data*)aCalloc(1,sizeof(struct elemental_data));
 		ed->bl.type = BL_ELEM;
@@ -400,7 +398,7 @@ int elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned 
 		return 0;
 
 	if( ed->target_id )
-		elemental_unlocktarget(ed);	// Remove previous target.
+		elemental->unlocktarget(ed);	// Remove previous target.
 
 	ARR_FIND(0, MAX_ELESKILLTREE, i, ed->db->skill[i].id && (ed->db->skill[i].mode&EL_SKILLMODE_AGGRESSIVE));
 	if( i == MAX_ELESKILLTREE )
@@ -409,7 +407,7 @@ int elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned 
 	skill_id = ed->db->skill[i].id;
 	skill_lv = ed->db->skill[i].lv;
 
-	if( elemental_skillnotok(skill_id, ed) )
+	if( elemental->skillnotok(skill_id, ed) )
 		return 0;
 
 	if( ed->ud.skilltimer != INVALID_TIMER )
@@ -424,7 +422,7 @@ int elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned 
 	if( !battle->check_range(&ed->bl,bl,skill->get_range(skill_id,skill_lv)) ) {
 		// Try to walk to the target.
 		if( !unit_walktobl(&ed->bl, bl, skill->get_range(skill_id,skill_lv), 2) )
-			elemental_unlocktarget(ed);
+			elemental->unlocktarget(ed);
 		else {
 			// Walking, waiting to be in range. Client don't handle it, then we must handle it here.
 			int walk_dist = distance_bl(&ed->bl,bl) - skill->get_range(skill_id,skill_lv);
@@ -440,7 +438,7 @@ int elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned 
 
 	}
 
-	req = elemental_skill_get_requirements(skill_id, skill_lv);
+	req = elemental->skill_get_requirements(skill_id, skill_lv);
 
 	if(req.hp || req.sp){
 		struct map_session_data *sd = BL_CAST(BL_PC, battle->get_master(&ed->bl));
@@ -487,7 +485,7 @@ int elemental_change_mode_ack(struct elemental_data *ed, int mode) {
 	skill_id = ed->db->skill[i].id;
 	skill_lv = ed->db->skill[i].lv;
 
-	if( elemental_skillnotok(skill_id, ed) )
+	if( elemental->skillnotok(skill_id, ed) )
 		return 0;
 
 	if( ed->ud.skilltimer != INVALID_TIMER )
@@ -515,10 +513,10 @@ int elemental_change_mode(struct elemental_data *ed, int mode) {
 	nullpo_ret(ed);
 
 	// Remove target
-	elemental_unlocktarget(ed);
+	elemental->unlocktarget(ed);
 
 	// Removes the effects of the previous mode.
-	if(ed->elemental.mode != mode ) elemental_clean_effect(ed);
+	if(ed->elemental.mode != mode ) elemental->clean_effect(ed);
 
 	ed->battle_status.mode = ed->elemental.mode = mode;
 
@@ -529,7 +527,7 @@ int elemental_change_mode(struct elemental_data *ed, int mode) {
 
 	// Use a skill inmediately after every change mode.
 	if( mode != EL_SKILLMODE_AGGRESSIVE )
-		elemental_change_mode_ack(ed,mode);
+		elemental->change_mode_ack(ed,mode);
 	return 1;
 }
 
@@ -541,7 +539,7 @@ void elemental_heal(struct elemental_data *ed, int hp, int sp) {
 }
 
 int elemental_dead(struct elemental_data *ed) {
-	elemental_delete(ed, 1);
+	elemental->delete(ed, 1);
 	return 0;
 }
 
@@ -662,7 +660,7 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 		}
 
 		if( status_get_sp(&sd->bl) < sp ){ // Can't sustain delete it.
-			elemental_delete(sd->ed,0);
+			elemental->delete(sd->ed,0);
 			return 0;
 		}
 
@@ -693,7 +691,7 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 
 	master_dist = distance_bl(&sd->bl, &ed->bl);
 	if( master_dist > AREA_SIZE ) {	// Master out of vision range.
-		elemental_unlocktarget(ed);
+		elemental->unlocktarget(ed);
 		unit_warp(&ed->bl,sd->bl.m,sd->bl.x,sd->bl.y,CLR_TELEPORT);
 		clif->elemental_updatestatus(sd,SP_HP);
 		clif->elemental_updatestatus(sd,SP_SP);
@@ -701,7 +699,7 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 	} else if( master_dist > MAX_ELEDISTANCE ) {	// Master too far, chase.
 		short x = sd->bl.x, y = sd->bl.y;
 		if( ed->target_id )
-			elemental_unlocktarget(ed);
+			elemental->unlocktarget(ed);
 		if( ed->ud.walktimer != INVALID_TIMER && ed->ud.target == sd->bl.id )
 			return 0; //Already walking to him
 		if( DIFF_TICK(tick, ed->ud.canmove_tick) < 0 )
@@ -718,12 +716,12 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 			iMap->foreachinrange(elemental_ai_sub_timer_activesearch, &ed->bl, view_range, BL_CHAR, ed, &target, status_get_mode(&ed->bl));
 
 		if( !target ) { //No targets available.
-			elemental_unlocktarget(ed);
+			elemental->unlocktarget(ed);
 			return 1;
 		}
 
 		if( battle->check_range(&ed->bl,target,view_range) && rnd()%100 < 2 ) { // 2% chance to cast attack skill.
-			if(	elemental_action(ed,target,tick) )
+			if(	elemental->action(ed,target,tick) )
 				return 1;
 		}
 
@@ -739,7 +737,7 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 
 		//Follow up if possible.
 		if( !unit_walktobl(&ed->bl, target, ed->base_status.rhw.range, 2) )
-			elemental_unlocktarget(ed);
+			elemental->unlocktarget(ed);
 	}
 
 	return 0;
@@ -767,7 +765,7 @@ int read_elementaldb(void) {
 	struct status_data *status;
 
 	sprintf(line, "%s/%s", iMap->db_path, "elemental_db.txt");
-	memset(elemental_db,0,sizeof(elemental_db));
+	memset(elemental->elemental_db,0,sizeof(elemental->elemental_db));
 
 	fp = fopen(line, "r");
 	if( !fp ) {
@@ -794,7 +792,7 @@ int read_elementaldb(void) {
 			continue;
 		}
 
-		db = &elemental_db[j];
+		db = &elemental->elemental_db[j];
 		db->class_ = atoi(str[0]);
 		safestrncpy(db->sprite, str[1], NAME_LENGTH);
 		safestrncpy(db->name, str[2], NAME_LENGTH);
@@ -884,7 +882,7 @@ int read_elemental_skilldb(void) {
 		}
 
 		class_ = atoi(str[0]);
-		ARR_FIND(0, MAX_ELEMENTAL_CLASS, i, class_ == elemental_db[i].class_);
+		ARR_FIND(0, MAX_ELEMENTAL_CLASS, i, class_ == elemental->elemental_db[i].class_);
 		if( i == MAX_ELEMENTAL_CLASS ) {
 			ShowError("read_elemental_skilldb : Class not found in elemental_db for skill entry, line %d.\n", k);
 			continue;
@@ -896,7 +894,7 @@ int read_elemental_skilldb(void) {
 			continue;
 		}
 
-		db = &elemental_db[i];
+		db = &elemental->elemental_db[i];
 		skill_lv = atoi(str[2]);
 
 		skillmode = atoi(str[3]);
@@ -922,16 +920,16 @@ int read_elemental_skilldb(void) {
 
 void reload_elementaldb(void) {
 	read_elementaldb();
-	reload_elemental_skilldb();
+	elemental->reload_skilldb();
 }
 
 void reload_elemental_skilldb(void) {
-	read_elemental_skilldb();
+	elemental->read_skilldb();
 }
 
 int do_init_elemental(void) {
 	read_elementaldb();
-	read_elemental_skilldb();
+	elemental->read_skilldb();
 
 	iTimer->add_timer_func_list(elemental_ai_timer,"elemental_ai_timer");
 	iTimer->add_timer_interval(iTimer->gettick()+MIN_ELETHINKTIME,elemental_ai_timer,0,0,MIN_ELETHINKTIME);
@@ -941,4 +939,46 @@ int do_init_elemental(void) {
 
 void do_final_elemental(void) {
 	return;
+}
+
+/*=====================================
+* Default Functions : elemental.h 
+* Generated by HerculesInterfaceMaker
+* created by Susu
+*-------------------------------------*/
+void elemental_defaults(void) {
+	elemental = &elemental_s;
+	/* funcs */
+	
+	elemental->class = elemental_class;
+	elemental->get_viewdata = elemental_get_viewdata;
+	
+	elemental->create = elemental_create;
+	elemental->data_received = elemental_data_received;
+	elemental->save = elemental_save;
+	
+	elemental->change_mode_ack = elemental_change_mode_ack;
+	elemental->change_mode = elemental_change_mode;
+	
+	elemental->heal = elemental_heal;
+	elemental->dead = elemental_dead;
+	
+	elemental->delete = elemental_delete;
+	elemental->summon_stop = elemental_summon_stop;
+	
+	elemental->get_lifetime = elemental_get_lifetime;
+	
+	elemental->unlocktarget = elemental_unlocktarget;
+	elemental->skillnotok = elemental_skillnotok;
+	elemental->set_target = elemental_set_target;
+	elemental->clean_single_effect = elemental_clean_single_effect;
+	elemental->clean_effect = elemental_clean_effect;
+	elemental->action = elemental_action;
+	elemental->skill_get_requirements = elemental_skill_get_requirements;
+	
+	elemental->read_skilldb = read_elemental_skilldb;
+	elemental->reload_elementaldb = reload_elementaldb;
+	elemental->reload_skilldb = reload_elemental_skilldb;
+	elemental->do_init_elemental = do_init_elemental;
+	elemental->do_final_elemental = do_final_elemental;
 }

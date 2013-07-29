@@ -745,7 +745,7 @@ ACMD(save)
 	
 	pc->setsavepoint(sd, sd->mapindex, sd->bl.x, sd->bl.y);
 	if (sd->status.pet_id > 0 && sd->pd)
-		intif_save_petdata(sd->status.account_id, &sd->pd->pet);
+		intif->save_petdata(sd->status.account_id, &sd->pd->pet);
 	
 	chrif->save(sd,0);
 	
@@ -1048,7 +1048,7 @@ ACMD(kami)
 		if (strstr(command, "l") != NULL)
 			clif->broadcast(&sd->bl, atcmd_output, strlen(atcmd_output) + 1, 0, ALL_SAMEMAP);
 		else
-			intif_broadcast(atcmd_output, strlen(atcmd_output) + 1, (*(command + 5) == 'b' || *(command + 5) == 'B') ? 0x10 : 0);
+			intif->broadcast(atcmd_output, strlen(atcmd_output) + 1, (*(command + 5) == 'b' || *(command + 5) == 'B') ? 0x10 : 0);
 	} else {
 		if(!message || !*message || (sscanf(message, "%lx %199[^\n]", &color, atcmd_output) < 2)) {
 			clif->message(fd, msg_txt(981)); // Please enter color and message (usage: @kamic <color> <message>).
@@ -1059,7 +1059,7 @@ ACMD(kami)
 			clif->message(fd, msg_txt(982)); // Invalid color.
 			return false;
 		}
-		intif_broadcast2(atcmd_output, strlen(atcmd_output) + 1, color, 0x190, 12, 0, 0);
+		intif->broadcast2(atcmd_output, strlen(atcmd_output) + 1, color, 0x190, 12, 0, 0);
 	}
 	return true;
 }
@@ -2526,7 +2526,7 @@ ACMD(guildlevelup)
 		added_level = 1 - guild_info->guild_lv;
 	
 	if (added_level != 0) {
-		intif_guild_change_basicinfo(guild_info->guild_id, GBI_GUILDLV, &added_level, sizeof(added_level));
+		intif->guild_change_basicinfo(guild_info->guild_id, GBI_GUILDLV, &added_level, sizeof(added_level));
 		clif->message(fd, msg_txt(179)); // Guild level changed.
 	} else {
 		clif->message(fd, msg_txt(45)); // Guild level change failed.
@@ -2563,7 +2563,7 @@ ACMD(makeegg)
 		pet_id = search_petDB_index(id, PET_EGG);
 	if (pet_id >= 0) {
 		sd->catch_target_class = pet_db[pet_id].class_;
-		intif_create_pet(
+		intif->create_pet(
 						 sd->status.account_id, sd->status.char_id,
 						 (short)pet_db[pet_id].class_, (short)mob_db(pet_db[pet_id].class_)->lv,
 						 (short)pet_db[pet_id].EggID, 0, (short)pet_db[pet_id].intimate,
@@ -2682,7 +2682,7 @@ ACMD(petrename)
 	}
 	
 	pd->pet.rename_flag = 0;
-	intif_save_petdata(sd->status.account_id, &pd->pet);
+	intif->save_petdata(sd->status.account_id, &pd->pet);
 	clif->send_petstatus(sd);
 	clif->message(fd, msg_txt(187)); // You can now rename your pet.
 	
@@ -3598,9 +3598,9 @@ ACMD(reloadmobdb) {
 	mob_reload();
 	read_petdb();
 	homun->reload();
-	read_mercenarydb();
-	read_mercenary_skilldb();
-	reload_elementaldb();
+	mercenary->read_mercenarydb();
+	mercenary->read_skilldb();
+	elemental->reload_elementaldb();
 	clif->message(fd, msg_txt(98)); // Monster database has been reloaded.
 	
 	return true;
@@ -3614,8 +3614,8 @@ ACMD(reloadskilldb)
 	nullpo_retr(-1, sd);
 	skill->reload();
 	homun->reload_skill();
-	reload_elemental_skilldb();
-	read_mercenary_skilldb();
+	elemental->reload_skilldb();
+	mercenary->read_skilldb();
 	clif->message(fd, msg_txt(99)); // Skill database has been reloaded.
 	
 	return true;
@@ -4960,7 +4960,7 @@ ACMD(broadcast)
 	}
 	
 	sprintf(atcmd_output, "%s: %s", sd->status.name, message);
-	intif_broadcast(atcmd_output, strlen(atcmd_output) + 1, 0);
+	intif->broadcast(atcmd_output, strlen(atcmd_output) + 1, 0);
 	
 	return true;
 }
@@ -7694,8 +7694,8 @@ ACMD(invite)
 		return true;
 	}
 	
-	if(duel_list[did].max_players_limit > 0 &&
-	   duel_list[did].members_count >= duel_list[did].max_players_limit) {
+	if(iDuel->duel_list[did].max_players_limit > 0 &&
+	   iDuel->duel_list[did].members_count >= iDuel->duel_list[did].max_players_limit) {
 		
 		// "Duel: Limit of players is reached."
 		clif->message(fd, msg_txt(351));
@@ -7721,7 +7721,7 @@ ACMD(invite)
 		return true;
 	}
 	
-	duel_invite(did, sd, target_sd);
+	iDuel->invite(did, sd, target_sd);
 	// "Duel: Invitation has been sent."
 	clif->message(fd, msg_txt(354));
 	return true;
@@ -7732,7 +7732,7 @@ ACMD(duel)
 	unsigned int maxpl = 0;
 	
 	if(sd->duel_group > 0) {
-		duel_showinfo(sd->duel_group, sd);
+		iDuel->showinfo(sd->duel_group, sd);
 		return true;
 	}
 	
@@ -7742,7 +7742,7 @@ ACMD(duel)
 		return true;
 	}
 	
-	if(!duel_checktime(sd)) {
+	if(!iDuel->checktime(sd)) {
 		char output[CHAT_SIZE_MAX];
 		// "Duel: You can take part in duel only one time per %d minutes."
 		sprintf(output, msg_txt(356), battle_config.duel_time_interval);
@@ -7756,18 +7756,18 @@ ACMD(duel)
 				clif->message(fd, msg_txt(357)); // "Duel: Invalid value."
 				return true;
 			}
-			duel_create(sd, maxpl);
+			iDuel->create(sd, maxpl);
 		} else {
 			struct map_session_data *target_sd;
 			target_sd = iMap->nick2sd((char *)message);
 			if(target_sd != NULL) {
 				unsigned int newduel;
-				if((newduel = duel_create(sd, 2)) != -1) {
+				if((newduel = iDuel->create(sd, 2)) != -1) {
 					if(target_sd->duel_group > 0 ||	target_sd->duel_invite > 0) {
 						clif->message(fd, msg_txt(353)); // "Duel: Player already in duel."
 						return true;
 					}
-					duel_invite(newduel, sd, target_sd);
+					iDuel->invite(newduel, sd, target_sd);
 					clif->message(fd, msg_txt(354)); // "Duel: Invitation has been sent."
 				}
 			} else {
@@ -7777,7 +7777,7 @@ ACMD(duel)
 			}
 		}
 	} else
-		duel_create(sd, 0);
+		iDuel->create(sd, 0);
 	
 	return true;
 }
@@ -7791,14 +7791,14 @@ ACMD(leave)
 		return true;
 	}
 	
-	duel_leave(sd->duel_group, sd);
+	iDuel->leave(sd->duel_group, sd);
 	clif->message(fd, msg_txt(359)); // "Duel: You left the duel."
 	return true;
 }
 
 ACMD(accept)
 {
-	if(!duel_checktime(sd)) {
+	if(!iDuel->checktime(sd)) {
 		char output[CHAT_SIZE_MAX];
 		// "Duel: You can take part in duel only one time per %d minutes."
 		sprintf(output, msg_txt(356), battle_config.duel_time_interval);
@@ -7812,14 +7812,14 @@ ACMD(accept)
 		return true;
 	}
 	
-	if( duel_list[sd->duel_invite].max_players_limit > 0 && duel_list[sd->duel_invite].members_count >= duel_list[sd->duel_invite].max_players_limit )
+	if( iDuel->duel_list[sd->duel_invite].max_players_limit > 0 && iDuel->duel_list[sd->duel_invite].members_count >= iDuel->duel_list[sd->duel_invite].max_players_limit )
 	{
 		// "Duel: Limit of players is reached."
 		clif->message(fd, msg_txt(351));
 		return true;
 	}
 	
-	duel_accept(sd->duel_invite, sd);
+	iDuel->accept(sd->duel_invite, sd);
 	// "Duel: Invitation has been accepted."
 	clif->message(fd, msg_txt(361));
 	return true;
@@ -7833,7 +7833,7 @@ ACMD(reject)
 		return true;
 	}
 	
-	duel_reject(sd->duel_invite, sd);
+	iDuel->reject(sd->duel_invite, sd);
 	// "Duel: Invitation has been rejected."
 	clif->message(fd, msg_txt(363));
 	return true;
@@ -7974,7 +7974,7 @@ ACMD(request)
 	}
 	
 	sprintf(atcmd_output, msg_txt(278), message);	// (@request): %s
-	intif_wis_message_to_gm(sd->status.name, PC_PERM_RECEIVE_REQUESTS, atcmd_output);
+	intif->wis_message_to_gm(sd->status.name, PC_PERM_RECEIVE_REQUESTS, atcmd_output);
 	clif->disp_onlyself(sd, atcmd_output, strlen(atcmd_output));
 	clif->message(sd->fd,msg_txt(279));	// @request sent.
 	return true;
@@ -8335,7 +8335,7 @@ ACMD(delitem)
 		
 		if( sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET )
 		{// delete pet
-			intif_delete_petdata(MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]));
+			intif->delete_petdata(MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]));
 		}
 		pc->delitem(sd, idx, delamount, 0, 0, LOG_TYPE_COMMAND);
 		
@@ -8508,7 +8508,7 @@ ACMD(accinfo) {
 	//remove const type
 	safestrncpy(query, message, NAME_LENGTH);
 	
-	intif_request_accinfo( sd->fd, sd->bl.id, pc->get_group_level(sd), query );
+	intif->request_accinfo( sd->fd, sd->bl.id, pc->get_group_level(sd), query );
 	
 	return true;
 }
