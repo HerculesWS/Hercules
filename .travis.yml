@@ -2,8 +2,22 @@ language: c
 compiler:
   - clang
   - gcc
+  
+before_script:
+  - uname -a  
 
-script: uname -a && ./configure --enable-debug && make
+script: 
+  - ./configure --enable-debug
+  - make -j3
+  
+notifications:
+  email: false
+  
+  irc:
+    channels:
+      - "irc.rizon.net#Hercules"
+      on_success: always
+      on_failure: always
 
 branches:
   only:
