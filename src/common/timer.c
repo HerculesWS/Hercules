@@ -188,6 +188,38 @@ unsigned int timer_gettick(void) {
 #endif
 //////////////////////////////////////////////////////////////////////////
 
+/** @name CPU time related functions **/
+/** @{ */
+
+void timer_cputimer_start(uint64 *start_time)
+{
+#if defined(WIN32)
+	QueryPerformanceCounter((LARGE_INTEGER*)start_time);
+#else
+	struct timespec tval;
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tval);
+	*start_time = tval.tv_sec * 1000 + tval.tv_nsec / 1000000;
+#endif
+}
+
+double timer_cputimer_stop(uint64 start_time)
+{
+#if defined(WIN32)
+	uint64 end_time, ldFreq;
+	QueryPerformanceCounter((LARGE_INTEGER*)&end_time);
+	QueryPerformanceFrequency((LARGE_INTEGER*)&ldFreq);
+	return ((double)(end_time - start_time) / (double)ldFreq) * 1000.0;
+#else
+	struct timespec tval;
+	uint64 end_time;
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tval);
+	end_time = tval.tv_sec * 1000 + tval.tv_nsec / 1000000;
+	return (double)(end_time - start_time);
+#endif
+}
+
+/** @} */
+
 /*======================================
  * 	CORE : Timer Heap
  *--------------------------------------*/

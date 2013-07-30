@@ -1608,8 +1608,6 @@ CPCMD(bcrypt_benchmark)
 {
 	char password[NAME_LENGTH] = "benchmark";
 	char hash[BCRYPT_HASHSIZE] = "";
-	clock_t starttime;
-	clock_t endtime;
 	int time_limit;
 	int i;
 
@@ -1619,14 +1617,20 @@ CPCMD(bcrypt_benchmark)
 	}
 	
 	for (i = 4; i <= 31; i++) {
-		int ret;
-		starttime = clock();
-		ret = bcrypt_hashnew(password, hash, i);
-		endtime = clock();
+		int ret = 0;
+		double miliseconds = 0.0;
+		uint64 start_time = 0;
+		char salt[BCRYPT_SALTSIZE] = "";
+		char hash[BCRYPT_HASHSIZE] = "";
+		if (bcrypt_gensalt(i, salt) != 0)
+			break;
+		timer_cputimer_start(&start_time);
+		ret = bcrypt_hashpw(password, salt, hash);
+		miliseconds = timer_cputimer_stop(start_time);
 		if (ret != 0)
 			break;
-		ShowStatus("bcrypt benchmark: %2d rounds - %5d ms\n", i, endtime - starttime);
-		if (endtime - starttime > time_limit / 2)
+		ShowStatus("bcrypt benchmark: %2d rounds - %.3f ms\n", i, miliseconds);
+		if (miliseconds > time_limit / 2.0)
 			break;
 	}
 	ShowStatus("bcrypt benchmark: done\n");

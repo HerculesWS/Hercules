@@ -65,4 +65,7 @@ struct timer_interface *iTimer;
 
 void timer_defaults(void);
 
+void timer_cputimer_start(uint64 *start_time);
+double timer_cputimer_stop(uint64 start_time);
+
 #endif /* _TIMER_H_ */
