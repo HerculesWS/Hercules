@@ -3,35 +3,47 @@
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
-//= 1.1
+//= 1.2
 //===== Description: =========================================
 //= One-click automatic mount rentals.
 //= Replaced 'close' with 'end' [Streusel]
+//= Fixed 'close' issues. [Joseph]
 //============================================================
 
 prontera,124,201,1	script	Universal Rental NPC	726,{
 	if (ismounting()) {
 		message strcharinfo(0),"You must first remove your mount.";
-		end; }
+		end;
+	}
 	else if ((eaclass()&EAJ_THIRDMASK==EAJ_RANGER) && !countitem(6124)) {
 		if (!checkfalcon() && getskilllv("HT_FALCON") && !checkoption(Option_Wug) && !checkoption(Option_Wugrider)) {
 			if(select(" ~ Falcon: ~ Warg")==1) setfalcon;
-			else getitem 6124,1; }
-		else getitem 6124,1; }
+			else getitem 6124,1;
+			specialeffect2 EF_TEIHIT3;
+			close;
+		}
+		else getitem 6124,1;
+	}
 	else if ((eaclass()&EAJ_THIRDMASK==EAJ_MECHANIC) && !checkcart() && getskilllv("MC_PUSHCART")) {
 		if (!checkmadogear() && getskilllv("NC_MADOLICENCE")) {
 			if(select(" ~ Cart: ~ Mado")==1) setcart;
-			else setmadogear; }
-		else setcart; }
+			else setmadogear;
+			specialeffect2 EF_TEIHIT3;
+			close;
+		}
+		else setcart;
+	}
 	else if (!checkcart() && getskilllv("MC_PUSHCART")) setcart;
 	else if (!checkfalcon() && getskilllv("HT_FALCON") && !checkoption(Option_Wug) && !checkoption(Option_Wugrider)) setfalcon;
 	else if (!checkriding() && getskilllv("KN_RIDING")) {
 		if (eaclass()&EAJ_THIRDMASK==EAJ_RUNE_KNIGHT) setdragon;
-		else setriding; }
+		else setriding;
+	}
 	else if (!checkmadogear() && getskilllv("NC_MADOLICENCE")) setmadogear;
 	else {
 		message strcharinfo(0),"You do not meet requirements to rent.";
-		end; }
+		end;
+	}
 	specialeffect2 EF_TEIHIT3;
 	end;
 }
