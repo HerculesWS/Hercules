@@ -9287,7 +9287,7 @@ BUILDIN(getusersname)
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
-		if (pc_has_permission(pl_sd, PC_PERM_HIDE_SESSION) && pc->get_group_level(pl_sd) > group_level)
+		if (pc->has_permission(pl_sd, PC_PERM_HIDE_SESSION) && pc->get_group_level(pl_sd) > group_level)
 			continue; // skip hidden sessions
 		
 		/* Temporary fix for bugreport:1023.
@@ -12280,10 +12280,10 @@ BUILDIN(nude)
  *------------------------------------------*/
 BUILDIN(atcommand)
 {
-	TBL_PC dummy_sd;
-	TBL_PC* sd;
+	TBL_PC *sd, *dummy_sd = NULL;
 	int fd;
 	const char* cmd;
+	bool ret = true;
 	
 	cmd = script_getstr(st,2);
 	
@@ -12291,26 +12291,25 @@ BUILDIN(atcommand)
 		sd = script_rid2sd(st);
 		fd = sd->fd;
 	} else { //Use a dummy character.
-		sd = &dummy_sd;
+		sd = dummy_sd = pc->get_dummy_sd();
 		fd = 0;
 		
-		memset(&dummy_sd, 0, sizeof(TBL_PC));
 		if (st->oid)
 		{
 			struct block_list* bl = iMap->id2bl(st->oid);
-			memcpy(&dummy_sd.bl, bl, sizeof(struct block_list));
+			memcpy(&sd->bl, bl, sizeof(struct block_list));
 			if (bl->type == BL_NPC)
-				safestrncpy(dummy_sd.status.name, ((TBL_NPC*)bl)->name, NAME_LENGTH);
+				safestrncpy(sd->status.name, ((TBL_NPC*)bl)->name, NAME_LENGTH);
 		}
 	}
 	
 	if (!atcommand->parse(fd, sd, cmd, 0)) {
 		ShowWarning("script: buildin_atcommand: failed to execute command '%s'\n", cmd);
 		script_reportsrc(st);
-		return false;
+		ret = false;
 	}
-	
-	return true;
+	if (dummy_sd) aFree(dummy_sd);
+	return ret;
 }
 
 /*==========================================
@@ -16849,8 +16848,7 @@ BUILDIN(unbindatcmd) {
 
 BUILDIN(useatcmd)
 {
-	TBL_PC dummy_sd;
-	TBL_PC* sd;
+	TBL_PC *sd, *dummy_sd = NULL;
 	int fd;
 	const char* cmd;
 	
@@ -16863,16 +16861,15 @@ BUILDIN(useatcmd)
 	}
 	else
 	{ // Use a dummy character.
-		sd = &dummy_sd;
+		sd = dummy_sd = pc->get_dummy_sd();
 		fd = 0;
 		
-		memset(&dummy_sd, 0, sizeof(TBL_PC));
 		if( st->oid )
 		{
 			struct block_list* bl = iMap->id2bl(st->oid);
-			memcpy(&dummy_sd.bl, bl, sizeof(struct block_list));
+			memcpy(&sd->bl, bl, sizeof(struct block_list));
 			if( bl->type == BL_NPC )
-				safestrncpy(dummy_sd.status.name, ((TBL_NPC*)bl)->name, NAME_LENGTH);
+				safestrncpy(sd->status.name, ((TBL_NPC*)bl)->name, NAME_LENGTH);
 		}
 	}
 	
@@ -16884,6 +16881,7 @@ BUILDIN(useatcmd)
 	}
 	
 	atcommand->parse(fd, sd, cmd, 1);
+	if (dummy_sd) aFree(dummy_sd);
 	return true;
 }
 

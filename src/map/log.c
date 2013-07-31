@@ -291,7 +291,7 @@ void log_atcommand(struct map_session_data* sd, const char* message)
 	nullpo_retv(sd);
 
 	if( !logs->config.commands ||
-	    !pc_should_log_commands(sd) )
+	    !pc->should_log_commands(sd) )
 		return;
 
 	logs->atcommand_sub(sd,message);
