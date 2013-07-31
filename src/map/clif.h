@@ -523,7 +523,10 @@ struct clif_interface {
 	void (*skillunit_update) (struct block_list* bl);
 	int (*clearunit_delayed_sub) (int tid, unsigned int tick, int id, intptr_t data);
 	void (*set_unit_idle) (struct block_list* bl, struct map_session_data *tsd,enum send_target target);
-	void (*spawn_unit) (struct block_list* bl,enum send_target target);
+	void (*spawn_unit) (struct block_list* bl, enum send_target target);
+#if PACKETVER < 20091103
+	void (*spawn_unit2) (struct block_list* bl, enum send_target target);
+#endif
 	void (*set_unit_walking) (struct block_list* bl, struct map_session_data *tsd,struct unit_data* ud, enum send_target target);
 	int (*calc_walkdelay) (struct block_list *bl,int delay, int type, int damage, int div_);
 	void (*getareachar_skillunit) (struct map_session_data *sd, struct skill_unit *unit);

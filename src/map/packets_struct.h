@@ -53,6 +53,9 @@ enum packet_headers {
 #endif
 	status_change2Type = 0x43f,
 	status_change_endType = 0x196,
+#if PACKETVER < 20091103
+	spawn_unit2Type = 0x7c,
+#endif
 #if PACKETVER < 4
 	spawn_unitType = 0x79,
 #elif PACKETVER < 7
@@ -173,7 +176,33 @@ struct packet_dropflooritem {
 	unsigned char subY;
 	short count;
 } __attribute__((packed));
-
+#if PACKETVER < 20091103
+struct packet_spawn_unit2 {
+	short PacketType;
+	unsigned char objecttype;
+	unsigned int GID;
+	short speed;
+	short bodyState;
+	short healthState;
+	short effectState;
+	short head;
+	short weapon;
+	short accessory;
+	short job;
+	short shield;
+	short accessory2;
+	short accessory3;
+	short headpalette;
+	short bodypalette;
+	short headDir;
+	bool isPKModeON;
+	unsigned char sex;
+	unsigned char PosDir[3];
+	unsigned char xSize;
+	unsigned char ySize;
+	short clevel;
+} __attribute__((packed));
+#endif
 struct packet_spawn_unit {
 	short PacketType;
 #if PACKETVER >= 20091103
