@@ -15,6 +15,7 @@
 #include "../common/conf.h"
 #include "../common/mmo.h" //NAME_LENGTH
 
+#include "pc.h"
 #include "atcommand.h" // get_atcommand_level()
 #include "battle.h" // battle_config
 #include "battleground.h"
@@ -41,7 +42,6 @@
 #include "skill.h"
 #include "status.h" // struct status_data
 #include "storage.h"
-#include "pc.h"
 #include "pc_groups.h"
 #include "quest.h"
 
@@ -101,8 +101,59 @@ int pc_class2idx(int class_) {
 	return class_;
 }
 
-int pc_get_group_level(struct map_session_data *sd) {
-	return sd->group_level;
+/**
+ * Creates a new dummy map session data.
+ * Used when there is no real player attached, but it is
+ * required to provide a session.
+ * Caller must release dummy on its own when it's no longer needed.
+ */
+struct map_session_data* pc_get_dummy_sd(void)
+{
+	struct map_session_data *dummy_sd;
+	CREATE(dummy_sd, struct map_session_data, 1);
+	dummy_sd->group = pc_group_get_dummy_group(); // map_session_data.group is expected to be non-NULL at all times
+	return dummy_sd;
+}
+
+/**
+ * Gets player's group level.
+ * @see pc_group_get_level()
+ */
+int pc_get_group_level(struct map_session_data *sd)
+{
+	return pc_group_get_level(sd->group);
+}
+
+/**
+ * Sets player's group.
+ * Caller should handle error (preferably display message and disconnect).
+ * @param group_id Group ID
+ * @return 1 on error, 0 on success
+ */
+int pc_set_group(struct map_session_data *sd, int group_id)
+{
+	GroupSettings *group = pc_group_id2group(group_id);
+	if (group == NULL)
+		return 1;
+	sd->group_id = group_id;
+	sd->group = group;
+	return 0;
+}
+
+/**
+ * Checks if player has permission to perform action.
+ */
+bool pc_has_permission(struct map_session_data *sd, enum e_pc_permission permission)
+{
+	return ((sd->extra_temp_permissions&permission) != 0 || pc_group_has_permission(sd->group, permission));
+}
+
+/**
+ * Checks if commands used by player should be logged.
+ */
+bool pc_should_log_commands(struct map_session_data *sd)
+{
+	return pc_group_should_log_commands(sd->group);
 }
 
 static int pc_invincible_timer(int tid, unsigned int tick, int id, intptr_t data)
@@ -503,7 +554,7 @@ void pc_inventory_rental_add(struct map_session_data *sd, int seconds)
  */
 bool pc_can_give_items(struct map_session_data *sd)
 {
-	return pc_has_permission(sd, PC_PERM_TRADE);
+	return pc->has_permission(sd, PC_PERM_TRADE);
 }
 
 /*==========================================
@@ -857,7 +908,7 @@ int pc_isequip(struct map_session_data *sd,int n)
 
 	item = sd->inventory_data[n];
 
-	if(pc_has_permission(sd, PC_PERM_USE_ALL_EQUIPMENT))
+	if(pc->has_permission(sd, PC_PERM_USE_ALL_EQUIPMENT))
 		return 1;
 
 	if(item == NULL)
@@ -931,10 +982,13 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	uint32 ip = session[sd->fd]->client_addr;
 
 	sd->login_id2 = login_id2;
-	sd->group_id = group_id;
-
-	/* load user permissions */
-	pc_group_pc_load(sd);
+	
+	if (pc->set_group(sd, group_id) != 0) {
+		ShowWarning("pc_authok: %s (AID:%d) logged in with unknown group id (%d)! kicking...\n",
+			st->name, sd->status.account_id, group_id);
+		clif->authfail_fd(sd->fd, 0);
+		return false;
+	}
 
 	memcpy(&sd->status, st, sizeof(*st));
 
@@ -1370,7 +1424,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 		}
 	}
 
-	if( pc_has_permission(sd, PC_PERM_ALL_SKILL) ) {
+	if( pc->has_permission(sd, PC_PERM_ALL_SKILL) ) {
 		for( i = 0; i < MAX_SKILL; i++ ) {
 			switch(skill_db[i].nameid) {
 				/**
@@ -1566,7 +1620,7 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 	int skill_point, novice_skills;
 	int c = sd->class_;
 
-	if (!battle_config.skillup_limit || pc_has_permission(sd, PC_PERM_ALL_SKILL))
+	if (!battle_config.skillup_limit || pc->has_permission(sd, PC_PERM_ALL_SKILL))
 		return c;
 
 	skill_point = pc_calc_skillpoint(sd);
@@ -4989,7 +5043,7 @@ int pc_memo(struct map_session_data* sd, int pos)
 	nullpo_ret(sd);
 
 	// check mapflags
-	if( sd->bl.m >= 0 && (map[sd->bl.m].flag.nomemo || map[sd->bl.m].flag.nowarpto) && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE) ) {
+	if( sd->bl.m >= 0 && (map[sd->bl.m].flag.nomemo || map[sd->bl.m].flag.nowarpto) && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE) ) {
 		clif->skill_mapinfomessage(sd, 1); // "Saved point cannot be memorized."
 		return 0;
 	}
@@ -6246,7 +6300,7 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 		clif->updatestatus(sd,SP_SKILLPOINT);
 		if( skill_id == GN_REMODELING_CART ) /* cart weight info was updated by status_calc_pc */
 			clif->updatestatus(sd,SP_CARTINFO);
-		if (!pc_has_permission(sd, PC_PERM_ALL_SKILL)) // may skill everything at any time anyways, and this would cause a huge slowdown
+		if (!pc->has_permission(sd, PC_PERM_ALL_SKILL)) // may skill everything at any time anyways, and this would cause a huge slowdown
 			clif->skillinfoblock(sd);
 	}
 	return 0;
@@ -6270,7 +6324,7 @@ int pc_allskillup(struct map_session_data *sd)
 		}
 	}
 
-	if (pc_has_permission(sd, PC_PERM_ALL_SKILL)) { //Get ALL skills except npc/guild ones. [Skotlex]
+	if (pc->has_permission(sd, PC_PERM_ALL_SKILL)) { //Get ALL skills except npc/guild ones. [Skotlex]
 		//and except SG_DEVIL [Komurka] and MO_TRIPLEATTACK and RG_SNATCHER [ultramage]
 		for(i=0;i<MAX_SKILL;i++){
 			switch( skill_db[i].nameid ) {
@@ -10236,12 +10290,16 @@ void pc_defaults(void) {
 
 	/* funcs */
 	
+	pc->get_dummy_sd = pc_get_dummy_sd;
 	pc->class2idx = pc_class2idx;
 	pc->get_group_level = pc_get_group_level;
 	pc->can_give_items = pc_can_give_items;
 	
 	pc->can_use_command = pc_can_use_command;
-	
+	pc->has_permission = pc_has_permission;
+	pc->set_group = pc_set_group;
+	pc->should_log_commands = pc_should_log_commands;
+
 	pc->setrestartvalue = pc_setrestartvalue;
 	pc->makesavestatus = pc_makesavestatus;
 	pc->respawn = pc_respawn;

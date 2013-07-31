@@ -5,7 +5,9 @@
 #ifndef _ATCOMMAND_H_
 #define _ATCOMMAND_H_
 
+#include "../common/conf.h"
 #include "../common/db.h"
+#include "pc_groups.h"
 
 /**
  * Declarations
@@ -68,7 +70,6 @@ struct atcommand_interface {
 	/* atcommand binding */
 	struct atcmd_binding_data** binding;
 	int binding_count;
-	unsigned int *group_ids;
 	/* other vars */
 	DBMap* db; //name -> AtCommandInfo
 	DBMap* alias_db; //alias -> AtCommandInfo
@@ -80,7 +81,7 @@ struct atcommand_interface {
 	bool (*create) (char *name, AtCommandFunc func);
 	bool (*can_use) (struct map_session_data *sd, const char *command);
 	bool (*can_use2) (struct map_session_data *sd, const char *command, AtCommandType type);
-	void (*load_groups) (void);
+	void (*load_groups) (GroupSettings **groups, config_setting_t **commands_, size_t sz);
 	AtCommandInfo* (*exists) (const char* name);
 	int (*msg_read) (const char* cfgName);
 	void (*final_msg) (void);

@@ -8,23 +8,22 @@
 #include "../common/nullpo.h"
 #include "../common/showmsg.h"
 #include "../common/strlib.h" // strcmp
-#include "../common/socket.h"
 
-#include "atcommand.h" // AtCommandType
 #include "pc_groups.h"
-#include "pc.h" // e_pc_permission
+#include "atcommand.h" // atcommand->exists(), atcommand->load_groups()
+#include "clif.h"      // clif->GM_kick()
+#include "map.h"       // mapiterator
+#include "pc.h"        // pc->set_group()
 
-typedef struct GroupSettings GroupSettings;
-
-// Cached config settings/pointers for quick lookup
+// Cached config settings for quick lookup
 struct GroupSettings {
 	unsigned int id; // groups.[].id
 	int level; // groups.[].level
-	char name[60]; // copy of groups.[].name
+	char *name; // copy of groups.[].name
 	unsigned int e_permissions; // packed groups.[].permissions
 	bool log_commands; // groups.[].log_commands
-	int group_pos;/* pos on load [Ind] */
-	/// Following are used/avaialble only during config reading
+	int index; // internal index of the group (contiguous range starting at 0) [Ind]
+	/// Following are used/available only during config reading
 	config_setting_t *commands; // groups.[].commands
 	config_setting_t *permissions; // groups.[].permissions
 	config_setting_t *inherit; // groups.[].inherit
@@ -32,18 +31,44 @@ struct GroupSettings {
 	config_setting_t *root; // groups.[]
 };
 
-int pc_group_max; /* known number of groups */
+const struct pc_permission_name_table pc_g_permission_name[NUM_PC_PERM] = {
+	{ "can_trade", PC_PERM_TRADE },
+	{ "can_party", PC_PERM_PARTY },
+	{ "all_skill", PC_PERM_ALL_SKILL },
+	{ "all_equipment", PC_PERM_USE_ALL_EQUIPMENT },
+	{ "skill_unconditional", PC_PERM_SKILL_UNCONDITIONAL },
+	{ "join_chat", PC_PERM_JOIN_ALL_CHAT },
+	{ "kick_chat", PC_PERM_NO_CHAT_KICK },
+	{ "hide_session", PC_PERM_HIDE_SESSION },
+	{ "who_display_aid", PC_PERM_WHO_DISPLAY_AID },
+	{ "hack_info", PC_PERM_RECEIVE_HACK_INFO },
+	{ "any_warp", PC_PERM_WARP_ANYWHERE },
+	{ "view_hpmeter", PC_PERM_VIEW_HPMETER },
+	{ "view_equipment", PC_PERM_VIEW_EQUIPMENT },
+	{ "use_check", PC_PERM_USE_CHECK },
+	{ "use_changemaptype", PC_PERM_USE_CHANGEMAPTYPE },
+	{ "all_commands", PC_PERM_USE_ALL_COMMANDS },
+	{ "receive_requests", PC_PERM_RECEIVE_REQUESTS },
+	{ "show_bossmobs", PC_PERM_SHOW_BOSS },
+	{ "disable_pvm", PC_PERM_DISABLE_PVM },
+	{ "disable_pvp", PC_PERM_DISABLE_PVP },
+	{ "disable_commands_when_dead", PC_PERM_DISABLE_CMD_DEAD },
+	{ "hchsys_admin", PC_PERM_HCHSYS_ADMIN },
+};
 
 static DBMap* pc_group_db; // id -> GroupSettings
 static DBMap* pc_groupname_db; // name -> GroupSettings
 
+static GroupSettings dummy_group; ///< dummy group used in dummy map sessions @see pc_get_dummy_sd()
+
 /**
- * @retval NULL if not found
- * @private
+ * Returns dummy group.
+ * Used in dummy map sessions.
+ * @see pc_get_dummy_sd()
  */
-static inline GroupSettings* id2group(int group_id)
+GroupSettings* pc_group_get_dummy_group(void)
 {
-	return (GroupSettings*)idb_get(pc_group_db, group_id);
+	return &dummy_group;
 }
 
 /**
@@ -52,7 +77,7 @@ static inline GroupSettings* id2group(int group_id)
  */
 static inline GroupSettings* name2group(const char* group_name)
 {
-	return (GroupSettings*)strdb_get(pc_groupname_db, group_name);
+	return strdb_get(pc_groupname_db, group_name);
 }
 
 /**
@@ -90,7 +115,7 @@ static void read_config(void) {
 				continue;
 			}
 
-			if (id2group(id) != NULL) {
+			if (pc_group_exists(id)) {
 				ShowConfigWarning(group, "pc_groups:read_config: duplicate group id %d, removing...", i);
 				config_setting_remove_elem(groups, i);
 				--i;
@@ -109,6 +134,8 @@ static void read_config(void) {
 				    !config_setting_set_string(name, temp)) {
 					ShowError("pc_groups:read_config: failed to set missing group name, id=%d, skipping... (%s:%d)\n",
 					          id, config_setting_source_file(group), config_setting_source_line(group));
+					--i;
+					--group_count;
 					continue;
 				}
 				config_setting_lookup_string(group, "name", &groupname); // Retrieve the pointer
@@ -125,20 +152,21 @@ static void read_config(void) {
 			CREATE(group_settings, GroupSettings, 1);
 			group_settings->id = id;
 			group_settings->level = level;
-			safestrncpy(group_settings->name, groupname, 60);
+			group_settings->name = aStrdup(groupname);
 			group_settings->log_commands = (bool)log_commands;
 			group_settings->inherit = config_setting_get_member(group, "inherit");
 			group_settings->commands = config_setting_get_member(group, "commands");
 			group_settings->permissions = config_setting_get_member(group, "permissions");
 			group_settings->inheritance_done = false;
 			group_settings->root = group;
-			group_settings->group_pos = i;
+			group_settings->index = i;
 
 			strdb_put(pc_groupname_db, groupname, group_settings);
 			idb_put(pc_group_db, id, group_settings);
 			
 		}
 		group_count = config_setting_length(groups); // Save number of groups
+		assert(group_count == db_size(pc_group_db));
 		
 		// Check if all commands and permissions exist
 		iter = db_iterator(pc_group_db);
@@ -249,7 +277,7 @@ static void read_config(void) {
 				break;
 			}
 		} // while(i < group_count)
-
+		
 		// Pack permissions into GroupSettings.e_permissions for faster checking
 		iter = db_iterator(pc_group_db);
 		for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
@@ -269,111 +297,51 @@ static void read_config(void) {
 			}
 		}
 		dbi_destroy(iter);
+
+		// Atcommand permissions are processed by atcommand module.
+		// Fetch all groups and relevant config setting and send them
+		// to atcommand->load_group() for processing.
+		if (group_count > 0) {
+			int i = 0;
+			GroupSettings **groups = NULL;
+			config_setting_t **commands = NULL;
+			CREATE(groups, GroupSettings*, group_count);
+			CREATE(commands, config_setting_t*, group_count);
+			iter = db_iterator(pc_group_db);
+			for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
+				groups[i] = group_settings;
+				commands[i] = group_settings->commands;
+				i++;
+			}
+			atcommand->load_groups(groups, commands, group_count);
+			dbi_destroy(iter);
+			aFree(groups);
+			aFree(commands);
+		}
 	}
 
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' groups in '"CL_WHITE"%s"CL_RESET"'.\n", group_count, config_filename);
 
-	
-	if( ( pc_group_max = group_count ) ) {
-		DBIterator *iter = db_iterator(pc_group_db);
-		GroupSettings *group_settings = NULL;
-		unsigned int* group_ids = aMalloc( pc_group_max * sizeof(unsigned int) );
-		int i = 0;
-		for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
-			group_ids[i++] = group_settings->id;
-		}
-		
-		if( atcommand->group_ids )
-			aFree(atcommand->group_ids);
-		atcommand->group_ids = group_ids;
-		
-		atcommand->load_groups();
-				
-		dbi_destroy(iter);
-	}
-	
+	// All data is loaded now, discard config
 	config_destroy(&pc_group_config);
 }
 
 /**
- * In group configuration file, setting for each command is either
- * <commandname> : <bool> (only atcommand), or
- * <commandname> : [ <bool>, <bool> ] ([ atcommand, charcommand ])
- * Maps AtCommandType enums to indexes of <commandname> value array,
- * COMMAND_ATCOMMAND (1) being index 0, COMMAND_CHARCOMMAND (2) being index 1.
- * @private
- */
-static inline int AtCommandType2idx(AtCommandType type) { return (type-1); }
-
-/**
- * Checks if player group can use @/#command, used only during parse (only available during parse)
- * @param group_id ID of the group
- * @param command Command name without @/# and params
- * @param type enum AtCommanndType { COMMAND_ATCOMMAND = 1, COMMAND_CHARCOMMAND = 2 }
- */
-bool pc_group_can_use_command(int group_id, const char *command, AtCommandType type) {
-	int result = 0;
-	config_setting_t *commands = NULL;
-	GroupSettings *group = NULL;
-
-	if (pc_group_has_permission(group_id, PC_PERM_USE_ALL_COMMANDS))
-		return true;
-
-	if ((group = id2group(group_id)) == NULL)
-		return false;
-
-	commands = group->commands;
-	if (commands != NULL) {
-		config_setting_t *cmd = NULL;
-		
-		// <commandname> : <bool> (only atcommand)
-		if (type == COMMAND_ATCOMMAND && config_setting_lookup_bool(commands, command, &result))
-			return (bool)result;
-
-		// <commandname> : [ <bool>, <bool> ] ([ atcommand, charcommand ])
-		if ((cmd = config_setting_get_member(commands, command)) != NULL &&
-		    config_setting_is_aggregate(cmd) && config_setting_length(cmd) == 2)
-			return (bool)config_setting_get_bool_elem(cmd, AtCommandType2idx(type));
-	}
-	return false;
-}
-void pc_group_pc_load(struct map_session_data * sd) {
-	GroupSettings *group = NULL;
-	if ((group = id2group(sd->group_id)) == NULL) {
-		ShowWarning("pc_group_pc_load: %s (AID:%d) logged in with unknown group id (%d)! kicking...\n",
-					sd->status.name,
-					sd->status.account_id,
-					sd->group_id);
-		set_eof(sd->fd);
-		return;
-	}
-	sd->permissions = group->e_permissions;
-	sd->group_pos = group->group_pos;
-	sd->group_level = group->level;
-	sd->group_log_command = group->log_commands;
-}
-/**
  * Checks if player group has a permission
- * @param group_id ID of the group
+ * @param group group
  * @param permission permission to check
  */
-bool pc_group_has_permission(int group_id, int permission)
+bool pc_group_has_permission(GroupSettings *group, enum e_pc_permission permission)
 {
-	GroupSettings *group = NULL;
-	if ((group = id2group(group_id)) == NULL) 
-		return false;
 	return ((group->e_permissions&permission) != 0);
 }
 
 /**
- * Checks commands used by player group should be logged
- * @param group_id ID of the group
+ * Checks if commands used by player group should be logged
+ * @param group group
  */
-bool pc_group_should_log_commands(int group_id)
+bool pc_group_should_log_commands(GroupSettings *group)
 {
-	GroupSettings *group = NULL;
-	if ((group = id2group(group_id)) == NULL) 
-		return false;
 	return group->log_commands;
 }
 
@@ -388,44 +356,44 @@ bool pc_group_exists(int group_id)
 }
 
 /**
- * Group ID -> group name lookup. Used only in @who atcommands.
- * @param group_id group id
+ * @retval NULL if not found
+ */
+GroupSettings* pc_group_id2group(int group_id)
+{
+	return idb_get(pc_group_db, group_id);
+}
+
+/**
+ * Group name lookup. Used only in @who atcommands.
+ * @param group group
  * @return group name
  * @public
  */
-const char* pc_group_id2name(int group_id)
+const char* pc_group_get_name(GroupSettings *group)
 {
-	GroupSettings *group = id2group(group_id);
-	if (group == NULL)
-		return "Non-existent group!";
 	return group->name;
 }
 
 /**
- * Group ID -> group level lookup. A way to provide backward compatibility with GM level system.
- * @param group id
+ * Group level lookup. A way to provide backward compatibility with GM level system.
+ * @param group group
  * @return group level
  * @public
  */
-int pc_group_id2level(int group_id)
+int pc_group_get_level(GroupSettings *group)
 {
-	GroupSettings *group = id2group(group_id);
-	if (group == NULL)
-		return 0;
 	return group->level;
 }
+
 /**
- * Group ID -> group level lookup.
- * @param group id
+ * Group -> index lookup.
+ * @param group group
  * @return group index
  * @public
  */
-int pc_group_id2idx(int group_id)
+int pc_group_get_idx(GroupSettings *group)
 {
-	GroupSettings *group = id2group(group_id);
-	if (group == NULL)
-		return 0;
-	return group->group_pos;
+	return group->index;
 }
 
 /**
@@ -440,14 +408,25 @@ void do_init_pc_groups(void)
 }
 
 /**
+ * @see DBApply
+ */
+static int group_db_clear_sub(DBKey key, DBData *data, va_list args)
+{
+	GroupSettings *group = DB->data2ptr(data);
+	if (group->name)
+		aFree(group->name);
+	return 0;
+}
+
+/**
  * Finalize PC Groups: free DBMaps and config.
  * @public
  */
 void do_final_pc_groups(void)
 {
 	if (pc_group_db != NULL)
-		db_destroy(pc_group_db);
-	if (pc_groupname_db != NULL )
+		pc_group_db->destroy(pc_group_db, group_db_clear_sub);
+	if (pc_groupname_db != NULL)
 		db_destroy(pc_groupname_db);
 }
 
@@ -457,18 +436,20 @@ void do_final_pc_groups(void)
  * @public
  */
 void pc_groups_reload(void) {
-	struct map_session_data* sd = NULL;
-	struct s_mapiterator* iter;
+	struct map_session_data *sd = NULL;
+	struct s_mapiterator *iter;
 
 	do_final_pc_groups();
 	do_init_pc_groups();
 	
 	/* refresh online users permissions */
 	iter = mapit_getallusers();
-	for (sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter))	{
-		pc_group_pc_load(sd);
+	for (sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter)) {
+		if (pc->set_group(sd, sd->group_id) != 0) {
+			ShowWarning("pc_groups_reload: %s (AID:%d) has unknown group id (%d)! kicking...\n",
+				sd->status.name, sd->status.account_id, pc_get_group_id(sd));
+			clif->GM_kick(NULL, sd);
+		}
 	}
 	mapit->free(iter);
-
-	
 }
