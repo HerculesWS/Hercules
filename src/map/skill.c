@@ -16229,11 +16229,11 @@ int skill_produce_mix (struct map_session_data *sd, uint16 skill_id, int nameid,
 			 **/
 			case GC_CREATENEWPOISON:
 				{
-					const int min[] = {2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
-					const int max[] = {4, 5, 5, 6, 6, 7, 7, 8, 8, 9};
-					uint16 lv = pc->checkskill(sd,GC_RESEARCHNEWPOISON);
-					make_per = 3000 + 500 * lv ;
-					qty = min[lv] + rand()%(max[lv] - min[lv]);
+					const int min[10] = {2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
+					const int max[10] = {4, 5, 5, 6, 6, 7, 7, 8, 8, 9};
+					int lv = max(0, pc->checkskill(sd,GC_RESEARCHNEWPOISON) - 1);
+					qty = min[lv] + rnd()%(max[lv] - min[lv]);
+					make_per = 3000 + 500 * (lv+1);
 				}
 				break;
 			case GN_CHANGEMATERIAL:

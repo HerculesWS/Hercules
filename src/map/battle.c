@@ -5176,14 +5176,20 @@ int battle_calc_return_damage(struct block_list* bl, struct block_list *src, int
 	int rdamage = 0, damage = *dmg, trdamage = 0;
 	struct map_session_data* sd;
 	struct status_change* sc;
+#ifdef RENEWAL
 	int max_reflect_damage;
 
+	max_reflect_damage = max(status_get_max_hp(bl), status_get_max_hp(bl) * iStatus->get_lv(bl) / 100);
+#endif
 	sd = BL_CAST(BL_PC, bl);
 	sc = iStatus->get_sc(bl);
-	max_reflect_damage = max(status_get_max_hp(bl), status_get_max_hp(bl) * iStatus->get_lv(bl) / 100);
 
+#ifdef RENEWAL
 #define NORMALIZE_RDAMAGE(d){ trdamage += rdamage = max(1, min(max_reflect_damage, d)); }
-	
+#else
+#define NORMALIZE_RDAMAGE(d){ trdamage += rdamage = max(1, d); }
+#endif
+
 	 if( sc && sc->data[SC_CRESCENTELBOW] && !is_boss(src) && rnd()%100 < sc->data[SC_CRESCENTELBOW]->val2 ){
 		//ATK [{(Target HP / 100) x Skill Level} x Caster Base Level / 125] % + [Received damage x {1 + (Skill Level x 0.2)}]
 		int ratio = (status_get_hp(src) / 100) * sc->data[SC_CRESCENTELBOW]->val1 * iStatus->get_lv(bl) / 125;
