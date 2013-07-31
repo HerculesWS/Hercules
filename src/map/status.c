@@ -1573,27 +1573,27 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 		}
 
 		switch( skill_id ) {
-		case PA_PRESSURE:
-			if( flag && target ) {
-				//Gloria Avoids pretty much everything....
-				tsc = iStatus->get_sc(target);
-				if(tsc && tsc->option&OPTION_HIDE)
+			case PA_PRESSURE:
+				if( flag && target ) {
+					//Gloria Avoids pretty much everything....
+					tsc = iStatus->get_sc(target);
+					if(tsc && tsc->option&OPTION_HIDE)
+						return 0;
+				}
+				break;
+			case GN_WALLOFTHORN:
+				if( target && iStatus->isdead(target) )
 					return 0;
-			}
-			break;
-		case GN_WALLOFTHORN:
-			if( target && iStatus->isdead(target) )
-				return 0;
-			break;
-		case AL_TELEPORT:
-			//Should fail when used on top of Land Protector [Skotlex]
-			if (src && iMap->getcell(src->m, src->x, src->y, CELL_CHKLANDPROTECTOR)
-				&& !(status->mode&MD_BOSS)
-				&& (src->type != BL_PC || ((TBL_PC*)src)->skillitem != skill_id))
-				return 0;
-			break;
-		default:
-			break;
+				break;
+			case AL_TELEPORT:
+				//Should fail when used on top of Land Protector [Skotlex]
+				if (src && iMap->getcell(src->m, src->x, src->y, CELL_CHKLANDPROTECTOR)
+					&& !(status->mode&MD_BOSS)
+					&& (src->type != BL_PC || ((TBL_PC*)src)->skillitem != skill_id))
+					return 0;
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -1707,18 +1707,18 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 	if (sc && sc->option) {
 		if (sc->option&OPTION_HIDE) {
 			switch (skill_id) { //Usable skills while hiding.
-			case TF_HIDING:
-			case AS_GRIMTOOTH:
-			case RG_BACKSTAP:
-			case RG_RAID:
-			case NJ_SHADOWJUMP:
-			case NJ_KIRIKAGE:
-			case KO_YAMIKUMO:
-				break;
-			default:
-				//Non players can use all skills while hidden.
-				if (!skill_id || src->type == BL_PC)
-					return 0;
+				case TF_HIDING:
+				case AS_GRIMTOOTH:
+				case RG_BACKSTAP:
+				case RG_RAID:
+				case NJ_SHADOWJUMP:
+				case NJ_KIRIKAGE:
+				case KO_YAMIKUMO:
+					break;
+				default:
+					//Non players can use all skills while hidden.
+					if (!skill_id || src->type == BL_PC)
+						return 0;
 			}
 		}
 		if (sc->option&OPTION_CHASEWALK && skill_id != ST_CHASEWALK)
@@ -1744,54 +1744,63 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 		if(skill_id == PR_LEXAETERNA && (tsc->data[SC_FREEZE] || (tsc->data[SC_STONE] && tsc->opt1 == OPT1_STONE)))
 			return 0;
 	}
-
 	//If targetting, cloak+hide protect you, otherwise only hiding does.
 	hide_flag = flag?OPTION_HIDE:(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK);
 
 	//You cannot hide from ground skills.
 	if( skill->get_ele(skill_id,1) == ELE_EARTH ) //TODO: Need Skill Lv here :/
 		hide_flag &= ~OPTION_HIDE;
-
-	switch( target->type ) {
-	case BL_PC: {
-		struct map_session_data *sd = (TBL_PC*) target;
-		bool is_boss = (status->mode&MD_BOSS);
-		bool is_detect = ((status->mode&MD_DETECTOR)?true:false);//god-knows-why gcc doesn't shut up until this happens
-		if (pc_isinvisible(sd))
-			return 0;
-		if (tsc->option&hide_flag && !is_boss &&
-			((sd->special_state.perfect_hiding || !is_detect) ||
-			(tsc->data[SC_CLOAKINGEXCEED] && is_detect)))
-			return 0;
-		if( tsc->data[SC_CAMOUFLAGE] && !(is_boss || is_detect) && !skill_id )
-			return 0;
-		if( tsc->data[SC_STEALTHFIELD] && !is_boss )
-			return 0;
-				}
+	else {
+		switch ( skill_id ) {
+			case LG_OVERBRAND:
+			case LG_OVERBRAND_BRANDISH:
+			case LG_OVERBRAND_PLUSATK:
+				hide_flag &=~ OPTION_CLOAK|OPTION_CHASEWALK;
 				break;
-	case BL_ITEM:	//Allow targetting of items to pick'em up (or in the case of mobs, to loot them).
-		//TODO: Would be nice if this could be used to judge whether the player can or not pick up the item it targets. [Skotlex]
-		if (status->mode&MD_LOOTER)
-			return 1;
-		return 0;
-	case BL_HOM:
-	case BL_MER:
-	case BL_ELEM:
-		if( target->type == BL_HOM && skill_id && battle_config.hom_setting&0x1 && skill->get_inf(skill_id)&INF_SUPPORT_SKILL && battle->get_master(target) != src )
-			return 0; // Can't use support skills on Homunculus (only Master/Self)
-		if( target->type == BL_MER && (skill_id == PR_ASPERSIO || (skill_id >= SA_FLAMELAUNCHER && skill_id <= SA_SEISMICWEAPON)) && battle->get_master(target) != src )
-			return 0; // Can't use Weapon endow skills on Mercenary (only Master)
-		if( skill_id == AM_POTIONPITCHER && ( target->type == BL_MER || target->type == BL_ELEM) )
-			return 0; // Can't use Potion Pitcher on Mercenaries
-	default:
-		//Check for chase-walk/hiding/cloaking opponents.
-		if( tsc ) {
-			if( tsc->option&hide_flag && !(status->mode&(MD_BOSS|MD_DETECTOR)))
-				return 0;
-			if( tsc->data[SC_STEALTHFIELD] && !(status->mode&MD_BOSS) )
-				return 0;
 		}
 	}
+
+	switch( target->type ) {
+		case BL_PC: {
+				struct map_session_data *sd = (TBL_PC*) target;
+				bool is_boss = (status->mode&MD_BOSS);
+				bool is_detect = ((status->mode&MD_DETECTOR)?true:false);//god-knows-why gcc doesn't shut up until this happens
+				if (pc_isinvisible(sd))
+					return 0;
+				if (tsc->option&hide_flag && !is_boss &&
+					((sd->special_state.perfect_hiding || !is_detect) ||
+					(tsc->data[SC_CLOAKINGEXCEED] && is_detect)))
+					return 0;
+				if( tsc->data[SC_CAMOUFLAGE] && !(is_boss || is_detect) && !skill_id )
+					return 0;
+				if( tsc->data[SC_STEALTHFIELD] && !is_boss )
+					return 0;
+			}
+			break;
+		case BL_ITEM:	//Allow targetting of items to pick'em up (or in the case of mobs, to loot them).
+			//TODO: Would be nice if this could be used to judge whether the player can or not pick up the item it targets. [Skotlex]
+			if (status->mode&MD_LOOTER)
+				return 1;
+			return 0;
+		case BL_HOM:
+		case BL_MER:
+		case BL_ELEM:
+			if( target->type == BL_HOM && skill_id && battle_config.hom_setting&0x1 && skill->get_inf(skill_id)&INF_SUPPORT_SKILL && battle->get_master(target) != src )
+				return 0; // Can't use support skills on Homunculus (only Master/Self)
+			if( target->type == BL_MER && (skill_id == PR_ASPERSIO || (skill_id >= SA_FLAMELAUNCHER && skill_id <= SA_SEISMICWEAPON)) && battle->get_master(target) != src )
+				return 0; // Can't use Weapon endow skills on Mercenary (only Master)
+			if( skill_id == AM_POTIONPITCHER && ( target->type == BL_MER || target->type == BL_ELEM) )
+				return 0; // Can't use Potion Pitcher on Mercenaries
+		default:
+			//Check for chase-walk/hiding/cloaking opponents.
+			if( tsc ) {
+				if( tsc->option&hide_flag && !(status->mode&(MD_BOSS|MD_DETECTOR)))
+					return 0;
+				if( tsc->data[SC_STEALTHFIELD] && !(status->mode&MD_BOSS) )
+					return 0;
+			}
+	}
+
 	return 1;
 }
 

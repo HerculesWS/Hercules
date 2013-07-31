@@ -3207,6 +3207,11 @@ int skill_timerskill(int tid, unsigned int tick, int id, intptr_t data) {
 					break;
 				case LG_OVERBRAND_BRANDISH:
 				case LG_OVERBRAND_PLUSATK:
+					if( iStatus->check_skilluse(src, target, skl->skill_id, 1) )
+						skill->attack(BF_WEAPON, src, src, target, skl->skill_id, skl->skill_lv, tick, skl->flag|SD_LEVEL);
+					else
+						clif->skill_damage(src, target, tick, status_get_amotion(src), status_get_dmotion(target), 0, 1, skl->skill_id, skl->skill_lv, skill->get_hit(skl->skill_id));
+					break;
 				case SR_KNUCKLEARROW:
 					skill->attack(BF_WEAPON, src, src, target, skl->skill_id, skl->skill_lv, tick, skl->flag|SD_LEVEL);
 					break;
@@ -4350,7 +4355,10 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 			break;
 
 		case LG_OVERBRAND:
-			skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag|SD_LEVEL);
+				if( iStatus->check_skilluse(src, bl, skill_id, 1) )
+					skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag|SD_LEVEL);
+				else
+					clif->skill_damage(src, bl, tick, status_get_amotion(src), status_get_dmotion(bl), 0, 1, skill_id, skill_lv, skill->get_hit(skill_id));
 			break;
 
 		case LG_OVERBRAND_BRANDISH:
