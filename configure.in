@@ -790,6 +790,7 @@ AC_SEARCH_LIBS([clock_gettime], [rt])
 # (ref. bugreport:1003).
 #
 if test "$ac_cv_search_clock_gettime" != "no" ; then
+	CGLAGS="$CFLAGS -DHAVE_CLOCK_GETTIME"
 	AC_MSG_CHECKING([whether CLOCK_MONOTONIC is supported and works])
 	AC_RUN_IFELSE(
 		[AC_LANG_SOURCE([
@@ -810,6 +811,37 @@ if test "$ac_cv_search_clock_gettime" != "no" ; then
 		[
 			# either it failed to compile (CLOCK_MONOTONIC undefined)
 			# or clock_gettime has returned a non-zero value
+			AC_MSG_RESULT([no])
+		],
+		[
+			AC_MSG_RESULT([guessing no])
+		]
+	)
+fi
+
+# Mac OS X doesn't have clock_gettime, but it can use mach_absolute_time.
+# Let's check if we can use it.
+if test "$ac_cv_search_clock_gettime" == "no" ; then
+	AC_MSG_CHECKING([whether mach_absolute_time is supported and works])
+	AC_RUN_IFELSE(
+		[AC_LANG_SOURCE([
+			#include <mach/mach.h>
+			#include <mach/mach_time.h>
+			#include <unistd.h>
+
+			int main(int argc, char** argv)
+			{
+				mach_timebase_info_data_t sTimebaseInfo;
+				(void) mach_timebase_info(&sTimebaseInfo);
+				mach_absolute_time();
+				return 0;
+			}
+		])],
+		[
+			AC_MSG_RESULT([yes])
+			CFLAGS="$CFLAGS -DHAVE_MACH_ABSOLUTE_TIME"
+		],
+		[
 			AC_MSG_RESULT([no])
 		],
 		[

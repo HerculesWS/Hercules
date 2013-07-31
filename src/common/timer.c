@@ -21,6 +21,11 @@
 #include <sys/time.h> // struct timeval, gettimeofday()
 #endif
 
+#ifdef HAVE_MACH_ABSOLUTE_TIME
+#include <mach/mach.h>
+#include <mach/mach_time.h>
+#endif
+
 // If the server can't handle processing thousands of monsters
 // or many connected clients, please increase TIMER_MIN_INTERVAL.
 #define TIMER_MIN_INTERVAL 50
@@ -195,10 +200,16 @@ void timer_cputimer_start(uint64 *start_time)
 {
 #if defined(WIN32)
 	QueryPerformanceCounter((LARGE_INTEGER*)start_time);
-#else
+#elif defined(HAVE_CLOCK_GETTIME)
 	struct timespec tval;
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tval);
 	*start_time = tval.tv_sec * 1000 + tval.tv_nsec / 1000000;
+#elif defined(HAVE_MACH_ABSOLUTE_TIME)
+	// http://developer.apple.com/library/mac/#qa/qa1398/_index.html
+	*start_time = mach_absolute_time();
+#else
+	// Fallback in case nothing else is available (note: it can wrap)
+	*start_time = (uint64)clock();
 #endif
 }
 
@@ -208,13 +219,23 @@ double timer_cputimer_stop(uint64 start_time)
 	uint64 end_time, ldFreq;
 	QueryPerformanceCounter((LARGE_INTEGER*)&end_time);
 	QueryPerformanceFrequency((LARGE_INTEGER*)&ldFreq);
-	return ((double)(end_time - start_time) / (double)ldFreq) * 1000.0;
-#else
+	return ((double)(end_time - start_time) / (double)ldFreq) * 1000.0; // s -> ms
+#elif defined(HAVE_CLOCK_GETTIME)
 	struct timespec tval;
 	uint64 end_time;
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tval);
-	end_time = tval.tv_sec * 1000 + tval.tv_nsec / 1000000;
+	end_time = tval.tv_sec * 1000 + tval.tv_nsec / 1000000; // s -> ms + ns -> ms
 	return (double)(end_time - start_time);
+#elif defined(HAVE_MACH_ABSOLUTE_TIME)
+	static mach_timebase_info_data_t sTimebaseInfo;
+	uint64 end_time = mach_absolute_time();
+	if( sTimebaseInfo.denom == 0 ) { // Uninitialized (denom can never be zero)
+		(void) mach_timebase_info(&sTimebaseInfo);
+	}
+	return (double)(end_time - start_time) * sTimebaseInfo.numer / (double)sTimebaseInfo.denom / 1000000; // ns -> ms
+#else
+	uint64 end_time = (uint64)clock();
+	return (double)(end_time - start_time) / (double)CLOCKS_PER_SEC * 1000; // s -> ms
 #endif
 }
 
