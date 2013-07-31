@@ -954,7 +954,7 @@ struct pc_interface {
 	
 	void (*baselevelchanged) (struct map_session_data *sd);
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
-	int (*level_penalty_mod) (struct map_session_data *sd, struct mob_data * md, int type);
+	int (*level_penalty_mod) (int diff, unsigned char race, unsigned short mode, int type);
 #endif
 };
 

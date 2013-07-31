@@ -6656,8 +6656,7 @@ ACMD(mobinfo)
 	}
 	
 	// If monster identifier/name argument is a name
-	if ((i = mobdb_checkid(atoi(message))))
-	{
+	if ((i = mobdb_checkid(atoi(message)))) {
 		mob_array[0] = mob_db(i);
 		count = 1;
 	} else
@@ -6673,8 +6672,21 @@ ACMD(mobinfo)
 		clif->message(fd, atcmd_output);
 		count = MAX_SEARCH;
 	}
+	
 	for (k = 0; k < count; k++) {
+		unsigned int job_exp, base_exp;
+		
 		mob = mob_array[k];
+		
+		job_exp  = mob->job_exp;
+		base_exp = mob->base_exp;
+		
+#ifdef RENEWAL_EXP
+		if( battle_config.atcommand_mobinfo_type ) {
+			base_exp = base_exp * pc->level_penalty_mod(mob->lv - sd->status.base_level, mob->status.race, mob->status.mode, 1) / 100;
+			job_exp = job_exp * pc->level_penalty_mod(mob->lv - sd->status.base_level, mob->status.race, mob->status.mode, 1) / 100;
+		}
+#endif
 		
 		// stats
 		if (mob->mexp)
@@ -6682,8 +6694,10 @@ ACMD(mobinfo)
 		else
 			sprintf(atcmd_output, msg_txt(1241), mob->name, mob->jname, mob->sprite, mob->vd.class_); // Monster: '%s'/'%s'/'%s' (%d)
 		clif->message(fd, atcmd_output);
-		sprintf(atcmd_output, msg_txt(1242), mob->lv, mob->status.max_hp, mob->base_exp, mob->job_exp,MOB_HIT(mob), MOB_FLEE(mob)); //  Lv:%d  HP:%d  Base EXP:%u  Job EXP:%u  HIT:%d  FLEE:%d
+		
+		sprintf(atcmd_output, msg_txt(1242), mob->lv, mob->status.max_hp, base_exp, job_exp,MOB_HIT(mob), MOB_FLEE(mob)); //  Lv:%d  HP:%d  Base EXP:%u  Job EXP:%u  HIT:%d  FLEE:%d
 		clif->message(fd, atcmd_output);
+		
 		sprintf(atcmd_output, msg_txt(1243), //  DEF:%d  MDEF:%d  STR:%d  AGI:%d  VIT:%d  INT:%d  DEX:%d  LUK:%d
 				mob->status.def, mob->status.mdef,mob->status.str, mob->status.agi,
 				mob->status.vit, mob->status.int_, mob->status.dex, mob->status.luk);
@@ -6694,26 +6708,41 @@ ACMD(mobinfo)
 				mob->range2 , mob->range3, msize[mob->status.size],
 				mrace[mob->status.race], melement[mob->status.def_ele], mob->status.ele_lv);
 		clif->message(fd, atcmd_output);
+		
 		// drops
 		clif->message(fd, msg_txt(1245)); //  Drops:
 		strcpy(atcmd_output, " ");
 		j = 0;
 		for (i = 0; i < MAX_MOB_DROP; i++) {
 			int droprate;
+			
 			if (mob->dropitem[i].nameid <= 0 || mob->dropitem[i].p < 1 || (item_data = itemdb->exists(mob->dropitem[i].nameid)) == NULL)
 				continue;
+			
 			droprate = mob->dropitem[i].p;
+
+#ifdef RENEWAL_DROP
+			if( battle_config.atcommand_mobinfo_type ) {
+				droprate = droprate * pc->level_penalty_mod(mob->lv - sd->status.base_level, mob->status.race, mob->status.mode, 2) / 100;
+				
+				if (droprate <= 0 && !battle_config.drop_rate0item)
+					droprate = 1;
+			}
+#endif
 			
 			if (item_data->slot)
 				sprintf(atcmd_output2, " - %s[%d]  %02.02f%%", item_data->jname, item_data->slot, (float)droprate / 100);
 			else
 				sprintf(atcmd_output2, " - %s  %02.02f%%", item_data->jname, (float)droprate / 100);
+			
 			strcat(atcmd_output, atcmd_output2);
+			
 			if (++j % 3 == 0) {
 				clif->message(fd, atcmd_output);
 				strcpy(atcmd_output, " ");
 			}
 		}
+		
 		if (j == 0)
 			clif->message(fd, msg_txt(1246)); // This monster has no drops.
 		else if (j % 3 != 0)
@@ -6722,6 +6751,7 @@ ACMD(mobinfo)
 		if (mob->mexp) {
 			sprintf(atcmd_output, msg_txt(1247), mob->mexp); //  MVP Bonus EXP:%u
 			clif->message(fd, atcmd_output);
+			
 			strcpy(atcmd_output, msg_txt(1248)); //  MVP Items:
 			j = 0;
 			for (i = 0; i < MAX_MVP_DROP; i++) {
@@ -7202,10 +7232,12 @@ ACMD(iteminfo)
 		
 		if (item_data->maxchance == -1)
 			strcpy(atcmd_output, msg_txt(1281)); //  - Available in the shops only.
-		else if (!battle_config.atcommand_mobinfo_type && item_data->maxchance)
-			sprintf(atcmd_output, msg_txt(1282), (float)item_data->maxchance / 100 ); //  - Maximal monsters drop chance: %02.02f%%
-		else
-			strcpy(atcmd_output, msg_txt(1283)); //  - Monsters don't drop this item.
+		else if ( !battle_config.atcommand_mobinfo_type ) {
+			if( item_data->maxchance )
+				sprintf(atcmd_output, msg_txt(1282), (float)item_data->maxchance / 100 ); //  - Maximal monsters drop chance: %02.02f%%
+			else
+				strcpy(atcmd_output, msg_txt(1283)); //  - Monsters don't drop this item.
+		}
 		clif->message(fd, atcmd_output);
 		
 	}

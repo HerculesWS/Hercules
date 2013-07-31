@@ -2285,7 +2285,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			if(base_exp || job_exp) {
 				if( md->dmglog[i].flag != MDLF_PET || battle_config.pet_attack_exp_to_master ) {
 #ifdef RENEWAL_EXP
-					int rate = pc->level_penalty_mod(tmpsd[i], md, 1);
+					int rate = pc->level_penalty_mod(md->level - (tmpsd[i])->status.base_level, md->status.race, md->status.mode, 1);
 					base_exp = (unsigned int)cap_value(base_exp * rate / 100, 1, UINT_MAX);
 					job_exp = (unsigned int)cap_value(job_exp * rate / 100, 1, UINT_MAX);
 #endif
@@ -2313,9 +2313,9 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		struct item_data* it = NULL;
 		int drop_rate;
 #ifdef RENEWAL_DROP
-		int drop_modifier = mvp_sd    ? pc->level_penalty_mod(mvp_sd, md, 2)   :
-							second_sd ? pc->level_penalty_mod(second_sd, md, 2):
-							third_sd  ? pc->level_penalty_mod(third_sd, md, 2) :
+		int drop_modifier = mvp_sd    ? pc->level_penalty_mod( md->level - mvp_sd->status.base_level, md->status.race, md->status.mode, 2)   :
+							second_sd ? pc->level_penalty_mod( md->level - second_sd->status.base_level, md->status.race, md->status.mode, 2):
+							third_sd  ? pc->level_penalty_mod( md->level - third_sd->status.base_level, md->status.race, md->status.mode, 2) :
 							100;/* no player was attached, we dont use any modifier (100 = rates are not touched) */
 #endif
 		dlist->m = md->bl.m;
