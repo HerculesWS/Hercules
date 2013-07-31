@@ -6813,7 +6813,8 @@ ACMD(homlevel)
 {
 	TBL_HOM * hd;
 	int level = 0;
-	
+	enum homun_type htype;
+
 	nullpo_retr(-1, sd);
 	
 	if ( !message || !*message || ( level = atoi(message) ) < 1 ) {
@@ -6827,11 +6828,35 @@ ACMD(homlevel)
 	}
 	
 	hd = sd->hd;
+		
+	if((htype = homun->class2type(hd->homunculus.class_)) == -1) {
+		ShowError("atcommand_homlevel: invalid homun class %d (player %s)\n", hd->homunculus.class_,sd->status.name);
+		return false;
+	}
+
+	switch( htype ) {
+		case HT_REG:
+		case HT_EVO:
+			if( hd->homunculus.level >= battle_config.hom_max_level ) {
+				snprintf(atcmd_output, sizeof(atcmd_output), msg_txt(1478), hd->homunculus.level); // Homun reached its maximum level of '%d'
+				clif->message(fd, atcmd_output);
+				return true;
+			}
+			break;
+		case HT_S:
+			if( hd->homunculus.level >= battle_config.hom_S_max_level ) {
+				snprintf(atcmd_output, sizeof(atcmd_output), msg_txt(1478), hd->homunculus.level); // Homun reached its maximum level of '%d'
+				clif->message(fd, atcmd_output);
+				return true;
+			}
+			break;
+		default:
+			ShowError("atcommand_homlevel: unknown htype '%d'\n",htype);
+			return false;
+	}
 	
-	if ( battle_config.hom_max_level == hd->homunculus.level ) // Already reach maximum level
-		return true;
-	
-	do{
+		
+	do {
 		hd->homunculus.exp += hd->exp_next;
 	} while( hd->homunculus.level < level && homun->levelup(hd) );
 	
@@ -6903,7 +6928,10 @@ ACMD(makehomun) {
 	homunid = atoi(message);
 	
 	if( homunid == -1 && sd->status.hom_id && !homun_alive(sd->hd) ) {
-		homun->call(sd);
+		if( !sd->hd->homunculus.vaporize )
+			homun->ressurect(sd, 100, sd->bl.x, sd->bl.y);
+		else
+			homun->call(sd);
 		return true;
 	}
 		
