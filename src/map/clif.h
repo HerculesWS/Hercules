@@ -52,7 +52,8 @@ struct skill_cd;
  * Enumerations
  **/
 enum {// packet DB
-	MAX_PACKET_DB  = 0xF00,
+	MIN_PACKET_DB  = 0x0064,
+	MAX_PACKET_DB  = 0x0F00,
 	MAX_PACKET_POS = 20,
 };
 

@@ -502,7 +502,8 @@ struct map_session_data {
 	unsigned int queues_count;
 	
 	/* Made Possible Thanks to Yommy~! */
-	unsigned int cryptKey;
+	unsigned int cryptKey;                                                 ///< Packet obfuscation key to be used for the next received packet
+	unsigned short (*parse_cmd_func)(int fd, struct map_session_data *sd); ///< parse_cmd_func used by this player
 	
 	unsigned char delayed_damage;//ref. counter bugreport:7307 [Ind/Hercules]
 	
