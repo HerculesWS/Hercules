@@ -10293,7 +10293,7 @@ bool atcommand_hp_add(char *name, AtCommandFunc func) {
 		return false;
 	}
 	
-	if( !atcommand->db )
+	if( atcommand->db == NULL )
 		atcommand->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
 	
 	if( atcommand->exists(name) ) {
@@ -10315,8 +10315,7 @@ bool atcommand_hp_add(char *name, AtCommandFunc func) {
 /**
  * @see DBApply
  */
-static int atcommand_db_clear_sub(DBKey key, DBData *data, va_list args)
-{
+static int atcommand_db_clear_sub(DBKey key, DBData *data, va_list args) {
 	AtCommandInfo *cmd = DB->data2ptr(data);
 	aFree(cmd->at_groups);
 	aFree(cmd->char_groups);
@@ -10325,20 +10324,24 @@ static int atcommand_db_clear_sub(DBKey key, DBData *data, va_list args)
 	return 0;
 }
 
-void atcommand_db_clear(void)
-{
-	if (atcommand->db != NULL)
+void atcommand_db_clear(void) {
+	if( atcommand->db != NULL ) {
 		atcommand->db->destroy(atcommand->db, atcommand_db_clear_sub);
-	if (atcommand->alias_db != NULL)
+		atcommand->db = NULL;
+	}
+	if( atcommand->alias_db != NULL ) {
 		db_destroy(atcommand->alias_db);
+		atcommand->alias_db = NULL;
+	}
 }
 
 void atcommand_doload(void) {
 	if( runflag >= MAPSERVER_ST_RUNNING )
 		atcommand_db_clear();
-	if( !atcommand->db )
+	if( atcommand->db == NULL )
 		atcommand->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
-	atcommand->alias_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
+	if( atcommand->alias_db == NULL )
+		atcommand->alias_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
 	atcommand_basecommands(); //fills initial atcommand_db with known commands
 	atcommand_config_read(iMap->ATCOMMAND_CONF_FILENAME);
 }
