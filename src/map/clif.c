@@ -17535,10 +17535,10 @@ int clif_parse(int fd) {
 	// Note: "click masters" can do 80+ clicks in 10 seconds
 	
 	for( pnum = 0; pnum < 3; ++pnum ) { // Limit max packets per cycle to 3 (delay packet spammers) [FlavioJS]  -- This actually aids packet spammers, but stuff like /str+ gets slow without it [Ai4rei]
+		unsigned short (*parse_cmd_func)(int fd, struct map_session_data *sd);
 		// begin main client packet processing loop
 		
 		sd = (TBL_PC *)session[fd]->session_data;
-		unsigned short (*parse_cmd_func)(int fd, struct map_session_data *sd);
 
 		if (session[fd]->flag.eof) {
 			if (sd) {
