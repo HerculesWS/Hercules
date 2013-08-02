@@ -11,7 +11,7 @@
 typedef struct AccountDB AccountDB;
 typedef struct AccountDBIterator AccountDBIterator;
 
-#define PASSWORD_LENGTH BCRYPT_HASHSIZE // bcrypt has longest hash
+#define PASSWORD_LENGTH (BCRYPT_HASHSIZE + 1) // bcrypt has longest hash; +1 for '*' at the end of bcrypt(md5(pass)) hashes
 
 // standard engines
 AccountDB* account_db_sql(void);

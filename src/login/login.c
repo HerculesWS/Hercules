@@ -3,6 +3,7 @@
 // Portions Copyright (c) Athena Dev Teams
 
 #include "../common/bcrypt.h"
+#include "../common/cbasetypes.h"
 #include "../common/console.h"
 #include "../common/core.h"
 #include "../common/db.h"
@@ -259,36 +260,6 @@ bool check_encrypted(const char* str1, const char* str2, const char* passwd)
 	return (0==strcmp(passwd, md5str));
 }
 
-static bool check_password(const char *md5key, int passwdenc, const char *passwd, const char *refpass)
-{
-	if(passwdenc == 0)
-	{
-		if (login_config.pass_store_method == PASS_STORE_MD5) {
-			char md5hash[MD5_HASHSIZE] = "";
-			MD5_String(passwd, md5hash);
-			return (0 == strcmp(refpass, md5hash));
-		}
-		else if (login_config.pass_store_method == PASS_STORE_BCRYPT) {
-			char hash[BCRYPT_HASHSIZE] = "";
-			if (bcrypt_hashpw(passwd, refpass, hash) != 0)
-				return false;
-			return (0 == strcmp(refpass, hash));
-		}
-		else {
-			return (0 == strcmp(refpass, passwd));
-		}
-	}
-	else
-	{
-		// password mode set to 1 -> md5(md5key, refpass) enable with <passwordencrypt></passwordencrypt>
-		// password mode set to 2 -> md5(refpass, md5key) enable with <passwordencrypt2></passwordencrypt2>
-		
-		return ((passwdenc&0x01) && check_encrypted(md5key, refpass, passwd)) ||
-		       ((passwdenc&0x02) && check_encrypted(refpass, md5key, passwd));
-	}
-}
-
-
 /**
  * Creates new password hash using password storage method
  * defined in login-server configuration file.
@@ -312,6 +283,87 @@ static int password_hash(const char *password, char *output)
 			break;
 	}
 	return 0;
+}
+
+static bool check_password(struct login_session_data *sd, struct mmo_account *acc)
+{
+	char *md5key = sd->md5key;
+	int passwdenc = sd->passwdenc;
+	char *passwd = sd->passwd;
+	char *refpass = acc->pass;
+	if(passwdenc == 0)
+	{
+		if (login_config.pass_store_method == PASS_STORE_MD5) {
+			char md5hash[MD5_HASHSIZE] = "";
+			MD5_String(passwd, md5hash);
+			return (0 == strcmp(refpass, md5hash));
+		}
+		else if (login_config.pass_store_method == PASS_STORE_BCRYPT) {
+			char hash[PASSWORD_LENGTH] = "";
+			char pass_copy[NAME_LENGTH] = "";
+			bool bcrypted_md5 = false;
+			if (refpass[PASSWORD_LENGTH - 2] == '*') { // if last char is '*' it's bcrypt(md5(pass))
+				bcrypted_md5 = true;
+				safestrncpy(pass_copy, passwd, sizeof(pass_copy)); // save password so we can update it later to bcrypt(pass)
+				MD5_String(passwd, passwd);
+			}
+			if (bcrypt_hashpw(passwd, refpass, hash) != 0)
+				return false;
+			if (bcrypted_md5) {
+				hash[PASSWORD_LENGTH - 2] = '*'; // append '*' at the end, so that strcmp() doesn't fail
+				hash[PASSWORD_LENGTH - 1] = '\0';
+			}
+			if (0 == strcmp(refpass, hash)) {
+				if (bcrypted_md5) { // perform update
+					if (password_hash(pass_copy, hash) != 0) {
+						ShowError("check_password: error updating password storage method for account ID=%d\n", acc->account_id);
+					} else {
+						safestrncpy(acc->pass, hash, sizeof(acc->pass));
+						if (accounts->save(accounts, acc))
+							ShowInfo("Updated password storage method for account ID=%d\n", acc->account_id);
+					}
+				}
+				return true;
+			}
+			return false;
+		}
+		else {
+			return (0 == strcmp(refpass, passwd));
+		}
+	}
+	else
+	{
+		// password mode set to 1 -> md5(md5key, refpass) enable with <passwordencrypt></passwordencrypt>
+		// password mode set to 2 -> md5(refpass, md5key) enable with <passwordencrypt2></passwordencrypt2>
+		return ((passwdenc&0x01) && check_encrypted(md5key, refpass, passwd)) ||
+		       ((passwdenc&0x02) && check_encrypted(refpass, md5key, passwd));
+	}
+}
+
+static enum pass_store password_guess_store_method(const char *password)
+{
+	int i;
+	size_t len = strnlen(password, PASSWORD_LENGTH) + 1;
+
+	if (len >= BCRYPT_HASHSIZE
+	    && password[0] == '$' && password[1] == '2'
+	    && (password[2] == 'a' || password[2] == 'y') && password[3] == '$'
+	    && ISDIGIT(password[4]) && ISDIGIT(password[5]) && password[6] == '$'
+	) {
+		ARR_FIND(7, BCRYPT_HASHSIZE, i, !ISALNUM(password[i]) && password[i] != '.' && password[i] != '/');
+		if ((i == BCRYPT_HASHSIZE - 1 && (len == BCRYPT_HASHSIZE || (len == BCRYPT_HASHSIZE + 1 && password[len - 2] == '*'))))
+			return PASS_STORE_BCRYPT;
+	}
+
+	if (len == MD5_HASHSIZE) {
+		ARR_FIND(0, len, i, !ISALNUM(password[i]) || (ISALPHA(password[i]) && !ISLOWER(password[i])));
+		if (i == len - 1)
+			return PASS_STORE_MD5;
+	}
+
+	if (len > 1 && len <= NAME_LENGTH)
+		return PASS_STORE_PLAINTEXT;
+	return -1;
 }
 
 //-----------------------------------------------------
@@ -1051,7 +1103,7 @@ int mmo_auth(struct login_session_data* sd, bool isServer) {
 		return 0; // 0 = Unregistered ID
 	}
 
-	if( !check_password(sd->md5key, sd->passwdenc, sd->passwd, acc.pass) ) {
+	if( !check_password(sd, &acc) ) {
 		ShowNotice("Invalid password (account: '%s', pass: '%s', received pass: '%s', ip: %s)\n", sd->userid, acc.pass, sd->passwd, ip);
 		return 1; // 1 = Incorrect Password
 	}
@@ -1636,10 +1688,80 @@ CPCMD(bcrypt_benchmark)
 	ShowStatus("bcrypt benchmark: done\n");
 }
 
+CPCMD(bcrypt_update)
+{
+	int i;
+	char input[20] = "";
+
+	if (line == NULL || sscanf(line, "%19s", input) != 1 || strncmp(input, "all", 19)) {
+		ShowNotice("bcrypt update: Updates password storage method to bcrypt.\n");
+		ShowNotice("bcrypt update: To upgrade passwords to all accounts use '"CL_WHITE"bcrypt update all"CL_RESET"'.\n");
+		ShowNotice("bcrypt update: Please note that this is a time-consuming process.\n");
+		ShowWarning("bcrypt update: BACKUP YOUR DATABASE FIRST!\n");
+		return;
+	}
+	if (login_config.pass_store_method == PASS_STORE_BCRYPT) {
+		ShowWarning("bcrypt update: Currently selected password storage method is 'bcrypt'. Looks like there is nothing to update.\n");
+		ShowWarning("bcrypt update: If you are sure that passwords in database are not in bcrypt format, please set 'pass_store_method' in '%s' to your current password storage method.\n", LOGIN_CONF_NAME);
+		return;
+	}
+	ARR_FIND(0, ARRAYLENGTH(server), i, server[i].fd != -1);
+	if (i != ARRAYLENGTH(server))
+	{
+		ShowWarning("bcrypt update: Unable to update when char-server is connected.\n");
+		ShowWarning("bcrypt update: Please shutdown char- and map-servers first.\n");
+		return;
+	}
+	{
+		int count = 0;
+		struct mmo_account account;
+		AccountDBIterator *iter = accounts->iterator(accounts);
+		ShowStatus("bcrypt update: Current password storage method: %s\n", login_config.pass_store_method == PASS_STORE_PLAINTEXT ? "plaintext" : "md5");
+		while (iter->next(iter, &account)) {
+			char hash[PASSWORD_LENGTH] = "";
+			enum pass_store store_method = password_guess_store_method(account.pass);
+			switch(store_method) {
+				case PASS_STORE_BCRYPT:
+					ShowError("bcrypt update: password for account id %d already in bcrypt format... skipping\n", account.account_id);
+					continue;
+				case PASS_STORE_MD5:
+				case PASS_STORE_PLAINTEXT:
+					if (bcrypt_hashnew(account.pass, hash, login_config.bcrypt_rounds) != 0) {
+						ShowWarning("bcrypt update: Error hashing password. Aborting.\n");
+						return;
+					}
+					if (store_method == PASS_STORE_MD5) {
+						hash[PASSWORD_LENGTH - 2] = '*';
+						hash[PASSWORD_LENGTH - 1] = '\0';
+					}
+					safestrncpy(account.pass, hash, sizeof(account.pass));
+					if (accounts->save(accounts, &account)) {
+						ShowInfo("bcrypt update: Updated account '%s' (%d)\n", account.userid, account.account_id);
+						count++;
+					} else {
+						ShowError("bcrypt update: Error updating account data. Aborting\n");
+						return;
+					}
+					break;
+				default:
+					ShowError("bcrypt update: invalid password for account id %d... skipping\n", account.account_id);
+					continue;
+			}
+		}
+		ShowStatus("bcrypt update: Finished. %d accounts updated\n", count);
+		if (count) {
+			ShowStatus("bcrypt update: Changed pass_store_method to bcrypt.\n");
+			ShowNotice("bcrypt update: Please update your login-server configuration file: 'pass_store_method: %d'\n", PASS_STORE_BCRYPT);
+			login_config.pass_store_method = PASS_STORE_BCRYPT;
+		}
+	}
+}
+
 static void console_init(void)
 {
 	console->addCommand("bcrypt:benchmark", CPCMD_A(bcrypt_benchmark));
 	console->addCommand("bcrypt:hash", CPCMD_A(bcrypt_hash));
+	console->addCommand("bcrypt:update", CPCMD_A(bcrypt_update));
 }
 
 void login_set_defaults()
@@ -1720,7 +1842,7 @@ int login_config_read(const char* cfgName)
 			login_config.check_client_version = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "client_version_to_connect"))
 			login_config.client_version_to_connect = strtoul(w2, NULL, 10);
-		else if(!strcmpi(w1, "use_MD5_passwords")) {
+		else if(!strcmpi(w1, "password_store_method")) {
 			login_config.pass_store_method = atoi(w2); //TODO: validate values like in map-server battle_config
 			if(login_config.pass_store_method <= PASS_STORE_MIN ||
 			   login_config.pass_store_method >= PASS_STORE_MAX) {
