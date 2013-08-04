@@ -853,7 +853,53 @@ static int clif_setlevel(struct block_list* bl) {
 	}
 	return lv;
 }
-
+#if PACKETVER < 20091103
+/* for 'packetver < 20091103' 0x78 non-pc-looking unit handling */
+void clif_set_unit_idle2(struct block_list* bl, struct map_session_data *tsd, enum send_target target) {
+	struct map_session_data* sd;
+	struct status_change* sc = iStatus->get_sc(bl);
+	struct view_data* vd = iStatus->get_viewdata(bl);
+	struct packet_idle_unit2 p;
+	int g_id = iStatus->get_guild_id(bl);
+	
+	sd = BL_CAST(BL_PC, bl);
+	
+	p.PacketType = idle_unit2Type;
+	p.objecttype = clif_bl_type(bl);
+	p.GID = bl->id;
+	p.speed = iStatus->get_speed(bl);
+	p.bodyState = (sc) ? sc->opt1 : 0;
+	p.healthState = (sc) ? sc->opt2 : 0;
+	p.effectState = (sc) ? sc->option : bl->type == BL_NPC ? ((TBL_NPC*)bl)->option : 0;
+	p.job = vd->class_;
+	p.head = vd->hair_style;
+	p.weapon = vd->weapon;
+	p.accessory = vd->head_bottom;
+	p.shield = vd->shield;
+	p.accessory2 = vd->head_top;
+	p.accessory3 = vd->head_mid;
+	if( bl->type == BL_NPC && vd->class_ == FLAG_CLASS ) { //The hell, why flags work like this?
+		p.shield = iStatus->get_emblem_id(bl);
+		p.accessory2 = GetWord(g_id, 1);
+		p.accessory3 = GetWord(g_id, 0);
+	}
+	p.headpalette = vd->hair_color;
+	p.bodypalette = vd->cloth_color;
+	p.headDir = (sd)? sd->head_dir : 0;
+	p.GUID = g_id;
+	p.GEmblemVer = iStatus->get_emblem_id(bl);
+	p.honor = (sd) ? sd->status.manner : 0;
+	p.virtue = (sc) ? sc->opt3 : 0;
+	p.isPKModeON = (sd) ? sd->status.karma : 0;
+	p.sex = vd->sex;
+	WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit_getdir(bl));
+	p.xSize = p.ySize = (sd) ? 5 : 0;
+	p.state = vd->dead_sit;
+	p.clevel = clif_setlevel(bl);
+	
+	clif->send(&p,sizeof(p),tsd?&tsd->bl:bl,target);
+}
+#endif
 /*==========================================
  * Prepares 'unit standing' packet
  *------------------------------------------*/
@@ -863,6 +909,11 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	struct view_data* vd = iStatus->get_viewdata(bl);
 	struct packet_idle_unit p;
 	int g_id = iStatus->get_guild_id(bl);
+	
+#if PACKETVER < 20091103
+	if( !pcdb_checkid(vd->class_) )
+		return clif->set_unit_idle2(bl,tsd,target);
+#endif
 	
 	sd = BL_CAST(BL_PC, bl);
 	
@@ -886,7 +937,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	p.accessory2 = vd->head_top;
 	p.accessory3 = vd->head_mid;
 	if( bl->type == BL_NPC && vd->class_ == FLAG_CLASS ) { //The hell, why flags work like this?
-		p.accessory = g_id;
+		p.accessory = iStatus->get_emblem_id(bl);
 		p.accessory2 = GetWord(g_id, 1);
 		p.accessory3 = GetWord(g_id, 0);
 	}
@@ -960,7 +1011,7 @@ void clif_spawn_unit2(struct block_list* bl, enum send_target target) {
 	p.accessory2 = vd->head_top;
 	p.accessory3 = vd->head_mid;
 	if( bl->type == BL_NPC && vd->class_ == FLAG_CLASS ) { //The hell, why flags work like this?
-		p.accessory = g_id;
+		p.shield = iStatus->get_emblem_id(bl);
 		p.accessory2 = GetWord(g_id, 1);
 		p.accessory3 = GetWord(g_id, 0);
 	}
@@ -972,6 +1023,8 @@ void clif_spawn_unit2(struct block_list* bl, enum send_target target) {
 	WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit_getdir(bl));
 	p.xSize = p.ySize = (sd) ? 5 : 0;
 	p.clevel = clif_setlevel(bl);
+
+	clif->send(&p,sizeof(p),bl,target);
 }
 #endif
 void clif_spawn_unit(struct block_list* bl, enum send_target target) {
@@ -1008,7 +1061,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	p.accessory2 = vd->head_top;
 	p.accessory3 = vd->head_mid;
 	if( bl->type == BL_NPC && vd->class_ == FLAG_CLASS ) { //The hell, why flags work like this?
-		p.accessory = g_id;
+		p.accessory = iStatus->get_emblem_id(bl);
 		p.accessory2 = GetWord(g_id, 1);
 		p.accessory3 = GetWord(g_id, 0);
 	}	
@@ -1071,6 +1124,8 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 	p.PacketType = unit_walkingType;
 #if PACKETVER >= 20091103
 	p.PacketLength = sizeof(p);
+#endif
+#if PACKETVER > 7
 	p.objecttype = clif_bl_type(bl);
 #endif
 	p.GID = bl->id;
@@ -17728,7 +17783,7 @@ void clif_bc_ready(void) {
 int do_init_clif(void) {
 	const char* colors[COLOR_MAX] = { "0xFF0000", "0x00ff00", "0xffffff" };
 	int i;
-	
+
 	/**
 	 * Setup Color Table (saves unnecessary load of strtoul on every call)
 	 **/
@@ -17855,6 +17910,7 @@ void clif_defaults(void) {
 	clif->spawn_unit = clif_spawn_unit;
 #if PACKETVER < 20091103
 	clif->spawn_unit2 = clif_spawn_unit2;
+	clif->set_unit_idle2 = clif_set_unit_idle2;
 #endif
 	clif->set_unit_walking = clif_set_unit_walking;
 	clif->calc_walkdelay = clif_calc_walkdelay;
