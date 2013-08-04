@@ -51,6 +51,7 @@
 #include "log.h"
 #include "mail.h"
 #include "irc-bot.h"
+#include "HPMmap.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -5172,6 +5173,9 @@ void map_hp_symbols(void) {
 	/* specific */
 	HPM->share(atcommand->create,"addCommand");
 	HPM->share(script->addScript,"addScript");
+	HPM->share(HPM_map_addToMSD,"addToMSD");
+	HPM->share(HPM_map_getFromMSD,"getFromMSD");
+	HPM->share(HPM_map_removeFromMSD,"removeFromMSD");
 	/* vars */
 	HPM->share(map,"map");
 }
@@ -5379,6 +5383,7 @@ int do_init(int argc, char *argv[])
 	iTimer->add_timer_func_list(map_removemobs_timer, "map_removemobs_timer");
 	iTimer->add_timer_interval(iTimer->gettick()+1000, map_freeblock_timer, 0, 0, 60*1000);
 
+	HPM->load_sub = HPM_map_plugin_load_sub;
 	HPM->symbol_defaults_sub = map_hp_symbols;
 	HPM->config_read();
 	HPM->event(HPET_INIT);

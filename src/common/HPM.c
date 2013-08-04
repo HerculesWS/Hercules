@@ -22,6 +22,9 @@
 #include <unistd.h>
 #endif
 
+struct malloc_interface iMalloc_HPM;
+struct malloc_interface *HPMiMalloc;
+
 void hplugin_trigger_event(enum hp_event_types type) {
 	unsigned int i;
 	for( i = 0; i < HPM->plugin_count; i++ ) {
@@ -189,12 +192,17 @@ void hplugin_load(const char* filename) {
 	
 	if( !HPM->populate(plugin,filename) )
 		return;
-	
-	if( SERVER_TYPE == SERVER_TYPE_MAP ) {
-		plugin->hpi->addCommand		= HPM->import_symbol("addCommand");
-		plugin->hpi->addScript		= HPM->import_symbol("addScript");
-		plugin->hpi->addCPCommand	= HPM->import_symbol("addCPCommand");
-	}
+	/* id */
+	plugin->hpi->pid				= plugin->idx;
+	/* core */
+	plugin->hpi->addCPCommand		= HPM->import_symbol("addCPCommand");
+	plugin->hpi->addPacket			= HPM->import_symbol("addPacket");
+	plugin->hpi->addToSession		= HPM->import_symbol("addToSession");
+	plugin->hpi->getFromSession		= HPM->import_symbol("getFromSession");
+	plugin->hpi->removeFromSession	= HPM->import_symbol("removeFromSession");
+	/* server specific */
+	if( HPM->load_sub )
+		HPM->load_sub(plugin);
 	
 	plugin->info = info;
 	plugin->filename = aStrdup(filename);
@@ -209,7 +217,8 @@ void hplugin_unload(struct hplugin* plugin) {
 		aFree(plugin->filename);
 	if( plugin->dll )
 		plugin_close(plugin->dll);
-	
+	/* TODO: for manual packet unload */
+	/* - Go thru known packets and unlink any belonging to the plugin being removed */
 	aFree(plugin);
 	if( !HPM->off ) {
 		HPM->plugins[i] = NULL;
@@ -253,39 +262,6 @@ void hplugins_config_read(void) {
 	if( HPM->plugin_count )
 		ShowStatus("HPM: There are '"CL_WHITE"%d"CL_RESET"' plugins loaded, type '"CL_WHITE"plugins"CL_RESET"' to list them\n", HPM->plugin_count);
 }
-void hplugins_share_defaults(void) {
-	/* console */
-#ifdef CONSOLE_INPUT
-	HPM->share(console->addCommand,"addCPCommand");
-#endif
-	/* core */
-	HPM->share(&runflag,"runflag");
-	HPM->share(arg_v,"arg_v");
-	HPM->share(&arg_c,"arg_c");
-	HPM->share(SERVER_NAME,"SERVER_NAME");
-	HPM->share(&SERVER_TYPE,"SERVER_TYPE");
-	HPM->share((void*)get_svn_revision,"get_svn_revision");
-	HPM->share((void*)get_git_hash,"get_git_hash");
-	HPM->share(DB, "DB");
-	HPM->share(iMalloc, "iMalloc");
-	/* socket */
-	HPM->share(RFIFOSKIP,"RFIFOSKIP");
-	HPM->share(WFIFOSET,"WFIFOSET");
-	HPM->share(do_close,"do_close");
-	HPM->share(make_connection,"make_connection");
-	HPM->share(session,"session");
-	HPM->share(&fd_max,"fd_max");
-	HPM->share(addr_,"addr");
-	/* strlib */
-	HPM->share(strlib,"strlib");
-	HPM->share(sv,"sv");
-	HPM->share(StrBuf,"StrBuf");
-	/* sql */
-	HPM->share(SQL,"SQL");
-	/* timer */
-	HPM->share(iTimer,"iTimer");
-	
-}
 CPCMD(plugins) {
 	if( HPM->plugin_count == 0 ) {
 		ShowInfo("HPC: there are no plugins loaded\n");
@@ -299,18 +275,232 @@ CPCMD(plugins) {
 		}
 	}
 }
+
+void hplugins_addToSession(struct socket_data *sess, void *data, unsigned int id, unsigned int type, bool autofree) {
+	struct HPluginData *HPData;
+	unsigned int i;
+	
+	for(i = 0; i < sess->hdatac; i++) {
+		if( sess->hdata[i]->pluginID == id && sess->hdata[i]->type == type ) {
+			ShowError("HPM->addToSession:%s: error! attempting to insert duplicate struct of id %u and type %u\n",HPM->pid2name(id),id,type);
+			return;
+		}
+	}
+	
+	//HPluginData is always same size, probably better to use the ERS
+	CREATE(HPData, struct HPluginData, 1);
+	
+	HPData->pluginID = id;
+	HPData->type = type;
+	HPData->flag.free = autofree ? 1 : 0;
+	HPData->data = data;
+	
+	RECREATE(sess->hdata,struct HPluginData *,++sess->hdatac);
+	sess->hdata[sess->hdatac - 1] = HPData;
+}
+void *hplugins_getFromSession(struct socket_data *sess, unsigned int id, unsigned int type) {
+	unsigned int i;
+	
+	for(i = 0; i < sess->hdatac; i++) {
+		if( sess->hdata[i]->pluginID == id && sess->hdata[i]->type == type ) {
+			break;
+		}
+	}
+	
+	if( i != sess->hdatac )
+		return sess->hdata[i]->data;
+	
+	return NULL;
+}
+void hplugins_removeFromSession(struct socket_data *sess, unsigned int id, unsigned int type) {
+	unsigned int i;
+	
+	for(i = 0; i < sess->hdatac; i++) {
+		if( sess->hdata[i]->pluginID == id && sess->hdata[i]->type == type ) {
+			break;
+		}
+	}
+	
+	if( i != sess->hdatac ) {
+		unsigned int cursor;
+
+		aFree(sess->hdata[i]->data);
+		aFree(sess->hdata[i]);
+		sess->hdata[i] = NULL;
+		
+		for(i = 0, cursor = 0; i < sess->hdatac; i++) {
+			if( sess->hdata[i] == NULL )
+				continue;
+			if( i != cursor )
+				sess->hdata[cursor] = sess->hdata[i];
+			cursor++;
+		}
+		sess->hdatac = cursor;
+	}
+	
+}
+
+bool hplugins_addpacket(unsigned short cmd, short length,void (*receive) (int fd),unsigned int point,unsigned int pluginID) {
+	struct HPluginPacket *packet;
+	unsigned int i;
+	
+	if( point >= hpPHP_MAX ) {
+		ShowError("HPM->addPacket:%s: unknown point '%u' specified for packet 0x%04x (len %d)\n",HPM->pid2name(pluginID),point,cmd,length);
+		return false;
+	}
+
+	for(i = 0; i < HPM->packetsc[point]; i++) {
+		if( HPM->packets[point][i].cmd == cmd ) {
+			ShowError("HPM->addPacket:%s: can't add packet 0x%04x, already in use by '%s'!",HPM->pid2name(pluginID),cmd,HPM->pid2name(HPM->packets[point][i].pluginID));
+			return false;
+		}
+	}
+	
+	RECREATE(HPM->packets[point], struct HPluginPacket, ++HPM->packetsc[point]);
+	packet = &HPM->packets[point][HPM->packetsc[point] - 1];
+	
+	packet->pluginID = pluginID;
+	packet->cmd = cmd;
+	packet->len = length;
+	packet->receive = receive;
+	
+	return true;
+}
+/* 
+ 0 = unknown
+ 1 = OK
+ 2 = incomplete
+ */
+unsigned char hplugins_parse_packets(int fd, enum HPluginPacketHookingPoints point) {
+	unsigned int i;
+		
+	for(i = 0; i < HPM->packetsc[point]; i++) {
+		if( HPM->packets[point][i].cmd == RFIFOW(fd,0) )
+			break;
+	}
+	
+	if( i != HPM->packetsc[point] ) {
+		struct HPluginPacket *packet = &HPM->packets[point][i];
+		short length;
+		
+		if( (length = packet->len) == -1 ) {
+			if( (length = RFIFOW(fd, 2)) < (int)RFIFOREST(fd) )
+			   return 2;
+		}
+		
+		packet->receive(fd);
+		RFIFOSKIP(fd, length);
+		return 1;
+	}
+	
+	return 0;
+}
+
+char *hplugins_id2name (unsigned int pid) {
+	unsigned int i;
+	
+	for( i = 0; i < HPM->plugin_count; i++ ) {
+		if( HPM->plugins[i]->idx == pid )
+			return HPM->plugins[i]->info->name;
+	}
+	
+	return "UnknownPlugin";
+}
+char* HPM_file2ptr(const char *file) {
+	unsigned int i;
+	
+	for(i = 0; i < HPM->fnamec; i++) {
+		if( HPM->fnames[i].addr == file )
+			return HPM->fnames[i].name;
+	}
+	
+	i = HPM->fnamec;
+	
+	/* we handle this memory outside of the server's memory manager because we need it to exist after the memory manager goes down */
+	HPM->fnames = realloc(HPM->fnames,(++HPM->fnamec)*sizeof(struct HPMFileNameCache));
+		
+	HPM->fnames[i].addr = file;
+	HPM->fnames[i].name = strdup(file);
+
+	return HPM->fnames[i].name;
+}
+void* HPM_mmalloc(size_t size, const char *file, int line, const char *func) {
+	return iMalloc->malloc(size,HPM_file2ptr(file),line,func);
+}
+void* HPM_calloc(size_t num, size_t size, const char *file, int line, const char *func) {
+	return iMalloc->calloc(num,size,HPM_file2ptr(file),line,func);
+}
+void* HPM_realloc(void *p, size_t size, const char *file, int line, const char *func) {
+	return iMalloc->realloc(p,size,HPM_file2ptr(file),line,func);
+}
+char* HPM_astrdup(const char *p, const char *file, int line, const char *func) {
+	return iMalloc->astrdup(p,HPM_file2ptr(file),line,func);
+}
+
+void hplugins_share_defaults(void) {
+	/* console */
+#ifdef CONSOLE_INPUT
+	HPM->share(console->addCommand,"addCPCommand");
+#endif
+	/* our own */
+	HPM->share(hplugins_addpacket,"addPacket");
+	HPM->share(hplugins_addToSession,"addToSession");
+	HPM->share(hplugins_getFromSession,"getFromSession");
+	HPM->share(hplugins_removeFromSession,"removeFromSession");
+	/* core */
+	HPM->share(&runflag,"runflag");
+	HPM->share(arg_v,"arg_v");
+	HPM->share(&arg_c,"arg_c");
+	HPM->share(SERVER_NAME,"SERVER_NAME");
+	HPM->share(&SERVER_TYPE,"SERVER_TYPE");
+	HPM->share((void*)get_svn_revision,"get_svn_revision");
+	HPM->share((void*)get_git_hash,"get_git_hash");
+	HPM->share(DB, "DB");
+	HPM->share(HPMiMalloc, "iMalloc");
+	/* socket */
+	HPM->share(RFIFOSKIP,"RFIFOSKIP");
+	HPM->share(WFIFOSET,"WFIFOSET");
+	HPM->share(do_close,"do_close");
+	HPM->share(make_connection,"make_connection");
+	//session,fd_max and addr_ are shared from within socket.c
+	/* strlib */
+	HPM->share(strlib,"strlib");
+	HPM->share(sv,"sv");
+	HPM->share(StrBuf,"StrBuf");
+	/* sql */
+	HPM->share(SQL,"SQL");
+	/* timer */
+	HPM->share(iTimer,"iTimer");
+	
+}
+
 void hpm_init(void) {
+	unsigned int i;
+	
 	HPM->symbols = NULL;
 	HPM->plugins = NULL;
 	HPM->plugin_count = HPM->symbol_count = 0;
 	HPM->off = false;
 	
+	memcpy(&iMalloc_HPM, iMalloc, sizeof(struct malloc_interface));
+	HPMiMalloc = &iMalloc_HPM;
+	HPMiMalloc->malloc = HPM_mmalloc;
+	HPMiMalloc->calloc = HPM_calloc;
+	HPMiMalloc->realloc = HPM_realloc;
+	HPMiMalloc->astrdup = HPM_astrdup;
+
 	sscanf(HPM_VERSION, "%d.%d", &HPM->version[0], &HPM->version[1]);
 	
 	if( HPM->version[0] == 0 && HPM->version[1] == 0 ) {
 		ShowError("HPM:init:failed to retrieve HPM version!!\n");
 		return;
 	}
+	
+	for(i = 0; i < hpPHP_MAX; i++) {
+		HPM->packets[i] = NULL;
+		HPM->packetsc[i] = 0;
+	}
+	
 	HPM->symbol_defaults();
 	
 #ifdef CONSOLE_INPUT
@@ -318,7 +508,18 @@ void hpm_init(void) {
 #endif
 	return;
 }
-
+void hpm_memdown(void) {
+	unsigned int i;
+	
+	/* this memory is handled outside of the server's memory manager and thus cleared after memory manager goes down */
+	
+	for( i = 0; i < HPM->fnamec; i++ ) {
+		free(HPM->fnames[i].name);
+	}
+	
+	if( HPM->fnames )
+		free(HPM->fnames);
+}
 void hpm_final(void) {
 	unsigned int i;
 	
@@ -337,11 +538,22 @@ void hpm_final(void) {
 	
 	if( HPM->symbols )
 		aFree(HPM->symbols);
-			
+	
+	for( i = 0; i < hpPHP_MAX; i++ ) {
+		if( HPM->packets[i] )
+			aFree(HPM->packets[i]);
+	}
+	
+	/* HPM->fnames is cleared after the memory manager goes down */
+	iMalloc->post_shutdown = hpm_memdown;
+	
 	return;
 }
 void hpm_defaults(void) {
 	HPM = &HPM_s;
+	
+	HPM->fnames = NULL;
+	HPM->fnamec = 0;
 	
 	HPM->init = hpm_init;
 	HPM->final = hpm_final;
@@ -358,4 +570,7 @@ void hpm_defaults(void) {
 	HPM->config_read = hplugins_config_read;
 	HPM->populate = hplugin_populate;
 	HPM->symbol_defaults_sub = NULL;
+	HPM->pid2name = hplugins_id2name;
+	HPM->parse_packets = hplugins_parse_packets;
+	HPM->load_sub = NULL;
 }

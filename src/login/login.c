@@ -11,6 +11,7 @@
 #include "../common/socket.h"
 #include "../common/strlib.h"
 #include "../common/timer.h"
+#include "../common/HPM.h"
 #include "account.h"
 #include "ipban.h"
 #include "login.h"
@@ -372,12 +373,17 @@ int parse_fromchar(int fd)
 	ipl = server[id].ip;
 	ip2str(ipl, ip);
 
-	while( RFIFOREST(fd) >= 2 )
-	{
+	while( RFIFOREST(fd) >= 2 ) {
 		uint16 command = RFIFOW(fd,0);
 
-		switch( command )
-		{
+		if( HPM->packetsc[hpParse_FromChar] ) {
+			if( (j = HPM->parse_packets(fd,hpParse_FromChar)) ) {
+				if( j == 1 ) continue;
+				if( j == 2 ) return 0;
+			}
+		}
+		
+		switch( command ) {
 
 		case 0x2712: // request from char-server to authenticate an account
 			if( RFIFOREST(fd) < 23 )
@@ -1324,12 +1330,17 @@ int parse_login(int fd)
 		sd->fd = fd;
 	}
 
-	while( RFIFOREST(fd) >= 2 )
-	{
+	while( RFIFOREST(fd) >= 2 ) {
 		uint16 command = RFIFOW(fd,0);
 
-		switch( command )
-		{
+		if( HPM->packetsc[hpParse_Login] ) {
+			if( (result = HPM->parse_packets(fd,hpParse_Login)) ) {
+				if( result == 1 ) continue;
+				if( result == 2 ) return 0;
+			}
+		}
+		
+		switch( command ) {
 
 		case 0x0200:		// New alive packet: structure: 0x200 <account.userid>.24B. used to verify if client is always alive.
 			if (RFIFOREST(fd) < 26)
@@ -1688,15 +1699,17 @@ void do_final(void)
 	int i;
 	struct client_hash_node *hn = login_config.client_hash_nodes;
 
-	while (hn)
-	{
+	ShowStatus("Terminating...\n");
+	
+	HPM->event(HPET_FINAL);
+	
+	while (hn) {
 		struct client_hash_node *tmp = hn;
 		hn = hn->next;
 		aFree(tmp);
 	}
 
 	login_log(0, "login server", 100, "login server shutdown");
-	ShowStatus("Terminating...\n");
 
 	if( login_config.log_login )
 		loginlog_final();
@@ -1770,7 +1783,7 @@ int do_init(int argc, char** argv)
 	login_lan_config_read((argc > 2) ? argv[2] : LAN_CONF_NAME);
 
 	rnd_init();
-	
+		
 	for( i = 0; i < ARRAYLENGTH(server); ++i )
 		chrif_server_init(i);
 
@@ -1780,7 +1793,7 @@ int do_init(int argc, char** argv)
 
 	// initialize static and dynamic ipban system
 	ipban_init();
-
+	
 	// Online user database init
 	online_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	iTimer->add_timer_func_list(waiting_disconnect_timer, "waiting_disconnect_timer");
@@ -1814,6 +1827,10 @@ int do_init(int argc, char** argv)
 		}
 	}
 
+	HPM->share(account_db_sql_up(accounts),"sql_handle");
+	HPM->config_read();
+	HPM->event(HPET_INIT);
+	
 	// server port open & binding	
 	if( (login_fd = make_listen_bind(login_config.login_ip,login_config.login_port)) == -1 ) {
 		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",login_config.login_port);
@@ -1824,11 +1841,11 @@ int do_init(int argc, char** argv)
 		shutdown_callback = do_shutdown;
 		runflag = LOGINSERVER_ST_RUNNING;
 	}
-
-	account_db_sql_up(accounts);
 	
 	ShowStatus("The login-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %u).\n\n", login_config.login_port);
 	login_log(0, "login server", 100, "login server started");
-		
+	
+	HPM->event(HPET_READY);
+	
 	return 0;
 }
