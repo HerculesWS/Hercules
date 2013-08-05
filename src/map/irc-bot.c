@@ -23,7 +23,7 @@
 
 struct irc_bot_interface irc_bot_s;
 
-char send_string[200];
+char send_string[IRC_MESSAGE_LENGTH];
 
 /**
  * Timer callback to (re-)connect to an IRC server
@@ -172,7 +172,7 @@ void irc_parse_source(char *source, char *nick, char *ident, char *host) {
  * @param str Raw received message
  */
 void irc_parse_sub(int fd, char *str) {
-	char source[180], command[60], buf1[500], buf2[500];
+	char source[180], command[60], buf1[IRC_MESSAGE_LENGTH], buf2[IRC_MESSAGE_LENGTH];
 	char *target = buf1, *message = buf2;
 	struct irc_func *func;
 	
@@ -206,8 +206,10 @@ void irc_parse_sub(int fd, char *str) {
  */
 void irc_send(char *str) {
 	int len = strlen(str) + 2;
+	if (len > IRC_MESSAGE_LENGTH-3)
+		len = IRC_MESSAGE_LENGTH-3;
 	WFIFOHEAD(ircbot->fd, len);
-	snprintf((char*)WFIFOP(ircbot->fd,0),200, "%s\r\n", str);
+	snprintf((char*)WFIFOP(ircbot->fd,0),IRC_MESSAGE_LENGTH, "%s\r\n", str);
 	WFIFOSET(ircbot->fd, len);
 }
 
@@ -275,7 +277,7 @@ void irc_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char *msg) 
 void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 	if( msg && *msg == '\001' && strlen(msg) > 2 && msg[strlen(msg)-1] == '\001' ) {
 		// CTCP
-		char command[500], message[500];
+		char command[IRC_MESSAGE_LENGTH], message[IRC_MESSAGE_LENGTH];
 		command[0] = message[0] = '\0';
 		sscanf(msg, "\001%499[^\001\r\n ] %499[^\r\n\001]\001", command, message);
 
@@ -293,8 +295,15 @@ void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 			ircbot->parse_source(source,source_nick,source_ident,source_host);
 				
 		if( ircbot->channel ) {
-			snprintf(send_string, 150, "[ #%s ] IRC.%s : %s",ircbot->channel->name,source_nick,msg);
-			clif->chsys_msg2(ircbot->channel,send_string);
+			int padding_len = strlen(ircbot->channel->name) + strlen(source_nick) + 13;
+			while (1) {
+				snprintf(send_string, 150, "[ #%s ] IRC.%s : %s",ircbot->channel->name,source_nick,msg);
+				clif->chsys_msg2(ircbot->channel,send_string);
+				//break; // Uncomment this line to truncate long messages instead of posting them as multiple lines
+				if (strlen(msg) <= 149 - padding_len)
+					break;
+				msg += 149 - padding_len;
+			}
 		}
 	}
 }

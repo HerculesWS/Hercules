@@ -10,6 +10,7 @@
 #define IRC_IDENT_LENGTH 40
 #define IRC_HOST_LENGTH 63
 #define IRC_FUNC_LENGTH 30
+#define IRC_MESSAGE_LENGTH 500
 
 struct hChSysCh;
 
