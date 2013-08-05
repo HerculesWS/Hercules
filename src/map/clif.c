@@ -17657,7 +17657,7 @@ int clif_parse(int fd) {
 		if ((int)RFIFOREST(fd) < packet_len)
 			return 0; // not enough data received to form the packet
 
-		if( cmd != RFIFOW(fd, 0) ) {
+		if( battle_config.packet_obfuscation == 2 || cmd != RFIFOW(fd, 0) || (sd && sd->parse_cmd_func == clif_parse_cmd_decrypt) ) {
 			RFIFOW(fd, 0) = cmd;
 			if( sd ) {
 				sd->cryptKey = (( sd->cryptKey * clif->cryptKey[1] ) + clif->cryptKey[2]) & 0xFFFFFFFF; // Update key for the next packet
