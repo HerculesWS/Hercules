@@ -177,21 +177,62 @@ void irc_join(int fd, char *cmd, char *source, char *target, char *msg) {
 	ircbot->isIn = true;
 }
 
-void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
-	if( strcmpi(target,hChSys.irc_nick) == 0 ) {
-		if( msg[0] == ':' ) msg++;
-		if( strcmpi(msg,"VERSION") == 0 ) {
-			char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
-			
-			source_nick[0] = source_ident[0] = source_host[0] = '\0';
-			
-			if( source[0] != '\0' )
-				ircbot->parse_source(source,source_nick,source_ident,source_host);
+/**
+ * Handler for CTCP commands received via PRIVMSG
+ * @see irc_privmsg
+ */
+void irc_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char *msg) {
+	char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
 
-			sprintf(send_string, "NOTICE %s :Hercules.ws IRC Bridge",source_nick);
-			ircbot->send(send_string);
-			return;
+	source_nick[0] = source_ident[0] = source_host[0] = '\0';
+
+	if( source[0] != '\0' )
+		ircbot->parse_source(source,source_nick,source_ident,source_host);
+
+	if( strcmpi(cmd,"ACTION") == 0 ) {
+		if( ircbot->channel ) {
+			snprintf(send_string, 150, "[ #%s ] * IRC.%s %s *",ircbot->channel->name,source_nick,msg);
+			clif->chsys_msg2(ircbot->channel,send_string);
 		}
+	} else if( strcmpi(cmd,"ERRMSG") == 0 ) {
+		// Ignore it
+	} else if( strcmpi(cmd,"FINGER") == 0 ) {
+		// Ignore it
+	} else if( strcmpi(cmd,"PING") == 0 ) {
+		sprintf(send_string, "NOTICE %s :\001PING %s\001",source_nick,msg);
+		ircbot->send(send_string);
+	} else if( strcmpi(cmd,"TIME") == 0 ) {
+		time_t time_server;  // variable for number of seconds (used with time() function)
+		struct tm *datetime; // variable for time in structure ->tm_mday, ->tm_sec, ...
+		char temp[CHAT_SIZE_MAX];
+
+		memset(temp, '\0', sizeof(temp));
+
+		time(&time_server);  // get time in seconds since 1/1/1970
+		datetime = localtime(&time_server); // convert seconds in structure
+		// like sprintf, but only for date/time (Sunday, November 02 2003 15:12:52)
+		strftime(temp, sizeof(temp)-1, msg_txt(230), datetime); // Server time (normal time): %A, %B %d %Y %X.
+
+		sprintf(send_string, "NOTICE %s :\001TIME %s\001",source_nick,temp);
+		ircbot->send(send_string);
+	} else if( strcmpi(cmd,"VERSION") == 0 ) {
+		sprintf(send_string, "NOTICE %s :\001VERSION Hercules.ws IRC Bridge\001",source_nick);
+		ircbot->send(send_string);
+	//} else {
+		//ShowWarning("Unknown CTCP command received %s (%s) from %s\n",cmd,msg,source);
+	}
+}
+
+void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
+	if( msg && *msg == '\001' && strlen(msg) > 2 && msg[strlen(msg)-1] == '\001' ) {
+		// CTCP
+		char command[500], message[500];
+		command[0] = message[0] = '\0';
+		sscanf(msg, "\001%499[^\001\r\n ] %499[^\r\n\001]\001", command, message);
+
+		irc_privmsg_ctcp(fd, command, source, target, message);
+	//} else if( strcmpi(target,hChSys.irc_nick) == 0 ) {
+		//ShowDebug("irc_privmsg: Received message from %s: '%s'\n", source ? source : "(null)", msg);
 	} else if( strcmpi(target,hChSys.irc_channel) == 0 ) {
 		char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
 
