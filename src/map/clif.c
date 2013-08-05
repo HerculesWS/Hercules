@@ -3711,7 +3711,7 @@ void clif_useitemack(struct map_session_data *sd,int index,int amount,bool ok)
 	}
 }
 
-void clif_hercules_chsys_send(struct hChSysCh *channel, struct map_session_data *sd, char *msg) {
+void clif_hercules_chsys_send(struct hChSysCh *channel, struct map_session_data *sd, const char *msg) {
 	if( channel->msg_delay != 0 && DIFF_TICK(sd->hchsysch_tick + ( channel->msg_delay * 1000 ), iTimer->gettick()) > 0 && !pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
 		clif->colormes(sd->fd,COLOR_RED,msg_txt(1455));
 		return;
@@ -5715,7 +5715,7 @@ void clif_broadcast(struct block_list* bl, const char* mes, int len, int type, e
  * Used by npc_globalmessage
  *------------------------------------------*/
 void clif_GlobalMessage(struct block_list* bl, const char* message) {
-	char buf[100];
+	char buf[256];
 	int len;
 	nullpo_retv(bl);
 

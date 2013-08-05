@@ -131,15 +131,20 @@ void irc_parse_source(char *source, char *nick, char *ident, char *host) {
 	}
 }
 void irc_parse_sub(int fd, char *str) {
-	char source[180], command[60], target[60], message[200];
+	char source[180], command[60], buf1[500], buf2[500];
+	char *target = buf1, *message = buf2;
 	struct irc_func *func;
 	
-	source[0] = command[0] = target[0] = message[0] = '\0';
+	source[0] = command[0] = buf1[0] = buf2[0] = '\0';
 	
 	if( str[0] == ':' )
 		str++;
 	
-	sscanf(str, "%179s %59s %59s :%199[^\r\n]", source, command, target, message);
+	if (sscanf(str, "%179s %59s %499s :%499[^\r\n]", source, command, buf1, buf2) == 3 && buf1[0] == ':') {
+		// source command :message (i.e. QUIT)
+		message = buf1+1;
+		target = buf2;
+	}
 		
 	if( command[0] == '\0' )
 		return;
@@ -202,7 +207,7 @@ void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 	}
 }
 
-void irc_relay (char *name, char *msg) {
+void irc_relay (char *name, const char *msg) {
 	if( !ircbot->isIn )
 		return;
 	sprintf(send_string,"PRIVMSG %s :[ %s ] : %s",hChSys.irc_channel,name,msg);
