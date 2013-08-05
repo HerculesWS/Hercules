@@ -207,6 +207,66 @@ void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 	}
 }
 
+/**
+ * Handler for the JOIN IRC command (notify an in-game channel of users joining
+ * the IRC channel)
+ * @see irc_parse_sub
+ */
+void irc_userjoin(int fd, char *cmd, char *source, char *target, char *msg) {
+	char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
+
+	source_nick[0] = source_ident[0] = source_host[0] = '\0';
+
+	if( source[0] != '\0' )
+		ircbot->parse_source(source,source_nick,source_ident,source_host);
+
+	if( ircbot->channel ) {
+		snprintf(send_string, 150, "[ #%s ] User IRC.%s joined the channel.",ircbot->channel->name,source_nick);
+		clif->chsys_msg2(ircbot->channel,send_string);
+	}
+}
+
+/**
+ * Handler for the PART and QUIT IRC commands (notify an in-game channel of
+ * users leaving the IRC channel)
+ * @see irc_parse_sub
+ */
+void irc_userleave(int fd, char *cmd, char *source, char *target, char *msg) {
+	char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
+
+	source_nick[0] = source_ident[0] = source_host[0] = '\0';
+
+	if( source[0] != '\0' )
+		ircbot->parse_source(source,source_nick,source_ident,source_host);
+
+	if( ircbot->channel ) {
+		if (!strcmpi(cmd, "QUIT"))
+			snprintf(send_string, 150, "[ #%s ] User IRC.%s left the channel. [Quit: %s]",ircbot->channel->name,source_nick,msg);
+		else
+			snprintf(send_string, 150, "[ #%s ] User IRC.%s left the channel. [%s]",ircbot->channel->name,source_nick,msg);
+		clif->chsys_msg2(ircbot->channel,send_string);
+	}
+}
+
+/**
+ * Handler for the NICK IRC commands (notify an in-game channel of users
+ * changing their name while in the IRC channel)
+ * @see irc_parse_sub
+ */
+void irc_usernick(int fd, char *cmd, char *source, char *target, char *msg) {
+	char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
+
+	source_nick[0] = source_ident[0] = source_host[0] = '\0';
+
+	if( source[0] != '\0' )
+		ircbot->parse_source(source,source_nick,source_ident,source_host);
+
+	if( ircbot->channel ) {
+		snprintf(send_string, 150, "[ #%s ] User IRC.%s is now known as IRC.%s",ircbot->channel->name,source_nick,msg);
+		clif->chsys_msg2(ircbot->channel,send_string);
+	}
+}
+
 void irc_relay (char *name, const char *msg) {
 	if( !ircbot->isIn )
 		return;
@@ -217,6 +277,10 @@ void irc_bot_init(void) {
 	const struct irc_func irc_func_base[] = {
 		{ "PING" , ircbot->pong },
 		{ "PRIVMSG", ircbot->privmsg },
+		{ "JOIN", ircbot->userjoin },
+		{ "QUIT", ircbot->userleave },
+		{ "PART", ircbot->userleave },
+		{ "NICK", ircbot->usernick },
 	};
 	struct irc_func* function;
 	int i;
@@ -293,4 +357,8 @@ void ircbot_defaults(void) {
 	ircbot->pong = irc_pong;
 	ircbot->join = irc_join;
 	ircbot->privmsg = irc_privmsg;
+
+	ircbot->userjoin = irc_userjoin;
+	ircbot->userleave = irc_userleave;
+	ircbot->usernick = irc_usernick;
 }
