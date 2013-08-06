@@ -2700,6 +2700,7 @@ void read_channels_config(void) {
 		if( hChSys.irc ) {
 			const char *irc_server, *irc_channel,
 				 *irc_nick, *irc_nick_pw;
+			int irc_use_ghost = 0;
 			if( config_setting_lookup_string(settings, "irc_channel_network", &irc_server) ) {
 				if( !strstr(irc_server,":") ) {
 					hChSys.irc = false;
@@ -2739,8 +2740,11 @@ void read_channels_config(void) {
 				hChSys.irc = false;
 				ShowWarning("channels.conf : irc channel enabled but irc_channel_nick wasn't found, disabling irc channel...\n");
 			}
-			if( config_setting_lookup_string(settings, "irc_channel_nick_pw", &irc_nick_pw) )
+			if( config_setting_lookup_string(settings, "irc_channel_nick_pw", &irc_nick_pw) ) {
 				safestrncpy(hChSys.irc_nick_pw, irc_nick_pw, 30);
+				config_setting_lookup_bool(settings, "irc_channel_use_ghost", &irc_use_ghost);
+				hChSys.irc_use_ghost = irc_use_ghost;
+			}
 
 		}
 		

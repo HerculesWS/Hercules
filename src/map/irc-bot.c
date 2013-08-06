@@ -77,6 +77,9 @@ int irc_join_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	if( hChSys.irc_nick_pw[0] != '\0' ) {
 		sprintf(send_string, "PRIVMSG NICKSERV : IDENTIFY %s", hChSys.irc_nick_pw);
 		ircbot->send(send_string);
+		if( hChSys.irc_use_ghost ) {
+			sprintf(send_string, "PRIVMSG NICKSERV : GHOST %s %s", hChSys.irc_nick, hChSys.irc_nick_pw);
+		}
 	}
 	
 	sprintf(send_string, "JOIN %s", hChSys.irc_channel);

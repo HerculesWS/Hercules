@@ -417,6 +417,7 @@ struct {
 	bool allow_user_channel_creation;
 	char irc_server[40], irc_channel[50], irc_nick[40], irc_nick_pw[30];
 	unsigned short irc_server_port;
+	bool irc_use_ghost;
 } hChSys;
 
 struct hChSysBanEntry {
