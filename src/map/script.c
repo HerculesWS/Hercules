@@ -15092,8 +15092,17 @@ BUILDIN(unitskilluseid)
 	target_id = ( script_hasdata(st,5) ? script_getnum(st,5) : unit_id );
 	
 	bl = iMap->id2bl(unit_id);
-	if( bl != NULL )
+	
+	if( bl != NULL ) {
+		if( bl->type == BL_NPC ) {
+			if (!((TBL_NPC*)bl)->status.hp) {
+				status_calc_npc(((TBL_NPC*)bl), true);
+			} else {
+				status_calc_npc(((TBL_NPC*)bl), false);
+			}
+		}
 		unit_skilluse_id(bl, target_id, skill_id, skill_lv);
+	}
 	
 	return true;
 }
@@ -15118,8 +15127,17 @@ BUILDIN(unitskillusepos)
 	skill_y  = script_getnum(st,6);
 	
 	bl = iMap->id2bl(unit_id);
-	if( bl != NULL )
+	
+	if( bl != NULL ) {
+		if( bl->type == BL_NPC ) {
+			if (!((TBL_NPC*)bl)->status.hp) {
+				status_calc_npc(((TBL_NPC*)bl), true);
+			} else {
+				status_calc_npc(((TBL_NPC*)bl), false);
+			}
+		}
 		unit_skilluse_pos(bl, skill_x, skill_y, skill_id, skill_lv);
+	}
 	
 	return true;
 }
