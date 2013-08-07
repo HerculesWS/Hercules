@@ -19,10 +19,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+//#define IRCBOT_DEBUG
+
 struct irc_bot_interface irc_bot_s;
 
 char send_string[200];
 
+/**
+ * Timer callback to (re-)connect to an IRC server
+ * @see iTimer->do_timer
+ */
 int irc_connect_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	struct hSockOpt opt;
 	if( ircbot->isOn || ++ircbot->fails >= 3 )
@@ -42,6 +48,10 @@ int irc_connect_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	return 0;
 }
 
+/**
+ * Timer callback to send identification commands to an IRC server
+ * @see iTimer->do_timer
+ */
 int irc_identify_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	if( !ircbot->isOn )
 		return 0;
@@ -56,6 +66,10 @@ int irc_identify_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	return 0;
 }
 
+/**
+ * Timer callback to join channels (and optionally send NickServ commands)
+ * @see iTimer->do_timer
+ */
 int irc_join_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	if( !ircbot->isOn )
 		return 0;
@@ -72,6 +86,12 @@ int irc_join_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	return 0;
 }
 
+/**
+ * Search the handler for a given IRC received command
+ * @param function_name Name of the received IRC command
+ * @return              Function pointer to the command handler, NULL in case
+ *                      of unhandled commands
+ */
 struct irc_func* irc_func_search(char* function_name) {
 	int i;
 	for(i = 0; i < ircbot->funcs.size; i++) {
@@ -82,6 +102,10 @@ struct irc_func* irc_func_search(char* function_name) {
 	return NULL;
 }
 
+/**
+ * Parser for the IRC server connection
+ * @see do_sockets
+ */
 int irc_parse(int fd) {
 	char *parse_string = NULL, *str_safe = NULL;
 
@@ -114,6 +138,16 @@ int irc_parse(int fd) {
 	return 0;
 }
 
+/**
+ * Parse the source from a received irc message
+ * @param source Source string, as reported by the server
+ * @param nick   Pointer to a string where to return the nick (may not be NULL,
+ *               needs to be able to fit an IRC_NICK_LENGTH long string)
+ * @param ident  Pointer to a string where to return the ident (may not be
+ *               NULL, needs to be able to fit an IRC_IDENT_LENGTH long string)
+ * @param host   Pointer to a string where to return the hostname (may not be
+ *               NULL, needs to be able to fit an IRC_HOST_LENGTH long string)
+ */
 void irc_parse_source(char *source, char *nick, char *ident, char *host) {
 	int i, len = strlen(source), pos = 0;
 	unsigned char stage = 0;
@@ -130,6 +164,13 @@ void irc_parse_source(char *source, char *nick, char *ident, char *host) {
 		}
 	}
 }
+
+/**
+ * Parse a received message from the irc server, and do the appropriate action
+ * for the detected command
+ * @param fd  IRC server connection file descriptor
+ * @param str Raw received message
+ */
 void irc_parse_sub(int fd, char *str) {
 	char source[180], command[60], buf1[500], buf2[500];
 	char *target = buf1, *message = buf2;
@@ -150,13 +191,19 @@ void irc_parse_sub(int fd, char *str) {
 		return;
 		
 	if( !(func = ircbot->func_search(command)) && !(func = ircbot->func_search(source)) ) {
-		//ShowWarning("Unknown command received %s from %s\n",command,source);
+#ifdef IRCBOT_DEBUG
+		ShowWarning("Unknown command received %s from %s\n",command,source);
+#endif // IRCBOT_DEBUG
 		return;
 	}
 	func->func(fd,command,source,target,message);
 	
 }
 
+/**
+ * Send a raw command to the irc server
+ * @param str Command to send
+ */
 void irc_send(char *str) {
 	int len = strlen(str) + 2;
 	WFIFOHEAD(ircbot->fd, len);
@@ -164,17 +211,13 @@ void irc_send(char *str) {
 	WFIFOSET(ircbot->fd, len);
 }
 
+/**
+ * Handler for the PING IRC command (send back a PONG)
+ * @see irc_parse_sub
+ */
 void irc_pong(int fd, char *cmd, char *source, char *target, char *msg) {
 	sprintf(send_string, "PONG %s", cmd);
 	ircbot->send(send_string);
-}
-
-void irc_join(int fd, char *cmd, char *source, char *target, char *msg) {
-	if( ircbot->isIn )
-		return;
-	sprintf(send_string, "JOIN %s", hChSys.irc_channel);
-	ircbot->send(send_string);
-	ircbot->isIn = true;
 }
 
 /**
@@ -218,11 +261,17 @@ void irc_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char *msg) 
 	} else if( strcmpi(cmd,"VERSION") == 0 ) {
 		sprintf(send_string, "NOTICE %s :\001VERSION Hercules.ws IRC Bridge\001",source_nick);
 		ircbot->send(send_string);
-	//} else {
-		//ShowWarning("Unknown CTCP command received %s (%s) from %s\n",cmd,msg,source);
+#ifdef IRCBOT_DEBUG
+	} else {
+		ShowWarning("Unknown CTCP command received %s (%s) from %s\n",cmd,msg,source);
+#endif // IRCBOT_DEBUG
 	}
 }
 
+/**
+ * Handler for the PRIVMSG IRC command (action depends on the message contents)
+ * @see irc_parse_sub
+ */
 void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 	if( msg && *msg == '\001' && strlen(msg) > 2 && msg[strlen(msg)-1] == '\001' ) {
 		// CTCP
@@ -231,8 +280,10 @@ void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 		sscanf(msg, "\001%499[^\001\r\n ] %499[^\r\n\001]\001", command, message);
 
 		irc_privmsg_ctcp(fd, command, source, target, message);
-	//} else if( strcmpi(target,hChSys.irc_nick) == 0 ) {
-		//ShowDebug("irc_privmsg: Received message from %s: '%s'\n", source ? source : "(null)", msg);
+#ifdef IRCBOT_DEBUG
+	} else if( strcmpi(target,hChSys.irc_nick) == 0 ) {
+		ShowDebug("irc_privmsg: Received message from %s: '%s'\n", source ? source : "(null)", msg);
+#endif // IRCBOT_DEBUG
 	} else if( strcmpi(target,hChSys.irc_channel) == 0 ) {
 		char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
 
@@ -308,13 +359,23 @@ void irc_usernick(int fd, char *cmd, char *source, char *target, char *msg) {
 	}
 }
 
-void irc_relay (char *name, const char *msg) {
+/**
+ * Relay a chat message to the irc channel the bot is connected to
+ * @param name Sender's name
+ * @param msg  Message text
+ */
+void irc_relay(char *name, const char *msg) {
 	if( !ircbot->isIn )
 		return;
 	sprintf(send_string,"PRIVMSG %s :[ %s ] : %s",hChSys.irc_channel,name,msg);
 	ircbot->send(send_string);
 }
+
+/**
+ * IRC bot initializer
+ */
 void irc_bot_init(void) {
+	/// Command handlers
 	const struct irc_func irc_func_base[] = {
 		{ "PING" , ircbot->pong },
 		{ "PRIVMSG", ircbot->privmsg },
@@ -358,6 +419,9 @@ void irc_bot_init(void) {
 	iTimer->add_timer(iTimer->gettick() + 7000, ircbot->connect_timer, 0, 0);
 }
 
+/**
+ * IRC bot finalizer
+ */
 void irc_bot_final(void) {
 	int i;
 	
@@ -374,6 +438,9 @@ void irc_bot_final(void) {
 	aFree(ircbot->funcs.list);
 }
 
+/**
+ * IRC bot interface defaults initializer
+ */
 void ircbot_defaults(void) {
 	ircbot = &irc_bot_s;
 	
@@ -396,7 +463,6 @@ void ircbot_defaults(void) {
 	ircbot->relay = irc_relay;
 	
 	ircbot->pong = irc_pong;
-	ircbot->join = irc_join;
 	ircbot->privmsg = irc_privmsg;
 
 	ircbot->userjoin = irc_userjoin;
