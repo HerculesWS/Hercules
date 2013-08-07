@@ -322,6 +322,7 @@ typedef enum useskill_fail_cause { // clif_skill_fail
 
 enum clif_messages {
 	SKILL_CANT_USE_AREA = 0x536,
+	ITEM_CANT_USE_AREA =  0x537,
 };
 
 /**

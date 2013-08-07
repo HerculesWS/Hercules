@@ -4432,6 +4432,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	/* on restricted maps the item is consumed but the effect is not used */	
 	for(i = 0; i < map[sd->bl.m].zone->disabled_items_count; i++) {
 		if( map[sd->bl.m].zone->disabled_items[i] == nameid ) {
+			clif->msg(sd, ITEM_CANT_USE_AREA); // This item cannot be used within this area
 			if( battle_config.item_restricted_consumption_type ) {
 				clif->useitemack(sd,n,sd->status.inventory[n].amount-1,true);
 				pc->delitem(sd,n,1,1,0,LOG_TYPE_CONSUME);
