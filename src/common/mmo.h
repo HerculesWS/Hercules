@@ -230,9 +230,11 @@ enum e_skill_flag
 	SKILL_FLAG_PERMANENT,
 	SKILL_FLAG_TEMPORARY,
 	SKILL_FLAG_PLAGIARIZED,
-	SKILL_FLAG_REPLACED_LV_0,   // Temporary skill overshadowing permanent skill of level 'N - SKILL_FLAG_REPLACED_LV_0',
+	SKILL_FLAG_UNUSED,			/* needed to maintain the order since the values are saved, can be renamed and used if a new flag is necessary */
 	SKILL_FLAG_PERM_GRANTED,    // Permanent, granted through someway (e.g. script).
-	//...
+	/* */
+	/* MUST be the last, because with it the flag value stores a dynamic value (flag+lv) */
+	SKILL_FLAG_REPLACED_LV_0,   // Temporary skill overshadowing permanent skill of level 'N - SKILL_FLAG_REPLACED_LV_0',
 };
 
 enum e_mmo_charstatus_opt {

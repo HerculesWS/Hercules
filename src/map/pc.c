@@ -1353,7 +1353,7 @@ static int pc_calc_skillpoint(struct map_session_data* sd)
 				) {
 				if(sd->status.skill[i].flag == SKILL_FLAG_PERMANENT)
 					skill_point += skill_lv;
-				else if(sd->status.skill[i].flag == SKILL_FLAG_REPLACED_LV_0)
+				else if(sd->status.skill[i].flag >= SKILL_FLAG_REPLACED_LV_0)
 					skill_point += (sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0);
 			}
 		}
@@ -1606,7 +1606,7 @@ int pc_clean_skilltree(struct map_session_data *sd)
 			sd->status.skill[i].id = 0;
 			sd->status.skill[i].lv = 0;
 			sd->status.skill[i].flag = 0;
-		} else if (sd->status.skill[i].flag == SKILL_FLAG_REPLACED_LV_0) {
+		} else if (sd->status.skill[i].flag >= SKILL_FLAG_REPLACED_LV_0) {
 			sd->status.skill[i].lv = sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0;
 			sd->status.skill[i].flag = 0;
 		}
@@ -5956,10 +5956,13 @@ int pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int
 		clif->updatestatus(sd,SP_JOBEXP);
 	}
 
+#if PACKETVER >= 20091027
 	if(base_exp)
 		clif->displayexp(sd, base_exp, SP_BASEEXP, quest);
 	if(job_exp)
 		clif->displayexp(sd, job_exp,  SP_JOBEXP, quest);
+#endif
+	
 	if(sd->state.showexp) {
 		char output[256];
 		sprintf(output,
@@ -6242,9 +6245,9 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 				}
 
 				if( can_skip ) break;
-				
-				if( pts < 40 ) {
-					clif->msg_value(sd, 0x61E, 40 - pts);
+
+				if( pts < sd->change_level_2nd ) {
+					clif->msg_value(sd, 0x61E, sd->change_level_2nd - pts);
 					return 0;
 				}
 				
@@ -6271,9 +6274,9 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 					}
 					
 					if( can_skip ) break;
-					
-					if( pts_second - pts < ( is_trans ? 70 : 50 ) ) {
-						clif->msg_value(sd, 0x61F, ( is_trans ? 70 : 50 ) - (pts_second - pts));
+
+					if( pts_second - pts < sd->change_level_3rd ) {
+						clif->msg_value(sd, 0x61F, sd->change_level_3rd - (pts_second - pts));
 						return 0;
 					}
 				}
@@ -6604,8 +6607,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		}
 		if( sd->status.skill[i].flag == SKILL_FLAG_PERMANENT )
 			skill_point += lv;
-		else
-		if( sd->status.skill[i].flag == SKILL_FLAG_REPLACED_LV_0 )
+		else if( sd->status.skill[i].flag >= SKILL_FLAG_REPLACED_LV_0 )
 			skill_point += (sd->status.skill[i].flag - SKILL_FLAG_REPLACED_LV_0);
 
 		if( !(flag&2) ) {// reset
