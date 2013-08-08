@@ -49,6 +49,27 @@ struct hpm_symbol {
 	void *ptr;
 };
 
+struct HPluginData {
+	unsigned int pluginID;
+	unsigned int type;
+	struct {
+		unsigned int free : 1;
+	} flag;
+	void *data;
+};
+
+struct HPluginPacket {
+	unsigned int pluginID;
+	unsigned short cmd;
+	short len;
+	void (*receive) (int fd);
+};
+
+struct HPMFileNameCache {
+	const char *addr;
+	char *name;
+};
+
 /* Hercules Plugin Manager Interface */
 struct HPM_interface {
 	/* vars */
@@ -59,6 +80,12 @@ struct HPM_interface {
 	unsigned int plugin_count;
 	struct hpm_symbol **symbols;
 	unsigned int symbol_count;
+	/* packet hooking points */
+	struct HPluginPacket *packets[hpPHP_MAX];
+	unsigned int packetsc[hpPHP_MAX];
+	/* plugin file ptr caching */
+	struct HPMFileNameCache *fnames;
+	unsigned int fnamec;
 	/* funcs */
 	void (*init) (void);
 	void (*final) (void);
@@ -73,7 +100,10 @@ struct HPM_interface {
 	void (*symbol_defaults) (void);
 	void (*config_read) (void);
 	bool (*populate) (struct hplugin *plugin,const char *filename);
-	void (*symbol_defaults_sub) (void);
+	void (*symbol_defaults_sub) (void);//TODO drop
+	char *(*pid2name) (unsigned int pid);
+	unsigned char (*parse_packets) (int fd, enum HPluginPacketHookingPoints point);
+	void (*load_sub) (struct hplugin *plugin);
 } HPM_s;
 
 struct HPM_interface *HPM;

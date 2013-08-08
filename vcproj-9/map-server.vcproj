@@ -584,6 +584,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\map\HPMmap.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\map\HPMmap.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\map\instance.c"
 				>
 			</File>

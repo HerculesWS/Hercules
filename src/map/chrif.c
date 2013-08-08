@@ -10,6 +10,7 @@
 #include "../common/showmsg.h"
 #include "../common/strlib.h"
 #include "../common/ers.h"
+#include "../common/HPM.h"
 
 #include "map.h"
 #include "battle.h"
@@ -1396,7 +1397,7 @@ void chrif_skillid2idx(int fd) {
  *
  *------------------------------------------*/
 int chrif_parse(int fd) {
-	int packet_len, cmd;
+	int packet_len, cmd, r;
 
 	// only process data from the char-server
 	if ( fd != char_fd ) {
@@ -1421,9 +1422,18 @@ int chrif_parse(int fd) {
 	}
 
 	while ( RFIFOREST(fd) >= 2 ) {
+
+		if( HPM->packetsc[hpChrif_Parse] ) {
+			if( (r = HPM->parse_packets(fd,hpChrif_Parse)) ) {
+				if( r == 1 ) continue;
+				if( r == 2 ) return 0;
+			}
+		}
+
 		cmd = RFIFOW(fd,0);
+		
 		if (cmd < 0x2af8 || cmd >= 0x2af8 + ARRAYLENGTH(packet_len_table) || packet_len_table[cmd-0x2af8] == 0) {
-			int r = intif->parse(fd); // Passed on to the intif
+			r = intif->parse(fd); // Passed on to the intif
 
 			if (r == 1) continue;	// Treated in intif 
 			if (r == 2) return 0;	// Didn't have enough data (len==-1)

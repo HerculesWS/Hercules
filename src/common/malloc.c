@@ -11,6 +11,8 @@
 #include <string.h>
 #include <time.h>
 
+struct malloc_interface iMalloc_s;
+
 ////////////// Memory Libraries //////////////////
 
 #if defined(MEMWATCH)
@@ -672,7 +674,7 @@ void memmgr_report (int extra) {
 	
 	if( extra != 0 )
 		msize = extra;
-	
+
 	while (block) {
 		if (block->unit_used) {
 			int i;
@@ -784,6 +786,8 @@ void malloc_final (void) {
 	memmgr_final ();
 #endif
 	MEMORY_CHECK();
+	if( iMalloc->post_shutdown )
+		iMalloc->post_shutdown();
 }
 
 void malloc_init (void) {
@@ -825,4 +829,5 @@ void malloc_defaults(void) {
 	iMalloc->astrdup =	aStrdup_;
 	iMalloc->free    =	aFree_;
 #endif
+	iMalloc->post_shutdown = NULL;
 }
