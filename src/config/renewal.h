@@ -13,6 +13,8 @@
  * @INFO: This file holds general-purpose renewal settings, for class-specific ones check /src/config/classes folder
  **/
 
+#ifndef DISABLE_RENEWAL
+
 /// game renewal server mode
 /// (disable by commenting the line)
 ///
@@ -68,5 +70,7 @@
 /// - there is a change in how skills/items give ASPD
 /// - some skill/item ASPD bonuses won't stack
 #define RENEWAL_ASPD
+
+#endif // DISABLE_RENEWAL
 
 #endif // _CONFIG_RENEWAL_H_
