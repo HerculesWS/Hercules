@@ -14,6 +14,7 @@
 #include "../common/timer.h"
 #include "../common/utils.h"
 #include "../common/console.h"
+#include "../common/HPM.h"
 #include "int_guild.h"
 #include "int_homun.h"
 #include "int_mercenary.h"
@@ -2150,6 +2151,14 @@ int parse_fromlogin(int fd) {
 
 	while(RFIFOREST(fd) >= 2) {
 		uint16 command = RFIFOW(fd,0);
+		
+		if( HPM->packetsc[hpParse_FromLogin] ) {
+			if( (i = HPM->parse_packets(fd,hpParse_FromLogin)) ) {
+				if( i == 1 ) continue;
+				if( i == 2 ) return 0;
+			}
+		}
+		
 		switch( command ) {
 
 			// acknowledgement of connect-to-loginserver request
@@ -2704,6 +2713,14 @@ int parse_frommap(int fd)
 	}
 
 	while(RFIFOREST(fd) >= 2) {
+		
+		if( HPM->packetsc[hpParse_FromMap] ) {
+			if( (i = HPM->parse_packets(fd,hpParse_FromMap)) ) {
+				if( i == 1 ) continue;
+				if( i == 2 ) return 0;
+			}
+		}
+		
 		switch(RFIFOW(fd,0)) {
 
 			case 0x2b0a:
@@ -3752,6 +3769,13 @@ int parse_char(int fd)
 		//For use in packets that depend on an sd being present [Skotlex]
 		#define FIFOSD_CHECK(rest) { if(RFIFOREST(fd) < rest) return 0; if (sd==NULL || !sd->auth) { RFIFOSKIP(fd,rest); return 0; } }
 
+		if( HPM->packetsc[hpParse_Char] ) {
+			if( (i = HPM->parse_packets(fd,hpParse_Char)) ) {
+				if( i == 1 ) continue;
+				if( i == 2 ) return 0;
+			}
+		}
+		
 		cmd = RFIFOW(fd,0);
 
 		switch( cmd ) {
@@ -4874,8 +4898,11 @@ int char_config_read(const char* cfgName)
 
 void do_final(void) {
 	int i;
+	
 	ShowStatus("Terminating...\n");
 
+	HPM->event(HPET_FINAL);
+	
 	set_all_offline(-1);
 	set_all_offline_sql();
 
@@ -4967,6 +4994,11 @@ int do_init(int argc, char **argv) {
 
 	auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	online_char_db = idb_alloc(DB_OPT_RELEASE_DATA);
+
+	HPM->share(sql_handle,"sql_handle");
+	HPM->config_read();
+	HPM->event(HPET_INIT);
+	
 	mmo_char_sql_init();
 	char_read_fame_list(); //Read fame lists.
 
@@ -5034,5 +5066,7 @@ int do_init(int argc, char **argv) {
 		runflag = CHARSERVER_ST_RUNNING;
 	}
 
+	HPM->event(HPET_READY);
+	
 	return 0;
 }

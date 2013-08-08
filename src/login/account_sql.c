@@ -687,10 +687,11 @@ static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, boo
 
 	return result;
 }
-void account_db_sql_up(AccountDB* self) {
+Sql* account_db_sql_up(AccountDB* self) {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
 	Sql_HerculesUpdateCheck(db->accounts);
 #ifdef CONSOLE_INPUT
 	console->setSQL(db->accounts);
 #endif
+	return db->accounts;
 }

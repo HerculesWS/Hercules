@@ -8,6 +8,7 @@
 #include "../common/db.h"
 #include "../common/malloc.h"
 #include "../common/random.h"
+#include "../common/HPM.h"
 
 #include "map.h"
 #include "path.h"
@@ -2330,6 +2331,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 		{
 			struct map_session_data *sd = (struct map_session_data*)bl;
 			int i;
+			unsigned int k;
 
 			if( iStatus->isdead(bl) )
 				pc->setrestartvalue(sd,2);
@@ -2397,6 +2399,15 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 				aFree(sd->queues);
 				sd->queues = NULL;
 			}
+			
+			for( k = 0; k < sd->hdatac; k++ ) {
+				if( sd->hdata[k]->flag.free ) {
+					aFree(sd->hdata[k]->data);
+					aFree(sd->hdata[k]);
+				}
+			}
+			if( sd->hdata )
+				aFree(sd->hdata);
 			break;
 		}
 		case BL_PET:

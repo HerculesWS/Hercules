@@ -14,6 +14,7 @@
 #include "../common/utils.h"
 #include "../common/ers.h"
 #include "../common/conf.h"
+#include "../common/HPM.h"
 
 #include "map.h"
 #include "chrif.h"
@@ -17621,6 +17622,14 @@ int clif_parse(int fd) {
 		
 		if (RFIFOREST(fd) < 2)
 			return 0;
+
+		if( HPM->packetsc[hpClif_Parse] ) {
+			int r;
+			if( (r = HPM->parse_packets(fd,hpClif_Parse)) ) {
+				if( r == 1 ) continue;
+				if( r == 2 ) return 0;
+			}
+		}
 		
 		if( sd )
 			parse_cmd_func = sd->parse_cmd_func;

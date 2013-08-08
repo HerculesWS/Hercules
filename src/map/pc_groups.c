@@ -2,6 +2,7 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
+#include "../common/cbasetypes.h"
 #include "../common/conf.h"
 #include "../common/db.h"
 #include "../common/malloc.h"

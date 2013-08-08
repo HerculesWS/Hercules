@@ -9,6 +9,7 @@
 #include "../common/showmsg.h"
 #include "../common/strlib.h"
 #include "../config/core.h"
+#include "../common/HPM.h"
 #include "socket.h"
 
 #include <stdio.h>
@@ -238,8 +239,6 @@ static time_t socket_data_last_tick = 0;
 // Maximum size of pending data in the write fifo. (for non-server connections)
 // The connection is closed if it goes over the limit.
 #define WFIFO_MAX (1*1024*1024)
-
-struct socket_data* session[FD_SETSIZE];
 
 #ifdef SEND_SHORTLIST
 int send_shortlist_array[FD_SETSIZE];// we only support FD_SETSIZE sockets, limit the array to that
@@ -594,13 +593,15 @@ static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseF
 	session[fd]->func_parse = func_parse;
 	session[fd]->rdata_tick = last_tick;
 	session[fd]->session_data = NULL;
+	session[fd]->hdata = NULL;
+	session[fd]->hdatac = 0;
 	return 0;
 }
 
 static void delete_session(int fd)
 {
-	if( session_isValid(fd) )
-	{
+	if( session_isValid(fd) ) {
+		unsigned int i;
 #ifdef SHOW_SERVER_STATS
 		socket_data_qi -= session[fd]->rdata_size - session[fd]->rdata_pos;
 		socket_data_qo -= session[fd]->wdata_size;
@@ -609,6 +610,14 @@ static void delete_session(int fd)
 		aFree(session[fd]->wdata);
 		if( session[fd]->session_data )
 			aFree(session[fd]->session_data);
+		for(i = 0; i < session[fd]->hdatac; i++) {
+			if( session[fd]->hdata[i]->flag.free ) {
+				aFree(session[fd]->hdata[i]->data);
+				aFree(session[fd]->hdata[i]);
+			}
+		}
+		if( session[fd]->hdata )
+			aFree(session[fd]->hdata);
 		aFree(session[fd]);
 		session[fd] = NULL;
 	}
@@ -1214,6 +1223,8 @@ void socket_final(void)
 	aFree(session[0]->rdata);
 	aFree(session[0]->wdata);
 	aFree(session[0]);
+	
+	aFree(session);
 }
 
 /// Closes a socket.
@@ -1375,6 +1386,8 @@ void socket_init(void)
 	memset(send_shortlist_set, 0, sizeof(send_shortlist_set));
 #endif
 
+	CREATE(session, struct socket_data *, FD_SETSIZE);
+	
 	socket_config_read(SOCKET_CONF_FILENAME);
 
 	// initialise last send-receive tick
@@ -1392,6 +1405,11 @@ void socket_init(void)
 #endif
 
 	ShowInfo("Server supports up to '"CL_WHITE"%u"CL_RESET"' concurrent connections.\n", rlim_cur);
+	
+	/* Hercules Plugin Manager */
+	HPM->share(session,"session");
+	HPM->share(&fd_max,"fd_max");
+	HPM->share(addr_,"addr");
 }
 
 bool session_isValid(int fd)
