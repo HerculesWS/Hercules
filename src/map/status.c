@@ -8680,10 +8680,10 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			tick_time = 1000;
 			break;
 		case SC_ZANGETSU:
-			val2 = iStatus->get_lv(bl) / 3 + 20 * val1;
+			val2 = val4 = iStatus->get_lv(bl) / 3 + 20 * val1;
 			val3 = iStatus->get_lv(bl) / 2 + 30 * val1;
 			val2 = (!(status_get_hp(bl)%2) ? val2 : -val3);
-			val3 = (!(status_get_sp(bl)%2) ? val2 : -val3);
+			val3 = (!(status_get_sp(bl)%2) ? val4 : -val3);
 			break;
 		case SC_GENSOU:
 			{
@@ -10932,8 +10932,8 @@ int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int fl
 		variance = 5.0f * watk->atk *  watk->wlv / 100.0f;
 		strdex_bonus = watk->atk * dstr / 200.0f;
 
-		min = (watk->atk - (int)(variance + strdex_bonus)) + watk->atk2;
-		max = (watk->atk + (int)(variance + strdex_bonus)) + watk->atk2;
+		min = (int)(watk->atk - variance + strdex_bonus) + watk->atk2;
+		max = (int)(watk->atk + variance + strdex_bonus) + watk->atk2;
 	}else if( watk->atk ){
 		min = watk->atk * 80 / 100;
 		max = watk->atk * 120 / 100;

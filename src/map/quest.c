@@ -97,7 +97,7 @@ int quest_add(TBL_PC * sd, int quest_id)
 	sd->save_quest = true;
 
 	clif->quest_add(sd, &sd->quest_log[i], sd->quest_index[i]);
-
+	clif->quest_update_objective(sd, &sd->quest_log[i], sd->quest_index[i]);
 	if( iMap->save_settings&64 )
 		chrif->save(sd,0);
 
@@ -145,6 +145,7 @@ int quest_change(TBL_PC * sd, int qid1, int qid2)
 
 	clif->quest_delete(sd, qid1);
 	clif->quest_add(sd, &sd->quest_log[i], sd->quest_index[i]);
+	clif->quest_update_objective(sd, &sd->quest_log[i], sd->quest_index[i]);
 
 	if( iMap->save_settings&64 )
 		chrif->save(sd,0);
