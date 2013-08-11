@@ -261,9 +261,21 @@ typedef uintptr_t uintptr;
 //////////////////////////////
 
 // boolean types for C
+#if !defined(_MSC_VER) || _MSC_VER >= 1800
+// MSVC doesn't have stdbool.h yet as of Visual Studio 2012 (MSVC version 17.00)
+// but it will support it in Visual Studio 2013 (MSVC version 18.00)
+// http://blogs.msdn.com/b/vcblog/archive/2013/07/19/c99-library-support-in-visual-studio-2013.aspx
+// GCC and Clang are assumed to be C99 compliant
+#include <stdbool.h> // bool, true, false, __bool_true_false_are_defined
+#endif // ! defined(_MSC_VER) || _MSC_VER >= 1800
+
+#ifndef __bool_true_false_are_defined
+// If stdbool.h is not available or does not define this
 typedef char bool;
 #define false	(1==0)
 #define true	(1==1)
+#define __bool_true_false_are_defined
+#endif // __bool_true_false_are_defined
 
 //////////////////////////////
 #endif // not __cplusplus
