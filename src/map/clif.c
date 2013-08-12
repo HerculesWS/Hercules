@@ -2700,6 +2700,7 @@ void read_channels_config(void) {
 		if( hChSys.irc ) {
 			const char *irc_server, *irc_channel,
 				 *irc_nick, *irc_nick_pw;
+			int irc_use_ghost = 0;
 			if( config_setting_lookup_string(settings, "irc_channel_network", &irc_server) ) {
 				if( !strstr(irc_server,":") ) {
 					hChSys.irc = false;
@@ -2739,8 +2740,11 @@ void read_channels_config(void) {
 				hChSys.irc = false;
 				ShowWarning("channels.conf : irc channel enabled but irc_channel_nick wasn't found, disabling irc channel...\n");
 			}
-			if( config_setting_lookup_string(settings, "irc_channel_nick_pw", &irc_nick_pw) )
+			if( config_setting_lookup_string(settings, "irc_channel_nick_pw", &irc_nick_pw) ) {
 				safestrncpy(hChSys.irc_nick_pw, irc_nick_pw, 30);
+				config_setting_lookup_bool(settings, "irc_channel_use_ghost", &irc_use_ghost);
+				hChSys.irc_use_ghost = irc_use_ghost;
+			}
 
 		}
 		
@@ -3711,7 +3715,7 @@ void clif_useitemack(struct map_session_data *sd,int index,int amount,bool ok)
 	}
 }
 
-void clif_hercules_chsys_send(struct hChSysCh *channel, struct map_session_data *sd, char *msg) {
+void clif_hercules_chsys_send(struct hChSysCh *channel, struct map_session_data *sd, const char *msg) {
 	if( channel->msg_delay != 0 && DIFF_TICK(sd->hchsysch_tick + ( channel->msg_delay * 1000 ), iTimer->gettick()) > 0 && !pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) {
 		clif->colormes(sd->fd,COLOR_RED,msg_txt(1455));
 		return;
@@ -5715,7 +5719,7 @@ void clif_broadcast(struct block_list* bl, const char* mes, int len, int type, e
  * Used by npc_globalmessage
  *------------------------------------------*/
 void clif_GlobalMessage(struct block_list* bl, const char* message) {
-	char buf[100];
+	char buf[256];
 	int len;
 	nullpo_retv(bl);
 

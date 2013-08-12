@@ -10,6 +10,7 @@
 #define IRC_IDENT_LENGTH 40
 #define IRC_HOST_LENGTH 63
 #define IRC_FUNC_LENGTH 30
+#define IRC_MESSAGE_LENGTH 500
 
 struct hChSysCh;
 
@@ -47,11 +48,13 @@ struct irc_bot_interface {
 	int (*join_timer) (int tid, unsigned int tick, int id, intptr_t data);
 	/* */
 	void (*send)(char *str);
-	void (*relay) (char *name, char *msg);
+	void (*relay) (char *name, const char *msg);
 	/* */
 	void (*pong) (int fd, char *cmd, char *source, char *target, char *msg);
-	void (*join) (int fd, char *cmd, char *source, char *target, char *msg);
 	void (*privmsg) (int fd, char *cmd, char *source, char *target, char *msg);
+	void (*userjoin) (int fd, char *cmd, char *source, char *target, char *msg);
+	void (*userleave) (int fd, char *cmd, char *source, char *target, char *msg);
+	void (*usernick) (int fd, char *cmd, char *source, char *target, char *msg);
 };
 
 struct irc_bot_interface *ircbot;

@@ -417,6 +417,7 @@ struct {
 	bool allow_user_channel_creation;
 	char irc_server[40], irc_channel[50], irc_nick[40], irc_nick_pw[30];
 	unsigned short irc_server_port;
+	bool irc_use_ghost;
 } hChSys;
 
 struct hChSysBanEntry {
@@ -930,7 +931,7 @@ struct clif_interface {
 	void (*chsys_create) (struct hChSysCh *channel, char *name, char *pass, unsigned char color);
 	void (*chsys_msg) (struct hChSysCh *channel, struct map_session_data *sd, char *msg);
 	void (*chsys_msg2) (struct hChSysCh *channel, char *msg);
-	void (*chsys_send) (struct hChSysCh *channel, struct map_session_data *sd, char *msg);
+	void (*chsys_send) (struct hChSysCh *channel, struct map_session_data *sd, const char *msg);
 	void (*chsys_join) (struct hChSysCh *channel, struct map_session_data *sd);
 	void (*chsys_left) (struct hChSysCh *channel, struct map_session_data *sd);
 	void (*chsys_delete) (struct hChSysCh *channel);
