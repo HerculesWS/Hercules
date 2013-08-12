@@ -49,11 +49,16 @@ int quest_search_db(int quest_id)
 //Send quest info on login
 int quest_pc_login(TBL_PC * sd)
 {
+	int i;
+
 	if(sd->avail_quests == 0)
 		return 1;
 
 	clif->quest_send_list(sd);
 	clif->quest_send_mission(sd);
+	for( i = 0; i < sd->avail_quests; i++ ) {
+		clif->quest_update_objective(sd, &sd->quest_log[i], sd->quest_index[i]);
+	}
 
 	return 0;
 }
