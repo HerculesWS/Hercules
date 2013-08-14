@@ -937,6 +937,7 @@ void itemdb_read_packages(void) {
 		must[i] = 0;
 		random[i] = 0;
 		rgroup[i] = 0;
+		rgroups[i] = NULL;
 	}
 	
 	/* validate tree, drop poisonous fruits! */
@@ -1031,8 +1032,8 @@ void itemdb_read_packages(void) {
 		
 		c = 0;
 		while( (it = config_setting_get_elem(itg,c++)) ) {
-			int icount = 1, expire = 0, rate = 10000;
-			bool announce = false, named = false, gid = 0;
+			int icount = 1, expire = 0, rate = 10000, gid = 0;
+			bool announce = false, named = false;
 			
 			itname = config_setting_name(it);
 			
