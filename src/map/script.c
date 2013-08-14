@@ -2284,11 +2284,11 @@ void get_val(struct script_state* st, struct script_data* data)
 		sd = script_rid2sd(st);
 		if( sd == NULL ) {// needs player attached
 			if( postfix == '$' ) {// string variable
-				ShowWarning("script:script->get_val: cannot access player variable '%s', defaulting to \"\"\n", name);
+				ShowWarning("script_get_val: cannot access player variable '%s', defaulting to \"\"\n", name);
 				data->type = C_CONSTSTR;
 				data->u.str = "";
 			} else {// integer variable
-				ShowWarning("script:script->get_val: cannot access player variable '%s', defaulting to 0\n", name);
+				ShowWarning("script_get_val: cannot access player variable '%s', defaulting to 0\n", name);
 				data->type = C_INT;
 				data->u.num = 0;
 			}
@@ -2327,7 +2327,7 @@ void get_val(struct script_state* st, struct script_data* data)
 					if ( st->instance_id >= 0 ) {
 						data->u.str = (char*)idb_get(instances[st->instance_id].vars,reference_getuid(data));
 					} else {
-						ShowWarning("script:script->get_val: cannot access instance variable '%s', defaulting to \"\"\n", name);
+						ShowWarning("script_get_val: cannot access instance variable '%s', defaulting to \"\"\n", name);
 						data->u.str = NULL;
 					}
 				break;
@@ -2382,7 +2382,7 @@ void get_val(struct script_state* st, struct script_data* data)
 						if( st->instance_id >= 0 )
 							data->u.num = (int)idb_iget(instances[st->instance_id].vars,reference_getuid(data));
 						else {
-							ShowWarning("script:script->get_val: cannot access instance variable '%s', defaulting to 0\n", name);
+							ShowWarning("script_get_val: cannot access instance variable '%s', defaulting to 0\n", name);
 							data->u.num = 0;
 						}
 					break;

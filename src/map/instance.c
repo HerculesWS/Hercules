@@ -207,6 +207,37 @@ int instance_add_map(const char *name, int instance_id, bool usebasename, const 
 	memset(map[im].moblist, 0x00, sizeof(map[im].moblist));
 	map[im].mob_delete_timer = INVALID_TIMER;
 
+	//Mimic unit
+	if( map[m].unit_count ) {
+		map[im].unit_count = map[m].unit_count;
+		CREATE( map[im].units, struct mapflag_skill_adjust*, map[im].unit_count );
+
+		for(i = 0; i < map[im].unit_count; i++) {
+			CREATE( map[im].units[i], struct mapflag_skill_adjust, 1);
+			memcpy( map[im].units[i],map[m].units[i],sizeof(struct mapflag_skill_adjust));
+		}
+	}
+	//Mimic skills
+	if( map[m].skill_count ) {
+		map[im].skill_count = map[m].skill_count;
+		CREATE( map[im].skills, struct mapflag_skill_adjust*, map[im].skill_count );
+		
+		for(i = 0; i < map[im].skill_count; i++) {
+			CREATE( map[im].skills[i], struct mapflag_skill_adjust, 1);
+			memcpy( map[im].skills[i],map[m].skills[i],sizeof(struct mapflag_skill_adjust));
+		}
+	}
+	//Mimic zone mf
+	if( map[m].zone_mf_count ) {
+		map[im].zone_mf_count = map[m].zone_mf_count;
+		CREATE( map[im].zone_mf, char *, map[im].zone_mf_count );
+		
+		for(i = 0; i < map[im].zone_mf_count; i++) {
+			CREATE(map[im].zone_mf[i], char, MAP_ZONE_MAPFLAG_LENGTH);
+			safestrncpy(map[im].zone_mf[i],map[m].zone_mf[i],MAP_ZONE_MAPFLAG_LENGTH);
+		}
+	}
+	
 	map[im].m = im;
 	map[im].instance_id = instance_id;
 	map[im].instance_src_map = m;
@@ -352,6 +383,30 @@ void instance_del_map(int16 m) {
 	aFree(map[m].cell);
 	aFree(map[m].block);
 	aFree(map[m].block_mob);
+	
+	if( map[m].unit_count ) {
+		for(i = 0; i < map[m].unit_count; i++) {
+			aFree(map[m].units[i]);
+		}
+		if( map[m].units )
+			aFree(map[m].units);
+	}
+	
+	if( map[m].skill_count ) {
+		for(i = 0; i < map[m].skill_count; i++) {
+			aFree(map[m].skills[i]);
+		}
+		if( map[m].skills )
+			aFree(map[m].skills);
+	}
+	
+	if( map[m].zone_mf_count ) {
+		for(i = 0; i < map[m].zone_mf_count; i++) {
+			aFree(map[m].zone_mf[i]);
+		}
+		if( map[m].zone_mf )
+			aFree(map[m].zone_mf);
+	}
 	
 	// Remove from instance
 	for( i = 0; i < instances[map[m].instance_id].num_map; i++ ) {
