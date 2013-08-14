@@ -1339,8 +1339,7 @@ int pc_reg_received(struct map_session_data *sd)
 	return 1;
 }
 
-static int pc_calc_skillpoint(struct map_session_data* sd)
-{
+int pc_calc_skillpoint(struct map_session_data* sd) {
 	int  i,skill_lv,inf2,skill_point=0;
 
 	nullpo_ret(sd);
@@ -1349,7 +1348,7 @@ static int pc_calc_skillpoint(struct map_session_data* sd)
 		if( (skill_lv = pc->checkskill2(sd,i)) > 0) {
 			inf2 = skill_db[i].inf2;
 			if((!(inf2&INF2_QUEST_SKILL) || battle_config.quest_skill_learn) &&
-				!(inf2&(INF2_WEDDING_SKILL|INF2_SPIRIT_SKILL)) //Do not count wedding/link skills. [Skotlex]
+				!(inf2&(INF2_WEDDING_SKILL|INF2_SPIRIT_SKILL|INF2_GUILD_SKILL)) //Do not count wedding/link skills. [Skotlex]
 				) {
 				if(sd->status.skill[i].flag == SKILL_FLAG_PERMANENT)
 					skill_point += skill_lv;
@@ -1623,13 +1622,14 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 	if (!battle_config.skillup_limit || pc->has_permission(sd, PC_PERM_ALL_SKILL))
 		return c;
 
-	skill_point = pc_calc_skillpoint(sd);
+	skill_point = pc->calc_skillpoint(sd);
 
 	novice_skills = max_level[pc->class2idx(JOB_NOVICE)][1] - 1;
 
+	sd->sktree.second = sd->sktree.third = 0;
+	
 	// limit 1st class and above to novice job levels
-	if(skill_point < novice_skills)
-	{
+	if(skill_point < novice_skills) {
 		c = MAPID_NOVICE;
 	}
 	// limit 2nd class and above to first class job levels (super novices are exempt)
@@ -1662,6 +1662,7 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 
 		if (skill_point < novice_skills + (sd->change_level_2nd - 1)) {
 			c &= MAPID_BASEMASK;
+			sd->sktree.second = ( novice_skills + (sd->change_level_2nd - 1) ) - skill_point;
 		} else if(sd->class_&JOBL_THIRD) { // limit 3rd class to 2nd class/trans job levels
 			// regenerate change_level_3rd
 			if (!sd->change_level_3rd) {
@@ -1672,14 +1673,16 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 					pc_setglobalreg (sd, "jobchange_level_3rd", sd->change_level_3rd);
 			}
 
-			if (skill_point < novice_skills + (sd->change_level_2nd - 1) + (sd->change_level_3rd - 1))
+			if (skill_point < novice_skills + (sd->change_level_2nd - 1) + (sd->change_level_3rd - 1)) {
 				c &= MAPID_UPPERMASK;
+				sd->sktree.third = (novice_skills + (sd->change_level_2nd - 1) + (sd->change_level_3rd - 1)) - skill_point;
+			}
 		}
 	}
 
 	// restore non-limiting flags
 	c |= sd->class_&(JOBL_UPPER|JOBL_BABY);
-
+	
 	return c;
 }
 
@@ -6219,73 +6222,6 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 	if( !(index = skill->get_index(skill_id)) )
 		return 0;
 	
-	if( battle_config.skillup_limit ) {
-		/* [Ind/Hercules] */
-		if( (sd->class_&JOBL_2) && (sd->class_&MAPID_UPPERMASK) != MAPID_SUPER_NOVICE ){
-			while(1) {
-				int c, i = 0, k = 0, pts = 0, pts_second = 0, id = 0;
-				bool can_skip = false;
-								
-				c = sd->class_ & MAPID_BASEMASK;
-				
-				k = pc_class2idx(pc_mapid2jobid(c, sd->status.sex));
-
-				for(i = 0; i < MAX_SKILL_TREE && (id=skill_tree[k][i].id) > 0 ; i++){
-					int inf2 = skill->get_inf2(id), idx = skill_tree[k][i].idx;
-					
-					if( skill_id == id ) {
-						can_skip = true;
-						break;/* its oki we can skip */
-					}
-					
-					if ( inf2&INF2_QUEST_SKILL || (inf2&(INF2_WEDDING_SKILL|INF2_SPIRIT_SKILL)) || id == NV_BASIC )
-						continue;
-					
-					if( sd->status.skill[idx].id && sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT )
-						pts += pc_checkskill(sd, id);
-				}
-
-				if( can_skip ) break;
-
-				if( pts < sd->change_level_2nd ) {
-					clif->msg_value(sd, 0x61E, sd->change_level_2nd - pts);
-					return 0;
-				}
-				
-				if( sd->class_&JOBL_THIRD ) {
-					bool is_trans = sd->class_&JOBL_UPPER? true : false;
-					
-					c = is_trans ? (sd->class_ &~ JOBL_THIRD)/* find fancy way */ : sd->class_ & MAPID_UPPERMASK;
-
-					k = pc_class2idx(pc_mapid2jobid(c, sd->status.sex));
-
-					for(i = 0; i < MAX_SKILL_TREE && (id=skill_tree[k][i].id) > 0 ; i++){
-						int inf2 = skill->get_inf2(id), idx = skill_tree[k][i].idx;
-						
-						if( skill_id == id ) {
-							can_skip = true;
-							break;/* its oki we can skip */
-						}
-						
-						if ( inf2&INF2_QUEST_SKILL || (inf2&(INF2_WEDDING_SKILL|INF2_SPIRIT_SKILL)) || id == NV_BASIC )
-							continue;
-						
-						if( sd->status.skill[idx].id && sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT )
-							pts_second += pc_checkskill(sd, id);
-					}
-					
-					if( can_skip ) break;
-
-					if( pts_second - pts < sd->change_level_3rd ) {
-						clif->msg_value(sd, 0x61F, sd->change_level_3rd - (pts_second - pts));
-						return 0;
-					}
-				}
-				break;
-			}
-		}
-	}
-	
 	if( sd->status.skill_point > 0 &&
 		sd->status.skill[index].id &&
 		sd->status.skill[index].flag == SKILL_FLAG_PERMANENT && //Don't allow raising while you have granted skills. [Skotlex]
@@ -6306,6 +6242,15 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 			clif->updatestatus(sd,SP_CARTINFO);
 		if (!pc->has_permission(sd, PC_PERM_ALL_SKILL)) // may skill everything at any time anyways, and this would cause a huge slowdown
 			clif->skillinfoblock(sd);
+	} else if( battle_config.skillup_limit ){
+		if( sd->sktree.second )
+			clif->msg_value(sd, 0x61E, sd->sktree.second);
+		else if( sd->sktree.third )
+			clif->msg_value(sd, 0x61F, sd->sktree.third);
+		else if( pc->calc_skillpoint(sd) < 9 ) {
+			/* TODO: official response? */
+			clif->colormes(sd->fd,COLOR_RED,"You need the basic skills");
+		}
 	}
 	return 0;
 }
@@ -10492,4 +10437,6 @@ void pc_defaults(void) {
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	pc->level_penalty_mod = pc_level_penalty_mod;
 #endif
+	
+	pc->calc_skillpoint = pc_calc_skillpoint;
 }

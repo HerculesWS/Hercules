@@ -510,6 +510,10 @@ struct map_session_data {
 	struct HPluginData **hdata;
 	unsigned int hdatac;
 	
+	/* */
+	struct {
+		unsigned int second,third;
+	} sktree;
 	// temporary debugging of bug #3504
 	const char* delunit_prevfile;
 	int delunit_prevline;
@@ -960,6 +964,7 @@ struct pc_interface {
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	int (*level_penalty_mod) (int diff, unsigned char race, unsigned short mode, int type);
 #endif
+	int (*calc_skillpoint) (struct map_session_data* sd);
 };
 
 struct pc_interface *pc;

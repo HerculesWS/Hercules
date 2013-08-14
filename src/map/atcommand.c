@@ -9502,6 +9502,19 @@ ACMD(costume){
 	
 	return true;
 }
+/* for debugging purposes (so users can easily provide us with debug info) */
+/* should be trashed as soon as its no longer necessary */
+ACMD(skdebug) {
+	sprintf(atcmd_output,"second: %d; third: %d",sd->sktree.second,sd->sktree.third);
+	clif->message(fd,atcmd_output);
+	sprintf(atcmd_output,"pc_calc_skilltree_normalize_job: %d",pc->calc_skilltree_normalize_job(sd));
+	clif->message(fd,atcmd_output);
+	sprintf(atcmd_output,"change_lv_2nd/3rd: %d/%d",sd->change_level_2nd,sd->change_level_3rd);
+	clif->message(fd,atcmd_output);
+	sprintf(atcmd_output,"pc_calc_skillpoint:%d",pc->calc_skillpoint(sd));
+	clif->message(fd,atcmd_output);
+	return true;
+}
 /**
  * Fills the reference of available commands in atcommand DBMap
  **/
@@ -9765,6 +9778,7 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(fontcolor),
 		ACMD_DEF(searchstore),
 		ACMD_DEF(costume),
+		ACMD_DEF(skdebug),
 	};
 	AtCommandInfo* cmd;
 	int i;
