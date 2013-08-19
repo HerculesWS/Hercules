@@ -8966,11 +8966,12 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			break;
 
 		case SO_ELEMENTAL_SHIELD:
-			if( !sd->ed )	break;
+			if( sd == NULL || !sd->ed )
+				break;
 			elemental->delete(sd->ed, 0);
-			if( sd == NULL || sd->status.party_id == 0 || flag&1 )
+			if( sd->status.party_id == 0 || flag&1 )
 				skill->unitsetting(src,MG_SAFETYWALL,skill_lv,bl->x,bl->y,0);
-			else if( sd )
+			else
 				party_foreachsamemap(skill->area_sub, sd, skill->get_splash(skill_id, skill_lv), src, skill_id, skill_lv, tick, flag|BCT_PARTY|1, skill->castend_nodamage_id);
 			break;
 
