@@ -677,8 +677,7 @@ struct map_data {
 	/* long_damage_rate mapflag */
 	unsigned short long_damage_rate;
 
-	/* instance unique name */
-	char *cName;
+	bool custom_name; ///< Whether the instanced map is using a custom name
 
 	/* */
 	int (*getcellp)(struct map_data* m,int16 x,int16 y,cell_chk cellchk);
