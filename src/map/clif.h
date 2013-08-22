@@ -532,7 +532,7 @@ struct clif_interface {
 	void (*set_unit_idle2) (struct block_list* bl, struct map_session_data *tsd, enum send_target target);
 #endif
 	void (*set_unit_walking) (struct block_list* bl, struct map_session_data *tsd,struct unit_data* ud, enum send_target target);
-	int (*calc_walkdelay) (struct block_list *bl,int delay, int type, int64 damage, int div_);
+	int (*calc_walkdelay) (struct block_list *bl,int delay, int type, int damage, int div_);
 	void (*getareachar_skillunit) (struct map_session_data *sd, struct skill_unit *unit);
 	void (*getareachar_unit) (struct map_session_data* sd,struct block_list *bl);
 	void (*clearchar_skillunit) (struct skill_unit *unit, int fd);

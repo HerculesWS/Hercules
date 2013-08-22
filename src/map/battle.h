@@ -492,9 +492,9 @@ struct battle_interface {
 	/* delays damage or skills by a timer */
 	int (*delay_damage) (unsigned int tick, int amotion, struct block_list *src, struct block_list *target, int attack_type, uint16 skill_id, uint16 skill_lv, int64 damage, enum damage_lv dmg_lv, int ddelay, bool additional_effects);
 	/* drain damage */
-	void (*drain) (struct map_session_data *sd, struct block_list *tbl, int rdamage, int ldamage, int race, int boss);
+	void (*drain) (struct map_session_data *sd, struct block_list *tbl, int64 rdamage, int64 ldamage, int race, int boss);
 	/* damage return/reflect */
-	int64 (*calc_return_damage) (struct block_list *bl, struct block_list *src, int64 *, int flag, uint16 skill_id, int64 *);
+	int64 (*calc_return_damage) (struct block_list *bl, struct block_list *src, int64 *, int flag, uint16 skill_id, int *);
 	/* attribute rate */
 	int (*attr_ratio) (int atk_elem, int def_type, int def_lv);
 	/* applies attribute modifiers */
@@ -514,7 +514,7 @@ struct battle_interface {
 	int64 (*calc_weapon_damage) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, struct weapon_atk *watk, int nk, bool n_ele, short s_ele, short s_ele_, int size, int type, int flag, int flag2);
 #endif
 	/* applies defense reductions */
-	int (*calc_defense) (int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, int flag, int pdef);
+	int64 (*calc_defense) (int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, int flag, int pdef);
 	/* get master (who does this unit respond to?) */
 	struct block_list *(*get_master) (struct block_list *src);
 	/* returns a random unit who is targeting this unit */

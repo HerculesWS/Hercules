@@ -2793,7 +2793,7 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 
 	iMap->freeblock_unlock();
 
-	return damage;
+	return (int)cap_value(damage,INT_MIN,INT_MAX);
 }
 
 /*==========================================
@@ -12140,13 +12140,13 @@ int skill_unit_ondamaged (struct skill_unit *src, struct block_list *bl, int64 d
 	case UNT_ICEWALL:
 	case UNT_REVERBERATION:
 	case UNT_WALLOFTHORN:
-		src->val1-=damage;
+		src->val1 -= (int)cap_value(damage,INT_MIN,INT_MAX);
 		break;
 	default:
 		damage = 0;
 		break;
 	}
-	return damage;
+	return (int)cap_value(damage,INT_MIN,INT_MAX);
 }
 
 /*==========================================

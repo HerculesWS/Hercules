@@ -1132,13 +1132,14 @@ int status_charge(struct block_list* bl, int64 hp, int64 sp)
 //If flag&2, fail if target does not has enough to substract.
 //If flag&4, if killed, mob must not give exp/loot.
 //flag will be set to &8 when damaging sp of a dead character
-int status_damage(struct block_list *src,struct block_list *target,int64 hp, int64 sp, int walkdelay, int flag) {
+int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, int64 in_sp, int walkdelay, int flag) {
 	struct status_data *status;
 	struct status_change *sc;
+	int hp,sp;
 
 	/* here onwards we consider it a 32-type, the client does not support higher and from here onwards the value doesn't get thru percentage modifiers */
-	hp = cap_value(hp,INT_MIN,INT_MAX);
-	sp = cap_value(sp,INT_MIN,INT_MAX);
+	hp = (int)cap_value(in_hp,INT_MIN,INT_MAX);
+	sp = (int)cap_value(in_sp,INT_MIN,INT_MAX);
 	
 	if(sp && !(target->type&BL_CONSUME))
 		sp = 0; //Not a valid SP target.
@@ -1353,10 +1354,11 @@ int status_damage(struct block_list *src,struct block_list *target,int64 hp, int
 
 //Heals a character. If flag&1, this is forced healing (otherwise stuff like Berserk can block it)
 //If flag&2, when the player is healed, show the HP/SP heal effect.
-int status_heal(struct block_list *bl,int64 hp,int64 sp, int flag)
+int status_heal(struct block_list *bl,int64 in_hp,int64 in_sp, int flag)
 {
 	struct status_data *status;
 	struct status_change *sc;
+	int hp,sp;
 
 	status = iStatus->get_status_data(bl);
 
@@ -1364,8 +1366,8 @@ int status_heal(struct block_list *bl,int64 hp,int64 sp, int flag)
 		return 0;
 
 	/* here onwards we consider it a 32-type, the client does not support higher and from here onwards the value doesn't get thru percentage modifiers */
-	hp = cap_value(hp,INT_MIN,INT_MAX);
-	sp = cap_value(sp,INT_MIN,INT_MAX);
+	hp = (int)cap_value(in_hp,INT_MIN,INT_MAX);
+	sp = (int)cap_value(in_sp,INT_MIN,INT_MAX);
 	
 	sc = iStatus->get_sc(bl);
 	if (sc && !sc->count)
