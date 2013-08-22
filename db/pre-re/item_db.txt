@@ -3415,6 +3415,10 @@
 6394,Golden_Feather,Golden Feather,3,650,,10,,,,,,,,,,,,,{},{},{}
 6395,Angel_Magic_Power,Angel Magic Power,3,820,,10,,,,,,,,,,,,,{},{},{}
 6396,Auger_Of_Spirit,Auger Of Spirit,3,0,,10,,,,,,,,,,,,,{},{},{}
+6512,Charm_Fire,Charm Fire,3,100,,1,,,,,,,,,,,,,{},{},{}
+6513,Charm_Ice,Charm Ice,3,100,,1,,,,,,,,,,,,,{},{},{}
+6514,Charm_Wind,Charm Wind,3,100,,1,,,,,,,,,,,,,{},{},{}
+6515,Charm_Earth,Charm Earth,3,100,,1,,,,,,,,,,,,,{},{},{}
 7001,Mould_Powder,Mould Powder,3,466,,10,,,,,,,,,,,,,{},{},{}
 7002,Ogre_Tooth,Ogre Tooth,3,658,,10,,,,,,,,,,,,,{},{},{}
 7003,Anolian_Skin,Anolian Skin,3,968,,10,,,,,,,,,,,,,{},{},{}
