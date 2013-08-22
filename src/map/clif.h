@@ -532,7 +532,7 @@ struct clif_interface {
 	void (*set_unit_idle2) (struct block_list* bl, struct map_session_data *tsd, enum send_target target);
 #endif
 	void (*set_unit_walking) (struct block_list* bl, struct map_session_data *tsd,struct unit_data* ud, enum send_target target);
-	int (*calc_walkdelay) (struct block_list *bl,int delay, int type, int damage, int div_);
+	int (*calc_walkdelay) (struct block_list *bl,int delay, int type, int64 damage, int div_);
 	void (*getareachar_skillunit) (struct map_session_data *sd, struct skill_unit *unit);
 	void (*getareachar_unit) (struct map_session_data* sd,struct block_list *bl);
 	void (*clearchar_skillunit) (struct skill_unit *unit, int fd);
@@ -570,7 +570,7 @@ struct clif_interface {
 	void (*scriptclear) (struct map_session_data *sd, int npcid);
 	/* client-user-interface-related */
 	void (*viewpoint) (struct map_session_data *sd, int npc_id, int type, int x, int y, int id, int color);
-	int (*damage) (struct block_list* src, struct block_list* dst, unsigned int tick, int sdelay, int ddelay, int damage, int div, int type, int damage2);
+	int (*damage) (struct block_list* src, struct block_list* dst, unsigned int tick, int sdelay, int ddelay, int64 damage, int div, int type, int64 damage2);
 	void (*sitting) (struct block_list* bl);
 	void (*standing) (struct block_list* bl);
 	void (*arrow_create_list) (struct map_session_data *sd);
@@ -667,7 +667,7 @@ struct clif_interface {
 	void (*wedding_effect) (struct block_list *bl);
 	void (*divorced) (struct map_session_data* sd, const char* name);
 	void (*callpartner) (struct map_session_data *sd);
-	int (*skill_damage) (struct block_list *src,struct block_list *dst,unsigned int tick,int sdelay,int ddelay,int damage,int div,uint16 skill_id,uint16 skill_lv,int type);
+	int (*skill_damage) (struct block_list *src,struct block_list *dst,unsigned int tick,int sdelay,int ddelay,int64 damage,int div,uint16 skill_id,uint16 skill_lv,int type);
 	int (*skill_nodamage) (struct block_list *src,struct block_list *dst,uint16 skill_id,int heal,int fail);
 	void (*skill_poseffect) (struct block_list *src,uint16 skill_id,int val,int x,int y,int tick);
 	void (*skill_estimation) (struct map_session_data *sd,struct block_list *dst);

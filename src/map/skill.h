@@ -1826,7 +1826,7 @@ struct skill_interface {
 	int (*clear_unitgroup) (struct block_list *src);
 	int (*clear_group) (struct block_list *bl, int flag);
 	int (*unit_onplace) (struct skill_unit *src, struct block_list *bl, unsigned int tick);
-	int (*unit_ondamaged) (struct skill_unit *src,struct block_list *bl,int damage,unsigned int tick);
+	int (*unit_ondamaged) (struct skill_unit *src,struct block_list *bl,int64 damage,unsigned int tick);
 	int (*cast_fix) ( struct block_list *bl, uint16 skill_id, uint16 skill_lv);
 	int (*cast_fix_sc) ( struct block_list *bl, int time);
 #ifdef RENEWAL_CAST

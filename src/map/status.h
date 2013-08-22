@@ -2,12 +2,14 @@
 // For more information, see LICENCE in the main folder
 #ifndef _STATUS_H_
 #define _STATUS_H_
+
 struct block_list;
 struct mob_data;
 struct pet_data;
 struct homun_data;
 struct mercenary_data;
 struct status_change;
+
 /**
  * Max Refine available to your server
  * Changing this limit requires edits to refine_db.txt
@@ -17,6 +19,7 @@ struct status_change;
 #else
 	#define MAX_REFINE 10
 #endif
+
 enum refine_type {
 	REFINE_TYPE_ARMOR   = 0,
 	REFINE_TYPE_WEAPON1 = 1,
@@ -25,6 +28,7 @@ enum refine_type {
 	REFINE_TYPE_WEAPON4 = 4,
 	REFINE_TYPE_MAX     = 5
 };
+
 typedef enum sc_conf_type {
 	SC_NO_REM_DEATH   = 0x1,
 	SC_NO_SAVE = 0x2,
@@ -34,7 +38,8 @@ typedef enum sc_conf_type {
 	SC_DEBUFF = 0x20,
 	SC_MADO_NO_RESET = 0x40
 } sc_conf_type;
-// Status changes listing. These code are for use by the server. 
+
+// Status changes listing. These code are for use by the server.
 typedef enum sc_type {
 	SC_NONE = -1,
 	//First we enumerate common status ailments which are often used around.
@@ -1759,8 +1764,6 @@ struct status_change {
 #define status_get_size(bl) iStatus->get_status_data(bl)->size
 #define status_get_mode(bl) iStatus->get_status_data(bl)->mode
 
-
-
 //Short version, receives rate in 1->100 range, and does not uses a flag setting.
 #define sc_start(bl, type, rate, val1, tick) iStatus->change_start(bl,type,100*(rate),val1,0,0,0,tick,0)
 #define sc_start2(bl, type, rate, val1, val2, tick) iStatus->change_start(bl,type,100*(rate),val1,val2,0,0,tick,0)
@@ -1776,16 +1779,6 @@ struct status_change {
 #define status_calc_mercenary(md, first) iStatus->calc_bl_(&(md)->bl, SCB_ALL, first)
 #define status_calc_elemental(ed, first) iStatus->calc_bl_(&(ed)->bl, SCB_ALL, first)
 #define status_calc_npc(nd, first) iStatus->calc_bl_(&(nd)->bl, SCB_ALL, first)
-
-
-
-
-
-
-#ifdef RENEWAL
-#endif
-
-
 
 /*=====================================
 * Interface : status.h 
@@ -1809,14 +1802,14 @@ struct status_interface {
 	int (*type2relevant_bl_types) (int type);
 	int (*get_sc_type) (sc_type idx);
 	
-	int (*damage) (struct block_list *src,struct block_list *target,int hp,int sp, int walkdelay, int flag);
+	int (*damage) (struct block_list *src,struct block_list *target,int64 hp,int64 sp, int walkdelay, int flag);
 	//Define for standard HP/SP skill-related cost triggers (mobs require no HP/SP to use skills)
-	int (*charge) (struct block_list* bl, int hp, int sp);
+	int (*charge) (struct block_list* bl, int64 hp, int64 sp);
 	int (*percent_change) (struct block_list *src,struct block_list *target,signed char hp_rate, signed char sp_rate, int flag);
 	//Used to set the hp/sp of an object to an absolute value (can't kill)
 	int (*set_hp) (struct block_list *bl, unsigned int hp, int flag);
 	int (*set_sp) (struct block_list *bl, unsigned int sp, int flag);
-	int (*heal) (struct block_list *bl,int hp,int sp, int flag);
+	int (*heal) (struct block_list *bl,int64 hp,int64 sp, int flag);
 	int (*revive) (struct block_list *bl, unsigned char per_hp, unsigned char per_sp);
 	
 	struct regen_data * (*get_regen_data) (struct block_list *bl);
