@@ -1,5 +1,5 @@
 //===== Hercules Script ======================================
-//= Manuk & Splendide Coin Merchants
+//= Coin Merchants
 //===== By: ==================================================
 //= rAthena Dev Team
 //===== Current Version: =====================================

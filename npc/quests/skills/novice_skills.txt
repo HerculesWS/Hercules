@@ -3,7 +3,7 @@
 //===== By: ================================================== 
 //= kobra_k88
 //===== Current Version: ===================================== 
-//= 1.7
+//= 1.8
 //===== Compatible With: ===================================== 
 //= rAthena SVN
 //===== Description: ========================================= 
@@ -12,6 +12,7 @@
 //= 1.5 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //= 1.6 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
 //= 1.7 Updated to latest available official file. [Masao]
+//= 1.8 Added Baby support. [Zopokx]
 //============================================================ 
 
 prt_in,234,133,4	script	Nami	66,{

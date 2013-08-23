@@ -3,7 +3,7 @@
 //===== By: ================================================== 
 //= Euphy
 //===== Current Version: ===================================== 
-//= 1.0a
+//= 1.0b
 //===== Compatible With: ===================================== 
 //= rAthena SVN
 //===== Description: ========================================= 
@@ -15,6 +15,7 @@
 //= 1.0 First version. [Euphy]
 //=     Letters "n" and "h" in NPC names indicate difficulty.
 //= 1.0a There is no minimum party size on official servers.
+//= 1.0b Fixed incorrect use of 'close'. [Joseph]
 //============================================================ 
 
 // Quest NPCs
@@ -461,11 +462,10 @@ mal_in01,160,34,4	script	Missing, the Cleaner	545,{
 			case 3:
 				goto L_Enter;
 			}
-		} else {
-			if(select("Enter Culvert:Cancel") == 2)
-				close;
-			goto L_Enter;
 		}
+		if(select("Enter Culvert:Cancel") == 2)
+			end;
+		goto L_Enter;
 	} else if (.@playtime == 0 || .@playtime == 1) {
 		mes "You can enter the Culvert if the gate is open.";
 		next;
@@ -521,7 +521,7 @@ L_Enter:
 			close;
 		}
 		set 'party_id,getcharid(1);
-		instance_announce 0,"Missing: Move toward the 3 o'clock direction and wait for my next order!",bc_map,"0xff88ff",FW_NORMAL,15;
+		instance_announce -1,"Missing: Move toward the 3 o'clock direction and wait for my next order!",bc_map,"0xff88ff",FW_NORMAL,15;
 		disablenpc instance_npcname("Missing, the Cleaner#0", instance_id());
 		enablenpc instance_npcname("Missing, the Cleaner#n", instance_id());
 		close;
@@ -543,7 +543,7 @@ L_Enter:
 			close;
 		}
 		set 'party_id,getcharid(1);
-		instance_announce 0,"Missing: I'll go in first, so follow me! I'll open up a gate at the 3 o'clock direction!",bc_map,"0xff88ff",FW_NORMAL,15;
+		instance_announce -1,"Missing: I'll go in first, so follow me! I'll open up a gate at the 3 o'clock direction!",bc_map,"0xff88ff",FW_NORMAL,15;
 		disablenpc instance_npcname("Missing, the Cleaner#0", instance_id());
 		enablenpc instance_npcname("Culvert Entrance#i", instance_id());
 		close;
@@ -670,7 +670,7 @@ OnAddSeaweed:
 	if (.@mob_dead_num >= 6)
 		donpcevent instance_npcname("Missing, the Cleaner#n", instance_id())+"::OnFail";
 	else
-		instance_announce 0,"Contaminated Seaweed: "+.@mob_dead_num+" stem",bc_map,"0xff3333",FW_NORMAL,20;
+		instance_announce -1,"Contaminated Seaweed: "+.@mob_dead_num+" stem",bc_map,"0xff3333",FW_NORMAL,20;
 	end;
 OnMyMobDead:
 	end;
@@ -679,14 +679,14 @@ OnFail:
 	donpcevent instance_npcname("Monster Hole#n", instance_id())+"::OnClear";
 	killmonster "1@pump",instance_npcname("Missing, the Cleaner#n", instance_id())+"::OnMyMobDead";
 	enablenpc instance_npcname("Missing, the Cleaner#nf", instance_id());
-	instance_announce 0,"What is this!! Seaweed is all over the culverts! You're done with cleaning! Get out!!",bc_map,"0xff88ff",FW_NORMAL,15;
+	instance_announce -1,"What is this!! Seaweed is all over the culverts! You're done with cleaning! Get out!!",bc_map,"0xff88ff",FW_NORMAL,15;
 	disablenpc instance_npcname("Missing, the Cleaner#n", instance_id());
 	end;
 OnTimer100:
-	instance_announce 0,"First culvert will be opened in 5 sec. Cleaner can find the opened drain and click to start cleaning.",bc_map,"0x00ffcc",FW_NORMAL,15;
+	instance_announce -1,"First culvert will be opened in 5 sec. Cleaner can find the opened drain and click to start cleaning.",bc_map,"0x00ffcc",FW_NORMAL,15;
 	end;
 OnTimer5500:
-	instance_announce 0,"The one who's in charge of cleaning the culvert cannot move or be attacked until the casting is over.",bc_map,"0x00ffcc",FW_NORMAL,15;
+	instance_announce -1,"The one who's in charge of cleaning the culvert cannot move or be attacked until the casting is over.",bc_map,"0x00ffcc",FW_NORMAL,15;
 	donpcevent instance_npcname("Monster Hole#n", instance_id())+"::OnSpawn";
 	end;
 OnTimer45000:
@@ -698,7 +698,7 @@ OnTimer295000:
 OnTimer345000:
 OnTimer395000:
 OnTimer445000:
-	instance_announce 0,"Next culvert will be opened in 5 sec. Please hurry up and find the position of the next culvert.",bc_map,"0x00ffcc",FW_NORMAL,15;
+	instance_announce -1,"Next culvert will be opened in 5 sec. Please hurry up and find the position of the next culvert.",bc_map,"0x00ffcc",FW_NORMAL,15;
 	end;
 OnTimer50000:
 OnTimer100000:
@@ -719,7 +719,7 @@ OnTimer450000:
 	end;
 OnTimer515000:
 	set .@mob_dead_num, mobcount("1@pump",instance_npcname("Missing, the Cleaner#n", instance_id())+"::OnMyMobDead");
-	instance_announce 0,"Contaminated Seaweed: "+.@mob_dead_num+" stem. Missing will come and inspect the results of the cleaning soon.",bc_map,"0xff3333",FW_NORMAL,20;
+	instance_announce -1,"Contaminated Seaweed: "+.@mob_dead_num+" stem. Missing will come and inspect the results of the cleaning soon.",bc_map,"0xff3333",FW_NORMAL,20;
 	end;
 OnTimer520000:
 	stopnpctimer;
@@ -824,15 +824,15 @@ OnEnable:
 OnTimer100:
 	set .@i$, charat(strnpcinfo(2),0);
 	if (.@i$ == "n")
-		instance_announce 0,"Hmm! That wasn't so bad!",bc_map,"0xff88ff",FW_NORMAL,15;
+		instance_announce -1,"Hmm! That wasn't so bad!",bc_map,"0xff88ff",FW_NORMAL,15;
 	else if (.@i$ == "h")
-		instance_announce 0,"Hmm! You guys are pretty good!!",bc_map,"0xff88ff",FW_NORMAL,15;
+		instance_announce -1,"Hmm! You guys are pretty good!!",bc_map,"0xff88ff",FW_NORMAL,15;
 	end;
 OnTimer5000:
-	instance_announce 0,"Let's pack up and go... WHAT!!?",bc_map,"0xff88ff",FW_NORMAL,15;
+	instance_announce -1,"Let's pack up and go... WHAT!!?",bc_map,"0xff88ff",FW_NORMAL,15;
 	end;
 OnTimer10000:
-	instance_announce 0,"I sense something strange!! Don't loosen up-- prepare for a fight!!",bc_map,"0xff88ff",FW_NORMAL,15;
+	instance_announce -1,"I sense something strange!! Don't loosen up-- prepare for a fight!!",bc_map,"0xff88ff",FW_NORMAL,15;
 	end;
 OnTimer20000:
 	stopnpctimer;
@@ -843,18 +843,18 @@ OnTimer20000:
 			monster "1@pump",0,0,"Weird Coelacanth",2188,1,.@label$;
 		else if (.@i$ == "h")
 			monster "2@pump",0,0,"Mutant Coelacanth",2189,1,.@label$;
-		instance_announce 0,"Something big inside the abyss appears with a huge noise.",bc_map,"0x00ffcc",FW_NORMAL,15;
+		instance_announce -1,"Something big inside the abyss appears with a huge noise.",bc_map,"0x00ffcc",FW_NORMAL,15;
 	} else {
 		if (.@i$ == "n")
 			monster "1@pump",0,0,"Gloomy Coelacanth",2187,1,.@label$;
 		else if (.@i$ == "h")
 			monster "2@pump",0,0,"Violent Coelacanth",2190,1,.@label$;
-		instance_announce 0,"Something savage inside the abyss appears with a huge noise.",bc_map,"0x00ffcc",FW_NORMAL,15;
+		instance_announce -1,"Something savage inside the abyss appears with a huge noise.",bc_map,"0x00ffcc",FW_NORMAL,15;
 	}
 	end;
 OnMyMobDead:
 	if (mobcount(strnpcinfo(4),instance_npcname(strnpcinfo(0), instance_id())+"::OnMyMobDead") < 1) {
-		instance_announce 0,"You've destroyed all monsters in the culverts. There are trophies lying on the ground, please look for them.",bc_map,"0xffff00",FW_NORMAL,15;
+		instance_announce -1,"You've destroyed all monsters in the culverts. There are trophies lying on the ground, please look for them.",bc_map,"0xffff00",FW_NORMAL,15;
 		set .@i$, charat(strnpcinfo(2),0);
 		set .@map$, strnpcinfo(4);
 		enablenpc instance_npcname("Culvert Entrance#"+.@i$, instance_id());
@@ -883,7 +883,7 @@ OnMyMobDead:
 			}
 		}
 	} else
-		instance_announce 0,"There are still monsters alive.",bc_map,"0x00ff99",FW_NORMAL,20;
+		instance_announce -1,"There are still monsters alive.",bc_map,"0x00ff99",FW_NORMAL,20;
 	end;
 }
 
@@ -960,7 +960,7 @@ OnAddSeaweed:
 	if (.@mob_dead_num >= 6)
 		donpcevent instance_npcname("Missing, the Cleaner#h", instance_id())+"::OnFail";
 	else
-		instance_announce 0,"Proliferous Contaminated Seaweed: "+.@mob_dead_num+" stem",bc_map,"0xff3333",FW_NORMAL,20;
+		instance_announce -1,"Proliferous Contaminated Seaweed: "+.@mob_dead_num+" stem",bc_map,"0xff3333",FW_NORMAL,20;
 	end;
 OnMyMobDead:
 	end;
@@ -969,14 +969,14 @@ OnFail:
 	donpcevent instance_npcname("Monster Hole#h", instance_id())+"::OnClear";
 	killmonster "2@pump",instance_npcname("Missing, the Cleaner#h", instance_id())+"::OnMyMobDead";
 	enablenpc instance_npcname("Missing, the Cleaner#hf", instance_id());
-	instance_announce 0,"What is this!! Seaweed is all over the culverts! You're done with cleaning! Get out!!",bc_map,"0xff88ff",FW_NORMAL,15;
+	instance_announce -1,"What is this!! Seaweed is all over the culverts! You're done with cleaning! Get out!!",bc_map,"0xff88ff",FW_NORMAL,15;
 	disablenpc instance_npcname("Missing, the Cleaner#h", instance_id());
 	end;
 OnTimer100:
-	instance_announce 0,"First culvert will be opened in 5 sec. Cleaner can find the opened drain and click to start cleaning.",bc_map,"0x00ffcc",FW_NORMAL,15;
+	instance_announce -1,"First culvert will be opened in 5 sec. Cleaner can find the opened drain and click to start cleaning.",bc_map,"0x00ffcc",FW_NORMAL,15;
 	end;
 OnTimer5500:
-	instance_announce 0,"The one who's in charge of cleaning the culvert cannot move or be attacked until the casting is over.",bc_map,"0x00ffcc",FW_NORMAL,15;
+	instance_announce -1,"The one who's in charge of cleaning the culvert cannot move or be attacked until the casting is over.",bc_map,"0x00ffcc",FW_NORMAL,15;
 	donpcevent instance_npcname("Monster Hole#h", instance_id())+"::OnSpawn";
 	end;
 OnTimer35000:
@@ -988,7 +988,7 @@ OnTimer235000:
 OnTimer275000:
 OnTimer315000:
 OnTimer355000:
-	instance_announce 0,"Next culvert will be opened in 5 sec. Please hurry up and find the position of the next culvert.",bc_map,"0x00ffcc",FW_NORMAL,15;
+	instance_announce -1,"Next culvert will be opened in 5 sec. Please hurry up and find the position of the next culvert.",bc_map,"0x00ffcc",FW_NORMAL,15;
 	end;
 OnTimer40000:
 OnTimer80000:
@@ -1008,7 +1008,7 @@ OnTimer360000:
 		donpcevent instance_npcname("Monster Hole#h", instance_id())+"::OnSpawn";
 	end;
 OnTimer420000:
-	instance_announce 0,"It seems Missing will come and inspect the results of the cleaning soon. Shall we clean up the mess around here?",bc_map,"0xff3333",FW_NORMAL,20;
+	instance_announce -1,"It seems Missing will come and inspect the results of the cleaning soon. Shall we clean up the mess around here?",bc_map,"0xff3333",FW_NORMAL,20;
 	end;
 OnTimer425000:
 	stopnpctimer;

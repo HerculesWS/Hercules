@@ -116,8 +116,8 @@ function	script	F_Kafra	{
 			// NPC has it's own welcome message. (Display nothing)
 			break;
 	}
+	next;
 	while (1) {
-		next;
 		deletearray @K_Menu0$[0],getarraysize(@K_Menu0$);
 		if (getarg(0) == 2) {
 			// Guild Kafra Menu override (free Teleport, free Storage, Free Cart)
@@ -159,6 +159,7 @@ function	script	F_Kafra	{
 				callfunc "F_KafStor",2,0,0;
 			else 
 				callfunc "F_KafStor",0,getarg(3),getarg(0);
+			next;
 		} else if (@K_Menu0$[.@j] == "Use Teleport Service") {
 			// Display Einbroch "No Teleport Service" notice.
 			if(getarg(1) != 4) callfunc "F_KafTele",getarg(0);
@@ -176,16 +177,19 @@ function	script	F_Kafra	{
 				mes "instead. Thank you for your";
 				mes "understanding and cooperation.";
 			}
+			next;
 		} else if (@K_Menu0$[.@j] == "Rent a Pushcart") {
 			if(callfunc("F_KafCart",getarg(0),getarg(4)) == 1) 
-			next;
+				next;
 		} else if (@K_Menu0$[.@j] == "Check Other Information") {
 			callfunc "F_KafInfo",getarg(2);
+			next;
 		} else if (@K_Menu0$[.@j] == "Cancel"){
 			callfunc "F_KafEnd",getarg(0),0;
 			end;
 		} else if (@K_Menu0$[.@j] == "Use Guild Storage") {
 			callfunc "F_KafStor",1,0;
+			next;
 		}
 	}
 }
@@ -381,7 +385,7 @@ function	script	F_KafInfo	{
 	// Uncomment next line to block Kafra Storage Protection
 	//	set .@block, 1;
 		setarray .@m$, "Check Special Reserve Points.","Storage Password Service","Kafra Employee Locations","Cancel";
-		if (getarg(0) == 2) deletearray .@m$[1],2; // Rune Knight
+		if (getarg(0) == 2) deletearray .@m$[1],2; // Port Malaya, Rune Knight
 		else if (.@block) deletearray .@m$[1],1;
 	while (1) {
 		set .@j, select(implode(.@m$,":")) - 1;
@@ -472,7 +476,7 @@ function	script	F_SetKafCode	{
 		mes "Your storage is protected with a password. What would you do now?";
 		next;
 		switch (select("Change old password -> 5000z:Remove storage password -> 1000z:Cancel")) {
-			Case 1:
+			case 1:
 				mes getarg(0);
 				mes "At first, please enter your ^0000FFold password^000000.";
 				set @code,callfunc("F_EntKafCode");
@@ -484,7 +488,7 @@ function	script	F_SetKafCode	{
 				next;
 				callsub S_SET,getarg(0),getarg(1);
 				break;
-			Case 2:
+			case 2:
 				mes getarg(0);
 				mes "Please, enter your password before its removal.";
 				set @code,callfunc("F_EntKafCode");
@@ -512,7 +516,7 @@ function	script	F_SetKafCode	{
 					emotion e_sry;
 				}
 				break;
-			Case 3:
+			case 3:
 				break;
 		}
 	} else {
@@ -520,8 +524,8 @@ function	script	F_SetKafCode	{
 		mes "Additional storage protection with a password.";
 		next;
 		switch (select("Set new password -> 5000z:Cancel")) {
-			Case 1: callsub S_SET,getarg(0),getarg(1); break;
-			Case 2: break;		
+			case 1: callsub S_SET,getarg(0),getarg(1); break;
+			case 2: break;		
 		}
 	}
 	close2;

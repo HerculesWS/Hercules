@@ -11,7 +11,7 @@
 
 #define MAX_HOM_SKILL_REQUIRE 5
 #define homdb_checkid(id) (id >=  HM_CLASS_BASE && id <= HM_CLASS_MAX)
-#define homun_alive(x) ((x) && (x)->homunculus.vaporize != 1 && (x)->battle_status.hp > 0)
+#define homun_alive(x) ((x) && (x)->homunculus.vaporize == HOM_ST_ACTIVE && (x)->battle_status.hp > 0)
 
 struct h_stats {
 	unsigned int HP, SP;
@@ -38,6 +38,12 @@ enum {
 enum {
 	MH_MD_FIGHTING = 1,
 	MH_MD_GRAPPLING
+};
+
+enum {
+	HOM_ST_ACTIVE	= 0,
+	HOM_ST_REST		= 1,
+	HOM_ST_MORPH	= 2,
 };
 
 enum {
