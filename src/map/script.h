@@ -362,6 +362,7 @@ struct script_interface {
 	const char* (*parse_subexpr) (const char* p,int limit);
 	const char* (*skip_space) (const char* p);
 	void (*error) (const char* src, const char* file, int start_line, const char* error_msg, const char* error_pos);
+	void (*warning) (const char* src, const char* file, int start_line, const char* error_msg, const char* error_pos);
 	/* */
 	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st));
 	int (*conv_num) (struct script_state *st,struct script_data *data);
