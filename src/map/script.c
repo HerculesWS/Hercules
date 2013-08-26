@@ -1006,7 +1006,7 @@ const char* parse_variable(const char* p) {
  *------------------------------------------*/
 const char* parse_simpleexpr(const char *p)
 {
-	int i;
+	long long i;
 	p=script->skip_space(p);
 
 	if(*p==';' || *p==',')
@@ -1031,7 +1031,14 @@ const char* parse_simpleexpr(const char *p)
 	} else if(ISDIGIT(*p) || ((*p=='-' || *p=='+') && ISDIGIT(p[1]))){
 		char *np;
 		while(*p == '0' && ISDIGIT(p[1])) p++;
-		i=strtoul(p,&np,0);
+		i=strtoll(p,&np,0);
+		if( i < INT_MIN ) {
+			i = INT_MIN;
+			disp_error_message("parse_simpleexpr: underflow detected, capping value to INT_MIN",p);
+		} else if( i > INT_MAX ) {
+			i = INT_MAX;
+			disp_error_message("parse_simpleexpr: overflow detected, capping value to INT_MAX",p);
+		}
 		add_scripti(i);
 		p=np;
 	} else if(*p=='"'){
