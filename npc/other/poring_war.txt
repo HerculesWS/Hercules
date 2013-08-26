@@ -905,7 +905,7 @@ OnReset:
 	stopnpctimer;
 	end;
 
-Onstart:
+OnStart:
 	initnpctimer;
 	end;
 

@@ -35,7 +35,7 @@
 //= 3.1 Moved some merchants to a separate renewal file. [Kenpachi]
 //= 3.2 Added Missing Items to the pet Groomers in prontera, payon, and yuno. BugReport:6680[Spre]
 //= 3.3 Moved more shops to Renewal file. [Euphy]
-//= 3.4 Removed some Izlude shops [Streusel]
+//= 3.4 Moved Izlude shops to pre-re/re paths. [Streusel]
 //============================================================ 
 
 //=======================================================

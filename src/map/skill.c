@@ -7589,7 +7589,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 		case AM_REST:
 			if (sd) {
-				if (homun->vaporize(sd,1))
+				if (homun->vaporize(sd,HOM_ST_REST))
 					clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 				else
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);

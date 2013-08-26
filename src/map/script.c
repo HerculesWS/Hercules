@@ -9748,32 +9748,82 @@ BUILDIN(homunculus_evolution)
 }
 
 /*==========================================
- * [Xantara]
+ * Checks for vaporized morph state
+ * and deletes ITEMID_STRANGE_EMBRYO.
  *------------------------------------------*/
 BUILDIN(homunculus_mutate) {
-	int homun_id;
-	enum homun_type m_class, m_id;
+	int homun_id, m_class, m_id, i;
 	TBL_PC *sd;
-	
+
 	sd = script_rid2sd(st);
 	if( sd == NULL || sd->hd == NULL )
-		return true;
-	
+		return 0;
+
 	if(script_hasdata(st,2))
 		homun_id = script_getnum(st,2);
 	else
 		homun_id = 6048 + (rnd() % 4);
-	
-	if(homun_alive(sd->hd)) {
+
+	if( sd->hd->homunculus.vaporize == HOM_ST_MORPH ) {
 		m_class = homun->class2type(sd->hd->homunculus.class_);
 		m_id    = homun->class2type(homun_id);
-		
-		if ( m_class != -1 && m_id != -1 && m_class == HT_EVO && m_id == HT_S && sd->hd->homunculus.level >= 99 )
+
+		i = pc->search_inventory(sd, ITEMID_STRANGE_EMBRYO);
+
+		if ( m_class != -1 && m_id != -1 && m_class == HT_EVO && m_id == HT_S && sd->hd->homunculus.level >= 99 && i >= 0 ) {
+			sd->hd->homunculus.vaporize = HOM_ST_REST; // Remove morph state.
+			homun->call(sd); // Respawn homunculus.
 			homun->mutate(sd->hd, homun_id);
-		else
+			pc->delitem(sd, i, 1, 0, 0, LOG_TYPE_SCRIPT);
+			script_pushint(st, 1);
+			return 0;
+		} else
+			clif->emotion(&sd->bl, E_SWT);
+	} else
+		clif->emotion(&sd->bl, E_SWT);
+
+	script_pushint(st, 0);
+
+	return 0;
+}
+
+/*==========================================
+ * Puts homunculus into morph state
+ * and gives ITEMID_STRANGE_EMBRYO.
+ *------------------------------------------*/
+BUILDIN(morphembryo) {
+	struct item item_tmp;
+	int m_class, i;
+	TBL_PC *sd;
+	
+	sd = script_rid2sd(st);
+	if( sd == NULL || sd->hd == NULL )
+		return 0;
+
+	if( homun_alive(sd->hd) ) {
+		m_class = homun->class2type(sd->hd->homunculus.class_);
+
+		if ( m_class != -1 && m_class == HT_EVO && sd->hd->homunculus.level >= 99 ) {
+			memset(&item_tmp, 0, sizeof(item_tmp));
+			item_tmp.nameid = ITEMID_STRANGE_EMBRYO;
+			item_tmp.identify = 1;
+
+			if( item_tmp.nameid==0 || (i = pc->additem(sd, &item_tmp, 1, LOG_TYPE_SCRIPT)) ) {
+				clif->additem(sd, 0, 0, i);
+				clif->emotion(&sd->bl, E_SWT); // Fail to avoid item drop exploit.
+			} else {
+				homun->vaporize(sd, HOM_ST_MORPH);
+				script_pushint(st, 1);
+				return 0;
+			}
+		} else
 			clif->emotion(&sd->hd->bl, E_SWT);
-	}
-	return true;
+	} else
+		clif->emotion(&sd->bl, E_SWT);
+
+	script_pushint(st, 0);
+
+	return 0;
 }
 
 // [Zephyrus]
@@ -12398,8 +12448,7 @@ BUILDIN(gethominfo)
 	int type=script_getnum(st,2);
 	
 	hd = sd?sd->hd:NULL;
-	if(!homun_alive(hd))
-	{
+	if(!hd) {
 		if (type == 2)
 			script_pushconststr(st,"null");
 		else
@@ -17949,6 +17998,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(warpportal,"iisii"),
 		BUILDIN_DEF2(homunculus_evolution,"homevolution",""),	//[orn]
 		BUILDIN_DEF2(homunculus_mutate,"hommutate","?"),
+		BUILDIN_DEF(morphembryo,""),
 		BUILDIN_DEF2(homunculus_shuffle,"homshuffle",""),	//[Zephyrus]
 		BUILDIN_DEF(checkhomcall,""),
 		BUILDIN_DEF(eaclass,"?"),	//[Skotlex]

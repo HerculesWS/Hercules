@@ -1,11 +1,13 @@
-//===== Hercules Script ======================================
+//===== rAthena Script =======================================
 //= Hypnotist
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.0
+//===== Compatible With: =====================================
+//= rAthena SVN
 //===== Description: =========================================
-//= [Aegis conversion]
+//= [Official Conversion]
 //= Permenent first class, base level 40 and under skill resetter.
 //= First Class characters and expanded classes only.
 //= Baby Classes and First Class trans can't use this service.

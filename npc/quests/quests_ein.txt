@@ -22,7 +22,7 @@
 //= 1.0 Initial Release [Evera]
 //= 1.1 Added more quests [Evera]
 //= 1.2 Added quest bits from Einbech and renamed file to
-//=	quests_ein.txt [Evera]
+//=     quests_ein.txt [Evera]
 //= 1.3 Implemented the polution quest. [MasterOfMuppets]
 //= 1.4.1 Massive bugfix. Fixed Pollution exploit [Lupus]
 //= 1.4.2 Fixed Khowropher bug [Lupus]
@@ -47,7 +47,7 @@
 //= 2.5 Added quest log entries for:
 //=     - Factory Quest
 //=     - Murder Quest
-//= 2.6 Added renewal checks for exp distribution [Streusel]
+//= 2.6 Updated RE/Pre-RE EXP. [Euphy]
 //============================================================ 
 
 // Oridecon Stone OR Mineral Stone Quest
@@ -3554,50 +3554,22 @@ ein_in01,67,242,3	script	Zelmeto	851,{
 			set $EinPolution,$EinPolution+1;
 			completequest 8031;
 			set EinFactory,16;
-			if(checkre(0)) {
-				if (BaseLevel < 41) {
-					getexp 61,0;
-				}
-				else if (BaseLevel < 51) {
-					getexp 307,0;
-				}
-				else if (BaseLevel < 61) {
-					getexp 660,0;
-				}
-				else if (BaseLevel < 71) {
-					getexp 1850,0;
-				}
-				else if( BaseLevel < 81) {
-					getexp 3206,0;
-				}
-				else if (BaseLevel < 91) {
-					getexp 7602,0;
-				}
-				else if (BaseLevel < 99) {
-					getexp 29067,0;
-				}
-			}else {
-				if (BaseLevel < 41) {
-					getexp 615,0;
-				}
-				else if (BaseLevel < 51) {
-					getexp 3075,0;
-				}
-				else if (BaseLevel < 61) {
-					getexp 6604,0;
-				}
-				else if (BaseLevel < 71) {
-					getexp 18508,0;
-				}
-				else if( BaseLevel < 81) {
-					getexp 32062,0;
-				}
-				else if (BaseLevel < 91) {
-					getexp 76026,0;
-				}
-				else if (BaseLevel < 99) {
-					getexp 290675,0;
-				}			
+			if (checkre(3)) {
+				if (BaseLevel < 41) getexp 61,0;
+				else if (BaseLevel < 51) getexp 307,0;
+				else if (BaseLevel < 61) getexp 660,0;
+				else if (BaseLevel < 71) getexp 1850,0;
+				else if( BaseLevel < 81) getexp 3206,0;
+				else if (BaseLevel < 91) getexp 7602,0;
+				else getexp 29067,0;
+			} else {
+				if (BaseLevel < 41) getexp 615,0;
+				else if (BaseLevel < 51) getexp 3075,0;
+				else if (BaseLevel < 61) getexp 6604,0;
+				else if (BaseLevel < 71) getexp 18508,0;
+				else if( BaseLevel < 81) getexp 32066,0;
+				else if (BaseLevel < 91) getexp 76026,0;
+				else getexp 290675,0;
 			}
 			next;
 			mes "[Zelmeto]";
@@ -4697,32 +4669,16 @@ einbech,165,105,7	script	Buender Hikeman#ein	847,{
 			cutin "ein_hicman",255;
 			completequest 2078;
 			set Shinokas_Quest,11;
-			if(checkre(0)) {
-				if (BaseLevel < 70) {
-					getexp 10000,8000;
-				}
-				else if ((BaseLevel > 69) && (BaseLevel < 80)) {
-					getexp 30000,10000;
-				}
-				else if ((BaseLevel > 79) && (BaseLevel < 90)) {
-					getexp 50000,30000;
-				}
-				else if ((BaseLevel > 89) && (BaseLevel < 100)) {
-					getexp 70000,50000;
-				}
+			if (checkre(3)) {
+				if (BaseLevel < 70) getexp 30000,30000;
+				else if ((BaseLevel > 69) && (BaseLevel < 80)) getexp 40000,40000;
+				else if ((BaseLevel > 79) && (BaseLevel < 90)) getexp 70000,70000;
+				else getexp 90000,90000;
 			} else {
-				if (BaseLevel < 70) {
-					getexp 100000,80000;
-				}
-				else if ((BaseLevel > 69) && (BaseLevel < 80)) {
-					getexp 300000,100000;
-				}
-				else if ((BaseLevel > 79) && (BaseLevel < 90)) {
-					getexp 500000,300000;
-				}
-				else if ((BaseLevel > 89) && (BaseLevel < 100)) {
-					getexp 700000,500000;
-				}
+				if (BaseLevel < 70) getexp 100000,80000;
+				else if ((BaseLevel > 69) && (BaseLevel < 80)) getexp 300000,100000;
+				else if ((BaseLevel > 79) && (BaseLevel < 90)) getexp 500000,300000;
+				else getexp 700000,500000;
 			}
 			end;
 		case 2:
@@ -5984,38 +5940,17 @@ ein_in01,31,138,3	script	Calla#ein	90,{
 		mes "feel goooood~";
 		percentheal 100,0;
 		set EIN_LOVERQ,17;
-		if(checkre(0)) {
-			if (BaseLevel < 41) {
-				getexp 61,0;
-			}
-			else if (BaseLevel < 61) {
-				getexp 600,0;
-			}
-			else if (BaseLevel < 81) {
-				getexp 3000,0;
-			}
-			else if (BaseLevel < 99) {
-				getexp 20000,0;
-			}
+		if (checkre(3)) {
+			if (BaseLevel < 41) getexp 61,0;
+			else if (BaseLevel < 61) getexp 600,0;
+			else if (BaseLevel < 81) getexp 3000,0;
+			else if (BaseLevel < 99) getexp 20000,0;
+			else getexp 30000,0;
 		} else {
-			if (BaseLevel < 41) {
-				getexp 3712,0;
-			}
-			else if (BaseLevel < 61) {
-				getexp 7425,0;
-			}
-			else if (BaseLevel < 71) {
-				getexp 14850,0;
-			}
-			else if (BaseLevel < 81) {
-				getexp 29700,0;
-			}
-			else if (BaseLevel < 91) {
-				getexp 59400,0;
-			}
-			else if (BaseLevel < 99) {
-				getexp 118800,0;
-		}
+			if (BaseLevel < 41) getexp 610,0;
+			else if (BaseLevel < 61) getexp 6000,0;
+			else if (BaseLevel < 81) getexp 30000,0;
+			else getexp 200000,0;
 		}
 		next;
 		mes "[Calla]";
@@ -6032,6 +5967,7 @@ ein_in01,31,138,3	script	Calla#ein	90,{
 		mes "I'll always pray for";
 		mes "your safety on your";
 		mes "your adventures~";
+		completequest 8088;
 		close;
 	}
 	if ((EIN_LOVERQ == 5) && (countitem(712) > 0)) {
@@ -6071,6 +6007,7 @@ ein_in01,31,138,3	script	Calla#ein	90,{
 			mes "^333333*Sob Sob...*^000000";
 			delitem 712,1; //Flower
 			set EIN_LOVERQ,6;
+			changequest 8079,808;
 			close;
 		}
 		else {
@@ -6104,6 +6041,7 @@ ein_in01,31,138,3	script	Calla#ein	90,{
 		mes "this time? Thank you";
 		mes "for your help~";
 		set EIN_LOVERQ,3;
+		changequest 8078,8077;
 		getitem 1901,1; //Violin
 		close;
 	}
@@ -6146,6 +6084,7 @@ ein_in01,31,138,3	script	Calla#ein	90,{
 		mes "all the time...";
 		next;
 		set EIN_LOVERQ,3;
+		changequest 8076,8077;
 		getitem 1901,1; //Violin
 		mes "[Calla]";
 		mes "I'm sorry to trouble you,";
@@ -6236,6 +6175,7 @@ ein_in01,200,101,5	script	Klitzer#ein	854,{
 			mes "even be useful to you later~";
 			delitem 7170,1; //Tuxedo
 			set EIN_LOVERQ,16;
+			changequest 8087,8088;
 			switch(rand(1,7)) {
 			case 1:
 				getitem 7289,1; //Olivine
@@ -6333,6 +6273,7 @@ ein_in01,200,101,5	script	Klitzer#ein	854,{
 		mes "W-what should I do?";
 		next;
 		set EIN_LOVERQ,14;
+		changequest 8085,8086;
 		mes "[Klitzer]";
 		mes "This monkey suit";
 		mes "that I've got on just";
@@ -6381,6 +6322,7 @@ ein_in01,200,101,5	script	Klitzer#ein	854,{
 			mes "my regards if you help me.";
 			next;
 			set EIN_LOVERQ,7;
+			changequest 8080,8081;
 			mes "[Klitzer]";
 			mes "I feel so much";
 			mes "better now. Oh!";
@@ -6473,38 +6415,18 @@ ein_in01,200,101,5	script	Klitzer#ein	854,{
 		percentheal 100,0;
 		delitem 1901,1; //Violin
 		set EIN_LOVERQ,5;
-		if(checkre(0)) {
-			if (BaseLevel < 41) {
-				getexp 61,0;
-			}
-			else if (BaseLevel < 61) {
-				getexp 600,0;
-			}
-			else if (BaseLevel < 81) {
-				getexp 3000,0;
-			}
-			else if (BaseLevel < 99) {
-				getexp 20000,0;
-			}
+		changequest 8077,8079;
+		if (checkre(3)) {
+			if (BaseLevel < 41) getexp 61,0;
+			else if (BaseLevel < 61) getexp 600,0;
+			else if (BaseLevel < 81) getexp 3000,0;
+			else if (BaseLevel < 99) getexp 20000,0;
+			else getexp 30000,0;
 		} else {
-			if (BaseLevel < 41) {
-				getexp 3712,0;
-			}
-			else if (BaseLevel < 61) {
-				getexp 7425,0;
-			}
-			else if (BaseLevel < 71) {
-				getexp 14850,0;
-			}
-			else if (BaseLevel < 81) {
-				getexp 29700,0;
-			}
-			else if (BaseLevel < 91) {
-				getexp 59400,0;
-			}
-			else if (BaseLevel < 99) {
-				getexp 118800,0;
-		}
+			if (BaseLevel < 41) getexp 610,0;
+			else if (BaseLevel < 61) getexp 6000,0;
+			else if (BaseLevel < 81) getexp 30000,0;
+			else getexp 200000,0;
 		}
 		next;
 		mes "[Klitzer]";
@@ -6556,6 +6478,7 @@ ein_in01,200,101,5	script	Klitzer#ein	854,{
 		mes "give anything to see her...";
 		next;
 		set EIN_LOVERQ,2;
+		setquest 8076;
 		mes "[Klitzer]";
 		mes "Just...";
 		mes "Just don't listen";
@@ -6634,6 +6557,7 @@ OnTouch:
 		mes "wakes up, it won't be today!";
 		delitem 1901,1; //Violin
 		set EIN_LOVERQ,4;
+		changequest 8077,8078;
 		percentheal -90,0;
 		close2;
 		warp "einbroch",112,245;
@@ -6748,6 +6672,7 @@ ein_in01,31,151,3	script	Satra#ein	850,{
 			next;
 			delitem 1003,10; //Coal
 			set EIN_LOVERQ,13;
+			changequest 8084,8085;
 			mes "[Satra]";
 			mes "Anyway, when you next";
 			mes "meet Klitzer, please tell";
@@ -6973,6 +6898,7 @@ ein_in01,31,151,3	script	Satra#ein	850,{
 		next;
 		delitem 1003,10; //Coal
 		set EIN_LOVERQ,10;
+		changequest 8083,8084;
 		mes "[Satra]";
 		mes "Well, I shall try to";
 		mes "find some use for these.";
@@ -7123,6 +7049,7 @@ ein_in01,31,151,3	script	Satra#ein	850,{
 		mes "this kind of task will require";
 		mes "some effort on your part.";
 		set EIN_LOVERQ,9;
+		changequest 8082,8083;
 		next;
 		mes "[Satra]";
 		mes "Tah tah,";
@@ -7197,6 +7124,7 @@ ein_in01,191,102,5	script	Kaijeta#ein	846,{
 		mes "He gets so nervous about it!";
 		next;
 		set EIN_LOVERQ,15;
+		changequest 8086,8087;
 		mes "[Kaijeta]";
 		mes "A man should wear nice";
 		mes "clothes, like a Formal Suit";
@@ -7211,6 +7139,7 @@ ein_in01,191,102,5	script	Kaijeta#ein	846,{
 		mes "petty hatred between our";
 		mes "two towns stop my son from";
 		mes "seeing the woman he loves...";
+		changequest 8081,8082;
 		close;
 	}
 	if (EIN_LOVERQ == 7) {

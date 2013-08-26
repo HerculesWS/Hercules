@@ -4,7 +4,7 @@
 //= First Version: Tsuyuki and Harp
 //= iRO Version: L0ne_W0lf
 //===== Current Version: =====================================
-//= 0.9
+//= 0.9a
 //===== Description: =========================================
 //= [Partial Aegis Conversion]
 //= Arunafeltz NPCs
