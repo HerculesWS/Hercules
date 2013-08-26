@@ -1049,7 +1049,7 @@ const char* parse_simpleexpr(const char *p)
 			i = INT_MAX;
 			disp_warning_message("parse_simpleexpr: overflow detected, capping value to INT_MAX",p);
 		}
-		add_scripti(i);
+		add_scripti((int)i);
 		p=np;
 	} else if(*p=='"'){
 		add_scriptc(C_STR);
