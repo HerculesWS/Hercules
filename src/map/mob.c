@@ -110,17 +110,24 @@ int mobdb_searchname(const char *str)
 
 	return 0;
 }
-static int mobdb_searchname_array_sub(struct mob_db* mob, const char *str)
+static int mobdb_searchname_array_sub(struct mob_db* mob, const char *str, int flag)
 {
 	if (mob == mob_dummy)
 		return 1;
 	if(!mob->base_exp && !mob->job_exp && mob->spawn[0].qty < 1)
 		return 1; // Monsters with no base/job exp and no spawn point are, by this criteria, considered "slave mobs" and excluded from search results
-	if(stristr(mob->jname,str))
+	if( !flag ){
+		if(stristr(mob->jname,str))
+			return 0;
+		if(stristr(mob->name,str))
+			return 0;
+		return strcmpi(mob->jname,str);
+	}
+	if(strcmp(mob->jname,str) == 0)
 		return 0;
-	if(stristr(mob->name,str))
+	if(strcmp(mob->name,str) == 0)
 		return 0;
-	return strcmpi(mob->jname,str);
+	return strcmp(mob->sprite,str);
 }
 
 /*==========================================
@@ -194,7 +201,7 @@ void mvptomb_destroy(struct mob_data *md) {
 /*==========================================
  * Founds up to N matches. Returns number of matches [Skotlex]
  *------------------------------------------*/
-int mobdb_searchname_array(struct mob_db** data, int size, const char *str)
+int mobdb_searchname_array(struct mob_db** data, int size, const char *str, int flag)
 {
 	int count = 0, i;
 	struct mob_db* mob;
@@ -202,7 +209,7 @@ int mobdb_searchname_array(struct mob_db** data, int size, const char *str)
 		mob = mob_db(i);
 		if (mob == mob_dummy || mob_is_clone(i) ) //keep clones out (or you leak player stats)
 			continue;
-		if (!mobdb_searchname_array_sub(mob, str)) {
+		if (!mobdb_searchname_array_sub(mob, str, flag)) {
 			if (count < size)
 				data[count] = mob;
 			count++;

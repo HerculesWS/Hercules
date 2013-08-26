@@ -1327,6 +1327,13 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 			}
 		}
 		break;
+	case NC_DISJOINT:
+		if( target->type == BL_PC ){
+			struct mob_data *md;
+			if( (md = iMap->id2md(target->id)) && md->master_id != src->id )
+				casttime <<= 1;
+		}
+		break;
 	}
 
 	// moved here to prevent Suffragium from ending if skill fails

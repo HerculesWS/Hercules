@@ -61,7 +61,14 @@ struct clif_interface clif_s;
 
 //Converts item type in case of pet eggs.
 static inline int itemtype(int type) {
-	return ( type == IT_PETEGG ) ? IT_WEAPON : type;
+	switch( type ){
+#if PACKETVER >= 20080827
+		case IT_WEAPON:	return IT_ARMOR;
+		case IT_ARMOR:
+#endif
+		case IT_PETEGG: return IT_WEAPON;
+		default:		return type;
+	}
 }
 
 
@@ -4217,7 +4224,7 @@ void clif_storageitemadded(struct map_session_data* sd, struct item* i, int inde
 	WFIFOW(fd, 2) = index+1; // index
 	WFIFOL(fd, 4) = amount; // amount
 	WFIFOW(fd, 8) = ( view > 0 ) ? view : i->nameid; // id
-	WFIFOB(fd,10) = itemdb_type(i->nameid); //type
+	WFIFOB(fd,10) = itemtype(itemdb_type(i->nameid)); //type
 	WFIFOB(fd,11) = i->identify; //identify flag
 	WFIFOB(fd,12) = i->attribute; // attribute
 	WFIFOB(fd,13) = i->refine; //refine
@@ -13323,32 +13330,60 @@ void clif_parse_GMRecall2(int fd, struct map_session_data* sd)
 
 
 /// /item /monster (CZ_ITEM_CREATE).
-/// Request to make items or spawn monsters.
+/// Request to execute GM commands.
+/// usage:
+/// /item n - summon n monster or acquire n item/s
+/// /item money - grants 2147483647 zenies
+/// /item whereisboss - locate boss mob in current map.(not yet implemented)
+/// /item regenboss_n t - regenerate n boss monster by t millisecond.(not yet implemented)
+/// /item onekillmonster - toggle an ability to kill mobs in one hit.(not yet implemented)
+/// /item bossinfo - display the information of a boss monster in current map.(not yet implemented)
+/// /item cap_n - capture n monster as pet.(not yet implemented)
+/// /item agitinvest - reset current global agit investments.(not yet implemented)
 /// 013f <item/mob name>.24B
 void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd)
 {
-	char *monster_item_name;
-	struct mob_db *mob_data;
-	struct item_data *item_data;
+	int i, count;
+	char *item_monster_name;
+	struct item_data *item_array[10];
+	struct mob_db *mob_array[10];
 	char command[NAME_LENGTH+10];
 
-	monster_item_name = (char*)RFIFOP(fd,2);
-	monster_item_name[NAME_LENGTH-1] = '\0';
+	item_monster_name = (char*)RFIFOP(fd,2);
+	item_monster_name[NAME_LENGTH-1] = '\0';
 
-	if( (item_data=itemdb->search_name(monster_item_name)) != NULL 
-		&& strcmp(item_data->name, monster_item_name) != 0 ) { // It only accepts aegis name
-		if( item_data->type == IT_WEAPON || item_data->type == IT_ARMOR ) // nonstackable
-			snprintf(command, sizeof(command)-1, "%citem2 %d 1 0 0 0 0 0 0 0", atcommand->at_symbol, item_data->nameid);
-		else
-			snprintf(command, sizeof(command)-1, "%citem %d 20", atcommand->at_symbol, item_data->nameid);
+	if ( (count=itemdb->search_name_array(item_array, 10, item_monster_name, 1)) > 0 ){
+		for(i = 0; i < count; i++){
+			if( item_array[i] && strcmp(item_array[i]->name, item_monster_name) == 0 )// It only accepts aegis name
+				break;
+		}
+
+		if( i < count ){
+			if( item_array[i]->type == IT_WEAPON || item_array[i]->type == IT_ARMOR ) // nonstackable
+				snprintf(command, sizeof(command)-1, "%citem2 %d 1 0 0 0 0 0 0 0", atcommand->at_symbol, item_array[i]->nameid);
+			else
+				snprintf(command, sizeof(command)-1, "%citem %d 20", atcommand->at_symbol, item_array[i]->nameid);
+			atcommand->parse(fd, sd, command, 1);
+			return;
+		}
+	}
+
+	if( strcmp("money", item_monster_name) == 0 ){
+		snprintf(command, sizeof(command)-1, "%czeny %d", atcommand->at_symbol, INT_MAX);
 		atcommand->parse(fd, sd, command, 1);
 		return;
 	}
-	if( (mob_data=mob_db(mobdb_searchname(monster_item_name))) 
-		&& strcmp(mob_data->sprite, monster_item_name) != 0 ) { // It only accepts sprite name
-		snprintf(command, sizeof(command)-1, "%cmonster %s", atcommand->at_symbol, mob_data->name);
-		atcommand->parse(fd, sd, command, 1);
-		return;
+
+	if( (count=mobdb_searchname_array(mob_array, 10, item_monster_name, 1)) > 0){
+		for(i = 0; i < count; i++){
+			if( mob_array[i] && strcmp(mob_array[i]->sprite, item_monster_name) == 0 ) // It only accepts sprite name
+				break;
+		}
+
+		if( i < count ){
+			snprintf(command, sizeof(command)-1, "%cmonster %s", atcommand->at_symbol, mob_array[i]->sprite);
+			atcommand->parse(fd, sd, command, 1);
+		}
 	}
 }
 
@@ -17325,7 +17360,7 @@ void clif_status_change2(struct block_list *bl, int tid, enum send_target target
 	p.index = type;
 	p.AID = tid;
 	p.state = 1;
-	p.Left = -1;// officially its 9999 but -1 is a explicit "no-duration" which behaves best [Ind/Hercules]
+	p.Left = 9999;
 	p.val1 = val1;
 	p.val2 = val2;
 	p.val3 = val3;

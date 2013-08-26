@@ -1871,9 +1871,9 @@ struct status_interface {
 #ifdef RENEWAL
 	unsigned short (*base_matk) (const struct status_data* status, int level);
 	int (*get_weapon_atk) (struct block_list *src, struct weapon_atk *watk, int flag);
+#endif
 	int (*get_total_mdef) (struct block_list *src);
 	int (*get_total_def) (struct block_list *src);
-#endif
 
 	int (*get_matk) (struct block_list *src, int flag);
 	

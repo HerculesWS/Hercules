@@ -303,7 +303,7 @@ struct itemdb_interface {
 	/* */
 	struct item_data* (*name2id) (const char *str);
 	struct item_data* (*search_name) (const char *name);
-	int (*search_name_array) (struct item_data** data, int size, const char *str);
+	int (*search_name_array) (struct item_data** data, int size, const char *str, int flag);
 	struct item_data* (*load)(int nameid);
 	struct item_data* (*search)(int nameid);
 	int (*parse_dbrow) (char** str, const char* source, int line, int scriptopt);

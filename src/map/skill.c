@@ -870,7 +870,9 @@ int skill_additional_effect (struct block_list* src, struct block_list *bl, uint
 	#ifndef RENEWAL
 		case WZ_FROSTNOVA:
 	#endif
-			sc_start(bl,SC_FREEZE,skill_lv*3+35,skill_lv,skill->get_time2(skill_id,skill_lv));
+			if( !sc_start(bl,SC_FREEZE,skill_lv*3+35,skill_lv,skill->get_time2(skill_id,skill_lv))
+				&&	sd && skill_id == MG_FROSTDIVER )
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			break;
 
 	#ifdef RENEWAL
@@ -1702,7 +1704,8 @@ int skill_onskillusage(struct map_session_data *sd, struct block_list *bl, uint1
 
 	return 1;
 }
-
+//Early declaration
+static int skill_area_temp[8];
 /* Splitted off from skill->additional_effect, which is never called when the
  * attack skill kills the enemy. Place in this function counter status effects
  * when using skills (eg: Asura's sp regen penalty, or counter-status effects
@@ -1783,9 +1786,13 @@ int skill_counter_additional_effect (struct block_list* src, struct block_list *
 	 	!(skill->get_inf(skill_id)&(INF_GROUND_SKILL|INF_SELF_SKILL)) &&
 		(rate=pc->checkskill(sd,HW_SOULDRAIN))>0
 	){	//Soul Drain should only work on targetted spells [Skotlex]
-		if (pc_issit(sd)) pc->setstand(sd); //Character stuck in attacking animation while 'sitting' fix. [Skotlex]
-		clif->skill_nodamage(src,bl,HW_SOULDRAIN,rate,1);
-		iStatus->heal(src, 0, iStatus->get_lv(bl)*(95+15*rate)/100, 2);
+		if( pc_issit(sd) ) pc->setstand(sd); //Character stuck in attacking animation while 'sitting' fix. [Skotlex]
+		if( skill->get_nk(skill_id)&NK_SPLASH && skill_area_temp[1] != bl->id )
+			;
+		else{
+			clif->skill_nodamage(src,bl,HW_SOULDRAIN,rate,1);
+			iStatus->heal(src, 0, iStatus->get_lv(bl)*(95+15*rate)/100, 2);
+		}
 	}
 
 	if( sd && iStatus->isdead(bl) ) {
@@ -2045,8 +2052,6 @@ int skill_strip_equip(struct block_list *bl, unsigned short where, int rate, int
 	}
 	return where?1:0;
 }
-//Early declaration
-static int skill_area_temp[8];
 /*=========================================================================
  Used to knock back players, monsters, traps, etc
  - 'count' is the number of squares to knock back
@@ -3688,8 +3693,8 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 				if( (mbl == src || (!map_flag_gvg(src->m) && !map[src->m].flag.battleground) ) && // only NJ_ISSEN don't have slide effect in GVG
 					unit_movepos(src, mbl->x+x, mbl->y+y, 1, 1) ) {
 					clif->slide(src, src->x, src->y);
-					//uncomment this if you want to remove MO_EXTREMITYFIST glitchy walking effect. [malufett]
-					//clif->fixpos(src);
+					clif->fixpos(src);
+					clif->spiritball(src);
 				}
 			}
 			break;
@@ -4884,7 +4889,7 @@ int skill_castend_id(int tid, unsigned int tick, int id, intptr_t data)
 			if (unit_movepos(src, src->x+x, src->y+y, 1, 1))
 			{	//Display movement + animation.
 				clif->slide(src,src->x,src->y);
-				clif->skill_damage(src,target,tick,sd->battle_status.amotion,0,0,1,ud->skill_id, ud->skill_lv, 5);
+				clif->spiritball(src);
 			}
 			clif->skill_fail(sd,ud->skill_id,USESKILL_FAIL_LEVEL,0);
 		}
@@ -8153,7 +8158,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				int rate = 45 + 5 * skill_lv;
 				if( rnd()%100 < rate ){
 					clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
-					iMap->foreachinrange(skill_area_sub,bl,skill->get_splash(skill_id,skill_lv),BL_CHAR,src,skill_id,skill_lv,tick,flag|BCT_ENEMY|1,skill_castend_nodamage_id);
+					iMap->foreachinrange(skill->area_sub,bl,skill->get_splash(skill_id,skill_lv),BL_CHAR,src,skill_id,skill_lv,tick,flag|BCT_ENEMY|1,skill_castend_nodamage_id);
 				}else if( sd ) // Failure on Rate
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			}
@@ -9311,7 +9316,6 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				if(sd) clif->send_homdata(sd, SP_INTIMATE, hd->homunculus.intimacy); //refresh intimacy info
 			}
 			//don't break need to start status and start block timer
-		case MH_STYLE_CHANGE:
 			case MH_MAGMA_FLOW:
 			case MH_PAIN_KILLER:
 			   sc_start(bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv));
@@ -13899,8 +13903,6 @@ int skill_vfcastfix (struct block_list *bl, double time, uint16 skill_id, uint16
 
 	if (sc && sc->count && !(skill->get_castnodex(skill_id, skill_lv)&2) ) {
 		// All variable cast additive bonuses must come first
-		if ( sc->data[SC_MAGICPOWER] && !( sd && time == 0 && sd->skillitem == skill_id ))
-			time += 700;
 		if (sc->data[SC_SLOWCAST])
 			VARCAST_REDUCTION(-sc->data[SC_SLOWCAST]->val2);
 		if (sc->data[SC_FROSTMISTY])

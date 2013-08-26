@@ -514,7 +514,7 @@ void initChangeTables(void) {
 	add_sc(MH_POISON_MIST, SC_BLIND);
 	set_sc(MH_PAIN_KILLER, SC_PAIN_KILLER, SI_PAIN_KILLER, SCB_ASPD);
 
-	add_sc(MH_STYLE_CHANGE, SC_STYLE_CHANGE);
+	add_sc(MH_STYLE_CHANGE		 , SC_STYLE_CHANGE);
 	set_sc( MH_TINDER_BREAKER      , SC_RG_CCONFINE_S   , SI_RG_CCONFINE_S   , SCB_NONE );
 	set_sc( MH_TINDER_BREAKER      , SC_RG_CCONFINE_M    , SI_RG_CCONFINE_M    , SCB_FLEE );
 
@@ -8193,9 +8193,6 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			val4 = tick / 10000;
 			tick_time = 10000; // [GodLesZ] tick time
 			break;
-		case SC_GIANTGROWTH:
-			val2 = 10; // Triple damage success rate.
-			break;
 			/**
 			* Arch Bishop
 			**/
@@ -10924,9 +10921,9 @@ int status_change_timer_sub(struct block_list* bl, va_list ap)
 	return 0;
 }
 
-#ifdef RENEWAL
 int status_get_total_def(struct block_list *src){ return iStatus->get_status_data(src)->def2 + (short)iStatus->get_def(src); }
 int status_get_total_mdef(struct block_list *src){ return iStatus->get_status_data(src)->mdef2 + (short)status_get_mdef(src); }
+#ifdef RENEWAL
 int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int flag){
 	int min = 0, max = 0, dstr;
 	float strdex_bonus, variance;
@@ -11073,13 +11070,12 @@ int status_change_clear_buffs (struct block_list* bl, int type)
 		if( type&3 && !(iStatus->get_sc_type(i)&SC_BUFF) && !(iStatus->get_sc_type(i)&SC_DEBUFF) )
 			continue;
 
-		if( !(type&3) ){
+		if( type < 3 ){
 			if( type&1 && !(iStatus->get_sc_type(i)&SC_BUFF) )
 				continue;
 			if( type&2 && !(iStatus->get_sc_type(i)&SC_DEBUFF) )
 				continue;
 		}
-
 		switch (i) {
 		case SC_DEEP_SLEEP:
 		case SC_FROSTMISTY:
