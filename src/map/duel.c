@@ -187,9 +187,9 @@ void do_init_duel(void)
 *-------------------------------------*/
 void iDuel_defaults(void) {
 	iDuel = &iDuel_s;
-	/* vars */
+	/* vars */
 	iDuel->duel_count = 0;
-	/* funcs */
+	/* funcs */
 	//Duel functions // [LuzZza]
 	iDuel->create = duel_create;
 	iDuel->invite = duel_invite;

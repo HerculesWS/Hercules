@@ -33,7 +33,7 @@ struct chat_data {
 * created by Susu
 *-------------------------------------*/
 struct chat_interface {
-	/* funcs */
+	/* funcs */
 	
 	int (*createpcchat) (struct map_session_data* sd, const char* title, const char* pass, int limit, bool pub);
 	int (*joinchat) (struct map_session_data* sd, int chatid, const char* pass);

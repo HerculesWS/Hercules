@@ -63,9 +63,9 @@ struct elemental_data {
 * created by Susu
 *-------------------------------------*/
 struct elemental_interface {
-	/* vars */
+	/* vars */
 	struct s_elemental_db elemental_db[MAX_ELEMENTAL_CLASS]; // Elemental Database
-	/* funcs */
+	/* funcs */
 	bool (*class) (int class_);
 	struct view_data * (*get_viewdata) (int class_);
 	

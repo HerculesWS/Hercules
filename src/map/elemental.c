@@ -948,7 +948,7 @@ void do_final_elemental(void) {
 *-------------------------------------*/
 void elemental_defaults(void) {
 	elemental = &elemental_s;
-	/* funcs */
+	/* funcs */
 	
 	elemental->class = elemental_class;
 	elemental->get_viewdata = elemental_get_viewdata;

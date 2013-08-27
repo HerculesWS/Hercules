@@ -32,7 +32,7 @@ struct auction_data;
 * created by Susu
 *-------------------------------------*/
 struct intif_interface {
-	/* funcs */
+	/* funcs */
 	
 
 	int (*parse) (int fd);
