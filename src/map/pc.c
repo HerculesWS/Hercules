@@ -10215,7 +10215,9 @@ void do_final_pc(void) {
 	return;
 }
 
-void do_init_pc(void) {
+void do_init_pc(bool minimal) {
+	if (minimal)
+		return;
 
 	pc->itemcd_db = idb_alloc(DB_OPT_RELEASE_DATA);
 

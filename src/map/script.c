@@ -1863,66 +1863,98 @@ void read_constdb(void) {
 	fclose(fp);
 }
 
+// Standard UNIX tab size is 8
+#define TAB_SIZE 8
+#define update_tabstop(tabstop,chars) \
+	do { \
+		(tabstop) -= (chars); \
+		while ((tabstop) <= 0) (tabstop) += TAB_SIZE; \
+	} while (false)
+
 /*==========================================
  * Display emplacement line of script
  *------------------------------------------*/
 const char* script_print_line(StringBuf* buf, const char* p, const char* mark, int line)
 {
-	int i;
+	int i, mark_pos = 0, tabstop = TAB_SIZE;
 	if( p == NULL || !p[0] ) return NULL;
 	if( line < 0 )
-		StrBuf->Printf(buf, "*% 5d : ", -line);
+		StrBuf->Printf(buf, "*%5d: ", -line);         // len = 8
 	else
-		StrBuf->Printf(buf, " % 5d : ", line);
-	for(i=0;p[i] && p[i] != '\n';i++){
-		if(p + i != mark)
-			StrBuf->Printf(buf, "%c", p[i]);
+		StrBuf->Printf(buf, " %5d: ", line);          // len = 8
+	update_tabstop(tabstop,8);                            // len = 8
+	for( i=0; p[i] && p[i] != '\n'; i++ ) {
+		char c = p[i];
+		int w = 1;
+		// Like Clang does, let's print the code with tabs expanded to spaces to ensure that the marker will be under the right character
+		if( c == '\t' ) {
+			c = ' ';
+			w = tabstop;
+		}
+		update_tabstop(tabstop, w);
+		if( p + i < mark)
+			mark_pos += w;
+		if( p + i != mark)
+			StrBuf->Printf(buf, "%*c", w, c);
 		else
-			StrBuf->Printf(buf, "\'%c\'", p[i]);
+			StrBuf->Printf(buf, CL_BT_RED"%*c"CL_RESET, w, c);
 	}
 	StrBuf->AppendStr(buf, "\n");
+	if( mark ) {
+		StrBuf->AppendStr(buf, "        "CL_BT_CYAN); // len = 8
+		for( ; mark_pos > 0; mark_pos-- ) {
+			StrBuf->AppendStr(buf, "~");
+		}
+		StrBuf->AppendStr(buf, CL_RESET CL_BT_GREEN"^"CL_RESET"\n");
+	}
 	return p+i+(p[i] == '\n' ? 1 : 0);
 }
+#undef TAB_SIZE
+#undef update_tabstop
 
+#define CONTEXTLINES 3
 void script_errorwarning_sub(StringBuf *buf, const char* src, const char* file, int start_line, const char* error_msg, const char* error_pos) {
 	// Find the line where the error occurred
 	int j;
 	int line = start_line;
-	const char *p;
-	const char *linestart[5] = { NULL, NULL, NULL, NULL, NULL };
+	const char *p, *error_linepos;
+	const char *linestart[CONTEXTLINES];
+	memset(linestart, '\0', sizeof(linestart));
 
 	for(p=src;p && *p;line++){
 		const char *lineend=strchr(p,'\n');
 		if(lineend==NULL || error_pos<lineend){
 			break;
 		}
-		for( j = 0; j < 4; j++ ) {
+		for( j = 0; j < CONTEXTLINES-1; j++ ) {
 			linestart[j] = linestart[j+1];
 		}
-		linestart[4] = p;
-		p=lineend+1;
+		linestart[CONTEXTLINES-1] = p;
+		p = lineend+1;
 	}
+	error_linepos = p;
 
 	if( line >= 0 )
-		StrBuf->Printf(buf, "script error in file '%s' line %d\n", file, line);
+		StrBuf->Printf(buf, "script error in file '%s' line %d column %d\n", file, line, error_pos-error_linepos+1);
 	else
 		StrBuf->Printf(buf, "script error in file '%s' item ID %d\n", file, -line);
 
 	StrBuf->Printf(buf, "    %s\n", error_msg);
-	for(j = 0; j < 5; j++ ) {
-		script->print_line(buf, linestart[j], NULL, line + j - 5);
+	for(j = 0; j < CONTEXTLINES; j++ ) {
+		script->print_line(buf, linestart[j], NULL, line + j - CONTEXTLINES);
 	}
 	p = script->print_line(buf, p, error_pos, -line);
-	for(j = 0; j < 5; j++) {
+	for(j = 0; j < CONTEXTLINES; j++) {
 		p = script->print_line(buf, p, NULL, line + j + 1 );
 	}
 }
+#undef CONTEXTLINES
 
 void script_error(const char* src, const char* file, int start_line, const char* error_msg, const char* error_pos) {
 	StringBuf buf;
 
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "\a\n");
+	StrBuf->AppendStr(&buf, "\a");
 
 	script->errorwarning_sub(&buf, src, file, start_line, error_msg, error_pos);
 
@@ -3694,7 +3726,7 @@ void do_final_script(void) {
 /*==========================================
  * Initialization
  *------------------------------------------*/
-void do_init_script(void) {
+void do_init_script(bool minimal) {
 	script->st_db = idb_alloc(DB_OPT_BASE);
 	script->userfunc_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 	script->autobonus_db = strdb_alloc(DB_OPT_DUP_KEY,0);
@@ -3707,6 +3739,10 @@ void do_init_script(void) {
 	
 	script->parse_builtin();
 	script->read_constdb();
+
+	if (minimal)
+		return;
+
 	mapreg->init();
 }
 

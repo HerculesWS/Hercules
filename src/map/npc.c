@@ -1253,6 +1253,7 @@ int npc_buysellsel(struct map_session_data* sd, int id, int type) {
 	}
 	return 0;
 }
+
 /*==========================================
 * Cash Shop Buy List
 *------------------------------------------*/
@@ -3498,8 +3499,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 
 //Read file and create npc/func/mapflag/monster... accordingly.
 //@runOnInit should we exec OnInit when it's done ?
-void npc_parsesrcfile(const char* filepath, bool runOnInit)
-{
+int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 	int16 m, x, y;
 	int lines = 0;
 	FILE* fp;
@@ -3512,7 +3512,7 @@ void npc_parsesrcfile(const char* filepath, bool runOnInit)
 	if( fp == NULL )
 	{
 		ShowError("npc_parsesrcfile: File not found '%s'.\n", filepath);
-		return;
+		return -1;
 	}
 	fseek(fp, 0, SEEK_END);
 	len = ftell(fp);
@@ -3525,7 +3525,7 @@ void npc_parsesrcfile(const char* filepath, bool runOnInit)
 		ShowError("npc_parsesrcfile: Failed to read file '%s' - %s\n", filepath, strerror(errno));
 		aFree(buffer);
 		fclose(fp);
-		return;
+		return -1;
 	}
 	fclose(fp);
 
@@ -3660,7 +3660,7 @@ void npc_parsesrcfile(const char* filepath, bool runOnInit)
 	}
 	aFree(buffer);
 
-	return;
+	return 0;
 }
 
 int npc_script_event(struct map_session_data* sd, enum npce_event type)
@@ -3937,8 +3937,7 @@ static void npc_debug_warps(void) {
 /*==========================================
  * npc initialization
  *------------------------------------------*/
-int do_init_npc(void)
-{
+int do_init_npc(bool minimal) {
 	struct npc_src_list *file;
 	int i;
 
@@ -3965,43 +3964,47 @@ int do_init_npc(void)
 	npc->name_db = strdb_alloc(DB_OPT_BASE, NAME_LENGTH);
 	npc->path_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, 0);
 
-	npc->timer_event_ers = ers_new(sizeof(struct timer_event_data),"clif.c::timer_event_ers",ERS_OPT_NONE);
-
 	npc_last_npd = NULL;
 	npc_last_path = NULL;
 	npc_last_ref = NULL;
 	
-	// process all npc files
-	ShowStatus("Loading NPCs...\r");
-	for( file = npc->src_files; file != NULL; file = file->next ) {
-		ShowStatus("Loading NPC file: %s"CL_CLL"\r", file->name);
-		npc->parsesrcfile(file->name,false);
+	if (!minimal) {
+		npc->timer_event_ers = ers_new(sizeof(struct timer_event_data),"clif.c::timer_event_ers",ERS_OPT_NONE);
+
+		// process all npc files
+		ShowStatus("Loading NPCs...\r");
+		for( file = npc->src_files; file != NULL; file = file->next ) {
+			ShowStatus("Loading NPC file: %s"CL_CLL"\r", file->name);
+			npc->parsesrcfile(file->name,false);
+		}
+		ShowInfo ("Done loading '"CL_WHITE"%d"CL_RESET"' NPCs:"CL_CLL"\n"
+			"\t-'"CL_WHITE"%d"CL_RESET"' Warps\n"
+			"\t-'"CL_WHITE"%d"CL_RESET"' Shops\n"
+			"\t-'"CL_WHITE"%d"CL_RESET"' Scripts\n"
+			"\t-'"CL_WHITE"%d"CL_RESET"' Spawn sets\n"
+			"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
+			"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
+			npc_id - START_NPC_NUM, npc_warp, npc_shop, npc_script, npc_mob, npc_cache_mob, npc_delay_mob);
 	}
-	ShowInfo ("Done loading '"CL_WHITE"%d"CL_RESET"' NPCs:"CL_CLL"\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Warps\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Shops\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Scripts\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Spawn sets\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
-		npc_id - START_NPC_NUM, npc_warp, npc_shop, npc_script, npc_mob, npc_cache_mob, npc_delay_mob);
 
 	itemdb->name_constants();
-	
-	map->zone_init();
-	
-	npc->motd = npc->name2id("HerculesMOTD"); /* [Ind/Hercules] */
-	
-	// set up the events cache
-	memset(script_event, 0, sizeof(script_event));
-	npc->read_event_script();
 
-	//Debug function to locate all endless loop warps.
-	if (battle_config.warp_point_debug)
-		npc->debug_warps();
+	if (!minimal) {
+		map->zone_init();
+	
+		npc->motd = npc->name2id("HerculesMOTD"); /* [Ind/Hercules] */
+	
+		// set up the events cache
+		memset(script_event, 0, sizeof(script_event));
+		npc->read_event_script();
 
-	timer->add_func_list(npc->event_do_clock,"npc_event_do_clock");
-	timer->add_func_list(npc->timerevent,"npc_timerevent");
+		//Debug function to locate all endless loop warps.
+		if (battle_config.warp_point_debug)
+			npc->debug_warps();
+
+		timer->add_func_list(npc->event_do_clock,"npc_event_do_clock");
+		timer->add_func_list(npc->timerevent,"npc_timerevent");
+	}
 
 	// Init dummy NPC
 	npc->fake_nd = (struct npc_data *)aCalloc(1,sizeof(struct npc_data));

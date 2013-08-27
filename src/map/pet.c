@@ -1328,8 +1328,10 @@ int read_petdb()
 /*==========================================
  * Initialization process relationship skills
  *------------------------------------------*/
-int do_init_pet(void)
-{
+int do_init_pet(bool minimal) {
+	if (minimal)
+		return 0;
+
 	pet->read_db();
 
 	pet->item_drop_ers = ers_new(sizeof(struct item_drop),"pet.c::item_drop_ers",ERS_OPT_NONE);

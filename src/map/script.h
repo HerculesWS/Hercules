@@ -507,7 +507,7 @@ struct script_interface {
 	int potion_hp, potion_per_hp, potion_sp, potion_per_sp;
 	int potion_target;
 	/*  */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	int  (*reload) (void);
 	/* parse */

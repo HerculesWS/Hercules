@@ -717,7 +717,9 @@ int storage_guild_storage_quit(struct map_session_data* sd, int flag) {
 
 	return 0;
 }
-void do_init_gstorage(void) {
+void do_init_gstorage(bool minimal) {
+	if (minimal)
+		return;
 	gstorage->db = idb_alloc(DB_OPT_RELEASE_DATA);
 }
 void do_final_gstorage(void) {

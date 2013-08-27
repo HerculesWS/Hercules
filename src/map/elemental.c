@@ -931,7 +931,10 @@ void reload_elemental_skilldb(void) {
 	elemental->read_skilldb();
 }
 
-int do_init_elemental(void) {
+int do_init_elemental(bool minimal) {
+	if (minimal)
+		return 0;
+
 	elemental->read_db();
 	elemental->read_skilldb();
 

@@ -18046,9 +18046,12 @@ void clif_bc_ready(void) {
 /*==========================================
  *
  *------------------------------------------*/
-int do_init_clif(void) {
+int do_init_clif(bool minimal) {
 	const char* colors[COLOR_MAX] = { "0xFF0000", "0x00ff00", "0xffffff" };
 	int i;
+
+	if (minimal)
+		return 0;
 
 	/**
 	 * Setup Color Table (saves unnecessary load of strtoul on every call)

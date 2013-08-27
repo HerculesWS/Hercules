@@ -259,7 +259,7 @@ struct mob_interface {
 	int manuk[8];
 	int splendide[5];
 	/* */
-	int (*init) (void);
+	int (*init) (bool mimimal);
 	int (*final) (void);
 	void (*reload) (void);
 	/* */
@@ -354,7 +354,7 @@ struct mob_interface {
 	int (*read_sqlskilldb) (void);
 	bool (*readdb_race2) (char *fields[], int columns, int current);
 	bool (*readdb_itemratio) (char *str[], int columns, int current);
-	void (*load) (void);
+	void (*load) (bool minimal);
 	void (*clear_spawninfo) ();
 };
 

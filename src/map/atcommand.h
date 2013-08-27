@@ -77,7 +77,7 @@ struct atcommand_interface {
 	/* */
 	char* msg_table[MAX_MSG]; // Server messages (0-499 reserved for GM commands, 500-999 reserved for others)
 	/* */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
 	bool (*parse) (const int fd, struct map_session_data* sd, const char* message, int type);

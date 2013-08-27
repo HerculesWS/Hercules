@@ -490,7 +490,10 @@ int read_mercenary_skilldb(void) {
 	return 0;
 }
 
-void do_init_mercenary(void) {
+void do_init_mercenary(bool minimal) {
+	if (minimal)
+		return;
+
 	mercenary->read_db();
 	mercenary->read_skilldb();
 	

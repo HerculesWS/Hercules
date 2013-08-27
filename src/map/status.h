@@ -1864,7 +1864,7 @@ struct status_interface {
 	int64 natural_heal_prev_tick;
 	unsigned int natural_heal_diff_tick;
 	/* */
-	int (*init) (void);
+	int (*init) (bool minimal);
 	void (*final) (void);
 	/* funcs */
 	int (*get_refine_chance) (enum refine_type wlv, int refine);
