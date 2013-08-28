@@ -88,7 +88,7 @@ function Pick {
 	}
 	if (.@warp_block & (1<<.@select)) {
 		message strcharinfo(0),"This map is not enabled in "+((checkre(0))?"":"Pre-")+"Renewal.";
-		end;
+		close;
 	}
 	warp .@map$,@c[.@i*2],@c[.@i*2+1];
 	getmapxy(lastwarp$,lastwarpx,lastwarpy,0);
@@ -103,7 +103,7 @@ function Restrict {
 				set @warp_block, @warp_block | (1<<getarg(.@i));
 		} else {
 			message strcharinfo(0),"This map is not enabled in "+((checkre(0))?"":"Pre-")+"Renewal.";
-			end;
+			close;
 		}
 	}
 	return;
