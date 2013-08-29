@@ -2900,8 +2900,10 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 	// ----- HIT CALCULATION -----
 
 	// Absolute modifiers from passive skills
-	if((skill=pc->checkskill(sd,BS_WEAPONRESEARCH))>0)
+#ifndef RENEWAL
+	if((skill=pc->checkskill(sd,BS_WEAPONRESEARCH))>0) // is this correct in pre? there is already hitrate bonus in battle.c
 		status->hit += skill*2;
+#endif
 	if((skill=pc->checkskill(sd,AC_VULTURE))>0){
 #ifndef RENEWAL
 		status->hit += skill;
