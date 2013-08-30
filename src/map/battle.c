@@ -1086,7 +1086,7 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 						}
 					}
 #ifndef RENEWAL
-					if( wd.flag&BF_LONG )
+					if( wflag&BF_LONG )
 						cardfix = cardfix * (100 + sd->bonus.long_attack_atk_rate) / 100;
 #endif
 					if( (cflag&1) && cardfix_ != 1000 )
@@ -4740,7 +4740,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			if (skill_id && (i = pc->skillatk_bonus(sd, skill_id)))
 				ATK_ADDRATE(i);
 	#ifdef RENEWAL
-			if( wflag&BF_LONG )
+			if( wd.flag&BF_LONG )
 				ATK_ADDRATE(sd->bonus.long_attack_atk_rate);
 	#endif	
 			if( (i=pc->checkskill(sd,AB_EUCHARISTICA)) > 0 &&
