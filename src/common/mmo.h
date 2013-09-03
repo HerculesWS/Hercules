@@ -64,6 +64,7 @@
 // Comment the following line to disable sc_data saving. [Skotlex]
 #define ENABLE_SC_SAVING
 
+#if PACKETVER >= 20070227
 // Comment the following like to disable server-side hot-key saving support. [Skotlex]
 // Note that newer clients no longer save hotkeys in the registry!
 #define HOTKEY_SAVING
@@ -74,10 +75,11 @@
 #elif PACKETVER < 20090617
         // (36 = 9 skills x 4 bars)               (0x07d9,254)
         #define MAX_HOTKEYS 36
-#else
+#else // >= 20090617
         // (38 = 9 skills x 4 bars & 2 Quickslots)(0x07d9,268)
         #define MAX_HOTKEYS 38
-#endif
+#endif // 20090603
+#endif // 20070227
 
 #define MAX_INVENTORY 100
 //Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
