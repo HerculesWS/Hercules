@@ -921,8 +921,10 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	int g_id = iStatus->get_guild_id(bl);
 	
 #if PACKETVER < 20091103
-	if( !pcdb_checkid(vd->class_) )
-		return clif->set_unit_idle2(bl,tsd,target);
+	if( !pcdb_checkid(vd->class_) ) {
+		clif->set_unit_idle2(bl,tsd,target);
+		return;
+	}
 #endif
 	
 	sd = BL_CAST(BL_PC, bl);
@@ -1047,8 +1049,10 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	int g_id = iStatus->get_guild_id(bl);
 
 #if PACKETVER < 20091103
-	if( !pcdb_checkid(vd->class_) )
-		return clif->spawn_unit2(bl,target);
+	if( !pcdb_checkid(vd->class_) ) {
+		clif->spawn_unit2(bl,target);
+		return;
+	}
 #endif
 	
 	sd = BL_CAST(BL_PC, bl);
