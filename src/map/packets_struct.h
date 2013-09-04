@@ -235,7 +235,6 @@ struct packet_spawn_unit2 {
 	unsigned char PosDir[3];
 	unsigned char xSize;
 	unsigned char ySize;
-	short clevel;
 } __attribute__((packed));
 #endif
 struct packet_spawn_unit {
@@ -308,7 +307,7 @@ struct packet_unit_walking {
 	short speed;
 	short bodyState;
 	short healthState;
-#if PACKETVER < 20080102
+#if PACKETVER < 7
 	short effectState;
 #else
 	int effectState;

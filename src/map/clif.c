@@ -1036,7 +1036,6 @@ void clif_spawn_unit2(struct block_list* bl, enum send_target target) {
 	p.sex = vd->sex;
 	WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit_getdir(bl));
 	p.xSize = p.ySize = (sd) ? 5 : 0;
-	p.clevel = clif_setlevel(bl);
 
 	clif->send(&p,sizeof(p),bl,target);
 }
