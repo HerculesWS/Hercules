@@ -11709,9 +11709,9 @@ void status_defaults(void) {
 #ifdef RENEWAL
 	iStatus->base_matk = status_base_matk;
 	iStatus->get_weapon_atk = status_get_weapon_atk;
+#endif
 	iStatus->get_total_mdef = status_get_total_mdef;
 	iStatus->get_total_def = status_get_total_def;
-#endif
 
 	iStatus->get_matk = status_get_matk;
 
