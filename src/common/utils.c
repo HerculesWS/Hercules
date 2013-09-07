@@ -309,7 +309,7 @@ bool HCache_check(const char *file) {
 		return false;
 	}
 
-	if( fread(dT,sizeof(dT),1,second) != 1 || fread(&rtime,sizeof(rtime),1,second) != 1 || dT[0] != 'k' || HCache->recompile_time > rtime ) {
+	if( fread(dT,sizeof(dT),1,second) != 1 || fread(&rtime,sizeof(rtime),1,second) != 1 || dT[0] != HCACHE_KEY || HCache->recompile_time > rtime ) {
 		fclose(first);
 		fclose(second);
 		return false;
@@ -343,7 +343,8 @@ FILE *HCache_open(const char *file, const char *opt) {
 	}
 	
 	if( opt[0] != 'r' ) {
-		char dT[1] = "k";/* 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
+		char dT[1];/* 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
+		dT[0] = HCACHE_KEY;
 		hwrite(dT,sizeof(dT),1,first);
 		hwrite(&HCache->recompile_time,sizeof(HCache->recompile_time),1,first);
 	}

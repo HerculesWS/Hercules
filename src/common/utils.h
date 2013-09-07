@@ -9,6 +9,9 @@
 #include <stdio.h> // FILE*
 #include <time.h>
 
+/* [HCache] 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
+#define HCACHE_KEY 'k'
+
 // generate a hex dump of the first 'length' bytes of 'buffer'
 void WriteDump(FILE* fp, const void* buffer, size_t length);
 void ShowDump(const void* buffer, size_t length);
