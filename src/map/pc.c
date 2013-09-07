@@ -9649,6 +9649,8 @@ void pc_read_skill_tree(void) {
 	const char *config_filename = "db/pre-re/skill_tree.conf"; // FIXME hardcoded name
 #endif
 	int i = 0, jnamelen = 0;
+	struct s_mapiterator *iter;
+	struct map_session_data *sd;
 	struct {
 		const char *name;
 		int id;
@@ -9893,6 +9895,11 @@ void pc_read_skill_tree(void) {
 	
 	config_destroy(&skill_tree_conf);
 
+    /* lets update all players skill tree */
+    iter = mapit_getallusers();
+    for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
+        clif->skillinfoblock(sd);
+    mapit->free(iter);
 }
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 static bool pc_readdb_levelpenalty(char* fields[], int columns, int current)
@@ -9930,8 +9937,7 @@ static bool pc_readdb_levelpenalty(char* fields[], int columns, int current)
  * skill_tree.txt - skill tree for every class
  * attr_fix.txt   - elemental adjustment table
  *------------------------------------------*/
-int pc_readdb(void)
-{
+int pc_readdb(void) {
 	int i,j,k;
 	unsigned int count = 0;
 	FILE *fp;
@@ -9948,8 +9954,7 @@ int pc_readdb(void)
 		ShowError("can't read %s\n", line);
 		return 1;
 	}
-	while(fgets(line, sizeof(line), fp))
-	{
+	while(fgets(line, sizeof(line), fp)) {
 		int jobs[CLASS_COUNT], job_count, job, job_id;
 		int type;
 		unsigned int ui,maxlv;
