@@ -11201,7 +11201,7 @@ int skill_unit_onplace (struct skill_unit *src, struct block_list *bl, unsigned 
 		case UNT_GD_GLORYWOUNDS:
 		case UNT_GD_SOULCOLD:
 		case UNT_GD_HAWKEYES:
-			if ( !sce )
+			if ( !sce && battle->check_target(&sg->unit->bl,bl,sg->target_flag) > 0 )
 				sc_start4(bl,type,100,sg->skill_lv,0,0,0,1000);
 			break;
 	}
