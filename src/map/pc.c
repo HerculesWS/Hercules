@@ -7027,14 +7027,14 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 		}
 		if( sd->pvp_point < 0 )
 		{
-			iTimer->add_timer(tick+1000, pc_respawn_timer,sd->bl.id,0);
+			iTimer->add_timer(tick+1, pc_respawn_timer,sd->bl.id,0);
 			return 1|8;
 		}
 	}
 	//GvG
 	if( map_flag_gvg(sd->bl.m) )
 	{
-		iTimer->add_timer(tick+1000, pc_respawn_timer, sd->bl.id, 0);
+		iTimer->add_timer(tick+1, pc_respawn_timer, sd->bl.id, 0);
 		return 1|8;
 	}
 	else if( sd->bg_id )
