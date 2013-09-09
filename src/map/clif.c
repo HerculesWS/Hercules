@@ -9414,7 +9414,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 	}
 
 	if( sd->bg_id ) clif->bg_hp(sd); // BattleGround System
-
+	
 	if(map[sd->bl.m].flag.pvp && !(sd->sc.option&OPTION_INVISIBLE)) {
 		if(!battle_config.pk_mode) { // remove pvp stuff for pk_mode [Valaris]
 			if (!map[sd->bl.m].flag.pvp_nocalcrank)
@@ -9436,6 +9436,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 
 	if( map_flag_gvg(sd->bl.m) )
 		clif->map_property(sd, MAPPROPERTY_AGITZONE);
+
 	// info about nearby objects
 	// must use foreachinarea (CIRCULAR_AREA interferes with foreachinrange)
 	iMap->foreachinarea(clif->getareachar, sd->bl.m, sd->bl.x-AREA_SIZE, sd->bl.y-AREA_SIZE, sd->bl.x+AREA_SIZE, sd->bl.y+AREA_SIZE, BL_ALL, sd);
@@ -9896,6 +9897,38 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 		if (DIFF_TICK(sd->cantalk_tick, iTimer->gettick()) > 0)
 			return;
 		sd->cantalk_tick = iTimer->gettick() + battle_config.min_chat_delay;
+	}
+
+	if( (sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE ) {
+		unsigned int next = pc->nextbaseexp(sd);
+		if( next == 0 ) next = pc->thisbaseexp(sd);
+		if( next ) { // 0%, 10%, 20%, ...
+			int percent = (int)( ( (float)sd->status.base_exp/(float)next )*1000. );
+			if( (battle_config.snovice_call_type || percent) && ( percent%100 ) == 0 ) {// 10.0%, 20.0%, ..., 90.0%
+				switch (sd->state.snovice_call_flag) {
+					case 0:
+						if( strstr(message, msg_txt(1479)) ) // "Dear angel, can you hear my voice?"
+							sd->state.snovice_call_flag = 1;
+						break;
+					case 1: {
+						char buf[256];
+						snprintf(buf, 256, msg_txt(1480), sd->status.name);
+						if( strstr(message, buf) ) // "I am %s Super Novice~"
+							sd->state.snovice_call_flag = 2;
+					}
+						break;
+					case 2:
+						if( strstr(message, msg_txt(1481)) ) // "Help me out~ Please~ T_T"
+							sd->state.snovice_call_flag = 3;
+						break;
+					case 3:
+						sc_start(&sd->bl, iStatus->skill2sc(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5)); //Lv17-> +50 critical (noted by Poki) [Skotlex]
+						clif->skill_nodamage(&sd->bl, &sd->bl, MO_EXPLOSIONSPIRITS, 5, 1);  // prayer always shows successful Lv5 cast and disregards noskill restrictions
+						sd->state.snovice_call_flag = 0;
+						break;
+				}
+			}
+		}
 	}
 	
 	if( sd->gcbind ) {
@@ -13674,6 +13707,10 @@ void clif_parse_NoviceDoriDori(int fd, struct map_session_data *sd)
 ///       "Help me out~ Please~ T_T"
 void clif_parse_NoviceExplosionSpirits(int fd, struct map_session_data *sd)
 {
+	/* [Ind/Hercules] */
+	/* game client is currently broken on this (not sure the packetver range) */
+	/* it sends the request when the criteria doesn't match (and of course we let it fail) */
+	/* so restoring the old parse_globalmes method. */
 	if( ( sd->class_&MAPID_UPPERMASK ) == MAPID_SUPER_NOVICE ) {
 		unsigned int next = pc->nextbaseexp(sd);
 		if( next == 0 ) next = pc->thisbaseexp(sd);

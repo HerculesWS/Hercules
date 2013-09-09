@@ -457,6 +457,7 @@ struct Battle_Config {
 	int gm_ignore_warpable_area;
 	
 	int client_accept_chatdori; // [Ai4rei/Mirei]
+	int snovice_call_type;
 	
 } battle_config;
 

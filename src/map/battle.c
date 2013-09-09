@@ -6500,6 +6500,7 @@ static const struct _battle_data {
 	{ "gm_ignore_warpable_area",			&battle_config.gm_ignore_warpable_area,			0,		2,		100,			},
 	{ "packet_obfuscation",					&battle_config.packet_obfuscation,				1,		0,		3,				},
 	{ "client_accept_chatdori",             &battle_config.client_accept_chatdori,          0,      0,      INT_MAX,		},
+	{ "snovice_call_type",					&battle_config.snovice_call_type,				0,		0,		1,				},
 };
 #ifndef STATS_OPT_OUT
 /**
