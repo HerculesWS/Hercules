@@ -17165,36 +17165,45 @@ void clif_cashshop_db(void) {
 			if( (cat = config_setting_get_member(cats, entry_name)) != NULL ) {
 				int item_count = config_setting_length(cat);
 				
-				for(k = 0; k < item_count; k++) {
-					config_setting_t *entry = config_setting_get_elem(cat,k);
-					const char *name = config_setting_name(entry);
-					int price = config_setting_get_int(entry);
-					struct item_data * data = NULL;
-					
-					if( price < 1 ) {
-						ShowWarning("cashshop_db: unsupported price '%d' for entry named '%s' in category '%s'\n", price, name, entry_name);
-						continue;
-					}
-										
-					if( name[0] == 'I' && name[1] == 'D' && strlen(name) <= 7 ) {
-						if( !( data = itemdb->exists(atoi(name+2))) ) {
-							ShowWarning("cashshop_db: unknown item id '%s' in category '%s'\n", name+2, entry_name);
-							continue;
-						}
-					} else {
-						if( !( data = itemdb->search_name(name) ) ) {
-							ShowWarning("cashshop_db: unknown item name '%s' in category '%s'\n", name, entry_name);
-							continue;
-						}
-					}
-					
-					
+				if( item_count == 0 ) {
+					ShowWarning("cashshop_db: category '%s' is empty! adding dull apple!\n", entry_name);
 					RECREATE(clif->cs.data[i], struct hCSData *, ++clif->cs.item_count[i]);
 					CREATE(clif->cs.data[i][ clif->cs.item_count[i] - 1 ], struct hCSData , 1);
 					
-					clif->cs.data[i][ clif->cs.item_count[i] - 1 ]->id = data->nameid;
-					clif->cs.data[i][ clif->cs.item_count[i] - 1 ]->price = price;
-					item_count_t++;
+					clif->cs.data[i][ clif->cs.item_count[i] - 1 ]->id = 512;
+					clif->cs.data[i][ clif->cs.item_count[i] - 1 ]->price = 999;
+				} else {
+					for(k = 0; k < item_count; k++) {
+						config_setting_t *entry = config_setting_get_elem(cat,k);
+						const char *name = config_setting_name(entry);
+						int price = config_setting_get_int(entry);
+						struct item_data * data = NULL;
+						
+						if( price < 1 ) {
+							ShowWarning("cashshop_db: unsupported price '%d' for entry named '%s' in category '%s'\n", price, name, entry_name);
+							continue;
+						}
+											
+						if( name[0] == 'I' && name[1] == 'D' && strlen(name) <= 7 ) {
+							if( !( data = itemdb->exists(atoi(name+2))) ) {
+								ShowWarning("cashshop_db: unknown item id '%s' in category '%s'\n", name+2, entry_name);
+								continue;
+							}
+						} else {
+							if( !( data = itemdb->search_name(name) ) ) {
+								ShowWarning("cashshop_db: unknown item name '%s' in category '%s'\n", name, entry_name);
+								continue;
+							}
+						}
+						
+						
+						RECREATE(clif->cs.data[i], struct hCSData *, ++clif->cs.item_count[i]);
+						CREATE(clif->cs.data[i][ clif->cs.item_count[i] - 1 ], struct hCSData , 1);
+						
+						clif->cs.data[i][ clif->cs.item_count[i] - 1 ]->id = data->nameid;
+						clif->cs.data[i][ clif->cs.item_count[i] - 1 ]->price = price;
+						item_count_t++;
+					}
 				}
 			} else {
 				ShowError("cashshop_db: category '%s' (%d) not found!!\n",entry_name,i);
