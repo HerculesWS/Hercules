@@ -9336,8 +9336,7 @@ void clif_hercules_chsys_mjoin(struct map_session_data *sd) {
 
 /// Notification from the client, that it has finished map loading and is about to display player's character (CZ_NOTIFY_ACTORINIT).
 /// 007d
-void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
-{
+void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 	if(sd->bl.prev != NULL)
 		return;
 
@@ -9549,6 +9548,9 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 
 		if(sd->npc_id)
 			npc_event_dequeue(sd);
+		
+		if( sd->guild && ( battle_config.guild_notice_changemap == 2 || ( battle_config.guild_notice_changemap == 1 && sd->state.changemap ) ) )
+			clif->guild_notice(sd,sd->guild);
 	}
 
 	if( sd->state.changemap ) {// restore information that gets lost on map-change

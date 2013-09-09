@@ -6501,6 +6501,7 @@ static const struct _battle_data {
 	{ "packet_obfuscation",					&battle_config.packet_obfuscation,				1,		0,		3,				},
 	{ "client_accept_chatdori",             &battle_config.client_accept_chatdori,          0,      0,      INT_MAX,		},
 	{ "snovice_call_type",					&battle_config.snovice_call_type,				0,		0,		1,				},
+	{ "guild_notice_changemap",				&battle_config.guild_notice_changemap,			2,		0,		2,				},
 };
 #ifndef STATS_OPT_OUT
 /**

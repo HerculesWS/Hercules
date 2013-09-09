@@ -458,6 +458,7 @@ struct Battle_Config {
 	
 	int client_accept_chatdori; // [Ai4rei/Mirei]
 	int snovice_call_type;
+	int guild_notice_changemap;
 	
 } battle_config;
 
