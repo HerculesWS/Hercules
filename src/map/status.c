@@ -6497,7 +6497,22 @@ int status_get_sc_def(struct block_list *bl, enum sc_type type, int rate, int ti
 }
 /* [Ind/Hercules] fast-checkin sc-display array */
 void status_display_add(struct map_session_data *sd, enum sc_type type, int dval1, int dval2, int dval3) {
-	struct sc_display_entry *entry = ers_alloc(pc_sc_display_ers, struct sc_display_entry);
+	struct sc_display_entry *entry;
+	int i;
+	
+	for( i = 0; i < sd->sc_display_count; i++ ) {
+		if( sd->sc_display[i]->type == type )
+			break;
+	}
+	
+	if( i != sd->sc_display_count ) {
+		sd->sc_display[i]->val1 = dval1;
+		sd->sc_display[i]->val2 = dval2;
+		sd->sc_display[i]->val3 = dval3;
+		return;
+	}
+	
+	entry = ers_alloc(pc_sc_display_ers, struct sc_display_entry);
 
 	entry->type = type;
 	entry->val1 = dval1;
