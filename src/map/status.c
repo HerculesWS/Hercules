@@ -1207,7 +1207,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 			if ((sce=sc->data[SC_ENDURE]) && !sce->val4 && !sc->data[SC_LKCONCENTRATION]) {
 				//Endure count is only reduced by non-players on non-gvg maps.
 				//val4 signals infinite endure. [Skotlex]
-				if (src && src->type != BL_PC && !map_flag_gvg(target->m) && !map[target->m].flag.battleground && --(sce->val2) < 0)
+				if (src && src->type != BL_PC && !map_flag_gvg2(target->m) && !map[target->m].flag.battleground && --(sce->val2) < 0)
 					status_change_end(target, SC_ENDURE, INVALID_TIMER);
 			}
 			if ((sce=sc->data[SC_GRAVITATION]) && sce->val3 == BCT_SELF) {
@@ -1301,7 +1301,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 		}
 	}
 
-	if( sc && sc->data[SC_KAIZEL] && !map_flag_gvg(target->m) )
+	if( sc && sc->data[SC_KAIZEL] && !map_flag_gvg2(target->m) )
 	{ //flag&8 = disable Kaizel
 		int time = skill->get_time2(SL_KAIZEL,sc->data[SC_KAIZEL]->val1);
 		//Look for Osiris Card's bonus effect on the character and revive 100% or revive normally
@@ -4786,7 +4786,7 @@ static signed short status_calc_flee(struct block_list *bl, struct status_change
 {
 	if( bl->type == BL_PC )
 	{
-		if( map_flag_gvg(bl->m) )
+		if( map_flag_gvg2(bl->m) )
 			flee -= flee * battle_config.gvg_flee_penalty/100;
 		else if( map[bl->m].flag.battleground )
 			flee -= flee * battle_config.bg_flee_penalty/100;
@@ -5593,7 +5593,7 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
 
 static unsigned short status_calc_dmotion(struct block_list *bl, struct status_change *sc, int dmotion)
 {
-	if( !sc || !sc->count || map_flag_gvg(bl->m) || map[bl->m].flag.battleground )
+	if( !sc || !sc->count || map_flag_gvg2(bl->m) || map[bl->m].flag.battleground )
 		return cap_value(dmotion,0,USHRT_MAX);
 	/**
 	* It has been confirmed on official servers that MvP mobs have no dmotion even without endure

@@ -4185,7 +4185,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 	switch( nameid ) //@TODO, lot oh harcoded nameid here
 	{
 		case 605: // Anodyne
-			if( map_flag_gvg(sd->bl.m) )
+			if( map_flag_gvg2(sd->bl.m) )
 				return 0;
 		case 606:
 			if( pc_issit(sd) )
@@ -4193,7 +4193,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 			break;
 		case 601: // Fly Wing
 		case 12212: // Giant Fly Wing
-			if( map[sd->bl.m].flag.noteleport || map_flag_gvg(sd->bl.m) )
+			if( map[sd->bl.m].flag.noteleport || map_flag_gvg2(sd->bl.m) )
 			{
 				clif->skill_mapinfomessage(sd,0);
 				return 0;
@@ -4218,7 +4218,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		case 12024: // Red Pouch
 		case 12103: // Bloody Branch
 		case 12109: // Poring Box
-			if( map[sd->bl.m].flag.nobranch || map_flag_gvg(sd->bl.m) )
+			if( map[sd->bl.m].flag.nobranch || map_flag_gvg2(sd->bl.m) )
 				return 0;
 			break;
 		case 12210: // Bubble Gum
@@ -6909,7 +6909,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			if(battle_config.pc_invincible_time)
 				pc->setinvincibletimer(sd, battle_config.pc_invincible_time);
 			sc_start(&sd->bl,iStatus->skill2sc(MO_STEELBODY),100,1,skill->get_time(MO_STEELBODY,1));
-			if(map_flag_gvg(sd->bl.m))
+			if(map_flag_gvg2(sd->bl.m))
 				pc_respawn_timer(INVALID_TIMER, iTimer->gettick(), sd->bl.id, 0);
 			return 0;
 		}
@@ -6918,7 +6918,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	// changed penalty options, added death by player if pk_mode [Valaris]
 	if(battle_config.death_penalty_type
 		&& (sd->class_&MAPID_UPPERMASK) != MAPID_NOVICE	// only novices will receive no penalty
-		&& !map[sd->bl.m].flag.noexppenalty && !map_flag_gvg(sd->bl.m)
+		&& !map[sd->bl.m].flag.noexppenalty && !map_flag_gvg2(sd->bl.m)
 		&& !sd->sc.data[SC_BABY] && !sd->sc.data[SC_CASH_DEATHPENALTY])
 	{
 		unsigned int base_penalty =0;
@@ -7032,16 +7032,12 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 		}
 	}
 	//GvG
-	if( map_flag_gvg(sd->bl.m) )
-	{
+	if( map_flag_gvg2(sd->bl.m) ) {
 		iTimer->add_timer(tick+1, pc_respawn_timer, sd->bl.id, 0);
 		return 1|8;
-	}
-	else if( sd->bg_id )
-	{
+	} else if( sd->bg_id ) {
 		struct battleground_data *bg = bg_team_search(sd->bg_id);
-		if( bg && bg->mapindex > 0 )
-		{ // Respawn by BG
+		if( bg && bg->mapindex > 0 ) { // Respawn by BG
 			iTimer->add_timer(tick+1000, pc_respawn_timer, sd->bl.id, 0);
 			return 1|8;
 		}

@@ -4470,7 +4470,7 @@ int clif_damage(struct block_list* src, struct block_list* dst, unsigned int tic
 	WBUFL(buf,14)=sdelay;
 	WBUFL(buf,18)=ddelay;
 #if PACKETVER < 20071113
-	if (battle_config.hide_woe_damage && map_flag_gvg(src->m)) {
+	if (battle_config.hide_woe_damage && map_flag_gvg2(src->m)) {
 		WBUFW(buf,22)=damage?div:0;
 		WBUFW(buf,27)=damage2?div:0;
 	} else {
@@ -4480,7 +4480,7 @@ int clif_damage(struct block_list* src, struct block_list* dst, unsigned int tic
 	WBUFW(buf,24)=div;
 	WBUFB(buf,26)=type;
 #else
-	if (battle_config.hide_woe_damage && map_flag_gvg(src->m)) {
+	if (battle_config.hide_woe_damage && map_flag_gvg2(src->m)) {
 		WBUFL(buf,22)=damage?div:0;
 		WBUFL(buf,29)=damage2?div:0;
 	} else {
@@ -5149,7 +5149,7 @@ int clif_skill_damage(struct block_list *src,struct block_list *dst,unsigned int
 	WBUFL(buf,12)=tick;
 	WBUFL(buf,16)=sdelay;
 	WBUFL(buf,20)=ddelay;
-	if (battle_config.hide_woe_damage && map_flag_gvg(src->m)) {
+	if (battle_config.hide_woe_damage && map_flag_gvg2(src->m)) {
 		WBUFW(buf,24)=damage?div:0;
 	} else {
 		WBUFW(buf,24)=damage;
@@ -5180,7 +5180,7 @@ int clif_skill_damage(struct block_list *src,struct block_list *dst,unsigned int
 	WBUFL(buf,12)=tick;
 	WBUFL(buf,16)=sdelay;
 	WBUFL(buf,20)=ddelay;
-	if (battle_config.hide_woe_damage && map_flag_gvg(src->m)) {
+	if (battle_config.hide_woe_damage && map_flag_gvg2(src->m)) {
 		WBUFL(buf,24)=damage?div:0;
 	} else {
 		WBUFL(buf,24)=damage;
@@ -6968,7 +6968,7 @@ void clif_sendegg(struct map_session_data *sd)
 	nullpo_retv(sd);
 
 	fd=sd->fd;
-	if (battle_config.pet_no_gvg && map_flag_gvg(sd->bl.m)) { //Disable pet hatching in GvG grounds during Guild Wars [Skotlex]
+	if (battle_config.pet_no_gvg && map_flag_gvg2(sd->bl.m)) { //Disable pet hatching in GvG grounds during Guild Wars [Skotlex]
 		clif->message(fd, msg_txt(666));
 		return;
 	}
@@ -9433,7 +9433,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 	if (map[sd->bl.m].flag.gvg_dungeon)
 		clif->map_property(sd, MAPPROPERTY_FREEPVPZONE); //TODO: Figure out the real packet to send here.
 
-	if( map_flag_gvg(sd->bl.m) )
+	if( map_flag_gvg2(sd->bl.m) )
 		clif->map_property(sd, MAPPROPERTY_AGITZONE);
 
 	// info about nearby objects
@@ -9442,7 +9442,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 
 	// pet
 	if( sd->pd ) {
-		if( battle_config.pet_no_gvg && map_flag_gvg(sd->bl.m) ) { //Return the pet to egg. [Skotlex]
+		if( battle_config.pet_no_gvg && map_flag_gvg2(sd->bl.m) ) { //Return the pet to egg. [Skotlex]
 			clif->message(sd->fd, msg_txt(666));
 			pet_menu(sd, 3); //Option 3 is return to egg.
 		} else {
@@ -9559,7 +9559,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		clif->equpcheckbox(sd);
 #endif
 		if( (battle_config.bg_flee_penalty != 100 || battle_config.gvg_flee_penalty != 100) &&
-			(map_flag_gvg(sd->state.pmap) || map_flag_gvg(sd->bl.m) || map[sd->state.pmap].flag.battleground || map[sd->bl.m].flag.battleground) )
+			(map_flag_gvg2(sd->state.pmap) || map_flag_gvg2(sd->bl.m) || map[sd->state.pmap].flag.battleground || map[sd->bl.m].flag.battleground) )
 			status_calc_bl(&sd->bl, SCB_FLEE); //Refresh flee penalty
 
 		if( iMap->night_flag && map[sd->bl.m].flag.nightenabled ) { //Display night.
@@ -17172,7 +17172,7 @@ void clif_cashshop_db(void) {
 					RECREATE(clif->cs.data[i], struct hCSData *, ++clif->cs.item_count[i]);
 					CREATE(clif->cs.data[i][ clif->cs.item_count[i] - 1 ], struct hCSData , 1);
 					
-					clif->cs.data[i][ clif->cs.item_count[i] - 1 ]->id = 512;
+					clif->cs.data[i][ clif->cs.item_count[i] - 1 ]->id = UNKNOWN_ITEM_ID;
 					clif->cs.data[i][ clif->cs.item_count[i] - 1 ]->price = 999;
 				} else {
 					for(k = 0; k < item_count; k++) {
