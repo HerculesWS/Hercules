@@ -1046,9 +1046,9 @@ ACMD(kami)
 		
 		sscanf(message, "%199[^\n]", atcmd_output);
 		if (strstr(command, "l") != NULL)
-			clif->broadcast(&sd->bl, atcmd_output, strlen(atcmd_output) + 1, 0, ALL_SAMEMAP);
+			clif->broadcast(&sd->bl, atcmd_output, strlen(atcmd_output) + 1, BC_DEFAULT, ALL_SAMEMAP);
 		else
-			intif->broadcast(atcmd_output, strlen(atcmd_output) + 1, (*(command + 5) == 'b' || *(command + 5) == 'B') ? 0x10 : 0);
+			intif->broadcast(atcmd_output, strlen(atcmd_output) + 1, (*(command + 5) == 'b' || *(command + 5) == 'B') ? BC_BLUE : BC_YELLOW);
 	} else {
 		if(!message || !*message || (sscanf(message, "%lx %199[^\n]", &color, atcmd_output) < 2)) {
 			clif->message(fd, msg_txt(981)); // Please enter color and message (usage: @kamic <color> <message>).
@@ -4960,7 +4960,7 @@ ACMD(broadcast)
 	}
 	
 	sprintf(atcmd_output, "%s: %s", sd->status.name, message);
-	intif->broadcast(atcmd_output, strlen(atcmd_output) + 1, 0);
+	intif->broadcast(atcmd_output, strlen(atcmd_output) + 1, BC_DEFAULT);
 	
 	return true;
 }
@@ -4981,7 +4981,7 @@ ACMD(localbroadcast)
 	
 	sprintf(atcmd_output, "%s: %s", sd->status.name, message);
 	
-	clif->broadcast(&sd->bl, atcmd_output, strlen(atcmd_output) + 1, 0, ALL_SAMEMAP);
+	clif->broadcast(&sd->bl, atcmd_output, strlen(atcmd_output) + 1, BC_DEFAULT, ALL_SAMEMAP);
 	
 	return true;
 }

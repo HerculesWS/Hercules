@@ -9138,8 +9138,7 @@ BUILDIN(playerattached)
 
 /*==========================================
  *------------------------------------------*/
-BUILDIN(announce)
-{
+BUILDIN(announce) {
 	const char *mes       = script_getstr(st,2);
 	int         flag      = script_getnum(st,3);
 	const char *fontColor = script_hasdata(st,4) ? script_getstr(st,4) : NULL;
@@ -9148,29 +9147,29 @@ BUILDIN(announce)
 	int         fontAlign = script_hasdata(st,7) ? script_getnum(st,7) : 0;     // default fontAlign
 	int         fontY     = script_hasdata(st,8) ? script_getnum(st,8) : 0;     // default fontY
 	
-	if (flag&0x0f) // Broadcast source or broadcast region defined
-	{
+	if( flag&(BC_TARGET_MASK|BC_SOURCE_MASK) ) {
+		// Broadcast source or broadcast region defined
 		send_target target;
-		struct block_list *bl = (flag&0x08) ? iMap->id2bl(st->oid) : (struct block_list *)script_rid2sd(st); // If bc_npc flag is set, use NPC as broadcast source
+		struct block_list *bl = (flag&BC_NPC) ? iMap->id2bl(st->oid) : (struct block_list *)script_rid2sd(st); // If bc_npc flag is set, use NPC as broadcast source
 		if (bl == NULL)
 			return true;
 		
-		flag &= 0x07;
-		target = (flag == 1) ? ALL_SAMEMAP :
-		(flag == 2) ? AREA :
-		(flag == 3) ? SELF :
-		ALL_CLIENT;
+		switch( flag&BC_TARGET_MASK ) {
+			case BC_MAP:  target = ALL_SAMEMAP; break;
+			case BC_AREA: target = AREA;        break;
+			case BC_SELF: target = SELF;        break;
+			default:      target = ALL_CLIENT;  break; // BC_ALL
+		}
+
 		if (fontColor)
 			clif->broadcast2(bl, mes, (int)strlen(mes)+1, strtol(fontColor, (char **)NULL, 0), fontType, fontSize, fontAlign, fontY, target);
 		else
-			clif->broadcast(bl, mes, (int)strlen(mes)+1, flag&0xf0, target);
-	}
-	else
-	{
+			clif->broadcast(bl, mes, (int)strlen(mes)+1, flag&BC_COLOR_MASK, target);
+	} else {
 		if (fontColor)
 			intif->broadcast2(mes, (int)strlen(mes)+1, strtol(fontColor, (char **)NULL, 0), fontType, fontSize, fontAlign, fontY);
 		else
-			intif->broadcast(mes, (int)strlen(mes)+1, flag&0xf0);
+			intif->broadcast(mes, (int)strlen(mes)+1, flag&(BC_SOURCE_MASK|BC_TARGET_MASK));
 	}
 	return true;
 }
@@ -9247,7 +9246,7 @@ BUILDIN(mapannounce)
 		return true;
 	
 	iMap->foreachinmap(buildin_announce_sub, m, BL_PC,
-					 mes, strlen(mes)+1, flag&0xf0, fontColor, fontType, fontSize, fontAlign, fontY);
+					 mes, strlen(mes)+1, flag&(BC_SOURCE_MASK|BC_TARGET_MASK), fontColor, fontType, fontSize, fontAlign, fontY);
 	return true;
 }
 /*==========================================
@@ -9272,7 +9271,7 @@ BUILDIN(areaannounce)
 		return true;
 	
 	iMap->foreachinarea(buildin_announce_sub, m, x0, y0, x1, y1, BL_PC,
-					  mes, strlen(mes)+1, flag&0xf0, fontColor, fontType, fontSize, fontAlign, fontY);
+					  mes, strlen(mes)+1, flag&(BC_SOURCE_MASK|BC_TARGET_MASK), fontColor, fontType, fontSize, fontAlign, fontY);
 	return true;
 }
 
@@ -16139,7 +16138,7 @@ BUILDIN(instance_announce) {
 	
 	for( i = 0; i < instances[instance_id].num_map; i++ )
 		iMap->foreachinmap(buildin_announce_sub, instances[instance_id].map[i], BL_PC,
-						 mes, strlen(mes)+1, flag&0xf0, fontColor, fontType, fontSize, fontAlign, fontY);
+						 mes, strlen(mes)+1, flag&(BC_SOURCE_MASK|BC_TARGET_MASK), fontColor, fontType, fontSize, fontAlign, fontY);
 	
 	return true;
 }
