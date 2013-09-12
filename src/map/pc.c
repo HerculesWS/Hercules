@@ -400,21 +400,17 @@ int pc_banding(struct map_session_data *sd, uint16 skill_lv) {
 // Increases a player's fame points and displays a notice to him
 void pc_addfame(struct map_session_data *sd,int count)
 {
+	int ranktype = -1;
 	nullpo_retv(sd);
 	sd->status.fame += count;
 	if(sd->status.fame > MAX_FAME)
 		sd->status.fame = MAX_FAME;
 	switch(sd->class_&MAPID_UPPERMASK){
-		case MAPID_BLACKSMITH: // Blacksmith
-			clif->fame_blacksmith(sd,count);
-			break;
-		case MAPID_ALCHEMIST: // Alchemist
-			clif->fame_alchemist(sd,count);
-			break;
-		case MAPID_TAEKWON: // Taekwon
-			clif->fame_taekwon(sd,count);
-			break;
+		case MAPID_BLACKSMITH: ranktype = RANKTYPE_BLACKSMITH; break;
+		case MAPID_ALCHEMIST:  ranktype = RANKTYPE_ALCHEMIST; break;
+		case MAPID_TAEKWON: ranktype = RANKTYPE_TAEKWON; break;
 	}
+	clif->update_rankingpoint(sd, ranktype, count);
 	chrif->updatefamelist(sd);
 }
 
