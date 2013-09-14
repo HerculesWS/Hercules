@@ -1158,32 +1158,32 @@ const char* script_parse_subexpr(const char* p,int limit) {
 	if( (op=C_ADD_PRE,p[0]=='+'&&p[1]=='+') || (op=C_SUB_PRE,p[0]=='-'&&p[1]=='-') ) { // Pre ++ -- operators
 		p=script->parse_variable(p);
 	} else if( (op=C_NEG,*p=='-') || (op=C_LNOT,*p=='!') || (op=C_NOT,*p=='~') ) { // Unary - ! ~ operators
-		p=script->parse_subexpr(p+1,10);
+		p=script->parse_subexpr(p+1,11);
 		script->addc(op);
 	} else {
 		p=script->parse_simpleexpr(p);
 	}
 	p=script->skip_space(p);
 	while((
-	   (op=C_OP3,    opl=0,len=1,*p=='?')              // ?:
-	|| (op=C_ADD,    opl=8,len=1,*p=='+')              // +
-	|| (op=C_SUB,    opl=8,len=1,*p=='-')              // -
-	|| (op=C_MUL,    opl=9,len=1,*p=='*')              // *
-	|| (op=C_DIV,    opl=9,len=1,*p=='/')              // /
-	|| (op=C_MOD,    opl=9,len=1,*p=='%')              // %
-	|| (op=C_LAND,   opl=2,len=2,*p=='&' && p[1]=='&') // &&
-	|| (op=C_AND,    opl=6,len=1,*p=='&')              // &
-	|| (op=C_LOR,    opl=1,len=2,*p=='|' && p[1]=='|') // ||
-	|| (op=C_OR,     opl=5,len=1,*p=='|')              // |
-	|| (op=C_XOR,    opl=4,len=1,*p=='^')              // ^
-	|| (op=C_EQ,     opl=3,len=2,*p=='=' && p[1]=='=') // ==
-	|| (op=C_NE,     opl=3,len=2,*p=='!' && p[1]=='=') // !=
-	|| (op=C_R_SHIFT,opl=7,len=2,*p=='>' && p[1]=='>') // >>
-	|| (op=C_GE,     opl=3,len=2,*p=='>' && p[1]=='=') // >=
-	|| (op=C_GT,     opl=3,len=1,*p=='>')              // >
-	|| (op=C_L_SHIFT,opl=7,len=2,*p=='<' && p[1]=='<') // <<
-	|| (op=C_LE,     opl=3,len=2,*p=='<' && p[1]=='=') // <=
-	|| (op=C_LT,     opl=3,len=1,*p=='<')              // <
+	   (op=C_OP3,    opl=0, len=1,*p=='?')              // ?:
+	|| (op=C_ADD,    opl=9, len=1,*p=='+')              // +
+	|| (op=C_SUB,    opl=9, len=1,*p=='-')              // -
+	|| (op=C_MUL,    opl=10,len=1,*p=='*')              // *
+	|| (op=C_DIV,    opl=10,len=1,*p=='/')              // /
+	|| (op=C_MOD,    opl=10,len=1,*p=='%')              // %
+	|| (op=C_LAND,   opl=2, len=2,*p=='&' && p[1]=='&') // &&
+	|| (op=C_AND,    opl=5, len=1,*p=='&')              // &
+	|| (op=C_LOR,    opl=1, len=2,*p=='|' && p[1]=='|') // ||
+	|| (op=C_OR,     opl=3, len=1,*p=='|')              // |
+	|| (op=C_XOR,    opl=4, len=1,*p=='^')              // ^
+	|| (op=C_EQ,     opl=6, len=2,*p=='=' && p[1]=='=') // ==
+	|| (op=C_NE,     opl=6, len=2,*p=='!' && p[1]=='=') // !=
+	|| (op=C_R_SHIFT,opl=8, len=2,*p=='>' && p[1]=='>') // >>
+	|| (op=C_GE,     opl=7, len=2,*p=='>' && p[1]=='=') // >=
+	|| (op=C_GT,     opl=7, len=1,*p=='>')              // >
+	|| (op=C_L_SHIFT,opl=8, len=2,*p=='<' && p[1]=='<') // <<
+	|| (op=C_LE,     opl=7, len=2,*p=='<' && p[1]=='=') // <=
+	|| (op=C_LT,     opl=7, len=1,*p=='<')              // <
 	) && opl>limit) {
 		p+=len;
 		if(op == C_OP3) {
