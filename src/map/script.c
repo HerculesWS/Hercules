@@ -63,6 +63,7 @@
 #include <setjmp.h>
 #include <errno.h>
 
+
 #define FETCH(n, t) \
 		if( script_hasdata(st,n) ) \
 			(t)=script_getnum(st,n);
