@@ -4753,7 +4753,7 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 		char message[128];
 		sprintf (message, msg_txt(542), (sd->status.name != NULL)?sd->status.name :"GM", md->db->jname, data->jname, (float)md->db->dropitem[i].p/100);
 		//MSG: "'%s' stole %s's %s (chance: %0.02f%%)"
-		intif->broadcast(message,strlen(message)+1,0);
+		intif->broadcast(message, strlen(message)+1, BC_DEFAULT);
 	}
 	return 1;
 }
@@ -9368,7 +9368,7 @@ int map_day_timer(int tid, unsigned int tick, int id, intptr_t data)
 	iMap->night_flag = 0; // 0=day, 1=night [Yor]
 	iMap->map_foreachpc(pc_daynight_timer_sub);
 	strcpy(tmp_soutput, (data == 0) ? msg_txt(502) : msg_txt(60)); // The day has arrived!
-	intif->broadcast(tmp_soutput, strlen(tmp_soutput) + 1, 0);
+	intif->broadcast(tmp_soutput, strlen(tmp_soutput) + 1, BC_DEFAULT);
 	return 0;
 }
 
@@ -9389,7 +9389,7 @@ int map_night_timer(int tid, unsigned int tick, int id, intptr_t data)
 	iMap->night_flag = 1; // 0=day, 1=night [Yor]
 	iMap->map_foreachpc(pc_daynight_timer_sub);
 	strcpy(tmp_soutput, (data == 0) ? msg_txt(503) : msg_txt(59)); // The night has fallen...
-	intif->broadcast(tmp_soutput, strlen(tmp_soutput) + 1, 0);
+	intif->broadcast(tmp_soutput, strlen(tmp_soutput) + 1, BC_DEFAULT);
 	return 0;
 }
 
