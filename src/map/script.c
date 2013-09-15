@@ -1070,26 +1070,29 @@ const char* parse_simpleexpr(const char *p) {
 		p=np;
 	} else if(*p=='"') {
 		script->addc(C_STR);
-		p++;
-		while( *p && *p != '"' ) {
-			if( (unsigned char)p[-1] <= 0x7e && *p == '\\' ) {
-				char buf[8];
-				size_t len = sv->skip_escaped_c(p) - p;
-				size_t n = sv->unescape_c(buf, p, len);
-				if( n != 1 )
-					ShowDebug("parse_simpleexpr: unexpected length %d after unescape (\"%.*s\" -> %.*s)\n", (int)n, (int)len, p, (int)n, buf);
-				p += len;
-				script->addb(*buf);
-				continue;
-			} else if( *p == '\n' ) {
-				disp_error_message("parse_simpleexpr: unexpected newline @ string",p);
+		do {
+			p++;
+			while( *p && *p != '"' ) {
+				if( (unsigned char)p[-1] <= 0x7e && *p == '\\' ) {
+					char buf[8];
+					size_t len = sv->skip_escaped_c(p) - p;
+					size_t n = sv->unescape_c(buf, p, len);
+					if( n != 1 )
+						ShowDebug("parse_simpleexpr: unexpected length %d after unescape (\"%.*s\" -> %.*s)\n", (int)n, (int)len, p, (int)n, buf);
+					p += len;
+					script->addb(*buf);
+					continue;
+				} else if( *p == '\n' ) {
+					disp_error_message("parse_simpleexpr: unexpected newline @ string",p);
+				}
+				script->addb(*p++);
 			}
-			script->addb(*p++);
-		}
-		if(!*p)
-			disp_error_message("parse_simpleexpr: unexpected end of file @ string",p);
+			if(!*p)
+				disp_error_message("parse_simpleexpr: unexpected end of file @ string",p);
+			p++;	//'"'
+			p = script->skip_space(p);
+		} while( *p && *p == '"' );
 		script->addb(0);
-		p++;	//'"'
 	} else {
 		int l;
 		const char* pv;

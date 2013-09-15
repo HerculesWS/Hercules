@@ -19,6 +19,15 @@ OnCheck:
 		//end;
 	}
 	return;
+OnCheckStr:
+	.@msg$ = getarg(0,"Unknown Error");
+	.@val$ = getarg(1,"");
+	.@ref$ = getarg(2,"");
+	if (.@val$ != .@ref$) {
+		debugmes "Error: "+.@msg$+": '"+.@val$+"' != '"+.@ref$+"'";
+		//end;
+	}
+	return;
 OnInit:
 	// Array subscript
 	setarray .@a, 3, 2, 1;
@@ -224,6 +233,11 @@ OnInit:
 	.@y = (1 < 2 == 1); // true
 	callsub(OnCheck, "Order of <,>,==", .@x);
 	callsub(OnCheck, "Order of <,>,==", .@y);
+
+
+	.@x$ = "string "
+		"concatenation" /* test */ " succeeded";
+	callsub(OnCheckStr, "String concatenation", .@x$, "string concatenation succeeded");
 
 
 	// Bitwise & operator
