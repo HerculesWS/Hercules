@@ -9444,7 +9444,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 	if( sd->pd ) {
 		if( battle_config.pet_no_gvg && map_flag_gvg2(sd->bl.m) ) { //Return the pet to egg. [Skotlex]
 			clif->message(sd->fd, msg_txt(666));
-			pet_menu(sd, 3); //Option 3 is return to egg.
+			pet->menu(sd, 3); //Option 3 is return to egg.
 		} else {
 			iMap->addblock(&sd->pd->bl);
 			clif->spawn(&sd->pd->bl);
@@ -9517,7 +9517,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		}
 
 		if(sd->pd && sd->pd->pet.intimate > 900)
-			clif->pet_emotion(sd->pd,(sd->pd->pet.class_ - 100)*100 + 50 + pet_hungry_val(sd->pd));
+			clif->pet_emotion(sd->pd,(sd->pd->pet.class_ - 100)*100 + 50 + pet->hungry_val(sd->pd));
 
 		if(homun_alive(sd->hd))
 			homun->init_timers(sd->hd);
@@ -10678,7 +10678,7 @@ void clif_parse_EquipItem(int fd,struct map_session_data *sd)
 		return;
 
 	if(sd->inventory_data[index]->type == IT_PETARMOR){
-		pet_equipitem(sd,index);
+		pet->equipitem(sd,index);
 		return;
 	}
 
@@ -13162,7 +13162,7 @@ void clif_parse_GuildBreak(int fd, struct map_session_data *sd)
 ///     4 = unequip accessory
 void clif_parse_PetMenu(int fd, struct map_session_data *sd)
 {
-	pet_menu(sd,RFIFOB(fd,2));
+	pet->menu(sd,RFIFOB(fd,2));
 }
 
 
@@ -13170,7 +13170,7 @@ void clif_parse_PetMenu(int fd, struct map_session_data *sd)
 /// 019f <id>.L
 void clif_parse_CatchPet(int fd, struct map_session_data *sd)
 {
-	pet_catch_process2(sd,RFIFOL(fd,2));
+	pet->catch_process2(sd,RFIFOL(fd,2));
 }
 
 
@@ -13183,7 +13183,7 @@ void clif_parse_SelectEgg(int fd, struct map_session_data *sd)
 		clif->authfail_fd(fd, 0);
 		return;
 	}
-	pet_select_egg(sd,RFIFOW(fd,2)-2);
+	pet->select_egg(sd,RFIFOW(fd,2)-2);
 	clif_menuskill_clear(sd);
 }
 
@@ -13223,7 +13223,7 @@ void clif_parse_SendEmotion(int fd, struct map_session_data *sd)
 /// 01a5 <name>.24B
 void clif_parse_ChangePetName(int fd, struct map_session_data *sd)
 {
-	pet_change_name(sd,(char*)RFIFOP(fd,2));
+	pet->change_name(sd,(char*)RFIFOP(fd,2));
 }
 
 
@@ -17319,7 +17319,7 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 				
 				pc->paycash(sd, clif->cs.data[tab][j]->price * qty, kafra_pay);// [Ryuuzaki]
 				for (k = 0; k < qty; k += get_count) {
-					if (!pet_create_egg(sd, data->nameid)) {
+					if (!pet->create_egg(sd, data->nameid)) {
 						memset(&item_tmp, 0, sizeof(item_tmp));
 						item_tmp.nameid = data->nameid;
 						item_tmp.identify = 1;

@@ -2370,7 +2370,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 					continue;
 
 			if( mvp_sd && it->type == IT_PETEGG ) {
-				pet_create_egg(mvp_sd, md->db->dropitem[i].nameid);
+				pet->create_egg(mvp_sd, md->db->dropitem[i].nameid);
 				continue;
 			}
 

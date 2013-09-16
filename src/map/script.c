@@ -5951,7 +5951,7 @@ BUILDIN(getitem)
 	for (i = 0; i < amount; i += get_count)
 	{
 		// if not pet egg
-		if (!pet_create_egg(sd, nameid))
+		if (!pet->create_egg(sd, nameid))
 		{
 			if ((flag = pc->additem(sd, &it, get_count, LOG_TYPE_SCRIPT)))
 			{
@@ -6049,7 +6049,7 @@ BUILDIN(getitem2)
 		for (i = 0; i < amount; i += get_count)
 		{
 			// if not pet egg
-			if (!pet_create_egg(sd, nameid))
+			if (!pet->create_egg(sd, nameid))
 			{
 				if ((flag = pc->additem(sd, &item_tmp, get_count, LOG_TYPE_SCRIPT)))
 				{
@@ -8350,17 +8350,17 @@ BUILDIN(makepet)
 	if( sd == NULL )
 		return true;
 	
-	pet_id = search_petDB_index(id, PET_CLASS);
+	pet_id = pet->search_petDB_index(id, PET_CLASS);
 	
 	if (pet_id < 0)
-		pet_id = search_petDB_index(id, PET_EGG);
+		pet_id = pet->search_petDB_index(id, PET_EGG);
 	if (pet_id >= 0 && sd) {
-		sd->catch_target_class = pet_db[pet_id].class_;
+		sd->catch_target_class = pet->db[pet_id].class_;
 		intif->create_pet(
 						 sd->status.account_id, sd->status.char_id,
-						 (short)pet_db[pet_id].class_, (short)mob->db(pet_db[pet_id].class_)->lv,
-						 (short)pet_db[pet_id].EggID, 0, (short)pet_db[pet_id].intimate,
-						 100, 0, 1, pet_db[pet_id].jname);
+						 (short)pet->db[pet_id].class_, (short)mob->db(pet->db[pet_id].class_)->lv,
+						 (short)pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
+						 100, 0, 1, pet->db[pet_id].jname);
 	}
 	
 	return true;
@@ -9761,7 +9761,7 @@ BUILDIN(catchpet)
 	if( sd == NULL )
 		return true;
 	
-	pet_catch_process1(sd,pet_id);
+	pet->catch_process1(sd,pet_id);
 	return true;
 }
 
@@ -11695,7 +11695,7 @@ BUILDIN(petskillbonus)
 	if (pd->bonus)
 	{ //Clear previous bonus
 		if (pd->bonus->timer != INVALID_TIMER)
-			iTimer->delete_timer(pd->bonus->timer, pet_skill_bonus_timer);
+			iTimer->delete_timer(pd->bonus->timer, pet->skill_bonus_timer);
 	} else //init
 		pd->bonus = (struct pet_bonus *) aMalloc(sizeof(struct pet_bonus));
 	
@@ -11711,7 +11711,7 @@ BUILDIN(petskillbonus)
 	if (battle_config.pet_equip_required && pd->pet.equip == 0)
 		pd->bonus->timer = INVALID_TIMER;
 	else
-		pd->bonus->timer = iTimer->add_timer(iTimer->gettick()+pd->bonus->delay*1000, pet_skill_bonus_timer, sd->bl.id, 0);
+		pd->bonus->timer = iTimer->add_timer(iTimer->gettick()+pd->bonus->delay*1000, pet->skill_bonus_timer, sd->bl.id, 0);
 	
 	return true;
 }
@@ -11738,7 +11738,7 @@ BUILDIN(petloot)
 	pd = sd->pd;
 	if (pd->loot != NULL)
 	{	//Release whatever was there already and reallocate memory
-		pet_lootitem_drop(pd, pd->msd);
+		pet->lootitem_drop(pd, pd->msd);
 		aFree(pd->loot->item);
 	}
 	else
@@ -12065,7 +12065,7 @@ BUILDIN(petrecovery)
 	if (pd->recovery)
 	{ //Halt previous bonus
 		if (pd->recovery->timer != INVALID_TIMER)
-			iTimer->delete_timer(pd->recovery->timer, pet_recovery_timer);
+			iTimer->delete_timer(pd->recovery->timer, pet->recovery_timer);
 	} else //Init
 		pd->recovery = (struct pet_recovery *)aMalloc(sizeof(struct pet_recovery));
 	
@@ -12093,9 +12093,9 @@ BUILDIN(petheal)
 		if (pd->s_skill->timer != INVALID_TIMER)
 		{
 			if (pd->s_skill->id)
-				iTimer->delete_timer(pd->s_skill->timer, pet_skill_support_timer);
+				iTimer->delete_timer(pd->s_skill->timer, pet->skill_support_timer);
 			else
-				iTimer->delete_timer(pd->s_skill->timer, pet_heal_timer);
+				iTimer->delete_timer(pd->s_skill->timer, pet->heal_timer);
 		}
 	} else //init memory
 		pd->s_skill = (struct pet_skill_support *) aMalloc(sizeof(struct pet_skill_support));
@@ -12111,7 +12111,7 @@ BUILDIN(petheal)
 	if (battle_config.pet_equip_required && pd->pet.equip == 0)
 		pd->s_skill->timer = INVALID_TIMER;
 	else
-		pd->s_skill->timer = iTimer->add_timer(iTimer->gettick()+pd->s_skill->delay*1000,pet_heal_timer,sd->bl.id,0);
+		pd->s_skill->timer = iTimer->add_timer(iTimer->gettick()+pd->s_skill->delay*1000,pet->heal_timer,sd->bl.id,0);
 	
 	return true;
 }
@@ -12187,9 +12187,9 @@ BUILDIN(petskillsupport)
 		if (pd->s_skill->timer != INVALID_TIMER)
 		{
 			if (pd->s_skill->id)
-				iTimer->delete_timer(pd->s_skill->timer, pet_skill_support_timer);
+				iTimer->delete_timer(pd->s_skill->timer, pet->skill_support_timer);
 			else
-				iTimer->delete_timer(pd->s_skill->timer, pet_heal_timer);
+				iTimer->delete_timer(pd->s_skill->timer, pet->heal_timer);
 		}
 	} else //init memory
 		pd->s_skill = (struct pet_skill_support *) aMalloc(sizeof(struct pet_skill_support));
@@ -12204,7 +12204,7 @@ BUILDIN(petskillsupport)
 	if (battle_config.pet_equip_required && pd->pet.equip == 0)
 		pd->s_skill->timer = INVALID_TIMER;
 	else
-		pd->s_skill->timer = iTimer->add_timer(iTimer->gettick()+pd->s_skill->delay*1000,pet_skill_support_timer,sd->bl.id,0);
+		pd->s_skill->timer = iTimer->add_timer(iTimer->gettick()+pd->s_skill->delay*1000,pet->skill_support_timer,sd->bl.id,0);
 	
 	return true;
 }
@@ -17046,7 +17046,7 @@ BUILDIN(getrandgroupitem) {
 		
 		for (i = 0; i < count; i += get_count) {
 			// if not pet egg
-			if (!pet_create_egg(sd, nameid)) {
+			if (!pet->create_egg(sd, nameid)) {
 				if ((flag = pc->additem(sd, &it, get_count, LOG_TYPE_SCRIPT))) {
 					clif->additem(sd, 0, 0, flag);
 					if( pc->candrop(sd,&it) )

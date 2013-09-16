@@ -1278,7 +1278,7 @@ int intif_parse_GuildMasterChanged(int fd)
 // Request pet creation
 int intif_parse_CreatePet(int fd)
 {
-	pet_get_egg(RFIFOL(fd,2),RFIFOL(fd,7),RFIFOB(fd,6));
+	pet->get_egg(RFIFOL(fd,2),RFIFOL(fd,7),RFIFOB(fd,6));
 	return 0;
 }
 
@@ -1294,7 +1294,7 @@ int intif_parse_RecvPetData(int fd)
 	}
 	else{
 		memcpy(&p,RFIFOP(fd,9),sizeof(struct s_pet));
-		pet_recv_petdata(RFIFOL(fd,4),&p,RFIFOB(fd,8));
+		pet->recv_petdata(RFIFOL(fd,4),&p,RFIFOB(fd,8));
 	}
 
 	return 0;
@@ -1330,7 +1330,7 @@ int intif_parse_ChangeNameOk(int fd)
 	case 0: //Players [NOT SUPPORTED YET]
 		break;
 	case 1: //Pets
-		pet_change_name_ack(sd, (char*)RFIFOP(fd,12), RFIFOB(fd,11));
+		pet->change_name_ack(sd, (char*)RFIFOP(fd,12), RFIFOB(fd,11));
 		break;
 	case 2: //Hom
 		homun->change_name_ack(sd, (char*)RFIFOP(fd,12), RFIFOB(fd,11));

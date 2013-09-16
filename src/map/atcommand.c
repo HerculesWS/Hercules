@@ -1162,7 +1162,7 @@ ACMD(item)
 	
 	for (i = 0; i < number; i += get_count) {
 		// if not pet egg
-		if (!pet_create_egg(sd, item_id)) {
+		if (!pet->create_egg(sd, item_id)) {
 			memset(&item_tmp, 0, sizeof(item_tmp));
 			item_tmp.nameid = item_id;
 			item_tmp.identify = 1;
@@ -2558,16 +2558,16 @@ ACMD(makeegg)
 		else
 			id = atoi(message);
 	
-	pet_id = search_petDB_index(id, PET_CLASS);
+	pet_id = pet->search_petDB_index(id, PET_CLASS);
 	if (pet_id < 0)
-		pet_id = search_petDB_index(id, PET_EGG);
+		pet_id = pet->search_petDB_index(id, PET_EGG);
 	if (pet_id >= 0) {
-		sd->catch_target_class = pet_db[pet_id].class_;
+		sd->catch_target_class = pet->db[pet_id].class_;
 		intif->create_pet(
 						 sd->status.account_id, sd->status.char_id,
-						 (short)pet_db[pet_id].class_, (short)mob->db(pet_db[pet_id].class_)->lv,
-						 (short)pet_db[pet_id].EggID, 0, (short)pet_db[pet_id].intimate,
-						 100, 0, 1, pet_db[pet_id].jname);
+						 (short)pet->db[pet_id].class_, (short)mob->db(pet->db[pet_id].class_)->lv,
+						 (short)pet->db[pet_id].EggID, 0, (short)pet->db[pet_id].intimate,
+						 100, 0, 1, pet->db[pet_id].jname);
 	} else {
 		clif->message(fd, msg_txt(180)); // The monster/egg name/id doesn't exist.
 		return false;
@@ -2623,7 +2623,7 @@ ACMD(petfriendly)
 		return false;
 	}
 	
-	pet_set_intimate(pd, friendly);
+	pet->set_intimate(pd, friendly);
 	clif->send_petstatus(sd);
 	clif->message(fd, msg_txt(182)); // Pet intimacy changed.
 	return true;
@@ -3596,7 +3596,7 @@ ACMD(reloaditemdb)
 ACMD(reloadmobdb) {
 	nullpo_retr(-1, sd);
 	mob->reload();
-	read_petdb();
+	pet->read_db();
 	homun->reload();
 	mercenary->read_db();
 	mercenary->read_skilldb();

@@ -1187,7 +1187,7 @@ int map_clearflooritem_timer(int tid, unsigned int tick, int id, intptr_t data)
 	}
 
 
-	if (search_petDB_index(fitem->item_data.nameid, PET_EGG) >= 0)
+	if (pet->search_petDB_index(fitem->item_data.nameid, PET_EGG) >= 0)
 		intif->delete_petdata(MakeDWord(fitem->item_data.card[1], fitem->item_data.card[2]));
 
 	clif->clearflooritem(fitem, 0);
@@ -1587,7 +1587,7 @@ int map_quit(struct map_session_data *sd) {
 	}
 
 	// Return loot to owner
-	if( sd->pd ) pet_lootitem_drop(sd->pd, sd);
+	if( sd->pd ) pet->lootitem_drop(sd->pd, sd);
 
 	if( sd->state.storage_flag == 1 ) sd->state.storage_flag = 0; // No need to Double Save Storage on Quit.
 
@@ -4944,7 +4944,7 @@ void do_final(void)
 	guild->final();
 	party->do_final_party();
 	pc->do_final_pc();
-	do_final_pet();
+	pet->final();
 	mob->final();
 	homun->final();
 	atcommand->final_msg();
@@ -5172,6 +5172,7 @@ void map_hp_symbols(void) {
 	HPM->share(unit,"unit");
 	HPM->share(npc,"npc");
 	HPM->share(mapreg,"mapreg");
+	HPM->share(pet,"pet");
 
 	/* partial */
 	HPM->share(mapit,"mapit");
@@ -5220,6 +5221,7 @@ void map_load_defaults(void) {
 	mob_defaults();
 	unit_defaults();
 	mapreg_defaults();
+	pet_defaults();
 }
 int do_init(int argc, char *argv[])
 {
@@ -5414,7 +5416,7 @@ int do_init(int argc, char *argv[])
 	party->do_init_party();
 	guild->init();
 	storage->init();
-	do_init_pet();
+	pet->init();
 	homun->init();
 	mercenary->init();
 	elemental->do_init_elemental();

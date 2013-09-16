@@ -1336,7 +1336,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 
         memset(&item_tmp,0,sizeof(item_tmp));
 
-        if( !pet_create_egg(sd,nameid) )
+        if( !pet->create_egg(sd,nameid) )
         {
             item_tmp.nameid = nameid;
             item_tmp.identify = 1;
@@ -1440,7 +1440,7 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 
 	pc->paycash(sd, price, points);
 
-	if( !pet_create_egg(sd, nameid) )
+	if( !pet->create_egg(sd, nameid) )
 	{
 		struct item item_tmp;
 		memset(&item_tmp, 0, sizeof(struct item));
@@ -1543,7 +1543,7 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list)
 		struct item item_tmp;
 
 		if (itemdb_type(nameid) == IT_PETEGG)
-			pet_create_egg(sd, nameid);
+			pet->create_egg(sd, nameid);
 		else {
 			memset(&item_tmp,0,sizeof(item_tmp));
 			item_tmp.nameid = nameid;
@@ -1683,7 +1683,7 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list)
 		amount = item_list[i*2+1];
 
 		if( sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET ) {
-			if( search_petDB_index(sd->status.inventory[idx].nameid, PET_EGG) >= 0 ) {
+			if( pet->search_petDB_index(sd->status.inventory[idx].nameid, PET_EGG) >= 0 ) {
 				intif->delete_petdata(MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]));
 			}
 		}

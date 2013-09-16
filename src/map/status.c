@@ -8363,7 +8363,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				if( pc_iswug(sd) ) pc->setoption(sd, sd->sc.option&~OPTION_WUG);
 				if( pc_isridingwug(sd) ) pc->setoption(sd, sd->sc.option&~OPTION_WUGRIDER);
 				if( pc_isfalcon(sd) ) pc->setoption(sd, sd->sc.option&~OPTION_FALCON);
-				if( sd->status.pet_id > 0 ) pet_menu(sd, 3);
+				if( sd->status.pet_id > 0 ) pet->menu(sd, 3);
 				if( homun_alive(sd->hd) ) homun->vaporize(sd,1);
 				if( sd->md ) mercenary->delete(sd->md,3);
 			}
@@ -9133,7 +9133,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		status_calc_bl(bl,calc_flag);
 
 	if(sd && sd->pd)
-		pet_sc_check(sd, type); //Skotlex: Pet Status Effect Healing
+		pet->sc_check(sd, type); //Skotlex: Pet Status Effect Healing
 
 	switch (type) {
 	case SC_BERSERK:
