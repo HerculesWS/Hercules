@@ -3469,7 +3469,7 @@ int inter_config_read(char *cfgName) {
 		else if(strcmpi(w1,"log_db_db")==0)
 			strcpy(log_db_db, w2);
 		/* mapreg */
-		else if( mapreg_config_read(w1,w2) )
+		else if( mapreg->config_read(w1,w2) )
 			continue;
 		/* import */
 		else if(strcmpi(w1,"import")==0)
@@ -5171,6 +5171,7 @@ void map_hp_symbols(void) {
 	HPM->share(mob,"mob");
 	HPM->share(unit,"unit");
 	HPM->share(npc,"npc");
+	HPM->share(mapreg,"mapreg");
 
 	/* partial */
 	HPM->share(mapit,"mapit");
@@ -5218,6 +5219,7 @@ void map_load_defaults(void) {
 	mercenary_defaults();
 	mob_defaults();
 	unit_defaults();
+	mapreg_defaults();
 }
 int do_init(int argc, char *argv[])
 {

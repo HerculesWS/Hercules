@@ -2341,7 +2341,7 @@ void get_val(struct script_state* st, struct script_data* data)
 				data->u.str = pc->readregstr(sd, data->u.num);
 				break;
 			case '$':
-				data->u.str = mapreg_readregstr(data->u.num);
+				data->u.str = mapreg->readregstr(data->u.num);
 				break;
 			case '#':
 				if( name[1] == '#' )
@@ -2396,7 +2396,7 @@ void get_val(struct script_state* st, struct script_data* data)
 					data->u.num = pc->readreg(sd, data->u.num);
 					break;
 				case '$':
-					data->u.num = mapreg_readreg(data->u.num);
+					data->u.num = mapreg->readreg(data->u.num);
 					break;
 				case '#':
 					if( name[1] == '#' )
@@ -2459,7 +2459,7 @@ static int set_reg(struct script_state* st, TBL_PC* sd, int num, const char* nam
 		case '@':
 			return pc->setregstr(sd, num, str);
 		case '$':
-			return mapreg_setregstr(num, str);
+			return mapreg->setregstr(num, str);
 		case '#':
 			return (name[1] == '#') ?
 				pc_setaccountreg2str(sd, name, str) :
@@ -2506,7 +2506,7 @@ static int set_reg(struct script_state* st, TBL_PC* sd, int num, const char* nam
 		case '@':
 			return pc->setreg(sd, num, val);
 		case '$':
-			return mapreg_setreg(num, val);
+			return mapreg->setreg(num, val);
 		case '#':
 			return (name[1] == '#') ?
 				pc_setaccountreg2(sd, name, val) :
@@ -3795,7 +3795,7 @@ void do_final_script(void) {
 	
 	dbi_destroy(iter);
 	
-	mapreg_final();
+	mapreg->final();
 
 	script->userfunc_db->destroy(script->userfunc_db, db_script_free_code_sub);
 	script->autobonus_db->destroy(script->autobonus_db, db_script_free_code_sub);
@@ -3864,7 +3864,7 @@ void do_init_script(void) {
 	
 	script->parse_builtin();
 	read_constdb();
-	mapreg_init();
+	mapreg->init();
 }
 
 int script_reload(void) {
@@ -3894,7 +3894,7 @@ int script_reload(void) {
 	
 	db_clear(script->st_db);
 	
-	mapreg_reload();
+	mapreg->reload();
 	
 	itemdb->force_name_constants();
 	
@@ -6731,19 +6731,19 @@ BUILDIN(getpartymember)
 			if(p->party.member[i].account_id){
 				switch (type) {
 					case 2:
-						mapreg_setreg(reference_uid(script->add_str("$@partymemberaid"), j),p->party.member[i].account_id);
+						mapreg->setreg(reference_uid(script->add_str("$@partymemberaid"), j),p->party.member[i].account_id);
 						break;
 					case 1:
-						mapreg_setreg(reference_uid(script->add_str("$@partymembercid"), j),p->party.member[i].char_id);
+						mapreg->setreg(reference_uid(script->add_str("$@partymembercid"), j),p->party.member[i].char_id);
 						break;
 					default:
-						mapreg_setregstr(reference_uid(script->add_str("$@partymembername$"), j),p->party.member[i].name);
+						mapreg->setregstr(reference_uid(script->add_str("$@partymembername$"), j),p->party.member[i].name);
 				}
 				j++;
 			}
 		}
 	}
-	mapreg_setreg(script->add_str("$@partymembercount"),j);
+	mapreg->setreg(script->add_str("$@partymembercount"),j);
 	
 	return true;
 }
@@ -8538,13 +8538,13 @@ BUILDIN(getmobdrops)
 		if( itemdb->exists(monster->dropitem[i].nameid) == NULL )
 			continue;
 		
-		mapreg_setreg(reference_uid(script->add_str("$@MobDrop_item"), j), monster->dropitem[i].nameid);
-		mapreg_setreg(reference_uid(script->add_str("$@MobDrop_rate"), j), monster->dropitem[i].p);
+		mapreg->setreg(reference_uid(script->add_str("$@MobDrop_item"), j), monster->dropitem[i].nameid);
+		mapreg->setreg(reference_uid(script->add_str("$@MobDrop_rate"), j), monster->dropitem[i].p);
 		
 		j++;
 	}
 	
-	mapreg_setreg(script->add_str("$@MobDrop_count"), j);
+	mapreg->setreg(script->add_str("$@MobDrop_count"), j);
 	script_pushint(st, 1);
 	
 	return true;
@@ -10240,7 +10240,7 @@ BUILDIN(warpwaitingpc)
 			pc->payzeny(sd, cd->zeny, LOG_TYPE_NPC, NULL);
 		}
 		
-		mapreg_setreg(reference_uid(script->add_str("$@warpwaitingpc"), i), sd->bl.id);
+		mapreg->setreg(reference_uid(script->add_str("$@warpwaitingpc"), i), sd->bl.id);
 		
 		if( strcmp(map_name,"Random") == 0 )
 			pc->randomwarp(sd,CLR_TELEPORT);
@@ -10249,7 +10249,7 @@ BUILDIN(warpwaitingpc)
 		else
 			pc->setpos(sd, mapindex_name2id(map_name), x, y, CLR_OUTSIGHT);
 	}
-	mapreg_setreg(script->add_str("$@warpwaitingpcnum"), i);
+	mapreg->setreg(script->add_str("$@warpwaitingpcnum"), i);
 	return true;
 }
 
@@ -15757,12 +15757,12 @@ BUILDIN(waitingroom2bg)
 	for( i = 0; i < n && i < MAX_BG_MEMBERS; i++ )
 	{
 		if( (sd = cd->usersd[i]) != NULL && bg_team_join(bg_id, sd) )
-			mapreg_setreg(reference_uid(script->add_str("$@arenamembers"), i), sd->bl.id);
+			mapreg->setreg(reference_uid(script->add_str("$@arenamembers"), i), sd->bl.id);
 		else
-			mapreg_setreg(reference_uid(script->add_str("$@arenamembers"), i), 0);
+			mapreg->setreg(reference_uid(script->add_str("$@arenamembers"), i), 0);
 	}
 	
-	mapreg_setreg(script->add_str("$@arenamembersnum"), i);
+	mapreg->setreg(script->add_str("$@arenamembersnum"), i);
 	script_pushint(st,bg_id);
 	return true;
 }

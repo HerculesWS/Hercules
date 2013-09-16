@@ -5,6 +5,9 @@
 #ifndef _MAPREG_H_
 #define _MAPREG_H_
 
+#include "../common/cbasetypes.h"
+#include "../common/db.h"
+
 struct mapreg_save {
 	int uid;
 	union {
@@ -14,14 +17,30 @@ struct mapreg_save {
 	bool save;
 };
 
-void mapreg_reload(void);
-void mapreg_final(void);
-void mapreg_init(void);
-bool mapreg_config_read(const char* w1, const char* w2);
+struct mapreg_interface {
+	DBMap *db; // int var_id -> int value
+	DBMap *str_db; // int var_id -> char* value
+	struct eri *ers; //[Ind/Hercules]
+	char table[32];
+	bool i_dirty;
+	bool str_dirty;
+	/* */
+	void (*init) (void);
+	void (*final) (void);
+	/* */
+	int (*readreg) (int uid);
+	char* (*readregstr) (int uid);
+	bool (*setreg) (int uid, int val);
+	bool (*setregstr) (int uid, const char *str);
+	void (*load) (void);
+	void (*save) (void);
+	int (*save_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	void (*reload) (void);
+	bool (*config_read) (const char *w1, const char *w2);
+};
 
-int mapreg_readreg(int uid);
-char* mapreg_readregstr(int uid);
-bool mapreg_setreg(int uid, int val);
-bool mapreg_setregstr(int uid, const char* str);
+struct mapreg_interface *mapreg;
+
+void mapreg_defaults(void);
 
 #endif /* _MAPREG_H_ */
