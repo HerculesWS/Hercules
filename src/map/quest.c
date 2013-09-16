@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/socket.h"
@@ -32,14 +33,13 @@
 #include <time.h>
 
 
-struct s_quest_db quest_db[MAX_QUEST_DB];
-
+struct quest_interface quest_s;
 
 int quest_search_db(int quest_id)
 {
 	int i;
 
-	ARR_FIND(0, MAX_QUEST_DB,i,quest_id == quest_db[i].id);
+	ARR_FIND(0, MAX_QUEST_DB,i,quest_id == quest->db[i].id);
 	if( i == MAX_QUEST_DB )
 		return -1;
 
@@ -74,13 +74,13 @@ int quest_add(TBL_PC * sd, int quest_id)
 		return 1;
 	}
 
-	if( quest_check(sd, quest_id, HAVEQUEST) >= 0 )
+	if( quest->check(sd, quest_id, HAVEQUEST) >= 0 )
 	{
 		ShowError("quest_add: Character %d already has quest %d.\n", sd->status.char_id, quest_id);
 		return -1;
 	}
 
-	if( (j = quest_search_db(quest_id)) < 0 )
+	if( (j = quest->search_db(quest_id)) < 0 )
 	{
 		ShowError("quest_add: quest %d not found in DB.\n", quest_id);
 		return -1;
@@ -91,9 +91,9 @@ int quest_add(TBL_PC * sd, int quest_id)
 	memmove(sd->quest_index+i+1, sd->quest_index+i, sizeof(int)*(sd->num_quests-sd->avail_quests));
 
 	memset(&sd->quest_log[i], 0, sizeof(struct quest));
-	sd->quest_log[i].quest_id = quest_db[j].id;
-	if( quest_db[j].time )
-		sd->quest_log[i].time = (unsigned int)(time(NULL) + quest_db[j].time);
+	sd->quest_log[i].quest_id = quest->db[j].id;
+	if( quest->db[j].time )
+		sd->quest_log[i].time = (unsigned int)(time(NULL) + quest->db[j].time);
 	sd->quest_log[i].state = Q_ACTIVE;
 
 	sd->quest_index[i] = j;
@@ -114,19 +114,19 @@ int quest_change(TBL_PC * sd, int qid1, int qid2)
 
 	int i, j;
 
-	if( quest_check(sd, qid2, HAVEQUEST) >= 0 )
+	if( quest->check(sd, qid2, HAVEQUEST) >= 0 )
 	{
 		ShowError("quest_change: Character %d already has quest %d.\n", sd->status.char_id, qid2);
 		return -1;
 	}
 
-	if( quest_check(sd, qid1, HAVEQUEST) < 0 )
+	if( quest->check(sd, qid1, HAVEQUEST) < 0 )
 	{
 		ShowError("quest_change: Character %d doesn't have quest %d.\n", sd->status.char_id, qid1);
 		return -1;
 	}
 
-	if( (j = quest_search_db(qid2)) < 0 )
+	if( (j = quest->search_db(qid2)) < 0 )
 	{
 		ShowError("quest_change: quest %d not found in DB.\n",qid2);
 		return -1;
@@ -140,9 +140,9 @@ int quest_change(TBL_PC * sd, int qid1, int qid2)
 	}
 
 	memset(&sd->quest_log[i], 0, sizeof(struct quest));
-	sd->quest_log[i].quest_id = quest_db[j].id;
-	if( quest_db[j].time )
-		sd->quest_log[i].time = (unsigned int)(time(NULL) + quest_db[j].time);
+	sd->quest_log[i].quest_id = quest->db[j].id;
+	if( quest->db[j].time )
+		sd->quest_log[i].time = (unsigned int)(time(NULL) + quest->db[j].time);
 	sd->quest_log[i].state = Q_ACTIVE;
 
 	sd->quest_index[i] = j;
@@ -205,7 +205,7 @@ int quest_update_objective_sub(struct block_list *bl, va_list ap)
 	if( sd->status.party_id != party )
 		return 0;
 
-	quest_update_objective(sd, mob);
+	quest->update_objective(sd, mob);
 
 	return 1;
 }
@@ -219,7 +219,7 @@ void quest_update_objective(TBL_PC * sd, int mob) {
 			continue;
 
 		for( j = 0; j < MAX_QUEST_OBJECTIVES; j++ )
-			if( quest_db[sd->quest_index[i]].mob[j] == mob && sd->quest_log[i].count[j] < quest_db[sd->quest_index[i]].count[j] )  {
+			if( quest->db[sd->quest_index[i]].mob[j] == mob && sd->quest_log[i].count[j] < quest->db[sd->quest_index[i]].count[j] )  {
 				sd->quest_log[i].count[j]++;
 				sd->save_quest = true;
 				clif->quest_update_objective(sd,&sd->quest_log[i],sd->quest_index[i]);
@@ -275,7 +275,7 @@ int quest_check(TBL_PC * sd, int quest_id, quest_check_type type) {
 		case HUNTING: {
 				if( sd->quest_log[i].state == 0 || sd->quest_log[i].state == 1 ) {
 					int j;
-					ARR_FIND(0, MAX_QUEST_OBJECTIVES, j, sd->quest_log[i].count[j] < quest_db[sd->quest_index[i]].count[j]);
+					ARR_FIND(0, MAX_QUEST_OBJECTIVES, j, sd->quest_log[i].count[j] < quest->db[sd->quest_index[i]].count[j]);
 					if( j == MAX_QUEST_OBJECTIVES )
 						return 2;
 					if( sd->quest_log[i].time < (unsigned int)time(NULL) )
@@ -331,20 +331,20 @@ int quest_read_db(void) {
 		if(str[0]==NULL)
 			continue;
 
-		memset(&quest_db[k], 0, sizeof(quest_db[0]));
+		memset(&quest->db[k], 0, sizeof(quest->db[0]));
 
-		quest_db[k].id = atoi(str[0]);
-		quest_db[k].time = atoi(str[1]);
+		quest->db[k].id = atoi(str[0]);
+		quest->db[k].time = atoi(str[1]);
 		
 		for( i = 0; i < MAX_QUEST_OBJECTIVES; i++ ) {
-			quest_db[k].mob[i] = atoi(str[2*i+2]);
-			quest_db[k].count[i] = atoi(str[2*i+3]);
+			quest->db[k].mob[i] = atoi(str[2*i+2]);
+			quest->db[k].count[i] = atoi(str[2*i+3]);
 
-			if( !quest_db[k].mob[i] || !quest_db[k].count[i] )
+			if( !quest->db[k].mob[i] || !quest->db[k].count[i] )
 				break;
 		}
 		
-		quest_db[k].num_objectives = i;
+		quest->db[k].num_objectives = i;
 
 		k++;
 	}
@@ -354,10 +354,30 @@ int quest_read_db(void) {
 }
 
 void do_init_quest(void) {
-	quest_read_db();
+	quest->read_db();
 }
 
 void do_reload_quest(void) {
-	memset(&quest_db, 0, sizeof(quest_db));
-	quest_read_db();
+	memset(&quest->db, 0, sizeof(quest->db));
+	quest->read_db();
+}
+
+void quest_defaults(void) {
+	quest = &quest_s;
+	
+	memset(&quest->db, 0, sizeof(quest->db));
+	/* */
+	quest->init = do_init_quest;
+	quest->reload = do_reload_quest;
+	/* */
+	quest->search_db = quest_search_db;
+	quest->pc_login = quest_pc_login;
+	quest->add = quest_add;
+	quest->change = quest_change;
+	quest->delete = quest_delete;
+	quest->update_objective_sub = quest_update_objective_sub;
+	quest->update_objective = quest_update_objective;
+	quest->update_status = quest_update_status;
+	quest->check = quest_check;
+	quest->read_db = quest_read_db;
 }

@@ -5174,6 +5174,7 @@ void map_hp_symbols(void) {
 	HPM->share(mapreg,"mapreg");
 	HPM->share(pet,"pet");
 	HPM->share(path,"path");
+	HPM->share(quest,"quest");
 
 	/* partial */
 	HPM->share(mapit,"mapit");
@@ -5224,6 +5225,7 @@ void map_load_defaults(void) {
 	mapreg_defaults();
 	pet_defaults();
 	path_defaults();
+	quest_defaults();
 }
 int do_init(int argc, char *argv[])
 {
@@ -5422,7 +5424,7 @@ int do_init(int argc, char *argv[])
 	homun->init();
 	mercenary->init();
 	elemental->do_init_elemental();
-	do_init_quest();
+	quest->init();
 	npc->init();
 	unit->init();
 	do_init_battleground();

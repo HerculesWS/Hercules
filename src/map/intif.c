@@ -1419,7 +1419,7 @@ int intif_parse_questlog(int fd)
 	{
 		memcpy(&sd->quest_log[i], RFIFOP(fd, i*sizeof(struct quest)+8), sizeof(struct quest));
 
-		sd->quest_index[i] = quest_search_db(sd->quest_log[i].quest_id);
+		sd->quest_index[i] = quest->search_db(sd->quest_log[i].quest_id);
 
 		if( sd->quest_index[i] < 0 )
 		{
@@ -1434,7 +1434,7 @@ int intif_parse_questlog(int fd)
 			sd->avail_quests--;
 	}
 
-	quest_pc_login(sd);
+	quest->pc_login(sd);
 
 	return 0;
 }

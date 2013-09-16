@@ -8689,7 +8689,7 @@ ACMD(set) {
 	return true;
 }
 ACMD(reloadquestdb) {
-	do_reload_quest();
+	quest->reload();
 	clif->message(fd, msg_txt(1377)); // Quest database has been reloaded.
 	return true;
 }

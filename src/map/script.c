@@ -15645,7 +15645,7 @@ BUILDIN(setquest)
 	struct map_session_data *sd = script_rid2sd(st);
 	nullpo_ret(sd);
 	
-	quest_add(sd, script_getnum(st, 2));
+	quest->add(sd, script_getnum(st, 2));
 	return true;
 }
 
@@ -15654,7 +15654,7 @@ BUILDIN(erasequest)
 	struct map_session_data *sd = script_rid2sd(st);
 	nullpo_ret(sd);
 	
-	quest_delete(sd, script_getnum(st, 2));
+	quest->delete(sd, script_getnum(st, 2));
 	return true;
 }
 
@@ -15663,7 +15663,7 @@ BUILDIN(completequest)
 	struct map_session_data *sd = script_rid2sd(st);
 	nullpo_ret(sd);
 	
-	quest_update_status(sd, script_getnum(st, 2), Q_COMPLETE);
+	quest->update_status(sd, script_getnum(st, 2), Q_COMPLETE);
 	return true;
 }
 
@@ -15672,7 +15672,7 @@ BUILDIN(changequest)
 	struct map_session_data *sd = script_rid2sd(st);
 	nullpo_ret(sd);
 	
-	quest_change(sd, script_getnum(st, 2),script_getnum(st, 3));
+	quest->change(sd, script_getnum(st, 2),script_getnum(st, 3));
 	return true;
 }
 
@@ -15686,7 +15686,7 @@ BUILDIN(checkquest)
 	if( script_hasdata(st, 3) )
 		type = (quest_check_type)script_getnum(st, 3);
 	
-	script_pushint(st, quest_check(sd, script_getnum(st, 2), type));
+	script_pushint(st, quest->check(sd, script_getnum(st, 2), type));
 	
 	return true;
 }
