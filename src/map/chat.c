@@ -430,7 +430,7 @@ int chat_npckickall(struct chat_data* cd)
 *-------------------------------------*/
 void chat_defaults(void) {
 	chat = &chat_s;
-	/* funcs */
+	/* funcs */
 	
 	chat->createpcchat = chat_createpcchat;
 	chat->joinchat = chat_joinchat;
