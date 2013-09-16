@@ -9170,7 +9170,7 @@ BUILDIN(announce) {
 		if (fontColor)
 			intif->broadcast2(mes, (int)strlen(mes)+1, strtol(fontColor, (char **)NULL, 0), fontType, fontSize, fontAlign, fontY);
 		else
-			intif->broadcast(mes, (int)strlen(mes)+1, flag&(BC_SOURCE_MASK|BC_TARGET_MASK));
+			intif->broadcast(mes, (int)strlen(mes)+1, flag&BC_COLOR_MASK);
 	}
 	return true;
 }
@@ -9247,7 +9247,7 @@ BUILDIN(mapannounce)
 		return true;
 	
 	iMap->foreachinmap(buildin_announce_sub, m, BL_PC,
-					 mes, strlen(mes)+1, flag&(BC_SOURCE_MASK|BC_TARGET_MASK), fontColor, fontType, fontSize, fontAlign, fontY);
+					 mes, strlen(mes)+1, flag&BC_COLOR_MASK, fontColor, fontType, fontSize, fontAlign, fontY);
 	return true;
 }
 /*==========================================
@@ -9272,7 +9272,7 @@ BUILDIN(areaannounce)
 		return true;
 	
 	iMap->foreachinarea(buildin_announce_sub, m, x0, y0, x1, y1, BL_PC,
-					  mes, strlen(mes)+1, flag&(BC_SOURCE_MASK|BC_TARGET_MASK), fontColor, fontType, fontSize, fontAlign, fontY);
+					  mes, strlen(mes)+1, flag&BC_COLOR_MASK, fontColor, fontType, fontSize, fontAlign, fontY);
 	return true;
 }
 
@@ -16139,7 +16139,7 @@ BUILDIN(instance_announce) {
 	
 	for( i = 0; i < instances[instance_id].num_map; i++ )
 		iMap->foreachinmap(buildin_announce_sub, instances[instance_id].map[i], BL_PC,
-						 mes, strlen(mes)+1, flag&(BC_SOURCE_MASK|BC_TARGET_MASK), fontColor, fontType, fontSize, fontAlign, fontY);
+						 mes, strlen(mes)+1, flag&BC_COLOR_MASK, fontColor, fontType, fontSize, fontAlign, fontY);
 	
 	return true;
 }
