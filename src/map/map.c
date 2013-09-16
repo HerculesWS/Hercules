@@ -1307,7 +1307,7 @@ int map_search_freecell(struct block_list *src, int16 m, int16 *x,int16 *y, int1
 
 		if (iMap->getcell(m,*x,*y,CELL_CHKREACH))
 		{
-			if(flag&2 && !unit_can_reach_pos(src, *x, *y, 1))
+			if(flag&2 && !unit->can_reach_pos(src, *x, *y, 1))
 				continue;
 			if(flag&4) {
 				if (spawn >= 100) return 0; //Limit of retries reached.
@@ -1595,7 +1595,7 @@ int map_quit(struct map_session_data *sd) {
 
 	if( sd->ed ) {
 		elemental->clean_effect(sd->ed);
-		unit_remove_map(&sd->ed->bl,CLR_TELEPORT);
+		unit->remove_map(&sd->ed->bl,CLR_TELEPORT,ALC_MARK);
 	}
 
 	if( hChSys.local && map[sd->bl.m].channel && idb_exists(map[sd->bl.m].channel->users, sd->status.char_id) ) {
@@ -1604,7 +1604,7 @@ int map_quit(struct map_session_data *sd) {
 
 	clif->chsys_quit(sd);
 
-	unit_remove_map_pc(sd,CLR_TELEPORT);
+	unit->remove_map_pc(sd,CLR_TELEPORT);
 
 	if( map[sd->bl.m].instance_id >= 0 ) { // Avoid map conflicts and warnings on next login
 		int16 m;
@@ -1630,7 +1630,7 @@ int map_quit(struct map_session_data *sd) {
 	pc->makesavestatus(sd);
 	pc->clean_skilltree(sd);
 	chrif->save(sd,1);
-	unit_free_pc(sd);
+	unit->free_pc(sd);
 	return 0;
 }
 
@@ -2135,7 +2135,7 @@ int map_removemobs_sub(struct block_list *bl, va_list ap)
 	if( md->db->mexp > 0 )
 		return 0;
 
-	unit_free(&md->bl,CLR_OUTSIGHT);
+	unit->free(&md->bl,CLR_OUTSIGHT);
 
 	return 1;
 }
@@ -2244,7 +2244,7 @@ uint8 map_calc_dir(struct block_list* src, int16 x, int16 y)
 	if( dx == 0 && dy == 0 )
 	{	// both are standing on the same spot
 		//dir = 6; // aegis-style, makes knockback default to the left
-		dir = unit_getdir(src); // athena-style, makes knockback default to behind 'src'
+		dir = unit->getdir(src); // athena-style, makes knockback default to behind 'src'
 	}
 	else if( dx >= 0 && dy >=0 )
 	{	// upper-right
@@ -4872,7 +4872,7 @@ int cleanup_sub(struct block_list *bl, va_list ap) {
 		npc_unload((struct npc_data *)bl,false);
 		break;
 	case BL_MOB:
-		unit_free(bl,CLR_OUTSIGHT);
+		unit->free(bl,CLR_OUTSIGHT);
 		break;
 	case BL_PET:
 		//There is no need for this, the pet is removed together with the player. [Skotlex]
@@ -4950,7 +4950,7 @@ void do_final(void)
 	atcommand->final_msg();
 	skill->final();
 	iStatus->do_final_status();
-	do_final_unit();
+	unit->final();
 	do_final_battleground();
 	iDuel->do_final_duel();
 	elemental->do_final_elemental();
@@ -5169,6 +5169,7 @@ void map_hp_symbols(void) {
 	HPM->share(intif,"intif");
 	HPM->share(mercenary,"mercenary");
 	HPM->share(mob,"mob");
+	HPM->share(unit,"unit");
 
 	/* partial */
 	HPM->share(mapit,"mapit");
@@ -5215,6 +5216,7 @@ void map_load_defaults(void) {
 	intif_defaults();
 	mercenary_defaults();
 	mob_defaults();
+	unit_defaults();
 }
 int do_init(int argc, char *argv[])
 {
@@ -5415,7 +5417,7 @@ int do_init(int argc, char *argv[])
 	elemental->do_init_elemental();
 	do_init_quest();
 	do_init_npc();
-	do_init_unit();
+	unit->init();
 	do_init_battleground();
 	iDuel->do_init_duel();
 	vending->init();

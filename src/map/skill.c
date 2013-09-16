@@ -863,7 +863,7 @@ int skill_additional_effect (struct block_list* src, struct block_list *bl, uint
 			break;
 
 		case WZ_FIREPILLAR:
-			unit_set_walkdelay(bl, tick, skill->get_time2(skill_id, skill_lv), 1);
+			unit->set_walkdelay(bl, tick, skill->get_time2(skill_id, skill_lv), 1);
 			break;
 
 		case MG_FROSTDIVER:
@@ -1447,7 +1447,7 @@ int skill_additional_effect (struct block_list* src, struct block_list *bl, uint
 	}
 
 	if( sd && sd->ed && sc && !iStatus->isdead(bl) && !skill_id ){
-		struct unit_data *ud = unit_bl2ud(src);
+		struct unit_data *ud = unit->bl2ud(src);
 
 		if( sc->data[SC_WILD_STORM_OPTION] )
 			temp = sc->data[SC_WILD_STORM_OPTION]->val2;
@@ -1559,7 +1559,7 @@ int skill_additional_effect (struct block_list* src, struct block_list *bl, uint
 			}
 			sd->state.autocast = 0;
 			//Set canact delay. [Skotlex]
-			ud = unit_bl2ud(src);
+			ud = unit->bl2ud(src);
 			if (ud) {
 				rate = skill->delay_fix(src, temp, skill_lv);
 				if (DIFF_TICK(ud->canact_tick, tick + rate) < 0){
@@ -1900,7 +1900,7 @@ int skill_counter_additional_effect (struct block_list* src, struct block_list *
 			}
 			dstsd->state.autocast = 0;
 			//Set canact delay. [Skotlex]
-			ud = unit_bl2ud(bl);
+			ud = unit->bl2ud(bl);
 			if (ud) {
 				rate = skill->delay_fix(bl, skill_id, skill_lv);
 				if (DIFF_TICK(ud->canact_tick, tick + rate) < 0){
@@ -2103,7 +2103,7 @@ int skill_blown(struct block_list* src, struct block_list* target, int count, in
 		dy = -diry[dir];
 	}
 
-	return unit_blown(target, dx, dy, count, flag);	// send over the proper flag
+	return unit->blown(target, dx, dy, count, flag);	// send over the proper flag
 }
 
 
@@ -2338,7 +2338,7 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 					sce->timer = iTimer->add_timer(tick+sce->val4, iStatus->change_timer, src->id, SC_COMBOATTACK);
 					break;
 				}
-				unit_cancel_combo(src); // Cancel combo wait
+				unit->cancel_combo(src); // Cancel combo wait
 				break;
 			default:
 				if( src == dsrc ) // Ground skills are exceptions. [Inkfish]
@@ -2617,7 +2617,7 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 	if (dmg.dmg_lv >= ATK_MISS && (type = skill->get_walkdelay(skill_id, skill_lv)) > 0) {
 		//Skills with can't walk delay also stop normal attacking for that
 		//duration when the attack connects. [Skotlex]
-		struct unit_data *ud = unit_bl2ud(src);
+		struct unit_data *ud = unit->bl2ud(src);
 		if (ud && DIFF_TICK(ud->attackabletime, tick + type) < 0)
 			ud->attackabletime = tick + type;
 	}
@@ -2650,7 +2650,7 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 			case SR_KNUCKLEARROW:
 			case GN_WALLOFTHORN:
 			case EL_FIRE_MANTLE:
-				dir = unit_getdir(bl);// backwards
+				dir = unit->getdir(bl);// backwards
 				break;
 			// This ensures the storm randomly pushes instead of exactly a cell backwards per official mechanics.
 			case WZ_STORMGUST:
@@ -2688,7 +2688,7 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 				}
 				break;
 			case GN_WALLOFTHORN:
-				unit_stop_walking(bl,1);
+				unit->stop_walking(bl,1);
 				skill->blown(dsrc,bl,dmg.blewcount,dir, 0x2 );
 				clif->fixpos(bl);
 				break;
@@ -3037,7 +3037,7 @@ int skill_check_condition_mercenary(struct block_list *bl, int skill_id, int lv,
 	if( !type )
 		switch( state ) {
 			case ST_MOVE_ENABLE:
-				if( !unit_can_move(bl) ) {
+				if( !unit->can_move(bl) ) {
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
 					return 0;
 				}
@@ -3086,7 +3086,7 @@ int skill_area_sub_count (struct block_list *src, struct block_list *target, uin
  *------------------------------------------*/
 int skill_timerskill(int tid, unsigned int tick, int id, intptr_t data) {
 	struct block_list *src = iMap->id2bl(id),*target;
-	struct unit_data *ud = unit_bl2ud(src);
+	struct unit_data *ud = unit->bl2ud(src);
 	struct skill_timerskill *skl;
 	int range;
 
@@ -3116,11 +3116,11 @@ int skill_timerskill(int tid, unsigned int tick, int id, intptr_t data) {
 
 			switch(skl->skill_id) {
 				case RG_INTIMIDATE:
-					if (unit_warp(src,-1,-1,-1,CLR_TELEPORT) == 0) {
+					if (unit->warp(src,-1,-1,-1,CLR_TELEPORT) == 0) {
 						short x,y;
 						iMap->search_freecell(src, 0, &x, &y, 1, 1, 0);
 						if (target != src && !iStatus->isdead(target))
-							unit_warp(target, -1, x, y, CLR_TELEPORT);
+							unit->warp(target, -1, x, y, CLR_TELEPORT);
 					}
 					break;
 				case BA_FROSTJOKER:
@@ -3193,11 +3193,11 @@ int skill_timerskill(int tid, unsigned int tick, int id, intptr_t data) {
 					break;
 				case SC_FATALMENACE:
 					if( src == target ) // Casters Part
-						unit_warp(src, -1, skl->x, skl->y, 3);
+						unit->warp(src, -1, skl->x, skl->y, 3);
 					else { // Target's Part
 						short x = skl->x, y = skl->y;
 						iMap->search_freecell(NULL, target->m, &x, &y, 2, 2, 1);
-						unit_warp(target,-1,x,y,3);
+						unit->warp(target,-1,x,y,3);
 					}
 					break;
 				case LG_MOONSLASHER:
@@ -3241,7 +3241,7 @@ int skill_timerskill(int tid, unsigned int tick, int id, intptr_t data) {
 				case SC_ESCAPE:
 					if( skl->type < 4+skl->skill_lv ){
 						clif->skill_damage(src,src,tick,0,0,-30000,1,skl->skill_id,skl->skill_lv,5);
-						skill->blown(src,src,1,unit_getdir(src),0);
+						skill->blown(src,src,1,unit->getdir(src),0);
 						skill->addtimerskill(src,tick+80,src->id,0,0,skl->skill_id,skl->skill_lv,skl->type+1,0);
 					}
 					break;
@@ -3300,7 +3300,7 @@ int skill_addtimerskill (struct block_list *src, unsigned int tick, int target, 
 	nullpo_retr(1, src);
 	if (src->prev == NULL)
 		return 0;
-	ud = unit_bl2ud(src);
+	ud = unit->bl2ud(src);
 	nullpo_retr(1, ud);
 
 	ARR_FIND( 0, MAX_SKILLTIMERSKILL, i, ud->skilltimerskill[i] == 0 );
@@ -3328,7 +3328,7 @@ int skill_cleartimerskill (struct block_list *src)
 	int i;
 	struct unit_data *ud;
 	nullpo_ret(src);
-	ud = unit_bl2ud(src);
+	ud = unit->bl2ud(src);
 	nullpo_ret(ud);
 
 	for(i=0;i<MAX_SKILLTIMERSKILL;i++) {
@@ -3579,7 +3579,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 				uint8 dir = iMap->calc_dir(bl, src->x, src->y);
 
 				// teleport to target (if not on WoE grounds)
-				if( !map_flag_gvg2(src->m) && !map[src->m].flag.battleground && unit_movepos(src, bl->x, bl->y, 0, 1) )
+				if( !map_flag_gvg2(src->m) && !map[src->m].flag.battleground && unit->movepos(src, bl->x, bl->y, 0, 1) )
 					clif->slide(src, bl->x, bl->y);
 
 				// cause damage and knockback if the path to target was a straight one
@@ -3588,7 +3588,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 					skill->blown(src, bl, dist, dir, 0);
 					//HACK: since knockback officially defaults to the left, the client also turns to the left... therefore,
 					// make the caster look in the direction of the target
-					unit_setdir(src, (dir+4)%8);
+					unit->setdir(src, (dir+4)%8);
 				}
 
 			}
@@ -3626,12 +3626,12 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 
 		case RG_BACKSTAP:
 			{
-				uint8 dir = iMap->calc_dir(src, bl->x, bl->y), t_dir = unit_getdir(bl);
+				uint8 dir = iMap->calc_dir(src, bl->x, bl->y), t_dir = unit->getdir(bl);
 				if ((!check_distance_bl(src, bl, 0) && !iMap->check_dir(dir, t_dir)) || bl->type == BL_SKILL) {
 					status_change_end(src, SC_HIDING, INVALID_TIMER);
 					skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
 					dir = dir < 4 ? dir+4 : dir-4; // change direction [Celest]
-					unit_setdir(bl,dir);
+					unit->setdir(bl,dir);
 				}
 				else if (sd)
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
@@ -3691,7 +3691,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 				else if( dir == 7 || dir < 2 ) y = i;
 				else y = 0;
 				if( (mbl == src || (!map_flag_gvg2(src->m) && !map[src->m].flag.battleground) ) && // only NJ_ISSEN don't have slide effect in GVG
-					unit_movepos(src, mbl->x+x, mbl->y+y, 1, 1) ) {
+					unit->movepos(src, mbl->x+x, mbl->y+y, 1, 1) ) {
 					clif->slide(src, src->x, src->y);
 					clif->fixpos(src);
 					clif->spiritball(src);
@@ -3830,7 +3830,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 				c = skill->get_blewcount(skill_id,skill_lv);
 				// keep moving target in the direction that src is looking, square by square
 				for(i=0;i<c;i++){
-					if (!skill->blown(src,bl,1,(unit_getdir(src)+4)%8,0x1))
+					if (!skill->blown(src,bl,1,(unit->getdir(src)+4)%8,0x1))
 						break; //Can't knockback
 					skill_area_temp[0] = iMap->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), BL_CHAR, src, skill_id, skill_lv, tick, flag|BCT_ENEMY, skill->area_sub_count);
 					if( skill_area_temp[0] > 1 ) break; // collision
@@ -4073,17 +4073,17 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 			{	//You don't move on GVG grounds.
 				short x, y;
 				iMap->search_freecell(bl, 0, &x, &y, 1, 1, 0);
-				if (unit_movepos(src, x, y, 0, 0))
+				if (unit->movepos(src, x, y, 0, 0))
 					clif->slide(src,src->x,src->y);
 			}
 			status_change_end(src, SC_HIDING, INVALID_TIMER);
 			skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 			break;
 		case RK_PHANTOMTHRUST:
-			unit_setdir(src,iMap->calc_dir(src, bl->x, bl->y));
+			unit->setdir(src,iMap->calc_dir(src, bl->x, bl->y));
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 
-			skill->blown(src,bl,distance_bl(src,bl)-1,unit_getdir(src),0);
+			skill->blown(src,bl,distance_bl(src,bl)-1,unit->getdir(src),0);
 			if( battle->check_target(src,bl,BCT_ENEMY) > 0 )
 				skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 			break;
@@ -4100,7 +4100,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 				else if( dir == 7 || dir < 2 ) y = -2;
 				else y = 0;
 
-				if( unit_movepos(src, bl->x+x, bl->y+y, 1, 1) )
+				if( unit->movepos(src, bl->x+x, bl->y+y, 1, 1) )
 				{
 					clif->slide(src,bl->x+x,bl->y+y);
 					clif->fixpos(src); // the official server send these two packts.
@@ -4270,7 +4270,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 				short y[8]={1,1,0,-1,-1,-1,0,1};
 				uint8 dir = iMap->calc_dir(bl, src->x, src->y);
 
-				if( unit_movepos(src, bl->x+x[dir], bl->y+y[dir], 1, 1) )
+				if( unit->movepos(src, bl->x+x[dir], bl->y+y[dir], 1, 1) )
 				{
 					clif->slide(src, bl->x+x[dir], bl->y+y[dir]);
 					clif->fixpos(src);
@@ -4350,7 +4350,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 			}
 			break;
 		case LG_PINPOINTATTACK:
-			if( !map_flag_gvg2(src->m) && !map[src->m].flag.battleground && unit_movepos(src, bl->x, bl->y, 1, 1) )
+			if( !map_flag_gvg2(src->m) && !map[src->m].flag.battleground && unit->movepos(src, bl->x, bl->y, 1, 1) )
 				clif->slide(src,bl->x,bl->y);
 			skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 			break;
@@ -4375,7 +4375,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 			break;
 
 		case SR_KNUCKLEARROW:
-				if( !map_flag_gvg2(src->m) && !map[src->m].flag.battleground && unit_movepos(src, bl->x, bl->y, 1, 1) ) {
+				if( !map_flag_gvg2(src->m) && !map[src->m].flag.battleground && unit->movepos(src, bl->x, bl->y, 1, 1) ) {
 					clif->slide(src,bl->x,bl->y);
 					clif->fixpos(src); // Aegis send this packet too.
 				}
@@ -4523,7 +4523,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 			skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
 			break;
 		case MH_TINDER_BREAKER:
-			if (unit_movepos(src, bl->x, bl->y, 1, 1)) {
+			if (unit->movepos(src, bl->x, bl->y, 1, 1)) {
 	#if PACKETVER >= 20111005
 				clif->snap(src, bl->x, bl->y);
 	#else
@@ -4600,7 +4600,7 @@ int skill_castend_id(int tid, unsigned int tick, int id, intptr_t data)
 		return 0;// not found
 	}
 
-	ud = unit_bl2ud(src);
+	ud = unit->bl2ud(src);
 	if( ud == NULL )
 	{
 		ShowDebug("skill_castend_id: ud == NULL (tid=%d, id=%d)\n", tid, id);
@@ -4615,7 +4615,7 @@ int skill_castend_id(int tid, unsigned int tick, int id, intptr_t data)
 		return 0;
 	}
 
-	if(ud->skill_id != SA_CASTCANCEL && ud->skill_id != SO_SPELLFIST) {// otherwise handled in unit_skillcastcancel()
+	if(ud->skill_id != SA_CASTCANCEL && ud->skill_id != SO_SPELLFIST) {// otherwise handled in unit->skillcastcancel()
 		if( ud->skilltimer != tid ) {
 			ShowError("skill_castend_id: Timer mismatch %d!=%d!\n", ud->skilltimer, tid);
 			ud->skilltimer = INVALID_TIMER;
@@ -4668,7 +4668,7 @@ int skill_castend_id(int tid, unsigned int tick, int id, intptr_t data)
 		}
 
 		if(ud->skill_id == RG_BACKSTAP) {
-			uint8 dir = iMap->calc_dir(src,target->x,target->y),t_dir = unit_getdir(target);
+			uint8 dir = iMap->calc_dir(src,target->x,target->y),t_dir = unit->getdir(target);
 			if(check_distance_bl(src, target, 0) || iMap->check_dir(dir,t_dir)) {
 				break;
 			}
@@ -4782,7 +4782,7 @@ int skill_castend_id(int tid, unsigned int tick, int id, intptr_t data)
 		}
 
 		if (ud->walktimer != INVALID_TIMER && ud->skill_id != TK_RUN && ud->skill_id != RA_WUGDASH)
-			unit_stop_walking(src,1);
+			unit->stop_walking(src,1);
 
 		if( !sd || sd->skillitem != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) )
 			ud->canact_tick = tick + skill->delay_fix(src, ud->skill_id, ud->skill_lv); //Tests show wings don't overwrite the delay but skill scrolls do. [Inkfish]
@@ -4819,7 +4819,7 @@ int skill_castend_id(int tid, unsigned int tick, int id, intptr_t data)
 			}
 		}
 		if (skill->get_state(ud->skill_id) != ST_MOVE_ENABLE)
-			unit_set_walkdelay(src, tick, battle_config.default_walk_delay+skill->get_walkdelay(ud->skill_id, ud->skill_lv), 1);
+			unit->set_walkdelay(src, tick, battle_config.default_walk_delay+skill->get_walkdelay(ud->skill_id, ud->skill_lv), 1);
 
 		if(battle_config.skill_log && battle_config.skill_log&src->type)
 			ShowInfo("Type %d, ID %d skill castend id [id =%d, lv=%d, target ID %d]\n",
@@ -4886,7 +4886,7 @@ int skill_castend_id(int tid, unsigned int tick, int id, intptr_t data)
 			if( dir > 2 && dir < 6 ) y = -2;
 			else if( dir == 7 || dir < 2 ) y = 2;
 			else y = 0;
-			if (unit_movepos(src, src->x+x, src->y+y, 1, 1))
+			if (unit->movepos(src, src->x+x, src->y+y, 1, 1))
 			{	//Display movement + animation.
 				clif->slide(src,src->x,src->y);
 				clif->spiritball(src);
@@ -5217,14 +5217,14 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				}
 				else
 				{// mob-casted
-					struct unit_data *ud = unit_bl2ud(src);
+					struct unit_data *ud = unit->bl2ud(src);
 					int inf = skill->get_inf(abra_skill_id);
 					if (!ud) break;
 					if (inf&INF_SELF_SKILL || inf&INF_SUPPORT_SKILL) {
 						if (src->type == BL_PET)
 							bl = (struct block_list*)((TBL_PET*)src)->msd;
 						if (!bl) bl = src;
-						unit_skilluse_id(src, bl->id, abra_skill_id, abra_skill_lv);
+						unit->skilluse_id(src, bl->id, abra_skill_id, abra_skill_lv);
 					} else {	//Assume offensive skills
 						int target_id = 0;
 						if (ud->target)
@@ -5238,9 +5238,9 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 						if (skill->get_casttype(abra_skill_id) == CAST_GROUND) {
 							bl = iMap->id2bl(target_id);
 							if (!bl) bl = src;
-							unit_skilluse_pos(src, bl->x, bl->y, abra_skill_id, abra_skill_lv);
+							unit->skilluse_pos(src, bl->x, bl->y, abra_skill_id, abra_skill_lv);
 						} else
-							unit_skilluse_id(src, target_id, abra_skill_id, abra_skill_lv);
+							unit->skilluse_id(src, target_id, abra_skill_id, abra_skill_lv);
 					}
 				}
 			}
@@ -5474,10 +5474,10 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			break;
 
 		case TK_JUMPKICK:
-			/* Check if the target is an enemy; if not, skill should fail so the character doesn't unit_movepos (exploitable) */
+			/* Check if the target is an enemy; if not, skill should fail so the character doesn't unit->movepos (exploitable) */
 			if( battle->check_target(src, bl, BCT_ENEMY) > 0 )
 			{
-				if( unit_movepos(src, bl->x, bl->y, 1, 1) )
+				if( unit->movepos(src, bl->x, bl->y, 1, 1) )
 				{
 					skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 					clif->slide(src,bl->x,bl->y);
@@ -5726,7 +5726,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				iMap->freeblock_unlock();
 				return 0;
 			}
-			unit_skillcastcancel(bl, 2);
+			unit->skillcastcancel(bl, 2);
 
 			if( tsc && tsc->count )
 			{
@@ -6069,7 +6069,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				iMap->freeblock_unlock();
 				return 0;
 			}
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,sc_start4(bl,type,100,skill_lv,unit_getdir(bl),0,0,0));
+			clif->skill_nodamage(src,bl,skill_id,skill_lv,sc_start4(bl,type,100,skill_lv,unit->getdir(bl),0,0,0));
 			if (sd) // If the client receives a skill-use packet inmediately before a walkok packet, it will discard the walk packet! [Skotlex]
 				clif->walkok(sd); // So aegis has to resend the walk ok.
 			break;
@@ -6364,12 +6364,12 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				else
 					clif->skill_warppoint(sd,skill_id,skill_lv, (unsigned short)-1,sd->status.save_point.map,0,0);
 			} else
-				unit_warp(bl,-1,-1,-1,CLR_TELEPORT);
+				unit->warp(bl,-1,-1,-1,CLR_TELEPORT);
 			break;
 
 		case NPC_EXPULSION:
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-			unit_warp(bl,-1,-1,-1,CLR_TELEPORT);
+			unit->warp(bl,-1,-1,-1,CLR_TELEPORT);
 			break;
 
 		case AL_HOLYWATER:
@@ -6704,12 +6704,12 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 		case TF_BACKSLIDING: //This is the correct implementation as per packet logging information. [Skotlex]
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-			skill->blown(src,bl,skill->get_blewcount(skill_id,skill_lv),unit_getdir(bl),0);
+			skill->blown(src,bl,skill->get_blewcount(skill_id,skill_lv),unit->getdir(bl),0);
 			break;
 
 		case TK_HIGHJUMP:
 			{
-				int x,y, dir = unit_getdir(src);
+				int x,y, dir = unit->getdir(src);
 
 				//Fails on noteleport maps, except for GvG and BG maps [Skotlex]
 				if( map[src->m].flag.noteleport &&
@@ -6725,7 +6725,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				clif->skill_nodamage(src,bl,TK_HIGHJUMP,skill_lv,1);
 				if(!iMap->count_oncell(src->m,x,y,BL_PC|BL_NPC|BL_MOB) && iMap->getcell(src->m,x,y,CELL_CHKREACH)) {
 					clif->slide(src,x,y);
-					unit_movepos(src, x, y, 1, 0);
+					unit->movepos(src, x, y, 1, 0);
 				}
 			}
 			break;
@@ -6733,7 +6733,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		case SA_CASTCANCEL:
 		case SO_SPELLFIST:
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-			unit_skillcastcancel(src,1);
+			unit->skillcastcancel(src,1);
 			if(sd) {
 				int sp = skill->get_sp(sd->skill_id_old,sd->skill_lv_old);
 				if( skill_id == SO_SPELLFIST ){
@@ -6756,7 +6756,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					iStatus->heal(bl,0,sp,2);
 					status_percent_damage(bl, src, 0, -20, false); //20% max SP damage.
 				} else {
-					struct unit_data *ud = unit_bl2ud(bl);
+					struct unit_data *ud = unit->bl2ud(bl);
 					int bl_skill_id=0,bl_skill_lv=0,hp = 0;
 					if (!ud || ud->skilltimer == INVALID_TIMER)
 						break; //Nothing to cancel.
@@ -6773,7 +6773,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 						hp = tstatus->max_hp/50; //Recover 2% HP [Skotlex]
 
 					clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-					unit_skillcastcancel(bl,0);
+					unit->skillcastcancel(bl,0);
 					sp = skill->get_sp(bl_skill_id,bl_skill_lv);
 					status_zap(bl, hp, sp);
 
@@ -6879,7 +6879,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		case NPC_BARRIER:
 			{
 				int skill_time = skill->get_time(skill_id,skill_lv);
-				struct unit_data *ud = unit_bl2ud(bl);
+				struct unit_data *ud = unit->bl2ud(bl);
 				if (clif->skill_nodamage(src,bl,skill_id,skill_lv,
 						sc_start(bl,type,100,skill_lv,skill_time))
 				&& ud) {	//Disable attacking/acting/moving for skill's duration.
@@ -6955,10 +6955,10 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		case NPC_RUN:
 			{
 				const int mask[8][2] = {{0,-1},{1,-1},{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1}};
-				uint8 dir = (bl == src)?unit_getdir(src):iMap->calc_dir(src,bl->x,bl->y); //If cast on self, run forward, else run away.
-				unit_stop_attack(src);
+				uint8 dir = (bl == src)?unit->getdir(src):iMap->calc_dir(src,bl->x,bl->y); //If cast on self, run forward, else run away.
+				unit->stop_attack(src);
 				//Run skillv tiles overriding the can-move check.
-				if (unit_walktoxy(src, src->x + skill_lv * mask[dir][0], src->y + skill_lv * mask[dir][1], 2) && md)
+				if (unit->walktoxy(src, src->x + skill_lv * mask[dir][0], src->y + skill_lv * mask[dir][1], 2) && md)
 					md->state.skillstate = MSS_WALK; //Otherwise it isn't updated in the ai.
 			}
 			break;
@@ -7152,7 +7152,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		case BD_ENCORE:
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			if(sd)
-				unit_skilluse_id(src,src->id,sd->skill_id_dance,sd->skill_lv_dance);
+				unit->skilluse_id(src,src->id,sd->skill_id_dance,sd->skill_lv_dance);
 			break;
 
 		case AS_SPLASHER:
@@ -7198,7 +7198,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					return 0;
 				}
 
-				unit_skillcastcancel(bl,0);
+				unit->skillcastcancel(bl,0);
 
 				if(tsc && tsc->count){
 					status_change_end(bl, SC_FREEZE, INVALID_TIMER);
@@ -7361,7 +7361,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					case 5:	// 2000HP heal, random teleported
 						iStatus->heal(src, 2000, 0, 0);
 						if( !map_flag_vs(bl->m) )
-							unit_warp(bl, -1,-1,-1, CLR_TELEPORT);
+							unit->warp(bl, -1,-1,-1, CLR_TELEPORT);
 						break;
 					case 6:	// random 2 other effects
 						if (count == -1)
@@ -7605,10 +7605,10 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				if (hd)
 					skill->blockhomun_start(hd, skill_id, skill->get_time2(skill_id,skill_lv));
 
-				if (unit_movepos(src,bl->x,bl->y,0,0)) {
+				if (unit->movepos(src,bl->x,bl->y,0,0)) {
 					clif->skill_nodamage(src,src,skill_id,skill_lv,1); // Homunc
 					clif->slide(src,bl->x,bl->y) ;
-					if (unit_movepos(bl,x,y,0,0))
+					if (unit->movepos(bl,x,y,0,0))
 					{
 						clif->skill_nodamage(bl,bl,skill_id,skill_lv,1); // Master
 						clif->slide(bl,x,y) ;
@@ -8233,7 +8233,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				return 0;
 			}
 			if( sd && pc_isridingwug(sd) ) {
-				clif->skill_nodamage(src,bl,skill_id,skill_lv,sc_start4(bl,type,100,skill_lv,unit_getdir(bl),0,0,1));
+				clif->skill_nodamage(src,bl,skill_id,skill_lv,sc_start4(bl,type,100,skill_lv,unit->getdir(bl),0,0,1));
 				clif->walkok(sd);
 			}
 			break;
@@ -8249,7 +8249,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		case NC_F_SIDESLIDE:
 		case NC_B_SIDESLIDE:
 			{
-				uint8 dir = (skill_id == NC_F_SIDESLIDE) ? (unit_getdir(src)+4)%8 : unit_getdir(src);
+				uint8 dir = (skill_id == NC_F_SIDESLIDE) ? (unit->getdir(src)+4)%8 : unit->getdir(src);
 				skill->blown(src,bl,skill->get_blewcount(skill_id,skill_lv),dir,0);
 				clif->slide(src,src->x,src->y);
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
@@ -8561,7 +8561,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				if( sc_start2(bl, type, 100, skill_lv, src->id, skill->get_time(skill_id, skill_lv))) {
 					if( bl->type == BL_MOB )
 						mob->unlocktarget((TBL_MOB*)bl,iTimer->gettick());
-					unit_stop_attack(bl);
+					unit->stop_attack(bl);
 					clif->bladestop(src, bl->id, 1);
 					iMap->freeblock_unlock();
 					return 1;
@@ -8796,14 +8796,14 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					sd->skillitemlv = improv_skill_lv;
 					clif->item_skill(sd, improv_skill_id, improv_skill_lv);
 				} else {
-					struct unit_data *ud = unit_bl2ud(src);
+					struct unit_data *ud = unit->bl2ud(src);
 					int inf = skill->get_inf(improv_skill_id);
 					if (!ud) break;
 					if (inf&INF_SELF_SKILL || inf&INF_SUPPORT_SKILL) {
 						if (src->type == BL_PET)
 							bl = (struct block_list*)((TBL_PET*)src)->msd;
 						if (!bl) bl = src;
-						unit_skilluse_id(src, bl->id, improv_skill_id, improv_skill_lv);
+						unit->skilluse_id(src, bl->id, improv_skill_id, improv_skill_lv);
 					} else {
 						int target_id = 0;
 						if (ud->target)
@@ -8817,9 +8817,9 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 						if (skill->get_casttype(improv_skill_id) == CAST_GROUND) {
 							bl = iMap->id2bl(target_id);
 							if (!bl) bl = src;
-							unit_skilluse_pos(src, bl->x, bl->y, improv_skill_id, improv_skill_lv);
+							unit->skilluse_pos(src, bl->x, bl->y, improv_skill_id, improv_skill_lv);
 						} else
-							unit_skilluse_id(src, target_id, improv_skill_id, improv_skill_lv);
+							unit->skilluse_id(src, target_id, improv_skill_id, improv_skill_lv);
 					}
 				}
 			}
@@ -9158,7 +9158,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					mob->spawn( md );
 					pc->setinvincibletimer(sd,500);// unlock target lock
 					clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-					skill->blown(src,bl,skill->get_blewcount(skill_id,skill_lv),unit_getdir(bl),0);
+					skill->blown(src,bl,skill->get_blewcount(skill_id,skill_lv),unit->getdir(bl),0);
 				}
 			}
 			break;
@@ -9198,11 +9198,11 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					break;
 				}
 
-				if (unit_movepos(src, bl->x, bl->y, 0, 0)) {
+				if (unit->movepos(src, bl->x, bl->y, 0, 0)) {
 					clif->skill_nodamage(src, src, skill_id, skill_lv, 1);
 					clif->slide(src, bl->x, bl->y) ;
 					sc_start(src, SC_CONFUSION, 25, skill_lv, skill->get_time(skill_id, skill_lv));
-					if ( !is_boss(bl) && unit_stop_walking(&sd->bl, 1) && unit_movepos(bl, x, y, 0, 0) )
+					if ( !is_boss(bl) && unit->stop_walking(&sd->bl, 1) && unit->movepos(bl, x, y, 0, 0) )
 					{
 						if( dstsd && pc_issit(dstsd) )
 							pc->setstand(dstsd);
@@ -9389,7 +9389,7 @@ int skill_castend_pos(int tid, unsigned int tick, int id, intptr_t data)
 	struct block_list* src = iMap->id2bl(id);
 	int maxcount;
 	struct map_session_data *sd;
-	struct unit_data *ud = unit_bl2ud(src);
+	struct unit_data *ud = unit->bl2ud(src);
 	struct mob_data *md;
 
 	nullpo_ret(ud);
@@ -9485,7 +9485,7 @@ int skill_castend_pos(int tid, unsigned int tick, int id, intptr_t data)
 				src->type, src->id, ud->skill_id, ud->skill_lv, ud->skillx, ud->skilly);
 
 		if (ud->walktimer != INVALID_TIMER)
-			unit_stop_walking(src,1);
+			unit->stop_walking(src,1);
 
 		if( !sd || sd->skillitem != ud->skill_id || skill->get_delay(ud->skill_id,ud->skill_lv) )
 			ud->canact_tick = tick + skill->delay_fix(src, ud->skill_id, ud->skill_lv);
@@ -9511,7 +9511,7 @@ int skill_castend_pos(int tid, unsigned int tick, int id, intptr_t data)
 //				break;
 //			}
 //		}
-		unit_set_walkdelay(src, tick, battle_config.default_walk_delay+skill->get_walkdelay(ud->skill_id, ud->skill_lv), 1);
+		unit->set_walkdelay(src, tick, battle_config.default_walk_delay+skill->get_walkdelay(ud->skill_id, ud->skill_lv), 1);
 		status_change_end(src,SC_CAMOUFLAGE, INVALID_TIMER);// only normal attack and auto cast skills benefit from its bonuses
 		iMap->freeblock_lock();
 		skill->castend_pos2(src,ud->skillx,ud->skilly,ud->skill_id,ud->skill_lv,tick,0);
@@ -9969,7 +9969,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			return 0; // not to consume item.
 
 		case MO_BODYRELOCATION:
-			if (unit_movepos(src, x, y, 1, 1)) {
+			if (unit->movepos(src, x, y, 1, 1)) {
 	#if PACKETVER >= 20111005
 				clif->snap(src, src->x, src->y);
 	#else
@@ -9981,7 +9981,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			break;
 		case NJ_SHADOWJUMP:
 			if( !map_flag_gvg2(src->m) && !map[src->m].flag.battleground ) { //You don't move on GVG grounds.
-				unit_movepos(src, x, y, 1, 0);
+				unit->movepos(src, x, y, 1, 0);
 				clif->slide(src,x,y);
 			}
 			status_change_end(src, SC_HIDING, INVALID_TIMER);
@@ -10248,7 +10248,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case SC_FEINTBOMB:
 			skill->unitsetting(src,skill_id,skill_lv,x,y,0); // Set bomb on current Position
 			clif->skill_nodamage(src,src,skill_id,skill_lv,1);
-			if( skill->blown(src,src,6,unit_getdir(src),0) )
+			if( skill->blown(src,src,6,unit->getdir(src),0) )
 				skill->castend_nodamage_id(src,src,TF_HIDING,1,tick,0x2);
 			break;
 
@@ -10312,7 +10312,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			break;
 		case GN_FIRE_EXPANSION: {
 			int i;
-			struct unit_data *ud = unit_bl2ud(src);
+			struct unit_data *ud = unit->bl2ud(src);
 
 			if( !ud ) break;
 
@@ -11093,7 +11093,7 @@ int skill_unit_onplace (struct skill_unit *src, struct block_list *bl, unsigned 
 			} else if(bl->type == BL_MOB && battle_config.mob_warp&2) {
 				int16 m = iMap->mapindex2mapid(sg->val3);
 				if (m < 0) break; //Map not available on this map-server.
-				unit_warp(bl,m,sg->val2>>16,sg->val2&0xffff,CLR_TELEPORT);
+				unit->warp(bl,m,sg->val2>>16,sg->val2&0xffff,CLR_TELEPORT);
 			}
 		}
 			break;
@@ -11182,7 +11182,7 @@ int skill_unit_onplace (struct skill_unit *src, struct block_list *bl, unsigned 
 				break;
 			if (ss == bl) //Also needed to prevent infinite loop crash.
 				break;
-			skill->blown(ss,bl,skill->get_blewcount(sg->skill_id,sg->skill_lv),unit_getdir(bl),0);
+			skill->blown(ss,bl,skill->get_blewcount(sg->skill_id,sg->skill_lv),unit->getdir(bl),0);
 			break;
 
 		case UNT_WALLOFTHORN:
@@ -11399,7 +11399,7 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 
 		case UNT_SKIDTRAP:
 			{
-				skill->blown(&src->bl,bl,skill->get_blewcount(sg->skill_id,sg->skill_lv),unit_getdir(bl),0);
+				skill->blown(&src->bl,bl,skill->get_blewcount(sg->skill_id,sg->skill_lv),unit->getdir(bl),0);
 				sg->unit_id = UNT_USED_TRAPS;
 				clif->changetraplook(&src->bl, UNT_USED_TRAPS);
 				sg->limit=DIFF_TICK(tick,sg->tick)+1500;
@@ -11415,7 +11415,7 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 					if( td )
 						sec = DIFF_TICK(td->tick, tick);
 					if( sg->unit_id == UNT_MANHOLE || battle_config.skill_trap_type || !map_flag_gvg2(src->bl.m) ) {
-						unit_movepos(bl, src->bl.x, src->bl.y, 0, 0);
+						unit->movepos(bl, src->bl.x, src->bl.y, 0, 0);
 						clif->fixpos(bl);
 					}
 					sg->val2 = bl->id;
@@ -11644,7 +11644,7 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 				int i = battle->check_target(&src->bl, bl, BCT_ENEMY);
 				if( i > 0 && !(status_get_mode(bl)&MD_BOSS) )
 				{ // knock-back any enemy except Boss
-					skill->blown(&src->bl, bl, 2, unit_getdir(bl), 0);
+					skill->blown(&src->bl, bl, 2, unit->getdir(bl), 0);
 					clif->fixpos(bl);
 				}
 
@@ -11720,7 +11720,7 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 			if( tsd && !map[bl->m].flag.noteleport )
 				pc->randomwarp(tsd,3);
 			else if( bl->type == BL_MOB && battle_config.mob_warp&8 )
-				unit_warp(bl,-1,-1,-1,3);
+				unit->warp(bl,-1,-1,-1,3);
 			break;
 
 		case UNT_REVERBERATION:
@@ -11851,21 +11851,21 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 					distance_xy(src->bl.x, src->bl.y, bl->x, bl->y) <= range)// don't consider outer bounderies
 					sc_start(bl, type, 100, sg->skill_lv, sec);
 
-				if( unit_is_walking(bl) && // wait until target stop walking
+				if( unit->is_walking(bl) && // wait until target stop walking
 					( tsc && tsc->data[type] && tsc->data[type]->val4 >= tsc->data[type]->val3-range ))
 						break;
 
 				if( tsc && ( !tsc->data[type] || (tsc->data[type] && tsc->data[type]->val4 < 1 ) ) )
 					break;
 
-				if( unit_is_walking(bl) &&
+				if( unit->is_walking(bl) &&
 					distance_xy(src->bl.x, src->bl.y, bl->x, bl->y) > range )// going outside of boundaries? then force it to stop
-						unit_stop_walking(bl,1);
+						unit->stop_walking(bl,1);
 
-				if(	!unit_is_walking(bl) &&
+				if(	!unit->is_walking(bl) &&
 					distance_xy(src->bl.x, src->bl.y, bl->x, bl->y) <= range &&  // only snap if the target is inside the range or
 					src->bl.x != bl->x && src->bl.y != bl->y){// diagonal position parallel to VE's center
-					unit_movepos(bl, src->bl.x, src->bl.y, 0, 0);
+					unit->movepos(bl, src->bl.x, src->bl.y, 0, 0);
 					clif->fixpos(bl);
 				}
 			}
@@ -12193,7 +12193,7 @@ int skill_check_condition_char_sub (struct block_list *bl, va_list ap) {
 		switch(skill_id) {
 			case PR_BENEDICTIO: {
 				uint8 dir = iMap->calc_dir(&sd->bl,tsd->bl.x,tsd->bl.y);
-				dir = (unit_getdir(&sd->bl) + dir)%8; //This adjusts dir to account for the direction the sd is facing.
+				dir = (unit->getdir(&sd->bl) + dir)%8; //This adjusts dir to account for the direction the sd is facing.
 				if ((tsd->class_&MAPID_BASEMASK) == MAPID_ACOLYTE && (dir == 2 || dir == 6) //Must be standing to the left/right of Priest.
 					&& sd->status.sp >= 10)
 					p_sd[(*c)++]=tsd->bl.id;
@@ -12217,7 +12217,7 @@ int skill_check_condition_char_sub (struct block_list *bl, va_list ap) {
 			default: //Warning: Assuming Ensemble Dance/Songs for code speed. [Skotlex]
 				{
 					uint16 skill_lv;
-					if(pc_issit(tsd) || !unit_can_move(&tsd->bl))
+					if(pc_issit(tsd) || !unit->can_move(&tsd->bl))
 						return 0;
 					if (sd->status.sex != tsd->status.sex &&
 							(tsd->class_&MAPID_UPPERMASK) == MAPID_BARDDANCER &&
@@ -12546,7 +12546,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 						return 0;
 				}
 			}
-			else if( !unit_can_move(&sd->bl) )
+			else if( !unit->can_move(&sd->bl) )
 			{	//Placed here as ST_MOVE_ENABLE should not apply if rooted or on a combo. [Skotlex]
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;
@@ -12590,7 +12590,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				return 0;
 			}
 			if(sc->data[SC_COMBOATTACK]->val1 != skill_id && !( sd && sd->status.base_level >= 90 && pc->famerank(sd->status.char_id, MAPID_TAEKWON) )) {	//Cancel combo wait.
-				unit_cancel_combo(&sd->bl);
+				unit->cancel_combo(&sd->bl);
 				return 0;
 			}
 			break; //Combo ready.
@@ -13093,7 +13093,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			if (sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == skill_id)
 				sd->ud.canmove_tick = iTimer->gettick(); //When using a combo, cancel the can't move delay to enable the skill. [Skotlex]
 
-			if (!unit_can_move(&sd->bl)) {
+			if (!unit->can_move(&sd->bl)) {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;
 			}
@@ -14614,7 +14614,7 @@ int skill_attack_area (struct block_list *bl, va_list ap)
  *------------------------------------------*/
 int skill_clear_group (struct block_list *bl, int flag)
 {
-	struct unit_data *ud = unit_bl2ud(bl);
+	struct unit_data *ud = unit->bl2ud(bl);
 	struct skill_unit_group *group[MAX_SKILLUNITGROUP];
 	int i, count=0;
 
@@ -14653,7 +14653,7 @@ int skill_clear_group (struct block_list *bl, int flag)
  * Returns the first element field found [Skotlex]
  *------------------------------------------*/
 struct skill_unit_group *skill_locate_element_field(struct block_list *bl) {
-	struct unit_data *ud = unit_bl2ud(bl);
+	struct unit_data *ud = unit->bl2ud(bl);
 	int i;
 	nullpo_ret(bl);
 	if (!ud) return NULL;
@@ -14859,7 +14859,7 @@ int skill_cell_overlap(struct block_list *bl, va_list ap) {
 int skill_chastle_mob_changetarget(struct block_list *bl,va_list ap)
 {
 	struct mob_data* md;
-	struct unit_data*ud = unit_bl2ud(bl);
+	struct unit_data*ud = unit->bl2ud(bl);
 	struct block_list *from_bl;
 	struct block_list *to_bl;
 	md = (struct mob_data*)bl;
@@ -15247,7 +15247,7 @@ static int skill_get_new_group_id(void)
 
 struct skill_unit_group* skill_initunitgroup (struct block_list* src, int count, uint16 skill_id, uint16 skill_lv, int unit_id, int limit, int interval)
 {
-	struct unit_data* ud = unit_bl2ud( src );
+	struct unit_data* ud = unit->bl2ud( src );
 	struct skill_unit_group* group;
 	int i;
 
@@ -15318,7 +15318,7 @@ int skill_delunitgroup(struct skill_unit_group *group, const char* file, int lin
 	}
 
 	src=iMap->id2bl(group->src_id);
-	ud = unit_bl2ud(src);
+	ud = unit->bl2ud(src);
 	if(!src || !ud) {
 		ShowError("skill_delunitgroup: Group's source not found! (src_id: %d skill_id: %d)\n", group->src_id, group->skill_id);
 		return 0;
@@ -15442,7 +15442,7 @@ int skill_delunitgroup(struct skill_unit_group *group, const char* file, int lin
  *------------------------------------------*/
 int skill_clear_unitgroup (struct block_list *src)
 {
-	struct unit_data *ud = unit_bl2ud(src);
+	struct unit_data *ud = unit->bl2ud(src);
 
 	nullpo_ret(ud);
 
@@ -15464,7 +15464,7 @@ struct skill_unit_group_tickset *skill_unitgrouptickset_search (struct block_lis
 	if (group->interval==-1)
 		return NULL;
 
-	ud = unit_bl2ud(bl);
+	ud = unit->bl2ud(bl);
 	if (!ud) return NULL;
 
 	set = ud->skillunittick;

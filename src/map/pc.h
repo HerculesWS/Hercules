@@ -645,8 +645,8 @@ enum equip_pos {
 // Rune Knight Dragon
 #define pc_isridingdragon(sd) ( (sd)->sc.option&OPTION_DRAGON )
 
-#define pc_stop_walking(sd, type) unit_stop_walking(&(sd)->bl, type)
-#define pc_stop_attack(sd) unit_stop_attack(&(sd)->bl)
+#define pc_stop_walking(sd, type) unit->stop_walking(&(sd)->bl, type)
+#define pc_stop_attack(sd) unit->stop_attack(&(sd)->bl)
 
 //Weapon check considering dual wielding.
 #define pc_check_weapontype(sd, type) ((type)&((sd)->status.weapon < MAX_WEAPON_TYPE? \

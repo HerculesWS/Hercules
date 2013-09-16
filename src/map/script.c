@@ -12635,7 +12635,7 @@ BUILDIN(npcspeed) {
 	nd = (struct npc_data *)iMap->id2bl(st->oid);
 	
 	if( nd ) {
-		unit_bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
+		unit->bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
 		nd->speed = speed;
 		nd->ud->state.speed_changed = 1;
 	}
@@ -12651,13 +12651,13 @@ BUILDIN(npcwalkto) {
 	y=script_getnum(st,3);
 	
 	if( nd ) {
-		unit_bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
+		unit->bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
 		if (!nd->status.hp) {
 			status_calc_npc(nd, true);
 		} else {
 			status_calc_npc(nd, false);
 		}
-		unit_walktoxy(&nd->bl,x,y,0);
+		unit->walktoxy(&nd->bl,x,y,0);
 	}
 	
 	return true;
@@ -12667,8 +12667,8 @@ BUILDIN(npcstop) {
 	struct npc_data *nd = (struct npc_data *)iMap->id2bl(st->oid);
 	
 	if( nd ) {
-		unit_bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
-		unit_stop_walking(&nd->bl,1|4);
+		unit->bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
+		unit->stop_walking(&nd->bl,1|4);
 	}
 	
 	return true;
@@ -14918,15 +14918,15 @@ BUILDIN(unitwalk) {
 	}
 
 	if( bl->type == BL_NPC ) {
-		unit_bl2ud2(bl); // ensure the ((TBL_NPC*)bl)->ud is safe to edit
+		unit->bl2ud2(bl); // ensure the ((TBL_NPC*)bl)->ud is safe to edit
 	}
 	if( script_hasdata(st,4) ) {
 		int x = script_getnum(st,3);
 		int y = script_getnum(st,4);
-		script_pushint(st, unit_walktoxy(bl,x,y,0));// We'll use harder calculations.
+		script_pushint(st, unit->walktoxy(bl,x,y,0));// We'll use harder calculations.
 	} else {
 		int map_id = script_getnum(st,3);
-		script_pushint(st, unit_walktobl(bl,iMap->id2bl(map_id),65025,1));
+		script_pushint(st, unit->walktobl(bl,iMap->id2bl(map_id),65025,1));
 	}
 	
 	return true;
@@ -14972,8 +14972,8 @@ BUILDIN(unitwarp) {
 		map = iMap->mapname2mapid(mapname);
 	
 	if( map >= 0 && bl != NULL ) {
-		unit_bl2ud2(bl); // ensure ((TBL_NPC*)bl)->ud is safe to edit
-		script_pushint(st, unit_warp(bl,map,x,y,CLR_OUTSIGHT));
+		unit->bl2ud2(bl); // ensure ((TBL_NPC*)bl)->ud is safe to edit
+		script_pushint(st, unit->warp(bl,map,x,y,CLR_OUTSIGHT));
 	} else {
 		script_pushint(st, 0);
 	}
@@ -15039,7 +15039,7 @@ BUILDIN(unitattack)
 			script_pushint(st, 0);
 			return false;
 	}
-	script_pushint(st, unit_walktobl(unit_bl, target_bl, 65025, 2));
+	script_pushint(st, unit->walktobl(unit_bl, target_bl, 65025, 2));
 	return true;
 }
 
@@ -15055,9 +15055,9 @@ BUILDIN(unitstop) {
 	bl = iMap->id2bl(unit_id);
 	if( bl != NULL )
 	{
-		unit_bl2ud2(bl); // ensure ((TBL_NPC*)bl)->ud is safe to edit
-		unit_stop_attack(bl);
-		unit_stop_walking(bl,4);
+		unit->bl2ud2(bl); // ensure ((TBL_NPC*)bl)->ud is safe to edit
+		unit->stop_attack(bl);
+		unit->stop_walking(bl,4);
 		if( bl->type == BL_MOB )
 			((TBL_MOB*)bl)->target_id = 0;
 	}
@@ -15139,7 +15139,7 @@ BUILDIN(unitskilluseid)
 				status_calc_npc(((TBL_NPC*)bl), false);
 			}
 		}
-		unit_skilluse_id(bl, target_id, skill_id, skill_lv);
+		unit->skilluse_id(bl, target_id, skill_id, skill_lv);
 	}
 	
 	return true;
@@ -15174,7 +15174,7 @@ BUILDIN(unitskillusepos)
 				status_calc_npc(((TBL_NPC*)bl), false);
 			}
 		}
-		unit_skilluse_pos(bl, skill_x, skill_y, skill_id, skill_lv);
+		unit->skilluse_pos(bl, skill_x, skill_y, skill_id, skill_lv);
 	}
 	
 	return true;
@@ -16373,12 +16373,12 @@ static int buildin_mobuseskill_sub(struct block_list *bl,va_list ap)
 		return 0;
 	
 	if( md->ud.skilltimer != INVALID_TIMER ) // Cancel the casting skill.
-		unit_skillcastcancel(bl,0);
+		unit->skillcastcancel(bl,0);
 	
 	if( skill->get_casttype(skill_id) == CAST_GROUND )
-		unit_skilluse_pos2(&md->bl, tbl->x, tbl->y, skill_id, skill_lv, casttime, cancel);
+		unit->skilluse_pos2(&md->bl, tbl->x, tbl->y, skill_id, skill_lv, casttime, cancel);
 	else
-		unit_skilluse_id2(&md->bl, tbl->id, skill_id, skill_lv, casttime, cancel);
+		unit->skilluse_id2(&md->bl, tbl->id, skill_id, skill_lv, casttime, cancel);
 	
 	clif->emotion(&md->bl, emotion);
 	
@@ -16475,7 +16475,7 @@ BUILDIN(pushpc)
 	dx = dirx[dir];
 	dy = diry[dir];
 	
-	unit_blown(&sd->bl, dx, dy, cells, 0);
+	unit->blown(&sd->bl, dx, dy, cells, 0);
 	return true;
 }
 
@@ -17140,9 +17140,9 @@ BUILDIN(npcskill)
 	}
 	
 	if (skill->get_inf(skill_id)&INF_GROUND_SKILL) {
-		unit_skilluse_pos(&nd->bl, sd->bl.x, sd->bl.y, skill_id, skill_level);
+		unit->skilluse_pos(&nd->bl, sd->bl.x, sd->bl.y, skill_id, skill_level);
 	} else {
-		unit_skilluse_id(&nd->bl, sd->bl.id, skill_id, skill_level);
+		unit->skilluse_id(&nd->bl, sd->bl.id, skill_id, skill_level);
 	}
 	
 	return true;

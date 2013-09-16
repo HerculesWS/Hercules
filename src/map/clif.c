@@ -902,7 +902,7 @@ void clif_set_unit_idle2(struct block_list* bl, struct map_session_data *tsd, en
 	p.virtue = (sc) ? sc->opt3 : 0;
 	p.isPKModeON = (sd) ? sd->status.karma : 0;
 	p.sex = vd->sex;
-	WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit_getdir(bl));
+	WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit->getdir(bl));
 	p.xSize = p.ySize = (sd) ? 5 : 0;
 	p.state = vd->dead_sit;
 	p.clevel = clif_setlevel(bl);
@@ -965,7 +965,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	p.virtue = (sc) ? sc->opt3 : 0;
 	p.isPKModeON = (sd) ? sd->status.karma : 0;
 	p.sex = vd->sex;
-	WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit_getdir(bl));
+	WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit->getdir(bl));
 	p.xSize = p.ySize = (sd) ? 5 : 0;
 	p.state = vd->dead_sit;
 	p.clevel = clif_setlevel(bl);
@@ -1034,7 +1034,7 @@ void clif_spawn_unit2(struct block_list* bl, enum send_target target) {
 	p.headDir = (sd)? sd->head_dir : 0;
 	p.isPKModeON = (sd) ? sd->status.karma : 0;
 	p.sex = vd->sex;
-	WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit_getdir(bl));
+	WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit->getdir(bl));
 	p.xSize = p.ySize = (sd) ? 5 : 0;
 
 	clif->send(&p,sizeof(p),bl,target);
@@ -1092,7 +1092,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	p.virtue = (sc) ? sc->opt3 : 0;
 	p.isPKModeON = (sd) ? sd->status.karma : 0;
 	p.sex = vd->sex;
-	WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit_getdir(bl));
+	WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit->getdir(bl));
 	p.xSize = p.ySize = (sd) ? 5 : 0;
 	p.clevel = clif_setlevel(bl);
 #if PACKETVER >= 20080102
@@ -4328,7 +4328,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 	if(bl->type == BL_NPC && !((TBL_NPC*)bl)->chat_id && (((TBL_NPC*)bl)->option&OPTION_INVISIBLE))
 		return;
 
-	if ( ( ud = unit_bl2ud(bl) ) && ud->walktimer != INVALID_TIMER )
+	if ( ( ud = unit->bl2ud(bl) ) && ud->walktimer != INVALID_TIMER )
 		clif->set_unit_walking(bl,sd,ud,SELF);
 	else
 		clif->set_unit_idle(bl,sd,SELF);
@@ -4512,7 +4512,7 @@ int clif_damage(struct block_list* src, struct block_list* dst, unsigned int tic
 	}
 
 	if(src == dst) {
-		unit_setdir(src,unit_getdir(src));
+		unit->setdir(src,unit->getdir(src));
 	}
 	//Return adjusted can't walk delay for further processing.
 	return clif->calc_walkdelay(dst,ddelay,type,damage+damage2,div);
@@ -9784,7 +9784,7 @@ void clif_parse_WalkToXY(int fd, struct map_session_data *sd)
 	//Set last idle time... [Skotlex]
 	sd->idletime = last_tick;
 
-	unit_walktoxy(&sd->bl, x, y, 4);
+	unit->walktoxy(&sd->bl, x, y, 4);
 }
 
 
@@ -9945,7 +9945,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 			pc->disguise(sd,sd->status.class_);
 			if( pc_isdead(sd) )
 				clif_clearunit_single(-sd->bl.id, CLR_DEAD, sd->fd);
-			if( unit_is_walking(&sd->bl) )
+			if( unit->is_walking(&sd->bl) )
 				clif->move(&sd->ud);
 		} else if ( sd->disguise == sd->status.class_ && sd->fontcolor_tid != INVALID_TIMER ) {
 			const struct TimerData *timer;
@@ -10045,7 +10045,7 @@ void clif_changed_dir(struct block_list *bl, enum send_target target)
 	WBUFW(buf,0) = 0x9c;
 	WBUFL(buf,2) = bl->id;
 	WBUFW(buf,6) = bl->type==BL_PC?((TBL_PC*)bl)->head_dir:0;
-	WBUFB(buf,8) = unit_getdir(bl);
+	WBUFB(buf,8) = unit->getdir(bl);
 
 	clif->send(buf, packet_len(0x9c), bl, target);
 
@@ -10169,7 +10169,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 
 			pc->delinvincibletimer(sd);
 			sd->idletime = last_tick;
-			unit_attack(&sd->bl, target_id, action_type != 0);
+			unit->attack(&sd->bl, target_id, action_type != 0);
 		break;
 		case 0x02: // sitdown
 			if (battle_config.basic_skill_check && pc->checkskill(sd, NV_BASIC) < 3) {
@@ -11248,7 +11248,7 @@ void clif_parse_UseSkillToId_homun(struct homun_data *hd, struct map_session_dat
 	if( skill_lv > lv )
 		skill_lv = lv;
 	if( skill_lv )
-		unit_skilluse_id(&hd->bl, target_id, skill_id, skill_lv);
+		unit->skilluse_id(&hd->bl, target_id, skill_id, skill_lv);
 }
 
 void clif_parse_UseSkillToPos_homun(struct homun_data *hd, struct map_session_data *sd, unsigned int tick, uint16 skill_id, uint16 skill_lv, short x, short y, int skillmoreinfo)
@@ -11269,7 +11269,7 @@ void clif_parse_UseSkillToPos_homun(struct homun_data *hd, struct map_session_da
 	if( skill_lv > lv )
 		skill_lv = lv;
 	if( skill_lv )
-		unit_skilluse_pos(&hd->bl, x, y, skill_id, skill_lv);
+		unit->skilluse_pos(&hd->bl, x, y, skill_id, skill_lv);
 }
 
 void clif_parse_UseSkillToId_mercenary(struct mercenary_data *md, struct map_session_data *sd, unsigned int tick, uint16 skill_id, uint16 skill_lv, int target_id)
@@ -11291,7 +11291,7 @@ void clif_parse_UseSkillToId_mercenary(struct mercenary_data *md, struct map_ses
 	if( skill_lv > lv )
 		skill_lv = lv;
 	if( skill_lv )
-		unit_skilluse_id(&md->bl, target_id, skill_id, skill_lv);
+		unit->skilluse_id(&md->bl, target_id, skill_id, skill_lv);
 }
 
 void clif_parse_UseSkillToPos_mercenary(struct mercenary_data *md, struct map_session_data *sd, unsigned int tick, uint16 skill_id, uint16 skill_lv, short x, short y, int skillmoreinfo)
@@ -11314,7 +11314,7 @@ void clif_parse_UseSkillToPos_mercenary(struct mercenary_data *md, struct map_se
 	if( skill_lv > lv )
 		skill_lv = lv;
 	if( skill_lv )
-		unit_skilluse_pos(&md->bl, x, y, skill_id, skill_lv);
+		unit->skilluse_pos(&md->bl, x, y, skill_id, skill_lv);
 }
 
 
@@ -11398,7 +11398,7 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 			skill_lv = sd->skillitemlv;
 		if( !(tmp&INF_SELF_SKILL) )
 			pc->delinvincibletimer(sd); // Target skills thru items cancel invincibility. [Inkfish]
-		unit_skilluse_id(&sd->bl, target_id, skill_id, skill_lv);
+		unit->skilluse_id(&sd->bl, target_id, skill_id, skill_lv);
 		return;
 	}
 
@@ -11418,7 +11418,7 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 	pc->delinvincibletimer(sd);
 
 	if( skill_lv )
-		unit_skilluse_id(&sd->bl, target_id, skill_id, skill_lv);
+		unit->skilluse_id(&sd->bl, target_id, skill_id, skill_lv);
 }
 
 /*==========================================
@@ -11490,14 +11490,14 @@ void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uint16 ski
 	if( sd->skillitem == skill_id ) {
 		if( skill_lv != sd->skillitemlv )
 			skill_lv = sd->skillitemlv;
-		unit_skilluse_pos(&sd->bl, x, y, skill_id, skill_lv);
+		unit->skilluse_pos(&sd->bl, x, y, skill_id, skill_lv);
 	} else {
 		int lv;
 		sd->skillitem = sd->skillitemlv = 0;
 		if( (lv = pc->checkskill(sd, skill_id)) > 0 ) {
 			if( skill_lv > lv )
 				skill_lv = lv;
-			unit_skilluse_pos(&sd->bl, x, y, skill_id,skill_lv);
+			unit->skilluse_pos(&sd->bl, x, y, skill_id,skill_lv);
 		}
 	}
 }
@@ -14282,9 +14282,9 @@ void clif_parse_HomMoveToMaster(int fd, struct map_session_data *sd)
 	else
 		return;
 
-	unit_calc_pos(bl, sd->bl.x, sd->bl.y, sd->ud.dir);
-	ud = unit_bl2ud(bl);
-	unit_walktoxy(bl, ud->to_x, ud->to_y, 4);
+	unit->calc_pos(bl, sd->bl.x, sd->bl.y, sd->ud.dir);
+	ud = unit->bl2ud(bl);
+	unit->walktoxy(bl, ud->to_x, ud->to_y, 4);
 }
 
 
@@ -14305,7 +14305,7 @@ void clif_parse_HomMoveTo(int fd, struct map_session_data *sd)
 	else
 		return;
 
-	unit_walktoxy(bl, x, y, 4);
+	unit->walktoxy(bl, x, y, 4);
 }
 
 
@@ -14326,8 +14326,8 @@ void clif_parse_HomAttack(int fd,struct map_session_data *sd)
 		bl = &sd->md->bl;
 	else return;
 
-	unit_stop_attack(bl);
-	unit_attack(bl, target_id, action_type != 0);
+	unit->stop_attack(bl);
+	unit->attack(bl, target_id, action_type != 0);
 }
 
 

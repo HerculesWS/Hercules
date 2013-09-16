@@ -1082,7 +1082,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 		
 	//Set here because we need the inventory data for weapon sprite parsing.
 	iStatus->set_viewdata(&sd->bl, sd->status.class_);
-	unit_dataset(&sd->bl);
+	unit->dataset(&sd->bl);
 
 	sd->guild_x = -1;
 	sd->guild_y = -1;
@@ -4933,7 +4933,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 			npc_event_dequeue(sd);
 		npc_script_event(sd, NPCE_LOGOUT);
 		//remove from map, THEN change x/y coordinates
-		unit_remove_map_pc(sd,clrtype);
+		unit->remove_map_pc(sd,clrtype);
 		sd->mapindex = mapindex;
 		sd->bl.x=x;
 		sd->bl.y=y;
@@ -4942,7 +4942,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		chrif->changemapserver(sd, ip, (short)port);
 
 		//Free session data from this map server [Kevin]
-		unit_free_pc(sd);
+		unit->free_pc(sd);
 
 		return 0;
 	}
@@ -4965,7 +4965,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 	}
 
 	if(sd->bl.prev != NULL){
-		unit_remove_map_pc(sd,clrtype);
+		unit->remove_map_pc(sd,clrtype);
 		clif->changemap(sd,m,x,y); // [MouseJstr]
 	} else if(sd->state.active)
 		//Tag player for rewarping after map-loading is done. [Skotlex]
@@ -5730,9 +5730,9 @@ int pc_follow_timer(int tid, unsigned int tick, int id, intptr_t data)
 	if (sd->bl.prev != NULL && tbl->prev != NULL &&
 		sd->ud.skilltimer == INVALID_TIMER && sd->ud.attacktimer == INVALID_TIMER && sd->ud.walktimer == INVALID_TIMER)
 	{
-		if((sd->bl.m == tbl->m) && unit_can_reach_bl(&sd->bl,tbl, AREA_SIZE, 0, NULL, NULL)) {
+		if((sd->bl.m == tbl->m) && unit->can_reach_bl(&sd->bl,tbl, AREA_SIZE, 0, NULL, NULL)) {
 			if (!check_distance_bl(&sd->bl, tbl, 5))
-				unit_walktobl(&sd->bl, tbl, 5, 0);
+				unit->walktobl(&sd->bl, tbl, 5, 0);
 		} else
 			pc->setpos(sd, map_id2index(tbl->m), tbl->x, tbl->y, CLR_TELEPORT);
 	}
@@ -5753,7 +5753,7 @@ int pc_stop_following (struct map_session_data *sd)
 	sd->followtarget = -1;
 	sd->ud.target_to = 0;
 
-	unit_stop_walking(&sd->bl, 1);
+	unit->stop_walking(&sd->bl, 1);
 	
 	return 0;
 }

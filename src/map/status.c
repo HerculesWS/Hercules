@@ -1225,7 +1225,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 			if(sc->data[SC_KAGEMUSYA] && --(sc->data[SC_KAGEMUSYA]->val3) <= 0)
 				status_change_end(target, SC_KAGEMUSYA, INVALID_TIMER);
 		}
-		unit_skillcastcancel(target, 2);
+		unit->skillcastcancel(target, 2);
 	}
 
 	status->hp-= hp;
@@ -1253,13 +1253,13 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 	}
 
 	if( src && target->type == BL_PC && (((TBL_PC*)target)->disguise) > 0 ) {// stop walking when attacked in disguise to prevent walk-delay bug
-		unit_stop_walking( target, 1 );
+		unit->stop_walking( target, 1 );
 	}
 
 	if( status->hp || (flag&8) )
 	{	//Still lives or has been dead before this damage.
 		if (walkdelay)
-			unit_set_walkdelay(target, iTimer->gettick(), walkdelay, 0);
+			unit->set_walkdelay(target, iTimer->gettick(), walkdelay, 0);
 		return (int)(hp+sp);
 	}
 
@@ -1339,13 +1339,13 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 	iStatus->change_clear(target,0);
 
 	if(flag&4) //Delete from memory. (also invokes map removal code)
-		unit_free(target,CLR_DEAD);
+		unit->free(target,CLR_DEAD);
 	else if(flag&2) //remove from map
-		unit_remove_map(target,CLR_DEAD);
+		unit->remove_map(target,CLR_DEAD,ALC_MARK);
 	else { //Some death states that would normally be handled by unit_remove_map
-		unit_stop_attack(target);
-		unit_stop_walking(target,1);
-		unit_skillcastcancel(target,0);
+		unit->stop_attack(target);
+		unit->stop_walking(target,1);
+		unit->skillcastcancel(target,0);
 		clif->clearunit_area(target,CLR_DEAD);
 		skill->unit_move(target,iTimer->gettick(),4);
 		skill->cleartimerskill(target);
@@ -1628,8 +1628,8 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 			return 0;
 
 		if (sc->data[SC_DC_WINKCHARM] && target && !flag) { //Prevents skill usage
-			if( unit_bl2ud(src) && (unit_bl2ud(src))->walktimer == INVALID_TIMER )
-				unit_walktobl(src, iMap->id2bl(sc->data[SC_DC_WINKCHARM]->val2), 3, 1);
+			if( unit->bl2ud(src) && (unit->bl2ud(src))->walktimer == INVALID_TIMER )
+				unit->walktobl(src, iMap->id2bl(sc->data[SC_DC_WINKCHARM]->val2), 3, 1);
 			clif->emotion(src, E_LV);
 			return 0;
 		}
@@ -2088,7 +2088,7 @@ int status_calc_mob_(struct mob_data* md, bool first)
 
 	if (flag&16 && mbl)
 	{	//Max HP setting from Summon Flora/marine Sphere
-		struct unit_data *ud = unit_bl2ud(mbl);
+		struct unit_data *ud = unit->bl2ud(mbl);
 		//Remove special AI when this is used by regular mobs.
 		if (mbl->type == BL_MOB && !((TBL_MOB*)mbl)->special_state.ai)
 			md->special_state.ai = 0;
@@ -3743,7 +3743,7 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag)
 	}
 
 	if(flag&SCB_SPEED) {
-		struct unit_data *ud = unit_bl2ud(bl);
+		struct unit_data *ud = unit->bl2ud(bl);
 		status->speed = status_calc_speed(bl, sc, b_status->speed);
 
 		//Re-walk to adjust speed (we do not check if walktimer != INVALID_TIMER
@@ -3798,9 +3798,9 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag)
 		status->mode = status_calc_mode(bl, sc, b_status->mode);
 		//Since mode changed, reset their state.
 		if (!(status->mode&MD_CANATTACK))
-			unit_stop_attack(bl);
+			unit->stop_attack(bl);
 		if (!(status->mode&MD_CANMOVE))
-			unit_stop_walking(bl,1);
+			unit->stop_walking(bl,1);
 	}
 
 	// No status changes alter these yet.
@@ -5883,7 +5883,7 @@ defType status_get_def(struct block_list *bl) {
 	struct unit_data *ud;
 	struct status_data *status = iStatus->get_status_data(bl);
 	int def = status?status->def:0;
-	ud = unit_bl2ud(bl);
+	ud = unit->bl2ud(bl);
 	if (ud && ud->skilltimer != INVALID_TIMER)
 		def -= def * skill->get_castdef(ud->skill_id)/100;
 
@@ -7554,7 +7554,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		case SC_HANBOK:
 			if (!vd) return 0;
 			//Store previous values as they could be removed.
-			unit_stop_attack(bl);
+			unit->stop_attack(bl);
 			break;
 		case SC_NOCHAT:
 			// [GodLesZ] FIXME: is this correct? a hardcoded interval of 60sec? what about configuration ?_?
@@ -7914,11 +7914,11 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			//val3: When set, this combo time should NOT delay attack/movement
 			//val3: TK: Last used kick
 			//val4: TK: Combo time
-			struct unit_data *ud = unit_bl2ud(bl);
+			struct unit_data *ud = unit->bl2ud(bl);
 			if (ud && !val3) {
 				tick += 300 * battle_config.combo_delay_rate/100;
 				ud->attackabletime = iTimer->gettick()+tick;
-				unit_set_walkdelay(bl, iTimer->gettick(), tick, 1);
+				unit->set_walkdelay(bl, iTimer->gettick(), tick, 1);
 			}
 			val3 = 0;
 			val4 = tick;
@@ -8498,7 +8498,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			break;
 		case SC_UNLIMITED_HUMMING_VOICE:
 			{
-				struct unit_data *ud = unit_bl2ud(bl);
+				struct unit_data *ud = unit->bl2ud(bl);
 				if( ud == NULL ) return 0;
 				ud->state.skillcastcancel = 0;
 				val3 = 15 - (2 * val2);
@@ -8861,9 +8861,9 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		status_change_end(bl, SC_DANCING, INVALID_TIMER);
 		// Cancel cast when get status [LuzZza]
 		if (battle_config.sc_castcancel&bl->type)
-			unit_skillcastcancel(bl, 0);
+			unit->skillcastcancel(bl, 0);
 	case SC_WHITEIMPRISON:
-		unit_stop_attack(bl);
+		unit->stop_attack(bl);
 	case SC_STOP:
 	case SC_CONFUSION:
 	case SC_RG_CCONFINE_M:
@@ -8882,11 +8882,11 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 	case SC_KYOUGAKU:
 	case SC_NEEDLE_OF_PARALYZE:
 	case SC_DEATHBOUND:
-		unit_stop_walking(bl,1);
+		unit->stop_walking(bl,1);
 		break;
 	case SC_ANKLESNARE:
 		if( battle_config.skill_trap_type || !map_flag_gvg(bl->m) )
-			unit_stop_walking(bl,1);
+			unit->stop_walking(bl,1);
 		break;
 	case SC_HIDING:
 	case SC_CLOAKING:
@@ -8895,11 +8895,11 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 	case SC_WEIGHTOVER90:
 	case SC_CAMOUFLAGE:
 	case SC_SIREN:
-		unit_stop_attack(bl);
+		unit->stop_attack(bl);
 		break;
 	case SC_SILENCE:
 		if (battle_config.sc_castcancel&bl->type)
-			unit_skillcastcancel(bl, 0);
+			unit->skillcastcancel(bl, 0);
 		break;
 		/* */
 	case SC_ITEMSCRIPT:
@@ -9148,9 +9148,9 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		break;
 	case SC_RUN:
 		{
-			struct unit_data *ud = unit_bl2ud(bl);
+			struct unit_data *ud = unit->bl2ud(bl);
 			if( ud )
-				ud->state.running = unit_run(bl);
+				ud->state.running = unit->run(bl);
 		}
 		break;
 	case SC_CASH_BOSS_ALARM:
@@ -9167,9 +9167,9 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		**/
 	case SC_WUGDASH:
 		{
-			struct unit_data *ud = unit_bl2ud(bl);
+			struct unit_data *ud = unit->bl2ud(bl);
 			if( ud )
-				ud->state.running = unit_wugdash(bl, sd);
+				ud->state.running = unit->wugdash(bl, sd);
 		}
 		break;
 	case SC_COMBOATTACK:
@@ -9365,14 +9365,14 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		break;
 	case SC_RUN:
 		{
-			struct unit_data *ud = unit_bl2ud(bl);
+			struct unit_data *ud = unit->bl2ud(bl);
 			bool begin_spurt = true;
 			if (ud) {
 				if(!ud->state.running)
 					begin_spurt = false;
 				ud->state.running = 0;
 				if (ud->walktimer != INVALID_TIMER)
-					unit_stop_walking(bl,1);
+					unit->stop_walking(bl,1);
 			}
 			if (begin_spurt && sce->val1 >= 7 &&
 				DIFF_TICK(iTimer->gettick(), sce->val4) <= 1000 &&
@@ -9681,11 +9681,11 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		break;
 	case SC_WUGDASH:
 		{
-			struct unit_data *ud = unit_bl2ud(bl);
+			struct unit_data *ud = unit->bl2ud(bl);
 			if (ud) {
 				ud->state.running = 0;
 				if (ud->walktimer != -1)
-					unit_stop_walking(bl,1);
+					unit->stop_walking(bl,1);
 			}
 		}
 		break;
@@ -10131,8 +10131,8 @@ int status_change_timer(int tid, unsigned int tick, int id, intptr_t data)
 	case SC_STONE:
 		if(sc->opt1 == OPT1_STONEWAIT && sce->val3) {
 			sce->val4 = 0;
-			unit_stop_walking(bl,1);
-			unit_stop_attack(bl);
+			unit->stop_walking(bl,1);
+			unit->stop_attack(bl);
 			sc->opt1 = OPT1_STONE;
 			clif->changeoption(bl);
 			sc_timer_next(1000+tick,iStatus->change_timer, bl->id, data );
@@ -10392,7 +10392,7 @@ int status_change_timer(int tid, unsigned int tick, int id, intptr_t data)
 		if( --(sce->val4) > 0 ) {
 			int damage = status->max_hp/100; // {Target VIT x (New Poison Research Skill Level - 3)} + (Target HP/100)
 			damage += status->vit * (sce->val1 - 3);
-			unit_skillcastcancel(bl,2);
+			unit->skillcastcancel(bl,2);
 			iMap->freeblock_lock();
 			iStatus->damage(bl, bl, damage, 0, clif->damage(bl,bl,tick,status_get_amotion(bl),status_get_dmotion(bl)+500,damage,1,0,0), 1);
 			if( sc->data[type] ) {
@@ -10420,8 +10420,8 @@ int status_change_timer(int tid, unsigned int tick, int id, intptr_t data)
 			if( !flag ) { // Random Skill Cast
 				if (sd && !pc_issit(sd)) { //can't cast if sit
 					int mushroom_skill_id = 0, i;
-					unit_stop_attack(bl);
-					unit_skillcastcancel(bl,1);
+					unit->stop_attack(bl);
+					unit->skillcastcancel(bl,1);
 					do {
 						i = rnd() % MAX_SKILL_MAGICMUSHROOM_DB;
 						mushroom_skill_id = skill_magicmushroom_db[i].skill_id;
@@ -10618,7 +10618,7 @@ int status_change_timer(int tid, unsigned int tick, int id, intptr_t data)
 			iMap->freeblock_lock();
 			damage =  sce->val3;
 			iStatus->damage(src, bl, damage, 0, clif->damage(bl,bl,tick,status->amotion,status->dmotion+200,damage,1,0,0), 1);
-			unit_skillcastcancel(bl,1);
+			unit->skillcastcancel(bl,1);
 			if ( sc->data[type] ) {
 				sc_timer_next(1000 + tick, iStatus->change_timer, bl->id, data);
 			}
@@ -11299,7 +11299,7 @@ static int status_natural_heal(struct block_list* bl, va_list args)
 	if (flag && regen->state.overweight)
 		flag=0;
 
-	ud = unit_bl2ud(bl);
+	ud = unit->bl2ud(bl);
 
 	if (flag&(RGN_HP|RGN_SHP|RGN_SSP) && ud && ud->walktimer != INVALID_TIMER)
 	{

@@ -1453,11 +1453,11 @@ ACMD(help) {
 // parameter: '0' - everyone, 'id' - only those attacking someone with that id
 static int atcommand_stopattack(struct block_list *bl,va_list ap)
 {
-	struct unit_data *ud = unit_bl2ud(bl);
+	struct unit_data *ud = unit->bl2ud(bl);
 	int id = va_arg(ap, int);
 	if (ud && ud->attacktimer != INVALID_TIMER && (!id || id == ud->target))
 	{
-		unit_stop_attack(bl);
+		unit->stop_attack(bl);
 		return 1;
 	}
 	return 0;
@@ -5429,9 +5429,9 @@ ACMD(useskill)
 		bl = &sd->bl;
 	
 	if (skill->get_inf(skill_id)&INF_GROUND_SKILL)
-		unit_skilluse_pos(bl, pl_sd->bl.x, pl_sd->bl.y, skill_id, skill_lv);
+		unit->skilluse_pos(bl, pl_sd->bl.x, pl_sd->bl.y, skill_id, skill_lv);
 	else
-		unit_skilluse_id(bl, pl_sd->bl.id, skill_id, skill_lv);
+		unit->skilluse_id(bl, pl_sd->bl.id, skill_id, skill_lv);
 	
 	return true;
 }

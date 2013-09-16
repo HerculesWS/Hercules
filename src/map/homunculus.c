@@ -157,7 +157,7 @@ int homunculus_vaporize(struct map_session_data *sd, int flag) {
 		memset(hd->blockskill, 0, sizeof(hd->blockskill));
 	clif->hominfo(sd, sd->hd, 0);
 	homun->save(hd);
-	return unit_remove_map(&hd->bl, CLR_OUTSIGHT);
+	return unit->remove_map(&hd->bl, CLR_OUTSIGHT, ALC_MARK);
 }
 
 //delete a homunculus, completely "killing it".
@@ -168,7 +168,7 @@ int homunculus_delete(struct homun_data *hd, int emote) {
 	sd = hd->master;
 
 	if (!sd)
-		return unit_free(&hd->bl,CLR_DEAD);
+		return unit->free(&hd->bl,CLR_DEAD);
 
 	if (emote >= 0)
 		clif->emotion(&sd->bl, emote);
@@ -178,7 +178,7 @@ int homunculus_delete(struct homun_data *hd, int emote) {
 	// Send homunculus_dead to client
 	hd->homunculus.hp = 0;
 	clif->hominfo(sd, hd, 0);
-	return unit_remove_map(&hd->bl,CLR_OUTSIGHT);
+	return unit->remove_map(&hd->bl,CLR_OUTSIGHT, ALC_MARK);
 }
 
 int homunculus_calc_skilltree(struct homun_data *hd, int flag_evolve) {
@@ -403,7 +403,7 @@ bool homunculus_evolve(struct homun_data *hd) {
 	hom->luk += 10*rnd_value(min->luk, max->luk);
 	hom->intimacy = 500;
 
-	unit_remove_map(&hd->bl, CLR_OUTSIGHT);
+	unit->remove_map(&hd->bl, CLR_OUTSIGHT, ALC_MARK);
 	iMap->addblock(&hd->bl);
 
 	clif->spawn(&hd->bl);
@@ -447,7 +447,7 @@ bool homunculus_mutate(struct homun_data *hd, int homun_id) {
 		return false;
 	}
 
-	unit_remove_map(&hd->bl, CLR_OUTSIGHT);
+	unit->remove_map(&hd->bl, CLR_OUTSIGHT, ALC_MARK);
 	iMap->addblock(&hd->bl);
 
 	clif->spawn(&hd->bl);
@@ -745,14 +745,14 @@ bool homunculus_create(struct map_session_data *sd, struct s_homunculus *hom) {
 
 	iStatus->set_viewdata(&hd->bl, hd->homunculus.class_);
 	iStatus->change_init(&hd->bl);
-	unit_dataset(&hd->bl);
+	unit->dataset(&hd->bl);
 	hd->ud.dir = sd->ud.dir;
 
 	// Find a random valid pos around the player
 	hd->bl.m = sd->bl.m;
 	hd->bl.x = sd->bl.x;
 	hd->bl.y = sd->bl.y;
-	unit_calc_pos(&hd->bl, sd->bl.x, sd->bl.y, sd->ud.dir);
+	unit->calc_pos(&hd->bl, sd->bl.x, sd->bl.y, sd->ud.dir);
 	hd->bl.x = hd->ud.to_x;
 	hd->bl.y = hd->ud.to_y;
 
@@ -801,7 +801,7 @@ bool homunculus_call(struct map_session_data *sd) {
 		homun->save(hd);
 	} else
 		//Warp him to master.
-		unit_warp(&hd->bl,sd->bl.m, sd->bl.x, sd->bl.y,CLR_OUTSIGHT);
+		unit->warp(&hd->bl,sd->bl.m, sd->bl.x, sd->bl.y,CLR_OUTSIGHT);
 	return true;
 }
 

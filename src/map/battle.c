@@ -50,7 +50,7 @@ int battle_getcurrentskill(struct block_list *bl) { //Returns the current/last s
 		return su->group?su->group->skill_id:0;
 	}
 
-	ud = unit_bl2ud(bl);
+	ud = unit->bl2ud(bl);
 
 	return ud?ud->skill_id:0;
 }
@@ -74,7 +74,7 @@ int battle_gettargeted_sub(struct block_list *bl, va_list ap) {
 	if (*c >= 24)
 		return 0;
 
-	if ( !(ud = unit_bl2ud(bl)) )
+	if ( !(ud = unit->bl2ud(bl)) )
 		return 0;
 
 	if (ud->target == target_id || ud->skilltarget == target_id) {
@@ -1250,7 +1250,7 @@ int64 battle_calc_defense(int attack_type, struct block_list *src, struct block_
 			
 			if( battle_config.vit_penalty_type && battle_config.vit_penalty_target&target->type ) {
 				unsigned char target_count; //256 max targets should be a sane max
-				target_count = unit_counttargeted(target);
+				target_count = unit->counttargeted(target);
 				if(target_count >= battle_config.vit_penalty_count) {
 					if(battle_config.vit_penalty_type == 1) {
 						if( !tsc || !tsc->data[SC_STEELBODY] )
@@ -2664,7 +2664,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				delay = 200;
 			else
 				delay = 100;
-			unit_set_walkdelay(bl, iTimer->gettick(), delay, 1);
+			unit->set_walkdelay(bl, iTimer->gettick(), delay, 1);
 
 			if(sc->data[SC_CR_SHRINK] && rnd()%100<5*sce->val1)
 				skill->blown(bl,src,skill->get_blewcount(CR_SHRINK,1),-1,0);
@@ -2931,9 +2931,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			int dx[8]={0,-1,-1,-1,0,1,1,1};
 			int dy[8]={1,1,0,-1,-1,-1,0,1};
 			uint8 dir = iMap->calc_dir(bl, src->x, src->y);
-			if( unit_movepos(bl, src->x-dx[dir], src->y-dy[dir], 1, 1) ) {
+			if( unit->movepos(bl, src->x-dx[dir], src->y-dy[dir], 1, 1) ) {
 				clif->slide(bl,src->x-dx[dir],src->y-dy[dir]);
-				unit_setdir(bl, dir);
+				unit->setdir(bl, dir);
 			}
 			d->dmg_lv = ATK_DEF;
 			status_change_end(bl, SC_LIGHTNINGWALK, INVALID_TIMER);
@@ -3837,7 +3837,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 
 			if(battle_config.agi_penalty_type && battle_config.agi_penalty_target&target->type) {
 				unsigned char attacker_count; //256 max targets should be a sane max
-				attacker_count = unit_counttargeted(target);
+				attacker_count = unit->counttargeted(target);
 				if(attacker_count >= battle_config.agi_penalty_count)
 				{
 					if (battle_config.agi_penalty_type == 1)
@@ -4303,7 +4303,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 
 		if(battle_config.agi_penalty_type && battle_config.agi_penalty_target&target->type) {
 			unsigned char attacker_count; //256 max targets should be a sane max
-			attacker_count = unit_counttargeted(target);
+			attacker_count = unit->counttargeted(target);
 			if(attacker_count >= battle_config.agi_penalty_count) {
 				if (battle_config.agi_penalty_type == 1)
 					flee = (flee * (100 - (attacker_count - (battle_config.agi_penalty_count - 1))*battle_config.agi_penalty_num))/100;
@@ -5199,7 +5199,7 @@ int64 battle_calc_return_damage(struct block_list* bl, struct block_list *src, i
 		int ratio = (status_get_hp(src) / 100) * sc->data[SC_CRESCENTELBOW]->val1 * iStatus->get_lv(bl) / 125;
 		if (ratio > 5000) ratio = 5000; // Maximum of 5000% ATK
 		rdamage = rdamage * ratio / 100 + (*dmg) * (10 + sc->data[SC_CRESCENTELBOW]->val1 * 20 / 10) / 10;
-		skill->blown(bl, src, skill->get_blewcount(SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1), unit_getdir(src), 0);
+		skill->blown(bl, src, skill->get_blewcount(SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1), unit->getdir(src), 0);
 		clif->skill_damage(bl, src, iTimer->gettick(), status_get_amotion(src), 0, rdamage,
 			1, SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1, 6); // This is how official does
 		clif->damage(src, bl, iTimer->gettick(), status_get_amotion(src)+1000, 0, rdamage/10, 1, 0, 0);
@@ -5226,13 +5226,13 @@ int64 battle_calc_return_damage(struct block_list* bl, struct block_list *src, i
 			}
 			if( sc->data[SC_DEATHBOUND] && skill_id != WS_CARTTERMINATION && !is_boss(src) ) {
 				uint8 dir = iMap->calc_dir(bl,src->x,src->y),
-				t_dir = unit_getdir(bl);
+				t_dir = unit->getdir(bl);
 
 				if( !iMap->check_dir(dir,t_dir) ) {
 					int64 rd1 = damage * sc->data[SC_DEATHBOUND]->val2 / 100; // Amplify damage.
 					trdamage += rdamage = rd1 - (*dmg = rd1 * 30 / 100); // not normalized as intended.
 					clif->skill_damage(src, bl, iTimer->gettick(), status_get_amotion(src), 0, -3000, 1, RK_DEATHBOUND, sc->data[SC_DEATHBOUND]->val1, 6);
-					skill->blown(bl, src, skill->get_blewcount(RK_DEATHBOUND, sc->data[SC_DEATHBOUND]->val1), unit_getdir(src), 0);
+					skill->blown(bl, src, skill->get_blewcount(RK_DEATHBOUND, sc->data[SC_DEATHBOUND]->val1), unit->getdir(src), 0);
 					if( skill_id )
 						status_change_end(bl, SC_DEATHBOUND, INVALID_TIMER);
 					*delay = clif->damage(src, src, iTimer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
@@ -5417,7 +5417,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 	if( tsc && tsc->data[SC_AUTOCOUNTER] && iStatus->check_skilluse(target, src, KN_AUTOCOUNTER, 1) )
 	{
 		uint8 dir = iMap->calc_dir(target,src->x,src->y);
-		int t_dir = unit_getdir(target);
+		int t_dir = unit->getdir(target);
 		int dist = distance_bl(src, target);
 		if(dist <= 0 || (!iMap->check_dir(dir,t_dir) && dist <= tstatus->rhw.range+1))
 		{

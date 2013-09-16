@@ -283,7 +283,7 @@ struct mob_data* mob_spawn_dataset(struct spawn_data *data) {
 	md->skill_idx = -1;
 	iStatus->set_viewdata(&md->bl, md->class_);
 	iStatus->change_init(&md->bl);
-	unit_dataset(&md->bl);
+	unit->dataset(&md->bl);
 	
 	iMap->addiddb(&md->bl);
 	return md;
@@ -597,7 +597,7 @@ int mob_spawn_guardian_sub(int tid, unsigned int tick, int id, intptr_t data)
 		} else {
 			if (md->guardian_data->number >= 0 && md->guardian_data->number < MAX_GUARDIANS && md->guardian_data->castle->guardian[md->guardian_data->number].visible)
 				guild->castledatasave(md->guardian_data->castle->castle_id, 10+md->guardian_data->number,0);
-			unit_free(&md->bl,CLR_OUTSIGHT); //Remove guardian.
+			unit->free(&md->bl,CLR_OUTSIGHT); //Remove guardian.
 		}
 		return 0;
 	}
@@ -783,7 +783,7 @@ int mob_can_reach(struct mob_data *md,struct block_list *bl,int range, int state
 			easy = 1;
 			break;
 	}
-	return unit_can_reach_bl(&md->bl, bl, range, easy, NULL, NULL);
+	return unit->can_reach_bl(&md->bl, bl, range, easy, NULL, NULL);
 }
 
 /*==========================================
@@ -846,7 +846,7 @@ int mob_setdelayspawn(struct mob_data *md)
 	struct mob_db *db;
 
 	if (!md->spawn) //Doesn't has respawn data!
-		return unit_free(&md->bl,CLR_DEAD);
+		return unit->free(&md->bl,CLR_DEAD);
 
 	spawntime = md->spawn->delay1; //Base respawn time
 	if (md->spawn->delay2) //random variance
@@ -900,10 +900,8 @@ int mob_spawn (struct mob_data *md)
 
 	md->last_thinktime = tick;
 	if (md->bl.prev != NULL)
-		unit_remove_map(&md->bl,CLR_RESPAWN);
-	else
-	if (md->spawn && md->class_ != md->spawn->class_)
-	{
+		unit->remove_map(&md->bl,CLR_RESPAWN,ALC_MARK);
+	else if (md->spawn && md->class_ != md->spawn->class_) {
 		md->class_ = md->spawn->class_;
 		iStatus->set_viewdata(&md->bl, md->class_);
 		md->db = mob->db(md->class_);
@@ -1226,7 +1224,7 @@ int mob_ai_sub_hard_slavemob(struct mob_data *md,unsigned int tick)
 			md->master_dist > MAX_MINCHASE
 		){
 			md->master_dist = 0;
-			unit_warp(&md->bl,bl->m,bl->x,bl->y,CLR_TELEPORT);
+			unit->warp(&md->bl,bl->m,bl->x,bl->y,CLR_TELEPORT);
 			return 1;
 		}
 
@@ -1235,12 +1233,12 @@ int mob_ai_sub_hard_slavemob(struct mob_data *md,unsigned int tick)
 
 		// Approach master if within view range, chase back to Master's area also if standing on top of the master.
 		if((md->master_dist>MOB_SLAVEDISTANCE || md->master_dist == 0) &&
-			unit_can_move(&md->bl))
+			unit->can_move(&md->bl))
 		{
 			short x = bl->x, y = bl->y;
 			mob_stop_attack(md);
 			if(iMap->search_freecell(&md->bl, bl->m, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, 1)
-				&& unit_walktoxy(&md->bl, x, y, 0))
+				&& unit->walktoxy(&md->bl, x, y, 0))
 				return 1;
 		}
 	} else if (bl->m != md->bl.m && map_flag_gvg(md->bl.m)) {
@@ -1252,7 +1250,7 @@ int mob_ai_sub_hard_slavemob(struct mob_data *md,unsigned int tick)
 	//Avoid attempting to lock the master's target too often to avoid unnecessary overload. [Skotlex]
 	if (DIFF_TICK(md->last_linktime, tick) < MIN_MOBLINKTIME && !md->target_id)
   	{
-		struct unit_data *ud = unit_bl2ud(bl);
+		struct unit_data *ud = unit->bl2ud(bl);
 		md->last_linktime = tick;
 
 		if (ud) {
@@ -1316,7 +1314,7 @@ int mob_unlocktarget(struct mob_data *md, unsigned int tick)
 	if (md->target_id) {
 		md->target_id=0;
 		md->ud.target_to = 0;
-		unit_set_target(&md->ud, 0);
+		unit->set_target(&md->ud, 0);
 	}
 	return 0;
 }
@@ -1332,7 +1330,7 @@ int mob_randomwalk(struct mob_data *md,unsigned int tick)
 	nullpo_ret(md);
 
 	if(DIFF_TICK(md->next_walktime,tick)>0 ||
-	   !unit_can_move(&md->bl) ||
+	   !unit->can_move(&md->bl) ||
 	   !(status_get_mode(&md->bl)&MD_CANMOVE))
 		return 0;
 
@@ -1345,7 +1343,7 @@ int mob_randomwalk(struct mob_data *md,unsigned int tick)
 		x+=md->bl.x;
 		y+=md->bl.y;
 
-		if((iMap->getcell(md->bl.m,x,y,CELL_CHKPASS)) && unit_walktoxy(&md->bl,x,y,1)){
+		if((iMap->getcell(md->bl.m,x,y,CELL_CHKPASS)) && unit->walktoxy(&md->bl,x,y,1)){
 			break;
 		}
 	}
@@ -1389,7 +1387,7 @@ int mob_warpchase(struct mob_data *md, struct block_list *target)
 	iMap->foreachinrange (mob->warpchase_sub, &md->bl,
 		md->db->range2, BL_NPC, target, &warp, &distance);
 
-	if (warp && unit_walktobl(&md->bl, &warp->bl, 1, 1))
+	if (warp && unit->walktobl(&md->bl, &warp->bl, 1, 1))
 		return 1;
 	return 0;
 }
@@ -1430,7 +1428,7 @@ bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 		view_range = md->db->range2;
 	mode = status_get_mode(&md->bl);
 
-	can_move = (mode&MD_CANMOVE)&&unit_can_move(&md->bl);
+	can_move = (mode&MD_CANMOVE)&&unit->can_move(&md->bl);
 
 	if (md->target_id)
 	{	//Check validity of current target. [Skotlex]
@@ -1464,7 +1462,7 @@ bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 					)
 			&&  md->state.attacked_count++ >= RUDE_ATTACKED_COUNT
 			&&  !mob->skill_use(md, tick, MSC_RUDEATTACKED) // If can't rude Attack
-			&&  can_move && unit_escape(&md->bl, tbl, rnd()%10 +1)) // Attempt escape
+			&&  can_move && unit->escape(&md->bl, tbl, rnd()%10 +1)) // Attempt escape
 			{	//Escaped
 				md->attacked_id = 0;
 				return true;
@@ -1489,7 +1487,7 @@ bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 			{ // Rude attacked
 				if (md->state.attacked_count++ >= RUDE_ATTACKED_COUNT
 				&& !mob->skill_use(md, tick, MSC_RUDEATTACKED) && can_move
-				&& !tbl && unit_escape(&md->bl, abl, rnd()%10 +1))
+				&& !tbl && unit->escape(&md->bl, abl, rnd()%10 +1))
 				{	//Escaped.
 					//TODO: Maybe it shouldn't attempt to run if it has another, valid target?
 					md->attacked_id = 0;
@@ -1555,7 +1553,7 @@ bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 				return true;/* we are already moving */
 			iMap->foreachinrange (mob->ai_sub_hard_bg_ally, &md->bl, view_range, BL_PC, md, &tbl, mode);
 			if( tbl ) {
-				if( distance_blxy(&md->bl, tbl->x, tbl->y) <= 3 || unit_walktobl(&md->bl, tbl, 1, 1) )
+				if( distance_blxy(&md->bl, tbl->x, tbl->y) <= 3 || unit->walktobl(&md->bl, tbl, 1, 1) )
 					return true;/* we're moving or close enough don't unlock the target. */
 			}
 		}
@@ -1586,7 +1584,7 @@ bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 			if (!can_move) //Stuck. Wait before walking.
 				return true;
 			md->state.skillstate = MSS_LOOT;
-			if (!unit_walktobl(&md->bl, tbl, 1, 1))
+			if (!unit->walktobl(&md->bl, tbl, 1, 1))
 				mob->unlocktarget(md, tick); //Can't loot...
 			return true;
 		}
@@ -1610,7 +1608,7 @@ bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 		{	//Give them walk act/delay to properly mimic players. [Skotlex]
 			clif->takeitem(&md->bl,tbl);
 			md->ud.canact_tick = tick + md->status.amotion;
-			unit_set_walkdelay(&md->bl, tick, md->status.amotion, 1);
+			unit->set_walkdelay(&md->bl, tick, md->status.amotion, 1);
 		}
 		//Clear item.
 		iMap->clearflooritem (tbl);
@@ -1627,7 +1625,7 @@ bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 
 		if(tbl->type == BL_PC)
 			mob->log_damage(md, tbl, 0); //Log interaction (counts as 'attacker' for the exp bonus)
-		unit_attack(&md->bl,tbl->id,1);
+		unit->attack(&md->bl,tbl->id,1);
 		return true;
 	}
 
@@ -1657,7 +1655,7 @@ bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 
 	//Follow up if possible.
 	if(!mob->can_reach(md, tbl, md->min_chase, MSS_RUSH) ||
-		!unit_walktobl(&md->bl, tbl, md->status.rhw.range, 2))
+		!unit->walktobl(&md->bl, tbl, md->status.rhw.range, 2))
 		mob->unlocktarget(md,tick);
 
 	return true;
@@ -1738,7 +1736,7 @@ int mob_ai_sub_lazy(struct mob_data *md, va_list args)
 		return 0;
 	}
 
-	if( DIFF_TICK(md->next_walktime,tick) < 0 && (status_get_mode(&md->bl)&MD_CANMOVE) && unit_can_move(&md->bl) )
+	if( DIFF_TICK(md->next_walktime,tick) < 0 && (status_get_mode(&md->bl)&MD_CANMOVE) && unit->can_move(&md->bl) )
 	{
 		if( map[md->bl.m].users > 0 )
 		{
@@ -1876,7 +1874,7 @@ int mob_timer_delete(int tid, unsigned int tick, int id, intptr_t data)
 		}
 		//for Alchemist CANNIBALIZE [Lupus]
 		md->deletetimer = INVALID_TIMER;
-		unit_free(bl, CLR_TELEPORT);
+		unit->free(bl, CLR_TELEPORT);
 	}
 	return 0;
 }
@@ -2673,7 +2671,7 @@ int mob_guardian_guildchange(struct mob_data *md)
 		} else {
 			if (md->guardian_data->number >= 0 && md->guardian_data->number < MAX_GUARDIANS && md->guardian_data->castle->guardian[md->guardian_data->number].visible)
 				guild->castledatasave(md->guardian_data->castle->castle_id, 10+md->guardian_data->number, 0);
-			unit_free(&md->bl,CLR_OUTSIGHT); //Remove guardian.
+			unit->free(&md->bl,CLR_OUTSIGHT); //Remove guardian.
 		}
 		return 0;
 	}
@@ -2684,7 +2682,7 @@ int mob_guardian_guildchange(struct mob_data *md)
 		ShowError("mob_guardian_guildchange: New Guild (id %d) does not exists!\n", md->guardian_data->guild_id);
 		if (md->guardian_data->number >= 0 && md->guardian_data->number < MAX_GUARDIANS)
 			guild->castledatasave(md->guardian_data->castle->castle_id, 10+md->guardian_data->number, 0);
-		unit_free(&md->bl,CLR_OUTSIGHT);
+		unit->free(&md->bl,CLR_OUTSIGHT);
 		return 0;
 	}
 
@@ -2757,7 +2755,7 @@ int mob_class_change (struct mob_data *md, int class_)
 
 	mob_stop_attack(md);
 	mob_stop_walking(md, 0);
-	unit_skillcastcancel(&md->bl, 0);
+	unit->skillcastcancel(&md->bl, 0);
 	iStatus->set_viewdata(&md->bl, class_);
 	clif->class_change(&md->bl, md->vd->class_, 1);
 	status_calc_mob(md, 1);
@@ -2810,7 +2808,7 @@ int mob_warpslave_sub(struct block_list *bl,va_list ap)
 		return 0;
 
 	iMap->search_freecell(master, 0, &x, &y, range, range, 0);
-	unit_warp(&md->bl, master->m, x, y,CLR_RESPAWN);
+	unit->warp(&md->bl, master->m, x, y,CLR_RESPAWN);
 	return 1;
 }
 
@@ -3148,11 +3146,11 @@ int mobskill_use(struct mob_data *md, unsigned int tick, int event)
 				case MSC_SLAVELT:		// slave < num
 					flag = (mob->countslave(&md->bl) < c2 ); break;
 				case MSC_ATTACKPCGT:	// attack pc > num
-					flag = (unit_counttargeted(&md->bl) > c2); break;
+					flag = (unit->counttargeted(&md->bl) > c2); break;
 				case MSC_SLAVELE:		// slave <= num
 					flag = (mob->countslave(&md->bl) <= c2 ); break;
 				case MSC_ATTACKPCGE:	// attack pc >= num
-					flag = (unit_counttargeted(&md->bl) >= c2); break;
+					flag = (unit->counttargeted(&md->bl) >= c2); break;
 				case MSC_AFTERSKILL:
 					flag = (md->ud.skill_id == c2); break;
 				case MSC_RUDEATTACKED:
@@ -3162,7 +3160,7 @@ int mobskill_use(struct mob_data *md, unsigned int tick, int event)
 				case MSC_MASTERHPLTMAXRATE:
 					flag = ((fbl = mob->getmasterhpltmaxrate(md, ms[i].cond2)) != NULL); break;
 				case MSC_MASTERATTACKED:
-					flag = (md->master_id > 0 && (fbl=iMap->id2bl(md->master_id)) && unit_counttargeted(fbl) > 0); break;
+					flag = (md->master_id > 0 && (fbl=iMap->id2bl(md->master_id)) && unit->counttargeted(fbl) > 0); break;
 				case MSC_ALCHEMIST:
 					flag = (md->state.alchemist);
 					break;
@@ -3214,7 +3212,7 @@ int mobskill_use(struct mob_data *md, unsigned int tick, int event)
 			md->skill_idx = i;
 			iMap->freeblock_lock();
 			if( !battle->check_range(&md->bl,bl,skill->get_range2(&md->bl, ms[i].skill_id,ms[i].skill_lv)) ||
-				!unit_skilluse_pos2(&md->bl, x, y,ms[i].skill_id, ms[i].skill_lv,ms[i].casttime, ms[i].cancel) )
+				!unit->skilluse_pos2(&md->bl, x, y,ms[i].skill_id, ms[i].skill_lv,ms[i].casttime, ms[i].cancel) )
 			{
 				iMap->freeblock_unlock();
 				continue;
@@ -3252,7 +3250,7 @@ int mobskill_use(struct mob_data *md, unsigned int tick, int event)
 			md->skill_idx = i;
 			iMap->freeblock_lock();
 			if( !battle->check_range(&md->bl,bl,skill->get_range2(&md->bl, ms[i].skill_id,ms[i].skill_lv)) ||
-				!unit_skilluse_id2(&md->bl, bl->id,ms[i].skill_id, ms[i].skill_lv,ms[i].casttime, ms[i].cancel) )
+				!unit->skilluse_id2(&md->bl, bl->id,ms[i].skill_id, ms[i].skill_lv,ms[i].casttime, ms[i].cancel) )
 			{
 				iMap->freeblock_unlock();
 				continue;

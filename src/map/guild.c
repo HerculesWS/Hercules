@@ -1883,7 +1883,7 @@ int guild_break(struct map_session_data *sd,char *name) {
 	}
 	
 	/* regardless of char server allowing it, we clear the guild master's auras */
-	if( (ud = unit_bl2ud(&sd->bl)) ) {
+	if( (ud = unit->bl2ud(&sd->bl)) ) {
 		int count = 0;
 		struct skill_unit_group *groups[4];
 		for (i=0;i<MAX_SKILLUNITGROUP && ud->skillunit[i];i++) {

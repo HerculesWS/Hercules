@@ -205,12 +205,12 @@ int elemental_delete(struct elemental_data *ed, int reply) {
 	elemental->summon_stop(ed);
 
 	if( !sd )
-		return unit_free(&ed->bl, 0);
+		return unit->free(&ed->bl, 0);
 
 	sd->ed = NULL;
 	sd->status.ele_id = 0;
 
-	return unit_remove_map(&ed->bl, 0);
+	return unit->remove_map(&ed->bl, 0, ALC_MARK);
 }
 
 void elemental_summon_init(struct elemental_data *ed) {
@@ -245,13 +245,13 @@ int elemental_data_received(struct s_elemental *ele, bool flag) {
 		iStatus->set_viewdata(&ed->bl, ed->elemental.class_);
 		ed->vd->head_mid = 10; // Why?
 		iStatus->change_init(&ed->bl);
-		unit_dataset(&ed->bl);
+		unit->dataset(&ed->bl);
 		ed->ud.dir = sd->ud.dir;
 
 		ed->bl.m = sd->bl.m;
 		ed->bl.x = sd->bl.x;
 		ed->bl.y = sd->bl.y;
-		unit_calc_pos(&ed->bl, sd->bl.x, sd->bl.y, sd->ud.dir);
+		unit->calc_pos(&ed->bl, sd->bl.x, sd->bl.y, sd->ud.dir);
 		ed->bl.x = ed->ud.to_x;
 		ed->bl.y = ed->ud.to_y;
 
@@ -421,7 +421,7 @@ int elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned 
 	// Not in skill range.
 	if( !battle->check_range(&ed->bl,bl,skill->get_range(skill_id,skill_lv)) ) {
 		// Try to walk to the target.
-		if( !unit_walktobl(&ed->bl, bl, skill->get_range(skill_id,skill_lv), 2) )
+		if( !unit->walktobl(&ed->bl, bl, skill->get_range(skill_id,skill_lv), 2) )
 			elemental->unlocktarget(ed);
 		else {
 			// Walking, waiting to be in range. Client don't handle it, then we must handle it here.
@@ -453,9 +453,9 @@ int elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned 
 
 	//Otherwise, just cast the skill.
 	if( skill->get_inf(skill_id) & INF_GROUND_SKILL )
-		unit_skilluse_pos(&ed->bl, bl->x, bl->y, skill_id, skill_lv);
+		unit->skilluse_pos(&ed->bl, bl->x, bl->y, skill_id, skill_lv);
 	else
-		unit_skilluse_id(&ed->bl, bl->id, skill_id, skill_lv);
+		unit->skilluse_id(&ed->bl, bl->id, skill_id, skill_lv);
 
 	// Reset target.
 	ed->target_id = 0;
@@ -497,9 +497,9 @@ int elemental_change_mode_ack(struct elemental_data *ed, int mode) {
 	ed->last_thinktime = iTimer->gettick();
 
 	if( skill->get_inf(skill_id) & INF_GROUND_SKILL )
-		unit_skilluse_pos(&ed->bl, bl->x, bl->y, skill_id, skill_lv);
+		unit->skilluse_pos(&ed->bl, bl->x, bl->y, skill_id, skill_lv);
 	else
-		unit_skilluse_id(&ed->bl,bl->id,skill_id,skill_lv);
+		unit->skilluse_id(&ed->bl,bl->id,skill_id,skill_lv);
 
 	ed->target_id = 0;	// Reset target after casting the skill  to avoid continious attack.
 
@@ -692,7 +692,7 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 	master_dist = distance_bl(&sd->bl, &ed->bl);
 	if( master_dist > AREA_SIZE ) {	// Master out of vision range.
 		elemental->unlocktarget(ed);
-		unit_warp(&ed->bl,sd->bl.m,sd->bl.x,sd->bl.y,CLR_TELEPORT);
+		unit->warp(&ed->bl,sd->bl.m,sd->bl.x,sd->bl.y,CLR_TELEPORT);
 		clif->elemental_updatestatus(sd,SP_HP);
 		clif->elemental_updatestatus(sd,SP_SP);
 		return 0;
@@ -705,7 +705,7 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 		if( DIFF_TICK(tick, ed->ud.canmove_tick) < 0 )
 			return 0; //Can't move yet.
 		if( iMap->search_freecell(&ed->bl, sd->bl.m, &x, &y, MIN_ELEDISTANCE, MIN_ELEDISTANCE, 1)
-		   && unit_walktoxy(&ed->bl, x, y, 0) )
+		   && unit->walktoxy(&ed->bl, x, y, 0) )
 			return 0;
 	}
 
@@ -731,12 +731,12 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 			return 1;
 
 		if( battle->check_range(&ed->bl, target, ed->base_status.rhw.range) ) {//Target within range, engage
-			unit_attack(&ed->bl,target->id,1);
+			unit->attack(&ed->bl,target->id,1);
 			return 1;
 		}
 
 		//Follow up if possible.
-		if( !unit_walktobl(&ed->bl, target, ed->base_status.rhw.range, 2) )
+		if( !unit->walktobl(&ed->bl, target, ed->base_status.rhw.range, 2) )
 			elemental->unlocktarget(ed);
 	}
 
@@ -948,7 +948,8 @@ void do_final_elemental(void) {
 *-------------------------------------*/
 void elemental_defaults(void) {
 	elemental = &elemental_s;
-	/* funcs */
+
+	/* funcs */
 	
 	elemental->class = elemental_class;
 	elemental->get_viewdata = elemental_get_viewdata;

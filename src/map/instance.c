@@ -344,7 +344,7 @@ int instance_cleanup_sub(struct block_list *bl, va_list ap) {
 			npc_unload((struct npc_data *)bl,true);
 			break;
 		case BL_MOB:
-			unit_free(bl,CLR_OUTSIGHT);
+			unit->free(bl,CLR_OUTSIGHT);
 			break;
 		case BL_PET:
 			//There is no need for this, the pet is removed together with the player. [Skotlex]

@@ -121,9 +121,9 @@ int pet_attackskill(struct pet_data *pd, int target_id)
 
 		inf = skill->get_inf(pd->a_skill->id);
 		if (inf & INF_GROUND_SKILL)
-			unit_skilluse_pos(&pd->bl, bl->x, bl->y, pd->a_skill->id, pd->a_skill->lv);
+			unit->skilluse_pos(&pd->bl, bl->x, bl->y, pd->a_skill->id, pd->a_skill->lv);
 		else	//Offensive self skill? Could be stuff like GX.
-			unit_skilluse_id(&pd->bl,(inf&INF_SELF_SKILL?pd->bl.id:bl->id), pd->a_skill->id, pd->a_skill->lv);
+			unit->skilluse_id(&pd->bl,(inf&INF_SELF_SKILL?pd->bl.id:bl->id), pd->a_skill->id, pd->a_skill->lv);
 		return 1; //Skill invoked.
 	}
 	return 0;
@@ -309,7 +309,7 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 		iMap->addflooritem(&tmp_item,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 	}
 	pd->pet.incuvate = 1;
-	unit_free(&pd->bl,CLR_OUTSIGHT);
+	unit->free(&pd->bl,CLR_OUTSIGHT);
 
 	status_calc_pc(sd,0);
 	sd->status.pet_id = 0;
@@ -356,13 +356,13 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *pet)
 	pd->db = mob->db(pet->class_);
 	memcpy(&pd->pet, pet, sizeof(struct s_pet));
 	iStatus->set_viewdata(&pd->bl, pet->class_);
-	unit_dataset(&pd->bl);
+	unit->dataset(&pd->bl);
 	pd->ud.dir = sd->ud.dir;
 
 	pd->bl.m = sd->bl.m;
 	pd->bl.x = sd->bl.x;
 	pd->bl.y = sd->bl.y;
-	unit_calc_pos(&pd->bl, sd->bl.x, sd->bl.y, sd->ud.dir);
+	unit->calc_pos(&pd->bl, sd->bl.x, sd->bl.y, sd->ud.dir);
 	pd->bl.x = pd->ud.to_x;
 	pd->bl.y = pd->ud.to_y;
 
@@ -526,7 +526,7 @@ int pet_catch_process2(struct map_session_data* sd, int target_id)
 
 	if(rnd()%10000 < pet_catch_rate)
 	{
-		unit_remove_map(&md->bl,CLR_OUTSIGHT);
+		unit->remove_map(&md->bl,CLR_OUTSIGHT,ALC_MARK);
 		status_kill(&md->bl);
 		clif->pet_roulette(sd,1);
 		intif->create_pet(sd->status.account_id,sd->status.char_id,pet_db[i].class_,mob->db(pet_db[i].class_)->lv,
@@ -793,7 +793,7 @@ static int pet_randomwalk(struct pet_data *pd,unsigned int tick)
 
 	Assert((pd->msd == 0) || (pd->msd->pd == pd));
 
-	if(DIFF_TICK(pd->next_walktime,tick) < 0 && unit_can_move(&pd->bl)) {
+	if(DIFF_TICK(pd->next_walktime,tick) < 0 && unit->can_move(&pd->bl)) {
 		const int retrycount=20;
 		int i,x,y,c,d=12-pd->move_fail_count;
 		if(d<5) d=5;
@@ -801,7 +801,7 @@ static int pet_randomwalk(struct pet_data *pd,unsigned int tick)
 			int r=rnd();
 			x=pd->bl.x+r%(d*2+1)-d;
 			y=pd->bl.y+r/(d*2+1)%(d*2+1)-d;
-			if(iMap->getcell(pd->bl.m,x,y,CELL_CHKPASS) && unit_walktoxy(&pd->bl,x,y,0)){
+			if(iMap->getcell(pd->bl.m,x,y,CELL_CHKPASS) && unit->walktoxy(&pd->bl,x,y,0)){
 				pd->move_fail_count=0;
 				break;
 			}
@@ -862,7 +862,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, uns
 		pd->status.speed = (sd->battle_status.speed>>1);
 		if(pd->status.speed <= 0)
 			pd->status.speed = 1;
-		if (!unit_walktobl(&pd->bl, &sd->bl, 3, 0))
+		if (!unit->walktobl(&pd->bl, &sd->bl, 3, 0))
 			pet_randomwalk(pd,tick);
 		return 0;
 	}
@@ -899,8 +899,8 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, uns
 		if(pd->ud.walktimer != INVALID_TIMER && check_distance_blxy(&sd->bl, pd->ud.to_x,pd->ud.to_y, 3))
 			return 0; //Already walking to him
 
-		unit_calc_pos(&pd->bl, sd->bl.x, sd->bl.y, sd->ud.dir);
-		if(!unit_walktoxy(&pd->bl,pd->ud.to_x,pd->ud.to_y,0))
+		unit->calc_pos(&pd->bl, sd->bl.x, sd->bl.y, sd->ud.dir);
+		if(!unit->walktoxy(&pd->bl,pd->ud.to_x,pd->ud.to_y,0))
 			pet_randomwalk(pd,tick);
 
 		return 0;
@@ -914,16 +914,16 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, uns
 	{ //enemy targetted
 		if(!battle->check_range(&pd->bl,target,pd->status.rhw.range))
 		{	//Chase
-			if(!unit_walktobl(&pd->bl, target, pd->status.rhw.range, 2))
+			if(!unit->walktobl(&pd->bl, target, pd->status.rhw.range, 2))
 				pet_unlocktarget(pd); //Unreachable target.
 			return 0;
 		}
 		//Continuous attack.
-		unit_attack(&pd->bl, pd->target_id, 1);
+		unit->attack(&pd->bl, pd->target_id, 1);
 	} else {	//Item Targeted, attempt loot
 		if (!check_distance_bl(&pd->bl, target, 1))
 		{	//Out of range
-			if(!unit_walktobl(&pd->bl, target, 1, 1)) //Unreachable target.
+			if(!unit->walktobl(&pd->bl, target, 1, 1)) //Unreachable target.
 				pet_unlocktarget(pd);
 			return 0;
 		} else{
@@ -971,7 +971,7 @@ static int pet_ai_sub_hard_lootsearch(struct block_list *bl,va_list ap)
 	if(sd_charid && sd_charid != pd->msd->status.char_id)
 		return 0;
 	
-	if(unit_can_reach_bl(&pd->bl,bl, pd->db->range2, 1, NULL, NULL) &&
+	if(unit->can_reach_bl(&pd->bl,bl, pd->db->range2, 1, NULL, NULL) &&
 		((*target) == NULL || //New target closer than previous one.
 		!check_distance_bl(&pd->bl, *target, distance_bl(&pd->bl, bl))))
 	{
@@ -1197,9 +1197,9 @@ int pet_skill_support_timer(int tid, unsigned int tick, int id, intptr_t data)
 	pet_stop_walking(pd,1);
 	pd->s_skill->timer=iTimer->add_timer(tick+pd->s_skill->delay*1000,pet_skill_support_timer,sd->bl.id,0);
 	if (skill->get_inf(pd->s_skill->id) & INF_GROUND_SKILL)
-		unit_skilluse_pos(&pd->bl, sd->bl.x, sd->bl.y, pd->s_skill->id, pd->s_skill->lv);
+		unit->skilluse_pos(&pd->bl, sd->bl.x, sd->bl.y, pd->s_skill->id, pd->s_skill->lv);
 	else
-		unit_skilluse_id(&pd->bl, sd->bl.id, pd->s_skill->id, pd->s_skill->lv);
+		unit->skilluse_id(&pd->bl, sd->bl.id, pd->s_skill->id, pd->s_skill->lv);
 	return 0;
 }
 

@@ -971,7 +971,7 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 
 			if( npc_ontouch_event(sd,map[m].npc[i]) > 0 && npc_ontouch2_event(sd,map[m].npc[i]) > 0 )
 			{ // failed to run OnTouch event, so just click the npc
-				struct unit_data *ud = unit_bl2ud(&sd->bl);
+				struct unit_data *ud = unit->bl2ud(&sd->bl);
 				if( ud && ud->walkpath.path_pos < ud->walkpath.path_len )
 				{ // Since walktimer always == INVALID_TIMER at this time, we stop walking manually. [Inkfish]
 					clif->fixpos(&sd->bl);
@@ -1021,7 +1021,7 @@ int npc_touch_areanpc2(struct mob_data *md)
 					xs = iMap->mapindex2mapid(map[m].npc[i]->u.warp.mapindex);
 					if( m < 0 )
 						break; // Cannot Warp between map servers
-					if( unit_warp(&md->bl, xs, map[m].npc[i]->u.warp.x, map[m].npc[i]->u.warp.y, CLR_OUTSIGHT) == 0 )
+					if( unit->warp(&md->bl, xs, map[m].npc[i]->u.warp.x, map[m].npc[i]->u.warp.y, CLR_OUTSIGHT) == 0 )
 						return 1; // Warped
 					break;
 				case SCRIPT:
@@ -3796,7 +3796,7 @@ int npc_reload(void) {
 					npc_unload((struct npc_data *)bl, false);
 				break;
 			case BL_MOB:
-				unit_free(bl,CLR_OUTSIGHT);
+				unit->free(bl,CLR_OUTSIGHT);
 				break;
 		}
 	}

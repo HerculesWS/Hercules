@@ -46,16 +46,8 @@ struct elemental_data {
 	int target_id, attacked_id;
 };
 
-
-
-
-
-
-
-
-#define elemental_stop_walking(ed, type) unit_stop_walking(&(ed)->bl, type)
-#define elemental_stop_attack(ed) unit_stop_attack(&(ed)->bl)
-
+#define elemental_stop_walking(ed, type) unit->stop_walking(&(ed)->bl, type)
+#define elemental_stop_attack(ed) unit->stop_attack(&(ed)->bl)
 
 /*=====================================
 * Interface : elemental.h 
@@ -63,9 +55,11 @@ struct elemental_data {
 * created by Susu
 *-------------------------------------*/
 struct elemental_interface {
-	/* vars */
+
+	/* vars */
 	struct s_elemental_db elemental_db[MAX_ELEMENTAL_CLASS]; // Elemental Database
-	/* funcs */
+
+	/* funcs */
 	bool (*class) (int class_);
 	struct view_data * (*get_viewdata) (int class_);
 	
