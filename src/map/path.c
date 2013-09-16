@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
@@ -22,6 +23,8 @@
 #define DIR_WEST 2
 #define DIR_SOUTH 4
 #define DIR_EAST 8
+
+struct path_interface path_s;
 
 /// @name Structures and defines for A* pathfinding
 /// @{
@@ -457,4 +460,13 @@ unsigned int distance(int dx, int dy)
 	if (dy < 0) dy = -dy;
 	return (dx<dy?dy:dx);
 #endif
+}
+void path_defaults(void) {
+	path = &path_s;
+	
+	path->blownpos = path_blownpos;
+	path->search_long = path_search_long;
+	path->search = path_search;
+	path->check_distance = check_distance;
+	path->distance = distance;
 }

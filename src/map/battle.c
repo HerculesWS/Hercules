@@ -6091,7 +6091,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 }
 /*==========================================
  * Check if can attack from this range
- * Basic check then calling path_search for obstacle etc..
+ * Basic check then calling path->search for obstacle etc..
  *------------------------------------------*/
 bool battle_check_range(struct block_list *src, struct block_list *bl, int range)
 {
@@ -6105,7 +6105,7 @@ bool battle_check_range(struct block_list *src, struct block_list *bl, int range
 #ifndef CIRCULAR_AREA
 	if( src->type == BL_PC ) { // Range for players' attacks and skills should always have a circular check. [Angezerus]
 		int dx = src->x - bl->x, dy = src->y - bl->y;
-		if( !check_distance(dx, dy, range) )
+		if( !path->check_distance(dx, dy, range) )
 			return false;
 	} else
 #endif
@@ -6118,7 +6118,7 @@ bool battle_check_range(struct block_list *src, struct block_list *bl, int range
 	if( d > AREA_SIZE )
 		return false; // Avoid targetting objects beyond your range of sight.
 
-	return path_search_long(NULL,src->m,src->x,src->y,bl->x,bl->y,CELL_CHKWALL);
+	return path->search_long(NULL,src->m,src->x,src->y,bl->x,bl->y,CELL_CHKWALL);
 }
 
 static const struct _battle_data {

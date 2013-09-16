@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef _PATH_H_
 #define _PATH_H_
@@ -22,25 +23,27 @@ struct shootpath_data {
 	int y[MAX_WALKPATH];
 };
 
-// calculates destination cell for knockback
-int path_blownpos(int16 m,int16 x0,int16 y0,int16 dx,int16 dy,int count);
+#define check_distance_bl(bl1, bl2, distance) path->check_distance((bl1)->x - (bl2)->x, (bl1)->y - (bl2)->y, distance)
+#define check_distance_blxy(bl, x1, y1, distance) path->check_distance((bl)->x-(x1), (bl)->y-(y1), distance)
+#define check_distance_xy(x0, y0, x1, y1, distance) path->check_distance((x0)-(x1), (y0)-(y1), distance)
 
-// tries to find a walkable path
-bool path_search(struct walkpath_data *wpd,int16 m,int16 x0,int16 y0,int16 x1,int16 y1,int flag,cell_chk cell);
+#define distance_bl(bl1, bl2) path->distance((bl1)->x - (bl2)->x, (bl1)->y - (bl2)->y)
+#define distance_blxy(bl, x1, y1) path->distance((bl)->x-(x1), (bl)->y-(y1))
+#define distance_xy(x0, y0, x1, y1) path->distance((x0)-(x1), (y0)-(y1))
 
-// tries to find a shootable path
-bool path_search_long(struct shootpath_data *spd,int16 m,int16 x0,int16 y0,int16 x1,int16 y1,cell_chk cell);
+struct path_interface {
+	// calculates destination cell for knockback
+	int (*blownpos) (int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count);
+	// tries to find a walkable path
+	bool (*search) (struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell);
+	// tries to find a shootable path
+	bool (*search_long) (struct shootpath_data *spd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, cell_chk cell);
+	int (*check_distance) (int dx, int dy, int distance);
+	unsigned int (*distance) (int dx, int dy);
+};
 
+struct path_interface *path;
 
-// distance related functions
-int check_distance(int dx, int dy, int distance);
-#define check_distance_bl(bl1, bl2, distance) check_distance((bl1)->x - (bl2)->x, (bl1)->y - (bl2)->y, distance)
-#define check_distance_blxy(bl, x1, y1, distance) check_distance((bl)->x-(x1), (bl)->y-(y1), distance)
-#define check_distance_xy(x0, y0, x1, y1, distance) check_distance((x0)-(x1), (y0)-(y1), distance)
-
-unsigned int distance(int dx, int dy);
-#define distance_bl(bl1, bl2) distance((bl1)->x - (bl2)->x, (bl1)->y - (bl2)->y)
-#define distance_blxy(bl, x1, y1) distance((bl)->x-(x1), (bl)->y-(y1))
-#define distance_xy(x0, y0, x1, y1) distance((x0)-(x1), (y0)-(y1))
+void path_defaults(void);
 
 #endif /* _PATH_H_ */

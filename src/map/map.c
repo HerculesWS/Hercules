@@ -810,7 +810,7 @@ static int bl_vgetall_inshootrange(struct block_list *bl, va_list args)
 	if (!check_distance_bl(center, bl, range))
 		return 0;
 #endif
-	if (!path_search_long(NULL, center->m, center->x, center->y, bl->x, bl->y, CELL_CHKWALL))
+	if (!path->search_long(NULL, center->m, center->x, center->y, bl->x, bl->y, CELL_CHKWALL))
 		return 0;
 	return 1;
 }
@@ -1039,7 +1039,7 @@ static int bl_vgetall_inpath(struct block_list *bl, va_list args)
 	if ( k < 0 || k > len_limit ) //Since more skills use this, check for ending point as well.
 		return 0;
 
-	if ( k > magnitude2 && !path_search_long(NULL, m, x0, y0, xi, yi, CELL_CHKWALL) )
+	if ( k > magnitude2 && !path->search_long(NULL, m, x0, y0, xi, yi, CELL_CHKWALL) )
 		return 0; //Targets beyond the initial ending point need the wall check.
 
 	//All these shifts are to increase the precision of the intersection point and distance considering how it's
@@ -2296,7 +2296,7 @@ int map_random_dir(struct block_list *bl, int16 *x, int16 *y)
 		segment = (short)sqrt((float)(dist2 - segment*segment)); //The complement of the previously picked segment
 		yi = bl->y + segment*diry[j];
 	} while (
-		(iMap->getcell(bl->m,xi,yi,CELL_CHKNOPASS) || !path_search(NULL,bl->m,bl->x,bl->y,xi,yi,1,CELL_CHKNOREACH))
+		(iMap->getcell(bl->m,xi,yi,CELL_CHKNOPASS) || !path->search(NULL,bl->m,bl->x,bl->y,xi,yi,1,CELL_CHKNOREACH))
 		&& (++i)<100 );
 
 	if (i < 100) {
@@ -5173,6 +5173,7 @@ void map_hp_symbols(void) {
 	HPM->share(npc,"npc");
 	HPM->share(mapreg,"mapreg");
 	HPM->share(pet,"pet");
+	HPM->share(path,"path");
 
 	/* partial */
 	HPM->share(mapit,"mapit");
@@ -5222,6 +5223,7 @@ void map_load_defaults(void) {
 	unit_defaults();
 	mapreg_defaults();
 	pet_defaults();
+	path_defaults();
 }
 int do_init(int argc, char *argv[])
 {
