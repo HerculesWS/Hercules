@@ -234,7 +234,7 @@ static int unit_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data
 		//But avoid triggering on stop-walk calls.
 		if(tid != INVALID_TIMER &&
 			!(ud->walk_count%WALK_SKILL_INTERVAL) &&
-			mobskill_use(md, tick, -1))
+			mob->skill_use(md, tick, -1))
 	  	{
 			if (!(ud->skill_id == NPC_SELFDESTRUCTION && ud->skilltimer != INVALID_TIMER))
 			{	//Skill used, abort walking
@@ -295,7 +295,7 @@ static int unit_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data
 		if (!tbl || !iStatus->check_visibility(bl, tbl)) {	//Cancel chase.
 			ud->to_x = bl->x;
 			ud->to_y = bl->y;
-			if (tbl && bl->type == BL_MOB && mob_warpchase((TBL_MOB*)bl, tbl) )
+			if (tbl && bl->type == BL_MOB && mob->warpchase((TBL_MOB*)bl, tbl) )
 				return 0;
 			ud->target_to = 0;
 			return 0;
@@ -1157,7 +1157,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	if( !target || src->m != target->m || !src->prev || !target->prev )
 		return 0;
 
-	if( battle_config.ksprotection && sd && mob_ksprotected(src, target) )
+	if( battle_config.ksprotection && sd && mob->ksprotected(src, target) )
 		return 0;
 
 	//Normally not needed because clif.c checks for it, but the at/char/script commands don't! [Skotlex]
@@ -1358,7 +1358,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		if (sd && target->type == BL_MOB)
 		{
 			TBL_MOB *md = (TBL_MOB*)target;
-			mobskill_event(md, src, tick, -1); //Cast targetted skill event.
+			mob->skill_event(md, src, tick, -1); //Cast targetted skill event.
 			if (tstatus->mode&(MD_CASTSENSOR_IDLE|MD_CASTSENSOR_CHASE) &&
 				battle->check_target(target, src, BCT_ENEMY) > 0)
 			{
@@ -1609,7 +1609,7 @@ int unit_unattackable(struct block_list *bl)
 	}
 
 	if(bl->type == BL_MOB)
-		mob_unlocktarget((struct mob_data*)bl, iTimer->gettick()) ;
+		mob->unlocktarget((struct mob_data*)bl, iTimer->gettick()) ;
 	else if(bl->type == BL_PET)
 		pet_unlocktarget((struct pet_data*)bl);
 	return 0;
@@ -1837,7 +1837,7 @@ static int unit_attack_timer_sub(struct block_list* src, int tid, unsigned int t
 
 	if( src->m != target->m )
 	{
-		if( src->type == BL_MOB && mob_warpchase((TBL_MOB*)src, target) )
+		if( src->type == BL_MOB && mob->warpchase((TBL_MOB*)src, target) )
 			return 1; // Follow up.
 		return 0;
 	}
@@ -1892,12 +1892,12 @@ static int unit_attack_timer_sub(struct block_list* src, int tid, unsigned int t
 		if(ud->walktimer != INVALID_TIMER)
 			unit_stop_walking(src,1);
 		if(md) {
-			if (mobskill_use(md,tick,-1))
+			if (mob->skill_use(md,tick,-1))
 				return 1;
 			if (sstatus->mode&MD_ASSIST && DIFF_TICK(md->last_linktime, tick) < MIN_MOBLINKTIME)
 			{	// Link monsters nearby [Skotlex]
 				md->last_linktime = tick;
-				iMap->foreachinrange(mob_linksearch, src, md->db->range2, BL_MOB, md->class_, target, tick);
+				iMap->foreachinrange(mob->linksearch, src, md->db->range2, BL_MOB, md->class_, target, tick);
 			}
 		}
 		if(src->type == BL_PET && pet_attackskill((TBL_PET*)src, target->id))
@@ -2476,12 +2476,12 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 			struct mob_data *md = (struct mob_data*)bl;
 			if( md->spawn_timer != INVALID_TIMER )
 			{
-				iTimer->delete_timer(md->spawn_timer,mob_delayspawn);
+				iTimer->delete_timer(md->spawn_timer,mob->delayspawn);
 				md->spawn_timer = INVALID_TIMER;
 			}
 			if( md->deletetimer != INVALID_TIMER )
 			{
-				iTimer->delete_timer(md->deletetimer,mob_timer_delete);
+				iTimer->delete_timer(md->deletetimer,mob->timer_delete);
 				md->deletetimer = INVALID_TIMER;
 			}
 			if( md->lootitem )
@@ -2523,10 +2523,10 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 				aFree(md->base_status);
 				md->base_status = NULL;
 			}
-			if( mob_is_clone(md->class_) )
-				mob_clone_delete(md);
+			if( mob->is_clone(md->class_) )
+				mob->clone_delete(md);
 			if( md->tomb_nid )
-				mvptomb_destroy(md);
+				mob->mvptomb_destroy(md);
 			break;
 		}
 		case BL_HOM:

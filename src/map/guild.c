@@ -1960,7 +1960,7 @@ int guild_castledatasave(int castle_id, int index, int value)
 		gc->guild_id = value;
 		for (i = 0; i < MAX_GUARDIANS; i++)
 			if (gc->guardian[i].visible && (gd = iMap->id2md(gc->guardian[i].id)) != NULL)
-				mob_guardian_guildchange(gd);
+				mob->guardian_guildchange(gd);
 		break;
 	}
 	case 2:

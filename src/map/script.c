@@ -8358,7 +8358,7 @@ BUILDIN(makepet)
 		sd->catch_target_class = pet_db[pet_id].class_;
 		intif->create_pet(
 						 sd->status.account_id, sd->status.char_id,
-						 (short)pet_db[pet_id].class_, (short)mob_db(pet_db[pet_id].class_)->lv,
+						 (short)pet_db[pet_id].class_, (short)mob->db(pet_db[pet_id].class_)->lv,
 						 (short)pet_db[pet_id].EggID, 0, (short)pet_db[pet_id].intimate,
 						 100, 0, 1, pet_db[pet_id].jname);
 	}
@@ -8485,7 +8485,7 @@ BUILDIN(monster)
 		}
 	}
 	
-	if (class_ >= 0 && !mobdb_checkid(class_))
+	if (class_ >= 0 && !mob->db_checkid(class_))
 	{
 		ShowWarning("buildin_monster: Attempted to spawn non-existing monster class %d\n", class_);
 		return false;
@@ -8510,7 +8510,7 @@ BUILDIN(monster)
 		}
 	}
 	
-	mob_id = mob_once_spawn(sd, m, x, y, str, class_, amount, event, size, ai);
+	mob_id = mob->once_spawn(sd, m, x, y, str, class_, amount, event, size, ai);
 	script_pushint(st, mob_id);
 	return true;
 }
@@ -8521,25 +8521,25 @@ BUILDIN(getmobdrops)
 {
 	int class_ = script_getnum(st,2);
 	int i, j = 0;
-	struct mob_db *mob;
+	struct mob_db *monster;
 	
-	if( !mobdb_checkid(class_) )
+	if( !mob->db_checkid(class_) )
 	{
 		script_pushint(st, 0);
 		return true;
 	}
 	
-	mob = mob_db(class_);
+	monster = mob->db(class_);
 	
 	for( i = 0; i < MAX_MOB_DROP; i++ )
 	{
-		if( mob->dropitem[i].nameid < 1 )
+		if( monster->dropitem[i].nameid < 1 )
 			continue;
-		if( itemdb->exists(mob->dropitem[i].nameid) == NULL )
+		if( itemdb->exists(monster->dropitem[i].nameid) == NULL )
 			continue;
 		
-		mapreg_setreg(reference_uid(script->add_str("$@MobDrop_item"), j), mob->dropitem[i].nameid);
-		mapreg_setreg(reference_uid(script->add_str("$@MobDrop_rate"), j), mob->dropitem[i].p);
+		mapreg_setreg(reference_uid(script->add_str("$@MobDrop_item"), j), monster->dropitem[i].nameid);
+		mapreg_setreg(reference_uid(script->add_str("$@MobDrop_rate"), j), monster->dropitem[i].p);
 		
 		j++;
 	}
@@ -8608,7 +8608,7 @@ BUILDIN(areamonster)
 		}
 	}
 	
-	mob_id = mob_once_spawn_area(sd, m, x0, y0, x1, y1, str, class_, amount, event, size, ai);
+	mob_id = mob->once_spawn_area(sd, m, x0, y0, x1, y1, str, class_, amount, event, size, ai);
 	script_pushint(st, mob_id);
 	
 	return true;
@@ -8762,7 +8762,7 @@ BUILDIN(clone)
 			master_id = 0;
 	}
 	if (sd) //Return ID of newly crafted clone.
-		script_pushint(st,mob_clone_spawn(sd, m, x, y, event, master_id, mode, flag, 1000*duration));
+		script_pushint(st,mob->clone_spawn(sd, m, x, y, event, master_id, mode, flag, 1000*duration));
 	else //Failed to create clone.
 		script_pushint(st,0);
 	
@@ -11372,7 +11372,7 @@ BUILDIN(strmobinfo)
 	int num=script_getnum(st,2);
 	int class_=script_getnum(st,3);
 	
-	if(!mobdb_checkid(class_))
+	if(!mob->db_checkid(class_))
 	{
 		if (num < 3) //requested a string
 			script_pushconststr(st,"");
@@ -11382,13 +11382,13 @@ BUILDIN(strmobinfo)
 	}
 	
 	switch (num) {
-		case 1: script_pushstrcopy(st,mob_db(class_)->name); break;
-		case 2: script_pushstrcopy(st,mob_db(class_)->jname); break;
-		case 3: script_pushint(st,mob_db(class_)->lv); break;
-		case 4: script_pushint(st,mob_db(class_)->status.max_hp); break;
-		case 5: script_pushint(st,mob_db(class_)->status.max_sp); break;
-		case 6: script_pushint(st,mob_db(class_)->base_exp); break;
-		case 7: script_pushint(st,mob_db(class_)->job_exp); break;
+		case 1: script_pushstrcopy(st,mob->db(class_)->name); break;
+		case 2: script_pushstrcopy(st,mob->db(class_)->jname); break;
+		case 3: script_pushint(st,mob->db(class_)->lv); break;
+		case 4: script_pushint(st,mob->db(class_)->status.max_hp); break;
+		case 5: script_pushint(st,mob->db(class_)->status.max_sp); break;
+		case 6: script_pushint(st,mob->db(class_)->base_exp); break;
+		case 7: script_pushint(st,mob->db(class_)->job_exp); break;
 		default:
 			script_pushint(st,0);
 			break;
@@ -11436,7 +11436,7 @@ BUILDIN(guardian)
 	}
 	
 	check_event(st, evt);
-	script_pushint(st, mob_spawn_guardian(map,x,y,str,class_,evt,guardian,has_index));
+	script_pushint(st, mob->spawn_guardian(map,x,y,str,class_,evt,guardian,has_index));
 	
 	return true;
 }
@@ -11828,7 +11828,7 @@ BUILDIN(disguise)
 	
 	id = script_getnum(st,2);
 	
-	if (mobdb_checkid(id) || npcdb_checkid(id)) {
+	if (mob->db_checkid(id) || npcdb_checkid(id)) {
 		pc->disguise(sd, id);
 		script_pushint(st,id);
 	} else
@@ -12932,14 +12932,14 @@ BUILDIN(summon)
 	
 	clif->skill_poseffect(&sd->bl,AM_CALLHOMUN,1,sd->bl.x,sd->bl.y,tick);
 	
-	md = mob_once_spawn_sub(&sd->bl, sd->bl.m, sd->bl.x, sd->bl.y, str, _class, event, SZ_SMALL, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, sd->bl.x, sd->bl.y, str, _class, event, SZ_SMALL, AI_NONE);
 	if (md) {
 		md->master_id=sd->bl.id;
 		md->special_state.ai = AI_ATTACK;
 		if( md->deletetimer != INVALID_TIMER )
-			iTimer->delete_timer(md->deletetimer, mob_timer_delete);
-		md->deletetimer = iTimer->add_timer(tick+(timeout>0?timeout*1000:60000),mob_timer_delete,md->bl.id,0);
-		mob_spawn (md); //Now it is ready for spawning.
+			iTimer->delete_timer(md->deletetimer, mob->timer_delete);
+		md->deletetimer = iTimer->add_timer(tick+(timeout>0?timeout*1000:60000),mob->timer_delete,md->bl.id,0);
+		mob->spawn (md); //Now it is ready for spawning.
 		clif->specialeffect(&md->bl,344,AREA);
 		sc_start4(&md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 60000);
 	}
@@ -14612,11 +14612,11 @@ BUILDIN(setitemscript)
  *------------------------------------------*/
 BUILDIN(getmonsterinfo)
 {
-	struct mob_db *mob;
+	struct mob_db *monster;
 	int mob_id;
 	
 	mob_id	= script_getnum(st,2);
-	if (!mobdb_checkid(mob_id)) {
+	if (!mob->db_checkid(mob_id)) {
 		ShowError("buildin_getmonsterinfo: Wrong Monster ID: %i\n", mob_id);
 		if ( !script_getnum(st,3) ) //requested a string
 			script_pushconststr(st,"null");
@@ -14624,31 +14624,31 @@ BUILDIN(getmonsterinfo)
 			script_pushint(st,-1);
 		return -1;
 	}
-	mob = mob_db(mob_id);
+	monster = mob->db(mob_id);
 	switch ( script_getnum(st,3) ) {
-		case 0:  script_pushstrcopy(st,mob->jname); break;
-		case 1:  script_pushint(st,mob->lv); break;
-		case 2:  script_pushint(st,mob->status.max_hp); break;
-		case 3:  script_pushint(st,mob->base_exp); break;
-		case 4:  script_pushint(st,mob->job_exp); break;
-		case 5:  script_pushint(st,mob->status.rhw.atk); break;
-		case 6:  script_pushint(st,mob->status.rhw.atk2); break;
-		case 7:  script_pushint(st,mob->status.def); break;
-		case 8:  script_pushint(st,mob->status.mdef); break;
-		case 9:  script_pushint(st,mob->status.str); break;
-		case 10: script_pushint(st,mob->status.agi); break;
-		case 11: script_pushint(st,mob->status.vit); break;
-		case 12: script_pushint(st,mob->status.int_); break;
-		case 13: script_pushint(st,mob->status.dex); break;
-		case 14: script_pushint(st,mob->status.luk); break;
-		case 15: script_pushint(st,mob->status.rhw.range); break;
-		case 16: script_pushint(st,mob->range2); break;
-		case 17: script_pushint(st,mob->range3); break;
-		case 18: script_pushint(st,mob->status.size); break;
-		case 19: script_pushint(st,mob->status.race); break;
-		case 20: script_pushint(st,mob->status.def_ele); break;
-		case 21: script_pushint(st,mob->status.mode); break;
-		case 22: script_pushint(st,mob->mexp); break;
+		case 0:  script_pushstrcopy(st,monster->jname); break;
+		case 1:  script_pushint(st,monster->lv); break;
+		case 2:  script_pushint(st,monster->status.max_hp); break;
+		case 3:  script_pushint(st,monster->base_exp); break;
+		case 4:  script_pushint(st,monster->job_exp); break;
+		case 5:  script_pushint(st,monster->status.rhw.atk); break;
+		case 6:  script_pushint(st,monster->status.rhw.atk2); break;
+		case 7:  script_pushint(st,monster->status.def); break;
+		case 8:  script_pushint(st,monster->status.mdef); break;
+		case 9:  script_pushint(st,monster->status.str); break;
+		case 10: script_pushint(st,monster->status.agi); break;
+		case 11: script_pushint(st,monster->status.vit); break;
+		case 12: script_pushint(st,monster->status.int_); break;
+		case 13: script_pushint(st,monster->status.dex); break;
+		case 14: script_pushint(st,monster->status.luk); break;
+		case 15: script_pushint(st,monster->status.rhw.range); break;
+		case 16: script_pushint(st,monster->range2); break;
+		case 17: script_pushint(st,monster->range3); break;
+		case 18: script_pushint(st,monster->status.size); break;
+		case 19: script_pushint(st,monster->status.race); break;
+		case 20: script_pushint(st,monster->status.def_ele); break;
+		case 21: script_pushint(st,monster->status.mode); break;
+		case 22: script_pushint(st,monster->mexp); break;
 		default: script_pushint(st,-1); //wrong Index
 	}
 	return true;
@@ -15843,7 +15843,7 @@ BUILDIN(bg_monster)
 	class_ = script_getnum(st,7);
 	if( script_hasdata(st,8) ) evt = script_getstr(st,8);
 	check_event(st, evt);
-	script_pushint(st, mob_spawn_bg(map,x,y,str,class_,evt,bg_id));
+	script_pushint(st, mob->spawn_bg(map,x,y,str,class_,evt,bg_id));
 	return true;
 }
 

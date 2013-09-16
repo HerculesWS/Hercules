@@ -8904,8 +8904,8 @@ void clif_hate_info(struct map_session_data *sd, unsigned char hate_level,int cl
 {
 	if( pcdb_checkid(class_) ) {
 		clif->starskill(sd, pc->job_name(class_), class_, hate_level, type ? 10 : 11);
-	} else if( mobdb_checkid(class_) ) {
-		clif->starskill(sd, mob_db(class_)->jname, class_, hate_level, type ? 10 : 11);
+	} else if( mob->db_checkid(class_) ) {
+		clif->starskill(sd, mob->db(class_)->jname, class_, hate_level, type ? 10 : 11);
 	} else {
 		ShowWarning("clif_hate_info: Received invalid class %d for this packet (char_id=%d, hate_level=%u, type=%u).\n", class_, sd->status.char_id, (unsigned int)hate_level, (unsigned int)type);
 	}
@@ -8916,7 +8916,7 @@ void clif_hate_info(struct map_session_data *sd, unsigned char hate_level,int cl
  *------------------------------------------*/
 void clif_mission_info(struct map_session_data *sd, int mob_id, unsigned char progress)
 {
-	clif->starskill(sd, mob_db(mob_id)->jname, mob_id, progress, 20);
+	clif->starskill(sd, mob->db(mob_id)->jname, mob_id, progress, 20);
 }
 
 /*==========================================
@@ -13416,7 +13416,7 @@ void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	if( (count=mobdb_searchname_array(mob_array, 10, item_monster_name, 1)) > 0){
+	if( (count=mob->db_searchname_array(mob_array, 10, item_monster_name, 1)) > 0){
 		for(i = 0; i < count; i++){
 			if( mob_array[i] && strcmp(mob_array[i]->sprite, item_monster_name) == 0 ) // It only accepts sprite name
 				break;
@@ -15505,7 +15505,7 @@ void clif_quest_send_mission(struct map_session_data * sd)
 	int fd = sd->fd;
 	int i, j;
 	int len = sd->avail_quests*104+8;
-	struct mob_db *mob;
+	struct mob_db *monster;
 
 	WFIFOHEAD(fd, len);
 	WFIFOW(fd, 0) = 0x2b2;
@@ -15522,8 +15522,8 @@ void clif_quest_send_mission(struct map_session_data * sd)
 		{
 			WFIFOL(fd, i*104+22+j*30) = quest_db[sd->quest_index[i]].mob[j];
 			WFIFOW(fd, i*104+26+j*30) = sd->quest_log[i].count[j];
-			mob = mob_db(quest_db[sd->quest_index[i]].mob[j]);
-			memcpy(WFIFOP(fd, i*104+28+j*30), mob?mob->jname:"NULL", NAME_LENGTH);
+			monster = mob->db(quest_db[sd->quest_index[i]].mob[j]);
+			memcpy(WFIFOP(fd, i*104+28+j*30), monster?monster->jname:"NULL", NAME_LENGTH);
 		}
 	}
 
@@ -15537,7 +15537,7 @@ void clif_quest_add(struct map_session_data * sd, struct quest * qd, int index)
 {
 	int fd = sd->fd;
 	int i;
-	struct mob_db *mob;
+	struct mob_db *monster;
 
 	WFIFOHEAD(fd, packet_len(0x2b3));
 	WFIFOW(fd, 0) = 0x2b3;
@@ -15550,8 +15550,8 @@ void clif_quest_add(struct map_session_data * sd, struct quest * qd, int index)
 	for( i = 0; i < quest_db[index].num_objectives; i++ ) {
 		WFIFOL(fd, i*30+17) = quest_db[index].mob[i];
 		WFIFOW(fd, i*30+21) = qd->count[i];
-		mob = mob_db(quest_db[index].mob[i]);
-		memcpy(WFIFOP(fd, i*30+23), mob?mob->jname:"NULL", NAME_LENGTH);
+		monster = mob->db(quest_db[index].mob[i]);
+		memcpy(WFIFOP(fd, i*30+23), monster?monster->jname:"NULL", NAME_LENGTH);
 	}
 
 	WFIFOSET(fd, packet_len(0x2b3));

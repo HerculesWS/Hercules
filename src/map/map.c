@@ -4945,7 +4945,7 @@ void do_final(void)
 	party->do_final_party();
 	pc->do_final_pc();
 	do_final_pet();
-	do_final_mob();
+	mob->final();
 	homun->final();
 	atcommand->final_msg();
 	skill->final();
@@ -5168,7 +5168,7 @@ void map_hp_symbols(void) {
 	HPM->share(elemental,"elemental");
 	HPM->share(intif,"intif");
 	HPM->share(mercenary,"mercenary");
-
+	HPM->share(mob,"mob");
 
 	/* partial */
 	HPM->share(mapit,"mapit");
@@ -5214,6 +5214,7 @@ void map_load_defaults(void) {
 	elemental_defaults();
 	intif_defaults();
 	mercenary_defaults();
+	mob_defaults();
 }
 int do_init(int argc, char *argv[])
 {
@@ -5402,7 +5403,7 @@ int do_init(int argc, char *argv[])
 	itemdb->init();
 	skill->init();
 	read_map_zone_db();/* read after item and skill initalization */
-	do_init_mob();
+	mob->init();
 	pc->do_init_pc();
 	iStatus->do_init_status();
 	party->do_init_party();

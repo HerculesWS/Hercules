@@ -2553,7 +2553,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 
 	if( !damage )
 		return 0;
-	if( battle_config.ksprotection && mob_ksprotected(src, bl) )
+	if( battle_config.ksprotection && mob->ksprotected(src, bl) )
 		return 0;
 	if( iMap->getcell(bl->m, bl->x, bl->y, CELL_CHKMAELSTROM) && skill->get_type(skill_id) != BF_MISC 
 			&& skill->get_casttype(skill_id) == CAST_GROUND )
@@ -2834,14 +2834,14 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if (src->type == BL_MOB) {
 			int i;
 			if (sc->data[SC_MANU_DEF])
-				for (i=0;ARRAYLENGTH(mob_manuk)>i;i++)
-					if (mob_manuk[i]==((TBL_MOB*)src)->class_) {
+				for (i=0;ARRAYLENGTH(mob->manuk)>i;i++)
+					if (mob->manuk[i]==((TBL_MOB*)src)->class_) {
 						damage -= damage * sc->data[SC_MANU_DEF]->val1 / 100;
 						break;
 					}
 			if (sc->data[SC_SPL_DEF])
-				for (i=0;ARRAYLENGTH(mob_splendide)>i;i++)
-					if (mob_splendide[i]==((TBL_MOB*)src)->class_) {
+				for (i=0;ARRAYLENGTH(mob->splendide)>i;i++)
+					if (mob->splendide[i]==((TBL_MOB*)src)->class_) {
 						damage -= damage * sc->data[SC_SPL_DEF]->val1 / 100;
 						break;
 					}
@@ -2991,16 +2991,16 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			if ( ((sce=sc->data[SC_MANU_ATK]) && (flag&BF_WEAPON)) ||
 				 ((sce=sc->data[SC_MANU_MATK]) && (flag&BF_MAGIC))
 				)
-				for (i=0;ARRAYLENGTH(mob_manuk)>i;i++)
-					if (((TBL_MOB*)bl)->class_==mob_manuk[i]) {
+				for (i=0;ARRAYLENGTH(mob->manuk)>i;i++)
+					if (((TBL_MOB*)bl)->class_==mob->manuk[i]) {
 						damage += damage * sce->val1 / 100;
 						break;
 					}
 			if ( ((sce=sc->data[SC_SPL_ATK]) && (flag&BF_WEAPON)) ||
 				 ((sce=sc->data[SC_SPL_MATK]) && (flag&BF_MAGIC))
 				)
-				for (i=0;ARRAYLENGTH(mob_splendide)>i;i++)
-					if (((TBL_MOB*)bl)->class_==mob_splendide[i]) {
+				for (i=0;ARRAYLENGTH(mob->splendide)>i;i++)
+					if (((TBL_MOB*)bl)->class_==mob->splendide[i]) {
 						damage += damage * sce->val1 / 100;
 						break;
 					}
@@ -3052,9 +3052,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 
 	if( bl->type == BL_MOB && !iStatus->isdead(bl) && src != bl) {
 	  if (damage > 0 )
-			mobskill_event((TBL_MOB*)bl,src,iTimer->gettick(),flag);
+			mob->skill_event((TBL_MOB*)bl,src,iTimer->gettick(),flag);
 	  if (skill_id)
-			mobskill_event((TBL_MOB*)bl,src,iTimer->gettick(),MSC_SKILLUSED|(skill_id<<16));
+			mob->skill_event((TBL_MOB*)bl,src,iTimer->gettick(),MSC_SKILLUSED|(skill_id<<16));
 	}
 	if( sd ) {
 		if( pc_ismadogear(sd) && rnd()%100 < 50 ) {
