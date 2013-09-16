@@ -6074,7 +6074,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 	if (mob->db_checkid(class_) || mob->is_clone(class_))
 		vd = mob->get_viewdata(class_);
 	else if (npcdb_checkid(class_) || (bl->type == BL_NPC && class_ == WARP_CLASS))
-		vd = npc_get_viewdata(class_);
+		vd = npc->get_viewdata(class_);
 	else if (homdb_checkid(class_))
 		vd = homun->get_viewdata(class_);
 	else if (mercenary->class(class_))
@@ -9214,7 +9214,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 	}
 
 	if( opt_flag&2 && sd && sd->touching_id )
-		npc_touchnext_areanpc(sd,false); // run OnTouch_ on next char in range
+		npc->touchnext_areanpc(sd,false); // run OnTouch_ on next char in range
 
 	return 1;
 }
@@ -9982,7 +9982,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		skill->unit_move(bl,iTimer->gettick(),1);
 
 	if(opt_flag&2 && sd && iMap->getcell(bl->m,bl->x,bl->y,CELL_CHKNPC))
-		npc_touch_areanpc(sd,bl->m,bl->x,bl->y); //Trigger on-touch event.
+		npc->touch_areanpc(sd,bl->m,bl->x,bl->y); //Trigger on-touch event.
 
 	ers_free(sc_data_ers, sce);
 	return 1;

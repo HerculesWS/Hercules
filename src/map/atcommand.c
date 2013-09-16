@@ -3749,7 +3749,7 @@ ACMD(reloadscript)
 	flush_fifos();
 	iMap->reloadnpc(true); // reload config files seeking for npcs
 	script->reload();
-	npc_reload();
+	npc->reload();
 	
 	clif->message(fd, msg_txt(100)); // Scripts have been reloaded.
 	
@@ -4237,7 +4237,7 @@ ACMD(tonpc)
 		return false;
 	}
 	
-	if ((nd = npc_name2id(npcname)) != NULL) {
+	if ((nd = npc->name2id(npcname)) != NULL) {
 		if (pc->setpos(sd, map_id2index(nd->bl.m), nd->bl.x, nd->bl.y, CLR_TELEPORT) == 0)
 			clif->message(fd, msg_txt(0)); // Warped.
 		else
@@ -4265,8 +4265,8 @@ ACMD(shownpc)
 		return false;
 	}
 	
-	if (npc_name2id(NPCname) != NULL) {
-		npc_enable(NPCname, 1);
+	if (npc->name2id(NPCname) != NULL) {
+		npc->enable(NPCname, 1);
 		clif->message(fd, msg_txt(110)); // Npc Enabled.
 	} else {
 		clif->message(fd, msg_txt(111)); // This NPC doesn't exist.
@@ -4291,12 +4291,12 @@ ACMD(hidenpc)
 		return false;
 	}
 	
-	if (npc_name2id(NPCname) == NULL) {
+	if (npc->name2id(NPCname) == NULL) {
 		clif->message(fd, msg_txt(111)); // This NPC doesn't exist.
 		return false;
 	}
 	
-	npc_enable(NPCname, 0);
+	npc->enable(NPCname, 0);
 	clif->message(fd, msg_txt(112)); // Npc Disabled.
 	return true;
 }
@@ -4318,9 +4318,9 @@ ACMD(loadnpc)
 	fclose(fp);
 	
 	// add to list of script sources and run it
-	npc_addsrcfile(message);
-	npc_parsesrcfile(message,true);
-	npc_read_event_script();
+	npc->addsrcfile(message);
+	npc->parsesrcfile(message,true);
+	npc->read_event_script();
 	
 	clif->message(fd, msg_txt(262));
 	
@@ -4340,14 +4340,14 @@ ACMD(unloadnpc)
 		return false;
 	}
 	
-	if ((nd = npc_name2id(NPCname)) == NULL) {
+	if ((nd = npc->name2id(NPCname)) == NULL) {
 		clif->message(fd, msg_txt(111)); // This NPC doesn't exist.
 		return false;
 	}
 	
-	npc_unload_duplicates(nd);
-	npc_unload(nd,true);
-	npc_read_event_script();
+	npc->unload_duplicates(nd);
+	npc->unload(nd,true);
+	npc->read_event_script();
 	clif->message(fd, msg_txt(112)); // Npc Disabled.
 	return true;
 }
@@ -4749,7 +4749,7 @@ ACMD(disguise)
 	}	else	{ //Acquired a Name
 		if ((id = mob->db_searchname(message)) == 0)
 		{
-			struct npc_data* nd = npc_name2id(message);
+			struct npc_data* nd = npc->name2id(message);
 			if (nd != NULL)
 				id = nd->class_;
 		}
@@ -4828,7 +4828,7 @@ ACMD(disguiseguild)
 			id = 0;
 	} else {
 		if( (id = mob->db_searchname(monster)) == 0 ) {
-			struct npc_data* nd = npc_name2id(monster);
+			struct npc_data* nd = npc->name2id(monster);
 			if( nd != NULL )
 				id = nd->class_;
 		}
@@ -5116,7 +5116,7 @@ ACMD(npcmove)
 		return false;
 	}
 	
-	if ((nd = npc_name2id(atcmd_player_name)) == NULL)
+	if ((nd = npc->name2id(atcmd_player_name)) == NULL)
 	{
 		clif->message(fd, msg_txt(111)); // This NPC doesn't exist.
 		return false;
@@ -5165,7 +5165,7 @@ ACMD(addwarp)
 		return false;
 	}
 	
-	nd = npc_add_warp(warpname, sd->bl.m, sd->bl.x, sd->bl.y, 2, 2, m, x, y);
+	nd = npc->add_warp(warpname, sd->bl.m, sd->bl.x, sd->bl.y, 2, 2, m, x, y);
 	if( nd == NULL )
 		return false;
 	
@@ -6194,7 +6194,7 @@ ACMD(npctalk)
 		}
 	}
 	
-	if (!(nd = npc_name2id(name))) {
+	if (!(nd = npc->name2id(name))) {
 		clif->message(fd, msg_txt(111)); // This NPC doesn't exist
 		return false;
 	}
@@ -8759,7 +8759,7 @@ ACMD(unloadnpcfile) {
 		return false;
 	}
 	
-	if( npc_unloadfile(message) )
+	if( npc->unloadfile(message) )
 		clif->message(fd, msg_txt(1386)); // File unloaded. Be aware that mapflags and monsters spawned directly are not removed.
 	else {
 		clif->message(fd, msg_txt(1387)); // File not found.
@@ -10018,7 +10018,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 			if( binding->log ) /* log only if this command should be logged [Ind/Hercules] */
 				logs->atcommand(sd, atcmd_msg);
 			
-			npc_do_atcmd_event((invokeFlag ? sd : ssd), command, params, binding->npc_event);
+			npc->do_atcmd_event((invokeFlag ? sd : ssd), command, params, binding->npc_event);
 			return true;
 		}
 	}

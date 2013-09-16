@@ -132,7 +132,7 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 
 	CREATE(nd, struct npc_data, 1);
 
-	nd->bl.id = md->tomb_nid = npc_get_new_npc_id();
+	nd->bl.id = md->tomb_nid = npc->get_new_npc_id();
 
     nd->dir = md->ud.dir;
 	nd->bl.m = md->bl.m;
@@ -259,7 +259,7 @@ int mob_parse_dataset(struct spawn_data *data)
  *------------------------------------------*/
 struct mob_data* mob_spawn_dataset(struct spawn_data *data) {
 	struct mob_data *md = (struct mob_data*)aCalloc(1, sizeof(struct mob_data));
-	md->bl.id= npc_get_new_npc_id();
+	md->bl.id= npc->get_new_npc_id();
 	md->bl.type = BL_MOB;
 	md->bl.m = data->m;
 	md->bl.x = data->x;
@@ -2579,15 +2579,15 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		if( md->npc_event[0] && !md->state.npc_killmonster ) {
 			if( sd && battle_config.mob_npc_event_type ) {
 				pc->setparam(sd, SP_KILLERRID, sd->bl.id);
-				npc_event(sd,md->npc_event,0);
+				npc->event(sd,md->npc_event,0);
 			} else if( mvp_sd ) {
 				pc->setparam(mvp_sd, SP_KILLERRID, sd?sd->bl.id:0);
-				npc_event(mvp_sd,md->npc_event,0);
+				npc->event(mvp_sd,md->npc_event,0);
 			} else
-				npc_event_do(md->npc_event);
+				npc->event_do(md->npc_event);
 		} else if( mvp_sd && !md->state.npc_killmonster ) {
 			pc->setparam(mvp_sd, SP_KILLEDRID, md->class_);
-			npc_script_event(mvp_sd, NPCE_KILLNPC); // PCKillNPC [Lance]
+			npc->script_event(mvp_sd, NPCE_KILLNPC); // PCKillNPC [Lance]
 		}
 
 		md->status.hp = 1;

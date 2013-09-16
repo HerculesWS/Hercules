@@ -543,7 +543,7 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 			break;
 		case MC_VENDING:
 		case ALL_BUYING_STORE:
-			if( npc_isnear(&sd->bl) ) {
+			if( npc->isnear(&sd->bl) ) {
 				// uncomment for more verbose message.
 				//char output[150];
 				//sprintf(output, msg_txt(662), battle_config.min_npc_vendchat_distance);
@@ -9041,7 +9041,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					if( !script )
 						break;
 					if( dstsd )
-						script->run(scriptroot,0,dstsd->bl.id,fake_nd->bl.id);
+						script->run(scriptroot,0,dstsd->bl.id,npc->fake_nd->bl.id);
 					else
 						script->run(scriptroot,0,src->id,0);
 				}
@@ -12633,7 +12633,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			break;
 
 		case CG_HERMODE:
-			if(!npc_check_areanpc(1,sd->bl.m,sd->bl.x,sd->bl.y,skill->get_splash(skill_id, skill_lv)))
+			if(!npc->check_areanpc(1,sd->bl.m,sd->bl.x,sd->bl.y,skill->get_splash(skill_id, skill_lv)))
 			{
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;

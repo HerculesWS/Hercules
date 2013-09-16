@@ -388,7 +388,7 @@ int chat_triggerevent(struct chat_data *cd)
 	nullpo_ret(cd);
 
 	if( cd->users >= cd->trigger && cd->npc_event[0] )
-		npc_event_do(cd->npc_event);
+		npc->event_do(cd->npc_event);
 	return 0;
 }
 

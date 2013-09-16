@@ -349,7 +349,7 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *pet)
 	}
 	sd->pd = pd = (struct pet_data *)aCalloc(1,sizeof(struct pet_data));
 	pd->bl.type = BL_PET;
-	pd->bl.id = npc_get_new_npc_id();
+	pd->bl.id = npc->get_new_npc_id();
 
 	pd->msd = sd;
 	pd->petDB = &pet_db[i];

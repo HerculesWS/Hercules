@@ -3381,11 +3381,11 @@ static void script_detach_state(struct script_state* st, bool dequeue_event)
 			 * We're done with this NPC session, so we cancel the timer (if existent) and move on
 			 **/
 			if( sd->npc_idle_timer != INVALID_TIMER ) {
-				iTimer->delete_timer(sd->npc_idle_timer,npc_rr_secure_timeout_timer);
+				iTimer->delete_timer(sd->npc_idle_timer,npc->secure_timeout_timer);
 				sd->npc_idle_timer = INVALID_TIMER;
 			}
 #endif
-			npc_event_dequeue(sd);
+			npc->event_dequeue(sd);
 		}
 	} else if(st->bk_st) { // rid was set to 0, before detaching the script state
 		ShowError("script_detach_state: Found previous script state without attached player (rid=%d, oid=%d, state=%d, bk_npcid=%d)\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
@@ -3421,7 +3421,7 @@ void script_attach_state(struct script_state* st) {
  **/
 #ifdef SECURE_NPCTIMEOUT
 		if( sd->npc_idle_timer == INVALID_TIMER )
-			sd->npc_idle_timer = iTimer->add_timer(iTimer->gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc_rr_secure_timeout_timer,sd->bl.id,0);
+			sd->npc_idle_timer = iTimer->add_timer(iTimer->gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc->secure_timeout_timer,sd->bl.id,0);
 		sd->npc_idle_tick = iTimer->gettick();
 #endif
 	}
@@ -6665,7 +6665,7 @@ BUILDIN(getnpcid)
 	
 	if( script_hasdata(st,3) )
 	{// unique npc name
-		if( ( nd = npc_name2id(script_getstr(st,3)) ) == NULL )
+		if( ( nd = npc->name2id(script_getstr(st,3)) ) == NULL )
 		{
 			ShowError("buildin_getnpcid: No such NPC '%s'.\n", script_getstr(st,3));
 			script_pushint(st,0);
@@ -8781,7 +8781,7 @@ BUILDIN(doevent)
 	}
 	
 	check_event(st, event);
-	npc_event(sd, event, 0);
+	npc->event(sd, event, 0);
 	return true;
 }
 /*==========================================
@@ -8790,7 +8790,7 @@ BUILDIN(donpcevent)
 {
 	const char* event = script_getstr(st,2);
 	check_event(st, event);
-	if( !npc_event_do(event) ) {
+	if( !npc->event_do(event) ) {
 		struct npc_data * nd = iMap->id2nd(st->oid);
 		ShowDebug("NPCEvent '%s' not found! (source: %s)\n",event,nd?nd->name:"Unknown");
 		script_pushint(st, 0);
@@ -8803,12 +8803,12 @@ BUILDIN(donpcevent)
 /// basically a specialized 'donpcevent', with the event specified as two arguments instead of one
 BUILDIN(cmdothernpc)	// Added by RoVeRT
 {
-	const char* npc = script_getstr(st,2);
+	const char* npc_name = script_getstr(st,2);
 	const char* command = script_getstr(st,3);
 	char event[EVENT_NAME_LENGTH];
-	snprintf(event, sizeof(event), "%s::OnCommand%s", npc, command);
+	snprintf(event, sizeof(event), "%s::OnCommand%s", npc_name, command);
 	check_event(st, event);
-	npc_event_do(event);
+	npc->event_do(event);
 	return true;
 }
 
@@ -8872,7 +8872,7 @@ BUILDIN(initnpctimer)
 	
 	if( script_hasdata(st,3) )
 	{	//Two arguments: NPC name and attach flag.
-		nd = npc_name2id(script_getstr(st, 2));
+		nd = npc->name2id(script_getstr(st, 2));
 		flag = script_getnum(st,3);
 	}
 	else if( script_hasdata(st,2) )
@@ -8881,7 +8881,7 @@ BUILDIN(initnpctimer)
 		data = script_getdata(st,2);
 		script->get_val(st,data);
 		if( data_isstring(data) ) //NPC name
-			nd = npc_name2id(script->conv_str(st, data));
+			nd = npc->name2id(script->conv_str(st, data));
 		else if( data_isint(data) ) //Flag
 		{
 			nd = (struct npc_data *)iMap->id2bl(st->oid);
@@ -8907,8 +8907,8 @@ BUILDIN(initnpctimer)
 	}
 	
 	nd->u.scr.timertick = 0;
-	npc_settimerevent_tick(nd,0);
-	npc_timerevent_start(nd, st->rid);
+	npc->settimerevent_tick(nd,0);
+	npc->timerevent_start(nd, st->rid);
 	return true;
 }
 /*==========================================
@@ -8920,7 +8920,7 @@ BUILDIN(startnpctimer)
 	
 	if( script_hasdata(st,3) )
 	{	//Two arguments: NPC name and attach flag.
-		nd = npc_name2id(script_getstr(st, 2));
+		nd = npc->name2id(script_getstr(st, 2));
 		flag = script_getnum(st,3);
 	}
 	else if( script_hasdata(st,2) )
@@ -8929,7 +8929,7 @@ BUILDIN(startnpctimer)
 		data = script_getdata(st,2);
 		script->get_val(st,data);
 		if( data_isstring(data) ) //NPC name
-			nd = npc_name2id(script->conv_str(st, data));
+			nd = npc->name2id(script->conv_str(st, data));
 		else if( data_isint(data) ) //Flag
 		{
 			nd = (struct npc_data *)iMap->id2bl(st->oid);
@@ -8954,7 +8954,7 @@ BUILDIN(startnpctimer)
 		nd->u.scr.rid = sd->bl.id;
 	}
 	
-	npc_timerevent_start(nd, st->rid);
+	npc->timerevent_start(nd, st->rid);
 	return true;
 }
 /*==========================================
@@ -8966,7 +8966,7 @@ BUILDIN(stopnpctimer)
 	
 	if( script_hasdata(st,3) )
 	{	//Two arguments: NPC name and attach flag.
-		nd = npc_name2id(script_getstr(st, 2));
+		nd = npc->name2id(script_getstr(st, 2));
 		flag = script_getnum(st,3);
 	}
 	else if( script_hasdata(st,2) )
@@ -8975,7 +8975,7 @@ BUILDIN(stopnpctimer)
 		data = script_getdata(st,2);
 		script->get_val(st,data);
 		if( data_isstring(data) ) //NPC name
-			nd = npc_name2id(script->conv_str(st, data));
+			nd = npc->name2id(script->conv_str(st, data));
 		else if( data_isint(data) ) //Flag
 		{
 			nd = (struct npc_data *)iMap->id2bl(st->oid);
@@ -8995,7 +8995,7 @@ BUILDIN(stopnpctimer)
 	if( flag ) //Detach
 		nd->u.scr.rid = 0;
 	
-	npc_timerevent_stop(nd);
+	npc->timerevent_stop(nd);
 	return true;
 }
 /*==========================================
@@ -9008,7 +9008,7 @@ BUILDIN(getnpctimer)
 	int val = 0;
 	
 	if( script_hasdata(st,3) )
-		nd = npc_name2id(script_getstr(st,3));
+		nd = npc->name2id(script_getstr(st,3));
 	else
 		nd = (struct npc_data *)iMap->id2bl(st->oid);
 	
@@ -9021,7 +9021,7 @@ BUILDIN(getnpctimer)
 	
 	switch( type )
 	{
-		case 0: val = npc_gettimerevent_tick(nd); break;
+		case 0: val = npc->gettimerevent_tick(nd); break;
 		case 1:
 			if( nd->u.scr.rid )
 			{
@@ -9051,7 +9051,7 @@ BUILDIN(setnpctimer)
 	
 	tick = script_getnum(st,2);
 	if( script_hasdata(st,3) )
-		nd = npc_name2id(script_getstr(st,3));
+		nd = npc->name2id(script_getstr(st,3));
 	else
 		nd = (struct npc_data *)iMap->id2bl(st->oid);
 	
@@ -9062,7 +9062,7 @@ BUILDIN(setnpctimer)
 		return false;
 	}
 	
-	npc_settimerevent_tick(nd,tick);
+	npc->settimerevent_tick(nd,tick);
 	script_pushint(st,0);
 	return true;
 }
@@ -9107,7 +9107,7 @@ BUILDIN(detachnpctimer)
 	struct npc_data *nd;
 	
 	if( script_hasdata(st,2) )
-		nd = npc_name2id(script_getstr(st,2));
+		nd = npc->name2id(script_getstr(st,2));
 	else
 		nd = (struct npc_data *)iMap->id2bl(st->oid);
 	
@@ -9466,7 +9466,7 @@ BUILDIN(enablenpc)
 {
 	const char *str;
 	str=script_getstr(st,2);
-	npc_enable(str,1);
+	npc->enable(str,1);
 	return true;
 }
 /*==========================================
@@ -9475,7 +9475,7 @@ BUILDIN(disablenpc)
 {
 	const char *str;
 	str=script_getstr(st,2);
-	npc_enable(str,0);
+	npc->enable(str,0);
 	return true;
 }
 
@@ -9485,7 +9485,7 @@ BUILDIN(hideoffnpc)
 {
 	const char *str;
 	str=script_getstr(st,2);
-	npc_enable(str,2);
+	npc->enable(str,2);
 	return true;
 }
 /*==========================================
@@ -9494,7 +9494,7 @@ BUILDIN(hideonnpc)
 {
 	const char *str;
 	str=script_getstr(st,2);
-	npc_enable(str,4);
+	npc->enable(str,4);
 	return true;
 }
 
@@ -10035,7 +10035,7 @@ BUILDIN(globalmes)
 		name=nd->name; //use current npc name
 	}
 	
-	npc_globalmessage(name,mes);	// broadcast  to all players connected
+	npc->globalmessage(name,mes);	// broadcast  to all players connected
 	
 	return true;
 }
@@ -10074,7 +10074,7 @@ BUILDIN(delwaitingroom)
 {
 	struct npc_data* nd;
 	if( script_hasdata(st,2) )
-		nd = npc_name2id(script_getstr(st, 2));
+		nd = npc->name2id(script_getstr(st, 2));
 	else
 		nd = (struct npc_data *)iMap->id2bl(st->oid);
 	if( nd != NULL )
@@ -10092,7 +10092,7 @@ BUILDIN(waitingroomkickall)
 	struct chat_data* cd;
 	
 	if( script_hasdata(st,2) )
-		nd = npc_name2id(script_getstr(st,2));
+		nd = npc->name2id(script_getstr(st,2));
 	else
 		nd = (struct npc_data *)iMap->id2bl(st->oid);
 	
@@ -10111,7 +10111,7 @@ BUILDIN(enablewaitingroomevent)
 	struct chat_data* cd;
 	
 	if( script_hasdata(st,2) )
-		nd = npc_name2id(script_getstr(st, 2));
+		nd = npc->name2id(script_getstr(st, 2));
 	else
 		nd = (struct npc_data *)iMap->id2bl(st->oid);
 	
@@ -10130,7 +10130,7 @@ BUILDIN(disablewaitingroomevent)
 	struct chat_data *cd;
 	
 	if( script_hasdata(st,2) )
-		nd = npc_name2id(script_getstr(st, 2));
+		nd = npc->name2id(script_getstr(st, 2));
 	else
 		nd = (struct npc_data *)iMap->id2bl(st->oid);
 	
@@ -10161,7 +10161,7 @@ BUILDIN(getwaitingroomstate)
 	
 	type = script_getnum(st,2);
 	if( script_hasdata(st,3) )
-		nd = npc_name2id(script_getstr(st, 3));
+		nd = npc->name2id(script_getstr(st, 3));
 	else
 		nd = (struct npc_data *)iMap->id2bl(st->oid);
 	
@@ -10490,7 +10490,7 @@ BUILDIN(setmapflag)
 				char empty[1] = "\0";
 				char params[MAP_ZONE_MAPFLAG_LENGTH];
 				memcpy(params, val2, MAP_ZONE_MAPFLAG_LENGTH);
-				npc_parse_mapflag(map[m].name, empty, zone, params, empty, empty, empty);
+				npc->parse_mapflag(map[m].name, empty, zone, params, empty, empty, empty);
 			}
 				break;
 			case MF_NOCOMMAND:			map[m].nocommand = (val <= 0) ? 100 : val; break;
@@ -10746,7 +10746,7 @@ BUILDIN(emotion)
 	} else
 		if( script_hasdata(st,4) )
 		{
-			TBL_NPC *nd = npc_name2id(script_getstr(st,4));
+			TBL_NPC *nd = npc->name2id(script_getstr(st,4));
 			if(nd)
 				clif->emotion(&nd->bl,type);
 		}
@@ -11879,7 +11879,7 @@ BUILDIN(misceffect)
 	int type;
 	
 	type=script_getnum(st,2);
-	if(st->oid && st->oid != fake_nd->bl.id) {
+	if(st->oid && st->oid != npc->fake_nd->bl.id) {
 		struct block_list *bl = iMap->id2bl(st->oid);
 		if (bl)
 			clif->specialeffect(bl,type,AREA);
@@ -12261,7 +12261,7 @@ BUILDIN(specialeffect)
 	
 	if( script_hasdata(st,4) )
 	{
-		TBL_NPC *nd = npc_name2id(script_getstr(st,4));
+		TBL_NPC *nd = npc->name2id(script_getstr(st,4));
 		if(nd)
 			clif->specialeffect(&nd->bl, type, target);
 	}
@@ -12570,19 +12570,19 @@ BUILDIN(jump_zero)
  *------------------------------------------*/
 BUILDIN(movenpc) {
 	TBL_NPC *nd = NULL;
-	const char *npc;
+	const char *npc_name;
 	int x,y;
 	
-	npc = script_getstr(st,2);
+	npc_name = script_getstr(st,2);
 	x = script_getnum(st,3);
 	y = script_getnum(st,4);
 	
-	if ((nd = npc_name2id(npc)) == NULL)
+	if ((nd = npc->name2id(npc_name)) == NULL)
 		return -1;
 	
 	if (script_hasdata(st,5))
 		nd->dir = script_getnum(st,5) % 8;
-	npc_movenpc(nd, x, y);
+	npc->movenpc(nd, x, y);
 	return true;
 }
 
@@ -12797,7 +12797,7 @@ BUILDIN(getmapxy)
 			if( script_hasdata(st,6) )
 			{
 				struct npc_data *nd;
-				nd=npc_name2id(script_getstr(st,6));
+				nd=npc->name2id(script_getstr(st,6));
 				if (nd)
 					bl = &nd->bl;
 			} else //In case the origin is not an npc?
@@ -14083,7 +14083,7 @@ BUILDIN(setnpcdisplay)
 		return false;
 	}
 	
-	nd = npc_name2id(name);
+	nd = npc->name2id(name);
 	if( nd == NULL )
 	{// not found
 		script_pushint(st,1);
@@ -14092,7 +14092,7 @@ BUILDIN(setnpcdisplay)
 	
 	// update npc
 	if( newname )
-		npc_setdisplayname(nd, newname);
+		npc->setdisplayname(nd, newname);
 	
 	if( size != -1 && size != (int)nd->size )
 		nd->size = size;
@@ -14100,7 +14100,7 @@ BUILDIN(setnpcdisplay)
 		size = -1;
 	
 	if( class_ != -1 && nd->class_ != class_ )
-		npc_setclass(nd, class_);
+		npc->setclass(nd, class_);
 	else if( size != -1 )
 	{ // Required to update the visual size
 		clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);
@@ -14384,7 +14384,7 @@ BUILDIN(callshop)
 	shopname = script_getstr(st, 2);
 	if( script_hasdata(st,3) )
 		flag = script_getnum(st,3);
-	nd = npc_name2id(shopname);
+	nd = npc->name2id(shopname);
 	if( !nd || nd->bl.type != BL_NPC || (nd->subtype != SHOP && nd->subtype != CASHSHOP) )
 	{
 		ShowError("buildin_callshop: Shop [%s] not found (or NPC is not shop type)\n", shopname);
@@ -14399,8 +14399,8 @@ BUILDIN(callshop)
 		
 		switch( flag )
 		{
-			case 1: npc_buysellsel(sd,nd->bl.id,0); break; //Buy window
-			case 2: npc_buysellsel(sd,nd->bl.id,1); break; //Sell window
+			case 1: npc->buysellsel(sd,nd->bl.id,0); break; //Buy window
+			case 2: npc->buysellsel(sd,nd->bl.id,1); break; //Sell window
 			default: clif->npcbuysell(sd,nd->bl.id); break; //Show menu
 		}
 	}
@@ -14415,7 +14415,7 @@ BUILDIN(callshop)
 BUILDIN(npcshopitem)
 {
 	const char* npcname = script_getstr(st, 2);
-	struct npc_data* nd = npc_name2id(npcname);
+	struct npc_data* nd = npc->name2id(npcname);
 	int n, i;
 	int amount;
 	
@@ -14444,7 +14444,7 @@ BUILDIN(npcshopitem)
 BUILDIN(npcshopadditem)
 {
 	const char* npcname = script_getstr(st,2);
-	struct npc_data* nd = npc_name2id(npcname);
+	struct npc_data* nd = npc->name2id(npcname);
 	int n, i;
 	int amount;
 	
@@ -14473,7 +14473,7 @@ BUILDIN(npcshopadditem)
 BUILDIN(npcshopdelitem)
 {
 	const char* npcname = script_getstr(st,2);
-	struct npc_data* nd = npc_name2id(npcname);
+	struct npc_data* nd = npc->name2id(npcname);
 	unsigned int nameid;
 	int n, i;
 	int amount;
@@ -14512,7 +14512,7 @@ BUILDIN(npcshopdelitem)
 BUILDIN(npcshopattach)
 {
 	const char* npcname = script_getstr(st,2);
-	struct npc_data* nd = npc_name2id(npcname);
+	struct npc_data* nd = npc->name2id(npcname);
 	int flag = 1;
 	
 	if( script_hasdata(st,3) )
@@ -15246,7 +15246,7 @@ BUILDIN(awake) {
 	struct script_state *tst;
 	struct npc_data* nd;
 	
-	if( ( nd = npc_name2id(script_getstr(st, 2)) ) == NULL ) {
+	if( ( nd = npc->name2id(script_getstr(st, 2)) ) == NULL ) {
 		ShowError("awake: NPC \"%s\" not found\n", script_getstr(st, 2));
 		return false;
 	}
@@ -15309,7 +15309,7 @@ BUILDIN(getvariableofnpc)
 		return false;
 	}
 	
-	nd = npc_name2id(script_getstr(st,3));
+	nd = npc->name2id(script_getstr(st,3));
 	if( nd == NULL || nd->subtype != SCRIPT || nd->u.scr.script == NULL )
 	{// NPC not found or has no script
 		ShowError("script:getvariableofnpc: can't find npc %s\n", script_getstr(st,3));
@@ -15721,7 +15721,7 @@ BUILDIN(waitingroom2bg)
 	struct map_session_data *sd;
 	
 	if( script_hasdata(st,7) )
-		nd = npc_name2id(script_getstr(st,7));
+		nd = npc->name2id(script_getstr(st,7));
 	else
 		nd = (struct npc_data *)iMap->id2bl(st->oid);
 	
@@ -15782,7 +15782,7 @@ BUILDIN(waitingroom2bg_single)
 	
 	x = script_getnum(st,4);
 	y = script_getnum(st,5);
-	nd = npc_name2id(script_getstr(st,6));
+	nd = npc->name2id(script_getstr(st,6));
 	
 	if( nd == NULL || (cd = (struct chat_data *)iMap->id2bl(nd->chat_id)) == NULL || cd->users <= 0 )
 		return true;
@@ -16155,7 +16155,7 @@ BUILDIN(instance_npcname) {
 	else if( st->instance_id >= 0 )
 		instance_id = st->instance_id;
 	
-	if( instance_id >= 0 && (nd = npc_name2id(str)) != NULL ) {
+	if( instance_id >= 0 && (nd = npc->name2id(str)) != NULL ) {
 		static char npcname[NAME_LENGTH];
 		snprintf(npcname, sizeof(npcname), "dup_%d_%d", instance_id, nd->bl.id);
  		script_pushconststr(st,npcname);

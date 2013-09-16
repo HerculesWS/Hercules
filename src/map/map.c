@@ -372,7 +372,7 @@ int map_moveblock(struct block_list *bl, int x1, int y1, unsigned int tick)
 			sc->data[SC_PROPERTYWALK]->val3 >= skill->get_maxcount(sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2) )
 			status_change_end(bl,SC_PROPERTYWALK,INVALID_TIMER);
 	} else if (bl->type == BL_NPC)
-		npc_unsetcells((TBL_NPC*)bl);
+		npc->unsetcells((TBL_NPC*)bl);
 
 	if (moveblock) iMap->delblock(bl);
 #ifdef CELL_NOSTACK
@@ -443,7 +443,7 @@ int map_moveblock(struct block_list *bl, int x1, int y1, unsigned int tick)
 			}
 		}
 	} else if (bl->type == BL_NPC)
-		npc_setcells((TBL_NPC*)bl);
+		npc->setcells((TBL_NPC*)bl);
 
 	return 0;
 }
@@ -1534,10 +1534,10 @@ int map_quit(struct map_session_data *sd) {
 	}
 
 	if (sd->npc_timer_id != INVALID_TIMER) //Cancel the event timer.
-		npc_timerevent_quit(sd);
+		npc->timerevent_quit(sd);
 
 	if (sd->npc_id)
-		npc_event_dequeue(sd);
+		npc->event_dequeue(sd);
 
 	if( sd->bg_id && !sd->bg_queue.arena ) /* TODO: dump this chunk after bg_queue is fully enabled */
 		bg_team_leave(sd,1);
@@ -1548,7 +1548,7 @@ int map_quit(struct map_session_data *sd) {
 	for( i = 0; i < sd->queues_count; i++ ) {
 		struct hQueue *queue;
 		if( (queue = script->queue(sd->queues[i])) && queue->onLogOut[0] != '\0' ) {
-			npc_event(sd, queue->onLogOut, 0);
+			npc->event(sd, queue->onLogOut, 0);
 		}
 	}
 	/* two times, the npc event above may assign a new one or delete others */
@@ -1557,7 +1557,7 @@ int map_quit(struct map_session_data *sd) {
 			script->queue_remove(sd->queues[i],sd->status.account_id);
 	}
 
-	npc_script_event(sd, NPCE_LOGOUT);
+	npc->script_event(sd, NPCE_LOGOUT);
 
 	//Unit_free handles clearing the player related data,
 	//iMap->quit handles extra specific data which is related to quitting normally
@@ -2104,7 +2104,7 @@ void map_spawnmobs(int16 m)
 		if(map[m].moblist[i]!=NULL)
 		{
 			k+=map[m].moblist[i]->num;
-			npc_parse_mob2(map[m].moblist[i]);
+			npc->parse_mob2(map[m].moblist[i]);
 		}
 
 		if (battle_config.etc_log && k > 0)
@@ -2361,7 +2361,7 @@ void map_cellfromcache(struct map_data *m) {
 		m->setcell  = map_setcell;
 
 		for(i = 0; i < m->npc_num; i++) {
-			npc_setcells(m->npc[i]);
+			npc->setcells(m->npc[i]);
 		}
 	}
 }
@@ -3274,9 +3274,9 @@ int map_config_read(char *cfgName) {
 		else if (strcmpi(w1, "delmap") == 0)
 			iMap->map_num--;
 		else if (strcmpi(w1, "npc") == 0)
-			npc_addsrcfile(w2);
+			npc->addsrcfile(w2);
 		else if (strcmpi(w1, "delnpc") == 0)
-			npc_delsrcfile(w2);
+			npc->delsrcfile(w2);
 		else if (strcmpi(w1, "autosave_time") == 0) {
 			iMap->autosave_interval = atoi(w2);
 			if (iMap->autosave_interval < 1) //Revert to default saving.
@@ -3379,7 +3379,7 @@ void map_reloadnpc_sub(char *cfgName)
 		*ptr = '\0';
 
 		if (strcmpi(w1, "npc") == 0)
-			npc_addsrcfile(w2);
+			npc->addsrcfile(w2);
 		else if (strcmpi(w1, "import") == 0)
 			map_reloadnpc_sub(w2);
 		else
@@ -3392,7 +3392,7 @@ void map_reloadnpc_sub(char *cfgName)
 void map_reloadnpc(bool clear)
 {
 	if (clear)
-		npc_addsrcfile("clear"); // this will clear the current script list
+		npc->addsrcfile("clear"); // this will clear the current script list
 
 #ifdef RENEWAL
 	map_reloadnpc_sub("npc/re/scripts_main.conf");
@@ -3563,7 +3563,7 @@ void map_zone_remove(int m) {
 			}
 		}
 
-		npc_parse_mapflag(map[m].name,empty,flag,params,empty,empty,empty);
+		npc->parse_mapflag(map[m].name,empty,flag,params,empty,empty,empty);
 		aFree(map[m].zone_mf[k]);
 		map[m].zone_mf[k] = NULL;
 	}
@@ -4287,7 +4287,7 @@ void map_zone_apply(int m, struct map_zone_data *zone, const char* start, const 
 		if( map_zone_mf_cache(m,flag,params) )
 			continue;
 
-		npc_parse_mapflag(map[m].name,empty,flag,params,start,buffer,filepath);
+		npc->parse_mapflag(map[m].name,empty,flag,params,start,buffer,filepath);
 	}
 }
 /* used on npc load and reload to apply all "Normal" and "PK Mode" zones */
@@ -4315,7 +4315,7 @@ void map_zone_init(void) {
 			if( map[j].zone == zone ) {
 				if( map_zone_mf_cache(j,flag,params) )
 					break;
-				npc_parse_mapflag(map[j].name,empty,flag,params,empty,empty,empty);
+				npc->parse_mapflag(map[j].name,empty,flag,params,empty,empty,empty);
 			}
 		}
 	}
@@ -4337,7 +4337,7 @@ void map_zone_init(void) {
 				if( map[j].zone == zone ) {
 					if( map_zone_mf_cache(j,flag,params) )
 						break;
-					npc_parse_mapflag(map[j].name,empty,flag,params,empty,empty,empty);
+					npc->parse_mapflag(map[j].name,empty,flag,params,empty,empty,empty);
 				}
 			}
 		}
@@ -4869,7 +4869,7 @@ int cleanup_sub(struct block_list *bl, va_list ap) {
 		iMap->quit((struct map_session_data *) bl);
 		break;
 	case BL_NPC:
-		npc_unload((struct npc_data *)bl,false);
+		npc->unload((struct npc_data *)bl,false);
 		break;
 	case BL_MOB:
 		unit->free(bl,CLR_OUTSIGHT);
@@ -4917,7 +4917,7 @@ void do_final(void)
 	mapit->free(iter);
 
 	/* prepares npcs for a faster shutdown process */
-	do_clear_npc();
+	npc->do_clear_npc();
 
 	// remove all objects on maps
 	for (i = 0; i < iMap->map_num; i++) {
@@ -4936,7 +4936,7 @@ void do_final(void)
 	chrif->do_final_chrif();
 	ircbot->final();/* before clif. */
 	clif->final();
-	do_final_npc();
+	npc->final();
 	script->final();
 	itemdb->final();
 	instance->final();
@@ -5170,6 +5170,7 @@ void map_hp_symbols(void) {
 	HPM->share(mercenary,"mercenary");
 	HPM->share(mob,"mob");
 	HPM->share(unit,"unit");
+	HPM->share(npc,"npc");
 
 	/* partial */
 	HPM->share(mapit,"mapit");
@@ -5416,13 +5417,13 @@ int do_init(int argc, char *argv[])
 	mercenary->init();
 	elemental->do_init_elemental();
 	do_init_quest();
-	do_init_npc();
+	npc->init();
 	unit->init();
 	do_init_battleground();
 	iDuel->do_init_duel();
 	vending->init();
 
-	npc_event_do_oninit();	// Init npcs (OnInit)
+	npc->event_do_oninit();	// Init npcs (OnInit)
 
 	if (battle_config.pk_mode)
 		ShowNotice("Server is running on '"CL_WHITE"PK Mode"CL_RESET"'.\n");

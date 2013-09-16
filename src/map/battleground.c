@@ -149,7 +149,7 @@ int bg_team_leave(struct map_session_data *sd, int flag)
 	}
 
 	if( bg_data->logout_event[0] && flag )
-		npc_event(sd, bg_data->logout_event, 0);
+		npc->event(sd, bg_data->logout_event, 0);
 	
 	if( sd->bg_queue.arena ) {
 		bg->queue_pc_cleanup(sd);
@@ -534,7 +534,7 @@ void bg_begin(struct bg_arena *arena) {
 		arena->ongoing = true;
 		mapreg_setreg(script->add_str("$@bg_queue_id"),arena->queue_id);/* TODO: make this a arena-independant var? or just .@? */
 		mapreg_setregstr(script->add_str("$@bg_delay_var$"),bg->gdelay_var);
-		npc_event_do(arena->npc_event);
+		npc->event_do(arena->npc_event);
 		/* we split evenly? */
 		/* but if a party of say 10 joins, it cant be split evenly unless by luck there are 10 soloers in the queue besides them */
 		/* not sure how to split T_T needs more info */

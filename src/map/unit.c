@@ -73,7 +73,7 @@ struct unit_data* unit_bl2ud(struct block_list *bl) {
  * @return a pointer to the given object's unit_data
  */
 struct unit_data* unit_bl2ud2(struct block_list *bl) {
-	if( bl && bl->type == BL_NPC && ((struct npc_data*)bl)->ud == &npc_base_ud ) {
+	if( bl && bl->type == BL_NPC && ((struct npc_data*)bl)->ud == &npc->base_ud ) {
 		struct npc_data *nd = (struct npc_data *)bl;
 		nd->ud = NULL;
 		CREATE(nd->ud, struct unit_data, 1);
@@ -200,9 +200,9 @@ int unit_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data)
 
 	if(sd) {
 		if( sd->touching_id )
-			npc_touchnext_areanpc(sd,false);
+			npc->touchnext_areanpc(sd,false);
 		if(iMap->getcell(bl->m,x,y,CELL_CHKNPC)) {
-			npc_touch_areanpc(sd,bl->m,x,y);
+			npc->touch_areanpc(sd,bl->m,x,y);
 			if (bl->prev == NULL) //Script could have warped char, abort remaining of the function.
 				return 0;
 		} else
@@ -228,7 +228,7 @@ int unit_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data)
 		}
 	} else if (md) {
 		if( iMap->getcell(bl->m,x,y,CELL_CHKNPC) ) {
-			if( npc_touch_areanpc2(md) ) return 0; // Warped
+			if( npc->touch_areanpc2(md) ) return 0; // Warped
 		} else
 			md->areanpc_id = 0;
 		if (md->min_chase > md->db->range3) md->min_chase--;
@@ -667,9 +667,9 @@ int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool
 
 	if(sd) {
 		if( sd->touching_id )
-			npc_touchnext_areanpc(sd,false);
+			npc->touchnext_areanpc(sd,false);
 		if(iMap->getcell(bl->m,bl->x,bl->y,CELL_CHKNPC)) {
-			npc_touch_areanpc(sd,bl->m,bl->x,bl->y);
+			npc->touch_areanpc(sd,bl->m,bl->x,bl->y);
 			if (bl->prev == NULL) //Script could have warped char, abort remaining of the function.
 				return 0;
 		} else
@@ -765,10 +765,10 @@ int unit_blown(struct block_list* bl, int dx, int dy, int count, int flag)
 
 			if(sd) {
 				if(sd->touching_id) {
-					npc_touchnext_areanpc(sd, false);
+					npc->touchnext_areanpc(sd, false);
 				}
 				if(iMap->getcell(bl->m, bl->x, bl->y, CELL_CHKNPC)) {
-					npc_touch_areanpc(sd, bl->m, bl->x, bl->y);
+					npc->touch_areanpc(sd, bl->m, bl->x, bl->y);
 				} else {
 					sd->areanpc_id = 0;
 				}
@@ -1637,7 +1637,7 @@ int unit_attack(struct block_list *src,int target_id,int continuous)
 	if( src->type == BL_PC ) {
 		TBL_PC* sd = (TBL_PC*)src;
 		if( target->type == BL_NPC ) { // monster npcs [Valaris]
-			npc_click(sd,(TBL_NPC*)target); // submitted by leinsirk10 [Celest]
+			npc->click(sd,(TBL_NPC*)target); // submitted by leinsirk10 [Celest]
 			return 0;
 		}
 		if( pc_is90overweight(sd) || pc_isridingwug(sd) ) { // overweight or mounted on warg - stop attacking
@@ -2160,7 +2160,7 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 			if(sd->menuskill_id)
 				sd->menuskill_id = sd->menuskill_val = 0;
 			if( sd->touching_id )
-				npc_touchnext_areanpc(sd,true);
+				npc->touchnext_areanpc(sd,true);
 
 			// Check if warping and not changing the map.
 			if ( sd->state.warping && !sd->state.changemap ) {

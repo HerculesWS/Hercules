@@ -301,7 +301,7 @@ int merc_data_received(struct s_mercenary *merc, bool flag)
 	{
 		sd->md = md = (struct mercenary_data*)aCalloc(1,sizeof(struct mercenary_data));
 		md->bl.type = BL_MER;
-		md->bl.id = npc_get_new_npc_id();
+		md->bl.id = npc->get_new_npc_id();
 		md->devotion_flag = 0;
 
 		md->master = sd;

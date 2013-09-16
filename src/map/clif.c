@@ -1928,7 +1928,7 @@ void clif_scriptmenu(struct map_session_data* sd, int npcid, const char* mes)
 	int slen = strlen(mes) + 9;
 	struct block_list *bl = NULL;
 
-	if (!sd->state.using_fake_npc && (npcid == fake_nd->bl.id || ((bl = iMap->id2bl(npcid)) && (bl->m!=sd->bl.m ||
+	if (!sd->state.using_fake_npc && (npcid == npc->fake_nd->bl.id || ((bl = iMap->id2bl(npcid)) && (bl->m!=sd->bl.m ||
 	   bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
 	   bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
 	   clif->sendfakenpc(sd, npcid);
@@ -1960,7 +1960,7 @@ void clif_scriptinput(struct map_session_data *sd, int npcid)
 
 	nullpo_retv(sd);
 
-	if (!sd->state.using_fake_npc && (npcid == fake_nd->bl.id || ((bl = iMap->id2bl(npcid)) && (bl->m!=sd->bl.m ||
+	if (!sd->state.using_fake_npc && (npcid == npc->fake_nd->bl.id || ((bl = iMap->id2bl(npcid)) && (bl->m!=sd->bl.m ||
 	   bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
 	   bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
 	   clif->sendfakenpc(sd, npcid);
@@ -1991,7 +1991,7 @@ void clif_scriptinputstr(struct map_session_data *sd, int npcid)
 
 	nullpo_retv(sd);
 
-	if (!sd->state.using_fake_npc && (npcid == fake_nd->bl.id || ((bl = iMap->id2bl(npcid)) && (bl->m!=sd->bl.m ||
+	if (!sd->state.using_fake_npc && (npcid == npc->fake_nd->bl.id || ((bl = iMap->id2bl(npcid)) && (bl->m!=sd->bl.m ||
 	   bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
 	   bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
 	   clif->sendfakenpc(sd, npcid);
@@ -9531,7 +9531,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		iMap->map_foreachpc(clif->friendslist_toggle_sub, sd->status.account_id, sd->status.char_id, 1);
 
 		//Login Event
-		npc_script_event(sd, NPCE_LOGIN);
+		npc->script_event(sd, NPCE_LOGIN);
 	} else {
 		//For some reason the client "loses" these on warp/map-change.
 		clif->updatestatus(sd,SP_STR);
@@ -9547,7 +9547,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		sd->npc_menu = 0;
 
 		if(sd->npc_id)
-			npc_event_dequeue(sd);
+			npc->event_dequeue(sd);
 		
 		if( sd->guild && ( battle_config.guild_notice_changemap == 2 || ( battle_config.guild_notice_changemap == 1 && sd->state.changemap ) ) )
 			clif->guild_notice(sd,sd->guild);
@@ -9611,7 +9611,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 	}
 
 	if(map[sd->bl.m].flag.loadevent) // Lance
-		npc_script_event(sd, NPCE_LOADMAP);
+		npc->script_event(sd, NPCE_LOADMAP);
 
 	if (pc->checkskill(sd, SG_DEVIL) && !pc->nextjobexp(sd)) //blindness [Komurka]
 		clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_DEVIL1);
@@ -9623,7 +9623,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 
 	// For automatic triggering of NPCs after map loading (so you don't need to walk 1 step first)
 	if (iMap->getcell(sd->bl.m,sd->bl.x,sd->bl.y,CELL_CHKNPC))
-		npc_touch_areanpc(sd,sd->bl.m,sd->bl.x,sd->bl.y);
+		npc->touch_areanpc(sd,sd->bl.m,sd->bl.x,sd->bl.y);
 	else
 		sd->areanpc_id = 0;
 
@@ -9750,7 +9750,7 @@ void clif_parse_progressbar(int fd, struct map_session_data * sd)
 		sd->st->state = END;
 
 	sd->state.workinprogress = sd->progressbar.npc_id = sd->progressbar.timeout = 0;
-	npc_scriptcont(sd, npc_id, false);
+	npc->scriptcont(sd, npc_id, false);
 }
 
 
@@ -10401,8 +10401,8 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 	//-------------------------------------------------------//
 	if (target[0] && (strncasecmp(target,"NPC:",4) == 0) && (strlen(target) > 4)) {
 		char* str = target+4; //Skip the NPC: string part.
-		struct npc_data* npc;
-		if ((npc = npc_name2id(str))) {
+		struct npc_data *nd;
+		if ((nd = npc->name2id(str))) {
 			char split_data[NUM_WHISPER_VAR][CHAT_SIZE_MAX];
 			char *split;
 			char output[256];
@@ -10429,8 +10429,8 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 				script->set_var(sd,output,(char *) split_data[i]);
 			}
 
-			sprintf(output, "%s::OnWhisperGlobal", npc->exname);
-			npc_event(sd,output,0); // Calls the NPC label
+			sprintf(output, "%s::OnWhisperGlobal", nd->exname);
+			npc->event(sd,output,0); // Calls the NPC label
 
 			return;
 		}
@@ -10837,7 +10837,7 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 				break;
 			}
 			if( bl->m != -1 )// the user can't click floating npcs directly (hack attempt)
-				npc_click(sd,(TBL_NPC*)bl);
+				npc->click(sd,(TBL_NPC*)bl);
 			break;
 	}
 }
@@ -10852,7 +10852,7 @@ void clif_parse_NpcBuySellSelected(int fd,struct map_session_data *sd)
 {
 	if (sd->state.trading)
 		return;
-	npc_buysellsel(sd,RFIFOL(fd,2),RFIFOB(fd,6));
+	npc->buysellsel(sd,RFIFOL(fd,2),RFIFOB(fd,6));
 }
 
 
@@ -10884,7 +10884,7 @@ void clif_parse_NpcBuyListSend(int fd, struct map_session_data* sd)
 	if( sd->state.trading || !sd->npc_shopid )
 		result = 1;
 	else
-		result = npc_buylist(sd,n,item_list);
+		result = npc->buylist(sd,n,item_list);
 
 	sd->npc_shopid = 0; //Clear shop data.
 
@@ -10920,7 +10920,7 @@ void clif_parse_NpcSellListSend(int fd,struct map_session_data *sd)
 	if (sd->state.trading || !sd->npc_shopid)
 		fail = 1;
 	else
-		fail = npc_selllist(sd,n,item_list);
+		fail = npc->selllist(sd,n,item_list);
 
 	sd->npc_shopid = 0; //Clear shop data.
 
@@ -10949,7 +10949,7 @@ void clif_parse_CreateChatRoom(int fd, struct map_session_data* sd)
 		clif->skill_fail(sd,1,USESKILL_FAIL_LEVEL,3);
 		return;
 	}
-	if( npc_isnear(&sd->bl) ) {
+	if( npc->isnear(&sd->bl) ) {
 		// uncomment for more verbose message.
 		//char output[150];
 		//sprintf(output, msg_txt(662), battle_config.min_npc_vendchat_distance);
@@ -11695,7 +11695,7 @@ void clif_parse_NpcSelectMenu(int fd,struct map_session_data *sd)
 	}
 
 	sd->npc_menu = select;
-	npc_scriptcont(sd,npc_id, false);
+	npc->scriptcont(sd,npc_id, false);
 }
 
 
@@ -11703,7 +11703,7 @@ void clif_parse_NpcSelectMenu(int fd,struct map_session_data *sd)
 /// 00b9 <npc id>.L
 void clif_parse_NpcNextClicked(int fd,struct map_session_data *sd)
 {
-	npc_scriptcont(sd,RFIFOL(fd,2), false);
+	npc->scriptcont(sd,RFIFOL(fd,2), false);
 }
 
 
@@ -11715,7 +11715,7 @@ void clif_parse_NpcAmountInput(int fd,struct map_session_data *sd)
 	int amount = (int)RFIFOL(fd,6);
 
 	sd->npc_amount = amount;
-	npc_scriptcont(sd, npcid, false);
+	npc->scriptcont(sd, npcid, false);
 }
 
 
@@ -11731,7 +11731,7 @@ void clif_parse_NpcStringInput(int fd, struct map_session_data* sd)
 		return; // invalid input
 
 	safestrncpy(sd->npc_str, message, min(message_len,CHATBOX_SIZE));
-	npc_scriptcont(sd, npcid, false);
+	npc->scriptcont(sd, npcid, false);
 }
 
 
@@ -11741,7 +11741,7 @@ void clif_parse_NpcCloseClicked(int fd,struct map_session_data *sd)
 {
 	if (!sd->npc_id) //Avoid parsing anything when the script was done with. [Skotlex]
 		return;
-	npc_scriptcont(sd, RFIFOL(fd,2), true);
+	npc->scriptcont(sd, RFIFOL(fd,2), true);
 }
 
 
@@ -13275,9 +13275,9 @@ void clif_parse_GMKick(int fd, struct map_session_data *sd)
 				clif->GM_kickack(sd, 0);
 				return;
 			}
-			npc_unload_duplicates(nd);
-			npc_unload(nd,true);
-			npc_read_event_script();
+			npc->unload_duplicates(nd);
+			npc->unload(nd,true);
+			npc->read_event_script();
 		}
 		break;
 
@@ -15293,7 +15293,7 @@ void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
         short amount = RFIFOW(fd,4);
         int points = RFIFOL(fd,6);
 
-        fail = npc_cashshop_buy(sd, nameid, amount, points);
+        fail = npc->cashshop_buy(sd, nameid, amount, points);
 #else
         int len = RFIFOW(fd,2);
         int points = RFIFOL(fd,4);
@@ -15305,7 +15305,7 @@ void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
             ShowWarning("Player %u sent incorrect cash shop buy packet (len %u:%u)!\n", sd->status.char_id, len, 10 + count * 4);
             return;
         }
-        fail = npc_cashshop_buylist(sd,points,count,item_list);
+        fail = npc->cashshop_buylist(sd,points,count,item_list);
 #endif
     }
 

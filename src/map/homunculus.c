@@ -736,7 +736,7 @@ bool homunculus_create(struct map_session_data *sd, struct s_homunculus *hom) {
 	}
 	sd->hd = hd = (struct homun_data*)aCalloc(1,sizeof(struct homun_data));
 	hd->bl.type = BL_HOM;
-	hd->bl.id = npc_get_new_npc_id();
+	hd->bl.id = npc->get_new_npc_id();
 
 	hd->master = sd;
 	hd->homunculusDB = &homun->db[i];

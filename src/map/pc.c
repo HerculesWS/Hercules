@@ -1334,7 +1334,7 @@ int pc_reg_received(struct map_session_data *sd)
 	}
 
 	if( npc->motd ) /* [Ind/Hercules] */
-		script->run(npc->motd->u.scr.script, 0, sd->bl.id, fake_nd->bl.id);
+		script->run(npc->motd->u.scr.script, 0, sd->bl.id, npc->fake_nd->bl.id);
 
 	return 1;
 }
@@ -4476,7 +4476,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	
 	script->current_item_id = nameid;
 	
-	script->run(item_script,0,sd->bl.id,fake_nd->bl.id);
+	script->run(item_script,0,sd->bl.id,npc->fake_nd->bl.id);
 	
 	script->current_item_id = 0;
 	script->potion_flag = 0;
@@ -4874,7 +4874,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 			struct hQueue *queue;
 			if( (queue = script->queue(sd->queues[i])) && queue->onMapChange[0] != '\0' ) {
 				pc->setregstr(sd, script->add_str("QMapChangeTo"), map[m].name);
-				npc_event(sd, queue->onMapChange, 0);
+				npc->event(sd, queue->onMapChange, 0);
 			}
 		}
 		
@@ -4930,8 +4930,8 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 			return 2;
 
 		if (sd->npc_id)
-			npc_event_dequeue(sd);
-		npc_script_event(sd, NPCE_LOGOUT);
+			npc->event_dequeue(sd);
+		npc->script_event(sd, NPCE_LOGOUT);
 		//remove from map, THEN change x/y coordinates
 		unit->remove_map_pc(sd,clrtype);
 		sd->mapindex = mapindex;
@@ -5813,7 +5813,7 @@ int pc_checkbaselevelup(struct map_session_data *sd) {
 		sc_start(&sd->bl,iStatus->skill2sc(AL_BLESSING),100,10,600000);
 	}
 	clif->misceffect(&sd->bl,0);
-	npc_script_event(sd, NPCE_BASELVUP); //LORDALFA - LVLUPEVENT
+	npc->script_event(sd, NPCE_BASELVUP); //LORDALFA - LVLUPEVENT
 
 	if(sd->status.party_id)
 		party->send_levelup(sd);
@@ -5862,7 +5862,7 @@ int pc_checkjoblevelup(struct map_session_data *sd)
 	if (pc->checkskill(sd, SG_DEVIL) && !pc->nextjobexp(sd))
 		clif->status_change(&sd->bl,SI_DEVIL1, 1, 0, 0, 0, 1); //Permanent blind effect from SG_DEVIL.
 
-	npc_script_event(sd, NPCE_JOBLVUP);
+	npc->script_event(sd, NPCE_JOBLVUP);
 	return 1;
 }
 
@@ -6755,7 +6755,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	}
 
 	if (sd->npc_id && sd->st && sd->st->state != RUN)
-		npc_event_dequeue(sd);
+		npc->event_dequeue(sd);
 	
 	pc_setglobalreg(sd,"PC_DIE_COUNTER",sd->die_counter+1);
 	pc->setparam(sd, SP_KILLERRID, src?src->id:0);
@@ -6763,16 +6763,16 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	if( sd->bg_id ) {/* TODO: purge when bgqueue is deemed ok */
 		struct battleground_data *bg;
 		if( (bg = bg_team_search(sd->bg_id)) != NULL && bg->die_event[0] )
-			npc_event(sd, bg->die_event, 0);
+			npc->event(sd, bg->die_event, 0);
 	}
 	
 	for( i = 0; i < sd->queues_count; i++ ) {
 		struct hQueue *queue;
 		if( (queue = script->queue(sd->queues[i])) && queue->onDeath[0] != '\0' )
-			npc_event(sd, queue->onDeath, 0);
+			npc->event(sd, queue->onDeath, 0);
 	}
 	
-	npc_script_event(sd,NPCE_DIE);
+	npc->script_event(sd,NPCE_DIE);
 		
 	// Clear anything NPC-related when you die and was interacting with one.
 	if (sd->npc_id || sd->npc_shopid) {
@@ -6850,7 +6850,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	if (src && src->type == BL_PC) {
 		struct map_session_data *ssd = (struct map_session_data *)src;
 		pc->setparam(ssd, SP_KILLEDRID, sd->bl.id);
-		npc_script_event(ssd, NPCE_KILLPC);
+		npc->script_event(ssd, NPCE_KILLPC);
 
 		if (battle_config.pk_mode&2) {
 			ssd->status.manner -= 5;
@@ -8331,7 +8331,7 @@ static int pc_eventtimer(int tid, unsigned int tick, int id, intptr_t data)
 	{
 		sd->eventtimer[i] = INVALID_TIMER;
 		sd->eventcount--;
-		npc_event(sd,p,0);
+		npc->event(sd,p,0);
 	}
 	else
 		ShowError("pc_eventtimer: no such event timer\n");
@@ -8774,7 +8774,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 	//OnEquip script [Skotlex]
 	if (id) {
 		if (id->equip_script)
-			script->run(id->equip_script,0,sd->bl.id,fake_nd->bl.id);
+			script->run(id->equip_script,0,sd->bl.id,npc->fake_nd->bl.id);
 		if(itemdb_isspecial(sd->status.inventory[n].card[0]))
 			; //No cards
 		else {
@@ -8784,7 +8784,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 					continue;
 				if ( ( data = itemdb->exists(sd->status.inventory[n].card[i]) ) != NULL ) {
 					if( data->equip_script )
-						script->run(data->equip_script,0,sd->bl.id,fake_nd->bl.id);
+						script->run(data->equip_script,0,sd->bl.id,npc->fake_nd->bl.id);
 				}
 			}
 		}
@@ -8941,7 +8941,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 	//OnUnEquip script [Skotlex]
 	if (sd->inventory_data[n]) {
 		if (sd->inventory_data[n]->unequip_script)
-			script->run(sd->inventory_data[n]->unequip_script,0,sd->bl.id,fake_nd->bl.id);
+			script->run(sd->inventory_data[n]->unequip_script,0,sd->bl.id,npc->fake_nd->bl.id);
 		if(itemdb_isspecial(sd->status.inventory[n].card[0]))
 			; //No cards
 		else {
@@ -8952,7 +8952,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 
 				if ( ( data = itemdb->exists(sd->status.inventory[n].card[i]) ) != NULL ) {
 					if( data->unequip_script )
-						script->run(data->unequip_script,0,sd->bl.id,fake_nd->bl.id);
+						script->run(data->unequip_script,0,sd->bl.id,npc->fake_nd->bl.id);
 				}
 
 			}
