@@ -2326,7 +2326,7 @@ void clif_inventorylist(struct map_session_data *sd) {
 		if( sd->status.inventory[i].nameid <=0 || sd->inventory_data[i] == NULL )
 			continue;
 
-		if( !itemdb_isstackable2(sd->inventory_data[i]) )
+		if( !itemdb->isstackable2(sd->inventory_data[i]) )
 		{	//Non-stackable (Equippable)
 			WBUFW(bufe,ne*se+4)=i+2;
 			clif->item_sub(bufe, ne*se+6, &sd->status.inventory[i], sd->inventory_data[i], pc->equippoint(sd,i));
@@ -2415,7 +2415,7 @@ void clif_equiplist(struct map_session_data *sd)
 		if (sd->status.inventory[i].nameid <=0 || sd->inventory_data[i] == NULL)
 			continue;
 
-		if(itemdb_isstackable2(sd->inventory_data[i]))
+		if(itemdb->isstackable2(sd->inventory_data[i]))
 			continue;
 		//Equippable
 		WBUFW(buf,n*cmd+4)=i+2;
@@ -2473,7 +2473,7 @@ void clif_storagelist(struct map_session_data* sd, struct item* items, int items
 		if( items[i].nameid <= 0 )
 			continue;
 		id = itemdb->search(items[i].nameid);
-		if( !itemdb_isstackable2(id) )
+		if( !itemdb->isstackable2(id) )
 		{ //Equippable
 			WBUFW(bufe,ne*cmd+4)=i+1;
 			clif->item_sub(bufe, ne*cmd+6, &items[i], id, id->equip);
@@ -2553,7 +2553,7 @@ void clif_cartlist(struct map_session_data *sd)
 		if( sd->status.cart[i].nameid <= 0 )
 			continue;
 		id = itemdb->search(sd->status.cart[i].nameid);
-		if( !itemdb_isstackable2(id) )
+		if( !itemdb->isstackable2(id) )
 		{ //Equippable
 			WBUFW(bufe,ne*cmd+4)=i+2;
 			clif->item_sub(bufe, ne*cmd+6, &sd->status.cart[i], id, id->equip);
@@ -9012,7 +9012,7 @@ void clif_viewequip_ack(struct map_session_data* sd, struct map_session_data* ts
 	{
 		if (tsd->status.inventory[i].nameid <= 0 || tsd->inventory_data[i] == NULL)	// Item doesn't exist
 			continue;
-		if (!itemdb_isequip2(tsd->inventory_data[i])) // Is not equippable
+		if (!itemdb->isequip2(tsd->inventory_data[i])) // Is not equippable
 			continue;
 
 		// Inventory position
@@ -17314,7 +17314,7 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 				
 				get_count = qty;
 				
-				if (!itemdb_isstackable2(data))
+				if (!itemdb->isstackable2(data))
 					get_count = 1;
 				
 				pc->paycash(sd, clif->cs.data[tab][j]->price * qty, kafra_pay);// [Ryuuzaki]

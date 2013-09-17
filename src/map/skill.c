@@ -16125,7 +16125,7 @@ int skill_produce_mix (struct map_session_data *sd, uint16 skill_id, int nameid,
 		}while( j>=0 && x>0 );
 	}
 
-	if( (equip = (itemdb_isequip(nameid) && skill_id != GN_CHANGEMATERIAL && skill_id != GN_MAKEBOMB )) )
+	if( (equip = (itemdb->isequip(nameid) && skill_id != GN_CHANGEMATERIAL && skill_id != GN_MAKEBOMB )) )
 		wlv = itemdb_wlv(nameid);
 	if(!equip) {
 		switch(skill_id){

@@ -152,7 +152,7 @@ int storage_additem(struct map_session_data* sd, struct item* item_data, int amo
 		return 1;
 	}
 	
-	if( itemdb_isstackable2(data) )
+	if( itemdb->isstackable2(data) )
 	{//Stackable
 		for( i = 0; i < MAX_STORAGE; i++ )
 		{
@@ -448,7 +448,7 @@ int guild_storage_additem(struct map_session_data* sd, struct guild_storage* sto
 		return 1;
 	}
 
-	if(itemdb_isstackable2(data)){ //Stackable
+	if(itemdb->isstackable2(data)){ //Stackable
 		for(i=0;i<MAX_GUILD_STORAGE;i++){
 			if(compare_item(&stor->items[i], item_data)) {
 				if( amount > MAX_AMOUNT - stor->items[i].amount || ( data->stack.guildstorage && amount > data->stack.amount - stor->items[i].amount ) )

@@ -5759,7 +5759,7 @@ BUILDIN(checkweight)
 			    // item is already in inventory, but there is still space for the requested amount
 			    break;
 		    case ADDITEM_NEW:
-			    if( itemdb_isstackable(nameid) ) {// stackable
+			    if( itemdb->isstackable(nameid) ) {// stackable
 				    amount2++;
 				    if( slots < amount2 ) {
 					    script_pushint(st,0);
@@ -5864,7 +5864,7 @@ BUILDIN(checkweight2)
 				// item is already in inventory, but there is still space for the requested amount
 			    break;
 		    case ADDITEM_NEW:
-			    if( itemdb_isstackable(nameid) ){// stackable
+			    if( itemdb->isstackable(nameid) ){// stackable
 				    amount2++;
 				    if( slots < amount2 )
 					    fail = 1;
@@ -5932,7 +5932,7 @@ BUILDIN(getitem)
 	if(!flag)
 		it.identify=1;
 	else
-		it.identify=itemdb_isidentified2(item_data);
+		it.identify=itemdb->isidentified2(item_data);
 	
 	if( script_hasdata(st,4) )
 		sd=iMap->id2sd(script_getnum(st,4)); // <Account ID>
@@ -5943,7 +5943,7 @@ BUILDIN(getitem)
 		return true;
 	
 	//Check if it's stackable.
-	if (!itemdb_isstackable(nameid))
+	if (!itemdb->isstackable(nameid))
 		get_count = 1;
 	else
 		get_count = amount;
@@ -6041,7 +6041,7 @@ BUILDIN(getitem2)
 		item_tmp.card[3]=(short)c4;
 		
 		//Check if it's stackable.
-		if (!itemdb_isstackable(nameid))
+		if (!itemdb->isstackable(nameid))
 			get_count = 1;
 		else
 			get_count = amount;
@@ -6157,7 +6157,7 @@ BUILDIN(getnameditem)
 	}else
 		nameid = script->conv_num(st,data);
 	
-	if(!itemdb->exists(nameid)/* || itemdb_isstackable(nameid)*/)
+	if(!itemdb->exists(nameid)/* || itemdb->isstackable(nameid)*/)
 	{	//Even though named stackable items "could" be risky, they are required for certain quests.
 		script_pushint(st,0);
 		return true;
@@ -6275,7 +6275,7 @@ BUILDIN(makeitem)
 	if(!flag)
 		item_tmp.identify=1;
 	else
-		item_tmp.identify=itemdb_isidentified2(item_data);
+		item_tmp.identify=itemdb->isidentified2(item_data);
 	
 	iMap->addflooritem(&item_tmp,amount,m,x,y,0,0,0,0);
 	
@@ -13220,7 +13220,7 @@ BUILDIN(autoequip)
 		return false;
 	}
 	
-	if( !itemdb_isequip2(item_data) )
+	if( !itemdb->isequip2(item_data) )
 	{
 		ShowError("buildin_autoequip: Item '%d' cannot be equipped.\n", nameid);
 		return false;
@@ -17037,9 +17037,9 @@ BUILDIN(getrandgroupitem) {
 		nameid = itemdb->group_item(data->group);
 
 		it.nameid = nameid;
-		it.identify = itemdb_isidentified(nameid);
+		it.identify = itemdb->isidentified(nameid);
 		
-		if (!itemdb_isstackable(nameid))
+		if (!itemdb->isstackable(nameid))
 			get_count = 1;
 		else
 			get_count = count;

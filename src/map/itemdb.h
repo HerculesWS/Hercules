@@ -240,41 +240,21 @@ struct item_package {
 #define itemdb_iscashfood(id) ( (id) >= 12202 && (id) <= 12207 )
 #define itemdb_is_GNbomb(n) (n >= 13260 && n <= 13267)
 #define itemdb_is_GNthrowable(n) (n >= 13268 && n <= 13290)
-const char* itemdb_typename(int type);
 
 #define itemdb_value_buy(n) itemdb->search(n)->value_buy
 #define itemdb_value_sell(n) itemdb->search(n)->value_sell
 #define itemdb_canrefine(n) (!itemdb->search(n)->flag.no_refine)
 //Item trade restrictions [Skotlex]
-int itemdb_isdropable_sub(struct item_data *, int, int);
-int itemdb_cantrade_sub(struct item_data*, int, int);
-int itemdb_canpartnertrade_sub(struct item_data*, int, int);
-int itemdb_cansell_sub(struct item_data*,int, int);
-int itemdb_cancartstore_sub(struct item_data*, int, int);
-int itemdb_canstore_sub(struct item_data*, int, int);
-int itemdb_canguildstore_sub(struct item_data*, int, int);
-int itemdb_canmail_sub(struct item_data*, int, int);
-int itemdb_canauction_sub(struct item_data*, int, int);
-int itemdb_isrestricted(struct item* item, int gmlv, int gmlv2, int (*func)(struct item_data*, int, int));
-#define itemdb_isdropable(item, gmlv) itemdb_isrestricted(item, gmlv, 0, itemdb_isdropable_sub)
-#define itemdb_cantrade(item, gmlv, gmlv2) itemdb_isrestricted(item, gmlv, gmlv2, itemdb_cantrade_sub)
-#define itemdb_canpartnertrade(item, gmlv, gmlv2) itemdb_isrestricted(item, gmlv, gmlv2, itemdb_canpartnertrade_sub)
-#define itemdb_cansell(item, gmlv) itemdb_isrestricted(item, gmlv, 0, itemdb_cansell_sub)
-#define itemdb_cancartstore(item, gmlv)  itemdb_isrestricted(item, gmlv, 0, itemdb_cancartstore_sub)
-#define itemdb_canstore(item, gmlv) itemdb_isrestricted(item, gmlv, 0, itemdb_canstore_sub) 
-#define itemdb_canguildstore(item, gmlv) itemdb_isrestricted(item , gmlv, 0, itemdb_canguildstore_sub) 
-#define itemdb_canmail(item, gmlv) itemdb_isrestricted(item , gmlv, 0, itemdb_canmail_sub)
-#define itemdb_canauction(item, gmlv) itemdb_isrestricted(item , gmlv, 0, itemdb_canauction_sub)
+#define itemdb_isdropable(item, gmlv) itemdb->isrestricted(item, gmlv, 0, itemdb->isdropable_sub)
+#define itemdb_cantrade(item, gmlv, gmlv2) itemdb->isrestricted(item, gmlv, gmlv2, itemdb->cantrade_sub)
+#define itemdb_canpartnertrade(item, gmlv, gmlv2) itemdb->isrestricted(item, gmlv, gmlv2, itemdb->canpartnertrade_sub)
+#define itemdb_cansell(item, gmlv) itemdb->isrestricted(item, gmlv, 0, itemdb->cansell_sub)
+#define itemdb_cancartstore(item, gmlv)  itemdb->isrestricted(item, gmlv, 0, itemdb->cancartstore_sub)
+#define itemdb_canstore(item, gmlv) itemdb->isrestricted(item, gmlv, 0, itemdb->canstore_sub)
+#define itemdb_canguildstore(item, gmlv) itemdb->isrestricted(item , gmlv, 0, itemdb->canguildstore_sub)
+#define itemdb_canmail(item, gmlv) itemdb->isrestricted(item , gmlv, 0, itemdb->canmail_sub)
+#define itemdb_canauction(item, gmlv) itemdb->isrestricted(item , gmlv, 0, itemdb->canauction_sub)
 
-int itemdb_isequip(int);
-int itemdb_isequip2(struct item_data *);
-int itemdb_isidentified(int);
-int itemdb_isidentified2(struct item_data *data);
-int itemdb_isstackable(int);
-int itemdb_isstackable2(struct item_data *);
-uint64 itemdb_unique_id(int8 flag, int64 value); // Unique Item ID
-
-/* incomplete */
 struct itemdb_interface {
 	void (*init) (void);
 	void (*final) (void);
@@ -294,6 +274,10 @@ struct itemdb_interface {
 	/* */
 	DBMap *names;
 	/* */
+	struct item_data *array[MAX_ITEMDB];
+	DBMap *other;// int nameid -> struct item_data*
+	struct item_data dummy; //This is the default dummy item used for non-existant items. [Skotlex]
+	/* */
 	void (*read_groups) (void);
 	void (*read_chains) (void);
 	void (*read_packages) (void);
@@ -312,6 +296,46 @@ struct itemdb_interface {
 	int (*group_item) (struct item_group *group);
 	int (*chain_item) (unsigned short chain_id, int *rate);
 	void (*package_item) (struct map_session_data *sd, struct item_package *package);
+	int (*searchname_sub) (DBKey key, DBData *data, va_list ap);
+	int (*searchname_array_sub) (DBKey key, DBData data, va_list ap);
+	int (*searchrandomid) (struct item_group *group);
+	const char* (*typename) (int type);
+	void (*jobid2mapid) (unsigned int *bclass, unsigned int jobmask);
+	void (*create_dummy_data) (void);
+	struct item_data* (*create_item_data) (int nameid);
+	int (*isequip) (int nameid);
+	int (*isequip2) (struct item_data *data);
+	int (*isstackable) (int nameid);
+	int (*isstackable2) (struct item_data *data);
+	int (*isdropable_sub) (struct item_data *item, int gmlv, int unused);
+	int (*cantrade_sub) (struct item_data *item, int gmlv, int gmlv2);
+	int (*canpartnertrade_sub) (struct item_data *item, int gmlv, int gmlv2);
+	int (*cansell_sub) (struct item_data *item, int gmlv, int unused);
+	int (*cancartstore_sub) (struct item_data *item, int gmlv, int unused);
+	int (*canstore_sub) (struct item_data *item, int gmlv, int unused);
+	int (*canguildstore_sub) (struct item_data *item, int gmlv, int unused);
+	int (*canmail_sub) (struct item_data *item, int gmlv, int unused);
+	int (*canauction_sub) (struct item_data *item, int gmlv, int unused);
+	int (*isrestricted) (struct item *item, int gmlv, int gmlv2, int(*func)(struct item_data *, int, int));
+	int (*isidentified) (int nameid);
+	int (*isidentified2) (struct item_data *data);
+	bool (*read_itemavail) (char *str[], int columns, int current);
+	bool (*read_itemtrade) (char *str[], int columns, int current);
+	bool (*read_itemdelay) (char *str[], int columns, int current);
+	bool (*read_stack) (char *fields[], int columns, int current);
+	bool (*read_buyingstore) (char *fields[], int columns, int current);
+	bool (*read_nouse) (char *fields[], int columns, int current);
+	int (*combo_split_atoi) (char *str, int *val);
+	void (*read_combos) ();
+	int (*gendercheck) (struct item_data *id);
+	void (*re_split_atoi) (char *str, int *atk, int *matk);
+	int (*readdb) (void);
+	int (*read_sqldb) (void);
+	uint64 (*unique_id) (int8 flag, int64 value);
+	int (*uid_load) ();
+	void (*read) (void);
+	void (*destroy_item_data) (struct item_data *self, int free_self);
+	int (*final_sub) (DBKey key, DBData *data, va_list ap);
 };
 
 struct itemdb_interface *itemdb;

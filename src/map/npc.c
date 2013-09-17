@@ -1296,7 +1296,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
         if( j == nd->u.shop.count || nd->u.shop.shop_item[j].value <= 0 )
             return 5;
 
-        if( !itemdb_isstackable(nameid) && amount > 1 )
+        if( !itemdb->isstackable(nameid) && amount > 1 )
         {
             ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of nonstackable item %d!\n", sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
             amount = item_list[i*2+0] = 1;
@@ -1402,7 +1402,7 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	if( nd->u.shop.shop_item[i].value <= 0 )
 		return 5;
 
-	if(!itemdb_isstackable(nameid) && amount > 1)
+	if(!itemdb->isstackable(nameid) && amount > 1)
 	{
 		ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of nonstackable item %d!\n",
 			sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
@@ -1495,7 +1495,7 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list)
 		if( !itemdb->exists(nameid) )
 			return 3; // item no longer in itemdb
 
-		if( !itemdb_isstackable(nameid) && amount > 1 ) {
+		if( !itemdb->isstackable(nameid) && amount > 1 ) {
 			//Exploit? You can't buy more than 1 of equipment types o.O
 			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of nonstackable item %d!\n",
 				sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
@@ -1605,7 +1605,7 @@ int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_li
 		script->setarray_pc(sd, "@sold_nameid", i, (void*)(intptr_t)sd->status.inventory[idx].nameid, &key_nameid);
 		script->setarray_pc(sd, "@sold_quantity", i, (void*)(intptr_t)item_list[i*2+1], &key_amount);
 
-		if( itemdb_isequip(sd->status.inventory[idx].nameid) )
+		if( itemdb->isequip(sd->status.inventory[idx].nameid) )
 		{// process equipment based information into the arrays
 			script->setarray_pc(sd, "@sold_refine", i, (void*)(intptr_t)sd->status.inventory[idx].refine, &key_refine);
 			script->setarray_pc(sd, "@sold_attribute", i, (void*)(intptr_t)sd->status.inventory[idx].attribute, &key_attribute);

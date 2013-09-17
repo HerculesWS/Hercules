@@ -652,7 +652,7 @@ int pc_equippoint(struct map_session_data *sd,int n)
 	if(!sd->inventory_data[n])
 		return 0;
 
-	if (!itemdb_isequip2(sd->inventory_data[n]))
+	if (!itemdb->isequip2(sd->inventory_data[n]))
 		return 0; //Not equippable by players.
 
 	ep = sd->inventory_data[n]->equip;
@@ -3699,7 +3699,7 @@ int pc_checkadditem(struct map_session_data *sd,int nameid,int amount)
 
 	data = itemdb->search(nameid);
 
-	if(!itemdb_isstackable2(data))
+	if(!itemdb->isstackable2(data))
 		return ADDITEM_NEW;
 
 	if( data->stack.inventory && amount > data->stack.amount )
@@ -3945,7 +3945,7 @@ int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_l
 
 	i = MAX_INVENTORY;
 
-	if( itemdb_isstackable2(data) && item_data->expire_time == 0 )
+	if( itemdb->isstackable2(data) && item_data->expire_time == 0 )
 	{ // Stackable | Non Rental
 		for( i = 0; i < MAX_INVENTORY; i++ )
 		{
@@ -3976,8 +3976,8 @@ int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_l
 		clif->additem(sd,i,amount,0);
 	}
 #ifdef NSI_UNIQUE_ID
-	if( !itemdb_isstackable2(data) && !item_data->unique_id )
-		sd->status.inventory[i].unique_id = itemdb_unique_id(0,0);
+	if( !itemdb->isstackable2(data) && !item_data->unique_id )
+		sd->status.inventory[i].unique_id = itemdb->unique_id(0,0);
 #endif
 	logs->pick_pc(sd, log_type, amount, &sd->status.inventory[i],sd->inventory_data[i]);
 
@@ -4517,7 +4517,7 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 		return 1;
 
 	i = MAX_CART;
-	if( itemdb_isstackable2(data) && !item_data->expire_time )
+	if( itemdb->isstackable2(data) && !item_data->expire_time )
 	{
 		ARR_FIND( 0, MAX_CART, i,
 			sd->status.cart[i].nameid == item_data->nameid &&
@@ -4731,7 +4731,7 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	memset(&tmp_item,0,sizeof(tmp_item));
 	tmp_item.nameid = itemid;
 	tmp_item.amount = 1;
-	tmp_item.identify = itemdb_isidentified2(data);
+	tmp_item.identify = itemdb->isidentified2(data);
 	flag = pc->additem(sd,&tmp_item,1,LOG_TYPE_PICKDROP_PLAYER);
 
 	//TODO: Should we disable stealing when the item you stole couldn't be added to your inventory? Perhaps players will figure out a way to exploit this behaviour otherwise?

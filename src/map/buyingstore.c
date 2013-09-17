@@ -147,7 +147,7 @@ void buyingstore_create(struct map_session_data* sd, int zenylimit, unsigned cha
 			break;
 		}
 
-		if( !id->flag.buyingstore || !itemdb_cantrade_sub(id, pc->get_group_level(sd), pc->get_group_level(sd)) || ( idx = pc->search_inventory(sd, nameid) ) == -1 )
+		if( !id->flag.buyingstore || !itemdb->cantrade_sub(id, pc->get_group_level(sd), pc->get_group_level(sd)) || ( idx = pc->search_inventory(sd, nameid) ) == -1 )
 		{// restrictions: allowed, no character-bound items and at least one must be owned
 			break;
 		}

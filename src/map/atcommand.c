@@ -1157,7 +1157,7 @@ ACMD(item)
 	item_id = item_data->nameid;
 	get_count = number;
 	//Check if it's stackable.
-	if (!itemdb_isstackable2(item_data))
+	if (!itemdb->isstackable2(item_data))
 		get_count = 1;
 	
 	for (i = 0; i < number; i += get_count) {
@@ -2138,7 +2138,7 @@ ACMD(produce)
 	
 	item_id = item_data->nameid;
 	
-	if (itemdb_isequip2(item_data)) {
+	if (itemdb->isequip2(item_data)) {
 		int flag = 0;
 		if (attribute < MIN_ATTRIBUTE || attribute > MAX_ATTRIBUTE)
 			attribute = ATTRIBUTE_NORMAL;
@@ -7222,7 +7222,7 @@ ACMD(iteminfo)
 		item_data = item_array[i];
 		sprintf(atcmd_output, msg_txt(1277), // Item: '%s'/'%s'[%d] (%d) Type: %s | Extra Effect: %s
 				item_data->name,item_data->jname,item_data->slot,item_data->nameid,
-				itemdb_typename(item_data->type),
+				itemdb->typename(item_data->type),
 				(item_data->script==NULL)? msg_txt(1278) : msg_txt(1279) // None / With script
 				);
 		clif->message(fd, atcmd_output);
