@@ -96,7 +96,8 @@ static void __config_locale_override(void)
 
 #else
 
-/* locale overriding is pretty pointless (rathena doesn't make use of the area that uses locale functionality), but I'm actually removing it because it floods the buildbot with warnings  */
+/* locale overriding is pretty pointless (Hercules doesn't make use of the area that uses locale functionality),
+ * but I'm actually removing it because it floods the buildbot with warnings  */
 //#warning "No way to modify calling thread's locale!"
 
 #endif
@@ -118,7 +119,8 @@ static void __config_locale_restore(void)
 
 #else
 
-/* locale overriding is pretty pointless (rathena doesn't make use of the area that uses locale functionality), but I'm actually removing it because it floods the buildbot with warnings  */
+/* locale overriding is pretty pointless (Hercules doesn't make use of the area that uses locale functionality),
+ * but I'm actually removing it because it floods the buildbot with warnings  */
 //#warning "No way to modify calling thread's locale!"
 
 #endif
@@ -535,12 +537,12 @@ static int __config_validate_name(const char *name)
   if(*p == '\0')
     return(CONFIG_FALSE);
 
-  if(! isalpha((unsigned char)*p) && (*p != '*'))
+  if(! isalpha((int)*p) && (*p != '*'))
     return(CONFIG_FALSE);
 
   for(++p; *p; ++p)
   {
-    if(! (isalpha((unsigned char)*p) || isdigit((unsigned char)*p) || strchr("*_-'", (int)*p)))
+    if(! (isalpha((int)*p) || isdigit((int)*p) || strchr("*_-'", (int)*p)))
       return(CONFIG_FALSE);
   }
 
@@ -1531,10 +1533,23 @@ config_setting_t *config_setting_add(config_setting_t *parent,
   if((parent->type == CONFIG_TYPE_ARRAY) || (parent->type == CONFIG_TYPE_LIST))
     name = NULL;
 
-  if(name) {
+  if(name)
+  {
     if(! __config_validate_name(name))
       return(NULL);
   }
+
+#if 0
+  /* https://github.com/HerculesWS/Hercules/pull/136#discussion_r6363319
+   * With this code, accidental duplicate keys would cause the file parsing to fail
+   * (would cause several issues during runtime on file reloads), while libconfig's code
+   * has no problems with duplicate members so it was ducked out -- TODO: looking now though
+   * I'd think it could be useful to have it display a warning or error message when finding
+   * duplicate keys instead of silently moving on. [Ind]
+   */
+  if(config_setting_get_member(parent, name) != NULL)
+    return(NULL); /* already exists */
+#endif
 
   return(config_setting_create(parent, name, type));
 }
