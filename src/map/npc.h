@@ -98,10 +98,6 @@ enum actor_classes {
 //Since new npcs are added all the time, the max valid value is the one before the first mob (Scorpion = 1001)
 #define npcdb_checkid(id) ( ( (id) >= 46 && (id) <= 125) || (id) == HIDDEN_WARP_CLASS || ( (id) > 400 && (id) < MAX_NPC_CLASS ) || (id) == INVISIBLE_CLASS || ( (id) > MAX_NPC_CLASS2_START && (id) < MAX_NPC_CLASS2_END ) )
 
-#ifdef PCRE_SUPPORT
-void npc_chat_finalize(struct npc_data* nd);
-#endif
-
 //Script NPC events.
 enum npce_event {
 	NPCE_LOGIN,
@@ -130,10 +126,6 @@ struct npc_path_data {
 	char* path;
 	unsigned short references;
 };
-
-/* comes from npc_chat.c */
-int npc_chat_sub (struct block_list* bl, va_list ap);
-
 
 /* npc.c interface */
 struct npc_interface {
@@ -245,5 +237,57 @@ struct npc_interface {
 struct npc_interface *npc;
 
 void npc_defaults(void);
+
+
+/* comes from npc_chat.c */
+#ifdef PCRE_SUPPORT
+#include "../../3rdparty/pcre/include/pcre.h"
+/* Structure containing all info associated with a single pattern block */
+struct pcrematch_entry {
+	struct pcrematch_entry* next;
+	char* pattern;
+	pcre* pcre_;
+	pcre_extra* pcre_extra_;
+	char* label;
+};
+
+/* A set of patterns that can be activated and deactived with a single command */
+struct pcrematch_set {
+	struct pcrematch_set* prev;
+	struct pcrematch_set* next;
+	struct pcrematch_entry* head;
+	int setid;
+};
+
+/*
+ * Entire data structure hung off a NPC
+ *
+ * The reason I have done it this way (a void * in npc_data and then
+ * this) was to reduce the number of patches that needed to be applied
+ * to a ragnarok distribution to bring this code online.  I
+ * also wanted people to be able to grab this one file to get updates
+ * without having to do a large number of changes.
+ */
+struct npc_parse {
+	struct pcrematch_set* active;
+	struct pcrematch_set* inactive;
+};
+
+struct npc_chat_interface {
+	int (*sub) (struct block_list* bl, va_list ap);
+	void (*finalize) (struct npc_data* nd);
+	void (*def_pattern) (struct npc_data* nd, int setid, const char* pattern, const char* label);
+	struct pcrematch_entry* (*create_pcrematch_entry) (struct pcrematch_set* set);
+	void (*delete_pcreset) (struct npc_data* nd, int setid);
+	void (*deactivate_pcreset) (struct npc_data* nd, int setid);
+	void (*activate_pcreset) (struct npc_data* nd, int setid);
+	struct pcrematch_set* (*lookup_pcreset) (struct npc_data* nd, int setid);
+	void (*finalize_pcrematch_entry) (struct pcrematch_entry* e);
+};
+
+struct npc_chat_interface *npc_chat;
+
+void npc_chat_defaults(void);
+#endif
 
 #endif /* _NPC_H_ */

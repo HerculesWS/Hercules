@@ -1794,7 +1794,7 @@ int npc_unload(struct npc_data* nd, bool single) {
 		chat->deletenpcchat(nd);
 
 #ifdef PCRE_SUPPORT
-	npc_chat_finalize(nd); // deallocate npc PCRE data structures
+	npc_chat->finalize(nd); // deallocate npc PCRE data structures
 #endif
 
 	if( single && nd->path ) {

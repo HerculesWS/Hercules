@@ -5175,7 +5175,9 @@ void map_hp_symbols(void) {
 	HPM->share(pet,"pet");
 	HPM->share(path,"path");
 	HPM->share(quest,"quest");
-
+#ifdef PCRE_SUPPORT
+	HPM->share(npc_chat,"npc_chat");
+#endif
 	/* partial */
 	HPM->share(mapit,"mapit");
 	/* sql link */
@@ -5226,6 +5228,9 @@ void map_load_defaults(void) {
 	pet_defaults();
 	path_defaults();
 	quest_defaults();
+#ifdef PCRE_SUPPORT
+	npc_chat_defaults();
+#endif
 }
 int do_init(int argc, char *argv[])
 {
