@@ -339,7 +339,7 @@ int clif_send(const void* buf, int len, struct block_list* bl, enum send_target 
 	struct map_session_data *sd, *tsd;
 	struct party_data *p = NULL;
 	struct guild *g = NULL;
-	struct battleground_data *bg = NULL;
+	struct battleground_data *bgd = NULL;
 	int x0 = 0, x1 = 0, y0 = 0, y1 = 0, fd;
 	struct s_mapiterator* iter;
 
@@ -545,9 +545,9 @@ int clif_send(const void* buf, int len, struct block_list* bl, enum send_target 
 		case BG_SAMEMAP_WOS:
 		case BG:
 		case BG_WOS:
-			if( sd && sd->bg_id && (bg = bg_team_search(sd->bg_id)) != NULL ) {
+			if( sd && sd->bg_id && (bgd = bg->team_search(sd->bg_id)) != NULL ) {
 				for( i = 0; i < MAX_BG_MEMBERS; i++ ) {
-					if( (sd = bg->members[i].sd) == NULL || !(fd = sd->fd) )
+					if( (sd = bgd->members[i].sd) == NULL || !(fd = sd->fd) )
 						continue;
 					if( sd->bl.id == bl->id && (type == BG_WOS || type == BG_SAMEMAP_WOS || type == BG_AREA_WOS) )
 						continue;
@@ -13047,7 +13047,7 @@ void clif_parse_GuildMessage(int fd, struct map_session_data* sd)
 	}
 
 	if( sd->bg_id )
-		bg_send_message(sd, text, textlen);
+		bg->send_message(sd, text, textlen);
 	else
 		guild->send_message(sd, text, textlen);
 }
@@ -15920,11 +15920,11 @@ void clif_bg_xy_remove(struct map_session_data *sd)
 
 /// Notifies clients of a battleground message (ZC_BATTLEFIELD_CHAT).
 /// 02dc <packet len>.W <account id>.L <name>.24B <message>.?B
-void clif_bg_message(struct battleground_data *bg, int src_id, const char *name, const char *mes, int len)
+void clif_bg_message(struct battleground_data *bgd, int src_id, const char *name, const char *mes, int len)
 {
 	struct map_session_data *sd;
 	unsigned char *buf;
-	if( !bg->count || (sd = bg_getavailablesd(bg)) == NULL )
+	if( !bgd->count || (sd = bg->getavailablesd(bgd)) == NULL )
 		return;
 
 	buf = (unsigned char*)aMalloc((len + NAME_LENGTH + 8)*sizeof(unsigned char));
@@ -15966,7 +15966,7 @@ void clif_parse_BattleChat(int fd, struct map_session_data* sd)
 		sd->cantalk_tick = iTimer->gettick() + battle_config.min_chat_delay;
 	}
 
-	bg_send_message(sd, text, textlen);
+	bg->send_message(sd, text, textlen);
 }
 
 

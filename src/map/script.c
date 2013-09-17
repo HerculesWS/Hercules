@@ -15747,7 +15747,7 @@ BUILDIN(waitingroom2bg)
 	ev = script_getstr(st,5); // Logout Event
 	dev = script_getstr(st,6); // Die Event
 	
-	if( (bg_id = bg_create(mapindex, x, y, ev, dev)) == 0 )
+	if( (bg_id = bg->create(mapindex, x, y, ev, dev)) == 0 )
 	{ // Creation failed
 		script_pushint(st,0);
 		return true;
@@ -15756,7 +15756,7 @@ BUILDIN(waitingroom2bg)
 	n = cd->users;
 	for( i = 0; i < n && i < MAX_BG_MEMBERS; i++ )
 	{
-		if( (sd = cd->usersd[i]) != NULL && bg_team_join(bg_id, sd) )
+		if( (sd = cd->usersd[i]) != NULL && bg->team_join(bg_id, sd) )
 			mapreg->setreg(reference_uid(script->add_str("$@arenamembers"), i), sd->bl.id);
 		else
 			mapreg->setreg(reference_uid(script->add_str("$@arenamembers"), i), 0);
@@ -15790,7 +15790,7 @@ BUILDIN(waitingroom2bg_single)
 	if( (sd = cd->usersd[0]) == NULL )
 		return true;
 	
-	if( bg_team_join(bg_id, sd) )
+	if( bg->team_join(bg_id, sd) )
 	{
 		pc->setpos(sd, mapindex, x, y, CLR_TELEPORT);
 		script_pushint(st,1);
@@ -15803,15 +15803,15 @@ BUILDIN(waitingroom2bg_single)
 
 BUILDIN(bg_team_setxy)
 {
-	struct battleground_data *bg;
+	struct battleground_data *bgd;
 	int bg_id;
 	
 	bg_id = script_getnum(st,2);
-	if( (bg = bg_team_search(bg_id)) == NULL )
+	if( (bgd = bg->team_search(bg_id)) == NULL )
 		return true;
 	
-	bg->x = script_getnum(st,3);
-	bg->y = script_getnum(st,4);
+	bgd->x = script_getnum(st,3);
+	bgd->y = script_getnum(st,4);
 	return true;
 }
 
@@ -15826,7 +15826,7 @@ BUILDIN(bg_warp)
 		return true; // Invalid Map
 	x = script_getnum(st,4);
 	y = script_getnum(st,5);
-	bg_team_warp(bg_id, mapindex, x, y);
+	bg->team_warp(bg_id, mapindex, x, y);
 	return true;
 }
 
@@ -15873,14 +15873,14 @@ BUILDIN(bg_leave)
 	if( sd == NULL || !sd->bg_id )
 		return true;
 	
-	bg_team_leave(sd,0);
+	bg->team_leave(sd,0);
 	return true;
 }
 
 BUILDIN(bg_destroy)
 {
 	int bg_id = script_getnum(st,2);
-	bg_team_delete(bg_id);
+	bg->team_delete(bg_id);
 	return true;
 }
 
@@ -15890,13 +15890,13 @@ BUILDIN(bg_getareausers)
 	int16 m, x0, y0, x1, y1;
 	int bg_id;
 	int i = 0, c = 0;
-	struct battleground_data *bg = NULL;
+	struct battleground_data *bgd = NULL;
 	struct map_session_data *sd;
 	
 	bg_id = script_getnum(st,2);
 	str = script_getstr(st,3);
 	
-	if( (bg = bg_team_search(bg_id)) == NULL || (m = iMap->mapname2mapid(str)) < 0 )
+	if( (bgd = bg->team_search(bg_id)) == NULL || (m = iMap->mapname2mapid(str)) < 0 )
 	{
 		script_pushint(st,0);
 		return true;
@@ -15909,7 +15909,7 @@ BUILDIN(bg_getareausers)
 	
 	for( i = 0; i < MAX_BG_MEMBERS; i++ )
 	{
-		if( (sd = bg->members[i].sd) == NULL )
+		if( (sd = bgd->members[i].sd) == NULL )
 			continue;
 		if( sd->bl.m != m || sd->bl.x < x0 || sd->bl.y < y0 || sd->bl.x > x1 || sd->bl.y > y1 )
 			continue;
@@ -15938,11 +15938,11 @@ BUILDIN(bg_updatescore)
 
 BUILDIN(bg_get_data)
 {
-	struct battleground_data *bg;
+	struct battleground_data *bgd;
 	int bg_id = script_getnum(st,2),
 	type = script_getnum(st,3);
 	
-	if( (bg = bg_team_search(bg_id)) == NULL )
+	if( (bgd = bg->team_search(bg_id)) == NULL )
 	{
 		script_pushint(st,0);
 		return true;
@@ -15950,7 +15950,7 @@ BUILDIN(bg_get_data)
 	
 	switch( type )
 	{
-		case 0: script_pushint(st, bg->count); break;
+		case 0: script_pushint(st, bgd->count); break;
 		default:
 			ShowError("script:bg_get_data: unknown data identifier %d\n", type);
 			break;
@@ -17545,7 +17545,7 @@ BUILDIN(bg_create_team) {
 	x = script_getnum(st,3);
 	y = script_getnum(st,4);
 	
-	if( (bg_id = bg_create(mapindex, x, y, ev, dev)) == 0 ) { // Creation failed
+	if( (bg_id = bg->create(mapindex, x, y, ev, dev)) == 0 ) { // Creation failed
 		script_pushint(st,-1);
 	} else
 		script_pushint(st,bg_id);
@@ -17568,7 +17568,7 @@ BUILDIN(bg_join_team) {
 	if( !sd )
 		script_pushint(st, 1);
 	else
-		script_pushint(st,bg_team_join(team_id, sd)?0:1);
+		script_pushint(st,bg->team_join(team_id, sd)?0:1);
 	
 	return true;
 }

@@ -4908,7 +4908,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 			skill->clear_unitgroup(&sd->bl);
 		party->send_dot_remove(sd); //minimap dot fix [Kevin]
 		guild->send_dot_remove(sd);
-		bg_send_dot_remove(sd);
+		bg->send_dot_remove(sd);
 		if (sd->regen.state.gc)
 			sd->regen.state.gc = 0;
 		// make sure vending is allowed here
@@ -6656,7 +6656,7 @@ void pc_respawn(struct map_session_data* sd, clr_type clrtype)
 {
 	if( !pc_isdead(sd) )
 		return; // not applicable
-	if( sd->bg_id && bg_member_respawn(sd) )
+	if( sd->bg_id && bg->member_respawn(sd) )
 		return; // member revived by battleground
 
 	pc->setstand(sd);
@@ -6761,9 +6761,9 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	pc->setparam(sd, SP_KILLERRID, src?src->id:0);
 
 	if( sd->bg_id ) {/* TODO: purge when bgqueue is deemed ok */
-		struct battleground_data *bg;
-		if( (bg = bg_team_search(sd->bg_id)) != NULL && bg->die_event[0] )
-			npc->event(sd, bg->die_event, 0);
+		struct battleground_data *bgd;
+		if( (bgd = bg->team_search(sd->bg_id)) != NULL && bgd->die_event[0] )
+			npc->event(sd, bgd->die_event, 0);
 	}
 	
 	for( i = 0; i < sd->queues_count; i++ ) {
@@ -7036,8 +7036,8 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 		iTimer->add_timer(tick+1, pc_respawn_timer, sd->bl.id, 0);
 		return 1|8;
 	} else if( sd->bg_id ) {
-		struct battleground_data *bg = bg_team_search(sd->bg_id);
-		if( bg && bg->mapindex > 0 ) { // Respawn by BG
+		struct battleground_data *bgd = bg->team_search(sd->bg_id);
+		if( bgd && bgd->mapindex > 0 ) { // Respawn by BG
 			iTimer->add_timer(tick+1000, pc_respawn_timer, sd->bl.id, 0);
 			return 1|8;
 		}

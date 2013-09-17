@@ -2185,7 +2185,7 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 			}
 			party->send_dot_remove(sd);//minimap dot fix [Kevin]
 			guild->send_dot_remove(sd);
-			bg_send_dot_remove(sd);
+			bg->send_dot_remove(sd);
 
 			if( map[bl->m].users <= 0 || sd->state.debug_remove_map )
 			{// this is only place where map users is decreased, if the mobs were removed too soon then this function was executed too many times [FlavioJS]

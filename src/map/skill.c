@@ -15276,7 +15276,7 @@ struct skill_unit_group* skill_initunitgroup (struct block_list* src, int count,
 	group->src_id     = src->id;
 	group->party_id   = iStatus->get_party_id(src);
 	group->guild_id   = iStatus->get_guild_id(src);
-	group->bg_id      = bg_team_get_id(src);
+	group->bg_id      = bg->team_get_id(src);
 	group->group_id   = skill_get_new_group_id();
 	group->unit       = (struct skill_unit *)aCalloc(count,sizeof(struct skill_unit));
 	group->unit_count = count;

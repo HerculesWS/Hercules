@@ -6028,8 +6028,8 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 		int sbg_id = 0, tbg_id = 0;
 		if( map[m].flag.battleground )
 		{
-			sbg_id = bg_team_get_id(s_bl);
-			tbg_id = bg_team_get_id(t_bl);
+			sbg_id = bg->team_get_id(s_bl);
+			tbg_id = bg->team_get_id(t_bl);
 		}
 		if( flag&(BCT_PARTY|BCT_ENEMY) )
 		{

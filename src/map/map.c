@@ -1540,7 +1540,7 @@ int map_quit(struct map_session_data *sd) {
 		npc->event_dequeue(sd);
 
 	if( sd->bg_id && !sd->bg_queue.arena ) /* TODO: dump this chunk after bg_queue is fully enabled */
-		bg_team_leave(sd,1);
+		bg->team_leave(sd,1);
 
 	skill->cooldown_save(sd);
 	pc->itemcd_do(sd,false);
@@ -4951,7 +4951,7 @@ void do_final(void)
 	skill->final();
 	iStatus->do_final_status();
 	unit->final();
-	do_final_battleground();
+	bg->final();
 	iDuel->do_final_duel();
 	elemental->do_final_elemental();
 	do_final_maps();
@@ -5427,7 +5427,7 @@ int do_init(int argc, char *argv[])
 	quest->init();
 	npc->init();
 	unit->init();
-	do_init_battleground();
+	bg->init();
 	iDuel->do_init_duel();
 	vending->init();
 

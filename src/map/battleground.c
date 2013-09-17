@@ -26,13 +26,11 @@
 #include <string.h>
 #include <stdio.h>
 
-static DBMap* bg_team_db; // int bg_id -> struct battleground_data*
-static unsigned int bg_team_counter = 0; // Next bg_id
 struct battleground_interface bg_s;
 
 struct battleground_data* bg_team_search(int bg_id) { // Search a BG Team using bg_id
 	if( !bg_id ) return NULL;
-	return (struct battleground_data *)idb_get(bg_team_db, bg_id);
+	return (struct battleground_data *)idb_get(bg->team_db, bg_id);
 }
 
 struct map_session_data* bg_getavailablesd(struct battleground_data *bg) {
@@ -46,28 +44,28 @@ int bg_team_delete(int bg_id)
 { // Deletes BG Team from db
 	int i;
 	struct map_session_data *sd;
-	struct battleground_data *bg = bg_team_search(bg_id);
+	struct battleground_data *bgd = bg->team_search(bg_id);
 
 	if( bg == NULL ) return 0;
 	for( i = 0; i < MAX_BG_MEMBERS; i++ )
 	{
-		if( (sd = bg->members[i].sd) == NULL )
+		if( (sd = bgd->members[i].sd) == NULL )
 			continue;
 
-		bg_send_dot_remove(sd);
+		bg->send_dot_remove(sd);
 		sd->bg_id = 0;
 	}
-	idb_remove(bg_team_db, bg_id);
+	idb_remove(bg->team_db, bg_id);
 	return 1;
 }
 
 int bg_team_warp(int bg_id, unsigned short mapindex, short x, short y)
 { // Warps a Team
 	int i;
-	struct battleground_data *bg = bg_team_search(bg_id);
+	struct battleground_data *bgd = bg->team_search(bg_id);
 	if( bg == NULL ) return 0;
 	for( i = 0; i < MAX_BG_MEMBERS; i++ )
-		if( bg->members[i].sd != NULL ) pc->setpos(bg->members[i].sd, mapindex, x, y, CLR_TELEPORT);
+		if( bgd->members[i].sd != NULL ) pc->setpos(bgd->members[i].sd, mapindex, x, y, CLR_TELEPORT);
 	return 1;
 }
 
@@ -81,33 +79,33 @@ int bg_send_dot_remove(struct map_session_data *sd)
 int bg_team_join(int bg_id, struct map_session_data *sd)
 { // Player joins team
 	int i;
-	struct battleground_data *bg = bg_team_search(bg_id);
+	struct battleground_data *bgd = bg->team_search(bg_id);
 	struct map_session_data *pl_sd;
 
 	if( bg == NULL || sd == NULL || sd->bg_id ) return 0;
 
-	ARR_FIND(0, MAX_BG_MEMBERS, i, bg->members[i].sd == NULL);
+	ARR_FIND(0, MAX_BG_MEMBERS, i, bgd->members[i].sd == NULL);
 	if( i == MAX_BG_MEMBERS ) return 0; // No free slots
 
 	sd->bg_id = bg_id;
-	bg->members[i].sd = sd;
-	bg->members[i].x = sd->bl.x;
-	bg->members[i].y = sd->bl.y;
+	bgd->members[i].sd = sd;
+	bgd->members[i].x = sd->bl.x;
+	bgd->members[i].y = sd->bl.y;
 	/* populate 'where i came from' */
 	if(map[sd->bl.m].flag.nosave || map[sd->bl.m].instance_id >= 0){
 		struct map_data *m=&map[sd->bl.m];
 		if(m->save.map)
-			memcpy(&bg->members[i].source,&m->save,sizeof(struct point));
+			memcpy(&bgd->members[i].source,&m->save,sizeof(struct point));
 		else
-			memcpy(&bg->members[i].source,&sd->status.save_point,sizeof(struct point));
+			memcpy(&bgd->members[i].source,&sd->status.save_point,sizeof(struct point));
 	} else
-		memcpy(&bg->members[i].source,&sd->status.last_point,sizeof(struct point));
-	bg->count++;
+		memcpy(&bgd->members[i].source,&sd->status.last_point,sizeof(struct point));
+	bgd->count++;
 
 	guild->send_dot_remove(sd);
 
 	for( i = 0; i < MAX_BG_MEMBERS; i++ ) {
-		if( (pl_sd = bg->members[i].sd) != NULL && pl_sd != sd )
+		if( (pl_sd = bgd->members[i].sd) != NULL && pl_sd != sd )
 			clif->hpmeter_single(sd->fd, pl_sd->bl.id, pl_sd->battle_status.hp, pl_sd->battle_status.max_hp);
 	}
 
@@ -124,11 +122,11 @@ int bg_team_leave(struct map_session_data *sd, int flag)
 
 	if( sd == NULL || !sd->bg_id )
 		return 0;
-	bg_send_dot_remove(sd);
+	bg->send_dot_remove(sd);
 	bg_id = sd->bg_id;
 	sd->bg_id = 0;
 
-	if( (bg_data = bg_team_search(bg_id)) == NULL )
+	if( (bg_data = bg->team_search(bg_id)) == NULL )
 		return 0;
 
 	ARR_FIND(0, MAX_BG_MEMBERS, i, bg_data->members[i].sd == sd);
@@ -160,34 +158,34 @@ int bg_team_leave(struct map_session_data *sd, int flag)
 
 int bg_member_respawn(struct map_session_data *sd)
 { // Respawn after killed
-	struct battleground_data *bg;
-	if( sd == NULL || !pc_isdead(sd) || !sd->bg_id || (bg = bg_team_search(sd->bg_id)) == NULL )
+	struct battleground_data *bgd;
+	if( sd == NULL || !pc_isdead(sd) || !sd->bg_id || (bgd = bg->team_search(sd->bg_id)) == NULL )
 		return 0;
-	if( bg->mapindex == 0 )
+	if( bgd->mapindex == 0 )
 		return 0; // Respawn not handled by Core
-	pc->setpos(sd, bg->mapindex, bg->x, bg->y, CLR_OUTSIGHT);
+	pc->setpos(sd, bgd->mapindex, bgd->x, bgd->y, CLR_OUTSIGHT);
 	iStatus->revive(&sd->bl, 1, 100);
 
 	return 1; // Warped
 }
 
 int bg_create(unsigned short mapindex, short rx, short ry, const char *ev, const char *dev) {
-	struct battleground_data *bg;
-	bg_team_counter++;
+	struct battleground_data *bgd;
+	bg->team_counter++;
 
-	CREATE(bg, struct battleground_data, 1);
-	bg->bg_id = bg_team_counter;
-	bg->count = 0;
-	bg->mapindex = mapindex;
-	bg->x = rx;
-	bg->y = ry;
-	safestrncpy(bg->logout_event, ev, sizeof(bg->logout_event));
-	safestrncpy(bg->die_event, dev, sizeof(bg->die_event));
+	CREATE(bgd, struct battleground_data, 1);
+	bgd->bg_id = bg->team_counter;
+	bgd->count = 0;
+	bgd->mapindex = mapindex;
+	bgd->x = rx;
+	bgd->y = ry;
+	safestrncpy(bgd->logout_event, ev, sizeof(bgd->logout_event));
+	safestrncpy(bgd->die_event, dev, sizeof(bgd->die_event));
 
-	memset(&bg->members, 0, sizeof(bg->members));
-	idb_put(bg_team_db, bg_team_counter, bg);
+	memset(&bgd->members, 0, sizeof(bgd->members));
+	idb_put(bg->team_db, bg->team_counter, bg);
 
-	return bg->bg_id;
+	return bgd->bg_id;
 }
 
 int bg_team_get_id(struct block_list *bl)
@@ -226,12 +224,12 @@ int bg_team_get_id(struct block_list *bl)
 
 int bg_send_message(struct map_session_data *sd, const char *mes, int len)
 {
-	struct battleground_data *bg;
+	struct battleground_data *bgd;
 
 	nullpo_ret(sd);
-	if( sd->bg_id == 0 || (bg = bg_team_search(sd->bg_id)) == NULL )
+	if( sd->bg_id == 0 || (bgd = bg->team_search(sd->bg_id)) == NULL )
 		return 0;
-	clif->bg_message(bg, sd->bl.id, sd->status.name, mes, len);
+	clif->bg_message(bgd, sd->bl.id, sd->status.name, mes, len);
 	return 0;
 }
 
@@ -257,7 +255,7 @@ int bg_send_xy_timer_sub(DBKey key, DBData *data, va_list ap)
 }
 
 int bg_send_xy_timer(int tid, unsigned int tick, int id, intptr_t data) {
-	bg_team_db->foreach(bg_team_db, bg_send_xy_timer_sub, tick);
+	bg->team_db->foreach(bg->team_db, bg->send_xy_timer_sub, tick);
 	return 0;
 }
 void bg_config_read(void) {
@@ -497,7 +495,7 @@ void bg_match_over(struct bg_arena *arena, bool canceled) {
 		
 		if( queue->item[i] > 0 && ( sd = iMap->id2sd(queue->item[i]) ) ) {
 			if( sd->bg_queue.arena ) {
-				bg_team_leave(sd, 0);
+				bg->team_leave(sd, 0);
 				bg->queue_pc_cleanup(sd);
 			}
 			if( canceled )
@@ -570,7 +568,7 @@ void bg_queue_check(struct bg_arena *arena) {
 	int count = script->hq[arena->queue_id].items;
 	if( count == arena->max_players ) {
 		if( arena->fillup_timer != INVALID_TIMER ) {
-			iTimer->delete_timer(arena->fillup_timer,bg_fillup_timer);
+			iTimer->delete_timer(arena->fillup_timer,bg->fillup_timer);
 			arena->fillup_timer = INVALID_TIMER;
 		}
 		bg->queue_pregame(arena);
@@ -765,16 +763,16 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 	return BGQA_SUCCESS;
 }
 void do_init_battleground(void) {
-	bg_team_db = idb_alloc(DB_OPT_RELEASE_DATA);
-	iTimer->add_timer_func_list(bg_send_xy_timer, "bg_send_xy_timer");
-	iTimer->add_timer_interval(iTimer->gettick() + battle_config.bg_update_interval, bg_send_xy_timer, 0, 0, battle_config.bg_update_interval);
+	bg->team_db = idb_alloc(DB_OPT_RELEASE_DATA);
+	iTimer->add_timer_func_list(bg->send_xy_timer, "bg_send_xy_timer");
+	iTimer->add_timer_interval(iTimer->gettick() + battle_config.bg_update_interval, bg->send_xy_timer, 0, 0, battle_config.bg_update_interval);
 	bg->config_read();
 }
 
 void do_final_battleground(void) {
 	int i;
 	
-	bg_team_db->destroy(bg_team_db, NULL);
+	db_destroy(bg->team_db);
 	
 	for( i = 0; i < bg->arenas; i++ ) {
 		if( bg->arena[i] )
@@ -793,6 +791,12 @@ void battleground_defaults(void) {
 	bg->arena = NULL;
 	bg->arenas = 0;
 	/* */
+	bg->team_db = NULL;
+	bg->team_counter = 0;
+	/* */
+	bg->init = do_init_battleground;
+	bg->final = do_final_battleground;
+	/* */
 	bg->name2arena = bg_name2arena;
 	bg->queue_add = bg_queue_add;
 	bg->can_queue = bg_canqueue;
@@ -805,6 +809,19 @@ void battleground_defaults(void) {
 	bg->queue_ready_ack = bg_queue_ready_ack;
 	bg->match_over = bg_match_over;
 	bg->queue_check = bg_queue_check;
+	bg->team_search = bg_team_search;
+	bg->getavailablesd = bg_getavailablesd;
+	bg->team_delete = bg_team_delete;
+	bg->team_warp = bg_team_warp;
+	bg->send_dot_remove = bg_send_dot_remove;
+	bg->team_join = bg_team_join;
+	bg->team_leave = bg_team_leave;
+	bg->member_respawn = bg_member_respawn;
+	bg->create = bg_create;
+	bg->team_get_id = bg_team_get_id;
+	bg->send_message = bg_send_message;
+	bg->send_xy_timer_sub = bg_send_xy_timer_sub;
+	bg->send_xy_timer = bg_send_xy_timer;
 	/* */
 	bg->config_read = bg_config_read;
 }

@@ -43,22 +43,6 @@ struct battleground_data {
 	char die_event[EVENT_NAME_LENGTH];
 };
 
-void do_init_battleground(void);
-void do_final_battleground(void);
-
-struct battleground_data* bg_team_search(int bg_id);
-int bg_send_dot_remove(struct map_session_data *sd);
-int bg_team_get_id(struct block_list *bl);
-struct map_session_data* bg_getavailablesd(struct battleground_data *bg);
-
-int bg_create(unsigned short mapindex, short rx, short ry, const char *ev, const char *dev);
-int bg_team_join(int bg_id, struct map_session_data *sd);
-int bg_team_delete(int bg_id);
-int bg_team_leave(struct map_session_data *sd, int flag);
-int bg_team_warp(int bg_id, unsigned short mapindex, short x, short y);
-int bg_member_respawn(struct map_session_data *sd);
-int bg_send_message(struct map_session_data *sd, const char *mes, int len);
-
 struct bg_arena {
 	char name[NAME_LENGTH];
 	unsigned char id;
@@ -79,7 +63,6 @@ struct bg_arena {
 	bool ongoing;
 };
 
-/* battleground.c interface (incomplete) */
 struct battleground_interface {
 	bool queue_on;
 	/* */
@@ -88,6 +71,12 @@ struct battleground_interface {
 	/* */
 	struct bg_arena **arena;
 	unsigned char arenas;
+	/* */
+	DBMap *team_db; // int bg_id -> struct battleground_data*
+	unsigned int team_counter; // Next bg_id
+	/* */
+	void (*init) (void);
+	void (*final) (void);
 	/* */
 	struct bg_arena *(*name2arena) (char *name);
 	void (*queue_add) (struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type);
@@ -101,6 +90,19 @@ struct battleground_interface {
 	void (*queue_ready_ack) (struct bg_arena *arena, struct map_session_data *sd, bool response);
 	void (*match_over) (struct bg_arena *arena, bool canceled);
 	void (*queue_check) (struct bg_arena *arena);
+	struct battleground_data* (*team_search) (int bg_id);
+	struct map_session_data* (*getavailablesd) (struct battleground_data *bg);
+	int (*team_delete) (int bg_id);
+	int (*team_warp) (int bg_id, unsigned short mapindex, short x, short y);
+	int (*send_dot_remove) (struct map_session_data *sd);
+	int (*team_join) (int bg_id, struct map_session_data *sd);
+	int (*team_leave) (struct map_session_data *sd, int flag);
+	int (*member_respawn) (struct map_session_data *sd);
+	int (*create) (unsigned short mapindex, short rx, short ry, const char *ev, const char *dev);
+	int (*team_get_id) (struct block_list *bl);
+	int (*send_message) (struct map_session_data *sd, const char *mes, int len);
+	int (*send_xy_timer_sub) (DBKey key, DBData *data, va_list ap);
+	int (*send_xy_timer) (int tid, unsigned int tick, int id, intptr_t data);	
 	/* */
 	void (*config_read) (void);
 };
