@@ -96,15 +96,11 @@ void rathread_final(){
 
 
 // gets called whenever a thread terminated ..
-static void rat_thread_terminated( rAthread handle ){
-
-	int id_backup = handle->myID;
-
-	// Simply set all members to 0 (except the id)
-	memset(handle, 0x00, sizeof(struct rAthread));
-	
-	handle->myID = id_backup; // done ;)
-
+static void rat_thread_terminated(rAthread handle) {
+	// Preserve handle->myID and handle->hThread, set everything else to its default value
+	handle->param = NULL;
+	handle->proc = NULL;
+	handle->prio = RAT_PRIO_NORMAL;
 }//end: rat_thread_terminated()
 
 #ifdef WIN32
