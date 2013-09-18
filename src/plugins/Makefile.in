@@ -9,7 +9,7 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY : all $(PLUGINS) sample db2sql clean help
+.PHONY: all $(PLUGINS) sample db2sql clean help
 
 all: $(PLUGINS)
 

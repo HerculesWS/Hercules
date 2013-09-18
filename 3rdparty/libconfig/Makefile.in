@@ -8,7 +8,7 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY : all clean help
+.PHONY: all clean help
 
 all: $(LIBCONFIG_OBJ)
 
