@@ -339,13 +339,6 @@ typedef enum useskill_fail_cause { // clif_skill_fail
 	USESKILL_FAIL_THERE_ARE_NPC_AROUND = 83,
 }useskill_fail_cause;
 
-enum rank_type {
-	RANKTYPE_BLACKSMITH = 0,
-	RANKTYPE_ALCHEMIST = 1,
-	RANKTYPE_TAEKWON = 2,
-	RANKTYPE_PK = 3 //Not supported yet
-};
-
 enum clif_messages {
 	SKILL_CANT_USE_AREA = 0x536,
 	ITEM_CANT_USE_AREA =  0x537,
@@ -604,9 +597,9 @@ struct clif_interface {
 	void (*fame_blacksmith) (struct map_session_data *sd, int points);
 	void (*fame_alchemist) (struct map_session_data *sd, int points);
 	void (*fame_taekwon) (struct map_session_data *sd, int points);
-	void (*ranklist) (struct map_session_data *sd, int16 rankingType);
-	void (*update_rankingpoint) (struct map_session_data *sd, int16 rankingtype, int point);
-	void (*parse_ranklist) (int fd,struct map_session_data *sd);
+	void (*ranklist) (struct map_session_data *sd, enum fame_list_type type);
+	void (*update_rankingpoint) (struct map_session_data *sd, enum fame_list_type type, int points);
+	void (*pRanklist) (int fd, struct map_session_data *sd);
 	void (*hotkeys) (struct map_session_data *sd);
 	int (*insight) (struct block_list *bl,va_list ap);
 	int (*outsight) (struct block_list *bl,va_list ap);

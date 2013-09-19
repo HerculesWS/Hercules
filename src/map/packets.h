@@ -2366,8 +2366,7 @@ packet(0x020d,-1);
 	packet(0x0360,26,clif->pFriendsListAdd,2);
 	packet(0x094A,5,clif->pHomMenu,2,4);
 	packet(0x0873,36,clif->pStoragePassword,0);
-	packet(0x097c,4, clif->parse_ranklist);
-	packet(0x97D,288, clif->update_rankingpoint); //ZC_ACK_RANKING
+	packet(0x097C,4,clif->pRanklist);
 #endif
 
 

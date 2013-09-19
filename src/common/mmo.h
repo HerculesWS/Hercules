@@ -575,6 +575,13 @@ struct fame_list {
 	char name[NAME_LENGTH];
 };
 
+enum fame_list_type {
+	RANKTYPE_BLACKSMITH = 0,
+	RANKTYPE_ALCHEMIST  = 1,
+	RANKTYPE_TAEKWON    = 2,
+	RANKTYPE_PK         = 3, //Not supported yet
+};
+
 enum { //Change Guild Infos
 	GBI_EXP	=1,		// Guild Experience (EXP)
 	GBI_GUILDLV,		// Guild level
