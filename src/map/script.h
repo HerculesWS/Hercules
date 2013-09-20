@@ -213,6 +213,10 @@ typedef enum c_op {
 	C_SUB_POST, // a--
 	C_ADD_PRE, // ++a
 	C_SUB_PRE, // --a
+#ifdef PCRE_SUPPORT
+	C_RE_EQ, // ~=
+	C_RE_NE, // ~!
+#endif // PCRE_SUPPORT
 } c_op;
 
 enum hQueueOpt {

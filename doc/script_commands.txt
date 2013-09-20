@@ -725,6 +725,12 @@ other, but you can not compare numbers to strings.
  >   - True if the first value greater than the second value.
  <   - True if the first value is less than the second value.
  !=  - True if the first value IS NOT equal to the second one.
+ ~=  - True if the second value (as regular expression) matches the first
+       value. Both values must be strings. See the script function pcre_match
+       for more details and advanced features.
+ ~!  - True if the second value (as regular expression) DOES NOT match the
+       first value. Both values must be strings. See script function pcre_match
+       for more details and advanced features.
 
 Examples:
 
@@ -732,9 +738,9 @@ Examples:
  1<2 is True while 1>2 is False.
  @x>2 is True if @x is equal to 3. But it isn't true if @x is 2.
 
-Only '==' and '!=' have been tested for comparing strings. Since there's 
-no way to code a seriously complex data structure in this language, trying 
-to sort strings by alphabet would be pointless anyway.
+Only '==', '!=', '~=' and '~!' have been tested for comparing strings. Since
+there's no way to code a seriously complex data structure in this language,
+trying to sort strings by alphabet would be pointless anyway.
 
 Comparisons can be stacked in the same condition:
 
@@ -910,6 +916,8 @@ Precedence  |  Description                                  | Associativity
 ---------------------------------------------------------------------------
 7           | ==  Equal to                                  | Left to right
             | !=  Not equal to                              |
+            | ~=  Regexp match                              |
+            | ~!  Regexp non-match                          |
 ---------------------------------------------------------------------------
 8           |  &  Bitwise AND                               | Left to right
 ---------------------------------------------------------------------------
@@ -7234,15 +7242,54 @@ script is used.
 
 ---------------------------------------
 
+*pcre_match("<string>","<regex>");
+
+This command is only available if the server is compiled with regular
+expressions library enabled.
+
+The string <string> will be searched for a match to the regular expression
+<regex>, and the number of matches will be returned.
+
+An alternative way to invoke this command is to use the operators '~=' or '~!'.
+The operator '~=' is exactly the same as pcre_match, while the operator '~!'
+will return 1 if no matches were found, or 0 if at least a match was found.
+
+	if (pcre_match("string", "regex")) mes "There was a match.";
+	if ("string" ~= "regex") mes "There was a match.";
+	if ("string" ~! "regex") mes "There were no matches.";
+
+You can find more usage examples in the test script npc/custom/test.txt.
+
+Using regular expressions is high wizardry. But with this high wizardry
+comes unparalleled power of text manipulation. For an explanation of what
+a regular expression pattern is, see a few web pages:
+
+http://www.regular-expressions.info/
+http://www.weitz.de/regex-coach/
+
+Additionally, the following temporary variables will be filled (unless the
+command is invoked as '~!'):
+
+- $@regexmatchcount: The number of matches detected, including any
+  parenthesized capture-groups.
+- $@regexmatch$[0]: The part of <string> That matched the full <regex> pattern.
+- $@regexmatch$[1 .. $@regexmatchcount]: The parts of <string> that matched
+  each of the parenthesized capture-groups in <pattern>.
+
+A capture group is a part of a regex enclosed in (parentheses) in order to
+store in a variable the part of the expression that was matched by that part of
+the regex. For more details, see the links above, as this is not intended to be
+a regex tutorial.
+
+---------------------------------------
+
 *defpattern <set number>,"<regular expression pattern>","<event label>";
 *activatepset <set number>;
 *deactivatepset <set number>;
 *deletepset <set number>;
 
 This set of commands is only available if the server is compiled with 
-regular expressions library enabled. Default compilation and most binary 
-distributions aren't, which is probably bad, since these, while complex to 
-use, are quite fascinating.
+regular expressions library enabled.
 
 They will make the NPC object listen for text spoken publicly by players 
 and match it against regular expression patterns, then trigger labels 
@@ -7265,13 +7312,6 @@ pattern set number in this case will deactivate all pattern sets defined.
 
 'deletepset' will delete a pattern set from memory, so you can create a 
 new pattern set in its place.
-
-Using regular expressions is high wizardry. But with this high wizardry 
-comes unparalleled power of text manipulation. For an explanation of what 
-a regular expression pattern is, see a few web pages:
-
-http://www.regular-expressions.info/
-http://www.weitz.de/regex-coach/
 
 For an example of this in use, see doc/sample/npc_test_pcre.txt
 

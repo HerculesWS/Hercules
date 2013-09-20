@@ -335,7 +335,7 @@ OnInit:
 	callsub(OnCheck, "Order of < and <<", .@x);
 
 
-	// ==, != operators
+	// ==, !=, ~=, ~! operators
 	.@x = (0 == 0); // true
 	.@y = (1 == 0); // false
 	callsub(OnCheck, "== operator", .@x);
@@ -344,6 +344,21 @@ OnInit:
 	.@y = (1 != 1); // false
 	callsub(OnCheck, "!= operator", .@x);
 	callsub(OnCheck, "!= operator", .@y, 0);
+	.@x$ = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+			"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. "
+			"Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
+			"Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+	.@y = (.@x$ ~= "^Lorem.*, ([a-z]*).*(Duis).* ([a-z.]*)$");
+	callsub(OnCheck, "~= operator", .@y, 4);
+	callsub(OnCheck, "~= operator", $@regexmatchcount, 4);
+	if( $@regexmatchcount == 4 ) {
+		callsub(OnCheck, "~= operator", $@regexmatch$[0], .@x$);
+		callsub(OnCheck, "~= operator", $@regexmatch$[1], "quis");
+		callsub(OnCheck, "~= operator", $@regexmatch$[2], "Duis");
+		callsub(OnCheck, "~= operator", $@regexmatch$[3], "laborum.");
+	}
+	.@y = (.@x$ ~! "^Not Lorem.*, ([a-z]*).*(Duis).* ([a-z.]*)$");
+	callsub(OnCheck, "~! operator", .@y);
 
 	// Associativity of ==, !=
 	.@x = (1 == 0 == 0); // (1 == 0) == 0  -->  0 == 0  --> 1
