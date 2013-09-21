@@ -71,7 +71,7 @@ enum homun_type homunculus_class2type(int class_) {
 		case 6052:
 			return HT_S;
 		default:
-			return -1;
+			return HT_INVALID;
 	}
 }
 
@@ -288,7 +288,7 @@ bool homunculus_levelup(struct homun_data *hd) {
 	int growth_max_hp, growth_max_sp;
 	enum homun_type htype;
 
-	if((htype = homun->class2type(hd->homunculus.class_)) == -1) {
+	if( (htype = homun->class2type(hd->homunculus.class_)) == HT_INVALID ) {
 		ShowError("homunculus_levelup: Invalid class %d. \n", hd->homunculus.class_);
 		return false;
 	}
@@ -435,14 +435,14 @@ bool homunculus_mutate(struct homun_data *hd, int homun_id) {
 	m_class = homun->class2type(hd->homunculus.class_);
 	m_id    = homun->class2type(homun_id);
 
-	if( m_class == -1 || m_id == -1 || m_class != HT_EVO || m_id != HT_S ) {
+	if( m_class == HT_INVALID || m_id == HT_INVALID || m_class != HT_EVO || m_id != HT_S ) {
 		clif->emotion(&hd->bl, E_SWT);
 		return false;
 	}
 
 	prev_class = hd->homunculus.class_;
 
-	if (!homun->change_class(hd, homun_id)) {
+	if( !homun->change_class(hd, homun_id) ) {
 		ShowError("homunculus_mutate: Can't evolve homunc from %d to %d", hd->homunculus.class_, homun_id);
 		return false;
 	}
@@ -462,7 +462,7 @@ bool homunculus_mutate(struct homun_data *hd, int homun_id) {
 	hom->prev_class = prev_class;
 	status_calc_homunculus(hd,1);
 
-	if (!(battle_config.hom_setting&0x2))
+	if( !(battle_config.hom_setting&0x2) )
 		skill->unit_move(&sd->hd->bl,iTimer->gettick(),1); // apply land skills immediately
 
 	return true;
@@ -474,7 +474,7 @@ int homunculus_gainexp(struct homun_data *hd,unsigned int exp) {
 	if(hd->homunculus.vaporize)
 		return 1;
 	
-	if((htype = homun->class2type(hd->homunculus.class_)) == -1) {
+	if( (htype = homun->class2type(hd->homunculus.class_)) == HT_INVALID ) {
 		ShowError("homunculus_gainexp: Invalid class %d. \n", hd->homunculus.class_);
 		return 0;
 	}

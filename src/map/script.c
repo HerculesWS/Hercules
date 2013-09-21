@@ -9797,16 +9797,16 @@ BUILDIN(homunculus_mutate) {
 	if( sd == NULL || sd->hd == NULL )
 		return true;
 	
-	if(script_hasdata(st,2))
+	if( script_hasdata(st,2) )
 		homun_id = script_getnum(st,2);
 	else
 		homun_id = 6048 + (rnd() % 4);
 	
-	if(homun_alive(sd->hd)) {
+	if( homun_alive(sd->hd) ) {
 		m_class = homun->class2type(sd->hd->homunculus.class_);
 		m_id    = homun->class2type(homun_id);
 		
-		if ( m_class != -1 && m_id != -1 && m_class == HT_EVO && m_id == HT_S && sd->hd->homunculus.level >= 99 )
+		if( m_class != HT_INVALID && m_id != HT_INVALID && m_class == HT_EVO && m_id == HT_S && sd->hd->homunculus.level >= 99 )
 			homun->mutate(sd->hd, homun_id);
 		else
 			clif->emotion(&sd->hd->bl, E_SWT);

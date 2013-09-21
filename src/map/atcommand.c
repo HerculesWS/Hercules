@@ -6838,27 +6838,26 @@ ACMD(showmobs)
 /*==========================================
  * homunculus level up [orn]
  *------------------------------------------*/
-ACMD(homlevel)
-{
+ACMD(homlevel) {
 	TBL_HOM * hd;
 	int level = 0;
 	enum homun_type htype;
 
 	nullpo_retr(-1, sd);
 	
-	if ( !message || !*message || ( level = atoi(message) ) < 1 ) {
+	if( !message || !*message || ( level = atoi(message) ) < 1 ) {
 		clif->message(fd, msg_txt(1253)); // Please enter a level adjustment (usage: @homlevel <number of levels>).
 		return false;
 	}
 	
-	if ( !homun_alive(sd->hd) ) {
+	if( !homun_alive(sd->hd) ) {
 		clif->message(fd, msg_txt(1254)); // You do not have a homunculus.
 		return false;
 	}
 	
 	hd = sd->hd;
 		
-	if((htype = homun->class2type(hd->homunculus.class_)) == -1) {
+	if( (htype = homun->class2type(hd->homunculus.class_)) == HT_INVALID ) {
 		ShowError("atcommand_homlevel: invalid homun class %d (player %s)\n", hd->homunculus.class_,sd->status.name);
 		return false;
 	}
@@ -6920,12 +6919,12 @@ ACMD(hommutate) {
 	enum homun_type m_class, m_id;
 	nullpo_retr(-1, sd);
 	
-	if (!homun_alive(sd->hd)) {
+	if( !homun_alive(sd->hd) ) {
 		clif->message(fd, msg_txt(1254)); // You do not have a homunculus.
 		return false;
 	}
 	
-	if (!message || !*message) {
+	if( !message || !*message ) {
 		homun_id = 6048 + (rnd() % 4);
 	} else {
 		homun_id = atoi(message);
@@ -6934,7 +6933,7 @@ ACMD(hommutate) {
 	m_class = homun->class2type(sd->hd->homunculus.class_);
 	m_id	= homun->class2type(homun_id);
 	
-	if (m_class != -1 && m_id != -1 && m_class == HT_EVO && m_id == HT_S && sd->hd->homunculus.level >= 99) {
+	if( m_class != HT_INVALID && m_id != HT_INVALID && m_class == HT_EVO && m_id == HT_S && sd->hd->homunculus.level >= 99 ) {
 		homun->mutate(sd->hd, homun_id);
 	} else {
 		clif->emotion(&sd->hd->bl, E_SWT);
