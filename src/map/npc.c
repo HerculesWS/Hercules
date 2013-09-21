@@ -1952,8 +1952,7 @@ void npc_delsrcfile(const char* name)
 
 /// Parses and sets the name and exname of a npc.
 /// Assumes that m, x and y are already set in nd.
-void npc_parsename(struct npc_data* nd, const char* name, const char* start, const char* buffer, const char* filepath)
-{
+void npc_parsename(struct npc_data* nd, const char* name, const char* start, const char* buffer, const char* filepath) {
 	const char* p;
 	struct npc_data* dnd;// duplicate npc
 	char newname[NAME_LENGTH];
@@ -1997,8 +1996,8 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 			snprintf(newname, ARRAYLENGTH(newname), "%d_%d_%d_%d", i, nd->bl.m, nd->bl.x, nd->bl.y);
 		} while( npc->name2id(newname) != NULL );
 
-		strcpy(this_mapname, (nd->bl.m==-1?"(not on a map)":mapindex_id2name(map[nd->bl.m].index)));
-		strcpy(other_mapname, (dnd->bl.m==-1?"(not on a map)":mapindex_id2name(map[dnd->bl.m].index)));
+		strcpy(this_mapname, (nd->bl.m == -1 ? "(not on a map)" : mapindex_id2name(map_id2index(nd->bl.m))));
+		strcpy(other_mapname, (dnd->bl.m == -1 ? "(not on a map)" : mapindex_id2name(map_id2index(dnd->bl.m))));
 
 		ShowWarning("npc_parsename: Duplicate unique name in file '%s', line'%d'. Renaming '%s' to '%s'.\n", filepath, strline(buffer,start-buffer), nd->exname, newname);
 		ShowDebug("this npc:\n   display name '%s'\n   unique name '%s'\n   map=%s, x=%d, y=%d\n", nd->name, nd->exname, this_mapname, nd->bl.x, nd->bl.y);
@@ -2627,7 +2626,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 int npc_duplicate4instance(struct npc_data *snd, int16 m) {
 	char newname[NAME_LENGTH];
 
-	if( map[m].instance_id == -1 )
+	if( m == -1 || map[m].instance_id == -1 )
 		return 1;
 
 	snprintf(newname, ARRAYLENGTH(newname), "dup_%d_%d", map[m].instance_id, snd->bl.id);
@@ -2924,8 +2923,7 @@ void npc_parse_mob2(struct spawn_data* mobspawn)
 	}
 }
 
-const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath)
-{
+const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath) {
 	int num, class_, m,x,y,xs,ys, i,j;
 	int mob_lv = -1, ai = -1, size = -1;
 	char mapname[32], mobname[NAME_LENGTH];
@@ -2940,14 +2938,13 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 	// w3=<mob name>{,<mob level>}
 	// w4=<mob id>,<amount>,<delay1>,<delay2>,<event>{,<mob size>,<mob ai>}
 	if( sscanf(w1, "%31[^,],%d,%d,%d,%d", mapname, &x, &y, &xs, &ys) < 3
-	||	sscanf(w3, "%23[^,],%d", mobname, &mob_lv) < 1
-	||	sscanf(w4, "%d,%d,%u,%u,%127[^,],%d,%d[^\t\r\n]", &class_, &num, &mobspawn.delay1, &mobspawn.delay2, mobspawn.eventname, &size, &ai) < 2 )
-	{
+	 || sscanf(w3, "%23[^,],%d", mobname, &mob_lv) < 1
+	 || sscanf(w4, "%d,%d,%u,%u,%127[^,],%d,%d[^\t\r\n]", &class_, &num, &mobspawn.delay1, &mobspawn.delay2, mobspawn.eventname, &size, &ai) < 2
+	 ) {
 		ShowError("npc_parse_mob: Invalid mob definition in file '%s', line '%d'.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 		return strchr(start,'\n');// skip and continue
 	}
-	if( mapindex_name2id(mapname) == 0 )
-	{
+	if( mapindex_name2id(mapname) == 0 ) {
 		ShowError("npc_parse_mob: Unknown map '%s' in file '%s', line '%d'.\n", mapname, filepath, strline(buffer,start-buffer));
 		return strchr(start,'\n');// skip and continue
 	}
@@ -2956,39 +2953,33 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 		return strchr(start,'\n');// skip and continue
 	mobspawn.m = (unsigned short)m;
 
-	if( x < 0 || x >= map[mobspawn.m].xs || y < 0 || y >= map[mobspawn.m].ys )
-	{
+	if( x < 0 || x >= map[mobspawn.m].xs || y < 0 || y >= map[mobspawn.m].ys ) {
 		ShowError("npc_parse_mob: Spawn coordinates out of range: %s (%d,%d), map size is (%d,%d) - %s %s (file '%s', line '%d').\n", map[mobspawn.m].name, x, y, (map[mobspawn.m].xs-1), (map[mobspawn.m].ys-1), w1, w3, filepath, strline(buffer,start-buffer));
 		return strchr(start,'\n');// skip and continue
 	}
 
 	// check monster ID if exists!
-	if( mob->db_checkid(class_) == 0 )
-	{
+	if( mob->db_checkid(class_) == 0 ) {
 		ShowError("npc_parse_mob: Unknown mob ID %d (file '%s', line '%d').\n", class_, filepath, strline(buffer,start-buffer));
 		return strchr(start,'\n');// skip and continue
 	}
 
-	if( num < 1 || num > 1000 )
-	{
+	if( num < 1 || num > 1000 ) {
 		ShowError("npc_parse_mob: Invalid number of monsters %d, must be inside the range [1,1000] (file '%s', line '%d').\n", num, filepath, strline(buffer,start-buffer));
 		return strchr(start,'\n');// skip and continue
 	}
 
-	if( (mobspawn.state.size < 0 || mobspawn.state.size > 2) && size != -1 )
-	{
+	if( (mobspawn.state.size < 0 || mobspawn.state.size > 2) && size != -1 ) {
 		ShowError("npc_parse_mob: Invalid size number %d for mob ID %d (file '%s', line '%d').\n", mobspawn.state.size, class_, filepath, strline(buffer, start - buffer));
 		return strchr(start, '\n');
 	}
 
-	if( (mobspawn.state.ai < 0 || mobspawn.state.ai > 4) && ai != -1 )
-	{
+	if( (mobspawn.state.ai < 0 || mobspawn.state.ai > 4) && ai != -1 ) {
 		ShowError("npc_parse_mob: Invalid ai %d for mob ID %d (file '%s', line '%d').\n", mobspawn.state.ai, class_, filepath, strline(buffer, start - buffer));
 		return strchr(start, '\n');
 	}
 
-	if( (mob_lv == 0 || mob_lv > MAX_LEVEL) && mob_lv != -1 )
-	{
+	if( (mob_lv == 0 || mob_lv > MAX_LEVEL) && mob_lv != -1 ) {
 		ShowError("npc_parse_mob: Invalid level %d for mob ID %d (file '%s', line '%d').\n", mob_lv, class_, filepath, strline(buffer, start - buffer));
 		return strchr(start, '\n');
 	}
@@ -3012,8 +3003,8 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 			mobspawn.num = 1;
 	}
 
-	if (battle_config.force_random_spawn || (mobspawn.x == 0 && mobspawn.y == 0))
-	{	//Force a random spawn anywhere on the map.
+	if (battle_config.force_random_spawn || (mobspawn.x == 0 && mobspawn.y == 0)) {
+		//Force a random spawn anywhere on the map.
 		mobspawn.x = mobspawn.y = 0;
 		mobspawn.xs = mobspawn.ys = -1;
 	}
@@ -3032,23 +3023,20 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 		safestrncpy(mobspawn.name, mobname, sizeof(mobspawn.name));
 
 	//Verify dataset.
-	if( !mob->parse_dataset(&mobspawn) )
-	{
+	if( !mob->parse_dataset(&mobspawn) ) {
 		ShowError("npc_parse_mob: Invalid dataset for monster ID %d (file '%s', line '%d').\n", class_, filepath, strline(buffer,start-buffer));
 		return strchr(start,'\n');// skip and continue
 	}
 
 	//Update mob spawn lookup database
 	db = mob->db(class_);
-	for( i = 0; i < ARRAYLENGTH(db->spawn); ++i )
-	{
-		if (map[mobspawn.m].index == db->spawn[i].mapindex)
-		{	//Update total
+	for( i = 0; i < ARRAYLENGTH(db->spawn); ++i ) {
+		if (map_id2index(mobspawn.m) == db->spawn[i].mapindex) {
+			//Update total
 			db->spawn[i].qty += mobspawn.num;
 			//Re-sort list
 			for( j = i; j > 0 && db->spawn[j-1].qty < db->spawn[i].qty; --j );
-			if( j != i )
-			{
+			if( j != i ) {
 				xs = db->spawn[i].mapindex;
 				ys = db->spawn[i].qty;
 				memmove(&db->spawn[j+1], &db->spawn[j], (i-j)*sizeof(db->spawn[0]));
@@ -3057,10 +3045,10 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 			}
 			break;
 		}
-		if (mobspawn.num > db->spawn[i].qty)
-		{	//Insert into list
+		if (mobspawn.num > db->spawn[i].qty) {
+			//Insert into list
 			memmove(&db->spawn[i+1], &db->spawn[i], sizeof(db->spawn) -(i+1)*sizeof(db->spawn[0]));
-			db->spawn[i].mapindex = map[mobspawn.m].index;
+			db->spawn[i].mapindex = map_id2index(mobspawn.m);
 			db->spawn[i].qty = mobspawn.num;
 			break;
 		}

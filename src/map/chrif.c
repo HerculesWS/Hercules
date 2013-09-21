@@ -348,7 +348,7 @@ int chrif_sendmap(int fd) {
 	WFIFOHEAD(fd, 4 + instance->start_id * 4);
 	WFIFOW(fd,0) = 0x2afa;
 	for(i = 0; i < instance->start_id; i++)
-		WFIFOW(fd,4+i*4) = map[i].index;
+		WFIFOW(fd,4+i*4) = map_id2index(i);
 	WFIFOW(fd,2) = 4 + i * 4;
 	WFIFOSET(fd,WFIFOW(fd,2));
 

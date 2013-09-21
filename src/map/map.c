@@ -3167,7 +3167,7 @@ int map_readallmaps (void) {
 
 		map[i].index = mapindex_name2id(map[i].name);
 
-		if ( index2mapid[map[i].index] != -1 ) {
+		if ( index2mapid[map_id2index(i)] != -1 ) {
 			ShowWarning("Map %s already loaded!"CL_CLL"\n", map[i].name);
 			if (map[i].cell && map[i].cell != (struct mapcell *)0xdeadbeaf) {
 				aFree(map[i].cell);

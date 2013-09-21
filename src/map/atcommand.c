@@ -4223,8 +4223,7 @@ ACMD(nuke)
 /*==========================================
  * @tonpc
  *------------------------------------------*/
-ACMD(tonpc)
-{
+ACMD(tonpc) {
 	char npcname[NAME_LENGTH+1];
 	struct npc_data *nd;
 	
@@ -4238,7 +4237,7 @@ ACMD(tonpc)
 	}
 	
 	if ((nd = npc->name2id(npcname)) != NULL) {
-		if (pc->setpos(sd, map_id2index(nd->bl.m), nd->bl.x, nd->bl.y, CLR_TELEPORT) == 0)
+		if (nd->bl.m != -1 && pc->setpos(sd, map_id2index(nd->bl.m), nd->bl.x, nd->bl.y, CLR_TELEPORT) == 0)
 			clif->message(fd, msg_txt(0)); // Warped.
 		else
 			return false;
@@ -7637,7 +7636,7 @@ return true;\
 		clif->message(sd->fd," ");
 		clif->message(sd->fd,msg_txt(1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
 		clif->message(sd->fd,msg_txt(1313)); // Type "@mapflag available" to list the available mapflags.
-		return 1;
+		return true;
 	}
 	for (i = 0; flag_name[i]; i++) flag_name[i] = TOLOWER(flag_name[i]); //lowercase
 	
@@ -8146,28 +8145,20 @@ ACMD(itemlist)
 	
 	nullpo_retr(-1, sd);
 	
-	if( strcmp(command+1, "storagelist") == 0 )
-	{
+	if( strcmp(command+1, "storagelist") == 0 ) {
 		location = "storage";
 		items = sd->status.storage.items;
 		size = MAX_STORAGE;
-	}
-	else
-		if( strcmp(command+1, "cartlist") == 0 )
-		{
-			location = "cart";
-			items = sd->status.cart;
-			size = MAX_CART;
-		}
-		else
-			if( strcmp(command+1, "itemlist") == 0 )
-			{
-				location = "inventory";
-				items = sd->status.inventory;
-				size = MAX_INVENTORY;
-			}
-			else
-				return 1;
+	} else if( strcmp(command+1, "cartlist") == 0 ) {
+		location = "cart";
+		items = sd->status.cart;
+		size = MAX_CART;
+	} else if( strcmp(command+1, "itemlist") == 0 ) {
+		location = "inventory";
+		items = sd->status.inventory;
+		size = MAX_INVENTORY;
+	} else
+		return false;
 	
 	StrBuf->Init(&buf);
 	
@@ -8196,8 +8187,7 @@ ACMD(itemlist)
 		else
 			StrBuf->Printf(&buf, "%d %s (%s, id: %d)", it->amount, itd->jname, itd->name, it->nameid);
 		
-		if( it->equip )
-		{
+		if( it->equip ) {
 			char equipstr[CHAT_SIZE_MAX];
 			strcpy(equipstr, msg_txt(1333)); //  | equipped:
 			if( it->equip & EQP_GARMENT )
@@ -8236,52 +8226,46 @@ ACMD(itemlist)
 		clif->message(fd, StrBuf->Value(&buf));
 		StrBuf->Clear(&buf);
 		
-		if( it->card[0] == CARD0_PET )
-		{// pet egg
+		if( it->card[0] == CARD0_PET ) {
+			// pet egg
 			if (it->card[3])
 				StrBuf->Printf(&buf, msg_txt(1348), (unsigned int)MakeDWord(it->card[1], it->card[2])); //  -> (pet egg, pet id: %u, named)
 			else
 				StrBuf->Printf(&buf, msg_txt(1349), (unsigned int)MakeDWord(it->card[1], it->card[2])); //  -> (pet egg, pet id: %u, unnamed)
-		}
-		else
-			if(it->card[0] == CARD0_FORGE)
-			{// forged item
-				StrBuf->Printf(&buf, msg_txt(1350), (unsigned int)MakeDWord(it->card[2], it->card[3]), it->card[1]>>8, it->card[1]&0x0f); //  -> (crafted item, creator id: %u, star crumbs %d, element %d)
+		} else if(it->card[0] == CARD0_FORGE) {
+			// forged item
+			StrBuf->Printf(&buf, msg_txt(1350), (unsigned int)MakeDWord(it->card[2], it->card[3]), it->card[1]>>8, it->card[1]&0x0f); //  -> (crafted item, creator id: %u, star crumbs %d, element %d)
+		} else if(it->card[0] == CARD0_CREATE) {
+			// created item
+			StrBuf->Printf(&buf, msg_txt(1351), (unsigned int)MakeDWord(it->card[2], it->card[3])); //  -> (produced item, creator id: %u)
+		} else {
+			// normal item
+			int counter2 = 0;
+
+			for( j = 0; j < itd->slot; ++j ) {
+				struct item_data* card;
+
+				if( it->card[j] == 0 || (card = itemdb->exists(it->card[j])) == NULL )
+					continue;
+
+				counter2++;
+
+				if( counter2 == 1 )
+					StrBuf->AppendStr(&buf, msg_txt(1352)); //  -> (card(s):
+
+				if( counter2 != 1 )
+					StrBuf->AppendStr(&buf, ", ");
+
+				StrBuf->Printf(&buf, "#%d %s (id: %d)", counter2, card->jname, card->nameid);
 			}
-			else
-				if(it->card[0] == CARD0_CREATE)
-				{// created item
-					StrBuf->Printf(&buf, msg_txt(1351), (unsigned int)MakeDWord(it->card[2], it->card[3])); //  -> (produced item, creator id: %u)
-				}
-				else
-				{// normal item
-					int counter2 = 0;
-					
-					for( j = 0; j < itd->slot; ++j )
-					{
-						struct item_data* card;
-						
-						if( it->card[j] == 0 || (card = itemdb->exists(it->card[j])) == NULL )
-							continue;
-						
-						counter2++;
-						
-						if( counter2 == 1 )
-							StrBuf->AppendStr(&buf, msg_txt(1352)); //  -> (card(s):
-						
-						if( counter2 != 1 )
-							StrBuf->AppendStr(&buf, ", ");
-						
-						StrBuf->Printf(&buf, "#%d %s (id: %d)", counter2, card->jname, card->nameid);
-					}
-					
-					if( counter2 > 0 )
-						StrBuf->AppendStr(&buf, ")");
-				}
+
+			if( counter2 > 0 )
+				StrBuf->AppendStr(&buf, ")");
+		}
 		
 		if( StrBuf->Length(&buf) > 0 )
 			clif->message(fd, StrBuf->Value(&buf));
-		
+
 		StrBuf->Clear(&buf);
 	}
 	

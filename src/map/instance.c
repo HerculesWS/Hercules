@@ -377,7 +377,7 @@ void instance_del_map(int16 m) {
 	if( map[m].mob_delete_timer != INVALID_TIMER )
 		iTimer->delete_timer(map[m].mob_delete_timer, iMap->removemobs_timer);
 	
-	mapindex_removemap( map[m].index );
+	mapindex_removemap(map_id2index(m));
 
 	// Free memory
 	aFree(map[m].cell);

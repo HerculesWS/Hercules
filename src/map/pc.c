@@ -4825,7 +4825,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 			}
 			if( i != sd->instances ) {
 				m = instances[sd->instance[i]].map[j];
-				mapindex = map[m].index;
+				mapindex = map_id2index(m);
 				stop = true;
 			}
 		}
@@ -4839,7 +4839,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 			}
 			if( i != p->instances ) {
 				m = instances[p->instance[i]].map[j];
-				mapindex = map[m].index;
+				mapindex = map_id2index(m);
 				stop = true;
 			}
 		}
@@ -4853,7 +4853,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 			}
 			if( i != sd->guild->instances ) {
 				m = instances[sd->guild->instance[i]].map[j];
-				mapindex = map[m].index;
+				mapindex = map_id2index(m);
 				stop = true;
 			}
 		}
@@ -5009,8 +5009,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
  *	0 = fail or FIXME success (from pc->setpos)
  *	x(1|2) = fail
  *------------------------------------------*/
-int pc_randomwarp(struct map_session_data *sd, clr_type type)
-{
+int pc_randomwarp(struct map_session_data *sd, clr_type type) {
 	int x,y,i=0;
 	int16 m;
 
@@ -5021,13 +5020,13 @@ int pc_randomwarp(struct map_session_data *sd, clr_type type)
 	if (map[sd->bl.m].flag.noteleport) //Teleport forbidden
 		return 0;
 
-	do{
+	do {
 		x=rnd()%(map[m].xs-2)+1;
 		y=rnd()%(map[m].ys-2)+1;
-	}while(iMap->getcell(m,x,y,CELL_CHKNOPASS) && (i++)<1000 );
+	} while( iMap->getcell(m,x,y,CELL_CHKNOPASS) && (i++) < 1000 );
 
 	if (i < 1000)
-		return pc->setpos(sd,map[sd->bl.m].index,x,y,type);
+		return pc->setpos(sd,map_id2index(sd->bl.m),x,y,type);
 
 	return 0;
 }
