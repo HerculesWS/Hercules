@@ -57,6 +57,9 @@ needs_mysql:
 	@echo "MySQL not found or disabled by the configure script"
 	@exit 1
 
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. src/char/Makefile
+
 # object directories
 
 obj_sql:
@@ -65,7 +68,7 @@ obj_sql:
 
 # executables
 
-char-server: $(CHAR_SERVER_SQL_DEPENDS)
+char-server: $(CHAR_SERVER_SQL_DEPENDS) Makefile
 	@echo "	LD	$@"
 	@$(CC) @LDFLAGS@ -o ../../char-server@EXEEXT@ $(CHAR_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
 

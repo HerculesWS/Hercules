@@ -24,9 +24,9 @@ export CC
 #####################################################################
 .PHONY: all mapcache clean help
 
-all: mapcache
+all: mapcache Makefile
 
-mapcache: $(MAPCACHE_OBJ) $(COMMON_OBJ) $(LIBCONFIG_OBJ)
+mapcache: $(MAPCACHE_OBJ) $(COMMON_OBJ) $(LIBCONFIG_OBJ) Makefile
 	@echo "	LD	$@"
 	@$(CC) @LDFLAGS@ $(LIBCONFIG_INCLUDE) -o ../../mapcache@EXEEXT@ $(MAPCACHE_OBJ) $(COMMON_OBJ) $(LIBCONFIG_OBJ) @LIBS@
 
@@ -42,6 +42,9 @@ help:
 	@echo "'help'      - outputs this message"
 
 #####################################################################
+
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. src/tool/Makefile
 
 obj_all:
 	@echo "	MKDIR	obj_all"

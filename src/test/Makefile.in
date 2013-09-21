@@ -26,13 +26,16 @@ export CC
 #####################################################################
 .PHONY: all test_spinlock
 
-all: test_spinlock
+all: test_spinlock Makefile
 
 clean:
 	@echo "	CLEAN	test"
 	@rm -rf *.o obj ../../test_spinlock@EXEEXT@ 
 
 #####################################################################
+
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. src/test/Makefile
 
 # object directories
 
@@ -42,7 +45,7 @@ obj:
 	
 #executables
 
-test_spinlock: $(TEST_SPINLOCK_DEPENDS)
+test_spinlock: $(TEST_SPINLOCK_DEPENDS) Makefile
 	@echo "	LD	$@"
 	@$(CC) @LDFLAGS@ -o ../../test_spinlock@EXEEXT@ $(TEST_SPINLOCK_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
 

@@ -59,6 +59,9 @@ help:
 
 #####################################################################
 
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. src/common/Makefile
+
 needs_mysql:
 	@echo "MySQL not found or disabled by the configure script"
 	@exit 1
@@ -73,23 +76,23 @@ obj_sql:
 	@echo "	MKDIR	obj_sql"
 	@-mkdir obj_sql
 
-obj_all/common.a: $(COMMON_OBJ)
+obj_all/common.a: $(COMMON_OBJ) Makefile
 	@echo "	AR	$@"
 	@@AR@ rcs obj_all/common.a $(COMMON_OBJ)
 
-obj_all/common_mini.a: $(COMMON_MINI_OBJ)
+obj_all/common_mini.a: $(COMMON_MINI_OBJ) Makefile
 	@echo "	AR	$@"
 	@@AR@ rcs obj_all/common_mini.a $(COMMON_MINI_OBJ)
 
-obj_sql/common_sql.a: $(COMMON_SQL_OBJ)
+obj_sql/common_sql.a: $(COMMON_SQL_OBJ) Makefile
 	@echo "	AR	$@"
 	@@AR@ rcs obj_sql/common_sql.a $(COMMON_SQL_OBJ)
 
-common: $(COMMON_OBJ) $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) obj_all/common.a
+common: $(COMMON_OBJ) $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) obj_all/common.a Makefile
 
-common_mini: $(COMMON_MINI_OBJ) $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) obj_all/common_mini.a
+common_mini: $(COMMON_MINI_OBJ) $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) obj_all/common_mini.a Makefile
 
-common_sql: $(COMMON_SQL_OBJ) obj_sql/common_sql.a
+common_sql: $(COMMON_SQL_OBJ) obj_sql/common_sql.a Makefile
 
 obj_all/%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj_all
 	@echo "	CC	$<"

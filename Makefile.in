@@ -27,6 +27,10 @@ else
 	PLUGIN_DEPENDS=no_plugins
 endif
 
+MF_TARGETS = Makefile $(addsuffix /Makefile, src/common 3rdparty/mt19937ar \
+             3rdparty/libconfig src/char src/login src/map src/plugins \
+             src/tool src/test)
+
 CC = @CC@
 export CC
 
@@ -41,56 +45,73 @@ export CC
 	plugins \
 	import \
 	test \
-	clean help
+	clean \
+	help
 
 all: $(ALL_DEPENDS)
 
 sql: $(SQL_DEPENDS)
 
-common_sql: $(COMMON_SQL_DEPENDS)
+$(MF_TARGETS): %: %.in
+	@echo "	CONFIGURE"
+	@if [ -x config.status ]; then \
+		echo "Reconfiguring with options: $$(./config.status --config)"; \
+		./config.status; \
+	else \
+		echo "Unable to find a previous config.status.  ./configure will be re-run with the default options."; \
+		echo "If you want to use custom options, please press CTRL-C and run ./configure yourself"; \
+		for i in 1 2 3 4 5 6 7 8 9 10; do \
+			printf "\a. "; \
+			sleep 1; \
+		done; \
+		echo ""; \
+		./configure; \
+	fi;
+
+common_sql: $(COMMON_SQL_DEPENDS) src/common/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C src/common sql
 
-mt19937ar:
+mt19937ar: 3rdparty/mt19937ar/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C 3rdparty/mt19937ar
 
-libconfig:
+libconfig: 3rdparty/libconfig/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C 3rdparty/libconfig
 
-login_sql: $(LOGIN_SQL_DEPENDS)
+login_sql: $(LOGIN_SQL_DEPENDS) src/login/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C src/login sql
 
-char_sql: $(CHAR_SQL_DEPENDS)
+char_sql: $(CHAR_SQL_DEPENDS) src/char/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C src/char
 
-map_sql: $(MAP_SQL_DEPENDS)
+map_sql: $(MAP_SQL_DEPENDS) src/map/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C src/map sql
 
-tools: $(TOOLS_DEPENDS)
+tools: $(TOOLS_DEPENDS) src/tool/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C src/tool
 
-test:
+test: src/test/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C src/test
 
-plugins: $(PLUGIN_DEPENDS)
+plugins: $(PLUGIN_DEPENDS) src/plugins/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C src/plugins
 
-import:
+import: Makefile
 	@# 1) create conf/import folder
 	@# 2) add missing files
 	@echo "building conf/import folder..."
 	@if test ! -d conf/import ; then mkdir conf/import ; fi
 	@for f in $$(ls conf/import-tmpl) ; do if test ! -e conf/import/$$f ; then cp conf/import-tmpl/$$f conf/import ; fi ; done
 
-clean:
+clean: $(MF_TARGETS)
 	@$(MAKE) -C src/common $@
 	@$(MAKE) -C 3rdparty/mt19937ar $@
 	@$(MAKE) -C 3rdparty/libconfig $@
@@ -102,12 +123,9 @@ clean:
 	@$(MAKE) -C src/test $@
 
 distclean: clean
-	@-rm -f Makefile src/common/Makefile 3rdparty/mt19937ar/Makefile \
-		3rdparty/libconfig/Makefile src/char/Makefile src/login/Makefile \
-		src/map/Makefile src/plugins/Makefile src/tool/Makefile \
-		src/test/Makefile
+	@-rm -f $(MF_TARGETS) config.status config.log
 
-help:
+help: Makefile
 	@echo "most common targets are 'all' 'sql' 'clean' 'plugins' 'help'"
 	@echo "possible targets are:"
 	@echo "'common_sql'  - builds object files used in SQL servers"

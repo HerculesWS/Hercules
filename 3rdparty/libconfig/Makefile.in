@@ -24,6 +24,9 @@ help:
 
 #####################################################################
 
-%.o: %.c $(LIBCONFIG_H)
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. 3rdparty/libconfig/Makefile
+
+%.o: %.c $(LIBCONFIG_H) Makefile
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ @DEFS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<

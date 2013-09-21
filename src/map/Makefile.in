@@ -66,6 +66,9 @@ help:
 
 #####################################################################
 
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. src/map/Makefile
+
 needs_mysql:
 	@echo "MySQL not found or disabled by the configure script"
 	@exit 1
@@ -78,7 +81,7 @@ obj_sql:
 
 # executables
 
-map-server: $(MAP_SERVER_SQL_DEPENDS)
+map-server: $(MAP_SERVER_SQL_DEPENDS) Makefile
 	@echo "	LD	$@"
 	@$(CC) @LDFLAGS@ -o ../../map-server@EXEEXT@ $(MAP_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @PCRE_LIBS@ @MYSQL_LIBS@
 
