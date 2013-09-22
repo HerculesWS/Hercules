@@ -65,8 +65,10 @@ obj_sql:
 
 # executables
 
-login-server: $(LOGIN_SERVER_SQL_DEPENDS) Makefile
-	@echo "	LD	$@"
+login-server: ../../login-server@EXEEXT@
+
+../../login-server@EXEEXT@: $(LOGIN_SERVER_SQL_DEPENDS) Makefile
+	@echo "	LD	$(notdir $@)"
 	@$(CC) @LDFLAGS@ -o ../../login-server@EXEEXT@ $(LOGIN_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
 
 # login object files

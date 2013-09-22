@@ -26,8 +26,10 @@ export CC
 
 all: mapcache Makefile
 
-mapcache: $(MAPCACHE_OBJ) $(COMMON_OBJ) $(LIBCONFIG_OBJ) Makefile
-	@echo "	LD	$@"
+mapcache: ../../mapcache@EXEEXT@
+
+../../mapcache@EXEEXT@: $(MAPCACHE_OBJ) $(COMMON_OBJ) $(LIBCONFIG_OBJ) Makefile
+	@echo "	LD	$(notdir $@)"
 	@$(CC) @LDFLAGS@ $(LIBCONFIG_INCLUDE) -o ../../mapcache@EXEEXT@ $(MAPCACHE_OBJ) $(COMMON_OBJ) $(LIBCONFIG_OBJ) @LIBS@
 
 clean:

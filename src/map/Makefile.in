@@ -81,8 +81,10 @@ obj_sql:
 
 # executables
 
-map-server: $(MAP_SERVER_SQL_DEPENDS) Makefile
-	@echo "	LD	$@"
+map-server: ../../map-server@EXEEXT@
+
+../../map-server@EXEEXT@: $(MAP_SERVER_SQL_DEPENDS) Makefile
+	@echo "	LD	$(notdir $@)"
 	@$(CC) @LDFLAGS@ -o ../../map-server@EXEEXT@ $(MAP_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @PCRE_LIBS@ @MYSQL_LIBS@
 
 # map object files
