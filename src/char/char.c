@@ -68,6 +68,7 @@ char skill_homunculus_db[256] = "skill_homunculus";
 char mercenary_db[256] = "mercenary";
 char mercenary_owner_db[256] = "mercenary_owner";
 char ragsrvinfo_db[256] = "ragsrvinfo";
+char elemental_db[256] = "elemental";
 char interreg_db[32] = "interreg";
 
 // show loading/saving messages
@@ -2819,7 +2820,8 @@ int parse_frommap(int fd)
 				int aid, cid;
 				aid = RFIFOL(fd,2);
 				cid = RFIFOL(fd,6);
-				if( SQL_ERROR == SQL->Query(sql_handle, "SELECT type, tick, val1, val2, val3, val4 from `%s` WHERE `account_id` = '%d' AND `char_id`='%d'",
+				if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `type`, `tick`, `val1`, `val2`, `val3`, `val4` "
+					"FROM `%s` WHERE `account_id` = '%d' AND `char_id`='%d'",
 					scdata_db, aid, cid) )
 				{
 					Sql_ShowDebug(sql_handle);
@@ -4715,6 +4717,8 @@ void sql_config_read(const char* cfgName)
 			safestrncpy(mercenary_owner_db,w2,sizeof(mercenary_owner_db));
 		else if(!strcmpi(w1,"ragsrvinfo_db"))
 			safestrncpy(ragsrvinfo_db,w2,sizeof(ragsrvinfo_db));
+		else if(!strcmpi(w1,"elemental_db"))
+			safestrncpy(elemental_db,w2,sizeof(elemental_db));
 		else if(!strcmpi(w1,"interreg_db"))
 			safestrncpy(interreg_db,w2,sizeof(interreg_db));
 		//support the import command, just like any other config

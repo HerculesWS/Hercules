@@ -103,6 +103,7 @@ extern char skill_homunculus_db[256];
 extern char mercenary_db[256];
 extern char mercenary_owner_db[256];
 extern char ragsrvinfo_db[256];
+extern char elemental_db[256];
 extern char interreg_db[32];
 
 extern int db_use_sql_item_db;

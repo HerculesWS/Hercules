@@ -252,7 +252,7 @@ int ipban_cleanup(int tid, unsigned int tick, int id, intptr_t data)
 	if( !login_config.ipban )
 		return 0;// ipban disabled
 
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `ipbanlist` WHERE `rtime` <= NOW()") )
+	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `rtime` <= NOW()", ipban_table) )
 		Sql_ShowDebug(sql_handle);
 
 	return 0;
