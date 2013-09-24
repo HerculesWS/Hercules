@@ -4941,7 +4941,7 @@ void do_final(void)
 	iStatus->do_final_status();
 	unit->final();
 	bg->final();
-	iDuel->do_final_duel();
+	duel->final();
 	elemental->do_final_elemental();
 	do_final_maps();
 	vending->final();
@@ -5153,7 +5153,7 @@ void map_hp_symbols(void) {
 	HPM->share(trade,"trade");
 	HPM->share(iStatus,"iStatus");
 	HPM->share(chat, "chat");
-	HPM->share(iDuel,"iDuel");
+	HPM->share(duel,"duel");
 	HPM->share(elemental,"elemental");
 	HPM->share(intif,"intif");
 	HPM->share(mercenary,"mercenary");
@@ -5207,7 +5207,7 @@ void map_load_defaults(void) {
 	trade_defaults();
 	status_defaults();
 	chat_defaults();
-	iDuel_defaults();
+	duel_defaults();
 	elemental_defaults();
 	intif_defaults();
 	mercenary_defaults();
@@ -5422,7 +5422,7 @@ int do_init(int argc, char *argv[])
 	npc->init();
 	unit->init();
 	bg->init();
-	iDuel->do_init_duel();
+	duel->init();
 	vending->init();
 
 	npc->event_do_oninit();	// Init npcs (OnInit)

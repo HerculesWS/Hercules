@@ -21,8 +21,8 @@ struct duel {
 struct duel_interface {
 
 	/* vars */
-	struct duel duel_list[MAX_DUEL];
-	int duel_count;
+	struct duel list[MAX_DUEL];
+	int count;
 
 	/* funcs */
 	//Duel functions // [LuzZza]
@@ -34,12 +34,12 @@ struct duel_interface {
 	void (*showinfo) (const unsigned int did, struct map_session_data* sd);
 	int (*checktime) (struct map_session_data* sd);
 	
-	void (*do_init_duel) (void);
-	void (*do_final_duel) (void);
-} iDuel_s;
+	void (*init) (void);
+	void (*final) (void);
+} duel_s;
 
-struct duel_interface *iDuel;
+struct duel_interface *duel;
 
-void iDuel_defaults(void);
+void duel_defaults(void);
 
 #endif /* _DUEL_H_ */
