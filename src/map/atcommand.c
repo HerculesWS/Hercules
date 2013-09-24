@@ -60,7 +60,7 @@ static char atcmd_player_name[NAME_LENGTH];
 
 static AtCommandInfo* get_atcommandinfo_byname(const char *name); // @help
 static const char* atcommand_checkalias(const char *aliasname); // @help
-static void atcommand_get_suggestions(struct map_session_data* sd, const char *name, bool atcommand); // @help
+static void atcommand_get_suggestions(struct map_session_data* sd, const char *name, bool is_atcmd_cmd); // @help
 
 // @commands (script-based)
 struct atcmd_binding_data* get_atcommandbind_byname(const char* name) {

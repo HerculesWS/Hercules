@@ -3887,26 +3887,21 @@ bool mob_parse_dbrow(char** str)
 /*==========================================
  * mob_db.txt reading
  *------------------------------------------*/
-bool mob_readdb_sub(char* fields[], int columns, int current)
-{
+bool mob_readdb_sub(char* fields[], int columns, int current) {
 	return mob->parse_dbrow(fields);
 }
 
-void mob_readdb(void)
-{
+void mob_readdb(void) {
 	const char* filename[] = {
 		DBPATH"mob_db.txt",
 		"mob_db2.txt" };
 	int fi;
 
-	for( fi = 0; fi < ARRAYLENGTH(filename); ++fi )
-	{
-		if(fi > 0)
-		{
-			char path[256];
-			sprintf(path, "%s/%s", iMap->db_path, filename[fi]);
-			if(!exists(path))
-			{
+	for( fi = 0; fi < ARRAYLENGTH(filename); ++fi ) {
+		if(fi > 0) {
+			char filepath[256];
+			sprintf(filepath, "%s/%s", iMap->db_path, filename[fi]);
+			if(!exists(filepath)) {
 				continue;
 			}
 		}
@@ -4135,23 +4130,20 @@ bool mob_parse_row_chatdb(char** str, const char* source, int line, int* last_ms
 /*==========================================
  * mob_chat_db.txt reading [SnakeDrak]
  *-------------------------------------------------------------------------*/
-void mob_readchatdb(void)
-{
+void mob_readchatdb(void) {
 	char arc[]="mob_chat_db.txt";
 	uint32 lines=0, count=0;
-	char line[1024], path[256];
+	char line[1024], filepath[256];
 	int i, tmp=0;
 	FILE *fp;
-	sprintf(path, "%s/%s", iMap->db_path, arc);
-	fp=fopen(path, "r");
-	if(fp == NULL)
-	{
-		ShowWarning("mob_readchatdb: File not found \"%s\", skipping.\n", path);
+	sprintf(filepath, "%s/%s", iMap->db_path, arc);
+	fp=fopen(filepath, "r");
+	if(fp == NULL) {
+		ShowWarning("mob_readchatdb: File not found \"%s\", skipping.\n", filepath);
 		return;
 	}
 
-	while(fgets(line, sizeof(line), fp))
-	{
+	while(fgets(line, sizeof(line), fp)) {
 		char *str[3], *p, *np;
 		int j=0;
 
@@ -4179,7 +4171,7 @@ void mob_readchatdb(void)
 			continue;
 		}
 
-		if( !mob->parse_row_chatdb(str, path, lines, &tmp) )
+		if( !mob->parse_row_chatdb(str, filepath, lines, &tmp) )
 			continue;
 
 		count++;
@@ -4457,20 +4449,16 @@ void mob_readskilldb(void) {
 		"mob_skill_db2.txt" };
 	int fi;
 
-	if( battle_config.mob_skill_rate == 0 )
-	{
+	if( battle_config.mob_skill_rate == 0 ) {
 		ShowStatus("Mob skill use disabled. Not reading mob skills.\n");
 		return;
 	}
 
-	for( fi = 0; fi < ARRAYLENGTH(filename); ++fi )
-	{
-		if(fi > 0)
-		{
-			char path[256];
-			sprintf(path, "%s/%s", iMap->db_path, filename[fi]);
-			if(!exists(path))
-			{
+	for( fi = 0; fi < ARRAYLENGTH(filename); ++fi ) {
+		if(fi > 0) {
+			char filepath[256];
+			sprintf(filepath, "%s/%s", iMap->db_path, filename[fi]);
+			if(!exists(filepath)) {
 				continue;
 			}
 		}

@@ -540,8 +540,8 @@ struct clif_interface {
 	void (*changetraplook) (struct block_list *bl,int val);
 	void (*refreshlook) (struct block_list *bl,int id,int type,int val,enum send_target target);
 	void (*class_change) (struct block_list *bl,int class_,int type);
-	void (*skill_setunit) (struct skill_unit *unit);
-	void (*skill_delunit) (struct skill_unit *unit);
+	void (*skill_setunit) (struct skill_unit *su);
+	void (*skill_delunit) (struct skill_unit *su);
 	void (*skillunit_update) (struct block_list* bl);
 	int (*clearunit_delayed_sub) (int tid, unsigned int tick, int id, intptr_t data);
 	void (*set_unit_idle) (struct block_list* bl, struct map_session_data *tsd,enum send_target target);
@@ -552,9 +552,9 @@ struct clif_interface {
 #endif
 	void (*set_unit_walking) (struct block_list* bl, struct map_session_data *tsd,struct unit_data* ud, enum send_target target);
 	int (*calc_walkdelay) (struct block_list *bl,int delay, int type, int damage, int div_);
-	void (*getareachar_skillunit) (struct map_session_data *sd, struct skill_unit *unit);
+	void (*getareachar_skillunit) (struct map_session_data *sd, struct skill_unit *su);
 	void (*getareachar_unit) (struct map_session_data* sd,struct block_list *bl);
-	void (*clearchar_skillunit) (struct skill_unit *unit, int fd);
+	void (*clearchar_skillunit) (struct skill_unit *su, int fd);
 	int (*getareachar) (struct block_list* bl,va_list ap);
 	/* main unit spawn */
 	int (*spawn) (struct block_list *bl);
@@ -649,7 +649,7 @@ struct clif_interface {
 	void (*viewequip_ack) (struct map_session_data* sd, struct map_session_data* tsd);
 	void (*viewequip_fail) (struct map_session_data* sd);
 	void (*equpcheckbox) (struct map_session_data* sd);
-	void (*displayexp) (struct map_session_data *sd, unsigned int exp, char type, bool quest);
+	void (*displayexp) (struct map_session_data *sd, unsigned int exp, char type, bool is_quest);
 	void (*font) (struct map_session_data *sd);
 	void (*progressbar) (struct map_session_data * sd, unsigned long color, unsigned int second);
 	void (*progressbar_abort) (struct map_session_data * sd);
@@ -761,9 +761,9 @@ struct clif_interface {
 	void (*openvendingreq) (struct map_session_data* sd, int num);
 	void (*showvendingboard) (struct block_list* bl, const char* message, int fd);
 	void (*closevendingboard) (struct block_list* bl, int fd);
-	void (*vendinglist) (struct map_session_data* sd, unsigned int id, struct s_vending* vending);
+	void (*vendinglist) (struct map_session_data* sd, unsigned int id, struct s_vending* vending_list);
 	void (*buyvending) (struct map_session_data* sd, int index, int amount, int fail);
-	void (*openvending) (struct map_session_data* sd, int id, struct s_vending* vending);
+	void (*openvending) (struct map_session_data* sd, int id, struct s_vending* vending_list);
 	void (*vendingreport) (struct map_session_data* sd, int index, int amount);
 	/* storage handling */
 	void (*storagelist) (struct map_session_data* sd, struct item* items, int items_length);
@@ -774,7 +774,7 @@ struct clif_interface {
 	/* skill-list handling */
 	void (*skillinfoblock) (struct map_session_data *sd);
 	void (*skillup) (struct map_session_data *sd,uint16 skill_id);
-	void (*skillinfo) (struct map_session_data *sd,int skill, int inf);
+	void (*skillinfo) (struct map_session_data *sd,int skill_id, int inf);
 	void (*addskill) (struct map_session_data *sd, int id);
 	void (*deleteskill) (struct map_session_data *sd, int id);
 	/* party-specific */

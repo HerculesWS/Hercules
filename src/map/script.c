@@ -2761,11 +2761,10 @@ void pop_stack(struct script_state* st, int start, int end)
 /*==========================================
  * Release script dependent variable, dependent variable of function
  *------------------------------------------*/
-void script_free_vars(struct DBMap* storage)
-{
-	if( storage )
-	{// destroy the storage construct containing the variables
-		db_destroy(storage);
+void script_free_vars(struct DBMap* var_storage) {
+	if( var_storage ) {
+		// destroy the storage construct containing the variables
+		db_destroy(var_storage);
 	}
 }
 
@@ -15496,17 +15495,15 @@ BUILDIN(mercenary_sc_start)
 	return true;
 }
 
-BUILDIN(mercenary_get_calls)
-{
+BUILDIN(mercenary_get_calls) {
 	struct map_session_data *sd = script_rid2sd(st);
-	int guild;
+	int guild_id;
 	
 	if( sd == NULL )
 		return true;
 	
-	guild = script_getnum(st,2);
-	switch( guild )
-	{
+	guild_id = script_getnum(st,2);
+	switch( guild_id ) {
 		case ARCH_MERC_GUILD:
 			script_pushint(st,sd->status.arch_calls);
 			break;
@@ -15524,19 +15521,17 @@ BUILDIN(mercenary_get_calls)
 	return true;
 }
 
-BUILDIN(mercenary_set_calls)
-{
+BUILDIN(mercenary_set_calls) {
 	struct map_session_data *sd = script_rid2sd(st);
-	int guild, value, *calls;
+	int guild_id, value, *calls;
 	
 	if( sd == NULL )
 		return true;
 	
-	guild = script_getnum(st,2);
+	guild_id = script_getnum(st,2);
 	value = script_getnum(st,3);
 	
-	switch( guild )
-	{
+	switch( guild_id ) {
 		case ARCH_MERC_GUILD:
 			calls = &sd->status.arch_calls;
 			break;
@@ -15556,17 +15551,15 @@ BUILDIN(mercenary_set_calls)
 	return true;
 }
 
-BUILDIN(mercenary_get_faith)
-{
+BUILDIN(mercenary_get_faith) {
 	struct map_session_data *sd = script_rid2sd(st);
-	int guild;
+	int guild_id;
 	
 	if( sd == NULL )
 		return true;
 	
-	guild = script_getnum(st,2);
-	switch( guild )
-	{
+	guild_id = script_getnum(st,2);
+	switch( guild_id ) {
 		case ARCH_MERC_GUILD:
 			script_pushint(st,sd->status.arch_faith);
 			break;
@@ -15584,19 +15577,17 @@ BUILDIN(mercenary_get_faith)
 	return true;
 }
 
-BUILDIN(mercenary_set_faith)
-{
+BUILDIN(mercenary_set_faith) {
 	struct map_session_data *sd = script_rid2sd(st);
-	int guild, value, *calls;
+	int guild_id, value, *calls;
 	
 	if( sd == NULL )
 		return true;
 	
-	guild = script_getnum(st,2);
+	guild_id = script_getnum(st,2);
 	value = script_getnum(st,3);
 	
-	switch( guild )
-	{
+	switch( guild_id ) {
 		case ARCH_MERC_GUILD:
 			calls = &sd->status.arch_faith;
 			break;
@@ -15612,7 +15603,7 @@ BUILDIN(mercenary_set_faith)
 	
 	*calls += value;
 	*calls = cap_value(*calls, 0, INT_MAX);
-	if( mercenary->get_guild(sd->md) == guild )
+	if( mercenary->get_guild(sd->md) == guild_id )
 		clif->mercenary_updatestatus(sd,SP_MERCFAITH);
 	
 	return true;

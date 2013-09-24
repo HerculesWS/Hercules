@@ -1858,13 +1858,10 @@ static int pc_bonus_addeff(struct s_addeffect* effect, int max, enum sc_type id,
 	return 1;
 }
 
-static int pc_bonus_addeff_onskill(struct s_addeffectonskill* effect, int max, enum sc_type id, short rate, short skill, unsigned char target)
-{
+static int pc_bonus_addeff_onskill(struct s_addeffectonskill* effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target) {
 	int i;
-	for( i = 0; i < max && effect[i].skill; i++ )
-	{
-		if( effect[i].id == id && effect[i].skill == skill && effect[i].target == target )
-		{
+	for( i = 0; i < max && effect[i].skill; i++ ) {
+		if( effect[i].id == id && effect[i].skill == skill_id && effect[i].target == target ) {
 			effect[i].rate += rate;
 			return 1;
 		}
@@ -1875,7 +1872,7 @@ static int pc_bonus_addeff_onskill(struct s_addeffectonskill* effect, int max, e
 	}
 	effect[i].id = id;
 	effect[i].rate = rate;
-	effect[i].skill = skill;
+	effect[i].skill = skill_id;
 	effect[i].target = target;
 	return 1;
 }
@@ -1929,8 +1926,7 @@ static int pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id
 	return 1;
 }
 
-int pc_addautobonus(struct s_autobonus *bonus,char max,const char *script,short rate,unsigned int dur,short flag,const char *other_script,unsigned short pos,bool onskill)
-{
+int pc_addautobonus(struct s_autobonus *bonus,char max,const char *bonus_script,short rate,unsigned int dur,short flag,const char *other_script,unsigned short pos,bool onskill) {
 	int i;
 
 	ARR_FIND(0, max, i, bonus[i].rate == 0);
@@ -1960,7 +1956,7 @@ int pc_addautobonus(struct s_autobonus *bonus,char max,const char *script,short 
 	bonus[i].active = INVALID_TIMER;
 	bonus[i].atk_type = flag;
 	bonus[i].pos = pos;
-	bonus[i].bonus_script = aStrdup(script);
+	bonus[i].bonus_script = aStrdup(bonus_script);
 	bonus[i].other_script = other_script?aStrdup(other_script):NULL;
 	return 1;
 }
@@ -3647,13 +3643,12 @@ int pc_insert_card(struct map_session_data* sd, int idx_card, int idx_equip)
 /*==========================================
  * Update buying value by skills
  *------------------------------------------*/
-int pc_modifybuyvalue(struct map_session_data *sd,int orig_value)
-{
-	int skill,val = orig_value,rate1 = 0,rate2 = 0;
-	if((skill=pc->checkskill(sd,MC_DISCOUNT))>0)	// merchant discount
-		rate1 = 5+skill*2-((skill==10)? 1:0);
-	if((skill=pc->checkskill(sd,RG_COMPULSION))>0)	 // rogue discount
-		rate2 = 5+skill*4;
+int pc_modifybuyvalue(struct map_session_data *sd,int orig_value) {
+	int skill_lv,val = orig_value,rate1 = 0,rate2 = 0;
+	if((skill_lv=pc->checkskill(sd,MC_DISCOUNT))>0)   // merchant discount
+		rate1 = 5+skill_lv*2-((skill_lv==10)? 1:0);
+	if((skill_lv=pc->checkskill(sd,RG_COMPULSION))>0) // rogue discount
+		rate2 = 5+skill_lv*4;
 	if(rate1 < rate2) rate1 = rate2;
 	if(rate1)
 		val = (int)((double)orig_value*(double)(100-rate1)/100.);
@@ -3666,11 +3661,10 @@ int pc_modifybuyvalue(struct map_session_data *sd,int orig_value)
 /*==========================================
  * Update selling value by skills
  *------------------------------------------*/
-int pc_modifysellvalue(struct map_session_data *sd,int orig_value)
-{
-	int skill,val = orig_value,rate = 0;
-	if((skill=pc->checkskill(sd,MC_OVERCHARGE))>0)	//OverCharge
-		rate = 5+skill*2-((skill==10)? 1:0);
+int pc_modifysellvalue(struct map_session_data *sd,int orig_value) {
+	int skill_lv,val = orig_value,rate = 0;
+	if((skill_lv=pc->checkskill(sd,MC_OVERCHARGE))>0) //OverCharge
+		rate = 5+skill_lv*2-((skill_lv==10)? 1:0);
 	if(rate)
 		val = (int)((double)orig_value*(double)(100+rate)/100.);
 	if(val < 0) val = 0;
@@ -4760,9 +4754,8 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
  *	0 = fail
  *	1 = success
  *------------------------------------------*/
-int pc_steal_coin(struct map_session_data *sd,struct block_list *target)
-{
-	int rate,skill;
+int pc_steal_coin(struct map_session_data *sd,struct block_list *target) {
+	int rate,skill_lv;
 	struct mob_data *md;
 	if(!sd || !target || target->type != BL_MOB)
 		return 0;
@@ -4775,10 +4768,9 @@ int pc_steal_coin(struct map_session_data *sd,struct block_list *target)
 		return 0;
 
 	// FIXME: This formula is either custom or outdated.
-	skill = pc->checkskill(sd,RG_STEALCOIN)*10;
-	rate = skill + (sd->status.base_level - md->level)*3 + sd->battle_status.dex*2 + sd->battle_status.luk*2;
-	if(rnd()%1000 < rate)
-	{
+	skill_lv = pc->checkskill(sd,RG_STEALCOIN)*10;
+	rate = skill_lv + (sd->status.base_level - md->level)*3 + sd->battle_status.dex*2 + sd->battle_status.luk*2;
+	if(rnd()%1000 < rate) {
 		int amount = md->level*10 + rnd()%100;
 
 		pc->getzeny(sd, amount, LOG_TYPE_STEAL, NULL);
@@ -5035,9 +5027,8 @@ int pc_randomwarp(struct map_session_data *sd, clr_type type) {
  * Records a memo point at sd's current position
  * pos - entry to replace, (-1: shift oldest entry out)
  *------------------------------------------*/
-int pc_memo(struct map_session_data* sd, int pos)
-{
-	int skill;
+int pc_memo(struct map_session_data* sd, int pos) {
+	int skill_lv;
 
 	nullpo_ret(sd);
 
@@ -5052,12 +5043,12 @@ int pc_memo(struct map_session_data* sd, int pos)
 		return 0; // invalid input
 
 	// check required skill level
-	skill = pc->checkskill(sd, AL_WARP);
-	if( skill < 1 ) {
+	skill_lv = pc->checkskill(sd, AL_WARP);
+	if( skill_lv < 1 ) {
 		clif->skill_memomessage(sd,2); // "You haven't learned Warp."
 		return 0;
 	}
-	if( skill < 2 || skill - 2 < pos ) {
+	if( skill_lv < 2 || skill_lv - 2 < pos ) {
 		clif->skill_memomessage(sd,1); // "Skill Level is not high enough."
 		return 0;
 	}
@@ -5892,8 +5883,7 @@ static void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsi
 /*==========================================
  * Give x exp at sd player and calculate remaining exp for next lvl
  *------------------------------------------*/
-int pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int base_exp,unsigned int job_exp,bool quest)
-{
+int pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int base_exp,unsigned int job_exp,bool is_quest) {
 	float nextbp=0, nextjp=0;
 	unsigned int nextb=0, nextj=0;
 	nullpo_ret(sd);
@@ -5957,9 +5947,9 @@ int pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int
 
 #if PACKETVER >= 20091027
 	if(base_exp)
-		clif->displayexp(sd, base_exp, SP_BASEEXP, quest);
+		clif->displayexp(sd, base_exp, SP_BASEEXP, is_quest);
 	if(job_exp)
-		clif->displayexp(sd, job_exp,  SP_JOBEXP, quest);
+		clif->displayexp(sd, job_exp,  SP_JOBEXP, is_quest);
 #endif
 	
 	if(sd->state.showexp) {
@@ -9388,7 +9378,7 @@ int map_night_timer(int tid, unsigned int tick, int id, intptr_t data)
 	return 0;
 }
 
-void pc_setstand(struct map_session_data *sd){
+void pc_setstand(struct map_session_data *sd) {
 	nullpo_retv(sd);
 
 	status_change_end(&sd->bl, SC_TENSIONRELAX, INVALID_TIMER);
@@ -9402,20 +9392,20 @@ void pc_setstand(struct map_session_data *sd){
  * Mechanic (MADO GEAR)
  **/
 void pc_overheat(struct map_session_data *sd, int val) {
-	int heat = val, skill,
+	int heat = val, skill_lv,
 		limit[] = { 10, 20, 28, 46, 66 };
 
 	if( !pc_ismadogear(sd) || sd->sc.data[SC_OVERHEAT] )
 		return; // already burning
 
-	skill = cap_value(pc->checkskill(sd,NC_MAINFRAME),0,4);
+	skill_lv = cap_value(pc->checkskill(sd,NC_MAINFRAME),0,4);
 	if( sd->sc.data[SC_OVERHEAT_LIMITPOINT] ) {
 		heat += sd->sc.data[SC_OVERHEAT_LIMITPOINT]->val1;
 		status_change_end(&sd->bl,SC_OVERHEAT_LIMITPOINT,INVALID_TIMER);
 	}
 
 	heat = max(0,heat); // Avoid negative HEAT
-	if( heat >= limit[skill] )
+	if( heat >= limit[skill_lv] )
 		sc_start(&sd->bl,SC_OVERHEAT,100,0,1000);
 	else
 		sc_start(&sd->bl,SC_OVERHEAT_LIMITPOINT,100,heat,30000);

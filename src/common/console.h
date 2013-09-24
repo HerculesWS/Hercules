@@ -64,7 +64,7 @@ struct console_interface {
 	void (*load_defaults) (void);
 	void (*parse_list_subs) (struct CParseEntry *cmd, unsigned char depth);
 	void (*addCommand) (char *name, CParseFunc func);
-	void (*setSQL) (Sql *SQL);
+	void (*setSQL) (Sql *SQL_handle);
 #endif
 };
 

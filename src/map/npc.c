@@ -3835,13 +3835,13 @@ int npc_reload(void) {
 }
 
 //Unload all npc in the given file
-bool npc_unloadfile( const char* path ) {
+bool npc_unloadfile( const char* filepath ) {
 	DBIterator * iter = db_iterator(npc->name_db);
 	struct npc_data* nd = NULL;
 	bool found = false;
 
 	for( nd = dbi_first(iter); dbi_exists(iter); nd = dbi_next(iter) ) {
-		if( nd->path && strcasecmp(nd->path,path) == 0 ) {
+		if( nd->path && strcasecmp(nd->path,filepath) == 0 ) {
 			found = true;
 			npc->unload_duplicates(nd);/* unload any npcs which could duplicate this but be in a different file */
 			npc->unload(nd, true);

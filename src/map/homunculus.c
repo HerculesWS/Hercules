@@ -1127,11 +1127,11 @@ void homunculus_read_db(void) {
 	memset(homun->db,0,sizeof(homun->db));
 	for(i = 0; i<ARRAYLENGTH(filename); i++) {
 		if( i > 0 ) {
-			char path[256];
+			char filepath[256];
 
-			sprintf(path, "%s/%s", iMap->db_path, filename[i]);
+			sprintf(filepath, "%s/%s", iMap->db_path, filename[i]);
 
-			if( !exists(path) ) {
+			if( !exists(filepath) ) {
 				continue;
 			}
 		}

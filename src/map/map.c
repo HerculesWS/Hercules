@@ -483,7 +483,7 @@ int map_count_oncell(int16 m, int16 x, int16 y, int type)
 struct skill_unit* map_find_skill_unit_oncell(struct block_list* target,int16 x,int16 y,uint16 skill_id,struct skill_unit* out_unit, int flag) {
 	int16 m,bx,by;
 	struct block_list *bl;
-	struct skill_unit *unit;
+	struct skill_unit *su;
 	m = target->m;
 
 	if (x < 0 || y < 0 || (x >= map[m].xs) || (y >= map[m].ys))
@@ -497,11 +497,11 @@ struct skill_unit* map_find_skill_unit_oncell(struct block_list* target,int16 x,
 		if (bl->x != x || bl->y != y || bl->type != BL_SKILL)
 			continue;
 
-		unit = (struct skill_unit *) bl;
-		if( unit == out_unit || !unit->alive || !unit->group || unit->group->skill_id != skill_id )
+		su = (struct skill_unit *) bl;
+		if( su == out_unit || !su->alive || !su->group || su->group->skill_id != skill_id )
 			continue;
-		if( !(flag&1) || battle->check_target(&unit->bl,target,unit->group->target_flag) > 0 )
-			return unit;
+		if( !(flag&1) || battle->check_target(&su->bl,target,su->group->target_flag) > 0 )
+			return su;
 	}
 	return NULL;
 }
@@ -1935,44 +1935,40 @@ struct s_mapiterator
 /// @param flags Flags of the iterator
 /// @param type Target types
 /// @return Iterator
-struct s_mapiterator* mapit_alloc(enum e_mapitflags flags, enum bl_type types)
-{
-	struct s_mapiterator* mapit;
+struct s_mapiterator* mapit_alloc(enum e_mapitflags flags, enum bl_type types) {
+	struct s_mapiterator* iter;
 
-	mapit = ers_alloc(map_iterator_ers, struct s_mapiterator);
-	mapit->flags = flags;
-	mapit->types = types;
-	if( types == BL_PC )       mapit->dbi = db_iterator(pc_db);
-	else if( types == BL_MOB ) mapit->dbi = db_iterator(mobid_db);
-	else                       mapit->dbi = db_iterator(id_db);
-	return mapit;
+	iter = ers_alloc(map_iterator_ers, struct s_mapiterator);
+	iter->flags = flags;
+	iter->types = types;
+	if( types == BL_PC )       iter->dbi = db_iterator(pc_db);
+	else if( types == BL_MOB ) iter->dbi = db_iterator(mobid_db);
+	else                       iter->dbi = db_iterator(id_db);
+	return iter;
 }
 
 /// Frees the iterator.
 ///
-/// @param mapit Iterator
-void mapit_free(struct s_mapiterator* mapit)
-{
-	nullpo_retv(mapit);
+/// @param iter Iterator
+void mapit_free(struct s_mapiterator* iter) {
+	nullpo_retv(iter);
 
-	dbi_destroy(mapit->dbi);
-	ers_free(map_iterator_ers, mapit);
+	dbi_destroy(iter->dbi);
+	ers_free(map_iterator_ers, iter);
 }
 
 /// Returns the first block_list that matches the description.
 /// Returns NULL if not found.
 ///
-/// @param mapit Iterator
+/// @param iter Iterator
 /// @return first block_list or NULL
-struct block_list* mapit_first(struct s_mapiterator* mapit)
-{
+struct block_list* mapit_first(struct s_mapiterator* iter) {
 	struct block_list* bl;
 
-	nullpo_retr(NULL,mapit);
+	nullpo_retr(NULL,iter);
 
-	for( bl = (struct block_list*)dbi_first(mapit->dbi); bl != NULL; bl = (struct block_list*)dbi_next(mapit->dbi) )
-	{
-		if( MAPIT_MATCHES(mapit,bl) )
+	for( bl = (struct block_list*)dbi_first(iter->dbi); bl != NULL; bl = (struct block_list*)dbi_next(iter->dbi) ) {
+		if( MAPIT_MATCHES(iter,bl) )
 			break;// found match
 	}
 	return bl;
@@ -1981,17 +1977,15 @@ struct block_list* mapit_first(struct s_mapiterator* mapit)
 /// Returns the last block_list that matches the description.
 /// Returns NULL if not found.
 ///
-/// @param mapit Iterator
+/// @param iter Iterator
 /// @return last block_list or NULL
-struct block_list* mapit_last(struct s_mapiterator* mapit)
-{
+struct block_list* mapit_last(struct s_mapiterator* iter) {
 	struct block_list* bl;
 
-	nullpo_retr(NULL,mapit);
+	nullpo_retr(NULL,iter);
 
-	for( bl = (struct block_list*)dbi_last(mapit->dbi); bl != NULL; bl = (struct block_list*)dbi_prev(mapit->dbi) )
-	{
-		if( MAPIT_MATCHES(mapit,bl) )
+	for( bl = (struct block_list*)dbi_last(iter->dbi); bl != NULL; bl = (struct block_list*)dbi_prev(iter->dbi) ) {
+		if( MAPIT_MATCHES(iter,bl) )
 			break;// found match
 	}
 	return bl;
@@ -2000,20 +1994,18 @@ struct block_list* mapit_last(struct s_mapiterator* mapit)
 /// Returns the next block_list that matches the description.
 /// Returns NULL if not found.
 ///
-/// @param mapit Iterator
+/// @param iter Iterator
 /// @return next block_list or NULL
-struct block_list* mapit_next(struct s_mapiterator* mapit)
-{
+struct block_list* mapit_next(struct s_mapiterator* iter) {
 	struct block_list* bl;
 
-	nullpo_retr(NULL,mapit);
+	nullpo_retr(NULL,iter);
 
-	for( ; ; )
-	{
-		bl = (struct block_list*)dbi_next(mapit->dbi);
+	for( ; ; ) {
+		bl = (struct block_list*)dbi_next(iter->dbi);
 		if( bl == NULL )
 			break;// end
-		if( MAPIT_MATCHES(mapit,bl) )
+		if( MAPIT_MATCHES(iter,bl) )
 			break;// found a match
 		// try next
 	}
@@ -2023,20 +2015,18 @@ struct block_list* mapit_next(struct s_mapiterator* mapit)
 /// Returns the previous block_list that matches the description.
 /// Returns NULL if not found.
 ///
-/// @param mapit Iterator
+/// @param iter Iterator
 /// @return previous block_list or NULL
-struct block_list* mapit_prev(struct s_mapiterator* mapit)
-{
+struct block_list* mapit_prev(struct s_mapiterator* iter) {
 	struct block_list* bl;
 
-	nullpo_retr(NULL,mapit);
+	nullpo_retr(NULL,iter);
 
-	for( ; ; )
-	{
-		bl = (struct block_list*)dbi_prev(mapit->dbi);
+	for( ; ; ) {
+		bl = (struct block_list*)dbi_prev(iter->dbi);
 		if( bl == NULL )
 			break;// end
-		if( MAPIT_MATCHES(mapit,bl) )
+		if( MAPIT_MATCHES(iter,bl) )
 			break;// found a match
 		// try prev
 	}
@@ -2045,13 +2035,12 @@ struct block_list* mapit_prev(struct s_mapiterator* mapit)
 
 /// Returns true if the current block_list exists in the database.
 ///
-/// @param mapit Iterator
+/// @param iter Iterator
 /// @return true if it exists
-bool mapit_exists(struct s_mapiterator* mapit)
-{
-	nullpo_retr(false,mapit);
+bool mapit_exists(struct s_mapiterator* iter) {
+	nullpo_retr(false,iter);
 
-	return dbi_exists(mapit->dbi);
+	return dbi_exists(iter->dbi);
 }
 
 /*==========================================
@@ -4491,8 +4480,8 @@ void read_map_zone_db(void) {
 				disabled_skills_count = config_setting_length(skills);
 				/* validate */
 				for(h = 0; h < config_setting_length(skills); h++) {
-					config_setting_t *skill = config_setting_get_elem(skills, h);
-					name = config_setting_name(skill);
+					config_setting_t *skillinfo = config_setting_get_elem(skills, h);
+					name = config_setting_name(skillinfo);
 					if( !map_zone_str2skillid(name) ) {
 						ShowError("map_zone_db: unknown skill (%s) in disabled_skills for zone '%s', skipping skill...\n",name,zone->name);
 						config_setting_remove_elem(skills,h);
@@ -4506,10 +4495,10 @@ void read_map_zone_db(void) {
 				/* all ok, process */
 				CREATE( zone->disabled_skills, struct map_zone_disabled_skill_entry *, disabled_skills_count );
 				for(h = 0, v = 0; h < config_setting_length(skills); h++) {
-					config_setting_t *skill = config_setting_get_elem(skills, h);
+					config_setting_t *skillinfo = config_setting_get_elem(skills, h);
 					struct map_zone_disabled_skill_entry * entry;
 					enum bl_type type;
-					name = config_setting_name(skill);
+					name = config_setting_name(skillinfo);
 
 					if( (type = map_zone_bl_type(config_setting_get_string_elem(skills,h),&subtype)) ) { /* only add if enabled */
 						CREATE( entry, struct map_zone_disabled_skill_entry, 1 );
@@ -4710,8 +4699,8 @@ void read_map_zone_db(void) {
 					for(j = 0; j < disabled_skills_count_i; j++) {
 						int k;
 						for(k = 0; k < disabled_skills_count; k++) {
-							config_setting_t *skill = config_setting_get_elem(skills, k);
-							if( map_zone_str2skillid(config_setting_name(skill)) == izone->disabled_skills[j]->nameid ) {
+							config_setting_t *skillinfo = config_setting_get_elem(skills, k);
+							if( map_zone_str2skillid(config_setting_name(skillinfo)) == izone->disabled_skills[j]->nameid ) {
 								break;
 							}
 						}

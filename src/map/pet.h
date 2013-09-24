@@ -121,8 +121,8 @@ struct pet_interface {
 	int (*hungry_timer_delete) (struct pet_data *pd);
 	int (*performance) (struct map_session_data *sd, struct pet_data *pd);
 	int (*return_egg) (struct map_session_data *sd, struct pet_data *pd);
-	int (*data_init) (struct map_session_data *sd, struct s_pet *pet);
-	int (*birth_process) (struct map_session_data *sd, struct s_pet *pet);
+	int (*data_init) (struct map_session_data *sd, struct s_pet *petinfo);
+	int (*birth_process) (struct map_session_data *sd, struct s_pet *petinfo);
 	int (*recv_petdata) (int account_id, struct s_pet *p, int flag);
 	int (*select_egg) (struct map_session_data *sd, short egg_index);
 	int (*catch_process1) (struct map_session_data *sd, int target_class);

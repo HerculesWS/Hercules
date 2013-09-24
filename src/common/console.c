@@ -386,8 +386,8 @@ void console_parse_init(void) {
 	iTimer->add_timer_interval(iTimer->gettick() + 1000, console->parse_timer, 0, 0, 500);/* start listening in 1s; re-try every 0.5s */
 	
 }
-void console_setSQL(Sql *SQL) {
-	console->SQL = SQL;
+void console_setSQL(Sql *SQL_handle) {
+	console->SQL = SQL_handle;
 }
 #endif /* CONSOLE_INPUT */
 

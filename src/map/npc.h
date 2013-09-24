@@ -213,7 +213,7 @@ struct npc_interface {
 	void (*setclass) (struct npc_data *nd, short class_);
 	int (*do_atcmd_event) (struct map_session_data *sd, const char *command, const char *message, const char *eventname);
 	const char* (*parse_function) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
-	void (*parse_mob2) (struct spawn_data *mob);
+	void (*parse_mob2) (struct spawn_data *mobspawn);
 	const char* (*parse_mob) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
 	const char* (*parse_mapflag) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
 	void (*parsesrcfile) (const char *filepath, bool runOnInit);
@@ -222,7 +222,7 @@ struct npc_interface {
 	int (*path_db_clear_sub) (DBKey key, DBData *data, va_list args);
 	int (*ev_label_db_clear_sub) (DBKey key, DBData *data, va_list args);
 	int (*reload) (void);
-	bool (*unloadfile) (const char *path);
+	bool (*unloadfile) (const char *filepath);
 	void (*do_clear_npc) (void);
 	void (*debug_warps_sub) (struct npc_data *nd);
 	void (*debug_warps) (void);

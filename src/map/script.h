@@ -386,7 +386,7 @@ struct script_interface {
 	int (*set_var) (struct map_session_data *sd, char *name, void *val);
 	void (*stop_instances) (struct script_code *code);
 	void (*free_code) (struct script_code* code);
-	void (*free_vars) (struct DBMap *storage);
+	void (*free_vars) (struct DBMap *var_storage);
 	struct script_state* (*alloc_state) (struct script_code* rootscript, int pos, int rid, int oid);
 	void (*free_state) (struct script_state* st);
 	void (*run_autobonus) (const char *autobonus,int id, int pos);
