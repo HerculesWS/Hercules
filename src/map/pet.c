@@ -1049,7 +1049,7 @@ int pet_skill_bonus_timer(int tid, unsigned int tick, int id, intptr_t data)
 	struct map_session_data *sd=iMap->id2sd(id);
 	struct pet_data *pd;
 	int bonus;
-	int timer = 0;
+	int duration = 0;
 
 	if(sd == NULL || sd->pd==NULL || sd->pd->bonus == NULL)
 		return 1;
@@ -1065,10 +1065,10 @@ int pet_skill_bonus_timer(int tid, unsigned int tick, int id, intptr_t data)
 	// determine the time for the next timer
 	if (pd->state.skillbonus && pd->bonus->delay > 0) {
 		bonus = 0;
-		timer = pd->bonus->delay*1000;	// the duration until pet bonuses will be reactivated again
+		duration = pd->bonus->delay*1000; // the duration until pet bonuses will be reactivated again
 	} else if (pd->pet.intimate) {
 		bonus = 1;
-		timer = pd->bonus->duration*1000;	// the duration for pet bonuses to be in effect
+		duration = pd->bonus->duration*1000; // the duration for pet bonuses to be in effect
 	} else { //Lost pet...
 		pd->bonus->timer = INVALID_TIMER;
 		return 0;
@@ -1079,7 +1079,7 @@ int pet_skill_bonus_timer(int tid, unsigned int tick, int id, intptr_t data)
 		status_calc_pc(sd, 0);
 	}
 	// wait for the next timer
-	pd->bonus->timer=iTimer->add_timer(tick+timer,pet->skill_bonus_timer,sd->bl.id,0);
+	pd->bonus->timer=iTimer->add_timer(tick+duration,pet->skill_bonus_timer,sd->bl.id,0);
 	return 0;
 }
 

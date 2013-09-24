@@ -10312,9 +10312,9 @@ int status_change_timer(int tid, unsigned int tick, int id, intptr_t data)
 	case SC_SPLASHER:
 		// custom Venom Splasher countdown timer
 		//if (sce->val4 % 1000 == 0) {
-		//	char timer[10];
-		//	snprintf (timer, 10, "%d", sce->val4/1000);
-		//	clif->message(bl, timer);
+		//	char counter[10];
+		//	snprintf (counter, 10, "%d", sce->val4/1000);
+		//	clif->message(bl, counter);
 		//}
 		if((sce->val4 -= 500) > 0) {
 			sc_timer_next(500 + tick, iStatus->change_timer, bl->id, data);
@@ -11125,7 +11125,6 @@ int status_change_clear_buffs (struct block_list* bl, int type)
 int status_change_spread( struct block_list *src, struct block_list *bl ) {
 	int i, flag = 0;
 	struct status_change *sc = iStatus->get_sc(src);
-	const struct TimerData *timer;
 	unsigned int tick;
 	struct status_change_data data;
 
@@ -11165,10 +11164,10 @@ int status_change_spread( struct block_list *src, struct block_list *bl ) {
 		case SC_DEATHHURT:
 		case SC_PARALYSE:
 			if( sc->data[i]->timer != INVALID_TIMER ) {
-				timer = iTimer->get_timer(sc->data[i]->timer);
-				if (timer == NULL || timer->func != iStatus->change_timer || DIFF_TICK(timer->tick,tick) < 0)
+				const struct TimerData *td = iTimer->get_timer(sc->data[i]->timer);
+				if (td == NULL || td->func != iStatus->change_timer || DIFF_TICK(td->tick,tick) < 0)
 					continue;
-				data.tick = DIFF_TICK(timer->tick,tick);
+				data.tick = DIFF_TICK(td->tick,tick);
 			} else
 				data.tick = INVALID_TIMER;
 			break;

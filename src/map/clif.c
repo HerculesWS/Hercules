@@ -9945,9 +9945,9 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 			if( unit->is_walking(&sd->bl) )
 				clif->move(&sd->ud);
 		} else if ( sd->disguise == sd->status.class_ && sd->fontcolor_tid != INVALID_TIMER ) {
-			const struct TimerData *timer;
-			if( (timer = iTimer->get_timer(sd->fontcolor_tid)) ) {
-				iTimer->settick_timer(sd->fontcolor_tid, timer->tick+5000);
+			const struct TimerData *td;
+			if( (td = iTimer->get_timer(sd->fontcolor_tid)) ) {
+				iTimer->settick_timer(sd->fontcolor_tid, td->tick+5000);
 			}
 		}
 		

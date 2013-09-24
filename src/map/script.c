@@ -8150,10 +8150,9 @@ BUILDIN(savepoint)
 /*==========================================
  * GetTimeTick(0: System Tick, 1: Time Second Tick)
  *------------------------------------------*/
-BUILDIN(gettimetick)	/* Asgard Version */
-{
+BUILDIN(gettimetick) { /* Asgard Version */
 	int type;
-	time_t timer;
+	time_t clock;
 	struct tm *t;
 	
 	type=script_getnum(st,2);
@@ -8166,8 +8165,8 @@ BUILDIN(gettimetick)	/* Asgard Version */
 			break;
 		case 1:
 			//type 1:(Second Ticks: 0-86399, 00:00:00-23:59:59)
-			time(&timer);
-			t=localtime(&timer);
+			time(&clock);
+			t=localtime(&clock);
 			script_pushint(st,((t->tm_hour)*3600+(t->tm_min)*60+t->tm_sec));
 			break;
 		case 0:
@@ -8185,16 +8184,15 @@ BUILDIN(gettimetick)	/* Asgard Version */
  * 4: WeekDay     5: MonthDay     6: Month
  * 7: Year
  *------------------------------------------*/
-BUILDIN(gettime)	/* Asgard Version */
-{
+BUILDIN(gettime) { /* Asgard Version */
 	int type;
-	time_t timer;
+	time_t clock;
 	struct tm *t;
 	
 	type=script_getnum(st,2);
 	
-	time(&timer);
-	t=localtime(&timer);
+	time(&clock);
+	t=localtime(&clock);
 	
 	switch(type){
 		case 1://Sec(0~59)
@@ -9715,19 +9713,18 @@ BUILDIN(getstatus)
 		return true;
 	}
 	
-	switch( type )
-	{
+	switch( type ) {
 		case 1:	 script_pushint(st, sd->sc.data[id]->val1);	break;
 		case 2:  script_pushint(st, sd->sc.data[id]->val2);	break;
 		case 3:  script_pushint(st, sd->sc.data[id]->val3);	break;
 		case 4:  script_pushint(st, sd->sc.data[id]->val4);	break;
 		case 5:
 		{
-			struct TimerData* timer = (struct TimerData*)iTimer->get_timer(sd->sc.data[id]->timer);
+			struct TimerData* td = (struct TimerData*)iTimer->get_timer(sd->sc.data[id]->timer);
 			
-			if( timer )
-			{// return the amount of time remaining
-				script_pushint(st, timer->tick - iTimer->gettick());
+			if( td ) {
+				// return the amount of time remaining
+				script_pushint(st, td->tick - iTimer->gettick());
 			}
 		}
 			break;

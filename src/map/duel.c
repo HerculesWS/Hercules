@@ -17,25 +17,23 @@
 /*==========================================
  * Duel organizing functions [LuzZza]
  *------------------------------------------*/
-void duel_savetime(struct map_session_data* sd)
-{
-	time_t timer;
+void duel_savetime(struct map_session_data* sd) {
+	time_t clock;
 	struct tm *t;
 	
-	time(&timer);
-	t = localtime(&timer);
+	time(&clock);
+	t = localtime(&clock);
 	
 	pc_setglobalreg(sd, "PC_LAST_DUEL_TIME", t->tm_mday*24*60 + t->tm_hour*60 + t->tm_min);
 }
 
-int duel_checktime(struct map_session_data* sd)
-{
+int duel_checktime(struct map_session_data* sd) {
 	int diff;
-	time_t timer;
+	time_t clock;
 	struct tm *t;
 	
-	time(&timer);
-    t = localtime(&timer);
+	time(&clock);
+	t = localtime(&clock);
 	
 	diff = t->tm_mday*24*60 + t->tm_hour*60 + t->tm_min - pc_readglobalreg(sd, "PC_LAST_DUEL_TIME");
 	

@@ -4807,8 +4807,8 @@ int skill_castend_id(int tid, unsigned int tick, int id, intptr_t data)
 			case NPC_GRANDDARKNESS:
 				if( (sc = iStatus->get_sc(src)) && sc->data[SC_NOEQUIPSHIELD] )
 				{
-					const struct TimerData *timer = iTimer->get_timer(sc->data[SC_NOEQUIPSHIELD]->timer);
-					if( timer && timer->func == iStatus->change_timer && DIFF_TICK(timer->tick,iTimer->gettick()+skill->get_time(ud->skill_id, ud->skill_lv)) > 0 )
+					const struct TimerData *td = iTimer->get_timer(sc->data[SC_NOEQUIPSHIELD]->timer);
+					if( td && td->func == iStatus->change_timer && DIFF_TICK(td->tick,iTimer->gettick()+skill->get_time(ud->skill_id, ud->skill_lv)) > 0 )
 						break;
 				}
 				sc_start2(src, SC_NOEQUIPSHIELD, 100, 0, 1, skill->get_time(ud->skill_id, ud->skill_lv));

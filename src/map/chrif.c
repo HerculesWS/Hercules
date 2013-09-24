@@ -1170,7 +1170,7 @@ int chrif_save_scdata(struct map_session_data *sd) { //parses the sc_data of the
 	unsigned int tick;
 	struct status_change_data data;
 	struct status_change *sc = &sd->sc;
-	const struct TimerData *timer;
+	const struct TimerData *td;
 
 	chrif_check(-1);
 	tick = iTimer->gettick();
@@ -1184,10 +1184,10 @@ int chrif_save_scdata(struct map_session_data *sd) { //parses the sc_data of the
 		if (!sc->data[i])
 			continue;
 		if (sc->data[i]->timer != INVALID_TIMER) {
-			timer = iTimer->get_timer(sc->data[i]->timer);
-			if (timer == NULL || timer->func != iStatus->change_timer || DIFF_TICK(timer->tick,tick) < 0)
+			td = iTimer->get_timer(sc->data[i]->timer);
+			if (td == NULL || td->func != iStatus->change_timer || DIFF_TICK(td->tick,tick) < 0)
 				continue;
-			data.tick = DIFF_TICK(timer->tick,tick); //Duration that is left before ending.
+			data.tick = DIFF_TICK(td->tick,tick); //Duration that is left before ending.
 		} else
 			data.tick = -1; //Infinite duration
 		data.type = i;
