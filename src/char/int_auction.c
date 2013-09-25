@@ -115,7 +115,7 @@ unsigned int auction_create(struct auction_data *auction)
 		auction->item.expire_time = 0;
 
 		auction->auction_id = (unsigned int)SQL->StmtLastInsertId(stmt);
-		auction->auction_end_timer = iTimer->add_timer( iTimer->gettick() + tick , auction_end_timer, auction->auction_id, 0);
+		auction->auction_end_timer = timer->add( timer->gettick() + tick , auction_end_timer, auction->auction_id, 0);
 		ShowInfo("New Auction %u | time left %u ms | By %s.\n", auction->auction_id, tick, auction->seller_name);
 
 		CREATE(auction_, struct auction_data, 1);
@@ -170,7 +170,7 @@ void auction_delete(struct auction_data *auction)
 		Sql_ShowDebug(sql_handle);
 
 	if( auction->auction_end_timer != INVALID_TIMER )
-		iTimer->delete_timer(auction->auction_end_timer, auction_end_timer);
+		timer->delete(auction->auction_end_timer, auction_end_timer);
 
 	idb_remove(auction_db_, auction_id);
 }
@@ -182,7 +182,7 @@ void inter_auctions_fromsql(void)
 	struct item *item;
 	char *data;
 	StringBuf buf;
-	unsigned int tick = iTimer->gettick(), endtick;
+	unsigned int tick = timer->gettick(), endtick;
 	time_t now = time(NULL);
 
 	StrBuf->Init(&buf);
@@ -234,7 +234,7 @@ void inter_auctions_fromsql(void)
 		else
 			endtick = tick + 10000; // 10 Second's to process ended auctions
 
-		auction->auction_end_timer = iTimer->add_timer(endtick, auction_end_timer, auction->auction_id, 0);
+		auction->auction_end_timer = timer->add(endtick, auction_end_timer, auction->auction_id, 0);
 		idb_put(auction_db_, auction->auction_id, auction);
 	}
 

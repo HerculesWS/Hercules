@@ -912,7 +912,7 @@ ACMD(hide)
 		
 		if( map[sd->bl.m].flag.pvp && !map[sd->bl.m].flag.pvp_nocalcrank )
 		{// register the player for ranking calculations
-			sd->pvp_timer = iTimer->add_timer( iTimer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0 );
+			sd->pvp_timer = timer->add( timer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0 );
 		}
 		//bugreport:2266
 		iMap->foreachinmovearea(clif->insight, &sd->bl, AREA_SIZE, sd->bl.x, sd->bl.y, BL_ALL, &sd->bl);
@@ -926,7 +926,7 @@ ACMD(hide)
 		
 		if( map[sd->bl.m].flag.pvp && !map[sd->bl.m].flag.pvp_nocalcrank && sd->pvp_timer != INVALID_TIMER )
 		{// unregister the player for ranking
-			iTimer->delete_timer( sd->pvp_timer, pc->calc_pvprank_timer );
+			timer->delete( sd->pvp_timer, pc->calc_pvprank_timer );
 			sd->pvp_timer = INVALID_TIMER;
 		}
 	}
@@ -1096,7 +1096,7 @@ ACMD(heal)
 	
 	if ( hp < 0 && sp <= 0 ) {
 		iStatus->damage(NULL, &sd->bl, -hp, -sp, 0, 0);
-		clif->damage(&sd->bl,&sd->bl, iTimer->gettick(), 0, 0, -hp, 0, 4, 0);
+		clif->damage(&sd->bl,&sd->bl, timer->gettick(), 0, 0, -hp, 0, 4, 0);
 		clif->message(fd, msg_txt(156)); // HP or/and SP modified.
 		return true;
 	}
@@ -1107,7 +1107,7 @@ ACMD(heal)
 			iStatus->heal(&sd->bl, hp, 0, 0);
 		else {
 			iStatus->damage(NULL, &sd->bl, -hp, 0, 0, 0);
-			clif->damage(&sd->bl,&sd->bl, iTimer->gettick(), 0, 0, -hp, 0, 4, 0);
+			clif->damage(&sd->bl,&sd->bl, timer->gettick(), 0, 0, -hp, 0, 4, 0);
 		}
 	}
 	
@@ -1470,7 +1470,7 @@ static int atcommand_pvpoff_sub(struct block_list *bl,va_list ap)
 	TBL_PC* sd = (TBL_PC*)bl;
 	clif->pvpset(sd, 0, 0, 2);
 	if (sd->pvp_timer != INVALID_TIMER) {
-		iTimer->delete_timer(sd->pvp_timer, pc->calc_pvprank_timer);
+		timer->delete(sd->pvp_timer, pc->calc_pvprank_timer);
 		sd->pvp_timer = INVALID_TIMER;
 	}
 	return 0;
@@ -1505,7 +1505,7 @@ static int atcommand_pvpon_sub(struct block_list *bl,va_list ap)
 {
 	TBL_PC* sd = (TBL_PC*)bl;
 	if (sd->pvp_timer == INVALID_TIMER) {
-		sd->pvp_timer = iTimer->add_timer(iTimer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0);
+		sd->pvp_timer = timer->add(timer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0);
 		sd->pvp_rank = 0;
 		sd->pvp_lastusers = 0;
 		sd->pvp_point = 5;
@@ -4206,7 +4206,7 @@ ACMD(nuke)
 	
 	if ((pl_sd = iMap->nick2sd(atcmd_player_name)) != NULL) {
 		if (pc->get_group_level(sd) >= pc->get_group_level(pl_sd)) { // you can kill only lower or same GM level
-			skill->castend_nodamage_id(&pl_sd->bl, &pl_sd->bl, NPC_SELFDESTRUCTION, 99, iTimer->gettick(), 0);
+			skill->castend_nodamage_id(&pl_sd->bl, &pl_sd->bl, NPC_SELFDESTRUCTION, 99, timer->gettick(), 0);
 			clif->message(fd, msg_txt(109)); // Player has been nuked!
 		} else {
 			clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
@@ -4419,25 +4419,25 @@ ACMD(servertime)
 			clif->message(fd, msg_txt(232)); // Game time: The game is in permanent night.
 	} else if (battle_config.night_duration == 0)
 		if (iMap->night_flag == 1) { // we start with night
-			timer_data = iTimer->get_timer(pc->day_timer_tid);
-			sprintf(temp, msg_txt(233), txt_time(DIFF_TICK(timer_data->tick,iTimer->gettick())/1000)); // Game time: The game is actualy in night for %s.
+			timer_data = timer->get(pc->day_timer_tid);
+			sprintf(temp, msg_txt(233), txt_time(DIFF_TICK(timer_data->tick,timer->gettick())/1000)); // Game time: The game is actualy in night for %s.
 			clif->message(fd, temp);
 			clif->message(fd, msg_txt(234)); // Game time: After, the game will be in permanent daylight.
 		} else
 			clif->message(fd, msg_txt(231)); // Game time: The game is in permanent daylight.
 		else if (battle_config.day_duration == 0)
 			if (iMap->night_flag == 0) { // we start with day
-				timer_data = iTimer->get_timer(pc->night_timer_tid);
-				sprintf(temp, msg_txt(235), txt_time(DIFF_TICK(timer_data->tick,iTimer->gettick())/1000)); // Game time: The game is actualy in daylight for %s.
+				timer_data = timer->get(pc->night_timer_tid);
+				sprintf(temp, msg_txt(235), txt_time(DIFF_TICK(timer_data->tick,timer->gettick())/1000)); // Game time: The game is actualy in daylight for %s.
 				clif->message(fd, temp);
 				clif->message(fd, msg_txt(236)); // Game time: After, the game will be in permanent night.
 			} else
 				clif->message(fd, msg_txt(232)); // Game time: The game is in permanent night.
 			else {
 				if (iMap->night_flag == 0) {
-					timer_data = iTimer->get_timer(pc->night_timer_tid);
-					timer_data2 = iTimer->get_timer(pc->day_timer_tid);
-					sprintf(temp, msg_txt(235), txt_time(DIFF_TICK(timer_data->tick,iTimer->gettick())/1000)); // Game time: The game is actualy in daylight for %s.
+					timer_data = timer->get(pc->night_timer_tid);
+					timer_data2 = timer->get(pc->day_timer_tid);
+					sprintf(temp, msg_txt(235), txt_time(DIFF_TICK(timer_data->tick,timer->gettick())/1000)); // Game time: The game is actualy in daylight for %s.
 					clif->message(fd, temp);
 					if (DIFF_TICK(timer_data->tick, timer_data2->tick) > 0)
 						sprintf(temp, msg_txt(237), txt_time(DIFF_TICK(timer_data->interval,DIFF_TICK(timer_data->tick,timer_data2->tick)) / 1000)); // Game time: After, the game will be in night for %s.
@@ -4447,9 +4447,9 @@ ACMD(servertime)
 					sprintf(temp, msg_txt(238), txt_time(timer_data->interval / 1000)); // Game time: A day cycle has a normal duration of %s.
 					clif->message(fd, temp);
 				} else {
-					timer_data = iTimer->get_timer(pc->day_timer_tid);
-					timer_data2 = iTimer->get_timer(pc->night_timer_tid);
-					sprintf(temp, msg_txt(233), txt_time(DIFF_TICK(timer_data->tick,iTimer->gettick()) / 1000)); // Game time: The game is actualy in night for %s.
+					timer_data = timer->get(pc->day_timer_tid);
+					timer_data2 = timer->get(pc->night_timer_tid);
+					sprintf(temp, msg_txt(233), txt_time(DIFF_TICK(timer_data->tick,timer->gettick()) / 1000)); // Game time: The game is actualy in night for %s.
 					clif->message(fd, temp);
 					if (DIFF_TICK(timer_data->tick,timer_data2->tick) > 0)
 						sprintf(temp, msg_txt(239), txt_time((timer_data->interval - DIFF_TICK(timer_data->tick, timer_data2->tick)) / 1000)); // Game time: After, the game will be in daylight for %s.
@@ -5131,7 +5131,7 @@ ACMD(npcmove)
 	x = cap_value(x, 0, map[m].xs-1);
 	y = cap_value(y, 0, map[m].ys-1);
 	iMap->foreachinrange(clif->outsight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
-	iMap->moveblock(&nd->bl, x, y, iTimer->gettick());
+	iMap->moveblock(&nd->bl, x, y, timer->gettick());
 	iMap->foreachinrange(clif->insight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
 	clif->message(fd, msg_txt(1155)); // NPC moved.
 	
@@ -5455,7 +5455,7 @@ ACMD(displayskill)
 		return false;
 	}
 	status = iStatus->get_status_data(&sd->bl);
-	tick = iTimer->gettick();
+	tick = timer->gettick();
 	clif->skill_damage(&sd->bl,&sd->bl, tick, status->amotion, status->dmotion, 1, 1, skill_id, skill_lv, 5);
 	clif->skill_nodamage(&sd->bl, &sd->bl, skill_id, skill_lv, 1);
 	clif->skill_poseffect(&sd->bl, skill_id, skill_lv, sd->bl.x, sd->bl.y, tick);
@@ -6216,9 +6216,9 @@ ACMD(pettalk)
 	nullpo_retr(-1, sd);
 	
 	if ( battle_config.min_chat_delay ) {
-		if( DIFF_TICK(sd->cantalk_tick, iTimer->gettick()) > 0 )
+		if( DIFF_TICK(sd->cantalk_tick, timer->gettick()) > 0 )
 			return true;
-		sd->cantalk_tick = iTimer->gettick() + battle_config.min_chat_delay;
+		sd->cantalk_tick = timer->gettick() + battle_config.min_chat_delay;
 	}
 	
 	if(!sd->status.pet_id || !(pd=sd->pd))
@@ -6339,7 +6339,7 @@ ACMD(summon)
 	int mob_id = 0;
 	int duration = 0;
 	struct mob_data *md;
-	unsigned int tick=iTimer->gettick();
+	unsigned int tick=timer->gettick();
 	
 	nullpo_retr(-1, sd);
 	
@@ -6369,7 +6369,7 @@ ACMD(summon)
 	
 	md->master_id=sd->bl.id;
 	md->special_state.ai=1;
-	md->deletetimer=iTimer->add_timer(tick+(duration*60000),mob->timer_delete,md->bl.id,0);
+	md->deletetimer=timer->add(tick+(duration*60000),mob->timer_delete,md->bl.id,0);
 	clif->specialeffect(&md->bl,344,AREA);
 	mob->spawn(md);
 	sc_start4(&md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 60000);
@@ -6492,7 +6492,7 @@ ACMD(uptime)
 	minute = 60, days = 0, hours = 0, minutes = 0;
 	nullpo_retr(-1, sd);
 	
-	seconds = iTimer->get_uptime();
+	seconds = timer->get_uptime();
 	days = seconds/day;
 	seconds -= (seconds/day>0)?(seconds/day)*day:0;
 	hours = seconds/hour;
@@ -7044,9 +7044,9 @@ ACMD(homtalk)
 	nullpo_retr(-1, sd);
 	
 	if ( battle_config.min_chat_delay ) {
-		if( DIFF_TICK(sd->cantalk_tick, iTimer->gettick()) > 0 )
+		if( DIFF_TICK(sd->cantalk_tick, timer->gettick()) > 0 )
 			return true;
-		sd->cantalk_tick = iTimer->gettick() + battle_config.min_chat_delay;
+		sd->cantalk_tick = timer->gettick() + battle_config.min_chat_delay;
 	}
 	
 	if (sd->sc.count && //no "chatting" while muted.

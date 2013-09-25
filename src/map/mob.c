@@ -341,7 +341,7 @@ bool mob_ksprotected (struct block_list *src, struct block_list *target)
 		*t_sd;  // Mob Target
 	struct status_change_entry *sce;
 	struct mob_data *md;
-	unsigned int tick = iTimer->gettick();
+	unsigned int tick = timer->gettick();
 	char output[128];
 
 	if( !battle_config.ksprotection )
@@ -491,7 +491,7 @@ int mob_once_spawn(struct map_session_data* sd, int16 m, int16 x, int16 y, const
 					memcpy(md->guardian_data->guild_name, g->name, NAME_LENGTH);
 				}
 				else if (gc->guild_id) //Guild not yet available, retry in 5.
-					iTimer->add_timer(iTimer->gettick()+5000,mob->spawn_guardian_sub,md->bl.id,md->guardian_data->guild_id);
+					timer->add(timer->gettick()+5000,mob->spawn_guardian_sub,md->bl.id,md->guardian_data->guild_id);
 			}
 		}	// end addition [Valaris]
 
@@ -709,7 +709,7 @@ int mob_spawn_guardian(const char* mapname, short x, short y, const char* mobnam
 		memcpy (md->guardian_data->guild_name, g->name, NAME_LENGTH);
 		md->guardian_data->guardup_lv = guild->checkskill(g,GD_GUARDUP);
 	} else if (md->guardian_data->guild_id)
-		iTimer->add_timer(iTimer->gettick()+5000,mob->spawn_guardian_sub,md->bl.id,md->guardian_data->guild_id);
+		timer->add(timer->gettick()+5000,mob->spawn_guardian_sub,md->bl.id,md->guardian_data->guild_id);
 	mob->spawn(md);
 
 	return md->bl.id;
@@ -873,8 +873,8 @@ int mob_setdelayspawn(struct mob_data *md)
 		spawntime = 5000;
 
 	if( md->spawn_timer != INVALID_TIMER )
-		iTimer->delete_timer(md->spawn_timer, mob->delayspawn);
-	md->spawn_timer = iTimer->add_timer(iTimer->gettick()+spawntime, mob->delayspawn, md->bl.id, 0);
+		timer->delete(md->spawn_timer, mob->delayspawn);
+	md->spawn_timer = timer->add(timer->gettick()+spawntime, mob->delayspawn, md->bl.id, 0);
 	return 0;
 }
 
@@ -895,7 +895,7 @@ int mob_count_sub(struct block_list *bl, va_list ap) {
 int mob_spawn (struct mob_data *md)
 {
 	int i=0;
-	unsigned int tick = iTimer->gettick();
+	unsigned int tick = timer->gettick();
 	int c =0;
 
 	md->last_thinktime = tick;
@@ -918,16 +918,16 @@ int mob_spawn (struct mob_data *md)
 			if( !iMap->search_freecell(&md->bl, -1, &md->bl.x, &md->bl.y, md->spawn->xs, md->spawn->ys, battle_config.no_spawn_on_player?4:0) )
 			{ // retry again later
 				if( md->spawn_timer != INVALID_TIMER )
-					iTimer->delete_timer(md->spawn_timer, mob->delayspawn);
-				md->spawn_timer = iTimer->add_timer(tick+5000,mob->delayspawn,md->bl.id,0);
+					timer->delete(md->spawn_timer, mob->delayspawn);
+				md->spawn_timer = timer->add(tick+5000,mob->delayspawn,md->bl.id,0);
 				return 1;
 			}
 		}
 		else if( battle_config.no_spawn_on_player > 99 && iMap->foreachinrange(mob->count_sub, &md->bl, AREA_SIZE, BL_PC) )
 		{ // retry again later (players on sight)
 			if( md->spawn_timer != INVALID_TIMER )
-				iTimer->delete_timer(md->spawn_timer, mob->delayspawn);
-			md->spawn_timer = iTimer->add_timer(tick+5000,mob->delayspawn,md->bl.id,0);
+				timer->delete(md->spawn_timer, mob->delayspawn);
+			md->spawn_timer = timer->add(tick+5000,mob->delayspawn,md->bl.id,0);
 			return 1;
 		}
 	}
@@ -941,7 +941,7 @@ int mob_spawn (struct mob_data *md)
 	md->ud.target_to = 0;
 	if( md->spawn_timer != INVALID_TIMER )
 	{
-		iTimer->delete_timer(md->spawn_timer, mob->delayspawn);
+		timer->delete(md->spawn_timer, mob->delayspawn);
 		md->spawn_timer = INVALID_TIMER;
 	}
 
@@ -2049,7 +2049,7 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
 		//Log damage
 		if (src)
 			mob->log_damage(md, src, damage);
-		md->dmgtick = iTimer->gettick();
+		md->dmgtick = timer->gettick();
 	}
 
 	if (battle_config.show_mob_info&3)
@@ -2073,7 +2073,7 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
 
 	if( md->special_state.ai == 2 ) {//LOne WOlf explained that ANYONE can trigger the marine countdown skill. [Skotlex]
 		md->state.alchemist = 1;
-		mob->skill_use(md, iTimer->gettick(), MSC_ALCHEMIST);
+		mob->skill_use(md, timer->gettick(), MSC_ALCHEMIST);
 	}
 }
 
@@ -2094,7 +2094,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 	} pt[DAMAGELOG_SIZE];
 	int i, temp, count, m = md->bl.m, pnum = 0;
 	int dmgbltypes = 0;  // bitfield of all bl types, that caused damage to the mob and are elligible for exp distribution
-	unsigned int mvp_damage, tick = iTimer->gettick();
+	unsigned int mvp_damage, tick = timer->gettick();
 	bool rebirth, homkillonly;
 
 	status = &md->status;
@@ -2441,7 +2441,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				mob->item_drop(md, dlist, mob->setlootitem(&md->lootitem[i]), 1, 10000, homkillonly);
 		}
 		if (dlist->item) //There are drop items.
-			iTimer->add_timer(tick + (!battle_config.delay_battle_damage?500:0), mob->delay_item_drop, 0, (intptr_t)dlist);
+			timer->add(tick + (!battle_config.delay_battle_damage?500:0), mob->delay_item_drop, 0, (intptr_t)dlist);
 		else //No drops
 			ers_free(item_drop_list_ers, dlist);
 	} else if (md->lootitem && md->lootitem_count) {	//Loot MUST drop!
@@ -2455,7 +2455,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		dlist->item = NULL;
 		for(i = 0; i < md->lootitem_count; i++)
 			mob->item_drop(md, dlist, mob->setlootitem(&md->lootitem[i]), 1, 10000, homkillonly);
-		iTimer->add_timer(tick + (!battle_config.delay_battle_damage?500:0), mob->delay_item_drop, 0, (intptr_t)dlist);
+		timer->add(tick + (!battle_config.delay_battle_damage?500:0), mob->delay_item_drop, 0, (intptr_t)dlist);
 	}
 
 	if(mvp_sd && md->db->mexp > 0 && !md->special_state.ai) {
@@ -2594,7 +2594,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 	}
 
 	if(md->deletetimer != INVALID_TIMER) {
-		iTimer->delete_timer(md->deletetimer,mob->timer_delete);
+		timer->delete(md->deletetimer,mob->timer_delete);
 		md->deletetimer = INVALID_TIMER;
 	}
 	/**
@@ -2636,7 +2636,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 void mob_revive(struct mob_data *md, unsigned int hp)
 {
-	unsigned int tick = iTimer->gettick();
+	unsigned int tick = timer->gettick();
 	md->state.skillstate = MSS_IDLE;
 	md->last_thinktime = tick;
 	md->next_walktime = tick+rnd()%50+5000;
@@ -2721,7 +2721,7 @@ int mob_random_class (int *value, size_t count)
  *------------------------------------------*/
 int mob_class_change (struct mob_data *md, int class_)
 {
-	unsigned int tick = iTimer->gettick();
+	unsigned int tick = timer->gettick();
 	int i, c, hp_rate;
 
 	nullpo_ret(md);
@@ -3520,8 +3520,8 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 		if (duration) //Auto Delete after a while.
 		{
 			if( md->deletetimer != INVALID_TIMER )
-				iTimer->delete_timer(md->deletetimer, mob->timer_delete);
-			md->deletetimer = iTimer->add_timer (iTimer->gettick() + duration, mob->timer_delete, md->bl.id, 0);
+				timer->delete(md->deletetimer, mob->timer_delete);
+			md->deletetimer = timer->add (timer->gettick() + duration, mob->timer_delete, md->bl.id, 0);
 		}
 	}
 
@@ -4655,15 +4655,15 @@ int do_init_mob(void)
 
 	mob->load();
 
-	iTimer->add_timer_func_list(mob->delayspawn,"mob_delayspawn");
-	iTimer->add_timer_func_list(mob->delay_item_drop,"mob_delay_item_drop");
-	iTimer->add_timer_func_list(mob->ai_hard,"mob_ai_hard");
-	iTimer->add_timer_func_list(mob->ai_lazy,"mob_ai_lazy");
-	iTimer->add_timer_func_list(mob->timer_delete,"mob_timer_delete");
-	iTimer->add_timer_func_list(mob->spawn_guardian_sub,"mob_spawn_guardian_sub");
-	iTimer->add_timer_func_list(mob->respawn,"mob_respawn");
-	iTimer->add_timer_interval(iTimer->gettick()+MIN_MOBTHINKTIME,mob->ai_hard,0,0,MIN_MOBTHINKTIME);
-	iTimer->add_timer_interval(iTimer->gettick()+MIN_MOBTHINKTIME*10,mob->ai_lazy,0,0,MIN_MOBTHINKTIME*10);
+	timer->add_func_list(mob->delayspawn,"mob_delayspawn");
+	timer->add_func_list(mob->delay_item_drop,"mob_delay_item_drop");
+	timer->add_func_list(mob->ai_hard,"mob_ai_hard");
+	timer->add_func_list(mob->ai_lazy,"mob_ai_lazy");
+	timer->add_func_list(mob->timer_delete,"mob_timer_delete");
+	timer->add_func_list(mob->spawn_guardian_sub,"mob_spawn_guardian_sub");
+	timer->add_func_list(mob->respawn,"mob_respawn");
+	timer->add_interval(timer->gettick()+MIN_MOBTHINKTIME,mob->ai_hard,0,0,MIN_MOBTHINKTIME);
+	timer->add_interval(timer->gettick()+MIN_MOBTHINKTIME*10,mob->ai_lazy,0,0,MIN_MOBTHINKTIME*10);
 
 	return 0;
 }

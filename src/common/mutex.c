@@ -201,7 +201,7 @@ void racond_wait( racond c,  ramutex m,  sysint timeout_ticks){
 		pthread_cond_wait( &c->hCond,  &m->hMutex );
 	}else{
 		struct timespec wtime;
-		int64 exact_timeout = iTimer->gettick() + timeout_ticks;
+		int64 exact_timeout = timer->gettick() + timeout_ticks;
 	
 		wtime.tv_sec = exact_timeout/1000;
 		wtime.tv_nsec = (exact_timeout%1000)*1000000;

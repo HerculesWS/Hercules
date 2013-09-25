@@ -102,7 +102,7 @@ int pet_attackskill(struct pet_data *pd, int target_id)
 		(battle_config.pet_equip_required && !pd->pet.equip))
 		return 0;
 
-	if (DIFF_TICK(pd->ud.canact_tick, iTimer->gettick()) > 0)
+	if (DIFF_TICK(pd->ud.canact_tick, timer->gettick()) > 0)
 		return 0;
 	
 	if (rnd()%100 < (pd->a_skill->rate +pd->pet.intimate*pd->a_skill->bonusrate/1000))
@@ -183,7 +183,7 @@ int pet_sc_check(struct map_session_data *sd, int type)
 	||  pd->recovery->type != type )
 		return 1;
 
-	pd->recovery->timer = iTimer->add_timer(iTimer->gettick()+pd->recovery->delay*1000,pet->recovery_timer,sd->bl.id,0);
+	pd->recovery->timer = timer->add(timer->gettick()+pd->recovery->delay*1000,pet->recovery_timer,sd->bl.id,0);
 	
 	return 0;
 }
@@ -233,7 +233,7 @@ int pet_hungry(int tid, unsigned int tick, int id, intptr_t data)
 		interval = pd->petDB->hungry_delay;
 	if(interval <= 0)
 		interval = 1;
-	pd->pet_hungry_timer = iTimer->add_timer(tick+interval,pet->hungry,sd->bl.id,0);
+	pd->pet_hungry_timer = timer->add(tick+interval,pet->hungry,sd->bl.id,0);
 
 	return 0;
 }
@@ -263,7 +263,7 @@ int pet_hungry_timer_delete(struct pet_data *pd)
 {
 	nullpo_ret(pd);
 	if(pd->pet_hungry_timer != INVALID_TIMER) {
-		iTimer->delete_timer(pd->pet_hungry_timer,pet->hungry);
+		timer->delete(pd->pet_hungry_timer,pet->hungry);
 		pd->pet_hungry_timer = INVALID_TIMER;
 	}
 
@@ -365,7 +365,7 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 	iMap->addiddb(&pd->bl);
 	status_calc_pet(pd,1);
 
-	pd->last_thinktime = iTimer->gettick();
+	pd->last_thinktime = timer->gettick();
 	pd->state.skillbonus = 0;
 	if( battle_config.pet_status_support )
 		script->run(pet->db[i].pet_script,0,sd->bl.id,0);
@@ -378,7 +378,7 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 		interval = pd->petDB->hungry_delay;
 	if( interval <= 0 )
 		interval = 1;
-	pd->pet_hungry_timer = iTimer->add_timer(iTimer->gettick() + interval, pet->hungry, sd->bl.id, 0);
+	pd->pet_hungry_timer = timer->add(timer->gettick() + interval, pet->hungry, sd->bl.id, 0);
 	return 0;
 }
 
@@ -672,16 +672,16 @@ int pet_equipitem(struct map_session_data *sd,int index)
 	clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
 	if (battle_config.pet_equip_required)
 	{ 	//Skotlex: start support timers if need
-		unsigned int tick = iTimer->gettick();
+		unsigned int tick = timer->gettick();
 		if (pd->s_skill && pd->s_skill->timer == INVALID_TIMER)
 		{
 			if (pd->s_skill->id)
-				pd->s_skill->timer=iTimer->add_timer(tick+pd->s_skill->delay*1000, pet->skill_support_timer, sd->bl.id, 0);
+				pd->s_skill->timer=timer->add(tick+pd->s_skill->delay*1000, pet->skill_support_timer, sd->bl.id, 0);
 			else
-				pd->s_skill->timer=iTimer->add_timer(tick+pd->s_skill->delay*1000, pet->heal_timer, sd->bl.id, 0);
+				pd->s_skill->timer=timer->add(tick+pd->s_skill->delay*1000, pet->heal_timer, sd->bl.id, 0);
 		}
 		if (pd->bonus && pd->bonus->timer == INVALID_TIMER)
-			pd->bonus->timer=iTimer->add_timer(tick+pd->bonus->delay*1000, pet->skill_bonus_timer, sd->bl.id, 0);
+			pd->bonus->timer=timer->add(tick+pd->bonus->delay*1000, pet->skill_bonus_timer, sd->bl.id, 0);
 	}
 
 	return 0;
@@ -716,14 +716,14 @@ int pet_unequipitem(struct map_session_data *sd, struct pet_data *pd)
 		if( pd->s_skill && pd->s_skill->timer != INVALID_TIMER )
 		{
 			if( pd->s_skill->id )
-				iTimer->delete_timer(pd->s_skill->timer, pet->skill_support_timer);
+				timer->delete(pd->s_skill->timer, pet->skill_support_timer);
 			else
-				iTimer->delete_timer(pd->s_skill->timer, pet->heal_timer);
+				timer->delete(pd->s_skill->timer, pet->heal_timer);
 			pd->s_skill->timer = INVALID_TIMER;
 		}
 		if( pd->bonus && pd->bonus->timer != INVALID_TIMER )
 		{
-			iTimer->delete_timer(pd->bonus->timer, pet->skill_bonus_timer);
+			timer->delete(pd->bonus->timer, pet->skill_bonus_timer);
 			pd->bonus->timer = INVALID_TIMER;
 		}
 	}
@@ -1032,10 +1032,10 @@ int pet_lootitem_drop(struct pet_data *pd,struct map_session_data *sd)
 	memset(pd->loot->item,0,pd->loot->max * sizeof(struct item));
 	pd->loot->count = 0;
 	pd->loot->weight = 0;
-	pd->ud.canact_tick = iTimer->gettick()+10000;	//prevent picked up during 10*1000ms
+	pd->ud.canact_tick = timer->gettick()+10000;	//prevent picked up during 10*1000ms
 
 	if (dlist->item)
-		iTimer->add_timer(iTimer->gettick()+540,pet->delay_item_drop,0,(intptr_t)dlist);
+		timer->add(timer->gettick()+540,pet->delay_item_drop,0,(intptr_t)dlist);
 	else
 		ers_free(pet->item_drop_list_ers, dlist);
 	return 1;
@@ -1049,7 +1049,7 @@ int pet_skill_bonus_timer(int tid, unsigned int tick, int id, intptr_t data)
 	struct map_session_data *sd=iMap->id2sd(id);
 	struct pet_data *pd;
 	int bonus;
-	int timer = 0;
+	int next = 0;
 
 	if(sd == NULL || sd->pd==NULL || sd->pd->bonus == NULL)
 		return 1;
@@ -1065,10 +1065,10 @@ int pet_skill_bonus_timer(int tid, unsigned int tick, int id, intptr_t data)
 	// determine the time for the next timer
 	if (pd->state.skillbonus && pd->bonus->delay > 0) {
 		bonus = 0;
-		timer = pd->bonus->delay*1000;	// the duration until pet bonuses will be reactivated again
+		next = pd->bonus->delay*1000;	// the duration until pet bonuses will be reactivated again
 	} else if (pd->pet.intimate) {
 		bonus = 1;
-		timer = pd->bonus->duration*1000;	// the duration for pet bonuses to be in effect
+		next = pd->bonus->duration*1000;	// the duration for pet bonuses to be in effect
 	} else { //Lost pet...
 		pd->bonus->timer = INVALID_TIMER;
 		return 0;
@@ -1079,7 +1079,7 @@ int pet_skill_bonus_timer(int tid, unsigned int tick, int id, intptr_t data)
 		status_calc_pc(sd, 0);
 	}
 	// wait for the next timer
-	pd->bonus->timer=iTimer->add_timer(tick+timer,pet->skill_bonus_timer,sd->bl.id,0);
+	pd->bonus->timer=timer->add(tick+next,pet->skill_bonus_timer,sd->bl.id,0);
 	return 0;
 }
 
@@ -1138,14 +1138,14 @@ int pet_heal_timer(int tid, unsigned int tick, int id, intptr_t data)
 		(rate = get_percentage(status->hp, status->max_hp)) > pd->s_skill->hp ||
 		(rate = (pd->ud.skilltimer != INVALID_TIMER)) //Another skill is in effect
 	) {  //Wait (how long? 1 sec for every 10% of remaining)
-		pd->s_skill->timer=iTimer->add_timer(iTimer->gettick()+(rate>10?rate:10)*100,pet->heal_timer,sd->bl.id,0);
+		pd->s_skill->timer=timer->add(timer->gettick()+(rate>10?rate:10)*100,pet->heal_timer,sd->bl.id,0);
 		return 0;
 	}
 	pet_stop_attack(pd);
 	pet_stop_walking(pd,1);
 	clif->skill_nodamage(&pd->bl,&sd->bl,AL_HEAL,pd->s_skill->lv,1);
 	iStatus->heal(&sd->bl, pd->s_skill->lv,0, 0);
-	pd->s_skill->timer=iTimer->add_timer(tick+pd->s_skill->delay*1000,pet->heal_timer,sd->bl.id,0);
+	pd->s_skill->timer=timer->add(tick+pd->s_skill->delay*1000,pet->heal_timer,sd->bl.id,0);
 	return 0;
 }
 
@@ -1172,7 +1172,7 @@ int pet_skill_support_timer(int tid, unsigned int tick, int id, intptr_t data)
 
 	if (DIFF_TICK(pd->ud.canact_tick, tick) > 0)
 	{	//Wait until the pet can act again.
-		pd->s_skill->timer=iTimer->add_timer(pd->ud.canact_tick,pet->skill_support_timer,sd->bl.id,0);
+		pd->s_skill->timer=timer->add(pd->ud.canact_tick,pet->skill_support_timer,sd->bl.id,0);
 		return 0;
 	}
 	
@@ -1181,13 +1181,13 @@ int pet_skill_support_timer(int tid, unsigned int tick, int id, intptr_t data)
 		(rate = get_percentage(status->hp, status->max_hp)) > pd->s_skill->hp ||
 		(rate = (pd->ud.skilltimer != INVALID_TIMER)) //Another skill is in effect
 	) {  //Wait (how long? 1 sec for every 10% of remaining)
-		pd->s_skill->timer=iTimer->add_timer(tick+(rate>10?rate:10)*100,pet->skill_support_timer,sd->bl.id,0);
+		pd->s_skill->timer=timer->add(tick+(rate>10?rate:10)*100,pet->skill_support_timer,sd->bl.id,0);
 		return 0;
 	}
 	
 	pet_stop_attack(pd);
 	pet_stop_walking(pd,1);
-	pd->s_skill->timer=iTimer->add_timer(tick+pd->s_skill->delay*1000,pet->skill_support_timer,sd->bl.id,0);
+	pd->s_skill->timer=timer->add(tick+pd->s_skill->delay*1000,pet->skill_support_timer,sd->bl.id,0);
 	if (skill->get_inf(pd->s_skill->id) & INF_GROUND_SKILL)
 		unit->skilluse_pos(&pd->bl, sd->bl.x, sd->bl.y, pd->s_skill->id, pd->s_skill->lv);
 	else
@@ -1355,14 +1355,14 @@ int do_init_pet(void)
 	pet->item_drop_ers = ers_new(sizeof(struct item_drop),"pet.c::item_drop_ers",ERS_OPT_NONE);
 	pet->item_drop_list_ers = ers_new(sizeof(struct item_drop_list),"pet.c::item_drop_list_ers",ERS_OPT_NONE);
 	
-	iTimer->add_timer_func_list(pet->hungry,"pet_hungry");
-	iTimer->add_timer_func_list(pet->ai_hard,"pet_ai_hard");
-	iTimer->add_timer_func_list(pet->skill_bonus_timer,"pet_skill_bonus_timer"); // [Valaris]
-	iTimer->add_timer_func_list(pet->delay_item_drop,"pet_delay_item_drop");
-	iTimer->add_timer_func_list(pet->skill_support_timer, "pet_skill_support_timer"); // [Skotlex]
-	iTimer->add_timer_func_list(pet->recovery_timer,"pet_recovery_timer"); // [Valaris]
-	iTimer->add_timer_func_list(pet->heal_timer,"pet_heal_timer"); // [Valaris]
-	iTimer->add_timer_interval(iTimer->gettick()+MIN_PETTHINKTIME,pet->ai_hard,0,0,MIN_PETTHINKTIME);
+	timer->add_func_list(pet->hungry,"pet_hungry");
+	timer->add_func_list(pet->ai_hard,"pet_ai_hard");
+	timer->add_func_list(pet->skill_bonus_timer,"pet_skill_bonus_timer"); // [Valaris]
+	timer->add_func_list(pet->delay_item_drop,"pet_delay_item_drop");
+	timer->add_func_list(pet->skill_support_timer, "pet_skill_support_timer"); // [Skotlex]
+	timer->add_func_list(pet->recovery_timer,"pet_recovery_timer"); // [Valaris]
+	timer->add_func_list(pet->heal_timer,"pet_heal_timer"); // [Valaris]
+	timer->add_interval(timer->gettick()+MIN_PETTHINKTIME,pet->ai_hard,0,0,MIN_PETTHINKTIME);
 
 	return 0;
 }

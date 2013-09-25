@@ -93,8 +93,8 @@ int mercenary_get_lifetime(struct mercenary_data *md)
 	if( md == NULL || md->contract_timer == INVALID_TIMER )
 		return 0;
 
-	td = iTimer->get_timer(md->contract_timer);
-	return (td != NULL) ? DIFF_TICK(td->tick, iTimer->gettick()) : 0;
+	td = timer->get(md->contract_timer);
+	return (td != NULL) ? DIFF_TICK(td->tick, timer->gettick()) : 0;
 }
 
 int mercenary_get_guild(struct mercenary_data *md)
@@ -269,14 +269,14 @@ void merc_contract_stop(struct mercenary_data *md)
 {
 	nullpo_retv(md);
 	if( md->contract_timer != INVALID_TIMER )
-		iTimer->delete_timer(md->contract_timer, merc_contract_end);
+		timer->delete(md->contract_timer, merc_contract_end);
 	md->contract_timer = INVALID_TIMER;
 }
 
 void merc_contract_init(struct mercenary_data *md)
 {
 	if( md->contract_timer == INVALID_TIMER )
-		md->contract_timer = iTimer->add_timer(iTimer->gettick() + md->mercenary.life_time, merc_contract_end, md->master->bl.id, 0);
+		md->contract_timer = timer->add(timer->gettick() + md->mercenary.life_time, merc_contract_end, md->master->bl.id, 0);
 
 	md->regen.state.block = 0;
 }

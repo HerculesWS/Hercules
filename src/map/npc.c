@@ -251,7 +251,7 @@ int npc_rr_secure_timeout_timer(int tid, unsigned int tick, int id, intptr_t dat
 		clif->scriptclear(sd,sd->npc_id);
 		sd->npc_idle_timer = INVALID_TIMER;
 	} else //Create a new instance of ourselves to continue
-		sd->npc_idle_timer = iTimer->add_timer(iTimer->gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc->secure_timeout_timer,sd->bl.id,0);
+		sd->npc_idle_timer = timer->add(timer->gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc->secure_timeout_timer,sd->bl.id,0);
 	return 0;
 }
 #endif
@@ -451,7 +451,7 @@ void npc_event_do_oninit(void)
 {
 	ShowStatus("Event '"CL_WHITE"OnInit"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs."CL_CLL"\n", npc->event_doall("OnInit"));
 
-	iTimer->add_timer_interval(iTimer->gettick()+100,npc->event_do_clock,0,0,1000);
+	timer->add_interval(timer->gettick()+100,npc->event_do_clock,0,0,1000);
 }
 
 /*==========================================
@@ -537,9 +537,9 @@ int npc_timerevent(int tid, unsigned int tick, int id, intptr_t data)
 		next = nd->u.scr.timer_event[ ted->next ].timer - nd->u.scr.timer_event[ ted->next - 1 ].timer;
 		ted->time += next;
 		if( sd )
-			sd->npc_timer_id = iTimer->add_timer(tick+next,npc->timerevent,id,(intptr_t)ted);
+			sd->npc_timer_id = timer->add(tick+next,npc->timerevent,id,(intptr_t)ted);
 		else
-			nd->u.scr.timerid = iTimer->add_timer(tick+next,npc->timerevent,id,(intptr_t)ted);
+			nd->u.scr.timerid = timer->add(tick+next,npc->timerevent,id,(intptr_t)ted);
 	}
 	else
 	{
@@ -569,7 +569,7 @@ int npc_timerevent(int tid, unsigned int tick, int id, intptr_t data)
 int npc_timerevent_start(struct npc_data* nd, int rid)
 {
 	int j;
-	unsigned int tick = iTimer->gettick();
+	unsigned int tick = timer->gettick();
 	struct map_session_data *sd = NULL; //Player to whom script is attached.
 
 	nullpo_ret(nd);
@@ -600,13 +600,13 @@ int npc_timerevent_start(struct npc_data* nd, int rid)
 		if( sd )
 		{
 			ted->rid = sd->bl.id; // Attach only the player if attachplayerrid was used.
-			sd->npc_timer_id = iTimer->add_timer(tick+next,npc->timerevent,nd->bl.id,(intptr_t)ted);
+			sd->npc_timer_id = timer->add(tick+next,npc->timerevent,nd->bl.id,(intptr_t)ted);
 		}
 		else
 		{
 			ted->rid = 0;
 			nd->u.scr.timertick = tick; // Set when timer is started
-			nd->u.scr.timerid = iTimer->add_timer(tick+next,npc->timerevent,nd->bl.id,(intptr_t)ted);
+			nd->u.scr.timerid = timer->add(tick+next,npc->timerevent,nd->bl.id,(intptr_t)ted);
 		}
 
 	} else if (!sd) {
@@ -639,16 +639,16 @@ int npc_timerevent_stop(struct npc_data* nd)
 	// Delete timer
 	if ( *tid != INVALID_TIMER )
 	{
-		td = iTimer->get_timer(*tid);
+		td = timer->get(*tid);
 		if( td && td->data )
 			ers_free(npc->timer_event_ers, (void*)td->data);
-		iTimer->delete_timer(*tid,npc->timerevent);
+		timer->delete(*tid,npc->timerevent);
 		*tid = INVALID_TIMER;
 	}
 
 	if( !sd && nd->u.scr.timertick )
 	{
-		nd->u.scr.timer += DIFF_TICK(iTimer->gettick(),nd->u.scr.timertick); // Set 'timer' to the time that has passed since the beginning of the timers
+		nd->u.scr.timer += DIFF_TICK(timer->gettick(),nd->u.scr.timertick); // Set 'timer' to the time that has passed since the beginning of the timers
 		nd->u.scr.timertick = 0; // Set 'tick' to zero so that we know it's off.
 	}
 
@@ -666,7 +666,7 @@ void npc_timerevent_quit(struct map_session_data* sd)
 	// Check timer existance
 	if( sd->npc_timer_id == INVALID_TIMER )
 		return;
-	if( !(td = iTimer->get_timer(sd->npc_timer_id)) )
+	if( !(td = timer->get(sd->npc_timer_id)) )
 	{
 		sd->npc_timer_id = INVALID_TIMER;
 		return;
@@ -675,7 +675,7 @@ void npc_timerevent_quit(struct map_session_data* sd)
 	// Delete timer
 	nd = (struct npc_data *)iMap->id2bl(td->id);
 	ted = (struct timer_event_data*)td->data;
-	iTimer->delete_timer(sd->npc_timer_id, npc->timerevent);
+	timer->delete(sd->npc_timer_id, npc->timerevent);
 	sd->npc_timer_id = INVALID_TIMER;
 
 	// Execute OnTimerQuit
@@ -702,7 +702,7 @@ void npc_timerevent_quit(struct map_session_data* sd)
 			old_timer = nd->u.scr.timer;
 
 			nd->u.scr.rid = sd->bl.id;
-			nd->u.scr.timertick = iTimer->gettick();
+			nd->u.scr.timertick = timer->gettick();
 			nd->u.scr.timer = ted->time;
 
 			//Execute label
@@ -730,7 +730,7 @@ int npc_gettimerevent_tick(struct npc_data* nd)
 
 	tick = nd->u.scr.timer; // The last time it's active(start, stop or event trigger)
 	if( nd->u.scr.timertick ) // It's a running timer
-		tick += DIFF_TICK(iTimer->gettick(), nd->u.scr.timertick);
+		tick += DIFF_TICK(timer->gettick(), nd->u.scr.timertick);
 
 	return tick;
 }
@@ -1212,13 +1212,13 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing)
 	/**
 	 * Update the last NPC iteration
 	 **/
-	sd->npc_idle_tick = iTimer->gettick();
+	sd->npc_idle_tick = timer->gettick();
 #endif
 
 	/**
 	 * WPE can get to this point with a progressbar; we deny it.
 	 **/
-	if( sd->progressbar.npc_id && DIFF_TICK(sd->progressbar.timeout,iTimer->gettick()) > 0 )
+	if( sd->progressbar.npc_id && DIFF_TICK(sd->progressbar.timeout,timer->gettick()) > 0 )
 		return 1;
 
 	if( closing && sd->st->state == CLOSE )
@@ -1824,14 +1824,14 @@ int npc_unload(struct npc_data* nd, bool single) {
 		for( bl = (struct block_list*)mapit->first(iter); mapit->exists(iter); bl = (struct block_list*)mapit->next(iter) ) {
 			struct map_session_data *sd = ((TBL_PC*)bl);
 			if( sd && sd->npc_timer_id != INVALID_TIMER ) {
-				const struct TimerData *td = iTimer->get_timer(sd->npc_timer_id);
+				const struct TimerData *td = timer->get(sd->npc_timer_id);
 
 				if( td && td->id != nd->bl.id )
 					continue;
 
 				if( td && td->data )
 					ers_free(npc->timer_event_ers, (void*)td->data);
-				iTimer->delete_timer(sd->npc_timer_id, npc->timerevent);
+				timer->delete(sd->npc_timer_id, npc->timerevent);
 				sd->npc_timer_id = INVALID_TIMER;
 			}
 		}
@@ -1839,10 +1839,10 @@ int npc_unload(struct npc_data* nd, bool single) {
 
 		if (nd->u.scr.timerid != INVALID_TIMER) {
 			const struct TimerData *td;
-			td = iTimer->get_timer(nd->u.scr.timerid);
+			td = timer->get(nd->u.scr.timerid);
 			if (td && td->data)
 				ers_free(npc->timer_event_ers, (void*)td->data);
-			iTimer->delete_timer(nd->u.scr.timerid, npc->timerevent);
+			timer->delete(nd->u.scr.timerid, npc->timerevent);
 		}
 		if (nd->u.scr.timer_event)
 			aFree(nd->u.scr.timer_event);
@@ -2768,7 +2768,7 @@ void npc_movenpc(struct npc_data* nd, int16 x, int16 y)
 	y = cap_value(y, 0, map[m].ys-1);
 
 	iMap->foreachinrange(clif->outsight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
-	iMap->moveblock(&nd->bl, x, y, iTimer->gettick());
+	iMap->moveblock(&nd->bl, x, y, timer->gettick());
 	iMap->foreachinrange(clif->insight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
 }
 
@@ -3785,7 +3785,7 @@ int npc_reload(void) {
 				}
 				if( map[m].mob_delete_timer != INVALID_TIMER )
 				{ // Mobs were removed anyway,so delete the timer [Inkfish]
-					iTimer->delete_timer(map[m].mob_delete_timer, iMap->removemobs_timer);
+					timer->delete(map[m].mob_delete_timer, iMap->removemobs_timer);
 					map[m].mob_delete_timer = INVALID_TIMER;
 				}
 			}
@@ -3937,7 +3937,7 @@ int do_init_npc(void)
 	npc->base_ud.attacktimer    = INVALID_TIMER;
 	npc->base_ud.attackabletime =
 	npc->base_ud.canact_tick    =
-	npc->base_ud.canmove_tick   = iTimer->gettick();
+	npc->base_ud.canmove_tick   = timer->gettick();
 	
 	//Stock view data for normal npcs.
 	memset(&npc_viewdb, 0, sizeof(npc_viewdb));
@@ -3988,8 +3988,8 @@ int do_init_npc(void)
 	if (battle_config.warp_point_debug)
 		npc->debug_warps();
 
-	iTimer->add_timer_func_list(npc->event_do_clock,"npc_event_do_clock");
-	iTimer->add_timer_func_list(npc->timerevent,"npc_timerevent");
+	timer->add_func_list(npc->event_do_clock,"npc_event_do_clock");
+	timer->add_func_list(npc->timerevent,"npc_timerevent");
 
 	// Init dummy NPC
 	npc->fake_nd = (struct npc_data *)aCalloc(1,sizeof(struct npc_data));

@@ -17,7 +17,7 @@
 /// Initializes the random number generator with an appropriate seed.
 void rnd_init(void)
 {
-	uint32 seed = iTimer->gettick();
+	uint32 seed = timer->gettick();
 	seed += (uint32)time(NULL);
 #if defined(WIN32)
 	seed += GetCurrentProcessId();

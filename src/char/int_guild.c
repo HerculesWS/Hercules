@@ -86,7 +86,7 @@ static int guild_save_timer(int tid, unsigned int tick, int id, intptr_t data)
 
 	state = guild_db_->size(guild_db_);
 	if( state < 1 ) state = 1; //Calculate the time slot for the next save.
-	iTimer->add_timer(tick  + autosave_interval/state, guild_save_timer, 0, 0);
+	timer->add(tick  + autosave_interval/state, guild_save_timer, 0, 0);
 	return 0;
 }
 
@@ -729,8 +729,8 @@ int inter_guild_sql_init(void)
 	//Read exp file
 	sv->readdb("db", DBPATH"exp_guild.txt", ',', 1, 1, 100, exp_guild_parse_row);
 
-	iTimer->add_timer_func_list(guild_save_timer, "guild_save_timer");
-	iTimer->add_timer(iTimer->gettick() + 10000, guild_save_timer, 0, 0);
+	timer->add_func_list(guild_save_timer, "guild_save_timer");
+	timer->add(timer->gettick() + 10000, guild_save_timer, 0, 0);
 	return 0;
 }
 

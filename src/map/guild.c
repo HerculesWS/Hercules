@@ -2235,10 +2235,10 @@ void do_init_guild(void) {
 	memset(guild_skill_tree,0,sizeof(guild_skill_tree));
 	sv->readdb(iMap->db_path, "guild_skill_tree.txt", ',', 2+MAX_GUILD_SKILL_REQUIRE*2, 2+MAX_GUILD_SKILL_REQUIRE*2, -1, &guild_read_guildskill_tree_db); //guild skill tree [Komurka]
 
-	iTimer->add_timer_func_list(guild_payexp_timer,"guild_payexp_timer");
-	iTimer->add_timer_func_list(guild_send_xy_timer, "guild_send_xy_timer");
-	iTimer->add_timer_interval(iTimer->gettick()+GUILD_PAYEXP_INVERVAL,guild_payexp_timer,0,0,GUILD_PAYEXP_INVERVAL);
-	iTimer->add_timer_interval(iTimer->gettick()+GUILD_SEND_XY_INVERVAL,guild_send_xy_timer,0,0,GUILD_SEND_XY_INVERVAL);
+	timer->add_func_list(guild_payexp_timer,"guild_payexp_timer");
+	timer->add_func_list(guild_send_xy_timer, "guild_send_xy_timer");
+	timer->add_interval(timer->gettick()+GUILD_PAYEXP_INVERVAL,guild_payexp_timer,0,0,GUILD_PAYEXP_INVERVAL);
+	timer->add_interval(timer->gettick()+GUILD_SEND_XY_INVERVAL,guild_send_xy_timer,0,0,GUILD_SEND_XY_INVERVAL);
 }
 
 void do_final_guild(void) {

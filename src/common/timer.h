@@ -44,24 +44,24 @@ struct timer_interface {
 	unsigned int (*gettick) (void);
 	unsigned int (*gettick_nocache) (void);
 
-	int (*add_timer) (unsigned int tick, TimerFunc func, int id, intptr_t data);
-	int (*add_timer_interval) (unsigned int tick, TimerFunc func, int id, intptr_t data, int interval);
-	const struct TimerData *(*get_timer) (int tid);
-	int (*delete_timer) (int tid, TimerFunc func);
+	int (*add) (unsigned int tick, TimerFunc func, int id, intptr_t data);
+	int (*add_interval) (unsigned int tick, TimerFunc func, int id, intptr_t data, int interval);
+	const struct TimerData *(*get) (int tid);
+	int (*delete) (int tid, TimerFunc func);
 
-	int (*addtick_timer) (int tid, unsigned int tick);
-	int (*settick_timer) (int tid, unsigned int tick);
+	int (*addtick) (int tid, unsigned int tick);
+	int (*settick) (int tid, unsigned int tick);
 
-	int (*add_timer_func_list) (TimerFunc func, char* name);
+	int (*add_func_list) (TimerFunc func, char* name);
 
 	unsigned long (*get_uptime) (void);
 
 	int (*do_timer) (unsigned int tick);
 	void (*init) (void);
 	void (*final) (void);
-} iTimer_s;
+};
 
-struct timer_interface *iTimer;
+struct timer_interface *timer;
 
 void timer_defaults(void);
 

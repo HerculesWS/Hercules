@@ -1204,7 +1204,7 @@ void map_clearflooritem(struct block_list *bl) {
 	struct flooritem_data* fitem = (struct flooritem_data*)bl;
 
 	if( fitem->cleartimer )
-		iTimer->delete_timer(fitem->cleartimer,iMap->clearflooritem_timer);
+		timer->delete(fitem->cleartimer,iMap->clearflooritem_timer);
 
 	clif->clearflooritem(fitem, 0);
 	iMap->deliddb(&fitem->bl);
@@ -1359,7 +1359,7 @@ int map_addflooritem(struct item *item_data,int amount,int16 m,int16 x,int16 y,i
 	}
 
 	fitem->first_get_charid = first_charid;
-	fitem->first_get_tick = iTimer->gettick() + (flags&1 ? battle_config.mvp_item_first_get_time : battle_config.item_first_get_time);
+	fitem->first_get_tick = timer->gettick() + (flags&1 ? battle_config.mvp_item_first_get_time : battle_config.item_first_get_time);
 	fitem->second_get_charid = second_charid;
 	fitem->second_get_tick = fitem->first_get_tick + (flags&1 ? battle_config.mvp_item_second_get_time : battle_config.item_second_get_time);
 	fitem->third_get_charid = third_charid;
@@ -1369,7 +1369,7 @@ int map_addflooritem(struct item *item_data,int amount,int16 m,int16 x,int16 y,i
 	fitem->item_data.amount=amount;
 	fitem->subx=(r&3)*3+3;
 	fitem->suby=((r>>2)&3)*3+3;
-	fitem->cleartimer=iTimer->add_timer(iTimer->gettick()+battle_config.flooritem_lifetime,iMap->clearflooritem_timer,fitem->bl.id,0);
+	fitem->cleartimer=timer->add(timer->gettick()+battle_config.flooritem_lifetime,iMap->clearflooritem_timer,fitem->bl.id,0);
 
 	iMap->addiddb(&fitem->bl);
 	iMap->addblock(&fitem->bl);
@@ -2096,7 +2096,7 @@ void map_spawnmobs(int16 m)
 	int i, k=0;
 	if (map[m].mob_delete_timer != INVALID_TIMER)
 	{	//Mobs have not been removed yet [Skotlex]
-		iTimer->delete_timer(map[m].mob_delete_timer, iMap->removemobs_timer);
+		timer->delete(map[m].mob_delete_timer, iMap->removemobs_timer);
 		map[m].mob_delete_timer = INVALID_TIMER;
 		return;
 	}
@@ -2170,7 +2170,7 @@ void map_removemobs(int16 m)
 	if (map[m].mob_delete_timer != INVALID_TIMER) // should never happen
 		return; //Mobs are already scheduled for removal
 
-	map[m].mob_delete_timer = iTimer->add_timer(iTimer->gettick()+battle_config.mob_remove_delay, iMap->removemobs_timer, m, 0);
+	map[m].mob_delete_timer = timer->add(timer->gettick()+battle_config.mob_remove_delay, iMap->removemobs_timer, m, 0);
 }
 
 /*==========================================
@@ -2867,7 +2867,7 @@ void map_clean(int i) {
 	if(battle_config.dynamic_mobs) { //Dynamic mobs flag by [random]
 		int j;
 		if(map[i].mob_delete_timer != INVALID_TIMER)
-			iTimer->delete_timer(map[i].mob_delete_timer, iMap->removemobs_timer);
+			timer->delete(map[i].mob_delete_timer, iMap->removemobs_timer);
 		for (j=0; j<MAX_MOB_LIST_PER_MAP; j++)
 			if (map[i].moblist[j]) aFree(map[i].moblist[j]);
 	}
@@ -2920,7 +2920,7 @@ void do_final_maps(void) {
 		if(battle_config.dynamic_mobs) { //Dynamic mobs flag by [random]
 			int j;
 			if(map[i].mob_delete_timer != INVALID_TIMER)
-				iTimer->delete_timer(map[i].mob_delete_timer, iMap->removemobs_timer);
+				timer->delete(map[i].mob_delete_timer, iMap->removemobs_timer);
 			for (j=0; j<MAX_MOB_LIST_PER_MAP; j++)
 				if (map[i].moblist[j]) aFree(map[i].moblist[j]);
 		}
@@ -5399,10 +5399,10 @@ int do_init(int argc, char *argv[])
 
 	map_readallmaps();
 
-	iTimer->add_timer_func_list(map_freeblock_timer, "map_freeblock_timer");
-	iTimer->add_timer_func_list(map_clearflooritem_timer, "map_clearflooritem_timer");
-	iTimer->add_timer_func_list(map_removemobs_timer, "map_removemobs_timer");
-	iTimer->add_timer_interval(iTimer->gettick()+1000, map_freeblock_timer, 0, 0, 60*1000);
+	timer->add_func_list(map_freeblock_timer, "map_freeblock_timer");
+	timer->add_func_list(map_clearflooritem_timer, "map_clearflooritem_timer");
+	timer->add_func_list(map_removemobs_timer, "map_removemobs_timer");
+	timer->add_interval(timer->gettick()+1000, map_freeblock_timer, 0, 0, 60*1000);
 
 	HPM->load_sub = HPM_map_plugin_load_sub;
 	HPM->symbol_defaults_sub = map_hp_symbols;

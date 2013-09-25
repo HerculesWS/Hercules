@@ -325,7 +325,7 @@ int main (int argc, char **argv) {
 	cevents_init();
 #endif
 
-	iTimer->init();
+	timer->init();
 
 	console->init();
 	
@@ -341,7 +341,7 @@ int main (int argc, char **argv) {
 	{// Main runtime cycle
 		int next;
 		while (runflag != CORE_ST_STOP) {
-			next = iTimer->do_timer(iTimer->gettick_nocache());
+			next = timer->do_timer(timer->gettick_nocache());
 			do_sockets(next);
 		}
 	}
@@ -352,7 +352,7 @@ int main (int argc, char **argv) {
 #ifndef MINICORE
 	HPM->final();
 #endif
-	iTimer->final();
+	timer->final();
 	socket_final();
 	DB->final();
 	mempool_final();

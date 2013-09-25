@@ -86,8 +86,8 @@ void ipban_init(void)
 
 	if( login_config.ipban_cleanup_interval > 0 )
 	{ // set up periodic cleanup of connection history and active bans
-		iTimer->add_timer_func_list(ipban_cleanup, "ipban_cleanup");
-		cleanup_timer_id = iTimer->add_timer_interval(iTimer->gettick()+10, ipban_cleanup, 0, 0, login_config.ipban_cleanup_interval*1000);
+		timer->add_func_list(ipban_cleanup, "ipban_cleanup");
+		cleanup_timer_id = timer->add_interval(timer->gettick()+10, ipban_cleanup, 0, 0, login_config.ipban_cleanup_interval*1000);
 	} else // make sure it gets cleaned up on login-server start regardless of interval-based cleanups
 		ipban_cleanup(0,0,0,0);
 }
@@ -100,7 +100,7 @@ void ipban_final(void)
 
 	if( login_config.ipban_cleanup_interval > 0 )
 		// release data
-		iTimer->delete_timer(cleanup_timer_id, ipban_cleanup);
+		timer->delete(cleanup_timer_id, ipban_cleanup);
 	
 	ipban_cleanup(0,0,0,0); // always clean up on login-server stop
 

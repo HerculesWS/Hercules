@@ -470,7 +470,7 @@ void hplugins_share_defaults(void) {
 	/* sql */
 	HPM->share(SQL,"SQL");
 	/* timer */
-	HPM->share(iTimer,"iTimer");
+	HPM->share(timer,"timer");
 	
 }
 

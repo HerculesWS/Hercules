@@ -460,7 +460,7 @@ void bg_queue_ready_ack (struct bg_arena *arena, struct map_session_data *sd, bo
 		}
 		/* check if all are ready then cancell timer, and start game  */
 		if( count == queue->items ) {
-			iTimer->delete_timer(arena->begin_timer,bg->begin_timer);
+			timer->delete(arena->begin_timer,bg->begin_timer);
 			arena->begin_timer = INVALID_TIMER;
 			bg->begin(arena);
 		}
@@ -556,7 +556,7 @@ void bg_queue_pregame(struct bg_arena *arena) {
 			clif->bgqueue_battlebegins(sd,arena->id,SELF);
 		}
 	}
-	arena->begin_timer = iTimer->add_timer( iTimer->gettick() + (arena->pregame_duration*1000), bg->begin_timer, arena->id, 0 );
+	arena->begin_timer = timer->add( timer->gettick() + (arena->pregame_duration*1000), bg->begin_timer, arena->id, 0 );
 }
 int bg_fillup_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	bg->queue_pregame(bg->arena[id]);
@@ -568,12 +568,12 @@ void bg_queue_check(struct bg_arena *arena) {
 	int count = script->hq[arena->queue_id].items;
 	if( count == arena->max_players ) {
 		if( arena->fillup_timer != INVALID_TIMER ) {
-			iTimer->delete_timer(arena->fillup_timer,bg->fillup_timer);
+			timer->delete(arena->fillup_timer,bg->fillup_timer);
 			arena->fillup_timer = INVALID_TIMER;
 		}
 		bg->queue_pregame(arena);
 	} else if( count >= arena->min_players && arena->fillup_timer == INVALID_TIMER ) {
-		arena->fillup_timer = iTimer->add_timer( iTimer->gettick() + (arena->fillup_duration*1000), bg->fillup_timer, arena->id, 0 );
+		arena->fillup_timer = timer->add( timer->gettick() + (arena->fillup_duration*1000), bg->fillup_timer, arena->id, 0 );
 	}
 }
 void bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type) {
@@ -764,8 +764,8 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 }
 void do_init_battleground(void) {
 	bg->team_db = idb_alloc(DB_OPT_RELEASE_DATA);
-	iTimer->add_timer_func_list(bg->send_xy_timer, "bg_send_xy_timer");
-	iTimer->add_timer_interval(iTimer->gettick() + battle_config.bg_update_interval, bg->send_xy_timer, 0, 0, battle_config.bg_update_interval);
+	timer->add_func_list(bg->send_xy_timer, "bg_send_xy_timer");
+	timer->add_interval(timer->gettick() + battle_config.bg_update_interval, bg->send_xy_timer, 0, 0, battle_config.bg_update_interval);
 	bg->config_read();
 }
 

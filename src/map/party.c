@@ -123,8 +123,8 @@ void do_init_party(void)
 {
 	party_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	party_booking_db = idb_alloc(DB_OPT_RELEASE_DATA); // Party Booking [Spiria]
-	iTimer->add_timer_func_list(party_send_xy_timer, "party_send_xy_timer");
-	iTimer->add_timer_interval(iTimer->gettick()+battle_config.party_update_interval, party_send_xy_timer, 0, 0, battle_config.party_update_interval);
+	timer->add_func_list(party_send_xy_timer, "party_send_xy_timer");
+	timer->add_interval(timer->gettick()+battle_config.party_update_interval, party_send_xy_timer, 0, 0, battle_config.party_update_interval);
 }
 
 /// Party data lookup using party id.

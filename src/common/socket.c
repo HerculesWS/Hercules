@@ -1012,9 +1012,9 @@ static int connect_check_(uint32 ip)
 			if( hist->ddos )
 			{// flagged as DDoS
 				return (connect_ok == 2 ? 1 : 0);
-			} else if( DIFF_TICK(iTimer->gettick(),hist->tick) < ddos_interval )
+			} else if( DIFF_TICK(timer->gettick(),hist->tick) < ddos_interval )
 			{// connection within ddos_interval
-				hist->tick = iTimer->gettick();
+				hist->tick = timer->gettick();
 				if( hist->count++ >= ddos_count )
 				{// DDoS attack detected
 					hist->ddos = 1;
@@ -1024,7 +1024,7 @@ static int connect_check_(uint32 ip)
 				return connect_ok;
 			} else
 			{// not within ddos_interval, clear data
-				hist->tick  = iTimer->gettick();
+				hist->tick  = timer->gettick();
 				hist->count = 0;
 				return connect_ok;
 			}
@@ -1035,7 +1035,7 @@ static int connect_check_(uint32 ip)
 	CREATE(hist, ConnectHistory, 1);
 	memset(hist, 0, sizeof(ConnectHistory));
 	hist->ip   = ip;
-	hist->tick = iTimer->gettick();
+	hist->tick = timer->gettick();
 	hist->next = connect_history[ip&0xFFFF];
 	connect_history[ip&0xFFFF] = hist;
 	return connect_ok;
@@ -1400,8 +1400,8 @@ void socket_init(void)
 #ifndef MINICORE
 	// Delete old connection history every 5 minutes
 	memset(connect_history, 0, sizeof(connect_history));
-	iTimer->add_timer_func_list(connect_check_clear, "connect_check_clear");
-	iTimer->add_timer_interval(iTimer->gettick()+1000, connect_check_clear, 0, 0, 5*60*1000);
+	timer->add_func_list(connect_check_clear, "connect_check_clear");
+	timer->add_interval(timer->gettick()+1000, connect_check_clear, 0, 0, 5*60*1000);
 #endif
 
 	ShowInfo("Server supports up to '"CL_WHITE"%u"CL_RESET"' concurrent connections.\n", rlim_cur);

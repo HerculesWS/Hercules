@@ -186,7 +186,7 @@ static bool chrif_sd_to_auth(TBL_PC* sd, enum sd_state state) {
 	node->sex = sd->status.sex;
 	node->fd = sd->fd;
 	node->sd = sd;	//Data from logged on char.
-	node->node_created = iTimer->gettick(); //timestamp for node timeouts
+	node->node_created = timer->gettick(); //timestamp for node timeouts
 	node->state = state;
 
 	sd->state.active = 0;
@@ -691,11 +691,11 @@ int auth_db_cleanup_sub(DBKey key, DBData *data, va_list ap) {
 	struct auth_node *node = DB->data2ptr(data);
 	const char* states[] = { "Login", "Logout", "Map change" };
 	
-	if(DIFF_TICK(iTimer->gettick(),node->node_created)>60000) {
+	if(DIFF_TICK(timer->gettick(),node->node_created)>60000) {
 		switch (node->state) {
 			case ST_LOGOUT:
 				//Re-save attempt (->sd should never be null here).
-				node->node_created = iTimer->gettick(); //Refresh tick (avoid char-server load if connection is really bad)
+				node->node_created = timer->gettick(); //Refresh tick (avoid char-server load if connection is really bad)
 				chrif->save(node->sd, 1);
 				break;
 			default:
@@ -1170,10 +1170,10 @@ int chrif_save_scdata(struct map_session_data *sd) { //parses the sc_data of the
 	unsigned int tick;
 	struct status_change_data data;
 	struct status_change *sc = &sd->sc;
-	const struct TimerData *timer;
+	const struct TimerData *td;
 
 	chrif_check(-1);
-	tick = iTimer->gettick();
+	tick = timer->gettick();
 	
 	WFIFOHEAD(char_fd, 14 + SC_MAX*sizeof(struct status_change_data));
 	WFIFOW(char_fd,0) = 0x2b1c;
@@ -1184,10 +1184,10 @@ int chrif_save_scdata(struct map_session_data *sd) { //parses the sc_data of the
 		if (!sc->data[i])
 			continue;
 		if (sc->data[i]->timer != INVALID_TIMER) {
-			timer = iTimer->get_timer(sc->data[i]->timer);
-			if (timer == NULL || timer->func != iStatus->change_timer || DIFF_TICK(timer->tick,tick) < 0)
+			td = timer->get(sc->data[i]->timer);
+			if (td == NULL || td->func != iStatus->change_timer || DIFF_TICK(td->tick,tick) < 0)
 				continue;
-			data.tick = DIFF_TICK(timer->tick,tick); //Duration that is left before ending.
+			data.tick = DIFF_TICK(td->tick,tick); //Duration that is left before ending.
 		} else
 			data.tick = -1; //Infinite duration
 		data.type = i;
@@ -1342,7 +1342,7 @@ void chrif_on_disconnect(void) {
 	iMap->eraseallipport();
 
 	//Attempt to reconnect in a second. [Skotlex]
-	iTimer->add_timer(iTimer->gettick() + 1000, check_connect_char_server, 0, 0);
+	timer->add(timer->gettick() + 1000, check_connect_char_server, 0, 0);
 }
 
 
@@ -1643,17 +1643,17 @@ int do_init_chrif(void) {
 	auth_db = idb_alloc(DB_OPT_BASE);
 	auth_db_ers = ers_new(sizeof(struct auth_node),"chrif.c::auth_db_ers",ERS_OPT_NONE);
 
-	iTimer->add_timer_func_list(check_connect_char_server, "check_connect_char_server");
-	iTimer->add_timer_func_list(auth_db_cleanup, "auth_db_cleanup");
+	timer->add_func_list(check_connect_char_server, "check_connect_char_server");
+	timer->add_func_list(auth_db_cleanup, "auth_db_cleanup");
 
 	// establish map-char connection if not present
-	iTimer->add_timer_interval(iTimer->gettick() + 1000, check_connect_char_server, 0, 0, 10 * 1000);
+	timer->add_interval(timer->gettick() + 1000, check_connect_char_server, 0, 0, 10 * 1000);
 
 	// wipe stale data for timed-out client connection requests
-	iTimer->add_timer_interval(iTimer->gettick() + 1000, auth_db_cleanup, 0, 0, 30 * 1000);
+	timer->add_interval(timer->gettick() + 1000, auth_db_cleanup, 0, 0, 30 * 1000);
 
 	// send the user count every 10 seconds, to hide the charserver's online counting problem
-	iTimer->add_timer_interval(iTimer->gettick() + 1000, send_usercount_tochar, 0, 0, UPDATE_INTERVAL);
+	timer->add_interval(timer->gettick() + 1000, send_usercount_tochar, 0, 0, UPDATE_INTERVAL);
 
 	return 0;
 }

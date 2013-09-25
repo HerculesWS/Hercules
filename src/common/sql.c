@@ -210,7 +210,7 @@ static int Sql_P_Keepalive(Sql* self)
 	// establish keepalive
 	ping_interval = timeout - 30; // 30-second reserve
 	//add_timer_func_list(Sql_P_KeepaliveTimer, "Sql_P_KeepaliveTimer");
-	return iTimer->add_timer_interval(iTimer->gettick() + ping_interval*1000, Sql_P_KeepaliveTimer, 0, (intptr_t)self, ping_interval*1000);
+	return timer->add_interval(timer->gettick() + ping_interval*1000, Sql_P_KeepaliveTimer, 0, (intptr_t)self, ping_interval*1000);
 }
 
 
@@ -404,7 +404,7 @@ void Sql_Free(Sql* self)
 	{
 		SQL->FreeResult(self);
 		StrBuf->Destroy(&self->buf);
-		if( self->keepalive != INVALID_TIMER ) iTimer->delete_timer(self->keepalive, Sql_P_KeepaliveTimer);
+		if( self->keepalive != INVALID_TIMER ) timer->delete(self->keepalive, Sql_P_KeepaliveTimer);
 		aFree(self);
 	}
 }

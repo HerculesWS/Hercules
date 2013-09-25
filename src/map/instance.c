@@ -375,7 +375,7 @@ void instance_del_map(int16 m) {
 	iMap->foreachinmap(instance_cleanup_sub, m, BL_ALL);
 
 	if( map[m].mob_delete_timer != INVALID_TIMER )
-		iTimer->delete_timer(map[m].mob_delete_timer, iMap->removemobs_timer);
+		timer->delete(map[m].mob_delete_timer, iMap->removemobs_timer);
 	
 	mapindex_removemap( map[m].index );
 
@@ -508,9 +508,9 @@ void instance_destroy(int instance_id) {
 		db_destroy(instances[instance_id].vars);
 
 	if( instances[instance_id].progress_timer != INVALID_TIMER )
-		iTimer->delete_timer( instances[instance_id].progress_timer, instance_destroy_timer);
+		timer->delete( instances[instance_id].progress_timer, instance_destroy_timer);
 	if( instances[instance_id].idle_timer != INVALID_TIMER )
-		iTimer->delete_timer( instances[instance_id].idle_timer, instance_destroy_timer);
+		timer->delete( instances[instance_id].idle_timer, instance_destroy_timer);
 
 	instances[instance_id].vars = NULL;
 
@@ -536,13 +536,13 @@ void instance_check_idle(int instance_id) {
 		idle = false;
 
 	if( instances[instance_id].idle_timer != INVALID_TIMER && !idle ) {
-		iTimer->delete_timer(instances[instance_id].idle_timer, instance_destroy_timer);
+		timer->delete(instances[instance_id].idle_timer, instance_destroy_timer);
 		instances[instance_id].idle_timer = INVALID_TIMER;
 		instances[instance_id].idle_timeout = 0;
 		clif->instance(instance_id, 3, 0); // Notify instance users normal instance expiration
 	} else if( instances[instance_id].idle_timer == INVALID_TIMER && idle ) {
 		instances[instance_id].idle_timeout = now + instances[instance_id].idle_timeoutval;
-		instances[instance_id].idle_timer = iTimer->add_timer( iTimer->gettick() + instances[instance_id].idle_timeoutval * 1000, instance_destroy_timer, instance_id, 0);
+		instances[instance_id].idle_timer = timer->add( timer->gettick() + instances[instance_id].idle_timeoutval * 1000, instance_destroy_timer, instance_id, 0);
 		clif->instance(instance_id, 4, 0); // Notify instance users it will be destroyed of no user join it again in "X" time
 	}
 }
@@ -558,13 +558,13 @@ void instance_set_timeout(int instance_id, unsigned int progress_timeout, unsign
 		return;
 
 	if( instances[instance_id].progress_timer != INVALID_TIMER )
-		iTimer->delete_timer( instances[instance_id].progress_timer, instance_destroy_timer);
+		timer->delete( instances[instance_id].progress_timer, instance_destroy_timer);
 	if( instances[instance_id].idle_timer != INVALID_TIMER )
-		iTimer->delete_timer( instances[instance_id].idle_timer, instance_destroy_timer);
+		timer->delete( instances[instance_id].idle_timer, instance_destroy_timer);
 
 	if( progress_timeout ) {
 		instances[instance_id].progress_timeout = now + progress_timeout;
-		instances[instance_id].progress_timer = iTimer->add_timer( iTimer->gettick() + progress_timeout * 1000, instance_destroy_timer, instance_id, 0);
+		instances[instance_id].progress_timer = timer->add( timer->gettick() + progress_timeout * 1000, instance_destroy_timer, instance_id, 0);
 	} else {
 		instances[instance_id].progress_timeout = 0;
 		instances[instance_id].progress_timer = INVALID_TIMER;
@@ -613,7 +613,7 @@ void do_final_instance(void) {
 }
 
 void do_init_instance(void) {
-	iTimer->add_timer_func_list(instance_destroy_timer, "instance_destroy_timer");
+	timer->add_func_list(instance_destroy_timer, "instance_destroy_timer");
 }
 
 void instance_defaults(void) {

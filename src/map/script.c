@@ -2822,7 +2822,7 @@ void script_free_state(struct script_state* st) {
 		}
 
 		if( st->sleep.timer != INVALID_TIMER )
-			iTimer->delete_timer(st->sleep.timer, script->run_timer);
+			timer->delete(st->sleep.timer, script->run_timer);
 		if( st->stack ) {
 			script->free_vars(st->stack->var_function);
 			script->pop_stack(st, 0, st->stack->sp);
@@ -3381,7 +3381,7 @@ static void script_detach_state(struct script_state* st, bool dequeue_event)
 			 * We're done with this NPC session, so we cancel the timer (if existent) and move on
 			 **/
 			if( sd->npc_idle_timer != INVALID_TIMER ) {
-				iTimer->delete_timer(sd->npc_idle_timer,npc->secure_timeout_timer);
+				timer->delete(sd->npc_idle_timer,npc->secure_timeout_timer);
 				sd->npc_idle_timer = INVALID_TIMER;
 			}
 #endif
@@ -3421,8 +3421,8 @@ void script_attach_state(struct script_state* st) {
  **/
 #ifdef SECURE_NPCTIMEOUT
 		if( sd->npc_idle_timer == INVALID_TIMER )
-			sd->npc_idle_timer = iTimer->add_timer(iTimer->gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc->secure_timeout_timer,sd->bl.id,0);
-		sd->npc_idle_tick = iTimer->gettick();
+			sd->npc_idle_timer = timer->add(timer->gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc->secure_timeout_timer,sd->bl.id,0);
+		sd->npc_idle_tick = timer->gettick();
 #endif
 	}
 }
@@ -3546,7 +3546,7 @@ void run_script_main(struct script_state *st)
 		//Delay execution
 		sd = iMap->id2sd(st->rid); // Get sd since script might have attached someone while running. [Inkfish]
 		st->sleep.charid = sd?sd->status.char_id:0;
-		st->sleep.timer  = iTimer->add_timer(iTimer->gettick()+st->sleep.tick,
+		st->sleep.timer  = timer->add(timer->gettick()+st->sleep.tick,
 			script->run_timer, st->sleep.charid, (intptr_t)st->id);
 	} else if(st->state != END && st->rid){
 		//Resume later (st is already attached to player).
@@ -8154,7 +8154,7 @@ BUILDIN(savepoint)
 BUILDIN(gettimetick)	/* Asgard Version */
 {
 	int type;
-	time_t timer;
+	time_t tt;
 	struct tm *t;
 	
 	type=script_getnum(st,2);
@@ -8167,14 +8167,14 @@ BUILDIN(gettimetick)	/* Asgard Version */
 			break;
 		case 1:
 			//type 1:(Second Ticks: 0-86399, 00:00:00-23:59:59)
-			time(&timer);
-			t=localtime(&timer);
+			time(&tt);
+			t=localtime(&tt);
 			script_pushint(st,((t->tm_hour)*3600+(t->tm_min)*60+t->tm_sec));
 			break;
 		case 0:
 		default:
 			//type 0:(System Ticks)
-			script_pushint(st,iTimer->gettick());
+			script_pushint(st,timer->gettick());
 			break;
 	}
 	return true;
@@ -9724,11 +9724,11 @@ BUILDIN(getstatus)
 		case 4:  script_pushint(st, sd->sc.data[id]->val4);	break;
 		case 5:
 		{
-			struct TimerData* timer = (struct TimerData*)iTimer->get_timer(sd->sc.data[id]->timer);
+			struct TimerData* td = (struct TimerData*)timer->get(sd->sc.data[id]->timer);
 			
-			if( timer )
+			if( td )
 			{// return the amount of time remaining
-				script_pushint(st, timer->tick - iTimer->gettick());
+				script_pushint(st, td->tick - timer->gettick());
 			}
 		}
 			break;
@@ -10402,7 +10402,7 @@ BUILDIN(getmapflag)
 static int script_mapflag_pvp_sub(struct block_list *bl,va_list ap) {
 	TBL_PC* sd = (TBL_PC*)bl;
 	if (sd->pvp_timer == INVALID_TIMER) {
-		sd->pvp_timer = iTimer->add_timer(iTimer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0);
+		sd->pvp_timer = timer->add(timer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0);
 		sd->pvp_rank = 0;
 		sd->pvp_lastusers = 0;
 		sd->pvp_point = 5;
@@ -10632,7 +10632,7 @@ BUILDIN(pvpon)
 		if( sd->bl.m != m || sd->pvp_timer != INVALID_TIMER )
 			continue; // not applicable
 		
-		sd->pvp_timer = iTimer->add_timer(iTimer->gettick()+200,pc->calc_pvprank_timer,sd->bl.id,0);
+		sd->pvp_timer = timer->add(timer->gettick()+200,pc->calc_pvprank_timer,sd->bl.id,0);
 		sd->pvp_rank = 0;
 		sd->pvp_lastusers = 0;
 		sd->pvp_point = 5;
@@ -10649,7 +10649,7 @@ static int buildin_pvpoff_sub(struct block_list *bl,va_list ap)
 	TBL_PC* sd = (TBL_PC*)bl;
 	clif->pvpset(sd, 0, 0, 2);
 	if (sd->pvp_timer != INVALID_TIMER) {
-		iTimer->delete_timer(sd->pvp_timer, pc->calc_pvprank_timer);
+		timer->delete(sd->pvp_timer, pc->calc_pvprank_timer);
 		sd->pvp_timer = INVALID_TIMER;
 	}
 	return 0;
@@ -11695,7 +11695,7 @@ BUILDIN(petskillbonus)
 	if (pd->bonus)
 	{ //Clear previous bonus
 		if (pd->bonus->timer != INVALID_TIMER)
-			iTimer->delete_timer(pd->bonus->timer, pet->skill_bonus_timer);
+			timer->delete(pd->bonus->timer, pet->skill_bonus_timer);
 	} else //init
 		pd->bonus = (struct pet_bonus *) aMalloc(sizeof(struct pet_bonus));
 	
@@ -11711,7 +11711,7 @@ BUILDIN(petskillbonus)
 	if (battle_config.pet_equip_required && pd->pet.equip == 0)
 		pd->bonus->timer = INVALID_TIMER;
 	else
-		pd->bonus->timer = iTimer->add_timer(iTimer->gettick()+pd->bonus->delay*1000, pet->skill_bonus_timer, sd->bl.id, 0);
+		pd->bonus->timer = timer->add(timer->gettick()+pd->bonus->delay*1000, pet->skill_bonus_timer, sd->bl.id, 0);
 	
 	return true;
 }
@@ -12065,7 +12065,7 @@ BUILDIN(petrecovery)
 	if (pd->recovery)
 	{ //Halt previous bonus
 		if (pd->recovery->timer != INVALID_TIMER)
-			iTimer->delete_timer(pd->recovery->timer, pet->recovery_timer);
+			timer->delete(pd->recovery->timer, pet->recovery_timer);
 	} else //Init
 		pd->recovery = (struct pet_recovery *)aMalloc(sizeof(struct pet_recovery));
 	
@@ -12093,9 +12093,9 @@ BUILDIN(petheal)
 		if (pd->s_skill->timer != INVALID_TIMER)
 		{
 			if (pd->s_skill->id)
-				iTimer->delete_timer(pd->s_skill->timer, pet->skill_support_timer);
+				timer->delete(pd->s_skill->timer, pet->skill_support_timer);
 			else
-				iTimer->delete_timer(pd->s_skill->timer, pet->heal_timer);
+				timer->delete(pd->s_skill->timer, pet->heal_timer);
 		}
 	} else //init memory
 		pd->s_skill = (struct pet_skill_support *) aMalloc(sizeof(struct pet_skill_support));
@@ -12111,7 +12111,7 @@ BUILDIN(petheal)
 	if (battle_config.pet_equip_required && pd->pet.equip == 0)
 		pd->s_skill->timer = INVALID_TIMER;
 	else
-		pd->s_skill->timer = iTimer->add_timer(iTimer->gettick()+pd->s_skill->delay*1000,pet->heal_timer,sd->bl.id,0);
+		pd->s_skill->timer = timer->add(timer->gettick()+pd->s_skill->delay*1000,pet->heal_timer,sd->bl.id,0);
 	
 	return true;
 }
@@ -12187,9 +12187,9 @@ BUILDIN(petskillsupport)
 		if (pd->s_skill->timer != INVALID_TIMER)
 		{
 			if (pd->s_skill->id)
-				iTimer->delete_timer(pd->s_skill->timer, pet->skill_support_timer);
+				timer->delete(pd->s_skill->timer, pet->skill_support_timer);
 			else
-				iTimer->delete_timer(pd->s_skill->timer, pet->heal_timer);
+				timer->delete(pd->s_skill->timer, pet->heal_timer);
 		}
 	} else //init memory
 		pd->s_skill = (struct pet_skill_support *) aMalloc(sizeof(struct pet_skill_support));
@@ -12204,7 +12204,7 @@ BUILDIN(petskillsupport)
 	if (battle_config.pet_equip_required && pd->pet.equip == 0)
 		pd->s_skill->timer = INVALID_TIMER;
 	else
-		pd->s_skill->timer = iTimer->add_timer(iTimer->gettick()+pd->s_skill->delay*1000,pet->skill_support_timer,sd->bl.id,0);
+		pd->s_skill->timer = timer->add(timer->gettick()+pd->s_skill->delay*1000,pet->skill_support_timer,sd->bl.id,0);
 	
 	return true;
 }
@@ -12242,7 +12242,7 @@ BUILDIN(npcskilleffect)
 	int y=script_getnum(st,5);
 	
 	if (bl)
-		clif->skill_poseffect(bl,skill_id,skill_lv,x,y,iTimer->gettick());
+		clif->skill_poseffect(bl,skill_id,skill_lv,x,y,timer->gettick());
 	
 	return true;
 }
@@ -12916,7 +12916,7 @@ BUILDIN(summon)
 	const char *str,*event="";
 	TBL_PC *sd;
 	struct mob_data *md;
-	int tick = iTimer->gettick();
+	int tick = timer->gettick();
 	
 	sd=script_rid2sd(st);
 	if (!sd) return true;
@@ -12937,8 +12937,8 @@ BUILDIN(summon)
 		md->master_id=sd->bl.id;
 		md->special_state.ai = AI_ATTACK;
 		if( md->deletetimer != INVALID_TIMER )
-			iTimer->delete_timer(md->deletetimer, mob->timer_delete);
-		md->deletetimer = iTimer->add_timer(tick+(timeout>0?timeout*1000:60000),mob->timer_delete,md->bl.id,0);
+			timer->delete(md->deletetimer, mob->timer_delete);
+		md->deletetimer = timer->add(tick+(timeout>0?timeout*1000:60000),mob->timer_delete,md->bl.id,0);
 		mob->spawn (md); //Now it is ready for spawning.
 		clif->specialeffect(&md->bl,344,AREA);
 		sc_start4(&md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 60000);
@@ -15025,7 +15025,7 @@ BUILDIN(unitattack)
 	switch( unit_bl->type )
 	{
 		case BL_PC:
-			clif->pActionRequest_sub(((TBL_PC *)unit_bl), actiontype > 0 ? 0x07 : 0x00, target_bl->id, iTimer->gettick());
+			clif->pActionRequest_sub(((TBL_PC *)unit_bl), actiontype > 0 ? 0x07 : 0x00, target_bl->id, timer->gettick());
 			script_pushint(st, 1);
 			return true;
 		case BL_MOB:
@@ -15266,7 +15266,7 @@ BUILDIN(awake) {
 				tst->rid = 0;
 			}
 			
-			iTimer->delete_timer(tst->sleep.timer, script->run_timer);
+			timer->delete(tst->sleep.timer, script->run_timer);
 			tst->sleep.timer = INVALID_TIMER;
 			if(tst->state != RERUNLINE)
 				tst->sleep.tick = 0;
@@ -16433,7 +16433,7 @@ BUILDIN(progressbar)
 	second = script_getnum(st,3);
 	
 	sd->progressbar.npc_id = st->oid;
-	sd->progressbar.timeout = iTimer->gettick() + second*1000;
+	sd->progressbar.timeout = timer->gettick() + second*1000;
 	sd->state.workinprogress = 3;
 	
 	clif->progressbar(sd, strtol(color, (char **)NULL, 0), second);

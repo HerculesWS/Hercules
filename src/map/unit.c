@@ -133,7 +133,7 @@ int unit_walktoxy_sub(struct block_list *bl)
 	else
 		i = iStatus->get_speed(bl);
 	if( i > 0)
-		ud->walktimer = iTimer->add_timer(iTimer->gettick()+i,unit->walktoxy_timer,bl->id,i);
+		ud->walktimer = timer->add(timer->gettick()+i,unit->walktoxy_timer,bl->id,i);
 	return 1;
 }
 
@@ -213,9 +213,9 @@ int unit_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data)
 			// mercenary should be warped after being 3 seconds too far from the master [greenbox]
 			if (sd->md->masterteleport_timer == 0)
 			{
-				sd->md->masterteleport_timer = iTimer->gettick();
+				sd->md->masterteleport_timer = timer->gettick();
 			}
-			else if (DIFF_TICK(iTimer->gettick(), sd->md->masterteleport_timer) > 3000)
+			else if (DIFF_TICK(timer->gettick(), sd->md->masterteleport_timer) > 3000)
 			{
 				sd->md->masterteleport_timer = 0;
 				unit->warp( &sd->md->bl, sd->bl.m, sd->bl.x, sd->bl.y, CLR_TELEPORT );
@@ -254,9 +254,9 @@ int unit_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data)
 			// mercenary should be warped after being 3 seconds too far from the master [greenbox]
 			if (mrd->masterteleport_timer == 0)
 			{
-				mrd->masterteleport_timer = iTimer->gettick();
+				mrd->masterteleport_timer = timer->gettick();
 			}
-			else if (DIFF_TICK(iTimer->gettick(), mrd->masterteleport_timer) > 3000)
+			else if (DIFF_TICK(timer->gettick(), mrd->masterteleport_timer) > 3000)
 			{
 				mrd->masterteleport_timer = 0;
 				unit->warp( bl, mrd->master->bl.id, mrd->master->bl.x, mrd->master->bl.y, CLR_TELEPORT );
@@ -283,7 +283,7 @@ int unit_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data)
 		i = iStatus->get_speed(bl);
 
 	if(i > 0) {
-		ud->walktimer = iTimer->add_timer(tick+i,unit->walktoxy_timer,id,i);
+		ud->walktimer = timer->add(tick+i,unit->walktoxy_timer,id,i);
 		if( md && DIFF_TICK(tick,md->dmgtick) < 3000 )//not required not damaged recently
 			clif->move(ud);
 	} else if(ud->state.running) {
@@ -361,10 +361,10 @@ int unit_walktoxy( struct block_list *bl, short x, short y, int flag)
 	if ((wpd.path_len > battle_config.max_walk_path) && (bl->type != BL_NPC))
 		return 0;
 
-	if (flag&4 && DIFF_TICK(ud->canmove_tick, iTimer->gettick()) > 0 &&
-		DIFF_TICK(ud->canmove_tick, iTimer->gettick()) < 2000)
+	if (flag&4 && DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0 &&
+		DIFF_TICK(ud->canmove_tick, timer->gettick()) < 2000)
   	{	// Delay walking command. [Skotlex]
-		iTimer->add_timer(ud->canmove_tick+1, unit->delay_walktoxy_timer, bl->id, (x<<16)|(y&0xFFFF));
+		timer->add(ud->canmove_tick+1, unit->delay_walktoxy_timer, bl->id, (x<<16)|(y&0xFFFF));
 		return 1;
 	}
 
@@ -388,7 +388,7 @@ int unit_walktoxy( struct block_list *bl, short x, short y, int flag)
 	}
 
 	if(ud->attacktimer != INVALID_TIMER) {
-		iTimer->delete_timer( ud->attacktimer, unit->attack_timer );
+		timer->delete( ud->attacktimer, unit->attack_timer );
 		ud->attacktimer = INVALID_TIMER;
 	}
 
@@ -412,7 +412,7 @@ int unit_walktobl_sub(int tid, unsigned int tick, int id, intptr_t data)
 	if (ud && ud->walktimer == INVALID_TIMER && ud->target == data)
 	{
 		if (DIFF_TICK(ud->canmove_tick, tick) > 0) //Keep waiting?
-			iTimer->add_timer(ud->canmove_tick+1, unit->walktobl_sub, id, data);
+			timer->add(ud->canmove_tick+1, unit->walktobl_sub, id, data);
 		else if (unit->can_move(bl))
 		{
 			if (unit->walktoxy_sub(bl))
@@ -461,9 +461,9 @@ int unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, int 
 		return 1;
 	}
 
-	if(DIFF_TICK(ud->canmove_tick, iTimer->gettick()) > 0)
+	if(DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0)
 	{	//Can't move, wait a bit before invoking the movement.
-		iTimer->add_timer(ud->canmove_tick+1, unit->walktobl_sub, bl->id, ud->target);
+		timer->add(ud->canmove_tick+1, unit->walktobl_sub, bl->id, ud->target);
 		return 1;
 	}
 
@@ -471,7 +471,7 @@ int unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, int 
 		return 0;
 
 	if(ud->attacktimer != INVALID_TIMER) {
-		iTimer->delete_timer( ud->attacktimer, unit->attack_timer );
+		timer->delete( ud->attacktimer, unit->attack_timer );
 		ud->attacktimer = INVALID_TIMER;
 	}
 
@@ -595,7 +595,7 @@ int unit_wugdash(struct block_list *bl, struct map_session_data *sd) {
 
 		if( sd ){
 			clif->fixpos(bl);
-			skill->castend_damage_id(bl, &sd->bl, RA_WUGDASH, lv, iTimer->gettick(), SD_LEVEL);
+			skill->castend_damage_id(bl, &sd->bl, RA_WUGDASH, lv, timer->gettick(), SD_LEVEL);
 		}
 		return 0;
 	}
@@ -612,7 +612,7 @@ int unit_wugdash(struct block_list *bl, struct map_session_data *sd) {
 
 		if( sd ){
 			clif->fixpos(bl);
-			skill->castend_damage_id(bl, &sd->bl, RA_WUGDASH, lv, iTimer->gettick(), SD_LEVEL);
+			skill->castend_damage_id(bl, &sd->bl, RA_WUGDASH, lv, timer->gettick(), SD_LEVEL);
 		}
 		return 0;
 	}
@@ -659,7 +659,7 @@ int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool
 
 	iMap->foreachinmovearea(clif->outsight, bl, AREA_SIZE, dx, dy, sd?BL_ALL:BL_PC, bl);
 
-	iMap->moveblock(bl, dst_x, dst_y, iTimer->gettick());
+	iMap->moveblock(bl, dst_x, dst_y, timer->gettick());
 
 	ud->walktimer = -2; // arbitrary non-INVALID_TIMER value to make the clif code send walking packets
 	iMap->foreachinmovearea(clif->insight, bl, AREA_SIZE, -dx, -dy, sd?BL_ALL:BL_PC, bl);
@@ -754,7 +754,7 @@ int unit_blown(struct block_list* bl, int dx, int dy, int count, int flag)
 			if(su) {
 				skill->unit_move_unit_group(su->group, bl->m, dx, dy);
 			} else {
-				iMap->moveblock(bl, nx, ny, iTimer->gettick());
+				iMap->moveblock(bl, nx, ny, timer->gettick());
 			}
 
 			iMap->foreachinmovearea(clif->insight, bl, AREA_SIZE, -dx, -dy, bl->type == BL_PC ? BL_ALL : BL_PC, bl);
@@ -847,7 +847,7 @@ int unit_warp(struct block_list *bl,short m,short x,short y,clr_type type)
 
 	iMap->addblock(bl);
 	clif->spawn(bl);
-	skill->unit_move(bl,iTimer->gettick(),1);
+	skill->unit_move(bl,timer->gettick(),1);
 
 	return 0;
 }
@@ -871,13 +871,13 @@ int unit_stop_walking(struct block_list *bl,int type)
 	if(!ud || ud->walktimer == INVALID_TIMER)
 		return 0;
 	//NOTE: We are using timer data after deleting it because we know the
-	//iTimer->delete_timer function does not messes with it. If the function's
+	//timer->delete function does not messes with it. If the function's
 	//behaviour changes in the future, this code could break!
-	td = iTimer->get_timer(ud->walktimer);
-	iTimer->delete_timer(ud->walktimer, unit->walktoxy_timer);
+	td = timer->get(ud->walktimer);
+	timer->delete(ud->walktimer, unit->walktoxy_timer);
 	ud->walktimer = INVALID_TIMER;
 	ud->state.change_walk_target = 0;
-	tick = iTimer->gettick();
+	tick = timer->gettick();
 	if( (type&0x02 && !ud->walkpath.path_pos) //Force moving at least one cell.
 	||  (type&0x04 && td && DIFF_TICK(td->tick, tick) <= td->data/2) //Enough time has passed to cover half-cell
 	) {
@@ -893,7 +893,7 @@ int unit_stop_walking(struct block_list *bl,int type)
 	ud->to_x = bl->x;
 	ud->to_y = bl->y;
 	if(bl->type == BL_PET && type&~0xff)
-		ud->canmove_tick = iTimer->gettick() + (type>>8);
+		ud->canmove_tick = timer->gettick() + (type>>8);
 
 	//Readded, the check in unit_set_walkdelay means dmg during running won't fall through to this place in code [Kevin]
 	if (ud->state.running) {
@@ -939,7 +939,7 @@ int unit_can_move(struct block_list *bl) {
 	if (ud->skilltimer != INVALID_TIMER && ud->skill_id != LG_EXEEDBREAK && (!sd || !pc->checkskill(sd, SA_FREECAST) || skill->get_inf2(ud->skill_id)&INF2_GUILD_SKILL))
 		return 0; // prevent moving while casting
 
-	if (DIFF_TICK(ud->canmove_tick, iTimer->gettick()) > 0)
+	if (DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0)
 		return 0;
 
 	if (sd && (
@@ -1061,13 +1061,13 @@ int unit_set_walkdelay(struct block_list *bl, unsigned int tick, int delay, int 
 			//Resume running after can move again [Kevin]
 			if(ud->state.running)
 			{
-				iTimer->add_timer(ud->canmove_tick, unit->resume_running, bl->id, (intptr_t)ud);
+				timer->add(ud->canmove_tick, unit->resume_running, bl->id, (intptr_t)ud);
 			}
 			else
 			{
 				unit->stop_walking(bl,2|4);
 				if(ud->target)
-					iTimer->add_timer(ud->canmove_tick+1, unit->walktobl_sub, bl->id, ud->target);
+					timer->add(ud->canmove_tick+1, unit->walktobl_sub, bl->id, ud->target);
 			}
 		}
 	}
@@ -1081,7 +1081,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	struct status_change *sc;
 	struct map_session_data *sd = NULL;
 	struct block_list * target = NULL;
-	unsigned int tick = iTimer->gettick();
+	unsigned int tick = timer->gettick();
 	int temp = 0, range;
 
 	nullpo_ret(src);
@@ -1421,7 +1421,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 
 
 	if( casttime > 0 ) {
-		ud->skilltimer = iTimer->add_timer( tick+casttime, skill->castend_id, src->id, 0 );
+		ud->skilltimer = timer->add( tick+casttime, skill->castend_id, src->id, 0 );
 		if( sd && (pc->checkskill(sd,SA_FREECAST) > 0 || skill_id == LG_EXEEDBREAK) )
 			status_calc_bl(&sd->bl, SCB_SPEED);
 	} else
@@ -1445,7 +1445,7 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 	struct unit_data        *ud = NULL;
 	struct status_change *sc;
 	struct block_list    bl;
-	unsigned int tick = iTimer->gettick();
+	unsigned int tick = timer->gettick();
 	int range;
 
 	nullpo_ret(src);
@@ -1556,7 +1556,7 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 	// in official this is triggered even if no cast time.
 	clif->skillcasting(src, src->id, 0, skill_x, skill_y, skill_id, skill->get_ele(skill_id, skill_lv), casttime);
 	if( casttime > 0 ) {
-		ud->skilltimer = iTimer->add_timer( tick+casttime, skill->castend_pos, src->id, 0 );
+		ud->skilltimer = timer->add( tick+casttime, skill->castend_pos, src->id, 0 );
 		if( (sd && pc->checkskill(sd,SA_FREECAST) > 0) || skill_id == LG_EXEEDBREAK)
 			status_calc_bl(&sd->bl, SCB_SPEED);	
 	} else {
@@ -1595,7 +1595,7 @@ int unit_stop_attack(struct block_list *bl)
 	if(!ud || ud->attacktimer == INVALID_TIMER)
 		return 0;
 
-	iTimer->delete_timer( ud->attacktimer, unit->attack_timer );
+	timer->delete( ud->attacktimer, unit->attack_timer );
 	ud->attacktimer = INVALID_TIMER;
 	unit->set_target(ud, 0);
 	return 0;
@@ -1611,7 +1611,7 @@ int unit_unattackable(struct block_list *bl)
 	}
 
 	if(bl->type == BL_MOB)
-		mob->unlocktarget((struct mob_data*)bl, iTimer->gettick()) ;
+		mob->unlocktarget((struct mob_data*)bl, timer->gettick()) ;
 	else if(bl->type == BL_PET)
 		pet->unlocktarget((struct pet_data*)bl);
 	return 0;
@@ -1663,11 +1663,11 @@ int unit_attack(struct block_list *src,int target_id,int continuous)
 	if(src->type == BL_MOB)
 		((TBL_MOB*)src)->state.skillstate = ((TBL_MOB*)src)->state.aggressive?MSS_ANGRY:MSS_BERSERK;
 
-	if(DIFF_TICK(ud->attackabletime, iTimer->gettick()) > 0)
+	if(DIFF_TICK(ud->attackabletime, timer->gettick()) > 0)
 		//Do attack next time it is possible. [Skotlex]
-		ud->attacktimer=iTimer->add_timer(ud->attackabletime,unit->attack_timer,src->id,0);
+		ud->attacktimer=timer->add(ud->attackabletime,unit->attack_timer,src->id,0);
 	else //Attack NOW.
-		unit->attack_timer(INVALID_TIMER, iTimer->gettick(), src->id, 0);
+		unit->attack_timer(INVALID_TIMER, timer->gettick(), src->id, 0);
 
 	return 0;
 }
@@ -1684,13 +1684,13 @@ int unit_cancel_combo(struct block_list *bl)
 	ud = unit->bl2ud(bl);
 	nullpo_ret(ud);
 
-	ud->attackabletime = iTimer->gettick() + status_get_amotion(bl);
+	ud->attackabletime = timer->gettick() + status_get_amotion(bl);
 
 	if (ud->attacktimer == INVALID_TIMER)
 		return 1; //Nothing more to do.
 
-	iTimer->delete_timer(ud->attacktimer, unit->attack_timer);
-	ud->attacktimer=iTimer->add_timer(ud->attackabletime,unit->attack_timer,bl->id,0);
+	timer->delete(ud->attacktimer, unit->attack_timer);
+	ud->attacktimer=timer->add(ud->attackabletime,unit->attack_timer,bl->id,0);
 	return 1;
 }
 /*==========================================
@@ -1857,7 +1857,7 @@ int unit_attack_timer_sub(struct block_list* src, int tid, unsigned int tick)
 		if( ud->state.attack_continue ) {
 			if( DIFF_TICK(ud->canact_tick, ud->attackabletime) > 0 )
 				ud->attackabletime = ud->canact_tick;
-			ud->attacktimer=iTimer->add_timer(ud->attackabletime,unit->attack_timer,src->id,0);
+			ud->attacktimer=timer->add(ud->attackabletime,unit->attack_timer,src->id,0);
 		}
 		return 1;
 	}
@@ -1927,7 +1927,7 @@ int unit_attack_timer_sub(struct block_list* src, int tid, unsigned int tick)
 	if(ud->state.attack_continue) {
 		if( src->type == BL_PC )
 			((TBL_PC*)src)->idletime = last_tick;
-		ud->attacktimer = iTimer->add_timer(ud->attackabletime,unit->attack_timer,src->id,0);
+		ud->attacktimer = timer->add(ud->attackabletime,unit->attack_timer,src->id,0);
 	}
 
 	return 1;
@@ -1951,7 +1951,7 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 {
 	struct map_session_data *sd = NULL;
 	struct unit_data *ud = unit->bl2ud( bl);
-	unsigned int tick=iTimer->gettick();
+	unsigned int tick=timer->gettick();
 	int ret=0, skill_id;
 
 	nullpo_ret(bl);
@@ -1978,9 +1978,9 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 		skill_id = ud->skill_id;
 
 	if (skill->get_inf(skill_id) & INF_GROUND_SKILL)
-		ret = iTimer->delete_timer( ud->skilltimer, skill->castend_pos );
+		ret = timer->delete( ud->skilltimer, skill->castend_pos );
 	else
-		ret = iTimer->delete_timer( ud->skilltimer, skill->castend_id );
+		ret = timer->delete( ud->skilltimer, skill->castend_id );
 	if( ret < 0 )
 		ShowError("delete timer error : skill_id : %d\n",ret);
 
@@ -2015,7 +2015,7 @@ void unit_dataset(struct block_list *bl) {
 	ud->attacktimer    = INVALID_TIMER;
 	ud->attackabletime =
 	ud->canact_tick    =
-	ud->canmove_tick   = iTimer->gettick();
+	ud->canmove_tick   = timer->gettick();
 }
 
 /*==========================================
@@ -2090,7 +2090,7 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 		unit->skillcastcancel(bl,0);
 
 // Do not reset can-act delay. [Skotlex]
-	ud->attackabletime = ud->canmove_tick /*= ud->canact_tick*/ = iTimer->gettick();
+	ud->attackabletime = ud->canmove_tick /*= ud->canact_tick*/ = timer->gettick();
 	if(sc && sc->count ) { //map-change/warp dispells.
 		status_change_end(bl, SC_BLADESTOP, INVALID_TIMER);
 		status_change_end(bl, SC_BASILICA, INVALID_TIMER);
@@ -2126,7 +2126,7 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 	}
 
 	if (bl->type&(BL_CHAR|BL_PET)) {
-		skill->unit_move(bl,iTimer->gettick(),4);
+		skill->unit_move(bl,timer->gettick(),4);
 		skill->cleartimerskill(bl);
 	}
 
@@ -2172,7 +2172,7 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 			sd->adopt_invite = 0;
 
 			if(sd->pvp_timer != INVALID_TIMER) {
-				iTimer->delete_timer(sd->pvp_timer,pc->calc_pvprank_timer);
+				timer->delete(sd->pvp_timer,pc->calc_pvprank_timer);
 				sd->pvp_timer = INVALID_TIMER;
 				sd->pvp_rank = 0;
 			}
@@ -2433,9 +2433,9 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 			{
 				if (pd->s_skill->timer != INVALID_TIMER) {
 					if (pd->s_skill->id)
-						iTimer->delete_timer(pd->s_skill->timer, pet->skill_support_timer);
+						timer->delete(pd->s_skill->timer, pet->skill_support_timer);
 					else
-						iTimer->delete_timer(pd->s_skill->timer, pet->heal_timer);
+						timer->delete(pd->s_skill->timer, pet->heal_timer);
 				}
 				aFree(pd->s_skill);
 				pd->s_skill = NULL;
@@ -2443,14 +2443,14 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 			if( pd->recovery )
 			{
 				if(pd->recovery->timer != INVALID_TIMER)
-					iTimer->delete_timer(pd->recovery->timer, pet->recovery_timer);
+					timer->delete(pd->recovery->timer, pet->recovery_timer);
 				aFree(pd->recovery);
 				pd->recovery = NULL;
 			}
 			if( pd->bonus )
 			{
 				if (pd->bonus->timer != INVALID_TIMER)
-					iTimer->delete_timer(pd->bonus->timer, pet->skill_bonus_timer);
+					timer->delete(pd->bonus->timer, pet->skill_bonus_timer);
 				aFree(pd->bonus);
 				pd->bonus = NULL;
 			}
@@ -2478,12 +2478,12 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 			struct mob_data *md = (struct mob_data*)bl;
 			if( md->spawn_timer != INVALID_TIMER )
 			{
-				iTimer->delete_timer(md->spawn_timer,mob->delayspawn);
+				timer->delete(md->spawn_timer,mob->delayspawn);
 				md->spawn_timer = INVALID_TIMER;
 			}
 			if( md->deletetimer != INVALID_TIMER )
 			{
-				iTimer->delete_timer(md->deletetimer,mob->timer_delete);
+				timer->delete(md->deletetimer,mob->timer_delete);
 				md->deletetimer = INVALID_TIMER;
 			}
 			if( md->lootitem )
@@ -2593,10 +2593,10 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 }
 
 int do_init_unit(void) {
-	iTimer->add_timer_func_list(unit->attack_timer,  "unit_attack_timer");
-	iTimer->add_timer_func_list(unit->walktoxy_timer,"unit_walktoxy_timer");
-	iTimer->add_timer_func_list(unit->walktobl_sub, "unit_walktobl_sub");
-	iTimer->add_timer_func_list(unit->delay_walktoxy_timer,"unit_delay_walktoxy_timer");
+	timer->add_func_list(unit->attack_timer,  "unit_attack_timer");
+	timer->add_func_list(unit->walktoxy_timer,"unit_walktoxy_timer");
+	timer->add_func_list(unit->walktobl_sub, "unit_walktobl_sub");
+	timer->add_func_list(unit->delay_walktoxy_timer,"unit_delay_walktoxy_timer");
 	return 0;
 }
 

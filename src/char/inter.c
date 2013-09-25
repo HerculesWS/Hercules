@@ -946,7 +946,7 @@ int check_ttl_wisdata_sub(DBKey key, DBData *data, va_list ap)
 
 int check_ttl_wisdata(void)
 {
-	unsigned long tick = iTimer->gettick();
+	unsigned long tick = timer->gettick();
 	int i;
 
 	do {
@@ -1039,7 +1039,7 @@ int mapif_parse_WisRequest(int fd)
 			memcpy(wd->src, RFIFOP(fd, 4), NAME_LENGTH);
 			memcpy(wd->dst, RFIFOP(fd,28), NAME_LENGTH);
 			memcpy(wd->msg, RFIFOP(fd,52), wd->len);
-			wd->tick = iTimer->gettick();
+			wd->tick = timer->gettick();
 			idb_put(wis_db, wd->id, wd);
 			mapif_wis_message(wd);
 		}

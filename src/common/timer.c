@@ -21,6 +21,8 @@
 #include <sys/time.h> // struct timeval, gettimeofday()
 #endif
 
+struct timer_interface timer_s;
+
 // If the server can't handle processing thousands of monsters
 // or many connected clients, please increase TIMER_MIN_INTERVAL.
 #define TIMER_MIN_INTERVAL 50
@@ -257,7 +259,7 @@ int timer_add_interval(unsigned int tick, TimerFunc func, int id, intptr_t data,
 	int tid;
 
 	if( interval < 1 ) {
-		ShowError("timer_add_interval: invalid interval (tick=%u %p[%s] id=%d data=%d diff_tick=%d)\n", tick, func, search_timer_func_list(func), id, data, DIFF_TICK(tick, iTimer->gettick()));
+		ShowError("timer_add_interval: invalid interval (tick=%u %p[%s] id=%d data=%d diff_tick=%d)\n", tick, func, search_timer_func_list(func), id, data, DIFF_TICK(tick, timer->gettick()));
 		return INVALID_TIMER;
 	}
 	
@@ -300,7 +302,7 @@ int timer_do_delete(int tid, TimerFunc func) {
 /// Adjusts a timer's expiration time.
 /// Returns the new tick value, or -1 if it fails.
 int timer_addtick(int tid, unsigned int tick) {
-	return iTimer->settick_timer(tid, timer_data[tid].tick+tick);
+	return timer->settick(tid, timer_data[tid].tick+tick);
 }
 
 /// Modifies a timer's expiration time (an alternative to deleting a timer and starting a new one).
@@ -415,20 +417,20 @@ void timer_final(void) {
 * created by Susu
 *-------------------------------------*/
 void timer_defaults(void) {
-	iTimer = &iTimer_s;
+	timer = &timer_s;
 
 	/* funcs */
-	iTimer->gettick = timer_gettick;
-	iTimer->gettick_nocache = timer_gettick_nocache;
-	iTimer->add_timer = timer_add;
-	iTimer->add_timer_interval = timer_add_interval;
-	iTimer->add_timer_func_list = timer_add_func_list;
-	iTimer->get_timer = timer_get;
-	iTimer->delete_timer = timer_do_delete;
-	iTimer->addtick_timer = timer_addtick;
-	iTimer->settick_timer = timer_settick;
-	iTimer->get_uptime = timer_get_uptime;
-	iTimer->do_timer = do_timer;
-	iTimer->init = timer_init;
-	iTimer->final = timer_final;
+	timer->gettick = timer_gettick;
+	timer->gettick_nocache = timer_gettick_nocache;
+	timer->add = timer_add;
+	timer->add_interval = timer_add_interval;
+	timer->add_func_list = timer_add_func_list;
+	timer->get = timer_get;
+	timer->delete = timer_do_delete;
+	timer->addtick = timer_addtick;
+	timer->settick = timer_settick;
+	timer->get_uptime = timer_get_uptime;
+	timer->do_timer = do_timer;
+	timer->init = timer_init;
+	timer->final = timer_final;
 }

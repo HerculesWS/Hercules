@@ -362,7 +362,7 @@ void console_parse_final(void) {
 		
 		/* wait for thread to close */
 		rathread_wait(console->pthread, NULL);
-		
+
 		racond_destroy(console->ptcond);
 		ramutex_destroy(console->ptmutex);
 	}
@@ -382,8 +382,8 @@ void console_parse_init(void) {
 		exit(EXIT_FAILURE);
 	}
 	
-	iTimer->add_timer_func_list(console->parse_timer, "console_parse_timer");
-	iTimer->add_timer_interval(iTimer->gettick() + 1000, console->parse_timer, 0, 0, 500);/* start listening in 1s; re-try every 0.5s */
+	timer->add_func_list(console->parse_timer, "console_parse_timer");
+	timer->add_interval(timer->gettick() + 1000, console->parse_timer, 0, 0, 500);/* start listening in 1s; re-try every 0.5s */
 	
 }
 void console_setSQL(Sql *SQL) {

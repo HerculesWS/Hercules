@@ -145,8 +145,8 @@ int elemental_get_lifetime(struct elemental_data *ed) {
 	if( ed == NULL || ed->summon_timer == INVALID_TIMER )
 		return 0;
 
-	td = iTimer->get_timer(ed->summon_timer);
-	return (td != NULL) ? DIFF_TICK(td->tick, iTimer->gettick()) : 0;
+	td = timer->get(ed->summon_timer);
+	return (td != NULL) ? DIFF_TICK(td->tick, timer->gettick()) : 0;
 }
 
 int elemental_save(struct elemental_data *ed) {
@@ -190,7 +190,7 @@ static int elemental_summon_end(int tid, unsigned int tick, int id, intptr_t dat
 void elemental_summon_stop(struct elemental_data *ed) {
 	nullpo_retv(ed);
 	if( ed->summon_timer != INVALID_TIMER )
-		iTimer->delete_timer(ed->summon_timer, elemental_summon_end);
+		timer->delete(ed->summon_timer, elemental_summon_end);
 	ed->summon_timer = INVALID_TIMER;
 }
 
@@ -215,7 +215,7 @@ int elemental_delete(struct elemental_data *ed, int reply) {
 
 void elemental_summon_init(struct elemental_data *ed) {
 	if( ed->summon_timer == INVALID_TIMER )
-		ed->summon_timer = iTimer->add_timer(iTimer->gettick() + ed->elemental.life_time, elemental_summon_end, ed->master->bl.id, 0);
+		ed->summon_timer = timer->add(timer->gettick() + ed->elemental.life_time, elemental_summon_end, ed->master->bl.id, 0);
 
 	ed->regen.state.block = 0;
 }
@@ -257,7 +257,7 @@ int elemental_data_received(struct s_elemental *ele, bool flag) {
 
 		iMap->addiddb(&ed->bl);
 		status_calc_elemental(ed,1);
-		ed->last_spdrain_time = ed->last_thinktime = iTimer->gettick();
+		ed->last_spdrain_time = ed->last_thinktime = timer->gettick();
 		ed->summon_timer = INVALID_TIMER;
 		elemental_summon_init(ed);
 	} else {
@@ -430,9 +430,9 @@ int elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned 
 			ed->ud.skill_lv = skill_lv;
 
 			if( skill->get_inf(skill_id) & INF_GROUND_SKILL )
-				ed->ud.skilltimer = iTimer->add_timer( tick+iStatus->get_speed(&ed->bl)*walk_dist, skill->castend_pos, ed->bl.id, 0 );
+				ed->ud.skilltimer = timer->add( tick+iStatus->get_speed(&ed->bl)*walk_dist, skill->castend_pos, ed->bl.id, 0 );
 			else
-				ed->ud.skilltimer = iTimer->add_timer( tick+iStatus->get_speed(&ed->bl)*walk_dist, skill->castend_id, ed->bl.id, 0 );
+				ed->ud.skilltimer = timer->add( tick+iStatus->get_speed(&ed->bl)*walk_dist, skill->castend_id, ed->bl.id, 0 );
 		}
 		return 1;
 
@@ -490,11 +490,11 @@ int elemental_change_mode_ack(struct elemental_data *ed, int mode) {
 
 	if( ed->ud.skilltimer != INVALID_TIMER )
 		return 0;
-	else if( DIFF_TICK(iTimer->gettick(), ed->ud.canact_tick) < 0 )
+	else if( DIFF_TICK(timer->gettick(), ed->ud.canact_tick) < 0 )
 		return 0;
 
 	ed->target_id = bl->id;	// Set new target
-	ed->last_thinktime = iTimer->gettick();
+	ed->last_thinktime = timer->gettick();
 
 	if( skill->get_inf(skill_id) & INF_GROUND_SKILL )
 		unit->skilluse_pos(&ed->bl, bl->x, bl->y, skill_id, skill_lv);
@@ -931,8 +931,8 @@ int do_init_elemental(void) {
 	read_elementaldb();
 	elemental->read_skilldb();
 
-	iTimer->add_timer_func_list(elemental_ai_timer,"elemental_ai_timer");
-	iTimer->add_timer_interval(iTimer->gettick()+MIN_ELETHINKTIME,elemental_ai_timer,0,0,MIN_ELETHINKTIME);
+	timer->add_func_list(elemental_ai_timer,"elemental_ai_timer");
+	timer->add_interval(timer->gettick()+MIN_ELETHINKTIME,elemental_ai_timer,0,0,MIN_ELETHINKTIME);
 
 	return 0;
 }
