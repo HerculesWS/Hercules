@@ -1379,13 +1379,13 @@ void itemdb_read_combos() {
 	uint32 lines = 0, count = 0;
 	char line[1024];
 	
-	char path[256];
+	char filepath[256];
 	FILE* fp;
 	
-	sprintf(path, "%s/%s", iMap->db_path, DBPATH"item_combo_db.txt");
+	sprintf(filepath, "%s/%s", iMap->db_path, DBPATH"item_combo_db.txt");
 	
-	if ((fp = fopen(path, "r")) == NULL) {
-		ShowError("itemdb_read_combos: File not found \"%s\".\n", path);
+	if ((fp = fopen(filepath, "r")) == NULL) {
+		ShowError("itemdb_read_combos: File not found \"%s\".\n", filepath);
 		return;
 	}
 	
@@ -1407,10 +1407,9 @@ void itemdb_read_combos() {
 		if (*p == '\0')
 			continue;// empty line
 		
-		if (!strchr(p,','))
-		{
+		if (!strchr(p,',')) {
 			/* is there even a single column? */
-			ShowError("itemdb_read_combos: Insufficient columns in line %d of \"%s\", skipping.\n", lines, path);
+			ShowError("itemdb_read_combos: Insufficient columns in line %d of \"%s\", skipping.\n", lines, filepath);
 			continue;
 		}
 		
@@ -1424,13 +1423,13 @@ void itemdb_read_combos() {
 		p++;
 		
 		if (str[1][0] != '{') {
-			ShowError("itemdb_read_combos(#1): Invalid format (Script column) in line %d of \"%s\", skipping.\n", lines, path);
+			ShowError("itemdb_read_combos(#1): Invalid format (Script column) in line %d of \"%s\", skipping.\n", lines, filepath);
 			continue;
 		}
 		
 		/* no ending key anywhere (missing \}\) */
 		if ( str[1][strlen(str[1])-1] != '}' ) {
-			ShowError("itemdb_read_combos(#2): Invalid format (Script column) in line %d of \"%s\", skipping.\n", lines, path);
+			ShowError("itemdb_read_combos(#2): Invalid format (Script column) in line %d of \"%s\", skipping.\n", lines, filepath);
 			continue;
 		} else {
 			int items[MAX_ITEMS_PER_COMBO];
@@ -1439,14 +1438,14 @@ void itemdb_read_combos() {
 			int idx = 0;
 			
 			if((retcount = itemdb->combo_split_atoi(str[0], items)) < 2) {
-				ShowError("itemdb_read_combos: line %d of \"%s\" doesn't have enough items to make for a combo (min:2), skipping.\n", lines, path);
+				ShowError("itemdb_read_combos: line %d of \"%s\" doesn't have enough items to make for a combo (min:2), skipping.\n", lines, filepath);
 				continue;
 			}
 			
 			/* validate */
 			for(v = 0; v < retcount; v++) {
 				if( !itemdb->exists(items[v]) ) {
-					ShowError("itemdb_read_combos: line %d of \"%s\" contains unknown item ID %d, skipping.\n", lines, path,items[v]);
+					ShowError("itemdb_read_combos: line %d of \"%s\" contains unknown item ID %d, skipping.\n", lines, filepath,items[v]);
 					break;
 				}
 			}
@@ -1470,7 +1469,7 @@ void itemdb_read_combos() {
 			
 			id->combos[idx]->nameid = aMalloc( retcount * sizeof(unsigned short) );
 			id->combos[idx]->count = retcount;
-			id->combos[idx]->script = script->parse(str[1], path, lines, 0);
+			id->combos[idx]->script = script->parse(str[1], filepath, lines, 0);
 			id->combos[idx]->id = count;
 			id->combos[idx]->isRef = false;
 			/* populate ->nameid field */
@@ -1712,13 +1711,13 @@ int itemdb_readdb(void)
 		uint32 lines = 0, count = 0;
 		char line[1024];
 
-		char path[256];
+		char filepath[256];
 		FILE* fp;
 
-		sprintf(path, "%s/%s", iMap->db_path, filename[fi]);
-		fp = fopen(path, "r");
+		sprintf(filepath, "%s/%s", iMap->db_path, filename[fi]);
+		fp = fopen(filepath, "r");
 		if( fp == NULL ) {
-			ShowWarning("itemdb_readdb: File not found \"%s\", skipping.\n", path);
+			ShowWarning("itemdb_readdb: File not found \"%s\", skipping.\n", filepath);
 			continue;
 		}
 
@@ -1737,8 +1736,7 @@ int itemdb_readdb(void)
 				++p;
 			if( *p == '\0' )
 				continue;// empty line
-			for( i = 0; i < 19; ++i )
-			{
+			for( i = 0; i < 19; ++i ) {
 				str[i] = p;
 				p = strchr(p,',');
 				if( p == NULL )
@@ -1747,48 +1745,42 @@ int itemdb_readdb(void)
 				++p;
 			}
 
-			if( p == NULL )
-			{
-				ShowError("itemdb_readdb: Insufficient columns in line %d of \"%s\" (item with id %d), skipping.\n", lines, path, atoi(str[0]));
+			if( p == NULL ) {
+				ShowError("itemdb_readdb: Insufficient columns in line %d of \"%s\" (item with id %d), skipping.\n", lines, filepath, atoi(str[0]));
 				continue;
 			}
 
 			// Script
-			if( *p != '{' )
-			{
-				ShowError("itemdb_readdb: Invalid format (Script column) in line %d of \"%s\" (item with id %d), skipping.\n", lines, path, atoi(str[0]));
+			if( *p != '{' ) {
+				ShowError("itemdb_readdb: Invalid format (Script column) in line %d of \"%s\" (item with id %d), skipping.\n", lines, filepath, atoi(str[0]));
 				continue;
 			}
 			str[19] = p;
 			p = strstr(p+1,"},");
-			if( p == NULL )
-			{
-				ShowError("itemdb_readdb: Invalid format (Script column) in line %d of \"%s\" (item with id %d), skipping.\n", lines, path, atoi(str[0]));
+			if( p == NULL ) {
+				ShowError("itemdb_readdb: Invalid format (Script column) in line %d of \"%s\" (item with id %d), skipping.\n", lines, filepath, atoi(str[0]));
 				continue;
 			}
 			p[1] = '\0';
 			p += 2;
 
 			// OnEquip_Script
-			if( *p != '{' )
-			{
-				ShowError("itemdb_readdb: Invalid format (OnEquip_Script column) in line %d of \"%s\" (item with id %d), skipping.\n", lines, path, atoi(str[0]));
+			if( *p != '{' ) {
+				ShowError("itemdb_readdb: Invalid format (OnEquip_Script column) in line %d of \"%s\" (item with id %d), skipping.\n", lines, filepath, atoi(str[0]));
 				continue;
 			}
 			str[20] = p;
 			p = strstr(p+1,"},");
-			if( p == NULL )
-			{
-				ShowError("itemdb_readdb: Invalid format (OnEquip_Script column) in line %d of \"%s\" (item with id %d), skipping.\n", lines, path, atoi(str[0]));
+			if( p == NULL ) {
+				ShowError("itemdb_readdb: Invalid format (OnEquip_Script column) in line %d of \"%s\" (item with id %d), skipping.\n", lines, filepath, atoi(str[0]));
 				continue;
 			}
 			p[1] = '\0';
 			p += 2;
 
 			// OnUnequip_Script (last column)
-			if( *p != '{' )
-			{
-				ShowError("itemdb_readdb: Invalid format (OnUnequip_Script column) in line %d of \"%s\" (item with id %d), skipping.\n", lines, path, atoi(str[0]));
+			if( *p != '{' ) {
+				ShowError("itemdb_readdb: Invalid format (OnUnequip_Script column) in line %d of \"%s\" (item with id %d), skipping.\n", lines, filepath, atoi(str[0]));
 				continue;
 			}
 			str[21] = p;
@@ -1805,12 +1797,12 @@ int itemdb_readdb(void)
 				}
 				
 				if( lcurly != rcurly ) {
-					ShowError("itemdb_readdb: Mismatching curly braces in line %d of \"%s\" (item with id %d), skipping.\n", lines, path, atoi(str[0]));
+					ShowError("itemdb_readdb: Mismatching curly braces in line %d of \"%s\" (item with id %d), skipping.\n", lines, filepath, atoi(str[0]));
 					continue;
 				}
 			}
 
-			if (!itemdb->parse_dbrow(str, path, lines, 0))
+			if (!itemdb->parse_dbrow(str, filepath, lines, 0))
 				continue;
 			
 			count++;

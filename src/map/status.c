@@ -82,7 +82,7 @@ static struct status_data dummy_status;
 sc_type status_skill2sc(int skill_id) {
 	int idx;
 	if( (idx = skill->get_index(skill_id)) == 0 ) {
-		ShowError("status_skill2sc: Unsupported skill id %d\n", skill);
+		ShowError("status_skill2sc: Unsupported skill id %d\n", skill_id);
 		return SC_NONE;
 	}
 	return SkillStatusChangeTable[idx];
@@ -2334,7 +2334,7 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 	const struct status_change *sc = &sd->sc;
 	struct s_skill b_skill[MAX_SKILL]; // previous skill tree
 	int b_weight, b_max_weight, b_cart_weight_max, // previous weight
-		i, k, index, skill,refinedef=0;
+		i, k, index, skill_lv,refinedef=0;
 	int64 i64;
 
 	if (++calculating > 10) //Too many recursive calls!
@@ -2742,12 +2742,12 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 	// Absolute modifiers from passive skills
 	if(pc->checkskill(sd,BS_HILTBINDING)>0)
 		status->str++;
-	if((skill=pc->checkskill(sd,SA_DRAGONOLOGY))>0)
-		status->int_ += (skill+1)/2; // +1 INT / 2 lv
-	if((skill=pc->checkskill(sd,AC_OWL))>0)
-		status->dex += skill;
-	if((skill = pc->checkskill(sd,RA_RESEARCHTRAP))>0)
-		status->int_ += skill;
+	if((skill_lv=pc->checkskill(sd,SA_DRAGONOLOGY))>0)
+		status->int_ += (skill_lv+1)/2; // +1 INT / 2 lv
+	if((skill_lv=pc->checkskill(sd,AC_OWL))>0)
+		status->dex += skill_lv;
+	if((skill_lv = pc->checkskill(sd,RA_RESEARCHTRAP))>0)
+		status->int_ += skill_lv;
 
 	// Bonuses from cards and equipment as well as base stat, remember to avoid overflows.
 	i = status->str + sd->status.str + sd->param_bonus[0] + sd->param_equip[0];
@@ -2771,7 +2771,7 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 		status->batk += sd->weapon_atk[sd->status.weapon];
 	// Absolute modifiers from passive skills
 #ifndef RENEWAL
-	if((skill=pc->checkskill(sd,BS_HILTBINDING))>0) // it doesn't work in RE.
+	if((skill_lv=pc->checkskill(sd,BS_HILTBINDING))>0) // it doesn't work in RE.
 		status->batk += 4;
 #endif
 
@@ -2785,8 +2785,8 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 	status->max_hp = (unsigned int)cap_value(i64, 0, INT_MAX);
 
 	// Absolute modifiers from passive skills
-	if((skill=pc->checkskill(sd,CR_TRUST))>0)
-		status->max_hp += skill*200;
+	if((skill_lv=pc->checkskill(sd,CR_TRUST))>0)
+		status->max_hp += skill_lv*200;
 
 	// Apply relative modifiers from equipment
 	if(sd->hprate < 0)
@@ -2810,16 +2810,16 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 	status->max_sp = (unsigned int)cap_value(i64, 0, INT_MAX);
 
 	// Absolute modifiers from passive skills
-	if((skill=pc->checkskill(sd,SL_KAINA))>0)
-		status->max_sp += 30*skill;
-	if((skill=pc->checkskill(sd,HP_MEDITATIO))>0)
-		status->max_sp += (int64)status->max_sp * skill/100;
-	if((skill=pc->checkskill(sd,HW_SOULDRAIN))>0)
-		status->max_sp += (int64)status->max_sp * 2*skill/100;
-	if( (skill = pc->checkskill(sd,RA_RESEARCHTRAP)) > 0 )
-		status->max_sp += 200 + 20 * skill;
-	if( (skill = pc->checkskill(sd,WM_LESSON)) > 0 )
-		status->max_sp += 30 * skill;
+	if((skill_lv=pc->checkskill(sd,SL_KAINA))>0)
+		status->max_sp += 30*skill_lv;
+	if((skill_lv=pc->checkskill(sd,HP_MEDITATIO))>0)
+		status->max_sp += (int64)status->max_sp * skill_lv/100;
+	if((skill_lv=pc->checkskill(sd,HW_SOULDRAIN))>0)
+		status->max_sp += (int64)status->max_sp * 2*skill_lv/100;
+	if( (skill_lv = pc->checkskill(sd,RA_RESEARCHTRAP)) > 0 )
+		status->max_sp += 200 + 20 * skill_lv;
+	if( (skill_lv = pc->checkskill(sd,WM_LESSON)) > 0 )
+		status->max_sp += 30 * skill_lv;
 
 
 	// Apply relative modifiers from equipment
@@ -2903,33 +2903,32 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 
 	// Absolute modifiers from passive skills
 #ifndef RENEWAL
-	if((skill=pc->checkskill(sd,BS_WEAPONRESEARCH))>0) // is this correct in pre? there is already hitrate bonus in battle.c
-		status->hit += skill*2;
+	if((skill_lv=pc->checkskill(sd,BS_WEAPONRESEARCH))>0) // is this correct in pre? there is already hitrate bonus in battle.c
+		status->hit += skill_lv*2;
 #endif
-	if((skill=pc->checkskill(sd,AC_VULTURE))>0){
+	if((skill_lv=pc->checkskill(sd,AC_VULTURE))>0) {
 #ifndef RENEWAL
-		status->hit += skill;
+		status->hit += skill_lv;
 #endif
 		if(sd->status.weapon == W_BOW)
-			status->rhw.range += skill;
+			status->rhw.range += skill_lv;
 	}
-	if(sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE)
-	{
-		if((skill=pc->checkskill(sd,GS_SINGLEACTION))>0)
-			status->hit += 2*skill;
-		if((skill=pc->checkskill(sd,GS_SNAKEEYE))>0) {
-			status->hit += skill;
-			status->rhw.range += skill;
+	if(sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE) {
+		if((skill_lv=pc->checkskill(sd,GS_SINGLEACTION))>0)
+			status->hit += 2*skill_lv;
+		if((skill_lv=pc->checkskill(sd,GS_SNAKEEYE))>0) {
+			status->hit += skill_lv;
+			status->rhw.range += skill_lv;
 		}
 	}
 
 	// ----- FLEE CALCULATION -----
 
 	// Absolute modifiers from passive skills
-	if((skill=pc->checkskill(sd,TF_MISS))>0)
-		status->flee += skill*(sd->class_&JOBL_2 && (sd->class_&MAPID_BASEMASK) == MAPID_THIEF? 4 : 3);
-	if((skill=pc->checkskill(sd,MO_DODGE))>0)
-		status->flee += (skill*3)>>1;
+	if((skill_lv=pc->checkskill(sd,TF_MISS))>0)
+		status->flee += skill_lv*(sd->class_&JOBL_2 && (sd->class_&MAPID_BASEMASK) == MAPID_THIEF? 4 : 3);
+	if((skill_lv=pc->checkskill(sd,MO_DODGE))>0)
+		status->flee += (skill_lv*3)>>1;
 	// ----- EQUIPMENT-DEF CALCULATION -----
 
 	// Apply relative modifiers from equipment
@@ -2975,25 +2974,25 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 
 	// Relative modifiers from passive skills
 #ifndef RENEWAL_ASPD
-	if((skill=pc->checkskill(sd,SA_ADVANCEDBOOK))>0 && sd->status.weapon == W_BOOK)
-		status->aspd_rate -= 5*skill;
-	if((skill = pc->checkskill(sd,SG_DEVIL)) > 0 && !pc->nextjobexp(sd))
-		status->aspd_rate -= 30*skill;
-	if((skill=pc->checkskill(sd,GS_SINGLEACTION))>0 &&
+	if((skill_lv=pc->checkskill(sd,SA_ADVANCEDBOOK))>0 && sd->status.weapon == W_BOOK)
+		status->aspd_rate -= 5*skill_lv;
+	if((skill_lv = pc->checkskill(sd,SG_DEVIL)) > 0 && !pc->nextjobexp(sd))
+		status->aspd_rate -= 30*skill_lv;
+	if((skill_lv=pc->checkskill(sd,GS_SINGLEACTION))>0 &&
 		(sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE))
-		status->aspd_rate -= ((skill+1)/2) * 10;
+		status->aspd_rate -= ((skill_lv+1)/2) * 10;
 	if(pc_isriding(sd))
 		status->aspd_rate += 500-100*pc->checkskill(sd,KN_CAVALIERMASTERY);
 	else if(pc_isridingdragon(sd))
 		status->aspd_rate += 250-50*pc->checkskill(sd,RK_DRAGONTRAINING);
 #else // needs more info
-	if((skill=pc->checkskill(sd,SA_ADVANCEDBOOK))>0 && sd->status.weapon == W_BOOK)
-		status->aspd_rate += 5*skill;
-	if((skill = pc->checkskill(sd,SG_DEVIL)) > 0 && !pc->nextjobexp(sd))
-		status->aspd_rate += 30*skill;
-	if((skill=pc->checkskill(sd,GS_SINGLEACTION))>0 &&
+	if((skill_lv=pc->checkskill(sd,SA_ADVANCEDBOOK))>0 && sd->status.weapon == W_BOOK)
+		status->aspd_rate += 5*skill_lv;
+	if((skill_lv = pc->checkskill(sd,SG_DEVIL)) > 0 && !pc->nextjobexp(sd))
+		status->aspd_rate += 30*skill_lv;
+	if((skill_lv=pc->checkskill(sd,GS_SINGLEACTION))>0 &&
 		(sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE))
-		status->aspd_rate += ((skill+1)/2) * 10;
+		status->aspd_rate += ((skill_lv+1)/2) * 10;
 	if(pc_isriding(sd))
 		status->aspd_rate -= 500-100*pc->checkskill(sd,KN_CAVALIERMASTERY);
 	else if(pc_isridingdragon(sd))
@@ -3012,16 +3011,16 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 	// ----- MISC CALCULATIONS -----
 
 	// Weight
-	if((skill=pc->checkskill(sd,MC_INCCARRY))>0)
-		sd->max_weight += 2000*skill;
+	if((skill_lv=pc->checkskill(sd,MC_INCCARRY))>0)
+		sd->max_weight += 2000*skill_lv;
 	if(pc_isriding(sd) && pc->checkskill(sd,KN_RIDING)>0)
 		sd->max_weight += 10000;
 	else if(pc_isridingdragon(sd))
 		sd->max_weight += 5000+2000*pc->checkskill(sd,RK_DRAGONTRAINING);
 	if(sc->data[SC_KNOWLEDGE])
 		sd->max_weight += sd->max_weight*sc->data[SC_KNOWLEDGE]->val1/10;
-	if((skill=pc->checkskill(sd,ALL_INCCARRY))>0)
-		sd->max_weight += 2000*skill;
+	if((skill_lv=pc->checkskill(sd,ALL_INCCARRY))>0)
+		sd->max_weight += 2000*skill_lv;
 
 	sd->cart_weight_max = battle_config.max_cart_weight + (pc->checkskill(sd, GN_REMODELING_CART)*5000);
 
@@ -3031,8 +3030,8 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 		sd->regen.state.walk = 0;
 
 	// Skill SP cost
-	if((skill=pc->checkskill(sd,HP_MANARECHARGE))>0 )
-		sd->dsprate -= 4*skill;
+	if((skill_lv=pc->checkskill(sd,HP_MANARECHARGE))>0 )
+		sd->dsprate -= 4*skill_lv;
 
 	if(sc->data[SC_SERVICEFORYOU])
 		sd->dsprate -= sc->data[SC_SERVICEFORYOU]->val3;
@@ -3053,29 +3052,29 @@ int status_calc_pc_(struct map_session_data* sd, bool first)
 		sd->sprecov_rate = 0;
 
 	// Anti-element and anti-race
-	if((skill=pc->checkskill(sd,CR_TRUST))>0)
-		sd->subele[ELE_HOLY] += skill*5;
-	if((skill=pc->checkskill(sd,BS_SKINTEMPER))>0) {
-		sd->subele[ELE_NEUTRAL] += skill;
-		sd->subele[ELE_FIRE] += skill*4;
+	if((skill_lv=pc->checkskill(sd,CR_TRUST))>0)
+		sd->subele[ELE_HOLY] += skill_lv*5;
+	if((skill_lv=pc->checkskill(sd,BS_SKINTEMPER))>0) {
+		sd->subele[ELE_NEUTRAL] += skill_lv;
+		sd->subele[ELE_FIRE] += skill_lv*4;
 	}
-	if((skill=pc->checkskill(sd,NC_RESEARCHFE))>0) {
-		sd->subele[ELE_EARTH] += skill*10;
-		sd->subele[ELE_FIRE] += skill*10;
+	if((skill_lv=pc->checkskill(sd,NC_RESEARCHFE))>0) {
+		sd->subele[ELE_EARTH] += skill_lv*10;
+		sd->subele[ELE_FIRE] += skill_lv*10;
 	}
-	if((skill=pc->checkskill(sd,SA_DRAGONOLOGY))>0 ){
+	if((skill_lv=pc->checkskill(sd,SA_DRAGONOLOGY))>0 ) {
 #ifdef RENEWAL
-		skill = skill*2;
+		skill_lv = skill_lv*2;
 #else
-		skill = skill*4;
+		skill_lv = skill_lv*4;
 #endif
-		sd->right_weapon.addrace[RC_DRAGON]+=skill;
-		sd->left_weapon.addrace[RC_DRAGON]+=skill;
-		sd->magic_addrace[RC_DRAGON]+=skill;
-		sd->subrace[RC_DRAGON]+=skill;
+		sd->right_weapon.addrace[RC_DRAGON]+=skill_lv;
+		sd->left_weapon.addrace[RC_DRAGON]+=skill_lv;
+		sd->magic_addrace[RC_DRAGON]+=skill_lv;
+		sd->subrace[RC_DRAGON]+=skill_lv;
 	}
 
-	if(sc->count){
+	if(sc->count) {
 		if(sc->data[SC_CONCENTRATION]) { //Update the card-bonus data
 			sc->data[SC_CONCENTRATION]->val3 = sd->param_bonus[1]; //Agi
 			sc->data[SC_CONCENTRATION]->val4 = sd->param_bonus[4]; //Dex
@@ -3183,11 +3182,10 @@ int status_calc_mercenary_(struct mercenary_data *md, bool first)
 	return 0;
 }
 
-int status_calc_homunculus_(struct homun_data *hd, bool first)
-{
+int status_calc_homunculus_(struct homun_data *hd, bool first) {
 	struct status_data *status = &hd->base_status;
 	struct s_homunculus *hom = &hd->homunculus;
-	int skill;
+	int skill_lv;
 	int amotion;
 
 	status->str = hom->str / 10;
@@ -3197,7 +3195,7 @@ int status_calc_homunculus_(struct homun_data *hd, bool first)
 	status->int_ = hom->int_ / 10;
 	status->luk = hom->luk / 10;
 
-	if (first) {	//[orn]
+	if (first) { //[orn]
 		const struct s_homunculus_db *db = hd->homunculusDB;
 		status->def_ele =  db->element;
 		status->ele_lv = 1;
@@ -3212,30 +3210,30 @@ int status_calc_homunculus_(struct homun_data *hd, bool first)
 		status->hp = 1;
 		status->sp = 1;
 	}
-	skill = hom->level/10 + status->vit/5;
-	status->def = cap_value(skill, 0, 99);
+	skill_lv = hom->level/10 + status->vit/5;
+	status->def = cap_value(skill_lv, 0, 99);
 
-	skill = hom->level/10 + status->int_/5;
-	status->mdef = cap_value(skill, 0, 99);
+	skill_lv = hom->level/10 + status->int_/5;
+	status->mdef = cap_value(skill_lv, 0, 99);
 
 	status->max_hp = hom->max_hp ;
 	status->max_sp = hom->max_sp ;
 
 	homun->calc_skilltree(hd, 0);
 
-	if((skill=homun->checkskill(hd,HAMI_SKIN)) > 0)
-		status->def +=	skill * 4;
+	if((skill_lv=homun->checkskill(hd,HAMI_SKIN)) > 0)
+		status->def +=	skill_lv * 4;
 
-	if((skill = homun->checkskill(hd,HVAN_INSTRUCT)) > 0) {
-		status->int_ += 1 +skill/2 +skill/4 +skill/5;
-		status->str  += 1 +skill/3 +skill/3 +skill/4;
+	if((skill_lv = homun->checkskill(hd,HVAN_INSTRUCT)) > 0) {
+		status->int_ += 1 +skill_lv/2 +skill_lv/4 +skill_lv/5;
+		status->str  += 1 +skill_lv/3 +skill_lv/3 +skill_lv/4;
 	}
 
-	if((skill=homun->checkskill(hd,HAMI_SKIN)) > 0)
-		status->max_hp += skill * 2 * status->max_hp / 100;
+	if((skill_lv=homun->checkskill(hd,HAMI_SKIN)) > 0)
+		status->max_hp += skill_lv * 2 * status->max_hp / 100;
 
-	if((skill = homun->checkskill(hd,HLIF_BRAIN)) > 0)
-		status->max_sp += (1 +skill/2 -skill/4 +skill/5) * status->max_sp / 100 ;
+	if((skill_lv = homun->checkskill(hd,HLIF_BRAIN)) > 0)
+		status->max_sp += (1 +skill_lv/2 -skill_lv/4 +skill_lv/5) * status->max_sp / 100 ;
 
 	if (first) {
 		hd->battle_status.hp = hom->hp ;
@@ -3365,10 +3363,9 @@ static unsigned short status_calc_batk(struct block_list *,struct status_change 
 #endif
 
 //Calculates base regen values.
-void status_calc_regen(struct block_list *bl, struct status_data *status, struct regen_data *regen)
-{
+void status_calc_regen(struct block_list *bl, struct status_data *status, struct regen_data *regen) {
 	struct map_session_data *sd;
-	int val, skill, reg_flag;
+	int val, skill_lv, reg_flag;
 
 	if( !(bl->type&BL_REGEN) || !regen )
 		return;
@@ -3392,29 +3389,27 @@ void status_calc_regen(struct block_list *bl, struct status_data *status, struct
 
 	regen->sp = cap_value(val, reg_flag, SHRT_MAX);
 
-	if( sd )
-	{
+	if( sd ) {
 		struct regen_data_sub *sregen;
-		if( (skill=pc->checkskill(sd,HP_MEDITATIO)) > 0 )
-		{
-			val = regen->sp*(100+3*skill)/100;
+		if( (skill_lv=pc->checkskill(sd,HP_MEDITATIO)) > 0 ) {
+			val = regen->sp*(100+3*skill_lv)/100;
 			regen->sp = cap_value(val, 1, SHRT_MAX);
 		}
 		//Only players have skill/sitting skill regen for now.
 		sregen = regen->sregen;
 
 		val = 0;
-		if( (skill=pc->checkskill(sd,SM_RECOVERY)) > 0 )
-			val += skill*5 + skill*status->max_hp/500;
+		if( (skill_lv=pc->checkskill(sd,SM_RECOVERY)) > 0 )
+			val += skill_lv*5 + skill_lv*status->max_hp/500;
 		sregen->hp = cap_value(val, 0, SHRT_MAX);
 
 		val = 0;
-		if( (skill=pc->checkskill(sd,MG_SRECOVERY)) > 0 )
-			val += skill*3 + skill*status->max_sp/500;
-		if( (skill=pc->checkskill(sd,NJ_NINPOU)) > 0 )
-			val += skill*3 + skill*status->max_sp/500;
-		if( (skill=pc->checkskill(sd,WM_LESSON)) > 0 )
-			val += 3 + 3 * skill;
+		if( (skill_lv=pc->checkskill(sd,MG_SRECOVERY)) > 0 )
+			val += skill_lv*3 + skill_lv*status->max_sp/500;
+		if( (skill_lv=pc->checkskill(sd,NJ_NINPOU)) > 0 )
+			val += skill_lv*3 + skill_lv*status->max_sp/500;
+		if( (skill_lv=pc->checkskill(sd,WM_LESSON)) > 0 )
+			val += 3 + 3 * skill_lv;
 
 		sregen->sp = cap_value(val, 0, SHRT_MAX);
 
@@ -3422,33 +3417,32 @@ void status_calc_regen(struct block_list *bl, struct status_data *status, struct
 		sregen = regen->ssregen;
 
 		val = 0;
-		if( (skill=pc->checkskill(sd,MO_SPIRITSRECOVERY)) > 0 )
-			val += skill*4 + skill*status->max_hp/500;
+		if( (skill_lv=pc->checkskill(sd,MO_SPIRITSRECOVERY)) > 0 )
+			val += skill_lv*4 + skill_lv*status->max_hp/500;
 
-		if( (skill=pc->checkskill(sd,TK_HPTIME)) > 0 && sd->state.rest )
-			val += skill*30 + skill*status->max_hp/500;
+		if( (skill_lv=pc->checkskill(sd,TK_HPTIME)) > 0 && sd->state.rest )
+			val += skill_lv*30 + skill_lv*status->max_hp/500;
 		sregen->hp = cap_value(val, 0, SHRT_MAX);
 
 		val = 0;
-		if( (skill=pc->checkskill(sd,TK_SPTIME)) > 0 && sd->state.rest )
-		{
-			val += skill*3 + skill*status->max_sp/500;
-			if ((skill=pc->checkskill(sd,SL_KAINA)) > 0) //Power up Enjoyable Rest
-				val += (30+10*skill)*val/100;
+		if( (skill_lv=pc->checkskill(sd,TK_SPTIME)) > 0 && sd->state.rest ) {
+			val += skill_lv*3 + skill_lv*status->max_sp/500;
+			if ((skill_lv=pc->checkskill(sd,SL_KAINA)) > 0) //Power up Enjoyable Rest
+				val += (30+10*skill_lv)*val/100;
 		}
-		if( (skill=pc->checkskill(sd,MO_SPIRITSRECOVERY)) > 0 )
-			val += skill*2 + skill*status->max_sp/500;
+		if( (skill_lv=pc->checkskill(sd,MO_SPIRITSRECOVERY)) > 0 )
+			val += skill_lv*2 + skill_lv*status->max_sp/500;
 		sregen->sp = cap_value(val, 0, SHRT_MAX);
 	}
 
 	if( bl->type == BL_HOM ) {
 		struct homun_data *hd = (TBL_HOM*)bl;
-		if( (skill = homun->checkskill(hd,HAMI_SKIN)) > 0 ) {
-			val = regen->hp*(100+5*skill)/100;
+		if( (skill_lv = homun->checkskill(hd,HAMI_SKIN)) > 0 ) {
+			val = regen->hp*(100+5*skill_lv)/100;
 			regen->hp = cap_value(val, 1, SHRT_MAX);
 		}
-		if( (skill = homun->checkskill(hd,HLIF_BRAIN)) > 0 ) {
-			val = regen->sp*(100+3*skill)/100;
+		if( (skill_lv = homun->checkskill(hd,HLIF_BRAIN)) > 0 ) {
+			val = regen->sp*(100+3*skill_lv)/100;
 			regen->sp = cap_value(val, 1, SHRT_MAX);
 		}
 	} else if( bl->type == BL_MER ) {
@@ -10318,9 +10312,9 @@ int status_change_timer(int tid, unsigned int tick, int id, intptr_t data)
 	case SC_SPLASHER:
 		// custom Venom Splasher countdown timer
 		//if (sce->val4 % 1000 == 0) {
-		//	char timer[10];
-		//	snprintf (timer, 10, "%d", sce->val4/1000);
-		//	clif->message(bl, timer);
+		//	char counter[10];
+		//	snprintf (counter, 10, "%d", sce->val4/1000);
+		//	clif->message(bl, counter);
 		//}
 		if((sce->val4 -= 500) > 0) {
 			sc_timer_next(500 + tick, iStatus->change_timer, bl->id, data);
@@ -11131,7 +11125,6 @@ int status_change_clear_buffs (struct block_list* bl, int type)
 int status_change_spread( struct block_list *src, struct block_list *bl ) {
 	int i, flag = 0;
 	struct status_change *sc = iStatus->get_sc(src);
-	const struct TimerData *td;
 	unsigned int tick;
 	struct status_change_data data;
 
@@ -11171,7 +11164,7 @@ int status_change_spread( struct block_list *src, struct block_list *bl ) {
 		case SC_DEATHHURT:
 		case SC_PARALYSE:
 			if( sc->data[i]->timer != INVALID_TIMER ) {
-				td = timer->get(sc->data[i]->timer);
+				const struct TimerData *td = timer->get(sc->data[i]->timer);
 				if (td == NULL || td->func != iStatus->change_timer || DIFF_TICK(td->tick,tick) < 0)
 					continue;
 				data.tick = DIFF_TICK(td->tick,tick);

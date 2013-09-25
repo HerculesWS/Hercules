@@ -124,9 +124,9 @@ struct sv_interface {
 	/// Parses a single field in a delim-separated string.
 	/// The delimiter after the field is skipped.
 	///
-	/// @param sv Parse state
+	/// @param svstate Parse state
 	/// @return 1 if a field was parsed, 0 if done, -1 on error.
-	int (*parse_next) (struct s_svstate* sv);
+	int (*parse_next) (struct s_svstate* svstate);
 	
 	/// Parses a delim-separated string.
 	/// Starts parsing at startoff and fills the pos array with position pairs.

@@ -202,7 +202,7 @@ int chat_leavechat(struct map_session_data* sd, bool kicked)
 
 
 	if( cd->users == 0 && cd->owner->type == BL_PC ) { // Delete empty chatroom
-		struct skill_unit* unit;
+		struct skill_unit* su;
 		struct skill_unit_group* group;	
 
 		clif->clearchat(cd, 0);
@@ -211,10 +211,10 @@ int chat_leavechat(struct map_session_data* sd, bool kicked)
 		iMap->delblock(&cd->bl);
 		iMap->freeblock(&cd->bl);
 		
-		unit = iMap->find_skill_unit_oncell(&sd->bl, sd->bl.x, sd->bl.y, AL_WARP, NULL, 0);
-		group = (unit != NULL) ? unit->group : NULL;
+		su = iMap->find_skill_unit_oncell(&sd->bl, sd->bl.x, sd->bl.y, AL_WARP, NULL, 0);
+		group = (su != NULL) ? su->group : NULL;
 		if (group != NULL)
-			skill->unit_onplace(unit, &sd->bl, group->tick);
+			skill->unit_onplace(su, &sd->bl, group->tick);
 
 		return 1;
 	}

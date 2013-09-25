@@ -1,19 +1,18 @@
 
-COMMON_OBJ = ../common/obj_all/minicore.o ../common/obj_all/malloc.o \
-	../common/obj_all/showmsg.o ../common/obj_all/strlib.o \
-	../common/obj_all/utils.o ../common/obj_all/des.o ../common/obj_all/grfio.o ../common/obj_all/miniconsole.o
-COMMON_H = ../common/core.h ../common/mmo.h \
-	../common/malloc.h ../common/showmsg.h ../common/strlib.h \
-	../common/utils.h ../common/cbasetypes.h ../common/des.h ../common/grfio.h ../common/console.h ../config/renewal.h
+COMMON_D = ../common
+COMMON_OBJ = $(addprefix $(COMMON_D)/obj_all/, des.o grfio.o malloc.o \
+	     miniconsole.o minicore.o showmsg.o strlib.o utils.o)
+COMMON_H = $(addprefix $(COMMON_D)/, cbasetypes.h console.h core.h des.h \
+	   grfio.h malloc.h mmo.h showmsg.h strlib.h utils.h)
 
-LIBCONFIG_OBJ = ../../3rdparty/libconfig/libconfig.o ../../3rdparty/libconfig/grammar.o \
-	../../3rdparty/libconfig/scanctx.o ../../3rdparty/libconfig/scanner.o ../../3rdparty/libconfig/strbuf.o
-LIBCONFIG_H = ../../3rdparty/libconfig/libconfig.h ../../3rdparty/libconfig/grammar.h \
-	../../3rdparty/libconfig/parsectx.h ../../3rdparty/libconfig/scanctx.h ../../3rdparty/libconfig/scanner.h \
-	../../3rdparty/libconfig/strbuf.h ../../3rdparty/libconfig/wincompat.h
-LIBCONFIG_INCLUDE = -I../../3rdparty/libconfig
+LIBCONFIG_D = ../../3rdparty/libconfig
+LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
+		scanner.o strbuf.o)
+LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
+	      scanctx.h scanner.h strbuf.h wincompat.h)
+LIBCONFIG_INCLUDE = -I$(LIBCONFIG_D)
 
-OTHER_H = ../config/renewal.h
+CONFIG_H = $(shell ls ../config/*.h ../config/*/*.h)
 
 MAPCACHE_OBJ = obj_all/mapcache.o
 
@@ -23,12 +22,14 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY : all mapcache clean help
+.PHONY: all mapcache clean help
 
-all: mapcache
+all: mapcache Makefile
 
-mapcache: obj_all $(MAPCACHE_OBJ) $(COMMON_OBJ) $(LIBCONFIG_OBJ)
-	@echo "	LD	$@"
+mapcache: ../../mapcache@EXEEXT@
+
+../../mapcache@EXEEXT@: $(MAPCACHE_OBJ) $(COMMON_OBJ) $(LIBCONFIG_OBJ) Makefile
+	@echo "	LD	$(notdir $@)"
 	@$(CC) @LDFLAGS@ $(LIBCONFIG_INCLUDE) -o ../../mapcache@EXEEXT@ $(MAPCACHE_OBJ) $(COMMON_OBJ) $(LIBCONFIG_OBJ) @LIBS@
 
 clean:
@@ -44,20 +45,26 @@ help:
 
 #####################################################################
 
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. src/tool/Makefile
+
 obj_all:
 	@echo "	MKDIR	obj_all"
 	@-mkdir obj_all
 
-obj_all/%.o: %.c $(COMMON_H) $(OTHER_H) $(LIBCONFIG_H)
+obj_all/%.o: %.c $(COMMON_H) $(CONFIG_H) $(LIBCONFIG_H) | obj_all
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ $(LIBCONFIG_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 # missing common object files
 ../common/obj_all/%.o:
+	@echo "	MAKE	$@"
 	@$(MAKE) -C ../common sql
 
 ../common/obj_all/mini%.o:
+	@echo "	MAKE	$@"
 	@$(MAKE) -C ../common sql
 
 $(LIBCONFIG_OBJ):
-	@$(MAKE) -C ../../3rdparty/libconfig
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(LIBCONFIG_D)

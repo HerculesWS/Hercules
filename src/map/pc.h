@@ -823,7 +823,7 @@ struct pc_interface {
 	
 	int (*updateweightstatus) (struct map_session_data *sd);
 	
-	int (*addautobonus) (struct s_autobonus *bonus,char max,const char *script,short rate,unsigned int dur,short atk_type,const char *o_script,unsigned short pos,bool onskill);
+	int (*addautobonus) (struct s_autobonus *bonus,char max,const char *bonus_script,short rate,unsigned int dur,short atk_type,const char *o_script,unsigned short pos,bool onskill);
 	int (*exeautobonus) (struct map_session_data* sd,struct s_autobonus *bonus);
 	int (*endautobonus) (int tid, unsigned int tick, int id, intptr_t data);
 	int (*delautobonus) (struct map_session_data* sd,struct s_autobonus *bonus,char max,bool restore);
@@ -850,7 +850,7 @@ struct pc_interface {
 	unsigned int (*maxjoblv) (struct map_session_data *sd);
 	int (*checkbaselevelup) (struct map_session_data *sd);
 	int (*checkjoblevelup) (struct map_session_data *sd);
-	int (*gainexp) (struct map_session_data*,struct block_list*,unsigned int,unsigned int, bool);
+	int (*gainexp) (struct map_session_data *sd, struct block_list *src, unsigned int base_exp, unsigned int job_exp, bool is_quest);
 	unsigned int (*nextbaseexp) (struct map_session_data *);
 	unsigned int (*thisbaseexp) (struct map_session_data *);
 	unsigned int (*nextjobexp) (struct map_session_data *);

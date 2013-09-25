@@ -9,9 +9,9 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY : all $(PLUGINS) sample db2sql clean help
+.PHONY: all $(PLUGINS) sample db2sql clean help
 
-all: $(PLUGINS)
+all: $(PLUGINS) Makefile
 
 sample: sample@DLLEXT@
 
@@ -27,6 +27,9 @@ help:
 	@echo "'help'     - outputs this message"
 
 #####################################################################
+
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. src/plugins/Makefile
 
 %@DLLEXT@: %.c $(COMMON_H)
 	@echo "	CC	$<"

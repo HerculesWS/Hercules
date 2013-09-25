@@ -1,43 +1,38 @@
 
 COMMON_H = $(shell ls ../common/*.h)
+CONFIG_H = $(shell ls ../config/*.h ../config/*/*.h)
 
-MT19937AR_OBJ = ../../3rdparty/mt19937ar/mt19937ar.o
-MT19937AR_H = ../../3rdparty/mt19937ar/mt19937ar.h
-MT19937AR_INCLUDE = -I../../3rdparty/mt19937ar
+MT19937AR_D = ../../3rdparty/mt19937ar
+MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
+MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
+MT19937AR_INCLUDE = -I$(MT19937AR_D)
 
-LIBCONFIG_OBJ = ../../3rdparty/libconfig/libconfig.o ../../3rdparty/libconfig/grammar.o \
-	../../3rdparty/libconfig/scanctx.o ../../3rdparty/libconfig/scanner.o ../../3rdparty/libconfig/strbuf.o
-LIBCONFIG_H = ../../3rdparty/libconfig/libconfig.h ../../3rdparty/libconfig/grammar.h \
-	../../3rdparty/libconfig/parsectx.h ../../3rdparty/libconfig/scanctx.h ../../3rdparty/libconfig/scanner.h \
-	../../3rdparty/libconfig/strbuf.h ../../3rdparty/libconfig/wincompat.h
-LIBCONFIG_INCLUDE = -I../../3rdparty/libconfig
+LIBCONFIG_D = ../../3rdparty/libconfig
+LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
+		scanner.o strbuf.o)
+LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
+	      scanctx.h scanner.h strbuf.h wincompat.h)
+LIBCONFIG_INCLUDE = -I$(LIBCONFIG_D)
 
-MAP_OBJ = map.o chrif.o clif.o pc.o status.o npc.o \
-	npc_chat.o chat.o path.o itemdb.o mob.o script.o \
-	storage.o skill.o atcommand.o battle.o battleground.o \
-	intif.o trade.o party.o vending.o guild.o pet.o \
-	log.o mail.o date.o unit.o homunculus.o mercenary.o quest.o instance.o \
-	buyingstore.o searchstore.o duel.o pc_groups.o elemental.o irc-bot.o HPMmap.o
-MAP_SQL_OBJ = $(MAP_OBJ:%=obj_sql/%) \
-	obj_sql/mapreg_sql.o
-MAP_H = map.h chrif.h clif.h pc.h status.h npc.h \
-	chat.h itemdb.h mob.h script.h path.h \
-	storage.h skill.h atcommand.h battle.h battleground.h \
-	intif.h trade.h party.h vending.h guild.h pet.h \
-	log.h mail.h date.h unit.h homunculus.h mercenary.h quest.h instance.h mapreg.h \
-	buyingstore.h searchstore.h duel.h pc_groups.h \
-	../config/core.h ../config/renewal.h ../config/secure.h ../config/const.h \
-	../config/classes/general.h elemental.h packets.h packets_struct.h irc-bot.h HPMmap.h
+MAP_OBJ = $(addprefix obj_sql/, atcommand.o battle.o battleground.o \
+	  buyingstore.o chat.o chrif.o clif.o date.o duel.o elemental.o \
+	  guild.o homunculus.o HPMmap.o instance.o intif.o irc-bot.o itemdb.o \
+	  log.o mail.o map.o mapreg_sql.o mercenary.o mob.o npc.o npc_chat.o \
+	  party.o path.o pc.o pc_groups.o pet.o quest.o script.o \
+	  searchstore.o skill.o status.o storage.o trade.o unit.o vending.o)
+MAP_H = atcommand.h battle.h battleground.h buyingstore.h chat.h chrif.h \
+	clif.h date.h duel.h elemental.h guild.h homunculus.h HPMmap.h \
+	instance.h intif.h irc-bot.h itemdb.h log.h mail.h map.h mapreg.h \
+	mercenary.h mob.h npc.h packets.h packets_struct.h party.h path.h \
+	pc.h pc_groups.h pet.h quest.h script.h searchstore.h skill.h \
+	status.h storage.h trade.h unit.h vending.h
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	ALL_DEPENDS=txt sql
-	SQL_DEPENDS=map-server
+	MAP_SERVER_SQL_DEPENDS=$(MAP_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ)
 else
-	ALL_TARGET=txt
-	SQL_DEPENDS=needs_mysql
+	MAP_SERVER_SQL_DEPENDS=needs_mysql
 endif
-TXT_DEPENDS=map-server
 
 HAVE_PCRE=@HAVE_PCRE@
 ifeq ($(HAVE_PCRE),yes)
@@ -52,40 +47,33 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY : all txt sql clean help
+.PHONY: all sql map-server clean help
 
-all: $(ALL_DEPENDS)
+all: sql
 
-txt: $(TXT_DEPENDS)
-
-sql: $(SQL_DEPENDS)
+sql: map-server
 
 clean:
 	@echo "	CLEAN	map"
-	@rm -rf *.o obj_txt obj_sql ../../map-server@EXEEXT@
+	@rm -rf *.o obj_sql ../../map-server@EXEEXT@
 
 help:
-ifeq ($(HAVE_MYSQL),yes)
-	@echo "possible targets are 'sql' 'txt' 'all' 'clean' 'help'"
-	@echo "'sql'   - map server (SQL version)"
-else
-	@echo "possible targets are 'txt' 'all' 'clean' 'help'"
-endif
-	@echo "'txt'   - map server (TXT version)"
-	@echo "'all'   - builds all above targets"
-	@echo "'clean' - cleans builds and objects"
-	@echo "'help'  - outputs this message"
+	@echo "possible targets are 'map-server' 'all' 'clean' 'help'"
+	@echo "'map-server' - map server"
+	@echo "'all'        - builds all above targets"
+	@echo "'clean'      - cleans builds and objects"
+	@echo "'help'       - outputs this message"
 
 #####################################################################
+
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. src/map/Makefile
 
 needs_mysql:
 	@echo "MySQL not found or disabled by the configure script"
 	@exit 1
 
 # object directories
-obj_txt:
-	@echo "	MKDIR	obj_txt"
-	@-mkdir obj_txt
 
 obj_sql:
 	@echo "	MKDIR	obj_sql"
@@ -93,25 +81,31 @@ obj_sql:
 
 # executables
 
-map-server: obj_sql $(MAP_SQL_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a
-	@echo "	LD	$@"
-	@$(CC) @LDFLAGS@ -o ../../map-server@EXEEXT@ $(MAP_SQL_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @PCRE_LIBS@ @MYSQL_LIBS@
+map-server: ../../map-server@EXEEXT@
+
+../../map-server@EXEEXT@: $(MAP_SERVER_SQL_DEPENDS) Makefile
+	@echo "	LD	$(notdir $@)"
+	@$(CC) @LDFLAGS@ -o ../../map-server@EXEEXT@ $(MAP_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @PCRE_LIBS@ @MYSQL_LIBS@
 
 # map object files
 
-obj_sql/%.o: %.c $(MAP_H) $(COMMON_H)  $(MT19937AR_H) $(LIBCONFIG_H)
+obj_sql/%.o: %.c $(MAP_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj_sql
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ $(MT19937AR_INCLUDE) $(LIBCONFIG_INCLUDE) $(PCRE_CFLAGS) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 # missing object files
 ../common/obj_all/common.a:
+	@echo "	MAKE	$@"
 	@$(MAKE) -C ../common sql
     
 ../common/obj_sql/common_sql.a:
+	@echo "	MAKE	$@"
 	@$(MAKE) -C ../common sql
         
 $(MT19937AR_OBJ):
-	@$(MAKE) -C ../../3rdparty/mt19937ar
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(MT19937AR_D)
 
 $(LIBCONFIG_OBJ):
-	@$(MAKE) -C ../../3rdparty/libconfig
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(LIBCONFIG_D)

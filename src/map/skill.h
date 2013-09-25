@@ -1820,7 +1820,7 @@ struct skill_interface {
 	struct skill_unit_group* (*id2group) (int group_id);
 	struct skill_unit_group *(*unitsetting) (struct block_list* src, uint16 skill_id, uint16 skill_lv, short x, short y, int flag);
 	struct skill_unit *(*initunit) (struct skill_unit_group *group, int idx, int x, int y, int val1, int val2);
-	int (*delunit) (struct skill_unit *unit);
+	int (*delunit) (struct skill_unit *su);
 	struct skill_unit_group *(*init_unitgroup) (struct block_list* src, int count, uint16 skill_id, uint16 skill_lv, int unit_id, int limit, int interval);
 	int (*del_unitgroup) (struct skill_unit_group *group, const char* file, int line, const char* func);
 	int (*clear_unitgroup) (struct block_list *src);
@@ -1883,14 +1883,14 @@ struct skill_interface {
 	int (*graffitiremover) (struct block_list *bl, va_list ap);
 	int (*activate_reverberation) ( struct block_list *bl, va_list ap);
 	int (*dance_overlap_sub) (struct block_list* bl, va_list ap);
-	int (*dance_overlap) (struct skill_unit* unit, int flag);
+	int (*dance_overlap) (struct skill_unit* su, int flag);
 	struct s_skill_unit_layout *(*get_unit_layout) (uint16 skill_id, uint16 skill_lv, struct block_list* src, int x, int y);
 	int (*frostjoke_scream) (struct block_list *bl, va_list ap);
 	int (*greed) (struct block_list *bl, va_list ap);
 	int (*destroy_trap) ( struct block_list *bl, va_list ap );
 	int (*icewall_block) (struct block_list *bl,va_list ap);
 	struct skill_unit_group_tickset *(*unitgrouptickset_search) (struct block_list *bl, struct skill_unit_group *group, int tick);
-	bool (*dance_switch) (struct skill_unit* unit, int flag);
+	bool (*dance_switch) (struct skill_unit* su, int flag);
 	int (*check_condition_char_sub) (struct block_list *bl, va_list ap);
 	int (*check_condition_mob_master_sub) (struct block_list *bl, va_list ap);
 	void (*brandishspear_first) (struct square *tc, uint8 dir, int16 x, int16 y);

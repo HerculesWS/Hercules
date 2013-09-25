@@ -91,7 +91,7 @@ HPExport struct HPMi_interface {
 	bool (*addPacket) (unsigned short cmd, unsigned short length, void (*receive)(int fd), unsigned int point, unsigned int pluginID);
 } HPMi_s;
 #ifndef _HPM_H_
-	HPExport struct HPMi_interface *HPMi;
+HPExport struct HPMi_interface *HPMi;
 #endif
 
 #endif /* _HPMi_H_ */

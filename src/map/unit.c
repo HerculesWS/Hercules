@@ -2177,7 +2177,7 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 				sd->pvp_rank = 0;
 			}
 			if(sd->duel_group > 0)
-				iDuel->leave(sd->duel_group, sd);
+				duel->leave(sd->duel_group, sd);
 
 			if(pc_issit(sd)) {
 				pc->setstand(sd);
@@ -2354,7 +2354,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 				pc->stop_following(sd);
 
 			if( sd->duel_invite > 0 )
-				iDuel->reject(sd->duel_invite, sd);
+				duel->reject(sd->duel_invite, sd);
 
 			// Notify friends that this char logged out. [Skotlex]
 			iMap->map_foreachpc(clif->friendslist_toggle_sub, sd->status.account_id, sd->status.char_id, 0);

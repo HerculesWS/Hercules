@@ -91,7 +91,7 @@ struct battleground_interface {
 	void (*match_over) (struct bg_arena *arena, bool canceled);
 	void (*queue_check) (struct bg_arena *arena);
 	struct battleground_data* (*team_search) (int bg_id);
-	struct map_session_data* (*getavailablesd) (struct battleground_data *bg);
+	struct map_session_data* (*getavailablesd) (struct battleground_data *bgd);
 	int (*team_delete) (int bg_id);
 	int (*team_warp) (int bg_id, unsigned short mapindex, short x, short y);
 	int (*send_dot_remove) (struct map_session_data *sd);

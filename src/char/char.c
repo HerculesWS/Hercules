@@ -68,6 +68,7 @@ char skill_homunculus_db[256] = "skill_homunculus";
 char mercenary_db[256] = "mercenary";
 char mercenary_owner_db[256] = "mercenary_owner";
 char ragsrvinfo_db[256] = "ragsrvinfo";
+char elemental_db[256] = "elemental";
 char interreg_db[32] = "interreg";
 
 // show loading/saving messages
@@ -136,7 +137,7 @@ int guild_exp_rate = 100;
 
 //Custom limits for the fame lists. [Skotlex]
 int fame_list_size_chemist = MAX_FAME_LIST;
-int fame_list_size_smith = MAX_FAME_LIST;
+int fame_list_size_smith   = MAX_FAME_LIST;
 int fame_list_size_taekwon = MAX_FAME_LIST;
 
 // Char-server-side stored fame lists [DracoRPG]
@@ -2517,8 +2518,7 @@ int save_accreg2(unsigned char* buf, int len)
 	return 0;
 }
 
-void char_read_fame_list(void)
-{
+void char_read_fame_list(void) {
 	int i;
 	char* data;
 	size_t len;
@@ -2576,8 +2576,7 @@ void char_read_fame_list(void)
 }
 
 // Send map-servers the fame ranking lists
-int char_send_fame_list(int fd)
-{
+int char_send_fame_list(int fd) {
 	int i, len = 8;
 	unsigned char buf[32000];
 
@@ -2612,8 +2611,7 @@ int char_send_fame_list(int fd)
 	return 0;
 }
 
-void char_update_fame_list(int type, int index, int fame)
-{
+void char_update_fame_list(int type, int index, int fame) {
 	unsigned char buf[8];
 	WBUFW(buf,0) = 0x2b22;
 	WBUFB(buf,2) = type;
@@ -2822,7 +2820,8 @@ int parse_frommap(int fd)
 				int aid, cid;
 				aid = RFIFOL(fd,2);
 				cid = RFIFOL(fd,6);
-				if( SQL_ERROR == SQL->Query(sql_handle, "SELECT type, tick, val1, val2, val3, val4 from `%s` WHERE `account_id` = '%d' AND `char_id`='%d'",
+				if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `type`, `tick`, `val1`, `val2`, `val3`, `val4` "
+					"FROM `%s` WHERE `account_id` = '%d' AND `char_id`='%d'",
 					scdata_db, aid, cid) )
 				{
 					Sql_ShowDebug(sql_handle);
@@ -3210,12 +3209,11 @@ int parse_frommap(int fd)
 				int player_pos;
 				int fame_pos;
 
-				switch(type)
-				{
-					case 1:  size = fame_list_size_smith;   list = smith_fame_list;   break;
-					case 2:  size = fame_list_size_chemist; list = chemist_fame_list; break;
-					case 3:  size = fame_list_size_taekwon; list = taekwon_fame_list; break;
-					default: size = 0;                      list = NULL;              break;
+				switch(type) {
+					case RANKTYPE_BLACKSMITH: size = fame_list_size_smith;   list = smith_fame_list;   break;
+					case RANKTYPE_ALCHEMIST:  size = fame_list_size_chemist; list = chemist_fame_list; break;
+					case RANKTYPE_TAEKWON:    size = fame_list_size_taekwon; list = taekwon_fame_list; break;
+					default:                  size = 0;                      list = NULL;              break;
 				}
 
 				ARR_FIND(0, size, player_pos, list[player_pos].id == cid);// position of the player
@@ -3223,22 +3221,20 @@ int parse_frommap(int fd)
 
 				if( player_pos == size && fame_pos == size )
 					;// not on list and not enough fame to get on it
-				else if( fame_pos == player_pos )
-				{// same position
+				else if( fame_pos == player_pos ) {
+					// same position
 					list[player_pos].fame = fame;
 					char_update_fame_list(type, player_pos, fame);
-				}
-				else
-				{// move in the list
-					if( player_pos == size )
-					{// new ranker - not in the list
+				} else {
+					// move in the list
+					if( player_pos == size ) {
+						// new ranker - not in the list
 						ARR_MOVE(size - 1, fame_pos, list, struct fame_list);
 						list[fame_pos].id = cid;
 						list[fame_pos].fame = fame;
 						char_loadName(cid, list[fame_pos].name);
-					}
-					else
-					{// already in the list
+					} else {
+						// already in the list
 						if( fame_pos == size )
 							--fame_pos;// move to the end of the list
 						ARR_MOVE(player_pos, fame_pos, list, struct fame_list);
@@ -4721,6 +4717,8 @@ void sql_config_read(const char* cfgName)
 			safestrncpy(mercenary_owner_db,w2,sizeof(mercenary_owner_db));
 		else if(!strcmpi(w1,"ragsrvinfo_db"))
 			safestrncpy(ragsrvinfo_db,w2,sizeof(ragsrvinfo_db));
+		else if(!strcmpi(w1,"elemental_db"))
+			safestrncpy(elemental_db,w2,sizeof(elemental_db));
 		else if(!strcmpi(w1,"interreg_db"))
 			safestrncpy(interreg_db,w2,sizeof(interreg_db));
 		//support the import command, just like any other config

@@ -711,12 +711,12 @@ struct s_mapiterator;
 /* temporary until the map.c "Hercules Renewal Phase One" design is complete. */
 struct mapit_interface {
 	struct s_mapiterator*   (*alloc) (enum e_mapitflags flags, enum bl_type types);
-	void                    (*free) (struct s_mapiterator* mapit);
-	struct block_list*      (*first) (struct s_mapiterator* mapit);
-	struct block_list*      (*last) (struct s_mapiterator* mapit);
-	struct block_list*      (*next) (struct s_mapiterator* mapit);
-	struct block_list*      (*prev) (struct s_mapiterator* mapit);
-	bool                    (*exists) (struct s_mapiterator* mapit);
+	void                    (*free) (struct s_mapiterator* iter);
+	struct block_list*      (*first) (struct s_mapiterator* iter);
+	struct block_list*      (*last) (struct s_mapiterator* iter);
+	struct block_list*      (*next) (struct s_mapiterator* iter);
+	struct block_list*      (*prev) (struct s_mapiterator* iter);
+	bool                    (*exists) (struct s_mapiterator* iter);
 } mapit_s;
 
 struct mapit_interface *mapit;

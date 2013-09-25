@@ -534,7 +534,7 @@ struct battle_interface {
 	/* is src and bl within range? */
 	bool (*check_range) (struct block_list *src,struct block_list *bl,int range);
 	/* consume amo for this skill and lv */
-	void (*consume_ammo) (struct map_session_data* sd, int skill, int lv);
+	void (*consume_ammo) (struct map_session_data* sd, int skill_id, int lv);
 	int (*get_targeted_sub) (struct block_list *bl, va_list ap);
 	int (*get_enemy_sub) (struct block_list *bl, va_list ap);
 	int (*get_enemy_area_sub) (struct block_list *bl, va_list ap);

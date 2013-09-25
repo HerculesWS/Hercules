@@ -458,8 +458,7 @@ int intif_party_leave(int party_id,int account_id, int char_id)
 }
 
 // Request keeping party for new map ??
-int intif_party_changemap(struct map_session_data *sd,int online)
-{
+int intif_party_changemap(struct map_session_data *sd,int online) {
 	int16 m, mapindex;
 
 	if (intif->CheckForCharServer())
@@ -468,7 +467,7 @@ int intif_party_changemap(struct map_session_data *sd,int online)
 		return 0;
 
 	if( (m=iMap->mapindex2mapid(sd->mapindex)) >= 0 && map[m].instance_id >= 0 )
-		mapindex = map[map[m].instance_src_map].index;
+		mapindex = map_id2index(map[m].instance_src_map);
 	else
 		mapindex = sd->mapindex;
 

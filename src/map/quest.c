@@ -189,29 +189,28 @@ int quest_delete(TBL_PC * sd, int quest_id)
 	return 0;
 }
 
-int quest_update_objective_sub(struct block_list *bl, va_list ap)
-{
+int quest_update_objective_sub(struct block_list *bl, va_list ap) {
 	struct map_session_data * sd;
-	int mob, party;
+	int mob_id, party_id;
 
 	nullpo_ret(bl);
 	nullpo_ret(sd = (struct map_session_data *)bl);
 
-	party = va_arg(ap,int);
-	mob = va_arg(ap,int);
+	party_id = va_arg(ap,int);
+	mob_id = va_arg(ap,int);
 
 	if( !sd->avail_quests )
 		return 0;
-	if( sd->status.party_id != party )
+	if( sd->status.party_id != party_id )
 		return 0;
 
-	quest->update_objective(sd, mob);
+	quest->update_objective(sd, mob_id);
 
 	return 1;
 }
 
 
-void quest_update_objective(TBL_PC * sd, int mob) {
+void quest_update_objective(TBL_PC * sd, int mob_id) {
 	int i,j;
 
 	for( i = 0; i < sd->avail_quests; i++ ) {
@@ -219,7 +218,7 @@ void quest_update_objective(TBL_PC * sd, int mob) {
 			continue;
 
 		for( j = 0; j < MAX_QUEST_OBJECTIVES; j++ )
-			if( quest->db[sd->quest_index[i]].mob[j] == mob && sd->quest_log[i].count[j] < quest->db[sd->quest_index[i]].count[j] )  {
+			if( quest->db[sd->quest_index[i]].mob[j] == mob_id && sd->quest_log[i].count[j] < quest->db[sd->quest_index[i]].count[j] )  {
 				sd->quest_log[i].count[j]++;
 				sd->save_quest = true;
 				clif->quest_update_objective(sd,&sd->quest_log[i],sd->quest_index[i]);

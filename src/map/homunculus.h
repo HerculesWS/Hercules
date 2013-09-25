@@ -53,13 +53,13 @@ struct homun_data {
 	struct status_data base_status, battle_status;
 	struct status_change sc;
 	struct regen_data regen;
-	struct s_homunculus_db *homunculusDB;	//[orn]
-	struct s_homunculus homunculus;	//[orn]
+	struct s_homunculus_db *homunculusDB; //[orn]
+	struct s_homunculus homunculus;       //[orn]
 
-	struct map_session_data *master; //pointer back to its master
-	int hungry_timer;	//[orn]
+	struct map_session_data *master;      //pointer back to its master
+	int hungry_timer;                     //[orn]
 	unsigned int exp_next;
-	char blockskill[MAX_SKILL];	// [orn]
+	char blockskill[MAX_SKILL];           // [orn]
 };
 
 struct homun_skill_tree_entry {
@@ -74,9 +74,10 @@ struct homun_skill_tree_entry {
 }; // Celest
 
 enum homun_type {
-	HT_REG	= 0x1,
-	HT_EVO	= 0x2,
-	HT_S	= 0x4,
+	HT_REG,          // Regular Homunculus
+	HT_EVO,          // Evolved Homunculus
+	HT_S,            // Homunculus S
+	HT_INVALID = -1, // Invalid Homunculus
 };
 
 /* homunculus.c interface */

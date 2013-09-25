@@ -8,7 +8,7 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY : all clean help
+.PHONY: all clean help
 
 all: $(MT19937AR_OBJ)
 
@@ -24,6 +24,10 @@ help:
 
 #####################################################################
 
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. 3rdparty/mt19937ar/Makefile
+
+%.o: %.c $(LIBCONFIG_H) Makefile
 %.o: %.c $(MT19937AR_H)
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<

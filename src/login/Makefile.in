@@ -1,25 +1,26 @@
 
 COMMON_H = $(shell ls ../common/*.h)
+CONFIG_H = $(shell ls ../config/*.h ../config/*/*.h)
 
-MT19937AR_OBJ = ../../3rdparty/mt19937ar/mt19937ar.o
-MT19937AR_H = ../../3rdparty/mt19937ar/mt19937ar.h
-MT19937AR_INCLUDE = -I../../3rdparty/mt19937ar
+MT19937AR_D = ../../3rdparty/mt19937ar
+MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
+MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
+MT19937AR_INCLUDE = -I$(MT19937AR_D)
 
-LIBCONFIG_OBJ = ../../3rdparty/libconfig/libconfig.o ../../3rdparty/libconfig/grammar.o \
-	../../3rdparty/libconfig/scanctx.o ../../3rdparty/libconfig/scanner.o ../../3rdparty/libconfig/strbuf.o
-LIBCONFIG_H = ../../3rdparty/libconfig/libconfig.h ../../3rdparty/libconfig/grammar.h \
-	../../3rdparty/libconfig/parsectx.h ../../3rdparty/libconfig/scanctx.h ../../3rdparty/libconfig/scanner.h \
-	../../3rdparty/libconfig/strbuf.h ../../3rdparty/libconfig/wincompat.h
-LIBCONFIG_INCLUDE = -I../../3rdparty/libconfig
+LIBCONFIG_D = ../../3rdparty/libconfig
+LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
+		scanner.o strbuf.o)
+LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
+	      scanctx.h scanner.h strbuf.h wincompat.h)
+LIBCONFIG_INCLUDE = -I$(LIBCONFIG_D)
 
-LOGIN_OBJ = login.o
-LOGIN_SQL_OBJ = $(LOGIN_OBJ:%=obj_sql/%) \
-	obj_sql/account_sql.o obj_sql/ipban_sql.o obj_sql/loginlog_sql.o
+LOGIN_OBJ = $(addprefix obj_sql/, account_sql.o ipban_sql.o login.o \
+	    loginlog_sql.o)
 LOGIN_H = login.h account.h ipban.h loginlog.h
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	LOGIN_SERVER_SQL_DEPENDS=obj_sql $(LOGIN_SQL_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a  $(MT19937AR_OBJ)
+	LOGIN_SERVER_SQL_DEPENDS=$(LOGIN_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ)
 else
 	LOGIN_SERVER_SQL_DEPENDS=needs_mysql
 endif
@@ -30,24 +31,27 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY :all sql clean help
+.PHONY: all sql login-server clean help
 
 all: sql
 
-sql: obj_sql login-server
+sql: login-server
 
 clean:
 	@echo "	CLEAN	login"
 	@rm -rf *.o obj_sql ../../login-server@EXEEXT@
 
 help:
-	@echo "possible targets are 'sql' 'all' 'clean' 'help'"
-	@echo "'sql'       - login server (SQL version)"
-	@echo "'all'       - builds all above targets"
-	@echo "'clean'     - cleans builds and objects"
-	@echo "'help'      - outputs this message"
+	@echo "possible targets are 'login-server' 'all' 'clean' 'help'"
+	@echo "'login-server' - login server"
+	@echo "'all'          - builds all above targets"
+	@echo "'clean'        - cleans builds and objects"
+	@echo "'help'         - outputs this message"
 
 #####################################################################
+
+Makefile: Makefile.in
+	@$(MAKE) -C ../.. src/login/Makefile
 
 needs_mysql:
 	@echo "MySQL not found or disabled by the configure script"
@@ -59,28 +63,33 @@ obj_sql:
 	@echo "	MKDIR	obj_sql"
 	@-mkdir obj_sql
 
-#executables
+# executables
 
-login-server: $(LOGIN_SERVER_SQL_DEPENDS)
-	@echo "	LD	$@"
-	@$(CC) @LDFLAGS@ -o ../../login-server@EXEEXT@ $(LOGIN_SQL_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
-	    
+login-server: ../../login-server@EXEEXT@
+
+../../login-server@EXEEXT@: $(LOGIN_SERVER_SQL_DEPENDS) Makefile
+	@echo "	LD	$(notdir $@)"
+	@$(CC) @LDFLAGS@ -o ../../login-server@EXEEXT@ $(LOGIN_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
 
 # login object files
 
-obj_sql/%.o: %.c $(LOGIN_H) $(COMMON_H) $(MT19937AR_H) $(LIBCONFIG_H)
+obj_sql/%.o: %.c $(LOGIN_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj_sql
 	@echo "	CC	$<"
 	@$(CC) @CFLAGS@ $(MT19937AR_INCLUDE) $(LIBCONFIG_INCLUDE) -DWITH_SQL @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 # missing object files
 ../common/obj_all/common.a:
+	@echo "	MAKE	$@"
 	@$(MAKE) -C ../common sql
 
 ../common/obj_sql/common_sql.a:
+	@echo "	MAKE	$@"
 	@$(MAKE) -C ../common sql
 
 $(MT19937AR_OBJ):
-	@$(MAKE) -C ../../3rdparty/mt19937ar
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(MT19937AR_D)
 
 $(LIBCONFIG_OBJ):
-	@$(MAKE) -C ../../3rdparty/libconfig
+	@echo "	MAKE	$@"
+	@$(MAKE) -C $(LIBCONFIG_D)

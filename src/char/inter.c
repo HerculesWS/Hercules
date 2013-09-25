@@ -451,7 +451,7 @@ void mapif_parse_accinfo(int fd) {
 	account_id = atoi(query);
 
 	if (account_id < START_ACCOUNT_NUM) {	// is string
-		if ( SQL_ERROR == SQL->Query(sql_handle, "SELECT `account_id`,`name`,`class`,`base_level`,`job_level`,`online` FROM `char` WHERE `name` LIKE '%s' LIMIT 10", query_esq)
+		if ( SQL_ERROR == SQL->Query(sql_handle, "SELECT `account_id`,`name`,`class`,`base_level`,`job_level`,`online` FROM `%s` WHERE `name` LIKE '%s' LIMIT 10", char_db, query_esq)
 				|| SQL->NumRows(sql_handle) == 0 ) {
 			if( SQL->NumRows(sql_handle) == 0 ) {
 				inter_to_fd(fd, u_fd, aid, "No matches were found for your criteria, '%s'",query);
@@ -490,9 +490,10 @@ void mapif_parse_accinfo(int fd) {
 
 	/* it will only get here if we have a single match */
 	if( account_id ) {
-		char userid[NAME_LENGTH], user_pass[NAME_LENGTH], email[40], last_ip[20], lastlogin[30], pincode[5], birthdate[11];
+		char userid[NAME_LENGTH], user_pass[NAME_LENGTH], email[40], last_ip[20], lastlogin[30], pin_code[5], birthdate[11];
 		short level = -1;
 		int logincount = 0,state = 0;
+		// FIXME: No, this doesn't really look right.  We can't, and shouldn't, access the login table from the char server.
 		if ( SQL_ERROR == SQL->Query(sql_handle, "SELECT `userid`, `user_pass`, `email`, `last_ip`, `group_id`, `lastlogin`, `logincount`, `state`,`pincode`,`birthdate` FROM `login` WHERE `account_id` = '%d' LIMIT 1", account_id)
 			|| SQL->NumRows(sql_handle) == 0 ) {
 			if( SQL->NumRows(sql_handle) == 0 ) {
@@ -511,7 +512,7 @@ void mapif_parse_accinfo(int fd) {
 			SQL->GetData(sql_handle, 5, &data, NULL); safestrncpy(lastlogin, data, sizeof(lastlogin));
 			SQL->GetData(sql_handle, 6, &data, NULL); logincount = atoi(data);
 			SQL->GetData(sql_handle, 7, &data, NULL); state = atoi(data);
-			SQL->GetData(sql_handle, 8, &data, NULL); safestrncpy(pincode, data, sizeof(pincode));
+			SQL->GetData(sql_handle, 8, &data, NULL); safestrncpy(pin_code, data, sizeof(pin_code));
 			SQL->GetData(sql_handle, 9, &data, NULL); safestrncpy(birthdate, data, sizeof(birthdate));
 		}
 
@@ -524,8 +525,8 @@ void mapif_parse_accinfo(int fd) {
 		inter_to_fd(fd, u_fd, aid, "User: %s | GM Group: %d | State: %d", userid, level, state );
 
 		if (level < castergroup) { /* only show pass if your gm level is greater than the one you're searching for */
-			if( strlen(pincode) )
-				inter_to_fd(fd, u_fd, aid, "Password: %s (PIN:%s)", user_pass, pincode );
+			if( strlen(pin_code) )
+				inter_to_fd(fd, u_fd, aid, "Password: %s (PIN:%s)", user_pass, pin_code );
 			else
 				inter_to_fd(fd, u_fd, aid, "Password: %s", user_pass );
 		}
@@ -536,7 +537,7 @@ void mapif_parse_accinfo(int fd) {
 		inter_to_fd(fd, u_fd, aid, "-- Character Details --" );
 
 
-		if ( SQL_ERROR == SQL->Query(sql_handle, "SELECT `char_id`, `name`, `char_num`, `class`, `base_level`, `job_level`, `online` FROM `char` WHERE `account_id` = '%d' ORDER BY `char_num` LIMIT %d", account_id, MAX_CHARS)
+		if ( SQL_ERROR == SQL->Query(sql_handle, "SELECT `char_id`, `name`, `char_num`, `class`, `base_level`, `job_level`, `online` FROM `%s` WHERE `account_id` = '%d' ORDER BY `char_num` LIMIT %d", char_db, account_id, MAX_CHARS)
 				|| SQL->NumRows(sql_handle) == 0 ) {
 
 				if( SQL->NumRows(sql_handle) == 0 )

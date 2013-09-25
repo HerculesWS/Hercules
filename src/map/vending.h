@@ -31,7 +31,7 @@ struct vending_interface {
 	bool (*searchall) (struct map_session_data* sd, const struct s_search_store_search* s);
 };
 
-struct vending_interface * vending;
+struct vending_interface *vending;
 
 void vending_defaults(void);
 

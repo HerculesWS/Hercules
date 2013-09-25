@@ -457,8 +457,7 @@ struct mob_data *mob_once_spawn_sub(struct block_list *bl, int16 m, int16 x, int
 /*==========================================
  * Spawn a single mob on the specified coordinates.
  *------------------------------------------*/
-int mob_once_spawn(struct map_session_data* sd, int16 m, int16 x, int16 y, const char* mobname, int class_, int amount, const char* event, unsigned int size, unsigned int ai)
-{
+int mob_once_spawn(struct map_session_data* sd, int16 m, int16 x, int16 y, const char* mobname, int class_, int amount, const char* event, unsigned int size, unsigned int ai) {
 	struct mob_data* md = NULL;
 	int count, lv;
 
@@ -467,26 +466,22 @@ int mob_once_spawn(struct map_session_data* sd, int16 m, int16 x, int16 y, const
 
 	lv = (sd) ? sd->status.base_level : 255;
 
-	for (count = 0; count < amount; count++)
-	{
+	for (count = 0; count < amount; count++) {
 		int c = (class_ >= 0) ? class_ : mob->get_random_id(-class_ - 1, (battle_config.random_monster_checklv) ? 3 : 1, lv);
 		md = mob->once_spawn_sub((sd) ? &sd->bl : NULL, m, x, y, mobname, c, event, size, ai);
 
 		if (!md)
 			continue;
 
-		if (class_ == MOBID_EMPERIUM)
-		{
-			struct guild_castle* gc = guild->mapindex2gc(map[m].index);
+		if (class_ == MOBID_EMPERIUM) {
+			struct guild_castle* gc = guild->mapindex2gc(map_id2index(m));
 			struct guild* g = (gc) ? guild->search(gc->guild_id) : NULL;
-			if (gc)
-			{
+			if (gc) {
 				md->guardian_data = (struct guardian_data*)aCalloc(1, sizeof(struct guardian_data));
 				md->guardian_data->castle = gc;
 				md->guardian_data->number = MAX_GUARDIANS;
 				md->guardian_data->guild_id = gc->guild_id;
-				if (g)
-				{
+				if (g) {
 					md->guardian_data->emblem_id = g->emblem_id;
 					memcpy(md->guardian_data->guild_name, g->name, NAME_LENGTH);
 				}
@@ -497,10 +492,11 @@ int mob_once_spawn(struct map_session_data* sd, int16 m, int16 x, int16 y, const
 
 		mob->spawn(md);
 
-		if (class_ < 0 && battle_config.dead_branch_active)
+		if (class_ < 0 && battle_config.dead_branch_active) {
 			//Behold Aegis's masterful decisions yet again...
 			//"I understand the "Aggressive" part, but the "Can Move" and "Can Attack" is just stupid" - Poki#3
 			sc_start4(&md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE|MD_CANATTACK|MD_CANMOVE|MD_ANGRY, 0, 60000);
+		}
 	}
 
 	return (md) ? md->bl.id : 0; // id of last spawned mob
@@ -1182,12 +1178,12 @@ int mob_warpchase_sub(struct block_list *bl,va_list ap) {
 	if(nd->subtype != WARP)
 		return 0; //Not a warp
 
-	if(nd->u.warp.mapindex != map[target->m].index)
+	if(nd->u.warp.mapindex != map_id2index(target->m))
 		return 0; //Does not lead to the same map.
 
 	cur_distance = distance_blxy(target, nd->u.warp.x, nd->u.warp.y);
-	if (cur_distance < *min_distance)
-	{	//Pick warp that leads closest to target.
+	if (cur_distance < *min_distance) {
+		//Pick warp that leads closest to target.
 		*target_nd = nd;
 		*min_distance = cur_distance;
 		return 1;
@@ -3891,26 +3887,21 @@ bool mob_parse_dbrow(char** str)
 /*==========================================
  * mob_db.txt reading
  *------------------------------------------*/
-bool mob_readdb_sub(char* fields[], int columns, int current)
-{
+bool mob_readdb_sub(char* fields[], int columns, int current) {
 	return mob->parse_dbrow(fields);
 }
 
-void mob_readdb(void)
-{
+void mob_readdb(void) {
 	const char* filename[] = {
 		DBPATH"mob_db.txt",
 		"mob_db2.txt" };
 	int fi;
 
-	for( fi = 0; fi < ARRAYLENGTH(filename); ++fi )
-	{
-		if(fi > 0)
-		{
-			char path[256];
-			sprintf(path, "%s/%s", iMap->db_path, filename[fi]);
-			if(!exists(path))
-			{
+	for( fi = 0; fi < ARRAYLENGTH(filename); ++fi ) {
+		if(fi > 0) {
+			char filepath[256];
+			sprintf(filepath, "%s/%s", iMap->db_path, filename[fi]);
+			if(!exists(filepath)) {
 				continue;
 			}
 		}
@@ -4139,23 +4130,20 @@ bool mob_parse_row_chatdb(char** str, const char* source, int line, int* last_ms
 /*==========================================
  * mob_chat_db.txt reading [SnakeDrak]
  *-------------------------------------------------------------------------*/
-void mob_readchatdb(void)
-{
+void mob_readchatdb(void) {
 	char arc[]="mob_chat_db.txt";
 	uint32 lines=0, count=0;
-	char line[1024], path[256];
+	char line[1024], filepath[256];
 	int i, tmp=0;
 	FILE *fp;
-	sprintf(path, "%s/%s", iMap->db_path, arc);
-	fp=fopen(path, "r");
-	if(fp == NULL)
-	{
-		ShowWarning("mob_readchatdb: File not found \"%s\", skipping.\n", path);
+	sprintf(filepath, "%s/%s", iMap->db_path, arc);
+	fp=fopen(filepath, "r");
+	if(fp == NULL) {
+		ShowWarning("mob_readchatdb: File not found \"%s\", skipping.\n", filepath);
 		return;
 	}
 
-	while(fgets(line, sizeof(line), fp))
-	{
+	while(fgets(line, sizeof(line), fp)) {
 		char *str[3], *p, *np;
 		int j=0;
 
@@ -4183,7 +4171,7 @@ void mob_readchatdb(void)
 			continue;
 		}
 
-		if( !mob->parse_row_chatdb(str, path, lines, &tmp) )
+		if( !mob->parse_row_chatdb(str, filepath, lines, &tmp) )
 			continue;
 
 		count++;
@@ -4461,20 +4449,16 @@ void mob_readskilldb(void) {
 		"mob_skill_db2.txt" };
 	int fi;
 
-	if( battle_config.mob_skill_rate == 0 )
-	{
+	if( battle_config.mob_skill_rate == 0 ) {
 		ShowStatus("Mob skill use disabled. Not reading mob skills.\n");
 		return;
 	}
 
-	for( fi = 0; fi < ARRAYLENGTH(filename); ++fi )
-	{
-		if(fi > 0)
-		{
-			char path[256];
-			sprintf(path, "%s/%s", iMap->db_path, filename[fi]);
-			if(!exists(path))
-			{
+	for( fi = 0; fi < ARRAYLENGTH(filename); ++fi ) {
+		if(fi > 0) {
+			char filepath[256];
+			sprintf(filepath, "%s/%s", iMap->db_path, filename[fi]);
+			if(!exists(filepath)) {
 				continue;
 			}
 		}

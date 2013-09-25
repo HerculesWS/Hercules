@@ -444,9 +444,9 @@ bool bin2hex(char* output, unsigned char* input, size_t count)
 /// Parses a single field in a delim-separated string.
 /// The delimiter after the field is skipped.
 ///
-/// @param sv Parse state
+/// @param svstate Parse state
 /// @return 1 if a field was parsed, 0 if already done, -1 on error.
-int sv_parse_next(struct s_svstate* sv)
+int sv_parse_next(struct s_svstate* svstate)
 {
 	enum {
 		START_OF_FIELD,
@@ -462,13 +462,13 @@ int sv_parse_next(struct s_svstate* sv)
 	char delim;
 	int i;
 
-	if( sv == NULL )
+	if( svstate == NULL )
 		return -1;// error
 
-	str = sv->str;
-	len = sv->len;
-	opt = sv->opt;
-	delim = sv->delim;
+	str = svstate->str;
+	len = svstate->len;
+	opt = svstate->opt;
+	delim = svstate->delim;
 
 	// check opt
 	if( delim == '\n' && (opt&(SV_TERMINATE_CRLF|SV_TERMINATE_LF)) )
@@ -482,9 +482,9 @@ int sv_parse_next(struct s_svstate* sv)
 		return -1;// error
 	}
 
-	if( sv->done || str == NULL )
+	if( svstate->done || str == NULL )
 	{
-		sv->done = true;
+		svstate->done = true;
 		return 0;// nothing to parse
 	}
 
@@ -495,10 +495,10 @@ int sv_parse_next(struct s_svstate* sv)
 	((opt&SV_TERMINATE_CR) && str[i] == '\r') || \
 	((opt&SV_TERMINATE_CRLF) && i+1 < len && str[i] == '\r' && str[i+1] == '\n') )
 #define IS_C_ESCAPE() ( (opt&SV_ESCAPE_C) && str[i] == '\\' )
-#define SET_FIELD_START() sv->start = i
-#define SET_FIELD_END() sv->end = i
+#define SET_FIELD_START() svstate->start = i
+#define SET_FIELD_END() svstate->end = i
 
-	i = sv->off;
+	i = svstate->off;
 	state = START_OF_FIELD;
 	while( state != END )
 	{
@@ -578,14 +578,14 @@ int sv_parse_next(struct s_svstate* sv)
 			else
 				++i;// CR or LF
 #endif
-			sv->done = true;
+			svstate->done = true;
 			state = END;
 			break;
 		}
 	}
 	if( IS_END() )
-		sv->done = true;
-	sv->off = i;
+		svstate->done = true;
+	svstate->off = i;
 
 #undef IS_END
 #undef IS_DELIM
@@ -619,31 +619,31 @@ int sv_parse_next(struct s_svstate* sv)
 /// @param opt Options that determine the parsing behaviour
 /// @return Number of fields found in the string or -1 if an error occured
 int sv_parse(const char* str, int len, int startoff, char delim, int* out_pos, int npos, enum e_svopt opt) {
-	struct s_svstate sv;
+	struct s_svstate svstate;
 	int count;
 
 	// initialize
 	if( out_pos == NULL ) npos = 0;
 	for( count = 0; count < npos; ++count )
 		out_pos[count] = -1;
-	sv.str = str;
-	sv.len = len;
-	sv.off = startoff;
-	sv.opt = opt;
-	sv.delim = delim;
-	sv.done = false;
+	svstate.str = str;
+	svstate.len = len;
+	svstate.off = startoff;
+	svstate.opt = opt;
+	svstate.delim = delim;
+	svstate.done = false;
 
 	// parse
 	count = 0;
 	if( npos > 0 ) out_pos[0] = startoff;
-	while( !sv.done ) {
+	while( !svstate.done ) {
 		++count;
-		if( sv_parse_next(&sv) <= 0 )
+		if( sv_parse_next(&svstate) <= 0 )
 			return -1;// error
-		if( npos > count*2 ) out_pos[count*2] = sv.start;
-		if( npos > count*2+1 ) out_pos[count*2+1] = sv.end;
+		if( npos > count*2 ) out_pos[count*2] = svstate.start;
+		if( npos > count*2+1 ) out_pos[count*2+1] = svstate.end;
 	}
-	if( npos > 1 ) out_pos[1] = sv.off;
+	if( npos > 1 ) out_pos[1] = svstate.off;
 	return count;
 }
 

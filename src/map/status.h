@@ -1796,7 +1796,7 @@ struct status_interface {
 	
 	int (*get_refine_chance) (enum refine_type wlv, int refine);
 	// for looking up associated data
-	sc_type (*skill2sc) (int skill);
+	sc_type (*skill2sc) (int skill_id);
 	int (*sc2skill) (sc_type sc);
 	unsigned int (*sc2scb_flag) (sc_type sc);
 	int (*type2relevant_bl_types) (int type);
