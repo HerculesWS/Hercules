@@ -1854,7 +1854,7 @@ struct status_interface {
 	int (*calc_elemental_) (struct elemental_data *ed, bool first);
 	
 	void (*calc_misc) (struct block_list *bl, struct status_data *status, int level);
-	void (*calc_regen) (struct block_list *bl, struct status_data *status, struct regen_data *regen);
+	void (*calc_regen) (struct block_list *bl, struct status_data *st, struct regen_data *regen);
 	void (*calc_regen_rate) (struct block_list *bl, struct regen_data *regen, struct status_change *sc);
 	
 	int (*check_skilluse) (struct block_list *src, struct block_list *target, uint16 skill_id, int flag); // [Skotlex]
@@ -1869,7 +1869,7 @@ struct status_interface {
 	unsigned short (*calc_batk) (struct block_list *, struct status_change *, int, bool);
 	
 #ifdef RENEWAL
-	unsigned short (*base_matk) (const struct status_data* status, int level);
+	unsigned short (*base_matk) (const struct status_data *st, int level);
 	int (*get_weapon_atk) (struct block_list *src, struct weapon_atk *watk, int flag);
 #endif
 	int (*get_total_mdef) (struct block_list *src);

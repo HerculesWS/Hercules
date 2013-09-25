@@ -1114,10 +1114,9 @@ int pet_recovery_timer(int tid, unsigned int tick, int id, intptr_t data)
 	return 0;
 }
 
-int pet_heal_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+int pet_heal_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	struct map_session_data *sd=iMap->id2sd(id);
-	struct status_data *status;
+	struct status_data *st;
 	struct pet_data *pd;
 	unsigned int rate = 100;
 	
@@ -1131,11 +1130,11 @@ int pet_heal_timer(int tid, unsigned int tick, int id, intptr_t data)
 		return 0;
 	}
 	
-	status = iStatus->get_status_data(&sd->bl);
+	st = iStatus->get_status_data(&sd->bl);
 	
 	if(pc_isdead(sd) ||
-		(rate = get_percentage(status->sp, status->max_sp)) > pd->s_skill->sp ||
-		(rate = get_percentage(status->hp, status->max_hp)) > pd->s_skill->hp ||
+		(rate = get_percentage(st->sp, st->max_sp)) > pd->s_skill->sp ||
+		(rate = get_percentage(st->hp, st->max_hp)) > pd->s_skill->hp ||
 		(rate = (pd->ud.skilltimer != INVALID_TIMER)) //Another skill is in effect
 	) {  //Wait (how long? 1 sec for every 10% of remaining)
 		pd->s_skill->timer=timer->add(timer->gettick()+(rate>10?rate:10)*100,pet->heal_timer,sd->bl.id,0);
@@ -1152,11 +1151,10 @@ int pet_heal_timer(int tid, unsigned int tick, int id, intptr_t data)
 /*==========================================
  * pet support skills [Skotlex]
  *------------------------------------------*/ 
-int pet_skill_support_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+int pet_skill_support_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	struct map_session_data *sd=iMap->id2sd(id);
 	struct pet_data *pd;
-	struct status_data *status;
+	struct status_data *st;
 	short rate = 100;
 	if(sd==NULL || sd->pd == NULL || sd->pd->s_skill == NULL)
 		return 1;
@@ -1168,7 +1166,7 @@ int pet_skill_support_timer(int tid, unsigned int tick, int id, intptr_t data)
 		return 0;
 	}
 	
-	status = iStatus->get_status_data(&sd->bl);
+	st = iStatus->get_status_data(&sd->bl);
 
 	if (DIFF_TICK(pd->ud.canact_tick, tick) > 0)
 	{	//Wait until the pet can act again.
@@ -1177,8 +1175,8 @@ int pet_skill_support_timer(int tid, unsigned int tick, int id, intptr_t data)
 	}
 	
 	if(pc_isdead(sd) ||
-		(rate = get_percentage(status->sp, status->max_sp)) > pd->s_skill->sp ||
-		(rate = get_percentage(status->hp, status->max_hp)) > pd->s_skill->hp ||
+		(rate = get_percentage(st->sp, st->max_sp)) > pd->s_skill->sp ||
+		(rate = get_percentage(st->hp, st->max_hp)) > pd->s_skill->hp ||
 		(rate = (pd->ud.skilltimer != INVALID_TIMER)) //Another skill is in effect
 	) {  //Wait (how long? 1 sec for every 10% of remaining)
 		pd->s_skill->timer=timer->add(tick+(rate>10?rate:10)*100,pet->skill_support_timer,sd->bl.id,0);

@@ -501,28 +501,26 @@ int64 battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, u
  *&16: Arrow attack but BOW, REVOLVER, RIFLE, SHOTGUN, GATLING or GRENADE type weapon not equipped (i.e. shuriken, kunai and venom knives not affected by DEX)
  */
 #ifdef RENEWAL
-int64 battle_calc_base_damage(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, int flag, int flag2)
-{
+int64 battle_calc_base_damage(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, int flag, int flag2) {
 	int64 damage, batk;
-	struct status_data *status = iStatus->get_status_data(src);
+	struct status_data *st = iStatus->get_status_data(src);
 	
-	batk = battle->calc_elefix(src, bl, skill_id, skill_lv, iStatus->calc_batk(bl, iStatus->get_sc(src), status->batk, false), nk, n_ele, ELE_NEUTRAL, ELE_NEUTRAL, false, flag);
+	batk = battle->calc_elefix(src, bl, skill_id, skill_lv, iStatus->calc_batk(bl, iStatus->get_sc(src), st->batk, false), nk, n_ele, ELE_NEUTRAL, ELE_NEUTRAL, false, flag);
 
 	if( type == EQI_HAND_L )
-		damage = batk + 3 * battle->calc_weapon_damage(src, bl, skill_id, skill_lv, &status->lhw, nk, n_ele, s_ele, s_ele_, status_get_size(bl), type, flag, flag2) / 4;
+		damage = batk + 3 * battle->calc_weapon_damage(src, bl, skill_id, skill_lv, &st->lhw, nk, n_ele, s_ele, s_ele_, status_get_size(bl), type, flag, flag2) / 4;
 	else
-		damage = (batk << 1) + battle->calc_weapon_damage(src, bl, skill_id, skill_lv, &status->rhw, nk, n_ele, s_ele, s_ele_, status_get_size(bl), type, flag, flag2);
+		damage = (batk << 1) + battle->calc_weapon_damage(src, bl, skill_id, skill_lv, &st->rhw, nk, n_ele, s_ele, s_ele_, status_get_size(bl), type, flag, flag2);
 #else
-static int64 battle_calc_base_damage(struct status_data *status, struct weapon_atk *wa, struct status_change *sc, unsigned short t_size, struct map_session_data *sd, int flag)
-{
+static int64 battle_calc_base_damage(struct status_data *st, struct weapon_atk *wa, struct status_change *sc, unsigned short t_size, struct map_session_data *sd, int flag) {
 	unsigned int atkmin=0, atkmax=0;
 	short type = 0;
 	int64 damage = 0;
 
 	if (!sd) { //Mobs/Pets
 		if(flag&4) {
-			atkmin = status->matk_min;
-			atkmax = status->matk_max;
+			atkmin = st->matk_min;
+			atkmax = st->matk_max;
 		} else {
 			atkmin = wa->atk;
 			atkmax = wa->atk2;
@@ -531,10 +529,10 @@ static int64 battle_calc_base_damage(struct status_data *status, struct weapon_a
 			atkmin = atkmax;
 	} else { //PCs
 		atkmax = wa->atk;
-		type = (wa == &status->lhw)?EQI_HAND_L:EQI_HAND_R;
+		type = (wa == &st->lhw)?EQI_HAND_L:EQI_HAND_R;
 
 		if (!(flag&1) || (flag&2)) { //Normal attacks
-			atkmin = status->dex;
+			atkmin = st->dex;
 
 			if (sd->equip_index[type] >= 0 && sd->inventory_data[sd->equip_index[type]])
 				atkmin = atkmin*(80 + sd->inventory_data[sd->equip_index[type]]->wlv*20)/100;
@@ -571,9 +569,9 @@ static int64 battle_calc_base_damage(struct status_data *status, struct weapon_a
 
 	//Finally, add baseatk
 	if(flag&4)
-		damage += status->matk_min;
+		damage += st->matk_min;
 	else
-		damage += status->batk;
+		damage += st->batk;
 
 	//rodatazone says that Overrefine bonuses are part of baseatk
 	//Here we also apply the weapon_atk_rate bonus so it is correctly applied on left/right hands.
@@ -606,7 +604,7 @@ int64 battle_calc_sizefix(struct map_session_data *sd, int64 damage, int type, i
  *------------------------------------------*/
 int64 battle_addmastery(struct map_session_data *sd,struct block_list *target,int64 dmg,int type) {
 	int64 damage;
-	struct status_data *status = iStatus->get_status_data(target);
+	struct status_data *st = iStatus->get_status_data(target);
 	int weapon, skill_lv;
 	damage = dmg;
 
@@ -614,12 +612,12 @@ int64 battle_addmastery(struct map_session_data *sd,struct block_list *target,in
 
 	if((skill_lv = pc->checkskill(sd,AL_DEMONBANE)) > 0 &&
 		target->type == BL_MOB && //This bonus doesnt work against players.
-		(battle->check_undead(status->race,status->def_ele) || status->race==RC_DEMON) )
+		(battle->check_undead(st->race,st->def_ele) || st->race==RC_DEMON) )
 		damage += (int)(skill_lv*(3+sd->status.base_level/20.0));
 		//damage += (skill_lv * 3);
-	if( (skill_lv = pc->checkskill(sd, RA_RANGERMAIN)) > 0 && (status->race == RC_BRUTE || status->race == RC_PLANT || status->race == RC_FISH) )
+	if( (skill_lv = pc->checkskill(sd, RA_RANGERMAIN)) > 0 && (st->race == RC_BRUTE || st->race == RC_PLANT || st->race == RC_FISH) )
 		damage += (skill_lv * 5);
-	if( (skill_lv = pc->checkskill(sd,NC_RESEARCHFE)) > 0 && (status->def_ele == ELE_FIRE || status->def_ele == ELE_EARTH) )
+	if( (skill_lv = pc->checkskill(sd,NC_RESEARCHFE)) > 0 && (st->def_ele == ELE_FIRE || st->def_ele == ELE_EARTH) )
 		damage += (skill_lv * 10);
 	if( pc_ismadogear(sd) )
 		damage += 20 + 20 * pc->checkskill(sd, NC_MADOLICENCE);
@@ -627,7 +625,7 @@ int64 battle_addmastery(struct map_session_data *sd,struct block_list *target,in
 	if( (skill_lv = pc->checkskill(sd,BS_WEAPONRESEARCH)) > 0 )
 		damage += (skill_lv * 2);
 #endif
-	if((skill_lv = pc->checkskill(sd,HT_BEASTBANE)) > 0 && (status->race==RC_BRUTE || status->race==RC_INSECT) ) {
+	if((skill_lv = pc->checkskill(sd,HT_BEASTBANE)) > 0 && (st->race==RC_BRUTE || st->race==RC_INSECT) ) {
 		damage += (skill_lv * 4);
 		if (sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_HUNTER)
 			damage += sd->status.str;
@@ -1377,7 +1375,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 	int i;
 	struct status_change *sc, *tsc;
 	struct map_session_data *sd, *tsd;
-	struct status_data *status, *tstatus;
+	struct status_data *st, *tst;
 
 	nullpo_ret(src);
 	nullpo_ret(target);
@@ -1386,8 +1384,8 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 	tsd = BL_CAST(BL_PC, target);
 	sc = iStatus->get_sc(src);
 	tsc = iStatus->get_sc(target);
-	status = iStatus->get_status_data(src);
-	tstatus = iStatus->get_status_data(target);
+	st = iStatus->get_status_data(src);
+	tst = iStatus->get_status_data(target);
 
 	switch(attack_type){
 		case BF_MAGIC:
@@ -1403,7 +1401,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 			#endif
 					break;
 				case MG_SOULSTRIKE:
-					if (battle->check_undead(tstatus->race,tstatus->def_ele))
+					if (battle->check_undead(tst->race,tst->def_ele))
 						skillratio += 5*skill_lv;
 					break;
 				case MG_FIREWALL:
@@ -1450,10 +1448,10 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio += 10 * skill_lv - 30;
 					break;
 				case SL_STIN:
-					skillratio += (tstatus->size!=SZ_SMALL?-99:10*skill_lv); //target size must be small (0) for full damage.
+					skillratio += (tst->size!=SZ_SMALL?-99:10*skill_lv); //target size must be small (0) for full damage.
 					break;
 				case SL_STUN:
-					skillratio += (tstatus->size!=SZ_BIG?5*skill_lv:-99); //Full damage is dealt on small/medium targets
+					skillratio += (tst->size!=SZ_BIG?5*skill_lv:-99); //Full damage is dealt on small/medium targets
 					break;
 				case SL_SMA:
 					skillratio += -60 + iStatus->get_lv(src); //Base damage is 40% + lv%
@@ -1904,7 +1902,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 	#ifndef RENEWAL
 				case MO_EXTREMITYFIST:
 					{	//Overflow check. [Skotlex]
-						unsigned int ratio = skillratio + 100*(8 + status->sp/10);
+						unsigned int ratio = skillratio + 100*(8 + st->sp/10);
 						//You'd need something like 6K SP to reach this max, so should be fine for most purposes.
 						if (ratio > 60000) ratio = 60000; //We leave some room here in case skillratio gets further increased.
 						skillratio = (unsigned short)ratio;
@@ -2009,8 +2007,8 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					break;
 				case GS_BULLSEYE:
 					//Only works well against brute/demihumans non bosses.
-					if((tstatus->race == RC_BRUTE || tstatus->race == RC_DEMIHUMAN)
-						&& !(tstatus->mode&MD_BOSS))
+					if((tst->race == RC_BRUTE || tst->race == RC_DEMIHUMAN)
+						&& !(tst->mode&MD_BOSS))
 						skillratio += 400;
 					break;
 				case GS_TRACKING:
@@ -2109,7 +2107,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 						else
 							skillratio += 200 * skill_lv;
 						skillratio = (skillratio - 100) * (100 + (iStatus->get_lv(src)-100)) / 100;
-						if( status->rhw.ele == ELE_FIRE )
+						if( st->rhw.ele == ELE_FIRE )
 							skillratio +=  100 * skill_lv;
 					break;
 				case RK_CRUSHSTRIKE:
@@ -2117,7 +2115,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					{//ATK [{Weapon Level * (Weapon Upgrade Level + 6) * 100} + (Weapon ATK) + (Weapon Weight)]%
 						short index = sd->equip_index[EQI_HAND_R];
 						if( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_WEAPON )
-							skillratio += -100 + sd->inventory_data[index]->weight/10 + status->rhw.atk +
+							skillratio += -100 + sd->inventory_data[index]->weight/10 + st->rhw.atk +
 								100 * sd->inventory_data[index]->wlv * (sd->status.inventory[index].refine + 6);
 					}
 					break;
@@ -2210,7 +2208,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					RE_LVL_DMOD(100);
 					break;
 				case NC_ARMSCANNON:
-					switch( tstatus->size ) {
+					switch( tst->size ) {
 						case SZ_SMALL: skillratio += 100 + 500 * skill_lv; break;// Small
 						case SZ_MEDIUM: skillratio += 100 + 400 * skill_lv; break;// Medium
 						case SZ_BIG: skillratio += 100 + 300 * skill_lv; break;// Large
@@ -2379,7 +2377,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					RE_LVL_DMOD(150);
 					break;
 				case SR_RIDEINLIGHTNING: // ATK [{(Skill Level x 200) + Additional Damage} x Caster Base Level / 100] %
-					if( (status->rhw.ele) == ELE_WIND || (status->lhw.ele) == ELE_WIND )
+					if( (st->rhw.ele) == ELE_WIND || (st->lhw.ele) == ELE_WIND )
 						skillratio += skill_lv * 50;
 					skillratio += -100 + 200 * skill_lv;
 					RE_LVL_DMOD(100);
@@ -2855,11 +2853,11 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if(sc->data[SC_ENERGYCOAT] && (flag&BF_WEAPON && skill_id != WS_CARTTERMINATION))
 #endif
 		{
-			struct status_data *status = iStatus->get_status_data(bl);
-			int per = 100*status->sp / status->max_sp -1; //100% should be counted as the 80~99% interval
+			struct status_data *sstatus = iStatus->get_status_data(bl);
+			int per = 100*sstatus->sp / sstatus->max_sp -1; //100% should be counted as the 80~99% interval
 			per /=20; //Uses 20% SP intervals.
 			//SP Cost: 1% + 0.5% per every 20% SP
-			if (!iStatus->charge(bl, 0, (10+5*per)*status->max_sp/1000))
+			if (!iStatus->charge(bl, 0, (10+5*per)*sstatus->max_sp/1000))
 				status_change_end(bl, SC_ENERGYCOAT, INVALID_TIMER);
 			//Reduction: 6% + 6% every 20%
 			damage -= damage * (6 * (1+per)) / 100;

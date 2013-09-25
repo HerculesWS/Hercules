@@ -226,7 +226,7 @@ void quest_update_objective(TBL_PC * sd, int mob_id) {
 	}
 }
 
-int quest_update_status(TBL_PC * sd, int quest_id, quest_state status) {
+int quest_update_status(TBL_PC * sd, int quest_id, quest_state qs) {
 	int i;
 
 	//Only status of active and inactive quests can be updated. Completed quests can't (for now). [Inkfish]
@@ -236,11 +236,11 @@ int quest_update_status(TBL_PC * sd, int quest_id, quest_state status) {
 		return -1;
 	}
 
-	sd->quest_log[i].state = status;
+	sd->quest_log[i].state = qs;
 	sd->save_quest = true;
 
-	if( status < Q_COMPLETE ) {
-		clif->quest_update_status(sd, quest_id, (bool)status);
+	if( qs < Q_COMPLETE ) {
+		clif->quest_update_status(sd, quest_id, (bool)qs);
 		return 0;
 	}
 

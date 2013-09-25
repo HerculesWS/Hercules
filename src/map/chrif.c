@@ -598,7 +598,7 @@ void chrif_authok(int fd) {
 	int account_id, group_id, char_id;
 	uint32 login_id1,login_id2;
 	time_t expiration_time;
-	struct mmo_charstatus* status;
+	struct mmo_charstatus* charstatus;
 	struct auth_node *node;
 	bool changing_mapservers;
 	TBL_PC* sd;
@@ -615,8 +615,8 @@ void chrif_authok(int fd) {
 	expiration_time = (time_t)(int32)RFIFOL(fd,16);
 	group_id = RFIFOL(fd,20);
 	changing_mapservers = (RFIFOB(fd,24));
-	status = (struct mmo_charstatus*)RFIFOP(fd,25);
-	char_id = status->char_id;
+	charstatus = (struct mmo_charstatus*)RFIFOP(fd,25);
+	char_id = charstatus->char_id;
 
 	//Check if we don't already have player data in our server
 	//Causes problems if the currently connected player tries to quit or this data belongs to an already connected player which is trying to re-auth.
@@ -646,7 +646,7 @@ void chrif_authok(int fd) {
 		node->char_id == char_id &&
 		node->login_id1 == login_id1 )
 	{ //Auth Ok
-		if (pc->authok(sd, login_id2, expiration_time, group_id, status, changing_mapservers))
+		if (pc->authok(sd, login_id2, expiration_time, group_id, charstatus, changing_mapservers))
 			return;
 	} else { //Auth Failed
 		pc->authfail(sd);

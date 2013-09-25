@@ -2377,11 +2377,10 @@ ACMD(zeny)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(param)
-{
+ACMD(param) {
 	int i, value = 0, new_value, max;
 	const char* param[] = { "str", "agi", "vit", "int", "dex", "luk" };
-	short* status[6];
+	short* stats[6];
  	//we don't use direct initialization because it isn't part of the c standard.
 	nullpo_retr(-1, sd);
 	
@@ -2399,28 +2398,28 @@ ACMD(param)
 		return false;
 	}
 	
-	status[0] = &sd->status.str;
-	status[1] = &sd->status.agi;
-	status[2] = &sd->status.vit;
-	status[3] = &sd->status.int_;
-	status[4] = &sd->status.dex;
-	status[5] = &sd->status.luk;
+	stats[0] = &sd->status.str;
+	stats[1] = &sd->status.agi;
+	stats[2] = &sd->status.vit;
+	stats[3] = &sd->status.int_;
+	stats[4] = &sd->status.dex;
+	stats[5] = &sd->status.luk;
 	
 	if( battle_config.atcommand_max_stat_bypass )
 		max = SHRT_MAX;
 	else
 		max = pc_maxparameter(sd);
 	
-	if(value < 0 && *status[i] <= -value) {
+	if(value < 0 && *stats[i] <= -value) {
 		new_value = 1;
-	} else if(max - *status[i] < value) {
+	} else if(max - *stats[i] < value) {
 		new_value = max;
 	} else {
-		new_value = *status[i] + value;
+		new_value = *stats[i] + value;
 	}
 	
-	if (new_value != *status[i]) {
-		*status[i] = new_value;
+	if (new_value != *stats[i]) {
+		*stats[i] = new_value;
 		clif->updatestatus(sd, SP_STR + i);
 		clif->updatestatus(sd, SP_USTR + i);
 		status_calc_pc(sd, 0);
@@ -2439,19 +2438,18 @@ ACMD(param)
 /*==========================================
  * Stat all by fritz (rewritten by [Yor])
  *------------------------------------------*/
-ACMD(stat_all)
-{
+ACMD(stat_all) {
 	int index, count, value, max, new_value;
-	short* status[6];
+	short* stats[6];
  	//we don't use direct initialization because it isn't part of the c standard.
 	nullpo_retr(-1, sd);
 	
-	status[0] = &sd->status.str;
-	status[1] = &sd->status.agi;
-	status[2] = &sd->status.vit;
-	status[3] = &sd->status.int_;
-	status[4] = &sd->status.dex;
-	status[5] = &sd->status.luk;
+	stats[0] = &sd->status.str;
+	stats[1] = &sd->status.agi;
+	stats[2] = &sd->status.vit;
+	stats[3] = &sd->status.int_;
+	stats[4] = &sd->status.dex;
+	stats[5] = &sd->status.luk;
 	
 	if (!message || !*message || sscanf(message, "%d", &value) < 1 || value == 0) {
 		value = pc_maxparameter(sd);
@@ -2464,17 +2462,17 @@ ACMD(stat_all)
 	}
 	
 	count = 0;
-	for (index = 0; index < ARRAYLENGTH(status); index++) {
+	for (index = 0; index < ARRAYLENGTH(stats); index++) {
 		
-		if (value > 0 && *status[index] > max - value)
+		if (value > 0 && *stats[index] > max - value)
 			new_value = max;
-		else if (value < 0 && *status[index] <= -value)
+		else if (value < 0 && *stats[index] <= -value)
 			new_value = 1;
 		else
-			new_value = *status[index] +value;
+			new_value = *stats[index] +value;
 		
-		if (new_value != (int)*status[index]) {
-			*status[index] = new_value;
+		if (new_value != (int)*stats[index]) {
+			*stats[index] = new_value;
 			clif->updatestatus(sd, SP_STR + index);
 			clif->updatestatus(sd, SP_USTR + index);
 			count++;
@@ -5440,9 +5438,8 @@ ACMD(useskill)
  *  Debug command to locate new skill IDs. It sends the
  *  three possible skill-effect packets to the area.
  *------------------------------------------*/
-ACMD(displayskill)
-{
-	struct status_data * status;
+ACMD(displayskill) {
+	struct status_data *st;
 	unsigned int tick;
 	uint16 skill_id;
 	uint16 skill_lv = 1;
@@ -5453,9 +5450,9 @@ ACMD(displayskill)
 		clif->message(fd, msg_txt(1166)); // Usage: @displayskill <skill ID> {<skill level>}
 		return false;
 	}
-	status = iStatus->get_status_data(&sd->bl);
+	st = iStatus->get_status_data(&sd->bl);
 	tick = timer->gettick();
-	clif->skill_damage(&sd->bl,&sd->bl, tick, status->amotion, status->dmotion, 1, 1, skill_id, skill_lv, 5);
+	clif->skill_damage(&sd->bl,&sd->bl, tick, st->amotion, st->dmotion, 1, 1, skill_id, skill_lv, 5);
 	clif->skill_nodamage(&sd->bl, &sd->bl, skill_id, skill_lv, 1);
 	clif->skill_poseffect(&sd->bl, skill_id, skill_lv, sd->bl.x, sd->bl.y, tick);
 	return true;
@@ -7071,10 +7068,9 @@ ACMD(homtalk)
 /*==========================================
  * Show homunculus stats
  *------------------------------------------*/
-ACMD(hominfo)
-{
+ACMD(hominfo) {
 	struct homun_data *hd;
-	struct status_data *status;
+	struct status_data *st;
 	nullpo_retr(-1, sd);
 	
 	if ( !homun_alive(sd->hd) ) {
@@ -7083,15 +7079,15 @@ ACMD(hominfo)
 	}
 	
 	hd = sd->hd;
-	status = iStatus->get_status_data(&hd->bl);
+	st = iStatus->get_status_data(&hd->bl);
 	clif->message(fd, msg_txt(1261)); // Homunculus stats:
 	
 	snprintf(atcmd_output, sizeof(atcmd_output) ,msg_txt(1262), // HP: %d/%d - SP: %d/%d
-			 status->hp, status->max_hp, status->sp, status->max_sp);
+			 st->hp, st->max_hp, st->sp, st->max_sp);
 	clif->message(fd, atcmd_output);
 	
 	snprintf(atcmd_output, sizeof(atcmd_output) ,msg_txt(1263), // ATK: %d - MATK: %d~%d
-			 status->rhw.atk2 +status->batk, status->matk_min, status->matk_max);
+			 st->rhw.atk2 +st->batk, st->matk_min, st->matk_max);
 	clif->message(fd, atcmd_output);
 	
 	snprintf(atcmd_output, sizeof(atcmd_output) ,msg_txt(1264), // Hungry: %d - Intimacy: %u
@@ -7100,8 +7096,8 @@ ACMD(hominfo)
 	
 	snprintf(atcmd_output, sizeof(atcmd_output) ,
 			 msg_txt(1265), // Stats: Str %d / Agi %d / Vit %d / Int %d / Dex %d / Luk %d
-			 status->str, status->agi, status->vit,
-			 status->int_, status->dex, status->luk);
+			 st->str, st->agi, st->vit,
+			 st->int_, st->dex, st->luk);
 	clif->message(fd, atcmd_output);
 	
 	return true;

@@ -29,7 +29,7 @@ struct quest_interface {
 	int (*delete) (TBL_PC *sd, int quest_id);
 	int (*update_objective_sub) (struct block_list *bl, va_list ap);
 	void (*update_objective) (TBL_PC *sd, int mob_id);
-	int (*update_status) (TBL_PC *sd, int quest_id, quest_state status);
+	int (*update_status) (TBL_PC *sd, int quest_id, quest_state qs);
 	int (*check) (TBL_PC *sd, int quest_id, quest_check_type type);
 	int (*read_db) (void);
 };

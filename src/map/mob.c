@@ -2077,9 +2077,8 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
  * Signals death of mob.
  * type&1 -> no drops, type&2 -> no exp
  *------------------------------------------*/
-int mob_dead(struct mob_data *md, struct block_list *src, int type)
-{
-	struct status_data *status;
+int mob_dead(struct mob_data *md, struct block_list *src, int type) {
+	struct status_data *mstatus;
 	struct map_session_data *sd = NULL, *tmpsd[DAMAGELOG_SIZE];
 	struct map_session_data *mvp_sd = NULL, *second_sd = NULL, *third_sd = NULL;
 
@@ -2093,7 +2092,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 	unsigned int mvp_damage, tick = timer->gettick();
 	bool rebirth, homkillonly;
 
-	status = &md->status;
+	mstatus = &md->status;
 
 	if( src && src->type == BL_PC )
 	{
@@ -2198,7 +2197,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			per = (double)md->dmglog[i].dmg/(double)md->tdmg;
 		else {
 			//eAthena's exp formula based on max hp.
-			per = (double)md->dmglog[i].dmg/(double)status->max_hp;
+			per = (double)md->dmglog[i].dmg/(double)mstatus->max_hp;
 			if (per > 2) per = 2; // prevents unlimited exp gain
 		}
 
@@ -2399,8 +2398,8 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			{
 				if ( sd->add_drop[i].race == -md->class_ ||
 					( sd->add_drop[i].race > 0 && (
-						sd->add_drop[i].race & (1<<status->race) ||
-						sd->add_drop[i].race & (1<<(status->mode&MD_BOSS?RC_BOSS:RC_NONBOSS))
+						sd->add_drop[i].race & (1<<mstatus->race) ||
+						sd->add_drop[i].race & (1<<(mstatus->mode&MD_BOSS?RC_BOSS:RC_NONBOSS))
 					)))
 				{
 					//check if the bonus item drop rate should be multiplied with mob level/10 [Lupus]
@@ -3323,14 +3322,13 @@ int mob_is_clone(int class_)
 //If mode is not passed, a default aggressive mode is used.
 //If master_id is passed, clone is attached to him.
 //Returns: ID of newly crafted copy.
-int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, int mode, int flag, unsigned int duration)
-{
+int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, int mode, int flag, unsigned int duration) {
 	int class_;
 	int i,j,h,inf,skill_id, fd;
 	struct mob_data *md;
 	struct mob_skill *ms;
 	struct mob_db* db;
-	struct status_data *status;
+	struct status_data *mstatus;
 
 	nullpo_ret(sd);
 
@@ -3342,24 +3340,24 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 		return 0;
 
 	db = mob->db_data[class_]=(struct mob_db*)aCalloc(1, sizeof(struct mob_db));
-	status = &db->status;
+	mstatus = &db->status;
 	strcpy(db->sprite,sd->status.name);
 	strcpy(db->name,sd->status.name);
 	strcpy(db->jname,sd->status.name);
 	db->lv=iStatus->get_lv(&sd->bl);
-	memcpy(status, &sd->base_status, sizeof(struct status_data));
-	status->rhw.atk2= status->dex + status->rhw.atk + status->rhw.atk2; //Max ATK
-	status->rhw.atk = status->dex; //Min ATK
-	if (status->lhw.atk) {
-		status->lhw.atk2= status->dex + status->lhw.atk + status->lhw.atk2; //Max ATK
-		status->lhw.atk = status->dex; //Min ATK
+	memcpy(mstatus, &sd->base_status, sizeof(struct status_data));
+	mstatus->rhw.atk2= mstatus->dex + mstatus->rhw.atk + mstatus->rhw.atk2; //Max ATK
+	mstatus->rhw.atk = mstatus->dex; //Min ATK
+	if (mstatus->lhw.atk) {
+		mstatus->lhw.atk2= mstatus->dex + mstatus->lhw.atk + mstatus->lhw.atk2; //Max ATK
+		mstatus->lhw.atk = mstatus->dex; //Min ATK
 	}
 	if (mode) //User provided mode.
-		status->mode = mode;
+		mstatus->mode = mode;
 	else if (flag&1) //Friendly Character, remove looting.
-		status->mode &= ~MD_LOOTER;
-	status->hp = status->max_hp;
-	status->sp = status->max_sp;
+		mstatus->mode &= ~MD_LOOTER;
+	mstatus->hp = mstatus->max_hp;
+	mstatus->sp = mstatus->max_sp;
 	memcpy(&db->vd, &sd->vd, sizeof(struct view_data));
 	db->base_exp=1;
 	db->job_exp=1;
@@ -3639,10 +3637,9 @@ static inline int mob_parse_dbrow_cap_value(int class_, int min, int max, int va
 /*==========================================
  * processes one mobdb entry
  *------------------------------------------*/
-bool mob_parse_dbrow(char** str)
-{
+bool mob_parse_dbrow(char** str) {
 	struct mob_db *db, entry;
-	struct status_data *status;
+	struct status_data *mstatus;
 	int class_, i, k;
 	double exp, maxhp;
 	struct mob_data data;
@@ -3666,7 +3663,7 @@ bool mob_parse_dbrow(char** str)
 	memset(&entry, 0, sizeof(entry));
 
 	db = &entry;
-	status = &db->status;
+	mstatus = &db->status;
 
 	db->vd.class_ = class_;
 	safestrncpy(db->sprite, str[1], sizeof(db->sprite));
@@ -3674,8 +3671,8 @@ bool mob_parse_dbrow(char** str)
 	safestrncpy(db->name, str[3], sizeof(db->name));
 	db->lv = atoi(str[4]);
 	db->lv = cap_value(db->lv, 1, USHRT_MAX);
-	status->max_hp = atoi(str[5]);
-	status->max_sp = atoi(str[6]);
+	mstatus->max_hp = atoi(str[5]);
+	mstatus->max_sp = atoi(str[6]);
 
 	exp = (double)atoi(str[7]) * (double)battle_config.base_exp_rate / 100.;
 	db->base_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
@@ -3683,28 +3680,28 @@ bool mob_parse_dbrow(char** str)
 	exp = (double)atoi(str[8]) * (double)battle_config.job_exp_rate / 100.;
 	db->job_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
 
-	status->rhw.range = atoi(str[9]);
+	mstatus->rhw.range = atoi(str[9]);
 	
-	status->rhw.atk = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[10]));
-	status->rhw.atk2 = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[11]));
+	mstatus->rhw.atk = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[10]));
+	mstatus->rhw.atk2 = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[11]));
 	
-	status->def  = mob_parse_dbrow_cap_value(class_,DEFTYPE_MIN,DEFTYPE_MAX,atoi(str[12]));
-	status->mdef = mob_parse_dbrow_cap_value(class_,DEFTYPE_MIN,DEFTYPE_MAX,atoi(str[13]));
+	mstatus->def  = mob_parse_dbrow_cap_value(class_,DEFTYPE_MIN,DEFTYPE_MAX,atoi(str[12]));
+	mstatus->mdef = mob_parse_dbrow_cap_value(class_,DEFTYPE_MIN,DEFTYPE_MAX,atoi(str[13]));
 	
-	status->str  = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[14]));
-	status->agi  = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[15]));
-	status->vit  = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[16]));
-	status->int_ = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[17]));
-	status->dex  = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[18]));
-	status->luk  = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[19]));
+	mstatus->str  = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[14]));
+	mstatus->agi  = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[15]));
+	mstatus->vit  = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[16]));
+	mstatus->int_ = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[17]));
+	mstatus->dex  = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[18]));
+	mstatus->luk  = mob_parse_dbrow_cap_value(class_,UINT16_MIN,UINT16_MAX,atoi(str[19]));
 	
 	//All status should be min 1 to prevent divisions by zero from some skills. [Skotlex]
-	if (status->str < 1) status->str = 1;
-	if (status->agi < 1) status->agi = 1;
-	if (status->vit < 1) status->vit = 1;
-	if (status->int_< 1) status->int_= 1;
-	if (status->dex < 1) status->dex = 1;
-	if (status->luk < 1) status->luk = 1;
+	if (mstatus->str < 1) mstatus->str = 1;
+	if (mstatus->agi < 1) mstatus->agi = 1;
+	if (mstatus->vit < 1) mstatus->vit = 1;
+	if (mstatus->int_< 1) mstatus->int_= 1;
+	if (mstatus->dex < 1) mstatus->dex = 1;
+	if (mstatus->luk < 1) mstatus->luk = 1;
 
 	db->range2 = atoi(str[20]);
 	db->range3 = atoi(str[21]);
@@ -3719,44 +3716,44 @@ bool mob_parse_dbrow(char** str)
 			db->range3 = db->range2;
 	}
 
-	status->size = atoi(str[22]);
-	status->race = atoi(str[23]);
+	mstatus->size = atoi(str[22]);
+	mstatus->race = atoi(str[23]);
 
 	i = atoi(str[24]); //Element
-	status->def_ele = i%10;
-	status->ele_lv = i/20;
-	if (status->def_ele >= ELE_MAX) {
-		ShowError("mob_parse_dbrow: Invalid element type %d for monster ID %d (max=%d).\n", status->def_ele, class_, ELE_MAX-1);
+	mstatus->def_ele = i%10;
+	mstatus->ele_lv = i/20;
+	if (mstatus->def_ele >= ELE_MAX) {
+		ShowError("mob_parse_dbrow: Invalid element type %d for monster ID %d (max=%d).\n", mstatus->def_ele, class_, ELE_MAX-1);
 		return false;
 	}
-	if (status->ele_lv < 1 || status->ele_lv > 4) {
-		ShowError("mob_parse_dbrow: Invalid element level %d for monster ID %d, must be in range 1-4.\n", status->ele_lv, class_);
+	if (mstatus->ele_lv < 1 || mstatus->ele_lv > 4) {
+		ShowError("mob_parse_dbrow: Invalid element level %d for monster ID %d, must be in range 1-4.\n", mstatus->ele_lv, class_);
 		return false;
 	}
 
-	status->mode = (int)strtol(str[25], NULL, 0);
+	mstatus->mode = (int)strtol(str[25], NULL, 0);
 	if (!battle_config.monster_active_enable)
-		status->mode &= ~MD_AGGRESSIVE;
+		mstatus->mode &= ~MD_AGGRESSIVE;
 
-	status->speed = atoi(str[26]);
-	status->aspd_rate = 1000;
+	mstatus->speed = atoi(str[26]);
+	mstatus->aspd_rate = 1000;
 	i = atoi(str[27]);
-	status->adelay = cap_value(i, battle_config.monster_max_aspd*2, 4000);
+	mstatus->adelay = cap_value(i, battle_config.monster_max_aspd*2, 4000);
 	i = atoi(str[28]);
-	status->amotion = cap_value(i, battle_config.monster_max_aspd, 2000);
+	mstatus->amotion = cap_value(i, battle_config.monster_max_aspd, 2000);
 	//If the attack animation is longer than the delay, the client crops the attack animation!
 	//On aegis there is no real visible effect of having a recharge-time less than amotion anyway.
-	if (status->adelay < status->amotion)
-		status->adelay = status->amotion;
-	status->dmotion = atoi(str[29]);
+	if (mstatus->adelay < mstatus->amotion)
+		mstatus->adelay = mstatus->amotion;
+	mstatus->dmotion = atoi(str[29]);
 	if(battle_config.monster_damage_delay_rate != 100)
-		status->dmotion = status->dmotion * battle_config.monster_damage_delay_rate / 100;
+		mstatus->dmotion = mstatus->dmotion * battle_config.monster_damage_delay_rate / 100;
 
 	// Fill in remaining status data by using a dummy monster.
 	data.bl.type = BL_MOB;
 	data.level = db->lv;
-	memcpy(&data.status, status, sizeof(struct status_data));
-	iStatus->calc_misc(&data.bl, status, db->lv);
+	memcpy(&data.status, mstatus, sizeof(struct status_data));
+	iStatus->calc_misc(&data.bl, mstatus, db->lv);
 
 	// MVP EXP Bonus: MEXP
 	// Some new MVP's MEXP multipled by high exp-rate cause overflow. [LuzZza]
@@ -3764,7 +3761,7 @@ bool mob_parse_dbrow(char** str)
 	db->mexp = (unsigned int)cap_value(exp, 0, UINT_MAX);
 
 	//Now that we know if it is an mvp or not, apply battle_config modifiers [Skotlex]
-	maxhp = (double)status->max_hp;
+	maxhp = (double)mstatus->max_hp;
 	if (db->mexp > 0) { //Mvp
 		if (battle_config.mvp_hp_rate != 100)
 			maxhp = maxhp * (double)battle_config.mvp_hp_rate / 100.;
@@ -3772,12 +3769,12 @@ bool mob_parse_dbrow(char** str)
 		if (battle_config.monster_hp_rate != 100)
 			maxhp = maxhp * (double)battle_config.monster_hp_rate / 100.;
 
-	status->max_hp = (unsigned int)cap_value(maxhp, 1, UINT_MAX);
-	if(status->max_sp < 1) status->max_sp = 1;
+	mstatus->max_hp = (unsigned int)cap_value(maxhp, 1, UINT_MAX);
+	if(mstatus->max_sp < 1) mstatus->max_sp = 1;
 
 	//Since mobs always respawn with full life...
-	status->hp = status->max_hp;
-	status->sp = status->max_sp;
+	mstatus->hp = mstatus->max_hp;
+	mstatus->sp = mstatus->max_sp;
 
 	// MVP Drops: MVP1id,MVP1per,MVP2id,MVP2per,MVP3id,MVP3per
 	for(i = 0; i < MAX_MVP_DROP; i++) {
@@ -3823,30 +3820,30 @@ bool mob_parse_dbrow(char** str)
 		else switch (type)
 		{ // Added suport to restrict normal drops of MVP's [Reddozen]
 		case IT_HEALING:
-			rate_adjust = (status->mode&MD_BOSS) ? battle_config.item_rate_heal_boss : battle_config.item_rate_heal;
+			rate_adjust = (mstatus->mode&MD_BOSS) ? battle_config.item_rate_heal_boss : battle_config.item_rate_heal;
 			ratemin = battle_config.item_drop_heal_min;
 			ratemax = battle_config.item_drop_heal_max;
 			break;
 		case IT_USABLE:
 		case IT_CASH:
-			rate_adjust = (status->mode&MD_BOSS) ? battle_config.item_rate_use_boss : battle_config.item_rate_use;
+			rate_adjust = (mstatus->mode&MD_BOSS) ? battle_config.item_rate_use_boss : battle_config.item_rate_use;
 			ratemin = battle_config.item_drop_use_min;
 			ratemax = battle_config.item_drop_use_max;
 			break;
 		case IT_WEAPON:
 		case IT_ARMOR:
 		case IT_PETARMOR:
-			rate_adjust = (status->mode&MD_BOSS) ? battle_config.item_rate_equip_boss : battle_config.item_rate_equip;
+			rate_adjust = (mstatus->mode&MD_BOSS) ? battle_config.item_rate_equip_boss : battle_config.item_rate_equip;
 			ratemin = battle_config.item_drop_equip_min;
 			ratemax = battle_config.item_drop_equip_max;
 			break;
 		case IT_CARD:
-			rate_adjust = (status->mode&MD_BOSS) ? battle_config.item_rate_card_boss : battle_config.item_rate_card;
+			rate_adjust = (mstatus->mode&MD_BOSS) ? battle_config.item_rate_card_boss : battle_config.item_rate_card;
 			ratemin = battle_config.item_drop_card_min;
 			ratemax = battle_config.item_drop_card_max;
 			break;
 		default:
-			rate_adjust = (status->mode&MD_BOSS) ? battle_config.item_rate_common_boss : battle_config.item_rate_common;
+			rate_adjust = (mstatus->mode&MD_BOSS) ? battle_config.item_rate_common_boss : battle_config.item_rate_common;
 			ratemin = battle_config.item_drop_common_min;
 			ratemax = battle_config.item_drop_common_max;
 			break;
