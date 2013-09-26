@@ -453,18 +453,18 @@ struct packet_maptypeproperty2 {
 	short PacketType;
 	short type;
 	struct {
-		unsigned int party					: 1;
-		unsigned int guild					: 1;
-		unsigned int siege					: 1;
-		unsigned int mineffect				: 1;
-		unsigned int nolockon				: 1;
-		unsigned int countpk				: 1;
-		unsigned int nopartyformation		: 1;
-		unsigned int bg						: 1;
-		unsigned int noitemconsumption		: 1;
-		unsigned int usecart				: 1;
-		unsigned int summonstarmiracle		: 1;
-		unsigned int SpareBits				: 15;
+		unsigned int party             : 1;  // Show attack cursor on non-party members (PvP)
+		unsigned int guild             : 1;  // Show attack cursor on non-guild members (GvG)
+		unsigned int siege             : 1;  // Show emblem over characters' heads when in GvG (WoE castle)
+		unsigned int mineffect         : 1;  // Automatically enable /mineffect
+		unsigned int nolockon          : 1;  // TODO: What does this do? (shows attack cursor on non-party members)
+		unsigned int countpk           : 1;  /// Show the PvP counter
+		unsigned int nopartyformation  : 1;  /// Prevent party creation/modification
+		unsigned int bg                : 1;  // TODO: What does this do? Probably related to Battlegrounds, but I'm not sure on the effect
+		unsigned int noitemconsumption : 1;  // TODO: What does this do? (shows a "Nothing found in the selected map" message when set)
+		unsigned int usecart           : 1;  /// Allow opening cart inventory
+		unsigned int summonstarmiracle : 1;  // TODO: What does this do? Related to Taekwon Masters, but I have no idea.
+		unsigned int SpareBits         : 15; /// Currently ignored, reserved for future updates
 	} flag;
 } __attribute__((packed));
 

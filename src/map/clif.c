@@ -17358,17 +17358,18 @@ void clif_maptypeproperty2(struct block_list *bl,enum send_target t) {
 	
 	p.PacketType = maptypeproperty2Type;
 	p.type = 0x28;
-	p.flag.usecart = 1;
-	p.flag.party = 1;
-	p.flag.guild = 1;
+	p.flag.party = maplist[bl->m].flag.pvp ? 1 : 0;
+	p.flag.guild = map_flag_gvg(bl->m) ? 1 : 0;
 	p.flag.siege = map_flag_gvg2(bl->m) ? 1: 0;
-	p.flag.mineffect = 1;
-	p.flag.nolockon = 1;
+	p.flag.mineffect = map_flag_gvg(bl->m); // FIXME/CHECKME Forcing /mineffect in castles during WoE (probably redundant? I'm not sure)
+	p.flag.nolockon = 0; // TODO
 	p.flag.countpk = maplist[bl->m].flag.pvp ? 1 : 0;
-	p.flag.nopartyformation = 0;
-	p.flag.noitemconsumption = 1;
-	p.flag.summonstarmiracle = 1;
+	p.flag.nopartyformation = maplist[bl->m].flag.partylock ? 1 : 0;
 	p.flag.bg = maplist[bl->m].flag.battleground ? 1 : 0;
+	p.flag.noitemconsumption = 0; // TODO
+	p.flag.summonstarmiracle = 0; // TODO
+	p.flag.usecart = 1; // TODO
+	p.flag.SpareBits = 0;
 	
 	clif->send(&p,sizeof(p),bl,t);
 #endif
