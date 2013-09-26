@@ -297,8 +297,7 @@ int merc_data_received(struct s_mercenary *merc, bool flag)
 	}
 
 	db = &mercenary->db[i];
-	if( !sd->md )
-	{
+	if( !sd->md ) {
 		sd->md = md = (struct mercenary_data*)aCalloc(1,sizeof(struct mercenary_data));
 		md->bl.type = BL_MER;
 		md->bl.id = npc->get_new_npc_id();
@@ -307,8 +306,8 @@ int merc_data_received(struct s_mercenary *merc, bool flag)
 		md->master = sd;
 		md->db = db;
 		memcpy(&md->mercenary, merc, sizeof(struct s_mercenary));
-		iStatus->set_viewdata(&md->bl, md->mercenary.class_);
-		iStatus->change_init(&md->bl);
+		status->set_viewdata(&md->bl, md->mercenary.class_);
+		status->change_init(&md->bl);
 		unit->dataset(&md->bl);
 		md->ud.dir = sd->ud.dir;
 

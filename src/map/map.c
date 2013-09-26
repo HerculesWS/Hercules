@@ -361,7 +361,7 @@ int map_moveblock(struct block_list *bl, int x1, int y1, unsigned int tick)
 
 	//TODO: Perhaps some outs of bounds checking should be placed here?
 	if (bl->type&BL_CHAR) {
-		sc = iStatus->get_sc(bl);
+		sc = status->get_sc(bl);
 
 		skill->unit_move(bl,tick,2);
 		status_change_end(bl, SC_RG_CCONFINE_M, INVALID_TIMER);
@@ -1562,7 +1562,7 @@ int map_quit(struct map_session_data *sd) {
 	if( sd->sc.count ) {
 		//Status that are not saved...
 		for(i=0; i < SC_MAX; i++){
-			if ( iStatus->get_sc_type(i)&SC_NO_SAVE ){
+			if ( status->get_sc_type(i)&SC_NO_SAVE ) {
 				if ( !sd->sc.data[i] )
 					continue;
 				switch( i ){
@@ -4927,7 +4927,7 @@ void do_final(void)
 	homun->final();
 	atcommand->final_msg();
 	skill->final();
-	iStatus->do_final_status();
+	status->final();
 	unit->final();
 	bg->final();
 	duel->final();
@@ -5140,7 +5140,7 @@ void map_hp_symbols(void) {
 	HPM->share(party,"party");
 	HPM->share(storage,"storage");
 	HPM->share(trade,"trade");
-	HPM->share(iStatus,"iStatus");
+	HPM->share(status,"status");
 	HPM->share(chat, "chat");
 	HPM->share(duel,"duel");
 	HPM->share(elemental,"elemental");
@@ -5399,7 +5399,7 @@ int do_init(int argc, char *argv[])
 	read_map_zone_db();/* read after item and skill initalization */
 	mob->init();
 	pc->do_init_pc();
-	iStatus->do_init_status();
+	status->init();
 	party->do_init_party();
 	guild->init();
 	storage->init();

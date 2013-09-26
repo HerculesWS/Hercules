@@ -134,7 +134,7 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 
 	nd->bl.id = md->tomb_nid = npc->get_new_npc_id();
 
-    nd->dir = md->ud.dir;
+	nd->dir = md->ud.dir;
 	nd->bl.m = md->bl.m;
 	nd->bl.x = md->bl.x;
 	nd->bl.y = md->bl.y;
@@ -156,8 +156,8 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 
 	iMap->addnpc(nd->bl.m, nd);
 	iMap->addblock(&nd->bl);
-	iStatus->set_viewdata(&nd->bl, nd->class_);
-    clif->spawn(&nd->bl);
+	status->set_viewdata(&nd->bl, nd->class_);
+	clif->spawn(&nd->bl);
 
 }
 
@@ -281,8 +281,8 @@ struct mob_data* mob_spawn_dataset(struct spawn_data *data) {
 	md->spawn_timer = INVALID_TIMER;
 	md->deletetimer = INVALID_TIMER;
 	md->skill_idx = -1;
-	iStatus->set_viewdata(&md->bl, md->class_);
-	iStatus->change_init(&md->bl);
+	status->set_viewdata(&md->bl, md->class_);
+	status->change_init(&md->bl);
 	unit->dataset(&md->bl);
 	
 	iMap->addiddb(&md->bl);
@@ -410,7 +410,7 @@ bool mob_ksprotected (struct block_list *src, struct block_list *target)
 		return true;
 	} while(0);
 
-	iStatus->change_start(target, SC_KSPROTECTED, 10000, sd->bl.id, sd->state.noks, sd->status.party_id, sd->status.guild_id, battle_config.ksprotection, 0);
+	status->change_start(target, SC_KSPROTECTED, 10000, sd->bl.id, sd->state.noks, sd->status.party_id, sd->status.guild_id, battle_config.ksprotection, 0);
 
 	return false;
 }
@@ -894,7 +894,7 @@ int mob_spawn (struct mob_data *md)
 		unit->remove_map(&md->bl,CLR_RESPAWN,ALC_MARK);
 	else if (md->spawn && md->class_ != md->spawn->class_) {
 		md->class_ = md->spawn->class_;
-		iStatus->set_viewdata(&md->bl, md->class_);
+		status->set_viewdata(&md->bl, md->class_);
 		md->db = mob->db(md->class_);
 		memcpy(md->name,md->spawn->name,NAME_LENGTH);
 	}
@@ -1017,7 +1017,7 @@ int mob_target(struct mob_data *md,struct block_list *bl,int dist)
 	if(md->target_id && !mob->can_changetarget(md, bl, status_get_mode(&md->bl)))
 		return 0;
 
-	if(!iStatus->check_skilluse(&md->bl, bl, 0, 0))
+	if(!status->check_skilluse(&md->bl, bl, 0, 0))
 		return 0;
 
 	md->target_id = bl->id;	// Since there was no disturbance, it locks on to target.
@@ -1045,10 +1045,10 @@ int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
 	mode= va_arg(ap,int);
 
 	//If can't seek yet, not an enemy, or you can't attack it, skip.
-	if ((*target) == bl || !iStatus->check_skilluse(&md->bl, bl, 0, 0))
+	if ((*target) == bl || !status->check_skilluse(&md->bl, bl, 0, 0))
 		return 0;
 
-	if ((mode&MD_TARGETWEAK) && iStatus->get_lv(bl) >= md->level-5)
+	if ((mode&MD_TARGETWEAK) && status->get_lv(bl) >= md->level-5)
 		return 0;
 
 	if(battle->check_target(&md->bl,bl,BCT_ENEMY)<=0)
@@ -1094,8 +1094,7 @@ int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
 /*==========================================
  * chase target-change routine.
  *------------------------------------------*/
-int mob_ai_sub_hard_changechase(struct block_list *bl,va_list ap)
-{
+int mob_ai_sub_hard_changechase(struct block_list *bl,va_list ap) {
 	struct mob_data *md;
 	struct block_list **target;
 
@@ -1104,9 +1103,10 @@ int mob_ai_sub_hard_changechase(struct block_list *bl,va_list ap)
 	target= va_arg(ap,struct block_list**);
 
 	//If can't seek yet, not an enemy, or you can't attack it, skip.
-	if ((*target) == bl ||
-		battle->check_target(&md->bl,bl,BCT_ENEMY)<=0 ||
-	  	!iStatus->check_skilluse(&md->bl, bl, 0, 0))
+	if( *target == bl
+	 || battle->check_target(&md->bl,bl,BCT_ENEMY) <= 0
+	 || !status->check_skilluse(&md->bl, bl, 0, 0)
+	)
 		return 0;
 
 	if(battle->check_range (&md->bl, bl, md->status.rhw.range)) {
@@ -1128,7 +1128,7 @@ int mob_ai_sub_hard_bg_ally(struct block_list *bl,va_list ap) {
 	md=va_arg(ap,struct mob_data *);
 	target= va_arg(ap,struct block_list**);
 
-	if( iStatus->check_skilluse(&md->bl, bl, 0, 0) && battle->check_target(&md->bl,bl,BCT_ENEMY)<=0 ) {
+	if( status->check_skilluse(&md->bl, bl, 0, 0) && battle->check_target(&md->bl,bl,BCT_ENEMY)<=0 ) {
 		(*target) = bl;
 	}
 	return 1;
@@ -1194,7 +1194,7 @@ int mob_ai_sub_hard_slavemob(struct mob_data *md,unsigned int tick)
 
 	bl=iMap->id2bl(md->master_id);
 
-	if (!bl || iStatus->isdead(bl)) {
+	if (!bl || status->isdead(bl)) {
 		status_kill(&md->bl);
 		return 1;
 	}
@@ -1254,7 +1254,7 @@ int mob_ai_sub_hard_slavemob(struct mob_data *md,unsigned int tick)
 				if (tbl && battle->check_target(&md->bl, tbl, BCT_ENEMY) <= 0)
 					tbl = NULL;
 			}
-			if (tbl && iStatus->check_skilluse(&md->bl, tbl, 0, 0)) {
+			if (tbl && status->check_skilluse(&md->bl, tbl, 0, 0)) {
 				md->target_id=tbl->id;
 				md->min_chase=md->db->range3+distance_bl(&md->bl, tbl);
 				if(md->min_chase>MAX_MINCHASE)
@@ -1347,8 +1347,9 @@ int mob_randomwalk(struct mob_data *md,unsigned int tick)
 		}
 		return 0;
 	}
-	speed=iStatus->get_speed(&md->bl);
-	for(i=c=0;i<md->ud.walkpath.path_len;i++){	// The next walk start time is calculated.
+	speed=status->get_speed(&md->bl);
+	for(i=c=0;i<md->ud.walkpath.path_len;i++) {
+		// The next walk start time is calculated.
 		if(md->ud.walkpath.path[i]&1)
 			c+=speed*MOVE_DIAGONAL_COST/MOVE_COST;
 		else
@@ -1421,17 +1422,18 @@ bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 
 	can_move = (mode&MD_CANMOVE)&&unit->can_move(&md->bl);
 
-	if (md->target_id)
-	{	//Check validity of current target. [Skotlex]
+	if (md->target_id) {
+		//Check validity of current target. [Skotlex]
 		tbl = iMap->id2bl(md->target_id);
-		if (!tbl || tbl->m != md->bl.m ||
-			(md->ud.attacktimer == INVALID_TIMER && !iStatus->check_skilluse(&md->bl, tbl, 0, 0)) ||
-			(md->ud.walktimer != INVALID_TIMER && !(battle_config.mob_ai&0x1) && !check_distance_bl(&md->bl, tbl, md->min_chase)) ||
-			(
-				tbl->type == BL_PC &&
-				((((TBL_PC*)tbl)->state.gangsterparadise && !(mode&MD_BOSS)) ||
-				((TBL_PC*)tbl)->invincible_timer != INVALID_TIMER)
-		)) {	//Unlock current target.
+		if (!tbl || tbl->m != md->bl.m
+		 || (md->ud.attacktimer == INVALID_TIMER && !status->check_skilluse(&md->bl, tbl, 0, 0))
+		 || (md->ud.walktimer != INVALID_TIMER && !(battle_config.mob_ai&0x1) && !check_distance_bl(&md->bl, tbl, md->min_chase))
+		 || ( tbl->type == BL_PC
+		   && ((((TBL_PC*)tbl)->state.gangsterparadise && !(mode&MD_BOSS))
+		     || ((TBL_PC*)tbl)->invincible_timer != INVALID_TIMER)
+		    )
+		) {
+			//Unlock current target.
 			if (mob->warpchase(md, tbl))
 				return true; //Chasing this target.
 			mob->unlocktarget(md, tick-(battle_config.mob_ai&0x8?3000:0)); //Imediately do random walk.
@@ -1464,18 +1466,19 @@ bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 		{
 			int dist;
 			if( md->bl.m != abl->m || abl->prev == NULL
-				|| (dist = distance_bl(&md->bl, abl)) >= MAX_MINCHASE // Attacker longer than visual area
-				|| battle->check_target(&md->bl, abl, BCT_ENEMY) <= 0 // Attacker is not enemy of mob
-				|| (battle_config.mob_ai&0x2 && !iStatus->check_skilluse(&md->bl, abl, 0, 0)) // Cannot normal attack back to Attacker
-				|| (!battle->check_range(&md->bl, abl, md->status.rhw.range) // Not on Melee Range and ...
-				&& ( // Reach check
-					(!can_move && DIFF_TICK(tick, md->ud.canmove_tick) > 0 && (battle_config.mob_ai&0x2 || (md->sc.data[SC_SPIDERWEB] && md->sc.data[SC_SPIDERWEB]->val1)
-					|| md->sc.data[SC_WUGBITE] || md->sc.data[SC_VACUUM_EXTREME] || md->sc.data[SC_THORNS_TRAP]
-					|| md->sc.data[SC__MANHOLE])) // Not yet confirmed if boss will teleport once it can't reach target.
-					|| !mob->can_reach(md, abl, dist+md->db->range3, MSS_RUSH)
-					)
-				) )
-			{ // Rude attacked
+			 || (dist = distance_bl(&md->bl, abl)) >= MAX_MINCHASE // Attacker longer than visual area
+			 || battle->check_target(&md->bl, abl, BCT_ENEMY) <= 0 // Attacker is not enemy of mob
+			 || (battle_config.mob_ai&0x2 && !status->check_skilluse(&md->bl, abl, 0, 0)) // Cannot normal attack back to Attacker
+			 || (!battle->check_range(&md->bl, abl, md->status.rhw.range) // Not on Melee Range and ...
+			    && ( // Reach check
+			         (!can_move && DIFF_TICK(tick, md->ud.canmove_tick) > 0 && (battle_config.mob_ai&0x2 || (md->sc.data[SC_SPIDERWEB] && md->sc.data[SC_SPIDERWEB]->val1)
+			       || md->sc.data[SC_WUGBITE] || md->sc.data[SC_VACUUM_EXTREME] || md->sc.data[SC_THORNS_TRAP]
+			       || md->sc.data[SC__MANHOLE])) // Not yet confirmed if boss will teleport once it can't reach target.
+			       || !mob->can_reach(md, abl, dist+md->db->range3, MSS_RUSH)
+			       )
+			    )
+			) {
+				// Rude attacked
 				if (md->state.attacked_count++ >= RUDE_ATTACKED_COUNT
 				&& !mob->skill_use(md, tick, MSC_RUDEATTACKED) && can_move
 				&& !tbl && unit->escape(&md->bl, abl, rnd()%10 +1))
@@ -1486,12 +1489,10 @@ bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 				}
 			}
 			else
-			if (!(battle_config.mob_ai&0x2) && !iStatus->check_skilluse(&md->bl, abl, 0, 0))
-			{
+			if (!(battle_config.mob_ai&0x2) && !status->check_skilluse(&md->bl, abl, 0, 0)) {
 				//Can't attack back, but didn't invoke a rude attacked skill...
-			}
-			else
-			{ //Attackable
+			} else {
+				//Attackable
 				if (!tbl || dist < md->status.rhw.range || !check_distance_bl(&md->bl, tbl, dist)
 					|| battle->get_target(tbl) != md->bl.id)
 				{	//Change if the new target is closer than the actual one
@@ -1897,12 +1898,11 @@ int mob_deleteslave(struct mob_data *md)
 	return 0;
 }
 // Mob respawning through KAIZEL or NPC_REBIRTH [Skotlex]
-int mob_respawn(int tid, unsigned int tick, int id, intptr_t data)
-{
+int mob_respawn(int tid, unsigned int tick, int id, intptr_t data) {
 	struct block_list *bl = iMap->id2bl(id);
 
 	if(!bl) return 0;
-	iStatus->revive(bl, (uint8)data, 0);
+	status->revive(bl, (uint8)data, 0);
 	return 1;
 }
 
@@ -2168,7 +2168,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		if (md->sc.data[SC_RICHMANKIM])
 			bonus += md->sc.data[SC_RICHMANKIM]->val2;
 		if(sd) {
-			temp = iStatus->get_class(&md->bl);
+			temp = status->get_class(&md->bl);
 			if(sd->sc.data[SC_MIRACLE]) i = 2; //All mobs are Star Targets
 			else
 			ARR_FIND(0, MAX_PC_FEELHATE, i, temp == sd->hate_mob[i] &&
@@ -2609,7 +2609,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 
 	}
 
-	if(!md->spawn) //Tell iStatus->damage to remove it from memory.
+	if(!md->spawn) //Tell status->damage to remove it from memory.
 		return 5; // Note: Actually, it's 4. Oh well...
 
 	// MvP tomb [GreenBox]
@@ -2617,7 +2617,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		mob->mvptomb_create(md, mvp_sd ? mvp_sd->status.name : NULL, time(NULL));
 
 	if( !rebirth ) {
-		iStatus->change_clear(&md->bl,1);
+		status->change_clear(&md->bl,1);
 		mob->setdelayspawn(md); //Set respawning.
 	}
 	return 3; //Remove from map.
@@ -2745,7 +2745,7 @@ int mob_class_change (struct mob_data *md, int class_)
 	mob_stop_attack(md);
 	mob_stop_walking(md, 0);
 	unit->skillcastcancel(&md->bl, 0);
-	iStatus->set_viewdata(&md->bl, class_);
+	status->set_viewdata(&md->bl, class_);
 	clif->class_change(&md->bl, md->vd->class_, 1);
 	status_calc_mob(md, 1);
 	md->ud.state.speed_changed = 1; //Speed change update.
@@ -3338,7 +3338,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 	strcpy(db->sprite,sd->status.name);
 	strcpy(db->name,sd->status.name);
 	strcpy(db->jname,sd->status.name);
-	db->lv=iStatus->get_lv(&sd->bl);
+	db->lv=status->get_lv(&sd->bl);
 	memcpy(mstatus, &sd->base_status, sizeof(struct status_data));
 	mstatus->rhw.atk2= mstatus->dex + mstatus->rhw.atk + mstatus->rhw.atk2; //Max ATK
 	mstatus->rhw.atk = mstatus->dex; //Min ATK
@@ -3747,7 +3747,7 @@ bool mob_parse_dbrow(char** str) {
 	data.bl.type = BL_MOB;
 	data.level = db->lv;
 	memcpy(&data.status, mstatus, sizeof(struct status_data));
-	iStatus->calc_misc(&data.bl, mstatus, db->lv);
+	status->calc_misc(&data.bl, mstatus, db->lv);
 
 	// MVP EXP Bonus: MEXP
 	// Some new MVP's MEXP multipled by high exp-rate cause overflow. [LuzZza]

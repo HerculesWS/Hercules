@@ -1718,67 +1718,67 @@ struct status_change {
 
 
 //Define for standard HP damage attacks.
-#define status_fix_damage(src, target, hp, walkdelay) iStatus->damage(src, target, hp, 0, walkdelay, 0)
+#define status_fix_damage(src, target, hp, walkdelay) status->damage(src, target, hp, 0, walkdelay, 0)
 //Define for standard HP/SP damage triggers.
-#define status_zap(bl, hp, sp) iStatus->damage(NULL, bl, hp, sp, 0, 1)
-//Easier handling of iStatus->percent_change
-#define status_percent_heal(bl, hp_rate, sp_rate) iStatus->percent_change(NULL, bl, -(hp_rate), -(sp_rate), 0)
-#define status_percent_damage(src, target, hp_rate, sp_rate, kill) iStatus->percent_change(src, target, hp_rate, sp_rate, (kill)?1:2)
+#define status_zap(bl, hp, sp) status->damage(NULL, bl, hp, sp, 0, 1)
+//Easier handling of status->percent_change
+#define status_percent_heal(bl, hp_rate, sp_rate) status->percent_change(NULL, bl, -(hp_rate), -(sp_rate), 0)
+#define status_percent_damage(src, target, hp_rate, sp_rate, kill) status->percent_change(src, target, hp_rate, sp_rate, (kill)?1:2)
 //Instant kill with no drops/exp/etc
 #define status_kill(bl) status_percent_damage(NULL, bl, 100, 0, true)
 
-#define status_get_range(bl) iStatus->get_status_data(bl)->rhw.range
-#define status_get_hp(bl) iStatus->get_status_data(bl)->hp
-#define status_get_max_hp(bl) iStatus->get_status_data(bl)->max_hp
-#define status_get_sp(bl) iStatus->get_status_data(bl)->sp
-#define status_get_max_sp(bl) iStatus->get_status_data(bl)->max_sp
-#define status_get_str(bl) iStatus->get_status_data(bl)->str
-#define status_get_agi(bl) iStatus->get_status_data(bl)->agi
-#define status_get_vit(bl) iStatus->get_status_data(bl)->vit
-#define status_get_int(bl) iStatus->get_status_data(bl)->int_
-#define status_get_dex(bl) iStatus->get_status_data(bl)->dex
-#define status_get_luk(bl) iStatus->get_status_data(bl)->luk
-#define status_get_hit(bl) iStatus->get_status_data(bl)->hit
-#define status_get_flee(bl) iStatus->get_status_data(bl)->flee
-#define status_get_mdef(bl) iStatus->get_status_data(bl)->mdef
-#define status_get_flee2(bl) iStatus->get_status_data(bl)->flee2
-#define status_get_def2(bl) iStatus->get_status_data(bl)->def2
-#define status_get_mdef2(bl) iStatus->get_status_data(bl)->mdef2
-#define status_get_critical(bl)  iStatus->get_status_data(bl)->cri
-#define status_get_batk(bl) iStatus->get_status_data(bl)->batk
-#define status_get_watk(bl) iStatus->get_status_data(bl)->rhw.atk
-#define status_get_watk2(bl) iStatus->get_status_data(bl)->rhw.atk2
-#define status_get_matk_max(bl) iStatus->get_status_data(bl)->matk_max
-#define status_get_matk_min(bl) iStatus->get_status_data(bl)->matk_min
-#define status_get_lwatk(bl) iStatus->get_status_data(bl)->lhw.atk
-#define status_get_lwatk2(bl) iStatus->get_status_data(bl)->lhw.atk2
-#define status_get_adelay(bl) iStatus->get_status_data(bl)->adelay
-#define status_get_amotion(bl) iStatus->get_status_data(bl)->amotion
-#define status_get_dmotion(bl) iStatus->get_status_data(bl)->dmotion
-#define status_get_element(bl) iStatus->get_status_data(bl)->def_ele
-#define status_get_element_level(bl) iStatus->get_status_data(bl)->ele_lv
-#define status_get_attack_sc_element(bl, sc) iStatus->calc_attack_element(bl, sc, 0)
-#define status_get_attack_element(bl) iStatus->get_status_data(bl)->rhw.ele
-#define status_get_attack_lelement(bl) iStatus->get_status_data(bl)->lhw.ele
-#define status_get_race(bl) iStatus->get_status_data(bl)->race
-#define status_get_size(bl) iStatus->get_status_data(bl)->size
-#define status_get_mode(bl) iStatus->get_status_data(bl)->mode
+#define status_get_range(bl) status->get_status_data(bl)->rhw.range
+#define status_get_hp(bl) status->get_status_data(bl)->hp
+#define status_get_max_hp(bl) status->get_status_data(bl)->max_hp
+#define status_get_sp(bl) status->get_status_data(bl)->sp
+#define status_get_max_sp(bl) status->get_status_data(bl)->max_sp
+#define status_get_str(bl) status->get_status_data(bl)->str
+#define status_get_agi(bl) status->get_status_data(bl)->agi
+#define status_get_vit(bl) status->get_status_data(bl)->vit
+#define status_get_int(bl) status->get_status_data(bl)->int_
+#define status_get_dex(bl) status->get_status_data(bl)->dex
+#define status_get_luk(bl) status->get_status_data(bl)->luk
+#define status_get_hit(bl) status->get_status_data(bl)->hit
+#define status_get_flee(bl) status->get_status_data(bl)->flee
+#define status_get_mdef(bl) status->get_status_data(bl)->mdef
+#define status_get_flee2(bl) status->get_status_data(bl)->flee2
+#define status_get_def2(bl) status->get_status_data(bl)->def2
+#define status_get_mdef2(bl) status->get_status_data(bl)->mdef2
+#define status_get_critical(bl) status->get_status_data(bl)->cri
+#define status_get_batk(bl) status->get_status_data(bl)->batk
+#define status_get_watk(bl) status->get_status_data(bl)->rhw.atk
+#define status_get_watk2(bl) status->get_status_data(bl)->rhw.atk2
+#define status_get_matk_max(bl) status->get_status_data(bl)->matk_max
+#define status_get_matk_min(bl) status->get_status_data(bl)->matk_min
+#define status_get_lwatk(bl) status->get_status_data(bl)->lhw.atk
+#define status_get_lwatk2(bl) status->get_status_data(bl)->lhw.atk2
+#define status_get_adelay(bl) status->get_status_data(bl)->adelay
+#define status_get_amotion(bl) status->get_status_data(bl)->amotion
+#define status_get_dmotion(bl) status->get_status_data(bl)->dmotion
+#define status_get_element(bl) status->get_status_data(bl)->def_ele
+#define status_get_element_level(bl) status->get_status_data(bl)->ele_lv
+#define status_get_attack_sc_element(bl, sc) status->calc_attack_element(bl, sc, 0)
+#define status_get_attack_element(bl) status->get_status_data(bl)->rhw.ele
+#define status_get_attack_lelement(bl) status->get_status_data(bl)->lhw.ele
+#define status_get_race(bl) status->get_status_data(bl)->race
+#define status_get_size(bl) status->get_status_data(bl)->size
+#define status_get_mode(bl) status->get_status_data(bl)->mode
 
 //Short version, receives rate in 1->100 range, and does not uses a flag setting.
-#define sc_start(bl, type, rate, val1, tick) iStatus->change_start(bl,type,100*(rate),val1,0,0,0,tick,0)
-#define sc_start2(bl, type, rate, val1, val2, tick) iStatus->change_start(bl,type,100*(rate),val1,val2,0,0,tick,0)
-#define sc_start4(bl, type, rate, val1, val2, val3, val4, tick) iStatus->change_start(bl,type,100*(rate),val1,val2,val3,val4,tick,0)
+#define sc_start(bl, type, rate, val1, tick) status->change_start(bl,type,100*(rate),val1,0,0,0,tick,0)
+#define sc_start2(bl, type, rate, val1, val2, tick) status->change_start(bl,type,100*(rate),val1,val2,0,0,tick,0)
+#define sc_start4(bl, type, rate, val1, val2, val3, val4, tick) status->change_start(bl,type,100*(rate),val1,val2,val3,val4,tick,0)
 
-#define status_change_end(bl,type,tid) iStatus->change_end_(bl,type,tid,__FILE__,__LINE__)
+#define status_change_end(bl,type,tid) status->change_end_(bl,type,tid,__FILE__,__LINE__)
 
-#define status_calc_bl(bl, flag) iStatus->calc_bl_(bl, (enum scb_flag)(flag), false)
-#define status_calc_mob(md, first) iStatus->calc_bl_(&(md)->bl, SCB_ALL, first)
-#define status_calc_pet(pd, first) iStatus->calc_bl_(&(pd)->bl, SCB_ALL, first)
-#define status_calc_pc(sd, first) iStatus->calc_bl_(&(sd)->bl, SCB_ALL, first)
-#define status_calc_homunculus(hd, first) iStatus->calc_bl_(&(hd)->bl, SCB_ALL, first)
-#define status_calc_mercenary(md, first) iStatus->calc_bl_(&(md)->bl, SCB_ALL, first)
-#define status_calc_elemental(ed, first) iStatus->calc_bl_(&(ed)->bl, SCB_ALL, first)
-#define status_calc_npc(nd, first) iStatus->calc_bl_(&(nd)->bl, SCB_ALL, first)
+#define status_calc_bl(bl, flag) status->calc_bl_(bl, (enum scb_flag)(flag), false)
+#define status_calc_mob(md, first) status->calc_bl_(&(md)->bl, SCB_ALL, first)
+#define status_calc_pet(pd, first) status->calc_bl_(&(pd)->bl, SCB_ALL, first)
+#define status_calc_pc(sd, first) status->calc_bl_(&(sd)->bl, SCB_ALL, first)
+#define status_calc_homunculus(hd, first) status->calc_bl_(&(hd)->bl, SCB_ALL, first)
+#define status_calc_mercenary(md, first) status->calc_bl_(&(md)->bl, SCB_ALL, first)
+#define status_calc_elemental(ed, first) status->calc_bl_(&(ed)->bl, SCB_ALL, first)
+#define status_calc_npc(nd, first) status->calc_bl_(&(nd)->bl, SCB_ALL, first)
 
 /*=====================================
 * Interface : status.h 
@@ -1878,11 +1878,11 @@ struct status_interface {
 	int (*get_matk) (struct block_list *src, int flag);
 	
 	int (*readdb) (void);
-	int (*do_init_status) (void);
-	void (*do_final_status) (void);
-} iStatus_s;
+	int (*init) (void);
+	void (*final) (void);
+} status_s;
 
-struct status_interface *iStatus;
+struct status_interface *status;
 
 void status_defaults(void);
 

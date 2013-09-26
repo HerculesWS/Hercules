@@ -163,7 +163,7 @@ int bg_member_respawn(struct map_session_data *sd) {
 	if( bgd->mapindex == 0 )
 		return 0; // Respawn not handled by Core
 	pc->setpos(sd, bgd->mapindex, bgd->x, bgd->y, CLR_OUTSIGHT);
-	iStatus->revive(&sd->bl, 1, 100);
+	status->revive(&sd->bl, 1, 100);
 
 	return 1; // Warped
 }

@@ -2071,7 +2071,7 @@ struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short 
 	nd->subtype = WARP;
 	npc->setcells(nd);
 	iMap->addblock(&nd->bl);
-	iStatus->set_viewdata(&nd->bl, nd->class_);
+	status->set_viewdata(&nd->bl, nd->class_);
 	nd->ud = &npc->base_ud;
 	if( maplist[nd->bl.m].users )
 		clif->spawn(&nd->bl);
@@ -2136,7 +2136,7 @@ const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const char* s
 	nd->subtype = WARP;
 	npc->setcells(nd);
 	iMap->addblock(&nd->bl);
-	iStatus->set_viewdata(&nd->bl, nd->class_);
+	status->set_viewdata(&nd->bl, nd->class_);
 	nd->ud = &npc->base_ud;
 	if( maplist[nd->bl.m].users )
 		clif->spawn(&nd->bl);
@@ -2248,7 +2248,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 	if( m >= 0 ) {// normal shop npc
 		iMap->addnpc(m,nd);
 		iMap->addblock(&nd->bl);
-		iStatus->set_viewdata(&nd->bl, nd->class_);
+		status->set_viewdata(&nd->bl, nd->class_);
 		nd->ud = &npc->base_ud;
 		nd->dir = dir;
 		if( maplist[nd->bl.m].users )
@@ -2440,7 +2440,7 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 		npc->setcells(nd);
 		iMap->addblock(&nd->bl);
 		if( class_ >= 0 ) {
-			iStatus->set_viewdata(&nd->bl, nd->class_);
+			status->set_viewdata(&nd->bl, nd->class_);
 			if( maplist[nd->bl.m].users )
 				clif->spawn(&nd->bl);
 		}
@@ -2596,7 +2596,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		npc->setcells(nd);
 		iMap->addblock(&nd->bl);
 		if( class_ >= 0 ) {
-			iStatus->set_viewdata(&nd->bl, nd->class_);
+			status->set_viewdata(&nd->bl, nd->class_);
 			if( maplist[nd->bl.m].users )
 				clif->spawn(&nd->bl);
 		}
@@ -2666,7 +2666,7 @@ int npc_duplicate4instance(struct npc_data *snd, int16 m) {
 		wnd->subtype = WARP;
 		npc->setcells(wnd);
 		iMap->addblock(&wnd->bl);
-		iStatus->set_viewdata(&wnd->bl, wnd->class_);
+		status->set_viewdata(&wnd->bl, wnd->class_);
 		wnd->ud = &npc->base_ud;
 		if( maplist[wnd->bl.m].users )
 			clif->spawn(&wnd->bl);
@@ -2789,8 +2789,7 @@ void npc_setdisplayname(struct npc_data* nd, const char* newname)
 ///
 /// @param nd Target npc
 /// @param class_ New display class
-void npc_setclass(struct npc_data* nd, short class_)
-{
+void npc_setclass(struct npc_data* nd, short class_) {
 	nullpo_retv(nd);
 
 	if( nd->class_ == class_ )
@@ -2799,7 +2798,7 @@ void npc_setclass(struct npc_data* nd, short class_)
 	if( maplist[nd->bl.m].users )
 		clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);// fade out
 	nd->class_ = class_;
-	iStatus->set_viewdata(&nd->bl, class_);
+	status->set_viewdata(&nd->bl, class_);
 	if( maplist[nd->bl.m].users )
 		clif->spawn(&nd->bl);// fade in
 }

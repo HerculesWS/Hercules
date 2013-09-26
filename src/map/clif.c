@@ -239,13 +239,13 @@ uint32 clif_refresh_ip(void) {
 #if PACKETVER >= 20071106
 static inline unsigned char clif_bl_type(struct block_list *bl) {
 	switch (bl->type) {
-		case BL_PC:    return (disguised(bl) && !pcdb_checkid(iStatus->get_viewdata(bl)->class_))? 0x1:0x0; //PC_TYPE
+		case BL_PC:    return (disguised(bl) && !pcdb_checkid(status->get_viewdata(bl)->class_))? 0x1:0x0; //PC_TYPE
 		case BL_ITEM:  return 0x2; //ITEM_TYPE
 		case BL_SKILL: return 0x3; //SKILL_TYPE
 		case BL_CHAT:  return 0x4; //UNKNOWN_TYPE
-		case BL_MOB:   return pcdb_checkid(iStatus->get_viewdata(bl)->class_)?0x0:0x5; //NPC_MOB_TYPE
+		case BL_MOB:   return pcdb_checkid(status->get_viewdata(bl)->class_)?0x0:0x5; //NPC_MOB_TYPE
 		case BL_NPC:   return 0x6; //NPC_EVT_TYPE
-		case BL_PET:   return pcdb_checkid(iStatus->get_viewdata(bl)->class_)?0x0:0x7; //NPC_PET_TYPE
+		case BL_PET:   return pcdb_checkid(status->get_viewdata(bl)->class_)?0x0:0x7; //NPC_PET_TYPE
 		case BL_HOM:   return 0x8; //NPC_HOM_TYPE
 		case BL_MER:   return 0x9; //NPC_MERSOL_TYPE
 		case BL_ELEM:  return 0xa; //NPC_ELEMENTAL_TYPE
@@ -850,7 +850,7 @@ static int clif_setlevel_sub(int lv) {
 }
 
 static int clif_setlevel(struct block_list* bl) {
-	int lv = iStatus->get_lv(bl);
+	int lv = status->get_lv(bl);
 	if( battle_config.client_limit_unit_lv&bl->type )
 		return clif_setlevel_sub(lv);
 	switch( bl->type ) {
@@ -865,10 +865,10 @@ static int clif_setlevel(struct block_list* bl) {
 /* for 'packetver < 20091103' 0x78 non-pc-looking unit handling */
 void clif_set_unit_idle2(struct block_list* bl, struct map_session_data *tsd, enum send_target target) {
 	struct map_session_data* sd;
-	struct status_change* sc = iStatus->get_sc(bl);
-	struct view_data* vd = iStatus->get_viewdata(bl);
+	struct status_change* sc = status->get_sc(bl);
+	struct view_data* vd = status->get_viewdata(bl);
 	struct packet_idle_unit2 p;
-	int g_id = iStatus->get_guild_id(bl);
+	int g_id = status->get_guild_id(bl);
 	
 	sd = BL_CAST(BL_PC, bl);
 	
@@ -877,7 +877,7 @@ void clif_set_unit_idle2(struct block_list* bl, struct map_session_data *tsd, en
 	p.objecttype = clif_bl_type(bl);
 #endif
 	p.GID = bl->id;
-	p.speed = iStatus->get_speed(bl);
+	p.speed = status->get_speed(bl);
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
 	p.effectState = (sc) ? sc->option : bl->type == BL_NPC ? ((TBL_NPC*)bl)->option : 0;
@@ -889,7 +889,7 @@ void clif_set_unit_idle2(struct block_list* bl, struct map_session_data *tsd, en
 	p.accessory2 = vd->head_top;
 	p.accessory3 = vd->head_mid;
 	if( bl->type == BL_NPC && vd->class_ == FLAG_CLASS ) { //The hell, why flags work like this?
-		p.shield = iStatus->get_emblem_id(bl);
+		p.shield = status->get_emblem_id(bl);
 		p.accessory2 = GetWord(g_id, 1);
 		p.accessory3 = GetWord(g_id, 0);
 	}
@@ -897,7 +897,7 @@ void clif_set_unit_idle2(struct block_list* bl, struct map_session_data *tsd, en
 	p.bodypalette = vd->cloth_color;
 	p.headDir = (sd)? sd->head_dir : 0;
 	p.GUID = g_id;
-	p.GEmblemVer = iStatus->get_emblem_id(bl);
+	p.GEmblemVer = status->get_emblem_id(bl);
 	p.honor = (sd) ? sd->status.manner : 0;
 	p.virtue = (sc) ? sc->opt3 : 0;
 	p.isPKModeON = (sd) ? sd->status.karma : 0;
@@ -915,10 +915,10 @@ void clif_set_unit_idle2(struct block_list* bl, struct map_session_data *tsd, en
  *------------------------------------------*/
 void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enum send_target target) {
 	struct map_session_data* sd;
-	struct status_change* sc = iStatus->get_sc(bl);
-	struct view_data* vd = iStatus->get_viewdata(bl);
+	struct status_change* sc = status->get_sc(bl);
+	struct view_data* vd = status->get_viewdata(bl);
 	struct packet_idle_unit p;
-	int g_id = iStatus->get_guild_id(bl);
+	int g_id = status->get_guild_id(bl);
 	
 #if PACKETVER < 20091103
 	if( !pcdb_checkid(vd->class_) ) {
@@ -935,7 +935,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	p.objecttype = clif_bl_type(bl);
 #endif
 	p.GID = bl->id;
-	p.speed = iStatus->get_speed(bl);
+	p.speed = status->get_speed(bl);
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
 	p.effectState = (sc) ? sc->option : bl->type == BL_NPC ? ((TBL_NPC*)bl)->option : 0;
@@ -949,7 +949,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	p.accessory2 = vd->head_top;
 	p.accessory3 = vd->head_mid;
 	if( bl->type == BL_NPC && vd->class_ == FLAG_CLASS ) { //The hell, why flags work like this?
-		p.accessory = iStatus->get_emblem_id(bl);
+		p.accessory = status->get_emblem_id(bl);
 		p.accessory2 = GetWord(g_id, 1);
 		p.accessory3 = GetWord(g_id, 0);
 	}
@@ -960,7 +960,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	p.robe = vd->robe;
 #endif
 	p.GUID = g_id;
-	p.GEmblemVer = iStatus->get_emblem_id(bl);
+	p.GEmblemVer = status->get_emblem_id(bl);
 	p.honor = (sd) ? sd->status.manner : 0;
 	p.virtue = (sc) ? sc->opt3 : 0;
 	p.isPKModeON = (sd) ? sd->status.karma : 0;
@@ -988,7 +988,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 
 	if( disguised(bl) ) {
 #if PACKETVER >= 20091103
-		p.objecttype = pcdb_checkid(iStatus->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+		p.objecttype = pcdb_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
 		p.GID = -bl->id;
 #else
 		p.GID = -bl->id;
@@ -1001,10 +1001,10 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 /* for 'packetver < 20091103' 0x7c non-pc-looking unit handling */
 void clif_spawn_unit2(struct block_list* bl, enum send_target target) {
 	struct map_session_data* sd;
-	struct status_change* sc = iStatus->get_sc(bl);
-	struct view_data* vd = iStatus->get_viewdata(bl);
+	struct status_change* sc = status->get_sc(bl);
+	struct view_data* vd = status->get_viewdata(bl);
 	struct packet_spawn_unit2 p;
-	int g_id = iStatus->get_guild_id(bl);
+	int g_id = status->get_guild_id(bl);
 		
 	sd = BL_CAST(BL_PC, bl);
 	
@@ -1013,7 +1013,7 @@ void clif_spawn_unit2(struct block_list* bl, enum send_target target) {
 	p.objecttype = clif_bl_type(bl);
 #endif
 	p.GID = bl->id;
-	p.speed = iStatus->get_speed(bl);
+	p.speed = status->get_speed(bl);
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
 	p.effectState = (sc) ? sc->option : bl->type == BL_NPC ? ((TBL_NPC*)bl)->option : 0;
@@ -1025,7 +1025,7 @@ void clif_spawn_unit2(struct block_list* bl, enum send_target target) {
 	p.accessory2 = vd->head_top;
 	p.accessory3 = vd->head_mid;
 	if( bl->type == BL_NPC && vd->class_ == FLAG_CLASS ) { //The hell, why flags work like this?
-		p.shield = iStatus->get_emblem_id(bl);
+		p.shield = status->get_emblem_id(bl);
 		p.accessory2 = GetWord(g_id, 1);
 		p.accessory3 = GetWord(g_id, 0);
 	}
@@ -1042,10 +1042,10 @@ void clif_spawn_unit2(struct block_list* bl, enum send_target target) {
 #endif
 void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	struct map_session_data* sd;
-	struct status_change* sc = iStatus->get_sc(bl);
-	struct view_data* vd = iStatus->get_viewdata(bl);
+	struct status_change* sc = status->get_sc(bl);
+	struct view_data* vd = status->get_viewdata(bl);
 	struct packet_spawn_unit p;
-	int g_id = iStatus->get_guild_id(bl);
+	int g_id = status->get_guild_id(bl);
 
 #if PACKETVER < 20091103
 	if( !pcdb_checkid(vd->class_) ) {
@@ -1062,7 +1062,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	p.objecttype = clif_bl_type(bl);
 #endif
 	p.GID = bl->id;
-	p.speed = iStatus->get_speed(bl);
+	p.speed = status->get_speed(bl);
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
 	p.effectState = (sc) ? sc->option : bl->type == BL_NPC ? ((TBL_NPC*)bl)->option : 0;
@@ -1076,7 +1076,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	p.accessory2 = vd->head_top;
 	p.accessory3 = vd->head_mid;
 	if( bl->type == BL_NPC && vd->class_ == FLAG_CLASS ) { //The hell, why flags work like this?
-		p.accessory = iStatus->get_emblem_id(bl);
+		p.accessory = status->get_emblem_id(bl);
 		p.accessory2 = GetWord(g_id, 1);
 		p.accessory3 = GetWord(g_id, 0);
 	}	
@@ -1087,7 +1087,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	p.robe = vd->robe;
 #endif
 	p.GUID = g_id;
-	p.GEmblemVer = iStatus->get_emblem_id(bl);
+	p.GEmblemVer = status->get_emblem_id(bl);
 	p.honor = (sd) ? sd->status.manner : 0;
 	p.virtue = (sc) ? sc->opt3 : 0;
 	p.isPKModeON = (sd) ? sd->status.karma : 0;
@@ -1113,7 +1113,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 		if( sd->status.class_ != sd->disguise )
 			clif->send(&p,sizeof(p),bl,target);
 #if PACKETVER >= 20091103
-		p.objecttype = pcdb_checkid(iStatus->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+		p.objecttype = pcdb_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
 		p.GID = -bl->id;
 #else
 		p.GID = -bl->id;
@@ -1129,10 +1129,10 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
  *------------------------------------------*/
 void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, struct unit_data* ud, enum send_target target) {
 	struct map_session_data* sd;
-	struct status_change* sc = iStatus->get_sc(bl);
-	struct view_data* vd = iStatus->get_viewdata(bl);
+	struct status_change* sc = status->get_sc(bl);
+	struct view_data* vd = status->get_viewdata(bl);
 	struct packet_unit_walking p;
-	int g_id = iStatus->get_guild_id(bl);
+	int g_id = status->get_guild_id(bl);
 	
 	sd = BL_CAST(BL_PC, bl);
 	
@@ -1144,7 +1144,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 	p.objecttype = clif_bl_type(bl);
 #endif
 	p.GID = bl->id;
-	p.speed = iStatus->get_speed(bl);
+	p.speed = status->get_speed(bl);
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
 	p.effectState = (sc) ? sc->option : bl->type == BL_NPC ? ((TBL_NPC*)bl)->option : 0;
@@ -1165,7 +1165,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 	p.robe = vd->robe;
 #endif
 	p.GUID = g_id;
-	p.GEmblemVer = iStatus->get_emblem_id(bl);
+	p.GEmblemVer = status->get_emblem_id(bl);
 	p.honor = (sd) ? sd->status.manner : 0;
 	p.virtue = (sc) ? sc->opt3 : 0;
 	p.isPKModeON = (sd) ? sd->status.karma : 0;
@@ -1192,7 +1192,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 
 	if( disguised(bl) ) {
 #if PACKETVER >= 20091103
-		p.objecttype = pcdb_checkid(iStatus->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+		p.objecttype = pcdb_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
 		p.GID = -bl->id;
 #else
 		p.GID = -bl->id;
@@ -1293,7 +1293,7 @@ int clif_spawn(struct block_list *bl)
 {
 	struct view_data *vd;
 
-	vd = iStatus->get_viewdata(bl);
+	vd = status->get_viewdata(bl);
 	if( !vd || vd->class_ == INVISIBLE_CLASS )
 		return 0;
 
@@ -1572,7 +1572,7 @@ void clif_move(struct unit_data *ud)
 	struct view_data* vd;
 	struct block_list* bl = ud->bl;
 
-	vd = iStatus->get_viewdata(bl);
+	vd = status->get_viewdata(bl);
 	if (!vd || vd->class_ == INVISIBLE_CLASS)
 		return; //This performance check is needed to keep GM-hidden objects from being notified to bots.
 
@@ -3193,8 +3193,8 @@ void clif_changelook(struct block_list *bl,int type,int val)
 	nullpo_retv(bl);
 
 	sd = BL_CAST(BL_PC, bl);
-	sc = iStatus->get_sc(bl);
-	vd = iStatus->get_viewdata(bl);
+	sc = status->get_sc(bl);
+	vd = status->get_viewdata(bl);
 	//nullpo_ret(vd);
 	if( vd ) //temp hack to let Warp Portal change appearance
 		switch(type) {
@@ -3614,7 +3614,7 @@ void clif_changeoption(struct block_list* bl)
 
 	nullpo_retv(bl);
 	
-	if ( !(sc = iStatus->get_sc(bl)) && bl->type != BL_NPC ) return; //How can an option change if there's no sc?
+	if ( !(sc = status->get_sc(bl)) && bl->type != BL_NPC ) return; //How can an option change if there's no sc?
 	
 	sd = BL_CAST(BL_PC, bl);
 
@@ -3660,7 +3660,7 @@ void clif_changeoption2(struct block_list* bl) {
 	unsigned char buf[20];
 	struct status_change *sc;
 
-	if ( !(sc = iStatus->get_sc(bl)) && bl->type != BL_NPC ) return; //How can an option change if there's no sc?
+	if ( !(sc = status->get_sc(bl)) && bl->type != BL_NPC ) return; //How can an option change if there's no sc?
 
 	WBUFW(buf,0) = 0x28a;
 	WBUFL(buf,2) = bl->id;
@@ -4310,7 +4310,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 	struct unit_data *ud;
 	struct view_data *vd;
 
-	vd = iStatus->get_viewdata(bl);
+	vd = status->get_viewdata(bl);
 	if (!vd || vd->class_ == INVISIBLE_CLASS)
 		return;
 
@@ -4447,7 +4447,7 @@ int clif_damage(struct block_list* src, struct block_list* dst, unsigned int tic
 	damage2 = (int)cap_value(in_damage2,INT_MIN,INT_MAX);
 	
 	type = clif_calc_delay(type,div,damage+damage2,ddelay);
-	sc = iStatus->get_sc(dst);
+	sc = status->get_sc(dst);
 	if(sc && sc->count) {
 		if(sc->data[SC_ILLUSION]) {
 			if(damage) damage = damage*(sc->data[SC_ILLUSION]->val2) + rnd()%100;
@@ -4792,13 +4792,13 @@ int clif_outsight(struct block_list *bl,va_list ap)
 					clif->clearunit_single(bl->id,CLR_OUTSIGHT,tsd->fd);
 				break;
 			default:
-				if ((vd=iStatus->get_viewdata(bl)) && vd->class_ != INVISIBLE_CLASS)
+				if ((vd=status->get_viewdata(bl)) && vd->class_ != INVISIBLE_CLASS)
 					clif->clearunit_single(bl->id,CLR_OUTSIGHT,tsd->fd);
 				break;
 			}
 	}
 	if (sd && sd->fd) { //sd is watching tbl go out of view.
-		if (((vd=iStatus->get_viewdata(tbl)) && vd->class_ != INVISIBLE_CLASS) &&
+		if (((vd=status->get_viewdata(tbl)) && vd->class_ != INVISIBLE_CLASS) &&
 			!(tbl->type == BL_NPC && (((TBL_NPC*)tbl)->option&OPTION_INVISIBLE)))
 			clif->clearunit_single(tbl->id,CLR_OUTSIGHT,sd->fd);
 	}
@@ -5116,8 +5116,7 @@ void clif_skill_cooldown(struct map_session_data *sd, uint16 skill_id, unsigned 
 /// Skill attack effect and damage.
 /// 0114 <skill id>.W <src id>.L <dst id>.L <tick>.L <src delay>.L <dst delay>.L <damage>.W <level>.W <div>.W <type>.B (ZC_NOTIFY_SKILL)
 /// 01de <skill id>.W <src id>.L <dst id>.L <tick>.L <src delay>.L <dst delay>.L <damage>.L <level>.W <div>.W <type>.B (ZC_NOTIFY_SKILL2)
-int clif_skill_damage(struct block_list *src,struct block_list *dst,unsigned int tick,int sdelay,int ddelay,int64 in_damage,int div,uint16 skill_id,uint16 skill_lv,int type)
-{
+int clif_skill_damage(struct block_list *src,struct block_list *dst,unsigned int tick,int sdelay,int ddelay,int64 in_damage,int div,uint16 skill_id,uint16 skill_lv,int type) {
 	unsigned char buf[64];
 	struct status_change *sc;
 	int damage;
@@ -5127,7 +5126,7 @@ int clif_skill_damage(struct block_list *src,struct block_list *dst,unsigned int
 
 	damage = (int)cap_value(in_damage,INT_MIN,INT_MAX);
 	type = clif_calc_delay(type,div,damage,ddelay);
-	sc = iStatus->get_sc(dst);
+	sc = status->get_sc(dst);
 	if(sc && sc->count) {
 		if(sc->data[SC_ILLUSION] && damage)
 			damage = damage*(sc->data[SC_ILLUSION]->val2) + rnd()%100;
@@ -5204,9 +5203,8 @@ int clif_skill_damage(struct block_list *src,struct block_list *dst,unsigned int
 
 /// Ground skill attack effect and damage (ZC_NOTIFY_SKILL_POSITION).
 /// 0115 <skill id>.W <src id>.L <dst id>.L <tick>.L <src delay>.L <dst delay>.L <x>.W <y>.W <damage>.W <level>.W <div>.W <type>.B
-/*
-int clif_skill_damage2(struct block_list *src,struct block_list *dst,unsigned int tick,int sdelay,int ddelay,int damage,int div,uint16 skill_id,uint16 skill_lv,int type)
-{
+#if 0
+int clif_skill_damage2(struct block_list *src,struct block_list *dst,unsigned int tick,int sdelay,int ddelay,int damage,int div,uint16 skill_id,uint16 skill_lv,int type) {
 	unsigned char buf[64];
 	struct status_change *sc;
 
@@ -5215,7 +5213,7 @@ int clif_skill_damage2(struct block_list *src,struct block_list *dst,unsigned in
 
 	type = (type>0)?type:skill_get_hit(skill_id);
 	type = clif_calc_delay(type,div,damage,ddelay);
-	sc = iStatus->get_sc(dst);
+	sc = status->get_sc(dst);
 
 	if(sc && sc->count) {
 		if(sc->data[SC_ILLUSION] && damage)
@@ -5258,7 +5256,7 @@ int clif_skill_damage2(struct block_list *src,struct block_list *dst,unsigned in
 	//Because the damage delay must be synced with the client, here is where the can-walk tick must be updated. [Skotlex]
 	return clif_calc_walkdelay(dst,ddelay,type,damage,div);
 }
-*/
+#endif // 0
 
 
 /// Non-damaging skill effect (ZC_USE_SKILL).
@@ -5465,19 +5463,19 @@ void clif_skill_estimation(struct map_session_data *sd,struct block_list *dst) {
 	if( dst->type != BL_MOB )
 		return;
 
-	dstatus = iStatus->get_status_data(dst);
+	dstatus = status->get_status_data(dst);
 
-	WBUFW(buf, 0)=0x18c;
-	WBUFW(buf, 2)=iStatus->get_class(dst);
-	WBUFW(buf, 4)=iStatus->get_lv(dst);
-	WBUFW(buf, 6)=dstatus->size;
-	WBUFL(buf, 8)=dstatus->hp;
-	WBUFW(buf,12)= (battle_config.estimation_type&1?dstatus->def:0)
-		+(battle_config.estimation_type&2?dstatus->def2:0);
-	WBUFW(buf,14)=dstatus->race;
-	WBUFW(buf,16)= (battle_config.estimation_type&1?dstatus->mdef:0)
-		+(battle_config.estimation_type&2?dstatus->mdef2:0);
-	WBUFW(buf,18)= dstatus->def_ele;
+	WBUFW(buf, 0) = 0x18c;
+	WBUFW(buf, 2) = status->get_class(dst);
+	WBUFW(buf, 4) = status->get_lv(dst);
+	WBUFW(buf, 6) = dstatus->size;
+	WBUFL(buf, 8) = dstatus->hp;
+	WBUFW(buf,12) = (battle_config.estimation_type&1?dstatus->def:0)
+	              + (battle_config.estimation_type&2?dstatus->def2:0);
+	WBUFW(buf,14) = dstatus->race;
+	WBUFW(buf,16) = (battle_config.estimation_type&1?dstatus->mdef:0)
+	              + (battle_config.estimation_type&2?dstatus->mdef2:0);
+	WBUFW(buf,18) = dstatus->def_ele;
 	for(i=0;i<9;i++)
 		WBUFB(buf,20+i)= (unsigned char)battle->attr_ratio(i+1,dstatus->def_ele, dstatus->ele_lv);
 //		The following caps negative attributes to 0 since the client displays them as 255-fix. [Skotlex]
@@ -5597,7 +5595,7 @@ void clif_status_change_notick(struct block_list *bl,int type,int flag,int tick,
 	
 	nullpo_retv(bl);
 	
-	if (!(iStatus->type2relevant_bl_types(type)&bl->type)) // only send status changes that actually matter to the client
+	if (!(status->type2relevant_bl_types(type)&bl->type)) // only send status changes that actually matter to the client
 		return;
 	
 	if (type == SI_BLANK)  //It shows nothing on the client...
@@ -5628,7 +5626,7 @@ void clif_status_change(struct block_list *bl,int type,int flag,int tick,int val
 
 	nullpo_retv(bl);
 
-	if (!(iStatus->type2relevant_bl_types(type)&bl->type)) // only send status changes that actually matter to the client
+	if (!(status->type2relevant_bl_types(type)&bl->type)) // only send status changes that actually matter to the client
 		return;
 
 	if ( tick < 0 )
@@ -7680,8 +7678,8 @@ void clif_guild_emblem_area(struct block_list* bl)
 	//      (emblem in the flag npcs and emblem over the head in agit maps) [FlavioJS]
 	WBUFW(buf,0) = 0x1b4;
 	WBUFL(buf,2) = bl->id;
-	WBUFL(buf,6) = iStatus->get_guild_id(bl);
-	WBUFW(buf,10) = iStatus->get_emblem_id(bl);
+	WBUFL(buf,6) = status->get_guild_id(bl);
+	WBUFW(buf,10) = status->get_emblem_id(bl);
 	clif->send(buf, 12, bl, AREA_WOS);
 }
 
@@ -9617,7 +9615,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		sd->areanpc_id = 0;
 
 	/* it broke at some point (e.g. during a crash), so we make it visibly dead again. */
-	if( !sd->status.hp && !pc_isdead(sd) && iStatus->isdead(&sd->bl) )
+	if( !sd->status.hp && !pc_isdead(sd) && status->isdead(&sd->bl) )
 		pc_setdead(sd);
 
 	// If player is dead, and is spawned (such as @refresh) send death packet. [Valaris]
@@ -9834,8 +9832,8 @@ void clif_parse_GetCharNameRequest(int fd, struct map_session_data *sd)
 		return; // Block namerequests past view range
 
 	// 'see people in GM hide' cheat detection
-	/* disabled due to false positives (network lag + request name of char that's about to hide = race condition)
-	sc = iStatus->get_sc(bl);
+#if 0 /* disabled due to false positives (network lag + request name of char that's about to hide = race condition) */
+	sc = status->get_sc(bl);
 	if (sc && sc->option&OPTION_INVISIBLE && !disguised(bl) &&
 		bl->type != BL_NPC && //Skip hidden NPCs which can be seen using Maya Purple
 		pc->get_group_level(sd) < battle_config.hack_info_GM_level
@@ -9847,7 +9845,7 @@ void clif_parse_GetCharNameRequest(int fd, struct map_session_data *sd)
 		intif->wis_message_to_gm(iMap->wisp_server_name, battle_config.hack_info_GM_level, gm_msg);
 		return;
 	}
-	*/
+#endif // 0
 
 	clif->charnameack(fd, bl);
 }
@@ -9913,7 +9911,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 							sd->state.snovice_call_flag = 3;
 						break;
 					case 3:
-						sc_start(&sd->bl, iStatus->skill2sc(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5)); //Lv17-> +50 critical (noted by Poki) [Skotlex]
+						sc_start(&sd->bl, status->skill2sc(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5)); //Lv17-> +50 critical (noted by Poki) [Skotlex]
 						clif->skill_nodamage(&sd->bl, &sd->bl, MO_EXPLOSIONSPIRITS, 5, 1);  // prayer always shows successful Lv5 cast and disregards noskill restrictions
 						sd->state.snovice_call_flag = 0;
 						break;
@@ -13236,7 +13234,7 @@ void clif_parse_GMKick(int fd, struct map_session_data *sd)
 		case BL_PC:
 		{
 			char command[NAME_LENGTH+6];
-			sprintf(command, "%ckick %s", atcommand->at_symbol, iStatus->get_name(target));
+			sprintf(command, "%ckick %s", atcommand->at_symbol, status->get_name(target));
 			atcommand->parse(fd, sd, command, 1);
 		}
 		break;
@@ -13251,7 +13249,7 @@ void clif_parse_GMKick(int fd, struct map_session_data *sd)
 				clif->GM_kickack(sd, 0);
 				return;
 			}
-			sprintf(command, "/kick %s (%d)", iStatus->get_name(target), iStatus->get_class(target));
+			sprintf(command, "/kick %s (%d)", status->get_name(target), status->get_class(target));
 			logs->atcommand(sd, command);
 			status_percent_damage(&sd->bl, target, 100, 0, true); // can invalidate 'target'
 		}
@@ -13709,7 +13707,7 @@ void clif_parse_NoviceExplosionSpirits(int fd, struct map_session_data *sd)
 			int percent = (int)( ( (float)sd->status.base_exp/(float)next )*1000. );
 
 			if( percent && ( percent%100 ) == 0 ) {// 10.0%, 20.0%, ..., 90.0%
-				sc_start(&sd->bl, iStatus->skill2sc(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5)); //Lv17-> +50 critical (noted by Poki) [Skotlex]
+				sc_start(&sd->bl, status->skill2sc(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5)); //Lv17-> +50 critical (noted by Poki) [Skotlex]
 				clif->skill_nodamage(&sd->bl, &sd->bl, MO_EXPLOSIONSPIRITS, 5, 1);  // prayer always shows successful Lv5 cast and disregards noskill restrictions
 			}
 		}
@@ -14363,8 +14361,7 @@ void clif_parse_HomMenu(int fd, struct map_session_data *sd) { //[orn]
 
 /// Request to resurrect oneself using Token of Siegfried (CZ_STANDING_RESURRECTION).
 /// 0292
-void clif_parse_AutoRevive(int fd, struct map_session_data *sd)
-{
+void clif_parse_AutoRevive(int fd, struct map_session_data *sd) {
 	int item_position = pc->search_inventory(sd, ITEMID_TOKEN_OF_SIEGFRIED);
 
 	if (item_position < 0)
@@ -14373,7 +14370,7 @@ void clif_parse_AutoRevive(int fd, struct map_session_data *sd)
 	if (sd->sc.data[SC_HELLPOWER]) //Cannot res while under the effect of SC_HELLPOWER.
 		return;
 
-	if (!iStatus->revive(&sd->bl, 100, 100))
+	if (!status->revive(&sd->bl, 100, 100))
 		return;
 
 	clif->skill_nodamage(&sd->bl,&sd->bl,ALL_RESURRECTION,4,1);

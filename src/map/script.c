@@ -332,9 +332,9 @@ static void script_reportsrc(struct script_state *st)
 			break;
 		default:
 			if( bl->m >= 0 )
-				ShowDebug("Source (Non-NPC type %d): name %s at %s (%d,%d)\n", bl->type, iStatus->get_name(bl), maplist[bl->m].name, bl->x, bl->y);
+				ShowDebug("Source (Non-NPC type %d): name %s at %s (%d,%d)\n", bl->type, status->get_name(bl), maplist[bl->m].name, bl->x, bl->y);
 			else
-				ShowDebug("Source (Non-NPC type %d): name %s (invisible/not on a map)\n", bl->type, iStatus->get_name(bl));
+				ShowDebug("Source (Non-NPC type %d): name %s (invisible/not on a map)\n", bl->type, status->get_name(bl));
 			break;
 	}
 }
@@ -3641,7 +3641,7 @@ void script_run_autobonus(const char *autobonus, int id, int pos)
 	struct script_code *scriptroot = (struct script_code *)strdb_get(script->autobonus_db, autobonus);
 
 	if( scriptroot ) {
-		iStatus->current_equip_item_index = pos;
+		status->current_equip_item_index = pos;
 		script->run(scriptroot,0,id,0);
 	}
 }
@@ -4874,8 +4874,7 @@ BUILDIN(warpguild)
 /*==========================================
  * Force Heal a player (hp and sp)
  *------------------------------------------*/
-BUILDIN(heal)
-{
+BUILDIN(heal) {
 	TBL_PC *sd;
 	int hp,sp;
 	
@@ -4884,7 +4883,7 @@ BUILDIN(heal)
 	
 	hp=script_getnum(st,2);
 	sp=script_getnum(st,3);
-	iStatus->heal(&sd->bl, hp, sp, 1);
+	status->heal(&sd->bl, hp, sp, 1);
 	return true;
 }
 /*==========================================
@@ -7253,8 +7252,7 @@ BUILDIN(getequipweaponlv)
  *	x : refine chance
  *	0 : false (max refine level or unequip..)
  *------------------------------------------*/
-BUILDIN(getequippercentrefinery)
-{
+BUILDIN(getequippercentrefinery) {
 	int i = -1,num;
 	TBL_PC *sd;
 	
@@ -7266,7 +7264,7 @@ BUILDIN(getequippercentrefinery)
 	if (num > 0 && num <= ARRAYLENGTH(equip))
 		i=pc->checkequip(sd,equip[num-1]);
 	if(i >= 0 && sd->status.inventory[i].nameid && sd->status.inventory[i].refine < MAX_REFINE)
-		script_pushint(st,iStatus->get_refine_chance(itemdb_wlv(sd->status.inventory[i].nameid), (int)sd->status.inventory[i].refine));
+		script_pushint(st,status->get_refine_chance(itemdb_wlv(sd->status.inventory[i].nameid), (int)sd->status.inventory[i].refine));
 	else
 		script_pushint(st,0);
 	
@@ -7544,8 +7542,7 @@ BUILDIN(bonus)
 	return true;
 }
 
-BUILDIN(autobonus)
-{
+BUILDIN(autobonus) {
 	unsigned int dur;
 	short rate;
 	short atk_type = 0;
@@ -7556,7 +7553,7 @@ BUILDIN(autobonus)
 	if( sd == NULL )
 		return true; // no player attached
 	
-	if( sd->state.autobonus&sd->status.inventory[iStatus->current_equip_item_index].equip )
+	if( sd->state.autobonus&sd->status.inventory[status->current_equip_item_index].equip )
 		return true;
 	
 	rate = script_getnum(st,3);
@@ -7570,9 +7567,9 @@ BUILDIN(autobonus)
 	if( script_hasdata(st,6) )
 		other_script = script_getstr(st,6);
 	
-	if( pc->addautobonus(sd->autobonus,ARRAYLENGTH(sd->autobonus),
-						bonus_script,rate,dur,atk_type,other_script,sd->status.inventory[iStatus->current_equip_item_index].equip,false) )
-	{
+	if( pc->addautobonus(sd->autobonus,ARRAYLENGTH(sd->autobonus),bonus_script,rate,dur,atk_type,other_script,
+	                     sd->status.inventory[status->current_equip_item_index].equip,false)
+	) {
 		script_add_autobonus(bonus_script);
 		if( other_script )
 			script_add_autobonus(other_script);
@@ -7581,8 +7578,7 @@ BUILDIN(autobonus)
 	return true;
 }
 
-BUILDIN(autobonus2)
-{
+BUILDIN(autobonus2) {
 	unsigned int dur;
 	short rate;
 	short atk_type = 0;
@@ -7593,7 +7589,7 @@ BUILDIN(autobonus2)
 	if( sd == NULL )
 		return true; // no player attached
 	
-	if( sd->state.autobonus&sd->status.inventory[iStatus->current_equip_item_index].equip )
+	if( sd->state.autobonus&sd->status.inventory[status->current_equip_item_index].equip )
 		return true;
 	
 	rate = script_getnum(st,3);
@@ -7607,9 +7603,9 @@ BUILDIN(autobonus2)
 	if( script_hasdata(st,6) )
 		other_script = script_getstr(st,6);
 	
-	if( pc->addautobonus(sd->autobonus2,ARRAYLENGTH(sd->autobonus2),
-						bonus_script,rate,dur,atk_type,other_script,sd->status.inventory[iStatus->current_equip_item_index].equip,false) )
-	{
+	if( pc->addautobonus(sd->autobonus2,ARRAYLENGTH(sd->autobonus2),bonus_script,rate,dur,atk_type,other_script,
+	                     sd->status.inventory[status->current_equip_item_index].equip,false)
+	) {
 		script_add_autobonus(bonus_script);
 		if( other_script )
 			script_add_autobonus(other_script);
@@ -7618,8 +7614,7 @@ BUILDIN(autobonus2)
 	return true;
 }
 
-BUILDIN(autobonus3)
-{
+BUILDIN(autobonus3) {
 	unsigned int dur;
 	short rate,atk_type;
 	TBL_PC* sd;
@@ -7629,7 +7624,7 @@ BUILDIN(autobonus3)
 	if( sd == NULL )
 		return true; // no player attached
 	
-	if( sd->state.autobonus&sd->status.inventory[iStatus->current_equip_item_index].equip )
+	if( sd->state.autobonus&sd->status.inventory[status->current_equip_item_index].equip )
 		return true;
 	
 	rate = script_getnum(st,3);
@@ -7642,9 +7637,9 @@ BUILDIN(autobonus3)
 	if( script_hasdata(st,6) )
 		other_script = script_getstr(st,6);
 	
-	if( pc->addautobonus(sd->autobonus3,ARRAYLENGTH(sd->autobonus3),
-						bonus_script,rate,dur,atk_type,other_script,sd->status.inventory[iStatus->current_equip_item_index].equip,true) )
-	{
+	if( pc->addautobonus(sd->autobonus3,ARRAYLENGTH(sd->autobonus3),bonus_script,rate,dur,atk_type,other_script,
+	                     sd->status.inventory[status->current_equip_item_index].equip,true)
+	) {
 		script_add_autobonus(bonus_script);
 		if( other_script )
 			script_add_autobonus(other_script);
@@ -9488,8 +9483,7 @@ BUILDIN(hideonnpc)
 /// Starts a status effect on the target unit or on the attached player.
 ///
 /// sc_start <effect_id>,<duration>,<val1>{,<unit_id>};
-BUILDIN(sc_start)
-{
+BUILDIN(sc_start) {
 	struct block_list* bl;
 	enum sc_type type;
 	int tick;
@@ -9504,20 +9498,20 @@ BUILDIN(sc_start)
 	else
 		bl = iMap->id2bl(st->rid);
 	
-	if( tick == 0 && val1 > 0 && type > SC_NONE && type < SC_MAX && iStatus->sc2skill(type) != 0 )
-	{// When there isn't a duration specified, try to get it from the skill_db
-		tick = skill->get_time(iStatus->sc2skill(type), val1);
+	if( tick == 0 && val1 > 0 && type > SC_NONE && type < SC_MAX && status->sc2skill(type) != 0 ) {
+		// When there isn't a duration specified, try to get it from the skill_db
+		tick = skill->get_time(status->sc2skill(type), val1);
 	}
 	
-	if( script->potion_flag == 1 && script->potion_target )
-	{	//skill.c set the flags before running the script, this must be a potion-pitched effect.
+	if( script->potion_flag == 1 && script->potion_target ) {
+		//skill.c set the flags before running the script, this must be a potion-pitched effect.
 		bl = iMap->id2bl(script->potion_target);
 		tick /= 2;// Thrown potions only last half.
 		val4 = 1;// Mark that this was a thrown sc_effect
 	}
 	
 	if( bl )
-		iStatus->change_start(bl, type, 10000, val1, 0, 0, val4, tick, 2);
+		status->change_start(bl, type, 10000, val1, 0, 0, val4, tick, 2);
 	
 	return true;
 }
@@ -9525,8 +9519,7 @@ BUILDIN(sc_start)
 /// Starts a status effect on the target unit or on the attached player.
 ///
 /// sc_start2 <effect_id>,<duration>,<val1>,<percent chance>{,<unit_id>};
-BUILDIN(sc_start2)
-{
+BUILDIN(sc_start2) {
 	struct block_list* bl;
 	enum sc_type type;
 	int tick;
@@ -9543,20 +9536,20 @@ BUILDIN(sc_start2)
 	else
 		bl = iMap->id2bl(st->rid);
 	
-	if( tick == 0 && val1 > 0 && type > SC_NONE && type < SC_MAX && iStatus->sc2skill(type) != 0 )
-	{// When there isn't a duration specified, try to get it from the skill_db
-		tick = skill->get_time(iStatus->sc2skill(type), val1);
+	if( tick == 0 && val1 > 0 && type > SC_NONE && type < SC_MAX && status->sc2skill(type) != 0 ) {
+		// When there isn't a duration specified, try to get it from the skill_db
+		tick = skill->get_time(status->sc2skill(type), val1);
 	}
 	
-	if( script->potion_flag == 1 && script->potion_target )
-	{	//skill.c set the flags before running the script, this must be a potion-pitched effect.
+	if( script->potion_flag == 1 && script->potion_target ) {
+		//skill.c set the flags before running the script, this must be a potion-pitched effect.
 		bl = iMap->id2bl(script->potion_target);
 		tick /= 2;// Thrown potions only last half.
 		val4 = 1;// Mark that this was a thrown sc_effect
 	}
 	
 	if( bl )
-		iStatus->change_start(bl, type, rate, val1, 0, 0, val4, tick, 2);
+		status->change_start(bl, type, rate, val1, 0, 0, val4, tick, 2);
 	
 	return true;
 }
@@ -9564,8 +9557,7 @@ BUILDIN(sc_start2)
 /// Starts a status effect on the target unit or on the attached player.
 ///
 /// sc_start4 <effect_id>,<duration>,<val1>,<val2>,<val3>,<val4>{,<unit_id>};
-BUILDIN(sc_start4)
-{
+BUILDIN(sc_start4) {
 	struct block_list* bl;
 	enum sc_type type;
 	int tick;
@@ -9585,19 +9577,19 @@ BUILDIN(sc_start4)
 	else
 		bl = iMap->id2bl(st->rid);
 	
-	if( tick == 0 && val1 > 0 && type > SC_NONE && type < SC_MAX && iStatus->sc2skill(type) != 0 )
-	{// When there isn't a duration specified, try to get it from the skill_db
-		tick = skill->get_time(iStatus->sc2skill(type), val1);
+	if( tick == 0 && val1 > 0 && type > SC_NONE && type < SC_MAX && status->sc2skill(type) != 0 ) {
+		// When there isn't a duration specified, try to get it from the skill_db
+		tick = skill->get_time(status->sc2skill(type), val1);
 	}
 	
-	if( script->potion_flag == 1 && script->potion_target )
-	{	//skill.c set the flags before running the script, this must be a potion-pitched effect.
+	if( script->potion_flag == 1 && script->potion_target ) {
+		//skill.c set the flags before running the script, this must be a potion-pitched effect.
 		bl = iMap->id2bl(script->potion_target);
 		tick /= 2;// Thrown potions only last half.
 	}
 	
 	if( bl )
-		iStatus->change_start(bl, type, 10000, val1, val2, val3, val4, tick, 2);
+		status->change_start(bl, type, 10000, val1, val2, val3, val4, tick, 2);
 	
 	return true;
 }
@@ -9605,8 +9597,7 @@ BUILDIN(sc_start4)
 /// Ends one or all status effects on the target unit or on the attached player.
 ///
 /// sc_end <effect_id>{,<unit_id>};
-BUILDIN(sc_end)
-{
+BUILDIN(sc_end) {
 	struct block_list* bl;
 	int type;
 	
@@ -9622,23 +9613,19 @@ BUILDIN(sc_end)
 	if (!bl)
 		return true;
 	
-	if (type >= 0 && type < SC_MAX)
-	{
-		struct status_change *sc = iStatus->get_sc(bl);
+	if (type >= 0 && type < SC_MAX) {
+		struct status_change *sc = status->get_sc(bl);
 		struct status_change_entry *sce = sc ? sc->data[type] : NULL;
 		
 		if (!sce)
 			return true;
 		
-		
-		switch (type)
-		{
+		switch (type) {
 			case SC_WEIGHTOVER50:
 			case SC_WEIGHTOVER90:
 			case SC_NOCHAT:
 			case SC_PUSH_CART:
 				return true;
-				
 			default:
 				break;
 		}
@@ -9648,7 +9635,7 @@ BUILDIN(sc_end)
 		status_change_end(bl, (sc_type)type, INVALID_TIMER);
 	}
 	else
-		iStatus->change_clear(bl, 3); // remove all effects
+		status->change_clear(bl, 3); // remove all effects
 	
 	return true;
 }
@@ -9656,8 +9643,7 @@ BUILDIN(sc_end)
 /*==========================================
  * @FIXME atm will return reduced tick, 0 immune, 1 no tick
  *------------------------------------------*/
-BUILDIN(getscrate)
-{
+BUILDIN(getscrate) {
 	struct block_list *bl;
 	int type,rate;
 	
@@ -9669,7 +9655,7 @@ BUILDIN(getscrate)
 		bl = iMap->id2bl(st->rid);
 	
 	if (bl)
-		rate = iStatus->get_sc_def(bl, (sc_type)type, 10000, 10000, 0);
+		rate = status->get_sc_def(bl, (sc_type)type, 10000, 10000, 0);
 	
 	script_pushint(st,rate);
 	return true;
@@ -9951,8 +9937,7 @@ BUILDIN(skillpointcount)
 /*==========================================
  *
  *------------------------------------------*/
-BUILDIN(changebase)
-{
+BUILDIN(changebase) {
 	TBL_PC *sd=NULL;
 	int vclass;
 	
@@ -9974,7 +9959,7 @@ BUILDIN(changebase)
 	}
 	
 	if(sd->disguise == -1 && vclass != sd->vd.class_) {
-		iStatus->set_viewdata(&sd->bl, vclass);
+		status->set_viewdata(&sd->bl, vclass);
 		//Updated client view. Base, Weapon and Cloth Colors.
 		clif->changelook(&sd->bl,LOOK_BASE,sd->vd.class_);
 		clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
@@ -12357,7 +12342,7 @@ BUILDIN(recovery)
 	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
 	{
 		if(pc_isdead(sd))
-			iStatus->revive(&sd->bl, 100, 100);
+			status->revive(&sd->bl, 100, 100);
 		else
 			status_percent_heal(&sd->bl, 100, 100);
 		clif->message(sd->fd,msg_txt(680));
@@ -13076,8 +13061,7 @@ BUILDIN(isequipped)
  * Check how many given inserted cards in the CURRENT
  * weapon - used for 2/15's cards patch [Lupus]
  *------------------------------------------------*/
-BUILDIN(cardscnt)
-{
+BUILDIN(cardscnt) {
 	TBL_PC *sd;
 	int i, k, id = 1;
 	int ret = 0;
@@ -13090,7 +13074,7 @@ BUILDIN(cardscnt)
 		if (id <= 0)
 			continue;
 		
-		index = iStatus->current_equip_item_index; //we get CURRENT WEAPON inventory index from status.c [Lupus]
+		index = status->current_equip_item_index; //we get CURRENT WEAPON inventory index from status.c [Lupus]
 		if(index < 0) continue;
 		
 		if(!sd->inventory_data[index])
@@ -13109,7 +13093,7 @@ BUILDIN(cardscnt)
 		}
 	}
 	script_pushint(st,ret);
-	//	script_pushint(st,iStatus->current_equip_item_index);
+	//	script_pushint(st,status->current_equip_item_index);
 	return true;
 }
 
@@ -13117,11 +13101,10 @@ BUILDIN(cardscnt)
  * Returns the refined number of the current item, or an
  * item with inventory index specified
  *-------------------------------------------------------*/
-BUILDIN(getrefine)
-{
+BUILDIN(getrefine) {
 	TBL_PC *sd;
 	if ((sd = script_rid2sd(st))!= NULL)
-		script_pushint(st,sd->status.inventory[iStatus->current_equip_item_index].refine);
+		script_pushint(st,sd->status.inventory[status->current_equip_item_index].refine);
 	else
 		script_pushint(st,0);
 	return true;
@@ -15043,8 +15026,7 @@ BUILDIN(unitstop) {
 /// Makes the unit say the message
 ///
 /// unittalk <unit_id>,"<message>";
-BUILDIN(unittalk)
-{
+BUILDIN(unittalk) {
 	int unit_id;
 	const char* message;
 	struct block_list* bl;
@@ -15053,11 +15035,10 @@ BUILDIN(unittalk)
 	message = script_getstr(st, 3);
 	
 	bl = iMap->id2bl(unit_id);
-	if( bl != NULL )
-	{
+	if( bl != NULL ) {
 		struct StringBuf sbuf;
 		StrBuf->Init(&sbuf);
-		StrBuf->Printf(&sbuf, "%s : %s", iStatus->get_name(bl), message);
+		StrBuf->Printf(&sbuf, "%s : %s", status->get_name(bl), message);
 		clif->disp_overhead(bl, StrBuf->Value(&sbuf));
 		if( bl->type == BL_PC )
 			clif->message(((TBL_PC*)bl)->fd, StrBuf->Value(&sbuf));
@@ -15440,8 +15421,7 @@ BUILDIN(mercenary_create)
 	return true;
 }
 
-BUILDIN(mercenary_heal)
-{
+BUILDIN(mercenary_heal) {
 	struct map_session_data *sd = script_rid2sd(st);
 	int hp, sp;
 	
@@ -15450,12 +15430,11 @@ BUILDIN(mercenary_heal)
 	hp = script_getnum(st,2);
 	sp = script_getnum(st,3);
 	
-	iStatus->heal(&sd->md->bl, hp, sp, 0);
+	status->heal(&sd->md->bl, hp, sp, 0);
 	return true;
 }
 
-BUILDIN(mercenary_sc_start)
-{
+BUILDIN(mercenary_sc_start) {
 	struct map_session_data *sd = script_rid2sd(st);
 	enum sc_type type;
 	int tick, val1;
@@ -15467,7 +15446,7 @@ BUILDIN(mercenary_sc_start)
 	tick = script_getnum(st,3);
 	val1 = script_getnum(st,4);
 	
-	iStatus->change_start(&sd->md->bl, type, 10000, val1, 0, 0, 0, tick, 2);
+	status->change_start(&sd->md->bl, type, 10000, val1, 0, 0, 0, tick, 2);
 	return true;
 }
 

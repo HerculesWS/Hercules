@@ -895,9 +895,9 @@ ACMD(hide) {
 	if (sd->sc.option & OPTION_INVISIBLE) {
 		sd->sc.option &= ~OPTION_INVISIBLE;
 		if (sd->disguise != -1 )
-			iStatus->set_viewdata(&sd->bl, sd->disguise);
+			status->set_viewdata(&sd->bl, sd->disguise);
 		else
-			iStatus->set_viewdata(&sd->bl, sd->status.class_);
+			status->set_viewdata(&sd->bl, sd->status.class_);
 		clif->message(fd, msg_txt(10)); // Invisible: Off
 		
 		// increment the number of pvp players on the map
@@ -1011,8 +1011,7 @@ ACMD(kill)
 ACMD(alive)
 {
 	nullpo_retr(-1, sd);
-	if (!iStatus->revive(&sd->bl, 100, 100))
-	{
+	if (!status->revive(&sd->bl, 100, 100)) {
 		clif->message(fd, msg_txt(667));
 		return false;
 	}
@@ -1080,7 +1079,7 @@ ACMD(heal)
 	}
 	
 	if ( hp > 0 && sp >= 0 ) {
-		if(!iStatus->heal(&sd->bl, hp, sp, 0))
+		if(!status->heal(&sd->bl, hp, sp, 0))
 			clif->message(fd, msg_txt(157)); // HP and SP are already with the good value.
 		else
 			clif->message(fd, msg_txt(17)); // HP, SP recovered.
@@ -1088,7 +1087,7 @@ ACMD(heal)
 	}
 	
 	if ( hp < 0 && sp <= 0 ) {
-		iStatus->damage(NULL, &sd->bl, -hp, -sp, 0, 0);
+		status->damage(NULL, &sd->bl, -hp, -sp, 0, 0);
 		clif->damage(&sd->bl,&sd->bl, timer->gettick(), 0, 0, -hp, 0, 4, 0);
 		clif->message(fd, msg_txt(156)); // HP or/and SP modified.
 		return true;
@@ -1097,18 +1096,18 @@ ACMD(heal)
 	//Opposing signs.
 	if ( hp ) {
 		if (hp > 0)
-			iStatus->heal(&sd->bl, hp, 0, 0);
+			status->heal(&sd->bl, hp, 0, 0);
 		else {
-			iStatus->damage(NULL, &sd->bl, -hp, 0, 0, 0);
+			status->damage(NULL, &sd->bl, -hp, 0, 0, 0);
 			clif->damage(&sd->bl,&sd->bl, timer->gettick(), 0, 0, -hp, 0, 4, 0);
 		}
 	}
 	
 	if ( sp ) {
 		if (sp > 0)
-			iStatus->heal(&sd->bl, 0, sp, 0);
+			status->heal(&sd->bl, 0, sp, 0);
 		else
-			iStatus->damage(NULL, &sd->bl, 0, -sp, 0, 0);
+			status->damage(NULL, &sd->bl, 0, -sp, 0, 0);
 	}
 	
 	clif->message(fd, msg_txt(156)); // HP or/and SP modified.
@@ -2971,7 +2970,7 @@ ACMD(doommap)
  *------------------------------------------*/
 static void atcommand_raise_sub(struct map_session_data* sd) {
 	
-	iStatus->revive(&sd->bl, 100, 100);
+	status->revive(&sd->bl, 100, 100);
 	
 	clif->skill_nodamage(&sd->bl,&sd->bl,ALL_RESURRECTION,4,1);
 	clif->message(sd->fd, msg_txt(63)); // Mercy has been shown.
@@ -3679,9 +3678,8 @@ ACMD(reloadbattleconf)
 /*==========================================
  * @reloadstatusdb - reloads job_db1.txt job_db2.txt job_db2-2.txt refine_db.txt size_fix.txt
  *------------------------------------------*/
-ACMD(reloadstatusdb)
-{
-	iStatus->readdb();
+ACMD(reloadstatusdb) {
+	status->readdb();
 	clif->message(fd, msg_txt(256));
 	return true;
 }
@@ -4444,7 +4442,7 @@ ACMD(servertime)
 }
 
 //Added by Coltaro
-//We're using this function here instead of using time_t so that it only counts player's jail time when he/she's online (and since the idea is to reduce the amount of minutes one by one in iStatus->change_timer...).
+//We're using this function here instead of using time_t so that it only counts player's jail time when he/she's online (and since the idea is to reduce the amount of minutes one by one in status->change_timer...).
 //Well, using time_t could still work but for some reason that looks like more coding x_x
 static void get_jail_time(int jailtime, int* year, int* month, int* day, int* hour, int* minute)
 {
@@ -4672,7 +4670,7 @@ ACMD(jailfor)
 			break;
 	}
 	
-	sc_start4(&pl_sd->bl,SC_JAILED,100,jailtime,m_index,x,y,jailtime?60000:1000); //jailtime = 0: Time was reset to 0. Wait 1 second to warp player out (since it's done in iStatus->change_timer).
+	sc_start4(&pl_sd->bl,SC_JAILED,100,jailtime,m_index,x,y,jailtime?60000:1000); //jailtime = 0: Time was reset to 0. Wait 1 second to warp player out (since it's done in status->change_timer).
 	return true;
 }
 
@@ -5425,12 +5423,11 @@ ACMD(displayskill) {
 	uint16 skill_lv = 1;
 	nullpo_retr(-1, sd);
 	
-	if (!message || !*message || sscanf(message, "%hu %hu", &skill_id, &skill_lv) < 1)
-	{
+	if (!message || !*message || sscanf(message, "%hu %hu", &skill_id, &skill_lv) < 1) {
 		clif->message(fd, msg_txt(1166)); // Usage: @displayskill <skill ID> {<skill level>}
 		return false;
 	}
-	st = iStatus->get_status_data(&sd->bl);
+	st = status->get_status_data(&sd->bl);
 	tick = timer->gettick();
 	clif->skill_damage(&sd->bl,&sd->bl, tick, st->amotion, st->dmotion, 1, 1, skill_id, skill_lv, 5);
 	clif->skill_nodamage(&sd->bl, &sd->bl, skill_id, skill_lv, 1);
@@ -5617,7 +5614,7 @@ ACMD(autotrade) {
 	sd->state.autotrade = 1;
 	if( battle_config.at_timeout ) {
 		int timeout = atoi(message);
-		iStatus->change_start(&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0, ((timeout > 0) ? min(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, 0);
+		status->change_start(&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0, ((timeout > 0) ? min(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, 0);
 	}
 	
 	clif->chsys_quit(sd);
@@ -7050,7 +7047,7 @@ ACMD(hominfo) {
 	}
 	
 	hd = sd->hd;
-	st = iStatus->get_status_data(&hd->bl);
+	st = status->get_status_data(&hd->bl);
 	clif->message(fd, msg_txt(1261)); // Homunculus stats:
 	
 	snprintf(atcmd_output, sizeof(atcmd_output) ,msg_txt(1262), // HP: %d/%d - SP: %d/%d
