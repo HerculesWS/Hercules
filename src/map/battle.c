@@ -3021,16 +3021,16 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			default:
 				if (flag & BF_SKILL) { //Skills get a different reduction than non-skills. [Skotlex]
 					if (flag&BF_WEAPON)
-						damage = damage * map[bl->m].weapon_damage_rate / 100;
+						damage = damage * maplist[bl->m].weapon_damage_rate / 100;
 					if (flag&BF_MAGIC)
-						damage = damage * map[bl->m].magic_damage_rate / 100;
+						damage = damage * maplist[bl->m].magic_damage_rate / 100;
 					if (flag&BF_MISC)
-						damage = damage * map[bl->m].misc_damage_rate / 100;
+						damage = damage * maplist[bl->m].misc_damage_rate / 100;
 				} else { //Normal attacks get reductions based on range.
 					if (flag & BF_SHORT)
-						damage = damage * map[bl->m].short_damage_rate / 100;
+						damage = damage * maplist[bl->m].short_damage_rate / 100;
 					if (flag & BF_LONG)
-						damage = damage * map[bl->m].long_damage_rate / 100;
+						damage = damage * maplist[bl->m].long_damage_rate / 100;
 				}
 				if(!damage) damage  = 1;
 				break;
@@ -3197,13 +3197,12 @@ int battle_range_type(struct block_list *src, struct block_list *target, uint16 
 	return BF_LONG;
 }
 int battle_adjust_skill_damage(int m, unsigned short skill_id) {
-
-	if( map[m].skill_count ) {
+	if( maplist[m].skill_count ) {
 		int i;
-		ARR_FIND(0, map[m].skill_count, i, map[m].skills[i]->skill_id == skill_id );
+		ARR_FIND(0, maplist[m].skill_count, i, maplist[m].skills[i]->skill_id == skill_id );
 		
-		if( i < map[m].skill_count ) {
-			return map[m].skills[i]->modifier;
+		if( i < maplist[m].skill_count ) {
+			return maplist[m].skills[i]->modifier;
 		}
 		
 	}
@@ -3422,18 +3421,18 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 		}
 #ifndef HMAP_ZONE_DAMAGE_CAP_TYPE
 		if( target && skill_id ) {
-			for(i = 0; i < map[target->m].zone->capped_skills_count; i++) {
-				if( skill_id == map[target->m].zone->capped_skills[i]->nameid && (map[target->m].zone->capped_skills[i]->type & target->type) ) {
-					if( target->type == BL_MOB && map[target->m].zone->capped_skills[i]->subtype != MZS_NONE ) {
-						if( (((TBL_MOB*)target)->status.mode&MD_BOSS) && !(map[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
+			for(i = 0; i < maplist[target->m].zone->capped_skills_count; i++) {
+				if( skill_id == maplist[target->m].zone->capped_skills[i]->nameid && (maplist[target->m].zone->capped_skills[i]->type & target->type) ) {
+					if( target->type == BL_MOB && maplist[target->m].zone->capped_skills[i]->subtype != MZS_NONE ) {
+						if( (((TBL_MOB*)target)->status.mode&MD_BOSS) && !(maplist[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
 							continue;
-						if( ((TBL_MOB*)target)->special_state.clone && !(map[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE) )
+						if( ((TBL_MOB*)target)->special_state.clone && !(maplist[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE) )
 							continue;
 					}
-					if( ad.damage > map[target->m].zone->capped_skills[i]->cap )
-						ad.damage = map[target->m].zone->capped_skills[i]->cap;
-					if( ad.damage2 > map[target->m].zone->capped_skills[i]->cap )
-						ad.damage2 = map[target->m].zone->capped_skills[i]->cap;
+					if( ad.damage > maplist[target->m].zone->capped_skills[i]->cap )
+						ad.damage = maplist[target->m].zone->capped_skills[i]->cap;
+					if( ad.damage2 > maplist[target->m].zone->capped_skills[i]->cap )
+						ad.damage2 = maplist[target->m].zone->capped_skills[i]->cap;
 					break;
 				}
 			}
@@ -3518,7 +3517,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 	ad.damage=battle->calc_damage(src,target,&ad,ad.damage,skill_id,skill_lv);
 	if( map_flag_gvg2(target->m) )
 		ad.damage=battle->calc_gvg_damage(src,target,ad.damage,ad.div_,skill_id,skill_lv,ad.flag);
-	else if( map[target->m].flag.battleground )
+	else if( maplist[target->m].flag.battleground )
 		ad.damage=battle->calc_bg_damage(src,target,ad.damage,ad.div_,skill_id,skill_lv,ad.flag);
 
 	switch( skill_id ) { /* post-calc modifiers */
@@ -3864,18 +3863,18 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	}
 #ifndef HMAP_ZONE_DAMAGE_CAP_TYPE
 	if( target && skill_id ) {
-		for(i = 0; i < map[target->m].zone->capped_skills_count; i++) {
-			if( skill_id == map[target->m].zone->capped_skills[i]->nameid && (map[target->m].zone->capped_skills[i]->type & target->type) ) {
-				if( target->type == BL_MOB && map[target->m].zone->capped_skills[i]->subtype != MZS_NONE ) {
-					if( (((TBL_MOB*)target)->status.mode&MD_BOSS) && !(map[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
+		for(i = 0; i < maplist[target->m].zone->capped_skills_count; i++) {
+			if( skill_id == maplist[target->m].zone->capped_skills[i]->nameid && (maplist[target->m].zone->capped_skills[i]->type & target->type) ) {
+				if( target->type == BL_MOB && maplist[target->m].zone->capped_skills[i]->subtype != MZS_NONE ) {
+					if( (((TBL_MOB*)target)->status.mode&MD_BOSS) && !(maplist[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
 						continue;
-					if( ((TBL_MOB*)target)->special_state.clone && !(map[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE) )
+					if( ((TBL_MOB*)target)->special_state.clone && !(maplist[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE) )
 						continue;
 				}
-				if( md.damage > map[target->m].zone->capped_skills[i]->cap )
-					md.damage = map[target->m].zone->capped_skills[i]->cap;
-				if( md.damage2 > map[target->m].zone->capped_skills[i]->cap )
-					md.damage2 = map[target->m].zone->capped_skills[i]->cap;
+				if( md.damage > maplist[target->m].zone->capped_skills[i]->cap )
+					md.damage = maplist[target->m].zone->capped_skills[i]->cap;
+				if( md.damage2 > maplist[target->m].zone->capped_skills[i]->cap )
+					md.damage2 = maplist[target->m].zone->capped_skills[i]->cap;
 				break;
 			}
 		}
@@ -3916,7 +3915,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	md.damage=battle->calc_damage(src,target,&md,md.damage,skill_id,skill_lv);
 	if( map_flag_gvg2(target->m) )
 		md.damage=battle->calc_gvg_damage(src,target,md.damage,md.div_,skill_id,skill_lv,md.flag);
-	else if( map[target->m].flag.battleground )
+	else if( maplist[target->m].flag.battleground )
 		md.damage=battle->calc_bg_damage(src,target,md.damage,md.div_,skill_id,skill_lv,md.flag);
 
 	switch( skill_id ) {
@@ -4879,18 +4878,18 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		return wd; //Enough, rest is not needed.
 #ifndef HMAP_ZONE_DAMAGE_CAP_TYPE
 	if( target && skill_id ) {
-		for(i = 0; i < map[target->m].zone->capped_skills_count; i++) {
-			if( skill_id == map[target->m].zone->capped_skills[i]->nameid && (map[target->m].zone->capped_skills[i]->type & target->type) ) {
-				if( target->type == BL_MOB && map[target->m].zone->capped_skills[i]->subtype != MZS_NONE ) {
-					if( (((TBL_MOB*)target)->status.mode&MD_BOSS) && !(map[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
+		for(i = 0; i < maplist[target->m].zone->capped_skills_count; i++) {
+			if( skill_id == maplist[target->m].zone->capped_skills[i]->nameid && (maplist[target->m].zone->capped_skills[i]->type & target->type) ) {
+				if( target->type == BL_MOB && maplist[target->m].zone->capped_skills[i]->subtype != MZS_NONE ) {
+					if( (((TBL_MOB*)target)->status.mode&MD_BOSS) && !(maplist[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
 						continue;
-					if( ((TBL_MOB*)target)->special_state.clone && !(map[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE) )
+					if( ((TBL_MOB*)target)->special_state.clone && !(maplist[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE) )
 						continue;
 				}
-				if( wd.damage > map[target->m].zone->capped_skills[i]->cap )
-					wd.damage = map[target->m].zone->capped_skills[i]->cap;
-				if( wd.damage2 > map[target->m].zone->capped_skills[i]->cap )
-					wd.damage2 = map[target->m].zone->capped_skills[i]->cap;
+				if( wd.damage > maplist[target->m].zone->capped_skills[i]->cap )
+					wd.damage = maplist[target->m].zone->capped_skills[i]->cap;
+				if( wd.damage2 > maplist[target->m].zone->capped_skills[i]->cap )
+					wd.damage2 = maplist[target->m].zone->capped_skills[i]->cap;
 				break;
 			}
 		}
@@ -5063,24 +5062,19 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					}
 				}
 		}
-		if(!wd.damage2)
-		{
+		if(!wd.damage2) {
 			wd.damage = battle->calc_damage(src,target,&wd,wd.damage,skill_id,skill_lv);
 			if( map_flag_gvg2(target->m) )
 				wd.damage=battle->calc_gvg_damage(src,target,wd.damage,wd.div_,skill_id,skill_lv,wd.flag);
-			else if( map[target->m].flag.battleground )
+			else if( maplist[target->m].flag.battleground )
 				wd.damage=battle->calc_bg_damage(src,target,wd.damage,wd.div_,skill_id,skill_lv,wd.flag);
-		}
-		else if(!wd.damage)
-		{
+		} else if(!wd.damage) {
 			wd.damage2 = battle->calc_damage(src,target,&wd,wd.damage2,skill_id,skill_lv);
 			if( map_flag_gvg2(target->m) )
 				wd.damage2 = battle->calc_gvg_damage(src,target,wd.damage2,wd.div_,skill_id,skill_lv,wd.flag);
-			else if( map[target->m].flag.battleground )
+			else if( maplist[target->m].flag.battleground )
 				wd.damage = battle->calc_bg_damage(src,target,wd.damage2,wd.div_,skill_id,skill_lv,wd.flag);
-		}
-		else
-		{
+		} else {
 #ifdef RENEWAL
 			wd.damage = battle->calc_damage(src,target,&wd,wd.damage,skill_id,skill_lv);
 			wd.damage2 = battle->calc_damage(src,target,&wd,wd.damage2,skill_id,skill_lv);
@@ -5090,7 +5084,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 #endif
 			if( map_flag_gvg2(target->m) )
 				wd.damage = battle->calc_gvg_damage(src,target,wd.damage,wd.div_,skill_id,skill_lv,wd.flag);
-			else if( map[target->m].flag.battleground )
+			else if( maplist[target->m].flag.battleground )
 				wd.damage = battle->calc_bg_damage(src,target,wd.damage,wd.div_,skill_id,skill_lv,wd.flag);
 #ifndef RENEWAL
 			wd.damage2 = d2*100/d1 * wd.damage/100;
@@ -5143,18 +5137,18 @@ struct Damage battle_calc_attack(int attack_type,struct block_list *bl,struct bl
 #ifdef HMAP_ZONE_DAMAGE_CAP_TYPE
 	if( target && skill_id ) {
 		int i;
-		for(i = 0; i < map[target->m].zone->capped_skills_count; i++) {
-			if( skill_id == map[target->m].zone->capped_skills[i]->nameid && (map[target->m].zone->capped_skills[i]->type & target->type) ) {
-				if( target->type == BL_MOB && map[target->m].zone->capped_skills[i]->subtype != MZS_NONE ) {
-					if( (((TBL_MOB*)target)->status.mode&MD_BOSS) && !(map[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
+		for(i = 0; i < maplist[target->m].zone->capped_skills_count; i++) {
+			if( skill_id == maplist[target->m].zone->capped_skills[i]->nameid && (maplist[target->m].zone->capped_skills[i]->type & target->type) ) {
+				if( target->type == BL_MOB && maplist[target->m].zone->capped_skills[i]->subtype != MZS_NONE ) {
+					if( (((TBL_MOB*)target)->status.mode&MD_BOSS) && !(maplist[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
 						continue;
-					if( ((TBL_MOB*)target)->special_state.clone && !(map[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE) )
+					if( ((TBL_MOB*)target)->special_state.clone && !(maplist[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE) )
 						continue;
 				}
-				if( d.damage > map[target->m].zone->capped_skills[i]->cap )
-					d.damage = map[target->m].zone->capped_skills[i]->cap;
-				if( d.damage2 > map[target->m].zone->capped_skills[i]->cap )
-					d.damage2 = map[target->m].zone->capped_skills[i]->cap;
+				if( d.damage > maplist[target->m].zone->capped_skills[i]->cap )
+					d.damage = maplist[target->m].zone->capped_skills[i]->cap;
+				if( d.damage2 > maplist[target->m].zone->capped_skills[i]->cap )
+					d.damage2 = maplist[target->m].zone->capped_skills[i]->cap;
 				break;
 			}
 		}
@@ -5825,7 +5819,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 				switch( battle->get_current_skill(src) ) {
 					case RK_DRAGONBREATH:// it can only hit traps in pvp/gvg maps
 					case RK_DRAGONBREATH_WATER:
-						if( !map[m].flag.pvp && !map[m].flag.gvg )
+						if( !maplist[m].flag.pvp && !maplist[m].flag.gvg )
 							break;
 					case 0://you can hit them without skills
 					case MA_REMOVETRAP:
@@ -5911,7 +5905,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 		{
 			struct mob_data *md = BL_CAST(BL_MOB, t_bl);
 
-			if( !((iMap->agit_flag || iMap->agit2_flag) && map[m].flag.gvg_castle) && md->guardian_data && md->guardian_data->guild_id )
+			if( !((iMap->agit_flag || iMap->agit2_flag) && maplist[m].flag.gvg_castle) && md->guardian_data && md->guardian_data->guild_id )
 				return 0; // Disable guardians/emperiums owned by Guilds on non-woe times.
 			break;
 		}
@@ -5945,20 +5939,17 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 			break;
     } //end switch actual src
 
-	switch( s_bl->type )
-	{	//Checks on source master
+	switch( s_bl->type ) { //Checks on source master
 		case BL_PC:
 		{
 			struct map_session_data *sd = BL_CAST(BL_PC, s_bl);
-			if( s_bl != t_bl )
-			{
-				if( sd->state.killer )
-				{
+			if( s_bl != t_bl ) {
+				if( sd->state.killer ) {
 					state |= BCT_ENEMY; // Can kill anything
 					strip_enemy = 0;
-				}
-				else if( sd->duel_group && !((!battle_config.duel_allow_pvp && map[m].flag.pvp) || (!battle_config.duel_allow_gvg && map_flag_gvg(m))) )
-		  		{
+				} else if( sd->duel_group
+				        && !((!battle_config.duel_allow_pvp && maplist[m].flag.pvp) || (!battle_config.duel_allow_gvg && map_flag_gvg(m)))
+				) {
 					if( t_bl->type == BL_PC && (sd->duel_group == ((TBL_PC*)t_bl)->duel_group) )
 						return (BCT_ENEMY&flag)?1:-1; // Duel targets can ONLY be your enemy, nothing else.
 					else
@@ -5974,7 +5965,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 		case BL_MOB:
 		{
 			struct mob_data *md = BL_CAST(BL_MOB, s_bl);
-			if( !((iMap->agit_flag || iMap->agit2_flag) && map[m].flag.gvg_castle) && md->guardian_data && md->guardian_data->guild_id )
+			if( !((iMap->agit_flag || iMap->agit2_flag) && maplist[m].flag.gvg_castle) && md->guardian_data && md->guardian_data->guild_id )
 				return 0; // Disable guardians/emperium owned by Guilds on non-woe times.
 
 			if( !md->special_state.ai )
@@ -6019,32 +6010,35 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 		return (flag&state)?1:-1;
 	}
 
-	if( map_flag_vs(m) )
-	{ //Check rivalry settings.
+	if( map_flag_vs(m) ) {
+		//Check rivalry settings.
 		int sbg_id = 0, tbg_id = 0;
-		if( map[m].flag.battleground )
-		{
+		if( maplist[m].flag.battleground ) {
 			sbg_id = bg->team_get_id(s_bl);
 			tbg_id = bg->team_get_id(t_bl);
 		}
-		if( flag&(BCT_PARTY|BCT_ENEMY) )
-		{
+		if( flag&(BCT_PARTY|BCT_ENEMY) ) {
 			int s_party = iStatus->get_party_id(s_bl);
-			if( s_party && s_party == iStatus->get_party_id(t_bl) && !(map[m].flag.pvp && map[m].flag.pvp_noparty) && !(map_flag_gvg(m) && map[m].flag.gvg_noparty) && (!map[m].flag.battleground || sbg_id == tbg_id) )
+			if( s_party && s_party == iStatus->get_party_id(t_bl)
+			 && !(maplist[m].flag.pvp && maplist[m].flag.pvp_noparty)
+			 && !(map_flag_gvg(m) && maplist[m].flag.gvg_noparty)
+			 && (!maplist[m].flag.battleground || sbg_id == tbg_id) )
 				state |= BCT_PARTY;
 			else
 				state |= BCT_ENEMY;
 		}
-		if( flag&(BCT_GUILD|BCT_ENEMY) )
-		{
+		if( flag&(BCT_GUILD|BCT_ENEMY) ) {
 			int s_guild = iStatus->get_guild_id(s_bl);
 			int t_guild = iStatus->get_guild_id(t_bl);
-			if( !(map[m].flag.pvp && map[m].flag.pvp_noguild) && s_guild && t_guild && (s_guild == t_guild || (!(flag&BCT_SAMEGUILD) && guild->isallied(s_guild, t_guild))) && (!map[m].flag.battleground || sbg_id == tbg_id) )
+			if( !(maplist[m].flag.pvp && maplist[m].flag.pvp_noguild)
+			 && s_guild && t_guild
+			 && (s_guild == t_guild || (!(flag&BCT_SAMEGUILD) && guild->isallied(s_guild, t_guild)))
+			 && (!maplist[m].flag.battleground || sbg_id == tbg_id) )
 				state |= BCT_GUILD;
 			else
 				state |= BCT_ENEMY;
 		}
-		if( state&BCT_ENEMY && map[m].flag.battleground && sbg_id && sbg_id == tbg_id )
+		if( state&BCT_ENEMY && maplist[m].flag.battleground && sbg_id && sbg_id == tbg_id )
 			state &= ~BCT_ENEMY;
 
 		if( state&BCT_ENEMY && battle_config.pk_mode && !map_flag_gvg(m) && s_bl->type == BL_PC && t_bl->type == BL_PC )

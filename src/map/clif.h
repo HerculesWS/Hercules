@@ -563,7 +563,7 @@ struct clif_interface {
 	void (*changemapcell) (int fd, int16 m, int x, int y, int type, enum send_target target);
 	void (*map_property) (struct map_session_data* sd, enum map_property property);
 	void (*pvpset) (struct map_session_data *sd, int pvprank, int pvpnum,int type);
-	void (*map_property_mapall) (int map, enum map_property property);
+	void (*map_property_mapall) (int mapid, enum map_property property);
 	void (*bossmapinfo) (int fd, struct mob_data *md, short flag);
 	void (*map_type) (struct map_session_data* sd, enum map_type type);
 	void (*maptypeproperty2) (struct block_list *bl,enum send_target t);

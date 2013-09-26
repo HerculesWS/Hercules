@@ -889,51 +889,53 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 	//if(sd->npc_id)
 	//	return 1;
 
-	for(i=0;i<map[m].npc_num;i++) {
-		if (map[m].npc[i]->option&OPTION_INVISIBLE) {
+	for(i=0;i<maplist[m].npc_num;i++) {
+		if (maplist[m].npc[i]->option&OPTION_INVISIBLE) {
 			f=0; // a npc was found, but it is disabled; don't print warning
 			continue;
 		}
 
-		switch(map[m].npc[i]->subtype) {
+		switch(maplist[m].npc[i]->subtype) {
 		case WARP:
-			xs=map[m].npc[i]->u.warp.xs;
-			ys=map[m].npc[i]->u.warp.ys;
+			xs=maplist[m].npc[i]->u.warp.xs;
+			ys=maplist[m].npc[i]->u.warp.ys;
 			break;
 		case SCRIPT:
-			xs=map[m].npc[i]->u.scr.xs;
-			ys=map[m].npc[i]->u.scr.ys;
+			xs=maplist[m].npc[i]->u.scr.xs;
+			ys=maplist[m].npc[i]->u.scr.ys;
 			break;
 		default:
 			continue;
 		}
-		if( x >= map[m].npc[i]->bl.x-xs && x <= map[m].npc[i]->bl.x+xs
-		&&  y >= map[m].npc[i]->bl.y-ys && y <= map[m].npc[i]->bl.y+ys )
+		if( x >= maplist[m].npc[i]->bl.x-xs && x <= maplist[m].npc[i]->bl.x+xs
+		&&  y >= maplist[m].npc[i]->bl.y-ys && y <= maplist[m].npc[i]->bl.y+ys )
 			break;
 	}
-	if( i == map[m].npc_num )
-	{
+	if( i == maplist[m].npc_num ) {
 		if( f == 1 ) // no npc found
-			ShowError("npc_touch_areanpc : stray NPC cell/NPC not found in the block on coordinates '%s',%d,%d\n", map[m].name, x, y);
+			ShowError("npc_touch_areanpc : stray NPC cell/NPC not found in the block on coordinates '%s',%d,%d\n", maplist[m].name, x, y);
 		return 1;
 	}
-	switch(map[m].npc[i]->subtype) {
+	switch(maplist[m].npc[i]->subtype) {
 		case WARP:
 			if( pc_ishiding(sd) || (sd->sc.count && sd->sc.data[SC_CAMOUFLAGE]) )
 				break; // hidden chars cannot use warps
-			pc->setpos(sd,map[m].npc[i]->u.warp.mapindex,map[m].npc[i]->u.warp.x,map[m].npc[i]->u.warp.y,CLR_OUTSIGHT);
+			pc->setpos(sd,maplist[m].npc[i]->u.warp.mapindex,maplist[m].npc[i]->u.warp.x,maplist[m].npc[i]->u.warp.y,CLR_OUTSIGHT);
 			break;
 		case SCRIPT:
-			for (j = i; j < map[m].npc_num; j++) {
-				if (map[m].npc[j]->subtype != WARP) {
+			for (j = i; j < maplist[m].npc_num; j++) {
+				if (maplist[m].npc[j]->subtype != WARP) {
 					continue;
 				}
 
-				if ((sd->bl.x >= (map[m].npc[j]->bl.x - map[m].npc[j]->u.warp.xs) && sd->bl.x <= (map[m].npc[j]->bl.x + map[m].npc[j]->u.warp.xs)) &&
-					(sd->bl.y >= (map[m].npc[j]->bl.y - map[m].npc[j]->u.warp.ys) && sd->bl.y <= (map[m].npc[j]->bl.y + map[m].npc[j]->u.warp.ys))) {
+				if ((sd->bl.x >= (maplist[m].npc[j]->bl.x - maplist[m].npc[j]->u.warp.xs)
+				  && sd->bl.x <= (maplist[m].npc[j]->bl.x + maplist[m].npc[j]->u.warp.xs))
+				 && (sd->bl.y >= (maplist[m].npc[j]->bl.y - maplist[m].npc[j]->u.warp.ys)
+				  && sd->bl.y <= (maplist[m].npc[j]->bl.y + maplist[m].npc[j]->u.warp.ys))
+				) {
 					if( pc_ishiding(sd) || (sd->sc.count && sd->sc.data[SC_CAMOUFLAGE]) )
 						break; // hidden chars cannot use warps
-					pc->setpos(sd,map[m].npc[j]->u.warp.mapindex,map[m].npc[j]->u.warp.x,map[m].npc[j]->u.warp.y,CLR_OUTSIGHT);
+					pc->setpos(sd,maplist[m].npc[j]->u.warp.mapindex,maplist[m].npc[j]->u.warp.x,maplist[m].npc[j]->u.warp.y,CLR_OUTSIGHT);
 					found_warp = 1;
 					break;
 				}
@@ -943,7 +945,7 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 				break;
 			}
 
-			if( npc->ontouch_event(sd,map[m].npc[i]) > 0 && npc->ontouch2_event(sd,map[m].npc[i]) > 0 )
+			if( npc->ontouch_event(sd,maplist[m].npc[i]) > 0 && npc->ontouch2_event(sd,maplist[m].npc[i]) > 0 )
 			{ // failed to run OnTouch event, so just click the npc
 				struct unit_data *ud = unit->bl2ud(&sd->bl);
 				if( ud && ud->walkpath.path_pos < ud->walkpath.path_len )
@@ -951,8 +953,8 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 					clif->fixpos(&sd->bl);
 					ud->walkpath.path_pos = ud->walkpath.path_len;
 				}
-				sd->areanpc_id = map[m].npc[i]->bl.id;
-				npc->click(sd,map[m].npc[i]);
+				sd->areanpc_id = maplist[m].npc[i]->bl.id;
+				npc->click(sd,maplist[m].npc[i]);
 			}
 			break;
 	}
@@ -968,43 +970,42 @@ int npc_touch_areanpc2(struct mob_data *md)
 	struct event_data* ev;
 	int xs, ys;
 
-	for( i = 0; i < map[m].npc_num; i++ ) {
-		if( map[m].npc[i]->option&OPTION_INVISIBLE )
+	for( i = 0; i < maplist[m].npc_num; i++ ) {
+		if( maplist[m].npc[i]->option&OPTION_INVISIBLE )
 			continue;
 
-		switch( map[m].npc[i]->subtype ) {
+		switch( maplist[m].npc[i]->subtype ) {
 			case WARP:
 				if( !( battle_config.mob_warp&1 ) )
 					continue;
-				xs = map[m].npc[i]->u.warp.xs;
-				ys = map[m].npc[i]->u.warp.ys;
+				xs = maplist[m].npc[i]->u.warp.xs;
+				ys = maplist[m].npc[i]->u.warp.ys;
 				break;
 			case SCRIPT:
-				xs = map[m].npc[i]->u.scr.xs;
-				ys = map[m].npc[i]->u.scr.ys;
+				xs = maplist[m].npc[i]->u.scr.xs;
+				ys = maplist[m].npc[i]->u.scr.ys;
 				break;
 			default:
 				continue; // Keep Searching
 		}
 
-		if( x >= map[m].npc[i]->bl.x-xs && x <= map[m].npc[i]->bl.x+xs && y >= map[m].npc[i]->bl.y-ys && y <= map[m].npc[i]->bl.y+ys )
-		{ // In the npc touch area
-			switch( map[m].npc[i]->subtype )
-			{
+		if( x >= maplist[m].npc[i]->bl.x-xs && x <= maplist[m].npc[i]->bl.x+xs && y >= maplist[m].npc[i]->bl.y-ys && y <= maplist[m].npc[i]->bl.y+ys ) {
+			// In the npc touch area
+			switch( maplist[m].npc[i]->subtype ) {
 				case WARP:
-					xs = iMap->mapindex2mapid(map[m].npc[i]->u.warp.mapindex);
+					xs = iMap->mapindex2mapid(maplist[m].npc[i]->u.warp.mapindex);
 					if( m < 0 )
 						break; // Cannot Warp between map servers
-					if( unit->warp(&md->bl, xs, map[m].npc[i]->u.warp.x, map[m].npc[i]->u.warp.y, CLR_OUTSIGHT) == 0 )
+					if( unit->warp(&md->bl, xs, maplist[m].npc[i]->u.warp.x, maplist[m].npc[i]->u.warp.y, CLR_OUTSIGHT) == 0 )
 						return 1; // Warped
 					break;
 				case SCRIPT:
-					if( map[m].npc[i]->bl.id == md->areanpc_id )
+					if( maplist[m].npc[i]->bl.id == md->areanpc_id )
 						break; // Already touch this NPC
-					snprintf(eventname, ARRAYLENGTH(eventname), "%s::OnTouchNPC", map[m].npc[i]->exname);
+					snprintf(eventname, ARRAYLENGTH(eventname), "%s::OnTouchNPC", maplist[m].npc[i]->exname);
 					if( (ev = (struct event_data*)strdb_get(npc->ev_db, eventname)) == NULL || ev->nd == NULL )
 						break; // No OnTouchNPC Event
-					md->areanpc_id = map[m].npc[i]->bl.id;
+					md->areanpc_id = maplist[m].npc[i]->bl.id;
 					id = md->bl.id; // Stores Unique ID
 					script->run(ev->nd->u.scr.script, ev->pos, md->bl.id, ev->nd->bl.id);
 					if( iMap->id2md(id) == NULL ) return 1; // Not Warped, but killed
@@ -1022,8 +1023,7 @@ int npc_touch_areanpc2(struct mob_data *md)
 //Flag determines the type of object to check for:
 //&1: NPC Warps
 //&2: NPCs with on-touch events.
-int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range)
-{
+int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range) {
 	int i;
 	int x0,y0,x1,y1;
 	int xs,ys;
@@ -1031,8 +1031,8 @@ int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range)
 	if (range < 0) return 0;
 	x0 = max(x-range, 0);
 	y0 = max(y-range, 0);
-	x1 = min(x+range, map[m].xs-1);
-	y1 = min(y+range, map[m].ys-1);
+	x1 = min(x+range, maplist[m].xs-1);
+	y1 = min(y+range, maplist[m].ys-1);
 
 	//First check for npc_cells on the range given
 	i = 0;
@@ -1045,35 +1045,35 @@ int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range)
 	if (!i) return 0; //No NPC_CELLs.
 
 	//Now check for the actual NPC on said range.
-	for(i=0;i<map[m].npc_num;i++) {
-		if (map[m].npc[i]->option&OPTION_INVISIBLE)
+	for(i=0;i<maplist[m].npc_num;i++) {
+		if (maplist[m].npc[i]->option&OPTION_INVISIBLE)
 			continue;
 
-		switch(map[m].npc[i]->subtype) {
+		switch(maplist[m].npc[i]->subtype) {
 			case WARP:
 				if (!(flag&1))
 					continue;
-				xs=map[m].npc[i]->u.warp.xs;
-				ys=map[m].npc[i]->u.warp.ys;
+				xs=maplist[m].npc[i]->u.warp.xs;
+				ys=maplist[m].npc[i]->u.warp.ys;
 				break;
 			case SCRIPT:
 				if (!(flag&2))
 					continue;
-				xs=map[m].npc[i]->u.scr.xs;
-				ys=map[m].npc[i]->u.scr.ys;
+				xs=maplist[m].npc[i]->u.scr.xs;
+				ys=maplist[m].npc[i]->u.scr.ys;
 				break;
 			default:
 				continue;
 		}
 
-		if( x1 >= map[m].npc[i]->bl.x-xs && x0 <= map[m].npc[i]->bl.x+xs
-		&&  y1 >= map[m].npc[i]->bl.y-ys && y0 <= map[m].npc[i]->bl.y+ys )
+		if( x1 >= maplist[m].npc[i]->bl.x-xs && x0 <= maplist[m].npc[i]->bl.x+xs
+		&&  y1 >= maplist[m].npc[i]->bl.y-ys && y0 <= maplist[m].npc[i]->bl.y+ys )
 			break; // found a npc
 	}
-	if (i==map[m].npc_num)
+	if (i==maplist[m].npc_num)
 		return 0;
 
-	return (map[m].npc[i]->bl.id);
+	return (maplist[m].npc[i]->bl.id);
 }
 
 /*==========================================
@@ -1423,11 +1423,12 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	if( w + sd->weight > sd->max_weight )
 		return 3;
 
-	if( (double)nd->u.shop.shop_item[i].value * amount > INT_MAX )
-	{
+	if( (double)nd->u.shop.shop_item[i].value * amount > INT_MAX ) {
 		ShowWarning("npc_cashshop_buy: Item '%s' (%d) price overflow attempt!\n", item->name, nameid);
 		ShowDebug("(NPC:'%s' (%s,%d,%d), player:'%s' (%d/%d), value:%d, amount:%d)\n",
-					nd->exname, map[nd->bl.m].name, nd->bl.x, nd->bl.y, sd->status.name, sd->status.account_id, sd->status.char_id, nd->u.shop.shop_item[i].value, amount);
+				nd->exname, maplist[nd->bl.m].name, nd->bl.x, nd->bl.y,
+				sd->status.name, sd->status.account_id, sd->status.char_id,
+				nd->u.shop.shop_item[i].value, amount);
 		return 5;
 	}
 
@@ -1724,13 +1725,13 @@ int npc_remove_map(struct npc_data* nd) {
 	clif->clearunit_area(&nd->bl,CLR_RESPAWN);
 	npc->unsetcells(nd);
 	iMap->delblock(&nd->bl);
-	//Remove npc from map[].npc list. [Skotlex]
-	ARR_FIND( 0, map[m].npc_num, i, map[m].npc[i] == nd );
-	if( i == map[m].npc_num ) return 2; //failed to find it?
+	//Remove npc from maplist[].npc list. [Skotlex]
+	ARR_FIND( 0, maplist[m].npc_num, i, maplist[m].npc[i] == nd );
+	if( i == maplist[m].npc_num ) return 2; //failed to find it?
 
-	map[m].npc_num--;
-	map[m].npc[i] = map[m].npc[map[m].npc_num];
-	map[m].npc[map[m].npc_num] = NULL;
+	maplist[m].npc_num--;
+	maplist[m].npc[i] = maplist[m].npc[maplist[m].npc_num];
+	maplist[m].npc[maplist[m].npc_num] = NULL;
 	return 0;
 }
 
@@ -2072,7 +2073,7 @@ struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short 
 	iMap->addblock(&nd->bl);
 	iStatus->set_viewdata(&nd->bl, nd->class_);
 	nd->ud = &npc->base_ud;
-	if( map[nd->bl.m].users )
+	if( maplist[nd->bl.m].users )
 		clif->spawn(&nd->bl);
 	strdb_put(npc->name_db, nd->exname, nd);
 
@@ -2104,8 +2105,8 @@ const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const char* s
 		return strchr(start,'\n');// skip and continue
 	}
 
-	if( m != -1 && ( x < 0 || x >= map[m].xs || y < 0 || y >= map[m].ys ) ) {
-		ShowError("npc_parse_warp: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d, in file '%s', line '%d'\n", map[m].name, x, y, map[m].xs, map[m].ys,filepath,strline(buffer,start-buffer));
+	if( m != -1 && ( x < 0 || x >= maplist[m].xs || y < 0 || y >= maplist[m].ys ) ) {
+		ShowError("npc_parse_warp: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d, in file '%s', line '%d'\n", maplist[m].name, x, y, maplist[m].xs, maplist[m].ys,filepath,strline(buffer,start-buffer));
 		return strchr(start,'\n');;//try next
 	}
 	
@@ -2137,7 +2138,7 @@ const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const char* s
 	iMap->addblock(&nd->bl);
 	iStatus->set_viewdata(&nd->bl, nd->class_);
 	nd->ud = &npc->base_ud;
-	if( map[nd->bl.m].users )
+	if( maplist[nd->bl.m].users )
 		clif->spawn(&nd->bl);
 	strdb_put(npc->name_db, nd->exname, nd);
 
@@ -2170,8 +2171,8 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 		m = iMap->mapname2mapid(mapname);
 	}
 
-	if( m != -1 && ( x < 0 || x >= map[m].xs || y < 0 || y >= map[m].ys ) ) {
-		ShowError("npc_parse_shop: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d, in file '%s', line '%d'\n", map[m].name, x, y, map[m].xs, map[m].ys,filepath,strline(buffer,start-buffer));
+	if( m != -1 && ( x < 0 || x >= maplist[m].xs || y < 0 || y >= maplist[m].ys ) ) {
+		ShowError("npc_parse_shop: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d, in file '%s', line '%d'\n", maplist[m].name, x, y, maplist[m].xs, maplist[m].ys,filepath,strline(buffer,start-buffer));
 		return strchr(start,'\n');;//try next
 	}
 	
@@ -2250,7 +2251,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 		iStatus->set_viewdata(&nd->bl, nd->class_);
 		nd->ud = &npc->base_ud;
 		nd->dir = dir;
-		if( map[nd->bl.m].users )
+		if( maplist[nd->bl.m].users )
 			clif->spawn(&nd->bl);
 	} else {// 'floating' shop?
 		iMap->addiddb(&nd->bl);
@@ -2440,7 +2441,7 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 		iMap->addblock(&nd->bl);
 		if( class_ >= 0 ) {
 			iStatus->set_viewdata(&nd->bl, nd->class_);
-			if( map[nd->bl.m].users )
+			if( maplist[nd->bl.m].users )
 				clif->spawn(&nd->bl);
 		}
 	} else {
@@ -2530,8 +2531,8 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		m = iMap->mapname2mapid(mapname);
 	}
 
-	if( m != -1 && ( x < 0 || x >= map[m].xs || y < 0 || y >= map[m].ys ) ) {
-		ShowError("npc_parse_duplicate: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d, in file '%s', line '%d'\n", map[m].name, x, y, map[m].xs, map[m].ys,filepath,strline(buffer,start-buffer));
+	if( m != -1 && ( x < 0 || x >= maplist[m].xs || y < 0 || y >= maplist[m].ys ) ) {
+		ShowError("npc_parse_duplicate: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d, in file '%s', line '%d'\n", maplist[m].name, x, y, maplist[m].xs, maplist[m].ys,filepath,strline(buffer,start-buffer));
 		return end;//try next
 	}
 	
@@ -2596,7 +2597,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		iMap->addblock(&nd->bl);
 		if( class_ >= 0 ) {
 			iStatus->set_viewdata(&nd->bl, nd->class_);
-			if( map[nd->bl.m].users )
+			if( maplist[nd->bl.m].users )
 				clif->spawn(&nd->bl);
 		}
 	} else {
@@ -2626,12 +2627,12 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 int npc_duplicate4instance(struct npc_data *snd, int16 m) {
 	char newname[NAME_LENGTH];
 
-	if( m == -1 || map[m].instance_id == -1 )
+	if( m == -1 || maplist[m].instance_id == -1 )
 		return 1;
 
-	snprintf(newname, ARRAYLENGTH(newname), "dup_%d_%d", map[m].instance_id, snd->bl.id);
+	snprintf(newname, ARRAYLENGTH(newname), "dup_%d_%d", maplist[m].instance_id, snd->bl.id);
 	if( npc->name2id(newname) != NULL ) { // Name already in use
-		ShowError("npc_duplicate4instance: the npcname (%s) is already in use while trying to duplicate npc %s in instance %d.\n", newname, snd->exname, map[m].instance_id);
+		ShowError("npc_duplicate4instance: the npcname (%s) is already in use while trying to duplicate npc %s in instance %d.\n", newname, snd->exname, maplist[m].instance_id);
 		return 1;
 	}
 
@@ -2640,8 +2641,8 @@ int npc_duplicate4instance(struct npc_data *snd, int16 m) {
 		int dm = iMap->mapindex2mapid(snd->u.warp.mapindex), im;
 		if( dm < 0 ) return 1;
 
-		if( ( im = instance->mapid2imapid(dm, map[m].instance_id) ) == -1 ) {
-			ShowError("npc_duplicate4instance: warp (%s) leading to instanced map (%s), but instance map is not attached to current instance.\n", map[dm].name, snd->exname);
+		if( ( im = instance->mapid2imapid(dm, maplist[m].instance_id) ) == -1 ) {
+			ShowError("npc_duplicate4instance: warp (%s) leading to instanced map (%s), but instance map is not attached to current instance.\n", maplist[dm].name, snd->exname);
 			return 1;
 		}
 
@@ -2667,14 +2668,14 @@ int npc_duplicate4instance(struct npc_data *snd, int16 m) {
 		iMap->addblock(&wnd->bl);
 		iStatus->set_viewdata(&wnd->bl, wnd->class_);
 		wnd->ud = &npc->base_ud;
-		if( map[wnd->bl.m].users )
+		if( maplist[wnd->bl.m].users )
 			clif->spawn(&wnd->bl);
 		strdb_put(npc->name_db, wnd->exname, wnd);
 	} else {
 		static char w1[50], w2[50], w3[50], w4[50];
 		const char* stat_buf = "- call from instancing subsystem -\n";
 
-		snprintf(w1, sizeof(w1), "%s,%d,%d,%d", map[m].name, snd->bl.x, snd->bl.y, snd->dir);
+		snprintf(w1, sizeof(w1), "%s,%d,%d,%d", maplist[m].name, snd->bl.x, snd->bl.y, snd->dir);
 		snprintf(w2, sizeof(w2), "duplicate(%s)", snd->exname);
 		snprintf(w3, sizeof(w3), "%s::%s", snd->name, newname);
 
@@ -2707,14 +2708,14 @@ void npc_setcells(struct npc_data* nd) {
 			return; // Other types doesn't have touch area
 	}
 
-	if (m < 0 || xs < 0 || ys < 0 || map[m].cell == (struct mapcell *)0xdeadbeaf) //invalid range or map
+	if (m < 0 || xs < 0 || ys < 0 || maplist[m].cell == (struct mapcell *)0xdeadbeaf) //invalid range or map
 		return;
 
 	for (i = y-ys; i <= y+ys; i++) {
 		for (j = x-xs; j <= x+xs; j++) {
 			if (iMap->getcell(m, j, i, CELL_CHKNOPASS))
 				continue;
-			map[m].setcell(m, j, i, CELL_NPC, true);
+			maplist[m].setcell(m, j, i, CELL_NPC, true);
 		}
 	}
 }
@@ -2739,20 +2740,20 @@ void npc_unsetcells(struct npc_data* nd) {
 		ys = nd->u.scr.ys;
 	}
 
-	if (m < 0 || xs < 0 || ys < 0 || map[m].cell == (struct mapcell *)0xdeadbeaf)
+	if (m < 0 || xs < 0 || ys < 0 || maplist[m].cell == (struct mapcell *)0xdeadbeaf)
 		return;
 
 	//Locate max range on which we can locate npc cells
 	//FIXME: does this really do what it's supposed to do? [ultramage]
 	for(x0 = x-xs; x0 > 0 && iMap->getcell(m, x0, y, CELL_CHKNPC); x0--);
-	for(x1 = x+xs; x1 < map[m].xs-1 && iMap->getcell(m, x1, y, CELL_CHKNPC); x1++);
+	for(x1 = x+xs; x1 < maplist[m].xs-1 && iMap->getcell(m, x1, y, CELL_CHKNPC); x1++);
 	for(y0 = y-ys; y0 > 0 && iMap->getcell(m, x, y0, CELL_CHKNPC); y0--);
-	for(y1 = y+ys; y1 < map[m].ys-1 && iMap->getcell(m, x, y1, CELL_CHKNPC); y1++);
+	for(y1 = y+ys; y1 < maplist[m].ys-1 && iMap->getcell(m, x, y1, CELL_CHKNPC); y1++);
 
 	//Erase this npc's cells
 	for (i = y-ys; i <= y+ys; i++)
 		for (j = x-xs; j <= x+xs; j++)
-			map[m].setcell(m, j, i, CELL_NPC, false);
+			maplist[m].setcell(m, j, i, CELL_NPC, false);
 
 	//Re-deploy NPC cells for other nearby npcs.
 	iMap->foreachinarea( npc->unsetcells_sub, m, x0, y0, x1, y1, BL_NPC, nd->bl.id );
@@ -2761,10 +2762,10 @@ void npc_unsetcells(struct npc_data* nd) {
 void npc_movenpc(struct npc_data* nd, int16 x, int16 y)
 {
 	const int16 m = nd->bl.m;
-	if (m < 0 || nd->bl.prev == NULL) return;	//Not on a map.
+	if (m < 0 || nd->bl.prev == NULL) return; //Not on a map.
 
-	x = cap_value(x, 0, map[m].xs-1);
-	y = cap_value(y, 0, map[m].ys-1);
+	x = cap_value(x, 0, maplist[m].xs-1);
+	y = cap_value(y, 0, maplist[m].ys-1);
 
 	iMap->foreachinrange(clif->outsight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
 	iMap->moveblock(&nd->bl, x, y, timer->gettick());
@@ -2780,7 +2781,7 @@ void npc_setdisplayname(struct npc_data* nd, const char* newname)
 	nullpo_retv(nd);
 
 	safestrncpy(nd->name, newname, sizeof(nd->name));
-	if( map[nd->bl.m].users )
+	if( maplist[nd->bl.m].users )
 		clif->charnameack(0, &nd->bl);
 }
 
@@ -2795,11 +2796,11 @@ void npc_setclass(struct npc_data* nd, short class_)
 	if( nd->class_ == class_ )
 		return;
 
-	if( map[nd->bl.m].users )
+	if( maplist[nd->bl.m].users )
 		clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);// fade out
 	nd->class_ = class_;
 	iStatus->set_viewdata(&nd->bl, class_);
-	if( map[nd->bl.m].users )
+	if( maplist[nd->bl.m].users )
 		clif->spawn(&nd->bl);// fade in
 }
 
@@ -2953,8 +2954,8 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 		return strchr(start,'\n');// skip and continue
 	mobspawn.m = (unsigned short)m;
 
-	if( x < 0 || x >= map[mobspawn.m].xs || y < 0 || y >= map[mobspawn.m].ys ) {
-		ShowError("npc_parse_mob: Spawn coordinates out of range: %s (%d,%d), map size is (%d,%d) - %s %s (file '%s', line '%d').\n", map[mobspawn.m].name, x, y, (map[mobspawn.m].xs-1), (map[mobspawn.m].ys-1), w1, w3, filepath, strline(buffer,start-buffer));
+	if( x < 0 || x >= maplist[mobspawn.m].xs || y < 0 || y >= maplist[mobspawn.m].ys ) {
+		ShowError("npc_parse_mob: Spawn coordinates out of range: %s (%d,%d), map size is (%d,%d) - %s %s (file '%s', line '%d').\n", maplist[mobspawn.m].name, x, y, (maplist[mobspawn.m].xs-1), (maplist[mobspawn.m].ys-1), w1, w3, filepath, strline(buffer,start-buffer));
 		return strchr(start,'\n');// skip and continue
 	}
 
@@ -3066,7 +3067,7 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 		// check if target map has players
 		// (usually shouldn't occur when map server is just starting,
 		// but not the case when we do @reloadscript
-		if( map[data->m].users > 0 ) {
+		if( maplist[data->m].users > 0 ) {
 			npc->parse_mob2(data);
 		}
 	} else {
@@ -3111,68 +3112,68 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		if (state == 0)
 			; //Map flag disabled.
 		else if (!strcmpi(w4, "SavePoint")) {
-			map[m].save.map = 0;
-			map[m].save.x = -1;
-			map[m].save.y = -1;
+			maplist[m].save.map = 0;
+			maplist[m].save.x = -1;
+			maplist[m].save.y = -1;
 		} else if (sscanf(w4, "%31[^,],%d,%d", savemap, &savex, &savey) == 3) {
-			map[m].save.map = mapindex_name2id(savemap);
-			map[m].save.x = savex;
-			map[m].save.y = savey;
-			if (!map[m].save.map) {
+			maplist[m].save.map = mapindex_name2id(savemap);
+			maplist[m].save.x = savex;
+			maplist[m].save.y = savey;
+			if (!maplist[m].save.map) {
 				ShowWarning("npc_parse_mapflag: Specified save point map '%s' for mapflag 'nosave' not found (file '%s', line '%d'), using 'SavePoint'.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", savemap, filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
-				map[m].save.x = -1;
-				map[m].save.y = -1;
+				maplist[m].save.x = -1;
+				maplist[m].save.y = -1;
 			}
 		}
-		map[m].flag.nosave = state;
+		maplist[m].flag.nosave = state;
 	}
 	else if (!strcmpi(w3,"autotrade"))
-		map[m].flag.autotrade=state;
+		maplist[m].flag.autotrade=state;
 	else if (!strcmpi(w3,"allowks"))
-		map[m].flag.allowks=state; // [Kill Steal Protection]
+		maplist[m].flag.allowks=state; // [Kill Steal Protection]
 	else if (!strcmpi(w3,"town"))
-		map[m].flag.town=state;
+		maplist[m].flag.town=state;
 	else if (!strcmpi(w3,"nomemo"))
-		map[m].flag.nomemo=state;
+		maplist[m].flag.nomemo=state;
 	else if (!strcmpi(w3,"noteleport"))
-		map[m].flag.noteleport=state;
+		maplist[m].flag.noteleport=state;
 	else if (!strcmpi(w3,"nowarp"))
-		map[m].flag.nowarp=state;
+		maplist[m].flag.nowarp=state;
 	else if (!strcmpi(w3,"nowarpto"))
-		map[m].flag.nowarpto=state;
+		maplist[m].flag.nowarpto=state;
 	else if (!strcmpi(w3,"noreturn"))
-		map[m].flag.noreturn=state;
+		maplist[m].flag.noreturn=state;
 	else if (!strcmpi(w3,"monster_noteleport"))
-		map[m].flag.monster_noteleport=state;
+		maplist[m].flag.monster_noteleport=state;
 	else if (!strcmpi(w3,"nobranch"))
-		map[m].flag.nobranch=state;
+		maplist[m].flag.nobranch=state;
 	else if (!strcmpi(w3,"nopenalty")) {
-		map[m].flag.noexppenalty=state;
-		map[m].flag.nozenypenalty=state;
+		maplist[m].flag.noexppenalty=state;
+		maplist[m].flag.nozenypenalty=state;
 	}
 	else if (!strcmpi(w3,"pvp")) {
 		struct map_zone_data *zone;
-		map[m].flag.pvp = state;
-		if( state && (map[m].flag.gvg || map[m].flag.gvg_dungeon || map[m].flag.gvg_castle) ) {
-			map[m].flag.gvg = 0;
-			map[m].flag.gvg_dungeon = 0;
-			map[m].flag.gvg_castle = 0;
-			ShowWarning("npc_parse_mapflag: You can't set PvP and GvG flags for the same map! Removing GvG flags from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
+		maplist[m].flag.pvp = state;
+		if( state && (maplist[m].flag.gvg || maplist[m].flag.gvg_dungeon || maplist[m].flag.gvg_castle) ) {
+			maplist[m].flag.gvg = 0;
+			maplist[m].flag.gvg_dungeon = 0;
+			maplist[m].flag.gvg_castle = 0;
+			ShowWarning("npc_parse_mapflag: You can't set PvP and GvG flags for the same map! Removing GvG flags from %s (file '%s', line '%d').\n", maplist[m].name, filepath, strline(buffer,start-buffer));
 		}
-		if( state && map[m].flag.battleground ) {
-			map[m].flag.battleground = 0;
-			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing BattleGround flag from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
+		if( state && maplist[m].flag.battleground ) {
+			maplist[m].flag.battleground = 0;
+			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing BattleGround flag from %s (file '%s', line '%d').\n", maplist[m].name, filepath, strline(buffer,start-buffer));
 		}
-		if( state && (zone = strdb_get(zone_db, MAP_ZONE_PVP_NAME)) && map[m].zone != zone ) {
+		if( state && (zone = strdb_get(zone_db, MAP_ZONE_PVP_NAME)) && maplist[m].zone != zone ) {
 			iMap->zone_change(m,zone,start,buffer,filepath);
 		} else if ( !state ) {
-			map[m].zone = &map_zone_pk;
+			maplist[m].zone = &map_zone_pk;
 		}
 	}
 	else if (!strcmpi(w3,"pvp_noparty"))
-		map[m].flag.pvp_noparty=state;
+		maplist[m].flag.pvp_noparty=state;
 	else if (!strcmpi(w3,"pvp_noguild"))
-		map[m].flag.pvp_noguild=state;
+		maplist[m].flag.pvp_noguild=state;
 	else if (!strcmpi(w3, "pvp_nightmaredrop")) {
 		char drop_arg1[16], drop_arg2[16];
 		int drop_per = 0;
@@ -3190,145 +3191,145 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 				drop_type = 3;
 
 			if (drop_id != 0) {
-				RECREATE(map[m].drop_list, struct map_drop_list, ++map[m].drop_list_count);
-				map[m].drop_list[map[m].drop_list_count-1].drop_id = drop_id;
-				map[m].drop_list[map[m].drop_list_count-1].drop_type = drop_type;
-				map[m].drop_list[map[m].drop_list_count-1].drop_per = drop_per;
-				map[m].flag.pvp_nightmaredrop = 1;
+				RECREATE(maplist[m].drop_list, struct map_drop_list, ++maplist[m].drop_list_count);
+				maplist[m].drop_list[maplist[m].drop_list_count-1].drop_id = drop_id;
+				maplist[m].drop_list[maplist[m].drop_list_count-1].drop_type = drop_type;
+				maplist[m].drop_list[maplist[m].drop_list_count-1].drop_per = drop_per;
+				maplist[m].flag.pvp_nightmaredrop = 1;
 			}
 		} else if (!state) //Disable
-			map[m].flag.pvp_nightmaredrop = 0;
+			maplist[m].flag.pvp_nightmaredrop = 0;
 	}
 	else if (!strcmpi(w3,"pvp_nocalcrank"))
-		map[m].flag.pvp_nocalcrank=state;
+		maplist[m].flag.pvp_nocalcrank=state;
 	else if (!strcmpi(w3,"gvg")) {
 		struct map_zone_data *zone;
 		
-		map[m].flag.gvg = state;
-		if( state && map[m].flag.pvp ) {
-			map[m].flag.pvp = 0;
-			ShowWarning("npc_parse_mapflag: You can't set PvP and GvG flags for the same map! Removing PvP flag from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
+		maplist[m].flag.gvg = state;
+		if( state && maplist[m].flag.pvp ) {
+			maplist[m].flag.pvp = 0;
+			ShowWarning("npc_parse_mapflag: You can't set PvP and GvG flags for the same map! Removing PvP flag from %s (file '%s', line '%d').\n", maplist[m].name, filepath, strline(buffer,start-buffer));
 		}
-		if( state && map[m].flag.battleground ) {
-			map[m].flag.battleground = 0;
-			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing BattleGround flag from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
+		if( state && maplist[m].flag.battleground ) {
+			maplist[m].flag.battleground = 0;
+			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing BattleGround flag from %s (file '%s', line '%d').\n", maplist[m].name, filepath, strline(buffer,start-buffer));
 		}
-		if( state && (zone = strdb_get(zone_db, MAP_ZONE_GVG_NAME)) && map[m].zone != zone ) {
+		if( state && (zone = strdb_get(zone_db, MAP_ZONE_GVG_NAME)) && maplist[m].zone != zone ) {
 			iMap->zone_change(m,zone,start,buffer,filepath);
 		}
 	}
 	else if (!strcmpi(w3,"gvg_noparty"))
-		map[m].flag.gvg_noparty=state;
+		maplist[m].flag.gvg_noparty=state;
 	else if (!strcmpi(w3,"gvg_dungeon")) {
-		map[m].flag.gvg_dungeon=state;
-		if (state) map[m].flag.pvp=0;
+		maplist[m].flag.gvg_dungeon=state;
+		if (state) maplist[m].flag.pvp=0;
 	}
 	else if (!strcmpi(w3,"gvg_castle")) {
-		map[m].flag.gvg_castle=state;
-		if (state) map[m].flag.pvp=0;
+		maplist[m].flag.gvg_castle=state;
+		if (state) maplist[m].flag.pvp=0;
 	}
 	else if (!strcmpi(w3,"battleground")) {
 		struct map_zone_data *zone;
 		if( state ) {
 			if( sscanf(w4, "%d", &state) == 1 )
-				map[m].flag.battleground = state;
+				maplist[m].flag.battleground = state;
 			else
-				map[m].flag.battleground = 1; // Default value
+				maplist[m].flag.battleground = 1; // Default value
 		} else
-			map[m].flag.battleground = 0;
+			maplist[m].flag.battleground = 0;
 
-		if( map[m].flag.battleground && map[m].flag.pvp ) {
-			map[m].flag.pvp = 0;
-			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing PvP flag from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
+		if( maplist[m].flag.battleground && maplist[m].flag.pvp ) {
+			maplist[m].flag.pvp = 0;
+			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing PvP flag from %s (file '%s', line '%d').\n", maplist[m].name, filepath, strline(buffer,start-buffer));
 		}
-		if( map[m].flag.battleground && (map[m].flag.gvg || map[m].flag.gvg_dungeon || map[m].flag.gvg_castle) ) {
-			map[m].flag.gvg = 0;
-			map[m].flag.gvg_dungeon = 0;
-			map[m].flag.gvg_castle = 0;
-			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing GvG flag from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
+		if( maplist[m].flag.battleground && (maplist[m].flag.gvg || maplist[m].flag.gvg_dungeon || maplist[m].flag.gvg_castle) ) {
+			maplist[m].flag.gvg = 0;
+			maplist[m].flag.gvg_dungeon = 0;
+			maplist[m].flag.gvg_castle = 0;
+			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing GvG flag from %s (file '%s', line '%d').\n", maplist[m].name, filepath, strline(buffer,start-buffer));
 		}
 		
-		if( state && (zone = strdb_get(zone_db, MAP_ZONE_BG_NAME)) && map[m].zone != zone ) {
+		if( state && (zone = strdb_get(zone_db, MAP_ZONE_BG_NAME)) && maplist[m].zone != zone ) {
 			iMap->zone_change(m,zone,start,buffer,filepath);
 		}
 	}
 	else if (!strcmpi(w3,"noexppenalty"))
-		map[m].flag.noexppenalty=state;
+		maplist[m].flag.noexppenalty=state;
 	else if (!strcmpi(w3,"nozenypenalty"))
-		map[m].flag.nozenypenalty=state;
+		maplist[m].flag.nozenypenalty=state;
 	else if (!strcmpi(w3,"notrade"))
-		map[m].flag.notrade=state;
+		maplist[m].flag.notrade=state;
 	else if (!strcmpi(w3,"novending"))
-		map[m].flag.novending=state;
+		maplist[m].flag.novending=state;
 	else if (!strcmpi(w3,"nodrop"))
-		map[m].flag.nodrop=state;
+		maplist[m].flag.nodrop=state;
 	else if (!strcmpi(w3,"noskill"))
-		map[m].flag.noskill=state;
+		maplist[m].flag.noskill=state;
 	else if (!strcmpi(w3,"noicewall"))
-		map[m].flag.noicewall=state;
+		maplist[m].flag.noicewall=state;
 	else if (!strcmpi(w3,"snow"))
-		map[m].flag.snow=state;
+		maplist[m].flag.snow=state;
 	else if (!strcmpi(w3,"clouds"))
-		map[m].flag.clouds=state;
+		maplist[m].flag.clouds=state;
 	else if (!strcmpi(w3,"clouds2"))
-		map[m].flag.clouds2=state;
+		maplist[m].flag.clouds2=state;
 	else if (!strcmpi(w3,"fog"))
-		map[m].flag.fog=state;
+		maplist[m].flag.fog=state;
 	else if (!strcmpi(w3,"fireworks"))
-		map[m].flag.fireworks=state;
+		maplist[m].flag.fireworks=state;
 	else if (!strcmpi(w3,"sakura"))
-		map[m].flag.sakura=state;
+		maplist[m].flag.sakura=state;
 	else if (!strcmpi(w3,"leaves"))
-		map[m].flag.leaves=state;
+		maplist[m].flag.leaves=state;
 	else if (!strcmpi(w3,"nightenabled"))
-		map[m].flag.nightenabled=state;
+		maplist[m].flag.nightenabled=state;
 	else if (!strcmpi(w3,"noexp")) {
-		map[m].flag.nobaseexp=state;
-		map[m].flag.nojobexp=state;
+		maplist[m].flag.nobaseexp=state;
+		maplist[m].flag.nojobexp=state;
 	}
 	else if (!strcmpi(w3,"nobaseexp"))
-		map[m].flag.nobaseexp=state;
+		maplist[m].flag.nobaseexp=state;
 	else if (!strcmpi(w3,"nojobexp"))
-		map[m].flag.nojobexp=state;
+		maplist[m].flag.nojobexp=state;
 	else if (!strcmpi(w3,"noloot")) {
-		map[m].flag.nomobloot=state;
-		map[m].flag.nomvploot=state;
+		maplist[m].flag.nomobloot=state;
+		maplist[m].flag.nomvploot=state;
 	}
 	else if (!strcmpi(w3,"nomobloot"))
-		map[m].flag.nomobloot=state;
+		maplist[m].flag.nomobloot=state;
 	else if (!strcmpi(w3,"nomvploot"))
-		map[m].flag.nomvploot=state;
+		maplist[m].flag.nomvploot=state;
 	else if (!strcmpi(w3,"nocommand")) {
 		if (state) {
 			if (sscanf(w4, "%d", &state) == 1)
-				map[m].nocommand =state;
+				maplist[m].nocommand =state;
 			else //No level specified, block everyone.
-				map[m].nocommand =100;
+				maplist[m].nocommand =100;
 		} else
-			map[m].nocommand=0;
+			maplist[m].nocommand=0;
 	}
 	else if (!strcmpi(w3,"jexp")) {
-		map[m].jexp = (state) ? atoi(w4) : 100;
-		if( map[m].jexp < 0 ) map[m].jexp = 100;
-		map[m].flag.nojobexp = (map[m].jexp==0)?1:0;
+		maplist[m].jexp = (state) ? atoi(w4) : 100;
+		if( maplist[m].jexp < 0 ) maplist[m].jexp = 100;
+		maplist[m].flag.nojobexp = (maplist[m].jexp==0)?1:0;
 	}
 	else if (!strcmpi(w3,"bexp")) {
-		map[m].bexp = (state) ? atoi(w4) : 100;
-		if( map[m].bexp < 0 ) map[m].bexp = 100;
-		 map[m].flag.nobaseexp = (map[m].bexp==0)?1:0;
+		maplist[m].bexp = (state) ? atoi(w4) : 100;
+		if( maplist[m].bexp < 0 ) maplist[m].bexp = 100;
+		 maplist[m].flag.nobaseexp = (maplist[m].bexp==0)?1:0;
 	}
 	else if (!strcmpi(w3,"loadevent"))
-		map[m].flag.loadevent=state;
+		maplist[m].flag.loadevent=state;
 	else if (!strcmpi(w3,"nochat"))
-		map[m].flag.nochat=state;
+		maplist[m].flag.nochat=state;
 	else if (!strcmpi(w3,"partylock"))
-		map[m].flag.partylock=state;
+		maplist[m].flag.partylock=state;
 	else if (!strcmpi(w3,"guildlock"))
-		map[m].flag.guildlock=state;
+		maplist[m].flag.guildlock=state;
 	else if (!strcmpi(w3,"reset"))
-		map[m].flag.reset=state;
+		maplist[m].flag.reset=state;
 	else if (!strcmpi(w3,"notomb"))
-		map[m].flag.notomb=state;
+		maplist[m].flag.notomb=state;
 	else if (!strcmpi(w3,"adjust_unit_duration")) {
 		int skill_id, k;
 		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
@@ -3346,41 +3347,41 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		}
 		
 		if( modifier[0] == '\0' ) {
-			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n", maplist[m].name, filepath, strline(buffer,start-buffer));
 		} else if( !( skill_id = skill->name2id(skill_name) ) || !skill->get_unit_id( skill->name2id(skill_name), 0) ) {
-			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n",skill_name, map[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n",skill_name, maplist[m].name, filepath, strline(buffer,start-buffer));
 		} else if ( atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
-			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n", atoi(modifier), skill_name, map[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n", atoi(modifier), skill_name, maplist[m].name, filepath, strline(buffer,start-buffer));
 		} else {
-			int idx = map[m].unit_count;
+			int idx = maplist[m].unit_count;
 			
-			ARR_FIND(0, idx, k, map[m].units[k]->skill_id == skill_id);
+			ARR_FIND(0, idx, k, maplist[m].units[k]->skill_id == skill_id);
 			
 			if( k < idx ) {
 				if( atoi(modifier) != 100 )
-					map[m].units[k]->modifier = (unsigned short)atoi(modifier);
+					maplist[m].units[k]->modifier = (unsigned short)atoi(modifier);
 				else { /* remove */
 					int cursor = 0;
-					aFree(map[m].units[k]);
-					map[m].units[k] = NULL;
+					aFree(maplist[m].units[k]);
+					maplist[m].units[k] = NULL;
 					for( k = 0; k < idx; k++ ) {
-						if( map[m].units[k] == NULL )
+						if( maplist[m].units[k] == NULL )
 							continue;
 						
-						map[m].units[cursor] = map[m].units[k];
+						maplist[m].units[cursor] = maplist[m].units[k];
 												
 						cursor++;
 					}
-					if( !( map[m].unit_count = cursor ) ) {
-						aFree(map[m].units);
-						map[m].units = NULL;
+					if( !( maplist[m].unit_count = cursor ) ) {
+						aFree(maplist[m].units);
+						maplist[m].units = NULL;
 					}
 				}
 			} else if( atoi(modifier) != 100 )  {
-				RECREATE(map[m].units, struct mapflag_skill_adjust*, ++map[m].unit_count);
-				CREATE(map[m].units[idx],struct mapflag_skill_adjust,1);
-				map[m].units[idx]->skill_id = (unsigned short)skill_id;
-				map[m].units[idx]->modifier = (unsigned short)atoi(modifier);
+				RECREATE(maplist[m].units, struct mapflag_skill_adjust*, ++maplist[m].unit_count);
+				CREATE(maplist[m].units[idx],struct mapflag_skill_adjust,1);
+				maplist[m].units[idx]->skill_id = (unsigned short)skill_id;
+				maplist[m].units[idx]->modifier = (unsigned short)atoi(modifier);
 			}
 		}
 	} else if (!strcmpi(w3,"adjust_skill_damage")) {
@@ -3400,41 +3401,41 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		}
 				
 		if( modifier[0] == '\0' ) {
-			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", map[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", maplist[m].name, filepath, strline(buffer,start-buffer));
 		} else if( !( skill_id = skill->name2id(skill_name) ) ) {
-			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", skill_name, map[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", skill_name, maplist[m].name, filepath, strline(buffer,start-buffer));
 		} else if ( atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
-			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", atoi(modifier), skill_name, map[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", atoi(modifier), skill_name, maplist[m].name, filepath, strline(buffer,start-buffer));
 		} else {
-			int idx = map[m].skill_count;
+			int idx = maplist[m].skill_count;
 			
-			ARR_FIND(0, idx, k, map[m].skills[k]->skill_id == skill_id);
+			ARR_FIND(0, idx, k, maplist[m].skills[k]->skill_id == skill_id);
 			
 			if( k < idx ) {
 				if( atoi(modifier) != 100 )
-					map[m].skills[k]->modifier = (unsigned short)atoi(modifier);
+					maplist[m].skills[k]->modifier = (unsigned short)atoi(modifier);
 				else { /* remove */
 					int cursor = 0;
-					aFree(map[m].skills[k]);
-					map[m].skills[k] = NULL;
+					aFree(maplist[m].skills[k]);
+					maplist[m].skills[k] = NULL;
 					for( k = 0; k < idx; k++ ) {
-						if( map[m].skills[k] == NULL )
+						if( maplist[m].skills[k] == NULL )
 							continue;
 						
-						map[m].skills[cursor] = map[m].skills[k];
+						maplist[m].skills[cursor] = maplist[m].skills[k];
 												
 						cursor++;
 					}
-					if( !( map[m].skill_count = cursor ) ) {
-						aFree(map[m].skills);
-						map[m].skills = NULL;
+					if( !( maplist[m].skill_count = cursor ) ) {
+						aFree(maplist[m].skills);
+						maplist[m].skills = NULL;
 					}
 				}
 			} else if( atoi(modifier) != 100 ) {
-				RECREATE(map[m].skills, struct mapflag_skill_adjust*, ++map[m].skill_count);
-				CREATE(map[m].skills[idx],struct mapflag_skill_adjust,1);
-				map[m].skills[idx]->skill_id = (unsigned short)skill_id;
-				map[m].skills[idx]->modifier = (unsigned short)atoi(modifier);
+				RECREATE(maplist[m].skills, struct mapflag_skill_adjust*, ++maplist[m].skill_count);
+				CREATE(maplist[m].skills[idx],struct mapflag_skill_adjust,1);
+				maplist[m].skills[idx]->skill_id = (unsigned short)skill_id;
+				maplist[m].skills[idx]->modifier = (unsigned short)atoi(modifier);
 			}
 			
 		}
@@ -3442,26 +3443,26 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		struct map_zone_data *zone;
 		
 		if( !(zone = strdb_get(zone_db, w4)) ) {
-			ShowWarning("npc_parse_mapflag: Invalid zone '%s'! removing flag from %s (file '%s', line '%d').\n", w4, map[m].name, filepath, strline(buffer,start-buffer));
-		} else if( map[m].zone != zone ) {
+			ShowWarning("npc_parse_mapflag: Invalid zone '%s'! removing flag from %s (file '%s', line '%d').\n", w4, maplist[m].name, filepath, strline(buffer,start-buffer));
+		} else if( maplist[m].zone != zone ) {
 			iMap->zone_change(m,zone,start,buffer,filepath);
 		}
 	} else if ( !strcmpi(w3,"nomapchannelautojoin") ) {
-		map[m].flag.chsysnolocalaj = state;
+		maplist[m].flag.chsysnolocalaj = state;
 	} else if ( !strcmpi(w3,"invincible_time_inc") ) {
-		map[m].invincible_time_inc = (state) ? atoi(w4) : 0;
+		maplist[m].invincible_time_inc = (state) ? atoi(w4) : 0;
 	} else if ( !strcmpi(w3,"noknockback") ) {
-		map[m].flag.noknockback = state;
+		maplist[m].flag.noknockback = state;
 	} else if ( !strcmpi(w3,"weapon_damage_rate") ) {
-		map[m].weapon_damage_rate = (state) ? atoi(w4) : 100;
+		maplist[m].weapon_damage_rate = (state) ? atoi(w4) : 100;
 	} else if ( !strcmpi(w3,"magic_damage_rate") ) {
-		map[m].magic_damage_rate = (state) ? atoi(w4) : 100;
+		maplist[m].magic_damage_rate = (state) ? atoi(w4) : 100;
 	} else if ( !strcmpi(w3,"misc_damage_rate") ) {
-		map[m].misc_damage_rate = (state) ? atoi(w4) : 100;
+		maplist[m].misc_damage_rate = (state) ? atoi(w4) : 100;
 	} else if ( !strcmpi(w3,"short_damage_rate") ) {
-		map[m].short_damage_rate = (state) ? atoi(w4) : 100;
+		maplist[m].short_damage_rate = (state) ? atoi(w4) : 100;
 	} else if ( !strcmpi(w3,"long_damage_rate") ) {
-		map[m].long_damage_rate = (state) ? atoi(w4) : 100;
+		maplist[m].long_damage_rate = (state) ? atoi(w4) : 100;
 	} else
 		ShowError("npc_parse_mapflag: unrecognized mapflag '%s' (file '%s', line '%d').\n", w3, filepath, strline(buffer,start-buffer));
 
@@ -3583,7 +3584,7 @@ void npc_parsesrcfile(const char* filepath, bool runOnInit)
 				p = strchr(p,'\n');// next line
 				continue;
 			}
-			if (x < 0 || x >= map[m].xs || y < 0 || y >= map[m].ys) {
+			if (x < 0 || x >= maplist[m].xs || y < 0 || y >= maplist[m].ys) {
 				ShowError("npc_parsesrcfile: Unknown coordinates ('%d', '%d') for map '%s' in file '%s', line '%d'. Skipping line...\n", x, y, mapname, filepath, strline(buffer,p-buffer));
 				if( strcasecmp(w2,"script") == 0 && count > 3 )
 				{
@@ -3767,18 +3768,18 @@ int npc_reload(void) {
 	if(battle_config.dynamic_mobs) {// dynamic check by [random]
 		for (m = 0; m < iMap->map_num; m++) {
 			for (i = 0; i < MAX_MOB_LIST_PER_MAP; i++) {
-				if (map[m].moblist[i] != NULL) {
-					aFree(map[m].moblist[i]);
-					map[m].moblist[i] = NULL;
+				if (maplist[m].moblist[i] != NULL) {
+					aFree(maplist[m].moblist[i]);
+					maplist[m].moblist[i] = NULL;
 				}
-				if( map[m].mob_delete_timer != INVALID_TIMER )
+				if( maplist[m].mob_delete_timer != INVALID_TIMER )
 				{ // Mobs were removed anyway,so delete the timer [Inkfish]
-					timer->delete(map[m].mob_delete_timer, iMap->removemobs_timer);
-					map[m].mob_delete_timer = INVALID_TIMER;
+					timer->delete(maplist[m].mob_delete_timer, iMap->removemobs_timer);
+					maplist[m].mob_delete_timer = INVALID_TIMER;
 				}
 			}
-			if (map[m].npc_num > 0)
-				ShowWarning("npc_reload: %d npcs weren't removed at map %s!\n", map[m].npc_num, map[m].name);
+			if (maplist[m].npc_num > 0)
+				ShowWarning("npc_reload: %d npcs weren't removed at map %s!\n", maplist[m].npc_num, maplist[m].name);
 		}
 	}
 
@@ -3889,25 +3890,24 @@ void npc_debug_warps_sub(struct npc_data* nd)
 	if (iMap->getcell(m, nd->u.warp.x, nd->u.warp.y, CELL_CHKNPC)) {
 		ShowWarning("Warp %s at %s(%d,%d) warps directly on top of an area npc at %s(%d,%d)\n",
 			nd->name,
-			map[nd->bl.m].name, nd->bl.x, nd->bl.y,
-			map[m].name, nd->u.warp.x, nd->u.warp.y
+			maplist[nd->bl.m].name, nd->bl.x, nd->bl.y,
+			maplist[m].name, nd->u.warp.x, nd->u.warp.y
 			);
 	}
 	if (iMap->getcell(m, nd->u.warp.x, nd->u.warp.y, CELL_CHKNOPASS)) {
 		ShowWarning("Warp %s at %s(%d,%d) warps to a non-walkable tile at %s(%d,%d)\n",
 			nd->name,
-			map[nd->bl.m].name, nd->bl.x, nd->bl.y,
-			map[m].name, nd->u.warp.x, nd->u.warp.y
+			maplist[nd->bl.m].name, nd->bl.x, nd->bl.y,
+			maplist[m].name, nd->u.warp.x, nd->u.warp.y
 			);
 	}
 }
 
-static void npc_debug_warps(void)
-{
+static void npc_debug_warps(void) {
 	int16 m, i;
 	for (m = 0; m < iMap->map_num; m++)
-		for (i = 0; i < map[m].npc_num; i++)
-			npc->debug_warps_sub(map[m].npc[i]);
+		for (i = 0; i < maplist[m].npc_num; i++)
+			npc->debug_warps_sub(maplist[m].npc[i]);
 }
 
 /*==========================================

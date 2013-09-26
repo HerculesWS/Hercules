@@ -802,31 +802,31 @@ int unit_warp(struct block_list *bl,short m,short x,short y,clr_type type)
 
 	switch (bl->type) {
 		case BL_MOB:
-			if (map[bl->m].flag.monster_noteleport && ((TBL_MOB*)bl)->master_id == 0)
+			if (maplist[bl->m].flag.monster_noteleport && ((TBL_MOB*)bl)->master_id == 0)
 				return 1;
-			if (m != bl->m && map[m].flag.nobranch && battle_config.mob_warp&4 && !(((TBL_MOB *)bl)->master_id))
+			if (m != bl->m && maplist[m].flag.nobranch && battle_config.mob_warp&4 && !(((TBL_MOB *)bl)->master_id))
 				return 1;
 			break;
 		case BL_PC:
-			if (map[bl->m].flag.noteleport)
+			if (maplist[bl->m].flag.noteleport)
 				return 1;
 			break;
 	}
 
-	if (x<0 || y<0)
-  	{	//Random map position.
+	if (x<0 || y<0) {
+		//Random map position.
 		if (!iMap->search_freecell(NULL, m, &x, &y, -1, -1, 1)) {
-			ShowWarning("unit_warp failed. Unit Id:%d/Type:%d, target position map %d (%s) at [%d,%d]\n", bl->id, bl->type, m, map[m].name, x, y);
+			ShowWarning("unit_warp failed. Unit Id:%d/Type:%d, target position map %d (%s) at [%d,%d]\n", bl->id, bl->type, m, maplist[m].name, x, y);
 			return 2;
 
 		}
-	} else if (iMap->getcell(m,x,y,CELL_CHKNOREACH))
-	{	//Invalid target cell
-		ShowWarning("unit_warp: Specified non-walkable target cell: %d (%s) at [%d,%d]\n", m, map[m].name, x,y);
+	} else if (iMap->getcell(m,x,y,CELL_CHKNOREACH)) {
+		//Invalid target cell
+		ShowWarning("unit_warp: Specified non-walkable target cell: %d (%s) at [%d,%d]\n", m, maplist[m].name, x,y);
 
-		if (!iMap->search_freecell(NULL, m, &x, &y, 4, 4, 1))
-	 	{	//Can't find a nearby cell
-			ShowWarning("unit_warp failed. Unit Id:%d/Type:%d, target position map %d (%s) at [%d,%d]\n", bl->id, bl->type, m, map[m].name, x, y);
+		if (!iMap->search_freecell(NULL, m, &x, &y, 4, 4, 1)) {
+			//Can't find a nearby cell
+			ShowWarning("unit_warp failed. Unit Id:%d/Type:%d, target position map %d (%s) at [%d,%d]\n", bl->id, bl->type, m, maplist[m].name, x, y);
 			return 2;
 		}
 	}
@@ -1966,7 +1966,7 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 			return 0;
 
 		if (sd && (sd->special_state.no_castcancel2 ||
-                ((sd->sc.data[SC_UNLIMITED_HUMMING_VOICE] || sd->special_state.no_castcancel) && !map_flag_gvg(bl->m) && !map[bl->m].flag.battleground))) //fixed flags being read the wrong way around [blackhole89]
+                ((sd->sc.data[SC_UNLIMITED_HUMMING_VOICE] || sd->special_state.no_castcancel) && !map_flag_gvg(bl->m) && !maplist[bl->m].flag.battleground))) //fixed flags being read the wrong way around [blackhole89]
 			return 0;
 	}
 
@@ -2187,10 +2187,9 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 			guild->send_dot_remove(sd);
 			bg->send_dot_remove(sd);
 
-			if( map[bl->m].users <= 0 || sd->state.debug_remove_map )
-			{// this is only place where map users is decreased, if the mobs were removed too soon then this function was executed too many times [FlavioJS]
-				if( sd->debug_file == NULL || !(sd->state.debug_remove_map) )
-				{
+			if( maplist[bl->m].users <= 0 || sd->state.debug_remove_map ) {
+				// this is only place where map users is decreased, if the mobs were removed too soon then this function was executed too many times [FlavioJS]
+				if( sd->debug_file == NULL || !(sd->state.debug_remove_map) ) {
 					sd->debug_file = "";
 					sd->debug_line = 0;
 					sd->debug_func = "";
@@ -2202,17 +2201,17 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 					" Please report this!!!\n",
 					sd->status.account_id, sd->status.char_id,
 					sd->state.active, sd->state.connect_new, sd->state.rewarp, sd->state.changemap, sd->state.debug_remove_map,
-					map[bl->m].name, map[bl->m].users,
+					maplist[bl->m].name, maplist[bl->m].users,
 					sd->debug_file, sd->debug_line, sd->debug_func, file, line, func);
-			} else if (--map[bl->m].users == 0 && battle_config.dynamic_mobs)	//[Skotlex]
+			} else if (--maplist[bl->m].users == 0 && battle_config.dynamic_mobs)	//[Skotlex]
 				iMap->removemobs(bl->m);
-			if( !(sd->sc.option&OPTION_INVISIBLE) )
-			{// decrement the number of active pvp players on the map
-				--map[bl->m].users_pvp;
+			if( !(sd->sc.option&OPTION_INVISIBLE) ) {
+				// decrement the number of active pvp players on the map
+				--maplist[bl->m].users_pvp;
 			}
-			if( map[bl->m].instance_id >= 0 ) {
-				instances[map[bl->m].instance_id].users--;
-				instance->check_idle(map[bl->m].instance_id);
+			if( maplist[bl->m].instance_id >= 0 ) {
+				instances[maplist[bl->m].instance_id].users--;
+				instance->check_idle(maplist[bl->m].instance_id);
 			}
 			sd->state.debug_remove_map = 1; // temporary state to track double remove_map's [FlavioJS]
 			sd->debug_file = file;

@@ -1205,7 +1205,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 			if ((sce=sc->data[SC_ENDURE]) && !sce->val4 && !sc->data[SC_LKCONCENTRATION]) {
 				//Endure count is only reduced by non-players on non-gvg maps.
 				//val4 signals infinite endure. [Skotlex]
-				if (src && src->type != BL_PC && !map_flag_gvg2(target->m) && !map[target->m].flag.battleground && --(sce->val2) < 0)
+				if (src && src->type != BL_PC && !map_flag_gvg2(target->m) && !maplist[target->m].flag.battleground && --(sce->val2) < 0)
 					status_change_end(target, SC_ENDURE, INVALID_TIMER);
 			}
 			if ((sce=sc->data[SC_GRAVITATION]) && sce->val3 == BCT_SELF) {
@@ -1564,12 +1564,12 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 		if( src && !(src->type == BL_PC && ((TBL_PC*)src)->skillitem)) { // Items that cast skills using 'itemskill' will not be handled by map_zone_db.
 			int i;
 
-			for(i = 0; i < map[src->m].zone->disabled_skills_count; i++) {
-				if( skill_id == map[src->m].zone->disabled_skills[i]->nameid && (map[src->m].zone->disabled_skills[i]->type&src->type) ) {
+			for(i = 0; i < maplist[src->m].zone->disabled_skills_count; i++) {
+				if( skill_id == maplist[src->m].zone->disabled_skills[i]->nameid && (maplist[src->m].zone->disabled_skills[i]->type&src->type) ) {
 					if( src->type == BL_PC )
 						clif->msg((TBL_PC*)src, SKILL_CANT_USE_AREA); // This skill cannot be used within this area
-					else if( src->type == BL_MOB && map[src->m].zone->disabled_skills[i]->subtype != MZS_NONE ) {
-						if( (st->mode&MD_BOSS) && !(map[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
+					else if( src->type == BL_MOB && maplist[src->m].zone->disabled_skills[i]->subtype != MZS_NONE ) {
+						if( (st->mode&MD_BOSS) && !(maplist[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
 							break;
 					}
 					return 0;
@@ -2152,9 +2152,9 @@ int status_calc_mob_(struct mob_data* md, bool first) {
 	if(flag&4)
 	{	// Strengthen Guardians - custom value +10% / lv
 		struct guild_castle *gc;
-		gc=guild->mapname2gc(map[md->bl.m].name);
+		gc=guild->mapname2gc(maplist[md->bl.m].name);
 		if (!gc)
-			ShowError("status_calc_mob: No castle set at map %s\n", map[md->bl.m].name);
+			ShowError("status_calc_mob: No castle set at map %s\n", maplist[md->bl.m].name);
 		else
 			if(gc->castle_id < 24 || md->class_ == MOBID_EMPERIUM) {
 #ifdef RENEWAL
@@ -2482,13 +2482,13 @@ int status_calc_pc_(struct map_session_data* sd, bool first) {
 		if(!sd->inventory_data[index])
 			continue;
 
-		for(k = 0; k < map[sd->bl.m].zone->disabled_items_count; k++) {
-			if( map[sd->bl.m].zone->disabled_items[k] == sd->inventory_data[index]->nameid ) {
+		for(k = 0; k < maplist[sd->bl.m].zone->disabled_items_count; k++) {
+			if( maplist[sd->bl.m].zone->disabled_items[k] == sd->inventory_data[index]->nameid ) {
 				break;
 			}
 		}
 
-		if( k < map[sd->bl.m].zone->disabled_items_count )
+		if( k < maplist[sd->bl.m].zone->disabled_items_count )
 			continue;
 
 		bstatus->def += sd->inventory_data[index]->def;
@@ -2626,13 +2626,13 @@ int status_calc_pc_(struct map_session_data* sd, bool first) {
 				if(!data)
 					continue;
 
-				for(k = 0; k < map[sd->bl.m].zone->disabled_items_count; k++) {
-					if( map[sd->bl.m].zone->disabled_items[k] == data->nameid ) {
+				for(k = 0; k < maplist[sd->bl.m].zone->disabled_items_count; k++) {
+					if( maplist[sd->bl.m].zone->disabled_items[k] == data->nameid ) {
 						break;
 					}
 				}
 
-				if( k < map[sd->bl.m].zone->disabled_items_count )
+				if( k < maplist[sd->bl.m].zone->disabled_items_count )
 					continue;
 
 				if(first && data->equip_script) {//Execute equip-script on login
@@ -4735,13 +4735,11 @@ static signed short status_calc_hit(struct block_list *bl, struct status_change 
 	return (short)cap_value(hit,1,SHRT_MAX);
 }
 
-static signed short status_calc_flee(struct block_list *bl, struct status_change *sc, int flee, bool viewable)
-{
-	if( bl->type == BL_PC )
-	{
+static signed short status_calc_flee(struct block_list *bl, struct status_change *sc, int flee, bool viewable) {
+	if( bl->type == BL_PC ) {
 		if( map_flag_gvg2(bl->m) )
 			flee -= flee * battle_config.gvg_flee_penalty/100;
-		else if( map[bl->m].flag.battleground )
+		else if( maplist[bl->m].flag.battleground )
 			flee -= flee * battle_config.bg_flee_penalty/100;
 	}
 
@@ -5544,9 +5542,8 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
 	return (short)cap_value(aspd_rate,0,SHRT_MAX);
 }
 
-static unsigned short status_calc_dmotion(struct block_list *bl, struct status_change *sc, int dmotion)
-{
-	if( !sc || !sc->count || map_flag_gvg2(bl->m) || map[bl->m].flag.battleground )
+static unsigned short status_calc_dmotion(struct block_list *bl, struct status_change *sc, int dmotion) {
+	if( !sc || !sc->count || map_flag_gvg2(bl->m) || maplist[bl->m].flag.battleground )
 		return cap_value(dmotion,0,USHRT_MAX);
 	/**
 	* It has been confirmed on official servers that MvP mobs have no dmotion even without endure
@@ -7293,8 +7290,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			break;
 		case SC_ENDURE:
 			val2 = 7; // Hit-count [Celest]
-			if( !(flag&1) && (bl->type&(BL_PC|BL_MER)) && !map_flag_gvg(bl->m) && !map[bl->m].flag.battleground && !val4 )
-			{
+			if( !(flag&1) && (bl->type&(BL_PC|BL_MER)) && !map_flag_gvg(bl->m) && !maplist[bl->m].flag.battleground && !val4 ) {
 				struct map_session_data *tsd;
 				if( sd )
 				{
@@ -7597,7 +7593,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			if (sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_ROGUE)
 				val3 -= 40;
 			val4 = 10+val1*2; //SP cost.
-			if (map_flag_gvg(bl->m) || map[bl->m].flag.battleground) val4 *= 5;
+			if (map_flag_gvg(bl->m) || maplist[bl->m].flag.battleground) val4 *= 5;
 			break;
 		case SC_CLOAKING:
 			if (!sd) //Monsters should be able to walk with no penalties. [Skotlex]
@@ -7797,13 +7793,12 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				struct block_list *d_bl;
 				struct status_change *d_sc;
 
-				if( (d_bl = iMap->id2bl(val1)) && (d_sc = iStatus->get_sc(d_bl)) && d_sc->count )
-				{ // Inherits Status From Source
+				if( (d_bl = iMap->id2bl(val1)) && (d_sc = iStatus->get_sc(d_bl)) && d_sc->count ) {
+					// Inherits Status From Source
 					const enum sc_type types[] = { SC_AUTOGUARD, SC_DEFENDER, SC_REFLECTSHIELD, SC_ENDURE };
 					enum sc_type type2;
-					int i = (map_flag_gvg(bl->m) || map[bl->m].flag.battleground)?2:3;
-					while( i >= 0 )
-					{
+					int i = (map_flag_gvg(bl->m) || maplist[bl->m].flag.battleground)?2:3;
+					while( i >= 0 ) {
 						type2 = types[i];
 						if( d_sc->data[type2] )
 							sc_start(bl, type2, 100, d_sc->data[type2]->val1, skill->get_time(iStatus->sc2skill(type2),d_sc->data[type2]->val1));
@@ -8006,12 +8001,12 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			{
 				if (sd->mapindex != val2)
 				{
-					int pos =  (bl->x&0xFFFF)|(bl->y<<16), //Current Coordinates
-						map =  sd->mapindex; //Current Map
+					int pos = (bl->x&0xFFFF)|(bl->y<<16); /// Current Coordinates
+					int mapindex = sd->mapindex; /// Current Map
 					//1. Place in Jail (val2 -> Jail Map, val3 -> x, val4 -> y
 					pc->setpos(sd,(unsigned short)val2,val3,val4, CLR_TELEPORT);
 					//2. Set restore point (val3 -> return map, val4 return coords
-					val3 = map;
+					val3 = mapindex;
 					val4 = pos;
 				} else if (!val3 || val3 == sd->mapindex) { //Use save point.
 					val3 = sd->status.save_point.map;

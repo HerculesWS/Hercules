@@ -63,7 +63,7 @@ struct log_interface {
 	void (*pick_mob) (struct mob_data* md, e_log_pick_type type, int amount, struct item* itm, struct item_data *data);
 	void (*zeny) (struct map_session_data* sd, e_log_pick_type type, struct map_session_data* src_sd, int amount);
 	void (*npc) (struct map_session_data* sd, const char *message);
-	void (*chat) (e_log_chat_type type, int type_id, int src_charid, int src_accid, const char* map, int x, int y, const char* dst_charname, const char* message);
+	void (*chat) (e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char* dst_charname, const char* message);
 	void (*atcommand) (struct map_session_data* sd, const char* message);
 	void (*branch) (struct map_session_data* sd);
 	void (*mvpdrop) (struct map_session_data* sd, int monster_id, int* log_mvp);
@@ -71,7 +71,7 @@ struct log_interface {
 	void (*pick_sub) (int id, int16 m, e_log_pick_type type, int amount, struct item* itm, struct item_data *data);
 	void (*zeny_sub) (struct map_session_data* sd, e_log_pick_type type, struct map_session_data* src_sd, int amount);
 	void (*npc_sub) (struct map_session_data* sd, const char *message);
-	void (*chat_sub) (e_log_chat_type type, int type_id, int src_charid, int src_accid, const char* map, int x, int y, const char* dst_charname, const char* message);
+	void (*chat_sub) (e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char* dst_charname, const char* message);
 	void (*atcommand_sub) (struct map_session_data* sd, const char* message);
 	void (*branch_sub) (struct map_session_data* sd);
 	void (*mvpdrop_sub) (struct map_session_data* sd, int monster_id, int* log_mvp);

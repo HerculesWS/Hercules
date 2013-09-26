@@ -153,9 +153,12 @@ void log_branch(struct map_session_data* sd) {
 	logs->branch_sub(sd);
 }
 void log_pick_sub_sql(int id, int16 m, e_log_pick_type type, int amount, struct item* itm, struct item_data *data) {
-	if( SQL_ERROR == SQL->Query(logmysql_handle, LOG_QUERY " INTO `%s` (`time`, `char_id`, `type`, `nameid`, `amount`, `refine`, `card0`, `card1`, `card2`, `card3`, `map`, `unique_id`) VALUES (NOW(), '%d', '%c', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%"PRIu64"')",
-							   logs->config.log_pick, id, log_picktype2char(type), itm->nameid, amount, itm->refine, itm->card[0], itm->card[1], itm->card[2], itm->card[3], map[m].name?map[m].name:"", itm->unique_id) )
-	{
+	if( SQL_ERROR == SQL->Query(logmysql_handle,
+	    LOG_QUERY " INTO `%s` (`time`, `char_id`, `type`, `nameid`, `amount`, `refine`, `card0`, `card1`, `card2`, `card3`, `map`, `unique_id`) "
+	    "VALUES (NOW(), '%d', '%c', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%"PRIu64"')",
+	    logs->config.log_pick, id, log_picktype2char(type), itm->nameid, amount, itm->refine, itm->card[0], itm->card[1], itm->card[2], itm->card[3],
+	    maplist[m].name?maplist[m].name:"", itm->unique_id)
+	) {
 		Sql_ShowDebug(logmysql_handle);
 		return;
 	}
@@ -169,7 +172,9 @@ void log_pick_sub_txt(int id, int16 m, e_log_pick_type type, int amount, struct 
 		return;
 	time(&curtime);
 	strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
-	fprintf(logfp,"%s - %d\t%c\t%d,%d,%d,%d,%d,%d,%d,%s,'%"PRIu64"'\n", timestring, id, log_picktype2char(type), itm->nameid, amount, itm->refine, itm->card[0], itm->card[1], itm->card[2], itm->card[3], map[m].name?map[m].name:"", itm->unique_id);
+	fprintf(logfp,"%s - %d\t%c\t%d,%d,%d,%d,%d,%d,%d,%s,'%"PRIu64"'\n",
+	        timestring, id, log_picktype2char(type), itm->nameid, amount, itm->refine, itm->card[0], itm->card[1], itm->card[2], itm->card[3],
+		maplist[m].name?maplist[m].name:"", itm->unique_id);
 	fclose(logfp);
 }
 /// logs item transactions (generic)
@@ -334,22 +339,22 @@ void log_npc(struct map_session_data* sd, const char* message)
 	logs->npc_sub(sd,message);
 }
 
-void log_chat_sub_sql(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char* map, int x, int y, const char* dst_charname, const char* message) {
+void log_chat_sub_sql(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char* dst_charname, const char* message) {
 	SqlStmt* stmt;
 	
 	stmt = SQL->StmtMalloc(logmysql_handle);
-	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`time`, `type`, `type_id`, `src_charid`, `src_accountid`, `src_map`, `src_map_x`, `src_map_y`, `dst_charname`, `message`) VALUES (NOW(), '%c', '%d', '%d', '%d', '%s', '%d', '%d', ?, ?)", logs->config.log_chat, log_chattype2char(type), type_id, src_charid, src_accid, map, x, y)
-	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, (char*)dst_charname, safestrnlen(dst_charname, NAME_LENGTH))
-	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, (char*)message, safestrnlen(message, CHAT_SIZE_MAX))
-	   ||  SQL_SUCCESS != SQL->StmtExecute(stmt) )
-	{
+	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`time`, `type`, `type_id`, `src_charid`, `src_accountid`, `src_map`, `src_map_x`, `src_map_y`, `dst_charname`, `message`) VALUES (NOW(), '%c', '%d', '%d', '%d', '%s', '%d', '%d', ?, ?)", logs->config.log_chat, log_chattype2char(type), type_id, src_charid, src_accid, mapname, x, y)
+	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, (char*)dst_charname, safestrnlen(dst_charname, NAME_LENGTH))
+	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, (char*)message, safestrnlen(message, CHAT_SIZE_MAX))
+	 || SQL_SUCCESS != SQL->StmtExecute(stmt)
+	) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
 		return;
 	}
 	SQL->StmtFree(stmt);
 }
-void log_chat_sub_txt(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char* map, int x, int y, const char* dst_charname, const char* message) {
+void log_chat_sub_txt(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char* dst_charname, const char* message) {
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
@@ -358,24 +363,23 @@ void log_chat_sub_txt(e_log_chat_type type, int type_id, int src_charid, int src
 		return;
 	time(&curtime);
 	strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
-	fprintf(logfp, "%s - %c,%d,%d,%d,%s,%d,%d,%s,%s\n", timestring, log_chattype2char(type), type_id, src_charid, src_accid, map, x, y, dst_charname, message);
+	fprintf(logfp, "%s - %c,%d,%d,%d,%s,%d,%d,%s,%s\n", timestring, log_chattype2char(type), type_id, src_charid, src_accid, mapname, x, y, dst_charname, message);
 	fclose(logfp);
 }
 
 /// logs chat
-void log_chat(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char* map, int x, int y, const char* dst_charname, const char* message)
-{
-	if( ( logs->config.chat&type ) == 0 )
-	{// disabled
+void log_chat(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char* dst_charname, const char* message) {
+	if( ( logs->config.chat&type ) == 0 ) {
+		// disabled
 		return;
 	}
 
-	if( logs->config.log_chat_woe_disable && ( iMap->agit_flag || iMap->agit2_flag ) )
-	{// no chat logging during woe
+	if( logs->config.log_chat_woe_disable && ( iMap->agit_flag || iMap->agit2_flag ) ) {
+		// no chat logging during woe
 		return;
 	}
 
-	logs->chat_sub(type,type_id,src_charid,src_accid,map,x,y,dst_charname,message);
+	logs->chat_sub(type,type_id,src_charid,src_accid,mapname,x,y,dst_charname,message);
 }
 
 

@@ -214,13 +214,13 @@ enum {
 #define EVENT_NAME_LENGTH ( NAME_LENGTH * 2 + 3 )
 #define DEFAULT_AUTOSAVE_INTERVAL 5*60*1000
 // Specifies maps where players may hit each other
-#define map_flag_vs(m) (map[m].flag.pvp || map[m].flag.gvg_dungeon || map[m].flag.gvg || ((iMap->agit_flag || iMap->agit2_flag) && map[m].flag.gvg_castle) || map[m].flag.battleground)
+#define map_flag_vs(m) (maplist[m].flag.pvp || maplist[m].flag.gvg_dungeon || maplist[m].flag.gvg || ((iMap->agit_flag || iMap->agit2_flag) && maplist[m].flag.gvg_castle) || maplist[m].flag.battleground)
 // Specifies maps that have special GvG/WoE restrictions
-#define map_flag_gvg(m) (map[m].flag.gvg || ((iMap->agit_flag || iMap->agit2_flag) && map[m].flag.gvg_castle))
+#define map_flag_gvg(m) (maplist[m].flag.gvg || ((iMap->agit_flag || iMap->agit2_flag) && maplist[m].flag.gvg_castle))
 // Specifies if the map is tagged as GvG/WoE (regardless of iMap->agit_flag status)
-#define map_flag_gvg2(m) (map[m].flag.gvg || map[m].flag.gvg_castle)
+#define map_flag_gvg2(m) (maplist[m].flag.gvg || maplist[m].flag.gvg_castle)
 // No Kill Steal Protection
-#define map_flag_ks(m) (map[m].flag.town || map[m].flag.pvp || map[m].flag.gvg || map[m].flag.battleground)
+#define map_flag_ks(m) (maplist[m].flag.town || maplist[m].flag.pvp || maplist[m].flag.gvg || maplist[m].flag.battleground)
 
 //This stackable implementation does not means a BL can be more than one type at a time, but it's
 // meant to make it easier to check for multiple types at a time on invocations such as map_foreach* calls [Skotlex]
@@ -696,9 +696,9 @@ struct map_data_other_server {
 };
 
 
-struct map_data *map;
+struct map_data *maplist;
 
-#define map_id2index(id) map[(id)].index
+#define map_id2index(id) maplist[(id)].index
 
 /// Bitfield of flags for the iterator.
 enum e_mapitflags {
@@ -868,8 +868,8 @@ struct map_interface {
 	int16 (*mapindex2mapid) (unsigned short mapindex);
 	int16 (*mapname2mapid) (const char* name);
 	int (*mapname2ipport) (unsigned short name, uint32* ip, uint16* port);
-	int (*setipport) (unsigned short map, uint32 ip, uint16 port);
-	int (*eraseipport) (unsigned short map, uint32 ip, uint16 port);
+	int (*setipport) (unsigned short mapindex, uint32 ip, uint16 port);
+	int (*eraseipport) (unsigned short mapindex, uint32 ip, uint16 port);
 	int (*eraseallipport) (void);
 	void (*addiddb) (struct block_list *);
 	void (*deliddb) (struct block_list *bl);

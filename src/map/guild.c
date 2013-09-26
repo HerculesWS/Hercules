@@ -661,15 +661,16 @@ int guild_invite(struct map_session_data *sd, struct map_session_data *tsd) {
 		return 0;
 	}
 
-	if(tsd->status.guild_id>0 ||
-		tsd->guild_invite>0 ||
-		((iMap->agit_flag || iMap->agit2_flag) && map[tsd->bl.m].flag.gvg_castle))
-	{	//Can't invite people inside castles. [Skotlex]
+	if( tsd->status.guild_id > 0
+	 || tsd->guild_invite > 0
+	 || ((iMap->agit_flag || iMap->agit2_flag) && maplist[tsd->bl.m].flag.gvg_castle)
+	) {
+		//Can't invite people inside castles. [Skotlex]
 		clif->guild_inviteack(sd,0);
 		return 0;
 	}
 
-    //search an empty spot in guild
+	//search an empty spot in guild
 	ARR_FIND( 0, g->max_member, i, g->member[i].account_id == 0 );
 	if(i==g->max_member){
 		clif->guild_inviteack(sd,3);
@@ -846,9 +847,11 @@ int guild_leave(struct map_session_data* sd, int guild_id, int account_id, int c
 	if(g==NULL)
 		return 0;
 
-	if(sd->status.account_id!=account_id ||
-		sd->status.char_id!=char_id || sd->status.guild_id!=guild_id ||
-		((iMap->agit_flag || iMap->agit2_flag) && map[sd->bl.m].flag.gvg_castle))
+	if( sd->status.account_id != account_id
+	 || sd->status.char_id != char_id
+	 || sd->status.guild_id != guild_id
+	 || ((iMap->agit_flag || iMap->agit2_flag) && maplist[sd->bl.m].flag.gvg_castle)
+	)
 		return 0;
 
 	intif->guild_leave(sd->status.guild_id, sd->status.account_id, sd->status.char_id,0,mes);
@@ -878,9 +881,10 @@ int guild_expulsion(struct map_session_data* sd, int guild_id, int account_id, i
 		return 0;	//Expulsion permission
 
   	//Can't leave inside guild castles.
-	if ((tsd = iMap->id2sd(account_id)) &&
-		tsd->status.char_id == char_id &&
-		((iMap->agit_flag || iMap->agit2_flag) && map[tsd->bl.m].flag.gvg_castle))
+	if ((tsd = iMap->id2sd(account_id))
+	 && tsd->status.char_id == char_id
+	 && ((iMap->agit_flag || iMap->agit2_flag) && maplist[tsd->bl.m].flag.gvg_castle)
+	)
 		return 0;
 
 	// find the member and perform expulsion

@@ -1809,7 +1809,7 @@ struct skill_interface {
 	int (*isammotype) (struct map_session_data *sd, int skill);
 	int (*castend_id) (int tid, unsigned int tick, int id, intptr_t data);
 	int (*castend_pos) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*castend_map) ( struct map_session_data *sd,uint16 skill_id, const char *map);
+	int (*castend_map) ( struct map_session_data *sd,uint16 skill_id, const char *mapname);
 	int (*cleartimerskill) (struct block_list *src);
 	int (*addtimerskill) (struct block_list *src,unsigned int tick,int target,int x,int y,uint16 skill_id,uint16 skill_lv,int type,int flag);
 	int (*additional_effect) ( struct block_list* src, struct block_list *bl,uint16 skill_id,uint16 skill_lv,int attack_type,int dmg_lv,unsigned int tick);

@@ -97,7 +97,7 @@ struct party_interface {
 	void (*reply_invite) (struct map_session_data *sd,int party_id,int flag);
 	int (*recv_noinfo) (int party_id, int char_id);
 	int (*recv_info) (struct party* sp, int char_id);
-	int (*recv_movemap) (int party_id,int account_id,int char_id, unsigned short map,int online,int lv);
+	int (*recv_movemap) (int party_id,int account_id,int char_id, unsigned short mapid,int online,int lv);
 	int (*broken) (int party_id);
 	int (*optionchanged) (int party_id,int account_id,int exp,int item,int flag);
 	int (*changeoption) (struct map_session_data *sd,int exp,int item);

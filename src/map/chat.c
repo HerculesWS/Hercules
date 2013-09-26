@@ -68,8 +68,7 @@ static struct chat_data* chat_createchat(struct block_list* bl, const char* titl
 /*==========================================
  * player chatroom creation
  *------------------------------------------*/
-int chat_createpcchat(struct map_session_data* sd, const char* title, const char* pass, int limit, bool pub)
-{
+int chat_createpcchat(struct map_session_data* sd, const char* title, const char* pass, int limit, bool pub) {
 	struct chat_data* cd;
 	nullpo_ret(sd);
 
@@ -81,8 +80,7 @@ int chat_createpcchat(struct map_session_data* sd, const char* title, const char
 		return 0;
 	}
 
-	if( map[sd->bl.m].flag.nochat )
-	{
+	if( maplist[sd->bl.m].flag.nochat ) {
 		clif->message(sd->fd, msg_txt(281));
 		return 0; //Can't create chatrooms on this map.
 	}

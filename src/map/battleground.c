@@ -91,8 +91,8 @@ int bg_team_join(int bg_id, struct map_session_data *sd) {
 	bgd->members[i].x = sd->bl.x;
 	bgd->members[i].y = sd->bl.y;
 	/* populate 'where i came from' */
-	if(map[sd->bl.m].flag.nosave || map[sd->bl.m].instance_id >= 0) {
-		struct map_data *m=&map[sd->bl.m];
+	if(maplist[sd->bl.m].flag.nosave || maplist[sd->bl.m].instance_id >= 0) {
+		struct map_data *m=&maplist[sd->bl.m];
 		if(m->save.map)
 			memcpy(&bgd->members[i].source,&m->save,sizeof(struct point));
 		else
