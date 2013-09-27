@@ -46,15 +46,14 @@ static const int packet_len_table[]={
 	-1,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3890  Homunculus [albator]
 };
 
-extern int char_fd; // inter server Fd used for char_fd
-#define inter_fd char_fd	// alias
+#define inter_fd chrif->fd	// alias
 
 //-----------------------------------------------------------------
 // Send to inter server
 
 int CheckForCharServer(void)
 {
-	return ((char_fd <= 0) || session[char_fd] == NULL || session[char_fd]->wdata == NULL);
+	return ((chrif->fd <= 0) || session[chrif->fd] == NULL || session[chrif->fd]->wdata == NULL);
 }
 
 // pet

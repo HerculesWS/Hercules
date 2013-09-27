@@ -7,9 +7,26 @@
 
 #include "../common/cbasetypes.h"
 #include <time.h>
+#include "map.h" //TBL_stuff
 
+/**
+ * Defines
+ **/
+//Interval at which map server updates online listing. [Valaris]
+#define CHECK_INTERVAL 3600000
+//Interval at which map server sends number of connected users. [Skotlex]
+#define UPDATE_INTERVAL 10000
+
+#define CHRIF_PACKET_LEN_TABLE_SIZE 0x3d
+
+/**
+ * Enumerations
+ **/
 enum sd_state { ST_LOGIN, ST_LOGOUT, ST_MAPCHANGE };
 
+/**
+ * Structures
+ **/
 struct auth_node {
 	int account_id, char_id;
 	int login_id1, login_id2, sex, fd;
@@ -32,8 +49,22 @@ struct chrif_interface {
 	int connected;
 	int other_mapserver_count; //Holds count of how many other map servers are online (apart of this instance) [Skotlex]
 
+	/* */
+	struct eri *auth_db_ers; //For reutilizing player login structures.
+	DBMap* auth_db; // int id -> struct auth_node*
+	/* */
+	int packet_len_table[CHRIF_PACKET_LEN_TABLE_SIZE];
+	int fd;
+	int srvinfo;
+	char ip_str[128];
+	uint32 ip;
+	uint16 port;
+	char userid[NAME_LENGTH], passwd[NAME_LENGTH];
+	int state;
+	/* */
+	int (*final) (void);
+	int (*init) (void);
 	/* funcs */
-	
 	void (*setuserid) (char* id);
 	void (*setpasswd) (char* pwd);
 	void (*checkdefaultlogin) (void);
@@ -73,12 +104,43 @@ struct chrif_interface {
 	
 	int (*removefriend) (int char_id, int friend_id);
 	void (*send_report) (char* buf, int len);
-	
-	int (*do_final_chrif) (void);
-	int (*do_init_chrif) (void);
-	
+			
 	int (*flush_fifo) (void);
 	void (*skillid2idx) (int fd);
+	
+	bool (*sd_to_auth) (TBL_PC* sd, enum sd_state state);
+	int (*check_connect_char_server) (int tid, unsigned int tick, int id, intptr_t data);
+	bool (*auth_logout) (TBL_PC* sd, enum sd_state state);
+	void (*save_ack) (int fd);
+	int (*reconnect) (DBKey key, DBData *data, va_list ap);
+	int (*auth_db_cleanup_sub) (DBKey key, DBData *data, va_list ap);
+	void (*char_ask_name_answer) (int acc, const char* player_name, uint16 type, uint16 answer);
+	int (*auth_db_final) (DBKey key, DBData *data, va_list ap);
+	int (*send_usercount_tochar) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*auth_db_cleanup) (int tid, unsigned int tick, int id, intptr_t data);
+
+	int (*connect) (int fd);
+	int (*connectack) (int fd);
+	int (*sendmap) (int fd);
+	int (*sendmapack) (int fd);
+	int (*recvmap) (int fd);
+	int (*changemapserverack) (int account_id, int login_id1, int login_id2, int char_id, short map_index, short x, short y, uint32 ip, uint16 port);
+	int (*changedsex) (int fd);
+	int (*divorceack) (int char_id, int partner_id);
+	int (*accountban) (int fd);
+	int (*recvfamelist) (int fd);
+	int (*load_scdata) (int fd);
+	void (*update_ip) (int fd);
+	int (*disconnectplayer) (int fd);
+	int (*removemap) (int fd);
+	int (*updatefamelist_ack) (int fd);
+	void (*keepalive)(int fd);
+	void (*keepalive_ack) (int fd);
+	int (*deadopt) (int father_id, int mother_id, int child_id);
+	void (*authfail) (int fd);
+	void (*on_ready) (void);
+	void (*on_disconnect) (void);
+	int (*parse) (int fd);
 };
 
 struct chrif_interface *chrif;

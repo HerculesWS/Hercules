@@ -4898,7 +4898,7 @@ void do_final(void)
 
 	atcommand->final();
 	battle->final();
-	chrif->do_final_chrif();
+	chrif->final();
 	ircbot->final();/* before clif. */
 	clif->final();
 	npc->final();
@@ -5377,7 +5377,7 @@ int do_init(int argc, char *argv[])
 	atcommand->init();
 	battle->init();
 	instance->init();
-	chrif->do_init_chrif();
+	chrif->init();
 	clif->init();
 	ircbot->init();
 	script->init();
