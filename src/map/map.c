@@ -4918,7 +4918,7 @@ void do_final(void)
 	unit->final();
 	bg->final();
 	duel->final();
-	elemental->do_final_elemental();
+	elemental->final();
 	do_final_maps();
 	vending->final();
 
@@ -5393,7 +5393,7 @@ int do_init(int argc, char *argv[])
 	pet->init();
 	homun->init();
 	mercenary->init();
-	elemental->do_init_elemental();
+	elemental->init();
 	quest->init();
 	npc->init();
 	unit->init();
