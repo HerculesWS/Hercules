@@ -5222,6 +5222,7 @@ int pc_jobid2mapid(unsigned short b_class)
 		case JOB_STAR_GLADIATOR:        return MAPID_STAR_GLADIATOR;
 		case JOB_KAGEROU:
 		case JOB_OBORO:                 return MAPID_KAGEROUOBORO;
+		case JOB_REBELLION:             return MAPID_REBELLION;
 		case JOB_DEATH_KNIGHT:          return MAPID_DEATH_KNIGHT;
 	//2-2 Jobs
 		case JOB_CRUSADER:              return MAPID_CRUSADER;
@@ -5362,6 +5363,7 @@ int pc_mapid2jobid(unsigned short class_, int sex)
 		case MAPID_ASSASSIN:              return JOB_ASSASSIN;
 		case MAPID_STAR_GLADIATOR:        return JOB_STAR_GLADIATOR;
 		case MAPID_KAGEROUOBORO:          return sex?JOB_KAGEROU:JOB_OBORO;
+		case MAPID_REBELLION:             return JOB_REBELLION;
 		case MAPID_DEATH_KNIGHT:          return JOB_DEATH_KNIGHT;
 	//2-2 Jobs
 		case MAPID_CRUSADER:              return JOB_CRUSADER;
@@ -5678,6 +5680,8 @@ const char* job_name(int class_)
 	case JOB_KAGEROU:
 	case JOB_OBORO:
 		return msg_txt(653 - JOB_KAGEROU+class_);
+	case JOB_REBELLION:
+		return msg_txt(694);
 
 	default:
 		return msg_txt(655);
@@ -9741,6 +9745,7 @@ void pc_read_skill_tree(void) {
 		{ "Expanded_Super_Baby", JOB_SUPER_BABY_E },
 		{ "Kagerou", JOB_KAGEROU },
 		{ "Oboro", JOB_OBORO },
+		{ "Rebellion", JOB_REBELLION },
 	};
 	
 	if (conf_read_file(&skill_tree_conf, config_filename)) {
