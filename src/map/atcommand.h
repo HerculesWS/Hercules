@@ -14,6 +14,7 @@
  **/
 struct map_session_data;
 struct AtCommandInfo;
+struct block_list;
 
 /**
  * Defines
@@ -74,6 +75,8 @@ struct atcommand_interface {
 	DBMap* db; //name -> AtCommandInfo
 	DBMap* alias_db; //alias -> AtCommandInfo
 	/* */
+	char* msg_table[MAX_MSG]; // Server messages (0-499 reserved for GM commands, 500-999 reserved for others)
+	/* */
 	void (*init) (void);
 	void (*final) (void);
 	/* */
@@ -87,12 +90,35 @@ struct atcommand_interface {
 	void (*final_msg) (void);
 	/* atcommand binding */
 	struct atcmd_binding_data* (*get_bind_byname) (const char* name);
+	/* */
+	AtCommandInfo* (*get_info_byname) (const char *name); // @help
+	const char* (*check_alias) (const char *aliasname); // @help
+	void (*get_suggestions) (struct map_session_data* sd, const char *name, bool is_atcmd_cmd); // @help
+	void (*config_read) (const char* config_filename);
+	/* command-specific subs */
+	int (*stopattack) (struct block_list *bl,va_list ap);
+	int (*pvpoff_sub) (struct block_list *bl,va_list ap);
+	int (*pvpon_sub) (struct block_list *bl,va_list ap);
+	int (*atkillmonster_sub) (struct block_list *bl, va_list ap);
+	void (*raise_sub) (struct map_session_data* sd);
+	void (*get_jail_time) (int jailtime, int* year, int* month, int* day, int* hour, int* minute);
+	int (*cleanfloor_sub) (struct block_list *bl, va_list ap);
+	int (*mutearea_sub) (struct block_list *bl,va_list ap);
+	/* */
+	void (*commands_sub) (struct map_session_data* sd, const int fd, AtCommandType type);
+	void (*cmd_db_clear) (void);
+	int (*cmd_db_clear_sub) (DBKey key, DBData *data, va_list args);
+	void (*doload) (void);
+	void (*base_commands) (void);
 };
 
 struct atcommand_interface *atcommand;
 
+/* will remain outside for a while, we have plans for this little fellow */
 const char* msg_txt(int msg_number);
+
 void atcommand_defaults(void);
+
 /* stay here */
 #define ACMD(x) static bool atcommand_ ## x (const int fd, struct map_session_data* sd, const char* command, const char* message, struct AtCommandInfo *info)
 #define ACMD_A(x) atcommand_ ## x

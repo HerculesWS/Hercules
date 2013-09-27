@@ -53,14 +53,8 @@
 
 struct atcommand_interface atcommand_s;
 
-static char* msg_table[MAX_MSG]; // Server messages (0-499 reserved for GM commands, 500-999 reserved for others)
-
 static char atcmd_output[CHAT_SIZE_MAX];
 static char atcmd_player_name[NAME_LENGTH];
-
-static AtCommandInfo* get_atcommandinfo_byname(const char *name); // @help
-static const char* atcommand_checkalias(const char *aliasname); // @help
-static void atcommand_get_suggestions(struct map_session_data* sd, const char *name, bool is_atcmd_cmd); // @help
 
 // @commands (script-based)
 struct atcmd_binding_data* get_atcommandbind_byname(const char* name) {
@@ -80,8 +74,8 @@ struct atcmd_binding_data* get_atcommandbind_byname(const char* name) {
 const char* msg_txt(int msg_number)
 {
 	if (msg_number >= 0 && msg_number < MAX_MSG &&
-	    msg_table[msg_number] != NULL && msg_table[msg_number][0] != '\0')
-		return msg_table[msg_number];
+	    atcommand->msg_table[msg_number] != NULL && atcommand->msg_table[msg_number][0] != '\0')
+		return atcommand->msg_table[msg_number];
 
 	return "??";
 }
@@ -102,7 +96,7 @@ int msg_config_read(const char* cfgName)
 	}
 
 	if ((--called) == 0)
-		memset(msg_table, 0, sizeof(msg_table[0]) * MAX_MSG);
+		memset(atcommand->msg_table, 0, sizeof(atcommand->msg_table[0]) * MAX_MSG);
 
 	while(fgets(line, sizeof(line), fp))
 	{
@@ -118,10 +112,11 @@ int msg_config_read(const char* cfgName)
 			msg_number = atoi(w1);
 			if (msg_number >= 0 && msg_number < MAX_MSG)
 			{
-				if (msg_table[msg_number] != NULL)
-					aFree(msg_table[msg_number]);
-				msg_table[msg_number] = (char *)aMalloc((strlen(w2) + 1)*sizeof (char));
-				strcpy(msg_table[msg_number],w2);
+				if (atcommand->msg_table[msg_number] != NULL)
+					aFree(atcommand->msg_table[msg_number]);
+				/* this could easily become consecutive memory like get_str() and save the malloc overhead for over 1k calls [Ind] */
+				atcommand->msg_table[msg_number] = (char *)aMalloc((strlen(w2) + 1)*sizeof (char));
+				strcpy(atcommand->msg_table[msg_number],w2);
 			}
 		}
 	}
@@ -138,7 +133,7 @@ void do_final_msg(void)
 {
 	int i;
 	for (i = 0; i < MAX_MSG; i++)
-		aFree(msg_table[i]);
+		aFree(atcommand->msg_table[i]);
 }
 
 /**
@@ -1388,22 +1383,22 @@ ACMD(help) {
 	} else {
 		if (*message == atcommand->at_symbol || *message == atcommand->char_symbol)
 			++message;
-		command_name = atcommand_checkalias(message);
+		command_name = atcommand->check_alias(message);
 	}
 	
 	if (!atcommand->can_use2(sd, command_name, COMMAND_ATCOMMAND)) {
 		sprintf(atcmd_output, msg_txt(153), message); // "%s is Unknown Command"
 		clif->message(fd, atcmd_output);
-		atcommand_get_suggestions(sd, command_name, true);
+		atcommand->get_suggestions(sd, command_name, true);
 		return false;
 	}
 	
-	tinfo = get_atcommandinfo_byname(atcommand_checkalias(command_name));
+	tinfo = atcommand->get_info_byname(atcommand->check_alias(command_name));
 	
 	if ( !tinfo || tinfo->help == NULL ) {
 		sprintf(atcmd_output, msg_txt(988), atcommand->at_symbol, command_name); // There is no help for %c%s.
 		clif->message(fd, atcmd_output);
-		atcommand_get_suggestions(sd, command_name, true);
+		atcommand->get_suggestions(sd, command_name, true);
 		return false;
 	}
 	
@@ -1419,7 +1414,7 @@ ACMD(help) {
 		
 		StrBuf->Init(&buf);
 		StrBuf->AppendStr(&buf, msg_txt(990)); // Available aliases:
-		command_info = get_atcommandinfo_byname(command_name);
+		command_info = atcommand->get_info_byname(command_name);
 		iter = db_iterator(atcommand->alias_db);
 		for (alias_info = dbi_first(iter); dbi_exists(iter); alias_info = dbi_next(iter)) {
 			if (alias_info->command == command_info) {
@@ -1440,7 +1435,7 @@ ACMD(help) {
 
 // helper function, used in foreach calls to stop auto-attack timers
 // parameter: '0' - everyone, 'id' - only those attacking someone with that id
-static int atcommand_stopattack(struct block_list *bl,va_list ap)
+int atcommand_stopattack(struct block_list *bl,va_list ap)
 {
 	struct unit_data *ud = unit->bl2ud(bl);
 	int id = va_arg(ap, int);
@@ -1454,7 +1449,7 @@ static int atcommand_stopattack(struct block_list *bl,va_list ap)
 /*==========================================
  *
  *------------------------------------------*/
-static int atcommand_pvpoff_sub(struct block_list *bl,va_list ap)
+int atcommand_pvpoff_sub(struct block_list *bl,va_list ap)
 {
 	TBL_PC* sd = (TBL_PC*)bl;
 	clif->pvpset(sd, 0, 0, 2);
@@ -1480,8 +1475,8 @@ ACMD(pvpoff) {
 		clif->map_property_mapall(sd->bl.m, MAPPROPERTY_NOTHING);
 		clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
 	}
-	map->foreachinmap(atcommand_pvpoff_sub,sd->bl.m, BL_PC);
-	map->foreachinmap(atcommand_stopattack,sd->bl.m, BL_CHAR, 0);
+	map->foreachinmap(atcommand->pvpoff_sub,sd->bl.m, BL_PC);
+	map->foreachinmap(atcommand->stopattack,sd->bl.m, BL_CHAR, 0);
 	clif->message(fd, msg_txt(31)); // PvP: Off.
 	return true;
 }
@@ -1489,7 +1484,7 @@ ACMD(pvpoff) {
 /*==========================================
  *
  *------------------------------------------*/
-static int atcommand_pvpon_sub(struct block_list *bl,va_list ap)
+int atcommand_pvpon_sub(struct block_list *bl,va_list ap)
 {
 	TBL_PC* sd = (TBL_PC*)bl;
 	if (sd->pvp_timer == INVALID_TIMER) {
@@ -1517,7 +1512,7 @@ ACMD(pvpon) {
 	if (!battle_config.pk_mode) {// display pvp circle and rank
 		clif->map_property_mapall(sd->bl.m, MAPPROPERTY_FREEPVPZONE);
 		clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
-		map->foreachinmap(atcommand_pvpon_sub,sd->bl.m, BL_PC);
+		map->foreachinmap(atcommand->pvpon_sub,sd->bl.m, BL_PC);
 	}
 	
 	clif->message(fd, msg_txt(32)); // PvP: On.
@@ -1540,7 +1535,7 @@ ACMD(gvgoff) {
 	maplist[sd->bl.m].flag.gvg = 0;
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_NOTHING);
 	clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
-	map->foreachinmap(atcommand_stopattack,sd->bl.m, BL_CHAR, 0);
+	map->foreachinmap(atcommand->stopattack,sd->bl.m, BL_CHAR, 0);
 	clif->message(fd, msg_txt(33)); // GvG: Off.
 	
 	return true;
@@ -1972,7 +1967,7 @@ ACMD(monster)
 /*==========================================
  *
  *------------------------------------------*/
-static int atkillmonster_sub(struct block_list *bl, va_list ap)
+int atkillmonster_sub(struct block_list *bl, va_list ap)
 {
 	struct mob_data *md;
 	int flag;
@@ -2006,7 +2001,7 @@ ACMD(killmonster) {
 	
 	drop_flag = strcmp(command+1, "killmonster2");
 	
-	map->foreachinmap(atkillmonster_sub, map_id, BL_MOB, -drop_flag);
+	map->foreachinmap(atcommand->atkillmonster_sub, map_id, BL_MOB, -drop_flag);
 	
 	clif->message(fd, msg_txt(165)); // All monsters killed!
 	
@@ -2960,7 +2955,7 @@ ACMD(doommap)
 /*==========================================
  *
  *------------------------------------------*/
-static void atcommand_raise_sub(struct map_session_data* sd) {
+void atcommand_raise_sub(struct map_session_data* sd) {
 	
 	status->revive(&sd->bl, 100, 100);
 	
@@ -2981,7 +2976,7 @@ ACMD(raise)
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 		if( pc_isdead(pl_sd) )
-			atcommand_raise_sub(pl_sd);
+			atcommand->raise_sub(pl_sd);
 	mapit->free(iter);
 	
 	clif->message(fd, msg_txt(64)); // Mercy has been granted.
@@ -3002,7 +2997,7 @@ ACMD(raisemap)
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 		if (sd->bl.m == pl_sd->bl.m && pc_isdead(pl_sd) )
-			atcommand_raise_sub(pl_sd);
+			atcommand->raise_sub(pl_sd);
 	mapit->free(iter);
 	
 	clif->message(fd, msg_txt(64)); // Mercy has been granted.
@@ -3590,7 +3585,6 @@ ACMD(reloadskilldb)
 /*==========================================
  * @reloadatcommand - reloads conf/atcommand.conf conf/groups.conf
  *------------------------------------------*/
-void atcommand_doload();
 ACMD(reloadatcommand) {
 	config_t run_test;
 	
@@ -3608,7 +3602,7 @@ ACMD(reloadatcommand) {
 	
 	config_destroy(&run_test);
 	
-	atcommand_doload();
+	atcommand->doload();
 	pc_groups_reload();
 	clif->message(fd, msg_txt(254));
 	return true;
@@ -4423,7 +4417,7 @@ ACMD(servertime) {
 //Added by Coltaro
 //We're using this function here instead of using time_t so that it only counts player's jail time when he/she's online (and since the idea is to reduce the amount of minutes one by one in status->change_timer...).
 //Well, using time_t could still work but for some reason that looks like more coding x_x
-static void get_jail_time(int jailtime, int* year, int* month, int* day, int* hour, int* minute)
+void get_jail_time(int jailtime, int* year, int* month, int* day, int* hour, int* minute)
 {
 	const int factor_year = 518400; //12*30*24*60 = 518400
 	const int factor_month = 43200; //30*24*60 = 43200
@@ -4622,7 +4616,7 @@ ACMD(jailfor) {
 			clif->message(pl_sd->fd, msg_txt(120)); // GM has discharge you.
 			clif->message(fd, msg_txt(121)); // Player unjailed
 		} else {
-			get_jail_time(jailtime,&year,&month,&day,&hour,&minute);
+			atcommand->get_jail_time(jailtime,&year,&month,&day,&hour,&minute);
 			sprintf(atcmd_output,msg_txt(402),msg_txt(1137),year,month,day,hour,minute); //%s in jail for %d years, %d months, %d days, %d hours and %d minutes
 	 		clif->message(pl_sd->fd, atcmd_output);
 			sprintf(atcmd_output,msg_txt(402),msg_txt(1138),year,month,day,hour,minute); //This player is now in jail for %d years, %d months, %d days, %d hours and %d minutes
@@ -4674,7 +4668,7 @@ ACMD(jailtime)
 	}
 	
 	//Get remaining jail time
-	get_jail_time(sd->sc.data[SC_JAILED]->val1,&year,&month,&day,&hour,&minute);
+	atcommand->get_jail_time(sd->sc.data[SC_JAILED]->val1,&year,&month,&day,&hour,&minute);
 	sprintf(atcmd_output,msg_txt(402),msg_txt(1142),year,month,day,hour,minute); // You will remain in jail for %d years, %d months, %d days, %d hours and %d minutes
 	
 	clif->message(fd, atcmd_output);
@@ -5023,7 +5017,7 @@ ACMD(killable) {
 		clif->message(fd, msg_txt(242));
 	else {
 		clif->message(fd, msg_txt(288));
-		map->foreachinrange(atcommand_stopattack,&sd->bl, AREA_SIZE, BL_CHAR, sd->bl.id);
+		map->foreachinrange(atcommand->stopattack,&sd->bl, AREA_SIZE, BL_CHAR, sd->bl.id);
 	}
 	return true;
 }
@@ -6060,7 +6054,7 @@ ACMD(mobsearch)
  * @cleanmap - cleans items on the ground
  * @cleanarea - cleans items on the ground within an specified area
  *------------------------------------------*/
-static int atcommand_cleanfloor_sub(struct block_list *bl, va_list ap) {
+int atcommand_cleanfloor_sub(struct block_list *bl, va_list ap) {
 	nullpo_ret(bl);
 	map->clearflooritem(bl);
 	
@@ -6068,7 +6062,7 @@ static int atcommand_cleanfloor_sub(struct block_list *bl, va_list ap) {
 }
 
 ACMD(cleanmap) {
-	map->foreachinmap(atcommand_cleanfloor_sub, sd->bl.m, BL_ITEM);
+	map->foreachinmap(atcommand->cleanfloor_sub, sd->bl.m, BL_ITEM);
 	clif->message(fd, msg_txt(1221)); // All dropped items have been cleaned up.
 	return true;
 }
@@ -6077,11 +6071,11 @@ ACMD(cleanarea) {
 	int x0 = 0, y0 = 0, x1 = 0, y1 = 0;
 	
 	if (!message || !*message || sscanf(message, "%d %d %d %d", &x0, &y0, &x1, &y1) < 1) {
-		map->foreachinrange(atcommand_cleanfloor_sub, &sd->bl, AREA_SIZE * 2, BL_ITEM);
+		map->foreachinrange(atcommand->cleanfloor_sub, &sd->bl, AREA_SIZE * 2, BL_ITEM);
 	} else if (sscanf(message, "%d %d %d %d", &x0, &y0, &x1, &y1) == 1) {
-		map->foreachinrange(atcommand_cleanfloor_sub, &sd->bl, x0, BL_ITEM);
+		map->foreachinrange(atcommand->cleanfloor_sub, &sd->bl, x0, BL_ITEM);
 	} else if (sscanf(message, "%d %d %d %d", &x0, &y0, &x1, &y1) == 4) {
-		map->foreachinarea(atcommand_cleanfloor_sub, sd->bl.m, x0, y0, x1, y1, BL_ITEM);
+		map->foreachinarea(atcommand->cleanfloor_sub, sd->bl.m, x0, y0, x1, y1, BL_ITEM);
 	}
 	
 	clif->message(fd, msg_txt(1221)); // All dropped items have been cleaned up.
@@ -7273,7 +7267,7 @@ ACMD(version) {
 /*==========================================
  * @mutearea by MouseJstr
  *------------------------------------------*/
-static int atcommand_mutearea_sub(struct block_list *bl,va_list ap)
+int atcommand_mutearea_sub(struct block_list *bl,va_list ap)
 {
 	
 	int time, id;
@@ -7305,7 +7299,7 @@ ACMD(mutearea) {
 	
 	time = atoi(message);
 	
-	map->foreachinarea(atcommand_mutearea_sub,sd->bl.m,
+	map->foreachinarea(atcommand->mutearea_sub,sd->bl.m,
 	                   sd->bl.x-AREA_SIZE, sd->bl.y-AREA_SIZE,
 	                   sd->bl.x+AREA_SIZE, sd->bl.y+AREA_SIZE, BL_PC, sd->bl.id, time);
 	
@@ -8357,7 +8351,7 @@ ACMD(font)
 /*==========================================
  * type: 1 = commands (@), 2 = charcommands (#)
  *------------------------------------------*/
-static void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommandType type)
+void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommandType type)
 {
 	char line_buff[CHATBOX_SIZE];
 	char* cur = line_buff;
@@ -8417,7 +8411,7 @@ static void atcommand_commands_sub(struct map_session_data* sd, const int fd, At
  *------------------------------------------*/
 ACMD(commands)
 {
-	atcommand_commands_sub(sd, fd, COMMAND_ATCOMMAND);
+	atcommand->commands_sub(sd, fd, COMMAND_ATCOMMAND);
 	return true;
 }
 
@@ -8426,7 +8420,7 @@ ACMD(commands)
  *------------------------------------------*/
 ACMD(charcommands)
 {
-	atcommand_commands_sub(sd, fd, COMMAND_CHARCOMMAND);
+	atcommand->commands_sub(sd, fd, COMMAND_CHARCOMMAND);
 	return true;
 }
 /* for new mounts */
@@ -9699,15 +9693,14 @@ AtCommandInfo* atcommand_exists(const char* name) {
 	return strdb_get(atcommand->db, name);
 }
 
-static AtCommandInfo* get_atcommandinfo_byname(const char *name) {
+AtCommandInfo* get_atcommandinfo_byname(const char *name) {
 	AtCommandInfo *cmd;
 	if ((cmd = strdb_get(atcommand->db, name)))
 		return cmd;
 	return NULL;
 }
 
-static const char* atcommand_checkalias(const char *aliasname)
-{
+const char* atcommand_checkalias(const char *aliasname) {
 	AliasInfo *alias_info = NULL;
 	if ((alias_info = (AliasInfo*)strdb_get(atcommand->alias_db, aliasname)) != NULL)
 		return alias_info->command->command;
@@ -9715,7 +9708,7 @@ static const char* atcommand_checkalias(const char *aliasname)
 }
 
 /// AtCommand suggestion
-static void atcommand_get_suggestions(struct map_session_data* sd, const char *name, bool is_atcmd_cmd) {
+void atcommand_get_suggestions(struct map_session_data* sd, const char *name, bool is_atcmd_cmd) {
 	DBIterator* atcommand_iter;
 	DBIterator* alias_iter;
 	AtCommandInfo* command_info = NULL;
@@ -9859,7 +9852,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 
 			if( !pc->get_group_level(sd) ) {
 				if( x >= 1 || y >= 1 ) { /* we have command */
-					info = get_atcommandinfo_byname(atcommand_checkalias(command + 1));
+					info = atcommand->get_info_byname(atcommand->check_alias(command + 1));
 					if( !info || info->char_groups[pc_group_get_idx(sd->group)] == 0 ) /* if we can't use or doesn't exist: don't even display the command failed message */
 							return false;
 				} else
@@ -9923,12 +9916,12 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 	}
 
 	//Grab the command information and check for the proper GM level required to use it or if the command exists
-	info = get_atcommandinfo_byname(atcommand_checkalias(command + 1));
+	info = atcommand->get_info_byname(atcommand->check_alias(command + 1));
 	if (info == NULL) {
 		if( pc->get_group_level(sd) ) { // TODO: remove or replace with proper permission
 			sprintf(output, msg_txt(153), command); // "%s is Unknown Command."
 			clif->message(fd, output);
-			atcommand_get_suggestions(sd, command + 1, *message == atcommand->at_symbol);
+			atcommand->get_suggestions(sd, command + 1, *message == atcommand->at_symbol);
 			return true;
 		} else
 			return false;
@@ -9982,7 +9975,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 /*==========================================
  *
  *------------------------------------------*/
-static void atcommand_config_read(const char* config_filename) {
+void atcommand_config_read(const char* config_filename) {
 	config_t atcommand_config;
 	config_setting_t *aliases = NULL, *help = NULL, *nolog = NULL;
 	const char *symbol = NULL;
@@ -10175,7 +10168,7 @@ void atcommand_db_load_groups(GroupSettings **groups, config_setting_t **command
 }
 
 bool atcommand_can_use(struct map_session_data *sd, const char *command) {
-	AtCommandInfo *info = get_atcommandinfo_byname(atcommand_checkalias(command + 1));
+	AtCommandInfo *info = atcommand->get_info_byname(atcommand->check_alias(command + 1));
 	
 	if (info == NULL)
 		return false;
@@ -10188,7 +10181,7 @@ bool atcommand_can_use(struct map_session_data *sd, const char *command) {
 	return false;
 }
 bool atcommand_can_use2(struct map_session_data *sd, const char *command, AtCommandType type) {
-	AtCommandInfo *info = get_atcommandinfo_byname(atcommand_checkalias(command));
+	AtCommandInfo *info = atcommand->get_info_byname(atcommand->check_alias(command));
 	
 	if (info == NULL)
 		return false;
@@ -10230,7 +10223,7 @@ bool atcommand_hp_add(char *name, AtCommandFunc func) {
 /**
  * @see DBApply
  */
-static int atcommand_db_clear_sub(DBKey key, DBData *data, va_list args) {
+int atcommand_db_clear_sub(DBKey key, DBData *data, va_list args) {
 	AtCommandInfo *cmd = DB->data2ptr(data);
 	aFree(cmd->at_groups);
 	aFree(cmd->char_groups);
@@ -10241,7 +10234,7 @@ static int atcommand_db_clear_sub(DBKey key, DBData *data, va_list args) {
 
 void atcommand_db_clear(void) {
 	if( atcommand->db != NULL ) {
-		atcommand->db->destroy(atcommand->db, atcommand_db_clear_sub);
+		atcommand->db->destroy(atcommand->db, atcommand->cmd_db_clear_sub);
 		atcommand->db = NULL;
 	}
 	if( atcommand->alias_db != NULL ) {
@@ -10252,13 +10245,13 @@ void atcommand_db_clear(void) {
 
 void atcommand_doload(void) {
 	if( runflag >= MAPSERVER_ST_RUNNING )
-		atcommand_db_clear();
+		atcommand->cmd_db_clear();
 	if( atcommand->db == NULL )
 		atcommand->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
 	if( atcommand->alias_db == NULL )
 		atcommand->alias_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
-	atcommand_basecommands(); //fills initial atcommand_db with known commands
-	atcommand_config_read(map->ATCOMMAND_CONF_FILENAME);
+	atcommand->base_commands(); //fills initial atcommand_db with known commands
+	atcommand->config_read(map->ATCOMMAND_CONF_FILENAME);
 }
 
 void do_init_atcommand(void) {
@@ -10266,11 +10259,11 @@ void do_init_atcommand(void) {
 	atcommand->char_symbol = '#';
 	atcommand->binding_count = 0;
 	
-	atcommand_doload();
+	atcommand->doload();
 }
 
 void do_final_atcommand(void) {
-	atcommand_db_clear();
+	atcommand->cmd_db_clear();
 }
 
 void atcommand_defaults(void) {
@@ -10278,6 +10271,8 @@ void atcommand_defaults(void) {
 	
 	atcommand->db = NULL;
 	atcommand->alias_db = NULL;
+	
+	memset(atcommand->msg_table, 0, sizeof(atcommand->msg_table));
 	
 	atcommand->init = do_init_atcommand;
 	atcommand->final = do_final_atcommand;
@@ -10291,4 +10286,21 @@ void atcommand_defaults(void) {
 	atcommand->msg_read = msg_config_read;
 	atcommand->final_msg = do_final_msg;
 	atcommand->get_bind_byname = get_atcommandbind_byname;
+	atcommand->get_info_byname = get_atcommandinfo_byname;
+	atcommand->check_alias = atcommand_checkalias;
+	atcommand->get_suggestions = atcommand_get_suggestions;
+	atcommand->config_read = atcommand_config_read;
+	atcommand->stopattack = atcommand_stopattack;
+	atcommand->pvpoff_sub = atcommand_pvpoff_sub;
+	atcommand->pvpon_sub = atcommand_pvpon_sub;
+	atcommand->atkillmonster_sub = atkillmonster_sub;
+	atcommand->raise_sub = atcommand_raise_sub;
+	atcommand->get_jail_time = get_jail_time;
+	atcommand->cleanfloor_sub = atcommand_cleanfloor_sub;
+	atcommand->mutearea_sub = atcommand_mutearea_sub;
+	atcommand->commands_sub = atcommand_commands_sub;
+	atcommand->cmd_db_clear = atcommand_db_clear;
+	atcommand->cmd_db_clear_sub = atcommand_db_clear_sub;
+	atcommand->doload = atcommand_doload;
+	atcommand->base_commands = atcommand_basecommands;
 }
