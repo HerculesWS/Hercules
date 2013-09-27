@@ -59,7 +59,7 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 		case IOT_NONE:
 			break;
 		case IOT_CHAR:
-			if( ( sd = iMap->id2sd(owner_id) ) == NULL ) {
+			if( ( sd = map->id2sd(owner_id) ) == NULL ) {
 				ShowError("instance_create: character %d not found for instance '%s'.\n", owner_id, name);
 				return -2;
 			}
@@ -142,7 +142,7 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
  * Add a map to the instance using src map "name"
  *--------------------------------------*/
 int instance_add_map(const char *name, int instance_id, bool usebasename, const char *map_name) {
-	int16 m = iMap->mapname2mapid(name);
+	int16 m = map->mapname2mapid(name);
 	int i, im = -1;
 	size_t num_cell, size;
 
@@ -165,17 +165,17 @@ int instance_add_map(const char *name, int instance_id, bool usebasename, const 
 		return -4;
 	}
 	
-	ARR_FIND( instance->start_id, iMap->map_num, i, maplist[i].name[0] == 0 ); // Searching for a Free Map
+	ARR_FIND( instance->start_id, map->map_num, i, maplist[i].name[0] == 0 ); // Searching for a Free Map
 		
-	if( i < iMap->map_num )
+	if( i < map->map_num )
 		im = i; // Unused map found (old instance)
 	else {
-		im = iMap->map_num; // Using next map index
-		RECREATE(maplist,struct map_data,++iMap->map_num);
+		im = map->map_num; // Using next map index
+		RECREATE(maplist,struct map_data,++map->map_num);
 	}
 	
 	if( maplist[m].cell == (struct mapcell *)0xdeadbeaf )
-		iMap->cellfromcache(&maplist[m]);
+		map->cellfromcache(&maplist[m]);
 
 	memcpy( &maplist[im], &maplist[m], sizeof(struct map_data) ); // Copy source map
 	if( map_name != NULL ) {
@@ -247,7 +247,7 @@ int instance_add_map(const char *name, int instance_id, bool usebasename, const 
 	RECREATE(instances[instance_id].map, unsigned short, ++instances[instance_id].num_map);
 
 	instances[instance_id].map[instances[instance_id].num_map - 1] = im; // Attach to actual instance
-	iMap->addmap2db(&maplist[im]);
+	map->addmap2db(&maplist[im]);
 	
 	return im;
 }
@@ -314,7 +314,7 @@ void instance_init(int instance_id) {
 		return; // nothing to do
 
 	for( i = 0; i < instances[instance_id].num_map; i++ )
-		iMap->foreachinmap(instance_map_npcsub, maplist[instances[instance_id].map[i]].instance_src_map, BL_NPC, instances[instance_id].map[i]);
+		map->foreachinmap(instance_map_npcsub, maplist[instances[instance_id].map[i]].instance_src_map, BL_NPC, instances[instance_id].map[i]);
 
 	instances[instance_id].state = INSTANCE_BUSY;
 }
@@ -339,7 +339,7 @@ int instance_cleanup_sub(struct block_list *bl, va_list ap) {
 
 	switch(bl->type) {
 		case BL_PC:
-			iMap->quit((struct map_session_data *) bl);
+			map->quit((struct map_session_data *) bl);
 			break;
 		case BL_NPC:
 			npc->unload((struct npc_data *)bl,true);
@@ -351,7 +351,7 @@ int instance_cleanup_sub(struct block_list *bl, va_list ap) {
 			//There is no need for this, the pet is removed together with the player. [Skotlex]
 			break;
 		case BL_ITEM:
-			iMap->clearflooritem(bl);
+			map->clearflooritem(bl);
 			break;
 		case BL_SKILL:
 			skill->delunit((struct skill_unit *) bl);
@@ -372,11 +372,11 @@ void instance_del_map(int16 m) {
 		return;
 	}
 
-	iMap->map_foreachpc(instance_del_load, m);
-	iMap->foreachinmap(instance_cleanup_sub, m, BL_ALL);
+	map->map_foreachpc(instance_del_load, m);
+	map->foreachinmap(instance_cleanup_sub, m, BL_ALL);
 
 	if( maplist[m].mob_delete_timer != INVALID_TIMER )
-		timer->delete(maplist[m].mob_delete_timer, iMap->removemobs_timer);
+		timer->delete(maplist[m].mob_delete_timer, map->removemobs_timer);
 	
 	mapindex_removemap(map_id2index(m));
 
@@ -426,7 +426,7 @@ void instance_del_map(int16 m) {
 	if( maplist[m].channel )
 		clif->chsys_delete(maplist[m].channel);
 
-	iMap->removemapdb(&maplist[m]);
+	map->removemapdb(&maplist[m]);
 	memset(&maplist[m], 0x00, sizeof(maplist[0]));
 	maplist[m].name[0] = 0;
 	maplist[m].instance_id = -1;
@@ -469,7 +469,7 @@ void instance_destroy(int instance_id) {
 		case IOT_NONE:
 			break;
 		case IOT_CHAR:
-			if( ( sd = iMap->id2sd(instances[instance_id].owner_id) ) == NULL ) {
+			if( ( sd = map->id2sd(instances[instance_id].owner_id) ) == NULL ) {
 				break;
 			}
 			iptr = sd->instance;

@@ -217,12 +217,11 @@ int mercenary_save(struct mercenary_data *md)
 	return 1;
 }
 
-static int merc_contract_end(int tid, unsigned int tick, int id, intptr_t data)
-{
+static int merc_contract_end(int tid, unsigned int tick, int id, intptr_t data) {
 	struct map_session_data *sd;
 	struct mercenary_data *md;
 
-	if( (sd = iMap->id2sd(id)) == NULL )
+	if( (sd = map->id2sd(id)) == NULL )
 		return 1;
 	if( (md = sd->md) == NULL )
 		return 1;
@@ -281,14 +280,13 @@ void merc_contract_init(struct mercenary_data *md)
 	md->regen.state.block = 0;
 }
 
-int merc_data_received(struct s_mercenary *merc, bool flag)
-{
+int merc_data_received(struct s_mercenary *merc, bool flag) {
 	struct map_session_data *sd;
 	struct mercenary_data *md;
 	struct s_mercenary_db *db;
 	int i = merc_search_index(merc->class_);
 
-	if( (sd = iMap->charid2sd(merc->char_id)) == NULL )
+	if( (sd = map->charid2sd(merc->char_id)) == NULL )
 		return 0;
 	if( !flag || i < 0 )
 	{ // Not created - loaded - DB info
@@ -318,7 +316,7 @@ int merc_data_received(struct s_mercenary *merc, bool flag)
 		md->bl.x = md->ud.to_x;
 		md->bl.y = md->ud.to_y;
 
-		iMap->addiddb(&md->bl);
+		map->addiddb(&md->bl);
 		status_calc_mercenary(md,1);
 		md->contract_timer = INVALID_TIMER;
 		merc_contract_init(md);
@@ -333,9 +331,8 @@ int merc_data_received(struct s_mercenary *merc, bool flag)
 		mercenary->set_calls(md, 1);
 	sd->status.mer_id = merc->mercenary_id;
 
-	if( md && md->bl.prev == NULL && sd->bl.prev != NULL )
-	{
-		iMap->addblock(&md->bl);
+	if( md && md->bl.prev == NULL && sd->bl.prev != NULL ) {
+		map->addblock(&md->bl);
 		clif->spawn(&md->bl);
 		clif->mercenary_info(sd);
 		clif->mercenary_skillblock(sd);
@@ -451,7 +448,7 @@ static bool read_mercenarydb_sub(char* str[], int columns, int current) {
 
 int read_mercenarydb(void) {
 	memset(mercenary->db,0,sizeof(mercenary->db));
-	sv->readdb(iMap->db_path, "mercenary_db.txt", ',', 26, 26, MAX_MERCENARY_CLASS, &read_mercenarydb_sub);
+	sv->readdb(map->db_path, "mercenary_db.txt", ',', 26, 26, MAX_MERCENARY_CLASS, &read_mercenarydb_sub);
 
 	return 0;
 }
@@ -487,9 +484,8 @@ static bool read_mercenary_skilldb_sub(char* str[], int columns, int current)
 	return true;
 }
 
-int read_mercenary_skilldb(void)
-{
-	sv->readdb(iMap->db_path, "mercenary_skill_db.txt", ',', 3, 3, -1, &read_mercenary_skilldb_sub);
+int read_mercenary_skilldb(void) {
+	sv->readdb(map->db_path, "mercenary_skill_db.txt", ',', 3, 3, -1, &read_mercenary_skilldb_sub);
 
 	return 0;
 }

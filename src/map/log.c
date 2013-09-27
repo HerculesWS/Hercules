@@ -374,7 +374,7 @@ void log_chat(e_log_chat_type type, int type_id, int src_charid, int src_accid, 
 		return;
 	}
 
-	if( logs->config.log_chat_woe_disable && ( iMap->agit_flag || iMap->agit2_flag ) ) {
+	if( logs->config.log_chat_woe_disable && ( map->agit_flag || map->agit2_flag ) ) {
 		// no chat logging during woe
 		return;
 	}

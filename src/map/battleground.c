@@ -200,7 +200,7 @@ int bg_team_get_id(struct block_list *bl) {
 		{
 			struct map_session_data *msd;
 			struct mob_data *md = (TBL_MOB*)bl;
-			if( md->special_state.ai && (msd = iMap->id2sd(md->master_id)) != NULL )
+			if( md->special_state.ai && (msd = map->id2sd(md->master_id)) != NULL )
 				return msd->bg_id;
 			return md->bg_id;
 		}
@@ -448,7 +448,7 @@ void bg_queue_ready_ack (struct bg_arena *arena, struct map_session_data *sd, bo
 		sd->bg_queue.ready = 1;
 		
 		for( i = 0; i < queue->size; i++ ) {
-			if( queue->item[i] > 0 && ( sd = iMap->id2sd(queue->item[i]) ) ) {
+			if( queue->item[i] > 0 && ( sd = map->id2sd(queue->item[i]) ) ) {
 				if( sd->bg_queue.ready == 1 )
 					count++;
 			}
@@ -488,7 +488,7 @@ void bg_match_over(struct bg_arena *arena, bool canceled) {
 	for( i = 0; i < queue->size; i++ ) {
 		struct map_session_data * sd = NULL;
 		
-		if( queue->item[i] > 0 && ( sd = iMap->id2sd(queue->item[i]) ) ) {
+		if( queue->item[i] > 0 && ( sd = map->id2sd(queue->item[i]) ) ) {
 			if( sd->bg_queue.arena ) {
 				bg->team_leave(sd, 0);
 				bg->queue_pc_cleanup(sd);
@@ -513,7 +513,7 @@ void bg_begin(struct bg_arena *arena) {
 	for( i = 0; i < queue->size; i++ ) {
 		struct map_session_data * sd = NULL;
 		
-		if( queue->item[i] > 0 && ( sd = iMap->id2sd(queue->item[i]) ) ) {
+		if( queue->item[i] > 0 && ( sd = map->id2sd(queue->item[i]) ) ) {
 			if( sd->bg_queue.ready == 1 )
 				count++;
 			else
@@ -547,7 +547,7 @@ void bg_queue_pregame(struct bg_arena *arena) {
 	for( i = 0; i < queue->size; i++ ) {
 		struct map_session_data * sd = NULL;
 		
-		if( queue->item[i] > 0 && ( sd = iMap->id2sd(queue->item[i]) ) ) {
+		if( queue->item[i] > 0 && ( sd = map->id2sd(queue->item[i]) ) ) {
 			clif->bgqueue_battlebegins(sd,arena->id,SELF);
 		}
 	}

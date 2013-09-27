@@ -466,7 +466,7 @@ int intif_party_changemap(struct map_session_data *sd,int online) {
 	if(!sd)
 		return 0;
 
-	if( (m=iMap->mapindex2mapid(sd->mapindex)) >= 0 && maplist[m].instance_id >= 0 )
+	if( (m=map->mapindex2mapid(sd->mapindex)) >= 0 && maplist[m].instance_id >= 0 )
 		mapindex = map_id2index(maplist[m].instance_src_map);
 	else
 		mapindex = sd->mapindex;
@@ -851,8 +851,7 @@ int intif_homunculus_requestdelete(int homun_id)
 // Packets receive from inter server
 
 // Wisp/Page reception // rewritten by [Yor]
-int intif_parse_WisMessage(int fd)
-{
+int intif_parse_WisMessage(int fd) {
 	struct map_session_data* sd;
 	char *wisp_source;
 	char name[NAME_LENGTH];
@@ -861,9 +860,9 @@ int intif_parse_WisMessage(int fd)
 	id=RFIFOL(fd,4);
 
 	safestrncpy(name, (char*)RFIFOP(fd,32), NAME_LENGTH);
-	sd = iMap->nick2sd(name);
-	if(sd == NULL || strcmp(sd->status.name, name) != 0)
-	{	//Not found
+	sd = map->nick2sd(name);
+	if(sd == NULL || strcmp(sd->status.name, name) != 0) {
+		//Not found
 		intif_wis_replay(id,1);
 		return 0;
 	}
@@ -895,7 +894,7 @@ int intif_parse_WisEnd(int fd)
 
 	if (battle_config.etc_log)
 		ShowInfo("intif_parse_wisend: player: %s, flag: %d\n", RFIFOP(fd,2), RFIFOB(fd,26)); // flag: 0: success to send wisper, 1: target character is not loged in?, 2: ignored by target
-	sd = (struct map_session_data *)iMap->nick2sd((char *) RFIFOP(fd,2));
+	sd = (struct map_session_data *)map->nick2sd((char *) RFIFOP(fd,2));
 	if (sd != NULL)
 		clif->wis_end(sd->fd, RFIFOB(fd,26));
 
@@ -934,7 +933,7 @@ int mapif_parse_WisToGM(int fd)
 	safestrncpy(Wisp_name, (char*)RFIFOP(fd,4), NAME_LENGTH);
 	safestrncpy(message, (char*)RFIFOP(fd,32), mes_len);
 	// information is sent to all online GM
-	iMap->map_foreachpc(mapif_parse_WisToGM_sub, permission, Wisp_name, message, mes_len);
+	map->map_foreachpc(mapif_parse_WisToGM_sub, permission, Wisp_name, message, mes_len);
 
 	if (message != mbuf)
 		aFree(message);
@@ -953,7 +952,7 @@ int intif_parse_Registers(int fd)
 	if (node)
 		sd = node->sd;
 	else { //Normally registries should arrive for in log-in chars.
-		sd = iMap->id2sd(account_id);
+		sd = map->id2sd(account_id);
 		if (sd && RFIFOB(fd,12) == 3 && sd->status.char_id != char_id)
 			sd = NULL; //Character registry from another character.
 	}
@@ -1005,7 +1004,7 @@ int intif_parse_LoadGuildStorage(int fd)
 	guild_id = RFIFOL(fd,8);
 	if(guild_id <= 0)
 		return 1;
-	sd=iMap->id2sd( RFIFOL(fd,4) );
+	sd=map->id2sd( RFIFOL(fd,4) );
 	if(sd==NULL){
 		ShowError("intif_parse_LoadGuildStorage: user not found %d\n",RFIFOL(fd,4));
 		return 1;
@@ -1321,7 +1320,7 @@ int intif_parse_DeletePetOk(int fd)
 int intif_parse_ChangeNameOk(int fd)
 {
 	struct map_session_data *sd = NULL;
-	if((sd=iMap->id2sd(RFIFOL(fd,2)))==NULL ||
+	if((sd=map->id2sd(RFIFOL(fd,2)))==NULL ||
 		sd->status.char_id != RFIFOL(fd,6))
 		return 0;
 
@@ -1404,7 +1403,7 @@ int intif_parse_questlog(int fd)
 {
 	int char_id = RFIFOL(fd, 4);
 	int i;
-	TBL_PC * sd = iMap->charid2sd(char_id);
+	TBL_PC * sd = map->charid2sd(char_id);
 
 	//User not online anymore
 	if(!sd)
@@ -1438,10 +1437,9 @@ int intif_parse_questlog(int fd)
 	return 0;
 }
 
-int intif_parse_questsave(int fd)
-{
+int intif_parse_questsave(int fd) {
 	int cid = RFIFOL(fd, 2);
-	TBL_PC *sd = iMap->id2sd(cid);
+	TBL_PC *sd = map->id2sd(cid);
 
 	if( !RFIFOB(fd, 6) )
 		ShowError("intif_parse_questsave: Failed to save quest(s) for character %d!\n", cid);
@@ -1499,7 +1497,7 @@ int intif_parse_Mail_inboxreceived(int fd)
 	struct map_session_data *sd;
 	unsigned char flag = RFIFOB(fd,8);
 
-	sd = iMap->charid2sd(RFIFOL(fd,4));
+	sd = map->charid2sd(RFIFOL(fd,4));
 
 	if (sd == NULL)
 	{
@@ -1559,13 +1557,12 @@ int intif_Mail_getattach(int char_id, int mail_id)
 	return 0;
 }
 
-int intif_parse_Mail_getattach(int fd)
-{
+int intif_parse_Mail_getattach(int fd) {
 	struct map_session_data *sd;
 	struct item item;
 	int zeny = RFIFOL(fd,8);
 
-	sd = iMap->charid2sd( RFIFOL(fd,4) );
+	sd = map->charid2sd( RFIFOL(fd,4) );
 
 	if (sd == NULL)
 	{
@@ -1601,13 +1598,12 @@ int intif_Mail_delete(int char_id, int mail_id)
 	return 0;
 }
 
-int intif_parse_Mail_delete(int fd)
-{
+int intif_parse_Mail_delete(int fd) {
 	int char_id = RFIFOL(fd,2);
 	int mail_id = RFIFOL(fd,6);
 	bool failed = RFIFOB(fd,10);
 
-	struct map_session_data *sd = iMap->charid2sd(char_id);
+	struct map_session_data *sd = map->charid2sd(char_id);
 	if (sd == NULL)
 	{
 		ShowError("intif_parse_Mail_delete: char not found %d\n", char_id);
@@ -1648,9 +1644,8 @@ int intif_Mail_return(int char_id, int mail_id)
 	return 0;
 }
 
-int intif_parse_Mail_return(int fd)
-{
-	struct map_session_data *sd = iMap->charid2sd(RFIFOL(fd,2));
+int intif_parse_Mail_return(int fd) {
+	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,2));
 	int mail_id = RFIFOL(fd,6);
 	short fail = RFIFOB(fd,10);
 
@@ -1713,23 +1708,20 @@ static void intif_parse_Mail_send(int fd)
 	fail = (msg.id == 0);
 
 	// notify sender
-	sd = iMap->charid2sd(msg.send_id);
-	if( sd != NULL )
-	{
+	sd = map->charid2sd(msg.send_id);
+	if( sd != NULL ) {
 		if( fail )
 			mail->deliveryfail(sd, &msg);
-		else
-		{
+		else {
 			clif->mail_send(sd->fd, false);
-			if( iMap->save_settings&16 )
+			if( map->save_settings&16 )
 				chrif->save(sd, 0);
 		}
 	}
 }
 
-static void intif_parse_Mail_new(int fd)
-{
-	struct map_session_data *sd = iMap->charid2sd(RFIFOL(fd,2));
+static void intif_parse_Mail_new(int fd) {
+	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,2));
 	int mail_id = RFIFOL(fd,6);
 	const char* sender_name = (char*)RFIFOP(fd,10);
 	const char* title = (char*)RFIFOP(fd,34);
@@ -1765,9 +1757,8 @@ int intif_Auction_requestlist(int char_id, short type, int price, const char* se
 	return 0;
 }
 
-static void intif_parse_Auction_results(int fd)
-{
-	struct map_session_data *sd = iMap->charid2sd(RFIFOL(fd,4));
+static void intif_parse_Auction_results(int fd) {
+	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,4));
 	short count = RFIFOW(fd,8);
 	short pages = RFIFOW(fd,10);
 	uint8* data = RFIFOP(fd,12);
@@ -1794,25 +1785,22 @@ int intif_Auction_register(struct auction_data *auction)
 	return 1;
 }
 
-static void intif_parse_Auction_register(int fd)
-{
+static void intif_parse_Auction_register(int fd) {
 	struct map_session_data *sd;
 	struct auction_data auction;
 
-	if( RFIFOW(fd,2) - 4 != sizeof(struct auction_data) )
-	{
+	if( RFIFOW(fd,2) - 4 != sizeof(struct auction_data) ) {
 		ShowError("intif_parse_Auction_register: data size error %d %d\n", RFIFOW(fd,2) - 4, sizeof(struct auction_data));
 		return;
 	}
 
 	memcpy(&auction, RFIFOP(fd,4), sizeof(struct auction_data));
-	if( (sd = iMap->charid2sd(auction.seller_id)) == NULL )
+	if( (sd = map->charid2sd(auction.seller_id)) == NULL )
 		return;
 
-	if( auction.auction_id > 0 )
-	{
+	if( auction.auction_id > 0 ) {
 		clif->auction_message(sd->fd, 1); // Confirmation Packet ??
-		if( iMap->save_settings&32 )
+		if( map->save_settings&32 )
 			chrif->save(sd,0);
 	}
 	else
@@ -1840,16 +1828,14 @@ int intif_Auction_cancel(int char_id, unsigned int auction_id)
 	return 0;
 }
 
-static void intif_parse_Auction_cancel(int fd)
-{
-	struct map_session_data *sd = iMap->charid2sd(RFIFOL(fd,2));
+static void intif_parse_Auction_cancel(int fd) {
+	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,2));
 	int result = RFIFOB(fd,6);
 
 	if( sd == NULL )
 		return;
 
-	switch( result )
-	{
+	switch( result ) {
 	case 0: clif->auction_message(sd->fd, 2); break;
 	case 1: clif->auction_close(sd->fd, 2); break;
 	case 2: clif->auction_close(sd->fd, 1); break;
@@ -1871,9 +1857,8 @@ int intif_Auction_close(int char_id, unsigned int auction_id)
 	return 0;
 }
 
-static void intif_parse_Auction_close(int fd)
-{
-	struct map_session_data *sd = iMap->charid2sd(RFIFOL(fd,2));
+static void intif_parse_Auction_close(int fd) {
+	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,2));
 	unsigned char result = RFIFOB(fd,6);
 
 	if( sd == NULL )
@@ -1907,9 +1892,8 @@ int intif_Auction_bid(int char_id, const char* name, unsigned int auction_id, in
 	return 0;
 }
 
-static void intif_parse_Auction_bid(int fd)
-{
-	struct map_session_data *sd = iMap->charid2sd(RFIFOL(fd,2));
+static void intif_parse_Auction_bid(int fd) {
+	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,2));
 	int bid = RFIFOL(fd,6);
 	unsigned char result = RFIFOB(fd,10);
 
@@ -1927,9 +1911,8 @@ static void intif_parse_Auction_bid(int fd)
 }
 
 // Used to send 'You have won the auction' and 'You failed to won the auction' messages
-static void intif_parse_Auction_message(int fd)
-{
-	struct map_session_data *sd = iMap->charid2sd(RFIFOL(fd,2));
+static void intif_parse_Auction_message(int fd) {
+	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,2));
 	unsigned char result = RFIFOB(fd,6);
 
 	if( sd == NULL )

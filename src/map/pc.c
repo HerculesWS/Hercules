@@ -156,11 +156,10 @@ bool pc_should_log_commands(struct map_session_data *sd)
 	return pc_group_should_log_commands(sd->group);
 }
 
-static int pc_invincible_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+static int pc_invincible_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	struct map_session_data *sd;
 
-	if( (sd=(struct map_session_data *)iMap->id2sd(id)) == NULL || sd->bl.type!=BL_PC )
+	if( (sd=(struct map_session_data *)map->id2sd(id)) == NULL || sd->bl.type!=BL_PC )
 		return 1;
 
 	if(sd->invincible_timer != tid){
@@ -195,12 +194,11 @@ void pc_delinvincibletimer(struct map_session_data* sd)
 	}
 }
 
-static int pc_spiritball_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+static int pc_spiritball_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	struct map_session_data *sd;
 	int i;
 
-	if( (sd=(struct map_session_data *)iMap->id2sd(id)) == NULL || sd->bl.type!=BL_PC )
+	if( (sd=(struct map_session_data *)map->id2sd(id)) == NULL || sd->bl.type!=BL_PC )
 		return 1;
 
 	if( sd->spiritball <= 0 )
@@ -356,9 +354,8 @@ int pc_banding(struct map_session_data *sd, uint16 skill_lv) {
 	i++;
 
 	// Get total HP of all Royal Guards in party.
-	for( j = 0; j < i; j++ )
-	{
-		bsd = iMap->id2sd(b_sd[j]);
+	for( j = 0; j < i; j++ ) {
+		bsd = map->id2sd(b_sd[j]);
 		if( bsd != NULL )
 			hp += status_get_hp(&bsd->bl);
 	}
@@ -367,9 +364,8 @@ int pc_banding(struct map_session_data *sd, uint16 skill_lv) {
 	hp = hp / i;
 
 	// If a Royal Guard have full HP, give more HP to others that haven't full HP.
-	for( j = 0; j < i; j++ )
-	{
-		bsd = iMap->id2sd(b_sd[j]);
+	for( j = 0; j < i; j++ ) {
+		bsd = map->id2sd(b_sd[j]);
 		if( bsd != NULL && (tmp_hp = hp - status_get_max_hp(&bsd->bl)) > 0 )
 		{
 			extra_hp += tmp_hp;
@@ -380,9 +376,8 @@ int pc_banding(struct map_session_data *sd, uint16 skill_lv) {
 	if( extra_hp > 0 && tmp_qty > 0 )
 		hp += extra_hp / tmp_qty;
 
-	for( j = 0; j < i; j++ )
-	{
-		bsd = iMap->id2sd(b_sd[j]);
+	for( j = 0; j < i; j++ ) {
+		bsd = map->id2sd(b_sd[j]);
 		if( bsd != NULL ) {
 			status->set_hp(&bsd->bl,hp,0); // Set hp
 			if( (sc = status->get_sc(&bsd->bl)) != NULL  && sc->data[SC_BANDING] ) {
@@ -463,9 +458,8 @@ int pc_setrestartvalue(struct map_session_data *sd,int type) {
 /*==========================================
 	Rental System
  *------------------------------------------*/
-static int pc_inventory_rental_end(int tid, unsigned int tick, int id, intptr_t data)
-{
-	struct map_session_data *sd = iMap->id2sd(id);
+static int pc_inventory_rental_end(int tid, unsigned int tick, int id, intptr_t data) {
+	struct map_session_data *sd = map->id2sd(id);
 	if( sd == NULL )
 		return 0;
 	if( tid != sd->rental_timer )
@@ -1153,7 +1147,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 		if (expiration_time != 0) { // don't display if it's unlimited or unknow value
 			char tmpstr[1024];
 			strftime(tmpstr, sizeof(tmpstr) - 1, msg_txt(501), localtime(&expiration_time)); // "Your account time limit is: %d-%m-%Y %H:%M:%S."
-			clif->wis_message(sd->fd, iMap->wisp_server_name, tmpstr, strlen(tmpstr)+1);
+			clif->wis_message(sd->fd, map->wisp_server_name, tmpstr, strlen(tmpstr)+1);
 		}
 
 		/**
@@ -1244,7 +1238,7 @@ int pc_reg_received(struct map_session_data *sd)
 	for(i=0;i<MAX_PC_FEELHATE;i++) { //for now - someone need to make reading from txt/sql
 		if ((j = pc_readglobalreg(sd,sg_info[i].feel_var))!=0) {
 			sd->feel_map[i].index = j;
-			sd->feel_map[i].m = iMap->mapindex2mapid(j);
+			sd->feel_map[i].m = map->mapindex2mapid(j);
 		} else {
 			sd->feel_map[i].index = 0;
 			sd->feel_map[i].m = -1;
@@ -1294,8 +1288,8 @@ int pc_reg_received(struct map_session_data *sd)
 	if( sd->status.ele_id > 0 )
 		intif->elemental_request(sd->status.ele_id, sd->status.char_id);
 
-	iMap->addiddb(&sd->bl);
-	iMap->delnickdb(sd->status.char_id, sd->status.name);
+	map->addiddb(&sd->bl);
+	map->delnickdb(sd->status.char_id, sd->status.name);
 	if (!chrif->auth_finished(sd))
 		ShowError("pc_reg_received: Failed to properly remove player %d:%d from logging db!\n", sd->status.account_id, sd->status.char_id);
 
@@ -1757,7 +1751,7 @@ int pc_disguise(struct map_session_data *sd, int class_) {
 		if (sd->chatID) {
 			struct chat_data* cd;
 			nullpo_retr(1, sd);
-			cd = (struct chat_data*)iMap->id2bl(sd->chatID);
+			cd = (struct chat_data*)map->id2bl(sd->chatID);
 			if( cd != NULL || (struct block_list*)sd == cd->owner )
 				clif->dispchat(cd,0);
 		}
@@ -2016,9 +2010,8 @@ int pc_exeautobonus(struct map_session_data *sd,struct s_autobonus *autobonus)
 	return 0;
 }
 
-int pc_endautobonus(int tid, unsigned int tick, int id, intptr_t data)
-{
-	struct map_session_data *sd = iMap->id2sd(id);
+int pc_endautobonus(int tid, unsigned int tick, int id, intptr_t data) {
+	struct map_session_data *sd = map->id2sd(id);
 	struct s_autobonus *autobonus = (struct s_autobonus *)data;
 
 	nullpo_ret(sd);
@@ -4055,7 +4048,7 @@ int pc_dropitem(struct map_session_data *sd,int n,int amount)
 		return 0;
 	}
 
-	if (!iMap->addflooritem(&sd->status.inventory[n], amount, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 2))
+	if (!map->addflooritem(&sd->status.inventory[n], amount, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 2))
 		return 0;
 
 	pc->delitem(sd, n, amount, 1, 0, LOG_TYPE_PICKDROP_PLAYER);
@@ -4085,9 +4078,8 @@ int pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 	if (sd->status.party_id)
 		p = party->search(sd->status.party_id);
 
-	if(fitem->first_get_charid > 0 && fitem->first_get_charid != sd->status.char_id)
-  	{
-		first_sd = iMap->charid2sd(fitem->first_get_charid);
+	if(fitem->first_get_charid > 0 && fitem->first_get_charid != sd->status.char_id) {
+		first_sd = map->charid2sd(fitem->first_get_charid);
 		if(DIFF_TICK(tick,fitem->first_get_tick) < 0) {
 			if (!(p && p->party.item&1 &&
 				first_sd && first_sd->status.party_id == sd->status.party_id
@@ -4095,9 +4087,8 @@ int pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 				return 0;
 		}
 		else
-		if(fitem->second_get_charid > 0 && fitem->second_get_charid != sd->status.char_id)
-	  	{
-			second_sd = iMap->charid2sd(fitem->second_get_charid);
+		if(fitem->second_get_charid > 0 && fitem->second_get_charid != sd->status.char_id) {
+			second_sd = map->charid2sd(fitem->second_get_charid);
 			if(DIFF_TICK(tick, fitem->second_get_tick) < 0) {
 				if(!(p && p->party.item&1 &&
 					((first_sd && first_sd->status.party_id == sd->status.party_id) ||
@@ -4106,9 +4097,8 @@ int pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 					return 0;
 			}
 			else
-			if(fitem->third_get_charid > 0 && fitem->third_get_charid != sd->status.char_id)
-		  	{
-				third_sd = iMap->charid2sd(fitem->third_get_charid);
+			if(fitem->third_get_charid > 0 && fitem->third_get_charid != sd->status.char_id) {
+				third_sd = map->charid2sd(fitem->third_get_charid);
 				if(DIFF_TICK(tick,fitem->third_get_tick) < 0) {
 					if(!(p && p->party.item&1 &&
 						((first_sd && first_sd->status.party_id == sd->status.party_id) ||
@@ -4130,7 +4120,7 @@ int pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 	//Display pickup animation.
 	pc_stop_attack(sd);
 	clif->takeitem(&sd->bl,&fitem->bl);
-	iMap->clearflooritem(&fitem->bl);
+	map->clearflooritem(&fitem->bl);
 	return 1;
 }
 
@@ -4783,7 +4773,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 
 	nullpo_ret(sd);
 
-	if( !mapindex || !mapindex_id2name(mapindex) || ( m = iMap->mapindex2mapid(mapindex) ) == -1 ) {
+	if( !mapindex || !mapindex_id2name(mapindex) || ( m = map->mapindex2mapid(mapindex) ) == -1 ) {
 		ShowDebug("pc_setpos: Passed mapindex(%d) is invalid!\n", mapindex);
 		return 1;
 	}
@@ -4858,7 +4848,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		}
 		
 		if( maplist[m].cell == (struct mapcell *)0xdeadbeaf )
-			iMap->cellfromcache(&maplist[m]);
+			map->cellfromcache(&maplist[m]);
 		if (sd->sc.count) { // Cancel some map related stuff.
 			if (sd->sc.data[SC_JAILED])
 				return 1; //You may not get out!
@@ -4905,7 +4895,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		uint32 ip;
 		uint16 port;
 		//if can't find any map-servers, just abort setting position.
-		if(!sd->mapindex || iMap->mapname2ipport(mapindex,&ip,&port))
+		if(!sd->mapindex || map->mapname2ipport(mapindex,&ip,&port))
 			return 2;
 
 		if (sd->npc_id)
@@ -4935,10 +4925,10 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		do {
 			x=rnd()%(maplist[m].xs-2)+1;
 			y=rnd()%(maplist[m].ys-2)+1;
-		} while(iMap->getcell(m,x,y,CELL_CHKNOPASS));
+		} while(map->getcell(m,x,y,CELL_CHKNOPASS));
 	}
 
-	if (sd->state.vending && iMap->getcell(m,x,y,CELL_CHKNOVENDING)) {
+	if (sd->state.vending && map->getcell(m,x,y,CELL_CHKNOVENDING)) {
 		clif->message (sd->fd, msg_txt(204)); // "You can't open a shop on this cell."
 		vending->close(sd);
 	}
@@ -5006,7 +4996,7 @@ int pc_randomwarp(struct map_session_data *sd, clr_type type) {
 	do {
 		x=rnd()%(maplist[m].xs-2)+1;
 		y=rnd()%(maplist[m].ys-2)+1;
-	} while( iMap->getcell(m,x,y,CELL_CHKNOPASS) && (i++) < 1000 );
+	} while( map->getcell(m,x,y,CELL_CHKNOPASS) && (i++) < 1000 );
 
 	if (i < 1000)
 		return pc->setpos(sd,map_id2index(sd->bl.m),x,y,type);
@@ -5683,7 +5673,7 @@ int pc_follow_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	struct map_session_data *sd;
 	struct block_list *tbl;
 
-	sd = iMap->id2sd(id);
+	sd = map->id2sd(id);
 	nullpo_ret(sd);
 
 	if (sd->followtimer != tid) {
@@ -5693,7 +5683,7 @@ int pc_follow_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	}
 
 	sd->followtimer = INVALID_TIMER;
-	tbl = iMap->id2bl(sd->followtarget);
+	tbl = map->id2bl(sd->followtarget);
 
 	if (tbl == NULL || pc_isdead(sd) || status->isdead(tbl)) {
 		pc->stop_following(sd);
@@ -5733,9 +5723,8 @@ int pc_stop_following (struct map_session_data *sd)
 	return 0;
 }
 
-int pc_follow(struct map_session_data *sd,int target_id)
-{
-	struct block_list *bl = iMap->id2bl(target_id);
+int pc_follow(struct map_session_data *sd,int target_id) {
+	struct block_list *bl = map->id2bl(target_id);
 	if (bl == NULL /*|| bl->type != BL_PC*/)
 		return 1;
 	if (sd->followtimer != INVALID_TIMER)
@@ -6638,9 +6627,8 @@ void pc_respawn(struct map_session_data* sd, clr_type clrtype)
 		clif->resurrection(&sd->bl, 1); //If warping fails, send a normal stand up packet.
 }
 
-static int pc_respawn_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
-	struct map_session_data *sd = iMap->id2sd(id);
+static int pc_respawn_timer(int tid, unsigned int tick, int id, intptr_t data) {
+	struct map_session_data *sd = map->id2sd(id);
 	if( sd != NULL )
 	{
 		sd->pvp_point=0;
@@ -6690,7 +6678,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 
 	for(k = 0; k < 5; k++)
 		if (sd->devotion[k]){
-			struct map_session_data *devsd = iMap->id2sd(sd->devotion[k]);
+			struct map_session_data *devsd = map->id2sd(sd->devotion[k]);
 			if (devsd)
 				status_change_end(&devsd->bl, SC_DEVOTION, INVALID_TIMER);
 			sd->devotion[k] = 0;
@@ -6866,7 +6854,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 		item_tmp.card[1]=0;
 		item_tmp.card[2]=GetWord(sd->status.char_id,0); // CharId
 		item_tmp.card[3]=GetWord(sd->status.char_id,1);
-		iMap->addflooritem(&item_tmp,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+		map->addflooritem(&item_tmp,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 	}
 
 	// activate Steel body if a super novice dies at 99+% exp [celest]
@@ -7608,7 +7596,7 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	if (sd->state.vending)
 		vending->close(sd);
 
-	iMap->foreachinmap(jobchange_killclone, sd->bl.m, BL_MOB, sd->bl.id);
+	map->foreachinmap(jobchange_killclone, sd->bl.m, BL_MOB, sd->bl.id);
 
 	//Remove peco/cart/falcon
 	i = sd->sc.option;
@@ -8289,9 +8277,8 @@ int pc_setregistry_str(struct map_session_data *sd,const char *reg,const char *v
 /*==========================================
  * Exec eventtimer for player sd (retrieved from map_session (id))
  *------------------------------------------*/
-static int pc_eventtimer(int tid, unsigned int tick, int id, intptr_t data)
-{
-	struct map_session_data *sd=iMap->id2sd(id);
+static int pc_eventtimer(int tid, unsigned int tick, int id, intptr_t data) {
+	struct map_session_data *sd=map->id2sd(id);
 	char *p = (char *)data;
 	int i;
 	if(sd==NULL)
@@ -9034,7 +9021,7 @@ int pc_calc_pvprank_sub(struct block_list *bl,va_list ap)
 	return 0;
 }
 /*==========================================
- * Calculate new rank beetween all present players (iMap->foreachinarea)
+ * Calculate new rank beetween all present players (map->foreachinarea)
  * and display result
  *------------------------------------------*/
 int pc_calc_pvprank(struct map_session_data *sd) {
@@ -9043,7 +9030,7 @@ int pc_calc_pvprank(struct map_session_data *sd) {
 	m=&maplist[sd->bl.m];
 	old=sd->pvp_rank;
 	sd->pvp_rank=1;
-	iMap->foreachinmap(pc_calc_pvprank_sub,sd->bl.m,BL_PC,sd);
+	map->foreachinmap(pc_calc_pvprank_sub,sd->bl.m,BL_PC,sd);
 	if(old!=sd->pvp_rank || sd->pvp_lastusers!=m->users_pvp)
 		clif->pvpset(sd,sd->pvp_rank,sd->pvp_lastusers=m->users_pvp,0);
 	return sd->pvp_rank;
@@ -9051,11 +9038,10 @@ int pc_calc_pvprank(struct map_session_data *sd) {
 /*==========================================
  * Calculate next sd ranking calculation from config
  *------------------------------------------*/
-int pc_calc_pvprank_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+int pc_calc_pvprank_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	struct map_session_data *sd;
 
-	sd=iMap->id2sd(id);
+	sd=map->id2sd(id);
 	if(sd==NULL)
 		return 0;
 	sd->pvp_timer = INVALID_TIMER;
@@ -9119,8 +9105,8 @@ int pc_divorce(struct map_session_data *sd)
 	if( !sd->status.partner_id )
 		return -1; // Char is not married
 
-	if( (p_sd = iMap->charid2sd(sd->status.partner_id)) == NULL )
-	{ // Lets char server do the divorce
+	if( (p_sd = map->charid2sd(sd->status.partner_id)) == NULL ) {
+		// Lets char server do the divorce
 		if( chrif->divorce(sd->status.char_id, sd->status.partner_id) )
 			return -1; // No char server connected
 
@@ -9147,11 +9133,10 @@ int pc_divorce(struct map_session_data *sd)
 /*==========================================
  * Get sd partner charid. (Married partner)
  *------------------------------------------*/
-struct map_session_data *pc_get_partner(struct map_session_data *sd)
-{
+struct map_session_data *pc_get_partner(struct map_session_data *sd) {
 	if (sd && pc->ismarried(sd))
 		// charid2sd returns NULL if not found
-		return iMap->charid2sd(sd->status.partner_id);
+		return map->charid2sd(sd->status.partner_id);
 
 	return NULL;
 }
@@ -9159,11 +9144,10 @@ struct map_session_data *pc_get_partner(struct map_session_data *sd)
 /*==========================================
  * Get sd father charid. (Need to be baby)
  *------------------------------------------*/
-struct map_session_data *pc_get_father (struct map_session_data *sd)
-{
+struct map_session_data *pc_get_father(struct map_session_data *sd) {
 	if (sd && sd->class_&JOBL_BABY && sd->status.father > 0)
 		// charid2sd returns NULL if not found
-		return iMap->charid2sd(sd->status.father);
+		return map->charid2sd(sd->status.father);
 
 	return NULL;
 }
@@ -9171,11 +9155,10 @@ struct map_session_data *pc_get_father (struct map_session_data *sd)
 /*==========================================
  * Get sd mother charid. (Need to be baby)
  *------------------------------------------*/
-struct map_session_data *pc_get_mother (struct map_session_data *sd)
-{
+struct map_session_data *pc_get_mother(struct map_session_data *sd) {
 	if (sd && sd->class_&JOBL_BABY && sd->status.mother > 0)
 		// charid2sd returns NULL if not found
-		return iMap->charid2sd(sd->status.mother);
+		return map->charid2sd(sd->status.mother);
 
 	return NULL;
 }
@@ -9183,11 +9166,10 @@ struct map_session_data *pc_get_mother (struct map_session_data *sd)
 /*==========================================
  * Get sd children charid. (Need to be married)
  *------------------------------------------*/
-struct map_session_data *pc_get_child (struct map_session_data *sd)
-{
+struct map_session_data *pc_get_child(struct map_session_data *sd) {
 	if (sd && pc->ismarried(sd) && sd->status.child > 0)
 		// charid2sd returns NULL if not found
-		return iMap->charid2sd(sd->status.child);
+		return map->charid2sd(sd->status.child);
 
 	return NULL;
 }
@@ -9303,18 +9285,18 @@ int pc_autosave(int tid, unsigned int tick, int id, intptr_t data)
 	}
 	mapit->free(iter);
 
-	interval = iMap->autosave_interval/(iMap->usercount()+1);
-	if(interval < iMap->minsave_interval)
-		interval = iMap->minsave_interval;
+	interval = map->autosave_interval/(map->usercount()+1);
+	if(interval < map->minsave_interval)
+		interval = map->minsave_interval;
 	timer->add(timer->gettick()+interval,pc_autosave,0,0);
 
 	return 0;
 }
 
 static int pc_daynight_timer_sub(struct map_session_data *sd,va_list ap) {
-	if (sd->state.night != iMap->night_flag && maplist[sd->bl.m].flag.nightenabled) { //Night/day state does not match.
-		clif->status_change(&sd->bl, SI_SKE, iMap->night_flag, 0, 0, 0, 0); //New night effect by dynamix [Skotlex]
-		sd->state.night = iMap->night_flag;
+	if (sd->state.night != map->night_flag && maplist[sd->bl.m].flag.nightenabled) { //Night/day state does not match.
+		clif->status_change(&sd->bl, SI_SKE, map->night_flag, 0, 0, 0, 0); //New night effect by dynamix [Skotlex]
+		sd->state.night = map->night_flag;
 		return 1;
 	}
 	return 0;
@@ -9323,18 +9305,17 @@ static int pc_daynight_timer_sub(struct map_session_data *sd,va_list ap) {
  * timer to do the day [Yor]
  * data: 0 = called by timer, 1 = gmcommand/script
  *------------------------------------------------*/
-int map_day_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+int map_day_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	char tmp_soutput[1024];
 
-	if (data == 0 && battle_config.day_duration <= 0)	// if we want a day
+	if (data == 0 && battle_config.day_duration <= 0) // if we want a day
 		return 0;
 
-	if (!iMap->night_flag)
+	if (!map->night_flag)
 		return 0; //Already day.
 
-	iMap->night_flag = 0; // 0=day, 1=night [Yor]
-	iMap->map_foreachpc(pc_daynight_timer_sub);
+	map->night_flag = 0; // 0=day, 1=night [Yor]
+	map->map_foreachpc(pc_daynight_timer_sub);
 	strcpy(tmp_soutput, (data == 0) ? msg_txt(502) : msg_txt(60)); // The day has arrived!
 	intif->broadcast(tmp_soutput, strlen(tmp_soutput) + 1, BC_DEFAULT);
 	return 0;
@@ -9344,18 +9325,17 @@ int map_day_timer(int tid, unsigned int tick, int id, intptr_t data)
  * timer to do the night [Yor]
  * data: 0 = called by timer, 1 = gmcommand/script
  *------------------------------------------------*/
-int map_night_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+int map_night_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	char tmp_soutput[1024];
 
-	if (data == 0 && battle_config.night_duration <= 0)	// if we want a night
+	if (data == 0 && battle_config.night_duration <= 0) // if we want a night
 		return 0;
 
-	if (iMap->night_flag)
+	if (map->night_flag)
 		return 0; //Already nigth.
 
-	iMap->night_flag = 1; // 0=day, 1=night [Yor]
-	iMap->map_foreachpc(pc_daynight_timer_sub);
+	map->night_flag = 1; // 0=day, 1=night [Yor]
+	map->map_foreachpc(pc_daynight_timer_sub);
 	strcpy(tmp_soutput, (data == 0) ? msg_txt(503) : msg_txt(59)); // The night has fallen...
 	intif->broadcast(tmp_soutput, strlen(tmp_soutput) + 1, BC_DEFAULT);
 	return 0;
@@ -9417,12 +9397,11 @@ bool pc_can_use_command(struct map_session_data *sd, const char *command) {
 	return atcommand->can_use(sd,command);
 }
 
-static int pc_charm_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+static int pc_charm_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	struct map_session_data *sd;
 	int i, type;
 
-	if( (sd=(struct map_session_data *)iMap->id2sd(id)) == NULL || sd->bl.type!=BL_PC )
+	if( (sd=(struct map_session_data *)map->id2sd(id)) == NULL || sd->bl.type!=BL_PC )
 		return 1;
 
 	ARR_FIND(1, 5, type, sd->charm[type] > 0);
@@ -9907,11 +9886,11 @@ int pc_readdb(void) {
 	FILE *fp;
 	char line[24000],*p;
 
-    //reset
+	//reset
 	memset(exp_table,0,sizeof(exp_table));
 	memset(max_level,0,sizeof(max_level));
 
-	sprintf(line, "%s/"DBPATH"exp.txt", iMap->db_path);
+	sprintf(line, "%s/"DBPATH"exp.txt", map->db_path);
 
 	fp=fopen(line, "r");
 	if(fp==NULL){
@@ -9989,13 +9968,13 @@ int pc_readdb(void) {
 		if (!max_level[j][1])
 			ShowWarning("Class %s (%d) does not has a job exp table.\n", pc->job_name(i), i);
 	}
-	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s/"DBPATH"%s"CL_RESET"'.\n",count,iMap->db_path,"exp.txt");
+	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s/"DBPATH"%s"CL_RESET"'.\n",count,map->db_path,"exp.txt");
 	count = 0;
 	// Reset and read skilltree
 	memset(skill_tree,0,sizeof(skill_tree));
 	pc_read_skill_tree();
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
-	sv->readdb(iMap->db_path, "re/level_penalty.txt", ',', 4, 4, -1, &pc_readdb_levelpenalty);
+	sv->readdb(map->db_path, "re/level_penalty.txt", ',', 4, 4, -1, &pc_readdb_levelpenalty);
 	for( k=1; k < 3; k++ ){ // fill in the blanks
 		for( j = 0; j < RC_MAX; j++ ){
 			int tmp = 0;
@@ -10017,7 +9996,7 @@ int pc_readdb(void) {
 			for(k=0;k<ELE_MAX;k++)
 				attr_fix_table[i][j][k]=100;
 
-	sprintf(line, "%s/"DBPATH"attr_fix.txt", iMap->db_path);
+	sprintf(line, "%s/"DBPATH"attr_fix.txt", map->db_path);
 
 	fp=fopen(line,"r");
 	if(fp==NULL){
@@ -10061,13 +10040,13 @@ int pc_readdb(void) {
 		}
 	}
 	fclose(fp);
-	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s/"DBPATH"%s"CL_RESET"'.\n",count,iMap->db_path,"attr_fix.txt");
+	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s/"DBPATH"%s"CL_RESET"'.\n",count,map->db_path,"attr_fix.txt");
 	count = 0;
-    // reset then read statspoint
+	// reset then read statspoint
 	memset(statp,0,sizeof(statp));
 	i=1;
 
-	sprintf(line, "%s/"DBPATH"statpoint.txt", iMap->db_path);
+	sprintf(line, "%s/"DBPATH"statpoint.txt", map->db_path);
 	fp=fopen(line,"r");
 	if(fp == NULL){
 		ShowWarning("Can't read '"CL_WHITE"%s"CL_RESET"'... Generating DB.\n",line);
@@ -10088,7 +10067,7 @@ int pc_readdb(void) {
 		}
 		fclose(fp);
 
-		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s/"DBPATH"%s"CL_RESET"'.\n",count,iMap->db_path,"statpoint.txt");
+		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s/"DBPATH"%s"CL_RESET"'.\n",count,map->db_path,"statpoint.txt");
 	}
 	// generate the remaining parts of the db if necessary
 	k = battle_config.use_statpoint_table; //save setting
@@ -10164,10 +10143,10 @@ int do_init_pc(void) {
 	timer->add_func_list(pc->endautobonus, "pc->endautobonus");
 	timer->add_func_list(pc_charm_timer, "pc_charm_timer");
 
-	timer->add(timer->gettick() + iMap->autosave_interval, pc_autosave, 0, 0);
+	timer->add(timer->gettick() + map->autosave_interval, pc_autosave, 0, 0);
 
 	// 0=day, 1=night [Yor]
-	iMap->night_flag = battle_config.night_at_start ? 1 : 0;
+	map->night_flag = battle_config.night_at_start ? 1 : 0;
 
 	if (battle_config.day_duration > 0 && battle_config.night_duration > 0) {
 		int day_duration = battle_config.day_duration;
@@ -10176,8 +10155,8 @@ int do_init_pc(void) {
 		timer->add_func_list(pc->map_day_timer, "pc->map_day_timer");
 		timer->add_func_list(pc->map_night_timer, "pc->map_night_timer");
 
-		pc->day_timer_tid   = timer->add_interval(timer->gettick() + (iMap->night_flag ? 0 : day_duration) + night_duration, pc->map_day_timer,   0, 0, day_duration + night_duration);
-		pc->night_timer_tid = timer->add_interval(timer->gettick() + day_duration + (iMap->night_flag ? night_duration : 0), pc->map_night_timer, 0, 0, day_duration + night_duration);
+		pc->day_timer_tid   = timer->add_interval(timer->gettick() + (map->night_flag ? 0 : day_duration) + night_duration, pc->map_day_timer,   0, 0, day_duration + night_duration);
+		pc->night_timer_tid = timer->add_interval(timer->gettick() + day_duration + (map->night_flag ? night_duration : 0), pc->map_night_timer, 0, 0, day_duration + night_duration);
 	}
 
 	do_init_pc_groups();

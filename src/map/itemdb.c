@@ -1382,7 +1382,7 @@ void itemdb_read_combos() {
 	char filepath[256];
 	FILE* fp;
 	
-	sprintf(filepath, "%s/%s", iMap->db_path, DBPATH"item_combo_db.txt");
+	sprintf(filepath, "%s/%s", map->db_path, DBPATH"item_combo_db.txt");
 	
 	if ((fp = fopen(filepath, "r")) == NULL) {
 		ShowError("itemdb_read_combos: File not found \"%s\".\n", filepath);
@@ -1626,7 +1626,7 @@ int itemdb_parse_dbrow(char** str, const char* source, int line, int scriptopt) 
 
 	id->weight = atoi(str[6]);
 #ifdef RENEWAL
-	if( iMap->db_use_sql_item_db ) {
+	if( map->db_use_sql_item_db ) {
 		id->atk = atoi(str[7]);
 		id->matk = atoi(str[8]);
 		offset += 1;
@@ -1656,7 +1656,7 @@ int itemdb_parse_dbrow(char** str, const char* source, int line, int scriptopt) 
 
 	id->wlv = cap_value(atoi(str[15+offset]), REFINE_TYPE_ARMOR, REFINE_TYPE_MAX);
 #ifdef RENEWAL
-	if( iMap->db_use_sql_item_db ) {
+	if( map->db_use_sql_item_db ) {
 		id->elv = atoi(str[16+offset]);
 		id->elvmax = atoi(str[17+offset]);
 		offset += 1;
@@ -1714,7 +1714,7 @@ int itemdb_readdb(void)
 		char filepath[256];
 		FILE* fp;
 
-		sprintf(filepath, "%s/%s", iMap->db_path, filename[fi]);
+		sprintf(filepath, "%s/%s", map->db_path, filename[fi]);
 		fp = fopen(filepath, "r");
 		if( fp == NULL ) {
 			ShowWarning("itemdb_readdb: File not found \"%s\", skipping.\n", filepath);
@@ -1821,12 +1821,12 @@ int itemdb_readdb(void)
 int itemdb_read_sqldb(void) {
 
 	const char* item_db_name[] = {
-								#ifdef RENEWAL
-									iMap->item_db_re_db,
-								#else
-									iMap->item_db_db,
-								#endif
-									iMap->item_db2_db };
+#ifdef RENEWAL
+		map->item_db_re_db,
+#else // not RENEWAL
+		map->item_db_db,
+#endif // RENEWAL
+		map->item_db2_db };
 	int fi;
 	
 	for( fi = 0; fi < ARRAYLENGTH(item_db_name); ++fi ) {
@@ -1889,9 +1889,8 @@ uint64 itemdb_unique_id(int8 flag, int64 value) {
 	return ++item_uid;
 }
 int itemdb_uid_load() {
-
 	char * uid;
-	if (SQL_ERROR == SQL->Query(mmysql_handle, "SELECT `value` FROM `%s` WHERE `varname`='unique_id'",iMap->interreg_db))
+	if (SQL_ERROR == SQL->Query(mmysql_handle, "SELECT `value` FROM `%s` WHERE `varname`='unique_id'",map->interreg_db))
 		Sql_ShowDebug(mmysql_handle);
 
 	if( SQL_SUCCESS != SQL->NextRow(mmysql_handle) ) {
@@ -1914,7 +1913,7 @@ void itemdb_read(void) {
 	int i;
 	DBData prev;
 	
-	if (iMap->db_use_sql_item_db)
+	if (map->db_use_sql_item_db)
 		itemdb->read_sqldb();
 	else
 		itemdb->readdb();
@@ -1933,12 +1932,12 @@ void itemdb_read(void) {
 	itemdb->read_chains();
 	itemdb->read_packages();
 	
-	sv->readdb(iMap->db_path, "item_avail.txt",         ',', 2, 2, -1, itemdb->read_itemavail);
-	sv->readdb(iMap->db_path, DBPATH"item_trade.txt",   ',', 3, 3, -1, itemdb->read_itemtrade);
-	sv->readdb(iMap->db_path, "item_delay.txt",         ',', 2, 2, -1, itemdb->read_itemdelay);
-	sv->readdb(iMap->db_path, "item_stack.txt",         ',', 3, 3, -1, itemdb->read_stack);
-	sv->readdb(iMap->db_path, DBPATH"item_buyingstore.txt",   ',', 1, 1, -1, itemdb->read_buyingstore);
-	sv->readdb(iMap->db_path, "item_nouse.txt",		 ',', 3, 3, -1, itemdb->read_nouse);
+	sv->readdb(map->db_path, "item_avail.txt",             ',', 2, 2, -1, itemdb->read_itemavail);
+	sv->readdb(map->db_path, DBPATH"item_trade.txt",       ',', 3, 3, -1, itemdb->read_itemtrade);
+	sv->readdb(map->db_path, "item_delay.txt",             ',', 2, 2, -1, itemdb->read_itemdelay);
+	sv->readdb(map->db_path, "item_stack.txt",             ',', 3, 3, -1, itemdb->read_stack);
+	sv->readdb(map->db_path, DBPATH"item_buyingstore.txt", ',', 1, 1, -1, itemdb->read_buyingstore);
+	sv->readdb(map->db_path, "item_nouse.txt",             ',', 3, 3, -1, itemdb->read_nouse);
 	
 	itemdb->uid_load();
 }

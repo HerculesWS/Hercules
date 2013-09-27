@@ -321,13 +321,12 @@ int storage_storagegettocart(struct map_session_data* sd, int index, int amount)
 /*==========================================
  * Modified By Valaris to save upon closing [massdriller]
  *------------------------------------------*/
-void storage_storageclose(struct map_session_data* sd)
-{
+void storage_storageclose(struct map_session_data* sd) {
 	nullpo_retv(sd);
 
 	clif->storageclose(sd);
 
-	if( iMap->save_settings&4 )
+	if( map->save_settings&4 )
 		chrif->save(sd,0); //Invokes the storage saving as well.
 
 	sd->state.storage_flag = 0;
@@ -336,11 +335,10 @@ void storage_storageclose(struct map_session_data* sd)
 /*==========================================
  * When quitting the game.
  *------------------------------------------*/
-void storage_storage_quit(struct map_session_data* sd, int flag)
-{
+void storage_storage_quit(struct map_session_data* sd, int flag) {
 	nullpo_retv(sd);
 	
-	if (iMap->save_settings&4)
+	if (map->save_settings&4)
 		chrif->save(sd, flag); //Invokes the storage saving as well.
 
 	sd->state.storage_flag = 0;
@@ -684,17 +682,15 @@ int storage_guild_storagesaved(int guild_id)
 }
 
 //Close storage for sd and save it
-int storage_guild_storageclose(struct map_session_data* sd)
-{
+int storage_guild_storageclose(struct map_session_data* sd) {
 	struct guild_storage *stor;
 
 	nullpo_ret(sd);
 	nullpo_ret(stor=gstorage->id2storage2(sd->status.guild_id));
 
 	clif->storageclose(sd);
-	if (stor->storage_status)
-	{
-		if (iMap->save_settings&4)
+	if (stor->storage_status) {
+		if (map->save_settings&4)
 			chrif->save(sd, 0); //This one also saves the storage. [Skotlex]
 		else
 			gstorage->save(sd->status.account_id, sd->status.guild_id,0);
@@ -705,25 +701,24 @@ int storage_guild_storageclose(struct map_session_data* sd)
 	return 0;
 }
 
-int storage_guild_storage_quit(struct map_session_data* sd, int flag)
-{
+int storage_guild_storage_quit(struct map_session_data* sd, int flag) {
 	struct guild_storage *stor;
 
 	nullpo_ret(sd);
 	nullpo_ret(stor=gstorage->id2storage2(sd->status.guild_id));
 	
-	if(flag)
-	{	//Only during a guild break flag is 1 (don't save storage)
+	if(flag) {
+		//Only during a guild break flag is 1 (don't save storage)
 		sd->state.storage_flag = 0;
 		stor->storage_status = 0;
 		clif->storageclose(sd);
-		if (iMap->save_settings&4)
+		if (map->save_settings&4)
 			chrif->save(sd,0);
 		return 0;
 	}
 
 	if(stor->storage_status) {
-		if (iMap->save_settings&4)
+		if (map->save_settings&4)
 			chrif->save(sd,0);
 		else
 			gstorage->save(sd->status.account_id,sd->status.guild_id,1);

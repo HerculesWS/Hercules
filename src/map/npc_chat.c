@@ -379,7 +379,7 @@ BUILDIN(defpattern) {
 	int setid = script_getnum(st,2);
 	const char* pattern = script_getstr(st,3);
 	const char* label = script_getstr(st,4);
-	struct npc_data* nd = (struct npc_data *)iMap->id2bl(st->oid);
+	struct npc_data* nd = (struct npc_data *)map->id2bl(st->oid);
 	
 	npc_chat->def_pattern(nd, setid, pattern, label);
 
@@ -388,7 +388,7 @@ BUILDIN(defpattern) {
 
 BUILDIN(activatepset) {
 	int setid = script_getnum(st,2);
-	struct npc_data* nd = (struct npc_data *)iMap->id2bl(st->oid);
+	struct npc_data* nd = (struct npc_data *)map->id2bl(st->oid);
 	
 	npc_chat->activate_pcreset(nd, setid);
 
@@ -397,7 +397,7 @@ BUILDIN(activatepset) {
 
 BUILDIN(deactivatepset) {
 	int setid = script_getnum(st,2);
-	struct npc_data* nd = (struct npc_data *)iMap->id2bl(st->oid);
+	struct npc_data* nd = (struct npc_data *)map->id2bl(st->oid);
 	
 	npc_chat->deactivate_pcreset(nd, setid);
 	
@@ -406,7 +406,7 @@ BUILDIN(deactivatepset) {
 
 BUILDIN(deletepset) {
 	int setid = script_getnum(st,2);
-	struct npc_data* nd = (struct npc_data *)iMap->id2bl(st->oid);
+	struct npc_data* nd = (struct npc_data *)map->id2bl(st->oid);
 	
 	npc_chat->delete_pcreset(nd, setid);
 

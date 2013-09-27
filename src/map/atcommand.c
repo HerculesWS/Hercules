@@ -384,8 +384,7 @@ return false;\
 /*==========================================
  * @rura, @warp, @mapmove
  *------------------------------------------*/
-ACMD(mapmove)
-{
+ACMD(mapmove) {
 	char map_name[MAP_NAME_LENGTH_EXT];
 	unsigned short mapindex;
 	short x = 0, y = 0;
@@ -405,17 +404,17 @@ ACMD(mapmove)
 	
 	mapindex = mapindex_name2id(map_name);
 	if (mapindex)
-		m = iMap->mapindex2mapid(mapindex);
+		m = map->mapindex2mapid(mapindex);
 	
 	if (!mapindex || m < 0) { // m < 0 means on different server or that map is disabled! [Kevin]
 		clif->message(fd, msg_txt(1)); // Map not found.
 		return false;
 	}
 	
-	if ((x || y) && iMap->getcell(m, x, y, CELL_CHKNOPASS) && pc->get_group_level(sd) < battle_config.gm_ignore_warpable_area)
-  	{	//This is to prevent the pc->setpos call from printing an error.
+	if ((x || y) && map->getcell(m, x, y, CELL_CHKNOPASS) && pc->get_group_level(sd) < battle_config.gm_ignore_warpable_area) {
+		//This is to prevent the pc->setpos call from printing an error.
 		clif->message(fd, msg_txt(2));
-		if (!iMap->search_freecell(NULL, m, &x, &y, 10, 10, 1))
+		if (!map->search_freecell(NULL, m, &x, &y, 10, 10, 1))
 			x = y = 0; //Invalid cell, use random spot.
 	}
 	if (maplist[m].flag.nowarpto && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
@@ -438,8 +437,7 @@ ACMD(mapmove)
 /*==========================================
  * Displays where a character is. Corrected version by Silent. [Skotlex]
  *------------------------------------------*/
-ACMD(where)
-{
+ACMD(where) {
 	struct map_session_data* pl_sd;
 	
 	nullpo_retr(-1, sd);
@@ -450,7 +448,7 @@ ACMD(where)
 		return false;
 	}
 	
-	pl_sd = iMap->nick2sd(atcmd_player_name);
+	pl_sd = map->nick2sd(atcmd_player_name);
 	if (pl_sd == NULL ||
 	    strncmp(pl_sd->status.name, atcmd_player_name, NAME_LENGTH) != 0 ||
 	    (pc->has_permission(pl_sd, PC_PERM_HIDE_SESSION) && pc->get_group_level(pl_sd) > pc->get_group_level(sd) && !pc->has_permission(sd, PC_PERM_WHO_DISPLAY_AID))
@@ -478,7 +476,7 @@ ACMD(jumpto) {
 		return false;
 	}
 	
-	if((pl_sd=iMap->nick2sd((char *)message)) == NULL && (pl_sd=iMap->charid2sd(atoi(message))) == NULL) {
+	if((pl_sd=map->nick2sd((char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
 	}
@@ -529,10 +527,10 @@ ACMD(jump)
 		return false;
 	}
 	
-	if ((x || y) && iMap->getcell(sd->bl.m, x, y, CELL_CHKNOPASS))
-  	{	//This is to prevent the pc->setpos call from printing an error.
+	if ((x || y) && map->getcell(sd->bl.m, x, y, CELL_CHKNOPASS)) {
+		//This is to prevent the pc->setpos call from printing an error.
 		clif->message(fd, msg_txt(2));
-		if (!iMap->search_freecell(NULL, sd->bl.m, &x, &y, 10, 10, 1))
+		if (!map->search_freecell(NULL, sd->bl.m, &x, &y, 10, 10, 1))
 			x = y = 0; //Invalid cell, use random spot.
 	}
 	
@@ -546,8 +544,7 @@ ACMD(jump)
  * Display list of online characters with
  * various info.
  *------------------------------------------*/
-ACMD(who)
-{
+ACMD(who) {
 	struct map_session_data *pl_sd = NULL;
 	struct s_mapiterator *iter = NULL;
 	char map_name[MAP_NAME_LENGTH_EXT] = "";
@@ -566,7 +563,7 @@ ACMD(who)
 	nullpo_retr(-1, sd);
 	
 	if (strstr(command, "map") != NULL) {
-		if (sscanf(message, "%15s %23s", map_name, player_name) < 1 || (map_id = iMap->mapname2mapid(map_name)) < 0)
+		if (sscanf(message, "%15s %23s", map_name, player_name) < 1 || (map_id = map->mapname2mapid(map_name)) < 0)
 			map_id = sd->bl.m;
 	} else {
 		sscanf(message, "%23s", player_name);
@@ -757,7 +754,7 @@ ACMD(load) {
 	
 	nullpo_retr(-1, sd);
 	
-	m = iMap->mapindex2mapid(sd->status.save_point.map);
+	m = map->mapindex2mapid(sd->status.save_point.map);
 	if (m >= 0 && maplist[m].flag.nowarpto && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 		clif->message(fd, msg_txt(249)); // You are not authorized to warp to your save map.
 		return false;
@@ -908,7 +905,7 @@ ACMD(hide) {
 			sd->pvp_timer = timer->add( timer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0 );
 		}
 		//bugreport:2266
-		iMap->foreachinmovearea(clif->insight, &sd->bl, AREA_SIZE, sd->bl.x, sd->bl.y, BL_ALL, &sd->bl);
+		map->foreachinmovearea(clif->insight, &sd->bl, AREA_SIZE, sd->bl.x, sd->bl.y, BL_ALL, &sd->bl);
 	} else {
 		sd->sc.option |= OPTION_INVISIBLE;
 		sd->vd.class_ = INVISIBLE_CLASS;
@@ -1476,15 +1473,15 @@ ACMD(pvpoff) {
 		return false;
 	}
 	
-	iMap->zone_change2(sd->bl.m,maplist[sd->bl.m].prev_zone);
+	map->zone_change2(sd->bl.m,maplist[sd->bl.m].prev_zone);
 	maplist[sd->bl.m].flag.pvp = 0;
 	
 	if (!battle_config.pk_mode) {
 		clif->map_property_mapall(sd->bl.m, MAPPROPERTY_NOTHING);
 		clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
 	}
-	iMap->foreachinmap(atcommand_pvpoff_sub,sd->bl.m, BL_PC);
-	iMap->foreachinmap(atcommand_stopattack,sd->bl.m, BL_CHAR, 0);
+	map->foreachinmap(atcommand_pvpoff_sub,sd->bl.m, BL_PC);
+	map->foreachinmap(atcommand_stopattack,sd->bl.m, BL_CHAR, 0);
 	clif->message(fd, msg_txt(31)); // PvP: Off.
 	return true;
 }
@@ -1514,13 +1511,13 @@ ACMD(pvpon) {
 		return false;
 	}
 	
-	iMap->zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_PVP_NAME));
+	map->zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_PVP_NAME));
 	maplist[sd->bl.m].flag.pvp = 1;
 	
 	if (!battle_config.pk_mode) {// display pvp circle and rank
 		clif->map_property_mapall(sd->bl.m, MAPPROPERTY_FREEPVPZONE);
 		clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
-		iMap->foreachinmap(atcommand_pvpon_sub,sd->bl.m, BL_PC);
+		map->foreachinmap(atcommand_pvpon_sub,sd->bl.m, BL_PC);
 	}
 	
 	clif->message(fd, msg_txt(32)); // PvP: On.
@@ -1539,11 +1536,11 @@ ACMD(gvgoff) {
 		return false;
 	}
 	
-	iMap->zone_change2(sd->bl.m,maplist[sd->bl.m].prev_zone);
+	map->zone_change2(sd->bl.m,maplist[sd->bl.m].prev_zone);
 	maplist[sd->bl.m].flag.gvg = 0;
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_NOTHING);
 	clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
-	iMap->foreachinmap(atcommand_stopattack,sd->bl.m, BL_CHAR, 0);
+	map->foreachinmap(atcommand_stopattack,sd->bl.m, BL_CHAR, 0);
 	clif->message(fd, msg_txt(33)); // GvG: Off.
 	
 	return true;
@@ -1560,7 +1557,7 @@ ACMD(gvgon) {
 		return false;
 	}
 	
-	iMap->zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_GVG_NAME));
+	map->zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_GVG_NAME));
 	maplist[sd->bl.m].flag.gvg = 1;
 	clif->map_property_mapall(sd->bl.m, MAPPROPERTY_AGITZONE);
 	clif->maptypeproperty2(&sd->bl,ALL_SAMEMAP);
@@ -1852,7 +1849,7 @@ ACMD(go)
 	}
 	
 	if (town >= 0 && town < ARRAYLENGTH(data)) {
-		m = iMap->mapname2mapid(data[town].map);
+		m = map->mapname2mapid(data[town].map);
 		if (m >= 0 && maplist[m].flag.nowarpto && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
 			clif->message(fd, msg_txt(247));
 			return false;
@@ -1952,7 +1949,7 @@ ACMD(monster)
 	count = 0;
 	range = (int)sqrt((float)number) +2; // calculation of an odd number (+ 4 area around)
 	for (i = 0; i < number; i++) {
-		iMap->search_freecell(&sd->bl, 0, &mx,  &my, range, range, 0);
+		map->search_freecell(&sd->bl, 0, &mx,  &my, range, range, 0);
 		k = mob->once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, eventname, size, AI_NONE);
 		count += (k != 0) ? 1 : 0;
 	}
@@ -1993,8 +1990,7 @@ static int atkillmonster_sub(struct block_list *bl, va_list ap)
 	return 1;
 }
 
-ACMD(killmonster)
-{
+ACMD(killmonster) {
 	int map_id, drop_flag;
 	char map_name[MAP_NAME_LENGTH_EXT];
 	nullpo_retr(-1, sd);
@@ -2004,13 +2000,13 @@ ACMD(killmonster)
 	if (!message || !*message || sscanf(message, "%15s", map_name) < 1)
 		map_id = sd->bl.m;
 	else {
-		if ((map_id = iMap->mapname2mapid(map_name)) < 0)
+		if ((map_id = map->mapname2mapid(map_name)) < 0)
 			map_id = sd->bl.m;
 	}
 	
 	drop_flag = strcmp(command+1, "killmonster2");
 	
-	iMap->foreachinmap(atkillmonster_sub, map_id, BL_MOB, -drop_flag);
+	map->foreachinmap(atkillmonster_sub, map_id, BL_MOB, -drop_flag);
 	
 	clif->message(fd, msg_txt(165)); // All monsters killed!
 	
@@ -2193,8 +2189,7 @@ ACMD(memo)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(gat)
-{
+ACMD(gat) {
 	int y;
 	nullpo_retr(-1, sd);
 	
@@ -2203,11 +2198,11 @@ ACMD(gat)
 	for (y = 2; y >= -2; y--) {
 		sprintf(atcmd_output, "%s (x= %d, y= %d) %02X %02X %02X %02X %02X",
 				maplist[sd->bl.m].name, sd->bl.x - 2, sd->bl.y + y,
-				iMap->getcell(sd->bl.m, sd->bl.x - 2, sd->bl.y + y, CELL_GETTYPE),
-				iMap->getcell(sd->bl.m, sd->bl.x - 1, sd->bl.y + y, CELL_GETTYPE),
-				iMap->getcell(sd->bl.m, sd->bl.x,     sd->bl.y + y, CELL_GETTYPE),
-				iMap->getcell(sd->bl.m, sd->bl.x + 1, sd->bl.y + y, CELL_GETTYPE),
-				iMap->getcell(sd->bl.m, sd->bl.x + 2, sd->bl.y + y, CELL_GETTYPE));
+				map->getcell(sd->bl.m,  sd->bl.x - 2, sd->bl.y + y, CELL_GETTYPE),
+				map->getcell(sd->bl.m,  sd->bl.x - 1, sd->bl.y + y, CELL_GETTYPE),
+				map->getcell(sd->bl.m,  sd->bl.x,     sd->bl.y + y, CELL_GETTYPE),
+				map->getcell(sd->bl.m,  sd->bl.x + 1, sd->bl.y + y, CELL_GETTYPE),
+				map->getcell(sd->bl.m,  sd->bl.x + 2, sd->bl.y + y, CELL_GETTYPE));
 		
 		clif->message(fd, atcmd_output);
 	}
@@ -2687,8 +2682,7 @@ ACMD(recall) {
 		return false;
 	}
 	
-	if((pl_sd=iMap->nick2sd((char *)message)) == NULL && (pl_sd=iMap->charid2sd(atoi(message))) == NULL)
-	{
+	if((pl_sd=map->nick2sd((char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
 	}
@@ -2880,11 +2874,10 @@ ACMD(char_unban)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(night)
-{
+ACMD(night) {
 	nullpo_retr(-1, sd);
 	
-	if (iMap->night_flag != 1) {
+	if (map->night_flag != 1) {
 		pc->map_night_timer(pc->night_timer_tid, 0, 0, 1);
 	} else {
 		clif->message(fd, msg_txt(89)); // Night mode is already enabled.
@@ -2897,11 +2890,10 @@ ACMD(night)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(day)
-{
+ACMD(day) {
 	nullpo_retr(-1, sd);
 	
-	if (iMap->night_flag != 0) {
+	if (map->night_flag != 0) {
 		pc->map_day_timer(pc->day_timer_tid, 0, 0, 1);
 	} else {
 		clif->message(fd, msg_txt(90)); // Day mode is already enabled.
@@ -3033,8 +3025,7 @@ ACMD(kick)
 		return false;
 	}
 	
-	if((pl_sd=iMap->nick2sd((char *)message)) == NULL && (pl_sd=iMap->charid2sd(atoi(message))) == NULL)
-	{
+	if((pl_sd=map->nick2sd((char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
 	}
@@ -3282,15 +3273,14 @@ ACMD(breakguild)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(agitstart)
-{
+ACMD(agitstart) {
 	nullpo_retr(-1, sd);
-	if (iMap->agit_flag == 1) {
+	if (map->agit_flag == 1) {
 		clif->message(fd, msg_txt(73)); // War of Emperium is currently in progress.
 		return false;
 	}
 	
-	iMap->agit_flag = 1;
+	map->agit_flag = 1;
 	guild->agit_start();
 	clif->message(fd, msg_txt(72)); // War of Emperium has been initiated.
 	
@@ -3300,15 +3290,14 @@ ACMD(agitstart)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(agitstart2)
-{
+ACMD(agitstart2) {
 	nullpo_retr(-1, sd);
-	if (iMap->agit2_flag == 1) {
+	if (map->agit2_flag == 1) {
 		clif->message(fd, msg_txt(404)); // "War of Emperium SE is currently in progress."
 		return false;
 	}
 	
-	iMap->agit2_flag = 1;
+	map->agit2_flag = 1;
 	guild->agit2_start();
 	clif->message(fd, msg_txt(403)); // "War of Emperium SE has been initiated."
 	
@@ -3318,15 +3307,14 @@ ACMD(agitstart2)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(agitend)
-{
+ACMD(agitend) {
 	nullpo_retr(-1, sd);
-	if (iMap->agit_flag == 0) {
+	if (map->agit_flag == 0) {
 		clif->message(fd, msg_txt(75)); // War of Emperium is currently not in progress.
 		return false;
 	}
 	
-	iMap->agit_flag = 0;
+	map->agit_flag = 0;
 	guild->agit_end();
 	clif->message(fd, msg_txt(74)); // War of Emperium has been ended.
 	
@@ -3336,15 +3324,14 @@ ACMD(agitend)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(agitend2)
-{
+ACMD(agitend2) {
 	nullpo_retr(-1, sd);
-	if (iMap->agit2_flag == 0) {
+	if (map->agit2_flag == 0) {
 		clif->message(fd, msg_txt(406)); // "War of Emperium SE is currently not in progress."
 		return false;
 	}
 	
-	iMap->agit2_flag = 0;
+	map->agit2_flag = 0;
 	guild->agit2_end();
 	clif->message(fd, msg_txt(405)); // "War of Emperium SE has been ended."
 	
@@ -3354,11 +3341,10 @@ ACMD(agitend2)
 /*==========================================
  * @mapexit - shuts down the map server
  *------------------------------------------*/
-ACMD(mapexit)
-{
+ACMD(mapexit) {
 	nullpo_retr(-1, sd);
 	
-	iMap->do_shutdown();
+	map->do_shutdown();
 	return true;
 }
 
@@ -3615,7 +3601,7 @@ ACMD(reloadatcommand) {
 	
 	config_destroy(&run_test);
 	
-	if (conf_read_file(&run_test, iMap->ATCOMMAND_CONF_FILENAME)) {
+	if (conf_read_file(&run_test, map->ATCOMMAND_CONF_FILENAME)) {
 		clif->message(fd, msg_txt(1037)); // Error reading atcommand.conf, reload failed.
 		return false;
 	}
@@ -3635,7 +3621,7 @@ ACMD(reloadbattleconf)
 	struct Battle_Config prev_config;
 	memcpy(&prev_config, &battle_config, sizeof(prev_config));
 	
-	battle->config_read(iMap->BATTLE_CONF_FILENAME);
+	battle->config_read(map->BATTLE_CONF_FILENAME);
 	
 	if( prev_config.item_rate_mvp          != battle_config.item_rate_mvp
 	   ||  prev_config.item_rate_common       != battle_config.item_rate_common
@@ -3696,8 +3682,7 @@ ACMD(reloadpcdb)
 /*==========================================
  * @reloadscript - reloads all scripts (npcs, warps, mob spawns, ...)
  *------------------------------------------*/
-ACMD(reloadscript)
-{
+ACMD(reloadscript) {
 	struct s_mapiterator* iter;
 	struct map_session_data* pl_sd;
 
@@ -3726,7 +3711,7 @@ ACMD(reloadscript)
 	mapit->free(iter);
 	
 	flush_fifos();
-	iMap->reloadnpc(true); // reload config files seeking for npcs
+	map->reloadnpc(true); // reload config files seeking for npcs
 	script->reload();
 	npc->reload();
 	
@@ -3769,9 +3754,9 @@ ACMD(mapinfo) {
 	
 	if (mapname[0] == '\0') {
 		safestrncpy(mapname, mapindex_id2name(sd->mapindex), MAP_NAME_LENGTH);
-		m_id =  iMap->mapindex2mapid(sd->mapindex);
+		m_id =  map->mapindex2mapid(sd->mapindex);
 	} else {
-		m_id = iMap->mapname2mapid(mapname);
+		m_id = map->mapname2mapid(mapname);
 	}
 	
 	if (m_id < 0) {
@@ -3789,7 +3774,7 @@ ACMD(mapinfo) {
 		if( pl_sd->mapindex == m_index ) {
 			if( pl_sd->state.vending )
 				vend_num++;
-			else if( (cd = (struct chat_data*)iMap->id2bl(pl_sd->chatID)) != NULL && cd->usersd[0] == pl_sd )
+			else if( (cd = (struct chat_data*)map->id2bl(pl_sd->chatID)) != NULL && cd->usersd[0] == pl_sd )
 				chat_num++;
 		}
 	}
@@ -3968,7 +3953,7 @@ ACMD(mapinfo) {
 			iter = mapit_getallusers();
 			for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 			{
-				if ((cd = (struct chat_data*)iMap->id2bl(pl_sd->chatID)) != NULL &&
+				if ((cd = (struct chat_data*)map->id2bl(pl_sd->chatID)) != NULL &&
 					pl_sd->mapindex == m_index &&
 					cd->usersd[0] == pl_sd)
 				{
@@ -4058,8 +4043,7 @@ ACMD(mount_peco)
 /*==========================================
  *Spy Commands by Syrus22
  *------------------------------------------*/
-ACMD(guildspy)
-{
+ACMD(guildspy) {
 	char guild_name[NAME_LENGTH];
 	struct guild *g;
 	nullpo_retr(-1, sd);
@@ -4067,7 +4051,7 @@ ACMD(guildspy)
 	memset(guild_name, '\0', sizeof(guild_name));
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 	
-	if (!iMap->enable_spy)
+	if (!map->enable_spy)
 	{
 		clif->message(fd, msg_txt(1125)); // The mapserver has spy command support disabled.
 		return false;
@@ -4099,8 +4083,7 @@ ACMD(guildspy)
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(partyspy)
-{
+ACMD(partyspy) {
 	char party_name[NAME_LENGTH];
 	struct party_data *p;
 	nullpo_retr(-1, sd);
@@ -4108,7 +4091,7 @@ ACMD(partyspy)
 	memset(party_name, '\0', sizeof(party_name));
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 	
-	if (!iMap->enable_spy)
+	if (!map->enable_spy)
 	{
 		clif->message(fd, msg_txt(1125)); // The mapserver has spy command support disabled.
 		return false;
@@ -4170,8 +4153,7 @@ ACMD(repairall)
 /*==========================================
  * @nuke [Valaris]
  *------------------------------------------*/
-ACMD(nuke)
-{
+ACMD(nuke) {
 	struct map_session_data *pl_sd;
 	nullpo_retr(-1, sd);
 	
@@ -4182,7 +4164,7 @@ ACMD(nuke)
 		return false;
 	}
 	
-	if ((pl_sd = iMap->nick2sd(atcmd_player_name)) != NULL) {
+	if ((pl_sd = map->nick2sd(atcmd_player_name)) != NULL) {
 		if (pc->get_group_level(sd) >= pc->get_group_level(pl_sd)) { // you can kill only lower or same GM level
 			skill->castend_nodamage_id(&pl_sd->bl, &pl_sd->bl, NPC_SELFDESTRUCTION, 99, timer->gettick(), 0);
 			clif->message(fd, msg_txt(109)); // Player has been nuked!
@@ -4372,8 +4354,7 @@ char* txt_time(unsigned int duration)
  * @time/@date/@serverdate/@servertime: Display the date/time of the server (by [Yor]
  * Calculation management of GM modification (@day/@night GM commands) is done
  *------------------------------------------*/
-ACMD(servertime)
-{
+ACMD(servertime) {
 	const struct TimerData * timer_data;
 	const struct TimerData * timer_data2;
 	time_t time_server;  // variable for number of seconds (used with time() function)
@@ -4390,53 +4371,51 @@ ACMD(servertime)
 	clif->message(fd, temp);
 	
 	if (battle_config.night_duration == 0 && battle_config.day_duration == 0) {
-		if (iMap->night_flag == 0)
+		if (map->night_flag == 0)
 			clif->message(fd, msg_txt(231)); // Game time: The game is in permanent daylight.
 		else
 			clif->message(fd, msg_txt(232)); // Game time: The game is in permanent night.
-	} else if (battle_config.night_duration == 0)
-		if (iMap->night_flag == 1) { // we start with night
+	} else if (battle_config.night_duration == 0) {
+		if (map->night_flag == 1) { // we start with night
 			timer_data = timer->get(pc->day_timer_tid);
 			sprintf(temp, msg_txt(233), txt_time(DIFF_TICK(timer_data->tick,timer->gettick())/1000)); // Game time: The game is actualy in night for %s.
 			clif->message(fd, temp);
 			clif->message(fd, msg_txt(234)); // Game time: After, the game will be in permanent daylight.
 		} else
 			clif->message(fd, msg_txt(231)); // Game time: The game is in permanent daylight.
-		else if (battle_config.day_duration == 0)
-			if (iMap->night_flag == 0) { // we start with day
-				timer_data = timer->get(pc->night_timer_tid);
-				sprintf(temp, msg_txt(235), txt_time(DIFF_TICK(timer_data->tick,timer->gettick())/1000)); // Game time: The game is actualy in daylight for %s.
-				clif->message(fd, temp);
-				clif->message(fd, msg_txt(236)); // Game time: After, the game will be in permanent night.
-			} else
-				clif->message(fd, msg_txt(232)); // Game time: The game is in permanent night.
-			else {
-				if (iMap->night_flag == 0) {
-					timer_data = timer->get(pc->night_timer_tid);
-					timer_data2 = timer->get(pc->day_timer_tid);
-					sprintf(temp, msg_txt(235), txt_time(DIFF_TICK(timer_data->tick,timer->gettick())/1000)); // Game time: The game is actualy in daylight for %s.
-					clif->message(fd, temp);
-					if (DIFF_TICK(timer_data->tick, timer_data2->tick) > 0)
-						sprintf(temp, msg_txt(237), txt_time(DIFF_TICK(timer_data->interval,DIFF_TICK(timer_data->tick,timer_data2->tick)) / 1000)); // Game time: After, the game will be in night for %s.
-					else
-						sprintf(temp, msg_txt(237), txt_time(DIFF_TICK(timer_data2->tick,timer_data->tick)/1000)); // Game time: After, the game will be in night for %s.
-					clif->message(fd, temp);
-					sprintf(temp, msg_txt(238), txt_time(timer_data->interval / 1000)); // Game time: A day cycle has a normal duration of %s.
-					clif->message(fd, temp);
-				} else {
-					timer_data = timer->get(pc->day_timer_tid);
-					timer_data2 = timer->get(pc->night_timer_tid);
-					sprintf(temp, msg_txt(233), txt_time(DIFF_TICK(timer_data->tick,timer->gettick()) / 1000)); // Game time: The game is actualy in night for %s.
-					clif->message(fd, temp);
-					if (DIFF_TICK(timer_data->tick,timer_data2->tick) > 0)
-						sprintf(temp, msg_txt(239), txt_time((timer_data->interval - DIFF_TICK(timer_data->tick, timer_data2->tick)) / 1000)); // Game time: After, the game will be in daylight for %s.
-					else
-						sprintf(temp, msg_txt(239), txt_time(DIFF_TICK(timer_data2->tick, timer_data->tick) / 1000)); // Game time: After, the game will be in daylight for %s.
-					clif->message(fd, temp);
-					sprintf(temp, msg_txt(238), txt_time(timer_data->interval / 1000)); // Game time: A day cycle has a normal duration of %s.
-					clif->message(fd, temp);
-				}
-			}
+	} else if (battle_config.day_duration == 0) {
+		if (map->night_flag == 0) { // we start with day
+			timer_data = timer->get(pc->night_timer_tid);
+			sprintf(temp, msg_txt(235), txt_time(DIFF_TICK(timer_data->tick,timer->gettick())/1000)); // Game time: The game is actualy in daylight for %s.
+			clif->message(fd, temp);
+			clif->message(fd, msg_txt(236)); // Game time: After, the game will be in permanent night.
+		} else
+			clif->message(fd, msg_txt(232)); // Game time: The game is in permanent night.
+	} else {
+		if (map->night_flag == 0) {
+			timer_data = timer->get(pc->night_timer_tid);
+			timer_data2 = timer->get(pc->day_timer_tid);
+			sprintf(temp, msg_txt(235), txt_time(DIFF_TICK(timer_data->tick,timer->gettick())/1000)); // Game time: The game is actualy in daylight for %s.
+			clif->message(fd, temp);
+			if (DIFF_TICK(timer_data->tick, timer_data2->tick) > 0)
+				sprintf(temp, msg_txt(237), txt_time(DIFF_TICK(timer_data->interval,DIFF_TICK(timer_data->tick,timer_data2->tick)) / 1000)); // Game time: After, the game will be in night for %s.
+			else
+				sprintf(temp, msg_txt(237), txt_time(DIFF_TICK(timer_data2->tick,timer_data->tick)/1000)); // Game time: After, the game will be in night for %s.
+			clif->message(fd, temp);
+		} else {
+			timer_data = timer->get(pc->day_timer_tid);
+			timer_data2 = timer->get(pc->night_timer_tid);
+			sprintf(temp, msg_txt(233), txt_time(DIFF_TICK(timer_data->tick,timer->gettick()) / 1000)); // Game time: The game is actualy in night for %s.
+			clif->message(fd, temp);
+			if (DIFF_TICK(timer_data->tick,timer_data2->tick) > 0)
+				sprintf(temp, msg_txt(239), txt_time((timer_data->interval - DIFF_TICK(timer_data->tick, timer_data2->tick)) / 1000)); // Game time: After, the game will be in daylight for %s.
+			else
+				sprintf(temp, msg_txt(239), txt_time(DIFF_TICK(timer_data2->tick, timer_data->tick) / 1000)); // Game time: After, the game will be in daylight for %s.
+			clif->message(fd, temp);
+		}
+		sprintf(temp, msg_txt(238), txt_time(timer_data->interval / 1000)); // Game time: A day cycle has a normal duration of %s.
+		clif->message(fd, temp);
+	}
 	
 	return true;
 }
@@ -4473,8 +4452,7 @@ static void get_jail_time(int jailtime, int* year, int* month, int* day, int* ho
  * @jail <char_name> by [Yor]
  * Special warp! No check with nowarp and nowarpto flag
  *------------------------------------------*/
-ACMD(jail)
-{
+ACMD(jail) {
 	struct map_session_data *pl_sd;
 	int x, y;
 	unsigned short m_index;
@@ -4487,7 +4465,7 @@ ACMD(jail)
 		return false;
 	}
 	
-	if ((pl_sd = iMap->nick2sd(atcmd_player_name)) == NULL) {
+	if ((pl_sd = map->nick2sd(atcmd_player_name)) == NULL) {
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
 	}
@@ -4528,8 +4506,7 @@ ACMD(jail)
  * @unjail/@discharge <char_name> by [Yor]
  * Special warp! No check with nowarp and nowarpto flag
  *------------------------------------------*/
-ACMD(unjail)
-{
+ACMD(unjail) {
 	struct map_session_data *pl_sd;
 	
 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
@@ -4539,7 +4516,7 @@ ACMD(unjail)
 		return false;
 	}
 	
-	if ((pl_sd = iMap->nick2sd(atcmd_player_name)) == NULL) {
+	if ((pl_sd = map->nick2sd(atcmd_player_name)) == NULL) {
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
 	}
@@ -4563,8 +4540,7 @@ ACMD(unjail)
 	return true;
 }
 
-ACMD(jailfor)
-{
+ACMD(jailfor) {
 	struct map_session_data *pl_sd = NULL;
 	int year, month, day, hour, minute, value;
 	char * modif_p;
@@ -4619,7 +4595,7 @@ ACMD(jailfor)
 		return false;
 	}
 	
-	if ((pl_sd = iMap->nick2sd(atcmd_player_name)) == NULL) {
+	if ((pl_sd = map->nick2sd(atcmd_player_name)) == NULL) {
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
 	}
@@ -5039,8 +5015,7 @@ ACMD(killer)
  * @killable by MouseJstr
  * enable other people killing you
  *------------------------------------------*/
-ACMD(killable)
-{
+ACMD(killable) {
 	nullpo_retr(-1, sd);
 	sd->state.killable = !sd->state.killable;
 	
@@ -5048,7 +5023,7 @@ ACMD(killable)
 		clif->message(fd, msg_txt(242));
 	else {
 		clif->message(fd, msg_txt(288));
-		iMap->foreachinrange(atcommand_stopattack,&sd->bl, AREA_SIZE, BL_CHAR, sd->bl.id);
+		map->foreachinrange(atcommand_stopattack,&sd->bl, AREA_SIZE, BL_CHAR, sd->bl.id);
 	}
 	return true;
 }
@@ -5079,8 +5054,7 @@ ACMD(skilloff) {
  * @npcmove by MouseJstr
  * move a npc
  *------------------------------------------*/
-ACMD(npcmove)
-{
+ACMD(npcmove) {
 	int x = 0, y = 0, m;
 	struct npc_data *nd = 0;
 	nullpo_retr(-1, sd);
@@ -5091,23 +5065,21 @@ ACMD(npcmove)
 		return false;
 	}
 	
-	if ((nd = npc->name2id(atcmd_player_name)) == NULL)
-	{
+	if ((nd = npc->name2id(atcmd_player_name)) == NULL) {
 		clif->message(fd, msg_txt(111)); // This NPC doesn't exist.
 		return false;
 	}
 	
-	if ((m=nd->bl.m) < 0 || nd->bl.prev == NULL)
-	{
+	if ((m=nd->bl.m) < 0 || nd->bl.prev == NULL) {
 		clif->message(fd, msg_txt(1154)); // NPC is not on this map.
 		return false;	//Not on a map.
 	}
 	
 	x = cap_value(x, 0, maplist[m].xs-1);
 	y = cap_value(y, 0, maplist[m].ys-1);
-	iMap->foreachinrange(clif->outsight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
-	iMap->moveblock(&nd->bl, x, y, timer->gettick());
-	iMap->foreachinrange(clif->insight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
+	map->foreachinrange(clif->outsight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
+	map->moveblock(&nd->bl, x, y, timer->gettick());
+	map->foreachinrange(clif->insight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
 	clif->message(fd, msg_txt(1155)); // NPC moved.
 	
 	return true;
@@ -5153,8 +5125,7 @@ ACMD(addwarp)
  * @follow by [MouseJstr]
  * Follow a player .. staying no more then 5 spaces away
  *------------------------------------------*/
-ACMD(follow)
-{
+ACMD(follow) {
 	struct map_session_data *pl_sd = NULL;
 	nullpo_retr(-1, sd);
 	
@@ -5167,7 +5138,7 @@ ACMD(follow)
 		return true;
 	}
 	
-	if ( (pl_sd = iMap->nick2sd((char *)message)) == NULL )
+	if ( (pl_sd = map->nick2sd((char *)message)) == NULL )
 	{
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
@@ -5371,8 +5342,7 @@ ACMD(skillid) {
  * @useskill by [MouseJstr]
  * A way of using skills without having to find them in the skills menu
  *------------------------------------------*/
-ACMD(useskill)
-{
+ACMD(useskill) {
 	struct map_session_data *pl_sd = NULL;
 	struct block_list *bl;
 	uint16 skill_id;
@@ -5385,8 +5355,9 @@ ACMD(useskill)
 		return false;
 	}
 	
-	if(!strcmp(target,"self")) pl_sd = sd; //quick keyword
-	else if ( (pl_sd = iMap->nick2sd(target)) == NULL ){
+	if(!strcmp(target,"self"))
+		pl_sd = sd; //quick keyword
+	else if ( (pl_sd = map->nick2sd(target)) == NULL ) {
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
 	}
@@ -5439,8 +5410,7 @@ ACMD(displayskill) {
  * @skilltree by [MouseJstr]
  * prints the skill tree for a player required to get to a skill
  *------------------------------------------*/
-ACMD(skilltree)
-{
+ACMD(skilltree) {
 	struct map_session_data *pl_sd = NULL;
 	uint16 skill_id;
 	int meets, j, c=0;
@@ -5453,8 +5423,7 @@ ACMD(skilltree)
 		return false;
 	}
 	
-	if ( (pl_sd = iMap->nick2sd(target)) == NULL )
-	{
+	if ( (pl_sd = map->nick2sd(target)) == NULL ) {
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
 	}
@@ -5492,8 +5461,7 @@ ACMD(skilltree)
 }
 
 // Hand a ring with partners name on it to this char
-void getring (struct map_session_data* sd)
-{
+void getring(struct map_session_data* sd) {
 	int flag, item_id;
 	struct item item_tmp;
 	item_id = (sd->status.sex) ? WEDDING_RING_M : WEDDING_RING_F;
@@ -5507,7 +5475,7 @@ void getring (struct map_session_data* sd)
 	
 	if((flag = pc->additem(sd,&item_tmp,1,LOG_TYPE_COMMAND))) {
 		clif->additem(sd,0,0,flag);
-		iMap->addflooritem(&item_tmp,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+		map->addflooritem(&item_tmp,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
 	}
 }
 
@@ -5515,8 +5483,7 @@ void getring (struct map_session_data* sd)
  * @marry by [MouseJstr], fixed by Lupus
  * Marry two players
  *------------------------------------------*/
-ACMD(marry)
-{
+ACMD(marry) {
 	struct map_session_data *pl_sd = NULL;
 	char player_name[NAME_LENGTH] = "";
 	
@@ -5527,7 +5494,7 @@ ACMD(marry)
 		return false;
 	}
 	
-	if ((pl_sd = iMap->nick2sd(player_name)) == NULL) {
+	if ((pl_sd = map->nick2sd(player_name)) == NULL) {
 		clif->message(fd, msg_txt(3));
 		return false;
 	}
@@ -5628,8 +5595,7 @@ ACMD(autotrade) {
  * @changegm by durf (changed by Lupus)
  * Changes Master of your Guild to a specified guild member
  *------------------------------------------*/
-ACMD(changegm)
-{
+ACMD(changegm) {
 	struct guild *g;
 	struct map_session_data *pl_sd;
 	nullpo_retr(-1, sd);
@@ -5649,7 +5615,7 @@ ACMD(changegm)
 		return false;
 	}
 	
-	if((pl_sd=iMap->nick2sd((char *) message)) == NULL || pl_sd->status.guild_id != sd->status.guild_id) {
+	if((pl_sd=map->nick2sd((char *) message)) == NULL || pl_sd->status.guild_id != sd->status.guild_id) {
 		clif->message(fd, msg_txt(1184)); // Target character must be online and be a guild member.
 		return false;
 	}
@@ -5662,17 +5628,15 @@ ACMD(changegm)
  * @changeleader by Skotlex
  * Changes the leader of a party.
  *------------------------------------------*/
-ACMD(changeleader)
-{
+ACMD(changeleader) {
 	nullpo_retr(-1, sd);
 	
-	if( !message[0] )
-	{
+	if( !message[0] ) {
 		clif->message(fd, msg_txt(1185)); // Usage: @changeleader <party_member_name>
 		return false;
 	}
 	
-	if (party->changeleader(sd, iMap->nick2sd((char *) message)))
+	if (party->changeleader(sd, map->nick2sd((char *) message)))
 		return true;
 	return false;
 }
@@ -6096,33 +6060,28 @@ ACMD(mobsearch)
  * @cleanmap - cleans items on the ground
  * @cleanarea - cleans items on the ground within an specified area
  *------------------------------------------*/
-static int atcommand_cleanfloor_sub(struct block_list *bl, va_list ap)
-{
+static int atcommand_cleanfloor_sub(struct block_list *bl, va_list ap) {
 	nullpo_ret(bl);
-	iMap->clearflooritem(bl);
+	map->clearflooritem(bl);
 	
 	return 0;
 }
 
-ACMD(cleanmap)
-{
-	iMap->foreachinmap(atcommand_cleanfloor_sub, sd->bl.m, BL_ITEM);
+ACMD(cleanmap) {
+	map->foreachinmap(atcommand_cleanfloor_sub, sd->bl.m, BL_ITEM);
 	clif->message(fd, msg_txt(1221)); // All dropped items have been cleaned up.
 	return true;
 }
 
-ACMD(cleanarea)
-{
+ACMD(cleanarea) {
 	int x0 = 0, y0 = 0, x1 = 0, y1 = 0;
 	
 	if (!message || !*message || sscanf(message, "%d %d %d %d", &x0, &y0, &x1, &y1) < 1) {
-		iMap->foreachinrange(atcommand_cleanfloor_sub, &sd->bl, AREA_SIZE * 2, BL_ITEM);
-	}
-	else if (sscanf(message, "%d %d %d %d", &x0, &y0, &x1, &y1) == 1) {
-		iMap->foreachinrange(atcommand_cleanfloor_sub, &sd->bl, x0, BL_ITEM);
-	}
-	else if (sscanf(message, "%d %d %d %d", &x0, &y0, &x1, &y1) == 4) {
-		iMap->foreachinarea(atcommand_cleanfloor_sub, sd->bl.m, x0, y0, x1, y1, BL_ITEM);
+		map->foreachinrange(atcommand_cleanfloor_sub, &sd->bl, AREA_SIZE * 2, BL_ITEM);
+	} else if (sscanf(message, "%d %d %d %d", &x0, &y0, &x1, &y1) == 1) {
+		map->foreachinrange(atcommand_cleanfloor_sub, &sd->bl, x0, BL_ITEM);
+	} else if (sscanf(message, "%d %d %d %d", &x0, &y0, &x1, &y1) == 4) {
+		map->foreachinarea(atcommand_cleanfloor_sub, sd->bl.m, x0, y0, x1, y1, BL_ITEM);
 	}
 	
 	clif->message(fd, msg_txt(1221)); // All dropped items have been cleaned up.
@@ -6372,8 +6331,7 @@ ACMD(adjgroup)
  * @trade by [MouseJstr]
  * Open a trade window with a remote player
  *------------------------------------------*/
-ACMD(trade)
-{
+ACMD(trade) {
     struct map_session_data *pl_sd = NULL;
 	nullpo_retr(-1, sd);
 	
@@ -6382,8 +6340,7 @@ ACMD(trade)
 		return false;
 	}
 	
-	if ( (pl_sd = iMap->nick2sd((char *)message)) == NULL )
-	{
+	if ( (pl_sd = map->nick2sd((char *)message)) == NULL ) {
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
 	}
@@ -6419,8 +6376,7 @@ ACMD(setbattleflag)
 /*==========================================
  * @unmute [Valaris]
  *------------------------------------------*/
-ACMD(unmute)
-{
+ACMD(unmute) {
 	struct map_session_data *pl_sd = NULL;
 	nullpo_retr(-1, sd);
 	
@@ -6429,7 +6385,7 @@ ACMD(unmute)
 		return false;
 	}
 	
-	if ( (pl_sd = iMap->nick2sd((char *)message)) == NULL )
+	if ( (pl_sd = map->nick2sd((char *)message)) == NULL )
 	{
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
@@ -6489,8 +6445,7 @@ ACMD(changesex)
 /*================================================
  * @mute - Mutes a player for a set amount of time
  *------------------------------------------------*/
-ACMD(mute)
-{
+ACMD(mute) {
 	struct map_session_data *pl_sd = NULL;
 	int manner;
 	nullpo_retr(-1, sd);
@@ -6500,8 +6455,7 @@ ACMD(mute)
 		return false;
 	}
 	
-	if ( (pl_sd = iMap->nick2sd(atcmd_player_name)) == NULL )
-	{
+	if ( (pl_sd = map->nick2sd(atcmd_player_name)) == NULL ) {
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
 	}
@@ -7288,7 +7242,7 @@ ACMD(whereis)
 		clif->message(fd, atcmd_output);
 		
 		for (i = 0; i < ARRAYLENGTH(monster->spawn) && monster->spawn[i].qty; i++) {
-			j = iMap->mapindex2mapid(monster->spawn[i].mapindex);
+			j = map->mapindex2mapid(monster->spawn[i].mapindex);
 			if (j < 0) continue;
 			snprintf(atcmd_output, sizeof atcmd_output, "%s (%d)", maplist[j].name, monster->spawn[i].qty);
 			clif->message(fd, atcmd_output);
@@ -7340,8 +7294,7 @@ static int atcommand_mutearea_sub(struct block_list *bl,va_list ap)
 	return 0;
 }
 
-ACMD(mutearea)
-{
+ACMD(mutearea) {
 	int time;
 	nullpo_ret(sd);
 	
@@ -7352,9 +7305,9 @@ ACMD(mutearea)
 	
 	time = atoi(message);
 	
-	iMap->foreachinarea(atcommand_mutearea_sub,sd->bl.m,
-					  sd->bl.x-AREA_SIZE, sd->bl.y-AREA_SIZE,
-					  sd->bl.x+AREA_SIZE, sd->bl.y+AREA_SIZE, BL_PC, sd->bl.id, time);
+	map->foreachinarea(atcommand_mutearea_sub,sd->bl.m,
+	                   sd->bl.x-AREA_SIZE, sd->bl.y-AREA_SIZE,
+	                   sd->bl.x+AREA_SIZE, sd->bl.y+AREA_SIZE, BL_PC, sd->bl.id, time);
 	
 	return true;
 }
@@ -7566,8 +7519,8 @@ ACMD(fakename)
  * Ragnarok Resources
  *------------------------------------------*/
 ACMD(mapflag) {
-#define checkflag( cmd ) if ( maplist[ sd->bl.m ].flag.cmd ) clif->message(sd->fd,#cmd)
-#define setflag( cmd ) do {\
+#define CHECKFLAG( cmd ) do { if ( maplist[ sd->bl.m ].flag.cmd ) clif->message(sd->fd,#cmd); } while(0)
+#define SETFLAG( cmd ) do { \
 	if ( strcmp( flag_name , #cmd ) == 0 ) { \
 		maplist[ sd->bl.m ].flag.cmd = flag; \
 		sprintf(atcmd_output,"[ @mapflag ] %s flag has been set to %s value = %hd",#cmd,flag?"On":"Off",flag); \
@@ -7584,19 +7537,19 @@ ACMD(mapflag) {
 	if (!message || !*message || (sscanf(message, "%99s %hd", flag_name, &flag) < 1)) {
 		clif->message(sd->fd,msg_txt(1311)); // Enabled Mapflags in this map:
 		clif->message(sd->fd,"----------------------------------");
-		checkflag(autotrade);			checkflag(allowks);				checkflag(nomemo);		checkflag(noteleport);
-		checkflag(noreturn);			checkflag(monster_noteleport);	checkflag(nosave);		checkflag(nobranch);
-		checkflag(noexppenalty);		checkflag(pvp);					checkflag(pvp_noparty);	checkflag(pvp_noguild);
-		checkflag(pvp_nightmaredrop);	checkflag(pvp_nocalcrank);		checkflag(gvg_castle);	checkflag(gvg);
-		checkflag(gvg_dungeon);			checkflag(gvg_noparty);			checkflag(battleground);checkflag(nozenypenalty);
-		checkflag(notrade);				checkflag(noskill);				checkflag(nowarp);		checkflag(nowarpto);
-		checkflag(noicewall);			checkflag(snow);				checkflag(clouds);		checkflag(clouds2);
-		checkflag(fog);					checkflag(fireworks);			checkflag(sakura);		checkflag(leaves);
-		checkflag(nobaseexp);
-		checkflag(nojobexp);			checkflag(nomobloot);			checkflag(nomvploot);	checkflag(nightenabled);
-		checkflag(nodrop);				checkflag(novending);	checkflag(loadevent);
-		checkflag(nochat);				checkflag(partylock);			checkflag(guildlock);	checkflag(src4instance);
-		checkflag(notomb);
+		CHECKFLAG(autotrade);         CHECKFLAG(allowks);            CHECKFLAG(nomemo);       CHECKFLAG(noteleport);
+		CHECKFLAG(noreturn);          CHECKFLAG(monster_noteleport); CHECKFLAG(nosave);       CHECKFLAG(nobranch);
+		CHECKFLAG(noexppenalty);      CHECKFLAG(pvp);                CHECKFLAG(pvp_noparty);  CHECKFLAG(pvp_noguild);
+		CHECKFLAG(pvp_nightmaredrop); CHECKFLAG(pvp_nocalcrank);     CHECKFLAG(gvg_castle);   CHECKFLAG(gvg);
+		CHECKFLAG(gvg_dungeon);       CHECKFLAG(gvg_noparty);        CHECKFLAG(battleground); CHECKFLAG(nozenypenalty);
+		CHECKFLAG(notrade);           CHECKFLAG(noskill);            CHECKFLAG(nowarp);       CHECKFLAG(nowarpto);
+		CHECKFLAG(noicewall);         CHECKFLAG(snow);               CHECKFLAG(clouds);       CHECKFLAG(clouds2);
+		CHECKFLAG(fog);               CHECKFLAG(fireworks);          CHECKFLAG(sakura);       CHECKFLAG(leaves);
+		CHECKFLAG(nobaseexp);
+		CHECKFLAG(nojobexp);          CHECKFLAG(nomobloot);          CHECKFLAG(nomvploot);    CHECKFLAG(nightenabled);
+		CHECKFLAG(nodrop);            CHECKFLAG(novending);          CHECKFLAG(loadevent);
+		CHECKFLAG(nochat);            CHECKFLAG(partylock);          CHECKFLAG(guildlock);    CHECKFLAG(src4instance);
+		CHECKFLAG(notomb);
 		clif->message(sd->fd," ");
 		clif->message(sd->fd,msg_txt(1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
 		clif->message(sd->fd,msg_txt(1313)); // Type "@mapflag available" to list the available mapflags.
@@ -7606,34 +7559,34 @@ ACMD(mapflag) {
 	
 	if ( strcmp( flag_name , "gvg" ) == 0 ) {
 		if( flag && !maplist[sd->bl.m].flag.gvg )
-			iMap->zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_GVG_NAME));
+			map->zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_GVG_NAME));
 		else if ( !flag && maplist[sd->bl.m].flag.gvg )
-			iMap->zone_change2(sd->bl.m,maplist[sd->bl.m].prev_zone);
+			map->zone_change2(sd->bl.m,maplist[sd->bl.m].prev_zone);
 	} else if ( strcmp( flag_name , "pvp" ) == 0 ) {
 		if( flag && !maplist[sd->bl.m].flag.pvp )
-			iMap->zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_PVP_NAME));
+			map->zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_PVP_NAME));
 		else if ( !flag && maplist[sd->bl.m].flag.pvp )
-			iMap->zone_change2(sd->bl.m,maplist[sd->bl.m].prev_zone);
+			map->zone_change2(sd->bl.m,maplist[sd->bl.m].prev_zone);
 	} else if ( strcmp( flag_name , "battleground" ) == 0 ) {
 		if( flag && !maplist[sd->bl.m].flag.battleground )
-			iMap->zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_BG_NAME));
+			map->zone_change2(sd->bl.m,strdb_get(zone_db, MAP_ZONE_BG_NAME));
 		else if ( !flag && maplist[sd->bl.m].flag.battleground )
-			iMap->zone_change2(sd->bl.m,maplist[sd->bl.m].prev_zone);
+			map->zone_change2(sd->bl.m,maplist[sd->bl.m].prev_zone);
 	}
 	
-	setflag(autotrade);			setflag(allowks);			setflag(nomemo);			setflag(noteleport);
-	setflag(noreturn);			setflag(monster_noteleport);setflag(nosave);			setflag(nobranch);
-	setflag(noexppenalty);		setflag(pvp);				setflag(pvp_noparty);		setflag(pvp_noguild);
-	setflag(pvp_nightmaredrop);	setflag(pvp_nocalcrank);	setflag(gvg_castle);		setflag(gvg);
-	setflag(gvg_dungeon);		setflag(gvg_noparty);		setflag(battleground);		setflag(nozenypenalty);
-	setflag(notrade);			setflag(noskill);			setflag(nowarp);			setflag(nowarpto);
-	setflag(noicewall);			setflag(snow);				setflag(clouds);			setflag(clouds2);
-	setflag(fog);				setflag(fireworks);			setflag(sakura);			setflag(leaves);
-	setflag(nobaseexp);
-	setflag(nojobexp);			setflag(nomobloot);			setflag(nomvploot);			setflag(nightenabled);
-	setflag(nodrop);			setflag(novending);			setflag(loadevent);
-	setflag(nochat);			setflag(partylock);			setflag(guildlock);			setflag(src4instance);
-	setflag(notomb);
+	SETFLAG(autotrade);         SETFLAG(allowks);            SETFLAG(nomemo);       SETFLAG(noteleport);
+	SETFLAG(noreturn);          SETFLAG(monster_noteleport); SETFLAG(nosave);       SETFLAG(nobranch);
+	SETFLAG(noexppenalty);      SETFLAG(pvp);                SETFLAG(pvp_noparty);  SETFLAG(pvp_noguild);
+	SETFLAG(pvp_nightmaredrop); SETFLAG(pvp_nocalcrank);     SETFLAG(gvg_castle);   SETFLAG(gvg);
+	SETFLAG(gvg_dungeon);       SETFLAG(gvg_noparty);        SETFLAG(battleground); SETFLAG(nozenypenalty);
+	SETFLAG(notrade);           SETFLAG(noskill);            SETFLAG(nowarp);       SETFLAG(nowarpto);
+	SETFLAG(noicewall);         SETFLAG(snow);               SETFLAG(clouds);       SETFLAG(clouds2);
+	SETFLAG(fog);               SETFLAG(fireworks);          SETFLAG(sakura);       SETFLAG(leaves);
+	SETFLAG(nobaseexp);
+	SETFLAG(nojobexp);          SETFLAG(nomobloot);          SETFLAG(nomvploot);    SETFLAG(nightenabled);
+	SETFLAG(nodrop);            SETFLAG(novending);          SETFLAG(loadevent);
+	SETFLAG(nochat);            SETFLAG(partylock);          SETFLAG(guildlock);    SETFLAG(src4instance);
+	SETFLAG(notomb);
 	
 	clif->message(sd->fd,msg_txt(1314)); // Invalid flag name or flag.
 	clif->message(sd->fd,msg_txt(1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
@@ -7647,8 +7600,8 @@ ACMD(mapflag) {
 	clif->message(sd->fd,"nomvploot, nightenabled, nodrop, novending, loadevent, nochat, partylock,");
 	clif->message(sd->fd,"guildlock, src4instance, notomb");
 	
-#undef checkflag
-#undef setflag
+#undef CHECKFLAG
+#undef SETFLAG
 	
 	return true;
 }
@@ -7706,7 +7659,7 @@ ACMD(showdelay)
  *------------------------------------------*/
 ACMD(invite) {
 	unsigned int did = sd->duel_group;
-	struct map_session_data *target_sd = iMap->nick2sd((char *)message);
+	struct map_session_data *target_sd = map->nick2sd((char *)message);
 	
 	if(did == 0)	{
 		// "Duel: @invite without @duel."
@@ -7778,7 +7731,7 @@ ACMD(duel) {
 			duel->create(sd, maxpl);
 		} else {
 			struct map_session_data *target_sd;
-			target_sd = iMap->nick2sd((char *)message);
+			target_sd = map->nick2sd((char *)message);
 			if(target_sd != NULL) {
 				unsigned int newduel;
 				if((newduel = duel->create(sd, 2)) != -1) {
@@ -7907,8 +7860,7 @@ ACMD(cash)
 }
 
 // @clone/@slaveclone/@evilclone <playername> [Valaris]
-ACMD(clone)
-{
+ACMD(clone) {
 	int x=0,y=0,flag=0,master=0,i=0;
 	struct map_session_data *pl_sd=NULL;
 	
@@ -7917,7 +7869,7 @@ ACMD(clone)
 		return true;
 	}
 	
-	if((pl_sd=iMap->nick2sd((char *)message)) == NULL && (pl_sd=iMap->charid2sd(atoi(message))) == NULL) {
+	if((pl_sd=map->nick2sd((char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_txt(3));	// Character not found.
 		return true;
 	}
@@ -7946,7 +7898,7 @@ ACMD(clone)
 	do {
 		x = sd->bl.x + (rnd() % 10 - 5);
 		y = sd->bl.y + (rnd() % 10 - 5);
-	} while (iMap->getcell(sd->bl.m,x,y,CELL_CHKNOPASS) && i++ < 10);
+	} while (map->getcell(sd->bl.m,x,y,CELL_CHKNOPASS) && i++ < 10);
 	
 	if (i >= 10) {
 		x = sd->bl.x;
@@ -9060,15 +9012,15 @@ ACMD(channel) {
 		}
 		
 		if (!message || !*message || sscanf(message, "%s %s %24[^\n]", key, sub1, sub2) < 1) {
-		        sprintf(atcmd_output, msg_txt(1434), sub2);// Player '%s' was not found
-		         clif->message(fd, atcmd_output);
-		         return false;
+			sprintf(atcmd_output, msg_txt(1434), sub2);// Player '%s' was not found
+			clif->message(fd, atcmd_output);
+			return false;
 		}
 
-		if( sub2[0] == '\0' || ( pl_sd = iMap->nick2sd(sub2) ) == NULL ) {
-		         sprintf(atcmd_output, msg_txt(1434), sub2);// Player '%s' was not found
-		         clif->message(fd, atcmd_output);
-		         return false;
+		if( sub2[0] == '\0' || ( pl_sd = map->nick2sd(sub2) ) == NULL ) {
+			sprintf(atcmd_output, msg_txt(1434), sub2);// Player '%s' was not found
+			clif->message(fd, atcmd_output);
+			return false;
 		 }
 		
 		if( pc->has_permission(pl_sd, PC_PERM_HCHSYS_ADMIN) ) {
@@ -9121,7 +9073,7 @@ ACMD(channel) {
 			return false;
 		}
 		
-		if( sub2[0] == '\0' || ( pl_sd = iMap->nick2sd(sub2) ) == NULL ) {
+		if( sub2[0] == '\0' || ( pl_sd = map->nick2sd(sub2) ) == NULL ) {
 			sprintf(atcmd_output, msg_txt(1434), sub2);// Player '%s' was not found
 			clif->message(fd, atcmd_output);
 			return false;
@@ -9942,16 +9894,21 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 		binding = atcommand->get_bind_byname(command);
 
 		// Check if the binding isn't NULL and there is a NPC event, level of usage met, et cetera
-		if( binding != NULL && binding->npc_event[0] &&
-			((*atcmd_msg == atcommand->at_symbol && pc->get_group_level(sd) >= binding->group_lv) ||
-			 (*atcmd_msg == atcommand->char_symbol && pc->get_group_level(sd) >= binding->group_lv_char)))
-		{
+		if( binding != NULL
+		 && binding->npc_event[0]
+		 && (
+		       (*atcmd_msg == atcommand->at_symbol && pc->get_group_level(sd) >= binding->group_lv)
+		    || (*atcmd_msg == atcommand->char_symbol && pc->get_group_level(sd) >= binding->group_lv_char)
+		    )
+		) {
 			// Check if self or character invoking; if self == character invoked, then self invoke.
 			bool invokeFlag = ((*atcmd_msg == atcommand->at_symbol) ? 1 : 0);
 			
 			// Check if the command initiated is a character command
-			if (*message == atcommand->char_symbol &&
-				(ssd = iMap->nick2sd(charname)) == NULL && (ssd = iMap->nick2sd(charname2)) == NULL ) {
+			if (*message == atcommand->char_symbol
+			 && (ssd = map->nick2sd(charname)) == NULL
+			 && (ssd = map->nick2sd(charname2)) == NULL
+			) {
 				sprintf(output, msg_txt(1389), command); // %s failed. Player not found.
 				clif->message(fd, output);
 				return true;
@@ -10000,8 +9957,10 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 	}
 	
 	// Check if target is valid only if confirmed that player can use command.
-	if (*message == atcommand->char_symbol &&
-	    (ssd = iMap->nick2sd(charname)) == NULL && (ssd = iMap->nick2sd(charname2)) == NULL ) {
+	if (*message == atcommand->char_symbol
+	 && (ssd = map->nick2sd(charname)) == NULL
+	 && (ssd = map->nick2sd(charname2)) == NULL
+	) {
 		sprintf(output, msg_txt(1389), command); // %s failed. Player not found.
 		clif->message(fd, output);
 		return true;
@@ -10299,7 +10258,7 @@ void atcommand_doload(void) {
 	if( atcommand->alias_db == NULL )
 		atcommand->alias_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
 	atcommand_basecommands(); //fills initial atcommand_db with known commands
-	atcommand_config_read(iMap->ATCOMMAND_CONF_FILENAME);
+	atcommand_config_read(map->ATCOMMAND_CONF_FILENAME);
 }
 
 void do_init_atcommand(void) {

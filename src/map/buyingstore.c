@@ -64,8 +64,8 @@ bool buyingstore_setup(struct map_session_data* sd, unsigned char slots)
 		return false;
 	}
 
-	if( iMap->getcell(sd->bl.m, sd->bl.x, sd->bl.y, CELL_CHKNOVENDING) )
-	{// custom: no vending cells
+	if( map->getcell(sd->bl.m, sd->bl.x, sd->bl.y, CELL_CHKNOVENDING) ) {
+		// custom: no vending cells
 		clif->message(sd->fd, msg_txt(204)); // "You can't open a shop on this cell."
 		return false;
 	}
@@ -119,8 +119,8 @@ void buyingstore_create(struct map_session_data* sd, int zenylimit, unsigned cha
 		return;
 	}
 
-	if( iMap->getcell(sd->bl.m, sd->bl.x, sd->bl.y, CELL_CHKNOVENDING) )
-	{// custom: no vending cells
+	if( map->getcell(sd->bl.m, sd->bl.x, sd->bl.y, CELL_CHKNOVENDING) ) {
+		// custom: no vending cells
 		clif->message(sd->fd, msg_txt(204)); // "You can't open a shop on this cell."
 		return;
 	}
@@ -227,8 +227,8 @@ void buyingstore_open(struct map_session_data* sd, int account_id)
 		return;
 	}
 
-	if( ( pl_sd = iMap->id2sd(account_id) ) == NULL || !pl_sd->state.buyingstore )
-	{// not online or not buying
+	if( ( pl_sd = map->id2sd(account_id) ) == NULL || !pl_sd->state.buyingstore ) {
+		// not online or not buying
 		return;
 	}
 
@@ -266,8 +266,8 @@ void buyingstore_trade(struct map_session_data* sd, int account_id, unsigned int
 		return;
 	}
 
-	if( ( pl_sd = iMap->id2sd(account_id) ) == NULL || !pl_sd->state.buyingstore || pl_sd->buyer_id != buyer_id )
-	{// not online, not buying or not same store
+	if( ( pl_sd = map->id2sd(account_id) ) == NULL || !pl_sd->state.buyingstore || pl_sd->buyer_id != buyer_id ) {
+		// not online, not buying or not same store
 		clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, 0);
 		return;
 	}
@@ -383,7 +383,7 @@ void buyingstore_trade(struct map_session_data* sd, int account_id, unsigned int
 		clif->buyingstore_update_item(pl_sd, nameid, amount);
 	}
 
-	if( iMap->save_settings&128 ) {
+	if( map->save_settings&128 ) {
 		chrif->save(sd, 0);
 		chrif->save(pl_sd, 0);
 	}
@@ -407,9 +407,8 @@ void buyingstore_trade(struct map_session_data* sd, int account_id, unsigned int
 	buyingstore_close(pl_sd);
 
 	// remove auto-trader
-	if( pl_sd->state.autotrade )
-	{
-		iMap->quit(pl_sd);
+	if( pl_sd->state.autotrade ) {
+		map->quit(pl_sd);
 	}
 }
 

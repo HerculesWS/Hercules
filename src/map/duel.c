@@ -69,7 +69,7 @@ void duel_showinfo(const unsigned int did, struct map_session_data* sd) {
 			duel->list[did].members_count + duel->list[did].invites_count);
 
 	clif->disp_onlyself(sd, output, strlen(output));
-	iMap->map_foreachpc(duel_showinfo_sub, sd, &p);
+	map->map_foreachpc(duel_showinfo_sub, sd, &p);
 }
 
 int duel_create(struct map_session_data* sd, const unsigned int maxpl) {
@@ -126,7 +126,7 @@ void duel_leave(const unsigned int did, struct map_session_data* sd) {
 	duel->list[did].members_count--;
 	
 	if(duel->list[did].members_count == 0) {
-		iMap->map_foreachpc(duel_leave_sub, did); 
+		map->map_foreachpc(duel_leave_sub, did); 
 		duel->count--;
 	}
 	

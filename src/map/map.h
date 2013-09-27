@@ -214,10 +214,10 @@ enum {
 #define EVENT_NAME_LENGTH ( NAME_LENGTH * 2 + 3 )
 #define DEFAULT_AUTOSAVE_INTERVAL 5*60*1000
 // Specifies maps where players may hit each other
-#define map_flag_vs(m) (maplist[m].flag.pvp || maplist[m].flag.gvg_dungeon || maplist[m].flag.gvg || ((iMap->agit_flag || iMap->agit2_flag) && maplist[m].flag.gvg_castle) || maplist[m].flag.battleground)
+#define map_flag_vs(m) (maplist[m].flag.pvp || maplist[m].flag.gvg_dungeon || maplist[m].flag.gvg || ((map->agit_flag || map->agit2_flag) && maplist[m].flag.gvg_castle) || maplist[m].flag.battleground)
 // Specifies maps that have special GvG/WoE restrictions
-#define map_flag_gvg(m) (maplist[m].flag.gvg || ((iMap->agit_flag || iMap->agit2_flag) && maplist[m].flag.gvg_castle))
-// Specifies if the map is tagged as GvG/WoE (regardless of iMap->agit_flag status)
+#define map_flag_gvg(m) (maplist[m].flag.gvg || ((map->agit_flag || map->agit2_flag) && maplist[m].flag.gvg_castle))
+// Specifies if the map is tagged as GvG/WoE (regardless of map->agit_flag status)
 #define map_flag_gvg2(m) (maplist[m].flag.gvg || maplist[m].flag.gvg_castle)
 // No Kill Steal Protection
 #define map_flag_ks(m) (maplist[m].flag.town || maplist[m].flag.pvp || maplist[m].flag.gvg || maplist[m].flag.battleground)
@@ -432,7 +432,7 @@ typedef enum {
 
 } cell_t;
 
-// used by iMap->getcell()
+// used by map->getcell()
 typedef enum {
 	CELL_GETTYPE,		// retrieves a cell's 'gat' type
 
@@ -524,7 +524,7 @@ struct map_zone_skill_damage_cap_entry {
 #define MAP_ZONE_PK_NAME "PK Mode"
 #define MAP_ZONE_MAPFLAG_LENGTH 50
 
-//TODO place it in iMap
+//TODO place it in the map interface
 DBMap *zone_db;/* string => struct map_zone_data */
 
 struct map_zone_data {
@@ -904,7 +904,7 @@ struct map_interface {
 	void (*do_shutdown) (void);
 };
 
-struct map_interface *iMap;
+struct map_interface *map;
 
 void map_defaults(void);
 

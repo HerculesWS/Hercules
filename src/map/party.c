@@ -84,9 +84,8 @@ struct map_session_data* party_getavailablesd(struct party_data *p)
  * Retrieves and validates the sd pointer for this party member [Skotlex]
  *------------------------------------------*/
 
-static TBL_PC* party_sd_check(int party_id, int account_id, int char_id)
-{
-	TBL_PC* sd = iMap->id2sd(account_id);
+static TBL_PC* party_sd_check(int party_id, int account_id, int char_id) {
+	TBL_PC* sd = map->id2sd(account_id);
 
 	if (!(sd && sd->status.char_id == char_id))
 		return NULL;
@@ -179,13 +178,12 @@ int party_create(struct map_session_data *sd,char *name,int item,int item2)
 }
 
 
-void party_created(int account_id,int char_id,int fail,int party_id,char *name)
-{
+void party_created(int account_id,int char_id,int fail,int party_id,char *name) {
 	struct map_session_data *sd;
-	sd=iMap->id2sd(account_id);
+	sd=map->id2sd(account_id);
 
-	if (!sd || sd->status.char_id != char_id || !sd->party_creating )
-	{	//Character logged off before creation ack?
+	if (!sd || sd->status.char_id != char_id || !sd->party_creating ) {
+		//Character logged off before creation ack?
 		if (!fail) //break up party since player could not be added to it.
 			intif->party_leave(party_id,account_id,char_id);
 		return;
@@ -209,13 +207,12 @@ int party_request_info(int party_id, int char_id)
 }
 
 /// Invoked (from char-server) when the party info is not found.
-int party_recv_noinfo(int party_id, int char_id)
-{
+int party_recv_noinfo(int party_id, int char_id) {
 	party->broken(party_id);
-	if( char_id != 0 )// requester
-	{
+	if( char_id != 0 ) {
+		// requester
 		struct map_session_data* sd;
-		sd = iMap->charid2sd(char_id);
+		sd = map->charid2sd(char_id);
 		if( sd && sd->status.party_id == party_id )
 			sd->status.party_id = 0;
 	}
@@ -329,9 +326,9 @@ int party_recv_info(struct party* sp, int char_id)
 			}
 		}
 	}
-	if( char_id != 0 )// requester
-	{
-		sd = iMap->charid2sd(char_id);
+	if( char_id != 0 ) {
+		// requester
+		sd = map->charid2sd(char_id);
 		if( sd && sd->status.party_id == sp->party_id && party->getmemberid(p,sd) == -1 )
 			sd->status.party_id = 0;// was not in the party
 	}
@@ -400,8 +397,7 @@ int party_invite(struct map_session_data *sd,struct map_session_data *tsd)
 	return 1;
 }
 
-void party_reply_invite(struct map_session_data *sd,int party_id,int flag)
-{
+void party_reply_invite(struct map_session_data *sd,int party_id,int flag) {
 	struct map_session_data* tsd;
 	struct party_member member;
 
@@ -411,7 +407,7 @@ void party_reply_invite(struct map_session_data *sd,int party_id,int flag)
 		sd->party_invite_account = 0;
 		return;
 	}
-	tsd = iMap->id2sd(sd->party_invite_account);
+	tsd = map->id2sd(sd->party_invite_account);
 
 	if( flag == 1 && !sd->party_creating && !sd->party_joining )
 	{// accepted and allowed
@@ -458,9 +454,8 @@ void party_member_joined(struct map_session_data *sd)
 
 /// Invoked (from char-server) when a new member is added to the party.
 /// flag: 0-success, 1-failure
-int party_member_added(int party_id,int account_id,int char_id, int flag)
-{
-	struct map_session_data *sd = iMap->id2sd(account_id),*sd2;
+int party_member_added(int party_id,int account_id,int char_id, int flag) {
+	struct map_session_data *sd = map->id2sd(account_id),*sd2;
 	struct party_data *p = party->search(party_id);
 	int i, j;
 
@@ -470,7 +465,7 @@ int party_member_added(int party_id,int account_id,int char_id, int flag)
 		return 0;
 	}
 
-	sd2 = iMap->id2sd(sd->party_invite_account);
+	sd2 = map->id2sd(sd->party_invite_account);
 
 	sd->party_joining = false;
 	sd->party_invite = 0;
@@ -565,7 +560,7 @@ int party_leave(struct map_session_data *sd)
 /// Invoked (from char-server) when a party member leaves the party.
 int party_member_withdraw(int party_id, int account_id, int char_id)
 {
-	struct map_session_data* sd = iMap->id2sd(account_id);
+	struct map_session_data* sd = map->id2sd(account_id);
 	struct party_data* p = party->search(party_id);
 
 	if( p ) {
@@ -634,10 +629,9 @@ int party_changeoption(struct map_session_data *sd,int exp,int item)
 	return 0;
 }
 
-int party_optionchanged(int party_id,int account_id,int exp,int item,int flag)
-{
+int party_optionchanged(int party_id,int account_id,int exp,int item,int flag) {
 	struct party_data *p;
-	struct map_session_data *sd=iMap->id2sd(account_id);
+	struct map_session_data *sd=map->id2sd(account_id);
 	if( (p=party->search(party_id))==NULL)
 		return 0;
 
@@ -1099,17 +1093,16 @@ int party_foreachsamemap(int (*func)(struct block_list*,va_list),struct map_sess
 		list[blockcount++]=&psd->bl;
 	}
 
-	iMap->freeblock_lock();
+	map->freeblock_lock();
 
-	for(i=0;i<blockcount;i++)
-	{
+	for(i=0;i<blockcount;i++) {
 		va_list ap;
 		va_start(ap, range);
 		total += func(list[i], ap);
 		va_end(ap);
 	}
 
-	iMap->freeblock_unlock();
+	map->freeblock_unlock();
 
 	return total;
 }
