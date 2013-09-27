@@ -36,11 +36,8 @@
 #include <string.h>
 #include <math.h>
 
-int attr_fix_table[4][ELE_MAX][ELE_MAX];
-
 struct Battle_Config battle_config;
 struct battle_interface battle_s;
-static struct eri *delay_damage_ers; //For battle delay damage structures.
 
 int battle_getcurrentskill(struct block_list *bl) { //Returns the current/last skill in use by this bl.
 	struct unit_data *ud;
@@ -199,21 +196,6 @@ struct block_list* battle_getenemyarea(struct block_list *src, int x, int y, int
 	return bl_list[rnd()%c];
 }
 
-// Dammage delayed info
-struct delay_damage {
-	int src_id;
-	int target_id;
-	int64 damage;
-	int delay;
-	unsigned short distance;
-	uint16 skill_lv;
-	uint16 skill_id;
-	enum damage_lv dmg_lv;
-	unsigned short attack_type;
-	bool additional_effects;
-	enum bl_type src_type;
-};
-
 int battle_delay_damage_sub(int tid, unsigned int tick, int id, intptr_t data) {
 	struct delay_damage *dat = (struct delay_damage *)data;
 
@@ -226,7 +208,7 @@ int battle_delay_damage_sub(int tid, unsigned int tick, int id, intptr_t data) {
 				((TBL_PC*)src)->state.hold_recalc = 0;
 				status_calc_pc(((TBL_PC*)src),0);
 			}
-			ers_free(delay_damage_ers, dat);
+			ers_free(battle->delay_damage_ers, dat);
 			return 0;
 		}
 
@@ -258,7 +240,7 @@ int battle_delay_damage_sub(int tid, unsigned int tick, int id, intptr_t data) {
 			status_calc_pc(((TBL_PC*)src),0);
 		}
 	}
-	ers_free(delay_damage_ers, dat);
+	ers_free(battle->delay_damage_ers, dat);
 	return 0;
 }
 
@@ -283,7 +265,7 @@ int battle_delay_damage (unsigned int tick, int amotion, struct block_list *src,
 		map->freeblock_unlock();
 		return 0;
 	}
-	dat = ers_alloc(delay_damage_ers, struct delay_damage);
+	dat = ers_alloc(battle->delay_damage_ers, struct delay_damage);
 	dat->src_id = src->id;
 	dat->target_id = target->id;
 	dat->skill_id = skill_id;
@@ -315,7 +297,7 @@ int battle_attr_ratio(int atk_elem,int def_type, int def_lv)
 	if (def_type < 0 || def_type > ELE_MAX || def_lv < 1 || def_lv > 4)
 		return 100;
 
-	return attr_fix_table[def_lv-1][atk_elem][def_type];
+	return battle->attr_fix_table[def_lv-1][atk_elem][def_type];
 }
 
 /*==========================================
@@ -340,7 +322,7 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 		return damage;
 	}
 
-	ratio = attr_fix_table[def_lv-1][atk_elem][def_type];
+	ratio = battle->attr_fix_table[def_lv-1][atk_elem][def_type];
 	if (sc && sc->count) {
 		if(sc->data[SC_VOLCANO] && atk_elem == ELE_FIRE)
 			ratio += skill->enchant_eff[sc->data[SC_VOLCANO]->val1-1];
@@ -6760,7 +6742,7 @@ int battle_config_read(const char* cfgName)
 }
 
 void do_init_battle(void) {
-	delay_damage_ers = ers_new(sizeof(struct delay_damage),"battle.c::delay_damage_ers",ERS_OPT_CLEAR);
+	battle->delay_damage_ers = ers_new(sizeof(struct delay_damage),"battle.c::delay_damage_ers",ERS_OPT_CLEAR);
 	timer->add_func_list(battle_delay_damage_sub, "battle_delay_damage_sub");
 
 #ifndef STATS_OPT_OUT
@@ -6771,7 +6753,7 @@ void do_init_battle(void) {
 }
 
 void do_final_battle(void) {
-	ers_destroy(delay_damage_ers);
+	ers_destroy(battle->delay_damage_ers);
 }
 
 /* initialize the interface */
@@ -6779,6 +6761,9 @@ void battle_defaults(void) {
 	battle = &battle_s;
 	
 	battle->bc = &battle_config;
+	
+	memset(battle->attr_fix_table, 0, sizeof(battle->attr_fix_table));
+	battle->delay_damage_ers = NULL;
 	
 	battle->init = do_init_battle;
 	battle->final = do_final_battle;

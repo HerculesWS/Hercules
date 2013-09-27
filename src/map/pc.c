@@ -9994,7 +9994,7 @@ int pc_readdb(void) {
 	for(i=0;i<4;i++)
 		for(j=0;j<ELE_MAX;j++)
 			for(k=0;k<ELE_MAX;k++)
-				attr_fix_table[i][j][k]=100;
+				battle->attr_fix_table[i][j][k]=100;
 
 	sprintf(line, "%s/"DBPATH"attr_fix.txt", map->db_path);
 
@@ -10029,9 +10029,9 @@ int pc_readdb(void) {
 			for(j=0,p=line;j<n && j<ELE_MAX && p;j++){
 				while(*p==32 && *p>0)
 					p++;
-				attr_fix_table[lv-1][i][j]=atoi(p);
-				if(battle_config.attr_recover == 0 && attr_fix_table[lv-1][i][j] < 0)
-					attr_fix_table[lv-1][i][j] = 0;
+				battle->attr_fix_table[lv-1][i][j]=atoi(p);
+				if(battle_config.attr_recover == 0 && battle->attr_fix_table[lv-1][i][j] < 0)
+					battle->attr_fix_table[lv-1][i][j] = 0;
 				p=strchr(p,',');
 				if(p) *p++=0;
 			}

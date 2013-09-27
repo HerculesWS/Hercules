@@ -6,6 +6,7 @@
 #define _BATTLE_H_
 
 #include "../common/cbasetypes.h"
+#include "map.h" //ELE_MAX
 
 /**
  * Declarations
@@ -462,12 +463,20 @@ struct Battle_Config {
 	
 } battle_config;
 
-
-/**
- * Vars
- **/
-//attribute table
-extern int attr_fix_table[4][10][10];
+// Dammage delayed info
+struct delay_damage {
+	int src_id;
+	int target_id;
+	int64 damage;
+	int delay;
+	unsigned short distance;
+	uint16 skill_lv;
+	uint16 skill_id;
+	enum damage_lv dmg_lv;
+	unsigned short attack_type;
+	bool additional_effects;
+	enum bl_type src_type;
+};
 
 /**
  * Battle.c Interface
@@ -475,6 +484,9 @@ extern int attr_fix_table[4][10][10];
 struct battle_interface {
 	/* */
 	struct Battle_Config *bc;
+	/* */
+	int attr_fix_table[4][ELE_MAX][ELE_MAX];
+	struct eri *delay_damage_ers; //For battle delay damage structures.
 	/* init */
 	void (*init) (void);
 	/* final */
@@ -496,7 +508,7 @@ struct battle_interface {
 	/* drain damage */
 	void (*drain) (struct map_session_data *sd, struct block_list *tbl, int64 rdamage, int64 ldamage, int race, int boss);
 	/* damage return/reflect */
-	int64 (*calc_return_damage) (struct block_list *bl, struct block_list *src, int64 *, int flag, uint16 skill_id, int *);
+	int64 (*calc_return_damage) (struct block_list *bl, struct block_list *src, int64 *, int flag, uint16 skill_id, int *rdelay);
 	/* attribute rate */
 	int (*attr_ratio) (int atk_elem, int def_type, int def_lv);
 	/* applies attribute modifiers */
