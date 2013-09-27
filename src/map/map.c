@@ -1597,7 +1597,7 @@ int map_quit(struct map_session_data *sd) {
 
 	clif->chsys_quit(sd);
 
-	unit->remove_map_pc(sd,CLR_TELEPORT);
+	unit->remove_map_pc(sd,CLR_RESPAWN);
 
 	if( maplist[sd->bl.m].instance_id >= 0 ) { // Avoid map conflicts and warnings on next login
 		int16 m;
