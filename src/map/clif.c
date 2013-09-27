@@ -3477,14 +3477,14 @@ void clif_arrow_create_list(struct map_session_data *sd)
 	WFIFOW(fd,0) = 0x1ad;
 
 	for (i = 0, c = 0; i < MAX_SKILL_ARROW_DB; i++) {
-		if (skill_arrow_db[i].nameid > 0 &&
-			(j = pc->search_inventory(sd, skill_arrow_db[i].nameid)) >= 0 &&
+		if (skill->arrow_db[i].nameid > 0 &&
+			(j = pc->search_inventory(sd, skill->arrow_db[i].nameid)) >= 0 &&
 			!sd->status.inventory[j].equip && sd->status.inventory[j].identify)
 		{
-			if ((j = itemdb_viewid(skill_arrow_db[i].nameid)) > 0)
+			if ((j = itemdb_viewid(skill->arrow_db[i].nameid)) > 0)
 				WFIFOW(fd,c*2+4) = j;
 			else
-				WFIFOW(fd,c*2+4) = skill_arrow_db[i].nameid;
+				WFIFOW(fd,c*2+4) = skill->arrow_db[i].nameid;
 			c++;
 		}
 	}
@@ -5500,13 +5500,13 @@ void clif_skill_produce_mix_list(struct map_session_data *sd, int skill_id , int
 	WFIFOW(fd, 0)=0x18d;
 
 	for(i=0,c=0;i<MAX_SKILL_PRODUCE_DB;i++){
-		if( skill->can_produce_mix(sd,skill_produce_db[i].nameid, trigger, 1) &&
-			( ( skill_id > 0 && skill_produce_db[i].req_skill == skill_id ) || skill_id < 0 )
+		if( skill->can_produce_mix(sd,skill->produce_db[i].nameid, trigger, 1) &&
+			( ( skill_id > 0 && skill->produce_db[i].req_skill == skill_id ) || skill_id < 0 )
 			){
-			if((view = itemdb_viewid(skill_produce_db[i].nameid)) > 0)
+			if((view = itemdb_viewid(skill->produce_db[i].nameid)) > 0)
 				WFIFOW(fd,c*8+ 4)= view;
 			else
-				WFIFOW(fd,c*8+ 4)= skill_produce_db[i].nameid;
+				WFIFOW(fd,c*8+ 4)= skill->produce_db[i].nameid;
 			WFIFOW(fd,c*8+ 6)= 0;
 			WFIFOW(fd,c*8+ 8)= 0;
 			WFIFOW(fd,c*8+10)= 0;
@@ -5547,13 +5547,13 @@ void clif_cooking_list(struct map_session_data *sd, int trigger, uint16 skill_id
 
 	c = 0;
 	for( i = 0; i < MAX_SKILL_PRODUCE_DB; i++ ) {
-		if( !skill->can_produce_mix(sd,skill_produce_db[i].nameid,trigger, qty) )
+		if( !skill->can_produce_mix(sd,skill->produce_db[i].nameid,trigger, qty) )
 			continue;
 
-		if( (view = itemdb_viewid(skill_produce_db[i].nameid)) > 0 )
+		if( (view = itemdb_viewid(skill->produce_db[i].nameid)) > 0 )
 			WFIFOW(fd, 6 + 2 * c) = view;
 		else
-			WFIFOW(fd, 6 + 2 * c) = skill_produce_db[i].nameid;
+			WFIFOW(fd, 6 + 2 * c) = skill->produce_db[i].nameid;
 
 		c++;
 	}
@@ -16815,11 +16815,11 @@ int clif_elementalconverter_list(struct map_session_data *sd) {
 	WFIFOW(fd, 0)=0x1ad;
 
 	for(i=0,c=0;i<MAX_SKILL_PRODUCE_DB;i++){
-		if( skill->can_produce_mix(sd,skill_produce_db[i].nameid,23, 1) ){
-			if((view = itemdb_viewid(skill_produce_db[i].nameid)) > 0)
+		if( skill->can_produce_mix(sd,skill->produce_db[i].nameid,23, 1) ){
+			if((view = itemdb_viewid(skill->produce_db[i].nameid)) > 0)
 				WFIFOW(fd,c*2+ 4)= view;
 			else
-				WFIFOW(fd,c*2+ 4)= skill_produce_db[i].nameid;
+				WFIFOW(fd,c*2+ 4)= skill->produce_db[i].nameid;
 			c++;
 		}
 	}

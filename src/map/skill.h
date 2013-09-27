@@ -1624,7 +1624,6 @@ struct s_skill_db {
 	int unit_target;
 	int unit_flag;
 };
-extern struct s_skill_db skill_db[MAX_SKILL_DB];
 
 struct s_skill_unit_layout {
 	int count;
@@ -1690,14 +1689,12 @@ struct s_skill_produce_db {
 	int req_skill,req_skill_lv,itemlv;
 	int mat_id[MAX_PRODUCE_RESOURCE],mat_amount[MAX_PRODUCE_RESOURCE];
 };
-extern struct s_skill_produce_db skill_produce_db[MAX_SKILL_PRODUCE_DB];
 
 // Creating database arrow
 struct s_skill_arrow_db {
 	int nameid, trigger;
 	int cre_id[MAX_ARROW_RESOURCE],cre_amount[MAX_ARROW_RESOURCE];
 };
-extern struct s_skill_arrow_db skill_arrow_db[MAX_SKILL_ARROW_DB];
 
 // Abracadabra database
 struct s_skill_abra_db {
@@ -1705,13 +1702,11 @@ struct s_skill_abra_db {
 	int req_lv;
 	int per;
 };
-extern struct s_skill_abra_db skill_abra_db[MAX_SKILL_ABRA_DB];
 
 //GCross magic mushroom database
 struct s_skill_magicmushroom_db {
 	uint16 skill_id;
 };
-extern struct s_skill_magicmushroom_db skill_magicmushroom_db[MAX_SKILL_MAGICMUSHROOM_DB];
 
 struct skill_cd_entry {
 	int duration;//milliseconds
@@ -1735,11 +1730,31 @@ struct skill_cd {
 };
 
 /**
- * Vars
+ * Skill Unit Persistency during endack routes (mostly for songs see bugreport:4574)
  **/
-extern int enchant_eff[5];
-extern int deluge_eff[5];
-DBMap* skilldb_name2id;
+struct skill_unit_save {
+	uint16 skill_id, skill_lv;
+};
+
+struct s_skill_improvise_db {
+	uint16 skill_id;
+	short per;//1-10000
+};
+
+struct s_skill_changematerial_db {
+	int itemid;
+	short rate;
+	int qty[5];
+	short qty_rate[5];
+};
+
+struct s_skill_spellbook_db {
+	int nameid;
+	uint16 skill_id;
+	int point;
+};
+
+typedef int (*SkillFunc)(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, unsigned int tick, int flag);
 
 /**
  * Skill.c Interface
@@ -1751,11 +1766,35 @@ struct skill_interface {
 	void (*read_db) (void);
 	/* */
 	DBMap* cd_db; // char_id -> struct skill_cd
+	DBMap* name2id_db;
+	DBMap* unit_db; // int id -> struct skill_unit*
+	DBMap* usave_db; // char_id -> struct skill_unit_save
+	DBMap* group_db;// int group_id -> struct skill_unit_group*
 	/* */
 	struct eri *unit_ers; //For handling skill_unit's [Skotlex]
 	struct eri *timer_ers; //For handling skill_timerskills [Skotlex]
 	struct eri *cd_ers; // ERS Storage for skill cool down managers [Ind/Hercules]
 	struct eri *cd_entry_ers; // ERS Storage for skill cool down entries [Ind/Hercules]
+	/* */
+	struct s_skill_db db[MAX_SKILL_DB];
+	struct s_skill_produce_db produce_db[MAX_SKILL_PRODUCE_DB];
+	struct s_skill_arrow_db arrow_db[MAX_SKILL_ARROW_DB];
+	struct s_skill_abra_db abra_db[MAX_SKILL_ABRA_DB];
+	struct s_skill_magicmushroom_db magicmushroom_db[MAX_SKILL_MAGICMUSHROOM_DB];
+	struct s_skill_improvise_db improvise_db[MAX_SKILL_IMPROVISE_DB];
+	struct s_skill_changematerial_db changematerial_db[MAX_SKILL_PRODUCE_DB];
+	struct s_skill_spellbook_db spellbook_db[MAX_SKILL_SPELLBOOK_DB];
+	bool reproduce_db[MAX_SKILL_DB];
+	struct s_skill_unit_layout unit_layout[MAX_SKILL_UNIT_LAYOUT];
+	/* */
+	int enchant_eff[5];
+	int deluge_eff[5];
+	int firewall_unit_pos;
+	int icewall_unit_pos;
+	int earthstrain_unit_pos;
+	int area_temp[8];
+	int unit_temp[20];  // temporary storage for tracking skill unit skill ids as players move in/out of them
+	int unit_group_newid;
 	/* accesssors */
 	int	(*get_index) ( uint16 skill_id );
 	int	(*get_type) ( uint16 skill_id );
@@ -1861,9 +1900,9 @@ struct skill_interface {
 	int (*castend_nodamage_id) ( struct block_list *src, struct block_list *bl,uint16 skill_id,uint16 skill_lv,unsigned int tick,int flag );
 	int (*castend_damage_id) ( struct block_list* src, struct block_list *bl,uint16 skill_id,uint16 skill_lv,unsigned int tick,int flag );
 	int (*castend_pos2) ( struct block_list *src, int x,int y,uint16 skill_id,uint16 skill_lv,unsigned int tick,int flag);
-	int (*blockpc_start) (struct map_session_data*, uint16 skill_id, int, bool);
-	int (*blockhomun_start) (struct homun_data*,uint16 skill_id,int);
-	int (*blockmerc_start) (struct mercenary_data*,uint16 skill_id,int);
+	int (*blockpc_start) (struct map_session_data *sd, uint16 skill_id, int tick, bool load);
+	int (*blockhomun_start) (struct homun_data *hd, uint16 skill_id, int tick);
+	int (*blockmerc_start) (struct mercenary_data *md, uint16 skill_id, int tick);
 	int (*attack) ( int attack_type, struct block_list* src, struct block_list *dsrc,struct block_list *bl,uint16 skill_id,uint16 skill_lv,unsigned int tick,int flag );
 	int (*attack_area) (struct block_list *bl,va_list ap);
 	int (*area_sub) (struct block_list *bl, va_list ap);
@@ -1946,6 +1985,7 @@ struct skill_interface {
 	int (*get_elemental_type) (uint16 skill_id, uint16 skill_lv);
 	void (*cooldown_save) (struct map_session_data * sd);
 	int (*maelstrom_suction) (struct block_list *bl, va_list ap);
+	int (*get_new_group_id) (void);
 };
 
 struct skill_interface *skill;

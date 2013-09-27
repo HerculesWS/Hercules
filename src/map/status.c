@@ -7423,7 +7423,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 #endif
 			break;
 		case SC_DELUGE:
-			val2 = deluge_eff[val1-1]; //HP increase
+			val2 = skill->deluge_eff[val1-1]; //HP increase
 #ifndef RENEWAL
 			if(st->def_ele != ELE_WATER)
 				val2 = 0;
@@ -10339,7 +10339,7 @@ int status_change_timer(int tid, unsigned int tick, int id, intptr_t data) {
 					unit->skillcastcancel(bl,1);
 					do {
 						i = rnd() % MAX_SKILL_MAGICMUSHROOM_DB;
-						mushroom_skill_id = skill_magicmushroom_db[i].skill_id;
+						mushroom_skill_id = skill->magicmushroom_db[i].skill_id;
 					}
 					while( mushroom_skill_id == 0 );
 

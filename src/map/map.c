@@ -4336,7 +4336,7 @@ unsigned short map_zone_str2skillid(const char *name) {
 		if( !skill->get_index((nameid = atoi(name+2))) )
 			return 0;
 	} else {
-		if( !( nameid = strdb_iget(skilldb_name2id, name) ) ) {
+		if( !( nameid = strdb_iget(skill->name2id_db, name) ) ) {
 			return 0;
 		}
 	}

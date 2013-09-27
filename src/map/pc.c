@@ -1334,7 +1334,7 @@ int pc_calc_skillpoint(struct map_session_data* sd) {
 
 	for(i=1;i<MAX_SKILL;i++){
 		if( (skill_lv = pc->checkskill2(sd,i)) > 0) {
-			inf2 = skill_db[i].inf2;
+			inf2 = skill->db[i].inf2;
 			if((!(inf2&INF2_QUEST_SKILL) || battle_config.quest_skill_learn) &&
 				!(inf2&(INF2_WEDDING_SKILL|INF2_SPIRIT_SKILL|INF2_GUILD_SKILL)) //Do not count wedding/link skills. [Skotlex]
 				) {
@@ -1373,7 +1373,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 			sd->status.skill[i].id = 0; //First clear skills.
 		/* permanent skills that must be re-checked */
 		if( sd->status.skill[i].flag == SKILL_FLAG_PERMANENT ) {
-			switch( skill_db[i].nameid ) {
+			switch( skill->db[i].nameid ) {
 				case NV_TRICKDEAD:
 					if( (sd->class_&MAPID_BASEMASK) != MAPID_NOVICE ) {
 							sd->status.skill[i].id = 0;
@@ -1392,19 +1392,19 @@ int pc_calc_skilltree(struct map_session_data *sd)
 			sd->status.skill[i].flag = SKILL_FLAG_PERMANENT;
 		}
 
-		if( sd->sc.count && sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_BARDDANCER && skill_db[i].nameid >= DC_HUMMING && skill_db[i].nameid <= DC_SERVICEFORYOU )
+		if( sd->sc.count && sd->sc.data[SC_SOULLINK] && sd->sc.data[SC_SOULLINK]->val2 == SL_BARDDANCER && skill->db[i].nameid >= DC_HUMMING && skill->db[i].nameid <= DC_SERVICEFORYOU )
 		{ //Enable Bard/Dancer spirit linked skills.
 			if( sd->status.sex )
 			{ //Link dancer skills to bard.
 				if( sd->status.skill[i-8].lv < 10 )
 					continue;
-				sd->status.skill[i].id = skill_db[i].nameid;
+				sd->status.skill[i].id = skill->db[i].nameid;
 				sd->status.skill[i].lv = sd->status.skill[i-8].lv; // Set the level to the same as the linking skill
 				sd->status.skill[i].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
 			} else { //Link bard skills to dancer.
 				if( sd->status.skill[i].lv < 10 )
 					continue;
-				sd->status.skill[i-8].id = skill_db[i-8].nameid;
+				sd->status.skill[i-8].id = skill->db[i-8].nameid;
 				sd->status.skill[i-8].lv = sd->status.skill[i].lv; // Set the level to the same as the linking skill
 				sd->status.skill[i-8].flag = SKILL_FLAG_TEMPORARY; // Tag it as a non-savable, non-uppable, bonus skill
 			}
@@ -1413,7 +1413,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 
 	if( pc->has_permission(sd, PC_PERM_ALL_SKILL) ) {
 		for( i = 0; i < MAX_SKILL; i++ ) {
-			switch(skill_db[i].nameid) {
+			switch(skill->db[i].nameid) {
 				/**
 				 * Dummy skills must be added here otherwise they'll be displayed in the,
 				 * skill tree and since they have no icons they'll give resource errors
@@ -1437,10 +1437,10 @@ int pc_calc_skilltree(struct map_session_data *sd)
 				default:
 					break;
 			}
-			if( skill_db[i].inf2&(INF2_NPC_SKILL|INF2_GUILD_SKILL) )
+			if( skill->db[i].inf2&(INF2_NPC_SKILL|INF2_GUILD_SKILL) )
 				continue; //Only skills you can't have are npc/guild ones
-			if( skill_db[i].max > 0 )
-				sd->status.skill[i].id = skill_db[i].nameid;
+			if( skill->db[i].max > 0 )
+				sd->status.skill[i].id = skill->db[i].nameid;
 		}
 		return 0;
 	}
@@ -1476,7 +1476,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 			}
 			if( f ) {
 				int inf2;
-				inf2 = skill_db[idx].inf2;
+				inf2 = skill->db[idx].inf2;
 				
 				if(!sd->status.skill[idx].lv && (
 					(inf2&INF2_QUEST_SKILL && !battle_config.quest_skill_learn) ||
@@ -1507,7 +1507,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 
 		for( i = 0; i < MAX_SKILL_TREE && (id = skill_tree[c][i].id) > 0; i++ ) {
 			int idx = skill_tree[c][i].idx;
-			if( (skill_db[idx].inf2&(INF2_QUEST_SKILL|INF2_WEDDING_SKILL)) )
+			if( (skill->db[idx].inf2&(INF2_QUEST_SKILL|INF2_WEDDING_SKILL)) )
 				continue; //Do not include Quest/Wedding skills.
 
 			if( sd->status.skill[idx].id == 0 ) {
@@ -1568,7 +1568,7 @@ static void pc_check_skilltree(struct map_session_data *sd, int skill_id)
 			if( sd->status.job_level < skill_tree[c][i].joblv )
 				continue;
 
-			j = skill_db[idx].inf2;
+			j = skill->db[idx].inf2;
 			if( !sd->status.skill[idx].lv && (
 				(j&INF2_QUEST_SKILL && !battle_config.quest_skill_learn) ||
 				j&INF2_WEDDING_SKILL ||
@@ -3502,7 +3502,7 @@ int pc_skill(TBL_PC* sd, int id, int level, int flag) {
 	uint16 index = 0;
 	nullpo_ret(sd);
 
-	if( !(index = skill->get_index(id)) || skill_db[index].name == NULL) {
+	if( !(index = skill->get_index(id)) || skill->db[index].name == NULL) {
 		ShowError("pc_skill: Skill with id %d does not exist in the skill database\n", id);
 		return 0;
 	}
@@ -3525,7 +3525,7 @@ int pc_skill(TBL_PC* sd, int id, int level, int flag) {
 				clif->deleteskill(sd,id);
 			} else
 				clif->addskill(sd,id);
-			if( !skill_db[index].inf ) //Only recalculate for passive skills.
+			if( !skill->db[index].inf ) //Only recalculate for passive skills.
 				status_calc_pc(sd, 0);
 		break;
 		case 1: //Item bonus skill.
@@ -3559,7 +3559,7 @@ int pc_skill(TBL_PC* sd, int id, int level, int flag) {
 				clif->deleteskill(sd,id);
 			} else
 				clif->addskill(sd,id);
-			if( !skill_db[index].inf ) //Only recalculate for passive skills.
+			if( !skill->db[index].inf ) //Only recalculate for passive skills.
 				status_calc_pc(sd, 0);
 			break;
 	default: //Unknown flag?
@@ -5083,14 +5083,14 @@ int pc_checkskill2(struct map_session_data *sd,uint16 index) {
 		ShowError("pc_checkskill: Invalid skill index %d (char_id=%d).\n", index, sd->status.char_id);
 		return 0;
 	}
-	if( skill_db[index].nameid >= GD_SKILLBASE && skill_db[index].nameid < GD_MAX ) {
+	if( skill->db[index].nameid >= GD_SKILLBASE && skill->db[index].nameid < GD_MAX ) {
 		struct guild *g;
 		
 		if( sd->status.guild_id>0 && (g=sd->guild)!=NULL)
-			return guild->checkskill(g,skill_db[index].nameid);
+			return guild->checkskill(g,skill->db[index].nameid);
 		return 0;
 	}
-	if(sd->status.skill[index].id == skill_db[index].nameid)
+	if(sd->status.skill[index].id == skill->db[index].nameid)
 		return (sd->status.skill[index].lv);
 	
 	return 0;
@@ -6191,7 +6191,7 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 	{
 		sd->status.skill[index].lv++;
 		sd->status.skill_point--;
-		if( !skill_db[index].inf )
+		if( !skill->db[index].inf )
 			status_calc_pc(sd,0); // Only recalculate for passive skills.
 		else if( sd->status.skill_point == 0 && (sd->class_&MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->famerank(sd->status.char_id, MAPID_TAEKWON) )
 			pc->calc_skilltree(sd); // Required to grant all TK Ranger skills.
@@ -6238,22 +6238,22 @@ int pc_allskillup(struct map_session_data *sd)
 	if (pc->has_permission(sd, PC_PERM_ALL_SKILL)) { //Get ALL skills except npc/guild ones. [Skotlex]
 		//and except SG_DEVIL [Komurka] and MO_TRIPLEATTACK and RG_SNATCHER [ultramage]
 		for(i=0;i<MAX_SKILL;i++){
-			switch( skill_db[i].nameid ) {
+			switch( skill->db[i].nameid ) {
 				case SG_DEVIL:
 				case MO_TRIPLEATTACK:
 				case RG_SNATCHER:
 					continue;
 				default:
-					if( !(skill_db[i].inf2&(INF2_NPC_SKILL|INF2_GUILD_SKILL)) )
-						if ( ( sd->status.skill[i].lv = skill_db[i].max ) )//Nonexistant skills should return a max of 0 anyway.
-							sd->status.skill[i].id = skill_db[i].nameid;
+					if( !(skill->db[i].inf2&(INF2_NPC_SKILL|INF2_GUILD_SKILL)) )
+						if ( ( sd->status.skill[i].lv = skill->db[i].max ) )//Nonexistant skills should return a max of 0 anyway.
+							sd->status.skill[i].id = skill->db[i].nameid;
 			}
 		}
 	} else {
 		int inf2;
 		for(i=0;i < MAX_SKILL_TREE && (id=skill_tree[pc->class2idx(sd->status.class_)][i].id)>0;i++){
 			int idx = skill_tree[pc->class2idx(sd->status.class_)][i].idx;
-			inf2 = skill_db[idx].inf2;
+			inf2 = skill->db[idx].inf2;
 			if (
 				(inf2&INF2_QUEST_SKILL && !battle_config.quest_skill_learn) ||
 				(inf2&(INF2_WEDDING_SKILL|INF2_SPIRIT_SKILL)) ||
@@ -6481,12 +6481,12 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		lv = sd->status.skill[i].lv;
 		if (lv < 1) continue;
 
-		inf2 = skill_db[i].inf2;
+		inf2 = skill->db[i].inf2;
 
 		if( inf2&(INF2_WEDDING_SKILL|INF2_SPIRIT_SKILL) ) //Avoid reseting wedding/linker skills.
 			continue;
 		
-		skill_id = skill_db[i].nameid;
+		skill_id = skill->db[i].nameid;
 		
 		// Don't reset trick dead if not a novice/baby
 		if( skill_id == NV_TRICKDEAD && (sd->class_&MAPID_BASEMASK) != MAPID_NOVICE ) {

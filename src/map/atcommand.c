@@ -5312,15 +5312,15 @@ ACMD(skillid) {
 	
 	skillen = strlen(message);
 	
-	iter = db_iterator(skilldb_name2id);
+	iter = db_iterator(skill->name2id_db);
 	
 	for( data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key) ) {
 		idx = skill->get_index(DB->data2i(data));
-		if (strnicmp(key.str, message, skillen) == 0 || strnicmp(skill_db[idx].desc, message, skillen) == 0) {
-			sprintf(atcmd_output, msg_txt(1164), DB->data2i(data), skill_db[idx].desc, key.str); // skill %d: %s (%s)
+		if (strnicmp(key.str, message, skillen) == 0 || strnicmp(skill->db[idx].desc, message, skillen) == 0) {
+			sprintf(atcmd_output, msg_txt(1164), DB->data2i(data), skill->db[idx].desc, key.str); // skill %d: %s (%s)
 			clif->message(fd, atcmd_output);
-		} else if ( found < MAX_SKILLID_PARTIAL_RESULTS && ( stristr(key.str,message) || stristr(skill_db[idx].desc,message) ) ) {
-			snprintf(partials[found++], MAX_SKILLID_PARTIAL_RESULTS_LEN, msg_txt(1164), DB->data2i(data), skill_db[idx].desc, key.str);
+		} else if ( found < MAX_SKILLID_PARTIAL_RESULTS && ( stristr(key.str,message) || stristr(skill->db[idx].desc,message) ) ) {
+			snprintf(partials[found++], MAX_SKILLID_PARTIAL_RESULTS_LEN, msg_txt(1164), DB->data2i(data), skill->db[idx].desc, key.str);
 		}
 	}
 	
@@ -5448,7 +5448,7 @@ ACMD(skilltree) {
 	{
 		if( ent->need[j].id && pc->checkskill(sd,ent->need[j].id) < ent->need[j].lv)
 		{
-			sprintf(atcmd_output, msg_txt(1170), ent->need[j].lv, skill_db[ent->need[j].id].desc); // Player requires level %d of skill %s.
+			sprintf(atcmd_output, msg_txt(1170), ent->need[j].lv, skill->db[ent->need[j].id].desc); // Player requires level %d of skill %s.
 			clif->message(fd, atcmd_output);
 			meets = 0;
 		}
