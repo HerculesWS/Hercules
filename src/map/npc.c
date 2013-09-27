@@ -1773,7 +1773,7 @@ int npc_unload(struct npc_data* nd, bool single) {
 		strdb_remove(npc->name_db, nd->exname);
 
 	if (nd->chat_id) // remove npc chatroom object and kick users
-		chat->deletenpcchat(nd);
+		chat->delete_npc_chat(nd);
 
 #ifdef PCRE_SUPPORT
 	npc_chat->finalize(nd); // deallocate npc PCRE data structures

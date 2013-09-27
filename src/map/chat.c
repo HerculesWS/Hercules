@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/cbasetypes.h"
 #include "../common/malloc.h"
@@ -19,16 +20,16 @@
 #include <stdio.h>
 #include <string.h>
 
-
-int chat_triggerevent(struct chat_data *cd); // forward declaration
+struct chat_interface chat_s;
 
 /// Initializes a chatroom object (common functionality for both pc and npc chatrooms).
 /// Returns a chatroom object on success, or NULL on failure.
-static struct chat_data* chat_createchat(struct block_list* bl, const char* title, const char* pass, int limit, bool pub, int trigger, const char* ev, int zeny, int minLvl, int maxLvl)
+struct chat_data* chat_createchat(struct block_list* bl, const char* title, const char* pass, int limit, bool pub, int trigger, const char* ev, int zeny, int minLvl, int maxLvl)
 {
 	struct chat_data* cd;
 	nullpo_retr(NULL, bl);
 
+	/* Given the overhead and the numerous instances (npc allocatted or otherwise) wouldn't it be benefitial to have it use ERS? [Ind] */
 	cd = (struct chat_data *) aMalloc(sizeof(struct chat_data));
 
 	safestrncpy(cd->title, title, sizeof(cd->title));
@@ -91,7 +92,7 @@ int chat_createpcchat(struct map_session_data* sd, const char* title, const char
 
 	pc_stop_walking(sd,1);
 
-	cd = chat_createchat(&sd->bl, title, pass, limit, pub, 0, "", 0, 1, MAX_LEVEL);
+	cd = chat->create(&sd->bl, title, pass, limit, pub, 0, "", 0, 1, MAX_LEVEL);
 	if( cd ) {
 		cd->users = 1;
 		cd->usersd[0] = sd;
@@ -155,7 +156,7 @@ int chat_joinchat(struct map_session_data* sd, int chatid, const char* pass) {
     clif->addchat(cd, sd); //Reports To the person who already in the chat 
     clif->dispchat(cd, 0); //Reported number of changes to the people around 
 
-    chat_triggerevent(cd); //Event 
+    chat->trigger_event(cd); //Event
 
     return 0;
 }
@@ -319,7 +320,7 @@ int chat_kickchat(struct map_session_data* sd, const char* kickusername) {
 	
 	idb_put(cd->kick_list,cd->usersd[i]->status.char_id,(void*)1);
 
-	chat->leavechat(cd->usersd[i],1);
+	chat->leave(cd->usersd[i],1);
 	return 0;
 }
 
@@ -339,7 +340,7 @@ int chat_createnpcchat(struct npc_data* nd, const char* title, int limit, bool p
 		return 0;
 	}
 
-	cd = chat_createchat(&nd->bl, title, "", limit, pub, trigger, ev, zeny, minLvl, maxLvl);
+	cd = chat->create(&nd->bl, title, "", limit, pub, trigger, ev, zeny, minLvl, maxLvl);
 
 	if( cd ) {
 		nd->chat_id = cd->bl.id;
@@ -358,7 +359,7 @@ int chat_deletenpcchat(struct npc_data* nd) {
 	if( cd == NULL )
 		return 0;
 	
-	chat->npckickall(cd);
+	chat->npc_kick_all(cd);
 	clif->clearchat(cd, 0);
 	map->deliddb(&cd->bl);
 	map->delblock(&cd->bl);
@@ -387,7 +388,7 @@ int chat_enableevent(struct chat_data* cd)
 	nullpo_ret(cd);
 
 	cd->trigger &= 0x7f;
-	chat_triggerevent(cd);
+	chat->trigger_event(cd);
 	return 0;
 }
 
@@ -406,7 +407,7 @@ int chat_npckickall(struct chat_data* cd)
 	nullpo_ret(cd);
 
 	while( cd->users > 0 )
-		chat->leavechat(cd->usersd[cd->users-1],0);
+		chat->leave(cd->usersd[cd->users-1],0);
 
 	return 0;
 }
@@ -418,18 +419,19 @@ int chat_npckickall(struct chat_data* cd)
 *-------------------------------------*/
 void chat_defaults(void) {
 	chat = &chat_s;
+	
 	/* funcs */
-	
-	chat->createpcchat = chat_createpcchat;
-	chat->joinchat = chat_joinchat;
-	chat->leavechat = chat_leavechat;
-	chat->changechatowner = chat_changechatowner;
-	chat->changechatstatus = chat_changechatstatus;
-	chat->kickchat = chat_kickchat;
-	
-	chat->createnpcchat = chat_createnpcchat;
-	chat->deletenpcchat = chat_deletenpcchat;
-	chat->enableevent = chat_enableevent;
-	chat->disableevent = chat_disableevent;
-	chat->npckickall = chat_npckickall;
+	chat->create_pc_chat = chat_createpcchat;
+	chat->join = chat_joinchat;
+	chat->leave = chat_leavechat;
+	chat->change_owner = chat_changechatowner;
+	chat->change_status = chat_changechatstatus;
+	chat->kick = chat_kickchat;
+	chat->create_npc_chat = chat_createnpcchat;
+	chat->delete_npc_chat = chat_deletenpcchat;
+	chat->enable_event = chat_enableevent;
+	chat->disable_event = chat_disableevent;
+	chat->npc_kick_all = chat_npckickall;
+	chat->trigger_event = chat_triggerevent;
+	chat->create = chat_createchat;
 }

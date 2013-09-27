@@ -1,11 +1,14 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
+
 #ifndef _CHAT_H_
 #define _CHAT_H_
+
 #include "map.h" // struct block_list, CHATROOM_TITLE_SIZE
+
 struct map_session_data;
 struct chat_data;
-
 
 struct chat_data {
 	struct block_list bl;            // data for this map object
@@ -21,11 +24,9 @@ struct chat_data {
 	struct map_session_data* usersd[20];
 	struct block_list* owner;
 	char npc_event[EVENT_NAME_LENGTH];
+	/* isn't this a waste? there is a enormous overhead, wouldn't something like skill_blockpc_start be better here? [Ind] */
 	DBMap* kick_list;				//DBMap of users who were kicked from this chat
 };
-
-
-
 
 /*=====================================
 * Interface : chat.h 
@@ -33,21 +34,22 @@ struct chat_data {
 * created by Susu
 *-------------------------------------*/
 struct chat_interface {
+	
 	/* funcs */
-	
-	int (*createpcchat) (struct map_session_data* sd, const char* title, const char* pass, int limit, bool pub);
-	int (*joinchat) (struct map_session_data* sd, int chatid, const char* pass);
-	int (*leavechat) (struct map_session_data* sd, bool kicked);
-	int (*changechatowner) (struct map_session_data* sd, const char* nextownername);
-	int (*changechatstatus) (struct map_session_data* sd, const char* title, const char* pass, int limit, bool pub);
-	int (*kickchat) (struct map_session_data* sd, const char* kickusername);
-	
-	int (*createnpcchat) (struct npc_data* nd, const char* title, int limit, bool pub, int trigger, const char* ev, int zeny, int minLvl, int maxLvl);
-	int (*deletenpcchat) (struct npc_data* nd);
-	int (*enableevent) (struct chat_data* cd);
-	int (*disableevent) (struct chat_data* cd);
-	int (*npckickall) (struct chat_data* cd);
-} chat_s;
+	int (*create_pc_chat) (struct map_session_data* sd, const char* title, const char* pass, int limit, bool pub);
+	int (*join) (struct map_session_data* sd, int chatid, const char* pass);
+	int (*leave) (struct map_session_data* sd, bool kicked);
+	int (*change_owner) (struct map_session_data* sd, const char* nextownername);
+	int (*change_status) (struct map_session_data* sd, const char* title, const char* pass, int limit, bool pub);
+	int (*kick) (struct map_session_data* sd, const char* kickusername);
+	int (*create_npc_chat) (struct npc_data* nd, const char* title, int limit, bool pub, int trigger, const char* ev, int zeny, int minLvl, int maxLvl);
+	int (*delete_npc_chat) (struct npc_data* nd);
+	int (*enable_event) (struct chat_data* cd);
+	int (*disable_event) (struct chat_data* cd);
+	int (*npc_kick_all) (struct chat_data* cd);
+	int (*trigger_event) (struct chat_data *cd);
+	struct chat_data* (*create) (struct block_list* bl, const char* title, const char* pass, int limit, bool pub, int trigger, const char* ev, int zeny, int minLvl, int maxLvl);
+};
 
 struct chat_interface *chat;
 

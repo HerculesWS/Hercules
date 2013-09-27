@@ -8507,7 +8507,7 @@ void clif_refresh(struct map_session_data *sd)
 	map->foreachinrange(clif->getareachar,&sd->bl,AREA_SIZE,BL_ALL,sd);
 	clif->weather_check(sd);
 	if( sd->chatID )
-		chat->leavechat(sd,0);
+		chat->leave(sd,0);
 	if( sd->state.vending )
 		clif->openvending(sd, sd->bl.id, sd->vending);
 	if( pc_issit(sd) )
@@ -10937,7 +10937,7 @@ void clif_parse_CreateChatRoom(int fd, struct map_session_data* sd)
 	safestrncpy(s_password, password, CHATROOM_PASS_SIZE);
 	safestrncpy(s_title, title, min(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
 
-	chat->createpcchat(sd, s_title, s_password, limit, pub);
+	chat->create_pc_chat(sd, s_title, s_password, limit, pub);
 }
 
 
@@ -10948,7 +10948,7 @@ void clif_parse_ChatAddMember(int fd, struct map_session_data* sd)
 	int chatid = RFIFOL(fd,2);
 	const char* password = (char*)RFIFOP(fd,6); // not zero-terminated
 
-	chat->joinchat(sd,chatid,password);
+	chat->join(sd,chatid,password);
 }
 
 
@@ -10973,7 +10973,7 @@ void clif_parse_ChatRoomStatusChange(int fd, struct map_session_data* sd)
 	safestrncpy(s_password, password, CHATROOM_PASS_SIZE);
 	safestrncpy(s_title, title, min(len+1,CHATROOM_TITLE_SIZE)); //NOTE: assumes that safestrncpy will not access the len+1'th byte
 
-	chat->changechatstatus(sd, s_title, s_password, limit, pub);
+	chat->change_status(sd, s_title, s_password, limit, pub);
 }
 
 
@@ -10984,7 +10984,7 @@ void clif_parse_ChatRoomStatusChange(int fd, struct map_session_data* sd)
 ///     1 = normal
 void clif_parse_ChangeChatOwner(int fd, struct map_session_data* sd)
 {
-	chat->changechatowner(sd,(char*)RFIFOP(fd,6));
+	chat->change_owner(sd,(char*)RFIFOP(fd,6));
 }
 
 
@@ -10992,7 +10992,7 @@ void clif_parse_ChangeChatOwner(int fd, struct map_session_data* sd)
 /// 00e2 <name>.24B
 void clif_parse_KickFromChat(int fd,struct map_session_data *sd)
 {
-	chat->kickchat(sd,(char*)RFIFOP(fd,2));
+	chat->kick(sd,(char*)RFIFOP(fd,2));
 }
 
 
@@ -11000,7 +11000,7 @@ void clif_parse_KickFromChat(int fd,struct map_session_data *sd)
 /// 00e3
 void clif_parse_ChatLeave(int fd, struct map_session_data* sd)
 {
-	chat->leavechat(sd,0);
+	chat->leave(sd,0);
 }
 
 
