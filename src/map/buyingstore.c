@@ -15,36 +15,12 @@
 #include "pc.h"  // struct map_session_data
 #include "chrif.h"
 
-
-/// constants (client-side restrictions)
-#define BUYINGSTORE_MAX_PRICE 99990000
-#define BUYINGSTORE_MAX_AMOUNT 9999
-
-
-/// failure constants for clif functions
-enum e_buyingstore_failure
-{
-	BUYINGSTORE_CREATE               = 1,  // "Failed to open buying store."
-	BUYINGSTORE_CREATE_OVERWEIGHT    = 2,  // "Total amount of then possessed items exceeds the weight limit by %d. Please re-enter."
-	BUYINGSTORE_TRADE_BUYER_ZENY     = 3,  // "All items within the buy limit were purchased."
-	BUYINGSTORE_TRADE_BUYER_NO_ITEMS = 4,  // "All items were purchased."
-	BUYINGSTORE_TRADE_SELLER_FAILED  = 5,  // "The deal has failed."
-	BUYINGSTORE_TRADE_SELLER_COUNT   = 6,  // "The trade failed, because the entered amount of item %s is higher, than the buyer is willing to buy."
-	BUYINGSTORE_TRADE_SELLER_ZENY    = 7,  // "The trade failed, because the buyer is lacking required balance."
-	BUYINGSTORE_CREATE_NO_INFO       = 8,  // "No sale (purchase) information available."
-};
-
-
-static unsigned int buyingstore_nextid = 0;
-static const short buyingstore_blankslots[MAX_SLOTS] = { 0 };  // used when checking whether or not an item's card slots are blank
 struct buyingstore_interface buyingstore_s;
 
 /// Returns unique buying store id
-static unsigned int buyingstore_getuid(void)
-{
-	return buyingstore_nextid++;
+unsigned int buyingstore_getuid(void) {
+	return buyingstore->nextid++;
 }
-
 
 bool buyingstore_setup(struct map_session_data* sd, unsigned char slots)
 {
@@ -314,7 +290,7 @@ void buyingstore_trade(struct map_session_data* sd, int account_id, unsigned int
 			return;
 		}
 
-		if( sd->status.inventory[index].expire_time || !itemdb_cantrade(&sd->status.inventory[index], pc->get_group_level(sd), pc->get_group_level(pl_sd)) || memcmp(sd->status.inventory[index].card, buyingstore_blankslots, sizeof(buyingstore_blankslots)) )
+		if( sd->status.inventory[index].expire_time || !itemdb_cantrade(&sd->status.inventory[index], pc->get_group_level(sd), pc->get_group_level(pl_sd)) || memcmp(sd->status.inventory[index].card, buyingstore->blankslots, sizeof(buyingstore->blankslots)) )
 		{// non-tradable item
 			clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, nameid);
 			return;
@@ -469,7 +445,7 @@ bool buyingstore_searchall(struct map_session_data* sd, const struct s_search_st
 			;
 		}
 
-		if( !searchstore->result(s->search_sd, sd->buyer_id, sd->status.account_id, sd->message, it->nameid, it->amount, it->price, buyingstore_blankslots, 0) )
+		if( !searchstore->result(s->search_sd, sd->buyer_id, sd->status.account_id, sd->message, it->nameid, it->amount, it->price, buyingstore->blankslots, 0) )
 		{// result set full
 			return false;
 		}
@@ -480,6 +456,9 @@ bool buyingstore_searchall(struct map_session_data* sd, const struct s_search_st
 void buyingstore_defaults(void) {
 	buyingstore = &buyingstore_s;
 	
+	buyingstore->nextid = 0;
+	memset(buyingstore->blankslots,0,sizeof(buyingstore->blankslots));
+	/* */
 	buyingstore->setup = buyingstore_setup;
 	buyingstore->create = buyingstore_create;
 	buyingstore->close = buyingstore_close;
@@ -487,5 +466,6 @@ void buyingstore_defaults(void) {
 	buyingstore->trade = buyingstore_trade;
 	buyingstore->search = buyingstore_search;
 	buyingstore->searchall = buyingstore_searchall;
+	buyingstore->getuid = buyingstore_getuid;
 
 }
