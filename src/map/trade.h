@@ -5,6 +5,9 @@
 #ifndef	_TRADE_H_
 #define	_TRADE_H_
 
+//Max distance from traders to enable a trade to take place.
+#define TRADE_DISTANCE 2
+
 struct map_session_data;
 
 struct trade_interface {

@@ -1,13 +1,15 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "../common/nullpo.h"
 #include "../common/socket.h"
+
+#include "trade.h"
 #include "clif.h"
 #include "itemdb.h"
 #include "map.h"
 #include "path.h"
-#include "trade.h"
 #include "pc.h"
 #include "npc.h"
 #include "battle.h"
@@ -19,10 +21,6 @@
 
 #include <stdio.h>
 #include <string.h>
-
-
-//Max distance from traders to enable a trade to take place.
-#define TRADE_DISTANCE 2
 
 struct trade_interface trade_s;
 
@@ -517,7 +515,7 @@ void trade_tradecommit(struct map_session_data *sd) {
 		return;
 
 	if ((tsd = map->id2sd(sd->trade_partner)) == NULL) {
-		trade_tradecancel(sd);
+		trade->cancel(sd);
 		return;
 	}
 
