@@ -2157,8 +2157,8 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 			if(sd->sc.data[SC_MIRACLE]) i = 2; //All mobs are Star Targets
 			else
 			ARR_FIND(0, MAX_PC_FEELHATE, i, temp == sd->hate_mob[i] &&
-				(battle_config.allow_skill_without_day || sg_info[i].day_func()));
-			if(i<MAX_PC_FEELHATE && (temp=pc->checkskill(sd,sg_info[i].bless_id)))
+				(battle_config.allow_skill_without_day || pc->sg_info[i].day_func()));
+			if(i<MAX_PC_FEELHATE && (temp=pc->checkskill(sd,pc->sg_info[i].bless_id)))
 				bonus += (i==2?20:10)*temp;
 		}
 		if(battle_config.mobs_level_up && md->level > md->db->lv) // [Valaris]
@@ -3348,8 +3348,8 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 
 	//Go Backwards to give better priority to advanced skills.
 	for (i=0,j = MAX_SKILL_TREE-1;j>=0 && i< MAX_MOBSKILL ;j--) {
-		int idx = skill_tree[pc->class2idx(sd->status.class_)][j].idx;
-		skill_id = skill_tree[pc->class2idx(sd->status.class_)][j].id;
+		int idx = pc->skill_tree[pc->class2idx(sd->status.class_)][j].idx;
+		skill_id = pc->skill_tree[pc->class2idx(sd->status.class_)][j].id;
 		if (!skill_id || sd->status.skill[idx].lv < 1 ||
 			(skill->db[idx].inf2&(INF2_WEDDING_SKILL|INF2_GUILD_SKILL))
 		)

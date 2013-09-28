@@ -14000,9 +14000,9 @@ void clif_ranklist_sub(unsigned char *buf, enum fame_list_type type) {
 	int i;
 
 	switch( type ) {
-		case RANKTYPE_BLACKSMITH: list = smith_fame_list; break;
-		case RANKTYPE_ALCHEMIST:  list = chemist_fame_list; break;
-		case RANKTYPE_TAEKWON:    list = taekwon_fame_list; break;
+		case RANKTYPE_BLACKSMITH: list = pc->smith_fame_list; break;
+		case RANKTYPE_ALCHEMIST:  list = pc->chemist_fame_list; break;
+		case RANKTYPE_TAEKWON:    list = pc->taekwon_fame_list; break;
 		default: return; // Unsupported
 	}
 
@@ -14208,7 +14208,7 @@ void clif_parse_FeelSaveOk(int fd,struct map_session_data *sd)
 
 	sd->feel_map[i].index = map_id2index(sd->bl.m);
 	sd->feel_map[i].m = sd->bl.m;
-	pc_setglobalreg(sd,sg_info[i].feel_var,sd->feel_map[i].index);
+	pc_setglobalreg(sd,pc->sg_info[i].feel_var,sd->feel_map[i].index);
 
 //Are these really needed? Shouldn't they show up automatically from the feel save packet?
 //	clif_misceffect2(&sd->bl, 0x1b0);

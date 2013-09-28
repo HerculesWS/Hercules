@@ -1076,14 +1076,14 @@ int chrif_recvfamelist(int fd) {
 	int num, size;
 	int total = 0, len = 8;
 
-	memset(smith_fame_list, 0, sizeof(smith_fame_list));
-	memset(chemist_fame_list, 0, sizeof(chemist_fame_list));
-	memset(taekwon_fame_list, 0, sizeof(taekwon_fame_list));
+	memset(pc->smith_fame_list, 0, sizeof(pc->smith_fame_list));
+	memset(pc->chemist_fame_list, 0, sizeof(pc->chemist_fame_list));
+	memset(pc->taekwon_fame_list, 0, sizeof(pc->taekwon_fame_list));
 
 	size = RFIFOW(fd, 6); //Blacksmith block size
 	
 	for (num = 0; len < size && num < MAX_FAME_LIST; num++) {
-		memcpy(&smith_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
+		memcpy(&pc->smith_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
  		len += sizeof(struct fame_list);
 	}
 	
@@ -1092,7 +1092,7 @@ int chrif_recvfamelist(int fd) {
 	size = RFIFOW(fd, 4); //Alchemist block size
 	
 	for (num = 0; len < size && num < MAX_FAME_LIST; num++) {
-		memcpy(&chemist_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
+		memcpy(&pc->chemist_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
  		len += sizeof(struct fame_list);
 	}
 	
@@ -1101,7 +1101,7 @@ int chrif_recvfamelist(int fd) {
 	size = RFIFOW(fd, 2); //Total packet length
 	
 	for (num = 0; len < size && num < MAX_FAME_LIST; num++) {
-		memcpy(&taekwon_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
+		memcpy(&pc->taekwon_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
  		len += sizeof(struct fame_list);
 	}
 	
@@ -1119,9 +1119,9 @@ int chrif_updatefamelist_ack(int fd) {
 	uint8 index;
 	
 	switch (RFIFOB(fd,2)) {
-		case RANKTYPE_BLACKSMITH: list = smith_fame_list;   break;
-		case RANKTYPE_ALCHEMIST:  list = chemist_fame_list; break;
-		case RANKTYPE_TAEKWON:    list = taekwon_fame_list; break;
+		case RANKTYPE_BLACKSMITH: list = pc->smith_fame_list;   break;
+		case RANKTYPE_ALCHEMIST:  list = pc->chemist_fame_list; break;
+		case RANKTYPE_TAEKWON:    list = pc->taekwon_fame_list; break;
 		default: return 0;
 	}
 	

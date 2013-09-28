@@ -6458,7 +6458,7 @@ void status_display_add(struct map_session_data *sd, enum sc_type type, int dval
 		return;
 	}
 	
-	entry = ers_alloc(pc_sc_display_ers, struct sc_display_entry);
+	entry = ers_alloc(pc->sc_display_ers, struct sc_display_entry);
 
 	entry->type = type;
 	entry->val1 = dval1;
@@ -6479,7 +6479,7 @@ void status_display_remove(struct map_session_data *sd, enum sc_type type) {
 	if( i != sd->sc_display_count ) {
 		int cursor;
 
-		ers_free(pc_sc_display_ers, sd->sc_display[i]);
+		ers_free(pc->sc_display_ers, sd->sc_display[i]);
 		sd->sc_display[i] = NULL;
 
 		/* the all-mighty compact-o-matic */

@@ -4908,7 +4908,7 @@ void do_final(void)
 	gstorage->final();
 	guild->final();
 	party->final();
-	pc->do_final_pc();
+	pc->final();
 	pet->final();
 	mob->final();
 	homun->final();
@@ -5385,7 +5385,7 @@ int do_init(int argc, char *argv[])
 	skill->init();
 	read_map_zone_db();/* read after item and skill initalization */
 	mob->init();
-	pc->do_init_pc();
+	pc->init();
 	status->init();
 	party->init();
 	guild->init();

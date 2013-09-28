@@ -5428,14 +5428,14 @@ ACMD(skilltree) {
 	sprintf(atcmd_output, msg_txt(1168), pc->job_name(c), pc->checkskill(pl_sd, NV_BASIC)); // Player is using %s skill tree (%d basic points).
 	clif->message(fd, atcmd_output);
 	
-	ARR_FIND( 0, MAX_SKILL_TREE, j, skill_tree[c][j].id == 0 || skill_tree[c][j].id == skill_id );
-	if( j == MAX_SKILL_TREE || skill_tree[c][j].id == 0 )
+	ARR_FIND( 0, MAX_SKILL_TREE, j, pc->skill_tree[c][j].id == 0 || pc->skill_tree[c][j].id == skill_id );
+	if( j == MAX_SKILL_TREE || pc->skill_tree[c][j].id == 0 )
 	{
 		clif->message(fd, msg_txt(1169)); // The player cannot use that skill.
 		return true;
 	}
 	
-	ent = &skill_tree[c][j];
+	ent = &pc->skill_tree[c][j];
 	
 	meets = 1;
 	for(j=0;j<MAX_PC_SKILL_REQUIRE;j++)

@@ -2375,7 +2375,7 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 			/* [Ind/Hercules] */
 			if( sd->sc_display_count ) {
 				for(i = 0; i < sd->sc_display_count; i++) {
-					ers_free(pc_sc_display_ers, sd->sc_display[i]);
+					ers_free(pc->sc_display_ers, sd->sc_display[i]);
 				}
 				sd->sc_display_count = 0;
 			}

@@ -193,9 +193,9 @@ int skill_tree_get_max(uint16 skill_id, int b_class)
 	int i;
 	b_class = pc->class2idx(b_class);
 
-	ARR_FIND( 0, MAX_SKILL_TREE, i, skill_tree[b_class][i].id == 0 || skill_tree[b_class][i].id == skill_id );
-	if( i < MAX_SKILL_TREE && skill_tree[b_class][i].id == skill_id )
-		return skill_tree[b_class][i].max;
+	ARR_FIND( 0, MAX_SKILL_TREE, i, pc->skill_tree[b_class][i].id == 0 || pc->skill_tree[b_class][i].id == skill_id );
+	if( i < MAX_SKILL_TREE && pc->skill_tree[b_class][i].id == skill_id )
+		return pc->skill_tree[b_class][i].max;
 	else
 		return skill->get_max(skill_id);
 }
@@ -12619,7 +12619,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				break;
 			i = skill_id-SG_SUN_COMFORT;
 			if (sd->bl.m == sd->feel_map[i].m &&
-				(battle_config.allow_skill_without_day || sg_info[i].day_func()))
+				(battle_config.allow_skill_without_day || pc->sg_info[i].day_func()))
 				break;
 			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			return 0;
@@ -17980,11 +17980,11 @@ void skill_reload (void) {
 	//[Ind/Hercules] refresh index cache
 	for(c = 0; c < CLASS_COUNT; c++) {
 		for( i = 0; i < MAX_SKILL_TREE; i++ ) {
-			if( skill_tree[c][i].id ) {
-				skill_tree[c][i].idx = skill->get_index(skill_tree[c][i].id);
+			if( pc->skill_tree[c][i].id ) {
+				pc->skill_tree[c][i].idx = skill->get_index(pc->skill_tree[c][i].id);
 				for(k = 0; k < MAX_PC_SKILL_REQUIRE; k++) {
-					if( skill_tree[c][i].need[k].id )
-						skill_tree[c][i].need[k].idx = skill->get_index(skill_tree[c][i].need[k].id);
+					if( pc->skill_tree[c][i].need[k].id )
+						pc->skill_tree[c][i].need[k].idx = skill->get_index(pc->skill_tree[c][i].need[k].id);
 				}
 			}
 		}
