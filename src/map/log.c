@@ -20,36 +20,8 @@
 
 struct log_interface log_s;
 
-/// filters for item logging
-typedef enum e_log_filter {
-	LOG_FILTER_NONE     = 0x000,
-	LOG_FILTER_ALL      = 0x001,
-	// bits
-	LOG_FILTER_HEALING  = 0x002,  // Healing items (0)
-	LOG_FILTER_ETC_AMMO = 0x004,  // Etc Items(3) + Arrows (10)
-	LOG_FILTER_USABLE   = 0x008,  // Usable Items(2) + Scrolls, Lures(11) + Usable Cash Items(18)
-	LOG_FILTER_WEAPON   = 0x010,  // Weapons(4)
-	LOG_FILTER_ARMOR    = 0x020,  // Shields, Armors, Headgears, Accessories, Garments and Shoes(5)
-	LOG_FILTER_CARD     = 0x040,  // Cards(6)
-	LOG_FILTER_PETITEM  = 0x080,  // Pet Accessories(8) + Eggs(7) (well, monsters don't drop 'em but we'll use the same system for ALL logs)
-	LOG_FILTER_PRICE    = 0x100,  // Log expensive items ( >= price_log )
-	LOG_FILTER_AMOUNT   = 0x200,  // Log large amount of items ( >= amount_log )
-	LOG_FILTER_REFINE   = 0x400,  // Log refined items ( refine >= refine_log ) [not implemented]
-	LOG_FILTER_CHANCE   = 0x800,  // Log rare items and Emperium ( drop chance <= rare_log )
-}
-e_log_filter;
-
-#ifdef SQL_INNODB
-// database is using an InnoDB engine so do not use DELAYED
-#define LOG_QUERY "INSERT"
-#else
-// database is using a MyISAM engine so use DELAYED
-#define LOG_QUERY "INSERT DELAYED"
-#endif
-
-
 /// obtain log type character for item/zeny logs
-static char log_picktype2char(e_log_pick_type type) {
+char log_picktype2char(e_log_pick_type type) {
 	switch( type ) {
 		case LOG_TYPE_TRADE:            return 'T';  // (T)rade
 		case LOG_TYPE_VENDING:          return 'V';  // (V)ending
@@ -78,7 +50,7 @@ static char log_picktype2char(e_log_pick_type type) {
 
 
 /// obtain log type character for chat logs
-static char log_chattype2char(e_log_chat_type type) {
+char log_chattype2char(e_log_chat_type type) {
 	switch( type ) {
 		case LOG_CHAT_GLOBAL:   return 'O';  // Gl(O)bal
 		case LOG_CHAT_WHISPER:  return 'W';  // (W)hisper
@@ -94,7 +66,7 @@ static char log_chattype2char(e_log_chat_type type) {
 
 
 /// check if this item should be logged according the settings
-static bool should_log_item(int nameid, int amount, int refine, struct item_data *id) {
+bool should_log_item(int nameid, int amount, int refine, struct item_data *id) {
 	int filter = logs->config.filter;
 
 	if( id == NULL )
@@ -156,7 +128,7 @@ void log_pick_sub_sql(int id, int16 m, e_log_pick_type type, int amount, struct 
 	if( SQL_ERROR == SQL->Query(logmysql_handle,
 	    LOG_QUERY " INTO `%s` (`time`, `char_id`, `type`, `nameid`, `amount`, `refine`, `card0`, `card1`, `card2`, `card3`, `map`, `unique_id`) "
 	    "VALUES (NOW(), '%d', '%c', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%"PRIu64"')",
-	    logs->config.log_pick, id, log_picktype2char(type), itm->nameid, amount, itm->refine, itm->card[0], itm->card[1], itm->card[2], itm->card[3],
+	    logs->config.log_pick, id, logs->picktype2char(type), itm->nameid, amount, itm->refine, itm->card[0], itm->card[1], itm->card[2], itm->card[3],
 	    maplist[m].name?maplist[m].name:"", itm->unique_id)
 	) {
 		Sql_ShowDebug(logmysql_handle);
@@ -173,7 +145,7 @@ void log_pick_sub_txt(int id, int16 m, e_log_pick_type type, int amount, struct 
 	time(&curtime);
 	strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
 	fprintf(logfp,"%s - %d\t%c\t%d,%d,%d,%d,%d,%d,%d,%s,'%"PRIu64"'\n",
-	        timestring, id, log_picktype2char(type), itm->nameid, amount, itm->refine, itm->card[0], itm->card[1], itm->card[2], itm->card[3],
+	        timestring, id, logs->picktype2char(type), itm->nameid, amount, itm->refine, itm->card[0], itm->card[1], itm->card[2], itm->card[3],
 		maplist[m].name?maplist[m].name:"", itm->unique_id);
 	fclose(logfp);
 }
@@ -184,7 +156,7 @@ void log_pick(int id, int16 m, e_log_pick_type type, int amount, struct item* it
 		return;
 	}
 
-	if( !should_log_item(itm->nameid, amount, itm->refine, data) )
+	if( !logs->should_log_item(itm->nameid, amount, itm->refine, data) )
 		return; //we skip logging this item set - it doesn't meet our logging conditions [Lupus]
 
 	logs->pick_sub(id,m,type,amount,itm,data);
@@ -204,7 +176,7 @@ void log_pick_mob(struct mob_data* md, e_log_pick_type type, int amount, struct 
 }
 void log_zeny_sub_sql(struct map_session_data* sd, e_log_pick_type type, struct map_session_data* src_sd, int amount) {
 	if( SQL_ERROR == SQL->Query(logmysql_handle, LOG_QUERY " INTO `%s` (`time`, `char_id`, `src_id`, `type`, `amount`, `map`) VALUES (NOW(), '%d', '%d', '%c', '%d', '%s')",
-							   logs->config.log_zeny, sd->status.char_id, src_sd->status.char_id, log_picktype2char(type), amount, mapindex_id2name(sd->mapindex)) )
+							   logs->config.log_zeny, sd->status.char_id, src_sd->status.char_id, logs->picktype2char(type), amount, mapindex_id2name(sd->mapindex)) )
 	{
 		Sql_ShowDebug(logmysql_handle);
 		return;
@@ -343,7 +315,7 @@ void log_chat_sub_sql(e_log_chat_type type, int type_id, int src_charid, int src
 	SqlStmt* stmt;
 	
 	stmt = SQL->StmtMalloc(logmysql_handle);
-	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`time`, `type`, `type_id`, `src_charid`, `src_accountid`, `src_map`, `src_map_x`, `src_map_y`, `dst_charname`, `message`) VALUES (NOW(), '%c', '%d', '%d', '%d', '%s', '%d', '%d', ?, ?)", logs->config.log_chat, log_chattype2char(type), type_id, src_charid, src_accid, mapname, x, y)
+	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`time`, `type`, `type_id`, `src_charid`, `src_accountid`, `src_map`, `src_map_x`, `src_map_y`, `dst_charname`, `message`) VALUES (NOW(), '%c', '%d', '%d', '%d', '%s', '%d', '%d', ?, ?)", logs->config.log_chat, logs->chattype2char(type), type_id, src_charid, src_accid, mapname, x, y)
 	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, (char*)dst_charname, safestrnlen(dst_charname, NAME_LENGTH))
 	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, (char*)message, safestrnlen(message, CHAT_SIZE_MAX))
 	 || SQL_SUCCESS != SQL->StmtExecute(stmt)
@@ -363,7 +335,7 @@ void log_chat_sub_txt(e_log_chat_type type, int type_id, int src_charid, int src
 		return;
 	time(&curtime);
 	strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
-	fprintf(logfp, "%s - %c,%d,%d,%d,%s,%d,%d,%s,%s\n", timestring, log_chattype2char(type), type_id, src_charid, src_accid, mapname, x, y, dst_charname, message);
+	fprintf(logfp, "%s - %c,%d,%d,%d,%s,%d,%d,%s,%s\n", timestring, logs->chattype2char(type), type_id, src_charid, src_accid, mapname, x, y, dst_charname, message);
 	fclose(logfp);
 }
 
@@ -530,4 +502,7 @@ void log_defaults(void) {
 	logs->config_read = log_config_read;
 	logs->config_done = log_config_complete;
 
+	logs->picktype2char = log_picktype2char;
+	logs->chattype2char = log_chattype2char;
+	logs->should_log_item = should_log_item;
 }
