@@ -10154,7 +10154,9 @@ void pc_defaults(void) {
 	memset(pc->exp_table, 0, sizeof(pc->exp_table)
 		   + sizeof(pc->max_level)
 		   + sizeof(pc->statp)
+#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 		   + sizeof(pc->level_penalty)
+#endif
 		   + sizeof(pc->skill_tree)
 		   + sizeof(pc->smith_fame_list)
 		   + sizeof(pc->chemist_fame_list)
