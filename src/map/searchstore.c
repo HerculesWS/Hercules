@@ -11,34 +11,6 @@
 #include "pc.h"  // struct map_session_data
 #include "searchstore.h"  // struct s_search_store_info
 
-
-/// failure constants for clif functions
-enum e_searchstore_failure {
-	SSI_FAILED_NOTHING_SEARCH_ITEM         = 0,  // "No matching stores were found."
-	SSI_FAILED_OVER_MAXCOUNT               = 1,  // "There are too many results. Please enter more detailed search term."
-	SSI_FAILED_SEARCH_CNT                  = 2,  // "You cannot search anymore."
-	SSI_FAILED_LIMIT_SEARCH_TIME           = 3,  // "You cannot search yet."
-	SSI_FAILED_SSILIST_CLICK_TO_OPEN_STORE = 4,  // "No sale (purchase) information available."
-};
-
-
-enum e_searchstore_searchtype {
-	SEARCHTYPE_VENDING      = 0,
-	SEARCHTYPE_BUYING_STORE = 1,
-};
-
-
-enum e_searchstore_effecttype {
-	EFFECTTYPE_NORMAL = 0,
-	EFFECTTYPE_CASH   = 1,
-	EFFECTTYPE_MAX
-};
-
-
-/// type for shop search function
-typedef bool (*searchstore_search_t)(struct map_session_data* sd, unsigned short nameid);
-typedef bool (*searchstore_searchall_t)(struct map_session_data* sd, const struct s_search_store_search* s);
-
 struct searchstore_interface searchstore_s;
 
 /// retrieves search function by type
