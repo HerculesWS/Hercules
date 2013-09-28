@@ -76,6 +76,7 @@ Job: Equippable jobs. Uses the following bitmask table:
 	Death Knight   (2^27): 0x08000000
 	Dark Collector (2^28): 0x10000000
 	Kagerou/Oboro  (2^29): 0x20000000
+	Rebellion      (2^30): 0x40000000
 
 Upper: Equippable upper-types. Uses the following bitmasks:
 	1: Normal jobs
