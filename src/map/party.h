@@ -1,15 +1,15 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
+
 #ifndef _PARTY_H_
 #define _PARTY_H_
+
 #include "../common/mmo.h" // struct party
 #include "../config/core.h"
-struct block_list;
-struct map_session_data;
-struct party;
-struct item;
-
 #include <stdarg.h>
+
+#include "map.h"
 
 #define PARTY_BOOKING_JOBS 6
 #define PARTY_BOOKING_RESULTS 10
@@ -47,7 +47,7 @@ struct party_booking_ad_info {
 	long expiretime;
 	struct party_booking_detail p_detail;
 };
-#else
+#else /* PARTY_RECRUIT */
 #define PB_NOTICE_LENGTH (36 + 1)
 struct party_booking_detail {
 	short level;
@@ -60,14 +60,7 @@ struct party_booking_ad_info {
 	char charname[NAME_LENGTH];
 	struct party_booking_detail p_detail;
 };
-#endif
-
-
-int party_foreachsamemap(int (*func)(struct block_list *,va_list),struct map_session_data *sd,int range,...);
-
-/*==========================================
- * Party Booking in KRO [Spiria]
- *------------------------------------------*/
+#endif /* PARTY_RECRUIT */
 
 /*=====================================
 * Interface : party.h 
@@ -75,11 +68,13 @@ int party_foreachsamemap(int (*func)(struct block_list *,va_list),struct map_ses
 * created by Susu
 *-------------------------------------*/
 struct party_interface {
-
+	DBMap* db; // int party_id -> struct party_data* (releases data)
+	DBMap* booking_db; // int char_id -> struct party_booking_ad_info* (releases data) // Party Booking [Spiria]
+	unsigned long booking_nextid;
 	/* funcs */
-	
-	void (*do_init_party) (void);
-	void (*do_final_party) (void);
+	void (*init) (void);
+	void (*final) (void);
+	/* */
 	struct party_data* (*search) (int party_id);
 	struct party_data* (*searchname) (const char* str);
 	int (*getmemberid) (struct party_data* p, struct map_session_data* sd);
@@ -113,16 +108,27 @@ struct party_interface {
 	int (*share_loot) (struct party_data* p, struct map_session_data* sd, struct item* item_data, int first_charid);
 	int (*send_dot_remove) (struct map_session_data *sd);
 	int (*sub_count) (struct block_list *bl, va_list ap);
+	/*==========================================
+	 * Party Booking in KRO [Spiria]
+	 *------------------------------------------*/
 #ifndef PARTY_RECRUIT
 	void (*booking_register) (struct map_session_data *sd, short level, short mapid, short* job);
 	void (*booking_update) (struct map_session_data *sd, short* job);
 	void (*booking_search) (struct map_session_data *sd, short level, short mapid, short job, unsigned long lastindex, short resultcount);
-#else
+#else /* PARTY_RECRUIT */
 	void (*booking_register) (struct map_session_data *sd, short level, const char *notice);
 	void (*booking_update) (struct map_session_data *sd, const char *notice);
 	void (*booking_search) (struct map_session_data *sd, short level, short mapid, unsigned long lastindex, short resultcount);
 #endif
 	bool (*booking_delete) (struct map_session_data *sd);
+	/* */
+	int (*foreachsamemap) (int (*func)(struct block_list *,va_list),struct map_session_data *sd,int range,...);
+	int (*send_xy_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	void (*fill_member) (struct party_member* member, struct map_session_data* sd, unsigned int leader);
+	TBL_PC* (*sd_check) (int party_id, int account_id, int char_id);
+	void (*check_state) (struct party_data *p);
+	struct party_booking_ad_info* (*create_booking_data) (void);
+	int (*db_final) (DBKey key, DBData *data, va_list ap);
 };
 
 struct party_interface *party;

@@ -337,7 +337,7 @@ int pc_banding(struct map_session_data *sd, uint16 skill_lv) {
 
 	c = 0;
 	memset(b_sd, 0, sizeof(b_sd));
-	i = party_foreachsamemap(pc_check_banding,sd,range,&sd->bl,&c,&b_sd);
+	i = party->foreachsamemap(pc_check_banding,sd,range,&sd->bl,&c,&b_sd);
 
 	if( c < 1 ) {
 		//just recalc status no need to recalc hp
@@ -4714,7 +4714,7 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	}
 
 	if(battle_config.show_steal_in_same_party)
-		party_foreachsamemap(pc_show_steal,sd,AREA_SIZE,sd,tmp_item.nameid);
+		party->foreachsamemap(pc_show_steal,sd,AREA_SIZE,sd,tmp_item.nameid);
 
 	//Logs items, Stolen from mobs [Lupus]
 	logs->pick_mob(md, LOG_TYPE_STEAL, -1, &tmp_item, data);

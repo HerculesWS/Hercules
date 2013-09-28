@@ -4907,7 +4907,7 @@ void do_final(void)
 	instance->final();
 	gstorage->final();
 	guild->final();
-	party->do_final_party();
+	party->final();
 	pc->do_final_pc();
 	pet->final();
 	mob->final();
@@ -5387,7 +5387,7 @@ int do_init(int argc, char *argv[])
 	mob->init();
 	pc->do_init_pc();
 	status->init();
-	party->do_init_party();
+	party->init();
 	guild->init();
 	gstorage->init();
 	pet->init();

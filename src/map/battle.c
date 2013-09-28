@@ -791,7 +791,7 @@ int64 battle_calc_masteryfix(struct block_list *src, struct block_list *target, 
 		damage += 4;
 
 	if(sd->status.party_id && (skill2_lv=pc->checkskill(sd,TK_POWER)) > 0) {
-		if( (i = party_foreachsamemap(party->sub_count, sd, 0)) > 1 )
+		if( (i = party->foreachsamemap(party->sub_count, sd, 0)) > 1 )
 			damage += 2 * skill2_lv * i * (damage /*+ unknown value*/)  / 100 /*+ unknown value*/;
 	}
 #else
@@ -1556,7 +1556,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 
 						c = 0;
 						memset (p_sd, 0, sizeof(p_sd));
-						party_foreachsamemap(skill->check_condition_char_sub, sd, 3, &sd->bl, &c, &p_sd, skill_id);
+						party->foreachsamemap(skill->check_condition_char_sub, sd, 3, &sd->bl, &c, &p_sd, skill_id);
 						c = ( c > 1 ? rand()%c : 0 );
 
 						if( (psd = map->id2sd(p_sd[c])) && pc->checkskill(psd,WL_COMET) > 0 ){
@@ -4534,7 +4534,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 #ifndef RENEWAL
 
 					if(sd->status.party_id && (temp=pc->checkskill(sd,TK_POWER)) > 0){
-						if( (i = party_foreachsamemap(party->sub_count, sd, 0)) > 1 ) // exclude the player himself [Inkfish]
+						if( (i = party->foreachsamemap(party->sub_count, sd, 0)) > 1 ) // exclude the player himself [Inkfish]
 							ATK_ADDRATE(2*temp*i);
 					}
 #endif
