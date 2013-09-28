@@ -30,7 +30,7 @@ struct guild_storage_interface gstorage_s;
 /*==========================================
  * Sort items in the warehouse
  *------------------------------------------*/
-static int storage_comp_item(const void *_i1, const void *_i2)
+int storage_comp_item(const void *_i1, const void *_i2)
 {
 	struct item *i1 = (struct item *)_i1;
 	struct item *i2 = (struct item *)_i2;
@@ -45,33 +45,21 @@ static int storage_comp_item(const void *_i1, const void *_i2)
 }
 
 //Sort item by storage_comp_item (nameid)
-static void storage_sortitem(struct item* items, unsigned int size)
+void storage_sortitem(struct item* items, unsigned int size)
 {
 	nullpo_retv(items);
 
 	if( battle_config.client_sort_storage )
 	{
-		qsort(items, size, sizeof(struct item), storage_comp_item);
+		qsort(items, size, sizeof(struct item), storage->comp_item);
 	}
-}
-
-/*==========================================
- * Init/Terminate
- *------------------------------------------*/
-/* ##TODO not really init_storage but init_gstorage, should rename/move */
-int do_init_storage(void) { // Called from map.c::do_init()
-	gstorage->db = idb_alloc(DB_OPT_RELEASE_DATA);
-	return 1;
-}
-void do_final_storage(void) { // by [MC Cameri]
-	gstorage->db->destroy(gstorage->db,NULL);
 }
 
 /**
  * Parses storage and saves 'dirty' ones upon reconnect. [Skotlex]
  * @see DBApply
  */
-static int storage_reconnect_sub(DBKey key, DBData *data, va_list ap)
+int storage_reconnect_sub(DBKey key, DBData *data, va_list ap)
 {
 	struct guild_storage *stor = DB->data2ptr(data);
 	if (stor->dirty && stor->storage_status == 0) //Save closed storages.
@@ -82,7 +70,7 @@ static int storage_reconnect_sub(DBKey key, DBData *data, va_list ap)
 
 //Function to be invoked upon server reconnection to char. To save all 'dirty' storages [Skotlex]
 void do_reconnect_storage(void) {
-	gstorage->db->foreach(gstorage->db, storage_reconnect_sub);
+	gstorage->db->foreach(gstorage->db, storage->reconnect_sub);
 }
 
 /*==========================================
@@ -104,7 +92,7 @@ int storage_storageopen(struct map_session_data *sd)
 	}
 	
 	sd->state.storage_flag = 1;
-	storage_sortitem(sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
+	storage->sortitem(sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
 	clif->storagelist(sd, sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
 	clif->updatestorageamount(sd, sd->status.storage.storage_amount, MAX_STORAGE);
 	return 0;
@@ -347,7 +335,7 @@ void storage_storage_quit(struct map_session_data* sd, int flag) {
 /**
  * @see DBCreateData
  */
-static DBData create_guildstorage(DBKey key, va_list args)
+DBData create_guildstorage(DBKey key, va_list args)
 {
 	struct guild_storage *gs = NULL;
 	gs = (struct guild_storage *) aCalloc(sizeof(struct guild_storage), 1);
@@ -359,7 +347,7 @@ struct guild_storage *guild2storage(int guild_id)
 {
 	struct guild_storage *gs = NULL;
 	if(guild->search(guild_id) != NULL)
-		gs = idb_ensure(gstorage->db,guild_id,create_guildstorage);
+		gs = idb_ensure(gstorage->db,guild_id,gstorage->create);
 	return gs;
 }
 
@@ -409,7 +397,7 @@ int storage_guild_storageopen(struct map_session_data* sd)
 	
 	gstor->storage_status = 1;
 	sd->state.storage_flag = 2;
-	storage_sortitem(gstor->items, ARRAYLENGTH(gstor->items));
+	storage->sortitem(gstor->items, ARRAYLENGTH(gstor->items));
 	clif->storagelist(sd, gstor->items, ARRAYLENGTH(gstor->items));
 	clif->updatestorageamount(sd, gstor->storage_amount, MAX_GUILD_STORAGE);
 	return 0;
@@ -728,12 +716,15 @@ int storage_guild_storage_quit(struct map_session_data* sd, int flag) {
 
 	return 0;
 }
+void do_init_gstorage(void) {
+	gstorage->db = idb_alloc(DB_OPT_RELEASE_DATA);
+}
+void do_final_gstorage(void) {
+	db_destroy(gstorage->db);
+}
 void storage_defaults(void) {
 	storage = &storage_s;
 
-	/* */
-	storage->init = do_init_storage;
-	storage->final = do_final_storage;
 	/* */
 	storage->reconnect = do_reconnect_storage;
 	/* */
@@ -746,10 +737,17 @@ void storage_defaults(void) {
 	storage->gettocart = storage_storagegettocart;
 	storage->close = storage_storageclose;
 	storage->pc_quit = storage_storage_quit;
+	storage->comp_item = storage_comp_item;
+	storage->sortitem = storage_sortitem;
+	storage->reconnect_sub = storage_reconnect_sub;
 }
 void gstorage_defaults(void) {
 	gstorage = &gstorage_s;
 	
+	/* */
+	gstorage->init = do_init_gstorage;
+	gstorage->final = do_final_gstorage;
+	/* */
 	gstorage->id2storage = guild2storage;
 	gstorage->id2storage2 = guild2storage2;
 	gstorage->delete = guild_storage_delete;
@@ -764,4 +762,5 @@ void gstorage_defaults(void) {
 	gstorage->pc_quit = storage_guild_storage_quit;
 	gstorage->save = storage_guild_storagesave;
 	gstorage->saved = storage_guild_storagesaved;
+	gstorage->create = create_guildstorage;
 }

@@ -4905,7 +4905,7 @@ void do_final(void)
 	script->final();
 	itemdb->final();
 	instance->final();
-	storage->final();
+	gstorage->final();
 	guild->final();
 	party->do_final_party();
 	pc->do_final_pc();
@@ -5389,7 +5389,7 @@ int do_init(int argc, char *argv[])
 	status->init();
 	party->do_init_party();
 	guild->init();
-	storage->init();
+	gstorage->init();
 	pet->init();
 	homun->init();
 	mercenary->init();
