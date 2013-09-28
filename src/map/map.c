@@ -624,8 +624,8 @@ int map_foreachininstance(int (*func)(struct block_list*, va_list), int16 instan
 	int i;
 	int returnCount = 0;
 
-	for (i = 0; i < instances[instance_id].num_map; i++) {
-		int m = instances[instance_id].map[i];
+	for (i = 0; i < instance->list[instance_id].num_map; i++) {
+		int m = instance->list[instance_id].map[i];
 		va_list ap;
 		va_start(ap, type);
 		returnCount += map_vforeachinmap(func, m, type, ap);

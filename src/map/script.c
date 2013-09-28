@@ -2361,7 +2361,7 @@ void get_val(struct script_state* st, struct script_data* data)
 				break;
 			case '\'':
 					if ( st->instance_id >= 0 ) {
-						data->u.str = (char*)idb_get(instances[st->instance_id].vars,reference_getuid(data));
+						data->u.str = (char*)idb_get(instance->list[st->instance_id].vars,reference_getuid(data));
 					} else {
 						ShowWarning("script_get_val: cannot access instance variable '%s', defaulting to \"\"\n", name);
 						data->u.str = NULL;
@@ -2416,7 +2416,7 @@ void get_val(struct script_state* st, struct script_data* data)
 					break;
 				case '\'':
 						if( st->instance_id >= 0 )
-							data->u.num = (int)idb_iget(instances[st->instance_id].vars,reference_getuid(data));
+							data->u.num = (int)idb_iget(instance->list[st->instance_id].vars,reference_getuid(data));
 						else {
 							ShowWarning("script_get_val: cannot access instance variable '%s', defaulting to 0\n", name);
 							data->u.num = 0;
@@ -2474,8 +2474,8 @@ static int set_reg(struct script_state* st, TBL_PC* sd, int num, const char* nam
 			return 1;
 		case '\'':
 			if( st->instance_id >= 0 ) {
-				idb_remove(instances[st->instance_id].vars, num);
-				if( str[0] ) idb_put(instances[st->instance_id].vars, num, aStrdup(str));
+				idb_remove(instance->list[st->instance_id].vars, num);
+				if( str[0] ) idb_put(instance->list[st->instance_id].vars, num, aStrdup(str));
 			}
 			return 1;
 		default:
@@ -2522,9 +2522,9 @@ static int set_reg(struct script_state* st, TBL_PC* sd, int num, const char* nam
 			return 1;
 		case '\'':
 			if( st->instance_id >= 0 ) {
-				idb_remove(instances[st->instance_id].vars, num);
+				idb_remove(instance->list[st->instance_id].vars, num);
 				if( val != 0 )
-					idb_iput(instances[st->instance_id].vars, num, val);
+					idb_iput(instance->list[st->instance_id].vars, num, val);
 			}
 			return 1;
 		default:
@@ -15930,7 +15930,7 @@ BUILDIN(instance_init) {
 		return true;
 	}
 	
-	if( instances[instance_id].state != INSTANCE_IDLE ) {
+	if( instance->list[instance_id].state != INSTANCE_IDLE ) {
 		ShowError("instance_init: instance already initialized.\n");
 		return true;
 	}
@@ -15961,8 +15961,8 @@ BUILDIN(instance_announce) {
 	if( !instance->valid(instance_id) )
 		return true;
 	
-	for( i = 0; i < instances[instance_id].num_map; i++ )
-		map->foreachinmap(buildin_announce_sub, instances[instance_id].map[i], BL_PC,
+	for( i = 0; i < instance->list[instance_id].num_map; i++ )
+		map->foreachinmap(buildin_announce_sub, instance->list[instance_id].map[i], BL_PC,
 		                  mes, strlen(mes)+1, flag&BC_COLOR_MASK, fontColor, fontType, fontSize, fontAlign, fontY);
 	
 	return true;
@@ -16015,8 +16015,8 @@ BUILDIN(has_instance) {
 		if( sd->instances ) {
 			for( i = 0; i < sd->instances; i++ ) {
 				if( sd->instance[i] >= 0 ) {
-					ARR_FIND(0, instances[sd->instance[i]].num_map, j, maplist[instances[sd->instance[i]].map[j]].instance_src_map == m);
-					if( j != instances[sd->instance[i]].num_map )
+					ARR_FIND(0, instance->list[sd->instance[i]].num_map, j, maplist[instance->list[sd->instance[i]].map[j]].instance_src_map == m);
+					if( j != instance->list[sd->instance[i]].num_map )
 						break;
 				}
 			}
@@ -16026,8 +16026,8 @@ BUILDIN(has_instance) {
 		if( instance_id == -1 && sd->status.party_id && (p = party->search(sd->status.party_id)) && p->instances ) {
 			for( i = 0; i < p->instances; i++ ) {
 				if( p->instance[i] >= 0 ) {
-					ARR_FIND(0, instances[p->instance[i]].num_map, j, maplist[instances[p->instance[i]].map[j]].instance_src_map == m);
-					if( j != instances[p->instance[i]].num_map )
+					ARR_FIND(0, instance->list[p->instance[i]].num_map, j, maplist[instance->list[p->instance[i]].map[j]].instance_src_map == m);
+					if( j != instance->list[p->instance[i]].num_map )
 						break;
 				}
 			}
@@ -16037,8 +16037,8 @@ BUILDIN(has_instance) {
 		if( instance_id == -1 && sd->guild && sd->guild->instances ) {
 			for( i = 0; i < sd->guild->instances; i++ ) {
 				if( sd->guild->instance[i] >= 0 ) {
-					ARR_FIND(0, instances[sd->guild->instance[i]].num_map, j, maplist[instances[sd->guild->instance[i]].map[j]].instance_src_map == m);
-					if( j != instances[sd->guild->instance[i]].num_map )
+					ARR_FIND(0, instance->list[sd->guild->instance[i]].num_map, j, maplist[instance->list[sd->guild->instance[i]].map[j]].instance_src_map == m);
+					if( j != instance->list[sd->guild->instance[i]].num_map )
 						break;
 				}
 			}

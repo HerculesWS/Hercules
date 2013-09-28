@@ -42,14 +42,14 @@ struct instance_data {
 	unsigned int idle_timeout, idle_timeoutval;
 };
 
-struct instance_data *instances;
-
 struct instance_interface {
 	void (*init) (void);
 	void (*final) (void);
 	/* start point */
 	unsigned short start_id;
-	unsigned short instances;
+	unsigned short instances;/* count */
+	/* */
+	struct instance_data *list;/* pointer to a chunk of consecutive memory, access via instance->list[0]..etc */
 	/* */
 	int (*create) (int party_id, const char *name, enum instance_owner_type type);
 	int (*add_map) (const char *name, int instance_id, bool usebasename, const char *map_name);
@@ -62,6 +62,7 @@ struct instance_interface {
 	void (*check_kick) (struct map_session_data *sd);
 	void (*set_timeout) (int instance_id, unsigned int progress_timeout, unsigned int idle_timeout);
 	bool (*valid) (int instance_id);
+	int (*destroy_timer) (int tid, unsigned int tick, int id, intptr_t data);
 };
 
 struct instance_interface *instance;

@@ -2197,7 +2197,7 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 				--maplist[bl->m].users_pvp;
 			}
 			if( maplist[bl->m].instance_id >= 0 ) {
-				instances[maplist[bl->m].instance_id].users--;
+				instance->list[maplist[bl->m].instance_id].users--;
 				instance->check_idle(maplist[bl->m].instance_id);
 			}
 			sd->state.debug_remove_map = 1; // temporary state to track double remove_map's [FlavioJS]

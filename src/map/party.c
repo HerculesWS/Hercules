@@ -319,7 +319,7 @@ int party_recv_info(struct party* sp, int char_id)
 		clif->party_info(p,NULL);
 		for( j = 0; j < p->instances; j++ ) {
 			if( p->instance[j] >= 0 ) {
-				if( instances[p->instance[j]].idle_timer == INVALID_TIMER && instances[p->instance[j]].progress_timer == INVALID_TIMER )
+				if( instance->list[p->instance[j]].idle_timer == INVALID_TIMER && instance->list[p->instance[j]].progress_timer == INVALID_TIMER )
 					continue;
 				clif->instance_join(sd->fd, p->instance[j]);
 				break;
@@ -442,7 +442,7 @@ void party_member_joined(struct map_session_data *sd)
 		p->data[i].sd = sd;
 		for( j = 0; j < p->instances; j++ ) {
 			if( p->instance[j] >= 0 ) {
-				if( instances[p->instance[j]].idle_timer == INVALID_TIMER && instances[p->instance[j]].progress_timer == INVALID_TIMER )
+				if( instance->list[p->instance[j]].idle_timer == INVALID_TIMER && instance->list[p->instance[j]].progress_timer == INVALID_TIMER )
 					continue;
 				clif->instance_join(sd->fd, p->instance[j]);
 				break;
@@ -504,7 +504,7 @@ int party_member_added(int party_id,int account_id,int char_id, int flag) {
 
 	for( j = 0; j < p->instances; j++ ) {
 		if( p->instance[j] >= 0 ) {
-			if( instances[p->instance[j]].idle_timer == INVALID_TIMER && instances[p->instance[j]].progress_timer == INVALID_TIMER )
+			if( instance->list[p->instance[j]].idle_timer == INVALID_TIMER && instance->list[p->instance[j]].progress_timer == INVALID_TIMER )
 				continue;
 			clif->instance_join(sd->fd, p->instance[j]);
 			break;
@@ -604,7 +604,7 @@ int party_broken(int party_id)
 	for( j = 0; j < p->instances; j++ ) {
 		if( p->instance[j] >= 0 ) {
 			instance->destroy( p->instance[j] );
-			instances[p->instance[j]].owner_id = 0;
+			instance->list[p->instance[j]].owner_id = 0;
 		}
 	}
 	
