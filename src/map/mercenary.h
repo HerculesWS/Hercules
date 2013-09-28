@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 #ifndef _MERCENARY_H_
 #define _MERCENARY_H_
 
@@ -58,7 +59,7 @@ struct mercenary_interface {
 
 	/* funcs */
 
-	int (*init) (void);
+	void (*init) (void);
 	
 	bool (*class) (int class_);
 	struct view_data * (*get_viewdata) (int class_);
@@ -83,7 +84,14 @@ struct mercenary_interface {
 	
 	int (*checkskill) (struct mercenary_data *md, uint16 skill_id);
 	int (*read_db) (void);
-	int (*read_skilldb) (void);	
+	int (*read_skilldb) (void);
+	
+	int (*killbonus) (struct mercenary_data *md);
+	int (*search_index) (int class_);
+	
+	int (*contract_end_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	bool (*read_db_sub) (char* str[], int columns, int current);
+	bool (*read_skill_db_sub) (char* str[], int columns, int current);
 };
 
 struct mercenary_interface *mercenary;

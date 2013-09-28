@@ -50,12 +50,12 @@ int merc_search_index(int class_)
 
 bool merc_class(int class_)
 {
-	return (bool)(merc_search_index(class_) > -1);
+	return (bool)(mercenary->search_index(class_) > -1);
 }
 
 struct view_data * merc_get_viewdata(int class_)
 {
-	int i = merc_search_index(class_);
+	int i = mercenary->search_index(class_);
 	if( i < 0 )
 		return 0;
 
@@ -69,7 +69,7 @@ int merc_create(struct map_session_data *sd, int class_, unsigned int lifetime)
 	int i;
 	nullpo_retr(0,sd);
 
-	if( (i = merc_search_index(class_)) < 0 )
+	if( (i = mercenary->search_index(class_)) < 0 )
 		return 0;
 
 	db = &mercenary->db[i];
@@ -217,7 +217,7 @@ int mercenary_save(struct mercenary_data *md)
 	return 1;
 }
 
-static int merc_contract_end(int tid, unsigned int tick, int id, intptr_t data) {
+int merc_contract_end_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	struct map_session_data *sd;
 	struct mercenary_data *md;
 
@@ -228,7 +228,7 @@ static int merc_contract_end(int tid, unsigned int tick, int id, intptr_t data) 
 
 	if( md->contract_timer != tid )
 	{
-		ShowError("merc_contract_end %d != %d.\n", md->contract_timer, tid);
+		ShowError("merc_contract_end_timer %d != %d.\n", md->contract_timer, tid);
 		return 0;
 	}
 
@@ -268,14 +268,14 @@ void merc_contract_stop(struct mercenary_data *md)
 {
 	nullpo_retv(md);
 	if( md->contract_timer != INVALID_TIMER )
-		timer->delete(md->contract_timer, merc_contract_end);
+		timer->delete(md->contract_timer, mercenary->contract_end_timer);
 	md->contract_timer = INVALID_TIMER;
 }
 
 void merc_contract_init(struct mercenary_data *md)
 {
 	if( md->contract_timer == INVALID_TIMER )
-		md->contract_timer = timer->add(timer->gettick() + md->mercenary.life_time, merc_contract_end, md->master->bl.id, 0);
+		md->contract_timer = timer->add(timer->gettick() + md->mercenary.life_time, mercenary->contract_end_timer, md->master->bl.id, 0);
 
 	md->regen.state.block = 0;
 }
@@ -284,7 +284,7 @@ int merc_data_received(struct s_mercenary *merc, bool flag) {
 	struct map_session_data *sd;
 	struct mercenary_data *md;
 	struct s_mercenary_db *db;
-	int i = merc_search_index(merc->class_);
+	int i = mercenary->search_index(merc->class_);
 
 	if( (sd = map->charid2sd(merc->char_id)) == NULL )
 		return 0;
@@ -372,7 +372,7 @@ int mercenary_kills(struct mercenary_data *md)
 	if( (md->mercenary.kill_count % 50) == 0 )
 	{
 		mercenary->set_faith(md, 1);
-		mercenary_killbonus(md);
+		mercenary->killbonus(md);
 	}
 
 	if( md->master )
@@ -393,7 +393,7 @@ int mercenary_checkskill(struct mercenary_data *md, uint16 skill_id)
 	return 0;
 }
 
-static bool read_mercenarydb_sub(char* str[], int columns, int current) {
+bool read_mercenarydb_sub(char* str[], int columns, int current) {
 	int ele;
 	struct s_mercenary_db *db;
 	struct status_data *mstatus;
@@ -448,12 +448,12 @@ static bool read_mercenarydb_sub(char* str[], int columns, int current) {
 
 int read_mercenarydb(void) {
 	memset(mercenary->db,0,sizeof(mercenary->db));
-	sv->readdb(map->db_path, "mercenary_db.txt", ',', 26, 26, MAX_MERCENARY_CLASS, &read_mercenarydb_sub);
+	sv->readdb(map->db_path, "mercenary_db.txt", ',', 26, 26, MAX_MERCENARY_CLASS, mercenary->read_db_sub);
 
 	return 0;
 }
 
-static bool read_mercenary_skilldb_sub(char* str[], int columns, int current)
+bool read_mercenary_skilldb_sub(char* str[], int columns, int current)
 {// <merc id>,<skill id>,<skill level>
 	struct s_mercenary_db *db;
 	int i, class_;
@@ -485,21 +485,17 @@ static bool read_mercenary_skilldb_sub(char* str[], int columns, int current)
 }
 
 int read_mercenary_skilldb(void) {
-	sv->readdb(map->db_path, "mercenary_skill_db.txt", ',', 3, 3, -1, &read_mercenary_skilldb_sub);
+	sv->readdb(map->db_path, "mercenary_skill_db.txt", ',', 3, 3, -1, mercenary->read_skill_db_sub);
 
 	return 0;
 }
 
-int do_init_mercenary(void)
-{
+void do_init_mercenary(void) {
 	mercenary->read_db();
 	mercenary->read_skilldb();
 	
-	//add_timer_func_list(mercenary_contract, "mercenary_contract");
-	return 0;
+	timer->add_func_list(mercenary->contract_end_timer, "merc_contract_end_timer");
 }
-
-int do_final_mercenary(void);
 
 /*=====================================
 * Default Functions : mercenary.h 
@@ -539,5 +535,12 @@ void mercenary_defaults(void) {
 	
 	mercenary->checkskill = mercenary_checkskill;
 	mercenary->read_db = read_mercenarydb;
-	mercenary->read_skilldb = read_mercenary_skilldb;	
+	mercenary->read_skilldb = read_mercenary_skilldb;
+	
+	mercenary->killbonus = mercenary_killbonus;
+	mercenary->search_index = merc_search_index;
+	
+	mercenary->contract_end_timer = merc_contract_end_timer;
+	mercenary->read_db_sub = read_mercenarydb_sub;
+	mercenary->read_skill_db_sub = read_mercenary_skilldb_sub;
 }
