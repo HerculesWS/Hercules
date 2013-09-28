@@ -1,8 +1,14 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
+
 #ifndef _INTIF_H_
 #define _INFIF_H_
-//#include "../common/mmo.h"
+
+
+/**
+ * Declarations
+ **/
 struct party_member;
 struct guild_member;
 struct guild_position;
@@ -13,17 +19,13 @@ struct s_elemental;
 struct mail_message;
 struct auction_data;
 
-
-
-
-
+/**
+ * Defines
+ **/
 #define intif_rename_pc(sd, name) intif->rename(sd, 0, name)
 #define intif_rename_pet(sd, name) intif->rename(sd, 1, name)
 #define intif_rename_hom(sd, name) intif->rename(sd, 2, name)
-
-
-
-
+#define INTIF_PACKET_LEN_TABLE_SIZE 161
 
 
 /*=====================================
@@ -32,30 +34,23 @@ struct auction_data;
 * created by Susu
 *-------------------------------------*/
 struct intif_interface {
+	/* */
+	int packet_len_table[INTIF_PACKET_LEN_TABLE_SIZE];
 	/* funcs */
-	
-
 	int (*parse) (int fd);
-	
 	int (*create_pet)(int account_id, int char_id, short pet_type, short pet_lv, short pet_egg_id,
-                     short pet_equip, short intimate, short hungry, char rename_flag, char incuvate, char *pet_name);
-
+					  short pet_equip, short intimate, short hungry, char rename_flag, char incuvate, char *pet_name);
 	int (*broadcast) (const char* mes, int len, int type);
 	int (*broadcast2) (const char* mes, int len, unsigned long fontColor, short fontType, short fontSize, short fontAlign, short fontY);
 	int (*main_message) (struct map_session_data* sd, const char* message);
-	
 	int (*wis_message) (struct map_session_data *sd,char *nick,char *mes,int mes_len);
 	int (*wis_message_to_gm) (char *Wisp_name, int permission, char *mes);
-	
 	int (*saveregistry) (struct map_session_data *sd, int type);
 	int (*request_registry) (struct map_session_data *sd, int flag);
-	
 	int (*request_guild_storage) (int account_id, int guild_id);
 	int (*send_guild_storage) (int account_id, struct guild_storage *gstor);
-	
 	int (*create_party) (struct party_member *member,char *name,int item,int item2);
 	int (*request_partyinfo) (int party_id, int char_id);
-	
 	int (*party_addmember) (int party_id,struct party_member *member);
 	int (*party_changeoption) (int party_id, int account_id, int exp, int item);
 	int (*party_leave) (int party_id,int account_id, int char_id);
@@ -63,7 +58,6 @@ struct intif_interface {
 	int (*break_party) (int party_id);
 	int (*party_message) (int party_id, int account_id, const char *mes,int len);
 	int (*party_leaderchange) (int party_id,int account_id,int char_id);
-	
 	int (*guild_create) (const char *name, const struct guild_member *master);
 	int (*guild_request_info) (int guild_id);
 	int (*guild_addmember) (int guild_id, struct guild_member *m);
@@ -117,9 +111,71 @@ struct intif_interface {
 	int (*elemental_save) (struct s_elemental *ele);
 	/* @accinfo */
 	void (*request_accinfo) (int u_fd, int aid, int group_lv, char* query);
-	
+	/* */
 	int (*CheckForCharServer) (void);
-} intif_s;
+	/* */
+	void (*pWisMessage) (int fd);
+	void (*pWisEnd) (int fd);
+	int (*pWisToGM_sub) (struct map_session_data* sd,va_list va);
+	void (*pWisToGM) (int fd);
+	void (*pRegisters) (int fd);
+	void (*pChangeNameOk) (int fd);
+	void (*pMessageToFD) (int fd);
+	void (*pLoadGuildStorage) (int fd);
+	void (*pSaveGuildStorage) (int fd);
+	void (*pPartyCreated) (int fd);
+	void (*pPartyInfo) (int fd);
+	void (*pPartyMemberAdded) (int fd);
+	void (*pPartyOptionChanged) (int fd);
+	void (*pPartyMemberWithdraw) (int fd);
+	void (*pPartyMove) (int fd);
+	void (*pPartyBroken) (int fd);
+	void (*pPartyMessage) (int fd);
+	void (*pGuildCreated) (int fd);
+	void (*pGuildInfo) (int fd);
+	void (*pGuildMemberAdded) (int fd);
+	void (*pGuildMemberWithdraw) (int fd);
+	void (*pGuildMemberInfoShort) (int fd);
+	void (*pGuildBroken) (int fd);
+	void (*pGuildMessage) (int fd);
+	void (*pGuildBasicInfoChanged) (int fd);
+	void (*pGuildMemberInfoChanged) (int fd);
+	void (*pGuildPosition) (int fd);
+	void (*pGuildSkillUp) (int fd);
+	void (*pGuildAlliance) (int fd);
+	void (*pGuildNotice) (int fd);
+	void (*pGuildEmblem) (int fd);
+	void (*pGuildCastleDataLoad) (int fd);
+	void (*pGuildMasterChanged) (int fd);
+	void (*pQuestLog) (int fd);
+	void (*pQuestSave) (int fd);
+	void (*pMailInboxReceived) (int fd);
+	void (*pMailNew) (int fd);
+	void (*pMailGetAttach) (int fd);
+	void (*pMailDelete) (int fd);
+	void (*pMailReturn) (int fd);
+	void (*pMailSend) (int fd);
+	void (*pAuctionResults) (int fd);
+	void (*pAuctionRegister) (int fd);
+	void (*pAuctionCancel) (int fd);
+	void (*pAuctionClose) (int fd);
+	void (*pAuctionMessage) (int fd);
+	void (*pAuctionBid) (int fd);
+	void (*pMercenaryReceived) (int fd);
+	void (*pMercenaryDeleted) (int fd);
+	void (*pMercenarySaved) (int fd);
+	void (*pElementalReceived) (int fd);
+	void (*pElementalDeleted) (int fd);
+	void (*pElementalSaved) (int fd);
+	void (*pCreatePet) (int fd);
+	void (*pRecvPetData) (int fd);
+	void (*pSavePetOk) (int fd);
+	void (*pDeletePetOk) (int fd);
+	void (*pCreateHomunculus) (int fd);
+	void (*pRecvHomunculusData) (int fd);
+	void (*pSaveHomunculusOk) (int fd);
+	void (*pDeleteHomunculusOk) (int fd);
+};
 
 struct intif_interface *intif;
 
