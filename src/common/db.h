@@ -882,12 +882,13 @@ struct linkdb_node {
 
 typedef void (*LinkDBFunc)(void* key, void* data, va_list args);
 
-void  linkdb_insert ( struct linkdb_node** head, void *key, void* data); // 重複を考慮しない
-void  linkdb_replace( struct linkdb_node** head, void *key, void* data); // 重複を考慮する
-void* linkdb_search ( struct linkdb_node** head, void *key);
-void* linkdb_erase  ( struct linkdb_node** head, void *key);
-void  linkdb_final  ( struct linkdb_node** head );
-void  linkdb_foreach( struct linkdb_node** head, LinkDBFunc func, ...  );
+void  linkdb_insert  (struct linkdb_node** head, void *key, void* data); // 重複を考慮しない
+void  linkdb_replace (struct linkdb_node** head, void *key, void* data); // 重複を考慮する
+void* linkdb_search  (struct linkdb_node** head, void *key);
+void* linkdb_erase   (struct linkdb_node** head, void *key);
+void  linkdb_final   (struct linkdb_node** head);
+void  linkdb_vforeach(struct linkdb_node** head, LinkDBFunc func, va_list ap);
+void  linkdb_foreach (struct linkdb_node** head, LinkDBFunc func, ...);
 
 
 

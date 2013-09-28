@@ -414,16 +414,19 @@ const char* geoip_getcountry(uint32 ipnum){
 	}
 	return geoip_countryname[0];
 }
-/* sends a mesasge to map server (fd) to a user (u_fd) although we use fd we keep aid for safe-check */
-/* extremely handy I believe it will serve other uses in the near future */
-void inter_to_fd(int fd, int u_fd, int aid, char* msg, ...) {
+
+/**
+ * Argument-list version of inter_msg_to_fd
+ * @see inter_msg_to_fd
+ */
+void inter_vmsg_to_fd(int fd, int u_fd, int aid, char* msg, va_list ap) {
 	char msg_out[512];
-	va_list ap;
+	va_list apcopy;
 	int len = 1;/* yes we start at 1 */
 
-	va_start(ap,msg);
-		len += vsnprintf(msg_out, 512, msg, ap);
-	va_end(ap);
+	va_copy(apcopy, ap);
+	len += vsnprintf(msg_out, 512, msg, apcopy);
+	va_end(apcopy);
 
 	WFIFOHEAD(fd,12 + len);
 
@@ -437,6 +440,23 @@ void inter_to_fd(int fd, int u_fd, int aid, char* msg, ...) {
 
 	return;
 }
+
+/**
+ * Sends a message to map server (fd) to a user (u_fd) although we use fd we
+ * keep aid for safe-check.
+ * @param fd   Mapserver's fd
+ * @param u_fd Recipient's fd
+ * @param aid  Recipient's expected for sanity checks on the mapserver
+ * @param msg  Message format string
+ * @param ...  Additional parameters for (v)sprinf
+ */
+void inter_msg_to_fd(int fd, int u_fd, int aid, char* msg, ...) {
+	va_list ap;
+	va_start(ap,msg);
+	inter_vmsg_to_fd(fd, u_fd, aid, msg, ap);
+	va_end(ap);
+}
+
 /* [Dekamaster/Nightroad] */
 void mapif_parse_accinfo(int fd) {
 	int u_fd = RFIFOL(fd,2), aid = RFIFOL(fd,6), castergroup = RFIFOL(fd,10);
@@ -454,10 +474,10 @@ void mapif_parse_accinfo(int fd) {
 		if ( SQL_ERROR == SQL->Query(sql_handle, "SELECT `account_id`,`name`,`class`,`base_level`,`job_level`,`online` FROM `%s` WHERE `name` LIKE '%s' LIMIT 10", char_db, query_esq)
 				|| SQL->NumRows(sql_handle) == 0 ) {
 			if( SQL->NumRows(sql_handle) == 0 ) {
-				inter_to_fd(fd, u_fd, aid, "No matches were found for your criteria, '%s'",query);
+				inter_msg_to_fd(fd, u_fd, aid, "No matches were found for your criteria, '%s'",query);
 			} else {
 				Sql_ShowDebug(sql_handle);
-				inter_to_fd(fd, u_fd, aid, "An error occured, bother your admin about it.");
+				inter_msg_to_fd(fd, u_fd, aid, "An error occured, bother your admin about it.");
 			}
 			SQL->FreeResult(sql_handle);
 			return;
@@ -467,7 +487,7 @@ void mapif_parse_accinfo(int fd) {
 				SQL->GetData(sql_handle, 0, &data, NULL); account_id = atoi(data);
 				SQL->FreeResult(sql_handle);
 			} else {// more than one, listing... [Dekamaster/Nightroad]
-				inter_to_fd(fd, u_fd, aid, "Your query returned the following %d results, please be more specific...",(int)SQL->NumRows(sql_handle));
+				inter_msg_to_fd(fd, u_fd, aid, "Your query returned the following %d results, please be more specific...",(int)SQL->NumRows(sql_handle));
 				while ( SQL_SUCCESS == SQL->NextRow(sql_handle) ) {
 					int class_;
 					short base_level, job_level, online;
@@ -480,7 +500,7 @@ void mapif_parse_accinfo(int fd) {
 					SQL->GetData(sql_handle, 4, &data, NULL); job_level = atoi(data);
 					SQL->GetData(sql_handle, 5, &data, NULL); online = atoi(data);
 
-					inter_to_fd(fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, job_name(class_), base_level, job_level, online?"Online":"Offline");
+					inter_msg_to_fd(fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, job_name(class_), base_level, job_level, online?"Online":"Offline");
 				}
 				SQL->FreeResult(sql_handle);
 				return;
@@ -497,9 +517,9 @@ void mapif_parse_accinfo(int fd) {
 		if ( SQL_ERROR == SQL->Query(sql_handle, "SELECT `userid`, `user_pass`, `email`, `last_ip`, `group_id`, `lastlogin`, `logincount`, `state`,`pincode`,`birthdate` FROM `login` WHERE `account_id` = '%d' LIMIT 1", account_id)
 			|| SQL->NumRows(sql_handle) == 0 ) {
 			if( SQL->NumRows(sql_handle) == 0 ) {
-				inter_to_fd(fd, u_fd, aid,  "No account with ID '%d' was found.", account_id );
+				inter_msg_to_fd(fd, u_fd, aid,  "No account with ID '%d' was found.", account_id );
 			} else {
-				inter_to_fd(fd, u_fd, aid, "An error occured, bother your admin about it.");
+				inter_msg_to_fd(fd, u_fd, aid, "An error occured, bother your admin about it.");
 				Sql_ShowDebug(sql_handle);
 			}
 		} else {
@@ -521,29 +541,29 @@ void mapif_parse_accinfo(int fd) {
 		if (level == -1)
 			return;
 
-		inter_to_fd(fd, u_fd, aid, "-- Account %d --", account_id );
-		inter_to_fd(fd, u_fd, aid, "User: %s | GM Group: %d | State: %d", userid, level, state );
+		inter_msg_to_fd(fd, u_fd, aid, "-- Account %d --", account_id );
+		inter_msg_to_fd(fd, u_fd, aid, "User: %s | GM Group: %d | State: %d", userid, level, state );
 
 		if (level < castergroup) { /* only show pass if your gm level is greater than the one you're searching for */
 			if( strlen(pin_code) )
-				inter_to_fd(fd, u_fd, aid, "Password: %s (PIN:%s)", user_pass, pin_code );
+				inter_msg_to_fd(fd, u_fd, aid, "Password: %s (PIN:%s)", user_pass, pin_code );
 			else
-				inter_to_fd(fd, u_fd, aid, "Password: %s", user_pass );
+				inter_msg_to_fd(fd, u_fd, aid, "Password: %s", user_pass );
 		}
 
-		inter_to_fd(fd, u_fd, aid, "Account e-mail: %s | Birthdate: %s", email, birthdate);
-		inter_to_fd(fd, u_fd, aid, "Last IP: %s (%s)", last_ip, geoip_getcountry(str2ip(last_ip)) );
-		inter_to_fd(fd, u_fd, aid, "This user has logged %d times, the last time were at %s", logincount, lastlogin );
-		inter_to_fd(fd, u_fd, aid, "-- Character Details --" );
+		inter_msg_to_fd(fd, u_fd, aid, "Account e-mail: %s | Birthdate: %s", email, birthdate);
+		inter_msg_to_fd(fd, u_fd, aid, "Last IP: %s (%s)", last_ip, geoip_getcountry(str2ip(last_ip)) );
+		inter_msg_to_fd(fd, u_fd, aid, "This user has logged %d times, the last time were at %s", logincount, lastlogin );
+		inter_msg_to_fd(fd, u_fd, aid, "-- Character Details --" );
 
 
 		if ( SQL_ERROR == SQL->Query(sql_handle, "SELECT `char_id`, `name`, `char_num`, `class`, `base_level`, `job_level`, `online` FROM `%s` WHERE `account_id` = '%d' ORDER BY `char_num` LIMIT %d", char_db, account_id, MAX_CHARS)
 				|| SQL->NumRows(sql_handle) == 0 ) {
 
 				if( SQL->NumRows(sql_handle) == 0 )
-					inter_to_fd(fd, u_fd, aid,"This account doesn't have characters.");
+					inter_msg_to_fd(fd, u_fd, aid,"This account doesn't have characters.");
 				else {
-					inter_to_fd(fd, u_fd, aid,"An error occured, bother your admin about it.");
+					inter_msg_to_fd(fd, u_fd, aid,"An error occured, bother your admin about it.");
 					Sql_ShowDebug(sql_handle);
 				}
 
@@ -561,7 +581,7 @@ void mapif_parse_accinfo(int fd) {
 				SQL->GetData(sql_handle, 5, &data, NULL); job_level = atoi(data);
 				SQL->GetData(sql_handle, 6, &data, NULL); online = atoi(data);
 
-				inter_to_fd(fd, u_fd, aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, job_name(class_), base_level, job_level, online?"On":"Off");
+				inter_msg_to_fd(fd, u_fd, aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, job_name(class_), base_level, job_level, online?"On":"Off");
 			}
 		}
 		SQL->FreeResult(sql_handle);
@@ -743,22 +763,41 @@ static int inter_config_read(const char* cfgName)
 	return 0;
 }
 
-// Save interlog into sql
-int inter_log(char* fmt, ...)
-{
+/**
+ * Save interlog into sql (arglist version)
+ * @see inter_log
+ */
+int inter_vlog(char* fmt, va_list ap) {
 	char str[255];
 	char esc_str[sizeof(str)*2+1];// escaped str
-	va_list ap;
+	va_list apcopy;
 
-	va_start(ap,fmt);
-	vsnprintf(str, sizeof(str), fmt, ap);
-	va_end(ap);
+	va_copy(apcopy, ap);
+	vsnprintf(str, sizeof(str), fmt, apcopy);
+	va_end(apcopy);
 
 	SQL->EscapeStringLen(sql_handle, esc_str, str, strnlen(str, sizeof(str)));
 	if( SQL_ERROR == SQL->Query(sql_handle, "INSERT INTO `%s` (`time`, `log`) VALUES (NOW(),  '%s')", interlog_db, esc_str) )
 		Sql_ShowDebug(sql_handle);
 
 	return 0;
+}
+
+/**
+ * Save interlog into sql
+ * @param fmt Message's format string
+ * @param ... Additional (printf-like) arguments
+ * @return Always 0 // FIXME
+ */
+int inter_log(char* fmt, ...) {
+	va_list ap;
+	int ret;
+
+	va_start(ap,fmt);
+	ret = inter_vlog(fmt, ap);
+	va_end(ap);
+
+	return ret;
 }
 
 // initialize

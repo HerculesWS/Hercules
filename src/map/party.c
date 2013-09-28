@@ -1031,9 +1031,11 @@ int party_sub_count(struct block_list *bl, va_list ap)
 	return 1;
 }
 
-/// Executes 'func' for each party member on the same map and in range (0:whole map)
-int party_foreachsamemap(int (*func)(struct block_list*,va_list),struct map_session_data *sd,int range,...)
-{
+/**
+ * Arglist-based version of party_foreachsamemap
+ * @see party_foreachsamemap
+ */
+int party_vforeachsamemap(int (*func)(struct block_list*,va_list), struct map_session_data *sd, int range, va_list ap) {
 	struct party_data *p;
 	int i;
 	int x0,y0,x1,y1;
@@ -1067,15 +1069,32 @@ int party_foreachsamemap(int (*func)(struct block_list*,va_list),struct map_sess
 	map->freeblock_lock();
 
 	for(i=0;i<blockcount;i++) {
-		va_list ap;
-		va_start(ap, range);
-		total += func(list[i], ap);
-		va_end(ap);
+		va_list ap_copy;
+		va_copy(ap_copy, ap);
+		total += func(list[i], ap_copy);
+		va_end(ap_copy);
 	}
 
 	map->freeblock_unlock();
 
 	return total;
+}
+
+/**
+ * Executes 'func' for each party member on the same map and within a 'range' cells area
+ * @param func  Function to execute
+ * @param sd    Reference character for party, map, area center
+ * @param range Area size (0 = whole map)
+ * @param ...   Adidtional parameters to pass to func()
+ * @return Sum of the return values from func()
+ */
+int party_foreachsamemap(int (*func)(struct block_list*,va_list), struct map_session_data *sd, int range, ...) {
+	va_list ap;
+	int ret;
+	va_start(ap, range);
+	ret = party->vforeachsamemap(func, sd, range, ap);
+	va_end(ap);
+	return ret;
 }
 
 /*==========================================
@@ -1291,6 +1310,7 @@ void party_defaults(void) {
 	party->booking_update = party_booking_update;
 	party->booking_search = party_booking_search;
 	party->booking_delete = party_booking_delete;
+	party->vforeachsamemap = party_vforeachsamemap;
 	party->foreachsamemap = party_foreachsamemap;
 	party->send_xy_timer = party_send_xy_timer;
 	party->fill_member = party_fill_member;
