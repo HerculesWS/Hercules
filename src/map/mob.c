@@ -2781,7 +2781,7 @@ int mob_warpslave_sub(struct block_list *bl,va_list ap) {
 		return 0;
 
 	map->search_freecell(master, 0, &x, &y, range, range, 0);
-	unit->warp(&md->bl, master->m, x, y,CLR_RESPAWN);
+	unit->warp(&md->bl, master->m, x, y,CLR_TELEPORT);
 	return 1;
 }
 
