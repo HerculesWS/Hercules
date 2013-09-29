@@ -8062,7 +8062,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				int rate = 45 + 5 * skill_lv;
 				if( rnd()%100 < rate ){
 					clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
-					map->foreachinrange(skill->area_sub,bl,skill->get_splash(skill_id,skill_lv),BL_CHAR,src,skill_id,skill_lv,tick,flag|BCT_ENEMY|1,skill_castend_nodamage_id);
+					map->foreachinrange(skill->area_sub,bl,skill->get_splash(skill_id,skill_lv),BL_CHAR,src,skill_id,skill_lv,tick,flag|BCT_ENEMY|1,skill->castend_nodamage_id);
 				}else if( sd ) // Failure on Rate
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			}
@@ -8923,7 +8923,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				status_zap(bl, 0, status_get_max_sp(bl) * (25 + 5 * skill_lv) / 100);
 				}
 			} else if ( sd ) {
-				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), BL_CHAR,src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill_castend_nodamage_id);
+				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), BL_CHAR,src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill->castend_nodamage_id);
 				clif->skill_nodamage(bl, src, skill_id, skill_lv, 1);
 			}
 			break;
