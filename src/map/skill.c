@@ -8915,12 +8915,17 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 		case GN_MANDRAGORA:
 			if( flag&1 ) {
-				if ( clif->skill_nodamage(bl, src, skill_id, skill_lv,
-										 sc_start(bl, type, 25 + 10 * skill_lv, skill_lv, skill->get_time(skill_id, skill_lv))) )
-					status_zap(bl, 0, status_get_max_sp(bl) * (25 + 5 * skill_lv) / 100);
-			} else
-				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), BL_CHAR,
-				                    src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill->castend_nodamage_id);
+				int chance = 25 + 10 * skill_lv - (status_get_vit(bl) + status_get_luk(bl)) / 5;
+				if ( chance < 10 )
+					chance = 10;//Minimal chance is 10%.
+				if ( rand()%100 < chance ) {//Coded to both inflect the status and drain the target's SP only when successful. [Rytech]
+				sc_start(bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv));
+				status_zap(bl, 0, status_get_max_sp(bl) * (25 + 5 * skill_lv) / 100);
+				}
+			} else if ( sd ) {
+				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), BL_CHAR,src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill_castend_nodamage_id);
+				clif->skill_nodamage(bl, src, skill_id, skill_lv, 1);
+			}
 			break;
 
 		case GN_SLINGITEM:
