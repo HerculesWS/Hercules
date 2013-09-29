@@ -17,6 +17,7 @@ int mapif_send_gmaccounts(void);
 int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason);
 
 int inter_log(char *fmt,...);
+int inter_vlog(char *fmt, va_list ap);
 
 #define inter_cfgName "conf/inter-server.conf"
 

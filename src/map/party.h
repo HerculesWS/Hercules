@@ -122,6 +122,7 @@ struct party_interface {
 #endif
 	bool (*booking_delete) (struct map_session_data *sd);
 	/* */
+	int (*vforeachsamemap) (int (*func)(struct block_list *,va_list),struct map_session_data *sd,int range, va_list ap);
 	int (*foreachsamemap) (int (*func)(struct block_list *,va_list),struct map_session_data *sd,int range,...);
 	int (*send_xy_timer) (int tid, unsigned int tick, int id, intptr_t data);
 	void (*fill_member) (struct party_member* member, struct map_session_data* sd, unsigned int leader);

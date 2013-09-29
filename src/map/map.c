@@ -596,13 +596,12 @@ static int map_vforeachinmap(int (*func)(struct block_list*, va_list), int16 m, 
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachinmap(int (*func)(struct block_list*, va_list), int16 m, int type, ...)
-{
-	int returnCount = 0;
+int map_foreachinmap(int (*func)(struct block_list*, va_list), int16 m, int type, ...) {
+	int returnCount;
 	va_list ap;
 
 	va_start(ap, type);
-	returnCount = map_vforeachinmap(func, m, type, ap);
+	returnCount = map->vforeachinmap(func, m, type, ap);
 	va_end(ap);
 
 	return returnCount;
@@ -616,21 +615,42 @@ int map_foreachinmap(int (*func)(struct block_list*, va_list), int16 m, int type
  * @param func Function to be applied
  * @param m Map id
  * @param type enum bl_type
- * @param ... Extra arguments for func
+ * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachininstance(int (*func)(struct block_list*, va_list), int16 instance_id, int type, ...)
-{
+int map_vforeachininstance(int (*func)(struct block_list*, va_list), int16 instance_id, int type, va_list ap) {
 	int i;
 	int returnCount = 0;
 
 	for (i = 0; i < instance->list[instance_id].num_map; i++) {
 		int m = instance->list[instance_id].map[i];
-		va_list ap;
-		va_start(ap, type);
-		returnCount += map_vforeachinmap(func, m, type, ap);
-		va_end(ap);
+		va_list apcopy;
+		va_copy(apcopy, ap);
+		returnCount += map->vforeachinmap(func, m, type, apcopy);
+		va_end(apcopy);
 	}
+
+	return returnCount;
+}
+
+/**
+ * Applies func to every block_list object of bl_type type on all maps
+ * of instance instance_id.
+ * Returns the sum of values returned by func.
+ * @see map_vforeachininstance.
+ * @param func Function to be applied
+ * @param m Map id
+ * @param type enum bl_type
+ * @param ... Extra arguments for func
+ * @return Sum of the values returned by func
+ */
+int map_foreachininstance(int (*func)(struct block_list*, va_list), int16 instance_id, int type, ...) {
+	int returnCount;
+	va_list ap;
+
+	va_start(ap, type);
+	returnCount = map->vforeachininstance(func, instance_id, type, ap);
+	va_end(ap);
 
 	return returnCount;
 }
@@ -740,21 +760,43 @@ static int bl_vgetall_inrange(struct block_list *bl, va_list args)
  * @param center Center of the selection area
  * @param range Range in cells from center
  * @param type enum bl_type
- * @param ... Extra arguments for func
+ * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachinrange(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int type, ...)
-{
+int map_vforeachinrange(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int type, va_list ap) {
 	int returnCount = 0;
 	int blockcount = bl_list_count;
-	va_list ap;
+	va_list apcopy;
 
 	if (range < 0) range *= -1;
 
 	bl_getall_area(type, center->m, center->x - range, center->y - range, center->x + range, center->y + range, bl_vgetall_inrange, center, range);
 
+	va_copy(apcopy, ap);
+	returnCount = bl_vforeach(func, blockcount, INT_MAX, apcopy);
+	va_end(ap);
+
+	return returnCount;
+}
+
+/**
+ * Applies func to every block_list object of bl_type type within range cells from center.
+ * Area is rectangular, unless CIRCULAR_AREA is defined.
+ * Returns the sum of values returned by func.
+ * @see map_vforeachinrange
+ * @param func Function to be applied
+ * @param center Center of the selection area
+ * @param range Range in cells from center
+ * @param type enum bl_type
+ * @param ... Extra arguments for func
+ * @return Sum of the values returned by func
+ */
+int map_foreachinrange(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int type, ...) {
+	int returnCount;
+	va_list ap;
+
 	va_start(ap, type);
-	returnCount = bl_vforeach(func, blockcount, INT_MAX, ap);
+	returnCount = map->vforeachinrange(func, center, range, type, ap);
 	va_end(ap);
 
 	return returnCount;
@@ -770,21 +812,45 @@ int map_foreachinrange(int (*func)(struct block_list*, va_list), struct block_li
  * @param range Range in cells from center
  * @param count Maximum sum of values returned by func (usually max number of func calls)
  * @param type enum bl_type
- * @param ... Extra arguments for func
+ * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_forcountinrange(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int count, int type, ...)
-{
+int map_vforcountinrange(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int count, int type, va_list ap) {
 	int returnCount = 0;
 	int blockcount = bl_list_count;
-	va_list ap;
+	va_list apcopy;
 
 	if (range < 0) range *= -1;
 
 	bl_getall_area(type, center->m, center->x - range, center->y - range, center->x + range, center->y + range, bl_vgetall_inrange, center, range);
 
+	va_copy(apcopy, ap);
+	returnCount = bl_vforeach(func, blockcount, count, apcopy);
+	va_end(apcopy);
+
+	return returnCount;
+}
+
+/**
+ * Applies func to some block_list objects of bl_type type within range cells from center.
+ * Limit is set by count parameter.
+ * Area is rectangular, unless CIRCULAR_AREA is defined.
+ * Returns the sum of values returned by func.
+ * @see map_vforcountinrange
+ * @param func Function to be applied
+ * @param center Center of the selection area
+ * @param range Range in cells from center
+ * @param count Maximum sum of values returned by func (usually max number of func calls)
+ * @param type enum bl_type
+ * @param ... Extra arguments for func
+ * @return Sum of the values returned by func
+ */
+int map_forcountinrange(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int count, int type, ...) {
+	int returnCount;
+	va_list ap;
+
 	va_start(ap, type);
-	returnCount = bl_vforeach(func, blockcount, count, ap);
+	returnCount = map->vforcountinrange(func, center, range, count, type, ap);
 	va_end(ap);
 
 	return returnCount;
@@ -819,21 +885,43 @@ static int bl_vgetall_inshootrange(struct block_list *bl, va_list args)
  * @param center Center of the selection area
  * @param range Range in cells from center
  * @param type enum bl_type
- * @param ... Extra arguments for func
+ * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachinshootrange(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int type, ...)
-{
+int map_vforeachinshootrange(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int type, va_list ap) {
 	int returnCount = 0;
 	int blockcount = bl_list_count;
-	va_list ap;
+	va_list apcopy;
 
 	if (range < 0) range *= -1;
 
 	bl_getall_area(type, center->m, center->x - range, center->y - range, center->x + range, center->y + range, bl_vgetall_inshootrange, center, range);
 
-	va_start(ap, type);
+	va_copy(apcopy, ap);
 	returnCount = bl_vforeach(func, blockcount, INT_MAX, ap);
+	va_end(apcopy);
+
+	return returnCount;
+}
+
+/**
+ * Applies func to every block_list object of bl_type type within shootable range from center.
+ * There must be a shootable path between bl and center.
+ * Area is rectangular, unless CIRCULAR_AREA is defined.
+ * Returns the sum of values returned by func.
+ * @param func Function to be applied
+ * @param center Center of the selection area
+ * @param range Range in cells from center
+ * @param type enum bl_type
+ * @param ... Extra arguments for func
+ * @return Sum of the values returned by func
+ */
+int map_foreachinshootrange(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int type, ...) {
+	int returnCount;
+	va_list ap;
+
+	va_start(ap, type);
+	returnCount = map->vforeachinshootrange(func, center, range, type, ap);
 	va_end(ap);
 
 	return returnCount;
@@ -850,19 +938,44 @@ int map_foreachinshootrange(int (*func)(struct block_list*, va_list), struct blo
  * @param x1 Ending X-coordinate
  * @param y1 Ending Y-coordinate
  * @param type enum bl_type
- * @param ... Extra arguments for func
+ * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, ...)
-{
+int map_vforeachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, va_list ap) {
 	int returnCount = 0;
 	int blockcount = bl_list_count;
-	va_list ap;
+	va_list apcopy;
 
 	bl_getall_area(type, m, x0, y0, x1, y1, NULL);
 
+	va_copy(apcopy, ap);
+	returnCount = bl_vforeach(func, blockcount, INT_MAX, apcopy);
+	va_end(apcopy);
+
+	return returnCount;
+}
+
+/**
+ * Applies func to every block_list object of bl_type type in
+ * rectangular area (x0,y0)~(x1,y1) on map m.
+ * Returns the sum of values returned by func.
+ * @see map_vforeachinarea
+ * @param func Function to be applied
+ * @param m Map id
+ * @param x0 Starting X-coordinate
+ * @param y0 Starting Y-coordinate
+ * @param x1 Ending X-coordinate
+ * @param y1 Ending Y-coordinate
+ * @param type enum bl_type
+ * @param ... Extra arguments for func
+ * @return Sum of the values returned by func
+ */
+int map_foreachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, ...) {
+	int returnCount;
+	va_list ap;
+
 	va_start(ap, type);
-	returnCount = bl_vforeach(func, blockcount, INT_MAX, ap);
+	returnCount = map->vforeachinarea(func, m, x0, y0, x1, y1, type, ap);
 	va_end(ap);
 
 	return returnCount;
@@ -881,19 +994,46 @@ int map_foreachinarea(int (*func)(struct block_list*, va_list), int16 m, int16 x
  * @param y1 Ending Y-coordinate
  * @param count Maximum sum of values returned by func (usually max number of func calls)
  * @param type enum bl_type
- * @param ... Extra arguments for func
+ * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_forcountinarea(int (*func)(struct block_list*,va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int count, int type, ...)
-{
+int map_vforcountinarea(int (*func)(struct block_list*,va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int count, int type, va_list ap) {
 	int returnCount = 0;
 	int blockcount = bl_list_count;
-	va_list ap;
+	va_list apcopy;
 
 	bl_getall_area(type, m, x0, y0, x1, y1, NULL);
 
+	va_copy(apcopy, ap);
+	returnCount = bl_vforeach(func, blockcount, count, apcopy);
+	va_end(apcopy);
+
+	return returnCount;
+}
+
+/**
+ * Applies func to some block_list objects of bl_type type in
+ * rectangular area (x0,y0)~(x1,y1) on map m.
+ * Limit is set by @count parameter.
+ * Returns the sum of values returned by func.
+ * @see map_vforcountinarea
+ * @param func Function to be applied
+ * @param m Map id
+ * @param x0 Starting X-coordinate
+ * @param y0 Starting Y-coordinate
+ * @param x1 Ending X-coordinate
+ * @param y1 Ending Y-coordinate
+ * @param count Maximum sum of values returned by func (usually max number of func calls)
+ * @param type enum bl_type
+ * @param ... Extra arguments for func
+ * @return Sum of the values returned by func
+ */
+int map_forcountinarea(int (*func)(struct block_list*,va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int count, int type, ...) {
+	int returnCount;
+	va_list ap;
+
 	va_start(ap, type);
-	returnCount = bl_vforeach(func, blockcount, count, ap);
+	returnCount = map->vforcountinarea(func, m, x0, y0, x1, y1, count, type, ap);
 	va_end(ap);
 
 	return returnCount;
@@ -939,15 +1079,14 @@ static int bl_vgetall_inmovearea(struct block_list *bl, va_list args)
  * @param dx Center's movement on X-axis
  * @param dy Center's movement on Y-axis
  * @param type enum bl_type
- * @param ... Extra arguments for func
+ * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachinmovearea(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int16 dx, int16 dy, int type, ...)
-{
+int map_vforeachinmovearea(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int16 dx, int16 dy, int type, va_list ap) {
 	int returnCount = 0;
 	int blockcount = bl_list_count;
-	va_list ap;
 	int m, x0, x1, y0, y1;
+	va_list apcopy;
 
 	if (!range) return 0;
 	if (!dx && !dy) return 0; // No movement.
@@ -974,9 +1113,66 @@ int map_foreachinmovearea(int (*func)(struct block_list*, va_list), struct block
 		bl_getall_area(type, m, x0, y0, x1, y1, bl_vgetall_inmovearea, dx, dy, center, range);
 	}
 
+	va_copy(apcopy, ap);
+	returnCount = bl_vforeach(func, blockcount, INT_MAX, apcopy);
+	va_end(apcopy);
+
+	return returnCount;
+}
+
+/**
+ * Applies func to every block_list object of bl_type type in
+ * area that was covered by range cells from center, but is no
+ * longer after center is moved by (dx,dy) cells (i.e. area that
+ * center has lost sight of).
+ * If used after center has reached its destination and with
+ * opposed movement vector (-dx,-dy), selection corresponds
+ * to new area in center's view).
+ * Uses rectangular area.
+ * Returns the sum of values returned by func.
+ * @see map_vforeachinmovearea
+ * @param func Function to be applied
+ * @param center Center of the selection area
+ * @param range Range in cells from center
+ * @param dx Center's movement on X-axis
+ * @param dy Center's movement on Y-axis
+ * @param type enum bl_type
+ * @param ... Extra arguments for func
+ * @return Sum of the values returned by func
+ */
+int map_foreachinmovearea(int (*func)(struct block_list*, va_list), struct block_list* center, int16 range, int16 dx, int16 dy, int type, ...) {
+	int returnCount;
+	va_list ap;
+
 	va_start(ap, type);
-	returnCount = bl_vforeach(func, blockcount, INT_MAX, ap);
+	returnCount = map->vforeachinmovearea(func, center, range, dx, dy, type, ap);
 	va_end(ap);
+
+	return returnCount;
+}
+
+/**
+ * Applies func to every block_list object of bl_type type in
+ * cell (x,y) on map m.
+ * Returns the sum of values returned by func.
+ * @param func Function to be applied
+ * @param m Map id
+ * @param x Target cell X-coordinate
+ * @param y Target cell Y-coordinate
+ * @param type enum bl_type
+ * @param ap Extra arguments for func
+ * @return Sum of the values returned by func
+ */
+int map_vforeachincell(int (*func)(struct block_list*, va_list), int16 m, int16 x, int16 y, int type, va_list ap) {
+	int returnCount = 0;
+	int blockcount = bl_list_count;
+	va_list apcopy;
+
+	bl_getall_area(type, m, x, y, x, y, NULL);
+
+	va_copy(apcopy, ap);
+	returnCount = bl_vforeach(func, blockcount, INT_MAX, apcopy);
+	va_end(apcopy);
 
 	return returnCount;
 }
@@ -993,16 +1189,12 @@ int map_foreachinmovearea(int (*func)(struct block_list*, va_list), struct block
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachincell(int (*func)(struct block_list*, va_list), int16 m, int16 x, int16 y, int type, ...)
-{
-	int returnCount = 0;
-	int blockcount = bl_list_count;
+int map_foreachincell(int (*func)(struct block_list*, va_list), int16 m, int16 x, int16 y, int type, ...) {
+	int returnCount;
 	va_list ap;
 
-	bl_getall_area(type, m, x, y, x, y, NULL);
-
 	va_start(ap, type);
-	returnCount = bl_vforeach(func, blockcount, INT_MAX, ap);
+	returnCount = map->vforeachincell(func, m, x, y, type, ap);
 	va_end(ap);
 
 	return returnCount;
@@ -1069,11 +1261,10 @@ static int bl_vgetall_inpath(struct block_list *bl, va_list args)
  * @param x Target cell X-coordinate
  * @param y Target cell Y-coordinate
  * @param type enum bl_type
- * @param ... Extra arguments for func
+ * @param ap Extra arguments for func
  * @return Sum of the values returned by func
  */
-int map_foreachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, ...)
-{
+int map_vforeachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, va_list ap) {
 	// [Skotlex]
 	// check for all targets in the square that
 	// contains the initial and final positions (area range increased to match the
@@ -1090,7 +1281,7 @@ int map_foreachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x
 
 	int returnCount = 0;
 	int blockcount = bl_list_count;
-	va_list ap;
+	va_list apcopy;
 
 	//method specific variables
 	int magnitude2, len_limit; //The square of the magnitude
@@ -1127,13 +1318,40 @@ int map_foreachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x
 
 	bl_getall_area(type, m, mx0, my0, mx1, my1, bl_vgetall_inpath, m, x0, y0, x1, y1, range, len_limit, magnitude2);
 
-	va_start(ap, type);
-	returnCount = bl_vforeach(func, blockcount, INT_MAX, ap);
-	va_end(ap);
+	va_copy(apcopy, ap);
+	returnCount = bl_vforeach(func, blockcount, INT_MAX, apcopy);
+	va_end(apcopy);
 
 	return returnCount;
 }
 #undef MAGNITUDE2
+
+/**
+ * Applies func to every block_list object of bl_type type in
+ * path on a line between (x0,y0) and (x1,y1) on map m.
+ * Path starts at (x0,y0) and is \a length cells long and \a range cells wide.
+ * Objects beyond the initial (x1,y1) ending point are checked
+ * for walls in the path.
+ * Returns the sum of values returned by func.
+ * @see map_vforeachinpath
+ * @param func Function to be applied
+ * @param m Map id
+ * @param x Target cell X-coordinate
+ * @param y Target cell Y-coordinate
+ * @param type enum bl_type
+ * @param ... Extra arguments for func
+ * @return Sum of the values returned by func
+ */
+int map_foreachinpath(int (*func)(struct block_list*, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, ...) {
+	int returnCount;
+	va_list ap;
+
+	va_start(ap, type);
+	returnCount = map->vforeachinpath(func, m, x0, y0, x1, y1, range, length, type, ap);
+	va_end(ap);
+
+	return returnCount;
+}
 
 /** @} */
 
@@ -1304,11 +1522,10 @@ int map_search_freecell(struct block_list *src, int16 m, int16 *x,int16 *y, int1
 				continue;
 			if(flag&4) {
 				if (spawn >= 100) return 0; //Limit of retries reached.
-				if (spawn++ < battle_config.no_spawn_on_player &&
-					map_foreachinarea(map_count_sub, m,
-					*x-AREA_SIZE, *y-AREA_SIZE,
-					*x+AREA_SIZE, *y+AREA_SIZE, BL_PC)
-					)
+				if (spawn++ < battle_config.no_spawn_on_player
+				 && map->foreachinarea(map_count_sub, m, *x-AREA_SIZE, *y-AREA_SIZE,
+				                                         *x+AREA_SIZE, *y+AREA_SIZE, BL_PC)
+				)
 					continue;
 			}
 			return 1;
@@ -1784,19 +2001,50 @@ struct mob_data * map_id2boss(int id)
 
 /// Applies func to all the players in the db.
 /// Stops iterating if func returns -1.
-void map_map_foreachpc(int (*func)(struct map_session_data* sd, va_list args), ...) {
+void map_vmap_foreachpc(int (*func)(struct map_session_data* sd, va_list args), va_list args) {
 	DBIterator* iter;
 	struct map_session_data* sd;
 
 	iter = db_iterator(pc_db);
 	for( sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter) )
 	{
-		va_list args;
+		va_list argscopy;
 		int ret;
 
-		va_start(args, func);
-		ret = func(sd, args);
-		va_end(args);
+		va_copy(argscopy, args);
+		ret = func(sd, argscopy);
+		va_end(argscopy);
+		if( ret == -1 )
+			break;// stop iterating
+	}
+	dbi_destroy(iter);
+}
+
+/// Applies func to all the players in the db.
+/// Stops iterating if func returns -1.
+/// @see map_vmap_foreachpc
+void map_map_foreachpc(int (*func)(struct map_session_data* sd, va_list args), ...) {
+	va_list args;
+
+	va_start(args, func);
+	map->vmap_foreachpc(func, args);
+	va_end(args);
+}
+
+/// Applies func to all the mobs in the db.
+/// Stops iterating if func returns -1.
+void map_vmap_foreachmob(int (*func)(struct mob_data* md, va_list args), va_list args) {
+	DBIterator* iter;
+	struct mob_data* md;
+
+	iter = db_iterator(mobid_db);
+	for( md = (struct mob_data*)dbi_first(iter); dbi_exists(iter); md = (struct mob_data*)dbi_next(iter) ) {
+		va_list argscopy;
+		int ret;
+
+		va_copy(argscopy, args);
+		ret = func(md, argscopy);
+		va_end(argscopy);
 		if( ret == -1 )
 			break;// stop iterating
 	}
@@ -1805,45 +2053,31 @@ void map_map_foreachpc(int (*func)(struct map_session_data* sd, va_list args), .
 
 /// Applies func to all the mobs in the db.
 /// Stops iterating if func returns -1.
-void map_map_foreachmob(int (*func)(struct mob_data* md, va_list args), ...)
-{
-	DBIterator* iter;
-	struct mob_data* md;
+/// @see map_vmap_foreachmob
+void map_map_foreachmob(int (*func)(struct mob_data* md, va_list args), ...) {
+	va_list args;
 
-	iter = db_iterator(mobid_db);
-	for( md = (struct mob_data*)dbi_first(iter); dbi_exists(iter); md = (struct mob_data*)dbi_next(iter) )
-	{
-		va_list args;
-		int ret;
-
-		va_start(args, func);
-		ret = func(md, args);
-		va_end(args);
-		if( ret == -1 )
-			break;// stop iterating
-	}
-	dbi_destroy(iter);
+	va_start(args, func);
+	map->vmap_foreachmob(func, args);
+	va_end(args);
 }
 
 /// Applies func to all the npcs in the db.
 /// Stops iterating if func returns -1.
-void map_map_foreachnpc(int (*func)(struct npc_data* nd, va_list args), ...)
-{
+void map_vmap_foreachnpc(int (*func)(struct npc_data* nd, va_list args), va_list args) {
 	DBIterator* iter;
 	struct block_list* bl;
 
 	iter = db_iterator(id_db);
-	for( bl = (struct block_list*)dbi_first(iter); dbi_exists(iter); bl = (struct block_list*)dbi_next(iter) )
-	{
-		if( bl->type == BL_NPC )
-		{
+	for( bl = (struct block_list*)dbi_first(iter); dbi_exists(iter); bl = (struct block_list*)dbi_next(iter) ) {
+		if( bl->type == BL_NPC ) {
 			struct npc_data* nd = (struct npc_data*)bl;
-			va_list args;
+			va_list argscopy;
 			int ret;
 
-			va_start(args, func);
-			ret = func(nd, args);
-			va_end(args);
+			va_copy(argscopy, args);
+			ret = func(nd, argscopy);
+			va_end(argscopy);
 			if( ret == -1 )
 				break;// stop iterating
 		}
@@ -1851,22 +2085,62 @@ void map_map_foreachnpc(int (*func)(struct npc_data* nd, va_list args), ...)
 	dbi_destroy(iter);
 }
 
+/// Applies func to all the npcs in the db.
+/// Stops iterating if func returns -1.
+/// @see map_vmap_foreachnpc
+void map_map_foreachnpc(int (*func)(struct npc_data* nd, va_list args), ...) {
+	va_list args;
+
+	va_start(args, func);
+	map->vmap_foreachnpc(func, args);
+	va_end(args);
+}
+
 /// Applies func to everything in the db.
 /// Stops iteratin gif func returns -1.
-void map_map_foreachregen(int (*func)(struct block_list* bl, va_list args), ...)
-{
+void map_vmap_foreachregen(int (*func)(struct block_list* bl, va_list args), va_list args) {
 	DBIterator* iter;
 	struct block_list* bl;
 
 	iter = db_iterator(regen_db);
-	for( bl = (struct block_list*)dbi_first(iter); dbi_exists(iter); bl = (struct block_list*)dbi_next(iter) )
-	{
-		va_list args;
+	for( bl = (struct block_list*)dbi_first(iter); dbi_exists(iter); bl = (struct block_list*)dbi_next(iter) ) {
+		va_list argscopy;
 		int ret;
 
-		va_start(args, func);
-		ret = func(bl, args);
-		va_end(args);
+		va_copy(argscopy, args);
+		ret = func(bl, argscopy);
+		va_end(argscopy);
+		if( ret == -1 )
+			break;// stop iterating
+	}
+	dbi_destroy(iter);
+}
+
+/// Applies func to everything in the db.
+/// Stops iteratin gif func returns -1.
+/// @see map_vmap_foreachregen
+void map_map_foreachregen(int (*func)(struct block_list* bl, va_list args), ...) {
+	va_list args;
+
+	va_start(args, func);
+	map->vmap_foreachregen(func, args);
+	va_end(args);
+}
+
+/// Applies func to everything in the db.
+/// Stops iterating if func returns -1.
+void map_vmap_foreachiddb(int (*func)(struct block_list* bl, va_list args), va_list args) {
+	DBIterator* iter;
+	struct block_list* bl;
+
+	iter = db_iterator(id_db);
+	for( bl = (struct block_list*)dbi_first(iter); dbi_exists(iter); bl = (struct block_list*)dbi_next(iter) ) {
+		va_list argscopy;
+		int ret;
+
+		va_copy(argscopy, args);
+		ret = func(bl, argscopy);
+		va_end(argscopy);
 		if( ret == -1 )
 			break;// stop iterating
 	}
@@ -1875,24 +2149,13 @@ void map_map_foreachregen(int (*func)(struct block_list* bl, va_list args), ...)
 
 /// Applies func to everything in the db.
 /// Stops iterating if func returns -1.
-void map_map_foreachiddb(int (*func)(struct block_list* bl, va_list args), ...)
-{
-	DBIterator* iter;
-	struct block_list* bl;
+/// @see map_vmap_foreachiddb
+void map_map_foreachiddb(int (*func)(struct block_list* bl, va_list args), ...) {
+	va_list args;
 
-	iter = db_iterator(id_db);
-	for( bl = (struct block_list*)dbi_first(iter); dbi_exists(iter); bl = (struct block_list*)dbi_next(iter) )
-	{
-		va_list args;
-		int ret;
-
-		va_start(args, func);
-		ret = func(bl, args);
-		va_end(args);
-		if( ret == -1 )
-			break;// stop iterating
-	}
-	dbi_destroy(iter);
+	va_start(args, func);
+	map->vmap_foreachiddb(func, args);
+	va_end(args);
 }
 
 /// Iterator.
@@ -2128,7 +2391,7 @@ int map_removemobs_timer(int tid, unsigned int tick, int id, intptr_t data)
 	if (maplist[m].users > 0) //Map not empty!
 		return 1;
 
-	count = map_foreachinmap(map_removemobs_sub, m, BL_MOB);
+	count = map->foreachinmap(map_removemobs_sub, m, BL_MOB);
 
 	if (battle_config.etc_log && count > 0)
 		ShowStatus("Map %s: Removed '"CL_WHITE"%d"CL_RESET"' mobs.\n",maplist[m].name, count);
@@ -4888,7 +5151,7 @@ void do_final(void)
 	for (i = 0; i < map->map_num; i++) {
 		ShowStatus("Cleaning up maps [%d/%d]: %s..."CL_CLL"\r", i+1, map->map_num, maplist[i].name);
 		if (maplist[i].m >= 0)
-			map_foreachinmap(map->cleanup_sub, i, BL_ALL);
+			map->foreachinmap(map->cleanup_sub, i, BL_ALL);
 	}
 	ShowStatus("Cleaned up %d maps."CL_CLL"\n", map->map_num);
 
@@ -5479,21 +5742,36 @@ void map_defaults(void) {
 	map->charid2nick = map_charid2nick;
 	map->charid2sd = map_charid2sd;
 
+	map->vmap_foreachpc = map_vmap_foreachpc;
 	map->map_foreachpc = map_map_foreachpc;
+	map->vmap_foreachmob = map_vmap_foreachmob;
 	map->map_foreachmob = map_map_foreachmob;
+	map->vmap_foreachnpc = map_vmap_foreachnpc;
 	map->map_foreachnpc = map_map_foreachnpc;
+	map->vmap_foreachregen = map_vmap_foreachregen;
 	map->map_foreachregen = map_map_foreachregen;
+	map->vmap_foreachiddb = map_vmap_foreachiddb;
 	map->map_foreachiddb = map_map_foreachiddb;
 
+	map->vforeachinrange = map_vforeachinrange;
 	map->foreachinrange = map_foreachinrange;
+	map->vforeachinshootrange = map_vforeachinshootrange;
 	map->foreachinshootrange = map_foreachinshootrange;
+	map->vforeachinarea = map_vforeachinarea;
 	map->foreachinarea = map_foreachinarea;
+	map->vforcountinrange = map_vforcountinrange;
 	map->forcountinrange = map_forcountinrange;
+	map->vforcountinarea = map_vforcountinarea;
 	map->forcountinarea = map_forcountinarea;
+	map->vforeachinmovearea = map_vforeachinmovearea;
 	map->foreachinmovearea = map_foreachinmovearea;
+	map->vforeachincell = map_vforeachincell;
 	map->foreachincell = map_foreachincell;
+	map->vforeachinpath = map_vforeachinpath;
 	map->foreachinpath = map_foreachinpath;
+	map->vforeachinmap = map_vforeachinmap;
 	map->foreachinmap = map_foreachinmap;
+	map->vforeachininstance = map_vforeachininstance;
 	map->foreachininstance = map_foreachininstance;
 
 	map->id2sd = map_id2sd;
