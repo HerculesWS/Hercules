@@ -2118,7 +2118,11 @@ packet(0x020d,-1);
 	packet(0x035F,6,clif->pReqClickBuyingStore,2);
 	packet(0x0886,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0938,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+#ifdef PACKETVER_RE
 	packet(0x085D,41,clif->pPartyBookingRegisterReq,2,4);
+#else // not PACKETVER_RE
+	packet(0x085D,18,clif->pPartyBookingRegisterReq,2,4);
+#endif // PACKETVER_RE
 	//packet(0x095A,8); // unknown usage
 	packet(0x0868,-1,clif->pItemListWindowSelected,2,4,8);
 	packet(0x0888,19,clif->pWantToConnection,2,6,10,14,18);
@@ -2159,7 +2163,11 @@ packet(0x020d,-1);
 	packet(0x0360,6,clif->pReqClickBuyingStore,2);
 	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+#ifdef PACKETVER_RE
 	packet(0x092D,41,clif->pPartyBookingRegisterReq,2,4);
+#else // not PACKETVER_RE
+	packet(0x092D,18,clif->pPartyBookingRegisterReq,2,4);
+#endif // PACKETVER_RE
 	//packet(0x08AA,8); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0963,-1,clif->pItemListWindowSelected,2,4,8);
 	packet(0x0943,19,clif->pWantToConnection,2,6,10,14,18);
@@ -2194,7 +2202,11 @@ packet(0x020d,-1);
 	packet(0x0368,6,clif->pReqClickBuyingStore,2);
 	packet(0x086E,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0874,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+#ifdef PACKETVER_RE
 	packet(0x089B,41,clif->pPartyBookingRegisterReq,2,4);
+#else // not PACKETVER_RE
+	packet(0x089B,18,clif->pPartyBookingRegisterReq,2,4);
+#endif // PACKETVER_RE
 	//packet(0x0965,8); // CZ_JOIN_BATTLE_FIELD
 	packet(0x086A,-1,clif->pItemListWindowSelected,2,4,8);
 	packet(0x08A9,19,clif->pWantToConnection,2,6,10,14,18);
@@ -2228,7 +2240,11 @@ packet(0x020d,-1);
 	packet(0x0892,6,clif->pReqClickBuyingStore,2);
 	packet(0x0964,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0869,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+#ifdef PACKETVER_RE
 	packet(0x0874,41,clif->pPartyBookingRegisterReq,2,4);
+#else // not PACKETVER_RE
+	packet(0x0874,18,clif->pPartyBookingRegisterReq,2,4);
+#endif // PACKETVER_RE
 	// packet(0x088E,8); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0958,-1,clif->pItemListWindowSelected,2,4,8);
 	packet(0x0919,19,clif->pWantToConnection,2,6,10,14,18);
@@ -2261,7 +2277,11 @@ packet(0x020d,-1);
 	packet(0x0360,6,clif->pReqClickBuyingStore,2);
 	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+#ifdef PACKETVER_RE
 	packet(0x0365,41,clif->pPartyBookingRegisterReq,2,4);
+#else // not PACKETVER_RE
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);
+#endif // PACKETVER_RE
 	// packet(0x0363,8); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
 	packet(0x022D,19,clif->pWantToConnection,2,6,10,14,18);
@@ -2303,7 +2323,11 @@ packet(0x020d,-1);
 	packet(0x0862,6,clif->pReqClickBuyingStore,2);
 	packet(0x085A,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0932,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+#ifdef PACKETVER_RE
 	packet(0x08A7,41,clif->pPartyBookingRegisterReq,2,4);
+#else // not PACKETVER_RE
+	packet(0x08A7,18,clif->pPartyBookingRegisterReq,2,4);
+#endif // PACKETVER_RE
 	// packet(0x087A,8); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0942,-1,clif->pItemListWindowSelected,2,4,8);
 	packet(0x095B,19,clif->pWantToConnection,2,6,10,14,18);
@@ -2336,7 +2360,11 @@ packet(0x020d,-1);
 	packet(0x0360,6,clif->pReqClickBuyingStore,2);
 	packet(0x0365,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+#ifdef PACKETVER_RE
 	packet(0x0894,41,clif->pPartyBookingRegisterReq,2,4);
+#else // not PACKETVER_RE
+	packet(0x0894,18,clif->pPartyBookingRegisterReq,2,4);
+#endif // PACKETVER_RE
 	// packet(0x0860,8); // CZ_JOIN_BATTLE_FIELD
 	packet(0x08A5,-1,clif->pItemListWindowSelected,2,4,8);
 	packet(0x088C,19,clif->pWantToConnection,2,6,10,14,18);
@@ -2357,7 +2385,11 @@ packet(0x020d,-1);
 	packet(0x0202,6,clif->pReqClickBuyingStore,2);
 	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+#ifdef PACKETVER_RE
 	packet(0x0365,41,clif->pPartyBookingRegisterReq,2,4);
+#else // not PACKETVER_RE
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);
+#endif // PACKETVER_RE
 	// packet(0x0363,8); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
 	packet(0x022D,19,clif->pWantToConnection,2,6,10,14,18);
@@ -2391,7 +2423,11 @@ packet(0x020d,-1);
 	packet(0x0360,6,clif->pReqClickBuyingStore,2);
 	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+#ifdef PACKETVER_RE
 	packet(0x0365,41,clif->pPartyBookingRegisterReq,2,4);
+#else // not PACKETVER_RE
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);
+#endif // PACKETVER_RE
 	// packet(0x0363,8); // CZ_JOIN_BATTLE_FIELD
 	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
 	packet(0x022D,19,clif->pWantToConnection,2,6,10,14,18);
