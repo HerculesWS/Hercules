@@ -454,8 +454,8 @@ int intif_party_changemap(struct map_session_data *sd,int online) {
 	if(!sd)
 		return 0;
 
-	if( (m=map->mapindex2mapid(sd->mapindex)) >= 0 && maplist[m].instance_id >= 0 )
-		mapindex = map_id2index(maplist[m].instance_src_map);
+	if( (m=map->mapindex2mapid(sd->mapindex)) >= 0 && map->list[m].instance_id >= 0 )
+		mapindex = map_id2index(map->list[m].instance_src_map);
 	else
 		mapindex = sd->mapindex;
 
@@ -918,7 +918,7 @@ void mapif_parse_WisToGM(int fd)
 	safestrncpy(Wisp_name, (char*)RFIFOP(fd,4), NAME_LENGTH);
 	safestrncpy(message, (char*)RFIFOP(fd,32), mes_len);
 	// information is sent to all online GM
-	map->map_foreachpc(mapif_parse_WisToGM_sub, permission, Wisp_name, message, mes_len);
+	map->foreachpc(mapif_parse_WisToGM_sub, permission, Wisp_name, message, mes_len);
 
 	if (message != mbuf)
 		aFree(message);

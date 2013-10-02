@@ -159,95 +159,95 @@ int instance_add_map(const char *name, int instance_id, bool usebasename, const 
 		return -2;
 	}
 	
-	if( maplist[m].instance_id >= 0 ) {
+	if( map->list[m].instance_id >= 0 ) {
 		// Source map already belong to a Instance.
 		ShowError("instance_add_map: trying to instance already instanced map %s.\n", name);
 		return -4;
 	}
 	
-	ARR_FIND( instance->start_id, map->map_num, i, maplist[i].name[0] == 0 ); // Searching for a Free Map
+	ARR_FIND( instance->start_id, map->count, i, map->list[i].name[0] == 0 ); // Searching for a Free Map
 		
-	if( i < map->map_num )
+	if( i < map->count )
 		im = i; // Unused map found (old instance)
 	else {
-		im = map->map_num; // Using next map index
-		RECREATE(maplist,struct map_data,++map->map_num);
+		im = map->count; // Using next map index
+		RECREATE(map->list,struct map_data,++map->count);
 	}
 	
-	if( maplist[m].cell == (struct mapcell *)0xdeadbeaf )
-		map->cellfromcache(&maplist[m]);
+	if( map->list[m].cell == (struct mapcell *)0xdeadbeaf )
+		map->cellfromcache(&map->list[m]);
 
-	memcpy( &maplist[im], &maplist[m], sizeof(struct map_data) ); // Copy source map
+	memcpy( &map->list[im], &map->list[m], sizeof(struct map_data) ); // Copy source map
 	if( map_name != NULL ) {
-		snprintf(maplist[im].name, MAP_NAME_LENGTH, "%s", map_name);
-		maplist[im].custom_name = true;
+		snprintf(map->list[im].name, MAP_NAME_LENGTH, "%s", map_name);
+		map->list[im].custom_name = true;
 	} else
-		snprintf(maplist[im].name, MAP_NAME_LENGTH, (usebasename ? "%.3d#%s" : "%.3d%s"), instance_id, name); // Generate Name for Instance Map
-	maplist[im].index = mapindex_addmap(-1, maplist[im].name); // Add map index
+		snprintf(map->list[im].name, MAP_NAME_LENGTH, (usebasename ? "%.3d#%s" : "%.3d%s"), instance_id, name); // Generate Name for Instance Map
+	map->list[im].index = mapindex_addmap(-1, map->list[im].name); // Add map index
 
-	maplist[im].channel = NULL;
+	map->list[im].channel = NULL;
 	
-	if( !maplist[im].index ) {
-		maplist[im].name[0] = '\0';
+	if( !map->list[im].index ) {
+		map->list[im].name[0] = '\0';
 		ShowError("instance_add_map: no more free map indexes.\n");
 		return -3; // No free map index
 	}
 	
 	// Reallocate cells
-	num_cell = maplist[im].xs * maplist[im].ys;
-	CREATE( maplist[im].cell, struct mapcell, num_cell );
-	memcpy( maplist[im].cell, maplist[m].cell, num_cell * sizeof(struct mapcell) );
+	num_cell = map->list[im].xs * map->list[im].ys;
+	CREATE( map->list[im].cell, struct mapcell, num_cell );
+	memcpy( map->list[im].cell, map->list[m].cell, num_cell * sizeof(struct mapcell) );
 
-	size = maplist[im].bxs * maplist[im].bys * sizeof(struct block_list*);
-	maplist[im].block = (struct block_list**)aCalloc(size, 1);
-	maplist[im].block_mob = (struct block_list**)aCalloc(size, 1);
+	size = map->list[im].bxs * map->list[im].bys * sizeof(struct block_list*);
+	map->list[im].block = (struct block_list**)aCalloc(size, 1);
+	map->list[im].block_mob = (struct block_list**)aCalloc(size, 1);
 
-	memset(maplist[im].npc, 0x00, sizeof(maplist[i].npc));
-	maplist[im].npc_num = 0;
+	memset(map->list[im].npc, 0x00, sizeof(map->list[i].npc));
+	map->list[im].npc_num = 0;
 
-	memset(maplist[im].moblist, 0x00, sizeof(maplist[im].moblist));
-	maplist[im].mob_delete_timer = INVALID_TIMER;
+	memset(map->list[im].moblist, 0x00, sizeof(map->list[im].moblist));
+	map->list[im].mob_delete_timer = INVALID_TIMER;
 
 	//Mimic unit
-	if( maplist[m].unit_count ) {
-		maplist[im].unit_count = maplist[m].unit_count;
-		CREATE( maplist[im].units, struct mapflag_skill_adjust*, maplist[im].unit_count );
+	if( map->list[m].unit_count ) {
+		map->list[im].unit_count = map->list[m].unit_count;
+		CREATE( map->list[im].units, struct mapflag_skill_adjust*, map->list[im].unit_count );
 
-		for(i = 0; i < maplist[im].unit_count; i++) {
-			CREATE( maplist[im].units[i], struct mapflag_skill_adjust, 1);
-			memcpy( maplist[im].units[i],maplist[m].units[i],sizeof(struct mapflag_skill_adjust));
+		for(i = 0; i < map->list[im].unit_count; i++) {
+			CREATE( map->list[im].units[i], struct mapflag_skill_adjust, 1);
+			memcpy( map->list[im].units[i],map->list[m].units[i],sizeof(struct mapflag_skill_adjust));
 		}
 	}
 	//Mimic skills
-	if( maplist[m].skill_count ) {
-		maplist[im].skill_count = maplist[m].skill_count;
-		CREATE( maplist[im].skills, struct mapflag_skill_adjust*, maplist[im].skill_count );
+	if( map->list[m].skill_count ) {
+		map->list[im].skill_count = map->list[m].skill_count;
+		CREATE( map->list[im].skills, struct mapflag_skill_adjust*, map->list[im].skill_count );
 		
-		for(i = 0; i < maplist[im].skill_count; i++) {
-			CREATE( maplist[im].skills[i], struct mapflag_skill_adjust, 1);
-			memcpy( maplist[im].skills[i],maplist[m].skills[i],sizeof(struct mapflag_skill_adjust));
+		for(i = 0; i < map->list[im].skill_count; i++) {
+			CREATE( map->list[im].skills[i], struct mapflag_skill_adjust, 1);
+			memcpy( map->list[im].skills[i],map->list[m].skills[i],sizeof(struct mapflag_skill_adjust));
 		}
 	}
 	//Mimic zone mf
-	if( maplist[m].zone_mf_count ) {
-		maplist[im].zone_mf_count = maplist[m].zone_mf_count;
-		CREATE( maplist[im].zone_mf, char *, maplist[im].zone_mf_count );
+	if( map->list[m].zone_mf_count ) {
+		map->list[im].zone_mf_count = map->list[m].zone_mf_count;
+		CREATE( map->list[im].zone_mf, char *, map->list[im].zone_mf_count );
 		
-		for(i = 0; i < maplist[im].zone_mf_count; i++) {
-			CREATE(maplist[im].zone_mf[i], char, MAP_ZONE_MAPFLAG_LENGTH);
-			safestrncpy(maplist[im].zone_mf[i],maplist[m].zone_mf[i],MAP_ZONE_MAPFLAG_LENGTH);
+		for(i = 0; i < map->list[im].zone_mf_count; i++) {
+			CREATE(map->list[im].zone_mf[i], char, MAP_ZONE_MAPFLAG_LENGTH);
+			safestrncpy(map->list[im].zone_mf[i],map->list[m].zone_mf[i],MAP_ZONE_MAPFLAG_LENGTH);
 		}
 	}
 	
-	maplist[im].m = im;
-	maplist[im].instance_id = instance_id;
-	maplist[im].instance_src_map = m;
-	maplist[m].flag.src4instance = 1; // Flag this map as a src map for instances
+	map->list[im].m = im;
+	map->list[im].instance_id = instance_id;
+	map->list[im].instance_src_map = m;
+	map->list[m].flag.src4instance = 1; // Flag this map as a src map for instances
 
 	RECREATE(instance->list[instance_id].map, unsigned short, ++instance->list[instance_id].num_map);
 
 	instance->list[instance_id].map[instance->list[instance_id].num_map - 1] = im; // Attach to actual instance
-	map->addmap2db(&maplist[im]);
+	map->addmap2db(&map->list[im]);
 	
 	return im;
 }
@@ -265,7 +265,7 @@ int instance_map2imap(int16 m, int instance_id) {
 	}
 
 	for( i = 0; i < instance->list[instance_id].num_map; i++ ) {
-		if( instance->list[instance_id].map[i] && maplist[instance->list[instance_id].map[i]].instance_src_map == m )
+		if( instance->list[instance_id].map[i] && map->list[instance->list[instance_id].map[i]].instance_src_map == m )
 			return instance->list[instance_id].map[i];
  	}
  	return -1;
@@ -277,9 +277,9 @@ int instance_map2imap(int16 m, int instance_id) {
  * result : mapid of map "m" in this instance
  *--------------------------------------*/
 int instance_mapid2imapid(int16 m, int instance_id) {
-	if( maplist[m].flag.src4instance == 0 )
+	if( map->list[m].flag.src4instance == 0 )
 		return m; // not instances found for this map
-	else if( maplist[m].instance_id >= 0 ) { // This map is a instance, not a src map instance
+	else if( map->list[m].instance_id >= 0 ) { // This map is a instance, not a src map instance
 		ShowError("map_instance_mapid2imapid: already instanced (%d / %d)\n", m, instance_id);
 		return -1;
 	}
@@ -314,7 +314,7 @@ void instance_init(int instance_id) {
 		return; // nothing to do
 
 	for( i = 0; i < instance->list[instance_id].num_map; i++ )
-		map->foreachinmap(instance_map_npcsub, maplist[instance->list[instance_id].map[i]].instance_src_map, BL_NPC, instance->list[instance_id].map[i]);
+		map->foreachinmap(instance_map_npcsub, map->list[instance->list[instance_id].map[i]].instance_src_map, BL_NPC, instance->list[instance_id].map[i]);
 
 	instance->list[instance_id].state = INSTANCE_BUSY;
 }
@@ -367,70 +367,70 @@ int instance_cleanup_sub(struct block_list *bl, va_list ap) {
 void instance_del_map(int16 m) {
 	int i;
 	
-	if( m <= 0 || maplist[m].instance_id == -1 ) {
+	if( m <= 0 || map->list[m].instance_id == -1 ) {
 		ShowError("instance_del_map: tried to remove non-existing instance map (%d)\n", m);
 		return;
 	}
 
-	map->map_foreachpc(instance_del_load, m);
+	map->foreachpc(instance_del_load, m);
 	map->foreachinmap(instance_cleanup_sub, m, BL_ALL);
 
-	if( maplist[m].mob_delete_timer != INVALID_TIMER )
-		timer->delete(maplist[m].mob_delete_timer, map->removemobs_timer);
+	if( map->list[m].mob_delete_timer != INVALID_TIMER )
+		timer->delete(map->list[m].mob_delete_timer, map->removemobs_timer);
 	
 	mapindex_removemap(map_id2index(m));
 
 	// Free memory
-	aFree(maplist[m].cell);
-	aFree(maplist[m].block);
-	aFree(maplist[m].block_mob);
+	aFree(map->list[m].cell);
+	aFree(map->list[m].block);
+	aFree(map->list[m].block_mob);
 	
-	if( maplist[m].unit_count ) {
-		for(i = 0; i < maplist[m].unit_count; i++) {
-			aFree(maplist[m].units[i]);
+	if( map->list[m].unit_count ) {
+		for(i = 0; i < map->list[m].unit_count; i++) {
+			aFree(map->list[m].units[i]);
 		}
-		if( maplist[m].units )
-			aFree(maplist[m].units);
+		if( map->list[m].units )
+			aFree(map->list[m].units);
 	}
 	
-	if( maplist[m].skill_count ) {
-		for(i = 0; i < maplist[m].skill_count; i++) {
-			aFree(maplist[m].skills[i]);
+	if( map->list[m].skill_count ) {
+		for(i = 0; i < map->list[m].skill_count; i++) {
+			aFree(map->list[m].skills[i]);
 		}
-		if( maplist[m].skills )
-			aFree(maplist[m].skills);
+		if( map->list[m].skills )
+			aFree(map->list[m].skills);
 	}
 	
-	if( maplist[m].zone_mf_count ) {
-		for(i = 0; i < maplist[m].zone_mf_count; i++) {
-			aFree(maplist[m].zone_mf[i]);
+	if( map->list[m].zone_mf_count ) {
+		for(i = 0; i < map->list[m].zone_mf_count; i++) {
+			aFree(map->list[m].zone_mf[i]);
 		}
-		if( maplist[m].zone_mf )
-			aFree(maplist[m].zone_mf);
+		if( map->list[m].zone_mf )
+			aFree(map->list[m].zone_mf);
 	}
 	
 	// Remove from instance
-	for( i = 0; i < instance->list[maplist[m].instance_id].num_map; i++ ) {
-		if( instance->list[maplist[m].instance_id].map[i] == m ) {
-			instance->list[maplist[m].instance_id].num_map--;
-			for( ; i < instance->list[maplist[m].instance_id].num_map; i++ )
-				instance->list[maplist[m].instance_id].map[i] = instance->list[maplist[m].instance_id].map[i+1];
+	for( i = 0; i < instance->list[map->list[m].instance_id].num_map; i++ ) {
+		if( instance->list[map->list[m].instance_id].map[i] == m ) {
+			instance->list[map->list[m].instance_id].num_map--;
+			for( ; i < instance->list[map->list[m].instance_id].num_map; i++ )
+				instance->list[map->list[m].instance_id].map[i] = instance->list[map->list[m].instance_id].map[i+1];
 			i = -1;
 			break;
 		}
 	}
 	
-	if( i == instance->list[maplist[m].instance_id].num_map )
-		ShowError("map_instance_del: failed to remove %s from instance list (%s): %d\n", maplist[m].name, instance->list[maplist[m].instance_id].name, m);
+	if( i == instance->list[map->list[m].instance_id].num_map )
+		ShowError("map_instance_del: failed to remove %s from instance list (%s): %d\n", map->list[m].name, instance->list[map->list[m].instance_id].name, m);
 	
-	if( maplist[m].channel )
-		clif->chsys_delete(maplist[m].channel);
+	if( map->list[m].channel )
+		clif->chsys_delete(map->list[m].channel);
 
-	map->removemapdb(&maplist[m]);
-	memset(&maplist[m], 0x00, sizeof(maplist[0]));
-	maplist[m].name[0] = 0;
-	maplist[m].instance_id = -1;
-	maplist[m].mob_delete_timer = INVALID_TIMER;
+	map->removemapdb(&map->list[m]);
+	memset(&map->list[m], 0x00, sizeof(map->list[0]));
+	map->list[m].name[0] = 0;
+	map->list[m].instance_id = -1;
+	map->list[m].mob_delete_timer = INVALID_TIMER;
 }
 
 /*--------------------------------------
@@ -592,9 +592,9 @@ void instance_check_kick(struct map_session_data *sd) {
 	int16 m = sd->bl.m;
 
 	clif->instance_leave(sd->fd);
-	if( maplist[m].instance_id >= 0 ) { // User was on the instance map
-		if( maplist[m].save.map )
-			pc->setpos(sd, maplist[m].save.map, maplist[m].save.x, maplist[m].save.y, CLR_TELEPORT);
+	if( map->list[m].instance_id >= 0 ) { // User was on the instance map
+		if( map->list[m].save.map )
+			pc->setpos(sd, map->list[m].save.map, map->list[m].save.x, map->list[m].save.y, CLR_TELEPORT);
 		else
 			pc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 	}

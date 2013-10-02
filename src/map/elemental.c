@@ -754,7 +754,7 @@ int elemental_ai_sub_foreachclient(struct map_session_data *sd, va_list ap) {
 }
 
 int elemental_ai_timer(int tid, unsigned int tick, int id, intptr_t data) {
-	map->map_foreachpc(elemental->ai_sub_foreachclient,tick);
+	map->foreachpc(elemental->ai_sub_foreachclient,tick);
 	return 0;
 }
 

@@ -630,7 +630,7 @@ bool party_changeleader(struct map_session_data *sd, struct map_session_data *ts
 		return false;
 	}
 
-	if( maplist[sd->bl.m].flag.partylock ) {
+	if( map->list[sd->bl.m].flag.partylock ) {
 		clif->message(sd->fd, msg_txt(287));
 		return false;
 	}

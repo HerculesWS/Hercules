@@ -475,7 +475,7 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 		case AL_WARP:
 		case RETURN_TO_ELDICASTES:
 		case ALL_GUARDIAN_RECALL:
-			if(maplist[m].flag.nowarp) {
+			if(map->list[m].flag.nowarp) {
 				clif->skill_mapinfomessage(sd,0);
 				return 1;
 			}
@@ -483,7 +483,7 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 		case AL_TELEPORT:
 		case SC_FATALMENACE:
 		case SC_DIMENSIONDOOR:
-			if(maplist[m].flag.noteleport) {
+			if(map->list[m].flag.noteleport) {
 				clif->skill_mapinfomessage(sd,0);
 				return 1;
 			}
@@ -491,7 +491,7 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 		case WE_CALLPARTNER:
 		case WE_CALLPARENT:
 		case WE_CALLBABY:
-			if (maplist[m].flag.nomemo) {
+			if (map->list[m].flag.nomemo) {
 				clif->skill_mapinfomessage(sd,1);
 				return 1;
 			}
@@ -510,7 +510,7 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 			return 0; // always allowed
 		case WZ_ICEWALL:
 			// noicewall flag [Valaris]
-			if (maplist[m].flag.noicewall) {
+			if (map->list[m].flag.noicewall) {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 1;
 			}
@@ -523,8 +523,8 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 			break;
 		case GD_EMERGENCYCALL:
 			if( !(battle_config.emergency_call&((map->agit_flag || map->agit2_flag)?2:1))
-			 || !(battle_config.emergency_call&(maplist[m].flag.gvg || maplist[m].flag.gvg_castle?8:4))
-			 || (battle_config.emergency_call&16 && maplist[m].flag.nowarpto && !maplist[m].flag.gvg_castle)
+			 || !(battle_config.emergency_call&(map->list[m].flag.gvg || map->list[m].flag.gvg_castle?8:4))
+			 || (battle_config.emergency_call&16 && map->list[m].flag.nowarpto && !map->list[m].flag.gvg_castle)
 			) {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 1;
@@ -560,7 +560,7 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 			break;
 
 	}
-	return (maplist[m].flag.noskill);
+	return (map->list[m].flag.noskill);
 }
 
 int skillnotok_hom(uint16 skill_id, struct homun_data *hd)
@@ -2015,7 +2015,7 @@ int skill_blown(struct block_list* src, struct block_list* target, int count, in
 
 	nullpo_ret(src);
 
-	if (src != target && maplist[src->m].flag.noknockback)
+	if (src != target && map->list[src->m].flag.noknockback)
 		return 0; //No knocking
 	if (count == 0)
 		return 0; //Actual knockback distance is 0.
@@ -3526,7 +3526,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 				uint8 dir = map->calc_dir(bl, src->x, src->y);
 
 				// teleport to target (if not on WoE grounds)
-				if( !map_flag_gvg2(src->m) && !maplist[src->m].flag.battleground && unit->movepos(src, bl->x, bl->y, 0, 1) )
+				if( !map_flag_gvg2(src->m) && !map->list[src->m].flag.battleground && unit->movepos(src, bl->x, bl->y, 0, 1) )
 					clif->slide(src, bl->x, bl->y);
 
 				// cause damage and knockback if the path to target was a straight one
@@ -3634,7 +3634,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 				if( dir > 2 && dir < 6 ) y = -i;
 				else if( dir == 7 || dir < 2 ) y = i;
 				else y = 0;
-				if( (mbl == src || (!map_flag_gvg2(src->m) && !maplist[src->m].flag.battleground) ) // only NJ_ISSEN don't have slide effect in GVG
+				if( (mbl == src || (!map_flag_gvg2(src->m) && !map->list[src->m].flag.battleground) ) // only NJ_ISSEN don't have slide effect in GVG
 				 && unit->movepos(src, mbl->x+x, mbl->y+y, 1, 1)
 				) {
 					clif->slide(src, src->x, src->y);
@@ -4011,7 +4011,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 				sc_start(src,SC_HIDING,100,skill_lv,skill->get_time(skill_id,skill_lv));
 			break;
 		case NJ_KIRIKAGE:
-			if( !map_flag_gvg2(src->m) && !maplist[src->m].flag.battleground ) {
+			if( !map_flag_gvg2(src->m) && !map->list[src->m].flag.battleground ) {
 				//You don't move on GVG grounds.
 				short x, y;
 				map->search_freecell(bl, 0, &x, &y, 1, 1, 0);
@@ -4284,7 +4284,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 			}
 			break;
 		case LG_PINPOINTATTACK:
-			if( !map_flag_gvg2(src->m) && !maplist[src->m].flag.battleground && unit->movepos(src, bl->x, bl->y, 1, 1) )
+			if( !map_flag_gvg2(src->m) && !map->list[src->m].flag.battleground && unit->movepos(src, bl->x, bl->y, 1, 1) )
 				clif->slide(src,bl->x,bl->y);
 			skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 			break;
@@ -4309,7 +4309,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 			break;
 
 		case SR_KNUCKLEARROW:
-				if( !map_flag_gvg2(src->m) && !maplist[src->m].flag.battleground && unit->movepos(src, bl->x, bl->y, 1, 1) ) {
+				if( !map_flag_gvg2(src->m) && !map->list[src->m].flag.battleground && unit->movepos(src, bl->x, bl->y, 1, 1) ) {
 					clif->slide(src,bl->x,bl->y);
 					clif->fixpos(src); // Aegis send this packet too.
 				}
@@ -5044,7 +5044,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					break;
 				}
 				skill->area_temp[0] = 5 - skill->area_temp[0]; // The actual penalty...
-				if (skill->area_temp[0] > 0 && !maplist[src->m].flag.noexppenalty) { //Apply penalty
+				if (skill->area_temp[0] > 0 && !map->list[src->m].flag.noexppenalty) { //Apply penalty
 					sd->status.base_exp -= min(sd->status.base_exp, pc->nextbaseexp(sd) * skill->area_temp[0] * 2/1000); //0.2% penalty per each.
 					sd->status.job_exp -= min(sd->status.job_exp, pc->nextjobexp(sd) * skill->area_temp[0] * 2/1000);
 					clif->updatestatus(sd,SP_BASEEXP);
@@ -5060,7 +5060,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				break;
 
 		case ALL_RESURRECTION:
-			if(sd && (map_flag_gvg2(bl->m) || maplist[bl->m].flag.battleground)) {
+			if(sd && (map_flag_gvg2(bl->m) || map->list[bl->m].flag.battleground)) {
 				//No reviving in WoE grounds!
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				break;
@@ -5072,7 +5072,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				if (tsc && tsc->data[SC_HELLPOWER])
 					break;
 
-				if (maplist[bl->m].flag.pvp && dstsd && dstsd->pvp_point < 0)
+				if (map->list[bl->m].flag.pvp && dstsd && dstsd->pvp_point < 0)
 					break;
 
 				switch(skill_lv){
@@ -6258,7 +6258,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 		case AL_TELEPORT:
 			if(sd) {
-				if (maplist[bl->m].flag.noteleport && skill_lv <= 2) {
+				if (map->list[bl->m].flag.noteleport && skill_lv <= 2) {
 					clif->skill_mapinfomessage(sd,0);
 					break;
 				}
@@ -6631,8 +6631,8 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				int x,y, dir = unit->getdir(src);
 
 				//Fails on noteleport maps, except for GvG and BG maps [Skotlex]
-				if( maplist[src->m].flag.noteleport
-				 && !(maplist[src->m].flag.battleground || map_flag_gvg2(src->m))
+				if( map->list[src->m].flag.noteleport
+				 && !(map->list[src->m].flag.battleground || map_flag_gvg2(src->m))
 				) {
 					x = src->x;
 					y = src->y;
@@ -7442,7 +7442,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				for(i = 0; i < g->max_member; i++, j++) {
 					if (j>8) j=0;
 					if ((dstsd = g->member[i].sd) != NULL && sd != dstsd && !dstsd->state.autotrade && !pc_isdead(dstsd)) {
-						if (maplist[dstsd->bl.m].flag.nowarp && !map_flag_gvg2(dstsd->bl.m))
+						if (map->list[dstsd->bl.m].flag.nowarp && !map_flag_gvg2(dstsd->bl.m))
 							continue;
 						if(map->getcell(src->m,src->x+dx[j],src->y+dy[j],CELL_CHKNOREACH))
 							dx[j] = dy[j] = 0;
@@ -8452,7 +8452,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			}
 			break;
 		case LG_INSPIRATION:
-			if( sd && !maplist[sd->bl.m].flag.noexppenalty && sd->status.base_level != MAX_LEVEL ) {
+			if( sd && !map->list[sd->bl.m].flag.noexppenalty && sd->status.base_level != MAX_LEVEL ) {
 					sd->status.base_exp -= min(sd->status.base_exp, pc->nextbaseexp(sd) * 1 / 100); // 1% penalty.
 					sd->status.job_exp -= min(sd->status.job_exp, pc->nextjobexp(sd) * 1 / 100);
 					clif->updatestatus(sd,SP_BASEEXP);
@@ -9887,7 +9887,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			}
 			break;
 		case NJ_SHADOWJUMP:
-			if( !map_flag_gvg2(src->m) && !maplist[src->m].flag.battleground ) { //You don't move on GVG grounds.
+			if( !map_flag_gvg2(src->m) && !map->list[src->m].flag.battleground ) { //You don't move on GVG grounds.
 				unit->movepos(src, x, y, 1, 0);
 				clif->slide(src,x,y);
 			}
@@ -10422,11 +10422,11 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 	unit_flag = skill->get_unit_flag(skill_id);
 	layout = skill->get_unit_layout(skill_id,skill_lv,src,x,y);
 
-	if( maplist[src->m].unit_count ) {
-		ARR_FIND(0, maplist[src->m].unit_count, i, maplist[src->m].units[i]->skill_id == skill_id );
+	if( map->list[src->m].unit_count ) {
+		ARR_FIND(0, map->list[src->m].unit_count, i, map->list[src->m].units[i]->skill_id == skill_id );
 
-		if( i < maplist[src->m].unit_count ) {
-			limit = limit * maplist[src->m].units[i]->modifier / 100;
+		if( i < map->list[src->m].unit_count ) {
+			limit = limit * map->list[src->m].units[i]->modifier / 100;
 		}
 	}
 	
@@ -10523,7 +10523,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 				ARR_FIND(0, MAX_SKILL_ITEM_REQUIRE, i, req.itemid[i] && (req.itemid[i] == ITEMID_TRAP || req.itemid[i] == ITEMID_TRAP_ALLOY));
 				if( req.itemid[i] )
 					req_item = req.itemid[i];
-				if( map_flag_gvg2(src->m) || maplist[src->m].flag.battleground )
+				if( map_flag_gvg2(src->m) || map->list[src->m].flag.battleground )
 					limit *= 4; // longer trap times in WOE [celest]
 				if( battle_config.vs_traps_bctall && map_flag_vs(src->m) && (src->type&battle_config.vs_traps_bctall) )
 					target = BCT_ALL;
@@ -11613,7 +11613,7 @@ int skill_unit_onplace_timer (struct skill_unit *src, struct block_list *bl, uns
 			break;
 
 		case UNT_DIMENSIONDOOR:
-			if( tsd && !maplist[bl->m].flag.noteleport )
+			if( tsd && !map->list[bl->m].flag.noteleport )
 				pc->randomwarp(tsd,3);
 			else if( bl->type == BL_MOB && battle_config.mob_warp&8 )
 				unit->warp(bl,-1,-1,-1,3);
@@ -13974,7 +13974,7 @@ int skill_delay_fix (struct block_list *bl, uint16 skill_id, uint16 skill_lv) {
 					time /= 2;
 				break;
 			case AS_SONICBLOW:
-				if (!map_flag_gvg2(bl->m) && !maplist[bl->m].flag.battleground && sc->data[SC_SOULLINK]->val2 == SL_ASSASIN)
+				if (!map_flag_gvg2(bl->m) && !map->list[bl->m].flag.battleground && sc->data[SC_SOULLINK]->val2 == SL_ASSASIN)
 					time /= 2;
 				break;
 		}
@@ -14502,7 +14502,7 @@ void skill_unitsetmapcell (struct skill_unit *src, uint16 skill_id, uint16 skill
 
 	for( y = src->bl.y - range; y <= src->bl.y + range; ++y )
 		for( x = src->bl.x - range; x <= src->bl.x + range; ++x )
-			maplist[src->bl.m].setcell(src->bl.m, x, y, cell, flag);
+			map->list[src->bl.m].setcell(src->bl.m, x, y, cell, flag);
 }
 
 /*==========================================
@@ -15056,7 +15056,7 @@ struct skill_unit *skill_initunit (struct skill_unit_group *group, int idx, int 
 			map->setgatcell(su->bl.m,su->bl.x,su->bl.y,5);
 			clif->changemapcell(0,su->bl.m,su->bl.x,su->bl.y,5,AREA);
 			skill->unitsetmapcell(su,WZ_ICEWALL,group->skill_lv,CELL_ICEWALL,true);
-			maplist[su->bl.m].icewall_num++;
+			map->list[su->bl.m].icewall_num++;
 			break;
 		case SA_LANDPROTECTOR:
 			skill->unitsetmapcell(su,SA_LANDPROTECTOR,group->skill_lv,CELL_LANDPROTECTOR,true);
@@ -15111,7 +15111,7 @@ int skill_delunit (struct skill_unit* su) {
 			map->setgatcell(su->bl.m,su->bl.x,su->bl.y,su->val2);
 			clif->changemapcell(0,su->bl.m,su->bl.x,su->bl.y,su->val2,ALL_SAMEMAP); // hack to avoid clientside cell bug
 			skill->unitsetmapcell(su,WZ_ICEWALL,group->skill_lv,CELL_ICEWALL,false);
-			maplist[su->bl.m].icewall_num--;
+			map->list[su->bl.m].icewall_num--;
 			break;
 		case SA_LANDPROTECTOR:
 			skill->unitsetmapcell(su,SA_LANDPROTECTOR,group->skill_lv,CELL_LANDPROTECTOR,false);
@@ -15536,13 +15536,13 @@ int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap) {
 				if(group->val1) {
 					sd = map->charid2sd(group->val1);
 					group->val1 = 0;
-					if (sd && !maplist[sd->bl.m].flag.nowarp)
+					if (sd && !map->list[sd->bl.m].flag.nowarp)
 						pc->setpos(sd,map_id2index(su->bl.m),su->bl.x,su->bl.y,CLR_TELEPORT);
 				}
 				if(group->val2) {
 					sd = map->charid2sd(group->val2);
 					group->val2 = 0;
-					if (sd && !maplist[sd->bl.m].flag.nowarp)
+					if (sd && !map->list[sd->bl.m].flag.nowarp)
 						pc->setpos(sd,map_id2index(su->bl.m),su->bl.x,su->bl.y,CLR_TELEPORT);
 				}
 				skill->delunit(su);

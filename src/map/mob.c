@@ -173,11 +173,11 @@ void mvptomb_destroy(struct mob_data *md) {
 
 		map->delblock(&nd->bl);
 
-		ARR_FIND( 0, maplist[m].npc_num, i, maplist[m].npc[i] == nd );
-		if( !(i == maplist[m].npc_num) ) {
-			maplist[m].npc_num--;
-			maplist[m].npc[i] = maplist[m].npc[maplist[m].npc_num];
-			maplist[m].npc[maplist[m].npc_num] = NULL;
+		ARR_FIND( 0, map->list[m].npc_num, i, map->list[m].npc[i] == nd );
+		if( !(i == map->list[m].npc_num) ) {
+			map->list[m].npc_num--;
+			map->list[m].npc[i] = map->list[m].npc[map->list[m].npc_num];
+			map->list[m].npc[map->list[m].npc_num] = NULL;
 		}
 
 		map->deliddb(&nd->bl);
@@ -363,7 +363,7 @@ bool mob_ksprotected (struct block_list *src, struct block_list *target)
 	t_sd = BL_CAST(BL_PC,s_bl);
 
 	do {
-		if( maplist[md->bl.m].flag.allowks || map_flag_ks(md->bl.m) )
+		if( map->list[md->bl.m].flag.allowks || map_flag_ks(md->bl.m) )
 			return false; // Ignores GVG, PVP and AllowKS map flags
 
 		if( md->db->mexp || md->master_id )
@@ -638,12 +638,12 @@ int mob_spawn_guardian(const char* mapname, short x, short y, const char* mobnam
 	if( !has_index ) {
 		guardian = -1;
 	} else if( guardian < 0 || guardian >= MAX_GUARDIANS ) {
-		ShowError("mob_spawn_guardian: Invalid guardian index %d for guardian %d (castle map %s)\n", guardian, class_, maplist[m].name);
+		ShowError("mob_spawn_guardian: Invalid guardian index %d for guardian %d (castle map %s)\n", guardian, class_, map->list[m].name);
 		return 0;
 	}
 
 	if((x<=0 || y<=0) && !map->search_freecell(NULL, m, &x, &y, -1,-1, 1)) {
-		ShowWarning("mob_spawn_guardian: Couldn't locate a spawn cell for guardian class %d (index %d) at castle map %s\n",class_, guardian, maplist[m].name);
+		ShowWarning("mob_spawn_guardian: Couldn't locate a spawn cell for guardian class %d (index %d) at castle map %s\n",class_, guardian, map->list[m].name);
 		return 0;
 	}
 	data.x = x;
@@ -653,13 +653,13 @@ int mob_spawn_guardian(const char* mapname, short x, short y, const char* mobnam
 	if (!mob->parse_dataset(&data))
 		return 0;
 
-	gc=guild->mapname2gc(maplist[m].name);
+	gc=guild->mapname2gc(map->list[m].name);
 	if (gc == NULL) {
-		ShowError("mob_spawn_guardian: No castle set at map %s\n", maplist[m].name);
+		ShowError("mob_spawn_guardian: No castle set at map %s\n", map->list[m].name);
 		return 0;
 	}
 	if (!gc->guild_id)
-		ShowWarning("mob_spawn_guardian: Spawning guardian %d on a castle with no guild (castle map %s)\n", class_, maplist[m].name);
+		ShowWarning("mob_spawn_guardian: Spawning guardian %d on a castle with no guild (castle map %s)\n", class_, map->list[m].name);
 	else
 		g = guild->search(gc->guild_id);
 
@@ -670,7 +670,7 @@ int mob_spawn_guardian(const char* mapname, short x, short y, const char* mobnam
 		        && md2->guardian_data
 		        && md2->guardian_data->number == guardian
 		) {
-			ShowError("mob_spawn_guardian: Attempted to spawn guardian in position %d which already has a guardian (castle map %s)\n", guardian, maplist[m].name);
+			ShowError("mob_spawn_guardian: Attempted to spawn guardian in position %d which already has a guardian (castle map %s)\n", guardian, map->list[m].name);
 			return 0;
 		}
 	}
@@ -732,7 +732,7 @@ int mob_spawn_bg(const char* mapname, short x, short y, const char* mobname, int
 
 	data.class_ = class_;
 	if( (x <= 0 || y <= 0) && !map->search_freecell(NULL, m, &x, &y, -1,-1, 1) ) {
-		ShowWarning("mob_spawn_bg: Couldn't locate a spawn cell for guardian class %d (bg_id %d) at map %s\n",class_, bg_id, maplist[m].name);
+		ShowWarning("mob_spawn_bg: Couldn't locate a spawn cell for guardian class %d (bg_id %d) at map %s\n",class_, bg_id, map->list[m].name);
 		return 0;
 	}
 
@@ -963,7 +963,7 @@ int mob_spawn (struct mob_data *md)
 		mob->mvptomb_destroy(md);
 
 	map->addblock(&md->bl);
-	if( maplist[md->bl.m].users )
+	if( map->list[md->bl.m].users )
 		clif->spawn(&md->bl);
 	skill->unit_move(&md->bl,tick,1);
 	mob->skill_use(md, tick, MSC_SPAWN);
@@ -1068,7 +1068,7 @@ int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
 			battle->check_range(&md->bl,bl,md->db->range2)
 		) { //Pick closest target?
 
-			if( maplist[bl->m].icewall_num &&
+			if( map->list[bl->m].icewall_num &&
 				!path->search_long(NULL,bl->m,md->bl.x,md->bl.y,bl->x,bl->y,CELL_CHKICEWALL) ) {
 
 				if( !check_distance_bl(&md->bl, bl, status_get_range(&md->bl) ) )
@@ -1337,7 +1337,7 @@ int mob_randomwalk(struct mob_data *md,unsigned int tick)
 	if(i==retrycount){
 		md->move_fail_count++;
 		if(md->move_fail_count>1000){
-			ShowWarning("MOB can't move. random spawn %d, class = %d, at %s (%d,%d)\n",md->bl.id,md->class_,maplist[md->bl.m].name, md->bl.x, md->bl.y);
+			ShowWarning("MOB can't move. random spawn %d, class = %d, at %s (%d,%d)\n",md->bl.id,md->class_,map->list[md->bl.m].name, md->bl.x, md->bl.y);
 			md->move_fail_count=0;
 			mob->spawn(md);
 		}
@@ -1683,7 +1683,7 @@ int mob_ai_sub_lazy(struct mob_data *md, va_list args)
 
 	tick = va_arg(args,unsigned int);
 
-	if (battle_config.mob_ai&0x20 && maplist[md->bl.m].users>0)
+	if (battle_config.mob_ai&0x20 && map->list[md->bl.m].users>0)
 		return (int)mob->ai_sub_hard(md, tick);
 
 	if (md->bl.prev==NULL || md->status.hp == 0)
@@ -1720,7 +1720,7 @@ int mob_ai_sub_lazy(struct mob_data *md, va_list args)
 	}
 
 	if( DIFF_TICK(md->next_walktime,tick) < 0 && (status_get_mode(&md->bl)&MD_CANMOVE) && unit->can_move(&md->bl) ) {
-		if( maplist[md->bl.m].users > 0 )
+		if( map->list[md->bl.m].users > 0 )
 		{
 			if( rnd()%1000 < MOB_LAZYMOVEPERC(md) )
 				mob->randomwalk(md, tick);
@@ -1741,7 +1741,7 @@ int mob_ai_sub_lazy(struct mob_data *md, va_list args)
  * Negligent processing for mob outside PC field of view   (interval timer function)
  *------------------------------------------*/
 int mob_ai_lazy(int tid, unsigned int tick, int id, intptr_t data) {
-	map->map_foreachmob(mob->ai_sub_lazy,tick);
+	map->foreachmob(mob->ai_sub_lazy,tick);
 	return 0;
 }
 
@@ -1751,9 +1751,9 @@ int mob_ai_lazy(int tid, unsigned int tick, int id, intptr_t data) {
 int mob_ai_hard(int tid, unsigned int tick, int id, intptr_t data) {
 
 	if (battle_config.mob_ai&0x20)
-		map->map_foreachmob(mob->ai_sub_lazy,tick);
+		map->foreachmob(mob->ai_sub_lazy,tick);
 	else
-		map->map_foreachpc(mob->ai_sub_foreachclient,tick);
+		map->foreachpc(mob->ai_sub_foreachclient,tick);
 
 	return 0;
 }
@@ -2145,9 +2145,9 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 	}
 
 	if( !(type&2) //No exp
-	 && (!maplist[m].flag.pvp || battle_config.pvp_exp) //Pvp no exp rule [MouseJstr]
+	 && (!map->list[m].flag.pvp || battle_config.pvp_exp) //Pvp no exp rule [MouseJstr]
 	 && (!md->master_id || !md->special_state.ai) //Only player-summoned mobs do not give exp. [Skotlex]
-	 && (!maplist[m].flag.nobaseexp || !maplist[m].flag.nojobexp) //Gives Exp
+	 && (!map->list[m].flag.nobaseexp || !map->list[m].flag.nojobexp) //Gives Exp
 	) { //Experience calculation.
 		int bonus = 100; //Bonus on top of your share (common to all attackers).
 		if (md->sc.data[SC_RICHMANKIM])
@@ -2209,15 +2209,15 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 				zeny*=rnd()%250;
 		}
 
-		if (maplist[m].flag.nobaseexp || !md->db->base_exp)
+		if (map->list[m].flag.nobaseexp || !md->db->base_exp)
 			base_exp = 0;
 		else
-			base_exp = (unsigned int)cap_value(md->db->base_exp * per * bonus/100. * maplist[m].bexp/100., 1, UINT_MAX);
+			base_exp = (unsigned int)cap_value(md->db->base_exp * per * bonus/100. * map->list[m].bexp/100., 1, UINT_MAX);
 
-		if (maplist[m].flag.nojobexp || !md->db->job_exp || md->dmglog[i].flag == MDLF_HOMUN) //Homun earned job-exp is always lost.
+		if (map->list[m].flag.nojobexp || !md->db->job_exp || md->dmglog[i].flag == MDLF_HOMUN) //Homun earned job-exp is always lost.
 			job_exp = 0;
 		else
-			job_exp = (unsigned int)cap_value(md->db->job_exp * per * bonus/100. * maplist[m].jexp/100., 1, UINT_MAX);
+			job_exp = (unsigned int)cap_value(md->db->job_exp * per * bonus/100. * map->list[m].jexp/100., 1, UINT_MAX);
 
 		if ( (temp = tmpsd[i]->status.party_id) > 0 ) {
 			int j;
@@ -2271,7 +2271,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 
 	} //End EXP giving.
 
-	if( !(type&1) && !maplist[m].flag.nomobloot && !md->state.rebirth && (
+	if( !(type&1) && !map->list[m].flag.nomobloot && !md->state.rebirth && (
 		!md->special_state.ai || //Non special mob
 		battle_config.alchemist_summon_reward == 2 || //All summoned give drops
 		(md->special_state.ai==2 && battle_config.alchemist_summon_reward == 1) //Marine Sphere Drops items.
@@ -2439,7 +2439,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		double exp;
 
 		//mapflag: noexp check [Lorky]
-		if (maplist[m].flag.nobaseexp || type&2)
+		if (map->list[m].flag.nobaseexp || type&2)
 			exp =1;
 		else {
 			exp = md->db->mexp;
@@ -2454,7 +2454,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		pc->gainexp(mvp_sd, &md->bl, mexp,0, false);
 		log_mvp[1] = mexp;
 
-		if( !(maplist[m].flag.nomvploot || type&1) ) {
+		if( !(map->list[m].flag.nomvploot || type&1) ) {
 			/* pose them randomly in the list -- so on 100% drop servers it wont always drop the same item */
 			int mdrop_id[MAX_MVP_DROP];
 			int mdrop_p[MAX_MVP_DROP];
@@ -2598,7 +2598,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		return 5; // Note: Actually, it's 4. Oh well...
 
 	// MvP tomb [GreenBox]
-	if (battle_config.mvp_tomb_enabled && md->spawn->state.boss && maplist[md->bl.m].flag.notomb != 1)
+	if (battle_config.mvp_tomb_enabled && md->spawn->state.boss && map->list[md->bl.m].flag.notomb != 1)
 		mob->mvptomb_create(md, mvp_sd ? mvp_sd->status.name : NULL, time(NULL));
 
 	if( !rebirth ) {
@@ -3354,12 +3354,12 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 			(skill->db[idx].inf2&(INF2_WEDDING_SKILL|INF2_GUILD_SKILL))
 		)
 			continue;
-		for(h = 0; h < maplist[sd->bl.m].zone->disabled_skills_count; h++) {
-			if( skill_id == maplist[sd->bl.m].zone->disabled_skills[h]->nameid && maplist[sd->bl.m].zone->disabled_skills[h]->subtype == MZS_CLONE ) {
+		for(h = 0; h < map->list[sd->bl.m].zone->disabled_skills_count; h++) {
+			if( skill_id == map->list[sd->bl.m].zone->disabled_skills[h]->nameid && map->list[sd->bl.m].zone->disabled_skills[h]->subtype == MZS_CLONE ) {
 				break;
 			}
 		}
-		if( h < maplist[sd->bl.m].zone->disabled_skills_count )
+		if( h < map->list[sd->bl.m].zone->disabled_skills_count )
 			continue;
 		//Normal aggressive mob, disable skills that cannot help them fight
 		//against players (those with flags UF_NOMOB and UF_NOPC are specific
@@ -3890,13 +3890,13 @@ int mob_read_sqldb(void) {
 		uint32 lines = 0, count = 0;
 
 		// retrieve all rows from the mob database
-		if( SQL_ERROR == SQL->Query(mmysql_handle, "SELECT * FROM `%s`", mob_db_name[fi]) ) {
-			Sql_ShowDebug(mmysql_handle);
+		if( SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT * FROM `%s`", mob_db_name[fi]) ) {
+			Sql_ShowDebug(map->mysql_handle);
 			continue;
 		}
 
 		// process rows one by one
-		while( SQL_SUCCESS == SQL->NextRow(mmysql_handle) ) {
+		while( SQL_SUCCESS == SQL->NextRow(map->mysql_handle) ) {
 			// wrap the result into a TXT-compatible format
 			char line[1024];
 			char* str[31+2*MAX_MVP_DROP+2*MAX_MOB_DROP];
@@ -3908,7 +3908,7 @@ int mob_read_sqldb(void) {
 			{
 				char* data;
 				size_t len;
-				SQL->GetData(mmysql_handle, i, &data, &len);
+				SQL->GetData(map->mysql_handle, i, &data, &len);
 
 				strcpy(p, data);
 				str[i] = p;
@@ -3922,7 +3922,7 @@ int mob_read_sqldb(void) {
 		}
 
 		// free the query result
-		SQL->FreeResult(mmysql_handle);
+		SQL->FreeResult(map->mysql_handle);
 
 		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, mob_db_name[fi]);
 	}
@@ -4454,13 +4454,13 @@ int mob_read_sqlskilldb(void) {
 		uint32 lines = 0, count = 0;
 
 		// retrieve all rows from the mob skill database
-		if( SQL_ERROR == SQL->Query(mmysql_handle, "SELECT * FROM `%s`", mob_skill_db_name[fi]) ) {
-			Sql_ShowDebug(mmysql_handle);
+		if( SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT * FROM `%s`", mob_skill_db_name[fi]) ) {
+			Sql_ShowDebug(map->mysql_handle);
 			continue;
 		}
 
 		// process rows one by one
-		while( SQL_SUCCESS == SQL->NextRow(mmysql_handle) ) {
+		while( SQL_SUCCESS == SQL->NextRow(map->mysql_handle) ) {
 			// wrap the result into a TXT-compatible format
 			char* str[19];
 			char* dummy = "";
@@ -4468,7 +4468,7 @@ int mob_read_sqlskilldb(void) {
 			++lines;
 			for( i = 0; i < 19; ++i )
 			{
-				SQL->GetData(mmysql_handle, i, &str[i], NULL);
+				SQL->GetData(map->mysql_handle, i, &str[i], NULL);
 				if( str[i] == NULL ) str[i] = dummy; // get rid of NULL columns
 			}
 
@@ -4479,7 +4479,7 @@ int mob_read_sqlskilldb(void) {
 		}
 
 		// free the query result
-		SQL->FreeResult(mmysql_handle);
+		SQL->FreeResult(map->mysql_handle);
 
 		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, mob_skill_db_name[fi]);
 	}

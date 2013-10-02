@@ -31,7 +31,7 @@ void trade_traderequest(struct map_session_data *sd, struct map_session_data *ta
 {
 	nullpo_retv(sd);
 
-	if (maplist[sd->bl.m].flag.notrade) {
+	if (map->list[sd->bl.m].flag.notrade) {
 		clif->message (sd->fd, msg_txt(272));
 		return; //Can't trade in notrade mapflag maps.
 	}

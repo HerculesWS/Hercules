@@ -11,6 +11,7 @@
 #include "../common/mapindex.h"
 #include "../common/db.h"
 #include "../config/core.h"
+#include "../common/sql.h"
 #include "atcommand.h"
 #include <stdarg.h>
 
@@ -40,6 +41,11 @@ enum E_MAPSERVER_ST {
 #define MAX_VENDING 12
 #define MAX_MAP_SIZE 512*512 // Wasn't there something like this already? Can't find it.. [Shinryo]
 
+#define BLOCK_SIZE 8
+#define block_free_max 1048576
+#define BL_LIST_MAX 1048576
+
+
 // Added definitions for WoESE objects. [L0ne_W0lf]
 enum MOBID {
 	MOBID_EMPERIUM = 1288,
@@ -67,10 +73,12 @@ enum MOBID {
 #define JOBL_UPPER 0x1000 //4096
 #define JOBL_BABY 0x2000  //8192
 #define JOBL_THIRD 0x4000 //16384
+
 // For filtering and quick checking.
 #define MAPID_BASEMASK 0x00ff
 #define MAPID_UPPERMASK 0x0fff
 #define MAPID_THIRDMASK (JOBL_THIRD|MAPID_UPPERMASK)
+
 //First Jobs
 //Note the oddity of the novice:
 //Super Novices are considered the 2-1 version of the novice! Novices are considered a first class type.
@@ -215,13 +223,13 @@ enum {
 #define EVENT_NAME_LENGTH ( NAME_LENGTH * 2 + 3 )
 #define DEFAULT_AUTOSAVE_INTERVAL 5*60*1000
 // Specifies maps where players may hit each other
-#define map_flag_vs(m) (maplist[m].flag.pvp || maplist[m].flag.gvg_dungeon || maplist[m].flag.gvg || ((map->agit_flag || map->agit2_flag) && maplist[m].flag.gvg_castle) || maplist[m].flag.battleground)
+#define map_flag_vs(m) (map->list[m].flag.pvp || map->list[m].flag.gvg_dungeon || map->list[m].flag.gvg || ((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle) || map->list[m].flag.battleground)
 // Specifies maps that have special GvG/WoE restrictions
-#define map_flag_gvg(m) (maplist[m].flag.gvg || ((map->agit_flag || map->agit2_flag) && maplist[m].flag.gvg_castle))
+#define map_flag_gvg(m) (map->list[m].flag.gvg || ((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle))
 // Specifies if the map is tagged as GvG/WoE (regardless of map->agit_flag status)
-#define map_flag_gvg2(m) (maplist[m].flag.gvg || maplist[m].flag.gvg_castle)
+#define map_flag_gvg2(m) (map->list[m].flag.gvg || map->list[m].flag.gvg_castle)
 // No Kill Steal Protection
-#define map_flag_ks(m) (maplist[m].flag.town || maplist[m].flag.pvp || maplist[m].flag.gvg || maplist[m].flag.battleground)
+#define map_flag_ks(m) (map->list[m].flag.town || map->list[m].flag.pvp || map->list[m].flag.gvg || map->list[m].flag.battleground)
 
 //This stackable implementation does not means a BL can be more than one type at a time, but it's
 // meant to make it easier to check for multiple types at a time on invocations such as map_foreach* calls [Skotlex]
@@ -460,19 +468,19 @@ typedef enum {
 struct mapcell {
 	// terrain flags
 	unsigned char
-walkable : 1,
-shootable : 1,
-water : 1;
+		walkable : 1,
+		shootable : 1,
+		water : 1;
 
 	// dynamic flags
 	unsigned char
-npc : 1,
-basilica : 1,
-landprotector : 1,
-novending : 1,
-nochat : 1,
-maelstrom : 1,
-icewall : 1;
+		npc : 1,
+		basilica : 1,
+		landprotector : 1,
+		novending : 1,
+		nochat : 1,
+		maelstrom : 1,
+		icewall : 1;
 
 #ifdef CELL_NOSTACK
 	unsigned char cell_bl; //Holds amount of bls in this cell.
@@ -525,9 +533,6 @@ struct map_zone_skill_damage_cap_entry {
 #define MAP_ZONE_PK_NAME "PK Mode"
 #define MAP_ZONE_MAPFLAG_LENGTH 50
 
-//TODO place it in the map interface
-DBMap *zone_db;/* string => struct map_zone_data */
-
 struct map_zone_data {
 	char name[MAP_ZONE_NAME_LENGTH];/* 20'd */
 	struct map_zone_disabled_skill_entry **disabled_skills;
@@ -541,9 +546,6 @@ struct map_zone_data {
 	struct map_zone_skill_damage_cap_entry **capped_skills;
 	int capped_skills_count;
 };
-
-struct map_zone_data map_zone_all;/* used as a base on all maps */
-struct map_zone_data map_zone_pk;/* used for (pk_mode) */
 
 struct map_drop_list {
 	int drop_id;
@@ -696,10 +698,7 @@ struct map_data_other_server {
 	uint16 port;
 };
 
-
-struct map_data *maplist;
-
-#define map_id2index(id) maplist[(id)].index
+#define map_id2index(id) map->list[(id)].index
 
 /// Bitfield of flags for the iterator.
 enum e_mapitflags {
@@ -718,7 +717,7 @@ struct mapit_interface {
 	struct block_list*      (*next) (struct s_mapiterator* iter);
 	struct block_list*      (*prev) (struct s_mapiterator* iter);
 	bool                    (*exists) (struct s_mapiterator* iter);
-} mapit_s;
+};
 
 struct mapit_interface *mapit;
 
@@ -743,11 +742,29 @@ typedef struct elemental_data	TBL_ELEM;
 #define BL_CAST(type_, bl) \
 	( ((bl) == (struct block_list*)NULL || (bl)->type != (type_)) ? (T ## type_ *)NULL : (T ## type_ *)(bl) )
 
-#include "../common/sql.h"
+struct charid_request {
+	struct charid_request* next;
+	int charid;// who want to be notified of the nick
+};
+struct charid2nick {
+	char nick[NAME_LENGTH];
+	struct charid_request* requests;// requests of notification on this nick
+};
 
+// This is the main header found at the very beginning of the map cache
+struct map_cache_main_header {
+	uint32 file_size;
+	uint16 map_count;
+};
 
-extern Sql* mmysql_handle;
-extern Sql* logmysql_handle;
+// This is the header appended before every compressed map cells info in the map cache
+struct map_cache_map_info {
+	char name[MAP_NAME_LENGTH];
+	int16 xs;
+	int16 ys;
+	int32 len;
+};
+
 
 /*=====================================
 * Interface : map.h 
@@ -757,7 +774,7 @@ extern Sql* logmysql_handle;
 struct map_interface {
 
 	/* vars */
-	int map_num;
+	int count;
 
 	int autosave_interval;
 	int minsave_interval;
@@ -796,6 +813,47 @@ struct map_interface {
 	char mob_skill_db2_db[32];
 	char interreg_db[32];
 
+	char default_codepage[32];
+	
+	int server_port;
+	char server_ip[32];
+	char server_id[32];
+	char server_pw[32];
+	char server_db[32];
+	Sql* mysql_handle;
+	
+	int port;
+	int users;
+	int enable_grf;	//To enable/disable reading maps from GRF files, bypassing mapcache [blackhole89]
+	int ip_set;
+	int char_ip_set;
+
+	int16 index2mapid[MAX_MAPINDEX];
+	/* */
+	DBMap* id_db;     // int id -> struct block_list*
+	DBMap* pc_db;     // int id -> struct map_session_data*
+	DBMap* mobid_db;  // int id -> struct mob_data*
+	DBMap* bossid_db; // int id -> struct mob_data* (MVP db)
+	DBMap* map_db;    // unsigned int mapindex -> struct map_data_other_server*
+	DBMap* nick_db;   // int char_id -> struct charid2nick* (requested names of offline characters)
+	DBMap* charid_db; // int char_id -> struct map_session_data*
+	DBMap* regen_db;  // int id -> struct block_list* (status_natural_heal processing)
+	DBMap* zone_db;   // string => struct map_zone_data
+	DBMap* iwall_db;
+	/* order respected by map_defaults() in order to zero */
+	/* from block_free until zone_pk */
+	struct block_list *block_free[block_free_max];
+	int block_free_count, block_free_lock;
+	struct block_list *bl_list[BL_LIST_MAX];
+	int bl_list_count;
+	struct block_list bl_head;
+	struct map_zone_data zone_all;/* used as a base on all maps */
+	struct map_zone_data zone_pk;/* used for (pk_mode) */
+	struct map_session_data *cpsd;
+	struct map_data *list;
+	/* [Ind/Hercules] */
+	struct eri *iterator_ers;
+	char *cache_buffer; // Has the uncompressed gat data of all maps, so just one allocation has to be made
 	/* funcs */
 	void (*zone_init) (void);
 	void (*zone_remove) (int m);
@@ -818,17 +876,17 @@ struct map_interface {
 	// blocklist manipulation
 	int (*addblock) (struct block_list* bl);
 	int (*delblock) (struct block_list* bl);
-	int (*moveblock) (struct block_list *, int, int, unsigned int);
+	int (*moveblock) (struct block_list *bl, int x1, int y1, unsigned int tick);
 	//blocklist nb in one cell
 	int (*count_oncell) (int16 m,int16 x,int16 y,int type);
-	struct skill_unit * (*find_skill_unit_oncell) (struct block_list *,int16 x,int16 y,uint16 skill_id,struct skill_unit *, int flag);
+	struct skill_unit * (*find_skill_unit_oncell) (struct block_list* target,int16 x,int16 y,uint16 skill_id,struct skill_unit* out_unit, int flag);
 	// search and creation
 	int (*get_new_object_id) (void);
 	int (*search_freecell) (struct block_list *src, int16 m, int16 *x, int16 *y, int16 rx, int16 ry, int flag);
 	//
-	int (*quit) (struct map_session_data *);
+	int (*quit) (struct map_session_data *sd);
 	// npc
-	bool (*addnpc) (int16 m,struct npc_data *);
+	bool (*addnpc) (int16 m,struct npc_data *nd);
 	// map item
 	int (*clearflooritem_timer) (int tid, unsigned int tick, int id, intptr_t data);
 	int (*removemobs_timer) (int tid, unsigned int tick, int id, intptr_t data);
@@ -841,16 +899,16 @@ struct map_interface {
 	const char* (*charid2nick) (int charid);
 	struct map_session_data* (*charid2sd) (int charid);
 
-	void (*vmap_foreachpc) (int (*func)(struct map_session_data* sd, va_list args), va_list args);
-	void (*map_foreachpc) (int (*func)(struct map_session_data* sd, va_list args), ...);
-	void (*vmap_foreachmob) (int (*func)(struct mob_data* md, va_list args), va_list args);
-	void (*map_foreachmob) (int (*func)(struct mob_data* md, va_list args), ...);
-	void (*vmap_foreachnpc) (int (*func)(struct npc_data* nd, va_list args), va_list args);
-	void (*map_foreachnpc) (int (*func)(struct npc_data* nd, va_list args), ...);
-	void (*vmap_foreachregen) (int (*func)(struct block_list* bl, va_list args), va_list args);
-	void (*map_foreachregen) (int (*func)(struct block_list* bl, va_list args), ...);
-	void (*vmap_foreachiddb) (int (*func)(struct block_list* bl, va_list args), va_list args);
-	void (*map_foreachiddb) (int (*func)(struct block_list* bl, va_list args), ...);
+	void (*vforeachpc) (int (*func)(struct map_session_data* sd, va_list args), va_list args);
+	void (*foreachpc) (int (*func)(struct map_session_data* sd, va_list args), ...);
+	void (*vforeachmob) (int (*func)(struct mob_data* md, va_list args), va_list args);
+	void (*foreachmob) (int (*func)(struct mob_data* md, va_list args), ...);
+	void (*vforeachnpc) (int (*func)(struct npc_data* nd, va_list args), va_list args);
+	void (*foreachnpc) (int (*func)(struct npc_data* nd, va_list args), ...);
+	void (*vforeachregen) (int (*func)(struct block_list* bl, va_list args), va_list args);
+	void (*foreachregen) (int (*func)(struct block_list* bl, va_list args), ...);
+	void (*vforeachiddb) (int (*func)(struct block_list* bl, va_list args), va_list args);
+	void (*foreachiddb) (int (*func)(struct block_list* bl, va_list args), ...);
 
 	int (*vforeachinrange) (int (*func)(struct block_list*,va_list), struct block_list* center, int16 range, int type, va_list ap);
 	int (*foreachinrange) (int (*func)(struct block_list*,va_list), struct block_list* center, int16 range, int type, ...);
@@ -887,10 +945,10 @@ struct map_interface {
 	int (*setipport) (unsigned short mapindex, uint32 ip, uint16 port);
 	int (*eraseipport) (unsigned short mapindex, uint32 ip, uint16 port);
 	int (*eraseallipport) (void);
-	void (*addiddb) (struct block_list *);
+	void (*addiddb) (struct block_list *bl);
 	void (*deliddb) (struct block_list *bl);
 	/* */
-	struct map_session_data * (*nick2sd) (const char*);
+	struct map_session_data * (*nick2sd) (const char *nick);
 	struct mob_data * (*getmob_boss) (int16 m);
 	struct mob_data * (*id2boss) (int id);
 	// reload config file looking only for npcs
@@ -918,6 +976,52 @@ struct map_interface {
 	void (*clean) (int i);
 
 	void (*do_shutdown) (void);
+	
+	int (*freeblock_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*searchrandfreecell) (int16 m, int16 *x, int16 *y, int stack);
+	int (*count_sub) (struct block_list *bl, va_list ap);
+	DBData (*create_charid2nick) (DBKey key, va_list args);
+	int (*removemobs_sub) (struct block_list *bl, va_list ap);
+	struct mapcell (*gat2cell) (int gat);
+	int (*cell2gat) (struct mapcell cell);
+	int (*getcellp) (struct map_data *m, int16 x, int16 y, cell_chk cellchk);
+	void (*setcell) (int16 m, int16 x, int16 y, cell_t cell, bool flag);
+	int (*sub_getcellp) (struct map_data *m, int16 x, int16 y, cell_chk cellchk);
+	void (*sub_setcell) (int16 m, int16 x, int16 y, cell_t cell, bool flag);
+	void (*iwall_nextxy) (int16 x, int16 y, int8 dir, int pos, int16 *x1, int16 *y1);
+	DBData (*create_map_data_other_server) (DBKey key, va_list args);
+	int (*eraseallipport_sub) (DBKey key, DBData *data, va_list va);
+	char* (*init_mapcache) (FILE *fp);
+	int (*readfromcache) (struct map_data *m, char *buffer);
+	int (*addmap) (char *mapname);
+	void (*delmapid) (int id);
+	void (*zone_db_clear) (void);
+	void (*list_final) (void);
+	int (*waterheight) (char *mapname);
+	int (*readgat) (struct map_data *m);
+	int (*readallmaps) (void);
+	int (*config_read) (char *cfgName);
+	int (*config_read_sub) (char *cfgName);
+	void (*reloadnpc_sub) (char *cfgName);
+	int (*inter_config_read) (char *cfgName);
+	int (*sql_init) (void);
+	int (*sql_close) (void);
+	bool (*zone_mf_cache) (int m, char *flag, char *params);
+	unsigned short (*zone_str2itemid) (const char *name);
+	unsigned short (*zone_str2skillid) (const char *name);
+	enum bl_type (*zone_bl_type) (const char *entry, enum map_zone_skill_subtype *subtype);
+	void (*read_zone_db) (void);
+	int (*db_final) (DBKey key, DBData *data, va_list ap);
+	int (*nick_db_final) (DBKey key, DBData *data, va_list args);
+	int (*cleanup_db_sub) (DBKey key, DBData *data, va_list va);
+	int (*abort_sub) (struct map_session_data *sd, va_list ap);
+	void (*helpscreen) (bool do_exit);
+	void (*versionscreen) (bool do_exit);
+	bool (*arg_next_value) (const char *option, int i, int argc);
+#ifdef CELL_NOSTACK
+	void (*addblcell) (struct block_list *bl);
+	void (*delblcell) (struct block_list *bl);
+#endif
 };
 
 struct map_interface *map;

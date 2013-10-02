@@ -1838,18 +1838,18 @@ int itemdb_read_sqldb(void) {
 		uint32 count = 0;
 
 		// retrieve all rows from the item database
-		if( SQL_ERROR == SQL->Query(mmysql_handle, "SELECT * FROM `%s`", item_db_name[fi]) ) {
-			Sql_ShowDebug(mmysql_handle);
+		if( SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT * FROM `%s`", item_db_name[fi]) ) {
+			Sql_ShowDebug(map->mysql_handle);
 			continue;
 		}
 
 		// process rows one by one
-		while( SQL_SUCCESS == SQL->NextRow(mmysql_handle) ) {// wrap the result into a TXT-compatible format
+		while( SQL_SUCCESS == SQL->NextRow(map->mysql_handle) ) {// wrap the result into a TXT-compatible format
 			char* str[ITEMDB_SQL_COLUMNS];
 			char* dummy = "";
 			int i;
 			for( i = 0; i < ITEMDB_SQL_COLUMNS; ++i ) {
-				SQL->GetData(mmysql_handle, i, &str[i], NULL);
+				SQL->GetData(map->mysql_handle, i, &str[i], NULL);
 				if( str[i] == NULL )
 					str[i] = dummy; // get rid of NULL columns
 			}
@@ -1860,7 +1860,7 @@ int itemdb_read_sqldb(void) {
 		}
 
 		// free the query result
-		SQL->FreeResult(mmysql_handle);
+		SQL->FreeResult(map->mysql_handle);
 
 		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, item_db_name[fi]);
 	}
@@ -1895,18 +1895,18 @@ uint64 itemdb_unique_id(int8 flag, int64 value) {
 }
 int itemdb_uid_load() {
 	char * uid;
-	if (SQL_ERROR == SQL->Query(mmysql_handle, "SELECT `value` FROM `%s` WHERE `varname`='unique_id'",map->interreg_db))
-		Sql_ShowDebug(mmysql_handle);
+	if (SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT `value` FROM `%s` WHERE `varname`='unique_id'",map->interreg_db))
+		Sql_ShowDebug(map->mysql_handle);
 
-	if( SQL_SUCCESS != SQL->NextRow(mmysql_handle) ) {
+	if( SQL_SUCCESS != SQL->NextRow(map->mysql_handle) ) {
 		ShowError("itemdb_uid_load: Unable to fetch unique_id data\n");
-		SQL->FreeResult(mmysql_handle);
+		SQL->FreeResult(map->mysql_handle);
 		return -1;
 	}
 
-	SQL->GetData(mmysql_handle, 0, &uid, NULL);
+	SQL->GetData(map->mysql_handle, 0, &uid, NULL);
 	itemdb->unique_id(1, (uint64)strtoull(uid, NULL, 10));
-	SQL->FreeResult(mmysql_handle);
+	SQL->FreeResult(map->mysql_handle);
 
 	return 0;
 }
