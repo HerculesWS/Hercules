@@ -34,7 +34,7 @@ bool buyingstore_setup(struct map_session_data* sd, unsigned char slots)
 		return false;
 	}
 
-	if( maplist[sd->bl.m].flag.novending ) {
+	if( map->list[sd->bl.m].flag.novending ) {
 		// custom: no vending maps
 		clif->message(sd->fd, msg_txt(276)); // "You can't open a shop on this map"
 		return false;
@@ -89,7 +89,7 @@ void buyingstore_create(struct map_session_data* sd, int zenylimit, unsigned cha
 		return;
 	}
 
-	if( maplist[sd->bl.m].flag.novending ) {
+	if( map->list[sd->bl.m].flag.novending ) {
 		// custom: no vending maps
 		clif->message(sd->fd, msg_txt(276)); // "You can't open a shop on this map"
 		return;

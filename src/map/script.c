@@ -172,13 +172,13 @@ void script_reportsrc(struct script_state *st) {
 	switch( bl->type ) {
 		case BL_NPC:
 			if( bl->m >= 0 )
-				ShowDebug("Source (NPC): %s at %s (%d,%d)\n", ((struct npc_data *)bl)->name, maplist[bl->m].name, bl->x, bl->y);
+				ShowDebug("Source (NPC): %s at %s (%d,%d)\n", ((struct npc_data *)bl)->name, map->list[bl->m].name, bl->x, bl->y);
 			else
 				ShowDebug("Source (NPC): %s (invisible/not on a map)\n", ((struct npc_data *)bl)->name);
 			break;
 		default:
 			if( bl->m >= 0 )
-				ShowDebug("Source (Non-NPC type %d): name %s at %s (%d,%d)\n", bl->type, status->get_name(bl), maplist[bl->m].name, bl->x, bl->y);
+				ShowDebug("Source (Non-NPC type %d): name %s at %s (%d,%d)\n", bl->type, status->get_name(bl), map->list[bl->m].name, bl->x, bl->y);
 			else
 				ShowDebug("Source (Non-NPC type %d): name %s (invisible/not on a map)\n", bl->type, status->get_name(bl));
 			break;
@@ -3285,7 +3285,7 @@ void run_script_main(struct script_state *st) {
 
 	nd = map->id2nd(st->oid);
 	if( nd && nd->bl.m >= 0 )
-		st->instance_id = maplist[nd->bl.m].instance_id;
+		st->instance_id = map->list[nd->bl.m].instance_id;
 	else
 		st->instance_id = -1;
 
@@ -4623,7 +4623,7 @@ BUILDIN(warpparty)
 		if( !(pl_sd = p->data[i].sd) || pl_sd->status.party_id != p_id )
 			continue;
 		
-		if( str2 && strcmp(str2, maplist[pl_sd->bl.m].name) != 0 )
+		if( str2 && strcmp(str2, map->list[pl_sd->bl.m].name) != 0 )
 			continue;
 		
 		if( pc_isdead(pl_sd) )
@@ -4632,20 +4632,20 @@ BUILDIN(warpparty)
 		switch( type )
 		{
 			case 0: // Random
-				if(!maplist[pl_sd->bl.m].flag.nowarp)
+				if(!map->list[pl_sd->bl.m].flag.nowarp)
 					pc->randomwarp(pl_sd,CLR_TELEPORT);
 				break;
 			case 1: // SavePointAll
-				if(!maplist[pl_sd->bl.m].flag.noreturn)
+				if(!map->list[pl_sd->bl.m].flag.noreturn)
 					pc->setpos(pl_sd,pl_sd->status.save_point.map,pl_sd->status.save_point.x,pl_sd->status.save_point.y,CLR_TELEPORT);
 				break;
 			case 2: // SavePoint
-				if(!maplist[pl_sd->bl.m].flag.noreturn)
+				if(!map->list[pl_sd->bl.m].flag.noreturn)
 					pc->setpos(pl_sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
 				break;
 			case 3: // Leader
 			case 4: // m,x,y
-				if(!maplist[pl_sd->bl.m].flag.noreturn && !maplist[pl_sd->bl.m].flag.nowarp)
+				if(!map->list[pl_sd->bl.m].flag.noreturn && !map->list[pl_sd->bl.m].flag.nowarp)
 					pc->setpos(pl_sd,mapindex,x,y,CLR_TELEPORT);
 				break;
 		}
@@ -4693,19 +4693,19 @@ BUILDIN(warpguild)
 		switch( type )
 		{
 			case 0: // Random
-				if(!maplist[pl_sd->bl.m].flag.nowarp)
+				if(!map->list[pl_sd->bl.m].flag.nowarp)
 					pc->randomwarp(pl_sd,CLR_TELEPORT);
 				break;
 			case 1: // SavePointAll
-				if(!maplist[pl_sd->bl.m].flag.noreturn)
+				if(!map->list[pl_sd->bl.m].flag.noreturn)
 					pc->setpos(pl_sd,pl_sd->status.save_point.map,pl_sd->status.save_point.x,pl_sd->status.save_point.y,CLR_TELEPORT);
 				break;
 			case 2: // SavePoint
-				if(!maplist[pl_sd->bl.m].flag.noreturn)
+				if(!map->list[pl_sd->bl.m].flag.noreturn)
 					pc->setpos(pl_sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
 				break;
 			case 3: // m,x,y
-				if(!maplist[pl_sd->bl.m].flag.noreturn && !maplist[pl_sd->bl.m].flag.nowarp)
+				if(!map->list[pl_sd->bl.m].flag.noreturn && !map->list[pl_sd->bl.m].flag.nowarp)
 					pc->setpos(pl_sd,mapindex_name2id(str),x,y,CLR_TELEPORT);
 				break;
 		}
@@ -6715,7 +6715,7 @@ BUILDIN(strcharinfo)
 			}
 			break;
 		case 3:
-			script_pushconststr(st,maplist[sd->bl.m].name);
+			script_pushconststr(st,map->list[sd->bl.m].name);
 			break;
 		default:
 			ShowWarning("buildin_strcharinfo: unknown parameter.\n");
@@ -6767,7 +6767,7 @@ BUILDIN(strnpcinfo) {
 			name = aStrdup(nd->exname);
 			break;
 		case 4: // map name
-			name = aStrdup(maplist[nd->bl.m].name);
+			name = aStrdup(map->list[nd->bl.m].name);
 			break;
 	}
 	
@@ -8314,7 +8314,7 @@ BUILDIN(monster)
 			return false;
 		}
 		
-		if (maplist[m].flag.src4instance && st->instance_id >= 0) { // Try to redirect to the instance map, not the src map
+		if (map->list[m].flag.src4instance && st->instance_id >= 0) { // Try to redirect to the instance map, not the src map
 			if ((m = instance->mapid2imapid(m, st->instance_id)) < 0) {
 				ShowError("buildin_monster: Trying to spawn monster (%d) on instance map (%s) without instance attached.\n", class_, mapn);
 				return false;
@@ -8412,7 +8412,7 @@ BUILDIN(areamonster)
 			ShowWarning("buildin_areamonster: Attempted to spawn monster class %d on non-existing map '%s'\n",class_, mapn);
 			return false;
 		}
-		if (maplist[m].flag.src4instance && st->instance_id >= 0) { // Try to redirect to the instance map, not the src map
+		if (map->list[m].flag.src4instance && st->instance_id >= 0) { // Try to redirect to the instance map, not the src map
 			if ((m = instance->mapid2imapid(m, st->instance_id)) < 0) {
 				ShowError("buildin_areamonster: Trying to spawn monster (%d) on instance map (%s) without instance attached.\n", class_, mapn);
 				return false;
@@ -8474,7 +8474,7 @@ BUILDIN(killmonster) {
 	if( (m=map->mapname2mapid(mapname))<0 )
 		return true;
 	
-	if( maplist[m].flag.src4instance && st->instance_id >= 0 && (m = instance->mapid2imapid(m, st->instance_id)) < 0 )
+	if( map->list[m].flag.src4instance && st->instance_id >= 0 && (m = instance->mapid2imapid(m, st->instance_id)) < 0 )
 		return true;
 	
 	if( script_hasdata(st,4) ) {
@@ -8514,7 +8514,7 @@ BUILDIN(killmonsterall) {
 	if( (m = map->mapname2mapid(mapname))<0 )
 		return true;
 	
-	if( maplist[m].flag.src4instance && st->instance_id >= 0 && (m = instance->mapid2imapid(m, st->instance_id)) < 0 )
+	if( map->list[m].flag.src4instance && st->instance_id >= 0 && (m = instance->mapid2imapid(m, st->instance_id)) < 0 )
 		return true;
 	
 	if( script_hasdata(st,3) ) {
@@ -9085,7 +9085,7 @@ BUILDIN(getusers) {
 			}
 			
 			if(bl) {
-				val = maplist[bl->m].users;
+				val = map->list[bl->m].users;
 			}
 			break;
 		case 1:
@@ -9168,7 +9168,7 @@ BUILDIN(getmapusers) {
 		script_pushint(st,-1);
 		return true;
 	}
-	script_pushint(st,maplist[m].users);
+	script_pushint(st,map->list[m].users);
 	return true;
 }
 /*==========================================
@@ -9988,7 +9988,7 @@ BUILDIN(warpwaitingpc) {
 	for( i = 0; i < n && cd->users > 0; i++ ) {
 		sd = cd->usersd[0];
 		
-		if( strcmp(map_name,"SavePoint") == 0 && maplist[sd->bl.m].flag.noteleport ) {
+		if( strcmp(map_name,"SavePoint") == 0 && map->list[sd->bl.m].flag.noteleport ) {
 			// can't teleport on this map
 			break;
 		}
@@ -10082,10 +10082,10 @@ BUILDIN(setmapflagnosave) {
 	mapindex = mapindex_name2id(str2);
 	
 	if(m >= 0 && mapindex) {
-		maplist[m].flag.nosave=1;
-		maplist[m].save.map=mapindex;
-		maplist[m].save.x=x;
-		maplist[m].save.y=y;
+		map->list[m].flag.nosave=1;
+		map->list[m].save.map=mapindex;
+		map->list[m].save.x=x;
+		map->list[m].save.y=y;
 	}
 	
 	return true;
@@ -10102,56 +10102,56 @@ BUILDIN(getmapflag)
 	m = map->mapname2mapid(str);
 	if(m >= 0) {
 		switch(i) {
-			case MF_NOMEMO:             script_pushint(st,maplist[m].flag.nomemo); break;
-			case MF_NOTELEPORT:         script_pushint(st,maplist[m].flag.noteleport); break;
-			case MF_NOSAVE:             script_pushint(st,maplist[m].flag.nosave); break;
-			case MF_NOBRANCH:           script_pushint(st,maplist[m].flag.nobranch); break;
-			case MF_NOPENALTY:          script_pushint(st,maplist[m].flag.noexppenalty); break;
-			case MF_NOZENYPENALTY:      script_pushint(st,maplist[m].flag.nozenypenalty); break;
-			case MF_PVP:                script_pushint(st,maplist[m].flag.pvp); break;
-			case MF_PVP_NOPARTY:        script_pushint(st,maplist[m].flag.pvp_noparty); break;
-			case MF_PVP_NOGUILD:        script_pushint(st,maplist[m].flag.pvp_noguild); break;
-			case MF_GVG:                script_pushint(st,maplist[m].flag.gvg); break;
-			case MF_GVG_NOPARTY:        script_pushint(st,maplist[m].flag.gvg_noparty); break;
-			case MF_NOTRADE:            script_pushint(st,maplist[m].flag.notrade); break;
-			case MF_NOSKILL:            script_pushint(st,maplist[m].flag.noskill); break;
-			case MF_NOWARP:             script_pushint(st,maplist[m].flag.nowarp); break;
-			case MF_PARTYLOCK:          script_pushint(st,maplist[m].flag.partylock); break;
-			case MF_NOICEWALL:          script_pushint(st,maplist[m].flag.noicewall); break;
-			case MF_SNOW:               script_pushint(st,maplist[m].flag.snow); break;
-			case MF_FOG:                script_pushint(st,maplist[m].flag.fog); break;
-			case MF_SAKURA:             script_pushint(st,maplist[m].flag.sakura); break;
-			case MF_LEAVES:             script_pushint(st,maplist[m].flag.leaves); break;
-			case MF_CLOUDS:             script_pushint(st,maplist[m].flag.clouds); break;
-			case MF_CLOUDS2:            script_pushint(st,maplist[m].flag.clouds2); break;
-			case MF_FIREWORKS:          script_pushint(st,maplist[m].flag.fireworks); break;
-			case MF_GVG_CASTLE:         script_pushint(st,maplist[m].flag.gvg_castle); break;
-			case MF_GVG_DUNGEON:        script_pushint(st,maplist[m].flag.gvg_dungeon); break;
-			case MF_NIGHTENABLED:       script_pushint(st,maplist[m].flag.nightenabled); break;
-			case MF_NOBASEEXP:          script_pushint(st,maplist[m].flag.nobaseexp); break;
-			case MF_NOJOBEXP:           script_pushint(st,maplist[m].flag.nojobexp); break;
-			case MF_NOMOBLOOT:          script_pushint(st,maplist[m].flag.nomobloot); break;
-			case MF_NOMVPLOOT:          script_pushint(st,maplist[m].flag.nomvploot); break;
-			case MF_NORETURN:           script_pushint(st,maplist[m].flag.noreturn); break;
-			case MF_NOWARPTO:           script_pushint(st,maplist[m].flag.nowarpto); break;
-			case MF_NIGHTMAREDROP:      script_pushint(st,maplist[m].flag.pvp_nightmaredrop); break;
-			case MF_NOCOMMAND:          script_pushint(st,maplist[m].nocommand); break;
-			case MF_NODROP:             script_pushint(st,maplist[m].flag.nodrop); break;
-			case MF_JEXP:               script_pushint(st,maplist[m].jexp); break;
-			case MF_BEXP:               script_pushint(st,maplist[m].bexp); break;
-			case MF_NOVENDING:          script_pushint(st,maplist[m].flag.novending); break;
-			case MF_LOADEVENT:          script_pushint(st,maplist[m].flag.loadevent); break;
-			case MF_NOCHAT:             script_pushint(st,maplist[m].flag.nochat); break;
-			case MF_NOEXPPENALTY:       script_pushint(st,maplist[m].flag.noexppenalty ); break;
-			case MF_GUILDLOCK:          script_pushint(st,maplist[m].flag.guildlock); break;
-			case MF_TOWN:               script_pushint(st,maplist[m].flag.town); break;
-			case MF_AUTOTRADE:          script_pushint(st,maplist[m].flag.autotrade); break;
-			case MF_ALLOWKS:            script_pushint(st,maplist[m].flag.allowks); break;
-			case MF_MONSTER_NOTELEPORT: script_pushint(st,maplist[m].flag.monster_noteleport); break;
-			case MF_PVP_NOCALCRANK:     script_pushint(st,maplist[m].flag.pvp_nocalcrank); break;
-			case MF_BATTLEGROUND:       script_pushint(st,maplist[m].flag.battleground); break;
-			case MF_RESET:              script_pushint(st,maplist[m].flag.reset); break;
-			case MF_NOTOMB:             script_pushint(st,maplist[m].flag.notomb); break;
+			case MF_NOMEMO:             script_pushint(st,map->list[m].flag.nomemo); break;
+			case MF_NOTELEPORT:         script_pushint(st,map->list[m].flag.noteleport); break;
+			case MF_NOSAVE:             script_pushint(st,map->list[m].flag.nosave); break;
+			case MF_NOBRANCH:           script_pushint(st,map->list[m].flag.nobranch); break;
+			case MF_NOPENALTY:          script_pushint(st,map->list[m].flag.noexppenalty); break;
+			case MF_NOZENYPENALTY:      script_pushint(st,map->list[m].flag.nozenypenalty); break;
+			case MF_PVP:                script_pushint(st,map->list[m].flag.pvp); break;
+			case MF_PVP_NOPARTY:        script_pushint(st,map->list[m].flag.pvp_noparty); break;
+			case MF_PVP_NOGUILD:        script_pushint(st,map->list[m].flag.pvp_noguild); break;
+			case MF_GVG:                script_pushint(st,map->list[m].flag.gvg); break;
+			case MF_GVG_NOPARTY:        script_pushint(st,map->list[m].flag.gvg_noparty); break;
+			case MF_NOTRADE:            script_pushint(st,map->list[m].flag.notrade); break;
+			case MF_NOSKILL:            script_pushint(st,map->list[m].flag.noskill); break;
+			case MF_NOWARP:             script_pushint(st,map->list[m].flag.nowarp); break;
+			case MF_PARTYLOCK:          script_pushint(st,map->list[m].flag.partylock); break;
+			case MF_NOICEWALL:          script_pushint(st,map->list[m].flag.noicewall); break;
+			case MF_SNOW:               script_pushint(st,map->list[m].flag.snow); break;
+			case MF_FOG:                script_pushint(st,map->list[m].flag.fog); break;
+			case MF_SAKURA:             script_pushint(st,map->list[m].flag.sakura); break;
+			case MF_LEAVES:             script_pushint(st,map->list[m].flag.leaves); break;
+			case MF_CLOUDS:             script_pushint(st,map->list[m].flag.clouds); break;
+			case MF_CLOUDS2:            script_pushint(st,map->list[m].flag.clouds2); break;
+			case MF_FIREWORKS:          script_pushint(st,map->list[m].flag.fireworks); break;
+			case MF_GVG_CASTLE:         script_pushint(st,map->list[m].flag.gvg_castle); break;
+			case MF_GVG_DUNGEON:        script_pushint(st,map->list[m].flag.gvg_dungeon); break;
+			case MF_NIGHTENABLED:       script_pushint(st,map->list[m].flag.nightenabled); break;
+			case MF_NOBASEEXP:          script_pushint(st,map->list[m].flag.nobaseexp); break;
+			case MF_NOJOBEXP:           script_pushint(st,map->list[m].flag.nojobexp); break;
+			case MF_NOMOBLOOT:          script_pushint(st,map->list[m].flag.nomobloot); break;
+			case MF_NOMVPLOOT:          script_pushint(st,map->list[m].flag.nomvploot); break;
+			case MF_NORETURN:           script_pushint(st,map->list[m].flag.noreturn); break;
+			case MF_NOWARPTO:           script_pushint(st,map->list[m].flag.nowarpto); break;
+			case MF_NIGHTMAREDROP:      script_pushint(st,map->list[m].flag.pvp_nightmaredrop); break;
+			case MF_NOCOMMAND:          script_pushint(st,map->list[m].nocommand); break;
+			case MF_NODROP:             script_pushint(st,map->list[m].flag.nodrop); break;
+			case MF_JEXP:               script_pushint(st,map->list[m].jexp); break;
+			case MF_BEXP:               script_pushint(st,map->list[m].bexp); break;
+			case MF_NOVENDING:          script_pushint(st,map->list[m].flag.novending); break;
+			case MF_LOADEVENT:          script_pushint(st,map->list[m].flag.loadevent); break;
+			case MF_NOCHAT:             script_pushint(st,map->list[m].flag.nochat); break;
+			case MF_NOEXPPENALTY:       script_pushint(st,map->list[m].flag.noexppenalty ); break;
+			case MF_GUILDLOCK:          script_pushint(st,map->list[m].flag.guildlock); break;
+			case MF_TOWN:               script_pushint(st,map->list[m].flag.town); break;
+			case MF_AUTOTRADE:          script_pushint(st,map->list[m].flag.autotrade); break;
+			case MF_ALLOWKS:            script_pushint(st,map->list[m].flag.allowks); break;
+			case MF_MONSTER_NOTELEPORT: script_pushint(st,map->list[m].flag.monster_noteleport); break;
+			case MF_PVP_NOCALCRANK:     script_pushint(st,map->list[m].flag.pvp_nocalcrank); break;
+			case MF_BATTLEGROUND:       script_pushint(st,map->list[m].flag.battleground); break;
+			case MF_RESET:              script_pushint(st,map->list[m].flag.reset); break;
+			case MF_NOTOMB:             script_pushint(st,map->list[m].flag.notomb); break;
 		}
 	}
 	
@@ -10197,77 +10197,77 @@ BUILDIN(setmapflag) {
 	
 	if(m >= 0) {
 		switch(i) {
-			case MF_NOMEMO:             maplist[m].flag.nomemo = 1; break;
-			case MF_NOTELEPORT:         maplist[m].flag.noteleport = 1; break;
-			case MF_NOSAVE:             maplist[m].flag.nosave = 1; break;
-			case MF_NOBRANCH:           maplist[m].flag.nobranch = 1; break;
-			case MF_NOPENALTY:          maplist[m].flag.noexppenalty = 1; maplist[m].flag.nozenypenalty = 1; break;
-			case MF_NOZENYPENALTY:      maplist[m].flag.nozenypenalty = 1; break;
+			case MF_NOMEMO:             map->list[m].flag.nomemo = 1; break;
+			case MF_NOTELEPORT:         map->list[m].flag.noteleport = 1; break;
+			case MF_NOSAVE:             map->list[m].flag.nosave = 1; break;
+			case MF_NOBRANCH:           map->list[m].flag.nobranch = 1; break;
+			case MF_NOPENALTY:          map->list[m].flag.noexppenalty = 1; map->list[m].flag.nozenypenalty = 1; break;
+			case MF_NOZENYPENALTY:      map->list[m].flag.nozenypenalty = 1; break;
 			case MF_PVP:
-				maplist[m].flag.pvp = 1;
+				map->list[m].flag.pvp = 1;
 				if( !battle_config.pk_mode ) {
 					map->foreachinmap(script->mapflag_pvp_sub,m,BL_PC);
 				}
 				break;
-			case MF_PVP_NOPARTY:        maplist[m].flag.pvp_noparty = 1; break;
-			case MF_PVP_NOGUILD:        maplist[m].flag.pvp_noguild = 1; break;
+			case MF_PVP_NOPARTY:        map->list[m].flag.pvp_noparty = 1; break;
+			case MF_PVP_NOGUILD:        map->list[m].flag.pvp_noguild = 1; break;
 			case MF_GVG: {
 				struct block_list bl;
-				maplist[m].flag.gvg = 1;
+				map->list[m].flag.gvg = 1;
 				clif->map_property_mapall(m, MAPPROPERTY_AGITZONE);
 				bl.type = BL_NUL;
 				bl.m = m;
 				clif->maptypeproperty2(&bl,ALL_SAMEMAP);
 			}
 				break;
-			case MF_GVG_NOPARTY:        maplist[m].flag.gvg_noparty = 1; break;
-			case MF_NOTRADE:            maplist[m].flag.notrade = 1; break;
-			case MF_NOSKILL:            maplist[m].flag.noskill = 1; break;
-			case MF_NOWARP:             maplist[m].flag.nowarp = 1; break;
-			case MF_PARTYLOCK:          maplist[m].flag.partylock = 1; break;
-			case MF_NOICEWALL:          maplist[m].flag.noicewall = 1; break;
-			case MF_SNOW:               maplist[m].flag.snow = 1; break;
-			case MF_FOG:                maplist[m].flag.fog = 1; break;
-			case MF_SAKURA:             maplist[m].flag.sakura = 1; break;
-			case MF_LEAVES:             maplist[m].flag.leaves = 1; break;
-			case MF_CLOUDS:             maplist[m].flag.clouds = 1; break;
-			case MF_CLOUDS2:            maplist[m].flag.clouds2 = 1; break;
-			case MF_FIREWORKS:          maplist[m].flag.fireworks = 1; break;
-			case MF_GVG_CASTLE:         maplist[m].flag.gvg_castle = 1; break;
-			case MF_GVG_DUNGEON:        maplist[m].flag.gvg_dungeon = 1; break;
-			case MF_NIGHTENABLED:       maplist[m].flag.nightenabled = 1; break;
-			case MF_NOBASEEXP:          maplist[m].flag.nobaseexp = 1; break;
-			case MF_NOJOBEXP:           maplist[m].flag.nojobexp = 1; break;
-			case MF_NOMOBLOOT:          maplist[m].flag.nomobloot = 1; break;
-			case MF_NOMVPLOOT:          maplist[m].flag.nomvploot = 1; break;
-			case MF_NORETURN:           maplist[m].flag.noreturn = 1; break;
-			case MF_NOWARPTO:           maplist[m].flag.nowarpto = 1; break;
-			case MF_NIGHTMAREDROP:      maplist[m].flag.pvp_nightmaredrop = 1; break;
+			case MF_GVG_NOPARTY:        map->list[m].flag.gvg_noparty = 1; break;
+			case MF_NOTRADE:            map->list[m].flag.notrade = 1; break;
+			case MF_NOSKILL:            map->list[m].flag.noskill = 1; break;
+			case MF_NOWARP:             map->list[m].flag.nowarp = 1; break;
+			case MF_PARTYLOCK:          map->list[m].flag.partylock = 1; break;
+			case MF_NOICEWALL:          map->list[m].flag.noicewall = 1; break;
+			case MF_SNOW:               map->list[m].flag.snow = 1; break;
+			case MF_FOG:                map->list[m].flag.fog = 1; break;
+			case MF_SAKURA:             map->list[m].flag.sakura = 1; break;
+			case MF_LEAVES:             map->list[m].flag.leaves = 1; break;
+			case MF_CLOUDS:             map->list[m].flag.clouds = 1; break;
+			case MF_CLOUDS2:            map->list[m].flag.clouds2 = 1; break;
+			case MF_FIREWORKS:          map->list[m].flag.fireworks = 1; break;
+			case MF_GVG_CASTLE:         map->list[m].flag.gvg_castle = 1; break;
+			case MF_GVG_DUNGEON:        map->list[m].flag.gvg_dungeon = 1; break;
+			case MF_NIGHTENABLED:       map->list[m].flag.nightenabled = 1; break;
+			case MF_NOBASEEXP:          map->list[m].flag.nobaseexp = 1; break;
+			case MF_NOJOBEXP:           map->list[m].flag.nojobexp = 1; break;
+			case MF_NOMOBLOOT:          map->list[m].flag.nomobloot = 1; break;
+			case MF_NOMVPLOOT:          map->list[m].flag.nomvploot = 1; break;
+			case MF_NORETURN:           map->list[m].flag.noreturn = 1; break;
+			case MF_NOWARPTO:           map->list[m].flag.nowarpto = 1; break;
+			case MF_NIGHTMAREDROP:      map->list[m].flag.pvp_nightmaredrop = 1; break;
 			case MF_ZONE: {
 				char zone[6] = "zone\0";
 				char empty[1] = "\0";
 				char params[MAP_ZONE_MAPFLAG_LENGTH];
 				memcpy(params, val2, MAP_ZONE_MAPFLAG_LENGTH);
-				npc->parse_mapflag(maplist[m].name, empty, zone, params, empty, empty, empty);
+				npc->parse_mapflag(map->list[m].name, empty, zone, params, empty, empty, empty);
 			}
 				break;
-			case MF_NOCOMMAND:          maplist[m].nocommand = (val <= 0) ? 100 : val; break;
-			case MF_NODROP:             maplist[m].flag.nodrop = 1; break;
-			case MF_JEXP:               maplist[m].jexp = (val <= 0) ? 100 : val; break;
-			case MF_BEXP:               maplist[m].bexp = (val <= 0) ? 100 : val; break;
-			case MF_NOVENDING:          maplist[m].flag.novending = 1; break;
-			case MF_LOADEVENT:          maplist[m].flag.loadevent = 1; break;
-			case MF_NOCHAT:             maplist[m].flag.nochat = 1; break;
-			case MF_NOEXPPENALTY:       maplist[m].flag.noexppenalty  = 1; break;
-			case MF_GUILDLOCK:          maplist[m].flag.guildlock = 1; break;
-			case MF_TOWN:               maplist[m].flag.town = 1; break;
-			case MF_AUTOTRADE:          maplist[m].flag.autotrade = 1; break;
-			case MF_ALLOWKS:            maplist[m].flag.allowks = 1; break;
-			case MF_MONSTER_NOTELEPORT: maplist[m].flag.monster_noteleport = 1; break;
-			case MF_PVP_NOCALCRANK:     maplist[m].flag.pvp_nocalcrank = 1; break;
-			case MF_BATTLEGROUND:       maplist[m].flag.battleground = (val <= 0 || val > 2) ? 1 : val; break;
-			case MF_RESET:              maplist[m].flag.reset = 1; break;
-			case MF_NOTOMB:             maplist[m].flag.notomb = 1; break;
+			case MF_NOCOMMAND:          map->list[m].nocommand = (val <= 0) ? 100 : val; break;
+			case MF_NODROP:             map->list[m].flag.nodrop = 1; break;
+			case MF_JEXP:               map->list[m].jexp = (val <= 0) ? 100 : val; break;
+			case MF_BEXP:               map->list[m].bexp = (val <= 0) ? 100 : val; break;
+			case MF_NOVENDING:          map->list[m].flag.novending = 1; break;
+			case MF_LOADEVENT:          map->list[m].flag.loadevent = 1; break;
+			case MF_NOCHAT:             map->list[m].flag.nochat = 1; break;
+			case MF_NOEXPPENALTY:       map->list[m].flag.noexppenalty  = 1; break;
+			case MF_GUILDLOCK:          map->list[m].flag.guildlock = 1; break;
+			case MF_TOWN:               map->list[m].flag.town = 1; break;
+			case MF_AUTOTRADE:          map->list[m].flag.autotrade = 1; break;
+			case MF_ALLOWKS:            map->list[m].flag.allowks = 1; break;
+			case MF_MONSTER_NOTELEPORT: map->list[m].flag.monster_noteleport = 1; break;
+			case MF_PVP_NOCALCRANK:     map->list[m].flag.pvp_nocalcrank = 1; break;
+			case MF_BATTLEGROUND:       map->list[m].flag.battleground = (val <= 0 || val > 2) ? 1 : val; break;
+			case MF_RESET:              map->list[m].flag.reset = 1; break;
+			case MF_NOTOMB:             map->list[m].flag.notomb = 1; break;
 		}
 	}
 	
@@ -10284,75 +10284,75 @@ BUILDIN(removemapflag) {
 	m = map->mapname2mapid(str);
 	if(m >= 0) {
 		switch(i) {
-			case MF_NOMEMO:             maplist[m].flag.nomemo = 0; break;
-			case MF_NOTELEPORT:         maplist[m].flag.noteleport = 0; break;
-			case MF_NOSAVE:             maplist[m].flag.nosave = 0; break;
-			case MF_NOBRANCH:           maplist[m].flag.nobranch = 0; break;
-			case MF_NOPENALTY:          maplist[m].flag.noexppenalty = 0; maplist[m].flag.nozenypenalty = 0; break;
-			case MF_NOZENYPENALTY:      maplist[m].flag.nozenypenalty = 0; break;
+			case MF_NOMEMO:             map->list[m].flag.nomemo = 0; break;
+			case MF_NOTELEPORT:         map->list[m].flag.noteleport = 0; break;
+			case MF_NOSAVE:             map->list[m].flag.nosave = 0; break;
+			case MF_NOBRANCH:           map->list[m].flag.nobranch = 0; break;
+			case MF_NOPENALTY:          map->list[m].flag.noexppenalty = 0; map->list[m].flag.nozenypenalty = 0; break;
+			case MF_NOZENYPENALTY:      map->list[m].flag.nozenypenalty = 0; break;
 			case MF_PVP: {
 				struct block_list bl;
 				bl.type = BL_NUL;
 				bl.m = m;
-				maplist[m].flag.pvp = 0;
+				map->list[m].flag.pvp = 0;
 				clif->map_property_mapall(m, MAPPROPERTY_NOTHING);
 				clif->maptypeproperty2(&bl,ALL_SAMEMAP);
 			}
 				break;
-			case MF_PVP_NOPARTY:        maplist[m].flag.pvp_noparty = 0; break;
-			case MF_PVP_NOGUILD:        maplist[m].flag.pvp_noguild = 0; break;
+			case MF_PVP_NOPARTY:        map->list[m].flag.pvp_noparty = 0; break;
+			case MF_PVP_NOGUILD:        map->list[m].flag.pvp_noguild = 0; break;
 			case MF_GVG: {
 				struct block_list bl;
 				bl.type = BL_NUL;
 				bl.m = m;
-				maplist[m].flag.gvg = 0;
+				map->list[m].flag.gvg = 0;
 				clif->map_property_mapall(m, MAPPROPERTY_NOTHING);
 				clif->maptypeproperty2(&bl,ALL_SAMEMAP);
 			}
 				break;
-			case MF_GVG_NOPARTY:        maplist[m].flag.gvg_noparty = 0; break;
-			case MF_NOTRADE:            maplist[m].flag.notrade = 0; break;
-			case MF_NOSKILL:            maplist[m].flag.noskill = 0; break;
-			case MF_NOWARP:             maplist[m].flag.nowarp = 0; break;
-			case MF_PARTYLOCK:          maplist[m].flag.partylock = 0; break;
-			case MF_NOICEWALL:          maplist[m].flag.noicewall = 0; break;
-			case MF_SNOW:               maplist[m].flag.snow = 0; break;
-			case MF_FOG:                maplist[m].flag.fog = 0; break;
-			case MF_SAKURA:             maplist[m].flag.sakura = 0; break;
-			case MF_LEAVES:             maplist[m].flag.leaves = 0; break;
-			case MF_CLOUDS:             maplist[m].flag.clouds = 0; break;
-			case MF_CLOUDS2:            maplist[m].flag.clouds2 = 0; break;
-			case MF_FIREWORKS:          maplist[m].flag.fireworks = 0; break;
-			case MF_GVG_CASTLE:         maplist[m].flag.gvg_castle = 0; break;
-			case MF_GVG_DUNGEON:        maplist[m].flag.gvg_dungeon = 0; break;
-			case MF_NIGHTENABLED:       maplist[m].flag.nightenabled = 0; break;
-			case MF_NOBASEEXP:          maplist[m].flag.nobaseexp = 0; break;
-			case MF_NOJOBEXP:           maplist[m].flag.nojobexp = 0; break;
-			case MF_NOMOBLOOT:          maplist[m].flag.nomobloot = 0; break;
-			case MF_NOMVPLOOT:          maplist[m].flag.nomvploot = 0; break;
-			case MF_NORETURN:           maplist[m].flag.noreturn = 0; break;
-			case MF_NOWARPTO:           maplist[m].flag.nowarpto = 0; break;
-			case MF_NIGHTMAREDROP:      maplist[m].flag.pvp_nightmaredrop = 0; break;
+			case MF_GVG_NOPARTY:        map->list[m].flag.gvg_noparty = 0; break;
+			case MF_NOTRADE:            map->list[m].flag.notrade = 0; break;
+			case MF_NOSKILL:            map->list[m].flag.noskill = 0; break;
+			case MF_NOWARP:             map->list[m].flag.nowarp = 0; break;
+			case MF_PARTYLOCK:          map->list[m].flag.partylock = 0; break;
+			case MF_NOICEWALL:          map->list[m].flag.noicewall = 0; break;
+			case MF_SNOW:               map->list[m].flag.snow = 0; break;
+			case MF_FOG:                map->list[m].flag.fog = 0; break;
+			case MF_SAKURA:             map->list[m].flag.sakura = 0; break;
+			case MF_LEAVES:             map->list[m].flag.leaves = 0; break;
+			case MF_CLOUDS:             map->list[m].flag.clouds = 0; break;
+			case MF_CLOUDS2:            map->list[m].flag.clouds2 = 0; break;
+			case MF_FIREWORKS:          map->list[m].flag.fireworks = 0; break;
+			case MF_GVG_CASTLE:         map->list[m].flag.gvg_castle = 0; break;
+			case MF_GVG_DUNGEON:        map->list[m].flag.gvg_dungeon = 0; break;
+			case MF_NIGHTENABLED:       map->list[m].flag.nightenabled = 0; break;
+			case MF_NOBASEEXP:          map->list[m].flag.nobaseexp = 0; break;
+			case MF_NOJOBEXP:           map->list[m].flag.nojobexp = 0; break;
+			case MF_NOMOBLOOT:          map->list[m].flag.nomobloot = 0; break;
+			case MF_NOMVPLOOT:          map->list[m].flag.nomvploot = 0; break;
+			case MF_NORETURN:           map->list[m].flag.noreturn = 0; break;
+			case MF_NOWARPTO:           map->list[m].flag.nowarpto = 0; break;
+			case MF_NIGHTMAREDROP:      map->list[m].flag.pvp_nightmaredrop = 0; break;
 			case MF_ZONE:
-				map->zone_change2(m, maplist[m].prev_zone);
+				map->zone_change2(m, map->list[m].prev_zone);
 				break;
-			case MF_NOCOMMAND:          maplist[m].nocommand = 0; break;
-			case MF_NODROP:             maplist[m].flag.nodrop = 0; break;
-			case MF_JEXP:               maplist[m].jexp = 0; break;
-			case MF_BEXP:               maplist[m].bexp = 0; break;
-			case MF_NOVENDING:          maplist[m].flag.novending = 0; break;
-			case MF_LOADEVENT:          maplist[m].flag.loadevent = 0; break;
-			case MF_NOCHAT:             maplist[m].flag.nochat = 0; break;
-			case MF_NOEXPPENALTY:       maplist[m].flag.noexppenalty  = 0; break;
-			case MF_GUILDLOCK:          maplist[m].flag.guildlock = 0; break;
-			case MF_TOWN:               maplist[m].flag.town = 0; break;
-			case MF_AUTOTRADE:          maplist[m].flag.autotrade = 0; break;
-			case MF_ALLOWKS:            maplist[m].flag.allowks = 0; break;
-			case MF_MONSTER_NOTELEPORT: maplist[m].flag.monster_noteleport = 0; break;
-			case MF_PVP_NOCALCRANK:     maplist[m].flag.pvp_nocalcrank = 0; break;
-			case MF_BATTLEGROUND:       maplist[m].flag.battleground = 0; break;
-			case MF_RESET:              maplist[m].flag.reset = 0; break;
-			case MF_NOTOMB:             maplist[m].flag.notomb = 0; break;
+			case MF_NOCOMMAND:          map->list[m].nocommand = 0; break;
+			case MF_NODROP:             map->list[m].flag.nodrop = 0; break;
+			case MF_JEXP:               map->list[m].jexp = 0; break;
+			case MF_BEXP:               map->list[m].bexp = 0; break;
+			case MF_NOVENDING:          map->list[m].flag.novending = 0; break;
+			case MF_LOADEVENT:          map->list[m].flag.loadevent = 0; break;
+			case MF_NOCHAT:             map->list[m].flag.nochat = 0; break;
+			case MF_NOEXPPENALTY:       map->list[m].flag.noexppenalty  = 0; break;
+			case MF_GUILDLOCK:          map->list[m].flag.guildlock = 0; break;
+			case MF_TOWN:               map->list[m].flag.town = 0; break;
+			case MF_AUTOTRADE:          map->list[m].flag.autotrade = 0; break;
+			case MF_ALLOWKS:            map->list[m].flag.allowks = 0; break;
+			case MF_MONSTER_NOTELEPORT: map->list[m].flag.monster_noteleport = 0; break;
+			case MF_PVP_NOCALCRANK:     map->list[m].flag.pvp_nocalcrank = 0; break;
+			case MF_BATTLEGROUND:       map->list[m].flag.battleground = 0; break;
+			case MF_RESET:              map->list[m].flag.reset = 0; break;
+			case MF_NOTOMB:             map->list[m].flag.notomb = 0; break;
 		}
 	}
 	
@@ -10368,11 +10368,16 @@ BUILDIN(pvpon) {
 	
 	str = script_getstr(st,2);
 	m = map->mapname2mapid(str);
-	if( m < 0 || maplist[m].flag.pvp )
+	if( m < 0 || map->list[m].flag.pvp )
 		return true; // nothing to do
 	
-	map->zone_change2(m, strdb_get(zone_db, MAP_ZONE_PVP_NAME));
-	maplist[m].flag.pvp = 1;
+	if( !strdb_exists(map->zone_db,MAP_ZONE_PVP_NAME) ) {
+		ShowError("buildin_pvpon: zone_db missing '%s'\n",MAP_ZONE_PVP_NAME);
+		return true;
+	}
+	
+	map->zone_change2(m, strdb_get(map->zone_db, MAP_ZONE_PVP_NAME));
+	map->list[m].flag.pvp = 1;
 	clif->map_property_mapall(m, MAPPROPERTY_FREEPVPZONE);
 	bl.type = BL_NUL;
 	bl.m = m;
@@ -10418,11 +10423,11 @@ BUILDIN(pvpoff) {
 	
 	str=script_getstr(st,2);
 	m = map->mapname2mapid(str);
-	if(m < 0 || !maplist[m].flag.pvp)
+	if(m < 0 || !map->list[m].flag.pvp)
 		return true; //fixed Lupus
 	
-	map->zone_change2(m, maplist[m].prev_zone);
-	maplist[m].flag.pvp = 0;
+	map->zone_change2(m, map->list[m].prev_zone);
+	map->list[m].flag.pvp = 0;
 	clif->map_property_mapall(m, MAPPROPERTY_NOTHING);
 	bl.type = BL_NUL;
 	bl.m = m;
@@ -10441,10 +10446,16 @@ BUILDIN(gvgon) {
 	
 	str=script_getstr(st,2);
 	m = map->mapname2mapid(str);
-	if(m >= 0 && !maplist[m].flag.gvg) {
+	if(m >= 0 && !map->list[m].flag.gvg) {
 		struct block_list bl;
-		map->zone_change2(m, strdb_get(zone_db, MAP_ZONE_GVG_NAME));
-		maplist[m].flag.gvg = 1;
+		
+		if( !strdb_exists(map->zone_db,MAP_ZONE_GVG_NAME) ) {
+			ShowError("buildin_gvgon: zone_db missing '%s'\n",MAP_ZONE_GVG_NAME);
+			return true;
+		}
+		
+		map->zone_change2(m, strdb_get(map->zone_db, MAP_ZONE_GVG_NAME));
+		map->list[m].flag.gvg = 1;
 		clif->map_property_mapall(m, MAPPROPERTY_AGITZONE);
 		bl.type = BL_NUL;
 		bl.m = m;
@@ -10459,10 +10470,10 @@ BUILDIN(gvgoff) {
 	
 	str=script_getstr(st,2);
 	m = map->mapname2mapid(str);
-	if(m >= 0 && maplist[m].flag.gvg) {
+	if(m >= 0 && map->list[m].flag.gvg) {
 		struct block_list bl;
-		map->zone_change2(m, maplist[m].prev_zone);
-		maplist[m].flag.gvg = 0;
+		map->zone_change2(m, map->list[m].prev_zone);
+		map->list[m].flag.gvg = 0;
 		clif->map_property_mapall(m, MAPPROPERTY_NOTHING);
 		bl.type = BL_NUL;
 		bl.m = m;
@@ -10542,7 +10553,7 @@ BUILDIN(maprespawnguildid) {
 		return true;
 	
 	//Catch ALL players (in case some are 'between maps' on execution time)
-	map->map_foreachpc(script->buildin_maprespawnguildid_sub_pc,m,g_id,flag);
+	map->foreachpc(script->buildin_maprespawnguildid_sub_pc,m,g_id,flag);
 	if (flag&4) //Remove script mobs.
 		map->foreachinmap(script->buildin_maprespawnguildid_sub_mob,m,BL_MOB);
 	return true;
@@ -10969,7 +10980,7 @@ BUILDIN(mobcount) {
 		return true;
 	}
 
-	if( maplist[m].flag.src4instance && maplist[m].instance_id == -1 && st->instance_id >= 0 && (m = instance->mapid2imapid(m, st->instance_id)) < 0 ) {
+	if( map->list[m].flag.src4instance && map->list[m].instance_id == -1 && st->instance_id >= 0 && (m = instance->mapid2imapid(m, st->instance_id)) < 0 ) {
 		script_pushint(st,-1);
 		return true;
 	}
@@ -11690,7 +11701,7 @@ BUILDIN(playBGMall) {
 		map->foreachinmap(script->playBGM_sub, m, BL_PC, name);
 	} else {
 		// entire server
-		map->map_foreachpc(script->playBGM_foreachpc_sub, name);
+		map->foreachpc(script->playBGM_foreachpc_sub, name);
 	}
 	
 	return true;
@@ -12565,7 +12576,7 @@ BUILDIN(getmapxy)
 	
 	x= bl->x;
 	y= bl->y;
-	safestrncpy(mapname, maplist[bl->m].name, MAP_NAME_LENGTH);
+	safestrncpy(mapname, map->list[bl->m].name, MAP_NAME_LENGTH);
 	
 	//Set MapName$
 	num=st->stack->stack_data[st->start+2].u.num;
@@ -14003,16 +14014,16 @@ int buildin_query_sql_sub(struct script_state* st, Sql* handle)
 	return true;
 }
 BUILDIN(query_sql) {
-	return script->buildin_query_sql_sub(st, mmysql_handle);
+	return script->buildin_query_sql_sub(st, map->mysql_handle);
 }
 
 BUILDIN(query_logsql) {
-	if( !logs->config.sql_logs ) {// logmysql_handle == NULL
+	if( !logs->config.sql_logs ) {// logs->mysql_handle == NULL
 		ShowWarning("buildin_query_logsql: SQL logs are disabled, query '%s' will not be executed.\n", script_getstr(st,2));
 		script_pushint(st,-1);
 		return false;
 	}
-	return script->buildin_query_sql_sub(st, logmysql_handle);
+	return script->buildin_query_sql_sub(st, logs->mysql_handle);
 }
 
 //Allows escaping of a given string.
@@ -14025,7 +14036,7 @@ BUILDIN(escape_sql)
 	str = script_getstr(st,2);
 	len = strlen(str);
 	esc_str = (char*)aMalloc(len*2+1);
-	SQL->EscapeStringLen(mmysql_handle, esc_str, str, len);
+	SQL->EscapeStringLen(map->mysql_handle, esc_str, str, len);
 	script_pushstr(st, esc_str);
 	return true;
 }
@@ -15125,7 +15136,7 @@ BUILDIN(setcell) {
 	
 	for( y = y1; y <= y2; ++y )
 		for( x = x1; x <= x2; ++x )
-			maplist[m].setcell(m, x, y, type, flag);
+			map->list[m].setcell(m, x, y, type, flag);
 	
 	return true;
 }
@@ -15597,8 +15608,8 @@ BUILDIN(bg_updatescore) {
 	if( (m = map->mapname2mapid(str)) < 0 )
 		return true;
 	
-	maplist[m].bgscore_lion = script_getnum(st,3);
-	maplist[m].bgscore_eagle = script_getnum(st,4);
+	map->list[m].bgscore_lion = script_getnum(st,3);
+	map->list[m].bgscore_eagle = script_getnum(st,4);
 	
 	clif->bg_updatescore(m);
 	return true;
@@ -15704,7 +15715,7 @@ BUILDIN(instance_attachmap) {
 		script_pushconststr(st, "");
 		return true;
 	}
-	script_pushconststr(st, maplist[m].name);
+	script_pushconststr(st, map->list[m].name);
 	
 	return true;
 }
@@ -15859,7 +15870,7 @@ BUILDIN(has_instance) {
 		if( sd->instances ) {
 			for( i = 0; i < sd->instances; i++ ) {
 				if( sd->instance[i] >= 0 ) {
-					ARR_FIND(0, instance->list[sd->instance[i]].num_map, j, maplist[instance->list[sd->instance[i]].map[j]].instance_src_map == m);
+					ARR_FIND(0, instance->list[sd->instance[i]].num_map, j, map->list[instance->list[sd->instance[i]].map[j]].instance_src_map == m);
 					if( j != instance->list[sd->instance[i]].num_map )
 						break;
 				}
@@ -15870,7 +15881,7 @@ BUILDIN(has_instance) {
 		if( instance_id == -1 && sd->status.party_id && (p = party->search(sd->status.party_id)) && p->instances ) {
 			for( i = 0; i < p->instances; i++ ) {
 				if( p->instance[i] >= 0 ) {
-					ARR_FIND(0, instance->list[p->instance[i]].num_map, j, maplist[instance->list[p->instance[i]].map[j]].instance_src_map == m);
+					ARR_FIND(0, instance->list[p->instance[i]].num_map, j, map->list[instance->list[p->instance[i]].map[j]].instance_src_map == m);
 					if( j != instance->list[p->instance[i]].num_map )
 						break;
 				}
@@ -15881,7 +15892,7 @@ BUILDIN(has_instance) {
 		if( instance_id == -1 && sd->guild && sd->guild->instances ) {
 			for( i = 0; i < sd->guild->instances; i++ ) {
 				if( sd->guild->instance[i] >= 0 ) {
-					ARR_FIND(0, instance->list[sd->guild->instance[i]].num_map, j, maplist[instance->list[sd->guild->instance[i]].map[j]].instance_src_map == m);
+					ARR_FIND(0, instance->list[sd->guild->instance[i]].num_map, j, map->list[instance->list[sd->guild->instance[i]].map[j]].instance_src_map == m);
 					if( j != instance->list[sd->guild->instance[i]].num_map )
 						break;
 				}
@@ -15896,7 +15907,7 @@ BUILDIN(has_instance) {
 		return true;
 	}
 	
-	script_pushconststr(st, maplist[m].name);
+	script_pushconststr(st, map->list[m].name);
 	return true;
 }
 int buildin_instance_warpall_sub(struct block_list *bl,va_list ap) {
@@ -15927,7 +15938,7 @@ BUILDIN(instance_warpall) {
 	else
 		return true;
 	
-	if( (m = map->mapname2mapid(mapn)) < 0 || (maplist[m].flag.src4instance && (m = instance->mapid2imapid(m, instance_id)) < 0) )
+	if( (m = map->mapname2mapid(mapn)) < 0 || (map->list[m].flag.src4instance && (m = instance->mapid2imapid(m, instance_id)) < 0) )
 		return true;
 		
 	mapindex = map_id2index(m);
@@ -16065,7 +16076,7 @@ BUILDIN(areamobuseskill) {
 		return true;
 	}
 	
-	if( maplist[m].flag.src4instance && st->instance_id >= 0 && (m = instance->mapid2imapid(m, st->instance_id)) < 0 )
+	if( map->list[m].flag.src4instance && st->instance_id >= 0 && (m = instance->mapid2imapid(m, st->instance_id)) < 0 )
 		return true;
 	
 	center.m = m;

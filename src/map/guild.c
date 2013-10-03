@@ -621,7 +621,7 @@ int guild_invite(struct map_session_data *sd, struct map_session_data *tsd) {
 
 	if( tsd->status.guild_id > 0
 	 || tsd->guild_invite > 0
-	 || ((map->agit_flag || map->agit2_flag) && maplist[tsd->bl.m].flag.gvg_castle)
+	 || ((map->agit_flag || map->agit2_flag) && map->list[tsd->bl.m].flag.gvg_castle)
 	) {
 		//Can't invite people inside castles. [Skotlex]
 		clif->guild_inviteack(sd,0);
@@ -806,7 +806,7 @@ int guild_leave(struct map_session_data* sd, int guild_id, int account_id, int c
 	if( sd->status.account_id != account_id
 	 || sd->status.char_id != char_id
 	 || sd->status.guild_id != guild_id
-	 || ((map->agit_flag || map->agit2_flag) && maplist[sd->bl.m].flag.gvg_castle)
+	 || ((map->agit_flag || map->agit2_flag) && map->list[sd->bl.m].flag.gvg_castle)
 	)
 		return 0;
 
@@ -838,7 +838,7 @@ int guild_expulsion(struct map_session_data* sd, int guild_id, int account_id, i
 	//Can't leave inside guild castles.
 	if ((tsd = map->id2sd(account_id))
 	 && tsd->status.char_id == char_id
-	 && ((map->agit_flag || map->agit2_flag) && maplist[tsd->bl.m].flag.gvg_castle)
+	 && ((map->agit_flag || map->agit2_flag) && map->list[tsd->bl.m].flag.gvg_castle)
 	)
 		return 0;
 
