@@ -4784,17 +4784,14 @@ so.
 
 ---------------------------------------
 
-*downrefitem <equipment slot>;
+*downrefitem <equipment slot>{,<downgrade_count>};
 
-This command will downgrade an item by - 1 in the specified equipment slot 
-of the invoking character. So the item will not be destroyed unlike in the 
+This command will downgrade an item by - 1 (unless optional <downgrade_count> is provided)
+in the specified equipment slot  of the invoking character.
+So the item will not be destroyed unlike in the 
 failedrefitem script command. This will also display a 'refine failure' 
 effect on the character and put appropriate messages into their chat 
 window.
-
-The official scripts seems to use the 'downrefitem' command as a function 
-instead: 'downrefitem(<number>)' but it returns nothing on the stack. 
-This is since jAthena, so probably nobody knows for sure why is it so.
 
 ---------------------------------------
 

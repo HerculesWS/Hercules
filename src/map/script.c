@@ -7187,13 +7187,15 @@ BUILDIN(failedrefitem)
  *------------------------------------------*/
 BUILDIN(downrefitem)
 {
-	int i = -1,num,ep;
+	int i = -1,num,ep, down = 1;
 	TBL_PC *sd;
 	
-	num = script_getnum(st,2);
 	sd = script->rid2sd(st);
 	if( sd == NULL )
 		return true;
+	num = script_getnum(st,2);
+	if( script_hasdata(st, 3) )
+		down = script_getnum(st, 3);
 	
 	if (num > 0 && num <= ARRAYLENGTH(script->equip))
 		i = pc->checkequip(sd,script->equip[num-1]);
@@ -7203,10 +7205,11 @@ BUILDIN(downrefitem)
 		//Logs items, got from (N)PC scripts [Lupus]
 		logs->pick_pc(sd, LOG_TYPE_SCRIPT, -1, &sd->status.inventory[i],sd->inventory_data[i]);
 		
-		sd->status.inventory[i].refine++;
 		pc->unequipitem(sd,i,2); // status calc will happen in pc->equipitem() below
-		
-		clif->refine(sd->fd,2,i,sd->status.inventory[i].refine = sd->status.inventory[i].refine - 2);
+		sd->status.inventory[i].refine -= down;
+		sd->status.inventory[i].refine = cap_value( sd->status.inventory[i].refine, 0, MAX_REFINE);
+
+		clif->refine(sd->fd,2,i,sd->status.inventory[i].refine);
 		clif->delitem(sd,i,1,3);
 		
 		//Logs items, got from (N)PC scripts [Lupus]
@@ -17375,7 +17378,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getequippercentrefinery,"i"),
 		BUILDIN_DEF(successrefitem,"i"),
 		BUILDIN_DEF(failedrefitem,"i"),
-		BUILDIN_DEF(downrefitem,"i"),
+		BUILDIN_DEF(downrefitem,"i?"),
 		BUILDIN_DEF(statusup,"i"),
 		BUILDIN_DEF(statusup2,"ii"),
 		BUILDIN_DEF(bonus,"iv"),
