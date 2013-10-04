@@ -185,9 +185,13 @@ int	skill_get_unit_bl_target( uint16 skill_id )    { skill_get (skill->db[skill_
 int	skill_get_unit_flag( uint16 skill_id )         { skill_get (skill->db[skill_id].unit_flag, skill_id); }
 int	skill_get_unit_layout_type( uint16 skill_id ,uint16 skill_lv ){ skill_get2 (skill->db[skill_id].unit_layout_type[skill_glv(skill_lv-1)], skill_id, skill_lv); }
 int	skill_get_cooldown( uint16 skill_id, uint16 skill_lv )     { skill_get2 (skill->db[skill_id].cooldown[skill_glv(skill_lv-1)], skill_id, skill_lv); }
+int	skill_get_fixed_cast( uint16 skill_id ,uint16 skill_lv ) {
 #ifdef RENEWAL_CAST
-int	skill_get_fixed_cast( uint16 skill_id ,uint16 skill_lv ){ skill_get2 (skill->db[skill_id].fixed_cast[skill_glv(skill_lv-1)], skill_id, skill_lv); }
+	skill_get2 (skill->db[skill_id].fixed_cast[skill_glv(skill_lv-1)], skill_id, skill_lv);
+#else
+	return 0;
 #endif
+}
 int skill_tree_get_max(uint16 skill_id, int b_class)
 {
 	int i;
@@ -13792,8 +13796,8 @@ int skill_castfix_sc (struct block_list *bl, int time) {
 	//ShowInfo("Castime castfix_sc = %d\n",time);
 	return time;
 }
-#ifdef RENEWAL_CAST
 int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 skill_lv) {
+#ifdef RENEWAL_CAST
 	struct status_change *sc = status->get_sc(bl);
 	struct map_session_data *sd = BL_CAST(BL_PC,bl);
 	int fixed = skill->get_fixed_cast(skill_id, skill_lv), fixcast_r = 0, varcast_r = 0, i = 0;
@@ -13907,10 +13911,9 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 		time = (1 - sqrt( ((float)(status_get_dex(bl)*2 + status_get_int(bl)) / battle_config.vcast_stat_scale) )) * time;
 	// underflow checking/capping
 	time = max(time, 0) + (1 - (float)min(fixcast_r, 100) / 100) * max(fixed,0);
-
+#endif
 	return (int)time;
 }
-#endif
 
 /*==========================================
  * Does delay reductions based on dex/agi, sc data, item bonuses, ...
@@ -18156,9 +18159,7 @@ void skill_defaults(void) {
 	skill->unit_ondamaged = skill_unit_ondamaged;
 	skill->cast_fix = skill_castfix;
 	skill->cast_fix_sc = skill_castfix_sc;	
-#ifdef RENEWAL_CAST
 	skill->vf_cast_fix = skill_vfcastfix;
-#endif
 	skill->delay_fix = skill_delay_fix;
 	skill->check_condition_castbegin = skill_check_condition_castbegin;
 	skill->check_condition_castend = skill_check_condition_castend;
@@ -18222,9 +18223,7 @@ void skill_defaults(void) {
 	skill->check_condition_mob_master_sub = skill_check_condition_mob_master_sub;
 	skill->brandishspear_first = skill_brandishspear_first;
 	skill->brandishspear_dir = skill_brandishspear_dir;
-#ifdef RENEWAL_CAST
 	skill->get_fixed_cast = skill_get_fixed_cast;
-#endif
 	skill->sit_count = skill_sit_count;
 	skill->sit_in = skill_sit_in;
 	skill->sit_out = skill_sit_out;

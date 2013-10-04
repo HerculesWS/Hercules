@@ -9460,13 +9460,12 @@ int pc_del_charm(struct map_session_data *sd,int count,int type)
 	clif->charm(sd, type);
 	return 0;
 }
-#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 /*==========================================
  * Renewal EXP/Itemdrop rate modifier base on level penalty
  * 1=exp 2=itemdrop
  *------------------------------------------*/
-int pc_level_penalty_mod(int diff, unsigned char race, unsigned short mode, int type)
-{
+int pc_level_penalty_mod(int diff, unsigned char race, unsigned short mode, int type) {
+#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	int rate = 100, i;
 
 	if( diff < 0 )
@@ -9489,8 +9488,10 @@ int pc_level_penalty_mod(int diff, unsigned char race, unsigned short mode, int 
 	}
 
 	return rate;
-}
+#else
+	return 100;
 #endif
+}
 int pc_split_str(char *str,char **val,int num)
 {
 	int i;
@@ -9810,8 +9811,8 @@ void pc_read_skill_tree(void) {
         clif->skillinfoblock(sd);
     mapit->free(iter);
 }
-#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 bool pc_readdb_levelpenalty(char* fields[], int columns, int current) {
+#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	int type, race, diff;
 
 	type = atoi(fields[0]);
@@ -9834,10 +9835,9 @@ bool pc_readdb_levelpenalty(char* fields[], int columns, int current) {
 		diff = min(MAX_LEVEL + ( ~(diff) + 1 ), MAX_LEVEL*2);
 
 	pc->level_penalty[type][race][diff] = atoi(fields[3]);
-
+#endif
 	return true;
 }
-#endif
 
 /*==========================================
  * pc DB reading.
@@ -10371,9 +10371,7 @@ void pc_defaults(void) {
 	pc->del_charm = pc_del_charm;
 	
 	pc->baselevelchanged = pc_baselevelchanged;
-#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	pc->level_penalty_mod = pc_level_penalty_mod;
-#endif
 	
 	pc->calc_skillpoint = pc_calc_skillpoint;
 	
@@ -10395,9 +10393,7 @@ void pc_defaults(void) {
 	pc->eventtimer = pc_eventtimer;
 	pc->daynight_timer_sub = pc_daynight_timer_sub;
 	pc->charm_timer = pc_charm_timer;
-#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	pc->readdb_levelpenalty = pc_readdb_levelpenalty;
-#endif
 	pc->autosave = pc_autosave;
 	pc->follow_timer = pc_follow_timer;
 	pc->read_skill_tree = pc_read_skill_tree;

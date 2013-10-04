@@ -35,7 +35,7 @@ struct map_session_data;
 /* after */
 #include "../common/showmsg.h"
 
-#define HPM_VERSION "0.2"
+#define HPM_VERSION "1.0"
 
 struct hplugin_info {
 	char* name;
@@ -44,10 +44,10 @@ struct hplugin_info {
 	char* req_version;
 };
 
-HPExport void *(*import_symbol) (char *name);
+HPExport void *(*import_symbol) (char *name, unsigned int pID);
 HPExport Sql *mysql_handle;
 
-#define GET_SYMBOL(n) import_symbol(n)
+#define GET_SYMBOL(n) import_symbol(n,HPMi->pid)
 
 #define SERVER_TYPE_ALL SERVER_TYPE_LOGIN|SERVER_TYPE_CHAR|SERVER_TYPE_MAP
 
@@ -55,6 +55,7 @@ enum hp_event_types {
 	HPET_INIT,/* server starts */
 	HPET_FINAL,/* server is shutting down */
 	HPET_READY,/* server is ready (online) */
+	HPET_POST_FINAL,/* server is done shutting down */
 	HPET_MAX,
 };
 
@@ -69,6 +70,18 @@ enum HPluginPacketHookingPoints {
 	/* */
 	hpPHP_MAX,
 };
+
+enum HPluginHookType {
+	HOOK_TYPE_PRE,
+	HOOK_TYPE_POST,
+};
+
+#define addHookPre(tname,hook) HPMi->AddHook(HOOK_TYPE_PRE,tname,hook,HPMi->pid)
+#define addHookPost(tname,hook) HPMi->AddHook(HOOK_TYPE_POST,tname,hook,HPMi->pid)
+/* need better names ;/ */
+/* will not run the original function after pre-hook processing is complete (other hooks will run) */
+#define hookStop() HPMi->HookStop(__func__,HPMi->pid)
+#define hookStopped() HPMi->HookStopped()
 
 /* Hercules Plugin Mananger Include Interface */
 HPExport struct HPMi_interface {
@@ -89,6 +102,10 @@ HPExport struct HPMi_interface {
 	void (*removeFromSession) (struct socket_data *sess, unsigned int id, unsigned int type);
 	/* packet */
 	bool (*addPacket) (unsigned short cmd, unsigned short length, void (*receive)(int fd), unsigned int point, unsigned int pluginID);
+	/* Hooking */
+	bool (*AddHook) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
+	void (*HookStop) (const char *func, unsigned int pID);
+	bool (*HookStopped) (void);
 } HPMi_s;
 #ifndef _HPM_H_
 HPExport struct HPMi_interface *HPMi;

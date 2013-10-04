@@ -5016,8 +5016,10 @@ void do_final(void)
 	struct s_mapiterator* iter;
 
 	ShowStatus("Terminating...\n");
+	
 	hChSys.closing = true;
 	HPM->event(HPET_FINAL);
+	
 	if (map->cpsd) aFree(map->cpsd);
 
 	//Ladies and babies first.
@@ -5090,6 +5092,8 @@ void do_final(void)
 	if( !map->enable_grf )
 		aFree(map->cache_buffer);
 
+	HPM->event(HPET_POST_FINAL);
+	
 	ShowStatus("Finished.\n");
 }
 
@@ -5263,6 +5267,7 @@ void map_hp_symbols(void) {
 	HPM->share(itemdb,"itemdb");
 	HPM->share(logs,"logs");
 	HPM->share(mail,"mail");
+	HPM->share(instance,"instance");
 	HPM->share(script,"script");
 	HPM->share(searchstore,"searchstore");
 	HPM->share(skill,"skill");

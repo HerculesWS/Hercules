@@ -1893,9 +1893,7 @@ struct skill_interface {
 	int (*unit_ondamaged) (struct skill_unit *src,struct block_list *bl,int64 damage,unsigned int tick);
 	int (*cast_fix) ( struct block_list *bl, uint16 skill_id, uint16 skill_lv);
 	int (*cast_fix_sc) ( struct block_list *bl, int time);
-#ifdef RENEWAL_CAST
 	int (*vf_cast_fix) ( struct block_list *bl, double time, uint16 skill_id, uint16 skill_lv);
-#endif
 	int (*delay_fix) ( struct block_list *bl, uint16 skill_id, uint16 skill_lv);
 	int (*check_condition_castbegin) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
 	int (*check_condition_castend) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
@@ -1959,9 +1957,7 @@ struct skill_interface {
 	int (*check_condition_mob_master_sub) (struct block_list *bl, va_list ap);
 	void (*brandishspear_first) (struct square *tc, uint8 dir, int16 x, int16 y);
 	void (*brandishspear_dir) (struct square* tc, uint8 dir, int are);
-#ifdef RENEWAL_CAST
 	int	(*get_fixed_cast) ( uint16 skill_id ,uint16 skill_lv );
-#endif
 	int (*sit_count) (struct block_list *bl, va_list ap);
 	int (*sit_in) (struct block_list *bl, va_list ap);
 	int (*sit_out) (struct block_list *bl, va_list ap);

@@ -88,6 +88,26 @@ void sample_packet0f3(int fd) {
 	
 	clif->pGlobalMessage(fd,sd);
 }
+int my_pc_dropitem_storage;/* storage var */
+/* my custom prehook for pc_dropitem, checks if amount of item being dropped is higher than 1 and if so cap it to 1 and store the value of how much it was */
+int my_pc_dropitem_pre(struct map_session_data *sd,int *n,int *amount) {
+	my_pc_dropitem_storage = 0;
+	if( *amount > 1 ) {
+		my_pc_dropitem_storage = *amount;
+		*amount = 1;
+	}
+	return 0;
+}
+/* postHook receive retVal as the first param, allows posthook to act accordingly to whatever the original was going to return */
+int my_pc_dropitem_post(int retVal, struct map_session_data *sd,int *n,int *amount) {
+	if( retVal != 1 ) return retVal;/* we don't do anything if pc_dropitem didn't return 1 (success) */
+	if( my_pc_dropitem_storage ) {/* signs whether pre-hook did this */
+		char output[99];
+		snprintf(output,99,"[ Warning ] you can only drop 1 item at a time, capped from %d to 1",my_pc_dropitem_storage);
+		clif->colormes(sd->fd,COLOR_RED,output);
+	}
+	return 1;
+}
 /* run when server starts */
 HPExport void plugin_init (void) {
 	char *server_type;
@@ -103,6 +123,7 @@ HPExport void plugin_init (void) {
 	/* map-server interfaces */
 	script = GET_SYMBOL("script");
 	clif = GET_SYMBOL("clif");
+	pc = GET_SYMBOL("pc");
 	
 	/* session[] */
 	session = GET_SYMBOL("session");
@@ -132,7 +153,16 @@ HPExport void plugin_init (void) {
 	if( HPMi->addPacket != NULL ) {//link our 'sample' packet to map-server
 		HPMi->addPacket(0xf3,-1,sample_packet0f3,hpClif_Parse,HPMi->pid);
 	}
-
+	
+	/* in this sample we add a PreHook to pc->dropitem */
+	/* to identify whether the item being dropped is on amount higher than 1 */
+	/* if so, it stores the amount on a variable (my_pc_dropitem_storage) and changes the amount to 1 */
+	addHookPre("pc->dropitem",my_pc_dropitem_pre);
+	/* in this sample we add a PostHook to pc->dropitem */
+	/* if the original pc->dropitem was successful and the amount stored on my_pc_dropitem_storage is higher than 1, */
+	/* our posthook will display a message to the user about the cap */
+	/* - by checking whether it was successful (retVal value) it allows for the originals conditions to take place */
+	addHookPost("pc->dropitem",my_pc_dropitem_post);	
 }
 /* run when server is ready (online) */
 HPExport void server_online (void) {

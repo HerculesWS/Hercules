@@ -10,11 +10,28 @@
 #include "pc.h"
 #include "map.h"
 
+//
+#include "chat.h"
+#include "chrif.h"
+#include "duel.h"
+#include "elemental.h"
+#include "homunculus.h"
+#include "instance.h"
+#include "intif.h"
+#include "irc-bot.h"
+#include "mail.h"
+#include "mapreg.h"
+#include "mercenary.h"
+#include "party.h"
+#include "pet.h"
+#include "quest.h"
+#include "storage.h"
+#include "trade.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 
 void HPM_map_addToMSD(struct map_session_data *sd, void *data, unsigned int id, unsigned int type, bool autofree) {
 	struct HPluginData *HPData;
@@ -80,10 +97,10 @@ void HPM_map_removeFromMSD(struct map_session_data *sd, unsigned int id, unsigne
 	
 }
 void HPM_map_plugin_load_sub(struct hplugin *plugin) {
-	plugin->hpi->addCommand		= HPM->import_symbol("addCommand");
-	plugin->hpi->addScript		= HPM->import_symbol("addScript");
+	plugin->hpi->addCommand		= HPM->import_symbol("addCommand",plugin->idx);
+	plugin->hpi->addScript		= HPM->import_symbol("addScript",plugin->idx);
 	/* */
-	plugin->hpi->addToMSD		= HPM->import_symbol("addToMSD");
-	plugin->hpi->getFromMSD		= HPM->import_symbol("getFromMSD");
-	plugin->hpi->removeFromMSD	= HPM->import_symbol("removeFromMSD");
+	plugin->hpi->addToMSD		= HPM->import_symbol("addToMSD",plugin->idx);
+	plugin->hpi->getFromMSD		= HPM->import_symbol("getFromMSD",plugin->idx);
+	plugin->hpi->removeFromMSD	= HPM->import_symbol("removeFromMSD",plugin->idx);
 }

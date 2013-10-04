@@ -931,9 +931,7 @@ struct pc_interface {
 	int (*del_charm) (struct map_session_data *sd,int count,int type);
 	
 	void (*baselevelchanged) (struct map_session_data *sd);
-#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	int (*level_penalty_mod) (int diff, unsigned char race, unsigned short mode, int type);
-#endif
 	int (*calc_skillpoint) (struct map_session_data* sd);
 	
 	int (*invincible_timer) (int tid, unsigned int tick, int id, intptr_t data);
@@ -954,9 +952,7 @@ struct pc_interface {
 	int (*eventtimer) (int tid, unsigned int tick, int id, intptr_t data);
 	int (*daynight_timer_sub) (struct map_session_data *sd,va_list ap);
 	int (*charm_timer) (int tid, unsigned int tick, int id, intptr_t data);
-#if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	bool (*readdb_levelpenalty) (char* fields[], int columns, int current);
-#endif
 	int (*autosave) (int tid, unsigned int tick, int id, intptr_t data);
 	int (*follow_timer) (int tid, unsigned int tick, int id, intptr_t data);
 	void (*read_skill_tree) (void);

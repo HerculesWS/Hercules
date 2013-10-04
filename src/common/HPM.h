@@ -79,6 +79,9 @@ struct HPM_interface {
 	/* vars */
 	unsigned int version[2];
 	bool off;
+	bool hooking;
+	/* hooking */
+	bool force_return;
 	/* data */
 	struct hplugin **plugins;
 	unsigned int plugin_count;
@@ -94,12 +97,12 @@ struct HPM_interface {
 	void (*init) (void);
 	void (*final) (void);
 	struct hplugin * (*create) (void);
-	void (*load) (const char* filename);
+	struct hplugin * (*load) (const char* filename);
 	void (*unload) (struct hplugin* plugin);
 	bool (*exists) (const char *filename);
 	bool (*iscompatible) (char* version);
 	void (*event) (enum hp_event_types type);
-	void *(*import_symbol) (char *);
+	void *(*import_symbol) (char *name, unsigned int pID);
 	void (*share) (void *, char *);
 	void (*symbol_defaults) (void);
 	void (*config_read) (void);
@@ -108,6 +111,7 @@ struct HPM_interface {
 	char *(*pid2name) (unsigned int pid);
 	unsigned char (*parse_packets) (int fd, enum HPluginPacketHookingPoints point);
 	void (*load_sub) (struct hplugin *plugin);
+	bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
 } HPM_s;
 
 struct HPM_interface *HPM;

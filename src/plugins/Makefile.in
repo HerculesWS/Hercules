@@ -1,7 +1,26 @@
+################  PLUGIN CONFIGURATION  ##############################
+#                                                                    #
+# When you add a plugin, add its name here:                          #
+# Example: if you have a plugin named my_cool_plugin.c and another   #
+# one named my_second_plugin.c, add them to the list like this:      #
+#                                                                    #
+# MYPLUGINS = my_cool_plugin my_second_plugin                        #
+#                                                                    #
+# Note: DO NOT include the .c extension!!!                           #
 
-COMMON_H = ../common/HPMi.h ../common/cbasetypes.h
+MYPLUGINS = 
 
-PLUGINS = sample db2sql
+#                                                                    #
+#########  DO NOT EDIT ANYTHING BELOW THIS LINE!!!  ##################
+
+PLUGINS = sample db2sql HPMHooking $(MYPLUGINS)
+
+COMMON_H = $(shell ls ../common/*.h)
+CONFIG_H = $(shell ls ../config/*.h ../config/*/*.h)
+MAP_H = $(shell ls ../map/*.h)
+CHAR_H = $(shell ls ../char/*.h)
+LOGIN_H = $(shell ls ../login/*.h)
+ALL_H = $(COMMON_H) $(CONFIG_H) $(MAP_H) $(CHAR_H) $(LOGIN_H)
 
 @SET_MAKE@
 
@@ -9,17 +28,19 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY: all $(PLUGINS) sample db2sql clean help
+.PHONY: all $(PLUGINS) clean buildclean help
 
 all: $(PLUGINS) Makefile
 
-sample: sample@DLLEXT@
+$(PLUGINS): %: ../../plugins/%@DLLEXT@
 
-db2sql: db2sql@DLLEXT@
-
-clean:
-	@echo "	CLEAN	plugins"
+buildclean:
+	@echo "	CLEAN	plugins (build temp files)"
 	@rm -rf *.o
+	
+clean: buildclean
+	@echo "	CLEAN	plugins"
+	@rm -rf ../../plugins/*@DLLEXT@
 
 help:
 	@echo "possible targets are $(PLUGINS:%='%') 'all' 'clean' 'help'"
@@ -31,6 +52,8 @@ help:
 Makefile: Makefile.in
 	@$(MAKE) -C ../.. src/plugins/Makefile
 
-%@DLLEXT@: %.c $(COMMON_H)
+.SECONDEXPANSION:
+
+../../plugins/%@DLLEXT@: %.c $(ALL_H) $$(shell ls %/* 2>/dev/null)
 	@echo "	CC	$<"
-	@$(CC) @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o ../../plugins/$@ $<
+	@$(CC) @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<
