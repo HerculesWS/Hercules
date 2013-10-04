@@ -196,8 +196,7 @@ int storage_delitem(struct map_session_data* sd, int n, int amount)
  *	0 : fail
  *	1 : success
  *------------------------------------------*/
-int storage_storageadd(struct map_session_data* sd, int index, int amount)
-{
+int storage_storageadd(struct map_session_data* sd, int index, int amount) {
 	nullpo_ret(sd);
 
 	if( sd->status.storage.storage_amount > MAX_STORAGE )
@@ -214,6 +213,8 @@ int storage_storageadd(struct map_session_data* sd, int index, int amount)
 
 	if( storage->additem(sd,&sd->status.inventory[index],amount) == 0 )
 		pc->delitem(sd,index,amount,0,4,LOG_TYPE_STORAGE);
+	else
+		clif->dropitem(sd, index,0);
 
 	return 1;
 }
