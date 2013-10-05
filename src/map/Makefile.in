@@ -47,21 +47,27 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY: all sql map-server clean help
+.PHONY: all sql map-server clean buildclean help
 
 all: sql
 
 sql: map-server
 
-clean:
+buildclean:
+	@echo "	CLEAN	map (build temp files)"
+	@rm -rf *.o obj_sql
+
+clean: buildclean
 	@echo "	CLEAN	map"
-	@rm -rf *.o obj_sql ../../map-server@EXEEXT@
+	@rm -rf ../../map-server@EXEEXT@
 
 help:
 	@echo "possible targets are 'map-server' 'all' 'clean' 'help'"
 	@echo "'map-server' - map server"
 	@echo "'all'        - builds all above targets"
 	@echo "'clean'      - cleans builds and objects"
+	@echo "'buildclean' - cleans build temporary (object) files, without deleting the"
+	@echo "               executables"
 	@echo "'help'       - outputs this message"
 
 #####################################################################

@@ -34,21 +34,27 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY: all sql char-server clean help
+.PHONY: all sql char-server clean buildclean help
 
 all: sql
 
 sql: char-server
 
-clean:
+buildclean:
+	@echo "	CLEAN	char (build temp files)"
+	@rm -rf *.o obj_sql
+
+clean: buildclean
 	@echo "	CLEAN	char"
-	@rm -rf *.o obj_sql ../../char-server@EXEEXT@
+	@rm -rf ../../char-server@EXEEXT@
 
 help:
 	@echo "possible targets are 'char-server' 'all' 'clean' 'help'"
 	@echo "'char-server' - char server"
 	@echo "'all'         - builds all above targets"
 	@echo "'clean'       - cleans builds and objects"
+	@echo "'buildclean'  - cleans build temporary (object) files, without deleting the"
+	@echo "                executables"
 	@echo "'help'        - outputs this message"
 
 #####################################################################
