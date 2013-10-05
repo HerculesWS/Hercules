@@ -4216,7 +4216,7 @@ unsigned short status_calc_int(struct block_list *bl, struct status_change *sc, 
 	if(sc->data[SC_MARIONETTE])
 		int_ += ((sc->data[SC_MARIONETTE]->val4)>>16)&0xFF;
 	if(sc->data[SC_MANDRAGORA])
-		int_ -= 5 + 5 * sc->data[SC_MANDRAGORA]->val1;
+		int_ -= 4 * sc->data[SC_MANDRAGORA]->val1;
 	if(sc->data[SC_COCKTAIL_WARG_BLOOD])
 		int_ += sc->data[SC_COCKTAIL_WARG_BLOOD]->val1;
 	if(sc->data[SC_INSPIRATION])
@@ -6262,9 +6262,6 @@ int status_get_sc_def(struct block_list *bl, enum sc_type type, int rate, int ti
 	case SC_SIREN:
 		tick -= 1000 * ((status->get_lv(bl) / 10) + ((sd?sd->status.job_level:0) / 5));
 		tick = max(tick,10000);
-		break;
-	case SC_MANDRAGORA:
-		sc_def = (st->vit+st->luk)/5;
 		break;
 	case SC_KYOUGAKU:
 		tick -= 1000 * status_get_int(bl) / 20;
