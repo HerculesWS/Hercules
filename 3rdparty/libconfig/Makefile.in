@@ -8,19 +8,22 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY: all clean help
+.PHONY: all clean buildclean help
 
 all: $(LIBCONFIG_OBJ)
 
-clean:
-	@echo "	CLEAN	libconfig"
+buildclean:
+	@echo "	CLEAN	libconfig (build temp files)"
 	@rm -rf *.o
 
+clean: buildclean
+	@echo "	CLEAN	libconfig"
+
 help:
-	@echo "possible targets are 'all' 'clean' 'help'"
-	@echo "'all'    - builds $(LIBCONFIG_OBJ)"
-	@echo "'clean'  - deletes $(LIBCONFIG_OBJ)"
-	@echo "'help'   - outputs this message"
+	@echo "possible targets are 'all' 'clean' 'buildclean' 'help'"
+	@echo "'all'                 - builds $(LIBCONFIG_OBJ)"
+	@echo "'clean', 'buildclean' - deletes $(LIBCONFIG_OBJ)"
+	@echo "'help'                - outputs this message"
 
 #####################################################################
 

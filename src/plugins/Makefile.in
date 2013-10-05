@@ -44,8 +44,14 @@ clean: buildclean
 
 help:
 	@echo "possible targets are $(PLUGINS:%='%') 'all' 'clean' 'help'"
-	@echo "'sample'   - sample plugin"
-	@echo "'help'     - outputs this message"
+	@echo ""
+	@echo "$(PLUGINS:%='%')"
+	@echo "              - builds a specific plugin"
+	@echo "'all'         - builds all above targets"
+	@echo "'clean'       - cleans builds and objects"
+	@echo "'buildclean'  - cleans build temporary (object) files, without deleting the"
+	@echo "                compiled plugins"
+	@echo "'help'        - outputs this message"
 
 #####################################################################
 

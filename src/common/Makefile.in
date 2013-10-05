@@ -40,22 +40,25 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY: all sql common common_sql common_mini clean help
+.PHONY: all sql common common_sql common_mini clean buildclean help
 
 all: sql
 
 sql: $(SQL_DEPENDS)
 
-clean:
-	@echo "	CLEAN	common"
+buildclean:
+	@echo "	CLEAN	common (build temp files)"
 	@rm -rf *.o obj_all obj_sql
+
+clean: buildclean
+	@echo "	CLEAN	common"
 
 help:
 	@echo "possible targets are 'sql' 'all' 'clean' 'help'"
-	@echo "'sql'    - builds object files used in sql servers"
-	@echo "'all'    - builds all above targets"
-	@echo "'clean'  - cleans builds and objects"
-	@echo "'help'   - outputs this message"
+	@echo "'sql'                 - builds object files used in sql servers"
+	@echo "'all'                 - builds all above targets"
+	@echo "'clean', 'buildclean' - cleans builds and objects"
+	@echo "'help'                - outputs this message"
 
 #####################################################################
 

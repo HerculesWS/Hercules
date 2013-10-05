@@ -118,6 +118,11 @@ setting_terminator:
   | TOK_COMMA
   ;
 
+comma_optional:
+    /* empty */
+  | TOK_COMMA
+  ;
+
 setting:
   TOK_NAME
   {
@@ -359,9 +364,13 @@ value_list_optional:
   | value_list
   ;
 
-simple_value_list:
+simple_value_list_sub:
     simple_value
-  | simple_value_list TOK_COMMA simple_value
+  | simple_value_list_sub TOK_COMMA simple_value
+  ;
+
+simple_value_list:
+    simple_value_list_sub comma_optional
   ;
 
 simple_value_list_optional:
