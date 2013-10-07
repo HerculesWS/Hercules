@@ -5110,9 +5110,15 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			break;
 
 		case AL_DECAGI:
+			clif->skill_nodamage (src, bl, skill_id, skill_lv,
+								  sc_start(bl, type, (40 + skill_lv * 2 + (status->get_lv(src) + sstatus->int_)/5), skill_lv,
+										   /* monsters using lvl 48 get the rate benefit but the duration of lvl 10 */
+										   ( src->type == BL_MOB && skill_lv == 48 ) ? skill->get_time(skill_id,skill_lv) : skill->get_time(skill_id,skill_lv)));
+			break;
+
 		case MER_DECAGI:
 			clif->skill_nodamage (src, bl, skill_id, skill_lv,
-				sc_start(bl, type, (40 + skill_lv * 2 + (status->get_lv(src) + sstatus->int_)/5), skill_lv, skill->get_time(skill_id,skill_lv)));
+								  sc_start(bl, type, (40 + skill_lv * 2 + (status->get_lv(src) + sstatus->int_)/5), skill_lv, skill->get_time(skill_id,skill_lv)));
 			break;
 
 		case AL_CRUCIS:
