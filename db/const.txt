@@ -593,6 +593,7 @@ bMagicAtkEle 2056
 bFixedCast	2057
 bVariableCast	2058
 
+//reference to script.c::script_defaults():equip[] array used for easy-conversion
 EQI_HEAD_TOP	1
 EQI_ARMOR	2
 EQI_HAND_L	3
@@ -603,6 +604,10 @@ EQI_ACC_L	7
 EQI_ACC_R	8
 EQI_HEAD_MID	9
 EQI_HEAD_LOW	10
+EQI_COSTUME_HEAD_LOW	11
+EQI_COSTUME_HEAD_MID	12
+EQI_COSTUME_HEAD_TOP	13
+EQI_COSTUME_GARMENT	14
 
 LOOK_BASE	0
 LOOK_HAIR	1
