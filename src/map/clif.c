@@ -860,9 +860,9 @@ static int clif_setlevel(struct block_list* bl) {
 	}
 	return lv;
 }
-#if PACKETVER < 20091103
 /* for 'packetver < 20091103' 0x78 non-pc-looking unit handling */
 void clif_set_unit_idle2(struct block_list* bl, struct map_session_data *tsd, enum send_target target) {
+#if PACKETVER < 20091103
 	struct map_session_data* sd;
 	struct status_change* sc = status->get_sc(bl);
 	struct view_data* vd = status->get_viewdata(bl);
@@ -907,8 +907,10 @@ void clif_set_unit_idle2(struct block_list* bl, struct map_session_data *tsd, en
 	p.clevel = clif_setlevel(bl);
 	
 	clif->send(&p,sizeof(p),tsd?&tsd->bl:bl,target);
-}
+#else
+	return;
 #endif
+}
 /*==========================================
  * Prepares 'unit standing' packet
  *------------------------------------------*/
@@ -996,9 +998,9 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	}
 	
 }
-#if PACKETVER < 20091103
 /* for 'packetver < 20091103' 0x7c non-pc-looking unit handling */
 void clif_spawn_unit2(struct block_list* bl, enum send_target target) {
+#if PACKETVER < 20091103
 	struct map_session_data* sd;
 	struct status_change* sc = status->get_sc(bl);
 	struct view_data* vd = status->get_viewdata(bl);
@@ -1037,8 +1039,10 @@ void clif_spawn_unit2(struct block_list* bl, enum send_target target) {
 	p.xSize = p.ySize = (sd) ? 5 : 0;
 
 	clif->send(&p,sizeof(p),bl,target);
-}
+#else
+	return;
 #endif
+}
 void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	struct map_session_data* sd;
 	struct status_change* sc = status->get_sc(bl);
@@ -12369,7 +12373,7 @@ void clif_parse_PartyBookingRegisterReq(int fd, struct map_session_data* sd)
 	short level = RFIFOW(fd,2);
 	const char *notice = (const char*)RFIFOP(fd, 4);
 
-	party->booking_register(sd, level, notice);
+	party->recruit_register(sd, level, notice);
 }
 
 /// Party booking search results (ZC_PARTY_RECRUIT_ACK_SEARCH).
@@ -12426,7 +12430,7 @@ void clif_parse_PartyBookingSearchReq(int fd, struct map_session_data* sd)
 	unsigned long lastindex = RFIFOL(fd, 6);
 	short resultcount = RFIFOW(fd, 10);
 
-	party->booking_search(sd, level, mapid, lastindex, resultcount);
+	party->recruit_search(sd, level, mapid, lastindex, resultcount);
 }
 
 /// Request to delete own party booking advertisment (CZ_PARTY_RECRUIT_REQ_DELETE).
@@ -12462,7 +12466,7 @@ void clif_parse_PartyBookingUpdateReq(int fd, struct map_session_data *sd)
 
 	notice = (const char*)RFIFOP(fd, 2);
 	
-	party->booking_update(sd, notice);
+	party->recruit_update(sd, notice);
 }
 
 /// Notification about new party booking advertisment (ZC_PARTY_RECRUIT_NOTIFY_INSERT).
@@ -17984,10 +17988,8 @@ void clif_defaults(void) {
 	clif->clearunit_delayed_sub = clif_clearunit_delayed_sub;
 	clif->set_unit_idle = clif_set_unit_idle;
 	clif->spawn_unit = clif_spawn_unit;
-#if PACKETVER < 20091103
 	clif->spawn_unit2 = clif_spawn_unit2;
 	clif->set_unit_idle2 = clif_set_unit_idle2;
-#endif
 	clif->set_unit_walking = clif_set_unit_walking;
 	clif->calc_walkdelay = clif_calc_walkdelay;
 	clif->getareachar_skillunit = clif_getareachar_skillunit;
@@ -18343,13 +18345,11 @@ void clif_defaults(void) {
 	clif->PartyBookingDeleteNotify = clif_PartyBookingDeleteNotify;
 	clif->PartyBookingInsertNotify = clif_PartyBookingInsertNotify;
 	/* Group Search System Update */
-#ifdef PARTY_RECRUIT
 	clif->PartyBookingVolunteerInfo = clif_PartyBookingVolunteerInfo;
 	clif->PartyBookingRefuseVolunteer = clif_PartyBookingRefuseVolunteer;
 	clif->PartyBookingCancelVolunteer = clif_PartyBookingCancelVolunteer;
 	clif->PartyBookingAddFilteringList = clif_PartyBookingAddFilteringList;
 	clif->PartyBookingSubFilteringList = clif_PartyBookingSubFilteringList;
-#endif
 	/* buying store-related */
 	clif->buyingstore_open = clif_buyingstore_open;
 	clif->buyingstore_open_failed = clif_buyingstore_open_failed;
@@ -18613,11 +18613,9 @@ void clif_defaults(void) {
 	clif->pPartyTick = clif_parse_PartyTick;
 	clif->pGuildInvite2 = clif_parse_GuildInvite2;
 	/* Group Search System Update */
-#ifdef PARTY_RECRUIT
 	clif->pPartyBookingAddFilter = clif_parse_PartyBookingAddFilteringList;
 	clif->pPartyBookingSubFilter = clif_parse_PartyBookingSubFilteringList;
 	clif->pPartyBookingReqVolunteer = clif_parse_PartyBookingReqVolunteer;
 	clif->pPartyBookingRefuseVolunteer = clif_parse_PartyBookingRefuseVolunteer;
 	clif->pPartyBookingCancelVolunteer = clif_parse_PartyBookingCancelVolunteer;
-#endif
 }

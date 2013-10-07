@@ -137,26 +137,32 @@ int map_freeblock_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	return 0;
 }
 
-#ifdef CELL_NOSTACK
 /*==========================================
  * These pair of functions update the counter of how many objects
  * lie on a tile.
  *------------------------------------------*/
 void map_addblcell(struct block_list *bl) {
+#ifdef CELL_NOSTACK
 	if( bl->m < 0 || bl->x < 0 || bl->x >= map->list[bl->m].xs
 	              || bl->y < 0 || bl->y >= map->list[bl->m].ys
 	              || !(bl->type&BL_CHAR) )
 		return;
 	map->list[bl->m].cell[bl->x+bl->y*map->list[bl->m].xs].cell_bl++;
+#else
+	return;
+#endif
 }
 
 void map_delblcell(struct block_list *bl) {
+#ifdef CELL_NOSTACK
 	if( bl->m < 0 || bl->x < 0 || bl->x >= map->list[bl->m].xs
 	              || bl->y < 0 || bl->y >= map->list[bl->m].ys
 	              || !(bl->type&BL_CHAR) )
 	map->list[bl->m].cell[bl->x+bl->y*map->list[bl->m].xs].cell_bl--;
-}
+#else
+	return;
 #endif
+}
 
 /*==========================================
  * Adds a block to the map.
@@ -5792,10 +5798,8 @@ void map_defaults(void) {
 	map->versionscreen = map_versionscreen;
 	map->arg_next_value = map_arg_next_value;
 
-#ifdef CELL_NOSTACK
 	map->addblcell = map_addblcell;
 	map->delblcell = map_delblcell;
-#endif
 
 	/**
 	 * mapit interface
