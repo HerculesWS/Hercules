@@ -6972,8 +6972,14 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					return 0;
 				}
 				status->change_start(bl,SC_STUN,10000,skill_lv,0,0,0,skill->get_time2(skill_id,skill_lv),8);
-				if (f_sd) sc_start(&f_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
-				if (m_sd) sc_start(&m_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+				if (f_sd) {
+					sc_start(&f_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+					clif->specialeffect(&f_sd->bl,408,AREA);
+				}
+				if (m_sd) {
+					sc_start(&m_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+					clif->specialeffect(&m_sd->bl,408,AREA);
+				}
 			}
 			break;
 
