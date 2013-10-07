@@ -4632,8 +4632,9 @@ skill requirements.
 
 ---------------------------------------
 
-itemeffect <item id>;
-itemeffect "<item name>";
+*itemeffect <item id>;
+*itemeffect "<item name>";
+*consumeitem is an alias of itemeffect (added for compatibility)
 
 This command will run the item script of the specified item on the 
 invoking character. The character does not need to posess the item, and 

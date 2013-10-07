@@ -17738,6 +17738,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF2(cleanmap,"cleanarea","siiii"),
 		BUILDIN_DEF(npcskill,"viii"),
 		BUILDIN_DEF(itemeffect,"v"),
+		BUILDIN_DEF2(itemeffect,"consumeitem","v"), /* alias of itemeffect */
 		BUILDIN_DEF(delequip,"i"),
 		/**
 		 * @commands (script based)
