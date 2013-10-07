@@ -8066,7 +8066,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				int rate = 45 + 5 * skill_lv;
 				if( rnd()%100 < rate ){
 					clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
-					map->foreachinrange(skill->area_sub,bl,skill->get_splash(skill_id,skill_lv),BL_CHAR,src,skill_id,skill_lv,tick,flag|BCT_ENEMY|1,skill_castend_nodamage_id);
+					map->foreachinrange(skill->area_sub,bl,skill->get_splash(skill_id,skill_lv),BL_CHAR,src,skill_id,skill_lv,tick,flag|BCT_ENEMY|1,skill->castend_nodamage_id);
 				}else if( sd ) // Failure on Rate
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			}
@@ -8919,12 +8919,17 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 		case GN_MANDRAGORA:
 			if( flag&1 ) {
-				if ( clif->skill_nodamage(bl, src, skill_id, skill_lv,
-										 sc_start(bl, type, 25 + 10 * skill_lv, skill_lv, skill->get_time(skill_id, skill_lv))) )
-					status_zap(bl, 0, status_get_max_sp(bl) * (25 + 5 * skill_lv) / 100);
-			} else
-				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), BL_CHAR,
-				                    src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill->castend_nodamage_id);
+				int chance = 25 + 10 * skill_lv - (status_get_vit(bl) + status_get_luk(bl)) / 5;
+				if ( chance < 10 )
+					chance = 10;//Minimal chance is 10%.
+				if ( rand()%100 < chance ) {//Coded to both inflect the status and drain the target's SP only when successful. [Rytech]
+				sc_start(bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv));
+				status_zap(bl, 0, status_get_max_sp(bl) * (25 + 5 * skill_lv) / 100);
+				}
+			} else if ( sd ) {
+				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), BL_CHAR,src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill->castend_nodamage_id);
+				clif->skill_nodamage(bl, src, skill_id, skill_lv, 1);
+			}
 			break;
 
 		case GN_SLINGITEM:
@@ -13588,16 +13593,18 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 		if( itemid_isgemstone(req.itemid[i]) && skill_id != HW_GANBANTEIN )
 		{
 			if( sd->special_state.no_gemstone )
-			{	//Make it substract 1 gem rather than skipping the cost.
-				if( --req.amount[i] < 1 )
-					req.itemid[i] = 0;
+			{	// All gem skills except Hocus Pocus and Ganbantein can cast for free with Mistress card -helvetica
+				if( skill_id != SA_ABRACADABRA )
+					req.itemid[i] = req.amount[i] = 0;
+				else if( --req.amount[i] < 1 )
+					req.amount[i] = 1; // Hocus Pocus always use at least 1 gem
 			}
 			if(sc && sc->data[SC_INTOABYSS])
 			{
 				if( skill_id != SA_ABRACADABRA )
 					req.itemid[i] = req.amount[i] = 0;
 				else if( --req.amount[i] < 1 )
-					req.amount[i] = 1; // Hocus Pocus allways use at least 1 gem
+					req.amount[i] = 1; // Hocus Pocus always use at least 1 gem
 			}
 		}
 		if( skill_id >= HT_SKIDTRAP && skill_id <= HT_TALKIEBOX && pc->checkskill(sd, RA_RESEARCHTRAP) > 0){

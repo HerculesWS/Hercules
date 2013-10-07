@@ -24,13 +24,17 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY: all test_spinlock
+.PHONY: all test_spinlock clean buildclean
 
 all: test_spinlock Makefile
 
-clean:
+buildclean:
+	@echo "	CLEAN	test (build temp files)"
+	@rm -rf *.o obj
+
+clean: buildclean
 	@echo "	CLEAN	test"
-	@rm -rf *.o obj ../../test_spinlock@EXEEXT@ 
+	@rm -rf ../../test_spinlock@EXEEXT@
 
 #####################################################################
 
