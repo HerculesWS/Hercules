@@ -1121,7 +1121,7 @@ void party_recruit_register(struct map_session_data *sd, short level, const char
 	}
 	else
 	{// already registered
-		clif->PartyBookingRegisterAck(sd, 2);
+		clif->PartyRecruitRegisterAck(sd, 2);
 		return;
 	}
 
@@ -1130,8 +1130,8 @@ void party_recruit_register(struct map_session_data *sd, short level, const char
  	pb_ad->p_detail.level = level;
 	safestrncpy(pb_ad->p_detail.notice, notice, PB_NOTICE_LENGTH);
 
-	clif->PartyBookingRegisterAck(sd, 0);
-	clif->PartyBookingInsertNotify(sd, pb_ad); // Notice
+	clif->PartyRecruitRegisterAck(sd, 0);
+	clif->PartyRecruitInsertNotify(sd, pb_ad); // Notice
 #else
 	return;
 #endif
@@ -1187,7 +1187,7 @@ void party_recruit_update(struct map_session_data *sd, const char *notice) {
 		safestrncpy(pb_ad->p_detail.notice, notice, PB_NOTICE_LENGTH);
 	}
 
-	clif->PartyBookingUpdateNotify(sd, pb_ad);
+	clif->PartyRecruitUpdateNotify(sd, pb_ad);
 #else
 	return;
 #endif
@@ -1241,7 +1241,7 @@ void party_recruit_search(struct map_session_data *sd, short level, short mapid,
 		}
 	}
 	dbi_destroy(iter);
-	clif->PartyBookingSearchAck(sd->fd, result_list, count, more_result);
+	clif->PartyRecruitSearchAck(sd->fd, result_list, count, more_result);
 #else
 	return;
 #endif
@@ -1293,7 +1293,11 @@ bool party_booking_delete(struct map_session_data *sd)
 
 	if((pb_ad = (struct party_booking_ad_info*)idb_get(party->booking_db, sd->status.char_id))!=NULL)
 	{
+#ifdef PARTY_RECRUIT
+		clif->PartyRecruitDeleteNotify(sd, pb_ad->index);
+#else
 		clif->PartyBookingDeleteNotify(sd, pb_ad->index);
+#endif
 		idb_remove(party->booking_db,sd->status.char_id);
 	}
 	return true;

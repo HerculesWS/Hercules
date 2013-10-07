@@ -14927,6 +14927,156 @@ void HP_clif_PartyBookingInsertNotify(struct map_session_data *sd, struct party_
 	}
 	return;
 }
+void HP_clif_PartyRecruitRegisterAck(struct map_session_data *sd, int flag) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_PartyRecruitRegisterAck_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, int *flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitRegisterAck_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_PartyRecruitRegisterAck_pre[hIndex].func;
+			preHookFunc(sd, &flag);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.PartyRecruitRegisterAck(sd, flag);
+	}
+	if( HPMHooks.count.HP_clif_PartyRecruitRegisterAck_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, int *flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitRegisterAck_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_PartyRecruitRegisterAck_post[hIndex].func;
+			postHookFunc(sd, &flag);
+		}
+	}
+	return;
+}
+void HP_clif_PartyRecruitDeleteAck(struct map_session_data *sd, int flag) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_PartyRecruitDeleteAck_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, int *flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitDeleteAck_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_PartyRecruitDeleteAck_pre[hIndex].func;
+			preHookFunc(sd, &flag);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.PartyRecruitDeleteAck(sd, flag);
+	}
+	if( HPMHooks.count.HP_clif_PartyRecruitDeleteAck_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, int *flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitDeleteAck_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_PartyRecruitDeleteAck_post[hIndex].func;
+			postHookFunc(sd, &flag);
+		}
+	}
+	return;
+}
+void HP_clif_PartyRecruitSearchAck(int fd, struct party_booking_ad_info **results, int count, bool more_result) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_PartyRecruitSearchAck_pre ) {
+		void (*preHookFunc) (int *fd, struct party_booking_ad_info **results, int *count, bool *more_result);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitSearchAck_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_PartyRecruitSearchAck_pre[hIndex].func;
+			preHookFunc(&fd, results, &count, &more_result);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.PartyRecruitSearchAck(fd, results, count, more_result);
+	}
+	if( HPMHooks.count.HP_clif_PartyRecruitSearchAck_post ) {
+		void (*postHookFunc) (int *fd, struct party_booking_ad_info **results, int *count, bool *more_result);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitSearchAck_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_PartyRecruitSearchAck_post[hIndex].func;
+			postHookFunc(&fd, results, &count, &more_result);
+		}
+	}
+	return;
+}
+void HP_clif_PartyRecruitUpdateNotify(struct map_session_data *sd, struct party_booking_ad_info *pb_ad) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_PartyRecruitUpdateNotify_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, struct party_booking_ad_info *pb_ad);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitUpdateNotify_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_PartyRecruitUpdateNotify_pre[hIndex].func;
+			preHookFunc(sd, pb_ad);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.PartyRecruitUpdateNotify(sd, pb_ad);
+	}
+	if( HPMHooks.count.HP_clif_PartyRecruitUpdateNotify_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, struct party_booking_ad_info *pb_ad);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitUpdateNotify_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_PartyRecruitUpdateNotify_post[hIndex].func;
+			postHookFunc(sd, pb_ad);
+		}
+	}
+	return;
+}
+void HP_clif_PartyRecruitDeleteNotify(struct map_session_data *sd, int index) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_PartyRecruitDeleteNotify_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, int *index);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitDeleteNotify_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_PartyRecruitDeleteNotify_pre[hIndex].func;
+			preHookFunc(sd, &index);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.PartyRecruitDeleteNotify(sd, index);
+	}
+	if( HPMHooks.count.HP_clif_PartyRecruitDeleteNotify_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, int *index);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitDeleteNotify_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_PartyRecruitDeleteNotify_post[hIndex].func;
+			postHookFunc(sd, &index);
+		}
+	}
+	return;
+}
+void HP_clif_PartyRecruitInsertNotify(struct map_session_data *sd, struct party_booking_ad_info *pb_ad) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_PartyRecruitInsertNotify_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, struct party_booking_ad_info *pb_ad);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitInsertNotify_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_PartyRecruitInsertNotify_pre[hIndex].func;
+			preHookFunc(sd, pb_ad);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.PartyRecruitInsertNotify(sd, pb_ad);
+	}
+	if( HPMHooks.count.HP_clif_PartyRecruitInsertNotify_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, struct party_booking_ad_info *pb_ad);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitInsertNotify_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_PartyRecruitInsertNotify_post[hIndex].func;
+			postHookFunc(sd, pb_ad);
+		}
+	}
+	return;
+}
 void HP_clif_PartyBookingVolunteerInfo(int index, struct map_session_data *sd) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_PartyBookingVolunteerInfo_pre ) {
@@ -18524,6 +18674,106 @@ void HP_clif_pPartyBookingUpdateReq(int fd, struct map_session_data *sd) {
 		void (*postHookFunc) (int *fd, struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyBookingUpdateReq_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_pPartyBookingUpdateReq_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pPartyRecruitRegisterReq(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pPartyRecruitRegisterReq_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitRegisterReq_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pPartyRecruitRegisterReq_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pPartyRecruitRegisterReq(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pPartyRecruitRegisterReq_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitRegisterReq_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pPartyRecruitRegisterReq_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pPartyRecruitSearchReq(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pPartyRecruitSearchReq_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitSearchReq_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pPartyRecruitSearchReq_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pPartyRecruitSearchReq(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pPartyRecruitSearchReq_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitSearchReq_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pPartyRecruitSearchReq_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pPartyRecruitDeleteReq(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pPartyRecruitDeleteReq_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitDeleteReq_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pPartyRecruitDeleteReq_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pPartyRecruitDeleteReq(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pPartyRecruitDeleteReq_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitDeleteReq_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pPartyRecruitDeleteReq_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pPartyRecruitUpdateReq(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pPartyRecruitUpdateReq_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitUpdateReq_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pPartyRecruitUpdateReq_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pPartyRecruitUpdateReq(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pPartyRecruitUpdateReq_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitUpdateReq_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pPartyRecruitUpdateReq_post[hIndex].func;
 			postHookFunc(&fd, sd);
 		}
 	}

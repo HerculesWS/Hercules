@@ -902,6 +902,12 @@ struct clif_interface {
 	void (*PartyBookingUpdateNotify) (struct map_session_data* sd, struct party_booking_ad_info* pb_ad);
 	void (*PartyBookingDeleteNotify) (struct map_session_data* sd, int index);
 	void (*PartyBookingInsertNotify) (struct map_session_data* sd, struct party_booking_ad_info* pb_ad);
+	void (*PartyRecruitRegisterAck) (struct map_session_data *sd, int flag);
+	void (*PartyRecruitDeleteAck) (struct map_session_data* sd, int flag);
+	void (*PartyRecruitSearchAck) (int fd, struct party_booking_ad_info** results, int count, bool more_result);
+	void (*PartyRecruitUpdateNotify) (struct map_session_data* sd, struct party_booking_ad_info* pb_ad);
+	void (*PartyRecruitDeleteNotify) (struct map_session_data* sd, int index);
+	void (*PartyRecruitInsertNotify) (struct map_session_data* sd, struct party_booking_ad_info* pb_ad);
 	/* Group Search System Update */
 	void (*PartyBookingVolunteerInfo) (int index, struct map_session_data *sd);
 	void (*PartyBookingRefuseVolunteer) (unsigned long aid, struct map_session_data *sd);
@@ -1056,6 +1062,10 @@ struct clif_interface {
 	void (*pPartyBookingSearchReq) (int fd, struct map_session_data* sd);
 	void (*pPartyBookingDeleteReq) (int fd, struct map_session_data* sd);
 	void (*pPartyBookingUpdateReq) (int fd, struct map_session_data* sd);
+	void (*pPartyRecruitRegisterReq) (int fd, struct map_session_data* sd);
+	void (*pPartyRecruitSearchReq) (int fd, struct map_session_data* sd);
+	void (*pPartyRecruitDeleteReq) (int fd, struct map_session_data* sd);
+	void (*pPartyRecruitUpdateReq) (int fd, struct map_session_data* sd);
 	void (*pCloseVending) (int fd, struct map_session_data* sd);
 	void (*pVendingListReq) (int fd, struct map_session_data* sd);
 	void (*pPurchaseReq) (int fd, struct map_session_data* sd);
