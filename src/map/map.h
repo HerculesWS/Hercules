@@ -1018,10 +1018,8 @@ struct map_interface {
 	void (*helpscreen) (bool do_exit);
 	void (*versionscreen) (bool do_exit);
 	bool (*arg_next_value) (const char *option, int i, int argc);
-#ifdef CELL_NOSTACK
 	void (*addblcell) (struct block_list *bl);
 	void (*delblcell) (struct block_list *bl);
-#endif
 };
 
 struct map_interface *map;

@@ -1893,10 +1893,8 @@ struct status_interface {
 	defType (*calc_mdef) (struct block_list *bl, struct status_change *sc, int mdef, bool viewable);
 	short (*calc_mdef2) (struct block_list *bl, struct status_change *sc, int mdef2, bool viewable);
 	unsigned short (*calc_batk)(struct block_list *bl, struct status_change *sc, int batk, bool viewable);
-#ifdef RENEWAL
 	unsigned short (*base_matk) (const struct status_data *st, int level);
 	int (*get_weapon_atk) (struct block_list *src, struct weapon_atk *watk, int flag);
-#endif
 	int (*get_total_mdef) (struct block_list *src);
 	int (*get_total_def) (struct block_list *src);
 	int (*get_matk) (struct block_list *src, int flag);
@@ -1925,18 +1923,14 @@ struct status_interface {
 	unsigned short (*calc_speed) (struct block_list *bl, struct status_change *sc, int speed);
 	short (*calc_aspd_rate) (struct block_list *bl, struct status_change *sc, int aspd_rate);
 	unsigned short (*calc_dmotion) (struct block_list *bl, struct status_change *sc, int dmotion);
-#ifdef RENEWAL_ASPD
 	short (*calc_aspd) (struct block_list *bl, struct status_change *sc, short flag);
-#endif
 	short (*calc_fix_aspd) (struct block_list *bl, struct status_change *sc, int aspd);
 	unsigned int (*calc_maxhp) (struct block_list *bl, struct status_change *sc, uint64 maxhp);
 	unsigned int (*calc_maxsp) (struct block_list *bl, struct status_change *sc, unsigned int maxsp);
 	unsigned char (*calc_element) (struct block_list *bl, struct status_change *sc, int element);
 	unsigned char (*calc_element_lv) (struct block_list *bl, struct status_change *sc, int lv);
 	unsigned short (*calc_mode) (struct block_list *bl, struct status_change *sc, int mode);
-#ifdef RENEWAL
 	unsigned short (*calc_ematk) (struct block_list *bl, struct status_change *sc, int matk);
-#endif
 	void (*calc_bl_main) (struct block_list *bl, int flag);
 	void (*display_add) (struct map_session_data *sd, enum sc_type type, int dval1, int dval2, int dval3);
 	void (*display_remove) (struct map_session_data *sd, enum sc_type type);

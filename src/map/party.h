@@ -34,6 +34,8 @@ struct party_data {
 	} state;
 };
 
+#define PB_NOTICE_LENGTH (36 + 1)
+
 #ifndef PARTY_RECRUIT
 struct party_booking_detail {
 	short level;
@@ -48,7 +50,6 @@ struct party_booking_ad_info {
 	struct party_booking_detail p_detail;
 };
 #else /* PARTY_RECRUIT */
-#define PB_NOTICE_LENGTH (36 + 1)
 struct party_booking_detail {
 	short level;
 	char notice[PB_NOTICE_LENGTH];
@@ -111,15 +112,13 @@ struct party_interface {
 	/*==========================================
 	 * Party Booking in KRO [Spiria]
 	 *------------------------------------------*/
-#ifndef PARTY_RECRUIT
 	void (*booking_register) (struct map_session_data *sd, short level, short mapid, short* job);
 	void (*booking_update) (struct map_session_data *sd, short* job);
 	void (*booking_search) (struct map_session_data *sd, short level, short mapid, short job, unsigned long lastindex, short resultcount);
-#else /* PARTY_RECRUIT */
-	void (*booking_register) (struct map_session_data *sd, short level, const char *notice);
-	void (*booking_update) (struct map_session_data *sd, const char *notice);
-	void (*booking_search) (struct map_session_data *sd, short level, short mapid, unsigned long lastindex, short resultcount);
-#endif
+	/* PARTY_RECRUIT */
+	void (*recruit_register) (struct map_session_data *sd, short level, const char *notice);
+	void (*recruit_update) (struct map_session_data *sd, const char *notice);
+	void (*recruit_search) (struct map_session_data *sd, short level, short mapid, unsigned long lastindex, short resultcount);
 	bool (*booking_delete) (struct map_session_data *sd);
 	/* */
 	int (*vforeachsamemap) (int (*func)(struct block_list *,va_list),struct map_session_data *sd,int range, va_list ap);

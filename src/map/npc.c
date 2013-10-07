@@ -212,11 +212,11 @@ struct npc_data* npc_name2id(const char* name)
 /**
  * For the Secure NPC Timeout option (check config/Secure.h) [RR]
  **/
-#ifdef SECURE_NPCTIMEOUT
 /**
  * Timer to check for idle time and timeout the dialog if necessary
  **/
 int npc_rr_secure_timeout_timer(int tid, unsigned int tick, int id, intptr_t data) {
+#ifdef SECURE_NPCTIMEOUT
 	struct map_session_data* sd = NULL;
 	unsigned int timeout = NPC_SECURE_TIMEOUT_NEXT;
 	if( (sd = map->id2sd(id)) == NULL || !sd->npc_id ) {
@@ -251,9 +251,9 @@ int npc_rr_secure_timeout_timer(int tid, unsigned int tick, int id, intptr_t dat
 		sd->npc_idle_timer = INVALID_TIMER;
 	} else //Create a new instance of ourselves to continue
 		sd->npc_idle_timer = timer->add(timer->gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc->secure_timeout_timer,sd->bl.id,0);
+#endif
 	return 0;
 }
-#endif
 
 /*==========================================
  * Dequeue event and add timer for execution (100ms)
@@ -4072,7 +4072,5 @@ void npc_defaults(void) {
 	npc->do_clear_npc = do_clear_npc;
 	npc->debug_warps_sub = npc_debug_warps_sub;
 	npc->debug_warps = npc_debug_warps;
-#ifdef SECURE_NPCTIMEOUT
 	npc->secure_timeout_timer = npc_rr_secure_timeout_timer;
-#endif
 }
