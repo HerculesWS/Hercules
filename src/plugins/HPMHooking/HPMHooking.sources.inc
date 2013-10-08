@@ -1,3 +1,9 @@
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+//
+// NOTE: This file was auto-generated and should never be manually edited,
+//       as it will get overwritten.
+
 memcpy(&HPMHooks.source.atcommand, atcommand, sizeof(struct atcommand_interface));
 memcpy(&HPMHooks.source.battle, battle, sizeof(struct battle_interface));
 memcpy(&HPMHooks.source.bg, bg, sizeof(struct battleground_interface));

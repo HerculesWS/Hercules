@@ -92,6 +92,8 @@ Thumbs.db
 /tools/*.exe
 /tools/*.ilk
 /tools/*.pdb
+/tools/HPMHookGen/Makefile
+/tools/HPMHookGen/doxyoutput
 
 # /vcproj-12/
 /vcproj-12/map-server

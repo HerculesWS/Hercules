@@ -1,3 +1,9 @@
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+//
+// NOTE: This file was auto-generated and should never be manually edited,
+//       as it will get overwritten.
+
 if( !(atcommand = GET_SYMBOL("atcommand") ) ) return false;
 if( !(battle = GET_SYMBOL("battle") ) ) return false;
 if( !(bg = GET_SYMBOL("battlegrounds") ) ) return false;
