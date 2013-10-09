@@ -6977,14 +6977,42 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					map->freeblock_unlock();
 					return 0;
 				}
-				status->change_start(bl,SC_STUN,10000,skill_lv,0,0,0,skill->get_time2(skill_id,skill_lv),8);
+				// if only one parent is online but not in distance, skill fails
+				// online check must come before distance check or map server will crash
+				if(!f_sd && m_sd) {
+					if(!check_distance_bl(bl,&m_sd->bl,AREA_SIZE)) {
+						clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+						map->freeblock_unlock();
+						return 0;
+					}
+				}
+				if(f_sd && !m_sd) {
+					if(!check_distance_bl(bl,&f_sd->bl,AREA_SIZE)) {
+						clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+						map->freeblock_unlock();
+						return 0;
+					}
+				}
+				// if both parents are online but not in distance, skill fails
+				if(f_sd && m_sd) {
+					if (!check_distance_bl(bl,&f_sd->bl,AREA_SIZE) && !check_distance_bl(bl,&m_sd->bl,AREA_SIZE)) {
+						clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+						map->freeblock_unlock();
+						return 0;
+					}
+				}
+				status->change_start(bl,SC_STUN,10000,skill_lv,0,0,0,skill->get_time2(skill_id,skill_lv),8); 
 				if (f_sd) {
+					if (check_distance_bl(bl,&f_sd->bl,AREA_SIZE)) {
 					sc_start(&f_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
 					clif->specialeffect(&f_sd->bl,408,AREA);
+					}
 				}
 				if (m_sd) {
+					if (check_distance_bl(bl,&m_sd->bl,AREA_SIZE)) {
 					sc_start(&m_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
 					clif->specialeffect(&m_sd->bl,408,AREA);
+					}
 				}
 			}
 			break;
