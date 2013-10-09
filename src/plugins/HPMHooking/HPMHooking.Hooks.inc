@@ -1,3 +1,9 @@
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+//
+// NOTE: This file was auto-generated and should never be manually edited,
+//       as it will get overwritten.
+
 /* atcommand */
 void HP_atcommand_init(void) {
 	int hIndex = 0;
@@ -51,8 +57,7 @@ void HP_atcommand_final(void) {
 }
 bool HP_atcommand_parse(const int fd, struct map_session_data *sd, const char *message, int type) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_atcommand_parse_pre ) {
 		bool (*preHookFunc) (const int *fd, struct map_session_data *sd, const char *message, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_parse_pre; hIndex++ ) {
@@ -78,8 +83,7 @@ bool HP_atcommand_parse(const int fd, struct map_session_data *sd, const char *m
 }
 bool HP_atcommand_create(char *name, AtCommandFunc func) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_atcommand_create_pre ) {
 		bool (*preHookFunc) (char *name, AtCommandFunc *func);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_create_pre; hIndex++ ) {
@@ -105,8 +109,7 @@ bool HP_atcommand_create(char *name, AtCommandFunc func) {
 }
 bool HP_atcommand_can_use(struct map_session_data *sd, const char *command) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_atcommand_can_use_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, const char *command);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_can_use_pre; hIndex++ ) {
@@ -132,8 +135,7 @@ bool HP_atcommand_can_use(struct map_session_data *sd, const char *command) {
 }
 bool HP_atcommand_can_use2(struct map_session_data *sd, const char *command, AtCommandType type) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_atcommand_can_use2_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, const char *command, AtCommandType *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_can_use2_pre; hIndex++ ) {
@@ -210,8 +212,7 @@ AtCommandInfo* HP_atcommand_exists(const char *name) {
 }
 int HP_atcommand_msg_read(const char *cfgName) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_atcommand_msg_read_pre ) {
 		int (*preHookFunc) (const char *cfgName);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_msg_read_pre; hIndex++ ) {
@@ -390,8 +391,7 @@ void HP_atcommand_config_read(const char *config_filename) {
 }
 int HP_atcommand_stopattack(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_atcommand_stopattack_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_stopattack_pre; hIndex++ ) {
@@ -423,8 +423,7 @@ int HP_atcommand_stopattack(struct block_list *bl, va_list ap) {
 }
 int HP_atcommand_pvpoff_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_atcommand_pvpoff_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_pvpoff_sub_pre; hIndex++ ) {
@@ -456,8 +455,7 @@ int HP_atcommand_pvpoff_sub(struct block_list *bl, va_list ap) {
 }
 int HP_atcommand_pvpon_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_atcommand_pvpon_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_pvpon_sub_pre; hIndex++ ) {
@@ -489,8 +487,7 @@ int HP_atcommand_pvpon_sub(struct block_list *bl, va_list ap) {
 }
 int HP_atcommand_atkillmonster_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_atcommand_atkillmonster_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_atkillmonster_sub_pre; hIndex++ ) {
@@ -572,8 +569,7 @@ void HP_atcommand_get_jail_time(int jailtime, int *year, int *month, int *day, i
 }
 int HP_atcommand_cleanfloor_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_atcommand_cleanfloor_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_cleanfloor_sub_pre; hIndex++ ) {
@@ -605,8 +601,7 @@ int HP_atcommand_cleanfloor_sub(struct block_list *bl, va_list ap) {
 }
 int HP_atcommand_mutearea_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_atcommand_mutearea_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_mutearea_sub_pre; hIndex++ ) {
@@ -688,8 +683,7 @@ void HP_atcommand_cmd_db_clear(void) {
 }
 int HP_atcommand_cmd_db_clear_sub(DBKey key, DBData *data, va_list args) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_atcommand_cmd_db_clear_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list args);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_cmd_db_clear_sub_pre; hIndex++ ) {
@@ -849,8 +843,7 @@ struct Damage HP_battle_calc_attack(int attack_type, struct block_list *bl, stru
 }
 int64 HP_battle_calc_damage(struct block_list *src, struct block_list *bl, struct Damage *d, int64 damage, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int64 retVal___;
-	memset(&retVal___, '\0', sizeof(int64));
+	int64 retVal___ = 0;
 	if( HPMHooks.count.HP_battle_calc_damage_pre ) {
 		int64 (*preHookFunc) (struct block_list *src, struct block_list *bl, struct Damage *d, int64 *damage, uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_damage_pre; hIndex++ ) {
@@ -876,8 +869,7 @@ int64 HP_battle_calc_damage(struct block_list *src, struct block_list *bl, struc
 }
 int64 HP_battle_calc_gvg_damage(struct block_list *src, struct block_list *bl, int64 damage, int div_, uint16 skill_id, uint16 skill_lv, int flag) {
 	int hIndex = 0;
-	int64 retVal___;
-	memset(&retVal___, '\0', sizeof(int64));
+	int64 retVal___ = 0;
 	if( HPMHooks.count.HP_battle_calc_gvg_damage_pre ) {
 		int64 (*preHookFunc) (struct block_list *src, struct block_list *bl, int64 *damage, int *div_, uint16 *skill_id, uint16 *skill_lv, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_gvg_damage_pre; hIndex++ ) {
@@ -903,8 +895,7 @@ int64 HP_battle_calc_gvg_damage(struct block_list *src, struct block_list *bl, i
 }
 int64 HP_battle_calc_bg_damage(struct block_list *src, struct block_list *bl, int64 damage, int div_, uint16 skill_id, uint16 skill_lv, int flag) {
 	int hIndex = 0;
-	int64 retVal___;
-	memset(&retVal___, '\0', sizeof(int64));
+	int64 retVal___ = 0;
 	if( HPMHooks.count.HP_battle_calc_bg_damage_pre ) {
 		int64 (*preHookFunc) (struct block_list *src, struct block_list *bl, int64 *damage, int *div_, uint16 *skill_id, uint16 *skill_lv, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_bg_damage_pre; hIndex++ ) {
@@ -930,8 +921,7 @@ int64 HP_battle_calc_bg_damage(struct block_list *src, struct block_list *bl, in
 }
 enum damage_lv HP_battle_weapon_attack(struct block_list *bl, struct block_list *target, unsigned int tick, int flag) {
 	int hIndex = 0;
-	enum damage_lv retVal___;
-	memset(&retVal___, '\0', sizeof(enum damage_lv));
+	enum damage_lv retVal___ = ATK_NONE;
 	if( HPMHooks.count.HP_battle_weapon_attack_pre ) {
 		enum damage_lv (*preHookFunc) (struct block_list *bl, struct block_list *target, unsigned int *tick, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_weapon_attack_pre; hIndex++ ) {
@@ -984,8 +974,7 @@ struct Damage HP_battle_calc_weapon_attack(struct block_list *src, struct block_
 }
 int HP_battle_delay_damage(unsigned int tick, int amotion, struct block_list *src, struct block_list *target, int attack_type, uint16 skill_id, uint16 skill_lv, int64 damage, enum damage_lv dmg_lv, int ddelay, bool additional_effects) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_delay_damage_pre ) {
 		int (*preHookFunc) (unsigned int *tick, int *amotion, struct block_list *src, struct block_list *target, int *attack_type, uint16 *skill_id, uint16 *skill_lv, int64 *damage, enum damage_lv *dmg_lv, int *ddelay, bool *additional_effects);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_delay_damage_pre; hIndex++ ) {
@@ -1036,8 +1025,7 @@ void HP_battle_drain(struct map_session_data *sd, struct block_list *tbl, int64 
 }
 int64 HP_battle_calc_return_damage(struct block_list *bl, struct block_list *src, int64 *p1, int flag, uint16 skill_id, int *rdelay) {
 	int hIndex = 0;
-	int64 retVal___;
-	memset(&retVal___, '\0', sizeof(int64));
+	int64 retVal___ = 0;
 	if( HPMHooks.count.HP_battle_calc_return_damage_pre ) {
 		int64 (*preHookFunc) (struct block_list *bl, struct block_list *src, int64 *p1, int *flag, uint16 *skill_id, int *rdelay);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_return_damage_pre; hIndex++ ) {
@@ -1063,8 +1051,7 @@ int64 HP_battle_calc_return_damage(struct block_list *bl, struct block_list *src
 }
 int HP_battle_attr_ratio(int atk_elem, int def_type, int def_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_attr_ratio_pre ) {
 		int (*preHookFunc) (int *atk_elem, int *def_type, int *def_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_attr_ratio_pre; hIndex++ ) {
@@ -1090,8 +1077,7 @@ int HP_battle_attr_ratio(int atk_elem, int def_type, int def_lv) {
 }
 int64 HP_battle_attr_fix(struct block_list *src, struct block_list *target, int64 damage, int atk_elem, int def_type, int def_lv) {
 	int hIndex = 0;
-	int64 retVal___;
-	memset(&retVal___, '\0', sizeof(int64));
+	int64 retVal___ = 0;
 	if( HPMHooks.count.HP_battle_attr_fix_pre ) {
 		int64 (*preHookFunc) (struct block_list *src, struct block_list *target, int64 *damage, int *atk_elem, int *def_type, int *def_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_attr_fix_pre; hIndex++ ) {
@@ -1117,8 +1103,7 @@ int64 HP_battle_attr_fix(struct block_list *src, struct block_list *target, int6
 }
 int64 HP_battle_calc_cardfix(int attack_type, struct block_list *src, struct block_list *target, int nk, int s_ele, int s_ele_, int64 damage, int left, int flag) {
 	int hIndex = 0;
-	int64 retVal___;
-	memset(&retVal___, '\0', sizeof(int64));
+	int64 retVal___ = 0;
 	if( HPMHooks.count.HP_battle_calc_cardfix_pre ) {
 		int64 (*preHookFunc) (int *attack_type, struct block_list *src, struct block_list *target, int *nk, int *s_ele, int *s_ele_, int64 *damage, int *left, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_cardfix_pre; hIndex++ ) {
@@ -1144,8 +1129,7 @@ int64 HP_battle_calc_cardfix(int attack_type, struct block_list *src, struct blo
 }
 int64 HP_battle_calc_elefix(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, int nk, int n_ele, int s_ele, int s_ele_, bool left, int flag) {
 	int hIndex = 0;
-	int64 retVal___;
-	memset(&retVal___, '\0', sizeof(int64));
+	int64 retVal___ = 0;
 	if( HPMHooks.count.HP_battle_calc_elefix_pre ) {
 		int64 (*preHookFunc) (struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int64 *damage, int *nk, int *n_ele, int *s_ele, int *s_ele_, bool *left, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_elefix_pre; hIndex++ ) {
@@ -1171,8 +1155,7 @@ int64 HP_battle_calc_elefix(struct block_list *src, struct block_list *target, u
 }
 int64 HP_battle_calc_masteryfix(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, int div, bool left, bool weapon) {
 	int hIndex = 0;
-	int64 retVal___;
-	memset(&retVal___, '\0', sizeof(int64));
+	int64 retVal___ = 0;
 	if( HPMHooks.count.HP_battle_calc_masteryfix_pre ) {
 		int64 (*preHookFunc) (struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int64 *damage, int *div, bool *left, bool *weapon);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_masteryfix_pre; hIndex++ ) {
@@ -1198,8 +1181,7 @@ int64 HP_battle_calc_masteryfix(struct block_list *src, struct block_list *targe
 }
 int HP_battle_calc_skillratio(int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int skillratio, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_calc_skillratio_pre ) {
 		int (*preHookFunc) (int *attack_type, struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *skillratio, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_skillratio_pre; hIndex++ ) {
@@ -1225,8 +1207,7 @@ int HP_battle_calc_skillratio(int attack_type, struct block_list *src, struct bl
 }
 int64 HP_battle_calc_sizefix(struct map_session_data *sd, int64 damage, int type, int size, bool ignore) {
 	int hIndex = 0;
-	int64 retVal___;
-	memset(&retVal___, '\0', sizeof(int64));
+	int64 retVal___ = 0;
 	if( HPMHooks.count.HP_battle_calc_sizefix_pre ) {
 		int64 (*preHookFunc) (struct map_session_data *sd, int64 *damage, int *type, int *size, bool *ignore);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_sizefix_pre; hIndex++ ) {
@@ -1252,8 +1233,7 @@ int64 HP_battle_calc_sizefix(struct map_session_data *sd, int64 damage, int type
 }
 int64 HP_battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, struct weapon_atk *watk, int nk, bool n_ele, short s_ele, short s_ele_, int size, int type, int flag, int flag2) {
 	int hIndex = 0;
-	int64 retVal___;
-	memset(&retVal___, '\0', sizeof(int64));
+	int64 retVal___ = 0;
 	if( HPMHooks.count.HP_battle_calc_weapon_damage_pre ) {
 		int64 (*preHookFunc) (struct block_list *src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, struct weapon_atk *watk, int *nk, bool *n_ele, short *s_ele, short *s_ele_, int *size, int *type, int *flag, int *flag2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_weapon_damage_pre; hIndex++ ) {
@@ -1279,8 +1259,7 @@ int64 HP_battle_calc_weapon_damage(struct block_list *src, struct block_list *bl
 }
 int64 HP_battle_calc_defense(int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, int flag, int pdef) {
 	int hIndex = 0;
-	int64 retVal___;
-	memset(&retVal___, '\0', sizeof(int64));
+	int64 retVal___ = 0;
 	if( HPMHooks.count.HP_battle_calc_defense_pre ) {
 		int64 (*preHookFunc) (int *attack_type, struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int64 *damage, int *flag, int *pdef);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_defense_pre; hIndex++ ) {
@@ -1384,8 +1363,7 @@ struct block_list* HP_battle_get_enemy(struct block_list *target, int type, int 
 }
 int HP_battle_get_target(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_get_target_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_get_target_pre; hIndex++ ) {
@@ -1411,8 +1389,7 @@ int HP_battle_get_target(struct block_list *bl) {
 }
 int HP_battle_get_current_skill(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_get_current_skill_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_get_current_skill_pre; hIndex++ ) {
@@ -1438,8 +1415,7 @@ int HP_battle_get_current_skill(struct block_list *bl) {
 }
 int HP_battle_check_undead(int race, int element) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_check_undead_pre ) {
 		int (*preHookFunc) (int *race, int *element);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_check_undead_pre; hIndex++ ) {
@@ -1465,8 +1441,7 @@ int HP_battle_check_undead(int race, int element) {
 }
 int HP_battle_check_target(struct block_list *src, struct block_list *target, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_check_target_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *target, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_check_target_pre; hIndex++ ) {
@@ -1492,8 +1467,7 @@ int HP_battle_check_target(struct block_list *src, struct block_list *target, in
 }
 bool HP_battle_check_range(struct block_list *src, struct block_list *bl, int range) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_battle_check_range_pre ) {
 		bool (*preHookFunc) (struct block_list *src, struct block_list *bl, int *range);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_check_range_pre; hIndex++ ) {
@@ -1544,8 +1518,7 @@ void HP_battle_consume_ammo(struct map_session_data *sd, int skill_id, int lv) {
 }
 int HP_battle_get_targeted_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_get_targeted_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_get_targeted_sub_pre; hIndex++ ) {
@@ -1577,8 +1550,7 @@ int HP_battle_get_targeted_sub(struct block_list *bl, va_list ap) {
 }
 int HP_battle_get_enemy_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_get_enemy_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_get_enemy_sub_pre; hIndex++ ) {
@@ -1610,8 +1582,7 @@ int HP_battle_get_enemy_sub(struct block_list *bl, va_list ap) {
 }
 int HP_battle_get_enemy_area_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_get_enemy_area_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_get_enemy_area_sub_pre; hIndex++ ) {
@@ -1643,8 +1614,7 @@ int HP_battle_get_enemy_area_sub(struct block_list *bl, va_list ap) {
 }
 int HP_battle_delay_damage_sub(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_delay_damage_sub_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_delay_damage_sub_pre; hIndex++ ) {
@@ -1670,8 +1640,7 @@ int HP_battle_delay_damage_sub(int tid, unsigned int tick, int id, intptr_t data
 }
 int HP_battle_blewcount_bonus(struct map_session_data *sd, uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_blewcount_bonus_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_blewcount_bonus_pre; hIndex++ ) {
@@ -1697,8 +1666,7 @@ int HP_battle_blewcount_bonus(struct map_session_data *sd, uint16 skill_id) {
 }
 int HP_battle_range_type(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_range_type_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_range_type_pre; hIndex++ ) {
@@ -1724,8 +1692,7 @@ int HP_battle_range_type(struct block_list *src, struct block_list *target, uint
 }
 int64 HP_battle_calc_base_damage(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, int flag, int flag2) {
 	int hIndex = 0;
-	int64 retVal___;
-	memset(&retVal___, '\0', sizeof(int64));
+	int64 retVal___ = 0;
 	if( HPMHooks.count.HP_battle_calc_base_damage_pre ) {
 		int64 (*preHookFunc) (struct block_list *src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int *nk, bool *n_ele, short *s_ele, short *s_ele_, int *type, int *flag, int *flag2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_base_damage_pre; hIndex++ ) {
@@ -1751,8 +1718,7 @@ int64 HP_battle_calc_base_damage(struct block_list *src, struct block_list *bl, 
 }
 int64 HP_battle_calc_base_damage2(struct status_data *st, struct weapon_atk *wa, struct status_change *sc, unsigned short t_size, struct map_session_data *sd, int flag) {
 	int hIndex = 0;
-	int64 retVal___;
-	memset(&retVal___, '\0', sizeof(int64));
+	int64 retVal___ = 0;
 	if( HPMHooks.count.HP_battle_calc_base_damage2_pre ) {
 		int64 (*preHookFunc) (struct status_data *st, struct weapon_atk *wa, struct status_change *sc, unsigned short *t_size, struct map_session_data *sd, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_base_damage2_pre; hIndex++ ) {
@@ -1832,8 +1798,7 @@ struct Damage HP_battle_calc_magic_attack(struct block_list *src, struct block_l
 }
 int HP_battle_adjust_skill_damage(int m, unsigned short skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_adjust_skill_damage_pre ) {
 		int (*preHookFunc) (int *m, unsigned short *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_adjust_skill_damage_pre; hIndex++ ) {
@@ -1859,8 +1824,7 @@ int HP_battle_adjust_skill_damage(int m, unsigned short skill_id) {
 }
 int64 HP_battle_add_mastery(struct map_session_data *sd, struct block_list *target, int64 dmg, int type) {
 	int hIndex = 0;
-	int64 retVal___;
-	memset(&retVal___, '\0', sizeof(int64));
+	int64 retVal___ = 0;
 	if( HPMHooks.count.HP_battle_add_mastery_pre ) {
 		int64 (*preHookFunc) (struct map_session_data *sd, struct block_list *target, int64 *dmg, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_add_mastery_pre; hIndex++ ) {
@@ -1886,8 +1850,7 @@ int64 HP_battle_add_mastery(struct map_session_data *sd, struct block_list *targ
 }
 int HP_battle_calc_drain(int64 damage, int rate, int per) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_calc_drain_pre ) {
 		int (*preHookFunc) (int64 *damage, int *rate, int *per);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_calc_drain_pre; hIndex++ ) {
@@ -1913,8 +1876,7 @@ int HP_battle_calc_drain(int64 damage, int rate, int per) {
 }
 int HP_battle_config_read(const char *cfgName) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_config_read_pre ) {
 		int (*preHookFunc) (const char *cfgName);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_read_pre; hIndex++ ) {
@@ -1965,8 +1927,7 @@ void HP_battle_config_set_defaults(void) {
 }
 int HP_battle_config_set_value(const char *w1, const char *w2) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_config_set_value_pre ) {
 		int (*preHookFunc) (const char *w1, const char *w2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_set_value_pre; hIndex++ ) {
@@ -1992,8 +1953,7 @@ int HP_battle_config_set_value(const char *w1, const char *w2) {
 }
 int HP_battle_config_get_value(const char *w1) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_config_get_value_pre ) {
 		int (*preHookFunc) (const char *w1);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_get_value_pre; hIndex++ ) {
@@ -2070,8 +2030,7 @@ struct block_list* HP_battle_get_enemy_area(struct block_list *src, int x, int y
 }
 int HP_battle_damage_area(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_battle_damage_area_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_damage_area_pre; hIndex++ ) {
@@ -2205,8 +2164,7 @@ void HP_bg_queue_add(struct map_session_data *sd, struct bg_arena *arena, enum b
 }
 enum BATTLEGROUNDS_QUEUE_ACK HP_bg_can_queue(struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type) {
 	int hIndex = 0;
-	enum BATTLEGROUNDS_QUEUE_ACK retVal___;
-	memset(&retVal___, '\0', sizeof(enum BATTLEGROUNDS_QUEUE_ACK));
+	enum BATTLEGROUNDS_QUEUE_ACK retVal___ = BGQA_SUCCESS;
 	if( HPMHooks.count.HP_bg_can_queue_pre ) {
 		enum BATTLEGROUNDS_QUEUE_ACK (*preHookFunc) (struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_can_queue_pre; hIndex++ ) {
@@ -2232,8 +2190,7 @@ enum BATTLEGROUNDS_QUEUE_ACK HP_bg_can_queue(struct map_session_data *sd, struct
 }
 int HP_bg_id2pos(int queue_id, int account_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_bg_id2pos_pre ) {
 		int (*preHookFunc) (int *queue_id, int *account_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_id2pos_pre; hIndex++ ) {
@@ -2309,8 +2266,7 @@ void HP_bg_begin(struct bg_arena *arena) {
 }
 int HP_bg_begin_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_bg_begin_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_begin_timer_pre; hIndex++ ) {
@@ -2361,8 +2317,7 @@ void HP_bg_queue_pregame(struct bg_arena *arena) {
 }
 int HP_bg_fillup_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_bg_fillup_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_fillup_timer_pre; hIndex++ ) {
@@ -2515,8 +2470,7 @@ struct map_session_data* HP_bg_getavailablesd(struct battleground_data *bgd) {
 }
 int HP_bg_team_delete(int bg_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_bg_team_delete_pre ) {
 		int (*preHookFunc) (int *bg_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_team_delete_pre; hIndex++ ) {
@@ -2542,8 +2496,7 @@ int HP_bg_team_delete(int bg_id) {
 }
 int HP_bg_team_warp(int bg_id, unsigned short mapindex, short x, short y) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_bg_team_warp_pre ) {
 		int (*preHookFunc) (int *bg_id, unsigned short *mapindex, short *x, short *y);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_team_warp_pre; hIndex++ ) {
@@ -2569,8 +2522,7 @@ int HP_bg_team_warp(int bg_id, unsigned short mapindex, short x, short y) {
 }
 int HP_bg_send_dot_remove(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_bg_send_dot_remove_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_send_dot_remove_pre; hIndex++ ) {
@@ -2596,8 +2548,7 @@ int HP_bg_send_dot_remove(struct map_session_data *sd) {
 }
 int HP_bg_team_join(int bg_id, struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_bg_team_join_pre ) {
 		int (*preHookFunc) (int *bg_id, struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_team_join_pre; hIndex++ ) {
@@ -2623,8 +2574,7 @@ int HP_bg_team_join(int bg_id, struct map_session_data *sd) {
 }
 int HP_bg_team_leave(struct map_session_data *sd, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_bg_team_leave_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_team_leave_pre; hIndex++ ) {
@@ -2650,8 +2600,7 @@ int HP_bg_team_leave(struct map_session_data *sd, int flag) {
 }
 int HP_bg_member_respawn(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_bg_member_respawn_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_member_respawn_pre; hIndex++ ) {
@@ -2677,8 +2626,7 @@ int HP_bg_member_respawn(struct map_session_data *sd) {
 }
 int HP_bg_create(unsigned short mapindex, short rx, short ry, const char *ev, const char *dev) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_bg_create_pre ) {
 		int (*preHookFunc) (unsigned short *mapindex, short *rx, short *ry, const char *ev, const char *dev);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_create_pre; hIndex++ ) {
@@ -2704,8 +2652,7 @@ int HP_bg_create(unsigned short mapindex, short rx, short ry, const char *ev, co
 }
 int HP_bg_team_get_id(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_bg_team_get_id_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_team_get_id_pre; hIndex++ ) {
@@ -2731,8 +2678,7 @@ int HP_bg_team_get_id(struct block_list *bl) {
 }
 int HP_bg_send_message(struct map_session_data *sd, const char *mes, int len) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_bg_send_message_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *mes, int *len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_send_message_pre; hIndex++ ) {
@@ -2758,8 +2704,7 @@ int HP_bg_send_message(struct map_session_data *sd, const char *mes, int len) {
 }
 int HP_bg_send_xy_timer_sub(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_bg_send_xy_timer_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_send_xy_timer_sub_pre; hIndex++ ) {
@@ -2791,8 +2736,7 @@ int HP_bg_send_xy_timer_sub(DBKey key, DBData *data, va_list ap) {
 }
 int HP_bg_send_xy_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_bg_send_xy_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_send_xy_timer_pre; hIndex++ ) {
@@ -2844,8 +2788,7 @@ void HP_bg_config_read(void) {
 /* buyingstore */
 bool HP_buyingstore_setup(struct map_session_data *sd, unsigned char slots) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_buyingstore_setup_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, unsigned char *slots);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_buyingstore_setup_pre; hIndex++ ) {
@@ -2971,8 +2914,7 @@ void HP_buyingstore_trade(struct map_session_data *sd, int account_id, unsigned 
 }
 bool HP_buyingstore_search(struct map_session_data *sd, unsigned short nameid) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_buyingstore_search_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, unsigned short *nameid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_buyingstore_search_pre; hIndex++ ) {
@@ -2998,8 +2940,7 @@ bool HP_buyingstore_search(struct map_session_data *sd, unsigned short nameid) {
 }
 bool HP_buyingstore_searchall(struct map_session_data *sd, const struct s_search_store_search *s) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_buyingstore_searchall_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, const struct s_search_store_search *s);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_buyingstore_searchall_pre; hIndex++ ) {
@@ -3025,8 +2966,7 @@ bool HP_buyingstore_searchall(struct map_session_data *sd, const struct s_search
 }
 unsigned int HP_buyingstore_getuid(void) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_buyingstore_getuid_pre ) {
 		unsigned int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_buyingstore_getuid_pre; hIndex++ ) {
@@ -3053,8 +2993,7 @@ unsigned int HP_buyingstore_getuid(void) {
 /* chat */
 int HP_chat_create_pc_chat(struct map_session_data *sd, const char *title, const char *pass, int limit, bool pub) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chat_create_pc_chat_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *title, const char *pass, int *limit, bool *pub);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_create_pc_chat_pre; hIndex++ ) {
@@ -3080,8 +3019,7 @@ int HP_chat_create_pc_chat(struct map_session_data *sd, const char *title, const
 }
 int HP_chat_join(struct map_session_data *sd, int chatid, const char *pass) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chat_join_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *chatid, const char *pass);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_join_pre; hIndex++ ) {
@@ -3107,8 +3045,7 @@ int HP_chat_join(struct map_session_data *sd, int chatid, const char *pass) {
 }
 int HP_chat_leave(struct map_session_data *sd, bool kicked) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chat_leave_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, bool *kicked);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_leave_pre; hIndex++ ) {
@@ -3134,8 +3071,7 @@ int HP_chat_leave(struct map_session_data *sd, bool kicked) {
 }
 int HP_chat_change_owner(struct map_session_data *sd, const char *nextownername) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chat_change_owner_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *nextownername);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_change_owner_pre; hIndex++ ) {
@@ -3161,8 +3097,7 @@ int HP_chat_change_owner(struct map_session_data *sd, const char *nextownername)
 }
 int HP_chat_change_status(struct map_session_data *sd, const char *title, const char *pass, int limit, bool pub) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chat_change_status_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *title, const char *pass, int *limit, bool *pub);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_change_status_pre; hIndex++ ) {
@@ -3188,8 +3123,7 @@ int HP_chat_change_status(struct map_session_data *sd, const char *title, const 
 }
 int HP_chat_kick(struct map_session_data *sd, const char *kickusername) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chat_kick_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *kickusername);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_kick_pre; hIndex++ ) {
@@ -3215,8 +3149,7 @@ int HP_chat_kick(struct map_session_data *sd, const char *kickusername) {
 }
 int HP_chat_create_npc_chat(struct npc_data *nd, const char *title, int limit, bool pub, int trigger, const char *ev, int zeny, int minLvl, int maxLvl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chat_create_npc_chat_pre ) {
 		int (*preHookFunc) (struct npc_data *nd, const char *title, int *limit, bool *pub, int *trigger, const char *ev, int *zeny, int *minLvl, int *maxLvl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_create_npc_chat_pre; hIndex++ ) {
@@ -3242,8 +3175,7 @@ int HP_chat_create_npc_chat(struct npc_data *nd, const char *title, int limit, b
 }
 int HP_chat_delete_npc_chat(struct npc_data *nd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chat_delete_npc_chat_pre ) {
 		int (*preHookFunc) (struct npc_data *nd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_delete_npc_chat_pre; hIndex++ ) {
@@ -3269,8 +3201,7 @@ int HP_chat_delete_npc_chat(struct npc_data *nd) {
 }
 int HP_chat_enable_event(struct chat_data *cd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chat_enable_event_pre ) {
 		int (*preHookFunc) (struct chat_data *cd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_enable_event_pre; hIndex++ ) {
@@ -3296,8 +3227,7 @@ int HP_chat_enable_event(struct chat_data *cd) {
 }
 int HP_chat_disable_event(struct chat_data *cd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chat_disable_event_pre ) {
 		int (*preHookFunc) (struct chat_data *cd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_disable_event_pre; hIndex++ ) {
@@ -3323,8 +3253,7 @@ int HP_chat_disable_event(struct chat_data *cd) {
 }
 int HP_chat_npc_kick_all(struct chat_data *cd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chat_npc_kick_all_pre ) {
 		int (*preHookFunc) (struct chat_data *cd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_npc_kick_all_pre; hIndex++ ) {
@@ -3350,8 +3279,7 @@ int HP_chat_npc_kick_all(struct chat_data *cd) {
 }
 int HP_chat_trigger_event(struct chat_data *cd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chat_trigger_event_pre ) {
 		int (*preHookFunc) (struct chat_data *cd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_trigger_event_pre; hIndex++ ) {
@@ -3404,8 +3332,7 @@ struct chat_data* HP_chat_create(struct block_list *bl, const char *title, const
 /* chrif */
 int HP_chrif_final(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_final_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_final_pre; hIndex++ ) {
@@ -3431,8 +3358,7 @@ int HP_chrif_final(void) {
 }
 int HP_chrif_init(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_init_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_init_pre; hIndex++ ) {
@@ -3533,8 +3459,7 @@ void HP_chrif_checkdefaultlogin(void) {
 }
 int HP_chrif_setip(const char *ip) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_setip_pre ) {
 		int (*preHookFunc) (const char *ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_setip_pre; hIndex++ ) {
@@ -3585,8 +3510,7 @@ void HP_chrif_setport(uint16 port) {
 }
 int HP_chrif_isconnected(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_isconnected_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_isconnected_pre; hIndex++ ) {
@@ -3689,8 +3613,7 @@ struct auth_node* HP_chrif_auth_check(int account_id, int char_id, enum sd_state
 }
 bool HP_chrif_auth_delete(int account_id, int char_id, enum sd_state state) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_chrif_auth_delete_pre ) {
 		bool (*preHookFunc) (int *account_id, int *char_id, enum sd_state *state);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_auth_delete_pre; hIndex++ ) {
@@ -3716,8 +3639,7 @@ bool HP_chrif_auth_delete(int account_id, int char_id, enum sd_state state) {
 }
 bool HP_chrif_auth_finished(struct map_session_data *sd) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_chrif_auth_finished_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_auth_finished_pre; hIndex++ ) {
@@ -3793,8 +3715,7 @@ void HP_chrif_authok(int fd) {
 }
 int HP_chrif_scdata_request(int account_id, int char_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_scdata_request_pre ) {
 		int (*preHookFunc) (int *account_id, int *char_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_scdata_request_pre; hIndex++ ) {
@@ -3820,8 +3741,7 @@ int HP_chrif_scdata_request(int account_id, int char_id) {
 }
 int HP_chrif_save(struct map_session_data *sd, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_save_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_save_pre; hIndex++ ) {
@@ -3847,8 +3767,7 @@ int HP_chrif_save(struct map_session_data *sd, int flag) {
 }
 int HP_chrif_charselectreq(struct map_session_data *sd, uint32 s_ip) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_charselectreq_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint32 *s_ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_charselectreq_pre; hIndex++ ) {
@@ -3874,8 +3793,7 @@ int HP_chrif_charselectreq(struct map_session_data *sd, uint32 s_ip) {
 }
 int HP_chrif_changemapserver(struct map_session_data *sd, uint32 ip, uint16 port) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_changemapserver_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint32 *ip, uint16 *port);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_changemapserver_pre; hIndex++ ) {
@@ -3901,8 +3819,7 @@ int HP_chrif_changemapserver(struct map_session_data *sd, uint32 ip, uint16 port
 }
 int HP_chrif_searchcharid(int char_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_searchcharid_pre ) {
 		int (*preHookFunc) (int *char_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_searchcharid_pre; hIndex++ ) {
@@ -3928,8 +3845,7 @@ int HP_chrif_searchcharid(int char_id) {
 }
 int HP_chrif_changeemail(int id, const char *actual_email, const char *new_email) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_changeemail_pre ) {
 		int (*preHookFunc) (int *id, const char *actual_email, const char *new_email);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_changeemail_pre; hIndex++ ) {
@@ -3955,8 +3871,7 @@ int HP_chrif_changeemail(int id, const char *actual_email, const char *new_email
 }
 int HP_chrif_char_ask_name(int acc, const char *character_name, unsigned short operation_type, int year, int month, int day, int hour, int minute, int second) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_char_ask_name_pre ) {
 		int (*preHookFunc) (int *acc, const char *character_name, unsigned short *operation_type, int *year, int *month, int *day, int *hour, int *minute, int *second);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_char_ask_name_pre; hIndex++ ) {
@@ -3982,8 +3897,7 @@ int HP_chrif_char_ask_name(int acc, const char *character_name, unsigned short o
 }
 int HP_chrif_updatefamelist(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_updatefamelist_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_updatefamelist_pre; hIndex++ ) {
@@ -4009,8 +3923,7 @@ int HP_chrif_updatefamelist(struct map_session_data *sd) {
 }
 int HP_chrif_buildfamelist(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_buildfamelist_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_buildfamelist_pre; hIndex++ ) {
@@ -4036,8 +3949,7 @@ int HP_chrif_buildfamelist(void) {
 }
 int HP_chrif_save_scdata(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_save_scdata_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_save_scdata_pre; hIndex++ ) {
@@ -4063,8 +3975,7 @@ int HP_chrif_save_scdata(struct map_session_data *sd) {
 }
 int HP_chrif_ragsrvinfo(int base_rate, int job_rate, int drop_rate) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_ragsrvinfo_pre ) {
 		int (*preHookFunc) (int *base_rate, int *job_rate, int *drop_rate);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_ragsrvinfo_pre; hIndex++ ) {
@@ -4090,8 +4001,7 @@ int HP_chrif_ragsrvinfo(int base_rate, int job_rate, int drop_rate) {
 }
 int HP_chrif_char_offline(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_char_offline_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_char_offline_pre; hIndex++ ) {
@@ -4117,8 +4027,7 @@ int HP_chrif_char_offline(struct map_session_data *sd) {
 }
 int HP_chrif_char_offline_nsd(int account_id, int char_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_char_offline_nsd_pre ) {
 		int (*preHookFunc) (int *account_id, int *char_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_char_offline_nsd_pre; hIndex++ ) {
@@ -4144,8 +4053,7 @@ int HP_chrif_char_offline_nsd(int account_id, int char_id) {
 }
 int HP_chrif_char_reset_offline(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_char_reset_offline_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_char_reset_offline_pre; hIndex++ ) {
@@ -4171,8 +4079,7 @@ int HP_chrif_char_reset_offline(void) {
 }
 int HP_chrif_send_users_tochar(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_send_users_tochar_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_send_users_tochar_pre; hIndex++ ) {
@@ -4198,8 +4105,7 @@ int HP_chrif_send_users_tochar(void) {
 }
 int HP_chrif_char_online(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_char_online_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_char_online_pre; hIndex++ ) {
@@ -4225,8 +4131,7 @@ int HP_chrif_char_online(struct map_session_data *sd) {
 }
 int HP_chrif_changesex(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_changesex_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_changesex_pre; hIndex++ ) {
@@ -4252,8 +4157,7 @@ int HP_chrif_changesex(struct map_session_data *sd) {
 }
 int HP_chrif_divorce(int partner_id1, int partner_id2) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_divorce_pre ) {
 		int (*preHookFunc) (int *partner_id1, int *partner_id2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_divorce_pre; hIndex++ ) {
@@ -4279,8 +4183,7 @@ int HP_chrif_divorce(int partner_id1, int partner_id2) {
 }
 int HP_chrif_removefriend(int char_id, int friend_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_removefriend_pre ) {
 		int (*preHookFunc) (int *char_id, int *friend_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_removefriend_pre; hIndex++ ) {
@@ -4331,8 +4234,7 @@ void HP_chrif_send_report(char *buf, int len) {
 }
 int HP_chrif_flush_fifo(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_flush_fifo_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_flush_fifo_pre; hIndex++ ) {
@@ -4383,8 +4285,7 @@ void HP_chrif_skillid2idx(int fd) {
 }
 bool HP_chrif_sd_to_auth(TBL_PC *sd, enum sd_state state) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_chrif_sd_to_auth_pre ) {
 		bool (*preHookFunc) (TBL_PC *sd, enum sd_state *state);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_sd_to_auth_pre; hIndex++ ) {
@@ -4410,8 +4311,7 @@ bool HP_chrif_sd_to_auth(TBL_PC *sd, enum sd_state state) {
 }
 int HP_chrif_check_connect_char_server(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_check_connect_char_server_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_check_connect_char_server_pre; hIndex++ ) {
@@ -4437,8 +4337,7 @@ int HP_chrif_check_connect_char_server(int tid, unsigned int tick, int id, intpt
 }
 bool HP_chrif_auth_logout(TBL_PC *sd, enum sd_state state) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_chrif_auth_logout_pre ) {
 		bool (*preHookFunc) (TBL_PC *sd, enum sd_state *state);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_auth_logout_pre; hIndex++ ) {
@@ -4489,8 +4388,7 @@ void HP_chrif_save_ack(int fd) {
 }
 int HP_chrif_reconnect(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_reconnect_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_reconnect_pre; hIndex++ ) {
@@ -4522,8 +4420,7 @@ int HP_chrif_reconnect(DBKey key, DBData *data, va_list ap) {
 }
 int HP_chrif_auth_db_cleanup_sub(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_auth_db_cleanup_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_auth_db_cleanup_sub_pre; hIndex++ ) {
@@ -4580,8 +4477,7 @@ void HP_chrif_char_ask_name_answer(int acc, const char *player_name, uint16 type
 }
 int HP_chrif_auth_db_final(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_auth_db_final_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_auth_db_final_pre; hIndex++ ) {
@@ -4613,8 +4509,7 @@ int HP_chrif_auth_db_final(DBKey key, DBData *data, va_list ap) {
 }
 int HP_chrif_send_usercount_tochar(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_send_usercount_tochar_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_send_usercount_tochar_pre; hIndex++ ) {
@@ -4640,8 +4535,7 @@ int HP_chrif_send_usercount_tochar(int tid, unsigned int tick, int id, intptr_t 
 }
 int HP_chrif_auth_db_cleanup(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_auth_db_cleanup_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_auth_db_cleanup_pre; hIndex++ ) {
@@ -4667,8 +4561,7 @@ int HP_chrif_auth_db_cleanup(int tid, unsigned int tick, int id, intptr_t data) 
 }
 int HP_chrif_connect(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_connect_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_connect_pre; hIndex++ ) {
@@ -4694,8 +4587,7 @@ int HP_chrif_connect(int fd) {
 }
 int HP_chrif_connectack(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_connectack_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_connectack_pre; hIndex++ ) {
@@ -4721,8 +4613,7 @@ int HP_chrif_connectack(int fd) {
 }
 int HP_chrif_sendmap(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_sendmap_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_sendmap_pre; hIndex++ ) {
@@ -4748,8 +4639,7 @@ int HP_chrif_sendmap(int fd) {
 }
 int HP_chrif_sendmapack(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_sendmapack_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_sendmapack_pre; hIndex++ ) {
@@ -4775,8 +4665,7 @@ int HP_chrif_sendmapack(int fd) {
 }
 int HP_chrif_recvmap(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_recvmap_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_recvmap_pre; hIndex++ ) {
@@ -4802,8 +4691,7 @@ int HP_chrif_recvmap(int fd) {
 }
 int HP_chrif_changemapserverack(int account_id, int login_id1, int login_id2, int char_id, short map_index, short x, short y, uint32 ip, uint16 port) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_changemapserverack_pre ) {
 		int (*preHookFunc) (int *account_id, int *login_id1, int *login_id2, int *char_id, short *map_index, short *x, short *y, uint32 *ip, uint16 *port);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_changemapserverack_pre; hIndex++ ) {
@@ -4829,8 +4717,7 @@ int HP_chrif_changemapserverack(int account_id, int login_id1, int login_id2, in
 }
 int HP_chrif_changedsex(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_changedsex_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_changedsex_pre; hIndex++ ) {
@@ -4856,8 +4743,7 @@ int HP_chrif_changedsex(int fd) {
 }
 int HP_chrif_divorceack(int char_id, int partner_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_divorceack_pre ) {
 		int (*preHookFunc) (int *char_id, int *partner_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_divorceack_pre; hIndex++ ) {
@@ -4883,8 +4769,7 @@ int HP_chrif_divorceack(int char_id, int partner_id) {
 }
 int HP_chrif_accountban(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_accountban_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_accountban_pre; hIndex++ ) {
@@ -4910,8 +4795,7 @@ int HP_chrif_accountban(int fd) {
 }
 int HP_chrif_recvfamelist(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_recvfamelist_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_recvfamelist_pre; hIndex++ ) {
@@ -4937,8 +4821,7 @@ int HP_chrif_recvfamelist(int fd) {
 }
 int HP_chrif_load_scdata(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_load_scdata_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_load_scdata_pre; hIndex++ ) {
@@ -4989,8 +4872,7 @@ void HP_chrif_update_ip(int fd) {
 }
 int HP_chrif_disconnectplayer(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_disconnectplayer_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_disconnectplayer_pre; hIndex++ ) {
@@ -5016,8 +4898,7 @@ int HP_chrif_disconnectplayer(int fd) {
 }
 int HP_chrif_removemap(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_removemap_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_removemap_pre; hIndex++ ) {
@@ -5043,8 +4924,7 @@ int HP_chrif_removemap(int fd) {
 }
 int HP_chrif_updatefamelist_ack(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_updatefamelist_ack_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_updatefamelist_ack_pre; hIndex++ ) {
@@ -5120,8 +5000,7 @@ void HP_chrif_keepalive_ack(int fd) {
 }
 int HP_chrif_deadopt(int father_id, int mother_id, int child_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_deadopt_pre ) {
 		int (*preHookFunc) (int *father_id, int *mother_id, int *child_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_deadopt_pre; hIndex++ ) {
@@ -5222,8 +5101,7 @@ void HP_chrif_on_disconnect(void) {
 }
 int HP_chrif_parse(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_chrif_parse_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_parse_pre; hIndex++ ) {
@@ -5250,8 +5128,7 @@ int HP_chrif_parse(int fd) {
 /* clif */
 int HP_clif_init(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_init_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_init_pre; hIndex++ ) {
@@ -5302,8 +5179,7 @@ void HP_clif_final(void) {
 }
 int HP_clif_setip(const char *ip) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_setip_pre ) {
 		int (*preHookFunc) (const char *ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_setip_pre; hIndex++ ) {
@@ -5379,8 +5255,7 @@ void HP_clif_setport(uint16 port) {
 }
 uint32 HP_clif_refresh_ip(void) {
 	int hIndex = 0;
-	uint32 retVal___;
-	memset(&retVal___, '\0', sizeof(uint32));
+	uint32 retVal___ = 0;
 	if( HPMHooks.count.HP_clif_refresh_ip_pre ) {
 		uint32 (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_refresh_ip_pre; hIndex++ ) {
@@ -5406,8 +5281,7 @@ uint32 HP_clif_refresh_ip(void) {
 }
 int HP_clif_send(const void *buf, int len, struct block_list *bl, enum send_target type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_send_pre ) {
 		int (*preHookFunc) (const void *buf, int *len, struct block_list *bl, enum send_target *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_send_pre; hIndex++ ) {
@@ -5433,8 +5307,7 @@ int HP_clif_send(const void *buf, int len, struct block_list *bl, enum send_targ
 }
 int HP_clif_send_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_send_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_send_sub_pre; hIndex++ ) {
@@ -5466,8 +5339,7 @@ int HP_clif_send_sub(struct block_list *bl, va_list ap) {
 }
 int HP_clif_parse(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_parse_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_parse_pre; hIndex++ ) {
@@ -5493,8 +5365,7 @@ int HP_clif_parse(int fd) {
 }
 unsigned short HP_clif_parse_cmd(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_clif_parse_cmd_pre ) {
 		unsigned short (*preHookFunc) (int *fd, struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_parse_cmd_pre; hIndex++ ) {
@@ -5520,8 +5391,7 @@ unsigned short HP_clif_parse_cmd(int fd, struct map_session_data *sd) {
 }
 unsigned short HP_clif_decrypt_cmd(int cmd, struct map_session_data *sd) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_clif_decrypt_cmd_pre ) {
 		unsigned short (*preHookFunc) (int *cmd, struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_decrypt_cmd_pre; hIndex++ ) {
@@ -6572,8 +6442,7 @@ void HP_clif_skillunit_update(struct block_list *bl) {
 }
 int HP_clif_clearunit_delayed_sub(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_clearunit_delayed_sub_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_clearunit_delayed_sub_pre; hIndex++ ) {
@@ -6647,6 +6516,56 @@ void HP_clif_spawn_unit(struct block_list *bl, enum send_target target) {
 	}
 	return;
 }
+void HP_clif_spawn_unit2(struct block_list *bl, enum send_target target) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_spawn_unit2_pre ) {
+		void (*preHookFunc) (struct block_list *bl, enum send_target *target);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_spawn_unit2_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_spawn_unit2_pre[hIndex].func;
+			preHookFunc(bl, &target);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.spawn_unit2(bl, target);
+	}
+	if( HPMHooks.count.HP_clif_spawn_unit2_post ) {
+		void (*postHookFunc) (struct block_list *bl, enum send_target *target);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_spawn_unit2_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_spawn_unit2_post[hIndex].func;
+			postHookFunc(bl, &target);
+		}
+	}
+	return;
+}
+void HP_clif_set_unit_idle2(struct block_list *bl, struct map_session_data *tsd, enum send_target target) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_set_unit_idle2_pre ) {
+		void (*preHookFunc) (struct block_list *bl, struct map_session_data *tsd, enum send_target *target);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_set_unit_idle2_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_set_unit_idle2_pre[hIndex].func;
+			preHookFunc(bl, tsd, &target);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.set_unit_idle2(bl, tsd, target);
+	}
+	if( HPMHooks.count.HP_clif_set_unit_idle2_post ) {
+		void (*postHookFunc) (struct block_list *bl, struct map_session_data *tsd, enum send_target *target);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_set_unit_idle2_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_set_unit_idle2_post[hIndex].func;
+			postHookFunc(bl, tsd, &target);
+		}
+	}
+	return;
+}
 void HP_clif_set_unit_walking(struct block_list *bl, struct map_session_data *tsd, struct unit_data *ud, enum send_target target) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_set_unit_walking_pre ) {
@@ -6674,8 +6593,7 @@ void HP_clif_set_unit_walking(struct block_list *bl, struct map_session_data *ts
 }
 int HP_clif_calc_walkdelay(struct block_list *bl, int delay, int type, int damage, int div_) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_calc_walkdelay_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int *delay, int *type, int *damage, int *div_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_calc_walkdelay_pre; hIndex++ ) {
@@ -6776,8 +6694,7 @@ void HP_clif_clearchar_skillunit(struct skill_unit *su, int fd) {
 }
 int HP_clif_getareachar(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_getareachar_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_getareachar_pre; hIndex++ ) {
@@ -6809,8 +6726,7 @@ int HP_clif_getareachar(struct block_list *bl, va_list ap) {
 }
 int HP_clif_spawn(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_spawn_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_spawn_pre; hIndex++ ) {
@@ -7486,8 +7402,7 @@ void HP_clif_viewpoint(struct map_session_data *sd, int npc_id, int type, int x,
 }
 int HP_clif_damage(struct block_list *src, struct block_list *dst, unsigned int tick, int sdelay, int ddelay, int64 damage, int div, int type, int64 damage2) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_damage_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *dst, unsigned int *tick, int *sdelay, int *ddelay, int64 *damage, int *div, int *type, int64 *damage2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_damage_pre; hIndex++ ) {
@@ -7788,8 +7703,7 @@ void HP_clif_hotkeys(struct map_session_data *sd) {
 }
 int HP_clif_insight(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_insight_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_insight_pre; hIndex++ ) {
@@ -7821,8 +7735,7 @@ int HP_clif_insight(struct block_list *bl, va_list ap) {
 }
 int HP_clif_outsight(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_outsight_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_outsight_pre; hIndex++ ) {
@@ -8579,8 +8492,7 @@ void HP_clif_monster_hp_bar(struct mob_data *md, struct map_session_data *sd) {
 }
 int HP_clif_hpmeter(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_hpmeter_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_hpmeter_pre; hIndex++ ) {
@@ -8631,8 +8543,7 @@ void HP_clif_hpmeter_single(int fd, int id, unsigned int hp, unsigned int maxhp)
 }
 int HP_clif_hpmeter_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_hpmeter_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_hpmeter_sub_pre; hIndex++ ) {
@@ -9139,8 +9050,7 @@ void HP_clif_showdigit(struct map_session_data *sd, unsigned char type, int valu
 }
 int HP_clif_elementalconverter_list(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_elementalconverter_list_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_elementalconverter_list_pre; hIndex++ ) {
@@ -9166,8 +9076,7 @@ int HP_clif_elementalconverter_list(struct map_session_data *sd) {
 }
 int HP_clif_spellbook_list(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_spellbook_list_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_spellbook_list_pre; hIndex++ ) {
@@ -9193,8 +9102,7 @@ int HP_clif_spellbook_list(struct map_session_data *sd) {
 }
 int HP_clif_magicdecoy_list(struct map_session_data *sd, uint16 skill_lv, short x, short y) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_magicdecoy_list_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_lv, short *x, short *y);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_magicdecoy_list_pre; hIndex++ ) {
@@ -9220,8 +9128,7 @@ int HP_clif_magicdecoy_list(struct map_session_data *sd, uint16 skill_lv, short 
 }
 int HP_clif_poison_list(struct map_session_data *sd, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_poison_list_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_poison_list_pre; hIndex++ ) {
@@ -9247,8 +9154,7 @@ int HP_clif_poison_list(struct map_session_data *sd, uint16 skill_lv) {
 }
 int HP_clif_autoshadowspell_list(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_autoshadowspell_list_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_autoshadowspell_list_pre; hIndex++ ) {
@@ -9274,8 +9180,7 @@ int HP_clif_autoshadowspell_list(struct map_session_data *sd) {
 }
 int HP_clif_skill_itemlistwindow(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_skill_itemlistwindow_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_skill_itemlistwindow_pre; hIndex++ ) {
@@ -9551,8 +9456,7 @@ void HP_clif_charnameupdate(struct map_session_data *ssd) {
 }
 int HP_clif_delayquit(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_delayquit_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_delayquit_pre; hIndex++ ) {
@@ -9978,8 +9882,7 @@ void HP_clif_callpartner(struct map_session_data *sd) {
 }
 int HP_clif_skill_damage(struct block_list *src, struct block_list *dst, unsigned int tick, int sdelay, int ddelay, int64 damage, int div, uint16 skill_id, uint16 skill_lv, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_skill_damage_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *dst, unsigned int *tick, int *sdelay, int *ddelay, int64 *damage, int *div, uint16 *skill_id, uint16 *skill_lv, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_skill_damage_pre; hIndex++ ) {
@@ -10005,8 +9908,7 @@ int HP_clif_skill_damage(struct block_list *src, struct block_list *dst, unsigne
 }
 int HP_clif_skill_nodamage(struct block_list *src, struct block_list *dst, uint16 skill_id, int heal, int fail) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_skill_nodamage_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *dst, uint16 *skill_id, int *heal, int *fail);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_skill_nodamage_pre; hIndex++ ) {
@@ -11282,8 +11184,7 @@ void HP_clif_messageln(const int fd, const char *mes) {
 }
 int HP_clif_colormes(int fd, enum clif_colors color, const char *msg) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_colormes_pre ) {
 		int (*preHookFunc) (int *fd, enum clif_colors *color, const char *msg);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_colormes_pre; hIndex++ ) {
@@ -11309,8 +11210,7 @@ int HP_clif_colormes(int fd, enum clif_colors color, const char *msg) {
 }
 bool HP_clif_process_message(struct map_session_data *sd, int format, char **name_, int *namelen_, char **message_, int *messagelen_) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_clif_process_message_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, int *format, char **name_, int *namelen_, char **message_, int *messagelen_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_process_message_pre; hIndex++ ) {
@@ -12861,8 +12761,7 @@ void HP_clif_guild_message(struct guild *g, int account_id, const char *mes, int
 }
 int HP_clif_guild_skillup(struct map_session_data *sd, uint16 skill_id, int lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_guild_skillup_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id, int *lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_guild_skillup_pre; hIndex++ ) {
@@ -13163,8 +13062,7 @@ void HP_clif_guild_expulsionlist(struct map_session_data *sd) {
 }
 bool HP_clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_clif_validate_emblem_pre ) {
 		bool (*preHookFunc) (const uint8 *emblem, unsigned long *emblem_len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_validate_emblem_pre; hIndex++ ) {
@@ -13390,8 +13288,7 @@ void HP_clif_sendbgemblem_single(int fd, struct map_session_data *sd) {
 }
 int HP_clif_instance(int instance_id, int type, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_instance_pre ) {
 		int (*preHookFunc) (int *instance_id, int *type, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_instance_pre; hIndex++ ) {
@@ -13642,8 +13539,7 @@ void HP_clif_pet_food(struct map_session_data *sd, int foodid, int fail) {
 }
 int HP_clif_friendslist_toggle_sub(struct map_session_data *sd, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_friendslist_toggle_sub_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_friendslist_toggle_sub_pre; hIndex++ ) {
@@ -13950,8 +13846,7 @@ void HP_clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int fla
 }
 int HP_clif_homskillinfoblock(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_homskillinfoblock_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_homskillinfoblock_pre; hIndex++ ) {
@@ -14002,8 +13897,7 @@ void HP_clif_homskillup(struct map_session_data *sd, uint16 skill_id) {
 }
 int HP_clif_hom_food(struct map_session_data *sd, int foodid, int fail) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_hom_food_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *foodid, int *fail);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_hom_food_pre; hIndex++ ) {
@@ -14872,6 +14766,156 @@ void HP_clif_PartyBookingInsertNotify(struct map_session_data *sd, struct party_
 		void (*postHookFunc) (struct map_session_data *sd, struct party_booking_ad_info *pb_ad);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyBookingInsertNotify_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_PartyBookingInsertNotify_post[hIndex].func;
+			postHookFunc(sd, pb_ad);
+		}
+	}
+	return;
+}
+void HP_clif_PartyRecruitRegisterAck(struct map_session_data *sd, int flag) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_PartyRecruitRegisterAck_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, int *flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitRegisterAck_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_PartyRecruitRegisterAck_pre[hIndex].func;
+			preHookFunc(sd, &flag);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.PartyRecruitRegisterAck(sd, flag);
+	}
+	if( HPMHooks.count.HP_clif_PartyRecruitRegisterAck_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, int *flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitRegisterAck_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_PartyRecruitRegisterAck_post[hIndex].func;
+			postHookFunc(sd, &flag);
+		}
+	}
+	return;
+}
+void HP_clif_PartyRecruitDeleteAck(struct map_session_data *sd, int flag) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_PartyRecruitDeleteAck_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, int *flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitDeleteAck_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_PartyRecruitDeleteAck_pre[hIndex].func;
+			preHookFunc(sd, &flag);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.PartyRecruitDeleteAck(sd, flag);
+	}
+	if( HPMHooks.count.HP_clif_PartyRecruitDeleteAck_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, int *flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitDeleteAck_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_PartyRecruitDeleteAck_post[hIndex].func;
+			postHookFunc(sd, &flag);
+		}
+	}
+	return;
+}
+void HP_clif_PartyRecruitSearchAck(int fd, struct party_booking_ad_info **results, int count, bool more_result) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_PartyRecruitSearchAck_pre ) {
+		void (*preHookFunc) (int *fd, struct party_booking_ad_info **results, int *count, bool *more_result);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitSearchAck_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_PartyRecruitSearchAck_pre[hIndex].func;
+			preHookFunc(&fd, results, &count, &more_result);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.PartyRecruitSearchAck(fd, results, count, more_result);
+	}
+	if( HPMHooks.count.HP_clif_PartyRecruitSearchAck_post ) {
+		void (*postHookFunc) (int *fd, struct party_booking_ad_info **results, int *count, bool *more_result);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitSearchAck_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_PartyRecruitSearchAck_post[hIndex].func;
+			postHookFunc(&fd, results, &count, &more_result);
+		}
+	}
+	return;
+}
+void HP_clif_PartyRecruitUpdateNotify(struct map_session_data *sd, struct party_booking_ad_info *pb_ad) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_PartyRecruitUpdateNotify_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, struct party_booking_ad_info *pb_ad);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitUpdateNotify_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_PartyRecruitUpdateNotify_pre[hIndex].func;
+			preHookFunc(sd, pb_ad);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.PartyRecruitUpdateNotify(sd, pb_ad);
+	}
+	if( HPMHooks.count.HP_clif_PartyRecruitUpdateNotify_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, struct party_booking_ad_info *pb_ad);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitUpdateNotify_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_PartyRecruitUpdateNotify_post[hIndex].func;
+			postHookFunc(sd, pb_ad);
+		}
+	}
+	return;
+}
+void HP_clif_PartyRecruitDeleteNotify(struct map_session_data *sd, int index) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_PartyRecruitDeleteNotify_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, int *index);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitDeleteNotify_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_PartyRecruitDeleteNotify_pre[hIndex].func;
+			preHookFunc(sd, &index);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.PartyRecruitDeleteNotify(sd, index);
+	}
+	if( HPMHooks.count.HP_clif_PartyRecruitDeleteNotify_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, int *index);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitDeleteNotify_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_PartyRecruitDeleteNotify_post[hIndex].func;
+			postHookFunc(sd, &index);
+		}
+	}
+	return;
+}
+void HP_clif_PartyRecruitInsertNotify(struct map_session_data *sd, struct party_booking_ad_info *pb_ad) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_PartyRecruitInsertNotify_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, struct party_booking_ad_info *pb_ad);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitInsertNotify_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_PartyRecruitInsertNotify_pre[hIndex].func;
+			preHookFunc(sd, pb_ad);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.PartyRecruitInsertNotify(sd, pb_ad);
+	}
+	if( HPMHooks.count.HP_clif_PartyRecruitInsertNotify_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, struct party_booking_ad_info *pb_ad);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_PartyRecruitInsertNotify_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_PartyRecruitInsertNotify_post[hIndex].func;
 			postHookFunc(sd, pb_ad);
 		}
 	}
@@ -15779,8 +15823,7 @@ void HP_clif_bc_ready(void) {
 }
 int HP_clif_undisguise_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_clif_undisguise_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_undisguise_timer_pre; hIndex++ ) {
@@ -18474,6 +18517,106 @@ void HP_clif_pPartyBookingUpdateReq(int fd, struct map_session_data *sd) {
 		void (*postHookFunc) (int *fd, struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyBookingUpdateReq_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_pPartyBookingUpdateReq_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pPartyRecruitRegisterReq(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pPartyRecruitRegisterReq_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitRegisterReq_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pPartyRecruitRegisterReq_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pPartyRecruitRegisterReq(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pPartyRecruitRegisterReq_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitRegisterReq_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pPartyRecruitRegisterReq_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pPartyRecruitSearchReq(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pPartyRecruitSearchReq_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitSearchReq_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pPartyRecruitSearchReq_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pPartyRecruitSearchReq(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pPartyRecruitSearchReq_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitSearchReq_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pPartyRecruitSearchReq_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pPartyRecruitDeleteReq(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pPartyRecruitDeleteReq_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitDeleteReq_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pPartyRecruitDeleteReq_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pPartyRecruitDeleteReq(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pPartyRecruitDeleteReq_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitDeleteReq_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pPartyRecruitDeleteReq_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pPartyRecruitUpdateReq(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pPartyRecruitUpdateReq_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitUpdateReq_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pPartyRecruitUpdateReq_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pPartyRecruitUpdateReq(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pPartyRecruitUpdateReq_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pPartyRecruitUpdateReq_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pPartyRecruitUpdateReq_post[hIndex].func;
 			postHookFunc(&fd, sd);
 		}
 	}
@@ -21357,8 +21500,7 @@ void HP_clif_pPartyBookingCancelVolunteer(int fd, struct map_session_data *sd) {
 /* duel */
 int HP_duel_create(struct map_session_data *sd, const unsigned int maxpl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_duel_create_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const unsigned int *maxpl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_duel_create_pre; hIndex++ ) {
@@ -21509,8 +21651,7 @@ void HP_duel_showinfo(const unsigned int did, struct map_session_data *sd) {
 }
 int HP_duel_checktime(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_duel_checktime_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_duel_checktime_pre; hIndex++ ) {
@@ -21587,8 +21728,7 @@ void HP_duel_final(void) {
 /* elemental */
 int HP_elemental_init(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_init_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_init_pre; hIndex++ ) {
@@ -21639,8 +21779,7 @@ void HP_elemental_final(void) {
 }
 bool HP_elemental_class(int class_) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_elemental_class_pre ) {
 		bool (*preHookFunc) (int *class_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_class_pre; hIndex++ ) {
@@ -21692,8 +21831,7 @@ struct view_data* HP_elemental_get_viewdata(int class_) {
 }
 int HP_elemental_create(struct map_session_data *sd, int class_, unsigned int lifetime) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_create_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *class_, unsigned int *lifetime);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_create_pre; hIndex++ ) {
@@ -21719,8 +21857,7 @@ int HP_elemental_create(struct map_session_data *sd, int class_, unsigned int li
 }
 int HP_elemental_data_received(struct s_elemental *ele, bool flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_data_received_pre ) {
 		int (*preHookFunc) (struct s_elemental *ele, bool *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_data_received_pre; hIndex++ ) {
@@ -21746,8 +21883,7 @@ int HP_elemental_data_received(struct s_elemental *ele, bool flag) {
 }
 int HP_elemental_save(struct elemental_data *ed) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_save_pre ) {
 		int (*preHookFunc) (struct elemental_data *ed);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_save_pre; hIndex++ ) {
@@ -21773,8 +21909,7 @@ int HP_elemental_save(struct elemental_data *ed) {
 }
 int HP_elemental_change_mode_ack(struct elemental_data *ed, int mode) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_change_mode_ack_pre ) {
 		int (*preHookFunc) (struct elemental_data *ed, int *mode);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_change_mode_ack_pre; hIndex++ ) {
@@ -21800,8 +21935,7 @@ int HP_elemental_change_mode_ack(struct elemental_data *ed, int mode) {
 }
 int HP_elemental_change_mode(struct elemental_data *ed, int mode) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_change_mode_pre ) {
 		int (*preHookFunc) (struct elemental_data *ed, int *mode);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_change_mode_pre; hIndex++ ) {
@@ -21852,8 +21986,7 @@ void HP_elemental_heal(struct elemental_data *ed, int hp, int sp) {
 }
 int HP_elemental_dead(struct elemental_data *ed) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_dead_pre ) {
 		int (*preHookFunc) (struct elemental_data *ed);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_dead_pre; hIndex++ ) {
@@ -21879,8 +22012,7 @@ int HP_elemental_dead(struct elemental_data *ed) {
 }
 int HP_elemental_delete(struct elemental_data *ed, int reply) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_delete_pre ) {
 		int (*preHookFunc) (struct elemental_data *ed, int *reply);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_delete_pre; hIndex++ ) {
@@ -21931,8 +22063,7 @@ void HP_elemental_summon_stop(struct elemental_data *ed) {
 }
 int HP_elemental_get_lifetime(struct elemental_data *ed) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_get_lifetime_pre ) {
 		int (*preHookFunc) (struct elemental_data *ed);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_get_lifetime_pre; hIndex++ ) {
@@ -21958,8 +22089,7 @@ int HP_elemental_get_lifetime(struct elemental_data *ed) {
 }
 int HP_elemental_unlocktarget(struct elemental_data *ed) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_unlocktarget_pre ) {
 		int (*preHookFunc) (struct elemental_data *ed);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_unlocktarget_pre; hIndex++ ) {
@@ -21985,8 +22115,7 @@ int HP_elemental_unlocktarget(struct elemental_data *ed) {
 }
 int HP_elemental_skillnotok(uint16 skill_id, struct elemental_data *ed) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_skillnotok_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, struct elemental_data *ed);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_skillnotok_pre; hIndex++ ) {
@@ -22012,8 +22141,7 @@ int HP_elemental_skillnotok(uint16 skill_id, struct elemental_data *ed) {
 }
 int HP_elemental_set_target(struct map_session_data *sd, struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_set_target_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_set_target_pre; hIndex++ ) {
@@ -22039,8 +22167,7 @@ int HP_elemental_set_target(struct map_session_data *sd, struct block_list *bl) 
 }
 int HP_elemental_clean_single_effect(struct elemental_data *ed, uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_clean_single_effect_pre ) {
 		int (*preHookFunc) (struct elemental_data *ed, uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_clean_single_effect_pre; hIndex++ ) {
@@ -22066,8 +22193,7 @@ int HP_elemental_clean_single_effect(struct elemental_data *ed, uint16 skill_id)
 }
 int HP_elemental_clean_effect(struct elemental_data *ed) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_clean_effect_pre ) {
 		int (*preHookFunc) (struct elemental_data *ed);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_clean_effect_pre; hIndex++ ) {
@@ -22093,8 +22219,7 @@ int HP_elemental_clean_effect(struct elemental_data *ed) {
 }
 int HP_elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_action_pre ) {
 		int (*preHookFunc) (struct elemental_data *ed, struct block_list *bl, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_action_pre; hIndex++ ) {
@@ -22147,8 +22272,7 @@ struct skill_condition HP_elemental_skill_get_requirements(uint16 skill_id, uint
 }
 int HP_elemental_read_skilldb(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_read_skilldb_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_read_skilldb_pre; hIndex++ ) {
@@ -22224,8 +22348,7 @@ void HP_elemental_reload_skilldb(void) {
 }
 int HP_elemental_search_index(int class_) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_search_index_pre ) {
 		int (*preHookFunc) (int *class_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_search_index_pre; hIndex++ ) {
@@ -22276,8 +22399,7 @@ void HP_elemental_summon_init(struct elemental_data *ed) {
 }
 int HP_elemental_summon_end_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_summon_end_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_summon_end_timer_pre; hIndex++ ) {
@@ -22303,8 +22425,7 @@ int HP_elemental_summon_end_timer(int tid, unsigned int tick, int id, intptr_t d
 }
 int HP_elemental_ai_sub_timer_activesearch(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_ai_sub_timer_activesearch_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_ai_sub_timer_activesearch_pre; hIndex++ ) {
@@ -22336,8 +22457,7 @@ int HP_elemental_ai_sub_timer_activesearch(struct block_list *bl, va_list ap) {
 }
 int HP_elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_data *sd, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_ai_sub_timer_pre ) {
 		int (*preHookFunc) (struct elemental_data *ed, struct map_session_data *sd, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_ai_sub_timer_pre; hIndex++ ) {
@@ -22363,8 +22483,7 @@ int HP_elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_data
 }
 int HP_elemental_ai_sub_foreachclient(struct map_session_data *sd, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_ai_sub_foreachclient_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_ai_sub_foreachclient_pre; hIndex++ ) {
@@ -22396,8 +22515,7 @@ int HP_elemental_ai_sub_foreachclient(struct map_session_data *sd, va_list ap) {
 }
 int HP_elemental_ai_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_ai_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_ai_timer_pre; hIndex++ ) {
@@ -22423,8 +22541,7 @@ int HP_elemental_ai_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_elemental_read_db(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_read_db_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_read_db_pre; hIndex++ ) {
@@ -22501,8 +22618,7 @@ void HP_guild_final(void) {
 }
 int HP_guild_skill_get_max(int id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_skill_get_max_pre ) {
 		int (*preHookFunc) (int *id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_skill_get_max_pre; hIndex++ ) {
@@ -22528,8 +22644,7 @@ int HP_guild_skill_get_max(int id) {
 }
 int HP_guild_checkskill(struct guild *g, int id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_checkskill_pre ) {
 		int (*preHookFunc) (struct guild *g, int *id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_checkskill_pre; hIndex++ ) {
@@ -22555,8 +22670,7 @@ int HP_guild_checkskill(struct guild *g, int id) {
 }
 int HP_guild_check_skill_require(struct guild *g, int id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_check_skill_require_pre ) {
 		int (*preHookFunc) (struct guild *g, int *id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_check_skill_require_pre; hIndex++ ) {
@@ -22582,8 +22696,7 @@ int HP_guild_check_skill_require(struct guild *g, int id) {
 }
 int HP_guild_checkcastles(struct guild *g) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_checkcastles_pre ) {
 		int (*preHookFunc) (struct guild *g);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_checkcastles_pre; hIndex++ ) {
@@ -22609,8 +22722,7 @@ int HP_guild_checkcastles(struct guild *g) {
 }
 bool HP_guild_isallied(int guild_id, int guild_id2) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_guild_isallied_pre ) {
 		bool (*preHookFunc) (int *guild_id, int *guild_id2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_isallied_pre; hIndex++ ) {
@@ -22792,8 +22904,7 @@ struct map_session_data* HP_guild_getavailablesd(struct guild *g) {
 }
 int HP_guild_getindex(struct guild *g, int account_id, int char_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_getindex_pre ) {
 		int (*preHookFunc) (struct guild *g, int *account_id, int *char_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_getindex_pre; hIndex++ ) {
@@ -22819,8 +22930,7 @@ int HP_guild_getindex(struct guild *g, int account_id, int char_id) {
 }
 int HP_guild_getposition(struct guild *g, struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_getposition_pre ) {
 		int (*preHookFunc) (struct guild *g, struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_getposition_pre; hIndex++ ) {
@@ -22846,8 +22956,7 @@ int HP_guild_getposition(struct guild *g, struct map_session_data *sd) {
 }
 unsigned int HP_guild_payexp(struct map_session_data *sd, unsigned int exp) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_payexp_pre ) {
 		unsigned int (*preHookFunc) (struct map_session_data *sd, unsigned int *exp);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_payexp_pre; hIndex++ ) {
@@ -22873,8 +22982,7 @@ unsigned int HP_guild_payexp(struct map_session_data *sd, unsigned int exp) {
 }
 int HP_guild_getexp(struct map_session_data *sd, int exp) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_getexp_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *exp);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_getexp_pre; hIndex++ ) {
@@ -22900,8 +23008,7 @@ int HP_guild_getexp(struct map_session_data *sd, int exp) {
 }
 int HP_guild_create(struct map_session_data *sd, const char *name) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_create_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_create_pre; hIndex++ ) {
@@ -22927,8 +23034,7 @@ int HP_guild_create(struct map_session_data *sd, const char *name) {
 }
 int HP_guild_created(int account_id, int guild_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_created_pre ) {
 		int (*preHookFunc) (int *account_id, int *guild_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_created_pre; hIndex++ ) {
@@ -22954,8 +23060,7 @@ int HP_guild_created(int account_id, int guild_id) {
 }
 int HP_guild_request_info(int guild_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_request_info_pre ) {
 		int (*preHookFunc) (int *guild_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_request_info_pre; hIndex++ ) {
@@ -22981,8 +23086,7 @@ int HP_guild_request_info(int guild_id) {
 }
 int HP_guild_recv_noinfo(int guild_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_recv_noinfo_pre ) {
 		int (*preHookFunc) (int *guild_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_recv_noinfo_pre; hIndex++ ) {
@@ -23008,8 +23112,7 @@ int HP_guild_recv_noinfo(int guild_id) {
 }
 int HP_guild_recv_info(struct guild *sg) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_recv_info_pre ) {
 		int (*preHookFunc) (struct guild *sg);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_recv_info_pre; hIndex++ ) {
@@ -23035,8 +23138,7 @@ int HP_guild_recv_info(struct guild *sg) {
 }
 int HP_guild_npc_request_info(int guild_id, const char *ev) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_npc_request_info_pre ) {
 		int (*preHookFunc) (int *guild_id, const char *ev);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_npc_request_info_pre; hIndex++ ) {
@@ -23062,8 +23164,7 @@ int HP_guild_npc_request_info(int guild_id, const char *ev) {
 }
 int HP_guild_invite(struct map_session_data *sd, struct map_session_data *tsd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_invite_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct map_session_data *tsd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_invite_pre; hIndex++ ) {
@@ -23089,8 +23190,7 @@ int HP_guild_invite(struct map_session_data *sd, struct map_session_data *tsd) {
 }
 int HP_guild_reply_invite(struct map_session_data *sd, int guild_id, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_reply_invite_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *guild_id, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_reply_invite_pre; hIndex++ ) {
@@ -23141,8 +23241,7 @@ void HP_guild_member_joined(struct map_session_data *sd) {
 }
 int HP_guild_member_added(int guild_id, int account_id, int char_id, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_member_added_pre ) {
 		int (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_member_added_pre; hIndex++ ) {
@@ -23168,8 +23267,7 @@ int HP_guild_member_added(int guild_id, int account_id, int char_id, int flag) {
 }
 int HP_guild_leave(struct map_session_data *sd, int guild_id, int account_id, int char_id, const char *mes) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_leave_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *guild_id, int *account_id, int *char_id, const char *mes);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_leave_pre; hIndex++ ) {
@@ -23195,8 +23293,7 @@ int HP_guild_leave(struct map_session_data *sd, int guild_id, int account_id, in
 }
 int HP_guild_member_withdraw(int guild_id, int account_id, int char_id, int flag, const char *name, const char *mes) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_member_withdraw_pre ) {
 		int (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *flag, const char *name, const char *mes);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_member_withdraw_pre; hIndex++ ) {
@@ -23222,8 +23319,7 @@ int HP_guild_member_withdraw(int guild_id, int account_id, int char_id, int flag
 }
 int HP_guild_expulsion(struct map_session_data *sd, int guild_id, int account_id, int char_id, const char *mes) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_expulsion_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *guild_id, int *account_id, int *char_id, const char *mes);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_expulsion_pre; hIndex++ ) {
@@ -23249,8 +23345,7 @@ int HP_guild_expulsion(struct map_session_data *sd, int guild_id, int account_id
 }
 int HP_guild_skillup(struct map_session_data *sd, uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_skillup_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_skillup_pre; hIndex++ ) {
@@ -23301,8 +23396,7 @@ void HP_guild_block_skill(struct map_session_data *sd, int time) {
 }
 int HP_guild_reqalliance(struct map_session_data *sd, struct map_session_data *tsd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_reqalliance_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct map_session_data *tsd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_reqalliance_pre; hIndex++ ) {
@@ -23328,8 +23422,7 @@ int HP_guild_reqalliance(struct map_session_data *sd, struct map_session_data *t
 }
 int HP_guild_reply_reqalliance(struct map_session_data *sd, int account_id, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_reply_reqalliance_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *account_id, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_reply_reqalliance_pre; hIndex++ ) {
@@ -23355,8 +23448,7 @@ int HP_guild_reply_reqalliance(struct map_session_data *sd, int account_id, int 
 }
 int HP_guild_allianceack(int guild_id1, int guild_id2, int account_id1, int account_id2, int flag, const char *name1, const char *name2) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_allianceack_pre ) {
 		int (*preHookFunc) (int *guild_id1, int *guild_id2, int *account_id1, int *account_id2, int *flag, const char *name1, const char *name2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_allianceack_pre; hIndex++ ) {
@@ -23382,8 +23474,7 @@ int HP_guild_allianceack(int guild_id1, int guild_id2, int account_id1, int acco
 }
 int HP_guild_delalliance(struct map_session_data *sd, int guild_id, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_delalliance_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *guild_id, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_delalliance_pre; hIndex++ ) {
@@ -23409,8 +23500,7 @@ int HP_guild_delalliance(struct map_session_data *sd, int guild_id, int flag) {
 }
 int HP_guild_opposition(struct map_session_data *sd, struct map_session_data *tsd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_opposition_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct map_session_data *tsd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_opposition_pre; hIndex++ ) {
@@ -23436,8 +23526,7 @@ int HP_guild_opposition(struct map_session_data *sd, struct map_session_data *ts
 }
 int HP_guild_check_alliance(int guild_id1, int guild_id2, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_check_alliance_pre ) {
 		int (*preHookFunc) (int *guild_id1, int *guild_id2, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_check_alliance_pre; hIndex++ ) {
@@ -23463,8 +23552,7 @@ int HP_guild_check_alliance(int guild_id1, int guild_id2, int flag) {
 }
 int HP_guild_send_memberinfoshort(struct map_session_data *sd, int online) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_send_memberinfoshort_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *online);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_send_memberinfoshort_pre; hIndex++ ) {
@@ -23490,8 +23578,7 @@ int HP_guild_send_memberinfoshort(struct map_session_data *sd, int online) {
 }
 int HP_guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class_) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_recv_memberinfoshort_pre ) {
 		int (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *online, int *lv, int *class_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_recv_memberinfoshort_pre; hIndex++ ) {
@@ -23517,8 +23604,7 @@ int HP_guild_recv_memberinfoshort(int guild_id, int account_id, int char_id, int
 }
 int HP_guild_change_memberposition(int guild_id, int account_id, int char_id, short idx) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_change_memberposition_pre ) {
 		int (*preHookFunc) (int *guild_id, int *account_id, int *char_id, short *idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_change_memberposition_pre; hIndex++ ) {
@@ -23544,8 +23630,7 @@ int HP_guild_change_memberposition(int guild_id, int account_id, int char_id, sh
 }
 int HP_guild_memberposition_changed(struct guild *g, int idx, int pos) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_memberposition_changed_pre ) {
 		int (*preHookFunc) (struct guild *g, int *idx, int *pos);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_memberposition_changed_pre; hIndex++ ) {
@@ -23571,8 +23656,7 @@ int HP_guild_memberposition_changed(struct guild *g, int idx, int pos) {
 }
 int HP_guild_change_position(int guild_id, int idx, int mode, int exp_mode, const char *name) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_change_position_pre ) {
 		int (*preHookFunc) (int *guild_id, int *idx, int *mode, int *exp_mode, const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_change_position_pre; hIndex++ ) {
@@ -23598,8 +23682,7 @@ int HP_guild_change_position(int guild_id, int idx, int mode, int exp_mode, cons
 }
 int HP_guild_position_changed(int guild_id, int idx, struct guild_position *p) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_position_changed_pre ) {
 		int (*preHookFunc) (int *guild_id, int *idx, struct guild_position *p);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_position_changed_pre; hIndex++ ) {
@@ -23625,8 +23708,7 @@ int HP_guild_position_changed(int guild_id, int idx, struct guild_position *p) {
 }
 int HP_guild_change_notice(struct map_session_data *sd, int guild_id, const char *mes1, const char *mes2) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_change_notice_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *guild_id, const char *mes1, const char *mes2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_change_notice_pre; hIndex++ ) {
@@ -23652,8 +23734,7 @@ int HP_guild_change_notice(struct map_session_data *sd, int guild_id, const char
 }
 int HP_guild_notice_changed(int guild_id, const char *mes1, const char *mes2) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_notice_changed_pre ) {
 		int (*preHookFunc) (int *guild_id, const char *mes1, const char *mes2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_notice_changed_pre; hIndex++ ) {
@@ -23679,8 +23760,7 @@ int HP_guild_notice_changed(int guild_id, const char *mes1, const char *mes2) {
 }
 int HP_guild_change_emblem(struct map_session_data *sd, int len, const char *data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_change_emblem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *len, const char *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_change_emblem_pre; hIndex++ ) {
@@ -23706,8 +23786,7 @@ int HP_guild_change_emblem(struct map_session_data *sd, int len, const char *dat
 }
 int HP_guild_emblem_changed(int len, int guild_id, int emblem_id, const char *data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_emblem_changed_pre ) {
 		int (*preHookFunc) (int *len, int *guild_id, int *emblem_id, const char *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_emblem_changed_pre; hIndex++ ) {
@@ -23733,8 +23812,7 @@ int HP_guild_emblem_changed(int len, int guild_id, int emblem_id, const char *da
 }
 int HP_guild_send_message(struct map_session_data *sd, const char *mes, int len) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_send_message_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *mes, int *len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_send_message_pre; hIndex++ ) {
@@ -23760,8 +23838,7 @@ int HP_guild_send_message(struct map_session_data *sd, const char *mes, int len)
 }
 int HP_guild_recv_message(int guild_id, int account_id, const char *mes, int len) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_recv_message_pre ) {
 		int (*preHookFunc) (int *guild_id, int *account_id, const char *mes, int *len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_recv_message_pre; hIndex++ ) {
@@ -23787,8 +23864,7 @@ int HP_guild_recv_message(int guild_id, int account_id, const char *mes, int len
 }
 int HP_guild_send_dot_remove(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_send_dot_remove_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_send_dot_remove_pre; hIndex++ ) {
@@ -23814,8 +23890,7 @@ int HP_guild_send_dot_remove(struct map_session_data *sd) {
 }
 int HP_guild_skillupack(int guild_id, uint16 skill_id, int account_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_skillupack_pre ) {
 		int (*preHookFunc) (int *guild_id, uint16 *skill_id, int *account_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_skillupack_pre; hIndex++ ) {
@@ -23841,8 +23916,7 @@ int HP_guild_skillupack(int guild_id, uint16 skill_id, int account_id) {
 }
 int HP_guild_dobreak(struct map_session_data *sd, char *name) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_dobreak_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_dobreak_pre; hIndex++ ) {
@@ -23868,8 +23942,7 @@ int HP_guild_dobreak(struct map_session_data *sd, char *name) {
 }
 int HP_guild_broken(int guild_id, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_broken_pre ) {
 		int (*preHookFunc) (int *guild_id, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_broken_pre; hIndex++ ) {
@@ -23895,8 +23968,7 @@ int HP_guild_broken(int guild_id, int flag) {
 }
 int HP_guild_gm_change(int guild_id, struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_gm_change_pre ) {
 		int (*preHookFunc) (int *guild_id, struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_gm_change_pre; hIndex++ ) {
@@ -23922,8 +23994,7 @@ int HP_guild_gm_change(int guild_id, struct map_session_data *sd) {
 }
 int HP_guild_gm_changed(int guild_id, int account_id, int char_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_gm_changed_pre ) {
 		int (*preHookFunc) (int *guild_id, int *account_id, int *char_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_gm_changed_pre; hIndex++ ) {
@@ -23974,8 +24045,7 @@ void HP_guild_castle_map_init(void) {
 }
 int HP_guild_castledatasave(int castle_id, int index, int value) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_castledatasave_pre ) {
 		int (*preHookFunc) (int *castle_id, int *index, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_castledatasave_pre; hIndex++ ) {
@@ -24001,8 +24071,7 @@ int HP_guild_castledatasave(int castle_id, int index, int value) {
 }
 int HP_guild_castledataloadack(int len, struct guild_castle *gc) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_castledataloadack_pre ) {
 		int (*preHookFunc) (int *len, struct guild_castle *gc);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_castledataloadack_pre; hIndex++ ) {
@@ -24253,8 +24322,7 @@ void HP_guild_aura_refresh(struct map_session_data *sd, uint16 skill_id, uint16 
 }
 int HP_guild_payexp_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_payexp_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_payexp_timer_pre; hIndex++ ) {
@@ -24306,8 +24374,7 @@ TBL_PC* HP_guild_sd_check(int guild_id, int account_id, int char_id) {
 }
 bool HP_guild_read_guildskill_tree_db(char *split[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_guild_read_guildskill_tree_db_pre ) {
 		bool (*preHookFunc) (char *split[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_read_guildskill_tree_db_pre; hIndex++ ) {
@@ -24333,8 +24400,7 @@ bool HP_guild_read_guildskill_tree_db(char *split[], int columns, int current) {
 }
 bool HP_guild_read_castledb(char *str[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_guild_read_castledb_pre ) {
 		bool (*preHookFunc) (char *str[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_read_castledb_pre; hIndex++ ) {
@@ -24360,8 +24426,7 @@ bool HP_guild_read_castledb(char *str[], int columns, int current) {
 }
 int HP_guild_payexp_timer_sub(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_payexp_timer_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_payexp_timer_sub_pre; hIndex++ ) {
@@ -24393,8 +24458,7 @@ int HP_guild_payexp_timer_sub(DBKey key, DBData *data, va_list ap) {
 }
 int HP_guild_send_xy_timer_sub(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_send_xy_timer_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_send_xy_timer_sub_pre; hIndex++ ) {
@@ -24426,8 +24490,7 @@ int HP_guild_send_xy_timer_sub(DBKey key, DBData *data, va_list ap) {
 }
 int HP_guild_send_xy_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_send_xy_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_send_xy_timer_pre; hIndex++ ) {
@@ -24486,8 +24549,7 @@ DBData HP_guild_create_expcache(DBKey key, va_list args) {
 }
 int HP_guild_eventlist_db_final(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_eventlist_db_final_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_eventlist_db_final_pre; hIndex++ ) {
@@ -24519,8 +24581,7 @@ int HP_guild_eventlist_db_final(DBKey key, DBData *data, va_list ap) {
 }
 int HP_guild_expcache_db_final(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_expcache_db_final_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_expcache_db_final_pre; hIndex++ ) {
@@ -24552,8 +24613,7 @@ int HP_guild_expcache_db_final(DBKey key, DBData *data, va_list ap) {
 }
 int HP_guild_castle_db_final(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_castle_db_final_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_castle_db_final_pre; hIndex++ ) {
@@ -24585,8 +24645,7 @@ int HP_guild_castle_db_final(DBKey key, DBData *data, va_list ap) {
 }
 int HP_guild_broken_sub(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_broken_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_broken_sub_pre; hIndex++ ) {
@@ -24618,8 +24677,7 @@ int HP_guild_broken_sub(DBKey key, DBData *data, va_list ap) {
 }
 int HP_guild_castle_broken_sub(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_castle_broken_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_castle_broken_sub_pre; hIndex++ ) {
@@ -24676,8 +24734,7 @@ void HP_guild_makemember(struct guild_member *m, struct map_session_data *sd) {
 }
 int HP_guild_check_member(struct guild *g) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_check_member_pre ) {
 		int (*preHookFunc) (struct guild *g);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_check_member_pre; hIndex++ ) {
@@ -24703,8 +24760,7 @@ int HP_guild_check_member(struct guild *g) {
 }
 int HP_guild_get_alliance_count(struct guild *g, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_guild_get_alliance_count_pre ) {
 		int (*preHookFunc) (struct guild *g, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_guild_get_alliance_count_pre; hIndex++ ) {
@@ -24864,8 +24920,7 @@ void HP_gstorage_final(void) {
 }
 int HP_gstorage_delete(int guild_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_gstorage_delete_pre ) {
 		int (*preHookFunc) (int *guild_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_gstorage_delete_pre; hIndex++ ) {
@@ -24891,8 +24946,7 @@ int HP_gstorage_delete(int guild_id) {
 }
 int HP_gstorage_open(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_gstorage_open_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_gstorage_open_pre; hIndex++ ) {
@@ -24918,8 +24972,7 @@ int HP_gstorage_open(struct map_session_data *sd) {
 }
 int HP_gstorage_additem(struct map_session_data *sd, struct guild_storage *stor, struct item *item_data, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_gstorage_additem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct guild_storage *stor, struct item *item_data, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_gstorage_additem_pre; hIndex++ ) {
@@ -24945,8 +24998,7 @@ int HP_gstorage_additem(struct map_session_data *sd, struct guild_storage *stor,
 }
 int HP_gstorage_delitem(struct map_session_data *sd, struct guild_storage *stor, int n, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_gstorage_delitem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct guild_storage *stor, int *n, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_gstorage_delitem_pre; hIndex++ ) {
@@ -24972,8 +25024,7 @@ int HP_gstorage_delitem(struct map_session_data *sd, struct guild_storage *stor,
 }
 int HP_gstorage_add(struct map_session_data *sd, int index, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_gstorage_add_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *index, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_gstorage_add_pre; hIndex++ ) {
@@ -24999,8 +25050,7 @@ int HP_gstorage_add(struct map_session_data *sd, int index, int amount) {
 }
 int HP_gstorage_get(struct map_session_data *sd, int index, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_gstorage_get_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *index, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_gstorage_get_pre; hIndex++ ) {
@@ -25026,8 +25076,7 @@ int HP_gstorage_get(struct map_session_data *sd, int index, int amount) {
 }
 int HP_gstorage_addfromcart(struct map_session_data *sd, int index, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_gstorage_addfromcart_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *index, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_gstorage_addfromcart_pre; hIndex++ ) {
@@ -25053,8 +25102,7 @@ int HP_gstorage_addfromcart(struct map_session_data *sd, int index, int amount) 
 }
 int HP_gstorage_gettocart(struct map_session_data *sd, int index, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_gstorage_gettocart_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *index, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_gstorage_gettocart_pre; hIndex++ ) {
@@ -25080,8 +25128,7 @@ int HP_gstorage_gettocart(struct map_session_data *sd, int index, int amount) {
 }
 int HP_gstorage_close(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_gstorage_close_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_gstorage_close_pre; hIndex++ ) {
@@ -25107,8 +25154,7 @@ int HP_gstorage_close(struct map_session_data *sd) {
 }
 int HP_gstorage_pc_quit(struct map_session_data *sd, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_gstorage_pc_quit_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_gstorage_pc_quit_pre; hIndex++ ) {
@@ -25134,8 +25180,7 @@ int HP_gstorage_pc_quit(struct map_session_data *sd, int flag) {
 }
 int HP_gstorage_save(int account_id, int guild_id, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_gstorage_save_pre ) {
 		int (*preHookFunc) (int *account_id, int *guild_id, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_gstorage_save_pre; hIndex++ ) {
@@ -25161,8 +25206,7 @@ int HP_gstorage_save(int account_id, int guild_id, int flag) {
 }
 int HP_gstorage_saved(int guild_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_gstorage_saved_pre ) {
 		int (*preHookFunc) (int *guild_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_gstorage_saved_pre; hIndex++ ) {
@@ -25348,8 +25392,7 @@ struct view_data* HP_homun_get_viewdata(int class_) {
 }
 enum homun_type HP_homun_class2type(int class_) {
 	int hIndex = 0;
-	enum homun_type retVal___;
-	memset(&retVal___, '\0', sizeof(enum homun_type));
+	enum homun_type retVal___ = HT_INVALID;
 	if( HPMHooks.count.HP_homun_class2type_pre ) {
 		enum homun_type (*preHookFunc) (int *class_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_class2type_pre; hIndex++ ) {
@@ -25400,8 +25443,7 @@ void HP_homun_damaged(struct homun_data *hd) {
 }
 int HP_homun_dead(struct homun_data *hd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_homun_dead_pre ) {
 		int (*preHookFunc) (struct homun_data *hd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_dead_pre; hIndex++ ) {
@@ -25427,8 +25469,7 @@ int HP_homun_dead(struct homun_data *hd) {
 }
 int HP_homun_vaporize(struct map_session_data *sd, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_homun_vaporize_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_vaporize_pre; hIndex++ ) {
@@ -25454,8 +25495,7 @@ int HP_homun_vaporize(struct map_session_data *sd, int flag) {
 }
 int HP_homun_delete(struct homun_data *hd, int emote) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_homun_delete_pre ) {
 		int (*preHookFunc) (struct homun_data *hd, int *emote);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_delete_pre; hIndex++ ) {
@@ -25481,8 +25521,7 @@ int HP_homun_delete(struct homun_data *hd, int emote) {
 }
 int HP_homun_checkskill(struct homun_data *hd, uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_homun_checkskill_pre ) {
 		int (*preHookFunc) (struct homun_data *hd, uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_checkskill_pre; hIndex++ ) {
@@ -25508,8 +25547,7 @@ int HP_homun_checkskill(struct homun_data *hd, uint16 skill_id) {
 }
 int HP_homun_calc_skilltree(struct homun_data *hd, int flag_evolve) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_homun_calc_skilltree_pre ) {
 		int (*preHookFunc) (struct homun_data *hd, int *flag_evolve);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_calc_skilltree_pre; hIndex++ ) {
@@ -25535,8 +25573,7 @@ int HP_homun_calc_skilltree(struct homun_data *hd, int flag_evolve) {
 }
 int HP_homun_skill_tree_get_max(int id, int b_class) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_homun_skill_tree_get_max_pre ) {
 		int (*preHookFunc) (int *id, int *b_class);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_skill_tree_get_max_pre; hIndex++ ) {
@@ -25587,8 +25624,7 @@ void HP_homun_skillup(struct homun_data *hd, uint16 skill_id) {
 }
 bool HP_homun_levelup(struct homun_data *hd) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_homun_levelup_pre ) {
 		bool (*preHookFunc) (struct homun_data *hd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_levelup_pre; hIndex++ ) {
@@ -25614,8 +25650,7 @@ bool HP_homun_levelup(struct homun_data *hd) {
 }
 int HP_homun_change_class(struct homun_data *hd, short class_) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_homun_change_class_pre ) {
 		int (*preHookFunc) (struct homun_data *hd, short *class_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_change_class_pre; hIndex++ ) {
@@ -25641,8 +25676,7 @@ int HP_homun_change_class(struct homun_data *hd, short class_) {
 }
 bool HP_homun_evolve(struct homun_data *hd) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_homun_evolve_pre ) {
 		bool (*preHookFunc) (struct homun_data *hd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_evolve_pre; hIndex++ ) {
@@ -25668,8 +25702,7 @@ bool HP_homun_evolve(struct homun_data *hd) {
 }
 bool HP_homun_mutate(struct homun_data *hd, int homun_id) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_homun_mutate_pre ) {
 		bool (*preHookFunc) (struct homun_data *hd, int *homun_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_mutate_pre; hIndex++ ) {
@@ -25695,8 +25728,7 @@ bool HP_homun_mutate(struct homun_data *hd, int homun_id) {
 }
 int HP_homun_gainexp(struct homun_data *hd, unsigned int exp) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_homun_gainexp_pre ) {
 		int (*preHookFunc) (struct homun_data *hd, unsigned int *exp);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_gainexp_pre; hIndex++ ) {
@@ -25722,8 +25754,7 @@ int HP_homun_gainexp(struct homun_data *hd, unsigned int exp) {
 }
 unsigned int HP_homun_add_intimacy(struct homun_data *hd, unsigned int value) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_homun_add_intimacy_pre ) {
 		unsigned int (*preHookFunc) (struct homun_data *hd, unsigned int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_add_intimacy_pre; hIndex++ ) {
@@ -25749,8 +25780,7 @@ unsigned int HP_homun_add_intimacy(struct homun_data *hd, unsigned int value) {
 }
 unsigned int HP_homun_consume_intimacy(struct homun_data *hd, unsigned int value) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_homun_consume_intimacy_pre ) {
 		unsigned int (*preHookFunc) (struct homun_data *hd, unsigned int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_consume_intimacy_pre; hIndex++ ) {
@@ -25826,8 +25856,7 @@ void HP_homun_save(struct homun_data *hd) {
 }
 unsigned char HP_homun_menu(struct map_session_data *sd, unsigned char menu_num) {
 	int hIndex = 0;
-	unsigned char retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned char));
+	unsigned char retVal___ = 0;
 	if( HPMHooks.count.HP_homun_menu_pre ) {
 		unsigned char (*preHookFunc) (struct map_session_data *sd, unsigned char *menu_num);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_menu_pre; hIndex++ ) {
@@ -25853,8 +25882,7 @@ unsigned char HP_homun_menu(struct map_session_data *sd, unsigned char menu_num)
 }
 bool HP_homun_feed(struct map_session_data *sd, struct homun_data *hd) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_homun_feed_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, struct homun_data *hd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_feed_pre; hIndex++ ) {
@@ -25880,8 +25908,7 @@ bool HP_homun_feed(struct map_session_data *sd, struct homun_data *hd) {
 }
 int HP_homun_hunger_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_homun_hunger_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_hunger_timer_pre; hIndex++ ) {
@@ -25932,8 +25959,7 @@ void HP_homun_hunger_timer_delete(struct homun_data *hd) {
 }
 int HP_homun_change_name(struct map_session_data *sd, char *name) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_homun_change_name_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_change_name_pre; hIndex++ ) {
@@ -25959,8 +25985,7 @@ int HP_homun_change_name(struct map_session_data *sd, char *name) {
 }
 bool HP_homun_change_name_ack(struct map_session_data *sd, char *name, int flag) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_homun_change_name_ack_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, char *name, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_change_name_ack_pre; hIndex++ ) {
@@ -25986,8 +26011,7 @@ bool HP_homun_change_name_ack(struct map_session_data *sd, char *name, int flag)
 }
 int HP_homun_db_search(int key, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_homun_db_search_pre ) {
 		int (*preHookFunc) (int *key, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_db_search_pre; hIndex++ ) {
@@ -26013,8 +26037,7 @@ int HP_homun_db_search(int key, int type) {
 }
 bool HP_homun_create(struct map_session_data *sd, struct s_homunculus *hom) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_homun_create_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, struct s_homunculus *hom);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_create_pre; hIndex++ ) {
@@ -26065,8 +26088,7 @@ void HP_homun_init_timers(struct homun_data *hd) {
 }
 bool HP_homun_call(struct map_session_data *sd) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_homun_call_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_call_pre; hIndex++ ) {
@@ -26092,8 +26114,7 @@ bool HP_homun_call(struct map_session_data *sd) {
 }
 bool HP_homun_recv_data(int account_id, struct s_homunculus *sh, int flag) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_homun_recv_data_pre ) {
 		bool (*preHookFunc) (int *account_id, struct s_homunculus *sh, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_recv_data_pre; hIndex++ ) {
@@ -26119,8 +26140,7 @@ bool HP_homun_recv_data(int account_id, struct s_homunculus *sh, int flag) {
 }
 bool HP_homun_creation_request(struct map_session_data *sd, int class_) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_homun_creation_request_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, int *class_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_creation_request_pre; hIndex++ ) {
@@ -26146,8 +26166,7 @@ bool HP_homun_creation_request(struct map_session_data *sd, int class_) {
 }
 bool HP_homun_ressurect(struct map_session_data *sd, unsigned char per, short x, short y) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_homun_ressurect_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, unsigned char *per, short *x, short *y);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_ressurect_pre; hIndex++ ) {
@@ -26223,8 +26242,7 @@ void HP_homun_stat_reset(struct homun_data *hd) {
 }
 bool HP_homun_shuffle(struct homun_data *hd) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_homun_shuffle_pre ) {
 		bool (*preHookFunc) (struct homun_data *hd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_shuffle_pre; hIndex++ ) {
@@ -26250,8 +26268,7 @@ bool HP_homun_shuffle(struct homun_data *hd) {
 }
 bool HP_homun_read_db_sub(char *str[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_homun_read_db_sub_pre ) {
 		bool (*preHookFunc) (char *str[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_read_db_sub_pre; hIndex++ ) {
@@ -26302,8 +26319,7 @@ void HP_homun_read_db(void) {
 }
 bool HP_homun_read_skill_db_sub(char *split[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_homun_read_skill_db_sub_pre ) {
 		bool (*preHookFunc) (char *split[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_read_skill_db_sub_pre; hIndex++ ) {
@@ -26480,8 +26496,7 @@ void HP_instance_final(void) {
 }
 int HP_instance_create(int party_id, const char *name, enum instance_owner_type type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_instance_create_pre ) {
 		int (*preHookFunc) (int *party_id, const char *name, enum instance_owner_type *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_instance_create_pre; hIndex++ ) {
@@ -26507,8 +26522,7 @@ int HP_instance_create(int party_id, const char *name, enum instance_owner_type 
 }
 int HP_instance_add_map(const char *name, int instance_id, bool usebasename, const char *map_name) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_instance_add_map_pre ) {
 		int (*preHookFunc) (const char *name, int *instance_id, bool *usebasename, const char *map_name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_instance_add_map_pre; hIndex++ ) {
@@ -26559,8 +26573,7 @@ void HP_instance_del_map(int16 m) {
 }
 int HP_instance_map2imap(int16 m, int instance_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_instance_map2imap_pre ) {
 		int (*preHookFunc) (int16 *m, int *instance_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_instance_map2imap_pre; hIndex++ ) {
@@ -26586,8 +26599,7 @@ int HP_instance_map2imap(int16 m, int instance_id) {
 }
 int HP_instance_mapid2imapid(int16 m, int instance_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_instance_mapid2imapid_pre ) {
 		int (*preHookFunc) (int16 *m, int *instance_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_instance_mapid2imapid_pre; hIndex++ ) {
@@ -26738,8 +26750,7 @@ void HP_instance_set_timeout(int instance_id, unsigned int progress_timeout, uns
 }
 bool HP_instance_valid(int instance_id) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_instance_valid_pre ) {
 		bool (*preHookFunc) (int *instance_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_instance_valid_pre; hIndex++ ) {
@@ -26765,8 +26776,7 @@ bool HP_instance_valid(int instance_id) {
 }
 int HP_instance_destroy_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_instance_destroy_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_instance_destroy_timer_pre; hIndex++ ) {
@@ -26793,8 +26803,7 @@ int HP_instance_destroy_timer(int tid, unsigned int tick, int id, intptr_t data)
 /* intif */
 int HP_intif_parse(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_parse_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_parse_pre; hIndex++ ) {
@@ -26820,8 +26829,7 @@ int HP_intif_parse(int fd) {
 }
 int HP_intif_create_pet(int account_id, int char_id, short pet_type, short pet_lv, short pet_egg_id, short pet_equip, short intimate, short hungry, char rename_flag, char incuvate, char *pet_name) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_create_pet_pre ) {
 		int (*preHookFunc) (int *account_id, int *char_id, short *pet_type, short *pet_lv, short *pet_egg_id, short *pet_equip, short *intimate, short *hungry, char *rename_flag, char *incuvate, char *pet_name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_create_pet_pre; hIndex++ ) {
@@ -26847,8 +26855,7 @@ int HP_intif_create_pet(int account_id, int char_id, short pet_type, short pet_l
 }
 int HP_intif_broadcast(const char *mes, int len, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_broadcast_pre ) {
 		int (*preHookFunc) (const char *mes, int *len, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_broadcast_pre; hIndex++ ) {
@@ -26874,8 +26881,7 @@ int HP_intif_broadcast(const char *mes, int len, int type) {
 }
 int HP_intif_broadcast2(const char *mes, int len, unsigned long fontColor, short fontType, short fontSize, short fontAlign, short fontY) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_broadcast2_pre ) {
 		int (*preHookFunc) (const char *mes, int *len, unsigned long *fontColor, short *fontType, short *fontSize, short *fontAlign, short *fontY);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_broadcast2_pre; hIndex++ ) {
@@ -26901,8 +26907,7 @@ int HP_intif_broadcast2(const char *mes, int len, unsigned long fontColor, short
 }
 int HP_intif_main_message(struct map_session_data *sd, const char *message) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_main_message_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *message);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_main_message_pre; hIndex++ ) {
@@ -26928,8 +26933,7 @@ int HP_intif_main_message(struct map_session_data *sd, const char *message) {
 }
 int HP_intif_wis_message(struct map_session_data *sd, char *nick, char *mes, int mes_len) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_wis_message_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, char *nick, char *mes, int *mes_len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_wis_message_pre; hIndex++ ) {
@@ -26955,8 +26959,7 @@ int HP_intif_wis_message(struct map_session_data *sd, char *nick, char *mes, int
 }
 int HP_intif_wis_message_to_gm(char *Wisp_name, int permission, char *mes) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_wis_message_to_gm_pre ) {
 		int (*preHookFunc) (char *Wisp_name, int *permission, char *mes);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_wis_message_to_gm_pre; hIndex++ ) {
@@ -26982,8 +26985,7 @@ int HP_intif_wis_message_to_gm(char *Wisp_name, int permission, char *mes) {
 }
 int HP_intif_saveregistry(struct map_session_data *sd, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_saveregistry_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_saveregistry_pre; hIndex++ ) {
@@ -27009,8 +27011,7 @@ int HP_intif_saveregistry(struct map_session_data *sd, int type) {
 }
 int HP_intif_request_registry(struct map_session_data *sd, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_request_registry_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_request_registry_pre; hIndex++ ) {
@@ -27036,8 +27037,7 @@ int HP_intif_request_registry(struct map_session_data *sd, int flag) {
 }
 int HP_intif_request_guild_storage(int account_id, int guild_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_request_guild_storage_pre ) {
 		int (*preHookFunc) (int *account_id, int *guild_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_request_guild_storage_pre; hIndex++ ) {
@@ -27063,8 +27063,7 @@ int HP_intif_request_guild_storage(int account_id, int guild_id) {
 }
 int HP_intif_send_guild_storage(int account_id, struct guild_storage *gstor) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_send_guild_storage_pre ) {
 		int (*preHookFunc) (int *account_id, struct guild_storage *gstor);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_send_guild_storage_pre; hIndex++ ) {
@@ -27090,8 +27089,7 @@ int HP_intif_send_guild_storage(int account_id, struct guild_storage *gstor) {
 }
 int HP_intif_create_party(struct party_member *member, char *name, int item, int item2) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_create_party_pre ) {
 		int (*preHookFunc) (struct party_member *member, char *name, int *item, int *item2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_create_party_pre; hIndex++ ) {
@@ -27117,8 +27115,7 @@ int HP_intif_create_party(struct party_member *member, char *name, int item, int
 }
 int HP_intif_request_partyinfo(int party_id, int char_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_request_partyinfo_pre ) {
 		int (*preHookFunc) (int *party_id, int *char_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_request_partyinfo_pre; hIndex++ ) {
@@ -27144,8 +27141,7 @@ int HP_intif_request_partyinfo(int party_id, int char_id) {
 }
 int HP_intif_party_addmember(int party_id, struct party_member *member) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_party_addmember_pre ) {
 		int (*preHookFunc) (int *party_id, struct party_member *member);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_party_addmember_pre; hIndex++ ) {
@@ -27171,8 +27167,7 @@ int HP_intif_party_addmember(int party_id, struct party_member *member) {
 }
 int HP_intif_party_changeoption(int party_id, int account_id, int exp, int item) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_party_changeoption_pre ) {
 		int (*preHookFunc) (int *party_id, int *account_id, int *exp, int *item);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_party_changeoption_pre; hIndex++ ) {
@@ -27198,8 +27193,7 @@ int HP_intif_party_changeoption(int party_id, int account_id, int exp, int item)
 }
 int HP_intif_party_leave(int party_id, int account_id, int char_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_party_leave_pre ) {
 		int (*preHookFunc) (int *party_id, int *account_id, int *char_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_party_leave_pre; hIndex++ ) {
@@ -27225,8 +27219,7 @@ int HP_intif_party_leave(int party_id, int account_id, int char_id) {
 }
 int HP_intif_party_changemap(struct map_session_data *sd, int online) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_party_changemap_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *online);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_party_changemap_pre; hIndex++ ) {
@@ -27252,8 +27245,7 @@ int HP_intif_party_changemap(struct map_session_data *sd, int online) {
 }
 int HP_intif_break_party(int party_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_break_party_pre ) {
 		int (*preHookFunc) (int *party_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_break_party_pre; hIndex++ ) {
@@ -27279,8 +27271,7 @@ int HP_intif_break_party(int party_id) {
 }
 int HP_intif_party_message(int party_id, int account_id, const char *mes, int len) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_party_message_pre ) {
 		int (*preHookFunc) (int *party_id, int *account_id, const char *mes, int *len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_party_message_pre; hIndex++ ) {
@@ -27306,8 +27297,7 @@ int HP_intif_party_message(int party_id, int account_id, const char *mes, int le
 }
 int HP_intif_party_leaderchange(int party_id, int account_id, int char_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_party_leaderchange_pre ) {
 		int (*preHookFunc) (int *party_id, int *account_id, int *char_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_party_leaderchange_pre; hIndex++ ) {
@@ -27333,8 +27323,7 @@ int HP_intif_party_leaderchange(int party_id, int account_id, int char_id) {
 }
 int HP_intif_guild_create(const char *name, const struct guild_member *master) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_create_pre ) {
 		int (*preHookFunc) (const char *name, const struct guild_member *master);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_create_pre; hIndex++ ) {
@@ -27360,8 +27349,7 @@ int HP_intif_guild_create(const char *name, const struct guild_member *master) {
 }
 int HP_intif_guild_request_info(int guild_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_request_info_pre ) {
 		int (*preHookFunc) (int *guild_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_request_info_pre; hIndex++ ) {
@@ -27387,8 +27375,7 @@ int HP_intif_guild_request_info(int guild_id) {
 }
 int HP_intif_guild_addmember(int guild_id, struct guild_member *m) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_addmember_pre ) {
 		int (*preHookFunc) (int *guild_id, struct guild_member *m);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_addmember_pre; hIndex++ ) {
@@ -27414,8 +27401,7 @@ int HP_intif_guild_addmember(int guild_id, struct guild_member *m) {
 }
 int HP_intif_guild_leave(int guild_id, int account_id, int char_id, int flag, const char *mes) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_leave_pre ) {
 		int (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *flag, const char *mes);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_leave_pre; hIndex++ ) {
@@ -27441,8 +27427,7 @@ int HP_intif_guild_leave(int guild_id, int account_id, int char_id, int flag, co
 }
 int HP_intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, int online, int lv, int class_) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_memberinfoshort_pre ) {
 		int (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *online, int *lv, int *class_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_memberinfoshort_pre; hIndex++ ) {
@@ -27468,8 +27453,7 @@ int HP_intif_guild_memberinfoshort(int guild_id, int account_id, int char_id, in
 }
 int HP_intif_guild_break(int guild_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_break_pre ) {
 		int (*preHookFunc) (int *guild_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_break_pre; hIndex++ ) {
@@ -27495,8 +27479,7 @@ int HP_intif_guild_break(int guild_id) {
 }
 int HP_intif_guild_message(int guild_id, int account_id, const char *mes, int len) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_message_pre ) {
 		int (*preHookFunc) (int *guild_id, int *account_id, const char *mes, int *len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_message_pre; hIndex++ ) {
@@ -27522,8 +27505,7 @@ int HP_intif_guild_message(int guild_id, int account_id, const char *mes, int le
 }
 int HP_intif_guild_change_gm(int guild_id, const char *name, int len) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_change_gm_pre ) {
 		int (*preHookFunc) (int *guild_id, const char *name, int *len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_change_gm_pre; hIndex++ ) {
@@ -27549,8 +27531,7 @@ int HP_intif_guild_change_gm(int guild_id, const char *name, int len) {
 }
 int HP_intif_guild_change_basicinfo(int guild_id, int type, const void *data, int len) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_change_basicinfo_pre ) {
 		int (*preHookFunc) (int *guild_id, int *type, const void *data, int *len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_change_basicinfo_pre; hIndex++ ) {
@@ -27576,8 +27557,7 @@ int HP_intif_guild_change_basicinfo(int guild_id, int type, const void *data, in
 }
 int HP_intif_guild_change_memberinfo(int guild_id, int account_id, int char_id, int type, const void *data, int len) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_change_memberinfo_pre ) {
 		int (*preHookFunc) (int *guild_id, int *account_id, int *char_id, int *type, const void *data, int *len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_change_memberinfo_pre; hIndex++ ) {
@@ -27603,8 +27583,7 @@ int HP_intif_guild_change_memberinfo(int guild_id, int account_id, int char_id, 
 }
 int HP_intif_guild_position(int guild_id, int idx, struct guild_position *p) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_position_pre ) {
 		int (*preHookFunc) (int *guild_id, int *idx, struct guild_position *p);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_position_pre; hIndex++ ) {
@@ -27630,8 +27609,7 @@ int HP_intif_guild_position(int guild_id, int idx, struct guild_position *p) {
 }
 int HP_intif_guild_skillup(int guild_id, uint16 skill_id, int account_id, int max) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_skillup_pre ) {
 		int (*preHookFunc) (int *guild_id, uint16 *skill_id, int *account_id, int *max);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_skillup_pre; hIndex++ ) {
@@ -27657,8 +27635,7 @@ int HP_intif_guild_skillup(int guild_id, uint16 skill_id, int account_id, int ma
 }
 int HP_intif_guild_alliance(int guild_id1, int guild_id2, int account_id1, int account_id2, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_alliance_pre ) {
 		int (*preHookFunc) (int *guild_id1, int *guild_id2, int *account_id1, int *account_id2, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_alliance_pre; hIndex++ ) {
@@ -27684,8 +27661,7 @@ int HP_intif_guild_alliance(int guild_id1, int guild_id2, int account_id1, int a
 }
 int HP_intif_guild_notice(int guild_id, const char *mes1, const char *mes2) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_notice_pre ) {
 		int (*preHookFunc) (int *guild_id, const char *mes1, const char *mes2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_notice_pre; hIndex++ ) {
@@ -27711,8 +27687,7 @@ int HP_intif_guild_notice(int guild_id, const char *mes1, const char *mes2) {
 }
 int HP_intif_guild_emblem(int guild_id, int len, const char *data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_emblem_pre ) {
 		int (*preHookFunc) (int *guild_id, int *len, const char *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_emblem_pre; hIndex++ ) {
@@ -27738,8 +27713,7 @@ int HP_intif_guild_emblem(int guild_id, int len, const char *data) {
 }
 int HP_intif_guild_castle_dataload(int num, int *castle_ids) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_castle_dataload_pre ) {
 		int (*preHookFunc) (int *num, int *castle_ids);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_castle_dataload_pre; hIndex++ ) {
@@ -27765,8 +27739,7 @@ int HP_intif_guild_castle_dataload(int num, int *castle_ids) {
 }
 int HP_intif_guild_castle_datasave(int castle_id, int index, int value) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_guild_castle_datasave_pre ) {
 		int (*preHookFunc) (int *castle_id, int *index, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_guild_castle_datasave_pre; hIndex++ ) {
@@ -27792,8 +27765,7 @@ int HP_intif_guild_castle_datasave(int castle_id, int index, int value) {
 }
 int HP_intif_request_petdata(int account_id, int char_id, int pet_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_request_petdata_pre ) {
 		int (*preHookFunc) (int *account_id, int *char_id, int *pet_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_request_petdata_pre; hIndex++ ) {
@@ -27819,8 +27791,7 @@ int HP_intif_request_petdata(int account_id, int char_id, int pet_id) {
 }
 int HP_intif_save_petdata(int account_id, struct s_pet *p) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_save_petdata_pre ) {
 		int (*preHookFunc) (int *account_id, struct s_pet *p);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_save_petdata_pre; hIndex++ ) {
@@ -27846,8 +27817,7 @@ int HP_intif_save_petdata(int account_id, struct s_pet *p) {
 }
 int HP_intif_delete_petdata(int pet_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_delete_petdata_pre ) {
 		int (*preHookFunc) (int *pet_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_delete_petdata_pre; hIndex++ ) {
@@ -27873,8 +27843,7 @@ int HP_intif_delete_petdata(int pet_id) {
 }
 int HP_intif_rename(struct map_session_data *sd, int type, char *name) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_rename_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type, char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_rename_pre; hIndex++ ) {
@@ -27900,8 +27869,7 @@ int HP_intif_rename(struct map_session_data *sd, int type, char *name) {
 }
 int HP_intif_homunculus_create(int account_id, struct s_homunculus *sh) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_homunculus_create_pre ) {
 		int (*preHookFunc) (int *account_id, struct s_homunculus *sh);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_homunculus_create_pre; hIndex++ ) {
@@ -27927,8 +27895,7 @@ int HP_intif_homunculus_create(int account_id, struct s_homunculus *sh) {
 }
 bool HP_intif_homunculus_requestload(int account_id, int homun_id) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_intif_homunculus_requestload_pre ) {
 		bool (*preHookFunc) (int *account_id, int *homun_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_homunculus_requestload_pre; hIndex++ ) {
@@ -27954,8 +27921,7 @@ bool HP_intif_homunculus_requestload(int account_id, int homun_id) {
 }
 int HP_intif_homunculus_requestsave(int account_id, struct s_homunculus *sh) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_homunculus_requestsave_pre ) {
 		int (*preHookFunc) (int *account_id, struct s_homunculus *sh);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_homunculus_requestsave_pre; hIndex++ ) {
@@ -27981,8 +27947,7 @@ int HP_intif_homunculus_requestsave(int account_id, struct s_homunculus *sh) {
 }
 int HP_intif_homunculus_requestdelete(int homun_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_homunculus_requestdelete_pre ) {
 		int (*preHookFunc) (int *homun_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_homunculus_requestdelete_pre; hIndex++ ) {
@@ -28008,8 +27973,7 @@ int HP_intif_homunculus_requestdelete(int homun_id) {
 }
 int HP_intif_request_questlog(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_request_questlog_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_request_questlog_pre; hIndex++ ) {
@@ -28035,8 +27999,7 @@ int HP_intif_request_questlog(struct map_session_data *sd) {
 }
 int HP_intif_quest_save(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_quest_save_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_quest_save_pre; hIndex++ ) {
@@ -28062,8 +28025,7 @@ int HP_intif_quest_save(struct map_session_data *sd) {
 }
 int HP_intif_mercenary_create(struct s_mercenary *merc) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_mercenary_create_pre ) {
 		int (*preHookFunc) (struct s_mercenary *merc);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_mercenary_create_pre; hIndex++ ) {
@@ -28089,8 +28051,7 @@ int HP_intif_mercenary_create(struct s_mercenary *merc) {
 }
 int HP_intif_mercenary_request(int merc_id, int char_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_mercenary_request_pre ) {
 		int (*preHookFunc) (int *merc_id, int *char_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_mercenary_request_pre; hIndex++ ) {
@@ -28116,8 +28077,7 @@ int HP_intif_mercenary_request(int merc_id, int char_id) {
 }
 int HP_intif_mercenary_delete(int merc_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_mercenary_delete_pre ) {
 		int (*preHookFunc) (int *merc_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_mercenary_delete_pre; hIndex++ ) {
@@ -28143,8 +28103,7 @@ int HP_intif_mercenary_delete(int merc_id) {
 }
 int HP_intif_mercenary_save(struct s_mercenary *merc) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_mercenary_save_pre ) {
 		int (*preHookFunc) (struct s_mercenary *merc);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_mercenary_save_pre; hIndex++ ) {
@@ -28170,8 +28129,7 @@ int HP_intif_mercenary_save(struct s_mercenary *merc) {
 }
 int HP_intif_Mail_requestinbox(int char_id, unsigned char flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_Mail_requestinbox_pre ) {
 		int (*preHookFunc) (int *char_id, unsigned char *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_Mail_requestinbox_pre; hIndex++ ) {
@@ -28197,8 +28155,7 @@ int HP_intif_Mail_requestinbox(int char_id, unsigned char flag) {
 }
 int HP_intif_Mail_read(int mail_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_Mail_read_pre ) {
 		int (*preHookFunc) (int *mail_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_Mail_read_pre; hIndex++ ) {
@@ -28224,8 +28181,7 @@ int HP_intif_Mail_read(int mail_id) {
 }
 int HP_intif_Mail_getattach(int char_id, int mail_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_Mail_getattach_pre ) {
 		int (*preHookFunc) (int *char_id, int *mail_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_Mail_getattach_pre; hIndex++ ) {
@@ -28251,8 +28207,7 @@ int HP_intif_Mail_getattach(int char_id, int mail_id) {
 }
 int HP_intif_Mail_delete(int char_id, int mail_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_Mail_delete_pre ) {
 		int (*preHookFunc) (int *char_id, int *mail_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_Mail_delete_pre; hIndex++ ) {
@@ -28278,8 +28233,7 @@ int HP_intif_Mail_delete(int char_id, int mail_id) {
 }
 int HP_intif_Mail_return(int char_id, int mail_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_Mail_return_pre ) {
 		int (*preHookFunc) (int *char_id, int *mail_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_Mail_return_pre; hIndex++ ) {
@@ -28305,8 +28259,7 @@ int HP_intif_Mail_return(int char_id, int mail_id) {
 }
 int HP_intif_Mail_send(int account_id, struct mail_message *msg) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_Mail_send_pre ) {
 		int (*preHookFunc) (int *account_id, struct mail_message *msg);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_Mail_send_pre; hIndex++ ) {
@@ -28332,8 +28285,7 @@ int HP_intif_Mail_send(int account_id, struct mail_message *msg) {
 }
 int HP_intif_Auction_requestlist(int char_id, short type, int price, const char *searchtext, short page) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_Auction_requestlist_pre ) {
 		int (*preHookFunc) (int *char_id, short *type, int *price, const char *searchtext, short *page);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_Auction_requestlist_pre; hIndex++ ) {
@@ -28359,8 +28311,7 @@ int HP_intif_Auction_requestlist(int char_id, short type, int price, const char 
 }
 int HP_intif_Auction_register(struct auction_data *auction) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_Auction_register_pre ) {
 		int (*preHookFunc) (struct auction_data *auction);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_Auction_register_pre; hIndex++ ) {
@@ -28386,8 +28337,7 @@ int HP_intif_Auction_register(struct auction_data *auction) {
 }
 int HP_intif_Auction_cancel(int char_id, unsigned int auction_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_Auction_cancel_pre ) {
 		int (*preHookFunc) (int *char_id, unsigned int *auction_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_Auction_cancel_pre; hIndex++ ) {
@@ -28413,8 +28363,7 @@ int HP_intif_Auction_cancel(int char_id, unsigned int auction_id) {
 }
 int HP_intif_Auction_close(int char_id, unsigned int auction_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_Auction_close_pre ) {
 		int (*preHookFunc) (int *char_id, unsigned int *auction_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_Auction_close_pre; hIndex++ ) {
@@ -28440,8 +28389,7 @@ int HP_intif_Auction_close(int char_id, unsigned int auction_id) {
 }
 int HP_intif_Auction_bid(int char_id, const char *name, unsigned int auction_id, int bid) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_Auction_bid_pre ) {
 		int (*preHookFunc) (int *char_id, const char *name, unsigned int *auction_id, int *bid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_Auction_bid_pre; hIndex++ ) {
@@ -28467,8 +28415,7 @@ int HP_intif_Auction_bid(int char_id, const char *name, unsigned int auction_id,
 }
 int HP_intif_elemental_create(struct s_elemental *ele) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_elemental_create_pre ) {
 		int (*preHookFunc) (struct s_elemental *ele);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_elemental_create_pre; hIndex++ ) {
@@ -28494,8 +28441,7 @@ int HP_intif_elemental_create(struct s_elemental *ele) {
 }
 int HP_intif_elemental_request(int ele_id, int char_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_elemental_request_pre ) {
 		int (*preHookFunc) (int *ele_id, int *char_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_elemental_request_pre; hIndex++ ) {
@@ -28521,8 +28467,7 @@ int HP_intif_elemental_request(int ele_id, int char_id) {
 }
 int HP_intif_elemental_delete(int ele_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_elemental_delete_pre ) {
 		int (*preHookFunc) (int *ele_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_elemental_delete_pre; hIndex++ ) {
@@ -28548,8 +28493,7 @@ int HP_intif_elemental_delete(int ele_id) {
 }
 int HP_intif_elemental_save(struct s_elemental *ele) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_elemental_save_pre ) {
 		int (*preHookFunc) (struct s_elemental *ele);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_elemental_save_pre; hIndex++ ) {
@@ -28600,8 +28544,7 @@ void HP_intif_request_accinfo(int u_fd, int aid, int group_lv, char *query) {
 }
 int HP_intif_CheckForCharServer(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_CheckForCharServer_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_CheckForCharServer_pre; hIndex++ ) {
@@ -28677,8 +28620,7 @@ void HP_intif_pWisEnd(int fd) {
 }
 int HP_intif_pWisToGM_sub(struct map_session_data *sd, va_list va) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_intif_pWisToGM_sub_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, va_list va);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_intif_pWisToGM_sub_pre; hIndex++ ) {
@@ -30211,8 +30153,7 @@ void HP_ircbot_final(void) {
 }
 int HP_ircbot_parse(int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_ircbot_parse_pre ) {
 		int (*preHookFunc) (int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_parse_pre; hIndex++ ) {
@@ -30314,8 +30255,7 @@ struct irc_func* HP_ircbot_func_search(char *function_name) {
 }
 int HP_ircbot_connect_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_ircbot_connect_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_connect_timer_pre; hIndex++ ) {
@@ -30341,8 +30281,7 @@ int HP_ircbot_connect_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_ircbot_identify_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_ircbot_identify_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_identify_timer_pre; hIndex++ ) {
@@ -30368,8 +30307,7 @@ int HP_ircbot_identify_timer(int tid, unsigned int tick, int id, intptr_t data) 
 }
 int HP_ircbot_join_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_ircbot_join_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_join_timer_pre; hIndex++ ) {
@@ -30796,8 +30734,7 @@ void HP_itemdb_write_cached_packages(const char *config_filename) {
 }
 bool HP_itemdb_read_cached_packages(const char *config_filename) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_itemdb_read_cached_packages_pre ) {
 		bool (*preHookFunc) (const char *config_filename);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_cached_packages_pre; hIndex++ ) {
@@ -30875,8 +30812,7 @@ struct item_data* HP_itemdb_search_name(const char *name) {
 }
 int HP_itemdb_search_name_array(struct item_data **data, int size, const char *str, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_search_name_array_pre ) {
 		int (*preHookFunc) (struct item_data **data, int *size, const char *str, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_search_name_array_pre; hIndex++ ) {
@@ -30954,8 +30890,7 @@ struct item_data* HP_itemdb_search(int nameid) {
 }
 int HP_itemdb_parse_dbrow(char **str, const char *source, int line, int scriptopt) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_parse_dbrow_pre ) {
 		int (*preHookFunc) (char **str, const char *source, int *line, int *scriptopt);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_parse_dbrow_pre; hIndex++ ) {
@@ -31007,8 +30942,7 @@ struct item_data* HP_itemdb_exists(int nameid) {
 }
 bool HP_itemdb_in_group(struct item_group *group, int nameid) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_itemdb_in_group_pre ) {
 		bool (*preHookFunc) (struct item_group *group, int *nameid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_in_group_pre; hIndex++ ) {
@@ -31034,8 +30968,7 @@ bool HP_itemdb_in_group(struct item_group *group, int nameid) {
 }
 int HP_itemdb_group_item(struct item_group *group) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_group_item_pre ) {
 		int (*preHookFunc) (struct item_group *group);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_group_item_pre; hIndex++ ) {
@@ -31061,8 +30994,7 @@ int HP_itemdb_group_item(struct item_group *group) {
 }
 int HP_itemdb_chain_item(unsigned short chain_id, int *rate) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_chain_item_pre ) {
 		int (*preHookFunc) (unsigned short *chain_id, int *rate);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_chain_item_pre; hIndex++ ) {
@@ -31113,8 +31045,7 @@ void HP_itemdb_package_item(struct map_session_data *sd, struct item_package *pa
 }
 int HP_itemdb_searchname_sub(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_searchname_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_searchname_sub_pre; hIndex++ ) {
@@ -31146,8 +31077,7 @@ int HP_itemdb_searchname_sub(DBKey key, DBData *data, va_list ap) {
 }
 int HP_itemdb_searchname_array_sub(DBKey key, DBData data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_searchname_array_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_searchname_array_sub_pre; hIndex++ ) {
@@ -31179,8 +31109,7 @@ int HP_itemdb_searchname_array_sub(DBKey key, DBData data, va_list ap) {
 }
 int HP_itemdb_searchrandomid(struct item_group *group) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_searchrandomid_pre ) {
 		int (*preHookFunc) (struct item_group *group);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_searchrandomid_pre; hIndex++ ) {
@@ -31308,8 +31237,7 @@ struct item_data* HP_itemdb_create_item_data(int nameid) {
 }
 int HP_itemdb_isequip(int nameid) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_isequip_pre ) {
 		int (*preHookFunc) (int *nameid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_isequip_pre; hIndex++ ) {
@@ -31335,8 +31263,7 @@ int HP_itemdb_isequip(int nameid) {
 }
 int HP_itemdb_isequip2(struct item_data *data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_isequip2_pre ) {
 		int (*preHookFunc) (struct item_data *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_isequip2_pre; hIndex++ ) {
@@ -31362,8 +31289,7 @@ int HP_itemdb_isequip2(struct item_data *data) {
 }
 int HP_itemdb_isstackable(int nameid) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_isstackable_pre ) {
 		int (*preHookFunc) (int *nameid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_isstackable_pre; hIndex++ ) {
@@ -31389,8 +31315,7 @@ int HP_itemdb_isstackable(int nameid) {
 }
 int HP_itemdb_isstackable2(struct item_data *data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_isstackable2_pre ) {
 		int (*preHookFunc) (struct item_data *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_isstackable2_pre; hIndex++ ) {
@@ -31416,8 +31341,7 @@ int HP_itemdb_isstackable2(struct item_data *data) {
 }
 int HP_itemdb_isdropable_sub(struct item_data *item, int gmlv, int unused) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_isdropable_sub_pre ) {
 		int (*preHookFunc) (struct item_data *item, int *gmlv, int *unused);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_isdropable_sub_pre; hIndex++ ) {
@@ -31443,8 +31367,7 @@ int HP_itemdb_isdropable_sub(struct item_data *item, int gmlv, int unused) {
 }
 int HP_itemdb_cantrade_sub(struct item_data *item, int gmlv, int gmlv2) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_cantrade_sub_pre ) {
 		int (*preHookFunc) (struct item_data *item, int *gmlv, int *gmlv2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_cantrade_sub_pre; hIndex++ ) {
@@ -31470,8 +31393,7 @@ int HP_itemdb_cantrade_sub(struct item_data *item, int gmlv, int gmlv2) {
 }
 int HP_itemdb_canpartnertrade_sub(struct item_data *item, int gmlv, int gmlv2) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_canpartnertrade_sub_pre ) {
 		int (*preHookFunc) (struct item_data *item, int *gmlv, int *gmlv2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_canpartnertrade_sub_pre; hIndex++ ) {
@@ -31497,8 +31419,7 @@ int HP_itemdb_canpartnertrade_sub(struct item_data *item, int gmlv, int gmlv2) {
 }
 int HP_itemdb_cansell_sub(struct item_data *item, int gmlv, int unused) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_cansell_sub_pre ) {
 		int (*preHookFunc) (struct item_data *item, int *gmlv, int *unused);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_cansell_sub_pre; hIndex++ ) {
@@ -31524,8 +31445,7 @@ int HP_itemdb_cansell_sub(struct item_data *item, int gmlv, int unused) {
 }
 int HP_itemdb_cancartstore_sub(struct item_data *item, int gmlv, int unused) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_cancartstore_sub_pre ) {
 		int (*preHookFunc) (struct item_data *item, int *gmlv, int *unused);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_cancartstore_sub_pre; hIndex++ ) {
@@ -31551,8 +31471,7 @@ int HP_itemdb_cancartstore_sub(struct item_data *item, int gmlv, int unused) {
 }
 int HP_itemdb_canstore_sub(struct item_data *item, int gmlv, int unused) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_canstore_sub_pre ) {
 		int (*preHookFunc) (struct item_data *item, int *gmlv, int *unused);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_canstore_sub_pre; hIndex++ ) {
@@ -31578,8 +31497,7 @@ int HP_itemdb_canstore_sub(struct item_data *item, int gmlv, int unused) {
 }
 int HP_itemdb_canguildstore_sub(struct item_data *item, int gmlv, int unused) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_canguildstore_sub_pre ) {
 		int (*preHookFunc) (struct item_data *item, int *gmlv, int *unused);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_canguildstore_sub_pre; hIndex++ ) {
@@ -31605,8 +31523,7 @@ int HP_itemdb_canguildstore_sub(struct item_data *item, int gmlv, int unused) {
 }
 int HP_itemdb_canmail_sub(struct item_data *item, int gmlv, int unused) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_canmail_sub_pre ) {
 		int (*preHookFunc) (struct item_data *item, int *gmlv, int *unused);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_canmail_sub_pre; hIndex++ ) {
@@ -31632,8 +31549,7 @@ int HP_itemdb_canmail_sub(struct item_data *item, int gmlv, int unused) {
 }
 int HP_itemdb_canauction_sub(struct item_data *item, int gmlv, int unused) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_canauction_sub_pre ) {
 		int (*preHookFunc) (struct item_data *item, int *gmlv, int *unused);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_canauction_sub_pre; hIndex++ ) {
@@ -31659,8 +31575,7 @@ int HP_itemdb_canauction_sub(struct item_data *item, int gmlv, int unused) {
 }
 int HP_itemdb_isrestricted(struct item *item, int gmlv, int gmlv2, int ( *func ) (struct item_data *, int, int)) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_isrestricted_pre ) {
 		int (*preHookFunc) (struct item *item, int *gmlv, int *gmlv2, int ( *func ) (struct item_data *, int, int));
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_isrestricted_pre; hIndex++ ) {
@@ -31686,8 +31601,7 @@ int HP_itemdb_isrestricted(struct item *item, int gmlv, int gmlv2, int ( *func )
 }
 int HP_itemdb_isidentified(int nameid) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_isidentified_pre ) {
 		int (*preHookFunc) (int *nameid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_isidentified_pre; hIndex++ ) {
@@ -31713,8 +31627,7 @@ int HP_itemdb_isidentified(int nameid) {
 }
 int HP_itemdb_isidentified2(struct item_data *data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_isidentified2_pre ) {
 		int (*preHookFunc) (struct item_data *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_isidentified2_pre; hIndex++ ) {
@@ -31740,8 +31653,7 @@ int HP_itemdb_isidentified2(struct item_data *data) {
 }
 bool HP_itemdb_read_itemavail(char *str[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_itemdb_read_itemavail_pre ) {
 		bool (*preHookFunc) (char *str[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_itemavail_pre; hIndex++ ) {
@@ -31767,8 +31679,7 @@ bool HP_itemdb_read_itemavail(char *str[], int columns, int current) {
 }
 bool HP_itemdb_read_itemtrade(char *str[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_itemdb_read_itemtrade_pre ) {
 		bool (*preHookFunc) (char *str[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_itemtrade_pre; hIndex++ ) {
@@ -31794,8 +31705,7 @@ bool HP_itemdb_read_itemtrade(char *str[], int columns, int current) {
 }
 bool HP_itemdb_read_itemdelay(char *str[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_itemdb_read_itemdelay_pre ) {
 		bool (*preHookFunc) (char *str[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_itemdelay_pre; hIndex++ ) {
@@ -31821,8 +31731,7 @@ bool HP_itemdb_read_itemdelay(char *str[], int columns, int current) {
 }
 bool HP_itemdb_read_stack(char *fields[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_itemdb_read_stack_pre ) {
 		bool (*preHookFunc) (char *fields[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_stack_pre; hIndex++ ) {
@@ -31848,8 +31757,7 @@ bool HP_itemdb_read_stack(char *fields[], int columns, int current) {
 }
 bool HP_itemdb_read_buyingstore(char *fields[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_itemdb_read_buyingstore_pre ) {
 		bool (*preHookFunc) (char *fields[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_buyingstore_pre; hIndex++ ) {
@@ -31875,8 +31783,7 @@ bool HP_itemdb_read_buyingstore(char *fields[], int columns, int current) {
 }
 bool HP_itemdb_read_nouse(char *fields[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_itemdb_read_nouse_pre ) {
 		bool (*preHookFunc) (char *fields[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_nouse_pre; hIndex++ ) {
@@ -31902,8 +31809,7 @@ bool HP_itemdb_read_nouse(char *fields[], int columns, int current) {
 }
 int HP_itemdb_combo_split_atoi(char *str, int *val) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_combo_split_atoi_pre ) {
 		int (*preHookFunc) (char *str, int *val);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_combo_split_atoi_pre; hIndex++ ) {
@@ -31954,8 +31860,7 @@ void HP_itemdb_read_combos(void) {
 }
 int HP_itemdb_gendercheck(struct item_data *id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_gendercheck_pre ) {
 		int (*preHookFunc) (struct item_data *id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_gendercheck_pre; hIndex++ ) {
@@ -32006,8 +31911,7 @@ void HP_itemdb_re_split_atoi(char *str, int *atk, int *matk) {
 }
 int HP_itemdb_readdb(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_readdb_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_pre; hIndex++ ) {
@@ -32033,8 +31937,7 @@ int HP_itemdb_readdb(void) {
 }
 int HP_itemdb_read_sqldb(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_read_sqldb_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_read_sqldb_pre; hIndex++ ) {
@@ -32060,8 +31963,7 @@ int HP_itemdb_read_sqldb(void) {
 }
 uint64 HP_itemdb_unique_id(int8 flag, int64 value) {
 	int hIndex = 0;
-	uint64 retVal___;
-	memset(&retVal___, '\0', sizeof(uint64));
+	uint64 retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_unique_id_pre ) {
 		uint64 (*preHookFunc) (int8 *flag, int64 *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_unique_id_pre; hIndex++ ) {
@@ -32087,8 +31989,7 @@ uint64 HP_itemdb_unique_id(int8 flag, int64 value) {
 }
 int HP_itemdb_uid_load(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_uid_load_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_uid_load_pre; hIndex++ ) {
@@ -32164,8 +32065,7 @@ void HP_itemdb_destroy_item_data(struct item_data *self, int free_self) {
 }
 int HP_itemdb_final_sub(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_final_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_final_sub_pre; hIndex++ ) {
@@ -32573,8 +32473,7 @@ void HP_logs_mvpdrop_sub(struct map_session_data *sd, int monster_id, int *log_m
 }
 int HP_logs_config_read(const char *cfgName) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_logs_config_read_pre ) {
 		int (*preHookFunc) (const char *cfgName);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_logs_config_read_pre; hIndex++ ) {
@@ -32675,8 +32574,7 @@ void HP_logs_sql_final(void) {
 }
 char HP_logs_picktype2char(e_log_pick_type type) {
 	int hIndex = 0;
-	char retVal___;
-	memset(&retVal___, '\0', sizeof(char));
+	char retVal___ = 0;
 	if( HPMHooks.count.HP_logs_picktype2char_pre ) {
 		char (*preHookFunc) (e_log_pick_type *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_logs_picktype2char_pre; hIndex++ ) {
@@ -32702,8 +32600,7 @@ char HP_logs_picktype2char(e_log_pick_type type) {
 }
 char HP_logs_chattype2char(e_log_chat_type type) {
 	int hIndex = 0;
-	char retVal___;
-	memset(&retVal___, '\0', sizeof(char));
+	char retVal___ = 0;
 	if( HPMHooks.count.HP_logs_chattype2char_pre ) {
 		char (*preHookFunc) (e_log_chat_type *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_logs_chattype2char_pre; hIndex++ ) {
@@ -32729,8 +32626,7 @@ char HP_logs_chattype2char(e_log_chat_type type) {
 }
 bool HP_logs_should_log_item(int nameid, int amount, int refine, struct item_data *id) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_logs_should_log_item_pre ) {
 		bool (*preHookFunc) (int *nameid, int *amount, int *refine, struct item_data *id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_logs_should_log_item_pre; hIndex++ ) {
@@ -32782,8 +32678,7 @@ void HP_mail_clear(struct map_session_data *sd) {
 }
 int HP_mail_removeitem(struct map_session_data *sd, short flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mail_removeitem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, short *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mail_removeitem_pre; hIndex++ ) {
@@ -32809,8 +32704,7 @@ int HP_mail_removeitem(struct map_session_data *sd, short flag) {
 }
 int HP_mail_removezeny(struct map_session_data *sd, short flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mail_removezeny_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, short *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mail_removezeny_pre; hIndex++ ) {
@@ -32836,8 +32730,7 @@ int HP_mail_removezeny(struct map_session_data *sd, short flag) {
 }
 unsigned char HP_mail_setitem(struct map_session_data *sd, int idx, int amount) {
 	int hIndex = 0;
-	unsigned char retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned char));
+	unsigned char retVal___ = 0;
 	if( HPMHooks.count.HP_mail_setitem_pre ) {
 		unsigned char (*preHookFunc) (struct map_session_data *sd, int *idx, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mail_setitem_pre; hIndex++ ) {
@@ -32863,8 +32756,7 @@ unsigned char HP_mail_setitem(struct map_session_data *sd, int idx, int amount) 
 }
 bool HP_mail_setattachment(struct map_session_data *sd, struct mail_message *msg) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mail_setattachment_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, struct mail_message *msg);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mail_setattachment_pre; hIndex++ ) {
@@ -32915,8 +32807,7 @@ void HP_mail_getattachment(struct map_session_data *sd, int zeny, struct item *i
 }
 int HP_mail_openmail(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mail_openmail_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mail_openmail_pre; hIndex++ ) {
@@ -32967,8 +32858,7 @@ void HP_mail_deliveryfail(struct map_session_data *sd, struct mail_message *msg)
 }
 bool HP_mail_invalid_operation(struct map_session_data *sd) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mail_invalid_operation_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mail_invalid_operation_pre; hIndex++ ) {
@@ -33120,8 +33010,7 @@ void HP_map_zone_change2(int m, struct map_zone_data *zone) {
 }
 int HP_map_getcell(int16 m, int16 x, int16 y, cell_chk cellchk) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_getcell_pre ) {
 		int (*preHookFunc) (int16 *m, int16 *x, int16 *y, cell_chk *cellchk);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_getcell_pre; hIndex++ ) {
@@ -33222,8 +33111,7 @@ void HP_map_setusers(int p1) {
 }
 int HP_map_getusers(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_getusers_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_getusers_pre; hIndex++ ) {
@@ -33249,8 +33137,7 @@ int HP_map_getusers(void) {
 }
 int HP_map_usercount(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_usercount_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_usercount_pre; hIndex++ ) {
@@ -33276,8 +33163,7 @@ int HP_map_usercount(void) {
 }
 int HP_map_freeblock(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_freeblock_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_freeblock_pre; hIndex++ ) {
@@ -33303,8 +33189,7 @@ int HP_map_freeblock(struct block_list *bl) {
 }
 int HP_map_freeblock_lock(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_freeblock_lock_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_freeblock_lock_pre; hIndex++ ) {
@@ -33330,8 +33215,7 @@ int HP_map_freeblock_lock(void) {
 }
 int HP_map_freeblock_unlock(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_freeblock_unlock_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_freeblock_unlock_pre; hIndex++ ) {
@@ -33357,8 +33241,7 @@ int HP_map_freeblock_unlock(void) {
 }
 int HP_map_addblock(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_addblock_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_addblock_pre; hIndex++ ) {
@@ -33384,8 +33267,7 @@ int HP_map_addblock(struct block_list *bl) {
 }
 int HP_map_delblock(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_delblock_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_delblock_pre; hIndex++ ) {
@@ -33411,8 +33293,7 @@ int HP_map_delblock(struct block_list *bl) {
 }
 int HP_map_moveblock(struct block_list *bl, int x1, int y1, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_moveblock_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int *x1, int *y1, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_moveblock_pre; hIndex++ ) {
@@ -33438,8 +33319,7 @@ int HP_map_moveblock(struct block_list *bl, int x1, int y1, unsigned int tick) {
 }
 int HP_map_count_oncell(int16 m, int16 x, int16 y, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_count_oncell_pre ) {
 		int (*preHookFunc) (int16 *m, int16 *x, int16 *y, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_count_oncell_pre; hIndex++ ) {
@@ -33491,8 +33371,7 @@ struct skill_unit* HP_map_find_skill_unit_oncell(struct block_list *target, int1
 }
 int HP_map_get_new_object_id(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_get_new_object_id_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_get_new_object_id_pre; hIndex++ ) {
@@ -33518,8 +33397,7 @@ int HP_map_get_new_object_id(void) {
 }
 int HP_map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 *y, int16 rx, int16 ry, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_search_freecell_pre ) {
 		int (*preHookFunc) (struct block_list *src, int16 *m, int16 *x, int16 *y, int16 *rx, int16 *ry, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_search_freecell_pre; hIndex++ ) {
@@ -33545,8 +33423,7 @@ int HP_map_search_freecell(struct block_list *src, int16 m, int16 *x, int16 *y, 
 }
 int HP_map_quit(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_quit_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_quit_pre; hIndex++ ) {
@@ -33572,8 +33449,7 @@ int HP_map_quit(struct map_session_data *sd) {
 }
 bool HP_map_addnpc(int16 m, struct npc_data *nd) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_map_addnpc_pre ) {
 		bool (*preHookFunc) (int16 *m, struct npc_data *nd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_addnpc_pre; hIndex++ ) {
@@ -33599,8 +33475,7 @@ bool HP_map_addnpc(int16 m, struct npc_data *nd) {
 }
 int HP_map_clearflooritem_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_clearflooritem_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_clearflooritem_timer_pre; hIndex++ ) {
@@ -33626,8 +33501,7 @@ int HP_map_clearflooritem_timer(int tid, unsigned int tick, int id, intptr_t dat
 }
 int HP_map_removemobs_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_removemobs_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_removemobs_timer_pre; hIndex++ ) {
@@ -33678,8 +33552,7 @@ void HP_map_clearflooritem(struct block_list *bl) {
 }
 int HP_map_addflooritem(struct item *item_data, int amount, int16 m, int16 x, int16 y, int first_charid, int second_charid, int third_charid, int flags) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_addflooritem_pre ) {
 		int (*preHookFunc) (struct item *item_data, int *amount, int16 *m, int16 *x, int16 *y, int *first_charid, int *second_charid, int *third_charid, int *flags);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_addflooritem_pre; hIndex++ ) {
@@ -33987,8 +33860,7 @@ void HP_map_vforeachiddb(int ( *func ) (struct block_list *bl, va_list args), va
 }
 int HP_map_vforeachinrange(int ( *func ) (struct block_list *, va_list), struct block_list *center, int16 range, int type, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_vforeachinrange_pre ) {
 		int (*preHookFunc) (int ( *func ) (struct block_list *, va_list), struct block_list *center, int16 *range, int *type, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_vforeachinrange_pre; hIndex++ ) {
@@ -34020,8 +33892,7 @@ int HP_map_vforeachinrange(int ( *func ) (struct block_list *, va_list), struct 
 }
 int HP_map_vforeachinshootrange(int ( *func ) (struct block_list *, va_list), struct block_list *center, int16 range, int type, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_vforeachinshootrange_pre ) {
 		int (*preHookFunc) (int ( *func ) (struct block_list *, va_list), struct block_list *center, int16 *range, int *type, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_vforeachinshootrange_pre; hIndex++ ) {
@@ -34053,8 +33924,7 @@ int HP_map_vforeachinshootrange(int ( *func ) (struct block_list *, va_list), st
 }
 int HP_map_vforeachinarea(int ( *func ) (struct block_list *, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int type, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_vforeachinarea_pre ) {
 		int (*preHookFunc) (int ( *func ) (struct block_list *, va_list), int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, int *type, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_vforeachinarea_pre; hIndex++ ) {
@@ -34086,8 +33956,7 @@ int HP_map_vforeachinarea(int ( *func ) (struct block_list *, va_list), int16 m,
 }
 int HP_map_vforcountinrange(int ( *func ) (struct block_list *, va_list), struct block_list *center, int16 range, int count, int type, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_vforcountinrange_pre ) {
 		int (*preHookFunc) (int ( *func ) (struct block_list *, va_list), struct block_list *center, int16 *range, int *count, int *type, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_vforcountinrange_pre; hIndex++ ) {
@@ -34119,8 +33988,7 @@ int HP_map_vforcountinrange(int ( *func ) (struct block_list *, va_list), struct
 }
 int HP_map_vforcountinarea(int ( *func ) (struct block_list *, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int count, int type, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_vforcountinarea_pre ) {
 		int (*preHookFunc) (int ( *func ) (struct block_list *, va_list), int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, int *count, int *type, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_vforcountinarea_pre; hIndex++ ) {
@@ -34152,8 +34020,7 @@ int HP_map_vforcountinarea(int ( *func ) (struct block_list *, va_list), int16 m
 }
 int HP_map_vforeachinmovearea(int ( *func ) (struct block_list *, va_list), struct block_list *center, int16 range, int16 dx, int16 dy, int type, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_vforeachinmovearea_pre ) {
 		int (*preHookFunc) (int ( *func ) (struct block_list *, va_list), struct block_list *center, int16 *range, int16 *dx, int16 *dy, int *type, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_vforeachinmovearea_pre; hIndex++ ) {
@@ -34185,8 +34052,7 @@ int HP_map_vforeachinmovearea(int ( *func ) (struct block_list *, va_list), stru
 }
 int HP_map_vforeachincell(int ( *func ) (struct block_list *, va_list), int16 m, int16 x, int16 y, int type, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_vforeachincell_pre ) {
 		int (*preHookFunc) (int ( *func ) (struct block_list *, va_list), int16 *m, int16 *x, int16 *y, int *type, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_vforeachincell_pre; hIndex++ ) {
@@ -34218,8 +34084,7 @@ int HP_map_vforeachincell(int ( *func ) (struct block_list *, va_list), int16 m,
 }
 int HP_map_vforeachinpath(int ( *func ) (struct block_list *, va_list), int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int16 range, int length, int type, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_vforeachinpath_pre ) {
 		int (*preHookFunc) (int ( *func ) (struct block_list *, va_list), int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, int16 *range, int *length, int *type, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_vforeachinpath_pre; hIndex++ ) {
@@ -34251,8 +34116,7 @@ int HP_map_vforeachinpath(int ( *func ) (struct block_list *, va_list), int16 m,
 }
 int HP_map_vforeachinmap(int ( *func ) (struct block_list *, va_list), int16 m, int type, va_list args) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_vforeachinmap_pre ) {
 		int (*preHookFunc) (int ( *func ) (struct block_list *, va_list), int16 *m, int *type, va_list args);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_vforeachinmap_pre; hIndex++ ) {
@@ -34284,8 +34148,7 @@ int HP_map_vforeachinmap(int ( *func ) (struct block_list *, va_list), int16 m, 
 }
 int HP_map_vforeachininstance(int ( *func ) (struct block_list *, va_list), int16 instance_id, int type, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_vforeachininstance_pre ) {
 		int (*preHookFunc) (int ( *func ) (struct block_list *, va_list), int16 *instance_id, int *type, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_vforeachininstance_pre; hIndex++ ) {
@@ -34499,8 +34362,7 @@ struct block_list* HP_map_id2bl(int id) {
 }
 bool HP_map_blid_exists(int id) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_map_blid_exists_pre ) {
 		bool (*preHookFunc) (int *id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_blid_exists_pre; hIndex++ ) {
@@ -34526,8 +34388,7 @@ bool HP_map_blid_exists(int id) {
 }
 int16 HP_map_mapindex2mapid(unsigned short mapindex) {
 	int hIndex = 0;
-	int16 retVal___;
-	memset(&retVal___, '\0', sizeof(int16));
+	int16 retVal___ = 0;
 	if( HPMHooks.count.HP_map_mapindex2mapid_pre ) {
 		int16 (*preHookFunc) (unsigned short *mapindex);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_mapindex2mapid_pre; hIndex++ ) {
@@ -34553,8 +34414,7 @@ int16 HP_map_mapindex2mapid(unsigned short mapindex) {
 }
 int16 HP_map_mapname2mapid(const char *name) {
 	int hIndex = 0;
-	int16 retVal___;
-	memset(&retVal___, '\0', sizeof(int16));
+	int16 retVal___ = 0;
 	if( HPMHooks.count.HP_map_mapname2mapid_pre ) {
 		int16 (*preHookFunc) (const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_mapname2mapid_pre; hIndex++ ) {
@@ -34580,8 +34440,7 @@ int16 HP_map_mapname2mapid(const char *name) {
 }
 int HP_map_mapname2ipport(unsigned short name, uint32 *ip, uint16 *port) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_mapname2ipport_pre ) {
 		int (*preHookFunc) (unsigned short *name, uint32 *ip, uint16 *port);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_mapname2ipport_pre; hIndex++ ) {
@@ -34607,8 +34466,7 @@ int HP_map_mapname2ipport(unsigned short name, uint32 *ip, uint16 *port) {
 }
 int HP_map_setipport(unsigned short mapindex, uint32 ip, uint16 port) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_setipport_pre ) {
 		int (*preHookFunc) (unsigned short *mapindex, uint32 *ip, uint16 *port);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_setipport_pre; hIndex++ ) {
@@ -34634,8 +34492,7 @@ int HP_map_setipport(unsigned short mapindex, uint32 ip, uint16 port) {
 }
 int HP_map_eraseipport(unsigned short mapindex, uint32 ip, uint16 port) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_eraseipport_pre ) {
 		int (*preHookFunc) (unsigned short *mapindex, uint32 *ip, uint16 *port);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_eraseipport_pre; hIndex++ ) {
@@ -34661,8 +34518,7 @@ int HP_map_eraseipport(unsigned short mapindex, uint32 ip, uint16 port) {
 }
 int HP_map_eraseallipport(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_eraseallipport_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_eraseallipport_pre; hIndex++ ) {
@@ -34841,8 +34697,7 @@ void HP_map_reloadnpc(bool clear) {
 }
 int HP_map_check_dir(int s_dir, int t_dir) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_check_dir_pre ) {
 		int (*preHookFunc) (int *s_dir, int *t_dir);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_check_dir_pre; hIndex++ ) {
@@ -34868,8 +34723,7 @@ int HP_map_check_dir(int s_dir, int t_dir) {
 }
 uint8 HP_map_calc_dir(struct block_list *src, int16 x, int16 y) {
 	int hIndex = 0;
-	uint8 retVal___;
-	memset(&retVal___, '\0', sizeof(uint8));
+	uint8 retVal___ = 0;
 	if( HPMHooks.count.HP_map_calc_dir_pre ) {
 		uint8 (*preHookFunc) (struct block_list *src, int16 *x, int16 *y);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_calc_dir_pre; hIndex++ ) {
@@ -34895,8 +34749,7 @@ uint8 HP_map_calc_dir(struct block_list *src, int16 x, int16 y) {
 }
 int HP_map_random_dir(struct block_list *bl, short *x, short *y) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_random_dir_pre ) {
 		int (*preHookFunc) (struct block_list *bl, short *x, short *y);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_random_dir_pre; hIndex++ ) {
@@ -34922,8 +34775,7 @@ int HP_map_random_dir(struct block_list *bl, short *x, short *y) {
 }
 int HP_map_cleanup_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_cleanup_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_cleanup_sub_pre; hIndex++ ) {
@@ -34955,8 +34807,7 @@ int HP_map_cleanup_sub(struct block_list *bl, va_list ap) {
 }
 int HP_map_delmap(char *mapname) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_delmap_pre ) {
 		int (*preHookFunc) (char *mapname);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_delmap_pre; hIndex++ ) {
@@ -35007,8 +34858,7 @@ void HP_map_flags_init(void) {
 }
 bool HP_map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool shootable, const char *wall_name) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_map_iwall_set_pre ) {
 		bool (*preHookFunc) (int16 *m, int16 *x, int16 *y, int *size, int8 *dir, bool *shootable, const char *wall_name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_iwall_set_pre; hIndex++ ) {
@@ -35084,8 +34934,7 @@ void HP_map_iwall_remove(const char *wall_name) {
 }
 int HP_map_addmobtolist(unsigned short m, struct spawn_data *spawn) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_addmobtolist_pre ) {
 		int (*preHookFunc) (unsigned short *m, struct spawn_data *spawn);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_addmobtolist_pre; hIndex++ ) {
@@ -35261,8 +35110,7 @@ void HP_map_do_shutdown(void) {
 }
 int HP_map_freeblock_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_freeblock_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_freeblock_timer_pre; hIndex++ ) {
@@ -35288,8 +35136,7 @@ int HP_map_freeblock_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_map_searchrandfreecell(int16 m, int16 *x, int16 *y, int stack) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_searchrandfreecell_pre ) {
 		int (*preHookFunc) (int16 *m, int16 *x, int16 *y, int *stack);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_searchrandfreecell_pre; hIndex++ ) {
@@ -35315,8 +35162,7 @@ int HP_map_searchrandfreecell(int16 m, int16 *x, int16 *y, int stack) {
 }
 int HP_map_count_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_count_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_count_sub_pre; hIndex++ ) {
@@ -35381,8 +35227,7 @@ DBData HP_map_create_charid2nick(DBKey key, va_list args) {
 }
 int HP_map_removemobs_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_removemobs_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_removemobs_sub_pre; hIndex++ ) {
@@ -35441,8 +35286,7 @@ struct mapcell HP_map_gat2cell(int gat) {
 }
 int HP_map_cell2gat(struct mapcell cell) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_cell2gat_pre ) {
 		int (*preHookFunc) (struct mapcell *cell);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_cell2gat_pre; hIndex++ ) {
@@ -35468,8 +35312,7 @@ int HP_map_cell2gat(struct mapcell cell) {
 }
 int HP_map_getcellp(struct map_data *m, int16 x, int16 y, cell_chk cellchk) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_getcellp_pre ) {
 		int (*preHookFunc) (struct map_data *m, int16 *x, int16 *y, cell_chk *cellchk);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_getcellp_pre; hIndex++ ) {
@@ -35520,8 +35363,7 @@ void HP_map_setcell(int16 m, int16 x, int16 y, cell_t cell, bool flag) {
 }
 int HP_map_sub_getcellp(struct map_data *m, int16 x, int16 y, cell_chk cellchk) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_sub_getcellp_pre ) {
 		int (*preHookFunc) (struct map_data *m, int16 *x, int16 *y, cell_chk *cellchk);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_sub_getcellp_pre; hIndex++ ) {
@@ -35630,8 +35472,7 @@ DBData HP_map_create_map_data_other_server(DBKey key, va_list args) {
 }
 int HP_map_eraseallipport_sub(DBKey key, DBData *data, va_list va) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_eraseallipport_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list va);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_eraseallipport_sub_pre; hIndex++ ) {
@@ -35689,8 +35530,7 @@ char* HP_map_init_mapcache(FILE *fp) {
 }
 int HP_map_readfromcache(struct map_data *m, char *buffer) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_readfromcache_pre ) {
 		int (*preHookFunc) (struct map_data *m, char *buffer);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_readfromcache_pre; hIndex++ ) {
@@ -35716,8 +35556,7 @@ int HP_map_readfromcache(struct map_data *m, char *buffer) {
 }
 int HP_map_addmap(char *mapname) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_addmap_pre ) {
 		int (*preHookFunc) (char *mapname);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_addmap_pre; hIndex++ ) {
@@ -35818,8 +35657,7 @@ void HP_map_list_final(void) {
 }
 int HP_map_waterheight(char *mapname) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_waterheight_pre ) {
 		int (*preHookFunc) (char *mapname);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_waterheight_pre; hIndex++ ) {
@@ -35845,8 +35683,7 @@ int HP_map_waterheight(char *mapname) {
 }
 int HP_map_readgat(struct map_data *m) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_readgat_pre ) {
 		int (*preHookFunc) (struct map_data *m);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_readgat_pre; hIndex++ ) {
@@ -35872,8 +35709,7 @@ int HP_map_readgat(struct map_data *m) {
 }
 int HP_map_readallmaps(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_readallmaps_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_readallmaps_pre; hIndex++ ) {
@@ -35899,8 +35735,7 @@ int HP_map_readallmaps(void) {
 }
 int HP_map_config_read(char *cfgName) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_config_read_pre ) {
 		int (*preHookFunc) (char *cfgName);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_config_read_pre; hIndex++ ) {
@@ -35926,8 +35761,7 @@ int HP_map_config_read(char *cfgName) {
 }
 int HP_map_config_read_sub(char *cfgName) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_config_read_sub_pre ) {
 		int (*preHookFunc) (char *cfgName);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_config_read_sub_pre; hIndex++ ) {
@@ -35978,8 +35812,7 @@ void HP_map_reloadnpc_sub(char *cfgName) {
 }
 int HP_map_inter_config_read(char *cfgName) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_inter_config_read_pre ) {
 		int (*preHookFunc) (char *cfgName);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_inter_config_read_pre; hIndex++ ) {
@@ -36005,8 +35838,7 @@ int HP_map_inter_config_read(char *cfgName) {
 }
 int HP_map_sql_init(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_sql_init_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_sql_init_pre; hIndex++ ) {
@@ -36032,8 +35864,7 @@ int HP_map_sql_init(void) {
 }
 int HP_map_sql_close(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_sql_close_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_sql_close_pre; hIndex++ ) {
@@ -36059,8 +35890,7 @@ int HP_map_sql_close(void) {
 }
 bool HP_map_zone_mf_cache(int m, char *flag, char *params) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_map_zone_mf_cache_pre ) {
 		bool (*preHookFunc) (int *m, char *flag, char *params);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_zone_mf_cache_pre; hIndex++ ) {
@@ -36086,8 +35916,7 @@ bool HP_map_zone_mf_cache(int m, char *flag, char *params) {
 }
 unsigned short HP_map_zone_str2itemid(const char *name) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_map_zone_str2itemid_pre ) {
 		unsigned short (*preHookFunc) (const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_zone_str2itemid_pre; hIndex++ ) {
@@ -36113,8 +35942,7 @@ unsigned short HP_map_zone_str2itemid(const char *name) {
 }
 unsigned short HP_map_zone_str2skillid(const char *name) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_map_zone_str2skillid_pre ) {
 		unsigned short (*preHookFunc) (const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_zone_str2skillid_pre; hIndex++ ) {
@@ -36140,8 +35968,7 @@ unsigned short HP_map_zone_str2skillid(const char *name) {
 }
 enum bl_type HP_map_zone_bl_type(const char *entry, enum map_zone_skill_subtype *subtype) {
 	int hIndex = 0;
-	enum bl_type retVal___;
-	memset(&retVal___, '\0', sizeof(enum bl_type));
+	enum bl_type retVal___ = BL_NUL;
 	if( HPMHooks.count.HP_map_zone_bl_type_pre ) {
 		enum bl_type (*preHookFunc) (const char *entry, enum map_zone_skill_subtype *subtype);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_zone_bl_type_pre; hIndex++ ) {
@@ -36192,8 +36019,7 @@ void HP_map_read_zone_db(void) {
 }
 int HP_map_db_final(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_db_final_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_db_final_pre; hIndex++ ) {
@@ -36225,8 +36051,7 @@ int HP_map_db_final(DBKey key, DBData *data, va_list ap) {
 }
 int HP_map_nick_db_final(DBKey key, DBData *data, va_list args) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_nick_db_final_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list args);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_nick_db_final_pre; hIndex++ ) {
@@ -36258,8 +36083,7 @@ int HP_map_nick_db_final(DBKey key, DBData *data, va_list args) {
 }
 int HP_map_cleanup_db_sub(DBKey key, DBData *data, va_list va) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_cleanup_db_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list va);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_cleanup_db_sub_pre; hIndex++ ) {
@@ -36291,8 +36115,7 @@ int HP_map_cleanup_db_sub(DBKey key, DBData *data, va_list va) {
 }
 int HP_map_abort_sub(struct map_session_data *sd, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_abort_sub_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_abort_sub_pre; hIndex++ ) {
@@ -36374,8 +36197,7 @@ void HP_map_versionscreen(bool do_exit) {
 }
 bool HP_map_arg_next_value(const char *option, int i, int argc) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_map_arg_next_value_pre ) {
 		bool (*preHookFunc) (const char *option, int *i, int *argc);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_arg_next_value_pre; hIndex++ ) {
@@ -36398,6 +36220,56 @@ bool HP_map_arg_next_value(const char *option, int i, int argc) {
 		}
 	}
 	return retVal___;
+}
+void HP_map_addblcell(struct block_list *bl) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_map_addblcell_pre ) {
+		void (*preHookFunc) (struct block_list *bl);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_addblcell_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_map_addblcell_pre[hIndex].func;
+			preHookFunc(bl);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.map.addblcell(bl);
+	}
+	if( HPMHooks.count.HP_map_addblcell_post ) {
+		void (*postHookFunc) (struct block_list *bl);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_addblcell_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_map_addblcell_post[hIndex].func;
+			postHookFunc(bl);
+		}
+	}
+	return;
+}
+void HP_map_delblcell(struct block_list *bl) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_map_delblcell_pre ) {
+		void (*preHookFunc) (struct block_list *bl);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_delblcell_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_map_delblcell_pre[hIndex].func;
+			preHookFunc(bl);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.map.delblcell(bl);
+	}
+	if( HPMHooks.count.HP_map_delblcell_post ) {
+		void (*postHookFunc) (struct block_list *bl);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_delblcell_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_map_delblcell_post[hIndex].func;
+			postHookFunc(bl);
+		}
+	}
+	return;
 }
 /* mapit */
 struct s_mapiterator* HP_mapit_alloc(enum e_mapitflags flags, enum bl_type types) {
@@ -36557,8 +36429,7 @@ struct block_list* HP_mapit_prev(struct s_mapiterator *iter) {
 }
 bool HP_mapit_exists(struct s_mapiterator *iter) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mapit_exists_pre ) {
 		bool (*preHookFunc) (struct s_mapiterator *iter);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mapit_exists_pre; hIndex++ ) {
@@ -36635,8 +36506,7 @@ void HP_mapreg_final(void) {
 }
 int HP_mapreg_readreg(int uid) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mapreg_readreg_pre ) {
 		int (*preHookFunc) (int *uid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_readreg_pre; hIndex++ ) {
@@ -36688,8 +36558,7 @@ char* HP_mapreg_readregstr(int uid) {
 }
 bool HP_mapreg_setreg(int uid, int val) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mapreg_setreg_pre ) {
 		bool (*preHookFunc) (int *uid, int *val);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_setreg_pre; hIndex++ ) {
@@ -36715,8 +36584,7 @@ bool HP_mapreg_setreg(int uid, int val) {
 }
 bool HP_mapreg_setregstr(int uid, const char *str) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mapreg_setregstr_pre ) {
 		bool (*preHookFunc) (int *uid, const char *str);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_setregstr_pre; hIndex++ ) {
@@ -36792,8 +36660,7 @@ void HP_mapreg_save(void) {
 }
 int HP_mapreg_save_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mapreg_save_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_save_timer_pre; hIndex++ ) {
@@ -36844,8 +36711,7 @@ void HP_mapreg_reload(void) {
 }
 bool HP_mapreg_config_read(const char *w1, const char *w2) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mapreg_config_read_pre ) {
 		bool (*preHookFunc) (const char *w1, const char *w2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mapreg_config_read_pre; hIndex++ ) {
@@ -36897,8 +36763,7 @@ void HP_mercenary_init(void) {
 }
 bool HP_mercenary_class(int class_) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mercenary_class_pre ) {
 		bool (*preHookFunc) (int *class_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_class_pre; hIndex++ ) {
@@ -36950,8 +36815,7 @@ struct view_data* HP_mercenary_get_viewdata(int class_) {
 }
 int HP_mercenary_create(struct map_session_data *sd, int class_, unsigned int lifetime) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_create_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *class_, unsigned int *lifetime);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_create_pre; hIndex++ ) {
@@ -36977,8 +36841,7 @@ int HP_mercenary_create(struct map_session_data *sd, int class_, unsigned int li
 }
 int HP_mercenary_data_received(struct s_mercenary *merc, bool flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_data_received_pre ) {
 		int (*preHookFunc) (struct s_mercenary *merc, bool *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_data_received_pre; hIndex++ ) {
@@ -37004,8 +36867,7 @@ int HP_mercenary_data_received(struct s_mercenary *merc, bool flag) {
 }
 int HP_mercenary_save(struct mercenary_data *md) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_save_pre ) {
 		int (*preHookFunc) (struct mercenary_data *md);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_save_pre; hIndex++ ) {
@@ -37056,8 +36918,7 @@ void HP_mercenary_heal(struct mercenary_data *md, int hp, int sp) {
 }
 int HP_mercenary_dead(struct mercenary_data *md) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_dead_pre ) {
 		int (*preHookFunc) (struct mercenary_data *md);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_dead_pre; hIndex++ ) {
@@ -37083,8 +36944,7 @@ int HP_mercenary_dead(struct mercenary_data *md) {
 }
 int HP_mercenary_delete(struct mercenary_data *md, int reply) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_delete_pre ) {
 		int (*preHookFunc) (struct mercenary_data *md, int *reply);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_delete_pre; hIndex++ ) {
@@ -37135,8 +36995,7 @@ void HP_mercenary_contract_stop(struct mercenary_data *md) {
 }
 int HP_mercenary_get_lifetime(struct mercenary_data *md) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_get_lifetime_pre ) {
 		int (*preHookFunc) (struct mercenary_data *md);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_get_lifetime_pre; hIndex++ ) {
@@ -37162,8 +37021,7 @@ int HP_mercenary_get_lifetime(struct mercenary_data *md) {
 }
 int HP_mercenary_get_guild(struct mercenary_data *md) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_get_guild_pre ) {
 		int (*preHookFunc) (struct mercenary_data *md);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_get_guild_pre; hIndex++ ) {
@@ -37189,8 +37047,7 @@ int HP_mercenary_get_guild(struct mercenary_data *md) {
 }
 int HP_mercenary_get_faith(struct mercenary_data *md) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_get_faith_pre ) {
 		int (*preHookFunc) (struct mercenary_data *md);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_get_faith_pre; hIndex++ ) {
@@ -37216,8 +37073,7 @@ int HP_mercenary_get_faith(struct mercenary_data *md) {
 }
 int HP_mercenary_set_faith(struct mercenary_data *md, int value) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_set_faith_pre ) {
 		int (*preHookFunc) (struct mercenary_data *md, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_set_faith_pre; hIndex++ ) {
@@ -37243,8 +37099,7 @@ int HP_mercenary_set_faith(struct mercenary_data *md, int value) {
 }
 int HP_mercenary_get_calls(struct mercenary_data *md) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_get_calls_pre ) {
 		int (*preHookFunc) (struct mercenary_data *md);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_get_calls_pre; hIndex++ ) {
@@ -37270,8 +37125,7 @@ int HP_mercenary_get_calls(struct mercenary_data *md) {
 }
 int HP_mercenary_set_calls(struct mercenary_data *md, int value) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_set_calls_pre ) {
 		int (*preHookFunc) (struct mercenary_data *md, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_set_calls_pre; hIndex++ ) {
@@ -37297,8 +37151,7 @@ int HP_mercenary_set_calls(struct mercenary_data *md, int value) {
 }
 int HP_mercenary_kills(struct mercenary_data *md) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_kills_pre ) {
 		int (*preHookFunc) (struct mercenary_data *md);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_kills_pre; hIndex++ ) {
@@ -37324,8 +37177,7 @@ int HP_mercenary_kills(struct mercenary_data *md) {
 }
 int HP_mercenary_checkskill(struct mercenary_data *md, uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_checkskill_pre ) {
 		int (*preHookFunc) (struct mercenary_data *md, uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_checkskill_pre; hIndex++ ) {
@@ -37351,8 +37203,7 @@ int HP_mercenary_checkskill(struct mercenary_data *md, uint16 skill_id) {
 }
 int HP_mercenary_read_db(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_read_db_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_read_db_pre; hIndex++ ) {
@@ -37378,8 +37229,7 @@ int HP_mercenary_read_db(void) {
 }
 int HP_mercenary_read_skilldb(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_read_skilldb_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_read_skilldb_pre; hIndex++ ) {
@@ -37405,8 +37255,7 @@ int HP_mercenary_read_skilldb(void) {
 }
 int HP_mercenary_killbonus(struct mercenary_data *md) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_killbonus_pre ) {
 		int (*preHookFunc) (struct mercenary_data *md);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_killbonus_pre; hIndex++ ) {
@@ -37432,8 +37281,7 @@ int HP_mercenary_killbonus(struct mercenary_data *md) {
 }
 int HP_mercenary_search_index(int class_) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_search_index_pre ) {
 		int (*preHookFunc) (int *class_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_search_index_pre; hIndex++ ) {
@@ -37459,8 +37307,7 @@ int HP_mercenary_search_index(int class_) {
 }
 int HP_mercenary_contract_end_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mercenary_contract_end_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_contract_end_timer_pre; hIndex++ ) {
@@ -37486,8 +37333,7 @@ int HP_mercenary_contract_end_timer(int tid, unsigned int tick, int id, intptr_t
 }
 bool HP_mercenary_read_db_sub(char *str[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mercenary_read_db_sub_pre ) {
 		bool (*preHookFunc) (char *str[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_read_db_sub_pre; hIndex++ ) {
@@ -37513,8 +37359,7 @@ bool HP_mercenary_read_db_sub(char *str[], int columns, int current) {
 }
 bool HP_mercenary_read_skill_db_sub(char *str[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mercenary_read_skill_db_sub_pre ) {
 		bool (*preHookFunc) (char *str[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mercenary_read_skill_db_sub_pre; hIndex++ ) {
@@ -37541,8 +37386,7 @@ bool HP_mercenary_read_skill_db_sub(char *str[], int columns, int current) {
 /* mob */
 int HP_mob_init(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_init_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_init_pre; hIndex++ ) {
@@ -37568,8 +37412,7 @@ int HP_mob_init(void) {
 }
 int HP_mob_final(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_final_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_final_pre; hIndex++ ) {
@@ -37672,8 +37515,7 @@ struct mob_chat* HP_mob_chat(short id) {
 }
 int HP_mob_makedummymobdb(int p1) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_makedummymobdb_pre ) {
 		int (*preHookFunc) (int *p1);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_makedummymobdb_pre; hIndex++ ) {
@@ -37699,8 +37541,7 @@ int HP_mob_makedummymobdb(int p1) {
 }
 int HP_mob_spawn_guardian_sub(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_spawn_guardian_sub_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_spawn_guardian_sub_pre; hIndex++ ) {
@@ -37726,8 +37567,7 @@ int HP_mob_spawn_guardian_sub(int tid, unsigned int tick, int id, intptr_t data)
 }
 int HP_mob_skill_id2skill_idx(int class_, uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_skill_id2skill_idx_pre ) {
 		int (*preHookFunc) (int *class_, uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_skill_id2skill_idx_pre; hIndex++ ) {
@@ -37753,8 +37593,7 @@ int HP_mob_skill_id2skill_idx(int class_, uint16 skill_id) {
 }
 int HP_mob_db_searchname(const char *str) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_db_searchname_pre ) {
 		int (*preHookFunc) (const char *str);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_db_searchname_pre; hIndex++ ) {
@@ -37780,8 +37619,7 @@ int HP_mob_db_searchname(const char *str) {
 }
 int HP_mob_db_searchname_array_sub(struct mob_db *mob, const char *str, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_db_searchname_array_sub_pre ) {
 		int (*preHookFunc) (struct mob_db *mob, const char *str, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_db_searchname_array_sub_pre; hIndex++ ) {
@@ -37857,8 +37695,7 @@ void HP_mob_mvptomb_destroy(struct mob_data *md) {
 }
 int HP_mob_db_searchname_array(struct mob_db **data, int size, const char *str, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_db_searchname_array_pre ) {
 		int (*preHookFunc) (struct mob_db **data, int *size, const char *str, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_db_searchname_array_pre; hIndex++ ) {
@@ -37884,8 +37721,7 @@ int HP_mob_db_searchname_array(struct mob_db **data, int size, const char *str, 
 }
 int HP_mob_db_checkid(const int id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_db_checkid_pre ) {
 		int (*preHookFunc) (const int *id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_db_checkid_pre; hIndex++ ) {
@@ -37937,8 +37773,7 @@ struct view_data* HP_mob_get_viewdata(int class_) {
 }
 int HP_mob_parse_dataset(struct spawn_data *data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_parse_dataset_pre ) {
 		int (*preHookFunc) (struct spawn_data *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_parse_dataset_pre; hIndex++ ) {
@@ -37990,8 +37825,7 @@ struct mob_data* HP_mob_spawn_dataset(struct spawn_data *data) {
 }
 int HP_mob_get_random_id(int type, int flag, int lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_get_random_id_pre ) {
 		int (*preHookFunc) (int *type, int *flag, int *lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_get_random_id_pre; hIndex++ ) {
@@ -38017,8 +37851,7 @@ int HP_mob_get_random_id(int type, int flag, int lv) {
 }
 bool HP_mob_ksprotected(struct block_list *src, struct block_list *target) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mob_ksprotected_pre ) {
 		bool (*preHookFunc) (struct block_list *src, struct block_list *target);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_ksprotected_pre; hIndex++ ) {
@@ -38070,8 +37903,7 @@ struct mob_data* HP_mob_once_spawn_sub(struct block_list *bl, int16 m, int16 x, 
 }
 int HP_mob_once_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, const char *mobname, int class_, int amount, const char *event, unsigned int size, unsigned int ai) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_once_spawn_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int16 *m, int16 *x, int16 *y, const char *mobname, int *class_, int *amount, const char *event, unsigned int *size, unsigned int *ai);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_once_spawn_pre; hIndex++ ) {
@@ -38097,8 +37929,7 @@ int HP_mob_once_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, co
 }
 int HP_mob_once_spawn_area(struct map_session_data *sd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, const char *mobname, int class_, int amount, const char *event, unsigned int size, unsigned int ai) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_once_spawn_area_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, const char *mobname, int *class_, int *amount, const char *event, unsigned int *size, unsigned int *ai);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_once_spawn_area_pre; hIndex++ ) {
@@ -38124,8 +37955,7 @@ int HP_mob_once_spawn_area(struct map_session_data *sd, int16 m, int16 x0, int16
 }
 int HP_mob_spawn_guardian(const char *mapname, short x, short y, const char *mobname, int class_, const char *event, int guardian, bool has_index) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_spawn_guardian_pre ) {
 		int (*preHookFunc) (const char *mapname, short *x, short *y, const char *mobname, int *class_, const char *event, int *guardian, bool *has_index);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_spawn_guardian_pre; hIndex++ ) {
@@ -38151,8 +37981,7 @@ int HP_mob_spawn_guardian(const char *mapname, short x, short y, const char *mob
 }
 int HP_mob_spawn_bg(const char *mapname, short x, short y, const char *mobname, int class_, const char *event, unsigned int bg_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_spawn_bg_pre ) {
 		int (*preHookFunc) (const char *mapname, short *x, short *y, const char *mobname, int *class_, const char *event, unsigned int *bg_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_spawn_bg_pre; hIndex++ ) {
@@ -38178,8 +38007,7 @@ int HP_mob_spawn_bg(const char *mapname, short x, short y, const char *mobname, 
 }
 int HP_mob_can_reach(struct mob_data *md, struct block_list *bl, int range, int state) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_can_reach_pre ) {
 		int (*preHookFunc) (struct mob_data *md, struct block_list *bl, int *range, int *state);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_can_reach_pre; hIndex++ ) {
@@ -38205,8 +38033,7 @@ int HP_mob_can_reach(struct mob_data *md, struct block_list *bl, int range, int 
 }
 int HP_mob_linksearch(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_linksearch_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_linksearch_pre; hIndex++ ) {
@@ -38238,8 +38065,7 @@ int HP_mob_linksearch(struct block_list *bl, va_list ap) {
 }
 int HP_mob_delayspawn(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_delayspawn_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_delayspawn_pre; hIndex++ ) {
@@ -38265,8 +38091,7 @@ int HP_mob_delayspawn(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_mob_setdelayspawn(struct mob_data *md) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_setdelayspawn_pre ) {
 		int (*preHookFunc) (struct mob_data *md);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_setdelayspawn_pre; hIndex++ ) {
@@ -38292,8 +38117,7 @@ int HP_mob_setdelayspawn(struct mob_data *md) {
 }
 int HP_mob_count_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_count_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_count_sub_pre; hIndex++ ) {
@@ -38325,8 +38149,7 @@ int HP_mob_count_sub(struct block_list *bl, va_list ap) {
 }
 int HP_mob_spawn(struct mob_data *md) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_spawn_pre ) {
 		int (*preHookFunc) (struct mob_data *md);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_spawn_pre; hIndex++ ) {
@@ -38352,8 +38175,7 @@ int HP_mob_spawn(struct mob_data *md) {
 }
 int HP_mob_can_changetarget(struct mob_data *md, struct block_list *target, int mode) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_can_changetarget_pre ) {
 		int (*preHookFunc) (struct mob_data *md, struct block_list *target, int *mode);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_can_changetarget_pre; hIndex++ ) {
@@ -38379,8 +38201,7 @@ int HP_mob_can_changetarget(struct mob_data *md, struct block_list *target, int 
 }
 int HP_mob_target(struct mob_data *md, struct block_list *bl, int dist) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_target_pre ) {
 		int (*preHookFunc) (struct mob_data *md, struct block_list *bl, int *dist);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_target_pre; hIndex++ ) {
@@ -38406,8 +38227,7 @@ int HP_mob_target(struct mob_data *md, struct block_list *bl, int dist) {
 }
 int HP_mob_ai_sub_hard_activesearch(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_ai_sub_hard_activesearch_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_ai_sub_hard_activesearch_pre; hIndex++ ) {
@@ -38439,8 +38259,7 @@ int HP_mob_ai_sub_hard_activesearch(struct block_list *bl, va_list ap) {
 }
 int HP_mob_ai_sub_hard_changechase(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_ai_sub_hard_changechase_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_ai_sub_hard_changechase_pre; hIndex++ ) {
@@ -38472,8 +38291,7 @@ int HP_mob_ai_sub_hard_changechase(struct block_list *bl, va_list ap) {
 }
 int HP_mob_ai_sub_hard_bg_ally(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_ai_sub_hard_bg_ally_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_ai_sub_hard_bg_ally_pre; hIndex++ ) {
@@ -38505,8 +38323,7 @@ int HP_mob_ai_sub_hard_bg_ally(struct block_list *bl, va_list ap) {
 }
 int HP_mob_ai_sub_hard_lootsearch(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_ai_sub_hard_lootsearch_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_ai_sub_hard_lootsearch_pre; hIndex++ ) {
@@ -38538,8 +38355,7 @@ int HP_mob_ai_sub_hard_lootsearch(struct block_list *bl, va_list ap) {
 }
 int HP_mob_warpchase_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_warpchase_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_warpchase_sub_pre; hIndex++ ) {
@@ -38571,8 +38387,7 @@ int HP_mob_warpchase_sub(struct block_list *bl, va_list ap) {
 }
 int HP_mob_ai_sub_hard_slavemob(struct mob_data *md, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_ai_sub_hard_slavemob_pre ) {
 		int (*preHookFunc) (struct mob_data *md, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_ai_sub_hard_slavemob_pre; hIndex++ ) {
@@ -38598,8 +38413,7 @@ int HP_mob_ai_sub_hard_slavemob(struct mob_data *md, unsigned int tick) {
 }
 int HP_mob_unlocktarget(struct mob_data *md, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_unlocktarget_pre ) {
 		int (*preHookFunc) (struct mob_data *md, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_unlocktarget_pre; hIndex++ ) {
@@ -38625,8 +38439,7 @@ int HP_mob_unlocktarget(struct mob_data *md, unsigned int tick) {
 }
 int HP_mob_randomwalk(struct mob_data *md, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_randomwalk_pre ) {
 		int (*preHookFunc) (struct mob_data *md, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_randomwalk_pre; hIndex++ ) {
@@ -38652,8 +38465,7 @@ int HP_mob_randomwalk(struct mob_data *md, unsigned int tick) {
 }
 int HP_mob_warpchase(struct mob_data *md, struct block_list *target) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_warpchase_pre ) {
 		int (*preHookFunc) (struct mob_data *md, struct block_list *target);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_warpchase_pre; hIndex++ ) {
@@ -38679,8 +38491,7 @@ int HP_mob_warpchase(struct mob_data *md, struct block_list *target) {
 }
 bool HP_mob_ai_sub_hard(struct mob_data *md, unsigned int tick) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mob_ai_sub_hard_pre ) {
 		bool (*preHookFunc) (struct mob_data *md, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_ai_sub_hard_pre; hIndex++ ) {
@@ -38706,8 +38517,7 @@ bool HP_mob_ai_sub_hard(struct mob_data *md, unsigned int tick) {
 }
 int HP_mob_ai_sub_hard_timer(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_ai_sub_hard_timer_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_ai_sub_hard_timer_pre; hIndex++ ) {
@@ -38739,8 +38549,7 @@ int HP_mob_ai_sub_hard_timer(struct block_list *bl, va_list ap) {
 }
 int HP_mob_ai_sub_foreachclient(struct map_session_data *sd, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_ai_sub_foreachclient_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_ai_sub_foreachclient_pre; hIndex++ ) {
@@ -38772,8 +38581,7 @@ int HP_mob_ai_sub_foreachclient(struct map_session_data *sd, va_list ap) {
 }
 int HP_mob_ai_sub_lazy(struct mob_data *md, va_list args) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_ai_sub_lazy_pre ) {
 		int (*preHookFunc) (struct mob_data *md, va_list args);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_ai_sub_lazy_pre; hIndex++ ) {
@@ -38805,8 +38613,7 @@ int HP_mob_ai_sub_lazy(struct mob_data *md, va_list args) {
 }
 int HP_mob_ai_lazy(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_ai_lazy_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_ai_lazy_pre; hIndex++ ) {
@@ -38832,8 +38639,7 @@ int HP_mob_ai_lazy(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_mob_ai_hard(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_ai_hard_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_ai_hard_pre; hIndex++ ) {
@@ -38911,8 +38717,7 @@ struct item_drop* HP_mob_setlootitem(struct item *item) {
 }
 int HP_mob_delay_item_drop(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_delay_item_drop_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_delay_item_drop_pre; hIndex++ ) {
@@ -38963,8 +38768,7 @@ void HP_mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, struct 
 }
 int HP_mob_timer_delete(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_timer_delete_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_timer_delete_pre; hIndex++ ) {
@@ -38990,8 +38794,7 @@ int HP_mob_timer_delete(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_mob_deleteslave_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_deleteslave_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_deleteslave_sub_pre; hIndex++ ) {
@@ -39023,8 +38826,7 @@ int HP_mob_deleteslave_sub(struct block_list *bl, va_list ap) {
 }
 int HP_mob_deleteslave(struct mob_data *md) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_deleteslave_pre ) {
 		int (*preHookFunc) (struct mob_data *md);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_deleteslave_pre; hIndex++ ) {
@@ -39050,8 +38852,7 @@ int HP_mob_deleteslave(struct mob_data *md) {
 }
 int HP_mob_respawn(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_respawn_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_respawn_pre; hIndex++ ) {
@@ -39127,8 +38928,7 @@ void HP_mob_damage(struct mob_data *md, struct block_list *src, int damage) {
 }
 int HP_mob_dead(struct mob_data *md, struct block_list *src, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_dead_pre ) {
 		int (*preHookFunc) (struct mob_data *md, struct block_list *src, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_dead_pre; hIndex++ ) {
@@ -39179,8 +38979,7 @@ void HP_mob_revive(struct mob_data *md, unsigned int hp) {
 }
 int HP_mob_guardian_guildchange(struct mob_data *md) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_guardian_guildchange_pre ) {
 		int (*preHookFunc) (struct mob_data *md);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_guardian_guildchange_pre; hIndex++ ) {
@@ -39206,8 +39005,7 @@ int HP_mob_guardian_guildchange(struct mob_data *md) {
 }
 int HP_mob_random_class(int *value, size_t count) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_random_class_pre ) {
 		int (*preHookFunc) (int *value, size_t *count);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_random_class_pre; hIndex++ ) {
@@ -39233,8 +39031,7 @@ int HP_mob_random_class(int *value, size_t count) {
 }
 int HP_mob_class_change(struct mob_data *md, int class_) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_class_change_pre ) {
 		int (*preHookFunc) (struct mob_data *md, int *class_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_class_change_pre; hIndex++ ) {
@@ -39285,8 +39082,7 @@ void HP_mob_heal(struct mob_data *md, unsigned int heal) {
 }
 int HP_mob_warpslave_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_warpslave_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_warpslave_sub_pre; hIndex++ ) {
@@ -39318,8 +39114,7 @@ int HP_mob_warpslave_sub(struct block_list *bl, va_list ap) {
 }
 int HP_mob_warpslave(struct block_list *bl, int range) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_warpslave_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int *range);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_warpslave_pre; hIndex++ ) {
@@ -39345,8 +39140,7 @@ int HP_mob_warpslave(struct block_list *bl, int range) {
 }
 int HP_mob_countslave_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_countslave_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_countslave_sub_pre; hIndex++ ) {
@@ -39378,8 +39172,7 @@ int HP_mob_countslave_sub(struct block_list *bl, va_list ap) {
 }
 int HP_mob_countslave(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_countslave_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_countslave_pre; hIndex++ ) {
@@ -39405,8 +39198,7 @@ int HP_mob_countslave(struct block_list *bl) {
 }
 int HP_mob_summonslave(struct mob_data *md2, int *value, int amount, uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_summonslave_pre ) {
 		int (*preHookFunc) (struct mob_data *md2, int *value, int *amount, uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_summonslave_pre; hIndex++ ) {
@@ -39432,8 +39224,7 @@ int HP_mob_summonslave(struct mob_data *md2, int *value, int amount, uint16 skil
 }
 int HP_mob_getfriendhprate_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_getfriendhprate_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_getfriendhprate_sub_pre; hIndex++ ) {
@@ -39517,8 +39308,7 @@ struct block_list* HP_mob_getmasterhpltmaxrate(struct mob_data *md, int rate) {
 }
 int HP_mob_getfriendstatus_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_getfriendstatus_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_getfriendstatus_sub_pre; hIndex++ ) {
@@ -39576,8 +39366,7 @@ struct mob_data* HP_mob_getfriendstatus(struct mob_data *md, int cond1, int cond
 }
 int HP_mob_skill_use(struct mob_data *md, unsigned int tick, int event) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_skill_use_pre ) {
 		int (*preHookFunc) (struct mob_data *md, unsigned int *tick, int *event);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_skill_use_pre; hIndex++ ) {
@@ -39603,8 +39392,7 @@ int HP_mob_skill_use(struct mob_data *md, unsigned int tick, int event) {
 }
 int HP_mob_skill_event(struct mob_data *md, struct block_list *src, unsigned int tick, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_skill_event_pre ) {
 		int (*preHookFunc) (struct mob_data *md, struct block_list *src, unsigned int *tick, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_skill_event_pre; hIndex++ ) {
@@ -39630,8 +39418,7 @@ int HP_mob_skill_event(struct mob_data *md, struct block_list *src, unsigned int
 }
 int HP_mob_is_clone(int class_) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_is_clone_pre ) {
 		int (*preHookFunc) (int *class_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_is_clone_pre; hIndex++ ) {
@@ -39657,8 +39444,7 @@ int HP_mob_is_clone(int class_) {
 }
 int HP_mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, int mode, int flag, unsigned int duration) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_clone_spawn_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int16 *m, int16 *x, int16 *y, const char *event, int *master_id, int *mode, int *flag, unsigned int *duration);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_clone_spawn_pre; hIndex++ ) {
@@ -39684,8 +39470,7 @@ int HP_mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, c
 }
 int HP_mob_clone_delete(struct mob_data *md) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_clone_delete_pre ) {
 		int (*preHookFunc) (struct mob_data *md);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_clone_delete_pre; hIndex++ ) {
@@ -39711,8 +39496,7 @@ int HP_mob_clone_delete(struct mob_data *md) {
 }
 unsigned int HP_mob_drop_adjust(int baserate, int rate_adjust, unsigned short rate_min, unsigned short rate_max) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_drop_adjust_pre ) {
 		unsigned int (*preHookFunc) (int *baserate, int *rate_adjust, unsigned short *rate_min, unsigned short *rate_max);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_drop_adjust_pre; hIndex++ ) {
@@ -39763,8 +39547,7 @@ void HP_mob_item_dropratio_adjust(int nameid, int mob_id, int *rate_adjust) {
 }
 bool HP_mob_parse_dbrow(char **str) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mob_parse_dbrow_pre ) {
 		bool (*preHookFunc) (char **str);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_parse_dbrow_pre; hIndex++ ) {
@@ -39790,8 +39573,7 @@ bool HP_mob_parse_dbrow(char **str) {
 }
 bool HP_mob_readdb_sub(char *fields[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mob_readdb_sub_pre ) {
 		bool (*preHookFunc) (char *fields[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_readdb_sub_pre; hIndex++ ) {
@@ -39842,8 +39624,7 @@ void HP_mob_readdb(void) {
 }
 int HP_mob_read_sqldb(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_read_sqldb_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_sqldb_pre; hIndex++ ) {
@@ -39869,8 +39650,7 @@ int HP_mob_read_sqldb(void) {
 }
 bool HP_mob_readdb_mobavail(char *str[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mob_readdb_mobavail_pre ) {
 		bool (*preHookFunc) (char *str[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_readdb_mobavail_pre; hIndex++ ) {
@@ -39896,8 +39676,7 @@ bool HP_mob_readdb_mobavail(char *str[], int columns, int current) {
 }
 int HP_mob_read_randommonster(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_read_randommonster_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_randommonster_pre; hIndex++ ) {
@@ -39923,8 +39702,7 @@ int HP_mob_read_randommonster(void) {
 }
 bool HP_mob_parse_row_chatdb(char **str, const char *source, int line, int *last_msg_id) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mob_parse_row_chatdb_pre ) {
 		bool (*preHookFunc) (char **str, const char *source, int *line, int *last_msg_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_parse_row_chatdb_pre; hIndex++ ) {
@@ -39975,8 +39753,7 @@ void HP_mob_readchatdb(void) {
 }
 bool HP_mob_parse_row_mobskilldb(char **str, int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mob_parse_row_mobskilldb_pre ) {
 		bool (*preHookFunc) (char **str, int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_parse_row_mobskilldb_pre; hIndex++ ) {
@@ -40027,8 +39804,7 @@ void HP_mob_readskilldb(void) {
 }
 int HP_mob_read_sqlskilldb(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_read_sqlskilldb_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_sqlskilldb_pre; hIndex++ ) {
@@ -40054,8 +39830,7 @@ int HP_mob_read_sqlskilldb(void) {
 }
 bool HP_mob_readdb_race2(char *fields[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mob_readdb_race2_pre ) {
 		bool (*preHookFunc) (char *fields[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_readdb_race2_pre; hIndex++ ) {
@@ -40081,8 +39856,7 @@ bool HP_mob_readdb_race2(char *fields[], int columns, int current) {
 }
 bool HP_mob_readdb_itemratio(char *str[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_mob_readdb_itemratio_pre ) {
 		bool (*preHookFunc) (char *str[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_readdb_itemratio_pre; hIndex++ ) {
@@ -40159,8 +39933,7 @@ void HP_mob_clear_spawninfo(void) {
 /* npc */
 int HP_npc_init(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_init_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_init_pre; hIndex++ ) {
@@ -40186,8 +39959,7 @@ int HP_npc_init(void) {
 }
 int HP_npc_final(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_final_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_final_pre; hIndex++ ) {
@@ -40213,8 +39985,7 @@ int HP_npc_final(void) {
 }
 int HP_npc_get_new_npc_id(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_get_new_npc_id_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_get_new_npc_id_pre; hIndex++ ) {
@@ -40266,8 +40037,7 @@ struct view_data* HP_npc_get_viewdata(int class_) {
 }
 int HP_npc_isnear_sub(struct block_list *bl, va_list args) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_isnear_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list args);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_isnear_sub_pre; hIndex++ ) {
@@ -40299,8 +40069,7 @@ int HP_npc_isnear_sub(struct block_list *bl, va_list args) {
 }
 bool HP_npc_isnear(struct block_list *bl) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_npc_isnear_pre ) {
 		bool (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_isnear_pre; hIndex++ ) {
@@ -40326,8 +40095,7 @@ bool HP_npc_isnear(struct block_list *bl) {
 }
 int HP_npc_ontouch_event(struct map_session_data *sd, struct npc_data *nd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_ontouch_event_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct npc_data *nd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_ontouch_event_pre; hIndex++ ) {
@@ -40353,8 +40121,7 @@ int HP_npc_ontouch_event(struct map_session_data *sd, struct npc_data *nd) {
 }
 int HP_npc_ontouch2_event(struct map_session_data *sd, struct npc_data *nd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_ontouch2_event_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct npc_data *nd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_ontouch2_event_pre; hIndex++ ) {
@@ -40380,8 +40147,7 @@ int HP_npc_ontouch2_event(struct map_session_data *sd, struct npc_data *nd) {
 }
 int HP_npc_enable_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_enable_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_enable_sub_pre; hIndex++ ) {
@@ -40413,8 +40179,7 @@ int HP_npc_enable_sub(struct block_list *bl, va_list ap) {
 }
 int HP_npc_enable(const char *name, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_enable_pre ) {
 		int (*preHookFunc) (const char *name, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_enable_pre; hIndex++ ) {
@@ -40466,8 +40231,7 @@ struct npc_data* HP_npc_name2id(const char *name) {
 }
 int HP_npc_event_dequeue(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_event_dequeue_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_event_dequeue_pre; hIndex++ ) {
@@ -40526,8 +40290,7 @@ DBData HP_npc_event_export_create(DBKey key, va_list args) {
 }
 int HP_npc_event_export(struct npc_data *nd, int i) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_event_export_pre ) {
 		int (*preHookFunc) (struct npc_data *nd, int *i);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_event_export_pre; hIndex++ ) {
@@ -40553,8 +40316,7 @@ int HP_npc_event_export(struct npc_data *nd, int i) {
 }
 int HP_npc_event_sub(struct map_session_data *sd, struct event_data *ev, const char *eventname) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_event_sub_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct event_data *ev, const char *eventname);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_event_sub_pre; hIndex++ ) {
@@ -40611,8 +40373,7 @@ void HP_npc_event_doall_sub(void *key, void *data, va_list ap) {
 }
 int HP_npc_event_do(const char *name) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_event_do_pre ) {
 		int (*preHookFunc) (const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_event_do_pre; hIndex++ ) {
@@ -40638,8 +40399,7 @@ int HP_npc_event_do(const char *name) {
 }
 int HP_npc_event_doall_id(const char *name, int rid) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_event_doall_id_pre ) {
 		int (*preHookFunc) (const char *name, int *rid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_event_doall_id_pre; hIndex++ ) {
@@ -40665,8 +40425,7 @@ int HP_npc_event_doall_id(const char *name, int rid) {
 }
 int HP_npc_event_doall(const char *name) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_event_doall_pre ) {
 		int (*preHookFunc) (const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_event_doall_pre; hIndex++ ) {
@@ -40692,8 +40451,7 @@ int HP_npc_event_doall(const char *name) {
 }
 int HP_npc_event_do_clock(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_event_do_clock_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_event_do_clock_pre; hIndex++ ) {
@@ -40744,8 +40502,7 @@ void HP_npc_event_do_oninit(void) {
 }
 int HP_npc_timerevent_export(struct npc_data *nd, int i) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_timerevent_export_pre ) {
 		int (*preHookFunc) (struct npc_data *nd, int *i);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_timerevent_export_pre; hIndex++ ) {
@@ -40771,8 +40528,7 @@ int HP_npc_timerevent_export(struct npc_data *nd, int i) {
 }
 int HP_npc_timerevent(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_timerevent_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_timerevent_pre; hIndex++ ) {
@@ -40798,8 +40554,7 @@ int HP_npc_timerevent(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_npc_timerevent_start(struct npc_data *nd, int rid) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_timerevent_start_pre ) {
 		int (*preHookFunc) (struct npc_data *nd, int *rid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_timerevent_start_pre; hIndex++ ) {
@@ -40825,8 +40580,7 @@ int HP_npc_timerevent_start(struct npc_data *nd, int rid) {
 }
 int HP_npc_timerevent_stop(struct npc_data *nd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_timerevent_stop_pre ) {
 		int (*preHookFunc) (struct npc_data *nd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_timerevent_stop_pre; hIndex++ ) {
@@ -40877,8 +40631,7 @@ void HP_npc_timerevent_quit(struct map_session_data *sd) {
 }
 int HP_npc_gettimerevent_tick(struct npc_data *nd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_gettimerevent_tick_pre ) {
 		int (*preHookFunc) (struct npc_data *nd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_gettimerevent_tick_pre; hIndex++ ) {
@@ -40904,8 +40657,7 @@ int HP_npc_gettimerevent_tick(struct npc_data *nd) {
 }
 int HP_npc_settimerevent_tick(struct npc_data *nd, int newtimer) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_settimerevent_tick_pre ) {
 		int (*preHookFunc) (struct npc_data *nd, int *newtimer);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_settimerevent_tick_pre; hIndex++ ) {
@@ -40931,8 +40683,7 @@ int HP_npc_settimerevent_tick(struct npc_data *nd, int newtimer) {
 }
 int HP_npc_event(struct map_session_data *sd, const char *eventname, int ontouch) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_event_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *eventname, int *ontouch);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_event_pre; hIndex++ ) {
@@ -40958,8 +40709,7 @@ int HP_npc_event(struct map_session_data *sd, const char *eventname, int ontouch
 }
 int HP_npc_touch_areanpc_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_touch_areanpc_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_touch_areanpc_sub_pre; hIndex++ ) {
@@ -40991,8 +40741,7 @@ int HP_npc_touch_areanpc_sub(struct block_list *bl, va_list ap) {
 }
 int HP_npc_touchnext_areanpc(struct map_session_data *sd, bool leavemap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_touchnext_areanpc_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, bool *leavemap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_touchnext_areanpc_pre; hIndex++ ) {
@@ -41018,8 +40767,7 @@ int HP_npc_touchnext_areanpc(struct map_session_data *sd, bool leavemap) {
 }
 int HP_npc_touch_areanpc(struct map_session_data *sd, int16 m, int16 x, int16 y) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_touch_areanpc_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int16 *m, int16 *x, int16 *y);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_touch_areanpc_pre; hIndex++ ) {
@@ -41045,8 +40793,7 @@ int HP_npc_touch_areanpc(struct map_session_data *sd, int16 m, int16 x, int16 y)
 }
 int HP_npc_touch_areanpc2(struct mob_data *md) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_touch_areanpc2_pre ) {
 		int (*preHookFunc) (struct mob_data *md);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_touch_areanpc2_pre; hIndex++ ) {
@@ -41072,8 +40819,7 @@ int HP_npc_touch_areanpc2(struct mob_data *md) {
 }
 int HP_npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_check_areanpc_pre ) {
 		int (*preHookFunc) (int *flag, int16 *m, int16 *x, int16 *y, int16 *range);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_check_areanpc_pre; hIndex++ ) {
@@ -41125,8 +40871,7 @@ struct npc_data* HP_npc_checknear(struct map_session_data *sd, struct block_list
 }
 int HP_npc_globalmessage(const char *name, const char *mes) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_globalmessage_pre ) {
 		int (*preHookFunc) (const char *name, const char *mes);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_globalmessage_pre; hIndex++ ) {
@@ -41177,8 +40922,7 @@ void HP_npc_run_tomb(struct map_session_data *sd, struct npc_data *nd) {
 }
 int HP_npc_click(struct map_session_data *sd, struct npc_data *nd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_click_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct npc_data *nd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_click_pre; hIndex++ ) {
@@ -41204,8 +40948,7 @@ int HP_npc_click(struct map_session_data *sd, struct npc_data *nd) {
 }
 int HP_npc_scriptcont(struct map_session_data *sd, int id, bool closing) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_scriptcont_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *id, bool *closing);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_scriptcont_pre; hIndex++ ) {
@@ -41231,8 +40974,7 @@ int HP_npc_scriptcont(struct map_session_data *sd, int id, bool closing) {
 }
 int HP_npc_buysellsel(struct map_session_data *sd, int id, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_buysellsel_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *id, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_buysellsel_pre; hIndex++ ) {
@@ -41258,8 +41000,7 @@ int HP_npc_buysellsel(struct map_session_data *sd, int id, int type) {
 }
 int HP_npc_cashshop_buylist(struct map_session_data *sd, int points, int count, unsigned short *item_list) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_cashshop_buylist_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *points, int *count, unsigned short *item_list);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_cashshop_buylist_pre; hIndex++ ) {
@@ -41285,8 +41026,7 @@ int HP_npc_cashshop_buylist(struct map_session_data *sd, int points, int count, 
 }
 int HP_npc_buylist_sub(struct map_session_data *sd, int n, unsigned short *item_list, struct npc_data *nd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_buylist_sub_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n, unsigned short *item_list, struct npc_data *nd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_buylist_sub_pre; hIndex++ ) {
@@ -41312,8 +41052,7 @@ int HP_npc_buylist_sub(struct map_session_data *sd, int n, unsigned short *item_
 }
 int HP_npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int points) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_cashshop_buy_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *nameid, int *amount, int *points);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_cashshop_buy_pre; hIndex++ ) {
@@ -41339,8 +41078,7 @@ int HP_npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int
 }
 int HP_npc_buylist(struct map_session_data *sd, int n, unsigned short *item_list) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_buylist_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n, unsigned short *item_list);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_buylist_pre; hIndex++ ) {
@@ -41366,8 +41104,7 @@ int HP_npc_buylist(struct map_session_data *sd, int n, unsigned short *item_list
 }
 int HP_npc_selllist_sub(struct map_session_data *sd, int n, unsigned short *item_list, struct npc_data *nd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_selllist_sub_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n, unsigned short *item_list, struct npc_data *nd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_selllist_sub_pre; hIndex++ ) {
@@ -41393,8 +41130,7 @@ int HP_npc_selllist_sub(struct map_session_data *sd, int n, unsigned short *item
 }
 int HP_npc_selllist(struct map_session_data *sd, int n, unsigned short *item_list) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_selllist_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n, unsigned short *item_list);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_selllist_pre; hIndex++ ) {
@@ -41420,8 +41156,7 @@ int HP_npc_selllist(struct map_session_data *sd, int n, unsigned short *item_lis
 }
 int HP_npc_remove_map(struct npc_data *nd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_remove_map_pre ) {
 		int (*preHookFunc) (struct npc_data *nd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_remove_map_pre; hIndex++ ) {
@@ -41447,8 +41182,7 @@ int HP_npc_remove_map(struct npc_data *nd) {
 }
 int HP_npc_unload_ev(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_unload_ev_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_unload_ev_pre; hIndex++ ) {
@@ -41480,8 +41214,7 @@ int HP_npc_unload_ev(DBKey key, DBData *data, va_list ap) {
 }
 int HP_npc_unload_ev_label(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_unload_ev_label_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_unload_ev_label_pre; hIndex++ ) {
@@ -41513,8 +41246,7 @@ int HP_npc_unload_ev_label(DBKey key, DBData *data, va_list ap) {
 }
 int HP_npc_unload_dup_sub(struct npc_data *nd, va_list args) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_unload_dup_sub_pre ) {
 		int (*preHookFunc) (struct npc_data *nd, va_list args);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_unload_dup_sub_pre; hIndex++ ) {
@@ -41571,8 +41303,7 @@ void HP_npc_unload_duplicates(struct npc_data *nd) {
 }
 int HP_npc_unload(struct npc_data *nd, bool single) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_unload_pre ) {
 		int (*preHookFunc) (struct npc_data *nd, bool *single);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_unload_pre; hIndex++ ) {
@@ -41879,8 +41610,7 @@ const char* HP_npc_parse_duplicate(char *w1, char *w2, char *w3, char *w4, const
 }
 int HP_npc_duplicate4instance(struct npc_data *snd, int16 m) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_duplicate4instance_pre ) {
 		int (*preHookFunc) (struct npc_data *snd, int16 *m);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_duplicate4instance_pre; hIndex++ ) {
@@ -41931,8 +41661,7 @@ void HP_npc_setcells(struct npc_data *nd) {
 }
 int HP_npc_unsetcells_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_unsetcells_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_unsetcells_sub_pre; hIndex++ ) {
@@ -42064,8 +41793,7 @@ void HP_npc_setclass(struct npc_data *nd, short class_) {
 }
 int HP_npc_do_atcmd_event(struct map_session_data *sd, const char *command, const char *message, const char *eventname) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_do_atcmd_event_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *command, const char *message, const char *eventname);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_do_atcmd_event_pre; hIndex++ ) {
@@ -42219,8 +41947,7 @@ void HP_npc_parsesrcfile(const char *filepath, bool runOnInit) {
 }
 int HP_npc_script_event(struct map_session_data *sd, enum npce_event type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_script_event_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, enum npce_event *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_script_event_pre; hIndex++ ) {
@@ -42271,8 +41998,7 @@ void HP_npc_read_event_script(void) {
 }
 int HP_npc_path_db_clear_sub(DBKey key, DBData *data, va_list args) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_path_db_clear_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list args);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_path_db_clear_sub_pre; hIndex++ ) {
@@ -42304,8 +42030,7 @@ int HP_npc_path_db_clear_sub(DBKey key, DBData *data, va_list args) {
 }
 int HP_npc_ev_label_db_clear_sub(DBKey key, DBData *data, va_list args) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_ev_label_db_clear_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list args);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_ev_label_db_clear_sub_pre; hIndex++ ) {
@@ -42337,8 +42062,7 @@ int HP_npc_ev_label_db_clear_sub(DBKey key, DBData *data, va_list args) {
 }
 int HP_npc_reload(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_reload_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_reload_pre; hIndex++ ) {
@@ -42364,8 +42088,7 @@ int HP_npc_reload(void) {
 }
 bool HP_npc_unloadfile(const char *filepath) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_npc_unloadfile_pre ) {
 		bool (*preHookFunc) (const char *filepath);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_unloadfile_pre; hIndex++ ) {
@@ -42463,6 +42186,32 @@ void HP_npc_debug_warps(void) {
 		}
 	}
 	return;
+}
+int HP_npc_secure_timeout_timer(int tid, unsigned int tick, int id, intptr_t data) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_npc_secure_timeout_timer_pre ) {
+		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_secure_timeout_timer_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_secure_timeout_timer_pre[hIndex].func;
+			retVal___ = preHookFunc(&tid, &tick, &id, &data);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.secure_timeout_timer(tid, tick, id, data);
+	}
+	if( HPMHooks.count.HP_npc_secure_timeout_timer_post ) {
+		int (*postHookFunc) (int retVal___, int *tid, unsigned int *tick, int *id, intptr_t *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_secure_timeout_timer_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_secure_timeout_timer_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &tid, &tick, &id, &data);
+		}
+	}
+	return retVal___;
 }
 /* party */
 void HP_party_init(void) {
@@ -42569,8 +42318,7 @@ struct party_data* HP_party_searchname(const char *str) {
 }
 int HP_party_getmemberid(struct party_data *p, struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_getmemberid_pre ) {
 		int (*preHookFunc) (struct party_data *p, struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_getmemberid_pre; hIndex++ ) {
@@ -42622,8 +42370,7 @@ struct map_session_data* HP_party_getavailablesd(struct party_data *p) {
 }
 int HP_party_create(struct map_session_data *sd, char *name, int item, int item2) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_create_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, char *name, int *item, int *item2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_create_pre; hIndex++ ) {
@@ -42674,8 +42421,7 @@ void HP_party_created(int account_id, int char_id, int fail, int party_id, char 
 }
 int HP_party_request_info(int party_id, int char_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_request_info_pre ) {
 		int (*preHookFunc) (int *party_id, int *char_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_request_info_pre; hIndex++ ) {
@@ -42701,8 +42447,7 @@ int HP_party_request_info(int party_id, int char_id) {
 }
 int HP_party_invite(struct map_session_data *sd, struct map_session_data *tsd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_invite_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct map_session_data *tsd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_invite_pre; hIndex++ ) {
@@ -42753,8 +42498,7 @@ void HP_party_member_joined(struct map_session_data *sd) {
 }
 int HP_party_member_added(int party_id, int account_id, int char_id, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_member_added_pre ) {
 		int (*preHookFunc) (int *party_id, int *account_id, int *char_id, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_member_added_pre; hIndex++ ) {
@@ -42780,8 +42524,7 @@ int HP_party_member_added(int party_id, int account_id, int char_id, int flag) {
 }
 int HP_party_leave(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_leave_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_leave_pre; hIndex++ ) {
@@ -42807,8 +42550,7 @@ int HP_party_leave(struct map_session_data *sd) {
 }
 int HP_party_removemember(struct map_session_data *sd, int account_id, char *name) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_removemember_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *account_id, char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_removemember_pre; hIndex++ ) {
@@ -42834,8 +42576,7 @@ int HP_party_removemember(struct map_session_data *sd, int account_id, char *nam
 }
 int HP_party_member_withdraw(int party_id, int account_id, int char_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_member_withdraw_pre ) {
 		int (*preHookFunc) (int *party_id, int *account_id, int *char_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_member_withdraw_pre; hIndex++ ) {
@@ -42886,8 +42627,7 @@ void HP_party_reply_invite(struct map_session_data *sd, int party_id, int flag) 
 }
 int HP_party_recv_noinfo(int party_id, int char_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_recv_noinfo_pre ) {
 		int (*preHookFunc) (int *party_id, int *char_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_recv_noinfo_pre; hIndex++ ) {
@@ -42913,8 +42653,7 @@ int HP_party_recv_noinfo(int party_id, int char_id) {
 }
 int HP_party_recv_info(struct party *sp, int char_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_recv_info_pre ) {
 		int (*preHookFunc) (struct party *sp, int *char_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_recv_info_pre; hIndex++ ) {
@@ -42940,8 +42679,7 @@ int HP_party_recv_info(struct party *sp, int char_id) {
 }
 int HP_party_recv_movemap(int party_id, int account_id, int char_id, unsigned short mapid, int online, int lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_recv_movemap_pre ) {
 		int (*preHookFunc) (int *party_id, int *account_id, int *char_id, unsigned short *mapid, int *online, int *lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_recv_movemap_pre; hIndex++ ) {
@@ -42967,8 +42705,7 @@ int HP_party_recv_movemap(int party_id, int account_id, int char_id, unsigned sh
 }
 int HP_party_broken(int party_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_broken_pre ) {
 		int (*preHookFunc) (int *party_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_broken_pre; hIndex++ ) {
@@ -42994,8 +42731,7 @@ int HP_party_broken(int party_id) {
 }
 int HP_party_optionchanged(int party_id, int account_id, int exp, int item, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_optionchanged_pre ) {
 		int (*preHookFunc) (int *party_id, int *account_id, int *exp, int *item, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_optionchanged_pre; hIndex++ ) {
@@ -43021,8 +42757,7 @@ int HP_party_optionchanged(int party_id, int account_id, int exp, int item, int 
 }
 int HP_party_changeoption(struct map_session_data *sd, int exp, int item) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_changeoption_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *exp, int *item);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_changeoption_pre; hIndex++ ) {
@@ -43048,8 +42783,7 @@ int HP_party_changeoption(struct map_session_data *sd, int exp, int item) {
 }
 bool HP_party_changeleader(struct map_session_data *sd, struct map_session_data *t_sd) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_party_changeleader_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, struct map_session_data *t_sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_changeleader_pre; hIndex++ ) {
@@ -43125,8 +42859,7 @@ void HP_party_send_levelup(struct map_session_data *sd) {
 }
 int HP_party_send_logout(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_send_logout_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_send_logout_pre; hIndex++ ) {
@@ -43152,8 +42885,7 @@ int HP_party_send_logout(struct map_session_data *sd) {
 }
 int HP_party_send_message(struct map_session_data *sd, const char *mes, int len) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_send_message_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *mes, int *len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_send_message_pre; hIndex++ ) {
@@ -43179,8 +42911,7 @@ int HP_party_send_message(struct map_session_data *sd, const char *mes, int len)
 }
 int HP_party_recv_message(int party_id, int account_id, const char *mes, int len) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_recv_message_pre ) {
 		int (*preHookFunc) (int *party_id, int *account_id, const char *mes, int *len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_recv_message_pre; hIndex++ ) {
@@ -43206,8 +42937,7 @@ int HP_party_recv_message(int party_id, int account_id, const char *mes, int len
 }
 int HP_party_skill_check(struct map_session_data *sd, int party_id, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_skill_check_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *party_id, uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_skill_check_pre; hIndex++ ) {
@@ -43233,8 +42963,7 @@ int HP_party_skill_check(struct map_session_data *sd, int party_id, uint16 skill
 }
 int HP_party_send_xy_clear(struct party_data *p) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_send_xy_clear_pre ) {
 		int (*preHookFunc) (struct party_data *p);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_send_xy_clear_pre; hIndex++ ) {
@@ -43260,8 +42989,7 @@ int HP_party_send_xy_clear(struct party_data *p) {
 }
 int HP_party_exp_share(struct party_data *p, struct block_list *src, unsigned int base_exp, unsigned int job_exp, int zeny) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_exp_share_pre ) {
 		int (*preHookFunc) (struct party_data *p, struct block_list *src, unsigned int *base_exp, unsigned int *job_exp, int *zeny);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_exp_share_pre; hIndex++ ) {
@@ -43287,8 +43015,7 @@ int HP_party_exp_share(struct party_data *p, struct block_list *src, unsigned in
 }
 int HP_party_share_loot(struct party_data *p, struct map_session_data *sd, struct item *item_data, int first_charid) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_share_loot_pre ) {
 		int (*preHookFunc) (struct party_data *p, struct map_session_data *sd, struct item *item_data, int *first_charid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_share_loot_pre; hIndex++ ) {
@@ -43314,8 +43041,7 @@ int HP_party_share_loot(struct party_data *p, struct map_session_data *sd, struc
 }
 int HP_party_send_dot_remove(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_send_dot_remove_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_send_dot_remove_pre; hIndex++ ) {
@@ -43341,8 +43067,7 @@ int HP_party_send_dot_remove(struct map_session_data *sd) {
 }
 int HP_party_sub_count(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_sub_count_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_sub_count_pre; hIndex++ ) {
@@ -43372,12 +43097,87 @@ int HP_party_sub_count(struct block_list *bl, va_list ap) {
 	}
 	return retVal___;
 }
-void HP_party_booking_register(struct map_session_data *sd, short level, const char *notice) {
+void HP_party_booking_register(struct map_session_data *sd, short level, short mapid, short *job) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_party_booking_register_pre ) {
-		void (*preHookFunc) (struct map_session_data *sd, short *level, const char *notice);
+		void (*preHookFunc) (struct map_session_data *sd, short *level, short *mapid, short *job);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_booking_register_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_party_booking_register_pre[hIndex].func;
+			preHookFunc(sd, &level, &mapid, job);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.party.booking_register(sd, level, mapid, job);
+	}
+	if( HPMHooks.count.HP_party_booking_register_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, short *level, short *mapid, short *job);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_booking_register_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_party_booking_register_post[hIndex].func;
+			postHookFunc(sd, &level, &mapid, job);
+		}
+	}
+	return;
+}
+void HP_party_booking_update(struct map_session_data *sd, short *job) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_party_booking_update_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, short *job);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_booking_update_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_party_booking_update_pre[hIndex].func;
+			preHookFunc(sd, job);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.party.booking_update(sd, job);
+	}
+	if( HPMHooks.count.HP_party_booking_update_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, short *job);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_booking_update_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_party_booking_update_post[hIndex].func;
+			postHookFunc(sd, job);
+		}
+	}
+	return;
+}
+void HP_party_booking_search(struct map_session_data *sd, short level, short mapid, short job, unsigned long lastindex, short resultcount) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_party_booking_search_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, short *level, short *mapid, short *job, unsigned long *lastindex, short *resultcount);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_booking_search_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_party_booking_search_pre[hIndex].func;
+			preHookFunc(sd, &level, &mapid, &job, &lastindex, &resultcount);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.party.booking_search(sd, level, mapid, job, lastindex, resultcount);
+	}
+	if( HPMHooks.count.HP_party_booking_search_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, short *level, short *mapid, short *job, unsigned long *lastindex, short *resultcount);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_booking_search_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_party_booking_search_post[hIndex].func;
+			postHookFunc(sd, &level, &mapid, &job, &lastindex, &resultcount);
+		}
+	}
+	return;
+}
+void HP_party_recruit_register(struct map_session_data *sd, short level, const char *notice) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_party_recruit_register_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, short *level, const char *notice);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_recruit_register_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_party_recruit_register_pre[hIndex].func;
 			preHookFunc(sd, &level, notice);
 		}
 		if( *HPMforce_return ) {
@@ -43386,23 +43186,23 @@ void HP_party_booking_register(struct map_session_data *sd, short level, const c
 		}
 	}
 	{
-		HPMHooks.source.party.booking_register(sd, level, notice);
+		HPMHooks.source.party.recruit_register(sd, level, notice);
 	}
-	if( HPMHooks.count.HP_party_booking_register_post ) {
+	if( HPMHooks.count.HP_party_recruit_register_post ) {
 		void (*postHookFunc) (struct map_session_data *sd, short *level, const char *notice);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_booking_register_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_party_booking_register_post[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_recruit_register_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_party_recruit_register_post[hIndex].func;
 			postHookFunc(sd, &level, notice);
 		}
 	}
 	return;
 }
-void HP_party_booking_update(struct map_session_data *sd, const char *notice) {
+void HP_party_recruit_update(struct map_session_data *sd, const char *notice) {
 	int hIndex = 0;
-	if( HPMHooks.count.HP_party_booking_update_pre ) {
+	if( HPMHooks.count.HP_party_recruit_update_pre ) {
 		void (*preHookFunc) (struct map_session_data *sd, const char *notice);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_booking_update_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_party_booking_update_pre[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_recruit_update_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_party_recruit_update_pre[hIndex].func;
 			preHookFunc(sd, notice);
 		}
 		if( *HPMforce_return ) {
@@ -43411,23 +43211,23 @@ void HP_party_booking_update(struct map_session_data *sd, const char *notice) {
 		}
 	}
 	{
-		HPMHooks.source.party.booking_update(sd, notice);
+		HPMHooks.source.party.recruit_update(sd, notice);
 	}
-	if( HPMHooks.count.HP_party_booking_update_post ) {
+	if( HPMHooks.count.HP_party_recruit_update_post ) {
 		void (*postHookFunc) (struct map_session_data *sd, const char *notice);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_booking_update_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_party_booking_update_post[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_recruit_update_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_party_recruit_update_post[hIndex].func;
 			postHookFunc(sd, notice);
 		}
 	}
 	return;
 }
-void HP_party_booking_search(struct map_session_data *sd, short level, short mapid, unsigned long lastindex, short resultcount) {
+void HP_party_recruit_search(struct map_session_data *sd, short level, short mapid, unsigned long lastindex, short resultcount) {
 	int hIndex = 0;
-	if( HPMHooks.count.HP_party_booking_search_pre ) {
+	if( HPMHooks.count.HP_party_recruit_search_pre ) {
 		void (*preHookFunc) (struct map_session_data *sd, short *level, short *mapid, unsigned long *lastindex, short *resultcount);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_booking_search_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_party_booking_search_pre[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_recruit_search_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_party_recruit_search_pre[hIndex].func;
 			preHookFunc(sd, &level, &mapid, &lastindex, &resultcount);
 		}
 		if( *HPMforce_return ) {
@@ -43436,12 +43236,12 @@ void HP_party_booking_search(struct map_session_data *sd, short level, short map
 		}
 	}
 	{
-		HPMHooks.source.party.booking_search(sd, level, mapid, lastindex, resultcount);
+		HPMHooks.source.party.recruit_search(sd, level, mapid, lastindex, resultcount);
 	}
-	if( HPMHooks.count.HP_party_booking_search_post ) {
+	if( HPMHooks.count.HP_party_recruit_search_post ) {
 		void (*postHookFunc) (struct map_session_data *sd, short *level, short *mapid, unsigned long *lastindex, short *resultcount);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_booking_search_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_party_booking_search_post[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_recruit_search_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_party_recruit_search_post[hIndex].func;
 			postHookFunc(sd, &level, &mapid, &lastindex, &resultcount);
 		}
 	}
@@ -43449,8 +43249,7 @@ void HP_party_booking_search(struct map_session_data *sd, short level, short map
 }
 bool HP_party_booking_delete(struct map_session_data *sd) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_party_booking_delete_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_booking_delete_pre; hIndex++ ) {
@@ -43476,8 +43275,7 @@ bool HP_party_booking_delete(struct map_session_data *sd) {
 }
 int HP_party_vforeachsamemap(int ( *func ) (struct block_list *, va_list), struct map_session_data *sd, int range, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_vforeachsamemap_pre ) {
 		int (*preHookFunc) (int ( *func ) (struct block_list *, va_list), struct map_session_data *sd, int *range, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_vforeachsamemap_pre; hIndex++ ) {
@@ -43509,8 +43307,7 @@ int HP_party_vforeachsamemap(int ( *func ) (struct block_list *, va_list), struc
 }
 int HP_party_send_xy_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_send_xy_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_send_xy_timer_pre; hIndex++ ) {
@@ -43638,8 +43435,7 @@ struct party_booking_ad_info* HP_party_create_booking_data(void) {
 }
 int HP_party_db_final(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_party_db_final_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_party_db_final_pre; hIndex++ ) {
@@ -43672,8 +43468,7 @@ int HP_party_db_final(DBKey key, DBData *data, va_list ap) {
 /* path */
 int HP_path_blownpos(int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_path_blownpos_pre ) {
 		int (*preHookFunc) (int16 *m, int16 *x0, int16 *y0, int16 *dx, int16 *dy, int *count);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_path_blownpos_pre; hIndex++ ) {
@@ -43699,8 +43494,7 @@ int HP_path_blownpos(int16 m, int16 x0, int16 y0, int16 dx, int16 dy, int count)
 }
 bool HP_path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_path_search_pre ) {
 		bool (*preHookFunc) (struct walkpath_data *wpd, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, int *flag, cell_chk *cell);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_path_search_pre; hIndex++ ) {
@@ -43726,8 +43520,7 @@ bool HP_path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int1
 }
 bool HP_path_search_long(struct shootpath_data *spd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, cell_chk cell) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_path_search_long_pre ) {
 		bool (*preHookFunc) (struct shootpath_data *spd, int16 *m, int16 *x0, int16 *y0, int16 *x1, int16 *y1, cell_chk *cell);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_path_search_long_pre; hIndex++ ) {
@@ -43753,8 +43546,7 @@ bool HP_path_search_long(struct shootpath_data *spd, int16 m, int16 x0, int16 y0
 }
 int HP_path_check_distance(int dx, int dy, int distance) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_path_check_distance_pre ) {
 		int (*preHookFunc) (int *dx, int *dy, int *distance);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_path_check_distance_pre; hIndex++ ) {
@@ -43780,8 +43572,7 @@ int HP_path_check_distance(int dx, int dy, int distance) {
 }
 unsigned int HP_path_distance(int dx, int dy) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_path_distance_pre ) {
 		unsigned int (*preHookFunc) (int *dx, int *dy);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_path_distance_pre; hIndex++ ) {
@@ -43884,8 +43675,7 @@ struct map_session_data* HP_pc_get_dummy_sd(void) {
 }
 int HP_pc_class2idx(int class_) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_class2idx_pre ) {
 		int (*preHookFunc) (int *class_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_class2idx_pre; hIndex++ ) {
@@ -43911,8 +43701,7 @@ int HP_pc_class2idx(int class_) {
 }
 int HP_pc_get_group_level(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_get_group_level_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_get_group_level_pre; hIndex++ ) {
@@ -43938,8 +43727,7 @@ int HP_pc_get_group_level(struct map_session_data *sd) {
 }
 bool HP_pc_can_give_items(struct map_session_data *sd) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_pc_can_give_items_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_can_give_items_pre; hIndex++ ) {
@@ -43965,8 +43753,7 @@ bool HP_pc_can_give_items(struct map_session_data *sd) {
 }
 bool HP_pc_can_use_command(struct map_session_data *sd, const char *command) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_pc_can_use_command_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, const char *command);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_can_use_command_pre; hIndex++ ) {
@@ -43992,8 +43779,7 @@ bool HP_pc_can_use_command(struct map_session_data *sd, const char *command) {
 }
 bool HP_pc_has_permission(struct map_session_data *sd, enum e_pc_permission permission) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_pc_has_permission_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, enum e_pc_permission *permission);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_has_permission_pre; hIndex++ ) {
@@ -44019,8 +43805,7 @@ bool HP_pc_has_permission(struct map_session_data *sd, enum e_pc_permission perm
 }
 int HP_pc_set_group(struct map_session_data *sd, int group_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_set_group_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *group_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_set_group_pre; hIndex++ ) {
@@ -44046,8 +43831,7 @@ int HP_pc_set_group(struct map_session_data *sd, int group_id) {
 }
 bool HP_pc_should_log_commands(struct map_session_data *sd) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_pc_should_log_commands_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_should_log_commands_pre; hIndex++ ) {
@@ -44073,8 +43857,7 @@ bool HP_pc_should_log_commands(struct map_session_data *sd) {
 }
 int HP_pc_setrestartvalue(struct map_session_data *sd, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setrestartvalue_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setrestartvalue_pre; hIndex++ ) {
@@ -44100,8 +43883,7 @@ int HP_pc_setrestartvalue(struct map_session_data *sd, int type) {
 }
 int HP_pc_makesavestatus(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_makesavestatus_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_makesavestatus_pre; hIndex++ ) {
@@ -44152,8 +43934,7 @@ void HP_pc_respawn(struct map_session_data *sd, clr_type clrtype) {
 }
 int HP_pc_setnewpc(struct map_session_data *sd, int account_id, int char_id, int login_id1, unsigned int client_tick, int sex, int fd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setnewpc_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *account_id, int *char_id, int *login_id1, unsigned int *client_tick, int *sex, int *fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setnewpc_pre; hIndex++ ) {
@@ -44179,8 +43960,7 @@ int HP_pc_setnewpc(struct map_session_data *sd, int account_id, int char_id, int
 }
 bool HP_pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_time, int group_id, struct mmo_charstatus *st, bool changing_mapservers) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_pc_authok_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, int *login_id2, time_t *expiration_time, int *group_id, struct mmo_charstatus *st, bool *changing_mapservers);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_authok_pre; hIndex++ ) {
@@ -44231,8 +44011,7 @@ void HP_pc_authfail(struct map_session_data *sd) {
 }
 int HP_pc_reg_received(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_reg_received_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_reg_received_pre; hIndex++ ) {
@@ -44258,8 +44037,7 @@ int HP_pc_reg_received(struct map_session_data *sd) {
 }
 int HP_pc_isequip(struct map_session_data *sd, int n) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_isequip_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_isequip_pre; hIndex++ ) {
@@ -44285,8 +44063,7 @@ int HP_pc_isequip(struct map_session_data *sd, int n) {
 }
 int HP_pc_equippoint(struct map_session_data *sd, int n) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_equippoint_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_equippoint_pre; hIndex++ ) {
@@ -44312,8 +44089,7 @@ int HP_pc_equippoint(struct map_session_data *sd, int n) {
 }
 int HP_pc_setinventorydata(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setinventorydata_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setinventorydata_pre; hIndex++ ) {
@@ -44339,8 +44115,7 @@ int HP_pc_setinventorydata(struct map_session_data *sd) {
 }
 int HP_pc_checkskill(struct map_session_data *sd, uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_checkskill_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_checkskill_pre; hIndex++ ) {
@@ -44366,8 +44141,7 @@ int HP_pc_checkskill(struct map_session_data *sd, uint16 skill_id) {
 }
 int HP_pc_checkskill2(struct map_session_data *sd, uint16 index) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_checkskill2_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *index);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_checkskill2_pre; hIndex++ ) {
@@ -44393,8 +44167,7 @@ int HP_pc_checkskill2(struct map_session_data *sd, uint16 index) {
 }
 int HP_pc_checkallowskill(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_checkallowskill_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_checkallowskill_pre; hIndex++ ) {
@@ -44420,8 +44193,7 @@ int HP_pc_checkallowskill(struct map_session_data *sd) {
 }
 int HP_pc_checkequip(struct map_session_data *sd, int pos) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_checkequip_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *pos);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_checkequip_pre; hIndex++ ) {
@@ -44447,8 +44219,7 @@ int HP_pc_checkequip(struct map_session_data *sd, int pos) {
 }
 int HP_pc_calc_skilltree(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_calc_skilltree_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_calc_skilltree_pre; hIndex++ ) {
@@ -44474,8 +44245,7 @@ int HP_pc_calc_skilltree(struct map_session_data *sd) {
 }
 int HP_pc_calc_skilltree_normalize_job(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_calc_skilltree_normalize_job_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_calc_skilltree_normalize_job_pre; hIndex++ ) {
@@ -44501,8 +44271,7 @@ int HP_pc_calc_skilltree_normalize_job(struct map_session_data *sd) {
 }
 int HP_pc_clean_skilltree(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_clean_skilltree_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_clean_skilltree_pre; hIndex++ ) {
@@ -44528,8 +44297,7 @@ int HP_pc_clean_skilltree(struct map_session_data *sd) {
 }
 int HP_pc_setpos(struct map_session_data *sd, unsigned short mapindex, int x, int y, clr_type clrtype) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setpos_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, unsigned short *mapindex, int *x, int *y, clr_type *clrtype);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setpos_pre; hIndex++ ) {
@@ -44555,8 +44323,7 @@ int HP_pc_setpos(struct map_session_data *sd, unsigned short mapindex, int x, in
 }
 int HP_pc_setsavepoint(struct map_session_data *sd, short mapindex, int x, int y) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setsavepoint_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, short *mapindex, int *x, int *y);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setsavepoint_pre; hIndex++ ) {
@@ -44582,8 +44349,7 @@ int HP_pc_setsavepoint(struct map_session_data *sd, short mapindex, int x, int y
 }
 int HP_pc_randomwarp(struct map_session_data *sd, clr_type type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_randomwarp_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, clr_type *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_randomwarp_pre; hIndex++ ) {
@@ -44609,8 +44375,7 @@ int HP_pc_randomwarp(struct map_session_data *sd, clr_type type) {
 }
 int HP_pc_memo(struct map_session_data *sd, int pos) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_memo_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *pos);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_memo_pre; hIndex++ ) {
@@ -44636,8 +44401,7 @@ int HP_pc_memo(struct map_session_data *sd, int pos) {
 }
 int HP_pc_checkadditem(struct map_session_data *sd, int nameid, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_checkadditem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *nameid, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_checkadditem_pre; hIndex++ ) {
@@ -44663,8 +44427,7 @@ int HP_pc_checkadditem(struct map_session_data *sd, int nameid, int amount) {
 }
 int HP_pc_inventoryblank(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_inventoryblank_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_inventoryblank_pre; hIndex++ ) {
@@ -44690,8 +44453,7 @@ int HP_pc_inventoryblank(struct map_session_data *sd) {
 }
 int HP_pc_search_inventory(struct map_session_data *sd, int item_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_search_inventory_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *item_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_search_inventory_pre; hIndex++ ) {
@@ -44717,8 +44479,7 @@ int HP_pc_search_inventory(struct map_session_data *sd, int item_id) {
 }
 int HP_pc_payzeny(struct map_session_data *sd, int zeny, enum e_log_pick_type type, struct map_session_data *tsd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_payzeny_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *zeny, enum e_log_pick_type *type, struct map_session_data *tsd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_payzeny_pre; hIndex++ ) {
@@ -44744,8 +44505,7 @@ int HP_pc_payzeny(struct map_session_data *sd, int zeny, enum e_log_pick_type ty
 }
 int HP_pc_additem(struct map_session_data *sd, struct item *item_data, int amount, e_log_pick_type log_type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_additem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct item *item_data, int *amount, e_log_pick_type *log_type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_additem_pre; hIndex++ ) {
@@ -44771,8 +44531,7 @@ int HP_pc_additem(struct map_session_data *sd, struct item *item_data, int amoun
 }
 int HP_pc_getzeny(struct map_session_data *sd, int zeny, enum e_log_pick_type type, struct map_session_data *tsd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_getzeny_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *zeny, enum e_log_pick_type *type, struct map_session_data *tsd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_getzeny_pre; hIndex++ ) {
@@ -44798,8 +44557,7 @@ int HP_pc_getzeny(struct map_session_data *sd, int zeny, enum e_log_pick_type ty
 }
 int HP_pc_delitem(struct map_session_data *sd, int n, int amount, int type, short reason, e_log_pick_type log_type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_delitem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n, int *amount, int *type, short *reason, e_log_pick_type *log_type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_delitem_pre; hIndex++ ) {
@@ -44825,8 +44583,7 @@ int HP_pc_delitem(struct map_session_data *sd, int n, int amount, int type, shor
 }
 int HP_pc_paycash(struct map_session_data *sd, int price, int points) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_paycash_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *price, int *points);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_paycash_pre; hIndex++ ) {
@@ -44852,8 +44609,7 @@ int HP_pc_paycash(struct map_session_data *sd, int price, int points) {
 }
 int HP_pc_getcash(struct map_session_data *sd, int cash, int points) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_getcash_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *cash, int *points);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_getcash_pre; hIndex++ ) {
@@ -44879,8 +44635,7 @@ int HP_pc_getcash(struct map_session_data *sd, int cash, int points) {
 }
 int HP_pc_cart_additem(struct map_session_data *sd, struct item *item_data, int amount, e_log_pick_type log_type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_cart_additem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct item *item_data, int *amount, e_log_pick_type *log_type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_cart_additem_pre; hIndex++ ) {
@@ -44906,8 +44661,7 @@ int HP_pc_cart_additem(struct map_session_data *sd, struct item *item_data, int 
 }
 int HP_pc_cart_delitem(struct map_session_data *sd, int n, int amount, int type, e_log_pick_type log_type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_cart_delitem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n, int *amount, int *type, e_log_pick_type *log_type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_cart_delitem_pre; hIndex++ ) {
@@ -44933,8 +44687,7 @@ int HP_pc_cart_delitem(struct map_session_data *sd, int n, int amount, int type,
 }
 int HP_pc_putitemtocart(struct map_session_data *sd, int idx, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_putitemtocart_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *idx, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_putitemtocart_pre; hIndex++ ) {
@@ -44960,8 +44713,7 @@ int HP_pc_putitemtocart(struct map_session_data *sd, int idx, int amount) {
 }
 int HP_pc_getitemfromcart(struct map_session_data *sd, int idx, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_getitemfromcart_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *idx, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_getitemfromcart_pre; hIndex++ ) {
@@ -44987,8 +44739,7 @@ int HP_pc_getitemfromcart(struct map_session_data *sd, int idx, int amount) {
 }
 int HP_pc_cartitem_amount(struct map_session_data *sd, int idx, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_cartitem_amount_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *idx, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_cartitem_amount_pre; hIndex++ ) {
@@ -45014,8 +44765,7 @@ int HP_pc_cartitem_amount(struct map_session_data *sd, int idx, int amount) {
 }
 int HP_pc_takeitem(struct map_session_data *sd, struct flooritem_data *fitem) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_takeitem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct flooritem_data *fitem);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_takeitem_pre; hIndex++ ) {
@@ -45041,8 +44791,7 @@ int HP_pc_takeitem(struct map_session_data *sd, struct flooritem_data *fitem) {
 }
 int HP_pc_dropitem(struct map_session_data *sd, int n, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_dropitem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_dropitem_pre; hIndex++ ) {
@@ -45068,8 +44817,7 @@ int HP_pc_dropitem(struct map_session_data *sd, int n, int amount) {
 }
 bool HP_pc_isequipped(struct map_session_data *sd, int nameid) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_pc_isequipped_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, int *nameid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_isequipped_pre; hIndex++ ) {
@@ -45095,8 +44843,7 @@ bool HP_pc_isequipped(struct map_session_data *sd, int nameid) {
 }
 bool HP_pc_can_Adopt(struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_pc_can_Adopt_pre ) {
 		bool (*preHookFunc) (struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_can_Adopt_pre; hIndex++ ) {
@@ -45122,8 +44869,7 @@ bool HP_pc_can_Adopt(struct map_session_data *p1_sd, struct map_session_data *p2
 }
 bool HP_pc_adoption(struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_pc_adoption_pre ) {
 		bool (*preHookFunc) (struct map_session_data *p1_sd, struct map_session_data *p2_sd, struct map_session_data *b_sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_adoption_pre; hIndex++ ) {
@@ -45149,8 +44895,7 @@ bool HP_pc_adoption(struct map_session_data *p1_sd, struct map_session_data *p2_
 }
 int HP_pc_updateweightstatus(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_updateweightstatus_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_updateweightstatus_pre; hIndex++ ) {
@@ -45176,8 +44921,7 @@ int HP_pc_updateweightstatus(struct map_session_data *sd) {
 }
 int HP_pc_addautobonus(struct s_autobonus *bonus, char max, const char *bonus_script, short rate, unsigned int dur, short atk_type, const char *o_script, unsigned short pos, bool onskill) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_addautobonus_pre ) {
 		int (*preHookFunc) (struct s_autobonus *bonus, char *max, const char *bonus_script, short *rate, unsigned int *dur, short *atk_type, const char *o_script, unsigned short *pos, bool *onskill);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_addautobonus_pre; hIndex++ ) {
@@ -45203,8 +44947,7 @@ int HP_pc_addautobonus(struct s_autobonus *bonus, char max, const char *bonus_sc
 }
 int HP_pc_exeautobonus(struct map_session_data *sd, struct s_autobonus *bonus) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_exeautobonus_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct s_autobonus *bonus);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_exeautobonus_pre; hIndex++ ) {
@@ -45230,8 +44973,7 @@ int HP_pc_exeautobonus(struct map_session_data *sd, struct s_autobonus *bonus) {
 }
 int HP_pc_endautobonus(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_endautobonus_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_endautobonus_pre; hIndex++ ) {
@@ -45257,8 +44999,7 @@ int HP_pc_endautobonus(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_pc_delautobonus(struct map_session_data *sd, struct s_autobonus *bonus, char max, bool restore) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_delautobonus_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct s_autobonus *bonus, char *max, bool *restore);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_delautobonus_pre; hIndex++ ) {
@@ -45284,8 +45025,7 @@ int HP_pc_delautobonus(struct map_session_data *sd, struct s_autobonus *bonus, c
 }
 int HP_pc_bonus(struct map_session_data *sd, int type, int val) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_bonus_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type, int *val);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_pre; hIndex++ ) {
@@ -45311,8 +45051,7 @@ int HP_pc_bonus(struct map_session_data *sd, int type, int val) {
 }
 int HP_pc_bonus2(struct map_session_data *sd, int type, int type2, int val) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_bonus2_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type, int *type2, int *val);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus2_pre; hIndex++ ) {
@@ -45338,8 +45077,7 @@ int HP_pc_bonus2(struct map_session_data *sd, int type, int type2, int val) {
 }
 int HP_pc_bonus3(struct map_session_data *sd, int type, int type2, int type3, int val) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_bonus3_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type, int *type2, int *type3, int *val);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus3_pre; hIndex++ ) {
@@ -45365,8 +45103,7 @@ int HP_pc_bonus3(struct map_session_data *sd, int type, int type2, int type3, in
 }
 int HP_pc_bonus4(struct map_session_data *sd, int type, int type2, int type3, int type4, int val) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_bonus4_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type, int *type2, int *type3, int *type4, int *val);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus4_pre; hIndex++ ) {
@@ -45392,8 +45129,7 @@ int HP_pc_bonus4(struct map_session_data *sd, int type, int type2, int type3, in
 }
 int HP_pc_bonus5(struct map_session_data *sd, int type, int type2, int type3, int type4, int type5, int val) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_bonus5_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type, int *type2, int *type3, int *type4, int *type5, int *val);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus5_pre; hIndex++ ) {
@@ -45419,8 +45155,7 @@ int HP_pc_bonus5(struct map_session_data *sd, int type, int type2, int type3, in
 }
 int HP_pc_skill(struct map_session_data *sd, int id, int level, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_skill_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *id, int *level, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_skill_pre; hIndex++ ) {
@@ -45446,8 +45181,7 @@ int HP_pc_skill(struct map_session_data *sd, int id, int level, int flag) {
 }
 int HP_pc_insert_card(struct map_session_data *sd, int idx_card, int idx_equip) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_insert_card_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *idx_card, int *idx_equip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_insert_card_pre; hIndex++ ) {
@@ -45473,8 +45207,7 @@ int HP_pc_insert_card(struct map_session_data *sd, int idx_card, int idx_equip) 
 }
 int HP_pc_steal_item(struct map_session_data *sd, struct block_list *bl, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_steal_item_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct block_list *bl, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_steal_item_pre; hIndex++ ) {
@@ -45500,8 +45233,7 @@ int HP_pc_steal_item(struct map_session_data *sd, struct block_list *bl, uint16 
 }
 int HP_pc_steal_coin(struct map_session_data *sd, struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_steal_coin_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_steal_coin_pre; hIndex++ ) {
@@ -45527,8 +45259,7 @@ int HP_pc_steal_coin(struct map_session_data *sd, struct block_list *bl) {
 }
 int HP_pc_modifybuyvalue(struct map_session_data *sd, int orig_value) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_modifybuyvalue_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *orig_value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_modifybuyvalue_pre; hIndex++ ) {
@@ -45554,8 +45285,7 @@ int HP_pc_modifybuyvalue(struct map_session_data *sd, int orig_value) {
 }
 int HP_pc_modifysellvalue(struct map_session_data *sd, int orig_value) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_modifysellvalue_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *orig_value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_modifysellvalue_pre; hIndex++ ) {
@@ -45581,8 +45311,7 @@ int HP_pc_modifysellvalue(struct map_session_data *sd, int orig_value) {
 }
 int HP_pc_follow(struct map_session_data *sd, int target_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_follow_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *target_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_follow_pre; hIndex++ ) {
@@ -45608,8 +45337,7 @@ int HP_pc_follow(struct map_session_data *sd, int target_id) {
 }
 int HP_pc_stop_following(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_stop_following_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_stop_following_pre; hIndex++ ) {
@@ -45635,8 +45363,7 @@ int HP_pc_stop_following(struct map_session_data *sd) {
 }
 unsigned int HP_pc_maxbaselv(struct map_session_data *sd) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_maxbaselv_pre ) {
 		unsigned int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_maxbaselv_pre; hIndex++ ) {
@@ -45662,8 +45389,7 @@ unsigned int HP_pc_maxbaselv(struct map_session_data *sd) {
 }
 unsigned int HP_pc_maxjoblv(struct map_session_data *sd) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_maxjoblv_pre ) {
 		unsigned int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_maxjoblv_pre; hIndex++ ) {
@@ -45689,8 +45415,7 @@ unsigned int HP_pc_maxjoblv(struct map_session_data *sd) {
 }
 int HP_pc_checkbaselevelup(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_checkbaselevelup_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_checkbaselevelup_pre; hIndex++ ) {
@@ -45716,8 +45441,7 @@ int HP_pc_checkbaselevelup(struct map_session_data *sd) {
 }
 int HP_pc_checkjoblevelup(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_checkjoblevelup_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_checkjoblevelup_pre; hIndex++ ) {
@@ -45743,8 +45467,7 @@ int HP_pc_checkjoblevelup(struct map_session_data *sd) {
 }
 int HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int base_exp, unsigned int job_exp, bool is_quest) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_gainexp_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct block_list *src, unsigned int *base_exp, unsigned int *job_exp, bool *is_quest);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_gainexp_pre; hIndex++ ) {
@@ -45770,8 +45493,7 @@ int HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned 
 }
 unsigned int HP_pc_nextbaseexp(struct map_session_data *sd) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_nextbaseexp_pre ) {
 		unsigned int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_nextbaseexp_pre; hIndex++ ) {
@@ -45797,8 +45519,7 @@ unsigned int HP_pc_nextbaseexp(struct map_session_data *sd) {
 }
 unsigned int HP_pc_thisbaseexp(struct map_session_data *sd) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_thisbaseexp_pre ) {
 		unsigned int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_thisbaseexp_pre; hIndex++ ) {
@@ -45824,8 +45545,7 @@ unsigned int HP_pc_thisbaseexp(struct map_session_data *sd) {
 }
 unsigned int HP_pc_nextjobexp(struct map_session_data *sd) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_nextjobexp_pre ) {
 		unsigned int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_nextjobexp_pre; hIndex++ ) {
@@ -45851,8 +45571,7 @@ unsigned int HP_pc_nextjobexp(struct map_session_data *sd) {
 }
 unsigned int HP_pc_thisjobexp(struct map_session_data *sd) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_thisjobexp_pre ) {
 		unsigned int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_thisjobexp_pre; hIndex++ ) {
@@ -45878,8 +45597,7 @@ unsigned int HP_pc_thisjobexp(struct map_session_data *sd) {
 }
 int HP_pc_gets_status_point(int level) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_gets_status_point_pre ) {
 		int (*preHookFunc) (int *level);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_gets_status_point_pre; hIndex++ ) {
@@ -45905,8 +45623,7 @@ int HP_pc_gets_status_point(int level) {
 }
 int HP_pc_need_status_point(struct map_session_data *sd, int type, int val) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_need_status_point_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type, int *val);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_need_status_point_pre; hIndex++ ) {
@@ -45932,8 +45649,7 @@ int HP_pc_need_status_point(struct map_session_data *sd, int type, int val) {
 }
 int HP_pc_statusup(struct map_session_data *sd, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_statusup_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_statusup_pre; hIndex++ ) {
@@ -45959,8 +45675,7 @@ int HP_pc_statusup(struct map_session_data *sd, int type) {
 }
 int HP_pc_statusup2(struct map_session_data *sd, int type, int val) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_statusup2_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type, int *val);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_statusup2_pre; hIndex++ ) {
@@ -45986,8 +45701,7 @@ int HP_pc_statusup2(struct map_session_data *sd, int type, int val) {
 }
 int HP_pc_skillup(struct map_session_data *sd, uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_skillup_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_skillup_pre; hIndex++ ) {
@@ -46013,8 +45727,7 @@ int HP_pc_skillup(struct map_session_data *sd, uint16 skill_id) {
 }
 int HP_pc_allskillup(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_allskillup_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_allskillup_pre; hIndex++ ) {
@@ -46040,8 +45753,7 @@ int HP_pc_allskillup(struct map_session_data *sd) {
 }
 int HP_pc_resetlvl(struct map_session_data *sd, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_resetlvl_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_resetlvl_pre; hIndex++ ) {
@@ -46067,8 +45779,7 @@ int HP_pc_resetlvl(struct map_session_data *sd, int type) {
 }
 int HP_pc_resetstate(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_resetstate_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_resetstate_pre; hIndex++ ) {
@@ -46094,8 +45805,7 @@ int HP_pc_resetstate(struct map_session_data *sd) {
 }
 int HP_pc_resetskill(struct map_session_data *sd, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_resetskill_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_resetskill_pre; hIndex++ ) {
@@ -46121,8 +45831,7 @@ int HP_pc_resetskill(struct map_session_data *sd, int flag) {
 }
 int HP_pc_resetfeel(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_resetfeel_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_resetfeel_pre; hIndex++ ) {
@@ -46148,8 +45857,7 @@ int HP_pc_resetfeel(struct map_session_data *sd) {
 }
 int HP_pc_resethate(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_resethate_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_resethate_pre; hIndex++ ) {
@@ -46175,8 +45883,7 @@ int HP_pc_resethate(struct map_session_data *sd) {
 }
 int HP_pc_equipitem(struct map_session_data *sd, int n, int req_pos) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_equipitem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n, int *req_pos);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_equipitem_pre; hIndex++ ) {
@@ -46202,8 +45909,7 @@ int HP_pc_equipitem(struct map_session_data *sd, int n, int req_pos) {
 }
 int HP_pc_unequipitem(struct map_session_data *sd, int n, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_unequipitem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_unequipitem_pre; hIndex++ ) {
@@ -46229,8 +45935,7 @@ int HP_pc_unequipitem(struct map_session_data *sd, int n, int flag) {
 }
 int HP_pc_checkitem(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_checkitem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_checkitem_pre; hIndex++ ) {
@@ -46256,8 +45961,7 @@ int HP_pc_checkitem(struct map_session_data *sd) {
 }
 int HP_pc_useitem(struct map_session_data *sd, int n) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_useitem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_useitem_pre; hIndex++ ) {
@@ -46283,8 +45987,7 @@ int HP_pc_useitem(struct map_session_data *sd, int n) {
 }
 int HP_pc_skillatk_bonus(struct map_session_data *sd, uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_skillatk_bonus_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_skillatk_bonus_pre; hIndex++ ) {
@@ -46310,8 +46013,7 @@ int HP_pc_skillatk_bonus(struct map_session_data *sd, uint16 skill_id) {
 }
 int HP_pc_skillheal_bonus(struct map_session_data *sd, uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_skillheal_bonus_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_skillheal_bonus_pre; hIndex++ ) {
@@ -46337,8 +46039,7 @@ int HP_pc_skillheal_bonus(struct map_session_data *sd, uint16 skill_id) {
 }
 int HP_pc_skillheal2_bonus(struct map_session_data *sd, uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_skillheal2_bonus_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_skillheal2_bonus_pre; hIndex++ ) {
@@ -46389,8 +46090,7 @@ void HP_pc_damage(struct map_session_data *sd, struct block_list *src, unsigned 
 }
 int HP_pc_dead(struct map_session_data *sd, struct block_list *src) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_dead_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct block_list *src);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_dead_pre; hIndex++ ) {
@@ -46466,8 +46166,7 @@ void HP_pc_heal(struct map_session_data *sd, unsigned int hp, unsigned int sp, i
 }
 int HP_pc_itemheal(struct map_session_data *sd, int itemid, int hp, int sp) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_itemheal_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *itemid, int *hp, int *sp);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_itemheal_pre; hIndex++ ) {
@@ -46493,8 +46192,7 @@ int HP_pc_itemheal(struct map_session_data *sd, int itemid, int hp, int sp) {
 }
 int HP_pc_percentheal(struct map_session_data *sd, int hp, int sp) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_percentheal_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *hp, int *sp);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_percentheal_pre; hIndex++ ) {
@@ -46520,8 +46218,7 @@ int HP_pc_percentheal(struct map_session_data *sd, int hp, int sp) {
 }
 int HP_pc_jobchange(struct map_session_data *sd, int job, int upper) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_jobchange_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *job, int *upper);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_jobchange_pre; hIndex++ ) {
@@ -46547,8 +46244,7 @@ int HP_pc_jobchange(struct map_session_data *sd, int job, int upper) {
 }
 int HP_pc_setoption(struct map_session_data *sd, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setoption_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setoption_pre; hIndex++ ) {
@@ -46574,8 +46270,7 @@ int HP_pc_setoption(struct map_session_data *sd, int type) {
 }
 int HP_pc_setcart(struct map_session_data *sd, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setcart_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setcart_pre; hIndex++ ) {
@@ -46601,8 +46296,7 @@ int HP_pc_setcart(struct map_session_data *sd, int type) {
 }
 int HP_pc_setfalcon(struct map_session_data *sd, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setfalcon_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setfalcon_pre; hIndex++ ) {
@@ -46628,8 +46322,7 @@ int HP_pc_setfalcon(struct map_session_data *sd, int flag) {
 }
 int HP_pc_setriding(struct map_session_data *sd, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setriding_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setriding_pre; hIndex++ ) {
@@ -46655,8 +46348,7 @@ int HP_pc_setriding(struct map_session_data *sd, int flag) {
 }
 int HP_pc_setmadogear(struct map_session_data *sd, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setmadogear_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setmadogear_pre; hIndex++ ) {
@@ -46682,8 +46374,7 @@ int HP_pc_setmadogear(struct map_session_data *sd, int flag) {
 }
 int HP_pc_changelook(struct map_session_data *sd, int type, int val) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_changelook_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type, int *val);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_changelook_pre; hIndex++ ) {
@@ -46709,8 +46400,7 @@ int HP_pc_changelook(struct map_session_data *sd, int type, int val) {
 }
 int HP_pc_equiplookall(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_equiplookall_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_equiplookall_pre; hIndex++ ) {
@@ -46736,8 +46426,7 @@ int HP_pc_equiplookall(struct map_session_data *sd) {
 }
 int HP_pc_readparam(struct map_session_data *sd, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_readparam_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_readparam_pre; hIndex++ ) {
@@ -46763,8 +46452,7 @@ int HP_pc_readparam(struct map_session_data *sd, int type) {
 }
 int HP_pc_setparam(struct map_session_data *sd, int type, int val) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setparam_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type, int *val);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setparam_pre; hIndex++ ) {
@@ -46790,8 +46478,7 @@ int HP_pc_setparam(struct map_session_data *sd, int type, int val) {
 }
 int HP_pc_readreg(struct map_session_data *sd, int reg) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_readreg_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *reg);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_readreg_pre; hIndex++ ) {
@@ -46817,8 +46504,7 @@ int HP_pc_readreg(struct map_session_data *sd, int reg) {
 }
 int HP_pc_setreg(struct map_session_data *sd, int reg, int val) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setreg_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *reg, int *val);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setreg_pre; hIndex++ ) {
@@ -46870,8 +46556,7 @@ char* HP_pc_readregstr(struct map_session_data *sd, int reg) {
 }
 int HP_pc_setregstr(struct map_session_data *sd, int reg, const char *str) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setregstr_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *reg, const char *str);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setregstr_pre; hIndex++ ) {
@@ -46897,8 +46582,7 @@ int HP_pc_setregstr(struct map_session_data *sd, int reg, const char *str) {
 }
 int HP_pc_readregistry(struct map_session_data *sd, const char *reg, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_readregistry_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *reg, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_readregistry_pre; hIndex++ ) {
@@ -46924,8 +46608,7 @@ int HP_pc_readregistry(struct map_session_data *sd, const char *reg, int type) {
 }
 int HP_pc_setregistry(struct map_session_data *sd, const char *reg, int val, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setregistry_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *reg, int *val, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setregistry_pre; hIndex++ ) {
@@ -46977,8 +46660,7 @@ char* HP_pc_readregistry_str(struct map_session_data *sd, const char *reg, int t
 }
 int HP_pc_setregistry_str(struct map_session_data *sd, const char *reg, const char *val, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setregistry_str_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *reg, const char *val, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setregistry_str_pre; hIndex++ ) {
@@ -47004,8 +46686,7 @@ int HP_pc_setregistry_str(struct map_session_data *sd, const char *reg, const ch
 }
 int HP_pc_addeventtimer(struct map_session_data *sd, int tick, const char *name) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_addeventtimer_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *tick, const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_addeventtimer_pre; hIndex++ ) {
@@ -47031,8 +46712,7 @@ int HP_pc_addeventtimer(struct map_session_data *sd, int tick, const char *name)
 }
 int HP_pc_deleventtimer(struct map_session_data *sd, const char *name) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_deleventtimer_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_deleventtimer_pre; hIndex++ ) {
@@ -47058,8 +46738,7 @@ int HP_pc_deleventtimer(struct map_session_data *sd, const char *name) {
 }
 int HP_pc_cleareventtimer(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_cleareventtimer_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_cleareventtimer_pre; hIndex++ ) {
@@ -47085,8 +46764,7 @@ int HP_pc_cleareventtimer(struct map_session_data *sd) {
 }
 int HP_pc_addeventtimercount(struct map_session_data *sd, const char *name, int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_addeventtimercount_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, const char *name, int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_addeventtimercount_pre; hIndex++ ) {
@@ -47112,8 +46790,7 @@ int HP_pc_addeventtimercount(struct map_session_data *sd, const char *name, int 
 }
 int HP_pc_calc_pvprank(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_calc_pvprank_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_calc_pvprank_pre; hIndex++ ) {
@@ -47139,8 +46816,7 @@ int HP_pc_calc_pvprank(struct map_session_data *sd) {
 }
 int HP_pc_calc_pvprank_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_calc_pvprank_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_calc_pvprank_timer_pre; hIndex++ ) {
@@ -47166,8 +46842,7 @@ int HP_pc_calc_pvprank_timer(int tid, unsigned int tick, int id, intptr_t data) 
 }
 int HP_pc_ismarried(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_ismarried_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_ismarried_pre; hIndex++ ) {
@@ -47193,8 +46868,7 @@ int HP_pc_ismarried(struct map_session_data *sd) {
 }
 int HP_pc_marriage(struct map_session_data *sd, struct map_session_data *dstsd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_marriage_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct map_session_data *dstsd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_marriage_pre; hIndex++ ) {
@@ -47220,8 +46894,7 @@ int HP_pc_marriage(struct map_session_data *sd, struct map_session_data *dstsd) 
 }
 int HP_pc_divorce(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_divorce_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_divorce_pre; hIndex++ ) {
@@ -47426,8 +47099,7 @@ void HP_pc_setstand(struct map_session_data *sd) {
 }
 int HP_pc_candrop(struct map_session_data *sd, struct item *item) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_candrop_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct item *item);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_candrop_pre; hIndex++ ) {
@@ -47453,8 +47125,7 @@ int HP_pc_candrop(struct map_session_data *sd, struct item *item) {
 }
 int HP_pc_jobid2mapid(unsigned short b_class) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_jobid2mapid_pre ) {
 		int (*preHookFunc) (unsigned short *b_class);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_jobid2mapid_pre; hIndex++ ) {
@@ -47480,8 +47151,7 @@ int HP_pc_jobid2mapid(unsigned short b_class) {
 }
 int HP_pc_mapid2jobid(unsigned short class_, int sex) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_mapid2jobid_pre ) {
 		int (*preHookFunc) (unsigned short *class_, int *sex);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_mapid2jobid_pre; hIndex++ ) {
@@ -47583,8 +47253,7 @@ void HP_pc_delinvincibletimer(struct map_session_data *sd) {
 }
 int HP_pc_addspiritball(struct map_session_data *sd, int interval, int max) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_addspiritball_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *interval, int *max);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_addspiritball_pre; hIndex++ ) {
@@ -47610,8 +47279,7 @@ int HP_pc_addspiritball(struct map_session_data *sd, int interval, int max) {
 }
 int HP_pc_delspiritball(struct map_session_data *sd, int count, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_delspiritball_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *count, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_delspiritball_pre; hIndex++ ) {
@@ -47662,8 +47330,7 @@ void HP_pc_addfame(struct map_session_data *sd, int count) {
 }
 unsigned char HP_pc_famerank(int char_id, int job) {
 	int hIndex = 0;
-	unsigned char retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned char));
+	unsigned char retVal___ = 0;
 	if( HPMHooks.count.HP_pc_famerank_pre ) {
 		unsigned char (*preHookFunc) (int *char_id, int *job);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_famerank_pre; hIndex++ ) {
@@ -47689,8 +47356,7 @@ unsigned char HP_pc_famerank(int char_id, int job) {
 }
 int HP_pc_set_hate_mob(struct map_session_data *sd, int pos, struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_set_hate_mob_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *pos, struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_set_hate_mob_pre; hIndex++ ) {
@@ -47716,8 +47382,7 @@ int HP_pc_set_hate_mob(struct map_session_data *sd, int pos, struct block_list *
 }
 int HP_pc_readdb(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_readdb_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_readdb_pre; hIndex++ ) {
@@ -47743,8 +47408,7 @@ int HP_pc_readdb(void) {
 }
 int HP_pc_map_day_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_map_day_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_map_day_timer_pre; hIndex++ ) {
@@ -47770,8 +47434,7 @@ int HP_pc_map_day_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_pc_map_night_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_map_night_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_map_night_timer_pre; hIndex++ ) {
@@ -47822,8 +47485,7 @@ void HP_pc_inventory_rentals(struct map_session_data *sd) {
 }
 int HP_pc_inventory_rental_clear(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_inventory_rental_clear_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_inventory_rental_clear_pre; hIndex++ ) {
@@ -47874,8 +47536,7 @@ void HP_pc_inventory_rental_add(struct map_session_data *sd, int seconds) {
 }
 int HP_pc_disguise(struct map_session_data *sd, int class_) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_disguise_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *class_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_disguise_pre; hIndex++ ) {
@@ -47901,8 +47562,7 @@ int HP_pc_disguise(struct map_session_data *sd, int class_) {
 }
 bool HP_pc_isautolooting(struct map_session_data *sd, int nameid) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_pc_isautolooting_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, int *nameid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_isautolooting_pre; hIndex++ ) {
@@ -47953,8 +47613,7 @@ void HP_pc_overheat(struct map_session_data *sd, int val) {
 }
 int HP_pc_banding(struct map_session_data *sd, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_banding_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_banding_pre; hIndex++ ) {
@@ -48005,8 +47664,7 @@ void HP_pc_itemcd_do(struct map_session_data *sd, bool load) {
 }
 int HP_pc_load_combo(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_load_combo_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_load_combo_pre; hIndex++ ) {
@@ -48032,8 +47690,7 @@ int HP_pc_load_combo(struct map_session_data *sd) {
 }
 int HP_pc_add_charm(struct map_session_data *sd, int interval, int max, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_add_charm_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *interval, int *max, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_add_charm_pre; hIndex++ ) {
@@ -48059,8 +47716,7 @@ int HP_pc_add_charm(struct map_session_data *sd, int interval, int max, int type
 }
 int HP_pc_del_charm(struct map_session_data *sd, int count, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_del_charm_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *count, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_del_charm_pre; hIndex++ ) {
@@ -48111,8 +47767,7 @@ void HP_pc_baselevelchanged(struct map_session_data *sd) {
 }
 int HP_pc_level_penalty_mod(int diff, unsigned char race, unsigned short mode, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_level_penalty_mod_pre ) {
 		int (*preHookFunc) (int *diff, unsigned char *race, unsigned short *mode, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_level_penalty_mod_pre; hIndex++ ) {
@@ -48138,8 +47793,7 @@ int HP_pc_level_penalty_mod(int diff, unsigned char race, unsigned short mode, i
 }
 int HP_pc_calc_skillpoint(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_calc_skillpoint_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_calc_skillpoint_pre; hIndex++ ) {
@@ -48165,8 +47819,7 @@ int HP_pc_calc_skillpoint(struct map_session_data *sd) {
 }
 int HP_pc_invincible_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_invincible_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_invincible_timer_pre; hIndex++ ) {
@@ -48192,8 +47845,7 @@ int HP_pc_invincible_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_pc_spiritball_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_spiritball_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_spiritball_timer_pre; hIndex++ ) {
@@ -48219,8 +47871,7 @@ int HP_pc_spiritball_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_pc_check_banding(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_check_banding_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_check_banding_pre; hIndex++ ) {
@@ -48252,8 +47903,7 @@ int HP_pc_check_banding(struct block_list *bl, va_list ap) {
 }
 int HP_pc_inventory_rental_end(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_inventory_rental_end_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_inventory_rental_end_pre; hIndex++ ) {
@@ -48304,8 +47954,7 @@ void HP_pc_check_skilltree(struct map_session_data *sd, int skill_id) {
 }
 int HP_pc_bonus_autospell(struct s_autospell *spell, int max, short id, short lv, short rate, short flag, short card_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_bonus_autospell_pre ) {
 		int (*preHookFunc) (struct s_autospell *spell, int *max, short *id, short *lv, short *rate, short *flag, short *card_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_autospell_pre; hIndex++ ) {
@@ -48331,8 +47980,7 @@ int HP_pc_bonus_autospell(struct s_autospell *spell, int max, short id, short lv
 }
 int HP_pc_bonus_autospell_onskill(struct s_autospell *spell, int max, short src_skill, short id, short lv, short rate, short card_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_bonus_autospell_onskill_pre ) {
 		int (*preHookFunc) (struct s_autospell *spell, int *max, short *src_skill, short *id, short *lv, short *rate, short *card_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_autospell_onskill_pre; hIndex++ ) {
@@ -48358,8 +48006,7 @@ int HP_pc_bonus_autospell_onskill(struct s_autospell *spell, int max, short src_
 }
 int HP_pc_bonus_addeff(struct s_addeffect *effect, int max, enum sc_type id, short rate, short arrow_rate, unsigned char flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_bonus_addeff_pre ) {
 		int (*preHookFunc) (struct s_addeffect *effect, int *max, enum sc_type *id, short *rate, short *arrow_rate, unsigned char *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_addeff_pre; hIndex++ ) {
@@ -48385,8 +48032,7 @@ int HP_pc_bonus_addeff(struct s_addeffect *effect, int max, enum sc_type id, sho
 }
 int HP_pc_bonus_addeff_onskill(struct s_addeffectonskill *effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_bonus_addeff_onskill_pre ) {
 		int (*preHookFunc) (struct s_addeffectonskill *effect, int *max, enum sc_type *id, short *rate, short *skill_id, unsigned char *target);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_addeff_onskill_pre; hIndex++ ) {
@@ -48412,8 +48058,7 @@ int HP_pc_bonus_addeff_onskill(struct s_addeffectonskill *effect, int max, enum 
 }
 int HP_pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id, short group, int race, int rate) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_bonus_item_drop_pre ) {
 		int (*preHookFunc) (struct s_add_drop *drop, const short *max, short *id, short *group, int *race, int *rate);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bonus_item_drop_pre; hIndex++ ) {
@@ -48464,8 +48109,7 @@ void HP_pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned
 }
 int HP_pc_respawn_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_respawn_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_respawn_timer_pre; hIndex++ ) {
@@ -48491,8 +48135,7 @@ int HP_pc_respawn_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_pc_jobchange_killclone(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_jobchange_killclone_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_jobchange_killclone_pre; hIndex++ ) {
@@ -48524,8 +48167,7 @@ int HP_pc_jobchange_killclone(struct block_list *bl, va_list ap) {
 }
 int HP_pc_getstat(struct map_session_data *sd, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_getstat_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_getstat_pre; hIndex++ ) {
@@ -48551,8 +48193,7 @@ int HP_pc_getstat(struct map_session_data *sd, int type) {
 }
 int HP_pc_setstat(struct map_session_data *sd, int type, int val) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setstat_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type, int *val);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setstat_pre; hIndex++ ) {
@@ -48578,8 +48219,7 @@ int HP_pc_setstat(struct map_session_data *sd, int type, int val) {
 }
 int HP_pc_eventtimer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_eventtimer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_eventtimer_pre; hIndex++ ) {
@@ -48605,8 +48245,7 @@ int HP_pc_eventtimer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_pc_daynight_timer_sub(struct map_session_data *sd, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_daynight_timer_sub_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_daynight_timer_sub_pre; hIndex++ ) {
@@ -48638,8 +48277,7 @@ int HP_pc_daynight_timer_sub(struct map_session_data *sd, va_list ap) {
 }
 int HP_pc_charm_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_charm_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_charm_timer_pre; hIndex++ ) {
@@ -48665,8 +48303,7 @@ int HP_pc_charm_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 bool HP_pc_readdb_levelpenalty(char *fields[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_pc_readdb_levelpenalty_pre ) {
 		bool (*preHookFunc) (char *fields[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_readdb_levelpenalty_pre; hIndex++ ) {
@@ -48692,8 +48329,7 @@ bool HP_pc_readdb_levelpenalty(char *fields[], int columns, int current) {
 }
 int HP_pc_autosave(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_autosave_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_autosave_pre; hIndex++ ) {
@@ -48719,8 +48355,7 @@ int HP_pc_autosave(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_pc_follow_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_follow_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_follow_timer_pre; hIndex++ ) {
@@ -48771,8 +48406,7 @@ void HP_pc_read_skill_tree(void) {
 }
 int HP_pc_isUseitem(struct map_session_data *sd, int n) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_isUseitem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_isUseitem_pre; hIndex++ ) {
@@ -48798,8 +48432,7 @@ int HP_pc_isUseitem(struct map_session_data *sd, int n) {
 }
 int HP_pc_show_steal(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_show_steal_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_show_steal_pre; hIndex++ ) {
@@ -48831,8 +48464,7 @@ int HP_pc_show_steal(struct block_list *bl, va_list ap) {
 }
 int HP_pc_checkcombo(struct map_session_data *sd, struct item_data *data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_checkcombo_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct item_data *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_checkcombo_pre; hIndex++ ) {
@@ -48858,8 +48490,7 @@ int HP_pc_checkcombo(struct map_session_data *sd, struct item_data *data) {
 }
 int HP_pc_calcweapontype(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_calcweapontype_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_calcweapontype_pre; hIndex++ ) {
@@ -48885,8 +48516,7 @@ int HP_pc_calcweapontype(struct map_session_data *sd) {
 }
 int HP_pc_removecombo(struct map_session_data *sd, struct item_data *data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_removecombo_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct item_data *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_removecombo_pre; hIndex++ ) {
@@ -48913,8 +48543,7 @@ int HP_pc_removecombo(struct map_session_data *sd, struct item_data *data) {
 /* pet */
 int HP_pet_init(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_init_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_init_pre; hIndex++ ) {
@@ -48940,8 +48569,7 @@ int HP_pet_init(void) {
 }
 int HP_pet_final(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_final_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_final_pre; hIndex++ ) {
@@ -48967,8 +48595,7 @@ int HP_pet_final(void) {
 }
 int HP_pet_hungry_val(struct pet_data *pd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_hungry_val_pre ) {
 		int (*preHookFunc) (struct pet_data *pd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_hungry_val_pre; hIndex++ ) {
@@ -49019,8 +48646,7 @@ void HP_pet_set_intimate(struct pet_data *pd, int value) {
 }
 int HP_pet_create_egg(struct map_session_data *sd, int item_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_create_egg_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *item_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_create_egg_pre; hIndex++ ) {
@@ -49046,8 +48672,7 @@ int HP_pet_create_egg(struct map_session_data *sd, int item_id) {
 }
 int HP_pet_unlocktarget(struct pet_data *pd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_unlocktarget_pre ) {
 		int (*preHookFunc) (struct pet_data *pd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_unlocktarget_pre; hIndex++ ) {
@@ -49073,8 +48698,7 @@ int HP_pet_unlocktarget(struct pet_data *pd) {
 }
 int HP_pet_attackskill(struct pet_data *pd, int target_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_attackskill_pre ) {
 		int (*preHookFunc) (struct pet_data *pd, int *target_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_attackskill_pre; hIndex++ ) {
@@ -49100,8 +48724,7 @@ int HP_pet_attackskill(struct pet_data *pd, int target_id) {
 }
 int HP_pet_target_check(struct map_session_data *sd, struct block_list *bl, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_target_check_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct block_list *bl, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_target_check_pre; hIndex++ ) {
@@ -49127,8 +48750,7 @@ int HP_pet_target_check(struct map_session_data *sd, struct block_list *bl, int 
 }
 int HP_pet_sc_check(struct map_session_data *sd, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_sc_check_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_sc_check_pre; hIndex++ ) {
@@ -49154,8 +48776,7 @@ int HP_pet_sc_check(struct map_session_data *sd, int type) {
 }
 int HP_pet_hungry(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_hungry_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_hungry_pre; hIndex++ ) {
@@ -49181,8 +48802,7 @@ int HP_pet_hungry(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_pet_search_petDB_index(int key, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_search_petDB_index_pre ) {
 		int (*preHookFunc) (int *key, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_search_petDB_index_pre; hIndex++ ) {
@@ -49208,8 +48828,7 @@ int HP_pet_search_petDB_index(int key, int type) {
 }
 int HP_pet_hungry_timer_delete(struct pet_data *pd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_hungry_timer_delete_pre ) {
 		int (*preHookFunc) (struct pet_data *pd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_hungry_timer_delete_pre; hIndex++ ) {
@@ -49235,8 +48854,7 @@ int HP_pet_hungry_timer_delete(struct pet_data *pd) {
 }
 int HP_pet_performance(struct map_session_data *sd, struct pet_data *pd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_performance_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct pet_data *pd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_performance_pre; hIndex++ ) {
@@ -49262,8 +48880,7 @@ int HP_pet_performance(struct map_session_data *sd, struct pet_data *pd) {
 }
 int HP_pet_return_egg(struct map_session_data *sd, struct pet_data *pd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_return_egg_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct pet_data *pd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_return_egg_pre; hIndex++ ) {
@@ -49289,8 +48906,7 @@ int HP_pet_return_egg(struct map_session_data *sd, struct pet_data *pd) {
 }
 int HP_pet_data_init(struct map_session_data *sd, struct s_pet *petinfo) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_data_init_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct s_pet *petinfo);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_data_init_pre; hIndex++ ) {
@@ -49316,8 +48932,7 @@ int HP_pet_data_init(struct map_session_data *sd, struct s_pet *petinfo) {
 }
 int HP_pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_birth_process_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct s_pet *petinfo);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_birth_process_pre; hIndex++ ) {
@@ -49343,8 +48958,7 @@ int HP_pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo) {
 }
 int HP_pet_recv_petdata(int account_id, struct s_pet *p, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_recv_petdata_pre ) {
 		int (*preHookFunc) (int *account_id, struct s_pet *p, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_recv_petdata_pre; hIndex++ ) {
@@ -49370,8 +48984,7 @@ int HP_pet_recv_petdata(int account_id, struct s_pet *p, int flag) {
 }
 int HP_pet_select_egg(struct map_session_data *sd, short egg_index) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_select_egg_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, short *egg_index);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_select_egg_pre; hIndex++ ) {
@@ -49397,8 +49010,7 @@ int HP_pet_select_egg(struct map_session_data *sd, short egg_index) {
 }
 int HP_pet_catch_process1(struct map_session_data *sd, int target_class) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_catch_process1_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *target_class);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_catch_process1_pre; hIndex++ ) {
@@ -49424,8 +49036,7 @@ int HP_pet_catch_process1(struct map_session_data *sd, int target_class) {
 }
 int HP_pet_catch_process2(struct map_session_data *sd, int target_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_catch_process2_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *target_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_catch_process2_pre; hIndex++ ) {
@@ -49451,8 +49062,7 @@ int HP_pet_catch_process2(struct map_session_data *sd, int target_id) {
 }
 int HP_pet_get_egg(int account_id, int pet_id, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_get_egg_pre ) {
 		int (*preHookFunc) (int *account_id, int *pet_id, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_get_egg_pre; hIndex++ ) {
@@ -49478,8 +49088,7 @@ int HP_pet_get_egg(int account_id, int pet_id, int flag) {
 }
 int HP_pet_unequipitem(struct map_session_data *sd, struct pet_data *pd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_unequipitem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct pet_data *pd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_unequipitem_pre; hIndex++ ) {
@@ -49505,8 +49114,7 @@ int HP_pet_unequipitem(struct map_session_data *sd, struct pet_data *pd) {
 }
 int HP_pet_food(struct map_session_data *sd, struct pet_data *pd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_food_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct pet_data *pd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_food_pre; hIndex++ ) {
@@ -49532,8 +49140,7 @@ int HP_pet_food(struct map_session_data *sd, struct pet_data *pd) {
 }
 int HP_pet_ai_sub_hard_lootsearch(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_ai_sub_hard_lootsearch_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_ai_sub_hard_lootsearch_pre; hIndex++ ) {
@@ -49565,8 +49172,7 @@ int HP_pet_ai_sub_hard_lootsearch(struct block_list *bl, va_list ap) {
 }
 int HP_pet_menu(struct map_session_data *sd, int menunum) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_menu_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *menunum);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_menu_pre; hIndex++ ) {
@@ -49592,8 +49198,7 @@ int HP_pet_menu(struct map_session_data *sd, int menunum) {
 }
 int HP_pet_change_name(struct map_session_data *sd, char *name) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_change_name_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_change_name_pre; hIndex++ ) {
@@ -49619,8 +49224,7 @@ int HP_pet_change_name(struct map_session_data *sd, char *name) {
 }
 int HP_pet_change_name_ack(struct map_session_data *sd, char *name, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_change_name_ack_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, char *name, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_change_name_ack_pre; hIndex++ ) {
@@ -49646,8 +49250,7 @@ int HP_pet_change_name_ack(struct map_session_data *sd, char *name, int flag) {
 }
 int HP_pet_equipitem(struct map_session_data *sd, int index) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_equipitem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *index);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_equipitem_pre; hIndex++ ) {
@@ -49673,8 +49276,7 @@ int HP_pet_equipitem(struct map_session_data *sd, int index) {
 }
 int HP_pet_randomwalk(struct pet_data *pd, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_randomwalk_pre ) {
 		int (*preHookFunc) (struct pet_data *pd, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_randomwalk_pre; hIndex++ ) {
@@ -49700,8 +49302,7 @@ int HP_pet_randomwalk(struct pet_data *pd, unsigned int tick) {
 }
 int HP_pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_ai_sub_hard_pre ) {
 		int (*preHookFunc) (struct pet_data *pd, struct map_session_data *sd, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_ai_sub_hard_pre; hIndex++ ) {
@@ -49727,8 +49328,7 @@ int HP_pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, unsigne
 }
 int HP_pet_ai_sub_foreachclient(struct map_session_data *sd, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_ai_sub_foreachclient_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_ai_sub_foreachclient_pre; hIndex++ ) {
@@ -49760,8 +49360,7 @@ int HP_pet_ai_sub_foreachclient(struct map_session_data *sd, va_list ap) {
 }
 int HP_pet_ai_hard(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_ai_hard_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_ai_hard_pre; hIndex++ ) {
@@ -49787,8 +49386,7 @@ int HP_pet_ai_hard(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_pet_delay_item_drop(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_delay_item_drop_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_delay_item_drop_pre; hIndex++ ) {
@@ -49814,8 +49412,7 @@ int HP_pet_delay_item_drop(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_pet_lootitem_drop(struct pet_data *pd, struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_lootitem_drop_pre ) {
 		int (*preHookFunc) (struct pet_data *pd, struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_lootitem_drop_pre; hIndex++ ) {
@@ -49841,8 +49438,7 @@ int HP_pet_lootitem_drop(struct pet_data *pd, struct map_session_data *sd) {
 }
 int HP_pet_skill_bonus_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_skill_bonus_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_skill_bonus_timer_pre; hIndex++ ) {
@@ -49868,8 +49464,7 @@ int HP_pet_skill_bonus_timer(int tid, unsigned int tick, int id, intptr_t data) 
 }
 int HP_pet_recovery_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_recovery_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_recovery_timer_pre; hIndex++ ) {
@@ -49895,8 +49490,7 @@ int HP_pet_recovery_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_pet_heal_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_heal_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_heal_timer_pre; hIndex++ ) {
@@ -49922,8 +49516,7 @@ int HP_pet_heal_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_pet_skill_support_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_skill_support_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_skill_support_timer_pre; hIndex++ ) {
@@ -49949,8 +49542,7 @@ int HP_pet_skill_support_timer(int tid, unsigned int tick, int id, intptr_t data
 }
 int HP_pet_read_db(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pet_read_db_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pet_read_db_pre; hIndex++ ) {
@@ -50027,8 +49619,7 @@ void HP_quest_reload(void) {
 }
 int HP_quest_search_db(int quest_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_quest_search_db_pre ) {
 		int (*preHookFunc) (int *quest_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_quest_search_db_pre; hIndex++ ) {
@@ -50054,8 +49645,7 @@ int HP_quest_search_db(int quest_id) {
 }
 int HP_quest_pc_login(TBL_PC *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_quest_pc_login_pre ) {
 		int (*preHookFunc) (TBL_PC *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_quest_pc_login_pre; hIndex++ ) {
@@ -50081,8 +49671,7 @@ int HP_quest_pc_login(TBL_PC *sd) {
 }
 int HP_quest_add(TBL_PC *sd, int quest_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_quest_add_pre ) {
 		int (*preHookFunc) (TBL_PC *sd, int *quest_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_quest_add_pre; hIndex++ ) {
@@ -50108,8 +49697,7 @@ int HP_quest_add(TBL_PC *sd, int quest_id) {
 }
 int HP_quest_change(TBL_PC *sd, int qid1, int qid2) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_quest_change_pre ) {
 		int (*preHookFunc) (TBL_PC *sd, int *qid1, int *qid2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_quest_change_pre; hIndex++ ) {
@@ -50135,8 +49723,7 @@ int HP_quest_change(TBL_PC *sd, int qid1, int qid2) {
 }
 int HP_quest_delete(TBL_PC *sd, int quest_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_quest_delete_pre ) {
 		int (*preHookFunc) (TBL_PC *sd, int *quest_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_quest_delete_pre; hIndex++ ) {
@@ -50162,8 +49749,7 @@ int HP_quest_delete(TBL_PC *sd, int quest_id) {
 }
 int HP_quest_update_objective_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_quest_update_objective_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_quest_update_objective_sub_pre; hIndex++ ) {
@@ -50220,8 +49806,7 @@ void HP_quest_update_objective(TBL_PC *sd, int mob_id) {
 }
 int HP_quest_update_status(TBL_PC *sd, int quest_id, quest_state qs) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_quest_update_status_pre ) {
 		int (*preHookFunc) (TBL_PC *sd, int *quest_id, quest_state *qs);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_quest_update_status_pre; hIndex++ ) {
@@ -50247,8 +49832,7 @@ int HP_quest_update_status(TBL_PC *sd, int quest_id, quest_state qs) {
 }
 int HP_quest_check(TBL_PC *sd, int quest_id, quest_check_type type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_quest_check_pre ) {
 		int (*preHookFunc) (TBL_PC *sd, int *quest_id, quest_check_type *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_quest_check_pre; hIndex++ ) {
@@ -50274,8 +49858,7 @@ int HP_quest_check(TBL_PC *sd, int quest_id, quest_check_type type) {
 }
 int HP_quest_read_db(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_quest_read_db_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_quest_read_db_pre; hIndex++ ) {
@@ -50352,8 +49935,7 @@ void HP_script_final(void) {
 }
 int HP_script_reload(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_reload_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_reload_pre; hIndex++ ) {
@@ -50532,8 +50114,7 @@ void HP_script_warning(const char *src, const char *file, int start_line, const 
 }
 bool HP_script_addScript(char *name, char *args, bool ( *func ) (struct script_state *st)) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_script_addScript_pre ) {
 		bool (*preHookFunc) (char *name, char *args, bool ( *func ) (struct script_state *st));
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_addScript_pre; hIndex++ ) {
@@ -50559,8 +50140,7 @@ bool HP_script_addScript(char *name, char *args, bool ( *func ) (struct script_s
 }
 int HP_script_conv_num(struct script_state *st, struct script_data *data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_conv_num_pre ) {
 		int (*preHookFunc) (struct script_state *st, struct script_data *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_conv_num_pre; hIndex++ ) {
@@ -50892,8 +50472,7 @@ void HP_script_set_constant_force(const char *name, int value, bool isparameter)
 }
 bool HP_script_get_constant(const char *name, int *value) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_script_get_constant_pre ) {
 		bool (*preHookFunc) (const char *name, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_constant_pre; hIndex++ ) {
@@ -50994,8 +50573,7 @@ void HP_script_run_main(struct script_state *st) {
 }
 int HP_script_run_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_run_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_run_timer_pre; hIndex++ ) {
@@ -51021,8 +50599,7 @@ int HP_script_run_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_script_set_var(struct map_session_data *sd, char *name, void *val) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_set_var_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, char *name, void *val);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_var_pre; hIndex++ ) {
@@ -51249,8 +50826,7 @@ void HP_script_setarray_pc(struct map_session_data *sd, const char *varname, uin
 }
 int HP_script_config_read(char *cfgName) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_config_read_pre ) {
 		int (*preHookFunc) (char *cfgName);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_config_read_pre; hIndex++ ) {
@@ -51276,8 +50852,7 @@ int HP_script_config_read(char *cfgName) {
 }
 int HP_script_add_str(const char *p) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_add_str_pre ) {
 		int (*preHookFunc) (const char *p);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_add_str_pre; hIndex++ ) {
@@ -51329,8 +50904,7 @@ const char* HP_script_get_str(int id) {
 }
 int HP_script_search_str(const char *p) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_search_str_pre ) {
 		int (*preHookFunc) (const char *p);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_search_str_pre; hIndex++ ) {
@@ -51432,8 +51006,7 @@ struct hQueue* HP_script_queue(int idx) {
 }
 bool HP_script_queue_add(int idx, int var) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_script_queue_add_pre ) {
 		bool (*preHookFunc) (int *idx, int *var);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_queue_add_pre; hIndex++ ) {
@@ -51459,8 +51032,7 @@ bool HP_script_queue_add(int idx, int var) {
 }
 bool HP_script_queue_del(int idx) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_script_queue_del_pre ) {
 		bool (*preHookFunc) (int *idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_queue_del_pre; hIndex++ ) {
@@ -51486,8 +51058,7 @@ bool HP_script_queue_del(int idx) {
 }
 bool HP_script_queue_remove(int idx, int var) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_script_queue_remove_pre ) {
 		bool (*preHookFunc) (int *idx, int *var);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_queue_remove_pre; hIndex++ ) {
@@ -51513,8 +51084,7 @@ bool HP_script_queue_remove(int idx, int var) {
 }
 int HP_script_queue_create(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_queue_create_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_queue_create_pre; hIndex++ ) {
@@ -51669,8 +51239,7 @@ const char* HP_script_parse_syntax(const char *p) {
 }
 c_op HP_script_get_com(unsigned char *scriptbuf, int *pos) {
 	int hIndex = 0;
-	c_op retVal___;
-	memset(&retVal___, '\0', sizeof(c_op));
+	c_op retVal___ = C_NOP;
 	if( HPMHooks.count.HP_script_get_com_pre ) {
 		c_op (*preHookFunc) (unsigned char *scriptbuf, int *pos);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_com_pre; hIndex++ ) {
@@ -51696,8 +51265,7 @@ c_op HP_script_get_com(unsigned char *scriptbuf, int *pos) {
 }
 int HP_script_get_num(unsigned char *scriptbuf, int *pos) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_get_num_pre ) {
 		int (*preHookFunc) (unsigned char *scriptbuf, int *pos);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_num_pre; hIndex++ ) {
@@ -51899,8 +51467,7 @@ void HP_script_check_event(struct script_state *st, const char *evt) {
 }
 unsigned int HP_script_calc_hash(const char *p) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_script_calc_hash_pre ) {
 		unsigned int (*preHookFunc) (const char *p);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_calc_hash_pre; hIndex++ ) {
@@ -52077,8 +51644,7 @@ const char* HP_script_skip_word(const char *p) {
 }
 int HP_script_add_word(const char *p) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_add_word_pre ) {
 		int (*preHookFunc) (const char *p);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_add_word_pre; hIndex++ ) {
@@ -52335,8 +51901,7 @@ void HP_script_errorwarning_sub(StringBuf *buf, const char *src, const char *fil
 }
 int HP_script_set_reg(struct script_state *st, TBL_PC *sd, int num, const char *name, const void *value, struct DBMap **ref) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_set_reg_pre ) {
 		int (*preHookFunc) (struct script_state *st, TBL_PC *sd, int *num, const char *name, const void *value, struct DBMap **ref);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_reg_pre; hIndex++ ) {
@@ -52413,8 +51978,7 @@ struct script_data* HP_script_push_retinfo(struct script_stack *stack, struct sc
 }
 int HP_script_pop_val(struct script_state *st) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_pop_val_pre ) {
 		int (*preHookFunc) (struct script_state *st);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_pop_val_pre; hIndex++ ) {
@@ -52615,8 +52179,7 @@ void HP_script_detach_state(struct script_state *st, bool dequeue_event) {
 }
 int HP_script_db_free_code_sub(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_db_free_code_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_db_free_code_sub_pre; hIndex++ ) {
@@ -52673,8 +52236,7 @@ void HP_script_add_autobonus(const char *autobonus) {
 }
 int HP_script_menu_countoptions(const char *str, int max_count, int *total) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_menu_countoptions_pre ) {
 		int (*preHookFunc) (const char *str, int *max_count, int *total);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_menu_countoptions_pre; hIndex++ ) {
@@ -52700,8 +52262,7 @@ int HP_script_menu_countoptions(const char *str, int max_count, int *total) {
 }
 int HP_script_buildin_areawarp_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_areawarp_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_areawarp_sub_pre; hIndex++ ) {
@@ -52733,8 +52294,7 @@ int HP_script_buildin_areawarp_sub(struct block_list *bl, va_list ap) {
 }
 int HP_script_buildin_areapercentheal_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_areapercentheal_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_areapercentheal_sub_pre; hIndex++ ) {
@@ -52766,8 +52326,7 @@ int HP_script_buildin_areapercentheal_sub(struct block_list *bl, va_list ap) {
 }
 int32 HP_script_getarraysize(struct script_state *st, int32 id, int32 idx, int isstring, struct DBMap **ref) {
 	int hIndex = 0;
-	int32 retVal___;
-	memset(&retVal___, '\0', sizeof(int32));
+	int32 retVal___ = 0;
 	if( HPMHooks.count.HP_script_getarraysize_pre ) {
 		int32 (*preHookFunc) (struct script_state *st, int32 *id, int32 *idx, int *isstring, struct DBMap **ref);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_getarraysize_pre; hIndex++ ) {
@@ -52818,8 +52377,7 @@ void HP_script_buildin_delitem_delete(struct map_session_data *sd, int idx, int 
 }
 bool HP_script_buildin_delitem_search(struct map_session_data *sd, struct item *it, bool exact_match) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_script_buildin_delitem_search_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, struct item *it, bool *exact_match);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_delitem_search_pre; hIndex++ ) {
@@ -52845,8 +52403,7 @@ bool HP_script_buildin_delitem_search(struct map_session_data *sd, struct item *
 }
 int HP_script_buildin_killmonster_sub_strip(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_killmonster_sub_strip_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_killmonster_sub_strip_pre; hIndex++ ) {
@@ -52878,8 +52435,7 @@ int HP_script_buildin_killmonster_sub_strip(struct block_list *bl, va_list ap) {
 }
 int HP_script_buildin_killmonster_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_killmonster_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_killmonster_sub_pre; hIndex++ ) {
@@ -52911,8 +52467,7 @@ int HP_script_buildin_killmonster_sub(struct block_list *bl, va_list ap) {
 }
 int HP_script_buildin_killmonsterall_sub_strip(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_killmonsterall_sub_strip_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_killmonsterall_sub_strip_pre; hIndex++ ) {
@@ -52944,8 +52499,7 @@ int HP_script_buildin_killmonsterall_sub_strip(struct block_list *bl, va_list ap
 }
 int HP_script_buildin_killmonsterall_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_killmonsterall_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_killmonsterall_sub_pre; hIndex++ ) {
@@ -52977,8 +52531,7 @@ int HP_script_buildin_killmonsterall_sub(struct block_list *bl, va_list ap) {
 }
 int HP_script_buildin_announce_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_announce_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_announce_sub_pre; hIndex++ ) {
@@ -53010,8 +52563,7 @@ int HP_script_buildin_announce_sub(struct block_list *bl, va_list ap) {
 }
 int HP_script_buildin_getareausers_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_getareausers_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_getareausers_sub_pre; hIndex++ ) {
@@ -53043,8 +52595,7 @@ int HP_script_buildin_getareausers_sub(struct block_list *bl, va_list ap) {
 }
 int HP_script_buildin_getareadropitem_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_getareadropitem_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_getareadropitem_sub_pre; hIndex++ ) {
@@ -53076,8 +52627,7 @@ int HP_script_buildin_getareadropitem_sub(struct block_list *bl, va_list ap) {
 }
 int HP_script_mapflag_pvp_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_mapflag_pvp_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_mapflag_pvp_sub_pre; hIndex++ ) {
@@ -53109,8 +52659,7 @@ int HP_script_mapflag_pvp_sub(struct block_list *bl, va_list ap) {
 }
 int HP_script_buildin_pvpoff_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_pvpoff_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_pvpoff_sub_pre; hIndex++ ) {
@@ -53142,8 +52691,7 @@ int HP_script_buildin_pvpoff_sub(struct block_list *bl, va_list ap) {
 }
 int HP_script_buildin_maprespawnguildid_sub_pc(struct map_session_data *sd, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_maprespawnguildid_sub_pc_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_maprespawnguildid_sub_pc_pre; hIndex++ ) {
@@ -53175,8 +52723,7 @@ int HP_script_buildin_maprespawnguildid_sub_pc(struct map_session_data *sd, va_l
 }
 int HP_script_buildin_maprespawnguildid_sub_mob(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_maprespawnguildid_sub_mob_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_maprespawnguildid_sub_mob_pre; hIndex++ ) {
@@ -53208,8 +52755,7 @@ int HP_script_buildin_maprespawnguildid_sub_mob(struct block_list *bl, va_list a
 }
 int HP_script_buildin_mobcount_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_mobcount_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_mobcount_sub_pre; hIndex++ ) {
@@ -53241,8 +52787,7 @@ int HP_script_buildin_mobcount_sub(struct block_list *bl, va_list ap) {
 }
 int HP_script_playBGM_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_playBGM_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_playBGM_sub_pre; hIndex++ ) {
@@ -53274,8 +52819,7 @@ int HP_script_playBGM_sub(struct block_list *bl, va_list ap) {
 }
 int HP_script_playBGM_foreachpc_sub(struct map_session_data *sd, va_list args) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_playBGM_foreachpc_sub_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, va_list args);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_playBGM_foreachpc_sub_pre; hIndex++ ) {
@@ -53307,8 +52851,7 @@ int HP_script_playBGM_foreachpc_sub(struct map_session_data *sd, va_list args) {
 }
 int HP_script_soundeffect_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_soundeffect_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_soundeffect_sub_pre; hIndex++ ) {
@@ -53340,8 +52883,7 @@ int HP_script_soundeffect_sub(struct block_list *bl, va_list ap) {
 }
 int HP_script_buildin_query_sql_sub(struct script_state *st, Sql *handle) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_query_sql_sub_pre ) {
 		int (*preHookFunc) (struct script_state *st, Sql *handle);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_query_sql_sub_pre; hIndex++ ) {
@@ -53367,8 +52909,7 @@ int HP_script_buildin_query_sql_sub(struct script_state *st, Sql *handle) {
 }
 int HP_script_axtoi(const char *hexStg) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_axtoi_pre ) {
 		int (*preHookFunc) (const char *hexStg);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_axtoi_pre; hIndex++ ) {
@@ -53394,8 +52935,7 @@ int HP_script_axtoi(const char *hexStg) {
 }
 int HP_script_buildin_instance_warpall_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_instance_warpall_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_instance_warpall_sub_pre; hIndex++ ) {
@@ -53427,8 +52967,7 @@ int HP_script_buildin_instance_warpall_sub(struct block_list *bl, va_list ap) {
 }
 int HP_script_buildin_mobuseskill_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_buildin_mobuseskill_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_buildin_mobuseskill_sub_pre; hIndex++ ) {
@@ -53460,8 +52999,7 @@ int HP_script_buildin_mobuseskill_sub(struct block_list *bl, va_list ap) {
 }
 int HP_script_cleanfloor_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_cleanfloor_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_cleanfloor_sub_pre; hIndex++ ) {
@@ -53493,8 +53031,7 @@ int HP_script_cleanfloor_sub(struct block_list *bl, va_list ap) {
 }
 int HP_script_run_func(struct script_state *st) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_script_run_func_pre ) {
 		int (*preHookFunc) (struct script_state *st);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_run_func_pre; hIndex++ ) {
@@ -53521,8 +53058,7 @@ int HP_script_run_func(struct script_state *st) {
 /* searchstore */
 bool HP_searchstore_open(struct map_session_data *sd, unsigned int uses, unsigned short effect) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_searchstore_open_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, unsigned int *uses, unsigned short *effect);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_searchstore_open_pre; hIndex++ ) {
@@ -53573,8 +53109,7 @@ void HP_searchstore_query(struct map_session_data *sd, unsigned char type, unsig
 }
 bool HP_searchstore_querynext(struct map_session_data *sd) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_searchstore_querynext_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_searchstore_querynext_pre; hIndex++ ) {
@@ -53700,8 +53235,7 @@ void HP_searchstore_click(struct map_session_data *sd, int account_id, int store
 }
 bool HP_searchstore_queryremote(struct map_session_data *sd, int account_id) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_searchstore_queryremote_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, int *account_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_searchstore_queryremote_pre; hIndex++ ) {
@@ -53752,8 +53286,7 @@ void HP_searchstore_clearremote(struct map_session_data *sd) {
 }
 bool HP_searchstore_result(struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, unsigned short nameid, unsigned short amount, unsigned int price, const short *card, unsigned char refine) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_searchstore_result_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, unsigned int *store_id, int *account_id, const char *store_name, unsigned short *nameid, unsigned short *amount, unsigned int *price, const short *card, unsigned char *refine);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_searchstore_result_pre; hIndex++ ) {
@@ -53780,8 +53313,7 @@ bool HP_searchstore_result(struct map_session_data *sd, unsigned int store_id, i
 /* skill */
 int HP_skill_init(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_init_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_init_pre; hIndex++ ) {
@@ -53807,8 +53339,7 @@ int HP_skill_init(void) {
 }
 int HP_skill_final(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_final_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_final_pre; hIndex++ ) {
@@ -53884,8 +53415,7 @@ void HP_skill_read_db(void) {
 }
 int HP_skill_get_index(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_index_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_index_pre; hIndex++ ) {
@@ -53911,8 +53441,7 @@ int HP_skill_get_index(uint16 skill_id) {
 }
 int HP_skill_get_type(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_type_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_type_pre; hIndex++ ) {
@@ -53938,8 +53467,7 @@ int HP_skill_get_type(uint16 skill_id) {
 }
 int HP_skill_get_hit(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_hit_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_hit_pre; hIndex++ ) {
@@ -53965,8 +53493,7 @@ int HP_skill_get_hit(uint16 skill_id) {
 }
 int HP_skill_get_inf(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_inf_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_inf_pre; hIndex++ ) {
@@ -53992,8 +53519,7 @@ int HP_skill_get_inf(uint16 skill_id) {
 }
 int HP_skill_get_ele(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_ele_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_ele_pre; hIndex++ ) {
@@ -54019,8 +53545,7 @@ int HP_skill_get_ele(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_nk(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_nk_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_nk_pre; hIndex++ ) {
@@ -54046,8 +53571,7 @@ int HP_skill_get_nk(uint16 skill_id) {
 }
 int HP_skill_get_max(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_max_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_max_pre; hIndex++ ) {
@@ -54073,8 +53597,7 @@ int HP_skill_get_max(uint16 skill_id) {
 }
 int HP_skill_get_range(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_range_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_range_pre; hIndex++ ) {
@@ -54100,8 +53623,7 @@ int HP_skill_get_range(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_range2(struct block_list *bl, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_range2_pre ) {
 		int (*preHookFunc) (struct block_list *bl, uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_range2_pre; hIndex++ ) {
@@ -54127,8 +53649,7 @@ int HP_skill_get_range2(struct block_list *bl, uint16 skill_id, uint16 skill_lv)
 }
 int HP_skill_get_splash(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_splash_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_splash_pre; hIndex++ ) {
@@ -54154,8 +53675,7 @@ int HP_skill_get_splash(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_hp(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_hp_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_hp_pre; hIndex++ ) {
@@ -54181,8 +53701,7 @@ int HP_skill_get_hp(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_mhp(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_mhp_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_mhp_pre; hIndex++ ) {
@@ -54208,8 +53727,7 @@ int HP_skill_get_mhp(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_sp(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_sp_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_sp_pre; hIndex++ ) {
@@ -54235,8 +53753,7 @@ int HP_skill_get_sp(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_state(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_state_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_state_pre; hIndex++ ) {
@@ -54262,8 +53779,7 @@ int HP_skill_get_state(uint16 skill_id) {
 }
 int HP_skill_get_spiritball(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_spiritball_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_spiritball_pre; hIndex++ ) {
@@ -54289,8 +53805,7 @@ int HP_skill_get_spiritball(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_zeny(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_zeny_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_zeny_pre; hIndex++ ) {
@@ -54316,8 +53831,7 @@ int HP_skill_get_zeny(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_num(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_num_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_num_pre; hIndex++ ) {
@@ -54343,8 +53857,7 @@ int HP_skill_get_num(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_cast(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_cast_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_cast_pre; hIndex++ ) {
@@ -54370,8 +53883,7 @@ int HP_skill_get_cast(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_delay(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_delay_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_delay_pre; hIndex++ ) {
@@ -54397,8 +53909,7 @@ int HP_skill_get_delay(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_walkdelay(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_walkdelay_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_walkdelay_pre; hIndex++ ) {
@@ -54424,8 +53935,7 @@ int HP_skill_get_walkdelay(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_time(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_time_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_time_pre; hIndex++ ) {
@@ -54451,8 +53961,7 @@ int HP_skill_get_time(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_time2(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_time2_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_time2_pre; hIndex++ ) {
@@ -54478,8 +53987,7 @@ int HP_skill_get_time2(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_castnodex(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_castnodex_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_castnodex_pre; hIndex++ ) {
@@ -54505,8 +54013,7 @@ int HP_skill_get_castnodex(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_delaynodex(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_delaynodex_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_delaynodex_pre; hIndex++ ) {
@@ -54532,8 +54039,7 @@ int HP_skill_get_delaynodex(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_castdef(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_castdef_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_castdef_pre; hIndex++ ) {
@@ -54559,8 +54065,7 @@ int HP_skill_get_castdef(uint16 skill_id) {
 }
 int HP_skill_get_weapontype(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_weapontype_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_weapontype_pre; hIndex++ ) {
@@ -54586,8 +54091,7 @@ int HP_skill_get_weapontype(uint16 skill_id) {
 }
 int HP_skill_get_ammotype(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_ammotype_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_ammotype_pre; hIndex++ ) {
@@ -54613,8 +54117,7 @@ int HP_skill_get_ammotype(uint16 skill_id) {
 }
 int HP_skill_get_ammo_qty(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_ammo_qty_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_ammo_qty_pre; hIndex++ ) {
@@ -54640,8 +54143,7 @@ int HP_skill_get_ammo_qty(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_unit_id(uint16 skill_id, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_unit_id_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_unit_id_pre; hIndex++ ) {
@@ -54667,8 +54169,7 @@ int HP_skill_get_unit_id(uint16 skill_id, int flag) {
 }
 int HP_skill_get_inf2(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_inf2_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_inf2_pre; hIndex++ ) {
@@ -54694,8 +54195,7 @@ int HP_skill_get_inf2(uint16 skill_id) {
 }
 int HP_skill_get_castcancel(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_castcancel_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_castcancel_pre; hIndex++ ) {
@@ -54721,8 +54221,7 @@ int HP_skill_get_castcancel(uint16 skill_id) {
 }
 int HP_skill_get_maxcount(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_maxcount_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_maxcount_pre; hIndex++ ) {
@@ -54748,8 +54247,7 @@ int HP_skill_get_maxcount(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_blewcount(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_blewcount_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_blewcount_pre; hIndex++ ) {
@@ -54775,8 +54273,7 @@ int HP_skill_get_blewcount(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_unit_flag(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_unit_flag_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_unit_flag_pre; hIndex++ ) {
@@ -54802,8 +54299,7 @@ int HP_skill_get_unit_flag(uint16 skill_id) {
 }
 int HP_skill_get_unit_target(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_unit_target_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_unit_target_pre; hIndex++ ) {
@@ -54829,8 +54325,7 @@ int HP_skill_get_unit_target(uint16 skill_id) {
 }
 int HP_skill_get_unit_interval(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_unit_interval_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_unit_interval_pre; hIndex++ ) {
@@ -54856,8 +54351,7 @@ int HP_skill_get_unit_interval(uint16 skill_id) {
 }
 int HP_skill_get_unit_bl_target(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_unit_bl_target_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_unit_bl_target_pre; hIndex++ ) {
@@ -54883,8 +54377,7 @@ int HP_skill_get_unit_bl_target(uint16 skill_id) {
 }
 int HP_skill_get_unit_layout_type(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_unit_layout_type_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_unit_layout_type_pre; hIndex++ ) {
@@ -54910,8 +54403,7 @@ int HP_skill_get_unit_layout_type(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_unit_range(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_unit_range_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_unit_range_pre; hIndex++ ) {
@@ -54937,8 +54429,7 @@ int HP_skill_get_unit_range(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_get_cooldown(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_cooldown_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_cooldown_pre; hIndex++ ) {
@@ -54964,8 +54455,7 @@ int HP_skill_get_cooldown(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_tree_get_max(uint16 skill_id, int b_class) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_tree_get_max_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, int *b_class);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_tree_get_max_pre; hIndex++ ) {
@@ -55068,8 +54558,7 @@ void HP_skill_chk(uint16 *skill_id) {
 }
 int HP_skill_get_casttype(uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_casttype_pre ) {
 		int (*preHookFunc) (uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_casttype_pre; hIndex++ ) {
@@ -55095,8 +54584,7 @@ int HP_skill_get_casttype(uint16 skill_id) {
 }
 int HP_skill_get_casttype2(uint16 index) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_casttype2_pre ) {
 		int (*preHookFunc) (uint16 *index);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_casttype2_pre; hIndex++ ) {
@@ -55122,8 +54610,7 @@ int HP_skill_get_casttype2(uint16 index) {
 }
 int HP_skill_name2id(const char *name) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_name2id_pre ) {
 		int (*preHookFunc) (const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_name2id_pre; hIndex++ ) {
@@ -55149,8 +54636,7 @@ int HP_skill_name2id(const char *name) {
 }
 int HP_skill_isammotype(struct map_session_data *sd, int skill) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_isammotype_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *skill);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_isammotype_pre; hIndex++ ) {
@@ -55176,8 +54662,7 @@ int HP_skill_isammotype(struct map_session_data *sd, int skill) {
 }
 int HP_skill_castend_id(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_castend_id_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_id_pre; hIndex++ ) {
@@ -55203,8 +54688,7 @@ int HP_skill_castend_id(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_skill_castend_pos(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_castend_pos_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_pos_pre; hIndex++ ) {
@@ -55230,8 +54714,7 @@ int HP_skill_castend_pos(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_skill_castend_map(struct map_session_data *sd, uint16 skill_id, const char *mapname) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_castend_map_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id, const char *mapname);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_map_pre; hIndex++ ) {
@@ -55257,8 +54740,7 @@ int HP_skill_castend_map(struct map_session_data *sd, uint16 skill_id, const cha
 }
 int HP_skill_cleartimerskill(struct block_list *src) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_cleartimerskill_pre ) {
 		int (*preHookFunc) (struct block_list *src);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_cleartimerskill_pre; hIndex++ ) {
@@ -55284,8 +54766,7 @@ int HP_skill_cleartimerskill(struct block_list *src) {
 }
 int HP_skill_addtimerskill(struct block_list *src, unsigned int tick, int target, int x, int y, uint16 skill_id, uint16 skill_lv, int type, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_addtimerskill_pre ) {
 		int (*preHookFunc) (struct block_list *src, unsigned int *tick, int *target, int *x, int *y, uint16 *skill_id, uint16 *skill_lv, int *type, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_addtimerskill_pre; hIndex++ ) {
@@ -55311,8 +54792,7 @@ int HP_skill_addtimerskill(struct block_list *src, unsigned int tick, int target
 }
 int HP_skill_additional_effect(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int attack_type, int dmg_lv, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_additional_effect_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int *attack_type, int *dmg_lv, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_additional_effect_pre; hIndex++ ) {
@@ -55338,8 +54818,7 @@ int HP_skill_additional_effect(struct block_list *src, struct block_list *bl, ui
 }
 int HP_skill_counter_additional_effect(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int attack_type, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_counter_additional_effect_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int *attack_type, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_counter_additional_effect_pre; hIndex++ ) {
@@ -55365,8 +54844,7 @@ int HP_skill_counter_additional_effect(struct block_list *src, struct block_list
 }
 int HP_skill_blown(struct block_list *src, struct block_list *target, int count, int8 dir, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_blown_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *target, int *count, int8 *dir, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_blown_pre; hIndex++ ) {
@@ -55392,8 +54870,7 @@ int HP_skill_blown(struct block_list *src, struct block_list *target, int count,
 }
 int HP_skill_break_equip(struct block_list *bl, unsigned short where, int rate, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_break_equip_pre ) {
 		int (*preHookFunc) (struct block_list *bl, unsigned short *where, int *rate, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_break_equip_pre; hIndex++ ) {
@@ -55419,8 +54896,7 @@ int HP_skill_break_equip(struct block_list *bl, unsigned short where, int rate, 
 }
 int HP_skill_strip_equip(struct block_list *bl, unsigned short where, int rate, int lv, int time) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_strip_equip_pre ) {
 		int (*preHookFunc) (struct block_list *bl, unsigned short *where, int *rate, int *lv, int *time);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_strip_equip_pre; hIndex++ ) {
@@ -55524,8 +55000,7 @@ struct skill_unit* HP_skill_initunit(struct skill_unit_group *group, int idx, in
 }
 int HP_skill_delunit(struct skill_unit *su) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_delunit_pre ) {
 		int (*preHookFunc) (struct skill_unit *su);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_delunit_pre; hIndex++ ) {
@@ -55577,8 +55052,7 @@ struct skill_unit_group* HP_skill_init_unitgroup(struct block_list *src, int cou
 }
 int HP_skill_del_unitgroup(struct skill_unit_group *group, const char *file, int line, const char *func) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_del_unitgroup_pre ) {
 		int (*preHookFunc) (struct skill_unit_group *group, const char *file, int *line, const char *func);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_del_unitgroup_pre; hIndex++ ) {
@@ -55604,8 +55078,7 @@ int HP_skill_del_unitgroup(struct skill_unit_group *group, const char *file, int
 }
 int HP_skill_clear_unitgroup(struct block_list *src) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_clear_unitgroup_pre ) {
 		int (*preHookFunc) (struct block_list *src);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_clear_unitgroup_pre; hIndex++ ) {
@@ -55631,8 +55104,7 @@ int HP_skill_clear_unitgroup(struct block_list *src) {
 }
 int HP_skill_clear_group(struct block_list *bl, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_clear_group_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_clear_group_pre; hIndex++ ) {
@@ -55658,8 +55130,7 @@ int HP_skill_clear_group(struct block_list *bl, int flag) {
 }
 int HP_skill_unit_onplace(struct skill_unit *src, struct block_list *bl, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_unit_onplace_pre ) {
 		int (*preHookFunc) (struct skill_unit *src, struct block_list *bl, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_unit_onplace_pre; hIndex++ ) {
@@ -55685,8 +55156,7 @@ int HP_skill_unit_onplace(struct skill_unit *src, struct block_list *bl, unsigne
 }
 int HP_skill_unit_ondamaged(struct skill_unit *src, struct block_list *bl, int64 damage, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_unit_ondamaged_pre ) {
 		int (*preHookFunc) (struct skill_unit *src, struct block_list *bl, int64 *damage, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_unit_ondamaged_pre; hIndex++ ) {
@@ -55712,8 +55182,7 @@ int HP_skill_unit_ondamaged(struct skill_unit *src, struct block_list *bl, int64
 }
 int HP_skill_cast_fix(struct block_list *bl, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_cast_fix_pre ) {
 		int (*preHookFunc) (struct block_list *bl, uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_cast_fix_pre; hIndex++ ) {
@@ -55739,8 +55208,7 @@ int HP_skill_cast_fix(struct block_list *bl, uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_cast_fix_sc(struct block_list *bl, int time) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_cast_fix_sc_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int *time);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_cast_fix_sc_pre; hIndex++ ) {
@@ -55766,8 +55234,7 @@ int HP_skill_cast_fix_sc(struct block_list *bl, int time) {
 }
 int HP_skill_vf_cast_fix(struct block_list *bl, double time, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_vf_cast_fix_pre ) {
 		int (*preHookFunc) (struct block_list *bl, double *time, uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_vf_cast_fix_pre; hIndex++ ) {
@@ -55793,8 +55260,7 @@ int HP_skill_vf_cast_fix(struct block_list *bl, double time, uint16 skill_id, ui
 }
 int HP_skill_delay_fix(struct block_list *bl, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_delay_fix_pre ) {
 		int (*preHookFunc) (struct block_list *bl, uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_delay_fix_pre; hIndex++ ) {
@@ -55820,8 +55286,7 @@ int HP_skill_delay_fix(struct block_list *bl, uint16 skill_id, uint16 skill_lv) 
 }
 int HP_skill_check_condition_castbegin(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_check_condition_castbegin_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_condition_castbegin_pre; hIndex++ ) {
@@ -55847,8 +55312,7 @@ int HP_skill_check_condition_castbegin(struct map_session_data *sd, uint16 skill
 }
 int HP_skill_check_condition_castend(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_check_condition_castend_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_condition_castend_pre; hIndex++ ) {
@@ -55874,8 +55338,7 @@ int HP_skill_check_condition_castend(struct map_session_data *sd, uint16 skill_i
 }
 int HP_skill_consume_requirement(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, short type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_consume_requirement_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv, short *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_consume_requirement_pre; hIndex++ ) {
@@ -55928,8 +55391,7 @@ struct skill_condition HP_skill_get_requirement(struct map_session_data *sd, uin
 }
 int HP_skill_check_pc_partner(struct map_session_data *sd, uint16 skill_id, uint16 *skill_lv, int range, int cast_flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_check_pc_partner_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv, int *range, int *cast_flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_pc_partner_pre; hIndex++ ) {
@@ -55955,8 +55417,7 @@ int HP_skill_check_pc_partner(struct map_session_data *sd, uint16 skill_id, uint
 }
 int HP_skill_unit_move(struct block_list *bl, unsigned int tick, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_unit_move_pre ) {
 		int (*preHookFunc) (struct block_list *bl, unsigned int *tick, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_unit_move_pre; hIndex++ ) {
@@ -55982,8 +55443,7 @@ int HP_skill_unit_move(struct block_list *bl, unsigned int tick, int flag) {
 }
 int HP_skill_unit_onleft(uint16 skill_id, struct block_list *bl, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_unit_onleft_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, struct block_list *bl, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_unit_onleft_pre; hIndex++ ) {
@@ -56009,8 +55469,7 @@ int HP_skill_unit_onleft(uint16 skill_id, struct block_list *bl, unsigned int ti
 }
 int HP_skill_unit_onout(struct skill_unit *src, struct block_list *bl, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_unit_onout_pre ) {
 		int (*preHookFunc) (struct skill_unit *src, struct block_list *bl, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_unit_onout_pre; hIndex++ ) {
@@ -56036,8 +55495,7 @@ int HP_skill_unit_onout(struct skill_unit *src, struct block_list *bl, unsigned 
 }
 int HP_skill_unit_move_unit_group(struct skill_unit_group *group, int16 m, int16 dx, int16 dy) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_unit_move_unit_group_pre ) {
 		int (*preHookFunc) (struct skill_unit_group *group, int16 *m, int16 *dx, int16 *dy);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_unit_move_unit_group_pre; hIndex++ ) {
@@ -56063,8 +55521,7 @@ int HP_skill_unit_move_unit_group(struct skill_unit_group *group, int16 m, int16
 }
 int HP_skill_sit(struct map_session_data *sd, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_sit_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_sit_pre; hIndex++ ) {
@@ -56190,8 +55647,7 @@ void HP_skill_weaponrefine(struct map_session_data *sd, int idx) {
 }
 int HP_skill_autospell(struct map_session_data *md, uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_autospell_pre ) {
 		int (*preHookFunc) (struct map_session_data *md, uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_autospell_pre; hIndex++ ) {
@@ -56217,8 +55673,7 @@ int HP_skill_autospell(struct map_session_data *md, uint16 skill_id) {
 }
 int HP_skill_calc_heal(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, bool heal) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_calc_heal_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, bool *heal);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_calc_heal_pre; hIndex++ ) {
@@ -56244,8 +55699,7 @@ int HP_skill_calc_heal(struct block_list *src, struct block_list *target, uint16
 }
 bool HP_skill_check_cloaking(struct block_list *bl, struct status_change_entry *sce) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_check_cloaking_pre ) {
 		bool (*preHookFunc) (struct block_list *bl, struct status_change_entry *sce);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_cloaking_pre; hIndex++ ) {
@@ -56271,8 +55725,7 @@ bool HP_skill_check_cloaking(struct block_list *bl, struct status_change_entry *
 }
 int HP_skill_enchant_elemental_end(struct block_list *bl, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_enchant_elemental_end_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_enchant_elemental_end_pre; hIndex++ ) {
@@ -56298,8 +55751,7 @@ int HP_skill_enchant_elemental_end(struct block_list *bl, int type) {
 }
 int HP_skill_not_ok(uint16 skill_id, struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_not_ok_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_not_ok_pre; hIndex++ ) {
@@ -56325,8 +55777,7 @@ int HP_skill_not_ok(uint16 skill_id, struct map_session_data *sd) {
 }
 int HP_skill_not_ok_hom(uint16 skill_id, struct homun_data *hd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_not_ok_hom_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, struct homun_data *hd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_not_ok_hom_pre; hIndex++ ) {
@@ -56352,8 +55803,7 @@ int HP_skill_not_ok_hom(uint16 skill_id, struct homun_data *hd) {
 }
 int HP_skill_not_ok_mercenary(uint16 skill_id, struct mercenary_data *md) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_not_ok_mercenary_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, struct mercenary_data *md);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_not_ok_mercenary_pre; hIndex++ ) {
@@ -56379,8 +55829,7 @@ int HP_skill_not_ok_mercenary(uint16 skill_id, struct mercenary_data *md) {
 }
 int HP_skill_chastle_mob_changetarget(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_chastle_mob_changetarget_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_chastle_mob_changetarget_pre; hIndex++ ) {
@@ -56412,8 +55861,7 @@ int HP_skill_chastle_mob_changetarget(struct block_list *bl, va_list ap) {
 }
 int HP_skill_can_produce_mix(struct map_session_data *sd, int nameid, int trigger, int qty) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_can_produce_mix_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *nameid, int *trigger, int *qty);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_can_produce_mix_pre; hIndex++ ) {
@@ -56439,8 +55887,7 @@ int HP_skill_can_produce_mix(struct map_session_data *sd, int nameid, int trigge
 }
 int HP_skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, int slot1, int slot2, int slot3, int qty) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_produce_mix_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id, int *nameid, int *slot1, int *slot2, int *slot3, int *qty);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_produce_mix_pre; hIndex++ ) {
@@ -56466,8 +55913,7 @@ int HP_skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int namei
 }
 int HP_skill_arrow_create(struct map_session_data *sd, int nameid) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_arrow_create_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *nameid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_arrow_create_pre; hIndex++ ) {
@@ -56493,8 +55939,7 @@ int HP_skill_arrow_create(struct map_session_data *sd, int nameid) {
 }
 int HP_skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, unsigned int tick, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_castend_nodamage_id_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, unsigned int *tick, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_nodamage_id_pre; hIndex++ ) {
@@ -56520,8 +55965,7 @@ int HP_skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, 
 }
 int HP_skill_castend_damage_id(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, unsigned int tick, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_castend_damage_id_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, unsigned int *tick, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_damage_id_pre; hIndex++ ) {
@@ -56547,8 +55991,7 @@ int HP_skill_castend_damage_id(struct block_list *src, struct block_list *bl, ui
 }
 int HP_skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill_id, uint16 skill_lv, unsigned int tick, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_castend_pos2_pre ) {
 		int (*preHookFunc) (struct block_list *src, int *x, int *y, uint16 *skill_id, uint16 *skill_lv, unsigned int *tick, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_castend_pos2_pre; hIndex++ ) {
@@ -56574,8 +56017,7 @@ int HP_skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill_id,
 }
 int HP_skill_blockpc_start(struct map_session_data *sd, uint16 skill_id, int tick, bool load) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_blockpc_start_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id, int *tick, bool *load);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_blockpc_start_pre; hIndex++ ) {
@@ -56601,8 +56043,7 @@ int HP_skill_blockpc_start(struct map_session_data *sd, uint16 skill_id, int tic
 }
 int HP_skill_blockhomun_start(struct homun_data *hd, uint16 skill_id, int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_blockhomun_start_pre ) {
 		int (*preHookFunc) (struct homun_data *hd, uint16 *skill_id, int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_blockhomun_start_pre; hIndex++ ) {
@@ -56628,8 +56069,7 @@ int HP_skill_blockhomun_start(struct homun_data *hd, uint16 skill_id, int tick) 
 }
 int HP_skill_blockmerc_start(struct mercenary_data *md, uint16 skill_id, int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_blockmerc_start_pre ) {
 		int (*preHookFunc) (struct mercenary_data *md, uint16 *skill_id, int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_blockmerc_start_pre; hIndex++ ) {
@@ -56655,8 +56095,7 @@ int HP_skill_blockmerc_start(struct mercenary_data *md, uint16 skill_id, int tic
 }
 int HP_skill_attack(int attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 skill_id, uint16 skill_lv, unsigned int tick, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_attack_pre ) {
 		int (*preHookFunc) (int *attack_type, struct block_list *src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, unsigned int *tick, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_attack_pre; hIndex++ ) {
@@ -56682,8 +56121,7 @@ int HP_skill_attack(int attack_type, struct block_list *src, struct block_list *
 }
 int HP_skill_attack_area(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_attack_area_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_attack_area_pre; hIndex++ ) {
@@ -56715,8 +56153,7 @@ int HP_skill_attack_area(struct block_list *bl, va_list ap) {
 }
 int HP_skill_area_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_area_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_area_sub_pre; hIndex++ ) {
@@ -56748,8 +56185,7 @@ int HP_skill_area_sub(struct block_list *bl, va_list ap) {
 }
 int HP_skill_area_sub_count(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, unsigned int tick, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_area_sub_count_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, unsigned int *tick, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_area_sub_count_pre; hIndex++ ) {
@@ -56775,8 +56211,7 @@ int HP_skill_area_sub_count(struct block_list *src, struct block_list *target, u
 }
 int HP_skill_check_unit_range(struct block_list *bl, int x, int y, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_check_unit_range_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int *x, int *y, uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_unit_range_pre; hIndex++ ) {
@@ -56802,8 +56237,7 @@ int HP_skill_check_unit_range(struct block_list *bl, int x, int y, uint16 skill_
 }
 int HP_skill_check_unit_range_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_check_unit_range_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_unit_range_sub_pre; hIndex++ ) {
@@ -56835,8 +56269,7 @@ int HP_skill_check_unit_range_sub(struct block_list *bl, va_list ap) {
 }
 int HP_skill_check_unit_range2(struct block_list *bl, int x, int y, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_check_unit_range2_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int *x, int *y, uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_unit_range2_pre; hIndex++ ) {
@@ -56862,8 +56295,7 @@ int HP_skill_check_unit_range2(struct block_list *bl, int x, int y, uint16 skill
 }
 int HP_skill_check_unit_range2_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_check_unit_range2_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_unit_range2_sub_pre; hIndex++ ) {
@@ -56920,8 +56352,7 @@ void HP_skill_toggle_magicpower(struct block_list *bl, uint16 skill_id) {
 }
 int HP_skill_magic_reflect(struct block_list *src, struct block_list *bl, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_magic_reflect_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *bl, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_magic_reflect_pre; hIndex++ ) {
@@ -56947,8 +56378,7 @@ int HP_skill_magic_reflect(struct block_list *src, struct block_list *bl, int ty
 }
 int HP_skill_onskillusage(struct map_session_data *sd, struct block_list *bl, uint16 skill_id, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_onskillusage_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct block_list *bl, uint16 *skill_id, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_onskillusage_pre; hIndex++ ) {
@@ -56974,8 +56404,7 @@ int HP_skill_onskillusage(struct map_session_data *sd, struct block_list *bl, ui
 }
 int HP_skill_cell_overlap(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_cell_overlap_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_cell_overlap_pre; hIndex++ ) {
@@ -57007,8 +56436,7 @@ int HP_skill_cell_overlap(struct block_list *bl, va_list ap) {
 }
 int HP_skill_timerskill(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_timerskill_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_timerskill_pre; hIndex++ ) {
@@ -57034,8 +56462,7 @@ int HP_skill_timerskill(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_skill_trap_splash(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_trap_splash_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_trap_splash_pre; hIndex++ ) {
@@ -57067,8 +56494,7 @@ int HP_skill_trap_splash(struct block_list *bl, va_list ap) {
 }
 int HP_skill_check_condition_mercenary(struct block_list *bl, int skill_id, int lv, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_check_condition_mercenary_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int *skill_id, int *lv, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_condition_mercenary_pre; hIndex++ ) {
@@ -57120,8 +56546,7 @@ struct skill_unit_group* HP_skill_locate_element_field(struct block_list *bl) {
 }
 int HP_skill_graffitiremover(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_graffitiremover_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_graffitiremover_pre; hIndex++ ) {
@@ -57153,8 +56578,7 @@ int HP_skill_graffitiremover(struct block_list *bl, va_list ap) {
 }
 int HP_skill_activate_reverberation(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_activate_reverberation_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_activate_reverberation_pre; hIndex++ ) {
@@ -57186,8 +56610,7 @@ int HP_skill_activate_reverberation(struct block_list *bl, va_list ap) {
 }
 int HP_skill_dance_overlap_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_dance_overlap_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_dance_overlap_sub_pre; hIndex++ ) {
@@ -57219,8 +56642,7 @@ int HP_skill_dance_overlap_sub(struct block_list *bl, va_list ap) {
 }
 int HP_skill_dance_overlap(struct skill_unit *su, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_dance_overlap_pre ) {
 		int (*preHookFunc) (struct skill_unit *su, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_dance_overlap_pre; hIndex++ ) {
@@ -57272,8 +56694,7 @@ struct s_skill_unit_layout* HP_skill_get_unit_layout(uint16 skill_id, uint16 ski
 }
 int HP_skill_frostjoke_scream(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_frostjoke_scream_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_frostjoke_scream_pre; hIndex++ ) {
@@ -57305,8 +56726,7 @@ int HP_skill_frostjoke_scream(struct block_list *bl, va_list ap) {
 }
 int HP_skill_greed(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_greed_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_greed_pre; hIndex++ ) {
@@ -57338,8 +56758,7 @@ int HP_skill_greed(struct block_list *bl, va_list ap) {
 }
 int HP_skill_destroy_trap(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_destroy_trap_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_destroy_trap_pre; hIndex++ ) {
@@ -57371,8 +56790,7 @@ int HP_skill_destroy_trap(struct block_list *bl, va_list ap) {
 }
 int HP_skill_icewall_block(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_icewall_block_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_icewall_block_pre; hIndex++ ) {
@@ -57430,8 +56848,7 @@ struct skill_unit_group_tickset* HP_skill_unitgrouptickset_search(struct block_l
 }
 bool HP_skill_dance_switch(struct skill_unit *su, int flag) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_dance_switch_pre ) {
 		bool (*preHookFunc) (struct skill_unit *su, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_dance_switch_pre; hIndex++ ) {
@@ -57457,8 +56874,7 @@ bool HP_skill_dance_switch(struct skill_unit *su, int flag) {
 }
 int HP_skill_check_condition_char_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_check_condition_char_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_condition_char_sub_pre; hIndex++ ) {
@@ -57490,8 +56906,7 @@ int HP_skill_check_condition_char_sub(struct block_list *bl, va_list ap) {
 }
 int HP_skill_check_condition_mob_master_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_check_condition_mob_master_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_condition_mob_master_sub_pre; hIndex++ ) {
@@ -57573,8 +56988,7 @@ void HP_skill_brandishspear_dir(struct square *tc, uint8 dir, int are) {
 }
 int HP_skill_get_fixed_cast(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_fixed_cast_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_fixed_cast_pre; hIndex++ ) {
@@ -57600,8 +57014,7 @@ int HP_skill_get_fixed_cast(uint16 skill_id, uint16 skill_lv) {
 }
 int HP_skill_sit_count(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_sit_count_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_sit_count_pre; hIndex++ ) {
@@ -57633,8 +57046,7 @@ int HP_skill_sit_count(struct block_list *bl, va_list ap) {
 }
 int HP_skill_sit_in(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_sit_in_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_sit_in_pre; hIndex++ ) {
@@ -57666,8 +57078,7 @@ int HP_skill_sit_in(struct block_list *bl, va_list ap) {
 }
 int HP_skill_sit_out(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_sit_out_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_sit_out_pre; hIndex++ ) {
@@ -57724,8 +57135,7 @@ void HP_skill_unitsetmapcell(struct skill_unit *src, uint16 skill_id, uint16 ski
 }
 int HP_skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_unit_onplace_timer_pre ) {
 		int (*preHookFunc) (struct skill_unit *src, struct block_list *bl, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_unit_onplace_timer_pre; hIndex++ ) {
@@ -57751,8 +57161,7 @@ int HP_skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, u
 }
 int HP_skill_unit_effect(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_unit_effect_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_unit_effect_pre; hIndex++ ) {
@@ -57784,8 +57193,7 @@ int HP_skill_unit_effect(struct block_list *bl, va_list ap) {
 }
 int HP_skill_unit_timer_sub_onplace(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_unit_timer_sub_onplace_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_unit_timer_sub_onplace_pre; hIndex++ ) {
@@ -57817,8 +57225,7 @@ int HP_skill_unit_timer_sub_onplace(struct block_list *bl, va_list ap) {
 }
 int HP_skill_unit_move_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_unit_move_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_unit_move_sub_pre; hIndex++ ) {
@@ -57850,8 +57257,7 @@ int HP_skill_unit_move_sub(struct block_list *bl, va_list ap) {
 }
 int HP_skill_blockpc_end(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_blockpc_end_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_blockpc_end_pre; hIndex++ ) {
@@ -57877,8 +57283,7 @@ int HP_skill_blockpc_end(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_skill_blockhomun_end(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_blockhomun_end_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_blockhomun_end_pre; hIndex++ ) {
@@ -57904,8 +57309,7 @@ int HP_skill_blockhomun_end(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_skill_blockmerc_end(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_blockmerc_end_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_blockmerc_end_pre; hIndex++ ) {
@@ -57931,8 +57335,7 @@ int HP_skill_blockmerc_end(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_skill_split_atoi(char *str, int *val) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_split_atoi_pre ) {
 		int (*preHookFunc) (char *str, int *val);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_split_atoi_pre; hIndex++ ) {
@@ -57958,8 +57361,7 @@ int HP_skill_split_atoi(char *str, int *val) {
 }
 int HP_skill_unit_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_unit_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_unit_timer_pre; hIndex++ ) {
@@ -57985,8 +57387,7 @@ int HP_skill_unit_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_skill_unit_timer_sub(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_unit_timer_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_unit_timer_sub_pre; hIndex++ ) {
@@ -58043,8 +57444,7 @@ void HP_skill_init_unit_layout(void) {
 }
 bool HP_skill_parse_row_skilldb(char *split[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_parse_row_skilldb_pre ) {
 		bool (*preHookFunc) (char *split[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_skilldb_pre; hIndex++ ) {
@@ -58070,8 +57470,7 @@ bool HP_skill_parse_row_skilldb(char *split[], int columns, int current) {
 }
 bool HP_skill_parse_row_requiredb(char *split[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_parse_row_requiredb_pre ) {
 		bool (*preHookFunc) (char *split[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_requiredb_pre; hIndex++ ) {
@@ -58097,8 +57496,7 @@ bool HP_skill_parse_row_requiredb(char *split[], int columns, int current) {
 }
 bool HP_skill_parse_row_castdb(char *split[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_parse_row_castdb_pre ) {
 		bool (*preHookFunc) (char *split[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_castdb_pre; hIndex++ ) {
@@ -58124,8 +57522,7 @@ bool HP_skill_parse_row_castdb(char *split[], int columns, int current) {
 }
 bool HP_skill_parse_row_castnodexdb(char *split[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_parse_row_castnodexdb_pre ) {
 		bool (*preHookFunc) (char *split[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_castnodexdb_pre; hIndex++ ) {
@@ -58151,8 +57548,7 @@ bool HP_skill_parse_row_castnodexdb(char *split[], int columns, int current) {
 }
 bool HP_skill_parse_row_unitdb(char *split[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_parse_row_unitdb_pre ) {
 		bool (*preHookFunc) (char *split[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_unitdb_pre; hIndex++ ) {
@@ -58178,8 +57574,7 @@ bool HP_skill_parse_row_unitdb(char *split[], int columns, int current) {
 }
 bool HP_skill_parse_row_producedb(char *split[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_parse_row_producedb_pre ) {
 		bool (*preHookFunc) (char *split[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_producedb_pre; hIndex++ ) {
@@ -58205,8 +57600,7 @@ bool HP_skill_parse_row_producedb(char *split[], int columns, int current) {
 }
 bool HP_skill_parse_row_createarrowdb(char *split[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_parse_row_createarrowdb_pre ) {
 		bool (*preHookFunc) (char *split[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_createarrowdb_pre; hIndex++ ) {
@@ -58232,8 +57626,7 @@ bool HP_skill_parse_row_createarrowdb(char *split[], int columns, int current) {
 }
 bool HP_skill_parse_row_abradb(char *split[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_parse_row_abradb_pre ) {
 		bool (*preHookFunc) (char *split[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_abradb_pre; hIndex++ ) {
@@ -58259,8 +57652,7 @@ bool HP_skill_parse_row_abradb(char *split[], int columns, int current) {
 }
 bool HP_skill_parse_row_spellbookdb(char *split[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_parse_row_spellbookdb_pre ) {
 		bool (*preHookFunc) (char *split[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_spellbookdb_pre; hIndex++ ) {
@@ -58286,8 +57678,7 @@ bool HP_skill_parse_row_spellbookdb(char *split[], int columns, int current) {
 }
 bool HP_skill_parse_row_magicmushroomdb(char *split[], int column, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_parse_row_magicmushroomdb_pre ) {
 		bool (*preHookFunc) (char *split[], int *column, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_magicmushroomdb_pre; hIndex++ ) {
@@ -58313,8 +57704,7 @@ bool HP_skill_parse_row_magicmushroomdb(char *split[], int column, int current) 
 }
 bool HP_skill_parse_row_reproducedb(char *split[], int column, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_parse_row_reproducedb_pre ) {
 		bool (*preHookFunc) (char *split[], int *column, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_reproducedb_pre; hIndex++ ) {
@@ -58340,8 +57730,7 @@ bool HP_skill_parse_row_reproducedb(char *split[], int column, int current) {
 }
 bool HP_skill_parse_row_improvisedb(char *split[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_parse_row_improvisedb_pre ) {
 		bool (*preHookFunc) (char *split[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_improvisedb_pre; hIndex++ ) {
@@ -58367,8 +57756,7 @@ bool HP_skill_parse_row_improvisedb(char *split[], int columns, int current) {
 }
 bool HP_skill_parse_row_changematerialdb(char *split[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_parse_row_changematerialdb_pre ) {
 		bool (*preHookFunc) (char *split[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_changematerialdb_pre; hIndex++ ) {
@@ -58469,8 +57857,7 @@ void HP_skill_cooldown_load(struct map_session_data *sd) {
 }
 int HP_skill_spellbook(struct map_session_data *sd, int nameid) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_spellbook_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *nameid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_spellbook_pre; hIndex++ ) {
@@ -58496,8 +57883,7 @@ int HP_skill_spellbook(struct map_session_data *sd, int nameid) {
 }
 int HP_skill_block_check(struct block_list *bl, enum sc_type type, uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_block_check_pre ) {
 		int (*preHookFunc) (struct block_list *bl, enum sc_type *type, uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_block_check_pre; hIndex++ ) {
@@ -58523,8 +57909,7 @@ int HP_skill_block_check(struct block_list *bl, enum sc_type type, uint16 skill_
 }
 int HP_skill_detonator(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_detonator_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_detonator_pre; hIndex++ ) {
@@ -58556,8 +57941,7 @@ int HP_skill_detonator(struct block_list *bl, va_list ap) {
 }
 bool HP_skill_check_camouflage(struct block_list *bl, struct status_change_entry *sce) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_skill_check_camouflage_pre ) {
 		bool (*preHookFunc) (struct block_list *bl, struct status_change_entry *sce);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_camouflage_pre; hIndex++ ) {
@@ -58583,8 +57967,7 @@ bool HP_skill_check_camouflage(struct block_list *bl, struct status_change_entry
 }
 int HP_skill_magicdecoy(struct map_session_data *sd, int nameid) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_magicdecoy_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *nameid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_magicdecoy_pre; hIndex++ ) {
@@ -58610,8 +57993,7 @@ int HP_skill_magicdecoy(struct map_session_data *sd, int nameid) {
 }
 int HP_skill_poisoningweapon(struct map_session_data *sd, int nameid) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_poisoningweapon_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *nameid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_poisoningweapon_pre; hIndex++ ) {
@@ -58637,8 +58019,7 @@ int HP_skill_poisoningweapon(struct map_session_data *sd, int nameid) {
 }
 int HP_skill_select_menu(struct map_session_data *sd, uint16 skill_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_select_menu_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_select_menu_pre; hIndex++ ) {
@@ -58664,8 +58045,7 @@ int HP_skill_select_menu(struct map_session_data *sd, uint16 skill_id) {
 }
 int HP_skill_elementalanalysis(struct map_session_data *sd, int n, uint16 skill_lv, unsigned short *item_list) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_elementalanalysis_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n, uint16 *skill_lv, unsigned short *item_list);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_elementalanalysis_pre; hIndex++ ) {
@@ -58691,8 +58071,7 @@ int HP_skill_elementalanalysis(struct map_session_data *sd, int n, uint16 skill_
 }
 int HP_skill_changematerial(struct map_session_data *sd, int n, unsigned short *item_list) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_changematerial_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n, unsigned short *item_list);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_changematerial_pre; hIndex++ ) {
@@ -58718,8 +58097,7 @@ int HP_skill_changematerial(struct map_session_data *sd, int n, unsigned short *
 }
 int HP_skill_get_elemental_type(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_elemental_type_pre ) {
 		int (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_elemental_type_pre; hIndex++ ) {
@@ -58770,8 +58148,7 @@ void HP_skill_cooldown_save(struct map_session_data *sd) {
 }
 int HP_skill_maelstrom_suction(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_maelstrom_suction_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_maelstrom_suction_pre; hIndex++ ) {
@@ -58803,8 +58180,7 @@ int HP_skill_maelstrom_suction(struct block_list *bl, va_list ap) {
 }
 int HP_skill_get_new_group_id(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_get_new_group_id_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_get_new_group_id_pre; hIndex++ ) {
@@ -58831,8 +58207,7 @@ int HP_skill_get_new_group_id(void) {
 /* status */
 int HP_status_init(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_init_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_init_pre; hIndex++ ) {
@@ -58883,8 +58258,7 @@ void HP_status_final(void) {
 }
 int HP_status_get_refine_chance(enum refine_type wlv, int refine) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_refine_chance_pre ) {
 		int (*preHookFunc) (enum refine_type *wlv, int *refine);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_refine_chance_pre; hIndex++ ) {
@@ -58910,8 +58284,7 @@ int HP_status_get_refine_chance(enum refine_type wlv, int refine) {
 }
 sc_type HP_status_skill2sc(int skill_id) {
 	int hIndex = 0;
-	sc_type retVal___;
-	memset(&retVal___, '\0', sizeof(sc_type));
+	sc_type retVal___ = SC_NONE;
 	if( HPMHooks.count.HP_status_skill2sc_pre ) {
 		sc_type (*preHookFunc) (int *skill_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_skill2sc_pre; hIndex++ ) {
@@ -58937,8 +58310,7 @@ sc_type HP_status_skill2sc(int skill_id) {
 }
 int HP_status_sc2skill(sc_type sc) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_sc2skill_pre ) {
 		int (*preHookFunc) (sc_type *sc);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_sc2skill_pre; hIndex++ ) {
@@ -58964,8 +58336,7 @@ int HP_status_sc2skill(sc_type sc) {
 }
 unsigned int HP_status_sc2scb_flag(sc_type sc) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_status_sc2scb_flag_pre ) {
 		unsigned int (*preHookFunc) (sc_type *sc);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_sc2scb_flag_pre; hIndex++ ) {
@@ -58991,8 +58362,7 @@ unsigned int HP_status_sc2scb_flag(sc_type sc) {
 }
 int HP_status_type2relevant_bl_types(int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_type2relevant_bl_types_pre ) {
 		int (*preHookFunc) (int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_type2relevant_bl_types_pre; hIndex++ ) {
@@ -59018,8 +58388,7 @@ int HP_status_type2relevant_bl_types(int type) {
 }
 int HP_status_get_sc_type(sc_type idx) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_sc_type_pre ) {
 		int (*preHookFunc) (sc_type *idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_sc_type_pre; hIndex++ ) {
@@ -59045,8 +58414,7 @@ int HP_status_get_sc_type(sc_type idx) {
 }
 int HP_status_damage(struct block_list *src, struct block_list *target, int64 hp, int64 sp, int walkdelay, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_damage_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *target, int64 *hp, int64 *sp, int *walkdelay, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_damage_pre; hIndex++ ) {
@@ -59072,8 +58440,7 @@ int HP_status_damage(struct block_list *src, struct block_list *target, int64 hp
 }
 int HP_status_charge(struct block_list *bl, int64 hp, int64 sp) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_charge_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int64 *hp, int64 *sp);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_charge_pre; hIndex++ ) {
@@ -59099,8 +58466,7 @@ int HP_status_charge(struct block_list *bl, int64 hp, int64 sp) {
 }
 int HP_status_percent_change(struct block_list *src, struct block_list *target, signed char hp_rate, signed char sp_rate, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_percent_change_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *target, signed char *hp_rate, signed char *sp_rate, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_percent_change_pre; hIndex++ ) {
@@ -59126,8 +58492,7 @@ int HP_status_percent_change(struct block_list *src, struct block_list *target, 
 }
 int HP_status_set_hp(struct block_list *bl, unsigned int hp, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_set_hp_pre ) {
 		int (*preHookFunc) (struct block_list *bl, unsigned int *hp, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_set_hp_pre; hIndex++ ) {
@@ -59153,8 +58518,7 @@ int HP_status_set_hp(struct block_list *bl, unsigned int hp, int flag) {
 }
 int HP_status_set_sp(struct block_list *bl, unsigned int sp, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_set_sp_pre ) {
 		int (*preHookFunc) (struct block_list *bl, unsigned int *sp, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_set_sp_pre; hIndex++ ) {
@@ -59180,8 +58544,7 @@ int HP_status_set_sp(struct block_list *bl, unsigned int sp, int flag) {
 }
 int HP_status_heal(struct block_list *bl, int64 hp, int64 sp, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_heal_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int64 *hp, int64 *sp, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_heal_pre; hIndex++ ) {
@@ -59207,8 +58570,7 @@ int HP_status_heal(struct block_list *bl, int64 hp, int64 sp, int flag) {
 }
 int HP_status_revive(struct block_list *bl, unsigned char per_hp, unsigned char per_sp) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_revive_pre ) {
 		int (*preHookFunc) (struct block_list *bl, unsigned char *per_hp, unsigned char *per_sp);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_revive_pre; hIndex++ ) {
@@ -59338,8 +58700,7 @@ const char* HP_status_get_name(struct block_list *bl) {
 }
 int HP_status_get_class(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_class_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_class_pre; hIndex++ ) {
@@ -59365,8 +58726,7 @@ int HP_status_get_class(struct block_list *bl) {
 }
 int HP_status_get_lv(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_lv_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_lv_pre; hIndex++ ) {
@@ -59392,8 +58752,7 @@ int HP_status_get_lv(struct block_list *bl) {
 }
 defType HP_status_get_def(struct block_list *bl) {
 	int hIndex = 0;
-	defType retVal___;
-	memset(&retVal___, '\0', sizeof(defType));
+	defType retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_def_pre ) {
 		defType (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_def_pre; hIndex++ ) {
@@ -59419,8 +58778,7 @@ defType HP_status_get_def(struct block_list *bl) {
 }
 unsigned short HP_status_get_speed(struct block_list *bl) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_speed_pre ) {
 		unsigned short (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_speed_pre; hIndex++ ) {
@@ -59446,8 +58804,7 @@ unsigned short HP_status_get_speed(struct block_list *bl) {
 }
 unsigned char HP_status_calc_attack_element(struct block_list *bl, struct status_change *sc, int element) {
 	int hIndex = 0;
-	unsigned char retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned char));
+	unsigned char retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_attack_element_pre ) {
 		unsigned char (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *element);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_attack_element_pre; hIndex++ ) {
@@ -59473,8 +58830,7 @@ unsigned char HP_status_calc_attack_element(struct block_list *bl, struct status
 }
 int HP_status_get_party_id(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_party_id_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_party_id_pre; hIndex++ ) {
@@ -59500,8 +58856,7 @@ int HP_status_get_party_id(struct block_list *bl) {
 }
 int HP_status_get_guild_id(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_guild_id_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_guild_id_pre; hIndex++ ) {
@@ -59527,8 +58882,7 @@ int HP_status_get_guild_id(struct block_list *bl) {
 }
 int HP_status_get_emblem_id(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_emblem_id_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_emblem_id_pre; hIndex++ ) {
@@ -59554,8 +58908,7 @@ int HP_status_get_emblem_id(struct block_list *bl) {
 }
 int HP_status_get_mexp(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_mexp_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_mexp_pre; hIndex++ ) {
@@ -59581,8 +58934,7 @@ int HP_status_get_mexp(struct block_list *bl) {
 }
 int HP_status_get_race2(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_race2_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_race2_pre; hIndex++ ) {
@@ -59710,8 +59062,7 @@ struct status_change* HP_status_get_sc(struct block_list *bl) {
 }
 int HP_status_isdead(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_isdead_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_isdead_pre; hIndex++ ) {
@@ -59737,8 +59088,7 @@ int HP_status_isdead(struct block_list *bl) {
 }
 int HP_status_isimmune(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_isimmune_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_isimmune_pre; hIndex++ ) {
@@ -59764,8 +59114,7 @@ int HP_status_isimmune(struct block_list *bl) {
 }
 int HP_status_get_sc_def(struct block_list *bl, enum sc_type type, int rate, int tick, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_sc_def_pre ) {
 		int (*preHookFunc) (struct block_list *bl, enum sc_type *type, int *rate, int *tick, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_sc_def_pre; hIndex++ ) {
@@ -59791,8 +59140,7 @@ int HP_status_get_sc_def(struct block_list *bl, enum sc_type type, int rate, int
 }
 int HP_status_change_start(struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_change_start_pre ) {
 		int (*preHookFunc) (struct block_list *bl, enum sc_type *type, int *rate, int *val1, int *val2, int *val3, int *val4, int *tick, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_change_start_pre; hIndex++ ) {
@@ -59818,8 +59166,7 @@ int HP_status_change_start(struct block_list *bl, enum sc_type type, int rate, i
 }
 int HP_status_change_end_(struct block_list *bl, enum sc_type type, int tid, const char *file, int line) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_change_end__pre ) {
 		int (*preHookFunc) (struct block_list *bl, enum sc_type *type, int *tid, const char *file, int *line);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_change_end__pre; hIndex++ ) {
@@ -59845,8 +59192,7 @@ int HP_status_change_end_(struct block_list *bl, enum sc_type type, int tid, con
 }
 int HP_status_kaahi_heal_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_kaahi_heal_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_kaahi_heal_timer_pre; hIndex++ ) {
@@ -59872,8 +59218,7 @@ int HP_status_kaahi_heal_timer(int tid, unsigned int tick, int id, intptr_t data
 }
 int HP_status_change_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_change_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_change_timer_pre; hIndex++ ) {
@@ -59899,8 +59244,7 @@ int HP_status_change_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_status_change_timer_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_change_timer_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_change_timer_sub_pre; hIndex++ ) {
@@ -59932,8 +59276,7 @@ int HP_status_change_timer_sub(struct block_list *bl, va_list ap) {
 }
 int HP_status_change_clear(struct block_list *bl, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_change_clear_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_change_clear_pre; hIndex++ ) {
@@ -59959,8 +59302,7 @@ int HP_status_change_clear(struct block_list *bl, int type) {
 }
 int HP_status_change_clear_buffs(struct block_list *bl, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_change_clear_buffs_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_change_clear_buffs_pre; hIndex++ ) {
@@ -60011,8 +59353,7 @@ void HP_status_calc_bl_(struct block_list *bl, enum scb_flag flag, bool first) {
 }
 int HP_status_calc_mob_(struct mob_data *md, bool first) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_mob__pre ) {
 		int (*preHookFunc) (struct mob_data *md, bool *first);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_mob__pre; hIndex++ ) {
@@ -60038,8 +59379,7 @@ int HP_status_calc_mob_(struct mob_data *md, bool first) {
 }
 int HP_status_calc_pet_(struct pet_data *pd, bool first) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_pet__pre ) {
 		int (*preHookFunc) (struct pet_data *pd, bool *first);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_pet__pre; hIndex++ ) {
@@ -60065,8 +59405,7 @@ int HP_status_calc_pet_(struct pet_data *pd, bool first) {
 }
 int HP_status_calc_pc_(struct map_session_data *sd, bool first) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_pc__pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, bool *first);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_pc__pre; hIndex++ ) {
@@ -60092,8 +59431,7 @@ int HP_status_calc_pc_(struct map_session_data *sd, bool first) {
 }
 int HP_status_calc_homunculus_(struct homun_data *hd, bool first) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_homunculus__pre ) {
 		int (*preHookFunc) (struct homun_data *hd, bool *first);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_homunculus__pre; hIndex++ ) {
@@ -60119,8 +59457,7 @@ int HP_status_calc_homunculus_(struct homun_data *hd, bool first) {
 }
 int HP_status_calc_mercenary_(struct mercenary_data *md, bool first) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_mercenary__pre ) {
 		int (*preHookFunc) (struct mercenary_data *md, bool *first);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_mercenary__pre; hIndex++ ) {
@@ -60146,8 +59483,7 @@ int HP_status_calc_mercenary_(struct mercenary_data *md, bool first) {
 }
 int HP_status_calc_elemental_(struct elemental_data *ed, bool first) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_elemental__pre ) {
 		int (*preHookFunc) (struct elemental_data *ed, bool *first);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_elemental__pre; hIndex++ ) {
@@ -60248,8 +59584,7 @@ void HP_status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, 
 }
 int HP_status_check_skilluse(struct block_list *src, struct block_list *target, uint16 skill_id, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_check_skilluse_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *target, uint16 *skill_id, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_check_skilluse_pre; hIndex++ ) {
@@ -60275,8 +59610,7 @@ int HP_status_check_skilluse(struct block_list *src, struct block_list *target, 
 }
 int HP_status_check_visibility(struct block_list *src, struct block_list *target) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_check_visibility_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *target);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_check_visibility_pre; hIndex++ ) {
@@ -60302,8 +59636,7 @@ int HP_status_check_visibility(struct block_list *src, struct block_list *target
 }
 int HP_status_change_spread(struct block_list *src, struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_change_spread_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_change_spread_pre; hIndex++ ) {
@@ -60329,8 +59662,7 @@ int HP_status_change_spread(struct block_list *src, struct block_list *bl) {
 }
 defType HP_status_calc_def(struct block_list *bl, struct status_change *sc, int def, bool viewable) {
 	int hIndex = 0;
-	defType retVal___;
-	memset(&retVal___, '\0', sizeof(defType));
+	defType retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_def_pre ) {
 		defType (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *def, bool *viewable);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_def_pre; hIndex++ ) {
@@ -60356,8 +59688,7 @@ defType HP_status_calc_def(struct block_list *bl, struct status_change *sc, int 
 }
 short HP_status_calc_def2(struct block_list *bl, struct status_change *sc, int def2, bool viewable) {
 	int hIndex = 0;
-	short retVal___;
-	memset(&retVal___, '\0', sizeof(short));
+	short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_def2_pre ) {
 		short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *def2, bool *viewable);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_def2_pre; hIndex++ ) {
@@ -60383,8 +59714,7 @@ short HP_status_calc_def2(struct block_list *bl, struct status_change *sc, int d
 }
 defType HP_status_calc_mdef(struct block_list *bl, struct status_change *sc, int mdef, bool viewable) {
 	int hIndex = 0;
-	defType retVal___;
-	memset(&retVal___, '\0', sizeof(defType));
+	defType retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_mdef_pre ) {
 		defType (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *mdef, bool *viewable);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_mdef_pre; hIndex++ ) {
@@ -60410,8 +59740,7 @@ defType HP_status_calc_mdef(struct block_list *bl, struct status_change *sc, int
 }
 short HP_status_calc_mdef2(struct block_list *bl, struct status_change *sc, int mdef2, bool viewable) {
 	int hIndex = 0;
-	short retVal___;
-	memset(&retVal___, '\0', sizeof(short));
+	short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_mdef2_pre ) {
 		short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *mdef2, bool *viewable);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_mdef2_pre; hIndex++ ) {
@@ -60437,8 +59766,7 @@ short HP_status_calc_mdef2(struct block_list *bl, struct status_change *sc, int 
 }
 unsigned short HP_status_calc_batk(struct block_list *bl, struct status_change *sc, int batk, bool viewable) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_batk_pre ) {
 		unsigned short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *batk, bool *viewable);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_batk_pre; hIndex++ ) {
@@ -60462,10 +59790,61 @@ unsigned short HP_status_calc_batk(struct block_list *bl, struct status_change *
 	}
 	return retVal___;
 }
+unsigned short HP_status_base_matk(const struct status_data *st, int level) {
+	int hIndex = 0;
+	unsigned short retVal___ = 0;
+	if( HPMHooks.count.HP_status_base_matk_pre ) {
+		unsigned short (*preHookFunc) (const struct status_data *st, int *level);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_base_matk_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_status_base_matk_pre[hIndex].func;
+			retVal___ = preHookFunc(st, &level);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.base_matk(st, level);
+	}
+	if( HPMHooks.count.HP_status_base_matk_post ) {
+		unsigned short (*postHookFunc) (unsigned short retVal___, const struct status_data *st, int *level);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_base_matk_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_status_base_matk_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, st, &level);
+		}
+	}
+	return retVal___;
+}
+int HP_status_get_weapon_atk(struct block_list *src, struct weapon_atk *watk, int flag) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_status_get_weapon_atk_pre ) {
+		int (*preHookFunc) (struct block_list *src, struct weapon_atk *watk, int *flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_weapon_atk_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_status_get_weapon_atk_pre[hIndex].func;
+			retVal___ = preHookFunc(src, watk, &flag);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.get_weapon_atk(src, watk, flag);
+	}
+	if( HPMHooks.count.HP_status_get_weapon_atk_post ) {
+		int (*postHookFunc) (int retVal___, struct block_list *src, struct weapon_atk *watk, int *flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_weapon_atk_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_status_get_weapon_atk_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, src, watk, &flag);
+		}
+	}
+	return retVal___;
+}
 int HP_status_get_total_mdef(struct block_list *src) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_total_mdef_pre ) {
 		int (*preHookFunc) (struct block_list *src);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_total_mdef_pre; hIndex++ ) {
@@ -60491,8 +59870,7 @@ int HP_status_get_total_mdef(struct block_list *src) {
 }
 int HP_status_get_total_def(struct block_list *src) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_total_def_pre ) {
 		int (*preHookFunc) (struct block_list *src);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_total_def_pre; hIndex++ ) {
@@ -60518,8 +59896,7 @@ int HP_status_get_total_def(struct block_list *src) {
 }
 int HP_status_get_matk(struct block_list *src, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_matk_pre ) {
 		int (*preHookFunc) (struct block_list *src, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_matk_pre; hIndex++ ) {
@@ -60545,8 +59922,7 @@ int HP_status_get_matk(struct block_list *src, int flag) {
 }
 int HP_status_readdb(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_readdb_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_pre; hIndex++ ) {
@@ -60622,8 +59998,7 @@ void HP_status_initDummyData(void) {
 }
 int HP_status_base_amotion_pc(struct map_session_data *sd, struct status_data *st) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_base_amotion_pc_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct status_data *st);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_base_amotion_pc_pre; hIndex++ ) {
@@ -60649,8 +60024,7 @@ int HP_status_base_amotion_pc(struct map_session_data *sd, struct status_data *s
 }
 unsigned short HP_status_base_atk(const struct block_list *bl, const struct status_data *st) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_status_base_atk_pre ) {
 		unsigned short (*preHookFunc) (const struct block_list *bl, const struct status_data *st);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_base_atk_pre; hIndex++ ) {
@@ -60701,8 +60075,7 @@ void HP_status_calc_sigma(void) {
 }
 unsigned int HP_status_base_pc_maxhp(struct map_session_data *sd, struct status_data *st) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_status_base_pc_maxhp_pre ) {
 		unsigned int (*preHookFunc) (struct map_session_data *sd, struct status_data *st);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_base_pc_maxhp_pre; hIndex++ ) {
@@ -60728,8 +60101,7 @@ unsigned int HP_status_base_pc_maxhp(struct map_session_data *sd, struct status_
 }
 unsigned int HP_status_base_pc_maxsp(struct map_session_data *sd, struct status_data *st) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_status_base_pc_maxsp_pre ) {
 		unsigned int (*preHookFunc) (struct map_session_data *sd, struct status_data *st);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_base_pc_maxsp_pre; hIndex++ ) {
@@ -60755,8 +60127,7 @@ unsigned int HP_status_base_pc_maxsp(struct map_session_data *sd, struct status_
 }
 int HP_status_calc_npc_(struct npc_data *nd, bool first) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_npc__pre ) {
 		int (*preHookFunc) (struct npc_data *nd, bool *first);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_npc__pre; hIndex++ ) {
@@ -60782,8 +60153,7 @@ int HP_status_calc_npc_(struct npc_data *nd, bool first) {
 }
 unsigned short HP_status_calc_str(struct block_list *bl, struct status_change *sc, int str) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_str_pre ) {
 		unsigned short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *str);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_str_pre; hIndex++ ) {
@@ -60809,8 +60179,7 @@ unsigned short HP_status_calc_str(struct block_list *bl, struct status_change *s
 }
 unsigned short HP_status_calc_agi(struct block_list *bl, struct status_change *sc, int agi) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_agi_pre ) {
 		unsigned short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *agi);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_agi_pre; hIndex++ ) {
@@ -60836,8 +60205,7 @@ unsigned short HP_status_calc_agi(struct block_list *bl, struct status_change *s
 }
 unsigned short HP_status_calc_vit(struct block_list *bl, struct status_change *sc, int vit) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_vit_pre ) {
 		unsigned short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *vit);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_vit_pre; hIndex++ ) {
@@ -60863,8 +60231,7 @@ unsigned short HP_status_calc_vit(struct block_list *bl, struct status_change *s
 }
 unsigned short HP_status_calc_int(struct block_list *bl, struct status_change *sc, int int_) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_int_pre ) {
 		unsigned short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *int_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_int_pre; hIndex++ ) {
@@ -60890,8 +60257,7 @@ unsigned short HP_status_calc_int(struct block_list *bl, struct status_change *s
 }
 unsigned short HP_status_calc_dex(struct block_list *bl, struct status_change *sc, int dex) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_dex_pre ) {
 		unsigned short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *dex);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_dex_pre; hIndex++ ) {
@@ -60917,8 +60283,7 @@ unsigned short HP_status_calc_dex(struct block_list *bl, struct status_change *s
 }
 unsigned short HP_status_calc_luk(struct block_list *bl, struct status_change *sc, int luk) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_luk_pre ) {
 		unsigned short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *luk);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_luk_pre; hIndex++ ) {
@@ -60944,8 +60309,7 @@ unsigned short HP_status_calc_luk(struct block_list *bl, struct status_change *s
 }
 unsigned short HP_status_calc_watk(struct block_list *bl, struct status_change *sc, int watk, bool viewable) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_watk_pre ) {
 		unsigned short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *watk, bool *viewable);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_watk_pre; hIndex++ ) {
@@ -60971,8 +60335,7 @@ unsigned short HP_status_calc_watk(struct block_list *bl, struct status_change *
 }
 unsigned short HP_status_calc_matk(struct block_list *bl, struct status_change *sc, int matk, bool viewable) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_matk_pre ) {
 		unsigned short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *matk, bool *viewable);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_matk_pre; hIndex++ ) {
@@ -60998,8 +60361,7 @@ unsigned short HP_status_calc_matk(struct block_list *bl, struct status_change *
 }
 signed short HP_status_calc_hit(struct block_list *bl, struct status_change *sc, int hit, bool viewable) {
 	int hIndex = 0;
-	signed short retVal___;
-	memset(&retVal___, '\0', sizeof(signed short));
+	signed short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_hit_pre ) {
 		signed short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *hit, bool *viewable);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_hit_pre; hIndex++ ) {
@@ -61025,8 +60387,7 @@ signed short HP_status_calc_hit(struct block_list *bl, struct status_change *sc,
 }
 signed short HP_status_calc_critical(struct block_list *bl, struct status_change *sc, int critical, bool viewable) {
 	int hIndex = 0;
-	signed short retVal___;
-	memset(&retVal___, '\0', sizeof(signed short));
+	signed short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_critical_pre ) {
 		signed short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *critical, bool *viewable);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_critical_pre; hIndex++ ) {
@@ -61052,8 +60413,7 @@ signed short HP_status_calc_critical(struct block_list *bl, struct status_change
 }
 signed short HP_status_calc_flee(struct block_list *bl, struct status_change *sc, int flee, bool viewable) {
 	int hIndex = 0;
-	signed short retVal___;
-	memset(&retVal___, '\0', sizeof(signed short));
+	signed short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_flee_pre ) {
 		signed short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *flee, bool *viewable);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_flee_pre; hIndex++ ) {
@@ -61079,8 +60439,7 @@ signed short HP_status_calc_flee(struct block_list *bl, struct status_change *sc
 }
 signed short HP_status_calc_flee2(struct block_list *bl, struct status_change *sc, int flee2, bool viewable) {
 	int hIndex = 0;
-	signed short retVal___;
-	memset(&retVal___, '\0', sizeof(signed short));
+	signed short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_flee2_pre ) {
 		signed short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *flee2, bool *viewable);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_flee2_pre; hIndex++ ) {
@@ -61106,8 +60465,7 @@ signed short HP_status_calc_flee2(struct block_list *bl, struct status_change *s
 }
 unsigned short HP_status_calc_speed(struct block_list *bl, struct status_change *sc, int speed) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_speed_pre ) {
 		unsigned short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *speed);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_speed_pre; hIndex++ ) {
@@ -61133,8 +60491,7 @@ unsigned short HP_status_calc_speed(struct block_list *bl, struct status_change 
 }
 short HP_status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int aspd_rate) {
 	int hIndex = 0;
-	short retVal___;
-	memset(&retVal___, '\0', sizeof(short));
+	short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_aspd_rate_pre ) {
 		short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *aspd_rate);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_aspd_rate_pre; hIndex++ ) {
@@ -61160,8 +60517,7 @@ short HP_status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, 
 }
 unsigned short HP_status_calc_dmotion(struct block_list *bl, struct status_change *sc, int dmotion) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_dmotion_pre ) {
 		unsigned short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *dmotion);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_dmotion_pre; hIndex++ ) {
@@ -61185,10 +60541,35 @@ unsigned short HP_status_calc_dmotion(struct block_list *bl, struct status_chang
 	}
 	return retVal___;
 }
+short HP_status_calc_aspd(struct block_list *bl, struct status_change *sc, short flag) {
+	int hIndex = 0;
+	short retVal___ = 0;
+	if( HPMHooks.count.HP_status_calc_aspd_pre ) {
+		short (*preHookFunc) (struct block_list *bl, struct status_change *sc, short *flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_aspd_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_status_calc_aspd_pre[hIndex].func;
+			retVal___ = preHookFunc(bl, sc, &flag);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.calc_aspd(bl, sc, flag);
+	}
+	if( HPMHooks.count.HP_status_calc_aspd_post ) {
+		short (*postHookFunc) (short retVal___, struct block_list *bl, struct status_change *sc, short *flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_aspd_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_status_calc_aspd_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, sc, &flag);
+		}
+	}
+	return retVal___;
+}
 short HP_status_calc_fix_aspd(struct block_list *bl, struct status_change *sc, int aspd) {
 	int hIndex = 0;
-	short retVal___;
-	memset(&retVal___, '\0', sizeof(short));
+	short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_fix_aspd_pre ) {
 		short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *aspd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_fix_aspd_pre; hIndex++ ) {
@@ -61214,8 +60595,7 @@ short HP_status_calc_fix_aspd(struct block_list *bl, struct status_change *sc, i
 }
 unsigned int HP_status_calc_maxhp(struct block_list *bl, struct status_change *sc, uint64 maxhp) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_maxhp_pre ) {
 		unsigned int (*preHookFunc) (struct block_list *bl, struct status_change *sc, uint64 *maxhp);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_maxhp_pre; hIndex++ ) {
@@ -61241,8 +60621,7 @@ unsigned int HP_status_calc_maxhp(struct block_list *bl, struct status_change *s
 }
 unsigned int HP_status_calc_maxsp(struct block_list *bl, struct status_change *sc, unsigned int maxsp) {
 	int hIndex = 0;
-	unsigned int retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned int));
+	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_maxsp_pre ) {
 		unsigned int (*preHookFunc) (struct block_list *bl, struct status_change *sc, unsigned int *maxsp);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_maxsp_pre; hIndex++ ) {
@@ -61268,8 +60647,7 @@ unsigned int HP_status_calc_maxsp(struct block_list *bl, struct status_change *s
 }
 unsigned char HP_status_calc_element(struct block_list *bl, struct status_change *sc, int element) {
 	int hIndex = 0;
-	unsigned char retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned char));
+	unsigned char retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_element_pre ) {
 		unsigned char (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *element);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_element_pre; hIndex++ ) {
@@ -61295,8 +60673,7 @@ unsigned char HP_status_calc_element(struct block_list *bl, struct status_change
 }
 unsigned char HP_status_calc_element_lv(struct block_list *bl, struct status_change *sc, int lv) {
 	int hIndex = 0;
-	unsigned char retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned char));
+	unsigned char retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_element_lv_pre ) {
 		unsigned char (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_element_lv_pre; hIndex++ ) {
@@ -61322,8 +60699,7 @@ unsigned char HP_status_calc_element_lv(struct block_list *bl, struct status_cha
 }
 unsigned short HP_status_calc_mode(struct block_list *bl, struct status_change *sc, int mode) {
 	int hIndex = 0;
-	unsigned short retVal___;
-	memset(&retVal___, '\0', sizeof(unsigned short));
+	unsigned short retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_mode_pre ) {
 		unsigned short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *mode);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_mode_pre; hIndex++ ) {
@@ -61343,6 +60719,32 @@ unsigned short HP_status_calc_mode(struct block_list *bl, struct status_change *
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_mode_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_status_calc_mode_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl, sc, &mode);
+		}
+	}
+	return retVal___;
+}
+unsigned short HP_status_calc_ematk(struct block_list *bl, struct status_change *sc, int matk) {
+	int hIndex = 0;
+	unsigned short retVal___ = 0;
+	if( HPMHooks.count.HP_status_calc_ematk_pre ) {
+		unsigned short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *matk);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_ematk_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_status_calc_ematk_pre[hIndex].func;
+			retVal___ = preHookFunc(bl, sc, &matk);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.status.calc_ematk(bl, sc, matk);
+	}
+	if( HPMHooks.count.HP_status_calc_ematk_post ) {
+		unsigned short (*postHookFunc) (unsigned short retVal___, struct block_list *bl, struct status_change *sc, int *matk);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_ematk_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_status_calc_ematk_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, sc, &matk);
 		}
 	}
 	return retVal___;
@@ -61424,8 +60826,7 @@ void HP_status_display_remove(struct map_session_data *sd, enum sc_type type) {
 }
 int HP_status_natural_heal(struct block_list *bl, va_list args) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_natural_heal_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list args);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_natural_heal_pre; hIndex++ ) {
@@ -61457,8 +60858,7 @@ int HP_status_natural_heal(struct block_list *bl, va_list args) {
 }
 int HP_status_natural_heal_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_natural_heal_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_natural_heal_timer_pre; hIndex++ ) {
@@ -61484,8 +60884,7 @@ int HP_status_natural_heal_timer(int tid, unsigned int tick, int id, intptr_t da
 }
 bool HP_status_readdb_job1(char *fields[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_status_readdb_job1_pre ) {
 		bool (*preHookFunc) (char *fields[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_job1_pre; hIndex++ ) {
@@ -61511,8 +60910,7 @@ bool HP_status_readdb_job1(char *fields[], int columns, int current) {
 }
 bool HP_status_readdb_job2(char *fields[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_status_readdb_job2_pre ) {
 		bool (*preHookFunc) (char *fields[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_job2_pre; hIndex++ ) {
@@ -61538,8 +60936,7 @@ bool HP_status_readdb_job2(char *fields[], int columns, int current) {
 }
 bool HP_status_readdb_sizefix(char *fields[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_status_readdb_sizefix_pre ) {
 		bool (*preHookFunc) (char *fields[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_sizefix_pre; hIndex++ ) {
@@ -61565,8 +60962,7 @@ bool HP_status_readdb_sizefix(char *fields[], int columns, int current) {
 }
 bool HP_status_readdb_refine(char *fields[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_status_readdb_refine_pre ) {
 		bool (*preHookFunc) (char *fields[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_refine_pre; hIndex++ ) {
@@ -61592,8 +60988,7 @@ bool HP_status_readdb_refine(char *fields[], int columns, int current) {
 }
 bool HP_status_readdb_scconfig(char *fields[], int columns, int current) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_status_readdb_scconfig_pre ) {
 		bool (*preHookFunc) (char *fields[], int *columns, int *current);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_scconfig_pre; hIndex++ ) {
@@ -61645,8 +61040,7 @@ void HP_storage_reconnect(void) {
 }
 int HP_storage_delitem(struct map_session_data *sd, int n, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_storage_delitem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *n, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_storage_delitem_pre; hIndex++ ) {
@@ -61672,8 +61066,7 @@ int HP_storage_delitem(struct map_session_data *sd, int n, int amount) {
 }
 int HP_storage_open(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_storage_open_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_storage_open_pre; hIndex++ ) {
@@ -61699,8 +61092,7 @@ int HP_storage_open(struct map_session_data *sd) {
 }
 int HP_storage_add(struct map_session_data *sd, int index, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_storage_add_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *index, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_storage_add_pre; hIndex++ ) {
@@ -61726,8 +61118,7 @@ int HP_storage_add(struct map_session_data *sd, int index, int amount) {
 }
 int HP_storage_get(struct map_session_data *sd, int index, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_storage_get_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *index, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_storage_get_pre; hIndex++ ) {
@@ -61753,8 +61144,7 @@ int HP_storage_get(struct map_session_data *sd, int index, int amount) {
 }
 int HP_storage_additem(struct map_session_data *sd, struct item *item_data, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_storage_additem_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct item *item_data, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_storage_additem_pre; hIndex++ ) {
@@ -61780,8 +61170,7 @@ int HP_storage_additem(struct map_session_data *sd, struct item *item_data, int 
 }
 int HP_storage_addfromcart(struct map_session_data *sd, int index, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_storage_addfromcart_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *index, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_storage_addfromcart_pre; hIndex++ ) {
@@ -61807,8 +61196,7 @@ int HP_storage_addfromcart(struct map_session_data *sd, int index, int amount) {
 }
 int HP_storage_gettocart(struct map_session_data *sd, int index, int amount) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_storage_gettocart_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *index, int *amount);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_storage_gettocart_pre; hIndex++ ) {
@@ -61884,8 +61272,7 @@ void HP_storage_pc_quit(struct map_session_data *sd, int flag) {
 }
 int HP_storage_comp_item(const void *_i1, const void *_i2) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_storage_comp_item_pre ) {
 		int (*preHookFunc) (const void *_i1, const void *_i2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_storage_comp_item_pre; hIndex++ ) {
@@ -61936,8 +61323,7 @@ void HP_storage_sortitem(struct item *items, unsigned int size) {
 }
 int HP_storage_reconnect_sub(DBKey key, DBData *data, va_list ap) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_storage_reconnect_sub_pre ) {
 		int (*preHookFunc) (DBKey *key, DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_storage_reconnect_sub_pre; hIndex++ ) {
@@ -62020,8 +61406,7 @@ void HP_trade_ack(struct map_session_data *sd, int type) {
 }
 int HP_trade_check_impossible(struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_trade_check_impossible_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_trade_check_impossible_pre; hIndex++ ) {
@@ -62047,8 +61432,7 @@ int HP_trade_check_impossible(struct map_session_data *sd) {
 }
 int HP_trade_check(struct map_session_data *sd, struct map_session_data *tsd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_trade_check_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, struct map_session_data *tsd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_trade_check_pre; hIndex++ ) {
@@ -62200,8 +61584,7 @@ void HP_trade_commit(struct map_session_data *sd) {
 /* unit */
 int HP_unit_init(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_init_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_init_pre; hIndex++ ) {
@@ -62227,8 +61610,7 @@ int HP_unit_init(void) {
 }
 int HP_unit_final(void) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_final_pre ) {
 		int (*preHookFunc) (void);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_final_pre; hIndex++ ) {
@@ -62306,8 +61688,7 @@ struct unit_data* HP_unit_bl2ud2(struct block_list *bl) {
 }
 int HP_unit_attack_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_attack_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_attack_timer_pre; hIndex++ ) {
@@ -62333,8 +61714,7 @@ int HP_unit_attack_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_unit_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_walktoxy_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_walktoxy_timer_pre; hIndex++ ) {
@@ -62360,8 +61740,7 @@ int HP_unit_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_unit_walktoxy_sub(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_walktoxy_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_walktoxy_sub_pre; hIndex++ ) {
@@ -62387,8 +61766,7 @@ int HP_unit_walktoxy_sub(struct block_list *bl) {
 }
 int HP_unit_delay_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_delay_walktoxy_timer_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_delay_walktoxy_timer_pre; hIndex++ ) {
@@ -62414,8 +61792,7 @@ int HP_unit_delay_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t da
 }
 int HP_unit_walktoxy(struct block_list *bl, short x, short y, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_walktoxy_pre ) {
 		int (*preHookFunc) (struct block_list *bl, short *x, short *y, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_walktoxy_pre; hIndex++ ) {
@@ -62441,8 +61818,7 @@ int HP_unit_walktoxy(struct block_list *bl, short x, short y, int flag) {
 }
 int HP_unit_walktobl_sub(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_walktobl_sub_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_walktobl_sub_pre; hIndex++ ) {
@@ -62468,8 +61844,7 @@ int HP_unit_walktobl_sub(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_walktobl_pre ) {
 		int (*preHookFunc) (struct block_list *bl, struct block_list *tbl, int *range, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_walktobl_pre; hIndex++ ) {
@@ -62495,8 +61870,7 @@ int HP_unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, i
 }
 int HP_unit_run(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_run_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_run_pre; hIndex++ ) {
@@ -62522,8 +61896,7 @@ int HP_unit_run(struct block_list *bl) {
 }
 int HP_unit_wugdash(struct block_list *bl, struct map_session_data *sd) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_wugdash_pre ) {
 		int (*preHookFunc) (struct block_list *bl, struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_wugdash_pre; hIndex++ ) {
@@ -62549,8 +61922,7 @@ int HP_unit_wugdash(struct block_list *bl, struct map_session_data *sd) {
 }
 int HP_unit_escape(struct block_list *bl, struct block_list *target, short dist) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_escape_pre ) {
 		int (*preHookFunc) (struct block_list *bl, struct block_list *target, short *dist);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_escape_pre; hIndex++ ) {
@@ -62576,8 +61948,7 @@ int HP_unit_escape(struct block_list *bl, struct block_list *target, short dist)
 }
 int HP_unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool checkpath) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_movepos_pre ) {
 		int (*preHookFunc) (struct block_list *bl, short *dst_x, short *dst_y, int *easy, bool *checkpath);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_movepos_pre; hIndex++ ) {
@@ -62603,8 +61974,7 @@ int HP_unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, b
 }
 int HP_unit_setdir(struct block_list *bl, unsigned char dir) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_setdir_pre ) {
 		int (*preHookFunc) (struct block_list *bl, unsigned char *dir);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_setdir_pre; hIndex++ ) {
@@ -62630,8 +62000,7 @@ int HP_unit_setdir(struct block_list *bl, unsigned char dir) {
 }
 uint8 HP_unit_getdir(struct block_list *bl) {
 	int hIndex = 0;
-	uint8 retVal___;
-	memset(&retVal___, '\0', sizeof(uint8));
+	uint8 retVal___ = 0;
 	if( HPMHooks.count.HP_unit_getdir_pre ) {
 		uint8 (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_getdir_pre; hIndex++ ) {
@@ -62657,8 +62026,7 @@ uint8 HP_unit_getdir(struct block_list *bl) {
 }
 int HP_unit_blown(struct block_list *bl, int dx, int dy, int count, int flag) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_blown_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int *dx, int *dy, int *count, int *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_blown_pre; hIndex++ ) {
@@ -62684,8 +62052,7 @@ int HP_unit_blown(struct block_list *bl, int dx, int dy, int count, int flag) {
 }
 int HP_unit_warp(struct block_list *bl, short m, short x, short y, clr_type type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_warp_pre ) {
 		int (*preHookFunc) (struct block_list *bl, short *m, short *x, short *y, clr_type *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_warp_pre; hIndex++ ) {
@@ -62711,8 +62078,7 @@ int HP_unit_warp(struct block_list *bl, short m, short x, short y, clr_type type
 }
 int HP_unit_stop_walking(struct block_list *bl, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_stop_walking_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_stop_walking_pre; hIndex++ ) {
@@ -62738,8 +62104,7 @@ int HP_unit_stop_walking(struct block_list *bl, int type) {
 }
 int HP_unit_skilluse_id(struct block_list *src, int target_id, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_skilluse_id_pre ) {
 		int (*preHookFunc) (struct block_list *src, int *target_id, uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_skilluse_id_pre; hIndex++ ) {
@@ -62765,8 +62130,7 @@ int HP_unit_skilluse_id(struct block_list *src, int target_id, uint16 skill_id, 
 }
 int HP_unit_is_walking(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_is_walking_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_is_walking_pre; hIndex++ ) {
@@ -62792,8 +62156,7 @@ int HP_unit_is_walking(struct block_list *bl) {
 }
 int HP_unit_can_move(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_can_move_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_can_move_pre; hIndex++ ) {
@@ -62819,8 +62182,7 @@ int HP_unit_can_move(struct block_list *bl) {
 }
 int HP_unit_resume_running(int tid, unsigned int tick, int id, intptr_t data) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_resume_running_pre ) {
 		int (*preHookFunc) (int *tid, unsigned int *tick, int *id, intptr_t *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_resume_running_pre; hIndex++ ) {
@@ -62846,8 +62208,7 @@ int HP_unit_resume_running(int tid, unsigned int tick, int id, intptr_t data) {
 }
 int HP_unit_set_walkdelay(struct block_list *bl, unsigned int tick, int delay, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_set_walkdelay_pre ) {
 		int (*preHookFunc) (struct block_list *bl, unsigned int *tick, int *delay, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_set_walkdelay_pre; hIndex++ ) {
@@ -62873,8 +62234,7 @@ int HP_unit_set_walkdelay(struct block_list *bl, unsigned int tick, int delay, i
 }
 int HP_unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, uint16 skill_lv, int casttime, int castcancel) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_skilluse_id2_pre ) {
 		int (*preHookFunc) (struct block_list *src, int *target_id, uint16 *skill_id, uint16 *skill_lv, int *casttime, int *castcancel);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_skilluse_id2_pre; hIndex++ ) {
@@ -62900,8 +62260,7 @@ int HP_unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id,
 }
 int HP_unit_skilluse_pos(struct block_list *src, short skill_x, short skill_y, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_skilluse_pos_pre ) {
 		int (*preHookFunc) (struct block_list *src, short *skill_x, short *skill_y, uint16 *skill_id, uint16 *skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_skilluse_pos_pre; hIndex++ ) {
@@ -62927,8 +62286,7 @@ int HP_unit_skilluse_pos(struct block_list *src, short skill_x, short skill_y, u
 }
 int HP_unit_skilluse_pos2(struct block_list *src, short skill_x, short skill_y, uint16 skill_id, uint16 skill_lv, int casttime, int castcancel) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_skilluse_pos2_pre ) {
 		int (*preHookFunc) (struct block_list *src, short *skill_x, short *skill_y, uint16 *skill_id, uint16 *skill_lv, int *casttime, int *castcancel);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_skilluse_pos2_pre; hIndex++ ) {
@@ -62954,8 +62312,7 @@ int HP_unit_skilluse_pos2(struct block_list *src, short skill_x, short skill_y, 
 }
 int HP_unit_set_target(struct unit_data *ud, int target_id) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_set_target_pre ) {
 		int (*preHookFunc) (struct unit_data *ud, int *target_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_set_target_pre; hIndex++ ) {
@@ -62981,8 +62338,7 @@ int HP_unit_set_target(struct unit_data *ud, int target_id) {
 }
 int HP_unit_stop_attack(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_stop_attack_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_stop_attack_pre; hIndex++ ) {
@@ -63008,8 +62364,7 @@ int HP_unit_stop_attack(struct block_list *bl) {
 }
 int HP_unit_unattackable(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_unattackable_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_unattackable_pre; hIndex++ ) {
@@ -63035,8 +62390,7 @@ int HP_unit_unattackable(struct block_list *bl) {
 }
 int HP_unit_attack(struct block_list *src, int target_id, int continuous) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_attack_pre ) {
 		int (*preHookFunc) (struct block_list *src, int *target_id, int *continuous);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_attack_pre; hIndex++ ) {
@@ -63062,8 +62416,7 @@ int HP_unit_attack(struct block_list *src, int target_id, int continuous) {
 }
 int HP_unit_cancel_combo(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_cancel_combo_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_cancel_combo_pre; hIndex++ ) {
@@ -63089,8 +62442,7 @@ int HP_unit_cancel_combo(struct block_list *bl) {
 }
 bool HP_unit_can_reach_pos(struct block_list *bl, int x, int y, int easy) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_unit_can_reach_pos_pre ) {
 		bool (*preHookFunc) (struct block_list *bl, int *x, int *y, int *easy);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_can_reach_pos_pre; hIndex++ ) {
@@ -63116,8 +62468,7 @@ bool HP_unit_can_reach_pos(struct block_list *bl, int x, int y, int easy) {
 }
 bool HP_unit_can_reach_bl(struct block_list *bl, struct block_list *tbl, int range, int easy, short *x, short *y) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_unit_can_reach_bl_pre ) {
 		bool (*preHookFunc) (struct block_list *bl, struct block_list *tbl, int *range, int *easy, short *x, short *y);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_can_reach_bl_pre; hIndex++ ) {
@@ -63143,8 +62494,7 @@ bool HP_unit_can_reach_bl(struct block_list *bl, struct block_list *tbl, int ran
 }
 int HP_unit_calc_pos(struct block_list *bl, int tx, int ty, uint8 dir) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_calc_pos_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int *tx, int *ty, uint8 *dir);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_calc_pos_pre; hIndex++ ) {
@@ -63170,8 +62520,7 @@ int HP_unit_calc_pos(struct block_list *bl, int tx, int ty, uint8 dir) {
 }
 int HP_unit_attack_timer_sub(struct block_list *src, int tid, unsigned int tick) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_attack_timer_sub_pre ) {
 		int (*preHookFunc) (struct block_list *src, int *tid, unsigned int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_attack_timer_sub_pre; hIndex++ ) {
@@ -63197,8 +62546,7 @@ int HP_unit_attack_timer_sub(struct block_list *src, int tid, unsigned int tick)
 }
 int HP_unit_skillcastcancel(struct block_list *bl, int type) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_skillcastcancel_pre ) {
 		int (*preHookFunc) (struct block_list *bl, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_skillcastcancel_pre; hIndex++ ) {
@@ -63249,8 +62597,7 @@ void HP_unit_dataset(struct block_list *bl) {
 }
 int HP_unit_counttargeted(struct block_list *bl) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_counttargeted_pre ) {
 		int (*preHookFunc) (struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_counttargeted_pre; hIndex++ ) {
@@ -63276,8 +62623,7 @@ int HP_unit_counttargeted(struct block_list *bl) {
 }
 int HP_unit_fixdamage(struct block_list *src, struct block_list *target, unsigned int tick, int sdelay, int ddelay, int64 damage, int div, int type, int64 damage2) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_fixdamage_pre ) {
 		int (*preHookFunc) (struct block_list *src, struct block_list *target, unsigned int *tick, int *sdelay, int *ddelay, int64 *damage, int *div, int *type, int64 *damage2);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_fixdamage_pre; hIndex++ ) {
@@ -63303,8 +62649,7 @@ int HP_unit_fixdamage(struct block_list *src, struct block_list *target, unsigne
 }
 int HP_unit_changeviewsize(struct block_list *bl, short size) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_changeviewsize_pre ) {
 		int (*preHookFunc) (struct block_list *bl, short *size);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_changeviewsize_pre; hIndex++ ) {
@@ -63330,8 +62675,7 @@ int HP_unit_changeviewsize(struct block_list *bl, short size) {
 }
 int HP_unit_remove_map(struct block_list *bl, clr_type clrtype, const char *file, int line, const char *func) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_remove_map_pre ) {
 		int (*preHookFunc) (struct block_list *bl, clr_type *clrtype, const char *file, int *line, const char *func);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_remove_map_pre; hIndex++ ) {
@@ -63407,8 +62751,7 @@ void HP_unit_free_pc(struct map_session_data *sd) {
 }
 int HP_unit_free(struct block_list *bl, clr_type clrtype) {
 	int hIndex = 0;
-	int retVal___;
-	memset(&retVal___, '\0', sizeof(int));
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_unit_free_pre ) {
 		int (*preHookFunc) (struct block_list *bl, clr_type *clrtype);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_free_pre; hIndex++ ) {
@@ -63585,8 +62928,7 @@ void HP_vending_purchase(struct map_session_data *sd, int aid, unsigned int uid,
 }
 bool HP_vending_search(struct map_session_data *sd, unsigned short nameid) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_vending_search_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, unsigned short *nameid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_vending_search_pre; hIndex++ ) {
@@ -63612,8 +62954,7 @@ bool HP_vending_search(struct map_session_data *sd, unsigned short nameid) {
 }
 bool HP_vending_searchall(struct map_session_data *sd, const struct s_search_store_search *s) {
 	int hIndex = 0;
-	bool retVal___;
-	memset(&retVal___, '\0', sizeof(bool));
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_vending_searchall_pre ) {
 		bool (*preHookFunc) (struct map_session_data *sd, const struct s_search_store_search *s);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_vending_searchall_pre; hIndex++ ) {

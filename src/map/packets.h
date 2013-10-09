@@ -1971,14 +1971,14 @@ packet(0x020d,-1);
 #ifndef PACKETVER_RE
 	packet(0x091D,18,clif->pPartyBookingRegisterReq,2,4,6);
 #else
-	packet(0x08E5,41,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x08E5,41,clif->pPartyRecruitRegisterReq,2,4);
 #endif
 	packet(0x08E6,4);
-	packet(0x08E7,10,clif->pPartyBookingSearchReq,2);
+	packet(0x08E7,10,clif->pPartyRecruitSearchReq,2);
 	packet(0x08E8,-1);
-	packet(0x08E9,2,clif->pPartyBookingDeleteReq,2);
+	packet(0x08E9,2,clif->pPartyRecruitDeleteReq,2);
 	packet(0x08EA,4);
-	packet(0x08EB,39,clif->pPartyBookingUpdateReq,2);
+	packet(0x08EB,39,clif->pPartyRecruitUpdateReq,2);
 	packet(0x08EC,73);
 	packet(0x08ED,43);
 	packet(0x08EE,6);
@@ -2022,14 +2022,14 @@ packet(0x020d,-1);
 	packet(0x0364,8,clif->pMoveFromKafra,2,4);
 	packet(0x096A,6,clif->pGetCharNameRequest,2);
 	packet(0x0368,6,clif->pSolveCharName,2);
-	packet(0x08E5,41,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x08E5,41,clif->pPartyRecruitRegisterReq,2,4);
 	packet(0x08d2,10);
 	packet(0x0916,26,clif->pGuildInvite2,2);
 #endif
 
 #ifndef PACKETVER_RE
 #if PACKETVER >= 20120604
-	packet(0x0861,18,clif->pPartyBookingRegisterReq,2,4,6);
+	packet(0x0861,18,clif->pPartyRecruitRegisterReq,2,4,6);
 #endif
 #endif
 
@@ -2119,7 +2119,7 @@ packet(0x020d,-1);
 	packet(0x0886,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0938,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
 #ifdef PACKETVER_RE
-	packet(0x085D,41,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x085D,41,clif->pPartyRecruitRegisterReq,2,4);
 #else // not PACKETVER_RE
 	packet(0x085D,18,clif->pPartyBookingRegisterReq,2,4);
 #endif // PACKETVER_RE
@@ -2164,7 +2164,7 @@ packet(0x020d,-1);
 	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
 #ifdef PACKETVER_RE
-	packet(0x092D,41,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x092D,41,clif->pPartyRecruitRegisterReq,2,4);
 #else // not PACKETVER_RE
 	packet(0x092D,18,clif->pPartyBookingRegisterReq,2,4);
 #endif // PACKETVER_RE
@@ -2203,7 +2203,7 @@ packet(0x020d,-1);
 	packet(0x086E,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0874,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
 #ifdef PACKETVER_RE
-	packet(0x089B,41,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x089B,41,clif->pPartyRecruitRegisterReq,2,4);
 #else // not PACKETVER_RE
 	packet(0x089B,18,clif->pPartyBookingRegisterReq,2,4);
 #endif // PACKETVER_RE
@@ -2241,7 +2241,7 @@ packet(0x020d,-1);
 	packet(0x0964,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0869,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
 #ifdef PACKETVER_RE
-	packet(0x0874,41,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x0874,41,clif->pPartyRecruitRegisterReq,2,4);
 #else // not PACKETVER_RE
 	packet(0x0874,18,clif->pPartyBookingRegisterReq,2,4);
 #endif // PACKETVER_RE
@@ -2278,7 +2278,7 @@ packet(0x020d,-1);
 	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
 #ifdef PACKETVER_RE
-	packet(0x0365,41,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x0365,41,clif->pPartyRecruitRegisterReq,2,4);
 #else // not PACKETVER_RE
 	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);
 #endif // PACKETVER_RE
@@ -2324,7 +2324,7 @@ packet(0x020d,-1);
 	packet(0x085A,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0932,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
 #ifdef PACKETVER_RE
-	packet(0x08A7,41,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x08A7,41,clif->pPartyRecruitRegisterReq,2,4);
 #else // not PACKETVER_RE
 	packet(0x08A7,18,clif->pPartyBookingRegisterReq,2,4);
 #endif // PACKETVER_RE
@@ -2361,7 +2361,7 @@ packet(0x020d,-1);
 	packet(0x0365,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
 #ifdef PACKETVER_RE
-	packet(0x0894,41,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x0894,41,clif->pPartyRecruitRegisterReq,2,4);
 #else // not PACKETVER_RE
 	packet(0x0894,18,clif->pPartyBookingRegisterReq,2,4);
 #endif // PACKETVER_RE
@@ -2386,7 +2386,7 @@ packet(0x020d,-1);
 	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
 #ifdef PACKETVER_RE
-	packet(0x0365,41,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x0365,41,clif->pPartyRecruitRegisterReq,2,4);
 #else // not PACKETVER_RE
 	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);
 #endif // PACKETVER_RE
@@ -2424,7 +2424,7 @@ packet(0x020d,-1);
 	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
 	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
 #ifdef PACKETVER_RE
-	packet(0x0365,41,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x0365,41,clif->pPartyRecruitRegisterReq,2,4);
 #else // not PACKETVER_RE
 	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);
 #endif // PACKETVER_RE

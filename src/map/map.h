@@ -118,7 +118,7 @@ enum {
 	MAPID_ALCHEMIST,
 	MAPID_ROGUE,
 	MAPID_SOUL_LINKER,
-	MAPID_DARK_COLLECTOR = JOBL_2_2|0x0D,
+	MAPID_DARK_COLLECTOR = JOBL_2_2|0x0E,
 	//Trans Novice And Trans 1-1 Jobs
 	MAPID_NOVICE_HIGH = JOBL_UPPER|0x0,
 	MAPID_SWORDMAN_HIGH,
@@ -1018,10 +1018,8 @@ struct map_interface {
 	void (*helpscreen) (bool do_exit);
 	void (*versionscreen) (bool do_exit);
 	bool (*arg_next_value) (const char *option, int i, int argc);
-#ifdef CELL_NOSTACK
 	void (*addblcell) (struct block_list *bl);
 	void (*delblcell) (struct block_list *bl);
-#endif
 };
 
 struct map_interface *map;

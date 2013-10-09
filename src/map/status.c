@@ -1911,9 +1911,14 @@ unsigned short status_base_atk(const struct block_list *bl, const struct status_
 
 static inline unsigned short status_base_matk_min(const struct status_data *st){ return st->int_+(st->int_/7)*(st->int_/7); }
 static inline unsigned short status_base_matk_max(const struct status_data *st){ return st->int_+(st->int_/5)*(st->int_/5); }
+
+unsigned short status_base_matk(const struct status_data *st, int level) {
 #ifdef RENEWAL
-unsigned short status_base_matk(const struct status_data *st, int level){ return st->int_+(st->int_/2)+(st->dex/5)+(st->luk/3)+(level/4); }
+	return st->int_+(st->int_/2)+(st->dex/5)+(st->luk/3)+(level/4);
+#else
+	return 0;
 #endif
+}
 
 //Fills in the misc data that can be calculated from the other status info (except for level)
 void status_calc_misc(struct block_list *bl, struct status_data *st, int level) {
@@ -4514,9 +4519,8 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 
 	return (unsigned short)cap_value(watk,0,USHRT_MAX);
 }
+unsigned short status_calc_ematk(struct block_list *bl, struct status_change *sc, int matk) {
 #ifdef RENEWAL
-unsigned short status_calc_ematk(struct block_list *bl, struct status_change *sc, int matk)
-{
 
 	if (!sc || !sc->count)
 		return cap_value(matk,0,USHRT_MAX);
@@ -4539,8 +4543,10 @@ unsigned short status_calc_ematk(struct block_list *bl, struct status_change *sc
 	if(sc->data[SC_IZAYOI])
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
 	return (unsigned short)cap_value(matk,0,USHRT_MAX);
-}
+#else
+	return 0;
 #endif
+}
 unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc, int matk, bool viewable)
 {
 	if(!sc || !sc->count)
@@ -5202,11 +5208,10 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 	return (short)cap_value(speed,10,USHRT_MAX);
 }
 
-#ifdef RENEWAL_ASPD
 // flag&1 - fixed value [malufett]
 // flag&2 - percentage value
-short status_calc_aspd(struct block_list *bl, struct status_change *sc, short flag)
-{
+short status_calc_aspd(struct block_list *bl, struct status_change *sc, short flag) {
+#ifdef RENEWAL_ASPD
 	int i, pots = 0, skills1 = 0, skills2 = 0;
 
 	if(!sc || !sc->count)
@@ -5318,8 +5323,10 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 		}
 	}
 	return ( flag&1? (skills1 + pots) : skills2 );
-}
+#else
+	return 0;
 #endif
+}
 
 short status_calc_fix_aspd(struct block_list *bl, struct status_change *sc, int aspd) {
 	if (!sc || !sc->count)
@@ -10765,8 +10772,8 @@ int status_change_timer_sub(struct block_list* bl, va_list ap) {
 
 int status_get_total_def(struct block_list *src) { return status->get_status_data(src)->def2 + (short)status->get_def(src); }
 int status_get_total_mdef(struct block_list *src) { return status->get_status_data(src)->mdef2 + (short)status_get_mdef(src); }
-#ifdef RENEWAL
 int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int flag) {
+#ifdef RENEWAL
 	int min = 0, max = 0, dstr;
 	float strdex_bonus, variance;
 	struct status_change *sc = status->get_sc(bl);
@@ -10800,8 +10807,10 @@ int status_get_weapon_atk(struct block_list *bl, struct weapon_atk *watk, int fl
 	max = status->calc_watk(bl, sc, max, false);
 
 	return max;
-}
+#else
+	return 0;
 #endif
+}
 
 #define GETRANDMATK(st) do {\
 	if( (st)->matk_max > (st)->matk_min ) \
@@ -11549,10 +11558,8 @@ void status_defaults(void) {
 	status->calc_mdef = status_calc_mdef;
 	status->calc_mdef2 = status_calc_mdef2;
 	status->calc_batk = status_calc_batk;
-#ifdef RENEWAL
 	status->base_matk = status_base_matk;
 	status->get_weapon_atk = status_get_weapon_atk;
-#endif
 	status->get_total_mdef = status_get_total_mdef;
 	status->get_total_def = status_get_total_def;
 
@@ -11585,18 +11592,14 @@ void status_defaults(void) {
 	status->calc_speed = status_calc_speed;
 	status->calc_aspd_rate = status_calc_aspd_rate;
 	status->calc_dmotion = status_calc_dmotion;
-#ifdef RENEWAL_ASPD
 	status->calc_aspd = status_calc_aspd;
-#endif
 	status->calc_fix_aspd = status_calc_fix_aspd;
 	status->calc_maxhp = status_calc_maxhp;
 	status->calc_maxsp = status_calc_maxsp;
 	status->calc_element = status_calc_element;
 	status->calc_element_lv = status_calc_element_lv;
 	status->calc_mode = status_calc_mode;
-#ifdef RENEWAL
 	status->calc_ematk = status_calc_ematk;
-#endif
 	status->calc_bl_main = status_calc_bl_main;
 	status->display_add = status_display_add;
 	status->display_remove = status_display_remove;

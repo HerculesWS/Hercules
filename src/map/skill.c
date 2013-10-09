@@ -5110,9 +5110,15 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			break;
 
 		case AL_DECAGI:
+			clif->skill_nodamage (src, bl, skill_id, skill_lv,
+								  sc_start(bl, type, (40 + skill_lv * 2 + (status->get_lv(src) + sstatus->int_)/5), skill_lv,
+										   /* monsters using lvl 48 get the rate benefit but the duration of lvl 10 */
+										   ( src->type == BL_MOB && skill_lv == 48 ) ? skill->get_time(skill_id,10) : skill->get_time(skill_id,skill_lv)));
+			break;
+
 		case MER_DECAGI:
 			clif->skill_nodamage (src, bl, skill_id, skill_lv,
-				sc_start(bl, type, (40 + skill_lv * 2 + (status->get_lv(src) + sstatus->int_)/5), skill_lv, skill->get_time(skill_id,skill_lv)));
+								  sc_start(bl, type, (40 + skill_lv * 2 + (status->get_lv(src) + sstatus->int_)/5), skill_lv, skill->get_time(skill_id,skill_lv)));
 			break;
 
 		case AL_CRUCIS:
@@ -6972,8 +6978,14 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 					return 0;
 				}
 				status->change_start(bl,SC_STUN,10000,skill_lv,0,0,0,skill->get_time2(skill_id,skill_lv),8);
-				if (f_sd) sc_start(&f_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
-				if (m_sd) sc_start(&m_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+				if (f_sd) {
+					sc_start(&f_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+					clif->specialeffect(&f_sd->bl,408,AREA);
+				}
+				if (m_sd) {
+					sc_start(&m_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+					clif->specialeffect(&m_sd->bl,408,AREA);
+				}
 			}
 			break;
 
@@ -7970,8 +7982,12 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		case AB_CLEARANCE:
 			if( flag&1 || (i = skill->get_splash(skill_id, skill_lv)) < 1 ) {
 				//As of the behavior in official server Clearance is just a super version of Dispell skill. [Jobbie]
+				if( bl->type != BL_MOB && battle->check_target(src,bl,BCT_PARTY) <= 0 ) // Only affect mob or party.
+					break;
+								
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-				if((dstsd && (dstsd->class_&MAPID_UPPERMASK) == MAPID_SOUL_LINKER) || rnd()%100 >= 30 + 10 * skill_lv) {
+				
+				if((dstsd && (dstsd->class_&MAPID_UPPERMASK) == MAPID_SOUL_LINKER) || rnd()%100 >= 60 + 8 * skill_lv) {
 					if (sd)
 						clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					break;
@@ -9805,6 +9821,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case MH_STEINWAND:
 		case MH_XENO_SLASHER:
 		case NC_MAGMA_ERUPTION:
+		case RL_B_TRAP:
 			flag|=1;//Set flag to 1 to prevent deleting ammo (it will be deleted on group-delete).
 		case GS_GROUNDDRIFT: //Ammo should be deleted right away.
 			skill->unitsetting(src,skill_id,skill_lv,x,y,0);
