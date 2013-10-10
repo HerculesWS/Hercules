@@ -6971,16 +6971,16 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			if(sd) {
 				struct map_session_data *f_sd = pc->get_father(sd);
 				struct map_session_data *m_sd = pc->get_mother(sd);
-				bool we_baby_parents;
+				bool we_baby_parents = false;
 				if(m_sd && check_distance_bl(bl,&m_sd->bl,AREA_SIZE)) {
 					sc_start(&m_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
 					clif->specialeffect(&m_sd->bl,408,AREA);
-					we_baby_parents = 1;
+					we_baby_parents = true;
 				}
 				if(f_sd && check_distance_bl(bl,&f_sd->bl,AREA_SIZE)) {
 					sc_start(&f_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
 					clif->specialeffect(&f_sd->bl,408,AREA);
-					we_baby_parents = 1;
+					we_baby_parents = true;
 				}
 				if (!we_baby_parents) {
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
