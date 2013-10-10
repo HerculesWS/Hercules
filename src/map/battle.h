@@ -462,6 +462,7 @@ struct Battle_Config {
 	int guild_notice_changemap;
 	
 	int feature_banking;
+	int feature_auction;
 } battle_config;
 
 // Dammage delayed info
