@@ -6438,7 +6438,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 			pc->setoption(sd, i);
 
 		if( homun_alive(sd->hd) && pc->checkskill(sd, AM_CALLHOMUN) )
-			homun->vaporize(sd, 0);
+			homun->vaporize(sd, HOM_ST_ACTIVE);
 	}
 
 	for( i = 1; i < MAX_SKILL; i++ ) {
@@ -6663,7 +6663,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 
 	if (sd->status.hom_id > 0){
 	    if(battle_config.homunculus_auto_vapor && sd->hd && !sd->hd->sc.data[SC_LIGHT_OF_REGENE])
-		    homun->vaporize(sd, 0);
+		    homun->vaporize(sd, HOM_ST_ACTIVE);
 	}
 
 	if( sd->md )
@@ -7588,7 +7588,7 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 		pc->setoption(sd, i);
 
 	if(homun_alive(sd->hd) && !pc->checkskill(sd, AM_CALLHOMUN))
-		homun->vaporize(sd, 0);
+		homun->vaporize(sd, HOM_ST_ACTIVE);
 
 	if(sd->status.manner < 0)
 		clif->changestatus(sd,SP_MANNER,sd->status.manner);

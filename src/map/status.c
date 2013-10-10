@@ -8230,7 +8230,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				if( pc_isridingwug(sd) ) pc->setoption(sd, sd->sc.option&~OPTION_WUGRIDER);
 				if( pc_isfalcon(sd) ) pc->setoption(sd, sd->sc.option&~OPTION_FALCON);
 				if( sd->status.pet_id > 0 ) pet->menu(sd, 3);
-				if( homun_alive(sd->hd) ) homun->vaporize(sd,1);
+				if( homun_alive(sd->hd) ) homun->vaporize(sd,HOM_ST_REST);
 				if( sd->md ) mercenary->delete(sd->md,3);
 			}
 			break;

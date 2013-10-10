@@ -6780,7 +6780,7 @@ BUILDIN(strnpcinfo) {
 }
 
 /*==========================================
- * GetEquipID(Pos);     Pos: 1-10
+ * GetEquipID(Pos);     Pos: 1-SCRIPT_EQUIP_TABLE_SIZE
  *------------------------------------------*/
 BUILDIN(getequipid)
 {
@@ -9564,32 +9564,103 @@ BUILDIN(homunculus_evolution)
 
 /*==========================================
  * [Xantara]
+ * Checks for vaporized morph state
+ * and deletes ITEMID_STRANGE_EMBRYO.
  *------------------------------------------*/
 BUILDIN(homunculus_mutate) {
 	int homun_id;
 	enum homun_type m_class, m_id;
 	TBL_PC *sd;
+	bool success = false;
+	
+	sd = script->rid2sd(st);
+	if( sd == NULL || sd->hd == NULL )
+		return true;
+		
+	if( sd->hd->homunculus.vaporize == HOM_ST_MORPH ) {
+		int i = pc->search_inventory(sd, ITEMID_STRANGE_EMBRYO);
+		if( script_hasdata(st,2) )
+			homun_id = script_getnum(st,2);
+		else
+			homun_id = 6048 + (rnd() % 4);
+		
+		m_class = homun->class2type(sd->hd->homunculus.class_);
+		m_id    = homun->class2type(homun_id);
+		
+		if( m_class == HT_EVO && m_id == HT_S &&
+			sd->hd->homunculus.level >= 99 && i >= 0 &&
+			!pc->delitem(sd, i, 1, 0, 0, LOG_TYPE_SCRIPT) ) {
+			sd->hd->homunculus.vaporize = HOM_ST_REST; // Remove morph state.
+			homun->call(sd); // Respawn homunculus.
+			homun->mutate(sd->hd, homun_id);
+			success = true;
+		} else
+			clif->emotion(&sd->hd->bl, E_SWT);
+	} else
+		clif->emotion(&sd->hd->bl, E_SWT);
+	
+	script_pushint(st,success?1:0);
+	return true;
+}
+
+/*==========================================
+ * Puts homunculus into morph state
+ * and gives ITEMID_STRANGE_EMBRYO.
+ *------------------------------------------*/
+BUILDIN(homunculus_morphembryo) {
+	enum homun_type m_class;
+	int i = 0;
+	TBL_PC *sd;
+	bool success = false;
 	
 	sd = script->rid2sd(st);
 	if( sd == NULL || sd->hd == NULL )
 		return true;
 	
-	if( script_hasdata(st,2) )
-		homun_id = script_getnum(st,2);
-	else
-		homun_id = 6048 + (rnd() % 4);
-	
 	if( homun_alive(sd->hd) ) {
 		m_class = homun->class2type(sd->hd->homunculus.class_);
-		m_id    = homun->class2type(homun_id);
 		
-		if( m_class != HT_INVALID && m_id != HT_INVALID && m_class == HT_EVO && m_id == HT_S && sd->hd->homunculus.level >= 99 )
-			homun->mutate(sd->hd, homun_id);
-		else
+		if ( m_class == HT_EVO && sd->hd->homunculus.level >= 99 ) {
+			struct item item_tmp;
+			
+			memset(&item_tmp, 0, sizeof(item_tmp));
+			item_tmp.nameid = ITEMID_STRANGE_EMBRYO;
+			item_tmp.identify = 1;
+			
+			if( (i = pc->additem(sd, &item_tmp, 1, LOG_TYPE_SCRIPT)) ) {
+				clif->additem(sd, 0, 0, i);
+				clif->emotion(&sd->hd->bl, E_SWT);
+			} else {
+				homun->vaporize(sd, HOM_ST_MORPH);
+				success = true;
+			}
+		} else
 			clif->emotion(&sd->hd->bl, E_SWT);
-	}
+	} else
+		clif->emotion(&sd->hd->bl, E_SWT);
+	
+	script_pushint(st, success?1:0);
 	return true;
 }
+
+/*==========================================
+ * Check for homunculus state.
+ * Return: -1 = No homunculus
+ *          0 = Homunculus is active
+ *          1 = Homunculus is vaporized (rest)
+ *          2 = Homunculus is in morph state
+ *------------------------------------------*/
+BUILDIN(homunculus_checkcall) {
+	TBL_PC *sd = script->rid2sd(st);
+
+	if( sd == NULL || !sd->hd )
+		script_pushint(st, -1);
+	else
+		script_pushint(st, sd->hd->homunculus.vaporize);
+	
+	return true;
+}
+
 
 // [Zephyrus]
 BUILDIN(homunculus_shuffle) {
@@ -9602,31 +9673,6 @@ BUILDIN(homunculus_shuffle) {
 	if(homun_alive(sd->hd))
 		homun->shuffle(sd->hd);
 	
-	return true;
-}
-
-/*==========================================
- * Check for homunculus state.
- * Return: -1 = No homunculus
- *          0 = Homunculus is active
- *          1 = Homunculus is vaporized (rest)
- *          2 = Homunculus is in morph state
- *------------------------------------------*/
-BUILDIN(checkhomcall)
-{
-	TBL_PC *sd = script->rid2sd(st);
-	TBL_HOM *hd;
-
-	if( sd == NULL )
-		return false;
-
-	hd = sd->hd;
-
-	if( !hd )
-		script_pushint(st, -1);
-	else
-		script_pushint(st, hd->homunculus.vaporize);
-
 	return true;
 }
 
@@ -12166,12 +12212,9 @@ BUILDIN(getpetinfo)
 BUILDIN(gethominfo)
 {
 	TBL_PC *sd=script->rid2sd(st);
-	TBL_HOM *hd;
-	int type=script_getnum(st,2);
+	int type = script_getnum(st,2);
 	
-	hd = sd?sd->hd:NULL;
-	if(!homun_alive(hd))
-	{
+	if(!sd || !sd->hd) {
 		if (type == 2)
 			script_pushconststr(st,"null");
 		else
@@ -12180,13 +12223,13 @@ BUILDIN(gethominfo)
 	}
 	
 	switch(type){
-		case 0: script_pushint(st,hd->homunculus.hom_id); break;
-		case 1: script_pushint(st,hd->homunculus.class_); break;
-		case 2: script_pushstrcopy(st,hd->homunculus.name); break;
-		case 3: script_pushint(st,hd->homunculus.intimacy); break;
-		case 4: script_pushint(st,hd->homunculus.hunger); break;
-		case 5: script_pushint(st,hd->homunculus.rename_flag); break;
-		case 6: script_pushint(st,hd->homunculus.level); break;
+		case 0: script_pushint(st,sd->hd->homunculus.hom_id); break;
+		case 1: script_pushint(st,sd->hd->homunculus.class_); break;
+		case 2: script_pushstrcopy(st,sd->hd->homunculus.name); break;
+		case 3: script_pushint(st,sd->hd->homunculus.intimacy); break;
+		case 4: script_pushint(st,sd->hd->homunculus.hunger); break;
+		case 5: script_pushint(st,sd->hd->homunculus.rename_flag); break;
+		case 6: script_pushint(st,sd->hd->homunculus.level); break;
 		default:
 			script_pushint(st,0);
 			break;
@@ -17655,8 +17698,9 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(warpportal,"iisii"),
 		BUILDIN_DEF2(homunculus_evolution,"homevolution",""),	//[orn]
 		BUILDIN_DEF2(homunculus_mutate,"hommutate","?"),
+		BUILDIN_DEF2(homunculus_morphembryo,"morphembryo",""),
+		BUILDIN_DEF2(homunculus_checkcall,"checkhomcall",""),
 		BUILDIN_DEF2(homunculus_shuffle,"homshuffle",""),	//[Zephyrus]
-		BUILDIN_DEF(checkhomcall,""),
 		BUILDIN_DEF(eaclass,"?"),	//[Skotlex]
 		BUILDIN_DEF(roclass,"i?"),	//[Skotlex]
 		BUILDIN_DEF(checkvending,"?"),
