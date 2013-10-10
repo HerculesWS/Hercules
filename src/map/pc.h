@@ -961,6 +961,9 @@ struct pc_interface {
 	int (*checkcombo) (struct map_session_data *sd, struct item_data *data );
 	int (*calcweapontype) (struct map_session_data *sd);
 	int (*removecombo) (struct map_session_data *sd, struct item_data *data );
+	
+	void (*bank_deposit) (struct map_session_data *sd, int money);
+	void (*bank_withdraw) (struct map_session_data *sd, int money);
 };
 
 struct pc_interface *pc;

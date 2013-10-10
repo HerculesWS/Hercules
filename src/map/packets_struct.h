@@ -18,6 +18,9 @@ struct EQUIPSLOTINFO {
  *
  **/
 enum packet_headers {
+	banking_withdraw_ackType = 0x9aa,
+	banking_deposit_ackType = 0x9a8,
+	banking_checkType = 0x9a6,
 	cart_additem_ackType = 0x12c,
 	sc_notickType = 0x196,
 #if PACKETVER < 20061218
@@ -541,6 +544,38 @@ struct packet_package_item_announce {
 struct packet_cart_additem_ack {
 	short PacketType;
 	char result;
+} __attribute__((packed));
+
+struct packet_banking_check {
+	short PacketType;
+	int64 Money;
+	short Reason;
+} __attribute__((packed));
+
+struct packet_banking_deposit_req {
+	short PacketType;
+	unsigned int AID;
+	int Money;
+} __attribute__((packed));
+
+struct packet_banking_withdraw_req {
+	short PacketType;
+	unsigned int AID;
+	int Money;
+} __attribute__((packed));
+
+struct packet_banking_deposit_ack {
+	short PacketType;
+	short Reason;
+	int64 Money;
+	int Balance;
+} __attribute__((packed));
+
+struct packet_banking_withdraw_ack {
+	short PacketType;
+	short Reason;
+	int64 Money;
+	int Balance;
 } __attribute__((packed));
 
 #pragma pack(pop)

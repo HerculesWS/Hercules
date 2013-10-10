@@ -61,7 +61,7 @@ struct clif_interface clif_s;
 
 //Converts item type in case of pet eggs.
 static inline int itemtype(int type) {
-	switch( type ){
+	switch( type ) {
 #if PACKETVER >= 20080827
 		case IT_WEAPON:	return IT_ARMOR;
 		case IT_ARMOR:
@@ -17726,6 +17726,79 @@ void clif_cart_additem_ack(struct map_session_data *sd, int flag) {
 	
 	clif->send(&p,sizeof(p), &sd->bl, SELF);
 }
+/* Bank System [Yommy/Hercules] */
+void clif_parse_BankDeposit(int fd, struct map_session_data* sd) {
+	struct packet_banking_deposit_req *p = P2PTR(fd);
+	int money;
+	
+	if( !battle_config.feature_banking ) {
+		clif->colormes(fd,COLOR_RED,msg_txt(1483));
+		return;
+	}
+	
+	money = (int)cap_value(p->Money,0,INT_MAX);
+
+	pc->bank_deposit(sd,money);
+}
+
+void clif_parse_BankWithdraw(int fd, struct map_session_data* sd) {
+	struct packet_banking_withdraw_req *p = P2PTR(fd);
+	int money;
+	
+	if( !battle_config.feature_banking ) {
+		clif->colormes(fd,COLOR_RED,msg_txt(1483));
+		return;
+	}
+	
+	money = (int)cap_value(p->Money,0,INT_MAX);
+	
+	pc->bank_withdraw(sd,money);
+}
+
+void clif_parse_BankCheck(int fd, struct map_session_data* sd) {
+	struct packet_banking_check p;
+	
+	if( !battle_config.feature_banking ) {
+		clif->colormes(fd,COLOR_RED,msg_txt(1483));
+		return;
+	}
+	
+	p.PacketType = banking_checkType;
+	p.Money = (int)sd->status.bank_vault;
+	p.Reason = (short)0;
+	
+	clif->send(&p,sizeof(p), &sd->bl, SELF);
+}
+
+void clif_parse_BankOpen(int fd, struct map_session_data* sd) {
+	return;
+}
+
+void clif_parse_BankClose(int fd, struct map_session_data* sd) {
+	return;
+}
+
+void clif_bank_deposit(struct map_session_data *sd, enum e_BANKING_DEPOSIT_ACK reason) {
+	struct packet_banking_deposit_ack p;
+	
+	p.PacketType = banking_deposit_ackType;
+	p.Balance = sd->status.zeny;/* how much zeny char has after operation */
+	p.Money = (int64)sd->status.bank_vault;/* money in the bank */
+	p.Reason = (short)reason;
+	
+	clif->send(&p,sizeof(p), &sd->bl, SELF);
+}
+void clif_bank_withdraw(struct map_session_data *sd,enum e_BANKING_WITHDRAW_ACK reason) {
+	struct packet_banking_withdraw_ack p;
+	
+	p.PacketType = banking_withdraw_ackType;
+	p.Balance = sd->status.zeny;/* how much zeny char has after operation */
+	p.Money = (int64)sd->status.bank_vault;/* money in the bank */
+	p.Reason = (short)reason;
+	
+	clif->send(&p,sizeof(p), &sd->bl, SELF);
+}
+
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 	if( sd ) {
@@ -18524,6 +18597,9 @@ void clif_defaults(void) {
 	clif->chsys_quitg = clif_hercules_chsys_quitg;
 	clif->chsys_gjoin = clif_hercules_chsys_gjoin;
 	clif->chsys_gleave = clif_hercules_chsys_gleave;
+	/* Bank System [Yommy/Hercules] */
+	clif->bank_deposit = clif_bank_deposit;
+	clif->bank_withdraw = clif_bank_withdraw;
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/ 
@@ -18746,4 +18822,10 @@ void clif_defaults(void) {
 	clif->pPartyBookingReqVolunteer = clif_parse_PartyBookingReqVolunteer;
 	clif->pPartyBookingRefuseVolunteer = clif_parse_PartyBookingRefuseVolunteer;
 	clif->pPartyBookingCancelVolunteer = clif_parse_PartyBookingCancelVolunteer;
+	/* Bank System [Yommy/Hercules] */
+	clif->pBankDeposit = clif_parse_BankDeposit;
+	clif->pBankWithdraw = clif_parse_BankWithdraw;
+	clif->pBankCheck = clif_parse_BankCheck;
+	clif->pBankOpen = clif_parse_BankOpen;
+	clif->pBankClose = clif_parse_BankClose;
 }

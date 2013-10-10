@@ -90,6 +90,10 @@
 //Max amount of a single stacked item
 #define MAX_AMOUNT 30000
 #define MAX_ZENY 1000000000
+
+//Official Limit: 2.1b ( the var that stores the money doesn't go much higher than this by default )
+#define MAX_BANK_ZENY 2100000000
+
 #define MAX_FAME 1000000000
 #define MAX_CART 100
 #define MAX_SKILL 1478
@@ -366,6 +370,7 @@ struct mmo_charstatus {
 
 	unsigned int base_exp,job_exp;
 	int zeny;
+	int bank_vault;
 
 	short class_;
 	unsigned int status_point,skill_point;
