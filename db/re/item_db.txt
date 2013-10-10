@@ -8011,7 +8011,6 @@
 18572,Korean_Judge_Hat,Judges Hat,5,20,,300,,2,,1,0xFFFFFFFF,63,2,256,,0,1,377,{ bonus bMdef,2; },{},{}
 18573,White_Feather,White Feather,5,20,,500,,2,,1,0xFFFFFFFF,63,2,256,,30,1,741,{},{},{}
 18574,Lord_of_Death,Lord of the Dead Helm,5,20,,1000,,10,,1,0xFFFFFFFF,63,2,768,,70,1,742,{ bonus bMdef,5; },{},{}
-18574,Lord_of_Death,Lord of the Dead Helm,5,20,,1000,,10,,1,0xFFFFFFFF,63,2,768,,70,1,742,{ bonus bMdef,5; },{},{}
 18575,Wunderkammer,Wunderkammer,5,20,,500,,10,,1,0xFFFFFFFF,7,2,769,,20,0,743,{ bonus bMdef,10; },{},{}
 18576,YinYang_Earring,Yin Yang Earrings,5,20,,100,,0,,0,0xFFFFFFFF,63,2,512,,50,0,744,{},{},{}
 18577,24_Bolt,Screw Stuck Head,5,20,,200,,0,,0,0xFFFFFFFF,63,2,512,,10,0,696,{},{},{}
@@ -8041,7 +8040,6 @@
 18601,Red_Bread_Hat,Red Pom Band,5,20,,300,,0,,1,0xFFFFFFFF,63,2,256,,0,1,762,{ bonus bMdef,5; },{},{}
 18602,Watermelon_Slice,Watermelon Bite,5,20,,100,,0,,0,0xFFFFFFFF,63,2,1,,30,0,763,{ bonus bUnbreakableHelm,0; bonus bMdef,4; bonus2 bAddEle,Ele_Fire,4; },{},{}
 18603,Black_Devil_Mask_,Black Devil's Mask,5,20,,100,,0,,1,0xFFFFFFFF,63,2,512,,0,0,760,{ bonus bAllStats,1; },{},{}
-18604,Falcon_Mask,Falcon Mask,5,10,,30,,0,,1,0xFFFFFFFF,63,2,513,,50,0,782,{},{},{}
 18604,Falcon_Mask,Falcon Mask,5,10,,30,,0,,1,0xFFFFFFFF,63,2,513,,50,0,782,{},{},{}
 18605,Dark_Age,Dark Age,5,20,,200,,3,,1,0xFFFFFFFF,63,2,256,,10,1,766,{ bonus bMdef,3; },{},{}
 18606,Tear_Drop,Tear drop,5,20,,100,,1,,0,0xFFFFFFFF,63,2,513,,30,0,767,{},{},{}

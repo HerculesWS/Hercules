@@ -1704,12 +1704,11 @@ int itemdb_parse_dbrow(char** str, const char* source, int line, int scriptopt) 
  * Reading item from item db
  * item_db2 overwriting item_db
  *------------------------------------------*/
-int itemdb_readdb(void)
-{
+int itemdb_readdb(void) {
 	const char* filename[] = {
 		DBPATH"item_db.txt",
 		"item_db2.txt" };
-
+	bool duplicate[MAX_ITEMDB];
 	int fi;
 
 	for( fi = 0; fi < ARRAYLENGTH(filename); ++fi ) {
@@ -1726,11 +1725,13 @@ int itemdb_readdb(void)
 			continue;
 		}
 
+		memset(&duplicate,0,sizeof(duplicate));
+		
 		// process rows one by one
 		while(fgets(line, sizeof(line), fp))
 		{
 			char *str[32], *p;
-			int i;
+			int i, id = 0;
 			lines++;
 			if(line[0] == '/' && line[1] == '/')
 				continue;
@@ -1807,8 +1808,13 @@ int itemdb_readdb(void)
 				}
 			}
 
-			if (!itemdb->parse_dbrow(str, filepath, lines, 0))
+			if (!(id = itemdb->parse_dbrow(str, filepath, lines, 0)))
 				continue;
+			
+			if( duplicate[id] ) {
+				ShowWarning("itemdb_readdb:%s: duplicate entry of ID #%d (%s/%s)\n",filename[fi],id,itemdb_name(id),itemdb_jname(id));
+			} else
+				duplicate[id] = true;
 			
 			count++;
 		}
@@ -1836,7 +1842,7 @@ int itemdb_read_sqldb(void) {
 	
 	for( fi = 0; fi < ARRAYLENGTH(item_db_name); ++fi ) {
 		uint32 count = 0;
-
+				
 		// retrieve all rows from the item database
 		if( SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT * FROM `%s`", item_db_name[fi]) ) {
 			Sql_ShowDebug(map->mysql_handle);
@@ -1856,6 +1862,7 @@ int itemdb_read_sqldb(void) {
 
 			if (!itemdb->parse_dbrow(str, item_db_name[fi], -(atoi(str[0])), SCRIPT_IGNORE_EXTERNAL_BRACKETS))
 				continue;
+						
 			++count;
 		}
 
