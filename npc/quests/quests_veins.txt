@@ -48,7 +48,7 @@
 
 // Stone Quest
 //============================================================ 
-ve_fild05,257,130,4	script	::WincingOldMan_veins	945,{
+-	script	::WincingOldMan_veins	-1,{
 	if ((MaxWeight - Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you are carrying -";
