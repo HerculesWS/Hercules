@@ -5655,20 +5655,46 @@ above 91000 intimacy with its owner.
 
 ---------------------------------------
 
+*gethominfo(<type>)
+
+This function works as a direct counterpart of 'getpetinfo':
+ 0 - Homunculus unique ID
+ 1 - Homunculus Class
+ 2 - Name
+ 3 - Friendly level (intimacy score). 100000 is full loyalty.
+ 4 - Hungry level. 100 is completely full.
+ 5 - Rename flag. 0 means this homunculus has not been named yet.
+ 6 - Homunculus level
+
+---------------------------------------
+
+*morphembryo;
+
+This command will try to put the invoking player's Homunculus in an
+uncallable state, required for mutation into a Homunculus S. The player
+will also receive a Strange Embryo (ID 6415) in their inventory if
+successful, which is deleted upon mutation.
+
+The command will fail if the invoking player does not have an evolved
+Homunculus at level 99 or above. The /swt emotion is shown upon failure.
+
+Returns 1 upon success and 0 for all failures.
+
+---------------------------------------
+
 *hommutate {<ID>};
 
-This command will try to mutate the invoking player's Homunculus into a 
-Homunculus S. The Strange Embryo (ID 6415) is deleted upon success.
+This command will try to mutate the invoking player's Homunculus into
+a Homunculus S. The Strange Embryo (ID 6415) is deleted upon success.
 
-The command will fail if the invoking player does not have an evolved 
-Homunculus at level 99 or above, if it is not in the embryo state (from 
-the 'morphembryo' command), or if the invoking player does not possess a 
-Strange Embryo. The /swt emotion is shown upon failure.
+The command will fail if the invoking player does not have an evolved
+Homunculus at level 99 or above, if it is not in the embryo state
+(from the 'morphembryo' command), or if the invoking player does not
+possess a Strange Embryo. The /swt emotion is shown upon failure.
 
-If the optional parameter <ID> is set, the invoking player's Homunculus 
-will change into the specified Homunculus ID. Otherwise, a random 
-Homunculus S will be chosen. See 'db/homunculus_db.txt' for a full list of 
-IDs.
+If the optional parameter <ID> is set, the invoking player's Homunculus
+will change into the specified Homunculus ID. Otherwise, a random Homunculus S
+will be chosen. See 'db/homunculus_db.txt' for a full list of IDs.
 
 Returns 1 upon success and 0 for all failures.
 
@@ -5682,19 +5708,6 @@ and will return the following values:
   0: The player's Homunculus is active.
   1: The player's Homunculus is vaporized.
   2: The player's Homunculus is in morph state.
-
----------------------------------------
-
-*gethominfo(<type>)
-
-This function works as a direct counterpart of 'getpetinfo':
- 0 - Homunculus unique ID
- 1 - Homunculus Class
- 2 - Name
- 3 - Friendly level (intimacy score). 100000 is full loyalty.
- 4 - Hungry level. 100 is completely full.
- 5 - Rename flag. 0 means this homunculus has not been named yet.
- 6 - Homunculus level
 
 ---------------------------------------
 
