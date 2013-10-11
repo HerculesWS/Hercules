@@ -17825,20 +17825,12 @@ unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 unsigned short clif_parse_cmd_normal( int fd, struct map_session_data *sd ) {
 	unsigned short cmd = RFIFOW(fd,0);
 
-	// filter out invalid / unsupported packets
-	if( cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packet_db[cmd].len == 0 )
-		return 0;
-
 	return cmd;
 }
 unsigned short clif_parse_cmd_decrypt( int fd, struct map_session_data *sd ) {
 	unsigned short cmd = RFIFOW(fd,0);
 
 	cmd = clif->decrypt_cmd(cmd, sd);
-
-	// filter out invalid / unsupported packets
-	if( cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packet_db[cmd].len == 0 )
-		return 0;
 
 	return cmd;
 }
@@ -17914,7 +17906,10 @@ int clif_parse(int fd) {
 		else
 			parse_cmd_func = clif->parse_cmd;
 
-		if( !( cmd = parse_cmd_func(fd,sd) ) ) {
+		cmd = parse_cmd_func(fd,sd);
+
+		// filter out invalid / unsupported packets
+		if( cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packet_db[cmd].len == 0 ) {
 			ShowWarning("clif_parse: Received unsupported packet (packet 0x%04x (0x%04x), %d bytes received), disconnecting session #%d.\n", cmd, RFIFOW(fd,0), RFIFOREST(fd), fd);
 #ifdef DUMP_INVALID_PACKET
 			ShowDump(RFIFOP(fd,0), RFIFOREST(fd));
