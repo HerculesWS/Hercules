@@ -414,6 +414,19 @@ enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED {
 	BGQND_FAIL_NOT_QUEUING = 11,
 };
 
+enum e_BANKING_DEPOSIT_ACK {
+	BDA_SUCCESS  = 0x0,
+	BDA_ERROR    = 0x1,
+	BDA_NO_MONEY = 0x2,
+	BDA_OVERFLOW = 0x3,
+};
+enum e_BANKING_WITHDRAW_ACK {
+	BWA_SUCCESS       = 0x0,
+	BWA_NO_MONEY      = 0x1,
+	BWA_UNKNOWN_ERROR = 0x2,
+};
+
+
 /**
  * Structures
  **/
@@ -964,6 +977,9 @@ struct clif_interface {
 	void (*chsys_quitg) (struct map_session_data *sd);
 	void (*chsys_gjoin) (struct guild *g1,struct guild *g2);
 	void (*chsys_gleave) (struct guild *g1,struct guild *g2);
+	/* Bank System [Yommy/Hercules] */
+	void (*bank_deposit) (struct map_session_data *sd, enum e_BANKING_DEPOSIT_ACK reason);
+	void (*bank_withdraw) (struct map_session_data *sd,enum e_BANKING_WITHDRAW_ACK reason);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/
@@ -1184,6 +1200,12 @@ struct clif_interface {
 	void (*pPartyBookingReqVolunteer) (int fd, struct map_session_data *sd);
 	void (*pPartyBookingRefuseVolunteer) (int fd, struct map_session_data *sd);
 	void (*pPartyBookingCancelVolunteer) (int fd, struct map_session_data *sd);
+	/* Bank System [Yommy/Hercules] */
+	void (*pBankDeposit) (int fd, struct map_session_data *sd);
+	void (*pBankWithdraw) (int fd, struct map_session_data *sd);
+	void (*pBankCheck) (int fd, struct map_session_data *sd);
+	void (*pBankOpen) (int fd, struct map_session_data *sd);
+	void (*pBankClose) (int fd, struct map_session_data *sd);
 };
 
 struct clif_interface *clif;

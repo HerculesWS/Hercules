@@ -6971,21 +6971,23 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			if(sd) {
 				struct map_session_data *f_sd = pc->get_father(sd);
 				struct map_session_data *m_sd = pc->get_mother(sd);
-				// if neither was found
-				if(!f_sd && !m_sd) {
+				bool we_baby_parents = false;
+				if(m_sd && check_distance_bl(bl,&m_sd->bl,AREA_SIZE)) {
+					sc_start(&m_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+					clif->specialeffect(&m_sd->bl,408,AREA);
+					we_baby_parents = true;
+				}
+				if(f_sd && check_distance_bl(bl,&f_sd->bl,AREA_SIZE)) {
+					sc_start(&f_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+					clif->specialeffect(&f_sd->bl,408,AREA);
+					we_baby_parents = true;
+				}
+				if (!we_baby_parents) {
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					map->freeblock_unlock();
 					return 0;
 				}
-				status->change_start(bl,SC_STUN,10000,skill_lv,0,0,0,skill->get_time2(skill_id,skill_lv),8);
-				if (f_sd) {
-					sc_start(&f_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
-					clif->specialeffect(&f_sd->bl,408,AREA);
-				}
-				if (m_sd) {
-					sc_start(&m_sd->bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
-					clif->specialeffect(&m_sd->bl,408,AREA);
-				}
+				else status->change_start(bl,SC_STUN,10000,skill_lv,0,0,0,skill->get_time2(skill_id,skill_lv),8); 
 			}
 			break;
 
@@ -7516,7 +7518,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 		case AM_REST:
 			if (sd) {
-				if (homun->vaporize(sd,1))
+				if (homun->vaporize(sd,HOM_ST_REST))
 					clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 				else
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);

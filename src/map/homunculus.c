@@ -134,25 +134,25 @@ int homunculus_dead(struct homun_data *hd) {
 }
 
 //Vaporize a character's homun. If flag, HP needs to be 80% or above.
-int homunculus_vaporize(struct map_session_data *sd, int flag) {
+int homunculus_vaporize(struct map_session_data *sd, enum homun_state flag) {
 	struct homun_data *hd;
 
 	nullpo_ret(sd);
 
 	hd = sd->hd;
-	if (!hd || hd->homunculus.vaporize)
+	if (!hd || hd->homunculus.vaporize != HOM_ST_ACTIVE)
 		return 0;
 
 	if (status->isdead(&hd->bl))
 		return 0; //Can't vaporize a dead homun.
 
-	if (flag && get_percentage(hd->battle_status.hp, hd->battle_status.max_hp) < 80)
+	if (flag == HOM_ST_REST && get_percentage(hd->battle_status.hp, hd->battle_status.max_hp) < 80)
 		return 0;
 
 	hd->regen.state.block = 3; //Block regen while vaporized.
 	//Delete timers when vaporized.
 	homun->hunger_timer_delete(hd);
-	hd->homunculus.vaporize = 1;
+	hd->homunculus.vaporize = flag;
 	if(battle_config.hom_setting&0x40)
 		memset(hd->blockskill, 0, sizeof(hd->blockskill));
 	clif->hominfo(sd, sd->hd, 0);
@@ -260,7 +260,7 @@ void homunculus_skillup(struct homun_data *hd,uint16 skill_id) {
 	int i = 0 ;
 	nullpo_retv(hd);
 
-	if(hd->homunculus.vaporize)
+	if(hd->homunculus.vaporize != HOM_ST_ACTIVE)
 		return;
 
 	i = skill_id - HM_SKILLBASE;
@@ -471,7 +471,7 @@ bool homunculus_mutate(struct homun_data *hd, int homun_id) {
 int homunculus_gainexp(struct homun_data *hd,unsigned int exp) {
 	enum homun_type htype;
 
-	if(hd->homunculus.vaporize)
+	if(hd->homunculus.vaporize != HOM_ST_ACTIVE)
 		return 1;
 	
 	if( (htype = homun->class2type(hd->homunculus.class_)) == HT_INVALID ) {
@@ -571,7 +571,7 @@ unsigned char homunculus_menu(struct map_session_data *sd,unsigned char menu_num
 bool homunculus_feed(struct map_session_data *sd, struct homun_data *hd) {
 	int i, foodID, emotion;
 
-	if(hd->homunculus.vaporize)
+	if(hd->homunculus.vaporize == HOM_ST_REST)
 		return false;
 
 	foodID = hd->homunculusDB->foodID;
@@ -781,11 +781,11 @@ bool homunculus_call(struct map_session_data *sd) {
 
 	hd = sd->hd;
 
-	if (!hd->homunculus.vaporize)
+	if (hd->homunculus.vaporize != HOM_ST_REST)
 		return false; //Can't use this if homun wasn't vaporized.
 
 	homun->init_timers(hd);
-	hd->homunculus.vaporize = 0;
+	hd->homunculus.vaporize = HOM_ST_ACTIVE;
 	if (hd->bl.prev == NULL) { //Spawn him
 		hd->bl.x = sd->bl.x;
 		hd->bl.y = sd->bl.y;
@@ -833,7 +833,7 @@ bool homunculus_recv_data(int account_id, struct s_homunculus *sh, int flag) {
 		homun->create(sd, sh);
 
 	hd = sd->hd;
-	if(hd && hd->homunculus.hp && !hd->homunculus.vaporize && hd->bl.prev == NULL && sd->bl.prev != NULL) {
+	if(hd && hd->homunculus.hp && hd->homunculus.vaporize == HOM_ST_ACTIVE && hd->bl.prev == NULL && sd->bl.prev != NULL) {
 		enum homun_type htype = homun->class2type(hd->homunculus.class_);
 
 		map->addblock(&hd->bl);
@@ -908,7 +908,7 @@ bool homunculus_ressurect(struct map_session_data* sd, unsigned char per, short 
 
 	hd = sd->hd;
 
-  	if (hd->homunculus.vaporize)
+  	if (hd->homunculus.vaporize != HOM_ST_ACTIVE)
 		return false; // vaporized homunculi need to be 'called'
 
 	if (!status->isdead(&hd->bl))

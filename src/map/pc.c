@@ -6438,7 +6438,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 			pc->setoption(sd, i);
 
 		if( homun_alive(sd->hd) && pc->checkskill(sd, AM_CALLHOMUN) )
-			homun->vaporize(sd, 0);
+			homun->vaporize(sd, HOM_ST_ACTIVE);
 	}
 
 	for( i = 1; i < MAX_SKILL; i++ ) {
@@ -6663,7 +6663,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 
 	if (sd->status.hom_id > 0){
 	    if(battle_config.homunculus_auto_vapor && sd->hd && !sd->hd->sc.data[SC_LIGHT_OF_REGENE])
-		    homun->vaporize(sd, 0);
+		    homun->vaporize(sd, HOM_ST_ACTIVE);
 	}
 
 	if( sd->md )
@@ -7588,7 +7588,7 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 		pc->setoption(sd, i);
 
 	if(homun_alive(sd->hd) && !pc->checkskill(sd, AM_CALLHOMUN))
-		homun->vaporize(sd, 0);
+		homun->vaporize(sd, HOM_ST_ACTIVE);
 
 	if(sd->status.manner < 0)
 		clif->changestatus(sd,SP_MANNER,sd->status.manner);
@@ -10079,6 +10079,51 @@ void pc_itemcd_do(struct map_session_data *sd, bool load) {
 	return;
 }
 
+void pc_bank_deposit(struct map_session_data *sd, int money) {
+	unsigned int limit_check = money+sd->status.bank_vault;
+	
+	if( money <= 0 || limit_check > MAX_BANK_ZENY ) {
+		clif->bank_deposit(sd,BDA_OVERFLOW);
+		return;
+	} else if ( money > sd->status.zeny ) {
+		clif->bank_deposit(sd,BDA_NO_MONEY);
+		return;
+	}
+
+	if( pc->payzeny(sd,money, LOG_TYPE_BANK, NULL) )
+		clif->bank_deposit(sd,BDA_NO_MONEY);
+	else {
+		sd->status.bank_vault += money;
+		if( map->save_settings&256 )
+			chrif->save(sd,0);
+		clif->bank_deposit(sd,BDA_SUCCESS);
+	}
+}
+void pc_bank_withdraw(struct map_session_data *sd, int money) {
+	unsigned int limit_check = money+sd->status.zeny;
+	
+	if( money <= 0 ) {
+		clif->bank_withdraw(sd,BWA_UNKNOWN_ERROR);
+		return;
+	} else if ( money > sd->status.bank_vault ) {
+		clif->bank_withdraw(sd,BWA_NO_MONEY);
+		return;
+	} else if ( limit_check > MAX_ZENY ) {
+		/* no official response for this scenario exists. */
+		clif->colormes(sd->fd,COLOR_RED,msg_txt(1482));
+		return;
+	}
+	
+	if( pc->getzeny(sd,money, LOG_TYPE_BANK, NULL) )
+		clif->bank_withdraw(sd,BWA_NO_MONEY);
+	else {
+		sd->status.bank_vault -= money;
+		if( map->save_settings&256 )
+			chrif->save(sd,0);
+		clif->bank_withdraw(sd,BWA_SUCCESS);
+	}
+}
+
 /*==========================================
  * pc Init/Terminate
  *------------------------------------------*/
@@ -10402,4 +10447,7 @@ void pc_defaults(void) {
 	pc->checkcombo = pc_checkcombo;
 	pc->calcweapontype = pc_calcweapontype;
 	pc->removecombo = pc_removecombo;
+	
+	pc->bank_withdraw = pc_bank_withdraw;
+	pc->bank_deposit = pc_bank_deposit;
 }

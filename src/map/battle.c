@@ -6474,6 +6474,10 @@ static const struct _battle_data {
 	{ "client_accept_chatdori",             &battle_config.client_accept_chatdori,          0,      0,      INT_MAX,		},
 	{ "snovice_call_type",					&battle_config.snovice_call_type,				0,		0,		1,				},
 	{ "guild_notice_changemap",				&battle_config.guild_notice_changemap,			2,		0,		2,				},
+	{ "feature.banking",                    &battle_config.feature_banking,                 1,      0,      1,              },
+	{ "feature.auction",                    &battle_config.feature_auction,                 0,      0,      2,              },
+
+
 };
 #ifndef STATS_OPT_OUT
 /**
@@ -6695,6 +6699,22 @@ void battle_adjust_conf(void) {
 		battle_config.feature_search_stores = 0;
 	}
 #endif
+	
+#if PACKETVER < 20130724
+	if( battle_config.feature_banking ) {
+		ShowWarning("conf/battle/feature.conf banking is enabled but it requires PACKETVER 2013-07-24 or newer, disabling...\n");
+		battle_config.feature_banking = 0;
+	}
+#endif
+
+#if PACKETVER > 20120000 && PACKETVER < 20130515 /* exact date (when it started) not known */
+	if( battle_config.feature_auction == 1 ) {
+		ShowWarning("conf/battle/feature.conf:feature.auction is enabled but it is not stable on PACKETVER "EXPAND_AND_QUOTE(PACKETVER)", disabling...\n");
+		ShowWarning("conf/battle/feature.conf:feature.auction change value to '2' to silence this warning and maintain it enabled\n");
+		battle_config.feature_auction = 0;
+	}
+#endif
+
 
 #ifndef CELL_NOSTACK
 	if (battle_config.cell_stack_limit != 1)

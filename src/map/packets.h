@@ -2375,6 +2375,21 @@ packet(0x020d,-1);
 	packet(0x0930,36,clif->pStoragePassword,0);
 #endif
 
+/* Bank System [Yommy/Hercules] */
+#if PACKETVER >= 20130724
+	packet(0x09A6,12); // ZC_BANKING_CHECK
+	packet(0x09A7,10,clif->pBankDeposit,2,4,6);
+	packet(0x09A8,16); // ZC_ACK_BANKING_DEPOSIT
+	packet(0x09A9,10,clif->pBankWithdraw,2,4,6);
+	packet(0x09AA,16); // ZC_ACK_BANKING_WITHDRAW
+	packet(0x09AB,6,clif->pBankCheck,2,4);
+	////
+	packet(0x09B6,6,clif->pBankOpen,2,4);
+	packet(0x09B7,4); // ZC_ACK_OPEN_BANKING
+	packet(0x09B8,6,clif->pBankClose,2,4);
+	packet(0x09B9,4); // ZC_ACK_CLOSE_BANKING
+#endif
+
 //2013-07-03Ragexe (Shakto)
 #if PACKETVER >= 20130703
 	packet(0x0930,5,clif->pChangeDir,2,4);

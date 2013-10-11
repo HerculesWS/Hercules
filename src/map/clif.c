@@ -61,10 +61,11 @@ struct clif_interface clif_s;
 
 //Converts item type in case of pet eggs.
 static inline int itemtype(int type) {
-	switch( type ){
+	switch( type ) {
 #if PACKETVER >= 20080827
 		case IT_WEAPON:	return IT_ARMOR;
 		case IT_ARMOR:
+		case IT_PETARMOR:
 #endif
 		case IT_PETEGG: return IT_WEAPON;
 		default:		return type;
@@ -1378,7 +1379,7 @@ void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int flag) 
 	WBUFW(buf,0)=0x22e;
 	memcpy(WBUFP(buf,2),hd->homunculus.name,NAME_LENGTH);
 	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc dead (1 = true)
-	WBUFB(buf,26)=(battle_config.hom_rename?0:hd->homunculus.rename_flag) | (hd->homunculus.vaporize << 1) | (hd->homunculus.hp?0:4);
+	WBUFB(buf,26)=(battle_config.hom_rename && hd->homunculus.rename_flag ? 0x1 : 0x0) | (hd->homunculus.vaporize == HOM_ST_REST ? 0x2 : 0) | (hd->homunculus.hp > 0 ? 0x4 : 0);
 	WBUFW(buf,27)=hd->homunculus.level;
 	WBUFW(buf,29)=hd->homunculus.hunger;
 	WBUFW(buf,31)=(unsigned short) (hd->homunculus.intimacy / 100) ;
@@ -14987,6 +14988,9 @@ void clif_Auction_openwindow(struct map_session_data *sd)
 	if( sd->state.storage_flag || sd->state.vending || sd->state.buyingstore || sd->state.trading )
 		return;
 
+	if( !battle_config.feature_auction )
+		return;
+	
 	WFIFOHEAD(fd,packet_len(0x25f));
 	WFIFOW(fd,0) = 0x25f;
 	WFIFOL(fd,2) = 0;
@@ -15076,6 +15080,9 @@ void clif_parse_Auction_setitem(int fd, struct map_session_data *sd)
 	int amount = RFIFOL(fd,4); // Always 1
 	struct item_data *item;
 
+	if( !battle_config.feature_auction )
+		return;
+	
 	if( sd->auction.amount > 0 )
 		sd->auction.amount = 0;
 
@@ -15151,6 +15158,9 @@ void clif_parse_Auction_register(int fd, struct map_session_data *sd)
 	struct auction_data auction;
 	struct item_data *item;
 
+	if( !battle_config.feature_auction )
+		return;
+	
 	auction.price = RFIFOL(fd,2);
 	auction.buynow = RFIFOL(fd,6);
 	auction.hours = RFIFOW(fd,10);
@@ -15282,6 +15292,9 @@ void clif_parse_Auction_search(int fd, struct map_session_data* sd)
 	short type = RFIFOW(fd,2), page = RFIFOW(fd,32);
 	int price = RFIFOL(fd,4);  // FIXME: bug #5071
 
+	if( !battle_config.feature_auction )
+		return;
+	
 	clif->pAuction_cancelreg(fd, sd);
 
 	safestrncpy(search_text, (char*)RFIFOP(fd,8), sizeof(search_text));
@@ -15297,6 +15310,10 @@ void clif_parse_Auction_search(int fd, struct map_session_data* sd)
 void clif_parse_Auction_buysell(int fd, struct map_session_data* sd)
 {
 	short type = RFIFOW(fd,2) + 6;
+	
+	if( !battle_config.feature_auction )
+		return;
+	
 	clif->pAuction_cancelreg(fd, sd);
 
 	intif->Auction_requestlist(sd->status.char_id, type, 0, "", 1);
@@ -17725,6 +17742,79 @@ void clif_cart_additem_ack(struct map_session_data *sd, int flag) {
 	
 	clif->send(&p,sizeof(p), &sd->bl, SELF);
 }
+/* Bank System [Yommy/Hercules] */
+void clif_parse_BankDeposit(int fd, struct map_session_data* sd) {
+	struct packet_banking_deposit_req *p = P2PTR(fd);
+	int money;
+	
+	if( !battle_config.feature_banking ) {
+		clif->colormes(fd,COLOR_RED,msg_txt(1483));
+		return;
+	}
+	
+	money = (int)cap_value(p->Money,0,INT_MAX);
+
+	pc->bank_deposit(sd,money);
+}
+
+void clif_parse_BankWithdraw(int fd, struct map_session_data* sd) {
+	struct packet_banking_withdraw_req *p = P2PTR(fd);
+	int money;
+	
+	if( !battle_config.feature_banking ) {
+		clif->colormes(fd,COLOR_RED,msg_txt(1483));
+		return;
+	}
+	
+	money = (int)cap_value(p->Money,0,INT_MAX);
+	
+	pc->bank_withdraw(sd,money);
+}
+
+void clif_parse_BankCheck(int fd, struct map_session_data* sd) {
+	struct packet_banking_check p;
+	
+	if( !battle_config.feature_banking ) {
+		clif->colormes(fd,COLOR_RED,msg_txt(1483));
+		return;
+	}
+	
+	p.PacketType = banking_checkType;
+	p.Money = (int)sd->status.bank_vault;
+	p.Reason = (short)0;
+	
+	clif->send(&p,sizeof(p), &sd->bl, SELF);
+}
+
+void clif_parse_BankOpen(int fd, struct map_session_data* sd) {
+	return;
+}
+
+void clif_parse_BankClose(int fd, struct map_session_data* sd) {
+	return;
+}
+
+void clif_bank_deposit(struct map_session_data *sd, enum e_BANKING_DEPOSIT_ACK reason) {
+	struct packet_banking_deposit_ack p;
+	
+	p.PacketType = banking_deposit_ackType;
+	p.Balance = sd->status.zeny;/* how much zeny char has after operation */
+	p.Money = (int64)sd->status.bank_vault;/* money in the bank */
+	p.Reason = (short)reason;
+	
+	clif->send(&p,sizeof(p), &sd->bl, SELF);
+}
+void clif_bank_withdraw(struct map_session_data *sd,enum e_BANKING_WITHDRAW_ACK reason) {
+	struct packet_banking_withdraw_ack p;
+	
+	p.PacketType = banking_withdraw_ackType;
+	p.Balance = sd->status.zeny;/* how much zeny char has after operation */
+	p.Money = (int64)sd->status.bank_vault;/* money in the bank */
+	p.Reason = (short)reason;
+	
+	clif->send(&p,sizeof(p), &sd->bl, SELF);
+}
+
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 	if( sd ) {
@@ -17735,20 +17825,12 @@ unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 unsigned short clif_parse_cmd_normal( int fd, struct map_session_data *sd ) {
 	unsigned short cmd = RFIFOW(fd,0);
 
-	// filter out invalid / unsupported packets
-	if( cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packet_db[cmd].len == 0 )
-		return 0;
-
 	return cmd;
 }
 unsigned short clif_parse_cmd_decrypt( int fd, struct map_session_data *sd ) {
 	unsigned short cmd = RFIFOW(fd,0);
 
 	cmd = clif->decrypt_cmd(cmd, sd);
-
-	// filter out invalid / unsupported packets
-	if( cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packet_db[cmd].len == 0 )
-		return 0;
 
 	return cmd;
 }
@@ -17824,7 +17906,10 @@ int clif_parse(int fd) {
 		else
 			parse_cmd_func = clif->parse_cmd;
 
-		if( !( cmd = parse_cmd_func(fd,sd) ) ) {
+		cmd = parse_cmd_func(fd,sd);
+
+		// filter out invalid / unsupported packets
+		if( cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packet_db[cmd].len == 0 ) {
 			ShowWarning("clif_parse: Received unsupported packet (packet 0x%04x (0x%04x), %d bytes received), disconnecting session #%d.\n", cmd, RFIFOW(fd,0), RFIFOREST(fd), fd);
 #ifdef DUMP_INVALID_PACKET
 			ShowDump(RFIFOP(fd,0), RFIFOREST(fd));
@@ -18523,6 +18608,9 @@ void clif_defaults(void) {
 	clif->chsys_quitg = clif_hercules_chsys_quitg;
 	clif->chsys_gjoin = clif_hercules_chsys_gjoin;
 	clif->chsys_gleave = clif_hercules_chsys_gleave;
+	/* Bank System [Yommy/Hercules] */
+	clif->bank_deposit = clif_bank_deposit;
+	clif->bank_withdraw = clif_bank_withdraw;
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/ 
@@ -18745,4 +18833,10 @@ void clif_defaults(void) {
 	clif->pPartyBookingReqVolunteer = clif_parse_PartyBookingReqVolunteer;
 	clif->pPartyBookingRefuseVolunteer = clif_parse_PartyBookingRefuseVolunteer;
 	clif->pPartyBookingCancelVolunteer = clif_parse_PartyBookingCancelVolunteer;
+	/* Bank System [Yommy/Hercules] */
+	clif->pBankDeposit = clif_parse_BankDeposit;
+	clif->pBankWithdraw = clif_parse_BankWithdraw;
+	clif->pBankCheck = clif_parse_BankCheck;
+	clif->pBankOpen = clif_parse_BankOpen;
+	clif->pBankClose = clif_parse_BankClose;
 }

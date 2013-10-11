@@ -11,7 +11,7 @@
 
 #define MAX_HOM_SKILL_REQUIRE 5
 #define homdb_checkid(id) (id >=  HM_CLASS_BASE && id <= HM_CLASS_MAX)
-#define homun_alive(x) ((x) && (x)->homunculus.vaporize != 1 && (x)->battle_status.hp > 0)
+#define homun_alive(x) ((x) && (x)->homunculus.vaporize == HOM_ST_ACTIVE && (x)->battle_status.hp > 0)
 
 struct h_stats {
 	unsigned int HP, SP;
@@ -42,6 +42,12 @@ enum {
 	SP_ACK      = 0x0,
 	SP_INTIMATE = 0x1,
 	SP_HUNGRY   = 0x2,
+};
+
+enum homun_state {
+	HOM_ST_ACTIVE = 0,/* either alive or dead */
+	HOM_ST_REST   = 1,/* is resting (vaporized) */
+	HOM_ST_MORPH  = 2,/* in morph state */
 };
 
 struct homun_data {
@@ -94,7 +100,7 @@ struct homunculus_interface {
 	enum homun_type (*class2type) (int class_);
 	void (*damaged) (struct homun_data *hd);
 	int (*dead) (struct homun_data *hd);
-	int (*vaporize) (struct map_session_data *sd, int flag);
+	int (*vaporize) (struct map_session_data *sd, enum homun_state flag);
 	int (*delete) (struct homun_data *hd, int emote);
 	int (*checkskill) (struct homun_data *hd, uint16 skill_id);
 	int (*calc_skilltree) (struct homun_data *hd, int flag_evolve);
