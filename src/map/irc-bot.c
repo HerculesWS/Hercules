@@ -29,7 +29,7 @@ char send_string[IRC_MESSAGE_LENGTH];
  * Timer callback to (re-)connect to an IRC server
  * @see timer->do_timer
  */
-int irc_connect_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int irc_connect_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct hSockOpt opt;
 	if( ircbot->isOn || ++ircbot->fails >= 3 )
 		return 0;
@@ -52,7 +52,7 @@ int irc_connect_timer(int tid, unsigned int tick, int id, intptr_t data) {
  * Timer callback to send identification commands to an IRC server
  * @see timer->do_timer
  */
-int irc_identify_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int irc_identify_timer(int tid, int64 tick, int id, intptr_t data) {
 	if( !ircbot->isOn )
 		return 0;
 	
@@ -70,7 +70,7 @@ int irc_identify_timer(int tid, unsigned int tick, int id, intptr_t data) {
  * Timer callback to join channels (and optionally send NickServ commands)
  * @see timer->do_timer
  */
-int irc_join_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int irc_join_timer(int tid, int64 tick, int id, intptr_t data) {
 	if( !ircbot->isOn )
 		return 0;
 	

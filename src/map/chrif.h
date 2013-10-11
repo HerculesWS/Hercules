@@ -30,11 +30,11 @@ enum sd_state { ST_LOGIN, ST_LOGOUT, ST_MAPCHANGE };
 struct auth_node {
 	int account_id, char_id;
 	int login_id1, login_id2, sex, fd;
-	time_t expiration_time; // # of seconds 1/1/1970 (timestamp): Validity limit of the account (0 = unlimited)
-	struct map_session_data *sd;	//Data from logged on char.
-	struct mmo_charstatus *char_dat;	//Data from char server.
-	unsigned int node_created; //timestamp for node timeouts
-	enum sd_state state; //To track whether player was login in/out or changing maps.
+	time_t expiration_time;          // # of seconds 1/1/1970 (timestamp): Validity limit of the account (0 = unlimited)
+	struct map_session_data *sd;     //Data from logged on char.
+	struct mmo_charstatus *char_dat; //Data from char server.
+	int64 node_created;              //timestamp for node timeouts
+	enum sd_state state;             //To track whether player was login in/out or changing maps.
 };
 
 /*=====================================
@@ -109,15 +109,15 @@ struct chrif_interface {
 	void (*skillid2idx) (int fd);
 	
 	bool (*sd_to_auth) (TBL_PC* sd, enum sd_state state);
-	int (*check_connect_char_server) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*check_connect_char_server) (int tid, int64 tick, int id, intptr_t data);
 	bool (*auth_logout) (TBL_PC* sd, enum sd_state state);
 	void (*save_ack) (int fd);
 	int (*reconnect) (DBKey key, DBData *data, va_list ap);
 	int (*auth_db_cleanup_sub) (DBKey key, DBData *data, va_list ap);
 	void (*char_ask_name_answer) (int acc, const char* player_name, uint16 type, uint16 answer);
 	int (*auth_db_final) (DBKey key, DBData *data, va_list ap);
-	int (*send_usercount_tochar) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*auth_db_cleanup) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*send_usercount_tochar) (int tid, int64 tick, int id, intptr_t data);
+	int (*auth_db_cleanup) (int tid, int64 tick, int id, intptr_t data);
 
 	int (*connect) (int fd);
 	int (*connectack) (int fd);

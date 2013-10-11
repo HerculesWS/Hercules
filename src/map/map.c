@@ -134,7 +134,7 @@ int map_freeblock_unlock (void) {
 
 // Timer function to check if there some remaining lock and remove them if so.
 // Called each 1s
-int map_freeblock_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int map_freeblock_timer(int tid, int64 tick, int id, intptr_t data) {
 	if (map->block_free_lock > 0) {
 		ShowError("map_freeblock_timer: block_free_lock(%d) is invalid.\n", map->block_free_lock);
 		map->block_free_lock = 1;
@@ -266,8 +266,7 @@ int map_delblock(struct block_list* bl)
  * Pass flag as 1 to prevent doing skill->unit_move checks
  * (which are executed by default on BL_CHAR types)
  *------------------------------------------*/
-int map_moveblock(struct block_list *bl, int x1, int y1, unsigned int tick)
-{
+int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 	int x0 = bl->x, y0 = bl->y;
 	struct status_change *sc = NULL;
 	int moveblock = ( x0/BLOCK_SIZE != x1/BLOCK_SIZE || y0/BLOCK_SIZE != y1/BLOCK_SIZE);
@@ -1312,7 +1311,7 @@ int map_get_new_object_id(void)
  * Timered function to clear the floor (remove remaining item)
  * Called each flooritem_lifetime ms
  *------------------------------------------*/
-int map_clearflooritem_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int map_clearflooritem_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct flooritem_data* fitem = (struct flooritem_data*)idb_get(map->id_db, id);
 
 	if (fitem == NULL || fitem->bl.type != BL_ITEM || (fitem->cleartimer != tid)) {
@@ -2296,8 +2295,7 @@ int map_removemobs_sub(struct block_list *bl, va_list ap)
 	return 1;
 }
 
-int map_removemobs_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+int map_removemobs_timer(int tid, int64 tick, int id, intptr_t data) {
 	int count;
 	const int16 m = id;
 

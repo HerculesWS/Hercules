@@ -249,7 +249,7 @@ int bg_send_xy_timer_sub(DBKey key, DBData *data, va_list ap) {
 	return 0;
 }
 
-int bg_send_xy_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int bg_send_xy_timer(int tid, int64 tick, int id, intptr_t data) {
 	bg->team_db->foreach(bg->team_db, bg->send_xy_timer_sub, tick);
 	return 0;
 }
@@ -534,7 +534,7 @@ void bg_begin(struct bg_arena *arena) {
 		/* currently running only on solo mode so we do it evenly */
 	}
 }
-int bg_begin_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int bg_begin_timer(int tid, int64 tick, int id, intptr_t data) {
 	bg->begin(bg->arena[id]);
 	bg->arena[id]->begin_timer = INVALID_TIMER;
 	return 0;
@@ -553,7 +553,7 @@ void bg_queue_pregame(struct bg_arena *arena) {
 	}
 	arena->begin_timer = timer->add( timer->gettick() + (arena->pregame_duration*1000), bg->begin_timer, arena->id, 0 );
 }
-int bg_fillup_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int bg_fillup_timer(int tid, int64 tick, int id, intptr_t data) {
 	bg->queue_pregame(bg->arena[id]);
 	bg->arena[id]->fillup_timer = INVALID_TIMER;
 	return 0;

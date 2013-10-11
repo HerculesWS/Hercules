@@ -77,8 +77,7 @@ typedef int (*RecvFunc)(int fd);
 typedef int (*SendFunc)(int fd);
 typedef int (*ParseFunc)(int fd);
 
-struct socket_data
-{
+struct socket_data {
 	struct {
 		unsigned char eof : 1;
 		unsigned char server : 1;

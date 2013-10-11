@@ -228,7 +228,7 @@ void script_save_mapreg(void) {
 	}
 }
 
-int script_autosave_mapreg(int tid, unsigned int tick, int id, intptr_t data) {
+int script_autosave_mapreg(int tid, int64 tick, int id, intptr_t data) {
 	mapreg->save();
 	return 0;
 }

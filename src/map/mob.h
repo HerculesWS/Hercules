@@ -166,7 +166,7 @@ struct mob_data {
 	int areanpc_id; //Required in OnTouchNPC (to avoid multiple area touchs)
 	unsigned int bg_id; // BattleGround System
 
-	unsigned int next_walktime,last_thinktime,last_linktime,last_pcneartime,dmgtick;
+	int64 next_walktime, last_thinktime, last_linktime, last_pcneartime, dmgtick;
 	short move_fail_count;
 	short lootitem_count;
 	short min_chase;
@@ -175,7 +175,7 @@ struct mob_data {
 	int master_id,master_dist;
 
 	int8 skill_idx;// key of array
-	unsigned int skilldelay[MAX_MOBSKILL];
+	int64 skilldelay[MAX_MOBSKILL];
 	char npc_event[EVENT_NAME_LENGTH];
 	/**
 	 * Did this monster summon something?
@@ -266,7 +266,7 @@ struct mob_interface {
 	struct mob_db* (*db) (int index);
 	struct mob_chat* (*chat) (short id);
 	int (*makedummymobdb) (int);
-	int (*spawn_guardian_sub) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*spawn_guardian_sub) (int tid, int64 tick, int id, intptr_t data);
 	int (*skill_id2skill_idx) (int class_, uint16 skill_id);
 	int (*db_searchname) (const char *str);
 	int (*db_searchname_array_sub) (struct mob_db *mob, const char *str, int flag);
@@ -287,7 +287,7 @@ struct mob_interface {
 	int (*spawn_bg) (const char *mapname, short x, short y, const char *mobname, int class_, const char *event, unsigned int bg_id);
 	int (*can_reach) (struct mob_data *md, struct block_list *bl, int range, int state);
 	int (*linksearch) (struct block_list *bl, va_list ap);
-	int (*delayspawn) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*delayspawn) (int tid, int64 tick, int id, intptr_t data);
 	int (*setdelayspawn) (struct mob_data *md);
 	int (*count_sub) (struct block_list *bl, va_list ap);
 	int (*spawn) (struct mob_data *md);
@@ -298,24 +298,24 @@ struct mob_interface {
 	int (*ai_sub_hard_bg_ally) (struct block_list *bl, va_list ap);
 	int (*ai_sub_hard_lootsearch) (struct block_list *bl, va_list ap);
 	int (*warpchase_sub) (struct block_list *bl, va_list ap);
-	int (*ai_sub_hard_slavemob) (struct mob_data *md, unsigned int tick);
-	int (*unlocktarget) (struct mob_data *md, unsigned int tick);
-	int (*randomwalk) (struct mob_data *md, unsigned int tick);
+	int (*ai_sub_hard_slavemob) (struct mob_data *md, int64 tick);
+	int (*unlocktarget) (struct mob_data *md, int64 tick);
+	int (*randomwalk) (struct mob_data *md, int64 tick);
 	int (*warpchase) (struct mob_data *md, struct block_list *target);
-	bool (*ai_sub_hard) (struct mob_data *md, unsigned int tick);
+	bool (*ai_sub_hard) (struct mob_data *md, int64 tick);
 	int (*ai_sub_hard_timer) (struct block_list *bl, va_list ap);
 	int (*ai_sub_foreachclient) (struct map_session_data *sd, va_list ap);
 	int (*ai_sub_lazy) (struct mob_data *md, va_list args);
-	int (*ai_lazy) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*ai_hard) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*ai_lazy) (int tid, int64 tick, int id, intptr_t data);
+	int (*ai_hard) (int tid, int64 tick, int id, intptr_t data);
 	struct item_drop* (*setdropitem) (int nameid, int qty, struct item_data *data);
 	struct item_drop* (*setlootitem) (struct item *item);
-	int (*delay_item_drop) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*delay_item_drop) (int tid, int64 tick, int id, intptr_t data);
 	void (*item_drop) (struct mob_data *md, struct item_drop_list *dlist, struct item_drop *ditem, int loot, int drop_rate, unsigned short flag);
-	int (*timer_delete) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*timer_delete) (int tid, int64 tick, int id, intptr_t data);
 	int (*deleteslave_sub) (struct block_list *bl, va_list ap);
 	int (*deleteslave) (struct mob_data *md);
-	int (*respawn) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*respawn) (int tid, int64 tick, int id, intptr_t data);
 	void (*log_damage) (struct mob_data *md, struct block_list *src, int damage);
 	void (*damage) (struct mob_data *md, struct block_list *src, int damage);
 	int (*dead) (struct mob_data *md, struct block_list *src, int type);
@@ -334,8 +334,8 @@ struct mob_interface {
 	struct block_list* (*getmasterhpltmaxrate) (struct mob_data *md, int rate);
 	int (*getfriendstatus_sub) (struct block_list *bl, va_list ap);
 	struct mob_data* (*getfriendstatus) (struct mob_data *md, int cond1, int cond2);
-	int (*skill_use) (struct mob_data *md, unsigned int tick, int event);
-	int (*skill_event) (struct mob_data *md, struct block_list *src, unsigned int tick, int flag);
+	int (*skill_use) (struct mob_data *md, int64 tick, int event);
+	int (*skill_event) (struct mob_data *md, struct block_list *src, int64 tick, int flag);
 	int (*is_clone) (int class_);
 	int (*clone_spawn) (struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, int mode, int flag, unsigned int duration);
 	int (*clone_delete) (struct mob_data *md);

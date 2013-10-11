@@ -148,13 +148,13 @@ struct guild_interface {
 	/* guild aura */
 	void (*aura_refresh) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
 	/* */
-	int (*payexp_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*payexp_timer) (int tid, int64 tick, int id, intptr_t data);
 	TBL_PC* (*sd_check) (int guild_id, int account_id, int char_id);
 	bool (*read_guildskill_tree_db) (char* split[], int columns, int current);
 	bool (*read_castledb) (char* str[], int columns, int current);
 	int (*payexp_timer_sub) (DBKey key, DBData *data, va_list ap);
 	int (*send_xy_timer_sub) (DBKey key, DBData *data, va_list ap);
-	int (*send_xy_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);
 	DBData (*create_expcache) (DBKey key, va_list args);
 	int (*eventlist_db_final) (DBKey key, DBData *data, va_list ap);
 	int (*expcache_db_final) (DBKey key, DBData *data, va_list ap);

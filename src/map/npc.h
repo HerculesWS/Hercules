@@ -35,7 +35,7 @@ struct npc_data {
 	char exname[NAME_LENGTH+1];// unique npc name
 	int chat_id;
 	int touching_id;
-	unsigned int next_walktime;
+	int64 next_walktime;
 	uint8 dir;
 	
 	unsigned size : 2;
@@ -54,7 +54,7 @@ struct npc_data {
 			short xs,ys; // OnTouch area radius
 			int guild_id;
 			int timer,timerid,timeramount,rid;
-			unsigned int timertick;
+			int64 timertick;
 			struct npc_timerevent_list *timer_event;
 			int label_list_num;
 			struct npc_label_list *label_list;
@@ -160,14 +160,14 @@ struct npc_interface {
 	int (*event_do) (const char *name);
 	int (*event_doall_id) (const char *name, int rid);
 	int (*event_doall) (const char *name);
-	int (*event_do_clock) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*event_do_clock) (int tid, int64 tick, int id, intptr_t data);
 	void (*event_do_oninit) (void);
 	int (*timerevent_export) (struct npc_data *nd, int i);
-	int (*timerevent) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*timerevent) (int tid, int64 tick, int id, intptr_t data);
 	int (*timerevent_start) (struct npc_data *nd, int rid);
 	int (*timerevent_stop) (struct npc_data *nd);
 	void (*timerevent_quit) (struct map_session_data *sd);
-	int (*gettimerevent_tick) (struct npc_data *nd);
+	int64 (*gettimerevent_tick) (struct npc_data *nd);
 	int (*settimerevent_tick) (struct npc_data *nd, int newtimer);
 	int (*event) (struct map_session_data *sd, const char *eventname, int ontouch);
 	int (*touch_areanpc_sub) (struct block_list *bl, va_list ap);
@@ -229,7 +229,7 @@ struct npc_interface {
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/
-	int (*secure_timeout_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*secure_timeout_timer) (int tid, int64 tick, int id, intptr_t data);
 };
 
 struct npc_interface *npc;

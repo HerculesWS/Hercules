@@ -615,7 +615,7 @@ bool homunculus_feed(struct map_session_data *sd, struct homun_data *hd) {
 	return true;
 }
 
-int homunculus_hunger_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int homunculus_hunger_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data *sd;
 	struct homun_data *hd;
 

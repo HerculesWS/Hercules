@@ -1858,7 +1858,8 @@ struct status_interface {
 	sc_conf_type sc_conf[SC_MAX];
 	struct eri *data_ers; //For sc_data entries
 	struct status_data dummy;
-	unsigned int natural_heal_prev_tick,natural_heal_diff_tick;
+	int64 natural_heal_prev_tick;
+	unsigned int natural_heal_diff_tick;
 	/* */
 	int (*init) (void);
 	void (*final) (void);
@@ -1902,8 +1903,8 @@ struct status_interface {
 	int (*get_sc_def) (struct block_list *bl, enum sc_type type, int rate, int tick, int flag);
 	int (*change_start) (struct block_list* bl,enum sc_type type,int rate,int val1,int val2,int val3,int val4,int tick,int flag);
 	int (*change_end_) (struct block_list* bl, enum sc_type type, int tid, const char* file, int line);
-	int (*kaahi_heal_timer) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*change_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*kaahi_heal_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*change_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*change_timer_sub) (struct block_list* bl, va_list ap);
 	int (*change_clear) (struct block_list* bl, int type);
 	int (*change_clear_buffs) (struct block_list* bl, int type);
@@ -1967,7 +1968,7 @@ struct status_interface {
 	void (*display_add) (struct map_session_data *sd, enum sc_type type, int dval1, int dval2, int dval3);
 	void (*display_remove) (struct map_session_data *sd, enum sc_type type);
 	int (*natural_heal) (struct block_list *bl, va_list args);
-	int (*natural_heal_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*natural_heal_timer) (int tid, int64 tick, int id, intptr_t data);
 	bool (*readdb_job1) (char *fields[], int columns, int current);
 	bool (*readdb_job2) (char *fields[], int columns, int current);
 	bool (*readdb_sizefix) (char *fields[], int columns, int current);

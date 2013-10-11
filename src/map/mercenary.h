@@ -43,7 +43,7 @@ struct mercenary_data {
 	int contract_timer;
 	
 	unsigned devotion_flag : 1;
-	unsigned int masterteleport_timer;
+	int64 masterteleport_timer;
 };
 
 /*=====================================
@@ -89,7 +89,7 @@ struct mercenary_interface {
 	int (*killbonus) (struct mercenary_data *md);
 	int (*search_index) (int class_);
 	
-	int (*contract_end_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*contract_end_timer) (int tid, int64 tick, int id, intptr_t data);
 	bool (*read_db_sub) (char* str[], int columns, int current);
 	bool (*read_skill_db_sub) (char* str[], int columns, int current);
 };
