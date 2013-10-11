@@ -19,6 +19,7 @@ enum E_LOGINSERVER_ST
 
 // supported encryption types: 1- passwordencrypt, 2- passwordencrypt2, 3- both
 #define PASSWORDENC 3
+#define PASSWD_LEN 32+1 // 23+1 for plaintext, 32+1 for md5-ed passwords
 
 struct login_session_data {
 	int account_id;
@@ -27,7 +28,7 @@ struct login_session_data {
 	char sex;// 'F','M','S'
 
 	char userid[NAME_LENGTH];
-	char passwd[32+1]; // 23+1 for plaintext, 32+1 for md5-ed passwords
+	char passwd[PASSWD_LEN];
 	int passwdenc;
 	char md5key[20];
 	uint16 md5keylen;
