@@ -17451,7 +17451,8 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 						
 						if( result != CSBR_SUCCESS )
 							pc->getcash(sd, clif->cs.data[tab][j]->price * get_count,0);
-					}
+					} else /* create_egg succeeded so mark as success */
+						result = CSBR_SUCCESS;
 				}
 			}
 		} else {
