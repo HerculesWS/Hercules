@@ -1738,7 +1738,7 @@ void chrif_defaults(void) {
 	chrif->update_ip = chrif_update_ip;
 	chrif->disconnectplayer = chrif_disconnectplayer;
 	chrif->removemap = chrif_removemap;
-	chrif->updatefamelist_ack = chrif->updatefamelist_ack;
+	chrif->updatefamelist_ack = chrif_updatefamelist_ack;
 	chrif->keepalive = chrif_keepalive;
 	chrif->keepalive_ack = chrif_keepalive_ack;
 	chrif->deadopt = chrif_deadopt;
