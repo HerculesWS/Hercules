@@ -17611,6 +17611,7 @@ bool skill_parse_row_skilldb(char* split[], int columns, int current) {
 	safestrncpy(skill->db[idx].name, trim(split[15]), sizeof(skill->db[idx].name));
 	safestrncpy(skill->db[idx].desc, trim(split[16]), sizeof(skill->db[idx].desc));
 	strdb_iput(skill->name2id_db, skill->db[idx].name, skill_id);
+	script->set_constant2(skill->db[idx].name,(int)skill_id,0);
 	
 	return true;
 }
