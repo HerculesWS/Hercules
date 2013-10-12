@@ -14350,25 +14350,25 @@ BUILDIN(setitemscript)
  * is updated to the new rate.  Rate cannot exceed 10000
  * Returns 1 if succeeded (added/updated a mob drop)
  *-------------------------------------------------------*/
-BUILDIN_FUNC(addmonsterdrop)
+BUILDIN(addmonsterdrop)
 {
-	struct mob_db *mob;
+	struct mob_db *monster;
 	int item_id,rate,i,c = 0;
 
 	if(script_isstring(st,2))
-		mob = mob_db(mob->db_searchname(script_getstr(st,2)));
+		monster = mob->db(mob->db_searchname(script_getstr(st,2)));
 	else
-		mob = mob_db(script_getnum(st,2));
+		monster = mob->db(script_getnum(st,2));
 
 	item_id=script_getnum(st,3);
-	rate=script_getnum(st,4);
+	rate=cap_value(script_getnum(st,4),0,10000);
 
 	if(!itemdb->exists(item_id)){
 		ShowError("addmonsterdrop: Nonexistant item %d requested.\n", item_id );
 		return 1;
 	}
 
-	if(mob) { //We got a valid monster, check for available drop slot
+	if(monster) { //We got a valid monster, check for available drop slot
 		for(i = 0; i < MAX_MOB_DROP; i++) {
 			if(mob->dropitem[i].nameid) {
 				if(mob->dropitem[i].nameid == item_id) { //If it equals item_id we update that drop
@@ -14382,7 +14382,7 @@ BUILDIN_FUNC(addmonsterdrop)
 		}
 		if(c) { //Fill in the slot with the item and rate
 			mob->dropitem[c].nameid = item_id;
-			mob->dropitem[c].p = (rate > 10000)?10000:rate;
+			mob->dropitem[c].p = rate;
 			script_pushint(st,1);
 		} else //No place to put the new drop
 			script_pushint(st,0);
@@ -14403,15 +14403,15 @@ BUILDIN_FUNC(addmonsterdrop)
  *
  * Returns 1 if succeeded (deleted a mob drop)
  *-------------------------------------------------------*/
-BUILDIN_FUNC(delmonsterdrop)
+BUILDIN(delmonsterdrop)
 {
-	struct mob_db *mob;
+	struct mob_db *monster;
 	int item_id,i;
 
 	if(script_isstring(st,2))
-		mob = mob_db(mob->db_searchname(script_getstr(st,2)));
+		monster = mob->db(mob->db_searchname(script_getstr(st,2)));
 	else
-		mob = mob_db(script_getnum(st,2));
+		monster = mob->db(script_getnum(st,2));
 
 	item_id=script_getnum(st,3);
 
@@ -14420,7 +14420,7 @@ BUILDIN_FUNC(delmonsterdrop)
 		return 1;
 	}
 
-	if(mob) { //We got a valid monster, check for item drop on monster
+	if(monster) { //We got a valid monster, check for item drop on monster
 		for(i = 0; i < MAX_MOB_DROP; i++) {
 			if(mob->dropitem[i].nameid == item_id) {
 				mob->dropitem[i].nameid = 0;
