@@ -14340,32 +14340,112 @@ BUILDIN(setitemscript)
 	return true;
 }
 
-/* Work In Progress [Lupus]
- BUILDIN(addmonsterdrop)
- {
- int class_,item_id,chance;
- class_=script_getnum(st,2);
- item_id=script_getnum(st,3);
- chance=script_getnum(st,4);
- if(class_>1000 && item_id>500 && chance>0) {
- script_pushint(st,1);
- } else {
- script_pushint(st,0);
- }
- }
- 
- BUILDIN(delmonsterdrop)
- {
- int class_,item_id;
- class_=script_getnum(st,2);
- item_id=script_getnum(st,3);
- if(class_>1000 && item_id>500) {
- script_pushint(st,1);
- } else {
- script_pushint(st,0);
- }
- }
- */
+/*=======================================================
+ * Temporarily add or update a mob drop
+ * Original Idea By: [Lupus], [Akinari]
+ *
+ * addmonsterdrop <mob_id or name>,<item_id>,<rate>;
+ *
+ * If given an item the mob already drops, the rate
+ * is updated to the new rate.  Rate must be in the range [1:10000]
+ * Returns 1 if succeeded (added/updated a mob drop)
+ *-------------------------------------------------------*/
+BUILDIN(addmonsterdrop) {
+	struct mob_db *monster;
+	int item_id, rate, i, c = MAX_MOB_DROP;
+
+	if( script_isstring(st,2) )
+		monster = mob->db(mob->db_searchname(script_getstr(st,2)));
+	else
+		monster = mob->db(script_getnum(st,2));
+
+	if( monster == mob->dummy ) {
+		if( script_isstring(st,2) ) {
+			ShowError("buildin_addmonsterdrop: invalid mob name: '%s'.\n", script_getstr(st,2));
+		} else {
+			ShowError("buildin_addmonsterdrop: invalid mob id: '%d'.\n", script_getnum(st,2));
+		}
+		return false;
+	}
+
+	item_id = script_getnum(st,3);
+	if( !itemdb->exists(item_id) ) {
+		ShowError("buildin_addmonsterdrop: Invalid item ID: '%d'.\n", item_id);
+		return false;
+	}
+
+	rate = script_getnum(st,4);
+	if( rate < 1 || rate > 10000 ) {
+		ShowWarning("buildin_addmonsterdrop: Invalid drop rate '%d'. Capping to the [1:10000] range.\n", rate);
+		rate = cap_value(rate,1,10000);
+	}
+
+	for( i = 0; i < MAX_MOB_DROP; i++ ) {
+		if( monster->dropitem[i].nameid == item_id ) // Item ID found
+			break;
+		if( c == MAX_MOB_DROP && monster->dropitem[i].nameid < 1 ) // First empty slot
+			c = i;
+	}
+	if( i < MAX_MOB_DROP ) // If the item ID was found, prefer it
+		c = i;
+
+	if( c < MAX_MOB_DROP ) {
+		// Fill in the slot with the item and rate
+		monster->dropitem[c].nameid = item_id;
+		monster->dropitem[c].p = rate;
+		script_pushint(st,1);
+	} else {
+		//No place to put the new drop
+		script_pushint(st,0);
+	}
+
+	return true;
+}
+
+/*=======================================================
+ * Temporarily remove a mob drop
+ * Original Idea By: [Lupus], [Akinari]
+ *
+ * delmonsterdrop <mob_id or name>,<item_id>;
+ *
+ * Returns 1 if succeeded (deleted a mob drop)
+ *-------------------------------------------------------*/
+BUILDIN(delmonsterdrop) {
+	struct mob_db *monster;
+	int item_id, i;
+
+	if( script_isstring(st,2) )
+		monster = mob->db(mob->db_searchname(script_getstr(st,2)));
+	else
+		monster = mob->db(script_getnum(st,2));
+
+	if( monster == mob->dummy ) {
+		if( script_isstring(st,2) ) {
+			ShowError("buildin_delmonsterdrop: invalid mob name: '%s'.\n", script_getstr(st,2));
+		} else {
+			ShowError("buildin_delmonsterdrop: invalid mob id: '%d'.\n", script_getnum(st,2));
+		}
+		return false;
+	}
+
+	item_id = script_getnum(st,3);
+	if( !itemdb->exists(item_id) ) {
+		ShowError("buildin_delmonsterdrop: Invalid item ID: '%d'.\n", item_id);
+		return false;
+	}
+
+	for( i = 0; i < MAX_MOB_DROP; i++ ) {
+		if( monster->dropitem[i].nameid == item_id ) {
+			monster->dropitem[i].nameid = 0;
+			monster->dropitem[i].p = 0;
+			script_pushint(st,1);
+			return true;
+		}
+	}
+	// No drop on that monster
+	script_pushint(st,0);
+	return true;
+}
 
 /*==========================================
  * Returns some values of a monster [Lupus]
@@ -17669,6 +17749,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(disguise,"i"), //disguise player. Lupus
 		BUILDIN_DEF(undisguise,""), //undisguise player. Lupus
 		BUILDIN_DEF(getmonsterinfo,"ii"), //Lupus
+		BUILDIN_DEF(addmonsterdrop,"vii"),
+		BUILDIN_DEF(delmonsterdrop,"vi"),
 		BUILDIN_DEF(axtoi,"s"),
 		BUILDIN_DEF(query_sql,"s*"),
 		BUILDIN_DEF(query_logsql,"s*"),
