@@ -1,0 +1,9 @@
+//===== Hercules Script ======================================
+//= Veins Quests
+//===== By: ================================================== 
+//= L0ne_W0lf
+//===== Current Version: ===================================== 
+//= 1.0 (originally 2.2 prior to being split)
+//============================================================ 
+
+ve_fild05,257,130,4	duplicate(WincingOldMan_veins)	Wincing Old Man#ve	945
