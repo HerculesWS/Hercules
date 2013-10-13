@@ -14340,32 +14340,104 @@ BUILDIN(setitemscript)
 	return true;
 }
 
-/* Work In Progress [Lupus]
- BUILDIN(addmonsterdrop)
- {
- int class_,item_id,chance;
- class_=script_getnum(st,2);
- item_id=script_getnum(st,3);
- chance=script_getnum(st,4);
- if(class_>1000 && item_id>500 && chance>0) {
- script_pushint(st,1);
- } else {
- script_pushint(st,0);
- }
- }
- 
- BUILDIN(delmonsterdrop)
- {
- int class_,item_id;
- class_=script_getnum(st,2);
- item_id=script_getnum(st,3);
- if(class_>1000 && item_id>500) {
- script_pushint(st,1);
- } else {
- script_pushint(st,0);
- }
- }
- */
+/*=======================================================
+ * Add or Update a mob drop temporarily [Akinari]
+ * Original Idea By: [Lupus]
+ *
+ * addmonsterdrop <mob_id or name>,<item_id>,<rate>;
+ *
+ * If given an item the mob already drops, the rate
+ * is updated to the new rate.  Rate cannot exceed 10000
+ * Returns 1 if succeeded (added/updated a mob drop)
+ *-------------------------------------------------------*/
+BUILDIN(addmonsterdrop)
+{
+	struct mob_db *monster;
+	int item_id,rate,i,c = 0;
+
+	if(script_isstring(st,2))
+		monster = mob->db(mob->db_searchname(script_getstr(st,2)));
+	else
+		monster = mob->db(script_getnum(st,2));
+
+	item_id=script_getnum(st,3);
+	rate=cap_value(script_getnum(st,4),0,10000);
+
+	if(!itemdb->exists(item_id)){
+		ShowError("addmonsterdrop: Nonexistant item %d requested.\n", item_id );
+		return 1;
+	}
+
+	if(monster) { //We got a valid monster, check for available drop slot
+		for(i = 0; i < MAX_MOB_DROP; i++) {
+			if(mob->dropitem[i].nameid) {
+				if(mob->dropitem[i].nameid == item_id) { //If it equals item_id we update that drop
+					c = i;
+					break;
+				}
+				continue;
+			}
+			if(!c) //Accept first available slot only
+				c = i;
+		}
+		if(c) { //Fill in the slot with the item and rate
+			mob->dropitem[c].nameid = item_id;
+			mob->dropitem[c].p = rate;
+			script_pushint(st,1);
+		} else //No place to put the new drop
+			script_pushint(st,0);
+	} else {
+		ShowWarning("addmonsterdrop: bad mob id given %d\n",script_getnum(st,2));
+		return 1;
+	}
+
+	return 0;
+
+}
+
+/*=======================================================
+ * Delete a mob drop temporarily [Akinari]
+ * Original Idea By: [Lupus]
+ *
+ * delmonsterdrop <mob_id or name>,<item_id>;
+ *
+ * Returns 1 if succeeded (deleted a mob drop)
+ *-------------------------------------------------------*/
+BUILDIN(delmonsterdrop)
+{
+	struct mob_db *monster;
+	int item_id,i;
+
+	if(script_isstring(st,2))
+		monster = mob->db(mob->db_searchname(script_getstr(st,2)));
+	else
+		monster = mob->db(script_getnum(st,2));
+
+	item_id=script_getnum(st,3);
+
+	if(!itemdb->exists(item_id)){
+		ShowError("delmonsterdrop: Nonexistant item %d requested.\n", item_id );
+		return 1;
+	}
+
+	if(monster) { //We got a valid monster, check for item drop on monster
+		for(i = 0; i < MAX_MOB_DROP; i++) {
+			if(mob->dropitem[i].nameid == item_id) {
+				mob->dropitem[i].nameid = 0;
+				mob->dropitem[i].p = 0;
+				script_pushint(st,1);
+				return 0;
+			}
+		}
+		//No drop on that monster
+		script_pushint(st,0);
+	} else {
+		ShowWarning("delmonsterdrop: bad mob id given %d\n",script_getnum(st,2));
+		return 1;
+	}
+
+	return 0;
+}
 
 /*==========================================
  * Returns some values of a monster [Lupus]
@@ -17669,6 +17741,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(disguise,"i"), //disguise player. Lupus
 		BUILDIN_DEF(undisguise,""), //undisguise player. Lupus
 		BUILDIN_DEF(getmonsterinfo,"ii"), //Lupus
+		BUILDIN_DEF(addmonsterdrop,"vii"), //Akinari [Lupus]
+		BUILDIN_DEF(delmonsterdrop,"vi"), //Akinari [Lupus]
 		BUILDIN_DEF(axtoi,"s"),
 		BUILDIN_DEF(query_sql,"s*"),
 		BUILDIN_DEF(query_logsql,"s*"),
