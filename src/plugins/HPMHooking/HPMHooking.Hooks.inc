@@ -16147,6 +16147,56 @@ void HP_clif_chsys_gleave(struct guild *g1, struct guild *g2) {
 	}
 	return;
 }
+void HP_clif_bank_deposit(struct map_session_data *sd, enum e_BANKING_DEPOSIT_ACK reason) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_bank_deposit_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, enum e_BANKING_DEPOSIT_ACK *reason);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_bank_deposit_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_bank_deposit_pre[hIndex].func;
+			preHookFunc(sd, &reason);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.bank_deposit(sd, reason);
+	}
+	if( HPMHooks.count.HP_clif_bank_deposit_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, enum e_BANKING_DEPOSIT_ACK *reason);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_bank_deposit_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_bank_deposit_post[hIndex].func;
+			postHookFunc(sd, &reason);
+		}
+	}
+	return;
+}
+void HP_clif_bank_withdraw(struct map_session_data *sd, enum e_BANKING_WITHDRAW_ACK reason) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_bank_withdraw_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, enum e_BANKING_WITHDRAW_ACK *reason);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_bank_withdraw_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_bank_withdraw_pre[hIndex].func;
+			preHookFunc(sd, &reason);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.bank_withdraw(sd, reason);
+	}
+	if( HPMHooks.count.HP_clif_bank_withdraw_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, enum e_BANKING_WITHDRAW_ACK *reason);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_bank_withdraw_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_bank_withdraw_post[hIndex].func;
+			postHookFunc(sd, &reason);
+		}
+	}
+	return;
+}
 void HP_clif_pWantToConnection(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_pWantToConnection_pre ) {
@@ -21497,6 +21547,131 @@ void HP_clif_pPartyBookingCancelVolunteer(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_pBankDeposit(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pBankDeposit_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pBankDeposit_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pBankDeposit_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pBankDeposit(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pBankDeposit_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pBankDeposit_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pBankDeposit_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pBankWithdraw(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pBankWithdraw_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pBankWithdraw_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pBankWithdraw_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pBankWithdraw(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pBankWithdraw_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pBankWithdraw_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pBankWithdraw_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pBankCheck(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pBankCheck_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pBankCheck_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pBankCheck_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pBankCheck(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pBankCheck_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pBankCheck_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pBankCheck_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pBankOpen(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pBankOpen_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pBankOpen_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pBankOpen_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pBankOpen(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pBankOpen_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pBankOpen_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pBankOpen_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pBankClose(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pBankClose_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pBankClose_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pBankClose_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pBankClose(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pBankClose_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pBankClose_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pBankClose_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
 /* duel */
 int HP_duel_create(struct map_session_data *sd, const unsigned int maxpl) {
 	int hIndex = 0;
@@ -25467,11 +25642,11 @@ int HP_homun_dead(struct homun_data *hd) {
 	}
 	return retVal___;
 }
-int HP_homun_vaporize(struct map_session_data *sd, int flag) {
+int HP_homun_vaporize(struct map_session_data *sd, enum homun_state flag) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_homun_vaporize_pre ) {
-		int (*preHookFunc) (struct map_session_data *sd, int *flag);
+		int (*preHookFunc) (struct map_session_data *sd, enum homun_state *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_vaporize_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_homun_vaporize_pre[hIndex].func;
 			retVal___ = preHookFunc(sd, &flag);
@@ -25485,7 +25660,7 @@ int HP_homun_vaporize(struct map_session_data *sd, int flag) {
 		retVal___ = HPMHooks.source.homun.vaporize(sd, flag);
 	}
 	if( HPMHooks.count.HP_homun_vaporize_post ) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int *flag);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, enum homun_state *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_homun_vaporize_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_homun_vaporize_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, &flag);
@@ -48539,6 +48714,56 @@ int HP_pc_removecombo(struct map_session_data *sd, struct item_data *data) {
 		}
 	}
 	return retVal___;
+}
+void HP_pc_bank_deposit(struct map_session_data *sd, int money) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_pc_bank_deposit_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, int *money);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bank_deposit_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_bank_deposit_pre[hIndex].func;
+			preHookFunc(sd, &money);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pc.bank_deposit(sd, money);
+	}
+	if( HPMHooks.count.HP_pc_bank_deposit_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, int *money);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bank_deposit_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_bank_deposit_post[hIndex].func;
+			postHookFunc(sd, &money);
+		}
+	}
+	return;
+}
+void HP_pc_bank_withdraw(struct map_session_data *sd, int money) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_pc_bank_withdraw_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, int *money);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bank_withdraw_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_bank_withdraw_pre[hIndex].func;
+			preHookFunc(sd, &money);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pc.bank_withdraw(sd, money);
+	}
+	if( HPMHooks.count.HP_pc_bank_withdraw_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, int *money);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_bank_withdraw_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_bank_withdraw_post[hIndex].func;
+			postHookFunc(sd, &money);
+		}
+	}
+	return;
 }
 /* pet */
 int HP_pet_init(void) {
