@@ -1356,7 +1356,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		src = sd?&sd->bl:src;
 	}
 
-	if( attack_type&BF_WEAPON ) {
+	if( attack_type&BF_WEAPON && skill_id != CR_REFLECTSHIELD ) {
 		// Coma, Breaking Equipment
 		if( sd && sd->special_state.bonus_coma ) {
 			rate  = sd->weapon_coma_ele[tstatus->def_ele];
