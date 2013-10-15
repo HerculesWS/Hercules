@@ -9617,7 +9617,6 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		clif->clearunit_area(&sd->bl, CLR_DEAD);
 	else {
 		skill->usave_trigger(sd);
-		clif->changed_dir(&sd->bl, SELF);
 	}
 
 // Trigger skill effects if you appear standing on them
