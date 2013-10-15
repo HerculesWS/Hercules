@@ -16938,6 +16938,79 @@ BUILDIN(npcskill) {
 	
 	return true;
 }
+
+/* Turns a player into a monster and grants SC attribute effect. [malufett/Hercules]
+ * montransform <monster name>, <duration>, <sc type>, <val1>, <val2>, <val3>, <val4>; */
+BUILDIN(montransform) {
+	int tick;
+	enum sc_type type;
+	const char * monster;
+	struct block_list* bl;
+	int mob_id, val1, val2, val3, val4;
+
+	monster = script_getstr(st, 2);
+	tick = script_getnum(st, 3);
+	type = (sc_type)script_getnum(st, 4);
+	val1 = val2 = val3 = val4 = 0;
+
+	if( (bl = map->id2bl(st->rid)) == NULL )
+		return true;
+
+	if( (mob_id = mob->db_searchname(monster)) == 0 )
+		mob_id = mob->db_checkid(atoi(monster));
+	
+	if( mob_id == 0 ) {
+		ShowWarning("buildin_montransform: Attempted to use non-existing monster '%s'.\n", monster);
+		return false;
+	}
+		
+	if(mob_id == MOBID_EMPERIUM) {
+		ShowWarning("buildin_montransform: Monster 'Emperium' cannot be used.\n");
+		return false;
+	}
+
+	if( !(type > SC_NONE && type < SC_MAX) ){
+		ShowWarning("buildin_montransform: Unsupported status change id %d\n", type);
+		return false;
+	}
+	
+	if (script_hasdata(st, 5))
+		val1 = script_getnum(st, 5);
+
+	if (script_hasdata(st, 6))
+		val2 = script_getnum(st, 6);
+
+	if (script_hasdata(st, 7))
+		val3 = script_getnum(st, 7);
+
+	if (script_hasdata(st, 8))
+		val4 = script_getnum(st, 8);
+
+	if( type && tick != 0 ){
+		struct map_session_data *sd = map->id2sd(bl->id);
+		char msg[CHAT_SIZE_MAX];
+
+		if( !sd )	return true;
+
+		if( battle_config.mon_trans_disable_in_gvg && map_flag_gvg2(sd->bl.m) ){
+			clif->message(sd->fd, msg_txt(1488)); // Transforming into monster is not allowed in Guild Wars.
+			return true;
+		}
+
+		if( sd->disguise != -1 ){
+			clif->message(sd->fd, msg_txt(1486)); // Cannot transform into monster while in disguise.
+			return true;
+		}
+
+		sprintf(msg, msg_txt(1485), monster); // Traaaansformation-!! %s form!!
+		clif->message(sd->fd, msg);
+		status_change_end(bl, SC_MONSTER_TRANSFORM, INVALID_TIMER); // Clear previous
+		sc_start2(bl, SC_MONSTER_TRANSFORM, 100, mob_id, type, tick);
+		sc_start4(bl, type, 100, val1, val2, val3, val4, tick);
+	}
+	return true;
+}
+
 struct hQueue *script_hqueue_get(int idx) {
 	if( idx < 0 || idx >= script->hqs || script->hq[idx].size == -1 )
 		return NULL;
@@ -17900,6 +17973,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(sit, "?"),
 		BUILDIN_DEF(stand, "?"),
 		BUILDIN_DEF(issit, "?"),
+
+		BUILDIN_DEF(montransform, "sii????"), // Monster Transform [malufett/Hercules]
 		
 		/* New BG Commands [Hercules] */
 		BUILDIN_DEF(bg_create_team,"sii"),

@@ -9600,6 +9600,11 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 	if (sd->sc.opt2) //Client loses these on warp.
 		clif->changeoption(&sd->bl);
 
+	if( battle_config.mon_trans_disable_in_gvg && map_flag_gvg2(sd->bl.m) ){
+		status_change_end(&sd->bl, SC_MONSTER_TRANSFORM, INVALID_TIMER);
+		clif->message(sd->fd, msg_txt(1488)); // Transforming into monster is not allowed in Guild Wars.
+	}
+
 	clif->weather_check(sd);
 
 	// For automatic triggering of NPCs after map loading (so you don't need to walk 1 step first)
