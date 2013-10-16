@@ -16940,27 +16940,29 @@ BUILDIN(npcskill) {
 }
 
 /* Turns a player into a monster and grants SC attribute effect. [malufett/Hercules]
- * montransform <monster name>, <duration>, <sc type>, <val1>, <val2>, <val3>, <val4>; */
+ * montransform <monster name/id>, <duration>, <sc type>, <val1>, <val2>, <val3>, <val4>; */
 BUILDIN(montransform) {
 	int tick;
 	enum sc_type type;
-	const char * monster;
 	struct block_list* bl;
+	char msg[CHAT_SIZE_MAX];
 	int mob_id, val1, val2, val3, val4;
+		
+	if( (bl = map->id2bl(st->rid)) == NULL )
+		return true;
+	
+	if( script_isstring(st, 2) )
+		mob_id = mob->db_searchname(script_getstr(st, 2));
+	else{
+		mob_id = mob->db_checkid(script_getnum(st, 2));
+	}
 
-	monster = script_getstr(st, 2);
 	tick = script_getnum(st, 3);
 	type = (sc_type)script_getnum(st, 4);
 	val1 = val2 = val3 = val4 = 0;
 
-	if( (bl = map->id2bl(st->rid)) == NULL )
-		return true;
-
-	if( (mob_id = mob->db_searchname(monster)) == 0 )
-		mob_id = mob->db_checkid(atoi(monster));
-	
 	if( mob_id == 0 ) {
-		ShowWarning("buildin_montransform: Attempted to use non-existing monster '%s'.\n", monster);
+		ShowWarning("buildin_montransform: Attempted to use non-existing monster '%s'.\n", script_isstring(st, 2) ? script_getstr(st, 2) : itoa(script_getnum(st, 2), msg, 10));
 		return false;
 	}
 		
@@ -16986,9 +16988,9 @@ BUILDIN(montransform) {
 	if (script_hasdata(st, 8))
 		val4 = script_getnum(st, 8);
 
-	if( type && tick != 0 ){
+	if( tick != 0 ){
 		struct map_session_data *sd = map->id2sd(bl->id);
-		char msg[CHAT_SIZE_MAX];
+		struct mob_db *monster =  mob->db(mob_id);
 
 		if( !sd )	return true;
 
@@ -17002,8 +17004,8 @@ BUILDIN(montransform) {
 			return true;
 		}
 
-		sprintf(msg, msg_txt(1485), monster); // Traaaansformation-!! %s form!!
-		clif->message(sd->fd, msg);
+		sprintf(msg, msg_txt(1485), monster->name); // Traaaansformation-!! %s form!!
+		clif->ShowScript(&sd->bl, msg);
 		status_change_end(bl, SC_MONSTER_TRANSFORM, INVALID_TIMER); // Clear previous
 		sc_start2(bl, SC_MONSTER_TRANSFORM, 100, mob_id, type, tick);
 		sc_start4(bl, type, 100, val1, val2, val3, val4, tick);
@@ -17974,7 +17976,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(stand, "?"),
 		BUILDIN_DEF(issit, "?"),
 
-		BUILDIN_DEF(montransform, "sii????"), // Monster Transform [malufett/Hercules]
+		BUILDIN_DEF(montransform, "vii????"), // Monster Transform [malufett/Hercules]
 		
 		/* New BG Commands [Hercules] */
 		BUILDIN_DEF(bg_create_team,"sii"),
