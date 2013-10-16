@@ -6540,6 +6540,29 @@ ACMD(misceffect) {
 	return true;
 }
 
+//Identifies all items [Heaven]
+// Reviced by [Mhalicot]
+ACMD(identifyall)
+{
+    int i,indentify;
+    struct item it;
+
+    nullpo_retr(-1,sd);
+
+    for(i=indentify=0;i < MAX_INVENTORY;i++){
+        if(!sd->status.inventory[i].identify && sd->status.inventory[i].nameid){
+            memset(&it,0,sizeof(it));
+            it=sd->status.inventory[i];
+            pc->delitem(sd,i,it.amount,0,0, LOG_TYPE_COMMAND);
+            it.identify=1;
+            pc->additem(sd,&it,it.amount, LOG_TYPE_COMMAND);
+            indentify++;
+        }
+    }
+    clif->message(fd,(indentify) ? "All items was identified" : "There are no items to appraise.");
+    return true;
+}
+
 /*==========================================
  * MAIL SYSTEM
  *------------------------------------------*/
@@ -9581,6 +9604,7 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(refresh),
 		ACMD_DEF(refreshall),
 		ACMD_DEF(identify),
+		ACMD_DEF(identifyall),
 		ACMD_DEF(misceffect),
 		ACMD_DEF(mobsearch),
 		ACMD_DEF(cleanmap),
