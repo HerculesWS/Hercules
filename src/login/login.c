@@ -1404,7 +1404,7 @@ int parse_login(int fd)
 				}
 
 				safestrncpy(username, accname, NAME_LENGTH);
-				safestrncpy(password, token, PASSWD_LEN);
+				safestrncpy(password, token, min(uTokenLen+1, PASSWD_LEN)); // Variable-length field, don't copy more than necessary
 				clienttype = RFIFOB(fd, 8);
 			}
 			else

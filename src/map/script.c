@@ -610,16 +610,16 @@ const char* parse_callfunc(const char* p, int require_paren, int is_custom)
 {
 	const char *p2;
 	char *arg = NULL;
+	char null_arg = '\0';
 	int func;
 
 	func = script->add_word(p);
 	if( script->str_data[func].type == C_FUNC ){
-		char argT = 0;
 		// buildin function
 		script->addl(func);
 		script->addc(C_ARG);
 		arg = script->buildin[script->str_data[func].val];
-		if( !arg ) arg = &argT;
+		if( !arg ) arg = &null_arg; // Use a dummy, null string
 	} else if( script->str_data[func].type == C_USERFUNC || script->str_data[func].type == C_USERFUNC_POS ){
 		// script defined function
 		script->addl(script->buildin_callsub_ref);
