@@ -16962,7 +16962,10 @@ BUILDIN(montransform) {
 	val1 = val2 = val3 = val4 = 0;
 
 	if( mob_id == 0 ) {
-		ShowWarning("buildin_montransform: Attempted to use non-existing monster '%s'.\n", script_isstring(st, 2) ? script_getstr(st, 2) : itoa(script_getnum(st, 2), msg, 10));
+		if( script_isstring(st,2) )
+			ShowWarning("buildin_montransform: Attempted to use non-existing monster '%s'.\n", script_getstr(st, 2));
+		else
+			ShowWarning("buildin_montransform: Attempted to use non-existing monster of ID '%d'.\n", script_getnum(st, 2));
 		return false;
 	}
 		
