@@ -9404,24 +9404,25 @@ ACMD(costume){
 // Reviced by [Mhalicot]
 ACMD(identifyall)
 {
-    int i,indentify;
+    int i,num;
     struct item it;
 
     nullpo_retr(-1,sd);
 
-    for(i=indentify=0;i < MAX_INVENTORY;i++){
+    for(i=num=0;i < MAX_INVENTORY;i++){
         if(!sd->status.inventory[i].identify && sd->status.inventory[i].nameid){
-            memset(&it,0,sizeof(it));
             it=sd->status.inventory[i];
             pc->delitem(sd,i,it.amount,0,0, LOG_TYPE_COMMAND);
             it.identify=1;
             pc->additem(sd,&it,it.amount, LOG_TYPE_COMMAND);
-            indentify++;
+            num++;
         }
     }
-    clif->message(fd,(indentify) ? "All items was identified" : "There are no items to appraise.");
+    clif->message(fd,(num) ? "All items have been identified." : msg_txt(1238));
+	
     return true;
 }
+
 /* for debugging purposes (so users can easily provide us with debug info) */
 /* should be trashed as soon as its no longer necessary */
 ACMD(skdebug) {
