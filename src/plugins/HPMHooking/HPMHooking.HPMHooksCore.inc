@@ -885,6 +885,8 @@ struct {
 	struct HPMHookPoint *HP_clif_wisall_post;
 	struct HPMHookPoint *HP_clif_PMIgnoreList_pre;
 	struct HPMHookPoint *HP_clif_PMIgnoreList_post;
+	struct HPMHookPoint *HP_clif_ShowScript_pre;
+	struct HPMHookPoint *HP_clif_ShowScript_post;
 	struct HPMHookPoint *HP_clif_traderequest_pre;
 	struct HPMHookPoint *HP_clif_traderequest_post;
 	struct HPMHookPoint *HP_clif_tradestart_pre;
@@ -5760,6 +5762,8 @@ struct {
 	int HP_clif_wisall_post;
 	int HP_clif_PMIgnoreList_pre;
 	int HP_clif_PMIgnoreList_post;
+	int HP_clif_ShowScript_pre;
+	int HP_clif_ShowScript_post;
 	int HP_clif_traderequest_pre;
 	int HP_clif_traderequest_post;
 	int HP_clif_tradestart_pre;
