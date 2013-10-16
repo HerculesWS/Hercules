@@ -17005,7 +17005,7 @@ BUILDIN(montransform) {
 		}
 
 		sprintf(msg, msg_txt(1485), monster->name); // Traaaansformation-!! %s form!!
-		clif->disp_overhead(&sd->bl, msg);
+		clif->ShowScript(&sd->bl, msg);
 		status_change_end(bl, SC_MONSTER_TRANSFORM, INVALID_TIMER); // Clear previous
 		sc_start2(bl, SC_MONSTER_TRANSFORM, 100, mob_id, type, tick);
 		sc_start4(bl, type, 100, val1, val2, val3, val4, tick);

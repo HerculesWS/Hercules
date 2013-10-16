@@ -17541,6 +17541,28 @@ void clif_partytickack(struct map_session_data* sd, bool flag) {
 	WFIFOSET(sd->fd, packet_len(0x2c9));
 }
 
+void clif_ShowScript(struct block_list* bl, const char* message) {
+	char buf[256];
+	int len;
+	nullpo_retv(bl);
+
+	if(!message)
+		return;
+
+	len = strlen(message)+1;
+
+	if( len > sizeof(buf)-8 ) {
+		ShowWarning("clif_ShowScript: Truncating too long message '%s' (len=%d).\n", message, len);
+		len = sizeof(buf)-8;
+	}
+
+	WBUFW(buf,0)=0x8b3;
+	WBUFW(buf,2)=len+8;
+	WBUFL(buf,4)=bl->id;
+	safestrncpy((char *) WBUFP(buf,8),message,len);
+	clif->send((unsigned char *) buf,WBUFW(buf,2),bl,ALL_CLIENT);
+}
+
 void clif_status_change_end(struct block_list *bl, int tid, enum send_target target, int type) {
 	struct packet_status_change_end p;
 	
@@ -18395,6 +18417,7 @@ void clif_defaults(void) {
 	clif->wisexin = clif_wisexin;
 	clif->wisall = clif_wisall;
 	clif->PMIgnoreList = clif_PMIgnoreList;
+	clif->ShowScript = clif_ShowScript;
 	/* trade handling */
 	clif->traderequest = clif_traderequest;
 	clif->tradestart = clif_tradestart;
