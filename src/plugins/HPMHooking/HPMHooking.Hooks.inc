@@ -11309,6 +11309,31 @@ void HP_clif_PMIgnoreList(struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_ShowScript(struct block_list *bl, const char *message) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_ShowScript_pre ) {
+		void (*preHookFunc) (struct block_list *bl, const char *message);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_ShowScript_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_ShowScript_pre[hIndex].func;
+			preHookFunc(bl, message);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.ShowScript(bl, message);
+	}
+	if( HPMHooks.count.HP_clif_ShowScript_post ) {
+		void (*postHookFunc) (struct block_list *bl, const char *message);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_ShowScript_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_ShowScript_post[hIndex].func;
+			postHookFunc(bl, message);
+		}
+	}
+	return;
+}
 void HP_clif_traderequest(struct map_session_data *sd, const char *name) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_traderequest_pre ) {
