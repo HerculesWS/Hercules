@@ -3320,6 +3320,39 @@ Check sample in doc/sample/getmonsterinfo.txt
 
 ---------------------------------------
 
+*addmonsterdrop(<mob id or name>, <item id>, <rate>)
+
+This command will temporarily add a drop to an existing monster. If the
+monster already drops the specified item, its drop rate will be updated to the
+given value.
+
+Both the monster and the item must be valid.  Acceptable values for the drop
+rate are in the range [1:10000].
+
+Return value will be 1 in case of success (the item was added or its drop rate
+was updated), and 0 otherwise (there were no free item drop slots).
+
+Example:
+	// Add Poring Doll (741) to the Poring's (1002) drops, with 1% (100) rate
+	addmonsterdrop(1002, 741, 100);
+
+---------------------------------------
+
+*delmonsterdrop(<mob id or name>, <item id>)
+
+This command will temporarily remove a drop from an existing monster.
+
+Both the monster and the item must be valid.
+
+Return value will be 1 in case of success (the item was removed), and 0
+otherwise (the monster didn't have the specified item in its drop list).
+
+Example:
+	// Remove Jellopy (909) from the Poring's (1002) drops
+	delmonsterdrop(1002, 909);
+
+---------------------------------------
+
 *getmobdrops(<mob id>)
 
 This command will find all drops of the specified mob and return the item 

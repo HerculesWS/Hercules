@@ -23,8 +23,6 @@
 11524,3000	// White_Raffle_Sap
 11525,5000	// Mora_Hip_Tea
 
-12622,3000 // Reins_Of_Mount
-
 //12580,0 // Vending_Search_Scroll
 //12581,0 // Vending_Search_Scroll2
 //12591,0 // Vending_Search_Scroll3
@@ -34,4 +32,3 @@
 12727,60000 // Runstone_Verkana,Berkana Rune
 12732,1000 // Runstone_Pertz,Wyrd Rune
 22540,60000 // Runstone_Luxanima,Lux Anima Rune
-

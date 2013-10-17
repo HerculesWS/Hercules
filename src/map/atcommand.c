@@ -4713,7 +4713,13 @@ ACMD(disguise)
 		clif->message(fd, msg_txt(1144)); // Character cannot be disguised while mounted.
 		return false;
 	}
-	
+		
+	if(sd->sc.data[SC_MONSTER_TRANSFORM])
+	{
+		clif->message(fd, msg_txt(1488)); // Character cannot be disguised while in monster form.
+		return false;
+	}
+
 	pc->disguise(sd, id);
 	clif->message(fd, msg_txt(122)); // Disguise applied.
 	

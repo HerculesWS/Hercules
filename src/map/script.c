@@ -610,16 +610,16 @@ const char* parse_callfunc(const char* p, int require_paren, int is_custom)
 {
 	const char *p2;
 	char *arg = NULL;
+	char null_arg = '\0';
 	int func;
 
 	func = script->add_word(p);
 	if( script->str_data[func].type == C_FUNC ){
-		char argT = 0;
 		// buildin function
 		script->addl(func);
 		script->addc(C_ARG);
 		arg = script->buildin[script->str_data[func].val];
-		if( !arg ) arg = &argT;
+		if( !arg ) arg = &null_arg; // Use a dummy, null string
 	} else if( script->str_data[func].type == C_USERFUNC || script->str_data[func].type == C_USERFUNC_POS ){
 		// script defined function
 		script->addl(script->buildin_callsub_ref);
@@ -14340,32 +14340,112 @@ BUILDIN(setitemscript)
 	return true;
 }
 
-/* Work In Progress [Lupus]
- BUILDIN(addmonsterdrop)
- {
- int class_,item_id,chance;
- class_=script_getnum(st,2);
- item_id=script_getnum(st,3);
- chance=script_getnum(st,4);
- if(class_>1000 && item_id>500 && chance>0) {
- script_pushint(st,1);
- } else {
- script_pushint(st,0);
- }
- }
- 
- BUILDIN(delmonsterdrop)
- {
- int class_,item_id;
- class_=script_getnum(st,2);
- item_id=script_getnum(st,3);
- if(class_>1000 && item_id>500) {
- script_pushint(st,1);
- } else {
- script_pushint(st,0);
- }
- }
- */
+/*=======================================================
+ * Temporarily add or update a mob drop
+ * Original Idea By: [Lupus], [Akinari]
+ *
+ * addmonsterdrop <mob_id or name>,<item_id>,<rate>;
+ *
+ * If given an item the mob already drops, the rate
+ * is updated to the new rate.  Rate must be in the range [1:10000]
+ * Returns 1 if succeeded (added/updated a mob drop)
+ *-------------------------------------------------------*/
+BUILDIN(addmonsterdrop) {
+	struct mob_db *monster;
+	int item_id, rate, i, c = MAX_MOB_DROP;
+
+	if( script_isstring(st,2) )
+		monster = mob->db(mob->db_searchname(script_getstr(st,2)));
+	else
+		monster = mob->db(script_getnum(st,2));
+
+	if( monster == mob->dummy ) {
+		if( script_isstring(st,2) ) {
+			ShowError("buildin_addmonsterdrop: invalid mob name: '%s'.\n", script_getstr(st,2));
+		} else {
+			ShowError("buildin_addmonsterdrop: invalid mob id: '%d'.\n", script_getnum(st,2));
+		}
+		return false;
+	}
+
+	item_id = script_getnum(st,3);
+	if( !itemdb->exists(item_id) ) {
+		ShowError("buildin_addmonsterdrop: Invalid item ID: '%d'.\n", item_id);
+		return false;
+	}
+
+	rate = script_getnum(st,4);
+	if( rate < 1 || rate > 10000 ) {
+		ShowWarning("buildin_addmonsterdrop: Invalid drop rate '%d'. Capping to the [1:10000] range.\n", rate);
+		rate = cap_value(rate,1,10000);
+	}
+
+	for( i = 0; i < MAX_MOB_DROP; i++ ) {
+		if( monster->dropitem[i].nameid == item_id ) // Item ID found
+			break;
+		if( c == MAX_MOB_DROP && monster->dropitem[i].nameid < 1 ) // First empty slot
+			c = i;
+	}
+	if( i < MAX_MOB_DROP ) // If the item ID was found, prefer it
+		c = i;
+
+	if( c < MAX_MOB_DROP ) {
+		// Fill in the slot with the item and rate
+		monster->dropitem[c].nameid = item_id;
+		monster->dropitem[c].p = rate;
+		script_pushint(st,1);
+	} else {
+		//No place to put the new drop
+		script_pushint(st,0);
+	}
+
+	return true;
+}
+
+/*=======================================================
+ * Temporarily remove a mob drop
+ * Original Idea By: [Lupus], [Akinari]
+ *
+ * delmonsterdrop <mob_id or name>,<item_id>;
+ *
+ * Returns 1 if succeeded (deleted a mob drop)
+ *-------------------------------------------------------*/
+BUILDIN(delmonsterdrop) {
+	struct mob_db *monster;
+	int item_id, i;
+
+	if( script_isstring(st,2) )
+		monster = mob->db(mob->db_searchname(script_getstr(st,2)));
+	else
+		monster = mob->db(script_getnum(st,2));
+
+	if( monster == mob->dummy ) {
+		if( script_isstring(st,2) ) {
+			ShowError("buildin_delmonsterdrop: invalid mob name: '%s'.\n", script_getstr(st,2));
+		} else {
+			ShowError("buildin_delmonsterdrop: invalid mob id: '%d'.\n", script_getnum(st,2));
+		}
+		return false;
+	}
+
+	item_id = script_getnum(st,3);
+	if( !itemdb->exists(item_id) ) {
+		ShowError("buildin_delmonsterdrop: Invalid item ID: '%d'.\n", item_id);
+		return false;
+	}
+
+	for( i = 0; i < MAX_MOB_DROP; i++ ) {
+		if( monster->dropitem[i].nameid == item_id ) {
+			monster->dropitem[i].nameid = 0;
+			monster->dropitem[i].p = 0;
+			script_pushint(st,1);
+			return true;
+		}
+	}
+	// No drop on that monster
+	script_pushint(st,0);
+	return true;
+}
 
 /*==========================================
  * Returns some values of a monster [Lupus]
@@ -16858,6 +16938,84 @@ BUILDIN(npcskill) {
 	
 	return true;
 }
+
+/* Turns a player into a monster and grants SC attribute effect. [malufett/Hercules]
+ * montransform <monster name/id>, <duration>, <sc type>, <val1>, <val2>, <val3>, <val4>; */
+BUILDIN(montransform) {
+	int tick;
+	enum sc_type type;
+	struct block_list* bl;
+	char msg[CHAT_SIZE_MAX];
+	int mob_id, val1, val2, val3, val4;
+		
+	if( (bl = map->id2bl(st->rid)) == NULL )
+		return true;
+	
+	if( script_isstring(st, 2) )
+		mob_id = mob->db_searchname(script_getstr(st, 2));
+	else{
+		mob_id = mob->db_checkid(script_getnum(st, 2));
+	}
+
+	tick = script_getnum(st, 3);
+	type = (sc_type)script_getnum(st, 4);
+	val1 = val2 = val3 = val4 = 0;
+
+	if( mob_id == 0 ) {
+		if( script_isstring(st,2) )
+			ShowWarning("buildin_montransform: Attempted to use non-existing monster '%s'.\n", script_getstr(st, 2));
+		else
+			ShowWarning("buildin_montransform: Attempted to use non-existing monster of ID '%d'.\n", script_getnum(st, 2));
+		return false;
+	}
+		
+	if(mob_id == MOBID_EMPERIUM) {
+		ShowWarning("buildin_montransform: Monster 'Emperium' cannot be used.\n");
+		return false;
+	}
+
+	if( !(type > SC_NONE && type < SC_MAX) ){
+		ShowWarning("buildin_montransform: Unsupported status change id %d\n", type);
+		return false;
+	}
+	
+	if (script_hasdata(st, 5))
+		val1 = script_getnum(st, 5);
+
+	if (script_hasdata(st, 6))
+		val2 = script_getnum(st, 6);
+
+	if (script_hasdata(st, 7))
+		val3 = script_getnum(st, 7);
+
+	if (script_hasdata(st, 8))
+		val4 = script_getnum(st, 8);
+
+	if( tick != 0 ){
+		struct map_session_data *sd = map->id2sd(bl->id);
+		struct mob_db *monster =  mob->db(mob_id);
+
+		if( !sd )	return true;
+
+		if( battle_config.mon_trans_disable_in_gvg && map_flag_gvg2(sd->bl.m) ){
+			clif->message(sd->fd, msg_txt(1488)); // Transforming into monster is not allowed in Guild Wars.
+			return true;
+		}
+
+		if( sd->disguise != -1 ){
+			clif->message(sd->fd, msg_txt(1486)); // Cannot transform into monster while in disguise.
+			return true;
+		}
+
+		sprintf(msg, msg_txt(1485), monster->name); // Traaaansformation-!! %s form!!
+		clif->ShowScript(&sd->bl, msg);
+		status_change_end(bl, SC_MONSTER_TRANSFORM, INVALID_TIMER); // Clear previous
+		sc_start2(bl, SC_MONSTER_TRANSFORM, 100, mob_id, type, tick);
+		sc_start4(bl, type, 100, val1, val2, val3, val4, tick);
+	}
+	return true;
+}
+
 struct hQueue *script_hqueue_get(int idx) {
 	if( idx < 0 || idx >= script->hqs || script->hq[idx].size == -1 )
 		return NULL;
@@ -17669,6 +17827,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(disguise,"i"), //disguise player. Lupus
 		BUILDIN_DEF(undisguise,""), //undisguise player. Lupus
 		BUILDIN_DEF(getmonsterinfo,"ii"), //Lupus
+		BUILDIN_DEF(addmonsterdrop,"vii"),
+		BUILDIN_DEF(delmonsterdrop,"vi"),
 		BUILDIN_DEF(axtoi,"s"),
 		BUILDIN_DEF(query_sql,"s*"),
 		BUILDIN_DEF(query_logsql,"s*"),
@@ -17818,6 +17978,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(sit, "?"),
 		BUILDIN_DEF(stand, "?"),
 		BUILDIN_DEF(issit, "?"),
+
+		BUILDIN_DEF(montransform, "vii????"), // Monster Transform [malufett/Hercules]
 		
 		/* New BG Commands [Hercules] */
 		BUILDIN_DEF(bg_create_team,"sii"),

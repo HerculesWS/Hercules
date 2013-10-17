@@ -991,6 +991,9 @@ void initChangeTables(void) {
 	status->ChangeFlagTable[SC_ALL_RIDING] = SCB_SPEED;
 	status->ChangeFlagTable[SC_WEDDING] = SCB_SPEED;
 
+	status->ChangeFlagTable[SC_MTF_ASPD] = SCB_ASPD|SCB_HIT;
+	status->ChangeFlagTable[SC_MTF_MATK] = SCB_MATK;
+	status->ChangeFlagTable[SC_MTF_MLEATKED] |= SCB_ALL;
 
 	/* status->DisplayType Table [Ind/Hercules] */
 	status->DisplayType[SC_ALL_RIDING]		= true;
@@ -3083,6 +3086,8 @@ int status_calc_pc_(struct map_session_data* sd, bool first) {
 			sd->subele[ELE_EARTH] += i;
 			sd->subele[ELE_FIRE] -= i;
 		}
+		if( sc->data[SC_MTF_MLEATKED] )
+			sd->subele[ELE_NEUTRAL] += 2;
 		if( sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 3 )
 			sd->magic_addele[ELE_FIRE] += 25;
 		if( sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 3 )
@@ -4590,6 +4595,9 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 		matk += matk * sc->data[SC_MOONLIT_SERENADE]->val2/100;
 	if (sc->data[SC_MELODYOFSINK])
 		matk += matk * sc->data[SC_MELODYOFSINK]->val3/100;
+	if (sc->data[SC_MTF_MATK])
+		matk += matk * 25 / 100;
+
 	if (sc->data[SC_BEYOND_OF_WARCRY])
 		matk -= matk * sc->data[SC_BEYOND_OF_WARCRY]->val3/100;
 
@@ -4639,6 +4647,8 @@ signed short status_calc_hit(struct block_list *bl, struct status_change *sc, in
 
 	if( !viewable ){
 		/* some statuses that are hidden in the status window */
+		if(sc->data[SC_MTF_ASPD])
+			hit += 5;
 		return (short)cap_value(hit,1,SHRT_MAX);
 	}
 
@@ -5342,6 +5352,8 @@ short status_calc_fix_aspd(struct block_list *bl, struct status_change *sc, int 
 		aspd -= 50; // +5 ASPD
 	if( sc && sc->data[SC_FIGHTINGSPIRIT] && sc->data[SC_FIGHTINGSPIRIT]->val2 )
 		aspd -= (bl->type==BL_PC?pc->checkskill((TBL_PC *)bl, RK_RUNEMASTERY):10) / 10 * 40;
+	if( sc && sc->data[SC_MTF_ASPD] )
+		aspd -= 10;
 
 	return cap_value(aspd, 0, 2000); // will be recap for proper bl anyway
 }
@@ -9630,6 +9642,10 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		break;
 	case SC_FULL_THROTTLE:
 		sc_start(bl,SC_REBOUND,100,sce->val1,skill->get_time2(ALL_FULL_THROTTLE,sce->val1));
+		break;
+	case SC_MONSTER_TRANSFORM:
+		if( sce->val2 )
+			status_change_end(bl, (sc_type)sce->val2, INVALID_TIMER);
 		break;
 	case SC_ITEMSCRIPT:
 		if( sd ) {

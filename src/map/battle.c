@@ -944,11 +944,13 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 						break;
 					}
 				}
+#ifndef RENEWAL
 				//It was discovered that ranged defense also counts vs magic! [Skotlex]
 				if ( wflag&BF_SHORT )
 					cardfix = cardfix * ( 100 - tsd->bonus.near_attack_def_rate ) / 100;
 				else
 					cardfix = cardfix * ( 100 - tsd->bonus.long_attack_def_rate ) / 100;
+#endif
 
 				cardfix = cardfix * ( 100 - tsd->bonus.magic_def_rate ) / 100;
 
@@ -4534,6 +4536,8 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 						ATK_ADDRATE(sd->bonus.atk_rate);
 					if(flag.cri && sd->bonus.crit_atk_rate)
 						ATK_ADDRATE(sd->bonus.crit_atk_rate);
+					if(flag.cri && sc && sc->data[SC_MTF_CRIDAMAGE])
+						ATK_ADDRATE(25);// temporary it should be 'bonus.crit_atk_rate'
 #ifndef RENEWAL
 
 					if(sd->status.party_id && (temp=pc->checkskill(sd,TK_POWER)) > 0){
@@ -4721,6 +4725,8 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	#ifdef RENEWAL
 			if( wd.flag&BF_LONG )
 				ATK_ADDRATE(sd->bonus.long_attack_atk_rate);
+			if( sc && sc->data[SC_MTF_RANGEATK] )
+				ATK_ADDRATE(25);// temporary it should be 'bonus.long_attack_atk_rate'
 	#endif	
 			if( (i=pc->checkskill(sd,AB_EUCHARISTICA)) > 0 &&
 				(tstatus->race == RC_DEMON || tstatus->def_ele == ELE_DARK) )
@@ -5472,6 +5478,9 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 				return ATK_DEF;
 			return ATK_MISS;
 		}
+		if( tsc && tsc->data[SC_MTF_MLEATKED] && rnd()%100 < 20 )
+			clif->skill_nodamage(target, target, SM_ENDURE, 5,
+				sc_start(target, SC_ENDURE, 100, 5, skill->get_time(SM_ENDURE, 5)));
 	}
 
 	if(tsc && tsc->data[SC_KAAHI] && tsc->data[SC_KAAHI]->val4 == INVALID_TIMER && tstatus->hp < tstatus->max_hp)
@@ -6477,7 +6486,7 @@ static const struct _battle_data {
 	{ "feature.banking",                    &battle_config.feature_banking,                 1,      0,      1,              },
 	{ "feature.auction",                    &battle_config.feature_auction,                 0,      0,      2,              },
 
-
+	{ "mon_trans_disable_in_gvg",           &battle_config.mon_trans_disable_in_gvg,        0,      0,      1,              },
 };
 #ifndef STATS_OPT_OUT
 /**

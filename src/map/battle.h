@@ -463,6 +463,8 @@ struct Battle_Config {
 	
 	int feature_banking;
 	int feature_auction;
+
+	int mon_trans_disable_in_gvg;
 } battle_config;
 
 // Dammage delayed info

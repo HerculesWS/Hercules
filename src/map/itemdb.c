@@ -1946,7 +1946,7 @@ void itemdb_read(void) {
 	
 	sv->readdb(map->db_path, "item_avail.txt",             ',', 2, 2, -1, itemdb->read_itemavail);
 	sv->readdb(map->db_path, DBPATH"item_trade.txt",       ',', 3, 3, -1, itemdb->read_itemtrade);
-	sv->readdb(map->db_path, "item_delay.txt",             ',', 2, 2, -1, itemdb->read_itemdelay);
+	sv->readdb(map->db_path, DBPATH"item_delay.txt",             ',', 2, 2, -1, itemdb->read_itemdelay);
 	sv->readdb(map->db_path, "item_stack.txt",             ',', 3, 3, -1, itemdb->read_stack);
 	sv->readdb(map->db_path, DBPATH"item_buyingstore.txt", ',', 1, 1, -1, itemdb->read_buyingstore);
 	sv->readdb(map->db_path, "item_nouse.txt",             ',', 3, 3, -1, itemdb->read_nouse);

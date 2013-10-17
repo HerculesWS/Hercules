@@ -1356,7 +1356,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		src = sd?&sd->bl:src;
 	}
 
-	if( attack_type&BF_WEAPON ) {
+	if( attack_type&BF_WEAPON && skill_id != CR_REFLECTSHIELD ) {
 		// Coma, Breaking Equipment
 		if( sd && sd->special_state.bonus_coma ) {
 			rate  = sd->weapon_coma_ele[tstatus->def_ele];
@@ -6570,7 +6570,12 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			break;
 		case SA_DISPELL:
 			if (flag&1 || (i = skill->get_splash(skill_id, skill_lv)) < 1)
-			{
+			{	
+				if( sd && dstsd && !map_flag_vs(sd->bl.m)
+					&& (sd->status.party_id == 0 || sd->status.party_id != dstsd->status.party_id) ) {
+					// Outside PvP it should only affect party members and no skill fail message.
+					break;
+				}
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 				if((dstsd && (dstsd->class_&MAPID_UPPERMASK) == MAPID_SOUL_LINKER)
 					|| (tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_ROGUE) //Rogue's spirit defends againt dispel.
@@ -6582,14 +6587,6 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 				}
 				if(status->isimmune(bl) || !tsc || !tsc->count)
 					break;
-				
-				if( sd && dstsd && !map_flag_vs(sd->bl.m)
-						&& (sd->status.party_id == 0 || sd->status.party_id != dstsd->status.party_id) ) {
-					// Outside PvP it should only affect party members
-					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-					break;
-				}
-
 				for(i = 0; i < SC_MAX; i++) {
 					if ( !tsc->data[i] )
 							continue;

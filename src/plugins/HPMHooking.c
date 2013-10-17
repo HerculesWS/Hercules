@@ -53,8 +53,7 @@ HPExport struct hplugin_info pinfo = {
 	HPM_VERSION,    // HPM Version (don't change, macro is automatically updated)
 };
 
-#define HP_POP(x) #x , (void**)(&x)
-#define HP_POP2(x) (void*)x
+#define HP_POP(x,y) #x , (void**)(&x) , (void*)y , 0
 DBMap *hp_db;/* hooking points db -- for quick lookup */
 
 struct HookingPointData {
@@ -150,7 +149,7 @@ void HPM_HP_final(void) {
 
 void HPM_HP_load(void) {
 	#include "../plugins/HPMHooking/HPMHooking.HookingPoints.inc"
-	int i, len = ARRAYLENGTH(HookingPoints);
+	int i, len = ARRAYLENGTH(HookingPoints), idx = 0;
 	
 	memset(&HPMHooks,0,sizeof(struct HPMHooksCore));
 	
@@ -162,6 +161,9 @@ void HPM_HP_load(void) {
 		CREATE(hpd, struct HookingPointData, 1);
 		
 		memcpy(hpd, &HookingPoints[i], sizeof(struct HookingPointData));
+		
+		hpd->idx = idx;
+		idx += 2;
 		
 		strdb_put(hp_db, HookingPoints[i].name, hpd);
 		

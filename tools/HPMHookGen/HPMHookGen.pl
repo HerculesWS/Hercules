@@ -392,7 +392,7 @@ foreach my $key (@keys) {
 	foreach my $if (@{ $ifs{$key} }) {
 
 		print FH <<"EOF";
-	{ HP_POP($key\->$if->{name}), HP_POP2($if->{hname}), $idx },
+	{ HP_POP($key\->$if->{name}, $if->{hname}) },
 EOF
 
 		$idx += 2;

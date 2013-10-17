@@ -9600,6 +9600,11 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 	if (sd->sc.opt2) //Client loses these on warp.
 		clif->changeoption(&sd->bl);
 
+	if( battle_config.mon_trans_disable_in_gvg && map_flag_gvg2(sd->bl.m) ){
+		status_change_end(&sd->bl, SC_MONSTER_TRANSFORM, INVALID_TIMER);
+		clif->message(sd->fd, msg_txt(1488)); // Transforming into monster is not allowed in Guild Wars.
+	}
+
 	clif->weather_check(sd);
 
 	// For automatic triggering of NPCs after map loading (so you don't need to walk 1 step first)
@@ -9617,7 +9622,6 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		clif->clearunit_area(&sd->bl, CLR_DEAD);
 	else {
 		skill->usave_trigger(sd);
-		clif->changed_dir(&sd->bl, SELF);
 	}
 
 // Trigger skill effects if you appear standing on them
@@ -17451,7 +17455,8 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 						
 						if( result != CSBR_SUCCESS )
 							pc->getcash(sd, clif->cs.data[tab][j]->price * get_count,0);
-					}
+					} else /* create_egg succeeded so mark as success */
+						result = CSBR_SUCCESS;
 				}
 			}
 		} else {
@@ -17534,6 +17539,28 @@ void clif_partytickack(struct map_session_data* sd, bool flag) {
 	WFIFOW(sd->fd, 0) = 0x2c9;
 	WFIFOB(sd->fd, 2) = flag;
 	WFIFOSET(sd->fd, packet_len(0x2c9));
+}
+
+void clif_ShowScript(struct block_list* bl, const char* message) {
+	char buf[256];
+	int len;
+	nullpo_retv(bl);
+
+	if(!message)
+		return;
+
+	len = strlen(message)+1;
+
+	if( len > sizeof(buf)-8 ) {
+		ShowWarning("clif_ShowScript: Truncating too long message '%s' (len=%d).\n", message, len);
+		len = sizeof(buf)-8;
+	}
+
+	WBUFW(buf,0)=0x8b3;
+	WBUFW(buf,2)=len+8;
+	WBUFL(buf,4)=bl->id;
+	safestrncpy((char *) WBUFP(buf,8),message,len);
+	clif->send((unsigned char *) buf,WBUFW(buf,2),bl,ALL_CLIENT);
 }
 
 void clif_status_change_end(struct block_list *bl, int tid, enum send_target target, int type) {
@@ -18390,6 +18417,7 @@ void clif_defaults(void) {
 	clif->wisexin = clif_wisexin;
 	clif->wisall = clif_wisall;
 	clif->PMIgnoreList = clif_PMIgnoreList;
+	clif->ShowScript = clif_ShowScript;
 	/* trade handling */
 	clif->traderequest = clif_traderequest;
 	clif->tradestart = clif_tradestart;
