@@ -2290,6 +2290,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->cooldown_save, HP_skill_cooldown_save) },
 	{ HP_POP(skill->maelstrom_suction, HP_skill_maelstrom_suction) },
 	{ HP_POP(skill->get_new_group_id, HP_skill_get_new_group_id) },
+	{ HP_POP(skill->check_shadowform, HP_skill_check_shadowform) },
 /* status */
 	{ HP_POP(status->init, HP_status_init) },
 	{ HP_POP(status->final, HP_status_final) },
