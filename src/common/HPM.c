@@ -471,6 +471,9 @@ bool HPM_AddHook(enum HPluginHookType type, const char *target, void *hook, unsi
 	/* if not check if a sub-hooking list is available (from the server) and run it by */
 	if( HPM->addhook_sub && HPM->addhook_sub(type,target,hook,pID) )
 		return true;
+	
+	ShowError("HPM:AddHook: unknown Hooking Point '%s'!\n",target);
+	
 	return false;
 }
 void HPM_HookStop (const char *func, unsigned int pID) {

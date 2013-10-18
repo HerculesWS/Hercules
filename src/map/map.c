@@ -4954,6 +4954,10 @@ void read_map_zone_db(void) {
 	}
 }
 
+int map_get_new_bonus_id (void) {
+	return map->bonus_id++;
+}
+
 /**
  * @see DBApply
  */
@@ -5648,6 +5652,8 @@ void map_defaults(void) {
 	map->cache_buffer = NULL;
 	
 	map->flooritem_ers = NULL;
+	/* */
+	map->bonus_id = SP_LAST_KNOWN;
 	/* funcs */
 	map->zone_init = map_zone_init;
 	map->zone_remove = map_zone_remove;
@@ -5814,6 +5820,8 @@ void map_defaults(void) {
 
 	map->addblcell = map_addblcell;
 	map->delblcell = map_delblcell;
+	
+	map->get_new_bonus_id = map_get_new_bonus_id;
 
 	/**
 	 * mapit interface
