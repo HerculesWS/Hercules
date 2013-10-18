@@ -854,6 +854,8 @@ struct map_interface {
 	/* [Ind/Hercules] */
 	struct eri *iterator_ers;
 	char *cache_buffer; // Has the uncompressed gat data of all maps, so just one allocation has to be made
+	/* */
+	struct eri *flooritem_ers;
 	/* funcs */
 	void (*zone_init) (void);
 	void (*zone_remove) (int m);

@@ -88,8 +88,12 @@ int map_usercount(void) {
  *------------------------------------------*/
 int map_freeblock (struct block_list *bl) {
 	nullpo_retr(map->block_free_lock, bl);
+	
 	if (map->block_free_lock == 0 || map->block_free_count >= block_free_max) {
-		aFree(bl);
+		if( bl->type == BL_ITEM )
+			ers_free(map->flooritem_ers, bl);
+		else
+			aFree(bl);
 		bl = NULL;
 		if (map->block_free_count >= block_free_max)
 			ShowWarning("map_freeblock: too many free block! %d %d\n", map->block_free_count, map->block_free_lock);
@@ -109,11 +113,14 @@ int map_freeblock_lock (void) {
  * Remove the lock on map_bl
  *------------------------------------------*/
 int map_freeblock_unlock (void) {
+	
 	if ((--map->block_free_lock) == 0) {
 		int i;
-		for (i = 0; i < map->block_free_count; i++)
-		{
-			aFree(map->block_free[i]);
+		for (i = 0; i < map->block_free_count; i++) {
+			if( map->block_free[i]->type == BL_ITEM )
+				ers_free(map->flooritem_ers, map->block_free[i]);
+			else
+				aFree(map->block_free[i]);
 			map->block_free[i] = NULL;
 		}
 		map->block_free_count = 0;
@@ -1330,7 +1337,7 @@ int map_clearflooritem_timer(int tid, unsigned int tick, int id, intptr_t data) 
 void map_clearflooritem(struct block_list *bl) {
 	struct flooritem_data* fitem = (struct flooritem_data*)bl;
 
-	if( fitem->cleartimer )
+	if( fitem->cleartimer != INVALID_TIMER )
 		timer->delete(fitem->cleartimer,map->clearflooritem_timer);
 
 	clif->clearflooritem(fitem, 0);
@@ -1470,15 +1477,16 @@ int map_addflooritem(struct item *item_data,int amount,int16 m,int16 x,int16 y,i
 		return 0;
 	r=rnd();
 
-	CREATE(fitem, struct flooritem_data, 1);
-	fitem->bl.type=BL_ITEM;
+	fitem = ers_alloc(map->flooritem_ers, struct flooritem_data);
+	
+	fitem->bl.type = BL_ITEM;
 	fitem->bl.prev = fitem->bl.next = NULL;
-	fitem->bl.m=m;
-	fitem->bl.x=x;
-	fitem->bl.y=y;
+	fitem->bl.m = m;
+	fitem->bl.x = x;
+	fitem->bl.y = y;
 	fitem->bl.id = map->get_new_object_id();
 	if(fitem->bl.id==0){
-		aFree(fitem);
+		ers_free(map->flooritem_ers, fitem);
 		return 0;
 	}
 
@@ -5092,6 +5100,7 @@ void do_final(void)
 
 	map->sql_close();
 	ers_destroy(map->iterator_ers);
+	ers_destroy(map->flooritem_ers);
 
 	aFree(map->list);
 
@@ -5470,7 +5479,10 @@ int do_init(int argc, char *argv[])
 	map->zone_db   = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, MAP_ZONE_NAME_LENGTH);
 
 	map->iterator_ers = ers_new(sizeof(struct s_mapiterator),"map.c::map_iterator_ers",ERS_OPT_NONE);
-
+	
+	map->flooritem_ers = ers_new(sizeof(struct flooritem_data),"map.c::map_flooritem_ers",ERS_OPT_NONE);
+	ers_chunk_size(map->flooritem_ers, 100);
+	
 	map->sql_init();
 	if (logs->config.sql_logs)
 		logs->sql_init();
@@ -5634,6 +5646,8 @@ void map_defaults(void) {
 	
 	map->iterator_ers = NULL;
 	map->cache_buffer = NULL;
+	
+	map->flooritem_ers = NULL;
 	/* funcs */
 	map->zone_init = map_zone_init;
 	map->zone_remove = map_zone_remove;
