@@ -1,9 +1,12 @@
+# Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+# See the LICENSE file
 
 CONFIG_D = ../config
 CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
 
 COMMON_D = ../common
 COMMON_H = $(wildcard $(COMMON_D)/*.h)
+SYSINFO_INC = $(COMMON_D)/sysinfo.inc
 
 LIBCONFIG_D = ../../3rdparty/libconfig
 LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
@@ -33,7 +36,7 @@ MAP_H = atcommand.h battle.h battleground.h buyingstore.h chat.h chrif.h \
 
 HAVE_MYSQL=@HAVE_MYSQL@
 ifeq ($(HAVE_MYSQL),yes)
-	MAP_SERVER_SQL_DEPENDS=$(MAP_OBJ) $(COMMON_D)/obj_sql/common_sql.a $(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ)
+	MAP_SERVER_SQL_DEPENDS=$(MAP_OBJ) $(COMMON_D)/obj_sql/common_sql.a $(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ $(SYSINFO_INC))
 else
 	MAP_SERVER_SQL_DEPENDS=needs_mysql
 endif
@@ -78,6 +81,10 @@ help:
 
 Makefile: Makefile.in
 	@$(MAKE) -C ../.. src/map/Makefile
+
+$(SYSINFO_INC): $(MAP_C) $(MAP_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H)
+	@echo "	MAKE	$@"
+	@$(MAKE) -C ../.. sysinfo
 
 needs_mysql:
 	@echo "MySQL not found or disabled by the configure script"

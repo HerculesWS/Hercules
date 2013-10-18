@@ -12,6 +12,7 @@
 #include "../common/socket.h"
 #include "../common/strlib.h"
 #include "../common/utils.h"
+#include "../common/sysinfo.h"
 #include "../common/HPM.h"
 
 #include "map.h"
@@ -6748,8 +6749,6 @@ static const struct _battle_data {
 void Hercules_report(char* date, char *time_c) {
 	int i, bd_size = ARRAYLENGTH(battle_data);
 	unsigned int config = 0;
-	const char *svn = get_svn_revision();
-	const char *git = get_git_hash();
 	char timestring[25];
 	time_t curtime;
 	char* buf;
@@ -6775,6 +6774,9 @@ void Hercules_report(char* date, char *time_c) {
 		C_GCOLLECT				= 0x20000,
 		C_SEND_SHORTLIST		= 0x40000,
 	};
+
+	// TODO[Haru]: Add sysinfo->platform(), sysinfo->osversion(), sysinfo->cpu(), sysinfo->arch(),
+	//             sysinfo->vcstype(), sysinfo->vcsrevision_scripts() to the stat server
 
 	/* we get the current time */
 	time(&curtime);
@@ -6867,7 +6869,7 @@ void Hercules_report(char* date, char *time_c) {
 	safestrncpy((char*)WBUFP(buf,6 + 12), time_c, 9);
 	safestrncpy((char*)WBUFP(buf,6 + 12 + 9), timestring, 24);
 
-	safestrncpy((char*)WBUFP(buf,6 + 12 + 9 + 24), git[0] != HERC_UNKNOWN_VER ? git : svn[0] != HERC_UNKNOWN_VER ? svn : "Unknown", 41);
+	safestrncpy((char*)WBUFP(buf,6 + 12 + 9 + 24), sysinfo->vcsrevision_src(), 41);
 	WBUFL(buf,6 + 12 + 9 + 24 + 41) = map->getusers();
 
 	WBUFL(buf,6 + 12 + 9 + 24 + 41 + 4) = config;

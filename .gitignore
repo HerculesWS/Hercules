@@ -69,7 +69,7 @@ Thumbs.db
 /src/common/Makefile
 /src/common/obj_all
 /src/common/obj_sql
-/src/common/svnversion.h
+/src/common/sysinfo.inc
 
 # /src/login/
 /src/login/Makefile

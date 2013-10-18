@@ -703,8 +703,6 @@ void hplugins_share_defaults(void) {
 	HPM->share(&arg_c,"arg_c");
 	HPM->share(SERVER_NAME,"SERVER_NAME");
 	HPM->share(&SERVER_TYPE,"SERVER_TYPE");
-	HPM->share((void*)get_svn_revision,"get_svn_revision");
-	HPM->share((void*)get_git_hash,"get_git_hash");
 	HPM->share(DB, "DB");
 	HPM->share(HPMiMalloc, "iMalloc");
 	/* socket */

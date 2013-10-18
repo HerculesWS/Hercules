@@ -14,6 +14,7 @@
 #include "../common/utils.h"
 #include "../common/conf.h"
 #include "../common/mmo.h" //NAME_LENGTH
+#include "../common/sysinfo.h"
 
 #include "pc.h"
 #include "atcommand.h" // get_atcommand_level()
@@ -1147,15 +1148,8 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	if( !changing_mapservers ) {
 
 		if (battle_config.display_version == 1) {
-			const char* svn = get_svn_revision();
-			const char* git = get_git_hash();
 			char buf[256];
-			if( git[0] != HERC_UNKNOWN_VER )
-				sprintf(buf,"Git Hash: %s", git);
-			else if( svn[0] != HERC_UNKNOWN_VER )
-				sprintf(buf,"SVN Revision: %s", svn);
-			else
-				sprintf(buf,"Unknown Version");
+			sprintf(buf, msg_txt(1295), sysinfo->vcstype(), sysinfo->vcsrevision_src(), sysinfo->vcsrevision_scripts()); // %s revision '%s' (src) / '%s' (scripts)
 			clif->message(sd->fd, buf);
 		}
 		
