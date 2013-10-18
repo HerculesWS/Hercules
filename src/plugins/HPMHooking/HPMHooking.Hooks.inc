@@ -58454,6 +58454,32 @@ int HP_skill_get_new_group_id(void) {
 	}
 	return retVal___;
 }
+bool HP_skill_check_shadowform(struct block_list *bl, int64 damage, int hit) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_skill_check_shadowform_pre ) {
+		bool (*preHookFunc) (struct block_list *bl, int64 *damage, int *hit);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_shadowform_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_check_shadowform_pre[hIndex].func;
+			retVal___ = preHookFunc(bl, &damage, &hit);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.skill.check_shadowform(bl, damage, hit);
+	}
+	if( HPMHooks.count.HP_skill_check_shadowform_post ) {
+		bool (*postHookFunc) (bool retVal___, struct block_list *bl, int64 *damage, int *hit);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_check_shadowform_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_check_shadowform_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, &damage, &hit);
+		}
+	}
+	return retVal___;
+}
 /* status */
 int HP_status_init(void) {
 	int hIndex = 0;

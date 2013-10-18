@@ -4511,6 +4511,8 @@ struct {
 	struct HPMHookPoint *HP_skill_maelstrom_suction_post;
 	struct HPMHookPoint *HP_skill_get_new_group_id_pre;
 	struct HPMHookPoint *HP_skill_get_new_group_id_post;
+	struct HPMHookPoint *HP_skill_check_shadowform_pre;
+	struct HPMHookPoint *HP_skill_check_shadowform_post;
 	struct HPMHookPoint *HP_status_init_pre;
 	struct HPMHookPoint *HP_status_init_post;
 	struct HPMHookPoint *HP_status_final_pre;
@@ -9388,6 +9390,8 @@ struct {
 	int HP_skill_maelstrom_suction_post;
 	int HP_skill_get_new_group_id_pre;
 	int HP_skill_get_new_group_id_post;
+	int HP_skill_check_shadowform_pre;
+	int HP_skill_check_shadowform_post;
 	int HP_status_init_pre;
 	int HP_status_init_post;
 	int HP_status_final_pre;
