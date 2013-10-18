@@ -909,7 +909,14 @@ enum e_skill {
 	NPC_VENOMFOG,
 	NPC_MILLENNIUMSHIELD,
 	NPC_COMET,
-	
+	NPC_WIDEWEB,
+	NPC_WIDESUCK,
+	NPC_STORMGUST2,
+	NPC_FIRESTORM,
+	NPC_REVERBERATION,
+	NPC_REVERBERATION_ATK,
+	NPC_LEX_AETERNA,
+
 	KN_CHARGEATK = 1001,
 	CR_SHRINK,
 	AS_SONICACCEL,
@@ -1271,7 +1278,7 @@ enum e_skill {
 	RL_R_TRIP_PLUSATK,
 	RL_B_FLICKER_ATK,
 	RL_GLITTERING_GREED_ATK,
-
+	
 	KO_YAMIKUMO = 3001,
 	KO_RIGHT,
 	KO_LEFT,
@@ -2011,6 +2018,7 @@ struct skill_interface {
 	void (*cooldown_save) (struct map_session_data * sd);
 	int (*maelstrom_suction) (struct block_list *bl, va_list ap);
 	int (*get_new_group_id) (void);
+	bool (*check_shadowform) (struct block_list *bl, int64 damage, int hit);
 };
 
 struct skill_interface *skill;

@@ -1139,12 +1139,12 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			sc_start4(bl,SC_BURNING,100,skill_lv,0,src->id,0,skill->get_time2(skill_id,skill_lv));
 			break;
 		case WL_EARTHSTRAIN:
-		{
-			// lv 1 & 2 = Strip Helm, lv 3 = Strip Armor, lv 4 = Strip Weapon and lv 5 = Strip Accessory. [malufett]
-			const int pos[5] = { EQP_HELM, EQP_HELM, EQP_ARMOR, EQP_WEAPON, EQP_ACC };
-			skill->strip_equip(bl, pos[skill_lv], 6 * skill_lv + status->get_lv(src) / 4 + status_get_dex(src) / 10,
-			                   skill_lv, skill->get_time2(skill_id,skill_lv));
-		}
+			{
+				// lv 1 & 2 = Strip Helm, lv 3 = Strip Armor, lv 4 = Strip Weapon and lv 5 = Strip Accessory. [malufett]
+				const int pos[5] = { EQP_HELM, EQP_HELM, EQP_ARMOR, EQP_WEAPON, EQP_ACC };
+				skill->strip_equip(bl, pos[skill_lv-1], 6 * skill_lv + status->get_lv(src) / 4 + status_get_dex(src) / 10,
+					skill_lv, skill->get_time2(skill_id,skill_lv));
+			}
 			break;
 		case WL_JACKFROST:
 			sc_start(bl,SC_FREEZE,100,skill_lv,skill->get_time(skill_id,skill_lv));
@@ -2117,7 +2117,7 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 	int type;
 	int64 damage;
 	int8 rmdamage=0;//magic reflected
-	bool additional_effects = true;
+	bool additional_effects = true, shadow_flag = false;
 
 	if(skill_id > 0 && !skill_lv) return 0;
 
@@ -2574,10 +2574,12 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 		if (ud && DIFF_TICK(ud->attackabletime, tick + type) < 0)
 			ud->attackabletime = tick + type;
 	}
+	
+	shadow_flag = skill->check_shadowform(bl, damage, dmg.div_);
 
 	if( !dmg.amotion ) {
 		//Instant damage
-		if( !sc || (!sc->data[SC_DEVOTION] && skill_id != CR_REFLECTSHIELD) )
+		if( (!sc || (!sc->data[SC_DEVOTION] && skill_id != CR_REFLECTSHIELD)) && !shadow_flag)
 			status_fix_damage(src,bl,damage,dmg.dmotion); //Deal damage before knockback to allow stuff like firewall+storm gust combo.
 		if( !status->isdead(bl) && additional_effects )
 			skill->additional_effect(src,bl,skill_id,skill_lv,dmg.flag,dmg.dmg_lv,tick);
@@ -2657,8 +2659,15 @@ int skill_attack (int attack_type, struct block_list* src, struct block_list *ds
 	}
 
 	//Delayed damage must be dealt after the knockback (it needs to know actual position of target)
-	if (dmg.amotion)
-		battle->delay_damage(tick, dmg.amotion,src,bl,dmg.flag,skill_id,skill_lv,damage,dmg.dmg_lv,dmg.dmotion, additional_effects);
+	if (dmg.amotion){
+		if( shadow_flag ){
+			if( !status->isdead(bl) && additional_effects )
+				skill->additional_effect(src,bl,skill_id,skill_lv,dmg.flag,dmg.dmg_lv,tick);
+			if( dmg.flag > ATK_BLOCK )
+				skill->counter_additional_effect(src,bl,skill_id,skill_lv,dmg.flag,tick);
+		}else
+			battle->delay_damage(tick, dmg.amotion,src,bl,dmg.flag,skill_id,skill_lv,damage,dmg.dmg_lv,dmg.dmotion, additional_effects);
+	}
 
 	if( sc && sc->data[SC_DEVOTION] && skill_id != PA_PRESSURE ) {
 		struct status_change_entry *sce = sc->data[SC_DEVOTION];
@@ -3059,8 +3068,23 @@ int skill_timerskill(int tid, unsigned int tick, int id, intptr_t data) {
 				break; // Target not on Map
 			if(src->m != target->m)
 				break; // Different Maps
-			if(status->isdead(src))
-				break; // Caster is Dead
+			if(status->isdead(src)){
+				// Exceptions
+				switch(skl->skill_id){
+					case WL_CHAINLIGHTNING_ATK:
+					case WL_TETRAVORTEX_FIRE:
+					case WL_TETRAVORTEX_WATER:
+					case WL_TETRAVORTEX_WIND:
+					case WL_TETRAVORTEX_GROUND:
+					case SR_FLASHCOMBO_ATK_STEP1:
+					case SR_FLASHCOMBO_ATK_STEP2:
+					case SR_FLASHCOMBO_ATK_STEP3:
+					case SR_FLASHCOMBO_ATK_STEP4:
+						break;
+					default:
+						continue; // Caster is Dead
+				}
+			}
 			if(status->isdead(target) && skl->skill_id != RG_INTIMIDATE && skl->skill_id != WZ_WATERBALL)
 				break;
 
@@ -3134,7 +3158,7 @@ int skill_timerskill(int tid, unsigned int tick, int id, intptr_t data) {
 					if( skl->type == 4 ){ 
 						const enum sc_type scs[] = { SC_BURNING, SC_BLOODING, SC_FROSTMISTY, SC_STUN }; // status inflicts are depend on what summoned element is used.
 						int rate = skl->y, index = skl->x-1;
-						sc_start2(target, scs[index], rate, skl->skill_lv, src->id, skill->get_time(WL_TETRAVORTEX,index));
+						sc_start2(target, scs[index], rate, skl->skill_lv, src->id, skill->get_time(WL_TETRAVORTEX,index+1));
 					}
 					break;
 				case WM_REVERBERATION_MELEE:
@@ -3285,6 +3309,17 @@ int skill_cleartimerskill (struct block_list *src)
 
 	for(i=0;i<MAX_SKILLTIMERSKILL;i++) {
 		if(ud->skilltimerskill[i]) {
+			switch(ud->skilltimerskill[i]->skill_id){
+				case WL_TETRAVORTEX_FIRE:
+				case WL_TETRAVORTEX_WATER:
+				case WL_TETRAVORTEX_WIND:
+				case WL_TETRAVORTEX_GROUND:
+				case SR_FLASHCOMBO_ATK_STEP1:
+				case SR_FLASHCOMBO_ATK_STEP2:
+				case SR_FLASHCOMBO_ATK_STEP3:
+				case SR_FLASHCOMBO_ATK_STEP4:
+					continue;
+			}
 			timer->delete(ud->skilltimerskill[i]->timer, skill->timerskill);
 			ers_free(skill->timer_ers, ud->skilltimerskill[i]);
 			ud->skilltimerskill[i]=NULL;
@@ -15046,6 +15081,39 @@ bool skill_check_camouflage(struct block_list *bl, struct status_change_entry *s
 	return wall;
 }
 
+bool skill_check_shadowform(struct block_list *bl, int64 damage, int hit){
+	struct status_change *sc;
+	struct block_list *src;
+
+	nullpo_retr(false, bl);
+
+	sc = status->get_sc(bl);
+
+	if( sc && sc->data[SC__SHADOWFORM] && damage ) {
+		src = map->id2bl(sc->data[SC__SHADOWFORM]->val2);
+
+		if( !src || src->m != bl->m ) { 
+			status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
+			return false;
+		}
+
+		if( src && (status->isdead(src) || !battle->check_target(bl,src,BCT_ENEMY)) ){
+			if( src->type == BL_PC )
+				((TBL_PC*)src)->shadowform_id = 0;
+			status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
+			return false;
+		}
+
+		status->damage(bl, src, damage, 0, clif->damage(src, src, timer->gettick(), 500, 500, damage, hit, (hit > 1 ? 8 : 0), 0), 0);
+		if( (--sc->data[SC__SHADOWFORM]->val3) <= 0 ) {
+			status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
+			if( src->type == BL_PC )
+				((TBL_PC*)src)->shadowform_id = 0;
+		}
+		return true;
+	}
+	return false;
+}
 /*==========================================
  *
  *------------------------------------------*/
@@ -18291,4 +18359,5 @@ void skill_defaults(void) {
 	skill->cooldown_save = skill_cooldown_save;
 	skill->maelstrom_suction = skill_maelstrom_suction;
 	skill->get_new_group_id = skill_get_new_group_id;
+	skill->check_shadowform = skill_check_shadowform;
 }
