@@ -2847,6 +2847,8 @@ struct {
 	struct HPMHookPoint *HP_map_addblcell_post;
 	struct HPMHookPoint *HP_map_delblcell_pre;
 	struct HPMHookPoint *HP_map_delblcell_post;
+	struct HPMHookPoint *HP_map_get_new_bonus_id_pre;
+	struct HPMHookPoint *HP_map_get_new_bonus_id_post;
 	struct HPMHookPoint *HP_mapit_alloc_pre;
 	struct HPMHookPoint *HP_mapit_alloc_post;
 	struct HPMHookPoint *HP_mapit_free_pre;
@@ -7726,6 +7728,8 @@ struct {
 	int HP_map_addblcell_post;
 	int HP_map_delblcell_pre;
 	int HP_map_delblcell_post;
+	int HP_map_get_new_bonus_id_pre;
+	int HP_map_get_new_bonus_id_post;
 	int HP_mapit_alloc_pre;
 	int HP_mapit_alloc_post;
 	int HP_mapit_free_pre;

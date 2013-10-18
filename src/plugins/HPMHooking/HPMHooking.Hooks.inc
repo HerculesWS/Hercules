@@ -36471,6 +36471,32 @@ void HP_map_delblcell(struct block_list *bl) {
 	}
 	return;
 }
+int HP_map_get_new_bonus_id(void) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_map_get_new_bonus_id_pre ) {
+		int (*preHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_get_new_bonus_id_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_map_get_new_bonus_id_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.map.get_new_bonus_id();
+	}
+	if( HPMHooks.count.HP_map_get_new_bonus_id_post ) {
+		int (*postHookFunc) (int retVal___);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_get_new_bonus_id_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_map_get_new_bonus_id_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
 /* mapit */
 struct s_mapiterator* HP_mapit_alloc(enum e_mapitflags flags, enum bl_type types) {
 	int hIndex = 0;
