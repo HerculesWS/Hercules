@@ -39,7 +39,7 @@ int storage_fromsql(int account_id, struct storage_data* p)
 
 	// storage {`account_id`/`id`/`nameid`/`amount`/`equip`/`identify`/`refine`/`attribute`/`card0`/`card1`/`card2`/`card3`}
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`,`nameid`,`amount`,`equip`,`identify`,`refine`,`attribute`,`expire_time`,`unique_id`");
+	StrBuf->AppendStr(&buf, "SELECT `id`,`nameid`,`amount`,`equip`,`identify`,`refine`,`attribute`,`expire_time`,`bound`,`unique_id`");
 	for( j = 0; j < MAX_SLOTS; ++j )
 		StrBuf->Printf(&buf, ",`card%d`", j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `account_id`='%d' ORDER BY `nameid`", storage_db, account_id);
@@ -60,10 +60,11 @@ int storage_fromsql(int account_id, struct storage_data* p)
 		SQL->GetData(sql_handle, 5, &data, NULL); item->refine = atoi(data);
 		SQL->GetData(sql_handle, 6, &data, NULL); item->attribute = atoi(data);
 		SQL->GetData(sql_handle, 7, &data, NULL); item->expire_time = (unsigned int)atoi(data);
-		SQL->GetData(sql_handle, 8, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
+		SQL->GetData(sql_handle, 8, &data, NULL); item->bound = atoi(data);
+		SQL->GetData(sql_handle, 9, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
 		for( j = 0; j < MAX_SLOTS; ++j )
 		{
-			SQL->GetData(sql_handle, 9+j, &data, NULL); item->card[j] = atoi(data);
+			SQL->GetData(sql_handle, 10+j, &data, NULL); item->card[j] = atoi(data);
 		}
 	}
 	p->storage_amount = i;
@@ -118,6 +119,7 @@ int guild_storage_fromsql(int guild_id, struct guild_storage* p)
 		SQL->GetData(sql_handle, 6, &data, NULL); item->attribute = atoi(data);
 		SQL->GetData(sql_handle, 7, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
 		item->expire_time = 0;
+		item->bound = 0;
 		for( j = 0; j < MAX_SLOTS; ++j )
 		{
 			SQL->GetData(sql_handle, 8+j, &data, NULL); item->card[j] = atoi(data);

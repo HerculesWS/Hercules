@@ -5946,6 +5946,7 @@ BUILDIN(rentitem)
 	it.nameid = nameid;
 	it.identify = 1;
 	it.expire_time = (unsigned int)(time(NULL) + seconds);
+	it.bound = 0;
 	
 	if( (flag = pc->additem(sd, &it, 1, LOG_TYPE_SCRIPT)) )
 	{
@@ -10847,6 +10848,7 @@ BUILDIN(successremovecards) {
 		item_tmp.refine      = sd->status.inventory[i].refine;
 		item_tmp.attribute   = sd->status.inventory[i].attribute;
 		item_tmp.expire_time = sd->status.inventory[i].expire_time;
+		item_tmp.bound       = sd->status.inventory[i].bound;
 		
 		for (j = sd->inventory_data[i]->slot; j < MAX_SLOTS; j++)
 			item_tmp.card[j]=sd->status.inventory[i].card[j];
@@ -10920,6 +10922,7 @@ BUILDIN(failedremovecards) {
 			item_tmp.refine      = sd->status.inventory[i].refine;
 			item_tmp.attribute   = sd->status.inventory[i].attribute;
 			item_tmp.expire_time = sd->status.inventory[i].expire_time;
+			item_tmp.bound       = sd->status.inventory[i].bound;
 			
 			for (j = sd->inventory_data[i]->slot; j < MAX_SLOTS; j++)
 				item_tmp.card[j]=sd->status.inventory[i].card[j];
@@ -11570,6 +11573,7 @@ BUILDIN(getinventorylist)
 				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.inventory[i].card[k]);
 			}
 			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_expire"), j),sd->status.inventory[i].expire_time);
+			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_bound"), j),sd->status.inventory[i].bound);
 			j++;
 		}
 	}
@@ -17455,6 +17459,172 @@ BUILDIN(bg_match_over) {
 	
 	return true;
 }
+/*==========================================
+ * getitembound <item id>,<amount>{,<account ID>};
+ * getitembound "<item name>",<amount>{,<account ID>};
+ *------------------------------------------*/
+BUILDIN(getitembound)
+{
+	int nameid, amount, i, flag;
+	struct item it;
+	struct script_data *data;
+	TBL_PC *sd;
+
+	data = script_getdata(st,2);
+	get_val(st,data);
+	if( data_isstring(data) ) { // "<item name>"
+		const char *name = script->conv_str(st,data);
+		struct item_data *item_data = itemdb->search_name(name);
+		if( item_data == NULL ) {
+			ShowError("buildin_getitembound: Nonexistant item %s requested.\n", name);
+			return 1; //No item created.
+		}
+		nameid = item_data->nameid;
+	} else if( data_isint(data) ) { // <item id>
+		nameid = script->conv_num(st,data);
+		if( nameid <= 0 || !itemdb->exists(nameid) ) {
+			ShowError("buildin_getitembound: Nonexistant item %d requested.\n", nameid);
+			return 1; //No item created.
+		}
+	} else {
+		ShowError("buildin_getitembound: invalid data type for argument #1 (%d).", data->type);
+		return 1;
+	}
+
+	if( itemdb->isstackable(nameid) || itemdb_type(nameid) == IT_PETEGG ) {
+		ShowError("buildin_getitembound: invalid item type. Bound only work for non stackeable items (Item %d).", nameid);
+		return 1;
+	}
+
+	if( (amount = script_getnum(st,3)) <= 0)
+		return 0; //return if amount <=0, skip the useless iteration
+
+	memset(&it,0,sizeof(it));
+	it.nameid = nameid;
+	it.bound = 1;
+	it.identify = 1;
+
+	if( script_hasdata(st,4) )
+		sd = map->id2sd(script_getnum(st,4)); // Account ID
+	else
+		sd = script->rid2sd(st); // Attached player
+
+	if( sd == NULL ) // no target
+		return 0;
+
+	for( i = 0; i < amount; i++ ) {
+		if( (flag = pc->additem(sd, &it, 1, LOG_TYPE_SCRIPT)) ) {
+			clif->additem(sd, 0, 0, flag);
+			if( pc->candrop(sd,&it) )
+				map->addflooritem(&it,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+		}
+	}
+
+	return 0;
+}
+
+/*==========================================
+ * getitembound2 <item id>,<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>{,<account ID>};
+ * getitembound2 "<item name>",<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>{,<account ID>};
+ *------------------------------------------*/
+BUILDIN(getitembound2)
+{
+	int nameid, amount, i, flag;
+	int iden, ref, attr, c1, c2, c3, c4;
+	struct item_data *item_data;
+	struct item item_tmp;
+	struct script_data *data;
+	TBL_PC *sd;
+
+	if( script_hasdata(st,11) )
+		sd = map->id2sd(script_getnum(st,11)); // <Account ID>
+	else
+		sd = script->rid2sd(st); // Attached player
+
+	if( sd == NULL ) // no target
+		return 0;
+
+	data = script_getdata(st,2);
+	get_val(st,data);
+	if( data_isstring(data) ) {
+		const char *name = script->conv_str(st,data);
+		struct item_data *item_data = itemdb->search_name(name);
+		if( item_data )
+			nameid = item_data->nameid;
+		else
+			nameid = UNKNOWN_ITEM_ID;
+	} else
+		nameid = script->conv_num(st,data);
+
+	amount = script_getnum(st,3);
+	iden = script_getnum(st,4);
+	ref = script_getnum(st,5);
+	attr = script_getnum(st,6);
+	c1 = (short)script_getnum(st,7);
+	c2 = (short)script_getnum(st,8);
+	c3 = (short)script_getnum(st,9);
+	c4 = (short)script_getnum(st,10);
+	
+	if( nameid < 0 || (item_data = itemdb->exists(nameid)) == NULL || itemdb->isstackable2(item_data) )
+		return 0;
+
+	memset(&item_tmp,0,sizeof(item_tmp));
+	
+	if( item_data->type == IT_WEAPON || item_data->type == IT_ARMOR )
+		ref = cap_value(ref,0,MAX_REFINE);
+	else if( item_data->type == IT_PETEGG ) {
+		ShowError("getitembound2: invalid item type. Pet Egg cannot be set as rental items.\n");
+		return 1;
+	} else { // Should not happen
+		iden = 1;
+		ref = attr = 0;
+	}
+
+	item_tmp.nameid = nameid;
+	item_tmp.identify = iden;
+	item_tmp.refine = ref;
+	item_tmp.attribute = attr;
+	item_tmp.card[0] = (short)c1;
+	item_tmp.card[1] = (short)c2;
+	item_tmp.card[2] = (short)c3;
+	item_tmp.card[3] = (short)c4;
+	item_tmp.bound = 1;
+
+	for( i = 0; i < amount; i++ ) {
+		if( (flag = pc->additem(sd, &item_tmp, 1, LOG_TYPE_SCRIPT)) ) {
+			clif->additem(sd, 0, 0, flag);
+			if( pc->candrop(sd,&item_tmp) )
+				map->addflooritem(&item_tmp,1,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0);
+		}
+	}
+
+	return 0;
+}
+
+/*==========================================
+ * equipisbounded <equip location>;
+ *------------------------------------------*/
+BUILDIN(equipisbounded)
+{
+	int i = -1, num;
+	TBL_PC *sd;
+
+	if( (sd = script->rid2sd(st)) == NULL )
+		return true;
+
+	num = script_getnum(st,2);
+	if( num > 0 && num <= ARRAYLENGTH(script->equip) )
+		i = pc->checkequip(sd,script->equip[num-1]);
+
+	if( i >= 0 && sd->status.inventory[i].bound )
+		script_pushint(st,1);
+	else
+		script_pushint(st,0);
+
+	return true;
+}
+
+
 // declarations that were supposed to be exported from npc_chat.c
 #ifdef PCRE_SUPPORT
 	BUILDIN(defpattern);
@@ -17950,6 +18120,12 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(bindatcmd, "ss???"),
 		BUILDIN_DEF(unbindatcmd, "s"),
 		BUILDIN_DEF(useatcmd, "s"),
+		/**
+		 * Item bound
+		 **/
+		BUILDIN_DEF(getitembound,"vi?"),
+		BUILDIN_DEF(getitembound2,"viiiiiiii?"),
+		BUILDIN_DEF(equipisbounded,"i"),
 		
 		//Quest Log System [Inkfish]
 		BUILDIN_DEF(setquest, "i"),

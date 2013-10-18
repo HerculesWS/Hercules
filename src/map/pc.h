@@ -736,6 +736,7 @@ struct pc_interface {
 	int (*get_group_level) (struct map_session_data *sd);
 	//int (*getrefinebonus) (int lv,int type); FIXME: This function does not exist, nor it is ever called
 	bool (*can_give_items) (struct map_session_data *sd);
+	bool (*can_give_bounded_items) (struct map_session_data *sd);
 	
 	bool (*can_use_command) (struct map_session_data *sd, const char *command);
 	bool (*has_permission) (struct map_session_data *sd, enum e_pc_permission permission);

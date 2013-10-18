@@ -2781,6 +2781,7 @@ recreate these items perfectly if they are destroyed. Here's what you get:
 @inventorylist_expire[]    - expire time (Unix time stamp). 0 means never 
                              expires.
 @inventorylist_count       - the number of items in these lists.
+@inventorylist_bound       - whether it is an account bounded item or not.
 
 This could be handy to save/restore a character's inventory, since no 
 other command returns such a complete set of data, and could also be the
@@ -4447,6 +4448,42 @@ You can, apparently, even create duplicates of the same pet egg with this
 command, creating a pet which is the same, but simultaneously exists in 
 two eggs, and may hatch from either, although, I'm not sure what kind of a 
 mess will this really cause.
+
+---------------------------------------
+
+*getitembound <item id>,<amount>{,<account ID>};
+*getitembound "<item name>",<amount>{,<account ID>};
+
+This command will give an amount of specified items to the invoking character. 
+If an optional account ID is specified, and the target character is currently 
+online, items will be created in their inventory instead. If they are not 
+online, nothing will happen. 
+
+It works essentially the same as 'getitem', except that items created using
+this command will bound the item to the player's account. They will not be able
+to trade, sell, drop, nor auction the item.
+
+---------------------------------------
+
+*getitembound2 <item id>,<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>{,<account ID>};
+*getitembound2 "<item name>",<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>{,<account ID>};
+
+This command will give an amount of specified items to the invoking character. 
+If an optional account ID is specified, and the target character is currently 
+online, items will be created in their inventory instead. If they are not 
+online, nothing will happen. 
+
+It works essentially the same as 'getitem2', except that items created using
+this command will bound the item to the player's account. They will not be able
+to trade, sell, drop, nor auction the item.
+
+---------------------------------------
+
+*equipisbounded <equipment slots>;
+
+This command will check if the item in the specified equipment slot is bounded
+to the player's account or not. It will return 1 if bounded, 0 otherwise.
+For a list of equipment slots see 'getequipid'.
 
 ---------------------------------------
 

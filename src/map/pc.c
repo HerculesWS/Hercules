@@ -506,6 +506,14 @@ bool pc_can_give_items(struct map_session_data *sd)
 	return pc->has_permission(sd, PC_PERM_TRADE);
 }
 
+/**
+ * Determines if player can give / drop / trade / vend bounded items
+ */
+bool pc_can_give_bounded_items(struct map_session_data *sd)
+{
+	return pc->has_permission(sd, PC_PERM_TRADE_BOUNDED);
+}
+
 /*==========================================
  * prepares character for saving.
  *------------------------------------------*/
@@ -3886,7 +3894,7 @@ int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_l
 	{ // Stackable | Non Rental
 		for( i = 0; i < MAX_INVENTORY; i++ )
 		{
-			if( sd->status.inventory[i].nameid == item_data->nameid && memcmp(&sd->status.inventory[i].card, &item_data->card, sizeof(item_data->card)) == 0 )
+			if( sd->status.inventory[i].nameid == item_data->nameid && sd->status.inventory[i].bound == item_data->bound && memcmp(&sd->status.inventory[i].card, &item_data->card, sizeof(item_data->card)) == 0 )
 			{
 				if( amount > MAX_AMOUNT - sd->status.inventory[i].amount || ( data->stack.inventory && amount > data->stack.amount - sd->status.inventory[i].amount ) )
 					return 5;
@@ -4453,6 +4461,7 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 	{
 		ARR_FIND( 0, MAX_CART, i,
 			sd->status.cart[i].nameid == item_data->nameid &&
+			sd->status.cart[i].bound == item_data->bound &&
 			sd->status.cart[i].card[0] == item_data->card[0] && sd->status.cart[i].card[1] == item_data->card[1] &&
 			sd->status.cart[i].card[2] == item_data->card[2] && sd->status.cart[i].card[3] == item_data->card[3] );
 	};
@@ -7896,7 +7905,7 @@ int pc_setmadogear(TBL_PC* sd, int flag)
  *------------------------------------------*/
 int pc_candrop(struct map_session_data *sd, struct item *item)
 {
-	if( item && item->expire_time )
+	if( item && (item->expire_time || (item->bound && !pc->can_give_bounded_items(sd))) )
 		return 0;
 	if( !pc->can_give_items(sd) ) //check if this GM level can drop items
 		return 0;
@@ -10221,6 +10230,7 @@ void pc_defaults(void) {
 	pc->class2idx = pc_class2idx;
 	pc->get_group_level = pc_get_group_level;
 	pc->can_give_items = pc_can_give_items;
+	pc->can_give_bounded_items = pc_can_give_bounded_items;
 	
 	pc->can_use_command = pc_can_use_command;
 	pc->has_permission = pc_has_permission;

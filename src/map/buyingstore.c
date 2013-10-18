@@ -290,7 +290,7 @@ void buyingstore_trade(struct map_session_data* sd, int account_id, unsigned int
 			return;
 		}
 
-		if( sd->status.inventory[index].expire_time || !itemdb_cantrade(&sd->status.inventory[index], pc->get_group_level(sd), pc->get_group_level(pl_sd)) || memcmp(sd->status.inventory[index].card, buyingstore->blankslots, sizeof(buyingstore->blankslots)) )
+		if( sd->status.inventory[index].expire_time || (sd->status.inventory[index].bound && !pc->can_give_bounded_items(sd)) || !itemdb_cantrade(&sd->status.inventory[index], pc->get_group_level(sd), pc->get_group_level(pl_sd)) || memcmp(sd->status.inventory[index].card, buyingstore->blankslots, sizeof(buyingstore->blankslots)) )
 		{// non-tradable item
 			clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, nameid);
 			return;
