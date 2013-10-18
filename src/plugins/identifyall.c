@@ -20,7 +20,7 @@ ACMD(identifyall)
     int i,num;
     struct item it;
 
-    nullpo_retr(-1,sd);
+    if (!sd) return false;
 
     for(i=num=0;i < MAX_INVENTORY;i++){
         if(!sd->status.inventory[i].identify && sd->status.inventory[i].nameid){
