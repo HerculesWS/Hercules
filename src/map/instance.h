@@ -40,11 +40,16 @@ struct instance_data {
 
 	int idle_timer;
 	unsigned int idle_timeout, idle_timeoutval;
+	
+	unsigned int original_progress_timeout;
+	
+	struct point respawn;/* reload spawn */
 };
 
 struct instance_interface {
 	void (*init) (void);
 	void (*final) (void);
+	void (*reload) (void);
 	/* start point */
 	unsigned short start_id;
 	unsigned short instances;/* count */
@@ -56,6 +61,9 @@ struct instance_interface {
 	void (*del_map) (int16 m);
 	int (*map2imap) (int16 m, int instance_id);
 	int (*mapid2imapid) (int16 m, int instance_id);
+	int (*mapname2imap) (const char *map_name, int instance_id);
+	int (*map_npcsub) (struct block_list* bl, va_list args);
+	int (*init_npc) (struct block_list* bl, va_list args);
 	void (*destroy) (int instance_id);
 	void (*start) (int instance_id);
 	void (*check_idle) (int instance_id);

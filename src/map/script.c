@@ -17455,6 +17455,74 @@ BUILDIN(bg_match_over) {
 	
 	return true;
 }
+
+BUILDIN(instance_mapname) {
+ 	const char *map_name;
+	int m;
+	short instance_id = -1;
+	
+ 	map_name = script_getstr(st,2);
+	
+	if( script_hasdata(st,3) )
+		instance_id = script_getnum(st,3);
+	else
+		instance_id = st->instance_id;
+	
+	// Check that instance mapname is a valid map
+	if( instance_id == -1 || (m = instance->mapname2imap(map_name,instance_id)) == -1 )
+		script_pushconststr(st, "");
+	else
+		script_pushconststr(st, map->list[m].name);
+	
+	return true;
+}
+/* modify an instances' reload-spawn point */
+/* instance_set_respawn <map_name>,<x>,<y>{,<instance_id>} */
+/* returns 1 when successful, 0 otherwise. */
+BUILDIN(instance_set_respawn) {
+	const char *map_name;
+	short instance_id = -1;
+	short mid;
+	short x,y;
+	
+	map_name = script_getstr(st,2);
+	x = script_getnum(st, 3);
+	y = script_getnum(st, 4);
+	
+	if( script_hasdata(st, 5) )
+		instance_id = script_getnum(st, 5);
+	else
+		instance_id = st->instance_id;
+	
+	if( instance_id == -1 || !instance->valid(instance_id) )
+		script_pushint(st, 0);
+	else if( (mid = map->mapname2mapid(map_name)) == -1 ) {
+		ShowError("buildin_instance_set_respawn: unknown map '%s'\n",map_name);
+		script_pushint(st, 0);
+	} else {
+		int i;
+		
+		for(i = 0; i < instance->list[instance_id].num_map; i++) {
+			if( map->list[instance->list[instance_id].map[i]].m == mid ) {
+				instance->list[instance_id].respawn.map = map_id2index(mid);
+				instance->list[instance_id].respawn.x = x;
+				instance->list[instance_id].respawn.y = y;
+				break;
+			}
+		}
+		
+		if( i != instance->list[instance_id].num_map )
+			script_pushint(st, 1);
+		else {
+			ShowError("buildin_instance_set_respawn: map '%s' not part of instance '%s'\n",map_name,instance->list[instance_id].name);
+			script_pushint(st, 0);
+		}
+	}
+	
+	
+	return true;
+}
+
 // declarations that were supposed to be exported from npc_chat.c
 #ifdef PCRE_SUPPORT
 	BUILDIN(defpattern);
@@ -17920,6 +17988,9 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(has_instance,"s?"),
 		BUILDIN_DEF(instance_warpall,"sii?"),
 		BUILDIN_DEF(instance_check_party,"i???"),
+		BUILDIN_DEF(instance_mapname,"s?"),
+		BUILDIN_DEF(instance_set_respawn,"sii?"),
+		
 		/**
 		 * 3rd-related
 		 **/

@@ -110,7 +110,10 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 	instance->list[i].owner_id = owner_id;
 	instance->list[i].owner_type = type;
 	instance->list[i].vars = idb_alloc(DB_OPT_RELEASE_DATA);
-
+	instance->list[i].respawn.map = 0;
+	instance->list[i].respawn.y = 0;
+	instance->list[i].respawn.x = 0;
+	
 	safestrncpy( instance->list[i].name, name, sizeof(instance->list[i].name) );
 	
 	if( type != IOT_NONE ) {
@@ -242,6 +245,7 @@ int instance_add_map(const char *name, int instance_id, bool usebasename, const 
 	map->list[im].m = im;
 	map->list[im].instance_id = instance_id;
 	map->list[im].instance_src_map = m;
+	map->list[im].flag.src4instance = 0; //clear
 	map->list[m].flag.src4instance = 1; // Flag this map as a src map for instances
 
 	RECREATE(instance->list[instance_id].map, unsigned short, ++instance->list[instance_id].num_map);
@@ -271,6 +275,21 @@ int instance_map2imap(int16 m, int instance_id) {
  	return -1;
 }
 
+int instance_mapname2imap(const char *map_name, int instance_id) {
+ 	int i;
+	
+	if( !instance->valid(instance_id) ) {
+		return -1;
+	}
+	
+	for( i = 0; i < instance->list[instance_id].num_map; i++ ) {
+		if( instance->list[instance_id].map[i] && !strcmpi(map->list[map->list[instance->list[instance_id].map[i]].instance_src_map].name,map_name) )
+			return instance->list[instance_id].map[i];
+ 	}
+ 	return -1;
+}
+
+
 /*--------------------------------------
  * m : source map
  * instance_id : where to search
@@ -291,7 +310,6 @@ int instance_mapid2imapid(int16 m, int instance_id) {
 }
 
 /*--------------------------------------
- * map_instance_map_npcsub
  * Used on Init instance. Duplicates each script on source map
  *--------------------------------------*/
 int instance_map_npcsub(struct block_list* bl, va_list args) {
@@ -300,6 +318,19 @@ int instance_map_npcsub(struct block_list* bl, va_list args) {
 
 	if ( npc->duplicate4instance(nd, m) )
 		ShowDebug("instance_map_npcsub:npc_duplicate4instance failed (%s/%d)\n",nd->name,m);
+
+	return 1;
+}
+
+int instance_init_npc(struct block_list* bl, va_list args) {
+	struct npc_data *nd = (struct npc_data*)bl;
+	struct event_data *ev;
+	char evname[EVENT_NAME_LENGTH];
+	
+	snprintf(evname, EVENT_NAME_LENGTH, "%s::OnInstanceInit", nd->exname);
+
+	if( ( ev = strdb_get(npc->ev_db, evname) ) )
+		script->run(ev->nd->u.scr.script, ev->pos, 0, ev->nd->bl.id);
 
 	return 1;
 }
@@ -314,8 +345,11 @@ void instance_init(int instance_id) {
 		return; // nothing to do
 
 	for( i = 0; i < instance->list[instance_id].num_map; i++ )
-		map->foreachinmap(instance_map_npcsub, map->list[instance->list[instance_id].map[i]].instance_src_map, BL_NPC, instance->list[instance_id].map[i]);
+		map->foreachinmap(instance->map_npcsub, map->list[instance->list[instance_id].map[i]].instance_src_map, BL_NPC, instance->list[instance_id].map[i]);
 
+	/* cant be together with the previous because it will rely on all of them being up */
+	map->foreachininstance(instance->init_npc, instance_id, BL_NPC);
+	
 	instance->list[instance_id].state = INSTANCE_BUSY;
 }
 
@@ -566,9 +600,11 @@ void instance_set_timeout(int instance_id, unsigned int progress_timeout, unsign
 	if( progress_timeout ) {
 		instance->list[instance_id].progress_timeout = now + progress_timeout;
 		instance->list[instance_id].progress_timer = timer->add( timer->gettick() + progress_timeout * 1000, instance->destroy_timer, instance_id, 0);
+		instance->list[instance_id].original_progress_timeout = progress_timeout;
 	} else {
 		instance->list[instance_id].progress_timeout = 0;
 		instance->list[instance_id].progress_timer = INVALID_TIMER;
+		instance->list[instance_id].original_progress_timeout = 0;
 	}
 
 	if( idle_timeout ) {
@@ -600,6 +636,37 @@ void instance_check_kick(struct map_session_data *sd) {
 	}
 }
 
+void do_reload_instance(void) {
+	struct s_mapiterator *iter;
+	struct map_session_data *sd;
+	int i, k;
+	
+	for(i = 0; i < instance->instances; i++) {
+		for(k = 0; k < instance->list[i].num_map; k++) {
+			if( !map->list[map->list[instance->list[i].map[k]].instance_src_map].flag.src4instance )
+				break;
+		}
+		
+		if( k != instance->list[i].num_map ) /* any (or all) of them were disabled, we destroy */
+			instance->destroy(i);
+		else {
+			/* populate the instance again */
+			instance->start(i);
+			/* restart timers */
+			instance->set_timeout(i,instance->list[i].original_progress_timeout,instance->list[i].idle_timeoutval);
+		}
+	}
+	
+	iter = mapit_getallusers();
+	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
+		if(sd && map->list[sd->bl.m].instance_id >= 0) {
+			pc->setpos(sd,instance->list[map->list[sd->bl.m].instance_id].respawn.map,instance->list[map->list[sd->bl.m].instance_id].respawn.x,instance->list[map->list[sd->bl.m].instance_id].respawn.y,CLR_TELEPORT);
+		}
+	}
+	mapit->free(iter);
+}
+
+
 void do_final_instance(void) {
 	int i;
 	
@@ -623,7 +690,7 @@ void instance_defaults(void) {
 	
 	instance->init = do_init_instance;
 	instance->final = do_final_instance;
-	
+	instance->reload = do_reload_instance;
 	/* start point */
 	instance->start_id = 0;
 	/* count */
@@ -636,6 +703,9 @@ void instance_defaults(void) {
 	instance->del_map = instance_del_map;
 	instance->map2imap = instance_map2imap;
 	instance->mapid2imapid = instance_mapid2imapid;
+	instance->mapname2imap = instance_mapname2imap;
+	instance->map_npcsub = instance_map_npcsub;
+	instance->init_npc = instance_init_npc;
 	instance->destroy = instance_destroy;
 	instance->start = instance_init;
 	instance->check_idle = instance_check_idle;

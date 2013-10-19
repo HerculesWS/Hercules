@@ -4791,6 +4791,14 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 				stop = true;
 			}
 		}
+		/* we hit a instance, if empty we populate the spawn data */
+		if( map->list[m].instance_id >= 0 && instance->list[map->list[m].instance_id].respawn.map == 0 &&
+		    instance->list[map->list[m].instance_id].respawn.x == 0 &&
+		    instance->list[map->list[m].instance_id].respawn.y == 0) {
+			instance->list[map->list[m].instance_id].respawn.map = mapindex;
+			instance->list[map->list[m].instance_id].respawn.x = x;
+			instance->list[map->list[m].instance_id].respawn.y = y;
+		}
 	}
 
 	sd->state.changemap = (sd->mapindex != mapindex);

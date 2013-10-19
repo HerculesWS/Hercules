@@ -2288,6 +2288,11 @@
 12300,0,0,0,0,0,0,0,"Revisiting Etran"
 12301,0,0,0,0,0,0,0,"Two remaining friends"
 
+// Old Glast Heim
+12317,82800,0,0,0,0,0,0,"Fake Keyblade"
+12318,0,2475,1,0,0,0,0,"Upper Cats: annoying guy"
+12319,0,2476,1,0,0,0,0,"Upper Cats: annoying guy"
+
 13000,0,0,0,0,0,0,0,"RWC2011Card Gathering"
 13001,82800,0,0,0,0,0,0,"RWC2011Card Gathering - Hold"
 
