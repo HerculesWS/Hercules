@@ -17538,6 +17538,19 @@ BUILDIN(bg_match_over) {
 	
 	return true;
 }
+/* force a save wtith involved character */
+BUILDIN(savechar) {
+
+	struct map_session_data *sd = script->rid2sd(st);
+
+	if (!sd)
+		return false;
+
+	chrif->save(sd,0);
+
+	return true;
+}
+
 // declarations that were supposed to be exported from npc_chat.c
 #ifdef PCRE_SUPPORT
 	BUILDIN(defpattern);
@@ -18057,6 +18070,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(sit, "?"),
 		BUILDIN_DEF(stand, "?"),
 		BUILDIN_DEF(issit, "?"),
+		BUILDIN_DEF(savechar,""),
 		
 		/* New BG Commands [Hercules] */
 		BUILDIN_DEF(bg_create_team,"sii"),
