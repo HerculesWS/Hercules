@@ -2097,6 +2097,8 @@ struct {
 	struct HPMHookPoint *HP_instance_init_post;
 	struct HPMHookPoint *HP_instance_final_pre;
 	struct HPMHookPoint *HP_instance_final_post;
+	struct HPMHookPoint *HP_instance_reload_pre;
+	struct HPMHookPoint *HP_instance_reload_post;
 	struct HPMHookPoint *HP_instance_create_pre;
 	struct HPMHookPoint *HP_instance_create_post;
 	struct HPMHookPoint *HP_instance_add_map_pre;
@@ -2107,6 +2109,12 @@ struct {
 	struct HPMHookPoint *HP_instance_map2imap_post;
 	struct HPMHookPoint *HP_instance_mapid2imapid_pre;
 	struct HPMHookPoint *HP_instance_mapid2imapid_post;
+	struct HPMHookPoint *HP_instance_mapname2imap_pre;
+	struct HPMHookPoint *HP_instance_mapname2imap_post;
+	struct HPMHookPoint *HP_instance_map_npcsub_pre;
+	struct HPMHookPoint *HP_instance_map_npcsub_post;
+	struct HPMHookPoint *HP_instance_init_npc_pre;
+	struct HPMHookPoint *HP_instance_init_npc_post;
 	struct HPMHookPoint *HP_instance_destroy_pre;
 	struct HPMHookPoint *HP_instance_destroy_post;
 	struct HPMHookPoint *HP_instance_start_pre;
@@ -6978,6 +6986,8 @@ struct {
 	int HP_instance_init_post;
 	int HP_instance_final_pre;
 	int HP_instance_final_post;
+	int HP_instance_reload_pre;
+	int HP_instance_reload_post;
 	int HP_instance_create_pre;
 	int HP_instance_create_post;
 	int HP_instance_add_map_pre;
@@ -6988,6 +6998,12 @@ struct {
 	int HP_instance_map2imap_post;
 	int HP_instance_mapid2imapid_pre;
 	int HP_instance_mapid2imapid_post;
+	int HP_instance_mapname2imap_pre;
+	int HP_instance_mapname2imap_post;
+	int HP_instance_map_npcsub_pre;
+	int HP_instance_map_npcsub_post;
+	int HP_instance_init_npc_pre;
+	int HP_instance_init_npc_post;
 	int HP_instance_destroy_pre;
 	int HP_instance_destroy_post;
 	int HP_instance_start_pre;
