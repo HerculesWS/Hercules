@@ -1445,6 +1445,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(map->arg_next_value, HP_map_arg_next_value) },
 	{ HP_POP(map->addblcell, HP_map_addblcell) },
 	{ HP_POP(map->delblcell, HP_map_delblcell) },
+	{ HP_POP(map->get_new_bonus_id, HP_map_get_new_bonus_id) },
 /* mapit */
 	{ HP_POP(mapit->alloc, HP_mapit_alloc) },
 	{ HP_POP(mapit->free, HP_mapit_free) },
