@@ -1783,6 +1783,9 @@ void clif_selllist(struct map_session_data *sd)
 
 			if( sd->status.inventory[i].expire_time || (sd->status.inventory[i].bound && !pc->can_give_bounded_items(sd)) )
 				continue; // Cannot Sell Rental Items or Account Bounded Items
+				
+			if( sd->status.inventory[i].bound && !pc->can_give_bounded_items(sd))
+				continue; // Don't allow sale of bound items
 
 			val=sd->inventory_data[i]->value_sell;
 			if( val < 0 )
@@ -15187,6 +15190,11 @@ void clif_parse_Auction_register(int fd, struct map_session_data *sd)
 	}
 
 	// Auction checks...
+	if( sd->status.inventory[sd->auction.index].bound && !pc->can_give_bounded_items(sd) ) {
+		clif->message(sd->fd, msg_txt(293));
+		clif->auction_message(fd, 2); // The auction has been canceled
+		return;
+	}
 	if( sd->status.zeny < (auction.hours * battle_config.auction_feeperhour) ) {
 		clif->auction_message(fd, 5); // You do not have enough zeny to pay the Auction Fee.
 		return;
@@ -17248,9 +17256,9 @@ void clif_parse_MoveItem(int fd, struct map_session_data *sd) {
 /* [Ind/Hercules] */
 void clif_cashshop_db(void) {
 	config_t cashshop_conf;
-	config_setting_t *cashshop = NULL;
+	config_setting_t *cashshop = NULL, *cats = NULL;
 	const char *config_filename = "db/cashshop_db.conf"; // FIXME hardcoded name
-	int i;
+	int i, item_count_t = 0;
 	for( i = 0; i < CASHSHOP_TAB_MAX; i++ ) {
 		CREATE(clif->cs.data[i], struct hCSData *, 1);
 		clif->cs.item_count[i] = 0;
@@ -17263,67 +17271,53 @@ void clif_cashshop_db(void) {
 	
 	cashshop = config_lookup(&cashshop_conf, "cash_shop");
 	
-	if (cashshop != NULL) {
-		config_setting_t *cats = config_setting_get_elem(cashshop, 0);
-		config_setting_t *cat;
-		int k, item_count_t = 0;
-		
+	if( cashshop != NULL && (cats = config_setting_get_elem(cashshop, 0)) != NULL ) {
 		for(i = 0; i < CASHSHOP_TAB_MAX; i++) {
+			config_setting_t *cat;
 			char entry_name[10];
 			
 			sprintf(entry_name,"cat_%d",i);
 			
 			if( (cat = config_setting_get_member(cats, entry_name)) != NULL ) {
-				int item_count = config_setting_length(cat);
+				int k, item_count = config_setting_length(cat);
 				
-				if( item_count == 0 ) {
-					ShowWarning("cashshop_db: category '%s' is empty! adding dull apple!\n", entry_name);
-					RECREATE(clif->cs.data[i], struct hCSData *, ++clif->cs.item_count[i]);
-					CREATE(clif->cs.data[i][ clif->cs.item_count[i] - 1 ], struct hCSData , 1);
-					
-					clif->cs.data[i][ clif->cs.item_count[i] - 1 ]->id = UNKNOWN_ITEM_ID;
-					clif->cs.data[i][ clif->cs.item_count[i] - 1 ]->price = 999;
-				} else {
-					for(k = 0; k < item_count; k++) {
-						config_setting_t *entry = config_setting_get_elem(cat,k);
-						const char *name = config_setting_name(entry);
-						int price = config_setting_get_int(entry);
-						struct item_data * data = NULL;
-						
-						if( price < 1 ) {
-							ShowWarning("cashshop_db: unsupported price '%d' for entry named '%s' in category '%s'\n", price, name, entry_name);
+				for(k = 0; k < item_count; k++) {
+					config_setting_t *entry = config_setting_get_elem(cat,k);
+					const char *name = config_setting_name(entry);
+					int price = config_setting_get_int(entry);
+					struct item_data * data = NULL;
+
+					if( price < 1 ) {
+						ShowWarning("cashshop_db: unsupported price '%d' for entry named '%s' in category '%s'\n", price, name, entry_name);
+						continue;
+					}
+
+					if( name[0] == 'I' && name[1] == 'D' && strlen(name) <= 7 ) {
+						if( !( data = itemdb->exists(atoi(name+2))) ) {
+							ShowWarning("cashshop_db: unknown item id '%s' in category '%s'\n", name+2, entry_name);
 							continue;
 						}
-											
-						if( name[0] == 'I' && name[1] == 'D' && strlen(name) <= 7 ) {
-							if( !( data = itemdb->exists(atoi(name+2))) ) {
-								ShowWarning("cashshop_db: unknown item id '%s' in category '%s'\n", name+2, entry_name);
-								continue;
-							}
-						} else {
-							if( !( data = itemdb->search_name(name) ) ) {
-								ShowWarning("cashshop_db: unknown item name '%s' in category '%s'\n", name, entry_name);
-								continue;
-							}
+					} else {
+						if( !( data = itemdb->search_name(name) ) ) {
+							ShowWarning("cashshop_db: unknown item name '%s' in category '%s'\n", name, entry_name);
+							continue;
 						}
-						
-						
-						RECREATE(clif->cs.data[i], struct hCSData *, ++clif->cs.item_count[i]);
-						CREATE(clif->cs.data[i][ clif->cs.item_count[i] - 1 ], struct hCSData , 1);
-						
-						clif->cs.data[i][ clif->cs.item_count[i] - 1 ]->id = data->nameid;
-						clif->cs.data[i][ clif->cs.item_count[i] - 1 ]->price = price;
-						item_count_t++;
 					}
+
+
+					RECREATE(clif->cs.data[i], struct hCSData *, ++clif->cs.item_count[i]);
+					CREATE(clif->cs.data[i][ clif->cs.item_count[i] - 1 ], struct hCSData , 1);
+
+					clif->cs.data[i][ clif->cs.item_count[i] - 1 ]->id = data->nameid;
+					clif->cs.data[i][ clif->cs.item_count[i] - 1 ]->price = price;
+					item_count_t++;
 				}
-			} else {
-				ShowError("cashshop_db: category '%s' (%d) not found!!\n",entry_name,i);
 			}
 		}
 		
-		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", item_count_t, config_filename);
 		config_destroy(&cashshop_conf);
 	}
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", item_count_t, config_filename);
 }
 /// Items that are in favorite tab of inventory (ZC_ITEM_FAVORITE).
 /// 0900 <index>.W <favorite>.B
@@ -17378,6 +17372,9 @@ void clif_parse_CashShopSchedule(int fd, struct map_session_data *sd) {
 	int i, j = 0;
 	
 	for( i = 0; i < CASHSHOP_TAB_MAX; i++ ) {
+		if( clif->cs.item_count[i] == 0 )
+			continue; // Skip empty tabs, the client only expects filled ones
+
 		WFIFOHEAD(fd, 8 + ( clif->cs.item_count[i] * 6 ) );
 		WFIFOW(fd, 0) = 0x8ca;
 		WFIFOW(fd, 2) = 8 + ( clif->cs.item_count[i] * 6 );
@@ -17479,7 +17476,7 @@ void clif_parse_CashShopReqTab(int fd, struct map_session_data *sd) {
 	short tab = RFIFOW(fd, 2);
 	int j;
 
-	if( tab < 0 || tab > CASHSHOP_TAB_MAX )
+	if( tab < 0 || tab > CASHSHOP_TAB_MAX || clif->cs.item_count[tab] == 0 )
 		return;
 
 	WFIFOHEAD(fd, 10 + ( clif->cs.item_count[tab] * 6 ) );

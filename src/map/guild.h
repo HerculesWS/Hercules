@@ -148,6 +148,9 @@ struct guild_interface {
 	/* guild aura */
 	void (*aura_refresh) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
 	/* */
+#ifdef BOUND_ITEMS
+	void (*retrieveitembound) (int char_id,int aid,int guild_id);
+#endif
 	int (*payexp_timer) (int tid, unsigned int tick, int id, intptr_t data);
 	TBL_PC* (*sd_check) (int guild_id, int account_id, int char_id);
 	bool (*read_guildskill_tree_db) (char* split[], int columns, int current);

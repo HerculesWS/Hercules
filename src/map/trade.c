@@ -365,8 +365,8 @@ void trade_tradeadditem(struct map_session_data *sd, short index, short amount) 
 		return;
 	}
 
-	if( item->bound && !pc->can_give_bounded_items(sd) ) { // Account Bound
-		clif->message (sd->fd, msg_txt(497)); // Can't distribute an account bounded item
+	if( ((item->bound == 1 || item->bound > 2) || (item->bound == 2 && sd->status.guild_id != target_sd->status.guild_id)) && !pc->can_give_bounded_items(sd) ) { // Item Bound
+		clif->message(sd->fd, msg_txt(293));
 		clif->tradeitemok(sd, index+2, 1);
 		return;
 	}

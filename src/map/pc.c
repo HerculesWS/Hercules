@@ -935,6 +935,10 @@ int pc_isequip(struct map_session_data *sd,int n)
  *------------------------------------------*/
 bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_time, int group_id, struct mmo_charstatus *st, bool changing_mapservers) {
 	int i;
+#ifdef BOUND_ITEMS
+	int j;
+	int idxlist[MAX_INVENTORY];
+#endif
 	unsigned long tick = timer->gettick();
 	uint32 ip = session[sd->fd]->client_addr;
 
@@ -1135,6 +1139,14 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	 **/
 	pc->itemcd_do(sd,true);
 	
+#ifdef BOUND_ITEMS
+	// Party bound item check
+	if(sd->status.party_id == 0 && (j = pc->bound_chk(sd,3,idxlist))) { // Party was deleted while character offline
+		for(i=0;i<j;i++)
+			pc->delitem(sd,idxlist[i],sd->status.inventory[idxlist[i]].amount,0,1,LOG_TYPE_OTHER);
+	}
+#endif
+
 	/* [Ind/Hercules] */
 	sd->sc_display = NULL;
 	sd->sc_display_count = 0;
@@ -4447,7 +4459,7 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 		return 1;
 	}
 
-	if( !itemdb_cancartstore(item_data, pc->get_group_level(sd)) )
+	if( !itemdb_cancartstore(item_data, pc->get_group_level(sd)) || (item_data->bound > 1 && !pc->can_give_bounded_items(sd)))
 	{ // Check item trade restrictions	[Skotlex]
 		clif->message (sd->fd, msg_txt(264));
 		return 1;/* TODO: there is no official response to this? */
@@ -4460,8 +4472,7 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 	if( itemdb->isstackable2(data) && !item_data->expire_time )
 	{
 		ARR_FIND( 0, MAX_CART, i,
-			sd->status.cart[i].nameid == item_data->nameid &&
-			sd->status.cart[i].bound == item_data->bound &&
+			sd->status.cart[i].nameid == item_data->nameid && sd->status.cart[i].bound == item_data->bound &&
 			sd->status.cart[i].card[0] == item_data->card[0] && sd->status.cart[i].card[1] == item_data->card[1] &&
 			sd->status.cart[i].card[2] == item_data->card[2] && sd->status.cart[i].card[3] == item_data->card[3] );
 	};
@@ -4594,6 +4605,25 @@ int pc_getitemfromcart(struct map_session_data *sd,int idx,int amount)
 		return pc->cart_delitem(sd,idx,amount,0,LOG_TYPE_NONE);
 
 	return flag;
+}
+ /*==========================================
+ * Bound Item Check
+ * Type:
+ * 1 Account Bound
+ * 2 Guild Bound
+ * 3 Party Bound
+ * 4 Character Bound
+ *------------------------------------------*/
+int pc_bound_chk(TBL_PC *sd,int type,int *idxlist)
+{
+	int i=0, j=0;
+	for(i=0;i<MAX_INVENTORY;i++){
+		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].amount > 0 && sd->status.inventory[i].bound == type) {
+			idxlist[j] = i;
+			j++;
+		}
+	}
+	return j;
 }
 
 /*==========================================
@@ -4799,6 +4829,14 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 				mapindex = map_id2index(m);
 				stop = true;
 			}
+		}
+		/* we hit a instance, if empty we populate the spawn data */
+		if( map->list[m].instance_id >= 0 && instance->list[map->list[m].instance_id].respawn.map == 0 &&
+		    instance->list[map->list[m].instance_id].respawn.x == 0 &&
+		    instance->list[map->list[m].instance_id].respawn.y == 0) {
+			instance->list[map->list[m].instance_id].respawn.map = mapindex;
+			instance->list[map->list[m].instance_id].respawn.x = x;
+			instance->list[map->list[m].instance_id].respawn.y = y;
 		}
 	}
 
@@ -10454,6 +10492,7 @@ void pc_defaults(void) {
 	pc->read_skill_tree = pc_read_skill_tree;
 	pc->isUseitem = pc_isUseitem;
 	pc->show_steal = pc_show_steal;
+	pc->bound_chk = pc_bound_chk;
 	pc->checkcombo = pc_checkcombo;
 	pc->calcweapontype = pc_calcweapontype;
 	pc->removecombo = pc_removecombo;

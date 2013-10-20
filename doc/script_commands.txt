@@ -4311,10 +4311,10 @@ client for getting Hercules).
 *getitem <item id>,<amount>{,<account ID>};
 *getitem "<item name>",<amount>{,<account ID>};
 
-This command will give a specific amount of specified items to the target 
-character. If the character is not online, nothing will happen.
-If <account ID> is not specified, items will be created in the invoking 
-character inventory instead.
+This command will give an amount of specified items to the invoking character. 
+If an optional account ID is specified, and the target character is currently 
+online, items will be created in their inventory instead. If they are not 
+online, nothing will happen.
 
 In the first and most commonly used version of this command, items are 
 referred to by their database ID number found in 'db/(pre-)re/item_db.txt'.
@@ -4451,39 +4451,49 @@ mess will this really cause.
 
 ---------------------------------------
 
-*getitembound <item id>,<amount>{,<account ID>};
-*getitembound "<item name>",<amount>{,<account ID>};
+*getitembound <item id>,<amount>,<bound type>{,<account ID>};
+*getitembound "<item name>",<amount>,<bound type>{,<account ID>};
 
-This command will give an amount of specified items to the invoking character. 
-If an optional account ID is specified, and the target character is currently 
-online, items will be created in their inventory instead. If they are not 
-online, nothing will happen. 
+This command behaves identically to 'getitem', but the items created will be
+bound to the target character as specified by the bound type. All items created
+in this manner cannot be dropped, sold, vended, auctioned, or mailed, and in
+some cases cannot be traded or stored.
 
-It works essentially the same as 'getitem', except that items created using
-this command will bound the item to the player's account. They will not be able
-to trade, sell, drop, nor auction the item.
-
----------------------------------------
-
-*getitembound2 <item id>,<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>{,<account ID>};
-*getitembound2 "<item name>",<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>{,<account ID>};
-
-This command will give an amount of specified items to the invoking character. 
-If an optional account ID is specified, and the target character is currently 
-online, items will be created in their inventory instead. If they are not 
-online, nothing will happen. 
-
-It works essentially the same as 'getitem2', except that items created using
-this command will bound the item to the player's account. They will not be able
-to trade, sell, drop, nor auction the item.
+Valid bound types are:
+ 1 - Account Bound
+ 2 - Guild Bound
+ 3 - Party Bound
+ 4 - Character Bound
 
 ---------------------------------------
 
-*equipisbounded <equipment slots>;
+*getitembound2 <item id>,<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>,<bound type>;
+*getitembound2 "<item name>",<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>,<bound type>;
 
-This command will check if the item in the specified equipment slot is bounded
-to the player's account or not. It will return 1 if bounded, 0 otherwise.
-For a list of equipment slots see 'getequipid'.
+This command behaves identically to 'getitem2', but the items created will be
+bound to the target character as specified by the bound type. All items created
+in this manner cannot be dropped, sold, vended, auctioned, or mailed, and in
+some cases cannot be traded or stored.
+
+For a list of bound types see 'getitembound'.
+
+---------------------------------------
+
+*countbound({<bound type>})
+
+This function will return the number of bounded items in the character's
+inventory, and sets an array @bound_items[] containing all item IDs of the
+counted items. If a bound type is specified, only those items will be counted.
+
+For a list of bound types see 'getitembound'.
+
+Example:
+	mes "You currently have "+countbound()+" bounded items.";
+	next;
+	mes "The list of bounded items include:";
+	for(set .@i,0; .@i<getarraysize(@bound_items); set .@i,.@i+1)
+		mes getitemname(@bound_items[.@i]);
+	close;
 
 ---------------------------------------
 
@@ -4631,7 +4641,7 @@ items.
 This function will return the number of items for the specified item ID 
 and other parameters that the invoking character has in the inventory.
 Check 'getitem2' to understand the arguments of the function.
-    
+
 ---------------------------------------
 
 *groupranditem <item_id/constant>;
@@ -7897,6 +7907,26 @@ if (instance_check_party(getcharid(1),2,2,149)) {
 }
 
 ---------------------------------------
+*instance_set_respawn(<map_name>,<x>,<y>{,<instance_id>});
+
+Updates the 'reload spawn' position of a instance,
+that is where players in the instance are sent to upon @reloadscript,
+uses the npc instance (if any) when instance_id is not provided,
+handy to update a instance's progress so that when/if @reloadscript happens
+the damage to the players progress is reduced.
+It is most effective when used with instance variables (which are @reloadscript persistent)
+
+If a player warps into a instance before this command has been used,
+it will use the player's warp destination as the initial respawn point,
+it can of course be modified by using this script command at any point.
+
+---------------------------------------
+*instance_mapname("<map name>"{,<instance id>})
+
+Returns the unique name of the instanced map. If no instance ID is specified,
+the instance the script is attached to is used. If the script is not attached to
+an instance, the instance of the currently attached player's party is used. If
+that fails, the command returns an empty string instead.
 
 =========================
 |8.- Quest Log commands.|

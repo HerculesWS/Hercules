@@ -632,19 +632,20 @@ identify_flag: 0 = unidentified, 1 = identified
 attribute: 0 = not broken, 1 = broken
 
 ---------------------------------------
-
-@itembound <item name/ID> {<amount>}
+ 
+@itembound <item name/ID> <amount> <bound_type>
 
 Creates the specified item and bounds it to the account.
-If an amount is given for @itembound, that number will be created.
+bound_type: 1 = Account, 2 = Guild, 3 = Party, 4 = Character
 
 ---------------------------------------
 
-@itembound2 <item name/ID> <quantity> <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4>
+@itembound2 <item name/ID> <quantity> <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4> <bound_type>
 
 Creates an item with the given parameters (the 'cards' can be any item) and bounds it to the account.
 identify_flag: 0 = unidentified, 1 = identified
 attribute: 0 = not broken, 1 = broken
+bound_type: 1 = Account, 2 = Guild, 3 = Party, 4 = Character
 
 ---------------------------------------
 

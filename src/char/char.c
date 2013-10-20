@@ -724,11 +724,9 @@ int memitemdata_to_sql(const struct item items[], int max, int id, int tableswit
 	// it significantly reduces cpu load on the database server.
 
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`");
+	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`");
 	for( j = 0; j < MAX_SLOTS; ++j )
 		StrBuf->Printf(&buf, ", `card%d`", j);
-	if( tableswitch != TABLE_GUILD_STORAGE )
-		StrBuf->AppendStr(&buf, ", `bound`");
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `%s`='%d'", tablename, selectoption, id);
 
 	stmt = SQL->StmtMalloc(sql_handle);
@@ -749,10 +747,9 @@ int memitemdata_to_sql(const struct item items[], int max, int id, int tableswit
 	SQL->StmtBindColumn(stmt, 5, SQLDT_CHAR,      &item.refine,      0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &item.attribute,   0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &item.expire_time, 0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 8, SQLDT_UINT,      &item.bound,       0, NULL, NULL);
 	for( j = 0; j < MAX_SLOTS; ++j )
-		SQL->StmtBindColumn(stmt, 8+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
-	if( tableswitch != TABLE_GUILD_STORAGE )
-		SQL->StmtBindColumn(stmt, 8+MAX_SLOTS, SQLDT_CHAR, &item.bound, 0, NULL, NULL);
+		SQL->StmtBindColumn(stmt, 9+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
 
 	// bit array indicating which inventory items have already been matched
 	flag = (bool*) aCalloc(max, sizeof(bool));
@@ -780,18 +777,16 @@ int memitemdata_to_sql(const struct item items[], int max, int id, int tableswit
 				    items[i].refine == item.refine &&
 				    items[i].attribute == item.attribute &&
 				    items[i].expire_time == item.expire_time &&
-					(tableswitch != TABLE_GUILD_STORAGE && items[i].bound == item.bound) )
+				    items[i].bound == item.bound )
 				;	//Do nothing.
 				else
 				{
 					// update all fields.
 					StrBuf->Clear(&buf);
-					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%d', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u'",
-						tablename, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time);
-					for( j = 0; j < MAX_SLOTS; ++j )
-						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);						
-					if( tableswitch != TABLE_GUILD_STORAGE )
-						StrBuf->Printf(&buf, ", `bound`=%d", items[i].bound);
+					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%d', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u', `bound`='%d'",
+						tablename, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].bound);
+ 					for( j = 0; j < MAX_SLOTS; ++j )for( j = 0; j < MAX_SLOTS; ++j )
+						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);	
 					StrBuf->Printf(&buf, " WHERE `id`='%d' LIMIT 1", item.id);
 
 					if( SQL_ERROR == SQL->QueryStr(sql_handle, StrBuf->Value(&buf)) )
@@ -817,11 +812,9 @@ int memitemdata_to_sql(const struct item items[], int max, int id, int tableswit
 	SQL->StmtFree(stmt);
 
 	StrBuf->Clear(&buf);
-	StrBuf->Printf(&buf, "INSERT INTO `%s`(`%s`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `unique_id`", tablename, selectoption);
+	StrBuf->Printf(&buf, "INSERT INTO `%s`(`%s`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`", tablename, selectoption);
 	for( j = 0; j < MAX_SLOTS; ++j )
 		StrBuf->Printf(&buf, ", `card%d`", j);
-	if( tableswitch != TABLE_GUILD_STORAGE )
-		StrBuf->AppendStr(&buf, ", `bound`");
 	StrBuf->AppendStr(&buf, ") VALUES ");
 
 	found = false;
@@ -837,12 +830,10 @@ int memitemdata_to_sql(const struct item items[], int max, int id, int tableswit
 		else
 			found = true;
 
-		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%u', '%"PRIu64"'",
-			id, items[i].nameid, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].unique_id);
+		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
+			id, items[i].nameid, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].bound, items[i].unique_id);
 		for( j = 0; j < MAX_SLOTS; ++j )
 			StrBuf->Printf(&buf, ", '%d'", items[i].card[j]);
-		if( tableswitch != TABLE_GUILD_STORAGE )
-			StrBuf->Printf(&buf, ", '%d'", items[i].bound);
 		StrBuf->AppendStr(&buf, ")");
 		
 		updateLastUid(items[i].unique_id); // Unique Non Stackable Item ID
@@ -1241,7 +1232,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	strcat(t_msg, " memo");
 
 	//read inventory
-	//`inventory` (`id`,`char_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `card0`, `card1`, `card2`, `card3`, `expire_time`, `favorite`, `unique_id`)
+	//`inventory` (`id`,`char_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `card0`, `card1`, `card2`, `card3`, `expire_time`, `favorite`, `bound`, `unique_id`)
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `favorite`, `bound`, `unique_id`");
 	for( i = 0; i < MAX_SLOTS; ++i )
@@ -2956,7 +2947,7 @@ int parse_frommap(int fd)
 					break;
 				}
 				//Check account only if this ain't final save. Final-save goes through because of the char-map reconnect
-				if (RFIFOB(fd,12) || (
+				if (RFIFOB(fd,12) || RFIFOB(fd,13) || (
 					(character = (struct online_char_data*)idb_get(online_char_db, aid)) != NULL &&
 					character->char_id == cid))
 				{
