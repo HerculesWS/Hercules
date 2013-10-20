@@ -1080,7 +1080,7 @@ ACMD(heal)
 
 /*==========================================
  * @item command (usage: @item <name/id_of_item> <quantity>) (modified by [Yor] for pet_egg)
- * @itembound command (usage: @itembound <name/id_of_item> <quantity>)
+ * @itembound command (usage: @itembound <name/id_of_item> <quantity> <bound type>)
  *------------------------------------------*/
 ACMD(item)
 {
@@ -1090,8 +1090,7 @@ ACMD(item)
 	struct item_data *item_data;
 	int get_count, i;
 	
-	memset(atcmd_output, '\0', sizeof(atcmd_output));
-	
+ 	memset(item_name, '\0', sizeof(item_name));
 
 	if (!strcmpi(command+1,"itembound") && (!message || !*message || (
 		sscanf(message, "\"%99[^\"]\" %d %d", item_name, &number, &bound) < 2 && 

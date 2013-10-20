@@ -3073,7 +3073,8 @@ int run_func(struct script_state *st)
 	for( i = end_sp-1; i > 0 ; --i )
 		if( st->stack->stack_data[i].type == C_ARG )
 			break;
-	if( i == 0 ) {
+	if( i == 0 )
+	{
 		ShowError("script:run_func: C_ARG not found. please report this!!!\n");
 		st->state = END;
 		script->reportsrc(st);
@@ -3084,9 +3085,10 @@ int run_func(struct script_state *st)
 	st->end = end_sp;
 
 	data = &st->stack->stack_data[st->start];
-	if( data->type == C_NAME && script->str_data[data->u.num].type == C_FUNC ) {
+	if( data->type == C_NAME && script->str_data[data->u.num].type == C_FUNC )
 		func = data->u.num;
-	} else {
+	else
+	{
 		ShowError("script:run_func: not a buildin command.\n");
 		script->reportdata(data);
 		script->reportsrc(st);
@@ -5725,14 +5727,6 @@ BUILDIN(checkweight2)
 /*==========================================
  * getitem <item id>,<amount>{,<account ID>};
  * getitem "<item name>",<amount>{,<account ID>};
- *
- * getitembound <item id>,<amount>,<type>{,<account ID>};
- * getitembound "<item id>",<amount>,<type>{,<account ID>};
- * Type:
- *	1 - Account Bound
- *	2 - Guild Bound
- *	3 - Party Bound
- *	4 - Character Bound
  *------------------------------------------*/
 BUILDIN(getitem)
 {
@@ -17451,10 +17445,29 @@ BUILDIN(bg_join_team) {
 	
 	return true;
 }
+/* bg_match_over( arena_name {, optional canceled } ) */
+/* returns 0 when successful, 1 otherwise */
+BUILDIN(bg_match_over) {
+	bool canceled = script_hasdata(st,3) ? true : false;
+	struct bg_arena *arena = bg->name2arena((char*)script_getstr(st, 2));
+	
+	if( arena ) {
+		bg->match_over(arena,canceled);
+		script_pushint(st, 0);
+	} else
+		script_pushint(st, 1);
+	
+	return true;
+}
 
 /*========================================== [Mhalicot]
- * getitembound <item id>,<amount>{,<account ID>};
- * getitembound "<item name>",<amount>{,<account ID>};
+ * getitembound <item id>,<amount>,<type>{,<account ID>};
+ * getitembound "<item id>",<amount>,<type>{,<account ID>};
+ * Type:
+ *	1 - Account Bound
+ *	2 - Guild Bound
+ *	3 - Party Bound
+ *	4 - Character Bound
  *------------------------------------------*/
 BUILDIN(getitembound)
 {
@@ -17537,7 +17550,7 @@ BUILDIN(getitembound2)
 	struct script_data *data;
 	
 		bound = script_getnum(st,11);
-		if( bound < 1 || bound > 3) { //Not a correct bound type
+		if( bound < 1 || bound > 4) { //Not a correct bound type
 			ShowError("script_getitembound2: Not a correct bound type! Type=%d\n",bound);
 			return 1;
 		}
@@ -17659,17 +17672,69 @@ BUILDIN(countbound)
 	return 0;
 }
 
-/* bg_match_over( arena_name {, optional canceled } ) */
-/* returns 0 when successful, 1 otherwise */
-BUILDIN(bg_match_over) {
-	bool canceled = script_hasdata(st,3) ? true : false;
-	struct bg_arena *arena = bg->name2arena((char*)script_getstr(st, 2));
+BUILDIN(instance_mapname) {
+ 	const char *map_name;
+	int m;
+	short instance_id = -1;
 	
-	if( arena ) {
-		bg->match_over(arena,canceled);
+ 	map_name = script_getstr(st,2);
+	
+	if( script_hasdata(st,3) )
+		instance_id = script_getnum(st,3);
+	else
+		instance_id = st->instance_id;
+	
+	// Check that instance mapname is a valid map
+	if( instance_id == -1 || (m = instance->mapname2imap(map_name,instance_id)) == -1 )
+		script_pushconststr(st, "");
+	else
+		script_pushconststr(st, map->list[m].name);
+	
+	return true;
+}
+/* modify an instances' reload-spawn point */
+/* instance_set_respawn <map_name>,<x>,<y>{,<instance_id>} */
+/* returns 1 when successful, 0 otherwise. */
+BUILDIN(instance_set_respawn) {
+	const char *map_name;
+	short instance_id = -1;
+	short mid;
+	short x,y;
+	
+	map_name = script_getstr(st,2);
+	x = script_getnum(st, 3);
+	y = script_getnum(st, 4);
+	
+	if( script_hasdata(st, 5) )
+		instance_id = script_getnum(st, 5);
+	else
+		instance_id = st->instance_id;
+	
+	if( instance_id == -1 || !instance->valid(instance_id) )
 		script_pushint(st, 0);
-	} else
-		script_pushint(st, 1);
+	else if( (mid = map->mapname2mapid(map_name)) == -1 ) {
+		ShowError("buildin_instance_set_respawn: unknown map '%s'\n",map_name);
+		script_pushint(st, 0);
+	} else {
+		int i;
+		
+		for(i = 0; i < instance->list[instance_id].num_map; i++) {
+			if( map->list[instance->list[instance_id].map[i]].m == mid ) {
+				instance->list[instance_id].respawn.map = map_id2index(mid);
+				instance->list[instance_id].respawn.x = x;
+				instance->list[instance_id].respawn.y = y;
+				break;
+			}
+		}
+		
+		if( i != instance->list[instance_id].num_map )
+			script_pushint(st, 1);
+		else {
+			ShowError("buildin_instance_set_respawn: map '%s' not part of instance '%s'\n",map_name,instance->list[instance_id].name);
+			script_pushint(st, 0);
+		}
+	}
+	
 	
 	return true;
 }
@@ -18139,6 +18204,9 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(has_instance,"s?"),
 		BUILDIN_DEF(instance_warpall,"sii?"),
 		BUILDIN_DEF(instance_check_party,"i???"),
+		BUILDIN_DEF(instance_mapname,"s?"),
+		BUILDIN_DEF(instance_set_respawn,"sii?"),
+		
 		/**
 		 * 3rd-related
 		 **/
@@ -18169,12 +18237,13 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(bindatcmd, "ss???"),
 		BUILDIN_DEF(unbindatcmd, "s"),
 		BUILDIN_DEF(useatcmd, "s"),
-		
-		//Bound items [Reviced by Mhalicot]
+		/**
+		 * Item bound [Mhalicot/Hercules]
+		 **/
 		BUILDIN_DEF(getitembound,"vii?"),
 		BUILDIN_DEF(getitembound2,"viiiiiiiii?"),
-		BUILDIN_DEF(countbound, "?"),
-
+		BUILDIN_DEF(countbound,"?"),
+		
 		//Quest Log System [Inkfish]
 		BUILDIN_DEF(setquest, "i"),
 		BUILDIN_DEF(erasequest, "i"),
