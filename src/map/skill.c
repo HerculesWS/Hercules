@@ -460,7 +460,7 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 		return 1;
 	}
 
-	if (sd->blockskill[idx] > 0) {
+	if (sd->blockskill[idx]) {
 		clif->skill_fail(sd, skill_id, USESKILL_FAIL_SKILLINTERVAL, 0);
 		return 1;
 	}
@@ -4220,7 +4220,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 						}					
 					}
 					if(cooldown)
-						skill->blockpc_start(sd, skill_id, cooldown, false);
+						skill->blockpc_start(sd, skill_id, cooldown);
 				}else if( sc ){ // Summon Balls
 					int i = SC_SUMMON5;
 					for(; i >= SC_SUMMON1; i--){
@@ -4769,7 +4769,7 @@ int skill_castend_id(int tid, unsigned int tick, int id, intptr_t data)
 				}
 			}
 			if(cooldown)
-				skill->blockpc_start(sd, ud->skill_id, cooldown, false);
+				skill->blockpc_start(sd, ud->skill_id, cooldown);
 		}
 		if( battle_config.display_status_timers && sd )
 			clif->status_change(src, SI_POSTDELAY, 1, skill->delay_fix(src, ud->skill_id, ud->skill_lv), 0, 0, 0);
@@ -4820,7 +4820,7 @@ int skill_castend_id(int tid, unsigned int tick, int id, intptr_t data)
 				sc->data[SC_SOULLINK]->val3 = 0; //Clear bounced spell check.
 
 			if( sc->data[SC_DANCING] && skill->get_inf2(ud->skill_id)&INF2_SONG_DANCE && sd )
-				skill->blockpc_start(sd,BD_ADAPTATION,3000, false);
+				skill->blockpc_start(sd,BD_ADAPTATION,3000);
 		}
 
 		if( sd && ud->skill_id != SA_ABRACADABRA && ud->skill_id != WM_RANDOMIZESPELL ) // they just set the data so leave it as it is.[Inkfish]
@@ -5441,7 +5441,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			// Initiate 10% of your damage becomes fire element.
 			sc_start4(src,SC_SUB_WEAPONPROPERTY,100,3,20,0,0,skill->get_time2(skill_id, skill_lv));
 			if( sd )
-				skill->blockpc_start(sd, skill_id, skill->get_time(skill_id, skill_lv), false);
+				skill->blockpc_start(sd, skill_id, skill->get_time(skill_id, skill_lv));
 			else if( bl->type == BL_MER )
 				skill->blockmerc_start((TBL_MER*)bl, skill_id, skill->get_time(skill_id, skill_lv));
 			break;
@@ -5610,7 +5610,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,
 				sc_start(bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv)));
 			if (sd)
-				skill->blockpc_start (sd, skill_id, skill->get_time2(skill_id,skill_lv), false);
+				skill->blockpc_start (sd, skill_id, skill->get_time2(skill_id,skill_lv));
 			break;
 
 		case ALL_ANGEL_PROTECT:
@@ -7133,7 +7133,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,
 				sc_start4(bl,type,100,skill_lv,skill_id,src->id,skill->get_time(skill_id,skill_lv),1000));
 		#ifndef RENEWAL
-			if (sd) skill->blockpc_start (sd, skill_id, skill->get_time(skill_id, skill_lv)+3000, false);
+			if (sd) skill->blockpc_start (sd, skill_id, skill->get_time(skill_id, skill_lv)+3000);
 		#endif
 			break;
 
@@ -8908,7 +8908,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 							duration = 9000;
 							break;
 					}
-					skill->blockpc_start(sd, skill_id, duration, false);
+					skill->blockpc_start(sd, skill_id, duration);
 			}
 			break;
 
@@ -9465,7 +9465,7 @@ int skill_castend_pos(int tid, unsigned int tick, int id, intptr_t data) {
 				}
 			}
 			if(cooldown)
-				skill->blockpc_start(sd, ud->skill_id, cooldown, false);
+				skill->blockpc_start(sd, ud->skill_id, cooldown);
 		}
 		if( battle_config.display_status_timers && sd )
 			clif->status_change(src, SI_POSTDELAY, 1, skill->delay_fix(src, ud->skill_id, ud->skill_lv), 0, 0, 0);
@@ -9943,7 +9943,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 				clif->skill_poseffect(src,skill_id,skill_lv,src->x,src->y,tick);
 	#endif
 				if (sd)
-					skill->blockpc_start (sd, MO_EXTREMITYFIST, 2000, false);
+					skill->blockpc_start (sd, MO_EXTREMITYFIST, 2000);
 			}
 			break;
 		case NJ_SHADOWJUMP:
@@ -16986,7 +16986,8 @@ int skill_blockpc_end(int tid, unsigned int tick, int id, intptr_t data) {
 
 	if (data <= 0 || data >= MAX_SKILL)
 		return 0;
-	if (!sd) return 0;
+	if (!sd || !sd->blockskill[data])
+		return 0;
 
 	if( ( cd = idb_get(skill->cd_db,sd->status.char_id) ) ) {
 		int i;
@@ -17020,22 +17021,21 @@ int skill_blockpc_end(int tid, unsigned int tick, int id, intptr_t data) {
 		}
 	}
 	
-	if (sd->blockskill[data] != (0x1|(tid&0xFE))) return 0;
-
-	sd->blockskill[data] = 0;
+	sd->blockskill[data] = false;
 	return 1;
 }
 
 /**
  * flags a singular skill as being blocked from persistent usage.
  * @param   sd        the player the skill delay affects
- * @param   skill_id   the skill which should be delayed
+ * @param   skill_id  the skill which should be delayed
  * @param   tick      the length of time the delay should last
- * @param   load      whether this assignment is being loaded upon player login
  * @return  0 if successful, -1 otherwise
  */
-int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick, bool load) {
+int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick) {
+	struct skill_cd* cd = NULL;
 	uint16 idx = skill->get_index(skill_id);
+	unsigned int now = timer->gettick();
 
 	nullpo_retr (-1, sd);
 
@@ -17043,49 +17043,59 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick,
 		return -1;
 
 	if (tick < 1) {
-		sd->blockskill[idx] = 0;
+		sd->blockskill[idx] = false;
 		return -1;
 	}
 
-	if( !load && battle_config.display_status_timers )
+	if( battle_config.display_status_timers )
 		clif->skill_cooldown(sd, skill_id, tick);
-
-	if( !load ) {// not being loaded initially so ensure the skill delay is recorded
-		struct skill_cd* cd = NULL;
+	
+	if( !(cd = idb_get(skill->cd_db,sd->status.char_id)) ) {// create a new skill cooldown object for map storage
+		cd = ers_alloc(skill->cd_ers, struct skill_cd);
+		
+		cd->cursor = 0;
+		memset(cd->entry, 0, sizeof(cd->entry));
+		
+		idb_put( skill->cd_db, sd->status.char_id, cd );
+	} else {
 		int i;
 		
-		if( !(cd = idb_get(skill->cd_db,sd->status.char_id)) ) {// create a new skill cooldown object for map storage
-			cd = ers_alloc(skill->cd_ers, struct skill_cd);
-			
-			cd->cursor = 0;
-			memset(cd->entry, 0, sizeof(cd->entry));
-			
-			idb_put( skill->cd_db, sd->status.char_id, cd );
-		}
-
 		for(i = 0; i < MAX_SKILL_TREE; i++) {
-			if( !cd->entry[i] )
+			if( cd->entry[i] && cd->entry[i]->skidx == idx )
 				break;
 		}
-		
-		if( i == MAX_SKILL_TREE ) {
-			ShowError("skill_blockpc_start: '%s' got over '%d' skill cooldowns, no room to save!\n",sd->status.name,MAX_SKILL_TREE);
-		} else {
-			cd->entry[cd->cursor] = ers_alloc(skill->cd_entry_ers,struct skill_cd_entry);
-			
-			cd->entry[cd->cursor]->duration = tick;
+	
+		if( i != MAX_SKILL_TREE ) {/* duplicate, update necessary */
+			cd->entry[i]->duration = tick;
 #if PACKETVER >= 20120604
-			cd->entry[cd->cursor]->total = tick;
+			cd->entry[i]->total = tick;
 #endif
-			cd->entry[cd->cursor]->skidx = idx;
-			cd->entry[cd->cursor]->skill_id = skill_id;
-			cd->entry[cd->cursor]->started = timer->gettick();
-			
-			cd->cursor++;
+			cd->entry[i]->started = now;
+			timer->settick(cd->entry[i]->timer,now+tick);
+			return 0;
 		}
+		
 	}
+	
+	if( cd->cursor == MAX_SKILL_TREE ) {
+		ShowError("skill_blockpc_start: '%s' got over '%d' skill cooldowns, no room to save!\n",sd->status.name,MAX_SKILL_TREE);
+		return -1;
+	}
+	
+	cd->entry[cd->cursor] = ers_alloc(skill->cd_entry_ers,struct skill_cd_entry);
+	
+	cd->entry[cd->cursor]->duration = tick;
+#if PACKETVER >= 20120604
+	cd->entry[cd->cursor]->total = tick;
+#endif
+	cd->entry[cd->cursor]->skidx = idx;
+	cd->entry[cd->cursor]->skill_id = skill_id;
+	cd->entry[cd->cursor]->started = now;
+	cd->entry[cd->cursor]->timer = timer->add(now+tick,skill->blockpc_end,sd->bl.id,idx);
+	
+	cd->cursor++;
 
-	sd->blockskill[idx] = 0x1|(0xFE&timer->add(timer->gettick()+tick,skill->blockpc_end,sd->bl.id,idx));
+	sd->blockskill[idx] = true;
 	return 0;
 }
 
@@ -17596,6 +17606,10 @@ void skill_cooldown_save(struct map_session_data * sd) {
 	// process each individual cooldown associated with the character
 	for( i = 0; i < cd->cursor; i++ ) {
 		cd->entry[i]->duration = DIFF_TICK(cd->entry[i]->started+cd->entry[i]->duration,now);
+		if( cd->entry[i]->timer != INVALID_TIMER ) {
+			timer->delete(cd->entry[i]->timer,skill->blockpc_end);
+			cd->entry[i]->timer = INVALID_TIMER;
+		}
 	}
 }
 	
@@ -17622,8 +17636,8 @@ void skill_cooldown_load(struct map_session_data * sd) {
 	// process each individual cooldown associated with the character
 	for( i = 0; i < cd->cursor; i++ ) {
 		cd->entry[i]->started = now;
-		// block the skill from usage but ensure it is not recorded (load = true)
-		skill->blockpc_start( sd, cd->entry[i]->skill_id, cd->entry[i]->duration, true );
+		cd->entry[i]->timer   = timer->add(timer->gettick()+cd->entry[i]->duration,skill->blockpc_end,sd->bl.id,cd->entry[i]->skidx);
+		sd->blockskill[cd->entry[i]->skidx] = true;
 	}
 }
 

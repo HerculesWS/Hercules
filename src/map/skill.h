@@ -1747,10 +1747,11 @@ struct s_skill_magicmushroom_db {
 struct skill_cd_entry {
 	int duration;//milliseconds
 #if PACKETVER >= 20120604
-	int total;
+	int total;/* used for display on newer clients */
 #endif
 	short skidx;//the skill index entries belong to
-	unsigned int started;
+	unsigned int started;/* gettick() of when it started, used vs duration to measure how much left upon logout */
+	int timer;/* timer id */
 	uint16 skill_id;//skill id
 };
 
@@ -1934,7 +1935,7 @@ struct skill_interface {
 	int (*castend_nodamage_id) ( struct block_list *src, struct block_list *bl,uint16 skill_id,uint16 skill_lv,unsigned int tick,int flag );
 	int (*castend_damage_id) ( struct block_list* src, struct block_list *bl,uint16 skill_id,uint16 skill_lv,unsigned int tick,int flag );
 	int (*castend_pos2) ( struct block_list *src, int x,int y,uint16 skill_id,uint16 skill_lv,unsigned int tick,int flag);
-	int (*blockpc_start) (struct map_session_data *sd, uint16 skill_id, int tick, bool load);
+	int (*blockpc_start) (struct map_session_data *sd, uint16 skill_id, int tick);
 	int (*blockhomun_start) (struct homun_data *hd, uint16 skill_id, int tick);
 	int (*blockmerc_start) (struct mercenary_data *md, uint16 skill_id, int tick);
 	int (*attack) ( int attack_type, struct block_list* src, struct block_list *dsrc,struct block_list *bl,uint16 skill_id,uint16 skill_lv,unsigned int tick,int flag );
