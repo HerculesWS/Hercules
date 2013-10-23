@@ -3585,6 +3585,14 @@ void char_delete2_ack(int fd, int char_id, uint32 result, time_t delete_date)
 /// Any (0x718): An unknown error has occurred.
 void char_delete2_accept_ack(int fd, int char_id, uint32 result)
 {// HC: <082a>.W <char id>.L <Msg:0-5>.L
+	
+#if PACKETVER >= 20130000 /* not sure the exact date -- must refresh or client gets stuck */
+	if( result == 1 ) {
+		struct char_session_data* sd = (struct char_session_data*)session[fd]->session_data;
+		mmo_char_send099d(fd, sd);
+	}
+#endif
+	
 	WFIFOHEAD(fd,10);
 	WFIFOW(fd,0) = 0x82a;
 	WFIFOL(fd,2) = char_id;
