@@ -34,6 +34,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(atcommand->cmd_db_clear_sub, HP_atcommand_cmd_db_clear_sub) },
 	{ HP_POP(atcommand->doload, HP_atcommand_doload) },
 	{ HP_POP(atcommand->base_commands, HP_atcommand_base_commands) },
+	{ HP_POP(atcommand->add, HP_atcommand_add) },
 /* battle */
 	{ HP_POP(battle->init, HP_battle_init) },
 	{ HP_POP(battle->final, HP_battle_final) },
