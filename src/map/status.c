@@ -8439,6 +8439,9 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				val2 = 180; // Watk. TODO: Renewal (Atk2)
 				val3 = MG_FIREBOLT;
 				break;
+			case SC_AQUAPLAY_OPTION:
+				val2 = 40;
+				break;
 			case SC_COOLER_OPTION:
 				val2 = 80;	// % Freezing chance
 				val3 = 33;	// % increased damage
@@ -8726,7 +8729,6 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 			val_flag |= 1|2|4;
 			break;
 		case SC_CRESCENTELBOW:
-			val2 = 94 + val1;
 			val_flag |= 1|2;
 			break;
 		case SC_LIGHTNINGWALK:
