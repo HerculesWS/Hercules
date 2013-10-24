@@ -1584,6 +1584,9 @@ int itemdb_parse_dbrow(char** str, const char* source, int line, int scriptopt) 
 	if( nameid <= 0 ) {
 		ShowWarning("itemdb_parse_dbrow: Invalid id %d in line %d of \"%s\", skipping.\n", nameid, line, source);
 		return 0;
+	} else if ( nameid >= MAX_ITEMDB ) {
+		ShowWarning("itemdb_parse_dbrow: Invalid id %d in line %d of \"%s\", beyond MAX_ITEMDB, skipping.\n", nameid, line, source);
+		return 0;
 	}
 
 	//ID,Name,Jname,Type,Price,Sell,Weight,ATK,DEF,Range,Slot,Job,Job Upper,Gender,Loc,wLV,eLV,refineable,View
