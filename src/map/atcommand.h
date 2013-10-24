@@ -110,6 +110,7 @@ struct atcommand_interface {
 	int (*cmd_db_clear_sub) (DBKey key, DBData *data, va_list args);
 	void (*doload) (void);
 	void (*base_commands) (void);
+	bool (*add) (char *name, AtCommandFunc func);
 };
 
 struct atcommand_interface *atcommand;
