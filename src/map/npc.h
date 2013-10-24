@@ -51,6 +51,8 @@ struct npc_data {
 	struct {
 		int icon;
 		int quest_id;
+		bool hasJob;
+		int job;
 	} quest;
 	union {
 		struct {

@@ -9316,6 +9316,8 @@ void clif_hercules_chsys_mjoin(struct map_session_data *sd) {
 /// Notification from the client, that it has finished map loading and is about to display player's character (CZ_NOTIFY_ACTORINIT).
 /// 007d
 void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
+	int i;
+
 	if(sd->bl.prev != NULL)
 		return;
 
@@ -9639,7 +9641,15 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 				// Check if NPC has quest attached to it
 				if(nd->quest.quest_id > 0)
 					if(quest->check(sd, nd->quest.quest_id, HAVEQUEST) == -1)	// Check if quest is not started
-						clif->quest_show_event(sd, &nd->bl, nd->quest.icon, 0);	// Show Bubble
+						// Check if quest is job-specific, check is user is said job class.
+						if(nd->quest.hasJob == true)
+						{
+							if(sd->class_ == nd->quest.job)
+								clif->quest_show_event(sd, &nd->bl, nd->quest.icon, 0);
+						}
+						else {
+							clif->quest_show_event(sd, &nd->bl, nd->quest.icon, 0);
+						}
 			}
 		}
 	#endif
