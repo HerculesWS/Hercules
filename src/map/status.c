@@ -8774,6 +8774,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		case SC_CASH_PLUSEXP:
 		case SC_CASH_PLUSONLYJOBEXP:
 		case SC_MONSTER_TRANSFORM:
+		case SC_CASH_RECEIVEITEM:
 			val_flag |= 1;
 			break;
 	}
