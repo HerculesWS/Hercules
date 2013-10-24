@@ -406,11 +406,7 @@ enum _sp {
 	SP_ADD_SKILL_BLOW, SP_SP_VANISH_RATE, SP_MAGIC_SP_GAIN_VALUE, SP_MAGIC_HP_GAIN_VALUE, SP_ADD_CLASS_DROP_ITEM, //2041-2045
 	SP_EMATK, SP_SP_GAIN_RACE_ATTACK, SP_HP_GAIN_RACE_ATTACK, SP_SKILL_USE_SP_RATE, //2046-2049
 	SP_SKILL_COOLDOWN,SP_SKILL_FIXEDCAST, SP_SKILL_VARIABLECAST, SP_FIXCASTRATE, SP_VARCASTRATE, //2050-2054
-	SP_SKILL_USE_SP,SP_MAGIC_ATK_ELE, SP_ADD_FIXEDCAST, SP_ADD_VARIABLECAST,  //2055-2058
-	
-	
-	/* must be the last, plugins add bonuses from this value onwards */
-	SP_LAST_KNOWN,
+	SP_SKILL_USE_SP,SP_MAGIC_ATK_ELE, SP_ADD_FIXEDCAST, SP_ADD_VARIABLECAST  //2055-2058
 };
 
 enum _look {
@@ -858,10 +854,6 @@ struct map_interface {
 	/* [Ind/Hercules] */
 	struct eri *iterator_ers;
 	char *cache_buffer; // Has the uncompressed gat data of all maps, so just one allocation has to be made
-	/* */
-	struct eri *flooritem_ers;
-	/* */
-	int bonus_id;
 	/* funcs */
 	void (*zone_init) (void);
 	void (*zone_remove) (int m);
@@ -1028,7 +1020,6 @@ struct map_interface {
 	bool (*arg_next_value) (const char *option, int i, int argc);
 	void (*addblcell) (struct block_list *bl);
 	void (*delblcell) (struct block_list *bl);
-	int (*get_new_bonus_id) (void);
 };
 
 struct map_interface *map;

@@ -2099,8 +2099,6 @@ struct {
 	struct HPMHookPoint *HP_instance_init_post;
 	struct HPMHookPoint *HP_instance_final_pre;
 	struct HPMHookPoint *HP_instance_final_post;
-	struct HPMHookPoint *HP_instance_reload_pre;
-	struct HPMHookPoint *HP_instance_reload_post;
 	struct HPMHookPoint *HP_instance_create_pre;
 	struct HPMHookPoint *HP_instance_create_post;
 	struct HPMHookPoint *HP_instance_add_map_pre;
@@ -2111,12 +2109,6 @@ struct {
 	struct HPMHookPoint *HP_instance_map2imap_post;
 	struct HPMHookPoint *HP_instance_mapid2imapid_pre;
 	struct HPMHookPoint *HP_instance_mapid2imapid_post;
-	struct HPMHookPoint *HP_instance_mapname2imap_pre;
-	struct HPMHookPoint *HP_instance_mapname2imap_post;
-	struct HPMHookPoint *HP_instance_map_npcsub_pre;
-	struct HPMHookPoint *HP_instance_map_npcsub_post;
-	struct HPMHookPoint *HP_instance_init_npc_pre;
-	struct HPMHookPoint *HP_instance_init_npc_post;
 	struct HPMHookPoint *HP_instance_destroy_pre;
 	struct HPMHookPoint *HP_instance_destroy_post;
 	struct HPMHookPoint *HP_instance_start_pre;
@@ -2857,8 +2849,6 @@ struct {
 	struct HPMHookPoint *HP_map_addblcell_post;
 	struct HPMHookPoint *HP_map_delblcell_pre;
 	struct HPMHookPoint *HP_map_delblcell_post;
-	struct HPMHookPoint *HP_map_get_new_bonus_id_pre;
-	struct HPMHookPoint *HP_map_get_new_bonus_id_post;
 	struct HPMHookPoint *HP_mapit_alloc_pre;
 	struct HPMHookPoint *HP_mapit_alloc_post;
 	struct HPMHookPoint *HP_mapit_free_pre;
@@ -4523,8 +4513,6 @@ struct {
 	struct HPMHookPoint *HP_skill_maelstrom_suction_post;
 	struct HPMHookPoint *HP_skill_get_new_group_id_pre;
 	struct HPMHookPoint *HP_skill_get_new_group_id_post;
-	struct HPMHookPoint *HP_skill_check_shadowform_pre;
-	struct HPMHookPoint *HP_skill_check_shadowform_post;
 	struct HPMHookPoint *HP_status_init_pre;
 	struct HPMHookPoint *HP_status_init_post;
 	struct HPMHookPoint *HP_status_final_pre;
@@ -6990,8 +6978,6 @@ struct {
 	int HP_instance_init_post;
 	int HP_instance_final_pre;
 	int HP_instance_final_post;
-	int HP_instance_reload_pre;
-	int HP_instance_reload_post;
 	int HP_instance_create_pre;
 	int HP_instance_create_post;
 	int HP_instance_add_map_pre;
@@ -7002,12 +6988,6 @@ struct {
 	int HP_instance_map2imap_post;
 	int HP_instance_mapid2imapid_pre;
 	int HP_instance_mapid2imapid_post;
-	int HP_instance_mapname2imap_pre;
-	int HP_instance_mapname2imap_post;
-	int HP_instance_map_npcsub_pre;
-	int HP_instance_map_npcsub_post;
-	int HP_instance_init_npc_pre;
-	int HP_instance_init_npc_post;
 	int HP_instance_destroy_pre;
 	int HP_instance_destroy_post;
 	int HP_instance_start_pre;
@@ -7748,8 +7728,6 @@ struct {
 	int HP_map_addblcell_post;
 	int HP_map_delblcell_pre;
 	int HP_map_delblcell_post;
-	int HP_map_get_new_bonus_id_pre;
-	int HP_map_get_new_bonus_id_post;
 	int HP_mapit_alloc_pre;
 	int HP_mapit_alloc_post;
 	int HP_mapit_free_pre;
@@ -9414,8 +9392,6 @@ struct {
 	int HP_skill_maelstrom_suction_post;
 	int HP_skill_get_new_group_id_pre;
 	int HP_skill_get_new_group_id_post;
-	int HP_skill_check_shadowform_pre;
-	int HP_skill_check_shadowform_post;
 	int HP_status_init_pre;
 	int HP_status_init_post;
 	int HP_status_final_pre;

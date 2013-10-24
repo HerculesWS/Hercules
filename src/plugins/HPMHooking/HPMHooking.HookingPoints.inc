@@ -1065,15 +1065,11 @@ struct HookingPointData HookingPoints[] = {
 /* instance */
 	{ HP_POP(instance->init, HP_instance_init) },
 	{ HP_POP(instance->final, HP_instance_final) },
-	{ HP_POP(instance->reload, HP_instance_reload) },
 	{ HP_POP(instance->create, HP_instance_create) },
 	{ HP_POP(instance->add_map, HP_instance_add_map) },
 	{ HP_POP(instance->del_map, HP_instance_del_map) },
 	{ HP_POP(instance->map2imap, HP_instance_map2imap) },
 	{ HP_POP(instance->mapid2imapid, HP_instance_mapid2imapid) },
-	{ HP_POP(instance->mapname2imap, HP_instance_mapname2imap) },
-	{ HP_POP(instance->map_npcsub, HP_instance_map_npcsub) },
-	{ HP_POP(instance->init_npc, HP_instance_init_npc) },
 	{ HP_POP(instance->destroy, HP_instance_destroy) },
 	{ HP_POP(instance->start, HP_instance_start) },
 	{ HP_POP(instance->check_idle, HP_instance_check_idle) },
@@ -1450,7 +1446,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(map->arg_next_value, HP_map_arg_next_value) },
 	{ HP_POP(map->addblcell, HP_map_addblcell) },
 	{ HP_POP(map->delblcell, HP_map_delblcell) },
-	{ HP_POP(map->get_new_bonus_id, HP_map_get_new_bonus_id) },
 /* mapit */
 	{ HP_POP(mapit->alloc, HP_mapit_alloc) },
 	{ HP_POP(mapit->free, HP_mapit_free) },
@@ -2296,7 +2291,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->cooldown_save, HP_skill_cooldown_save) },
 	{ HP_POP(skill->maelstrom_suction, HP_skill_maelstrom_suction) },
 	{ HP_POP(skill->get_new_group_id, HP_skill_get_new_group_id) },
-	{ HP_POP(skill->check_shadowform, HP_skill_check_shadowform) },
 /* status */
 	{ HP_POP(status->init, HP_status_init) },
 	{ HP_POP(status->final, HP_status_final) },

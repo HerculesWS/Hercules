@@ -1081,23 +1081,30 @@ ACMD(heal)
 
 /*==========================================
  * @item command (usage: @item <name/id_of_item> <quantity>) (modified by [Yor] for pet_egg)
+ * @itembound command (usage: @itembound <name/id_of_item> <quantity> <bound type>)
  *------------------------------------------*/
 ACMD(item)
 {
 	char item_name[100];
-	int number = 0, item_id, flag = 0;
+	int number = 0, item_id, flag = 0, bound = 0;
 	struct item item_tmp;
 	struct item_data *item_data;
 	int get_count, i;
 	
-	memset(item_name, '\0', sizeof(item_name));
-	
-	if (!message || !*message || (
-								  sscanf(message, "\"%99[^\"]\" %d", item_name, &number) < 1 &&
-								  sscanf(message, "%99s %d", item_name, &number) < 1
-								  )) {
+ 	memset(item_name, '\0', sizeof(item_name));
+
+	if (!strcmpi(command+1,"itembound") && (!message || !*message || (
+		sscanf(message, "\"%99[^\"]\" %d %d", item_name, &number, &bound) < 2 && 
+		sscanf(message, "%99s %d %d", item_name, &number, &bound) < 2 
+	))) {
+		clif->message(fd, msg_txt(295)); // Please enter an item name or ID (usage: @item <item name/ID> <quantity> <bound_type>).
+		return -1;
+	} else if (!message || !*message || (
+		sscanf(message, "\"%99[^\"]\" %d", item_name, &number) < 1 && 
+		sscanf(message, "%99s %d", item_name, &number) < 1 )) 
+		{
 		clif->message(fd, msg_txt(983)); // Please enter an item name or ID (usage: @item <item name/ID> <quantity>).
-		return false;
+ 		return false;
 	}
 	
 	if (number <= 0)
@@ -1109,12 +1116,26 @@ ACMD(item)
 		clif->message(fd, msg_txt(19)); // Invalid item ID or name.
 		return false;
 	}
-	
+
+	if( bound < 0 || bound > 4 ) {
+		clif->message(fd, msg_txt(298)); // Invalid bound type
+		return -1;
+	}
+
+
 	item_id = item_data->nameid;
 	get_count = number;
 	//Check if it's stackable.
-	if (!itemdb->isstackable2(item_data))
+	if (!itemdb->isstackable2(item_data)) {
+		if( bound && (item_data->type == IT_PETEGG || item_data->type == IT_PETARMOR) ) {
+			clif->message(fd, msg_txt(498)); // Cannot create bounded pet eggs or pet armors.
+			return false;
+		}
 		get_count = 1;
+	} else if( bound ) {
+		clif->message(fd, msg_txt(499)); // Cannot create bounded stackable items.
+		return false;
+	}
 	
 	for (i = 0; i < number; i += get_count) {
 		// if not pet egg
@@ -1122,6 +1143,7 @@ ACMD(item)
 			memset(&item_tmp, 0, sizeof(item_tmp));
 			item_tmp.nameid = item_id;
 			item_tmp.identify = 1;
+			item_tmp.bound = bound;
 			
 			if ((flag = pc->additem(sd, &item_tmp, get_count, LOG_TYPE_COMMAND)))
 				clif->additem(sd, 0, 0, flag);
@@ -1134,30 +1156,41 @@ ACMD(item)
 }
 
 /*==========================================
- *
+ * @item2 and @itembound2 command
  *------------------------------------------*/
 ACMD(item2)
 {
 	struct item item_tmp;
 	struct item_data *item_data;
 	char item_name[100];
-	int item_id, number = 0;
+	int item_id, number = 0, bound = 0;
 	int identify = 0, refine = 0, attr = 0;
 	int c1 = 0, c2 = 0, c3 = 0, c4 = 0;
 	
-	memset(item_name, '\0', sizeof(item_name));
+ 	memset(item_name, '\0', sizeof(item_name));	
 	
-	if (!message || !*message || (
+	if (!strcmpi(command+1,"itembound2") && (!message || !*message || (
+		sscanf(message, "\"%99[^\"]\" %d %d %d %d %d %d %d %d %d", item_name, &number, &identify, &refine, &attr, &c1, &c2, &c3, &c4, &bound) < 10 &&
+		sscanf(message, "%99s %d %d %d %d %d %d %d %d %d", item_name, &number, &identify, &refine, &attr, &c1, &c2, &c3, &c4, &bound) < 10 ))) {
+		clif->message(fd, msg_txt(296)); // Please enter all parameters (usage: @item2 <item name/ID> <quantity>
+		clif->message(fd, msg_txt(297)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4> <bound_type>).
+		return -1;
+	} else if ( !message || !*message || (
 								  sscanf(message, "\"%99[^\"]\" %d %d %d %d %d %d %d %d", item_name, &number, &identify, &refine, &attr, &c1, &c2, &c3, &c4) < 9 &&
 								  sscanf(message, "%99s %d %d %d %d %d %d %d %d", item_name, &number, &identify, &refine, &attr, &c1, &c2, &c3, &c4) < 9
-								  )) {
-		clif->message(fd, msg_txt(984)); // Please enter all parameters (usage: @item2 <item name/ID> <quantity>
-		clif->message(fd, msg_txt(985)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4>).
-		return false;
+	)) {
+ 		clif->message(fd, msg_txt(984)); // Please enter all parameters (usage: @item2 <item name/ID> <quantity>
+ 		clif->message(fd, msg_txt(985)); //   <identify_flag> <refine> <attribute> <card1> <card2> <card3> <card4>).
+ 		return false;
 	}
 	
 	if (number <= 0)
 		number = 1;
+		
+	if( bound < 0 || bound > 4 ) {
+		clif->message(fd, msg_txt(298)); // Invalid bound type
+		return -1;
+	}
 	
 	item_id = 0;
 	if ((item_data = itemdb->search_name(item_name)) != NULL ||
@@ -1169,8 +1202,13 @@ ACMD(item2)
 		int loop, get_count, i;
 		loop = 1;
 		get_count = number;
-		if (item_data->type == IT_WEAPON || item_data->type == IT_ARMOR ||
-			item_data->type == IT_PETEGG || item_data->type == IT_PETARMOR) {
+		if( !strcmpi(command+1,"itembound2") )
+			bound = 1;
+		if( !itemdb->isstackable2(item_data) ) {
+			if( bound && (item_data->type == IT_PETEGG || item_data->type == IT_PETARMOR) ) {
+				clif->message(fd, msg_txt(498)); // Cannot create bounded pet eggs or pet armors.
+				return false;
+			}
 			loop = number;
 			get_count = 1;
 			if (item_data->type == IT_PETEGG) {
@@ -1182,6 +1220,10 @@ ACMD(item2)
 			if (refine > MAX_REFINE)
 				refine = MAX_REFINE;
 		} else {
+			if( bound ) {
+				clif->message(fd, msg_txt(499)); // Cannot create bounded stackable items.
+				return false;
+			}
 			identify = 1;
 			refine = attr = 0;
 		}
@@ -1195,6 +1237,7 @@ ACMD(item2)
 			item_tmp.card[1] = c2;
 			item_tmp.card[2] = c3;
 			item_tmp.card[3] = c4;
+			item_tmp.bound = bound;
 			if ((flag = pc->additem(sd, &item_tmp, get_count, LOG_TYPE_COMMAND)))
 				clif->additem(sd, 0, 0, flag);
 		}
@@ -9171,6 +9214,29 @@ ACMD(costume){
 	
 	return true;
 }
+//Identifies all items [Heaven]
+// Reviced by [Mhalicot]
+ACMD(identifyall)
+{
+    int i,num;
+    struct item it;
+
+    nullpo_retr(-1,sd);
+
+    for(i=num=0;i < MAX_INVENTORY;i++){
+        if(!sd->status.inventory[i].identify && sd->status.inventory[i].nameid){
+            it=sd->status.inventory[i];
+            pc->delitem(sd,i,it.amount,0,0, LOG_TYPE_COMMAND);
+            it.identify=1;
+            pc->additem(sd,&it,it.amount, LOG_TYPE_COMMAND);
+            num++;
+        }
+    }
+    clif->message(fd,(num) ? "All items have been identified." : msg_txt(1238));
+	
+    return true;
+}
+
 /* for debugging purposes (so users can easily provide us with debug info) */
 /* should be trashed as soon as its no longer necessary */
 ACMD(skdebug) {
@@ -9222,6 +9288,8 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(heal),
 		ACMD_DEF(item),
 		ACMD_DEF(item2),
+		ACMD_DEF2("itembound", item),
+		ACMD_DEF2("itembound2", item2),
 		ACMD_DEF(itemreset),
 		ACMD_DEF(clearstorage),
 		ACMD_DEF(cleargstorage),
@@ -9352,6 +9420,7 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(refresh),
 		ACMD_DEF(refreshall),
 		ACMD_DEF(identify),
+		ACMD_DEF(identifyall),
 		ACMD_DEF(misceffect),
 		ACMD_DEF(mobsearch),
 		ACMD_DEF(cleanmap),
