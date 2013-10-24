@@ -8771,6 +8771,8 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		case SC_WATER_BARRIER:
 			val_flag |= 1|2|4;
 			break;
+		case SC_CASH_PLUSEXP:
+		case SC_CASH_PLUSONLYJOBEXP:
 		case SC_MONSTER_TRANSFORM:
 			val_flag |= 1;
 			break;
