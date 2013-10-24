@@ -5639,7 +5639,7 @@ BUILDIN(checkweight2)
 	int nb_it, nb_nb; //array size
 	
 	TBL_PC *sd = script->rid2sd(st);
-	nullpo_retr(1,sd);
+	nullpo_retr(false,sd);
 	
 	data_it = script_getdata(st, 2);
 	data_nb = script_getdata(st, 3);
@@ -8995,8 +8995,8 @@ BUILDIN(itemeffect) {
 	struct script_data *data;
 	struct item_data *item_data;
 	
-	nullpo_retr( 1, ( sd = script->rid2sd( st ) ) );
-	nullpo_retr( 1, ( nd = (TBL_NPC *)map->id2bl( sd->npc_id ) ) );
+	nullpo_retr( false, ( sd = script->rid2sd( st ) ) );
+	nullpo_retr( false, ( nd = (TBL_NPC *)map->id2bl( sd->npc_id ) ) );
 	
 	data = script_getdata( st, 2 );
 	script->get_val( st, data );
@@ -15456,7 +15456,7 @@ BUILDIN(readbook)
 BUILDIN(setquest)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	nullpo_ret(sd);
+	nullpo_retr(false,sd);
 	
 	quest->add(sd, script_getnum(st, 2));
 	return true;
@@ -15465,7 +15465,7 @@ BUILDIN(setquest)
 BUILDIN(erasequest)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	nullpo_ret(sd);
+	nullpo_retr(false,sd);
 	
 	quest->delete(sd, script_getnum(st, 2));
 	return true;
@@ -15474,7 +15474,7 @@ BUILDIN(erasequest)
 BUILDIN(completequest)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	nullpo_ret(sd);
+	nullpo_retr(false,sd);
 	
 	quest->update_status(sd, script_getnum(st, 2), Q_COMPLETE);
 	return true;
@@ -15483,7 +15483,7 @@ BUILDIN(completequest)
 BUILDIN(changequest)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	nullpo_ret(sd);
+	nullpo_retr(false,sd);
 	
 	quest->change(sd, script_getnum(st, 2),script_getnum(st, 3));
 	return true;
@@ -15494,7 +15494,7 @@ BUILDIN(checkquest)
 	struct map_session_data *sd = script->rid2sd(st);
 	quest_check_type type = HAVEQUEST;
 	
-	nullpo_ret(sd);
+	nullpo_retr(false,sd);
 	
 	if( script_hasdata(st, 3) )
 		type = (quest_check_type)script_getnum(st, 3);
