@@ -5087,6 +5087,8 @@ void do_final(void)
 	map->list_final();
 	vending->final();
 
+	HPM_map_do_final();
+	
 	map->map_db->destroy(map->map_db, map->db_final);
 
 	mapindex_final();

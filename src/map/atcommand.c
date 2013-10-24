@@ -45,6 +45,7 @@
 #include "mapreg.h"
 #include "quest.h"
 #include "searchstore.h"
+#include "HPMmap.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9445,22 +9446,37 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(costume),
 		ACMD_DEF(skdebug),
 	};
-	AtCommandInfo* cmd;
 	int i;
 	
 	for( i = 0; i < ARRAYLENGTH(atcommand_base); i++ ) {
-		if(atcommand->exists(atcommand_base[i].command)) { // Should not happen if atcommand_base[] array is OK
+		if(!atcommand->add(atcommand_base[i].command,atcommand_base[i].func)) { // Should not happen if atcommand_base[] array is OK
 			ShowDebug("atcommand_basecommands: duplicate ACMD_DEF for '%s'.\n", atcommand_base[i].command);
 			continue;
 		}
-		CREATE(cmd, AtCommandInfo, 1);
-		safestrncpy(cmd->command, atcommand_base[i].command, sizeof(cmd->command));
-		cmd->func = atcommand_base[i].func;
-		cmd->help = NULL;/* start as null dear */
-		cmd->log = true;
-		strdb_put(atcommand->db, cmd->command, cmd);
 	}
+	
+	/* @commands from plugins */
+	HPM_map_atcommands();
+	
 	return;
+}
+
+bool atcommand_add(char *name,AtCommandFunc func) {
+	AtCommandInfo* cmd;
+
+	if(atcommand->exists(name)) //caller will handle/display on false
+		return false;
+	
+	CREATE(cmd, AtCommandInfo, 1);
+	
+	safestrncpy(cmd->command, name, sizeof(cmd->command));
+	cmd->func = func;
+	cmd->help = NULL;
+	cmd->log = true;
+	
+	strdb_put(atcommand->db, cmd->command, cmd);
+	
+	return true;
 }
 
 /*==========================================
@@ -9971,30 +9987,14 @@ bool atcommand_can_use2(struct map_session_data *sd, const char *command, AtComm
 	return false;
 }
 bool atcommand_hp_add(char *name, AtCommandFunc func) {
-	AtCommandInfo* cmd;
-	
+	/* if commands are added after group permissions are thrown in, they end up with no permissions */
+	/* so we restrict commands to be linked in during boot */
 	if( runflag == MAPSERVER_ST_RUNNING ) {
 		ShowDebug("atcommand_hp_add: Commands can't be added after server is ready, skipping '%s'...\n",name);
 		return false;
 	}
 	
-	if( atcommand->db == NULL )
-		atcommand->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, ATCOMMAND_LENGTH);
-	
-	if( atcommand->exists(name) ) {
-		ShowDebug("atcommand_hp_add: duplicate command '%s', skipping...\n", name);
-		return false;
-	}
-	
-	CREATE(cmd, AtCommandInfo, 1);
-	
-	safestrncpy(cmd->command, name, sizeof(cmd->command));
-	cmd->func = func;
-	cmd->help = NULL;/* start as null dear */
-	cmd->log = true;
-
-	strdb_put(atcommand->db, cmd->command, cmd);
-	return true;
+	return HPM_map_add_atcommand(name,func);
 }
 
 /**
@@ -10080,4 +10080,5 @@ void atcommand_defaults(void) {
 	atcommand->cmd_db_clear_sub = atcommand_db_clear_sub;
 	atcommand->doload = atcommand_doload;
 	atcommand->base_commands = atcommand_basecommands;
+	atcommand->add = atcommand_add;
 }
