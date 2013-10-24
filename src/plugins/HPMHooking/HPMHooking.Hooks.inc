@@ -763,6 +763,32 @@ void HP_atcommand_base_commands(void) {
 	}
 	return;
 }
+bool HP_atcommand_add(char *name, AtCommandFunc func) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_atcommand_add_pre ) {
+		bool (*preHookFunc) (char *name, AtCommandFunc *func);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_add_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_atcommand_add_pre[hIndex].func;
+			retVal___ = preHookFunc(name, &func);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.atcommand.add(name, func);
+	}
+	if( HPMHooks.count.HP_atcommand_add_post ) {
+		bool (*postHookFunc) (bool retVal___, char *name, AtCommandFunc *func);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_add_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_atcommand_add_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, name, &func);
+		}
+	}
+	return retVal___;
+}
 /* battle */
 void HP_battle_init(void) {
 	int hIndex = 0;
