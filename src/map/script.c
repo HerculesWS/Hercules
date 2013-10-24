@@ -15453,12 +15453,49 @@ BUILDIN(readbook)
  Questlog script commands
  *******************/
 
+BUILDIN(questinfo)
+{
+	struct npc_data *nd = map->id2nd(st->oid);
+	int quest, icon;
+	
+	if( nd == NULL )
+		return true;
+
+	quest = script_getnum(st, 2);
+	icon = script_getnum(st, 3);	
+	
+	#if PACKETVER >= 20120410
+		if(icon < 0 || (icon > 8 && icon != 9999) || icon == 7)
+			icon = 9999;	// Default to nothing if icon id is invalid.
+	#else
+		if(icon < 0 || icon > 7)
+			icon = 0;
+		else
+			icon = icon + 1;
+	#endif
+	
+	nd->quest.quest_id = quest;
+	nd->quest.icon = icon;
+
+	return true;
+}
+
 BUILDIN(setquest)
 {
 	struct map_session_data *sd = script->rid2sd(st);
+	struct npc_data *nd = map->id2nd(st->oid);
 	nullpo_ret(sd);
 	
 	quest->add(sd, script_getnum(st, 2));
+
+	// If questinfo is set, remove quest bubble once quest is set.
+	if(nd->quest.quest_id > 0)
+		#if PACKETVER >= 20120410
+			clif->quest_show_event(sd, &nd->bl, 9999, 0);
+		#else
+			clif->quest_show_event(sd, &nd->bl, 0, 0);
+		#endif		
+
 	return true;
 }
 
@@ -15507,17 +15544,24 @@ BUILDIN(checkquest)
 BUILDIN(showevent) {
 	TBL_PC *sd = script->rid2sd(st);
 	struct npc_data *nd = map->id2nd(st->oid);
-	int state, color;
+	int icon;
 	
 	if( sd == NULL || nd == NULL )
 		return true;
-	state = script_getnum(st, 2);
-	color = script_getnum(st, 3);
+
+	icon = script_getnum(st, 2);
+
+	#if PACKETVER >= 20120410
+		if(icon < 0 || (icon > 8 && icon != 9999) || icon == 7)
+			icon = 9999;	// Default to nothing if icon id is invalid.
+	#else
+		if(icon < 0 || icon > 7)
+			icon = 0;
+		else
+			icon = icon + 1;
+	#endif
 	
-	if( color < 0 || color > 3 )
-		color = 0; // set default color
-	
-	clif->quest_show_event(sd, &nd->bl, state, color);
+	clif->quest_show_event(sd, &nd->bl, icon, 0);
 	return true;
 }
 
@@ -18023,12 +18067,13 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(useatcmd, "s"),
 		
 		//Quest Log System [Inkfish]
+		BUILDIN_DEF(questinfo, "ii"),
 		BUILDIN_DEF(setquest, "i"),
 		BUILDIN_DEF(erasequest, "i"),
 		BUILDIN_DEF(completequest, "i"),
 		BUILDIN_DEF(checkquest, "i?"),
 		BUILDIN_DEF(changequest, "ii"),
-		BUILDIN_DEF(showevent, "ii"),
+		BUILDIN_DEF(showevent, "i"),		
 		
 		/**
 		 * hQueue [Ind/Hercules]

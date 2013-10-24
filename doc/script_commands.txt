@@ -7886,9 +7886,45 @@ that fails, the command returns an empty string instead.
 =========================
 ---------------------------------------
 
+*questinfo <Quest ID>, <Icon>;
+
+This is esentially a combination of checkquest and showevent. Use this only
+in an OnInit label. For the Quest ID, specify the quest ID that you want
+checked if it has been started yet.
+
+For Icon, use one of the following:
+
+No Icon		: QTYPE_NONE
+! Quest Icon	: QTYPE_QUEST
+? Quest Icon	: QTYPE_QUEST2
+! Job Icon	: QTYPE_JOB
+? Job Icon	: QTYPE_JOB2
+! Event Icon	: QTYPE_EVENT
+? Event Icon	: QTYPE_EVENT2
+Warg		: QTYPE_WARG
+Warg Face	: QTYPE_WARG2 (Only for packetver >= 20120410)
+
+When a user shows up on a map, each NPC is checked for questinfo that has been set.
+If questinfo is present, it will check if the quest has been started, if it has not, the bubble will appear.
+
+Example
+izlude,100,100,4	script	Test	844,{
+	mes "[Test]";
+	mes "Hello World.";
+	close;
+
+	OnInit:
+		questinfo 1001, QTYPE_QUEST;
+		end;
+}
+
+---------------------------------------
+
 *setquest <ID>;
 
 Place quest of <ID> in the users quest log, the state of which is "active".
+
+If *questinfo is set, and the same ID is specified here, the icon will be cleared when the quest is set.
 
 ---------------------------------------
 
@@ -7937,27 +7973,23 @@ If parameter "HUNTING" is supplied:
 
 ---------------------------------------
 
-*showevent <state>, <color>;
+*showevent <icon>;
 
 Show a colored mark in the mini-map like "viewpoint" and an emotion on top 
 of a NPC. This is used to indicate that a NPC has a quest or an event to 
-certain player/s. 
+a certain player. 
 
-state can be:
-	0 = disable ( Used to disable and remove the mark and the emotion from 
-		the NPC. )
-	1 = exclamation emotion ( Used to show an important quest event to 
-		certain player. )
-	2 = interrogation emotion ( Used to show an non-important quest event 
-		to certain player. )
-Other value may cause client crashes.
+Available Icons:
 
-color can be:
-	0 = yellow "Quest"
-	1 = orange "Job"
-	2 = green "Event"
-	3 = an MVP flag
-Other values show a transparent mark in the mini-map.
+Remove Icon	: QTYPE_NONE
+! Quest Icon	: QTYPE_QUEST
+? Quest Icon	: QTYPE_QUEST2
+! Job Icon	: QTYPE_JOB
+? Job Icon	: QTYPE_JOB2
+! Event Icon	: QTYPE_EVENT
+? Event Icon	: QTYPE_EVENT2
+Warg		: QTYPE_WARG
+Warg Face	: QTYPE_WARG2 (Only for packetver >= 20120410)
 
 ----------------------------------------
 
