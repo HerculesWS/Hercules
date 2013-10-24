@@ -4875,7 +4875,6 @@ INSERT INTO `item_db` (`id`, `name_english`, `name_japanese`, `type`, `price_buy
 (12580, 'Vending_Search_Scroll', 'Universal Catalog Silver', 2, 0, 0, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'searchstores 10,0;', '', ''),
 (12581, 'Vending_Search_Scroll2', 'Universal Catalog Gold', 2, 0, 0, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'searchstores 10,1;', '', ''),
 (12591, 'Uni_Catalog_Bz', 'Universal Catalog Bronze', 2, 0, 0, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'searchstores 10,1;', '', ''),
-(12622, 'Boarding_Halter', 'Halter Lead', 11, 20, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 'setmounting();', '', ''),
 (12701, 'Old_Blue_Box_F', 'Old Blue Box', 2, 0, 0, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, '', '', ''),
 (12702, 'Old_Bleu_Box', 'Old Navy Box', 2, 0, 0, 200, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'getrandgroupitem 12702,1; getrandgroupitem 12702,1;', '', ''),
 (12703, 'Holy_Egg_2', 'Holy Egg', 11, 0, 0, 50, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, '', '', ''),
@@ -5109,9 +5108,9 @@ INSERT INTO `item_db` (`id`, `name_english`, `name_japanese`, `type`, `price_buy
 (13105, 'The_Garrison_', 'Garrison', 4, 48000, 24000, 500, 70, 0, 7, 2, 16777216, 7, 2, 34, 2, 55, 1, 17, 'bonus bHit,-10;', '', ''),
 (13106, 'Gold_Lux', 'Gold Lux', 4, 100000, 50000, 500, 20, 0, 7, 0, 16777216, 7, 2, 34, 3, 12, 1, 17, 'bonus bHit,-10; if(getskilllv("GS_GLITTERING")>0) bonus3 bAutoSpell,"GS_GLITTERING",getskilllv("GS_GLITTERING"),100;', '', ''),
 (13107, 'Wasteland_Outlaw', 'Wasteland''s Outlaw', 4, 20, 10, 580, 68, 0, 7, 2, 16777216, 7, 2, 34, 3, 70, 1, 17, 'bonus bHit,readparam(bAgi)/10; bonus bAspdRate,readparam(bAgi)/14;', '', ''),
-(13108, 'BF_Pistol1', 'Soldier Revolver', 4, 0, 0, 0, 70, 0, 7, 0, 16777216, 7, 2, 34, 3, 80, 1, 17, 'bonus bDex,2; bonus bHit,-10; bonus2 bAddRace,RC_DemiHuman,55; bonus2 bIgnoreDefRate,RC_DemiHuman,20; autobonus "{ bonus bAspdRate,100; }",10,3000,BF_WEAPON,"{ specialeffect2 EF_POTION_BERSERK; }"; bonus bUnbreakableWeapon,0;', '', '');
+(13108, 'BF_Pistol1', 'Soldier Revolver', 4, 0, 0, 0, 70, 0, 7, 0, 16777216, 7, 2, 34, 3, 80, 1, 17, 'bonus bDex,2; bonus bHit,-10; bonus2 bAddRace,RC_DemiHuman,55; bonus2 bIgnoreDefRate,RC_DemiHuman,20; autobonus "{ bonus bAspdRate,100; }",10,3000,BF_WEAPON,"{ specialeffect2 EF_POTION_BERSERK; }"; bonus bUnbreakableWeapon,0;', '', ''),
+(13109, 'Wasteland_Outlaw_C', 'Wasteland Outlaw', 4, 20, 10, 0, 100, 0, 7, 0, 16777216, 7, 2, 34, 3, 0, 0, 17, 'bonus bHit,readparam(bAgi)/10; bonus bAspdRate,readparam(bAgi)/14; bonus2 bAddRace,RC_NonBoss,10; bonus2 bAddRace,RC_Boss,10; bonus bMatkRate,10;', '', '');
 INSERT INTO `item_db` (`id`, `name_english`, `name_japanese`, `type`, `price_buy`, `price_sell`, `weight`, `atk`, `defence`, `range`, `slots`, `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`, `weapon_level`, `equip_level`, `refineable`, `view`, `script`, `equip_script`, `unequip_script`) VALUES
-(13109, 'Wasteland_Outlaw_C', 'Wasteland Outlaw', 4, 20, 10, 0, 100, 0, 7, 0, 16777216, 7, 2, 34, 3, 0, 0, 17, 'bonus bHit,readparam(bAgi)/10; bonus bAspdRate,readparam(bAgi)/14; bonus2 bAddRace,RC_NonBoss,10; bonus2 bAddRace,RC_Boss,10; bonus bMatkRate,10;', '', ''),
 (13110, 'Krieger_Pistol1', 'Glorious Pistol', 4, 0, 0, 0, 80, 0, 7, 0, 16777216, 7, 2, 34, 4, 80, 1, 17, 'bonus2 bAddRace,RC_DemiHuman,55; bonus2 bIgnoreDefRate,RC_DemiHuman,20; bonus bUnbreakableWeapon,0; if(getrefine()>5){ bonus2 bAddRace,RC_DemiHuman,pow(getrefine()-4,2); bonus2 bIgnoreDefRate,RC_DemiHuman,5; } if(getrefine()>8) { bonus4 bAutoSpellOnSkill,"GS_RAPIDSHOWER","GS_GLITTERING",1,1000; bonus2 bSkillAtk,"GS_RAPIDSHOWER",getrefine()*2; }', '', ''),
 (13112, 'P_Revolver1', 'Eden Revlover I', 4, 0, 0, 0, 4, 0, 7, 0, 16777216, 7, 2, 34, 1, 26, 0, 17, 'bonus bHit,-5;', '', ''),
 (13113, 'P_Revolver2', 'Eden Revlover II', 4, 0, 0, 0, 60, 0, 7, 0, 16777216, 7, 2, 34, 1, 40, 0, 17, 'bonus bHit,-5;', '', ''),
@@ -5401,10 +5400,10 @@ INSERT INTO `item_db` (`id`, `name_english`, `name_japanese`, `type`, `price_buy
 (13671, 'Safety_Ring_Box1', 'Refined Safety Ring Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 2695,604800;', '', ''),
 (13672, 'Vesper_Core01_Box1', 'Refined Vesper Core 01 Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 2696,604800;', '', ''),
 (13673, 'Vesper_Core02_Box1', 'Refined Vesper Core 02 Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 2697,604800;', '', ''),
-(13674, 'Vesper_Core03_Box1', 'Refined Vesper Core 03 Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 2698,604800;', '', '');
-INSERT INTO `item_db` (`id`, `name_english`, `name_japanese`, `type`, `price_buy`, `price_sell`, `weight`, `atk`, `defence`, `range`, `slots`, `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`, `weapon_level`, `equip_level`, `refineable`, `view`, `script`, `equip_script`, `unequip_script`) VALUES
+(13674, 'Vesper_Core03_Box1', 'Refined Vesper Core 03 Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 2698,604800;', '', ''),
 (13675, 'Vesper_Core04_Box1', 'Refined Vesper Core 04 Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 2699,604800;', '', ''),
-(13676, 'Drooping_Kitty_Box1', 'Refined Drooping Cat Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 5279,1209600;', '', ''),
+(13676, 'Drooping_Kitty_Box1', 'Refined Drooping Cat Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 5279,1209600;', '', '');
+INSERT INTO `item_db` (`id`, `name_english`, `name_japanese`, `type`, `price_buy`, `price_sell`, `weight`, `atk`, `defence`, `range`, `slots`, `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`, `weapon_level`, `equip_level`, `refineable`, `view`, `script`, `equip_script`, `unequip_script`) VALUES
 (13677, 'Magestic_Goat_Box1', 'Refined Majestic Goat Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 5280,1209600;', '', ''),
 (13678, 'Deviruchi_Cap_Box1', 'Refined Deviruchi Hat Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 5281,1209600;', '', ''),
 (13679, 'Executioner_Box1', 'Refined Executioner Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 1174,604800;', '', ''),
@@ -5732,10 +5731,10 @@ INSERT INTO `item_db` (`id`, `name_english`, `name_japanese`, `type`, `price_buy
 (14016, 'F_Lever_Action_Rifle_Box', 'Lever Action Rifle Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 13170,604800;', '', ''),
 (14017, 'F_All_In_One_Ring_Box', 'All In One Ring Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 2741,604800;', '', ''),
 (14018, 'F_Spritual_Tunic_Box', 'Spiritual Tunic Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 2384,604800;', '', ''),
-(14019, 'F_Recuperative_Box', 'Recuvative Armor Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 2385,604800;', '', '');
-INSERT INTO `item_db` (`id`, `name_english`, `name_japanese`, `type`, `price_buy`, `price_sell`, `weight`, `atk`, `defence`, `range`, `slots`, `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`, `weapon_level`, `equip_level`, `refineable`, `view`, `script`, `equip_script`, `unequip_script`) VALUES
+(14019, 'F_Recuperative_Box', 'Recuvative Armor Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 2385,604800;', '', ''),
 (14020, 'F_Shelter_Resist_Box', 'Shell Of Resistance Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 2132,604800;', '', ''),
-(14021, 'F_Sylphid_Manteau_Box', 'Silf Manteau Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 2543,604800;', '', ''),
+(14021, 'F_Sylphid_Manteau_Box', 'Silf Manteau Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 2543,604800;', '', '');
+INSERT INTO `item_db` (`id`, `name_english`, `name_japanese`, `type`, `price_buy`, `price_sell`, `weight`, `atk`, `defence`, `range`, `slots`, `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`, `weapon_level`, `equip_level`, `refineable`, `view`, `script`, `equip_script`, `unequip_script`) VALUES
 (14022, 'F_Refresh_Shoes_Box', 'Refresh Shoes Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 2439,604800;', '', ''),
 (14023, 'F_Toast_Box', 'Crunch Toast Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'rentitem 5391,604800;', '', ''),
 (14024, 'F_Robo_Eye_Box', 'Robo Eye Box', 18, 20, 10, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'getitem 5325,1;', '', ''),
@@ -6062,10 +6061,10 @@ INSERT INTO `item_db` (`id`, `name_english`, `name_japanese`, `type`, `price_buy
 (14538, 'Glass_Of_Illusion', 'Glass of Illusion', 2, 0, 0, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'specialeffect2 EF_STEAL; sc_start SC_PLUSAVOIDVALUE,60000,20;', '', ''),
 (14539, 'Shadow_Armor_S', 'Shadow Armor Scroll', 2, 0, 0, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'specialeffect2 EF_CLOAKING; sc_start4 SC_ARMOR_PROPERTY,1800000,1,Ele_Dark,1,0;', '', ''),
 (14540, 'Holy_Armor_S', 'Holy Armor Scroll', 2, 0, 0, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'specialeffect2 91; sc_start4 SC_ARMOR_PROPERTY,1800000,1,Ele_Holy,1,0;', '', ''),
-(14541, 'S_Def_Potion', 'Small Defense Potion', 2, 0, 0, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'specialeffect2 EF_GUARD; sc_start SC_PROTECT_DEF,60000,3;', '', '');
-INSERT INTO `item_db` (`id`, `name_english`, `name_japanese`, `type`, `price_buy`, `price_sell`, `weight`, `atk`, `defence`, `range`, `slots`, `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`, `weapon_level`, `equip_level`, `refineable`, `view`, `script`, `equip_script`, `unequip_script`) VALUES
+(14541, 'S_Def_Potion', 'Small Defense Potion', 2, 0, 0, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'specialeffect2 EF_GUARD; sc_start SC_PROTECT_DEF,60000,3;', '', ''),
 (14542, 'B_Def_Potion', 'Big Defense Potion', 2, 0, 0, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'specialeffect2 EF_GUARD; sc_start SC_PROTECT_DEF,180000,3;', '', ''),
-(14543, 'S_Mdef_Potion', 'Small Magic Defense Potion', 2, 0, 0, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'specialeffect2 EF_SPELLBREAKER; sc_start SC_PROTECT_MDEF,60000,3;', '', ''),
+(14543, 'S_Mdef_Potion', 'Small Magic Defense Potion', 2, 0, 0, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'specialeffect2 EF_SPELLBREAKER; sc_start SC_PROTECT_MDEF,60000,3;', '', '');
+INSERT INTO `item_db` (`id`, `name_english`, `name_japanese`, `type`, `price_buy`, `price_sell`, `weight`, `atk`, `defence`, `range`, `slots`, `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`, `weapon_level`, `equip_level`, `refineable`, `view`, `script`, `equip_script`, `unequip_script`) VALUES
 (14544, 'B_Mdef_Potion', 'Big Magic Defense Potion', 2, 0, 0, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'specialeffect2 EF_SPELLBREAKER; sc_start SC_PROTECT_MDEF,180000,3;', '', ''),
 (14545, 'Battle_Manual_X3', 'Field Manual 300%', 2, 0, 0, 10, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'sc_start SC_CASH_PLUSEXP,1800000,300;', '', ''),
 (14546, 'Fire_Cracker_Love', 'I Love You Firecracker', 2, 2, 1, 20, 0, 0, 0, 0, 4294967295, 7, 2, 0, 0, 0, 0, 0, 'end;', '', ''),
