@@ -4,8 +4,6 @@
 //= Hercules Dev Team
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= [Official Conversion]
 //= Renewal coin redemption NPCs.

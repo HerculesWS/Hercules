@@ -4,8 +4,6 @@
 //= Athena (1.0)
 //===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: =====================================
-//= Hercules
 //===== Additional Comments: =================================
 //= 1.1 added Garm Baby according to May 10 patch
 //= 1.2 Official kRO 10.1 spawns [Playtester]

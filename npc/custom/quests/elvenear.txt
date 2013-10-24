@@ -4,8 +4,6 @@
 //= someone
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Elven Ears (require 75+ Base Level)
 //===== Additional Comments: =================================

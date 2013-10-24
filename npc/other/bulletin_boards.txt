@@ -1,12 +1,14 @@
 //===== Hercules Script ======================================
-//= Official scripts for beginners from iRO
+//= Bulletin Boards
 //===== By: ==================================================
 //= MasterOfMuppets
 //===== Current Version: =====================================
-//= 1.8
+//= 1.9
+//===== Description: =========================================
+//= Bulletin Boards for beginners.
 //===== Additional Comments: =================================
 //= 1.0 Added Alberta, Prontera, Izlude, Payon, Byalan Island,
-//= 	Archer Village, Payon Cave and Coal Mine
+//=     Archer Village, Payon Cave and Coal Mine
 //= 1.1 Geffen, Orc Dungeon
 //= 1.2 Added 5 more Boards [MasterOfMuppets]
 //= 1.3 Fixed spelling mistakes. [Nexon]
@@ -16,8 +18,9 @@
 //= 1.5a Fixed a small screw up with the color codes in the Glastheim BB [MasterOfMuppets]
 //= 1.5b Fixed another small screw up with the color codes in the Glastheim BB [Kayla]
 //= 1.6 Removed Duplicates [Silent]
-//= 1.7 Updated MOrroc NPCs to reflect episode 12.1 changes. [L0ne_W0lf]
+//= 1.7 Updated Morroc NPCs to reflect episode 12.1 changes. [L0ne_W0lf]
 //= 1.8 Updated Payon Cave Bulletion Board Locations. [Masao]
+//= 1.9 Moved Izlude NPC to Pre-RE path. [Euphy]
 //============================================================
 
 alberta,111,59,5	script	Bulletin Board#1	837,{
@@ -91,23 +94,7 @@ izlu2dun,104,92,5	script	Bulletin Board#4	837,{
 	mes "With a few exceptions, most of the monsters in this dungeon are of the Water attribute. Therefore, a Wind attribute weapon will help you greatly";
 	close;
 }
-	
-izlude,131,116,4	script	Bulletin Board#5	837,{
-	mes "[Izlude: The Satellite City]";
-	mes "Welcome to Izlude, the satellite of Prontera. Izlude was built to support Prontera's defense and to accommodate its burgeoning population";
-	next;
-	mes "[Izlude: The Satellite City]";
-	mes "Points of interest include the Swordsman Association building which allows adventurers to change their job to Swordsman, and the Battle Area that is North of Izlude.";
-	next;
-	mes "[Izlude: The Satellite City]";
-	mes "At the docks, you may take a ship and travel to ^123972Alberta^000000 or ^2F0400Byalan Island^000000.";
-	next;
-	mes "[Izlude: The Satellite City]";
-	mes "From Izlude, ^6D6FE0Prontera^000000 is located to the Northwest, and ^1F3A11Payon^000000 is located to the South.";
-	mes "Enjoy your travels in the Rune-Midgarts Kingdom.";
-	close;
-}
-	
+
 payon,178,108,5	script	Bulletin Board#06	837,{
 	mes "[Payon: The Mountain City]";
 	mes "Welcome to Payon, the mountain city. Payon has recently been renovated, so we hope you enjoy the clean, nice streets and buildings.";
@@ -129,7 +116,7 @@ payon,178,108,5	script	Bulletin Board#06	837,{
 	mes "Enjoy your travels."; 
 	close;
 }
-	
+
 pay_arche,79,31,5	script	Bulletin Board#07	837,{
 	mes "[Archer Village]"; 
 	mes "Welcome to the Payon Archer Village where Novices can change their jobs to Archer.";
@@ -151,7 +138,7 @@ pay_arche,39,134,5	script	Bulletin Board#08	837,{
 	mes "In the fifth level, there is a pretty, yet dreadful boss monster known as ^6B1312Moonlight^000000 that spawns at certain times. Approach with extreme caution.";
 	close;
 }
-	
+
 prontera,148,49,5	script	Bulletin Board#09	837,{
 	mes "[Prontera: Capital of the]";
 	mes "[Rune-Midgards Kingdom]";
@@ -180,7 +167,7 @@ prontera,148,49,5	script	Bulletin Board#09	837,{
 	mes "[Prontera: Capital of the]";
 	mes "[Rune-Midgards Kingdom]";
 	mes "From Prontera, ^5E5C69Izlude^000000 is located to the Southeast, ^1F3A11Payon^000000 to the far South, ^683C1FGeffen^000000 to the far West and ^2D3832Al De Baran^000000 to the far North.";
-	mes "Enjoy Your time in Prontera.";
+	mes "Enjoy your time in Prontera.";
 	close;
 }
 
@@ -463,7 +450,6 @@ moc_fild19,107,101,5	script	Bulletin Board#20	837,{
 }
 
 gef_tower,55,142,5	script	Bulletin Board#21	837,{
-
 	mes "[Geffen Dungeon]";
 	mes "^6B1312Caution!^000000"; 
 	mes "Geffen dungeon is consisted of 3 levels";
@@ -481,7 +467,6 @@ gef_tower,55,142,5	script	Bulletin Board#21	837,{
 }
 
 xmas_fild01,75,80,5	script	Bulletin Board#22	837,{
-
 	mes "[Winter Town, Lutie]";
 	mes "Welcome to Lutie, the town of snowfall.";
 	mes "Manufacturing toys in the toy factory is the main";
@@ -497,7 +482,6 @@ xmas_fild01,75,80,5	script	Bulletin Board#22	837,{
 }
 
 xmas,147,311,5	script	Bulletin Board#23	837,{
-
 	mes "[Toy Factory]";
 	mes "^6B1312Caution!^000000";
 	mes "Toy Factory is consisting of 2 levels.";
@@ -513,7 +497,6 @@ xmas,147,311,5	script	Bulletin Board#23	837,{
 }
 
 yuno_fild03,37,143,5	script	Bulletin Board#24	837,{
-
 	mes "[The Magma Dungeon, Nogg Road]";
 	mes "^6B1312Caution!^000000";
 	mes "Nogg Road is filled with very dangerous creatures.";
@@ -527,7 +510,6 @@ yuno_fild03,37,143,5	script	Bulletin Board#24	837,{
 }
 
 niflheim,200,191,5	script	Bulletin Board#25	837,{
-
 	mes "[City of the Dead, Nifflheim]";
 	mes "Welcome to Nifflheim, the City of the Dead.";
 	mes "Nifflheim was known as the other world where";
@@ -553,7 +535,6 @@ niflheim,200,191,5	script	Bulletin Board#25	837,{
 
 /*
 moc_fild15,267,264,5	script	Bulletin Board#26	837,{
-
 	mes "[Ant Hell]";
 	mes "^6B1312Caution!^000000";
 	mes "Ant Hell is consisting of 2 levels.";
@@ -570,7 +551,6 @@ moc_fild15,267,264,5	script	Bulletin Board#26	837,{
 */
 
 moc_ruins,61,164,5	script	Bulletin Board#27	837,{
-
 	mes "[Pyramids]";
 	mes "^6B1312Caution!^000000";
 	mes "Pyramids is consisting of total 7 levels as 4 levels on the earth and the rest under the ground.";
@@ -584,7 +564,6 @@ moc_ruins,61,164,5	script	Bulletin Board#27	837,{
 }
 
 glast_01,369,308,5	script	Bulletin Board#28	837,{
-
 	mes "[Glast Heim]";
 	mes "Glast Heim is an enormous dungeon with countless levels.";
 	mes "This dungeon is definately not for new or experienced adventurers";

@@ -4,9 +4,8 @@
 //= Gennosuke Kouga, Muad_Dib
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
+//= [Official Conversion]
 //= Quest NPCs related to Dewata:
 //== "Dewata Legend"
 //== "Help Out the Old Man"
@@ -17,60 +16,7 @@
 //= 1.2 Updated to match the official script. [Lemongrass/Euphy]
 //============================================================
 
-// Entrance
-//============================================================
-alberta,212,202,4	script	Dewata Sailor#alberta	536,{
-	mes "[Dewata Sailor]";
-	mes "Do you want to visit ^8B4513Dewata Island^000000?";
-	mes "With it's dazzling waves and charming views it's a great place to relax.";
-	mes "The transit fee is 10,000 Zeny.";
-	next;
-	switch(select("Yes!:No.")) {
-	case 1:
-		if (Zeny >= 10000) {
-			mes "[Dewata Sailor]";
-			mes "^8B4513Dewata^000000 is a beautiful and peaceful island country.";
-			mes "Have a nice trip~";
-			close2;
-			set Zeny, Zeny - 10000;
-			warp "dewata",232,53;
-			end;
-		} else {
-			mes "[Dewata Sailor]";
-			mes "You don't have the dough, kid.";
-			mes "Come back when you have a bigger wallet.";
-			close;
-		}
-	case 2:
-		mes "[Dewata Sailor]";
-		mes "Let me know";
-		mes "when you're ready to travel~";
-		close;
-	}
-}
-
-dewata,229,49,6	script	Alberta Sailor#dewata	536,{
-	mes "[Alberta Sailor]";
-	mes "Do you want to go back to Alberta?";
-	next;
-	switch(select("Yes.:No.")) {
-	case 1:
-		mes "[Alberta Sailor]";
-		mes "I hope you had a lot of fun on";
-		mes "your trip to ^8B4513Dewata^000000 Island.";
-		mes "Please come again!";
-		close2;
-		warp "alberta",210,198;
-		end;
-	case 2:
-		mes "[Alberta Sailor]";
-		mes "Have some more fun before you go.";
-		mes "^8B4513Dewata^000000 Island still has more to offer.";
-		close;
-	}
-}
-
-// Dewata Legend Quest
+// Dewata Legend Quest :: dewata_legend
 //============================================================
 dew_fild01,57,274,0	script	#hideout_legend	111,6,6,{
 OnTouch:
@@ -794,7 +740,7 @@ dewata,78,192,6	script	Borobudur Temple Manager	536,{
 	close;
 }
 
-// Help Out the Old Man
+// Help Out the Old Man :: dewata_drink
 //============================================================
 dewata,109,262,4	script	Memo#dew_drink	534,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 5000) {
@@ -1716,7 +1662,7 @@ dew_fild01,209,137,0	duplicate(DewataPalm)	Palm Tree#drink38	844
 dew_fild01,206,156,0	duplicate(DewataPalm)	Palm Tree#drink39	844
 dew_fild01,209,201,0	duplicate(DewataPalm)	Palm Tree#drink40	844
 
-// Traditional Weapon Quest
+// Traditional Weapon Quest :: dewata_weapon
 //============================================================
 dew_fild01,127,240,4	script	Gatti#weapon	813,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 10000) {

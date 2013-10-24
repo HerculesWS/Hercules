@@ -1,19 +1,17 @@
 //===== Hercules Script ======================================
 //= Mechanic Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Muad_Dib
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Jobchange Quest from Blacksmith / Whitesmith -> Mechanic.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Masao]
 //= 1.1 Fixed the Door NPC [JayPee].
 //= 1.2 Updated script. [Euphy]
-//============================================================ 
+//============================================================
 
 yuno,129,156,3	script	Chainheart	923,{
 	mes "[Chainheart]";

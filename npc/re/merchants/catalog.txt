@@ -4,8 +4,6 @@
 //= skyiing, Scriptor
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= [Official Conversion]
 //= Catalogs allow players to easily search for items in-game,
@@ -13,7 +11,7 @@
 //===== Additional Comments: =================================
 //= 1.0 Moved from root directory. [Euphy]
 //= 1.1 Updated dialogue. [Euphy]
-//============================================================ 
+//============================================================
 
 moc_para01,22,16,5	script	Catalog Magician#catal01	704,{
 	if (!checkweight(1301,3)) {

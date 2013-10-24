@@ -4,8 +4,6 @@
 //= Euphy
 //===== Current Version: =====================================
 //= 1.6a
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= A dynamic quest shop based on Lunar's, with easier config.
 //= Includes support for multiple shops & cashpoints.

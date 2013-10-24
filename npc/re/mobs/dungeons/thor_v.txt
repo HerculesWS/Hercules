@@ -4,8 +4,6 @@
 //= Playtester
 //===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Official monster spawn in Thor Volcano Dungeon.
 //===== Additional Comments: =================================

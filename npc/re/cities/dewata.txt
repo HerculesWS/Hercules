@@ -1,20 +1,74 @@
 //===== Hercules Script ======================================
 //= Dewata Town
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Gennosuke Kouga, Muad_Dib
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
+//= [Official Conversion]
 //= Dewata Town Script
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version.
 //= 1.1 Standardized. [Euphy]
 //= 1.2 Fixed Zeny check. [Joseph]
 //= 1.3 Updated to match the official script. [Lemongrass/Euphy]
 //============================================================
 
+// Dewata Transportation
+//============================================================
+alberta,212,202,4	script	Dewata Sailor#alberta	536,{
+	mes "[Dewata Sailor]";
+	mes "Do you want to visit ^8B4513Dewata Island^000000?";
+	mes "With it's dazzling waves and charming views it's a great place to relax.";
+	mes "The transit fee is 10,000 Zeny.";
+	next;
+	switch(select("Yes!:No.")) {
+	case 1:
+		if (Zeny >= 10000) {
+			mes "[Dewata Sailor]";
+			mes "^8B4513Dewata^000000 is a beautiful and peaceful island country.";
+			mes "Have a nice trip~";
+			close2;
+			set Zeny, Zeny - 10000;
+			warp "dewata",232,53;
+			end;
+		} else {
+			mes "[Dewata Sailor]";
+			mes "You don't have the dough, kid.";
+			mes "Come back when you have a bigger wallet.";
+			close;
+		}
+	case 2:
+		mes "[Dewata Sailor]";
+		mes "Let me know";
+		mes "when you're ready to travel~";
+		close;
+	}
+}
+
+dewata,229,49,6	script	Alberta Sailor#dewata	536,{
+	mes "[Alberta Sailor]";
+	mes "Do you want to go back to Alberta?";
+	next;
+	switch(select("Yes.:No.")) {
+	case 1:
+		mes "[Alberta Sailor]";
+		mes "I hope you had a lot of fun on";
+		mes "your trip to ^8B4513Dewata^000000 Island.";
+		mes "Please come again!";
+		close2;
+		warp "alberta",210,198;
+		end;
+	case 2:
+		mes "[Alberta Sailor]";
+		mes "Have some more fun before you go.";
+		mes "^8B4513Dewata^000000 Island still has more to offer.";
+		close;
+	}
+}
+
+// Generic Dewata NPCs
+//============================================================
 dewata,221,237,5	script	Young Man#dew-1	536,{
 	mes "[Fruit Fancier]";
 	mes "What's wrong with your faaaaaace? You must really be clueless!";
@@ -456,36 +510,18 @@ dewata,89,191,6	script	Small Shrine#dew1	844,{
 		next;
 		callsub L_Wish;
 		set Zeny, Zeny - .@input;
-		if (.@stat & 1 && .@bonus){
-			sc_start SC_FOOD_STR,1200000,3;
-			percentheal 5,0;
-			//consumeitem 12043; //Str_Dish03
-		}
-		else if (.@stat & 2 && .@bonus){
-			sc_start SC_FOOD_AGI,1200000,3;
-			percentheal 5,0;
-			//consumeitem 12058; //Agi_Dish03
-		}
-		else if (.@stat & 4 && .@bonus){
-			sc_start SC_FOOD_DEX,1200000,3;
-			percentheal 5,0;
-			//consumeitem 12063; //Dex_Dish03
-		}
-		else if (.@stat & 8 && .@bonus){
-			sc_start SC_FOOD_VIT,1200000,3;
-			percentheal 5,0;
-			//consumeitem 12053; //Vit_Dish03
-		}
-		else if (.@stat & 16 && .@bonus){
-			sc_start SC_FOOD_INT,1200000,3;
-			percentheal 5,0;
-			//consumeitem 12048; //Int_Dish03
-		}
-		else if (.@stat & 32 && .@bonus){
-			sc_start SC_FOOD_LUK,1200000,3;
-			percentheal 5,0;
-			//consumeitem 12068; //Luk_Dish03
-		}
+		if (.@stat & 1 && .@bonus)
+			consumeitem 12043; //Str_Dish03
+		else if (.@stat & 2 && .@bonus)
+			consumeitem 12058; //Agi_Dish03
+		else if (.@stat & 4 && .@bonus)
+			consumeitem 12063; //Dex_Dish03
+		else if (.@stat & 8 && .@bonus)
+			consumeitem 12053; //Vit_Dish03
+		else if (.@stat & 16 && .@bonus)
+			consumeitem 12048; //Int_Dish03
+		else if (.@stat & 32 && .@bonus)
+			consumeitem 12068; //Luk_Dish03
 		else if (.@stat & 64) {
 			specialeffect2 EF_ANGEL;
 			mes "- A celestial entity gives you a blessing. -";
@@ -621,7 +657,7 @@ OnTouch:
 	close;
 }
 
-dewata,233,263,8	script	Sweet Married Couple::smc_dew_01	828,2,3,{
+dewata,233,263,8	script	Sweet Married Couple#1	828,2,3,{
 OnTouch:
 	mes "[Sweet Husband]";
 	mes "You are the most beautiful thing in the world baby~";
@@ -641,7 +677,7 @@ OnTouch:
 	close;
 }
 
-dewata,234,263,8	script	Sweet Married Couple::smc_dew_02	727,2,3,{
+dewata,234,263,8	script	Sweet Married Couple#2	727,2,3,{
 OnTouch:
 	mes "[Sweet Wife]";
 	mes "Baby~ You know what flower that is~?";
@@ -840,7 +876,7 @@ OnTouch:
 	close;
 }
 
-dewata,278,281,4	script	Happily Married Grandpa::hmg_dew_01	534,{
+dewata,278,281,4	script	Happily Married Grandpa	534,{
 	mes "[Happily Married Grandpa]";
 	mes "Today, I should ask my lady to";
 	mes "cook me some ^006400fried rice^000000.";
@@ -856,7 +892,7 @@ dewata,278,281,4	script	Happily Married Grandpa::hmg_dew_01	534,{
 	close;
 }
 
-dewata,280,277,4	script	Happily Married Grandma::hmg_dew_02	535,{
+dewata,280,277,4	script	Happily Married Grandma	535,{
 	mes "[Happily Married Grandma]";
 	mes "In my younger days,";
 	mes "there were many gentleman callers";
@@ -1104,7 +1140,7 @@ dewata,127,248,6	script	Wishing Kid#dew	539,{
 	close;
 }
 
-dew_fild01,101,259,6	script	Jaty Tribe Gatekeeper::jtg_dew	541,{
+dew_fild01,101,259,6	script	Jaty Tribe Gatekeeper	541,{
 	mes "[Jaty Tribe Gatekeeper]";
 	mes "Welcome to ^FF0000Jaty^000000 town.";
 	mes "Our tribe reveres strength and bravery.";

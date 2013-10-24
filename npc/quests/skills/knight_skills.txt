@@ -1,20 +1,18 @@
 //===== Hercules Script ======================================
 //= Knight Skills Quests
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Lupus, Reddozen, Samuray22
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Quests for skills: Charge Attack
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.5 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //============================================================
 
 prt_in,85,99,3	script	Knight#kabuto	734,{
-	if (BaseJob == job_Knight) {
+	if (BaseJob == Job_Knight) {
 		if (KNGT_SK == 10) {
 			mes "[Essofeit]";
 			mes "Ah, it must be grand to";
@@ -513,9 +511,9 @@ prontera,66,358,5	script	Knight#gattack	733,{
 	close;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= 1.0 for fully working skills only [Lupus]
 //= 1.1 Added more new skill quests for more classes [Lupus]
 //= Somehow eA engine doesn't let you keep learn't skill V_V'

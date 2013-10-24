@@ -4,8 +4,6 @@
 //= Athena (1.0)
 //===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: =====================================
-//= Hercules
 //===== Additional Comments: =================================
 //= 1.1 [Lupus]
 //= 1.2 Updated to ep 8.5 aegis spawns [MasterOfMuppets]

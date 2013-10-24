@@ -4,8 +4,6 @@
 //= Euphy
 //===== Current Version: =====================================
 //= 1.3a
-//===== Compatible With: ===================================== 
-//= Hercules
 //===== Description: =========================================
 //= Random hunting missions.
 //= Rewards are based on quest difficulty.

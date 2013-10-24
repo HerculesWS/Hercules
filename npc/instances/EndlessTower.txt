@@ -1,14 +1,14 @@
 //===== Hercules Script ======================================
 //= Endless Tower
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.4
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Endless Tower Memorial Dungeon.
 //= Consists of 101 floors.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version.
 //= 1.1 Removed a disablenpc from #102FShadowDust1. (bugreport:4415)
 //= 1.2 Added ends to several NPCs which would allow you to restart timers.
@@ -34,7 +34,7 @@
 //= 2.2 Instance system rewrite. [Euphy]
 //= 2.3 Added some missing announcements. [Euphy]
 //= 2.4 Added GM management function. [Euphy]
-//============================================================ 
+//============================================================
 
 1@tower	mapflag	src4instance
 2@tower	mapflag	src4instance

@@ -1,19 +1,21 @@
 //===== Hercules Script ======================================
 //= Brasilis Town
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.3
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Brasilis Town Script
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version. Transportation and Basic NPCs.
 //= 1.1 Fixed Zeny not being removed for payment. [Kisuka]
 //= 1.2 Updated dialog, added Ice Cream Maker. [L0ne_W0lf]
 //= 1.3 Moved Alberta NPC to pre-re/re paths. [Euphy]
-//============================================================ 
+//============================================================
 
+// Brasilis Transportation
+//============================================================
 /* Pre-Renewal coordinates: alberta,247,115,3 */
 alberta,246,82,3	script	Crewman#bra2	100,{
 	mes "[Crewman]";
@@ -29,7 +31,7 @@ alberta,246,82,3	script	Crewman#bra2	100,{
 		if (Zeny > 9999) {
 			mes "[Crewman]";
 			mes "Cool~!! Let's go~!";
-			set zeny,zeny-10000;
+			set Zeny, Zeny-10000;
 			close2;
 			warp "brasilis",314,60;
 			end;
@@ -67,6 +69,8 @@ brasilis,316,57,3	script	Crewman#bra1	100,{
 	}
 }
 
+// Generic Brasilis NPCs
+//============================================================
 brasilis,155,165,3	script	Signpost#bra1	858,{
 	mes ":: Art Museum ::";
 	close;
@@ -141,7 +145,7 @@ brasilis,137,77,5	script	Ice-Cream Maker	85,{
 			mes "Lighten your pack before buying this.";
 			close;
 		}
-		set zeny,zeny-.@icecream_hap;
+		set Zeny, Zeny-.@icecream_hap;
 		getitem 536,.@input; //Ice_Cream
 		close;
 	case 2:

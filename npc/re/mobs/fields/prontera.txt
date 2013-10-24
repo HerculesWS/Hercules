@@ -94,6 +94,22 @@ prt_fild08,0,0,0,0	monster	Lunatic	1063,40,5000,0,0
 prt_fild08,0,0,0,0	monster	Fabre	1007,40,5000,0,0
 
 //==================================================
+// prt_fild08 - Duplicates 
+//==================================================
+prt_fild08a,0,0,0,0	monster	Poring	1002,140,5000,0,0
+prt_fild08b,0,0,0,0	monster	Poring	1002,140,5000,0,0
+prt_fild08c,0,0,0,0	monster	Poring	1002,140,5000,0,0
+prt_fild08d,0,0,0,0	monster	Poring	1002,140,5000,0,0
+prt_fild08a,0,0,0,0	monster	Lunatic	1063,40,5000,0,0
+prt_fild08b,0,0,0,0	monster	Lunatic	1063,40,5000,0,0
+prt_fild08c,0,0,0,0	monster	Lunatic	1063,40,5000,0,0
+prt_fild08d,0,0,0,0	monster	Lunatic	1063,40,5000,0,0
+prt_fild08a,0,0,0,0	monster	Fabre	1007,40,5000,0,0
+prt_fild08b,0,0,0,0	monster	Fabre	1007,40,5000,0,0
+prt_fild08c,0,0,0,0	monster	Fabre	1007,40,5000,0,0
+prt_fild08d,0,0,0,0	monster	Fabre	1007,40,5000,0,0
+
+//==================================================
 // prt_fild09 - Prontera Field 
 //==================================================
 prt_fild09,0,0,0,0	monster	Magnolia	1138,140,5000,0,0

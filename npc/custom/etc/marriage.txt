@@ -4,8 +4,6 @@
 //= AppleGirl, Evera
 //===== Current Version: =====================================
 //= 2.9
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Fully working wedding script for all kind of weddings
 //===== Additional Comments: =================================

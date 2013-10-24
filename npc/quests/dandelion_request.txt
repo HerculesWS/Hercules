@@ -1,15 +1,16 @@
 //===== Hercules Script ======================================
 //= Dandelion's Request / Morocc Invasion quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= SinSloth
-//===== Current Version: ===================================== 
-//= 1.2
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 1.3
+//===== Description: =========================================
 //= A Morroc quest that is no longer used.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.1 Fixed a small bug in Dandelion's Request. [SinSloth]
 //= 1.2 Moved Dandelion's Request to its own file.
-//============================================================ 
+//= 1.3 Added GM management function. [Euphy]
+//============================================================
 
 izlude,103,106,3	script	Guildsman#1	48,3,3,{
 
@@ -2723,16 +2724,12 @@ que_job01,49,49,5	script	Tao	877,{
 
 que_job01,51,55,1	script	#roombar1	45,1,1,{
 
-OnInit:
-	set $maobar_room,0;
-	end;
-	
 OnTouch:
 	if(mao_request == 2 || mao_request == 24 || mao_request == 28 || mao_request == 29 || mao_request == 123 || mao_request == 126 || mao_request == 127 || prt_curse == 24)
 	{
-		if(!$maobar_room)
+		if(!$@maobar_room)
 		{
-			set $maobar_room,1;
+			set $@maobar_room,1;
 			donpcevent "#maobartimer1::OnEnter";
 			if(mao_request == 2 || mao_request == 28 || mao_request == 29 || mao_request == 126 || mao_request == 127)
 			{
@@ -2845,10 +2842,6 @@ OnTouch:
 
 que_job01,51,44,1	script	#roombar2	45,1,1,{
 
-OnInit:
-	set $maobar_room2,0;
-	end;
-	
 OnTouch:
 	if(mao_request == 25 || (mao_request > 102 && mao_request < 123))
 	{
@@ -2863,9 +2856,9 @@ OnTouch:
 			warp "que_job01",52,50;
 			end;
 		}
-		if(!$maobar_room2)
+		if(!$@maobar_room2)
 		{
-			set $maobar_room2,1;
+			set $@maobar_room2,1;
 			donpcevent "#maobartimer2::OnEnter";
 			if(mao_request == 25)
 			{
@@ -7932,7 +7925,7 @@ OnTouch:
 	mes ".........";
 	next;
 	soundeffect "wander_man_move.wav",0;
-	sc_start SC_Blind,60000,0;
+	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "...Isn't the moon";
 	mes "so beautiful tonight?";
@@ -7978,7 +7971,7 @@ OnTouch:
 	mes "............";
 	next;
 	soundeffect "wander_man_move.wav",0;
-	sc_start SC_Blind,60000,0;
+	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "So, you telling me you";
 	mes "don't know how this town";
@@ -8035,7 +8028,7 @@ OnTouch:
 	mes "............";
 	next;
 	soundeffect "wander_man_move.wav",0;
-	sc_start SC_Blind,60000,0;
+	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Hmpf.";
 	mes "It has begun.";
@@ -8087,7 +8080,7 @@ OnTouch:
 	mes "............";
 	next;
 	soundeffect "wander_man_move.wav",0;
-	sc_start SC_Blind,60000,0;
+	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Sir, our investigation has";
 	mes "turned something up. Every";
@@ -8124,7 +8117,7 @@ OnTouch:
 	mes "............";
 	next;
 	soundeffect "wander_man_move.wav",0;
-	sc_start SC_Blind,60000,0;
+	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Wh-what's with";
 	mes "all of this noise?";
@@ -8197,7 +8190,7 @@ OnTouch:
 	mes "............";
 	next;
 	soundeffect "wander_man_move.wav",0;
-	sc_start SC_Blind,60000,0;
+	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Jeez, what's going";
 	mes "on? Where the heck";
@@ -8915,7 +8908,7 @@ OnTouch:
 	mes ".........";
 	next;
 	soundeffect "wander_man_move.wav",0;
-	sc_start SC_Blind,60000,0;
+	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "...Isn't the moon";
 	mes "so beautiful tonight?";
@@ -8961,7 +8954,7 @@ OnTouch:
 	mes "............";
 	next;
 	soundeffect "wander_man_move.wav",0;
-	sc_start SC_Blind,60000,0;
+	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "So, you telling me you";
 	mes "don't know how this town";
@@ -9018,7 +9011,7 @@ OnTouch:
 	mes "............";
 	next;
 	soundeffect "wander_man_move.wav",0;
-	sc_start SC_Blind,60000,0;
+	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Hmpf.";
 	mes "It has begun.";
@@ -9070,7 +9063,7 @@ OnTouch:
 	mes "............";
 	next;
 	soundeffect "wander_man_move.wav",0;
-	sc_start SC_Blind,60000,0;
+	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Sir, our investigation has";
 	mes "turned something up. Every";
@@ -9107,7 +9100,7 @@ OnTouch:
 	mes "............";
 	next;
 	soundeffect "wander_man_move.wav",0;
-	sc_start SC_Blind,60000,0;
+	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Wh-what's with";
 	mes "all of this noise?";
@@ -9180,7 +9173,7 @@ OnTouch:
 	mes "............";
 	next;
 	soundeffect "wander_man_move.wav",0;
-	sc_start SC_Blind,60000,0;
+	sc_start SC_BLIND,60000,0;
 	mes "[?????]";
 	mes "Jeez, what's going";
 	mes "on? Where the heck";
@@ -10227,9 +10220,7 @@ que_job01,68,88,5	script	Simon#mao	881,{
 que_job01,70,84,1	duplicate(Simon#mao)	Kimmie	882,0,0
 
 sec_in02,38,162,0	script	Morroc Invasion Manager	882,{
-
-	if(getgmlevel() < 80) end;
-
+	callfunc "F_GM_NPC";
 	mes "A total of " + $maoattack + " users completed";
 	mes "the Satan Morroc: Lin Quest.";
 	mes "There are 2 requirements to";

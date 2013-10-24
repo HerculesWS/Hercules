@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Odin Temple Monster Spawn Script
 //===== By: ==================================================
 //= Poki#3 (0.1)
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Additional Comments: =================================
 //= 1.0 Updated by using Tharis' Homun AI, by Tharis [Vicious]
 //= 1.1 More accurate spawns [Playtester]

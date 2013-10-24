@@ -1,14 +1,14 @@
 //===== Hercules Script ======================================
-//= Brasilis Quest Monsters
+//= Turbo Track
 //===== By: ==================================================
-//= L0ne_W0lf
+//= Euphy
 //===== Current Version: =====================================
 //= 1.0
 //===== Description: =========================================
-//= 1.0 First version
+//= [Official Conversion]
+//= Renewal duplicates.
+//===== Additional Comments: =================================
+//= 1.0 Split Mount Manager NPC.
 //============================================================
 
-brasilis,283,88,6,6	monster	Strange Hydra	2081,5,5000,0,0
-brasilis,284,104,6,6	monster	Strange Hydra	2081,4,5000,0,0
-brasilis,215,80,6,6	monster	Strange Hydra	2081,4,5000,0,0
-brasilis,96,50,8,8	monster	Strange Hydra	2081,5,5000,0,0
+alde_gld,181,199,5	duplicate(MountManager_turbo)	Mount Manager	845

@@ -4,8 +4,6 @@
 //= Avaji
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= All-in-one: Mjolnir,Sleipnir,Brisingamen,Gleipnir,Megingjard
 //= Custom quest, ingredients based on official RO FAQ

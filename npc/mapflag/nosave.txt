@@ -4,10 +4,10 @@
 //= Hercules Dev Team
 //===== Current Version: =====================================
 //= 1.7
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Characters logging out on the specified map will be warped
 //= to the map specified in the last field, or "SavePoint".
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.7 - Updated. [Lupus]
 //============================================================
 

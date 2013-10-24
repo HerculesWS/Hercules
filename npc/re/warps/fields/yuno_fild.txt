@@ -4,8 +4,6 @@
 //= Nana (1.0), Sara
 //===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: =====================================
-//= Hercules; RO Episode 5+
 //===== Description: =========================================
 //= Warp Points for Yuno Field
 //===== Additional Comments: =================================

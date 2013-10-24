@@ -1,11 +1,9 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= HD Refiners
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official Conversion]
 //= Refiners that use HD ores to refine equipment. Upon

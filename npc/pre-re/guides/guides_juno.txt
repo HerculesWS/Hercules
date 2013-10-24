@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Yuno Guides
 //===== By: ==================================================
 //= KitsuneStarwind, usul, kobra_k88; L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.7
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= [Official Conversion]
 //= Guides for the City of Juno

@@ -1,16 +1,16 @@
 //===== Hercules Script ======================================
 //= Treasure Room Protection
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Masao
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.1
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Warps every Player out of the Treasure Room except for the
 //= Guildleader.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 Converted from the official script.
 //= 1.1 Reverted back and optimized. [Daegaladh]
-//============================================================ 
+//============================================================
 
 -	script	Gld_Trea_Protect::Gld_Trea_Protect	-1,{
 

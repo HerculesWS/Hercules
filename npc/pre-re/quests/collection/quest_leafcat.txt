@@ -1,13 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= iRO Repeatable EXP Quests.
 //===== By: ==================================================
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Added Monster Killing quests.
 //= Repeatable EXP Quest (Huge Leaves)
 //===== Additional Comments: =================================

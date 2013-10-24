@@ -1,10 +1,10 @@
 //===== Hercules Script ======================================
 //= Lighthalzen City
-//===== By: ================================================== 
+//===== By: ==================================================
 //=  erKURITA, Au{R}oN (Translated by Alan), $ephiroth
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.2
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Lighthalzen NPCs (Temporal names for now) [erKURITA]
 //===== Additional Comments: ==================================
 //= 2.0 Added missing Lab Staff#amano08 NPC. (bugreport:4319) [Gepard]
@@ -563,7 +563,7 @@ lighthalzen,182,102,3	script	Lucius#zen5	866,{
 				mes "as much as you possibly can...";
 				close;
 			}
-			set zeny,zeny-.@input;
+			set Zeny, Zeny-.@input;
 			set $donatedzeny,$donatedzeny + .@input;
 			mes "[Lucius]";
 			mes "So far, I've received";
@@ -1020,7 +1020,7 @@ OnTouch:
 		mes "[" + strcharinfo(0) + "]";
 		mes "Here you go,";
 		mes "take this.";
-		set zeny,zeny-50;
+		set Zeny, Zeny-50;
 		next;
 		mes "[Beggar]";
 		mes "Thank you so much.";
