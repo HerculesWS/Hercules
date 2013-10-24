@@ -4,11 +4,9 @@
 //= Euphy
 //===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: ===================================== 
-//= Hercules
 //===== Description: =========================================
 //= A fully functional job changer.
-//===== Additional Comments: =================================  
+//===== Additional Comments: =================================
 //= 1.1 Fixed reset on Baby job change. [Euphy]
 //= 1.2 Added Expanded Super Novice support and initial Kagerou/Oboro support. [Euphy]
 //= 1.3 Kagerou/Oboro added. [Euphy]

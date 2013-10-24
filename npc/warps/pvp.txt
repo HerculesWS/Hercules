@@ -4,8 +4,6 @@
 //= Athena (any)
 //===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Warp Points for Prontera Arena and PvP Maps
 //===== Additional Comments: =================================
@@ -13,7 +11,7 @@
 //= 1.1 Fixed Prontera Arena warp [Yor]
 //= 1.2 Added addition warps for PvP Nightmare Mode maps.
 //= 1.3 Fixed duplicate warp names [Timexy]
-//= 1.4 Disabled removed maps ordeal_*-3 and ordeal_*-4 [Streusel]
+//= 1.4 Disabled ordeal_*-3 and ordeal_*-4 maps.
 //============================================================
 
 //Battle Ordeal Mode
@@ -161,15 +159,6 @@ ordeal_3-2,180,154,0	warp	ord32-8	1,1,ordeal_3-2,284,164
 //ordeal_3-4,172,135,0	warp	ord34-6	1,1,ordeal_3-4,284,24
 //ordeal_3-4,172,172,0	warp	ord34-7	1,1,ordeal_3-4,284,284
 //ordeal_3-4,180,154,0	warp	ord34-8	1,1,ordeal_3-4,284,164
-//This map doesn't even exists. Is it ordeal_a02 or ordea_la00?
-//ordeal_a04,128,154,0	warp	orda1	0,0,ordeal_a04,24,154
-//ordeal_a04,136,136,0	warp	orda2	0,0,ordeal_a04,24,24
-//ordeal_a04,136,172,0	warp	orda3	0,0,ordeal_a04,24,284
-//ordeal_a04,153,128,0	warp	orda4	0,0,ordeal_a04,153,23
-//ordeal_a04,153,180,0	warp	orda5	0,0,ordeal_a04,144,284
-//ordeal_a04,172,135,0	warp	orda6	0,0,ordeal_a04,284,24
-//ordeal_a04,172,172,0	warp	orda7	0,0,ordeal_a04,284,284
-//ordeal_a04,180,154,0	warp	orda8	0,0,ordeal_a04,284,164
 
 // PvP Nightmare More warps
 pvp_n_8-4,33,122,0	warp	Link#pt_link_1-11	0,2,pvp_n_8-4,0,0

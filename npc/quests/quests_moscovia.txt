@@ -1,16 +1,14 @@
-//===== Hercules Script ====================================== 
+//===== Hercules Script ======================================
 //= Moscovia Quests
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Kisuka
-//===== Current Version: ===================================== 
-//= 2.2
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 2.3
+//===== Description: =========================================
 //= Quests for Moscovia.
 //= The Moving Island, Help Mikhail, Acorn Exchange,
 //= Banish Winter, Shafka Hat, Koshei the Immortal.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version. [Kisuka]
 //= 1.1 Small fixes on The Moving Island. [Kisuka]
 //= 1.2 Fixed a "player not attached" error. [brianluau]
@@ -26,7 +24,8 @@
 //= 2.0b Bug fixes. [Lemongrass]
 //= 2.1 Fixed incorrect use of 'close'. [Joseph]
 //= 2.2 Updated RE/Pre-RE EXP. [Euphy]
-//============================================================ 
+//= 2.3 Added GM management NPC. [Euphy]
+//============================================================
 
 // The Moving Island :: mos_whale_edq
 //============================================================
@@ -11849,4 +11848,57 @@ pay_dun04,163,186,0	script	Ghost Tree#rus45	111,{
 		close;
 	}
 	end;
+}
+
+mosk_dun01,3,3,3	script	Koshei GlobalVar#admin	958,{
+	callfunc "F_GM_NPC";
+	mes "[Koshei GlobalVar]";
+	mes "Please enter the password";
+	set .@i, callfunc("F_GM_NPC","orchid",1);
+	next;
+	if (.@i == 0) {
+		mes "[Koshei GlobalVar]";
+		mes "Please input the password exactly.";
+		close;
+	} else {
+		mes "[Koshei GlobalVar]";
+		mes "I can tell you what the";
+		mes "Koshei GlobalVar";
+		mes "$@rus_req02";
+		mes "on mosk_dun01";
+		mes "is currently set to.";
+		next;
+		if ($@rus_req02 == 0) {
+			mes "[Koshei GlobalVar]";
+			mes "Currently the GlobalVar $@rus_req02 is set to 0";
+			next;
+		} else if ($@rus_req02 == 1) {
+			mes "[Koshei GlobalVar]";
+			mes "Currently the GlobalVar $@rus_req02 is set to 1";
+			next;
+		} else {
+			mes "[Koshei GlobalVar]";
+			mes "error";
+			close;
+		}
+		mes "[Koshei GlobalVar]";
+		mes "What would you like to set the GlobalVar to?";
+		next;
+		switch(select("0:1:Cancel")) {
+		case 1:
+			mes "[Koshei GlobalVar]";
+			mes "GlobalVar $@rus_req02 will now be set to '0'";
+			set $@rus_req02,0;
+			donpcevent "Koshei#rus47::OnDisable";
+			close;
+		case 2:
+			mes "[Koshei GlobalVar]";
+			mes "GlobalVar $@rus_req02 will now be set to '1'";
+			set $@rus_req02,1;
+			donpcevent "Koshei#rus47::OnEnable";
+			close;
+		case 3:
+			close;
+		}
+	}
 }

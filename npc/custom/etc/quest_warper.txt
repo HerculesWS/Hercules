@@ -4,8 +4,6 @@
 //= DZeroX, Darkchild, Neouni
 //===== Current Version: =====================================
 //= 2.3
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Warper that works only after locations are unlocked.
 //===== Additional Comments: =================================

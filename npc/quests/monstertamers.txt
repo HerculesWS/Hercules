@@ -4,8 +4,6 @@
 //= kobra_k88, Darkchild, x[tsk]
 //===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Cute pet quest items
 //===== Additional Comments: =================================
@@ -16,7 +14,7 @@
 //= 1.4 Updated Monster taming item quests. [L0ne_W0lf]
 //= 1.4a FIXED item requirement for stellar hairpin. [L0ne_W0lf]
 //= 1.4b Fixed the delitem assosiated with the last uptate. [L0ne_W0lf]
-//= 1.5 Renamed Izlude Monster Tamer to function with Renewal [Streusel]
+//= 1.5 Moved Izlude NPC to pre-re/re paths.
 //============================================================
 
 alberta_in,173,76,4	script	Monster Tamer#alb	125,{
@@ -465,7 +463,7 @@ aldeba_in,168,175,4	script	Monster Tamer#alde	125,{
 	}
 }
 
--	script	::Monster_Tamer#izu	-1,{
+-	script	::MonsterTamer_izlude	-1,{
 	mes "[Shogo]";
 	mes "Are you pre-occupied with";
 	mes "gathering items for monsters";

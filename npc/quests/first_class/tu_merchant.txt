@@ -1,20 +1,19 @@
 //===== Hercules Script ======================================
 //= Merchant Class Tutorial and Job Specific Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Fix up by Jukka
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
-//= Tutorial for Merchant Class 
-//===== Additional Comments: ================================= 
+//===== Description: =========================================
+//= [Official Conversion]
+//= Merchant training quest.
+//===== Additional Comments: =================================
 //= 1.0 Fully working
-//= 1.1 Fixed bugs, optimized [Lupus] 1.2 fixed Weight check
-//=	TODO: Test, add missing misceffects
+//= 1.1 Fixed bugs, optimized [Lupus]
+//= 1.2 fixed Weight check
 //= 1.2 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
 //= 1.3 Misc. updates. [L0ne_W0lf]
-//============================================================ 
+//============================================================
 
 // Guarnien
 //============================================================

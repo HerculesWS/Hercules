@@ -1,15 +1,15 @@
 //===== Hercules Script ======================================
 // BattleGround System - KvM 1-59
-//===== By: ================================================== 
+//===== By: ==================================================
 //= ???, L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3
-//===== Description: ========================================= 
-//= [AEGIS Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Kreiger Von Midgard Battleground for levels 1 to 59
 //= - Winning Team: 1 point
 //= - Losing Team: 0 points
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version.
 //= 1.1 Updated using official Aegis files. [L0ne_W0lf]
 //= 1.2 Upated some announces and dialogs from iRO.
@@ -55,11 +55,11 @@ bat_room,197,211,0	warp	#kvm602	2,2,bat_room,154,150
 	end;
 
 OnKvM02One: 
-	misceffect EF_CHANGECOLD;
+	specialeffect EF_CHANGECOLD;
 	end;
 
 OnKvM02Two: 
-	misceffect EF_CHANGEPOISON;
+	specialeffect EF_CHANGEPOISON;
 	end;
 }
 

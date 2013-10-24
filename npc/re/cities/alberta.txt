@@ -5,6 +5,7 @@
 //===== Current Version: =====================================
 //= 1.0
 //===== Description: =========================================
+//= [Official Conversion]
 //= Alberta town NPCs.
 //===== Additional Comments: =================================
 //= 1.0 First Version.

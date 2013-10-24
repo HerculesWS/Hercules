@@ -1,25 +1,26 @@
 //===== Hercules Script ======================================
 //= Valkyrie's Gift NPCs
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
-//= 1.0
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Current Version: =====================================
+//= 1.1
+//===== Description: =========================================
+//= [Official Conversion]
 //= Post-God Item SE Creation Summoning Event 
-//= Second Sister is a cusotm translation.
-//===== Additional Comments: ================================= 
+//= Second Sister is a custom translation.
+//===== Additional Comments: =================================
 //= 1.0 First version. [L0ne_W0lf]
-//============================================================ 
+//= 1.1 Added GM management function. [Euphy]
+//============================================================
 
-/*
-yuno,1,1,0	script	Festival Manager#gq_fes00	891,{
+// Original name: "Festival Manager#god_se_fes00"
+yuno,1,1,0	script	Festival Manager#gq_fes0	891,{
+	callfunc "F_GM_NPC";
 	mes "[Festival Manager]";
 	mes "I am the festival NPC manager for the God SE quest.";
 	mes "Please enter your password.";
 	next;
-	input .@input$;
-	if (.@input$ != "07godsefes") {
+	if (callfunc("F_GM_NPC","07godsefes",1) == 0) {
 		mes "[Festival Manager]";
 		mes "Password is incorrect.";
 		close;
@@ -42,7 +43,6 @@ yuno,1,1,0	script	Festival Manager#gq_fes00	891,{
 		close;
 	}
 }
-*/
 
 yuno,118,192,5	script	Rmimi Ravies#gq_fes01	891,{
 	set .@GID, getcharid(2);
@@ -119,7 +119,7 @@ yuno,118,192,5	script	Rmimi Ravies#gq_fes01	891,{
 				next;
 				mes "[Rmimi Ravies]";
 				mes "Have a good time.";
-				donpcevent "Rmimi Ravies#gq_fes01::Onstart";
+				donpcevent "Rmimi Ravies#gq_fes01::OnStart";
 				
 				announce "["+ strcharinfo(0) +"] member of ["+ GetGuildName(.@GID) +"] is summoning a 'Valkyrie's Present' in 'Juno'.",bc_all,"0x70dbdb";
 				close;
@@ -164,7 +164,7 @@ OnDisable:
 	disablenpc "Rmimi Ravies#gq_fes01";
 	end;
 
-Onstart:
+OnStart:
 	initnpctimer;
 	set $@gqse_festival,1;
 	end;
@@ -390,19 +390,15 @@ OnTimer3900000:
 	end;
 }
 
-//===============================================================================================
-//                                             Rachel                                              
-//===============================================================================================
 
-//-------------------------------------Rachel Festival Manager-----------------------------------
-/*
-rachel,1,1,0	script	Festival Manager#god_se_fes02	891,{
+// Original name: "Festival Manager#god_se_fes02"
+rachel,1,1,0	script	Festival Manager#gq_fes2	891,{
+	callfunc "F_GM_NPC";
 	mes "[Festival Manager]";
 	mes "I am the festival NPC manager for the God SE quest.";
 	mes "Please enter your password.";
 	next;
-	input .@input$;
-	if (.@input$ != "07godsefes") {
+	if (callfunc("F_GM_NPC","07godsefes",1) == 0) {
 		mes "[Festival Manager]";
 		mes "Password is incorrect.";
 		close;
@@ -425,8 +421,6 @@ rachel,1,1,0	script	Festival Manager#god_se_fes02	891,{
 		close;
 	}
 }
-*/
-//----------------------------------------Rhehe Ravies----------------------------------------
 
 rachel,132,117,3	script	Rhehe Ravies#gq_fes03	891,{
 	set .@GID, getcharid(2);
@@ -507,7 +501,7 @@ rachel,132,117,3	script	Rhehe Ravies#gq_fes03	891,{
 				next;
 				mes "[Rhehe Ravies]";
 				mes "I hope you enjoy yourself!";
-				donpcevent "Rhehe Ravies#gq_fes03::Onstart";
+				donpcevent "Rhehe Ravies#gq_fes03::OnStart";
 				announce "["+ strcharinfo(0) +"] member of ["+ GetGuildName(.@GID) +"] is summoning a 'Valkyrie's Present' in 'Rachel'.",bc_all,"0x70dbdb";
 				close;
 			}
@@ -552,7 +546,7 @@ OnDisable:
 	disablenpc "Rhehe Ravies#gq_fes03";
 	end;
 
-Onstart:
+OnStart:
 	initnpctimer;
 	set $@gqse_festival,1;
 	end;

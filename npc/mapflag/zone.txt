@@ -4,9 +4,9 @@
 //= Ind/Hercules
 //===== Current Version: =====================================
 //= 1.0
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Flags maps as part of zones defined in map_zone_db.txt
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //============================================================
 
 //Aldebaran Turbo Track

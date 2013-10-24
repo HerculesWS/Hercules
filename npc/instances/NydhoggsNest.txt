@@ -4,10 +4,10 @@
 //= L0ne_W0lf, various sources
 //===== Current Version: =====================================
 //= 1.6
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Nidhoggr's Nest Instance
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version.
 //= 1.1 Minor dialog updates.
 //= 1.2 No longer glitches when anyone but party leader talks to the first NPC.
@@ -16,7 +16,7 @@
 //= 1.4 Cleaning. [Euphy]
 //= 1.5 Instance system rewrite. [Euphy]
 //= 1.6 Added GM management NPCs. [Euphy]
-//============================================================ 
+//============================================================
 
 1@nyd	mapflag	src4instance
 2@nyd	mapflag	src4instance
@@ -2023,7 +2023,7 @@ OnTouch:
 	if (compare(strnpcinfo(0),"red")) {
 		percentheal -50,0;
 		percentheal -30,0;
-		sc_start SC_BLEEDING,60000,0;
+		sc_start SC_BLOODING,60000,0;
 	} else if (compare(strnpcinfo(0),"white")) {
 		percentheal -50,0;
 		sc_start SC_FREEZE,20000,0;

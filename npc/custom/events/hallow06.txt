@@ -4,8 +4,6 @@
 //= Stryker
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Halloween Event Script
 //===== Additional Comments: =================================

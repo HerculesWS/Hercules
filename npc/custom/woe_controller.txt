@@ -4,8 +4,6 @@
 //= Euphy
 //===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= A controller for War of Emperium designed for
 //= simplicity and ease of use.

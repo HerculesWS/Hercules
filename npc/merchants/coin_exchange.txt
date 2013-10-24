@@ -1,5 +1,5 @@
 //===== Hercules Script ======================================
-//= Manuk & Splendide Coin Merchants
+//= Coin Merchants
 //===== By: ==================================================
 //= rAthena Dev Team
 //===== Current Version: =====================================
@@ -43,7 +43,7 @@
 		if (.@i == 1) {
 			mes "Here are the item descriptions.";
 			close2;
-			ReadBook .@Book,1;
+			readbook .@Book,1;
 			end;
 		}
 		else if (.@i < 5) {

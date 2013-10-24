@@ -48,9 +48,9 @@ prontera,124,201,1	script	Universal Rental NPC	726,{
 	end;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= A Free PecoPeco and Falcon Breeder
 //= 1.1 FIXED checkriding/cart/falcon funcs [Lupus]
 //= 1.2 Added Rebirth/Advanced Class support [Mass Zero]

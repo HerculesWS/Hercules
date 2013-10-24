@@ -1,10 +1,10 @@
 //===== Hercules Script ======================================
 //= Feast Day Of Ramadan Idul Fitri Event
-//===== By: ================================================== 
+//===== By: ==================================================
 //= $ephiroth
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.1
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Info : Official idRO
 //= 2006/10/16: 1.0 Release and fully working. [$ephiroth]
 //= 1.1 Replaced effect numerics with constants. [Samuray22]

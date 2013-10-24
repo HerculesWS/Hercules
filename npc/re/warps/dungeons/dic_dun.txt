@@ -4,8 +4,6 @@
 //= Chilly, Muad_Dib
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Warp Points for Scaraba Hole
 //===== Additional Comments: =================================

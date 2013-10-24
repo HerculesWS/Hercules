@@ -4,8 +4,6 @@
 //= TyrNemesis^
 //===== Current Version: =====================================
 //= 1.2a
-//===== Compatible With: =====================================
-//= Hercules Git
 //===== Description: =========================================
 //= Removes cards from equipped items.
 //===== Additional Comments: =================================

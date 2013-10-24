@@ -1,19 +1,17 @@
 //===== Hercules Script ======================================
 //= Expanded Super Novice Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Euphy
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.1a
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Job Change quest for Expanded Super Novice class.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 All dialogue is custom, contains some incorrect behaviors.
 //= 1.1 Switched to a translated copy of the official script
 //=     by Gennosuke Kouga, but vastly edited its content. [Euphy]
 //= 1.1a Replaced effect numerics with constants. [Euphy]
-//============================================================ 
+//============================================================
 
 function	script	Esseray_Ex	{
 	if (BaseLevel > 98 && JobLevel > 98) {

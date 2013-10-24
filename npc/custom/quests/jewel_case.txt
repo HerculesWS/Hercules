@@ -4,8 +4,6 @@
 //= Lupus
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= A quest for players at base level 99,
 //= with Jewel Case as a reward.

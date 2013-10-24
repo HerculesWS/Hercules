@@ -4,8 +4,6 @@
 //= Darkchild
 //===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Rooms containing 16 different MVPs
 //===== Additional Comments: =================================

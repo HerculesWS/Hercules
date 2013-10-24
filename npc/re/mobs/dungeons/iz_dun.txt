@@ -4,13 +4,11 @@
 //= Athena (1.0)
 //===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: =====================================
-//= Hercules
 //===== Additional Comments: =================================
 //= 1.1 Official kRO 10.1 spawns for 1-4 [Playtester]
 //= 1.2 More accurate spawns [Playtester]
 //= 1.3 Added Izlude Dungeon F6 spawns [Chilly]
-//= 1.4 Official F6 spawns [Euphy]
+//= 1.4 Official F6 spawns.
 //============================================================
 
 //==================================================

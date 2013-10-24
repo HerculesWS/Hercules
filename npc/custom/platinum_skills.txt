@@ -4,8 +4,6 @@
 //= Keichii, DarkChild
 //===== Current Version: =====================================
 //= 2.8
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Single NPC that assigns quests skills for all classes
 //===== Additional Comments: =================================

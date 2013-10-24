@@ -4,8 +4,6 @@
 //= acky
 //===== Current Version: =====================================
 //= 1.1.2
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Players buy ninjas to assassinate other players
 //===== Additional Comments: =================================

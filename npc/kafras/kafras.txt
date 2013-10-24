@@ -1,9 +1,9 @@
 //===== Hercules Script ======================================
 //= Kafras (Cities/Dungeons/Fields)
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Joseph
-//===== Current Version: ===================================== 
-//= 1.1
+//===== Current Version: =====================================
+//= 1.1b
 //===== Description: =========================================
 //= Argument settings for callfunc "F_Kafra":
 //=  arg(0): 0 - Default Kafra message
@@ -13,12 +13,14 @@
 //=  arg(2): 1 - Disable info menu
 //=  arg(3): Cost of Storage service
 //=  arg(4): Cost of Rent a Pushcart service
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 0.x Previous Authors: 
 //=     - L0ne_W0lf, kobra_k88, Samuray22, Evera, Lupus
 //= 1.0 Merged and cleaned up Kafras. [Joseph]
 //= 1.1 Added Izlude RE coordinates. [Euphy]
-//============================================================ 
+//= 1.1a Fixed Pre-RE Call and some leftovers. [Lemongrass]
+//= 1.1b Enabled saving in Izlude duplicates (RE). [Euphy]
+//============================================================
 
 // Aldebaran
 //============================================================
@@ -49,7 +51,7 @@ aldeba_in,96,181,4	script	Kafra Service	113,{
 		close2;
 		break;
 	case 2:
-		if (zeny < 20) {
+		if (Zeny < 20) {
 			mes "[Kafra Leilah]";
 			mes "Excuse me, but it";
 			mes "seems that you don't";
@@ -64,7 +66,7 @@ aldeba_in,96,181,4	script	Kafra Service	113,{
 		mes "and administrative functions,";
 		mes "I'll access your Storage for you.";
 		next;
-		set zeny,zeny-20;
+		set Zeny, Zeny-20;
 		set RESRVPTS, RESRVPTS + (20/5);
 		mes "[Kafra Leilah]";
 		mes "In the future, please";
@@ -326,7 +328,7 @@ yuno,327,108,4	script	Kafra Employee::kaf_yuno2	860,{
 
 yuno,277,221,4	script	Kafra Employee::kaf_yuno3	861,{
 	cutin "kafra_09",2;
-	callfunc "F_KafSetYun";
+	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
 	mes "The Kafra Corporation";
 	mes "is always working to provide";
@@ -400,7 +402,7 @@ cmd_fild07,136,134,4	script	Kafra Employee::kaf_cmd_fild07	721,{
 
 // Izlude
 //============================================================
--	script	kaf_izlude	-1,{
+-	script	::kaf_izlude	-1,{
 	cutin "kafra_01",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";
@@ -411,7 +413,7 @@ cmd_fild07,136,134,4	script	Kafra Employee::kaf_cmd_fild07	721,{
 	mes "How may I assist you?";
 	callfunc "F_Kafra",5,0,1,40,820;
 	if (checkre(0))
-		savepoint "izlude",129,97;
+		savepoint strnpcinfo(4),129,97;
 	else
 		savepoint "izlude",94,103;
 	callfunc "F_KafEnd",0,1,"in the city of Izlude";
@@ -596,7 +598,11 @@ niflheim,202,180,3	script	Kafra Employee::kaf_niflheim	791,{
 // - Byalan Island
 izlu2dun,106,58,8	script	Kafra Employee::kaf_izlu2dun	115,{
 	cutin "kafra_03",2;
-	if(BaseJob==Job_Novice && job_merchant_q2>0) callfunc "F_MercKafra";  //F_MercKafra found in merchant.txt
+	if (!checkre(0) && BaseJob == Job_Novice && job_merchant_q2 > 0) {
+		// Merchant Job Change Quest
+		// function F_MercKafra is found in /pre-re/jobs/1-1/merchant.txt
+		callfunc "F_MercKafra";
+	}
 	mes "[Kafra Employee]";
 	mes "Welcome to the";
 	mes "Kafra Corporation.";
@@ -619,10 +625,8 @@ prt_fild05,290,224,3	script	Kafra Employee::prt_fild05	114,{
 	mes "with its excellent service. So";
 	mes "what can I do for you today?";
 	callfunc "F_Kafra",5,1,1,40,0;
-
-	M_Save:
-		savepoint "prt_fild05",274,243;
-		callfunc "F_KafEnd",0,1, "at the Prontera Culverts";
+	savepoint "prt_fild05",274,243;
+	callfunc "F_KafEnd",0,1, "at the Prontera Culverts";
 }
 
 // - Coal Mine (Dead Pitt)

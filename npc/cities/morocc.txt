@@ -1,13 +1,13 @@
 //===== Hercules Script ======================================
 //= Morroc Town
-//===== By: ================================================== 
+//===== By: ==================================================
 //= kobra_k88; L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.2
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Morroc Town NPCs
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= Fully working
 //= Fixed Lapidary sprite, Implemented ANTHELL trigger
 //= (in both NPC/Warps) [Lupus]. Removed it from NPC and put in Warp
@@ -721,8 +721,8 @@ morocc_in,166,76,3	script	Bartender#02	46,{
 	next;
 	switch(select("Tropical Sograt:Vemillion the Beach:Nothing.")) {
 	case 1:
-		if (zeny >= 1000 ) {
-			set zeny,zeny-1000;
+		if (Zeny >= 1000 ) {
+			set Zeny, Zeny-1000;
 			getitem 12112,1;
 			mes "[Bartender]";
 			mes "Here you go.";
@@ -732,8 +732,8 @@ morocc_in,166,76,3	script	Bartender#02	46,{
 		}
 		break;
 	case 2:
-		if (zeny >= 1000 ) {
-			set zeny,zeny-1000;
+		if (Zeny >= 1000 ) {
+			set Zeny, Zeny-1000;
 			getitem 12113,1;
 			mes "[Bartender]";
 			mes "Here you go.";

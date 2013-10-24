@@ -1,10 +1,10 @@
 //===== Hercules Script ======================================
 //= Official Skill Resetter Event in Yuno (kRO & idRO)
-//===== By: ================================================== 
+//===== By: ==================================================
 //= $ephiroth
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.02
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= 2006 - Edition Skill Reset NPC
 //= 2006/11/16: 1.0 Release and fully working. [$ephiroth]
 //= 1.01 Checked, fixed typos, now uses MISC_QUEST var [Lupus]

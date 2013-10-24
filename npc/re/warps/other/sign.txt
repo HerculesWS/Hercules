@@ -4,8 +4,6 @@
 //= MasterOfMuppets
 //===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: =====================================
-//= Hercules; RO Episode 8+
 //===== Description: =========================================
 //= Warp Points related to the Sign Quest will be put here
 //===== Additional Comments: =================================

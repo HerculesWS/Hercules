@@ -4,9 +4,9 @@
 //= First Version: Tsuyuki and Harp
 //= iRO Version: L0ne_W0lf
 //===== Current Version: =====================================
-//= 0.9
+//= 0.9a
 //===== Description: =========================================
-//= [Partial Aegis Conversion]
+//= [Partial Official Conversion]
 //= Arunafeltz NPCs
 //===== Additional Comments: =================================
 //= 0.5 Text translated from Korean > English, incomplete, 
@@ -15,6 +15,7 @@
 //= 0.7 Total update of most if not all NPCs. [L0ne_W0lf]
 //= 0.8 Updated "Frozen Boy" dialog. (euRO) [L0ne_W0lf]
 //= 0.9 Replaced effect numerics with constants. [L0ne_W0lf]
+//= 0.9a Added 'consumeitem' command. [Euphy]
 //============================================================
 
 //===== Set 1 ================================================
@@ -273,7 +274,7 @@ rachel,206,30,3	script	Freya's Priest#play	920,{
 	mes "[Freya's Priest]";
 	mes "You!";
 	mes "Entertain me!";
-	Emotion e_ag;
+	emotion e_ag;
 	next;
 	if (select("What? You can't tell me what to do!:You got it.") == 1) {
 		mes "[Freya's Priest]";
@@ -306,11 +307,12 @@ rachel,206,30,3	script	Freya's Priest#play	920,{
 	mes "Oh? Oh! That's wonderful!";
 	close2;
 	set .@play,rand(1,10);
-	if (.@play == 1) warp "Random",0,0;
-	else if (.@play == 2) warp "Random",0,0;
-	else if (.@play == 3) sc_start SC_MOVHASTE_INFINITY,5000,0;
-	else if (.@play == 4) sc_start SC_MOVHASTE_INFINITY,5000,0;
-	else sc_start SC_SlowDown,5000,0;
+	if (.@play < 3)
+		consumeitem 601; //Wing_Of_Fly
+	else if (.@play < 5)
+		consumeitem 12016; //Speed_Up_Potion
+	else
+		consumeitem 12017; //Slow_Down_Potion
 	end;
 }
 
@@ -338,7 +340,7 @@ rachel,197,137,3	script	Bard#aru	51,{
 	mes ".........";
 	mes ".........";
 	mes ".........";
-	Emotion e_sob;
+	emotion e_sob;
 	close;
 }
 

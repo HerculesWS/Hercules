@@ -1,17 +1,15 @@
 //===== Hercules Script ======================================
 //= Pile Bunker Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= JayPee Mateo
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.2
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= 1.0 A Pile Bunker quest based on iRO WiKi. [JayPee Mateo]
 //= 2.0 Rewrited the Script a little so it looks a bit better. [Masao]
 //= 2.1 Switched to official script, coded by Gennosuke Kouga. [Euphy]
 //= 2.2 Updated to match the official script. [Euphy]
-//============================================================ 
+//============================================================
 
 yuno,179,174,4	script	Gomer	851,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
@@ -95,7 +93,7 @@ yuno,179,174,4	script	Gomer	851,{
 		} else {
 			mes "[Gomer]";
 			mes "Oh, I've been waiting. You didn't come on time, so I was wondering if you forgot about it. Please wait there a little bit.";
-			specialeffect 101;
+			specialeffect EF_REPAIRWEAPON;
 			next;
 			mes "[Gomer]";
 			mes "It's done. What do you think? Not bad, eh? Although I made it myself, I have to say it's pretty decently done.";

@@ -1,11 +1,9 @@
 //===== Hercules Script ======================================
 //= Find the Mushroom
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Mysterious
 //===== Current Version: =====================================
 //= 3.6a
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Find the Mushroom - random amount of Mushrooms spawns in random maps.
 //= Players need to find these mushrooms and kill them to gain prizes!

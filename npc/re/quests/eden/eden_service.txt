@@ -4,8 +4,6 @@
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Paradise Group storage access.
 //===== Additional Comments: =================================

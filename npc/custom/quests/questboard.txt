@@ -4,11 +4,9 @@
 //= tr0n
 //===== Current Version: =====================================
 //= 1.4.4
-//===== Compatible With: ===================================== 
-//= Hercules
 //===== Description: =========================================
 //= Easily add collection and hunting quests.
-//===== Additional Comments: =================================  
+//===== Additional Comments: =================================
 // 1.0.0 Release
 // 1.1.0 Added zeny reward
 // 1.2.0 Rewrote checkmob and killcounter

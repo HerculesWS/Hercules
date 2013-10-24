@@ -4,8 +4,6 @@
 //= amichan
 //===== Current Version: =====================================
 //= 1.8
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Quest to get Slotted Sunglasses.
 //= Will reset after quest completion.

@@ -4,8 +4,6 @@
 //= Muad_Dib, Aeomin
 //===== Current Version: =====================================
 //= 1.3a
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= [Official Conversion]
 //= Job change Quest from Alchemist / Creator -> Genetic.

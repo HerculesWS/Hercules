@@ -1,12 +1,10 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Izlude Dungeon Warp Script
 //===== By: ==================================================
 //= Athena (1.0)
 //= Nana (1.1)
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Description: =========================================
 //= Warp Points for Bibilyn Island & Undersea Cave
 //===== Additional Comments: =================================

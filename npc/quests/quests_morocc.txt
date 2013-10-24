@@ -1,10 +1,10 @@
 //===== Hercules Script ======================================
 //= Quest NPCs related to Morroc
-//===== By: ================================================== 
+//===== By: ==================================================
 //= kobra_k88
-//===== Current Version: ===================================== 
-//= 2.9
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 3.2
+//===== Description: =========================================
 //= [Official Conversion]
 //= - Stop Post
 //= - Binoculars Quest
@@ -12,7 +12,7 @@
 //= - Resurrection of Satan Morroc
 //= - The Crow of the Fate
 //= - Succession of the Prince
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.1 Fixed exploits [Lupus]
 //= 1.2 Added Dandelion's Request / Morroc Invasion quest. [SinSloth]
 //= 1.3 Updated dialogs from Binoculars Quest. [Samuray22]
@@ -41,7 +41,10 @@
 //= 2.8 Disabled Assassin bar pub NPCs, as they are included in the 13.1 quests file. [L0ne_W0lf]
 //= 2.9 Fixed player dying/logging out during conversation could prevent
 //=     summoning of Satan Morroc until server reboot. [Gepard]
-//============================================================ 
+//= 3.0 Updated RE/Pre-RE EXP. [Euphy]
+//= 3.1 Updated to match the latest official scripts. [Euphy]
+//= 3.2 Added GM management NPC and variable $@re_moc_time$. [Euphy]
+//============================================================
 
 // Stop Post Quest
 // ============================================================
@@ -64,7 +67,7 @@ moc_ruins,113,181,4	script	William	89,{
 		if ((countitem(1019) > 49) && (countitem(983) > 0) && (Zeny > 91099)) {
 			delitem 1019,50;  //Wooden_Block
 			delitem 983,1;  //Black_Dyestuffs
-			set Zeny,Zeny-91100;
+			set Zeny, Zeny-91100;
 			mes "[William]";
 			mes "Here you are~!";
 			mes "This ^3355FFStop Post^000000 has";
@@ -131,7 +134,7 @@ moc_ruins,118,176,4	script	Alchemist	64,{
 			next;
 			delitem 2243,1;  //Spinning_Eyes
 			delitem 999,100;  //Steel
-			set Zeny,Zeny-50000;
+			set Zeny, Zeny-50000;
 			mes "[Marius]";
 			mes "Here you are!";
 			mes "Binoculars !";
@@ -258,7 +261,7 @@ OnTouch:
 					mes "Hey, bartender! Gimme";
 					mes "the usual! I like your";
 					mes "style, adventurer...";
-					set zeny,zeny-1000;
+					set Zeny, Zeny-1000;
 					next;
 					mes "[Litheron]";
 					mes "Alright, you can come";
@@ -403,7 +406,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	46,{
 						mes "ask you for 800. Enjoy it,";
 						mes "my friend, and drink it as";
 						mes "deeply as you would life.";
-						set zeny,zeny-800;
+						set Zeny, Zeny-800;
 						getitem 12112,1; //Tropical_Sograt
 					}
 					close;
@@ -426,7 +429,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	46,{
 						mes "hard feelings, but you're";
 						mes "already lucky to be here.";
 						mes "Hey, enjoy your drink~";
-						set zeny,zeny-1000;
+						set Zeny, Zeny-1000;
 						getitem 12112,1; //Tropical_Sograt
 						close;
 					}
@@ -462,7 +465,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	46,{
 						mes "ask you for 800. Enjoy it,";
 						mes "my friend, and drink it as";
 						mes "deeply as you would life.";
-						set zeny,zeny-800;
+						set Zeny, Zeny-800;
 						getitem 12113,1; //Vermilion_The_Beach
 					}
 					close;
@@ -485,7 +488,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	46,{
 						mes "hard feelings, but you're";
 						mes "already lucky to be here.";
 						mes "Hey, enjoy your drink~";
-						set zeny,zeny-1000;
+						set Zeny, Zeny-1000;
 						getitem 12113,1; //Vermilion_The_Beach
 						close;
 					}
@@ -661,18 +664,15 @@ que_job01,49,49,5	script	Tao#dan_09	877,{
 }
 
 que_job01,51,55,0	script	que_job01#room_1	45,1,1,{
-OnInit:
-	set $maobar_room,0;
-	end;
 
-Onreset:
-	set $maobar_room,0;
+OnReset:
+	set $@maobar_room,0;
 	end;
 
 OnTouch:
 	if (prt_curse == 24) {
-		if ($maobar_room == 0) {
-			set $maobar_room,1;
+		if ($@maobar_room == 0) {
+			set $@maobar_room,1;
 			donpcevent " #room1timer::OnEnable";
 			donpcevent "Marjana#poison::OnEnable";
 			mes "[Tao]";
@@ -696,8 +696,8 @@ OnTouch:
 		}
 	}
 	else if (mao_request > 0) {
-		if ($maobar_room == 0) {
-			set $maobar_room,1;
+		if ($@maobar_room == 0) {
+			set $@maobar_room,1;
 			donpcevent " #room1timer::OnEnable";
 			donpcevent "Valdes#moc_master_1::OnEnable";
 			mes "[Tao]";
@@ -739,12 +739,12 @@ OnEnable:
 	mapannounce "que_job01","You will now enter the Master Zone, Area 1.",bc_map,"0x70DBDB";
 	end;
 
-Onstop:
+OnStop:
 	mapannounce "que_job01","The security magic in the Master Zone, Area 1 is deactivated.",bc_map,"0x70DBDB";
 	donpcevent "#room1_warp::OnDisable";
 	donpcevent "Valdes#moc_master_1::OnDisable";
 	donpcevent "Marjana#poison::OnDisable";
-	donpcevent "que_job01#room_1::Onreset";
+	donpcevent "que_job01#room_1::OnReset";
 	stopnpctimer;
 	end;
 
@@ -760,7 +760,7 @@ OnTimer245000:
 
 OnTimer250000:
 	mapannounce "que_job01","The security magic Master Zone, Area 1 is now activated.",bc_map,"0x70DBDB";
-	donpcevent "que_job01#room_1::Onreset";
+	donpcevent "que_job01#room_1::OnReset";
 	stopnpctimer;
 	end;
 }
@@ -1616,7 +1616,7 @@ morocc,159,113,3	script	Chief Balrog	752,{
 			mes "Once again, I thank you for your distinguished service on behalf of the Continental Guard and the Rune-Midgarts Kingdom. I'll report your great achievement to His Majesty right away.";
 			next;
 			delitem 7820,1; //Morroc_Skin
-			getexp 200000,0;
+			getexp (checkre(3))?200000:2000000,0;
 			set rebirth_moc_edq,7;
 			changequest 3055,3056;
 			mes "[Chief Balrog]";
@@ -1858,9 +1858,10 @@ morocc,159,113,3	script	Chief Balrog	752,{
 }
 
 moc_fild21,38,193,0	script	Morocc Timer#edq	-1,6,6,{
-OnInit:
-	set $@re_moc,0;
-	end;
+//OnInit:
+//	set $@re_moc,0;
+//	set $@re_moc_time$,"";
+//	end;
 
 OnTouch:
 	if ($@re_moc == 0) {
@@ -1926,6 +1927,7 @@ OnInit:
 
 OnEnable:
 	enablenpc "Group of Evil#edq";
+	set $@re_moc_time$,"";
 	end;
 
 OnDisable:
@@ -2000,6 +2002,7 @@ OnDisable:
 
 OnMyMobDead:
 	set $@re_moc,3;
+	set $@re_moc_time$, gettimestr("%H%M%S",7);
 	mapannounce "moc_fild21","I'll let live just a little longer. You'll never find me through this time-space gap!",bc_map,"0xFFFF00";
 	donpcevent "Time-Space Gap#edq::OnEnable";
 	donpcevent "Satan Broadcast#edq::OnDisable";
@@ -2020,6 +2023,84 @@ OnTimer5415000:
 	end;
 }
 
+sec_in02,14,43,5	script	Morroc GlobalVar Admin::MorrocAdmin_sec	971,{
+	callfunc "F_GM_NPC";
+	mes "[Helper]";
+	mes "Please enter the password and # button.";
+	next;
+	if (callfunc("F_GM_NPC",1854,0) < 1) {
+		mes "[Helper]";
+		mes "Please press the numbers we always sing about.";
+		close;
+	} else {
+		mes "[Helper]";
+		mes "Hello. I am a post office.";
+		mes "I am currently checking Morroc status.";
+		next;
+		mes "=============";
+		mes "Current State";
+		mes "=============";
+		mes "^3131FF<Morroc>^000000";
+		if ($@re_moc == 0) {
+			mes "Reset. Enable to summon Morroc.";
+			mes "^3131FF<Continental Guards>^000000";
+			mes "Enable to enter to moc_fild21 field.";
+		} else if ($@re_moc == 1) {
+			mes "^3131FF<Morroc>^000000";
+			mes "Some warrior entered after the reset. However, the warrior hasn't started the quest yet.";
+			mes "The warrior who has rebirth_moc_edq 4 and 7 is now enabled to summon Morroc.";
+			mes "^3131FF<Continental Guards>^000000";
+			mes "The warrior who has rebirth_moc_edq 4 ~ 7 is now enabled to enter to moc_fild21.";
+		} else if ($@re_moc == 2) {
+			mes "^3131FF<Morroc>^000000";
+			mes "Morroc has been summoned. After 90 minutes has passed, it will revert back to reset status.";
+			mes "^3131FF<Continental Guards>^000000";
+			mes "The warrior who has rebirth_moc_edq 4 ~ 7 is now enabled to enter to moc_fild21.";
+		} else if ($@re_moc == 3) {
+			mes "^3131FF<Morroc>^000000";
+			mes "Morroc has been killed. Death time is "+$@re_moc_time$+"(00 hr/00 min/00 sec).";
+			mes "After 6 hours later since the death time, it will be reset.";
+			mes "The warriors whom has remained in the field can continue the quest via Time Space Gap.";
+			mes "^3131FF<Continental Guards>^000000";
+			mes "Disabled to enter to moc_fild21 from outside of the field.";
+		} else {
+			mes "^3131FF<Morroc>^000000";
+			mes "Morroc has been killed. Death time is "+$@re_moc_time$+"(00 hr/00 min/00 sec).";
+			mes "After 6 hours later since the death time, it will be reset.";
+			mes "It has been already passed 30 minutes after Morroc's death, so warriors can not continue the quest even if they click the Time Space Gap.";
+			mes "^3131FF<Continental Guards>^000000";
+			mes "Disabled to enter to moc_fild21 from outside of the field.";
+		}
+		next;
+		mes "[Helper]";
+		mes "What do you want?";
+		next;
+		switch(select("Cancel.:Reset")) {
+		case 1:
+			mes "[Helper]";
+			mes "Alright.";
+			close;
+		case 2:
+			if (strnpcinfo(4) == "sec_in02")
+				mes "You can reset at moc_fild21 5 5.";
+			else {
+				mes "Reset starts.";
+				next;
+				donpcevent "Group of Evil#edq::OnEnable";
+				mes "Group of Evil NPC is appeared.";
+				mes "Time-Space Gap NPC is disappeared.";
+				mes "6 hours term timer is stopped.";
+				donpcevent "Satan Summon#edq::OnDisable";
+				mes "Morroc 90 minutes survival timer is stopped.";
+				mes "Morroc is being killed.";
+				mes "Now, Continental Guards will let players enter.";
+			}
+			close;
+		}
+	}
+}
+moc_fild21,5,5,5	duplicate(MorrocAdmin_sec)	Morroc GlobalVar Admin::MorrocAdmin_moc	971
+
 // The Crow of the Fate
 // ============================================================
 moc_ruins,137,70,3	script	Book-Touching Man#garas	48,{
@@ -2037,7 +2118,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	48,{
 			next;
 			mes "^660000Watching him makes you giggle, he looks no better than the dried corpses in the pyramid, but he is obviously alive and doesn't appear to be a monster. Somehow, you find yourself compelled to approach this interesting looking man.^000000";
 			next;
-			emotion 3;
+			emotion e_lv;
 			mes "[Book-Touching Man]";
 			mes "Ah... Mammi...";
 			next;
@@ -2070,7 +2151,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	48,{
 				mes "[Book-Touching Man]";
 				mes "What? Don't you know Mammi, one of the three greatest Rune-Midgart's idols?";
 				next;
-				emotion 54;
+				emotion e_sigh;
 				mes "[Book-Touching Man]";
 				mes "Man, you don't know anything, do you?! Well, judging by the stupid look on your face, I guess you're an adventurer running around on meaningless errands for others. Heh heh!";
 				next;
@@ -2083,7 +2164,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	48,{
 				mes "[Book-Touching Man]";
 				mes "She even mentioned in an interview in 'Morroc Times' that she wants to meet a man that loves books.";
 				next;
-				emotion 38;
+				emotion e_awsm;
 				mes "[Book-Touching Man]";
 				mes "That means... She's waiting for someone like me. Hehehe!";
 				mes "You see, every book in Rune-Midgart's Library has the name Benjamin written on them... That's me!";
@@ -2119,7 +2200,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	48,{
 				next;
 				mes "["+ strcharinfo(0) +"]";
 				mes "Huh?";
-				emotion 19,1;
+				emotion e_swt2,1;
 				next;
 				mes "[Benjamin]";
 				mes "You look bored. You must be waiting for someone to give you something to do!";
@@ -2213,12 +2294,12 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	48,{
 			next;
 			mes "[Benjamin]";
 			mes "Grrrr... Mammi! Here I am, following your noble tastes to read such a rare book! Mammi...!";
-			emotion 14;
+			emotion e_lv2;
 			next;
 			mes "[Benjamin]";
 			mes "I feel so excited to think about having a deep conversation with Mammi about literature! Yay!";
 			mes "I should go read this book right away. Hehehe!";
-			emotion 2;
+			emotion e_ho;
 			next;
 			mes "[Benjamin]";
 			mes "Oops, I must not forget to repay you. You know, I'm a polite man.";
@@ -2315,7 +2396,10 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	48,{
 					delitem 7797,1; //Author_Memo
 					delitem 7796,1; //Author_Autograph
 					set barmunt_crow,16;
-					getexp 90000,90000;
+					if (checkre(3))
+						getexp 90000,90000;
+					else
+						getexp 900000,900000;
 					close;
 				case 2:
 					mes "[Benjamin]";
@@ -3366,7 +3450,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	111,{
 		cutin "oliver_smile",2;
 		mes "[Oliver Hilpert]";
 		mes "Lady Mammi!";
-		emotion 14;
+		emotion e_lv2;
 		next;
 		mes "^660000Yes, it was the picture book of Mammi, an idol whom Benjamin of Morroc insists to be one of the three greatest idols in the Rune-Midgart Kingdom. That must be why Oliver is squealing in delight.^000000";
 		emotion e_dots,1;
@@ -3393,12 +3477,12 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	111,{
 		mes "[Oliver Hilpert]";
 		mes "...Oh!";
 		cutin "mami01",4;
-		emotion 3;
+		emotion e_lv;
 		next;
 		mes "[Oliver Hilpert]";
 		mes "...Ooooh!";
 		cutin "mami02",4;
-		emotion 3;
+		emotion e_lv;
 		next;
 		cutin "oliver_smile",2;
 		mes "[Oliver Hilpert]";
@@ -3420,7 +3504,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	111,{
 		mes "["+ strcharinfo(0) +"]";
 		mes "...............";
 		mes "I... I see...";
-		emotion 4,1;
+		emotion e_swt,1;
 		next;
 		mes "[Oliver Hilpert]";
 		mes "Umm...";
@@ -3502,7 +3586,7 @@ OnTouch:
 		warp "ama_dun03",119,110;
 	}
 	else {
-		sc_end SC_Blind;
+		sc_end SC_BLIND;
 		mes "[???]";
 		mes "Waaaaah!";
 		next;
@@ -3617,7 +3701,7 @@ OnTouch:
 		if (barmunt_crow == 4) {
 			set barmunt_crow,5;
 		}
-		sc_start SC_Blind,600000,0,10000;
+		sc_start SC_BLIND,600000,0,10000;
 		close2;
 		warp "que_ba",53,232;
 		end;
@@ -3852,7 +3936,7 @@ cave,82,97,3	script	Cave Settler#g1	996,3,3,{
 				mes "Hmm...";
 				mes "Wait here.";
 				next;
-				emotion 44;
+				emotion e_com;
 				mes "[Cave Settler]";
 				mes "Hey, Jaeda!";
 				enablenpc "Jaeda#garas1";
@@ -3941,7 +4025,7 @@ OnTouch:
 				mes "Hmm...";
 				mes "Wait here.";
 				next;
-				emotion 44;
+				emotion e_com;
 				mes "[Cave Settler]";
 				mes "Hey, Jaeda!";
 				enablenpc "Jaeda#garas1";
@@ -4369,7 +4453,7 @@ prontera,153,353,4	script	Messenger#prince1	105,{
 }
 
 prt_castle,117,163,5	script	Inspector#prince	755,{
-	if (checkquest(10004) == 1) {
+	if (checkquest(10004) == 0 || checkquest(10004) == 1) {
 		mes "[Inspector]";
 		mes "Judge!";
 		mes "How goes it? I don't think it is easy to meet seven candidates and appraise them.";
@@ -4408,7 +4492,7 @@ prt_castle,117,163,5	script	Inspector#prince	755,{
 		setquest 10022;
 		close;
 	}
-	if (nk_prince == 1) {
+	if (nk_prince < 2) {
 		mes "[Inspector]";
 		mes "What's wrong with you?";
 		mes "This is not an open area!";
@@ -4421,6 +4505,12 @@ prt_castle,117,163,5	script	Inspector#prince	755,{
 			warp "prontera",155,353;
 			end;
 		case 2:
+			if (nk_prince == 0) {
+				mes "[Inspector]";
+				mes "I don't think";
+				mes "that he is an experienced appraiser...";
+				close;
+			}
 			mes "[Inspector]";
 			mes "......";
 			next;
@@ -5153,7 +5243,7 @@ prt_castle,117,163,5	script	Inspector#prince	755,{
 		mes "How is it going?";
 		mes "Grading someone is not a piece of cake. It's real hard work indeed. You do the hard work for our country.";
 		next;
-		if ((nkprince_eisen == 15) && (checkquest(10025) == 1)) {
+		if ((nkprince_eisen == 15) && (checkquest(10025) == 0 || checkquest(10025) == 1)) {
 			mes "-I tell him about the Ahrum and Ernst accident.-";
 			next;
 			mes "[Inspector]";
@@ -5178,23 +5268,20 @@ prt_castle,117,163,5	script	Inspector#prince	755,{
 			mes "[Inspector]";
 			mes "So, keep up the good work.";
 			mes "For the Kingdom of Rune Midgarts!";
-			if ((BaseLevel > 80) && (BaseLevel < 86)) {
-				getexp 40000,0;
-			}
-			else if ((BaseLevel > 85) && (BaseLevel < 91)) {
-				getexp 45000,0;
-			}
-			else if ((BaseLevel > 90) && (BaseLevel < 96)) {
-				getexp 50000,0;
-			}
-			else if ((BaseLevel > 95) && (BaseLevel < 150)) {
-				getexp 55000,0;
-			}
-			else if (BaseLevel == 150) {
-				getexp 110000,0;
-			}
-			else {
-				getexp 30000,0;
+			if (checkre(3)) {
+				if ((BaseLevel > 80) && (BaseLevel < 86)) getexp 40000,0;
+				else if ((BaseLevel > 85) && (BaseLevel < 91)) getexp 45000,0;
+				else if ((BaseLevel > 90) && (BaseLevel < 96)) getexp 50000,0;
+				else if ((BaseLevel > 95) && (BaseLevel < 99)) getexp 55000,0;
+				else if (BaseLevel > 99) getexp 110000,0;
+				else getexp 30000,0;
+			} else {
+				if ((BaseLevel > 80) && (BaseLevel < 86)) getexp 400000,0;
+				else if ((BaseLevel > 85) && (BaseLevel < 91)) getexp 450000,0;
+				else if ((BaseLevel > 90) && (BaseLevel < 96)) getexp 500000,0;
+				else if ((BaseLevel > 95) && (BaseLevel < 99)) getexp 550000,0;
+				else if (BaseLevel >= 99) getexp 1100000,0;
+				else getexp 300000,0;
 			}
 			set nk_prince,8;
 			completequest 10025;
@@ -5216,19 +5303,49 @@ prt_castle,117,163,5	script	Inspector#prince	755,{
 		mes "[Inspector]";
 		mes "Hello, appraiser.";
 		mes "I hope you are able to finish your mission perfectly. Have you met with all the princes, like I told you to?";
+		if (nkprince_eisen != 10)
+			close;
 		next;
 		switch(select("Yes.:No.")) {
 		case 1:
-			mes "[Inspector]";
-			mes "Very well.";
-			mes "I like hearing about the princes.";
+			set .@prin1,checkquest(10005);
+			set .@prin2,checkquest(10006);
+			set .@prin3,checkquest(10007);
+			set .@prin4,checkquest(10008);
+			set .@prin5,checkquest(10009);
+			set .@prin6,checkquest(10010);
+			set .@prin7,checkquest(10011);
+			if (.@prin1 + .@prin2 + .@prin3 + .@prin4 + .@prin5 + .@prin6 + .@prin7 == 14) {
+				mes "[Inspector]";
+				mes "Very well.";
+				mes "I like hearing about the princes.";
+				completequest 10004;
+				setquest 10004;
+			} else {
+				mes "[Inspector]";
+				mes "Are you sure?";
+				mes "Please check on all the princes.";
+			}
 			close;
 		case 2:
-			mes "[Inspector]";
-			mes "Don't be coy. I'm sure you have done it already.";
+			set .@prin1,checkquest(10005);
+			set .@prin2,checkquest(10006);
+			set .@prin3,checkquest(10007);
+			set .@prin4,checkquest(10008);
+			set .@prin5,checkquest(10009);
+			set .@prin6,checkquest(10010);
+			set .@prin7,checkquest(10011);
+			if (.@prin1 + .@prin2 + .@prin3 + .@prin4 + .@prin5 + .@prin6 + .@prin7 == 14) {
+				mes "[Inspector]";
+				mes "Don't be coy. I'm sure you have done it already.";
+				completequest 10004;
+				setquest 10004;
+			} else {
+				mes "[Inspector]";
+				mes "My investigations on all the princes are done.";
+			}
 			close;
 		}
-		close;
 	}
 }
 
@@ -5244,7 +5361,7 @@ prt_castle,272,375,4	script	Prince	881,{
 		mes "But he insists me to be corrupted, knowing how it would be...";
 		close;
 	}
-	else if (checkquest(10020) == 1) {
+	else if (checkquest(10020) == 0 || checkquest(10020) == 1) {
 		mes "[Erich]";
 		mes "These days, I have bad luck... Only harrassments happen to me...";
 		close;
@@ -5310,7 +5427,7 @@ prt_castle,274,372,4	script	Servant#hans	48,{
 		mes "My prince didn't do anything wrong but, anyways, I apologize for anything to you!";
 		close;
 	}
-	else if (checkquest(10020) == 1) {
+	else if (checkquest(10020) == 0 || checkquest(10020) == 1) {
 		mes "Incessantly...-";
 		mes "-He has jitters whenever I react to him. His actions give me a feeling of pity.-";
 		close;
@@ -5398,7 +5515,7 @@ prt_castle,339,202,3	script	Prince#urgen	989,{
 		mes "My beautiful body isn't in perfect condition right now. I don't want to show it to anyone today.";
 		close;
 	}
-	else if (checkquest(10021) == 1) {
+	else if (checkquest(10021) == 0 || checkquest(10021) == 1) {
 		mes "[Urugen]";
 		mes "...What? What did you...";
 		mes "just say to me?... Huh?";
@@ -5499,7 +5616,7 @@ prt_castle,289,201,3	script	Prince#helmut	991,{
 		mes "How can I deal with this stress? Damn! Hell!";
 		close;
 	}
-	else if (checkquest(10022) == 1) {
+	else if (checkquest(10022) == 0 || checkquest(10022) == 1) {
 		mes "-He is so blushed,";
 		mes "evidently shown on his face.-";
 		close;
@@ -5694,7 +5811,7 @@ prt_castle,391,205,3	script	Prince#poe	993,{
 		mes "He gave up without any challenge. That's not what the man has to do. He is not as good as me. But okay. I am disappointed in him. Eigen Ahrum.";
 		close;
 	}
-	else if (checkquest(10018) == 1) {
+	else if (checkquest(10018) == 0 || checkquest(10018) == 1) {
 		mes "[Poe]";
 		mes "......";
 		close;
@@ -5915,10 +6032,32 @@ prt_castle,364,375,4	script	Prince#peter	987,{
 		next;
 		switch(select("Yes, I saw her for you.:No, I don't want to.")) {
 		case 1:
+			if (checkquest(10014) == 0 || checkquest(10014) == 1) {
+				mes "[Peter]";
+				mes "I am glad that the girl liked it. Once I got cured, I wanted to go meet with her.";
+				next;
+				mes "[Peter]";
+				mes "Anyhow, thanks for your good work. I really feel sorry about bothering you with trifle things. This is my sense of gratitude. Don't feel so much burden and take this.";
+				completequest 10014;
+				getitem 644,1; //Gift_Box
+				close;
+			}
 			mes "[Peter]";
 			mes "Thinking about the little girl calms me. I still can't believe my eyes. My prince Ahrum who just passed away...~";
 			close;
 		case 2:
+			if (checkquest(10014) == 0 || checkquest(10014) == 1) {
+				mes "[Peter]";
+				mes "As you said.";
+				mes "I've heard that her life is like a flower when I lost it.";
+				mes "I will go see her on my own.";
+				next;
+				mes "[Peter]";
+				mes "I really feel sorry about bothering you with trifle things. Please take this.";
+				completequest 10014;
+				getitem 644,1; //Gift_Box
+				close;
+			}
 			mes "[Peter]";
 			mes "Never mind.";
 			mes "I still can't believe my eyes. My prince Ahrum who just passed away...~~";
@@ -5930,19 +6069,20 @@ prt_castle,364,375,4	script	Prince#peter	987,{
 		mes "Child... What the heck happened to you?...";
 		close;
 	}
-	else if (checkquest(10019)== 1) {
+	else if (checkquest(10019) == 0 || checkquest(10019) == 1) {
 		mes "[Peter]";
 		mes "......";
 		close;
 	}
 	if (checkquest(10008) == 2) {
-		if (checkquest(10014) == 2) {
+		set .@quest, checkquest(10014);
+		if (.@quest == 2) {
 			mes "[Peter]";
 			mes "I really appreciate it.";
 			mes "You are so kind.";
 			close;
 		}
-		else if (checkquest(10014) == 1) {
+		else if (.@quest == 0 || .@quest == 1) {
 			mes "[Peter]";
 			mes "I am glad that the girl liked it. Once I got cured, I wanted to go meet with her.";
 			next;
@@ -6068,9 +6208,8 @@ prt_castle,364,375,4	script	Prince#peter	987,{
 }
 
 aldebaran,132,184,3	script	Girl#prince	96,{
-	if (checkquest(10013) == 1) {
+	if (checkquest(10013) == 0 || checkquest(10013) == 1) {
 		if (countitem(744) > 0) {
-			// Missed
 			mes "[Girl]";
 			mes "Wooah, Uncle Peter sent these flowers";
 			mes "for me?";
@@ -6314,12 +6453,13 @@ prt_castle,314,373,4	script	Prince#eisen	983,{
 			close;
 		}
 		else if (nkprince_eisen == 14) {
+			mes "[Ernst]";
 			mes "Bbb... Brother?... You... told me ";
 			mes "you would kill me... You just wanted to be killed";
 			mes "by me?... Bbb...brother?...";
 			next;
 			mes "[Ahrum]";
-			mes "Huhu... Not at all. I just wanted to kill you... That's it... Good job, Ern... This is legal, self-defense; killing a villain... right?";
+			mes "Huhu... Not at all. I just wanted to kill you... That's it... Good job, Ern... This is legal self-defense, killing a villain... right?";
 			next;
 			mes "[Ernst]";
 			mes "B..Brother... even now it is not too late! If you go to a medic, you can be restored!";
@@ -6565,7 +6705,7 @@ prt_castle,368,312,4	script	Prince#ern	985,{
 		mes "I don't want to see anyone.";
 		close;
 	}
-	else if (checkquest(01024) == 1) {
+	else if (checkquest(10024) == 0 || checkquest(10024) == 1) {
 		mes "[Ernst]";
 		mes "...Brother Ahrum...";
 		close;
@@ -6754,8 +6894,8 @@ prt_castle,163,319,0	script	#twonoble	-1,3,3,{
 //OnTouch2:
 OnTouch:
 	if (nkprince_eisen == 7) {
-		donpcevent "Aged Noble 1#valter::OnEnable";
-		donpcevent "Aged Noble 2#rihart::OnEnable";
+		donpcevent "Young Noble#valter::OnEnable";
+		donpcevent "Aged Noble#rihart::OnEnable";
 		mes "[Aged Noble]";
 		mes "You don't have to worry.";
 		mes "Once my Eigen Ahrum is chosen to be king, the Richard family will be a second magnate.";
@@ -6810,8 +6950,8 @@ OnTouch:
 		next;
 		mes "[A man of Riehart Family]";
 		mes "Never mind...";
-		donpcevent "Aged Noble 1#valter::OnDisable";
-		donpcevent "Aged Noble 2#rihart::OnDisable";
+		donpcevent "YoungNoble#valter::OnDisable";
+		donpcevent "Aged Noble#rihart::OnDisable";
 		next;
 		mes "[" + strcharinfo(0) + "]";
 		mes "(Walter is the name of Ahrum.";
@@ -6825,41 +6965,41 @@ OnTouch:
 	}
 }
 
-prt_castle,156,325,4	script	Aged Noble 1#valter	86,{
-	mes "[Aged Noble]";
+prt_castle,156,325,4	script	Young Noble#valter	86,{
+	mes "[Young Noble Walter]";
 	mes "Step aside.";
 	mes "How dare you talk to him.";
 	close;
 
 OnInit:
-	disablenpc "Aged Noble 1#valter";
+	disablenpc "Young Noble#valter";
 	end;
 
 OnEnable:
-	enablenpc "Aged Noble 1#valter";
+	enablenpc "Young Noble#valter";
 	end;
 
 OnDisable:
-	disablenpc "Aged Noble 1#valter";
+	disablenpc "Young Noble#valter";
 	end;
 }
 
-prt_castle,157,323,3	script	Aged Noble 2#rihart	880,{
-	mes "[Aged Noble]";
+prt_castle,157,323,3	script	Aged Noble#rihart	880,{
+	mes "[Aged Noble Richard]";
 	mes "Hmm-hmm.";
 	mes "What an indecorous person!";
 	close;
 
 OnInit:
-	disablenpc "Aged Noble 2#rihart";
+	disablenpc "Aged Noble#rihart";
 	end;
 
 OnEnable:
-	enablenpc "Aged Noble 2#rihart";
+	enablenpc "Aged Noble#rihart";
 	end;
 
 OnDisable:
-	disablenpc "Aged Noble 2#rihart";
+	disablenpc "Aged Noble#rihart";
 	end;
 }
 
@@ -7597,7 +7737,7 @@ OnTouch:
 
 prt_castle,336,276,0	script	#ern	45,1,1,{
 OnTouch:
-	if (checkquest(10023) == 1) {
+	if (checkquest(10023) == 0 || checkquest(10023) == 1) {
 		donpcevent "Prince#eisen6::OnEnable";
 	}
 	warp "prt_castle",368,308;
@@ -7606,7 +7746,7 @@ OnTouch:
 
 prt_castle,300,276,0	script	#erich	45,1,1,{
 OnTouch:
-	if (checkquest(10020) == 1) {
+	if (checkquest(10020) == 0 || checkquest(10020) == 1) {
 		donpcevent "Prince#eisen1::OnEnable";
 	}
 	warp "prt_castle",274,368;
@@ -7615,7 +7755,7 @@ OnTouch:
 
 prt_castle,330,271,0	script	#helmut	45,1,1,{
 OnTouch:
-	if (checkquest(10022) == 1) {
+	if (checkquest(10022) == 0 || checkquest(10022) == 1) {
 		donpcevent "Prince#eisen3::OnEnable";
 	}
 	warp "prt_castle",290,208;
@@ -7624,7 +7764,7 @@ OnTouch:
 
 prt_castle,348,271,0	script	#poe	45,1,1,{
 OnTouch:
-	if (checkquest(10018) == 1) {
+	if (checkquest(10018) == 0 || checkquest(10018) == 1) {
 		donpcevent "Prince#eisen4::OnEnable";
 	}
 	warp "prt_castle",390,208;
@@ -7633,7 +7773,7 @@ OnTouch:
 
 prt_castle,354,276,0	script	#peter	45,1,1,{
 OnTouch:;
-	if (checkquest(10019) == 1) {
+	if (checkquest(10019) == 0 || checkquest(10019) == 1) {
 		donpcevent "Prince#eisen5::OnEnable";
 	}
 	warp "prt_castle",366,368;
@@ -7642,7 +7782,7 @@ OnTouch:;
 
 prt_castle,310,271,0	script	#urgen	45,1,1,{
 OnTouch:
-	if (checkquest(10021) == 1) {
+	if (checkquest(10021) == 0 || checkquest(10021) == 1) {
 		donpcevent "Prince#eisen2::OnEnable";
 	}
 	warp "prt_castle",340,208;

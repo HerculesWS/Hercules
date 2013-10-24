@@ -4,8 +4,6 @@
 //= erKURITA & RockmanEXE
 //===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Warp Points for Rachel City, shops & other locations
 //===== Additional Comments: =================================

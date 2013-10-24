@@ -1,15 +1,15 @@
 //===== Hercules Script ======================================
 //= Juno Monster Museum
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Muad_Dib (The Prometheus Project)
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.4
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Juno Monster Museum - Non Player Character Locations
 //= - Information about various monsters
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 // 07/06/05 : Added 1st Version. [Muad_Dib]
 //= Adapted to rAthena Scripting Language by [Lance] 
 //= 1.1a Fixed typos [Haplo]
@@ -18,7 +18,7 @@
 //	-Thanks to Dr.Evil
 //= 1.4 Corrected a few typos. (bugreport:1077) [L0ne_W0lf]
 //= 1.4a "S_BonusREward" -> "S_BonusReward" [Paradox924X]
-//============================================================ 
+//============================================================
 
 yuno_in03,32,15,3	script	Museum Guide	67,{
 	mes "[Cenia]";

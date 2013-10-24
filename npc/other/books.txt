@@ -5,7 +5,7 @@
 //===== Current Version: =====================================
 //= 1.1
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Various Books found in Prontera Library
 //===== Additional Comments: =================================
 //= 1.0 First Version, rescripted to Aegis 10.3 standard. [L0ne_W0lf]

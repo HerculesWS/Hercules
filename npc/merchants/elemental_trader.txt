@@ -1,16 +1,16 @@
 //===== Hercules Script ======================================
 //= Elemental Stone Trader
-//===== By: ================================================== 
-//=  MasterOfMuppets, rAthena Dev Team
-//===== Current Version: ===================================== 
+//===== By: ==================================================
+//= rAthena Team & MasterOfMuppets
+//===== Current Version: =====================================
 //= 1.1
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Trade impure types of elemental stones for pure ones.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
 //= 1.1 Optimized. [Euphy]
-//============================================================ 
+//============================================================
 
 ama_in02,61,27,7	script	Alchemist#ama	749,{
 	mes "[Laspuchin Gregory]";

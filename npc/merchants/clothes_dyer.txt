@@ -1,12 +1,12 @@
 //===== Hercules Script ======================================
 //= Clothes Dyer
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Usnul
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.5
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Clothes dyer with standard palletes
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= Fully working
 //= 2.1 Shortened some labels to make this script loading,
 //= Added Black+White Colors desc [Lupus]

@@ -1,17 +1,15 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= The Sign Quest
-//===== By: ================================================== 
-//= SinSloth(Most of the NPCs), MasterOfMuppets(Some of the NPCs + bug fixes) & Kargha(The quiz NPCs)
-//===== Current Version: ===================================== 
-//= 3.8
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
+//===== By: ==================================================
+//= SinSloth, MasterOfMuppets, Kargha
+//===== Current Version: =====================================
+//= 3.9
+//===== Description: =========================================
 //= [Official Conversion]
 //= Quest for opening the doors to Geffenia.
 //= This script uses sign_01.bmp - sign_04.bmp, these will be
 //= found in the language of your client.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 3.0 Rewritten based on most recent Aegis script. [L0ne_W0lf]
 //=     Due to the incompatabity of the old script with this
 //=     version, variables will attmept to be translated to the
@@ -26,11 +24,11 @@
 //= 3.6 Corrected the Level Requirements for 'Standby Room' [tr0n]
 //= 3.7 Massive cleaning/optimization (more can still be done). [Euphy]
 //= 3.8 Corrected an invalid map name. [Joseph]
-//============================================================ 
+//= 3.9 Updated RE/Pre-RE EXP. [Euphy]
+//============================================================
 
-//============================================================ 
 // The Sign (Part 1)
-//============================================================ 
+//============================================================
 -	script	Sign::TheSign	111,{
 	callfunc "F_UpdateSignVars";
 	cutin "sign_01",4;
@@ -695,7 +693,7 @@ prt_in,227,45,0	script	Archeologist#sign	804,{
 			mes "You may have had your doubts,";
 			mes "but I'm happy enough to confirm that the Sign really exists. Thanks again, and I hope you stop by and chat from time to time.";
 			set sign_q,142;
-			getexp 200000,0;
+			getexp (checkre(3))?200000:2000000,0;
 		}
 		else {
 			mes "Have you visited";
@@ -728,7 +726,7 @@ prt_in,227,45,0	script	Archeologist#sign	804,{
 		}
 		delitem 7178,1; //Star's_Sob
 		set sign_q,202;
-		getexp 10000,0;
+		getexp (checkre(3))?10000:100000,0;
 		getitem 617,1; //Old_Violet_Box
 	}
 	else if (sign_q > 201) {
@@ -1496,11 +1494,19 @@ morocc_in,115,154,5	script	Rogue#sign	810,{
 			mes "you gave Ganaan tell me";
 			mes "you're not a total dumbass.";
 			mes "Now you're supposed to go see Daewoon in Payon. And don't forget to show him this Star thingee.";
-			if (BaseLevel < 60) getexp 300,0;
-			else if (BaseLevel < 70) getexp 750,0;
-			else if (BaseLevel < 80) getexp 1000,0;
-			else if (BaseLevel < 90) getexp 1300,0;
-			else if (BaseLevel < 150) getexp 1800,0;
+			if (checkre(3)) {
+				if (BaseLevel < 60) getexp 300,0;
+				else if (BaseLevel < 70) getexp 750,0;
+				else if (BaseLevel < 80) getexp 1000,0;
+				else if (BaseLevel < 90) getexp 1300,0;
+				else getexp 1800,0;
+			} else {
+				if (BaseLevel < 60) getexp 3000,0;
+				else if (BaseLevel < 70) getexp 7500,0;
+				else if (BaseLevel < 80) getexp 10000,0;
+				else if (BaseLevel < 90) getexp 13000,0;
+				else getexp 18000,0;
+			}
 			set sign_q,14;
 			getitem 7177,1; //Part_Of_Star's_Sob
 			close;
@@ -2358,11 +2364,19 @@ payon_in03,11,31,4	script	Daewoon#sign	808,{
 			if (.@pay_point > 29) {
 				set sign_q,15;
 				getitem 7177,1; //Part_Of_Star's_Sob
-				if (BaseLevel < 60) getexp 300,0;
-				else if (BaseLevel < 70) getexp 700,0;
-				else if (BaseLevel < 80) getexp 1000,0;
-				else if (BaseLevel < 90) getexp 1300,0;
-				else if (BaseLevel < 150) getexp 1800,0;
+				if (checkre(3)) {
+					if (BaseLevel < 60) getexp 300,0;
+					else if (BaseLevel < 70) getexp 750,0;
+					else if (BaseLevel < 80) getexp 1000,0;
+					else if (BaseLevel < 90) getexp 1300,0;
+					else getexp 1800,0;
+				} else {
+					if (BaseLevel < 60) getexp 3000,0;
+					else if (BaseLevel < 70) getexp 7500,0;
+					else if (BaseLevel < 80) getexp 10000,0;
+					else if (BaseLevel < 90) getexp 13000,0;
+					else getexp 18000,0;
+				}
 				emotion e_heh;
 				mes "[Daewoon]";
 				mes "Well, I must say that I've";
@@ -2394,11 +2408,19 @@ payon_in03,11,31,4	script	Daewoon#sign	808,{
 			else if ((.@pay_point > 26) && (.@pay_point < 30)) {
 				set sign_q,15;
 				getitem 7177,1; //Part_Of_Star's_Sob
-				if (BaseLevel < 60) getexp 300,0;
-				else if (BaseLevel < 70) getexp 700,0;
-				else if (BaseLevel < 80) getexp 1000,0;
-				else if (BaseLevel < 90) getexp 1300,0;
-				else if (BaseLevel < 150) getexp 1800,0;
+				if (checkre(3)) {
+					if (BaseLevel < 60) getexp 300,0;
+					else if (BaseLevel < 70) getexp 750,0;
+					else if (BaseLevel < 80) getexp 1000,0;
+					else if (BaseLevel < 90) getexp 1300,0;
+					else getexp 1800,0;
+				} else {
+					if (BaseLevel < 60) getexp 3000,0;
+					else if (BaseLevel < 70) getexp 7500,0;
+					else if (BaseLevel < 80) getexp 10000,0;
+					else if (BaseLevel < 90) getexp 13000,0;
+					else getexp 18000,0;
+				}
 				mes "[Daewoon]";
 				mes "You know, after talking with";
 				mes "you for a while, I now feel fairly comfortable with leaving you this piece of the Sobbing Starlight. Somehow, I think you're strong enough to get all the pieces.";
@@ -3068,11 +3090,13 @@ OnTouch:
 	end;
 }
 
-//prt_maze02,25,161,0	script	#music	-1,7,7,{
-//OnTouch:
-//	soundeffect "effect\\¼®¾çÀÇ ¾î½Ø½Å.wav",1;
-//	end;
-//}
+/* Currently broken.
+prt_maze02,25,161,0	script	#music	-1,7,7,{
+OnTouch:
+	soundeffect "effect\\¼®¾çÀÇ ¾î½Ø½Å.wav",1;
+	end;
+}
+*/
 
 prt_maze02,132,132,0	script	#skill	-1,{
 OnEnable:
@@ -4414,7 +4438,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	806,{
 		else {
 			mes "me. It also looks like you got zeny to spare! I think I'll help myself and borrow some of your cash!";
 			mes "^FF0000Yoink!^000000";
-			set zeny,zeny-10000;
+			set Zeny, Zeny-10000;
 			specialeffect EF_COIN;
 			close;
 		}
@@ -4496,7 +4520,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	806,{
 				mes "to me tomorrow night and";
 				mes "we'll start your test...";
 				set sign_q,27;
-				set zeny,zeny-30000;
+				set Zeny, Zeny-30000;
 			}
 			close;
 		case 2:
@@ -4616,11 +4640,19 @@ cmd_in02,88,51,4	script	Strange Guy#sign	806,{
 				if (countitem(750)) delitem 750,1; //Baphomet_Doll
 				if (countitem(751)) delitem 751,1; //Osiris_Doll
 				set sign_q,30;
-				if (BaseLevel < 60) getexp 300,0;
-				else if (BaseLevel < 70) getexp 500,0;
-				else if (BaseLevel < 80) getexp 800,0;
-				else if (BaseLevel < 90) getexp 1000,0;
-				else if (BaseLevel < 150) getexp 1300,0;
+				if (checkre(3)) {
+					if (BaseLevel < 60) getexp 300,0;
+					else if (BaseLevel < 70) getexp 500,0;
+					else if (BaseLevel < 80) getexp 800,0;
+					else if (BaseLevel < 90) getexp 1000,0;
+					else getexp 1300,0;
+				} else {
+					if (BaseLevel < 60) getexp 3000,0;
+					else if (BaseLevel < 70) getexp 5000,0;
+					else if (BaseLevel < 80) getexp 8000,0;
+					else if (BaseLevel < 90) getexp 10000,0;
+					else getexp 13000,0;
+				}
 				next;
 				warp "cmd_in01",33,29;
 				end;
@@ -4699,11 +4731,19 @@ cmd_in02,88,51,4	script	Strange Guy#sign	806,{
 			mes "um, ''Bakerlan'' in Alberta.";
 			set sign_q,35;
 			getitem 7177,1; //Part_Of_Star's_Sob
-			if (BaseLevel < 60) getexp 300,0;
-			else if (BaseLevel < 70) getexp 700,0;
-			else if (BaseLevel < 80) getexp 1900,0;
-			else if (BaseLevel < 90) getexp 1200,0;
-			else if (BaseLevel < 150) getexp 1700,0;
+			if (checkre(3)) {
+				if (BaseLevel < 60) getexp 300,0;
+				else if (BaseLevel < 70) getexp 700,0;
+				else if (BaseLevel < 80) getexp 1900,0;
+				else if (BaseLevel < 90) getexp 1200,0;
+				else getexp 1700,0;
+			} else {
+				if (BaseLevel < 60) getexp 3000,0;
+				else if (BaseLevel < 70) getexp 7000,0;
+				else if (BaseLevel < 80) getexp 19000,0;
+				else if (BaseLevel < 90) getexp 12000,0;
+				else getexp 17000,0;
+			}
 			next;
 			mes "[Dearles]";
 			mes "Well, that's it.";
@@ -4728,12 +4768,20 @@ cmd_in02,88,51,4	script	Strange Guy#sign	806,{
 			mes "um, ''Bakerlan'' in Alberta.";
 			set sign_q,35;
 			getitem 7177,1; //Part_Of_Star's_Sob
-			set zeny,zeny+20000;
-			if (BaseLevel < 60) getexp 300,0;
-			else if (BaseLevel < 70) getexp 700,0;
-			else if (BaseLevel < 80) getexp 1000,0;
-			else if (BaseLevel < 90) getexp 1400,0;
-			else if (BaseLevel < 150) getexp 1900,0;
+			set Zeny, Zeny+20000;
+			if (checkre(3)) {
+				if (BaseLevel < 60) getexp 300,0;
+				else if (BaseLevel < 70) getexp 700,0;
+				else if (BaseLevel < 80) getexp 1000,0;
+				else if (BaseLevel < 90) getexp 1400,0;
+				else getexp 1900,0;
+			} else {
+				if (BaseLevel < 60) getexp 3000,0;
+				else if (BaseLevel < 70) getexp 7000,0;
+				else if (BaseLevel < 80) getexp 10000,0;
+				else if (BaseLevel < 90) getexp 14000,0;
+				else getexp 19000,0;
+			}
 			next;
 			mes "[Dearles]";
 			mes "Well, that's it.";
@@ -4765,7 +4813,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	806,{
 			mes "me. It also looks like you got zeny to spare! I think I'll help myself and borrow some of your cash!";
 			mes "^FF0000Yoink!^000000";
 			mes "Giggle giggle..";
-			set zeny,zeny-10000;
+			set Zeny, Zeny-10000;
 			close;
 		}
 	}
@@ -4778,7 +4826,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	806,{
 			mes "cash. You know, for old";
 			mes "time's sake. ^FF0000Yoink!^000000";
 			emotion e_gg;
-			set zeny,zeny-10000;
+			set Zeny, Zeny-10000;
 		}
 		else {
 			mes "I got nothin' for you and";
@@ -4969,14 +5017,14 @@ OnInit:
 	end;
 
 OnStartArena:
-	donpcevent "s_dance_timer::Onbutton_off";
+	donpcevent "s_dance_timer::OnButton_Off";
 	donpcevent "Examiner#sd::OnDisable";
 	warpwaitingpc "cmd_in01",16,15,1;
 	donpcevent "s_dance_timer::OnEnable";
 	disablewaitingroomevent;
 	end;
 
-Onreset:
+OnReset:
 	enablewaitingroomevent;
 	end;
 }
@@ -4990,7 +5038,7 @@ OnDisable:
 	stopnpctimer;
 	end;
 
-Onbutton_off:
+OnButton_Off:
 	callsub OnDisableAll;
 	end;
 
@@ -5008,90 +5056,90 @@ OnTimer2000:
 
 OnTimer4000:
 	mapannounce "cmd_in01"," UP LEFT",bc_map,"0xFFFF00";
-	donpcevent "s_dance#up::Onup";
+	donpcevent "s_dance#up::OnUp";
 	donpcevent "s_dance#up::OnEnable";
 	end;
 
 OnTimer6000:
 	callsub OnDisableAll;
 	mapannounce "cmd_in01"," DOWN RIGHT",bc_map,"0xFFFF00";
-	donpcevent "s_dance#down::Onup";
+	donpcevent "s_dance#down::OnUp";
 	donpcevent "s_dance#down::OnEnable";
 	end;
 
 OnTimer8000:
 	callsub OnDisableAll;
 	mapannounce "cmd_in01"," DOWN LEFT & UP RIGHT",bc_map,"0xFFFF00";
-	donpcevent "s_dance#left::Onup";
+	donpcevent "s_dance#left::OnUp";
 	donpcevent "s_dance#left::OnEnable";
 	end;
 
 OnTimer11000:
 	callsub OnDisableAll;
 	mapannounce "cmd_in01"," DOWN RIGHT",bc_map,"0xFFFF00";
-	donpcevent "s_dance#down::Onup";
+	donpcevent "s_dance#down::OnUp";
 	donpcevent "s_dance#down::OnEnable";
 	end;
 
 OnTimer13000:
 	callsub OnDisableAll;
 	mapannounce "cmd_in01"," DOWN LEFT & UP RIGHT & UP LEFT & STAY CENTER",bc_map,"0xFFFF00";
-	donpcevent "s_dance#left::Onup";
+	donpcevent "s_dance#left::OnUp";
 	donpcevent "s_dance#left::OnEnable";
 	end;
 
 OnTimer18000:
 	callsub OnDisableAll;
 	mapannounce "cmd_in01"," DOWN LEFT & DOWN RIGHT & DOWN LEFT",bc_map,"0xFFFF00";
-	donpcevent "s_dance#left::Onup";
+	donpcevent "s_dance#left::OnUp";
 	donpcevent "s_dance#left::OnEnable";
 	end;
 
 OnTimer21000:
 	callsub OnDisableAll;
 	mapannounce "cmd_in01"," DOWN RIGHT & CENTER & DOWN RIGHT",bc_map,"0xFFFF00";
-	donpcevent "s_dance#down::Onup";
+	donpcevent "s_dance#down::OnUp";
 	donpcevent "s_dance#down::OnEnable";
 	end;
 
 OnTimer24000:
 	callsub OnDisableAll;
 	mapannounce "cmd_in01"," DOWN LEFT & UP LEFT & UP RIGHT & DOWN RIGHT & CENTER",bc_map,"0xFFFF00";
-	donpcevent "s_dance#left::Onup";
+	donpcevent "s_dance#left::OnUp";
 	donpcevent "s_dance#left::OnEnable";
 	end;
 
 OnTimer30000:
 	callsub OnDisableAll;
 	mapannounce "cmd_in01"," DOWN LEFT & UP RIGHT & UP LEFT & DOWN RIGHT",bc_map,"0xFFFF00";
-	donpcevent "s_dance#left::Onup";
+	donpcevent "s_dance#left::OnUp";
 	donpcevent "s_dance#left::OnEnable";
 	end;
 
 OnTimer34000:
 	callsub OnDisableAll;
 	mapannounce "cmd_in01"," UP RIGHT & DOWN RIGHT & UP RIGHT & DOWN RIGHT",bc_map,"0xFFFF00";
-	donpcevent "s_dance#right::Onup";
+	donpcevent "s_dance#right::OnUp";
 	donpcevent "s_dance#right::OnEnable";
 	end;
 
 OnTimer38000:
 	callsub OnDisableAll;
 	mapannounce "cmd_in01"," UP LEFT & UP RIGHT & CENTER & UP RIGHT & DOWN LEFT & DOWN RIGHT",bc_map,"0xFFFF00";
-	donpcevent "s_dance#up::Onup";
+	donpcevent "s_dance#up::OnUp";
 	donpcevent "s_dance#up::OnEnable";
 	end;
 
 OnTimer44000:
 	stopnpctimer;
-	donpcevent "s_dance#up::Onreset";
-	donpcevent "s_dance#down::Onreset";
-	donpcevent "s_dance#left::Onreset";
-	donpcevent "s_dance#right::Onreset";
-	donpcevent "s_dance#cen::Onreset";
+	donpcevent "s_dance#up::OnReset";
+	donpcevent "s_dance#down::OnReset";
+	donpcevent "s_dance#left::OnReset";
+	donpcevent "s_dance#right::OnReset";
+	donpcevent "s_dance#cen::OnReset";
 	mapannounce "cmd_in01","Well done.",bc_map,"0xFFFF00";
 	enablenpc "Examiner#sd";
-	donpcevent "Standby Room#sign::Onreset";
+	donpcevent "Standby Room#sign::OnReset";
 	end;
 }
 
@@ -5110,41 +5158,41 @@ OnDisable:
 	disablenpc "s_dance#up";
 	end;
 
-Onup:
+OnUp:
 	set .s_up,.s_up + 1;
 	end;
 
-Onreset:
+OnReset:
 	set .s_up,0;
 	end;
 
 OnTouch:
 	soundeffect "effect\\sign_up.wav",1;
 	if (.s_up == 1) {
-		donpcevent "Examiner#sd::Onup";
+		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#up::OnDisable";
 	}
 	else if (.s_up == 2) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#cen::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#cen::OnUp";
 		donpcevent "s_dance#cen::OnEnable";
 		donpcevent "s_dance#up::OnDisable";
 	}
 	else if (.s_up == 3) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#right::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#right::OnUp";
 		donpcevent "s_dance#right::OnEnable";
 		donpcevent "s_dance#up::OnDisable";
 	}
 	else if (.s_up == 4) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#down::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#down::OnUp";
 		donpcevent "s_dance#down::OnEnable";
 		donpcevent "s_dance#up::OnDisable";
 	}
 	else if (.s_up == 5) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#right::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#right::OnUp";
 		donpcevent "s_dance#right::OnEnable";
 		donpcevent "s_dance#up::OnDisable";
 	}
@@ -5166,62 +5214,62 @@ OnDisable:
 	disablenpc "s_dance#down";
 	end;
 
-Onup:
+OnUp:
 	set .s_down,.s_down + 1;
 	end;
 
-Onreset:
+OnReset:
 	set .s_down,0;
 	end;
 
 OnTouch:
 	soundeffect "effect\\sign_down.wav",1;
 	if (.s_down == 1) {
-		donpcevent "Examiner#sd::Onup";
+		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#down::OnDisable";
 	}
 	else if (.s_down == 2) {
-		donpcevent "Examiner#sd::Onup";
+		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#down::OnDisable";
 	}
 	else if (.s_down == 3) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#left::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#left::OnUp";
 		donpcevent "s_dance#left::OnEnable";
 		donpcevent "s_dance#down::OnDisable";
 	}
 	else if (.s_down == 4) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#cen::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#cen::OnUp";
 		donpcevent "s_dance#cen::OnEnable";
 		donpcevent "s_dance#down::OnDisable";
 	}
 	else if (.s_down == 5) {
-		donpcevent "Examiner#sd::Onup";
+		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#down::OnDisable";
 	}
 	else if (.s_down == 6) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#cen::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#cen::OnUp";
 		donpcevent "s_dance#cen::OnEnable";
 		donpcevent "s_dance#down::OnDisable";
 	}
 	else if (.s_down == 7) {
-		donpcevent "Examiner#sd::Onup";
+		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#down::OnDisable";
 	}
 	else if (.s_down == 8) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#right::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#right::OnUp";
 		donpcevent "s_dance#right::OnEnable";
 		donpcevent "s_dance#down::OnDisable";
 	}
 	else if (.s_down == 9) {
-		donpcevent "Examiner#sd::Onup";
+		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#down::OnDisable";
 	}
 	else if (.s_down == 10) {
-		donpcevent "Examiner#sd::Onup";
+		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#down::OnDisable";
 	}
 	end;
@@ -5243,53 +5291,53 @@ OnDisable:
 	disablenpc "s_dance#left";
 	end;
 
-Onup:
+OnUp:
 	set .s_left,.s_left + 1;
 	end;
 
-Onreset:
+OnReset:
 	set .s_left,0;
 	end;
 
 OnTouch:
 	soundeffect "effect\\sign_left.wav",1;
 	if (.s_left == 1) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#right::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#right::OnUp";
 		donpcevent "s_dance#right::OnEnable";
 		donpcevent "s_dance#left::OnDisable";
 	}
 	else if (.s_left == 2) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#right::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#right::OnUp";
 		donpcevent "s_dance#right::OnEnable";
 		donpcevent "s_dance#left::OnDisable";
 	}
 	else if (.s_left == 3) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#down::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#down::OnUp";
 		donpcevent "s_dance#down::OnEnable";
 		donpcevent "s_dance#left::OnDisable";
 	}
 	else if (.s_left == 4) {
-		donpcevent "Examiner#sd::Onup";
+		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#left::OnDisable";
 	}
 	else if (.s_left == 5) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#up::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#up::OnUp";
 		donpcevent "s_dance#up::OnEnable";
 		donpcevent "s_dance#left::OnDisable";
 	}
 	else if (.s_left == 6) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#right::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#right::OnUp";
 		donpcevent  "s_dance#right::OnEnable";
 		donpcevent "s_dance#left::OnDisable";
 	}
 	else if (.s_left == 7) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#down::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#down::OnUp";
 		donpcevent "s_dance#down::OnEnable";
 		donpcevent "s_dance#left::OnDisable";
 	}
@@ -5311,59 +5359,59 @@ OnDisable:
 	disablenpc "s_dance#right";
 	end;
 
-Onup:
+OnUp:
 	set .s_right,.s_right + 1;
 	end;
 
-Onreset:
+OnReset:
 	set .s_right,0;
 	end;
 
 OnTouch:
 	soundeffect "effect\\sign_right.wav",1;
 	if (.s_right == 1) {
-		donpcevent "Examiner#sd::Onup";
+		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#right::OnDisable";
 	}
 	else if (.s_right == 2) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#up::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#up::OnUp";
 		donpcevent "s_dance#up::OnEnable";
 		donpcevent "s_dance#right::OnDisable";
 	}
 	else if (.s_right == 3) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#down::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#down::OnUp";
 		donpcevent "s_dance#down::OnEnable";
 		donpcevent "s_dance#right::OnDisable";
 	}
 	else if (.s_right == 4) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#up::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#up::OnUp";
 		donpcevent "s_dance#up::OnEnable";
 		donpcevent "s_dance#right::OnDisable";
 	}
 	else if (.s_right == 5) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#down::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#down::OnUp";
 		donpcevent "s_dance#down::OnEnable";
 		donpcevent "s_dance#right::OnDisable";
 	}
 	else if (.s_right == 6) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#down::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#down::OnUp";
 		donpcevent "s_dance#down::OnEnable";
 		donpcevent "s_dance#right::OnDisable";
 	}
 	else if (.s_right == 7) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#cen::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#cen::OnUp";
 		donpcevent "s_dance#cen::OnEnable";
 		donpcevent "s_dance#right::OnDisable";
 	}
 	else if (.s_right == 8) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#left::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#left::OnUp";
 		donpcevent "s_dance#left::OnEnable";
 		donpcevent "s_dance#right::OnDisable";
 	}
@@ -5385,33 +5433,33 @@ OnDisable:
 	disablenpc "s_dance#cen";
 	end;
 	
-Onup:
+OnUp:
 	set .s_center,.s_center + 1;
 	end;
 
-Onreset:
+OnReset:
 	set .s_center,0;
 	end;
 
 OnTouch:
 	soundeffect "effect\\sign_center.wav",1;
 	if (.s_center == 1) {
-		donpcevent "Examiner#sd::Onup";
+		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#cen::OnDisable";
 	}
 	else if (.s_center == 2) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#down::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#down::OnUp";
 		donpcevent "s_dance#down::OnEnable";
 		donpcevent "s_dance#cen::OnDisable";
 	}
 	else if (.s_center == 3) {
-		donpcevent "Examiner#sd::Onup";
+		donpcevent "Examiner#sd::OnUp";
 		donpcevent "s_dance#cen::OnDisable";
 	}
 	else if (.s_center == 4) {
-		donpcevent "Examiner#sd::Onup";
-		donpcevent "s_dance#right::Onup";
+		donpcevent "Examiner#sd::OnUp";
+		donpcevent "s_dance#right::OnUp";
 		donpcevent "s_dance#right::OnEnable";
 		donpcevent "s_dance#cen::OnDisable";
 	}
@@ -5443,7 +5491,7 @@ OnTouch:
 	donpcevent "Examiner#sd::OnDisable";
 	end;
 
-Onup:
+OnUp:
 	set .s_check,.s_check + 1;
 	end;
 
@@ -5592,11 +5640,19 @@ alberta_in,125,101,5	script	Wealthy-looking Merchant	807,{
 		mes "He will tell you what you need to do next.";
 		set sign_q,53;
 		getitem 7177,1; //Part_Of_Star's_Sob
-		if (BaseLevel < 60) getexp 500,0;
-		else if (BaseLevel < 70) getexp 800,0;
-		else if (BaseLevel < 80) getexp 1100,0;
-		else if (BaseLevel < 90) getexp 1500,0;
-		else if (BaseLevel < 150) getexp 2000,0;
+		if (checkre(3)) {
+			if (BaseLevel < 60) getexp 500,0;
+			else if (BaseLevel < 70) getexp 800,0;
+			else if (BaseLevel < 80) getexp 1100,0;
+			else if (BaseLevel < 90) getexp 1500,0;
+			else getexp 2000,0;
+		} else {
+			if (BaseLevel < 60) getexp 5000,0;
+			else if (BaseLevel < 70) getexp 8000,0;
+			else if (BaseLevel < 80) getexp 11000,0;
+			else if (BaseLevel < 90) getexp 15000,0;
+			else getexp 20000,0;
+		}
 		close;
 	}
 	else if (sign_q == 97) {
@@ -6283,7 +6339,7 @@ alde_alche,169,162,7	script	Alchemist#sign	749,{
 						mes "just one bottle, but this";
 						mes "stuff is extremely potent!";
 						next;
-						set zeny,zeny-10000;
+						set Zeny, Zeny-10000;
 						delitem 526,10; //Royal_Jelly
 						delitem 518,20; //Honey
 						delitem 948,30; //Bear's_Foot
@@ -6798,11 +6854,19 @@ yuno,330,100,4	script	Knight#ss	734,{
 				delitem2 7049,1,1,0,0,.@sign1,.@sign2,.@sign3,.@sign4;
 				set sign_q,39;
 				getitem 7181,1; //Receipt_01
-				if (BaseLevel < 60) getexp 100,0;
-				else if (BaseLevel < 70) getexp 200,0;
-				else if (BaseLevel < 80) getexp 400,0;
-				else if (BaseLevel < 90) getexp 700,0;
-				else if (BaseLevel < 150) getexp 1100,0;
+				if (checkre(3)) {
+					if (BaseLevel < 60) getexp 100,0;
+					else if (BaseLevel < 70) getexp 200,0;
+					else if (BaseLevel < 80) getexp 400,0;
+					else if (BaseLevel < 90) getexp 700,0;
+					else getexp 1100,0;
+				} else {
+					if (BaseLevel < 60) getexp 1000,0;
+					else if (BaseLevel < 70) getexp 2000,0;
+					else if (BaseLevel < 80) getexp 4000,0;
+					else if (BaseLevel < 90) getexp 7000,0;
+					else getexp 11000,0;
+				}
 				close;
 			}
 		}
@@ -6847,10 +6911,8 @@ yuno,330,100,4	script	Knight#ss	734,{
 	}
 }
 
-//============================================================ 
 // The Sign (Part 2)
-//============================================================ 
-
+//============================================================
 geffen_in,159,48,5	script	Lonely-looking Woman	711,{
 	callfunc "F_UpdateSignVars";
 	mes "[Brenda Howard]";
@@ -7108,7 +7170,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	85,{
 				mes "If it weren't for your help,";
 				mes "I'd be in big trouble. I really appreciate you stepping in and volunteering your materials like this.";
 				delitem 1002,1; //Iron_Ore
-				getexp 1,0;
+				getexp 10,0;
 				close;
 			case 2:
 				mes "[Engel]";
@@ -8183,15 +8245,27 @@ himinn,48,86,5	script	Valkyrie#sign	811,{
 		mes "one of the hearts there...";
 		set sign_q,82;
 		percentheal 100,100;
-		if (BaseLevel < 56) getexp 900,0;
-		else if ((BaseLevel > 55) && (BaseLevel < 61)) getexp 1200,0;
-		else if ((BaseLevel > 60) && (BaseLevel < 66)) getexp 2000,0;
-		else if ((BaseLevel > 65) && (BaseLevel < 71)) getexp 3500,0;
-		else if ((BaseLevel > 70) && (BaseLevel < 76)) getexp 7000,0;
-		else if ((BaseLevel > 75) && (BaseLevel < 81)) getexp 12000,0;
-		else if ((BaseLevel > 80) && (BaseLevel < 86)) getexp 16000,0;
-		else if ((BaseLevel > 85) && (BaseLevel < 91)) getexp 21000,0;
-		else if (BaseLevel > 90) getexp 35000,0;
+		if (checkre(3)) {
+			if (BaseLevel < 56) getexp 900,0;
+			else if ((BaseLevel > 55) && (BaseLevel < 61)) getexp 1200,0;
+			else if ((BaseLevel > 60) && (BaseLevel < 66)) getexp 2000,0;
+			else if ((BaseLevel > 65) && (BaseLevel < 71)) getexp 3500,0;
+			else if ((BaseLevel > 70) && (BaseLevel < 76)) getexp 7000,0;
+			else if ((BaseLevel > 75) && (BaseLevel < 81)) getexp 12000,0;
+			else if ((BaseLevel > 80) && (BaseLevel < 86)) getexp 16000,0;
+			else if ((BaseLevel > 85) && (BaseLevel < 91)) getexp 21000,0;
+			else getexp 35000,0;
+		} else {
+			if (BaseLevel < 56) getexp 9000,0;
+			else if ((BaseLevel > 55) && (BaseLevel < 61)) getexp 12000,0;
+			else if ((BaseLevel > 60) && (BaseLevel < 66)) getexp 20000,0;
+			else if ((BaseLevel > 65) && (BaseLevel < 71)) getexp 35000,0;
+			else if ((BaseLevel > 70) && (BaseLevel < 76)) getexp 70000,0;
+			else if ((BaseLevel > 75) && (BaseLevel < 81)) getexp 120000,0;
+			else if ((BaseLevel > 80) && (BaseLevel < 86)) getexp 160000,0;
+			else if ((BaseLevel > 85) && (BaseLevel < 91)) getexp 210000,0;
+			else getexp 350000,0;
+		}
 		close2;
 		warp "geffen",120,100;
 		end;
@@ -8295,10 +8369,8 @@ himinn,48,86,5	script	Valkyrie#sign	811,{
 	}
 }
 
-//============================================================ 
 // The Sign (Part 3)
-//============================================================ 
-
+//============================================================
 que_sign01,196,39,4	script	Serin#dummy	90,{
 	end;
 
@@ -8311,7 +8383,7 @@ OnEnable:
 	enablenpc "Serin#dummy";
 	end;
 
-Onstart:
+OnStart:
 	initnpctimer;
 	end;
 
@@ -8379,7 +8451,7 @@ que_sign01,196,39,4	script	Serin#serin	90,{
 		delitem 7305,1; //Authority_Of_Nine_World
 		set sign_q,133;
 		donpcevent "Serin#dummy::OnEnable";
-		donpcevent "Serin#dummy::Onstart";
+		donpcevent "Serin#dummy::OnStart";
 		donpcevent "Serin#serin::OnDisable";
 		close;
 	}
@@ -8463,7 +8535,7 @@ que_sign01,196,39,4	script	Serin#serin	90,{
 				mes "ask the Dark Lord to spare";
 				mes "you. Thank you so much...";
 				set sign_q,200;
-				getexp 20000,0;
+				getexp (checkre(3))?20000:200000,0;
 				set $@sign_w2,0;
 				donpcevent "Dark Lord#serin::OnDisable";
 				close2;
@@ -8734,7 +8806,7 @@ que_sign01,197,195,4	script	Serin#witch	90,{
 				mes "ask the Dark Lord to spare";
 				mes "you. Thank you so much...";
 				set sign_q,200;
-				getexp 20000,0;
+				getexp (checkre(3))?20000:200000,0;
 				set $@sign_w1,0;
 				close2;
 				warp "umbala,",132,203;
@@ -9480,7 +9552,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	90,{
 				mes "the faint smile on her lips tell you that her memories of you";
 				mes "will always remain in her heart.^000000";
 				delitem 2643,1; //Serin's_Gold_Ring_
-				getexp 50000,0;
+				getexp (checkre(3))?50000:500000,0;
 				close;
 			case 2:
 				emotion e_sob;
@@ -10242,7 +10314,7 @@ que_sign01,122,141,4	script	Witch#s	792,{
 				mes "please visit our queen, Lady Hell. I believe she wants to see you for some reason, "+strcharinfo(0)+"...";
 				delitem 7313,5; //Seal_Of_Witch
 				set sign_q,129;
-				getexp 50000,0;
+				getexp (checkre(3))?50000:500000,0;
 				close;
 			}
 		}
@@ -10271,7 +10343,7 @@ que_sign01,122,141,4	script	Witch#s	792,{
 				mes "please visit our queen, Lady Hell. I believe she wants to see you for some reason...";
 				delitem 7313,5; //Seal_Of_Witch
 				set sign_q,130;
-				getexp 30000,0;
+				getexp (checkre(3))?30000:300000,0;
 				close;
 			}
 		}
@@ -10297,7 +10369,7 @@ que_sign01,122,141,4	script	Witch#s	792,{
 		mes "please visit our queen, Lady Hell. I believe she wants to see you for some reason...";
 		if (countitem(2643) == 1) set sign_q,129;
 		else set sign_q,130;
-		getexp 30000,0;
+		getexp (checkre(3))?30000:300000,0;
 		close;
 	}
 	else if (sign_q == 200) {
@@ -10327,7 +10399,7 @@ que_sign01,122,141,4	script	Witch#s	792,{
 		if (countitem(2642) > 0) delitem 2642,1; //Serin's_Gold_Ring
 		if (countitem(7308) > 0) delitem 7308,1; //Witch's_Potion
 		set sign_q,201;
-		getexp 20000,0;
+		getexp (checkre(3))?20000:200000,0;
 		close;
 	}
 	else if (sign_q > 200) {
@@ -11298,7 +11370,7 @@ niflheim,102,54,4	script	Mad Man#s	739,{
 						mes "Heh heh!";
 						close;
 					}
-					set zeny,zeny-40000;
+					set Zeny, Zeny-40000;
 					close;
 				case 2:
 					mes "[Laichin]";
@@ -11317,7 +11389,7 @@ niflheim,102,54,4	script	Mad Man#s	739,{
 						mes "crawling back when";
 						mes "you can't figure out";
 						mes "where the soul pieces are!";
-						set zeny,zeny-40000;
+						set Zeny, Zeny-40000;
 						if (.@select_s == 1) set sign_q,97;
 						else if (.@select_s == 2) set sign_q,98;
 						else if (.@select_s == 3) set sign_q,99;
@@ -11353,7 +11425,7 @@ niflheim,102,54,4	script	Mad Man#s	739,{
 							mes "than the borders of the map.";
 							mes "For very small, you gotta";
 							mes "look near the center. Got it?";
-							set zeny,zeny-60000;
+							set Zeny, Zeny-60000;
 							if (.@select_s == 1) set sign_q,101;
 							else if (.@select_s == 2) set sign_q,102;
 							else if (.@select_s == 3) set sign_q,103;
@@ -11392,7 +11464,7 @@ niflheim,102,54,4	script	Mad Man#s	739,{
 		next;
 		switch(select("Pay him.:Don't pay him.")) {
 		case 1:
-			if (Zeny < 60000) {
+			if (Zeny < 20000) {
 				mes "[Laichin]";
 				mes "What is this?";
 				mes "You tryin to welch";
@@ -11414,7 +11486,7 @@ niflheim,102,54,4	script	Mad Man#s	739,{
 				mes "than the borders of the map.";
 				mes "For very small, you gotta";
 				mes "look near the center. Got it?";
-				set zeny,zeny-20000;
+				set Zeny, Zeny-20000;
 				if (sign_q == 97) set sign_q,101;
 				else if (sign_q == 98) set sign_q,102;
 				else if (sign_q == 99) set sign_q,103;
@@ -12230,7 +12302,7 @@ geffen,119,48,0	script	Fountain#s	111,{
 
 que_sign01,196,44,0	script	Starter#serin	-1,32,32,{
 OnTouch:
-	donpcevent "Timer#serin::Onstart";
+	donpcevent "Timer#serin::OnStart";
 	disablenpc "Starter#serin";
 	end;
 
@@ -12255,7 +12327,7 @@ OnEnable:
 }
 
 que_sign01,1,0,0	script	Timer#serin	-1,{
-Onstart:
+OnStart:
 	initnpctimer;
 	end;
 
@@ -12270,7 +12342,7 @@ OnTimer620000:
 	donpcevent "Serin#serin::OnEnable";
 	donpcevent "Dark Lord#serin::OnDisable";
 	donpcevent "Serin#dummy::OnDisable";
-	donpcevent "CallMonster#serin::Onreset";
+	donpcevent "CallMonster#serin::OnReset";
 	stopnpctimer;
 	end;
 }
@@ -12285,13 +12357,13 @@ OnMyMobDead:
 		donpcevent "Serin#serin::OnEnable";
 	end;
 
-Onreset:
+OnReset:
 	killmonster "que_sign01","CallMonster#serin::OnMyMobDead";
 }
 
 que_sign01,197,195,0	script	Starter#witch	-1,32,32,{
 OnTouch:
-	donpcevent "Timer#witch::Onstart";
+	donpcevent "Timer#witch::OnStart";
 	disablenpc "Starter#witch";
 	end;
 
@@ -12301,7 +12373,7 @@ OnEnable:
 }
 
 que_sign01,1,1,0	script	Timer#witch	-1,{
-Onstart:
+OnStart:
 	initnpctimer;
 	end;
 
@@ -12312,7 +12384,7 @@ OnTimer600000:
 OnTimer620000:
 	donpcevent "Starter#witch::OnEnable";
 	donpcevent "Warp#witch::OnDisable";
-	donpcevent "CallMonster#witch::Onreset";
+	donpcevent "CallMonster#witch::OnReset";
 	donpcevent "Serin#witch::OnEnable";
 	set $@sign_w1,0;
 	stopnpctimer;
@@ -12354,7 +12426,7 @@ OnMyMobDead:
 	}
 	end;
 
-Onreset:
+OnReset:
 	killmonster "que_sign01","CallMonster#witch::OnMyMobDead";
 	end;
 }
@@ -12564,9 +12636,9 @@ function	script	F_UpdateSignVars	{
 	return;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= 1.0 First version, beware of potential nasty bugs :x [MasterOfMuppets]
 //= 1.1 Finalized for stable, might still contain bugs though. [MasterOfMuppets]
 //= 1.1a moved #aldesignwarp to fix enless warp [Lupus]
@@ -12599,3 +12671,4 @@ function	script	F_UpdateSignVars	{
 //= 2.8 Fixed some bugs with itemids and leftover questitems [Fish0r]
 //= 2.9 Made a delitem causing script to fault use countitem when deleting. [L0ne_W0lf]
 //= 2.9a Added a check for Sign_Branch8A before attempting to run a delitem on items not needed based on Path taken. [Paradox924X]
+//============================================================
