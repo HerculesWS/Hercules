@@ -56406,14 +56406,14 @@ int HP_skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill_id,
 	}
 	return retVal___;
 }
-int HP_skill_blockpc_start(struct map_session_data *sd, uint16 skill_id, int tick, bool load) {
+int HP_skill_blockpc_start(struct map_session_data *sd, uint16 skill_id, int tick) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_skill_blockpc_start_pre ) {
-		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id, int *tick, bool *load);
+		int (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id, int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_blockpc_start_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_skill_blockpc_start_pre[hIndex].func;
-			retVal___ = preHookFunc(sd, &skill_id, &tick, &load);
+			retVal___ = preHookFunc(sd, &skill_id, &tick);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -56421,13 +56421,13 @@ int HP_skill_blockpc_start(struct map_session_data *sd, uint16 skill_id, int tic
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.blockpc_start(sd, skill_id, tick, load);
+		retVal___ = HPMHooks.source.skill.blockpc_start(sd, skill_id, tick);
 	}
 	if( HPMHooks.count.HP_skill_blockpc_start_post ) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, uint16 *skill_id, int *tick, bool *load);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, uint16 *skill_id, int *tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_blockpc_start_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_skill_blockpc_start_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, &skill_id, &tick, &load);
+			retVal___ = postHookFunc(retVal___, sd, &skill_id, &tick);
 		}
 	}
 	return retVal___;
