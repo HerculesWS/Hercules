@@ -454,7 +454,7 @@ struct Battle_Config {
 	int max_walk_path;
 	int item_enabled_npc;
 	int packet_obfuscation;
-	
+	int idletime_criteria;
 	int gm_ignore_warpable_area;
 	
 	int client_accept_chatdori; // [Ai4rei/Mirei]
@@ -466,6 +466,20 @@ struct Battle_Config {
 
 	int mon_trans_disable_in_gvg;
 } battle_config;
+
+/* criteria for battle_config.idletime_critera */
+enum e_battle_config_idletime {
+	BCIDLE_WALK          = 0x001,
+	BCIDLE_USESKILLTOID  = 0x002,
+	BCIDLE_USESKILLTOPOS = 0x004,
+	BCIDLE_USEITEM       = 0x008,
+	BCIDLE_ATTACK        = 0x010,
+	BCIDLE_CHAT          = 0x020,
+	BCIDLE_SIT           = 0x040,
+	BCIDLE_EMOTION       = 0x080,
+	BCIDLE_DROPITEM      = 0x100,
+	BCIDLE_ATCOMMAND     = 0x200,
+};
 
 // Dammage delayed info
 struct delay_damage {
