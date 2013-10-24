@@ -7606,36 +7606,39 @@ ACMD(cash)
 		return false;
 	}
 	
-	if( !strcmpi(command+1,"cash") )
-	{
+	if( !strcmpi(command+1,"cash") ) {
 		if( value > 0 ) {
 			if( (ret=pc->getcash(sd, value, 0)) >= 0){
-			    sprintf(output, msg_txt(505), ret, sd->cashPoints);
-			    clif->disp_onlyself(sd, output, strlen(output));
-			}
-			else clif->message(fd, msg_txt(149)); // Unable to decrease the number/value.
+				// If this option is set, the message is already sent by pc function
+				if( !battle_config.cashshop_show_points ){
+					sprintf(output, msg_txt(505), ret, sd->cashPoints);
+					clif->disp_onlyself(sd, output, strlen(output));
+				}
+			} else
+				clif->message(fd, msg_txt(149)); // Unable to decrease the number/value.
 		} else {
 			if( (ret=pc->paycash(sd, -value, 0)) >= 0){
 			    sprintf(output, msg_txt(410), ret, sd->cashPoints);
 			    clif->disp_onlyself(sd, output, strlen(output));
-			}
-			else clif->message(fd, msg_txt(41)); // Unable to decrease the number/value.
+			} else
+				clif->message(fd, msg_txt(41)); // Unable to decrease the number/value.
 		}
-	}
-	else
-	{ // @points
+	} else { // @points
 		if( value > 0 ) {
-			if( (ret=pc->getcash(sd, 0, value)) >= 0){
-			    sprintf(output, msg_txt(506), ret, sd->kafraPoints);
-			    clif->disp_onlyself(sd, output, strlen(output));
-			}
-			else clif->message(fd, msg_txt(149)); // Unable to decrease the number/value.
+			if( (ret=pc->getcash(sd, 0, value)) >= 0) {
+				// If this option is set, the message is already sent by pc function
+				if( !battle_config.cashshop_show_points ){
+					sprintf(output, msg_txt(506), ret, sd->kafraPoints);
+					clif->disp_onlyself(sd, output, strlen(output));
+				}
+			} else
+				clif->message(fd, msg_txt(149)); // Unable to decrease the number/value.
 		} else {
 			if( (ret=pc->paycash(sd, -value, -value)) >= 0){
 			    sprintf(output, msg_txt(411), ret, sd->kafraPoints);
 			    clif->disp_onlyself(sd, output, strlen(output));
-			}
-			else clif->message(fd, msg_txt(41)); // Unable to decrease the number/value.
+			} else
+				clif->message(fd, msg_txt(41)); // Unable to decrease the number/value.
 		}
 	}
 	
