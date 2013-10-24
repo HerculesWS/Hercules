@@ -15464,7 +15464,7 @@ BUILDIN(questinfo)
 	quest = script_getnum(st, 2);
 	icon = script_getnum(st, 3);
 
-	if(script_hasdata(st,3))
+	if(script_hasdata(st, 4))
 		job = script_getnum(st, 4);
 	
 	if (!pcdb_checkid(job))
@@ -15484,7 +15484,7 @@ BUILDIN(questinfo)
 	nd->quest.icon = icon;
 	nd->quest.hasJob = false;
 	
-	if(script_hasdata(st,3) && pcdb_checkid(job))
+	if(script_hasdata(st, 4) && pcdb_checkid(job))
 	{
 		nd->quest.hasJob = true;
 		nd->quest.job = job;
