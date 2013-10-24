@@ -61,6 +61,8 @@ struct {
 	struct HPMHookPoint *HP_atcommand_doload_post;
 	struct HPMHookPoint *HP_atcommand_base_commands_pre;
 	struct HPMHookPoint *HP_atcommand_base_commands_post;
+	struct HPMHookPoint *HP_atcommand_add_pre;
+	struct HPMHookPoint *HP_atcommand_add_post;
 	struct HPMHookPoint *HP_battle_init_pre;
 	struct HPMHookPoint *HP_battle_init_post;
 	struct HPMHookPoint *HP_battle_final_pre;
@@ -4950,6 +4952,8 @@ struct {
 	int HP_atcommand_doload_post;
 	int HP_atcommand_base_commands_pre;
 	int HP_atcommand_base_commands_post;
+	int HP_atcommand_add_pre;
+	int HP_atcommand_add_post;
 	int HP_battle_init_pre;
 	int HP_battle_init_post;
 	int HP_battle_final_pre;
