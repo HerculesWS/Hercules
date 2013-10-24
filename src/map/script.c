@@ -15463,12 +15463,6 @@ BUILDIN(questinfo)
 
 	quest = script_getnum(st, 2);
 	icon = script_getnum(st, 3);
-
-	if(script_hasdata(st, 4))
-		job = script_getnum(st, 4);
-	
-	if (!pcdb_checkid(job))
-		ShowError("questinfo: Nonexistant Job Class.\n");
 	
 	#if PACKETVER >= 20120410
 		if(icon < 0 || (icon > 8 && icon != 9999) || icon == 7)
@@ -15484,10 +15478,19 @@ BUILDIN(questinfo)
 	nd->quest.icon = icon;
 	nd->quest.hasJob = false;
 	
-	if(script_hasdata(st, 4) && pcdb_checkid(job))
+	if(script_hasdata(st, 4))
 	{
-		nd->quest.hasJob = true;
-		nd->quest.job = job;
+		job = script_getnum(st, 4);
+	
+		if (!pcdb_checkid(job))
+		{
+			ShowError("questinfo: Nonexistant Job Class.\n");
+		}
+		else
+		{
+			nd->quest.hasJob = true;
+			nd->quest.job = job;
+		}
 	}
 
 	return true;
