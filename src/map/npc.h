@@ -48,6 +48,12 @@ struct npc_data {
 	char* path;/* path dir */
 	enum npc_subtype subtype;
 	int src_id;
+	struct {
+		int icon;
+		int quest_id;
+		bool hasJob;
+		int job;
+	} quest;
 	union {
 		struct {
 			struct script_code *script;
