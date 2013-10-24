@@ -5942,13 +5942,13 @@ INSERT INTO `item_db_re` (`id`, `name_english`, `name_japanese`, `type`, `price_
 (12655, 'Brain_Powder', 'Brain Powder', 11, 2000, 1000, 100, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, '', '', ''),
 (12656, 'Magical_Powder', 'Magical Powder', 11, 3000, 1500, 200, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, '', '', ''),
 (12657, 'Madness_Powder', 'Madness Powder', 11, 4000, 2000, 300, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, '', '', ''),
-(12658, 'Trans_Scroll_Devi', 'Transformation Scroll(Deviruchi)', 2, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'sc_start4 SC_MONSTER_TRANSFORM,1200000,1109,0,0,0;', '', ''),
-(12659, 'Trans_Scroll_Ray_Arch', 'Transformation Scroll(Raydric)', 2, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'sc_start4 SC_MONSTER_TRANSFORM,1200000,1276,0,0,0;', '', ''),
-(12660, 'Trans_Scroll_Mavka', 'Transformation Scroll(Mavka)', 2, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'sc_start4 SC_MONSTER_TRANSFORM,1200000,1884,0,0,0;', '', ''),
-(12661, 'Trans_Scroll_Marduk', 'Transformation Scroll(Marduk)', 2, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'sc_start4 SC_MONSTER_TRANSFORM,1200000,1140,0,0,0;', '', ''),
-(12662, 'Trans_Scroll_Banshee', 'Transformation Scroll(Banshee)', 2, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'sc_start4 SC_MONSTER_TRANSFORM,1200000,1867,0,0,0;', '', ''),
-(12663, 'Trans_Scroll_Poring', 'Transformation Scroll(Poring)', 2, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'sc_start4 SC_MONSTER_TRANSFORM,1200000,1002,0,0,0;', '', ''),
-(12664, 'Trans_Scroll_Golem', 'Transformation Scroll(Golem)', 2, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'sc_start4 SC_MONSTER_TRANSFORM,1200000,1040,0,0,0;', '', ''),
+(12658, 'Trans_Scroll_Devi', 'Transformation Scroll(Deviruchi)', 2, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'montransform "Deviruchi",1200000,SC_MTF_ASPD;', '', ''),
+(12659, 'Trans_Scroll_Ray_Arch', 'Transformation Scroll(Raydric)', 2, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'montransform "Raydric Archer",1200000,SC_MTF_RANGEATK;', '', ''),
+(12660, 'Trans_Scroll_Mavka', 'Transformation Scroll(Mavka)', 2, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'montransform "Mavka",1200000,SC_MTF_RANGEATK;', '', ''),
+(12661, 'Trans_Scroll_Marduk', 'Transformation Scroll(Marduk)', 2, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'montransform "Marduk",1200000,SC_MTF_MATK;', '', ''),
+(12662, 'Trans_Scroll_Banshee', 'Transformation Scroll(Banshee)', 2, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'montransform "Banshee",1200000,SC_MTF_MATK;', '', ''),
+(12663, 'Trans_Scroll_Poring', 'Transformation Scroll(Poring)', 2, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'montransform "Poring",1200000,SC_MTF_CRIDAMAGE;', '', ''),
+(12664, 'Trans_Scroll_Golem', 'Transformation Scroll(Golem)', 2, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'montransform "Golem",1200000,SC_MTF_MLEATKED;', '', ''),
 (12665, 'Grovel_Buff', 'Grovel Buff', 2, 0, 0, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, '', '', ''),
 (12666, 'Thai_Perfume_MATK', 'Thai Perfume(MATK)', 11, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, '', '', ''),
 (12667, 'Thai_Perfume_ATK', 'Thai Perfume(ATK)', 11, 20, 10, 10, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, '', '', ''),
@@ -6170,9 +6170,9 @@ INSERT INTO `item_db_re` (`id`, `name_english`, `name_japanese`, `type`, `price_
 (12995, 'White_Herb_Box', 'White Herb Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 509,15;', '', ''),
 (12996, 'Blue_Herb_Box', 'Blue Herb Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 510,15;', '', ''),
 (12997, 'Elunium_Box', 'Elunium Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 985,5;', '', ''),
-(12998, 'Oridecon_Box', 'Oridecon Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 984,5;', '', '');
+(12998, 'Oridecon_Box', 'Oridecon Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 984,5;', '', ''),
+(12999, 'Branch_Of_Dead_Tree_Box', 'Dead Branch Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 604,3;', '', '');
 INSERT INTO `item_db_re` (`id`, `name_english`, `name_japanese`, `type`, `price_buy`, `price_sell`, `weight`, `atk`, `matk`, `defence`, `range`, `slots`, `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`, `weapon_level`, `equip_level_min`, `equip_level_max`, `refineable`, `view`, `script`, `equip_script`, `unequip_script`) VALUES
-(12999, 'Branch_Of_Dead_Tree_Box', 'Dead Branch Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 604,3;', '', ''),
 (13000, 'Jujube_Dagger', 'Jujube Dagger', 4, 10000, 5000, 600, 39, 0, 0, 1, 0, 579821295, 63, 2, 2, 1, 0, 0, 1, 1, 'bonus bAtkEle,Ele_Wind;', '', ''),
 (13001, 'Dragon_Killer', 'Dragon Killer', 4, 20, 10, 900, 110, 0, 0, 1, 0, 579821295, 63, 2, 2, 4, 60, 0, 1, 1, 'bonus bIgnoreDefRace,RC_Dragon; bonus2 bExpAddRace,RC_Dragon,10;', '', ''),
 (13002, 'Ginnungagap', 'Ginnungagap', 4, 20, 10, 700, 148, 0, 0, 1, 0, 579821295, 63, 2, 2, 4, 70, 0, 1, 1, 'bonus bAtkEle,Ele_Dark; bonus2 bAddEff,Eff_Blind,500; bonus2 bAddEff2,Eff_Blind,50;', '', ''),
@@ -6448,9 +6448,9 @@ INSERT INTO `item_db_re` (`id`, `name_english`, `name_japanese`, `type`, `price_
 (13530, 'Pet_Egg_Scroll_Box5_', 'Pet Egg Scroll Box 16', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 12934,30;', '', ''),
 (13531, 'Light_Red_Pot_Box', 'Light Red Potion Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 598,50;', '', ''),
 (13532, 'Light_Orange_Pot_Box', 'Light Orange Potion Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 599,50;', '', ''),
-(13533, 'Light_Yellow_Pot_Box', 'Light Yellow Potion Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 11500,50;', '', '');
+(13533, 'Light_Yellow_Pot_Box', 'Light Yellow Potion Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 11500,50;', '', ''),
+(13534, 'Light_White_Pot_Box', 'Light White Potion Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 11501,50;', '', '');
 INSERT INTO `item_db_re` (`id`, `name_english`, `name_japanese`, `type`, `price_buy`, `price_sell`, `weight`, `atk`, `matk`, `defence`, `range`, `slots`, `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`, `weapon_level`, `equip_level_min`, `equip_level_max`, `refineable`, `view`, `script`, `equip_script`, `unequip_script`) VALUES
-(13534, 'Light_White_Pot_Box', 'Light White Potion Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 11501,50;', '', ''),
 (13535, 'Light_Center_Pot_Box', 'Light Center Potion Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 14509,20;', '', ''),
 (13536, 'Light_Awakening_Pot_Box', 'Light Awakening Potion Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 14510,20;', '', ''),
 (13537, 'Light_Berserk_Pot_Box', 'Light Berserk Potion Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 14511,20;', '', ''),
@@ -6767,9 +6767,9 @@ INSERT INTO `item_db_re` (`id`, `name_english`, `name_japanese`, `type`, `price_
 (13850, 'WOB_Box_Rune10', 'Yellow Butterfly Wing Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 14582,10;', '', ''),
 (13851, 'WOB_Box_Schawaltz5', 'Green Butterfly Wing Box(5)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 14583,5;', '', ''),
 (13852, 'WOB_Box_Schawaltz10', 'Green Butterfly Wing Box(10)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 14583,10;', '', ''),
-(13853, 'WOB_Box_Rachel5', 'Red Butterfly Wing Box(5)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 14584,5;', '', '');
+(13853, 'WOB_Box_Rachel5', 'Red Butterfly Wing Box(5)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 14584,5;', '', ''),
+(13854, 'WOB_Box_Rachel10', 'Red Butterfly Wing Box(10)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 14584,10;', '', '');
 INSERT INTO `item_db_re` (`id`, `name_english`, `name_japanese`, `type`, `price_buy`, `price_sell`, `weight`, `atk`, `matk`, `defence`, `range`, `slots`, `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`, `weapon_level`, `equip_level_min`, `equip_level_max`, `refineable`, `view`, `script`, `equip_script`, `unequip_script`) VALUES
-(13854, 'WOB_Box_Rachel10', 'Red Butterfly Wing Box(10)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 14584,10;', '', ''),
 (13855, 'WOB_Box_Local5', 'Blue Butterfly Wing Box(5)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 14585,5;', '', ''),
 (13856, 'WOB_Box_Local10', 'Blue Butterfly Wing Box(10)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 14585,10;', '', ''),
 (13857, 'Spark_Candy_Box5', 'Candy Box(5)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 14586,5;', '', ''),
@@ -7080,9 +7080,9 @@ INSERT INTO `item_db_re` (`id`, `name_english`, `name_japanese`, `type`, `price_
 (14162, 'F_Dex_Dish_Box', 'Hwergelmir''s Tonic Box(10)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 12205,10;', '', ''),
 (14163, 'F_Luk_Dish_Box', 'Cooked Nine Tail Box(10)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 12206,10;', '', ''),
 (14164, 'F_Vit_Dish_Box', 'Immortal Stew Box(10)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 12207,10;', '', ''),
-(14165, 'F_Kafra_Card_Box', 'Kafra Card Box(10)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 12211,10;', '', '');
+(14165, 'F_Kafra_Card_Box', 'Kafra Card Box(10)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 12211,10;', '', ''),
+(14166, 'F_Giant_Fly_Wing_Box', 'Giant Fly Wing Box(10)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 12212,10;', '', '');
 INSERT INTO `item_db_re` (`id`, `name_english`, `name_japanese`, `type`, `price_buy`, `price_sell`, `weight`, `atk`, `matk`, `defence`, `range`, `slots`, `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`, `weapon_level`, `equip_level_min`, `equip_level_max`, `refineable`, `view`, `script`, `equip_script`, `unequip_script`) VALUES
-(14166, 'F_Giant_Fly_Wing_Box', 'Giant Fly Wing Box(10)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 12212,10;', '', ''),
 (14167, 'F_Neuralizer_Box', 'Neuralizer Box(10)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 12213,1;', '', ''),
 (14168, 'F_Convex_Mirror_Box', 'Convex Mirror Box(10)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 12214,10;', '', ''),
 (14169, 'F_Blessing_10_Scroll_Box', 'Blessing Scroll Box(10)', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 12215,10;', '', ''),
@@ -7402,9 +7402,9 @@ INSERT INTO `item_db_re` (`id`, `name_english`, `name_japanese`, `type`, `price_
 (15021, 'Upg_Formal_Dress', 'Reinforcement Formal Suit', 5, 20, 10, 150, 0, 0, 45, 0, 1, 4294967294, 63, 2, 16, 0, 0, 0, 1, 0, 'bonus bMaxHPRate,3;', '', ''),
 (15022, 'Brazil_Swimsuit', 'Swimming Suit', 5, 20, 10, 100, 0, 0, 1, 0, 0, 4294967295, 63, 2, 16, 0, 0, 0, 1, 0, 'bonus bStr,4; bonus bInt,4; bonus bMdef,3;', '', ''),
 (15023, 'Half_Brynhild', 'Brynhild (Trial Version)', 5, 20, 10, 0, 0, 0, 60, 0, 0, 4294967295, 63, 2, 16, 0, 47, 0, 0, 0, 'bonus bMdef,10; bonus bMaxHP,20*BaseLevel; bonus bMaxSP,5*BaseLevel; bonus2 bAddRace,RC_NonBoss,5; bonus2 bAddRace,RC_Boss,5; bonus bMatkRate,5; bonus bUnbreakableArmor,0; bonus bNoKnockback,0;', '', ''),
-(15024, 'Army_Padding', 'Army Padding', 5, 0, 0, 10, 0, 0, 10, 0, 0, 4294967295, 63, 2, 16, 0, 0, 0, 1, 0, '', '', '');
+(15024, 'Army_Padding', 'Army Padding', 5, 0, 0, 10, 0, 0, 10, 0, 0, 4294967295, 63, 2, 16, 0, 0, 0, 1, 0, '', '', ''),
+(15025, 'Golden_Rod_Robe', 'Golden Rod Robe', 5, 20, 10, 500, 0, 0, 40, 0, 0, 512, 56, 2, 16, 0, 100, 0, 1, 0, 'bonus bDefEle,Ele_Wind; bonus bMdef,10; bonus bInt,1; if(readparam(bInt)>=120){ bonus bInt,1; }', '', '');
 INSERT INTO `item_db_re` (`id`, `name_english`, `name_japanese`, `type`, `price_buy`, `price_sell`, `weight`, `atk`, `matk`, `defence`, `range`, `slots`, `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`, `weapon_level`, `equip_level_min`, `equip_level_max`, `refineable`, `view`, `script`, `equip_script`, `unequip_script`) VALUES
-(15025, 'Golden_Rod_Robe', 'Golden Rod Robe', 5, 20, 10, 500, 0, 0, 40, 0, 0, 512, 56, 2, 16, 0, 100, 0, 1, 0, 'bonus bDefEle,Ele_Wind; bonus bMdef,10; bonus bInt,1; if(readparam(bInt)>=120){ bonus bInt,1; }', '', ''),
 (15026, 'Aqua_Robe', 'Aqua Robe', 5, 20, 10, 500, 0, 0, 40, 0, 0, 512, 56, 2, 16, 0, 100, 0, 1, 0, 'bonus bDefEle,Ele_Water; bonus bMdef,10; bonus bInt,1; if(readparam(bInt)>=120){ bonus bInt,1; }', '', ''),
 (15027, 'Crimson_Robe', 'Crimson Robe', 5, 20, 10, 500, 0, 0, 40, 0, 0, 512, 56, 2, 16, 0, 100, 0, 1, 0, 'bonus bDefEle,Ele_Fire; bonus bMdef,10; bonus bInt,1; if(readparam(bInt)>=120){ bonus bInt,1; }', '', ''),
 (15028, 'Forest_Robe', 'Forest Robe', 5, 20, 10, 500, 0, 0, 40, 0, 0, 512, 56, 2, 16, 0, 100, 0, 1, 0, 'bonus bDefEle,Ele_Earth; bonus bMdef,10; bonus bInt,1; if(readparam(bInt)>=120){ bonus bInt,1; }', '', ''),
@@ -7726,9 +7726,9 @@ INSERT INTO `item_db_re` (`id`, `name_english`, `name_japanese`, `type`, `price_
 (17087, 'Upg_Book_Box', 'Upgrade Book Box', 2, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 1585,1;', '', ''),
 (17088, 'Upg_Staff_Box', 'Upgrade Staff Box', 2, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 2015,1;', '', ''),
 (17089, 'Upg_Dagger_Box', 'Upgrade Dagger Box', 2, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 13071,1;', '', ''),
-(17090, 'Upg_Revolver_Box', 'Upgrade Revolver Box', 2, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 13115,1;', '', '');
+(17090, 'Upg_Revolver_Box', 'Upgrade Revolver Box', 2, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 13115,1;', '', ''),
+(17091, 'Upg_Mace_Box', 'Upgrade Mace Box', 2, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 16019,1;', '', '');
 INSERT INTO `item_db_re` (`id`, `name_english`, `name_japanese`, `type`, `price_buy`, `price_sell`, `weight`, `atk`, `matk`, `defence`, `range`, `slots`, `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`, `weapon_level`, `equip_level_min`, `equip_level_max`, `refineable`, `view`, `script`, `equip_script`, `unequip_script`) VALUES
-(17091, 'Upg_Mace_Box', 'Upgrade Mace Box', 2, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 16019,1;', '', ''),
 (17092, 'Upg_Bow_Box', 'Upgrade Bow Box', 2, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 18112,1;', '', ''),
 (17093, 'Upg_Twohand_Sword_Box', 'Upgrade Two-Hand Sword Box', 2, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, 'getitem 21000,1;', '', ''),
 (17094, 'Upg_Katar_Box2', 'Upgrade Katar Box', 18, 20, 10, 0, 0, 0, 0, 0, 0, 4294967295, 63, 2, 0, 0, 0, 0, 0, 0, '', '', ''),
@@ -8060,9 +8060,9 @@ INSERT INTO `item_db_re` (`id`, `name_english`, `name_japanese`, `type`, `price_
 (18785, 'King_Poring_Hat', 'King Poring Hat', 5, 20, 10, 600, 0, 0, 10, 0, 1, 4294967295, 7, 2, 256, 0, 10, 0, 1, 905, 'bonus bDex,1; bonus bLuk,1;', '', ''),
 (18786, 'Anemos_Mask', 'Anemos Mask', 5, 20, 10, 200, 0, 0, 0, 0, 0, 4294967295, 7, 2, 512, 0, 10, 0, 0, 906, 'bonus bUnbreakableHelm,0;', '', ''),
 (18790, 'Rainbow_Poring_Hat', 'Rainbow Poring Hat', 5, 20, 10, 100, 0, 0, 3, 0, 1, 4294967295, 7, 2, 256, 0, 0, 0, 1, 900, '', '', ''),
-(18805, 'Eclipse_Hat', 'Eclipse Hat', 5, 20, 10, 300, 0, 0, 2, 0, 0, 4294967295, 7, 2, 256, 0, 0, 0, 1, 922, 'bonus bLuk,3; bonus bMdef,5;', '', '');
+(18805, 'Eclipse_Hat', 'Eclipse Hat', 5, 20, 10, 300, 0, 0, 2, 0, 0, 4294967295, 7, 2, 256, 0, 0, 0, 1, 922, 'bonus bLuk,3; bonus bMdef,5;', '', ''),
+(18806, 'Black_Rabbit_Hat', 'Black Rabbit Hat', 5, 20, 10, 300, 0, 0, 2, 0, 1, 4294967295, 7, 2, 256, 0, 0, 0, 1, 923, 'bonus bDex,2; bonus bAgi,3;', '', '');
 INSERT INTO `item_db_re` (`id`, `name_english`, `name_japanese`, `type`, `price_buy`, `price_sell`, `weight`, `atk`, `matk`, `defence`, `range`, `slots`, `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`, `weapon_level`, `equip_level_min`, `equip_level_max`, `refineable`, `view`, `script`, `equip_script`, `unequip_script`) VALUES
-(18806, 'Black_Rabbit_Hat', 'Black Rabbit Hat', 5, 20, 10, 300, 0, 0, 2, 0, 1, 4294967295, 7, 2, 256, 0, 0, 0, 1, 923, 'bonus bDex,2; bonus bAgi,3;', '', ''),
 (18807, 'Yellow_Yuzu_Hat', 'White Citron Hat', 5, 20, 10, 400, 0, 0, 3, 0, 1, 4294967294, 7, 2, 256, 0, 0, 0, 1, 924, 'bonus bVit,2; bonus bLuk,3;', '', ''),
 (18808, 'Wing_Form_Spectacle', 'Wing Style Spectacle', 5, 20, 10, 100, 0, 0, 1, 0, 0, 4294967295, 7, 2, 256, 0, 0, 0, 1, 925, 'bonus bAgi,1;', '', ''),
 (18810, 'Hell_Pumpkin_Hat', 'Hell Pumpkin Hat', 5, 20, 10, 500, 0, 0, 12, 0, 0, 4294967295, 7, 2, 256, 0, 0, 0, 1, 717, 'bonus bMdef,12;', '', ''),
