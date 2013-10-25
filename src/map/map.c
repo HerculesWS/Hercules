@@ -3112,6 +3112,10 @@ void do_final_maps(void) {
 
 		if( map->list[i].channel )
 			clif->chsys_delete(map->list[i].channel);
+		
+		if( map->list[i].qi_data )
+			aFree(map->list[i].qi_data);
+		
 	}
 
 	map->zone_db_clear();
@@ -3177,6 +3181,12 @@ void map_flags_init(void) {
 		map->list[i].misc_damage_rate   = 100;
 		map->list[i].short_damage_rate  = 100;
 		map->list[i].long_damage_rate   = 100;
+		
+		if( map->list[i].qi_data )
+			aFree(map->list[i].qi_data);
+		
+		map->list[i].qi_data = NULL;
+		map->list[i].qi_count = 0;
 	}
 }
 
@@ -4958,6 +4968,38 @@ int map_get_new_bonus_id (void) {
 	return map->bonus_id++;
 }
 
+void map_add_questinfo(int m, struct questinfo *qi) {
+	unsigned short i;
+	
+	/* duplicate, override */
+	for(i = 0; i < map->list[m].qi_count; i++) {
+		if( map->list[m].qi_data[i].nd == qi->nd )
+			break;
+	}
+		
+	if( i == map->list[m].qi_count )
+		RECREATE(map->list[m].qi_data, struct questinfo, ++map->list[m].qi_count);
+	
+	memcpy(&map->list[m].qi_data[i], qi, sizeof(struct questinfo));
+}
+
+bool map_remove_questinfo(int m, struct npc_data *nd) {
+	unsigned short i;
+	
+	for(i = 0; i < map->list[m].qi_count; i++) {
+		struct questinfo *qi = &map->list[m].qi_data[i];
+		if( qi->nd == nd ) {
+			memset(&map->list[m].qi_data[i], 0, sizeof(struct questinfo));
+			if( i != --map->list[m].qi_count ) {
+				memmove(&map->list[m].qi_data[i],&map->list[m].qi_data[i+1],sizeof(struct questinfo)*(map->list[m].qi_count-i));
+			}
+			return true;
+		}
+	}
+	
+	return false;
+}
+
 /**
  * @see DBApply
  */
@@ -5824,7 +5866,10 @@ void map_defaults(void) {
 	map->delblcell = map_delblcell;
 	
 	map->get_new_bonus_id = map_get_new_bonus_id;
-
+	
+	map->add_questinfo = map_add_questinfo;
+	map->remove_questinfo = map_remove_questinfo;
+	
 	/**
 	 * mapit interface
 	 **/
