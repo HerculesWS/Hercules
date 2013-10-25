@@ -4398,7 +4398,17 @@ bool map_zone_mf_cache(int m, char *flag, char *params) {
 				map_zone_mf_cache_add(m,rflag);
 			}
 		}
+	} else if (!strcmpi(flag,"nocashshop")) {
+		if( state && map->list[m].flag.nocashshop )
+			;/* nothing to do */
+		else {
+			if( state )
+				map_zone_mf_cache_add(m,"nocashshop\toff");
+			else if( map->list[m].flag.nocashshop )
+				map_zone_mf_cache_add(m,"nocashshop");
+		}
 	}
+
 	return false;
 }
 void map_zone_apply(int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath) {
