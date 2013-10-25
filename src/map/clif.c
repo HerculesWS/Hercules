@@ -17387,6 +17387,12 @@ void __attribute__ ((unused)) clif_parse_dull(int fd,struct map_session_data *sd
 	return;
 }
 void clif_parse_CashShopOpen(int fd, struct map_session_data *sd) {
+	
+	if( map->list[sd->bl.m].flag.nocashshop ) {
+		clif->colormes(fd,COLOR_RED,msg_txt(1489)); //Cash Shop is disabled in this map
+		return;
+	}
+		
 	WFIFOHEAD(fd, 10);
 	WFIFOW(fd, 0) = 0x845;
 	WFIFOL(fd, 2) = sd->cashPoints; //[Ryuuzaki] - switched positions to reflect proper values
@@ -17423,6 +17429,11 @@ void clif_parse_CashShopBuy(int fd, struct map_session_data *sd) {
 	unsigned short limit = RFIFOW(fd, 4), i, j;
 	unsigned int kafra_pay = RFIFOL(fd, 6);// [Ryuuzaki] - These are free cash points (strangely #CASH = main cash curreny for us, confusing)
 
+	if( map->list[sd->bl.m].flag.nocashshop ) {
+		clif->colormes(fd,COLOR_RED,msg_txt(1489)); //Cash Shop is disabled in this map
+		return;
+	}
+	
 	for(i = 0; i < limit; i++) {
 		int qty = RFIFOL(fd, 14 + ( i * 10 ));
 		int id = RFIFOL(fd, 10 + ( i * 10 ));
