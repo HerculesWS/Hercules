@@ -15456,9 +15456,10 @@ BUILDIN(readbook)
 BUILDIN(questinfo)
 {
 	struct npc_data *nd = map->id2nd(st->oid);
-	int quest, icon, job;
-	
-	if( nd == NULL )
+	int quest, icon, job, color = 0;
+	struct questinfo qi;
+
+	if( nd == NULL || nd->bl.m == -1 )
 		return true;
 
 	quest = script_getnum(st, 2);
@@ -15474,24 +15475,34 @@ BUILDIN(questinfo)
 			icon = icon + 1;
 	#endif
 	
-	nd->quest.quest_id = quest;
-	nd->quest.icon = icon;
-	nd->quest.hasJob = false;
+	qi.quest_id = quest;
+	qi.icon = (unsigned char)icon;
+	qi.nd = nd;
+		
+	if( script_hasdata(st, 4) ) {
+		color = script_getnum(st, 4);
+		if( color < 0 || color > 3 ) {
+			ShowWarning("buildin_questinfo: invalid color '%d', changing to 0\n",color);
+			script->reportfunc(st);
+			color = 0;
+		}
+		qi.color = (unsigned char)color;
+	}
 	
-	if(script_hasdata(st, 4))
-	{
-		job = script_getnum(st, 4);
+	qi.hasJob = false;
+	
+	if(script_hasdata(st, 5)) {
+		job = script_getnum(st, 5);
 	
 		if (!pcdb_checkid(job))
-		{
-			ShowError("questinfo: Nonexistant Job Class.\n");
-		}
-		else
-		{
-			nd->quest.hasJob = true;
-			nd->quest.job = job;
+			ShowError("buildin_questinfo: Nonexistant Job Class.\n");
+		else {
+			qi.hasJob = true;
+			qi.job = (unsigned short)job;
 		}
 	}
+	
+	map->add_questinfo(nd->bl.m,&qi);
 
 	return true;
 }
@@ -15499,21 +15510,24 @@ BUILDIN(questinfo)
 BUILDIN(setquest)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	struct npc_data *nd = map->id2nd(st->oid);
-	nullpo_retr(false,sd);
+	unsigned short i;
 	
-	if (!nd)
+	if (!sd)
 		return false;
 
 	quest->add(sd, script_getnum(st, 2));
 
 	// If questinfo is set, remove quest bubble once quest is set.
-	if(nd->quest.quest_id > 0)
-		#if PACKETVER >= 20120410
-			clif->quest_show_event(sd, &nd->bl, 9999, 0);
-		#else
-			clif->quest_show_event(sd, &nd->bl, 0, 0);
-		#endif		
+	for(i = 0; i < map->list[sd->bl.m].qi_count; i++) {
+		struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
+		if( qi->quest_id == script_getnum(st, 2) ) {
+#if PACKETVER >= 20120410
+			clif->quest_show_event(sd, &qi->nd->bl, 9999, 0);
+#else
+			clif->quest_show_event(sd, &qi->nd->bl, 0, 0);
+#endif
+		}
+	}
 
 	return true;
 }
@@ -15563,12 +15577,20 @@ BUILDIN(checkquest)
 BUILDIN(showevent) {
 	TBL_PC *sd = script->rid2sd(st);
 	struct npc_data *nd = map->id2nd(st->oid);
-	int icon;
+	int icon, color = 0;
 	
 	if( sd == NULL || nd == NULL )
 		return true;
 
 	icon = script_getnum(st, 2);
+	if( script_hasdata(st, 3) ) {
+		color = script_getnum(st, 3);
+		if( color < 0 || color > 3 ) {
+			ShowWarning("buildin_showevent: invalid color '%d', changing to 0\n",color);
+			script->reportfunc(st);
+			color = 0;
+		}
+	}
 
 	#if PACKETVER >= 20120410
 		if(icon < 0 || (icon > 8 && icon != 9999) || icon == 7)
@@ -15580,7 +15602,7 @@ BUILDIN(showevent) {
 			icon = icon + 1;
 	#endif
 	
-	clif->quest_show_event(sd, &nd->bl, icon, 0);
+	clif->quest_show_event(sd, &nd->bl, icon, color);
 	return true;
 }
 
@@ -18086,13 +18108,13 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(useatcmd, "s"),
 		
 		//Quest Log System [Inkfish]
-		BUILDIN_DEF(questinfo, "ii?"),
+		BUILDIN_DEF(questinfo, "ii??"),
 		BUILDIN_DEF(setquest, "i"),
 		BUILDIN_DEF(erasequest, "i"),
 		BUILDIN_DEF(completequest, "i"),
 		BUILDIN_DEF(checkquest, "i?"),
 		BUILDIN_DEF(changequest, "ii"),
-		BUILDIN_DEF(showevent, "i"),		
+		BUILDIN_DEF(showevent, "i?"),
 		
 		/**
 		 * hQueue [Ind/Hercules]

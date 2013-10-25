@@ -7886,7 +7886,7 @@ that fails, the command returns an empty string instead.
 =========================
 ---------------------------------------
 
-*questinfo <Quest ID>, <Icon>{, <Job Class>};
+*questinfo <Quest ID>, <Icon> {, <Map Mark Color>{, <Job Class>}};
 
 This is esentially a combination of checkquest and showevent. Use this only
 in an OnInit label. For the Quest ID, specify the quest ID that you want
@@ -7904,6 +7904,14 @@ No Icon		: QTYPE_NONE
 Warg		: QTYPE_WARG
 Warg Face	: QTYPE_WARG2 (Only for packetver >= 20120410)
 
+Map Mark Color, when used, creates a mark in the user's mini map on the position of the NPC,
+the available color values are:
+
+0 - No Marker
+1 - Yellow Marker
+2 - Green Marker
+3 - Purple Marker
+
 When a user shows up on a map, each NPC is checked for questinfo that has been set.
 If questinfo is present, it will check if the quest has been started, if it has not, the bubble will appear.
 
@@ -7916,7 +7924,7 @@ izlude,100,100,4	script	Test	844,{
 	close;
 
 	OnInit:
-		questinfo 1001, QTYPE_QUEST, Job_Novice;
+		questinfo 1001, QTYPE_QUEST, 0, Job_Novice;
 		end;
 }
 
@@ -7975,10 +7983,11 @@ If parameter "HUNTING" is supplied:
 
 ---------------------------------------
 
-*showevent <icon>;
+*showevent <icon>{,<mark color>}
 
-Show a colored mark in the mini-map like "viewpoint" and an emotion on top 
-of a NPC. This is used to indicate that a NPC has a quest or an event to 
+Show an emotion on top of a NPC, and optionally,
+a colored mark in the mini-map like "viewpoint".
+This is used to indicate that a NPC has a quest or an event to 
 a certain player. 
 
 Available Icons:
@@ -7992,6 +8001,12 @@ Remove Icon	: QTYPE_NONE
 ? Event Icon	: QTYPE_EVENT2
 Warg		: QTYPE_WARG
 Warg Face	: QTYPE_WARG2 (Only for packetver >= 20120410)
+
+Mark Color:
+0 - No Mark
+1 - Yellow Mark
+2 - Green Mark
+3 - Purple Mark
 
 ----------------------------------------
 

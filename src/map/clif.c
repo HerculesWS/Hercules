@@ -9631,28 +9631,19 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		skill->unit_move(&sd->bl,timer->gettick(),1);
 	
 	// NPC Quest / Event Icon Check [Kisuka]
-	#if PACKETVER >= 20090218
-		for(i = 0; i < map->list[sd->bl.m].npc_num; i++) {
-			TBL_NPC *nd = map->list[sd->bl.m].npc[i];
-
-			// Make sure NPC exists and is not a warp
-			if(nd != NULL)
-			{
-				// Check if NPC has quest attached to it
-				if(nd->quest.quest_id > 0)
-					if(quest->check(sd, nd->quest.quest_id, HAVEQUEST) == -1)	// Check if quest is not started
-						// Check if quest is job-specific, check is user is said job class.
-						if(nd->quest.hasJob == true)
-						{
-							if(sd->class_ == nd->quest.job)
-								clif->quest_show_event(sd, &nd->bl, nd->quest.icon, 0);
-						}
-						else {
-							clif->quest_show_event(sd, &nd->bl, nd->quest.icon, 0);
-						}
+#if PACKETVER >= 20090218
+	for(i = 0; i < map->list[sd->bl.m].qi_count; i++) {
+		struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
+		if( quest->check(sd, qi->quest_id, HAVEQUEST) == -1 ) {// Check if quest is not started
+			if( qi->hasJob ) { // Check if quest is job-specific, check is user is said job class.
+				if( sd->class_ == qi->job )
+					clif->quest_show_event(sd, &qi->nd->bl, qi->icon, qi->color);
+			} else {
+				clif->quest_show_event(sd, &qi->nd->bl, qi->icon, qi->color);
 			}
 		}
-	#endif
+	}
+#endif
 }
 
 
