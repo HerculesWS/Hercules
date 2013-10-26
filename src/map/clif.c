@@ -9316,6 +9316,8 @@ void clif_hercules_chsys_mjoin(struct map_session_data *sd) {
 /// Notification from the client, that it has finished map loading and is about to display player's character (CZ_NOTIFY_ACTORINIT).
 /// 007d
 void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
+	int i;
+
 	if(sd->bl.prev != NULL)
 		return;
 
@@ -9624,10 +9626,24 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		skill->usave_trigger(sd);
 	}
 
-// Trigger skill effects if you appear standing on them
+	// Trigger skill effects if you appear standing on them
 	if(!battle_config.pc_invincible_time)
 		skill->unit_move(&sd->bl,timer->gettick(),1);
 	
+	// NPC Quest / Event Icon Check [Kisuka]
+#if PACKETVER >= 20090218
+	for(i = 0; i < map->list[sd->bl.m].qi_count; i++) {
+		struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
+		if( quest->check(sd, qi->quest_id, HAVEQUEST) == -1 ) {// Check if quest is not started
+			if( qi->hasJob ) { // Check if quest is job-specific, check is user is said job class.
+				if( sd->class_ == qi->job )
+					clif->quest_show_event(sd, &qi->nd->bl, qi->icon, qi->color);
+			} else {
+				clif->quest_show_event(sd, &qi->nd->bl, qi->icon, qi->color);
+			}
+		}
+	}
+#endif
 }
 
 

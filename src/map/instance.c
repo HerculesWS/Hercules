@@ -242,6 +242,13 @@ int instance_add_map(const char *name, int instance_id, bool usebasename, const 
 		}
 	}
 	
+	//Mimic questinfo
+	if( map->list[m].qi_count ) {
+		map->list[im].qi_count = map->list[m].qi_count;
+		CREATE( map->list[im].qi_data, struct questinfo, map->list[im].qi_count );
+		memcpy( map->list[im].qi_data, map->list[m].qi_data, map->list[im].qi_count * sizeof(struct questinfo) );
+	}
+	
 	map->list[im].m = im;
 	map->list[im].instance_id = instance_id;
 	map->list[im].instance_src_map = m;
@@ -442,6 +449,9 @@ void instance_del_map(int16 m) {
 		if( map->list[m].zone_mf )
 			aFree(map->list[m].zone_mf);
 	}
+	
+	if( map->list[m].qi_data )
+		aFree(map->list[m].qi_data);
 	
 	// Remove from instance
 	for( i = 0; i < instance->list[map->list[m].instance_id].num_map; i++ ) {

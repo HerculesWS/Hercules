@@ -557,6 +557,17 @@ struct map_drop_list {
 	int drop_per;
 };
 
+
+struct questinfo {
+	struct npc_data *nd;
+	unsigned short icon;
+	unsigned char color;
+	int quest_id;
+	bool hasJob;
+	unsigned short job;/* perhaps a mapid mask would be most flexible? */
+};
+
+
 struct map_data {
 	char name[MAP_NAME_LENGTH];
 	uint16 index; // The map index used by the mapindex* functions.
@@ -691,6 +702,10 @@ struct map_data {
 	int (*getcellp)(struct map_data* m,int16 x,int16 y,cell_chk cellchk);
 	void (*setcell) (int16 m, int16 x, int16 y, cell_t cell, bool flag);
 	char *cellPos;
+	
+	/* ShowEvent Data Cache */
+	struct questinfo *qi_data;
+	unsigned short qi_count;
 };
 
 /// Stores information about a remote map (for multi-mapserver setups).
@@ -1030,6 +1045,8 @@ struct map_interface {
 	void (*addblcell) (struct block_list *bl);
 	void (*delblcell) (struct block_list *bl);
 	int (*get_new_bonus_id) (void);
+	void (*add_questinfo) (int m, struct questinfo *qi);
+	bool (*remove_questinfo) (int m, struct npc_data *nd);
 };
 
 struct map_interface *map;
