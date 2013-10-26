@@ -7810,8 +7810,8 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				//Store time at which you started running.
 				int64 currenttick = timer->gettick();
 				// Note: this int64 value is stored in two separate int32 variables (FIXME)
-				val3 = (int)(currenttick&0x00000000ffffffff);
-				val4 = (int)((currenttick&0xffffffff00000000)>>32);
+				val3 = (int)(currenttick&0x00000000ffffffffLL);
+				val4 = (int)((currenttick&0xffffffff00000000LL)>>32);
 			}
 				tick = -1;
 				break;
@@ -8199,8 +8199,8 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				//Store time at which you started running.
 				int64 currenttick = timer->gettick();
 				// Note: this int64 value is stored in two separate int32 variables (FIXME)
-				val3 = (int)(currenttick&0x00000000ffffffff);
-				val4 = (int)((currenttick&0xffffffff00000000)>>32);
+				val3 = (int)(currenttick&0x00000000ffffffffLL);
+				val4 = (int)((currenttick&0xffffffff00000000LL)>>32);
 			}
 				tick = -1;
 				break;
@@ -9328,8 +9328,8 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			struct unit_data *ud = unit->bl2ud(bl);
 			bool begin_spurt = true;
 			// Note: this int64 value is stored in two separate int32 variables (FIXME)
-			int64 starttick  = (int64)sce->val3&0x00000000ffffffff;
-			      starttick |= ((int64)sce->val4<<32)&0xffffffff00000000;
+			int64 starttick  = (int64)sce->val3&0x00000000ffffffffLL;
+			      starttick |= ((int64)sce->val4<<32)&0xffffffff00000000LL;
 
 			if (ud) {
 				if(!ud->state.running)
