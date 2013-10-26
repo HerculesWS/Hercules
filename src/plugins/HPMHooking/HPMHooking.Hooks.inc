@@ -36638,6 +36638,57 @@ int HP_map_get_new_bonus_id(void) {
 	}
 	return retVal___;
 }
+void HP_map_add_questinfo(int m, struct questinfo *qi) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_map_add_questinfo_pre ) {
+		void (*preHookFunc) (int *m, struct questinfo *qi);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_add_questinfo_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_map_add_questinfo_pre[hIndex].func;
+			preHookFunc(&m, qi);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.map.add_questinfo(m, qi);
+	}
+	if( HPMHooks.count.HP_map_add_questinfo_post ) {
+		void (*postHookFunc) (int *m, struct questinfo *qi);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_add_questinfo_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_map_add_questinfo_post[hIndex].func;
+			postHookFunc(&m, qi);
+		}
+	}
+	return;
+}
+bool HP_map_remove_questinfo(int m, struct npc_data *nd) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_map_remove_questinfo_pre ) {
+		bool (*preHookFunc) (int *m, struct npc_data *nd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_remove_questinfo_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_map_remove_questinfo_pre[hIndex].func;
+			retVal___ = preHookFunc(&m, nd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.map.remove_questinfo(m, nd);
+	}
+	if( HPMHooks.count.HP_map_remove_questinfo_post ) {
+		bool (*postHookFunc) (bool retVal___, int *m, struct npc_data *nd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_remove_questinfo_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_map_remove_questinfo_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &m, nd);
+		}
+	}
+	return retVal___;
+}
 /* mapit */
 struct s_mapiterator* HP_mapit_alloc(enum e_mapitflags flags, enum bl_type types) {
 	int hIndex = 0;
