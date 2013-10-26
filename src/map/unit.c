@@ -82,9 +82,6 @@ struct unit_data* unit_bl2ud2(struct block_list *bl) {
 	return unit->bl2ud(bl);
 }
 
-int unit_attack_timer(int tid, unsigned int tick, int id, intptr_t data);
-int unit_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data);
-
 int unit_walktoxy_sub(struct block_list *bl)
 {
 	int i;
@@ -137,7 +134,7 @@ int unit_walktoxy_sub(struct block_list *bl)
 	return 1;
 }
 
-int unit_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 	int i;
 	int x,y,dx,dy;
 	uint8 dir;
@@ -322,7 +319,7 @@ int unit_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data) {
 	return 0;
 }
 
-int unit_delay_walktoxy_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int unit_delay_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct block_list *bl = map->id2bl(id);
 
 	if (!bl || bl->prev == NULL)
@@ -402,7 +399,7 @@ static inline void set_mobstate(struct block_list* bl, int flag)
 		md->state.skillstate = md->state.aggressive ? MSS_FOLLOW : MSS_RUSH;
 }
 
-int unit_walktobl_sub(int tid, unsigned int tick, int id, intptr_t data) {
+int unit_walktobl_sub(int tid, int64 tick, int id, intptr_t data) {
 	struct block_list *bl = map->id2bl(id);
 	struct unit_data *ud = bl?unit->bl2ud(bl):NULL;
 
@@ -854,7 +851,7 @@ int unit_stop_walking(struct block_list *bl,int type)
 {
 	struct unit_data *ud;
 	const struct TimerData* td;
-	unsigned int tick;
+	int64 tick;
 	nullpo_ret(bl);
 
 	ud = unit->bl2ud(bl);
@@ -1001,7 +998,7 @@ int unit_can_move(struct block_list *bl) {
  * Resume running after a walk delay
  *------------------------------------------*/
 
-int unit_resume_running(int tid, unsigned int tick, int id, intptr_t data) {
+int unit_resume_running(int tid, int64 tick, int id, intptr_t data) {
 
 	struct unit_data *ud = (struct unit_data *)data;
 	TBL_PC * sd = map->id2sd(id);
@@ -1025,8 +1022,7 @@ int unit_resume_running(int tid, unsigned int tick, int id, intptr_t data) {
  * if type is 0, this is a damage induced delay: if previous delay is active, do not change it.
  * if type is 1, this is a skill induced delay: walk-delay may only be increased, not decreased.
  *------------------------------------------*/
-int unit_set_walkdelay(struct block_list *bl, unsigned int tick, int delay, int type)
-{
+int unit_set_walkdelay(struct block_list *bl, int64 tick, int delay, int type) {
 	struct unit_data *ud = unit->bl2ud(bl);
 	if (delay <= 0 || !ud) return 0;
 
@@ -1073,7 +1069,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	struct status_change *sc;
 	struct map_session_data *sd = NULL;
 	struct block_list * target = NULL;
-	unsigned int tick = timer->gettick();
+	int64 tick = timer->gettick();
 	int temp = 0, range;
 
 	nullpo_ret(src);
@@ -1437,7 +1433,7 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 	struct unit_data        *ud = NULL;
 	struct status_change *sc;
 	struct block_list    bl;
-	unsigned int tick = timer->gettick();
+	int64 tick = timer->gettick();
 	int range;
 
 	nullpo_ret(src);
@@ -1795,8 +1791,7 @@ int	unit_calc_pos(struct block_list *bl, int tx, int ty, uint8 dir)
 /*==========================================
  * Continuous Attack (function timer)
  *------------------------------------------*/
-int unit_attack_timer_sub(struct block_list* src, int tid, unsigned int tick)
-{
+int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick) {
 	struct block_list *target;
 	struct unit_data *ud;
 	struct status_data *sstatus;
@@ -1923,7 +1918,7 @@ int unit_attack_timer_sub(struct block_list* src, int tid, unsigned int tick)
 	return 1;
 }
 
-int unit_attack_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int unit_attack_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct block_list *bl;
 	bl = map->id2bl(id);
 	if(bl && unit->attack_timer_sub(bl, tid, tick) == 0)
@@ -1940,7 +1935,7 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 {
 	struct map_session_data *sd = NULL;
 	struct unit_data *ud = unit->bl2ud( bl);
-	unsigned int tick=timer->gettick();
+	int64 tick = timer->gettick();
 	int ret=0, skill_id;
 
 	nullpo_ret(bl);
@@ -2021,8 +2016,7 @@ int unit_counttargeted(struct block_list* bl)
 /*==========================================
  *
  *------------------------------------------*/
-int unit_fixdamage(struct block_list *src,struct block_list *target,unsigned int tick,int sdelay,int ddelay,int64 damage,int div,int type,int64 damage2)
-{
+int unit_fixdamage(struct block_list *src, struct block_list *target, int64 tick, int sdelay, int ddelay, int64 damage, int div, int type, int64 damage2) {
 	nullpo_ret(target);
 
 	if(damage+damage2 <= 0)

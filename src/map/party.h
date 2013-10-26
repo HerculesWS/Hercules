@@ -123,7 +123,7 @@ struct party_interface {
 	/* */
 	int (*vforeachsamemap) (int (*func)(struct block_list *,va_list),struct map_session_data *sd,int range, va_list ap);
 	int (*foreachsamemap) (int (*func)(struct block_list *,va_list),struct map_session_data *sd,int range,...);
-	int (*send_xy_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*fill_member) (struct party_member* member, struct map_session_data* sd, unsigned int leader);
 	TBL_PC* (*sd_check) (int party_id, int account_id, int char_id);
 	void (*check_state) (struct party_data *p);

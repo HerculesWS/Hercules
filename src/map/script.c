@@ -3184,7 +3184,7 @@ void script_stop_instances(struct script_code *code) {
 /*==========================================
  * Timer function for sleep
  *------------------------------------------*/
-int run_script_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int run_script_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct script_state *st     = idb_get(script->st_db,(int)data);
 	if( st ) {
 		TBL_PC *sd = map->id2sd(st->rid);
@@ -7993,7 +7993,7 @@ BUILDIN(gettimetick) { /* Asgard Version */
 		case 0:
 		default:
 			//type 0:(System Ticks)
-			script_pushint(st,timer->gettick());
+			script_pushint(st,(int)timer->gettick()); // TODO: change this to int64 when we'll support 64 bit script values
 			break;
 	}
 	return true;
@@ -8821,7 +8821,7 @@ BUILDIN(getnpctimer) {
 	}
 	
 	switch( type ) {
-		case 0: val = npc->gettimerevent_tick(nd); break;
+		case 0: val = (int)npc->gettimerevent_tick(nd); break; // FIXME: change this to int64 when we'll support 64 bit script values
 		case 1:
 			if( nd->u.scr.rid ) {
 				sd = map->id2sd(nd->u.scr.rid);
@@ -9505,7 +9505,7 @@ BUILDIN(getstatus)
 			
 			if( td ) {
 				// return the amount of time remaining
-				script_pushint(st, td->tick - timer->gettick());
+				script_pushint(st, (int)(td->tick - timer->gettick())); // TODO: change this to int64 when we'll support 64 bit script values
 			}
 		}
 			break;
@@ -12688,7 +12688,7 @@ BUILDIN(summon)
 	const char *str,*event="";
 	TBL_PC *sd;
 	struct mob_data *md;
-	int tick = timer->gettick();
+	int64 tick = timer->gettick();
 	
 	sd=script->rid2sd(st);
 	if (!sd) return true;
@@ -14543,7 +14543,7 @@ BUILDIN(checkidle) {
 		sd = script->rid2sd(st);
 	
 	if (sd)
-		script_pushint(st, DIFF_TICK(last_tick, sd->idletime));
+		script_pushint(st, DIFF_TICK32(last_tick, sd->idletime)); // TODO: change this to int64 when we'll support 64 bit script values
 	else
 		script_pushint(st, 0);
 	

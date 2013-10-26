@@ -1686,7 +1686,7 @@ struct skill_unit_group {
 	int map;
 	int target_flag; //Holds BCT_* flag for battle_check_target
 	int bl_flag;	//Holds BL_* flag for map_foreachin* functions
-	unsigned int tick;
+	int64 tick;
 	int limit,interval;
 	
 	uint16 skill_id,skill_lv;
@@ -1715,7 +1715,7 @@ struct skill_unit {
 };
 
 struct skill_unit_group_tickset {
-	unsigned int tick;
+	int64 tick;
 	int id;
 };
 
@@ -1750,7 +1750,7 @@ struct skill_cd_entry {
 	int total;/* used for display on newer clients */
 #endif
 	short skidx;//the skill index entries belong to
-	unsigned int started;/* gettick() of when it started, used vs duration to measure how much left upon logout */
+	int64 started;/* gettick() of when it started, used vs duration to measure how much left upon logout */
 	int timer;/* timer id */
 	uint16 skill_id;//skill id
 };
@@ -1791,7 +1791,7 @@ struct s_skill_spellbook_db {
 	int point;
 };
 
-typedef int (*SkillFunc)(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, unsigned int tick, int flag);
+typedef int (*SkillFunc)(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 
 /**
  * Skill.c Interface
@@ -1883,13 +1883,13 @@ struct skill_interface {
 	int (*get_casttype2) (uint16 index);
 	int (*name2id) (const char* name);
 	int (*isammotype) (struct map_session_data *sd, int skill);
-	int (*castend_id) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*castend_pos) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*castend_id) (int tid, int64 tick, int id, intptr_t data);
+	int (*castend_pos) (int tid, int64 tick, int id, intptr_t data);
 	int (*castend_map) ( struct map_session_data *sd,uint16 skill_id, const char *mapname);
 	int (*cleartimerskill) (struct block_list *src);
-	int (*addtimerskill) (struct block_list *src,unsigned int tick,int target,int x,int y,uint16 skill_id,uint16 skill_lv,int type,int flag);
-	int (*additional_effect) ( struct block_list* src, struct block_list *bl,uint16 skill_id,uint16 skill_lv,int attack_type,int dmg_lv,unsigned int tick);
-	int (*counter_additional_effect) ( struct block_list* src, struct block_list *bl,uint16 skill_id,uint16 skill_lv,int attack_type,unsigned int tick);
+	int (*addtimerskill) (struct block_list *src, int64 tick, int target, int x, int y, uint16 skill_id, uint16 skill_lv, int type, int flag);
+	int (*additional_effect) (struct block_list* src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int attack_type, int dmg_lv, int64 tick);
+	int (*counter_additional_effect) (struct block_list* src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int attack_type, int64 tick);
 	int (*blown) (struct block_list* src, struct block_list* target, int count, int8 dir, int flag);
 	int (*break_equip) (struct block_list *bl, unsigned short where, int rate, int flag);
 	int (*strip_equip) (struct block_list *bl, unsigned short where, int rate, int lv, int time);
@@ -1901,8 +1901,8 @@ struct skill_interface {
 	int (*del_unitgroup) (struct skill_unit_group *group, const char* file, int line, const char* func);
 	int (*clear_unitgroup) (struct block_list *src);
 	int (*clear_group) (struct block_list *bl, int flag);
-	int (*unit_onplace) (struct skill_unit *src, struct block_list *bl, unsigned int tick);
-	int (*unit_ondamaged) (struct skill_unit *src,struct block_list *bl,int64 damage,unsigned int tick);
+	int (*unit_onplace) (struct skill_unit *src, struct block_list *bl, int64 tick);
+	int (*unit_ondamaged) (struct skill_unit *src, struct block_list *bl, int64 damage, int64 tick);
 	int (*cast_fix) ( struct block_list *bl, uint16 skill_id, uint16 skill_lv);
 	int (*cast_fix_sc) ( struct block_list *bl, int time);
 	int (*vf_cast_fix) ( struct block_list *bl, double time, uint16 skill_id, uint16 skill_lv);
@@ -1912,12 +1912,12 @@ struct skill_interface {
 	int (*consume_requirement) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, short type);
 	struct skill_condition (*get_requirement) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv);
 	int (*check_pc_partner) (struct map_session_data *sd, uint16 skill_id, uint16* skill_lv, int range, int cast_flag);
-	int (*unit_move) (struct block_list *bl,unsigned int tick,int flag);
-	int (*unit_onleft) (uint16 skill_id, struct block_list *bl,unsigned int tick);
-	int (*unit_onout) (struct skill_unit *src, struct block_list *bl, unsigned int tick);
+	int (*unit_move) (struct block_list *bl, int64 tick, int flag);
+	int (*unit_onleft) (uint16 skill_id, struct block_list *bl, int64 tick);
+	int (*unit_onout) (struct skill_unit *src, struct block_list *bl, int64 tick);
 	int (*unit_move_unit_group) ( struct skill_unit_group *group, int16 m,int16 dx,int16 dy);
 	int (*sit) (struct map_session_data *sd, int type);
-	void (*brandishspear) (struct block_list* src, struct block_list* bl, uint16 skill_id, uint16 skill_lv, unsigned int tick, int flag);
+	void (*brandishspear) (struct block_list* src, struct block_list* bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 	void (*repairweapon) (struct map_session_data *sd, int idx);
 	void (*identify) (struct map_session_data *sd,int idx);
 	void (*weaponrefine) (struct map_session_data *sd,int idx);
@@ -1932,25 +1932,25 @@ struct skill_interface {
 	int (*can_produce_mix) ( struct map_session_data *sd, int nameid, int trigger, int qty);
 	int (*produce_mix) ( struct map_session_data *sd, uint16 skill_id, int nameid, int slot1, int slot2, int slot3, int qty );
 	int (*arrow_create) ( struct map_session_data *sd,int nameid);
-	int (*castend_nodamage_id) ( struct block_list *src, struct block_list *bl,uint16 skill_id,uint16 skill_lv,unsigned int tick,int flag );
-	int (*castend_damage_id) ( struct block_list* src, struct block_list *bl,uint16 skill_id,uint16 skill_lv,unsigned int tick,int flag );
-	int (*castend_pos2) ( struct block_list *src, int x,int y,uint16 skill_id,uint16 skill_lv,unsigned int tick,int flag);
+	int (*castend_nodamage_id) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
+	int (*castend_damage_id) (struct block_list* src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick,int flag);
+	int (*castend_pos2) (struct block_list *src, int x, int y, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 	int (*blockpc_start) (struct map_session_data *sd, uint16 skill_id, int tick);
 	int (*blockhomun_start) (struct homun_data *hd, uint16 skill_id, int tick);
 	int (*blockmerc_start) (struct mercenary_data *md, uint16 skill_id, int tick);
-	int (*attack) ( int attack_type, struct block_list* src, struct block_list *dsrc,struct block_list *bl,uint16 skill_id,uint16 skill_lv,unsigned int tick,int flag );
+	int (*attack) (int attack_type, struct block_list* src, struct block_list *dsrc, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 	int (*attack_area) (struct block_list *bl,va_list ap);
 	int (*area_sub) (struct block_list *bl, va_list ap);
-	int (*area_sub_count) (struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, unsigned int tick, int flag);
+	int (*area_sub_count) (struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 	int (*check_unit_range) (struct block_list *bl, int x, int y, uint16 skill_id, uint16 skill_lv);
 	int (*check_unit_range_sub) (struct block_list *bl, va_list ap);
 	int (*check_unit_range2) (struct block_list *bl, int x, int y, uint16 skill_id, uint16 skill_lv);
 	int (*check_unit_range2_sub) (struct block_list *bl, va_list ap);
 	void (*toggle_magicpower) (struct block_list *bl, uint16 skill_id);
 	int (*magic_reflect) (struct block_list* src, struct block_list* bl, int type);
-	int (*onskillusage) (struct map_session_data *sd, struct block_list *bl, uint16 skill_id, unsigned int tick);
+	int (*onskillusage) (struct map_session_data *sd, struct block_list *bl, uint16 skill_id, int64 tick);
 	int (*cell_overlap) (struct block_list *bl, va_list ap);
-	int (*timerskill) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*timerskill) (int tid, int64 tick, int id, intptr_t data);
 	int (*trap_splash) (struct block_list *bl, va_list ap);
 	int (*check_condition_mercenary) (struct block_list *bl, int skill_id, int lv, int type);
 	struct skill_unit_group *(*locate_element_field) (struct block_list *bl);
@@ -1963,26 +1963,26 @@ struct skill_interface {
 	int (*greed) (struct block_list *bl, va_list ap);
 	int (*destroy_trap) ( struct block_list *bl, va_list ap );
 	int (*icewall_block) (struct block_list *bl,va_list ap);
-	struct skill_unit_group_tickset *(*unitgrouptickset_search) (struct block_list *bl, struct skill_unit_group *group, int tick);
+	struct skill_unit_group_tickset *(*unitgrouptickset_search) (struct block_list *bl, struct skill_unit_group *group, int64 tick);
 	bool (*dance_switch) (struct skill_unit* su, int flag);
 	int (*check_condition_char_sub) (struct block_list *bl, va_list ap);
 	int (*check_condition_mob_master_sub) (struct block_list *bl, va_list ap);
 	void (*brandishspear_first) (struct square *tc, uint8 dir, int16 x, int16 y);
 	void (*brandishspear_dir) (struct square* tc, uint8 dir, int are);
-	int	(*get_fixed_cast) ( uint16 skill_id ,uint16 skill_lv );
+	int (*get_fixed_cast) ( uint16 skill_id ,uint16 skill_lv );
 	int (*sit_count) (struct block_list *bl, va_list ap);
 	int (*sit_in) (struct block_list *bl, va_list ap);
 	int (*sit_out) (struct block_list *bl, va_list ap);
 	void (*unitsetmapcell) (struct skill_unit *src, uint16 skill_id, uint16 skill_lv, cell_t cell, bool flag);
-	int (*unit_onplace_timer) (struct skill_unit *src, struct block_list *bl, unsigned int tick);
+	int (*unit_onplace_timer) (struct skill_unit *src, struct block_list *bl, int64 tick);
 	int (*unit_effect) (struct block_list* bl, va_list ap);
 	int (*unit_timer_sub_onplace) (struct block_list* bl, va_list ap);
 	int (*unit_move_sub) (struct block_list* bl, va_list ap);
-	int (*blockpc_end) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*blockhomun_end) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*blockmerc_end) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*blockpc_end) (int tid, int64 tick, int id, intptr_t data);
+	int (*blockhomun_end) (int tid, int64 tick, int id, intptr_t data);
+	int (*blockmerc_end) (int tid, int64 tick, int id, intptr_t data);
 	int (*split_atoi) (char *str, int *val);
-	int (*unit_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*unit_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*unit_timer_sub) (DBKey key, DBData *data, va_list ap);
 	void (*init_unit_layout) (void);
 	bool (*parse_row_skilldb) (char* split[], int columns, int current);

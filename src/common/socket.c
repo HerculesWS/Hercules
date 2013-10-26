@@ -896,7 +896,7 @@ int do_sockets(int next)
 typedef struct _connect_history {
 	struct _connect_history* next;
 	uint32 ip;
-	uint32 tick;
+	int64 tick;
 	int count;
 	unsigned ddos : 1;
 } ConnectHistory;
@@ -1043,8 +1043,7 @@ static int connect_check_(uint32 ip)
 
 /// Timer function.
 /// Deletes old connection history records.
-static int connect_check_clear(int tid, unsigned int tick, int id, intptr_t data)
-{
+static int connect_check_clear(int tid, int64 tick, int id, intptr_t data) {
 	int i;
 	int clear = 0;
 	int list  = 0;

@@ -22,7 +22,7 @@
 static DBMap* auction_db_ = NULL; // int auction_id -> struct auction_data*
 
 void auction_delete(struct auction_data *auction);
-static int auction_end_timer(int tid, unsigned int tick, int id, intptr_t data);
+static int auction_end_timer(int tid, int64 tick, int id, intptr_t data);
 
 static int auction_count(int char_id, bool buy)
 {
@@ -108,7 +108,7 @@ unsigned int auction_create(struct auction_data *auction)
 	else
 	{
 		struct auction_data *auction_;
-		unsigned int tick = auction->hours * 3600000;
+		int64 tick = auction->hours * 3600000;
 
 		auction->item.amount = 1;
 		auction->item.identify = 1;
@@ -139,8 +139,7 @@ static void mapif_Auction_message(int char_id, unsigned char result)
 	mapif_sendall(buf,7);
 }
 
-static int auction_end_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+static int auction_end_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct auction_data *auction;
 	if( (auction = (struct auction_data *)idb_get(auction_db_, id)) != NULL )
 	{
@@ -182,7 +181,7 @@ void inter_auctions_fromsql(void)
 	struct item *item;
 	char *data;
 	StringBuf buf;
-	unsigned int tick = timer->gettick(), endtick;
+	int64 tick = timer->gettick(), endtick;
 	time_t now = time(NULL);
 
 	StrBuf->Init(&buf);
@@ -230,7 +229,7 @@ void inter_auctions_fromsql(void)
 		}
 
 		if( auction->timestamp > now )
-			endtick = ((unsigned int)(auction->timestamp - now) * 1000) + tick;
+			endtick = ((int64)(auction->timestamp - now) * 1000) + tick;
 		else
 			endtick = tick + 10000; // 10 Second's to process ended auctions
 

@@ -34,7 +34,7 @@ struct mapreg_interface {
 	bool (*setregstr) (int uid, const char *str);
 	void (*load) (void);
 	void (*save) (void);
-	int (*save_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*save_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*reload) (void);
 	bool (*config_read) (const char *w1, const char *w2);
 };
