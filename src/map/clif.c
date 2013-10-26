@@ -12233,7 +12233,7 @@ void clif_parse_PartyMessage(int fd, struct map_session_data* sd)
 /// Changes Party Leader (CZ_CHANGE_GROUP_MASTER).
 /// 07da <account id>.L
 void clif_parse_PartyChangeLeader(int fd, struct map_session_data* sd) {
-	party->changeleader(sd, map->id2sd(RFIFOL(fd,2)));
+	party->changeleader(sd, map->id2sd(RFIFOL(fd,2)),NULL);
 }
 
 /// Party Booking in KRO [Spiria]

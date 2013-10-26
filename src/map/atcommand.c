@@ -5496,7 +5496,7 @@ ACMD(changeleader) {
 		return false;
 	}
 	
-	if (party->changeleader(sd, map->nick2sd((char *) message)))
+	if (party->changeleader(sd, map->nick2sd((char *) message),NULL))
 		return true;
 	return false;
 }
