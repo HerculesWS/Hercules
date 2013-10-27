@@ -9246,10 +9246,6 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 	if( !(sd->sc.option&OPTION_INVISIBLE) ) { // increment the number of pvp players on the map
 		map->list[sd->bl.m].users_pvp++;
 	}
-	if( map->list[sd->bl.m].instance_id >= 0 ) {
-		instance->list[map->list[sd->bl.m].instance_id].users++;
-		instance->check_idle(map->list[sd->bl.m].instance_id);
-	}
 	sd->state.debug_remove_map = 0; // temporary state to track double remove_map's [FlavioJS]
 
 	// reset the callshop flag if the player changes map
@@ -9439,6 +9435,10 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 			clif->broadcast(&sd->bl, output, strlen(output) + 1, BC_BLUE, SELF);
 		}
 
+		if( map->list[sd->bl.m].instance_id >= 0 ) {
+			instance->list[map->list[sd->bl.m].instance_id].users++;
+			instance->check_idle(map->list[sd->bl.m].instance_id);
+		}
 		map->iwall_get(sd); // Updates Walls Info on this Map to Client
 		status_calc_pc(sd, false);/* some conditions are map-dependent so we must recalculate */
 		sd->state.changemap = false;
