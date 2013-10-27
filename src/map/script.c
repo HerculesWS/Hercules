@@ -14015,7 +14015,7 @@ int buildin_query_sql_sub(struct script_state* st, Sql* handle)
 	
 	if( SQL_ERROR == SQL->QueryStr(handle, query) ) {
 		Sql_ShowDebug(handle);
-		script_pushint(st, 0);
+		st->state = END;
 		return false;
 	}
 	
