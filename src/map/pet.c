@@ -656,7 +656,7 @@ int pet_equipitem(struct map_session_data *sd,int index) {
 	nameid = sd->status.inventory[index].nameid;
 	
 	if(pd->petDB->AcceID == 0 || nameid != pd->petDB->AcceID || pd->pet.equip != 0) {
-		clif->equipitemack(sd,0,0,0);
+		clif->equipitemack(sd,0,0,EIA_FAIL);
 		return 1;
 	}
 

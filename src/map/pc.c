@@ -611,6 +611,8 @@ int pc_equippoint(struct map_session_data *sd,int n)
 		if(ep == EQP_HAND_R && (pc->checkskill(sd,AS_LEFT) > 0 || (sd->class_&MAPID_UPPERMASK) == MAPID_ASSASSIN ||
 			(sd->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO))//Kagerou and Oboro can dual wield daggers. [Rytech]
 			return EQP_ARMS;
+		if( ep == EQP_SHADOW_SHIELD )/* are there conditions for those? */
+			return EQP_SHADOW_WEAPON|EQP_SHADOW_SHIELD;
 	}
 	return ep;
 }
@@ -8526,13 +8528,13 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 	nullpo_ret(sd);
 
 	if( n < 0 || n >= MAX_INVENTORY ) {
-		clif->equipitemack(sd,0,0,0);
+		clif->equipitemack(sd,0,0,EIA_FAIL);
 		return 0;
 	}
 
 	if( DIFF_TICK(sd->canequip_tick,timer->gettick()) > 0 )
 	{
-		clif->equipitemack(sd,n,0,0);
+		clif->equipitemack(sd,n,0,EIA_FAIL);
 		return 0;
 	}
 
@@ -8543,13 +8545,13 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 		ShowInfo("equip %d(%d) %x:%x\n",sd->status.inventory[n].nameid,n,id?id->equip:0,req_pos);
 	if(!pc->isequip(sd,n) || !(pos&req_pos) || sd->status.inventory[n].equip != 0 || sd->status.inventory[n].attribute==1 ) { // [Valaris]
 		// FIXME: pc->isequip: equip level failure uses 2 instead of 0
-		clif->equipitemack(sd,n,0,0);	// fail
+		clif->equipitemack(sd,n,0,EIA_FAIL);	// fail
 		return 0;
 	}
 
 	if (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_SATURDAY_NIGHT_FEVER])
 	{
-		clif->equipitemack(sd,n,0,0);	// fail
+		clif->equipitemack(sd,n,0,EIA_FAIL);	// fail
 		return 0;
 	}
 
@@ -8589,7 +8591,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 		clif->arrow_fail(sd,3);
 	}
 	else
-		clif->equipitemack(sd,n,pos,1);
+		clif->equipitemack(sd,n,pos,EIA_SUCCESS);
 
 	sd->status.inventory[n].equip=pos;
 
@@ -8738,20 +8740,20 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 	nullpo_ret(sd);
 
 	if( n < 0 || n >= MAX_INVENTORY ) {
-		clif->unequipitemack(sd,0,0,0);
+		clif->unequipitemack(sd,0,0,UIA_FAIL);
 		return 0;
 	}
 
 	// if player is berserk then cannot unequip
 	if (!(flag & 2) && sd->sc.count && (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_SATURDAY_NIGHT_FEVER]))
 	{
-		clif->unequipitemack(sd,n,0,0);
+		clif->unequipitemack(sd,n,0,UIA_FAIL);
 		return 0;
 	}
 
 	if( !(flag&2) && sd->sc.count && sd->sc.data[SC_KYOUGAKU] )
 	{
-		clif->unequipitemack(sd,n,0,0);
+		clif->unequipitemack(sd,n,0,UIA_FAIL);
 		return 0;
 	}
 
@@ -8759,7 +8761,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 		ShowInfo("unequip %d %x:%x\n",n,pc->equippoint(sd,n),sd->status.inventory[n].equip);
 
 	if(!sd->status.inventory[n].equip){ //Nothing to unequip
-		clif->unequipitemack(sd,n,0,0);
+		clif->unequipitemack(sd,n,0,UIA_FAIL);
 		return 0;
 	}
 	for(i=0;i<EQI_MAX;i++) {
@@ -8821,7 +8823,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 		clif->changelook(&sd->bl,LOOK_ROBE,sd->status.robe);
 	}
 	
-	clif->unequipitemack(sd,n,sd->status.inventory[n].equip,1);
+	clif->unequipitemack(sd,n,sd->status.inventory[n].equip,UIA_SUCCESS);
 
 	if((sd->status.inventory[n].equip & EQP_ARMS) &&
 		sd->weapontype1 == 0 && sd->weapontype2 == 0 && (!sd->sc.data[SC_TK_SEVENWIND] || sd->sc.data[SC_ASPERSIO])) //Check for seven wind (but not level seven!)

@@ -426,6 +426,29 @@ enum e_BANKING_WITHDRAW_ACK {
 	BWA_UNKNOWN_ERROR = 0x2,
 };
 
+/* because the client devs were replaced by monkeys. */
+enum e_EQUIP_ITEM_ACK {
+#if PACKETVER >= 20120925
+	EIA_SUCCESS = 0x0,
+	EIA_FAIL_LV = 0x1,
+	EIA_FAIL    = 0x2,
+#else
+	EIA_SUCCESS = 0x1,
+	EIA_FAIL_LV = 0x2,
+	EIA_FAIL    = 0x0,
+#endif
+};
+
+/* and again. because the client devs were replaced by monkeys. */
+enum e_UNEQUIP_ITEM_ACK {
+#if PACKETVER >= 20120925
+	UIA_SUCCESS = 0x0,
+	UIA_FAIL    = 0x1,
+#else
+	UIA_SUCCESS = 0x1,
+	UIA_FAIL    = 0x0,
+#endif
+};
 
 /**
  * Structures
@@ -529,8 +552,8 @@ struct clif_interface {
 	void (*use_card) (struct map_session_data *sd,int idx);
 	void (*cart_additem) (struct map_session_data *sd,int n,int amount,int fail);
 	void (*cart_delitem) (struct map_session_data *sd,int n,int amount);
-	void (*equipitemack) (struct map_session_data *sd,int n,int pos,int ok);
-	void (*unequipitemack) (struct map_session_data *sd,int n,int pos,int ok);
+	void (*equipitemack) (struct map_session_data *sd,int n,int pos,enum e_EQUIP_ITEM_ACK result);
+	void (*unequipitemack) (struct map_session_data *sd,int n,int pos,enum e_UNEQUIP_ITEM_ACK result);
 	void (*useitemack) (struct map_session_data *sd,int index,int amount,bool ok);
 	void (*addcards) (unsigned char* buf, struct item* item);
 	void (*addcards2) (unsigned short *cards, struct item* item);

@@ -216,7 +216,7 @@ struct item {
 	int id;
 	short nameid;
 	short amount;
-	unsigned short equip; // Location(s) where item is equipped (using enum equip_pos for bitmasking).
+	unsigned int equip; // Location(s) where item is equipped (using enum equip_pos for bitmasking).
 	char identify;
 	char refine;
 	char attribute;
@@ -838,6 +838,14 @@ enum ammo_type {
 	A_THROWWEAPON	//9
 };
 
+/* packet size constant for itemlist */
+#if MAX_INVENTORY > MAX_STORAGE && MAX_INVENTORY > MAX_CART
+#define MAX_ITEMLIST MAX_INVENTORY
+#elif MAX_CART > MAX_INVENTORY && MAX_CART > MAX_STORAGE
+#define MAX_ITEMLIST MAX_CART
+#else
+#define MAX_ITEMLIST MAX_STORAGE
+#endif
 
 // sanity checks...
 #if MAX_ZENY > INT_MAX

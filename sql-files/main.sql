@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `cart_inventory` (
   `char_id` int(11) NOT NULL default '0',
   `nameid` int(11) NOT NULL default '0',
   `amount` int(11) NOT NULL default '0',
-  `equip` mediumint(8) unsigned NOT NULL default '0',
+  `equip` int(11) unsigned NOT NULL default '0',
   `identify` smallint(6) NOT NULL default '0',
   `refine` tinyint(3) unsigned NOT NULL default '0',
   `attribute` tinyint(4) NOT NULL default '0',
@@ -332,7 +332,7 @@ CREATE TABLE IF NOT EXISTS `guild_storage` (
   `guild_id` int(11) unsigned NOT NULL default '0',
   `nameid` int(11) unsigned NOT NULL default '0',
   `amount` int(11) unsigned NOT NULL default '0',
-  `equip` mediumint(8) unsigned NOT NULL default '0',
+  `equip` int(11) unsigned NOT NULL default '0',
   `identify` smallint(6) unsigned NOT NULL default '0',
   `refine` tinyint(3) unsigned NOT NULL default '0',
   `attribute` tinyint(4) unsigned NOT NULL default '0',
@@ -395,7 +395,7 @@ CREATE TABLE IF NOT EXISTS `inventory` (
   `char_id` int(11) unsigned NOT NULL default '0',
   `nameid` int(11) unsigned NOT NULL default '0',
   `amount` int(11) unsigned NOT NULL default '0',
-  `equip` mediumint(8) unsigned NOT NULL default '0',
+  `equip` int(11) unsigned NOT NULL default '0',
   `identify` smallint(6) NOT NULL default '0',
   `refine` tinyint(3) unsigned NOT NULL default '0',
   `attribute` tinyint(4) unsigned NOT NULL default '0',
@@ -659,6 +659,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1366075474);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1366078541);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1381354728);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1381423003);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1382892428);
 
 --
 -- Table structure for table `sstatus`
@@ -679,7 +680,7 @@ CREATE TABLE IF NOT EXISTS `storage` (
   `account_id` int(11) unsigned NOT NULL default '0',
   `nameid` int(11) unsigned NOT NULL default '0',
   `amount` smallint(11) unsigned NOT NULL default '0',
-  `equip` mediumint(8) unsigned NOT NULL default '0',
+  `equip` int(11) unsigned NOT NULL default '0',
   `identify` smallint(6) unsigned NOT NULL default '0',
   `refine` tinyint(3) unsigned NOT NULL default '0',
   `attribute` tinyint(4) unsigned NOT NULL default '0',
