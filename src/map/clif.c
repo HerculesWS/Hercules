@@ -289,7 +289,7 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 	len = va_arg(ap,int);
 	nullpo_ret(src_bl = va_arg(ap,struct block_list*));
 	type = va_arg(ap,int);
-
+	
 	switch(type) {
 		case AREA_WOS:
 			if (bl == src_bl)
@@ -320,6 +320,10 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 			break;
 #endif
 	}
+
+	/* unless visible, hold it here */
+	if( clif->ally_only && !sd->special_state.intravision && battle->check_target( src_bl, &sd->bl, BCT_ENEMY ) > 0 )
+		return 0;
 
 	WFIFOHEAD(fd, len);
 	if (WFIFOP(fd,0) == buf) {
@@ -1539,6 +1543,10 @@ void clif_walkok(struct map_session_data *sd)
 
 
 void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_data *ud) {
+	struct status_change *sc = NULL;
+	
+	if( (sc = status->get_sc(bl)) && sc->option&(OPTION_HIDE|OPTION_CLOAK|OPTION_INVISIBLE|OPTION_CHASEWALK) )
+		clif->ally_only = true;
 
 	clif->set_unit_walking(bl,NULL,ud,AREA_WOS);
 
@@ -1570,6 +1578,8 @@ void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_data *u
 				clif->send_petdata(NULL, (TBL_PET*)bl, 3, vd->head_bottom);
 			break;
 	}
+	
+	clif->ally_only = false;
 }
 
 
@@ -1579,9 +1589,9 @@ void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_data *u
 void clif_move(struct unit_data *ud)
 {
 	unsigned char buf[16];
-	struct view_data* vd;
-	struct block_list* bl = ud->bl;
-
+	struct view_data *vd;
+	struct block_list *bl = ud->bl;
+	struct status_change *sc = NULL;
 	vd = status->get_viewdata(bl);
 	if (!vd || vd->class_ == INVISIBLE_CLASS)
 		return; //This performance check is needed to keep GM-hidden objects from being notified to bots.
@@ -1599,6 +1609,9 @@ void clif_move(struct unit_data *ud)
 		clif->move2(bl, vd, ud);
 		return;
 	}
+	
+	if( (sc = status->get_sc(bl)) && sc->option&(OPTION_HIDE|OPTION_CLOAK|OPTION_INVISIBLE|OPTION_CHASEWALK) )
+		clif->ally_only = true;
 
 	WBUFW(buf,0)=0x86;
 	WBUFL(buf,2)=bl->id;
@@ -1609,6 +1622,8 @@ void clif_move(struct unit_data *ud)
 		WBUFL(buf,2)=-bl->id;
 		clif->send(buf, packet_len(0x86), bl, SELF);
 	}
+	
+	clif->ally_only = false;
 }
 
 
@@ -1686,11 +1701,11 @@ void clif_blown(struct block_list *bl)
 /// isn't walkable, the char doesn't move at all. If the char is
 /// sitting it will stand up (ZC_STOPMOVE).
 /// 0088 <id>.L <x>.W <y>.W
-void clif_fixpos(struct block_list *bl)
-{
+void clif_fixpos(struct block_list *bl) {
 	unsigned char buf[10];
+	
 	nullpo_retv(bl);
-
+	
 	WBUFW(buf,0) = 0x88;
 	WBUFL(buf,2) = bl->id;
 	WBUFW(buf,6) = bl->x;
@@ -4723,7 +4738,7 @@ int clif_insight(struct block_list *bl,va_list ap)
 	tsd = BL_CAST(BL_PC, tbl);
 
 	if (tsd && tsd->fd) { //Tell tsd that bl entered into his view
-		switch(bl->type){
+		switch(bl->type) {
 			case BL_ITEM:
 				clif->getareachar_item(tsd,(struct flooritem_data*)bl);
 				break;
@@ -9244,9 +9259,11 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 
 	if( map->list[sd->bl.m].users++ == 0 && battle_config.dynamic_mobs )
 		map->spawnmobs(sd->bl.m);
+	
 	if( !(sd->sc.option&OPTION_INVISIBLE) ) { // increment the number of pvp players on the map
 		map->list[sd->bl.m].users_pvp++;
 	}
+	
 	sd->state.debug_remove_map = 0; // temporary state to track double remove_map's [FlavioJS]
 
 	// reset the callshop flag if the player changes map
@@ -18089,6 +18106,7 @@ void clif_defaults(void) {
 	/* vars */
 	clif->bind_ip = INADDR_ANY;
 	clif->map_port = 5121;
+	clif->ally_only = false;
 	/* core */
 	clif->init = do_init_clif;
 	clif->final = do_final_clif;

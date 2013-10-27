@@ -523,6 +523,8 @@ struct clif_interface {
 	} cs;
 	/* */
 	unsigned int cryptKey[3];
+	/* */
+	bool ally_only;
 	/* core */
 	int (*init) (void);
 	void (*final) (void);
