@@ -1930,6 +1930,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->removecombo, HP_pc_removecombo) },
 	{ HP_POP(pc->bank_deposit, HP_pc_bank_deposit) },
 	{ HP_POP(pc->bank_withdraw, HP_pc_bank_withdraw) },
+	{ HP_POP(pc->rental_expire, HP_pc_rental_expire) },
+	{ HP_POP(pc->scdata_received, HP_pc_scdata_received) },
 /* pet */
 	{ HP_POP(pet->init, HP_pet_init) },
 	{ HP_POP(pet->final, HP_pet_final) },
