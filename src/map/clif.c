@@ -2916,7 +2916,8 @@ void clif_updatestatus(struct map_session_data *sd,int type)
 		case SP_HP:
 			WFIFOL(fd,4)=sd->battle_status.hp;
 			// TODO: Won't these overwrite the current packet?
-			clif->hpmeter(sd);
+			if( map->list[sd->bl.m].hpmeter_visible )
+				clif->hpmeter(sd);
 			if( !battle_config.party_hp_mode && sd->status.party_id )
 				clif->party_hp(sd);
 			if( sd->bg_id )
@@ -9439,6 +9440,12 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 			instance->list[map->list[sd->bl.m].instance_id].users++;
 			instance->check_idle(map->list[sd->bl.m].instance_id);
 		}
+		
+		if( pc->has_permission(sd,PC_PERM_VIEW_HPMETER) ) {
+			map->list[sd->bl.m].hpmeter_visible++;
+			sd->state.hpmeter_visible = 1;
+		}
+		
 		map->iwall_get(sd); // Updates Walls Info on this Map to Client
 		status_calc_pc(sd, false);/* some conditions are map-dependent so we must recalculate */
 		sd->state.changemap = false;

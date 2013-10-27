@@ -177,6 +177,7 @@ struct map_session_data {
 		unsigned int workinprogress : 3; // 1 = disable skill/item, 2 = disable npc interaction, 3 = disable both
 		unsigned int hold_recalc : 1;
 		unsigned int snovice_call_flag : 3; //Summon Angel (stage 1~3)
+		unsigned int hpmeter_visible : 1;
 	} state;
 	struct {
 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;
@@ -545,7 +546,7 @@ enum equip_pos {
 	EQP_COSTUME_HEAD_TOP   = 0x000400, //1024
 	EQP_COSTUME_HEAD_MID   = 0x000800, //2048
 	EQP_COSTUME_HEAD_LOW   = 0x001000, //4096
-	EQP_COSTUME_GARMENT	   = 0x002000, //8192
+	EQP_COSTUME_GARMENT    = 0x002000, //8192
 	//UNUSED_COSTUME_FLOOR = 0x004000, //16384
 	EQP_AMMO               = 0x008000, //32768
 	EQP_SHADOW_ARMOR       = 0x010000, //65536
