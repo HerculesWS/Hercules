@@ -831,8 +831,7 @@ int party_skill_check(struct map_session_data *sd, int party_id, uint16 skill_id
 	return 0;
 }
 
-int party_send_xy_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+int party_send_xy_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct party_data* p;
 
 	DBIterator *iter = db_iterator(party->db);

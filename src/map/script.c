@@ -3184,7 +3184,7 @@ void script_stop_instances(struct script_code *code) {
 /*==========================================
  * Timer function for sleep
  *------------------------------------------*/
-int run_script_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int run_script_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct script_state *st     = idb_get(script->st_db,(int)data);
 	if( st ) {
 		TBL_PC *sd = map->id2sd(st->rid);
@@ -7993,7 +7993,7 @@ BUILDIN(gettimetick) { /* Asgard Version */
 		case 0:
 		default:
 			//type 0:(System Ticks)
-			script_pushint(st,timer->gettick());
+			script_pushint(st,(int)timer->gettick()); // TODO: change this to int64 when we'll support 64 bit script values
 			break;
 	}
 	return true;
@@ -8821,7 +8821,7 @@ BUILDIN(getnpctimer) {
 	}
 	
 	switch( type ) {
-		case 0: val = npc->gettimerevent_tick(nd); break;
+		case 0: val = (int)npc->gettimerevent_tick(nd); break; // FIXME: change this to int64 when we'll support 64 bit script values
 		case 1:
 			if( nd->u.scr.rid ) {
 				sd = map->id2sd(nd->u.scr.rid);
@@ -9505,7 +9505,7 @@ BUILDIN(getstatus)
 			
 			if( td ) {
 				// return the amount of time remaining
-				script_pushint(st, td->tick - timer->gettick());
+				script_pushint(st, (int)(td->tick - timer->gettick())); // TODO: change this to int64 when we'll support 64 bit script values
 			}
 		}
 			break;
@@ -12688,7 +12688,7 @@ BUILDIN(summon)
 	const char *str,*event="";
 	TBL_PC *sd;
 	struct mob_data *md;
-	int tick = timer->gettick();
+	int64 tick = timer->gettick();
 	
 	sd=script->rid2sd(st);
 	if (!sd) return true;
@@ -14543,7 +14543,7 @@ BUILDIN(checkidle) {
 		sd = script->rid2sd(st);
 	
 	if (sd)
-		script_pushint(st, DIFF_TICK(last_tick, sd->idletime));
+		script_pushint(st, DIFF_TICK32(last_tick, sd->idletime)); // TODO: change this to int64 when we'll support 64 bit script values
 	else
 		script_pushint(st, 0);
 	
@@ -15456,12 +15456,82 @@ BUILDIN(readbook)
  Questlog script commands
  *******************/
 
+BUILDIN(questinfo)
+{
+	struct npc_data *nd = map->id2nd(st->oid);
+	int quest, icon, job, color = 0;
+	struct questinfo qi;
+
+	if( nd == NULL || nd->bl.m == -1 )
+		return true;
+
+	quest = script_getnum(st, 2);
+	icon = script_getnum(st, 3);
+	
+	#if PACKETVER >= 20120410
+		if(icon < 0 || (icon > 8 && icon != 9999) || icon == 7)
+			icon = 9999;	// Default to nothing if icon id is invalid.
+	#else
+		if(icon < 0 || icon > 7)
+			icon = 0;
+		else
+			icon = icon + 1;
+	#endif
+	
+	qi.quest_id = quest;
+	qi.icon = (unsigned char)icon;
+	qi.nd = nd;
+		
+	if( script_hasdata(st, 4) ) {
+		color = script_getnum(st, 4);
+		if( color < 0 || color > 3 ) {
+			ShowWarning("buildin_questinfo: invalid color '%d', changing to 0\n",color);
+			script->reportfunc(st);
+			color = 0;
+		}
+		qi.color = (unsigned char)color;
+	}
+	
+	qi.hasJob = false;
+	
+	if(script_hasdata(st, 5)) {
+		job = script_getnum(st, 5);
+	
+		if (!pcdb_checkid(job))
+			ShowError("buildin_questinfo: Nonexistant Job Class.\n");
+		else {
+			qi.hasJob = true;
+			qi.job = (unsigned short)job;
+		}
+	}
+	
+	map->add_questinfo(nd->bl.m,&qi);
+
+	return true;
+}
+
 BUILDIN(setquest)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	nullpo_retr(false,sd);
+	unsigned short i;
 	
+	if (!sd)
+		return false;
+
 	quest->add(sd, script_getnum(st, 2));
+
+	// If questinfo is set, remove quest bubble once quest is set.
+	for(i = 0; i < map->list[sd->bl.m].qi_count; i++) {
+		struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
+		if( qi->quest_id == script_getnum(st, 2) ) {
+#if PACKETVER >= 20120410
+			clif->quest_show_event(sd, &qi->nd->bl, 9999, 0);
+#else
+			clif->quest_show_event(sd, &qi->nd->bl, 0, 0);
+#endif
+		}
+	}
+
 	return true;
 }
 
@@ -15510,17 +15580,32 @@ BUILDIN(checkquest)
 BUILDIN(showevent) {
 	TBL_PC *sd = script->rid2sd(st);
 	struct npc_data *nd = map->id2nd(st->oid);
-	int state, color;
+	int icon, color = 0;
 	
 	if( sd == NULL || nd == NULL )
 		return true;
-	state = script_getnum(st, 2);
-	color = script_getnum(st, 3);
+
+	icon = script_getnum(st, 2);
+	if( script_hasdata(st, 3) ) {
+		color = script_getnum(st, 3);
+		if( color < 0 || color > 3 ) {
+			ShowWarning("buildin_showevent: invalid color '%d', changing to 0\n",color);
+			script->reportfunc(st);
+			color = 0;
+		}
+	}
+
+	#if PACKETVER >= 20120410
+		if(icon < 0 || (icon > 8 && icon != 9999) || icon == 7)
+			icon = 9999;	// Default to nothing if icon id is invalid.
+	#else
+		if(icon < 0 || icon > 7)
+			icon = 0;
+		else
+			icon = icon + 1;
+	#endif
 	
-	if( color < 0 || color > 3 )
-		color = 0; // set default color
-	
-	clif->quest_show_event(sd, &nd->bl, state, color);
+	clif->quest_show_event(sd, &nd->bl, icon, color);
 	return true;
 }
 
@@ -18026,12 +18111,13 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(useatcmd, "s"),
 		
 		//Quest Log System [Inkfish]
+		BUILDIN_DEF(questinfo, "ii??"),
 		BUILDIN_DEF(setquest, "i"),
 		BUILDIN_DEF(erasequest, "i"),
 		BUILDIN_DEF(completequest, "i"),
 		BUILDIN_DEF(checkquest, "i?"),
 		BUILDIN_DEF(changequest, "ii"),
-		BUILDIN_DEF(showevent, "ii"),
+		BUILDIN_DEF(showevent, "i?"),
 		
 		/**
 		 * hQueue [Ind/Hercules]

@@ -354,9 +354,13 @@ simple_value:
   }
   ;
 
-value_list:
+value_list_sub:
     value
-  | value_list TOK_COMMA value
+  | value_list_sub TOK_COMMA value
+  ;
+
+value_list:
+    value_list_sub comma_optional
   ;
 
 value_list_optional:

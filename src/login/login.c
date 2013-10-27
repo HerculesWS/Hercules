@@ -81,7 +81,7 @@ struct online_login_data {
 };
 
 static DBMap* online_db; // int account_id -> struct online_login_data*
-static int waiting_disconnect_timer(int tid, unsigned int tick, int id, intptr_t data);
+static int waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data);
 
 /**
  * @see DBCreateData
@@ -121,8 +121,7 @@ void remove_online_user(int account_id)
 	idb_remove(online_db, account_id);
 }
 
-static int waiting_disconnect_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+static int waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct online_login_data* p = (struct online_login_data*)idb_get(online_db, id);
 	if( p != NULL && p->waiting_disconnect == tid && p->account_id == id )
 	{
@@ -165,8 +164,7 @@ static int online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
 	return 0;
 }
 
-static int online_data_cleanup(int tid, unsigned int tick, int id, intptr_t data)
-{
+static int online_data_cleanup(int tid, int64 tick, int id, intptr_t data) {
 	online_db->foreach(online_db, online_data_cleanup_sub);
 	return 0;
 } 
@@ -234,8 +232,7 @@ void chrif_on_disconnect(int id)
 //-----------------------------------------------------
 // periodic ip address synchronization
 //-----------------------------------------------------
-static int sync_ip_addresses(int tid, unsigned int tick, int id, intptr_t data)
-{
+static int sync_ip_addresses(int tid, int64 tick, int id, intptr_t data) {
 	uint8 buf[2];
 	ShowInfo("IP Sync in progress...\n");
 	WBUFW(buf,0) = 0x2735;
@@ -901,8 +898,8 @@ int parse_fromchar(int fd)
 //-------------------------------------
 int mmo_auth_new(const char* userid, const char* pass, const char sex, const char* last_ip) {
 	static int num_regs = 0; // registration counter
-	static unsigned int new_reg_tick = 0;
-	unsigned int tick = timer->gettick();
+	static int64 new_reg_tick = 0;
+	int64 tick = timer->gettick();
 	struct mmo_account acc;
 
 	//Account Registration Flood Protection by [Kevin]

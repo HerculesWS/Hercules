@@ -134,7 +134,7 @@ int map_freeblock_unlock (void) {
 
 // Timer function to check if there some remaining lock and remove them if so.
 // Called each 1s
-int map_freeblock_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int map_freeblock_timer(int tid, int64 tick, int id, intptr_t data) {
 	if (map->block_free_lock > 0) {
 		ShowError("map_freeblock_timer: block_free_lock(%d) is invalid.\n", map->block_free_lock);
 		map->block_free_lock = 1;
@@ -266,8 +266,7 @@ int map_delblock(struct block_list* bl)
  * Pass flag as 1 to prevent doing skill->unit_move checks
  * (which are executed by default on BL_CHAR types)
  *------------------------------------------*/
-int map_moveblock(struct block_list *bl, int x1, int y1, unsigned int tick)
-{
+int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 	int x0 = bl->x, y0 = bl->y;
 	struct status_change *sc = NULL;
 	int moveblock = ( x0/BLOCK_SIZE != x1/BLOCK_SIZE || y0/BLOCK_SIZE != y1/BLOCK_SIZE);
@@ -1312,7 +1311,7 @@ int map_get_new_object_id(void)
  * Timered function to clear the floor (remove remaining item)
  * Called each flooritem_lifetime ms
  *------------------------------------------*/
-int map_clearflooritem_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int map_clearflooritem_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct flooritem_data* fitem = (struct flooritem_data*)idb_get(map->id_db, id);
 
 	if (fitem == NULL || fitem->bl.type != BL_ITEM || (fitem->cleartimer != tid)) {
@@ -2296,8 +2295,7 @@ int map_removemobs_sub(struct block_list *bl, va_list ap)
 	return 1;
 }
 
-int map_removemobs_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+int map_removemobs_timer(int tid, int64 tick, int id, intptr_t data) {
 	int count;
 	const int16 m = id;
 
@@ -3112,6 +3110,10 @@ void do_final_maps(void) {
 
 		if( map->list[i].channel )
 			clif->chsys_delete(map->list[i].channel);
+		
+		if( map->list[i].qi_data )
+			aFree(map->list[i].qi_data);
+		
 	}
 
 	map->zone_db_clear();
@@ -3177,6 +3179,12 @@ void map_flags_init(void) {
 		map->list[i].misc_damage_rate   = 100;
 		map->list[i].short_damage_rate  = 100;
 		map->list[i].long_damage_rate   = 100;
+		
+		if( map->list[i].qi_data )
+			aFree(map->list[i].qi_data);
+		
+		map->list[i].qi_data = NULL;
+		map->list[i].qi_count = 0;
 	}
 }
 
@@ -4968,6 +4976,38 @@ int map_get_new_bonus_id (void) {
 	return map->bonus_id++;
 }
 
+void map_add_questinfo(int m, struct questinfo *qi) {
+	unsigned short i;
+	
+	/* duplicate, override */
+	for(i = 0; i < map->list[m].qi_count; i++) {
+		if( map->list[m].qi_data[i].nd == qi->nd )
+			break;
+	}
+		
+	if( i == map->list[m].qi_count )
+		RECREATE(map->list[m].qi_data, struct questinfo, ++map->list[m].qi_count);
+	
+	memcpy(&map->list[m].qi_data[i], qi, sizeof(struct questinfo));
+}
+
+bool map_remove_questinfo(int m, struct npc_data *nd) {
+	unsigned short i;
+	
+	for(i = 0; i < map->list[m].qi_count; i++) {
+		struct questinfo *qi = &map->list[m].qi_data[i];
+		if( qi->nd == nd ) {
+			memset(&map->list[m].qi_data[i], 0, sizeof(struct questinfo));
+			if( i != --map->list[m].qi_count ) {
+				memmove(&map->list[m].qi_data[i],&map->list[m].qi_data[i+1],sizeof(struct questinfo)*(map->list[m].qi_count-i));
+			}
+			return true;
+		}
+	}
+	
+	return false;
+}
+
 /**
  * @see DBApply
  */
@@ -5834,7 +5874,10 @@ void map_defaults(void) {
 	map->delblcell = map_delblcell;
 	
 	map->get_new_bonus_id = map_get_new_bonus_id;
-
+	
+	map->add_questinfo = map_add_questinfo;
+	map->remove_questinfo = map_remove_questinfo;
+	
 	/**
 	 * mapit interface
 	 **/

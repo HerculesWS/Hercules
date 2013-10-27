@@ -906,6 +906,8 @@ void initChangeTables(void) {
 	status->IconChangeTable[SC_REBOUND] = SI_REBOUND;
 	status->IconChangeTable[SC_ALL_RIDING] = SI_ALL_RIDING;
 	status->IconChangeTable[SC_MONSTER_TRANSFORM] = SI_MONSTER_TRANSFORM;
+	status->IconChangeTable[SC_MOONSTAR] = SI_MOONSTAR;
+	status->IconChangeTable[SC_SUPER_STAR] = SI_SUPER_STAR;
 
 	//Other SC which are not necessarily associated to skills.
 	status->ChangeFlagTable[SC_ATTHASTE_POTION1] = SCB_ASPD;
@@ -995,6 +997,9 @@ void initChangeTables(void) {
 	status->ChangeFlagTable[SC_MTF_MATK] = SCB_MATK;
 	status->ChangeFlagTable[SC_MTF_MLEATKED] |= SCB_ALL;
 
+	status->ChangeFlagTable[SC_MOONSTAR] |= SCB_NONE;
+	status->ChangeFlagTable[SC_SUPER_STAR] |= SCB_NONE;
+
 	/* status->DisplayType Table [Ind/Hercules] */
 	status->DisplayType[SC_ALL_RIDING]		= true;
 	status->DisplayType[SC_PUSH_CART]			= true;
@@ -1019,6 +1024,8 @@ void initChangeTables(void) {
 	status->DisplayType[SC__SHADOWFORM]		= true;
 	status->DisplayType[SC__MANHOLE]			= true;
 	status->DisplayType[SC_MONSTER_TRANSFORM] = true;
+	status->DisplayType[SC_MOONSTAR]		= true;
+	status->DisplayType[SC_SUPER_STAR]		= true;
 
 #ifdef RENEWAL_EDP
 	// renewal EDP increases your weapon atk
@@ -7806,7 +7813,13 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				val2 = 11-val1; //Chance to consume: 11-skill_lv%
 				break;
 			case SC_RUN:
-				val4 = timer->gettick(); //Store time at which you started running.
+			{
+				//Store time at which you started running.
+				int64 currenttick = timer->gettick();
+				// Note: this int64 value is stored in two separate int32 variables (FIXME)
+				val3 = (int)(currenttick&0x00000000ffffffffLL);
+				val4 = (int)((currenttick&0xffffffff00000000LL)>>32);
+			}
 				tick = -1;
 				break;
 			case SC_KAAHI:
@@ -8189,7 +8202,13 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				tick_time = 1000; // [GodLesZ] tick time
 				break;
 			case SC_WUGDASH:
-				val4 = timer->gettick(); //Store time at which you started running.
+			{
+				//Store time at which you started running.
+				int64 currenttick = timer->gettick();
+				// Note: this int64 value is stored in two separate int32 variables (FIXME)
+				val3 = (int)(currenttick&0x00000000ffffffffLL);
+				val4 = (int)((currenttick&0xffffffff00000000LL)>>32);
+			}
 				tick = -1;
 				break;
 			case SC__SHADOWFORM: {
@@ -9315,6 +9334,10 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		{
 			struct unit_data *ud = unit->bl2ud(bl);
 			bool begin_spurt = true;
+			// Note: this int64 value is stored in two separate int32 variables (FIXME)
+			int64 starttick  = (int64)sce->val3&0x00000000ffffffffLL;
+			      starttick |= ((int64)sce->val4<<32)&0xffffffff00000000LL;
+
 			if (ud) {
 				if(!ud->state.running)
 					begin_spurt = false;
@@ -9323,7 +9346,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 					unit->stop_walking(bl,1);
 			}
 			if (begin_spurt && sce->val1 >= 7
-			 && DIFF_TICK(timer->gettick(), sce->val4) <= 1000
+			 && DIFF_TICK(timer->gettick(), starttick) <= 1000
 			 && (!sd || (sd->weapontype1 == 0 && sd->weapontype2 == 0))
 			)
 				sc_start(bl,SC_STRUP,100,sce->val1,skill->get_time2(status->sc2skill(type), sce->val1));
@@ -9932,7 +9955,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 	return 1;
 }
 
-int kaahi_heal_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int kaahi_heal_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct block_list *bl;
 	struct status_change *sc;
 	struct status_change_entry *sce;
@@ -9970,7 +9993,7 @@ int kaahi_heal_timer(int tid, unsigned int tick, int id, intptr_t data) {
 * For recusive status, like for each 5s we drop sp etc.
 * Reseting the end timer.
 *------------------------------------------*/
-int status_change_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 	enum sc_type type = (sc_type)data;
 	struct block_list *bl;
 	struct map_session_data *sd;
@@ -10786,7 +10809,7 @@ int status_change_timer_sub(struct block_list* bl, va_list ap) {
 	struct block_list* src = va_arg(ap,struct block_list*);
 	struct status_change_entry* sce = va_arg(ap,struct status_change_entry*);
 	enum sc_type type = (sc_type)va_arg(ap,int); //gcc: enum args get promoted to int
-	unsigned int tick = va_arg(ap,unsigned int);
+	int64 tick = va_arg(ap, int64);
 
 	if (status->isdead(bl))
 		return 0;
@@ -11040,7 +11063,7 @@ int status_change_clear_buffs (struct block_list* bl, int type) {
 int status_change_spread( struct block_list *src, struct block_list *bl ) {
 	int i, flag = 0;
 	struct status_change *sc = status->get_sc(src);
-	unsigned int tick;
+	int64 tick;
 	struct status_change_data data;
 
 	if( !sc || !sc->count )
@@ -11082,7 +11105,7 @@ int status_change_spread( struct block_list *src, struct block_list *bl ) {
 				const struct TimerData *td = timer->get(sc->data[i]->timer);
 				if (td == NULL || td->func != status->change_timer || DIFF_TICK(td->tick,tick) < 0)
 					continue;
-				data.tick = DIFF_TICK(td->tick,tick);
+				data.tick = DIFF_TICK32(td->tick,tick);
 			} else
 				data.tick = INVALID_TIMER;
 			break;
@@ -11310,8 +11333,9 @@ int status_natural_heal(struct block_list* bl, va_list args) {
 }
 
 //Natural heal main timer.
-int status_natural_heal_timer(int tid, unsigned int tick, int id, intptr_t data) {
-	status->natural_heal_diff_tick = DIFF_TICK(tick,status->natural_heal_prev_tick);
+int status_natural_heal_timer(int tid, int64 tick, int id, intptr_t data) {
+	// This difference is always positive and lower than UINT_MAX (~24 days)
+	status->natural_heal_diff_tick = (unsigned int)cap_value(DIFF_TICK(tick,status->natural_heal_prev_tick), 0, UINT_MAX);
 	map->foreachregen(status->natural_heal);
 	status->natural_heal_prev_tick = tick;
 	return 0;

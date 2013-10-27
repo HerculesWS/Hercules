@@ -65,8 +65,7 @@ struct timer_func_list {
 } *tfl_root = NULL;
 
 /// Sets the name of a timer function.
-int timer_add_func_list(TimerFunc func, char* name)
-{
+int timer_add_func_list(TimerFunc func, char* name) {
 	struct timer_func_list* tfl;
 
 	if (name) {
@@ -139,22 +138,62 @@ static void rdtsc_calibrate(){
 
 #endif
 
-/// platform-abstracted tick retrieval
-static unsigned int tick(void) {
+/**
+ * platform-abstracted tick retrieval
+ * @return server's current tick
+ */
+static int64 tick(void) {
 #if defined(WIN32)
-	return GetTickCount();
+	// Windows: GetTickCount/GetTickCount64: Return the number of
+	//   milliseconds that have elapsed since the system was started.
+
+	// TODO: GetTickCount/GetTickCount64 has a resolution of only 10~15ms.
+	//       Ai4rei recommends that we replace it with either performance
+	//       counters or multimedia timers if we want it to be more accurate.
+	//       I'm leaving this for a future follow-up patch.
+
+	// GetTickCount64 is only available in Windows Vista / Windows Server
+	//   2008 or newer. Since we still support older versions, this runtime
+	//   check is required in order not to crash.
+	// http://msdn.microsoft.com/en-us/library/windows/desktop/ms724411%28v=vs.85%29.aspx
+	static bool first = true;
+	static ULONGLONG (WINAPI *pGetTickCount64)(void) = NULL;
+
+	if( first ) {
+		HMODULE hlib = GetModuleHandle(TEXT("KERNEL32.DLL"));
+		if( hlib != NULL )
+			pGetTickCount64 = (ULONGLONG (WINAPI *)(void))GetProcAddress(hlib, "GetTickCount64");
+		first = false;
+	}
+	if (pGetTickCount64)
+		return (int64)pGetTickCount64();
+	// 32-bit fallback. Note: This will wrap around every ~49 days since system startup!!!
+	return (int64)GetTickCount();
 #elif defined(ENABLE_RDTSC)
-	//
-		return (unsigned int)((_rdtsc() - RDTSC_BEGINTICK) / RDTSC_CLOCK);
-	//
+	// RDTSC: Returns the number of CPU cycles since reset. Unreliable if
+	//   the CPU frequency is variable.
+	return (int64)((_rdtsc() - RDTSC_BEGINTICK) / RDTSC_CLOCK);
 #elif defined(HAVE_MONOTONIC_CLOCK)
+	// Monotinic clock: Implementation-defined.
+	//   Clock that cannot be set and represents monotonic time since some
+	//   unspecified starting point.  This clock is not affected by
+	//   discontin‐uous jumps in the system time (e.g., if the system
+	//   administrator manually changes the  clock),  but  is  affected by
+	//   the  incremental adjustments performed by adjtime(3) and NTP.
 	struct timespec tval;
 	clock_gettime(CLOCK_MONOTONIC, &tval);
-	return tval.tv_sec * 1000 + tval.tv_nsec / 1000000;
+	// int64 cast to avoid overflows on platforms where time_t is 32 bit
+	return (int64)tval.tv_sec * 1000 + tval.tv_nsec / 1000000;
 #else
+	// Fallback, regular clock: Number of milliseconds since epoch.
+	//   The time returned by gettimeofday() is affected by discontinuous
+	//   jumps in the system time (e.g., if the system  administrator
+	//   manually  changes  the system time).  If you need a monotonically
+	//   increasing clock, see clock_gettime(2).
 	struct timeval tval;
 	gettimeofday(&tval, NULL);
-	return tval.tv_sec * 1000 + tval.tv_usec / 1000;
+	// int64 cast to avoid overflows on platforms where time_t is 32 bit
+	return (int64)tval.tv_sec * 1000 + tval.tv_usec / 1000;
 #endif
 }
 
@@ -162,28 +201,28 @@ static unsigned int tick(void) {
 #if defined(TICK_CACHE) && TICK_CACHE > 1
 //////////////////////////////////////////////////////////////////////////
 // tick is cached for TICK_CACHE calls
-static unsigned int gettick_cache;
+static int64 gettick_cache;
 static int gettick_count = 1;
 
-unsigned int timer_gettick_nocache(void) {
+int64 timer_gettick_nocache(void) {
 	gettick_count = TICK_CACHE;
 	gettick_cache = tick();
 	return gettick_cache;
 }
 
-unsigned int timer_gettick(void) {
+int64 timer_gettick(void) {
 	return ( --gettick_count == 0 ) ? gettick_nocache() : gettick_cache;
 }
 //////////////////////////////
 #else
 //////////////////////////////
 // tick doesn't get cached
-unsigned int timer_gettick_nocache(void)
+int64 timer_gettick_nocache(void)
 {
 	return tick();
 }
 
-unsigned int timer_gettick(void) {
+int64 timer_gettick(void) {
 	return tick();
 }
 //////////////////////////////////////////////////////////////////////////
@@ -237,7 +276,7 @@ static int acquire_timer(void) {
 
 /// Starts a new timer that is deleted once it expires (single-use).
 /// Returns the timer's id.
-int timer_add(unsigned int tick, TimerFunc func, int id, intptr_t data) {
+int timer_add(int64 tick, TimerFunc func, int id, intptr_t data) {
 	int tid;
 	
 	tid = acquire_timer();
@@ -254,12 +293,11 @@ int timer_add(unsigned int tick, TimerFunc func, int id, intptr_t data) {
 
 /// Starts a new timer that automatically restarts itself (infinite loop until manually removed).
 /// Returns the timer's id, or INVALID_TIMER if it fails.
-int timer_add_interval(unsigned int tick, TimerFunc func, int id, intptr_t data, int interval)
-{
+int timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data, int interval) {
 	int tid;
 
 	if( interval < 1 ) {
-		ShowError("timer_add_interval: invalid interval (tick=%u %p[%s] id=%d data=%d diff_tick=%d)\n", tick, func, search_timer_func_list(func), id, data, DIFF_TICK(tick, timer->gettick()));
+		ShowError("timer_add_interval: invalid interval (tick=%"PRId64" %p[%s] id=%d data=%d diff_tick=%"PRId64")\n", tick, func, search_timer_func_list(func), id, data, DIFF_TICK(tick, timer->gettick()));
 		return INVALID_TIMER;
 	}
 	
@@ -301,13 +339,13 @@ int timer_do_delete(int tid, TimerFunc func) {
 
 /// Adjusts a timer's expiration time.
 /// Returns the new tick value, or -1 if it fails.
-int timer_addtick(int tid, unsigned int tick) {
+int64 timer_addtick(int tid, int64 tick) {
 	return timer->settick(tid, timer_data[tid].tick+tick);
 }
 
 /// Modifies a timer's expiration time (an alternative to deleting a timer and starting a new one).
 /// Returns the new tick value, or -1 if it fails.
-int timer_settick(int tid, unsigned int tick) {
+int64 timer_settick(int tid, int64 tick) {
 	size_t i;
 	
 	// search timer position
@@ -332,8 +370,8 @@ int timer_settick(int tid, unsigned int tick) {
 
 /// Executes all expired timers.
 /// Returns the value of the smallest non-expired timer (or 1 second if there aren't any).
-int do_timer(unsigned int tick) {
-	int diff = TIMER_MAX_INTERVAL; // return value
+int do_timer(int64 tick) {
+	int64 diff = TIMER_MAX_INTERVAL; // return value
 
 	// process all timers one by one
 	while( BHEAP_LENGTH(timer_heap) ) {
@@ -381,7 +419,7 @@ int do_timer(unsigned int tick) {
 		}
 	}
 
-	return cap_value(diff, TIMER_MIN_INTERVAL, TIMER_MAX_INTERVAL);
+	return (int)cap_value(diff, TIMER_MIN_INTERVAL, TIMER_MAX_INTERVAL);
 }
 
 unsigned long timer_get_uptime(void) {

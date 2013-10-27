@@ -148,7 +148,7 @@ int elemental_get_lifetime(struct elemental_data *ed) {
 		return 0;
 
 	td = timer->get(ed->summon_timer);
-	return (td != NULL) ? DIFF_TICK(td->tick, timer->gettick()) : 0;
+	return (td != NULL) ? DIFF_TICK32(td->tick, timer->gettick()) : 0;
 }
 
 int elemental_save(struct elemental_data *ed) {
@@ -169,7 +169,7 @@ int elemental_save(struct elemental_data *ed) {
 	return 1;
 }
 
-int elemental_summon_end_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int elemental_summon_end_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data *sd;
 	struct elemental_data *ed;
 
@@ -388,7 +388,7 @@ int elemental_clean_effect(struct elemental_data *ed) {
 	return 1;
 }
 
-int elemental_action(struct elemental_data *ed, struct block_list *bl, unsigned int tick) {
+int elemental_action(struct elemental_data *ed, struct block_list *bl, int64 tick) {
 	struct skill_condition req;
 	uint16 skill_id, skill_lv;
 	int i;
@@ -636,7 +636,7 @@ int elemental_ai_sub_timer_activesearch(struct block_list *bl, va_list ap) {
 	return 0;
 }
 
-int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_data *sd, unsigned int tick) {
+int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_data *sd, int64 tick) {
 	struct block_list *target = NULL;
 	int master_dist, view_range, mode;
 
@@ -723,7 +723,7 @@ int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_data *s
 		}
 
 		if( battle->check_range(&ed->bl,target,view_range) && rnd()%100 < 2 ) { // 2% chance to cast attack skill.
-			if(	elemental->action(ed,target,tick) )
+			if( elemental->action(ed,target,tick) )
 				return 1;
 		}
 
@@ -746,14 +746,14 @@ int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_data *s
 }
 
 int elemental_ai_sub_foreachclient(struct map_session_data *sd, va_list ap) {
-	unsigned int tick = va_arg(ap,unsigned int);
+	int64 tick = va_arg(ap,int64);
 	if(sd->status.ele_id && sd->ed)
 		elemental->ai_sub_timer(sd->ed,sd,tick);
 
 	return 0;
 }
 
-int elemental_ai_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int elemental_ai_timer(int tid, int64 tick, int id, intptr_t data) {
 	map->foreachpc(elemental->ai_sub_foreachclient,tick);
 	return 0;
 }

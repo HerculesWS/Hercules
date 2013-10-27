@@ -242,6 +242,13 @@ int instance_add_map(const char *name, int instance_id, bool usebasename, const 
 		}
 	}
 	
+	//Mimic questinfo
+	if( map->list[m].qi_count ) {
+		map->list[im].qi_count = map->list[m].qi_count;
+		CREATE( map->list[im].qi_data, struct questinfo, map->list[im].qi_count );
+		memcpy( map->list[im].qi_data, map->list[m].qi_data, map->list[im].qi_count * sizeof(struct questinfo) );
+	}
+	
 	map->list[im].m = im;
 	map->list[im].instance_id = instance_id;
 	map->list[im].instance_src_map = m;
@@ -443,6 +450,9 @@ void instance_del_map(int16 m) {
 			aFree(map->list[m].zone_mf);
 	}
 	
+	if( map->list[m].qi_data )
+		aFree(map->list[m].qi_data);
+	
 	// Remove from instance
 	for( i = 0; i < instance->list[map->list[m].instance_id].num_map; i++ ) {
 		if( instance->list[map->list[m].instance_id].map[i] == m ) {
@@ -470,7 +480,7 @@ void instance_del_map(int16 m) {
 /*--------------------------------------
  * Timer to destroy instance by process or idle
  *--------------------------------------*/
-int instance_destroy_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int instance_destroy_timer(int tid, int64 tick, int id, intptr_t data) {
 	instance->destroy(id);
 	return 0;
 }

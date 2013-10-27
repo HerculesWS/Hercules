@@ -17,17 +17,17 @@
 /// Initializes the random number generator with an appropriate seed.
 void rnd_init(void)
 {
-	uint32 seed = timer->gettick();
-	seed += (uint32)time(NULL);
+	unsigned long seed = (unsigned long)timer->gettick();
+	seed += (unsigned long)time(NULL);
 #if defined(WIN32)
-	seed += GetCurrentProcessId();
-	seed += GetCurrentThreadId();
+	seed += (unsigned long)GetCurrentProcessId();
+	seed += (unsigned long)GetCurrentThreadId();
 #else
 #if defined(HAVE_GETPID)
-	seed += (uint32)getpid();
+	seed += (unsigned long)getpid();
 #endif // HAVE_GETPID
 #if defined(HAVE_GETTID)
-	seed += (uint32)gettid();
+	seed += (unsigned long)gettid();
 #endif // HAVE_GETTID
 #endif
 	init_genrand(seed);

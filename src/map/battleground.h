@@ -84,9 +84,9 @@ struct battleground_interface {
 	int (*id2pos) (int queue_id, int account_id);
 	void (*queue_pc_cleanup) (struct map_session_data *sd);
 	void (*begin) (struct bg_arena *arena);
-	int (*begin_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*begin_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*queue_pregame) (struct bg_arena *arena);
-	int (*fillup_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*fillup_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*queue_ready_ack) (struct bg_arena *arena, struct map_session_data *sd, bool response);
 	void (*match_over) (struct bg_arena *arena, bool canceled);
 	void (*queue_check) (struct bg_arena *arena);
@@ -102,7 +102,7 @@ struct battleground_interface {
 	int (*team_get_id) (struct block_list *bl);
 	int (*send_message) (struct map_session_data *sd, const char *mes, int len);
 	int (*send_xy_timer_sub) (DBKey key, DBData *data, va_list ap);
-	int (*send_xy_timer) (int tid, unsigned int tick, int id, intptr_t data);	
+	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);	
 	/* */
 	void (*config_read) (void);
 };
