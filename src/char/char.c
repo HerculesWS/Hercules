@@ -2849,8 +2849,7 @@ int parse_frommap(int fd)
 					Sql_ShowDebug(sql_handle);
 					break;
 				}
-				if( SQL->NumRows(sql_handle) > 0 )
-				{
+				if( SQL->NumRows(sql_handle) > 0 ) {
 					struct status_change_data scdata;
 					int count;
 					char* data;
@@ -2871,8 +2870,7 @@ int parse_frommap(int fd)
 					}
 					if (count >= 50)
 						ShowWarning("Too many status changes for %d:%d, some of them were not loaded.\n", aid, cid);
-					if (count > 0)
-					{
+					if (count > 0) {
 						WFIFOW(fd,2) = 14 + count*sizeof(struct status_change_data);
 						WFIFOW(fd,12) = count;
 						WFIFOSET(fd,WFIFOW(fd,2));
@@ -2881,6 +2879,14 @@ int parse_frommap(int fd)
 						if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `char_id`='%d'", scdata_db, aid, cid) )
 							Sql_ShowDebug(sql_handle);
 					}
+				} else { //no sc (needs a response)
+					WFIFOHEAD(fd,14);
+					WFIFOW(fd,0) = 0x2b1d;
+					WFIFOW(fd,2) = 14;
+					WFIFOL(fd,4) = aid;
+					WFIFOL(fd,8) = cid;
+					WFIFOW(fd,12) = 0;
+					WFIFOSET(fd,WFIFOW(fd,2));
 				}
 				SQL->FreeResult(sql_handle);
 	#endif

@@ -443,7 +443,20 @@ int pc_inventory_rental_clear(struct map_session_data *sd)
 
 	return 1;
 }
-
+/* assumes i is valid (from default areas where it is called, it is) */
+void pc_rental_expire(struct map_session_data *sd, int i) {
+	short nameid = sd->status.inventory[i].nameid;
+	
+	/* Soon to be dropped, we got plans to integrate it with item db */
+	switch( nameid ) {
+		case ITEMID_REINS_OF_MOUNT:
+			status_change_end(&sd->bl,SC_ALL_RIDING,INVALID_TIMER);
+			break;
+	}
+	
+	clif->rental_expired(sd->fd, i, sd->status.inventory[i].nameid);
+	pc->delitem(sd, i, sd->status.inventory[i].amount, 0, 0, LOG_TYPE_OTHER);
+}
 void pc_inventory_rentals(struct map_session_data *sd)
 {
 	int i, c = 0;
@@ -457,12 +470,7 @@ void pc_inventory_rentals(struct map_session_data *sd)
 			continue;
 
 		if( sd->status.inventory[i].expire_time <= time(NULL) ) {
-			if( sd->status.inventory[i].nameid == ITEMID_REINS_OF_MOUNT
-					&& sd->sc.data[SC_ALL_RIDING] ) {
-				status_change_end(&sd->bl,SC_ALL_RIDING,INVALID_TIMER);
-			}
-			clif->rental_expired(sd->fd, i, sd->status.inventory[i].nameid);
-			pc->delitem(sd, i, sd->status.inventory[i].amount, 0, 0, LOG_TYPE_OTHER);
+			pc->rental_expire(sd,i);
 		} else {
 			expire_tick = (int64)(sd->status.inventory[i].expire_time - time(NULL)) * 1000;
 			clif->rental_time(sd->fd, sd->status.inventory[i].nameid, (int)(expire_tick / 1000));
@@ -1268,8 +1276,6 @@ int pc_reg_received(struct map_session_data *sd)
 		sd->state.connect_new = 1;
 		clif->pLoadEndAck(sd->fd, sd);
 	}
-
-	pc->inventory_rentals(sd);
 
 	if( sd->sc.option & OPTION_INVISIBLE ) {
 		sd->vd.class_ = INVISIBLE_CLASS;
@@ -3929,8 +3935,7 @@ int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_l
 	/* rental item check */
 	if( item_data->expire_time ) {
 		if( time(NULL) > item_data->expire_time ) {
-			clif->rental_expired(sd->fd, i, sd->status.inventory[i].nameid);
-			pc->delitem(sd, i, sd->status.inventory[i].amount, 1, 0, LOG_TYPE_OTHER);
+			pc->rental_expire(sd,i);
 		} else {
 			int seconds = (int)( item_data->expire_time - time(NULL) );
 			clif->rental_time(sd->fd, sd->status.inventory[i].nameid, seconds);
@@ -10132,6 +10137,10 @@ void pc_bank_withdraw(struct map_session_data *sd, int money) {
 		clif->bank_withdraw(sd,BWA_SUCCESS);
 	}
 }
+/* status change data arrived from char-server */
+void pc_scdata_received(struct map_session_data *sd) {
+	pc->inventory_rentals(sd);
+}
 
 /*==========================================
  * pc Init/Terminate
@@ -10459,4 +10468,7 @@ void pc_defaults(void) {
 	
 	pc->bank_withdraw = pc_bank_withdraw;
 	pc->bank_deposit = pc_bank_deposit;
+	
+	pc->rental_expire = pc_rental_expire;
+	pc->scdata_received = pc_scdata_received;
 }

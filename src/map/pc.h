@@ -978,6 +978,9 @@ struct pc_interface {
 	
 	void (*bank_deposit) (struct map_session_data *sd, int money);
 	void (*bank_withdraw) (struct map_session_data *sd, int money);
+	
+	void (*rental_expire) (struct map_session_data *sd, int i);
+	void (*scdata_received) (struct map_session_data *sd);
 };
 
 struct pc_interface *pc;
