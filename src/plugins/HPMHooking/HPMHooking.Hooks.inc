@@ -5816,13 +5816,13 @@ void HP_clif_cart_delitem(struct map_session_data *sd, int n, int amount) {
 	}
 	return;
 }
-void HP_clif_equipitemack(struct map_session_data *sd, int n, int pos, int ok) {
+void HP_clif_equipitemack(struct map_session_data *sd, int n, int pos, enum e_EQUIP_ITEM_ACK result) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_equipitemack_pre ) {
-		void (*preHookFunc) (struct map_session_data *sd, int *n, int *pos, int *ok);
+		void (*preHookFunc) (struct map_session_data *sd, int *n, int *pos, enum e_EQUIP_ITEM_ACK *result);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_equipitemack_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_clif_equipitemack_pre[hIndex].func;
-			preHookFunc(sd, &n, &pos, &ok);
+			preHookFunc(sd, &n, &pos, &result);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -5830,24 +5830,24 @@ void HP_clif_equipitemack(struct map_session_data *sd, int n, int pos, int ok) {
 		}
 	}
 	{
-		HPMHooks.source.clif.equipitemack(sd, n, pos, ok);
+		HPMHooks.source.clif.equipitemack(sd, n, pos, result);
 	}
 	if( HPMHooks.count.HP_clif_equipitemack_post ) {
-		void (*postHookFunc) (struct map_session_data *sd, int *n, int *pos, int *ok);
+		void (*postHookFunc) (struct map_session_data *sd, int *n, int *pos, enum e_EQUIP_ITEM_ACK *result);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_equipitemack_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_equipitemack_post[hIndex].func;
-			postHookFunc(sd, &n, &pos, &ok);
+			postHookFunc(sd, &n, &pos, &result);
 		}
 	}
 	return;
 }
-void HP_clif_unequipitemack(struct map_session_data *sd, int n, int pos, int ok) {
+void HP_clif_unequipitemack(struct map_session_data *sd, int n, int pos, enum e_UNEQUIP_ITEM_ACK result) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_unequipitemack_pre ) {
-		void (*preHookFunc) (struct map_session_data *sd, int *n, int *pos, int *ok);
+		void (*preHookFunc) (struct map_session_data *sd, int *n, int *pos, enum e_UNEQUIP_ITEM_ACK *result);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_unequipitemack_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_clif_unequipitemack_pre[hIndex].func;
-			preHookFunc(sd, &n, &pos, &ok);
+			preHookFunc(sd, &n, &pos, &result);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -5855,13 +5855,13 @@ void HP_clif_unequipitemack(struct map_session_data *sd, int n, int pos, int ok)
 		}
 	}
 	{
-		HPMHooks.source.clif.unequipitemack(sd, n, pos, ok);
+		HPMHooks.source.clif.unequipitemack(sd, n, pos, result);
 	}
 	if( HPMHooks.count.HP_clif_unequipitemack_post ) {
-		void (*postHookFunc) (struct map_session_data *sd, int *n, int *pos, int *ok);
+		void (*postHookFunc) (struct map_session_data *sd, int *n, int *pos, enum e_UNEQUIP_ITEM_ACK *result);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_unequipitemack_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_unequipitemack_post[hIndex].func;
-			postHookFunc(sd, &n, &pos, &ok);
+			postHookFunc(sd, &n, &pos, &result);
 		}
 	}
 	return;
