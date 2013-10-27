@@ -1168,11 +1168,11 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 			struct status_change_entry *sce;
 
 			if((sce = sc->data[SC_DEVOTION]) && src && battle_config.devotion_reflect_damage) {
-				struct block_list *d_bl = map_id2bl(sce->val1);
+				struct block_list *d_bl = map->id2bl(sce->val1);
 
 				if(d_bl &&((d_bl->type == BL_MER && ((TBL_MER *)d_bl)->master && ((TBL_MER *)d_bl)->master->bl.id == target->id)
 				           || (d_bl->type == BL_PC && ((TBL_PC *)d_bl)->devotion[sce->val2] == target->id)) && check_distance_bl(target, d_bl, sce->val3)) {
-					clif->damage(d_bl, d_bl, gettick(), 0, 0, hp, 0, 0, 0);
+					clif->damage(d_bl, d_bl, timer->gettick(), 0, 0, hp, 0, 0, 0);
 					status_fix_damage(NULL, d_bl, hp, 0);
 					return 0;
 				}
