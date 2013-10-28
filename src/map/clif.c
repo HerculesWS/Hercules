@@ -2476,7 +2476,7 @@ void clif_storagelist(struct map_session_data* sd, struct item* items, int items
 	
 	if( normal ) {
 		storelist_normal.PacketType   = storagelistnormalType;
-		storelist_normal.PacketLength =  ( sizeof( storelist_normal ) - ARRAYLENGTH( storelist_normal.list ) ) + (sizeof(struct NORMALITEM_INFO) * normal);
+		storelist_normal.PacketLength =  ( sizeof( storelist_normal ) - sizeof( storelist_normal.list ) ) + (sizeof(struct NORMALITEM_INFO) * normal);
 #if PACKETVER >= 20120925
 		safestrncpy(storelist_normal.name, "Storage", NAME_LENGTH);
 #endif		
@@ -2485,7 +2485,7 @@ void clif_storagelist(struct map_session_data* sd, struct item* items, int items
 		
 	if( equip ) {
 		storelist_equip.PacketType   = storagelistequipType;
-		storelist_equip.PacketLength = ( sizeof( storelist_equip ) - ARRAYLENGTH( storelist_equip.list ) ) + (sizeof(struct EQUIPITEM_INFO) * equip);
+		storelist_equip.PacketLength = ( sizeof( storelist_equip ) - sizeof( storelist_equip.list ) ) + (sizeof(struct EQUIPITEM_INFO) * equip);
 
 #if PACKETVER >= 20120925
 		safestrncpy(storelist_equip.name, "Storage", NAME_LENGTH);
@@ -8885,7 +8885,7 @@ void clif_viewequip_ack(struct map_session_data* sd, struct map_session_data* ts
 	}
 		
 	viewequip_list.PacketType = viewequipackType;
-	viewequip_list.PacketLength = ( sizeof( viewequip_list ) - ARRAYLENGTH( viewequip_list.list ) ) + ( sizeof(struct EQUIPITEM_INFO) * equip );
+	viewequip_list.PacketLength = ( sizeof( viewequip_list ) - sizeof( viewequip_list.list ) ) + ( sizeof(struct EQUIPITEM_INFO) * equip );
 	
 	safestrncpy(viewequip_list.characterName, tsd->status.name, NAME_LENGTH);
 	
