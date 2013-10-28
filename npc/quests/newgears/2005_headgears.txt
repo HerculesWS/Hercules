@@ -16,7 +16,7 @@
 //= 1.3a Added 'disable_items' command. [Euphy]
 //============================================================
 
-yuno,222,116,3	script	Kasis#LhzHat	851,{
+yuno,222,116,3	script	Kasis#LhzHat	4_M_REPAIR,{
 	if(countitem(519) > 49 && countitem(7031) > 49 && countitem(548) > 49 && countitem(539) > 49)
 	{
 		mes "[Kasis]";
@@ -225,7 +225,7 @@ yuno,222,116,3	script	Kasis#LhzHat	851,{
 	}
 }
 
-lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
+lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 	disable_items;
 	if(DTHATQ == 0)
 	{
@@ -746,7 +746,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	47,{
 	}
 }
 
-lighthalzen,360,313,3	script	Kid#LhzHat	706,{
+lighthalzen,360,313,3	script	Kid#LhzHat	4_M_KID1,{
 	mes "[Kid]";
 	if(Sex)
 		mes "Hello, mister!";
@@ -871,7 +871,7 @@ lighthalzen,360,313,3	script	Kid#LhzHat	706,{
 	}
 }
 
-einbech,70,222,5	script	Metelle#LhzHat	91,{
+einbech,70,222,5	script	Metelle#LhzHat	4_F_02,{
 	if(countitem(983) && countitem(7267) > 998 && countitem(749) && Zeny > 49999)
 	{
 		mes "[Metelle]";
@@ -981,7 +981,7 @@ einbech,70,222,5	script	Metelle#LhzHat	91,{
 
 }
 
-lhz_in02,91,38,5	script	Margaret Mary#LhzHat	90,{
+lhz_in02,91,38,5	script	Margaret Mary#LhzHat	4_F_01,{
 
 	mes "[Margaret Mary]";
 	mes "The white rose, in its";
@@ -1084,7 +1084,7 @@ lhz_in02,91,38,5	script	Margaret Mary#LhzHat	90,{
 
 }
 
-lighthalzen,182,89,0	script	Relaxed-Looking Lady	91,{
+lighthalzen,182,89,0	script	Relaxed-Looking Lady	4_F_02,{
 	disable_items;
 	if(LHZBTQ == 0)
 	{
@@ -2107,7 +2107,7 @@ gl_prison1,100,48,5	script	Rybio#LhzHat	1201,{
 	}
 }
 
-airport,148,41,3	script	Freight Manager#toast	852,{
+airport,148,41,3	script	Freight Manager#toast	4_M_EIN_SOLDIER,{
 	mes "[Kirishu]";
 	mes "Oh man...";
 	mes "It's almost lunchtime,";

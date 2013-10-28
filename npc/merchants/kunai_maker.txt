@@ -16,7 +16,7 @@
 //= 1.3a Kagerou/Oboro support (BaseJob -> BaseClass) [Euphy]
 //============================================================
 
-que_ng,72,29,3	script	Kunai Merchant Kashin	83,{
+que_ng,72,29,3	script	Kunai Merchant Kashin	4_M_01,{
 	if(BaseClass == Job_Ninja) {
 		mes "[Kashin]";
 		mes "I am Kashin, distributor";

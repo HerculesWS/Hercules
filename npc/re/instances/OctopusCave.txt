@@ -17,7 +17,7 @@
 
 // Instance Creation
 //============================================================
-mal_dun01,151,235,5	script	Starfish	551,{
+mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 
 	set .@party_id,getcharid(1);
 	set .@md_name$,"Octopus Cave";
@@ -122,7 +122,7 @@ mal_dun01,151,235,5	script	Starfish	551,{
 	}
 }
 
-mal_dun01,153,237,5	script	Weird Entrance	844,{
+mal_dun01,153,237,5	script	Weird Entrance	CLEAR_NPC,{
 	mes "There is a strange entrance";
 	mes "blocked roughly with some boards.";
 	next;
@@ -162,7 +162,7 @@ mal_dun01,153,237,5	script	Weird Entrance	844,{
 
 // Instance Scripts
 //============================================================
-1@cash,199,99,0	script	oct_enter	139,4,4,{
+1@cash,199,99,0	script	oct_enter	HIDDEN_WARP_NPC,4,4,{
 	end;
 OnTouch:
 	donpcevent instance_npcname("oct_enter_broad")+"::OnEnable";
@@ -231,7 +231,7 @@ OnMyMobDead:
 	end;
 }
 
-1@cash,20,114,0	script	oct_foot1	139,6,6,{
+1@cash,20,114,0	script	oct_foot1	HIDDEN_WARP_NPC,6,6,{
 	end;
 OnInstanceInit:
 	donpcevent instance_npcname(strnpcinfo(0))+"::OnDisable";
@@ -351,11 +351,11 @@ OnMyMobDead:
 	}
 	end;
 }
-1@cash,88,190,0	duplicate(oct_foot1)	oct_foot2	139,6,6
-1@cash,307,215,0	duplicate(oct_foot1)	oct_foot3	139,6,6
-1@cash,372,131,0	duplicate(oct_foot1)	oct_foot4	139,6,6
+1@cash,88,190,0	duplicate(oct_foot1)	oct_foot2	HIDDEN_WARP_NPC,6,6
+1@cash,307,215,0	duplicate(oct_foot1)	oct_foot3	HIDDEN_WARP_NPC,6,6
+1@cash,372,131,0	duplicate(oct_foot1)	oct_foot4	HIDDEN_WARP_NPC,6,6
 
-1@cash,16,117,0	script	oct_foot_exit1	45,2,2,{
+1@cash,16,117,0	script	oct_foot_exit1	WARPNPC,2,2,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname(strnpcinfo(0));
@@ -367,9 +367,9 @@ OnTouch:
 	warp instance_mapname("1@cash"),198,99;
 	end;
 }
-1@cash,77,193,0	duplicate(oct_foot_exit1)	oct_foot_exit2	45,2,2
-1@cash,312,214,0	duplicate(oct_foot_exit1)	oct_foot_exit3	45,2,2
-1@cash,370,139,0	duplicate(oct_foot_exit1)	oct_foot_exit4	45,2,2
+1@cash,77,193,0	duplicate(oct_foot_exit1)	oct_foot_exit2	WARPNPC,2,2
+1@cash,312,214,0	duplicate(oct_foot_exit1)	oct_foot_exit3	WARPNPC,2,2
+1@cash,370,139,0	duplicate(oct_foot_exit1)	oct_foot_exit4	WARPNPC,2,2
 
 1@cash,15,15,0	script	oct_mob_con	-1,{
 	end;
@@ -433,7 +433,7 @@ OnDisable:
 	end;
 }
 
-1@cash,45,53,0	script	oct_backattack1	139,3,3,{
+1@cash,45,53,0	script	oct_backattack1	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("oct_backattack1");
@@ -456,7 +456,7 @@ OnEnable:
 	end;
 }
 
-1@cash,78,99,0	script	oct_backattack2	139,3,3,{
+1@cash,78,99,0	script	oct_backattack2	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("oct_backattack2");
@@ -496,7 +496,7 @@ OnEnable:
 	end;
 }
 
-1@cash,299,144,0	script	oct_backattack3	139,3,3,{
+1@cash,299,144,0	script	oct_backattack3	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("oct_backattack3");
@@ -523,7 +523,7 @@ OnEnable:
 	end;
 }
 
-1@cash,336,36,0	script	oct_backattack4	139,3,3,{
+1@cash,336,36,0	script	oct_backattack4	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("oct_backattack4");
@@ -674,7 +674,7 @@ OnMyMobDead:
 	end;
 }
 
-1@cash,198,116,0	script	oct_boss_warp	45,2,2,{
+1@cash,198,116,0	script	oct_boss_warp	WARPNPC,2,2,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("oct_boss_warp");
@@ -684,7 +684,7 @@ OnTouch:
 	end;
 }
 
-1@cash,190,208,0	script	oct_exit_1	45,2,2,{
+1@cash,190,208,0	script	oct_exit_1	WARPNPC,2,2,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname(strnpcinfo(0));
@@ -696,9 +696,9 @@ OnTouch:
 		warp "mal_dun01",153,233;
 	close;
 }
-1@cash,198,82,0	duplicate(oct_exit_1)	oct_exit_2	45,2,2
+1@cash,198,82,0	duplicate(oct_exit_1)	oct_exit_2	WARPNPC,2,2
 // This is never enabled in the official script.
-//1@cash,200,161,0	duplicate(oct_exit_1)	oct_exit_3	45,2,2
+//1@cash,200,161,0	duplicate(oct_exit_1)	oct_exit_3	WARPNPC,2,2
 
 // Warp Portals
 //============================================================

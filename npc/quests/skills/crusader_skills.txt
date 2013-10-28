@@ -11,7 +11,7 @@
 //= 1.4 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //============================================================
 
-geffen,110,117,3	script	Ford#11	752,{
+geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 	if (BaseJob == Job_Crusader) {
 		if (CRUS_SK == 8 && getskilllv("CR_SHRINK") == 0) {
 			mes "[Ford]";
@@ -275,7 +275,7 @@ geffen,110,117,3	script	Ford#11	752,{
 	}
 }
 
-gef_fild13,297,242,3	script	Soldier#277	751,{
+gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 	if (BaseJob == Job_Crusader) {
 		if (Upper == 1 && getskilllv("CR_SHRINK")) {
 			if (CRUS_SK == 8) {
@@ -576,7 +576,7 @@ gef_fild13,297,242,3	script	Soldier#277	751,{
 	}
 }
 
-prt_church,87,127,3	script	Pastor#1011	755,{
+prt_church,87,127,3	script	Pastor#1011	4_M_SAGE_C,{
 	if (BaseJob == Job_Crusader) {
 		if (Upper == 1 && getskilllv("CR_SHRINK")) {
 			if (CRUS_SK == 8) {

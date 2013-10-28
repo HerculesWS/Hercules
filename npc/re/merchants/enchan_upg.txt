@@ -12,7 +12,7 @@
 //= 1.1 Standardizing, grammar and bug fixes. [Euphy]
 //============================================================
 
-prt_in,28,73,3	script	Devil Enchant Master#prq	63,{
+prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "You are carrying too many items, please reduce it and come back again!";

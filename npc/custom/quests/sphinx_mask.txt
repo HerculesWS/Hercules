@@ -11,7 +11,7 @@
 //= 1.3 Optimized, and coordinates moved. [Euphy]
 //============================================================
 
-morocc,208,90,6	script	Turban Thief	58,{
+morocc,208,90,6	script	Turban Thief	1_M_MERCHANT,{
 	mes "[Turban Thief]";
 	if(event_umbala < 2) {
 		mes "What do you wan te withz me? Be gone!";

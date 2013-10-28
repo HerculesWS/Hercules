@@ -14,7 +14,7 @@
 //= 2.2b Follow up fixes to bugreport:1122 [L0ne_W0lf]
 //============================================================
 
-alberta_in,133,55,3	script	Louitz#cm	84,{
+alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 	if (molgenstain == 2) {
 		mes "[Merchant Louitz]";
 		mes "Oh, it's you again.";
@@ -303,7 +303,7 @@ alberta_in,133,55,3	script	Louitz#cm	84,{
 	close;
 }
 
-geffen,181,114,3	script	Aure Dupon#cm	82,{
+geffen,181,114,3	script	Aure Dupon#cm	4_KID01,{
 	if (molgenstain == 2) {
 		mes "[Aure Dupon]";
 		mes "It seems that our";
@@ -392,7 +392,7 @@ geffen,181,114,3	script	Aure Dupon#cm	82,{
 	close;
 }
 
-geffen_in,141,140,3	script	Molgenstein#cm	121,{
+geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";

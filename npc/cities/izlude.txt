@@ -458,7 +458,7 @@
 
 // Inside Izlude
 //============================================================
-izlude_in,125,164,2	script	Aaron#izlude	65,{
+izlude_in,125,164,2	script	Aaron#izlude	1_M_YOUNGKNIGHT,{
 	mes "[Aaron]";
 	mes "Don't you think Strong VIT and training in a unique breathing method which enables quick HP recovery are the greatest advantages for a Swordman?";
 	next;
@@ -500,7 +500,7 @@ izlude_in,125,164,2	script	Aaron#izlude	65,{
 
 // Izlude Dungeon
 //============================================================
-izlu2dun,108,27,0	script	Sailor#2izlude	100,{
+izlu2dun,108,27,0	script	Sailor#2izlude	4W_SAILOR,{
 	mes "[Sailor]";
 	mes "Wanna";
 	mes "head back?";

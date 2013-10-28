@@ -58,5 +58,5 @@
 	close;
 }
 
-moc_para01,173,120,0	duplicate(pggc)	Goods Cabinet#01	111
-moc_para01,170,120,0	duplicate(pggc)	Goods Cabinet#02	111
+moc_para01,173,120,0	duplicate(pggc)	Goods Cabinet#01	HIDDEN_NPC
+moc_para01,170,120,0	duplicate(pggc)	Goods Cabinet#02	HIDDEN_NPC

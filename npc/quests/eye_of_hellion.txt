@@ -23,7 +23,7 @@
 //= 2.1 Updated RE/Pre-RE EXP. [Euphy]
 //============================================================
 
-morocc_in,116,101,3	script	Old Scholar Tyus#hellion	735,3,3,{
+morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
@@ -672,7 +672,7 @@ OnTouch:
 	end;
 }
 
-prontera,269,326,3	script	Clanux Heffron#hellion	50,{
+prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
@@ -1037,7 +1037,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	50,{
 	close;
 }
 
-prontera,223,82,0	script	#prt_key-1	111,{
+prontera,223,82,0	script	#prt_key-1	HIDDEN_NPC,{
 	if (HELLIONQ == 39) {
 		mes "^3355FFIt's a training dummy";
 		mes "with a gash in its body";
@@ -1072,7 +1072,7 @@ prontera,223,82,0	script	#prt_key-1	111,{
 	close;
 }
 
-prontera,45,67,0	script	 #prt_key-1-1	111,1,1,{
+prontera,45,67,0	script	 #prt_key-1-1	HIDDEN_NPC,1,1,{
 OnTouch:
 	if (HELLIONQ == 40 || HELLIONQ == 41) {
 		mes "[" + strcharinfo(0) + "]";
@@ -1153,7 +1153,7 @@ OnTouch:
 	end;
 }
 
-prt_in,128,79,0	script	Unknown Machine#prt_key	111,{
+prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
@@ -1284,7 +1284,7 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	111,{
 	close;
 }
 
-payon,182,132,3	script	Grout'he Tuccok#hellion	48,{
+payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
 	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
@@ -1623,7 +1623,7 @@ OnTouch:
 	end;
 }
 
-payon,82,109,3	script	Pile of Stone#paypuzz2	111,{
+payon,82,109,3	script	Pile of Stone#paypuzz2	HIDDEN_NPC,{
 	if (HELLIONQ == 49) {
 		mes "[" + strcharinfo(0) + "]";
 		mes "Well, this is the place";
@@ -1643,7 +1643,7 @@ payon,82,109,3	script	Pile of Stone#paypuzz2	111,{
 	}
 }
 
-payon,239,56,3	script	Dried Fish#paypuzz3	111,{
+payon,239,56,3	script	Dried Fish#paypuzz3	HIDDEN_NPC,{
 	if (HELLIONQ == 50) {
 		mes "[" + strcharinfo(0) + "]";
 		mes "So... Dried fish all";
@@ -1664,7 +1664,7 @@ payon,239,56,3	script	Dried Fish#paypuzz3	111,{
 	}
 }
 
-payon,240,160,3	script	Vat#paypuzz4	111,{
+payon,240,160,3	script	Vat#paypuzz4	HIDDEN_NPC,{
 	if (HELLIONQ == 51) {
 		mes "[" + strcharinfo(0) + "]";
 		mes "Alright, the last";
@@ -1690,7 +1690,7 @@ payon,240,160,3	script	Vat#paypuzz4	111,{
 	}
 }
 
-payon,159,129,3	script	Wooden Floor#paypuzz5	111,{
+payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 	if (HELLIONQ == 53) {
 		mes "[" + strcharinfo(0) + "]";
 		mes "Hey, the floor around";
@@ -1790,7 +1790,7 @@ payon,159,129,3	script	Wooden Floor#paypuzz5	111,{
 	}
 }
 
-pay_arche,142,28,0	script	Buddha Statue#paypuzz6	111,5,5,{
+pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
 	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
@@ -1889,7 +1889,7 @@ OnTouch:
 	end;
 }
 
-geffen,110,200,3	script	Sage Welshyun#hellion	754,3,3,{
+geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
@@ -2258,7 +2258,7 @@ OnTouch:
 	end;
 }
 
-gef_tower,116,37,0	script	Enoz#hellion	748,{
+gef_tower,116,37,0	script	Enoz#hellion	4_M_ALCHE_A,{
 	if (HELLIONQ == 59 || HELLIONQ == 62) {
 		mes "[Enoz]";
 		mes "It's gone, it's gone!";
@@ -2368,7 +2368,7 @@ gef_tower,116,37,0	script	Enoz#hellion	748,{
 	close;
 }
 
-gef_fild09,296,59,0	script	Hidden Cave#hellion	111,3,3,{
+gef_fild09,296,59,0	script	Hidden Cave#hellion	HIDDEN_NPC,3,3,{
 	if (HELLIONQ == 68) {
 		mes "^3355FFAmongst the wild bushes";
 		mes "and overgrown grass, you";

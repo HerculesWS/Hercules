@@ -19,7 +19,7 @@
 
 // Waiting Room NPCs
 //============================================================
-bat_room,114,227,5	script	Lieutenant Rundel	418,{
+bat_room,114,227,5	script	Lieutenant Rundel	4_M_KY_KNT,{
 	end;
 
 OnInit:
@@ -31,7 +31,7 @@ OnEnterBG:
 	end;
 }
 
-bat_room,114,204,1	script	Lieutenant Guerrit	414,{
+bat_room,114,204,1	script	Lieutenant Guerrit	4_M_CRU_KNT,{
 	end;
 
 OnInit:
@@ -43,7 +43,7 @@ OnEnterBG:
 	end;
 }
 
-bat_room,1,151,3	script	#bat_a02_timer	844,{
+bat_room,1,151,3	script	#bat_a02_timer	CLEAR_NPC,{
 	end;
 
 OnInit:
@@ -91,7 +91,7 @@ bat_room,113,211,0	warp	back_bgrooma02b	1,1,bat_room,154,150
 
 // Tierra Gorge Battleground Engine
 //============================================================
-bat_a02,15,15,3	script	start#bat_a02	844,{
+bat_a02,15,15,3	script	start#bat_a02	CLEAR_NPC,{
 OnInit:
 	mapwarp "bat_a02","bat_room",154,150;
 	end;
@@ -149,7 +149,7 @@ OnTimer10000:
 	end;
 }
 
-bat_a02,15,16,3	script	OBJ#bat_a02_a	844,{
+bat_a02,15,16,3	script	OBJ#bat_a02_a	CLEAR_NPC,{
 OnEnable:
 	bg_monster $@TierraBG2_id1,"bat_a02",177,345,"Food Storage",1909,"OBJ#bat_a02_a::OnMyMobDead";
 	end;
@@ -172,7 +172,7 @@ OnMyMobDead:
 	end;
 }
 
-bat_a02,15,17,3	script	OBJ#bat_a02_b	844,{
+bat_a02,15,17,3	script	OBJ#bat_a02_b	CLEAR_NPC,{
 OnEnable:
 	bg_monster $@TierraBG2_id2,"bat_a02",167,50,"Food Depot",1910,"OBJ#bat_a02_b::OnMyMobDead";
 	end;
@@ -195,7 +195,7 @@ OnMyMobDead:
 	end;
 }
 
-bat_a02,15,18,3	script	barricade#bat_a02_a	844,{
+bat_a02,15,18,3	script	barricade#bat_a02_a	CLEAR_NPC,{
 OnEnable:
 	for( set .@i,185; .@i < 202; set .@i,.@i+1 )
 		bg_monster $@TierraBG2_id1,"bat_a02",.@i,266,"Barricade",1906,"barricade#bat_a02_a::OnMyMobDead";
@@ -217,7 +217,7 @@ OnMyMobDead:
 	end;
 }
 
-bat_a02,15,19,3	script	barricade#bat_a02_b	844,{
+bat_a02,15,19,3	script	barricade#bat_a02_b	CLEAR_NPC,{
 OnEnable:
 	for( set .@i,169; .@i < 186; set .@i,.@i+1 )
 		bg_monster $@TierraBG2_id2,"bat_a02",.@i,129,"Barricade",1906,"barricade#bat_a02_b::OnMyMobDead";
@@ -239,7 +239,7 @@ OnMyMobDead:
 	end;
 }
 
-bat_a02,15,20,3	script	OBJ#bat_a02_n	844,{
+bat_a02,15,20,3	script	OBJ#bat_a02_n	CLEAR_NPC,{
 OnEnable:
 	monster "bat_a02",273,203,"Neutrality Flag",1911,1,"OBJ#bat_a02_n::OnMyMobDead";
 	end;
@@ -263,7 +263,7 @@ OnMyMobDead:
 	end;
 }
 
-bat_a02,15,21,3	script	NOBJ_mob#bat_a02_a	844,{
+bat_a02,15,21,3	script	NOBJ_mob#bat_a02_a	CLEAR_NPC,{
 OnEnable:
 	donpcevent "NOBJ_mob#bat_a02_b::OnKill";
 	bg_monster $@TierraBG2_id1,"bat_a02",272,204,"Guillaume Camp Guardian",1949,"NOBJ_mob#bat_a02_a::OnMyMobDead";
@@ -279,7 +279,7 @@ OnMyMobDead:
 	end;
 }
 
-bat_a02,15,22,3	script	NOBJ_mob#bat_a02_b	844,{
+bat_a02,15,22,3	script	NOBJ_mob#bat_a02_b	CLEAR_NPC,{
 OnEnable:
 	donpcevent "NOBJ_mob#bat_a02_a::OnKill";
 	bg_monster $@TierraBG2_id2,"bat_a02",272,204,"Croix Camp Guardian",1949,"NOBJ_mob#bat_a02_a::OnMyMobDead";
@@ -295,7 +295,7 @@ OnMyMobDead:
 	end;
 }
 
-bat_a02,185,270,1	script	Guillaume Blacksmith#a02	851,{
+bat_a02,185,270,1	script	Guillaume Blacksmith#a02	4_M_REPAIR,{
 	if (getcharid(4) == $@TierraBG2_id1) {
 		mes "[Guillaume Blacksmith]";
 		mes "We are in urgency! The Barricade has been destroyed!";
@@ -379,7 +379,7 @@ OnInit:
 	end;
 }
 
-bat_a02,170,121,5	script	Croix Blacksmith#bat_a02	851,{
+bat_a02,170,121,5	script	Croix Blacksmith#bat_a02	4_M_REPAIR,{
 	if (getcharid(4) == $@TierraBG2_id2) {
 		mes "[Croix Blacksmith]";
 		mes "We are in urgency! The Barricade has been destroyed!";
@@ -463,7 +463,7 @@ OnInit:
 	end;
 }
 
-bat_a02,53,377,3	script	Battle Therapist#a02_a	95,{
+bat_a02,53,377,3	script	Battle Therapist#a02_a	4_F_SISTER,{
 	specialeffect2 EF_HEAL;
 	mes "[Battle Therapist]";
 	mes "Just close your eyes,";
@@ -513,7 +513,7 @@ OnTouch_:
 	end;
 }
 
-bat_a02,45,19,3	script	Battle Therapist#a02_b	95,{
+bat_a02,45,19,3	script	Battle Therapist#a02_b	4_F_SISTER,{
 	specialeffect2 EF_HEAL;
 	mes "[Battle Therapist]";
 	mes "Just close your eyes,";
@@ -563,7 +563,7 @@ OnTouch:
 	end;
 }
 
-bat_a02,60,216,3	script	Valley Ghost#bat_a02_n	950,{
+bat_a02,60,216,3	script	Valley Ghost#bat_a02_n	4_GHOSTRING,{
 	specialeffect2 EF_HEAL;
 	mes "[Valley Ghost]";
 	mes "Boo...Boo...";
@@ -647,39 +647,39 @@ OnTouch:
 	end;
 }
 
-bat_a02,169,227,0	script	underladd#bat_a02_1	45,1,1,{
+bat_a02,169,227,0	script	underladd#bat_a02_1	WARPNPC,1,1,{
 OnTouch_:
 	warp "bat_a02",178,228;
 	end;
 }
 
-bat_a02,208,164,0	script	underladd#bat_a02_2	45,1,1,{
+bat_a02,208,164,0	script	underladd#bat_a02_2	WARPNPC,1,1,{
 OnTouch_:
 	warp "bat_a02",200,171;
 	end;
 }
 
-bat_a02,171,309,3	script	Guillaume Camp#flag11	973,{ end; }
-bat_a02,149,310,3	script	Guillaume Camp#flag12	973,{ end; }
-bat_a02,119,336,3	script	Guillaume Camp#flag13	973,{ end; }
-bat_a02,118,357,3	script	Guillaume Camp#flag14	973,{ end; }
-bat_a02,150,380,3	script	Guillaume Camp#flag15	973,{ end; }
-bat_a02,173,380,3	script	Guillaume Camp#flag16	973,{ end; }
-bat_a02,210,344,3	script	Guillaume Camp#flag17	973,{ end; }
-bat_a02,350,325,3	script	Guillaume Camp#flag18	973,{ end; }
-bat_a02,358,325,3	script	Guillaume Camp#flag19	973,{ end; }
+bat_a02,171,309,3	script	Guillaume Camp#flag11	1_FLAG_LION,{ end; }
+bat_a02,149,310,3	script	Guillaume Camp#flag12	1_FLAG_LION,{ end; }
+bat_a02,119,336,3	script	Guillaume Camp#flag13	1_FLAG_LION,{ end; }
+bat_a02,118,357,3	script	Guillaume Camp#flag14	1_FLAG_LION,{ end; }
+bat_a02,150,380,3	script	Guillaume Camp#flag15	1_FLAG_LION,{ end; }
+bat_a02,173,380,3	script	Guillaume Camp#flag16	1_FLAG_LION,{ end; }
+bat_a02,210,344,3	script	Guillaume Camp#flag17	1_FLAG_LION,{ end; }
+bat_a02,350,325,3	script	Guillaume Camp#flag18	1_FLAG_LION,{ end; }
+bat_a02,358,325,3	script	Guillaume Camp#flag19	1_FLAG_LION,{ end; }
 
-bat_a02,138,12,3	script	Croix Camp#flag11	974,{ end; }
-bat_a02,108,36,3	script	Croix Camp#flag12	974,{ end; }
-bat_a02,108,63,3	script	Croix Camp#flag13	974,{ end; }
-bat_a02,136,87,3	script	Croix Camp#flag14	974,{ end; }
-bat_a02,167,86,3	script	Croix Camp#flag15	974,{ end; }
-bat_a02,199,49,3	script	Croix Camp#flag16	974,{ end; }
-bat_a02,168,16,3	script	Croix Camp#flag17	974,{ end; }
-bat_a02,357,74,3	script	Croix Camp#flag18	974,{ end; }
-bat_a02,348,74,3	script	Croix Camp#flag19	974,{ end; }
+bat_a02,138,12,3	script	Croix Camp#flag11	1_FLAG_EAGLE,{ end; }
+bat_a02,108,36,3	script	Croix Camp#flag12	1_FLAG_EAGLE,{ end; }
+bat_a02,108,63,3	script	Croix Camp#flag13	1_FLAG_EAGLE,{ end; }
+bat_a02,136,87,3	script	Croix Camp#flag14	1_FLAG_EAGLE,{ end; }
+bat_a02,167,86,3	script	Croix Camp#flag15	1_FLAG_EAGLE,{ end; }
+bat_a02,199,49,3	script	Croix Camp#flag16	1_FLAG_EAGLE,{ end; }
+bat_a02,168,16,3	script	Croix Camp#flag17	1_FLAG_EAGLE,{ end; }
+bat_a02,357,74,3	script	Croix Camp#flag18	1_FLAG_EAGLE,{ end; }
+bat_a02,348,74,3	script	Croix Camp#flag19	1_FLAG_EAGLE,{ end; }
 
-bat_a02,53,377,3	script	Guillaume Vintenar#a02_a	419,{
+bat_a02,53,377,3	script	Guillaume Vintenar#a02_a	4_M_KY_HEAD,{
 	if (getcharid(4) == $@TierraBG2_id1) {
 		if ($@TierraBG2_Victory == 1) {
 			set .@your_medal,countitem(7828);
@@ -773,7 +773,7 @@ OnInit:
 	end;
 }
 
-bat_a02,45,19,3	script	Croix Vintenar#a02_b	415,{
+bat_a02,45,19,3	script	Croix Vintenar#a02_b	4_M_CRU_HEAD,{
 	if (getcharid(4) == $@TierraBG2_id2) {
 		if ($@TierraBG2_Victory == 2) {
 			set .@your_medal,countitem(7828);
@@ -867,7 +867,7 @@ OnInit:
 	end;
 }
 
-bat_a02,1,5,3	script	countdown#bat_a02	844,{
+bat_a02,1,5,3	script	countdown#bat_a02	CLEAR_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -911,18 +911,18 @@ OnTimer1830000:
 }
 
 /*
-bat_a02,351,75,3	script	Croix Camp Soldier#bat_a02_guide	934,{
+bat_a02,351,75,3	script	Croix Camp Soldier#bat_a02_guide	4_M_RASWORD,{
 	mes "Loading...";
 	close;
 }
 
-bat_a02,356,326,3	script	Guillaume Camp Soldier#bat_a02_guide	934,{
+bat_a02,356,326,3	script	Guillaume Camp Soldier#bat_a02_guide	4_M_RASWORD,{
 	mes "Loading...";
 	close;
 }
 */
 
-bat_a02,1,1,3	script	Release all#a02	81,{
+bat_a02,1,1,3	script	Release all#a02	4_DOG01,{
 	set .@i, callfunc("F_GM_NPC",1854,0);
 	if (.@i == -1) {
 		mes "Cancelled.";

@@ -38,7 +38,7 @@
 //----------------------------------------------------------------------------
 // Kain Himere
 //----------------------------------------------------------------------------
-airplane,47,61,7	script	Crewman	833,{
+airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 	if (kain_ticket == 4) {
 		mes "[Kain Himere]";
 		mes "Ah...";
@@ -474,7 +474,7 @@ OnTouch:
 //----------------------------------------------------------------------------
 // Elle Cherno
 //----------------------------------------------------------------------------
-ein_in01,261,241,3	script	Elle Cherno	703,3,3,{
+ein_in01,261,241,3	script	Elle Cherno	4_F_KID2,3,3,{
 OnTouch:
 	mes "[Elle Cherno]";
 	mes "Let's get to work";
@@ -559,7 +559,7 @@ OnTouch:
 //----------------------------------------------------------------------------
 // Theo Cherno
 //----------------------------------------------------------------------------
-ein_in01,123,94,1	script	Theo Cherno	851,{
+ein_in01,123,94,1	script	Theo Cherno	4_M_REPAIR,{
 	if (kain_ticket == 7) {
 		callfunc "F_Cherno";
 		set kain_ticket, 8;
@@ -597,7 +597,7 @@ ein_in01,123,94,1	script	Theo Cherno	851,{
 //----------------------------------------------------------------------------
 // Tarsha Cherno
 //----------------------------------------------------------------------------
-ein_in01,125,99,3	script	Tarsha Cherno	850,{
+ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 	if (kain_ticket == 7) {
 		callfunc "F_Cherno";
 		set kain_ticket, 8;
@@ -781,7 +781,7 @@ ein_in01,125,99,3	script	Tarsha Cherno	850,{
 	}
 }
 
-ein_in01,127,94,3	script	#exp_ein	111,{ end; }
+ein_in01,127,94,3	script	#exp_ein	HIDDEN_NPC,{ end; }
 
 function	script	F_Cherno	{
 	specialeffect EF_COMBOATTACK1,AREA,"#exp_ein";
@@ -891,7 +891,7 @@ function	script	F_Cherno	{
 //----------------------------------------------------------------------------
 // Unidentified Machine
 //----------------------------------------------------------------------------
-ein_in01,122,103,5	script	Unidentified Machine#ein	111,{
+ein_in01,122,103,5	script	Unidentified Machine#ein	HIDDEN_NPC,{
 	mes "^3355FFIt's...";
 	mes "It's a really";
 	mes "strange looking";
@@ -903,7 +903,7 @@ ein_in01,122,103,5	script	Unidentified Machine#ein	111,{
 //----------------------------------------------------------------------------
 // Mirror
 //----------------------------------------------------------------------------
-ein_in01,121,99,3	script	Mirror#ein	111,{
+ein_in01,121,99,3	script	Mirror#ein	HIDDEN_NPC,{
 	if (kain_ticket == 8) {
 		mes "^3355FFIt's a mirror.";
 		mes "So, of course the";
@@ -1026,7 +1026,7 @@ ein_in01,121,99,3	script	Mirror#ein	111,{
 //----------------------------------------------------------------------------
 // Tree from Einbech
 //----------------------------------------------------------------------------
-einbech,45,113,5	script	Tree#t1-1::Tree	111,{
+einbech,45,113,5	script	Tree#t1-1::Tree	HIDDEN_NPC,{
 	if (kain_ticket == 11) {
 		mes "^3355FFYou crouch down";
 		mes "under the tree and";
@@ -1138,14 +1138,14 @@ L_Diary:
 	mes "^333333But those moments grow fewer the more he drinks. When will he finally overcome his pain?^000000";
 	return;
 }
-einbech,36,100,5	duplicate(Tree)	Tree#t1-2	111
-einbech,44,90,5	duplicate(Tree)	Tree#t1-3	111
-einbech,53,94,5	duplicate(Tree)	Tree#t1-4	111
+einbech,36,100,5	duplicate(Tree)	Tree#t1-2	HIDDEN_NPC
+einbech,44,90,5	duplicate(Tree)	Tree#t1-3	HIDDEN_NPC
+einbech,53,94,5	duplicate(Tree)	Tree#t1-4	HIDDEN_NPC
 
 //----------------------------------------------------------------------------
 // Expert Repairman
 //----------------------------------------------------------------------------
-ein_in01,117,80,5	script	Unidentified Machine#as	111,{
+ein_in01,117,80,5	script	Unidentified Machine#as	HIDDEN_NPC,{
 	if (kain_ticket > 12) {
 		mes "["+strcharinfo(0)+"]";
 		mes "This is the";
@@ -1573,7 +1573,7 @@ OnCaptainMobDead:
 	end;
 }
 
-airplane_01,246,54,3	script	Airship Captain#02	873,{
+airplane_01,246,54,3	script	Airship Captain#02	4_M_REINDEER,{
 	cutin "fly_felrock",2;
 	mes "[Tarlock]";
 	mes "I am Tarlock,";
@@ -1590,22 +1590,22 @@ OnInit:
 	end;
 }
 
-airplane_01,249,50,0	script	boom0#airplane	139,{ end; }
-airplane_01,239,62,0	script	boom1#airplane	139,{ end; }
-airplane_01,244,55,0	script	boom2#airplane	139,{ end; }
-airplane_01,239,50,0	script	boom3#airplane	139,{ end; }
-airplane_01,245,59,0	script	boom4#airplane	139,{ end; }
-airplane_01,245,48,0	script	boom5#airplane	139,{ end; }
-airplane_01,235,39,0	script	boom6#airplane	139,{ end; }
-airplane_01,252,41,0	script	boom7#airplane	139,{ end; }
-airplane_01,252,63,0	script	boom8#airplane	139,{ end; }
-airplane_01,234,65,0	script	boom9#airplane	139,{ end; }
-airplane_01,227,67,0	script	boom10#airplane	139,{ end; }
+airplane_01,249,50,0	script	boom0#airplane	HIDDEN_WARP_NPC,{ end; }
+airplane_01,239,62,0	script	boom1#airplane	HIDDEN_WARP_NPC,{ end; }
+airplane_01,244,55,0	script	boom2#airplane	HIDDEN_WARP_NPC,{ end; }
+airplane_01,239,50,0	script	boom3#airplane	HIDDEN_WARP_NPC,{ end; }
+airplane_01,245,59,0	script	boom4#airplane	HIDDEN_WARP_NPC,{ end; }
+airplane_01,245,48,0	script	boom5#airplane	HIDDEN_WARP_NPC,{ end; }
+airplane_01,235,39,0	script	boom6#airplane	HIDDEN_WARP_NPC,{ end; }
+airplane_01,252,41,0	script	boom7#airplane	HIDDEN_WARP_NPC,{ end; }
+airplane_01,252,63,0	script	boom8#airplane	HIDDEN_WARP_NPC,{ end; }
+airplane_01,234,65,0	script	boom9#airplane	HIDDEN_WARP_NPC,{ end; }
+airplane_01,227,67,0	script	boom10#airplane	HIDDEN_WARP_NPC,{ end; }
 
 //----------------------------------------------------------------------------
 // Captain Tarlock :: lght_air
 //----------------------------------------------------------------------------
-airplane_01,238,154,3	script	Airship Captain#01	873,{
+airplane_01,238,154,3	script	Airship Captain#01	4_M_REINDEER,{
 	cutin "fly_felrock",2;
 	mes "[Tarlock]";
 	mes "I am Tarlock,";
@@ -1888,7 +1888,7 @@ airplane_01,238,154,3	script	Airship Captain#01	873,{
 //----------------------------------------------------------------------------
 // Captain Ferlock :: lght_ymir
 //----------------------------------------------------------------------------
-airplane,236,163,5	script	Airship Captain#03	873,{
+airplane,236,163,5	script	Airship Captain#03	4_M_REINDEER,{
 	cutin "fly_trock.bmp",2;
 	if (hg_ma1 == 3 || hg_ma1 == 4) {
 		mes "[Ferlock]";
@@ -2322,7 +2322,7 @@ airplane,236,163,5	script	Airship Captain#03	873,{
 
 // Heart Fragment Quest :: lght_ymir
 //============================================================
-airplane,236,63,4	script	Hallen	706,{
+airplane,236,63,4	script	Hallen	4_M_KID1,{
 	if (hg_ma1 == 3) {
 		mes "[Hallen]";
 		mes "Sha Sha~ ";
@@ -2751,7 +2751,7 @@ airplane,236,63,4	script	Hallen	706,{
 	}
 }
 
-airplane,33,69,4	script	Kaci	73,{
+airplane,33,69,4	script	Kaci	1_F_MERCHANT_01,{
 	if (hg_ma1 == 3) {
 		mes "[Kaci]";
 		mes "Hello there. My name is Kaci. If you feel bored boarding the airship, why don't you play a game of dice with me.";
@@ -3001,7 +3001,7 @@ L_Ask:
 	end;
 }
 
-ein_in01,279,25,0	script	#lab01_heart	139,1,1,{
+ein_in01,279,25,0	script	#lab01_heart	HIDDEN_WARP_NPC,1,1,{
 	end;
 OnTouch:
 	if (lhz_heart == 9)
@@ -3016,7 +3016,7 @@ OnTouch:
 	}
 }
 
-ein_in01,264,17,0	script	#lab02_heart	139,1,1,{
+ein_in01,264,17,0	script	#lab02_heart	HIDDEN_WARP_NPC,1,1,{
 	end;
 OnTouch:
 	if (lhz_heart == 9)
@@ -3038,7 +3038,7 @@ OnTouch:
 	}
 }
 
-ein_in01,263,35,3	script	Ferlock#lab	873,{
+ein_in01,263,35,3	script	Ferlock#lab	4_M_REINDEER,{
 	end;
 
 OnInit:
@@ -3056,7 +3056,7 @@ OnTimer120000:
 	end;
 }
 
-ein_in01,261,35,0	script	lab03#heart	139,1,1,{
+ein_in01,261,35,0	script	lab03#heart	HIDDEN_WARP_NPC,1,1,{
 	end;
 OnTouch:
 	if (lhz_heart == 9) {

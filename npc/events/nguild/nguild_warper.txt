@@ -26,7 +26,7 @@
 //= TODO: The official entrance is in Izlude.
 //============================================================
 
-prontera,146,163,6	script	Novice Castles	729,{
+prontera,146,163,6	script	Novice Castles	4_F_NOVICE,{
 	mes "[Cita]";
 	if (!getcharid(2)) {
 		mes "^FF0000You have to enter a guild to be able to hit Emperium!^000000";
@@ -80,7 +80,7 @@ prontera,146,163,6	script	Novice Castles	729,{
 	close;
 }
 
-n_castle,102,107,5	script	Cita	729,{
+n_castle,102,107,5	script	Cita	4_F_NOVICE,{
 	mes "[Cita]";
 	mes "Hello, "+ strcharinfo(0) +". Can I help you?";
 	next;

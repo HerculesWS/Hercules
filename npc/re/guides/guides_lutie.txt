@@ -13,7 +13,7 @@
 //= 1.2 Navigation system update. [Euphy]
 //============================================================
 
-xmas,140,137,3	script	Lutie Guide#xmas	717,{
+xmas,140,137,3	script	Lutie Guide#xmas	4_F_KID3,{
 	mes "[Lutie Guide]";
 	mes "Welcome to ^8B4513Lutie^000000,";
 	mes "the Snow Village.";

@@ -18,7 +18,7 @@
 // 1.2a Corrected bad duplicate names. (bugreport:921) [Samuray22]
 //============================================================
 
--	script	Bank Clerk::bankg	833,{
+-	script	Bank Clerk::bankg	4_M_ZONDAOYAJI,{
 	mes"[Maniss]";
 	mes strcharinfo(0)+", welcome to the 2nd Bank of Prontera!";
 
@@ -108,7 +108,7 @@ B_EXIT2:
 	close;
 }
 
-prontera,131,190,1	duplicate(bankg)	Bank Clerk#1-1	833
-geffen,125,73,3	duplicate(bankg)	Bank Clerk#2-1	833
-izlude,145,107,1	duplicate(bankg)	Bank Clerk#3-1	833
-morocc,147,84,7	duplicate(bankg)	Bank Clerk#4-1	833
+prontera,131,190,1	duplicate(bankg)	Bank Clerk#1-1	4_M_ZONDAOYAJI
+geffen,125,73,3	duplicate(bankg)	Bank Clerk#2-1	4_M_ZONDAOYAJI
+izlude,145,107,1	duplicate(bankg)	Bank Clerk#3-1	4_M_ZONDAOYAJI
+morocc,147,84,7	duplicate(bankg)	Bank Clerk#4-1	4_M_ZONDAOYAJI

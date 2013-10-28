@@ -52,7 +52,7 @@ OnInit:
 // $@divorcee id of the partner, who has to accept the divorce and pay.
 
 //The Priest - official iRO sprite & in-dialog name (on-map name not confirmed)
-prt_church,100,123,4	script	Vomars	60,{
+prt_church,100,123,4	script	Vomars	1_M_PASTOR,{
 	set @name$,"Vomars";
 
 	function SF_wed_end;
@@ -433,7 +433,7 @@ OnInit:
 }
 
 //Registration & Status
-prt_church,106,99,3	script	Happy Marry	67,{
+prt_church,106,99,3	script	Happy Marry	1_F_02,{
 	set @name$,"Marry";
 	if (getpartnerid() > 0) {
 		mes "["+@name$+"]";
@@ -809,7 +809,7 @@ function SF_Procedure {
 }
 }
 
-prt_church,94,99,4	script	Sister Lisa	79,{
+prt_church,94,99,4	script	Sister Lisa	1_F_PRIEST,{
 	set @name$,"Lisa";
 
 	function SF_DivorceEnd;

@@ -14,7 +14,7 @@
 //= 1.8 Fixed JobLevel requirement for Assassins and Rogues. [Joseph]
 //============================================================
 
-moc_prydb1,154,128,4	script	Alcouskou	118,{
+moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 	if (BaseClass == Job_Thief) {
 		mes "[Alcouskou]";
 		mes "As you live life you will encounter";
@@ -429,7 +429,7 @@ moc_prydb1,154,128,4	script	Alcouskou	118,{
 	close;
 }
 
-payon,91,77,3	script	Bag Seller	99,{
+payon,91,77,3	script	Bag Seller	4W_M_03,{
 	mes "[RuRumuni]";
 	mes "I am a humble merchant here";
 	mes "in Payon. I buy the leather";

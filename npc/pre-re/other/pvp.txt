@@ -13,7 +13,7 @@
 
 // PVP Warpers
 //============================================================
-pvp_y_room,86,85,4	script	Fight Square Reception#8	105,{
+pvp_y_room,86,85,4	script	Fight Square Reception#8	8W_SOLDIER,{
 	callfunc "F_PVP_FSRS";
 	end;
 
@@ -22,7 +22,7 @@ OnInit:
 	end;
 }
 
-pvp_n_room,30,85,4	script	Fight Square Reception#n	105,{
+pvp_n_room,30,85,4	script	Fight Square Reception#n	8W_SOLDIER,{
 	callfunc "F_PVP_FSRS";
 	end;
 

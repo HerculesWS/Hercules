@@ -17,7 +17,7 @@
 
 // Poring War Recruiter
 //============================================================
-prt_fild08,159,371,3	script	Poring War Recruiter#wop	909,{
+prt_fild08,159,371,3	script	Poring War Recruiter#wop	4_PORING,{
 	mes "[Poring]";
 	mes "!!!!!";
 	mes "Whoa-! Humans, ring~!!";
@@ -67,7 +67,7 @@ prt_fild08,159,371,3	script	Poring War Recruiter#wop	909,{
 
 // Poring Vending Machine
 //============================================================
-poring_w01,100,97,3	script	Poring Vending Machine#w	909,{
+poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 	if (checkweight(714,3) == 0) {
 		mes "- You are carrying too much items in order to use the Vending Machine. -";
 		close;
@@ -220,7 +220,7 @@ S_PoringVending:
 
 // Information
 //============================================================
-poring_w01,96,97,3	script	Sweet Devi#wop	738,{
+poring_w01,96,97,3	script	Sweet Devi#wop	4_DEVIRUCHI,{
 	if (MaxWeight-Weight < 2000 || checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -562,7 +562,7 @@ OnTimer58000:
 	end;
 }
 
-poring_w01,103,70,0	script	#wop_warp_rtry	139,13,13,{
+poring_w01,103,70,0	script	#wop_warp_rtry	HIDDEN_WARP_NPC,13,13,{
 	end;
 
 OnInit:
@@ -618,7 +618,7 @@ OnTimer65000:
 
 // Mr. Doppel
 //============================================================
-poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	739,{
+poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 	if (checkweight(714,3) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -749,7 +749,7 @@ OnDisable:
 	end;
 }
 
-poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	739,{
+poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 	if (checkweight(714,3) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -1027,7 +1027,7 @@ OnTimer703000:
 	end;
 }
 
-poring_w02,51,82,0	script	#wop_warp_a	139,1,1,{
+poring_w02,51,82,0	script	#wop_warp_a	HIDDEN_WARP_NPC,1,1,{
 	end;
 
 OnInit:
@@ -1049,7 +1049,7 @@ OnTouch:
 	end;
 }
 
-poring_w02,146,82,0	script	#wop_warp_d	139,1,1,{
+poring_w02,146,82,0	script	#wop_warp_d	HIDDEN_WARP_NPC,1,1,{
 	end;
 
 OnInit:
@@ -1213,7 +1213,7 @@ OnTimer120000:
 
 // Deviruchi
 //============================================================
-poring_w02,99,201,3	script	Deviruchi#wop_endmaster	738,{
+poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
 	if (MaxWeight-Weight < 2000 || checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -1448,7 +1448,7 @@ OnTimer68100:
 
 // Gate Guardian
 //============================================================
-poring_w02,99,52,0	script	Angeling Guardian#wop_da	111,{
+poring_w02,99,52,0	script	Angeling Guardian#wop_da	HIDDEN_NPC,{
 	cutin "wop_emb0" + $@wop_doorcount_a,1;
 	if ($@wop_doorcount_a < 4) {
 		if (wop_team == 2) {
@@ -1505,7 +1505,7 @@ OnInit:
 	end;
 }
 
-poring_w02,103,52,0	script	#aroom_ingate_wop	139,1,1,{
+poring_w02,103,52,0	script	#aroom_ingate_wop	HIDDEN_WARP_NPC,1,1,{
 	end;
 
 OnInit:
@@ -1525,7 +1525,7 @@ OnTouch:
 	end;
 }
 
-poring_w02,93,51,0	script	#aroom_outgate_wop	139,1,1,{
+poring_w02,93,51,0	script	#aroom_outgate_wop	HIDDEN_WARP_NPC,1,1,{
 	end;
 
 OnInit:
@@ -1545,7 +1545,7 @@ OnTouch:
 	end;
 }
 
-poring_w02,98,113,0	script	Deviling Guardian#wop_dd	111,{
+poring_w02,98,113,0	script	Deviling Guardian#wop_dd	HIDDEN_NPC,{
 	cutin "wop_emb0" + $@wop_doorcount_d,1;
 	if ($@wop_doorcount_d < 4) {
 		if (wop_team == 1) {
@@ -1602,7 +1602,7 @@ OnInit:
 	end;
 }
 
-poring_w02,93,113,0	script	#droom_ingate_wop	139,1,1,{
+poring_w02,93,113,0	script	#droom_ingate_wop	HIDDEN_WARP_NPC,1,1,{
 	end;
 
 OnInit:
@@ -1622,7 +1622,7 @@ OnTouch:
 	end;
 }
 
-poring_w02,103,114,0	script	#droom_outgate_wop	139,1,1,{
+poring_w02,103,114,0	script	#droom_outgate_wop	HIDDEN_WARP_NPC,1,1,{
 	end;
 
 OnInit:
@@ -1664,7 +1664,7 @@ poring_w01,117,108,3	duplicate(Deviling Side Marin#wpd)	Deviling Side Marin#wd3	
 poring_w01,122,108,3	duplicate(Deviling Side Marin#wpd)	Deviling Side Marin#wd4	1242
 poring_w01,121,105,3	duplicate(Deviling Side Marin#wpd)	Deviling Side Marin#wd5	1242
 
-poring_w01,84,108,3	script	#wop_ex_1	139,3,3,{
+poring_w01,84,108,3	script	#wop_ex_1	HIDDEN_WARP_NPC,3,3,{
 	end;
 
 OnTouch:
@@ -1717,7 +1717,7 @@ OnTouch:
 	close;
 }
 
-poring_w01,119,107,3	script	#wop_ex_2	139,3,3,{
+poring_w01,119,107,3	script	#wop_ex_2	HIDDEN_WARP_NPC,3,3,{
 	end;
 
 OnTouch:

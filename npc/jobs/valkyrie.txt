@@ -38,7 +38,7 @@
 //= 3.1 Added Izlude Renewal coordinates.
 //============================================================
 
-valkyrie,48,86,4	script	Valkyrie#	811,{
+valkyrie,48,86,4	script	Valkyrie#	4_F_VALKYRIE,{
 	if (ADVJOB != 0 || Upper == 1) {
 		mes "[Valkyrie]";
 		mes "Welcome";
@@ -210,7 +210,7 @@ valkyrie,48,86,4	script	Valkyrie#	811,{
 	}
 }
 
-yuno_in02,88,164,5	script	Metheus Sylphe#Library	742,{
+yuno_in02,88,164,5	script	Metheus Sylphe#Library	2_M_SAGE_B,{
 	if (BaseLevel > 98 && JobLevel > 49 && Class >= Job_Knight && Class <= Job_Crusader2) {
 		if (valkyrie_Q == 0) {
 			mes "[Metheus Sylphe]";
@@ -257,7 +257,7 @@ yuno_in02,88,164,5	script	Metheus Sylphe#Library	742,{
 	close;
 }
 
-yuno_in02,93,207,1	script	Book of Ymir	111,{
+yuno_in02,93,207,1	script	Book of Ymir	HIDDEN_NPC,{
 	if (ADVJOB != 0 || Upper == 1) {
 		mes "[The Book of Ymir]";
 		mes "...The entrance to the Hall of Honor is open to anyone who has moved forward into their next life. It is there to help heroes decide what they want to do, and can lead them to anywhere in this world.";
@@ -343,14 +343,14 @@ yuno_in02,93,207,1	script	Book of Ymir	111,{
 	close;
 }
 
-yuno_in05,49,43,1	script	Heart of Ymir	111,{
+yuno_in05,49,43,1	script	Heart of Ymir	HIDDEN_NPC,{
 	if (BaseLevel > 98 && JobLevel > 49 && Class >= Job_Knight && Class <= Job_Crusader2) {
 		if (valkyrie_Q == 2) warp "valkyrie",48,8;
 	}
 	end;
 }
 
-valkyrie,44,33,5	script	Teleporter	124,{
+valkyrie,44,33,5	script	Teleporter	4_F_TELEPORTER,{
 	if (Upper != 1) {
 		set .@karma_d,rand(1,10);
 		if (.@karma_d > 4) {

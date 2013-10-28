@@ -55,7 +55,7 @@ Super Novice: SUPNOV_Q -> job_super
 Expanded Super Novice: EXSUPNOV_Q -> job_super2
 */
 
-prt_in,38,104,4	script	Valerie	811,{
+prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 	if (checkweight(1201,1) == 0) {
 		mes "I think you have too many items. Let's try it again after you take some out.";
 		close;
@@ -253,30 +253,30 @@ L_Third:
 	mes "^ff00ffValerie^000000";
 	close;
 }
-in_moc_16,17,33,4	duplicate(Valerie#sign)	Valerie#asn	837
-ein_in01,13,28,4	duplicate(Valerie#sign)	Valerie#bls	837
-hu_in01,386,377,4	duplicate(Valerie#sign)	Valerie#hnt	837
-prt_in,88,108,4	duplicate(Valerie#sign)	Valerie#knt	837
-prt_church,19,36,4	duplicate(Valerie#sign)	Valerie#prst	837
-gef_tower,110,30,4	duplicate(Valerie#sign)	Valerie#wiz	837
-comodo,215,155,4	duplicate(Valerie#sign)	Valerie#danc	837
-prt_castle,45,167,4	duplicate(Valerie#sign)	Valerie#cru	837
-prt_monk,59,253,4	duplicate(Valerie#sign)	Valerie#mnk	837
-moc_ruins,90,104,4	duplicate(Valerie#sign)	Valerie#rg	837
-yuno_in02,43,62,4	duplicate(Valerie#sign)	Valerie#sag	837
-prt_church,103,86,4	duplicate(Valerie#sign)	Valerie#arch	837
-que_job01,75,92,4	duplicate(Valerie#sign)	Valerie#gc	837
-yuno,129,150,4	duplicate(Valerie#sign)	Valerie#mech	837
-tur_dun01,159,40,4	duplicate(Valerie#sign)	Valerie#ran	837
-prt_in,167,24,4	duplicate(Valerie#sign)	Valerie#rk	837
-spl_in02,81,102,4	duplicate(Valerie#sign)	Valerie#wl	837
-alde_alche,38,181,4	duplicate(Valerie#sign)	Valerie#alche	837
-alberta,198,129,4	duplicate(Valerie#sign)	Valerie#min	837
-in_rogue,376,104,4	duplicate(Valerie#sign)	Valerie#sc	837
-ve_in,244,122,4	duplicate(Valerie#sign)	Valerie#shu	837
-xmas,166,209,4	duplicate(Valerie#sign)	Valerie#wan	837
+in_moc_16,17,33,4	duplicate(Valerie#sign)	Valerie#asn	2_BULLETIN_BOARD
+ein_in01,13,28,4	duplicate(Valerie#sign)	Valerie#bls	2_BULLETIN_BOARD
+hu_in01,386,377,4	duplicate(Valerie#sign)	Valerie#hnt	2_BULLETIN_BOARD
+prt_in,88,108,4	duplicate(Valerie#sign)	Valerie#knt	2_BULLETIN_BOARD
+prt_church,19,36,4	duplicate(Valerie#sign)	Valerie#prst	2_BULLETIN_BOARD
+gef_tower,110,30,4	duplicate(Valerie#sign)	Valerie#wiz	2_BULLETIN_BOARD
+comodo,215,155,4	duplicate(Valerie#sign)	Valerie#danc	2_BULLETIN_BOARD
+prt_castle,45,167,4	duplicate(Valerie#sign)	Valerie#cru	2_BULLETIN_BOARD
+prt_monk,59,253,4	duplicate(Valerie#sign)	Valerie#mnk	2_BULLETIN_BOARD
+moc_ruins,90,104,4	duplicate(Valerie#sign)	Valerie#rg	2_BULLETIN_BOARD
+yuno_in02,43,62,4	duplicate(Valerie#sign)	Valerie#sag	2_BULLETIN_BOARD
+prt_church,103,86,4	duplicate(Valerie#sign)	Valerie#arch	2_BULLETIN_BOARD
+que_job01,75,92,4	duplicate(Valerie#sign)	Valerie#gc	2_BULLETIN_BOARD
+yuno,129,150,4	duplicate(Valerie#sign)	Valerie#mech	2_BULLETIN_BOARD
+tur_dun01,159,40,4	duplicate(Valerie#sign)	Valerie#ran	2_BULLETIN_BOARD
+prt_in,167,24,4	duplicate(Valerie#sign)	Valerie#rk	2_BULLETIN_BOARD
+spl_in02,81,102,4	duplicate(Valerie#sign)	Valerie#wl	2_BULLETIN_BOARD
+alde_alche,38,181,4	duplicate(Valerie#sign)	Valerie#alche	2_BULLETIN_BOARD
+alberta,198,129,4	duplicate(Valerie#sign)	Valerie#min	2_BULLETIN_BOARD
+in_rogue,376,104,4	duplicate(Valerie#sign)	Valerie#sc	2_BULLETIN_BOARD
+ve_in,244,122,4	duplicate(Valerie#sign)	Valerie#shu	2_BULLETIN_BOARD
+xmas,166,209,4	duplicate(Valerie#sign)	Valerie#wan	2_BULLETIN_BOARD
 
-sec_in02,12,40,5	script	Job Repair	57,1,1,{
+sec_in02,12,40,5	script	Job Repair	1_M_LIBRARYMASTER,1,1,{
 	callfunc "F_GM_NPC";
 	mes "Please input your password.";
 	next;

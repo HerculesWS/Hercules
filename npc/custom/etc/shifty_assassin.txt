@@ -11,7 +11,7 @@
 //= 1.1.2 Updated WoE Check. [Paradox924X]
 //============================================================
 
-morocc,148,86,5	script	Shifty Assassin	725,{
+morocc,148,86,5	script	Shifty Assassin	4_F_JOB_ASSASSIN,{
 	set $ninja_price,250000;
 
 	// STARTS THE MENU //

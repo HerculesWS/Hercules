@@ -12,7 +12,7 @@
 //= 1.4a Fixed a little Typo error in duplicates. (bugreport:749) [Samuray22]
 //============================================================
 
--	script	Smile Assistance::SmileHelper	92,{
+-	script	Smile Assistance::SmileHelper	4_F_03,{
 	mes "[Smile Girl]";
 	mes "Hi ~ Hi ~";
 	mes "This is Smile Assistance.";
@@ -93,12 +93,12 @@
 }
 
 // Additional Smile Assistance staff
-alberta,113,53,4	duplicate(SmileHelper)	Smile Assistance#alb	92
-aldebaran,136,135,4	duplicate(SmileHelper)	Smile Assistance#alde	92
-geffen,119,107,4	duplicate(SmileHelper)	Smile Assistance#gef	92
-moc_ruins,59,154,3	duplicate(SmileHelper)	Smile Assistance#moc	92
-payon,186,104,5	duplicate(SmileHelper)	Smile Assistance#pay	92
-prontera,157,187,4	duplicate(SmileHelper)	Smile Assistance#prt	92
+alberta,113,53,4	duplicate(SmileHelper)	Smile Assistance#alb	4_F_03
+aldebaran,136,135,4	duplicate(SmileHelper)	Smile Assistance#alde	4_F_03
+geffen,119,107,4	duplicate(SmileHelper)	Smile Assistance#gef	4_F_03
+moc_ruins,59,154,3	duplicate(SmileHelper)	Smile Assistance#moc	4_F_03
+payon,186,104,5	duplicate(SmileHelper)	Smile Assistance#pay	4_F_03
+prontera,157,187,4	duplicate(SmileHelper)	Smile Assistance#prt	4_F_03
 
 //============================================================
 // Old changelog

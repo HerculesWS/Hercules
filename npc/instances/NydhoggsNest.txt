@@ -21,7 +21,7 @@
 1@nyd	mapflag	src4instance
 2@nyd	mapflag	src4instance
 //============================================================
-nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	111,8,8,{
+nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 	if (ins_nyd == 0) {
 		mes "A great stone gate stands before you. The sculpture of a terrible dragon spreads its powerful looking wings.";
 		next;
@@ -224,7 +224,7 @@ OnTouch_:
 	end;
 }
 
-mid_camp,271,299,3	script	Historian Magnifier#edq	755,3,3,{
+mid_camp,271,299,3	script	Historian Magnifier#edq	4_M_SAGE_C,3,3,{
 	mes "[Historian Magniffer]";
 	if (ins_nyd == 1) {
 		mes "Sure, the mainland also has lots of interesting adventures... Hello, I am Magnifier, a historian dispatched from the Prontera royal court.";
@@ -410,7 +410,7 @@ mid_camp,271,299,3	script	Historian Magnifier#edq	755,3,3,{
 	}
 }
 
-prt_in,171,94,3	script	Assistant Naomi#edq	893,3,3,{
+prt_in,171,94,3	script	Assistant Naomi#edq	4_F_HUWOMAN,3,3,{
 	mes "[Assistant Naomi]";
 	set .@name$,strcharinfo(0);
 	if (ins_nyd == 3) {
@@ -596,7 +596,7 @@ prt_in,171,94,3	script	Assistant Naomi#edq	893,3,3,{
 	}
 }
 
-splendide,198,178,3	script	Grumbling Soldier#edq	447,3,3,{
+splendide,198,178,3	script	Grumbling Soldier#edq	4_M_FAIRYSOLDIER,3,3,{
 	mes "[Grumbling Soldier]";
 	if (isequipped(2782) == 1) {
 		mes "Nowadays, the world has turned unstable. I can't even fly comfortably anymore.";
@@ -656,7 +656,7 @@ splendide,198,178,3	script	Grumbling Soldier#edq	447,3,3,{
 	}
 }
 
-splendide,240,164,3	script	Sighing Soldier#edq	461,3,3,{
+splendide,240,164,3	script	Sighing Soldier#edq	4_M_FAIRYSOLDIER2,3,3,{
 	mes "[Sighing Soldier]";
 	if (isequipped(2782) == 1) {
 		mes "When will we be finished with this combat with the Sapha? Ugghhhh...";
@@ -713,7 +713,7 @@ splendide,240,164,3	script	Sighing Soldier#edq	461,3,3,{
 	}
 }
 
-spl_in01,109,60,3	script	Commander Lebiordirr#edq	435,3,3,{
+spl_in01,109,60,3	script	Commander Lebiordirr#edq	4_F_FAIRY,3,3,{
 	mes "[Commander Lebiordirr]";
 	if (isequipped(2782) == 1) {
 		if (ins_nyd == 51) {
@@ -927,7 +927,7 @@ spl_in01,109,60,3	script	Commander Lebiordirr#edq	435,3,3,{
 	}
 }
 
-spl_in01,104,56,3	script	Aide Arioss#edq	437,3,3,{
+spl_in01,104,56,3	script	Aide Arioss#edq	4_F_FAIRYKID2,3,3,{
 	mes "[Aide Arioss]";
 	if (isequipped(2782) == 1) {
 		if (ins_nyd == 91) {
@@ -1072,21 +1072,21 @@ OnTouch_:
 	end;
 }
 
-spl_in01,101,52,5	script	Splendide Guard#1_edq	447,1,1,{
+spl_in01,101,52,5	script	Splendide Guard#1_edq	4_M_FAIRYSOLDIER,1,1,{
 	mes "[Splendide Guard]";
 	if (isequipped(2782) == 1) mes "This is the Splendide office. Don't act impolitely.";
 	else mes "ThusDurnah Ra SharVeldIyaz U UorAmanDur Yee neaOsaAdor Yee ";
 	close;
 }
 
-spl_in01,118,52,3	script	Splendide Guard#2_edq	447,1,1,{
+spl_in01,118,52,3	script	Splendide Guard#2_edq	4_M_FAIRYSOLDIER,1,1,{
 	mes "[Splendide Guard]";
 	if (isequipped(2782) == 1) mes "This is the Splendide office. Don't act impolitely.";
 	else mes "ThusDurnah Ra SharVeldIyaz U UorAmanDur Yee neaOsaAdor Yee ";
 	close;
 }
 
-man_in01,311,57,3	script	Neat Etorr#edq	453,3,3,{
+man_in01,311,57,3	script	Neat Etorr#edq	4_MAN_NITT,3,3,{
 	mes "[Neat Etorr]";
 	if (isequipped(2782) == 1) {
 		if (ins_nyd == 52) {
@@ -1293,21 +1293,21 @@ man_in01,311,57,3	script	Neat Etorr#edq	453,3,3,{
 	}
 }
 
-man_in01,286,61,5	script	Manuk Guard#1_edq	450,1,1,{
+man_in01,286,61,5	script	Manuk Guard#1_edq	4_MAN_GALTUN,1,1,{
 	mes "[Manuk Guard]";
 	if (isequipped(2782) == 1) mes "I'm guarding this Laphine prisoner. Leave me alone.";
 	else mes "Klekod Oi Thekd Pheid Okei.";
 	close;
 }
 
-man_in01,295,61,3	script	Manuk Guard#2_edq	450,1,1,{
+man_in01,295,61,3	script	Manuk Guard#2_edq	4_MAN_GALTUN,1,1,{
 	mes "[Manuk Guard]";
 	if (isequipped(2782) == 1) mes "I'm guarding this Laphine prisoner. Leave me alone.";
 	else mes "Liek QUekdk Ohei Vue.";
 	close;
 }
 
-man_in01,291,62,3	script	Laphine Prisoner#edq	437,3,3,{
+man_in01,291,62,3	script	Laphine Prisoner#edq	4_F_FAIRYKID2,3,3,{
 	mes "[Laphine Prisoner]";
 	if (isequipped(2782) == 1) {
 		if (ins_nyd == 5) {
@@ -1516,7 +1516,7 @@ OnTouch_:
 
 // First floor
 //============================================================
-1@nyd,213,277,5	script	Murdered Yggdrasilid#1F	437,5,5,{
+1@nyd,213,277,5	script	Murdered Yggdrasilid#1F	4_F_FAIRYKID2,5,5,{
 	if ('ins_nyd2 == 0) {
 		mes "When a faint light enters your heart, a voice sounds in your head.";
 		next;
@@ -1752,7 +1752,7 @@ OnTimer1850000:
 	end;
 }
 
-1@nyd,195,320,0	script	nyd_to2f_warp	45,5,5,{
+1@nyd,195,320,0	script	nyd_to2f_warp	WARPNPC,5,5,{
 OnInstanceInit:
 OnDisable:
 	disablenpc instance_npcname("nyd_to2f_warp");
@@ -1952,7 +1952,7 @@ OnTimer180000:
 	end;
 }
 
-2@nyd,202,324,5	script	World Tree Yggdrasil#2F	437,3,3,{
+2@nyd,202,324,5	script	World Tree Yggdrasil#2F	4_F_FAIRYKID2,3,3,{
 	mes "[World Tree Yggdrasil]";
 	mes "Thank you. You're the saviour of humans and the Laphine Tribe.";
 	next;
@@ -2181,7 +2181,7 @@ OnMyPingDead:
 
 // GM Management NPCs
 //============================================================
-sec_in02,36,167,3	script	Nidhoggur Manager	447,1,1,{
+sec_in02,36,167,3	script	Nidhoggur Manager	4_M_FAIRYSOLDIER,1,1,{
 	callfunc "F_GM_NPC";
 	mes "Enter the password.";
 	next;
@@ -2225,7 +2225,7 @@ sec_in02,36,167,3	script	Nidhoggur Manager	447,1,1,{
 	}
 }
 
-nyd_dun02,7,7,2	script	Purification Admin#nyd2	844,2,0,{
+nyd_dun02,7,7,2	script	Purification Admin#nyd2	CLEAR_NPC,2,0,{
 	callfunc "F_GM_NPC";
 	mes "Please enter the password";
 	set .@i, callfunc("F_GM_NPC","dragonslayer",1);
@@ -2256,7 +2256,7 @@ nyd_dun02,7,7,2	script	Purification Admin#nyd2	844,2,0,{
 	}
 }
 
-nyd_dun02,88,195,4	script	Purification Stone#nyd2	406,{
+nyd_dun02,88,195,4	script	Purification Stone#nyd2	2_MONEMUS,{
 	erasequest 3135;
 	erasequest 3136;
 	set ins_nyd,200;

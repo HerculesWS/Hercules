@@ -22,7 +22,7 @@
 //= 1.4 Added GM management function. [Euphy]
 //============================================================
 
-prt_church,97,100,4	script	Wedding Staff#w	71,{
+prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 	cutin "wedding_marry01",2;
 	if (Upper == 2) {
 		mes "[Marry Happy]";
@@ -444,7 +444,7 @@ L_End:
 	end;
 }
 
-prt_church,97,102,0	script	Single Army#Prontera	105,{
+prt_church,97,102,0	script	Single Army#Prontera	8W_SOLDIER,{
 	mes "[Single Army]";
 	mes "^CC9933You have to refine";
 	mes "items on your own to";
@@ -461,7 +461,7 @@ OnEnable:
 	end;
 }
 
-prt_church,98,102,0	script	Single Army#Geffen	705,{
+prt_church,98,102,0	script	Single Army#Geffen	4_M_GEF_SOLDIER,{
 	mes "[Single Army]";
 	mes "^330099It's a waste to";
 	mes "form parties in";
@@ -479,7 +479,7 @@ OnEnable:
 	end;
 }
 
-prt_church,99,102,0	script	Single Army#Morocc	707,{
+prt_church,99,102,0	script	Single Army#Morocc	4_M_MOC_SOLDIER,{
 	mes "[Single Army]";
 	mes "^666666Hell, I've trained";
 	mes "all by myself since";
@@ -497,7 +497,7 @@ OnEnable:
 	end;
 }
 
-prt_church,100,102,0	script	Single Army#Payon	708,{
+prt_church,100,102,0	script	Single Army#Payon	4_M_PAY_SOLDIER,{
 	mes "[Single Army]";
 	mes "^666600I CHOOSE to spend";
 	mes "Christmas alone...";
@@ -515,7 +515,7 @@ OnEnable:
 	end;
 }
 
-prt_church,101,102,0	script	Single Army#Amatsu	767,{
+prt_church,101,102,0	script	Single Army#Amatsu	8_M_JPNSOLDIER,{
 	mes "[Single Army]";
 	mes "^CC9966Women may break my";
 	mes " spirit, but they'll never";
@@ -532,7 +532,7 @@ OnEnable:
 	end;
 }
 
-prt_church,102,102,0	script	Single Army#Gonryun	780,{
+prt_church,102,102,0	script	Single Army#Gonryun	8_M_TWSOLDIER,{
 	mes "[Single Army]";
 	mes "^669900...We're the free! We're";
 	mes "the Invincible Single Army!^000000";
@@ -548,7 +548,7 @@ OnEnable:
 	end;
 }
 
-prt_church,100,128,4	script	Bishop#w	60,{
+prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 	cutin "wedding_bomars01",2;
 	if (Upper == 2) {
 		mes "[Vomars]";
@@ -809,7 +809,7 @@ OnTimer180000:
 	end;
 }
 
-prt_church,28,178,4	script	The King of Midgart	108,{
+prt_church,28,178,4	script	The King of Midgart	1_M_PRON_KING,{
 	callfunc "F_GM_NPC";
 	mes "[Vomars]";
 	mes "Wh-who are you?";
@@ -854,7 +854,7 @@ prt_church,28,178,4	script	The King of Midgart	108,{
 	}
 }
 
-prt_church,20,179,4	script	Divorce Staff	71,{
+prt_church,20,179,4	script	Divorce Staff	1_F_LIBRARYGIRL,{
 	callfunc "F_GM_NPC";
 	mes "[Bad Ending]";
 	mes "Uh oh...";
@@ -901,7 +901,7 @@ prt_church,20,179,4	script	Divorce Staff	71,{
 	}
 }
 
-prt_church,22,179,4	script	Remarry Staff	71,{
+prt_church,22,179,4	script	Remarry Staff	1_F_LIBRARYGIRL,{
 	callfunc "F_GM_NPC";
 	mes "[Wedding Again]";
 	mes "Hmm...?";

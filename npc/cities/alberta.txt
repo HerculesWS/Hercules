@@ -17,7 +17,7 @@
 //= 1.6 Added Izlude RE coordinates. [Euphy]
 //============================================================
 
-alberta,97,51,0	script	Fabian	84,{
+alberta,97,51,0	script	Fabian	4_M_02,{
 	mes "[Fabian]";
 	mes "Man... When you travel all around the world, you'll hear of some crazy things.";
 	next;
@@ -32,7 +32,7 @@ alberta,97,51,0	script	Fabian	84,{
 	close;
 }
 
-alberta,53,39,0	script	Steiner	100,{
+alberta,53,39,0	script	Steiner	4W_SAILOR,{
 	mes "[Steiner]";
 	mes "Oh...!";
 	mes "Welcome to Alberta,";
@@ -46,7 +46,7 @@ alberta,53,39,0	script	Steiner	100,{
 	close;
 }
 
-alberta,20,183,0	script	Chad	49,{
+alberta,20,183,0	script	Chad	1_M_03,{
 	mes "[Chad]";
 	mes "People say the legendary weapon Gungnir never misses its target. I wonder if it's possibly true...";
 	next;
@@ -61,7 +61,7 @@ alberta,20,183,0	script	Chad	49,{
 	close;
 }
 
-alberta,131,139,2	script	Drunken Old Man	54,{
+alberta,131,139,2	script	Drunken Old Man	1_M_JOBGUIDER,{
 	mes "[Deagle]";
 	mes "^666666*Hiccup*^000000";
 	mes "Wh-what are you";
@@ -108,7 +108,7 @@ alberta,131,139,2	script	Drunken Old Man	54,{
 	}
 }
 
-alberta,58,80,2	script	Shakir	99,{
+alberta,58,80,2	script	Shakir	4W_M_03,{
 	mes "[Shakir]";
 	if (rand(2)) {
 		mes "We Merchants have our own negotiating skill when we sell goods. This skill can get us more money than when other people sell goods.";
@@ -135,7 +135,7 @@ alberta,58,80,2	script	Shakir	99,{
 	close;
 }
 
-alberta,62,156,2	script	Sonya	102,{
+alberta,62,156,2	script	Sonya	8_F,{
 	mes "[Sonya]";
 	switch(rand(3)){
 	case 0:
@@ -171,7 +171,7 @@ alberta,62,156,2	script	Sonya	102,{
 	}
 }
 
-alberta,93,174,2	script	Grandmother Alma	103,{
+alberta,93,174,2	script	Grandmother Alma	8_F_GRANDMOTHER,{
 	mes "[Grandmother Alma]";
 	mes "Some time ago,";
 	mes "a derelict ship";
@@ -192,7 +192,7 @@ alberta,93,174,2	script	Grandmother Alma	103,{
 	close;
 }
 
-alberta,189,151,5	script	Fisk	100,{
+alberta,189,151,5	script	Fisk	4W_SAILOR,{
 	mes "[Fisk]";
 	mes "Ahoy mate,";
 	mes "where'd ya";
@@ -228,7 +228,7 @@ alberta,189,151,5	script	Fisk	100,{
 	}
 }
 
-alb2trea,39,50,6	script	Fisk#a2t	100,{
+alb2trea,39,50,6	script	Fisk#a2t	4W_SAILOR,{
 	mes "[Fisk]";
 	mes "So you wanna head back to the mainland in Alberta, eh?";
 	next;
@@ -237,7 +237,7 @@ alb2trea,39,50,6	script	Fisk#a2t	100,{
 	close;
 }
 
-alberta,195,151,2	script	Paul	86,{
+alberta,195,151,2	script	Paul	4_M_04,{
 	mes "[Paul]";
 	mes "Good day~";
 	mes "Would you like";
@@ -276,7 +276,7 @@ alberta,195,151,2	script	Paul	86,{
 	}
 }
 
-alberta,190,173,4	script	Phelix	85,{
+alberta,190,173,4	script	Phelix	4_M_03,{
 	set .@weight,MaxWeight-Weight;
 	mes "[Phelix]";
 	if ((.@weight) < 10000) {

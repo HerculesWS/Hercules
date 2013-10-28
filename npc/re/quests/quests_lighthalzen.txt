@@ -14,15 +14,15 @@
 
 // Renewal split [Daegaladh]
 //============================================================
-izlude,172,73,6	duplicate(Scamp)	Scamp#iz	853
-izlude_a,172,73,6	duplicate(Scamp)	Scamp#iz_a	853
-izlude_b,172,73,6	duplicate(Scamp)	Scamp#iz_b	853
-izlude_c,172,73,6	duplicate(Scamp)	Scamp#iz_c	853
-izlude_d,172,73,6	duplicate(Scamp)	Scamp#iz_d	853
+izlude,172,73,6	duplicate(Scamp)	Scamp#iz	4_M_YURI
+izlude_a,172,73,6	duplicate(Scamp)	Scamp#iz_a	4_M_YURI
+izlude_b,172,73,6	duplicate(Scamp)	Scamp#iz_b	4_M_YURI
+izlude_c,172,73,6	duplicate(Scamp)	Scamp#iz_c	4_M_YURI
+izlude_d,172,73,6	duplicate(Scamp)	Scamp#iz_d	4_M_YURI
 
 // Somatology Laboratory F4
 //============================================================
-lighthalzen,303,304,5	script	Jerome Jameson#start	904,{
+lighthalzen,303,304,5	script	Jerome Jameson#start	4_M_KHMAN,{
 	if (lhz_dun04 == 0) {
 		mes "[Jerome Jameson]";
 		mes "Wow, what a "+((Sex)?"strong man!":"beautiful dame!");
@@ -106,7 +106,7 @@ function	script	lhz4enter	{
 	close;
 }
 
-lhz_dun03,239,77,0	script	#warplhz3lhz4	45,1,1,{
+lhz_dun03,239,77,0	script	#warplhz3lhz4	WARPNPC,1,1,{
 OnTouch:
 	if (lhz_dun04 == 0) {
 		mes "It doesn't make sense to go down these flooded stairs.";
@@ -141,7 +141,7 @@ OnEnable:
 	end;
 }
 
-lhz_dun04,151,276,3	script	Researcher#lhz4	865,{
+lhz_dun04,151,276,3	script	Researcher#lhz4	4_LGTSCIENCE,{
 	if (lhz_dun04 == 0) {
 		mes "[Researcher]";
 		mes "................";
@@ -217,7 +217,7 @@ lhz_dun04,151,276,3	script	Researcher#lhz4	865,{
 	end;
 }
 
-que_lhz,207,75,3	script	Researcher#ins	865,3,3,{
+que_lhz,207,75,3	script	Researcher#ins	4_LGTSCIENCE,3,3,{
 OnTouch:
 	if (lhz_dun04 == 1) {
 		mes "[Researcher]";
@@ -264,7 +264,7 @@ OnTouch:
 	close;
 }
 
-que_lhz,94,119,3	script	Researcher#ins2	865,{
+que_lhz,94,119,3	script	Researcher#ins2	4_LGTSCIENCE,{
 	if (lhz_dun04 == 2) {
 		mes "[Wolfchev]";
 		mes "Hehehe. You are really persistent. What do you want from someone like me?";
@@ -302,7 +302,7 @@ que_lhz,94,119,3	script	Researcher#ins2	865,{
 	mes "..........";
 	close;
 }
-que_lhz,147,224,3	script	Researcher#ins3	865,{
+que_lhz,147,224,3	script	Researcher#ins3	4_LGTSCIENCE,{
 	if (lhz_dun04 == 4 || mobcount("que_lhz","#controllhz4::OnMyMobDead") > 0) {
 		mes "[Wolfchev]";
 		mes "Wolfchev is freaking out. He is out of his mind.";

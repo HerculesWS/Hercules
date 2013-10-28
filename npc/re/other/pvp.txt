@@ -13,7 +13,7 @@
 
 // PVP Warpers
 //============================================================
-pvp_y_room,30,85,4	script	Fight Square Reception#1	105,{ //5,5
+pvp_y_room,30,85,4	script	Fight Square Reception#1	8W_SOLDIER,{ //5,5
 	callfunc "F_PVP_FSRS",50,69;
 	end;
 
@@ -22,7 +22,7 @@ OnInit:
 	end;
 }
 
-pvp_y_room,38,85,4	script	Fight Square Reception#2	105,{ //5,5
+pvp_y_room,38,85,4	script	Fight Square Reception#2	8W_SOLDIER,{ //5,5
 	callfunc "F_PVP_FSRS",70,89;
 	end;
 
@@ -31,7 +31,7 @@ OnInit:
 	end;
 }
 
-pvp_y_room,46,85,4	script	Fight Square Reception#3	105,{ //5,5
+pvp_y_room,46,85,4	script	Fight Square Reception#3	8W_SOLDIER,{ //5,5
 	callfunc "F_PVP_FSRS",90,99;
 	end;
 
@@ -40,7 +40,7 @@ OnInit:
 	end;
 }
 
-pvp_y_room,54,85,4	script	Fight Square Reception#8	105,{
+pvp_y_room,54,85,4	script	Fight Square Reception#8	8W_SOLDIER,{
 	callfunc "F_PVP_FSRS";
 	end;
 
@@ -49,7 +49,7 @@ OnInit:
 	end;
 }
 
-pvp_y_room,62,85,4	script	Fight Square Reception#4	105,{
+pvp_y_room,62,85,4	script	Fight Square Reception#4	8W_SOLDIER,{
 	//if (ADVJOB > 0) {
 	if (Upper == 1) {
 		mes "[PVP Fight Square Reception Staff]";
@@ -65,7 +65,7 @@ OnInit:
 	end;
 }
 
-pvp_y_room,70,85,4	script	Fight Square Reception#5	105,{
+pvp_y_room,70,85,4	script	Fight Square Reception#5	8W_SOLDIER,{
 	//if (ADVJOB == 0) {
 	if (Upper != 1) {
 		mes "[PVP Fight Square Reception Staff]";
@@ -81,7 +81,7 @@ OnInit:
 	end;
 }
 
-pvp_n_room,86,85,4	script	Fight Square Reception#n	105,{
+pvp_n_room,86,85,4	script	Fight Square Reception#n	8W_SOLDIER,{
 	callfunc "F_PVP_FSRS";
 	end;
 

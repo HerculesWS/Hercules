@@ -18,7 +18,7 @@
 //= 1.8 Moved Craft Book Merchant to Renewal path. [Euphy]
 //============================================================
 
-alde_alche,24,188,3	script	Guild Dealer	740,{
+alde_alche,24,188,3	script	Guild Dealer	2_M_ALCHE,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you are carrying -";

@@ -13,7 +13,7 @@
 //= 1.2 Navigation system update. [Euphy]
 //============================================================
 
-hugel,98,56,3	script	Hugel Guide Granny#hugel	863,{
+hugel,98,56,3	script	Hugel Guide Granny#hugel	4_F_LGTGRAND,{
 	mes "[Hugel Guide Granny]";
 	mes "Oh, hello~ you are one energetic adventurer.";
 	mes "Welcome to ^8B4513Hugel^000000. I am honored to guide you in this beautiful village.";
@@ -170,7 +170,7 @@ hugel,98,56,3	script	Hugel Guide Granny#hugel	863,{
 	}
 }
 
-hugel,187,172,6	script	Guide Rich King#hugel	414,{
+hugel,187,172,6	script	Guide Rich King#hugel	4_M_CRU_KNT,{
 	mes "[Rich King]";
 	mes "What business do you have";
 	mes "in this countryside village?";

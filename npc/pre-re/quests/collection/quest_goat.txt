@@ -12,7 +12,7 @@
 //= 1.0 First version.
 //============================================================
 
-ein_fild06,82,171,0	script	Vegetable Farmer#Goat	919,{
+ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 	if (checkquest(60137) != -1) {
 		if (checkquest(60137,HUNTING) != 2 ) {
 			mes "[Vegetable Farmer]";

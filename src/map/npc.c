@@ -2013,6 +2013,67 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 	}
 }
 
+// Parse View
+// Support for using Constants in place of NPC View IDs.
+int npc_parseview(const char* w4, const char* start, const char* buffer, const char* filepath) {
+	int num, val, i = 0;
+	char viewid[1024];
+
+	// Check if view (w4) has a comma (Work around for Duplicate types).
+	if(strstr(w4, ",") != NULL) {
+		num = strstr(w4, ",") - w4;
+		strncpy(viewid, w4, num);	// Strip view from w4.
+		viewid[num] = 0;
+	}else{
+		strcpy(viewid, w4);
+	}
+
+	// Remove any in-line whitspacing / comments
+	while (viewid[i] != '\0') {
+		if (isspace(viewid[i]))
+		{
+			viewid[i] = 0;
+			break;
+		}
+
+		viewid[i] = viewid[i];
+		i++;
+	}
+
+	// Check if view is not an ID (only numbers).
+	if(!npc->viewisid(viewid))
+	{
+		// Check if constant exists and get its value.
+		if(!script->get_constant(viewid, &val)) {
+			ShowWarning("npc_parseview: Invalid NPC constant '%s' specified in file '%s', line'%d'. Defaulting to INVISIBLE_CLASS. \n", viewid, filepath, strline(buffer,start-buffer));
+			val = INVISIBLE_CLASS;
+		}
+	} else {
+		// NPC has ID specified for view.
+		val = atoi(w4);
+	}
+
+	if(val == -1)
+		val = INVISIBLE_CLASS;
+
+	return val;
+}
+
+// View is ID
+// Checks if given view is an ID or constant.
+bool npc_viewisid(const char * viewid)
+{
+	if(atoi(viewid) != -1)
+	{
+		// Loop through view, looking for non-numeric character.
+		while (*viewid) {
+			if (isdigit(*viewid++) == 0) return false;
+		}
+	}
+
+    return true;
+}
+
 //Add then display an npc warp on map
 struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y) {
 	int i, flag = 0;
@@ -2220,7 +2281,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 	nd->bl.y = y;
 	nd->bl.id = npc->get_new_npc_id();
 	npc->parsename(nd, w3, start, buffer, filepath);
-	nd->class_ = m==-1?-1:atoi(w4);
+	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
 	nd->speed = 200;
 
 	++npc_shop;
@@ -2383,14 +2444,13 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 
 	CREATE(nd, struct npc_data, 1);
 
-	if( sscanf(w4, "%d,%d,%d", &class_, &xs, &ys) == 3 )
+	if( sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2 )
 	{// OnTouch area defined
 		nd->u.scr.xs = xs;
 		nd->u.scr.ys = ys;
 	}
 	else
 	{// no OnTouch area
-		class_ = atoi(w4);
 		nd->u.scr.xs = -1;
 		nd->u.scr.ys = -1;
 	}
@@ -2401,7 +2461,7 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 	nd->bl.y = y;
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->bl.id = npc->get_new_npc_id();
-	nd->class_ = class_;
+	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
 	nd->speed = 200;
 	nd->u.scr.script = scriptroot;
 	nd->u.scr.label_list = label_list;
@@ -2530,7 +2590,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 	nd->bl.y = y;
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->bl.id = npc->get_new_npc_id();
-	nd->class_ = class_;
+	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
 	nd->speed = 200;
 	nd->src_id = src_id;
 	nd->bl.type = BL_NPC;
@@ -4045,6 +4105,8 @@ void npc_defaults(void) {
 	npc->addsrcfile = npc_addsrcfile;
 	npc->delsrcfile = npc_delsrcfile;
 	npc->parsename = npc_parsename;
+	npc->parseview = npc_parseview;
+	npc->viewisid = npc_viewisid;
 	npc->add_warp = npc_add_warp;
 	npc->parse_warp = npc_parse_warp;
 	npc->parse_shop = npc_parse_shop;

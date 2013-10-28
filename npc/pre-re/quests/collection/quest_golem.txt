@@ -12,7 +12,7 @@
 //= 1.0 First version.
 //============================================================
 
-moc_fild11,57,138,0	script	Private Jeremy#hunt	707,{
+moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 	if (checkquest(60140) != -1) {
 		if (checkquest(60140,HUNTING) != 2 ) {
 			mes "[Private Jeremy]";

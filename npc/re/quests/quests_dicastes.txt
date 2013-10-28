@@ -35,7 +35,7 @@
 
 // Entrance
 //============================================================
-manuk,321,182,5	script	Entrance Manager#ep133	450,{
+manuk,321,182,5	script	Entrance Manager#ep133	4_MAN_GALTUN,{
 	if (!isequipped(2782)) {
 		mes "[Average Galten]";
 		mes "¢¤¡ð¡ú? ¢£ ¡ù¡ð...";
@@ -64,7 +64,7 @@ manuk,321,182,5	script	Entrance Manager#ep133	450,{
 	close;
 }
 
-dic_dun01,266,113,5	script	Curious Sapha#ep13_3_	449,{
+dic_dun01,266,113,5	script	Curious Sapha#ep13_3_	4_MAN_BENKUNI,{
 	if (!isequipped(2782)) {
 		mes "[Curious Sapha]";
 		mes "¡ö¡ñ¡Ð ¡ò ¡õ?";
@@ -174,7 +174,7 @@ dic_dun01,266,113,5	script	Curious Sapha#ep13_3_	449,{
 	}
 }
 
-sec_in02,16,43,5	script	Scaraba Dungeon Entrance	449,{
+sec_in02,16,43,5	script	Scaraba Dungeon Entrance	4_MAN_BENKUNI,{
 	callfunc "F_GM_NPC";
 	mes "Setting you for dungeon entry.";
 	mes "You will be able to go through if the password is correct.";
@@ -247,11 +247,11 @@ sec_in02,16,43,5	script	Scaraba Dungeon Entrance	449,{
 	close;
 
 }
-dic_dun01,286,104,5	duplicate(Vigilante#main)	Vigilante#ep133_23	450
-dic_dun01,294,106,3	duplicate(Vigilante#main)	Vigilante#ep133_24	492
-dic_dun01,30,216,5	duplicate(Vigilante#main)	Vigilante#ep133_26	492
+dic_dun01,286,104,5	duplicate(Vigilante#main)	Vigilante#ep133_23	4_MAN_GALTUN
+dic_dun01,294,106,3	duplicate(Vigilante#main)	Vigilante#ep133_24	4_MAN_GALTUN1
+dic_dun01,30,216,5	duplicate(Vigilante#main)	Vigilante#ep133_26	4_MAN_GALTUN1
 
-dic_dun01,284,102,5	script	Dirty Vigilante#ep13_3	450,{
+dic_dun01,284,102,5	script	Dirty Vigilante#ep13_3	4_MAN_GALTUN,{
 	if (!isequipped(2782)) {
 		mes "[Vigilante]";
 		mes "¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó¢¤¡ö¡ø ¢³ ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û.";
@@ -303,7 +303,7 @@ dic_dun01,284,102,5	script	Dirty Vigilante#ep13_3	450,{
 	close;
 }
 
-mid_camp,216,246,0	script	#ep133_event03	139,2,2,{
+mid_camp,216,246,0	script	#ep133_event03	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (ep13_3_secret == 23) {
@@ -332,7 +332,7 @@ OnTouch:
 	end;
 }
 
-mid_camp,218,250,3	script	Suspicious Guy#ep133_	494,{
+mid_camp,218,250,3	script	Suspicious Guy#ep133_	4_M_ROKI,{
 	mes "[Suspicious Guy]";
 	mes ".....";
 	hideonnpc strnpcinfo(0);
@@ -345,7 +345,7 @@ OnEnable:
 	end;
 }
 
--	script	Guard#ep133_11	492,{
+-	script	Guard#ep133_11	4_MAN_GALTUN1,{
 	if (!isequipped(2782)) {
 		mes "[Capital City Guard]";
 		mes "¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?";
@@ -404,10 +404,10 @@ OnEnable:
 	mes "Please inquiry with a GM.";
 	close;
 }
-dic_fild01,146,281,5	duplicate(Guard#ep133_11)	Capital City Guard#1	492
-dic_fild01,153,281,3	duplicate(Guard#ep133_11)	Capital City Guard#2	450
+dic_fild01,146,281,5	duplicate(Guard#ep133_11)	Capital City Guard#1	4_MAN_GALTUN1
+dic_fild01,153,281,3	duplicate(Guard#ep133_11)	Capital City Guard#2	4_MAN_GALTUN
 
-dic_in01,254,119,0	script	Item Storage#01	844,{
+dic_in01,254,119,0	script	Item Storage#01	CLEAR_NPC,{
 	mes "This is the item storage.";
 	mes "There is some writing on the paper.";
 	next;
@@ -480,7 +480,7 @@ function	script	que_dic	{
 	close;
 }
 
-dic_in01,48,263,5	script	Hunting Dept. 1 Manager	449,{
+dic_in01,48,263,5	script	Hunting Dept. 1 Manager	4_MAN_BENKUNI,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
@@ -550,7 +550,7 @@ dic_in01,48,263,5	script	Hunting Dept. 1 Manager	449,{
 	close;
 }
 
-dic_in01,51,266,6	script	Hunting Dept. 2 Manager	449,{
+dic_in01,51,266,6	script	Hunting Dept. 2 Manager	4_MAN_BENKUNI,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
@@ -619,7 +619,7 @@ dic_in01,51,266,6	script	Hunting Dept. 2 Manager	449,{
 	close;
 }
 
-dic_in01,51,270,7	script	Supply Dept. 1 Manager	449,{
+dic_in01,51,270,7	script	Supply Dept. 1 Manager	4_MAN_BENKUNI,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
@@ -690,7 +690,7 @@ dic_in01,51,270,7	script	Supply Dept. 1 Manager	449,{
 	close;
 }
 
-dic_in01,48,273,8	script	Supply Dept. 2 Manager	449,{
+dic_in01,48,273,8	script	Supply Dept. 2 Manager	4_MAN_BENKUNI,{
 	if (!checkweight(1201,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
@@ -757,7 +757,7 @@ dic_in01,48,273,8	script	Supply Dept. 2 Manager	449,{
 	close;
 }
 
-dic_in01,43,273,1	script	Transport Dept. 1 Mgr	449,{
+dic_in01,43,273,1	script	Transport Dept. 1 Mgr	4_MAN_BENKUNI,{
 	if (!checkweight(1201,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
@@ -831,7 +831,7 @@ dic_in01,43,273,1	script	Transport Dept. 1 Mgr	449,{
 	close;
 }
 
-dic_in01,40,270,2	script	Transport Dept. 2 Mgr	449,{
+dic_in01,40,270,2	script	Transport Dept. 2 Mgr	4_MAN_BENKUNI,{
 	if (!checkweight(1201,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
@@ -900,7 +900,7 @@ dic_in01,40,270,2	script	Transport Dept. 2 Mgr	449,{
 }
 
 
-dic_in01,40,193,1	script	Papyrus#0001	453,{
+dic_in01,40,193,1	script	Papyrus#0001	4_MAN_NITT,{
 	if (!checkweight(1201,1)) {
 		mes "You have too many items in your inventory.";
 		close;
@@ -1110,10 +1110,10 @@ dic_in01,40,193,1	script	Papyrus#0001	453,{
 		close; 
 	}
 }
-dic_in01,31,192,0	duplicate(Document Package#main)	Document Package#0001	844
-dic_in01,31,187,0	duplicate(Document Package#main)	Document Package#0002	844
-dic_in01,25,192,0	duplicate(Document Package#main)	Document Package#0003	844
-dic_in01,25,187,0	duplicate(Document Package#main)	Document Package#0004	844
+dic_in01,31,192,0	duplicate(Document Package#main)	Document Package#0001	CLEAR_NPC
+dic_in01,31,187,0	duplicate(Document Package#main)	Document Package#0002	CLEAR_NPC
+dic_in01,25,192,0	duplicate(Document Package#main)	Document Package#0003	CLEAR_NPC
+dic_in01,25,187,0	duplicate(Document Package#main)	Document Package#0004	CLEAR_NPC
 
 // Unknown Relics
 //============================================================
@@ -1137,62 +1137,62 @@ function	script	unknown_d	{
 	}
 	close;
 }
-prt_fild03,144,95,0	script	Tree Roots	844,{ unknown_d(12166,902); }
-prt_fild09,371,255,0	script	Reptile Tongues	844,{ unknown_d(12167,903); }
-prt_fild09,352,241,0	script	Scorpion Tails	844,{ unknown_d(12168,904); }
-pay_fild02,177,108,0	script	Stems	844,{ unknown_d(12169,905); }
-pay_fild02,105,113,0	script	Pointed Scales	844,{ unknown_d(12170,906); }
-pay_fild01,152,171,0	script	Resin	844,{ unknown_d(12171,907); }
-gef_fild01,104,111,0	script	Spawn	844,{ unknown_d(12172,908); }
-prt_fild08,299,332,0	script	Jellopy	844,{ unknown_d(12173,909); }
-izlude,136,160,0	script	Fish Tails	844,{ unknown_d(12174,1023); }	// Old coordinates: (132,136)
-izlude_a,136,160,0	script	Fish Tails#a	844,{ unknown_d(12174,1023); }
-izlude_b,136,160,0	script	Fish Tails#b	844,{ unknown_d(12174,1023); }
-izlude_c,136,160,0	script	Fish Tails#c	844,{ unknown_d(12174,1023); }
-izlude_d,136,160,0	script	Fish Tails#d	844,{ unknown_d(12174,1023); }
-prt_fild05,303,169,0	script	Worm Peelings	844,{ unknown_d(12175,955); }
-iz_dun03,155,165,0	script	Gills	844,{ unknown_d(12176,956); }
-mjo_dun01,222,226,0	script	Tooth of Bat	844,{ unknown_d(12177,913); }
-prt_fild06,182,290,0	script	Fluff	844,{ unknown_d(12178,914); }
-prt_fild06,127,85,0	script	Chrysalis	844,{ unknown_d(12179,915); }
-moc_fild07,201,360,0	script	Feather of Bird	844,{ unknown_d(12180,916); }
-moc_fild12,116,122,0	script	Talons	844,{ unknown_d(12181,917); }
-prt_fild04,315,245,0	script	Sticky Webfoot	844,{ unknown_d(12182,918); }
-mjolnir_08,108,99,0	script	Animal Skin	844,{ unknown_d(12183,919); }
-moc_fild03,175,201,0	script	Wolf Claws	844,{ unknown_d(12184,920); }
-pay_fild08,188,153,0	script	Mushroom Spores	844,{ unknown_d(12185,921); }
-gef_fild03,251,109,0	script	Orc's Fangs	844,{ unknown_d(12186,922); }
-c_tower2,170,9,0	script	Evil Horns	844,{ unknown_d(12187,923); }
-gef_fild05,111,96,0	script	Powder of Butterfly	844,{ unknown_d(12188,924); }
-moc_fild11,237,273,0	script	Bill of Birds	844,{ unknown_d(12189,925); }
-pay_fild06,306,233,0	script	Snake Scales	844,{ unknown_d(12190,926); }
-pay_fild07,126,49,0	script	Insect Feelers	844,{ unknown_d(12191,928); }
-iz_dun02,112,96,0	script	Immortal Hearts	844,{ unknown_d(12192,929); }
-moc_pryd02,134,112,0	script	Rotten Bandages	844,{ unknown_d(12193,930); }
-moc_pryd02,36,75,0	script	Decayed Nails	844,{ unknown_d(12194,957); }
-moc_pryd02,148,184,0	script	Horrendous Mouths	844,{ unknown_d(12195,958); }
-iz_dun01,210,77,0	script	Tentacles	844,{ unknown_d(12196,962); }
-iz_dun01,191,92,0	script	Shells	844,{ unknown_d(12197,935); }
-mjolnir_04,191,154,0	script	Scale Shells	844,{ unknown_d(12198,936); }
-mjolnir_04,162,168,0	script	Venom Canines	844,{ unknown_d(12199,937); }
-prt_fild02,102,97,0	script	Sticky Mucus	844,{ unknown_d(12200,938); }
-mjolnir_09,99,100,0	script	Bee Stings	844,{ unknown_d(12201,939); }
-prt_fild07,76,122,0	script	Grasshopper's Legs	844,{ unknown_d(12202,940); }
-prt_fild03,64,35,0	script	Royal Jelly	844,{ unknown_d(12203,526); }
-prt_fild03,180,163,0	script	Yoyo Tails	844,{ unknown_d(12204,942); }
-prt_fild03,226,170,0	script	Solid Shells	844,{ unknown_d(12205,943); }
-prt_fild03,262,201,0	script	Nice Sweet Potato	844,{ unknown_d(12206,549); }
-prt_fild03,284,190,0	script	Raccoon Leaf	844,{ unknown_d(12207,945); }
-gef_fild09,67,46,0	script	Snail's Shells	844,{ unknown_d(12208,946); }
-prt_fild03,366,237,0	script	Horns	844,{ unknown_d(12209,947); }
-pay_fild07,269,164,0	script	Bear's Footskin	844,{ unknown_d(12210,948); }
-prt_fild02,142,116,0	script	Feathers	844,{ unknown_d(12211,949); }
-prt_fild02,97,209,0	script	Red Herbs	844,{ unknown_d(12212,507); }
-prt_fild02,280,328,0	script	Carrots	844,{ unknown_d(12213,515); }
-moc_fild01,169,62,0	script	Cactus Needles	844,{ unknown_d(12214,952); }
-cmd_fild08,324,163,0	script	Stone Hearts	844,{ unknown_d(12215,953); }
+prt_fild03,144,95,0	script	Tree Roots	CLEAR_NPC,{ unknown_d(12166,902); }
+prt_fild09,371,255,0	script	Reptile Tongues	CLEAR_NPC,{ unknown_d(12167,903); }
+prt_fild09,352,241,0	script	Scorpion Tails	CLEAR_NPC,{ unknown_d(12168,904); }
+pay_fild02,177,108,0	script	Stems	CLEAR_NPC,{ unknown_d(12169,905); }
+pay_fild02,105,113,0	script	Pointed Scales	CLEAR_NPC,{ unknown_d(12170,906); }
+pay_fild01,152,171,0	script	Resin	CLEAR_NPC,{ unknown_d(12171,907); }
+gef_fild01,104,111,0	script	Spawn	CLEAR_NPC,{ unknown_d(12172,908); }
+prt_fild08,299,332,0	script	Jellopy	CLEAR_NPC,{ unknown_d(12173,909); }
+izlude,136,160,0	script	Fish Tails	CLEAR_NPC,{ unknown_d(12174,1023); }	// Old coordinates: (132,136)
+izlude_a,136,160,0	script	Fish Tails#a	CLEAR_NPC,{ unknown_d(12174,1023); }
+izlude_b,136,160,0	script	Fish Tails#b	CLEAR_NPC,{ unknown_d(12174,1023); }
+izlude_c,136,160,0	script	Fish Tails#c	CLEAR_NPC,{ unknown_d(12174,1023); }
+izlude_d,136,160,0	script	Fish Tails#d	CLEAR_NPC,{ unknown_d(12174,1023); }
+prt_fild05,303,169,0	script	Worm Peelings	CLEAR_NPC,{ unknown_d(12175,955); }
+iz_dun03,155,165,0	script	Gills	CLEAR_NPC,{ unknown_d(12176,956); }
+mjo_dun01,222,226,0	script	Tooth of Bat	CLEAR_NPC,{ unknown_d(12177,913); }
+prt_fild06,182,290,0	script	Fluff	CLEAR_NPC,{ unknown_d(12178,914); }
+prt_fild06,127,85,0	script	Chrysalis	CLEAR_NPC,{ unknown_d(12179,915); }
+moc_fild07,201,360,0	script	Feather of Bird	CLEAR_NPC,{ unknown_d(12180,916); }
+moc_fild12,116,122,0	script	Talons	CLEAR_NPC,{ unknown_d(12181,917); }
+prt_fild04,315,245,0	script	Sticky Webfoot	CLEAR_NPC,{ unknown_d(12182,918); }
+mjolnir_08,108,99,0	script	Animal Skin	CLEAR_NPC,{ unknown_d(12183,919); }
+moc_fild03,175,201,0	script	Wolf Claws	CLEAR_NPC,{ unknown_d(12184,920); }
+pay_fild08,188,153,0	script	Mushroom Spores	CLEAR_NPC,{ unknown_d(12185,921); }
+gef_fild03,251,109,0	script	Orc's Fangs	CLEAR_NPC,{ unknown_d(12186,922); }
+c_tower2,170,9,0	script	Evil Horns	CLEAR_NPC,{ unknown_d(12187,923); }
+gef_fild05,111,96,0	script	Powder of Butterfly	CLEAR_NPC,{ unknown_d(12188,924); }
+moc_fild11,237,273,0	script	Bill of Birds	CLEAR_NPC,{ unknown_d(12189,925); }
+pay_fild06,306,233,0	script	Snake Scales	CLEAR_NPC,{ unknown_d(12190,926); }
+pay_fild07,126,49,0	script	Insect Feelers	CLEAR_NPC,{ unknown_d(12191,928); }
+iz_dun02,112,96,0	script	Immortal Hearts	CLEAR_NPC,{ unknown_d(12192,929); }
+moc_pryd02,134,112,0	script	Rotten Bandages	CLEAR_NPC,{ unknown_d(12193,930); }
+moc_pryd02,36,75,0	script	Decayed Nails	CLEAR_NPC,{ unknown_d(12194,957); }
+moc_pryd02,148,184,0	script	Horrendous Mouths	CLEAR_NPC,{ unknown_d(12195,958); }
+iz_dun01,210,77,0	script	Tentacles	CLEAR_NPC,{ unknown_d(12196,962); }
+iz_dun01,191,92,0	script	Shells	CLEAR_NPC,{ unknown_d(12197,935); }
+mjolnir_04,191,154,0	script	Scale Shells	CLEAR_NPC,{ unknown_d(12198,936); }
+mjolnir_04,162,168,0	script	Venom Canines	CLEAR_NPC,{ unknown_d(12199,937); }
+prt_fild02,102,97,0	script	Sticky Mucus	CLEAR_NPC,{ unknown_d(12200,938); }
+mjolnir_09,99,100,0	script	Bee Stings	CLEAR_NPC,{ unknown_d(12201,939); }
+prt_fild07,76,122,0	script	Grasshopper's Legs	CLEAR_NPC,{ unknown_d(12202,940); }
+prt_fild03,64,35,0	script	Royal Jelly	CLEAR_NPC,{ unknown_d(12203,526); }
+prt_fild03,180,163,0	script	Yoyo Tails	CLEAR_NPC,{ unknown_d(12204,942); }
+prt_fild03,226,170,0	script	Solid Shells	CLEAR_NPC,{ unknown_d(12205,943); }
+prt_fild03,262,201,0	script	Nice Sweet Potato	CLEAR_NPC,{ unknown_d(12206,549); }
+prt_fild03,284,190,0	script	Raccoon Leaf	CLEAR_NPC,{ unknown_d(12207,945); }
+gef_fild09,67,46,0	script	Snail's Shells	CLEAR_NPC,{ unknown_d(12208,946); }
+prt_fild03,366,237,0	script	Horns	CLEAR_NPC,{ unknown_d(12209,947); }
+pay_fild07,269,164,0	script	Bear's Footskin	CLEAR_NPC,{ unknown_d(12210,948); }
+prt_fild02,142,116,0	script	Feathers	CLEAR_NPC,{ unknown_d(12211,949); }
+prt_fild02,97,209,0	script	Red Herbs	CLEAR_NPC,{ unknown_d(12212,507); }
+prt_fild02,280,328,0	script	Carrots	CLEAR_NPC,{ unknown_d(12213,515); }
+moc_fild01,169,62,0	script	Cactus Needles	CLEAR_NPC,{ unknown_d(12214,952); }
+cmd_fild08,324,163,0	script	Stone Hearts	CLEAR_NPC,{ unknown_d(12215,953); }
 
-dic_in01,138,225,3	script	Diel Guard#ep133_19	492,{
+dic_in01,138,225,3	script	Diel Guard#ep133_19	4_MAN_GALTUN1,{
 	if (!isequipped(2782)) {
 		mes "[Diel Guard]";
 		mes "¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?";
@@ -1249,13 +1249,13 @@ dic_in01,138,225,3	script	Diel Guard#ep133_19	492,{
 	close;
 }
 
-dic_in01,242,182,0	script	Elevator#5f_to_4f	844,{
+dic_in01,242,182,0	script	Elevator#5f_to_4f	CLEAR_NPC,{
 	select("Administrative Office");
 	warp "dic_in01",138,221;
 	end;
 }
 
-dic_in01,263,193,3	script	Diel Guard#ep133_20	450,{
+dic_in01,263,193,3	script	Diel Guard#ep133_20	4_MAN_GALTUN,{
 	if (!isequipped(2782)) {
 		mes "[Diel Guard]";
 		mes "¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?";
@@ -1309,7 +1309,7 @@ dic_in01,263,193,3	script	Diel Guard#ep133_20	450,{
 	close;
 }
 
-dic_in01,299,268,0	script	#ep133_event01	139,4,4,{
+dic_in01,299,268,0	script	#ep133_event01	HIDDEN_WARP_NPC,4,4,{
 	end;
 OnTouch:
 	if (ep13_3_secret == 13) {
@@ -1339,7 +1339,7 @@ OnTouch:
 	end;
 }
 
-dic_in01,294,276,5	script	Secret Adjutant#ep133_2	498,{
+dic_in01,294,276,5	script	Secret Adjutant#ep133_2	4_M_CATMAN2,{
 	// if ((GetInventoryRemainCount 1301 3 == 2) || (GetInventoryRemainCount 1301 3 == 3)) {
 	if ((MaxWeight - Weight) < 1000) {
 		mes "- You can too many items to proceed with the quest. -";
@@ -1503,7 +1503,7 @@ dic_in01,294,276,5	script	Secret Adjutant#ep133_2	498,{
 	end;
 }
 
-dic_in01,300,280,5	script	Minister Ahat#ep133_21	493,{
+dic_in01,300,280,5	script	Minister Ahat#ep133_21	4_HUMAN_GERUTOO,{
 	// if ((GetInventoryRemainCount 1301 3 == 2) || (GetInventoryRemainCount 1301 3 == 3)) {
 	if ((MaxWeight - Weight) < 1000) {
 		mes "- You can too many items to proceed with the quest. -";
@@ -1790,7 +1790,7 @@ dic_in01,300,280,5	script	Minister Ahat#ep133_21	493,{
 	end;
 }
 
-dic_in01,138,188,0	script	#ep133_event02	139,4,4,{
+dic_in01,138,188,0	script	#ep133_event02	HIDDEN_WARP_NPC,4,4,{
 OnTouch:
 	if (ep13_3_secret == 19) {
 		if (!isequipped(2782)) {
@@ -1809,7 +1809,7 @@ OnTouch:
 	end;
 }
 
-dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	451,{
+dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	4_MAN_JERUTOO,{
 	if (!isequipped(2782)) {
 		mes "[Jarute HesLanta]";
 		mes "¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?";
@@ -2312,7 +2312,7 @@ dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	451,{
 	close;
 }
 
-dicastes01,223,190,1	script	Calyon#pa8029	453,{
+dicastes01,223,190,1	script	Calyon#pa8029	4_MAN_NITT,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
@@ -2485,7 +2485,7 @@ dicastes01,223,190,1	script	Calyon#pa8029	453,{
 	close;
 }
 
-dicastes01,211,178,2	script	Moltuka#pa0829	453,{
+dicastes01,211,178,2	script	Moltuka#pa0829	4_MAN_NITT,{
 	if (!checkweight(1201,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
@@ -2709,7 +2709,7 @@ dicastes01,211,178,2	script	Moltuka#pa0829	453,{
 	}
 }
 
-dicastes01,175,217,5	script	Kalipo#pa0829	453,{
+dicastes01,175,217,5	script	Kalipo#pa0829	4_MAN_NITT,{
 	if (!checkweight(1201,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
@@ -2851,7 +2851,7 @@ dicastes01,175,217,5	script	Kalipo#pa0829	453,{
 	}
 }
 
-dicastes01,187,230,5	script	Laponte#pa0829	453,{
+dicastes01,187,230,5	script	Laponte#pa0829	4_MAN_NITT,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
@@ -3022,7 +3022,7 @@ dicastes01,187,230,5	script	Laponte#pa0829	453,{
 	}
 }
 
-dicastes01,208,230,3	script	Pura#pa0829	453,{
+dicastes01,208,230,3	script	Pura#pa0829	4_MAN_NITT,{
 	if (!checkweight(1201,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
@@ -3213,7 +3213,7 @@ dicastes01,208,230,3	script	Pura#pa0829	453,{
 	close;
 }
 
-dicastes01,225,211,3	script	Tragis#pa0829	453,{
+dicastes01,225,211,3	script	Tragis#pa0829	4_MAN_NITT,{
 	if (!checkweight(1201,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
@@ -3385,7 +3385,7 @@ dicastes01,225,211,3	script	Tragis#pa0829	453,{
 
 // Doha's Secret Orders
 //============================================================
-mid_campin,168,170,3	script	Inspector Doha#ep133	59,{
+mid_campin,168,170,3	script	Inspector Doha#ep133	1_M_ORIENT01,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- You can too many items to proceed with the quest. -";
 		close;
@@ -3665,7 +3665,7 @@ mid_campin,168,170,3	script	Inspector Doha#ep133	59,{
 	close;
 }
 
-dic_in01,245,119,4	script	Shay#ep133_13	884,{
+dic_in01,245,119,4	script	Shay#ep133_13	4_M_ACROSS,{
 	// if ((GetInventoryRemainCount 1301 3 == 2) || (GetInventoryRemainCount 1301 3 == 3)) {
 	if ((MaxWeight - Weight) < 1000) {
 		mes "- You can too many items to proceed with the quest. -";
@@ -4288,7 +4288,7 @@ dic_in01,245,119,4	script	Shay#ep133_13	884,{
 	end;
 }
 
-dicastes01,207,210,5	script	Walking Knit#ep133_15	449,{
+dicastes01,207,210,5	script	Walking Knit#ep133_15	4_MAN_BENKUNI,{
 	if (!isequipped(2782)) {
 		mes "[Knit]";
 		mes "¡õ¢£¡ô";
@@ -4386,7 +4386,7 @@ dicastes01,207,210,5	script	Walking Knit#ep133_15	449,{
 	close2;
 }
 
-dicastes01,112,248,5	script	Resting Piom#ep133_16	491,{
+dicastes01,112,248,5	script	Resting Piom#ep133_16	4_MAN_PIOM5,{
 	mes "[Piom]";
 	if (!isequipped(2782)) {
 		mes "¡ñ¡÷¢¤ ¡ö ¢±¡ñ¡ú?";
@@ -4459,7 +4459,7 @@ dicastes01,112,248,5	script	Resting Piom#ep133_16	491,{
 	close;
 }
 
-dicastes01,249,140,3	script	Training Galten#ep133_17	450,{
+dicastes01,249,140,3	script	Training Galten#ep133_17	4_MAN_GALTUN,{
 	if (!isequipped(2782)) {
 		mes "[Galten]";
 		mes "¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü";
@@ -4531,7 +4531,7 @@ dicastes01,249,140,3	script	Training Galten#ep133_17	450,{
 	close;
 }
 
-dic_fild01,231,174,5	script	BK#ep133_18	496,{
+dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 	if (ep13_3_secret < 3) {
 		mes "[BK]";
 		mes "Ha. I'm the information collector of the Cat Merchants.";
@@ -4958,40 +4958,40 @@ OnTimer300000:
 	stopnpctimer;
 	end;
 }
-dic_fild02,269,55,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef1	844
-dic_fild02,236,29,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef2	844
-dic_fild02,220,34,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef3	844
-dic_fild02,228,55,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef4	844
-dic_fild02,228,63,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef5	844
-dic_fild02,210,75,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef6	844
-dic_fild02,213,35,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef7	844
-dic_fild02,171,49,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef8	844
-dic_fild02,266,44,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef9	844
-dic_fild02,174,79,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef10	844
-dic_fild02,215,85,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef1	844
-dic_fild02,207,41,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef2	844
-dic_fild02,232,41,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef3	844
-dic_fild02,245,68,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef4	844
-dic_fild02,184,63,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef5	844
-dic_fild02,207,94,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef6	844
-dic_fild02,230,71,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef7	844
-dic_fild02,188,50,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef8	844
-dic_fild02,248,36,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef9	844
-dic_fild02,206,115,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef10	844	
-dic_fild02,194,86,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef1	844
-dic_fild02,240,51,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef2	844
-dic_fild02,176,65,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef3	844
-dic_fild02,254,45,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef4	844
-dic_fild02,178,119,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef5	844
-dic_fild02,200,81,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef6	844
-dic_fild02,205,54,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef7	844
-dic_fild02,224,74,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef8	844
-dic_fild02,244,59,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef9	844
-dic_fild02,249,43,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef10	844
+dic_fild02,269,55,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef1	CLEAR_NPC
+dic_fild02,236,29,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef2	CLEAR_NPC
+dic_fild02,220,34,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef3	CLEAR_NPC
+dic_fild02,228,55,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef4	CLEAR_NPC
+dic_fild02,228,63,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef5	CLEAR_NPC
+dic_fild02,210,75,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef6	CLEAR_NPC
+dic_fild02,213,35,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef7	CLEAR_NPC
+dic_fild02,171,49,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef8	CLEAR_NPC
+dic_fild02,266,44,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef9	CLEAR_NPC
+dic_fild02,174,79,0	duplicate(ep133_crack#main)	Rock Pile#ep133_ef10	CLEAR_NPC
+dic_fild02,215,85,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef1	CLEAR_NPC
+dic_fild02,207,41,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef2	CLEAR_NPC
+dic_fild02,232,41,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef3	CLEAR_NPC
+dic_fild02,245,68,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef4	CLEAR_NPC
+dic_fild02,184,63,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef5	CLEAR_NPC
+dic_fild02,207,94,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef6	CLEAR_NPC
+dic_fild02,230,71,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef7	CLEAR_NPC
+dic_fild02,188,50,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef8	CLEAR_NPC
+dic_fild02,248,36,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef9	CLEAR_NPC
+dic_fild02,206,115,0	duplicate(ep133_crack#main)	Dirt Pile#ep133_ef10	CLEAR_NPC	
+dic_fild02,194,86,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef1	CLEAR_NPC
+dic_fild02,240,51,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef2	CLEAR_NPC
+dic_fild02,176,65,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef3	CLEAR_NPC
+dic_fild02,254,45,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef4	CLEAR_NPC
+dic_fild02,178,119,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef5	CLEAR_NPC
+dic_fild02,200,81,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef6	CLEAR_NPC
+dic_fild02,205,54,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef7	CLEAR_NPC
+dic_fild02,224,74,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef8	CLEAR_NPC
+dic_fild02,244,59,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef9	CLEAR_NPC
+dic_fild02,249,43,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef10	CLEAR_NPC
 
 // Frede's Request
 //============================================================
-dicastes01,117,262,0	script	Frede#13_3	491,2,2,{
+dicastes01,117,262,0	script	Frede#13_3	4_MAN_PIOM5,2,2,{
 	if (isequipped(2782)) {
 		if (ep13_3_invite <= 5) {
 			mes "[Frede]";
@@ -5049,7 +5049,7 @@ OnTouch:
 	end;
 }
 
-dic_in01,165,104,0	script	Frede#13_3_in	454,{
+dic_in01,165,104,0	script	Frede#13_3_in	4_MAN_PIOM,{
 	if (isequipped(2782)) {
 		if (ep13_3_bra < 1) {
 			mes "[Frede]";
@@ -5347,7 +5347,7 @@ dic_in01,165,104,0	script	Frede#13_3_in	454,{
 	close;
 }
 
-dic_dun01,205,43,5	script	Brian#ep13_3_	490,{
+dic_dun01,205,43,5	script	Brian#ep13_3_	4_MAN_PIOM4,{
 	if (isequipped(2782)) {
 		if (ep13_3_bra < 4) {
 			mes "[Brian]";
@@ -5446,7 +5446,7 @@ dic_dun01,205,43,5	script	Brian#ep13_3_	490,{
 	close;
 }
 
-dic_dun01,153,107,4	script	Tyler#13_3	489,{
+dic_dun01,153,107,4	script	Tyler#13_3	4_MAN_PIOM6,{
 	if (isequipped(2782)) {
 		if (ep13_3_bra < 4) {
 			mes "[Tyler]";
@@ -5572,7 +5572,7 @@ dic_dun01,153,107,4	script	Tyler#13_3	489,{
 	close;
 }
 
-dic_dun01,235,243,0	script	John#13_3	454,{
+dic_dun01,235,243,0	script	John#13_3	4_MAN_PIOM,{
 	if (isequipped(2782)) {
 		if (ep13_3_bra < 4) {
 			mes "[John]";
@@ -5674,7 +5674,7 @@ dic_dun01,235,243,0	script	John#13_3	454,{
 	close;
 }
 
-dic_dun02,110,127,5	script	Rose#13_3	489,{
+dic_dun02,110,127,5	script	Rose#13_3	4_MAN_PIOM6,{
 	if (isequipped(2782)) {
 		if (ep13_3_bra < 4) {
 			mes "[Rose]";
@@ -5773,7 +5773,7 @@ dic_dun02,110,127,5	script	Rose#13_3	489,{
 	close;
 }
 
-dic_dun01,64,107,7	script	Bain#13_3	490,{
+dic_dun01,64,107,7	script	Bain#13_3	4_MAN_PIOM4,{
 	if (isequipped(2782)) {
 		if (ep13_3_bra < 4) {
 			mes "[Bain]";
@@ -5867,7 +5867,7 @@ dic_dun01,64,107,7	script	Bain#13_3	490,{
 	close;
 }
 
-dic_dun01,58,225,4	script	Lash#13_3	491,{
+dic_dun01,58,225,4	script	Lash#13_3	4_MAN_PIOM5,{
 	if (isequipped(2782)) {
 		if (ep13_3_bra < 4) {
 			mes "[Lash]";
@@ -5968,7 +5968,7 @@ dic_dun01,58,225,4	script	Lash#13_3	491,{
 	close;
 }
 
-dic_in01,349,129,5	script	Bouy#13_3	449,{
+dic_in01,349,129,5	script	Bouy#13_3	4_MAN_BENKUNI,{
 	if (isequipped(2782)) {
 		if (ep13_3_bra < 5) {
 			mes "[Bouy]";
@@ -6181,10 +6181,10 @@ dic_in01,349,129,5	script	Bouy#13_3	449,{
 	mes "Try seeing ^4d4dffAello^000000.";
 	close;
 }
-mid_camp,220,246,5	duplicate(Expedition#ep133_is)	Expedition Guard Ben	930
-mid_camp,223,246,4	duplicate(Expedition#ep133_is)	Expedition Guard Maha	868
+mid_camp,220,246,5	duplicate(Expedition#ep133_is)	Expedition Guard Ben	4_M_RACHMAN2
+mid_camp,223,246,4	duplicate(Expedition#ep133_is)	Expedition Guard Maha	4_M_LGTGUARD
 
-mid_campin,93,114,3	script	Guard Aello#ep133_is03	967,{
+mid_campin,93,114,3	script	Guard Aello#ep133_is03	4_M_RUSMAN1,{
 	if (ep13_ryu > 99 || ep13_start > 99) {
 		if (ep13_3_invite == 0) {
 			mes "[Aello]";
@@ -6240,7 +6240,7 @@ mid_campin,93,114,3	script	Guard Aello#ep133_is03	967,{
 	close;
 }
 
-mid_campin,111,120,3	script	Soldier#ep133_is04	852,{
+mid_campin,111,120,3	script	Soldier#ep133_is04	4_M_EIN_SOLDIER,{
 	if (ep13_3_invite == 1) {
 		mes "[Soldier]";
 		mes "Sorry, but this room is currently restricted from visitors.";
@@ -6494,7 +6494,7 @@ function	script	eldicastes_c	{
 		}
 }
 
-mid_campin,168,128,3	script	Sapha from Manuk	451,{
+mid_campin,168,128,3	script	Sapha from Manuk	4_MAN_JERUTOO,{
 	if (isequipped(2782)) {
 		if (!ep13_3_invite) {
 			mes "-Looks like the Sapha messenger from Manuk.-";
@@ -6592,7 +6592,7 @@ mid_campin,168,128,3	script	Sapha from Manuk	451,{
 	close;
 }
 
-mid_campin,168,125,3	script	Hound#ep133_is06	997,{
+mid_campin,168,125,3	script	Hound#ep133_is06	4_M_MOCASS1,{
 	if (!isequipped(2782)) {
 		mes "[Hound]";
 		mes "Where is the interpreter ring?";
@@ -6651,7 +6651,7 @@ mid_campin,168,125,3	script	Hound#ep133_is06	997,{
 	close;
 }
 
-mid_campin,165,127,5	script	Hibba Agip#ep133_is07	459,{
+mid_campin,165,127,5	script	Hibba Agip#ep133_is07	4_M_REDSWORD,{
 	mes "[Hibba Agip]";
 	mes "Hmm..?";
 	mes "I should go now.";
@@ -6661,7 +6661,7 @@ OnInit:
 	end;	
 }
 
-man_in01,315,52,3	script	Guard Captain Avalanche	450,{
+man_in01,315,52,3	script	Guard Captain Avalanche	4_MAN_GALTUN,{
 	mes "[Guard Captain Avalanche]";
 	if (!isequipped(2782)) {
 		mes "¢¤¡ð¡ú? ¢£ ¡ù¡ð...";
@@ -6739,7 +6739,7 @@ man_in01,315,52,3	script	Guard Captain Avalanche	450,{
 	close;
 }
 
-dic_in01,42,264,3	script	Adventurer Clerk#ep133	453,{
+dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 	if (!isequipped(2782)) {
 		mes "[Clerk Knit]";
 		mes "¡ð¡ñ¡ô ¡õ ¡ü¢±¢³ ¡ö ¡ò...?";
@@ -7366,12 +7366,12 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	453,{
 	setd "ep13_3_"+.@v$, .@var[.@r-1] + getd("ep13_3_"+.@v$);
 	close;
 }
-dic_fild01,240,198,2	duplicate(dic_enc#main)	Jalapeno#pa0829	495
-dic_fild01,251,183,3	duplicate(dic_enc#main)	Brare#pa0829	495
-dic_fild01,259,172,3	duplicate(dic_enc#main)	Mancho#pa0829	495
-dic_in01,353,37,5	duplicate(dic_enc#main)	Kareka#pa0829	454
+dic_fild01,240,198,2	duplicate(dic_enc#main)	Jalapeno#pa0829	4_M_MERCAT1
+dic_fild01,251,183,3	duplicate(dic_enc#main)	Brare#pa0829	4_M_MERCAT1
+dic_fild01,259,172,3	duplicate(dic_enc#main)	Mancho#pa0829	4_M_MERCAT1
+dic_in01,353,37,5	duplicate(dic_enc#main)	Kareka#pa0829	4_MAN_PIOM
 
-dic_fild01,228,159,4	script	Jahbong#pa0829	496,{
+dic_fild01,228,159,4	script	Jahbong#pa0829	4_M_MERCAT2,{
 	mes "[Jahbong]";
 	if (countitem(6304) < 1) {
 		mes "You haven't received a Sapha Certification yet?";
@@ -7445,7 +7445,7 @@ dic_fild01,228,159,4	script	Jahbong#pa0829	496,{
 
 // Cat Hand Agent
 //============================================================
-moc_para01,44,19,3	script	Cat Hand Agent#gekk	496,{
+moc_para01,44,19,3	script	Cat Hand Agent#gekk	4_M_MERCAT2,{
 	if (BaseLevel < 70)	{
 		mes "[Cat Hand Agent]";
 		mes "Hey, human! Did you come to make a request, too? When will it be my turn?";
@@ -7580,7 +7580,7 @@ moc_para01,44,19,3	script	Cat Hand Agent#gekk	496,{
 	close;
 }
 
-moc_fild20,368,197,3	script	Cat#to22	876,{
+moc_fild20,368,197,3	script	Cat#to22	4_CAT,{
 	if (ep13_start != 100) {
 		mes "[Cat]";
 		mes "Meow~";
@@ -7604,7 +7604,7 @@ moc_fild20,368,197,3	script	Cat#to22	876,{
 	end;
 }
 
-moc_fild22b,182,179,3	script	Cat Hand Agent#Tat	495,{
+moc_fild22b,182,179,3	script	Cat Hand Agent#Tat	4_M_MERCAT1,{
 	if (ep13_start != 100) {
 		mes "[Cat Hand Agent]";
 		mes "This place as no meaning for us.";

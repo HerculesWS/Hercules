@@ -10,7 +10,7 @@
 //= 5.1 Cleaned and standardized, mostly. [Euphy]
 //============================================================
 
-prontera,160,155,4	script	Disguise Event	795,{
+prontera,160,155,4	script	Disguise Event	4_M_NFDEADMAN,{
 
 	// Currently set to run every two hours.
 	// To change times, edit the OnClock labels below.

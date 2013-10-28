@@ -12,7 +12,7 @@
 //============================================================
 
 //Entrance Flags
-yuno,48,101,6	script	Notice	722,{
+yuno,48,101,6	script	Notice	GUILD_FLAG,{
 	mes "^FF0000[ Treasure Hunter Guild House ]^000000";
 	mes " ";
 	mes "Welcome to the Treasure Hunter's Guild House.";
@@ -24,7 +24,7 @@ yuno,48,101,6	script	Notice	722,{
 	close;
 }
 //Saver Girl;
-yuno_in01,32,178,3	script	Ahlma	94,{
+yuno_in01,32,178,3	script	Ahlma	4_F_MAID,{
 	mes "[Ahlma]";
 	if (Event_THQS == 0) goto N_Member;
 	mes "Welcome to The Treasure Hunter Guild.";
@@ -44,7 +44,7 @@ N_Member:
 	close;
 }
 //Retired Smile mask girl;
-yuno_in01,33,162,3	script	Smile Helper	92,{
+yuno_in01,33,162,3	script	Smile Helper	4_F_03,{
 	mes "[Smile Gal]";
 	mes "Oh man...I am so sick of";
 	mes "trading Mr. Smile masks for crap.";
@@ -53,7 +53,7 @@ yuno_in01,33,162,3	script	Smile Helper	92,{
 	close;
 }
 //Usless Female Assasin;
-yuno_in01,22,162,6	script	Female Assasin	725,{
+yuno_in01,22,162,6	script	Female Assasin	4_F_JOB_ASSASSIN,{
 	mes "[Sharlet]";
 	if (Event_THQS > 0) goto N_Member;
 	mes "Umm sorry I'm not gona waste my time talking to you if you arn't even a member!";
@@ -74,7 +74,7 @@ N_Chat2:
 	close;
 }
 //another usless member
-yuno_in01,25,162,6	script	Female Wizard	123,{
+yuno_in01,25,162,6	script	Female Wizard	2_F_MAGICMASTER,{
 	mes "[Sasha]";
 	if (Event_THQS > 0) goto N_Member;
 	mes "Umm sorry I'm not gona waste my time talking to you if you arn't even a member!";

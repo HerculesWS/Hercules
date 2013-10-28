@@ -11,7 +11,7 @@
 //= 1.0 First Version. [Euphy]
 //============================================================
 
-moc_para01,34,178,3	script	Tutorial Instructor	904,{
+moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 	if (Class == Job_Novice) {
 		// Fall through
 	} else if (checkquest(9167) == -1) {
@@ -567,7 +567,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	904,{
 	close;
 }
 
-moc_para01,32,179,4	script	Tutorial Goal	895,{
+moc_para01,32,179,4	script	Tutorial Goal	4_F_KHELLY,{
 	if (checkweight(608,7) == 0) {
 		if (MaxWeight - Weight < getiteminfo(608,7)) {
 			mes "[Tutorial Goal]";
@@ -661,7 +661,7 @@ moc_para01,32,179,4	script	Tutorial Goal	895,{
 	close;
 }
 
-moc_para01,24,175,4	script	Siege Master	734,{
+moc_para01,24,175,4	script	Siege Master	4_M_JOB_KNIGHT2,{
 	set .@checkquest, checkquest(4161);
 	if (.@checkquest == 2) {
 		mes "[Siege Expert]";
@@ -834,7 +834,7 @@ L_Info:
 	return;
 }
 
-moc_para01,21,172,4	script	Party Recruiting Expert	878,{
+moc_para01,21,172,4	script	Party Recruiting Expert	4_M_OILMAN,{
 	set .@checkquest, checkquest(4162);
 	if (.@checkquest == 2) {
 		mes "[Party Recruiting Expert]";
@@ -1016,7 +1016,7 @@ L_Info:
 	return;
 }
 
-moc_para01,12,179,6	script	Battleground Master	419,{
+moc_para01,12,179,6	script	Battleground Master	4_M_KY_HEAD,{
 	set .@checkquest, checkquest(4163);
 	if (.@checkquest == 2) {
 		mes "[Battleground Expert]";
@@ -1196,7 +1196,7 @@ L_Info:
 	return;
 }
 
-moc_para01,28,167,3	script	Memorial Dungeon Expert	868,{
+moc_para01,28,167,3	script	Memorial Dungeon Expert	4_M_LGTGUARD,{
 	set .@checkquest, checkquest(4164);
 	if (.@checkquest == 2) {
 		mes "[Memorial Dungeon Expert]";
@@ -1374,7 +1374,7 @@ L_Info:
 	return;
 }
 
-moc_para01,14,168,6	script	Map Expert	743,{
+moc_para01,14,168,6	script	Map Expert	2_M_SAGE_OLD,{
 	set .@checkquest, checkquest(4165);
 	if (.@checkquest == 2) {
 		mes "[Map Expert]";

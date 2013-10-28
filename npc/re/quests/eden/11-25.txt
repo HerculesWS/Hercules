@@ -12,7 +12,7 @@
 //= 1.2 Optimized. [Euphy]
 //============================================================
 
-moc_para01,36,38,3	script	Mission [11 - 25]#Tuto	857,{
+moc_para01,36,38,3	script	Mission [11 - 25]#Tuto	4_BOARD3,{
 	if (countitem(6219) < 1) {
 		mes "- You need to have an -";
 		mes "- ^4d4dff'Eden Group Mark'^000000 -";
@@ -97,7 +97,7 @@ L_Quest:
 	close;
 }
 
-moc_para01,32,30,6	script	Spike	914,{
+moc_para01,32,30,6	script	Spike	4_F_CHILD,{
 	for(set .@i,11114; .@i<11124; set .@i,.@i+1) {
 		set .@j, checkquest(.@i,HUNTING);
 		if (.@j == 2) switch(.@i) {

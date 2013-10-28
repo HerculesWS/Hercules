@@ -12,7 +12,7 @@
 //=     Unsure if this is on kRO, so disabled for now.
 //============================================================
 
-prontera,98,121,4	script	Acolyte#Prtclear	90,{
+prontera,98,121,4	script	Acolyte#Prtclear	4_F_01,{
 	mes "[Keiki]";
 	mes "Hello there, adventurer.";
 	mes "I've been studying magic from all over Rune-Midgard to upgrade what I believe to be one of the greatest skills available to the acolyte class.";
@@ -77,7 +77,7 @@ prontera,98,121,4	script	Acolyte#Prtclear	90,{
 	}
 }
 
-yuno,142,184,6	script	Acolyte#Junoclear	90,{
+yuno,142,184,6	script	Acolyte#Junoclear	4_F_01,{
 	mes "[Isalei]";
 	mes "Hello, adventurer.";
 	mes "My companion Keiki and I have discovered a way to increase our warp portal abilities.";

@@ -11,7 +11,7 @@
 //============================================================
 
 // Juno
-yuno,109,167,5	script	Himinn	722,{
+yuno,109,167,5	script	Himinn	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
@@ -20,7 +20,7 @@ OnRecvCastlesc01:
 	end;
 }
 
-yuno,110,171,5	script	Andlangr	722,{
+yuno,110,171,5	script	Andlangr	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
@@ -29,7 +29,7 @@ OnRecvCastlesc02:
 	end;
 }
 
-yuno,111,175,5	script	Viblainn	722,{
+yuno,111,175,5	script	Viblainn	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
@@ -38,7 +38,7 @@ OnRecvCastlesc03:
 	end;
 }
 
-yuno,112,179,5	script	Hljod	722,{
+yuno,112,179,5	script	Hljod	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
@@ -47,7 +47,7 @@ OnRecvCastlesc04:
 	end;
 }
 
-yuno,114,183,5	script	Skidbladnir	722,{
+yuno,114,183,5	script	Skidbladnir	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
@@ -57,7 +57,7 @@ OnRecvCastlesc05:
 }
 
 // Arunafeltz
-rachel,124,120,3	script	Mardol	722,{
+rachel,124,120,3	script	Mardol	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
@@ -66,7 +66,7 @@ OnRecvCastlear01:
 	end;
 }
 
-rachel,136,120,5	script	Cyr	722,{
+rachel,136,120,5	script	Cyr	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
@@ -75,7 +75,7 @@ OnRecvCastlear02:
 	end;
 }
 
-rachel,138,126,6	script	Horn	722,{
+rachel,138,126,6	script	Horn	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
@@ -84,7 +84,7 @@ OnRecvCastlear03:
 	end;
 }
 
-rachel,135,131,7	script	Gefn	722,{
+rachel,135,131,7	script	Gefn	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
@@ -93,7 +93,7 @@ OnRecvCastlear04:
 	end;
 }
 
-rachel,124,130,1	script	Banadis	722,{
+rachel,124,130,1	script	Banadis	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:

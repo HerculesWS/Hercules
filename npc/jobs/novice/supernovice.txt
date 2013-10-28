@@ -18,7 +18,7 @@
 //= 2.4 Added an Ex. Super Novice dialog check. [Euphy]
 //============================================================
 
-aldeba_in,223,167,3	script	Tzerero#sn	709,{
+aldeba_in,223,167,3	script	Tzerero#sn	4_M_SEAMAN,{
 	if (BaseJob == Job_SuperNovice) {
 		mes "[Tzerero]";
 		mes "I trust that you are enjoying";
@@ -326,7 +326,7 @@ aldeba_in,223,167,3	script	Tzerero#sn	709,{
 	}
 }
 
-aldeba_in,216,169,5	script	Esseray#sn	86,{
+aldeba_in,216,169,5	script	Esseray#sn	4_M_04,{
 	if (Class == Job_Super_Novice_E || Class == Job_Super_Baby_E) {
 		mes "[Esseray]";
 		mes "You! Stronger than before.";
@@ -382,7 +382,7 @@ aldeba_in,216,169,5	script	Esseray#sn	86,{
 	}
 }
 
-aldebaran,54,238,5	script	Kafra Employee#sn	117,{
+aldebaran,54,238,5	script	Kafra Employee#sn	4_F_KAFRA1,{
 	if (BaseJob == Job_SuperNovice) {
 		mes "[Kafra Employee]";
 		if (Sex )

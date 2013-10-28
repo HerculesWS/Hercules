@@ -12,7 +12,7 @@
 //= 1.0a Added 'npcskill' command. [Euphy]
 //============================================================
 
-hu_fild01,140,163,5	script	Tower Keeper	852,3,3,{
+hu_fild01,140,163,5	script	Tower Keeper	4_M_EIN_SOLDIER,3,3,{
 	mes "[Gatei]";
 	mes "Greetings, adventurer.";
 	mes "I am Gatei Knumm, keeper";
@@ -158,7 +158,7 @@ OnTouch:
 	close;
 }
 
-tha_t01,149,78,4	script	Guide	90,{
+tha_t01,149,78,4	script	Guide	4_F_01,{
 	if (thana_tower == 0) {
 		mes "[Ditze]";
 		mes "Welcome to Thanatos Tower.";
@@ -407,7 +407,7 @@ L_Contract:
 	}
 }
 
-tha_t01,140,78,4	script	Guide#reward	831,{
+tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 	mes "[Liei]";
 	if (thana_tower == 0) {
 		mes "Good day, I'm";
@@ -510,7 +510,7 @@ tha_t01,140,78,4	script	Guide#reward	831,{
 	}
 }
 
-tha_t02,231,161,5	script	Entrance Guide	874,{
+tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 	mes "[Burled]";
 	if (thana_tower == 0) {
 		mes "You are in front of the entrance to the 3rd Floor. Only contracted";
@@ -887,7 +887,7 @@ OnTimer30000:
 	end;
 }
 
-tha_t03,67,70,0	script	Rune Device#tt1	111,4,4,{
+tha_t03,67,70,0	script	Rune Device#tt1	HIDDEN_NPC,4,4,{
 	if ((countitem(7421) == 0) && (countitem(7426) == 0)) {
 		mes "^3355FFA mysterious field of";
 		mes "energy seems to surround";
@@ -1005,7 +1005,7 @@ L_Key:
 	}
 }
 
-tha_t04,195,195,0	script	Rune Device#tt2	111,3,3,{
+tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 	if ((countitem(7422) == 0) && (countitem(7427) == 0)) {
 		mes "^3355FFYou find a screen";
 		mes "with three tiny panels and";
@@ -1156,7 +1156,7 @@ OnTouch:
 	end;
 }
 
-tha_t05,62,179,0	script	Brilliant Statue#tt3	111,3,3,{
+tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 	if ((countitem(7423) == 0) && (countitem(7428) == 0)) {
 		mes "I can feel some magical power from this beautiful stone statue.";
 		mes "There's a little crack between the wings.";
@@ -1241,7 +1241,7 @@ OnTouch:
 	end;
 }
 
-tha_t06,226,230,0	script	Brilliant Statue#tt4	111,3,3,{
+tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 	if ((countitem(7424) == 0) && (countitem(7429) == 0)) {
 		mes "I can feel some magical power from this brilliant statue.";
 		mes "This must be one of the seals.";
@@ -1513,7 +1513,7 @@ OnTouch:
 	end;
 }
 
-tha_t06,204,181,0	script	Splendid Sword#tt5	111,3,3,{
+tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 	if ((countitem(7425) == 0) && (countitem(7430) == 0)) {
 		mes "An old, worn sword hangs above the splendid table.";
 		mes "It emits a gloomy aura.";
@@ -1603,7 +1603,7 @@ OnTouch:
 	end;
 }
 
-tha_t08,1,1,0	script	#Charm Stone Admintt01	844,{
+tha_t08,1,1,0	script	#Charm Stone Admintt01	CLEAR_NPC,{
 	end;
 OnInit:
 OnEnable:
@@ -1654,7 +1654,7 @@ OnTimer2400000:
 	end;
 }
 
-tha_t08,90,153,0	script	Shining Crystal#tt_r1	844,{
+tha_t08,90,153,0	script	Shining Crystal#tt_r1	CLEAR_NPC,{
 	if (countitem(7421) > 0) {
 		mes "The Crystal ball is emitting mysterious power.";
 		next;
@@ -1684,11 +1684,11 @@ OnEnable:
 	enablenpc strnpcinfo(0);
 	end;
 }
-tha_t08,90,62,0	duplicate(Shining Crystal#tt_r1)	Shining Crystal#tt_r2	844
-tha_t08,49,59,0	duplicate(Shining Crystal#tt_r1)	Shining Crystal#tt_r3	844
-tha_t08,49,144,0	duplicate(Shining Crystal#tt_r1)	Shining Crystal#tt_r4	844
+tha_t08,90,62,0	duplicate(Shining Crystal#tt_r1)	Shining Crystal#tt_r2	CLEAR_NPC
+tha_t08,49,59,0	duplicate(Shining Crystal#tt_r1)	Shining Crystal#tt_r3	CLEAR_NPC
+tha_t08,49,144,0	duplicate(Shining Crystal#tt_r1)	Shining Crystal#tt_r4	CLEAR_NPC
 
-tha_t08,49,153,0	script	Shining Crystal#tt_y1	844,{
+tha_t08,49,153,0	script	Shining Crystal#tt_y1	CLEAR_NPC,{
 	if (countitem(7422) > 0) {
 		mes "The Crystal ball is emitting mysterious power.";
 		next;
@@ -1718,11 +1718,11 @@ OnEnable:
 	enablenpc strnpcinfo(0);
 	end;
 }
-tha_t08,90,150,0	duplicate(Shining Crystal#tt_y1)	Shining Crystal#tt_y2	844
-tha_t08,90,59,0	duplicate(Shining Crystal#tt_y1)	Shining Crystal#tt_y3	844
-tha_t08,49,56,0	duplicate(Shining Crystal#tt_y1)	Shining Crystal#tt_y4	844
+tha_t08,90,150,0	duplicate(Shining Crystal#tt_y1)	Shining Crystal#tt_y2	CLEAR_NPC
+tha_t08,90,59,0	duplicate(Shining Crystal#tt_y1)	Shining Crystal#tt_y3	CLEAR_NPC
+tha_t08,49,56,0	duplicate(Shining Crystal#tt_y1)	Shining Crystal#tt_y4	CLEAR_NPC
 
-tha_t08,49,65,0	script	Shining Crystal#tt_b1	844,{
+tha_t08,49,65,0	script	Shining Crystal#tt_b1	CLEAR_NPC,{
 	if (countitem(7423) > 0) {
 		mes "The Crystal ball is emitting mysterious power.";
 		next;
@@ -1752,11 +1752,11 @@ OnEnable:
 	enablenpc strnpcinfo(0);
 	end;
 }
-tha_t08,49,150,0	duplicate(Shining Crystal#tt_b1)	Shining Crystal#tt_b2	844
-tha_t08,90,147,0	duplicate(Shining Crystal#tt_b1)	Shining Crystal#tt_b3	844
-tha_t08,90,56,0	duplicate(Shining Crystal#tt_b1)	Shining Crystal#tt_b4	844
+tha_t08,49,150,0	duplicate(Shining Crystal#tt_b1)	Shining Crystal#tt_b2	CLEAR_NPC
+tha_t08,90,147,0	duplicate(Shining Crystal#tt_b1)	Shining Crystal#tt_b3	CLEAR_NPC
+tha_t08,90,56,0	duplicate(Shining Crystal#tt_b1)	Shining Crystal#tt_b4	CLEAR_NPC
 
-tha_t08,90,65,0	script	Shining Crystal#tt_g1	844,{
+tha_t08,90,65,0	script	Shining Crystal#tt_g1	CLEAR_NPC,{
 	if (countitem(7424) > 0) {
 		mes "The Crystal ball is emitting mysterious power.";
 		next;
@@ -1786,11 +1786,11 @@ OnEnable:
 	enablenpc strnpcinfo(0);
 	end;
 }
-tha_t08,49,62,0	duplicate(Shining Crystal#tt_g1)	Shining Crystal#tt_g2	844
-tha_t08,49,147,0	duplicate(Shining Crystal#tt_g1)	Shining Crystal#tt_g3	844
-tha_t08,90,144,0	duplicate(Shining Crystal#tt_g1)	Shining Crystal#tt_g4	844
+tha_t08,49,62,0	duplicate(Shining Crystal#tt_g1)	Shining Crystal#tt_g2	CLEAR_NPC
+tha_t08,49,147,0	duplicate(Shining Crystal#tt_g1)	Shining Crystal#tt_g3	CLEAR_NPC
+tha_t08,90,144,0	duplicate(Shining Crystal#tt_g1)	Shining Crystal#tt_g4	CLEAR_NPC
 
-tha_t12,161,57,0	script	Gold Religious Statue#tt	111,{
+tha_t12,161,57,0	script	Gold Religious Statue#tt	HIDDEN_NPC,{
 	if ($@thana_summon == 0) {
 		if (countitem(7427) > 0) {
 			mes "It's a statue giving off a golden light.";
@@ -1820,7 +1820,7 @@ tha_t12,161,57,0	script	Gold Religious Statue#tt	111,{
 	close;
 }
 
-tha_t12,154,17,0	script	Green Wiseman Statue#tt	111,{
+tha_t12,154,17,0	script	Green Wiseman Statue#tt	HIDDEN_NPC,{
 	if ($@thana_summon == 1) {
 		if (countitem(7429) > 0) {
 			mes "A statue gives off green light.";
@@ -1850,7 +1850,7 @@ tha_t12,154,17,0	script	Green Wiseman Statue#tt	111,{
 	close;
 }
 
-tha_t12,103,17,0	script	Blue Angel Statue#tt	111,{
+tha_t12,103,17,0	script	Blue Angel Statue#tt	HIDDEN_NPC,{
 	if ($@thana_summon == 2) {
 		if (countitem(7428) > 0) {
 			mes "An angel statue is covered with a blue light.";
@@ -1880,7 +1880,7 @@ tha_t12,103,17,0	script	Blue Angel Statue#tt	111,{
 	close;
 }
 
-tha_t12,96,57,0	script	Bloody Knight Statue#tt	111,{
+tha_t12,96,57,0	script	Bloody Knight Statue#tt	HIDDEN_NPC,{
 	if ($@thana_summon == 3) {
 		if (countitem(7426) > 0) {
 			mes "A statue is shining like blood.";
@@ -1910,7 +1910,7 @@ tha_t12,96,57,0	script	Bloody Knight Statue#tt	111,{
 	close;
 }
 
-tha_t12,129,86,0	script	Dark Devil Statue#tt	111,{
+tha_t12,129,86,0	script	Dark Devil Statue#tt	HIDDEN_NPC,{
 	if ($@thana_summon == 4) {
 		if (countitem(7430) > 0) {
 			mes "A devil statue emits dark light.";
@@ -1944,7 +1944,7 @@ tha_t12,129,86,0	script	Dark Devil Statue#tt	111,{
 	close;
 }
 
-tha_t12,134,52,0	script	#tteffect01	139,{
+tha_t12,134,52,0	script	#tteffect01	HIDDEN_WARP_NPC,{
 	end;
 OnEnable:
 	initnpctimer;
@@ -1964,7 +1964,7 @@ OnTimer3000:
 	end;
 }
 
-tha_t12,132,47,0	script	#tteffect02	139,{
+tha_t12,132,47,0	script	#tteffect02	HIDDEN_WARP_NPC,{
 	end;
 OnEnable:
 	initnpctimer;
@@ -1984,7 +1984,7 @@ OnTimer3000:
 	end;
 }
 
-tha_t12,127,47,0	script	#tteffect03	139,{
+tha_t12,127,47,0	script	#tteffect03	HIDDEN_WARP_NPC,{
 	end;
 OnEnable:
 	initnpctimer;
@@ -2004,7 +2004,7 @@ OnTimer3000:
 	end;
 }
 
-tha_t12,125,52,0	script	#tteffect04	139,{
+tha_t12,125,52,0	script	#tteffect04	HIDDEN_WARP_NPC,{
 	end;
 OnEnable:
 	initnpctimer;
@@ -2024,7 +2024,7 @@ OnTimer3000:
 	end;
 }
 
-tha_t12,129,56,0	script	#tteffect05	139,{
+tha_t12,129,56,0	script	#tteffect05	HIDDEN_WARP_NPC,{
 	end;
 OnEnable:
 	initnpctimer;
@@ -2044,7 +2044,7 @@ OnTimer3000:
 	end;
 }
 
-tha_t12,130,52,0	script	#gateto_thanatos	45,1,1,{
+tha_t12,130,52,0	script	#gateto_thanatos	WARPNPC,1,1,{
 	end;
 OnInit:
 	disablenpc "#gateto_thanatos";
@@ -2161,7 +2161,7 @@ thana_boss,202,75,3	duplicate(Memory Seal#tt1)	Memory Seal#tt2	1712,3,3
 thana_boss,80,76,7	duplicate(Memory Seal#tt1)	Memory Seal#tt3	1709,3,3
 thana_boss,62,171,5	duplicate(Memory Seal#tt1)	Memory Seal#tt4	1710,3,3
 
-thana_boss,141,228,0	script	#thanatos_seal	139,3,3,{
+thana_boss,141,228,0	script	#thanatos_seal	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnEnable:
 	enablenpc "#thanatos_seal";
@@ -2229,7 +2229,7 @@ OnMyMobDead:
 	end;
 }
 
-thana_boss,1,1,0	script	#cooltime_thana	844,{
+thana_boss,1,1,0	script	#cooltime_thana	CLEAR_NPC,{
 	end;
 OnInit:
 	set $@thana_summon, 0;
@@ -2286,7 +2286,7 @@ OnTimer7200000:
 
 tha_scene01,30,30,0	warp	scene	1,1,tha_scene01,131,220
 tha_t04,81,36,0	warp	to 5th Floor	1,1,tha_t05,62,8
-tha_t06,119,120,0	script	to 7th Floor	45,1,1,{
+tha_t06,119,120,0	script	to 7th Floor	WARPNPC,1,1,{
 	end;
 OnTouch:
 	if (eaclass()&(EAJL_2|EAJL_UPPER) || eaclass()&EAJL_THIRD || ((Class == Job_SuperNovice || Class == Job_Taekwon || Class == Job_Star_Gladiator || Class == Job_Soul_Linker || Class == Job_Ninja || Class == Job_Gunslinger) && BaseLevel > 94)) {

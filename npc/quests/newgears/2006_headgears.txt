@@ -24,7 +24,7 @@
 
 // Censor Bar
 //============================================================
-rachel,91,273,8	script	?	930,{
+rachel,91,273,8	script	?	4_M_RACHMAN2,{
 	if (countitem(983) > 0 && countitem(7111) > 99 && countitem(938) > 98 && Zeny > 99999) {
 		mes "[?]";
 		mes "Giggle giggle...isn't it my partner, eh?";
@@ -92,7 +92,7 @@ rachel,91,273,8	script	?	930,{
 
 // Feather Beret
 //============================================================
-rachel,152,131,3	script	Sakjul	928,{
+rachel,152,131,3	script	Sakjul	4_M_MIDDLE1,{
 	if (countitem(5172) > 0 && countitem(7063) > 99 && countitem(982) > 0) {
 		mes "[Sakjul]";
 		mes "Great, you have brought everything";
@@ -208,7 +208,7 @@ rachel,152,131,3	script	Sakjul	928,{
 
 // Valkyrie Helm
 //============================================================
-hugel,147,103,3	script	Ghenirhemin	897,{
+hugel,147,103,3	script	Ghenirhemin	4_M_HUGRANFA,{
 	if (moza_valkylie == 5) {
 		set .@val2,rand(1,10);
 		if (.@val2 == 3) {
@@ -565,7 +565,7 @@ hugel,147,103,3	script	Ghenirhemin	897,{
 }
 // Hahoe Mask / Mythical Lion Mask / Bride Mask
 //============================================================
-payon,135,320,3	script	Chungwolmang	97,{
+payon,135,320,3	script	Chungwolmang	4W_M_01,{
 	if (moza_tal == 2) {
 		if (countitem(7015) > 19 && countitem(952) > 99 && countitem(1028) > 99) {
 			//Hahoe_Mask: Bookclip_In_Memory, Cactus_Needle, Wild_Boar's_Mane
@@ -808,7 +808,7 @@ S_MakeMask:
 
 // Magistrate Hat / Ayam
 //============================================================
-payon_in03,139,124,3	script	Han Garam	88,{
+payon_in03,139,124,3	script	Han Garam	4_M_ORIENT01,{
 	if (moza_korea == 2 && countitem(954) > 299 && countitem(733) > 4 && countitem(975) > 0 && countitem(7166) > 49) {
 		mes "[Han Garam]";
 		mes "You came back faster than I expected.";

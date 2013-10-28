@@ -12,7 +12,7 @@
 //= 1.5 Replaced effect numerics with constants. [L0ne_W0lf]
 //============================================================
 
-prt_church,111,112,1	script	Sister Linus	79,{
+prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 	if (BaseJob == Job_Priest) {
 		if (PRIEST_SK == 100) {
 			if (getskilllv("PR_REDEMPTIO") == 0) {

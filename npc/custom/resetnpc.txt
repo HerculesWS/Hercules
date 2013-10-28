@@ -13,7 +13,7 @@
 //= 1.3 All statuses removed upon skill reset. [Euphy]
 //============================================================
 
-prontera,150,193,4	script	Reset Girl	124,{
+prontera,150,193,4	script	Reset Girl	4_F_TELEPORTER,{
 
 	set .@ResetStat,5000;	// Zeny for stat reset
 	set .@ResetSkill,5000;	// Zeny for skill reset

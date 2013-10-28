@@ -13,7 +13,7 @@
 //=     Optimized.
 //============================================================
 
-aldebaran,139,63,4	script	Guide#01aldebaran::GuideAldearan	105,{
+aldebaran,139,63,4	script	Guide#01aldebaran::GuideAldearan	8W_SOLDIER,{
 	cutin "prt_soldier",2;
 	mes "[Al De Baran Guide]";
 	mes "Welcome to ^8B4513Al De Baran^000000,";
@@ -145,6 +145,6 @@ L_Mark:
 	mes "on your mini-map.";
 	return;
 }
-aldebaran,243,143,2	duplicate(GuideAldearan)	Guide#02aldebaran	105
-aldebaran,135,243,4	duplicate(GuideAldearan)	Guide#03aldebaran	105
-aldebaran,36,135,6	duplicate(GuideAldearan)	Guide#04aldebaran	105
+aldebaran,243,143,2	duplicate(GuideAldearan)	Guide#02aldebaran	8W_SOLDIER
+aldebaran,135,243,4	duplicate(GuideAldearan)	Guide#03aldebaran	8W_SOLDIER
+aldebaran,36,135,6	duplicate(GuideAldearan)	Guide#04aldebaran	8W_SOLDIER

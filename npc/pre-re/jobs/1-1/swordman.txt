@@ -35,7 +35,7 @@
 //= 2.3 Added Quest Log commands. [L0ne_W0lf]
 //============================================================
 
-izlude_in,74,172,4	script	Swordman#swd_1	119,{
+izlude_in,74,172,4	script	Swordman#swd_1	2_M_SWORDMASTER,{
 	if (Upper == 1) {
 		if (Class == Job_Novice_High && (ADVJOB == Job_Lord_Knight || ADVJOB == Job_Paladin)) {
 			mes "[Swordman]";
@@ -201,7 +201,7 @@ izlude_in,74,172,4	script	Swordman#swd_1	119,{
 	}
 }
 
-izlude_in,62,170,6	script	Swordman#swd_2	85,{
+izlude_in,62,170,6	script	Swordman#swd_2	4_M_03,{
 	mes "[Swordman]";
 	if (BaseJob == Job_Swordman) {
 		mes "Sorry guy, but I can only allow Novices to enter the Test Hall.";
@@ -233,7 +233,7 @@ izlude_in,62,170,6	script	Swordman#swd_2	85,{
 	}
 }
 
-izlude_in,30,175,4	script	Swordman#swd_3	92,{
+izlude_in,30,175,4	script	Swordman#swd_3	4_F_03,{
 	mes "[Swordman]";
 	mes "I will tell you about the Test! Listen carefully, I won't repeat myself.";
 	next;
@@ -260,7 +260,7 @@ izlude_in,30,175,4	script	Swordman#swd_3	92,{
 	close;
 }
 
-izlude_in,30,163,0	script	Test Hall Staff#swd_1	105,{
+izlude_in,30,163,0	script	Test Hall Staff#swd_1	8W_SOLDIER,{
 	mes "[Test Hall Staff]";
 	if (BaseJob == Job_Swordman) {
 		mes "Hm? How did you get inside? You're not supposed to be in here, so please leave now.";
@@ -296,19 +296,19 @@ izlude_in,30,163,0	script	Test Hall Staff#swd_1	105,{
 // Examination Courses NPCs
 //============================================================
 // 1-1
-job_sword1,230,245,2	script	Medic#swd_1	105,{
+job_sword1,230,245,2	script	Medic#swd_1	8W_SOLDIER,{
 	callfunc "F_JobSwdMedic","1st";
 }
-job_sword1,230,242,2	script	Test Hall Staff#swd_2	105,{
+job_sword1,230,242,2	script	Test Hall Staff#swd_2	8W_SOLDIER,{
 	callfunc "F_JobSwdStaff",1;
 }
-job_sword1,230,207,2	script	Medic#2swd_2	105,{
+job_sword1,230,207,2	script	Medic#2swd_2	8W_SOLDIER,{
 	callfunc "F_JobSwdMedic","2nd";
 }
-job_sword1,230,204,2	script	Test Hall Staff#2swd_3	105,{
+job_sword1,230,204,2	script	Test Hall Staff#2swd_3	8W_SOLDIER,{
 	callfunc "F_JobSwdStaff",1;
 }
-job_sword1,223,167,2	script	Mae#swd_1_success	92,{
+job_sword1,223,167,2	script	Mae#swd_1_success	4_F_03,{
 	mapannounce "job_sword1","Applicant " + strcharinfo(0) + ". You successfully passed the test.",bc_map;
 	set job_sword_q,4;
 	mes "[Mae]";
@@ -368,28 +368,28 @@ OnTouch:
 job_sword1,223,243,0	warp	checkp1-2#swd_1	1,1,job_sword1,11,206
 job_sword1,223,205,0	warp	checkp2-3#swd_1	1,1,job_sword1,11,168
 
-job_sword1,7,245,0	script	Test Hall Staff#swd_4	45,1,3,{
+job_sword1,7,245,0	script	Test Hall Staff#swd_4	WARPNPC,1,3,{
 	callfunc "F_JobSwdTestStaff",10,245;
 }
 
-job_sword1,8,207,0	script	Test Hall Staff#swd_5	45,1,6,{
+job_sword1,8,207,0	script	Test Hall Staff#swd_5	WARPNPC,1,6,{
 	callfunc "F_JobSwdTestStaff",11,207;
 }
 
-job_sword1,8,169,0	script	Test Hall Staff#swd_6	45,1,6,{
+job_sword1,8,169,0	script	Test Hall Staff#swd_6	WARPNPC,1,6,{
 	callfunc "F_JobSwdTestStaff",11,169;
 }
 
-job_sword1,192,244,0	script	Test Hall Staff#swd_7	45,1,3,{
+job_sword1,192,244,0	script	Test Hall Staff#swd_7	WARPNPC,1,3,{
 	callfunc "F_JobSwdTestStaff2","1st",215,244;
 }
 
-job_sword1,193,207,0	script	Test Hall Staff#swd_8	45,1,3,{
+job_sword1,193,207,0	script	Test Hall Staff#swd_8	WARPNPC,1,3,{
 	callfunc "F_JobSwdTestStaff2","2nd",215,205;
 	warp "job_sword1",215,205;
 }
 
-job_sword1,193,168,0	script	Test Hall Staff#swd_9	45,1,3,{
+job_sword1,193,168,0	script	Test Hall Staff#swd_9	WARPNPC,1,3,{
 	callfunc "F_JobSwdTestStaff2","3rd",215,167;
 }
 

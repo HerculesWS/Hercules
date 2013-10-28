@@ -52,7 +52,7 @@ OnMyMobDead:
 	end;
 }
 
-lighthalzen,267,200,3	script	Guard#lhz01	868,{
+lighthalzen,267,200,3	script	Guard#lhz01	4_M_LGTGUARD,{
 	if (countitem(7350) > 0) {
 		mes "[Guard]";
 		mes "Hold it right th--!";
@@ -119,7 +119,7 @@ lighthalzen,267,200,3	script	Guard#lhz01	868,{
 	}
 }
 
-lighthalzen,294,223,7	script	Guard#lhz02	868,{
+lighthalzen,294,223,7	script	Guard#lhz02	4_M_LGTGUARD,{
 	if (countitem(7350) > 0) {
 		mes "[Guard]";
 		mes "Hold it right th--!";
@@ -188,7 +188,7 @@ lighthalzen,294,223,7	script	Guard#lhz02	868,{
 
 // Cube Room Quest
 //============================================================
-lighthalzen,341,224,3	script	Fishbone	868,{
+lighthalzen,341,224,3	script	Fishbone	4_M_LGTGUARD,{
 	// Retain prior position in quest.
 	if (piciburn) {
 		set lhz_sincube,piciburn;
@@ -653,7 +653,7 @@ lighthalzen,341,224,3	script	Fishbone	868,{
 	}
 }
 
-lhz_cube,237,198,0	script	Bundle of Files#cube	111,{
+lhz_cube,237,198,0	script	Bundle of Files#cube	HIDDEN_NPC,{
 	if (lhz_sincube < 7) {
 		mes "^3355FFThere are a bunch";
 		mes "of files scattered";
@@ -695,7 +695,7 @@ lhz_cube,237,198,0	script	Bundle of Files#cube	111,{
 	close;
 }
 
-lhz_cube,234,202,0	script	Picture#cube	111,{
+lhz_cube,234,202,0	script	Picture#cube	HIDDEN_NPC,{
 	if (lhz_secret01 < 2) {
 		mes "^3355FFThis picture hanging";
 		mes "on the wall catches";
@@ -791,7 +791,7 @@ lhz_cube,234,202,0	script	Picture#cube	111,{
 	close;
 }
 
-lhz_cube,242,201,0	script	Drawer#cube	111,{
+lhz_cube,242,201,0	script	Drawer#cube	HIDDEN_NPC,{
 	if (lhz_secret01 < 1) {
 		mes "^3355FFThe drawer here";
 		mes "looks interesting,";
@@ -831,7 +831,7 @@ lhz_cube,242,201,0	script	Drawer#cube	111,{
 	close;
 }
 
-lhz_cube,248,179,0	script	Chest#cube	111,{
+lhz_cube,248,179,0	script	Chest#cube	HIDDEN_NPC,{
 	if (lhz_sincube < 7) {
 		mes "^3355FFYou've found a chest";
 		mes "with an axe laid on";
@@ -862,7 +862,7 @@ lhz_cube,248,179,0	script	Chest#cube	111,{
 	close;
 }
 
-lhz_cube,237,183,0	script	Barrel#cube	111,{
+lhz_cube,237,183,0	script	Barrel#cube	HIDDEN_NPC,{
 	set number_line,0;
 	if (lhz_sincube < 8) {
 		mes "^3355FFYou have";
@@ -959,7 +959,7 @@ lhz_cube,237,183,0	script	Barrel#cube	111,{
 	close;
 }
 
-lhz_cube,224,192,0	script	Power Generator#cube	111,{
+lhz_cube,224,192,0	script	Power Generator#cube	HIDDEN_NPC,{
 	if (lhz_secret01 < 6) {
 		mes "^3355FFThis is a noisily";
 		mes "operating huge machine";
@@ -1008,7 +1008,7 @@ lhz_cube,224,192,0	script	Power Generator#cube	111,{
 	close;
 }
 
-lhz_cube,244,201,0	script	Status Light#cube	111,{
+lhz_cube,244,201,0	script	Status Light#cube	HIDDEN_NPC,{
 	if (lhz_secret01 < 7) {
 		mes "^3355FFThe Status Light is";
 		mes "on. It looks like there's";
@@ -1043,7 +1043,7 @@ lhz_cube,244,201,0	script	Status Light#cube	111,{
 	close;
 }
 
-lhz_cube,234,200,0	script	Desk#cube	111,{
+lhz_cube,234,200,0	script	Desk#cube	HIDDEN_NPC,{
 	if (lhz_secret02 <= 1) {
 		mes "^3355FFYou've found";
 		mes "a completely";
@@ -1180,7 +1180,7 @@ lhz_cube,234,200,0	script	Desk#cube	111,{
 	}
 }
 
-lhz_cube,247,198,0	script	Bed#cube	111,{
+lhz_cube,247,198,0	script	Bed#cube	HIDDEN_NPC,{
 	if (lhz_secret02 == 0) {
 		mes "^3355FFYou've found a bed";
 		mes "in which the sheets";
@@ -1328,7 +1328,7 @@ lhz_cube,247,198,0	script	Bed#cube	111,{
 	close;
 }
 
-lhz_cube,229,184,0	script	Goblet#cube	111,{
+lhz_cube,229,184,0	script	Goblet#cube	HIDDEN_NPC,{
 	if (lhz_sincube < 10) {
 		if (lhz_secret03 == 0) {
 			mes "^3355FFYou see an empty";
@@ -1357,7 +1357,7 @@ lhz_cube,229,184,0	script	Goblet#cube	111,{
 	close;
 }
 
-lhz_cube,231,202,0	script	Chemicals#cube	111,{
+lhz_cube,231,202,0	script	Chemicals#cube	HIDDEN_NPC,{
 	if (lhz_secret03 < 1) {
 		mes "^3355FFThere is a bottle";
 		mes "containing slightly";
@@ -1405,7 +1405,7 @@ lhz_cube,231,202,0	script	Chemicals#cube	111,{
 	close;
 }
 
-lhz_cube,249,191,0	script	Cabinet#cube	111,{
+lhz_cube,249,191,0	script	Cabinet#cube	HIDDEN_NPC,{
 	if (lhz_secret03 < 2) {
 		mes "^3355FFYou've found a";
 		mes "cabinet that contains";
@@ -1457,7 +1457,7 @@ lhz_cube,249,191,0	script	Cabinet#cube	111,{
 	close;
 }
 
-lhz_cube,224,197,0	script	Experiment Tube#cube	111,{
+lhz_cube,224,197,0	script	Experiment Tube#cube	HIDDEN_NPC,{
 	if (lhz_secret01 < 8) {
 		mes "^3355FFYou find a strange";
 		mes "tube that seems to";
@@ -1556,7 +1556,7 @@ lhz_cube,224,197,0	script	Experiment Tube#cube	111,{
 	}
 }
 
-lhz_cube,248,193,0	script	Box#cube1	111,{
+lhz_cube,248,193,0	script	Box#cube1	HIDDEN_NPC,{
 	if ((lhz_secret01 < 9) && (lhz_secret02 < 4) && (lhz_secret03 < 3)) {
 		mes "^3355FFYou find a box with";
 		mes "three distinctively";
@@ -1685,7 +1685,7 @@ lhz_cube,248,193,0	script	Box#cube1	111,{
 	close;
 }
 
-lhz_cube,250,184,0	script	Door#cube	111,{
+lhz_cube,250,184,0	script	Door#cube	HIDDEN_NPC,{
 	mes "^3355FFYou've come upon a";
 	mes "door that leads outside.^000000";
 	next;
@@ -1696,7 +1696,7 @@ lhz_cube,250,184,0	script	Door#cube	111,{
 	close;
 }
 
-lhz_dun02,224,6,0	script	Exit1#lt	45,1,1,{
+lhz_dun02,224,6,0	script	Exit1#lt	WARPNPC,1,1,{
 OnTouch:
 	if (MISC_QUEST&512) {
 		warp "lhz_cube",231,90;
@@ -1711,7 +1711,7 @@ OnTouch:
 
 // Lighthalzen Pickpocket Mini-Quest
 //============================================================
-lighthalzen,240,216,4	script	Suspicious Guy#lhz_01	870,2,2,{
+lighthalzen,240,216,4	script	Suspicious Guy#lhz_01	4_M_LGTPOOR,2,2,{
 	end;
 
 OnTouch:
@@ -1780,7 +1780,7 @@ OnTouch:
 	}
 }
 
-lighthalzen,220,169,3	script	Suspicious Guy#lhz_02	870,2,2,{
+lighthalzen,220,169,3	script	Suspicious Guy#lhz_02	4_M_LGTPOOR,2,2,{
 	end;
 
 OnInit:
@@ -1852,7 +1852,7 @@ OnTouch:
 	}
 }
 
-lighthalzen,164,127,4	script	Suspicious Guy#lhz_03	870,2,2,{
+lighthalzen,164,127,4	script	Suspicious Guy#lhz_03	4_M_LGTPOOR,2,2,{
 	end;
 
 OnInit:
@@ -2036,7 +2036,7 @@ OnTouch:
 
 // Friendship Quest
 //============================================================
-lhz_in02,201,210,5	script	Digotz	869,{
+lhz_in02,201,210,5	script	Digotz	4_M_LGTMAN,{
 	if (BaseLevel < 50) {
 		mes "[Digotz]";
 		mes "Oh, an adventurer?";
@@ -2515,7 +2515,7 @@ lhz_in02,201,210,5	script	Digotz	869,{
 	close;
 }
 
-lighthalzen,337,232,3	script	Maku	870,{
+lighthalzen,337,232,3	script	Maku	4_M_LGTPOOR,{
 	if (friendship > 14) {
 		cutin "lhz_macu07",2;
 		mes "[Maku]";
@@ -3083,7 +3083,7 @@ lighthalzen,337,232,3	script	Maku	870,{
 }
 
 
-yuno_in04,107,14,5	script	Student	754,{
+yuno_in04,107,14,5	script	Student	4_M_SAGE_A,{
 	if (friendship == 7 || friendship == 8) {
 		mes "[Joey Choryee]";
 		mes "This is a study area where";
@@ -3112,7 +3112,7 @@ yuno_in04,107,14,5	script	Student	754,{
 	close;
 }
 
-yuno_in04,96,106,5	script	Passionate Student	754,{
+yuno_in04,96,106,5	script	Passionate Student	4_M_SAGE_A,{
 	if ((MaxWeight-Weight) < 300 || checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -3333,7 +3333,7 @@ yuno_in04,96,106,5	script	Passionate Student	754,{
 	close;
 }
 
-yuno_in04,168,117,3	script	Book#lhz	111,{
+yuno_in04,168,117,3	script	Book#lhz	HIDDEN_NPC,{
 	if (friendship == 11) {
 		mes "^3355FFThere's nothing";
 		mes "over here that you";
@@ -3870,7 +3870,7 @@ OnTouch_:
 	end;
 }
 
-lhz_que01,21,31,5	script	#li_Varmunt	755,{
+lhz_que01,21,31,5	script	#li_Varmunt	4_M_SAGE_C,{
 	if (countitem(7345) > 0) {
 		if (lhz_curse == 12) {
 			mes "[??]";
@@ -4006,7 +4006,7 @@ lhz_que01,21,31,5	script	#li_Varmunt	755,{
 	end;
 }
 
-lhz_que01,29,24,3	script	#li_researcher	754,{
+lhz_que01,29,24,3	script	#li_researcher	4_M_SAGE_A,{
 	if (countitem(7345) > 0) {
 		if (lhz_curse == 12) {
 			mes "Doctor Varmunt,";
@@ -4173,7 +4173,7 @@ OnTouch_:
 	end;
 }
 
-lhz_que01,99,74,5	script	#li_Man	48,{
+lhz_que01,99,74,5	script	#li_Man	1_M_02,{
 	if (lhz_curse == 16) {
 		mes "[???]";
 		mes "It's over.";
@@ -4324,7 +4324,7 @@ OnTouch_:
 	close;
 }
 
-lighthalzen,346,263,3	script	Elder#lhz	846,{
+lighthalzen,346,263,3	script	Elder#lhz	4_F_EINOLD,{
 	if (countitem(7345) > 0) {
 		if ((lhz_curse == 1) && (lhz_spi01 == 1) && (lhz_spi02 == 1) && (lhz_spi03 == 1) && (lhz_spi04 == 1)) {
 			mes "[Elder]";
@@ -4792,7 +4792,7 @@ lighthalzen,346,263,3	script	Elder#lhz	846,{
 	}
 }
 
-lhz_in03,32,162,3	script	Crippled Girl#li_tre	53,{
+lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 	if (lhz_curse == 23) {
 		if (countitem(7341) > 0) {
 			mes "["+strcharinfo(0)+"]";
@@ -5157,7 +5157,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	53,{
 	}
 }
 
-lighthalzen,324,322,0	script	#li_door	45,2,2,{
+lighthalzen,324,322,0	script	#li_door	WARPNPC,2,2,{
 OnTouch_:
 	if ((lhz_curse > 19) && (lhz_curse < 23)) {
 		mes "^3355FFThe door is locked.^000000";
@@ -5244,7 +5244,7 @@ OnTouch_:
 	end;
 }
 
-lhz_in01,114,181,5	script	Representative#li_01	71,{
+lhz_in01,114,181,5	script	Representative#li_01	1_F_LIBRARYGIRL,{
 	if (lhz_curse == 7) {
 		mes "[Representative]";
 		mes "Greetings, and welcome";
@@ -5403,7 +5403,7 @@ lhz_in01,114,181,5	script	Representative#li_01	71,{
 	}
 }
 
-lhz_in01,27,247,5	script	Representative#li_02	71,{
+lhz_in01,27,247,5	script	Representative#li_02	1_F_LIBRARYGIRL,{
 	if (lhz_curse > 6) {
 		mes "[Representative]";
 		mes "Welcome to the";
@@ -5545,7 +5545,7 @@ lhz_in01,27,247,5	script	Representative#li_02	71,{
 	}
 }
 
-lhz_in01,25,251,3	script	Rekenber Guidebook#li	111,{
+lhz_in01,25,251,3	script	Rekenber Guidebook#li	HIDDEN_NPC,{
 	mes "..............";
 	next;
 	mes "^3131FF#The Vision^000000";
@@ -5581,7 +5581,7 @@ lhz_in01,25,251,3	script	Rekenber Guidebook#li	111,{
 	close;
 }
 
-lhz_in01,273,121,1	script	Mad Scientist#li	865,{
+lhz_in01,273,121,1	script	Mad Scientist#li	4_LGTSCIENCE,{
 	if (lhz_curse == 13) {
 		mes "[Wolfchev]";
 		mes "No one shall";
@@ -5780,7 +5780,7 @@ lhz_in01,273,121,1	script	Mad Scientist#li	865,{
 	}
 }
 
-lhz_in01,286,226,3	script	Secretary Slierre#li	831,{
+lhz_in01,286,226,3	script	Secretary Slierre#li	4_F_ZONDAGIRL,{
 	if (lhz_curse == 26) {
 		mes "[Sueii Slierre]";
 		mes "Excuse me, but you are";
@@ -6279,7 +6279,7 @@ OnTouch_:
 	end;
 }
 
-lhz_in01,43,114,0	script	#li_toend	45,1,1,{
+lhz_in01,43,114,0	script	#li_toend	WARPNPC,1,1,{
 OnTouch_:
 	if (lhz_curse > 30) {
 		warp "lhz_que01",97,30;
@@ -6293,7 +6293,7 @@ OnTouch_:
 lhz_que01,97,33,0	warp	#li_toin01	1,1,lhz_in01,43,120
 lhz_in01,278,132,0	warp	#li_toin02	1,1,lhz_in01,43,120
 
-lhz_que01,89,15,3	script	File#li	111,{
+lhz_que01,89,15,3	script	File#li	HIDDEN_NPC,{
 	mes "Name: Engeod";
 	mes "Age: XX";
 	mes "Height: XXX";
@@ -6311,7 +6311,7 @@ lhz_que01,89,15,3	script	File#li	111,{
 	close;
 }
 
-lhz_in01,269,114,3	script	A File#li-1	111,{
+lhz_in01,269,114,3	script	A File#li-1	HIDDEN_NPC,{
 	mes "Name: Engeod";
 	mes "Age: XX";
 	mes "Height: XXX";
@@ -6331,7 +6331,7 @@ lhz_in01,269,114,3	script	A File#li-1	111,{
 
 // President Quest, a.k.a. Schwartzvalt Triology Quest
 //============================================================
-lighthalzen,179,170,4	script	Ordinary Man	98,{
+lighthalzen,179,170,4	script	Ordinary Man	4W_M_02,{
 
 	if(!lhz_boss)
 	{
@@ -7113,7 +7113,7 @@ OnTouch:
 	}
 }
 
-yuno_fild04,165,245,4	script	Dismal Guy	89,{
+yuno_fild04,165,245,4	script	Dismal Guy	4_M_ORIENT02,{
 
 	if(lhz_boss < 8)
 	{
@@ -7293,7 +7293,7 @@ yuno_fild04,165,245,4	script	Dismal Guy	89,{
 	}
 }
 
-yuno_pre,69,20,4	script	Secretary#1	862,{
+yuno_pre,69,20,4	script	Secretary#1	4_F_LGTGIRL,{
 
 	if(lhz_boss < 11)
 	{
@@ -7549,7 +7549,7 @@ yuno_pre,69,20,4	script	Secretary#1	862,{
 	}
 }
 
-yuno_pre,95,71,5	script	Guard	852,{
+yuno_pre,95,71,5	script	Guard	4_M_EIN_SOLDIER,{
 
 	if(lhz_boss < 11)
 	{
@@ -7679,14 +7679,14 @@ yuno_pre,95,71,5	script	Guard	852,{
 	}
 }
 
-yuno_pre,96,69,2	script	A Fine Gentleman	754,{
+yuno_pre,96,69,2	script	A Fine Gentleman	4_M_SAGE_A,{
 
 OnInit:
 	disablenpc "A Fine Gentleman";
 	end;
 }
 
-yuno_pre,69,79,4	script	Mr. President	872,{
+yuno_pre,69,79,4	script	Mr. President	4_M_PRESIDENT,{
 
 	if(checkweight(7342,1) != 1)
 	{
@@ -8603,14 +8603,14 @@ L_Mission:
 	}
 }
 
-yuno_pre,77,68,0	script	Secretary#2	862,{
+yuno_pre,77,68,0	script	Secretary#2	4_F_LGTGIRL,{
 
 OnInit:
 	disablenpc "Secretary#2";
 	end;
 }
 
-yuno_pre,75,73,0	script	A Neat Gentleman	109,{
+yuno_pre,75,73,0	script	A Neat Gentleman	4_M_MANAGER,{
 
 OnInit:
 	disablenpc "A Neat Gentleman";
@@ -8653,7 +8653,7 @@ OnTouch:
 	}
 }
 
-aldebaran,58,225,4	script	Kafra Employee#l1	116,{
+aldebaran,58,225,4	script	Kafra Employee#l1	4_F_KAFRA2,{
 
 	if(lhz_boss != 17)
 	{
@@ -8723,7 +8723,7 @@ aldebaran,58,225,4	script	Kafra Employee#l1	116,{
 	}
 }
 
-aldeba_in,155,240,5	script	Kafra Employee#l2	859,{
+aldeba_in,155,240,5	script	Kafra Employee#l2	4_F_AGENTKAFRA,{
 
 	if(checkweight(7343,1) != 1)
 	{
@@ -9006,7 +9006,7 @@ aldeba_in,155,240,5	script	Kafra Employee#l2	859,{
 	}
 }
 
-lhz_fild02,228,214,0	script	Wounded Man	849,{
+lhz_fild02,228,214,0	script	Wounded Man	4_M_DIEMAN,{
 
 	if(checkweight(7343,1) != 1)
 	{
@@ -9137,7 +9137,7 @@ OnTouch:
 	}
 }
 
-lhz_fild01,66,219,4	script	Mysterious Woman	859,{
+lhz_fild01,66,219,4	script	Mysterious Woman	4_F_AGENTKAFRA,{
 
 	if(lhz_boss == 26)
 	{
@@ -9353,7 +9353,7 @@ OnInit:
 	end;
 }
 
-lhz_in01,93,45,4	script	Researcher#1	865,{
+lhz_in01,93,45,4	script	Researcher#1	4_LGTSCIENCE,{
 
 	if(lhz_boss < 28)
 	{
@@ -9455,7 +9455,7 @@ lhz_in01,93,45,4	script	Researcher#1	865,{
 	}
 }
 
-lhz_in01,285,169,3	script	Researcher#2	865,{
+lhz_in01,285,169,3	script	Researcher#2	4_LGTSCIENCE,{
 
 	if(checkweight(7349,1) != 1)
 	{
@@ -9608,7 +9608,7 @@ lhz_in01,285,169,3	script	Researcher#2	865,{
 	}
 }
 
-lhz_in01,187,31,0	script	#Sneak	111,4,3,{
+lhz_in01,187,31,0	script	#Sneak	HIDDEN_NPC,4,3,{
 
 	end;
 
@@ -9792,7 +9792,7 @@ OnTimer190000:
 
 
 
-lhz_in01,182,35,0	script	File Search Engine	111,{
+lhz_in01,182,35,0	script	File Search Engine	HIDDEN_NPC,{
 
 	if((lhz_boss > 28) && (lhz_boss < 35))
 	{
@@ -9922,7 +9922,7 @@ L_Search:
 	close;
 }
 
-lhz_in01,177,31,0	script	Door#sneak	111,{
+lhz_in01,177,31,0	script	Door#sneak	HIDDEN_NPC,{
 
 	if(lhz_boss < 29)
 	{
@@ -9960,7 +9960,7 @@ lhz_in01,177,31,0	script	Door#sneak	111,{
 	}
 }
 
-lhz_in01,184,40,0	script	Area 1-5	111,{
+lhz_in01,184,40,0	script	Area 1-5	HIDDEN_NPC,{
 
 	if(checkweight(7344,1) != 1)
 	{
@@ -10009,7 +10009,7 @@ lhz_in01,184,40,0	script	Area 1-5	111,{
 	}
 }
 
-lhz_in01,184,52,0	script	Area 1-7	111,{
+lhz_in01,184,52,0	script	Area 1-7	HIDDEN_NPC,{
 
 	if((lhz_boss > 28) && (lhz_boss < 32))
 	{
@@ -10071,7 +10071,7 @@ lhz_in01,184,52,0	script	Area 1-7	111,{
 	}
 }
 
-lhz_in01,184,46,0	script	Area 3-2	111,{
+lhz_in01,184,46,0	script	Area 3-2	HIDDEN_NPC,{
 
 	if((lhz_boss > 28) && (lhz_boss < 30))
 	{
@@ -10136,7 +10136,7 @@ lhz_in01,184,46,0	script	Area 3-2	111,{
 	}
 }
 
-lhz_in01,184,48,0	script	Area 3-3	111,{
+lhz_in01,184,48,0	script	Area 3-3	HIDDEN_NPC,{
 
 	if((lhz_boss > 28) && (lhz_boss < 34))
 	{
@@ -10184,7 +10184,7 @@ lhz_in01,184,48,0	script	Area 3-3	111,{
 	}
 }
 
-lhz_in01,177,56,0	script	Area 6-1	111,{
+lhz_in01,177,56,0	script	Area 6-1	HIDDEN_NPC,{
 
 	if((lhz_boss > 28) && (lhz_boss < 33))
 	{
@@ -10231,7 +10231,7 @@ lhz_in01,177,56,0	script	Area 6-1	111,{
 	}
 }
 
-lhz_dun02,282,278,0	script	Broken Machine	111,{
+lhz_dun02,282,278,0	script	Broken Machine	HIDDEN_NPC,{
 
 	if(checkweight(7346,1) != 1)
 	{
@@ -10311,7 +10311,7 @@ lhz_dun02,282,278,0	script	Broken Machine	111,{
 	}
 }
 
-sec_in02,17,170,4	script	boss::lght_boss_admin	809,{
+sec_in02,17,170,4	script	boss::lght_boss_admin	1_M_SIGNMONK,{
 	callfunc "F_GM_NPC";
 	mes "[Patch]";
 	mes "Tell me what you want.";
@@ -10332,7 +10332,7 @@ sec_in02,17,170,4	script	boss::lght_boss_admin	809,{
 	close;
 }
 
-lhz_in02,19,274,2	script	Maintenance Guy	851,{
+lhz_in02,19,274,2	script	Maintenance Guy	4_M_REPAIR,{
 
 	mes "[Kudiuu]";
 	mes "Holy...!";
@@ -10346,7 +10346,7 @@ lhz_in02,19,274,2	script	Maintenance Guy	851,{
 
 // Rekenber Job Quest
 //============================================================
-lhz_in01,174,258,3	script	Young Man#reken	868,{
+lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 
 	if(lhz_rekenber > 21)
 	{
@@ -11088,7 +11088,7 @@ lhz_in01,174,258,3	script	Young Man#reken	868,{
 	end;
 }
 
-lighthalzen,141,162,3	script	Old Man#reken	85,{
+lighthalzen,141,162,3	script	Old Man#reken	4_M_03,{
 
 	mes "[Old Man]";
 	mes "Lately, Kazien seems";
@@ -11201,7 +11201,7 @@ einbroch,55,52,3	script	Laboratory Guard#reken	 852,{
 	close;
 }
 
-airplane_01,96,48,3	script	Man#Lyozien	868,{
+airplane_01,96,48,3	script	Man#Lyozien	4_M_LGTGUARD,{
 
 	if(lhz_rekenber > 21)
 	{
@@ -11908,7 +11908,7 @@ OnTimer120000:
 	end;
 }
 
-airplane_01,99,47,3	script	#packidentity	139,2,2,{
+airplane_01,99,47,3	script	#packidentity	HIDDEN_WARP_NPC,2,2,{
 	end;
 	
 OnInit:
@@ -11948,7 +11948,7 @@ OnTimer120000:
 	end;
 }
 
-lhz_in01,187,247,3	script	#flashback1	139,2,2,{
+lhz_in01,187,247,3	script	#flashback1	HIDDEN_WARP_NPC,2,2,{
 
 OnTouch:
 	if(lhz_rekenber == 22)
@@ -11970,7 +11970,7 @@ OnTouch:
 	end;
 }
 
-lhz_in01,75,248,3	script	#flashback2	139,2,2,{
+lhz_in01,75,248,3	script	#flashback2	HIDDEN_WARP_NPC,2,2,{
 
 OnTouch:
 	if(lhz_rekenber == 22)
@@ -12008,7 +12008,7 @@ OnTouch:
 	end;
 }
 
-airplane_01,10,10,3	script	#LyozienSwitch	111,{
+airplane_01,10,10,3	script	#LyozienSwitch	HIDDEN_NPC,{
 	callfunc "F_GM_NPC";
 	mes "[Lyozien Switch]";
 	mes "Input password.";

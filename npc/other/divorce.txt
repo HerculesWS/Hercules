@@ -22,7 +22,7 @@
 //= 1.5 Replaced effect numerics with constants. [L0ne_W0lf]
 //============================================================
 
-nif_in,190,112,5	script	Deviruchi#divorce	738,{
+nif_in,190,112,5	script	Deviruchi#divorce	4_DEVIRUCHI,{
 	mes "[Deviruchi]";
 //	if (wedding_sign == 0) {
 //		mes "Heh heh...";

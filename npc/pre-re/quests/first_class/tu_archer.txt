@@ -11,4 +11,4 @@
 //= 1.0 First version. [Euphy]
 //============================================================
 
-mjolnir_11,27,223,3	duplicate(Acolyte_Tu)	Acolyte#tu	95
+mjolnir_11,27,223,3	duplicate(Acolyte_Tu)	Acolyte#tu	4_F_SISTER

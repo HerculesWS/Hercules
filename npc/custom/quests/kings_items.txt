@@ -11,7 +11,7 @@
 //= 1.1 Optimized. [Euphy]
 //============================================================
 
-prt_castle,80,170,4	script	King of Prontera	108,{
+prt_castle,80,170,4	script	King of Prontera	1_M_PRON_KING,{
 	mes "[King of Prontera]";
 	mes "Hello, can you help me?";
 	next;
@@ -62,7 +62,7 @@ prt_castle,80,170,4	script	King of Prontera	108,{
 	}
 }
 
-prt_castle,84,170,4	script	King's Daughter	62,{
+prt_castle,84,170,4	script	King's Daughter	1_M_SIZ,{
 	mes "[King's Daughter]";
 	mes "Hmph, I hate my dad right now!!";
 	next;

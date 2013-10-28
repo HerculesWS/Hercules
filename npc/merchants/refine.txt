@@ -63,7 +63,7 @@
 
 // Christopher: Geffen Blacksmith
 //============================================================
-geffen_in,110,172,0	script	Christopher#1	63,{
+geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 	mes "[Christopher Guillenrow]";
 	mes "Welcome to Christopher's Workshop. Ye can get all yer stuff for forging here. What business";
 	mes "brings ye to me?";
@@ -329,7 +329,7 @@ geffen_in,110,172,0	script	Christopher#1	63,{
 
 // Paul Spanner: Einbroch Blacksmith Supplier
 //============================================================
-ein_in01,38,29,0	script	Paul Spanner	63,{
+ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -565,31 +565,31 @@ ein_in01,38,29,0	script	Paul Spanner	63,{
 
 // Weapon/Armor Refiners
 //============================================================
-prt_in,63,60,0	script	Hollgrehenn	85,{
+prt_in,63,60,0	script	Hollgrehenn	4_M_03,{
 	callfunc "refinemain","Hollgrehenn",0;
 	end;
 }
-morocc_in,73,38,6	script	Aragham	99,{
+morocc_in,73,38,6	script	Aragham	4W_M_03,{
 	callfunc "refinemain","Aragham",0;
 	end;
 }
-payon,144,173,5	script	Antonio	88,{
+payon,144,173,5	script	Antonio	4_M_ORIENT01,{
 	callfunc "refinemain","Antonio",0;
 	end;
 }
-alberta_in,28,58,0	script	Fredrik	85,{
+alberta_in,28,58,0	script	Fredrik	4_M_03,{
 	callfunc "refinemain","Fredrik",0;
 	end;
 }
-yuno_in01,171,21,4	script	Lambert	88,{
+yuno_in01,171,21,4	script	Lambert	4_M_ORIENT01,{
 	callfunc "refinemain","Lambert",0;
 	end;
 }
-ein_in01,24,87,5	script	Manthasman	826,{
+ein_in01,24,87,5	script	Manthasman	4_M_DWARF,{
 	callfunc "refinemain","Manthasman Pruhag",0;
 	end;
 }
-lhz_in02,282,20,7	script	Fulerr	869,{
+lhz_in02,282,20,7	script	Fulerr	4_M_LGTMAN,{
 	callfunc "refinemain","Fulerr",0;
 	end;
 }
@@ -897,31 +897,31 @@ function	script	refinemain	{
 
 // Material Salesmen
 //============================================================
-prt_in,56,68,5	script	Vurewell	86,{
+prt_in,56,68,5	script	Vurewell	4_M_04,{
 	callfunc "phramain","Vurewell";
 	end;
 }
-payon,145,178,3	script	Begnahd	88,{
+payon,145,178,3	script	Begnahd	4_M_ORIENT01,{
 	callfunc "phramain","Begnahd";
 	end;
 }
-morocc_in,63,32,6	script	Sade	99,{
+morocc_in,63,32,6	script	Sade	4W_M_03,{
 	callfunc "phramain","Sade";
 	end;
 }
-alberta_in,13,71,3	script	Kahlamanlith	86,{
+alberta_in,13,71,3	script	Kahlamanlith	4_M_04,{
 	callfunc "phramain","Kahlamanlith";
 	end;
 }
-yuno_in01,171,27,4	script	Dilemma	88,{
+yuno_in01,171,27,4	script	Dilemma	4_M_ORIENT01,{
 	callfunc "phramain","Dilemma";
 	end;
 }
-ein_in01,15,87,3	script	Tirehaus	86,{
+ein_in01,15,87,3	script	Tirehaus	4_M_04,{
 	callfunc "phramain","Tirehaus";
 	end;
 }
-lhz_in02,278,24,3	script	Krugg	86,{
+lhz_in02,278,24,3	script	Krugg	4_M_04,{
 	callfunc "phramain","Krugg";
 	end;
 }
@@ -1010,31 +1010,31 @@ function	script	phramain	{
 
 // Ori/Elu Refiners
 //============================================================
-prt_in,63,69,3	script	Dietrich	84,{
+prt_in,63,69,3	script	Dietrich	4_M_02,{
 	callfunc "orimain","Dietrich";
 	end;
 }
-payon,137,178,5	script	Hakhim	88,{
+payon,137,178,5	script	Hakhim	4_M_ORIENT01,{
 	callfunc "orimain","Hakhim";
 	end;
 }
-morocc_in,72,32,6	script	Abdula	99,{
+morocc_in,72,32,6	script	Abdula	4W_M_03,{
 	callfunc "orimain","Abdula";
 	end;
 }
-alberta_in,21,63,5	script	Xenophon	84,{
+alberta_in,21,63,5	script	Xenophon	4_M_02,{
 	callfunc "orimain","Xenophon Zolotas";
 	end;
 }
-yuno_in01,164,27,4	script	Delight	88,{
+yuno_in01,164,27,4	script	Delight	4_M_ORIENT01,{
 	callfunc "orimain","Delight";
 	end;
 }
-ein_in01,18,82,6	script	Matestein	84,{
+ein_in01,18,82,6	script	Matestein	4_M_02,{
 	callfunc "orimain","Matestein";
 	end;
 }
-lhz_in02,281,24,5	script	Fruel	84,{
+lhz_in02,281,24,5	script	Fruel	4_M_02,{
 	callfunc "orimain","Fruel";
 	end;
 }
@@ -1110,72 +1110,72 @@ function	script	orimain	{
 
 // Equipment Repairmen
 //============================================================
-alberta_in,31,65,4	script	Repairman#alb	86,{
+alberta_in,31,65,4	script	Repairman#alb	4_M_04,{
 	callfunc "repairmain","Repairman";
 	end;
 }
 
-moc_ruins,107,94,4	script	Repairman#moc	99,{
+moc_ruins,107,94,4	script	Repairman#moc	4W_M_03,{
 	callfunc "repairmain","Repairman";
 	end;
 }
 
-payon,143,165,4	script	Repairman#pay	88,{
+payon,143,165,4	script	Repairman#pay	4_M_ORIENT01,{
 	callfunc "repairmain","Repairman";
 	end;
 }
 
-prt_in,63,54,2	script	Repairman#prt	86,{
+prt_in,63,54,2	script	Repairman#prt	4_M_04,{
 	callfunc "repairmain","Grendal";
 	end;
 }
 
-yuno_in01,175,28,3	script	Repairman#juno	86,{
+yuno_in01,175,28,3	script	Repairman#juno	4_M_04,{
 	callfunc "repairmain","Repairman";
 	end;
 }
 
-geffen_in,34,166,3	script	Repairman#gef	99,{
+geffen_in,34,166,3	script	Repairman#gef	4W_M_03,{
 	callfunc "repairmain","Repairman";
 	end;
 }
 
-aldeba_in,38,60,3	script	Repairman#alde	86,{
+aldeba_in,38,60,3	script	Repairman#alde	4_M_04,{
 	callfunc "repairmain","Repairman";
 	end;
 }
 
-lhz_in02,284,14,3	script	Repairman#lhz	86,{
+lhz_in02,284,14,3	script	Repairman#lhz	4_M_04,{
 	callfunc "repairmain","Repairman";
 	end;
 }
 
-prt_gld,139,117,4	script	Repairman#prt_gld	86,{
+prt_gld,139,117,4	script	Repairman#prt_gld	4_M_04,{
 	callfunc "repairmain","Repairman";
 	end;
 }
 
-gef_fild13,263,117,4	script	Repairman#gef_fild	86,{
+gef_fild13,263,117,4	script	Repairman#gef_fild	4_M_04,{
 	callfunc "repairmain","Repairman";
 	end;
 }
 
-pay_gld,295,183,4	script	Repairman#pay_gld	86,{
+pay_gld,295,183,4	script	Repairman#pay_gld	4_M_04,{
 	callfunc "repairmain","Repairman";
 	end;
 }
 
-alde_gld,220,152,4	script	Repairman#alde_gld	86,{
+alde_gld,220,152,4	script	Repairman#alde_gld	4_M_04,{
 	callfunc "repairmain","Repairman";
 	end;
 }
 
-aru_gld,189,336,4	script	Repairman#aru_gld	86,{
+aru_gld,189,336,4	script	Repairman#aru_gld	4_M_04,{
 	callfunc "repairmain","Repairman";
 	end;
 }
 
-sch_gld,340,80,7	script	Repairman#sch_gld	86,{
+sch_gld,340,80,7	script	Repairman#sch_gld	4_M_04,{
 	callfunc "repairmain","Repairman";
 	end;
 }

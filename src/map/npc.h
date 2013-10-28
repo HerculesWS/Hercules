@@ -92,7 +92,7 @@ enum actor_classes {
 #define MAX_NPC_CLASS 1000
 // New NPC range
 #define MAX_NPC_CLASS2_START 10000
-#define MAX_NPC_CLASS2_END 10049
+#define MAX_NPC_CLASS2_END 10070
 
 //Checks if a given id is a valid npc id. [Skotlex]
 //Since new npcs are added all the time, the max valid value is the one before the first mob (Scorpion = 1001)
@@ -197,6 +197,8 @@ struct npc_interface {
 	void (*addsrcfile) (const char *name);
 	void (*delsrcfile) (const char *name);
 	void (*parsename) (struct npc_data *nd, const char *name, const char *start, const char *buffer, const char *filepath);
+	int (*parseview) (const char *w4, const char *start, const char *buffer, const char *filepath);
+	bool (*viewisid) (const char *viewid);
 	struct npc_data* (*add_warp) (char *name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y);
 	const char* (*parse_warp) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
 	const char* (*parse_shop) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);

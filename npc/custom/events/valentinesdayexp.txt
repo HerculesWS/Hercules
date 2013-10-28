@@ -14,7 +14,7 @@
 //============================================================
 
 // Tine - Valentine Event Chocolate Even Guide ------------------
-prontera,156,172,4	script	Tine	58,{
+prontera,156,172,4	script	Tine	1_M_MERCHANT,{
 //  Debug info for item effects and tricky conditions 8)
 //	mes "@dsv: "+@dsv;
 //	mes "ispartneron()=="+ispartneron();
@@ -72,7 +72,7 @@ OnInit:
 }
 
 // Stephen - Valentine Event Chocolate seller ------------------
-alberta,26,243,4	script	Stephen#val1	58,{
+alberta,26,243,4	script	Stephen#val1	1_M_MERCHANT,{
 	mes "[Stephen]";
 	mes "Guess what I've got?";
 	mes "A tasty treat not easily found in Rune-Midgard....";
@@ -127,7 +127,7 @@ L_NOTENO:
 }
 
 // Jainie -- Gives information about Valentine Event ------------------------
-alberta,29,243,4	script	Jainie#val1	53,{
+alberta,29,243,4	script	Jainie#val1	1_M_INNKEEPER,{
 	mes "[Jainie]";
 	mes "You know what? The chocolate that my boyfriend sells are from me!";
 	mes "I made them by myself. Now I need some Milk for my special White Chocolate.";
@@ -195,7 +195,7 @@ L_NOMILK:
 }
 
 // Carl Orleans -- Valentine Event Chocolate maker ------------------
-prt_castle,54,34,4	script	Carl Orleans#val1	47,{
+prt_castle,54,34,4	script	Carl Orleans#val1	1_M_01,{
 	mes "[Carl Orleans]";
 	mes "Yes? What can I cook for you?";
 	next;

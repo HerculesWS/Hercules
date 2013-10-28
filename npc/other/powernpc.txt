@@ -10,7 +10,7 @@
 //= 1.2 Cleaning. [Euphy]
 //============================================================
 
-gonryun,180,118,4	script	Iron man#gnp	85,{
+gonryun,180,118,4	script	Iron man#gnp	4_M_03,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -110,7 +110,7 @@ L_Lifting:
 	return;
 }
 
-gon_test,50,14,4	script	Administrator#gnp	780,{
+gon_test,50,14,4	script	Administrator#gnp	8_M_TWSOLDIER,{
 	mes "[Administrator]";
 	if (BaseJob == Job_Novice) {
 		mes "Children are not allowed in here.";
@@ -146,7 +146,7 @@ gon_test,50,14,4	script	Administrator#gnp	780,{
 	end;
 }
 
-gon_test,42,89,4	script	Summoner#gnp	774,{
+gon_test,42,89,4	script	Summoner#gnp	4_M_TWBOY,{
 	mes "[SongYeunWoo]";
 	if (in_battle == 3) {
 		mes "Please come back after registration.";
@@ -223,7 +223,7 @@ OnTimer184000:
 	end;
 }
 
-gon_test,46,14,3	script	Guide of field of fight	770,{
+gon_test,46,14,3	script	Guide of field of fight	4_F_TWGIRL,{
 	mes "[SongHeeYeon]";
 	mes ".....";
 	mes "Hi, there~";
@@ -272,7 +272,7 @@ gon_test,46,14,3	script	Guide of field of fight	770,{
 	close;
 }
 
-gon_test,70,103,3	script	ChowAnAn#gnp	773,{
+gon_test,70,103,3	script	ChowAnAn#gnp	4_F_TWMIDWOMAN,{
 	mes "[ChowAnAn]";
 	mes "Want to go back?";
 	next;

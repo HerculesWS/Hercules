@@ -15,7 +15,7 @@
 
 // Malangdo
 //============================================================
-malangdo,220,167,5	script	Coin Exchanger CX-1	564,{
+malangdo,220,167,5	script	Coin Exchanger CX-1	2_VENDING_MACHINE1,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of objects. Let's try to continue after reducing those objects.";
 		close;
@@ -106,7 +106,7 @@ malangdo,220,167,5	script	Coin Exchanger CX-1	564,{
 	close;
 }
 
-malangdo,218,165,5	script	Special Vending Machine	562,{
+malangdo,218,165,5	script	Special Vending Machine	2_DROP_MACHINE,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of objects. Let's try to continue after reducing those objects.";
 		close;
@@ -176,7 +176,7 @@ L_AddItem:
 	}
 }
 
-malangdo,236,179,5	script	Dark Merchant K	554,{
+malangdo,236,179,5	script	Dark Merchant K	4_CAT_REST,{
 	if (checkweight(1201,1) == 0) {
 		mes "It seems you have too much in your inventory. Let's try again after getting rid of some of your belongings.";
 		close;
@@ -221,7 +221,7 @@ malangdo,236,179,5	script	Dark Merchant K	554,{
 	}
 }
 
-malangdo,233,180,3	script	Dark MachineTX100	564,{
+malangdo,233,180,3	script	Dark MachineTX100	2_VENDING_MACHINE1,{
 	if (checkweight(1201,1) == 0) {
 		mes "It seems you have too much in your inventory. Let's try again after getting rid of some of your belongings.";
 		close;
@@ -342,7 +342,7 @@ malangdo,233,180,3	script	Dark MachineTX100	564,{
 	close;
 }
 
-malangdo,175,145,4	script	Can Agency Guard	549,{
+malangdo,175,145,4	script	Can Agency Guard	4_CAT_MERMASTER,{
 	if (checkweight(1201,1) == 0) {
 		mes "You seem to have too many items. Give it a try after sorting out the item kinds.";
 		close;
@@ -567,7 +567,7 @@ function	script	F_mal_coin	{
 		}
 	}
 }
-malangdo,162,146,5	script	Wandering Merchant#mal	495,{
+malangdo,162,146,5	script	Wandering Merchant#mal	4_M_MERCAT1,{
 	callfunc "F_mal_coin",0,"[Wandering Merchant]",1;
 	setarray .@items[1],
 		16743,16747,16741,16745,16749,16751, // 1 hour items.
@@ -698,7 +698,7 @@ malangdo,162,146,5	script	Wandering Merchant#mal	495,{
 	}
 }
 
-malangdo,173,145,4	script	Stinky Merchant	496,{
+malangdo,173,145,4	script	Stinky Merchant	4_M_MERCAT2,{
 	callfunc "F_mal_coin",0,"[Stinky Merchant]",2;
 	setarray .@items[1],2873,16015;
 	setarray .@names$[1],"Cat Hand Glove","Cat Club";
@@ -749,7 +749,7 @@ malangdo,173,145,4	script	Stinky Merchant	496,{
 	}
 }
 
-malangdo,150,135,5	script	Roving Merchant	495,{
+malangdo,150,135,5	script	Roving Merchant	4_M_MERCAT1,{
 	callfunc "F_mal_coin",0,"[Roving Merchant]",3;
 	setarray .@items[1],12639,12637,12638,12640;
 	setarray .@names$[1],"Flying Fish","Sow Bug","Dried Squid","Starfish";
@@ -827,7 +827,7 @@ malangdo,150,135,5	script	Roving Merchant	495,{
 
 // Eclage
 //============================================================
-ecl_in01,66,95,2	script	Armor Merchant Naphara	436,{
+ecl_in01,66,95,2	script	Armor Merchant Naphara	4_F_FAIRYKID,{
 	mes "[Armor Merchant]";
 	mes "Hello, this is Naphara's store, a place of high class goods.";
 	mes "What would you need?";
@@ -901,7 +901,7 @@ ecl_in01,66,95,2	script	Armor Merchant Naphara	436,{
 	close;
 }
 
-ecl_in01,64,97,4	script	Slot Expert Nattuer#ecl	436,{
+ecl_in01,64,97,4	script	Slot Expert Nattuer#ecl	4_F_FAIRYKID,{
 	mes "[Slot Expert]";
 	mes "I am Slot Expert Nattuer.";
 	mes "If you bring me an item from my little brother Naphara along with 5 Splendide Coins, I will open up one Slot for you.";
@@ -956,7 +956,7 @@ ecl_in01,64,97,4	script	Slot Expert Nattuer#ecl	436,{
 	close;
 }
 
-ecl_in01,67,39,4	script	Replication Expert Palt	445,{
+ecl_in01,67,39,4	script	Replication Expert Palt	4_M_FAIRYKID4,{
 	emotion e_lv;
 	mes "[Paltu]";
 	mes "Woohoo- Greetings. What are you looking for? Lots of goods here.";
@@ -1107,7 +1107,7 @@ ecl_in01,67,39,4	script	Replication Expert Palt	445,{
 	close;
 }
 
-ecl_in01,33,98,4	script	Herb Merchant Plafina#e	443,{
+ecl_in01,33,98,4	script	Herb Merchant Plafina#e	4_M_FAIRYKID2,{
 	mes "[Herb Merchant]";
 	mes "Welcome, this is Plafina's Herb Store where only the freshest herbs are provided~!";
 	next;

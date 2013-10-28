@@ -13,7 +13,7 @@
 //= 1.8 Moved Alberta NPC to pre-re/re paths. [Euphy]
 //============================================================
 
-alberta,83,96,5	script	Necko	98,7,7,{
+alberta,83,96,5	script	Necko	4W_M_02,7,7,{
 	if (BaseClass == Job_Merchant) {
 		if (getskilllv("MC_LOUD") == 1) {
 			mes "[Necko]";
@@ -177,7 +177,7 @@ OnTouch:
 	close;
 }
 
-alberta,119,221,6	script	Charlron	107,{
+alberta,119,221,6	script	Charlron	1_M_PAY_ELDER,{
 	if (BaseClass == Job_Merchant) {
 		if (getskilllv("MC_CHANGECART") == 1) {
 			mes "[Charlron]";

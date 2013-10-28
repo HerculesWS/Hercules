@@ -11,7 +11,7 @@
 //= 2.2 Updated to match the official script. [Euphy]
 //============================================================
 
-yuno,179,174,4	script	Gomer	851,{
+yuno,179,174,4	script	Gomer	4_M_REPAIR,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "[Gomer]";
 		mes "You are carrying so much. Drop off some of your luggage and come back to me.";

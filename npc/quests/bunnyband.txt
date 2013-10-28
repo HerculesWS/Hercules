@@ -14,7 +14,7 @@
 //= 1.6 Cleaning. [Euphy]
 //============================================================
 
-alberta,26,229,0	script	Kafra Employee#bunny	83,{
+alberta,26,229,0	script	Kafra Employee#bunny	4_M_01,{
 	if (BUNYBND == 1) {
 		mes "[Kafra Employee]";
 		mes "Hello there~!";

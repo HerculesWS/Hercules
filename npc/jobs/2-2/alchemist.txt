@@ -17,7 +17,7 @@
 //= 3.0 Removed the need for use of 'goto.' [L0ne_W0lf]
 //============================================================
 
-alde_alche,27,185,5	script	Alchemist Guildsman#am	744,{
+alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 	mes "[Parmy Gianino]";
 	if (Upper == 1) {
 		mes "Welcome to the";
@@ -320,7 +320,7 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	744,{
 	}
 }
 
-alde_alche,175,107,3	script	Fastidious Alchemist#am	749,{
+alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 	mes "[Raspuchin Gregory]";
 	if (BaseJob != Job_Merchant) {
 		if (BaseJob == Job_Alchemist) {
@@ -789,7 +789,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	749,{
 	close;
 }
 
-alde_alche,13,15,7	script	Studying Man#am	750,{
+alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you are carrying -";
@@ -1333,7 +1333,7 @@ alde_alche,13,15,7	script	Studying Man#am	750,{
 	}
 }
 
-alde_alche,79,19,5	script	Experiment Expert#am	748,{
+alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
 	mes "[Van Helmont]";
 	if (BaseJob != Job_Merchant) {
 		if (BaseJob == Job_Alchemist) {
@@ -1585,7 +1585,7 @@ alde_alche,79,19,5	script	Experiment Expert#am	748,{
 	}
 }
 
-alde_alche,101,184,4	script	Master Alchemist#am	122,{
+alde_alche,101,184,4	script	Master Alchemist#am	2_M_DYEINGER,{
 	cutin "job_alche_vincent",2;
 	mes "[Vincent Carsciallo]";
 	if (Upper == 1) {
@@ -1767,7 +1767,7 @@ alde_alche,101,184,4	script	Master Alchemist#am	122,{
 	}
 }
 
-alde_alche,145,19,1	script	Chief Researcher#am	57,{
+alde_alche,145,19,1	script	Chief Researcher#am	1_M_LIBRARYMASTER,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you are carrying -";

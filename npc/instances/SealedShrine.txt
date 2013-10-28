@@ -33,7 +33,7 @@
 
 // Sealed Catacomb Entrance
 //============================================================
-monk_test,309,146,3	script	Friar Patrick#edq	412,{
+monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 	cutin "ins_cata_pri_n",2;
 	mes "[Friar Patrick]";
 	mes "The peace of this world cannot last forever... The hands of Evil are reaching into the world again...";
@@ -216,7 +216,7 @@ monk_test,309,146,3	script	Friar Patrick#edq	412,{
 	end;
 }
 
-monk_test,306,151,3	script	Grave of Baphomet#edq	111,{
+monk_test,306,151,3	script	Grave of Baphomet#edq	HIDDEN_NPC,{
 	if (countitem(6002)) delitem 6002,countitem(6002); //Token_Of_Apostle
 	mes "This gravestone has a carving of a wicked devil with large horns. It arouses an ominous feeling.";
 	next;
@@ -260,7 +260,7 @@ monk_test,306,151,3	script	Grave of Baphomet#edq	111,{
 	}
 }
 
-prt_monk,261,91,3	script	Rust Blackhand#edq	826,{
+prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 	set .@new_maje,checkquest(3043);
 	mes "[Rust Blackhand]";
 	mes "Who are you? What do you want me for?";
@@ -483,7 +483,7 @@ OnMyMobDead:
 
 // Soul of hero near the north grave
 //============================================================
-1@cata,141,221,0	script	Gravestone#	844,3,3,{
+1@cata,141,221,0	script	Gravestone#	CLEAR_NPC,3,3,{
 	set .@party_id,getcharid(1);
 	if ('ins_baphomet == 0) {
 		mes "The gravestone is trembling...";
@@ -590,7 +590,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 	end;
 }
 
-1@cata,176,119,4	script	Ancient Hero's Soul#1F	411,{
+1@cata,176,119,4	script	Ancient Hero's Soul#1F	4_M_CHAMPSOUL,{
 	set .@party_id,getcharid(1);
 	cutin "ins_cata_champ_n",2;
 	if ('ins_baphomet == 2) {
@@ -811,7 +811,7 @@ OnInstanceInit:
 
 // To 2F Warp
 //============================================================
-1@cata,281,12,0	script	ins_bapho_to_2f	45,1,1,{
+1@cata,281,12,0	script	ins_bapho_to_2f	WARPNPC,1,1,{
 OnTouch:
 	if (countitem(6002) > 0) {
 		delitem 6002,countitem(6002); //Token_Of_Apostle
@@ -847,37 +847,37 @@ OnInstanceInit:
 		close;
 	}
 }
-1@cata,86,214,0	duplicate(Gravestone#SS1)	Gravestone#1F_1T	844
-1@cata,200,209,0	duplicate(Gravestone#SS1)	Gravestone#1F_2T	844
-1@cata,230,195,0	duplicate(Gravestone#SS1)	Gravestone#1F_3T	844
-1@cata,118,182,0	duplicate(Gravestone#SS1)	Gravestone#1F_4T	844
-1@cata,193,182,0	duplicate(Gravestone#SS1)	Gravestone#1F_5T	844
-1@cata,253,156,0	duplicate(Gravestone#SS1)	Gravestone#1F_6T	844
-1@cata,88,154,0	duplicate(Gravestone#SS1)	Gravestone#1F_7T	844
-1@cata,127,116,0	duplicate(Gravestone#SS1)	Gravestone#1F_8T	844
-1@cata,90,98,0	duplicate(Gravestone#SS1)	Gravestone#1F_9T	844
-1@cata,188,84,0	duplicate(Gravestone#SS1)	Gravestone#1F_10T	844
-1@cata,244,42,0	duplicate(Gravestone#SS1)	Gravestone#1F_11T	844
-1@cata,127,32,0	duplicate(Gravestone#SS1)	Gravestone#1F_12T	844
-1@cata,267,30,0	duplicate(Gravestone#SS1)	Gravestone#1F_13T	844
+1@cata,86,214,0	duplicate(Gravestone#SS1)	Gravestone#1F_1T	CLEAR_NPC
+1@cata,200,209,0	duplicate(Gravestone#SS1)	Gravestone#1F_2T	CLEAR_NPC
+1@cata,230,195,0	duplicate(Gravestone#SS1)	Gravestone#1F_3T	CLEAR_NPC
+1@cata,118,182,0	duplicate(Gravestone#SS1)	Gravestone#1F_4T	CLEAR_NPC
+1@cata,193,182,0	duplicate(Gravestone#SS1)	Gravestone#1F_5T	CLEAR_NPC
+1@cata,253,156,0	duplicate(Gravestone#SS1)	Gravestone#1F_6T	CLEAR_NPC
+1@cata,88,154,0	duplicate(Gravestone#SS1)	Gravestone#1F_7T	CLEAR_NPC
+1@cata,127,116,0	duplicate(Gravestone#SS1)	Gravestone#1F_8T	CLEAR_NPC
+1@cata,90,98,0	duplicate(Gravestone#SS1)	Gravestone#1F_9T	CLEAR_NPC
+1@cata,188,84,0	duplicate(Gravestone#SS1)	Gravestone#1F_10T	CLEAR_NPC
+1@cata,244,42,0	duplicate(Gravestone#SS1)	Gravestone#1F_11T	CLEAR_NPC
+1@cata,127,32,0	duplicate(Gravestone#SS1)	Gravestone#1F_12T	CLEAR_NPC
+1@cata,267,30,0	duplicate(Gravestone#SS1)	Gravestone#1F_13T	CLEAR_NPC
 
 -	script	Gravestone#SS2	-1,{
 	mes "I can only feel gloom from this Gravestone.";
 	close;
 }
-1@cata,86,214,0	duplicate(Gravestone#SS2)	Gravestone#1F_1F	844
-1@cata,200,209,0	duplicate(Gravestone#SS2)	Gravestone#1F_2F	844
-1@cata,230,195,0	duplicate(Gravestone#SS2)	Gravestone#1F_3F	844
-1@cata,118,182,0	duplicate(Gravestone#SS2)	Gravestone#1F_4F	844
-1@cata,193,182,0	duplicate(Gravestone#SS2)	Gravestone#1F_5F	844
-1@cata,253,156,0	duplicate(Gravestone#SS2)	Gravestone#1F_6F	844
-1@cata,88,154,0	duplicate(Gravestone#SS2)	Gravestone#1F_7F	844
-1@cata,127,116,0	duplicate(Gravestone#SS2)	Gravestone#1F_8F	844
-1@cata,90,98,0	duplicate(Gravestone#SS2)	Gravestone#1F_9F	844
-1@cata,188,84,0	duplicate(Gravestone#SS2)	Gravestone#1F_10F	844
-1@cata,244,42,0	duplicate(Gravestone#SS2)	Gravestone#1F_11F	844
-1@cata,127,32,0	duplicate(Gravestone#SS2)	Gravestone#1F_12F	844
-1@cata,267,30,0	duplicate(Gravestone#SS2)	Gravestone#1F_13F	844
+1@cata,86,214,0	duplicate(Gravestone#SS2)	Gravestone#1F_1F	CLEAR_NPC
+1@cata,200,209,0	duplicate(Gravestone#SS2)	Gravestone#1F_2F	CLEAR_NPC
+1@cata,230,195,0	duplicate(Gravestone#SS2)	Gravestone#1F_3F	CLEAR_NPC
+1@cata,118,182,0	duplicate(Gravestone#SS2)	Gravestone#1F_4F	CLEAR_NPC
+1@cata,193,182,0	duplicate(Gravestone#SS2)	Gravestone#1F_5F	CLEAR_NPC
+1@cata,253,156,0	duplicate(Gravestone#SS2)	Gravestone#1F_6F	CLEAR_NPC
+1@cata,88,154,0	duplicate(Gravestone#SS2)	Gravestone#1F_7F	CLEAR_NPC
+1@cata,127,116,0	duplicate(Gravestone#SS2)	Gravestone#1F_8F	CLEAR_NPC
+1@cata,90,98,0	duplicate(Gravestone#SS2)	Gravestone#1F_9F	CLEAR_NPC
+1@cata,188,84,0	duplicate(Gravestone#SS2)	Gravestone#1F_10F	CLEAR_NPC
+1@cata,244,42,0	duplicate(Gravestone#SS2)	Gravestone#1F_11F	CLEAR_NPC
+1@cata,127,32,0	duplicate(Gravestone#SS2)	Gravestone#1F_12F	CLEAR_NPC
+1@cata,267,30,0	duplicate(Gravestone#SS2)	Gravestone#1F_13F	CLEAR_NPC
 
 // Bobbing Torches
 //============================================================
@@ -918,18 +918,18 @@ OnInstanceInit:
 	disablenpc instance_npcname(strnpcinfo(0));
 	end;
 }
-1@cata,267,210,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#1	844
-1@cata,85,182,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#2	844
-1@cata,267,154,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#3	844
-1@cata,157,139,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#4	844
-1@cata,193,138,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#5	844
-1@cata,193,102,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#6	844
-1@cata,157,102,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#7	844
-1@cata,113,112,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#8	844
-1@cata,253,56,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#9	844
-1@cata,239,56,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#10	844
-1@cata,71,42,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#11	844
-1@cata,155,14,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#12	844
+1@cata,267,210,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#1	CLEAR_NPC
+1@cata,85,182,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#2	CLEAR_NPC
+1@cata,267,154,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#3	CLEAR_NPC
+1@cata,157,139,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#4	CLEAR_NPC
+1@cata,193,138,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#5	CLEAR_NPC
+1@cata,193,102,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#6	CLEAR_NPC
+1@cata,157,102,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#7	CLEAR_NPC
+1@cata,113,112,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#8	CLEAR_NPC
+1@cata,253,56,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#9	CLEAR_NPC
+1@cata,239,56,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#10	CLEAR_NPC
+1@cata,71,42,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#11	CLEAR_NPC
+1@cata,155,14,0	duplicate(Bobbing Torch#SS)	Bobbing Torch#12	CLEAR_NPC
 
 1@cata,1,1,0	script	ins_baphomet_1f_timer	-1,{
 OnInstanceInit:
@@ -1114,13 +1114,13 @@ OnInstanceInit:
 	disablenpc instance_npcname(strnpcinfo(0));
 	end;
 }
-2@cata,79,81,0	duplicate(Magical Seal#SS)	Magical Seal#0	844
-2@cata,123,109,0	duplicate(Magical Seal#SS)	Magical Seal#2	844
-2@cata,123,22,0	duplicate(Magical Seal#SS)	Magical Seal#4	844
-2@cata,35,21,0	duplicate(Magical Seal#SS)	Magical Seal#8	844
-2@cata,35,109,0	duplicate(Magical Seal#SS)	Magical Seal#10	844
+2@cata,79,81,0	duplicate(Magical Seal#SS)	Magical Seal#0	CLEAR_NPC
+2@cata,123,109,0	duplicate(Magical Seal#SS)	Magical Seal#2	CLEAR_NPC
+2@cata,123,22,0	duplicate(Magical Seal#SS)	Magical Seal#4	CLEAR_NPC
+2@cata,35,21,0	duplicate(Magical Seal#SS)	Magical Seal#8	CLEAR_NPC
+2@cata,35,109,0	duplicate(Magical Seal#SS)	Magical Seal#10	CLEAR_NPC
 
-2@cata,79,65,0	script	The Main Altar#ss	844,{
+2@cata,79,65,0	script	The Main Altar#ss	CLEAR_NPC,{
 	set .@party_id,getcharid(1);
 	if (('ins_baphomet == 5) && (getpartyleader(.@party_id,2) == getcharid(0))) {
 		mes "An evil power, too terrible to describe, lies under the great altar radiating a violet color.";
@@ -1147,7 +1147,7 @@ OnInstanceInit:
 	end;
 }
 
-2@cata,80,63,4	script	Ancient Hero's Soul#2F	411,{
+2@cata,80,63,4	script	Ancient Hero's Soul#2F	4_M_CHAMPSOUL,{
 	cutin "ins_cata_champ_s",2;
 	if (checkquest(3041)>=0) erasequest 3041;
 	mes "[Ancient Hero's Soul]";

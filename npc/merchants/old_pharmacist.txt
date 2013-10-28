@@ -22,7 +22,7 @@
 //= 1.4 Updated to match AEGIS script. [Kisuka]
 //============================================================
 
-alberta_in,16,28,4	script	Pharmacist	61,{
+alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";

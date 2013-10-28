@@ -48,7 +48,7 @@
 
 // Stop Post Quest
 // ============================================================
-moc_ruins,113,181,4	script	William	89,{
+moc_ruins,113,181,4	script	William	4_M_ORIENT02,{
 	mes "[William]";
 	mes "Welcome to";
 	mes "MacMillan's ^3355FFPost^000000 Workshop.";
@@ -93,7 +93,7 @@ moc_ruins,113,181,4	script	William	89,{
 
 // Binoculars Quest
 // ============================================================
-moc_ruins,118,176,4	script	Alchemist	64,{
+moc_ruins,118,176,4	script	Alchemist	1_M_WIZARD,{
 	mes "[Marius]";
 	mes "Howdy, new customer!!";
 	mes "I know what you're gonna talk about. You want the Magic Glasses from me, riiiiight?";
@@ -166,7 +166,7 @@ moc_ruins,118,176,4	script	Alchemist	64,{
 // Morroc Assassin Guild Bar [Disabled]
 // ============================================================
 /*
-morocc,43,108,5	script	Sharp-Looking Kid#dan_07	82,{
+morocc,43,108,5	script	Sharp-Looking Kid#dan_07	4_KID01,{
 	if (BaseClass == Job_Assassin) {
 		mes "[Jack]";
 		mes "In spite of the chaotic mess in their town, ";
@@ -191,7 +191,7 @@ morocc,43,108,5	script	Sharp-Looking Kid#dan_07	82,{
 	}
 }
 
-morocc,45,110,0	script	que_job01#01	45,2,2,{
+morocc,45,110,0	script	que_job01#01	WARPNPC,2,2,{
 OnTouch:
 	if (BaseClass == Job_Assassin) {
 		warp "que_job01",9,94;
@@ -216,7 +216,7 @@ que_job01,6,94,0	warp	morocc#01	2,2,morocc,45,103
 que_job01,17,48,0	warp	que_job01#02	2,2,que_job01,68,92
 que_job01,68,96,0	warp	que_job01#03	2,2,que_job01,17,53
 
-que_job01,80,77,0	script	que_job01#04	45,2,2,{
+que_job01,80,77,0	script	que_job01#04	WARPNPC,2,2,{
 OnTouch:
 	if (BaseClass == Job_Assassin) {
 		warp "que_job01",61,50;
@@ -317,7 +317,7 @@ OnTouch:
 
 que_job01,65,50,0	warp	que_job01#05	2,2,que_job01,84,77
 
-que_job01,81,79,5	script	Idle Knight#dan_08	733,{
+que_job01,81,79,5	script	Idle Knight#dan_08	4_M_JOB_KNIGHT1,{
 	mes "[Litheron]";
 	mes "What's the matter?";
 	mes "Oh, I see... You're";
@@ -334,7 +334,7 @@ que_job01,81,79,5	script	Idle Knight#dan_08	733,{
 	close;
 }
 
-que_job01,82,95,3	script	Bar Master#moc_main01	46,{
+que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -582,7 +582,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	46,{
 	}
 }
 
-que_job01,49,49,5	script	Tao#dan_09	877,{
+que_job01,49,49,5	script	Tao#dan_09	4_F_YUNYANG,{
 	if (BaseClass == Job_Assassin) {
 		mes "[Tao]";
 		mes "Welcome, meow~";
@@ -663,7 +663,7 @@ que_job01,49,49,5	script	Tao#dan_09	877,{
 	}
 }
 
-que_job01,51,55,0	script	que_job01#room_1	45,1,1,{
+que_job01,51,55,0	script	que_job01#room_1	WARPNPC,1,1,{
 
 OnReset:
 	set $@maobar_room,0;
@@ -733,7 +733,7 @@ OnTouch:
 	}
 }
 
-que_job01,1,1,0	script	 #room1timer	844,{
+que_job01,1,1,0	script	 #room1timer	CLEAR_NPC,{
 OnEnable:
 	initnpctimer;
 	mapannounce "que_job01","You will now enter the Master Zone, Area 1.",bc_map,"0x70DBDB";
@@ -785,7 +785,7 @@ OnTouch:
 
 que_job01,51,44,0	warp	que_job01#room_2	1,1,que_job01,80,23
 
-que_job01,11,4,0	script	que_job01#room1_out	45,1,1,{
+que_job01,11,4,0	script	que_job01#room1_out	WARPNPC,1,1,{
 OnTouch:
 	warp "que_job01",52,50;
 	donpcevent " #room1timer::OnStop";
@@ -794,7 +794,7 @@ OnTouch:
 
 que_job01,80,27,0	warp	que_job01#room2_1_out	1,1,que_job01,52,50
 
-que_job01,16,21,5	script	Valdes#moc_master_1	55,{
+que_job01,16,21,5	script	Valdes#moc_master_1	1_M_JOBTESTER,{
 	if (BaseClass == Job_Assassin) {
 		mes "[Valdes]";
 		mes "What is it? I have nothing to ask you to do.";
@@ -835,7 +835,7 @@ OnDisable:
 }
 */
 
-yuno_in04,180,106,3	script	Reading Girl#moc_girl1	73,{
+yuno_in04,180,106,3	script	Reading Girl#moc_girl1	1_F_MERCHANT_01,{
 	mes "[" + strcharinfo(0) + "]";
 	mes "Excuse me, but may I ask";
 	mes "you a question?";
@@ -863,7 +863,7 @@ yuno_in04,180,106,3	script	Reading Girl#moc_girl1	73,{
 	close;
 }
 
-morocc_in,46,125,5	script	Assistant#moc_ex1	729,{
+morocc_in,46,125,5	script	Assistant#moc_ex1	4_F_NOVICE,{
 	mes "[Sephit]";
 	mes "I've always believed in Satan..";
 	mes "Haah... Guess it's good to be living, after all.";
@@ -873,7 +873,7 @@ morocc_in,46,125,5	script	Assistant#moc_ex1	729,{
 	close;
 }
 
-que_job01,70,84,1	script	Girl#moc_ex002	882,{
+que_job01,70,84,1	script	Girl#moc_ex002	4_F_SITDOWN,{
 	mes "[Girl]";
 	mes "Oh, the world.. the world is doomed..";
 	mes "-sobbing-";
@@ -888,7 +888,7 @@ que_job01,70,84,1	script	Girl#moc_ex002	882,{
 
 // Resurrection of Satan Morroc
 // ============================================================
-moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	707,3,3,{
+moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,3,{
 	if ((rebirth_moc_edq == 0) && (rebirth_moc_edq < 4)) {
 		mes "[Continental Guard]";
 		mes "No commoners are allowed in the area beyond this point.";
@@ -1108,15 +1108,15 @@ OnTouch:
 	end;
 }
 
-moc_fild20,354,174,3	duplicate(MocConGuard)	Continental Guard#02	707,3,3
-moc_fild20,38,174,5	duplicate(MocConGuard)	Continental Guard#03	707,3,3
-moc_fild20,38,183,5	duplicate(MocConGuard)	Continental Guard#04	707,3,3
-moc_fild20,189,21,7	duplicate(MocConGuard)	Continental Guard#05	707,3,3
-moc_fild20,200,21,7	duplicate(MocConGuard)	Continental Guard#06	707,3,3
-moc_fild20,203,336,5	duplicate(MocConGuard)	Continental Guard#07	707,3,3
-moc_fild20,215,336,3	duplicate(MocConGuard)	Continental Guard#08	707,3,3
+moc_fild20,354,174,3	duplicate(MocConGuard)	Continental Guard#02	4_M_MOC_SOLDIER,3,3
+moc_fild20,38,174,5	duplicate(MocConGuard)	Continental Guard#03	4_M_MOC_SOLDIER,3,3
+moc_fild20,38,183,5	duplicate(MocConGuard)	Continental Guard#04	4_M_MOC_SOLDIER,3,3
+moc_fild20,189,21,7	duplicate(MocConGuard)	Continental Guard#05	4_M_MOC_SOLDIER,3,3
+moc_fild20,200,21,7	duplicate(MocConGuard)	Continental Guard#06	4_M_MOC_SOLDIER,3,3
+moc_fild20,203,336,5	duplicate(MocConGuard)	Continental Guard#07	4_M_MOC_SOLDIER,3,3
+moc_fild20,215,336,3	duplicate(MocConGuard)	Continental Guard#08	4_M_MOC_SOLDIER,3,3
 
--	script	Continental Messenger#00::ConMessenger	997,3,3,{
+-	script	Continental Messenger#00::ConMessenger	4_M_MOCASS1,3,3,{
 	set .@area$,strnpcinfo(2);
 	if (.@area$ == "01") { set .@area$,"Prontera"; }
 	else if (.@area$ == "02") { set .@area$,"Geffen"; }
@@ -1201,13 +1201,13 @@ OnTouch:
 	end;
 }
 
-prontera,164,304,3	duplicate(ConMessenger)	Continental Messenger#01	997,3,3
-geffen,128,90,3	duplicate(ConMessenger)	Continental Messenger#02	997,3,3
-payon,200,113,3	duplicate(ConMessenger)	Continental Messenger#03	997,3,3
-alberta,127,64,3	duplicate(ConMessenger)	Continental Messenger#04	998,3,3
-aldebaran,135,128,3	duplicate(ConMessenger)	Continental Messenger#05	998,3,3
+prontera,164,304,3	duplicate(ConMessenger)	Continental Messenger#01	4_M_MOCASS1,3,3
+geffen,128,90,3	duplicate(ConMessenger)	Continental Messenger#02	4_M_MOCASS1,3,3
+payon,200,113,3	duplicate(ConMessenger)	Continental Messenger#03	4_M_MOCASS1,3,3
+alberta,127,64,3	duplicate(ConMessenger)	Continental Messenger#04	4_M_MOCASS2,3,3
+aldebaran,135,128,3	duplicate(ConMessenger)	Continental Messenger#05	4_M_MOCASS2,3,3
 
-morocc,176,103,3	script	Continental Official	754,{
+morocc,176,103,3	script	Continental Official	4_M_SAGE_A,{
 	if (rebirth_moc_edq > 3) {
 		mes "[Continental Guard Official]";
 		mes "On behalf of the Continental Guard, I thank you for your efforts. Now, let me see if I've received any news from Headquarters that you should know...";
@@ -1281,7 +1281,7 @@ morocc,176,103,3	script	Continental Official	754,{
 	}
 }
 
-morocc,159,113,3	script	Chief Balrog	752,{
+morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 	if (rebirth_moc_edq == 0) {
 		mes "[Chief Balrog]";
 		mes "You've come here at a bad time, but it's nice to meet you. I'm Continental Guard Chief Balrog. We've been dispatched to Morroc in order to suppress Satan Morroc... We'll need all the strength and luck we can gather.";
@@ -1871,7 +1871,7 @@ OnTouch:
 	end;
 }
 
-moc_fild21,1,1,0	script	Satan Broadcast#edq	844,{
+moc_fild21,1,1,0	script	Satan Broadcast#edq	CLEAR_NPC,{
 OnInit:
 	disablenpc "Satan Broadcast#edq";
 	end;
@@ -1899,7 +1899,7 @@ OnDisable:
 	end;
 }
 
-moc_fild21,178,239,0	script	Group of Evil#edq	844,1,1,{
+moc_fild21,178,239,0	script	Group of Evil#edq	CLEAR_NPC,1,1,{
 	if (((rebirth_moc_edq == 4) || (rebirth_moc_edq == 7)) && ($@re_moc == 1)) {
 		mes "Awed by the time-space gap where darkness is given life, you instinctively step back.";
 		next;
@@ -1936,7 +1936,7 @@ OnDisable:
 	end;
 }
 
-moc_fild21,177,239,0	script	Time-Space Gap#edq	844,1,1,{
+moc_fild21,177,239,0	script	Time-Space Gap#edq	CLEAR_NPC,1,1,{
 	if ((rebirth_moc_edq == 4) && ($@re_moc == 3)) {
 		mes "The time-space gap's frightening darkness seems to dissipate as Satan Morroc fades away.";
 		next;
@@ -1982,7 +1982,7 @@ OnTimer21600000:
 	end;
 }
 
-moc_fild21,3,1,0	script	Satan Summon#edq	844,{
+moc_fild21,3,1,0	script	Satan Summon#edq	CLEAR_NPC,{
 OnInit:
 	disablenpc "Satan Summon#edq";
 	end;
@@ -2023,7 +2023,7 @@ OnTimer5415000:
 	end;
 }
 
-sec_in02,14,43,5	script	Morroc GlobalVar Admin::MorrocAdmin_sec	971,{
+sec_in02,14,43,5	script	Morroc GlobalVar Admin::MorrocAdmin_sec	4_F_RUSGREEN,{
 	callfunc "F_GM_NPC";
 	mes "[Helper]";
 	mes "Please enter the password and # button.";
@@ -2099,11 +2099,11 @@ sec_in02,14,43,5	script	Morroc GlobalVar Admin::MorrocAdmin_sec	971,{
 		}
 	}
 }
-moc_fild21,5,5,5	duplicate(MorrocAdmin_sec)	Morroc GlobalVar Admin::MorrocAdmin_moc	971
+moc_fild21,5,5,5	duplicate(MorrocAdmin_sec)	Morroc GlobalVar Admin::MorrocAdmin_moc	4_F_RUSGREEN
 
 // The Crow of the Fate
 // ============================================================
-moc_ruins,137,70,3	script	Book-Touching Man#garas	48,{
+moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 	if (BaseLevel > 59) {
 		if (checkweight(703,3) == 0) {
 			mes "- You have too many items in your inventory to proceed with this quest. -";
@@ -2425,7 +2425,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	48,{
 	}
 }
 
-prt_in,179,92,3	script	Library Curator#garas	57,{
+prt_in,179,92,3	script	Library Curator#garas	1_M_LIBRARYMASTER,{
 	if (barmunt_crow == 0) {
 		mes "[Curator Guys]";
 		mes "Our library's Monster Encyclopedia has every monster in the Rune-Midgart Kingdom categorized by dungeon, to help our readers find them easily.";
@@ -2556,7 +2556,7 @@ prt_in,179,92,3	script	Library Curator#garas	57,{
 	}
 }
 
-yuno,333,210,5	script	Library Master#garas	57,{
+yuno,333,210,5	script	Library Master#garas	1_M_LIBRARYMASTER,{
 	if (barmunt_crow == 2) {
 		mes "[Dog]";
 		mes "Bowwow!";
@@ -2654,7 +2654,7 @@ yuno,333,210,5	script	Library Master#garas	57,{
 	}
 }
 
-yuno,336,203,0	script	#garas_catch	139,3,3,{
+yuno,336,203,0	script	#garas_catch	HIDDEN_WARP_NPC,3,3,{
 //OnTouch2:
 OnTouch:
 	if (barmunt_crow == 2) {
@@ -2750,17 +2750,17 @@ OnTouch:
 	end;
 }
 
-yuno,343,204,1	script	#garas_eff	111,{
+yuno,343,204,1	script	#garas_eff	HIDDEN_NPC,{
 	end;
 }
 
-yuno,335,208,5	script	Dog#garas	81,{
+yuno,335,208,5	script	Dog#garas	4_DOG01,{
 	mes "[Dog]";
 	mes "Bowwow!";
 	close;
 }
 
-yuno_in04,111,57,3	script	Library Part-Timer#garas	862,{
+yuno_in04,111,57,3	script	Library Part-Timer#garas	4_F_LGTGIRL,{
 	if (barmunt_crow == 3) {
 		mes "[Library Part-Timer]";
 		mes "People should learn to put away books after pulling them out.";
@@ -2845,7 +2845,7 @@ yuno_in04,111,57,3	script	Library Part-Timer#garas	862,{
 	end;
 }
 
-yuno_in04,100,5,3	script	Hot Bestseller Corner	111,{
+yuno_in04,100,5,3	script	Hot Bestseller Corner	HIDDEN_NPC,{
 	if (barmunt_crow == 3) {
 		mes "^660000The countless number of books filling this room tell you why this place is called the Greatest Library of Juno, the City of Scholars.^000000";
 		next;
@@ -2919,7 +2919,7 @@ yuno_in04,100,5,3	script	Hot Bestseller Corner	111,{
 	end;
 }
 
-yuno_in04,100,3,0	script	#garas_path	139,1,1,{
+yuno_in04,100,3,0	script	#garas_path	HIDDEN_WARP_NPC,1,1,{
 //OnTouch2:
 OnTouch2:
 	if (barmunt_crow == 6) {
@@ -2981,7 +2981,7 @@ OnTouch2:
 	end;
 }
 
-yuno_in04,117,102,3	script	Old News Scrapbook	844,{
+yuno_in04,117,102,3	script	Old News Scrapbook	CLEAR_NPC,{
 	if (barmunt_crow == 7) {
 		mes "^660000It is a folder with an wooden frame holding a thick pile of old newspapers.^000000";
 		next;
@@ -3120,7 +3120,7 @@ yuno_in04,117,102,3	script	Old News Scrapbook	844,{
 	}
 }
 
-yuno_in04,169,123,3	script	Suspicious Man#oliver_h	407,{
+yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 	if (checkweight(617,3) == 0) {
 		mes "- You have too many items in your inventory to proceed with this quest. -";
 		close;
@@ -3333,7 +3333,7 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	407,{
 	}
 }
 
-yuno_in04,167,120,3	script	Worn-out Book#garas	111,{
+yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 	if (checkweight(617,3) == 0) {
 		mes "- You have too many items in your inventory to proceed with this quest. -";
 		close;
@@ -3599,7 +3599,7 @@ OnTouch:
 	}
 }
 
-que_ba,257,39,3	script	Female Researcher#bpast	744,{
+que_ba,257,39,3	script	Female Researcher#bpast	4_F_ALCHE,{
 	if (barmunt_crow < 4) {
 		warp "ama_dun03",119,110;
 	}
@@ -3628,7 +3628,7 @@ que_ba,257,39,3	script	Female Researcher#bpast	744,{
 
 que_ba,265,34,0	warp	#bpast_1to2	1,1,que_ba,156,37
 
-que_ba,176,43,7	script	Researcher#bpast_2_1	402,{
+que_ba,176,43,7	script	Researcher#bpast_2_1	4_M_SCIENCE,{
 	specialeffect EF_CLOAKING;
 	mes "[Researcher]";
 	mes "Fire!";
@@ -3636,7 +3636,7 @@ que_ba,176,43,7	script	Researcher#bpast_2_1	402,{
 	close;
 }
 
-que_ba,181,14,7	script	Researcher#bpast_2_2	865,{
+que_ba,181,14,7	script	Researcher#bpast_2_2	4_LGTSCIENCE,{
 	specialeffect EF_CLOAKING;
 	mes "[Researcher]";
 	mes "Cough, cough!";
@@ -3709,17 +3709,17 @@ OnTouch:
 	end;
 }
 
-que_ba,104,55,3	script	Grotesque Woman#eva1	980,{
+que_ba,104,55,3	script	Grotesque Woman#eva1	4_F_MUT1,{
 	specialeffect EF_CLOAKING;
 	end;
 }
 
-que_ba,99,51,7	script	Grotesque Man#zid1	999,{
+que_ba,99,51,7	script	Grotesque Man#zid1	4_M_MUT1,{
 	specialeffect EF_CLOAKING;
 	end;
 }
 
-que_ba,53,232,0	script	#garas_f_yume	139,1,1,{
+que_ba,53,232,0	script	#garas_f_yume	HIDDEN_WARP_NPC,1,1,{
 //OnTouch2:
 OnTouch:
 	if (barmunt_crow == 5) {
@@ -3754,17 +3754,17 @@ OnTouch:
 	end;
 }
 
-que_ba,50,238,1	script	Grotesque Woman#eva2	980,{
+que_ba,50,238,1	script	Grotesque Woman#eva2	4_F_MUT1,{
 	specialeffect EF_CLOAKING;
 	end;
 }
 
-que_ba,48,227,7	script	Grotesque Man#zid2	999,{
+que_ba,48,227,7	script	Grotesque Man#zid2	4_M_MUT1,{
 	specialeffect EF_CLOAKING;
 	end;
 }
 
-que_ba,264,186,0	script	#barmut_room1	139,2,2,{
+que_ba,264,186,0	script	#barmut_room1	HIDDEN_WARP_NPC,2,2,{
 //OnTouch2:
 OnTouch:
 	if (barmunt_crow == 11) {
@@ -3800,11 +3800,11 @@ OnTouch:
 	end;
 }
 
-que_ba,270,181,3	script	#barmunt_fire	755,{
+que_ba,270,181,3	script	#barmunt_fire	4_M_SAGE_C,{
 	end;
 }
 
-que_ba,270,270,0	script	#barmunt_living	139,1,1,{
+que_ba,270,270,0	script	#barmunt_living	HIDDEN_WARP_NPC,1,1,{
 //OnTouch2:
 OnTouch:
 	mes "..................";
@@ -3884,17 +3884,17 @@ OnTouch:
 	end;
 }
 
-que_ba,263,276,3	script	#barmut_room2	755,{
+que_ba,263,276,3	script	#barmut_room2	4_M_SAGE_C,{
 	end;
 }
 
-que_ba,266,268,3	script	#barmut_onna	982,{
+que_ba,266,268,3	script	#barmut_onna	4_F_SCIENCE,{
 OnInit:
 	disablenpc "#barmut_onna";
 	end;
 }
 
-cave,82,97,3	script	Cave Settler#g1	996,3,3,{
+cave,82,97,3	script	Cave Settler#g1	4_M_CAVE1,3,3,{
 	if (barmunt_crow == 8) {
 		mes "[Cave Settler]";
 		mes "No outsiders are allowed beyond this point.";
@@ -4066,7 +4066,7 @@ OnTouch:
 	end;
 }
 
-cave,85,101,3	script	Jaeda#garas1	401,{
+cave,85,101,3	script	Jaeda#garas1	4_M_MUT2,{
 OnInit:
 	disablenpc "Jaeda#garas1";
 	end;
@@ -4078,7 +4078,7 @@ cave,97,21,0	warp	case_out1	1,1,ein_fild01,28,255
 cave,86,167,0	warp	zid_in	1,1,cave,77,185
 cave,79,180,0	warp	zid_out	3,3,cave,90,162
 
-cave,22,186,3	script	Monsterous Man#zid	999,{
+cave,22,186,3	script	Monsterous Man#zid	4_M_MUT1,{
 	if (barmunt_crow == 9) {
 		mes "^660000You are looking at a man who appears as hideous as a monster.";
 		mes "He was the man with Eva that you saw in your dream. Of course, he's older now, and his age is showing in his face and skin.^000000";
@@ -4263,7 +4263,7 @@ cave,22,186,3	script	Monsterous Man#zid	999,{
 	}
 }
 
-cave,91,43,3	script	Cave Settler#f_cave1	870,{
+cave,91,43,3	script	Cave Settler#f_cave1	4_M_LGTPOOR,{
 	mes "[Cave Settler]";
 	mes "(Startled)";
 	next;
@@ -4272,7 +4272,7 @@ cave,91,43,3	script	Cave Settler#f_cave1	870,{
 	close;
 }
 
-cave,72,71,5	script	Cave Settler#m_cave2	981,{
+cave,72,71,5	script	Cave Settler#m_cave2	4_F_MUT2,{
 	mes "[Cave Settler]";
 	mes "Heh...";
 	mes "You want... This?";
@@ -4281,7 +4281,7 @@ cave,72,71,5	script	Cave Settler#m_cave2	981,{
 	close;
 }
 
-cave,134,62,1	script	Cave Settler#m_cave3	981,{
+cave,134,62,1	script	Cave Settler#m_cave3	4_F_MUT2,{
 	mes "[Cave Settler]";
 	mes "Accessory!";
 	mes "My pretty accessory!";
@@ -4290,7 +4290,7 @@ cave,134,62,1	script	Cave Settler#m_cave3	981,{
 	close;
 }
 
-cave,113,74,5	script	Cave Settler#f_cave4	401,{
+cave,113,74,5	script	Cave Settler#f_cave4	4_M_MUT2,{
 	mes "[Cave Settler]";
 	mes "No one in this village welcomes you. Go back.";
 	next;
@@ -4299,9 +4299,9 @@ cave,113,74,5	script	Cave Settler#f_cave4	401,{
 	close;
 }
 
-cave,76,39,5	shop	Cave Girl#f_cave5	62,712:-1
+cave,76,39,5	shop	Cave Girl#f_cave5	1_M_SIZ,712:-1
 
-cave,108,34,3	script	Cave Settler#f_cave6	979,{
+cave,108,34,3	script	Cave Settler#f_cave6	4_F_CAVE1,{
 	mes "[Cave Settler]";
 	mes "Hoho, did he really say that yesterday...?";
 	mes "Wah!";
@@ -4314,7 +4314,7 @@ cave,108,34,3	script	Cave Settler#f_cave6	979,{
 	close;
 }
 
-cave,105,32,7	script	Cave Settler#f_cave7	979,{
+cave,105,32,7	script	Cave Settler#f_cave7	4_F_CAVE1,{
 	mes "[Cave Settler]";
 	mes "Hoho, did he really say that yesterday...?";
 	mes "Wah!";
@@ -4329,7 +4329,7 @@ cave,105,32,7	script	Cave Settler#f_cave7	979,{
 
 // Succession of the Prince
 // ============================================================
-prontera,153,353,4	script	Messenger#prince1	105,{
+prontera,153,353,4	script	Messenger#prince1	8W_SOLDIER,{
 	if (nk_prince == 0) {
 		if (rebirth_moc_edq > 1) {
 			mes "[Messenger]";
@@ -4452,7 +4452,7 @@ prontera,153,353,4	script	Messenger#prince1	105,{
 	}
 }
 
-prt_castle,117,163,5	script	Inspector#prince	755,{
+prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 	if (checkquest(10004) == 0 || checkquest(10004) == 1) {
 		mes "[Inspector]";
 		mes "Judge!";
@@ -5349,7 +5349,7 @@ prt_castle,117,163,5	script	Inspector#prince	755,{
 	}
 }
 
-prt_castle,272,375,4	script	Prince	881,{
+prt_castle,272,375,4	script	Prince	4_M_SITDOWN,{
 	if (nk_prince > 6) {
 		mes "-Obssessed with making";
 		mes "lock and key.-";
@@ -5416,7 +5416,7 @@ prt_castle,272,375,4	script	Prince	881,{
 	}
 }
 
-prt_castle,274,372,4	script	Servant#hans	48,{
+prt_castle,274,372,4	script	Servant#hans	1_M_02,{
 	if (checkquest(10020) == 2) {
 		mes "[Hans]";
 		mes "Ahh... mmm... I...";
@@ -5500,7 +5500,7 @@ prt_castle,274,372,4	script	Servant#hans	48,{
 	}
 }
 
-prt_castle,339,202,3	script	Prince#urgen	989,{
+prt_castle,339,202,3	script	Prince#urgen	4_M_4THPRIN1,{
 	if (nk_prince > 6) {
 		mes "[Urugen]";
 		mes "...It is not beautiful.";
@@ -5603,7 +5603,7 @@ prt_castle,339,202,3	script	Prince#urgen	989,{
 	}
 }
 
-prt_castle,289,201,3	script	Prince#helmut	991,{
+prt_castle,289,201,3	script	Prince#helmut	4_M_5THPRIN1,{
 	if (nk_prince > 6) {
 		mes "[Helmut]";
 		mes "Such an idiot. I should have killed him earlier. Now I feel relieved.";
@@ -5784,7 +5784,7 @@ prt_castle,289,201,3	script	Prince#helmut	991,{
 	}
 }
 
-prt_castle,288,208,4	script	Calbern	962,{
+prt_castle,288,208,4	script	Calbern	4_M_RUSCHILD,{
 	mes "[Calbern]";
 	mes "How are you doing, sir?";
 	mes "I am the servant of Prince Helmut...";
@@ -5800,7 +5800,7 @@ prt_castle,288,208,4	script	Calbern	962,{
 	close;
 }
 
-prt_castle,391,205,3	script	Prince#poe	993,{
+prt_castle,391,205,3	script	Prince#poe	4_M_6THPRIN1,{
 	if (nk_prince > 6) {
 		mes "[Poe]";
 		mes "Whatever the condition is, he is just a loser in the match of life.";
@@ -6024,7 +6024,7 @@ prt_castle,391,205,3	script	Prince#poe	993,{
 	}
 }
 
-prt_castle,364,375,4	script	Prince#peter	987,{
+prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 	if (nk_prince > 6) {
 		mes "[Peter]";
 		mes "Appraiser.";
@@ -6207,7 +6207,7 @@ prt_castle,364,375,4	script	Prince#peter	987,{
 	}
 }
 
-aldebaran,132,184,3	script	Girl#prince	96,{
+aldebaran,132,184,3	script	Girl#prince	4W_KID,{
 	if (checkquest(10013) == 0 || checkquest(10013) == 1) {
 		if (countitem(744) > 0) {
 			mes "[Girl]";
@@ -6243,7 +6243,7 @@ aldebaran,132,184,3	script	Girl#prince	96,{
 	}
 }
 
-prt_castle,314,373,4	script	Prince#eisen	983,{
+prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 	if (nkprince_eisen > 2) {
 		if (nkprince_eisen == 3) {
 			mes "[Ahrum]";
@@ -6697,7 +6697,7 @@ prt_castle,314,373,4	script	Prince#eisen	983,{
 	}
 }
 
-prt_castle,368,312,4	script	Prince#ern	985,{
+prt_castle,368,312,4	script	Prince#ern	4_M_2NDPRIN1,{
 	if (checkquest(10024) == 2) {
 		mes "[Ernst]";
 		mes "...brother, if you want...";
@@ -6965,7 +6965,7 @@ OnTouch:
 	}
 }
 
-prt_castle,156,325,4	script	Young Noble#valter	86,{
+prt_castle,156,325,4	script	Young Noble#valter	4_M_04,{
 	mes "[Young Noble Walter]";
 	mes "Step aside.";
 	mes "How dare you talk to him.";
@@ -6984,7 +6984,7 @@ OnDisable:
 	end;
 }
 
-prt_castle,157,323,3	script	Aged Noble#rihart	880,{
+prt_castle,157,323,3	script	Aged Noble#rihart	4_M_MASKMAN,{
 	mes "[Aged Noble Richard]";
 	mes "Hmm-hmm.";
 	mes "What an indecorous person!";
@@ -7003,7 +7003,7 @@ OnDisable:
 	end;
 }
 
-prt_castle,314,371,0	script	Prince#another_ern	985,{
+prt_castle,314,371,0	script	Prince#another_ern	4_M_2NDPRIN1,{
 	if (nkprince_eisen == 13) {
 		mes "[Ahrum]";
 		mes "I told you that I don't want to be king, and I don't have any intention to change my mind!";
@@ -7152,7 +7152,7 @@ OnDisable:
 	end;
 }
 
-prt_castle,314,372,0	script	Prince#another_ern1	985,{
+prt_castle,314,372,0	script	Prince#another_ern1	4_M_2NDPRIN1,{
 	if (nkprince_eisen == 14) {
 		mes "[Ernst]";
 		mes "Bbb... Brother?... You... told me you would kill me... You just wanted to be killed by me??... Bbb...brother?...";
@@ -7257,7 +7257,7 @@ OnDisable:
 	end;
 }
 
-prt_castle,272,372,1	script	Prince#eisen1	983,{
+prt_castle,272,372,1	script	Prince#eisen1	4_M_1STPRIN1,{
 	mes "[Ahrum]";
 	mes "Moron. You'll never be a king. All throughout your life... Don't you know it? Such a junk addict!!";
 	next;
@@ -7315,7 +7315,7 @@ OnDisable:
 	end;
 }
 
-prt_castle,336,202,7	script	Prince#eisen2	983,{
+prt_castle,336,202,7	script	Prince#eisen2	4_M_1STPRIN1,{
 	mes "[Urugen]";
 	mes "What did you say? Ahrum?";
 	mes "Hey! What did you just say to me? Ahrum?!";
@@ -7373,7 +7373,7 @@ OnDisable:
 	end;
 }
 
-prt_castle,286,201,7	script	Prince#eisen3	983,{
+prt_castle,286,201,7	script	Prince#eisen3	4_M_1STPRIN1,{
 	mes "[Ahrum]";
 	mes "Military maniac! Jerk! Do you think power can solve everything? In all situations, do you think people can live peacefully?!";
 	next;
@@ -7428,7 +7428,7 @@ OnDisable:
 	end;
 }
 
-prt_castle,388,205,6	script	Prince#eisen4	983,{
+prt_castle,388,205,6	script	Prince#eisen4	4_M_1STPRIN1,{
 	mes "[Ahrum]";
 	mes "You always care about gambling. But, why don't you care about your surrondings first, eh? Young master of Richard?";
 	next;
@@ -7492,7 +7492,7 @@ OnDisable:
 	end;
 }
 
-prt_castle,364,372,1	script	Prince#eisen5	983,{
+prt_castle,364,372,1	script	Prince#eisen5	4_M_1STPRIN1,{
 	mes "[Ahrum]";
 	mes "Peter, what will you do if your work doesn't mean anything?";
 	next;
@@ -7556,7 +7556,7 @@ OnDisable:
 	end;
 }
 
-prt_castle,368,310,1	script	Prince#eisen6	983,{
+prt_castle,368,310,1	script	Prince#eisen6	4_M_1STPRIN1,{
 	mes "[Ernst]";
 	mes "Bro, tell me again. You just said something?";
 	next;
@@ -7643,7 +7643,7 @@ OnDisable:
 	end;
 }
 
-prt_castle,318,276,0	script	#eisen	45,1,1,{
+prt_castle,318,276,0	script	#eisen	WARPNPC,1,1,{
 OnTouch:
 	if ((nkprince_eisen == 4) || (nkprince_eisen == 5)) {
 		donpcevent "Prince#another_ern::OnEnable";
@@ -7735,7 +7735,7 @@ OnTouch:
 	end;
 }
 
-prt_castle,336,276,0	script	#ern	45,1,1,{
+prt_castle,336,276,0	script	#ern	WARPNPC,1,1,{
 OnTouch:
 	if (checkquest(10023) == 0 || checkquest(10023) == 1) {
 		donpcevent "Prince#eisen6::OnEnable";
@@ -7744,7 +7744,7 @@ OnTouch:
 	end;
 }
 
-prt_castle,300,276,0	script	#erich	45,1,1,{
+prt_castle,300,276,0	script	#erich	WARPNPC,1,1,{
 OnTouch:
 	if (checkquest(10020) == 0 || checkquest(10020) == 1) {
 		donpcevent "Prince#eisen1::OnEnable";
@@ -7753,7 +7753,7 @@ OnTouch:
 	end;
 }
 
-prt_castle,330,271,0	script	#helmut	45,1,1,{
+prt_castle,330,271,0	script	#helmut	WARPNPC,1,1,{
 OnTouch:
 	if (checkquest(10022) == 0 || checkquest(10022) == 1) {
 		donpcevent "Prince#eisen3::OnEnable";
@@ -7762,7 +7762,7 @@ OnTouch:
 	end;
 }
 
-prt_castle,348,271,0	script	#poe	45,1,1,{
+prt_castle,348,271,0	script	#poe	WARPNPC,1,1,{
 OnTouch:
 	if (checkquest(10018) == 0 || checkquest(10018) == 1) {
 		donpcevent "Prince#eisen4::OnEnable";
@@ -7771,7 +7771,7 @@ OnTouch:
 	end;
 }
 
-prt_castle,354,276,0	script	#peter	45,1,1,{
+prt_castle,354,276,0	script	#peter	WARPNPC,1,1,{
 OnTouch:;
 	if (checkquest(10019) == 0 || checkquest(10019) == 1) {
 		donpcevent "Prince#eisen5::OnEnable";
@@ -7780,7 +7780,7 @@ OnTouch:;
 	end;
 }
 
-prt_castle,310,271,0	script	#urgen	45,1,1,{
+prt_castle,310,271,0	script	#urgen	WARPNPC,1,1,{
 OnTouch:
 	if (checkquest(10021) == 0 || checkquest(10021) == 1) {
 		donpcevent "Prince#eisen2::OnEnable";
@@ -7805,7 +7805,7 @@ prt_castle,225,318,0	warp	#room12	1,1,prt_castle,276,263
 prt_castle,273,264,0	warp	#room22	1,1,prt_castle,221,318
 prt_castle,221,308,0	warp	#princeout	1,1,prt_castle,176,167
 
-prt_castle,176,170,5	script	Guard#princein	105,{
+prt_castle,176,170,5	script	Guard#princein	8W_SOLDIER,{
 	if (nk_prince > 4) {
 		mes "[Guard of a strange place]";
 		mes "You can go to the room where princes gather, through the hidden door. For security reasons, it is totally guarded and hidden.";
@@ -7823,7 +7823,7 @@ prt_castle,176,170,5	script	Guard#princein	105,{
 	}
 }
 
-prt_castle,121,168,0	script	#arm	111,4,4,{
+prt_castle,121,168,0	script	#arm	HIDDEN_NPC,4,4,{
 //OnTouch2:
 OnTouch:
 	if (nk_prince == 8) {
@@ -7844,7 +7844,7 @@ OnTouch:
 	}
 }
 
-prt_castle,316,313,0	script	#arm1	111,3,3,{
+prt_castle,316,313,0	script	#arm1	HIDDEN_NPC,3,3,{
 //OnTouch2:
 OnTouch:
 	if (nkprince_eisen > 14) {

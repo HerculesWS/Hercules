@@ -18,7 +18,7 @@
 
 // Theore's Request :: ep14_1_bs
 //============================================================
-mid_camp,148,222,4	script	Theore#ep14_1_bs	982,3,3,{
+mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 	if (BaseLevel < 100) {
 		mes "- A person with a white gown -";
 		mes "- is pulling at his hair. -";
@@ -444,41 +444,41 @@ OnTimer5000:
 	end;
 }
 
-spl_fild02,79,104,0	duplicate(#mora_bush)	Bush#ep14_1_bs1	111
-spl_fild02,79,104,0	duplicate(#mora_pouch)	#ep14_1_bs1	139,2,2
-spl_fild02,79,104,6	duplicate(#mora_fairy)	Fairy#cmd11	440
-spl_fild02,79,104,6	duplicate(#mora_fairy)	Fairy#cmd12	445
-spl_fild02,79,104,6	duplicate(#mora_fairy)	Fairy#cmd13	439
+spl_fild02,79,104,0	duplicate(#mora_bush)	Bush#ep14_1_bs1	HIDDEN_NPC
+spl_fild02,79,104,0	duplicate(#mora_pouch)	#ep14_1_bs1	HIDDEN_WARP_NPC,2,2
+spl_fild02,79,104,6	duplicate(#mora_fairy)	Fairy#cmd11	4_F_FAIRYKID5
+spl_fild02,79,104,6	duplicate(#mora_fairy)	Fairy#cmd12	4_M_FAIRYKID4
+spl_fild02,79,104,6	duplicate(#mora_fairy)	Fairy#cmd13	4_F_FAIRYKID4
 
-spl_fild02,103,344,0	duplicate(#mora_bush)	Bush#ep14_1_bs2	111
-spl_fild02,103,344,0	duplicate(#mora_pouch)	#ep14_1_bs2	139,2,2
-spl_fild02,103,344,6	duplicate(#mora_fairy)	Fairy#cmd21	440
-spl_fild02,103,344,6	duplicate(#mora_fairy)	Fairy#cmd22	445
-spl_fild02,103,344,6	duplicate(#mora_fairy)	Fairy#cmd23	439
+spl_fild02,103,344,0	duplicate(#mora_bush)	Bush#ep14_1_bs2	HIDDEN_NPC
+spl_fild02,103,344,0	duplicate(#mora_pouch)	#ep14_1_bs2	HIDDEN_WARP_NPC,2,2
+spl_fild02,103,344,6	duplicate(#mora_fairy)	Fairy#cmd21	4_F_FAIRYKID5
+spl_fild02,103,344,6	duplicate(#mora_fairy)	Fairy#cmd22	4_M_FAIRYKID4
+spl_fild02,103,344,6	duplicate(#mora_fairy)	Fairy#cmd23	4_F_FAIRYKID4
 
-spl_fild02,261,323,0	duplicate(#mora_bush)	Bush#ep14_1_bs3	111
-spl_fild02,261,323,0	duplicate(#mora_pouch)	#ep14_1_bs3	139,2,2
-spl_fild02,261,323,6	duplicate(#mora_fairy)	Fairy#cmd31	440
-spl_fild02,261,323,6	duplicate(#mora_fairy)	Fairy#cmd32	445
-spl_fild02,261,323,6	duplicate(#mora_fairy)	Fairy#cmd33	439
+spl_fild02,261,323,0	duplicate(#mora_bush)	Bush#ep14_1_bs3	HIDDEN_NPC
+spl_fild02,261,323,0	duplicate(#mora_pouch)	#ep14_1_bs3	HIDDEN_WARP_NPC,2,2
+spl_fild02,261,323,6	duplicate(#mora_fairy)	Fairy#cmd31	4_F_FAIRYKID5
+spl_fild02,261,323,6	duplicate(#mora_fairy)	Fairy#cmd32	4_M_FAIRYKID4
+spl_fild02,261,323,6	duplicate(#mora_fairy)	Fairy#cmd33	4_F_FAIRYKID4
 
-spl_fild02,137,305,0	duplicate(#mora_bush)	Bush#ep14_1_bs4	111
-spl_fild02,137,305,0	duplicate(#mora_pouch)	#ep14_1_bs4	139,2,2
-spl_fild02,137,305,6	duplicate(#mora_fairy)	Fairy#cmd41	440
-spl_fild02,137,305,6	duplicate(#mora_fairy)	Fairy#cmd42	445
-spl_fild02,137,305,6	duplicate(#mora_fairy)	Fairy#cmd43	439
+spl_fild02,137,305,0	duplicate(#mora_bush)	Bush#ep14_1_bs4	HIDDEN_NPC
+spl_fild02,137,305,0	duplicate(#mora_pouch)	#ep14_1_bs4	HIDDEN_WARP_NPC,2,2
+spl_fild02,137,305,6	duplicate(#mora_fairy)	Fairy#cmd41	4_F_FAIRYKID5
+spl_fild02,137,305,6	duplicate(#mora_fairy)	Fairy#cmd42	4_M_FAIRYKID4
+spl_fild02,137,305,6	duplicate(#mora_fairy)	Fairy#cmd43	4_F_FAIRYKID4
 
-spl_fild02,23,196,0	duplicate(#mora_bush)	Bush#ep14_1_bs5	111
-spl_fild02,23,196,0	duplicate(#mora_pouch)	#ep14_1_bs5	139,2,2
-spl_fild02,23,196,6	duplicate(#mora_fairy)	Fairy#cmd51	440
-spl_fild02,23,196,6	duplicate(#mora_fairy)	Fairy#cmd52	445
-spl_fild02,23,196,6	duplicate(#mora_fairy)	Fairy#cmd53	439
+spl_fild02,23,196,0	duplicate(#mora_bush)	Bush#ep14_1_bs5	HIDDEN_NPC
+spl_fild02,23,196,0	duplicate(#mora_pouch)	#ep14_1_bs5	HIDDEN_WARP_NPC,2,2
+spl_fild02,23,196,6	duplicate(#mora_fairy)	Fairy#cmd51	4_F_FAIRYKID5
+spl_fild02,23,196,6	duplicate(#mora_fairy)	Fairy#cmd52	4_M_FAIRYKID4
+spl_fild02,23,196,6	duplicate(#mora_fairy)	Fairy#cmd53	4_F_FAIRYKID4
 
-spl_fild02,186,260,0	duplicate(#mora_bush)	Bush#ep14_1_bs6	111
-spl_fild02,186,260,0	duplicate(#mora_pouch)	#ep14_1_bs6	139,2,2
-spl_fild02,186,260,6	duplicate(#mora_fairy)	Fairy#cmd61	440
-spl_fild02,186,260,6	duplicate(#mora_fairy)	Fairy#cmd62	445
-spl_fild02,186,260,6	duplicate(#mora_fairy)	Fairy#cmd63	439
+spl_fild02,186,260,0	duplicate(#mora_bush)	Bush#ep14_1_bs6	HIDDEN_NPC
+spl_fild02,186,260,0	duplicate(#mora_pouch)	#ep14_1_bs6	HIDDEN_WARP_NPC,2,2
+spl_fild02,186,260,6	duplicate(#mora_fairy)	Fairy#cmd61	4_F_FAIRYKID5
+spl_fild02,186,260,6	duplicate(#mora_fairy)	Fairy#cmd62	4_M_FAIRYKID4
+spl_fild02,186,260,6	duplicate(#mora_fairy)	Fairy#cmd63	4_F_FAIRYKID4
 
 -	script	#mora_bush_timer	-1,{
 	end;
@@ -501,20 +501,20 @@ OnTimer600000:
 	donpcevent strnpcinfo(0)+"::OnDisable";
 	end;
 }
-spl_fild02,180,1,0	duplicate(#mora_bush_timer)	Bush1Timer	440
-spl_fild02,181,1,0	duplicate(#mora_bush_timer)	Bush2Timer	440
-spl_fild02,182,1,0	duplicate(#mora_bush_timer)	Bush3Timer	440
-spl_fild02,183,1,0	duplicate(#mora_bush_timer)	Bush4Timer	440
-spl_fild02,184,1,0	duplicate(#mora_bush_timer)	Bush5Timer	440
-spl_fild02,186,1,0	duplicate(#mora_bush_timer)	Bush6Timer	440
+spl_fild02,180,1,0	duplicate(#mora_bush_timer)	Bush1Timer	4_F_FAIRYKID5
+spl_fild02,181,1,0	duplicate(#mora_bush_timer)	Bush2Timer	4_F_FAIRYKID5
+spl_fild02,182,1,0	duplicate(#mora_bush_timer)	Bush3Timer	4_F_FAIRYKID5
+spl_fild02,183,1,0	duplicate(#mora_bush_timer)	Bush4Timer	4_F_FAIRYKID5
+spl_fild02,184,1,0	duplicate(#mora_bush_timer)	Bush5Timer	4_F_FAIRYKID5
+spl_fild02,186,1,0	duplicate(#mora_bush_timer)	Bush6Timer	4_F_FAIRYKID5
 
-spl_fild02,187,1,0	script	Field Bush Switch	440,{
+spl_fild02,187,1,0	script	Field Bush Switch	4_F_FAIRYKID5,{
 	callfunc "F_GM_NPC";
 	donpcevent "Bush#ep14_1_bs1::OnEnable";
 	end;
 }
 
-splendide,183,117,4	script	Tired-looking Fairy	438,{
+splendide,183,117,4	script	Tired-looking Fairy	4_F_FAIRYKID3,{
 	if (!isequipped(2782)) {
 		mes "[Tired-looking Fairy]";
 		mes "VeOsaRiveh No ModAsh";
@@ -618,7 +618,7 @@ splendide,183,117,4	script	Tired-looking Fairy	438,{
 	close;
 }
 
-splendide,119,138,4	script	Kusmi#ep14_1_bs	440,{
+splendide,119,138,4	script	Kusmi#ep14_1_bs	4_F_FAIRYKID5,{
 	if (!isequipped(2782)) {
 		mes "[Kusmi]";
 		mes "DimFusTal Mu Lars";
@@ -813,7 +813,7 @@ splendide,119,138,4	script	Kusmi#ep14_1_bs	440,{
 	close;
 }
 
-splendide,304,295,4	script	Theodore#ep14_1_bs	445,{
+splendide,304,295,4	script	Theodore#ep14_1_bs	4_M_FAIRYKID4,{
 	if (!isequipped(2782)) {
 		mes "[Theodore]";
 		mes "DimFusTal Mu Lars";
@@ -995,7 +995,7 @@ splendide,304,295,4	script	Theodore#ep14_1_bs	445,{
 	close;
 }
 
-splendide,168,301,4	script	Pauchon#ep14_1_bs	439,{
+splendide,168,301,4	script	Pauchon#ep14_1_bs	4_F_FAIRYKID4,{
 	if (!isequipped(2782)) {
 		mes "[Pauchon]";
 		mes "DimFusTal Mu Lars";
@@ -1178,7 +1178,7 @@ splendide,168,301,4	script	Pauchon#ep14_1_bs	439,{
 	close;
 }
 
-splendide,262,376,4	script	Laphine Soldier#ep14_1	447,{
+splendide,262,376,4	script	Laphine Soldier#ep14_1	4_M_FAIRYSOLDIER,{
 	if (!isequipped(2782)) {
 		mes "[Laphine Soldier]";
 		mes "DielFarmar Di RiniIyazser Ha mahAgolAsh U  U ";
@@ -1212,7 +1212,7 @@ splendide,262,376,4	script	Laphine Soldier#ep14_1	447,{
 	close;
 }
 
-mora,185,163,2	script	Warehouse Manager#ep14_1	516,{
+mora,185,163,2	script	Warehouse Manager#ep14_1	4_M_RAFLE_GR,{
 	if (ep14_1_bs < 15) {
 		mes "[Warehouse Manager]";
 		mes "No, sir!";
@@ -1256,7 +1256,7 @@ mora,185,163,2	script	Warehouse Manager#ep14_1	516,{
 	end;
 }
 
-mora,35,119,4	script	Rondo#ep14_1_bs	513,{
+mora,35,119,4	script	Rondo#ep14_1_bs	4_M_DOGTRAVELER,{
 	mes "[Rondo]";
 	mes "Mora is such a mysterious place.";
 	mes "You can understand any language.";
@@ -1274,7 +1274,7 @@ mora,35,119,4	script	Rondo#ep14_1_bs	513,{
 	close;
 }
 
-mora,98,66,4	script	Lilitia#ep14_1_bs	518,{
+mora,98,66,4	script	Lilitia#ep14_1_bs	4_F_RAFLE_PK,{
 	if (ep14_1_bs > 13 && ep14_1_bs2 == 11) {
 		mes "[Lilitia]";
 		mes "Boo!!!";
@@ -1301,7 +1301,7 @@ mora,98,66,4	script	Lilitia#ep14_1_bs	518,{
 	close;
 }
 
-mora,139,102,2	script	Humming#ep14_1_bs	515,{
+mora,139,102,2	script	Humming#ep14_1_bs	4_F_DOGTRAVELER,{
 	if (ep14_1_bs > 13 && ep14_1_bs2 == 12) {
 		mes "[Humming]";
 		mes "Oh!";
@@ -1329,7 +1329,7 @@ mora,139,102,2	script	Humming#ep14_1_bs	515,{
 	close;
 }
 
-mora,55,124,2	script	Jones#ep14_1_bs	495,{
+mora,55,124,2	script	Jones#ep14_1_bs	4_M_MERCAT1,{
 	if (ep14_1_bs < 15) {
 		mes "[Jones]";
 		mes "Oh.... Darn.......";
@@ -1396,7 +1396,7 @@ mora,55,124,2	script	Jones#ep14_1_bs	495,{
 	end;
 }
 
-splendide,121,260,4	script	Daphrer#ep14_1_bs	435,{
+splendide,121,260,4	script	Daphrer#ep14_1_bs	4_F_FAIRY,{
 	if (!isequipped(2782)) {
 		mes "[Daphrer]";
 		mes "DRHSfhsdfGSDH FGkkmvoifk DFG DFHshfeksmn fgg FDbbd fjnnvk n skncki dfgd F FHdfkdfjkmv";
@@ -1442,7 +1442,7 @@ splendide,121,260,4	script	Daphrer#ep14_1_bs	435,{
 	close;
 }
 
-sec_in02,35,175,0	script	Theore Set Guid	436,{
+sec_in02,35,175,0	script	Theore Set Guid	4_F_FAIRYKID,{
 	callfunc "F_GM_NPC";
 	switch(select("Set0:Set33:Set2_0")) {
 	case 1:
@@ -1460,7 +1460,7 @@ sec_in02,35,175,0	script	Theore Set Guid	436,{
 
 // Chesire's New Day :: ep14_1_cheshir2
 //============================================================
-dic_in01,262,191,0	script	#ep14_1_xq02	139,0,3,{
+dic_in01,262,191,0	script	#ep14_1_xq02	HIDDEN_WARP_NPC,0,3,{
 	end;
 OnTouch:
 	if (ep13_3_secret > 22 && checkquest(7206) == -1) {
@@ -1493,14 +1493,14 @@ OnTouch:
 	end;
 }
 
-dic_in01,260,194,4	script	Cheshire#ep14_1_xq01	498,{
+dic_in01,260,194,4	script	Cheshire#ep14_1_xq01	4_M_CATMAN2,{
 	end;
 OnInit:
 	disablenpc "Cheshire#ep14_1_xq01";
 	end;
 }
 
-dic_dun01,274,114,0	script	Stacked Boxes of Goods	844,{
+dic_dun01,274,114,0	script	Stacked Boxes of Goods	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- You have too many items to do this quest. -";
 		close;
@@ -1554,7 +1554,7 @@ dic_dun01,274,114,0	script	Stacked Boxes of Goods	844,{
 	end;
 }
 
-bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	497,{
+bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- You have too many items to do this quest. -";
 		close;
@@ -1851,7 +1851,7 @@ L_CheckPlaytime:
 		return;
 }
 
-dicastes02,125,192,0	script	#call_cheshir_ep14	139,0,3,{
+dicastes02,125,192,0	script	#call_cheshir_ep14	HIDDEN_WARP_NPC,0,3,{
 	end;
 OnTouch:
 	if (ep13_3_secret > 22) {
@@ -1870,7 +1870,7 @@ OnTouch:
 	end;
 }
 
-dicastes02,103,190,3	script	Cheshire#ep14_extra	497,{
+dicastes02,103,190,3	script	Cheshire#ep14_extra	4_M_CATMAN1,{
 	if (ep13_3_secret > 22) {
 		cutin "ep13_cheshire",1;
 		mes "[Cheshire]";
@@ -1952,7 +1952,7 @@ OnTimer600000:
 
 // Helping Lope and Euridi :: ep14_1_rofe
 //============================================================
-mora,117,66,3	script	Euridi#pa	521,{
+mora,117,66,3	script	Euridi#pa	4_F_MORAFINE2,{
 	if (BaseLevel < 100) {
 		mes "[Euridi]";
 		mes "You are very delicate.";
@@ -2138,7 +2138,7 @@ mora,117,66,3	script	Euridi#pa	521,{
 	}
 }
 
-mora,115,68,3	script	Euridi's Friend#pa	520,{
+mora,115,68,3	script	Euridi's Friend#pa	4_F_MORAFINE1,{
 	if (ep14_1_rope < 2) {
 		mes "[Euridi's Friend]";
 		mes "Please stop Euridi.";
@@ -2238,7 +2238,7 @@ mora,115,68,3	script	Euridi's Friend#pa	520,{
 	}
 }
 
-mora,65,145,3	script	Pitt#pa	519,{
+mora,65,145,3	script	Pitt#pa	4_M_LYINGDOG,{
 	if (ep14_1_rope == 0) {
 		mes "[Pitt]";
 		mes "So you're quite good,";
@@ -2386,7 +2386,7 @@ mora,65,145,3	script	Pitt#pa	519,{
 	}
 }
 
-bif_fild01,132,338,3	script	Lope#pa	461,2,2,{
+bif_fild01,132,338,3	script	Lope#pa	4_M_FAIRYSOLDIER2,2,2,{
 	if (ep14_1_rope < 8) {
 		mes "[Suspicious Man]";
 		mes "......";
@@ -2506,7 +2506,7 @@ OnTouch:
 
 // Find the Research Tools :: ep14_1_muk
 //============================================================
-mora,31,138,6	script	Raffle Researcher#ep14	522,{
+mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 500) {
 		mes "^FF0000- Warning message -";
 		mes "- Hang on there!! -";
@@ -3444,7 +3444,7 @@ L_CheckWeight:
 	return;
 }
 
-mora,114,79,0	script	Black Shadow#ep14_muk	844,{
+mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 500) {
 		mes "^FF0000- Warning message -";
 		mes "- Hang on there!! -";
@@ -4209,11 +4209,11 @@ OnTouch:
 		end;
 	}
 }
-mora,108,86,0	duplicate(???#mora)	???#ep14_muk01	844,2,2
-mora,107,82,0	duplicate(???#mora)	???#ep14_muk02	844,2,2
-mora,113,84,0	duplicate(???#mora)	???#ep14_muk03	844,2,2
-mora,116,81,0	duplicate(???#mora)	???#ep14_muk04	844,2,2
-mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	844,2,2
+mora,108,86,0	duplicate(???#mora)	???#ep14_muk01	CLEAR_NPC,2,2
+mora,107,82,0	duplicate(???#mora)	???#ep14_muk02	CLEAR_NPC,2,2
+mora,113,84,0	duplicate(???#mora)	???#ep14_muk03	CLEAR_NPC,2,2
+mora,116,81,0	duplicate(???#mora)	???#ep14_muk04	CLEAR_NPC,2,2
+mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	CLEAR_NPC,2,2
 
 -	script	#mora_puddle	-1,{
 	set .@i, atoi(charat(strnpcinfo(2),9));
@@ -4349,14 +4349,14 @@ mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	844,2,2
 	mes "You see a puddle with a calm surface.";
 	close;
 }
-bif_fild02,315,285,0	duplicate(#mora_puddle)	Puddle#ep14_muk01	844
-bif_fild02,65,109,0	duplicate(#mora_puddle)	Puddle#ep14_muk02	844
-bif_fild02,223,71,0	duplicate(#mora_puddle)	Puddle#ep14_muk03	844
-bif_fild02,113,340,0	duplicate(#mora_puddle)	Puddle#ep14_muk04	844
+bif_fild02,315,285,0	duplicate(#mora_puddle)	Puddle#ep14_muk01	CLEAR_NPC
+bif_fild02,65,109,0	duplicate(#mora_puddle)	Puddle#ep14_muk02	CLEAR_NPC
+bif_fild02,223,71,0	duplicate(#mora_puddle)	Puddle#ep14_muk03	CLEAR_NPC
+bif_fild02,113,340,0	duplicate(#mora_puddle)	Puddle#ep14_muk04	CLEAR_NPC
 
 // Mora Daily Quests :: ep14_1_dealer
 //============================================================
-mora,133,80,6	script	Elephantine#pa0829	509,{
+mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
@@ -4464,7 +4464,7 @@ mora,133,80,6	script	Elephantine#pa0829	509,{
 	close;
 }
 
-mora,115,98,8	script	Hotcha#pa0829	509,{
+mora,115,98,8	script	Hotcha#pa0829	4_ELEPHANT,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
@@ -4539,7 +4539,7 @@ mora,115,98,8	script	Hotcha#pa0829	509,{
 	close;
 }
 
-mora,119,103,4	script	Bow-wow#pa0829	513,{
+mora,119,103,4	script	Bow-wow#pa0829	4_M_DOGTRAVELER,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
@@ -4647,7 +4647,7 @@ mora,119,103,4	script	Bow-wow#pa0829	513,{
 	close;
 }
 
-mora,119,118,4	script	General Good Dealer#pa0	516,{
+mora,119,118,4	script	General Good Dealer#pa0	4_M_RAFLE_GR,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
@@ -4735,7 +4735,7 @@ L_CheckQuest:
 	return;
 }
 
-mora,124,108,7	script	Woof-grrr#pa0829	514,{
+mora,124,108,7	script	Woof-grrr#pa0829	4_M_DOGTRAVELER2,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
@@ -4843,7 +4843,7 @@ mora,124,108,7	script	Woof-grrr#pa0829	514,{
 	close;
 }
 
-mora,127,112,4	script	Commodities Dealer#pa08	518,{
+mora,127,112,4	script	Commodities Dealer#pa08	4_F_RAFLE_PK,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
@@ -4931,7 +4931,7 @@ L_CheckQuest:
 	return;
 }
 
-mora,170,101,4	script	Soul Guide#pa0829	515,{
+mora,170,101,4	script	Soul Guide#pa0829	4_F_DOGTRAVELER,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
@@ -5056,19 +5056,19 @@ mora,170,101,4	script	Soul Guide#pa0829	515,{
 	close;
 }
 
-mora,131,165,7	script	Wandering Customer#pa082	520,{
+mora,131,165,7	script	Wandering Customer#pa082	4_F_MORAFINE1,{
 	mes "[Wandering Customer]";
 	mes "I don't know whether to believe this art dealer... He made me stand here like this for days.... Ah... I feel dizzy.";
 	close;
 }
 
-mora,125,174,2	script	A Random Customer#pa0829	520,{
+mora,125,174,2	script	A Random Customer#pa0829	4_F_MORAFINE1,{
 	mes "[Naive Customer]";
 	mes "I don't know when carving my pendant will be completed. Since he is a reliable art dealer, I suppose he won't break my pendant.";
 	close;
 }
 
-mora,104,172,7	script	Victim#pa0829	520,{
+mora,104,172,7	script	Victim#pa0829	4_F_MORAFINE1,{
 	mes "[Victim]";
 	mes "You Bastard! I want my rugged outwear! That was passed on to me by my father *SOB*";
 	next;
@@ -5076,7 +5076,7 @@ mora,104,172,7	script	Victim#pa0829	520,{
 	close;
 }
 
-sec_in02,29,34,5	script	Initializing Mora Sanjo	453,{
+sec_in02,29,34,5	script	Initializing Mora Sanjo	4_MAN_NITT,{
 	callfunc "F_GM_NPC";
 	mes "Enter your password";
 	if (callfunc("F_GM_NPC","1854",1) == 0) {
@@ -5123,20 +5123,20 @@ function	script	mora_remains	{
 	mes "You see traces of recent digging.";
 	close;
 }
-1@mist,132,100,0	script	Tazaar's Remains#33	844,{ callfunc "mora_remains",12243,"Tazaar",6,526,3; }	//Royal_Jelly
-1@mist,102,242,0	script	Naizar's Remains#33	844,{ callfunc "mora_remains",12244,"Naizar",5,942,17; }	//Yoyo_Tail
-1@mist,145,245,0	script	Meshir's Remains#33	844,{ callfunc "mora_remains",12245,"Meshir",5,943,4; }	//Solid_Shell
-1@mist,196,276,0	script	Noirit's Remains#33	844,{ callfunc "mora_remains",12246,"Noirit",6,549,3; }	//Nice_Sweet_Potato
-1@mist,304,327,0	script	Pajama God's Remains#33	844,{ callfunc "mora_remains",12247,"Pajama God",5,945,18; }	//Raccoon_Leaf
-1@mist,334,287,0	script	Mendel's Remains#33	844,{ callfunc "mora_remains",12248,"Mendel",7,946,31; }	//Snail's_Shell
-1@mist,330,177,0	script	Milebit's Remains#33	844,{ callfunc "mora_remains",12249,"Milebit",5,7008,17; }	//Stiff_Horn
-1@mist,284,84,0	script	Kunmun's Remains#33	844,{ callfunc "mora_remains",12250,"Kunmun",4,6380,20; }	//Mora_Coin
-1@mist,170,54,0	script	Tsaihokin's Remains#33	844,{ callfunc "mora_remains",12251,"Tsaihokin",2,929,5; }	//Immortal_Heart
-1@mist,118,43,0	script	Tuar's Remains#33	844,{ callfunc "mora_remains",12252,"Tuar",3,6380,20; }	//Mora_Coin
+1@mist,132,100,0	script	Tazaar's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12243,"Tazaar",6,526,3; }	//Royal_Jelly
+1@mist,102,242,0	script	Naizar's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12244,"Naizar",5,942,17; }	//Yoyo_Tail
+1@mist,145,245,0	script	Meshir's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12245,"Meshir",5,943,4; }	//Solid_Shell
+1@mist,196,276,0	script	Noirit's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12246,"Noirit",6,549,3; }	//Nice_Sweet_Potato
+1@mist,304,327,0	script	Pajama God's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12247,"Pajama God",5,945,18; }	//Raccoon_Leaf
+1@mist,334,287,0	script	Mendel's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12248,"Mendel",7,946,31; }	//Snail's_Shell
+1@mist,330,177,0	script	Milebit's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12249,"Milebit",5,7008,17; }	//Stiff_Horn
+1@mist,284,84,0	script	Kunmun's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12250,"Kunmun",4,6380,20; }	//Mora_Coin
+1@mist,170,54,0	script	Tsaihokin's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12251,"Tsaihokin",2,929,5; }	//Immortal_Heart
+1@mist,118,43,0	script	Tuar's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12252,"Tuar",3,6380,20; }	//Mora_Coin
 
 // Knights of the Neighborhood :: ep14_1_mora_knight
 //============================================================
-mora,118,166,6	script	Knights Chief#mo	525,{
+mora,118,166,6	script	Knights Chief#mo	4_F_RAFLE_VI,{
 	mes "[Order of the Knights Chief]";
 	mes "We are the legendary order of the Neighborhood Knights, founded just five minutes ago!";
 	next;
@@ -5152,7 +5152,7 @@ mora,118,166,6	script	Knights Chief#mo	525,{
 	close;
 }
 
-mora,116,165,5	script	Knights Boss#mo	524,{
+mora,116,165,5	script	Knights Boss#mo	4_M_RAFLE_VI,{
 	set .@playtime, checkquest(1119,PLAYTIME);
 	if (.@playtime == 0 || .@playtime == 1) {
 		mes "[Order of the Knights Boss]";
@@ -5214,7 +5214,7 @@ mora,116,165,5	script	Knights Boss#mo	524,{
 	}
 }
 
-mora,114,163,5	script	Knights Head#mo	522,{
+mora,114,163,5	script	Knights Head#mo	4_M_RAFLE_OR,{
 	if (checkweight(6380,1) == 0) {
 		mes "[Order of the Knights Head]";
 		mes "You have a lot of things with you!";
@@ -5342,7 +5342,7 @@ mora,114,163,5	script	Knights Head#mo	522,{
 	end;
 }
 
-mora,112,161,5	script	Knights Leader#mo	523,{
+mora,112,161,5	script	Knights Leader#mo	4_F_RAFLE_YE,{
 	mes "[Order of the Knights Leader]";
 	mes "I'm the Leader of the Order -";
 	mes "you can tell me.";

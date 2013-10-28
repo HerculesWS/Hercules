@@ -13,7 +13,7 @@
 //= 1.2 Navigation system update. [Euphy]
 //============================================================
 
-comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	700,{
+comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	8_F_GIRL,{
 	mes "[Comodo Guide]";
 	mes "Welcome to ^8B4513Comodo^000000,";
 	mes "the Beach Town of the Rune-Midgarts Kingdom.";
@@ -176,6 +176,6 @@ L_Mark:
 	mes "Would you like to check any other locations?";
 	return;
 }
-comodo,181,347,4	duplicate(GuideComodo)	Comodo Guide#02comodo	700
-comodo,197,149,3	duplicate(GuideComodo)	Comodo Guide#03comodo	700
-comodo,37,219,4	duplicate(GuideComodo)	Comodo Guide#04comodo	700
+comodo,181,347,4	duplicate(GuideComodo)	Comodo Guide#02comodo	8_F_GIRL
+comodo,197,149,3	duplicate(GuideComodo)	Comodo Guide#03comodo	8_F_GIRL
+comodo,37,219,4	duplicate(GuideComodo)	Comodo Guide#04comodo	8_F_GIRL

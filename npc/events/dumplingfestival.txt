@@ -11,7 +11,7 @@
 //= 1.01 fixed bugs [Lupus]
 //============================================================
   
-payon,93,81,4	script	Exorcist Master Fahae	834,{
+payon,93,81,4	script	Exorcist Master Fahae	4_M_BUDDHIST,{
 
 	mes "[Exorcist Master Fahae]";
 	mes "Greetings young warrior, I'm the Exorcist Master Fahae.";

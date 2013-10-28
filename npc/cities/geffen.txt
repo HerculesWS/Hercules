@@ -23,7 +23,7 @@
 //= 2.0 Bug fixes (bugreport:7928) [DeadlySilence]
 //============================================================
 
-geffen,59,143,0	script	Meera	91,{
+geffen,59,143,0	script	Meera	4_F_02,{
 	mes "[Meera]";
 	mes "Welcome to Geffen,";
 	mes "the City of Magic!";
@@ -46,7 +46,7 @@ geffen,59,143,0	script	Meera	91,{
 	close;
 }
 
-geffen,156,190,0	script	Orwalk	82,{
+geffen,156,190,0	script	Orwalk	4_KID01,{
 	mes "[Orwalk]";
 	mes "...Interesting.";
 	mes "Most intriguing.";
@@ -64,7 +64,7 @@ geffen,156,190,0	script	Orwalk	82,{
 	close;
 }
 
-geffen_in,164,109,0	script	Wizard Stanza	64,{
+geffen_in,164,109,0	script	Wizard Stanza	1_M_WIZARD,{
 	mes "[Stanza]";
 	mes "I sense the presence of a mighty spirit. Can it be you...?";
 	next;
@@ -92,7 +92,7 @@ geffen_in,164,109,0	script	Wizard Stanza	64,{
 	close;
 }
 
-geffen,147,26,0	script	Ralphie	97,{
+geffen,147,26,0	script	Ralphie	4W_M_01,{
 	mes "[Ralphie]";
 	mes "Somewhere in this world, there is a rare Staff which can transform psychic energy into physical force, endowing its owner with ^990000destructive power^000000...";
 	next;
@@ -122,7 +122,7 @@ geffen,147,26,0	script	Ralphie	97,{
 	close;
 }
 
-geffen,111,48,0	script	Stacey	101,{
+geffen,111,48,0	script	Stacey	4W_F_01,{
 	if (getequipid(1) == 2299) {
 		mes "[Stacey]";
 		mes "Oh...!";
@@ -182,7 +182,7 @@ geffen,111,48,0	script	Stacey	101,{
 	}
 }
 	
-geffen_in,34,170,0	script	Theodore	47,{
+geffen_in,34,170,0	script	Theodore	1_M_01,{
 	mes "[Theodore]";
 	mes "Hello!";
 	mes "Isn't it a";
@@ -214,7 +214,7 @@ geffen_in,34,170,0	script	Theodore	47,{
 	close;
 }
 
-geffen,146,148,4	script	Suspicious Guy	99,6,6,{
+geffen,146,148,4	script	Suspicious Guy	4W_M_03,6,6,{
 	end;
 
 OnTouch:
@@ -423,7 +423,7 @@ OnTouch:
 	close;
 }
 
-geffen_in,22,125,1	script	Crumpler	52,{
+geffen_in,22,125,1	script	Crumpler	1_M_HOF,{
 	mes "[Crumpler]";
 	mes "Ooooh~!";
 	mes "You sure are dressed pretty,";
@@ -521,7 +521,7 @@ geffen_in,22,125,1	script	Crumpler	52,{
 	}
 }
 
-geffen_in,59,61,1	script	Skyler	61,{
+geffen_in,59,61,1	script	Skyler	1_M_PUBMASTER,{
 	mes "[Skyler]";
 	mes "Hello hello.";
 	mes "You're not looking";
@@ -546,7 +546,7 @@ geffen_in,59,61,1	script	Skyler	61,{
 	close;
 }
 
-geffen_in,27,134,5	script	Waitress#elen	91,{
+geffen_in,27,134,5	script	Waitress#elen	4_F_02,{
 	mes "[Elenore]";
 	mes "This place...";
 	mes "Certainly has";
@@ -685,7 +685,7 @@ geffen_in,27,134,5	script	Waitress#elen	91,{
 	close;
 }
 
-geffen_in,70,67,3	script	Waitress#elise	90,{
+geffen_in,70,67,3	script	Waitress#elise	4_F_01,{
 	mes "[Elisa]";
 	mes "Hello there~";
 	mes "Can I help you";
@@ -806,7 +806,7 @@ geffen_in,70,67,3	script	Waitress#elise	90,{
 	close;
 }
 
-geffen_in,79,76,2	script	Merchant Daven	120,{
+geffen_in,79,76,2	script	Merchant Daven	2_M_PHARMACIST,{
 	mes "[Merchant Daven]";
 	mes "I remember Geffen";
 	mes "back when it was boring. ";
@@ -873,7 +873,7 @@ geffen_in,79,76,2	script	Merchant Daven	120,{
 	close;
 }
 	
-geffen_in,114,73,5	script	Hadenheim	709,{
+geffen_in,114,73,5	script	Hadenheim	4_M_SEAMAN,{
 	mes "[Hans Hadenheim]";
 	mes "Man, the Rune-Midgard continent sure is big! How's it going, youngster?";
 	next;
@@ -919,7 +919,7 @@ geffen_in,114,73,5	script	Hadenheim	709,{
 	close;
 }
 
-geffen_in,39,127,2	script	Psychic Advisor	704,{
+geffen_in,39,127,2	script	Psychic Advisor	4_M_BIBI,{
 	mes "[Psychic Advisor]";
 	mes "Ah...";
 	mes "Don't tell me! You've come to have your fortune told, yes? I know,";
@@ -1336,7 +1336,7 @@ geffen_in,39,127,2	script	Psychic Advisor	704,{
 	}
 }
 	
-geffen_in,109,72,2	script	Monster Scholar	90,{
+geffen_in,109,72,2	script	Monster Scholar	4_F_01,{
 	mes "[Estheres]";
 	mes "Hello, I'm the resident expert of Monsterology here in Geffen. Is there anything in particular that you're curious about?";
 	next;
@@ -1404,7 +1404,7 @@ geffen_in,109,72,2	script	Monster Scholar	90,{
 
 // Lvl 4 weapon quest related NPC ------------------------------------------------------
 
-geffen,203,146,5	script	Citizen	97,{
+geffen,203,146,5	script	Citizen	4W_M_01,{
 	mes "[Citizen]";
 	mes "There was a skillful weaponsmith";
 	mes "in Al De Baran who had 4 sons.";

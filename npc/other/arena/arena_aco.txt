@@ -15,7 +15,7 @@
 //= 1.5 Added GM management function. [Euphy]
 //============================================================
 
-arena_room,114,102,0	script	onlyaco#arena	45,1,1,{
+arena_room,114,102,0	script	onlyaco#arena	WARPNPC,1,1,{
 OnTouch:
 	if (BaseClass == Job_Acolyte) {
 		warp "arena_room",135,129;
@@ -27,7 +27,7 @@ OnTouch:
 	}
 }
 
-arena_room,136,138,3	script	Acolyte Waiting Room	124,{
+arena_room,136,138,3	script	Acolyte Waiting Room	4_F_TELEPORTER,{
 	end;
 
 OnInit:
@@ -1024,7 +1024,7 @@ OnMyMobDead:
 	end;
 }
 
-force_5-1,62,26,0	script	force_08_01#aco	45,1,1,{
+force_5-1,62,26,0	script	force_08_01#aco	WARPNPC,1,1,{
 OnTouch:
 	warp "force_5-1",40,26;
 	if (BaseJob == Job_Acolyte) {
@@ -1036,7 +1036,7 @@ OnTouch:
 	end;
 }
 
-force_5-1,99,124,0	script	force_exit#aco	45,1,1,{
+force_5-1,99,124,0	script	force_exit#aco	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Trocco#aco1::OnTimerOff";
 	donpcevent "#arn_timer_aco::OnEnable";
@@ -1044,7 +1044,7 @@ OnTouch:
 	end;
 }
 
-prt_are_in,181,83,3	script	Staff#aco-1	67,{
+prt_are_in,181,83,3	script	Staff#aco-1	1_F_02,{
 	mes "[Staff]";
 	mes "Nice work!";
 	mes "You might have failed";
@@ -1075,7 +1075,7 @@ prt_are_in,181,83,3	script	Staff#aco-1	67,{
 	end;
 }
 
-prt_are_in,25,31,3	script	Staff#aco-2	67,{
+prt_are_in,25,31,3	script	Staff#aco-2	1_F_02,{
 	set .@start_timeaco, $@arn_1;
 	set .@hour_startaco, .@start_timeaco / 10000;
 	set .@min_startaco, ((.@start_timeaco % 10000) / 100);
@@ -1552,7 +1552,7 @@ OnEnable:
 	end;
 }
 
-arena_room,94,82,7	script	Arena Record Staff#aco	79,{
+arena_room,94,82,7	script	Arena Record Staff#aco	1_F_PRIEST,{
 	mes "[Mathea]";
 	mes "Hello, I'm in charge of";
 	mes "the Acolyte Class Records";
@@ -1648,7 +1648,7 @@ OnLineRec_pri90:
 	end;
 }
 
-arena_room,140,136,3	script	Guide Alias	729,{
+arena_room,140,136,3	script	Guide Alias	4_F_NOVICE,{
 	mes "[Alias]";
 	mes "Hello there, I'm here";
 	mes "to inform you about";
@@ -1708,7 +1708,7 @@ arena_room,140,136,3	script	Guide Alias	729,{
 	close;
 }
 
-arena_room,195,5,3	script	log-on-aco#arena	802,{
+arena_room,195,5,3	script	log-on-aco#arena	4_NFWISP,{
 	set .@i, callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
 		mes "^3355FFIncorrect Password.^000000";
@@ -1752,7 +1752,7 @@ arena_room,195,5,3	script	log-on-aco#arena	802,{
 	}
 }
 
-arena_room,195,10,3	script	acolink#arena	802,{
+arena_room,195,10,3	script	acolink#arena	4_NFWISP,{
 	set .@i, callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
 		mes "Command has";

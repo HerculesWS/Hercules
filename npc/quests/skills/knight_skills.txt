@@ -11,7 +11,7 @@
 //= 1.5 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //============================================================
 
-prt_in,85,99,3	script	Knight#kabuto	734,{
+prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 	if (BaseJob == Job_Knight) {
 		if (KNGT_SK == 10) {
 			mes "[Essofeit]";
@@ -306,7 +306,7 @@ prt_in,85,99,3	script	Knight#kabuto	734,{
 	close;
 }
 
-prontera,69,351,0	script	#tour	111,5,5,{
+prontera,69,351,0	script	#tour	HIDDEN_NPC,5,5,{
 //OnTouch2:
 OnTouch:
 	if (KNGT_SK > 2)
@@ -339,7 +339,7 @@ OnTouch:
 	close;
 }
 
-prontera,72,352,7	script	Grand Master	733,{
+prontera,72,352,7	script	Grand Master	4_M_JOB_KNIGHT1,{
 	mes "[Grand Master]";
 	if (KNGT_SK == 2 || KNGT_SK == 3) {
 		mes "Alright men, you don't";
@@ -372,7 +372,7 @@ prontera,72,352,7	script	Grand Master	733,{
 	close;
 }
 
-prontera,78,354,3	script	Knight#zabii	734,{
+prontera,78,354,3	script	Knight#zabii	4_M_JOB_KNIGHT2,{
 	if (KNGT_SK == 3 || KNGT_SK == 4) {
 		mes "[Zabi]";
 		mes "I guess we're more like";
@@ -410,7 +410,7 @@ prontera,78,354,3	script	Knight#zabii	734,{
 	close;
 }
 
-prontera,73,357,5	script	Knight#drake	734,{
+prontera,73,357,5	script	Knight#drake	4_M_JOB_KNIGHT2,{
 	if (KNGT_SK == 4 || KNGT_SK == 5) {
 		mes "[Gon]";
 		mes "What'll I get with";
@@ -444,7 +444,7 @@ prontera,73,357,5	script	Knight#drake	734,{
 	close;
 }
 
-prontera,78,357,3	script	Knight#sasword	734,{
+prontera,78,357,3	script	Knight#sasword	4_M_JOB_KNIGHT2,{
 	mes "[Jiya]";
 	if (KNGT_SK == 5 || KNGT_SK == 6) {
 		mes "Man, this division of";
@@ -471,7 +471,7 @@ prontera,78,357,3	script	Knight#sasword	734,{
 	close;
 }
 
-prontera,66,358,5	script	Knight#gattack	733,{
+prontera,66,358,5	script	Knight#gattack	4_M_JOB_KNIGHT1,{
 	mes "[Gatack]";
 	if (KNGT_SK == 7) {
 		mes "Wait, where's";

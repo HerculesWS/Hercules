@@ -34,7 +34,7 @@
 
 // Senior Crusader: 1st Collect Items Test
 //============================================================
-prt_castle,45,169,5	script	Senior Crusader	752,{
+prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 	mes "[Michael Halig]";
 	if (Upper == 1) { //the baby classes were totally blocked... due to missing == 1
 		mes "Go and train yourself in preparation for the holy war that is coming. Victory will be in the hands of those who are most ready to receive it.";
@@ -314,7 +314,7 @@ prt_castle,45,169,5	script	Senior Crusader	752,{
 
 // Suffering Man: 2nd Endurance Test
 //============================================================
-prt_castle,164,32,1	script	Man in Anguish	733,{
+prt_castle,164,32,1	script	Man in Anguish	4_M_JOB_KNIGHT1,{
 	mes "[Murnak Mijoul]";
 	if(BaseJob != Job_Swordman) {
 		if (BaseJob == Job_Crusader) {
@@ -448,7 +448,7 @@ prt_castle,164,32,1	script	Man in Anguish	733,{
 
 // Gabriel Valentine: 3rd Knowledge Test
 //============================================================
-prt_church,95,127,3	script	Crusader	745,{
+prt_church,95,127,3	script	Crusader	4_F_CRU,{
 	mes "[Gabriel Valentine]";
 	if(BaseJob != Job_Swordman) {
 		if (BaseJob == Job_Crusader) {
@@ -797,7 +797,7 @@ prt_church,95,127,3	script	Crusader	745,{
 
 // Crusader: 4th Purification Test
 //============================================================
-prt_castle,35,151,5	script	Patron Knight	751,{
+prt_castle,35,151,5	script	Patron Knight	4_M_CRU,{
 	mes "[Bliant Piyord]";
 	mes "Welcome.";
 	if(BaseJob != Job_Swordman) {
@@ -1202,7 +1202,7 @@ OnDead:
 }
 
 
-job_cru,98,105,4	script	 Summoner#cr5	45,3,3,{
+job_cru,98,105,4	script	 Summoner#cr5	WARPNPC,3,3,{
 OnTouch:
 	set CRUS_Q,6;
 	changequest 3010,3011;
@@ -1213,7 +1213,7 @@ OnTouch:
 //----------------------------------------------------------------------------
 // Purification Test
 //----------------------------------------------------------------------------
-job_cru,24,187,4	script	Patron Knight#2	751,{
+job_cru,24,187,4	script	Patron Knight#2	4_M_CRU,{
 	mes "[Bliant Piyord]";
 	mes "Welcome.";
 	mes "You will take";
@@ -1230,7 +1230,7 @@ job_cru,24,187,4	script	Patron Knight#2	751,{
 	close;
 }
 
-job_cru,24,187,2	script	Waiting Room#cr1	700,{
+job_cru,24,187,2	script	Waiting Room#cr1	8_F_GIRL,{
 	end;
 
 OnInit:
@@ -1408,7 +1408,7 @@ OnDead:
 	end;
 }
 
-job_cru,168,180,4	script	Monster Summon#cr5	45,3,3,{
+job_cru,168,180,4	script	Monster Summon#cr5	WARPNPC,3,3,{
 OnInit:
 	disablenpc "Monster Summon#cr5";
 	end;

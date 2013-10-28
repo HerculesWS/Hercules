@@ -12,7 +12,7 @@
 //= 1.0 First Version. [Euphy]
 //============================================================
 
-prontera,114,81,5	script	RWC2011 Agent#2	407,{
+prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 500) {
 		mes "[New Agent]";
 		mes "You have too many items. Please make room in your inventory and come back.";

@@ -16,7 +16,7 @@
 
 // Guild Flags (Outside Castle)
 //============================================================
--	script	Holy Shadow#1::OutsideFlagsPA3	722,{
+-	script	Holy Shadow#1::OutsideFlagsPA3	GUILD_FLAG,{
 
 	set .@GID, GetCastleData("payg_cas03",1);
 
@@ -66,14 +66,14 @@ OnRecvCastlePy03:
 	end;
 }
 
-pay_gld,321,298,2	duplicate(OutsideFlagsPA3)	Holy Shadow#1-2	722
-pay_gld,321,289,2	duplicate(OutsideFlagsPA3)	Holy Shadow#2	722
-pay_gld,327,304,1	duplicate(OutsideFlagsPA3)	Holy Shadow#3	722
-pay_gld,333,254,4	duplicate(OutsideFlagsPA3)	Holy Shadow#4	722
+pay_gld,321,298,2	duplicate(OutsideFlagsPA3)	Holy Shadow#1-2	GUILD_FLAG
+pay_gld,321,289,2	duplicate(OutsideFlagsPA3)	Holy Shadow#2	GUILD_FLAG
+pay_gld,327,304,1	duplicate(OutsideFlagsPA3)	Holy Shadow#3	GUILD_FLAG
+pay_gld,333,254,4	duplicate(OutsideFlagsPA3)	Holy Shadow#4	GUILD_FLAG
 
 // Guild Flags (Inside Castle)
 //============================================================
--	script	Holy Shadow#5::InsideFlagsPA3	722,{
+-	script	Holy Shadow#5::InsideFlagsPA3	GUILD_FLAG,{
 	end;
 
 OnRecvCastlePy03:
@@ -81,29 +81,29 @@ OnRecvCastlePy03:
 	end;
 }
 
-payg_cas03,236,54,2	duplicate(InsideFlagsPA3)	Holy Shadow#5-2	722
-payg_cas03,236,45,2	duplicate(InsideFlagsPA3)	Holy Shadow#6	722
-payg_cas03,259,66,4	duplicate(InsideFlagsPA3)	Holy Shadow#7	722
-payg_cas03,266,66,4	duplicate(InsideFlagsPA3)	Holy Shadow#8	722
-payg_cas03,34,31,4	duplicate(InsideFlagsPA3)	Holy Shadow#9	722
-payg_cas03,43,31,4	duplicate(InsideFlagsPA3)	Holy Shadow#10	722
+payg_cas03,236,54,2	duplicate(InsideFlagsPA3)	Holy Shadow#5-2	GUILD_FLAG
+payg_cas03,236,45,2	duplicate(InsideFlagsPA3)	Holy Shadow#6	GUILD_FLAG
+payg_cas03,259,66,4	duplicate(InsideFlagsPA3)	Holy Shadow#7	GUILD_FLAG
+payg_cas03,266,66,4	duplicate(InsideFlagsPA3)	Holy Shadow#8	GUILD_FLAG
+payg_cas03,34,31,4	duplicate(InsideFlagsPA3)	Holy Shadow#9	GUILD_FLAG
+payg_cas03,43,31,4	duplicate(InsideFlagsPA3)	Holy Shadow#10	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-payon,113,322,4	duplicate(InsideFlagsPA3)	Holy Shadow#11	722
-payon,166,169,3	duplicate(InsideFlagsPA3)	Holy Shadow#12	722
+payon,113,322,4	duplicate(InsideFlagsPA3)	Holy Shadow#11	GUILD_FLAG
+payon,166,169,3	duplicate(InsideFlagsPA3)	Holy Shadow#12	GUILD_FLAG
 
 // Kafra Employee
 //============================================================
-payg_cas03,9,263,5	duplicate(guildkafra)	Kafra Staff#payg_cas03	117
+payg_cas03,9,263,5	duplicate(guildkafra)	Kafra Staff#payg_cas03	4_F_KAFRA1
 
 // Steward
 //============================================================
-payg_cas03,50,261,3	duplicate(cm)	Gheriot#payg_cas03	55
+payg_cas03,50,261,3	duplicate(cm)	Gheriot#payg_cas03	1_M_JOBTESTER
 
 // Treasure Room Exit
 //============================================================
-payg_cas03,163,167,0	script	#lever_PA03	111,{
+payg_cas03,163,167,0	script	#lever_PA03	HIDDEN_NPC,{
 
 	mes " ";
 	mes "There's a small lever. Will you pull it?";
@@ -118,7 +118,7 @@ payg_cas03,163,167,0	script	#lever_PA03	111,{
 
 // Guild Dungeon Switch
 //============================================================
-payg_cas03,38,42,0	duplicate(gdlever)	#payg_cas03	111
+payg_cas03,38,42,0	duplicate(gdlever)	#payg_cas03	HIDDEN_NPC
 
 // Guild Treasure Spawns
 //============================================================
