@@ -3801,6 +3801,10 @@ struct {
 	struct HPMHookPoint *HP_pc_bank_deposit_post;
 	struct HPMHookPoint *HP_pc_bank_withdraw_pre;
 	struct HPMHookPoint *HP_pc_bank_withdraw_post;
+	struct HPMHookPoint *HP_pc_rental_expire_pre;
+	struct HPMHookPoint *HP_pc_rental_expire_post;
+	struct HPMHookPoint *HP_pc_scdata_received_pre;
+	struct HPMHookPoint *HP_pc_scdata_received_post;
 	struct HPMHookPoint *HP_pet_init_pre;
 	struct HPMHookPoint *HP_pet_init_post;
 	struct HPMHookPoint *HP_pet_final_pre;
@@ -8696,6 +8700,10 @@ struct {
 	int HP_pc_bank_deposit_post;
 	int HP_pc_bank_withdraw_pre;
 	int HP_pc_bank_withdraw_post;
+	int HP_pc_rental_expire_pre;
+	int HP_pc_rental_expire_post;
+	int HP_pc_scdata_received_pre;
+	int HP_pc_scdata_received_post;
 	int HP_pet_init_pre;
 	int HP_pet_init_post;
 	int HP_pet_final_pre;
