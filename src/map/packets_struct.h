@@ -215,9 +215,9 @@ struct NORMALITEM_INFO {
 #endif
 #if PACKETVER >= 20120925
 	struct {
-		unsigned int IsIdentified : 1;
-		unsigned int PlaceETCTab : 1;
-		unsigned int SpareBits : 6;
+		unsigned char IsIdentified : 1;
+		unsigned char PlaceETCTab : 1;
+		unsigned char SpareBits : 6;
 	} Flag;
 #endif
 } __attribute__((packed));
@@ -252,10 +252,10 @@ struct EQUIPITEM_INFO {
 #endif
 #if PACKETVER >= 20120925
 	struct {
-		unsigned int IsIdentified : 1;
-		unsigned int IsDamaged : 1;
-		unsigned int PlaceETCTab : 1;
-		unsigned int SpareBits : 5;
+		unsigned char IsIdentified : 1;
+		unsigned char IsDamaged : 1;
+		unsigned char PlaceETCTab : 1;
+		unsigned char SpareBits : 5;
 	} Flag;
 #endif
 } __attribute__((packed));
