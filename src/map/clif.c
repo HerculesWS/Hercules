@@ -2459,40 +2459,49 @@ void clif_equiplist(struct map_session_data *sd) {
 }
 
 void clif_storagelist(struct map_session_data* sd, struct item* items, int items_length) {
-	int i, normal = 0, equip = 0;
+	int i = 0;
 	struct item_data *id;
 	
-	for( i = 0; i < items_length; i++ ) {
-		
-		if( items[i].nameid <= 0 )
-			continue;
-		
-		id = itemdb->search(items[i].nameid);
-		if( !itemdb->isstackable2(id) ) //Non-stackable (Equippable)
-			clif_item_equip(i+1,&storelist_equip.list[equip++],&items[i],id,id->equip);
-		else //Stackable (Normal)
-			clif_item_normal(i+1,&storelist_normal.list[normal++],&items[i],id);
-	}
+	do {
+		int normal = 0, equip = 0, k = 0;
+
+		for( ; i < items_length && k < 500; i++, k++ ) {
+			
+			if( items[i].nameid <= 0 )
+				continue;
+			
+			id = itemdb->search(items[i].nameid);
+			
+			if( !itemdb->isstackable2(id) ) //Non-stackable (Equippable)
+				clif_item_equip(i+1,&storelist_equip.list[equip++],&items[i],id,id->equip);
+			else //Stackable (Normal)
+				clif_item_normal(i+1,&storelist_normal.list[normal++],&items[i],id);
+		}
 	
-	if( normal ) {
-		storelist_normal.PacketType   = storagelistnormalType;
-		storelist_normal.PacketLength =  ( sizeof( storelist_normal ) - sizeof( storelist_normal.list ) ) + (sizeof(struct NORMALITEM_INFO) * normal);
-#if PACKETVER >= 20120925
-		safestrncpy(storelist_normal.name, "Storage", NAME_LENGTH);
-#endif		
-		clif->send(&storelist_normal, storelist_normal.PacketLength, &sd->bl, SELF);
-	}
-		
-	if( equip ) {
-		storelist_equip.PacketType   = storagelistequipType;
-		storelist_equip.PacketLength = ( sizeof( storelist_equip ) - sizeof( storelist_equip.list ) ) + (sizeof(struct EQUIPITEM_INFO) * equip);
+		if( normal ) {
+			storelist_normal.PacketType   = storagelistnormalType;
+			storelist_normal.PacketLength =  ( sizeof( storelist_normal ) - sizeof( storelist_normal.list ) ) + (sizeof(struct NORMALITEM_INFO) * normal);
 
 #if PACKETVER >= 20120925
-		safestrncpy(storelist_equip.name, "Storage", NAME_LENGTH);
+			safestrncpy(storelist_normal.name, "Storage", NAME_LENGTH);
 #endif
+			
+			clif->send(&storelist_normal, storelist_normal.PacketLength, &sd->bl, SELF);
+		}
+			
+		if( equip ) {
+			storelist_equip.PacketType   = storagelistequipType;
+			storelist_equip.PacketLength = ( sizeof( storelist_equip ) - sizeof( storelist_equip.list ) ) + (sizeof(struct EQUIPITEM_INFO) * equip);
+
+#if PACKETVER >= 20120925
+			safestrncpy(storelist_equip.name, "Storage", NAME_LENGTH);
+#endif
+
+			clif->send(&storelist_equip, storelist_equip.PacketLength, &sd->bl, SELF);
+		}
 		
-		clif->send(&storelist_equip, storelist_equip.PacketLength, &sd->bl, SELF);
-	}
+	} while ( i < items_length );
+	
 }
 
 void clif_cartlist(struct map_session_data *sd) {
