@@ -499,12 +499,12 @@ int mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			strcat(save_status, " status");
 	}
 	
-	if( p->bank_vault != cp->bank_vault ) {
-		if( SQL_ERROR == SQL->Query(sql_handle, "REPLACE INTO `%s` (`account_id`,`bank_vault`) VALUES ('%d','%d')",account_data_db,p->account_id,p->bank_vault) ) {
+	if( p->bank_vault != cp->bank_vault || p->mod_exp != cp->mod_exp || p->mod_drop != cp->mod_drop || p->mod_death != p->mod_death ) {
+		if( SQL_ERROR == SQL->Query(sql_handle, "REPLACE INTO `%s` (`account_id`,`bank_vault`,`base_exp`,`base_drop`,`base_death`) VALUES ('%d','%d','%d','%d','%d')",account_data_db,p->account_id,p->bank_vault,p->mod_exp,p->mod_drop,p->mod_death) ) {
 			Sql_ShowDebug(sql_handle);
 			errors++;
 		} else
-			strcat(save_status, " bank");
+			strcat(save_status, " accdata");
 	}
 
 	//Values that will seldom change (to speed up saving)
@@ -1352,15 +1352,21 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	mercenary_owner_fromsql(char_id, p);
 	strcat(t_msg, " mercenary");
 
-	//`account_data` (`account_id`,`bank_vault`)
-	if( SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `bank_vault` FROM `%s` WHERE `account_id`=? LIMIT 1", account_data_db)
+	/* default */
+	p->mod_exp = p->mod_drop = p->mod_death = 100;
+	
+	//`account_data` (`account_id`,`bank_vault`,`base_exp`,`base_drop`,`base_death`)
+	if( SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `bank_vault`,`base_exp`,`base_drop`,`base_death` FROM `%s` WHERE `account_id`=? LIMIT 1", account_data_db)
 	   ||	SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &account_id, 0)
 	   ||	SQL_ERROR == SQL->StmtExecute(stmt)
-	   ||	SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT, &p->bank_vault, 0, NULL, NULL) )
+	   ||	SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT, &p->bank_vault, 0, NULL, NULL)
+	   ||	SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_USHORT, &p->mod_exp, 0, NULL, NULL)
+	   ||	SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_USHORT, &p->mod_drop, 0, NULL, NULL)
+	   ||	SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_USHORT, &p->mod_death, 0, NULL, NULL) )
 		SqlStmt_ShowDebug(stmt);
 	
 	if( SQL_SUCCESS == SQL->StmtNextRow(stmt) )
-		strcat(t_msg, " bank");
+		strcat(t_msg, " accdata");
 
 	if (save_log) ShowInfo("Loaded char (%d - %s): %s\n", char_id, p->name, t_msg);	//ok. all data load successfuly!
 	SQL->StmtFree(stmt);

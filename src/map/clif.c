@@ -17798,6 +17798,19 @@ void clif_bank_withdraw(struct map_session_data *sd,enum e_BANKING_WITHDRAW_ACK 
 	
 	clif->send(&p,sizeof(p), &sd->bl, SELF);
 }
+/* TODO: official response packet (tried 0x8cb/0x97b but the display was quite screwed up.) */
+/* currently mimicing */
+void clif_show_modifiers (struct map_session_data *sd) {
+
+	if( sd->status.mod_exp != 100 || sd->status.mod_drop != 100 || sd->status.mod_death != 100 ) {
+		char output[128];
+		
+		snprintf(output,128,"Base EXP : %d%% | Base Drop: %d%% | Base Death Penalty: %d%%",
+				sd->status.mod_exp,sd->status.mod_drop,sd->status.mod_death);
+		clif->broadcast2(&sd->bl,output, strlen(output) + 1, 0xffbc90, 0x190, 12, 0, 0, SELF);
+	}
+	
+}
 
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
@@ -18597,6 +18610,8 @@ void clif_defaults(void) {
 	/* Bank System [Yommy/Hercules] */
 	clif->bank_deposit = clif_bank_deposit;
 	clif->bank_withdraw = clif_bank_withdraw;
+	/* */
+	clif->show_modifiers = clif_show_modifiers;
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/ 

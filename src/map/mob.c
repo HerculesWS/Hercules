@@ -2332,6 +2332,12 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 					drop_rate = 1;
 			}
 #endif
+			if( sd && sd->status.mod_drop != 100 ) {
+				drop_rate = drop_rate * sd->status.mod_drop / 100;
+				if( drop_rate < 1 )
+					drop_rate = 1;
+			}
+			
 			// attempt to drop the item
 			if (rnd() % 10000 >= drop_rate)
 					continue;

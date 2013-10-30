@@ -5827,6 +5827,9 @@ void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned in
 
 	if (sd->sc.data[SC_CASH_PLUSEXP])
 		bonus += sd->sc.data[SC_CASH_PLUSEXP]->val1;
+	
+	if( sd->status.mod_exp != 100 )
+		bonus += sd->status.mod_exp - 100;
 
 	*base_exp = (unsigned int) cap_value(*base_exp + (double)*base_exp * bonus/100., 1, UINT_MAX);
 
@@ -6861,8 +6864,9 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	 && !map->list[sd->bl.m].flag.noexppenalty && !map_flag_gvg2(sd->bl.m)
 	 && !sd->sc.data[SC_BABY] && !sd->sc.data[SC_CASH_DEATHPENALTY]
 	) {
-		unsigned int base_penalty =0;
+		unsigned int base_penalty = 0;
 		if (battle_config.death_penalty_base > 0) {
+			
 			switch (battle_config.death_penalty_type) {
 				case 1:
 					base_penalty = (unsigned int) ((double)pc->nextbaseexp(sd) * (double)battle_config.death_penalty_base/10000);
@@ -6871,16 +6875,20 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 					base_penalty = (unsigned int) ((double)sd->status.base_exp * (double)battle_config.death_penalty_base/10000);
 				break;
 			}
+			
 			if(base_penalty) {
 			  	if (battle_config.pk_mode && src && src->type==BL_PC)
 					base_penalty*=2;
+				if( sd->status.mod_death != 100 )
+					base_penalty = base_penalty * sd->status.mod_death / 100;
 				sd->status.base_exp -= min(sd->status.base_exp, base_penalty);
 				clif->updatestatus(sd,SP_BASEEXP);
 			}
 		}
-		if(battle_config.death_penalty_job > 0)
-	  	{
+		
+		if(battle_config.death_penalty_job > 0) {
 			base_penalty = 0;
+			
 			switch (battle_config.death_penalty_type) {
 				case 1:
 					base_penalty = (unsigned int) ((double)pc->nextjobexp(sd) * (double)battle_config.death_penalty_job/10000);
@@ -6889,15 +6897,18 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 					base_penalty = (unsigned int) ((double)sd->status.job_exp * (double)battle_config.death_penalty_job/10000);
 				break;
 			}
+			
 			if(base_penalty) {
 			  	if (battle_config.pk_mode && src && src->type==BL_PC)
 					base_penalty*=2;
+				if( sd->status.mod_death != 100 )
+					base_penalty = base_penalty * sd->status.mod_death / 100;
 				sd->status.job_exp -= min(sd->status.job_exp, base_penalty);
 				clif->updatestatus(sd,SP_JOBEXP);
 			}
 		}
-		if(battle_config.zeny_penalty > 0 && !map->list[sd->bl.m].flag.nozenypenalty)
-	  	{
+		
+		if(battle_config.zeny_penalty > 0 && !map->list[sd->bl.m].flag.nozenypenalty) {
 			base_penalty = (unsigned int)((double)sd->status.zeny * (double)battle_config.zeny_penalty / 10000.);
 			if(base_penalty)
 				pc->payzeny(sd, base_penalty, LOG_TYPE_PICKDROP_PLAYER, NULL);
@@ -7049,6 +7060,9 @@ int pc_readparam(struct map_session_data* sd,int type)
 		case SP_KILLEDRID:       val = sd->killedrid; break;
 		case SP_SLOTCHANGE:		 val = sd->status.slotchange; break;
 		case SP_CHARRENAME:		 val = sd->status.rename; break;
+		case SP_MOD_EXP:         val = sd->status.mod_exp; break;
+		case SP_MOD_DROP:        val = sd->status.mod_drop; break;
+		case SP_MOD_DEATH:       val = sd->status.mod_death; break;
 		case SP_CRITICAL:        val = sd->battle_status.cri/10; break;
 		case SP_ASPD:            val = (2000-sd->battle_status.amotion)/10; break;
 		case SP_BASE_ATK:	     val = sd->battle_status.batk; break;
@@ -7166,139 +7180,148 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 	nullpo_ret(sd);
 
 	switch(type){
-	case SP_BASELEVEL:
-		if ((unsigned int)val > pc->maxbaselv(sd)) //Capping to max
-			val = pc->maxbaselv(sd);
-		if ((unsigned int)val > sd->status.base_level) {
-			int stat=0;
-			for (i = 0; i < (int)((unsigned int)val - sd->status.base_level); i++)
-				stat += pc->gets_status_point(sd->status.base_level + i);
-			sd->status.status_point += stat;
-		}
-		sd->status.base_level = (unsigned int)val;
-		sd->status.base_exp = 0;
-		// clif->updatestatus(sd, SP_BASELEVEL);  // Gets updated at the bottom
-		clif->updatestatus(sd, SP_NEXTBASEEXP);
-		clif->updatestatus(sd, SP_STATUSPOINT);
-		clif->updatestatus(sd, SP_BASEEXP);
-		status_calc_pc(sd, 0);
-		if(sd->status.party_id)
-		{
-			party->send_levelup(sd);
-		}
-		break;
-	case SP_JOBLEVEL:
-		if ((unsigned int)val >= sd->status.job_level) {
-			if ((unsigned int)val > pc->maxjoblv(sd)) val = pc->maxjoblv(sd);
-			sd->status.skill_point += val - sd->status.job_level;
-			clif->updatestatus(sd, SP_SKILLPOINT);
-		}
-		sd->status.job_level = (unsigned int)val;
-		sd->status.job_exp = 0;
-		// clif->updatestatus(sd, SP_JOBLEVEL);  // Gets updated at the bottom
-		clif->updatestatus(sd, SP_NEXTJOBEXP);
-		clif->updatestatus(sd, SP_JOBEXP);
-		status_calc_pc(sd, 0);
-		break;
-	case SP_SKILLPOINT:
-		sd->status.skill_point = val;
-		break;
-	case SP_STATUSPOINT:
-		sd->status.status_point = val;
-		break;
-	case SP_ZENY:
-		if( val < 0 )
-			return 0;// can't set negative zeny
-		logs->zeny(sd, LOG_TYPE_SCRIPT, sd, -(sd->status.zeny - cap_value(val, 0, MAX_ZENY)));
-		sd->status.zeny = cap_value(val, 0, MAX_ZENY);
-		break;
-	case SP_BASEEXP:
-		if(pc->nextbaseexp(sd) > 0) {
-			sd->status.base_exp = val;
-			pc->checkbaselevelup(sd);
-		}
-		break;
-	case SP_JOBEXP:
-		if(pc->nextjobexp(sd) > 0) {
-			sd->status.job_exp = val;
-			pc->checkjoblevelup(sd);
-		}
-		break;
-	case SP_SEX:
-		sd->status.sex = val ? SEX_MALE : SEX_FEMALE;
-		break;
-	case SP_WEIGHT:
-		sd->weight = val;
-		break;
-	case SP_MAXWEIGHT:
-		sd->max_weight = val;
-		break;
-	case SP_HP:
-		sd->battle_status.hp = cap_value(val, 1, (int)sd->battle_status.max_hp);
-		break;
-	case SP_MAXHP:
-		sd->battle_status.max_hp = cap_value(val, 1, battle_config.max_hp);
+		case SP_BASELEVEL:
+			if ((unsigned int)val > pc->maxbaselv(sd)) //Capping to max
+				val = pc->maxbaselv(sd);
+			if ((unsigned int)val > sd->status.base_level) {
+				int stat=0;
+				for (i = 0; i < (int)((unsigned int)val - sd->status.base_level); i++)
+					stat += pc->gets_status_point(sd->status.base_level + i);
+				sd->status.status_point += stat;
+			}
+			sd->status.base_level = (unsigned int)val;
+			sd->status.base_exp = 0;
+			// clif->updatestatus(sd, SP_BASELEVEL);  // Gets updated at the bottom
+			clif->updatestatus(sd, SP_NEXTBASEEXP);
+			clif->updatestatus(sd, SP_STATUSPOINT);
+			clif->updatestatus(sd, SP_BASEEXP);
+			status_calc_pc(sd, 0);
+			if(sd->status.party_id)
+			{
+				party->send_levelup(sd);
+			}
+			break;
+		case SP_JOBLEVEL:
+			if ((unsigned int)val >= sd->status.job_level) {
+				if ((unsigned int)val > pc->maxjoblv(sd)) val = pc->maxjoblv(sd);
+				sd->status.skill_point += val - sd->status.job_level;
+				clif->updatestatus(sd, SP_SKILLPOINT);
+			}
+			sd->status.job_level = (unsigned int)val;
+			sd->status.job_exp = 0;
+			// clif->updatestatus(sd, SP_JOBLEVEL);  // Gets updated at the bottom
+			clif->updatestatus(sd, SP_NEXTJOBEXP);
+			clif->updatestatus(sd, SP_JOBEXP);
+			status_calc_pc(sd, 0);
+			break;
+		case SP_SKILLPOINT:
+			sd->status.skill_point = val;
+			break;
+		case SP_STATUSPOINT:
+			sd->status.status_point = val;
+			break;
+		case SP_ZENY:
+			if( val < 0 )
+				return 0;// can't set negative zeny
+			logs->zeny(sd, LOG_TYPE_SCRIPT, sd, -(sd->status.zeny - cap_value(val, 0, MAX_ZENY)));
+			sd->status.zeny = cap_value(val, 0, MAX_ZENY);
+			break;
+		case SP_BASEEXP:
+			if(pc->nextbaseexp(sd) > 0) {
+				sd->status.base_exp = val;
+				pc->checkbaselevelup(sd);
+			}
+			break;
+		case SP_JOBEXP:
+			if(pc->nextjobexp(sd) > 0) {
+				sd->status.job_exp = val;
+				pc->checkjoblevelup(sd);
+			}
+			break;
+		case SP_SEX:
+			sd->status.sex = val ? SEX_MALE : SEX_FEMALE;
+			break;
+		case SP_WEIGHT:
+			sd->weight = val;
+			break;
+		case SP_MAXWEIGHT:
+			sd->max_weight = val;
+			break;
+		case SP_HP:
+			sd->battle_status.hp = cap_value(val, 1, (int)sd->battle_status.max_hp);
+			break;
+		case SP_MAXHP:
+			sd->battle_status.max_hp = cap_value(val, 1, battle_config.max_hp);
 
-		if( sd->battle_status.max_hp < sd->battle_status.hp )
-		{
-			sd->battle_status.hp = sd->battle_status.max_hp;
-			clif->updatestatus(sd, SP_HP);
-		}
-		break;
-	case SP_SP:
-		sd->battle_status.sp = cap_value(val, 0, (int)sd->battle_status.max_sp);
-		break;
-	case SP_MAXSP:
-		sd->battle_status.max_sp = cap_value(val, 1, battle_config.max_sp);
+			if( sd->battle_status.max_hp < sd->battle_status.hp )
+			{
+				sd->battle_status.hp = sd->battle_status.max_hp;
+				clif->updatestatus(sd, SP_HP);
+			}
+			break;
+		case SP_SP:
+			sd->battle_status.sp = cap_value(val, 0, (int)sd->battle_status.max_sp);
+			break;
+		case SP_MAXSP:
+			sd->battle_status.max_sp = cap_value(val, 1, battle_config.max_sp);
 
-		if( sd->battle_status.max_sp < sd->battle_status.sp )
-		{
-			sd->battle_status.sp = sd->battle_status.max_sp;
-			clif->updatestatus(sd, SP_SP);
-		}
-		break;
-	case SP_STR:
-		sd->status.str = cap_value(val, 1, pc_maxparameter(sd));
-		break;
-	case SP_AGI:
-		sd->status.agi = cap_value(val, 1, pc_maxparameter(sd));
-		break;
-	case SP_VIT:
-		sd->status.vit = cap_value(val, 1, pc_maxparameter(sd));
-		break;
-	case SP_INT:
-		sd->status.int_ = cap_value(val, 1, pc_maxparameter(sd));
-		break;
-	case SP_DEX:
-		sd->status.dex = cap_value(val, 1, pc_maxparameter(sd));
-		break;
-	case SP_LUK:
-		sd->status.luk = cap_value(val, 1, pc_maxparameter(sd));
-		break;
-	case SP_KARMA:
-		sd->status.karma = val;
-		break;
-	case SP_MANNER:
-		sd->status.manner = val;
-		break;
-	case SP_FAME:
-		sd->status.fame = val;
-		break;
-	case SP_KILLERRID:
-		sd->killerrid = val;
-		return 1;
-	case SP_KILLEDRID:
-		sd->killedrid = val;
-		return 1;
-	case SP_SLOTCHANGE:
-		sd->status.slotchange = val;
-		return 1;
-	case SP_CHARRENAME:
-		sd->status.rename = val;
-		return 1;
-	default:
-		ShowError("pc_setparam: Attempted to set unknown parameter '%d'.\n", type);
-		return 0;
+			if( sd->battle_status.max_sp < sd->battle_status.sp )
+			{
+				sd->battle_status.sp = sd->battle_status.max_sp;
+				clif->updatestatus(sd, SP_SP);
+			}
+			break;
+		case SP_STR:
+			sd->status.str = cap_value(val, 1, pc_maxparameter(sd));
+			break;
+		case SP_AGI:
+			sd->status.agi = cap_value(val, 1, pc_maxparameter(sd));
+			break;
+		case SP_VIT:
+			sd->status.vit = cap_value(val, 1, pc_maxparameter(sd));
+			break;
+		case SP_INT:
+			sd->status.int_ = cap_value(val, 1, pc_maxparameter(sd));
+			break;
+		case SP_DEX:
+			sd->status.dex = cap_value(val, 1, pc_maxparameter(sd));
+			break;
+		case SP_LUK:
+			sd->status.luk = cap_value(val, 1, pc_maxparameter(sd));
+			break;
+		case SP_KARMA:
+			sd->status.karma = val;
+			break;
+		case SP_MANNER:
+			sd->status.manner = val;
+			break;
+		case SP_FAME:
+			sd->status.fame = val;
+			break;
+		case SP_KILLERRID:
+			sd->killerrid = val;
+			return 1;
+		case SP_KILLEDRID:
+			sd->killedrid = val;
+			return 1;
+		case SP_SLOTCHANGE:
+			sd->status.slotchange = val;
+			return 1;
+		case SP_CHARRENAME:
+			sd->status.rename = val;
+			return 1;
+		case SP_MOD_EXP:
+			sd->status.mod_exp = val;
+			return 1;
+		case SP_MOD_DROP:
+			sd->status.mod_drop = val;
+			return 1;
+		case SP_MOD_DEATH:
+			sd->status.mod_death = val;
+			return 1;
+		default:
+			ShowError("pc_setparam: Attempted to set unknown parameter '%d'.\n", type);
+			return 0;
 	}
 	clif->updatestatus(sd,type);
 
@@ -10140,6 +10163,7 @@ void pc_bank_withdraw(struct map_session_data *sd, int money) {
 /* status change data arrived from char-server */
 void pc_scdata_received(struct map_session_data *sd) {
 	pc->inventory_rentals(sd);
+	clif->show_modifiers(sd);
 }
 
 /*==========================================
