@@ -24,7 +24,7 @@
 
 // Juno
 //============================================================
-yuno,184,173,4	script	Freidrich#juno	729,{
+yuno,184,173,4	script	Freidrich#juno	4_F_NOVICE,{
 	if (rand(1,5) == 1) {
 		mes "[Freidrich]";
 		mes "^3355FFJuno^000000 is kept aloft in the air by an ancient and mysterious force.";
@@ -57,7 +57,7 @@ yuno,184,173,4	script	Freidrich#juno	729,{
 	}
 }
 	
-yuno,337,227,4	script	Juno Granny#juno	103,{
+yuno,337,227,4	script	Juno Granny#juno	8_F_GRANDMOTHER,{
 	mes "[Granny]";
 	if (rand(1,50) == 1) {
 		if (Zeny > 999) {
@@ -111,7 +111,7 @@ yuno,337,227,4	script	Juno Granny#juno	103,{
 	}
 }
 
-yuno,328,239,4	script	Juno Fighter#juno	732,{
+yuno,328,239,4	script	Juno Fighter#juno	4_M_JOB_HUNTER,{
 	mes "[Sergiof]";
 	mes "My name is Sergiof,";
 	mes "the fighter who";
@@ -125,7 +125,7 @@ yuno,328,239,4	script	Juno Fighter#juno	732,{
 	close;
 }
 
-yuno,343,68,4	script	Juno Despot#juno	730,{
+yuno,343,68,4	script	Juno Despot#juno	4_M_JOB_ASSASSIN,{
 	mes "[Ninno]";
 	if (rand(1,1000) == 1) {
 		mes "You are very lucky to have me tell you this story. This only happens by ^FF33551 out of a 1,000 chance^000000.";
@@ -149,7 +149,7 @@ yuno,343,68,4	script	Juno Despot#juno	730,{
 	close;
 }
 
-yuno,165,111,4	script	Juno Sage#juno	123,,{
+yuno,165,111,4	script	Juno Sage#juno	2_F_MAGICMASTER,,{
 	mes "[Le Morpheus]";
 	if (rand(1,50) == 25) {
 		if (Zeny > 4999) {
@@ -196,7 +196,7 @@ yuno,165,111,4	script	Juno Sage#juno	123,,{
 	}
 }
 	
-yuno,157,205,4	script	Juno Artisan#juno	54,{
+yuno,157,205,4	script	Juno Artisan#juno	1_M_JOBGUIDER,{
 	mes "[Artisan]";
 	mes "*Mumble mumble...*";
 	next;
@@ -337,7 +337,7 @@ yuno,157,205,4	script	Juno Artisan#juno	54,{
 	close;
 }
 
-yuno,142,183,5	script	Airship Representative	100,{
+yuno,142,183,5	script	Airship Representative	4W_SAILOR,{
 	mes "[Airship Representative]";
 	mes "Good day, I am here to inform you";
 	mes "about the Juno Airship which";

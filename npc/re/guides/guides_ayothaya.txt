@@ -13,7 +13,7 @@
 //= 1.2 Navigation system update. [Euphy]
 //============================================================
 
-ayothaya,203,169,4	script	Ayothaya Guide Noi#01ay	839,{
+ayothaya,203,169,4	script	Ayothaya Guide Noi#01ay	4_F_THAIGIRL,{
 	if (strnpcinfo(0) == "Ayothaya Guide Noi#01ay")
 		set .@n$, "[Noi]";
 	else
@@ -90,4 +90,4 @@ ayothaya,203,169,4	script	Ayothaya Guide Noi#01ay	839,{
 		}
 	}
 }
-ayothaya,146,86,4	duplicate(Ayothaya Guide Noi#01ay)	Ayothaya Guide Noa#02ay	839
+ayothaya,146,86,4	duplicate(Ayothaya Guide Noi#01ay)	Ayothaya Guide Noa#02ay	4_F_THAIGIRL

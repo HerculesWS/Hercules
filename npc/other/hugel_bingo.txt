@@ -20,7 +20,7 @@
 //= 1.9 Some optimization/standardization. [Euphy]
 //============================================================
 
-que_bingo,48,84,5	script	Bingo Waiting Room	124,{
+que_bingo,48,84,5	script	Bingo Waiting Room	4_F_TELEPORTER,{
 	end;
 
 OnInit:
@@ -43,7 +43,7 @@ OnStart:
 	end;
 }
 
-que_bingo,49,125,0	script	plate1#bingo	139,1,1,{
+que_bingo,49,125,0	script	plate1#bingo	HIDDEN_WARP_NPC,1,1,{
 
 OnInit:
 	disablenpc "plate1#bingo";
@@ -102,12 +102,12 @@ L_Fill:
 	goto L_Fill;
 }
 
-que_bingo,53,121,0	duplicate(plate1#bingo)	plate2#bingo	139,1,1
-que_bingo,51,116,0	duplicate(plate1#bingo)	plate3#bingo	139,1,1
-que_bingo,46,116,0	duplicate(plate1#bingo)	plate4#bingo	139,1,1
-que_bingo,45,121,0	duplicate(plate1#bingo)	plate5#bingo	139,1,1
+que_bingo,53,121,0	duplicate(plate1#bingo)	plate2#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(plate1#bingo)	plate3#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(plate1#bingo)	plate4#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(plate1#bingo)	plate5#bingo	HIDDEN_WARP_NPC,1,1
 
-que_bingo,51,51,0	script	start#bingo	139,{
+que_bingo,51,51,0	script	start#bingo	HIDDEN_WARP_NPC,{
 
 OnStart:
 	initnpctimer;
@@ -165,7 +165,7 @@ OnTimer204000:
 	end;
 }
 
-que_bingo,52,52,0	script	start2#bingo	139,{
+que_bingo,52,52,0	script	start2#bingo	HIDDEN_WARP_NPC,{
 
 OnStop:
 	stopnpctimer;
@@ -499,132 +499,132 @@ OnTouch:
 	close;
 }
 
-que_bingo,49,125,0	duplicate(1a#bingo)	2a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	3a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	4a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	5a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	6a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	7a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	8a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	9a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	10a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	11a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	12a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	13a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	14a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	15a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	16a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	17a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	18a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	19a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	20a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	21a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	22a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	23a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	24a#bingo	139,1,1
-que_bingo,49,125,0	duplicate(1a#bingo)	25a#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	1b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	2b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	3b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	4b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	5b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	6b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	7b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	8b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	9b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	10b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	11b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	12b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	13b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	14b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	15b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	16b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	17b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	18b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	19b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	20b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	21b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	22b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	23b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	24b#bingo	139,1,1
-que_bingo,53,121,0	duplicate(1a#bingo)	25b#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	1c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	2c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	3c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	4c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	5c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	6c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	7c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	8c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	9c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	10c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	11c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	12c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	13c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	14c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	15c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	16c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	17c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	18c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	19c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	20c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	21c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	22c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	23c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	24c#bingo	139,1,1
-que_bingo,51,116,0	duplicate(1a#bingo)	25c#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	1d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	2d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	3d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	4d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	5d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	6d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	7d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	8d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	9d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	10d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	11d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	12d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	13d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	14d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	15d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	16d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	17d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	18d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	19d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	20d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	21d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	22d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	23d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	24d#bingo	139,1,1
-que_bingo,46,116,0	duplicate(1a#bingo)	25d#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	1e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	2e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	3e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	4e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	5e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	6e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	7e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	8e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	9e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	10e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	11e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	12e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	13e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	14e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	15e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	16e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	17e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	18e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	19e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	20e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	21e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	22e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	23e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	24e#bingo	139,1,1
-que_bingo,45,121,0	duplicate(1a#bingo)	25e#bingo	139,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	2a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	3a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	4a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	5a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	6a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	7a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	8a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	9a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	10a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	11a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	12a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	13a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	14a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	15a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	16a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	17a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	18a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	19a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	20a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	21a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	22a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	23a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	24a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,49,125,0	duplicate(1a#bingo)	25a#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	1b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	2b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	3b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	4b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	5b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	6b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	7b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	8b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	9b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	10b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	11b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	12b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	13b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	14b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	15b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	16b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	17b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	18b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	19b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	20b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	21b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	22b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	23b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	24b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,53,121,0	duplicate(1a#bingo)	25b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	1c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	2c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	3c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	4c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	5c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	6c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	7c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	8c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	9c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	10c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	11c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	12c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	13c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	14c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	15c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	16c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	17c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	18c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	19c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	20c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	21c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	22c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	23c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	24c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(1a#bingo)	25c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	1d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	2d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	3d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	4d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	5d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	6d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	7d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	8d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	9d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	10d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	11d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	12d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	13d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	14d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	15d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	16d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	17d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	18d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	19d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	20d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	21d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	22d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	23d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	24d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(1a#bingo)	25d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	1e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	2e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	3e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	4e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	5e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	6e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	7e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	8e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	9e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	10e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	11e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	12e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	13e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	14e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	15e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	16e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	17e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	18e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	19e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	20e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	21e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	22e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	23e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	24e#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(1a#bingo)	25e#bingo	HIDDEN_WARP_NPC,1,1
 
-que_bingo,79,19,0	script	win1a#bingo	139,4,4,{
+que_bingo,79,19,0	script	win1a#bingo	HIDDEN_WARP_NPC,4,4,{
 	end;
 
 OnWin:
@@ -641,7 +641,7 @@ OnTimer1000:
 	end;
 }
 
-que_bingo,49,125,0	script	win2a#bingo	139,1,1,{
+que_bingo,49,125,0	script	win2a#bingo	HIDDEN_WARP_NPC,1,1,{
 	end;
 
 OnInit:
@@ -686,12 +686,12 @@ OnTimer20000:
 	end;
 }
 
-que_bingo,53,121,0	duplicate(win2a#bingo)	win2b#bingo	139,1,1
-que_bingo,51,116,0	duplicate(win2a#bingo)	win2c#bingo	139,1,1
-que_bingo,46,116,0	duplicate(win2a#bingo)	win2d#bingo	139,1,1
-que_bingo,45,121,0	duplicate(win2a#bingo)	win2e#bingo	139,1,1
+que_bingo,53,121,0	duplicate(win2a#bingo)	win2b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(win2a#bingo)	win2c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(win2a#bingo)	win2d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(win2a#bingo)	win2e#bingo	HIDDEN_WARP_NPC,1,1
 
-que_bingo,89,59,0	script	end#bingo	139,4,4,{
+que_bingo,89,59,0	script	end#bingo	HIDDEN_WARP_NPC,4,4,{
 	end;
 
 OnEnd:
@@ -718,7 +718,7 @@ OnTimer5000:
 	end;
 }
 
-que_bingo,49,125,0	script	end1a#bingo	139,1,1,{
+que_bingo,49,125,0	script	end1a#bingo	HIDDEN_WARP_NPC,1,1,{
 
 OnInit:
 	disablenpc "end1a#bingo";
@@ -734,12 +734,12 @@ OnTouch:
 	end;
 }
 
-que_bingo,53,121,0	duplicate(end1a#bingo)	end1b#bingo	139,1,1
-que_bingo,51,116,0	duplicate(end1a#bingo)	end1c#bingo	139,1,1
-que_bingo,46,116,0	duplicate(end1a#bingo)	end1d#bingo	139,1,1
-que_bingo,45,121,0	duplicate(end1a#bingo)	end1e#bingo	139,1,1
+que_bingo,53,121,0	duplicate(end1a#bingo)	end1b#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,51,116,0	duplicate(end1a#bingo)	end1c#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,46,116,0	duplicate(end1a#bingo)	end1d#bingo	HIDDEN_WARP_NPC,1,1
+que_bingo,45,121,0	duplicate(end1a#bingo)	end1e#bingo	HIDDEN_WARP_NPC,1,1
 
-que_bingo,50,138,1	script	out3#bingo	139,5,8,{
+que_bingo,50,138,1	script	out3#bingo	HIDDEN_WARP_NPC,5,8,{
 
 OnInit:
 	disablenpc "out3#bingo";
@@ -750,7 +750,7 @@ OnTouch:
 	end;
 }
 
-que_bingo,49,136,0	script	go3#bingo	45,1,1,{
+que_bingo,49,136,0	script	go3#bingo	WARPNPC,1,1,{
 
 OnTouch:
 	switch($@hu_bingob) {
@@ -872,16 +872,16 @@ function	script	Func_BingoResult	{
 	end;
 }
 
-que_bingo,49,31,4	script	Arcade Helper#1	47,{
+que_bingo,49,31,4	script	Arcade Helper#1	1_M_01,{
 	mes "[Helper]";
 	mes "If you'd like to play";
 	mes "a game of bingo, then";
 	mes "please proceed this way.";
 	close;
 }
-que_bingo,42,31,4	duplicate(Arcade Helper#1)	Arcade Helper#2	66
+que_bingo,42,31,4	duplicate(Arcade Helper#1)	Arcade Helper#2	1_F_01
 
-que_bingo,54,17,5	script	Arcade Owner	712,{
+que_bingo,54,17,5	script	Arcade Owner	4_M_05,{
 	mes "[Arcade Owner]";
 	mes "Welcome to the";
 	mes "Bingo Game Arcade.";

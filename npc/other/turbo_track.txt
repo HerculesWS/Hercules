@@ -59,15 +59,15 @@ OnInit:
 	enablewaitingroomevent strnpcinfo(0);
 	end;
 }
-turbo_room,110,135,3	duplicate(entrance#tt_main)	Expert mode - 4 person	124
-turbo_room,117,135,3	duplicate(entrance#tt_main)	Expert mode - 8 person	124
-turbo_room,124,135,3	duplicate(entrance#tt_main)	Expert mode - 16 person	124
-turbo_room,77,135,3	duplicate(entrance#tt_main)	Normal mode - 4 person	124
-turbo_room,84,135,3	duplicate(entrance#tt_main)	Normal mode - 8 person	124
-turbo_room,91,135,3	duplicate(entrance#tt_main)	Normal mode - 16 person	124
-turbo_room,72,132,3	duplicate(entrance#tt_main)	Solo Mode#n1	124
+turbo_room,110,135,3	duplicate(entrance#tt_main)	Expert mode - 4 person	4_F_TELEPORTER
+turbo_room,117,135,3	duplicate(entrance#tt_main)	Expert mode - 8 person	4_F_TELEPORTER
+turbo_room,124,135,3	duplicate(entrance#tt_main)	Expert mode - 16 person	4_F_TELEPORTER
+turbo_room,77,135,3	duplicate(entrance#tt_main)	Normal mode - 4 person	4_F_TELEPORTER
+turbo_room,84,135,3	duplicate(entrance#tt_main)	Normal mode - 8 person	4_F_TELEPORTER
+turbo_room,91,135,3	duplicate(entrance#tt_main)	Normal mode - 16 person	4_F_TELEPORTER
+turbo_room,72,132,3	duplicate(entrance#tt_main)	Solo Mode#n1	4_F_TELEPORTER
 	
-turbo_e_4,298,167,3	script	Helper#tt_main	124,{
+turbo_e_4,298,167,3	script	Helper#tt_main	4_F_TELEPORTER,{
 	mes "[Helper]";
 	mes "You are now in the";
 	mes "Waiting Room. You will";
@@ -77,13 +77,13 @@ turbo_e_4,298,167,3	script	Helper#tt_main	124,{
 	mes "and equipment. Thank you.";
 	close;
 }
-turbo_e_4,298,167,3	duplicate(Helper#tt_main)	Helper#e4_F	124
-turbo_e_8,298,167,3	duplicate(Helper#tt_main)	Helper#e8_F	124
-turbo_e_16,298,167,3	duplicate(Helper#tt_main)	Helper#e16_F	124
-turbo_n_4,298,167,3	duplicate(Helper#tt_main)	Helper#n4_F	124
-turbo_n_8,298,167,3	duplicate(Helper#tt_main)	Helper#n8_F	124
-turbo_n_16,298,167,3	duplicate(Helper#tt_main)	Helper#n16_F	124
-turbo_n_1,298,167,3	duplicate(Helper#tt_main)	Helper#n1_F	124
+turbo_e_4,298,167,3	duplicate(Helper#tt_main)	Helper#e4_F	4_F_TELEPORTER
+turbo_e_8,298,167,3	duplicate(Helper#tt_main)	Helper#e8_F	4_F_TELEPORTER
+turbo_e_16,298,167,3	duplicate(Helper#tt_main)	Helper#e16_F	4_F_TELEPORTER
+turbo_n_4,298,167,3	duplicate(Helper#tt_main)	Helper#n4_F	4_F_TELEPORTER
+turbo_n_8,298,167,3	duplicate(Helper#tt_main)	Helper#n8_F	4_F_TELEPORTER
+turbo_n_16,298,167,3	duplicate(Helper#tt_main)	Helper#n16_F	4_F_TELEPORTER
+turbo_n_1,298,167,3	duplicate(Helper#tt_main)	Helper#n1_F	4_F_TELEPORTER
 
 turbo_e_4,298,167,0	script	Point#tt_main	-1,15,15,{
 	end;
@@ -1616,13 +1616,13 @@ OnTouch:
 	if (.@turbo2 < 8) warp strnpcinfo(4),279,292;
 	end;
 }
-turbo_e_4,324,279,0	duplicate(snake01#tt_main)	snake01#e4	45,1,1
-turbo_e_8,324,279,0	duplicate(snake01#tt_main)	snake01#e8	45,1,1
-turbo_e_16,324,279,0	duplicate(snake01#tt_main)	snake01#e16	45,1,1
-turbo_n_4,324,279,0	duplicate(snake01#tt_main)	snake01#n4	45,1,1
-turbo_n_8,324,279,0	duplicate(snake01#tt_main)	snake01#n8	45,1,1
-turbo_n_16,324,279,0	duplicate(snake01#tt_main)	snake01#n16	45,1,1
-turbo_n_1,324,279,0	duplicate(snake01#tt_main)	snake01#n1	45,1,1
+turbo_e_4,324,279,0	duplicate(snake01#tt_main)	snake01#e4	WARPNPC,1,1
+turbo_e_8,324,279,0	duplicate(snake01#tt_main)	snake01#e8	WARPNPC,1,1
+turbo_e_16,324,279,0	duplicate(snake01#tt_main)	snake01#e16	WARPNPC,1,1
+turbo_n_4,324,279,0	duplicate(snake01#tt_main)	snake01#n4	WARPNPC,1,1
+turbo_n_8,324,279,0	duplicate(snake01#tt_main)	snake01#n8	WARPNPC,1,1
+turbo_n_16,324,279,0	duplicate(snake01#tt_main)	snake01#n16	WARPNPC,1,1
+turbo_n_1,324,279,0	duplicate(snake01#tt_main)	snake01#n1	WARPNPC,1,1
 
 -	script	snake02#tt_main	-1,{
 OnTouch:
@@ -1633,16 +1633,16 @@ OnTouch:
 	if (.@turbo2 < 9) warp strnpcinfo(4),363,256;
 	end;
 }
-turbo_e_4,332,279,0	duplicate(snake02#tt_main)	snake02#e4	45,1,1
-turbo_e_8,332,279,0	duplicate(snake02#tt_main)	snake02#e8	45,1,1
-turbo_e_16,332,279,0	duplicate(snake02#tt_main)	snake02#e16	45,1,1
-turbo_n_4,332,279,0	duplicate(snake02#tt_main)	snake02#n4	45,1,1
-turbo_n_8,332,279,0	duplicate(snake02#tt_main)	snake02#n8	45,1,1
-turbo_n_16,332,279,0	duplicate(snake02#tt_main)	snake02#n16	45,1,1
-turbo_n_1,332,279,0	duplicate(snake02#tt_main)	snake02#n1	45,1,1
+turbo_e_4,332,279,0	duplicate(snake02#tt_main)	snake02#e4	WARPNPC,1,1
+turbo_e_8,332,279,0	duplicate(snake02#tt_main)	snake02#e8	WARPNPC,1,1
+turbo_e_16,332,279,0	duplicate(snake02#tt_main)	snake02#e16	WARPNPC,1,1
+turbo_n_4,332,279,0	duplicate(snake02#tt_main)	snake02#n4	WARPNPC,1,1
+turbo_n_8,332,279,0	duplicate(snake02#tt_main)	snake02#n8	WARPNPC,1,1
+turbo_n_16,332,279,0	duplicate(snake02#tt_main)	snake02#n16	WARPNPC,1,1
+turbo_n_1,332,279,0	duplicate(snake02#tt_main)	snake02#n1	WARPNPC,1,1
 
 
--	script	snake03#tt_main	45,1,1,{
+-	script	snake03#tt_main	WARPNPC,1,1,{
 OnTouch:
 	set .@turbo2,rand(1,8);
 	if (.@turbo2 < 3) warp strnpcinfo(4),279,292;
@@ -1651,16 +1651,16 @@ OnTouch:
 	if (.@turbo2 < 9) warp strnpcinfo(4),370,292;
 	end;
 }
-turbo_e_4,324,270,0	duplicate(snake03#tt_main)	snake03#e4	45,1,1
-turbo_e_8,324,270,0	duplicate(snake03#tt_main)	snake03#e8	45,1,1
-turbo_e_16,324,270,0	duplicate(snake03#tt_main)	snake03#e16	45,1,1
-turbo_n_4,324,270,0	duplicate(snake03#tt_main)	snake03#n4	45,1,1
-turbo_n_8,324,270,0	duplicate(snake03#tt_main)	snake03#n8	45,1,1
-turbo_n_16,324,270,0	duplicate(snake03#tt_main)	snake03#n16	45,1,1
-turbo_n_1,324,270,0	duplicate(snake03#tt_main)	snake03#n1	45,1,1
+turbo_e_4,324,270,0	duplicate(snake03#tt_main)	snake03#e4	WARPNPC,1,1
+turbo_e_8,324,270,0	duplicate(snake03#tt_main)	snake03#e8	WARPNPC,1,1
+turbo_e_16,324,270,0	duplicate(snake03#tt_main)	snake03#e16	WARPNPC,1,1
+turbo_n_4,324,270,0	duplicate(snake03#tt_main)	snake03#n4	WARPNPC,1,1
+turbo_n_8,324,270,0	duplicate(snake03#tt_main)	snake03#n8	WARPNPC,1,1
+turbo_n_16,324,270,0	duplicate(snake03#tt_main)	snake03#n16	WARPNPC,1,1
+turbo_n_1,324,270,0	duplicate(snake03#tt_main)	snake03#n1	WARPNPC,1,1
 
 
--	script	snake04#tt_main	45,1,1,{
+-	script	snake04#tt_main	WARPNPC,1,1,{
 OnTouch:
 	set .@turbo2,rand(1,7);
 	if (.@turbo2 < 3) warp strnpcinfo(4),363,256;
@@ -1669,13 +1669,13 @@ OnTouch:
 	if (.@turbo2 < 8) warp strnpcinfo(4),287,256;
 	end;
 }
-turbo_e_4,332,270,0	duplicate(snake04#tt_main)	snake04#e4	45,1,1
-turbo_e_8,332,270,0	duplicate(snake04#tt_main)	snake04#e8	45,1,1
-turbo_e_16,332,270,0	duplicate(snake04#tt_main)	snake04#e16	45,1,1
-turbo_n_4,332,270,0	duplicate(snake04#tt_main)	snake04#n4	45,1,1
-turbo_n_8,332,270,0	duplicate(snake04#tt_main)	snake04#n8	45,1,1
-turbo_n_16,332,270,0	duplicate(snake04#tt_main)	snake04#n16	45,1,1
-turbo_n_1,332,270,0	duplicate(snake04#tt_main)	snake04#n1	45,1,1
+turbo_e_4,332,270,0	duplicate(snake04#tt_main)	snake04#e4	WARPNPC,1,1
+turbo_e_8,332,270,0	duplicate(snake04#tt_main)	snake04#e8	WARPNPC,1,1
+turbo_e_16,332,270,0	duplicate(snake04#tt_main)	snake04#e16	WARPNPC,1,1
+turbo_n_4,332,270,0	duplicate(snake04#tt_main)	snake04#n4	WARPNPC,1,1
+turbo_n_8,332,270,0	duplicate(snake04#tt_main)	snake04#n8	WARPNPC,1,1
+turbo_n_16,332,270,0	duplicate(snake04#tt_main)	snake04#n16	WARPNPC,1,1
+turbo_n_1,332,270,0	duplicate(snake04#tt_main)	snake04#n1	WARPNPC,1,1
 
 -	script	SnakeHunt#tt_main	-1,{
 	end;
@@ -1705,16 +1705,16 @@ OnEnable:
 
 	end;
 }
-turbo_e_4,389,288,0	duplicate(SnakeHunt#tt_main)	snake#e4	111
-turbo_e_8,389,288,0	duplicate(SnakeHunt#tt_main)	snake#e8	111
-turbo_e_16,389,288,0	duplicate(SnakeHunt#tt_main)	snake#e16	111
-turbo_n_4,389,288,0	duplicate(SnakeHunt#tt_main)	snake#n4	111
-turbo_n_1,389,288,0	duplicate(SnakeHunt#tt_main)	snake#n1	111
-turbo_e_4,90,46,0	duplicate(SnakeHunt#tt_main)	hunting#e4	111
-turbo_e_8,90,46,0	duplicate(SnakeHunt#tt_main)	hunting#e8	111
-turbo_e_16,90,46,0	duplicate(SnakeHunt#tt_main)	hunting#e16	111
-turbo_n_4,90,46,0	duplicate(SnakeHunt#tt_main)	hunting#n4	111
-turbo_n_1,90,46,0	duplicate(SnakeHunt#tt_main)	hunting#n1	111
+turbo_e_4,389,288,0	duplicate(SnakeHunt#tt_main)	snake#e4	HIDDEN_NPC
+turbo_e_8,389,288,0	duplicate(SnakeHunt#tt_main)	snake#e8	HIDDEN_NPC
+turbo_e_16,389,288,0	duplicate(SnakeHunt#tt_main)	snake#e16	HIDDEN_NPC
+turbo_n_4,389,288,0	duplicate(SnakeHunt#tt_main)	snake#n4	HIDDEN_NPC
+turbo_n_1,389,288,0	duplicate(SnakeHunt#tt_main)	snake#n1	HIDDEN_NPC
+turbo_e_4,90,46,0	duplicate(SnakeHunt#tt_main)	hunting#e4	HIDDEN_NPC
+turbo_e_8,90,46,0	duplicate(SnakeHunt#tt_main)	hunting#e8	HIDDEN_NPC
+turbo_e_16,90,46,0	duplicate(SnakeHunt#tt_main)	hunting#e16	HIDDEN_NPC
+turbo_n_4,90,46,0	duplicate(SnakeHunt#tt_main)	hunting#n4	HIDDEN_NPC
+turbo_n_1,90,46,0	duplicate(SnakeHunt#tt_main)	hunting#n1	HIDDEN_NPC
 
 -	script	cos#tt_main	-1,{
 OnTouch:
@@ -1756,51 +1756,51 @@ OnTouch:
 			}
 	}
 }
-turbo_e_4,168,363,0	duplicate(cos#tt_main)	#cos_e4_1	45,1,1
-turbo_e_4,258,364,0	duplicate(cos#tt_main)	#cos_e4_2	45,1,1
-turbo_e_4,385,365,0	duplicate(cos#tt_main)	#cos_e4_3	45,1,1
-turbo_e_4,250,200,0	duplicate(cos#tt_main)	#cos_e4_5	45,1,1
-turbo_e_4,389,275,0	duplicate(cos#tt_main)	#cos_e4_6	45,1,1
-turbo_e_4,93,19,0	duplicate(cos#tt_main)	#cos_e4_7	45,1,1
-turbo_e_8,168,363,0	duplicate(cos#tt_main)	#cos_e8_1	45,1,1
-turbo_e_8,258,364,0	duplicate(cos#tt_main)	#cos_e8_2	45,1,1
-turbo_e_8,385,365,0	duplicate(cos#tt_main)	#cos_e8_3	45,1,1
-turbo_e_8,250,200,0	duplicate(cos#tt_main)	#cos_e8_5	45,1,1
-turbo_e_8,389,275,0	duplicate(cos#tt_main)	#cos_e8_6	45,1,1
-turbo_e_8,93,19,0	duplicate(cos#tt_main)	#cos_e8_7	45,1,1
-turbo_e_16,168,363,0	duplicate(cos#tt_main)	#cos_e16_1	45,1,1
-turbo_e_16,258,364,0	duplicate(cos#tt_main)	#cos_e16_2	45,1,1
-turbo_e_16,385,365,0	duplicate(cos#tt_main)	#cos_e16_3	45,1,1
-turbo_e_16,250,200,0	duplicate(cos#tt_main)	#cos_e16_5	45,1,1
-turbo_e_16,389,275,0	duplicate(cos#tt_main)	#cos_e16_6	45,1,1
-turbo_e_16,93,19,0	duplicate(cos#tt_main)	#cos_e16_7	45,1,1
-turbo_e_16,232,14,0	duplicate(cos#tt_main)	#cos_e16_8	45,1,1
-turbo_n_4,168,363,0	duplicate(cos#tt_main)	#cos_n4_1	45,1,1
-turbo_n_4,258,364,0	duplicate(cos#tt_main)	#cos_n4_2	45,1,1
-turbo_n_4,385,365,0	duplicate(cos#tt_main)	#cos_n4_3	45,1,1
-turbo_n_4,250,200,0	duplicate(cos#tt_main)	#cos_n4_5	45,1,1
-turbo_n_4,389,275,0	duplicate(cos#tt_main)	#cos_n4_6	45,1,1
-turbo_n_4,93,19,0	duplicate(cos#tt_main)	#cos_n4_7	45,1,1
-turbo_n_8,168,363,0	duplicate(cos#tt_main)	#cos_n8_1	45,1,1
-turbo_n_8,258,364,0	duplicate(cos#tt_main)	#cos_n8_2	45,1,1
-turbo_n_8,385,365,0	duplicate(cos#tt_main)	#cos_n8_3	45,1,1
-turbo_n_8,250,200,0	duplicate(cos#tt_main)	#cos_n8_5	45,1,1
-turbo_n_8,389,275,0	duplicate(cos#tt_main)	#cos_n8_6	45,1,1
-turbo_n_8,93,19,0	duplicate(cos#tt_main)	#cos_n8_7	45,1,1
-turbo_n_16,168,363,0	duplicate(cos#tt_main)	#cos_n16_1	45,1,1
-turbo_n_16,258,364,0	duplicate(cos#tt_main)	#cos_n16_2	45,1,1
-turbo_n_16,385,365,0	duplicate(cos#tt_main)	#cos_n16_3	45,1,1
-turbo_n_16,250,200,0	duplicate(cos#tt_main)	#cos_n16_5	45,1,1
-turbo_n_16,389,275,0	duplicate(cos#tt_main)	#cos_n16_6	45,1,1
-turbo_n_16,93,19,0	duplicate(cos#tt_main)	#cos_n16_7	45,1,1
-turbo_n_16,232,14,0	duplicate(cos#tt_main)	#cos_n16_8	45,1,1
-turbo_n_1,168,363,0	duplicate(cos#tt_main)	#cos_n1_1	45,1,1
-turbo_n_1,258,364,0	duplicate(cos#tt_main)	#cos_n1_2	45,1,1
-turbo_n_1,385,365,0	duplicate(cos#tt_main)	#cos_n1_3	45,1,1
-turbo_n_1,250,200,0	duplicate(cos#tt_main)	#cos_n1_5	45,1,1
-turbo_n_1,389,275,0	duplicate(cos#tt_main)	#cos_n1_6	45,1,1
-turbo_n_1,93,19,0	duplicate(cos#tt_main)	#cos_n1_7	45,1,1
-turbo_n_1,232,14,0	duplicate(cos#tt_main)	#cos_n1_8	45,1,1
+turbo_e_4,168,363,0	duplicate(cos#tt_main)	#cos_e4_1	WARPNPC,1,1
+turbo_e_4,258,364,0	duplicate(cos#tt_main)	#cos_e4_2	WARPNPC,1,1
+turbo_e_4,385,365,0	duplicate(cos#tt_main)	#cos_e4_3	WARPNPC,1,1
+turbo_e_4,250,200,0	duplicate(cos#tt_main)	#cos_e4_5	WARPNPC,1,1
+turbo_e_4,389,275,0	duplicate(cos#tt_main)	#cos_e4_6	WARPNPC,1,1
+turbo_e_4,93,19,0	duplicate(cos#tt_main)	#cos_e4_7	WARPNPC,1,1
+turbo_e_8,168,363,0	duplicate(cos#tt_main)	#cos_e8_1	WARPNPC,1,1
+turbo_e_8,258,364,0	duplicate(cos#tt_main)	#cos_e8_2	WARPNPC,1,1
+turbo_e_8,385,365,0	duplicate(cos#tt_main)	#cos_e8_3	WARPNPC,1,1
+turbo_e_8,250,200,0	duplicate(cos#tt_main)	#cos_e8_5	WARPNPC,1,1
+turbo_e_8,389,275,0	duplicate(cos#tt_main)	#cos_e8_6	WARPNPC,1,1
+turbo_e_8,93,19,0	duplicate(cos#tt_main)	#cos_e8_7	WARPNPC,1,1
+turbo_e_16,168,363,0	duplicate(cos#tt_main)	#cos_e16_1	WARPNPC,1,1
+turbo_e_16,258,364,0	duplicate(cos#tt_main)	#cos_e16_2	WARPNPC,1,1
+turbo_e_16,385,365,0	duplicate(cos#tt_main)	#cos_e16_3	WARPNPC,1,1
+turbo_e_16,250,200,0	duplicate(cos#tt_main)	#cos_e16_5	WARPNPC,1,1
+turbo_e_16,389,275,0	duplicate(cos#tt_main)	#cos_e16_6	WARPNPC,1,1
+turbo_e_16,93,19,0	duplicate(cos#tt_main)	#cos_e16_7	WARPNPC,1,1
+turbo_e_16,232,14,0	duplicate(cos#tt_main)	#cos_e16_8	WARPNPC,1,1
+turbo_n_4,168,363,0	duplicate(cos#tt_main)	#cos_n4_1	WARPNPC,1,1
+turbo_n_4,258,364,0	duplicate(cos#tt_main)	#cos_n4_2	WARPNPC,1,1
+turbo_n_4,385,365,0	duplicate(cos#tt_main)	#cos_n4_3	WARPNPC,1,1
+turbo_n_4,250,200,0	duplicate(cos#tt_main)	#cos_n4_5	WARPNPC,1,1
+turbo_n_4,389,275,0	duplicate(cos#tt_main)	#cos_n4_6	WARPNPC,1,1
+turbo_n_4,93,19,0	duplicate(cos#tt_main)	#cos_n4_7	WARPNPC,1,1
+turbo_n_8,168,363,0	duplicate(cos#tt_main)	#cos_n8_1	WARPNPC,1,1
+turbo_n_8,258,364,0	duplicate(cos#tt_main)	#cos_n8_2	WARPNPC,1,1
+turbo_n_8,385,365,0	duplicate(cos#tt_main)	#cos_n8_3	WARPNPC,1,1
+turbo_n_8,250,200,0	duplicate(cos#tt_main)	#cos_n8_5	WARPNPC,1,1
+turbo_n_8,389,275,0	duplicate(cos#tt_main)	#cos_n8_6	WARPNPC,1,1
+turbo_n_8,93,19,0	duplicate(cos#tt_main)	#cos_n8_7	WARPNPC,1,1
+turbo_n_16,168,363,0	duplicate(cos#tt_main)	#cos_n16_1	WARPNPC,1,1
+turbo_n_16,258,364,0	duplicate(cos#tt_main)	#cos_n16_2	WARPNPC,1,1
+turbo_n_16,385,365,0	duplicate(cos#tt_main)	#cos_n16_3	WARPNPC,1,1
+turbo_n_16,250,200,0	duplicate(cos#tt_main)	#cos_n16_5	WARPNPC,1,1
+turbo_n_16,389,275,0	duplicate(cos#tt_main)	#cos_n16_6	WARPNPC,1,1
+turbo_n_16,93,19,0	duplicate(cos#tt_main)	#cos_n16_7	WARPNPC,1,1
+turbo_n_16,232,14,0	duplicate(cos#tt_main)	#cos_n16_8	WARPNPC,1,1
+turbo_n_1,168,363,0	duplicate(cos#tt_main)	#cos_n1_1	WARPNPC,1,1
+turbo_n_1,258,364,0	duplicate(cos#tt_main)	#cos_n1_2	WARPNPC,1,1
+turbo_n_1,385,365,0	duplicate(cos#tt_main)	#cos_n1_3	WARPNPC,1,1
+turbo_n_1,250,200,0	duplicate(cos#tt_main)	#cos_n1_5	WARPNPC,1,1
+turbo_n_1,389,275,0	duplicate(cos#tt_main)	#cos_n1_6	WARPNPC,1,1
+turbo_n_1,93,19,0	duplicate(cos#tt_main)	#cos_n1_7	WARPNPC,1,1
+turbo_n_1,232,14,0	duplicate(cos#tt_main)	#cos_n1_8	WARPNPC,1,1
 
 turbo_e_16,179,55,0	script	TurboHint_1#tt_main	-1,1,1,{
 OnTouch:
@@ -1961,15 +1961,15 @@ OnInit:
 	enablenpc "#cos_"+.@w$+"_end";
 	end;
 }
-turbo_e_4,371,47,0	duplicate(cos_end#tt_main)	#cos_e4_end	45,1,1
-turbo_e_8,371,47,0	duplicate(cos_end#tt_main)	#cos_e8_end	45,1,1
-turbo_e_16,371,47,0	duplicate(cos_end#tt_main)	#cos_e16_end	45,1,1
-turbo_n_4,371,47,0	duplicate(cos_end#tt_main)	#cos_n4_end	45,1,1
-turbo_n_8,371,47,0	duplicate(cos_end#tt_main)	#cos_n8_end	45,1,1
-turbo_n_16,371,47,0	duplicate(cos_end#tt_main)	#cos_n16_end	45,1,1
-turbo_n_1,371,47,0	duplicate(cos_end#tt_main)	#cos_n1_end	45,1,1
+turbo_e_4,371,47,0	duplicate(cos_end#tt_main)	#cos_e4_end	WARPNPC,1,1
+turbo_e_8,371,47,0	duplicate(cos_end#tt_main)	#cos_e8_end	WARPNPC,1,1
+turbo_e_16,371,47,0	duplicate(cos_end#tt_main)	#cos_e16_end	WARPNPC,1,1
+turbo_n_4,371,47,0	duplicate(cos_end#tt_main)	#cos_n4_end	WARPNPC,1,1
+turbo_n_8,371,47,0	duplicate(cos_end#tt_main)	#cos_n8_end	WARPNPC,1,1
+turbo_n_16,371,47,0	duplicate(cos_end#tt_main)	#cos_n16_end	WARPNPC,1,1
+turbo_n_1,371,47,0	duplicate(cos_end#tt_main)	#cos_n1_end	WARPNPC,1,1
 
--	script	cos_end2#tt_main	45,1,1,{
+-	script	cos_end2#tt_main	WARPNPC,1,1,{
 OnTouch:
 	set .@w$,callfunc("F_tt");
 	mapannounce strnpcinfo(4),strcharinfo(0) +" is second to reach the Finish Line! Congratulations!",bc_map,"0xFFFF00";
@@ -1986,10 +1986,10 @@ OnInit:
 	disablenpc "#cos_"+.@w$+"_end2";
 	end;
 }
-turbo_e_8,371,51,0	duplicate(cos_end2#tt_main)	#cos_e8_end2	45,1,1
-turbo_e_16,371,51,0	duplicate(cos_end2#tt_main)	#cos_e16_end2	45,1,1
-turbo_n_8,371,51,0	duplicate(cos_end2#tt_main)	#cos_n8_end2	45,1,1
-turbo_n_16,371,51,0	duplicate(cos_end2#tt_main)	#cos_n16_end2	45,1,1
+turbo_e_8,371,51,0	duplicate(cos_end2#tt_main)	#cos_e8_end2	WARPNPC,1,1
+turbo_e_16,371,51,0	duplicate(cos_end2#tt_main)	#cos_e16_end2	WARPNPC,1,1
+turbo_n_8,371,51,0	duplicate(cos_end2#tt_main)	#cos_n8_end2	WARPNPC,1,1
+turbo_n_16,371,51,0	duplicate(cos_end2#tt_main)	#cos_n16_end2	WARPNPC,1,1
 
 -	script	cos_end3#tt_main	-1,{
 OnTouch:
@@ -2010,10 +2010,10 @@ OnInit:
 	disablenpc "#cos_"+.@w$+"_end3";
 	end;
 }
-turbo_e_8,371,43,0	duplicate(cos_end3#tt_main)	#cos_e8_end3	45,1,1
-turbo_e_16,371,43,0	duplicate(cos_end3#tt_main)	#cos_e16_end3	45,1,1
-turbo_n_8,371,43,0	duplicate(cos_end3#tt_main)	#cos_n8_end3	45,1,1
-turbo_n_16,371,43,0	duplicate(cos_end3#tt_main)	#cos_n16_end3	45,1,1
+turbo_e_8,371,43,0	duplicate(cos_end3#tt_main)	#cos_e8_end3	WARPNPC,1,1
+turbo_e_16,371,43,0	duplicate(cos_end3#tt_main)	#cos_e16_end3	WARPNPC,1,1
+turbo_n_8,371,43,0	duplicate(cos_end3#tt_main)	#cos_n8_end3	WARPNPC,1,1
+turbo_n_16,371,43,0	duplicate(cos_end3#tt_main)	#cos_n16_end3	WARPNPC,1,1
 
 turbo_e_4,316,365,0	script	DSwitch#tt_main	-1,1,1,{
 OnTouch:
@@ -2044,20 +2044,20 @@ OnInit:
 	disablenpc strnpcinfo(0);
 	end;
 }
-turbo_e_4,11,266,0	duplicate(Flasher#tt_main)	Flasher_Exit_1#e4	45,1,1
-turbo_e_4,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#e4	45,1,1
-turbo_e_8,11,266,0	duplicate(Flasher#tt_main)	Flasher_Exit_1#e8	45,1,1
-turbo_e_8,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#e8	45,1,1
-turbo_e_16,11,266,0	duplicate(Flasher#tt_main)	Flasher_Exit_1#e16	45,1,1
-turbo_e_16,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#e16	45,1,1
-turbo_n_4,11,266,0	duplicate(Flasher#tt_main)	Flasher_Exit_1#n4	45,1,1
-turbo_n_4,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n4	45,1,1
-turbo_n_8,11,266,0	duplicate(Flasher#tt_main)	Flasher_Exit_1#n8	45,1,1
-turbo_n_8,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n8	45,1,1
-turbo_n_16,11,266,0	duplicate(Flasher#tt_main)	Flasher_Exit_1#n16	45,1,1
-turbo_n_16,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n16	45,1,1
-turbo_n_1,11,266,0	duplicate(Flasher#tt_main)	Flasher_Exit_1#n1	45,1,1
-turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	45,1,1
+turbo_e_4,11,266,0	duplicate(Flasher#tt_main)	Flasher_Exit_1#e4	WARPNPC,1,1
+turbo_e_4,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#e4	WARPNPC,1,1
+turbo_e_8,11,266,0	duplicate(Flasher#tt_main)	Flasher_Exit_1#e8	WARPNPC,1,1
+turbo_e_8,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#e8	WARPNPC,1,1
+turbo_e_16,11,266,0	duplicate(Flasher#tt_main)	Flasher_Exit_1#e16	WARPNPC,1,1
+turbo_e_16,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#e16	WARPNPC,1,1
+turbo_n_4,11,266,0	duplicate(Flasher#tt_main)	Flasher_Exit_1#n4	WARPNPC,1,1
+turbo_n_4,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n4	WARPNPC,1,1
+turbo_n_8,11,266,0	duplicate(Flasher#tt_main)	Flasher_Exit_1#n8	WARPNPC,1,1
+turbo_n_8,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n8	WARPNPC,1,1
+turbo_n_16,11,266,0	duplicate(Flasher#tt_main)	Flasher_Exit_1#n16	WARPNPC,1,1
+turbo_n_16,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n16	WARPNPC,1,1
+turbo_n_1,11,266,0	duplicate(Flasher#tt_main)	Flasher_Exit_1#n1	WARPNPC,1,1
+turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 
 -	script	WHelper#tt_main	-1,{
 	function	RName;
@@ -2537,14 +2537,14 @@ OnInit:
 	disablenpc "Winner Helper#TBT_"+.@w$;
 	end;
 }
-turbo_e_4,384,167,1	duplicate(WHelper#tt_main)	Winner Helper#TBT_e4	47
-turbo_e_8,384,167,1	duplicate(WHelper#tt_main)	Winner Helper#TBT_e8	47
-turbo_e_16,384,167,1	duplicate(WHelper#tt_main)	Winner Helper#TBT_e16	47
-turbo_n_4,384,167,1	duplicate(WHelper#tt_main)	Winner Helper#TBT_n4	47
-turbo_n_8,384,167,1	duplicate(WHelper#tt_main)	Winner Helper#TBT_n8	47
-turbo_n_16,384,167,1	duplicate(WHelper#tt_main)	Winner Helper#TBT_n16	47
+turbo_e_4,384,167,1	duplicate(WHelper#tt_main)	Winner Helper#TBT_e4	1_M_01
+turbo_e_8,384,167,1	duplicate(WHelper#tt_main)	Winner Helper#TBT_e8	1_M_01
+turbo_e_16,384,167,1	duplicate(WHelper#tt_main)	Winner Helper#TBT_e16	1_M_01
+turbo_n_4,384,167,1	duplicate(WHelper#tt_main)	Winner Helper#TBT_n4	1_M_01
+turbo_n_8,384,167,1	duplicate(WHelper#tt_main)	Winner Helper#TBT_n8	1_M_01
+turbo_n_16,384,167,1	duplicate(WHelper#tt_main)	Winner Helper#TBT_n16	1_M_01
 
-turbo_n_1,384,167,1	script	Guide#TBT_n1	47,{
+turbo_n_1,384,167,1	script	Guide#TBT_n1	1_M_01,{
 	set .@hour_start,$@start_time / 10000;
 	set .@min_start,(($@start_time % 10000) / 100);
 	set .@sec_start,$@start_time % 100;
@@ -2896,629 +2896,629 @@ OnTouch:
 		percentheal -2,0;
 	end;
 }
-turbo_e_4,307,55,0	duplicate(TurboTrap#tt_main)	trap_e4#F1	139,1,1
-turbo_e_4,307,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F2	139,1,1
-turbo_e_4,307,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F3	139,1,1
-turbo_e_4,307,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F4	139,1,1
-turbo_e_4,307,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F5	139,1,1
-turbo_e_4,307,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F96	139,1,1
-turbo_e_4,312,56,0	duplicate(TurboTrap#tt_main)	trap_e4#F6	139,1,1
-turbo_e_4,312,52,0	duplicate(TurboTrap#tt_main)	trap_e4#F7	139,1,1
-turbo_e_4,312,48,0	duplicate(TurboTrap#tt_main)	trap_e4#F8	139,1,1
-turbo_e_4,312,44,0	duplicate(TurboTrap#tt_main)	trap_e4#F9	139,1,1
-turbo_e_4,312,40,0	duplicate(TurboTrap#tt_main)	trap_e4#F10	139,1,1
-turbo_e_4,312,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F11	139,1,1
-turbo_e_4,316,55,0	duplicate(TurboTrap#tt_main)	trap_e4#F12	139,1,1
-turbo_e_4,316,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F13	139,1,1
-turbo_e_4,316,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F14	139,1,1
-turbo_e_4,316,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F15	139,1,1
-turbo_e_4,316,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F16	139,1,1
-turbo_e_4,316,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F17	139,1,1
-turbo_e_4,320,56,0	duplicate(TurboTrap#tt_main)	trap_e4#F18	139,1,1
-turbo_e_4,320,52,0	duplicate(TurboTrap#tt_main)	trap_e4#F19	139,1,1
-turbo_e_4,320,48,0	duplicate(TurboTrap#tt_main)	trap_e4#F20	139,1,1
-turbo_e_4,320,44,0	duplicate(TurboTrap#tt_main)	trap_e4#F21	139,1,1
-turbo_e_4,320,40,0	duplicate(TurboTrap#tt_main)	trap_e4#F22	139,1,1
-turbo_e_4,320,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F23	139,1,1
-turbo_e_4,324,55,0	duplicate(TurboTrap#tt_main)	trap_e4#F24	139,1,1
-turbo_e_4,324,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F25	139,1,1
-turbo_e_4,324,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F26	139,1,1
-turbo_e_4,324,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F27	139,1,1
-turbo_e_4,324,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F28	139,1,1
-turbo_e_4,324,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F29	139,1,1
-turbo_e_4,328,56,0	duplicate(TurboTrap#tt_main)	trap_e4#F30	139,1,1
-turbo_e_4,328,52,0	duplicate(TurboTrap#tt_main)	trap_e4#F31	139,1,1
-turbo_e_4,328,48,0	duplicate(TurboTrap#tt_main)	trap_e4#F32	139,1,1
-turbo_e_4,328,44,0	duplicate(TurboTrap#tt_main)	trap_e4#F33	139,1,1
-turbo_e_4,328,40,0	duplicate(TurboTrap#tt_main)	trap_e4#F34	139,1,1
-turbo_e_4,328,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F35	139,1,1
-turbo_e_4,332,55,0	duplicate(TurboTrap#tt_main)	trap_e4#F36	139,1,1
-turbo_e_4,332,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F37	139,1,1
-turbo_e_4,332,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F38	139,1,1
-turbo_e_4,332,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F39	139,1,1
-turbo_e_4,332,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F40	139,1,1
-turbo_e_4,332,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F41	139,1,1
-turbo_e_8,307,55,0	duplicate(TurboTrap#tt_main)	trap_e8#F1	139,1,1
-turbo_e_8,307,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F2	139,1,1
-turbo_e_8,307,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F3	139,1,1
-turbo_e_8,307,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F4	139,1,1
-turbo_e_8,307,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F5	139,1,1
-turbo_e_8,307,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F96	139,1,1
-turbo_e_8,312,56,0	duplicate(TurboTrap#tt_main)	trap_e8#F6	139,1,1
-turbo_e_8,312,52,0	duplicate(TurboTrap#tt_main)	trap_e8#F7	139,1,1
-turbo_e_8,312,48,0	duplicate(TurboTrap#tt_main)	trap_e8#F8	139,1,1
-turbo_e_8,312,44,0	duplicate(TurboTrap#tt_main)	trap_e8#F9	139,1,1
-turbo_e_8,312,40,0	duplicate(TurboTrap#tt_main)	trap_e8#F10	139,1,1
-turbo_e_8,312,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F11	139,1,1
-turbo_e_8,316,55,0	duplicate(TurboTrap#tt_main)	trap_e8#F12	139,1,1
-turbo_e_8,316,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F13	139,1,1
-turbo_e_8,316,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F14	139,1,1
-turbo_e_8,316,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F15	139,1,1
-turbo_e_8,316,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F16	139,1,1
-turbo_e_8,316,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F17	139,1,1
-turbo_e_8,320,56,0	duplicate(TurboTrap#tt_main)	trap_e8#F18	139,1,1
-turbo_e_8,320,52,0	duplicate(TurboTrap#tt_main)	trap_e8#F19	139,1,1
-turbo_e_8,320,48,0	duplicate(TurboTrap#tt_main)	trap_e8#F20	139,1,1
-turbo_e_8,320,44,0	duplicate(TurboTrap#tt_main)	trap_e8#F21	139,1,1
-turbo_e_8,320,40,0	duplicate(TurboTrap#tt_main)	trap_e8#F22	139,1,1
-turbo_e_8,320,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F23	139,1,1
-turbo_e_8,324,55,0	duplicate(TurboTrap#tt_main)	trap_e8#F24	139,1,1
-turbo_e_8,324,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F25	139,1,1
-turbo_e_8,324,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F26	139,1,1
-turbo_e_8,324,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F27	139,1,1
-turbo_e_8,324,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F28	139,1,1
-turbo_e_8,324,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F29	139,1,1
-turbo_e_8,328,56,0	duplicate(TurboTrap#tt_main)	trap_e8#F30	139,1,1
-turbo_e_8,328,52,0	duplicate(TurboTrap#tt_main)	trap_e8#F31	139,1,1
-turbo_e_8,328,48,0	duplicate(TurboTrap#tt_main)	trap_e8#F32	139,1,1
-turbo_e_8,328,44,0	duplicate(TurboTrap#tt_main)	trap_e8#F33	139,1,1
-turbo_e_8,328,40,0	duplicate(TurboTrap#tt_main)	trap_e8#F34	139,1,1
-turbo_e_8,328,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F35	139,1,1
-turbo_e_8,332,55,0	duplicate(TurboTrap#tt_main)	trap_e8#F36	139,1,1
-turbo_e_8,332,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F37	139,1,1
-turbo_e_8,332,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F38	139,1,1
-turbo_e_8,332,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F39	139,1,1
-turbo_e_8,332,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F40	139,1,1
-turbo_e_8,332,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F41	139,1,1
-turbo_e_16,307,55,0	duplicate(TurboTrap#tt_main)	trap_e16#F1	139,1,1
-turbo_e_16,307,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F2	139,1,1
-turbo_e_16,307,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F3	139,1,1
-turbo_e_16,307,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F4	139,1,1
-turbo_e_16,307,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F5	139,1,1
-turbo_e_16,307,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F96	139,1,1
-turbo_e_16,312,56,0	duplicate(TurboTrap#tt_main)	trap_e16#F6	139,1,1
-turbo_e_16,312,52,0	duplicate(TurboTrap#tt_main)	trap_e16#F7	139,1,1
-turbo_e_16,312,48,0	duplicate(TurboTrap#tt_main)	trap_e16#F8	139,1,1
-turbo_e_16,312,44,0	duplicate(TurboTrap#tt_main)	trap_e16#F9	139,1,1
-turbo_e_16,312,40,0	duplicate(TurboTrap#tt_main)	trap_e16#F10	139,1,1
-turbo_e_16,312,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F11	139,1,1
-turbo_e_16,316,55,0	duplicate(TurboTrap#tt_main)	trap_e16#F12	139,1,1
-turbo_e_16,316,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F13	139,1,1
-turbo_e_16,316,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F14	139,1,1
-turbo_e_16,316,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F15	139,1,1
-turbo_e_16,316,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F16	139,1,1
-turbo_e_16,316,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F17	139,1,1
-turbo_e_16,320,56,0	duplicate(TurboTrap#tt_main)	trap_e16#F18	139,1,1
-turbo_e_16,320,52,0	duplicate(TurboTrap#tt_main)	trap_e16#F19	139,1,1
-turbo_e_16,320,48,0	duplicate(TurboTrap#tt_main)	trap_e16#F20	139,1,1
-turbo_e_16,320,44,0	duplicate(TurboTrap#tt_main)	trap_e16#F21	139,1,1
-turbo_e_16,320,40,0	duplicate(TurboTrap#tt_main)	trap_e16#F22	139,1,1
-turbo_e_16,320,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F23	139,1,1
-turbo_e_16,324,55,0	duplicate(TurboTrap#tt_main)	trap_e16#F24	139,1,1
-turbo_e_16,324,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F25	139,1,1
-turbo_e_16,324,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F26	139,1,1
-turbo_e_16,324,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F27	139,1,1
-turbo_e_16,324,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F28	139,1,1
-turbo_e_16,324,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F29	139,1,1
-turbo_e_16,328,56,0	duplicate(TurboTrap#tt_main)	trap_e16#F30	139,1,1
-turbo_e_16,328,52,0	duplicate(TurboTrap#tt_main)	trap_e16#F31	139,1,1
-turbo_e_16,328,48,0	duplicate(TurboTrap#tt_main)	trap_e16#F32	139,1,1
-turbo_e_16,328,44,0	duplicate(TurboTrap#tt_main)	trap_e16#F33	139,1,1
-turbo_e_16,328,40,0	duplicate(TurboTrap#tt_main)	trap_e16#F34	139,1,1
-turbo_e_16,328,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F35	139,1,1
-turbo_e_16,332,55,0	duplicate(TurboTrap#tt_main)	trap_e16#F36	139,1,1
-turbo_e_16,332,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F37	139,1,1
-turbo_e_16,332,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F38	139,1,1
-turbo_e_16,332,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F39	139,1,1
-turbo_e_16,332,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F40	139,1,1
-turbo_e_16,332,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F41	139,1,1
-turbo_n_4,307,55,0	duplicate(TurboTrap#tt_main)	trap_n4#F1	139,1,1
-turbo_n_4,307,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F2	139,1,1
-turbo_n_4,307,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F3	139,1,1
-turbo_n_4,307,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F4	139,1,1
-turbo_n_4,307,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F5	139,1,1
-turbo_n_4,307,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F96	139,1,1
-turbo_n_4,312,56,0	duplicate(TurboTrap#tt_main)	trap_n4#F6	139,1,1
-turbo_n_4,312,52,0	duplicate(TurboTrap#tt_main)	trap_n4#F7	139,1,1
-turbo_n_4,312,48,0	duplicate(TurboTrap#tt_main)	trap_n4#F8	139,1,1
-turbo_n_4,312,44,0	duplicate(TurboTrap#tt_main)	trap_n4#F9	139,1,1
-turbo_n_4,312,40,0	duplicate(TurboTrap#tt_main)	trap_n4#F10	139,1,1
-turbo_n_4,312,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F11	139,1,1
-turbo_n_4,316,55,0	duplicate(TurboTrap#tt_main)	trap_n4#F12	139,1,1
-turbo_n_4,316,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F13	139,1,1
-turbo_n_4,316,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F14	139,1,1
-turbo_n_4,316,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F15	139,1,1
-turbo_n_4,316,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F16	139,1,1
-turbo_n_4,316,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F17	139,1,1
-turbo_n_4,320,56,0	duplicate(TurboTrap#tt_main)	trap_n4#F18	139,1,1
-turbo_n_4,320,52,0	duplicate(TurboTrap#tt_main)	trap_n4#F19	139,1,1
-turbo_n_4,320,48,0	duplicate(TurboTrap#tt_main)	trap_n4#F20	139,1,1
-turbo_n_4,320,44,0	duplicate(TurboTrap#tt_main)	trap_n4#F21	139,1,1
-turbo_n_4,320,40,0	duplicate(TurboTrap#tt_main)	trap_n4#F22	139,1,1
-turbo_n_4,320,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F23	139,1,1
-turbo_n_4,324,55,0	duplicate(TurboTrap#tt_main)	trap_n4#F24	139,1,1
-turbo_n_4,324,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F25	139,1,1
-turbo_n_4,324,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F26	139,1,1
-turbo_n_4,324,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F27	139,1,1
-turbo_n_4,324,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F28	139,1,1
-turbo_n_4,324,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F29	139,1,1
-turbo_n_4,328,56,0	duplicate(TurboTrap#tt_main)	trap_n4#F30	139,1,1
-turbo_n_4,328,52,0	duplicate(TurboTrap#tt_main)	trap_n4#F31	139,1,1
-turbo_n_4,328,48,0	duplicate(TurboTrap#tt_main)	trap_n4#F32	139,1,1
-turbo_n_4,328,44,0	duplicate(TurboTrap#tt_main)	trap_n4#F33	139,1,1
-turbo_n_4,328,40,0	duplicate(TurboTrap#tt_main)	trap_n4#F34	139,1,1
-turbo_n_4,328,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F35	139,1,1
-turbo_n_4,332,55,0	duplicate(TurboTrap#tt_main)	trap_n4#F36	139,1,1
-turbo_n_4,332,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F37	139,1,1
-turbo_n_4,332,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F38	139,1,1
-turbo_n_4,332,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F39	139,1,1
-turbo_n_4,332,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F40	139,1,1
-turbo_n_4,332,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F41	139,1,1
-turbo_n_8,307,55,0	duplicate(TurboTrap#tt_main)	trap_n8#F1	139,1,1
-turbo_n_8,307,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F2	139,1,1
-turbo_n_8,307,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F3	139,1,1
-turbo_n_8,307,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F4	139,1,1
-turbo_n_8,307,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F5	139,1,1
-turbo_n_8,307,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F96	139,1,1
-turbo_n_8,312,56,0	duplicate(TurboTrap#tt_main)	trap_n8#F6	139,1,1
-turbo_n_8,312,52,0	duplicate(TurboTrap#tt_main)	trap_n8#F7	139,1,1
-turbo_n_8,312,48,0	duplicate(TurboTrap#tt_main)	trap_n8#F8	139,1,1
-turbo_n_8,312,44,0	duplicate(TurboTrap#tt_main)	trap_n8#F9	139,1,1
-turbo_n_8,312,40,0	duplicate(TurboTrap#tt_main)	trap_n8#F10	139,1,1
-turbo_n_8,312,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F11	139,1,1
-turbo_n_8,316,55,0	duplicate(TurboTrap#tt_main)	trap_n8#F12	139,1,1
-turbo_n_8,316,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F13	139,1,1
-turbo_n_8,316,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F14	139,1,1
-turbo_n_8,316,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F15	139,1,1
-turbo_n_8,316,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F16	139,1,1
-turbo_n_8,316,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F17	139,1,1
-turbo_n_8,320,56,0	duplicate(TurboTrap#tt_main)	trap_n8#F18	139,1,1
-turbo_n_8,320,52,0	duplicate(TurboTrap#tt_main)	trap_n8#F19	139,1,1
-turbo_n_8,320,48,0	duplicate(TurboTrap#tt_main)	trap_n8#F20	139,1,1
-turbo_n_8,320,44,0	duplicate(TurboTrap#tt_main)	trap_n8#F21	139,1,1
-turbo_n_8,320,40,0	duplicate(TurboTrap#tt_main)	trap_n8#F22	139,1,1
-turbo_n_8,320,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F23	139,1,1
-turbo_n_8,324,55,0	duplicate(TurboTrap#tt_main)	trap_n8#F24	139,1,1
-turbo_n_8,324,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F25	139,1,1
-turbo_n_8,324,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F26	139,1,1
-turbo_n_8,324,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F27	139,1,1
-turbo_n_8,324,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F28	139,1,1
-turbo_n_8,324,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F29	139,1,1
-turbo_n_8,328,56,0	duplicate(TurboTrap#tt_main)	trap_n8#F30	139,1,1
-turbo_n_8,328,52,0	duplicate(TurboTrap#tt_main)	trap_n8#F31	139,1,1
-turbo_n_8,328,48,0	duplicate(TurboTrap#tt_main)	trap_n8#F32	139,1,1
-turbo_n_8,328,44,0	duplicate(TurboTrap#tt_main)	trap_n8#F33	139,1,1
-turbo_n_8,328,40,0	duplicate(TurboTrap#tt_main)	trap_n8#F34	139,1,1
-turbo_n_8,328,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F35	139,1,1
-turbo_n_8,332,55,0	duplicate(TurboTrap#tt_main)	trap_n8#F36	139,1,1
-turbo_n_8,332,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F37	139,1,1
-turbo_n_8,332,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F38	139,1,1
-turbo_n_8,332,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F39	139,1,1
-turbo_n_8,332,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F40	139,1,1
-turbo_n_8,332,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F41	139,1,1
-turbo_n_16,307,55,0	duplicate(TurboTrap#tt_main)	trap_n16#F1	139,1,1
-turbo_n_16,307,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F2	139,1,1
-turbo_n_16,307,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F3	139,1,1
-turbo_n_16,307,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F4	139,1,1
-turbo_n_16,307,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F5	139,1,1
-turbo_n_16,307,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F96	139,1,1
-turbo_n_16,312,56,0	duplicate(TurboTrap#tt_main)	trap_n16#F6	139,1,1
-turbo_n_16,312,52,0	duplicate(TurboTrap#tt_main)	trap_n16#F7	139,1,1
-turbo_n_16,312,48,0	duplicate(TurboTrap#tt_main)	trap_n16#F8	139,1,1
-turbo_n_16,312,44,0	duplicate(TurboTrap#tt_main)	trap_n16#F9	139,1,1
-turbo_n_16,312,40,0	duplicate(TurboTrap#tt_main)	trap_n16#F10	139,1,1
-turbo_n_16,312,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F11	139,1,1
-turbo_n_16,316,55,0	duplicate(TurboTrap#tt_main)	trap_n16#F12	139,1,1
-turbo_n_16,316,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F13	139,1,1
-turbo_n_16,316,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F14	139,1,1
-turbo_n_16,316,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F15	139,1,1
-turbo_n_16,316,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F16	139,1,1
-turbo_n_16,316,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F17	139,1,1
-turbo_n_16,320,56,0	duplicate(TurboTrap#tt_main)	trap_n16#F18	139,1,1
-turbo_n_16,320,52,0	duplicate(TurboTrap#tt_main)	trap_n16#F19	139,1,1
-turbo_n_16,320,48,0	duplicate(TurboTrap#tt_main)	trap_n16#F20	139,1,1
-turbo_n_16,320,44,0	duplicate(TurboTrap#tt_main)	trap_n16#F21	139,1,1
-turbo_n_16,320,40,0	duplicate(TurboTrap#tt_main)	trap_n16#F22	139,1,1
-turbo_n_16,320,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F23	139,1,1
-turbo_n_16,324,55,0	duplicate(TurboTrap#tt_main)	trap_n16#F24	139,1,1
-turbo_n_16,324,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F25	139,1,1
-turbo_n_16,324,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F26	139,1,1
-turbo_n_16,324,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F27	139,1,1
-turbo_n_16,324,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F28	139,1,1
-turbo_n_16,324,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F29	139,1,1
-turbo_n_16,328,56,0	duplicate(TurboTrap#tt_main)	trap_n16#F30	139,1,1
-turbo_n_16,328,52,0	duplicate(TurboTrap#tt_main)	trap_n16#F31	139,1,1
-turbo_n_16,328,48,0	duplicate(TurboTrap#tt_main)	trap_n16#F32	139,1,1
-turbo_n_16,328,44,0	duplicate(TurboTrap#tt_main)	trap_n16#F33	139,1,1
-turbo_n_16,328,40,0	duplicate(TurboTrap#tt_main)	trap_n16#F34	139,1,1
-turbo_n_16,328,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F35	139,1,1
-turbo_n_16,332,55,0	duplicate(TurboTrap#tt_main)	trap_n16#F36	139,1,1
-turbo_n_16,332,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F37	139,1,1
-turbo_n_16,332,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F38	139,1,1
-turbo_n_16,332,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F39	139,1,1
-turbo_n_16,332,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F40	139,1,1
-turbo_n_16,332,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F41	139,1,1
-turbo_n_1,307,55,0	duplicate(TurboTrap#tt_main)	trap_n1#F1	139,1,1
-turbo_n_1,307,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F2	139,1,1
-turbo_n_1,307,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F3	139,1,1
-turbo_n_1,307,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F4	139,1,1
-turbo_n_1,307,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F5	139,1,1
-turbo_n_1,307,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F96	139,1,1
-turbo_n_1,312,56,0	duplicate(TurboTrap#tt_main)	trap_n1#F6	139,1,1
-turbo_n_1,312,52,0	duplicate(TurboTrap#tt_main)	trap_n1#F7	139,1,1
-turbo_n_1,312,48,0	duplicate(TurboTrap#tt_main)	trap_n1#F8	139,1,1
-turbo_n_1,312,44,0	duplicate(TurboTrap#tt_main)	trap_n1#F9	139,1,1
-turbo_n_1,312,40,0	duplicate(TurboTrap#tt_main)	trap_n1#F10	139,1,1
-turbo_n_1,312,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F11	139,1,1
-turbo_n_1,316,55,0	duplicate(TurboTrap#tt_main)	trap_n1#F12	139,1,1
-turbo_n_1,316,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F13	139,1,1
-turbo_n_1,316,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F14	139,1,1
-turbo_n_1,316,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F15	139,1,1
-turbo_n_1,316,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F16	139,1,1
-turbo_n_1,316,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F17	139,1,1
-turbo_n_1,320,56,0	duplicate(TurboTrap#tt_main)	trap_n1#F18	139,1,1
-turbo_n_1,320,52,0	duplicate(TurboTrap#tt_main)	trap_n1#F19	139,1,1
-turbo_n_1,320,48,0	duplicate(TurboTrap#tt_main)	trap_n1#F20	139,1,1
-turbo_n_1,320,44,0	duplicate(TurboTrap#tt_main)	trap_n1#F21	139,1,1
-turbo_n_1,320,40,0	duplicate(TurboTrap#tt_main)	trap_n1#F22	139,1,1
-turbo_n_1,320,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F23	139,1,1
-turbo_n_1,324,55,0	duplicate(TurboTrap#tt_main)	trap_n1#F24	139,1,1
-turbo_n_1,324,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F25	139,1,1
-turbo_n_1,324,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F26	139,1,1
-turbo_n_1,324,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F27	139,1,1
-turbo_n_1,324,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F28	139,1,1
-turbo_n_1,324,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F29	139,1,1
-turbo_n_1,328,56,0	duplicate(TurboTrap#tt_main)	trap_n1#F30	139,1,1
-turbo_n_1,328,52,0	duplicate(TurboTrap#tt_main)	trap_n1#F31	139,1,1
-turbo_n_1,328,48,0	duplicate(TurboTrap#tt_main)	trap_n1#F32	139,1,1
-turbo_n_1,328,44,0	duplicate(TurboTrap#tt_main)	trap_n1#F33	139,1,1
-turbo_n_1,328,40,0	duplicate(TurboTrap#tt_main)	trap_n1#F34	139,1,1
-turbo_n_1,328,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F35	139,1,1
-turbo_n_1,332,55,0	duplicate(TurboTrap#tt_main)	trap_n1#F36	139,1,1
-turbo_n_1,332,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F37	139,1,1
-turbo_n_1,332,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F38	139,1,1
-turbo_n_1,332,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F39	139,1,1
-turbo_n_1,332,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F40	139,1,1
-turbo_n_1,332,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F41	139,1,1
-turbo_e_4,340,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F49	139,1,1
-turbo_e_4,340,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F50	139,1,1
-turbo_e_4,340,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F51	139,1,1
-turbo_e_4,340,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F52	139,1,1
-turbo_e_4,340,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F53	139,1,1
-turbo_e_4,344,56,0	duplicate(TurboTrap#tt_main)	trap_e4#F54	139,1,1
-turbo_e_4,344,52,0	duplicate(TurboTrap#tt_main)	trap_e4#F55	139,1,1
-turbo_e_4,344,48,0	duplicate(TurboTrap#tt_main)	trap_e4#F56	139,1,1
-turbo_e_4,344,44,0	duplicate(TurboTrap#tt_main)	trap_e4#F57	139,1,1
-turbo_e_4,344,40,0	duplicate(TurboTrap#tt_main)	trap_e4#F58	139,1,1
-turbo_e_4,344,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F59	139,1,1
-turbo_e_4,348,55,0	duplicate(TurboTrap#tt_main)	trap_e4#F60	139,1,1
-turbo_e_4,348,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F61	139,1,1
-turbo_e_4,348,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F62	139,1,1
-turbo_e_4,348,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F63	139,1,1
-turbo_e_4,348,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F64	139,1,1
-turbo_e_4,348,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F65	139,1,1
-turbo_e_4,352,56,0	duplicate(TurboTrap#tt_main)	trap_e4#F66	139,1,1
-turbo_e_4,352,52,0	duplicate(TurboTrap#tt_main)	trap_e4#F67	139,1,1
-turbo_e_4,352,48,0	duplicate(TurboTrap#tt_main)	trap_e4#F68	139,1,1
-turbo_e_4,352,44,0	duplicate(TurboTrap#tt_main)	trap_e4#F69	139,1,1
-turbo_e_4,352,40,0	duplicate(TurboTrap#tt_main)	trap_e4#F70	139,1,1
-turbo_e_4,352,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F71	139,1,1
-turbo_e_4,356,55,0	duplicate(TurboTrap#tt_main)	trap_e4#F72	139,1,1
-turbo_e_4,356,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F73	139,1,1
-turbo_e_4,356,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F74	139,1,1
-turbo_e_4,356,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F75	139,1,1
-turbo_e_4,356,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F76	139,1,1
-turbo_e_4,356,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F77	139,1,1
-turbo_e_4,360,56,0	duplicate(TurboTrap#tt_main)	trap_e4#F78	139,1,1
-turbo_e_4,360,52,0	duplicate(TurboTrap#tt_main)	trap_e4#F79	139,1,1
-turbo_e_4,360,48,0	duplicate(TurboTrap#tt_main)	trap_e4#F80	139,1,1
-turbo_e_4,360,44,0	duplicate(TurboTrap#tt_main)	trap_e4#F81	139,1,1
-turbo_e_4,360,40,0	duplicate(TurboTrap#tt_main)	trap_e4#F82	139,1,1
-turbo_e_4,360,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F83	139,1,1
-turbo_e_4,364,55,0	duplicate(TurboTrap#tt_main)	trap_e4#F84	139,1,1
-turbo_e_4,364,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F85	139,1,1
-turbo_e_4,364,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F86	139,1,1
-turbo_e_4,364,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F87	139,1,1
-turbo_e_4,364,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F88	139,1,1
-turbo_e_4,364,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F89	139,1,1
-turbo_e_4,368,56,0	duplicate(TurboTrap#tt_main)	trap_e4#F90	139,1,1
-turbo_e_4,368,52,0	duplicate(TurboTrap#tt_main)	trap_e4#F91	139,1,1
-turbo_e_4,368,48,0	duplicate(TurboTrap#tt_main)	trap_e4#F92	139,1,1
-turbo_e_4,368,44,0	duplicate(TurboTrap#tt_main)	trap_e4#F93	139,1,1
-turbo_e_4,368,40,0	duplicate(TurboTrap#tt_main)	trap_e4#F94	139,1,1
-turbo_e_4,368,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F95	139,1,1
-turbo_e_8,340,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F49	139,1,1
-turbo_e_8,340,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F50	139,1,1
-turbo_e_8,340,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F51	139,1,1
-turbo_e_8,340,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F52	139,1,1
-turbo_e_8,340,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F53	139,1,1
-turbo_e_8,344,56,0	duplicate(TurboTrap#tt_main)	trap_e8#F54	139,1,1
-turbo_e_8,344,52,0	duplicate(TurboTrap#tt_main)	trap_e8#F55	139,1,1
-turbo_e_8,344,48,0	duplicate(TurboTrap#tt_main)	trap_e8#F56	139,1,1
-turbo_e_8,344,44,0	duplicate(TurboTrap#tt_main)	trap_e8#F57	139,1,1
-turbo_e_8,344,40,0	duplicate(TurboTrap#tt_main)	trap_e8#F58	139,1,1
-turbo_e_8,344,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F59	139,1,1
-turbo_e_8,348,55,0	duplicate(TurboTrap#tt_main)	trap_e8#F60	139,1,1
-turbo_e_8,348,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F61	139,1,1
-turbo_e_8,348,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F62	139,1,1
-turbo_e_8,348,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F63	139,1,1
-turbo_e_8,348,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F64	139,1,1
-turbo_e_8,348,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F65	139,1,1
-turbo_e_8,352,56,0	duplicate(TurboTrap#tt_main)	trap_e8#F66	139,1,1
-turbo_e_8,352,52,0	duplicate(TurboTrap#tt_main)	trap_e8#F67	139,1,1
-turbo_e_8,352,48,0	duplicate(TurboTrap#tt_main)	trap_e8#F68	139,1,1
-turbo_e_8,352,44,0	duplicate(TurboTrap#tt_main)	trap_e8#F69	139,1,1
-turbo_e_8,352,40,0	duplicate(TurboTrap#tt_main)	trap_e8#F70	139,1,1
-turbo_e_8,352,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F71	139,1,1
-turbo_e_8,356,55,0	duplicate(TurboTrap#tt_main)	trap_e8#F72	139,1,1
-turbo_e_8,356,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F73	139,1,1
-turbo_e_8,356,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F74	139,1,1
-turbo_e_8,356,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F75	139,1,1
-turbo_e_8,356,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F76	139,1,1
-turbo_e_8,356,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F77	139,1,1
-turbo_e_8,360,56,0	duplicate(TurboTrap#tt_main)	trap_e8#F78	139,1,1
-turbo_e_8,360,52,0	duplicate(TurboTrap#tt_main)	trap_e8#F79	139,1,1
-turbo_e_8,360,48,0	duplicate(TurboTrap#tt_main)	trap_e8#F80	139,1,1
-turbo_e_8,360,44,0	duplicate(TurboTrap#tt_main)	trap_e8#F81	139,1,1
-turbo_e_8,360,40,0	duplicate(TurboTrap#tt_main)	trap_e8#F82	139,1,1
-turbo_e_8,360,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F83	139,1,1
-turbo_e_8,364,55,0	duplicate(TurboTrap#tt_main)	trap_e8#F84	139,1,1
-turbo_e_8,364,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F85	139,1,1
-turbo_e_8,364,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F86	139,1,1
-turbo_e_8,364,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F87	139,1,1
-turbo_e_8,364,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F88	139,1,1
-turbo_e_8,364,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F89	139,1,1
-turbo_e_8,368,56,0	duplicate(TurboTrap#tt_main)	trap_e8#F90	139,1,1
-turbo_e_8,368,52,0	duplicate(TurboTrap#tt_main)	trap_e8#F91	139,1,1
-turbo_e_8,368,48,0	duplicate(TurboTrap#tt_main)	trap_e8#F92	139,1,1
-turbo_e_8,368,44,0	duplicate(TurboTrap#tt_main)	trap_e8#F93	139,1,1
-turbo_e_8,368,40,0	duplicate(TurboTrap#tt_main)	trap_e8#F94	139,1,1
-turbo_e_8,368,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F95	139,1,1
-turbo_e_16,340,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F49	139,1,1
-turbo_e_16,340,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F50	139,1,1
-turbo_e_16,340,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F51	139,1,1
-turbo_e_16,340,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F52	139,1,1
-turbo_e_16,340,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F53	139,1,1
-turbo_e_16,344,56,0	duplicate(TurboTrap#tt_main)	trap_e16#F54	139,1,1
-turbo_e_16,344,52,0	duplicate(TurboTrap#tt_main)	trap_e16#F55	139,1,1
-turbo_e_16,344,48,0	duplicate(TurboTrap#tt_main)	trap_e16#F56	139,1,1
-turbo_e_16,344,44,0	duplicate(TurboTrap#tt_main)	trap_e16#F57	139,1,1
-turbo_e_16,344,40,0	duplicate(TurboTrap#tt_main)	trap_e16#F58	139,1,1
-turbo_e_16,344,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F59	139,1,1
-turbo_e_16,348,55,0	duplicate(TurboTrap#tt_main)	trap_e16#F60	139,1,1
-turbo_e_16,348,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F61	139,1,1
-turbo_e_16,348,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F62	139,1,1
-turbo_e_16,348,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F63	139,1,1
-turbo_e_16,348,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F64	139,1,1
-turbo_e_16,348,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F65	139,1,1
-turbo_e_16,352,56,0	duplicate(TurboTrap#tt_main)	trap_e16#F66	139,1,1
-turbo_e_16,352,52,0	duplicate(TurboTrap#tt_main)	trap_e16#F67	139,1,1
-turbo_e_16,352,48,0	duplicate(TurboTrap#tt_main)	trap_e16#F68	139,1,1
-turbo_e_16,352,44,0	duplicate(TurboTrap#tt_main)	trap_e16#F69	139,1,1
-turbo_e_16,352,40,0	duplicate(TurboTrap#tt_main)	trap_e16#F70	139,1,1
-turbo_e_16,352,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F71	139,1,1
-turbo_e_16,356,55,0	duplicate(TurboTrap#tt_main)	trap_e16#F72	139,1,1
-turbo_e_16,356,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F73	139,1,1
-turbo_e_16,356,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F74	139,1,1
-turbo_e_16,356,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F75	139,1,1
-turbo_e_16,356,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F76	139,1,1
-turbo_e_16,356,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F77	139,1,1
-turbo_e_16,360,56,0	duplicate(TurboTrap#tt_main)	trap_e16#F78	139,1,1
-turbo_e_16,360,52,0	duplicate(TurboTrap#tt_main)	trap_e16#F79	139,1,1
-turbo_e_16,360,48,0	duplicate(TurboTrap#tt_main)	trap_e16#F80	139,1,1
-turbo_e_16,360,44,0	duplicate(TurboTrap#tt_main)	trap_e16#F81	139,1,1
-turbo_e_16,360,40,0	duplicate(TurboTrap#tt_main)	trap_e16#F82	139,1,1
-turbo_e_16,360,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F83	139,1,1
-turbo_e_16,364,55,0	duplicate(TurboTrap#tt_main)	trap_e16#F84	139,1,1
-turbo_e_16,364,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F85	139,1,1
-turbo_e_16,364,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F86	139,1,1
-turbo_e_16,364,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F87	139,1,1
-turbo_e_16,364,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F88	139,1,1
-turbo_e_16,364,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F89	139,1,1
-turbo_e_16,368,56,0	duplicate(TurboTrap#tt_main)	trap_e16#F90	139,1,1
-turbo_e_16,368,52,0	duplicate(TurboTrap#tt_main)	trap_e16#F91	139,1,1
-turbo_e_16,368,48,0	duplicate(TurboTrap#tt_main)	trap_e16#F92	139,1,1
-turbo_e_16,368,44,0	duplicate(TurboTrap#tt_main)	trap_e16#F93	139,1,1
-turbo_e_16,368,40,0	duplicate(TurboTrap#tt_main)	trap_e16#F94	139,1,1
-turbo_e_16,368,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F95	139,1,1
-turbo_n_4,340,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F49	139,1,1
-turbo_n_4,340,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F50	139,1,1
-turbo_n_4,340,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F51	139,1,1
-turbo_n_4,340,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F52	139,1,1
-turbo_n_4,340,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F53	139,1,1
-turbo_n_4,344,56,0	duplicate(TurboTrap#tt_main)	trap_n4#F54	139,1,1
-turbo_n_4,344,52,0	duplicate(TurboTrap#tt_main)	trap_n4#F55	139,1,1
-turbo_n_4,344,48,0	duplicate(TurboTrap#tt_main)	trap_n4#F56	139,1,1
-turbo_n_4,344,44,0	duplicate(TurboTrap#tt_main)	trap_n4#F57	139,1,1
-turbo_n_4,344,40,0	duplicate(TurboTrap#tt_main)	trap_n4#F58	139,1,1
-turbo_n_4,344,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F59	139,1,1
-turbo_n_4,348,55,0	duplicate(TurboTrap#tt_main)	trap_n4#F60	139,1,1
-turbo_n_4,348,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F61	139,1,1
-turbo_n_4,348,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F62	139,1,1
-turbo_n_4,348,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F63	139,1,1
-turbo_n_4,348,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F64	139,1,1
-turbo_n_4,348,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F65	139,1,1
-turbo_n_4,352,56,0	duplicate(TurboTrap#tt_main)	trap_n4#F66	139,1,1
-turbo_n_4,352,52,0	duplicate(TurboTrap#tt_main)	trap_n4#F67	139,1,1
-turbo_n_4,352,48,0	duplicate(TurboTrap#tt_main)	trap_n4#F68	139,1,1
-turbo_n_4,352,44,0	duplicate(TurboTrap#tt_main)	trap_n4#F69	139,1,1
-turbo_n_4,352,40,0	duplicate(TurboTrap#tt_main)	trap_n4#F70	139,1,1
-turbo_n_4,352,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F71	139,1,1
-turbo_n_4,356,55,0	duplicate(TurboTrap#tt_main)	trap_n4#F72	139,1,1
-turbo_n_4,356,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F73	139,1,1
-turbo_n_4,356,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F74	139,1,1
-turbo_n_4,356,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F75	139,1,1
-turbo_n_4,356,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F76	139,1,1
-turbo_n_4,356,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F77	139,1,1
-turbo_n_4,360,56,0	duplicate(TurboTrap#tt_main)	trap_n4#F78	139,1,1
-turbo_n_4,360,52,0	duplicate(TurboTrap#tt_main)	trap_n4#F79	139,1,1
-turbo_n_4,360,48,0	duplicate(TurboTrap#tt_main)	trap_n4#F80	139,1,1
-turbo_n_4,360,44,0	duplicate(TurboTrap#tt_main)	trap_n4#F81	139,1,1
-turbo_n_4,360,40,0	duplicate(TurboTrap#tt_main)	trap_n4#F82	139,1,1
-turbo_n_4,360,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F83	139,1,1
-turbo_n_4,364,55,0	duplicate(TurboTrap#tt_main)	trap_n4#F84	139,1,1
-turbo_n_4,364,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F85	139,1,1
-turbo_n_4,364,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F86	139,1,1
-turbo_n_4,364,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F87	139,1,1
-turbo_n_4,364,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F88	139,1,1
-turbo_n_4,364,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F89	139,1,1
-turbo_n_4,368,56,0	duplicate(TurboTrap#tt_main)	trap_n4#F90	139,1,1
-turbo_n_4,368,52,0	duplicate(TurboTrap#tt_main)	trap_n4#F91	139,1,1
-turbo_n_4,368,48,0	duplicate(TurboTrap#tt_main)	trap_n4#F92	139,1,1
-turbo_n_4,368,44,0	duplicate(TurboTrap#tt_main)	trap_n4#F93	139,1,1
-turbo_n_4,368,40,0	duplicate(TurboTrap#tt_main)	trap_n4#F94	139,1,1
-turbo_n_4,368,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F95	139,1,1
-turbo_n_8,340,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F49	139,1,1
-turbo_n_8,340,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F50	139,1,1
-turbo_n_8,340,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F51	139,1,1
-turbo_n_8,340,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F52	139,1,1
-turbo_n_8,340,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F53	139,1,1
-turbo_n_8,344,56,0	duplicate(TurboTrap#tt_main)	trap_n8#F54	139,1,1
-turbo_n_8,344,52,0	duplicate(TurboTrap#tt_main)	trap_n8#F55	139,1,1
-turbo_n_8,344,48,0	duplicate(TurboTrap#tt_main)	trap_n8#F56	139,1,1
-turbo_n_8,344,44,0	duplicate(TurboTrap#tt_main)	trap_n8#F57	139,1,1
-turbo_n_8,344,40,0	duplicate(TurboTrap#tt_main)	trap_n8#F58	139,1,1
-turbo_n_8,344,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F59	139,1,1
-turbo_n_8,348,55,0	duplicate(TurboTrap#tt_main)	trap_n8#F60	139,1,1
-turbo_n_8,348,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F61	139,1,1
-turbo_n_8,348,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F62	139,1,1
-turbo_n_8,348,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F63	139,1,1
-turbo_n_8,348,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F64	139,1,1
-turbo_n_8,348,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F65	139,1,1
-turbo_n_8,352,56,0	duplicate(TurboTrap#tt_main)	trap_n8#F66	139,1,1
-turbo_n_8,352,52,0	duplicate(TurboTrap#tt_main)	trap_n8#F67	139,1,1
-turbo_n_8,352,48,0	duplicate(TurboTrap#tt_main)	trap_n8#F68	139,1,1
-turbo_n_8,352,44,0	duplicate(TurboTrap#tt_main)	trap_n8#F69	139,1,1
-turbo_n_8,352,40,0	duplicate(TurboTrap#tt_main)	trap_n8#F70	139,1,1
-turbo_n_8,352,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F71	139,1,1
-turbo_n_8,356,55,0	duplicate(TurboTrap#tt_main)	trap_n8#F72	139,1,1
-turbo_n_8,356,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F73	139,1,1
-turbo_n_8,356,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F74	139,1,1
-turbo_n_8,356,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F75	139,1,1
-turbo_n_8,356,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F76	139,1,1
-turbo_n_8,356,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F77	139,1,1
-turbo_n_8,360,56,0	duplicate(TurboTrap#tt_main)	trap_n8#F78	139,1,1
-turbo_n_8,360,52,0	duplicate(TurboTrap#tt_main)	trap_n8#F79	139,1,1
-turbo_n_8,360,48,0	duplicate(TurboTrap#tt_main)	trap_n8#F80	139,1,1
-turbo_n_8,360,44,0	duplicate(TurboTrap#tt_main)	trap_n8#F81	139,1,1
-turbo_n_8,360,40,0	duplicate(TurboTrap#tt_main)	trap_n8#F82	139,1,1
-turbo_n_8,360,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F83	139,1,1
-turbo_n_8,364,55,0	duplicate(TurboTrap#tt_main)	trap_n8#F84	139,1,1
-turbo_n_8,364,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F85	139,1,1
-turbo_n_8,364,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F86	139,1,1
-turbo_n_8,364,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F87	139,1,1
-turbo_n_8,364,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F88	139,1,1
-turbo_n_8,364,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F89	139,1,1
-turbo_n_8,368,56,0	duplicate(TurboTrap#tt_main)	trap_n8#F90	139,1,1
-turbo_n_8,368,52,0	duplicate(TurboTrap#tt_main)	trap_n8#F91	139,1,1
-turbo_n_8,368,48,0	duplicate(TurboTrap#tt_main)	trap_n8#F92	139,1,1
-turbo_n_8,368,44,0	duplicate(TurboTrap#tt_main)	trap_n8#F93	139,1,1
-turbo_n_8,368,40,0	duplicate(TurboTrap#tt_main)	trap_n8#F94	139,1,1
-turbo_n_8,368,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F95	139,1,1
-turbo_n_16,340,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F49	139,1,1
-turbo_n_16,340,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F50	139,1,1
-turbo_n_16,340,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F51	139,1,1
-turbo_n_16,340,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F52	139,1,1
-turbo_n_16,340,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F53	139,1,1
-turbo_n_16,344,56,0	duplicate(TurboTrap#tt_main)	trap_n16#F54	139,1,1
-turbo_n_16,344,52,0	duplicate(TurboTrap#tt_main)	trap_n16#F55	139,1,1
-turbo_n_16,344,48,0	duplicate(TurboTrap#tt_main)	trap_n16#F56	139,1,1
-turbo_n_16,344,44,0	duplicate(TurboTrap#tt_main)	trap_n16#F57	139,1,1
-turbo_n_16,344,40,0	duplicate(TurboTrap#tt_main)	trap_n16#F58	139,1,1
-turbo_n_16,344,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F59	139,1,1
-turbo_n_16,348,55,0	duplicate(TurboTrap#tt_main)	trap_n16#F60	139,1,1
-turbo_n_16,348,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F61	139,1,1
-turbo_n_16,348,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F62	139,1,1
-turbo_n_16,348,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F63	139,1,1
-turbo_n_16,348,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F64	139,1,1
-turbo_n_16,348,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F65	139,1,1
-turbo_n_16,352,56,0	duplicate(TurboTrap#tt_main)	trap_n16#F66	139,1,1
-turbo_n_16,352,52,0	duplicate(TurboTrap#tt_main)	trap_n16#F67	139,1,1
-turbo_n_16,352,48,0	duplicate(TurboTrap#tt_main)	trap_n16#F68	139,1,1
-turbo_n_16,352,44,0	duplicate(TurboTrap#tt_main)	trap_n16#F69	139,1,1
-turbo_n_16,352,40,0	duplicate(TurboTrap#tt_main)	trap_n16#F70	139,1,1
-turbo_n_16,352,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F71	139,1,1
-turbo_n_16,356,55,0	duplicate(TurboTrap#tt_main)	trap_n16#F72	139,1,1
-turbo_n_16,356,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F73	139,1,1
-turbo_n_16,356,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F74	139,1,1
-turbo_n_16,356,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F75	139,1,1
-turbo_n_16,356,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F76	139,1,1
-turbo_n_16,356,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F77	139,1,1
-turbo_n_16,360,56,0	duplicate(TurboTrap#tt_main)	trap_n16#F78	139,1,1
-turbo_n_16,360,52,0	duplicate(TurboTrap#tt_main)	trap_n16#F79	139,1,1
-turbo_n_16,360,48,0	duplicate(TurboTrap#tt_main)	trap_n16#F80	139,1,1
-turbo_n_16,360,44,0	duplicate(TurboTrap#tt_main)	trap_n16#F81	139,1,1
-turbo_n_16,360,40,0	duplicate(TurboTrap#tt_main)	trap_n16#F82	139,1,1
-turbo_n_16,360,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F83	139,1,1
-turbo_n_16,364,55,0	duplicate(TurboTrap#tt_main)	trap_n16#F84	139,1,1
-turbo_n_16,364,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F85	139,1,1
-turbo_n_16,364,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F86	139,1,1
-turbo_n_16,364,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F87	139,1,1
-turbo_n_16,364,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F88	139,1,1
-turbo_n_16,364,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F89	139,1,1
-turbo_n_16,368,56,0	duplicate(TurboTrap#tt_main)	trap_n16#F90	139,1,1
-turbo_n_16,368,52,0	duplicate(TurboTrap#tt_main)	trap_n16#F91	139,1,1
-turbo_n_16,368,48,0	duplicate(TurboTrap#tt_main)	trap_n16#F92	139,1,1
-turbo_n_16,368,44,0	duplicate(TurboTrap#tt_main)	trap_n16#F93	139,1,1
-turbo_n_16,368,40,0	duplicate(TurboTrap#tt_main)	trap_n16#F94	139,1,1
-turbo_n_16,368,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F95	139,1,1
-turbo_n_1,340,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F49	139,1,1
-turbo_n_1,340,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F50	139,1,1
-turbo_n_1,340,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F51	139,1,1
-turbo_n_1,340,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F52	139,1,1
-turbo_n_1,340,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F53	139,1,1
-turbo_n_1,344,56,0	duplicate(TurboTrap#tt_main)	trap_n1#F54	139,1,1
-turbo_n_1,344,52,0	duplicate(TurboTrap#tt_main)	trap_n1#F55	139,1,1
-turbo_n_1,344,48,0	duplicate(TurboTrap#tt_main)	trap_n1#F56	139,1,1
-turbo_n_1,344,44,0	duplicate(TurboTrap#tt_main)	trap_n1#F57	139,1,1
-turbo_n_1,344,40,0	duplicate(TurboTrap#tt_main)	trap_n1#F58	139,1,1
-turbo_n_1,344,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F59	139,1,1
-turbo_n_1,348,55,0	duplicate(TurboTrap#tt_main)	trap_n1#F60	139,1,1
-turbo_n_1,348,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F61	139,1,1
-turbo_n_1,348,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F62	139,1,1
-turbo_n_1,348,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F63	139,1,1
-turbo_n_1,348,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F64	139,1,1
-turbo_n_1,348,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F65	139,1,1
-turbo_n_1,352,56,0	duplicate(TurboTrap#tt_main)	trap_n1#F66	139,1,1
-turbo_n_1,352,52,0	duplicate(TurboTrap#tt_main)	trap_n1#F67	139,1,1
-turbo_n_1,352,48,0	duplicate(TurboTrap#tt_main)	trap_n1#F68	139,1,1
-turbo_n_1,352,44,0	duplicate(TurboTrap#tt_main)	trap_n1#F69	139,1,1
-turbo_n_1,352,40,0	duplicate(TurboTrap#tt_main)	trap_n1#F70	139,1,1
-turbo_n_1,352,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F71	139,1,1
-turbo_n_1,356,55,0	duplicate(TurboTrap#tt_main)	trap_n1#F72	139,1,1
-turbo_n_1,356,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F73	139,1,1
-turbo_n_1,356,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F74	139,1,1
-turbo_n_1,356,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F75	139,1,1
-turbo_n_1,356,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F76	139,1,1
-turbo_n_1,356,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F77	139,1,1
-turbo_n_1,360,56,0	duplicate(TurboTrap#tt_main)	trap_n1#F78	139,1,1
-turbo_n_1,360,52,0	duplicate(TurboTrap#tt_main)	trap_n1#F79	139,1,1
-turbo_n_1,360,48,0	duplicate(TurboTrap#tt_main)	trap_n1#F80	139,1,1
-turbo_n_1,360,44,0	duplicate(TurboTrap#tt_main)	trap_n1#F81	139,1,1
-turbo_n_1,360,40,0	duplicate(TurboTrap#tt_main)	trap_n1#F82	139,1,1
-turbo_n_1,360,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F83	139,1,1
-turbo_n_1,364,55,0	duplicate(TurboTrap#tt_main)	trap_n1#F84	139,1,1
-turbo_n_1,364,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F85	139,1,1
-turbo_n_1,364,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F86	139,1,1
-turbo_n_1,364,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F87	139,1,1
-turbo_n_1,364,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F88	139,1,1
-turbo_n_1,364,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F89	139,1,1
-turbo_n_1,368,56,0	duplicate(TurboTrap#tt_main)	trap_n1#F90	139,1,1
-turbo_n_1,368,52,0	duplicate(TurboTrap#tt_main)	trap_n1#F91	139,1,1
-turbo_n_1,368,48,0	duplicate(TurboTrap#tt_main)	trap_n1#F92	139,1,1
-turbo_n_1,368,44,0	duplicate(TurboTrap#tt_main)	trap_n1#F93	139,1,1
-turbo_n_1,368,40,0	duplicate(TurboTrap#tt_main)	trap_n1#F94	139,1,1
-turbo_n_1,368,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F95	139,1,1
+turbo_e_4,307,55,0	duplicate(TurboTrap#tt_main)	trap_e4#F1	HIDDEN_WARP_NPC,1,1
+turbo_e_4,307,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F2	HIDDEN_WARP_NPC,1,1
+turbo_e_4,307,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F3	HIDDEN_WARP_NPC,1,1
+turbo_e_4,307,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F4	HIDDEN_WARP_NPC,1,1
+turbo_e_4,307,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F5	HIDDEN_WARP_NPC,1,1
+turbo_e_4,307,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F96	HIDDEN_WARP_NPC,1,1
+turbo_e_4,312,56,0	duplicate(TurboTrap#tt_main)	trap_e4#F6	HIDDEN_WARP_NPC,1,1
+turbo_e_4,312,52,0	duplicate(TurboTrap#tt_main)	trap_e4#F7	HIDDEN_WARP_NPC,1,1
+turbo_e_4,312,48,0	duplicate(TurboTrap#tt_main)	trap_e4#F8	HIDDEN_WARP_NPC,1,1
+turbo_e_4,312,44,0	duplicate(TurboTrap#tt_main)	trap_e4#F9	HIDDEN_WARP_NPC,1,1
+turbo_e_4,312,40,0	duplicate(TurboTrap#tt_main)	trap_e4#F10	HIDDEN_WARP_NPC,1,1
+turbo_e_4,312,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F11	HIDDEN_WARP_NPC,1,1
+turbo_e_4,316,55,0	duplicate(TurboTrap#tt_main)	trap_e4#F12	HIDDEN_WARP_NPC,1,1
+turbo_e_4,316,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F13	HIDDEN_WARP_NPC,1,1
+turbo_e_4,316,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F14	HIDDEN_WARP_NPC,1,1
+turbo_e_4,316,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F15	HIDDEN_WARP_NPC,1,1
+turbo_e_4,316,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F16	HIDDEN_WARP_NPC,1,1
+turbo_e_4,316,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F17	HIDDEN_WARP_NPC,1,1
+turbo_e_4,320,56,0	duplicate(TurboTrap#tt_main)	trap_e4#F18	HIDDEN_WARP_NPC,1,1
+turbo_e_4,320,52,0	duplicate(TurboTrap#tt_main)	trap_e4#F19	HIDDEN_WARP_NPC,1,1
+turbo_e_4,320,48,0	duplicate(TurboTrap#tt_main)	trap_e4#F20	HIDDEN_WARP_NPC,1,1
+turbo_e_4,320,44,0	duplicate(TurboTrap#tt_main)	trap_e4#F21	HIDDEN_WARP_NPC,1,1
+turbo_e_4,320,40,0	duplicate(TurboTrap#tt_main)	trap_e4#F22	HIDDEN_WARP_NPC,1,1
+turbo_e_4,320,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F23	HIDDEN_WARP_NPC,1,1
+turbo_e_4,324,55,0	duplicate(TurboTrap#tt_main)	trap_e4#F24	HIDDEN_WARP_NPC,1,1
+turbo_e_4,324,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F25	HIDDEN_WARP_NPC,1,1
+turbo_e_4,324,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F26	HIDDEN_WARP_NPC,1,1
+turbo_e_4,324,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F27	HIDDEN_WARP_NPC,1,1
+turbo_e_4,324,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F28	HIDDEN_WARP_NPC,1,1
+turbo_e_4,324,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F29	HIDDEN_WARP_NPC,1,1
+turbo_e_4,328,56,0	duplicate(TurboTrap#tt_main)	trap_e4#F30	HIDDEN_WARP_NPC,1,1
+turbo_e_4,328,52,0	duplicate(TurboTrap#tt_main)	trap_e4#F31	HIDDEN_WARP_NPC,1,1
+turbo_e_4,328,48,0	duplicate(TurboTrap#tt_main)	trap_e4#F32	HIDDEN_WARP_NPC,1,1
+turbo_e_4,328,44,0	duplicate(TurboTrap#tt_main)	trap_e4#F33	HIDDEN_WARP_NPC,1,1
+turbo_e_4,328,40,0	duplicate(TurboTrap#tt_main)	trap_e4#F34	HIDDEN_WARP_NPC,1,1
+turbo_e_4,328,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F35	HIDDEN_WARP_NPC,1,1
+turbo_e_4,332,55,0	duplicate(TurboTrap#tt_main)	trap_e4#F36	HIDDEN_WARP_NPC,1,1
+turbo_e_4,332,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F37	HIDDEN_WARP_NPC,1,1
+turbo_e_4,332,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F38	HIDDEN_WARP_NPC,1,1
+turbo_e_4,332,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F39	HIDDEN_WARP_NPC,1,1
+turbo_e_4,332,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F40	HIDDEN_WARP_NPC,1,1
+turbo_e_4,332,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F41	HIDDEN_WARP_NPC,1,1
+turbo_e_8,307,55,0	duplicate(TurboTrap#tt_main)	trap_e8#F1	HIDDEN_WARP_NPC,1,1
+turbo_e_8,307,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F2	HIDDEN_WARP_NPC,1,1
+turbo_e_8,307,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F3	HIDDEN_WARP_NPC,1,1
+turbo_e_8,307,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F4	HIDDEN_WARP_NPC,1,1
+turbo_e_8,307,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F5	HIDDEN_WARP_NPC,1,1
+turbo_e_8,307,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F96	HIDDEN_WARP_NPC,1,1
+turbo_e_8,312,56,0	duplicate(TurboTrap#tt_main)	trap_e8#F6	HIDDEN_WARP_NPC,1,1
+turbo_e_8,312,52,0	duplicate(TurboTrap#tt_main)	trap_e8#F7	HIDDEN_WARP_NPC,1,1
+turbo_e_8,312,48,0	duplicate(TurboTrap#tt_main)	trap_e8#F8	HIDDEN_WARP_NPC,1,1
+turbo_e_8,312,44,0	duplicate(TurboTrap#tt_main)	trap_e8#F9	HIDDEN_WARP_NPC,1,1
+turbo_e_8,312,40,0	duplicate(TurboTrap#tt_main)	trap_e8#F10	HIDDEN_WARP_NPC,1,1
+turbo_e_8,312,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F11	HIDDEN_WARP_NPC,1,1
+turbo_e_8,316,55,0	duplicate(TurboTrap#tt_main)	trap_e8#F12	HIDDEN_WARP_NPC,1,1
+turbo_e_8,316,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F13	HIDDEN_WARP_NPC,1,1
+turbo_e_8,316,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F14	HIDDEN_WARP_NPC,1,1
+turbo_e_8,316,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F15	HIDDEN_WARP_NPC,1,1
+turbo_e_8,316,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F16	HIDDEN_WARP_NPC,1,1
+turbo_e_8,316,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F17	HIDDEN_WARP_NPC,1,1
+turbo_e_8,320,56,0	duplicate(TurboTrap#tt_main)	trap_e8#F18	HIDDEN_WARP_NPC,1,1
+turbo_e_8,320,52,0	duplicate(TurboTrap#tt_main)	trap_e8#F19	HIDDEN_WARP_NPC,1,1
+turbo_e_8,320,48,0	duplicate(TurboTrap#tt_main)	trap_e8#F20	HIDDEN_WARP_NPC,1,1
+turbo_e_8,320,44,0	duplicate(TurboTrap#tt_main)	trap_e8#F21	HIDDEN_WARP_NPC,1,1
+turbo_e_8,320,40,0	duplicate(TurboTrap#tt_main)	trap_e8#F22	HIDDEN_WARP_NPC,1,1
+turbo_e_8,320,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F23	HIDDEN_WARP_NPC,1,1
+turbo_e_8,324,55,0	duplicate(TurboTrap#tt_main)	trap_e8#F24	HIDDEN_WARP_NPC,1,1
+turbo_e_8,324,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F25	HIDDEN_WARP_NPC,1,1
+turbo_e_8,324,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F26	HIDDEN_WARP_NPC,1,1
+turbo_e_8,324,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F27	HIDDEN_WARP_NPC,1,1
+turbo_e_8,324,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F28	HIDDEN_WARP_NPC,1,1
+turbo_e_8,324,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F29	HIDDEN_WARP_NPC,1,1
+turbo_e_8,328,56,0	duplicate(TurboTrap#tt_main)	trap_e8#F30	HIDDEN_WARP_NPC,1,1
+turbo_e_8,328,52,0	duplicate(TurboTrap#tt_main)	trap_e8#F31	HIDDEN_WARP_NPC,1,1
+turbo_e_8,328,48,0	duplicate(TurboTrap#tt_main)	trap_e8#F32	HIDDEN_WARP_NPC,1,1
+turbo_e_8,328,44,0	duplicate(TurboTrap#tt_main)	trap_e8#F33	HIDDEN_WARP_NPC,1,1
+turbo_e_8,328,40,0	duplicate(TurboTrap#tt_main)	trap_e8#F34	HIDDEN_WARP_NPC,1,1
+turbo_e_8,328,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F35	HIDDEN_WARP_NPC,1,1
+turbo_e_8,332,55,0	duplicate(TurboTrap#tt_main)	trap_e8#F36	HIDDEN_WARP_NPC,1,1
+turbo_e_8,332,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F37	HIDDEN_WARP_NPC,1,1
+turbo_e_8,332,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F38	HIDDEN_WARP_NPC,1,1
+turbo_e_8,332,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F39	HIDDEN_WARP_NPC,1,1
+turbo_e_8,332,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F40	HIDDEN_WARP_NPC,1,1
+turbo_e_8,332,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F41	HIDDEN_WARP_NPC,1,1
+turbo_e_16,307,55,0	duplicate(TurboTrap#tt_main)	trap_e16#F1	HIDDEN_WARP_NPC,1,1
+turbo_e_16,307,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F2	HIDDEN_WARP_NPC,1,1
+turbo_e_16,307,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F3	HIDDEN_WARP_NPC,1,1
+turbo_e_16,307,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F4	HIDDEN_WARP_NPC,1,1
+turbo_e_16,307,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F5	HIDDEN_WARP_NPC,1,1
+turbo_e_16,307,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F96	HIDDEN_WARP_NPC,1,1
+turbo_e_16,312,56,0	duplicate(TurboTrap#tt_main)	trap_e16#F6	HIDDEN_WARP_NPC,1,1
+turbo_e_16,312,52,0	duplicate(TurboTrap#tt_main)	trap_e16#F7	HIDDEN_WARP_NPC,1,1
+turbo_e_16,312,48,0	duplicate(TurboTrap#tt_main)	trap_e16#F8	HIDDEN_WARP_NPC,1,1
+turbo_e_16,312,44,0	duplicate(TurboTrap#tt_main)	trap_e16#F9	HIDDEN_WARP_NPC,1,1
+turbo_e_16,312,40,0	duplicate(TurboTrap#tt_main)	trap_e16#F10	HIDDEN_WARP_NPC,1,1
+turbo_e_16,312,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F11	HIDDEN_WARP_NPC,1,1
+turbo_e_16,316,55,0	duplicate(TurboTrap#tt_main)	trap_e16#F12	HIDDEN_WARP_NPC,1,1
+turbo_e_16,316,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F13	HIDDEN_WARP_NPC,1,1
+turbo_e_16,316,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F14	HIDDEN_WARP_NPC,1,1
+turbo_e_16,316,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F15	HIDDEN_WARP_NPC,1,1
+turbo_e_16,316,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F16	HIDDEN_WARP_NPC,1,1
+turbo_e_16,316,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F17	HIDDEN_WARP_NPC,1,1
+turbo_e_16,320,56,0	duplicate(TurboTrap#tt_main)	trap_e16#F18	HIDDEN_WARP_NPC,1,1
+turbo_e_16,320,52,0	duplicate(TurboTrap#tt_main)	trap_e16#F19	HIDDEN_WARP_NPC,1,1
+turbo_e_16,320,48,0	duplicate(TurboTrap#tt_main)	trap_e16#F20	HIDDEN_WARP_NPC,1,1
+turbo_e_16,320,44,0	duplicate(TurboTrap#tt_main)	trap_e16#F21	HIDDEN_WARP_NPC,1,1
+turbo_e_16,320,40,0	duplicate(TurboTrap#tt_main)	trap_e16#F22	HIDDEN_WARP_NPC,1,1
+turbo_e_16,320,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F23	HIDDEN_WARP_NPC,1,1
+turbo_e_16,324,55,0	duplicate(TurboTrap#tt_main)	trap_e16#F24	HIDDEN_WARP_NPC,1,1
+turbo_e_16,324,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F25	HIDDEN_WARP_NPC,1,1
+turbo_e_16,324,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F26	HIDDEN_WARP_NPC,1,1
+turbo_e_16,324,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F27	HIDDEN_WARP_NPC,1,1
+turbo_e_16,324,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F28	HIDDEN_WARP_NPC,1,1
+turbo_e_16,324,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F29	HIDDEN_WARP_NPC,1,1
+turbo_e_16,328,56,0	duplicate(TurboTrap#tt_main)	trap_e16#F30	HIDDEN_WARP_NPC,1,1
+turbo_e_16,328,52,0	duplicate(TurboTrap#tt_main)	trap_e16#F31	HIDDEN_WARP_NPC,1,1
+turbo_e_16,328,48,0	duplicate(TurboTrap#tt_main)	trap_e16#F32	HIDDEN_WARP_NPC,1,1
+turbo_e_16,328,44,0	duplicate(TurboTrap#tt_main)	trap_e16#F33	HIDDEN_WARP_NPC,1,1
+turbo_e_16,328,40,0	duplicate(TurboTrap#tt_main)	trap_e16#F34	HIDDEN_WARP_NPC,1,1
+turbo_e_16,328,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F35	HIDDEN_WARP_NPC,1,1
+turbo_e_16,332,55,0	duplicate(TurboTrap#tt_main)	trap_e16#F36	HIDDEN_WARP_NPC,1,1
+turbo_e_16,332,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F37	HIDDEN_WARP_NPC,1,1
+turbo_e_16,332,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F38	HIDDEN_WARP_NPC,1,1
+turbo_e_16,332,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F39	HIDDEN_WARP_NPC,1,1
+turbo_e_16,332,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F40	HIDDEN_WARP_NPC,1,1
+turbo_e_16,332,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F41	HIDDEN_WARP_NPC,1,1
+turbo_n_4,307,55,0	duplicate(TurboTrap#tt_main)	trap_n4#F1	HIDDEN_WARP_NPC,1,1
+turbo_n_4,307,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F2	HIDDEN_WARP_NPC,1,1
+turbo_n_4,307,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F3	HIDDEN_WARP_NPC,1,1
+turbo_n_4,307,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F4	HIDDEN_WARP_NPC,1,1
+turbo_n_4,307,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F5	HIDDEN_WARP_NPC,1,1
+turbo_n_4,307,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F96	HIDDEN_WARP_NPC,1,1
+turbo_n_4,312,56,0	duplicate(TurboTrap#tt_main)	trap_n4#F6	HIDDEN_WARP_NPC,1,1
+turbo_n_4,312,52,0	duplicate(TurboTrap#tt_main)	trap_n4#F7	HIDDEN_WARP_NPC,1,1
+turbo_n_4,312,48,0	duplicate(TurboTrap#tt_main)	trap_n4#F8	HIDDEN_WARP_NPC,1,1
+turbo_n_4,312,44,0	duplicate(TurboTrap#tt_main)	trap_n4#F9	HIDDEN_WARP_NPC,1,1
+turbo_n_4,312,40,0	duplicate(TurboTrap#tt_main)	trap_n4#F10	HIDDEN_WARP_NPC,1,1
+turbo_n_4,312,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F11	HIDDEN_WARP_NPC,1,1
+turbo_n_4,316,55,0	duplicate(TurboTrap#tt_main)	trap_n4#F12	HIDDEN_WARP_NPC,1,1
+turbo_n_4,316,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F13	HIDDEN_WARP_NPC,1,1
+turbo_n_4,316,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F14	HIDDEN_WARP_NPC,1,1
+turbo_n_4,316,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F15	HIDDEN_WARP_NPC,1,1
+turbo_n_4,316,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F16	HIDDEN_WARP_NPC,1,1
+turbo_n_4,316,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F17	HIDDEN_WARP_NPC,1,1
+turbo_n_4,320,56,0	duplicate(TurboTrap#tt_main)	trap_n4#F18	HIDDEN_WARP_NPC,1,1
+turbo_n_4,320,52,0	duplicate(TurboTrap#tt_main)	trap_n4#F19	HIDDEN_WARP_NPC,1,1
+turbo_n_4,320,48,0	duplicate(TurboTrap#tt_main)	trap_n4#F20	HIDDEN_WARP_NPC,1,1
+turbo_n_4,320,44,0	duplicate(TurboTrap#tt_main)	trap_n4#F21	HIDDEN_WARP_NPC,1,1
+turbo_n_4,320,40,0	duplicate(TurboTrap#tt_main)	trap_n4#F22	HIDDEN_WARP_NPC,1,1
+turbo_n_4,320,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F23	HIDDEN_WARP_NPC,1,1
+turbo_n_4,324,55,0	duplicate(TurboTrap#tt_main)	trap_n4#F24	HIDDEN_WARP_NPC,1,1
+turbo_n_4,324,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F25	HIDDEN_WARP_NPC,1,1
+turbo_n_4,324,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F26	HIDDEN_WARP_NPC,1,1
+turbo_n_4,324,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F27	HIDDEN_WARP_NPC,1,1
+turbo_n_4,324,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F28	HIDDEN_WARP_NPC,1,1
+turbo_n_4,324,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F29	HIDDEN_WARP_NPC,1,1
+turbo_n_4,328,56,0	duplicate(TurboTrap#tt_main)	trap_n4#F30	HIDDEN_WARP_NPC,1,1
+turbo_n_4,328,52,0	duplicate(TurboTrap#tt_main)	trap_n4#F31	HIDDEN_WARP_NPC,1,1
+turbo_n_4,328,48,0	duplicate(TurboTrap#tt_main)	trap_n4#F32	HIDDEN_WARP_NPC,1,1
+turbo_n_4,328,44,0	duplicate(TurboTrap#tt_main)	trap_n4#F33	HIDDEN_WARP_NPC,1,1
+turbo_n_4,328,40,0	duplicate(TurboTrap#tt_main)	trap_n4#F34	HIDDEN_WARP_NPC,1,1
+turbo_n_4,328,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F35	HIDDEN_WARP_NPC,1,1
+turbo_n_4,332,55,0	duplicate(TurboTrap#tt_main)	trap_n4#F36	HIDDEN_WARP_NPC,1,1
+turbo_n_4,332,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F37	HIDDEN_WARP_NPC,1,1
+turbo_n_4,332,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F38	HIDDEN_WARP_NPC,1,1
+turbo_n_4,332,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F39	HIDDEN_WARP_NPC,1,1
+turbo_n_4,332,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F40	HIDDEN_WARP_NPC,1,1
+turbo_n_4,332,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F41	HIDDEN_WARP_NPC,1,1
+turbo_n_8,307,55,0	duplicate(TurboTrap#tt_main)	trap_n8#F1	HIDDEN_WARP_NPC,1,1
+turbo_n_8,307,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F2	HIDDEN_WARP_NPC,1,1
+turbo_n_8,307,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F3	HIDDEN_WARP_NPC,1,1
+turbo_n_8,307,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F4	HIDDEN_WARP_NPC,1,1
+turbo_n_8,307,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F5	HIDDEN_WARP_NPC,1,1
+turbo_n_8,307,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F96	HIDDEN_WARP_NPC,1,1
+turbo_n_8,312,56,0	duplicate(TurboTrap#tt_main)	trap_n8#F6	HIDDEN_WARP_NPC,1,1
+turbo_n_8,312,52,0	duplicate(TurboTrap#tt_main)	trap_n8#F7	HIDDEN_WARP_NPC,1,1
+turbo_n_8,312,48,0	duplicate(TurboTrap#tt_main)	trap_n8#F8	HIDDEN_WARP_NPC,1,1
+turbo_n_8,312,44,0	duplicate(TurboTrap#tt_main)	trap_n8#F9	HIDDEN_WARP_NPC,1,1
+turbo_n_8,312,40,0	duplicate(TurboTrap#tt_main)	trap_n8#F10	HIDDEN_WARP_NPC,1,1
+turbo_n_8,312,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F11	HIDDEN_WARP_NPC,1,1
+turbo_n_8,316,55,0	duplicate(TurboTrap#tt_main)	trap_n8#F12	HIDDEN_WARP_NPC,1,1
+turbo_n_8,316,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F13	HIDDEN_WARP_NPC,1,1
+turbo_n_8,316,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F14	HIDDEN_WARP_NPC,1,1
+turbo_n_8,316,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F15	HIDDEN_WARP_NPC,1,1
+turbo_n_8,316,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F16	HIDDEN_WARP_NPC,1,1
+turbo_n_8,316,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F17	HIDDEN_WARP_NPC,1,1
+turbo_n_8,320,56,0	duplicate(TurboTrap#tt_main)	trap_n8#F18	HIDDEN_WARP_NPC,1,1
+turbo_n_8,320,52,0	duplicate(TurboTrap#tt_main)	trap_n8#F19	HIDDEN_WARP_NPC,1,1
+turbo_n_8,320,48,0	duplicate(TurboTrap#tt_main)	trap_n8#F20	HIDDEN_WARP_NPC,1,1
+turbo_n_8,320,44,0	duplicate(TurboTrap#tt_main)	trap_n8#F21	HIDDEN_WARP_NPC,1,1
+turbo_n_8,320,40,0	duplicate(TurboTrap#tt_main)	trap_n8#F22	HIDDEN_WARP_NPC,1,1
+turbo_n_8,320,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F23	HIDDEN_WARP_NPC,1,1
+turbo_n_8,324,55,0	duplicate(TurboTrap#tt_main)	trap_n8#F24	HIDDEN_WARP_NPC,1,1
+turbo_n_8,324,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F25	HIDDEN_WARP_NPC,1,1
+turbo_n_8,324,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F26	HIDDEN_WARP_NPC,1,1
+turbo_n_8,324,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F27	HIDDEN_WARP_NPC,1,1
+turbo_n_8,324,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F28	HIDDEN_WARP_NPC,1,1
+turbo_n_8,324,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F29	HIDDEN_WARP_NPC,1,1
+turbo_n_8,328,56,0	duplicate(TurboTrap#tt_main)	trap_n8#F30	HIDDEN_WARP_NPC,1,1
+turbo_n_8,328,52,0	duplicate(TurboTrap#tt_main)	trap_n8#F31	HIDDEN_WARP_NPC,1,1
+turbo_n_8,328,48,0	duplicate(TurboTrap#tt_main)	trap_n8#F32	HIDDEN_WARP_NPC,1,1
+turbo_n_8,328,44,0	duplicate(TurboTrap#tt_main)	trap_n8#F33	HIDDEN_WARP_NPC,1,1
+turbo_n_8,328,40,0	duplicate(TurboTrap#tt_main)	trap_n8#F34	HIDDEN_WARP_NPC,1,1
+turbo_n_8,328,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F35	HIDDEN_WARP_NPC,1,1
+turbo_n_8,332,55,0	duplicate(TurboTrap#tt_main)	trap_n8#F36	HIDDEN_WARP_NPC,1,1
+turbo_n_8,332,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F37	HIDDEN_WARP_NPC,1,1
+turbo_n_8,332,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F38	HIDDEN_WARP_NPC,1,1
+turbo_n_8,332,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F39	HIDDEN_WARP_NPC,1,1
+turbo_n_8,332,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F40	HIDDEN_WARP_NPC,1,1
+turbo_n_8,332,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F41	HIDDEN_WARP_NPC,1,1
+turbo_n_16,307,55,0	duplicate(TurboTrap#tt_main)	trap_n16#F1	HIDDEN_WARP_NPC,1,1
+turbo_n_16,307,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F2	HIDDEN_WARP_NPC,1,1
+turbo_n_16,307,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F3	HIDDEN_WARP_NPC,1,1
+turbo_n_16,307,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F4	HIDDEN_WARP_NPC,1,1
+turbo_n_16,307,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F5	HIDDEN_WARP_NPC,1,1
+turbo_n_16,307,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F96	HIDDEN_WARP_NPC,1,1
+turbo_n_16,312,56,0	duplicate(TurboTrap#tt_main)	trap_n16#F6	HIDDEN_WARP_NPC,1,1
+turbo_n_16,312,52,0	duplicate(TurboTrap#tt_main)	trap_n16#F7	HIDDEN_WARP_NPC,1,1
+turbo_n_16,312,48,0	duplicate(TurboTrap#tt_main)	trap_n16#F8	HIDDEN_WARP_NPC,1,1
+turbo_n_16,312,44,0	duplicate(TurboTrap#tt_main)	trap_n16#F9	HIDDEN_WARP_NPC,1,1
+turbo_n_16,312,40,0	duplicate(TurboTrap#tt_main)	trap_n16#F10	HIDDEN_WARP_NPC,1,1
+turbo_n_16,312,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F11	HIDDEN_WARP_NPC,1,1
+turbo_n_16,316,55,0	duplicate(TurboTrap#tt_main)	trap_n16#F12	HIDDEN_WARP_NPC,1,1
+turbo_n_16,316,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F13	HIDDEN_WARP_NPC,1,1
+turbo_n_16,316,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F14	HIDDEN_WARP_NPC,1,1
+turbo_n_16,316,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F15	HIDDEN_WARP_NPC,1,1
+turbo_n_16,316,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F16	HIDDEN_WARP_NPC,1,1
+turbo_n_16,316,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F17	HIDDEN_WARP_NPC,1,1
+turbo_n_16,320,56,0	duplicate(TurboTrap#tt_main)	trap_n16#F18	HIDDEN_WARP_NPC,1,1
+turbo_n_16,320,52,0	duplicate(TurboTrap#tt_main)	trap_n16#F19	HIDDEN_WARP_NPC,1,1
+turbo_n_16,320,48,0	duplicate(TurboTrap#tt_main)	trap_n16#F20	HIDDEN_WARP_NPC,1,1
+turbo_n_16,320,44,0	duplicate(TurboTrap#tt_main)	trap_n16#F21	HIDDEN_WARP_NPC,1,1
+turbo_n_16,320,40,0	duplicate(TurboTrap#tt_main)	trap_n16#F22	HIDDEN_WARP_NPC,1,1
+turbo_n_16,320,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F23	HIDDEN_WARP_NPC,1,1
+turbo_n_16,324,55,0	duplicate(TurboTrap#tt_main)	trap_n16#F24	HIDDEN_WARP_NPC,1,1
+turbo_n_16,324,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F25	HIDDEN_WARP_NPC,1,1
+turbo_n_16,324,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F26	HIDDEN_WARP_NPC,1,1
+turbo_n_16,324,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F27	HIDDEN_WARP_NPC,1,1
+turbo_n_16,324,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F28	HIDDEN_WARP_NPC,1,1
+turbo_n_16,324,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F29	HIDDEN_WARP_NPC,1,1
+turbo_n_16,328,56,0	duplicate(TurboTrap#tt_main)	trap_n16#F30	HIDDEN_WARP_NPC,1,1
+turbo_n_16,328,52,0	duplicate(TurboTrap#tt_main)	trap_n16#F31	HIDDEN_WARP_NPC,1,1
+turbo_n_16,328,48,0	duplicate(TurboTrap#tt_main)	trap_n16#F32	HIDDEN_WARP_NPC,1,1
+turbo_n_16,328,44,0	duplicate(TurboTrap#tt_main)	trap_n16#F33	HIDDEN_WARP_NPC,1,1
+turbo_n_16,328,40,0	duplicate(TurboTrap#tt_main)	trap_n16#F34	HIDDEN_WARP_NPC,1,1
+turbo_n_16,328,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F35	HIDDEN_WARP_NPC,1,1
+turbo_n_16,332,55,0	duplicate(TurboTrap#tt_main)	trap_n16#F36	HIDDEN_WARP_NPC,1,1
+turbo_n_16,332,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F37	HIDDEN_WARP_NPC,1,1
+turbo_n_16,332,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F38	HIDDEN_WARP_NPC,1,1
+turbo_n_16,332,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F39	HIDDEN_WARP_NPC,1,1
+turbo_n_16,332,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F40	HIDDEN_WARP_NPC,1,1
+turbo_n_16,332,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F41	HIDDEN_WARP_NPC,1,1
+turbo_n_1,307,55,0	duplicate(TurboTrap#tt_main)	trap_n1#F1	HIDDEN_WARP_NPC,1,1
+turbo_n_1,307,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F2	HIDDEN_WARP_NPC,1,1
+turbo_n_1,307,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F3	HIDDEN_WARP_NPC,1,1
+turbo_n_1,307,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F4	HIDDEN_WARP_NPC,1,1
+turbo_n_1,307,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F5	HIDDEN_WARP_NPC,1,1
+turbo_n_1,307,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F96	HIDDEN_WARP_NPC,1,1
+turbo_n_1,312,56,0	duplicate(TurboTrap#tt_main)	trap_n1#F6	HIDDEN_WARP_NPC,1,1
+turbo_n_1,312,52,0	duplicate(TurboTrap#tt_main)	trap_n1#F7	HIDDEN_WARP_NPC,1,1
+turbo_n_1,312,48,0	duplicate(TurboTrap#tt_main)	trap_n1#F8	HIDDEN_WARP_NPC,1,1
+turbo_n_1,312,44,0	duplicate(TurboTrap#tt_main)	trap_n1#F9	HIDDEN_WARP_NPC,1,1
+turbo_n_1,312,40,0	duplicate(TurboTrap#tt_main)	trap_n1#F10	HIDDEN_WARP_NPC,1,1
+turbo_n_1,312,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F11	HIDDEN_WARP_NPC,1,1
+turbo_n_1,316,55,0	duplicate(TurboTrap#tt_main)	trap_n1#F12	HIDDEN_WARP_NPC,1,1
+turbo_n_1,316,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F13	HIDDEN_WARP_NPC,1,1
+turbo_n_1,316,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F14	HIDDEN_WARP_NPC,1,1
+turbo_n_1,316,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F15	HIDDEN_WARP_NPC,1,1
+turbo_n_1,316,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F16	HIDDEN_WARP_NPC,1,1
+turbo_n_1,316,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F17	HIDDEN_WARP_NPC,1,1
+turbo_n_1,320,56,0	duplicate(TurboTrap#tt_main)	trap_n1#F18	HIDDEN_WARP_NPC,1,1
+turbo_n_1,320,52,0	duplicate(TurboTrap#tt_main)	trap_n1#F19	HIDDEN_WARP_NPC,1,1
+turbo_n_1,320,48,0	duplicate(TurboTrap#tt_main)	trap_n1#F20	HIDDEN_WARP_NPC,1,1
+turbo_n_1,320,44,0	duplicate(TurboTrap#tt_main)	trap_n1#F21	HIDDEN_WARP_NPC,1,1
+turbo_n_1,320,40,0	duplicate(TurboTrap#tt_main)	trap_n1#F22	HIDDEN_WARP_NPC,1,1
+turbo_n_1,320,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F23	HIDDEN_WARP_NPC,1,1
+turbo_n_1,324,55,0	duplicate(TurboTrap#tt_main)	trap_n1#F24	HIDDEN_WARP_NPC,1,1
+turbo_n_1,324,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F25	HIDDEN_WARP_NPC,1,1
+turbo_n_1,324,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F26	HIDDEN_WARP_NPC,1,1
+turbo_n_1,324,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F27	HIDDEN_WARP_NPC,1,1
+turbo_n_1,324,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F28	HIDDEN_WARP_NPC,1,1
+turbo_n_1,324,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F29	HIDDEN_WARP_NPC,1,1
+turbo_n_1,328,56,0	duplicate(TurboTrap#tt_main)	trap_n1#F30	HIDDEN_WARP_NPC,1,1
+turbo_n_1,328,52,0	duplicate(TurboTrap#tt_main)	trap_n1#F31	HIDDEN_WARP_NPC,1,1
+turbo_n_1,328,48,0	duplicate(TurboTrap#tt_main)	trap_n1#F32	HIDDEN_WARP_NPC,1,1
+turbo_n_1,328,44,0	duplicate(TurboTrap#tt_main)	trap_n1#F33	HIDDEN_WARP_NPC,1,1
+turbo_n_1,328,40,0	duplicate(TurboTrap#tt_main)	trap_n1#F34	HIDDEN_WARP_NPC,1,1
+turbo_n_1,328,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F35	HIDDEN_WARP_NPC,1,1
+turbo_n_1,332,55,0	duplicate(TurboTrap#tt_main)	trap_n1#F36	HIDDEN_WARP_NPC,1,1
+turbo_n_1,332,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F37	HIDDEN_WARP_NPC,1,1
+turbo_n_1,332,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F38	HIDDEN_WARP_NPC,1,1
+turbo_n_1,332,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F39	HIDDEN_WARP_NPC,1,1
+turbo_n_1,332,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F40	HIDDEN_WARP_NPC,1,1
+turbo_n_1,332,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F41	HIDDEN_WARP_NPC,1,1
+turbo_e_4,340,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F49	HIDDEN_WARP_NPC,1,1
+turbo_e_4,340,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F50	HIDDEN_WARP_NPC,1,1
+turbo_e_4,340,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F51	HIDDEN_WARP_NPC,1,1
+turbo_e_4,340,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F52	HIDDEN_WARP_NPC,1,1
+turbo_e_4,340,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F53	HIDDEN_WARP_NPC,1,1
+turbo_e_4,344,56,0	duplicate(TurboTrap#tt_main)	trap_e4#F54	HIDDEN_WARP_NPC,1,1
+turbo_e_4,344,52,0	duplicate(TurboTrap#tt_main)	trap_e4#F55	HIDDEN_WARP_NPC,1,1
+turbo_e_4,344,48,0	duplicate(TurboTrap#tt_main)	trap_e4#F56	HIDDEN_WARP_NPC,1,1
+turbo_e_4,344,44,0	duplicate(TurboTrap#tt_main)	trap_e4#F57	HIDDEN_WARP_NPC,1,1
+turbo_e_4,344,40,0	duplicate(TurboTrap#tt_main)	trap_e4#F58	HIDDEN_WARP_NPC,1,1
+turbo_e_4,344,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F59	HIDDEN_WARP_NPC,1,1
+turbo_e_4,348,55,0	duplicate(TurboTrap#tt_main)	trap_e4#F60	HIDDEN_WARP_NPC,1,1
+turbo_e_4,348,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F61	HIDDEN_WARP_NPC,1,1
+turbo_e_4,348,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F62	HIDDEN_WARP_NPC,1,1
+turbo_e_4,348,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F63	HIDDEN_WARP_NPC,1,1
+turbo_e_4,348,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F64	HIDDEN_WARP_NPC,1,1
+turbo_e_4,348,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F65	HIDDEN_WARP_NPC,1,1
+turbo_e_4,352,56,0	duplicate(TurboTrap#tt_main)	trap_e4#F66	HIDDEN_WARP_NPC,1,1
+turbo_e_4,352,52,0	duplicate(TurboTrap#tt_main)	trap_e4#F67	HIDDEN_WARP_NPC,1,1
+turbo_e_4,352,48,0	duplicate(TurboTrap#tt_main)	trap_e4#F68	HIDDEN_WARP_NPC,1,1
+turbo_e_4,352,44,0	duplicate(TurboTrap#tt_main)	trap_e4#F69	HIDDEN_WARP_NPC,1,1
+turbo_e_4,352,40,0	duplicate(TurboTrap#tt_main)	trap_e4#F70	HIDDEN_WARP_NPC,1,1
+turbo_e_4,352,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F71	HIDDEN_WARP_NPC,1,1
+turbo_e_4,356,55,0	duplicate(TurboTrap#tt_main)	trap_e4#F72	HIDDEN_WARP_NPC,1,1
+turbo_e_4,356,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F73	HIDDEN_WARP_NPC,1,1
+turbo_e_4,356,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F74	HIDDEN_WARP_NPC,1,1
+turbo_e_4,356,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F75	HIDDEN_WARP_NPC,1,1
+turbo_e_4,356,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F76	HIDDEN_WARP_NPC,1,1
+turbo_e_4,356,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F77	HIDDEN_WARP_NPC,1,1
+turbo_e_4,360,56,0	duplicate(TurboTrap#tt_main)	trap_e4#F78	HIDDEN_WARP_NPC,1,1
+turbo_e_4,360,52,0	duplicate(TurboTrap#tt_main)	trap_e4#F79	HIDDEN_WARP_NPC,1,1
+turbo_e_4,360,48,0	duplicate(TurboTrap#tt_main)	trap_e4#F80	HIDDEN_WARP_NPC,1,1
+turbo_e_4,360,44,0	duplicate(TurboTrap#tt_main)	trap_e4#F81	HIDDEN_WARP_NPC,1,1
+turbo_e_4,360,40,0	duplicate(TurboTrap#tt_main)	trap_e4#F82	HIDDEN_WARP_NPC,1,1
+turbo_e_4,360,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F83	HIDDEN_WARP_NPC,1,1
+turbo_e_4,364,55,0	duplicate(TurboTrap#tt_main)	trap_e4#F84	HIDDEN_WARP_NPC,1,1
+turbo_e_4,364,51,0	duplicate(TurboTrap#tt_main)	trap_e4#F85	HIDDEN_WARP_NPC,1,1
+turbo_e_4,364,47,0	duplicate(TurboTrap#tt_main)	trap_e4#F86	HIDDEN_WARP_NPC,1,1
+turbo_e_4,364,43,0	duplicate(TurboTrap#tt_main)	trap_e4#F87	HIDDEN_WARP_NPC,1,1
+turbo_e_4,364,39,0	duplicate(TurboTrap#tt_main)	trap_e4#F88	HIDDEN_WARP_NPC,1,1
+turbo_e_4,364,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F89	HIDDEN_WARP_NPC,1,1
+turbo_e_4,368,56,0	duplicate(TurboTrap#tt_main)	trap_e4#F90	HIDDEN_WARP_NPC,1,1
+turbo_e_4,368,52,0	duplicate(TurboTrap#tt_main)	trap_e4#F91	HIDDEN_WARP_NPC,1,1
+turbo_e_4,368,48,0	duplicate(TurboTrap#tt_main)	trap_e4#F92	HIDDEN_WARP_NPC,1,1
+turbo_e_4,368,44,0	duplicate(TurboTrap#tt_main)	trap_e4#F93	HIDDEN_WARP_NPC,1,1
+turbo_e_4,368,40,0	duplicate(TurboTrap#tt_main)	trap_e4#F94	HIDDEN_WARP_NPC,1,1
+turbo_e_4,368,36,0	duplicate(TurboTrap#tt_main)	trap_e4#F95	HIDDEN_WARP_NPC,1,1
+turbo_e_8,340,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F49	HIDDEN_WARP_NPC,1,1
+turbo_e_8,340,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F50	HIDDEN_WARP_NPC,1,1
+turbo_e_8,340,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F51	HIDDEN_WARP_NPC,1,1
+turbo_e_8,340,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F52	HIDDEN_WARP_NPC,1,1
+turbo_e_8,340,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F53	HIDDEN_WARP_NPC,1,1
+turbo_e_8,344,56,0	duplicate(TurboTrap#tt_main)	trap_e8#F54	HIDDEN_WARP_NPC,1,1
+turbo_e_8,344,52,0	duplicate(TurboTrap#tt_main)	trap_e8#F55	HIDDEN_WARP_NPC,1,1
+turbo_e_8,344,48,0	duplicate(TurboTrap#tt_main)	trap_e8#F56	HIDDEN_WARP_NPC,1,1
+turbo_e_8,344,44,0	duplicate(TurboTrap#tt_main)	trap_e8#F57	HIDDEN_WARP_NPC,1,1
+turbo_e_8,344,40,0	duplicate(TurboTrap#tt_main)	trap_e8#F58	HIDDEN_WARP_NPC,1,1
+turbo_e_8,344,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F59	HIDDEN_WARP_NPC,1,1
+turbo_e_8,348,55,0	duplicate(TurboTrap#tt_main)	trap_e8#F60	HIDDEN_WARP_NPC,1,1
+turbo_e_8,348,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F61	HIDDEN_WARP_NPC,1,1
+turbo_e_8,348,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F62	HIDDEN_WARP_NPC,1,1
+turbo_e_8,348,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F63	HIDDEN_WARP_NPC,1,1
+turbo_e_8,348,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F64	HIDDEN_WARP_NPC,1,1
+turbo_e_8,348,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F65	HIDDEN_WARP_NPC,1,1
+turbo_e_8,352,56,0	duplicate(TurboTrap#tt_main)	trap_e8#F66	HIDDEN_WARP_NPC,1,1
+turbo_e_8,352,52,0	duplicate(TurboTrap#tt_main)	trap_e8#F67	HIDDEN_WARP_NPC,1,1
+turbo_e_8,352,48,0	duplicate(TurboTrap#tt_main)	trap_e8#F68	HIDDEN_WARP_NPC,1,1
+turbo_e_8,352,44,0	duplicate(TurboTrap#tt_main)	trap_e8#F69	HIDDEN_WARP_NPC,1,1
+turbo_e_8,352,40,0	duplicate(TurboTrap#tt_main)	trap_e8#F70	HIDDEN_WARP_NPC,1,1
+turbo_e_8,352,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F71	HIDDEN_WARP_NPC,1,1
+turbo_e_8,356,55,0	duplicate(TurboTrap#tt_main)	trap_e8#F72	HIDDEN_WARP_NPC,1,1
+turbo_e_8,356,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F73	HIDDEN_WARP_NPC,1,1
+turbo_e_8,356,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F74	HIDDEN_WARP_NPC,1,1
+turbo_e_8,356,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F75	HIDDEN_WARP_NPC,1,1
+turbo_e_8,356,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F76	HIDDEN_WARP_NPC,1,1
+turbo_e_8,356,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F77	HIDDEN_WARP_NPC,1,1
+turbo_e_8,360,56,0	duplicate(TurboTrap#tt_main)	trap_e8#F78	HIDDEN_WARP_NPC,1,1
+turbo_e_8,360,52,0	duplicate(TurboTrap#tt_main)	trap_e8#F79	HIDDEN_WARP_NPC,1,1
+turbo_e_8,360,48,0	duplicate(TurboTrap#tt_main)	trap_e8#F80	HIDDEN_WARP_NPC,1,1
+turbo_e_8,360,44,0	duplicate(TurboTrap#tt_main)	trap_e8#F81	HIDDEN_WARP_NPC,1,1
+turbo_e_8,360,40,0	duplicate(TurboTrap#tt_main)	trap_e8#F82	HIDDEN_WARP_NPC,1,1
+turbo_e_8,360,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F83	HIDDEN_WARP_NPC,1,1
+turbo_e_8,364,55,0	duplicate(TurboTrap#tt_main)	trap_e8#F84	HIDDEN_WARP_NPC,1,1
+turbo_e_8,364,51,0	duplicate(TurboTrap#tt_main)	trap_e8#F85	HIDDEN_WARP_NPC,1,1
+turbo_e_8,364,47,0	duplicate(TurboTrap#tt_main)	trap_e8#F86	HIDDEN_WARP_NPC,1,1
+turbo_e_8,364,43,0	duplicate(TurboTrap#tt_main)	trap_e8#F87	HIDDEN_WARP_NPC,1,1
+turbo_e_8,364,39,0	duplicate(TurboTrap#tt_main)	trap_e8#F88	HIDDEN_WARP_NPC,1,1
+turbo_e_8,364,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F89	HIDDEN_WARP_NPC,1,1
+turbo_e_8,368,56,0	duplicate(TurboTrap#tt_main)	trap_e8#F90	HIDDEN_WARP_NPC,1,1
+turbo_e_8,368,52,0	duplicate(TurboTrap#tt_main)	trap_e8#F91	HIDDEN_WARP_NPC,1,1
+turbo_e_8,368,48,0	duplicate(TurboTrap#tt_main)	trap_e8#F92	HIDDEN_WARP_NPC,1,1
+turbo_e_8,368,44,0	duplicate(TurboTrap#tt_main)	trap_e8#F93	HIDDEN_WARP_NPC,1,1
+turbo_e_8,368,40,0	duplicate(TurboTrap#tt_main)	trap_e8#F94	HIDDEN_WARP_NPC,1,1
+turbo_e_8,368,36,0	duplicate(TurboTrap#tt_main)	trap_e8#F95	HIDDEN_WARP_NPC,1,1
+turbo_e_16,340,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F49	HIDDEN_WARP_NPC,1,1
+turbo_e_16,340,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F50	HIDDEN_WARP_NPC,1,1
+turbo_e_16,340,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F51	HIDDEN_WARP_NPC,1,1
+turbo_e_16,340,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F52	HIDDEN_WARP_NPC,1,1
+turbo_e_16,340,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F53	HIDDEN_WARP_NPC,1,1
+turbo_e_16,344,56,0	duplicate(TurboTrap#tt_main)	trap_e16#F54	HIDDEN_WARP_NPC,1,1
+turbo_e_16,344,52,0	duplicate(TurboTrap#tt_main)	trap_e16#F55	HIDDEN_WARP_NPC,1,1
+turbo_e_16,344,48,0	duplicate(TurboTrap#tt_main)	trap_e16#F56	HIDDEN_WARP_NPC,1,1
+turbo_e_16,344,44,0	duplicate(TurboTrap#tt_main)	trap_e16#F57	HIDDEN_WARP_NPC,1,1
+turbo_e_16,344,40,0	duplicate(TurboTrap#tt_main)	trap_e16#F58	HIDDEN_WARP_NPC,1,1
+turbo_e_16,344,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F59	HIDDEN_WARP_NPC,1,1
+turbo_e_16,348,55,0	duplicate(TurboTrap#tt_main)	trap_e16#F60	HIDDEN_WARP_NPC,1,1
+turbo_e_16,348,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F61	HIDDEN_WARP_NPC,1,1
+turbo_e_16,348,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F62	HIDDEN_WARP_NPC,1,1
+turbo_e_16,348,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F63	HIDDEN_WARP_NPC,1,1
+turbo_e_16,348,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F64	HIDDEN_WARP_NPC,1,1
+turbo_e_16,348,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F65	HIDDEN_WARP_NPC,1,1
+turbo_e_16,352,56,0	duplicate(TurboTrap#tt_main)	trap_e16#F66	HIDDEN_WARP_NPC,1,1
+turbo_e_16,352,52,0	duplicate(TurboTrap#tt_main)	trap_e16#F67	HIDDEN_WARP_NPC,1,1
+turbo_e_16,352,48,0	duplicate(TurboTrap#tt_main)	trap_e16#F68	HIDDEN_WARP_NPC,1,1
+turbo_e_16,352,44,0	duplicate(TurboTrap#tt_main)	trap_e16#F69	HIDDEN_WARP_NPC,1,1
+turbo_e_16,352,40,0	duplicate(TurboTrap#tt_main)	trap_e16#F70	HIDDEN_WARP_NPC,1,1
+turbo_e_16,352,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F71	HIDDEN_WARP_NPC,1,1
+turbo_e_16,356,55,0	duplicate(TurboTrap#tt_main)	trap_e16#F72	HIDDEN_WARP_NPC,1,1
+turbo_e_16,356,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F73	HIDDEN_WARP_NPC,1,1
+turbo_e_16,356,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F74	HIDDEN_WARP_NPC,1,1
+turbo_e_16,356,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F75	HIDDEN_WARP_NPC,1,1
+turbo_e_16,356,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F76	HIDDEN_WARP_NPC,1,1
+turbo_e_16,356,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F77	HIDDEN_WARP_NPC,1,1
+turbo_e_16,360,56,0	duplicate(TurboTrap#tt_main)	trap_e16#F78	HIDDEN_WARP_NPC,1,1
+turbo_e_16,360,52,0	duplicate(TurboTrap#tt_main)	trap_e16#F79	HIDDEN_WARP_NPC,1,1
+turbo_e_16,360,48,0	duplicate(TurboTrap#tt_main)	trap_e16#F80	HIDDEN_WARP_NPC,1,1
+turbo_e_16,360,44,0	duplicate(TurboTrap#tt_main)	trap_e16#F81	HIDDEN_WARP_NPC,1,1
+turbo_e_16,360,40,0	duplicate(TurboTrap#tt_main)	trap_e16#F82	HIDDEN_WARP_NPC,1,1
+turbo_e_16,360,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F83	HIDDEN_WARP_NPC,1,1
+turbo_e_16,364,55,0	duplicate(TurboTrap#tt_main)	trap_e16#F84	HIDDEN_WARP_NPC,1,1
+turbo_e_16,364,51,0	duplicate(TurboTrap#tt_main)	trap_e16#F85	HIDDEN_WARP_NPC,1,1
+turbo_e_16,364,47,0	duplicate(TurboTrap#tt_main)	trap_e16#F86	HIDDEN_WARP_NPC,1,1
+turbo_e_16,364,43,0	duplicate(TurboTrap#tt_main)	trap_e16#F87	HIDDEN_WARP_NPC,1,1
+turbo_e_16,364,39,0	duplicate(TurboTrap#tt_main)	trap_e16#F88	HIDDEN_WARP_NPC,1,1
+turbo_e_16,364,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F89	HIDDEN_WARP_NPC,1,1
+turbo_e_16,368,56,0	duplicate(TurboTrap#tt_main)	trap_e16#F90	HIDDEN_WARP_NPC,1,1
+turbo_e_16,368,52,0	duplicate(TurboTrap#tt_main)	trap_e16#F91	HIDDEN_WARP_NPC,1,1
+turbo_e_16,368,48,0	duplicate(TurboTrap#tt_main)	trap_e16#F92	HIDDEN_WARP_NPC,1,1
+turbo_e_16,368,44,0	duplicate(TurboTrap#tt_main)	trap_e16#F93	HIDDEN_WARP_NPC,1,1
+turbo_e_16,368,40,0	duplicate(TurboTrap#tt_main)	trap_e16#F94	HIDDEN_WARP_NPC,1,1
+turbo_e_16,368,36,0	duplicate(TurboTrap#tt_main)	trap_e16#F95	HIDDEN_WARP_NPC,1,1
+turbo_n_4,340,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F49	HIDDEN_WARP_NPC,1,1
+turbo_n_4,340,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F50	HIDDEN_WARP_NPC,1,1
+turbo_n_4,340,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F51	HIDDEN_WARP_NPC,1,1
+turbo_n_4,340,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F52	HIDDEN_WARP_NPC,1,1
+turbo_n_4,340,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F53	HIDDEN_WARP_NPC,1,1
+turbo_n_4,344,56,0	duplicate(TurboTrap#tt_main)	trap_n4#F54	HIDDEN_WARP_NPC,1,1
+turbo_n_4,344,52,0	duplicate(TurboTrap#tt_main)	trap_n4#F55	HIDDEN_WARP_NPC,1,1
+turbo_n_4,344,48,0	duplicate(TurboTrap#tt_main)	trap_n4#F56	HIDDEN_WARP_NPC,1,1
+turbo_n_4,344,44,0	duplicate(TurboTrap#tt_main)	trap_n4#F57	HIDDEN_WARP_NPC,1,1
+turbo_n_4,344,40,0	duplicate(TurboTrap#tt_main)	trap_n4#F58	HIDDEN_WARP_NPC,1,1
+turbo_n_4,344,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F59	HIDDEN_WARP_NPC,1,1
+turbo_n_4,348,55,0	duplicate(TurboTrap#tt_main)	trap_n4#F60	HIDDEN_WARP_NPC,1,1
+turbo_n_4,348,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F61	HIDDEN_WARP_NPC,1,1
+turbo_n_4,348,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F62	HIDDEN_WARP_NPC,1,1
+turbo_n_4,348,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F63	HIDDEN_WARP_NPC,1,1
+turbo_n_4,348,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F64	HIDDEN_WARP_NPC,1,1
+turbo_n_4,348,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F65	HIDDEN_WARP_NPC,1,1
+turbo_n_4,352,56,0	duplicate(TurboTrap#tt_main)	trap_n4#F66	HIDDEN_WARP_NPC,1,1
+turbo_n_4,352,52,0	duplicate(TurboTrap#tt_main)	trap_n4#F67	HIDDEN_WARP_NPC,1,1
+turbo_n_4,352,48,0	duplicate(TurboTrap#tt_main)	trap_n4#F68	HIDDEN_WARP_NPC,1,1
+turbo_n_4,352,44,0	duplicate(TurboTrap#tt_main)	trap_n4#F69	HIDDEN_WARP_NPC,1,1
+turbo_n_4,352,40,0	duplicate(TurboTrap#tt_main)	trap_n4#F70	HIDDEN_WARP_NPC,1,1
+turbo_n_4,352,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F71	HIDDEN_WARP_NPC,1,1
+turbo_n_4,356,55,0	duplicate(TurboTrap#tt_main)	trap_n4#F72	HIDDEN_WARP_NPC,1,1
+turbo_n_4,356,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F73	HIDDEN_WARP_NPC,1,1
+turbo_n_4,356,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F74	HIDDEN_WARP_NPC,1,1
+turbo_n_4,356,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F75	HIDDEN_WARP_NPC,1,1
+turbo_n_4,356,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F76	HIDDEN_WARP_NPC,1,1
+turbo_n_4,356,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F77	HIDDEN_WARP_NPC,1,1
+turbo_n_4,360,56,0	duplicate(TurboTrap#tt_main)	trap_n4#F78	HIDDEN_WARP_NPC,1,1
+turbo_n_4,360,52,0	duplicate(TurboTrap#tt_main)	trap_n4#F79	HIDDEN_WARP_NPC,1,1
+turbo_n_4,360,48,0	duplicate(TurboTrap#tt_main)	trap_n4#F80	HIDDEN_WARP_NPC,1,1
+turbo_n_4,360,44,0	duplicate(TurboTrap#tt_main)	trap_n4#F81	HIDDEN_WARP_NPC,1,1
+turbo_n_4,360,40,0	duplicate(TurboTrap#tt_main)	trap_n4#F82	HIDDEN_WARP_NPC,1,1
+turbo_n_4,360,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F83	HIDDEN_WARP_NPC,1,1
+turbo_n_4,364,55,0	duplicate(TurboTrap#tt_main)	trap_n4#F84	HIDDEN_WARP_NPC,1,1
+turbo_n_4,364,51,0	duplicate(TurboTrap#tt_main)	trap_n4#F85	HIDDEN_WARP_NPC,1,1
+turbo_n_4,364,47,0	duplicate(TurboTrap#tt_main)	trap_n4#F86	HIDDEN_WARP_NPC,1,1
+turbo_n_4,364,43,0	duplicate(TurboTrap#tt_main)	trap_n4#F87	HIDDEN_WARP_NPC,1,1
+turbo_n_4,364,39,0	duplicate(TurboTrap#tt_main)	trap_n4#F88	HIDDEN_WARP_NPC,1,1
+turbo_n_4,364,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F89	HIDDEN_WARP_NPC,1,1
+turbo_n_4,368,56,0	duplicate(TurboTrap#tt_main)	trap_n4#F90	HIDDEN_WARP_NPC,1,1
+turbo_n_4,368,52,0	duplicate(TurboTrap#tt_main)	trap_n4#F91	HIDDEN_WARP_NPC,1,1
+turbo_n_4,368,48,0	duplicate(TurboTrap#tt_main)	trap_n4#F92	HIDDEN_WARP_NPC,1,1
+turbo_n_4,368,44,0	duplicate(TurboTrap#tt_main)	trap_n4#F93	HIDDEN_WARP_NPC,1,1
+turbo_n_4,368,40,0	duplicate(TurboTrap#tt_main)	trap_n4#F94	HIDDEN_WARP_NPC,1,1
+turbo_n_4,368,36,0	duplicate(TurboTrap#tt_main)	trap_n4#F95	HIDDEN_WARP_NPC,1,1
+turbo_n_8,340,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F49	HIDDEN_WARP_NPC,1,1
+turbo_n_8,340,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F50	HIDDEN_WARP_NPC,1,1
+turbo_n_8,340,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F51	HIDDEN_WARP_NPC,1,1
+turbo_n_8,340,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F52	HIDDEN_WARP_NPC,1,1
+turbo_n_8,340,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F53	HIDDEN_WARP_NPC,1,1
+turbo_n_8,344,56,0	duplicate(TurboTrap#tt_main)	trap_n8#F54	HIDDEN_WARP_NPC,1,1
+turbo_n_8,344,52,0	duplicate(TurboTrap#tt_main)	trap_n8#F55	HIDDEN_WARP_NPC,1,1
+turbo_n_8,344,48,0	duplicate(TurboTrap#tt_main)	trap_n8#F56	HIDDEN_WARP_NPC,1,1
+turbo_n_8,344,44,0	duplicate(TurboTrap#tt_main)	trap_n8#F57	HIDDEN_WARP_NPC,1,1
+turbo_n_8,344,40,0	duplicate(TurboTrap#tt_main)	trap_n8#F58	HIDDEN_WARP_NPC,1,1
+turbo_n_8,344,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F59	HIDDEN_WARP_NPC,1,1
+turbo_n_8,348,55,0	duplicate(TurboTrap#tt_main)	trap_n8#F60	HIDDEN_WARP_NPC,1,1
+turbo_n_8,348,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F61	HIDDEN_WARP_NPC,1,1
+turbo_n_8,348,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F62	HIDDEN_WARP_NPC,1,1
+turbo_n_8,348,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F63	HIDDEN_WARP_NPC,1,1
+turbo_n_8,348,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F64	HIDDEN_WARP_NPC,1,1
+turbo_n_8,348,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F65	HIDDEN_WARP_NPC,1,1
+turbo_n_8,352,56,0	duplicate(TurboTrap#tt_main)	trap_n8#F66	HIDDEN_WARP_NPC,1,1
+turbo_n_8,352,52,0	duplicate(TurboTrap#tt_main)	trap_n8#F67	HIDDEN_WARP_NPC,1,1
+turbo_n_8,352,48,0	duplicate(TurboTrap#tt_main)	trap_n8#F68	HIDDEN_WARP_NPC,1,1
+turbo_n_8,352,44,0	duplicate(TurboTrap#tt_main)	trap_n8#F69	HIDDEN_WARP_NPC,1,1
+turbo_n_8,352,40,0	duplicate(TurboTrap#tt_main)	trap_n8#F70	HIDDEN_WARP_NPC,1,1
+turbo_n_8,352,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F71	HIDDEN_WARP_NPC,1,1
+turbo_n_8,356,55,0	duplicate(TurboTrap#tt_main)	trap_n8#F72	HIDDEN_WARP_NPC,1,1
+turbo_n_8,356,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F73	HIDDEN_WARP_NPC,1,1
+turbo_n_8,356,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F74	HIDDEN_WARP_NPC,1,1
+turbo_n_8,356,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F75	HIDDEN_WARP_NPC,1,1
+turbo_n_8,356,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F76	HIDDEN_WARP_NPC,1,1
+turbo_n_8,356,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F77	HIDDEN_WARP_NPC,1,1
+turbo_n_8,360,56,0	duplicate(TurboTrap#tt_main)	trap_n8#F78	HIDDEN_WARP_NPC,1,1
+turbo_n_8,360,52,0	duplicate(TurboTrap#tt_main)	trap_n8#F79	HIDDEN_WARP_NPC,1,1
+turbo_n_8,360,48,0	duplicate(TurboTrap#tt_main)	trap_n8#F80	HIDDEN_WARP_NPC,1,1
+turbo_n_8,360,44,0	duplicate(TurboTrap#tt_main)	trap_n8#F81	HIDDEN_WARP_NPC,1,1
+turbo_n_8,360,40,0	duplicate(TurboTrap#tt_main)	trap_n8#F82	HIDDEN_WARP_NPC,1,1
+turbo_n_8,360,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F83	HIDDEN_WARP_NPC,1,1
+turbo_n_8,364,55,0	duplicate(TurboTrap#tt_main)	trap_n8#F84	HIDDEN_WARP_NPC,1,1
+turbo_n_8,364,51,0	duplicate(TurboTrap#tt_main)	trap_n8#F85	HIDDEN_WARP_NPC,1,1
+turbo_n_8,364,47,0	duplicate(TurboTrap#tt_main)	trap_n8#F86	HIDDEN_WARP_NPC,1,1
+turbo_n_8,364,43,0	duplicate(TurboTrap#tt_main)	trap_n8#F87	HIDDEN_WARP_NPC,1,1
+turbo_n_8,364,39,0	duplicate(TurboTrap#tt_main)	trap_n8#F88	HIDDEN_WARP_NPC,1,1
+turbo_n_8,364,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F89	HIDDEN_WARP_NPC,1,1
+turbo_n_8,368,56,0	duplicate(TurboTrap#tt_main)	trap_n8#F90	HIDDEN_WARP_NPC,1,1
+turbo_n_8,368,52,0	duplicate(TurboTrap#tt_main)	trap_n8#F91	HIDDEN_WARP_NPC,1,1
+turbo_n_8,368,48,0	duplicate(TurboTrap#tt_main)	trap_n8#F92	HIDDEN_WARP_NPC,1,1
+turbo_n_8,368,44,0	duplicate(TurboTrap#tt_main)	trap_n8#F93	HIDDEN_WARP_NPC,1,1
+turbo_n_8,368,40,0	duplicate(TurboTrap#tt_main)	trap_n8#F94	HIDDEN_WARP_NPC,1,1
+turbo_n_8,368,36,0	duplicate(TurboTrap#tt_main)	trap_n8#F95	HIDDEN_WARP_NPC,1,1
+turbo_n_16,340,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F49	HIDDEN_WARP_NPC,1,1
+turbo_n_16,340,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F50	HIDDEN_WARP_NPC,1,1
+turbo_n_16,340,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F51	HIDDEN_WARP_NPC,1,1
+turbo_n_16,340,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F52	HIDDEN_WARP_NPC,1,1
+turbo_n_16,340,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F53	HIDDEN_WARP_NPC,1,1
+turbo_n_16,344,56,0	duplicate(TurboTrap#tt_main)	trap_n16#F54	HIDDEN_WARP_NPC,1,1
+turbo_n_16,344,52,0	duplicate(TurboTrap#tt_main)	trap_n16#F55	HIDDEN_WARP_NPC,1,1
+turbo_n_16,344,48,0	duplicate(TurboTrap#tt_main)	trap_n16#F56	HIDDEN_WARP_NPC,1,1
+turbo_n_16,344,44,0	duplicate(TurboTrap#tt_main)	trap_n16#F57	HIDDEN_WARP_NPC,1,1
+turbo_n_16,344,40,0	duplicate(TurboTrap#tt_main)	trap_n16#F58	HIDDEN_WARP_NPC,1,1
+turbo_n_16,344,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F59	HIDDEN_WARP_NPC,1,1
+turbo_n_16,348,55,0	duplicate(TurboTrap#tt_main)	trap_n16#F60	HIDDEN_WARP_NPC,1,1
+turbo_n_16,348,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F61	HIDDEN_WARP_NPC,1,1
+turbo_n_16,348,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F62	HIDDEN_WARP_NPC,1,1
+turbo_n_16,348,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F63	HIDDEN_WARP_NPC,1,1
+turbo_n_16,348,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F64	HIDDEN_WARP_NPC,1,1
+turbo_n_16,348,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F65	HIDDEN_WARP_NPC,1,1
+turbo_n_16,352,56,0	duplicate(TurboTrap#tt_main)	trap_n16#F66	HIDDEN_WARP_NPC,1,1
+turbo_n_16,352,52,0	duplicate(TurboTrap#tt_main)	trap_n16#F67	HIDDEN_WARP_NPC,1,1
+turbo_n_16,352,48,0	duplicate(TurboTrap#tt_main)	trap_n16#F68	HIDDEN_WARP_NPC,1,1
+turbo_n_16,352,44,0	duplicate(TurboTrap#tt_main)	trap_n16#F69	HIDDEN_WARP_NPC,1,1
+turbo_n_16,352,40,0	duplicate(TurboTrap#tt_main)	trap_n16#F70	HIDDEN_WARP_NPC,1,1
+turbo_n_16,352,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F71	HIDDEN_WARP_NPC,1,1
+turbo_n_16,356,55,0	duplicate(TurboTrap#tt_main)	trap_n16#F72	HIDDEN_WARP_NPC,1,1
+turbo_n_16,356,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F73	HIDDEN_WARP_NPC,1,1
+turbo_n_16,356,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F74	HIDDEN_WARP_NPC,1,1
+turbo_n_16,356,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F75	HIDDEN_WARP_NPC,1,1
+turbo_n_16,356,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F76	HIDDEN_WARP_NPC,1,1
+turbo_n_16,356,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F77	HIDDEN_WARP_NPC,1,1
+turbo_n_16,360,56,0	duplicate(TurboTrap#tt_main)	trap_n16#F78	HIDDEN_WARP_NPC,1,1
+turbo_n_16,360,52,0	duplicate(TurboTrap#tt_main)	trap_n16#F79	HIDDEN_WARP_NPC,1,1
+turbo_n_16,360,48,0	duplicate(TurboTrap#tt_main)	trap_n16#F80	HIDDEN_WARP_NPC,1,1
+turbo_n_16,360,44,0	duplicate(TurboTrap#tt_main)	trap_n16#F81	HIDDEN_WARP_NPC,1,1
+turbo_n_16,360,40,0	duplicate(TurboTrap#tt_main)	trap_n16#F82	HIDDEN_WARP_NPC,1,1
+turbo_n_16,360,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F83	HIDDEN_WARP_NPC,1,1
+turbo_n_16,364,55,0	duplicate(TurboTrap#tt_main)	trap_n16#F84	HIDDEN_WARP_NPC,1,1
+turbo_n_16,364,51,0	duplicate(TurboTrap#tt_main)	trap_n16#F85	HIDDEN_WARP_NPC,1,1
+turbo_n_16,364,47,0	duplicate(TurboTrap#tt_main)	trap_n16#F86	HIDDEN_WARP_NPC,1,1
+turbo_n_16,364,43,0	duplicate(TurboTrap#tt_main)	trap_n16#F87	HIDDEN_WARP_NPC,1,1
+turbo_n_16,364,39,0	duplicate(TurboTrap#tt_main)	trap_n16#F88	HIDDEN_WARP_NPC,1,1
+turbo_n_16,364,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F89	HIDDEN_WARP_NPC,1,1
+turbo_n_16,368,56,0	duplicate(TurboTrap#tt_main)	trap_n16#F90	HIDDEN_WARP_NPC,1,1
+turbo_n_16,368,52,0	duplicate(TurboTrap#tt_main)	trap_n16#F91	HIDDEN_WARP_NPC,1,1
+turbo_n_16,368,48,0	duplicate(TurboTrap#tt_main)	trap_n16#F92	HIDDEN_WARP_NPC,1,1
+turbo_n_16,368,44,0	duplicate(TurboTrap#tt_main)	trap_n16#F93	HIDDEN_WARP_NPC,1,1
+turbo_n_16,368,40,0	duplicate(TurboTrap#tt_main)	trap_n16#F94	HIDDEN_WARP_NPC,1,1
+turbo_n_16,368,36,0	duplicate(TurboTrap#tt_main)	trap_n16#F95	HIDDEN_WARP_NPC,1,1
+turbo_n_1,340,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F49	HIDDEN_WARP_NPC,1,1
+turbo_n_1,340,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F50	HIDDEN_WARP_NPC,1,1
+turbo_n_1,340,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F51	HIDDEN_WARP_NPC,1,1
+turbo_n_1,340,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F52	HIDDEN_WARP_NPC,1,1
+turbo_n_1,340,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F53	HIDDEN_WARP_NPC,1,1
+turbo_n_1,344,56,0	duplicate(TurboTrap#tt_main)	trap_n1#F54	HIDDEN_WARP_NPC,1,1
+turbo_n_1,344,52,0	duplicate(TurboTrap#tt_main)	trap_n1#F55	HIDDEN_WARP_NPC,1,1
+turbo_n_1,344,48,0	duplicate(TurboTrap#tt_main)	trap_n1#F56	HIDDEN_WARP_NPC,1,1
+turbo_n_1,344,44,0	duplicate(TurboTrap#tt_main)	trap_n1#F57	HIDDEN_WARP_NPC,1,1
+turbo_n_1,344,40,0	duplicate(TurboTrap#tt_main)	trap_n1#F58	HIDDEN_WARP_NPC,1,1
+turbo_n_1,344,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F59	HIDDEN_WARP_NPC,1,1
+turbo_n_1,348,55,0	duplicate(TurboTrap#tt_main)	trap_n1#F60	HIDDEN_WARP_NPC,1,1
+turbo_n_1,348,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F61	HIDDEN_WARP_NPC,1,1
+turbo_n_1,348,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F62	HIDDEN_WARP_NPC,1,1
+turbo_n_1,348,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F63	HIDDEN_WARP_NPC,1,1
+turbo_n_1,348,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F64	HIDDEN_WARP_NPC,1,1
+turbo_n_1,348,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F65	HIDDEN_WARP_NPC,1,1
+turbo_n_1,352,56,0	duplicate(TurboTrap#tt_main)	trap_n1#F66	HIDDEN_WARP_NPC,1,1
+turbo_n_1,352,52,0	duplicate(TurboTrap#tt_main)	trap_n1#F67	HIDDEN_WARP_NPC,1,1
+turbo_n_1,352,48,0	duplicate(TurboTrap#tt_main)	trap_n1#F68	HIDDEN_WARP_NPC,1,1
+turbo_n_1,352,44,0	duplicate(TurboTrap#tt_main)	trap_n1#F69	HIDDEN_WARP_NPC,1,1
+turbo_n_1,352,40,0	duplicate(TurboTrap#tt_main)	trap_n1#F70	HIDDEN_WARP_NPC,1,1
+turbo_n_1,352,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F71	HIDDEN_WARP_NPC,1,1
+turbo_n_1,356,55,0	duplicate(TurboTrap#tt_main)	trap_n1#F72	HIDDEN_WARP_NPC,1,1
+turbo_n_1,356,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F73	HIDDEN_WARP_NPC,1,1
+turbo_n_1,356,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F74	HIDDEN_WARP_NPC,1,1
+turbo_n_1,356,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F75	HIDDEN_WARP_NPC,1,1
+turbo_n_1,356,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F76	HIDDEN_WARP_NPC,1,1
+turbo_n_1,356,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F77	HIDDEN_WARP_NPC,1,1
+turbo_n_1,360,56,0	duplicate(TurboTrap#tt_main)	trap_n1#F78	HIDDEN_WARP_NPC,1,1
+turbo_n_1,360,52,0	duplicate(TurboTrap#tt_main)	trap_n1#F79	HIDDEN_WARP_NPC,1,1
+turbo_n_1,360,48,0	duplicate(TurboTrap#tt_main)	trap_n1#F80	HIDDEN_WARP_NPC,1,1
+turbo_n_1,360,44,0	duplicate(TurboTrap#tt_main)	trap_n1#F81	HIDDEN_WARP_NPC,1,1
+turbo_n_1,360,40,0	duplicate(TurboTrap#tt_main)	trap_n1#F82	HIDDEN_WARP_NPC,1,1
+turbo_n_1,360,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F83	HIDDEN_WARP_NPC,1,1
+turbo_n_1,364,55,0	duplicate(TurboTrap#tt_main)	trap_n1#F84	HIDDEN_WARP_NPC,1,1
+turbo_n_1,364,51,0	duplicate(TurboTrap#tt_main)	trap_n1#F85	HIDDEN_WARP_NPC,1,1
+turbo_n_1,364,47,0	duplicate(TurboTrap#tt_main)	trap_n1#F86	HIDDEN_WARP_NPC,1,1
+turbo_n_1,364,43,0	duplicate(TurboTrap#tt_main)	trap_n1#F87	HIDDEN_WARP_NPC,1,1
+turbo_n_1,364,39,0	duplicate(TurboTrap#tt_main)	trap_n1#F88	HIDDEN_WARP_NPC,1,1
+turbo_n_1,364,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F89	HIDDEN_WARP_NPC,1,1
+turbo_n_1,368,56,0	duplicate(TurboTrap#tt_main)	trap_n1#F90	HIDDEN_WARP_NPC,1,1
+turbo_n_1,368,52,0	duplicate(TurboTrap#tt_main)	trap_n1#F91	HIDDEN_WARP_NPC,1,1
+turbo_n_1,368,48,0	duplicate(TurboTrap#tt_main)	trap_n1#F92	HIDDEN_WARP_NPC,1,1
+turbo_n_1,368,44,0	duplicate(TurboTrap#tt_main)	trap_n1#F93	HIDDEN_WARP_NPC,1,1
+turbo_n_1,368,40,0	duplicate(TurboTrap#tt_main)	trap_n1#F94	HIDDEN_WARP_NPC,1,1
+turbo_n_1,368,36,0	duplicate(TurboTrap#tt_main)	trap_n1#F95	HIDDEN_WARP_NPC,1,1
 
 -	script	TurboTrap_2#tt_main	-1,{
 	end;
@@ -3536,55 +3536,55 @@ OnTouch:
 		percentheal -2,0;
 	}
 }
-turbo_e_4,336,56,0	duplicate(TurboTrap_2#tt_main)	trap_e4#F42	139,1,1
-turbo_e_4,336,52,0	duplicate(TurboTrap_2#tt_main)	trap_e4#F43	139,1,1
-turbo_e_4,336,48,0	duplicate(TurboTrap_2#tt_main)	trap_e4#F44	139,1,1
-turbo_e_4,336,44,0	duplicate(TurboTrap_2#tt_main)	trap_e4#F45	139,1,1
-turbo_e_4,336,50,0	duplicate(TurboTrap_2#tt_main)	trap_e4#F46	139,1,1
-turbo_e_4,336,36,0	duplicate(TurboTrap_2#tt_main)	trap_e4#F47	139,1,1
-turbo_e_4,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_e4#F48	139,1,1
-turbo_e_8,336,56,0	duplicate(TurboTrap_2#tt_main)	trap_e8#F42	139,1,1
-turbo_e_8,336,52,0	duplicate(TurboTrap_2#tt_main)	trap_e8#F43	139,1,1
-turbo_e_8,336,48,0	duplicate(TurboTrap_2#tt_main)	trap_e8#F44	139,1,1
-turbo_e_8,336,44,0	duplicate(TurboTrap_2#tt_main)	trap_e8#F45	139,1,1
-turbo_e_8,336,50,0	duplicate(TurboTrap_2#tt_main)	trap_e8#F46	139,1,1
-turbo_e_8,336,36,0	duplicate(TurboTrap_2#tt_main)	trap_e8#F47	139,1,1
-turbo_e_8,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_e8#F48	139,1,1
-turbo_e_16,336,56,0	duplicate(TurboTrap_2#tt_main)	trap_e16#F42	139,1,1
-turbo_e_16,336,52,0	duplicate(TurboTrap_2#tt_main)	trap_e16#F43	139,1,1
-turbo_e_16,336,48,0	duplicate(TurboTrap_2#tt_main)	trap_e16#F44	139,1,1
-turbo_e_16,336,44,0	duplicate(TurboTrap_2#tt_main)	trap_e16#F45	139,1,1
-turbo_e_16,336,50,0	duplicate(TurboTrap_2#tt_main)	trap_e16#F46	139,1,1
-turbo_e_16,336,36,0	duplicate(TurboTrap_2#tt_main)	trap_e16#F47	139,1,1
-turbo_e_16,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_e16#F48	139,1,1
-turbo_n_4,336,56,0	duplicate(TurboTrap_2#tt_main)	trap_n4#F42	139,1,1
-turbo_n_4,336,52,0	duplicate(TurboTrap_2#tt_main)	trap_n4#F43	139,1,1
-turbo_n_4,336,48,0	duplicate(TurboTrap_2#tt_main)	trap_n4#F44	139,1,1
-turbo_n_4,336,44,0	duplicate(TurboTrap_2#tt_main)	trap_n4#F45	139,1,1
-turbo_n_4,336,50,0	duplicate(TurboTrap_2#tt_main)	trap_n4#F46	139,1,1
-turbo_n_4,336,36,0	duplicate(TurboTrap_2#tt_main)	trap_n4#F47	139,1,1
-turbo_n_4,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_n4#F48	139,1,1
-turbo_n_8,336,56,0	duplicate(TurboTrap_2#tt_main)	trap_n8#F42	139,1,1
-turbo_n_8,336,52,0	duplicate(TurboTrap_2#tt_main)	trap_n8#F43	139,1,1
-turbo_n_8,336,48,0	duplicate(TurboTrap_2#tt_main)	trap_n8#F44	139,1,1
-turbo_n_8,336,44,0	duplicate(TurboTrap_2#tt_main)	trap_n8#F45	139,1,1
-turbo_n_8,336,50,0	duplicate(TurboTrap_2#tt_main)	trap_n8#F46	139,1,1
-turbo_n_8,336,36,0	duplicate(TurboTrap_2#tt_main)	trap_n8#F47	139,1,1
-turbo_n_8,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_n8#F48	139,1,1
-turbo_n_16,336,56,0	duplicate(TurboTrap_2#tt_main)	trap_n16#F42	139,1,1
-turbo_n_16,336,52,0	duplicate(TurboTrap_2#tt_main)	trap_n16#F43	139,1,1
-turbo_n_16,336,48,0	duplicate(TurboTrap_2#tt_main)	trap_n16#F44	139,1,1
-turbo_n_16,336,44,0	duplicate(TurboTrap_2#tt_main)	trap_n16#F45	139,1,1
-turbo_n_16,336,50,0	duplicate(TurboTrap_2#tt_main)	trap_n16#F46	139,1,1
-turbo_n_16,336,36,0	duplicate(TurboTrap_2#tt_main)	trap_n16#F47	139,1,1
-turbo_n_16,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_n16#F48	139,1,1
-turbo_n_1,336,56,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F42	139,1,1
-turbo_n_1,336,52,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F43	139,1,1
-turbo_n_1,336,48,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F44	139,1,1
-turbo_n_1,336,44,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F45	139,1,1
-turbo_n_1,336,50,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F46	139,1,1
-turbo_n_1,336,36,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F47	139,1,1
-turbo_n_1,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F48	139,1,1
+turbo_e_4,336,56,0	duplicate(TurboTrap_2#tt_main)	trap_e4#F42	HIDDEN_WARP_NPC,1,1
+turbo_e_4,336,52,0	duplicate(TurboTrap_2#tt_main)	trap_e4#F43	HIDDEN_WARP_NPC,1,1
+turbo_e_4,336,48,0	duplicate(TurboTrap_2#tt_main)	trap_e4#F44	HIDDEN_WARP_NPC,1,1
+turbo_e_4,336,44,0	duplicate(TurboTrap_2#tt_main)	trap_e4#F45	HIDDEN_WARP_NPC,1,1
+turbo_e_4,336,50,0	duplicate(TurboTrap_2#tt_main)	trap_e4#F46	HIDDEN_WARP_NPC,1,1
+turbo_e_4,336,36,0	duplicate(TurboTrap_2#tt_main)	trap_e4#F47	HIDDEN_WARP_NPC,1,1
+turbo_e_4,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_e4#F48	HIDDEN_WARP_NPC,1,1
+turbo_e_8,336,56,0	duplicate(TurboTrap_2#tt_main)	trap_e8#F42	HIDDEN_WARP_NPC,1,1
+turbo_e_8,336,52,0	duplicate(TurboTrap_2#tt_main)	trap_e8#F43	HIDDEN_WARP_NPC,1,1
+turbo_e_8,336,48,0	duplicate(TurboTrap_2#tt_main)	trap_e8#F44	HIDDEN_WARP_NPC,1,1
+turbo_e_8,336,44,0	duplicate(TurboTrap_2#tt_main)	trap_e8#F45	HIDDEN_WARP_NPC,1,1
+turbo_e_8,336,50,0	duplicate(TurboTrap_2#tt_main)	trap_e8#F46	HIDDEN_WARP_NPC,1,1
+turbo_e_8,336,36,0	duplicate(TurboTrap_2#tt_main)	trap_e8#F47	HIDDEN_WARP_NPC,1,1
+turbo_e_8,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_e8#F48	HIDDEN_WARP_NPC,1,1
+turbo_e_16,336,56,0	duplicate(TurboTrap_2#tt_main)	trap_e16#F42	HIDDEN_WARP_NPC,1,1
+turbo_e_16,336,52,0	duplicate(TurboTrap_2#tt_main)	trap_e16#F43	HIDDEN_WARP_NPC,1,1
+turbo_e_16,336,48,0	duplicate(TurboTrap_2#tt_main)	trap_e16#F44	HIDDEN_WARP_NPC,1,1
+turbo_e_16,336,44,0	duplicate(TurboTrap_2#tt_main)	trap_e16#F45	HIDDEN_WARP_NPC,1,1
+turbo_e_16,336,50,0	duplicate(TurboTrap_2#tt_main)	trap_e16#F46	HIDDEN_WARP_NPC,1,1
+turbo_e_16,336,36,0	duplicate(TurboTrap_2#tt_main)	trap_e16#F47	HIDDEN_WARP_NPC,1,1
+turbo_e_16,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_e16#F48	HIDDEN_WARP_NPC,1,1
+turbo_n_4,336,56,0	duplicate(TurboTrap_2#tt_main)	trap_n4#F42	HIDDEN_WARP_NPC,1,1
+turbo_n_4,336,52,0	duplicate(TurboTrap_2#tt_main)	trap_n4#F43	HIDDEN_WARP_NPC,1,1
+turbo_n_4,336,48,0	duplicate(TurboTrap_2#tt_main)	trap_n4#F44	HIDDEN_WARP_NPC,1,1
+turbo_n_4,336,44,0	duplicate(TurboTrap_2#tt_main)	trap_n4#F45	HIDDEN_WARP_NPC,1,1
+turbo_n_4,336,50,0	duplicate(TurboTrap_2#tt_main)	trap_n4#F46	HIDDEN_WARP_NPC,1,1
+turbo_n_4,336,36,0	duplicate(TurboTrap_2#tt_main)	trap_n4#F47	HIDDEN_WARP_NPC,1,1
+turbo_n_4,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_n4#F48	HIDDEN_WARP_NPC,1,1
+turbo_n_8,336,56,0	duplicate(TurboTrap_2#tt_main)	trap_n8#F42	HIDDEN_WARP_NPC,1,1
+turbo_n_8,336,52,0	duplicate(TurboTrap_2#tt_main)	trap_n8#F43	HIDDEN_WARP_NPC,1,1
+turbo_n_8,336,48,0	duplicate(TurboTrap_2#tt_main)	trap_n8#F44	HIDDEN_WARP_NPC,1,1
+turbo_n_8,336,44,0	duplicate(TurboTrap_2#tt_main)	trap_n8#F45	HIDDEN_WARP_NPC,1,1
+turbo_n_8,336,50,0	duplicate(TurboTrap_2#tt_main)	trap_n8#F46	HIDDEN_WARP_NPC,1,1
+turbo_n_8,336,36,0	duplicate(TurboTrap_2#tt_main)	trap_n8#F47	HIDDEN_WARP_NPC,1,1
+turbo_n_8,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_n8#F48	HIDDEN_WARP_NPC,1,1
+turbo_n_16,336,56,0	duplicate(TurboTrap_2#tt_main)	trap_n16#F42	HIDDEN_WARP_NPC,1,1
+turbo_n_16,336,52,0	duplicate(TurboTrap_2#tt_main)	trap_n16#F43	HIDDEN_WARP_NPC,1,1
+turbo_n_16,336,48,0	duplicate(TurboTrap_2#tt_main)	trap_n16#F44	HIDDEN_WARP_NPC,1,1
+turbo_n_16,336,44,0	duplicate(TurboTrap_2#tt_main)	trap_n16#F45	HIDDEN_WARP_NPC,1,1
+turbo_n_16,336,50,0	duplicate(TurboTrap_2#tt_main)	trap_n16#F46	HIDDEN_WARP_NPC,1,1
+turbo_n_16,336,36,0	duplicate(TurboTrap_2#tt_main)	trap_n16#F47	HIDDEN_WARP_NPC,1,1
+turbo_n_16,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_n16#F48	HIDDEN_WARP_NPC,1,1
+turbo_n_1,336,56,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F42	HIDDEN_WARP_NPC,1,1
+turbo_n_1,336,52,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F43	HIDDEN_WARP_NPC,1,1
+turbo_n_1,336,48,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F44	HIDDEN_WARP_NPC,1,1
+turbo_n_1,336,44,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F45	HIDDEN_WARP_NPC,1,1
+turbo_n_1,336,50,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F46	HIDDEN_WARP_NPC,1,1
+turbo_n_1,336,36,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F47	HIDDEN_WARP_NPC,1,1
+turbo_n_1,340,55,0	duplicate(TurboTrap_2#tt_main)	trap_n1#F48	HIDDEN_WARP_NPC,1,1
 
 -	script	bing_1#tt_main	-1,{
 	end;
@@ -3605,12 +3605,12 @@ OnTouch:
 	enablenpc "bing2#"+.@w$;
 	end;
 }
-turbo_e_4,217,214,0	duplicate(bing_1#tt_main)	bing#e4	45,3,3
-turbo_e_8,217,214,0	duplicate(bing_1#tt_main)	bing#e8	45,3,3
-turbo_e_16,217,214,0	duplicate(bing_1#tt_main)	bing#e16	45,3,3
-turbo_n_4,217,214,0	duplicate(bing_1#tt_main)	bing#n4	45,3,3
-turbo_n_8,217,214,0	duplicate(bing_1#tt_main)	bing#n8	45,3,3
-turbo_n_16,217,214,0	duplicate(bing_1#tt_main)	bing#n16	45,3,3
+turbo_e_4,217,214,0	duplicate(bing_1#tt_main)	bing#e4	WARPNPC,3,3
+turbo_e_8,217,214,0	duplicate(bing_1#tt_main)	bing#e8	WARPNPC,3,3
+turbo_e_16,217,214,0	duplicate(bing_1#tt_main)	bing#e16	WARPNPC,3,3
+turbo_n_4,217,214,0	duplicate(bing_1#tt_main)	bing#n4	WARPNPC,3,3
+turbo_n_8,217,214,0	duplicate(bing_1#tt_main)	bing#n8	WARPNPC,3,3
+turbo_n_16,217,214,0	duplicate(bing_1#tt_main)	bing#n16	WARPNPC,3,3
 
 -	script	bing_2#tt_main	-1,{
 	end;
@@ -3631,14 +3631,14 @@ OnInit:
 	disablenpc "bing2#"+.@w$;
 	end;
 }
-turbo_e_4,217,214,0	duplicate(bing_2#tt_main)	bing2#e4	45,3,3
-turbo_e_8,217,214,0	duplicate(bing_2#tt_main)	bing2#e8	45,3,3
-turbo_e_16,217,214,0	duplicate(bing_2#tt_main)	bing2#e16	45,3,3
-turbo_n_4,217,214,0	duplicate(bing_2#tt_main)	bing2#n4	45,3,3
-turbo_n_8,217,214,0	duplicate(bing_2#tt_main)	bing2#n8	45,3,3
-turbo_n_16,217,214,0	duplicate(bing_2#tt_main)	bing2#n16	45,3,3
+turbo_e_4,217,214,0	duplicate(bing_2#tt_main)	bing2#e4	WARPNPC,3,3
+turbo_e_8,217,214,0	duplicate(bing_2#tt_main)	bing2#e8	WARPNPC,3,3
+turbo_e_16,217,214,0	duplicate(bing_2#tt_main)	bing2#e16	WARPNPC,3,3
+turbo_n_4,217,214,0	duplicate(bing_2#tt_main)	bing2#n4	WARPNPC,3,3
+turbo_n_8,217,214,0	duplicate(bing_2#tt_main)	bing2#n8	WARPNPC,3,3
+turbo_n_16,217,214,0	duplicate(bing_2#tt_main)	bing2#n16	WARPNPC,3,3
 
-turbo_room,130,92,3	script	Kafra Staff#tt	115,{
+turbo_room,130,92,3	script	Kafra Staff#tt	4_F_KAFRA3,{
 	cutin "kafra_03",2;
 	mes "[Kafra Staff]";
 	mes "Welcome~ The Kafra Services";
@@ -3655,10 +3655,10 @@ turbo_room,130,92,3	script	Kafra Staff#tt	115,{
 
 }
 
-turbo_room,124,86,0	shop	Turbo Track Merchant	90,501:-1,502:-1,503:-1,504:-1,645:-1,656:-1,1065:-1,1750:-1
+turbo_room,124,86,0	shop	Turbo Track Merchant	4_F_01,501:-1,502:-1,503:-1,504:-1,645:-1,656:-1,1065:-1,1750:-1
 
 // Official name: "TBT_Guide#Broadcast"
-turbo_room,99,120,4	script	Turbo Track Guide	124,{
+turbo_room,99,120,4	script	Turbo Track Guide	4_F_TELEPORTER,{
 	mes "[Turbo Track Guide]";
 	mes "Good day~";
 	mes "Is there anything that";
@@ -3973,7 +3973,7 @@ OnWin_e16:
 	end;
 }
 
-turbo_room,102,117,3	script	Hall of Honor#tt	857,{
+turbo_room,102,117,3	script	Hall of Honor#tt	4_BOARD3,{
 	mes "^2F4F4FTurbo Track Hall of Honor^000000";
 	mes " ";
 	mes "The First:";
@@ -3984,7 +3984,7 @@ turbo_room,102,117,3	script	Hall of Honor#tt	857,{
 	close;
 }
 
-turbo_room,77,115,5	script	Solo Mode#tt::TurboSoloNames	857,{
+turbo_room,77,115,5	script	Solo Mode#tt::TurboSoloNames	4_BOARD3,{
 	mes "^2F4F4FSolo Mode Record^000000";
 	mes " ";
 	mes "The best player";
@@ -3993,7 +3993,7 @@ turbo_room,77,115,5	script	Solo Mode#tt::TurboSoloNames	857,{
 	close;
 }
 
-turbo_room,87,114,5	script	Normal Mode Record#tt::TurboNormalNames	857,{
+turbo_room,87,114,5	script	Normal Mode Record#tt::TurboNormalNames	4_BOARD3,{
 	mes "<<Recent Top Players>>";
 	mes "Winners of Normal Mode - 4 Person";
 	mes "^4d4dff" + $ttnames$[1] + "^000000";
@@ -4004,7 +4004,7 @@ turbo_room,87,114,5	script	Normal Mode Record#tt::TurboNormalNames	857,{
 	close;
 }
 
-turbo_room,112,114,3	script	Expert Mode Record::TurboExpertNames	857,{
+turbo_room,112,114,3	script	Expert Mode Record::TurboExpertNames	4_BOARD3,{
 	mes "<<Recent Top Players>>";
 	mes "Winners of Expert Mode - 4 Person";
 	mes "^4d4dff" + $ttnames$[4] + "^000000";
@@ -4015,7 +4015,7 @@ turbo_room,112,114,3	script	Expert Mode Record::TurboExpertNames	857,{
 	close;
 }
 
-turbo_room,97,117,5	script	Hall of Honor#tt2	857,{
+turbo_room,97,117,5	script	Hall of Honor#tt2	4_BOARD3,{
 	mes "^2F4F4FTurbo Track Hall of Honor^000000";
 	mes " ";
 	mes "1st: ^4d4dff" + $ttnames$[9] + "^000000";
@@ -4026,11 +4026,11 @@ turbo_room,97,117,5	script	Hall of Honor#tt2	857,{
 	close;
 }
 
-turbo_room,75,95,5	duplicate(TurboSoloNames)	Solo Mode#1	857
-turbo_room,67,95,5	duplicate(TurboNormalNames)	Normal Mode Records#1	857
-turbo_room,71,95,5	duplicate(TurboExpertNames)	Expert Mode Records#1	857
+turbo_room,75,95,5	duplicate(TurboSoloNames)	Solo Mode#1	4_BOARD3
+turbo_room,67,95,5	duplicate(TurboNormalNames)	Normal Mode Records#1	4_BOARD3
+turbo_room,71,95,5	duplicate(TurboExpertNames)	Expert Mode Records#1	4_BOARD3
 
-turbo_room,93,117,5	script	Point Exchange Helper	125,{
+turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -4444,7 +4444,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	125,{
 	}
 }
 
-turbo_room,106,117,3	script	Point Manager#tt	833,{
+turbo_room,106,117,3	script	Point Manager#tt	4_M_ZONDAOYAJI,{
 	mes "[Turbo Track Point Manager]";
 	mes "Good day.";
 	mes "Did you enjoy your";
@@ -4589,7 +4589,7 @@ S_ExchangePoints:
 	}
 }
 
-alde_gld,183,204,0	script	en_turbo	45,1,1,{
+alde_gld,183,204,0	script	en_turbo	WARPNPC,1,1,{
 OnTouch:
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second!";
@@ -4668,7 +4668,7 @@ OnTouch:
 	end;
 }
 
-alde_gld,186,199,3	script	Turbo Track Guide#Entran	845,{
+alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 	mes "[Guide]";
 	mes "Welcome to";
 	mes "the Al De Baran";
@@ -4801,7 +4801,7 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	845,{
 	}
 }
 
-alde_gld,178,180,0	script	Sign#TBT	837,{
+alde_gld,178,180,0	script	Sign#TBT	2_BULLETIN_BOARD,{
 	mes "[Al De Baran Turbo Track]";
 	mes "This way...";
 	mes "to the Al De Baran";

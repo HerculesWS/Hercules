@@ -12,4 +12,4 @@
 //= 1.0 Moved Dorian to pre-re/re paths.
 //============================================================
 
-izlude_in,110,64,3	duplicate(Dorian_izlude)	Dorian	878,2,2
+izlude_in,110,64,3	duplicate(Dorian_izlude)	Dorian	4_M_OILMAN,2,2

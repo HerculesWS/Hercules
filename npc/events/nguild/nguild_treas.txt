@@ -83,7 +83,7 @@ OnDied:
 }
 
 // Treasure Room Switch --------------------
-nguild_alde,123,223,0	script	Switch#TresN01	111,{
+nguild_alde,123,223,0	script	Switch#TresN01	HIDDEN_NPC,{
 	callfunc "F_GldTreasSw", "nguild_alde",218,176;
 	end;
 }
@@ -109,7 +109,7 @@ OnDied:
 }
 
 // Room Switch ---------------------------------------------------------
-nguild_gef,152,117,0	script	Switch#TresN02	111,{
+nguild_gef,152,117,0	script	Switch#TresN02	HIDDEN_NPC,{
 	callfunc "F_GldTreasSw","nguild_gef",40,49;
 	end;
 }
@@ -134,7 +134,7 @@ OnDied:
 }
 
 // Treasure Room Switch ---------------------------------------------------
-nguild_pay,295,8,0	script	Switch#TresN03	111,{
+nguild_pay,295,8,0	script	Switch#TresN03	HIDDEN_NPC,{
 	callfunc "F_GldTreasSw", "nguild_pay",120,59;
 	end;
 }
@@ -159,7 +159,7 @@ OnDied:
 }
 
 // Treasure Room Switch ----------------------------------------------------
-nguild_prt,15,209,0	script	Switch#TresN04	111,{
+nguild_prt,15,209,0	script	Switch#TresN04	HIDDEN_NPC,{
 	callfunc "F_GldTreasSw", "nguild_prt",109,179;
 	end;
 }

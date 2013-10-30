@@ -22,7 +22,7 @@
 //=     Removed "Holy Arrows" from the list.
 //============================================================
 
-payon_in01,5,134,5	script	Inventor Jaax	89,{
+payon_in01,5,134,5	script	Inventor Jaax	4_M_ORIENT02,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "[Inventor Jaax]";
 		mes "Hey, you're carrying";

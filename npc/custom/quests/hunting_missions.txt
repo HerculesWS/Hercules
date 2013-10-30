@@ -16,7 +16,7 @@
 //= 1.3a Added mission reset options.
 //============================================================
 
-prontera,152,187,6	script	Hunting Missions	951,{
+prontera,152,187,6	script	Hunting Missions	4_F_EDEN_MASTER,{
 function Chk; function Cm;
 	mes "[Hunting Missions]";
 	mes "Hello, "+strcharinfo(0)+"!";

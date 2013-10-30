@@ -10,7 +10,7 @@
 //= 1.1 Replaced effect numerics with constants. [Samuray22]
 //============================================================
 
-prontera,146,92,3	script	Cellerb	58,{
+prontera,146,92,3	script	Cellerb	1_M_MERCHANT,{
 	mes "[Staff Idul Fitri]";
 	if((gettime(6)==10 && (gettime(5)==24 || gettime(5)==25))==0) {
 		mes "Congratulation! Celebrate Feast Day Of Ramadan Idul Fitri 1427 H.";

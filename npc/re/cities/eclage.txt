@@ -12,7 +12,7 @@
 
 // Generic Eclage NPCs - Set 1
 //============================================================
-ecl_fild01,92,316,4	script	Tourist#ep14_2f2	545,{
+ecl_fild01,92,316,4	script	Tourist#ep14_2f2	4_CAT_SAILOR2,{
 	mes "[Tourist]";
 	mes "I can't believe I have to wait this long......";
 	mes "When is it going to be my turn?";
@@ -20,7 +20,7 @@ ecl_fild01,92,316,4	script	Tourist#ep14_2f2	545,{
 	close;
 }
 
-ecl_fild01,106,312,4	script	Tourist#ep14_2f3	525,{
+ecl_fild01,106,312,4	script	Tourist#ep14_2f3	4_F_RAFLE_VI,{
 	mes "[Tourist]";
 	mes "I'm actually done with my documentation, but I'm just sticking around to appreciate all of these flowers.";
 	emotion e_lv2;
@@ -31,7 +31,7 @@ ecl_fild01,106,312,4	script	Tourist#ep14_2f3	525,{
 	close;
 }
 
-ecl_fild01,108,320,6	script	Tourist#ep14_2f4	941,{
+ecl_fild01,108,320,6	script	Tourist#ep14_2f4	4_F_DST_CHILD,{
 	mes "[Tourist]";
 	mes "I wonder how beautiful of a city Eclage would be.";
 	mes "It just makes my heart beat thinking about it.";
@@ -39,7 +39,7 @@ ecl_fild01,108,320,6	script	Tourist#ep14_2f4	941,{
 	close;
 }
 
-ecl_fild01,105,320,2	script	Tourist#ep14_2f5	436,{
+ecl_fild01,105,320,2	script	Tourist#ep14_2f5	4_F_FAIRYKID,{
 	mes "[Tourist]";
 	mes "No, I'm not a visitor. I'm an Eclage citizen!";
 	emotion e_an;
@@ -50,7 +50,7 @@ ecl_fild01,105,320,2	script	Tourist#ep14_2f5	436,{
 	close;
 }
 
-ecl_fild01,103,319,4	script	Tourist#ep14_2f6	900,{
+ecl_fild01,103,319,4	script	Tourist#ep14_2f6	4_M_HUMERCHANT,{
 	mes "[Tourist]";
 	mes "I hear their acorns are delicious without a hint of bitterness.";
 	next;
@@ -60,7 +60,7 @@ ecl_fild01,103,319,4	script	Tourist#ep14_2f6	900,{
 	close;
 }
 
-ecl_fild01,110,316,2	script	Tourist#ep14_2f7	896,{
+ecl_fild01,110,316,2	script	Tourist#ep14_2f7	4_M_HUBOY,{
 	mes "[Tourist]";
 	mes "It's important to keep your belongings light when traveling.";
 	next;
@@ -73,13 +73,13 @@ ecl_fild01,110,316,2	script	Tourist#ep14_2f7	896,{
 	close;
 }
 
-ecl_fild01,92,318,4	script	Tourist#ep14_2f8	517,{
+ecl_fild01,92,318,4	script	Tourist#ep14_2f8	4_M_RAFLE_OLD,{
 	mes "[Tourist]";
 	mes "Cool cool.";
 	close;
 }
 
-ecl_fild01,93,318,2	script	Tourist#ep14_2f9	107,{
+ecl_fild01,93,318,2	script	Tourist#ep14_2f9	1_M_PAY_ELDER,{
 	mes "[Tourist]";
 	mes "Snorrrreee....Erhem....";
 	next;
@@ -90,7 +90,7 @@ ecl_fild01,93,318,2	script	Tourist#ep14_2f9	107,{
 	close;
 }
 
-ecl_fild01,94,313,4	script	Tourist#ep14_2f10	715,{
+ecl_fild01,94,313,4	script	Tourist#ep14_2f10	4_M_PIERROT,{
 	mes "[Tourist]";
 	mes "Oh! Are you also from Midgard?";
 	next;
@@ -100,7 +100,7 @@ ecl_fild01,94,313,4	script	Tourist#ep14_2f10	715,{
 	close;
 }
 
-ecl_fild01,101,320,4	script	Tourist#ep14_2f11	522,{
+ecl_fild01,101,320,4	script	Tourist#ep14_2f11	4_M_RAFLE_OR,{
 	mes "[Tourist]";
 	mes "Ow.... My legs...";
 	mes "You're saying I have to wait after all this traveling through Bifrost?!";
@@ -108,7 +108,7 @@ ecl_fild01,101,320,4	script	Tourist#ep14_2f11	522,{
 	close;
 }
 
-ecl_fild01,88,315,4	script	Tourist#ep14_2f12	957,{
+ecl_fild01,88,315,4	script	Tourist#ep14_2f12	4_WHITE_COW,{
 	mes "[Tourist]";
 	mes "Ahh...";
 	mes "Why are there so many people...?";
@@ -121,7 +121,7 @@ ecl_fild01,88,315,4	script	Tourist#ep14_2f12	957,{
 
 // Generic Eclage NPCs - Set 2
 //============================================================
-ecl_fild01,183,190,4	script	Catering#eclbig	447,{
+ecl_fild01,183,190,4	script	Catering#eclbig	4_M_FAIRYSOLDIER,{
 	mes "[Catering]";
 	mes "Wahahaha! How do you do!";
 	mes "It's perfect weather for a picnic, no?";
@@ -152,7 +152,7 @@ ecl_fild01,183,190,4	script	Catering#eclbig	447,{
 	close;
 }
 
-ecl_fild01,134,109,4	script	Warao#eclbig	446,{
+ecl_fild01,134,109,4	script	Warao#eclbig	4_M_FAIRYKID5,{
 	mes "[Warao]";
 	mes "Ah~ I'm so hungry. What should I eat today?";
 	next;
@@ -165,13 +165,13 @@ ecl_fild01,134,109,4	script	Warao#eclbig	446,{
 	close;
 }
 
-ecl_fild01,70,285,4	script	Giranni#eclbig	611,{
+ecl_fild01,70,285,4	script	Giranni#eclbig	4_F_FAIRY2,{
 	mes "[Giranni]";
 	mes "I wonder where he went. It should be around here...";
 	close;
 }
 
-eclage,106,61,4	script	Markoza#eclbig	444,{
+eclage,106,61,4	script	Markoza#eclbig	4_M_FAIRYKID3,{
 	mes "[Markoza]";
 	mes "I also want to visit foreign lands.";
 	next;
@@ -184,7 +184,7 @@ eclage,106,61,4	script	Markoza#eclbig	444,{
 	close;
 }
 
-eclage,101,130,5	script	Wutapoa#eclbig	435,{
+eclage,101,130,5	script	Wutapoa#eclbig	4_F_FAIRY,{
 	mes "[Wutapoa]";
 	mes "I recently moved out of my parent's place!";
 	mes "I am so glad I finally have my own Yai!";
@@ -198,7 +198,7 @@ eclage,101,130,5	script	Wutapoa#eclbig	435,{
 	close;
 }
 
-eclage,200,272,4	script	Masione#eclbig	437,{
+eclage,200,272,4	script	Masione#eclbig	4_F_FAIRYKID2,{
 	mes "[Masione]";
 	mes "Whoa! Hey!";
 	mes "Would you please stop appearing out of nowhere?";
@@ -209,7 +209,7 @@ eclage,200,272,4	script	Masione#eclbig	437,{
 	close;
 }
 
-ecl_in01,55,25,3	script	Mijani#eclbig	520,{
+ecl_in01,55,25,3	script	Mijani#eclbig	4_F_MORAFINE1,{
 	mes "[Mijani]";
 	mes "You are not from around here?";
 	mes "Welcome.";
@@ -219,7 +219,7 @@ ecl_in01,55,25,3	script	Mijani#eclbig	520,{
 	close;
 }
 
-ecl_in01,38,37,4	script	A kneeling boy#eclbig	441,{
+ecl_in01,38,37,4	script	A kneeling boy#eclbig	4_F_FAIRYKID6,{
 	mes "[A kneeling boy]";
 	mes "Why am I kneeling like this?";
 	next;
@@ -233,7 +233,7 @@ ecl_in01,38,37,4	script	A kneeling boy#eclbig	441,{
 	close;
 }
 
-ecl_in02,168,41,2	script	Pambo#eclbig	438,{
+ecl_in02,168,41,2	script	Pambo#eclbig	4_F_FAIRYKID3,{
 	mes "[Pambo]";
 	mes "Do you like things that twinkle?";
 	next;
@@ -261,7 +261,7 @@ ecl_in02,168,41,2	script	Pambo#eclbig	438,{
 	close;
 }
 
-ecl_in01,41,103,1	script	A blushing girl#eclbig	439,{
+ecl_in01,41,103,1	script	A blushing girl#eclbig	4_F_FAIRYKID4,{
 	mes "[A blushing girl]";
 	mes "Do you see this balcony up top?";
 	mes "Mayor Jun appears there everytime there is an important occasion!";
@@ -272,7 +272,7 @@ ecl_in01,41,103,1	script	A blushing girl#eclbig	439,{
 	close;
 }
 
-ecl_in01,53,92,4	script	Lafiki#eclbig	444,{
+ecl_in01,53,92,4	script	Lafiki#eclbig	4_M_FAIRYKID3,{
 	mes "[Lafiki]";
 	mes "My fashion sense today is excellent as usual. Heh-";
 	next;
@@ -287,7 +287,7 @@ ecl_in01,53,92,4	script	Lafiki#eclbig	444,{
 	close;
 }
 
-ecl_in01,54,91,2	script	Dandy#eclbig	443,{
+ecl_in01,54,91,2	script	Dandy#eclbig	4_M_FAIRYKID2,{
 	mes "[Dandy]";
 	mes "Take a look at me! How's this? Am I not so fabulous?";
 	next;
@@ -300,7 +300,7 @@ ecl_in01,54,91,2	script	Dandy#eclbig	443,{
 	close;
 }
 
-ecl_in01,52,102,4	script	Choir Conductor#eclbig	442,{
+ecl_in01,52,102,4	script	Choir Conductor#eclbig	4_M_FAIRYKID,{
 	mes "[Choir conductor]";
 	mes "We are Eclage's Tree Wing Choir~";
 	mes "We bring you heavenly harmonies~";
@@ -362,33 +362,33 @@ ecl_in01,52,102,4	script	Choir Conductor#eclbig	442,{
 	close;
 }
 
-ecl_in01,51,103,4	script	Choir member#eclbig01	442,{
+ecl_in01,51,103,4	script	Choir member#eclbig01	4_M_FAIRYKID,{
 	mes "[Choir member]";
 	mes "Aaa~";
 	emotion e_ho;
 	close;
 }
-ecl_in01,53,103,4	duplicate(Choir member#eclbig01)	Choir member#eclbig02	442
-ecl_in01,50,104,4	duplicate(Choir member#eclbig01)	Choir member#eclbig03	442
-ecl_in01,52,104,4	duplicate(Choir member#eclbig01)	Choir member#eclbig04	442
-ecl_in01,54,104,4	duplicate(Choir member#eclbig01)	Choir member#eclbig05	442
+ecl_in01,53,103,4	duplicate(Choir member#eclbig01)	Choir member#eclbig02	4_M_FAIRYKID
+ecl_in01,50,104,4	duplicate(Choir member#eclbig01)	Choir member#eclbig03	4_M_FAIRYKID
+ecl_in01,52,104,4	duplicate(Choir member#eclbig01)	Choir member#eclbig04	4_M_FAIRYKID
+ecl_in01,54,104,4	duplicate(Choir member#eclbig01)	Choir member#eclbig05	4_M_FAIRYKID
 
 // Generic Eclage NPCs - Set 3
 //============================================================
-ecl_fild01,190,93,4	script	Fili#1	617,{
+ecl_fild01,190,93,4	script	Fili#1	4_M_FAIRYANG,{
 	mes "[Fili]";
 	mes "Looking at this beautiful field, the song sings itself~";
 	emotion e_ho;
 	close;
 }
 
-ecl_fild01,83,263,4	script	Watering Laphine#1	444,{
+ecl_fild01,83,263,4	script	Watering Laphine#1	4_M_FAIRYKID3,{
 	mes "[Watering Laphine]";
 	mes "I think the earth is running dry.";
 	close;
 }
 
-ecl_fild01,163,196,4	script	Dancing Laphine#1	438,{
+ecl_fild01,163,196,4	script	Dancing Laphine#1	4_F_FAIRYKID3,{
 	mes "[Dancing Laphine]";
 	mes "It's important to warm up like this before you start dancing. One, two, three, four....";
 	close;
@@ -396,19 +396,19 @@ ecl_fild01,163,196,4	script	Dancing Laphine#1	438,{
 
 // Eclage Prison & Clinic
 //============================================================
-ecl_in01,8,71,4	script	Eclage Guard#pri_inn	447,{
+ecl_in01,8,71,4	script	Eclage Guard#pri_inn	4_M_FAIRYSOLDIER,{
 	mes "[Eclage Guard]";
 	mes "This path will take you to the lower parts of Eclage. You'll find a prison and a clinic there.";
 	close;
 }
 
-ecl_in02,96,22,2	script	Sign#prison_inn	835,{
+ecl_in02,96,22,2	script	Sign#prison_inn	2_BOARD1,{
 	mes "[North] Prison";
 	mes "[West] Clinic";
 	close;
 }
 
-ecl_in02,164,56,2	script	Receptionist#Laphine	437,{
+ecl_in02,164,56,2	script	Receptionist#Laphine	4_F_FAIRYKID2,{
 	mes "[Receptionist]";
 	mes "Welcome to Eclage Clinic.";
 	next;
@@ -454,7 +454,7 @@ ecl_in02,164,56,2	script	Receptionist#Laphine	437,{
 	}
 }
 
-ecl_in02,137,44,2	script	Doctor Laphine#doctor	442,{
+ecl_in02,137,44,2	script	Doctor Laphine#doctor	4_M_FAIRYKID,{
 	mes "[Injured Laphine]";
 	mes "Ooww...";
 	mes "Where...am...I?";
@@ -482,4 +482,4 @@ ecl_in02,137,44,2	script	Doctor Laphine#doctor	442,{
 	mes "What? No way...please...doctor!! No!!";
 	close;
 }
-ecl_in02,135,45,4	duplicate(Doctor Laphine#doctor)	Injured Laphine	441
+ecl_in02,135,45,4	duplicate(Doctor Laphine#doctor)	Injured Laphine	4_F_FAIRYKID6

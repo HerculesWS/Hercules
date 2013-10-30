@@ -33,7 +33,7 @@
 //----------------------------------------------------------------------------
 // Berbayeff - Starting Point
 //----------------------------------------------------------------------------
-moscovia,171,71,3	script	Berbayeff#npc	968,{
+moscovia,171,71,3	script	Berbayeff#npc	4_M_RUSMAN2,{
 	if (!mos_whale_edq) {
 		emotion e_an;
 		mes "[Berbayeff]";
@@ -249,7 +249,7 @@ moscovia,171,71,3	script	Berbayeff#npc	968,{
 //----------------------------------------------------------------------------
 // Bulletin Board - List Tide Times
 //----------------------------------------------------------------------------
-moscovia,135,52,0	script	Bulletin Board#npc	837,{
+moscovia,135,52,0	script	Bulletin Board#npc	2_BULLETIN_BOARD,{
 	mes "[Charabel Schedule]";
 	mes "NOTICE, due to the varying";
 	mes "tides here in Moscovia,";
@@ -269,7 +269,7 @@ moscovia,135,52,0	script	Bulletin Board#npc	837,{
 //----------------------------------------------------------------------------
 // Mr. Ibanoff - Docks
 //----------------------------------------------------------------------------
-moscovia,135,49,5	script	Mr. Ibanoff#npc	964,{
+moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 	if (mos_whale_edq == 0) {
 		mes "[Mr. Ibanoff]";
 		mes "You are also an adventurer from another province. I also was a great adventurer.";
@@ -778,7 +778,7 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	964,{
 //----------------------------------------------------------------------------
 // Mr. Ibanoff - Ship
 //----------------------------------------------------------------------------
-mosk_ship,98,110,3	script	Mr. Ibanoff#npc2	964,{
+mosk_ship,98,110,3	script	Mr. Ibanoff#npc2	4_M_RUSBALD,{
 	if (mos_whale_edq == 4) {
 		mes "[Mr. Ibanoff]";
 		mes "What a time for sailing!";
@@ -981,7 +981,7 @@ S_D_2:
 //----------------------------------------------------------------------------
 // Rudder
 //----------------------------------------------------------------------------
-mosk_ship,101,111,4	script	rudder#ship	111,{
+mosk_ship,101,111,4	script	rudder#ship	HIDDEN_NPC,{
 	if (mos_whale_edq == 5) {
 		callsub S_Rud1,1,0;
 	} else if (mos_whale_edq == 4) {
@@ -1170,7 +1170,7 @@ S_Rud1:
 //----------------------------------------------------------------------------
 // Aged Stranger - Whale Island
 //----------------------------------------------------------------------------
-mosk_fild01,86,104,3	script	Aged Stranger#npc	963,{
+mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 	if ((MaxWeight-Weight) < 2000) {
 		mes "[Aged Stranger]";
 		mes "You're carrying too many items.";
@@ -1806,7 +1806,7 @@ S_AS_3:
 //----------------------------------------------------------------------------
 // Csar Alexsay III - Moscovia Palace
 //----------------------------------------------------------------------------
-mosk_in,131,92,3	script	Csar Alexsay III#npc	965,{
+mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 	if ((MaxWeight-Weight) < 2000) {
 		mes "[Csar Alexsay III]";
 		mes "You're carrying too many items.";
@@ -2341,7 +2341,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	965,{
 //----------------------------------------------------------------------------
 // Prime Minister Dmitree - Moscovia Palace
 //----------------------------------------------------------------------------
-mosk_in,127,89,3	script	Prime Minister Dmitree#m	967,{
+mosk_in,127,89,3	script	Prime Minister Dmitree#m	4_M_RUSMAN1,{
 	if (mos_nowinter > 11 && mos_nowinter < 14) {
 		mes "[Prime Minister Dmitree]";
 		mes "You are in trouble if";
@@ -2465,7 +2465,7 @@ mosk_in,127,89,3	script	Prime Minister Dmitree#m	967,{
 //----------------------------------------------------------------------------
 // Island Trigger - Docks
 //----------------------------------------------------------------------------
-moscovia,136,46,4	script	Find#ship	844,4,4,{
+moscovia,136,46,4	script	Find#ship	CLEAR_NPC,4,4,{
 	end;
 
 OnTouch:
@@ -2524,7 +2524,7 @@ OnInit:
 	end;
 }
 
-mosk_ship,81,110,0	script	#findship	844,5,5,{
+mosk_ship,81,110,0	script	#findship	CLEAR_NPC,5,5,{
 OnInit:
 	disablenpc "#findship";
 	stopnpctimer;
@@ -2703,7 +2703,7 @@ function	script	F_MOS_1	{
 	close;
 }
 
-mosk_in,144,279,5	script	Gallina#mos	959,{
+mosk_in,144,279,5	script	Gallina#mos	4_F_RUSWOMAN1,{
 	if (!mos_swan) {
 		callfunc("F_MOS_1");
 	} else if (mos_swan == 1) {
@@ -2767,7 +2767,7 @@ mosk_in,144,279,5	script	Gallina#mos	959,{
 //----------------------------------------------------------------------------
 // Anna - Sister
 //----------------------------------------------------------------------------
-mosk_in,148,274,1	script	Anna#mos	958,{
+mosk_in,148,274,1	script	Anna#mos	4_F_RUSCHILD,{
 	if (!mos_swan) {
 		callfunc("F_MOS_1");
 	} else if (mos_swan == 1) {
@@ -2949,7 +2949,7 @@ mosk_in,148,274,1	script	Anna#mos	958,{
 //----------------------------------------------------------------------------
 // Bed
 //----------------------------------------------------------------------------
-mosk_in,136,279,3	script	Bed#mos1	111,{
+mosk_in,136,279,3	script	Bed#mos1	HIDDEN_NPC,{
 	mes "- There are sheets and a pillow which seem so neat and soft that I'll probably fall asleep as soon as I lie down on them. -";
 	if (mos_swan != 11) close;
 	next;
@@ -2969,12 +2969,12 @@ mosk_in,136,279,3	script	Bed#mos1	111,{
 	close;
 }
 
-mosk_in,161,279,3	duplicate(Bed#mos1)	Bed#mos2	111
+mosk_in,161,279,3	duplicate(Bed#mos1)	Bed#mos2	HIDDEN_NPC
 
 //----------------------------------------------------------------------------
 // Fire pot + Mikhail
 //----------------------------------------------------------------------------
-mosk_in,205,268,3	script	Fire pot#mos	111,{
+mosk_in,205,268,3	script	Fire pot#mos	HIDDEN_NPC,{
 	if (!mos_swan) {
 		mes "- It's a fire pot to heat the room or bake something -";
 		close;
@@ -3155,7 +3155,7 @@ mosk_in,205,268,3	script	Fire pot#mos	111,{
 	close;
 }
 
-mosk_in,202,269,5	script	Mikhail#mos	962,{
+mosk_in,202,269,5	script	Mikhail#mos	4_M_RUSCHILD,{
 	end;
 OnInit:
 OnEnable:
@@ -3166,7 +3166,7 @@ OnEnable:
 //----------------------------------------------------------------------------
 // Sticky Herb Tree Inn NPCs
 //----------------------------------------------------------------------------
-mosk_in,135,191,5	script	Landlord#mos	961,{
+mosk_in,135,191,5	script	Landlord#mos	4_F_RUSWOMAN3,{
 	mes "[Landlord]";
 	mes "Oh, welcome to the Inn 'Sticky Herb Tree'.";
 	mes "It is the most comfortable and calmest place in all of Moscovia.";
@@ -3343,7 +3343,7 @@ mosk_in,135,191,5	script	Landlord#mos	961,{
 	close;
 }
 
-mosk_in,141,212,3	script	Pub Owner#mos	964,{
+mosk_in,141,212,3	script	Pub Owner#mos	4_M_RUSBALD,{
 	if ((MaxWeight-Weight) < 2000) {
 		mes "- Please stop here!! -";
 		mes "- You're carrying too many items -";
@@ -3505,7 +3505,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	964,{
 	close;
 }
 
-mosk_in,147,202,3	script	Victor#mos	968,{
+mosk_in,147,202,3	script	Victor#mos	4_M_RUSMAN2,{
 	if ((MaxWeight-Weight) < 2000) {
 		mes "- Please stop here!! -";
 		mes "- You're carrying too many items -";
@@ -3725,7 +3725,7 @@ OnTouch:
 //----------------------------------------------------------------------------
 // Swamp
 //----------------------------------------------------------------------------
-mosk_dun03,153,90,3	script	Bubbling Swamp#mos1	844,{
+mosk_dun03,153,90,3	script	Bubbling Swamp#mos1	CLEAR_NPC,{
 	if ((MaxWeight-Weight) < 2000) {
 		mes "- Your bag is very heavy today -";
 		close;
@@ -3775,7 +3775,7 @@ mosk_dun03,153,90,3	script	Bubbling Swamp#mos1	844,{
 //----------------------------------------------------------------------------
 // Larissa - Hotcake Quests
 //----------------------------------------------------------------------------
-mosk_in,211,259,5	script	Larissa#mos_01	960,{
+mosk_in,211,259,5	script	Larissa#mos_01	4_F_RUSWOMAN2,{
 	if ((MaxWeight-Weight) < 2000) {
 		mes "- Please stop here !! -";
 		mes "- You're carrying too many items -";
@@ -3944,7 +3944,7 @@ mosk_in,211,259,5	script	Larissa#mos_01	960,{
 //----------------------------------------------------------------------------
 // Acorn Dealer - Sells Acorns
 //----------------------------------------------------------------------------
-moscovia,208,182,7	script	Acorn Dealer#mos	967,{
+moscovia,208,182,7	script	Acorn Dealer#mos	4_M_RUSMAN1,{
 	mes "[Acorn Dealer]";
 	mes "We have very fresh acorns. Everyone will like them!";
 	mes "You can buy one acorn for 100zeny!";
@@ -4117,7 +4117,7 @@ S_BS_1:
 	else if (.@stworld < 90) getitem 729,1;
 	return;
 }
-mosk_fild01,113,108,3	duplicate(Squirrel#mos_main)	Big Squirrel#mos	111
+mosk_fild01,113,108,3	duplicate(Squirrel#mos_main)	Big Squirrel#mos	HIDDEN_NPC
 mosk_fild01,113,108,5	duplicate(Squirrel#mos_main)	#mos_sq	1104,2,2
 
 // Banish Winter :: mos_nowinter
@@ -4217,7 +4217,7 @@ OnTouch:
 	end;
 }
 
-mosk_in,215,46,5	script	Baba Yaga, the Horrible	970,{
+mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 	if (!mos_nowinter || mos_nowinter == 1) {
 		mes "[Baba Yaga, the Horrible]";
 		mes "Hohoho";
@@ -4960,7 +4960,7 @@ S_BY_1:
 //----------------------------------------------------------------------------
 // Book
 //----------------------------------------------------------------------------
-mosk_in,217,45,0	script	#book_russia	111,{
+mosk_in,217,45,0	script	#book_russia	HIDDEN_NPC,{
 	if (mos_nowinter == 15) {
 		mes "-Beside the pot,";
 		mes "There is an unusually large book.";
@@ -5207,7 +5207,7 @@ mosk_in,217,45,0	script	#book_russia	111,{
 //----------------------------------------------------------------------------
 // Mixing Pot
 //----------------------------------------------------------------------------
-mosk_in,221,43,0	script	#bowl	111,{
+mosk_in,221,43,0	script	#bowl	HIDDEN_NPC,{
 	if (mos_nowinter != 16) end;
 	mes "-It is a very dirty pot.";
 	mes "Something is boiling";
@@ -5481,7 +5481,7 @@ mosk_in,221,43,0	script	#bowl	111,{
 //----------------------------------------------------------------------------
 // Center of Town
 //----------------------------------------------------------------------------
-moscovia,224,190,0	script	#nowinterplz	844,{
+moscovia,224,190,0	script	#nowinterplz	CLEAR_NPC,{
 	if (mos_nowinter != 19) end;
 	if (countitem(7765)) {
 		mes "["+strcharinfo(0)+"]";
@@ -5521,7 +5521,7 @@ moscovia,224,190,0	script	#nowinterplz	844,{
 //----------------------------------------------------------------------------
 // Villagers
 //----------------------------------------------------------------------------
-moscovia,252,203,5	script	A Little Girl#mos1	958,{
+moscovia,252,203,5	script	A Little Girl#mos1	4_F_RUSCHILD,{
 	if (mos_nowinter == 10) {
 		if (mos_kid == 1) {
 			mes "[Yosefina]";
@@ -5564,7 +5564,7 @@ moscovia,252,203,5	script	A Little Girl#mos1	958,{
 	close;
 }
 
-moscovia,233,204,3	script	A Young Man#mos2	968,{
+moscovia,233,204,3	script	A Young Man#mos2	4_M_RUSMAN2,{
 	if (mos_nowinter == 10) {
 		if (mos_middle == 1) {
 			mes "[Fedor]";
@@ -5601,7 +5601,7 @@ moscovia,233,204,3	script	A Young Man#mos2	968,{
 	close;
 }
 
-moscovia,219,229,5	script	A Middle-Aged Man#mos3	964,{
+moscovia,219,229,5	script	A Middle-Aged Man#mos3	4_M_RUSBALD,{
 	if (mos_nowinter == 10) {
 		if (mos_elder == 1) {
 			mes "[Viktor]";
@@ -5644,7 +5644,7 @@ moscovia,219,229,5	script	A Middle-Aged Man#mos3	964,{
 	close;
 }
 
-moscovia,255,203,3	script	A Little Boy#mos4	962,{
+moscovia,255,203,3	script	A Little Boy#mos4	4_M_RUSCHILD,{
 	if (mos_nowinter == 10) {
 		if (mos_kid == 1) {
 			mes "[Vasili]";
@@ -5713,7 +5713,7 @@ moscovia,255,203,3	script	A Little Boy#mos4	962,{
 	close;
 }
 
-moscovia,204,188,5	script	A Lady#mos5	959,{
+moscovia,204,188,5	script	A Lady#mos5	4_F_RUSWOMAN1,{
 	if (mos_nowinter == 10) {
 		if (mos_middle == 1) {
 			mes "[Katya]";
@@ -5754,7 +5754,7 @@ moscovia,204,188,5	script	A Lady#mos5	959,{
 	close;
 }
 
-moscovia,167,97,3	script	A Lady#mos6	961,{
+moscovia,167,97,3	script	A Lady#mos6	4_F_RUSWOMAN3,{
 	if (mos_nowinter == 10) {
 		if (mos_elder == 1) {
 			mes "[Roza]";
@@ -5801,7 +5801,7 @@ moscovia,167,97,3	script	A Lady#mos6	961,{
 	close;
 }
 
-moscovia,202,102,3	script	A Little Boy#mos7	962,{
+moscovia,202,102,3	script	A Little Boy#mos7	4_M_RUSCHILD,{
 	if (mos_nowinter == 10) {
 		if (mos_kid == 1) {
 			mes "[Feliks]";
@@ -5865,7 +5865,7 @@ moscovia,202,102,3	script	A Little Boy#mos7	962,{
 	close;
 }
 
-moscovia,220,172,3	script	A Young Man#mos8	968,{
+moscovia,220,172,3	script	A Young Man#mos8	4_M_RUSMAN2,{
 	if (mos_nowinter == 10) {
 		if (mos_middle == 1) {
 			mes "[Ilyav]";
@@ -5909,7 +5909,7 @@ moscovia,220,172,3	script	A Young Man#mos8	968,{
 	close;
 }
 
-moscovia,253,175,3	script	A Man#mos9	964,{
+moscovia,253,175,3	script	A Man#mos9	4_M_RUSBALD,{
 	if (mos_nowinter == 10) {
 		if (mos_elder == 1) {
 			mes "[Orek]";
@@ -5954,7 +5954,7 @@ moscovia,253,175,3	script	A Man#mos9	964,{
 	close;
 }
 
-moscovia,168,135,3	script	A Lady#mos10	961,{
+moscovia,168,135,3	script	A Lady#mos10	4_F_RUSWOMAN3,{
 	if (mos_nowinter == 10) {
 		if (mos_elder == 1) {
 			mes "[Kyra]";
@@ -6008,7 +6008,7 @@ moscovia,168,135,3	script	A Lady#mos10	961,{
 	close;
 }
 
-moscovia,192,80,3	script	A Lady#mos11	959,{
+moscovia,192,80,3	script	A Lady#mos11	4_F_RUSWOMAN1,{
 	if (mos_nowinter == 10) {
 		if (mos_middle == 1) {
 			mes "[Sabina]";
@@ -6056,7 +6056,7 @@ moscovia,192,80,3	script	A Lady#mos11	959,{
 	close;
 }
 
-moscovia,211,215,5	script	A Young Man#mos12	967,{
+moscovia,211,215,5	script	A Young Man#mos12	4_M_RUSMAN1,{
 	if (mos_nowinter == 10) {
 		if (mos_middle == 1) {
 			mes "[Izlof]";
@@ -6114,7 +6114,7 @@ moscovia,211,215,5	script	A Young Man#mos12	967,{
 	close;
 }
 
-moscovia,149,112,3	script	A Man#mos13	964,{
+moscovia,149,112,3	script	A Man#mos13	4_M_RUSBALD,{
 	if (mos_nowinter == 10) {
 		if (mos_elder == 1) {
 			mes "[Lev]";
@@ -6163,7 +6163,7 @@ moscovia,149,112,3	script	A Man#mos13	964,{
 	close;
 }
 
-moscovia,196,71,3	script	A Young Man#mos14	968,{
+moscovia,196,71,3	script	A Young Man#mos14	4_M_RUSMAN2,{
 	if (mos_nowinter == 10) {
 		if (mos_middle == 1) {
 			mes "[Fredek]";
@@ -6213,7 +6213,7 @@ moscovia,196,71,3	script	A Young Man#mos14	968,{
 	close;
 }
 
-moscovia,234,168,5	script	A Man#mos15	964,{
+moscovia,234,168,5	script	A Man#mos15	4_M_RUSBALD,{
 	if (mos_nowinter == 10) {
 		if (mos_elder == 1) {
 			mes "[Gavrel]";
@@ -6260,7 +6260,7 @@ moscovia,234,168,5	script	A Man#mos15	964,{
 
 }
 
-moscovia,228,80,3	script	A Little Boy#mos16	962,{
+moscovia,228,80,3	script	A Little Boy#mos16	4_M_RUSCHILD,{
 	if (mos_nowinter == 10) {
 		if (mos_kid == 1) {
 			mes "[Rurik]";
@@ -6319,7 +6319,7 @@ moscovia,228,80,3	script	A Little Boy#mos16	962,{
 //----------------------------------------------------------------------------
 // Magic Bottle
 //----------------------------------------------------------------------------
-mosk_dun03,225,233,0	script	Pile of skeletons#mosk	111,{
+mosk_dun03,225,233,0	script	Pile of skeletons#mosk	HIDDEN_NPC,{
 	if (mos_nowinter == 8) {
 		mes "-There are ugly skulls";
 		mes "all over here but, ";
@@ -6479,7 +6479,7 @@ mosk_in,131,92,3	script	#Csar	-1,7,7,{
 
 // Shafka Hat :: mos_whale_edq
 //============================================================
-moscovia,211,93,3	script	Irina#edq	958,{
+moscovia,211,93,3	script	Irina#edq	4_F_RUSCHILD,{
 	if (!checkweight(1201,1)) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -6592,7 +6592,7 @@ moscovia,211,93,3	script	Irina#edq	958,{
 //----------------------------------------------------------------------------
 // Sage - Starting Point
 //----------------------------------------------------------------------------
-mosk_fild02,198,252,3	script	Sage#rus01	755,{
+mosk_fild02,198,252,3	script	Sage#rus01	4_M_SAGE_C,{
 	if (!rhea_rus_main) {
 		mes "[Sage]";
 		mes "Ah, a foreigner,";
@@ -6680,7 +6680,7 @@ mosk_fild02,198,252,3	script	Sage#rus01	755,{
 //----------------------------------------------------------------------------
 // Mysterious Stone
 //----------------------------------------------------------------------------
-mosk_dun01,169,162,0	script	Mysterious Stone#rus02	111,{
+mosk_dun01,169,162,0	script	Mysterious Stone#rus02	HIDDEN_NPC,{
 	if (!rhea_rus_main) {
 		mes "- The road forks here -";
 		close;
@@ -6778,7 +6778,7 @@ mosk_dun01,169,162,0	script	Mysterious Stone#rus02	111,{
 //----------------------------------------------------------------------------
 // Gray Wolf
 //----------------------------------------------------------------------------
-mosk_dun01,167,160,3	script	Gray Wolf#rus03	972,{
+mosk_dun01,167,160,3	script	Gray Wolf#rus03	4_RUS_DWOLF,{
 	if (rhea_rus_main < 2) {
 		mes "[Gray Wolf]";
 		mes "... Turn back, adventurer...";
@@ -6901,7 +6901,7 @@ OnTimer120000:
 //----------------------------------------------------------------------------
 // Wall (Maria Morebna, Gray Wolf, Koshei)
 //----------------------------------------------------------------------------
-mosk_dun01,45,259,0	script	Wall#rus04	111,{
+mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 	if (rhea_rus_main < 5) {
 		mes "["+ strcharinfo(0) +"]";
 		mes "...?!";
@@ -7435,13 +7435,13 @@ OnTimer120000:
 	donpcevent strnpcinfo(0)+"::OnDisable";
 	end;
 }
-mosk_dun01,50,256,3	duplicate(mos_rus#main)	Gray Wolf#rus05	972
-mosk_dun01,46,256,3	duplicate(mos_rus#main)	Maria Morebna#rus46	958
+mosk_dun01,50,256,3	duplicate(mos_rus#main)	Gray Wolf#rus05	4_RUS_DWOLF
+mosk_dun01,46,256,3	duplicate(mos_rus#main)	Maria Morebna#rus46	4_F_RUSCHILD
 
 //----------------------------------------------------------------------------
 // The Blacksmith (Golden Key)
 //----------------------------------------------------------------------------
-moscovia,178,127,0	script	The Blacksmith#rus06	63,{
+moscovia,178,127,0	script	The Blacksmith#rus06	1_M_SMITH,{
 	if ((MaxWeight-Weight) < 3500) {
 		mes "[The Blacksmith]";
 		mes "Why are you carrying that much?";
@@ -7715,7 +7715,7 @@ moscovia,178,127,0	script	The Blacksmith#rus06	63,{
 //----------------------------------------------------------------------------
 // Vassili Grandpapa (Red Ring)
 //----------------------------------------------------------------------------
-moscovia,206,81,0	script	Vassili Grandpapa#rus07	712,{
+moscovia,206,81,0	script	Vassili Grandpapa#rus07	4_M_05,{
 	if ((MaxWeight-Weight) < 3500) {
 		mes "[Vassili Grandpapa]";
 		mes "Why are you carring that much?";
@@ -7983,7 +7983,7 @@ moscovia,206,81,0	script	Vassili Grandpapa#rus07	712,{
 //----------------------------------------------------------------------------
 // Ryubaba (Red Ring)
 //----------------------------------------------------------------------------
-moscovia,213,216,3	script	Ryubaba#rus08	960,{
+moscovia,213,216,3	script	Ryubaba#rus08	4_F_RUSWOMAN2,{
 	if ((MaxWeight-Weight) < 3500) {
 		mes "[Ryubaba]";
 		mes "What on earth do you have in your bag?";
@@ -8312,7 +8312,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	960,{
 //----------------------------------------------------------------------------
 // Little Boy (Ryubaba Info)
 //----------------------------------------------------------------------------
-moscovia,223,210,3	script	Little Boy#rus09	962,{
+moscovia,223,210,3	script	Little Boy#rus09	4_M_RUSCHILD,{
 	if (rhea_rus_main < 8) {
 		mes "[Little Boy]";
 		mes "I will be an adventer and will marry the most beautiful bride!";
@@ -8377,7 +8377,7 @@ moscovia,223,210,3	script	Little Boy#rus09	962,{
 //----------------------------------------------------------------------------
 // Shepherdess (Wooden Flute for Red Ring)
 //----------------------------------------------------------------------------
-mosk_fild02,157,233,0	script	Shepherdess#rus10	69,{
+mosk_fild02,157,233,0	script	Shepherdess#rus10	1_F_04,{
 	if (rhea_rus_main < 8) {
 		mes "[Shepherdess]";
 		mes "Haaaa, boring, boring! Herding sheep is really boring!";
@@ -8541,19 +8541,19 @@ OnTimer60000:
 	donpcevent "Pointed Tree#rus11::OnEnable";
 	end;
 }
-mosk_fild02,151,188,0	duplicate(PTree#rusmain)	Pointed Tree#rus11	111
-mosk_fild02,160,227,0	duplicate(PTree#rusmain)	Pointed Tree#rus12	111
-mosk_fild02,160,179,0	duplicate(PTree#rusmain)	Pointed Tree#rus13	111
-mosk_fild02,142,247,0	duplicate(PTree#rusmain)	Pointed Tree#rus14	111
-mosk_fild02,149,223,0	duplicate(PTree#rusmain)	Pointed Tree#rus15	111
-mosk_fild02,114,223,0	duplicate(PTree#rusmain)	Pointed Tree#rus16	111
-mosk_fild02,101,197,0	duplicate(PTree#rusmain)	Pointed Tree#rus17	111
-mosk_fild02,125,182,0	duplicate(PTree#rusmain)	Pointed Tree#rus18	111
+mosk_fild02,151,188,0	duplicate(PTree#rusmain)	Pointed Tree#rus11	HIDDEN_NPC
+mosk_fild02,160,227,0	duplicate(PTree#rusmain)	Pointed Tree#rus12	HIDDEN_NPC
+mosk_fild02,160,179,0	duplicate(PTree#rusmain)	Pointed Tree#rus13	HIDDEN_NPC
+mosk_fild02,142,247,0	duplicate(PTree#rusmain)	Pointed Tree#rus14	HIDDEN_NPC
+mosk_fild02,149,223,0	duplicate(PTree#rusmain)	Pointed Tree#rus15	HIDDEN_NPC
+mosk_fild02,114,223,0	duplicate(PTree#rusmain)	Pointed Tree#rus16	HIDDEN_NPC
+mosk_fild02,101,197,0	duplicate(PTree#rusmain)	Pointed Tree#rus17	HIDDEN_NPC
+mosk_fild02,125,182,0	duplicate(PTree#rusmain)	Pointed Tree#rus18	HIDDEN_NPC
 
 //----------------------------------------------------------------------------
 // Worried Mother (Lusalka's Hair)
 //----------------------------------------------------------------------------
-moscovia,166,145,1	script	Worried Mother#rus19	961,{
+moscovia,166,145,1	script	Worried Mother#rus19	4_F_RUSWOMAN3,{
 	if (rhea_rus_main < 8) {
 		mes "[Worried Mother]";
 		mes "Where is she...";
@@ -8656,13 +8656,13 @@ moscovia,166,145,1	script	Worried Mother#rus19	961,{
 //----------------------------------------------------------------------------
 // Marsh Warning Signs
 //----------------------------------------------------------------------------
--	script	Caution#07rus::NoSwim	837,{
+-	script	Caution#07rus::NoSwim	2_BULLETIN_BOARD,{
 	mes " WARNING !! ";
 	mes "No Swimming";
 	close;
 }
-mosk_fild02,101,204,0	duplicate(NoSwim)	Caution#rus01	837
-mosk_fild02,101,200,0	duplicate(NoSwim)	Caution#rus02	837
+mosk_fild02,101,204,0	duplicate(NoSwim)	Caution#rus01	2_BULLETIN_BOARD
+mosk_fild02,101,200,0	duplicate(NoSwim)	Caution#rus02	2_BULLETIN_BOARD
 
 //----------------------------------------------------------------------------
 // Lusalka Trigger (Lusalka's Hair)
@@ -8750,7 +8750,7 @@ OnTouch:
 //----------------------------------------------------------------------------
 // Lusalka (Lusalka's Hair)
 //----------------------------------------------------------------------------
-mosk_fild02,124,202,3	script	Lusalka#rus23	971,{
+mosk_fild02,124,202,3	script	Lusalka#rus23	4_F_RUSGREEN,{
 	if (countitem(523)) {
 		if (rhea_rus_main < 8) {
 			mes "[Lusalka]";
@@ -8977,7 +8977,7 @@ OnTimer300000:
 //----------------------------------------------------------------------------
 // Wanderer (Lusalka's Hair)
 //----------------------------------------------------------------------------
-prontera,228,279,3	script	Wanderer#rus24	968,{
+prontera,228,279,3	script	Wanderer#rus24	4_M_RUSMAN2,{
 	if (rhea_rus_main < 8) {
 		mes "[A Wanderer from a strange land]";
 		mes "Hey, there are so many adventurers around here. I can see why this is the capital of the Rune Midgarts Kingdom!";
@@ -9082,7 +9082,7 @@ prontera,228,279,3	script	Wanderer#rus24	968,{
 //----------------------------------------------------------------------------
 // Morroc Villager (Lusalka's Hair)
 //----------------------------------------------------------------------------
-morocc,165,82,0	script	Morroc Villager#rus25	48,{
+morocc,165,82,0	script	Morroc Villager#rus25	1_M_02,{
 	if (rhea_rus_main < 8) {
 		mes "[Morroc Villager]";
 		mes "Huh, more and more adventurers are settling here recently, so it's hard to tell who is a villager or an adventurer.";
@@ -9155,7 +9155,7 @@ morocc,165,82,0	script	Morroc Villager#rus25	48,{
 //----------------------------------------------------------------------------
 // Soldier/Igor (Lusalka's Hair)
 //----------------------------------------------------------------------------
-moc_pryd04,126,120,0	script	Soldier#rus26	967,{
+moc_pryd04,126,120,0	script	Soldier#rus26	4_M_RUSMAN1,{
 	if (rhea_rus_main < 8) {
 		mes "[A gloomy looking soldier]";
 		mes "............................";
@@ -9370,7 +9370,7 @@ OnTouch:
 	close;
 }
 
-mosk_que,45,131,0	script	Stone Furnace#rus28	111,{
+mosk_que,45,131,0	script	Stone Furnace#rus28	HIDDEN_NPC,{
 	if (rhea_rus_main == 8) {
 		if (rhea_rus_quiz == 1) {
 			if (getequipid(EQI_SHOES) != 2429) {
@@ -9441,7 +9441,7 @@ OnTimer300000:
 	end;
 }
 
-mosk_que,56,202,0	script	Occult Apple Tree#rus29	111,{
+mosk_que,56,202,0	script	Occult Apple Tree#rus29	HIDDEN_NPC,{
 	if (rhea_rus_main == 8) {
 		if (rhea_rus_quiz == 2) {
 			if (getequipid(EQI_SHOES) != 2429) {
@@ -9484,7 +9484,7 @@ mosk_que,47,217,0	warp	Escape#rus30	1,1,mosk_fild02,237,266
 //----------------------------------------------------------------------------
 // Marozka (Golden Thread)
 //----------------------------------------------------------------------------
-mosk_fild02,243,270,0	script	Marozka#rus31	866,{
+mosk_fild02,243,270,0	script	Marozka#rus31	4_M_LGTGRAND,{
 	if (rhea_rus_main < 8) {
 		mes "[Marozka]";
 		mes "...........................";
@@ -9642,7 +9642,7 @@ mosk_fild02,243,270,0	script	Marozka#rus31	866,{
 //----------------------------------------------------------------------------
 // Baba Yaga (Golden Key)
 //----------------------------------------------------------------------------
-mosk_dun02,48,214,5	script	Baba Yaga#rus32	970,{
+mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 	if (rhea_rus_main < 9) {
 		mes "[Baba Yaga]";
 		mes "...........................";
@@ -10376,7 +10376,7 @@ OnMyMobDead:
 //----------------------------------------------------------------------------
 // Baba Yaga's Tasks (Golden Key)
 //----------------------------------------------------------------------------
-mosk_dun02,257,193,0	script	Cow#rus33	889,3,3,{
+mosk_dun02,257,193,0	script	Cow#rus33	4_BULL,3,3,{
 	end;
 OnInit:
 	enablenpc "Cow#rus33";
@@ -10474,7 +10474,7 @@ OnTouch:
 	close;
 }
 
-mosk_dun02,257,193,0	script	Cow#rus34	889,3,3,{
+mosk_dun02,257,193,0	script	Cow#rus34	4_BULL,3,3,{
 	end;
 OnInit:
 	enablenpc "Cow#rus34";
@@ -10573,7 +10573,7 @@ OnTouch:
 	close;
 }
 
-mosk_dun02,257,193,0	script	Cow#rus35	889,3,3,{
+mosk_dun02,257,193,0	script	Cow#rus35	4_BULL,3,3,{
 	end;
 OnInit:
 	enablenpc "Cow#rus35";
@@ -10661,7 +10661,7 @@ OnTouch:
 	close;
 }
 
-mosk_dun02,65,232,0	script	Noisy Coffin#rus36	801,{
+mosk_dun02,65,232,0	script	Noisy Coffin#rus36	4_NFCOFFIN,{
 	if (rhea_rus_main < 16) {
 		mes "[Noisy Coffin]";
 		mes "Isn't it good to be alive? Isn't it good to live?";
@@ -10871,7 +10871,7 @@ mosk_dun02,65,232,0	script	Noisy Coffin#rus36	801,{
 	close;
 }
 
-treasure01,165,58,0	script	Old Treasure Box#rus37	111,{
+treasure01,165,58,0	script	Old Treasure Box#rus37	HIDDEN_NPC,{
 	if ((MaxWeight-Weight) < 3500) {
 		mes "You are carrying too much!";
 		mes "Lose some weight and try again.";
@@ -10956,7 +10956,7 @@ OnTimer180000:
 	end;
 }
 
-treasure01,24,39,0	script	Old Bed#rus38	111,{
+treasure01,24,39,0	script	Old Bed#rus38	HIDDEN_NPC,{
 	if (rhea_rus_main == 21) {
 		mes "- An old bed covered with dust and must -";
 		next;
@@ -11041,7 +11041,7 @@ treasure01,24,39,0	script	Old Bed#rus38	111,{
 	end;
 }
 
-treasure01,98,119,0	script	Dirty Wall#rus39	111,{
+treasure01,98,119,0	script	Dirty Wall#rus39	HIDDEN_NPC,{
 	if (rhea_rus_main == 22 || (rhea_rus_main > 22 && rhea_rus_main < 26)) {
 		mes "- Something is engraved on the wall -";
 		next;
@@ -11055,7 +11055,7 @@ treasure01,98,119,0	script	Dirty Wall#rus39	111,{
 	end;
 }
 
-treasure01,61,183,0	script	Old_Wooden_Box#rus40	111,{
+treasure01,61,183,0	script	Old_Wooden_Box#rus40	HIDDEN_NPC,{
 	if (rhea_rus_main == 23) {
 		mes "- Something is glimmering inside of the box -";
 		next;
@@ -11078,7 +11078,7 @@ treasure01,61,183,0	script	Old_Wooden_Box#rus40	111,{
 	end;
 }
 
-treasure01,27,115,0	script	Opened Treasure Chest#41	111,{
+treasure01,27,115,0	script	Opened Treasure Chest#41	HIDDEN_NPC,{
 	if (rhea_rus_main == 24) {
 		mes "- You open the box, junk is in it -";
 		next;
@@ -11122,7 +11122,7 @@ treasure01,27,115,0	script	Opened Treasure Chest#41	111,{
 	end;
 }
 
-amatsu,233,234,3	script	Momotoro Publisher#rus42	757,{
+amatsu,233,234,3	script	Momotoro Publisher#rus42	4_F_JPN2,{
 	if ((MaxWeight-Weight) < 3500) {
 		mes "[Momotoro Publisher]";
 		mes "What on earth do you have in your bag?";
@@ -11201,7 +11201,7 @@ amatsu,233,234,3	script	Momotoro Publisher#rus42	757,{
 	close;
 }
 
-mosk_dun02,57,220,0	script	House Ghost Jar#rus43	111,{
+mosk_dun02,57,220,0	script	House Ghost Jar#rus43	HIDDEN_NPC,{
 	if (rhea_rus_main == 31) {
 		mes "["+ strcharinfo(0) +"]";
 		mes "... Is it in here..? Hey, hey...";
@@ -11492,7 +11492,7 @@ OnMyMobDead:
 	end;
 }
 
-payon,65,119,0	script	Broom Grandma#rus44	78,{
+payon,65,119,0	script	Broom Grandma#rus44	1_F_ORIENT_04,{
 	if (rhea_rus_main < 36) {
 		mes "[Broom Grandma]";
 		mes "A broom from Payon is the best!";
@@ -11549,7 +11549,7 @@ payon,65,119,0	script	Broom Grandma#rus44	78,{
 	close;
 }
 
-pay_dun04,163,186,0	script	Ghost Tree#rus45	111,{
+pay_dun04,163,186,0	script	Ghost Tree#rus45	HIDDEN_NPC,{
 	if (rhea_rus_main == 37) {
 		mes "[Ghost Tree]";
 		mes "Errr, a human? What are you doing here? Do you want to play with me?";
@@ -11850,7 +11850,7 @@ pay_dun04,163,186,0	script	Ghost Tree#rus45	111,{
 	end;
 }
 
-mosk_dun01,3,3,3	script	Koshei GlobalVar#admin	958,{
+mosk_dun01,3,3,3	script	Koshei GlobalVar#admin	4_F_RUSCHILD,{
 	callfunc "F_GM_NPC";
 	mes "[Koshei GlobalVar]";
 	mes "Please enter the password";

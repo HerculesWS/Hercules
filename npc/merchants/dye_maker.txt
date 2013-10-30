@@ -17,7 +17,7 @@
 //= 1.4 Added a checkweight. [L0ne_W0lf]
 //============================================================
 
-morocc_in,146,99,3	script	Java Dullihan	58,{
+morocc_in,146,99,3	script	Java Dullihan	1_M_MERCHANT,{
 	if ((MaxWeight-Weight) < 200 || checkweight(1201,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";

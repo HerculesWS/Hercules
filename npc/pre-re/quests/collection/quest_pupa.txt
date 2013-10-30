@@ -12,7 +12,7 @@
 //= 1.0 First version.
 //============================================================
 
-gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	123,{
+gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 	if (checkquest(60110) != -1) {
 		if (checkquest(60110,HUNTING) != 2 ) {
 			mes "[Halgus]";

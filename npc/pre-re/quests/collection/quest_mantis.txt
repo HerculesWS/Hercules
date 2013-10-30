@@ -11,7 +11,7 @@
 //= 1.0 First version.
 //============================================================
 
-lou_fild01,240,354,4	script	Mantis Researcher	878,{
+lou_fild01,240,354,4	script	Mantis Researcher	4_M_OILMAN,{
 
 	if (checkquest(60179) != -1) {
 		if (checkquest(60179,HUNTING) != 2 ) {

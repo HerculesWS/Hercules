@@ -16,7 +16,7 @@
 //= 1.5 Moved Izlude duplicate to pre-re/re paths. [Euphy]
 //============================================================
 
-alberta,118,157,3	script	Magazine Dealer Kenny::mdk	83,{
+alberta,118,157,3	script	Magazine Dealer Kenny::mdk	4_M_01,{
 	if (BaseJob == Job_Gunslinger) {
 		mes "[Kenny]";
 		mes "Welcome to my Magazine Shop.";

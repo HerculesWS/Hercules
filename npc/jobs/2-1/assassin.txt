@@ -49,7 +49,7 @@
 //= 3.6 Fixed broken event calls. [Euphy]
 //============================================================
 
-in_moc_16,19,33,1	script	Guildsman#asn	55,{
+in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 	if (Upper == 1) {
 		mes "[Ferocious-looking guy]";
 		mes "Hm? You....?";
@@ -290,7 +290,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	55,{
 	}
 }
 
-in_moc_16,25,90,1	script	Guildsman#ASN2	730,2,2,{
+in_moc_16,25,90,1	script	Guildsman#ASN2	4_M_JOB_ASSASSIN,2,2,{
 	mes "[Assassin 'Khai']";
 	mes "Umm?!";
 	emotion e_gasp;
@@ -1094,7 +1094,7 @@ OnTouch:
 	}
 }
 
-in_moc_16,21,165,2	script	Standby Room#ASNTEST	725,{
+in_moc_16,21,165,2	script	Standby Room#ASNTEST	4_F_JOB_ASSASSIN,{
 	end;
 
 OnInit:
@@ -1121,7 +1121,7 @@ OnStart:
 	end;
 }
 
-in_moc_16,21,165,2	script	Test Guide#ASN	725,4,4,{
+in_moc_16,21,165,2	script	Test Guide#ASN	4_F_JOB_ASSASSIN,4,4,{
 	end;
 
 OnTouch:
@@ -1444,7 +1444,7 @@ in_moc_16,86,147,0	duplicate(SinTrap)	18_2	-1,0,0
 in_moc_16,87,146,0	duplicate(SinTrap)	18_3	-1,0,0
 in_moc_16,87,147,0	duplicate(SinTrap)	18_4	-1,0,0
 
-in_moc_16,87,137,0	script	Keeper of the Door#ASN	45,2,1,{
+in_moc_16,87,137,0	script	Keeper of the Door#ASN	WARPNPC,2,1,{
 OnInit:
 	disablenpc "Keeper of the Door#ASN";
 	end;
@@ -1492,7 +1492,7 @@ OnMyMobDead:
 	end;
 }
 
-in_moc_16,89,98,1	script	Thomas#ASNTEST	118,5,1,{
+in_moc_16,89,98,1	script	Thomas#ASNTEST	2_M_THIEFMASTER,5,1,{
 	end;
 
 OnTouch:
@@ -1582,7 +1582,7 @@ OnDisable:
 	end;
 }
 
-in_moc_16,87,48,2	script	Barcardi#ASN	725,2,2,{
+in_moc_16,87,48,2	script	Barcardi#ASN	4_F_JOB_ASSASSIN,2,2,{
 OnTouch:
 	donpcevent "timestopper#1::OnDisable";
 	donpcevent "Thomas#ASNTEST::OnDisable";
@@ -1596,7 +1596,7 @@ OnTouch:
 	end;
 }
 
-in_moc_16,182,169,0	script	Maze Assistant	45,1,1,{
+in_moc_16,182,169,0	script	Maze Assistant	WARPNPC,1,1,{
 OnTouch:
 	if (ASSIN_Q == 5 || ASSIN_Q == 6) {
 		warp "in_moc_16",181,183;
@@ -1633,7 +1633,7 @@ OnCast:
 	end;
 }
 
-in_moc_16,149,80,4	script	Guildmaster#ASN2	106,1,1,{
+in_moc_16,149,80,4	script	Guildmaster#ASN2	1_M_MOC_LORD,1,1,{
 OnTouch:
 	savepoint "morocc",100,100;
 	if (ASSIN_Q == 7 && BaseJob == Job_Thief) {
@@ -2172,7 +2172,7 @@ OnTouch:
 	}
 }
 
-in_moc_16,186,81,1	script	Master Assist	55,1,1,{
+in_moc_16,186,81,1	script	Master Assist	1_M_JOBTESTER,1,1,{
 	mes "[Assistent Gayle Maroubitz]";
 	mes "Sorry, but I'm not in charge of job changes. Go to the Guildmaster, as he has told you.";
 	close;
@@ -2246,10 +2246,10 @@ OnInit:
 	disablenpc strnpcinfo(0);
 	end;
 }
-in_moc_16,156,87,1	duplicate(#moc_assin_dup)	[Huey]	55
-in_moc_16,156,85,1	duplicate(#moc_assin_dup)	[Khai]	730
-in_moc_16,156,83,1	duplicate(#moc_assin_dup)	[The Anonymous One]	106
-in_moc_16,156,81,2	duplicate(#moc_assin_dup)	[Barcardi]	725
-in_moc_16,156,79,1	duplicate(#moc_assin_dup)	[Beholder]	118
-in_moc_16,156,77,1	duplicate(#moc_assin_dup)	[Thomas]	118
-in_moc_16,156,75,1	duplicate(#moc_assin_dup)	[Gayle Maroubitz]	55
+in_moc_16,156,87,1	duplicate(#moc_assin_dup)	[Huey]	1_M_JOBTESTER
+in_moc_16,156,85,1	duplicate(#moc_assin_dup)	[Khai]	4_M_JOB_ASSASSIN
+in_moc_16,156,83,1	duplicate(#moc_assin_dup)	[The Anonymous One]	1_M_MOC_LORD
+in_moc_16,156,81,2	duplicate(#moc_assin_dup)	[Barcardi]	4_F_JOB_ASSASSIN
+in_moc_16,156,79,1	duplicate(#moc_assin_dup)	[Beholder]	2_M_THIEFMASTER
+in_moc_16,156,77,1	duplicate(#moc_assin_dup)	[Thomas]	2_M_THIEFMASTER
+in_moc_16,156,75,1	duplicate(#moc_assin_dup)	[Gayle Maroubitz]	1_M_JOBTESTER

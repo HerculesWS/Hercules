@@ -170,7 +170,7 @@ S_Fluc:
 	end;
 }
 
-prontera,140,181,5	script	Stock Market::stockmarket	109,{
+prontera,140,181,5	script	Stock Market::stockmarket	4_M_MANAGER,{
 	// Ensures no trading when default prices have not been set //
 	set @stotal,$S1+$S2+$S3+$S4+$S5+$S6+$S7+$S8+$S9+$S10;
 	if (@stotal > 0) goto S_Start;

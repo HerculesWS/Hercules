@@ -83,5 +83,5 @@
 		close;
 	}
 }
-man_in01,286,16,1	duplicate(merchant_13_2)	Merchant of Manuk	454
-spl_in01,110,326,5	duplicate(merchant_13_2)	Merchant of Splendide	439
+man_in01,286,16,1	duplicate(merchant_13_2)	Merchant of Manuk	4_MAN_PIOM
+spl_in01,110,326,5	duplicate(merchant_13_2)	Merchant of Splendide	4_F_FAIRYKID4

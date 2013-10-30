@@ -84,10 +84,10 @@
 	mes "Isn't it a beautiful day today?";
 	close;
 }
-hu_in01,386,306,3	duplicate(fflute)	Falcon Flute Trader#fft	51
-pay_arche,91,134,3	duplicate(fflute)	Falcon Flute Trader#fft2	51
+hu_in01,386,306,3	duplicate(fflute)	Falcon Flute Trader#fft	1_M_BARD
+pay_arche,91,134,3	duplicate(fflute)	Falcon Flute Trader#fft2	1_M_BARD
 
-tur_dun01,89,170,5	script	Expert Flute Crafter	59,{
+tur_dun01,89,170,5	script	Expert Flute Crafter	1_M_ORIENT01,{
 	if (Class == Job_Ranger || Class == Job_Ranger_T || Class == Job_Baby_Ranger) {
 		if (countitem(6124)) {
 			mes "[Expert Flute Crafter]";

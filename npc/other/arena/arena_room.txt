@@ -15,7 +15,7 @@
 //= 1.4 Added GM management function. [Euphy]
 //============================================================
 
-arena_room,94,93,5	script	Vendigos	97,{
+arena_room,94,93,5	script	Vendigos	4W_M_01,{
 	mes "[Vendigos]";
 	mes "Welcome to the world of Arena, the battle against a time limit.";
 	mes "My name is Vendigos, I am here to help you.";
@@ -101,7 +101,7 @@ OnLineRec_pt:
 //	end;
 }
 
-arena_room,105,82,5	script	Arena Record Staff	57,{
+arena_room,105,82,5	script	Arena Record Staff	1_M_LIBRARYMASTER,{
 	mes "[Owen Kheuv]";
 	mes "Hello, my name is Own Kheuv";
 	mes "in charge of every arena stage record of players.";
@@ -134,7 +134,7 @@ arena_room,105,82,5	script	Arena Record Staff	57,{
 	}
 }
 
-arena_room,68,135,3	script	Helper Pat	726,{
+arena_room,68,135,3	script	Helper Pat	4_F_JOB_BLACKSMITH,{
 	mes "[Pat]";
 	mes "Welcome, welcome.";
 	mes "I am a helper of the Lv 50 arena stage.";
@@ -173,7 +173,7 @@ arena_room,68,135,3	script	Helper Pat	726,{
 	close;
 }
 
-arena_room,41,93,5	script	Helper Ben	750,{
+arena_room,41,93,5	script	Helper Ben	4_M_ALCHE_C,{
 	mes "[Ben]";
 	mes "Welcome, welcome.";
 	mes "I am a helper of the Lv 60 arena stage.";
@@ -212,7 +212,7 @@ arena_room,41,93,5	script	Helper Ben	750,{
 	close;
 }
 
-arena_room,53,49,5	script	Helper Vicious	730,{
+arena_room,53,49,5	script	Helper Vicious	4_M_JOB_ASSASSIN,{
 	mes "[Vicious]";
 	mes "Hey there.";
 	mes "My name is Vicious, I am a helper of Lv 70 arena stage.";
@@ -252,7 +252,7 @@ arena_room,53,49,5	script	Helper Vicious	730,{
 	close;
 }
 
-arena_room,147,49,3	script	Helper Epin	727,{
+arena_room,147,49,3	script	Helper Epin	4_F_JOB_HUNTER,{
 	mes "[Epin]";
 	mes "Good day,";
 	mes "I am a helper of Lv 80 arena stage and my name is Epin.";
@@ -296,7 +296,7 @@ arena_room,147,49,3	script	Helper Epin	727,{
 	close;
 }
 
-arena_room,158,93,5	script	Helper Lunic	828,{
+arena_room,158,93,5	script	Helper Lunic	4_M_ROGUE,{
 	mes "[Lunic]";
 	mes "Welcome to party arena stage.";
 	mes "I hope you will listen carefully to my introduction";
@@ -365,7 +365,7 @@ arena_room,158,93,5	script	Helper Lunic	828,{
 	close;
 }
 
-arena_room,158,82,1	script	Helper Lonik	828,{
+arena_room,158,82,1	script	Helper Lonik	4_M_ROGUE,{
 	emotion e_no1,0;
 	mes "[Lonik]";
 	mes "Tah dah! Here I am!";
@@ -391,7 +391,7 @@ arena_room,158,82,1	script	Helper Lonik	828,{
 	close;
 }
 
-sec_in02,72,180,3	script	Arena Manager#arena	802,{
+sec_in02,72,180,3	script	Arena Manager#arena	4_NFWISP,{
 	set .@i, callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
 		mes "[Arena Manager]";
@@ -513,7 +513,7 @@ sec_in02,72,180,3	script	Arena Manager#arena	802,{
 	}
 }
 
-sec_in02,79,171,3	script	Reward Manager#arena	802,{
+sec_in02,79,171,3	script	Reward Manager#arena	4_NFWISP,{
 	set .@i, callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
 		mes "[Reward Manager]";
@@ -546,7 +546,7 @@ sec_in02,79,171,3	script	Reward Manager#arena	802,{
 	}
 }
 
-arena_room,105,93,5	script	Teleporter#arena	55,{
+arena_room,105,93,5	script	Teleporter#arena	1_M_JOBTESTER,{
 	mes "[Teleporter]";
 	mes "I can move you to the reward arena!";
 	mes "Would you like to go there?";
@@ -565,7 +565,7 @@ arena_room,105,93,5	script	Teleporter#arena	55,{
 	}
 }
 
-prt_are_in,98,14,3	script	Givu#arena	728,{
+prt_are_in,98,14,3	script	Givu#arena	4_F_JOB_KNIGHT,{
 	if (checkweight(526,5) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";
@@ -755,10 +755,10 @@ OnKis:
 	emotion e_kis,0;
 	end;
 }
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_6969	714
-prt_are_in,94,26,5	duplicate(#arena_1039)	#arena_ss_2	714
-prt_are_in,100,28,3	duplicate(#arena_1039)	#arena_ss_3	714
-prt_are_in,102,26,3	duplicate(#arena_1039)	#arena_ss_4	714
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_6969	4_F_06
+prt_are_in,94,26,5	duplicate(#arena_1039)	#arena_ss_2	4_F_06
+prt_are_in,100,28,3	duplicate(#arena_1039)	#arena_ss_3	4_F_06
+prt_are_in,102,26,3	duplicate(#arena_1039)	#arena_ss_4	4_F_06
 prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1272	1272
 prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1046	1046
 prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1115	1115
@@ -766,7 +766,7 @@ prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1389	1389
 prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1492	1492
 prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1251	1251
 prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1159	1159
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_7777	811
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_7777	4_F_VALKYRIE
 
 -	script	npctime#arena	-1,{
 OnStop:
@@ -946,7 +946,7 @@ OnTimer62000:
 	end;
 }
 
-sec_in02,72,171,3	script	Picture Manager#arena	802,{
+sec_in02,72,171,3	script	Picture Manager#arena	4_NFWISP,{
 	set .@i, callfunc("F_GM_NPC",1357,0);
 	if (.@i == -1) {
 		mes "[Picture Manager]";
@@ -974,7 +974,7 @@ sec_in02,72,171,3	script	Picture Manager#arena	802,{
 	}
 }
 
-sec_in02,76,176,5	script	Live Broadcast#arena	802,{
+sec_in02,76,176,5	script	Live Broadcast#arena	4_NFWISP,{
 	callfunc "F_GM_NPC";
 	mes "[Live Broadcast]";
 	mes "Currently there are "+getmapusers("force_1-1")+" people in Lv 50s map.";

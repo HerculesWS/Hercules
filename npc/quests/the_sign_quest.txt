@@ -29,7 +29,7 @@
 
 // The Sign (Part 1)
 //============================================================
--	script	Sign::TheSign	111,{
+-	script	Sign::TheSign	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	cutin "sign_01",4;
 	mes "^3355FFNext^000000";
@@ -61,14 +61,14 @@ OnInit:
 	end;
 }
 
-prontera,147,305,0	duplicate(TheSign)	Sign#prontera	111
-geffen,168,175,0	duplicate(TheSign)	Sign#geffen	111
-morocc,168,265,0	duplicate(TheSign)	Sign#morroc	111
-payon,160,183,0	duplicate(TheSign)	Sign#payon	111
-aldebaran,54,223,0	duplicate(TheSign)	Sign#aldebaran	111
-alberta,35,241,0	duplicate(TheSign)	Sign#alberta	111
+prontera,147,305,0	duplicate(TheSign)	Sign#prontera	HIDDEN_NPC
+geffen,168,175,0	duplicate(TheSign)	Sign#geffen	HIDDEN_NPC
+morocc,168,265,0	duplicate(TheSign)	Sign#morroc	HIDDEN_NPC
+payon,160,183,0	duplicate(TheSign)	Sign#payon	HIDDEN_NPC
+aldebaran,54,223,0	duplicate(TheSign)	Sign#aldebaran	HIDDEN_NPC
+alberta,35,241,0	duplicate(TheSign)	Sign#alberta	HIDDEN_NPC
 
-prt_in,227,45,0	script	Archeologist#sign	804,{
+prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 	callfunc "F_UpdateSignVars";
 	cutin "mets_alpha",2;
 	mes "[Metz]";
@@ -768,7 +768,7 @@ prt_in,227,45,0	script	Archeologist#sign	804,{
 	end;
 }
 
-prt_in,228,26,5	script	Steward#sign	55,{
+prt_in,228,26,5	script	Steward#sign	1_M_JOBTESTER,{
 	callfunc "F_UpdateSignVars";
 	mes "[Vandez]";
 	if (sign_q < 3) {
@@ -963,7 +963,7 @@ prt_in,228,26,5	script	Steward#sign	55,{
 prt_in,248,23,3	script	Maid#sign	1275,{
 	end;
 }
-prt_in,248,23,0	script	Maid#sign2	111,{
+prt_in,248,23,0	script	Maid#sign2	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	mes "[Elle]";
 	if (sign_q < 3) {
@@ -1202,7 +1202,7 @@ prt_in,248,23,0	script	Maid#sign2	111,{
 	}
 }
 
-morocc_in,115,154,5	script	Rogue#sign	810,{
+morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 	callfunc "F_UpdateSignVars";
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second! Right now,";
@@ -1533,7 +1533,7 @@ morocc_in,115,154,5	script	Rogue#sign	810,{
 	}
 }
 
-morocc_in,114,162,4	script	Young Man#sign	118,{
+morocc_in,114,162,4	script	Young Man#sign	2_M_THIEFMASTER,{
 	callfunc "F_UpdateSignVars";
 	mes "[Gaanan]";
 	if (sign_q < 11) {
@@ -1699,7 +1699,7 @@ morocc_in,114,162,4	script	Young Man#sign	118,{
 	}
 }
 
-payon,154,170,3	script	Hagin#sign	78,{
+payon,154,170,3	script	Hagin#sign	1_F_ORIENT_04,{
 	mes "[Hagin]";
 	mes "Have you heard?";
 	mes "Payon's most eligible";
@@ -1775,7 +1775,7 @@ payon_in03,81,22,4	script	Maid#a1	1170,{
 	end;
 }
 
-payon_in03,81,22,4	script	Maid#a2	111,{
+payon_in03,81,22,4	script	Maid#a2	HIDDEN_NPC,{
 	mes "[Maid]";
 	mes "Welcome to the";
 	mes "Payon Castle annex";
@@ -1788,7 +1788,7 @@ payon_in03,79,22,4	script	Maid#b1	1404,{
 	end;
 }
 
-payon_in03,79,22,4	script	Maid#b2	111,{
+payon_in03,79,22,4	script	Maid#b2	HIDDEN_NPC,{
 	mes "[Maid]";
 	mes "Welcome.";
 	mes "Are you another";
@@ -1801,7 +1801,7 @@ payon_in03,81,15,1	script	Maid#c1	1170,{
 	end;
 }
 
-payon_in03,81,15,1	script	Maid#c2	111,{
+payon_in03,81,15,1	script	Maid#c2	HIDDEN_NPC,{
 	mes "[Maid]";
 	mes "Greetings.";
 	mes "Welcome to the";
@@ -1815,7 +1815,7 @@ payon_in03,79,15,1	script	Maid#d1	1404,{
 	end;
 }
 
-payon_in03,79,15,1	script	Maid#d2	111,{
+payon_in03,79,15,1	script	Maid#d2	HIDDEN_NPC,{
 	mes "[Maid]";
 	mes "Welcome to the";
 	mes "Payon Castle Annex.";
@@ -1829,7 +1829,7 @@ payon_in03,8,31,4	script	Maid#e1	1416,{
 	end;
 }
 
-payon_in03,8,31,4	script	Maid#e2	111,{
+payon_in03,8,31,4	script	Maid#e2	HIDDEN_NPC,{
 	mes "[Chamberlain]";
 	mes "Please refrain";
 	mes "from attacking";
@@ -1849,7 +1849,7 @@ payon_in03,13,31,4	script	Maid#f1	1416,{
 	end;
 }
 
-payon_in03,13,31,4	script	Maid#f2	111,{
+payon_in03,13,31,4	script	Maid#f2	HIDDEN_NPC,{
 	mes "[Chamberlain]";
 	mes "Master Daewoon~!";
 	mes "Please try this too!";
@@ -1864,7 +1864,7 @@ payon_in03,13,31,4	script	Maid#f2	111,{
 	close;
 }
 
-payon_in03,11,31,4	script	Daewoon#sign	808,{
+payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 	callfunc "F_UpdateSignVars";
 	mes "[Daewoon]";
 	mes "Mwah ah hah!";
@@ -2555,7 +2555,7 @@ payon_in03,11,31,4	script	Daewoon#sign	808,{
 	close;
 }
 
-aldeba_in,139,103,5	script	Monograph#sign	111,{
+aldeba_in,139,103,5	script	Monograph#sign	HIDDEN_NPC,{
 	mes "[Sir Jore]";
 	mes "Uwah~!";
 	mes "Stop reading my";
@@ -2564,7 +2564,7 @@ aldeba_in,139,103,5	script	Monograph#sign	111,{
 	close;
 }
 
-aldeba_in,155,101,3	script	Sir Jore#sign	805,7,7,{
+aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 	callfunc "F_UpdateSignVars";
 	if ((gettime(3) > 16) && (gettime(3) < 22)) {
 		if (sign_q == 15) {
@@ -2934,7 +2934,7 @@ OnTouch:
 	end;
 }
 
-aldeba_in,156,118,4	script	Piru Piru#sign	102,{
+aldeba_in,156,118,4	script	Piru Piru#sign	8_F,{
 	callfunc "F_UpdateSignVars";
 	mes "[Piru Piru]";
 	if ((gettime(3) >= 12) && (gettime(3) <= 24)) { //235959
@@ -3055,7 +3055,7 @@ aldeba_in,156,118,4	script	Piru Piru#sign	102,{
 	}
 }
 
-prt_maze02,57,151,1	script	Pleur#warp	91,{
+prt_maze02,57,151,1	script	Pleur#warp	4_F_02,{
 	mes "^3355FFYou catch a glimpse";
 	mes "of a girl heading directly";
 	mes "into a deep forest. You decide";
@@ -3115,7 +3115,7 @@ OnMyMobDead:
 	end;
 }
 
-prt_maze02,16,183,3	script	Pleur#sign	91,{
+prt_maze02,16,183,3	script	Pleur#sign	4_F_02,{
 	callfunc "F_UpdateSignVars";
 	mes "[Pleur]";
 	if (sign_q < 19) {
@@ -3142,7 +3142,7 @@ OnOmg:
 	end;
 }
 
-prt_maze02,14,183,4	script	Gordon#sign	51,{
+prt_maze02,14,183,4	script	Gordon#sign	1_M_BARD,{
 	callfunc "F_UpdateSignVars";
 	mes "[Gordon]";
 	if (sign_q < 18) {
@@ -3426,7 +3426,7 @@ prt_maze02,14,183,4	script	Gordon#sign	51,{
 	}
 }
 
-geffen_in,59,74,4	script	Jesqurienne#sign	803,{
+geffen_in,59,74,4	script	Jesqurienne#sign	1_F_SIGNZISK,{
 	callfunc "F_UpdateSignVars";
 	mes "[Jesqurienne]";
 	if (sign_q < 21) {
@@ -3714,7 +3714,7 @@ OnHo:
 	end;
 }
 
-geffen_in,61,72,7	script	Aaron#sign	754,{
+geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 	callfunc "F_UpdateSignVars";
 	mes "[Aaron]";
 	if (sign_q == 21) {
@@ -4415,7 +4415,7 @@ OnSmile:
 	end;
 }
 
-cmd_in02,88,51,4	script	Strange Guy#sign	806,{
+cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 	callfunc "F_UpdateSignVars";
 	mes "[Dearles]";
 	if (sign_q < 25) {
@@ -4868,7 +4868,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	806,{
 	}
 }
 
-cmd_in01,33,25,5	script	Examiner#sign	724,{
+cmd_in01,33,25,5	script	Examiner#sign	4_F_07,{
 	callfunc "F_UpdateSignVars";
 	mes "[Lamadin]";
 	if (sign_q == 30) {
@@ -4990,7 +4990,7 @@ cmd_in01,33,25,5	script	Examiner#sign	724,{
 	}
 }
 
-cmd_in01,16,24,0	script	Emergency Exit	111,{
+cmd_in01,16,24,0	script	Emergency Exit	HIDDEN_NPC,{
 	mes "[Exit]";
 	mes "Would you like to go out?";
 	next;
@@ -5008,7 +5008,7 @@ cmd_in01,16,24,0	script	Emergency Exit	111,{
 	}
 }
 
-cmd_in01,33,33,1	script	Standby Room#sign	66,{
+cmd_in01,33,33,1	script	Standby Room#sign	1_F_01,{
 	end;
 
 OnInit:
@@ -5143,7 +5143,7 @@ OnTimer44000:
 	end;
 }
 
-cmd_in01,16,21,0	script	s_dance#up	139,1,3,{
+cmd_in01,16,21,0	script	s_dance#up	HIDDEN_WARP_NPC,1,3,{
 OnInit:
 	disablenpc "s_dance#up";
 	end;
@@ -5199,7 +5199,7 @@ OnTouch:
 	end;
 }
 
-cmd_in01,16,11,0	script	s_dance#down	139,1,3,{
+cmd_in01,16,11,0	script	s_dance#down	HIDDEN_WARP_NPC,1,3,{
 OnInit:
 	donpcevent "s_dance#down::OnDisable";
 	end;
@@ -5275,7 +5275,7 @@ OnTouch:
 	end;
 }
 
-cmd_in01,11,16,0	script	s_dance#left	139,3,1,{
+cmd_in01,11,16,0	script	s_dance#left	HIDDEN_WARP_NPC,3,1,{
 OnInit:
 	donpcevent "s_dance#left::OnDisable";
 	end;
@@ -5344,7 +5344,7 @@ OnTouch:
 	end;
 }
 
-cmd_in01,21,16,0	script	s_dance#right	139,3,1,{
+cmd_in01,21,16,0	script	s_dance#right	HIDDEN_WARP_NPC,3,1,{
 OnInit:
 	donpcevent "s_dance#right::OnDisable";
 	end;
@@ -5418,7 +5418,7 @@ OnTouch:
 	end;
 }
 
-cmd_in01,16,16,0	script	s_dance#cen	139,1,1,{
+cmd_in01,16,16,0	script	s_dance#cen	HIDDEN_WARP_NPC,1,1,{
 OnInit:
 	donpcevent "s_dance#cen::OnDisable";
 	end;
@@ -5501,7 +5501,7 @@ OnDisable:
 	end;
 }
 
-alberta_in,125,101,5	script	Wealthy-looking Merchant	807,{
+alberta_in,125,101,5	script	Wealthy-looking Merchant	1_M_SIGNMCNT,{
 	callfunc "F_UpdateSignVars";
 	mes "[Bakerlan]";
 	if (sign_q < 35) {
@@ -5681,7 +5681,7 @@ alberta_in,125,101,5	script	Wealthy-looking Merchant	807,{
 	}
 }
 
-alberta_in,154,171,5	script	Maid#s10	758,{
+alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 	callfunc "F_UpdateSignVars";
 	mes "[Seylin]";
 	if (sign_q < 38) {
@@ -5998,7 +5998,7 @@ alberta_in,154,171,5	script	Maid#s10	758,{
 	}
 }
 
-prt_castle,107,58,5	script	Soldier#s11	105,{
+prt_castle,107,58,5	script	Soldier#s11	8W_SOLDIER,{
 	callfunc "F_UpdateSignVars";
 	mes "[Maruin]";
 	if (sign_q < 49) {
@@ -6130,7 +6130,7 @@ prt_castle,107,58,5	script	Soldier#s11	105,{
 	}
 }
 
-alde_alche,169,162,7	script	Alchemist#sign	749,{
+alde_alche,169,162,7	script	Alchemist#sign	4_M_ALCHE_B,{
 	callfunc "F_UpdateSignVars";
 	mes "[Melkaba]";
 	if (sign_q < 46) {
@@ -6439,7 +6439,7 @@ alde_alche,169,162,7	script	Alchemist#sign	749,{
 	}
 }
 
-alberta_in,114,178,5	script	Refined Steward	109,{
+alberta_in,114,178,5	script	Refined Steward	4_M_MANAGER,{
 	callfunc "F_UpdateSignVars";
 	mes "[Mahatra]";
 	if (sign_q < 37) {
@@ -6585,7 +6585,7 @@ alberta_in,114,178,5	script	Refined Steward	109,{
 	}
 }
 
-alberta,98,202,5	script	Guard#s10	105,{
+alberta,98,202,5	script	Guard#s10	8W_SOLDIER,{
 	mes "[Hurubu]";
 	mes "Welcome to the";
 	mes "Alchesh Estate.";
@@ -6632,7 +6632,7 @@ alberta,98,202,5	script	Guard#s10	105,{
 	}
 }
 
-alberta,43,49,5	script	Poor-looking Merchant	89,{
+alberta,43,49,5	script	Poor-looking Merchant	4_M_ORIENT02,{
 	callfunc "F_UpdateSignVars";
 	mes "[Machen]";
 	if (sign_q < 35) {
@@ -6731,7 +6731,7 @@ alberta,43,49,5	script	Poor-looking Merchant	89,{
 	}
 }
 
-yuno,330,100,4	script	Knight#ss	734,{
+yuno,330,100,4	script	Knight#ss	4_M_JOB_KNIGHT2,{
 	callfunc "F_UpdateSignVars";
 	mes "[Leibech]";
 	if (sign_q < 38) {
@@ -6913,7 +6913,7 @@ yuno,330,100,4	script	Knight#ss	734,{
 
 // The Sign (Part 2)
 //============================================================
-geffen_in,159,48,5	script	Lonely-looking Woman	711,{
+geffen_in,159,48,5	script	Lonely-looking Woman	4_F_05,{
 	callfunc "F_UpdateSignVars";
 	mes "[Brenda Howard]";
 	if (sign_q < 54) {
@@ -7030,7 +7030,7 @@ geffen_in,159,48,5	script	Lonely-looking Woman	711,{
 	}
 }
 
-geffen_in,171,42,3	script	Cute Girl	703,{
+geffen_in,171,42,3	script	Cute Girl	4_F_KID2,{
 	callfunc "F_UpdateSignVars";
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFWait a second! Right now,";
@@ -7144,7 +7144,7 @@ geffen_in,171,42,3	script	Cute Girl	703,{
 	}
 }
 
-mjo_dun02,88,295,4	script	Flaming Spirit Man	85,{
+mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 	callfunc "F_UpdateSignVars";
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFWait a second! Right now,";
@@ -7661,7 +7661,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	85,{
 	}
 }
 
-gef_tower,118,36,4	script	Annoyed Man	64,{
+gef_tower,118,36,4	script	Annoyed Man	1_M_WIZARD,{
 	callfunc "F_UpdateSignVars";
 	mes "[Dhota]";
 	if (sign_q < 72) {
@@ -7745,7 +7745,7 @@ gef_tower,118,36,4	script	Annoyed Man	64,{
 	}
 }
 
-umbala,163,256,3	script	Native#_s	781,{
+umbala,163,256,3	script	Native#_s	4_F_UMGIRL,{
 	callfunc "F_UpdateSignVars";
 	if (event_umbala >= 3) {
 		mes "[Laotan]";
@@ -7821,7 +7821,7 @@ umbala,163,256,3	script	Native#_s	781,{
 	}
 }
 
-um_in,27,23,3	script	Fastidious-Looking Guy	121,{
+um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 	callfunc "F_UpdateSignVars";
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFWait a second! Right now,";
@@ -8011,7 +8011,7 @@ um_in,27,23,3	script	Fastidious-Looking Guy	121,{
 	}
 }
 
-alberta,165,83,4	script	Fastidious Old Man	755,{
+alberta,165,83,4	script	Fastidious Old Man	4_M_SAGE_C,{
 	callfunc "F_UpdateSignVars";
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFWait a second! Right now,";
@@ -8134,7 +8134,7 @@ alberta,165,83,4	script	Fastidious Old Man	755,{
 	}
 }
 
-gef_fild07,182,241,0	script	#Valkyrie Warp	111,1,1,{
+gef_fild07,182,241,0	script	#Valkyrie Warp	HIDDEN_NPC,1,1,{
 	callfunc "F_UpdateSignVars";
 	if ((sign_q == 80) && (countitem(907) > 3) && (countitem(953) > 11) && (countitem(7013) > 364)) {
 		mes "^6B8E23It seems that";
@@ -8188,7 +8188,7 @@ OnTouch:
 	end;
 }
 
-himinn,48,86,5	script	Valkyrie#sign	811,{
+himinn,48,86,5	script	Valkyrie#sign	4_F_VALKYRIE,{
 	callfunc "F_UpdateSignVars";
 	mes "[Valkyrie Sandra]";
 	if (sign_q < 81) {
@@ -8371,7 +8371,7 @@ himinn,48,86,5	script	Valkyrie#sign	811,{
 
 // The Sign (Part 3)
 //============================================================
-que_sign01,196,39,4	script	Serin#dummy	90,{
+que_sign01,196,39,4	script	Serin#dummy	4_F_01,{
 	end;
 
 OnDisable:
@@ -8407,7 +8407,7 @@ OnTimer13000:
 	end;
 }
 
-que_sign01,196,44,4	script	Dark Lord#serin	737,{
+que_sign01,196,44,4	script	Dark Lord#serin	4_DARKLORD,{
 	end;
 
 OnDisable:
@@ -8420,7 +8420,7 @@ OnEnable:
 	end;
 }
 
-que_sign01,196,39,4	script	Serin#serin	90,{
+que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 	callfunc "F_UpdateSignVars";
 	if (sign_q < 132) {
 		mes "[Serin]";
@@ -8725,7 +8725,7 @@ OnEnable:
 	end;
 }
 
-que_sign01,197,195,4	script	Serin#witch	90,{
+que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 	callfunc "F_UpdateSignVars";
 	if (sign_q < 124) {
 		mes "[Serin]";
@@ -9085,7 +9085,7 @@ OnEnable:
 	end;
 }
 
-niflheim,313,70,4	script	Pleasant-Featured Lady#s	90,{
+niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 	callfunc "F_UpdateSignVars";
 	if (sign_q < 82) {
 		mes "[Serin]";
@@ -9747,7 +9747,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	90,{
 	}
 }
 
-que_sign01,122,141,4	script	Witch#s	792,{
+que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 	callfunc "F_UpdateSignVars";
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
@@ -10741,7 +10741,7 @@ OnTouch:
 	end;
 }
 
-que_sign01,45,227,4	script	Queen of the Dead	856,{
+que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 	callfunc "F_UpdateSignVars";
 	mes "[Lady Hell]";
 	if (sign_q < 117) {
@@ -10930,7 +10930,7 @@ que_sign01,45,227,4	script	Queen of the Dead	856,{
 	}
 }
 
-niflheim,146,241,0	script	Depressing Man	735,{
+niflheim,146,241,0	script	Depressing Man	4_M_JOB_WIZARD,{
 	callfunc "F_UpdateSignVars";
 	if (sign_q < 80) {
 		mes "[????]";
@@ -11195,7 +11195,7 @@ niflheim,146,241,0	script	Depressing Man	735,{
 	}
 }
 
-nif_in,140,177,0	script	#Switch	111,{
+nif_in,140,177,0	script	#Switch	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	if (countitem(7313) == 1) {
 		warp "que_sign01",115,135;
@@ -11209,7 +11209,7 @@ nif_in,140,177,0	script	#Switch	111,{
 	end;
 }
 
-niflheim,102,54,4	script	Mad Man#s	739,{
+niflheim,102,54,4	script	Mad Man#s	8_DOPPEL,{
 	callfunc "F_UpdateSignVars";
 	mes "[Laichin]";
 	if (sign_q < 82) {
@@ -12039,7 +12039,7 @@ function	script	F_SignSeal	{
 	return;
 }
 
-gl_dun02,262,265,0	script	Mysterious Energy#1	111,{
+gl_dun02,262,265,0	script	Mysterious Energy#1	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	set .@crash_s,rand(1,1000);
 	if (sign_q == 101) {
@@ -12055,7 +12055,7 @@ gl_dun02,262,265,0	script	Mysterious Energy#1	111,{
 }
 
 // Angrboda's Seal 2 big 4 O'clock 270 198
-gl_dun02,271,100,0	script	Mysterious Energy#2	111,{
+gl_dun02,271,100,0	script	Mysterious Energy#2	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	set .@crash_s,rand(1,1000);
 	if ((sign_q == 102) || (sign_q == 104)) {
@@ -12072,7 +12072,7 @@ gl_dun02,271,100,0	script	Mysterious Energy#2	111,{
 }
 
 // Angrboda's Seal 3 big 5 O'clock 268 32
-gl_dun02,268,32,0	script	Mysterious Energy#3	111,{
+gl_dun02,268,32,0	script	Mysterious Energy#3	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	set .@crash_s,rand(1,1000);
 	if ((sign_q == 103) || (sign_q == 105) || (sign_q == 108)) {
@@ -12090,7 +12090,7 @@ gl_dun02,268,32,0	script	Mysterious Energy#3	111,{
 }
 
 // Angrboda's Seal 4 big 7 O'clock 16 26
-gl_dun02,16,26,0	script	Mysterious Energy#4	111,{
+gl_dun02,16,26,0	script	Mysterious Energy#4	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	set .@crash_s,rand(1,1000);
 	if (sign_q == 109) {
@@ -12106,7 +12106,7 @@ gl_dun02,16,26,0	script	Mysterious Energy#4	111,{
 }
 
 // Angrboda's Seal 5 big 11 O'clock 42 251
-gl_dun02,42,251,0	script	Mysterious Energy#5	111,{
+gl_dun02,42,251,0	script	Mysterious Energy#5	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	set .@crash_s,rand(1,1000);
 	if ((sign_q == 106) || (sign_q == 112)) {
@@ -12123,7 +12123,7 @@ gl_dun02,42,251,0	script	Mysterious Energy#5	111,{
 }
 
 // Angrboda's Seal 6 small 11 O'clock 123 234
-gl_dun02,123,234,0	script	Mysterious Energy#6	111,{
+gl_dun02,123,234,0	script	Mysterious Energy#6	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	set .@crash_s,rand(1,1000);
 	if (sign_q == 107) {
@@ -12143,7 +12143,7 @@ gl_dun02,123,234,0	script	Mysterious Energy#6	111,{
 }
 
 // Angrboda's Seal 7 small 6 O'clock 140 72
-gl_dun02,140,72,0	script	Mysterious Energy#7	111,{
+gl_dun02,140,72,0	script	Mysterious Energy#7	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	set .@crash_s,rand(1,1000);
 	if ((sign_q == 110) || (sign_q == 111)) {
@@ -12164,7 +12164,7 @@ gl_dun02,140,72,0	script	Mysterious Energy#7	111,{
 }
 
 // Angrboda's Seal 8 very small 119 182
-gl_dun02,119,182,0	script	Mysterious Energy#8	111,{
+gl_dun02,119,182,0	script	Mysterious Energy#8	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	set .@crash_s,rand(1,1000);
 	if ((sign_q == 114) || (sign_q == 115)) {
@@ -12178,7 +12178,7 @@ gl_dun02,119,182,0	script	Mysterious Energy#8	111,{
 	}
 }
 
-que_sign01,46,56,0	script	Fountain#sign	111,{
+que_sign01,46,56,0	script	Fountain#sign	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	if (sign_q < 118) {
 		mes "^3355FFThe water in this";
@@ -12231,7 +12231,7 @@ que_sign01,46,56,0	script	Fountain#sign	111,{
 	}
 }
 
-geffen,119,55,0	script	Geffenia Warp	45,1,1,{
+geffen,119,55,0	script	Geffenia Warp	WARPNPC,1,1,{
 OnInit:
 	disablenpc "Geffenia Warp";
 	end;
@@ -12269,7 +12269,7 @@ OnTimer45000:
 	end;
 }
 
-geffen,119,48,0	script	Fountain#s	111,{
+geffen,119,48,0	script	Fountain#s	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
 	if (countitem(7025) > 0) {
 		mes "^3355FFAs you approach the fountain,";
@@ -12441,7 +12441,7 @@ que_sign02,0,0,0,0	monster	Zombie Prisoner	1480,15,0,0,0
 que_sign02,0,0,0,0	monster	Wraith	1475,15,0,0,0
 que_sign02,0,0,0,0	monster	Wraith Dead	1566,8,0,0,0
 
-que_sign02,378,235,0	script	sign_w6	45,1,1,{
+que_sign02,378,235,0	script	sign_w6	WARPNPC,1,1,{
 OnTouch:
 	callfunc "F_UpdateSignVars";
 	if ((countitem(7313) == 1) && ((sign_q != 124) || (sign_q != 125) || (sign_q != 126))) {

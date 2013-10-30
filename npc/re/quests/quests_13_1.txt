@@ -11,8 +11,8 @@
 //= 1.1 Added Izlude duplicates. [Euphy]
 //============================================================
 
-izlude,102,171,6	duplicate(PromotionalStaff_izlude)	Promotional Staff#iz	100
-izlude_a,102,171,6	duplicate(PromotionalStaff_izlude)	Promotional Staff#iz_a	100
-izlude_b,102,171,6	duplicate(PromotionalStaff_izlude)	Promotional Staff#iz_b	100
-izlude_c,102,171,6	duplicate(PromotionalStaff_izlude)	Promotional Staff#iz_c	100
-izlude_d,102,171,6	duplicate(PromotionalStaff_izlude)	Promotional Staff#iz_d	100
+izlude,102,171,6	duplicate(PromotionalStaff_izlude)	Promotional Staff#iz	4W_SAILOR
+izlude_a,102,171,6	duplicate(PromotionalStaff_izlude)	Promotional Staff#iz_a	4W_SAILOR
+izlude_b,102,171,6	duplicate(PromotionalStaff_izlude)	Promotional Staff#iz_b	4W_SAILOR
+izlude_c,102,171,6	duplicate(PromotionalStaff_izlude)	Promotional Staff#iz_c	4W_SAILOR
+izlude_d,102,171,6	duplicate(PromotionalStaff_izlude)	Promotional Staff#iz_d	4W_SAILOR

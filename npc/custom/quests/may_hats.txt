@@ -12,7 +12,7 @@
 //= 1.01 translated the rest of dialogues
 //============================================================
 
-gonryun,187,140,4	script	Yakima	850,{
+gonryun,187,140,4	script	Yakima	4_F_EINWOMAN,{
 	mes "[Yakima]";
 	mes callfunc("F_Hi");
 	mes "I can make some items for you.";

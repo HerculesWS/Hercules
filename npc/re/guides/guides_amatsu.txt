@@ -13,7 +13,7 @@
 //= 1.2 Navigation system update. [Euphy]
 //============================================================
 
-amatsu,202,91,3	script	Amatsu Guide#amatsu	758,{
+amatsu,202,91,3	script	Amatsu Guide#amatsu	4_F_JPN,{
 	mes "[Amachang]";
 	mes "Welcome to ^8B4513Amatsu^000000,";
 	mes "the town of kind towners";

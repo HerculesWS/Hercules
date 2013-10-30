@@ -19,7 +19,7 @@
 //= 1.5 Added GM management function. [Euphy]
 //============================================================
 
-moc_para01,25,35,4	script	Instructor Boya#para01	469,{
+moc_para01,25,35,4	script	Instructor Boya#para01	4_M_KNIGHT_GOLD,{
 	if (countitem(6219) > 0) {
 		if (para_suv01 == 0) {
 			mes "[Boya]";
@@ -1089,7 +1089,7 @@ moc_para01,25,35,4	script	Instructor Boya#para01	469,{
 	close;
 }
 
-moc_fild11,180,253,5	script	Talking Dog#para03	972,{
+moc_fild11,180,253,5	script	Talking Dog#para03	4_RUS_DWOLF,{
 	if (para_suv01 == 1) {
 		mes "[Talking Dog]";
 		mes "kkkkuuuuahhh.";
@@ -1323,7 +1323,7 @@ moc_fild11,180,253,5	script	Talking Dog#para03	972,{
 	close;
 }
 
-prt_sewb1,131,262,3	script	Timid Cat#para04	422,{
+prt_sewb1,131,262,3	script	Timid Cat#para04	4_M_BABYCAT,{
 	if (para_suv01 < 6) {
 		mes "[Timid Cat]";
 		mes "Meow...";
@@ -1515,7 +1515,7 @@ prt_sewb1,131,262,3	script	Timid Cat#para04	422,{
 	close;
 }
 
-pay_arche,41,136,3	script	Eden Member Karl#para05	904,{
+pay_arche,41,136,3	script	Eden Member Karl#para05	4_M_KHMAN,{
 	if (para_suv01 < 13) {
 		if (countitem(6219) > 0) {
 			mes "[Karl]";
@@ -1658,7 +1658,7 @@ pay_arche,41,136,3	script	Eden Member Karl#para05	904,{
 	close;
 }
 
-anthell01,29,264,5	script	Eden Member Cloud#para06	899,{
+anthell01,29,264,5	script	Eden Member Cloud#para06	4_M_HUMAN_02,{
 	if (para_suv01 < 17) {
 		if (countitem(6219) > 0) {
 			mes "[Cloud]";
@@ -1848,7 +1848,7 @@ anthell01,29,264,5	script	Eden Member Cloud#para06	899,{
 	close;
 }
 
-in_orcs01,38,175,3	script	Eden Member Hooksha	803,{
+in_orcs01,38,175,3	script	Eden Member Hooksha	1_F_SIGNZISK,{
 	if (para_suv01 < 24) {
 		if (countitem(6219) > 0) {
 			mes "[Hooksha]";
@@ -2117,7 +2117,7 @@ in_orcs01,38,175,3	script	Eden Member Hooksha	803,{
 	}
 }
 
-iz_dun04,43,46,3	script	Eden Member Callandiva	745,{
+iz_dun04,43,46,3	script	Eden Member Callandiva	4_F_CRU,{
 	if (para_suv01 < 33) {
 		if (countitem(6219) > 0) {
 			mes "[Callandiva]";
@@ -2257,7 +2257,7 @@ iz_dun04,43,46,3	script	Eden Member Callandiva	745,{
 	close;
 }
 
-moc_para01,112,96,5	script	Administrator Michael	967,{
+moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 	mes "[Michael]";
 	mes "Why did you come here?";
 	next;
@@ -3534,7 +3534,7 @@ moc_para01,112,96,5	script	Administrator Michael	967,{
 	}
 }
 
-moc_para01,179,44,3	script	Chef	820,{
+moc_para01,179,44,3	script	Chef	4_M_CHNCOOK,{
 	mes "[Chef]";
 	mes "What's up?";
 	mes "Do you want a Meal? Or do you have other business?";
@@ -3838,7 +3838,7 @@ moc_para01,179,44,3	script	Chef	820,{
 	}
 }
 
-moc_para01,23,35,4	script	Instructor Ur	468,{
+moc_para01,23,35,4	script	Instructor Ur	4_M_KNIGHT_BLACK,{
 	mes "[Instructor Ur]";
 	if (countitem(6219) > 0) {
 		if (BaseLevel < 60) {
@@ -3985,7 +3985,7 @@ L_Level:
 	close;
 }
 
-comodo,173,354,6	script	Romeo#01	55,{
+comodo,173,354,6	script	Romeo#01	1_M_JOBTESTER,{
 	if ((para_suv01 == 39) && (romeo < 1)) {
 		mes "[Romeo]";
 		mes "Ah, there you are.";
@@ -4031,7 +4031,7 @@ comodo,173,354,6	script	Romeo#01	55,{
 	close;
 }
 
-um_fild01,34,280,6	script	Romeo#02	55,{
+um_fild01,34,280,6	script	Romeo#02	1_M_JOBTESTER,{
 	if (romeo == 2) {
 		if (checkquest(7216,HUNTING) == 2) {
 			mes "[Romeo]";
@@ -4083,7 +4083,7 @@ um_fild01,34,280,6	script	Romeo#02	55,{
 	close;
 }
 
-glast_01,195,131,6	script	Johan	95,{
+glast_01,195,131,6	script	Johan	4_F_SISTER,{
 	if ((para_suv01 == 43) && (johan < 1)) {
 		mes "[Johan]";
 		mes "...";
@@ -4148,7 +4148,7 @@ glast_01,195,131,6	script	Johan	95,{
 	close;
 }
 
-ein_fild08,172,359,4	script	Kiren	989,{
+ein_fild08,172,359,4	script	Kiren	4_M_4THPRIN1,{
 	if ((para_suv01 == 46) && (kiren < 1)) {
 		mes "[Kiren]";
 		mes "Hey there.";
@@ -4215,7 +4215,7 @@ ein_fild08,172,359,4	script	Kiren	989,{
 	close;
 }
 
-ice_dun01,154,13,6	script	Naomi	726,{
+ice_dun01,154,13,6	script	Naomi	4_F_JOB_BLACKSMITH,{
 	if ((para_suv01 == 49) && (naomi < 1)) {
 		mes "[Naomi]";
 		mes "It is so cold in here.";
@@ -4283,7 +4283,7 @@ ice_dun01,154,13,6	script	Naomi	726,{
 	close;
 }
 
-mid_camp,212,229,4	script	Margaret	893,{
+mid_camp,212,229,4	script	Margaret	4_F_HUWOMAN,{
 	if ((para_suv01 == 52) && (margaret < 1)) {
 		mes "[Margaret]";
 		mes "Oh, hello there.";
@@ -4334,7 +4334,7 @@ mid_camp,212,229,4	script	Margaret	893,{
 	close;
 }
 
-man_fild01,43,234,2	script	Paradise Dispatch#01	939,{
+man_fild01,43,234,2	script	Paradise Dispatch#01	4_DST_SOLDIER,{
 	if (margaret == 1) {
 		mes "[Paradise Dispatch]";
 		mes "Hey you, can you help me here?";
@@ -4380,7 +4380,7 @@ man_fild01,43,234,2	script	Paradise Dispatch#01	939,{
 	close;
 }
 
-spl_fild02,377,149,4	script	Paradise Dispatch#02	946,{
+spl_fild02,377,149,4	script	Paradise Dispatch#02	4_M_DST_MASTER,{
 	if (margaret == 4) {
 		mes "[Paradise Dispatch]";
 		mes "So Margaret sent you to help me?";
@@ -4426,7 +4426,7 @@ spl_fild02,377,149,4	script	Paradise Dispatch#02	946,{
 	close;
 }
 
-moc_para01,111,83,3	script	Toren	813,{
+moc_para01,111,83,3	script	Toren	2_M_OLDBLSMITH,{
 	if (checkweight(1101,5) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -4731,7 +4731,7 @@ L_Select:
 	return;
 }
 
-moc_para01,112,79,3	script	Weapons Expert	851,{
+moc_para01,112,79,3	script	Weapons Expert	4_M_REPAIR,{
 	if (checkweight(1101,5) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you are carrying";
@@ -5120,7 +5120,7 @@ L_GetWeapon:
 	return;
 }
 
-sec_in02,25,33,4	script	Assistant#para_suvquest	422,{
+sec_in02,25,33,4	script	Assistant#para_suvquest	4_M_BABYCAT,{
 	callfunc "F_GM_NPC";
 	mes "Password";
 	next;

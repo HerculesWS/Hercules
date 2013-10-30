@@ -21,7 +21,7 @@
 //= 1.6 Updated to match the latest official script. [Euphy]
 //============================================================
 
-morocc_in,174,30,6	script	Kid#link1	716,{
+morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 	if (Class == Job_Soul_Linker) {
 		mes "[Maia]";
 		mes "Best of luck in your";
@@ -489,9 +489,9 @@ OnTouch:
 	end;
 }
 
-job_soul,35,30,6	duplicate(SLTester)	Maia#link6	716
+job_soul,35,30,6	duplicate(SLTester)	Maia#link6	4_M_KID2
 
-job_soul,30,35,6	script	Monk Spirit#link4	827,{
+job_soul,30,35,6	script	Monk Spirit#link4	4_M_GRANDMONK,{
 	if (SOUL_Q == 2) {
 		mes "[Monk Spirit]";
 		mes "Who am I...?";
@@ -536,7 +536,7 @@ job_soul,30,35,6	script	Monk Spirit#link4	827,{
 	close;
 }
 
-job_soul,30,25,7	script	Sage Spirit#link5	754,{
+job_soul,30,25,7	script	Sage Spirit#link5	4_M_SAGE_A,{
 	if (SOUL_Q == 2) {
 		mes "[Sage Spirit]";
 		mes "Speak to Maia.";
@@ -585,7 +585,7 @@ job_soul,30,25,7	script	Sage Spirit#link5	754,{
 	close;
 }
 
-job_soul,25,30,5	script	Alchemist Spirit#link7	744,{
+job_soul,25,30,5	script	Alchemist Spirit#link7	4_F_ALCHE,{
 	if (SOUL_Q == 2) {
 		mes "[Alchemist Spirit]";
 		mes "Oh! I really want to";
@@ -631,7 +631,7 @@ job_soul,25,30,5	script	Alchemist Spirit#link7	744,{
 	close;
 }
 
-job_soul,1,5,0	script	Timer#link3	111,{
+job_soul,1,5,0	script	Timer#link3	HIDDEN_NPC,{
 	end;
 
 OnEnable:
@@ -663,7 +663,7 @@ OnTimer183000:
 	stopnpctimer;
 }
 
-sec_in02,35,153,0	script	Soul Linker Var	871,{
+sec_in02,35,153,0	script	Soul Linker Var	4_M_OPERATION,{
 	callfunc "F_GM_NPC";
 	mes "[Soul Linker Var]";
 	mes "I can reset the Soul Linker";

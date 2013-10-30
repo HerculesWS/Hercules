@@ -19,7 +19,7 @@
 //= 1.7 Renewal script update. [Euphy]
 //============================================================
 
-prt_fild08,175,374,3	script	Bard#brising	51,{
+prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 	cutin "god_nelluad01",2;
 	if ($God2 >= $@god_check1 && $God3 < $@god_check2) {
 		if (god_brising > 49) {
@@ -840,7 +840,7 @@ prt_fild08,175,374,3	script	Bard#brising	51,{
 	end;
 }
 
-yuno_in04,47,113,1	script	Studying Scholar#1	749,{
+yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
@@ -1394,7 +1394,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	749,{
 	}
 }
 
-prt_church,113,103,1	script	Praying Man	798,{
+prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
  	if ($God2 < $@god_check1) {
 		mes "[Praying Man]";
 		mes "Let everyone live a life";
@@ -2080,7 +2080,7 @@ prt_church,113,103,1	script	Praying Man	798,{
 	}
 }
 
-prt_castle,80,52,0	script	Personnel Record#book1	111,{
+prt_castle,80,52,0	script	Personnel Record#book1	HIDDEN_NPC,{
 	if ($God2 < $@god_check1) {
 		mes "[Librarian]";
 		mes "What are you doing?";
@@ -2263,7 +2263,7 @@ prt_castle,80,52,0	script	Personnel Record#book1	111,{
 }
 
 //-----------librarian----------------------------------------------------------
-prt_castle,84,51,5	script	Librarian#2	105,{
+prt_castle,84,51,5	script	Librarian#2	8W_SOLDIER,{
 	if ($God2 < $@god_check1) {
 		mes "[Librarian]";
 		mes "What are you doing here?";
@@ -2437,7 +2437,7 @@ prt_castle,84,51,5	script	Librarian#2	105,{
 
 }
 
-prontera,260,354,4	script	Woman#Rosa Ellenen	101,{
+prontera,260,354,4	script	Woman#Rosa Ellenen	4W_F_01,{
 	if ($God2 < $@god_check1){ 
 		mes "[Woman]";
 		mes "Hm?";
@@ -2563,7 +2563,7 @@ prontera,260,354,4	script	Woman#Rosa Ellenen	101,{
 
 }
 
-prontera,262,353,0	script	Gravestone	111,{
+prontera,262,353,0	script	Gravestone	HIDDEN_NPC,{
 	if ($God2 > $@god_check1) {
 		if (god_brising > 33) {
 			mes "Lowen Ellenen";
@@ -2590,7 +2590,7 @@ prontera,262,353,0	script	Gravestone	111,{
 	}
 }
  
-gef_dun01,89,192,0	script	#lowentrace	111,3,3,{
+gef_dun01,89,192,0	script	#lowentrace	HIDDEN_NPC,3,3,{
 	if ($God2 < $@god_check1) {
 		mes "^3355FFIt's just an old,";
 		mes "dry piece of wood.^000000";
@@ -2713,7 +2713,7 @@ OnTouch:
 	end;
 }
 
-gef_dun01,203,48,0	script	#lowentrace1	111,3,3,{
+gef_dun01,203,48,0	script	#lowentrace1	HIDDEN_NPC,3,3,{
 	if ($God2 < $@god_check1) {
 		mes "^3355FFIt's just an old,";
 		mes "dry piece of wood.^000000";
@@ -2845,7 +2845,7 @@ OnTouch:
 	end;
 }
 
-que_god02,48,55,3	script	Lowen Ellenen	745,{
+que_god02,48,55,3	script	Lowen Ellenen	4_F_CRU,{
 	if (god_brising == 30) {
 		mes "[Lowen Ellenen]";
 		mes "Can you see me now?";
@@ -2953,7 +2953,7 @@ que_god02,48,55,3	script	Lowen Ellenen	745,{
 	}
 }
 
-que_god02,54,64,4	script	Soldier#1_brising	105,1,1,{
+que_god02,54,64,4	script	Soldier#1_brising	8W_SOLDIER,1,1,{
  	if (god_brising == 31) {
 		mes "[Soldier]";
 		mes "Have you volunteered for monster subjugation? Would you like to start the mission now?";
@@ -2998,7 +2998,7 @@ OnTouch:
 	end;
 }
 
-que_god02,55,64,4	script	Soldier#2_brising	105,1,1,{
+que_god02,55,64,4	script	Soldier#2_brising	8W_SOLDIER,1,1,{
 	mes "[Soldier]";
 	mes "Please back away.";
 	mes "You are not permitted";
@@ -3148,14 +3148,14 @@ OnReset:
 	end;
 }
 
-que_god02,173,58,4	script	#doppelganger1	739,{ end; }
-que_god02,175,55,4	script	#doppelganger2	739,{ end; }
-que_god02,175,54,1	script	#lowen	745,{ end; }
-que_god02,178,49,1	script	#knight1	751,{ end; }
-que_god02,168,53,7	script	#knight2	734,{ end; }
-que_god02,167,58,4	script	#knight3	752,{ end; }
+que_god02,173,58,4	script	#doppelganger1	8_DOPPEL,{ end; }
+que_god02,175,55,4	script	#doppelganger2	8_DOPPEL,{ end; }
+que_god02,175,54,1	script	#lowen	4_F_CRU,{ end; }
+que_god02,178,49,1	script	#knight1	4_M_CRU,{ end; }
+que_god02,168,53,7	script	#knight2	4_M_JOB_KNIGHT2,{ end; }
+que_god02,167,58,4	script	#knight3	4_M_CRU_OLD,{ end; }
 
-que_god02,174,49,0	script	#lowenone	139,0,0,{
+que_god02,174,49,0	script	#lowenone	HIDDEN_WARP_NPC,0,0,{
 
 OnTouch:
 	donpcevent "brisinsold2::OnSold2On";
@@ -3238,9 +3238,9 @@ OnTouch:
 	end;
 }
 
-que_god02,124,59,7	script	#hermite	798,{ end; }
+que_god02,124,59,7	script	#hermite	4_M_NFMAN,{ end; }
  
-que_god02,120,52,0	script	#monologue	139,0,0,{
+que_god02,120,52,0	script	#monologue	HIDDEN_WARP_NPC,0,0,{
 
 OnTouch:
 	mes "[" + strcharinfo(0) + "]";
@@ -3284,7 +3284,7 @@ OnTouch:
 
 }
 
-que_god02,21,127,3	script	Lowen Ellenen#2	745,{
+que_god02,21,127,3	script	Lowen Ellenen#2	4_F_CRU,{
 	mes "[Lowen Ellenen]";
 	mes "I was a fool.";
 	mes "Now I remember Hermite. He must have been the one who rescued me. But when I came to my senses, no one was there.";
@@ -3335,7 +3335,7 @@ que_god02,21,127,3	script	Lowen Ellenen#2	745,{
 	end;
 }
 
-que_god02,178,127,3	script	Valkyrie#1	811,{
+que_god02,178,127,3	script	Valkyrie#1	4_F_VALKYRIE,{
 
 	if (god_brising == 31) {
 		mes "[Valkyrie]";
@@ -3508,7 +3508,7 @@ que_god02,178,127,3	script	Valkyrie#1	811,{
 	}
 }
 
-xmas,38,105,0	script	#brisindwarf1	111,3,3,{
+xmas,38,105,0	script	#brisindwarf1	HIDDEN_NPC,3,3,{
 	if ($God2 < $@god_check1) {
 		mes "^3355FFA lot of snow";
 		mes "is heavily piled";
@@ -3682,7 +3682,7 @@ OnTouch:
 	end;
 }
 
-xmas,36,103,4	script	Alfrik#1	826,{
+xmas,36,103,4	script	Alfrik#1	4_M_DWARF,{
 	if (god_brising == 49) {
 		mes "[Alfrik]";
 		mes "I've got nothing";
@@ -3975,7 +3975,7 @@ OnInit:
 	end;
 }
 
-prt_fild02,185,269,0	script	#brisindwarf2	111,3,3,{
+prt_fild02,185,269,0	script	#brisindwarf2	HIDDEN_NPC,3,3,{
 	if ($God2 < $@god_check1) {
 		mes "^3355FFIt's just an";
 		mes "ordinary rock.^000000";
@@ -4149,7 +4149,7 @@ OnTouch:
 	end;
 }
 
-prt_fild02,185,270,3	script	Dvalin#1	826,{
+prt_fild02,185,270,3	script	Dvalin#1	4_M_DWARF,{
 	if (god_brising > 43) {
 		mes "[Dvalin]";
 		mes "A human?";
@@ -4272,7 +4272,7 @@ OnInit:
 
 }
 
-mjolnir_09,85,129,0	script	#brisindwarf3	111,3,3,{
+mjolnir_09,85,129,0	script	#brisindwarf3	HIDDEN_NPC,3,3,{
 	if ($God2 < $@god_check1) {
 		mes "^3355FFThe sight of this bubbling stream refreshes you just by looking at it.^000000";
 		close;
@@ -4343,7 +4343,7 @@ OnTouch:
 	end;
 }
 
-mjolnir_09,87,129,3	script	Berling#1	826,{
+mjolnir_09,87,129,3	script	Berling#1	4_M_DWARF,{
 	if (god_brising > 44) {
 		mes "[Berling]";
 		mes "You're the one that's awakened us? Hahaha, perhaps that's a sign we may see Freya again! Hahahaha!";
@@ -4487,7 +4487,7 @@ OnInit:
 	end;
 }
 
-mjo_dun02,126,36,0	script	#brisindwarf4	111,3,3,{
+mjo_dun02,126,36,0	script	#brisindwarf4	HIDDEN_NPC,3,3,{
 	if ($God2 < $@god_check1) {
 		mes "[" + strcharinfo(0) + "]";
 		mes "Bah, no way out.";
@@ -4645,7 +4645,7 @@ OnTimer301000:
 	end;
 }
 
-mjo_dun02,126,34,1	script	Grer#1	826,{
+mjo_dun02,126,34,1	script	Grer#1	4_M_DWARF,{
 	if (god_brising > 47) {
 		mes "[Grer]";
 		mes "As we promised,";

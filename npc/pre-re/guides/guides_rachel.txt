@@ -17,7 +17,7 @@
 //= 1.2b Deleted a unnecessary "end". [Samuray22]
 //============================================================
 
-rachel,138,146,5	script	Rachel Guide	934,{
+rachel,138,146,5	script	Rachel Guide	4_M_RASWORD,{
 	mes "[Rachel Guide]";
 	mes "Welcome to the capital of";
 	mes "Arunafeltz, Rachel where a warm";

@@ -51,7 +51,7 @@
 
 // Cat Hand Addition :: cat_enhance
 //============================================================
-spl_fild02,25,211,4	script	Cat Hand Agent#spl	421,{
+spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 	function Catwarp;
 	if (ep13_yong1 < 3) {
 		mes "[Cat Hand Agent]";
@@ -413,7 +413,7 @@ function Catwarp {
 	}
 }
 }
-man_fild02,132,47,4	duplicate(Cat Hand Agent#spl)	Cat Hand Agent#man	421
+man_fild02,132,47,4	duplicate(Cat Hand Agent#spl)	Cat Hand Agent#man	4_M_BOSSCAT
 
 -	script	Mysterious Rock#30::manukrock2	-1,{
 	if ((countitem(6048) < 3) && (checkquest(12062,PLAYTIME) == -1)) {
@@ -444,18 +444,18 @@ OnTimer120000:
 	end;
 }
 
-man_fild02,146,81,0	duplicate(manukrock2)	Mysterious Rock#31	844
-man_fild02,140,148,0	duplicate(manukrock2)	Mysterious Rock#32	844
-man_fild02,88,263,0	duplicate(manukrock2)	Mysterious Rock#33	844
-man_fild02,146,365,0	duplicate(manukrock2)	Mysterious Rock#34	844
-man_fild02,336,305,0	duplicate(manukrock2)	Mysterious Rock#35	844
-man_fild02,248,124,0	duplicate(manukrock2)	Mysterious Rock#36	844
-man_fild02,285,115,0	duplicate(manukrock2)	Mysterious Rock#37	844
-man_fild02,346,116,0	duplicate(manukrock2)	Mysterious Rock#38	844
-man_fild02,358,174,0	duplicate(manukrock2)	Mysterious Rock#39	844
-man_fild02,241,227,0	duplicate(manukrock2)	Mysterious Rock#40	844
+man_fild02,146,81,0	duplicate(manukrock2)	Mysterious Rock#31	CLEAR_NPC
+man_fild02,140,148,0	duplicate(manukrock2)	Mysterious Rock#32	CLEAR_NPC
+man_fild02,88,263,0	duplicate(manukrock2)	Mysterious Rock#33	CLEAR_NPC
+man_fild02,146,365,0	duplicate(manukrock2)	Mysterious Rock#34	CLEAR_NPC
+man_fild02,336,305,0	duplicate(manukrock2)	Mysterious Rock#35	CLEAR_NPC
+man_fild02,248,124,0	duplicate(manukrock2)	Mysterious Rock#36	CLEAR_NPC
+man_fild02,285,115,0	duplicate(manukrock2)	Mysterious Rock#37	CLEAR_NPC
+man_fild02,346,116,0	duplicate(manukrock2)	Mysterious Rock#38	CLEAR_NPC
+man_fild02,358,174,0	duplicate(manukrock2)	Mysterious Rock#39	CLEAR_NPC
+man_fild02,241,227,0	duplicate(manukrock2)	Mysterious Rock#40	CLEAR_NPC
 
-spl_fild03,226,151,0	script	School of Fish#5::FishingHole_spl3	844,{
+spl_fild03,226,151,0	script	School of Fish#5::FishingHole_spl3	CLEAR_NPC,{
 	if ((checkquest(12060,PLAYTIME) == -1) && (countitem(6039) < 20)) {
 		specialeffect2 EF_BUBBLE;
 		specialeffect2 EF_INVENOM;
@@ -519,19 +519,19 @@ spl_fild03,226,151,0	script	School of Fish#5::FishingHole_spl3	844,{
 	}
 	end;
 }
-spl_fild03,268,230,0	duplicate(FishingHole_spl3)	School of Fish#6	844
-spl_fild03,293,253,0	duplicate(FishingHole_spl3)	School of Fish#7	844
-spl_fild03,165,100,0	duplicate(FishingHole_spl3)	School of Fish#8	844
-spl_fild03,317,190,0	duplicate(FishingHole_spl3)	School of Fish#9	844
-spl_fild01,41,118,0	duplicate(FishingHole_spl3)	School of Fish#10	844
-spl_fild01,317,361,0	duplicate(FishingHole_spl3)	School of Fish#11	844
-spl_fild01,55,269,0	duplicate(FishingHole_spl3)	School of Fish#12	844
-spl_fild01,332,131,0	duplicate(FishingHole_spl3)	School of Fish#13	844
-spl_fild01,170,74,0	duplicate(FishingHole_spl3)	School of Fish#14	844
+spl_fild03,268,230,0	duplicate(FishingHole_spl3)	School of Fish#6	CLEAR_NPC
+spl_fild03,293,253,0	duplicate(FishingHole_spl3)	School of Fish#7	CLEAR_NPC
+spl_fild03,165,100,0	duplicate(FishingHole_spl3)	School of Fish#8	CLEAR_NPC
+spl_fild03,317,190,0	duplicate(FishingHole_spl3)	School of Fish#9	CLEAR_NPC
+spl_fild01,41,118,0	duplicate(FishingHole_spl3)	School of Fish#10	CLEAR_NPC
+spl_fild01,317,361,0	duplicate(FishingHole_spl3)	School of Fish#11	CLEAR_NPC
+spl_fild01,55,269,0	duplicate(FishingHole_spl3)	School of Fish#12	CLEAR_NPC
+spl_fild01,332,131,0	duplicate(FishingHole_spl3)	School of Fish#13	CLEAR_NPC
+spl_fild01,170,74,0	duplicate(FishingHole_spl3)	School of Fish#14	CLEAR_NPC
 
 // Two Tribes :: ep13_2_msg
 //============================================================
-spl_in01,32,306,3	script	Splendide Guard#ep13md01	447,2,2,{
+spl_in01,32,306,3	script	Splendide Guard#ep13md01	4_M_FAIRYSOLDIER,2,2,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -949,7 +949,7 @@ OnTouch:
 	end;
 }
 
-spl_fild02,45,214,0	script	????#ep13_mdplant01	844,{
+spl_fild02,45,214,0	script	????#ep13_mdplant01	CLEAR_NPC,{
 	if (ep13_mdrama == 2) {
 		cutin "ep13_plant01",2;
 		mes "Weeds are easy to find around here...";
@@ -975,7 +975,7 @@ spl_fild02,45,214,0	script	????#ep13_mdplant01	844,{
 	end;
 }
 
-spl_fild02,122,106,0	script	????#ep13_mdplant02	844,{
+spl_fild02,122,106,0	script	????#ep13_mdplant02	CLEAR_NPC,{
 	if (ep13_mdrama > 2) {
 		cutin "ep13_plant01",2;
 		mes "Weeds are easy to find around here...";
@@ -994,7 +994,7 @@ spl_fild02,122,106,0	script	????#ep13_mdplant02	844,{
 	end;
 }
 
-spl_fild02,329,191,0	script	????#ep13_mdplant03	844,{
+spl_fild02,329,191,0	script	????#ep13_mdplant03	CLEAR_NPC,{
 	if (ep13_mdrama > 2) {
 	cutin "ep13_plant01",2;
 		mes "Weeds are easy to find around here...";
@@ -1013,7 +1013,7 @@ spl_fild02,329,191,0	script	????#ep13_mdplant03	844,{
 	end;
 }
 
-spl_fild02,328,323,0	script	????#ep13_mdplant04	844,{
+spl_fild02,328,323,0	script	????#ep13_mdplant04	CLEAR_NPC,{
 	if (ep13_mdrama == 3) {
 		mes "There are footprints here as well as signs that someone has fallen.";
 		mes "It looks like someone was fighting here?";
@@ -1034,7 +1034,7 @@ spl_fild02,328,323,0	script	????#ep13_mdplant04	844,{
 	}
 }
 
-spl_fild01,341,109,0	script	????#ep13_mdplant05	844,{
+spl_fild01,341,109,0	script	????#ep13_mdplant05	CLEAR_NPC,{
 	if (ep13_mdrama == 4) {
 		mes "There's evidence that there was a fight here too.";
 		mes "These footsteps can't be a Laphine's...";
@@ -1097,7 +1097,7 @@ OnTouch:
 	}
 }
 
-nyd_dun01,58,223,0	script	Petrified Sapha#ep13md03	844,{
+nyd_dun01,58,223,0	script	Petrified Sapha#ep13md03	CLEAR_NPC,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -1317,7 +1317,7 @@ nyd_dun01,58,223,0	script	Petrified Sapha#ep13md03	844,{
 	}
 }
 
-nyd_dun01,55,223,5	script	Snorren#ep13md17	454,{
+nyd_dun01,55,223,5	script	Snorren#ep13md17	4_MAN_PIOM,{
 	disablenpc "Snorren#ep13md17";
 	end;
 
@@ -1331,7 +1331,7 @@ OnEnable:
 	end;
 }
 
-nyd_dun01,62,233,0	script	Trunk of a Tree#ep13	844,2,2,{
+nyd_dun01,62,233,0	script	Trunk of a Tree#ep13	CLEAR_NPC,2,2,{
 	mes "The trunk of a Tree moderately stretched upward.";
 	mes "There are big thorns here that should be enough to use as footholds to climb up.";
 	close;
@@ -1349,7 +1349,7 @@ OnTouch:
 			close;
 	}
 }
-manuk,278,177,5	script	Villager#ep13_11	454,{
+manuk,278,177,5	script	Villager#ep13_11	4_MAN_PIOM,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -1447,7 +1447,7 @@ manuk,278,177,5	script	Villager#ep13_11	454,{
 	}
 }
 
-manuk,281,177,3	script	Villager#ep13_12	449,{
+manuk,281,177,3	script	Villager#ep13_12	4_MAN_BENKUNI,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -1549,7 +1549,7 @@ manuk,281,177,3	script	Villager#ep13_12	449,{
 	}
 }
 
-man_in01,175,59,5	script	Snorren#ep13_13	454,{
+man_in01,175,59,5	script	Snorren#ep13_13	4_MAN_PIOM,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -1861,7 +1861,7 @@ man_in01,175,59,5	script	Snorren#ep13_13	454,{
 	}
 }
 
-man_in01,183,58,0	script	to_in013ep13mdwarp01	45,1,1,{
+man_in01,183,58,0	script	to_in013ep13mdwarp01	WARPNPC,1,1,{
 OnTouch:
 	if ((ep13_mdrama > 17) && (ep13_mdrama < 24)) {
 		warp "man_in01",13,125;
@@ -1881,7 +1881,7 @@ OnTouch:
 man_in01,10,125,0	warp	to_out1#ep13mdwarp02	1,1,man_in01,179,58
 man_in01,65,125,0	warp	to_out2#ep13mdwarp03	1,1,man_in01,179,58
 
-man_in01,22,126,3	script	Captured Laphine#ep13md	441,{
+man_in01,22,126,3	script	Captured Laphine#ep13md	4_F_FAIRYKID6,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -2056,7 +2056,7 @@ man_in01,22,126,3	script	Captured Laphine#ep13md	441,{
 	}
 }
 
-man_in01,17,128,5	script	Snorren#ep13md_15	454,{
+man_in01,17,128,5	script	Snorren#ep13md_15	4_MAN_PIOM,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -2186,7 +2186,7 @@ man_in01,17,128,5	script	Snorren#ep13md_15	454,{
 	}
 }
 
-man_in01,19,126,3	script	Luik#ep13md16	450,{
+man_in01,19,126,3	script	Luik#ep13md16	4_MAN_GALTUN,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -2363,7 +2363,7 @@ OnTouch:
 	close;
 }
 
-spl_in02,236,92,5	script	Arc#ep13md_l02	447,{
+spl_in02,236,92,5	script	Arc#ep13md_l02	4_M_FAIRYSOLDIER,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -2532,9 +2532,9 @@ spl_in02,236,92,5	script	Arc#ep13md_l02	447,{
 		close;
 	}
 }
-spl_in02,239,93,3	duplicate(Arc#ep13md_l02)	Terra#ep13md_l03	441
+spl_in02,239,93,3	duplicate(Arc#ep13md_l02)	Terra#ep13md_l03	4_F_FAIRYKID6
 
-splendide,287,140,0	script	terrashome_in	45,1,1,{
+splendide,287,140,0	script	terrashome_in	WARPNPC,1,1,{
 OnTouch:
 	if (ep13_mdrama > 25) {
 		warp "spl_in02",237,89;
@@ -2548,7 +2548,7 @@ OnTouch:
 
 spl_in02,236,86,0	warp	terrashome_out	1,1,splendide,285,139;
 
-spl_fild01,357,44,0	script	???#ep13mdf01	844,{
+spl_fild01,357,44,0	script	???#ep13mdf01	CLEAR_NPC,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -2597,7 +2597,7 @@ spl_fild01,357,44,0	script	???#ep13mdf01	844,{
 	}
 }
 
-spl_fild01,312,79,0	script	???#ep13mdf02	844,{
+spl_fild01,312,79,0	script	???#ep13mdf02	CLEAR_NPC,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -2646,7 +2646,7 @@ spl_fild01,312,79,0	script	???#ep13mdf02	844,{
 	}
 }
 
-spl_fild01,329,29,0	script	???#ep13mdf03	844,{
+spl_fild01,329,29,0	script	???#ep13mdf03	CLEAR_NPC,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -2703,7 +2703,7 @@ spl_fild01,329,29,0	script	???#ep13mdf03	844,{
 
 // Monster Suppression :: ep13_2_dayquest
 //============================================================
-manuk,252,116,3	script	Manuk Galtun#ep13_2day	450,{
+manuk,252,116,3	script	Manuk Galtun#ep13_2day	4_MAN_GALTUN,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -2819,7 +2819,7 @@ manuk,252,116,3	script	Manuk Galtun#ep13_2day	450,{
 // - Laphine Craftsman
 // - Draco Egg Collection (NPC includes 'Wanted' quest)
 //============================================================
-man_in01,378,276,3	script	Manuk Engineer#ep13_2	453,{
+man_in01,378,276,3	script	Manuk Engineer#ep13_2	4_MAN_NITT,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -2926,7 +2926,7 @@ man_in01,378,276,3	script	Manuk Engineer#ep13_2	453,{
 	}
 }
 
-spl_in01,97,313,3	script	Laphine Craftsman#ep13	446,{
+spl_in01,97,313,3	script	Laphine Craftsman#ep13	4_M_FAIRYKID5,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -3045,7 +3045,7 @@ spl_in01,97,313,3	script	Laphine Craftsman#ep13	446,{
 	close;
 }
 
-mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	982,{
+mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
@@ -3234,7 +3234,7 @@ mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	982,{
 	close;
 }
 
-mid_camp,192,239,4	script	Wanted Sign#ep13_2ect01	857,{
+mid_camp,192,239,4	script	Wanted Sign#ep13_2ect01	4_BOARD3,{
 	if (ep13_mdrama > 5) {
 		mes "[Wanted]";
 		mes " ";
@@ -3303,14 +3303,14 @@ OnDisable:
 	end;
 }
 
-nyd_dun01,258,134,0	duplicate(Dragon Egg#ep13_degg_0)	Dragon Egg#ep13_degg01	463
-nyd_dun01,100,210,0	duplicate(Dragon Egg#ep13_degg_0)	Dragon Egg#ep13_degg02	463
-nyd_dun01,74,68,0	duplicate(Dragon Egg#ep13_degg_0)	Dragon Egg#ep13_degg03	463
-nyd_dun01,98,142,0	duplicate(Dragon Egg#ep13_degg_0)	Dragon Egg#ep13_degg04	463
-nyd_dun01,244,157,0	duplicate(Dragon Egg#ep13_degg_0)	Dragon Egg#ep13_degg05	463
-nyd_dun01,59,185,0	duplicate(Dragon Egg#ep13_degg_0)	Dragon Egg#ep13_degg06	463
+nyd_dun01,258,134,0	duplicate(Dragon Egg#ep13_degg_0)	Dragon Egg#ep13_degg01	4_DRAGON_EGG
+nyd_dun01,100,210,0	duplicate(Dragon Egg#ep13_degg_0)	Dragon Egg#ep13_degg02	4_DRAGON_EGG
+nyd_dun01,74,68,0	duplicate(Dragon Egg#ep13_degg_0)	Dragon Egg#ep13_degg03	4_DRAGON_EGG
+nyd_dun01,98,142,0	duplicate(Dragon Egg#ep13_degg_0)	Dragon Egg#ep13_degg04	4_DRAGON_EGG
+nyd_dun01,244,157,0	duplicate(Dragon Egg#ep13_degg_0)	Dragon Egg#ep13_degg05	4_DRAGON_EGG
+nyd_dun01,59,185,0	duplicate(Dragon Egg#ep13_degg_0)	Dragon Egg#ep13_degg06	4_DRAGON_EGG
 
-nyd_dun02,68,256,0	script	Dragon Egg#ep13_degg_1	463,{
+nyd_dun02,68,256,0	script	Dragon Egg#ep13_degg_1	4_DRAGON_EGG,{
 	if (checkweight(1201,2) == 0) {
 		mes "- You're carrying too many items. -";
 		close;
@@ -3337,11 +3337,11 @@ OnDisable:
 	disablenpc strnpcinfo(0);
 	end;
 }
-nyd_dun02,68,256,0	duplicate(Dragon Egg#ep13_degg_1)	Dragon Egg#ep13_degg11	463
-nyd_dun02,202,166,0	duplicate(Dragon Egg#ep13_degg_1)	Dragon Egg#ep13_degg12	463
-nyd_dun02,200,165,0	duplicate(Dragon Egg#ep13_degg_1)	Dragon Egg#ep13_degg13	463
+nyd_dun02,68,256,0	duplicate(Dragon Egg#ep13_degg_1)	Dragon Egg#ep13_degg11	4_DRAGON_EGG
+nyd_dun02,202,166,0	duplicate(Dragon Egg#ep13_degg_1)	Dragon Egg#ep13_degg12	4_DRAGON_EGG
+nyd_dun02,200,165,0	duplicate(Dragon Egg#ep13_degg_1)	Dragon Egg#ep13_degg13	4_DRAGON_EGG
 
-nyd_dun02,201,166,0	script	Dragon Egg#ep13_degg_2	463,{
+nyd_dun02,201,166,0	script	Dragon Egg#ep13_degg_2	4_DRAGON_EGG,{
 	if (checkweight(1201,2) == 0) {
 		mes "- You're carrying too many items. -";
 		close;
@@ -3368,9 +3368,9 @@ OnDisable:
 	disablenpc strnpcinfo(0);
 	end;
 }
-nyd_dun02,201,166,0	duplicate(Dragon Egg#ep13_degg_2)	Dragon Egg#ep13_degg16	463
-nyd_dun02,203,167,0	duplicate(Dragon Egg#ep13_degg_2)	Dragon Egg#ep13_degg17	463
-nyd_dun02,201,164,0	duplicate(Dragon Egg#ep13_degg_2)	Dragon Egg#ep13_degg18	463
+nyd_dun02,201,166,0	duplicate(Dragon Egg#ep13_degg_2)	Dragon Egg#ep13_degg16	4_DRAGON_EGG
+nyd_dun02,203,167,0	duplicate(Dragon Egg#ep13_degg_2)	Dragon Egg#ep13_degg17	4_DRAGON_EGG
+nyd_dun02,201,164,0	duplicate(Dragon Egg#ep13_degg_2)	Dragon Egg#ep13_degg18	4_DRAGON_EGG
 
 nyd_dun02,201,157,5	script	Egg Keeper Draco#13_1	2013,3,3,{
 
@@ -3431,7 +3431,7 @@ OnTimer180000:
 	end;
 }
 
-nyd_dun02,144,103,3	script	Stranger#ep13_2_dan01	456,3,3,{
+nyd_dun02,144,103,3	script	Stranger#ep13_2_dan01	4_M_DSTMAN,3,3,{
 	end;
 
 OnEnable:
@@ -3458,7 +3458,7 @@ OnTouch:
 	end;
 }
 
-nyd_dun02,206,114,5	script	Stranger#ep13_2_dan02	456,3,3,{
+nyd_dun02,206,114,5	script	Stranger#ep13_2_dan02	4_M_DSTMAN,3,3,{
 	end;
 
 OnInit:
@@ -3516,7 +3516,7 @@ OnTimer300000:
 
 // Otherworld language :: ep13_2_rhea
 //============================================================
-mid_camp,197,237,3	script	Schwartzvalt Mechanic#1	869,{
+mid_camp,197,237,3	script	Schwartzvalt Mechanic#1	4_M_LGTMAN,{
 	if (ep13_1_edq > 2 || ep13_start == 100) {
 		if (ep13_2_rhea < 1) {
 			mes "[Mechanic Engineer Dorance]";
@@ -3749,7 +3749,7 @@ mid_camp,197,237,3	script	Schwartzvalt Mechanic#1	869,{
 	}
 }
 
-mid_campin,168,82,3	script	Arunafeltz Linguist#1	935,{
+mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 	if (ep13_2_rhea < 1) {
 		mes "[Linguist Dictionary]";
 		mes "Language distinguishes humans from animals. Every single intellectual life form has their own language.";
@@ -4175,7 +4175,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	935,{
 	}
 }
 
-mid_camp,147,256,3	script	Rune Midgarts Magician#1	735,{
+mid_camp,147,256,3	script	Rune Midgarts Magician#1	4_M_JOB_WIZARD,{
 	if (ep13_2_rhea < 4) {
 		mes "[Magician Whisper]";
 		mes "To store a tremendous amount of information, well, it's impossible with existing technology.";
@@ -4519,7 +4519,7 @@ function	script	jewel_13_2	{
 	end;
 }
 
-spl_fild02,27,218,0	script	Half-buried Gem#1	844,{
+spl_fild02,27,218,0	script	Half-buried Gem#1	CLEAR_NPC,{
 	callfunc "jewel_13_2","Red",1;
 
 OnInit:
@@ -4551,7 +4551,7 @@ OnTimer300000:
 	end;
 }
 
-man_fild03,227,109,0	script	Half-buried Gem#2	844,{
+man_fild03,227,109,0	script	Half-buried Gem#2	CLEAR_NPC,{
 	callfunc "jewel_13_2","Blue",2;
 
 OnInit:
@@ -4583,7 +4583,7 @@ OnTimer300000:
 	end;
 }
 
-mid_camp,7,3,0	script	Translator Preparation#1	708,{
+mid_camp,7,3,0	script	Translator Preparation#1	4_M_PAY_SOLDIER,{
 	callfunc "F_GM_NPC";
 	mes "[EP13 Translator Quest Preparation]";
 	mes "First, you must confirm that you are my master.";
@@ -4646,7 +4646,7 @@ mid_camp,7,3,0	script	Translator Preparation#1	708,{
 // - Midgard Ore
 // - Alfheim Perfume
 //============================================================
-man_in01,372,221,5	script	Scientist#lifeguard	449,{
+man_in01,372,221,5	script	Scientist#lifeguard	4_MAN_BENKUNI,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Dr. Lifeguard]";
 		if (ep13_2_tre == 0) {
@@ -4925,14 +4925,14 @@ OnTouch:
 	end;
 }
 
-mjolnir_01,32,309,3	duplicate(mjo_find)	#mj01_01	111,7,7
-mjolnir_01,217,34,3	duplicate(mjo_find)	#mj01_02	111,7,7
-mjolnir_02,90,195,3	duplicate(mjo_find)	#mj02_01	111,5,10
-mjolnir_02,206,187,3	duplicate(mjo_find)	#mj02_02	111,7,7
-mjolnir_04,125,380,3	duplicate(mjo_find)	#mj04_01	111,7,7
-mjolnir_04,220,130,3	duplicate(mjo_find)	#mj04_02	111,7,7
-mjolnir_09,229,214,3	duplicate(mjo_find)	#mj09_01	111,10,10
-mjolnir_10,188,260,3	duplicate(mjo_find)	#mj10_01	111,10,10
+mjolnir_01,32,309,3	duplicate(mjo_find)	#mj01_01	HIDDEN_NPC,7,7
+mjolnir_01,217,34,3	duplicate(mjo_find)	#mj01_02	HIDDEN_NPC,7,7
+mjolnir_02,90,195,3	duplicate(mjo_find)	#mj02_01	HIDDEN_NPC,5,10
+mjolnir_02,206,187,3	duplicate(mjo_find)	#mj02_02	HIDDEN_NPC,7,7
+mjolnir_04,125,380,3	duplicate(mjo_find)	#mj04_01	HIDDEN_NPC,7,7
+mjolnir_04,220,130,3	duplicate(mjo_find)	#mj04_02	HIDDEN_NPC,7,7
+mjolnir_09,229,214,3	duplicate(mjo_find)	#mj09_01	HIDDEN_NPC,10,10
+mjolnir_10,188,260,3	duplicate(mjo_find)	#mj10_01	HIDDEN_NPC,10,10
 
 mjolnir_01,364,256,0	script	#mj01_find	-1,5,5,{
 	end;
@@ -4944,7 +4944,7 @@ OnTouch:
 	close;
 }
 
-mjolnir_01,1,1,3	script	#mj01_01_t	111,{
+mjolnir_01,1,1,3	script	#mj01_01_t	HIDDEN_NPC,{
 	end;
 
 OnEnable:
@@ -4957,7 +4957,7 @@ OnTimer60000:
 	end;
 }
 
-mjolnir_01,1,1,3	script	#mj01_02_t	111,{
+mjolnir_01,1,1,3	script	#mj01_02_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -4989,7 +4989,7 @@ OnTouch:
 }
 
 
-mjolnir_02,1,1,3	script	#mj02_01_t	111,{
+mjolnir_02,1,1,3	script	#mj02_01_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5000,7 +5000,7 @@ OnTimer60000:
 	end;
 }
 
-mjolnir_02,1,1,3	script	#mj02_02_t	111,{
+mjolnir_02,1,1,3	script	#mj02_02_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5041,7 +5041,7 @@ OnTouch:
 	close;
 }
 
-mjolnir_04,1,1,3	script	#mj04_01_t	111,{
+mjolnir_04,1,1,3	script	#mj04_01_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5052,7 +5052,7 @@ OnTimer60000:
 	end;
 }
 
-mjolnir_04,1,1,3	script	#mj04_02_t	111,{
+mjolnir_04,1,1,3	script	#mj04_02_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5108,7 +5108,7 @@ OnTouch:
 	close;
 }
 
-mjolnir_09,1,1,3	script	#mj09_01_t	111,{
+mjolnir_09,1,1,3	script	#mj09_01_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5164,7 +5164,7 @@ OnTouch:
 	close;
 }
 
-mjolnir_10,1,1,3	script	#mj10_01_t	111,{
+mjolnir_10,1,1,3	script	#mj10_01_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5275,13 +5275,13 @@ OnTouch:
 	end;
 }
 
-hu_fild05,251,345,3	duplicate(hu_find)	#hu_01	111,10,10
-hu_fild05,134,322,3	duplicate(hu_find)	#hu_02	111,10,10
-hu_fild05,72,104,3	duplicate(hu_find)	#hu_03	111,10,10
-hu_fild05,65,99,3	duplicate(hu_find)	#hu_04	111,10,10
-hu_fild05,323,84,3	duplicate(hu_find)	#hu_05	111,10,10
+hu_fild05,251,345,3	duplicate(hu_find)	#hu_01	HIDDEN_NPC,10,10
+hu_fild05,134,322,3	duplicate(hu_find)	#hu_02	HIDDEN_NPC,10,10
+hu_fild05,72,104,3	duplicate(hu_find)	#hu_03	HIDDEN_NPC,10,10
+hu_fild05,65,99,3	duplicate(hu_find)	#hu_04	HIDDEN_NPC,10,10
+hu_fild05,323,84,3	duplicate(hu_find)	#hu_05	HIDDEN_NPC,10,10
 
-hu_fild05,1,1,3	script	#hu_01_t	111,{
+hu_fild05,1,1,3	script	#hu_01_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5292,7 +5292,7 @@ OnTimer60000:
 	end;
 }
 
-hu_fild05,1,1,3	script	#hu_02_t	111,{
+hu_fild05,1,1,3	script	#hu_02_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5303,7 +5303,7 @@ OnTimer60000:
 	end;
 }
 
-hu_fild05,1,1,3	script	#hu_03_t	111,{
+hu_fild05,1,1,3	script	#hu_03_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5314,7 +5314,7 @@ OnTimer60000:
 	end;
 }
 
-hu_fild05,1,1,3	script	#hu_04_t	111,{
+hu_fild05,1,1,3	script	#hu_04_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5325,7 +5325,7 @@ OnTimer60000:
 	end;
 }
 
-hu_fild05,1,1,3	script	#hu_05_t	111,{
+hu_fild05,1,1,3	script	#hu_05_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5408,12 +5408,12 @@ OnTouch:
 	end;
 }
 
-ve_fild03,152,134,3	duplicate(ve_find)	#ve_01	111,10,10
-ve_fild03,256,228,3	duplicate(ve_find)	#ve_02	111,10,10
-ve_fild03,85,189,3	duplicate(ve_find)	#ve_03	111,10,10
-ve_fild03,282,268,3	duplicate(ve_find)	#ve_04	111,10,10
+ve_fild03,152,134,3	duplicate(ve_find)	#ve_01	HIDDEN_NPC,10,10
+ve_fild03,256,228,3	duplicate(ve_find)	#ve_02	HIDDEN_NPC,10,10
+ve_fild03,85,189,3	duplicate(ve_find)	#ve_03	HIDDEN_NPC,10,10
+ve_fild03,282,268,3	duplicate(ve_find)	#ve_04	HIDDEN_NPC,10,10
 
-ve_fild03,1,1,3	script	#ve_01_t	111,{
+ve_fild03,1,1,3	script	#ve_01_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5424,7 +5424,7 @@ OnTimer40000:
 	end;
 }
 
-ve_fild03,1,1,3	script	#ve_02_t	111,{
+ve_fild03,1,1,3	script	#ve_02_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5435,7 +5435,7 @@ OnTimer40000:
 	end;
 }
 
-ve_fild03,1,1,3	script	#ve_03_t	111,{
+ve_fild03,1,1,3	script	#ve_03_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5446,7 +5446,7 @@ OnTimer40000:
 	end;
 }
 
-ve_fild03,1,1,3	script	#ve_04_t	111,{
+ve_fild03,1,1,3	script	#ve_04_t	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5457,7 +5457,7 @@ OnTimer40000:
 	end;
 }
 
-spl_in01,30,324,3	script	High Laphine#grenouille	446,{
+spl_in01,30,324,3	script	High Laphine#grenouille	4_M_FAIRYKID5,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (checkweight(1201,1) == 0) {
 			mes "[Grenouille]";
@@ -5691,7 +5691,7 @@ spl_in01,30,324,3	script	High Laphine#grenouille	446,{
 	}
 }
 
-spl_in02,139,65,3	script	Middle-Ranked Laphine#la	438,{
+spl_in02,139,65,3	script	Middle-Ranked Laphine#la	4_F_FAIRYKID3,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (checkweight(1201,1) == 0) {
 			mes "[Flowery]";
@@ -5796,14 +5796,14 @@ spl_in02,139,65,3	script	Middle-Ranked Laphine#la	438,{
 	end;
 }
 
-splendide,160,265,3	duplicate(Purifier)	Purifier#1	844
-splendide,262,262,3	duplicate(Purifier)	Purifier#2	844
-splendide,262,187,3	duplicate(Purifier)	Purifier#3	844
-splendide,164,82,3	duplicate(Purifier)	Purifier#4	844
-splendide,171,116,3	duplicate(Purifier)	Purifier#5	844
-splendide,134,280,3	duplicate(Purifier)	Purifier#6	844
+splendide,160,265,3	duplicate(Purifier)	Purifier#1	CLEAR_NPC
+splendide,262,262,3	duplicate(Purifier)	Purifier#2	CLEAR_NPC
+splendide,262,187,3	duplicate(Purifier)	Purifier#3	CLEAR_NPC
+splendide,164,82,3	duplicate(Purifier)	Purifier#4	CLEAR_NPC
+splendide,171,116,3	duplicate(Purifier)	Purifier#5	CLEAR_NPC
+splendide,134,280,3	duplicate(Purifier)	Purifier#6	CLEAR_NPC
 
-splendide,205,139,5	script	Exhausted Soldier#1	447,{
+splendide,205,139,5	script	Exhausted Soldier#1	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (ep13_2_tre1 == 5) {
 			if (countitem(6082) > 0) {
@@ -5852,7 +5852,7 @@ OnInit:
 	end;
 }
 
-splendide,1,1,1	script	#tukare_1	111,{
+splendide,1,1,1	script	#tukare_1	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5863,7 +5863,7 @@ OnTimer60000:
 	end;
 }
 
-splendide,181,135,5	script	Exhausted Soldier#2	447,{
+splendide,181,135,5	script	Exhausted Soldier#2	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (ep13_2_tre1 == 5) {
 			if (countitem(6082) > 0) {
@@ -5909,7 +5909,7 @@ OnInit:
 	end;
 }
 
-splendide,1,1,1	script	#tukare_2	111,{
+splendide,1,1,1	script	#tukare_2	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5920,7 +5920,7 @@ OnTimer60000:
 	end;
 }
 
-splendide,139,178,5	script	Exhausted Soldier#3	447,{
+splendide,139,178,5	script	Exhausted Soldier#3	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (ep13_2_tre1 == 5) {
 			if (countitem(6082) > 0) {
@@ -5969,7 +5969,7 @@ OnInit:
 	end;
 }
 
-splendide,1,1,1	script	#tukare_3	111,{
+splendide,1,1,1	script	#tukare_3	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5980,7 +5980,7 @@ OnTimer60000:
 	end;
 }
 
-splendide,164,188,5	script	Exhausted Soldier#4	447,{
+splendide,164,188,5	script	Exhausted Soldier#4	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (ep13_2_tre1 == 5) {
 			if (countitem(6082) > 0) {
@@ -6029,7 +6029,7 @@ OnInit:
 	end;
 }
 
-splendide,1,1,1	script	#tukare_4	111,{
+splendide,1,1,1	script	#tukare_4	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -6040,7 +6040,7 @@ OnTimer60000:
 	end;
 }
 
-splendide,177,257,5	script	Exhausted Soldier#5	447,{
+splendide,177,257,5	script	Exhausted Soldier#5	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (ep13_2_tre1 == 5) {
 			if (countitem(6082) > 0) {
@@ -6089,7 +6089,7 @@ OnInit:
 	end;
 }
 
-splendide,1,1,1	script	#tukare_5	111,{
+splendide,1,1,1	script	#tukare_5	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -6100,7 +6100,7 @@ OnTimer60000:
 	end;
 }
 
-splendide,124,212,5	script	Exhausted Soldier#6	447,{
+splendide,124,212,5	script	Exhausted Soldier#6	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (ep13_2_tre1 == 5) {
 			if (countitem(6082) > 0) {
@@ -6149,7 +6149,7 @@ OnInit:
 	end;
 }
 
-splendide,1,1,1	script	#tukare_6	111,{
+splendide,1,1,1	script	#tukare_6	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -6160,7 +6160,7 @@ OnTimer60000:
 	end;
 }
 
-splendide,196,153,5	script	Exhausted Soldier#7	447,{
+splendide,196,153,5	script	Exhausted Soldier#7	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (ep13_2_tre1 == 5) {
 			if (countitem(6082) > 0) {
@@ -6209,7 +6209,7 @@ OnInit:
 	end;
 }
 
-splendide,1,1,1	script	#tukare_7	111,{
+splendide,1,1,1	script	#tukare_7	HIDDEN_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -6222,7 +6222,7 @@ OnTimer60000:
 
 // Secret note of Bazett :: ep13_2_dailybs
 //============================================================
-mid_camp,283,198,5	script	Bazett Teablack#ep13bs	883,{
+mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 	if (checkweight(1201,1) == 0) {
 		mes " - Hold on!! -";
 		mes " - You are carrying too many different items - ";
@@ -6621,7 +6621,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	883,{
 	}
 }
 
-manuk,193,135,0	script	Worker#ep13bs	454,{
+manuk,193,135,0	script	Worker#ep13bs	4_MAN_PIOM,{
 	if (isequipped(2782) == 1) {
 		if (ep13_2_busut == 3) {
 			if (ep13_2_bs1 == 1) {
@@ -6888,7 +6888,7 @@ manuk,193,135,0	script	Worker#ep13bs	454,{
 
 // Yggdrasil Dungeon Floor 2 puzzle :: ny_dun02_puzzle
 //============================================================
-nyd_dun02,178,255,0	script	Strange Device#ep13_out	844,3,3,{
+nyd_dun02,178,255,0	script	Strange Device#ep13_out	CLEAR_NPC,3,3,{
 	mes "There's something strange here.";
 	mes "Maybe that device can be controlled from here.";
 	next;
@@ -6909,7 +6909,7 @@ OnTouch:
 	end;
 }
 
-nyd_dun02,139,274,0	script	Strange Device#ep13_in	844,3,3,{
+nyd_dun02,139,274,0	script	Strange Device#ep13_in	CLEAR_NPC,3,3,{
 	if ($@08_ep13nydun02_in == 1) {
 		mes "The device has already been activated.";
 		mes "You must wait for the controls to reset.";
@@ -7049,69 +7049,69 @@ OnTouch:
 	end;
 }
 
-nyd_dun02,143,272,0	duplicate(ep13_warp_s_0)	ep13_warp_s1	139
-nyd_dun02,143,266,0	duplicate(ep13_warp_s_0)	ep13_warp_s3	139
-nyd_dun02,146,272,0	duplicate(ep13_warp_s_0)	ep13_warp_11	139
-nyd_dun02,146,266,0	duplicate(ep13_warp_s_0)	ep13_warp_13	139
-nyd_dun02,149,260,0	duplicate(ep13_warp_s_0)	ep13_warp_25	139
-nyd_dun02,149,257,0	duplicate(ep13_warp_s_0)	ep13_warp_26	139
-nyd_dun02,152,270,0	duplicate(ep13_warp_s_0)	ep13_warp_31	139
-nyd_dun02,152,264,0	duplicate(ep13_warp_s_0)	ep13_warp_33	139
-nyd_dun02,155,269,0	duplicate(ep13_warp_s_0)	ep13_warp_41	139
-nyd_dun02,155,254,0	duplicate(ep13_warp_s_0)	ep13_warp_46	139
-nyd_dun02,158,263,0	duplicate(ep13_warp_s_0)	ep13_warp_52	139
-nyd_dun02,158,254,0	duplicate(ep13_warp_s_0)	ep13_warp_55	139
-nyd_dun02,161,261,0	duplicate(ep13_warp_s_0)	ep13_warp_62	139
-nyd_dun02,161,255,0	duplicate(ep13_warp_s_0)	ep13_warp_64	139
-nyd_dun02,161,249,0	duplicate(ep13_warp_s_0)	ep13_warp_66	139
-nyd_dun02,164,261,0	duplicate(ep13_warp_s_0)	ep13_warp_71	139
-nyd_dun02,164,255,0	duplicate(ep13_warp_s_0)	ep13_warp_73	139
-nyd_dun02,164,249,0	duplicate(ep13_warp_s_0)	ep13_warp_75	139
-nyd_dun02,167,249,0	duplicate(ep13_warp_s_0)	ep13_warp_84	139
-nyd_dun02,170,257,0	duplicate(ep13_warp_s_0)	ep13_warp_91	139
-nyd_dun02,170,254,0	duplicate(ep13_warp_s_0)	ep13_warp_92	139
-nyd_dun02,170,248,0	duplicate(ep13_warp_s_0)	ep13_warp_94	139
-nyd_dun02,170,245,0	duplicate(ep13_warp_s_0)	ep13_warp_95	139
+nyd_dun02,143,272,0	duplicate(ep13_warp_s_0)	ep13_warp_s1	HIDDEN_WARP_NPC
+nyd_dun02,143,266,0	duplicate(ep13_warp_s_0)	ep13_warp_s3	HIDDEN_WARP_NPC
+nyd_dun02,146,272,0	duplicate(ep13_warp_s_0)	ep13_warp_11	HIDDEN_WARP_NPC
+nyd_dun02,146,266,0	duplicate(ep13_warp_s_0)	ep13_warp_13	HIDDEN_WARP_NPC
+nyd_dun02,149,260,0	duplicate(ep13_warp_s_0)	ep13_warp_25	HIDDEN_WARP_NPC
+nyd_dun02,149,257,0	duplicate(ep13_warp_s_0)	ep13_warp_26	HIDDEN_WARP_NPC
+nyd_dun02,152,270,0	duplicate(ep13_warp_s_0)	ep13_warp_31	HIDDEN_WARP_NPC
+nyd_dun02,152,264,0	duplicate(ep13_warp_s_0)	ep13_warp_33	HIDDEN_WARP_NPC
+nyd_dun02,155,269,0	duplicate(ep13_warp_s_0)	ep13_warp_41	HIDDEN_WARP_NPC
+nyd_dun02,155,254,0	duplicate(ep13_warp_s_0)	ep13_warp_46	HIDDEN_WARP_NPC
+nyd_dun02,158,263,0	duplicate(ep13_warp_s_0)	ep13_warp_52	HIDDEN_WARP_NPC
+nyd_dun02,158,254,0	duplicate(ep13_warp_s_0)	ep13_warp_55	HIDDEN_WARP_NPC
+nyd_dun02,161,261,0	duplicate(ep13_warp_s_0)	ep13_warp_62	HIDDEN_WARP_NPC
+nyd_dun02,161,255,0	duplicate(ep13_warp_s_0)	ep13_warp_64	HIDDEN_WARP_NPC
+nyd_dun02,161,249,0	duplicate(ep13_warp_s_0)	ep13_warp_66	HIDDEN_WARP_NPC
+nyd_dun02,164,261,0	duplicate(ep13_warp_s_0)	ep13_warp_71	HIDDEN_WARP_NPC
+nyd_dun02,164,255,0	duplicate(ep13_warp_s_0)	ep13_warp_73	HIDDEN_WARP_NPC
+nyd_dun02,164,249,0	duplicate(ep13_warp_s_0)	ep13_warp_75	HIDDEN_WARP_NPC
+nyd_dun02,167,249,0	duplicate(ep13_warp_s_0)	ep13_warp_84	HIDDEN_WARP_NPC
+nyd_dun02,170,257,0	duplicate(ep13_warp_s_0)	ep13_warp_91	HIDDEN_WARP_NPC
+nyd_dun02,170,254,0	duplicate(ep13_warp_s_0)	ep13_warp_92	HIDDEN_WARP_NPC
+nyd_dun02,170,248,0	duplicate(ep13_warp_s_0)	ep13_warp_94	HIDDEN_WARP_NPC
+nyd_dun02,170,245,0	duplicate(ep13_warp_s_0)	ep13_warp_95	HIDDEN_WARP_NPC
 
-nyd_dun02,146,263,0	duplicate(ep13_warp_s_1)	ep13_warp_14	139
-nyd_dun02,149,272,0	duplicate(ep13_warp_s_1)	ep13_warp_21	139
-nyd_dun02,152,258,0	duplicate(ep13_warp_s_1)	ep13_warp_35	139
-nyd_dun02,155,266,0	duplicate(ep13_warp_s_1)	ep13_warp_42	139
-nyd_dun02,158,251,0	duplicate(ep13_warp_s_1)	ep13_warp_56	139
-nyd_dun02,164,258,0	duplicate(ep13_warp_s_1)	ep13_warp_72	139
-nyd_dun02,164,246,0	duplicate(ep13_warp_s_1)	ep13_warp_76	139
-nyd_dun02,167,255,0	duplicate(ep13_warp_s_1)	ep13_warp_82	139
-nyd_dun02,170,251,0	duplicate(ep13_warp_s_1)	ep13_warp_93	139
+nyd_dun02,146,263,0	duplicate(ep13_warp_s_1)	ep13_warp_14	HIDDEN_WARP_NPC
+nyd_dun02,149,272,0	duplicate(ep13_warp_s_1)	ep13_warp_21	HIDDEN_WARP_NPC
+nyd_dun02,152,258,0	duplicate(ep13_warp_s_1)	ep13_warp_35	HIDDEN_WARP_NPC
+nyd_dun02,155,266,0	duplicate(ep13_warp_s_1)	ep13_warp_42	HIDDEN_WARP_NPC
+nyd_dun02,158,251,0	duplicate(ep13_warp_s_1)	ep13_warp_56	HIDDEN_WARP_NPC
+nyd_dun02,164,258,0	duplicate(ep13_warp_s_1)	ep13_warp_72	HIDDEN_WARP_NPC
+nyd_dun02,164,246,0	duplicate(ep13_warp_s_1)	ep13_warp_76	HIDDEN_WARP_NPC
+nyd_dun02,167,255,0	duplicate(ep13_warp_s_1)	ep13_warp_82	HIDDEN_WARP_NPC
+nyd_dun02,170,251,0	duplicate(ep13_warp_s_1)	ep13_warp_93	HIDDEN_WARP_NPC
 
-nyd_dun02,149,269,0	duplicate(ep13_warp_s_2)	ep13_warp_22	139
-nyd_dun02,149,263,0	duplicate(ep13_warp_s_2)	ep13_warp_24	139
-nyd_dun02,155,263,0	duplicate(ep13_warp_s_2)	ep13_warp_43	139
-nyd_dun02,155,257,0	duplicate(ep13_warp_s_2)	ep13_warp_45	139
-nyd_dun02,161,264,0	duplicate(ep13_warp_s_2)	ep13_warp_61	139
-nyd_dun02,161,252,0	duplicate(ep13_warp_s_2)	ep13_warp_65	139
-nyd_dun02,167,258,0	duplicate(ep13_warp_s_2)	ep13_warp_81	139
-nyd_dun02,167,252,0	duplicate(ep13_warp_s_2)	ep13_warp_83	139
-nyd_dun02,167,246,0	duplicate(ep13_warp_s_2)	ep13_warp_85	139
-nyd_dun02,173,251,0	duplicate(ep13_warp_s_2)	ep13_warp_e1	139
-nyd_dun02,173,248,0	duplicate(ep13_warp_s_2)	ep13_warp_e2	139
-nyd_dun02,173,245,0	duplicate(ep13_warp_s_2)	ep13_warp_e3	139
+nyd_dun02,149,269,0	duplicate(ep13_warp_s_2)	ep13_warp_22	HIDDEN_WARP_NPC
+nyd_dun02,149,263,0	duplicate(ep13_warp_s_2)	ep13_warp_24	HIDDEN_WARP_NPC
+nyd_dun02,155,263,0	duplicate(ep13_warp_s_2)	ep13_warp_43	HIDDEN_WARP_NPC
+nyd_dun02,155,257,0	duplicate(ep13_warp_s_2)	ep13_warp_45	HIDDEN_WARP_NPC
+nyd_dun02,161,264,0	duplicate(ep13_warp_s_2)	ep13_warp_61	HIDDEN_WARP_NPC
+nyd_dun02,161,252,0	duplicate(ep13_warp_s_2)	ep13_warp_65	HIDDEN_WARP_NPC
+nyd_dun02,167,258,0	duplicate(ep13_warp_s_2)	ep13_warp_81	HIDDEN_WARP_NPC
+nyd_dun02,167,252,0	duplicate(ep13_warp_s_2)	ep13_warp_83	HIDDEN_WARP_NPC
+nyd_dun02,167,246,0	duplicate(ep13_warp_s_2)	ep13_warp_85	HIDDEN_WARP_NPC
+nyd_dun02,173,251,0	duplicate(ep13_warp_s_2)	ep13_warp_e1	HIDDEN_WARP_NPC
+nyd_dun02,173,248,0	duplicate(ep13_warp_s_2)	ep13_warp_e2	HIDDEN_WARP_NPC
+nyd_dun02,173,245,0	duplicate(ep13_warp_s_2)	ep13_warp_e3	HIDDEN_WARP_NPC
 
-nyd_dun02,143,269,0	duplicate(ep13_warp_w_0)	ep13_warp_s2	139,1,1
-nyd_dun02,143,263,0	duplicate(ep13_warp_w_0)	ep13_warp_s4	139,1,1
-nyd_dun02,146,269,0	duplicate(ep13_warp_w_0)	ep13_warp_12	139,1,1
-nyd_dun02,146,260,0	duplicate(ep13_warp_w_0)	ep13_warp_15	139,1,1
-nyd_dun02,149,266,0	duplicate(ep13_warp_w_0)	ep13_warp_23	139,1,1
-nyd_dun02,152,267,0	duplicate(ep13_warp_w_0)	ep13_warp_32	139,1,1
-nyd_dun02,152,261,0	duplicate(ep13_warp_w_0)	ep13_warp_34	139,1,1
-nyd_dun02,155,260,0	duplicate(ep13_warp_w_0)	ep13_warp_44	139,1,1
-nyd_dun02,158,266,0	duplicate(ep13_warp_w_0)	ep13_warp_51	139,1,1
-nyd_dun02,158,260,0	duplicate(ep13_warp_w_0)	ep13_warp_53	139,1,1
-nyd_dun02,158,257,0	duplicate(ep13_warp_w_0)	ep13_warp_54	139,1,1
-nyd_dun02,161,258,0	duplicate(ep13_warp_w_0)	ep13_warp_63	139,1,1
-nyd_dun02,164,252,0	duplicate(ep13_warp_w_0)	ep13_warp_74	139,1,1
-nyd_dun02,173,242,0	duplicate(ep13_warp_w_0)	ep13_warp_e4	139,1,1
+nyd_dun02,143,269,0	duplicate(ep13_warp_w_0)	ep13_warp_s2	HIDDEN_WARP_NPC,1,1
+nyd_dun02,143,263,0	duplicate(ep13_warp_w_0)	ep13_warp_s4	HIDDEN_WARP_NPC,1,1
+nyd_dun02,146,269,0	duplicate(ep13_warp_w_0)	ep13_warp_12	HIDDEN_WARP_NPC,1,1
+nyd_dun02,146,260,0	duplicate(ep13_warp_w_0)	ep13_warp_15	HIDDEN_WARP_NPC,1,1
+nyd_dun02,149,266,0	duplicate(ep13_warp_w_0)	ep13_warp_23	HIDDEN_WARP_NPC,1,1
+nyd_dun02,152,267,0	duplicate(ep13_warp_w_0)	ep13_warp_32	HIDDEN_WARP_NPC,1,1
+nyd_dun02,152,261,0	duplicate(ep13_warp_w_0)	ep13_warp_34	HIDDEN_WARP_NPC,1,1
+nyd_dun02,155,260,0	duplicate(ep13_warp_w_0)	ep13_warp_44	HIDDEN_WARP_NPC,1,1
+nyd_dun02,158,266,0	duplicate(ep13_warp_w_0)	ep13_warp_51	HIDDEN_WARP_NPC,1,1
+nyd_dun02,158,260,0	duplicate(ep13_warp_w_0)	ep13_warp_53	HIDDEN_WARP_NPC,1,1
+nyd_dun02,158,257,0	duplicate(ep13_warp_w_0)	ep13_warp_54	HIDDEN_WARP_NPC,1,1
+nyd_dun02,161,258,0	duplicate(ep13_warp_w_0)	ep13_warp_63	HIDDEN_WARP_NPC,1,1
+nyd_dun02,164,252,0	duplicate(ep13_warp_w_0)	ep13_warp_74	HIDDEN_WARP_NPC,1,1
+nyd_dun02,173,242,0	duplicate(ep13_warp_w_0)	ep13_warp_e4	HIDDEN_WARP_NPC,1,1
 
-nyd_dun02,149,269,0	script	ep13_warp_22_2	139,1,1,{
+nyd_dun02,149,269,0	script	ep13_warp_22_2	HIDDEN_WARP_NPC,1,1,{
 OnInit:
 OnDisable:
 	disablenpc "ep13_warp_22_2";
@@ -7131,7 +7131,7 @@ OnTouch:
 	end;
 }
 
-nyd_dun02,149,263,0	script	ep13_warp_24_2	139,1,1,{
+nyd_dun02,149,263,0	script	ep13_warp_24_2	HIDDEN_WARP_NPC,1,1,{
 OnEnable:
 	enablenpc "ep13_warp_24_2";
 	end;
@@ -7155,7 +7155,7 @@ OnDisable:
 	end;
 }
 
-nyd_dun02,155,263,0	script	ep13_warp_43_2	139,1,1,{
+nyd_dun02,155,263,0	script	ep13_warp_43_2	HIDDEN_WARP_NPC,1,1,{
 OnInit:
 OnDisable:
 	disablenpc "ep13_warp_43_2";
@@ -7173,7 +7173,7 @@ OnTouch:
 	end;
 }
 
-nyd_dun02,155,257,0	script	ep13_warp_45_2	139,1,1,{
+nyd_dun02,155,257,0	script	ep13_warp_45_2	HIDDEN_WARP_NPC,1,1,{
 OnInit:
 OnDisable:
 	disablenpc "ep13_warp_45_2";
@@ -7193,7 +7193,7 @@ OnTouch:
 	end;
 }
 
-nyd_dun02,161,264,0	script	ep13_warp_61_2	139,1,1,{
+nyd_dun02,161,264,0	script	ep13_warp_61_2	HIDDEN_WARP_NPC,1,1,{
 OnInit:
 OnDisable:
 	disablenpc "ep13_warp_61_2";
@@ -7213,7 +7213,7 @@ OnTouch:
 	end;
 }
 
-nyd_dun02,161,252,0	script	ep13_warp_65_2	139,1,1,{
+nyd_dun02,161,252,0	script	ep13_warp_65_2	HIDDEN_WARP_NPC,1,1,{
 OnEnable:
 	enablenpc "ep13_warp_65_2";
 	end;
@@ -7239,7 +7239,7 @@ OnDisable:
 	end;
 }
 
-nyd_dun02,167,258,0	script	ep13_warp_81_2	139,1,1,{
+nyd_dun02,167,258,0	script	ep13_warp_81_2	HIDDEN_WARP_NPC,1,1,{
 OnInit:
 OnDisable:
 	disablenpc "ep13_warp_81_2";
@@ -7258,7 +7258,7 @@ OnTouch:
 	end;
 }
 
-nyd_dun02,167,252,0	script	ep13_warp_83_2	139,1,1,{
+nyd_dun02,167,252,0	script	ep13_warp_83_2	HIDDEN_WARP_NPC,1,1,{
 OnInit:
 OnDisable:
 	disablenpc "ep13_warp_83_2";
@@ -7276,7 +7276,7 @@ OnTouch:
 	end;
 }
 
-nyd_dun02,167,246,0	script	ep13_warp_85_2	139,1,1,{
+nyd_dun02,167,246,0	script	ep13_warp_85_2	HIDDEN_WARP_NPC,1,1,{
 OnInit:
 OnDisable:
 	disablenpc "ep13_warp_85_2";
@@ -7296,7 +7296,7 @@ OnTouch:
 nyd_dun01,255,142,0	warp	nynm_dun1f_to_2f	1,1,nyd_dun02,61,265
 nyd_dun02,56,264,0	warp	nynm_dun2f_to_1f	1,1,nyd_dun01,249,143
 
-nyd_dun02,1,1,0	script	ep13_nd2f_mng	844,{
+nyd_dun02,1,1,0	script	ep13_nd2f_mng	CLEAR_NPC,{
 	callfunc "F_GM_NPC";
 	mes "Enter password.";
 	next;

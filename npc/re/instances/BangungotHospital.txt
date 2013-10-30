@@ -18,7 +18,7 @@
 
 // Instance Creation
 //============================================================
-ma_dun01,147,10,5	script	Nurse#ma_dun01	569,{
+ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 	if (BaseLevel < 100) end;
 
 	set .@party_id,getcharid(1);
@@ -337,7 +337,7 @@ L_Complete:
 	return;
 }
 
-sec_in02,27,30,0	script	Bangungot Gate	406,{
+sec_in02,27,30,0	script	Bangungot Gate	2_MONEMUS,{
 	callfunc "F_GM_NPC";
 	mes "Password";
 	next;
@@ -362,7 +362,7 @@ sec_in02,27,30,0	script	Bangungot Gate	406,{
 
 // Instance Scripts
 //============================================================
-1@ma_h,43,157,0	script	#Memorial Start	139,2,2,{
+1@ma_h,43,157,0	script	#Memorial Start	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	set .@map$, instance_mapname("1@ma_h");
@@ -386,7 +386,7 @@ OnTimer1000:
 	end;
 }
 
-1@ma_h,43,157,0	script	#Memorial Start_time	139,{ //2,2
+1@ma_h,43,157,0	script	#Memorial Start_time	HIDDEN_WARP_NPC,{ //2,2
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Memorial Start_time");
@@ -407,7 +407,7 @@ OnTimer10000:
 	end;
 }
 
-1@ma_h,46,165,0	script	#Ward1 Entry	139,{ //3,3
+1@ma_h,46,165,0	script	#Ward1 Entry	HIDDEN_WARP_NPC,{ //3,3
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname(strnpcinfo(0));
@@ -474,12 +474,12 @@ OnTimer1000:
 	stopnpctimer;
 	end;
 }
-1@ma_h,57,147,0	duplicate(#Ward1 Entry)	#Ward2 Entry	139 //3,3
-1@ma_h,67,165,0	duplicate(#Ward1 Entry)	#Ward3 Entry	139 //3,3
-1@ma_h,79,147,0	duplicate(#Ward1 Entry)	#Ward4 Entry	139 //3,3
-1@ma_h,90,165,0	duplicate(#Ward1 Entry)	#Ward5 Entry	139 //3,3
+1@ma_h,57,147,0	duplicate(#Ward1 Entry)	#Ward2 Entry	HIDDEN_WARP_NPC //3,3
+1@ma_h,67,165,0	duplicate(#Ward1 Entry)	#Ward3 Entry	HIDDEN_WARP_NPC //3,3
+1@ma_h,79,147,0	duplicate(#Ward1 Entry)	#Ward4 Entry	HIDDEN_WARP_NPC //3,3
+1@ma_h,90,165,0	duplicate(#Ward1 Entry)	#Ward5 Entry	HIDDEN_WARP_NPC //3,3
 
-1@ma_h,101,147,0	script	#Ward6 Entry	139,{ //2,2
+1@ma_h,101,147,0	script	#Ward6 Entry	HIDDEN_WARP_NPC,{ //2,2
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Ward6 Entry");
@@ -515,7 +515,7 @@ OnTimer3000:
 	end;
 }
 
-1@ma_h,110,177,0	script	#Summon Boss	139,{
+1@ma_h,110,177,0	script	#Summon Boss	HIDDEN_WARP_NPC,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Summon Boss");
@@ -539,7 +539,7 @@ OnTimer1000:
 	end;
 }
 
-1@ma_h,147,143,0	script	#Boss Room Entry	139,10,10,{
+1@ma_h,147,143,0	script	#Boss Room Entry	HIDDEN_WARP_NPC,10,10,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Boss Room Entry");
@@ -595,7 +595,7 @@ OnDisableEntry:
 	end;
 }
 
-1@ma_h,147,143,0	script	#Boss Room Entry_time	139,{ //10,10
+1@ma_h,147,143,0	script	#Boss Room Entry_time	HIDDEN_WARP_NPC,{ //10,10
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Boss Room Entry_time");
@@ -671,7 +671,7 @@ OnStopTimer:
 	end;
 }
 
-1@ma_h,111,177,0	script	#Boss Room Entry_2	45,{
+1@ma_h,111,177,0	script	#Boss Room Entry_2	WARPNPC,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Boss Room Entry_2");
@@ -708,7 +708,7 @@ OnTimer10500:
 	end;
 }
 
-1@ma_h,118,63,0	script	#Summon Ward Mob	139,4,4,{
+1@ma_h,118,63,0	script	#Summon Ward Mob	HIDDEN_WARP_NPC,4,4,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Summon Ward Mob");
@@ -799,7 +799,7 @@ OnTimer1000:
 	end;
 }
 
-1@ma_h,118,64,0	script	#Summon Ward Mob_time	139,{ //4,4
+1@ma_h,118,64,0	script	#Summon Ward Mob_time	HIDDEN_WARP_NPC,{ //4,4
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Summon Ward Mob_time");
@@ -830,7 +830,7 @@ OnTimer10000:
 	end;
 }
 
-1@ma_h,112,177,0	script	#Summon Pillar	139,{
+1@ma_h,112,177,0	script	#Summon Pillar	HIDDEN_WARP_NPC,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Summon Pillar");
@@ -865,7 +865,7 @@ OnTimer1000:
 	end;
 }
 
-1@ma_h,112,178,0	script	#Summon Pillar_time	139,{
+1@ma_h,112,178,0	script	#Summon Pillar_time	HIDDEN_WARP_NPC,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Summon Pillar_time");
@@ -906,7 +906,7 @@ OnTimer36000:
 	end;
 }
 
-1@ma_h,118,171,0	script	#Boss Room Entry_a	139,10,10,{
+1@ma_h,118,171,0	script	#Boss Room Entry_a	HIDDEN_WARP_NPC,10,10,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname(strnpcinfo(0));
@@ -917,15 +917,15 @@ OnTouch:
 	donpcevent instance_npcname("#Boss Room Entry_time")+"::OnEnable";
 	end;
 }
-1@ma_h,132,171,0	duplicate(#Boss Room Entry_a)	#Boss Room Entry_b	139,10,10
-1@ma_h,147,171,0	duplicate(#Boss Room Entry_a)	#Boss Room Entry_c	139,10,10
-1@ma_h,118,157,0	duplicate(#Boss Room Entry_a)	#Boss Room Entry_d	139,10,10
-1@ma_h,132,157,0	duplicate(#Boss Room Entry_a)	#Boss Room Entry_e	139,10,10
-1@ma_h,147,157,0	duplicate(#Boss Room Entry_a)	#Boss Room Entry_f	139,10,10
-1@ma_h,118,143,0	duplicate(#Boss Room Entry_a)	#Boss Room Entry_g	139,10,10
-1@ma_h,132,143,0	duplicate(#Boss Room Entry_a)	#Boss Room Entry_h	139,10,10
+1@ma_h,132,171,0	duplicate(#Boss Room Entry_a)	#Boss Room Entry_b	HIDDEN_WARP_NPC,10,10
+1@ma_h,147,171,0	duplicate(#Boss Room Entry_a)	#Boss Room Entry_c	HIDDEN_WARP_NPC,10,10
+1@ma_h,118,157,0	duplicate(#Boss Room Entry_a)	#Boss Room Entry_d	HIDDEN_WARP_NPC,10,10
+1@ma_h,132,157,0	duplicate(#Boss Room Entry_a)	#Boss Room Entry_e	HIDDEN_WARP_NPC,10,10
+1@ma_h,147,157,0	duplicate(#Boss Room Entry_a)	#Boss Room Entry_f	HIDDEN_WARP_NPC,10,10
+1@ma_h,118,143,0	duplicate(#Boss Room Entry_a)	#Boss Room Entry_g	HIDDEN_WARP_NPC,10,10
+1@ma_h,132,143,0	duplicate(#Boss Room Entry_a)	#Boss Room Entry_h	HIDDEN_WARP_NPC,10,10
 
-1@ma_h,131,62,0	script	#Boss Effect	139,{ //4,4
+1@ma_h,131,62,0	script	#Boss Effect	HIDDEN_WARP_NPC,{ //4,4
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Boss Effect");
@@ -938,7 +938,7 @@ OnTimer3000:
 	end;
 }
 
-1@ma_h,43,86,4	script	Moaning Patient#1	584,{
+1@ma_h,43,86,4	script	Moaning Patient#1	4_F_PATIENT,{
 	end;
 OnInstanceInit:
 	monster instance_mapname("1@ma_h"),131,62,"Bangungot",2318,1;
@@ -965,7 +965,7 @@ OnTimer30000:
 	end;
 }
 
-1@ma_h,60,87,4	script	Screaming Patient#2	585,{
+1@ma_h,60,87,4	script	Screaming Patient#2	4_M_PATIENT,{
 	end;
 OnEnable:
 	switch(atoi(strnpcinfo(2))) {
@@ -1001,29 +1001,29 @@ OnTimer30000:
 	stopnpctimer;
 	end;
 }
-1@ma_h,60,39,7	duplicate(Screaming Patient#2)	Patient in Pain#3	584
-1@ma_h,43,39,7	duplicate(Screaming Patient#2)	Passed Out Patient#4	585
-1@ma_h,77,86,4	duplicate(Screaming Patient#2)	Patient with Nightmare#5	584
-1@ma_h,69,87,4	duplicate(Screaming Patient#2)	Sick Looking Patient#6	585
-1@ma_h,73,39,7	duplicate(Screaming Patient#2)	Horrified Patient#7	584
-1@ma_h,65,51,7	duplicate(Screaming Patient#2)	Patient in Sorrow#8	585
-1@ma_h,87,86,4	duplicate(Screaming Patient#2)	Suffering Patient#9	584
-1@ma_h,104,86,4	duplicate(Screaming Patient#2)	Wriggling Patient#10	585
-1@ma_h,99,39,7	duplicate(Screaming Patient#2)	Patient in Cold Sweat#11	584
-1@ma_h,87,39,7	duplicate(Screaming Patient#2)	Howling Patient#12	585
+1@ma_h,60,39,7	duplicate(Screaming Patient#2)	Patient in Pain#3	4_F_PATIENT
+1@ma_h,43,39,7	duplicate(Screaming Patient#2)	Passed Out Patient#4	4_M_PATIENT
+1@ma_h,77,86,4	duplicate(Screaming Patient#2)	Patient with Nightmare#5	4_F_PATIENT
+1@ma_h,69,87,4	duplicate(Screaming Patient#2)	Sick Looking Patient#6	4_M_PATIENT
+1@ma_h,73,39,7	duplicate(Screaming Patient#2)	Horrified Patient#7	4_F_PATIENT
+1@ma_h,65,51,7	duplicate(Screaming Patient#2)	Patient in Sorrow#8	4_M_PATIENT
+1@ma_h,87,86,4	duplicate(Screaming Patient#2)	Suffering Patient#9	4_F_PATIENT
+1@ma_h,104,86,4	duplicate(Screaming Patient#2)	Wriggling Patient#10	4_M_PATIENT
+1@ma_h,99,39,7	duplicate(Screaming Patient#2)	Patient in Cold Sweat#11	4_F_PATIENT
+1@ma_h,87,39,7	duplicate(Screaming Patient#2)	Howling Patient#12	4_M_PATIENT
 
-1@ma_h,43,181,4	script	Moaning Patient#b	584,{ end; }
-1@ma_h,60,182,4	script	Screaming Patient#b	585,{ end; }
-1@ma_h,60,132,7	script	Patient in Pain#b	584,{ end; }
-1@ma_h,43,132,7	script	Passed Out Patient#b	585,{ end; }
-1@ma_h,77,182,4	script	Patient with Nightmare#b	584,{ end; }
-1@ma_h,69,182,4	script	Sick Looking Patient#b	585,{ end; }
-1@ma_h,73,132,7	script	Horrified Patient#b	584,{ end; }
-1@ma_h,65,144,7	script	Patient in Sorrow#b	585,{ end; }
-1@ma_h,87,181,4	script	Suffering Patient#b	584,{ end; }
-1@ma_h,104,181,4	script	Wriggling Patient#b	585,{ end; }
-1@ma_h,99,132,7	script	Patient in Cold Sweat#b	584,{ end; }
-1@ma_h,87,132,7	script	Howling Patient#b	585,{ end; }
+1@ma_h,43,181,4	script	Moaning Patient#b	4_F_PATIENT,{ end; }
+1@ma_h,60,182,4	script	Screaming Patient#b	4_M_PATIENT,{ end; }
+1@ma_h,60,132,7	script	Patient in Pain#b	4_F_PATIENT,{ end; }
+1@ma_h,43,132,7	script	Passed Out Patient#b	4_M_PATIENT,{ end; }
+1@ma_h,77,182,4	script	Patient with Nightmare#b	4_F_PATIENT,{ end; }
+1@ma_h,69,182,4	script	Sick Looking Patient#b	4_M_PATIENT,{ end; }
+1@ma_h,73,132,7	script	Horrified Patient#b	4_F_PATIENT,{ end; }
+1@ma_h,65,144,7	script	Patient in Sorrow#b	4_M_PATIENT,{ end; }
+1@ma_h,87,181,4	script	Suffering Patient#b	4_F_PATIENT,{ end; }
+1@ma_h,104,181,4	script	Wriggling Patient#b	4_M_PATIENT,{ end; }
+1@ma_h,99,132,7	script	Patient in Cold Sweat#b	4_F_PATIENT,{ end; }
+1@ma_h,87,132,7	script	Howling Patient#b	4_M_PATIENT,{ end; }
 
 // Warp Portals
 //============================================================
@@ -1083,7 +1083,7 @@ OnTimer30000:
 
 // Disable select warps.
 // Custom, but saves processing and lines.
-1@ma_h,1,1,0	script	#ma_hos_warp_init	844,{
+1@ma_h,1,1,0	script	#ma_hos_warp_init	CLEAR_NPC,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Boss Room Exit");

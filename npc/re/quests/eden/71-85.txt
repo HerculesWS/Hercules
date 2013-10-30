@@ -13,7 +13,7 @@
 //= 1.3 Updated to match the official scripts. [Euphy]
 //============================================================
 
-moc_para01,44,38,3	script	Mission [71 - 85]	857,{
+moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 	if (countitem(6219) < 1) {
 		mes "- Only members of the -";
 		mes "- Eden Group can read -";

@@ -11,7 +11,7 @@
 //= #Treasure_Token - used to keep track of tokens
 //============================================================
 
-yuno_in01,124,164,6	script	Guild Leader	108,{
+yuno_in01,124,164,6	script	Guild Leader	1_M_PRON_KING,{
 	mes "[Keegan]";
 	mes "What brings you here? Have something to say?";
 	next;

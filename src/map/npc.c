@@ -2013,6 +2013,53 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 	}
 }
 
+// Parse View
+// Support for using Constants in place of NPC View IDs.
+int npc_parseview(const char* w4, const char* start, const char* buffer, const char* filepath) {
+	int val = -1, i = 0;
+	char viewid[1024];	// Max size of name from const.txt, see script->read_constdb.
+
+	// Extract view ID / constant
+	while (w4[i] != '\0') {
+		if (isspace(w4[i]) || w4[i] == '/' || w4[i] == ',')
+			break;
+
+		i++;
+	}
+
+	safestrncpy(viewid, w4, i+=1);
+
+	// Check if view id is not an ID (only numbers).
+	if(!npc->viewisid(viewid))
+	{
+		// Check if constant exists and get its value.
+		if(!script->get_constant(viewid, &val)) {
+			ShowWarning("npc_parseview: Invalid NPC constant '%s' specified in file '%s', line'%d'. Defaulting to INVISIBLE_CLASS. \n", viewid, filepath, strline(buffer,start-buffer));
+			val = INVISIBLE_CLASS;
+		}
+	} else {
+		// NPC has an ID specified for view id.
+		val = atoi(w4);
+	}
+
+	return val;
+}
+
+// View is ID
+// Checks if given view is an ID or constant.
+bool npc_viewisid(const char * viewid)
+{
+	if(atoi(viewid) != -1)
+	{
+		// Loop through view, looking for non-numeric character.
+		while (*viewid) {
+			if (isdigit(*viewid++) == 0) return false;
+		}
+	}
+
+    return true;
+}
+
 //Add then display an npc warp on map
 struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y) {
 	int i, flag = 0;
@@ -2220,7 +2267,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 	nd->bl.y = y;
 	nd->bl.id = npc->get_new_npc_id();
 	npc->parsename(nd, w3, start, buffer, filepath);
-	nd->class_ = m==-1?-1:atoi(w4);
+	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
 	nd->speed = 200;
 
 	++npc_shop;
@@ -2335,7 +2382,7 @@ const char* npc_skip_script(const char* start, const char* buffer, const char* f
 /// <map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite id>,{<code>}
 /// <map name>,<x>,<y>,<facing>%TAB%script%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>,{<code>}
 const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, bool runOnInit) {
-	int x, y, dir = 0, m, xs = 0, ys = 0, class_ = 0;	// [Valaris] thanks to fov
+	int x, y, dir = 0, m, xs = 0, ys = 0;	// [Valaris] thanks to fov
 	char mapname[32];
 	struct script_code *scriptroot;
 	int i;
@@ -2383,14 +2430,13 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 
 	CREATE(nd, struct npc_data, 1);
 
-	if( sscanf(w4, "%d,%d,%d", &class_, &xs, &ys) == 3 )
+	if( sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2 )
 	{// OnTouch area defined
 		nd->u.scr.xs = xs;
 		nd->u.scr.ys = ys;
 	}
 	else
 	{// no OnTouch area
-		class_ = atoi(w4);
 		nd->u.scr.xs = -1;
 		nd->u.scr.ys = -1;
 	}
@@ -2401,7 +2447,7 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 	nd->bl.y = y;
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->bl.id = npc->get_new_npc_id();
-	nd->class_ = class_;
+	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
 	nd->speed = 200;
 	nd->u.scr.script = scriptroot;
 	nd->u.scr.label_list = label_list;
@@ -2417,7 +2463,7 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 		nd->dir = dir;
 		npc->setcells(nd);
 		map->addblock(&nd->bl);
-		if( class_ >= 0 ) {
+		if( nd->class_ >= 0 ) {
 			status->set_viewdata(&nd->bl, nd->class_);
 			if( map->list[nd->bl.m].users )
 				clif->spawn(&nd->bl);
@@ -2465,7 +2511,7 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 /// npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>
 const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath)
 {
-	int x, y, dir, m, xs = -1, ys = -1, class_ = 0;
+	int x, y, dir, m, xs = -1, ys = -1;
 	char mapname[32];
 	char srcname[128];
 	int i;
@@ -2515,9 +2561,8 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 	}
 	
 	if( type == WARP && sscanf(w4, "%d,%d", &xs, &ys) == 2 );// <spanx>,<spany>
-	else if( type == SCRIPT && sscanf(w4, "%d,%d,%d", &class_, &xs, &ys) == 3);// <sprite id>,<triggerX>,<triggerY>
-	else if( type != WARP ) class_ = atoi(w4);// <sprite id>
-	else {
+	else if( type == SCRIPT && sscanf(w4, "%*d,%d,%d", &xs, &ys) == 2);// <sprite id>,<triggerX>,<triggerY>
+	else if( type == WARP ) {
 		ShowError("npc_parse_duplicate: Invalid span format for duplicate warp in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 		return end;// next line, try to continue
 	}
@@ -2530,7 +2575,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 	nd->bl.y = y;
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->bl.id = npc->get_new_npc_id();
-	nd->class_ = class_;
+	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
 	nd->speed = 200;
 	nd->src_id = src_id;
 	nd->bl.type = BL_NPC;
@@ -2573,7 +2618,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		nd->dir = dir;
 		npc->setcells(nd);
 		map->addblock(&nd->bl);
-		if( class_ >= 0 ) {
+		if( nd->class_ >= 0 ) {
 			status->set_viewdata(&nd->bl, nd->class_);
 			if( map->list[nd->bl.m].users )
 				clif->spawn(&nd->bl);
@@ -4045,6 +4090,8 @@ void npc_defaults(void) {
 	npc->addsrcfile = npc_addsrcfile;
 	npc->delsrcfile = npc_delsrcfile;
 	npc->parsename = npc_parsename;
+	npc->parseview = npc_parseview;
+	npc->viewisid = npc_viewisid;
 	npc->add_warp = npc_add_warp;
 	npc->parse_warp = npc_parse_warp;
 	npc->parse_shop = npc_parse_shop;

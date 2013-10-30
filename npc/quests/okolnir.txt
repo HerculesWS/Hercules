@@ -144,16 +144,16 @@ OnInit:
 	end;
 }
 
-arug_cas01,161,371,3	duplicate(Guide#gq_main)	Guide#gq_aru01	899
-arug_cas02,349,347,3	duplicate(Guide#gq_main)	Guide#gq_aru02	899
-arug_cas03,324,161,3	duplicate(Guide#gq_main)	Guide#gq_aru03	899
-arug_cas04,324,161,3	duplicate(Guide#gq_main)	Guide#gq_aru04	899
-arug_cas05,324,161,3	duplicate(Guide#gq_main)	Guide#gq_aru05	899
-schg_cas01,376,307,3	duplicate(Guide#gq_main)	Guide#gq_sch01	899
-schg_cas02,181,335,3	duplicate(Guide#gq_main)	Guide#gq_sch02	899
-schg_cas03,84,101,3	duplicate(Guide#gq_main)	Guide#gq_sch03	899
-schg_cas04,376,307,3	duplicate(Guide#gq_main)	Guide#gq_sch04	899
-schg_cas05,376,307,3	duplicate(Guide#gq_main)	Guide#gq_sch05	899
+arug_cas01,161,371,3	duplicate(Guide#gq_main)	Guide#gq_aru01	4_M_HUMAN_02
+arug_cas02,349,347,3	duplicate(Guide#gq_main)	Guide#gq_aru02	4_M_HUMAN_02
+arug_cas03,324,161,3	duplicate(Guide#gq_main)	Guide#gq_aru03	4_M_HUMAN_02
+arug_cas04,324,161,3	duplicate(Guide#gq_main)	Guide#gq_aru04	4_M_HUMAN_02
+arug_cas05,324,161,3	duplicate(Guide#gq_main)	Guide#gq_aru05	4_M_HUMAN_02
+schg_cas01,376,307,3	duplicate(Guide#gq_main)	Guide#gq_sch01	4_M_HUMAN_02
+schg_cas02,181,335,3	duplicate(Guide#gq_main)	Guide#gq_sch02	4_M_HUMAN_02
+schg_cas03,84,101,3	duplicate(Guide#gq_main)	Guide#gq_sch03	4_M_HUMAN_02
+schg_cas04,376,307,3	duplicate(Guide#gq_main)	Guide#gq_sch04	4_M_HUMAN_02
+schg_cas05,376,307,3	duplicate(Guide#gq_main)	Guide#gq_sch05	4_M_HUMAN_02
 
 que_qaru01,345,23,0	warp	Gate02#gq_aru01	1,1,arug_cas01,157,369
 que_qaru02,345,23,0	warp	Gate02#gq_aru02	1,1,arug_cas02,349,355
@@ -353,16 +353,16 @@ OnInit:
 	end;
 }
 
-que_qaru01,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_aru01	403
-que_qaru02,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_aru02	403
-que_qaru03,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_aru03	403
-que_qaru04,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_aru04	403
-que_qaru05,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_aru05	403
-que_qsch01,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_sch01	403
-que_qsch02,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_sch02	403
-que_qsch03,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_sch03	403
-que_qsch04,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_sch04	403
-que_qsch05,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_sch05	403
+que_qaru01,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_aru01	4_F_VALKYRIE2
+que_qaru02,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_aru02	4_F_VALKYRIE2
+que_qaru03,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_aru03	4_F_VALKYRIE2
+que_qaru04,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_aru04	4_F_VALKYRIE2
+que_qaru05,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_aru05	4_F_VALKYRIE2
+que_qsch01,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_sch01	4_F_VALKYRIE2
+que_qsch02,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_sch02	4_F_VALKYRIE2
+que_qsch03,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_sch03	4_F_VALKYRIE2
+que_qsch04,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_sch04	4_F_VALKYRIE2
+que_qsch05,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_sch05	4_F_VALKYRIE2
 
 -	script	Gate01#gq_main	-1,{
 	function	SMonster;
@@ -450,16 +450,16 @@ OnInit:
 	end;
 }
 
-que_qaru01,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_aru01	45,1,1
-que_qaru02,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_aru02	45,1,1
-que_qaru03,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_aru03	45,1,1
-que_qaru04,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_aru04	45,1,1
-que_qaru05,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_aru05	45,1,1
-que_qsch01,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_sch01	45,1,1
-que_qsch02,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_sch02	45,1,1
-que_qsch03,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_sch03	45,1,1
-que_qsch04,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_sch04	45,1,1
-que_qsch05,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_sch05	45,1,1
+que_qaru01,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_aru01	WARPNPC,1,1
+que_qaru02,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_aru02	WARPNPC,1,1
+que_qaru03,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_aru03	WARPNPC,1,1
+que_qaru04,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_aru04	WARPNPC,1,1
+que_qaru05,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_aru05	WARPNPC,1,1
+que_qsch01,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_sch01	WARPNPC,1,1
+que_qsch02,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_sch02	WARPNPC,1,1
+que_qsch03,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_sch03	WARPNPC,1,1
+que_qsch04,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_sch04	WARPNPC,1,1
+que_qsch05,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_sch05	WARPNPC,1,1
 
 -	script	#Gate_manager_main	-1,{
 	end;
@@ -473,16 +473,16 @@ OnMyMobDead:
 	}
 	end;
 }
-que_qaru01,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_aru01	844
-que_qaru02,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_aru02	844
-que_qaru03,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_aru03	844
-que_qaru04,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_aru04	844
-que_qaru05,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_aru05	844
-que_qsch01,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_sch01	844
-que_qsch02,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_sch02	844
-que_qsch03,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_sch03	844
-que_qsch04,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_sch04	844
-que_qsch05,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_sch05	844
+que_qaru01,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_aru01	CLEAR_NPC
+que_qaru02,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_aru02	CLEAR_NPC
+que_qaru03,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_aru03	CLEAR_NPC
+que_qaru04,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_aru04	CLEAR_NPC
+que_qaru05,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_aru05	CLEAR_NPC
+que_qsch01,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_sch01	CLEAR_NPC
+que_qsch02,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_sch02	CLEAR_NPC
+que_qsch03,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_sch03	CLEAR_NPC
+que_qsch04,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_sch04	CLEAR_NPC
+que_qsch05,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_sch05	CLEAR_NPC
 
 -	script	#gq_miromob2_main	-1,{
 	end;
@@ -527,16 +527,16 @@ OnMyMobDead:
 	}
 	end;
 }
-que_qaru01,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_aru01	844
-que_qaru02,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_aru02	844
-que_qaru03,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_aru03	844
-que_qaru04,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_aru04	844
-que_qaru05,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_aru05	844
-que_qsch01,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_sch01	844
-que_qsch02,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_sch02	844
-que_qsch03,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_sch03	844
-que_qsch04,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_sch04	844
-que_qsch05,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_sch05	844
+que_qaru01,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_aru01	CLEAR_NPC
+que_qaru02,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_aru02	CLEAR_NPC
+que_qaru03,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_aru03	CLEAR_NPC
+que_qaru04,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_aru04	CLEAR_NPC
+que_qaru05,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_aru05	CLEAR_NPC
+que_qsch01,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_sch01	CLEAR_NPC
+que_qsch02,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_sch02	CLEAR_NPC
+que_qsch03,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_sch03	CLEAR_NPC
+que_qsch04,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_sch04	CLEAR_NPC
+que_qsch05,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_sch05	CLEAR_NPC
 
 -	script	#okolnir_main	-1,{
 	end;
@@ -724,16 +724,16 @@ OnTimer3611000:
 	stopnpctimer;
 	end;
 }
-que_qaru01,1,1,0	duplicate(#okolnir_main)	#okolnir_aru01	844
-que_qaru02,1,1,0	duplicate(#okolnir_main)	#okolnir_aru02	844
-que_qaru03,1,1,0	duplicate(#okolnir_main)	#okolnir_aru03	844
-que_qaru04,1,1,0	duplicate(#okolnir_main)	#okolnir_aru04	844
-que_qaru05,1,1,0	duplicate(#okolnir_main)	#okolnir_aru05	844
-que_qsch01,1,1,0	duplicate(#okolnir_main)	#okolnir_sch01	844
-que_qsch02,1,1,0	duplicate(#okolnir_main)	#okolnir_sch02	844
-que_qsch03,1,1,0	duplicate(#okolnir_main)	#okolnir_sch03	844
-que_qsch04,1,1,0	duplicate(#okolnir_main)	#okolnir_sch04	844
-que_qsch05,1,1,0	duplicate(#okolnir_main)	#okolnir_sch05	844
+que_qaru01,1,1,0	duplicate(#okolnir_main)	#okolnir_aru01	CLEAR_NPC
+que_qaru02,1,1,0	duplicate(#okolnir_main)	#okolnir_aru02	CLEAR_NPC
+que_qaru03,1,1,0	duplicate(#okolnir_main)	#okolnir_aru03	CLEAR_NPC
+que_qaru04,1,1,0	duplicate(#okolnir_main)	#okolnir_aru04	CLEAR_NPC
+que_qaru05,1,1,0	duplicate(#okolnir_main)	#okolnir_aru05	CLEAR_NPC
+que_qsch01,1,1,0	duplicate(#okolnir_main)	#okolnir_sch01	CLEAR_NPC
+que_qsch02,1,1,0	duplicate(#okolnir_main)	#okolnir_sch02	CLEAR_NPC
+que_qsch03,1,1,0	duplicate(#okolnir_main)	#okolnir_sch03	CLEAR_NPC
+que_qsch04,1,1,0	duplicate(#okolnir_main)	#okolnir_sch04	CLEAR_NPC
+que_qsch05,1,1,0	duplicate(#okolnir_main)	#okolnir_sch05	CLEAR_NPC
 
 -	script	#Maze_Manager_main	-1,{
 	end;
@@ -808,16 +808,16 @@ OnInit:
 	donpcevent "#miro_yf_"+.@sub$+"::OnDisable";
 	end;
 }
-que_qaru01,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_aru01	844
-que_qaru02,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_aru02	844
-que_qaru03,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_aru03	844
-que_qaru04,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_aru04	844
-que_qaru05,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_aru05	844
-que_qsch01,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_sch01	844
-que_qsch02,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_sch02	844
-que_qsch03,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_sch03	844
-que_qsch04,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_sch04	844
-que_qsch05,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_sch05	844
+que_qaru01,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_aru01	CLEAR_NPC
+que_qaru02,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_aru02	CLEAR_NPC
+que_qaru03,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_aru03	CLEAR_NPC
+que_qaru04,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_aru04	CLEAR_NPC
+que_qaru05,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_aru05	CLEAR_NPC
+que_qsch01,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_sch01	CLEAR_NPC
+que_qsch02,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_sch02	CLEAR_NPC
+que_qsch03,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_sch03	CLEAR_NPC
+que_qsch04,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_sch04	CLEAR_NPC
+que_qsch05,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_sch05	CLEAR_NPC
 
 -	script	#miro_bf_main	-1,{
 	function	Cell;
@@ -845,16 +845,16 @@ OnDisable:
 OnMyMobDead:
 	end;
 }
-que_qaru01,2,1,0	duplicate(#miro_bf_main)	#miro_bf_aru01	844
-que_qaru02,2,1,0	duplicate(#miro_bf_main)	#miro_bf_aru02	844
-que_qaru03,2,1,0	duplicate(#miro_bf_main)	#miro_bf_aru03	844
-que_qaru04,2,1,0	duplicate(#miro_bf_main)	#miro_bf_aru04	844
-que_qaru05,2,1,0	duplicate(#miro_bf_main)	#miro_bf_aru05	844
-que_qsch01,2,1,0	duplicate(#miro_bf_main)	#miro_bf_sch01	844
-que_qsch02,2,1,0	duplicate(#miro_bf_main)	#miro_bf_sch02	844
-que_qsch03,2,1,0	duplicate(#miro_bf_main)	#miro_bf_sch03	844
-que_qsch04,2,1,0	duplicate(#miro_bf_main)	#miro_bf_sch04	844
-que_qsch05,2,1,0	duplicate(#miro_bf_main)	#miro_bf_sch05	844
+que_qaru01,2,1,0	duplicate(#miro_bf_main)	#miro_bf_aru01	CLEAR_NPC
+que_qaru02,2,1,0	duplicate(#miro_bf_main)	#miro_bf_aru02	CLEAR_NPC
+que_qaru03,2,1,0	duplicate(#miro_bf_main)	#miro_bf_aru03	CLEAR_NPC
+que_qaru04,2,1,0	duplicate(#miro_bf_main)	#miro_bf_aru04	CLEAR_NPC
+que_qaru05,2,1,0	duplicate(#miro_bf_main)	#miro_bf_aru05	CLEAR_NPC
+que_qsch01,2,1,0	duplicate(#miro_bf_main)	#miro_bf_sch01	CLEAR_NPC
+que_qsch02,2,1,0	duplicate(#miro_bf_main)	#miro_bf_sch02	CLEAR_NPC
+que_qsch03,2,1,0	duplicate(#miro_bf_main)	#miro_bf_sch03	CLEAR_NPC
+que_qsch04,2,1,0	duplicate(#miro_bf_main)	#miro_bf_sch04	CLEAR_NPC
+que_qsch05,2,1,0	duplicate(#miro_bf_main)	#miro_bf_sch05	CLEAR_NPC
 
 -	script	#miro_rf_main	-1,{
 	function	Cell;
@@ -883,16 +883,16 @@ OnMyMobDead:
 		}
 	}
 }
-que_qaru01,2,2,0	duplicate(#miro_rf_main)	#miro_rf_aru01	844
-que_qaru02,2,2,0	duplicate(#miro_rf_main)	#miro_rf_aru02	844
-que_qaru03,2,2,0	duplicate(#miro_rf_main)	#miro_rf_aru03	844
-que_qaru04,2,2,0	duplicate(#miro_rf_main)	#miro_rf_aru04	844
-que_qaru05,2,2,0	duplicate(#miro_rf_main)	#miro_rf_aru05	844
-que_qsch01,2,2,0	duplicate(#miro_rf_main)	#miro_rf_sch01	844
-que_qsch02,2,2,0	duplicate(#miro_rf_main)	#miro_rf_sch02	844
-que_qsch03,2,2,0	duplicate(#miro_rf_main)	#miro_rf_sch03	844
-que_qsch04,2,2,0	duplicate(#miro_rf_main)	#miro_rf_sch04	844
-que_qsch05,2,2,0	duplicate(#miro_rf_main)	#miro_rf_sch05	844
+que_qaru01,2,2,0	duplicate(#miro_rf_main)	#miro_rf_aru01	CLEAR_NPC
+que_qaru02,2,2,0	duplicate(#miro_rf_main)	#miro_rf_aru02	CLEAR_NPC
+que_qaru03,2,2,0	duplicate(#miro_rf_main)	#miro_rf_aru03	CLEAR_NPC
+que_qaru04,2,2,0	duplicate(#miro_rf_main)	#miro_rf_aru04	CLEAR_NPC
+que_qaru05,2,2,0	duplicate(#miro_rf_main)	#miro_rf_aru05	CLEAR_NPC
+que_qsch01,2,2,0	duplicate(#miro_rf_main)	#miro_rf_sch01	CLEAR_NPC
+que_qsch02,2,2,0	duplicate(#miro_rf_main)	#miro_rf_sch02	CLEAR_NPC
+que_qsch03,2,2,0	duplicate(#miro_rf_main)	#miro_rf_sch03	CLEAR_NPC
+que_qsch04,2,2,0	duplicate(#miro_rf_main)	#miro_rf_sch04	CLEAR_NPC
+que_qsch05,2,2,0	duplicate(#miro_rf_main)	#miro_rf_sch05	CLEAR_NPC
 
 -	script	#miro_yf_main	-1,{
 	function	Cell;
@@ -921,16 +921,16 @@ OnMyMobDead:
 		}
 	}
 }
-que_qaru01,2,3,0	duplicate(#miro_yf_main)	#miro_yf_aru01	844
-que_qaru02,2,3,0	duplicate(#miro_yf_main)	#miro_yf_aru02	844
-que_qaru03,2,3,0	duplicate(#miro_yf_main)	#miro_yf_aru03	844
-que_qaru04,2,3,0	duplicate(#miro_yf_main)	#miro_yf_aru04	844
-que_qaru05,2,3,0	duplicate(#miro_yf_main)	#miro_yf_aru05	844
-que_qsch01,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch01	844
-que_qsch02,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch02	844
-que_qsch03,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch03	844
-que_qsch04,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch04	844
-que_qsch05,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch05	844
+que_qaru01,2,3,0	duplicate(#miro_yf_main)	#miro_yf_aru01	CLEAR_NPC
+que_qaru02,2,3,0	duplicate(#miro_yf_main)	#miro_yf_aru02	CLEAR_NPC
+que_qaru03,2,3,0	duplicate(#miro_yf_main)	#miro_yf_aru03	CLEAR_NPC
+que_qaru04,2,3,0	duplicate(#miro_yf_main)	#miro_yf_aru04	CLEAR_NPC
+que_qaru05,2,3,0	duplicate(#miro_yf_main)	#miro_yf_aru05	CLEAR_NPC
+que_qsch01,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch01	CLEAR_NPC
+que_qsch02,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch02	CLEAR_NPC
+que_qsch03,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch03	CLEAR_NPC
+que_qsch04,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch04	CLEAR_NPC
+que_qsch05,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch05	CLEAR_NPC
 
 -	script	windpath01_main	-1,{
 	end;
@@ -947,16 +947,16 @@ OnTouch:
 	mes "You need the Crystal Key to activate the Warp Gate.";
 	close;
 }
-que_qaru01,132,172,0	duplicate(windpath01_main)	windpath01_aru01	45,1,1
-que_qaru02,132,172,0	duplicate(windpath01_main)	windpath01_aru02	45,1,1
-que_qaru03,132,172,0	duplicate(windpath01_main)	windpath01_aru03	45,1,1
-que_qaru04,132,172,0	duplicate(windpath01_main)	windpath01_aru04	45,1,1
-que_qaru05,132,172,0	duplicate(windpath01_main)	windpath01_aru05	45,1,1
-que_qsch01,132,172,0	duplicate(windpath01_main)	windpath01_sch01	45,1,1
-que_qsch02,132,172,0	duplicate(windpath01_main)	windpath01_sch02	45,1,1
-que_qsch03,132,172,0	duplicate(windpath01_main)	windpath01_sch03	45,1,1
-que_qsch04,132,172,0	duplicate(windpath01_main)	windpath01_sch04	45,1,1
-que_qsch05,132,172,0	duplicate(windpath01_main)	windpath01_sch05	45,1,1
+que_qaru01,132,172,0	duplicate(windpath01_main)	windpath01_aru01	WARPNPC,1,1
+que_qaru02,132,172,0	duplicate(windpath01_main)	windpath01_aru02	WARPNPC,1,1
+que_qaru03,132,172,0	duplicate(windpath01_main)	windpath01_aru03	WARPNPC,1,1
+que_qaru04,132,172,0	duplicate(windpath01_main)	windpath01_aru04	WARPNPC,1,1
+que_qaru05,132,172,0	duplicate(windpath01_main)	windpath01_aru05	WARPNPC,1,1
+que_qsch01,132,172,0	duplicate(windpath01_main)	windpath01_sch01	WARPNPC,1,1
+que_qsch02,132,172,0	duplicate(windpath01_main)	windpath01_sch02	WARPNPC,1,1
+que_qsch03,132,172,0	duplicate(windpath01_main)	windpath01_sch03	WARPNPC,1,1
+que_qsch04,132,172,0	duplicate(windpath01_main)	windpath01_sch04	WARPNPC,1,1
+que_qsch05,132,172,0	duplicate(windpath01_main)	windpath01_sch05	WARPNPC,1,1
 
 que_qaru01,113,165,0	warp	windpath02_aru01	1,1,que_qaru01,139,172
 que_qaru02,113,165,0	warp	windpath02_aru02	1,1,que_qaru02,139,172
@@ -1130,16 +1130,16 @@ OnTimer80000:
 	donpcevent "#gdtimer01_"+.@sub$+"::OnEnable";
 	end;
 }
-que_qaru01,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_aru01	844
-que_qaru02,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_aru02	844
-que_qaru03,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_aru03	844
-que_qaru04,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_aru04	844
-que_qaru05,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_aru05	844
-que_qsch01,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_sch01	844
-que_qsch02,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_sch02	844
-que_qsch03,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_sch03	844
-que_qsch04,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_sch04	844
-que_qsch05,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_sch05	844
+que_qaru01,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_aru01	CLEAR_NPC
+que_qaru02,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_aru02	CLEAR_NPC
+que_qaru03,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_aru03	CLEAR_NPC
+que_qaru04,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_aru04	CLEAR_NPC
+que_qaru05,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_aru05	CLEAR_NPC
+que_qsch01,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_sch01	CLEAR_NPC
+que_qsch02,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_sch02	CLEAR_NPC
+que_qsch03,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_sch03	CLEAR_NPC
+que_qsch04,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_sch04	CLEAR_NPC
+que_qsch05,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_sch05	CLEAR_NPC
 
 -	script	#gdtimer02_main	-1,{
 	end;
@@ -1204,16 +1204,16 @@ OnMyMobDead:
 	}
 	end;
 }
-que_qaru01,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_aru01	844
-que_qaru02,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_aru02	844
-que_qaru03,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_aru03	844
-que_qaru04,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_aru04	844
-que_qaru05,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_aru05	844
-que_qsch01,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_sch01	844
-que_qsch02,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_sch02	844
-que_qsch03,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_sch03	844
-que_qsch04,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_sch04	844
-que_qsch05,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_sch05	844
+que_qaru01,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_aru01	CLEAR_NPC
+que_qaru02,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_aru02	CLEAR_NPC
+que_qaru03,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_aru03	CLEAR_NPC
+que_qaru04,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_aru04	CLEAR_NPC
+que_qaru05,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_aru05	CLEAR_NPC
+que_qsch01,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_sch01	CLEAR_NPC
+que_qsch02,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_sch02	CLEAR_NPC
+que_qsch03,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_sch03	CLEAR_NPC
+que_qsch04,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_sch04	CLEAR_NPC
+que_qsch05,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_sch05	CLEAR_NPC
 
 -	script	#piamette_main	-1,{
 OnEnable:
@@ -1247,16 +1247,16 @@ OnMyMobDead:
 	donpcevent "#nm_switch_"+.@sub$+"::OnEnable";
 	end;
 }
-que_qaru01,1,4,0	duplicate(#piamette_main)	#piamette_aru01	844
-que_qaru02,1,4,0	duplicate(#piamette_main)	#piamette_aru02	844
-que_qaru03,1,4,0	duplicate(#piamette_main)	#piamette_aru03	844
-que_qaru04,1,4,0	duplicate(#piamette_main)	#piamette_aru04	844
-que_qaru05,1,4,0	duplicate(#piamette_main)	#piamette_aru05	844
-que_qsch01,1,4,0	duplicate(#piamette_main)	#piamette_sch01	844
-que_qsch02,1,4,0	duplicate(#piamette_main)	#piamette_sch02	844
-que_qsch03,1,4,0	duplicate(#piamette_main)	#piamette_sch03	844
-que_qsch04,1,4,0	duplicate(#piamette_main)	#piamette_sch04	844
-que_qsch05,1,4,0	duplicate(#piamette_main)	#piamette_sch05	844
+que_qaru01,1,4,0	duplicate(#piamette_main)	#piamette_aru01	CLEAR_NPC
+que_qaru02,1,4,0	duplicate(#piamette_main)	#piamette_aru02	CLEAR_NPC
+que_qaru03,1,4,0	duplicate(#piamette_main)	#piamette_aru03	CLEAR_NPC
+que_qaru04,1,4,0	duplicate(#piamette_main)	#piamette_aru04	CLEAR_NPC
+que_qaru05,1,4,0	duplicate(#piamette_main)	#piamette_aru05	CLEAR_NPC
+que_qsch01,1,4,0	duplicate(#piamette_main)	#piamette_sch01	CLEAR_NPC
+que_qsch02,1,4,0	duplicate(#piamette_main)	#piamette_sch02	CLEAR_NPC
+que_qsch03,1,4,0	duplicate(#piamette_main)	#piamette_sch03	CLEAR_NPC
+que_qsch04,1,4,0	duplicate(#piamette_main)	#piamette_sch04	CLEAR_NPC
+que_qsch05,1,4,0	duplicate(#piamette_main)	#piamette_sch05	CLEAR_NPC
 
 -	script	#getspells_main	-1,{
 	end;
@@ -1462,7 +1462,7 @@ que_qsch03,150,159,0	duplicate(#main_cages)	#sch03_cage06	-1,1,1
 que_qsch04,150,159,0	duplicate(#main_cages)	#sch04_cage06	-1,1,1
 que_qsch05,150,159,0	duplicate(#main_cages)	#sch05_cage06	-1,1,1
 
-que_qaru01,1,8,0	script	#gd_main_mobctrl	844,{
+que_qaru01,1,8,0	script	#gd_main_mobctrl	CLEAR_NPC,{
 	end;
 	
 OnEnable:
@@ -1497,16 +1497,16 @@ OnMyMobDead:
 	}
 	end;
 }
-que_qaru01,1,8,0	duplicate(#gd_main_mobctrl)	#gd_aru01_mobctrl	844
-que_qaru02,1,8,0	duplicate(#gd_main_mobctrl)	#gd_aru02_mobctrl	844
-que_qaru03,1,8,0	duplicate(#gd_main_mobctrl)	#gd_aru03_mobctrl	844
-que_qaru04,1,8,0	duplicate(#gd_main_mobctrl)	#gd_aru04_mobctrl	844
-que_qaru05,1,8,0	duplicate(#gd_main_mobctrl)	#gd_aru05_mobctrl	844
-que_qsch01,1,8,0	duplicate(#gd_main_mobctrl)	#gd_sch01_mobctrl	844
-que_qsch02,1,8,0	duplicate(#gd_main_mobctrl)	#gd_sch02_mobctrl	844
-que_qsch03,1,8,0	duplicate(#gd_main_mobctrl)	#gd_sch03_mobctrl	844
-que_qsch04,1,8,0	duplicate(#gd_main_mobctrl)	#gd_sch04_mobctrl	844
-que_qsch05,1,8,0	duplicate(#gd_main_mobctrl)	#gd_sch05_mobctrl	844
+que_qaru01,1,8,0	duplicate(#gd_main_mobctrl)	#gd_aru01_mobctrl	CLEAR_NPC
+que_qaru02,1,8,0	duplicate(#gd_main_mobctrl)	#gd_aru02_mobctrl	CLEAR_NPC
+que_qaru03,1,8,0	duplicate(#gd_main_mobctrl)	#gd_aru03_mobctrl	CLEAR_NPC
+que_qaru04,1,8,0	duplicate(#gd_main_mobctrl)	#gd_aru04_mobctrl	CLEAR_NPC
+que_qaru05,1,8,0	duplicate(#gd_main_mobctrl)	#gd_aru05_mobctrl	CLEAR_NPC
+que_qsch01,1,8,0	duplicate(#gd_main_mobctrl)	#gd_sch01_mobctrl	CLEAR_NPC
+que_qsch02,1,8,0	duplicate(#gd_main_mobctrl)	#gd_sch02_mobctrl	CLEAR_NPC
+que_qsch03,1,8,0	duplicate(#gd_main_mobctrl)	#gd_sch03_mobctrl	CLEAR_NPC
+que_qsch04,1,8,0	duplicate(#gd_main_mobctrl)	#gd_sch04_mobctrl	CLEAR_NPC
+que_qsch05,1,8,0	duplicate(#gd_main_mobctrl)	#gd_sch05_mobctrl	CLEAR_NPC
 
 -	script	windpaths_main	-1,{
 	end;
@@ -1526,27 +1526,27 @@ OnInit:
 	disablenpc "windpath04_"+.@sub$;
 	end;
 }
-que_qaru01,149,105,0	duplicate(windpaths_main)	windpath03_aru01	45,1,1
-que_qaru02,149,105,0	duplicate(windpaths_main)	windpath03_aru02	45,1,1
-que_qaru03,149,105,0	duplicate(windpaths_main)	windpath03_aru03	45,1,1
-que_qaru04,149,105,0	duplicate(windpaths_main)	windpath03_aru04	45,1,1
-que_qaru05,149,105,0	duplicate(windpaths_main)	windpath03_aru05	45,1,1
-que_qsch01,149,105,0	duplicate(windpaths_main)	windpath03_sch01	45,1,1
-que_qsch02,149,105,0	duplicate(windpaths_main)	windpath03_sch02	45,1,1
-que_qsch03,149,105,0	duplicate(windpaths_main)	windpath03_sch03	45,1,1
-que_qsch04,149,105,0	duplicate(windpaths_main)	windpath03_sch04	45,1,1
-que_qsch05,149,105,0	duplicate(windpaths_main)	windpath03_sch05	45,1,1
+que_qaru01,149,105,0	duplicate(windpaths_main)	windpath03_aru01	WARPNPC,1,1
+que_qaru02,149,105,0	duplicate(windpaths_main)	windpath03_aru02	WARPNPC,1,1
+que_qaru03,149,105,0	duplicate(windpaths_main)	windpath03_aru03	WARPNPC,1,1
+que_qaru04,149,105,0	duplicate(windpaths_main)	windpath03_aru04	WARPNPC,1,1
+que_qaru05,149,105,0	duplicate(windpaths_main)	windpath03_aru05	WARPNPC,1,1
+que_qsch01,149,105,0	duplicate(windpaths_main)	windpath03_sch01	WARPNPC,1,1
+que_qsch02,149,105,0	duplicate(windpaths_main)	windpath03_sch02	WARPNPC,1,1
+que_qsch03,149,105,0	duplicate(windpaths_main)	windpath03_sch03	WARPNPC,1,1
+que_qsch04,149,105,0	duplicate(windpaths_main)	windpath03_sch04	WARPNPC,1,1
+que_qsch05,149,105,0	duplicate(windpaths_main)	windpath03_sch05	WARPNPC,1,1
 
-que_qaru01,128,104,0	duplicate(windpaths_main)	windpath04_aru01	45,1,1
-que_qaru02,128,104,0	duplicate(windpaths_main)	windpath04_aru02	45,1,1
-que_qaru03,128,104,0	duplicate(windpaths_main)	windpath04_aru03	45,1,1
-que_qaru04,128,104,0	duplicate(windpaths_main)	windpath04_aru04	45,1,1
-que_qaru05,128,104,0	duplicate(windpaths_main)	windpath04_aru05	45,1,1
-que_qsch01,128,104,0	duplicate(windpaths_main)	windpath04_sch01	45,1,1
-que_qsch02,128,104,0	duplicate(windpaths_main)	windpath04_sch02	45,1,1
-que_qsch03,128,104,0	duplicate(windpaths_main)	windpath04_sch03	45,1,1
-que_qsch04,128,104,0	duplicate(windpaths_main)	windpath04_sch04	45,1,1
-que_qsch05,128,104,0	duplicate(windpaths_main)	windpath04_sch05	45,1,1
+que_qaru01,128,104,0	duplicate(windpaths_main)	windpath04_aru01	WARPNPC,1,1
+que_qaru02,128,104,0	duplicate(windpaths_main)	windpath04_aru02	WARPNPC,1,1
+que_qaru03,128,104,0	duplicate(windpaths_main)	windpath04_aru03	WARPNPC,1,1
+que_qaru04,128,104,0	duplicate(windpaths_main)	windpath04_aru04	WARPNPC,1,1
+que_qaru05,128,104,0	duplicate(windpaths_main)	windpath04_aru05	WARPNPC,1,1
+que_qsch01,128,104,0	duplicate(windpaths_main)	windpath04_sch01	WARPNPC,1,1
+que_qsch02,128,104,0	duplicate(windpaths_main)	windpath04_sch02	WARPNPC,1,1
+que_qsch03,128,104,0	duplicate(windpaths_main)	windpath04_sch03	WARPNPC,1,1
+que_qsch04,128,104,0	duplicate(windpaths_main)	windpath04_sch04	WARPNPC,1,1
+que_qsch05,128,104,0	duplicate(windpaths_main)	windpath04_sch05	WARPNPC,1,1
 
 -	script	#nm_switch_main	-1,{
 	end;
@@ -1693,16 +1693,16 @@ OnMyMobDead:
 	}
 	end;
 }
-que_qaru01,2,8,0	duplicate(#main_stone01)	#aru01_stone01	844
-que_qaru02,2,8,0	duplicate(#main_stone01)	#aru02_stone01	844
-que_qaru03,2,8,0	duplicate(#main_stone01)	#aru03_stone01	844
-que_qaru04,2,8,0	duplicate(#main_stone01)	#aru04_stone01	844
-que_qaru05,2,8,0	duplicate(#main_stone01)	#aru05_stone01	844
-que_qsch01,2,8,0	duplicate(#main_stone01)	#sch01_stone01	844
-que_qsch02,2,8,0	duplicate(#main_stone01)	#sch02_stone01	844
-que_qsch03,2,8,0	duplicate(#main_stone01)	#sch03_stone01	844
-que_qsch04,2,8,0	duplicate(#main_stone01)	#sch04_stone01	844
-que_qsch05,2,8,0	duplicate(#main_stone01)	#sch05_stone01	844
+que_qaru01,2,8,0	duplicate(#main_stone01)	#aru01_stone01	CLEAR_NPC
+que_qaru02,2,8,0	duplicate(#main_stone01)	#aru02_stone01	CLEAR_NPC
+que_qaru03,2,8,0	duplicate(#main_stone01)	#aru03_stone01	CLEAR_NPC
+que_qaru04,2,8,0	duplicate(#main_stone01)	#aru04_stone01	CLEAR_NPC
+que_qaru05,2,8,0	duplicate(#main_stone01)	#aru05_stone01	CLEAR_NPC
+que_qsch01,2,8,0	duplicate(#main_stone01)	#sch01_stone01	CLEAR_NPC
+que_qsch02,2,8,0	duplicate(#main_stone01)	#sch02_stone01	CLEAR_NPC
+que_qsch03,2,8,0	duplicate(#main_stone01)	#sch03_stone01	CLEAR_NPC
+que_qsch04,2,8,0	duplicate(#main_stone01)	#sch04_stone01	CLEAR_NPC
+que_qsch05,2,8,0	duplicate(#main_stone01)	#sch05_stone01	CLEAR_NPC
 
 -	script	#nmsommain_jin02	-1,{
 OnEnable:
@@ -1777,16 +1777,16 @@ OnMyMobDead:
 	}
 	end;
 }
-que_qaru01,2,9,0	duplicate(#main_stone02)	#aru01_stone02	844
-que_qaru02,2,9,0	duplicate(#main_stone02)	#aru02_stone02	844
-que_qaru03,2,9,0	duplicate(#main_stone02)	#aru03_stone02	844
-que_qaru04,2,9,0	duplicate(#main_stone02)	#aru04_stone02	844
-que_qaru05,2,9,0	duplicate(#main_stone02)	#aru05_stone02	844
-que_qsch01,2,9,0	duplicate(#main_stone02)	#sch01_stone02	844
-que_qsch02,2,9,0	duplicate(#main_stone02)	#sch02_stone02	844
-que_qsch03,2,9,0	duplicate(#main_stone02)	#sch03_stone02	844
-que_qsch04,2,9,0	duplicate(#main_stone02)	#sch04_stone02	844
-que_qsch05,2,9,0	duplicate(#main_stone02)	#sch05_stone02	844
+que_qaru01,2,9,0	duplicate(#main_stone02)	#aru01_stone02	CLEAR_NPC
+que_qaru02,2,9,0	duplicate(#main_stone02)	#aru02_stone02	CLEAR_NPC
+que_qaru03,2,9,0	duplicate(#main_stone02)	#aru03_stone02	CLEAR_NPC
+que_qaru04,2,9,0	duplicate(#main_stone02)	#aru04_stone02	CLEAR_NPC
+que_qaru05,2,9,0	duplicate(#main_stone02)	#aru05_stone02	CLEAR_NPC
+que_qsch01,2,9,0	duplicate(#main_stone02)	#sch01_stone02	CLEAR_NPC
+que_qsch02,2,9,0	duplicate(#main_stone02)	#sch02_stone02	CLEAR_NPC
+que_qsch03,2,9,0	duplicate(#main_stone02)	#sch03_stone02	CLEAR_NPC
+que_qsch04,2,9,0	duplicate(#main_stone02)	#sch04_stone02	CLEAR_NPC
+que_qsch05,2,9,0	duplicate(#main_stone02)	#sch05_stone02	CLEAR_NPC
 
 -	script	#nmsommain_jin03	-1,{
 OnEnable:
@@ -1870,16 +1870,16 @@ OnMyMobDead:
 	}
 	end;
 }
-que_qaru01,2,10,0	duplicate(#main_stone03)	#aru01_stone03	844
-que_qaru02,2,10,0	duplicate(#main_stone03)	#aru02_stone03	844
-que_qaru03,2,10,0	duplicate(#main_stone03)	#aru03_stone03	844
-que_qaru04,2,10,0	duplicate(#main_stone03)	#aru04_stone03	844
-que_qaru05,2,10,0	duplicate(#main_stone03)	#aru05_stone03	844
-que_qsch01,2,10,0	duplicate(#main_stone03)	#sch01_stone03	844
-que_qsch02,2,10,0	duplicate(#main_stone03)	#sch02_stone03	844
-que_qsch03,2,10,0	duplicate(#main_stone03)	#sch03_stone03	844
-que_qsch04,2,10,0	duplicate(#main_stone03)	#sch04_stone03	844
-que_qsch05,2,10,0	duplicate(#main_stone03)	#sch05_stone03	844
+que_qaru01,2,10,0	duplicate(#main_stone03)	#aru01_stone03	CLEAR_NPC
+que_qaru02,2,10,0	duplicate(#main_stone03)	#aru02_stone03	CLEAR_NPC
+que_qaru03,2,10,0	duplicate(#main_stone03)	#aru03_stone03	CLEAR_NPC
+que_qaru04,2,10,0	duplicate(#main_stone03)	#aru04_stone03	CLEAR_NPC
+que_qaru05,2,10,0	duplicate(#main_stone03)	#aru05_stone03	CLEAR_NPC
+que_qsch01,2,10,0	duplicate(#main_stone03)	#sch01_stone03	CLEAR_NPC
+que_qsch02,2,10,0	duplicate(#main_stone03)	#sch02_stone03	CLEAR_NPC
+que_qsch03,2,10,0	duplicate(#main_stone03)	#sch03_stone03	CLEAR_NPC
+que_qsch04,2,10,0	duplicate(#main_stone03)	#sch04_stone03	CLEAR_NPC
+que_qsch05,2,10,0	duplicate(#main_stone03)	#sch05_stone03	CLEAR_NPC
 
 -	script	Guard of Shadow#main_all	-1,{
 	end;
@@ -2257,16 +2257,16 @@ OnInit:
 		disablenpc "Wish Maiden#"+.@sub$+"_gift";
 	end;
 }
-que_qaru01,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#aru01_gift	403
-que_qaru02,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#aru02_gift	403
-que_qaru03,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#aru03_gift	403
-que_qaru04,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#aru04_gift	403
-que_qaru05,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#aru05_gift	403
-que_qsch01,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#sch01_gift	403
-que_qsch02,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#sch02_gift	403
-que_qsch03,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#sch03_gift	403
-que_qsch04,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#sch04_gift	403
-que_qsch05,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#sch05_gift	403
+que_qaru01,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#aru01_gift	4_F_VALKYRIE2
+que_qaru02,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#aru02_gift	4_F_VALKYRIE2
+que_qaru03,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#aru03_gift	4_F_VALKYRIE2
+que_qaru04,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#aru04_gift	4_F_VALKYRIE2
+que_qaru05,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#aru05_gift	4_F_VALKYRIE2
+que_qsch01,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#sch01_gift	4_F_VALKYRIE2
+que_qsch02,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#sch02_gift	4_F_VALKYRIE2
+que_qsch03,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#sch03_gift	4_F_VALKYRIE2
+que_qsch04,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#sch04_gift	4_F_VALKYRIE2
+que_qsch05,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#sch05_gift	4_F_VALKYRIE2
 
 -	script	#to_agit_main_gate	-1,{
 	end;
@@ -2281,16 +2281,16 @@ OnInit:
 		disablenpc "#to_agit_"+.@sub$+"_gate";
 	end;
 }
-que_qaru01,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_aru01_gate	45,1,1
-que_qaru02,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_aru02_gate	45,1,1
-que_qaru03,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_aru03_gate	45,1,1
-que_qaru04,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_aru04_gate	45,1,1
-que_qaru05,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_aru05_gate	45,1,1
-que_qsch01,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_sch01_gate	45,1,1
-que_qsch02,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_sch02_gate	45,1,1
-que_qsch03,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_sch03_gate	45,1,1
-que_qsch04,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_sch04_gate	45,1,1
-que_qsch05,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_sch05_gate	45,1,1
+que_qaru01,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_aru01_gate	WARPNPC,1,1
+que_qaru02,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_aru02_gate	WARPNPC,1,1
+que_qaru03,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_aru03_gate	WARPNPC,1,1
+que_qaru04,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_aru04_gate	WARPNPC,1,1
+que_qaru05,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_aru05_gate	WARPNPC,1,1
+que_qsch01,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_sch01_gate	WARPNPC,1,1
+que_qsch02,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_sch02_gate	WARPNPC,1,1
+que_qsch03,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_sch03_gate	WARPNPC,1,1
+que_qsch04,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_sch04_gate	WARPNPC,1,1
+que_qsch05,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_sch05_gate	WARPNPC,1,1
 
 -	script	#okolnir_main_time01	-1,{
 	end;
@@ -2329,16 +2329,16 @@ OnInit:
 	if (getd("$siz_"+.@sub$+"_on") == 2) initnpctimer;
 	end;
 }
-que_qaru01,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_aru01_time01	844
-que_qaru02,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_aru02_time01	844
-que_qaru03,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_aru03_time01	844
-que_qaru04,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_aru04_time01	844
-que_qaru05,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_aru05_time01	844
-que_qsch01,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_sch01_time01	844
-que_qsch02,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_sch02_time01	844
-que_qsch03,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_sch03_time01	844
-que_qsch04,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_sch04_time01	844
-que_qsch05,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_sch05_time01	844
+que_qaru01,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_aru01_time01	CLEAR_NPC
+que_qaru02,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_aru02_time01	CLEAR_NPC
+que_qaru03,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_aru03_time01	CLEAR_NPC
+que_qaru04,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_aru04_time01	CLEAR_NPC
+que_qaru05,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_aru05_time01	CLEAR_NPC
+que_qsch01,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_sch01_time01	CLEAR_NPC
+que_qsch02,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_sch02_time01	CLEAR_NPC
+que_qsch03,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_sch03_time01	CLEAR_NPC
+que_qsch04,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_sch04_time01	CLEAR_NPC
+que_qsch05,1,6,0	duplicate(#okolnir_main_time01)	#okolnir_sch05_time01	CLEAR_NPC
 
 que_qaru01,116,313,0,0	monster	Garden Keeper	1932,1,180000,0,0
 que_qaru01,120,285,0,0	monster	Garden Keeper	1932,1,180000,0,0

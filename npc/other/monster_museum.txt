@@ -20,7 +20,7 @@
 //= 1.4a "S_BonusREward" -> "S_BonusReward" [Paradox924X]
 //============================================================
 
-yuno_in03,32,15,3	script	Museum Guide	67,{
+yuno_in03,32,15,3	script	Museum Guide	1_F_02,{
 	mes "[Cenia]";
 	mes "Welcome to the Monster Museum.";
 	next;
@@ -63,7 +63,7 @@ yuno_in03,32,15,3	script	Museum Guide	67,{
 yuno_in03,36,21,3	script	Deviace#yuno	1108,{
 	end;
 }
-yuno_in03,33,21,1	script	#DEVIACE	111,{
+yuno_in03,33,21,1	script	#DEVIACE	HIDDEN_NPC,{
 	mes " ";
 	mes "Scientific name : Deviace";
 	mes "Size : Medium";
@@ -89,7 +89,7 @@ yuno_in03,33,21,1	script	#DEVIACE	111,{
 yuno_in03,36,27,3	script	Seal#yuno	1317,{
 	end;
 }
-yuno_in03,33,27,1	script	#FUR_SEAL	111,{
+yuno_in03,33,27,1	script	#FUR_SEAL	HIDDEN_NPC,{
 	mes " ";
 	mes "Scientific name : Seal";
 	mes "Size : Medium";
@@ -115,7 +115,7 @@ yuno_in03,33,27,1	script	#FUR_SEAL	111,{
 yuno_in03,36,33,3	script	Sage Worm#yuno	1281,{
 	end;
 }
-yuno_in03,33,33,1	script	#SAGEWORM	111,{
+yuno_in03,33,33,1	script	#SAGEWORM	HIDDEN_NPC,{
 	mes " ";
 	mes "Scientific name : Sage Worm";
 	mes "Size : Small";
@@ -137,7 +137,7 @@ yuno_in03,33,33,1	script	#SAGEWORM	111,{
 yuno_in03,39,39,3	script	Penomena#yuno	1216,{
 	end;
 }
-yuno_in03,38,39,1	script	#PENOMANA	111,{
+yuno_in03,38,39,1	script	#PENOMANA	HIDDEN_NPC,{
 	mes " ";
 	mes "Scientific name : Penomena";
 	mes "Size : Medium";
@@ -163,7 +163,7 @@ yuno_in03,38,39,1	script	#PENOMANA	111,{
 yuno_in03,39,44,3	script	Galapago#yuno	1391,{
 	end;
 }
-yuno_in03,37,44,3	script	#GALAPAGO	111,{
+yuno_in03,37,44,3	script	#GALAPAGO	HIDDEN_NPC,{
 	mes " ";
 	mes "Scientific name : Galapago";
 	mes "Size : Small";
@@ -184,7 +184,7 @@ yuno_in03,37,44,3	script	#GALAPAGO	111,{
 yuno_in03,15,21,5	script	Raydric#yuno	1163,{
 	end;
 }
-yuno_in03,19,21,1	script	#RAYDRIC	111,{
+yuno_in03,19,21,1	script	#RAYDRIC	HIDDEN_NPC,{
 	mes " ";
 	mes "Scientific name : Raydric";
 	mes "Size : Large";
@@ -205,7 +205,7 @@ yuno_in03,19,21,1	script	#RAYDRIC	111,{
 yuno_in03,15,27,5	script	Chepet#yuno	1250,{
 	end;
 }
-yuno_in03,19,27,1	script	#CHEPET	111,{
+yuno_in03,19,27,1	script	#CHEPET	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Chepet";
 	mes " Size : Medium";
@@ -224,7 +224,7 @@ yuno_in03,19,27,1	script	#CHEPET	111,{
 yuno_in03,15,33,5	script	Violy#yuno	1390,{
 	end;
 }
-yuno_in03,19,33,1	script	#VIOLY	111,{
+yuno_in03,19,33,1	script	#VIOLY	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Violy";
 	mes " Size : Medium";
@@ -241,7 +241,7 @@ yuno_in03,19,33,1	script	#VIOLY	111,{
 yuno_in03,10,39,5	script	Alice#yuno	1275,{
 	end;
 }
-yuno_in03,12,39,1	script	#ALICE	111,{
+yuno_in03,12,39,1	script	#ALICE	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Alice ";
 	mes " Size : Medium";
@@ -263,7 +263,7 @@ yuno_in03,12,39,1	script	#ALICE	111,{
 yuno_in03,10,45,5	script	Assulter#yuno	1315,{
 	end;
 }
-yuno_in03,12,45,1	script	#ASSULTER	111,{
+yuno_in03,12,45,1	script	#ASSULTER	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Assulter";
 	mes " Size : Medium";
@@ -298,7 +298,7 @@ yuno_in03,12,50,3	script	Ant Egg#yuno	1097,{
 yuno_in03,18,96,5	script	Wanderer#yuno	1208,{
 	end;
 }
-yuno_in03,20,96,1	script	#WANDER_MAN	111,{
+yuno_in03,20,96,1	script	#WANDER_MAN	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Wanderer";
 	mes " Size : Medium";
@@ -320,7 +320,7 @@ yuno_in03,20,96,1	script	#WANDER_MAN	111,{
 yuno_in03,16,100,5	script	Caterpillar#yuno	1300,{
 	end;
 }
-yuno_in03,18,100,1	script	#CATERPILLAR	111,{
+yuno_in03,18,100,1	script	#CATERPILLAR	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Caterpillar";
 	mes " Size : Small";
@@ -342,7 +342,7 @@ yuno_in03,18,100,1	script	#CATERPILLAR	111,{
 yuno_in03,16,104,5	script	Male Thiefbug#yuno	1054,{
 	end;
 }
-yuno_in03,18,104,1	script	#THIEF_BUG__	111,{
+yuno_in03,18,104,1	script	#THIEF_BUG__	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Thief Bug";
 	mes " ^FFFFFFScientific name :^000000 (Male)";
@@ -360,7 +360,7 @@ yuno_in03,18,104,1	script	#THIEF_BUG__	111,{
 yuno_in03,16,108,5	script	Tri Joint#yuno	1279,{
 	end;
 }
-yuno_in03,18,108,1	script	#TRI_JOINT	111,{
+yuno_in03,18,108,1	script	#TRI_JOINT	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Tri Joint";
 	mes " Size : Small";
@@ -380,7 +380,7 @@ yuno_in03,18,108,1	script	#TRI_JOINT	111,{
 yuno_in03,16,111,5	script	Arclouz#yuno	1194,{
 	end;
 }
-yuno_in03,18,111,1	script	#ARCLOUSE	111,{
+yuno_in03,18,111,1	script	#ARCLOUSE	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Arclouz";
 	mes " Size : Medium";
@@ -403,7 +403,7 @@ yuno_in03,18,111,1	script	#ARCLOUSE	111,{
 yuno_in03,16,117,5	script	Dragon Tail#yuno	1321,{
 	end;
 }
-yuno_in03,18,116,1	script	#DRAGON_TAIL	111,{
+yuno_in03,18,116,1	script	#DRAGON_TAIL	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Dragon Tail";
 	mes " Size : Medium";
@@ -422,7 +422,7 @@ yuno_in03,18,116,1	script	#DRAGON_TAIL	111,{
 yuno_in03,46,96,3	script	Owl Duke#yuno	1320,{
 	end;
 }
-yuno_in03,44,96,1	script	#OWL_DUKE	111,{
+yuno_in03,44,96,1	script	#OWL_DUKE	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Owl Duke";
 	mes " Size : Large";
@@ -447,7 +447,7 @@ yuno_in03,44,96,1	script	#OWL_DUKE	111,{
 yuno_in03,48,100,3	script	Marine Sphere#yuno	1142,{
 	end;
 }
-yuno_in03,46,101,1	script	#MARINE_SPHERE	111,{
+yuno_in03,46,101,1	script	#MARINE_SPHERE	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Marine Sphere";
 	mes " Size : Small";
@@ -471,7 +471,7 @@ yuno_in03,46,101,1	script	#MARINE_SPHERE	111,{
 yuno_in03,48,104,3	script	Mandragora#yuno	1020,{
 	end;
 }
-yuno_in03,46,105,1	script	#MANDRAGORA	111,{
+yuno_in03,46,105,1	script	#MANDRAGORA	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Mandragora";
 	mes " Size : Medium";
@@ -502,7 +502,7 @@ yuno_in03,46,105,1	script	#MANDRAGORA	111,{
 yuno_in03,48,108,3	script	Geographer#yuno	1368,{
 	end;
 }
-yuno_in03,46,108,1	script	#GEOGRAPHER	111,{
+yuno_in03,46,108,1	script	#GEOGRAPHER	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Geographer";
 	mes " Size : Medium";
@@ -536,7 +536,7 @@ yuno_in03,46,108,1	script	#GEOGRAPHER	111,{
 yuno_in03,48,112,3	script	Rafflesia#yuno	1162,{
 	end;
 }
-yuno_in03,46,112,1	script	#RAFFLESIA	111,{
+yuno_in03,46,112,1	script	#RAFFLESIA	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Rafflesia";
 	mes " Size : Small";
@@ -561,7 +561,7 @@ yuno_in03,46,112,1	script	#RAFFLESIA	111,{
 yuno_in03,48,116,3	script	Stem Worm#yuno	1215,{
 	end;
 }
-yuno_in03,45,116,1	script	#STEM_WORM	111,{
+yuno_in03,45,116,1	script	#STEM_WORM	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Stem Worm";
 	mes " Size : Medium";
@@ -580,7 +580,7 @@ yuno_in03,45,116,1	script	#STEM_WORM	111,{
 yuno_in03,24,124,3	script	Blazzer#yuno	1367,{
 	end;
 }
-yuno_in03,24,122,1	script	#BLAZZER	111,{
+yuno_in03,24,122,1	script	#BLAZZER	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Blazzer";
 	mes " Size : Medium";
@@ -605,7 +605,7 @@ yuno_in03,24,122,1	script	#BLAZZER	111,{
 yuno_in03,28,124,5	script	Ride Word#yuno	1195,{
 	end;
 }
-yuno_in03,28,122,1	script	#RIDEWORD	111,{
+yuno_in03,28,122,1	script	#RIDEWORD	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Ride Word";
 	mes " Size : Small";
@@ -620,7 +620,7 @@ yuno_in03,28,122,1	script	#RIDEWORD	111,{
 yuno_in03,31,124,3	script	Megalodon#yuno	1064,{
 	end;
 }
-yuno_in03,31,122,1	script	#MEGALODON	111,{
+yuno_in03,31,122,1	script	#MEGALODON	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Megalodon";
 	mes " Size : Medium";
@@ -638,7 +638,7 @@ yuno_in03,31,122,1	script	#MEGALODON	111,{
 yuno_in03,35,124,3	script	Sleeper#yuno	1386,{
 	end;
 }
-yuno_in03,35,122,1	script	#SLEEPER	111,{
+yuno_in03,35,122,1	script	#SLEEPER	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Sleeper";
 	mes " Size : Medium";
@@ -659,7 +659,7 @@ yuno_in03,35,122,1	script	#SLEEPER	111,{
 yuno_in03,39,124,3	script	Ancient Mummy#yuno	1297,{
 	end;
 }
-yuno_in03,39,122,1	script	#ANCIENT_MUMMY	111,{
+yuno_in03,39,122,1	script	#ANCIENT_MUMMY	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Ancient Mummy";
 	mes " Size : Medium";
@@ -688,7 +688,7 @@ yuno_in03,39,122,1	script	#ANCIENT_MUMMY	111,{
 yuno_in03,18,122,5	script	Incubus#yuno	1374,{
 	end;
 }
-yuno_in03,19,120,1	script	#INCUBUS	111,{
+yuno_in03,19,120,1	script	#INCUBUS	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Incubus";
 	mes " Size : Medium";
@@ -710,7 +710,7 @@ yuno_in03,19,120,1	script	#INCUBUS	111,{
 yuno_in03,44,120,3	script	Succubus#yuno	1370,{
 	end;
 }
-yuno_in03,42,120,1	script	#SUCCUBUS	111,{
+yuno_in03,42,120,1	script	#SUCCUBUS	HIDDEN_NPC,{
 	mes " ";
 	mes " Scientific name : Succubus";
 	mes " Size : Medium";

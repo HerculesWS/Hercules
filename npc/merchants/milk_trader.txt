@@ -17,7 +17,7 @@
 //= 1.5 Fixed missed variable. (bugreport:1523) [L0ne_W0lf]
 //============================================================
 
-prontera,73,140,0	script	Milk Vendor	86,{
+prontera,73,140,0	script	Milk Vendor	4_M_04,{
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFJust a minute!";
 		mes "I can't offer any of my";

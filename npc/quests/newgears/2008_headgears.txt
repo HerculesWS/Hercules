@@ -12,7 +12,7 @@
 //= 1.0 First Version. [Masao]
 //============================================================
 
-gef_fild05,80,149,3	script	Myu#08_hat	877,{
+gef_fild05,80,149,3	script	Myu#08_hat	4_F_YUNYANG,{
 	mes "[Myu]";
 	mes "Meow...";
 	emotion e_omg;
@@ -197,7 +197,7 @@ gef_fild05,80,149,3	script	Myu#08_hat	877,{
 	close;
 }
 
-morocc_in,137,102,5	script	Trainee#2008hat01	82,{
+morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 	mes "[Trainee Elgo]";
 	mes "Welcome.";
 	mes "Please talk to our teacher if you are here to make a dyes.";

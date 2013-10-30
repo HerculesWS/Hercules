@@ -27,7 +27,7 @@
 //= 1.8a Minor cleaning. [Euphy]
 //============================================================
 
-prt_castle,43,30,3	script	Charles Orleans#cook	878,{
+prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 	if (MaxWeight - Weight < 2000) {
 		mes "[Charles Orleans]";
 		mes "Just one second.";
@@ -1478,7 +1478,7 @@ L_End:
 	end;
 }
 
-prt_castle,45,35,5	script	Madeleine Chu#cook	886,{
+prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 	if (MaxWeight - Weight < 2000) {
 		mes "[Madeleine Chu]";
 		mes "I'm sorry, but right now";
@@ -2117,7 +2117,7 @@ S_SellSets:
 	return;
 }
 
-prt_castle,45,28,3	script	Child with Cat#cook	877,{
+prt_castle,45,28,3	script	Child with Cat#cook	4_F_YUNYANG,{
 	set .@nyu,rand(1,2);
 	if (.@nyu == 1) {
 		cutin "nyuang_1",2;
@@ -2140,7 +2140,7 @@ prt_castle,45,28,3	script	Child with Cat#cook	877,{
 	end;
 }
 
-prt_castle,44,30,5	script	Wickebine#cook	725,{
+prt_castle,44,30,5	script	Wickebine#cook	4_F_JOB_ASSASSIN,{
 	disablenpc "Wickebine#cook";
 	end;
 
@@ -2157,7 +2157,7 @@ OnDisable:
 	end;
 }
 
-payon,209,127,3	script	Servant	88,{
+payon,209,127,3	script	Servant	4_M_ORIENT01,{
 	if (!checkweight(555,1)) {
 		mes "[Chulsoo]";
 		mes "Hold on, you're carrying";

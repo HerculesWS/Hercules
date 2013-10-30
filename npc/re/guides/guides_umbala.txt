@@ -12,7 +12,7 @@
 //= 1.1 Navigation system update. [Euphy]
 //============================================================
 
-umbala,128,94,3	script	Umbala Guide#01umbala::GuideUmbala	702,{
+umbala,128,94,3	script	Umbala Guide#01umbala::GuideUmbala	4_F_GON,{
 	mes "[Umbala Guide]";
 	mes "Welcome to ^8B4513Umbala^000000,";
 	mes "the Village of the Utan Tribe.";
@@ -97,4 +97,4 @@ umbala,128,94,3	script	Umbala Guide#01umbala::GuideUmbala	702,{
 		}
 	}
 }
-umbala,99,158,3	duplicate(GuideUmbala)	Umbala Guide#02umbala	702
+umbala,99,158,3	duplicate(GuideUmbala)	Umbala Guide#02umbala	4_F_GON

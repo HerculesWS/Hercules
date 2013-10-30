@@ -12,7 +12,7 @@
 //= 1.2 Optimized. [Euphy]
 //============================================================
 
-moc_para01,40,38,3	script	Mission [41 - 55]	857,{
+moc_para01,40,38,3	script	Mission [41 - 55]	4_BOARD3,{
 	if (countitem(6219) < 1) {
 		mes "You are not an Eden group member. You are not qualified to access the bulletin board.";
 		close;

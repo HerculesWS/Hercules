@@ -53,7 +53,7 @@
 
 // Oridecon Stone OR Mineral Stone Quest :: ein_amano
 //============================================================
-einbech,97,167,5	script	Cavitar	847,{
+einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
 	if (ein_gear1 == 2) {
 		mes "[Cavitar]";
 		mes "It's been a long";
@@ -472,7 +472,7 @@ einbech,97,167,5	script	Cavitar	847,{
 
 // Uwe Kleine :: ein_anoz
 //============================================================
-einbroch,215,180,6	script	Uwe Kleine#ein	85,{
+einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 	set EinUwe,0;
 	if (BaseClass == Job_Blacksmith) {
 		if (ein_cook > 999) {
@@ -3369,7 +3369,7 @@ OnTimer600000:
 	end;
 }
 
-einbroch,132,84,3	script	Liotzburg#ein	853,2,2,{
+einbroch,132,84,3	script	Liotzburg#ein	4_M_YURI,2,2,{
 	if ((EinFactory == 13) || (EinFactory == 14)) {
 		changequest 8029,8030;
 		set EinFactory,14;
@@ -3449,7 +3449,7 @@ OnTouch:
 	}
 }
 
-ein_in01,67,242,3	script	Zelmeto	851,{
+ein_in01,67,242,3	script	Zelmeto	4_M_REPAIR,{
 	if ($EinPolution > 9) {
 		mes "[Zelmeto]";
 		mes "We've got a big problem";
@@ -4104,7 +4104,7 @@ ein_in01,108,217,3	script	3rd Pressure Governor#1	111,{
 	end;
 }
 
-ein_in01,62,258,3	script	Main Control Panel#ins	111,{
+ein_in01,62,258,3	script	Main Control Panel#ins	HIDDEN_NPC,{
 	if ((EinFactory == 5) || (EinFactory == 6)) {
 		changequest 8021,8022;
 		set EinFactory,6;
@@ -4120,7 +4120,7 @@ ein_in01,62,258,3	script	Main Control Panel#ins	111,{
 	end;
 }
 
-ein_in01,46,197,3	script	Conveyor#ins	111,{
+ein_in01,46,197,3	script	Conveyor#ins	HIDDEN_NPC,{
 	if ((EinFactory == 7) || (EinFactory == 8)) {
 		changequest 8023,8024;
 		set EinFactory,8;
@@ -4135,7 +4135,7 @@ ein_in01,46,197,3	script	Conveyor#ins	111,{
 	end;
 }
 
-ein_in01,100,266,3	script	Pipe#ins	111,{
+ein_in01,100,266,3	script	Pipe#ins	HIDDEN_NPC,{
 	if ((EinFactory == 9) || (EinFactory == 10)) {
 		changequest 8025,8026;
 		set EinFactory,10;
@@ -4151,7 +4151,7 @@ ein_in01,100,266,3	script	Pipe#ins	111,{
 	end;
 }
 
-ein_in01,95,239,3	script	Conveyor#ins2	111,{
+ein_in01,95,239,3	script	Conveyor#ins2	HIDDEN_NPC,{
 	if ((EinFactory == 11) || (EinFactory == 12)) {
 		changequest 8027,8028;
 		set EinFactory,12;
@@ -4167,7 +4167,7 @@ ein_in01,95,239,3	script	Conveyor#ins2	111,{
 }
 
 // Administrator NPC used to rig the invasion in Einbroch.
-sec_in02,127,86,3	script	Factory Quest Test	851,{
+sec_in02,127,86,3	script	Factory Quest Test	4_M_REPAIR,{
 	set .@i, callfunc("F_GM_NPC",8028,0,0,9000);
 	if (.@i == -2) {
 		mes "[Test1]";
@@ -4216,7 +4216,7 @@ sec_in02,127,86,3	script	Factory Quest Test	851,{
 
 // Murder Quest :: ein_main_tre
 //============================================================
-einbech,165,105,7	script	Buender Hikeman#ein	847,{
+einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 	cutin "ein_hicman",2;
 	if (Shinokas_Quest == 0) {
 		mes "[Buender Hikeman]";
@@ -4722,7 +4722,7 @@ einbech,165,105,7	script	Buender Hikeman#ein	847,{
 	}
 }
 
-ein_in01,231,163,7	script	Sick Old Man#ein	849,{
+ein_in01,231,163,7	script	Sick Old Man#ein	4_M_DIEMAN,{
 	if (Shinokas_Quest < 2) {
 		mes "[Sick Old Man]";
 		mes "...!";
@@ -5252,7 +5252,7 @@ ein_in01,231,163,7	script	Sick Old Man#ein	849,{
 	}
 }
 
-ein_in01,32,133,7	script	Maid#ein	850,{
+ein_in01,32,133,7	script	Maid#ein	4_F_EINWOMAN,{
 	if (Shinokas_Quest == 4) {
 		mes "[Maid]";
 		mes "Did you ask me";
@@ -5285,7 +5285,7 @@ ein_in01,32,133,7	script	Maid#ein	850,{
 	}
 }
 
-ein_in01,254,35,1	script	Scientist#ein	749,{
+ein_in01,254,35,1	script	Scientist#ein	4_M_ALCHE_B,{
 	mes "[Scientist]";
 	mes "^333333*Grumble grumble*^000000";
 	next;
@@ -5350,7 +5350,7 @@ ein_in01,254,35,1	script	Scientist#ein	749,{
 	close;
 }
 
-ein_in01,266,27,3	script	Unknown Stuff#ein	111,{
+ein_in01,266,27,3	script	Unknown Stuff#ein	HIDDEN_NPC,{
 	mes "^3355FFThere's something";
 	mes "attached to a huge";
 	mes "machine with many cords";
@@ -5358,7 +5358,7 @@ ein_in01,266,27,3	script	Unknown Stuff#ein	111,{
 	close;
 }
 		
-einbroch,51,46,5	script	Laboratory Soldier#ein-1	852,{
+einbroch,51,46,5	script	Laboratory Soldier#ein-1	4_M_EIN_SOLDIER,{
 	mes "[Laboratory Soldier]";
 	mes "This area";
 	mes "is off limits.";
@@ -5367,7 +5367,7 @@ einbroch,51,46,5	script	Laboratory Soldier#ein-1	852,{
 	close;
 }
 	
-einbroch,51,56,5	script	Laboratory Soldier#ein-2	852,{
+einbroch,51,56,5	script	Laboratory Soldier#ein-2	4_M_EIN_SOLDIER,{
 	mes "[Laboratory Soldier]";
 	mes "Yuck...!";
 	mes "There's this";
@@ -5383,7 +5383,7 @@ einbroch,51,56,5	script	Laboratory Soldier#ein-2	852,{
 	close;
 }
 
-airplane,31,77,5	script	Drunken Man#ein	853,{
+airplane,31,77,5	script	Drunken Man#ein	4_M_YURI,{
 	if (Shinokas_Quest == 8) {
 		mes "[Drunken Man]";
 		mes "Okay okay...";
@@ -5648,7 +5648,7 @@ OnTouch:
 	end;
 }
 
-einbech,57,210,3	script	Young Man#Shinokas_Quest	855,{
+einbech,57,210,3	script	Young Man#Shinokas_Quest	4_M_EINMAN,{
 	mes "[Young Man]";
 	mes "Behind the pub,";
 	mes "you'll see this old man";
@@ -5673,7 +5673,7 @@ einbech,57,210,3	script	Young Man#Shinokas_Quest	855,{
 
 // Typing Test :: ein_main_ma1
 //============================================================
-einbroch,51,52,0	script	Security#ein	45,1,1,{
+einbroch,51,52,0	script	Security#ein	WARPNPC,1,1,{
 	end;
 
 OnTouch:
@@ -5827,7 +5827,7 @@ OnTouch:
 
 // Lovers Quest :: ein_ryu
 //============================================================
-ein_in01,31,138,3	script	Calla#ein	90,{
+ein_in01,31,138,3	script	Calla#ein	4_F_01,{
 	if (checkweight(908,70) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -6122,7 +6122,7 @@ ein_in01,31,138,3	script	Calla#ein	90,{
 	}
 }
 
-ein_in01,200,101,5	script	Klitzer#ein	854,{
+ein_in01,200,101,5	script	Klitzer#ein	4_M_EINMAN2,{
 	if (EIN_LOVERQ == 16) {
 		mes "[Klitzer]";
 		mes "Look out, world!";
@@ -6508,7 +6508,7 @@ ein_in01,200,101,5	script	Klitzer#ein	854,{
 	close;
 }
 
-ein_in01,21,147,3	script	Megass#EIN	853,3,3,{
+ein_in01,21,147,3	script	Megass#EIN	4_M_YURI,3,3,{
 	end;
 
 OnTouch:
@@ -6577,7 +6577,7 @@ OnTouch:
 	close;
 }
 
-ein_in01,31,151,3	script	Satra#ein	850,{
+ein_in01,31,151,3	script	Satra#ein	4_F_EINWOMAN,{
 	if (EIN_LOVERQ > 12) {
 		mes "[Satra]";
 		mes "I understand that my";
@@ -7076,7 +7076,7 @@ ein_in01,31,151,3	script	Satra#ein	850,{
 	close;
 }
 
-ein_in01,191,102,5	script	Kaijeta#ein	846,{
+ein_in01,191,102,5	script	Kaijeta#ein	4_F_EINOLD,{
 	if (EIN_LOVERQ > 15) {
 		mes "[Kaijeta]";
 		mes "My son learned";
@@ -7199,7 +7199,7 @@ ein_in01,191,102,5	script	Kaijeta#ein	846,{
 	close;
 }
 
-einbroch,188,72,3	script	Keneshiotz#ein	855,{
+einbroch,188,72,3	script	Keneshiotz#ein	4_M_EINMAN,{
 	mes "[Keneshiotz]";
 	mes "This city is full of sky";
 	mes "high smokestacks and";
@@ -7222,7 +7222,7 @@ einbroch,188,72,3	script	Keneshiotz#ein	855,{
 	close;
 }
 
-einbech,216,118,3	script	Catzllanpu#ein	854,{
+einbech,216,118,3	script	Catzllanpu#ein	4_M_EINMAN2,{
 	mes "[Catzllanpu]";
 	mes "^333333*Sigh...*^000000";
 	mes "Simple pleasures.";
@@ -7248,7 +7248,7 @@ einbech,216,118,3	script	Catzllanpu#ein	854,{
 	close;
 }
 
-einbroch,208,208,3	script	Kesunboss#ein	850,{
+einbroch,208,208,3	script	Kesunboss#ein	4_F_EINWOMAN,{
 	mes "[Kesunboss]";
 	mes "Lady Calla is the";
 	mes "epitome of elegance,";
@@ -7279,7 +7279,7 @@ einbroch,208,208,3	script	Kesunboss#ein	850,{
 	close;
 }
 
-einbech,176,125,3	script	Ellhenje#ein	850,{
+einbech,176,125,3	script	Ellhenje#ein	4_F_EINWOMAN,{
 	mes "[Ellhenje]";
 	mes "Things might be";
 	mes "bad in this town";
@@ -7315,7 +7315,7 @@ einbech,176,125,3	script	Ellhenje#ein	850,{
 	close;
 }
 
-ein_in01,208,86,3	script	Decii#ein	855,{
+ein_in01,208,86,3	script	Decii#ein	4_M_EINMAN,{
 	mes "[Decii]";
 	mes "This is so";
 	mes "frustrating!";
@@ -7331,7 +7331,7 @@ ein_in01,208,86,3	script	Decii#ein	855,{
 	close;
 }
 
-ein_in01,192,90,3	script	Supineque#ein	849,{
+ein_in01,192,90,3	script	Supineque#ein	4_M_DIEMAN,{
 	mes "[Supineque]";
 	mes "Ugh...";
 	mes "I'm starving!";

@@ -216,7 +216,7 @@
 //----------------------------------------------------------------------------
 // Juno Pub Master/Starting point.
 //----------------------------------------------------------------------------
-yuno_in01,35,179,4	script	Pub Master#kh	46,5,5,{
+yuno_in01,35,179,4	script	Pub Master#kh	1_ETC_01,5,5,{
 	if (checkweight(7487,1) == 0) {
 		mes "[Vandt]";
 		mes "Just a second! You're";
@@ -453,7 +453,7 @@ OnTouch:
 //----------------------------------------------------------------------------
 // Juno Toast Sales Girl.
 //----------------------------------------------------------------------------
-yuno,217,114,6	script	Little Kid#kh	96,{
+yuno,217,114,6	script	Little Kid#kh	4W_KID,{
 	mes "[Cezu]"; 
 	if (KielHyreQuest < 6) {
 		mes "Fresh, crunchy toast!";
@@ -544,7 +544,7 @@ yuno,217,114,6	script	Little Kid#kh	96,{
 //----------------------------------------------------------------------------
 // Lighthalzen WindMill Owner.
 //----------------------------------------------------------------------------
-lighthalzen,366,299,4	script	Windmill Owner#kh	46,{
+lighthalzen,366,299,4	script	Windmill Owner#kh	1_ETC_01,{
 	if (checkweight(7488,1) == 0) {
 		mes "[Mills]";
 		mes "Hey, you've got too much";
@@ -616,7 +616,7 @@ lighthalzen,366,299,4	script	Windmill Owner#kh	46,{
 	}
 }
 
-lighthalzen,366,289,2	script	Windmill Owner's Helper	97,{
+lighthalzen,366,289,2	script	Windmill Owner's Helper	4W_M_01,{
 	if (KHToastGirlEnd < 1) {
 		mes "[Cutz]";
 		mes "Man, why are we";
@@ -652,7 +652,7 @@ lighthalzen,366,289,2	script	Windmill Owner's Helper	97,{
 //----------------------------------------------------------------------------
 // Girl (Talks about the academy)
 //----------------------------------------------------------------------------
-yuno_fild08,196,196,5	script	Hanie#kh1	102,{
+yuno_fild08,196,196,5	script	Hanie#kh1	8_F,{
 	mes "[Hanie]";
 	mes "Oh, I wish I could study";
 	mes "at the Kiel Hyre Academy...";
@@ -683,7 +683,7 @@ yuno_fild08,196,196,5	script	Hanie#kh1	102,{
 //----------------------------------------------------------------------------
 // Academy Security Guards
 //----------------------------------------------------------------------------
-yuno_fild08,158,194,6	script	Security Guard#1::KHAGuard	852,{
+yuno_fild08,158,194,6	script	Security Guard#1::KHAGuard	4_M_EIN_SOLDIER,{
 	if ((KielHyreQuest < 2) || (KielHyreQuest > 31)) { 
 		mes "[Security Guard]";
 		mes "I'm sorry, but if you aren't";
@@ -793,12 +793,12 @@ yuno_fild08,158,194,6	script	Security Guard#1::KHAGuard	852,{
 	}
 }
 
-yuno_fild08,158,183,7	duplicate(KHAGuard)	Security Guard#2	852
+yuno_fild08,158,183,7	duplicate(KHAGuard)	Security Guard#2	4_M_EIN_SOLDIER
 
 //----------------------------------------------------------------------------
 // Gossiping Teenagers/Story NPCs
 //----------------------------------------------------------------------------
-kh_school,57,142,6	script	Student#kha	893,3,3,{
+kh_school,57,142,6	script	Student#kha	4_F_HUWOMAN,3,3,{
 	mes "[Laci]";
 	mes "Oh, wow! We usually";
 	mes "don't get visitors on";
@@ -832,7 +832,7 @@ OnTouch:
 	close;
 }
 
-kh_school,57,139,0	script	Student#khb	893,{
+kh_school,57,139,0	script	Student#khb	4_F_HUWOMAN,{
 	mes "[Gui Nesha]";
 	mes "Aren't we a little";
 	mes "old to be talking about";
@@ -847,7 +847,7 @@ kh_school,57,139,0	script	Student#khb	893,{
 //----------------------------------------------------------------------------
 // Mrs. Lecollane
 //----------------------------------------------------------------------------
-kh_school,176,60,4	script	Lady#kh	101,{
+kh_school,176,60,4	script	Lady#kh	4W_F_01,{
 	if (KielHyreQuest < 2) {
 		mes "[Mrs. Lecollane]";
 		mes "Is there a problem?";
@@ -928,7 +928,7 @@ kh_school,176,60,4	script	Lady#kh	101,{
 //----------------------------------------------------------------------------
 // Elly (In school)
 //----------------------------------------------------------------------------
-kh_school,179,39,0	script	Cute Student#kh	895,{
+kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 	if (checkweight(908,200) == 0) {
 		mes "[Elly]";
 		mes "I'm sorry, but would you";
@@ -1475,7 +1475,7 @@ kh_school,179,39,0	script	Cute Student#kh	895,{
 //----------------------------------------------------------------------------
 // Elly's Window 
 //----------------------------------------------------------------------------
-yuno_fild08,69,185,0	script	Window#kh	111,{
+yuno_fild08,69,185,0	script	Window#kh	HIDDEN_NPC,{
 	if (KielHyreQuest < 29) {
 		mes "^3355FFYou can see a curtain";
 		mes "decorated with a cute";
@@ -1541,7 +1541,7 @@ yuno_fild08,69,185,0	script	Window#kh	111,{
 //----------------------------------------------------------------------------
 // Elly (In Dormitory)
 //----------------------------------------------------------------------------
-kh_school,178,180,4	script	Elly	895,{
+kh_school,178,180,4	script	Elly	4_F_KHELLY,{
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
@@ -1720,7 +1720,7 @@ kh_school,178,180,4	script	Elly	895,{
 //----------------------------------------------------------------------------
 // Cookie Basket
 //----------------------------------------------------------------------------
-kh_school,175,176,0	script	Cookie Basket#kh	111,{
+kh_school,175,176,0	script	Cookie Basket#kh	HIDDEN_NPC,{
 	if (KielHyreQuest < 30) {
 		mes "^3355FFIt's a cookie";
 		mes "basket filled with";
@@ -1830,7 +1830,7 @@ kh_school,175,176,0	script	Cookie Basket#kh	111,{
 //----------------------------------------------------------------------------
 // Elly's Window (In Dormitory)
 //----------------------------------------------------------------------------
-kh_school,188,185,0	script	Window#kh2	111,{
+kh_school,188,185,0	script	Window#kh2	HIDDEN_NPC,{
 	warp "yuno_fild08",69,183;
 	end;
 }
@@ -1838,7 +1838,7 @@ kh_school,188,185,0	script	Window#kh2	111,{
 //----------------------------------------------------------------------------
 // Grave/Kiel Hyre dungeon entry
 //----------------------------------------------------------------------------
-yuno_fild08,71,170,0	script	Grave#kh	111,{
+yuno_fild08,71,170,0	script	Grave#kh	HIDDEN_NPC,{
 	if (KielHyreQuest < 36) {
 		mes "^3355FFIt's just a grave.";
 		mes "It might be important";
@@ -1964,7 +1964,7 @@ yuno_fild08,71,170,0	script	Grave#kh	111,{
 //----------------------------------------------------------------------------
 // Cottage Keeper
 //----------------------------------------------------------------------------
-yuno_fild02,93,210,4	script	Cottage Keeper#kh	85,{
+yuno_fild02,93,210,4	script	Cottage Keeper#kh	4_M_03,{
 	if ((KielHyreQuest < 12) || (KielHyreQuest > 12)) {
 		mes "[Cottage Keeper]";
 		mes "This is private property,";
@@ -2015,7 +2015,7 @@ yuno_fild02,93,210,4	script	Cottage Keeper#kh	85,{
 //----------------------------------------------------------------------------
 // Cottage Door (left)
 //----------------------------------------------------------------------------
-yuno_fild02,75,218,0	script	Door#kh2	111,{
+yuno_fild02,75,218,0	script	Door#kh2	HIDDEN_NPC,{
 	if (KielHyreQuest < 16) {
 		mes "^3355FFThis door is locked.";
 		mes "If someone inside won't";
@@ -2069,7 +2069,7 @@ yuno_fild02,75,218,0	script	Door#kh2	111,{
 //----------------------------------------------------------------------------
 // Cottage Door (Right)
 //----------------------------------------------------------------------------
-yuno_fild02,109,218,0	script	Door#kh1	111,{
+yuno_fild02,109,218,0	script	Door#kh1	HIDDEN_NPC,{
 	if (KielHyreQuest != 16) {
 		mes "^3355FFThis door is locked.";
 		mes "If someone inside won't";
@@ -2102,7 +2102,7 @@ yuno_fild02,109,218,0	script	Door#kh1	111,{
 //----------------------------------------------------------------------------
 // Store room interior; Wall
 //----------------------------------------------------------------------------
-kh_vila,191,14,0	script	Wall#kh	139,1,1,{
+kh_vila,191,14,0	script	Wall#kh	HIDDEN_WARP_NPC,1,1,{
 	if (KielHyreQuest < 28) {
 		mes "^3355FFIt's just a wall.";
 		mes "It's not particularly";
@@ -2127,7 +2127,7 @@ kh_vila,191,14,0	script	Wall#kh	139,1,1,{
 //----------------------------------------------------------------------------
 // Store room interior; books
 //----------------------------------------------------------------------------
-kh_vila,184,20,0	script	Book#kh1::BookKHQ1	111,{
+kh_vila,184,20,0	script	Book#kh1::BookKHQ1	HIDDEN_NPC,{
 	if (KielHyreQuest != 26) {
 		mes "^3355FFThis bookshelf is^000000";
 		mes "^3355FFcrammed with many^000000";
@@ -2156,9 +2156,9 @@ kh_vila,184,20,0	script	Book#kh1::BookKHQ1	111,{
 	}
 
 }
-kh_vila,181,20,0	duplicate(BookKHQ1)	Book#kh2	111
-kh_vila,178,20,0	duplicate(BookKHQ1)	Book#kh3	111
-kh_vila,175,19,0	duplicate(BookKHQ1)	Book#kh4	111
+kh_vila,181,20,0	duplicate(BookKHQ1)	Book#kh2	HIDDEN_NPC
+kh_vila,178,20,0	duplicate(BookKHQ1)	Book#kh3	HIDDEN_NPC
+kh_vila,175,19,0	duplicate(BookKHQ1)	Book#kh4	HIDDEN_NPC
 
 //----------------------------------------------------------------------------
 // Store room interior; Letter to Elly on the floor.
@@ -2195,7 +2195,7 @@ OnTouch:
 //----------------------------------------------------------------------------
 // Cottage interior, kitchen; Box (Pet Food vending machine)
 //----------------------------------------------------------------------------
-kh_vila,16,175,0	script	Box#khp1	111,{
+kh_vila,16,175,0	script	Box#khp1	HIDDEN_NPC,{
 	mes "^FFFFFF##^000000*Tasty-Nutricious-Delicious*";
 	mes "*Cute Pet Doof Vending Machine*";
 	mes "The best food for your Cute Pets";
@@ -2241,7 +2241,7 @@ kh_vila,16,175,0	script	Box#khp1	111,{
 //----------------------------------------------------------------------------
 // Cottage interior, kitchen; Apple Box (Useless?)
 //----------------------------------------------------------------------------
-kh_vila,30,184,0	script	Apple Box#khp1	111,{
+kh_vila,30,184,0	script	Apple Box#khp1	HIDDEN_NPC,{
 	mes "^3355FFYou find a box filled with";
 	mes "ripe, delicious apples.^000000";
 	next;
@@ -2268,7 +2268,7 @@ kh_vila,30,184,0	script	Apple Box#khp1	111,{
 //----------------------------------------------------------------------------
 // Cottage interior, dining room; Map
 //----------------------------------------------------------------------------
-kh_vila,44,126,0	script	Map#khp1	111,{
+kh_vila,44,126,0	script	Map#khp1	HIDDEN_NPC,{
 	if ((KHCottagePoem1 < 2) && (KielHyreQuest < 30)) {
 		mes "^3355FFA magnificent world map,";
 		mes "detailing the Rune-Midgarts";
@@ -2382,7 +2382,7 @@ kh_vila,44,126,0	script	Map#khp1	111,{
 //----------------------------------------------------------------------------
 // Cottage interior, kitchen; Pot
 //----------------------------------------------------------------------------
-kh_vila,33,184,0	script	Pot#khp1	111,{
+kh_vila,33,184,0	script	Pot#khp1	HIDDEN_NPC,{
 	if (KHCottagePoem1 < 1) {
 		mes "^3355FFYou've found a pot";
 		mes "filled with boiling,";
@@ -2424,7 +2424,7 @@ kh_vila,33,184,0	script	Pot#khp1	111,{
 //----------------------------------------------------------------------------
 // Cottage interior, fire place; Calabash
 //----------------------------------------------------------------------------
-kh_vila,14,55,0	script	Calabash#khp1	111,{
+kh_vila,14,55,0	script	Calabash#khp1	HIDDEN_NPC,{
 	if ((countitem(7329) < 1) && (countitem(7516) < 1) && (countitem(7491) < 1) && (KielHyreQuest < 38)) {
 		if (checkweight(7329,1) == 0) {
 			mes "^3355FFThat's a nice looking";
@@ -2478,7 +2478,7 @@ kh_vila,14,55,0	script	Calabash#khp1	111,{
 //----------------------------------------------------------------------------
 // Cottage interior, garden; Pool
 //----------------------------------------------------------------------------
-kh_vila,39,41,0	script	Pool#khp1	111,{
+kh_vila,39,41,0	script	Pool#khp1	HIDDEN_NPC,{
 	if ((KHCottagePoem1 < 3) && (KielHyreQuest < 30)) {
 		mes "^3355FFYou find a fancy pool";
 		mes "filled with fresh water.^000000";
@@ -2560,7 +2560,7 @@ kh_vila,39,41,0	script	Pool#khp1	111,{
 //----------------------------------------------------------------------------
 // Cottage interior, upstairs; Vicious Dog
 //----------------------------------------------------------------------------
-kh_vila,181,178,4	script	Vicious Dog#khp1	81,7,3,{
+kh_vila,181,178,4	script	Vicious Dog#khp1	4_DOG01,7,3,{
 //OnTouch2:
 OnTouch:
 	mes "*Grrr~*";
@@ -2625,7 +2625,7 @@ OnTouch:
 //----------------------------------------------------------------------------
 // Cottage interior, upstairs; Drawer, first room nightstand
 //----------------------------------------------------------------------------
-kh_vila,115,186,0	script	Drawer#khp1	111,{
+kh_vila,115,186,0	script	Drawer#khp1	HIDDEN_NPC,{
 	if (checkweight(7492,1) == 0) {
 		mes "^3355FFThere's something inside";
 		mes "this drawer, but you can't";
@@ -2669,7 +2669,7 @@ kh_vila,115,186,0	script	Drawer#khp1	111,{
 //----------------------------------------------------------------------------
 // Cottage interior, upstairs; Box
 //----------------------------------------------------------------------------
-kh_vila,107,126,0	script	Box#khp2	111,{
+kh_vila,107,126,0	script	Box#khp2	HIDDEN_NPC,{
 	if ((countitem(7329) < 1) && (countitem(7516) < 1) && (countitem(7491) < 1) && (KielHyreQuest < 38)) {
 		mes "^3355FFA solid box is laid";
 		mes "on the floor in which";
@@ -2716,7 +2716,7 @@ kh_vila,107,126,0	script	Box#khp2	111,{
 //----------------------------------------------------------------------------
 // Cottage interior, upstairs; Bookshelf.
 //----------------------------------------------------------------------------
-kh_vila,181,138,0	script	Bookshelf#khp1	111,{
+kh_vila,181,138,0	script	Bookshelf#khp1	HIDDEN_NPC,{
 	if ((countitem(7491) < 1) && (countitem(7329) >= 1) || (countitem(7516) >= 1)) {
 		mes "^3355FFOne of the books on";
 		mes "this crammed bookshelf";
@@ -2826,7 +2826,7 @@ kh_vila,181,138,0	script	Bookshelf#khp1	111,{
 //----------------------------------------------------------------------------
 // Cottage interior, upstairs; Desk
 //----------------------------------------------------------------------------
-kh_vila,118,144,0	script	Desk#khp1	111,{
+kh_vila,118,144,0	script	Desk#khp1	HIDDEN_NPC,{
 	if (KHCottagePoem2 < 1) {
 		mes "^3355FFThere are piles of papers";
 		mes "and books stacked on top";
@@ -2861,7 +2861,7 @@ kh_vila,118,144,0	script	Desk#khp1	111,{
 //----------------------------------------------------------------------------
 // Cottage interior, upstairs; Medicine Chest
 //----------------------------------------------------------------------------
-kh_vila,123,170,0	script	Medicine Chest#khp1	111,{
+kh_vila,123,170,0	script	Medicine Chest#khp1	HIDDEN_NPC,{
 	if ((KHCottagePoem2 < 1) && (KielHyreQuest < 30)) {
 		mes "^3355FFThis medicine cabinet";
 		mes "is filled with bottles of";
@@ -3007,7 +3007,7 @@ kh_vila,123,170,0	script	Medicine Chest#khp1	111,{
 //----------------------------------------------------------------------------
 // Cottage interior, stair case; Sword hilt
 //----------------------------------------------------------------------------
-kh_vila,136,68,0	script	Sword Hilt#kh	111,{
+kh_vila,136,68,0	script	Sword Hilt#kh	HIDDEN_NPC,{
 	if ((KHCottagePoem1 < 3) || (KHCottagePoem2 < 2) && (KielHyreQuest < 30)) {
 		mes "^3355FFThere are four elaborately";
 		mes "designed swords positioned";
@@ -3148,7 +3148,7 @@ kh_vila,136,68,0	script	Sword Hilt#kh	111,{
 //----------------------------------------------------------------------------
 // Cottage interior, Secret Room; left test tube
 //----------------------------------------------------------------------------
-kh_vila,179,68,0	script	Test Tube#khp2	111,{
+kh_vila,179,68,0	script	Test Tube#khp2	HIDDEN_NPC,{
 	mes "^3355FFThis test tube contains";
 	mes "a young man dressed in";
 	mes "a Kiel Hyre Academy";
@@ -3162,7 +3162,7 @@ kh_vila,179,68,0	script	Test Tube#khp2	111,{
 //----------------------------------------------------------------------------
 // Cottage interior, Secret Room; Right test tube
 //----------------------------------------------------------------------------
-kh_vila,185,68,0	script	Test Tube::TestTubeKHQ2	111,{
+kh_vila,185,68,0	script	Test Tube::TestTubeKHQ2	HIDDEN_NPC,{
 	if (KielHyreQuest > 28) {
 		mes "^3355FFA strange looking,";
 		mes "wizened old man is";
@@ -3250,7 +3250,7 @@ kh_vila,185,68,0	script	Test Tube::TestTubeKHQ2	111,{
 //----------------------------------------------------------------------------
 // Robotic's Factory; Heavy Door
 //----------------------------------------------------------------------------
-kh_dun01,235,48,0	script	Heavy Door#kh1::HeavyDoorKHQ1	111,{
+kh_dun01,235,48,0	script	Heavy Door#kh1::HeavyDoorKHQ1	HIDDEN_NPC,{
 	if (KielHyreQuest < 38) {
 		mes "^3355FFThere is a large, heavy";
 		mes "door infront of you.^000000";
@@ -3312,7 +3312,7 @@ kh_dun01,235,48,0	script	Heavy Door#kh1::HeavyDoorKHQ1	111,{
 //----------------------------------------------------------------------------
 // Robotic's Factory; Heavy Door (These doors don't seem to serve any purpose)
 //----------------------------------------------------------------------------
-kh_dun01,76,233,0	script	Heavy Door::HeavyDoorKHQ2	111,{
+kh_dun01,76,233,0	script	Heavy Door::HeavyDoorKHQ2	HIDDEN_NPC,{
 	if ((KielHyreQuest >= 38) && (KielHyreQuest < 46)) {
 		mes "^3355FFThere is a large, heavy";
 		mes "door infront of you.^000000";
@@ -3340,20 +3340,20 @@ kh_dun01,76,233,0	script	Heavy Door::HeavyDoorKHQ2	111,{
 	}
 }
 
-kh_dun01,106,233,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh3	111
-kh_dun01,6,164,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh4	111
-kh_dun01,6,133,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh5	111
-kh_dun01,6,60,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh6	111
-kh_dun01,6,30,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh7	111
-kh_dun01,6,18,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh8	111
-kh_dun01,235,70,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh9	111
-kh_dun01,235,92,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh10	111
-kh_dun01,235,114,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh11	111
+kh_dun01,106,233,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh3	HIDDEN_NPC
+kh_dun01,6,164,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh4	HIDDEN_NPC
+kh_dun01,6,133,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh5	HIDDEN_NPC
+kh_dun01,6,60,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh6	HIDDEN_NPC
+kh_dun01,6,30,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh7	HIDDEN_NPC
+kh_dun01,6,18,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh8	HIDDEN_NPC
+kh_dun01,235,70,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh9	HIDDEN_NPC
+kh_dun01,235,92,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh10	HIDDEN_NPC
+kh_dun01,235,114,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh11	HIDDEN_NPC
 
 //----------------------------------------------------------------------------
 // Beautiful Lady and Beautiful Lady copies.
 //----------------------------------------------------------------------------
-kh_school,119,149,4	script	Beautiful Lady#kh1::BeatifulLadyKHQ1	894,{
+kh_school,119,149,4	script	Beautiful Lady#kh1::BeatifulLadyKHQ1	4_F_KHELLISIA,{
 	cutin "kh_ellisia",2;
 	if (KielHyreQuest < 40) {
 		mes "[Allysia]";
@@ -3432,17 +3432,17 @@ kh_school,119,149,4	script	Beautiful Lady#kh1::BeatifulLadyKHQ1	894,{
 }
 
 
-kh_school,117,149,4	script	Beautiful lady#kh2::BeatifulLadyKHQ2	894,{
+kh_school,117,149,4	script	Beautiful lady#kh2::BeatifulLadyKHQ2	4_F_KHELLISIA,{
 	end;
 }
-kh_school,118,149,4	duplicate(BeatifulLadyKHQ2)	Beautiful lady#kh3	894
-kh_school,120,149,4	duplicate(BeatifulLadyKHQ2)	Beautiful lady#kh4	894
-kh_school,121,149,4	duplicate(BeatifulLadyKHQ1)	Beautiful lady#kh5	894
+kh_school,118,149,4	duplicate(BeatifulLadyKHQ2)	Beautiful lady#kh3	4_F_KHELLISIA
+kh_school,120,149,4	duplicate(BeatifulLadyKHQ2)	Beautiful lady#kh4	4_F_KHELLISIA
+kh_school,121,149,4	duplicate(BeatifulLadyKHQ1)	Beautiful lady#kh5	4_F_KHELLISIA
 
 //----------------------------------------------------------------------------
 // Beautiful Lady "Allysia"
 //----------------------------------------------------------------------------
-kh_school,122,186,4	script	Beautiful Lady#kh6	894,{
+kh_school,122,186,4	script	Beautiful Lady#kh6	4_F_KHELLISIA,{
 	if (checkweight(7496,1) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
@@ -3618,7 +3618,7 @@ kh_school,122,186,4	script	Beautiful Lady#kh6	894,{
 //----------------------------------------------------------------------------
 // Signboard (another useless NPC?)
 //----------------------------------------------------------------------------
-kh_dun01,163,223,4	script	Signboard#kh	857,{
+kh_dun01,163,223,4	script	Signboard#kh	4_BOARD3,{
 	mes "[Notice]";
 	mes "Cute Pets are prohibited";
 	mes "in this area. (Cute Pets that";
@@ -3631,7 +3631,7 @@ kh_dun01,163,223,4	script	Signboard#kh	857,{
 //----------------------------------------------------------------------------
 // Mechanical Devices for accessing restricted area
 //----------------------------------------------------------------------------
-kh_dun01,166,223,0	script	Mechanical Device#kh::KHKeyardReader	111,{
+kh_dun01,166,223,0	script	Mechanical Device#kh::KHKeyardReader	HIDDEN_NPC,{
 	if ((KielHyreQuest <= 38) || (KielHyreQuest >= 44)) {
 		mes "^3355FFYou encounter";
 		mes "a mechanical device.";
@@ -3662,7 +3662,7 @@ kh_dun01,166,223,0	script	Mechanical Device#kh::KHKeyardReader	111,{
 	}
 }
 
-kh_dun01,162,206,0	duplicate(KHKeyardReader)	Mechanical Device	111
+kh_dun01,162,206,0	duplicate(KHKeyardReader)	Mechanical Device	HIDDEN_NPC
 
 //----------------------------------------------------------------------------
 // Keep monsters out of the quest area.
@@ -3754,7 +3754,7 @@ OnTouch:
 //----------------------------------------------------------------------------
 // Robot Factory Second Floor Entrances
 //----------------------------------------------------------------------------
-kh_dun01,44,203,0	script	Entrance Device#khd2::KHAccess	111,{
+kh_dun01,44,203,0	script	Entrance Device#khd2::KHAccess	HIDDEN_NPC,{
 	if (countitem(7509) < 1) {
 		mes "^3355FFYou encounter";
 		mes "a mechanical device.";
@@ -3801,7 +3801,7 @@ kh_dun01,44,203,0	script	Entrance Device#khd2::KHAccess	111,{
 	}
 }
 
-kh_dun01,36,195,0	duplicate(KHAccess)	Entrance Device#khd1	111
+kh_dun01,36,195,0	duplicate(KHAccess)	Entrance Device#khd1	HIDDEN_NPC
 
 //============================================================================
 // Kiel Hyre Mansion NPCs, and Kiehl's Room NPCs
@@ -3810,7 +3810,7 @@ kh_dun01,36,195,0	duplicate(KHAccess)	Entrance Device#khd1	111
 //----------------------------------------------------------------------------
 // Kiel's Steward
 //----------------------------------------------------------------------------
-kh_mansion,78,55,5	script	Steward#kh	109,{
+kh_mansion,78,55,5	script	Steward#kh	4_M_MANAGER,{
 	if (KielHyreQuest < 46) {
 		mes "[Steward]";
 		mes "This is a private residence,";
@@ -3912,7 +3912,7 @@ kh_mansion,78,55,5	script	Steward#kh	109,{
 //----------------------------------------------------------------------------
 // Kiel Hyre
 //----------------------------------------------------------------------------
-kh_mansion,22,28,4	script	Kiel Hyre#kh	903,{
+kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
@@ -4684,7 +4684,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	903,{
 //----------------------------------------------------------------------------
 // Allysia
 //----------------------------------------------------------------------------
-kh_mansion,18,30,4	script	Allysia	894,{
+kh_mansion,18,30,4	script	Allysia	4_F_KHELLISIA,{
 	if (KielHyreQuest < 46) {
 		mes "[Allysia]";
 		mes "Who are you?";
@@ -4870,7 +4870,7 @@ OnTouch:
 //----------------------------------------------------------------------------
 // Mysterious Woman "Mitchell Layla"
 //----------------------------------------------------------------------------
-kh_mansion,25,79,4	script	Mysterious Woman#kh	727,3,3,{
+kh_mansion,25,79,4	script	Mysterious Woman#kh	4_F_JOB_HUNTER,3,3,{
 
 //OnTouch2:
 OnTouch:
@@ -5156,7 +5156,7 @@ OnTouch:
 // - Anyone can enter
 // - After 30-40 seonds this NPC should be disabled.
 //----------------------------------------------------------------------------
-kh_mansion,29,27,0	script	Kiehl_Room_Warp	45,2,2,{
+kh_mansion,29,27,0	script	Kiehl_Room_Warp	WARPNPC,2,2,{
 OnTouch:
 	warp "kh_kiehl01",10,31;
 	end;
@@ -5184,7 +5184,7 @@ OnInit:
 //----------------------------------------------------------------------------
 // Odd Grandma
 //----------------------------------------------------------------------------
-yuno,257,140,4	script	Odd Grandma	846,{
+yuno,257,140,4	script	Odd Grandma	4_F_EINOLD,{
 	if (KielHyreQuest < 54) {
 		mes "[Grandma]";
 		mes "Where did you go,";
@@ -5274,7 +5274,7 @@ yuno,257,140,4	script	Odd Grandma	846,{
 //----------------------------------------------------------------------------
 // Old Lady; gives you the key to the Rosimier Mansion
 //----------------------------------------------------------------------------
-yuno,250,132,0	script	Old Lady#kh	711,{
+yuno,250,132,0	script	Old Lady#kh	4_F_05,{
 	if (KielHyreQuest < 56) {
 		mes "[Old Lady]";
 		mes "Oooh, my legs and back";
@@ -5442,7 +5442,7 @@ yuno,250,132,0	script	Old Lady#kh	711,{
 //----------------------------------------------------------------------------
 // Warp portal into Rosimier Mansion
 //----------------------------------------------------------------------------
-yuno,273,141,0	script	Rosimmir_Entrance	45,2,2,{
+yuno,273,141,0	script	Rosimmir_Entrance	WARPNPC,2,2,{
 OnTouch:
 	if (countitem(7498) < 1) {
 		mes "That mansion seems to have";
@@ -5461,7 +5461,7 @@ OnTouch:
 //----------------------------------------------------------------------------
 // Rosimier Mansion, first floor; Table
 //----------------------------------------------------------------------------
-kh_rossi,23,23,0	script	Table#khr2	111,{
+kh_rossi,23,23,0	script	Table#khr2	HIDDEN_NPC,{
 	if (checkweight(7499,1) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
@@ -5504,7 +5504,7 @@ kh_rossi,23,23,0	script	Table#khr2	111,{
 //----------------------------------------------------------------------------
 // Rosimier Mansion, first floor; Shelf
 //----------------------------------------------------------------------------
-kh_rossi,92,40,0	script	Shelf#khr	111,{
+kh_rossi,92,40,0	script	Shelf#khr	HIDDEN_NPC,{
 	if (checkweight(7500,1) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
@@ -5577,7 +5577,7 @@ kh_rossi,92,40,0	script	Shelf#khr	111,{
 //----------------------------------------------------------------------------
 // Rosimier Mansion, top floor; Desk
 //----------------------------------------------------------------------------
-kh_rossi,144,286,0	script	Desk#khr3	111,{
+kh_rossi,144,286,0	script	Desk#khr3	HIDDEN_NPC,{
 	if (checkweight(7501,1) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
@@ -5642,7 +5642,7 @@ kh_rossi,144,286,0	script	Desk#khr3	111,{
 //----------------------------------------------------------------------------
 // Rosimier Mansion, top floor; Bookshelf
 //----------------------------------------------------------------------------
-kh_rossi,148,288,0	script	Bookshelf#khr	111,{
+kh_rossi,148,288,0	script	Bookshelf#khr	HIDDEN_NPC,{
 	if (checkweight(7502,1) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
@@ -5686,7 +5686,7 @@ kh_rossi,148,288,0	script	Bookshelf#khr	111,{
 //----------------------------------------------------------------------------
 // Rosimier Mansion, top floor; Bed
 //----------------------------------------------------------------------------
-kh_rossi,154,286,0	script	Bed#khr	111,{
+kh_rossi,154,286,0	script	Bed#khr	HIDDEN_NPC,{
 	if (KielHyreQuest < 58) {
 		mes "^3355FFYou found a well made";
 		mes "bed that has collected";
@@ -5725,7 +5725,7 @@ kh_rossi,154,286,0	script	Bed#khr	111,{
 //----------------------------------------------------------------------------
 // Fisherman
 //----------------------------------------------------------------------------
-yuno_fild12,232,222,0	script	Old Fisherman	709,{
+yuno_fild12,232,222,0	script	Old Fisherman	4_M_SEAMAN,{
 	if (KielHyreQuest < 60) {
 		mes "[Fisherman]";
 		mes "These days, it's much";
@@ -5833,7 +5833,7 @@ yuno_fild12,232,222,0	script	Old Fisherman	709,{
 //----------------------------------------------------------------------------
 // Kiel Hyre's hut; Wooden Board
 //----------------------------------------------------------------------------
-yuno_fild09,158,217,0	script	Wooden Board#kh	111,{
+yuno_fild09,158,217,0	script	Wooden Board#kh	HIDDEN_NPC,{
 	if (checkweight(7503,1) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
@@ -5888,7 +5888,7 @@ yuno_fild09,158,217,0	script	Wooden Board#kh	111,{
 //----------------------------------------------------------------------------
 // Kiehl's Room; Receiver (Gives black keycards upon killing mobs)
 //----------------------------------------------------------------------------
-kh_kiehl01,17,39,0	script	Receiver#kh	111,{
+kh_kiehl01,17,39,0	script	Receiver#kh	HIDDEN_NPC,{
 	if (mobcount("kh_kiehl01","Receiver#kh::OnMyMobDead") < 1) {
 		mes "^333333*BBBZZZ*^000000";
 		if (KielHyreQuest == 74) {
@@ -5922,7 +5922,7 @@ OnMyMobDead:
 //----------------------------------------------------------------------------
 // Kiehl's Room; Flower Vase (Gives...password...for Box)
 //----------------------------------------------------------------------------
-kh_kiehl01,13,40,0	script	Flower Vase#kh1	111,{
+kh_kiehl01,13,40,0	script	Flower Vase#kh1	HIDDEN_NPC,{
 	if (KielHyreQuest < 74) {
 		mes "^3355FFYou found";
 		mes "a flower vase.^000000";
@@ -5975,7 +5975,7 @@ kh_kiehl01,13,40,0	script	Flower Vase#kh1	111,{
 //----------------------------------------------------------------------------
 // Kiehl's Room; Box
 //----------------------------------------------------------------------------
-kh_kiehl01,19,25,0	script	Box#kh1	111,{
+kh_kiehl01,19,25,0	script	Box#kh1	HIDDEN_NPC,{
 	if (checkweight(7505,1) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
@@ -6035,7 +6035,7 @@ kh_kiehl01,19,25,0	script	Box#kh1	111,{
 // - Consume one Black KeyCard when opened.
 // - Only one person actually needs to open it.
 //----------------------------------------------------------------------------
-kh_kiehl01,44,33,0	script	Big Door#BigDoorKHQ1	111,{
+kh_kiehl01,44,33,0	script	Big Door#BigDoorKHQ1	HIDDEN_NPC,{
 	if (.KHDoor1Opened == 0) {
 		mes "^3355FFThe door is locked,";
 		mes "but there is a narrow";
@@ -6069,7 +6069,7 @@ kh_kiehl01,44,33,0	script	Big Door#BigDoorKHQ1	111,{
 	}
 }
 
-kh_kiehl01,43,33,0	script	Big_Door_1_Warp	45,1,1,{
+kh_kiehl01,43,33,0	script	Big_Door_1_Warp	WARPNPC,1,1,{
 OnEnable:
 	initnpctimer;
 	specialeffect EF_SUMMONSLAVE;
@@ -6096,7 +6096,7 @@ OnTouch:
 // - Consume Toy Key when opened.
 // - Only one person actually needs to open it.
 //----------------------------------------------------------------------------
-kh_kiehl01,174,40,0	script	Big Door#BigDoorKHQ2	111,{
+kh_kiehl01,174,40,0	script	Big Door#BigDoorKHQ2	HIDDEN_NPC,{
 	if (.KHDoor2Opened == 0) {
 		mes "^3355FFThe door is locked,";
 		mes "but there is a small";
@@ -6129,7 +6129,7 @@ kh_kiehl01,174,40,0	script	Big Door#BigDoorKHQ2	111,{
 	}
 }
 
-kh_kiehl01,174,39,0	script	Big_Door_2_Warp	45,1,1,{
+kh_kiehl01,174,39,0	script	Big_Door_2_Warp	WARPNPC,1,1,{
 OnEnable:
 	initnpctimer;
 	specialeffect EF_SUMMONSLAVE;
@@ -6156,7 +6156,7 @@ OnTouch:
 // - Consume one Black KeyCard when opened.
 // - Only one person actually needs to open it.
 //----------------------------------------------------------------------------
-kh_kiehl01,77,108,0	script	Big Door#BigDoorKHQ3	111,{
+kh_kiehl01,77,108,0	script	Big Door#BigDoorKHQ3	HIDDEN_NPC,{
 	if (.KHDoor3Opened == 0) {
 		mes "^3355FFThe door is locked,";
 		mes "but there is a narrow";
@@ -6189,7 +6189,7 @@ kh_kiehl01,77,108,0	script	Big Door#BigDoorKHQ3	111,{
 	}
 }
 
-kh_kiehl01,78,108,0	script	Big_Door_3_Warp	45,1,1,{
+kh_kiehl01,78,108,0	script	Big_Door_3_Warp	WARPNPC,1,1,{
 OnEnable:
 	initnpctimer;
 	specialeffect EF_SUMMONSLAVE;
@@ -6216,7 +6216,7 @@ OnTouch:
 // - Consume TWO Black KeyCard when opened.
 // - Only one person actually needs to open it.
 //----------------------------------------------------------------------------
-kh_kiehl01,42,177,0	script	Big Door#BigDoorKHQ4	111,{
+kh_kiehl01,42,177,0	script	Big Door#BigDoorKHQ4	HIDDEN_NPC,{
 	if (.KHDoor4Opened == 0) {
 		mes "^3355FFThe door is locked,";
 		mes "but there is a narrow";
@@ -6249,7 +6249,7 @@ kh_kiehl01,42,177,0	script	Big Door#BigDoorKHQ4	111,{
 	}
 }
 
-kh_kiehl01,41,177,0	script	Big_Door_4_Warp	45,1,1,{
+kh_kiehl01,41,177,0	script	Big_Door_4_Warp	WARPNPC,1,1,{
 OnEnable:
 	initnpctimer;
 	specialeffect EF_SUMMONSLAVE;
@@ -6274,7 +6274,7 @@ OnTouch:
 //----------------------------------------------------------------------------
 // Kiehl's Room; Robots
 //----------------------------------------------------------------------------
-kh_kiehl01,15,179,0	script	Robots#kh1	111,{
+kh_kiehl01,15,179,0	script	Robots#kh1	HIDDEN_NPC,{
 	if (mobcount("kh_kiehl01","Robots#kh1::OnMyMobDead") < 1) {
 		mes "^3355FFAs soon as you";
 		mes "touch the test tube,";
@@ -6301,22 +6301,22 @@ OnMyMobDead:
 //----------------------------------------------------------------------------
 // Kiehl's Room; Dummy Robots
 //----------------------------------------------------------------------------
-kh_kiehl01,15,177,0	script	Robots#kh2::RobotsKHQ	111,{
+kh_kiehl01,15,177,0	script	Robots#kh2::RobotsKHQ	HIDDEN_NPC,{
 	end;
 }
-kh_kiehl01,15,180,0	duplicate(RobotsKHQ)	Robots#kh3	111
-kh_kiehl01,15,182,0	duplicate(RobotsKHQ)	Robots#kh4	111
-kh_kiehl01,35,187,0	duplicate(RobotsKHQ)	Robots#kh5	111
-kh_kiehl01,37,187,0	duplicate(RobotsKHQ)	Robots#kh6	111
-kh_kiehl01,39,187,0	duplicate(RobotsKHQ)	Robots#kh7	111
-kh_kiehl01,41,187,0	duplicate(RobotsKHQ)	Robots#kh8	111
+kh_kiehl01,15,180,0	duplicate(RobotsKHQ)	Robots#kh3	HIDDEN_NPC
+kh_kiehl01,15,182,0	duplicate(RobotsKHQ)	Robots#kh4	HIDDEN_NPC
+kh_kiehl01,35,187,0	duplicate(RobotsKHQ)	Robots#kh5	HIDDEN_NPC
+kh_kiehl01,37,187,0	duplicate(RobotsKHQ)	Robots#kh6	HIDDEN_NPC
+kh_kiehl01,39,187,0	duplicate(RobotsKHQ)	Robots#kh7	HIDDEN_NPC
+kh_kiehl01,41,187,0	duplicate(RobotsKHQ)	Robots#kh8	HIDDEN_NPC
 
 //----------------------------------------------------------------------------
 // Kiehl's Room; Big Door, (Fifth, and final)
 // - Anyone can pass through this door
 // - Consumes 4 Solid Iron Pieces
 //----------------------------------------------------------------------------
-kh_kiehl01,166,187,0	script	Big Door#BigDoorKHQ5	111,{
+kh_kiehl01,166,187,0	script	Big Door#BigDoorKHQ5	HIDDEN_NPC,{
 	if (($@KHQuestBusy == 0) && (KielHyreQuest >= 74) && (KielHyreQuest <= 106)) {
 		if (KielHyreQuest < 86) {
 			mes "^3355FFThis large door..";
@@ -6458,7 +6458,7 @@ kh_kiehl01,166,187,0	script	Big Door#BigDoorKHQ5	111,{
 	}
 }
 
-kh_kiehl01,166,186,0	script	Big_Door_5_Warp	45,1,1,{
+kh_kiehl01,166,186,0	script	Big_Door_5_Warp	WARPNPC,1,1,{
 	end;
 
 OnEnable:
@@ -6528,7 +6528,7 @@ OnGlobalTimerOff:
 // Kiehl's Room; Kiehl
 // - Timer will drop to 3 minutes once Kiehl is defeated.
 //----------------------------------------------------------------------------
-kh_kiehl02,50,52,4	script	Kiehl#Original	902,{
+kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
@@ -7068,21 +7068,21 @@ OnReset:
 //----------------------------------------------------------------------------
 // Kiehl's Room; Mitchell and Agents.
 //----------------------------------------------------------------------------
-kh_kiehl02,49,55,6	script	Mitchell#KiehlRoom	727,{
+kh_kiehl02,49,55,6	script	Mitchell#KiehlRoom	4_F_JOB_HUNTER,{
 	end;
 OnInit:
 	hideonnpc strnpcinfo(0);
 	end;
 }
-kh_kiehl02,53,52,4	duplicate(Mitchell#KiehlRoom)	Agent#KHAgent1	880
-kh_kiehl02,51,49,1	duplicate(Mitchell#KiehlRoom)	Agent#KHAgent2	880
-kh_kiehl02,47,50,0	duplicate(Mitchell#KiehlRoom)	Agent#KHAgent3	880
-kh_kiehl02,46,53,6	duplicate(Mitchell#KiehlRoom)	Agent#KHAgent4	880
+kh_kiehl02,53,52,4	duplicate(Mitchell#KiehlRoom)	Agent#KHAgent1	4_M_MASKMAN
+kh_kiehl02,51,49,1	duplicate(Mitchell#KiehlRoom)	Agent#KHAgent2	4_M_MASKMAN
+kh_kiehl02,47,50,0	duplicate(Mitchell#KiehlRoom)	Agent#KHAgent3	4_M_MASKMAN
+kh_kiehl02,46,53,6	duplicate(Mitchell#KiehlRoom)	Agent#KHAgent4	4_M_MASKMAN
 
 //----------------------------------------------------------------------------
 // Kiehl's Room; Copy of Kiehl.
 //----------------------------------------------------------------------------
-kh_kiehl02,48,53,6	script	Kiehl#Copy	902,{
+kh_kiehl02,48,53,6	script	Kiehl#Copy	4_M_KHKIEL,{
 	end;
 
 OnInit:
@@ -7093,7 +7093,7 @@ OnInit:
 //----------------------------------------------------------------------------
 // Kiehl's Room; Kiehl_Room_Exit
 //----------------------------------------------------------------------------
-kh_kiehl02,50,59,0	script	Kiehl_Room_Exit	45,1,1,{
+kh_kiehl02,50,59,0	script	Kiehl_Room_Exit	WARPNPC,1,1,{
 OnTouch:
 	if (getmapusers("kh_kiehl02") < 1)
 		donpcevent "KiehlRoom::OnReset";

@@ -13,7 +13,7 @@
 //= 1.2 Navigation system update. [Euphy]
 //============================================================
 
-brasilis,219,97,3	script	Brasilis Guide	478,{
+brasilis,219,97,3	script	Brasilis Guide	4_F_BRZ_WOMAN,{
 	mes "[Brasilis Guide]";
 	mes "Welcome to ^8B4513Brasilis^000000, a country as passionate as the sun.";
 	mes "If you have any questions, please ask me.";

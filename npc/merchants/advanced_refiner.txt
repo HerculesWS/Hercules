@@ -25,7 +25,7 @@
 //= 1.5 Some official script updates. [Euphy]
 //============================================================
 
-payon,157,146,6	script	Suhnbi#cash	85,{
+payon,157,146,6	script	Suhnbi#cash	4_M_03,{
 	disable_items;
 	mes "[Suhnbi]";
 	mes "I am the Armsmith";

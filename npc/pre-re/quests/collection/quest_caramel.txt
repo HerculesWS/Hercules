@@ -12,7 +12,7 @@
 //= 1.0 First version.
 //============================================================
 
-mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	95,{
+mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 	if (checkquest(60116) != -1) {
 		if (checkquest(60116,HUNTING) != 2 ) {
 			mes "[Yullo]";

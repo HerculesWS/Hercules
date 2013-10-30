@@ -29,7 +29,7 @@
 
 // Hugel
 //============================================================
-hugel,189,143,5	script	Young Man	898,{
+hugel,189,143,5	script	Young Man	4_M_HUMAN_01,{
 	mes "[Young Man]";
 	mes "Huh. So that giant";
 	mes "air pouch can make";
@@ -39,7 +39,7 @@ hugel,189,143,5	script	Young Man	898,{
 	close;
 }
 
-hugel,126,151,3	script	Emily	90,{
+hugel,126,151,3	script	Emily	4_F_01,{
 	mes "[Emily]";
 	mes "I feel so blessed to";
 	mes "live in this quant, little";
@@ -56,7 +56,7 @@ hugel,126,151,3	script	Emily	90,{
 	close;
 }
  
-hugel,86,165,5	script	Kayplas	896,{
+hugel,86,165,5	script	Kayplas	4_M_HUBOY,{
 	mes "[Kayplas]";
 	mes "Ooh, I really want to";
 	mes "have that red bottle.";
@@ -66,7 +66,7 @@ hugel,86,165,5	script	Kayplas	896,{
 	close;
 }
 
-hugel,71,197,3	script	Lisa	90,{
+hugel,71,197,3	script	Lisa	4_F_01,{
 	mes "[Lisa]";
 	mes "Hugel is a pretty";
 	mes "small, homely village.";
@@ -83,7 +83,7 @@ hugel,71,197,3	script	Lisa	90,{
 	close;
 }
 
-hugel,169,112,5	script	Old Nikki	892,{
+hugel,169,112,5	script	Old Nikki	4_F_HUGRANMA,{
 	mes "[Old Nikki]";
 	mes "You must not be from";
 	mes "around here. Ah, you're";
@@ -100,7 +100,7 @@ hugel,169,112,5	script	Old Nikki	892,{
 	close;
 }
 
-hugel,175,115,5	script	Marius	897,{
+hugel,175,115,5	script	Marius	4_M_HUGRANFA,{
 	mes "[Marius]";
 	mes "Yes, I'm an old man, but";
 	mes "I can lick a whippersnapper";
@@ -120,7 +120,7 @@ hugel,175,115,5	script	Marius	897,{
 
 // Inside Hugel
 //============================================================
-hu_in01,111,386,4	script	Chris	86,{
+hu_in01,111,386,4	script	Chris	4_M_04,{
 	mes "[Chris]";
 	mes "You know, the people don't";
 	mes "fight harmful monsters, they";
@@ -136,7 +136,7 @@ hu_in01,111,386,4	script	Chris	86,{
 	close;
 }
 
-hu_in01,23,311,4	script	Party Supplies Shop	898,{
+hu_in01,23,311,4	script	Party Supplies Shop	4_M_HUMAN_01,{
 	mes "[Shopkeeper]";
 	mes "Welcome to the party supplies";
 	mes "shop!";
@@ -167,7 +167,7 @@ hu_in01,23,311,4	script	Party Supplies Shop	898,{
 	}
 }
 
-hu_in01,18,94,0	script	A Part-Timer#1	49,{
+hu_in01,18,94,0	script	A Part-Timer#1	1_M_03,{
 	mes "[Luda]";
 	mes "Welcome to the";
 	mes "Shrine Expedition Office.";
@@ -194,7 +194,7 @@ hu_in01,18,94,0	script	A Part-Timer#1	49,{
 	close;
 }
 
-hu_in01,26,77,4	script	A Part-Timer#2	50,{
+hu_in01,26,77,4	script	A Part-Timer#2	1_M_04,{
 	mes "^3355FFThis part-timer is";
 	mes "completely engrossed";
 	mes "in his task of organizing";

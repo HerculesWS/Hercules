@@ -14,7 +14,7 @@
 //=     Added GM management function.
 //============================================================
 
-gld_dun01,28,85,0	script	Grunburti#1::GodDwarf	826,{
+gld_dun01,28,85,0	script	Grunburti#1::GodDwarf	4_M_DWARF,{
 	mes "[Dwarf Grunburti]";
 	mes "A human?!";
 	mes "This land is full";
@@ -340,11 +340,11 @@ gld_dun01,28,85,0	script	Grunburti#1::GodDwarf	826,{
 		close;
 	}
 }
-gld_dun02,85,84,0	duplicate(GodDwarf)	Grunburti#2	826
-gld_dun03,92,105,0	duplicate(GodDwarf)	Grunburti#3	826
-gld_dun04,268,230,0	duplicate(GodDwarf)	Grunburti#4	826
+gld_dun02,85,84,0	duplicate(GodDwarf)	Grunburti#2	4_M_DWARF
+gld_dun03,92,105,0	duplicate(GodDwarf)	Grunburti#3	4_M_DWARF
+gld_dun04,268,230,0	duplicate(GodDwarf)	Grunburti#4	4_M_DWARF
 
-que_god01,215,127,0	script	#god_hopewarp1	111,{
+que_god01,215,127,0	script	#god_hopewarp1	HIDDEN_NPC,{
 	end;
 
 OnInit:
@@ -363,7 +363,7 @@ OnReset:
 	end;
 }
 
-que_god01,214,128,0	script	 #que_godnpc1::GodEntrance	111,{
+que_god01,214,128,0	script	 #que_godnpc1::GodEntrance	HIDDEN_NPC,{
 	mes "[Entrance Notice]";
 	mes "Only the most";
 	mes "worthy of humans";
@@ -371,10 +371,10 @@ que_god01,214,128,0	script	 #que_godnpc1::GodEntrance	111,{
 	mes "power of the gods.";
 	close;
 }
-que_god01,215,128,0	duplicate(GodEntrance)	 #que_godnpc2	111
-que_god01,213,128,0	duplicate(GodEntrance)	 #que_godnpc3	111
+que_god01,215,128,0	duplicate(GodEntrance)	 #que_godnpc2	HIDDEN_NPC
+que_god01,213,128,0	duplicate(GodEntrance)	 #que_godnpc3	HIDDEN_NPC
 
-que_god01,154,112,4	script	Grunburti#god	826,{
+que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 	if (($God1 < $@god_check2) || ($God2 < $@god_check2) || ($God3 < $@god_check2) || ($God4 < $@god_check2)){
 		mes "[Dwarf Grunburti]";
 		mes "One of the godly";
@@ -822,7 +822,7 @@ que_god01,145,118,0	duplicate(god_failwarp#1)	god_failwarp#5	-1,9,9
 que_god01,164,118,0	duplicate(god_failwarp#1)	god_failwarp#6	-1,9,9
 
 // Original name: "Godly Item Quests Related#god"
-que_god01,293,3,0	script	Godly Item Quests#god	90,{
+que_god01,293,3,0	script	Godly Item Quests#god	4_F_01,{
 	callfunc "F_GM_NPC";
 	mes "[Use in case of emergency]";
 	mes "Please enter password.";

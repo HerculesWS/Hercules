@@ -13,7 +13,7 @@
 //= 1.2 Navigation system update. [Euphy]
 //============================================================
 
-niflheim,201,187,3	script	Niflheim Guide#01nif	849,{
+niflheim,201,187,3	script	Niflheim Guide#01nif	4_M_DIEMAN,{
 	mes "[Niflheim Guide]";
 	mes "Welcome to.. ^8B4513Niflheim^000000...";
 	mes "the Realm of the Dead...";

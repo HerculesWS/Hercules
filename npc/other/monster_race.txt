@@ -183,7 +183,7 @@ OnInit:
 	end;
 }
 
-p_track01,73,22,1	script	Ticket Helper#single	899,{
+p_track01,73,22,1	script	Ticket Helper#single	4_M_HUMAN_02,{
 	mes "[Ticket Helper]";
 	mes "Welcome to the";
 	mes "Monster Race Arena.";
@@ -308,7 +308,7 @@ p_track01,30,32,0	duplicate(Runner#main)	Runner No. 4	-1,1,0
 p_track01,30,30,0	duplicate(Runner#main)	Runner No. 5	-1,1,0
 p_track01,30,28,0	duplicate(Runner#main)	Runner No. 6	-1,1,0
 
-p_track01,67,45,5	script	Medal Distributor#single	845,{
+p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 	if (!checkweight(908,200)) {
 		mes "[Medal Distributor]";
 		mes "I'm sorry, but I can't";
@@ -514,7 +514,7 @@ OnInit:
 	end;
 }
 
-p_track01,76,36,1	script	Exit Guide#single	798,{
+p_track01,76,36,1	script	Exit Guide#single	4_M_NFMAN,{
 	mes "[Exit Guide]";
 	mes "If you have a winning Racing";
 	mes "Ticket, please make sure that";
@@ -558,7 +558,7 @@ p_track01,76,36,1	script	Exit Guide#single	798,{
 	end;
 }
 
-hugel,58,72,6	script	Eckar Ellebird#single	798,{
+hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 	mes "[Eckar Ellebird]";
 	mes "Welcome to the biggest";
 	mes "attraction in Hugel, the";
@@ -743,7 +743,7 @@ OnDisable:
 	end;
 }
 
-p_track01,39,49,3	script	Game Guide#single	845,{
+p_track01,39,49,3	script	Game Guide#single	4_F_RACING,{
 	mes "[Game Guide]";
 	mes "Welcome to the";
 	mes "Monster Race Arena.";
@@ -1179,7 +1179,7 @@ OnTimer300000:
 	end;
 }
 
-hugel,62,69,1	script	Eckar Erenes#double	798,{
+hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 	mes "[Eckar Erenes]";
 	mes "Welcome to the";
 	mes "Monster Race Arena,";
@@ -1371,7 +1371,7 @@ OnDisable:
 	end;
 }
 
-p_track02,73,22,1	script	Ticket Helper#2	899,{
+p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 	if (!checkweight(908,200)) {
 		mes "[Ticket Helper]";
 		mes "Welcome to the";
@@ -1559,7 +1559,7 @@ OnInit:
 	end;
 }
 
-p_track02,39,49,3	script	Game Guide#double	845,{
+p_track02,39,49,3	script	Game Guide#double	4_F_RACING,{
 	mes "[Game Guide]";
 	mes "Welcome to the";
 	mes "Monster Race Arena.";
@@ -1657,7 +1657,7 @@ p_track02,39,49,3	script	Game Guide#double	845,{
 	close;
 }
 
-p_track02,67,45,5	script	Medal Distributor#medal	845,{
+p_track02,67,45,5	script	Medal Distributor#medal	4_F_RACING,{
 	if (!checkweight(909,20)) {
 		mes "[Medal Distributor]";
 		mes "I'm sorry, but I can't";
@@ -1750,7 +1750,7 @@ OnInit:
 	end;
 }
 
-p_track02,76,38,1	script	Exit Guide#double	798,{
+p_track02,76,38,1	script	Exit Guide#double	4_M_NFMAN,{
 	mes "[Exit Guide]";
 	mes "If you have a winning Racing";
 	mes "Ticket, please make sure that";
@@ -1852,12 +1852,12 @@ OnInit:
 	disablenpc strnpcinfo(0);
 	end;
 }
-p_track02,30,38,0	duplicate(mob1#main)	#poring1	139,0,0
-p_track02,30,36,0	duplicate(mob1#main)	#lunatic1	139,0,0
-p_track02,30,34,0	duplicate(mob1#main)	#savagebebe1	139,0,0
-p_track02,30,32,0	duplicate(mob1#main)	#desertwolf1	139,0,0
-p_track02,30,30,0	duplicate(mob1#main)	#deviruchi1	139,0,0
-p_track02,30,28,0	duplicate(mob1#main)	#baphomet1	139,0,0
+p_track02,30,38,0	duplicate(mob1#main)	#poring1	HIDDEN_WARP_NPC,0,0
+p_track02,30,36,0	duplicate(mob1#main)	#lunatic1	HIDDEN_WARP_NPC,0,0
+p_track02,30,34,0	duplicate(mob1#main)	#savagebebe1	HIDDEN_WARP_NPC,0,0
+p_track02,30,32,0	duplicate(mob1#main)	#desertwolf1	HIDDEN_WARP_NPC,0,0
+p_track02,30,30,0	duplicate(mob1#main)	#deviruchi1	HIDDEN_WARP_NPC,0,0
+p_track02,30,28,0	duplicate(mob1#main)	#baphomet1	HIDDEN_WARP_NPC,0,0
 
 p_track02,19,48,0	script	TrapGlobal#race02	-1,{
 OnEnable:
@@ -2048,7 +2048,7 @@ p_track02,47,28,0	duplicate(Tire_1)	Tire#race02_6_6	-1,0,0
 
 // NPCs for Redeeming Prize Medals (Einbroch and Hugel)
 //============================================================
-ein_in01,85,208,5	script	Ei'felle#repay01	854,{
+ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 	if (!ein_medal01) {
 		mes "[Ei'felle]";
 		mes "Curses! We need to deliver";
@@ -2740,7 +2740,7 @@ S_BonusReward:
 	close;
 }
 	
-hugel,71,83,4	script	Wayne	900,{
+hugel,71,83,4	script	Wayne	4_M_HUMERCHANT,{
 	if (!checkweight(1201,1)) {
 		mes "[Wayne]";
 		mes "Hold on a second...";
@@ -2868,7 +2868,7 @@ hugel,71,83,4	script	Wayne	900,{
 
 // Monster Race Affiliated NPCs
 //============================================================
-airplane,246,47,1	script	Eocatt#decoy01	878,{
+airplane,246,47,1	script	Eocatt#decoy01	4_M_OILMAN,{
 	mes "[Eocatt]";
 	mes "There's an old, humble";
 	mes "village on the outskirts of";
@@ -2893,7 +2893,7 @@ airplane,246,47,1	script	Eocatt#decoy01	878,{
 	close;
 }
 
-hugel,85,93,5	script	Mudie#dummy01	866,{
+hugel,85,93,5	script	Mudie#dummy01	4_M_LGTGRAND,{
 	mes "[Mudie]";
 	mes "The Monster Races";
 	mes "are probably the biggest";
@@ -2918,7 +2918,7 @@ hugel,85,93,5	script	Mudie#dummy01	866,{
 	close;
 }
 
-p_track02,32,45,5	script	Eccentric Scholar#double	755,{
+p_track02,32,45,5	script	Eccentric Scholar#double	4_M_SAGE_C,{
 	mes "[Eccentric Scholar]";
 	mes "Let's see now...";
 	mes "Monster 1's average speed";
@@ -2949,7 +2949,7 @@ p_track02,32,45,5	script	Eccentric Scholar#double	755,{
 	close;
 }
 
-p_track02,69,31,1	script	Blacksmith Guildsman#dou	726,{
+p_track02,69,31,1	script	Blacksmith Guildsman#dou	4_F_JOB_BLACKSMITH,{
 	if (!$@mon_time_2_2) {
 		mes "[Blacksmith Guildsman]";
 		mes "How many times must";
@@ -2979,7 +2979,7 @@ p_track02,69,31,1	script	Blacksmith Guildsman#dou	726,{
 	close;
 }
 
-p_track02,53,45,3	script	Valiant Knight#double	733,{
+p_track02,53,45,3	script	Valiant Knight#double	4_M_JOB_KNIGHT1,{
 	mes "[Valiant Knight]";
 	mes "Hey, have you been";
 	mes "wagering on the races?";
@@ -3003,7 +3003,7 @@ p_track02,53,45,3	script	Valiant Knight#double	733,{
 	close;
 }
 
-p_track01,27,47,5	script	Drunkard#single	853,{
+p_track01,27,47,5	script	Drunkard#single	4_M_YURI,{
 	mes "[Familiar Drunkard]";
 	mes "Grrr...! ^333333*Hiccup*^000000";
 	mes "I just gotta win this";
@@ -3022,7 +3022,7 @@ p_track01,27,47,5	script	Drunkard#single	853,{
 	close;
 }
 
-p_track01,69,31,1	script	Blacksmith Guildsman#sin	107,{
+p_track01,69,31,1	script	Blacksmith Guildsman#sin	1_M_PAY_ELDER,{
 	mes "[Blacksmith Guildsman]";
 	mes "How can this be so hard?";
 	mes "Why can't I win at least";
@@ -3047,7 +3047,7 @@ p_track01,69,31,1	script	Blacksmith Guildsman#sin	107,{
 	close;
 }
 
-p_track01,45,42,3	script	Absent Minded Man#single	881,{
+p_track01,45,42,3	script	Absent Minded Man#single	4_M_SITDOWN,{
 	mes "[Absent Minded Man]";
 	mes "Say, are you here to bet";
 	mes "on the monster races? I've";
@@ -3066,7 +3066,7 @@ p_track01,45,42,3	script	Absent Minded Man#single	881,{
 	close;
 }
 
-hugel,5,5,3	script	Monster Race Manager	868,{
+hugel,5,5,3	script	Monster Race Manager	4_M_LGTGUARD,{
 	callfunc "F_GM_NPC";
 	mes "[Monster Race Manager]";
 	mes "I can activate and";

@@ -14,7 +14,7 @@
 
 // Lauds
 //============================================================
-prontera,182,214,4	script	Lauds#Memorial	58,{
+prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 	if (Memorial08 < 1) {
 		mes "[Mad Sago Lauds]";
 		mes "Hey, yo!";
@@ -194,7 +194,7 @@ prontera,182,214,4	script	Lauds#Memorial	58,{
 		
 // Memorial Plaque
 //============================================================
-prontera,153,286,4	script	Memorial Plaque#Memorial	857,{
+prontera,153,286,4	script	Memorial Plaque#Memorial	4_BOARD3,{
 	if (Memorial08 < 8) {
 		mes "[" + strcharinfo(0) + "]";
 		mes "- It's a dusty old plaque.-";
@@ -251,7 +251,7 @@ prontera,153,286,4	script	Memorial Plaque#Memorial	857,{
 
 // Grast
 //============================================================
-prontera,150,270,4	script	Grast#Memorial	900,{
+prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 	if (Memorial08 < 3) {
 		mes "[Grast]";
 		mes "Memorial Day is a sad and yet glorious day.";

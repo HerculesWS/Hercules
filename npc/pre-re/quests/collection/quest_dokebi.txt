@@ -12,7 +12,7 @@
 //= 1.0 First version.
 //============================================================
 
-pay_fild10,108,357,5	script	Li#Dokebi_Hunt	90,{
+pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 	if (checkquest(60128) != -1) {
 		if (checkquest(60128,HUNTING) != 2 ) {
 			mes "[Li]";

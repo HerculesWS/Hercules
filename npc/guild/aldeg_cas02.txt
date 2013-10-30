@@ -14,7 +14,7 @@
 
 // Guild Flags (Outside Castle)
 //============================================================
--	script	Hohenschwangau#1::OutsideFlagsA2	722,{
+-	script	Hohenschwangau#1::OutsideFlagsA2	GUILD_FLAG,{
 
 	set .@GID, GetCastleData("aldeg_cas02",1);
 
@@ -64,12 +64,12 @@ OnRecvCastleA02:
 	end;
 }
 
-alde_gld,99,251,4	duplicate(OutsideFlagsA2)	Hohenschwangau#1-2	722
-alde_gld,99,244,4	duplicate(OutsideFlagsA2)	Hohenschwangau#2	722
+alde_gld,99,251,4	duplicate(OutsideFlagsA2)	Hohenschwangau#1-2	GUILD_FLAG
+alde_gld,99,244,4	duplicate(OutsideFlagsA2)	Hohenschwangau#2	GUILD_FLAG
 
 // Guild Flags (Inside Castle)
 //============================================================
--	script	Hohenschwangau#3::InsideFlagsA2	722,{
+-	script	Hohenschwangau#3::InsideFlagsA2	GUILD_FLAG,{
 	end;
 
 OnRecvCastleA02:
@@ -77,36 +77,36 @@ OnRecvCastleA02:
 	end;
 }
 
-aldeg_cas02,82,71,2	duplicate(InsideFlagsA2)	Hohenschwangau#3-2	722
-aldeg_cas02,67,30,2	duplicate(InsideFlagsA2)	Hohenschwangau#4	722
-aldeg_cas02,183,140,2	duplicate(InsideFlagsA2)	Hohenschwangau#5	722
-aldeg_cas02,212,152,2	duplicate(InsideFlagsA2)	Hohenschwangau#6	722
-aldeg_cas02,108,39,2	duplicate(InsideFlagsA2)	Hohenschwangau#7	722
-aldeg_cas02,57,213,2	duplicate(InsideFlagsA2)	Hohenschwangau#8	722
-aldeg_cas02,103,53,2	duplicate(InsideFlagsA2)	Hohenschwangau#9	722
-aldeg_cas02,73,53,2	duplicate(InsideFlagsA2)	Hohenschwangau#10	722
-aldeg_cas02,63,41,2	duplicate(InsideFlagsA2)	Hohenschwangau#11	722
-aldeg_cas02,229,6,2	duplicate(InsideFlagsA2)	Hohenschwangau#12	722
-aldeg_cas02,230,40,2	duplicate(InsideFlagsA2)	Hohenschwangau#13	722
-aldeg_cas02,197,40,2	duplicate(InsideFlagsA2)	Hohenschwangau#14	722
-aldeg_cas02,32,213,2	duplicate(InsideFlagsA2)	Hohenschwangau#15	722
-aldeg_cas02,121,29,2	duplicate(InsideFlagsA2)	Hohenschwangau#16	722
+aldeg_cas02,82,71,2	duplicate(InsideFlagsA2)	Hohenschwangau#3-2	GUILD_FLAG
+aldeg_cas02,67,30,2	duplicate(InsideFlagsA2)	Hohenschwangau#4	GUILD_FLAG
+aldeg_cas02,183,140,2	duplicate(InsideFlagsA2)	Hohenschwangau#5	GUILD_FLAG
+aldeg_cas02,212,152,2	duplicate(InsideFlagsA2)	Hohenschwangau#6	GUILD_FLAG
+aldeg_cas02,108,39,2	duplicate(InsideFlagsA2)	Hohenschwangau#7	GUILD_FLAG
+aldeg_cas02,57,213,2	duplicate(InsideFlagsA2)	Hohenschwangau#8	GUILD_FLAG
+aldeg_cas02,103,53,2	duplicate(InsideFlagsA2)	Hohenschwangau#9	GUILD_FLAG
+aldeg_cas02,73,53,2	duplicate(InsideFlagsA2)	Hohenschwangau#10	GUILD_FLAG
+aldeg_cas02,63,41,2	duplicate(InsideFlagsA2)	Hohenschwangau#11	GUILD_FLAG
+aldeg_cas02,229,6,2	duplicate(InsideFlagsA2)	Hohenschwangau#12	GUILD_FLAG
+aldeg_cas02,230,40,2	duplicate(InsideFlagsA2)	Hohenschwangau#13	GUILD_FLAG
+aldeg_cas02,197,40,2	duplicate(InsideFlagsA2)	Hohenschwangau#14	GUILD_FLAG
+aldeg_cas02,32,213,2	duplicate(InsideFlagsA2)	Hohenschwangau#15	GUILD_FLAG
+aldeg_cas02,121,29,2	duplicate(InsideFlagsA2)	Hohenschwangau#16	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-aldebaran,149,97,4	duplicate(InsideFlagsA2)	Hohenschwangau#17	722
+aldebaran,149,97,4	duplicate(InsideFlagsA2)	Hohenschwangau#17	GUILD_FLAG
 
 // Kafra Employee
 //============================================================
-aldeg_cas02,84,74,0	duplicate(guildkafra)	Kafra Staff#aldeg_cas02	117
+aldeg_cas02,84,74,0	duplicate(guildkafra)	Kafra Staff#aldeg_cas02	4_F_KAFRA1
 
 // Steward
 //============================================================
-aldeg_cas02,78,74,0	duplicate(cm)	Chenchenlie#aldeg_cas02	55
+aldeg_cas02,78,74,0	duplicate(cm)	Chenchenlie#aldeg_cas02	1_M_JOBTESTER
 
 // Treasure Room Lever
 //============================================================
-aldeg_cas02,139,234,0	script	#lever_A02	111,{
+aldeg_cas02,139,234,0	script	#lever_A02	HIDDEN_NPC,{
 
 	mes " ";
 	mes "There's a small lever. Will you pull it?";
@@ -121,7 +121,7 @@ aldeg_cas02,139,234,0	script	#lever_A02	111,{
 
 // Guild Dungeon Lever
 //============================================================
-aldeg_cas02,194,136,0	duplicate(gdlever)	#aldeg_cas02	111
+aldeg_cas02,194,136,0	duplicate(gdlever)	#aldeg_cas02	HIDDEN_NPC
 
 // Guild Treasure Spawns
 //============================================================

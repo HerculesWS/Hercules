@@ -147,15 +147,15 @@
 		close;
 	}
 }
-prontera,114,77,6	duplicate(Dolangmal)	Dolangmal#1	553
-geffen,109,61,6	duplicate(Dolangmal)	Dolangmal#2	553
-payon,200,106,4	duplicate(Dolangmal)	Dolangmal#3	553
-aldebaran,170,104,4	duplicate(Dolangmal)	Dolangmal#4	553
-morocc,168,275,4	duplicate(Dolangmal)	Dolangmal#5	553
-yuno,165,122,4	duplicate(Dolangmal)	Dolangmal#6	553
-rachel,121,126,4	duplicate(Dolangmal)	Dolangmal#7	553
-lighthalzen,254,83,5	duplicate(Dolangmal)	Dolangmal#8	553
-mora,57,150,4	duplicate(Dolangmal)	Dolangmal#9	553
+prontera,114,77,6	duplicate(Dolangmal)	Dolangmal#1	4_CAT_DOWN
+geffen,109,61,6	duplicate(Dolangmal)	Dolangmal#2	4_CAT_DOWN
+payon,200,106,4	duplicate(Dolangmal)	Dolangmal#3	4_CAT_DOWN
+aldebaran,170,104,4	duplicate(Dolangmal)	Dolangmal#4	4_CAT_DOWN
+morocc,168,275,4	duplicate(Dolangmal)	Dolangmal#5	4_CAT_DOWN
+yuno,165,122,4	duplicate(Dolangmal)	Dolangmal#6	4_CAT_DOWN
+rachel,121,126,4	duplicate(Dolangmal)	Dolangmal#7	4_CAT_DOWN
+lighthalzen,254,83,5	duplicate(Dolangmal)	Dolangmal#8	4_CAT_DOWN
+mora,57,150,4	duplicate(Dolangmal)	Dolangmal#9	4_CAT_DOWN
 
 -	script	::Odgnalam	-1,{
 	mes "This cat is sleeping in the warm "+((strnpcinfo(2) == "albe")?"Alberta":"Izlude")+" sun.";
@@ -205,14 +205,14 @@ mora,57,150,4	duplicate(Dolangmal)	Dolangmal#9	553
 	warp "malangdo",217,85;
 	close;
 }
-alberta,200,151,4	duplicate(Odgnalam)	Odgnalam#albe	554
-izlude,182,218,4	duplicate(Odgnalam)	Odgnalam#iz	554	// Old coordinates: (182,192)
-izlude_a,182,218,4	duplicate(Odgnalam)	Odgnalam#iz_a	554
-izlude_b,182,218,4	duplicate(Odgnalam)	Odgnalam#iz_b	554
-izlude_c,182,218,4	duplicate(Odgnalam)	Odgnalam#iz_c	554
-izlude_d,182,218,4	duplicate(Odgnalam)	Odgnalam#iz_d	554
+alberta,200,151,4	duplicate(Odgnalam)	Odgnalam#albe	4_CAT_REST
+izlude,182,218,4	duplicate(Odgnalam)	Odgnalam#iz	4_CAT_REST	// Old coordinates: (182,192)
+izlude_a,182,218,4	duplicate(Odgnalam)	Odgnalam#iz_a	4_CAT_REST
+izlude_b,182,218,4	duplicate(Odgnalam)	Odgnalam#iz_b	4_CAT_REST
+izlude_c,182,218,4	duplicate(Odgnalam)	Odgnalam#iz_c	4_CAT_REST
+izlude_d,182,218,4	duplicate(Odgnalam)	Odgnalam#iz_d	4_CAT_REST
 
-malangdo,219,86,4	script	Kong#malang	545,{
+malangdo,219,86,4	script	Kong#malang	4_CAT_SAILOR2,{
 	mes "[Kong]";
 	mes "Did you have fun in Malangdo?";
 	mes "The fleet has a service to Izlude and Alberta.";
@@ -284,7 +284,7 @@ malangdo,219,86,4	script	Kong#malang	545,{
 
 // Generic Malangdo NPCs :: malang_tre
 //============================================================
-malangdo,147,117,3	script	Innkeeper#malang	554,{
+malangdo,147,117,3	script	Innkeeper#malang	4_CAT_REST,{
 	mes "You see a lazy cat standing on a chair.";
 	mes "You guess that this is the Innkeeper.";
 	next;
@@ -330,7 +330,7 @@ malangdo,147,117,3	script	Innkeeper#malang	554,{
 	close;
 }
 
-malangdo,151,120,3	script	Minstrel#mal	479,{
+malangdo,151,120,3	script	Minstrel#mal	4_M_MINSTREL,{
 	mes "[Minstrel]";
 	mes "Boy, that lazy cat makes me want to just nap all day long.";
 	next;
@@ -339,7 +339,7 @@ malangdo,151,120,3	script	Minstrel#mal	479,{
 	close;
 }
 
-malangdo,149,120,5	script	Wanderer#mal	485,5,1,{
+malangdo,149,120,5	script	Wanderer#mal	4_F_WANDERER,5,1,{
 	mes "[Wanderer]";
 	mes "The cats living in here are so energetic.";
 	mes "Is it weird that they make me want to dance all day?";
@@ -367,7 +367,7 @@ OnTouch:
 	end;
 }
 
-malangdo,216,168,3	script	Cat Trainer#mal1	558,0,8,{
+malangdo,216,168,3	script	Cat Trainer#mal1	4_F_ALCHE_A,0,8,{
 	emotion e_awsm;
 	mes "[Cat Trainer]";
 	mes "Ooo~ their soft puffy tails and soft fur~";
@@ -399,7 +399,7 @@ OnTouch:
 	end;
 }
 
-malangdo,164,203,3	script	Cat Trainer#mal2	853,{
+malangdo,164,203,3	script	Cat Trainer#mal2	4_M_YURI,{
 	emotion e_awsm;
 	mes "[Cat Trainer]";
 	mes "Ooo~ their soft puffy tails and soft fur~";

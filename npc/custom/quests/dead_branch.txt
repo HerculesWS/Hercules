@@ -12,7 +12,7 @@
 //= 1.1 Optimized, added Bloody Branch with 0.01% chance [Lupus]
 //============================================================
 
-niflheim,204,179,3	script	Mister Mobry	121,{
+niflheim,204,179,3	script	Mister Mobry	2_M_MOLGENSTEIN,{
 
 	mes "[Mister Mobry]";
 	mes "Trees possess spirits you know...";

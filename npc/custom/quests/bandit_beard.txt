@@ -15,7 +15,7 @@
 //= 1.3 Removed duplicates [L0ne_W0lf]
 //============================================================
 
-umbala,126,129,4	script	Bearded Man#bandit	120,{
+umbala,126,129,4	script	Bearded Man#bandit	2_M_PHARMACIST,{
 	if(BEARD_QUEST == 4 ) goto L_MAKE;
 	if(BEARD_QUEST >= 5 ) goto L_DONE;
 	if(BEARD_QUEST >= 1 ) goto L_THREAD;
@@ -100,7 +100,7 @@ L_NOITEMS:
 }  
 
 //Master Tailor----------
-izlude_in,123,175,4	script	Master Tailor#bandit	50,{
+izlude_in,123,175,4	script	Master Tailor#bandit	1_M_04,{
 	mes "[Master Tailor]";
 	mes "Good evening! I am the Master Tailor!";
 	if(BEARD_QUEST != 1 ) close;
@@ -117,7 +117,7 @@ izlude_in,123,175,4	script	Master Tailor#bandit	50,{
 	close;
 }
 // Karfa Thread Clerk---
-aldeba_in,70,179,5	script	Karfa Clerk#bandit	113,{
+aldeba_in,70,179,5	script	Karfa Clerk#bandit	4_F_KAFRA5,{
 	mes "[Karfa Clerk]";
 	if(BEARD_QUEST == 3 ) goto L_REPEAT;
 	if(BEARD_QUEST > 3 ) goto L_DONE;
@@ -155,7 +155,7 @@ L_DONE:
 }
 
 //Thread Merchant ------
-alberta,65,123,6	script	Man#bandit	85,{
+alberta,65,123,6	script	Man#bandit	4_M_03,{
 	if(BEARD_QUEST == 3 && $@beardMobD) goto L_KILLED;
 	if(BEARD_QUEST > 3) goto L_DONE;
 

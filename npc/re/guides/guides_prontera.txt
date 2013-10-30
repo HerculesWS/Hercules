@@ -13,7 +13,7 @@
 //=     Optimized.
 //============================================================
 
-prontera,154,187,4	script	Guide#01prontera::GuideProntera	105,{
+prontera,154,187,4	script	Guide#01prontera::GuideProntera	8W_SOLDIER,{
 	cutin "prt_soldier",2;
 	mes "[Prontera Guide]";
 	mes "Welcome to ^8B4513Prontera^000000,";
@@ -294,7 +294,7 @@ L_Mark:
 	mes "on your mini-map.";
 	return;
 }
-prontera,282,208,2	duplicate(GuideProntera)	Guide#02prontera	105
-prontera,29,200,6	duplicate(GuideProntera)	Guide#03prontera	105
-prontera,160,29,0	duplicate(GuideProntera)	Guide#04prontera	105
-prontera,151,330,4	duplicate(GuideProntera)	Guide#05prontera	105
+prontera,282,208,2	duplicate(GuideProntera)	Guide#02prontera	8W_SOLDIER
+prontera,29,200,6	duplicate(GuideProntera)	Guide#03prontera	8W_SOLDIER
+prontera,160,29,0	duplicate(GuideProntera)	Guide#04prontera	8W_SOLDIER
+prontera,151,330,4	duplicate(GuideProntera)	Guide#05prontera	8W_SOLDIER

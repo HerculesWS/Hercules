@@ -11,7 +11,7 @@
 //= 1.0 First version.
 //============================================================
 
-lou_dun02,161,264,4	script	Dragon Hunter	732,{
+lou_dun02,161,264,4	script	Dragon Hunter	4_M_JOB_HUNTER,{
 
 	if (checkquest(60182) != -1) {
 		if (checkquest(60182,HUNTING) != 2 ) {

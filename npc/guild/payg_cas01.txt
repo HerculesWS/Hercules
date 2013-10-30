@@ -16,7 +16,7 @@
 
 // Guild Flags (Outside Castle)
 //============================================================
--	script	Bright Arbor#1::OutsideFlagsPA1	722,{
+-	script	Bright Arbor#1::OutsideFlagsPA1	GUILD_FLAG,{
 
 	set .@GID, GetCastleData("payg_cas01",1);
 
@@ -66,14 +66,14 @@ OnRecvCastlePy01:
 	end;
 }
 
-pay_gld,125,236,4	duplicate(OutsideFlagsPA1)	Bright Arbor#1-2	722
-pay_gld,110,233,4	duplicate(OutsideFlagsPA1)	Bright Arbor#2	722
-pay_gld,116,233,4	duplicate(OutsideFlagsPA1)	Bright Arbor#3	722
-pay_gld,91,239,2	duplicate(OutsideFlagsPA1)	Bright Arbor#4	722
+pay_gld,125,236,4	duplicate(OutsideFlagsPA1)	Bright Arbor#1-2	GUILD_FLAG
+pay_gld,110,233,4	duplicate(OutsideFlagsPA1)	Bright Arbor#2	GUILD_FLAG
+pay_gld,116,233,4	duplicate(OutsideFlagsPA1)	Bright Arbor#3	GUILD_FLAG
+pay_gld,91,239,2	duplicate(OutsideFlagsPA1)	Bright Arbor#4	GUILD_FLAG
 
 // Guild Flags (Inside Castle)
 //============================================================
--	script	Bright Arbor#5::InsideFlagsPA1	722,{
+-	script	Bright Arbor#5::InsideFlagsPA1	GUILD_FLAG,{
 	end;
 
 OnRecvCastlePy01:
@@ -81,29 +81,29 @@ OnRecvCastlePy01:
 	end;
 }
 
-payg_cas01,238,67,4	duplicate(InsideFlagsPA1)	Bright Arbor#5-2	722
-payg_cas01,233,67,4	duplicate(InsideFlagsPA1)	Bright Arbor#6	722
-payg_cas01,221,123,4	duplicate(InsideFlagsPA1)	Bright Arbor#7	722
-payg_cas01,221,116,4	duplicate(InsideFlagsPA1)	Bright Arbor#8	722
-payg_cas01,206,108,4	duplicate(InsideFlagsPA1)	Bright Arbor#9	722
-payg_cas01,212,108,4	duplicate(InsideFlagsPA1)	Bright Arbor#10	722
+payg_cas01,238,67,4	duplicate(InsideFlagsPA1)	Bright Arbor#5-2	GUILD_FLAG
+payg_cas01,233,67,4	duplicate(InsideFlagsPA1)	Bright Arbor#6	GUILD_FLAG
+payg_cas01,221,123,4	duplicate(InsideFlagsPA1)	Bright Arbor#7	GUILD_FLAG
+payg_cas01,221,116,4	duplicate(InsideFlagsPA1)	Bright Arbor#8	GUILD_FLAG
+payg_cas01,206,108,4	duplicate(InsideFlagsPA1)	Bright Arbor#9	GUILD_FLAG
+payg_cas01,212,108,4	duplicate(InsideFlagsPA1)	Bright Arbor#10	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-payon,90,322,4	duplicate(InsideFlagsPA1)	Bright Arbor#11	722
-payon,166,177,3	duplicate(InsideFlagsPA1)	Bright Arbor#12	722
+payon,90,322,4	duplicate(InsideFlagsPA1)	Bright Arbor#11	GUILD_FLAG
+payon,166,177,3	duplicate(InsideFlagsPA1)	Bright Arbor#12	GUILD_FLAG
 
 // Kafra Employee
 //============================================================
-payg_cas01,128,58,3	duplicate(guildkafra)	Kafra Staff#payg_cas01	117
+payg_cas01,128,58,3	duplicate(guildkafra)	Kafra Staff#payg_cas01	4_F_KAFRA1
 
 // Steward
 //============================================================
-payg_cas01,120,58,4	duplicate(cm)	Kurunnadi#payg_cas01	55
+payg_cas01,120,58,4	duplicate(cm)	Kurunnadi#payg_cas01	1_M_JOBTESTER
 
 // Treasure Room Exit
 //============================================================
-payg_cas01,295,8,0	script	#lever_PA01	111,{
+payg_cas01,295,8,0	script	#lever_PA01	HIDDEN_NPC,{
 
 	mes " ";
 	mes "There's a small lever. Will you pull it?";
@@ -118,7 +118,7 @@ payg_cas01,295,8,0	script	#lever_PA01	111,{
 
 // Guild Dungeon Switch
 //============================================================
-payg_cas01,101,25,0	duplicate(gdlever)	#payg_cas01	111
+payg_cas01,101,25,0	duplicate(gdlever)	#payg_cas01	HIDDEN_NPC
 
 // Guild Treasure Spawns
 //============================================================

@@ -16,7 +16,7 @@
 
 // Main NPCs
 //============================================================
-job3_gen01,12,44,3	script	Viorel#job3_gen01	542,{
+job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 	if (countitem(6415)) {
 		if (Class == Job_Genetic || Class == Job_Genetic_T || Class == Job_Baby_Genetic) {
 			disable_items;
@@ -269,7 +269,7 @@ L_CheckHomunculus:
 	return;
 }
 
-que_house_s,24,47,3	script	Viorel#homun_s	542,{
+que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 	if (checkquest(4155) > -1) {
 		emotion e_dum;
 		mes "[Viorel]";
@@ -604,7 +604,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	542,{
 	}
 }
 
-que_house_s,80,42,3	script	Jeyna#homun_s	558,{
+que_house_s,80,42,3	script	Jeyna#homun_s	4_F_ALCHE_A,{
 	if (checkquest(4156) > -1) {
 		playbgm "28.mp3"; // You're in Ruins
 		emotion e_gasp;
@@ -827,7 +827,7 @@ L_CheckHomunculus:
 
 // Magic Board
 //============================================================
-que_house_s,83,47,3	script	Magic Board#homun_s	857,{
+que_house_s,83,47,3	script	Magic Board#homun_s	4_BOARD3,{
 	playbgm "26.mp3"; // Everlasting Wanderers
 	callfunc "F_HomMutateInfo","[Magic Board Posts]";
 	mes "[Magic Board Posts]";
@@ -992,7 +992,7 @@ function	script	F_HomMutateInfo	{
 
 // Books
 //============================================================
-que_house_s,13,52,3	script	Open Book#01homun_s	111,{
+que_house_s,13,52,3	script	Open Book#01homun_s	HIDDEN_NPC,{
 	switch(rand(1,7)) {
 	case 1:
 		mes "[Bookcase Notes]";
@@ -1122,7 +1122,7 @@ que_house_s,13,52,3	script	Open Book#01homun_s	111,{
 	}
 }
 
-que_house_s,16,52,3	script	Open Book#02homun_s	111,{
+que_house_s,16,52,3	script	Open Book#02homun_s	HIDDEN_NPC,{
 	switch(rand(1,8)) {
 	case 1:
 		mes "[Bookcase Notes]";
@@ -1306,7 +1306,7 @@ que_house_s,16,52,3	script	Open Book#02homun_s	111,{
 
 // Notifiers
 //============================================================
-que_house_s,11,52,3	script	#03homun_s	111,{
+que_house_s,11,52,3	script	#03homun_s	HIDDEN_NPC,{
 	end;
 OnInit:
 	initnpctimer;
@@ -1321,7 +1321,7 @@ OnTimer7000:
 	end;
 }
 
-que_house_s,14,52,3	script	#04homun_s	111,{
+que_house_s,14,52,3	script	#04homun_s	HIDDEN_NPC,{
 	end;
 }
 
@@ -1331,7 +1331,7 @@ que_house_s,24,46,3	script	Jonathan#homun_s	6002,{
 	end;
 }
 
-que_house_s,23,46,3	script	#05homun_s	111,{
+que_house_s,23,46,3	script	#05homun_s	HIDDEN_NPC,{
 	emotion e_no,0,"Jonathan#homun_s";
 	if (gethominfo(1) < 6048 || gethominfo(1) > 6052) { // Not mutated Homunculus-S
 		mes "[Jonathan]";

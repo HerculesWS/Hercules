@@ -35,7 +35,7 @@
 
 // Doll Quest
 //============================================================
-alberta,117,135,0	script	Elin	96,{
+alberta,117,135,0	script	Elin	4W_KID,{
 	if (checkweight(1201,1) == 0) {
 		mes "[Elin]";
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
@@ -387,7 +387,7 @@ alberta,117,135,0	script	Elin	96,{
 
 // 'Boy's Cap' Quest
 //============================================================
-alberta_in,28,145,4	script	Grampa	120,{
+alberta_in,28,145,4	script	Grampa	2_M_PHARMACIST,{
 	mes "[Grampa]";
 	mes "*Gasp*...";
 	mes "....*Gasp!*";
@@ -465,7 +465,7 @@ alberta_in,28,145,4	script	Grampa	120,{
 
 // 'Antlers' Quest
 //============================================================
-alberta_in,122,53,4	script	Cherokee	47,{
+alberta_in,122,53,4	script	Cherokee	1_M_01,{
 	mes "[Cherokee]";
 	mes "Hey there~!";
 	next;
@@ -511,7 +511,7 @@ alberta_in,122,53,4	script	Cherokee	47,{
 
 // 'Bao Bao', 'Crescent Hairpin', 'Fashionable Glasses', 'Heart Hairpin' Quest
 //============================================================
-alberta,120,53,1	script	Stylish Merchant#new30	51,{
+alberta,120,53,1	script	Stylish Merchant#new30	1_M_BARD,{
 	if ((countitem(10007) > 0) && (countitem(968) > 49)) {
 		mes "[Zic]";
 		mes "I know I know, you just want to get a Bao Bao of your own. But I can't concentrate on my work if you keep rushing me like this.";
@@ -644,7 +644,7 @@ alberta,120,53,1	script	Stylish Merchant#new30	51,{
 
 // 'Hat of the Sun God', 'Sunday Hat', 'Mage Hat', 'Magician Hat' Quest
 //============================================================
-alberta,136,79,1	script	Hat store girl#new30	71,{
+alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 	mes "[Tempestra]";
 	mes "Ah, such a cool breeze. It's good to visit the seashore. I think it was the right choice to come here to take a break from my business.";
 	next;
@@ -945,7 +945,7 @@ alberta,136,79,1	script	Hat store girl#new30	71,{
 
 // Turtle Quest
 //============================================================
-alberta,91,70,4	script	Kinsey#tur	89,{
+alberta,91,70,4	script	Kinsey#tur	4_M_ORIENT02,{
 	mes "[Kinsey]";
 	mes "What does a man have to do to get a stiff drink around here? I mean, there are absolutely no good bars in Alberta!";
 	next;
@@ -990,7 +990,7 @@ alberta,91,70,4	script	Kinsey#tur	89,{
 	close;
 }
 
-alberta_in,23,104,4	script	Grandpa Turtle#tur	120,{
+alberta_in,23,104,4	script	Grandpa Turtle#tur	2_M_PHARMACIST,{
 	mes "[Grandpa Turtle]";
 	mes "Ooog...";
 	mes "So dizzy...";
@@ -1224,7 +1224,7 @@ alberta_in,23,104,4	script	Grandpa Turtle#tur	120,{
 	close;
 }
 
-tur_dun01,165,29,4	script	Sailor#tur2	709,{
+tur_dun01,165,29,4	script	Sailor#tur2	4_M_SEAMAN,{
 	mes "[Gotanblue]";
 	mes "Do you want";
 	mes "to return";
@@ -1319,7 +1319,7 @@ tur_dun01,165,29,4	script	Sailor#tur2	709,{
 	}
 }
 
-alberta_in,18,102,4	script	Letter#tur	111,{
+alberta_in,18,102,4	script	Letter#tur	HIDDEN_NPC,{
 	mes "[Explorer's Letter]";
 	mes "- O / X / XOVX -";
 	mes "If you find this letter, please don't disregard what you have read.";
@@ -1339,7 +1339,7 @@ alberta_in,18,102,4	script	Letter#tur	111,{
 	close;
 }
 
-alberta,248,93,4	script	Voyage log#tur	111,{
+alberta,248,93,4	script	Voyage log#tur	HIDDEN_NPC,{
 	if (rand(2)) {
 		mes "[Voyage log]";
 		mes "03:20 am";
@@ -1523,7 +1523,7 @@ alberta,248,93,4	script	Voyage log#tur	111,{
 	}
 }
 
-tur_dun01,160,81,4	script	Skull Stone#tur	111,{
+tur_dun01,160,81,4	script	Skull Stone#tur	HIDDEN_NPC,{
 	if (TURTLE == 2) {
 		mes "^3355FFUnder the stone^000000";
 		mes "^3355FFis a tiny key hole^000000";
@@ -1566,7 +1566,7 @@ tur_dun01,160,81,4	script	Skull Stone#tur	111,{
 	close;
 }
 
-tur_dun02,132,251,4	script	Turtle Tree Roots#tur	111,{
+tur_dun02,132,251,4	script	Turtle Tree Roots#tur	HIDDEN_NPC,{
 	if (TURTLE == 3) {
 		mes "^3355FFUnder the tree roots^000000";
 		mes "^3355FFis a tiny key hole^000000";
@@ -1625,7 +1625,7 @@ tur_dun02,132,251,4	script	Turtle Tree Roots#tur	111,{
 	close;
 }
 
-tur_dun02,46,125,4	script	A pile of turtle crystal	111,{
+tur_dun02,46,125,4	script	A pile of turtle crystal	HIDDEN_NPC,{
 	if (TURTLE == 7) {
 		mes "^3355FFAmong the Turtle Crystals,^000000";
 		mes "^3355FFyou find a strange key hole.^000000";
@@ -1681,7 +1681,7 @@ tur_dun02,46,125,4	script	A pile of turtle crystal	111,{
 	close;
 }
 
-tur_dun02,49,158,4	script	Turtle Pillar#tur	111,{
+tur_dun02,49,158,4	script	Turtle Pillar#tur	HIDDEN_NPC,{
 	if (TURTLE == 8) {
 		mes "^3355FFAt the base of the pillar^000000";
 		mes "^3355FFis a tiny key hole with^000000";
@@ -1781,7 +1781,7 @@ tur_dun02,49,158,4	script	Turtle Pillar#tur	111,{
 	close;
 }
 
-tur_dun01,203,155,4	script	Turtle stone#tur	111,{
+tur_dun01,203,155,4	script	Turtle stone#tur	HIDDEN_NPC,{
 	if (TURTLE == 4) {
 		mes "^3355FFOn top of the stone";
 		mes "is a small key hole";
@@ -1828,7 +1828,7 @@ tur_dun01,203,155,4	script	Turtle stone#tur	111,{
 	close;
 }
 
-tur_dun02,75,249,4	script	Turtle stone#tur2	111,{
+tur_dun02,75,249,4	script	Turtle stone#tur2	HIDDEN_NPC,{
 	if (TURTLE == 10) {
 		mes "^3355FFOn top of the stone";
 		mes "is a small keyhole";
@@ -1875,7 +1875,7 @@ tur_dun02,75,249,4	script	Turtle stone#tur2	111,{
 	close;
 }
 
-tur_dun03,118,233,4	script	Turtle Stone#tur3	111,{
+tur_dun03,118,233,4	script	Turtle Stone#tur3	HIDDEN_NPC,{
 	if (TURTLE == 11) {
 		mes "^3355FFOn top of the stone";
 		mes "is a small key hole";
@@ -1922,7 +1922,7 @@ tur_dun03,118,233,4	script	Turtle Stone#tur3	111,{
 	close;
 }
 
-tur_dun04,113,178,4	script	Turtle Statue#tur	111,{
+tur_dun04,113,178,4	script	Turtle Statue#tur	HIDDEN_NPC,{
 	if (TURTLE == 12) {
 		mes "^3355FFOn top of the statue";
 		mes "is a small key hole";
@@ -1989,7 +1989,7 @@ tur_dun04,113,178,4	script	Turtle Statue#tur	111,{
 	close;
 }
 
-tur_dun03,105,76,4	script	Knight Leader#tur	110,5,5,{
+tur_dun03,105,76,4	script	Knight Leader#tur	4_M_MINISTER,5,5,{
 	mes "[Takuyaka]";
 	mes "Where did all my men go?!";
 	mes "This is horrible~!";
@@ -2067,7 +2067,7 @@ OnTouch:
 	close;
 }
 
-tur_dun03,105,74,4	script	Mudasamu#tur	119,{
+tur_dun03,105,74,4	script	Mudasamu#tur	2_M_SWORDMASTER,{
 	mes "[Mudasamu]";
 	mes "My name is Mudasamu...";
 	mes "Second in command of the";
@@ -2098,7 +2098,7 @@ tur_dun03,105,74,4	script	Mudasamu#tur	119,{
 	close;
 }
 
-tur_dun01,190,115,4	script	Knight#tur	105,{
+tur_dun01,190,115,4	script	Knight#tur	8W_SOLDIER,{
 	mes "[?]";
 	mes "Where are they?";
 	mes "Oh hey! You're an adventurer, aren't you? Do you know where my comrades are?";
@@ -2160,7 +2160,7 @@ tur_dun01,190,115,4	script	Knight#tur	105,{
 	}
 }
 
-tur_dun03,189,126,4	script	Knight#tur2	105,{
+tur_dun03,189,126,4	script	Knight#tur2	8W_SOLDIER,{
 	mes "[Jayprocat]";
 	mes "Oh? Are you a civilian? Nice to meet you. I'm a mighty Security Knight of Alberta, Jayprocat.";
 	next;
@@ -2208,7 +2208,7 @@ tur_dun03,189,126,4	script	Knight#tur2	105,{
 	close;
 }
 
-tur_dun03,104,171,4	script	Knight#tur3	105,{
+tur_dun03,104,171,4	script	Knight#tur3	8W_SOLDIER,{
 	mes "[Squall]";
 	mes "Am I the only one left? Where are all my comrades?! I... I'm about to go crazy!";
 	next;
@@ -2260,7 +2260,7 @@ tur_dun03,104,171,4	script	Knight#tur3	105,{
 	close;
 }
 
-tur_dun03,67,130,4	script	Knight#tur4	105,{
+tur_dun03,67,130,4	script	Knight#tur4	8W_SOLDIER,{
 	mes "[Nysurea]";
 	mes "Hm? I'm surprised that someone around here is still alive.";
 	next;
@@ -2313,7 +2313,7 @@ tur_dun03,67,130,4	script	Knight#tur4	105,{
 
 // Alberta Boy
 //============================================================
-alberta_in,131,95,5	script	Iromo#ep3_2	706,{
+alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 	if (ep13_2_hiki == 13) {
 		mes "[Iromo]";
 		mes "But... this world is...";
@@ -2735,7 +2735,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	706,{
 	close;
 }
 
-alberta_in,120,93,3	script	Iromo's Mother#ep3_2	53,{
+alberta_in,120,93,3	script	Iromo's Mother#ep3_2	1_M_INNKEEPER,{
 	if (ep13_2_hiki == 8) {
 		mes "[Mother]";
 		mes "Thank you for helping my son.";
@@ -2842,7 +2842,7 @@ alberta_in,120,93,3	script	Iromo's Mother#ep3_2	53,{
 	close;
 }
 
-alberta,45,106,5	script	Little Boy#ep3_2	706,{
+alberta,45,106,5	script	Little Boy#ep3_2	4_M_KID1,{
 	if (ep13_2_hiki == 6) {
 		mes "[Little Boy]";
 		mes "Iromo? He used to like ^FF0000Monster's Feed^000000 and ^FF0000Red Potion^000000.";

@@ -12,7 +12,7 @@
 //= 1.1 Optimized. [Euphy]
 //============================================================
 
-pvp_y_room,77,85,4	script	Guild Battle Guide	105,{
+pvp_y_room,77,85,4	script	Guild Battle Guide	8W_SOLDIER,{
 
 	setarray .@map1X[1],7,9,16,8,20;
 	setarray .@map2X[1],91,90,83,91,79;

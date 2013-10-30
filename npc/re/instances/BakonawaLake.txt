@@ -15,7 +15,7 @@
 
 1@ma_b	mapflag	src4instance
 //============================================================
-ma_scene01,174,179,4	script	Taho	541,{
+ma_scene01,174,179,4	script	Taho	4_M_DEWZATIMAN,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "You are carrying too many items. Come back after taking off some of them.";
@@ -104,7 +104,7 @@ ma_scene01,174,179,4	script	Taho	541,{
 	}
 }
 
-sec_in02,26,26,4	script	Bakonawa's Rage	541,{
+sec_in02,26,26,4	script	Bakonawa's Rage	4_M_DEWZATIMAN,{
 	callfunc "F_GM_NPC";
 	mes "[Taho]";
 	mes "My name is Minky.";
@@ -117,7 +117,7 @@ sec_in02,26,26,4	script	Bakonawa's Rage	541,{
 	close;
 }
 
-1@ma_b,62,52,4	script	Taho#nf	541,{
+1@ma_b,62,52,4	script	Taho#nf	4_M_DEWZATIMAN,{
 	mes "[Taho]";
 	mes "Heehee, I could join the Bakonawa hunt, but I'd rather hide behind that rock and cheer you guys on.";
 	next;
@@ -150,7 +150,7 @@ sec_in02,26,26,4	script	Bakonawa's Rage	541,{
 	}
 }
 
-1@ma_b,36,111,4	script	#Bakonawan1	844,{
+1@ma_b,36,111,4	script	#Bakonawan1	CLEAR_NPC,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Bakonawan1");
@@ -203,7 +203,7 @@ OnAnnounce:
 	end;
 }
 
-1@ma_b,78,81,0	script	#SummonPuppetsn1	139,4,5,{
+1@ma_b,78,81,0	script	#SummonPuppetsn1	HIDDEN_WARP_NPC,4,5,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#SummonPuppetsn1");
@@ -238,7 +238,7 @@ OnMyMobDead:
 	end;
 }
 
-1@ma_b,1,5,4	script	#BakonawaDeadn1	844,{
+1@ma_b,1,5,4	script	#BakonawaDeadn1	CLEAR_NPC,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#BakonawaDeadn1");
@@ -264,7 +264,7 @@ OnTimer15000:
 	end;
 }
 
-1@ma_b,36,111,4	script	#Bakonawan2	844,{
+1@ma_b,36,111,4	script	#Bakonawan2	CLEAR_NPC,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Bakonawan2");
@@ -318,7 +318,7 @@ OnAnnounce:
 	end;
 }
 
-1@ma_b,36,111,4	script	#Bakonawan2-1	844,{
+1@ma_b,36,111,4	script	#Bakonawan2-1	CLEAR_NPC,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Bakonawan2-1");
@@ -351,7 +351,7 @@ OnMyMobDead:
 	end;
 }
 
-1@ma_b,36,111,4	script	#Bakonawan3	844,{
+1@ma_b,36,111,4	script	#Bakonawan3	CLEAR_NPC,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Bakonawan3");
@@ -410,7 +410,7 @@ OnAnnounce:
 	end;
 }
 
-1@ma_b,36,111,4	script	#Bakonawan3-1	844,{
+1@ma_b,36,111,4	script	#Bakonawan3-1	CLEAR_NPC,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#Bakonawan3-1");
@@ -459,7 +459,7 @@ OnMobSpawn:
 	end;
 }
 
-1@ma_b,62,52,4	script	Taho#Completed	541,{
+1@ma_b,62,52,4	script	Taho#Completed	4_M_DEWZATIMAN,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "It seems you are carrying too many different kinds of items. Please try again after reducing it.";
@@ -504,7 +504,7 @@ OnTimer10000:
 	end;
 }
 
-1@ma_b,62,52,4	script	Taho#Fail	541,{
+1@ma_b,62,52,4	script	Taho#Fail	4_M_DEWZATIMAN,{
 	mes "[Taho]";
 	mes "HMM. We almost got him but he is one fast creature...";
 	next;

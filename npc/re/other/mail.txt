@@ -13,7 +13,7 @@
 
 // Izlude
 //============================================================
-izlude_a,136,94,0	duplicate(MailBox)	Mailbox#iz_a	888
-izlude_b,136,94,0	duplicate(MailBox)	Mailbox#iz_b	888
-izlude_c,136,94,0	duplicate(MailBox)	Mailbox#iz_c	888
-izlude_d,136,94,0	duplicate(MailBox)	Mailbox#iz_d	888
+izlude_a,136,94,0	duplicate(MailBox)	Mailbox#iz_a	2_POSTBOX
+izlude_b,136,94,0	duplicate(MailBox)	Mailbox#iz_b	2_POSTBOX
+izlude_c,136,94,0	duplicate(MailBox)	Mailbox#iz_c	2_POSTBOX
+izlude_d,136,94,0	duplicate(MailBox)	Mailbox#iz_d	2_POSTBOX

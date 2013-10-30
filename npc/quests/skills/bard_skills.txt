@@ -25,7 +25,7 @@
 //= 1.6 Replaced effect numerics with constants. [L0ne_W0lf]
 //============================================================
 
-prontera,174,328,3	script	Young Man#bard_q1	89,3,3,{
+prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 	if (BaseJob == Job_Bard) {
 		emotion e_omg;
 		mes "[Timid Young Man]";
@@ -377,7 +377,7 @@ OnTouch:
 	end;
 }
 
-morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	741,3,3,{
+morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 	if (BaseJob == Job_Bard) {
 		if (Class == Job_Clown && qskill_bard == 9) {
 			if (getskilllv("BA_PANGVOICE") != 0) {
@@ -902,7 +902,7 @@ OnTouch:
 
 // Yhelle the Chicken
 //============================================================
-niflheim,239,70,1	script	Yhelle#bard_chick1	800,3,3,{
+niflheim,239,70,1	script	Yhelle#bard_chick1	4_NFCOCK,3,3,{
 	emotion e_omg,1;
 	emotion e_omg;
 	mes "[Hen Yhelle]";
@@ -935,7 +935,7 @@ OnTouch:
 	callfunc "F_BardSkillYhelle",1,2; close;
 }
 
-niflheim,185,205,3	script	Yhelle#bard_chick2	800,3,3,{
+niflheim,185,205,3	script	Yhelle#bard_chick2	4_NFCOCK,3,3,{
 	emotion e_omg,1;
 	emotion e_omg;
 	mes "[Hen Yhelle]";
@@ -961,7 +961,7 @@ OnTouch:
 	callfunc "F_BardSkillYhelle",2,3; close;
 }
 
-niflheim,85,203,5	script	Yhelle#bard_chick3	800,3,3,{
+niflheim,85,203,5	script	Yhelle#bard_chick3	4_NFCOCK,3,3,{
 	emotion e_omg,1;
 	emotion e_omg;
 	mes "[Hen Yhelle]";
@@ -987,7 +987,7 @@ OnTouch:
 	callfunc "F_BardSkillYhelle",3,4; close;
 }
 
-niflheim,149,81,7	script	Yhelle#bard_chick4	800,3,3,{
+niflheim,149,81,7	script	Yhelle#bard_chick4	4_NFCOCK,3,3,{
 	emotion e_omg,1;
 	emotion e_omg;
 	mes "[Hen Yhelle]";
@@ -1013,7 +1013,7 @@ OnTouch:
 	callfunc "F_BardSkillYhelle",4,5; close;
 }
 
-niflheim,209,144,3	script	Yhelle#bard_chick5	800,3,3,{
+niflheim,209,144,3	script	Yhelle#bard_chick5	4_NFCOCK,3,3,{
 	emotion e_omg,1;
 	emotion e_omg;
 	mes "[Hen Yhelle]";
@@ -1041,7 +1041,7 @@ OnTouch:
 
 // Drunken Men
 //============================================================
-morocc_in,178,73,3	script	Customer#bard_skill01	54,{
+morocc_in,178,73,3	script	Customer#bard_skill01	1_M_JOBGUIDER,{
 	mes "[Little Bit Drunken Guy]";
 	mes "What do you think";
 	mes "is the best drink in";
@@ -1101,7 +1101,7 @@ morocc_in,178,73,3	script	Customer#bard_skill01	54,{
 	close;
 }
 
-morocc_in,175,70,7	script	Customer#bard_skill02	50,{
+morocc_in,175,70,7	script	Customer#bard_skill02	1_M_04,{
 	mes "[Little Bit Drunken Guy]";
 	mes "What do you think";
 	mes "is the best drink in";
@@ -1163,7 +1163,7 @@ morocc_in,175,70,7	script	Customer#bard_skill02	50,{
 
 // Bartender
 //============================================================
-morocc_in,166,76,7	script	Bartender#bard_qskill	46,{
+morocc_in,166,76,7	script	Bartender#bard_qskill	1_ETC_01,{
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";

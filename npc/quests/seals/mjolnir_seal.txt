@@ -22,7 +22,7 @@
 //= 1.9 Renewal script update. [Euphy]
 //============================================================
 
-prontera,124,297,3	script	Tialfi	706,{
+prontera,124,297,3	script	Tialfi	4_M_KID1,{
 	if (checkweight(1301,3) == 0) {
 		mes "- You are carrying too many items! -";
 		close;
@@ -367,7 +367,7 @@ prontera,124,297,3	script	Tialfi	706,{
 	end;
 }
 
-prt_fild01,196,47,3	script	Roskva	703,{
+prt_fild01,196,47,3	script	Roskva	4_F_KID2,{
 	if (god_mjo_0 == 1) {
 		mes "[Roskva]";
 		mes "You should know that Dwarven Blacksmiths are extremely offended if you do not speak to them with the utmost respect.";
@@ -420,7 +420,7 @@ prt_fild01,196,47,3	script	Roskva	703,{
 	}
 }
 
-mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	826,{
+mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 	if ($God3 < $@god_check1) {
 		mes "[Austri]";
 		mes "Something is happening somewhere on this continent. You might not believe me, but I keep getting visions of the Fenrir-Wolf.";
@@ -980,7 +980,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	826,{
 	}
 }
 
-mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	826,{
+mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 	if ($God3 < $@god_check1) {
 		mes "[Sudri]";
 		mes "I want to compete";
@@ -1847,7 +1847,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	826,{
 	}
 }
 
-mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	826,{
+mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 	if ($God3 < $@god_check1) {
 		mes "[Vestri]";
 		mes "If you want something, you should earn it through your own efforts.";
@@ -2342,7 +2342,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	826,{
 	}
 }
 
-mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	826,{
+mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 	if ($God3 < $@god_check1) {
 		mes "[Nordri]";
 		mes "What...?";

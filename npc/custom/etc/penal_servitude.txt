@@ -14,7 +14,7 @@
 // 1.2 Stricted the conditions a bit
 //============================================================
 
-sec_pri,36,58,1	script	Chief Warder	105,{ 
+sec_pri,36,58,1	script	Chief Warder	8W_SOLDIER,{ 
 	mes "[Saddeus]";
 	emotion 1;
 	if(sex) {
@@ -127,7 +127,7 @@ M_NO_THANKS:
 	close;  
 }
 
-sec_in02,137,57,1	script	Overseer	708,{ 
+sec_in02,137,57,1	script	Overseer	4_M_PAY_SOLDIER,{ 
 	mes "[Oliver]";
 
 	delitem 4002,countitem(4002);//Items: Fabre_Card,

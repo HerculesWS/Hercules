@@ -27,7 +27,7 @@
 //= 2.8 Removed the need for use of 'goto.' [L0ne_W0lf]
 //============================================================
 
-yuno_in02,38,61,5	script	Dean of the Academy#sa	743,{
+yuno_in02,38,61,5	script	Dean of the Academy#sa	2_M_SAGE_OLD,{
 	cutin "job_sage_kayron",2;
 	mes "[Kayron Grik]";
 	if (Upper == 1) {
@@ -193,7 +193,7 @@ yuno_in02,38,61,5	script	Dean of the Academy#sa	743,{
 	end;
 }
 
-yuno_in03,154,35,4	script	Staff of the Academy#a	742,{
+yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 	mes "[Metheus Sylphe]";
 	if (Upper == 1) {
 		mes "Welcome to the";
@@ -634,7 +634,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	742,{
 	}
 }
 
-yuno_in03,105,177,5	script	Written Test Professor#s	754,{
+yuno_in03,105,177,5	script	Written Test Professor#s	4_M_SAGE_A,{
 	mes "[Claytos Verdo]";
 	if (BaseJob != Job_Mage) {
 		if (BaseJob == Job_Sage) {
@@ -1054,7 +1054,7 @@ L_AskQuestions:
 }
 
 //Practical Examination Professer
-yuno_in03,169,180,3	script	Practical Examination P	755,{
+yuno_in03,169,180,3	script	Practical Examination P	4_M_SAGE_C,{
 	mes "[Hermes Tris]";
 	if (BaseJob != Job_Mage) {
 		if (BaseJob == Job_Sage) {
@@ -1255,7 +1255,7 @@ yuno_in03,169,180,3	script	Practical Examination P	755,{
 	}
 }
 
-yuno_in03,62,176,2	script	History Professor#sa	109,{
+yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 	mes "[Saphien Layless]";
 	if (BaseJob != Job_Mage) {
 		if (BaseJob == Job_Sage) {
@@ -1696,7 +1696,7 @@ yuno_in03,62,176,2	script	History Professor#sa	109,{
 	}
 }
 
-yuno_in03,32,102,1	script	Biology Professor#sa	755,{
+yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 	mes "[Lucius Celsus]";
 	if (BaseJob != Job_Mage) {
 		if (BaseJob == Job_Sage) {
@@ -2123,7 +2123,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	755,{
 	}
 }
 
-yuno_in03,244,31,3	script	Physics Professor#sa	120,{
+yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 	mes "[Aebecee George]";
 	if (BaseJob != Job_Mage) {
 		if (BaseJob == Job_Sage) {
@@ -2542,7 +2542,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	120,{
 	}
 }
 
-job_sage,50,165,4	script	Test Helper#talk	700,{
+job_sage,50,165,4	script	Test Helper#talk	8_F_GIRL,{
 	mes "[Test Helper]";
 	mes "Welcome to the Sage practical examination hall.";
 	mes "If you wish to take the test right now, please enter the waiting room.";
@@ -2557,7 +2557,7 @@ job_sage,50,165,4	script	Test Helper#talk	700,{
 	close;
 }
 
-job_sage,50,165,4	script	Waiting Room#sg	700,{
+job_sage,50,165,4	script	Waiting Room#sg	8_F_GIRL,{
 	end;
 
 OnInit:
@@ -2577,7 +2577,7 @@ OnEnable:
 	end;
 }
 
--	script	Arena#1	66,{
+-	script	Arena#1	1_F_01,{
 OnInit:
 	disablenpc "Arena#1";
 	end;

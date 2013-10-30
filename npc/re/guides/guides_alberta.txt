@@ -12,7 +12,7 @@
 //= 1.1 Navigation system update. [Euphy]
 //============================================================
 
-alberta,23,238,4	script	Guide#01alberta::AlbertaGuide	105,{
+alberta,23,238,4	script	Guide#01alberta::AlbertaGuide	8W_SOLDIER,{
 	cutin "prt_soldier",2;
 	mes "[Alberta Guide]";
 	mes "Welcome to ^8B4513Alberta^000000,";
@@ -208,5 +208,5 @@ alberta,23,238,4	script	Guide#01alberta::AlbertaGuide	105,{
 		}
 	}
 }
-alberta,120,60,3	duplicate(AlbertaGuide)	Guide#02alberta	105
-alberta,184,143,4	duplicate(AlbertaGuide)	Guide#03alberta	105
+alberta,120,60,3	duplicate(AlbertaGuide)	Guide#02alberta	8W_SOLDIER
+alberta,184,143,4	duplicate(AlbertaGuide)	Guide#03alberta	8W_SOLDIER
