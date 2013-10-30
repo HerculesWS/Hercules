@@ -16229,10 +16229,10 @@ BUILDIN(setfont)
 	if( sd == NULL )
 		return true;
 	
-	if( sd->user_font != font )
-		sd->user_font = font;
+	if( sd->status.font != font )
+		sd->status.font = font;
 	else
-		sd->user_font = 0;
+		sd->status.font = 0;
 	
 	clif->font(sd);
 	return true;

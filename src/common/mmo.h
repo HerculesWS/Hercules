@@ -414,6 +414,8 @@ struct mmo_charstatus {
 	unsigned short slotchange;
 
 	time_t delete_date;
+
+	unsigned char font;
 };
 
 typedef enum mail_status {
