@@ -287,7 +287,8 @@ enum {
 	MF_PVP_NOCALCRANK,	//50
 	MF_BATTLEGROUND,
 	MF_RESET,
-	MF_NOTOMB
+	MF_NOTOMB,
+	MF_NOCASHSHOP
 };
 
 /**
@@ -535,7 +536,7 @@ struct script_interface {
 	void (*label_add)(int key, int pos);
 	void (*run) (struct script_code *rootscript,int pos,int rid,int oid);
 	void (*run_main) (struct script_state *st);
-	int (*run_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*run_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*set_var) (struct map_session_data *sd, char *name, void *val);
 	void (*stop_instances) (struct script_code *code);
 	void (*free_code) (struct script_code* code);

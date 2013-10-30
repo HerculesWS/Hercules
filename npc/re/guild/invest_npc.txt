@@ -1,12 +1,11 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Hall of Abyss - NPC Duplicates
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
+//= [Official Conversion]
 //= Expansion for War of Emperium FE.
 //= Invest in each realm to unlock new maps:
 //= - Guild Dungeon F2, total 20,000,000z.

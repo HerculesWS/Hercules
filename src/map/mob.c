@@ -332,8 +332,7 @@ int mob_get_random_id(int type, int flag, int lv)
 /*==========================================
  * Kill Steal Protection [Zephyrus]
  *------------------------------------------*/
-bool mob_ksprotected (struct block_list *src, struct block_list *target)
-{
+bool mob_ksprotected(struct block_list *src, struct block_list *target) {
 	struct block_list *s_bl, *t_bl;
 	struct map_session_data
 		*sd,    // Source
@@ -341,7 +340,7 @@ bool mob_ksprotected (struct block_list *src, struct block_list *target)
 		*t_sd;  // Mob Target
 	struct status_change_entry *sce;
 	struct mob_data *md;
-	unsigned int tick = timer->gettick();
+	int64 tick = timer->gettick();
 	char output[128];
 
 	if( !battle_config.ksprotection )
@@ -559,8 +558,8 @@ int mob_once_spawn_area(struct map_session_data* sd, int16 m, int16 x0, int16 y0
 /*==========================================
  * Set a Guardian's guild data [Skotlex]
  *------------------------------------------*/
-int mob_spawn_guardian_sub(int tid, unsigned int tick, int id, intptr_t data)
-{	//Needed because the guild_data may not be available at guardian spawn time.
+int mob_spawn_guardian_sub(int tid, int64 tick, int id, intptr_t data) {
+	//Needed because the guild_data may not be available at guardian spawn time.
 	struct block_list* bl = map->id2bl(id);
 	struct mob_data* md;
 	struct guild* g;
@@ -779,18 +778,17 @@ int mob_can_reach(struct mob_data *md,struct block_list *bl,int range, int state
 /*==========================================
  * Links nearby mobs (supportive mobs)
  *------------------------------------------*/
-int mob_linksearch(struct block_list *bl,va_list ap)
-{
+int mob_linksearch(struct block_list *bl,va_list ap) {
 	struct mob_data *md;
 	int class_;
 	struct block_list *target;
-	unsigned int tick;
+	int64 tick;
 
 	nullpo_ret(bl);
 	md=(struct mob_data *)bl;
 	class_ = va_arg(ap, int);
 	target = va_arg(ap, struct block_list *);
-	tick=va_arg(ap, unsigned int);
+	tick = va_arg(ap, int64);
 
 	if (md->class_ == class_ && DIFF_TICK(md->last_linktime, tick) < MIN_MOBLINKTIME
 		&& !md->target_id)
@@ -809,7 +807,7 @@ int mob_linksearch(struct block_list *bl,va_list ap)
 /*==========================================
  * mob spawn with delay (timer function)
  *------------------------------------------*/
-int mob_delayspawn(int tid, unsigned int tick, int id, intptr_t data) {
+int mob_delayspawn(int tid, int64 tick, int id, intptr_t data) {
 	struct block_list* bl = map->id2bl(id);
 	struct mob_data* md = BL_CAST(BL_MOB, bl);
 
@@ -884,8 +882,8 @@ int mob_count_sub(struct block_list *bl, va_list ap) {
 int mob_spawn (struct mob_data *md)
 {
 	int i=0;
-	unsigned int tick = timer->gettick();
-	int c =0;
+	int64 tick = timer->gettick();
+	int64 c = 0;
 
 	md->last_thinktime = tick;
 	if (md->bl.prev != NULL)
@@ -1185,7 +1183,7 @@ int mob_warpchase_sub(struct block_list *bl,va_list ap) {
 /*==========================================
  * Processing of slave monsters
  *------------------------------------------*/
-int mob_ai_sub_hard_slavemob(struct mob_data *md,unsigned int tick) {
+int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick) {
 	struct block_list *bl;
 
 	bl=map->id2bl(md->master_id);
@@ -1268,8 +1266,7 @@ int mob_ai_sub_hard_slavemob(struct mob_data *md,unsigned int tick) {
  * when trying to pick new targets when the current chosen target is
  * unreachable.
  *------------------------------------------*/
-int mob_unlocktarget(struct mob_data *md, unsigned int tick)
-{
+int mob_unlocktarget(struct mob_data *md, int64 tick) {
 	nullpo_ret(md);
 
 	switch (md->state.skillstate) {
@@ -1308,8 +1305,7 @@ int mob_unlocktarget(struct mob_data *md, unsigned int tick)
 /*==========================================
  * Random walk
  *------------------------------------------*/
-int mob_randomwalk(struct mob_data *md,unsigned int tick)
-{
+int mob_randomwalk(struct mob_data *md, int64 tick) {
 	const int retrycount=20;
 	int i,x,y,c,d;
 	int speed;
@@ -1383,8 +1379,7 @@ int mob_warpchase(struct mob_data *md, struct block_list *target)
 /*==========================================
  * AI of MOB whose is near a Player
  *------------------------------------------*/
-bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
-{
+bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 	struct block_list *tbl = NULL, *abl = NULL;
 	int mode;
 	int view_range, can_move;
@@ -1645,10 +1640,9 @@ bool mob_ai_sub_hard(struct mob_data *md, unsigned int tick)
 	return true;
 }
 
-int mob_ai_sub_hard_timer(struct block_list *bl,va_list ap)
-{
+int mob_ai_sub_hard_timer(struct block_list *bl, va_list ap) {
 	struct mob_data *md = (struct mob_data*)bl;
-	unsigned int tick = va_arg(ap, unsigned int);
+	int64 tick = va_arg(ap, int64);
 	if (mob->ai_sub_hard(md, tick))
 	{	//Hard AI triggered.
 		if(!md->state.spotted)
@@ -1661,9 +1655,9 @@ int mob_ai_sub_hard_timer(struct block_list *bl,va_list ap)
 /*==========================================
  * Serious processing for mob in PC field of view (foreachclient)
  *------------------------------------------*/
-int mob_ai_sub_foreachclient(struct map_session_data *sd,va_list ap) {
-	unsigned int tick;
-	tick=va_arg(ap,unsigned int);
+int mob_ai_sub_foreachclient(struct map_session_data *sd, va_list ap) {
+	int64 tick;
+	tick=va_arg(ap, int64);
 	map->foreachinrange(mob->ai_sub_hard_timer,&sd->bl, AREA_SIZE+ACTIVE_AI_RANGE, BL_MOB,tick);
 
 	return 0;
@@ -1672,16 +1666,15 @@ int mob_ai_sub_foreachclient(struct map_session_data *sd,va_list ap) {
 /*==========================================
  * Negligent mode MOB AI (PC is not in near)
  *------------------------------------------*/
-int mob_ai_sub_lazy(struct mob_data *md, va_list args)
-{
-	unsigned int tick;
+int mob_ai_sub_lazy(struct mob_data *md, va_list args) {
+	int64 tick;
 
 	nullpo_ret(md);
 
 	if(md->bl.prev == NULL)
 		return 0;
 
-	tick = va_arg(args,unsigned int);
+	tick = va_arg(args, int64);
 
 	if (battle_config.mob_ai&0x20 && map->list[md->bl.m].users>0)
 		return (int)mob->ai_sub_hard(md, tick);
@@ -1715,7 +1708,7 @@ int mob_ai_sub_lazy(struct mob_data *md, va_list args)
 	md->last_thinktime=tick;
 
 	if (md->master_id) {
-		mob->ai_sub_hard_slavemob (md,tick);
+		mob->ai_sub_hard_slavemob(md,tick);
 		return 0;
 	}
 
@@ -1740,7 +1733,7 @@ int mob_ai_sub_lazy(struct mob_data *md, va_list args)
 /*==========================================
  * Negligent processing for mob outside PC field of view   (interval timer function)
  *------------------------------------------*/
-int mob_ai_lazy(int tid, unsigned int tick, int id, intptr_t data) {
+int mob_ai_lazy(int tid, int64 tick, int id, intptr_t data) {
 	map->foreachmob(mob->ai_sub_lazy,tick);
 	return 0;
 }
@@ -1748,7 +1741,7 @@ int mob_ai_lazy(int tid, unsigned int tick, int id, intptr_t data) {
 /*==========================================
  * Serious processing for mob in PC field of view   (interval timer function)
  *------------------------------------------*/
-int mob_ai_hard(int tid, unsigned int tick, int id, intptr_t data) {
+int mob_ai_hard(int tid, int64 tick, int id, intptr_t data) {
 
 	if (battle_config.mob_ai&0x20)
 		map->foreachmob(mob->ai_sub_lazy,tick);
@@ -1785,8 +1778,7 @@ struct item_drop* mob_setlootitem(struct item* item)
 /*==========================================
  * item drop with delay (timer function)
  *------------------------------------------*/
-int mob_delay_item_drop(int tid, unsigned int tick, int id, intptr_t data)
-{
+int mob_delay_item_drop(int tid, int64 tick, int id, intptr_t data) {
 	struct item_drop_list *list;
 	struct item_drop *ditem, *ditem_prev;
 	list=(struct item_drop_list *)data;
@@ -1840,7 +1832,7 @@ void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, struct ite
 	dlist->item = ditem;
 }
 
-int mob_timer_delete(int tid, unsigned int tick, int id, intptr_t data) {
+int mob_timer_delete(int tid, int64 tick, int id, intptr_t data) {
 	struct block_list* bl = map->id2bl(id);
 	struct mob_data* md = BL_CAST(BL_MOB, bl);
 
@@ -1885,7 +1877,7 @@ int mob_deleteslave(struct mob_data *md) {
 	return 0;
 }
 // Mob respawning through KAIZEL or NPC_REBIRTH [Skotlex]
-int mob_respawn(int tid, unsigned int tick, int id, intptr_t data) {
+int mob_respawn(int tid, int64 tick, int id, intptr_t data) {
 	struct block_list *bl = map->id2bl(id);
 
 	if(!bl) return 0;
@@ -2069,7 +2061,8 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 	} pt[DAMAGELOG_SIZE];
 	int i, temp, count, m = md->bl.m, pnum = 0;
 	int dmgbltypes = 0;  // bitfield of all bl types, that caused damage to the mob and are elligible for exp distribution
-	unsigned int mvp_damage, tick = timer->gettick();
+	unsigned int mvp_damage;
+	int64 tick = timer->gettick();
 	bool rebirth, homkillonly;
 
 	mstatus = &md->status;
@@ -2610,7 +2603,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 
 void mob_revive(struct mob_data *md, unsigned int hp)
 {
-	unsigned int tick = timer->gettick();
+	int64 tick = timer->gettick();
 	md->state.skillstate = MSS_IDLE;
 	md->last_thinktime = tick;
 	md->next_walktime = tick+rnd()%50+5000;
@@ -2695,8 +2688,8 @@ int mob_random_class (int *value, size_t count)
  *------------------------------------------*/
 int mob_class_change (struct mob_data *md, int class_)
 {
-	unsigned int tick = timer->gettick();
-	int i, c, hp_rate;
+	int64 tick = timer->gettick(), c = 0;
+	int i, hp_rate;
 
 	nullpo_ret(md);
 
@@ -3032,8 +3025,7 @@ struct mob_data *mob_getfriendstatus(struct mob_data *md,int cond1,int cond2) {
 /*==========================================
  * Skill use judging
  *------------------------------------------*/
-int mobskill_use(struct mob_data *md, unsigned int tick, int event)
-{
+int mobskill_use(struct mob_data *md, int64 tick, int event) {
 	struct mob_skill *ms;
 	struct block_list *fbl = NULL; //Friend bl, which can either be a BL_PC or BL_MOB depending on the situation. [Skotlex]
 	struct block_list *bl;
@@ -3249,8 +3241,7 @@ int mobskill_use(struct mob_data *md, unsigned int tick, int event)
 /*==========================================
  * Skill use event processing
  *------------------------------------------*/
-int mobskill_event(struct mob_data *md, struct block_list *src, unsigned int tick, int flag)
-{
+int mobskill_event(struct mob_data *md, struct block_list *src, int64 tick, int flag) {
 	int target_id, res = 0;
 
 	if(md->bl.prev == NULL || md->status.hp <= 0)
@@ -3487,7 +3478,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 		{
 			if( md->deletetimer != INVALID_TIMER )
 				timer->delete(md->deletetimer, mob->timer_delete);
-			md->deletetimer = timer->add (timer->gettick() + duration, mob->timer_delete, md->bl.id, 0);
+			md->deletetimer = timer->add(timer->gettick() + duration, mob->timer_delete, md->bl.id, 0);
 		}
 	}
 

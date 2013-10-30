@@ -48,6 +48,12 @@ enum equip_index {
 	EQI_COSTUME_LOW,
 	EQI_COSTUME_GARMENT,
 	EQI_AMMO,
+	EQI_SHADOW_ARMOR,
+	EQI_SHADOW_WEAPON,
+	EQI_SHADOW_SHIELD,
+	EQI_SHADOW_SHOES,
+	EQI_SHADOW_ACC_R,
+	EQI_SHADOW_ACC_L,
 	EQI_MAX
 };
 struct weapon_data {
@@ -171,6 +177,7 @@ struct map_session_data {
 		unsigned int workinprogress : 3; // 1 = disable skill/item, 2 = disable npc interaction, 3 = disable both
 		unsigned int hold_recalc : 1;
 		unsigned int snovice_call_flag : 3; //Summon Angel (stage 1~3)
+		unsigned int hpmeter_visible : 1;
 	} state;
 	struct {
 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;
@@ -210,10 +217,10 @@ struct map_session_data {
 	char npc_str[CHATBOX_SIZE]; // for passing npc input box text to script engine
 	int npc_timer_id; //For player attached npc timers. [Skotlex]
 	unsigned int chatID;
-	time_t idletime;
-	struct{
+	int64 idletime;
+	struct {
 		int npc_id;
-		unsigned int timeout;
+		int64 timeout;
 	} progressbar; //Progress Bar [Inkfish]
 	struct{
 		char name[NAME_LENGTH];
@@ -229,17 +236,17 @@ struct map_session_data {
 	int cloneskill_id, reproduceskill_id;
 	int menuskill_id, menuskill_val, menuskill_val2;
 	int invincible_timer;
-	unsigned int canlog_tick;
-	unsigned int canuseitem_tick;	// [Skotlex]
-	unsigned int canusecashfood_tick;
-	unsigned int canequip_tick;	// [Inkfish]
-	unsigned int cantalk_tick;
-	unsigned int canskill_tick; // used to prevent abuse from no-delay ACT files
-	unsigned int cansendmail_tick; // [Mail System Flood Protection]
-	unsigned int ks_floodprotect_tick; // [Kill Steal Protection]
+	int64 canlog_tick;
+	int64 canuseitem_tick; // [Skotlex]
+	int64 canusecashfood_tick;
+	int64 canequip_tick; // [Inkfish]
+	int64 cantalk_tick;
+	int64 canskill_tick;        /// used to prevent abuse from no-delay ACT files
+	int64 cansendmail_tick;     /// Mail System Flood Protection
+	int64 ks_floodprotect_tick; /// [Kill Steal Protection]
 	struct {
 		short nameid;
-		unsigned int tick;
+		int64 tick;
 	} item_delay[MAX_ITEMDELAYS]; // [Paradox924X]
 	short weapontype1,weapontype2;
 	short disguise; // [Valaris]
@@ -460,7 +467,7 @@ struct map_session_data {
 	 * @info
 	 * - It is updated on every NPC iteration as mentioned above
 	 **/
-	unsigned int npc_idle_tick;
+	int64 npc_idle_tick;
 	/* */
 	enum npc_timeout_type npc_idle_type;
 #endif
@@ -485,7 +492,7 @@ struct map_session_data {
 	bool stealth;
 	unsigned char fontcolor;
 	unsigned int fontcolor_tid;
-	unsigned int hchsysch_tick;
+	int64 hchsysch_tick;
 	
 	/* [Ind/Hercules] */
 	struct sc_display_entry **sc_display;
@@ -526,21 +533,28 @@ struct map_session_data {
 
 //Equip position constants
 enum equip_pos {
-	EQP_HEAD_LOW         = 0x0001,
-	EQP_HEAD_MID         = 0x0200, //512
-	EQP_HEAD_TOP         = 0x0100, //256
-	EQP_HAND_R           = 0x0002, //2
-	EQP_HAND_L           = 0x0020, //32
-	EQP_ARMOR            = 0x0010, //16
-	EQP_SHOES            = 0x0040, //64
-	EQP_GARMENT          = 0x0004, //4
-	EQP_ACC_L            = 0x0008, //8
-	EQP_ACC_R            = 0x0080, //128
-	EQP_COSTUME_HEAD_TOP = 0x0400, //1024
-	EQP_COSTUME_HEAD_MID = 0x0800, //2048
-	EQP_COSTUME_HEAD_LOW = 0x1000, //4096
-	EQP_COSTUME_GARMENT	 = 0x2000, //8192
-	EQP_AMMO             = 0x8000, //32768
+	EQP_HEAD_LOW           = 0x000001,
+	EQP_HEAD_MID           = 0x000200, //512
+	EQP_HEAD_TOP           = 0x000100, //256
+	EQP_HAND_R             = 0x000002, //2
+	EQP_HAND_L             = 0x000020, //32
+	EQP_ARMOR              = 0x000010, //16
+	EQP_SHOES              = 0x000040, //64
+	EQP_GARMENT            = 0x000004, //4
+	EQP_ACC_L              = 0x000008, //8
+	EQP_ACC_R              = 0x000080, //128
+	EQP_COSTUME_HEAD_TOP   = 0x000400, //1024
+	EQP_COSTUME_HEAD_MID   = 0x000800, //2048
+	EQP_COSTUME_HEAD_LOW   = 0x001000, //4096
+	EQP_COSTUME_GARMENT    = 0x002000, //8192
+	//UNUSED_COSTUME_FLOOR = 0x004000, //16384
+	EQP_AMMO               = 0x008000, //32768
+	EQP_SHADOW_ARMOR       = 0x010000, //65536
+	EQP_SHADOW_WEAPON      = 0x020000, //131072
+	EQP_SHADOW_SHIELD      = 0x040000, //262144
+	EQP_SHADOW_SHOES       = 0x080000, //524288
+	EQP_SHADOW_ACC_R       = 0x100000, //1048576
+	EQP_SHADOW_ACC_L       = 0x200000, //2097152
 };
 
 #define EQP_WEAPON EQP_HAND_R
@@ -695,7 +709,7 @@ enum { ADDITEM_EXIST , ADDITEM_NEW , ADDITEM_OVERAMOUNT };
  * All cooldowns are reset when server is restarted.
  **/
 struct item_cd {
-	unsigned int tick[MAX_ITEMDELAYS];//tick
+	int64 tick[MAX_ITEMDELAYS];//tick
 	short nameid[MAX_ITEMDELAYS];//skill id
 };
 
@@ -796,7 +810,7 @@ struct pc_interface {
 	
 	int (*addautobonus) (struct s_autobonus *bonus,char max,const char *bonus_script,short rate,unsigned int dur,short atk_type,const char *o_script,unsigned short pos,bool onskill);
 	int (*exeautobonus) (struct map_session_data* sd,struct s_autobonus *bonus);
-	int (*endautobonus) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*endautobonus) (int tid, int64 tick, int id, intptr_t data);
 	int (*delautobonus) (struct map_session_data* sd,struct s_autobonus *bonus,char max,bool restore);
 	
 	int (*bonus) (struct map_session_data *sd,int type,int val);
@@ -878,7 +892,7 @@ struct pc_interface {
 	int (*addeventtimercount) (struct map_session_data *sd,const char *name,int tick);
 	
 	int (*calc_pvprank) (struct map_session_data *sd);
-	int (*calc_pvprank_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*calc_pvprank_timer) (int tid, int64 tick, int id, intptr_t data);
 	
 	int (*ismarried) (struct map_session_data *sd);
 	int (*marriage) (struct map_session_data *sd,struct map_session_data *dstsd);
@@ -909,8 +923,8 @@ struct pc_interface {
 	int (*set_hate_mob) (struct map_session_data *sd, int pos, struct block_list *bl);
 	
 	int (*readdb) (void);
-	int (*map_day_timer) (int tid, unsigned int tick, int id, intptr_t data); // by [yor]
-	int (*map_night_timer) (int tid, unsigned int tick, int id, intptr_t data); // by [yor]
+	int (*map_day_timer) (int tid, int64 tick, int id, intptr_t data); // by [yor]
+	int (*map_night_timer) (int tid, int64 tick, int id, intptr_t data); // by [yor]
 	// Rental System
 	void (*inventory_rentals) (struct map_session_data *sd);
 	int (*inventory_rental_clear) (struct map_session_data *sd);
@@ -934,10 +948,10 @@ struct pc_interface {
 	int (*level_penalty_mod) (int diff, unsigned char race, unsigned short mode, int type);
 	int (*calc_skillpoint) (struct map_session_data* sd);
 	
-	int (*invincible_timer) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*spiritball_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*invincible_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*spiritball_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*check_banding) ( struct block_list *bl, va_list ap );
-	int (*inventory_rental_end) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*inventory_rental_end) (int tid, int64 tick, int id, intptr_t data);
 	void (*check_skilltree) (struct map_session_data *sd, int skill_id);
 	int (*bonus_autospell) (struct s_autospell *spell, int max, short id, short lv, short rate, short flag, short card_id);
 	int (*bonus_autospell_onskill) (struct s_autospell *spell, int max, short src_skill, short id, short lv, short rate, short card_id);
@@ -945,16 +959,16 @@ struct pc_interface {
 	int (*bonus_addeff_onskill) (struct s_addeffectonskill* effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target);
 	int (*bonus_item_drop) (struct s_add_drop *drop, const short max, short id, short group, int race, int rate);
 	void (*calcexp) (struct map_session_data *sd, unsigned int *base_exp, unsigned int *job_exp, struct block_list *src);
-	int (*respawn_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*respawn_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*jobchange_killclone) (struct block_list *bl, va_list ap);
 	int (*getstat) (struct map_session_data* sd, int type);
 	int (*setstat) (struct map_session_data* sd, int type, int val);
-	int (*eventtimer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*eventtimer) (int tid, int64 tick, int id, intptr_t data);
 	int (*daynight_timer_sub) (struct map_session_data *sd,va_list ap);
-	int (*charm_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*charm_timer) (int tid, int64 tick, int id, intptr_t data);
 	bool (*readdb_levelpenalty) (char* fields[], int columns, int current);
-	int (*autosave) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*follow_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*autosave) (int tid, int64 tick, int id, intptr_t data);
+	int (*follow_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*read_skill_tree) (void);
 	int (*isUseitem) (struct map_session_data *sd,int n);
 	int (*show_steal) (struct block_list *bl,va_list ap);
@@ -964,6 +978,9 @@ struct pc_interface {
 	
 	void (*bank_deposit) (struct map_session_data *sd, int money);
 	void (*bank_withdraw) (struct map_session_data *sd, int money);
+	
+	void (*rental_expire) (struct map_session_data *sd, int i);
+	void (*scdata_received) (struct map_session_data *sd);
 };
 
 struct pc_interface *pc;

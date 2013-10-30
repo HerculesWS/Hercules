@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Mercenary related NPCs
 //===== By: ==================================================
 //= Daegaladh
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= Sells Lancer, Sword, and Archer mercenaries,
 //= along with related mercenary items.

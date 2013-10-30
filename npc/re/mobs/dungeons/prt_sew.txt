@@ -4,8 +4,6 @@
 //= Athena (1.0)
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Hercules
 //===== Additional Comments: =================================
 //= 1.1 Official kRO 10.1 spawns [Playtester]
 //= 1.2 Corrected MVP spawn variance. [L0ne_W0lf]

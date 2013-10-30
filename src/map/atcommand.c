@@ -4260,7 +4260,8 @@ ACMD(servertime) {
 	} else if (battle_config.night_duration == 0) {
 		if (map->night_flag == 1) { // we start with night
 			timer_data = timer->get(pc->day_timer_tid);
-			sprintf(temp, msg_txt(233), txt_time(DIFF_TICK(timer_data->tick,timer->gettick())/1000)); // Game time: The game is actualy in night for %s.
+			sprintf(temp, msg_txt(233), // Game time: The game is actually in night for %s.
+			        txt_time((unsigned int)(DIFF_TICK(timer_data->tick,timer->gettick())/1000)));
 			clif->message(fd, temp);
 			clif->message(fd, msg_txt(234)); // Game time: After, the game will be in permanent daylight.
 		} else
@@ -4268,7 +4269,8 @@ ACMD(servertime) {
 	} else if (battle_config.day_duration == 0) {
 		if (map->night_flag == 0) { // we start with day
 			timer_data = timer->get(pc->night_timer_tid);
-			sprintf(temp, msg_txt(235), txt_time(DIFF_TICK(timer_data->tick,timer->gettick())/1000)); // Game time: The game is actualy in daylight for %s.
+			sprintf(temp, msg_txt(235), // Game time: The game is actualy in daylight for %s.
+			        txt_time((unsigned int)(DIFF_TICK(timer_data->tick,timer->gettick())/1000)));
 			clif->message(fd, temp);
 			clif->message(fd, msg_txt(236)); // Game time: After, the game will be in permanent night.
 		} else
@@ -4277,22 +4279,28 @@ ACMD(servertime) {
 		if (map->night_flag == 0) {
 			timer_data = timer->get(pc->night_timer_tid);
 			timer_data2 = timer->get(pc->day_timer_tid);
-			sprintf(temp, msg_txt(235), txt_time(DIFF_TICK(timer_data->tick,timer->gettick())/1000)); // Game time: The game is actualy in daylight for %s.
+			sprintf(temp, msg_txt(235), // Game time: The game is actualy in daylight for %s.
+			        txt_time((unsigned int)(DIFF_TICK(timer_data->tick,timer->gettick())/1000)));
 			clif->message(fd, temp);
 			if (DIFF_TICK(timer_data->tick, timer_data2->tick) > 0)
-				sprintf(temp, msg_txt(237), txt_time(DIFF_TICK(timer_data->interval,DIFF_TICK(timer_data->tick,timer_data2->tick)) / 1000)); // Game time: After, the game will be in night for %s.
+				sprintf(temp, msg_txt(237), // Game time: After, the game will be in night for %s.
+				        txt_time((unsigned int)(DIFF_TICK(timer_data->interval,DIFF_TICK(timer_data->tick,timer_data2->tick)) / 1000)));
 			else
-				sprintf(temp, msg_txt(237), txt_time(DIFF_TICK(timer_data2->tick,timer_data->tick)/1000)); // Game time: After, the game will be in night for %s.
+				sprintf(temp, msg_txt(237), // Game time: After, the game will be in night for %s.
+				        txt_time((unsigned int)(DIFF_TICK(timer_data2->tick,timer_data->tick)/1000)));
 			clif->message(fd, temp);
 		} else {
 			timer_data = timer->get(pc->day_timer_tid);
 			timer_data2 = timer->get(pc->night_timer_tid);
-			sprintf(temp, msg_txt(233), txt_time(DIFF_TICK(timer_data->tick,timer->gettick()) / 1000)); // Game time: The game is actualy in night for %s.
+			sprintf(temp, msg_txt(233), // Game time: The game is actualy in night for %s.
+			        txt_time((unsigned int)(DIFF_TICK(timer_data->tick,timer->gettick()) / 1000)));
 			clif->message(fd, temp);
 			if (DIFF_TICK(timer_data->tick,timer_data2->tick) > 0)
-				sprintf(temp, msg_txt(239), txt_time((timer_data->interval - DIFF_TICK(timer_data->tick, timer_data2->tick)) / 1000)); // Game time: After, the game will be in daylight for %s.
+				sprintf(temp, msg_txt(239), // Game time: After, the game will be in daylight for %s.
+				        txt_time((unsigned int)((timer_data->interval - DIFF_TICK(timer_data->tick, timer_data2->tick)) / 1000)));
 			else
-				sprintf(temp, msg_txt(239), txt_time(DIFF_TICK(timer_data2->tick, timer_data->tick) / 1000)); // Game time: After, the game will be in daylight for %s.
+				sprintf(temp, msg_txt(239), // Game time: After, the game will be in daylight for %s.
+				        txt_time((unsigned int)(DIFF_TICK(timer_data2->tick, timer_data->tick) / 1000)));
 			clif->message(fd, temp);
 		}
 		sprintf(temp, msg_txt(238), txt_time(timer_data->interval / 1000)); // Game time: A day cycle has a normal duration of %s.
@@ -5250,7 +5258,7 @@ ACMD(useskill) {
  *------------------------------------------*/
 ACMD(displayskill) {
 	struct status_data *st;
-	unsigned int tick;
+	int64 tick;
 	uint16 skill_id;
 	uint16 skill_lv = 1;
 	
@@ -6086,8 +6094,8 @@ ACMD(summon)
 	int mob_id = 0;
 	int duration = 0;
 	struct mob_data *md;
-	unsigned int tick=timer->gettick();
-		
+	int64 tick=timer->gettick();
+	
 	if (!message || !*message || sscanf(message, "%23s %d", name, &duration) < 1)
 	{
 		clif->message(fd, msg_txt(1225)); // Please enter a monster name (usage: @summon <monster name> {duration}).
@@ -7333,7 +7341,7 @@ ACMD(mapflag) {
 		CHECKFLAG(nojobexp);          CHECKFLAG(nomobloot);          CHECKFLAG(nomvploot);    CHECKFLAG(nightenabled);
 		CHECKFLAG(nodrop);            CHECKFLAG(novending);          CHECKFLAG(loadevent);
 		CHECKFLAG(nochat);            CHECKFLAG(partylock);          CHECKFLAG(guildlock);    CHECKFLAG(src4instance);
-		CHECKFLAG(notomb);
+		CHECKFLAG(notomb);            CHECKFLAG(nocashshop);
 		clif->message(sd->fd," ");
 		clif->message(sd->fd,msg_txt(1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
 		clif->message(sd->fd,msg_txt(1313)); // Type "@mapflag available" to list the available mapflags.
@@ -7370,7 +7378,7 @@ ACMD(mapflag) {
 	SETFLAG(nojobexp);          SETFLAG(nomobloot);          SETFLAG(nomvploot);    SETFLAG(nightenabled);
 	SETFLAG(nodrop);            SETFLAG(novending);          SETFLAG(loadevent);
 	SETFLAG(nochat);            SETFLAG(partylock);          SETFLAG(guildlock);    SETFLAG(src4instance);
-	SETFLAG(notomb);
+	SETFLAG(notomb);            SETFLAG(nocashshop);
 	
 	clif->message(sd->fd,msg_txt(1314)); // Invalid flag name or flag.
 	clif->message(sd->fd,msg_txt(1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
@@ -7382,7 +7390,7 @@ ACMD(mapflag) {
 	clif->message(sd->fd,"nozenypenalty, notrade, noskill, nowarp, nowarpto, noicewall, snow, clouds, clouds2,");
 	clif->message(sd->fd,"fog, fireworks, sakura, leaves, nobaseexp, nojobexp, nomobloot,");
 	clif->message(sd->fd,"nomvploot, nightenabled, nodrop, novending, loadevent, nochat, partylock,");
-	clif->message(sd->fd,"guildlock, src4instance, notomb");
+	clif->message(sd->fd,"guildlock, src4instance, notomb, nocashshop");
 	
 #undef CHECKFLAG
 #undef SETFLAG

@@ -1,18 +1,18 @@
 //===== Hercules Script ======================================
 // BattleGround System - KvM Item Dealer
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.0
-//===== Description: ========================================= 
-//= [AEGIS Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Kreiger Von Midgard Battleground Point redemption NPC
 //= * NOTE * 
 //= KvM Does NOT use items, but a character variable to
 //= keep track of points. This NPC when talked to will
 //= convert already-given tokens and convert them to points.
 //= under the player variable kvm_point.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version.
 //============================================================
 
@@ -55,7 +55,7 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	734,{
 		mes "points. So, be carefull when";
 		mes "selecting a reward.";
 		close2;
-		ReadBook 11017,1;
+		readbook 11017,1;
 		end;
 	case 2:
 		mes "[Logistics]";

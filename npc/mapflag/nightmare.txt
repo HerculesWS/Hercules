@@ -4,13 +4,13 @@
 //= Hercules Dev Team
 //===== Current Version: =====================================
 //= 1.0
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Players drop items/equipment on death.
 //= pvp_nightmaredrop	id,type,percent
 //=   id: Drop a specific item ID or "random"
 //=   type: "inventory", "equip", or "all"
 //=   percent: Rate of item drop.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 - Initial script.
 //============================================================
 

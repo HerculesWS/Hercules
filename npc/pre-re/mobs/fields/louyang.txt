@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Louyang Fields Monster Spawn Script
 //===== By: ==================================================
 //= Evera/Lorri
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Additional Comments: =================================
 //= 1.1 updated by MasterOfMuppets
 //= 1.2 Official kRO 10.1 spawns [Playtester]

@@ -4,8 +4,6 @@
 //= PKGINGO (1.0)
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Hercules; RO Episode 6+
 //===== Description: =========================================
 //= Warp Points for Yggdrasil Tree
 //===== Additional Comments: =================================

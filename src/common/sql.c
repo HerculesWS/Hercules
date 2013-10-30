@@ -180,7 +180,7 @@ int Sql_Ping(Sql* self)
 /// Wrapper function for Sql_Ping.
 ///
 /// @private
-static int Sql_P_KeepaliveTimer(int tid, unsigned int tick, int id, intptr_t data)
+static int Sql_P_KeepaliveTimer(int tid, int64 tick, int id, intptr_t data)
 {
 	Sql* self = (Sql*)data;
 	ShowInfo("Pinging SQL server to keep connection alive...\n");

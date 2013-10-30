@@ -518,11 +518,11 @@ struct battle_interface {
 	/* battlegrounds final damage calculation */
 	int64 (*calc_bg_damage) (struct block_list *src, struct block_list *bl, int64 damage, int div_, uint16 skill_id, uint16 skill_lv, int flag);
 	/* normal weapon attack */
-	enum damage_lv (*weapon_attack) (struct block_list *bl, struct block_list *target, unsigned int tick, int flag);
+	enum damage_lv (*weapon_attack) (struct block_list *bl, struct block_list *target, int64 tick, int flag);
 	/* calculate weapon attack */
 	struct Damage (*calc_weapon_attack) (struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int wflag);
 	/* delays damage or skills by a timer */
-	int (*delay_damage) (unsigned int tick, int amotion, struct block_list *src, struct block_list *target, int attack_type, uint16 skill_id, uint16 skill_lv, int64 damage, enum damage_lv dmg_lv, int ddelay, bool additional_effects);
+	int (*delay_damage) (int64 tick, int amotion, struct block_list *src, struct block_list *target, int attack_type, uint16 skill_id, uint16 skill_lv, int64 damage, enum damage_lv dmg_lv, int ddelay, bool additional_effects);
 	/* drain damage */
 	void (*drain) (struct map_session_data *sd, struct block_list *tbl, int64 rdamage, int64 ldamage, int race, int boss);
 	/* damage return/reflect */
@@ -566,7 +566,7 @@ struct battle_interface {
 	int (*get_targeted_sub) (struct block_list *bl, va_list ap);
 	int (*get_enemy_sub) (struct block_list *bl, va_list ap);
 	int (*get_enemy_area_sub) (struct block_list *bl, va_list ap);
-	int (*delay_damage_sub) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*delay_damage_sub) (int tid, int64 tick, int id, intptr_t data);
 	int (*blewcount_bonus) (struct map_session_data *sd, uint16 skill_id);
 	/* skill range criteria */
 	int (*range_type) (struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv);
@@ -587,7 +587,7 @@ struct battle_interface {
 	/* picks a random enemy within the specified range */
 	struct block_list* (*get_enemy_area) (struct block_list *src, int x, int y, int range, int type, int ignore_id);
 	/* damages area, originally for royal guard's reflect damage */
-	int (*damage_area) ( struct block_list *bl, va_list ap);
+	int (*damage_area) (struct block_list *bl, va_list ap);
 };
 
 struct battle_interface *battle;

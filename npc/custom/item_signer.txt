@@ -4,8 +4,6 @@
 //= Lupus
 //===== Current Version: =====================================
 //= 1.1a
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Write you name on your rare equipment or weapon ^_-
 //===== Additional Comments: =================================

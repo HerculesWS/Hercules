@@ -86,7 +86,7 @@ struct pet_data {
 		unsigned skillbonus : 1;
 	} state;
 	int move_fail_count;
-	unsigned int next_walktime,last_thinktime;
+	int64 next_walktime, last_thinktime;
 	short rate_fix;	//Support rate as modified by intimacy (1000 = 100%) [Skotlex]
 
 	struct pet_recovery* recovery;
@@ -116,7 +116,7 @@ struct pet_interface {
 	int (*attackskill) (struct pet_data *pd, int target_id);
 	int (*target_check) (struct map_session_data *sd, struct block_list *bl, int type);
 	int (*sc_check) (struct map_session_data *sd, int type);
-	int (*hungry) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*hungry) (int tid, int64 tick, int id, intptr_t data);
 	int (*search_petDB_index) (int key, int type);
 	int (*hungry_timer_delete) (struct pet_data *pd);
 	int (*performance) (struct map_session_data *sd, struct pet_data *pd);
@@ -135,16 +135,16 @@ struct pet_interface {
 	int (*change_name) (struct map_session_data *sd, char *name);
 	int (*change_name_ack) (struct map_session_data *sd, char *name, int flag);
 	int (*equipitem) (struct map_session_data *sd, int index);
-	int (*randomwalk) (struct pet_data *pd, unsigned int tick);
-	int (*ai_sub_hard) (struct pet_data *pd, struct map_session_data *sd, unsigned int tick);
+	int (*randomwalk) (struct pet_data *pd, int64 tick);
+	int (*ai_sub_hard) (struct pet_data *pd, struct map_session_data *sd, int64 tick);
 	int (*ai_sub_foreachclient) (struct map_session_data *sd, va_list ap);
-	int (*ai_hard) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*delay_item_drop) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*ai_hard) (int tid, int64 tick, int id, intptr_t data);
+	int (*delay_item_drop) (int tid, int64 tick, int id, intptr_t data);
 	int (*lootitem_drop) (struct pet_data *pd, struct map_session_data *sd);
-	int (*skill_bonus_timer) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*recovery_timer) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*heal_timer) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*skill_support_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*skill_bonus_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*recovery_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*heal_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*skill_support_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*read_db) ();
 };
 

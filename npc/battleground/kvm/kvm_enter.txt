@@ -1,14 +1,14 @@
 //===== Hercules Script ======================================
 // BattleGround System - KvM Entrance NPCs
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.1
-//===== Description: ========================================= 
-//= [AEGIS Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Kreiger Von Midgard Battleground Entrance NPCs
 //= Original NPCs scrapped from bg_common.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version.
 //= 1.1 Corrected some typos, and shifted messages around.
 //=     Corrected iRO style quest log entries, however it's

@@ -344,7 +344,7 @@ void *cThread_main(void *x) {
 		
 	return NULL;
 }
-int console_parse_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int console_parse_timer(int tid, int64 tick, int id, intptr_t data) {
 	int i;
 	EnterSpinLock(&console->ptlock);
 	for(i = 0; i < cinput.count; i++) {

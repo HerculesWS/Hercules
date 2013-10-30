@@ -5,8 +5,6 @@
 //= Lupus
 //===== Current Version: =====================================
 //= 1.01
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Custom quest for some RO mobile game bonus items 
 //===== Additional Comments: =================================

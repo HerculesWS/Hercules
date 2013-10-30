@@ -10,10 +10,10 @@
 //= 1.0 First version. [Kisuka]
 //= 1.1 Added Catalog Magician. [Euphy]
 //= 1.1a Moved Catalog Magician to Renewal path. [Euphy]
-//============================================================ 
+//============================================================
 
 // Black Marketeer (Buy Licenses - Non-Merchant Classes)
-//============================================================ 
+//============================================================
 que_job01,68,84,1	script	Black Marketeer#Buying	881,{
 	if (getskilllv("ALL_BUYING_STORE") == 1) {
 		mes "[Mr. Jass]";
@@ -91,7 +91,7 @@ que_job01,68,84,1	script	Black Marketeer#Buying	881,{
 }
 
 // Purchasing Team (Learn Skill - Merchant Classes)
-//============================================================ 
+//============================================================
 alberta_in,58,52,4	script	Purchasing Team#Buying	59,{
 	mes "[Mr. Hugh]";
 	if (BaseClass == Job_Merchant && getskilllv("MC_VENDING") >= 1) {

@@ -1451,6 +1451,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(map->addblcell, HP_map_addblcell) },
 	{ HP_POP(map->delblcell, HP_map_delblcell) },
 	{ HP_POP(map->get_new_bonus_id, HP_map_get_new_bonus_id) },
+	{ HP_POP(map->add_questinfo, HP_map_add_questinfo) },
+	{ HP_POP(map->remove_questinfo, HP_map_remove_questinfo) },
 /* mapit */
 	{ HP_POP(mapit->alloc, HP_mapit_alloc) },
 	{ HP_POP(mapit->free, HP_mapit_free) },
@@ -1928,6 +1930,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->removecombo, HP_pc_removecombo) },
 	{ HP_POP(pc->bank_deposit, HP_pc_bank_deposit) },
 	{ HP_POP(pc->bank_withdraw, HP_pc_bank_withdraw) },
+	{ HP_POP(pc->rental_expire, HP_pc_rental_expire) },
+	{ HP_POP(pc->scdata_received, HP_pc_scdata_received) },
 /* pet */
 	{ HP_POP(pet->init, HP_pet_init) },
 	{ HP_POP(pet->final, HP_pet_final) },

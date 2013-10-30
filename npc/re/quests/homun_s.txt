@@ -1,20 +1,18 @@
 //===== Hercules Script ======================================
-//= Homunculus S Quest
-//===== By: ================================================== 
-//= Masao
-//===== Current Version: ===================================== 
+//= Homunculus S Mutation Quest
+//===== By: ==================================================
+//= Euphy
+//===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: ===================================== 
-//= Hercules
-//===== Description: ========================================= 
-//= Evolves an Homunculus which is at least Level 99 to the
-//= new Homunculus S Class.
-//===== Additional Comments: ================================= 
-//= 1.0 First Version. The actual changing dialog is currently
-//=     customized. [Masao]
+//===== Description: =========================================
+//= [Official Conversion]
+//= Genetic quest to mutate a level 99 evolved Homunculus
+//= into a Homunculus S.
+//===== Additional Comments: =================================
+//= 1.0 First Version, entirely custom. [Masao]
 //= 1.1 Cleaning. [Euphy]
 //= 1.2 Replaced with official script. [Euphy]
-//============================================================ 
+//============================================================
 
 // Main NPCs
 //============================================================

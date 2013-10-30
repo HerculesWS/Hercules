@@ -1,11 +1,9 @@
-//===== rAthena Script ========================================
+//===== Hercules Script ======================================
 //= Thor Volcano Monster Spawn Script
 //===== By: ==================================================
 //= Playtester
 //===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Description: =========================================
 //= Official monster spawn in Thor Volcano Dungeon.
 //===== Additional Comments: =================================
@@ -16,7 +14,7 @@
 //= 1.4 Corrected MVP spawn variance. [L0ne_W0lf]
 //============================================================
 
-// ================= [Thor Volcano - 01] =====================
+// =================[Thor Volcano - 01] =====================
 thor_v01,0,0,0,0	monster	Magmaring	1836,10,0,0,0
 thor_v01,0,0,0,0	monster	Fire Imp	1837,5,0,0,0
 thor_v01,0,0,0,0	monster	Fire Imp	1837,12,1800000,0,0
@@ -34,7 +32,7 @@ thor_v01,0,0,0,0	monster	Bow Master	1830,5,420000,0,0
 thor_v01,0,0,0,0	monster	Salamander	1831,5,3600000,0,0
 thor_v01,0,0,0,0	monster	Byorgue	1839,1,3600000,0,0
 
-// ================= [Thor Volcano - 02] =====================
+// =================[Thor Volcano - 02] =====================
 thor_v02,0,0,0,0	monster	Magmaring	1836,10,0,0,0
 thor_v02,0,0,0,0	monster	Fire Imp	1837,5,0,0,0
 thor_v02,75,125,50,85	monster	Fire Imp	1837,3,0,0,0
@@ -49,7 +47,7 @@ thor_v02,0,0,0,0	monster	Salamander	1831,1,18000000,0,0
 thor_v02,0,0,0,0	monster	Sword Master	1829,1,7200000,0,0
 thor_v02,0,0,0,0	monster	Bow Master	1830,1,7200000,0,0
 
-// ================= [Thor Volcano - 03] =====================
+// =================[Thor Volcano - 03] =====================
 thor_v03,0,0,0,0	monster	Kasa	1833,16,0,0,0
 thor_v03,95,220,64,55	monster	Kasa	1833,6,0,0,0
 thor_v03,223,224,65,60	monster	Kasa	1833,6,0,0,0

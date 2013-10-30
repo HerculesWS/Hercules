@@ -1,20 +1,18 @@
-//===== rAthena Script ======================================= 
-//= Theif Mage Quest Story Mode
-//===== By: ================================================== 
+//===== Hercules Script ======================================
+//= Thief Mage Quest Story Mode
+//===== By: ==================================================
 //= Fix up by Jukka
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3
-//===== Compatible With: ===================================== 
-//= rAthena SVN (Testet in Trunk 88xx)
-//===== Description: ========================================= 
-//=
-//===== Additional Comments: ================================= 
+//===== Description: =========================================
+//= [Official Conversion]
+//= Battle Traces from Thief and Magician training quests.
+//===== Additional Comments: =================================
 //= 1.0 Fully working
 //= 1.1 optimized [Lupus]
-//=	TODO: Test, Add correct misceffects numbers
 //= 1.2 Changed "battle_trace" to "Trace of Battle". [L0ne_W0lf]
 //= 1.3 Misc. updates. [L0ne_W0lf]
-//============================================================ 
+//============================================================
 
 // Battle Traces 1
 //============================================================
@@ -32,7 +30,7 @@ moc_fild12,166,369,0	script	Trace of Battle#1	844,{
 			mes "of acute dizziness overcomes";
 			mes "you after examining the scene.^000000";
 			set tu_thief01, 6;
-			sc_start SC_Poison,60000,0;
+			sc_start SC_POISON,60000,0;
 			specialeffect EF_VENOMDUST2;
 			close;
 		} else if(tu_thief01 == 6){
@@ -40,7 +38,7 @@ moc_fild12,166,369,0	script	Trace of Battle#1	844,{
 			mes "used in a battle. A feeling";
 			mes "of acute dizziness overcomes";
 			mes "you after examining the scene.^000000";
-			sc_start SC_Poison,60000,0;
+			sc_start SC_POISON,60000,0;
 			specialeffect EF_VENOMDUST2;
 			close;
 		} else if(tu_thief01 == 7){
@@ -1003,7 +1001,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 				mes "^3355FFBy sheer accident,";
 				mes "you set off one of";
 				mes "the traps in the area.^000000";
-				sc_start SC_Poison,60000,0;
+				sc_start SC_POISON,60000,0;
 				specialeffect EF_VENOMDUST2;
 				percentheal -30,0;
 				close;
@@ -1157,7 +1155,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	844,{
 				mes "^3355FFBy sheer accident,";
 				mes "you set off one of";
 				mes "the traps in the area.^000000";
-				sc_start SC_Poison,60000,0;
+				sc_start SC_POISON,60000,0;
 				specialeffect EF_VENOMDUST2;
 				percentheal -30,0;
 				close;

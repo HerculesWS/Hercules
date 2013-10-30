@@ -4,10 +4,8 @@
 //= Lupus, Reddozen
 //===== Current Version: =====================================
 //= 1.5
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= Quests for skills: Sight Blaster
 //===== Additional Comments: =================================
 //= 1.4 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
@@ -434,9 +432,9 @@ prt_in,82,98,3	script	Simon Mayace#q_wiz	46,{
 	}
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= 1.0 for fully working skills only [Lupus]
 //= 1.1 Added more new skill quests for more classes [Lupus]
 //= Somehow eA engine doesn't let you keep learn't skill V_V'

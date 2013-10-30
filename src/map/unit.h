@@ -30,10 +30,10 @@ struct unit_data {
 	int   target_to;
 	int   attacktimer;
 	int   walktimer;
-	int	chaserange;
-	unsigned int attackabletime;
-	unsigned int canact_tick;
-	unsigned int canmove_tick;
+	int   chaserange;
+	int64 attackabletime;
+	int64 canact_tick;
+	int64 canmove_tick;
 	uint8 dir;
 	unsigned char walk_count;
 	unsigned char target_count;
@@ -77,12 +77,12 @@ struct unit_interface {
 	/* */
 	struct unit_data* (*bl2ud) (struct block_list *bl);
 	struct unit_data* (*bl2ud2) (struct block_list *bl);
-	int (*attack_timer) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*walktoxy_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*attack_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*walktoxy_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*walktoxy_sub) (struct block_list *bl);
-	int (*delay_walktoxy_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*delay_walktoxy_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*walktoxy) (struct block_list *bl, short x, short y, int flag);
-	int (*walktobl_sub) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*walktobl_sub) (int tid, int64 tick, int id, intptr_t data);
 	int (*walktobl) (struct block_list *bl, struct block_list *tbl, int range, int flag);
 	int (*run) (struct block_list *bl);
 	int (*wugdash) (struct block_list *bl, struct map_session_data *sd);
@@ -96,8 +96,8 @@ struct unit_interface {
 	int (*skilluse_id) (struct block_list *src, int target_id, uint16 skill_id, uint16 skill_lv);
 	int (*is_walking) (struct block_list *bl);
 	int (*can_move) (struct block_list *bl);
-	int (*resume_running) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*set_walkdelay) (struct block_list *bl, unsigned int tick, int delay, int type);
+	int (*resume_running) (int tid, int64 tick, int id, intptr_t data);
+	int (*set_walkdelay) (struct block_list *bl, int64 tick, int delay, int type);
 	int (*skilluse_id2) (struct block_list *src, int target_id, uint16 skill_id, uint16 skill_lv, int casttime, int castcancel);
 	int (*skilluse_pos) (struct block_list *src, short skill_x, short skill_y, uint16 skill_id, uint16 skill_lv);
 	int (*skilluse_pos2) (struct block_list *src, short skill_x, short skill_y, uint16 skill_id, uint16 skill_lv, int casttime, int castcancel);
@@ -109,11 +109,11 @@ struct unit_interface {
 	bool (*can_reach_pos) (struct block_list *bl, int x, int y, int easy);
 	bool (*can_reach_bl) (struct block_list *bl, struct block_list *tbl, int range, int easy, short *x, short *y);
 	int (*calc_pos) (struct block_list *bl, int tx, int ty, uint8 dir);
-	int (*attack_timer_sub) (struct block_list *src, int tid, unsigned int tick);
+	int (*attack_timer_sub) (struct block_list *src, int tid, int64 tick);
 	int (*skillcastcancel) (struct block_list *bl, int type);
 	void (*dataset) (struct block_list *bl);
 	int (*counttargeted) (struct block_list *bl);
-	int (*fixdamage) (struct block_list *src, struct block_list *target, unsigned int tick, int sdelay, int ddelay, int64 damage, int div, int type, int64 damage2);
+	int (*fixdamage) (struct block_list *src, struct block_list *target, int64 tick, int sdelay, int ddelay, int64 damage, int div, int type, int64 damage2);
 	int (*changeviewsize) (struct block_list *bl, short size);
 	int (*remove_map) (struct block_list *bl, clr_type clrtype, const char *file, int line, const char *func);
 	void (*remove_map_pc) (struct map_session_data *sd, clr_type clrtype);

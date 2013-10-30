@@ -682,7 +682,7 @@ int auth_db_cleanup_sub(DBKey key, DBData *data, va_list ap) {
 	return 0;
 }
 
-int auth_db_cleanup(int tid, unsigned int tick, int id, intptr_t data) {
+int auth_db_cleanup(int tid, int64 tick, int id, intptr_t data) {
 	chrif_check(0);
 	chrif->auth_db->foreach(chrif->auth_db, chrif->auth_db_cleanup_sub);
 	return 0;
@@ -1139,7 +1139,7 @@ int chrif_save_scdata(struct map_session_data *sd) { //parses the sc_data of the
 
 #ifdef ENABLE_SC_SAVING
 	int i, count=0;
-	unsigned int tick;
+	int64 tick;
 	struct status_change_data data;
 	struct status_change *sc = &sd->sc;
 	const struct TimerData *td;
@@ -1159,7 +1159,7 @@ int chrif_save_scdata(struct map_session_data *sd) { //parses the sc_data of the
 			td = timer->get(sc->data[i]->timer);
 			if (td == NULL || td->func != status->change_timer || DIFF_TICK(td->tick,tick) < 0)
 				continue;
-			data.tick = DIFF_TICK(td->tick,tick); //Duration that is left before ending.
+			data.tick = DIFF_TICK32(td->tick,tick); //Duration that is left before ending.
 		} else
 			data.tick = -1; //Infinite duration
 		data.type = i;
@@ -1212,6 +1212,8 @@ int chrif_load_scdata(int fd) {
 		data = (struct status_change_data*)RFIFOP(fd,14 + i*sizeof(struct status_change_data));
 		status->change_start(&sd->bl, (sc_type)data->type, 10000, data->val1, data->val2, data->val3, data->val4, data->tick, 15);
 	}
+	
+	pc->scdata_received(sd);
 #endif
 	
 	return 0;
@@ -1462,7 +1464,7 @@ int chrif_parse(int fd) {
 	return 0;
 }
 
-int send_usercount_tochar(int tid, unsigned int tick, int id, intptr_t data) {
+int send_usercount_tochar(int tid, int64 tick, int id, intptr_t data) {
 	chrif_check(-1);
 
 	WFIFOHEAD(chrif->fd,4);
@@ -1509,7 +1511,7 @@ int send_users_tochar(void) {
  * timerFunction
   * Chk the connection to char server, (if it down)
  *------------------------------------------*/
-int check_connect_char_server(int tid, unsigned int tick, int id, intptr_t data) {
+int check_connect_char_server(int tid, int64 tick, int id, intptr_t data) {
 	static int displayed = 0;
 	if ( chrif->fd <= 0 || session[chrif->fd] == NULL ) {
 		if ( !displayed ) {

@@ -4,16 +4,14 @@
 //= Euphy
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Hercules
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Cross through the Hazy Forest to reach the Bifrost.
 //= Contains the "Wandering Guardian" quest.
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First version. [Euphy]
 //= 1.1 Instance system rewrite. [Euphy]
-//============================================================ 
+//============================================================
 
 1@mist	mapflag	src4instance
 //============================================================

@@ -1,15 +1,13 @@
-//===== rAthena Script ======================================= 
+//===== Hercules Script ======================================
 //= Crusader Skills Quests
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Lupus, Reddozen
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.4
-//===== Compatible With: ===================================== 
-//= rAthena SVN
-//===== Description: ========================================= 
-//= [Aegis Conversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Quests for skills: Shrink
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.4 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //============================================================
 
@@ -426,7 +424,7 @@ gef_fild13,297,242,3	script	Soldier#277	751,{
 		}
 		else if (CRUS_SK == 5) {
 			mes "[Sloutii]";
-			if (upper == 1) {
+			if (Upper == 1) {
 				mes "Eeearrrgh--!";
 				mes "My l-legs! Everything";
 				mes "is starting to h-hurt!";
@@ -811,9 +809,9 @@ prt_church,87,127,3	script	Pastor#1011	755,{
 	}
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= 1.0 for fully working skills only [Lupus]
 //= 1.1 Added more new skill quests for more classes [Lupus]
 //= Somehow eA engine doesn't let you keep learn't skill V_V'

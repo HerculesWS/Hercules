@@ -4,9 +4,8 @@
 //= Gennosuke Kouga, Muad_Dib
 //===== Current Version: =====================================
 //= 2.3
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
+//= [Official Conversion]
 //= Quest NPCs related to Dewata:
 //== Sapha's Visit, Doha's Secrect Order, Frede's Request,
 //== Department Quests, Document Quests,
@@ -173,6 +172,20 @@ dic_dun01,266,113,5	script	Curious Sapha#ep13_3_	449,{
 			close;
 		}
 	}
+}
+
+sec_in02,16,43,5	script	Scaraba Dungeon Entrance	449,{
+	callfunc "F_GM_NPC";
+	mes "Setting you for dungeon entry.";
+	mes "You will be able to go through if the password is correct.";
+	if (callfunc("F_GM_NPC",1854,0) == 1) {
+		set ep13_3_secret,6;
+		getitem 2782,1; //Ring_Of_Wise_King
+		getitem 6437,2; //Scaraba_Perfume
+		mes "Setting Complete";
+	} else
+		mes "Wrong Password";
+	close;
 }
 
 // Vigilantes
@@ -421,6 +434,19 @@ dic_in01,254,119,0	script	Item Storage#01	844,{
 	close2;
 	openstorage;
 	end;
+}
+
+sec_in02,10,42,1	script	13.3 Related Reset	449,{
+	callfunc "F_GM_NPC";
+	mes "[Reset]";
+	mes "Resets all quest windows including daily and map quests for 13.3.";
+	freeloop(1);
+	for(set .@i,12099; .@i<=12216; set .@i,.@i+1) {
+		if (checkquest(.@i) > -1)
+			erasequest .@i;
+	}
+	freeloop(0);
+	close;
 }
 
 // Civil Services
@@ -1111,6 +1137,7 @@ function	script	unknown_d	{
 	}
 	close;
 }
+prt_fild03,144,95,0	script	Tree Roots	844,{ unknown_d(12166,902); }
 prt_fild09,371,255,0	script	Reptile Tongues	844,{ unknown_d(12167,903); }
 prt_fild09,352,241,0	script	Scorpion Tails	844,{ unknown_d(12168,904); }
 pay_fild02,177,108,0	script	Stems	844,{ unknown_d(12169,905); }
@@ -1289,7 +1316,7 @@ OnTouch:
 		mes "As soon as you enter the room, someone";
 		mes "pushes down your head to force you to bow.";
 		soundeffect "wander_man_move.wav",0;
-		sc_start SC_Blind,60000,0;
+		sc_start SC_BLIND,60000,0;
 		next;
 		mes "[Ringing Voice]";
 		mes "That is fine, Cheshire.";
@@ -1302,7 +1329,7 @@ OnTouch:
 		cutin (Sex?"ep13_ahat_f":"ep13_ahat_m"),1;
 		mes "You hold up your head at the sound of Ahat's voice";
 		mes "But you see a human in high-ranking Sapha clothing in front of you.";
-		sc_end SC_Blind;
+		sc_end SC_BLIND;
 		emotion e_omg,1;
 		set ep13_3_secret, 14;
 		erasequest 7198;
@@ -1494,7 +1521,7 @@ dic_in01,300,280,5	script	Minister Ahat#ep133_21	493,{
 		mes "As soon as you try to approach Ahat, someone";
 		mes "pushes down your head to force you to bow.";
 		soundeffect "wander_man_move.wav",0;
-		SC_Start SC_Blind,60000,0;
+		SC_Start SC_BLIND,60000,0;
 		next;
 		mes "[Ringing Voice]";
 		mes "That is fine, Cheshire.";
@@ -1507,7 +1534,7 @@ dic_in01,300,280,5	script	Minister Ahat#ep133_21	493,{
 		cutin (Sex?"ep13_ahat_f":"ep13_ahat_m"),2;
 		mes "You hold up your head at the sound of Ahat's voice";
 		mes "But you see a human in high-ranking Sapha clothing in front of you.";
-		SC_End SC_Blind;
+		SC_End SC_BLIND;
 		emotion e_omg,1;
 		set ep13_3_secret, 14;
 		erasequest 7198;
@@ -6001,7 +6028,7 @@ dic_in01,349,129,5	script	Bouy#13_3	449,{
 				mes "I've been waiting for the Galtens to return because I'm not accustomed to battle since I'm Venknick. Thank you very much.";
 				next;
 				mes "[Bouy]";
-				mes "Handwork is much faster to refine pieces of Bradium instead of using a machine. I will only need an hour to finish.";
+				mes "Handwork is much faster to refine pieces of Bradium instead of using a machine. I will only need two hours to finish."; //Official: "an hour", but gives 2-hour quest.
 				next;
 				mes "[Bouy]";
 				mes "Please go rest while I get to work.";

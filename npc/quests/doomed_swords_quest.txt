@@ -4,10 +4,8 @@
 //= L0ne_W0lf
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
-//= [Aegis Conversion]
+//= [Official Conversion]
 //= - Creation of Doomed Swords: Grimtooth, Mysteltain, and
 //=   Executioner.
 //= - Continuation of the Comodo Quest

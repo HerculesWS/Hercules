@@ -4,8 +4,6 @@
 //= GM-Yevon
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: ===================================== 
-//= Hercules
 //===== Description: =========================================
 // Simple item trade-in quest, a person can get a Dead Branch
 // by simply providing the items: Log x3 (7201), Wooden Heart x1 (7189), 

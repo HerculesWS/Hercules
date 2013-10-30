@@ -4,8 +4,6 @@
 //= MagicalTux
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Custom quests for Balmung and Lord Kaho's Horns.
 //= WARNING: The quests are very easy, so be careful!

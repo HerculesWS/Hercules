@@ -4,8 +4,6 @@
 //= RedxSwordxHero, Lupus
 //===== Current Version: =====================================
 //= 1.4b
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= 4 brothers give you quests to get 6 new hats (missing
 //=   from official quests)

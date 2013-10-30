@@ -4,8 +4,6 @@
 //= 
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Custom quest for Lord Kaho's Horns.
 //===== Additional Comments: =================================

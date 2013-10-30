@@ -480,7 +480,7 @@ void instance_del_map(int16 m) {
 /*--------------------------------------
  * Timer to destroy instance by process or idle
  *--------------------------------------*/
-int instance_destroy_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int instance_destroy_timer(int tid, int64 tick, int id, intptr_t data) {
 	instance->destroy(id);
 	return 0;
 }

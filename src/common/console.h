@@ -56,7 +56,7 @@ struct console_interface {
 	/* */
 	void (*parse_init) (void);
 	void (*parse_final) (void);
-	int (*parse_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*parse_timer) (int tid, int64 tick, int id, intptr_t data);
 	void *(*pthread_main) (void *x);
 	void (*parse) (char* line);
 	void (*parse_sub) (char* line);

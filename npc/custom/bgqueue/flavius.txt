@@ -1,15 +1,15 @@
 //===== Hercules Script ======================================
 // BattleGround System - Flavius
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.4
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [AEGIS Conversion]
 //= Flavius Battleground.
 //= - Winning Team: 9 badges
 //= - Losing Team: 3 badge
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version.
 //= 1.1 Fixed pink crystal spawning as blue. [L0ne_W0lf]
 //= 1.2 Updated 'waitingroom' to support required zeny/lvl. [Kisuka]

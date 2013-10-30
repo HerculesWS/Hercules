@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Veins Fields Monster Spawn Script
 //===== By: ==================================================
 //= $ephiroth
 //===== Current Version: =====================================
 //= 1.7
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Additional Comments: =================================
 //= 1.0 Temp. monster spawn in Veins Field. [$ephiroth]
 //= 1.1 Updated monster spawn based on kRO website. [$ephiroth]

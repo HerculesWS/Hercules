@@ -22,7 +22,7 @@ struct irc_func {
 struct irc_bot_interface {
 	int fd;
 	bool isIn, isOn;
-	unsigned int last_try;
+	int64 last_try;
 	unsigned char fails;
 	unsigned long ip;
 	unsigned short port;
@@ -43,9 +43,9 @@ struct irc_bot_interface {
 	/* */
 	struct irc_func* (*func_search) (char* function_name);
 	/* */
-	int (*connect_timer) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*identify_timer) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*join_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*connect_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*identify_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*join_timer) (int tid, int64 tick, int id, intptr_t data);
 	/* */
 	void (*send)(char *str);
 	void (*relay) (char *name, const char *msg);

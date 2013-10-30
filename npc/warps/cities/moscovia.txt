@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Moscovia City Warp Script
 //===== By: ==================================================
 //= $ephiroth
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Any Athena Version
 //===== Description: =========================================
 //= Warp Points for Moscovia City
 //===== Additional Comments: =================================

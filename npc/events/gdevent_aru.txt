@@ -1,15 +1,16 @@
 //===== Hercules Script ======================================
 //= Guild dungeon event, Arunafeltz.
-//===== By: ================================================== 
+//===== By: ==================================================
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
-//= 1.1
-//===== Description: ========================================= 
+//===== Current Version: =====================================
+//= 1.2
+//===== Description: =========================================
 //= Guild dungeon event, Arunafeltz. Retrieve Morestone's
 //= pickaxe from Kublin.
 //===== Additional Comments: =================================
 //= 1.0 First version
 //= 1.1 Changed spawn timer to 1 hour. [L0ne_w0lf]
+//= 1.2 Added GM management function. [Euphy]
 //============================================================
 
 arug_dun01,1,1,1	script	Monster Controler#aru_gd	81,{
@@ -43,7 +44,7 @@ OnEnable:
 	}
 	end;
 
-Onkill:
+OnKill:
 	killmonster "arug_dun01","Monster Controler1#aru::OnMyMObDead";
 	end;
 
@@ -674,7 +675,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	715,{
 			mes "Let me see...";
 			next;
 			if (countitem(6031) > 0) {
-				donpcevent "Controller#gdevent_a::Onstop";
+				donpcevent "Controller#gdevent_a::OnStop";
 				set $@gdeventv_a2,3;
 				donpcevent "eff_mvp#aru_gd::Onmvp";
 				mes "[Pierrot Pier]";
@@ -816,7 +817,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	715,{
 			mes "Let me see.";
 			next;
 			if (countitem(6031) > 0) {
-				donpcevent "Controller#gdevent_a::Onstop";
+				donpcevent "Controller#gdevent_a::OnStop";
 				set $@gdeventv_a2,3;
 				donpcevent "eff_mvp#aru_gd::Onmvp";
 				mes "[Pierrot Pier]";
@@ -902,7 +903,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	715,{
 				mes "When is that person coming? I am very bored~!";
 				close;
 			}
-			emotion 18;
+			emotion e_heh;
 			mes "[Pierrot Pier]";
 			mes "^3131FF<Although you're a weirdo, you seem to be very dedicated>^000000. Beep beep.";
 			next;
@@ -926,7 +927,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	715,{
 			mes "Let me see...";
 			next;
 			if (countitem(6031) > 0) {
-				donpcevent "Controller#gdevent_a::Onstop";
+				donpcevent "Controller#gdevent_a::OnStop";
 				set $@gdeventv_a2,3;
 				donpcevent "eff_mvp#aru_gd::Onmvp";
 				mes "[Pierrot Pier]";
@@ -983,14 +984,14 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	715,{
 		}
 		else {
 			mes "[Pierrot Pier]";
-			mes "Voc� encontrou o tesouro?";
-			mes "Mostre-me o que voc� tem nas m�os agora.";
+			mes "Did you find the treasure?";
+			mes "Show me that thing you are holding, now!";
 			next;
 			mes "[Pierrot Pier]";
-			mes "Deixe-me ver...";
+			mes "Let me see...";
 			next;
 			if (countitem(6031) > 0) {
-				donpcevent "Controller#gdevent_a::Onstop";
+				donpcevent "Controller#gdevent_a::OnStop";
 				set $@gdeventv_a2,3;
 				donpcevent "eff_mvp#aru_gd::Onmvp";
 				mes "[Pierrot Pier]";
@@ -1040,35 +1041,35 @@ Ongame_start:
 	donpcevent "paper_sp_9_a::OnEnable";
 	set .@roulette_where,rand(1,9);
 	if (.@roulette_where == 1) {
-		donpcevent "paper_sp_1_a::Onbingo";
+		donpcevent "paper_sp_1_a::OnBingo";
 	}
 	else if (.@roulette_where == 2) {
-		donpcevent "paper_sp_2_a::Onbingo";
+		donpcevent "paper_sp_2_a::OnBingo";
 	}
 	else if (.@roulette_where == 3) {
-		donpcevent "paper_sp_3_a::Onbingo";
+		donpcevent "paper_sp_3_a::OnBingo";
 	}
 	else if (.@roulette_where == 4) {
-		donpcevent "paper_sp_4_a::Onbingo";
+		donpcevent "paper_sp_4_a::OnBingo";
 	}
 	else if (.@roulette_where == 5) {
-		donpcevent "paper_sp_5_a::Onbingo";
+		donpcevent "paper_sp_5_a::OnBingo";
 	}
 	else if (.@roulette_where == 6) {
-		donpcevent "paper_sp_6_a::Onbingo";
+		donpcevent "paper_sp_6_a::OnBingo";
 	}
 	else if (.@roulette_where == 7) {
-		donpcevent "paper_sp_7_a::Onbingo";
+		donpcevent "paper_sp_7_a::OnBingo";
 	}
 	else if (.@roulette_where == 8) {
-		donpcevent "paper_sp_8_a::Onbingo";
+		donpcevent "paper_sp_8_a::OnBingo";
 	}
 	else {
-		donpcevent "paper_sp_9_a::Onbingo";
+		donpcevent "paper_sp_9_a::OnBingo";
 	}
 	end;
 
-Onstop:
+OnStop:
 	stopnpctimer;
 	end;
 
@@ -1106,7 +1107,7 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x1,rand(81,95);
 	set .@paper_y1,rand(87,100);
 	makeitem 6031,1,"arug_que01",.@paper_x1,.@paper_y1; //Glitering_PaperB
@@ -1131,7 +1132,7 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x2,rand(96,110);
 	set .@paper_y2,rand(87,100);
 	makeitem 6031,1,"arug_que01",.@paper_x2,.@paper_y2; //Glitering_PaperB
@@ -1156,7 +1157,7 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x3,rand(111,124);
 	set .@paper_y3,rand(87,100);
 	makeitem 6031,1,"arug_que01",.@paper_x3,.@paper_y3; //Glitering_PaperB
@@ -1181,7 +1182,7 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x4,rand(81,95);
 	set .@paper_y4,rand(73,86);
 	makeitem 6031,1,"arug_que01",.@paper_x4,.@paper_y4; //Glitering_PaperB
@@ -1206,7 +1207,7 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x5,rand(96,110);
 	set .@paper_y5,rand(73,86);
 	makeitem 6031,1,"arug_que01",.@paper_x5,.@paper_y5; //Glitering_PaperB
@@ -1231,7 +1232,7 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x6,rand(111,124);
 	set .@paper_y6,rand(73,86);
 	makeitem 6031,1,"arug_que01",.@paper_x6,.@paper_y6; //Glitering_PaperB
@@ -1256,7 +1257,7 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x7,rand(81,95);
 	set .@paper_y7,rand(59,72);
 	makeitem 6031,1,"arug_que01",.@paper_x7,.@paper_y7; //Glitering_PaperB
@@ -1281,7 +1282,7 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x8,rand(96,110);
 	set .@paper_y8,rand(59,72);
 	makeitem 6031,1,"arug_que01",.@paper_x8,.@paper_y8; //Glitering_PaperB
@@ -1306,7 +1307,7 @@ OnEnable:
 	}
 	end;
 
-Onbingo:
+OnBingo:
 	set .@paper_x9,rand(111,124);
 	set .@paper_y9,rand(59,72);
 	makeitem 6031,1,"arug_que01",.@paper_x9,.@paper_y9; //Glitering_PaperB
@@ -1511,10 +1512,11 @@ arug_que01,114,105,3	duplicate(GD_Ev_Flower)	#aru_flower_53	978
 arug_que01,109,105,3	duplicate(GD_Ev_Flower)	#aru_flower_54	977
 arug_que01,104,105,3	duplicate(GD_Ev_Flower)	#aru_flower_55	976
 
-/*
 arug_dun01,5,5,1	script	Event controller#aru_gd	81,{
-	input .@input; //,0,9999;
-	if (input == 1854) {
+	if (callfunc("F_GM_NPC",1854,0) < 1) {
+		mes "Incorrect password.";
+		close;
+	} else {
 		mes "How can I help you?";
 		next;
 		switch(select("Reset.:No, thanks.")) {
@@ -1532,9 +1534,4 @@ arug_dun01,5,5,1	script	Event controller#aru_gd	81,{
 			close;
 		}
 	}
-	else {
-		mes "Incorrect password.";
-		close;
-	}
 }
-*/

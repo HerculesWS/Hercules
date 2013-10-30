@@ -339,7 +339,7 @@ struct flooritem_data {
 	unsigned char subx,suby;
 	int cleartimer;
 	int first_get_charid,second_get_charid,third_get_charid;
-	unsigned int first_get_tick,second_get_tick,third_get_tick;
+	int64 first_get_tick,second_get_tick,third_get_tick;
 	struct item item_data;
 };
 
@@ -706,6 +706,9 @@ struct map_data {
 	/* ShowEvent Data Cache */
 	struct questinfo *qi_data;
 	unsigned short qi_count;
+	
+	/* speeds up clif_updatestatus processing by causing hpmeter to run only when someone with the permission can view it */
+	unsigned short hpmeter_visible;
 };
 
 /// Stores information about a remote map (for multi-mapserver setups).
@@ -900,7 +903,7 @@ struct map_interface {
 	// blocklist manipulation
 	int (*addblock) (struct block_list* bl);
 	int (*delblock) (struct block_list* bl);
-	int (*moveblock) (struct block_list *bl, int x1, int y1, unsigned int tick);
+	int (*moveblock) (struct block_list *bl, int x1, int y1, int64 tick);
 	//blocklist nb in one cell
 	int (*count_oncell) (int16 m,int16 x,int16 y,int type);
 	struct skill_unit * (*find_skill_unit_oncell) (struct block_list* target,int16 x,int16 y,uint16 skill_id,struct skill_unit* out_unit, int flag);
@@ -912,8 +915,8 @@ struct map_interface {
 	// npc
 	bool (*addnpc) (int16 m,struct npc_data *nd);
 	// map item
-	int (*clearflooritem_timer) (int tid, unsigned int tick, int id, intptr_t data);
-	int (*removemobs_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*clearflooritem_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*removemobs_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*clearflooritem) (struct block_list* bl);
 	int (*addflooritem) (struct item *item_data,int amount,int16 m,int16 x,int16 y,int first_charid,int second_charid,int third_charid,int flags);
 	// player to map session
@@ -1001,7 +1004,7 @@ struct map_interface {
 
 	void (*do_shutdown) (void);
 	
-	int (*freeblock_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*freeblock_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*searchrandfreecell) (int16 m, int16 *x, int16 *y, int stack);
 	int (*count_sub) (struct block_list *bl, va_list ap);
 	DBData (*create_charid2nick) (DBKey key, va_list args);

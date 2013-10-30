@@ -4,8 +4,6 @@
 //= Lupus
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= A simple Penal Servitude Script.
 //= It could cheer up your prisoners a bit.

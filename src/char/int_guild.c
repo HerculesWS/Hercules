@@ -46,8 +46,7 @@ int mapif_guild_info(int fd,struct guild *g);
 int guild_break_sub(int key,void *data,va_list ap);
 int inter_guild_tosql(struct guild *g,int flag);
 
-static int guild_save_timer(int tid, unsigned int tick, int id, intptr_t data)
-{
+static int guild_save_timer(int tid, int64 tick, int id, intptr_t data) {
 	static int last_id = 0; //To know in which guild we were.
 	int state = 0; //0: Have not reached last guild. 1: Reached last guild, ready for save. 2: Some guild saved, don't do further saving.
 	DBIterator *iter = db_iterator(guild_db_);
@@ -86,7 +85,7 @@ static int guild_save_timer(int tid, unsigned int tick, int id, intptr_t data)
 
 	state = guild_db_->size(guild_db_);
 	if( state < 1 ) state = 1; //Calculate the time slot for the next save.
-	timer->add(tick  + autosave_interval/state, guild_save_timer, 0, 0);
+	timer->add(tick + autosave_interval/state, guild_save_timer, 0, 0);
 	return 0;
 }
 

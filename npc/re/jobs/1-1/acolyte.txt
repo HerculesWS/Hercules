@@ -1,17 +1,17 @@
 //===== Hercules Script ======================================
 //= Renewal Acolyte Job Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Kisuka
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.3
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Job Change to Acolyte Class
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 First Version. [Kisuka]
 //= 1.1 Added back the npcs used for the priest quest.
 //= 1.2 Added Baby Job compatibility [Streusel]
 //= 1.3 Rewrote bits [Euphy]
-//============================================================ 
+//============================================================
 prt_church,184,41,4	script	Cleric#aco	60,{
 	if (Upper == 1) {
 		if (ADVJOB == Job_High_Priest || ADVJOB == Job_Champion) {

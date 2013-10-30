@@ -4,8 +4,6 @@
 //= Fredzilla
 //===== Current Version: =====================================
 //= 1.1
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Start for Treasure hunter quests
 //===== Additional Comments: =================================

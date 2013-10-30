@@ -4,14 +4,14 @@
 //= jAthena (0.9) - I guess
 //= Unknown Translator (1.0)
 //= Darkchild (1.2)
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.8
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= [Official Conversion]
 //= Job quest for Sage classes
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 2.1 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=	No longer uses function "F_BlockHigh"
+//=     No longer uses function "F_BlockHigh"
 //= 2.2 Small bug fix (== -> !=) thanks to Saithis. [L0ne_W0lf]
 //= 2.2b ANotehr smaLL bugfix, pointed out by Cara. [L0ne_W0lf]
 //= 2.3 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
@@ -19,13 +19,13 @@
 //= 2.4a Deleted unused variables. [Samuray22]
 //= 2.5 Updated waiting room. (Removes global var) [L0ne_W0lf]
 //= 2.5a Corrected some "mes"s without the getitemname. (bugreport:1564) [Samuray22]
-//	-Changed an incorrect "!=" to "==". (bugreport:1572) 
-//	-And Small Typo Error
+//=     -Changed an incorrect "!=" to "==". (bugreport:1572) 
+//=     -And Small Typo Error
 //= 2.6 Fixed Kayron Grik cutin not being removed as reported by jc1991, bugreport:1825 [Brainstorm]
 //= 2.6a Fixed a Little Bug with Whispers Summoned in the Last Test. (bugreport:2253) [Samuray22]
 //= 2.7 Added Quest Log commands. [Kisuka]
 //= 2.8 Removed the need for use of 'goto.' [L0ne_W0lf]
-//============================================================ 
+//============================================================
 
 yuno_in02,38,61,5	script	Dean of the Academy#sa	743,{
 	cutin "job_sage_kayron",2;
@@ -343,7 +343,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	742,{
 				next;
 				if (select("Pay 70,000 zeny.:Give him Old Magicbook and Necklace of Wisdom.") == 1) {
 					if (Zeny > 69999) {
-						set zeny,zeny-70000;
+						set Zeny, Zeny-70000;
 						mes "[Metheus Sylphe]";
 						mes "Thank you, your application has been accepted.";
 						mes "Next, you will take an entrance test.";
@@ -515,7 +515,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	742,{
 			next;
 		}
 		else if (Zeny > 69999) {
-			set zeny,zeny-70000;
+			set Zeny, Zeny-70000;
 			mes "[Metheus Sylphe]";
 			mes "Well done. Let me proceed with your application request.";
 			set SAGE_Q,4;
@@ -545,7 +545,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	742,{
 				if (Zeny > 29999) {
 					for (set .@i, 0; .@i < .@size ; set .@i, .@i+1)
 						delitem .@item[.@i], .@count[.@i];  
-					set zeny,zeny-30000;
+					set Zeny, Zeny-30000;
 					mes "[Metheus Sylphe]";
 					mes "Well done. Let me proceed with your application request.";
 					set .@SAGE_Q_T,SAGE_Q;
@@ -2891,9 +2891,9 @@ OnTimer9000:
 	end;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= Script mostly based on translated jA script
 //= Written test questions/answers weren't translated 100% corectly
 //= So a lot of those are based upon mRO site and my own info

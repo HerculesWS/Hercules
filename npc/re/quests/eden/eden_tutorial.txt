@@ -1,11 +1,9 @@
-//===== rAthena Script =======================================
+//===== Hercules Script ======================================
 //= Eden Tutorial
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
 //= 1.0
-//===== Compatible With: =====================================
-//= rAthena SVN
 //===== Description: =========================================
 //= A series of quests introducing the major features of
 //= Ragnarok Online.

@@ -57,7 +57,7 @@ struct elemental_data {
 	int summon_timer;
 	int skill_timer;
 
-	unsigned last_thinktime, last_linktime, last_spdrain_time;
+	int64 last_thinktime, last_linktime, last_spdrain_time;
 	short min_chase;
 	int target_id, attacked_id;
 };
@@ -99,7 +99,7 @@ struct elemental_interface {
 	int (*set_target) (struct map_session_data *sd, struct block_list *bl);
 	int (*clean_single_effect) (struct elemental_data *ed, uint16 skill_id);
 	int (*clean_effect) (struct elemental_data *ed);
-	int (*action) (struct elemental_data *ed, struct block_list *bl, unsigned int tick);
+	int (*action) (struct elemental_data *ed, struct block_list *bl, int64 tick);
 	struct skill_condition (*skill_get_requirements) (uint16 skill_id, uint16 skill_lv);
 	
 	int (*read_skilldb) (void);
@@ -108,11 +108,11 @@ struct elemental_interface {
 	
 	int (*search_index) (int class_);
 	void (*summon_init) (struct elemental_data *ed);
-	int (*summon_end_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*summon_end_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*ai_sub_timer_activesearch) (struct block_list *bl, va_list ap);
-	int (*ai_sub_timer) (struct elemental_data *ed, struct map_session_data *sd, unsigned int tick);
+	int (*ai_sub_timer) (struct elemental_data *ed, struct map_session_data *sd, int64 tick);
 	int (*ai_sub_foreachclient) (struct map_session_data *sd, va_list ap);
-	int (*ai_timer) (int tid, unsigned int tick, int id, intptr_t data);
+	int (*ai_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*read_db) (void);
 };
 

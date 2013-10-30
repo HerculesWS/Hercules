@@ -1,15 +1,14 @@
 //===== Hercules Script ======================================
-//= Arena Warps
+//= Turbo Track
 //===== By: ==================================================
-//= Streusel
+//= Euphy
 //===== Current Version: =====================================
 //= 1.0
 //===== Description: =========================================
-//= Warp Points related to Izlude Arena && Control Panel
+//= [Official Conversion]
+//= Pre-Renewal duplicates.
 //===== Additional Comments: =================================
-//= 1.0 First version.
-//= Moved welcome_arena & bye_arena from main folder
+//= 1.0 Split Peco Peco Manager NPC.
 //============================================================
 
-izlude,128,226,0	warp	welcome_arena	1,1,arena_room,100,30
-arena_room,99,24,0	warp	bye_arena	2,2,izlude,128,220
+alde_gld,181,199,5	duplicate(MountManager_turbo)	Peco Peco Manager	845

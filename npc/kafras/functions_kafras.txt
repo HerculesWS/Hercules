@@ -1,10 +1,10 @@
 //===== Hercules Script ======================================
 //= Kafra Functions
-//===== By: ================================================== 
+//===== By: ==================================================
 //= rAthena Dev Team
 //= Darlskies, Darkchild, Syrus22, Lupus, kobra_k88 (2.0)
 //= L0ne_W0lf
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 6.7
 //===== Description: =========================================
 //= These functions handle save, storage, cart rental, teleport,
@@ -13,9 +13,9 @@
 //= Kafra's will need a lot of work. The Welcome Message argument
 //= may become obsolete, as most kafras have a slightly differing
 //= Welcome message.
-//===== Additional Comments: ================================= 
-//= v1.1 Now using functions v2.1 Added Cart Rent for Classes: Whitesmith, Professor.
-//= Replaced checkoption(x) into checkcart(0) [Lupus] v2.1b Added Fix Kafra Pass Func [Kobra_k88]
+//===== Additional Comments: =================================
+//= 1.1 Now using functions v2.1 Added Cart Rent for Classes: Whitesmith, Professor.
+//=     Replaced checkoption(x) into checkcart(0) [Lupus] v2.1b Added Fix Kafra Pass Func [Kobra_k88]
 //= 2.2 Final fix of the Kafra Pass Exploit! [Lupus] a -Izlude[4] fix
 //= 2.2a Minor changes to function calls.  Using agruments. Added Guild options. [kobra_k88]
 //= 2.2b This version uses arrays for the teleport option. Rearranged next statements to make menu transitions smoother. [kobra_k88]
@@ -30,29 +30,29 @@
 //= 3.1 Removed callfunc Is_####_Class in favor of baseClass [Silentdragon]
 //= 3.2 Fixed an exploit [Lupus]
 //= 4.0 Added Kafra storage password protection. [Lupus]
-//=	to block Kafra Password, read comments at 350 line
+//=     to block Kafra Password, read comments at 350 line
 //= 5.0 Fixed the close2;....close; end; lines. Who let them slip away? =/ [erKURITA]
-//=	  Also, the kafra upon warp was giving back the zeny. Removed. [erKURITA]
+//=     Also, the kafra upon warp was giving back the zeny. Removed. [erKURITA]
 //= 5.1 Optimized a little, added no tele/save arg's [Evera]
 //= 5.1a Temporary? Added F_ClearGarbage to clear unused/outdated variables [Lupus]
 //= 5.2 By default commented out custom Guilds Kafra's "Guild Storage". [Lupus]
 //= 5.3 uncommented Guild Storage. Confirmed kRO feature. [Lupus]
 //= 5.4 added -Guide option (Kafra shows you nearest Guide) Work in progress. 
-//=	Need all coords for all guides.. and somehow pass their coords to kafra.
-//=	Removed universal Kafra Pass, added 3 new Kafra Tickets [Lupus]
+//=     Need all coords for all guides.. and somehow pass their coords to kafra.
+//=     Removed universal Kafra Pass, added 3 new Kafra Tickets [Lupus]
 //= 5.4b temporary moved "-Guide" from the 1st menu punct [Lupus]
 //= 5.5 Added proper Niflheim welcome message.	[L0ne_W0lf]
-//=	Cleaned up the menus a bit. Got rid of the proceeding "-" prefix.
+//=     Cleaned up the menus a bit. Got rid of the proceeding "-" prefix.
 //= 5.5b Missed a preceeding hyphen, which was screwing up teleporting. [L0ne_W0lf]
 //= 5.6 Further dialog updates, added  dynamic costs for cart and storage use. [L0ne_W0lf]
-//=	Updated some functions to handle Guild Kafras the way they should. 
+//=     Updated some functions to handle Guild Kafras the way they should. 
 //= 5.6a Corrected a few wrong names in the teleport function. [L0ne_W0lf]
 //= 5.7 Correced end message no longer displaying, and the duplicate names [L0ne_W0lf]
-//=	Thanks to Barron-Monster for pointing out the issues.
+//=     Thanks to Barron-Monster for pointing out the issues.
 //= 5.8 Fixed another double name being shown when "saving" [L0ne_W0lf]
 //= 5.9 Fixed the Kafra Welcome message for guilds. Thanks Barron-Monster. [L0ne_W0lf]
 //= 6.0 Closed Kafra Password exploit in Cool Event Corp. Storages until we got a client/packet based password support.
-//=		Added 2 args into F_SetKafCode to fit it in Cool Evnt Co. NPC [Lupus]
+//=     Added 2 args into F_SetKafCode to fit it in Cool Evnt Co. NPC [Lupus]
 //= 6.1 Added menu for Turbo Track Kafra Staff. [L0ne_W0lf]
 //= 6.2 Updated/Fixed warp cords. [Kisuka]
 //= 6.3 #kafra_code is now stored as is. [brianluau]
@@ -60,7 +60,7 @@
 //= 6.5 Optimized. [Joseph]
 //= 6.6 Added Warp Points / View Points Function. [Joseph]
 //= 6.7 Added Rune Knight Kafra. [Euphy]
-//============================================================ 
+//============================================================
 
 //=== Main Function ========================================================
 //=   arg(0): Used to determine which welcome message to show.
@@ -116,8 +116,8 @@ function	script	F_Kafra	{
 			// NPC has it's own welcome message. (Display nothing)
 			break;
 	}
+	next;
 	while (1) {
-		next;
 		deletearray @K_Menu0$[0],getarraysize(@K_Menu0$);
 		if (getarg(0) == 2) {
 			// Guild Kafra Menu override (free Teleport, free Storage, Free Cart)
@@ -159,6 +159,7 @@ function	script	F_Kafra	{
 				callfunc "F_KafStor",2,0,0;
 			else 
 				callfunc "F_KafStor",0,getarg(3),getarg(0);
+			next;
 		} else if (@K_Menu0$[.@j] == "Use Teleport Service") {
 			// Display Einbroch "No Teleport Service" notice.
 			if(getarg(1) != 4) callfunc "F_KafTele",getarg(0);
@@ -176,16 +177,19 @@ function	script	F_Kafra	{
 				mes "instead. Thank you for your";
 				mes "understanding and cooperation.";
 			}
+			next;
 		} else if (@K_Menu0$[.@j] == "Rent a Pushcart") {
 			if(callfunc("F_KafCart",getarg(0),getarg(4)) == 1) 
-			next;
+				next;
 		} else if (@K_Menu0$[.@j] == "Check Other Information") {
 			callfunc "F_KafInfo",getarg(2);
+			next;
 		} else if (@K_Menu0$[.@j] == "Cancel"){
 			callfunc "F_KafEnd",getarg(0),0;
 			end;
 		} else if (@K_Menu0$[.@j] == "Use Guild Storage") {
 			callfunc "F_KafStor",1,0;
+			next;
 		}
 	}
 }
@@ -381,7 +385,7 @@ function	script	F_KafInfo	{
 	// Uncomment next line to block Kafra Storage Protection
 	//	set .@block, 1;
 		setarray .@m$, "Check Special Reserve Points.","Storage Password Service","Kafra Employee Locations","Cancel";
-		if (getarg(0) == 2) deletearray .@m$[1],2; // Rune Knight
+		if (getarg(0) == 2) deletearray .@m$[1],2; // Port Malaya, Rune Knight
 		else if (.@block) deletearray .@m$[1],1;
 	while (1) {
 		set .@j, select(implode(.@m$,":")) - 1;
@@ -472,7 +476,7 @@ function	script	F_SetKafCode	{
 		mes "Your storage is protected with a password. What would you do now?";
 		next;
 		switch (select("Change old password -> 5000z:Remove storage password -> 1000z:Cancel")) {
-			Case 1:
+			case 1:
 				mes getarg(0);
 				mes "At first, please enter your ^0000FFold password^000000.";
 				set @code,callfunc("F_EntKafCode");
@@ -484,7 +488,7 @@ function	script	F_SetKafCode	{
 				next;
 				callsub S_SET,getarg(0),getarg(1);
 				break;
-			Case 2:
+			case 2:
 				mes getarg(0);
 				mes "Please, enter your password before its removal.";
 				set @code,callfunc("F_EntKafCode");
@@ -512,7 +516,7 @@ function	script	F_SetKafCode	{
 					emotion e_sry;
 				}
 				break;
-			Case 3:
+			case 3:
 				break;
 		}
 	} else {
@@ -520,8 +524,8 @@ function	script	F_SetKafCode	{
 		mes "Additional storage protection with a password.";
 		next;
 		switch (select("Set new password -> 5000z:Cancel")) {
-			Case 1: callsub S_SET,getarg(0),getarg(1); break;
-			Case 2: break;		
+			case 1: callsub S_SET,getarg(0),getarg(1); break;
+			case 2: break;		
 		}
 	}
 	close2;

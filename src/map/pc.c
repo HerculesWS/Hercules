@@ -117,7 +117,7 @@ bool pc_should_log_commands(struct map_session_data *sd)
 	return pc_group_should_log_commands(sd->group);
 }
 
-int pc_invincible_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int pc_invincible_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data *sd;
 
 	if( (sd=(struct map_session_data *)map->id2sd(id)) == NULL || sd->bl.type!=BL_PC )
@@ -155,7 +155,7 @@ void pc_delinvincibletimer(struct map_session_data* sd)
 	}
 }
 
-int pc_spiritball_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int pc_spiritball_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data *sd;
 	int i;
 
@@ -419,7 +419,7 @@ int pc_setrestartvalue(struct map_session_data *sd,int type) {
 /*==========================================
 	Rental System
  *------------------------------------------*/
-int pc_inventory_rental_end(int tid, unsigned int tick, int id, intptr_t data) {
+int pc_inventory_rental_end(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data *sd = map->id2sd(id);
 	if( sd == NULL )
 		return 0;
@@ -443,11 +443,24 @@ int pc_inventory_rental_clear(struct map_session_data *sd)
 
 	return 1;
 }
-
+/* assumes i is valid (from default areas where it is called, it is) */
+void pc_rental_expire(struct map_session_data *sd, int i) {
+	short nameid = sd->status.inventory[i].nameid;
+	
+	/* Soon to be dropped, we got plans to integrate it with item db */
+	switch( nameid ) {
+		case ITEMID_REINS_OF_MOUNT:
+			status_change_end(&sd->bl,SC_ALL_RIDING,INVALID_TIMER);
+			break;
+	}
+	
+	clif->rental_expired(sd->fd, i, sd->status.inventory[i].nameid);
+	pc->delitem(sd, i, sd->status.inventory[i].amount, 0, 0, LOG_TYPE_OTHER);
+}
 void pc_inventory_rentals(struct map_session_data *sd)
 {
 	int i, c = 0;
-	unsigned int expire_tick, next_tick = UINT_MAX;
+	int64 expire_tick, next_tick = INT64_MAX;
 
 	for( i = 0; i < MAX_INVENTORY; i++ )
 	{ // Check for Rentals on Inventory
@@ -457,14 +470,9 @@ void pc_inventory_rentals(struct map_session_data *sd)
 			continue;
 
 		if( sd->status.inventory[i].expire_time <= time(NULL) ) {
-			if( sd->status.inventory[i].nameid == ITEMID_REINS_OF_MOUNT
-					&& sd->sc.data[SC_ALL_RIDING] ) {
-				status_change_end(&sd->bl,SC_ALL_RIDING,INVALID_TIMER);
-			}
-			clif->rental_expired(sd->fd, i, sd->status.inventory[i].nameid);
-			pc->delitem(sd, i, sd->status.inventory[i].amount, 0, 0, LOG_TYPE_OTHER);
+			pc->rental_expire(sd,i);
 		} else {
-			expire_tick = (unsigned int)(sd->status.inventory[i].expire_time - time(NULL)) * 1000;
+			expire_tick = (int64)(sd->status.inventory[i].expire_time - time(NULL)) * 1000;
 			clif->rental_time(sd->fd, sd->status.inventory[i].nameid, (int)(expire_tick / 1000));
 			next_tick = min(expire_tick, next_tick);
 			c++;
@@ -611,6 +619,8 @@ int pc_equippoint(struct map_session_data *sd,int n)
 		if(ep == EQP_HAND_R && (pc->checkskill(sd,AS_LEFT) > 0 || (sd->class_&MAPID_UPPERMASK) == MAPID_ASSASSIN ||
 			(sd->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO))//Kagerou and Oboro can dual wield daggers. [Rytech]
 			return EQP_ARMS;
+		if( ep == EQP_SHADOW_SHIELD )/* are there conditions for those? */
+			return EQP_SHADOW_WEAPON|EQP_SHADOW_SHIELD;
 	}
 	return ep;
 }
@@ -927,7 +937,7 @@ int pc_isequip(struct map_session_data *sd,int n)
  *------------------------------------------*/
 bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_time, int group_id, struct mmo_charstatus *st, bool changing_mapservers) {
 	int i;
-	unsigned long tick = timer->gettick();
+	int64 tick = timer->gettick();
 	uint32 ip = session[sd->fd]->client_addr;
 
 	sd->login_id2 = login_id2;
@@ -1266,8 +1276,6 @@ int pc_reg_received(struct map_session_data *sd)
 		sd->state.connect_new = 1;
 		clif->pLoadEndAck(sd->fd, sd);
 	}
-
-	pc->inventory_rentals(sd);
 
 	if( sd->sc.option & OPTION_INVISIBLE ) {
 		sd->vd.class_ = INVISIBLE_CLASS;
@@ -1971,7 +1979,7 @@ int pc_exeautobonus(struct map_session_data *sd,struct s_autobonus *autobonus)
 	return 0;
 }
 
-int pc_endautobonus(int tid, unsigned int tick, int id, intptr_t data) {
+int pc_endautobonus(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data *sd = map->id2sd(id);
 	struct s_autobonus *autobonus = (struct s_autobonus *)data;
 
@@ -3927,8 +3935,7 @@ int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_l
 	/* rental item check */
 	if( item_data->expire_time ) {
 		if( time(NULL) > item_data->expire_time ) {
-			clif->rental_expired(sd->fd, i, sd->status.inventory[i].nameid);
-			pc->delitem(sd, i, sd->status.inventory[i].amount, 1, 0, LOG_TYPE_OTHER);
+			pc->rental_expire(sd,i);
 		} else {
 			int seconds = (int)( item_data->expire_time - time(NULL) );
 			clif->rental_time(sd->fd, sd->status.inventory[i].nameid, seconds);
@@ -4026,7 +4033,7 @@ int pc_dropitem(struct map_session_data *sd,int n,int amount)
 int pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 {
 	int flag=0;
-	unsigned int tick = timer->gettick();
+	int64 tick = timer->gettick();
 	struct map_session_data *first_sd = NULL,*second_sd = NULL,*third_sd = NULL;
 	struct party_data *p=NULL;
 
@@ -4276,7 +4283,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
  *	1 = success
  *------------------------------------------*/
 int pc_useitem(struct map_session_data *sd,int n) {
-	unsigned int tick = timer->gettick();
+	int64 tick = timer->gettick();
 	int amount, nameid, i;
 	struct script_code *item_script;
 
@@ -4343,7 +4350,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		if( i < MAX_ITEMDELAYS ) {
 			if( sd->item_delay[i].nameid ) {// found
 				if( DIFF_TICK(sd->item_delay[i].tick, tick) > 0 ) {
-					int e_tick = DIFF_TICK(sd->item_delay[i].tick, tick)/1000;
+					int e_tick = (int)(DIFF_TICK(sd->item_delay[i].tick, tick)/1000);
 					clif->msgtable_num(sd->fd, 0x746, e_tick + 1); // [%d] seconds left until you can use
 					return 0; // Delay has not expired yet
 				}
@@ -5642,7 +5649,7 @@ const char* job_name(int class_)
 	}
 }
 
-int pc_follow_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int pc_follow_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data *sd;
 	struct block_list *tbl;
 
@@ -6600,7 +6607,7 @@ void pc_respawn(struct map_session_data* sd, clr_type clrtype)
 		clif->resurrection(&sd->bl, 1); //If warping fails, send a normal stand up packet.
 }
 
-int pc_respawn_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int pc_respawn_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data *sd = map->id2sd(id);
 	if( sd != NULL )
 	{
@@ -6647,7 +6654,7 @@ void pc_damage(struct map_session_data *sd,struct block_list *src,unsigned int h
  *------------------------------------------*/
 int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	int i=0,j=0,k=0;
-	unsigned int tick = timer->gettick();
+	int64 tick = timer->gettick();
 
 	for(k = 0; k < 5; k++)
 		if (sd->devotion[k]){
@@ -8250,7 +8257,7 @@ int pc_setregistry_str(struct map_session_data *sd,const char *reg,const char *v
 /*==========================================
  * Exec eventtimer for player sd (retrieved from map_session (id))
  *------------------------------------------*/
-int pc_eventtimer(int tid, unsigned int tick, int id, intptr_t data) {
+int pc_eventtimer(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data *sd=map->id2sd(id);
 	char *p = (char *)data;
 	int i;
@@ -8526,13 +8533,13 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 	nullpo_ret(sd);
 
 	if( n < 0 || n >= MAX_INVENTORY ) {
-		clif->equipitemack(sd,0,0,0);
+		clif->equipitemack(sd,0,0,EIA_FAIL);
 		return 0;
 	}
 
 	if( DIFF_TICK(sd->canequip_tick,timer->gettick()) > 0 )
 	{
-		clif->equipitemack(sd,n,0,0);
+		clif->equipitemack(sd,n,0,EIA_FAIL);
 		return 0;
 	}
 
@@ -8543,13 +8550,13 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 		ShowInfo("equip %d(%d) %x:%x\n",sd->status.inventory[n].nameid,n,id?id->equip:0,req_pos);
 	if(!pc->isequip(sd,n) || !(pos&req_pos) || sd->status.inventory[n].equip != 0 || sd->status.inventory[n].attribute==1 ) { // [Valaris]
 		// FIXME: pc->isequip: equip level failure uses 2 instead of 0
-		clif->equipitemack(sd,n,0,0);	// fail
+		clif->equipitemack(sd,n,0,EIA_FAIL);	// fail
 		return 0;
 	}
 
 	if (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_SATURDAY_NIGHT_FEVER])
 	{
-		clif->equipitemack(sd,n,0,0);	// fail
+		clif->equipitemack(sd,n,0,EIA_FAIL);	// fail
 		return 0;
 	}
 
@@ -8589,7 +8596,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 		clif->arrow_fail(sd,3);
 	}
 	else
-		clif->equipitemack(sd,n,pos,1);
+		clif->equipitemack(sd,n,pos,EIA_SUCCESS);
 
 	sd->status.inventory[n].equip=pos;
 
@@ -8738,20 +8745,20 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 	nullpo_ret(sd);
 
 	if( n < 0 || n >= MAX_INVENTORY ) {
-		clif->unequipitemack(sd,0,0,0);
+		clif->unequipitemack(sd,0,0,UIA_FAIL);
 		return 0;
 	}
 
 	// if player is berserk then cannot unequip
 	if (!(flag & 2) && sd->sc.count && (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_SATURDAY_NIGHT_FEVER]))
 	{
-		clif->unequipitemack(sd,n,0,0);
+		clif->unequipitemack(sd,n,0,UIA_FAIL);
 		return 0;
 	}
 
 	if( !(flag&2) && sd->sc.count && sd->sc.data[SC_KYOUGAKU] )
 	{
-		clif->unequipitemack(sd,n,0,0);
+		clif->unequipitemack(sd,n,0,UIA_FAIL);
 		return 0;
 	}
 
@@ -8759,7 +8766,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 		ShowInfo("unequip %d %x:%x\n",n,pc->equippoint(sd,n),sd->status.inventory[n].equip);
 
 	if(!sd->status.inventory[n].equip){ //Nothing to unequip
-		clif->unequipitemack(sd,n,0,0);
+		clif->unequipitemack(sd,n,0,UIA_FAIL);
 		return 0;
 	}
 	for(i=0;i<EQI_MAX;i++) {
@@ -8821,7 +8828,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 		clif->changelook(&sd->bl,LOOK_ROBE,sd->status.robe);
 	}
 	
-	clif->unequipitemack(sd,n,sd->status.inventory[n].equip,1);
+	clif->unequipitemack(sd,n,sd->status.inventory[n].equip,UIA_SUCCESS);
 
 	if((sd->status.inventory[n].equip & EQP_ARMS) &&
 		sd->weapontype1 == 0 && sd->weapontype2 == 0 && (!sd->sc.data[SC_TK_SEVENWIND] || sd->sc.data[SC_ASPERSIO])) //Check for seven wind (but not level seven!)
@@ -9011,7 +9018,7 @@ int pc_calc_pvprank(struct map_session_data *sd) {
 /*==========================================
  * Calculate next sd ranking calculation from config
  *------------------------------------------*/
-int pc_calc_pvprank_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int pc_calc_pvprank_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data *sd;
 
 	sd=map->id2sd(id);
@@ -9224,10 +9231,9 @@ int pc_setsavepoint(struct map_session_data *sd, short mapindex,int x,int y)
 }
 
 /*==========================================
- * Save 1 player data  at autosave intervalle
+ * Save 1 player data at autosave intervall
  *------------------------------------------*/
-int pc_autosave(int tid, unsigned int tick, int id, intptr_t data)
-{
+int pc_autosave(int tid, int64 tick, int id, intptr_t data) {
 	int interval;
 	struct s_mapiterator* iter;
 	struct map_session_data* sd;
@@ -9278,7 +9284,7 @@ int pc_daynight_timer_sub(struct map_session_data *sd,va_list ap) {
  * timer to do the day [Yor]
  * data: 0 = called by timer, 1 = gmcommand/script
  *------------------------------------------------*/
-int map_day_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int map_day_timer(int tid, int64 tick, int id, intptr_t data) {
 	char tmp_soutput[1024];
 
 	if (data == 0 && battle_config.day_duration <= 0) // if we want a day
@@ -9298,7 +9304,7 @@ int map_day_timer(int tid, unsigned int tick, int id, intptr_t data) {
  * timer to do the night [Yor]
  * data: 0 = called by timer, 1 = gmcommand/script
  *------------------------------------------------*/
-int map_night_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int map_night_timer(int tid, int64 tick, int id, intptr_t data) {
 	char tmp_soutput[1024];
 
 	if (data == 0 && battle_config.night_duration <= 0) // if we want a night
@@ -9370,7 +9376,7 @@ bool pc_can_use_command(struct map_session_data *sd, const char *command) {
 	return atcommand->can_use(sd,command);
 }
 
-int pc_charm_timer(int tid, unsigned int tick, int id, intptr_t data) {
+int pc_charm_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data *sd;
 	int i, type;
 
@@ -10131,6 +10137,10 @@ void pc_bank_withdraw(struct map_session_data *sd, int money) {
 		clif->bank_withdraw(sd,BWA_SUCCESS);
 	}
 }
+/* status change data arrived from char-server */
+void pc_scdata_received(struct map_session_data *sd) {
+	pc->inventory_rentals(sd);
+}
 
 /*==========================================
  * pc Init/Terminate
@@ -10458,4 +10468,7 @@ void pc_defaults(void) {
 	
 	pc->bank_withdraw = pc_bank_withdraw;
 	pc->bank_deposit = pc_bank_deposit;
+	
+	pc->rental_expire = pc_rental_expire;
+	pc->scdata_received = pc_scdata_received;
 }

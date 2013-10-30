@@ -4,8 +4,6 @@
 //= Kisuka
 //===== Current Version: =====================================
 //= 1.2
-//===== Compatible With: =====================================
-//= Hercules
 //===== Description: =========================================
 //= Official monster spawns in El Dicastes Dungeon.
 //===== Additional Comments: =================================

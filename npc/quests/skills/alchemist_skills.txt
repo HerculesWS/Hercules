@@ -1,14 +1,14 @@
 //===== Hercules Script ======================================
 //= Alchemist Skills Quests
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Lupus, Reddozen, Samuray22
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 2.2
-//===== Description: ========================================= 
-//= [Aegis COnversion]
+//===== Description: =========================================
+//= [Official Conversion]
 //= Quests for item: Elemental_Create_Book
 //= Quest for skill: Bioethics
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.9 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
 //= 2.0 Rescripted (and re-added) Bio Ethics quest. [L0ne_W0lf]
 //= 2.1 Fixed a Resurrection -> Homunculus Resurrection. [L0ne_W0lf]
@@ -1203,7 +1203,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	57,{
 		mes "" + strcharinfo(0) + ".";
 		next;
 		set bioeth,13;
-		skill 238,1,0;
+		skill "AM_BIOETHICS",1,0;
 		mes "[Kellasus]";
 		mes "Ah...";
 		mes "" + strcharinfo(0) + ".";
@@ -2197,9 +2197,9 @@ lhz_in01,218,141,7	script	Alchemist#qsk_al	98,{
 	close;
 }
 
-//============================================================ 
+//============================================================
 // Old changelog
-//============================================================ 
+//============================================================
 //= 1.0 for fully working skills only [Lupus]
 //= 1.1 Added more new skill quests for more classes [Lupus]
 //= Somehow eA engine doesn't let you keep learn't skill V_V'
