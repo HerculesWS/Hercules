@@ -162,7 +162,6 @@ struct map_session_data {
 		unsigned short autolootid[AUTOLOOTITEM_SIZE]; // [Zephyrus]
 		unsigned short autoloottype;
 		unsigned int autolooting : 1; //performance-saver, autolooting state for @alootid
-		unsigned int autolootingtype : 1; //performance-saver, autolooting state for @autoloottype
 		unsigned short autobonus; //flag to indicate if an autobonus is activated. [Inkfish]
 		unsigned int gmaster_flag : 1;
 		unsigned int prevend : 1;//used to flag wheather you've spent 40sp to open the vending or not.
