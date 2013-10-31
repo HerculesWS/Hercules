@@ -30,6 +30,7 @@ enum e_pc_permission {
 	PC_PERM_DISABLE_PVP         = 0x080000, // #20
 	PC_PERM_DISABLE_CMD_DEAD    = 0x100000,
 	PC_PERM_HCHSYS_ADMIN        = 0x200000,
+	PC_PERM_TRADE_BOUNDED		= 0x400000,
 };
 
 /// Total number of PC permissions (without PC_PERM_NONE).
@@ -37,7 +38,7 @@ enum e_pc_permission {
 /// so it's possible to apply sizeof to it [C-FAQ 1.24]
 /// Whenever adding new permission: 1. add enum entry above, 2. add entry into
 /// pc_g_permission_name (in pc.c), 3. increase NUM_PC_PERM below by 1.
-#define NUM_PC_PERM 22
+#define NUM_PC_PERM 23
 
 struct pc_permission_name_table {
 	const char *name;

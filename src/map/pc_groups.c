@@ -55,6 +55,7 @@ const struct pc_permission_name_table pc_g_permission_name[NUM_PC_PERM] = {
 	{ "disable_pvp", PC_PERM_DISABLE_PVP },
 	{ "disable_commands_when_dead", PC_PERM_DISABLE_CMD_DEAD },
 	{ "hchsys_admin", PC_PERM_HCHSYS_ADMIN },
+	{ "can_trade_bounded", PC_PERM_TRADE_BOUNDED },
 };
 
 static DBMap* pc_group_db; // id -> GroupSettings

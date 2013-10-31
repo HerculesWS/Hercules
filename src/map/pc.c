@@ -568,6 +568,14 @@ bool pc_can_give_items(struct map_session_data *sd)
 	return pc->has_permission(sd, PC_PERM_TRADE);
 }
 
+/**
+ * Determines if player can give / drop / trade / vend bounded items
+ */
+bool pc_can_give_bounded_items(struct map_session_data *sd)
+{
+	return pc->has_permission(sd, PC_PERM_TRADE_BOUNDED);
+}
+
 /*==========================================
  * prepares character for saving.
  *------------------------------------------*/
@@ -991,6 +999,10 @@ int pc_isequip(struct map_session_data *sd,int n)
  *------------------------------------------*/
 bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_time, int group_id, struct mmo_charstatus *st, bool changing_mapservers) {
 	int i;
+#ifdef BOUND_ITEMS
+	int j;
+	int idxlist[MAX_INVENTORY];
+#endif
 	int64 tick = timer->gettick();
 	uint32 ip = session[sd->fd]->client_addr;
 
@@ -1190,7 +1202,15 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	 * Check if player have any item cooldowns on
 	 **/
 	pc->itemcd_do(sd,true);
-	
+
+#ifdef BOUND_ITEMS
+	// Party bound item check
+	if(sd->status.party_id == 0 && (j = pc->bound_chk(sd,3,idxlist))) { // Party was deleted while character offline
+		for(i=0;i<j;i++)
+			pc->delitem(sd,idxlist[i],sd->status.inventory[idxlist[i]].amount,0,1,LOG_TYPE_OTHER);
+	}
+#endif
+
 	/* [Ind/Hercules] */
 	sd->sc_display = NULL;
 	sd->sc_display_count = 0;
@@ -3948,8 +3968,8 @@ int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_l
 	{ // Stackable | Non Rental
 		for( i = 0; i < MAX_INVENTORY; i++ )
 		{
-			if( sd->status.inventory[i].nameid == item_data->nameid && memcmp(&sd->status.inventory[i].card, &item_data->card, sizeof(item_data->card)) == 0 )
-			{
+			if( sd->status.inventory[i].nameid == item_data->nameid && sd->status.inventory[i].bound == item_data->bound && memcmp(&sd->status.inventory[i].card, &item_data->card, sizeof(item_data->card)) == 0 )
+ 			{
 				if( amount > MAX_AMOUNT - sd->status.inventory[i].amount || ( data->stack.inventory && amount > data->stack.amount - sd->status.inventory[i].amount ) )
 					return 5;
 				sd->status.inventory[i].amount += amount;
@@ -4500,8 +4520,8 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 		return 1;
 	}
 
-	if( !itemdb_cancartstore(item_data, pc->get_group_level(sd)) )
-	{ // Check item trade restrictions	[Skotlex]
+	if( !itemdb_cancartstore(item_data, pc->get_group_level(sd)) || (item_data->bound > 1 && !pc->can_give_bounded_items(sd)))
+ 	{ // Check item trade restrictions	[Skotlex]
 		clif->message (sd->fd, msg_txt(264));
 		return 1;/* TODO: there is no official response to this? */
 	}
@@ -4513,8 +4533,8 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 	if( itemdb->isstackable2(data) && !item_data->expire_time )
 	{
 		ARR_FIND( 0, MAX_CART, i,
-			sd->status.cart[i].nameid == item_data->nameid &&
-			sd->status.cart[i].card[0] == item_data->card[0] && sd->status.cart[i].card[1] == item_data->card[1] &&
+			sd->status.cart[i].nameid == item_data->nameid && sd->status.cart[i].bound == item_data->bound &&
+ 			sd->status.cart[i].card[0] == item_data->card[0] && sd->status.cart[i].card[1] == item_data->card[1] &&
 			sd->status.cart[i].card[2] == item_data->card[2] && sd->status.cart[i].card[3] == item_data->card[3] );
 	};
 
@@ -4647,7 +4667,25 @@ int pc_getitemfromcart(struct map_session_data *sd,int idx,int amount)
 
 	return flag;
 }
-
+ /*==========================================
+ * Bound Item Check
+ * Type:
+ * 1 Account Bound
+ * 2 Guild Bound
+ * 3 Party Bound
+ * 4 Character Bound
+ *------------------------------------------*/
+int pc_bound_chk(TBL_PC *sd,int type,int *idxlist)
+{
+	int i=0, j=0;
+	for(i=0;i<MAX_INVENTORY;i++){
+		if(sd->status.inventory[i].nameid > 0 && sd->status.inventory[i].amount > 0 && sd->status.inventory[i].bound == type) {
+			idxlist[j] = i;
+			j++;
+		}
+	}
+	return j;
+}
 /*==========================================
  *  Display item stolen msg to player sd
  *------------------------------------------*/
@@ -7965,8 +8003,8 @@ int pc_setmadogear(TBL_PC* sd, int flag)
  *------------------------------------------*/
 int pc_candrop(struct map_session_data *sd, struct item *item)
 {
-	if( item && item->expire_time )
-		return 0;
+	if( item && (item->expire_time || (item->bound && !pc->can_give_bounded_items(sd))) )
+ 		return 0;
 	if( !pc->can_give_items(sd) ) //check if this GM level can drop items
 		return 0;
 	return (itemdb_isdropable(item, pc->get_group_level(sd)));
@@ -10293,6 +10331,7 @@ void pc_defaults(void) {
 	pc->class2idx = pc_class2idx;
 	pc->get_group_level = pc_get_group_level;
 	pc->can_give_items = pc_can_give_items;
+	pc->can_give_bounded_items = pc_can_give_bounded_items;
 	
 	pc->can_use_command = pc_can_use_command;
 	pc->has_permission = pc_has_permission;
