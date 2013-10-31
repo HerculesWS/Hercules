@@ -547,7 +547,14 @@ int party_member_withdraw(int party_id, int account_id, int char_id)
 	}
 
 	if( sd && sd->status.party_id == party_id && sd->status.char_id == char_id ) {
-		sd->status.party_id = 0;
+#ifdef BOUND_ITEMS
+		int idxlist[MAX_INVENTORY]; //or malloc to reduce consumtion
+		int j,i;
+		j = pc->bound_chk(sd,3,idxlist);
+		for(i=0;i<j;i++)
+			pc->delitem(sd,idxlist[i],sd->status.inventory[idxlist[i]].amount,0,1,LOG_TYPE_OTHER);
+#endif
+	sd->status.party_id = 0;
 		clif->charnameupdate(sd); //Update name display [Skotlex]
 		//TODO: hp bars should be cleared too
 		if( p->instances )

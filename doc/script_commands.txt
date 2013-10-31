@@ -2781,6 +2781,7 @@ recreate these items perfectly if they are destroyed. Here's what you get:
 @inventorylist_expire[]    - expire time (Unix time stamp). 0 means never 
                              expires.
 @inventorylist_count       - the number of items in these lists.
+@inventorylist_bound       - whether it is an account bounded item or not.
 
 This could be handy to save/restore a character's inventory, since no 
 other command returns such a complete set of data, and could also be the
@@ -4447,6 +4448,51 @@ You can, apparently, even create duplicates of the same pet egg with this
 command, creating a pet which is the same, but simultaneously exists in 
 two eggs, and may hatch from either, although, I'm not sure what kind of a 
 mess will this really cause.
+
+---------------------------------------
+*getitembound <item id>,<amount>,<bound type>{,<account ID>};
+*getitembound "<item name>",<amount>,<bound type>{,<account ID>};
+
+This command behaves identically to 'getitem', but the items created will be
+bound to the target character as specified by the bound type. All items created
+in this manner cannot be dropped, sold, vended, auctioned, or mailed, and in
+some cases cannot be traded or stored.
+
+Valid bound types are:
+ 1 - Account Bound
+ 2 - Guild Bound
+ 3 - Party Bound
+ 4 - Character Bound
+
+---------------------------------------
+
+*getitembound2 <item id>,<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>,<bound type>;
+*getitembound2 "<item name>",<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>,<bound type>;
+
+This command behaves identically to 'getitem2', but the items created will be
+bound to the target character as specified by the bound type. All items created
+in this manner cannot be dropped, sold, vended, auctioned, or mailed, and in
+some cases cannot be traded or stored.
+
+For a list of bound types see 'getitembound'.
+
+---------------------------------------
+
+*countbound({<bound type>})
+
+This function will return the number of bounded items in the character's
+inventory, and sets an array @bound_items[] containing all item IDs of the
+counted items. If a bound type is specified, only those items will be counted.
+
+For a list of bound types see 'getitembound'.
+
+Example:
+	mes "You currently have "+countbound()+" bounded items.";
+	next;
+	mes "The list of bounded items include:";
+	for(set .@i,0; .@i<getarraysize(@bound_items); set .@i,.@i+1)
+		mes getitemname(@bound_items[.@i]);
+	close;
 
 ---------------------------------------
 

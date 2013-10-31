@@ -48,11 +48,11 @@
 // 20120307 - 2012-03-07aRagexeRE+ - 0x970
 
 #ifndef PACKETVER
-	#define PACKETVER 20120418
+	#define PACKETVER 20130807
 #endif
 
 // Comment the following line if your client is NOT ragexeRE (required because of conflicting packets in ragexe vs ragexeRE).
-#define PACKETVER_RE
+//#define PACKETVER_RE
 
 // Client support for experimental RagexeRE UI present in 2012-04-10 and 2012-04-18
 #ifdef PACKETVER_RE
@@ -222,7 +222,7 @@ struct item {
 	char attribute;
 	short card[MAX_SLOTS];
 	unsigned int expire_time;
-	char favorite;
+	char favorite, bound;
 	uint64 unique_id;
 };
 
