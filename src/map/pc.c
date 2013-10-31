@@ -10331,6 +10331,7 @@ void pc_defaults(void) {
 	pc->class2idx = pc_class2idx;
 	pc->get_group_level = pc_get_group_level;
 	pc->can_give_items = pc_can_give_items;
+	pc->bound_chk = pc_bound_chk;
 	pc->can_give_bounded_items = pc_can_give_bounded_items;
 	
 	pc->can_use_command = pc_can_use_command;
