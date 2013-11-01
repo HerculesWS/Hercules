@@ -9347,7 +9347,6 @@ void pc_overheat(struct map_session_data *sd, int val) {
 bool pc_isautolooting(struct map_session_data *sd, int nameid)
 {
 	int i = 0;
-	bool j = false;
 
 	if (sd->state.autoloottype && sd->state.autoloottype&(1<<itemdb_type(nameid)))
 		return true;
