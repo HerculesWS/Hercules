@@ -41845,6 +41845,58 @@ void HP_npc_parsename(struct npc_data *nd, const char *name, const char *start, 
 	}
 	return;
 }
+int HP_npc_parseview(const char *w4, const char *start, const char *buffer, const char *filepath) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_npc_parseview_pre ) {
+		int (*preHookFunc) (const char *w4, const char *start, const char *buffer, const char *filepath);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parseview_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_parseview_pre[hIndex].func;
+			retVal___ = preHookFunc(w4, start, buffer, filepath);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.parseview(w4, start, buffer, filepath);
+	}
+	if( HPMHooks.count.HP_npc_parseview_post ) {
+		int (*postHookFunc) (int retVal___, const char *w4, const char *start, const char *buffer, const char *filepath);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parseview_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_parseview_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, w4, start, buffer, filepath);
+		}
+	}
+	return retVal___;
+}
+bool HP_npc_viewisid(const char *viewid) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_npc_viewisid_pre ) {
+		bool (*preHookFunc) (const char *viewid);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_viewisid_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_viewisid_pre[hIndex].func;
+			retVal___ = preHookFunc(viewid);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.viewisid(viewid);
+	}
+	if( HPMHooks.count.HP_npc_viewisid_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *viewid);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_viewisid_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_viewisid_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, viewid);
+		}
+	}
+	return retVal___;
+}
 struct npc_data* HP_npc_add_warp(char *name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y) {
 	int hIndex = 0;
 	struct npc_data* retVal___ = NULL;
