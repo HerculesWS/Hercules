@@ -3120,6 +3120,13 @@ that castle. The data is read from 'db/castle_db.txt'.
 
 ---------------------------------------
 
+*getcastleid("<map name>")
+
+This function returns the ID of the castle when given the map name for 
+that castle. The data is read from 'db/castle_db.txt'.
+
+---------------------------------------
+
 *getcastledata("<map name>",<type of data>)
 *setcastledata "<map name>",<type of data>,<value>;
 

@@ -10691,6 +10691,15 @@ BUILDIN(getcastlename)
 	return true;
 }
 
+BUILDIN(getcastleid)
+{
+	const char* mapname = mapindex_getmapname(script_getstr(st,2),NULL);
+	struct guild_castle* gc = guild->mapname2gc(mapname);
+	int* id = (gc) ? gc->castle_id : -1;
+	script_pushint(st,id);
+	return true;
+}
+
 BUILDIN(getcastledata)
 {
 	const char *mapname = mapindex_getmapname(script_getstr(st,2),NULL);
@@ -17850,6 +17859,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(agitcheck,""),   // <Agitcheck>
 		BUILDIN_DEF(flagemblem,"i"),	// Flag Emblem
 		BUILDIN_DEF(getcastlename,"s"),
+		BUILDIN_DEF(getcastleid,"s"),
 		BUILDIN_DEF(getcastledata,"si"),
 		BUILDIN_DEF(setcastledata,"sii"),
 		BUILDIN_DEF(requestguildinfo,"i?"),
