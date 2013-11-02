@@ -2389,11 +2389,17 @@ int status_calc_pc_(struct map_session_data* sd, bool first) {
 		clif->sc_end(&sd->bl,sd->bl.id,SELF,SI_CLAIRVOYANCE);
 
 	memset(&sd->special_state,0,sizeof(sd->special_state));
-	memset(&bstatus->max_hp, 0, sizeof(struct status_data)-(sizeof(bstatus->hp)+sizeof(bstatus->sp)));
-
-	//FIXME: Most of these stuff should be calculated once, but how do I fix the memset above to do that? [Skotlex]
-	if (!sd->state.permanent_speed)
+	
+	if (!sd->state.permanent_speed) {
+		memset(&bstatus->max_hp, 0, sizeof(struct status_data)-(sizeof(bstatus->hp)+sizeof(bstatus->sp)));
 		bstatus->speed = DEFAULT_WALK_SPEED;
+	} else {
+		int pSpeed = bstatus->speed;
+		memset(&bstatus->max_hp, 0, sizeof(struct status_data)-(sizeof(bstatus->hp)+sizeof(bstatus->sp)));
+		bstatus->speed = pSpeed;
+	}
+	
+	//FIXME: Most of these stuff should be calculated once, but how do I fix the memset above to do that? [Skotlex]
 	//Give them all modes except these (useful for clones)
 	bstatus->mode = MD_MASK&~(MD_BOSS|MD_PLANT|MD_DETECTOR|MD_ANGRY|MD_TARGETWEAK);
 
@@ -3670,6 +3676,7 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 
 	if(flag&SCB_SPEED) {
 		struct unit_data *ud = unit->bl2ud(bl);
+
 		st->speed = status->calc_speed(bl, sc, bst->speed);
 
 		//Re-walk to adjust speed (we do not check if walktimer != INVALID_TIMER
@@ -3678,13 +3685,11 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 		if (ud)
 			ud->state.change_walk_target = ud->state.speed_changed = 1;
 
-		if( bl->type&BL_PC && st->speed < battle_config.max_walk_speed )
+		if( bl->type&BL_PC && !(sd && sd->state.permanent_speed) && st->speed < battle_config.max_walk_speed )
 			st->speed = battle_config.max_walk_speed;
 
 		if( bl->type&BL_HOM && battle_config.hom_setting&0x8 && ((TBL_HOM*)bl)->master)
 			st->speed = status->get_speed(&((TBL_HOM*)bl)->master->bl);
-
-
 	}
 
 	if(flag&SCB_CRI && bst->cri) {
@@ -5045,11 +5050,8 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 	TBL_PC* sd = BL_CAST(BL_PC, bl);
 	int speed_rate;
 
-	if( sc == NULL )
-		return cap_value(speed,10,USHRT_MAX);
-
-	if (sd && sd->state.permanent_speed)
-		return (short)cap_value(speed,10,USHRT_MAX);
+	if( sc == NULL || ( sd && sd->state.permanent_speed ) )
+		return (unsigned short)cap_value(speed,MIN_WALK_SPEED,MAX_WALK_SPEED);
 
 	if( sd && sd->ud.skilltimer != INVALID_TIMER && (pc->checkskill(sd,SA_FREECAST) > 0 || sd->ud.skill_id == LG_EXEEDBREAK) )
 	{
@@ -5222,7 +5224,7 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 
 	}
 
-	return (short)cap_value(speed,10,USHRT_MAX);
+	return (unsigned short)cap_value(speed,MIN_WALK_SPEED,MAX_WALK_SPEED);
 }
 
 // flag&1 - fixed value [malufett]
