@@ -30,7 +30,7 @@
 //= 1.5 Revamped the script. [Kisuka]
 //============================================================
 
-prt_fild05,170,286,4	script	Anxious Leprechaun#8pday	954,{
+prt_fild05,170,286,4	script	Anxious Leprechaun#8pday	4_M_PATRICK,{
 	if (StPatrick2008 < 1) {
 		mes "[O'Riley the Leprechaun]";
 		mes "Hmm...";

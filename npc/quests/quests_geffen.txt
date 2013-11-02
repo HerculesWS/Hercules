@@ -17,7 +17,7 @@
 
 // Blacksmith: 'Welding Mask' Quest
 //============================================================
-geffen_in,144,166,4	script	Blacksmith	63,{
+geffen_in,144,166,4	script	Blacksmith	1_M_SMITH,{
 	mes "[Blacksmith]";
 	mes "You've never heard of me? Why, I'm the Veteran Blacksmith of this land. I've spent 30 years in this hot and bloody hellfire, bending steel to my iron will!";
 	next;
@@ -83,7 +83,7 @@ geffen_in,144,166,4	script	Blacksmith	63,{
 
 // Eric: 'Headset' Quest
 //============================================================
-geffen_in,30,71,4	script	Eric	83,{
+geffen_in,30,71,4	script	Eric	4_M_01,{
 	mes "[Eric]";
 	mes "Please listen";
 	mes "to my story";
@@ -164,7 +164,7 @@ geffen_in,30,71,4	script	Eric	83,{
 
 // Number Match Game :: gef_yagu
 //============================================================
-geffen,122,77,4	script	Nia#yagu	700,{
+geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 	mes "[Nia]";
 	mes "Hello, I'm Nia, the fifth";
 	mes "disciple of Mawong, the";

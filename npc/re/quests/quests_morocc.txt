@@ -37,19 +37,19 @@
 		end;
 	}
 }
-moc_fild07,380,202,1	duplicate(Continental Guard#man)	Continental Guard#man1	852
-moc_fild11,189,360,6	duplicate(Continental Guard#man)	Continental Guard#man2	852
-prt_fild10,263,23,1	duplicate(Continental Guard#man)	Continental Guard#man3	852
-prt_fild09,95,19,1	duplicate(Continental Guard#man)	Continental Guard#man4	852
-prt_fild09,246,17,1	duplicate(Continental Guard#man)	Continental Guard#man5	852
-moc_fild13,32,171,6	duplicate(Continental Guard#man)	Continental Guard#man6	852
-moc_fild16,124,381,4	duplicate(Continental Guard#man)	Continental Guard#man7	852
-moc_fild16,333,380,4	duplicate(Continental Guard#man)	Continental Guard#man8	852
-moc_fild01,84,19,1	duplicate(Continental Guard#man)	Continental Guard#man9	852
+moc_fild07,380,202,1	duplicate(Continental Guard#man)	Continental Guard#man1	4_M_EIN_SOLDIER
+moc_fild11,189,360,6	duplicate(Continental Guard#man)	Continental Guard#man2	4_M_EIN_SOLDIER
+prt_fild10,263,23,1	duplicate(Continental Guard#man)	Continental Guard#man3	4_M_EIN_SOLDIER
+prt_fild09,95,19,1	duplicate(Continental Guard#man)	Continental Guard#man4	4_M_EIN_SOLDIER
+prt_fild09,246,17,1	duplicate(Continental Guard#man)	Continental Guard#man5	4_M_EIN_SOLDIER
+moc_fild13,32,171,6	duplicate(Continental Guard#man)	Continental Guard#man6	4_M_EIN_SOLDIER
+moc_fild16,124,381,4	duplicate(Continental Guard#man)	Continental Guard#man7	4_M_EIN_SOLDIER
+moc_fild16,333,380,4	duplicate(Continental Guard#man)	Continental Guard#man8	4_M_EIN_SOLDIER
+moc_fild01,84,19,1	duplicate(Continental Guard#man)	Continental Guard#man9	4_M_EIN_SOLDIER
 
 // Pyramids Nightmare Mode
 //============================================================
-moc_prydb1,103,54,3	script	Suspicious Cat#night	547,{
+moc_prydb1,103,54,3	script	Suspicious Cat#night	4_CAT_SAILOR4,{
 	mes "[Suspicious Cat]";
 	mes "I can't believe a mummy could do this to me. Oh man, it hurts. Nobody should find out about this....";
 	next;
@@ -107,7 +107,7 @@ moc_prydb1,103,54,3	script	Suspicious Cat#night	547,{
 	}
 }
 
-moc_prydn1,94,98,3	script	Suspicious Cat#night2	547,{
+moc_prydn1,94,98,3	script	Suspicious Cat#night2	4_CAT_SAILOR4,{
 	mes "[Suspicious Cat]";
 	mes "That stupid mummy slapped me again while you were looking away! Sniff sniff... Let's go back, meow!";
 	next;

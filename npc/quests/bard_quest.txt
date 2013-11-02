@@ -27,7 +27,7 @@
 //= 1.5 Updated RE/Pre-RE EXP. [Euphy]
 //============================================================
 
-geffen,132,38,3	script	Bard#2	51,{
+geffen,132,38,3	script	Bard#2	1_M_BARD,{
 	if (bard_q > 5) set gef_bard_q,bard_q;
 	set @name$,strcharinfo(0);
 	if (gef_bard_q > 29) {
@@ -1365,7 +1365,7 @@ S_StorySong:
 	}
 }
 
-morocc,134,111,3	script	Bard#3	741,{
+morocc,134,111,3	script	Bard#3	2_M_BARD_ORIENT,{
 	set @name$,strcharinfo(0);
 	if (gef_bard_q == 31) {
 		mes "[Kino Kitty]";
@@ -2064,7 +2064,7 @@ morocc,134,111,3	script	Bard#3	741,{
 	}
 }
 
-morocc,132,111,3	script	Little Girl#Jorti	703,{
+morocc,132,111,3	script	Little Girl#Jorti	4_F_KID2,{
 	if (gef_bard_q > 9 && gef_bard_q < 30) {
 		mes "[Jorti]";
 		mes "Jorti tries not to cry anymore because it hurts Uncle Kino and then he coughs up more blood.";
@@ -2130,7 +2130,7 @@ morocc,132,111,3	script	Little Girl#Jorti	703,{
 	}
 }
 
-yuno_in01,172,100,3	script	Old Man#bq1	712,{
+yuno_in01,172,100,3	script	Old Man#bq1	4_M_05,{
 	if (gef_bard_q > 11 && gef_bard_q < 20) {
 		mes "[Sketzi Bundin]";
 		mes "Well, did you find what you were seeking for? Although all we have are old, dusty books, I hope you come by to visit. And please give my regards to your Bard friends.";
@@ -2193,7 +2193,7 @@ yuno_in01,172,100,3	script	Old Man#bq1	712,{
 	}
 }
 
-yuno_in01,163,101,0	script	Old Book#bq	111,{
+yuno_in01,163,101,0	script	Old Book#bq	HIDDEN_NPC,{
 	set @name$,strcharinfo(0);
 	if ((gef_bard_q > 11) && (gef_bard_q < 14)) {
 		if (!rand(5)) {
@@ -2249,7 +2249,7 @@ yuno_in01,163,101,0	script	Old Book#bq	111,{
 }
 
 
-yuno_in01,173,96,0	script	Luke's Songs Vol.1	111,{
+yuno_in01,173,96,0	script	Luke's Songs Vol.1	HIDDEN_NPC,{
 	if (gef_bard_q > 11) {
 		mes "[Preface]";
 		mes "I, Luke of Izlude, greatest of Bards in my time, leave the lyrics of my essential songs for posterity.";
@@ -2355,7 +2355,7 @@ yuno_in01,173,96,0	script	Luke's Songs Vol.1	111,{
 	}
 }
 
-yuno_in01,173,94,0	script	Battle Songs	111,{
+yuno_in01,173,94,0	script	Battle Songs	HIDDEN_NPC,{
 	if (gef_bard_q > 11) {
 		mes "[Drumming in the battlefield]";
 		mes "This song was written to give courage to soldiers on the battlefield.";
@@ -2400,7 +2400,7 @@ yuno_in01,173,94,0	script	Battle Songs	111,{
 }
 
 
-yuno_in01,173,92,0	script	Apple of Idun	111,{
+yuno_in01,173,92,0	script	Apple of Idun	HIDDEN_NPC,{
 	if (gef_bard_q > 11) {
 		mes "[Apple of Idun]";
 		mes "This song praises the golden apples of the goddess Idun. These were the source of the God's power, as it prevented them from growing old.";
@@ -2465,7 +2465,7 @@ yuno_in01,173,92,0	script	Apple of Idun	111,{
 	}
 }
 
-payon,181,172,3	script	Bard#4	51,{
+payon,181,172,3	script	Bard#4	1_M_BARD,{
 	set @name$,strcharinfo(0);
 	if (gef_bard_q == 2 || gef_bard_q == 22) {
 		mes "[Gunther Doubleharmony]";
@@ -2764,7 +2764,7 @@ payon,181,172,3	script	Bard#4	51,{
 
 }
 
-yuno_in04,20,123,7	script	Representative#bq	95,{
+yuno_in04,20,123,7	script	Representative#bq	4_F_SISTER,{
 //set @check = GetGlobalVar "040708_god2"
 	mes "[Marlin Putiur]";
 	if (god_brising == 3) {
@@ -2892,7 +2892,7 @@ yuno_in04,20,123,7	script	Representative#bq	95,{
 	}
 }
 
-yuno_in04,33,119,3	script	Adventurer#1	828,{
+yuno_in04,33,119,3	script	Adventurer#1	4_M_ROGUE,{
 	mes "...";
 	next;
 	mes "...";

@@ -16,7 +16,7 @@
 //= 1.5 Script updates, and removed a level restriction. [Euphy]
 //============================================================
 
-arena_room,162,88,3	script	Ponox	124,{
+arena_room,162,88,3	script	Ponox	4_F_TELEPORTER,{
 	end;
 
 OnInit:
@@ -144,7 +144,7 @@ OnTouch:
 	end;
 }
 
-force_1-2,99,31,4	script	Slipslowrun#party	124,{
+force_1-2,99,31,4	script	Slipslowrun#party	4_F_TELEPORTER,{
 OnStart:
 	initnpctimer;
 	set $arena_minptst,gettime(2);
@@ -410,7 +410,7 @@ OnReset:
 	end;
 }
 
-force_1-2,95,187,0	script	force_09_exit	45,1,1,{
+force_1-2,95,187,0	script	force_09_exit	WARPNPC,1,1,{
 OnTouch:
 	set $arena_minptend,gettime(2);
 	set $arena_secptend,gettime(1);
@@ -949,7 +949,7 @@ OnMyMobDead:
 	end;
 }
 
-prt_are_in,181,135,3	script	Staff#party-1	67,{
+prt_are_in,181,135,3	script	Staff#party-1	1_F_02,{
 	mes "[Staff]";
 	mes "You did a good job.";
 	mes "Even if you have failed to clear a time attack battle, I will reward you with a small amount of arena points.";
@@ -970,7 +970,7 @@ prt_are_in,181,135,3	script	Staff#party-1	67,{
 	end;
 }
 
-prt_are_in,77,135,3	script	Staff#party-2	67,{
+prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 	if($arena_minptend < $arena_minptst) {
 		if($arena_secptend < $arena_secptst) {
 			set @record_minpt,60 - $arena_minptst + $arena_minptend -1;

@@ -32,7 +32,7 @@ L_StartG:
 }
 
 // Castle 1 ===============================================
-nguild_alde,218,170,0	script	Kafra Service#N01	117,{
+nguild_alde,218,170,0	script	Kafra Service#N01	4_F_KAFRA1,{
 	callfunc "F_GKafra", "nguild_alde", "Prontera";
 	end;
 OnRecvCastleN01:
@@ -41,8 +41,8 @@ OnRecvCastleN01:
 }
 
 // Castle 2 ===============================================
-//nguild_gef,96,173,0	script	Kafra Service#N02	117,{
-nguild_gef,35,37,0	script	Kafra Service#N02	117,{
+//nguild_gef,96,173,0	script	Kafra Service#N02	4_F_KAFRA1,{
+nguild_gef,35,37,0	script	Kafra Service#N02	4_F_KAFRA1,{
 	callfunc "F_GKafra", "nguild_gef", "Prontera";
 	end;
 OnRecvCastleN02:
@@ -51,7 +51,7 @@ OnRecvCastleN02:
 }
 
 // Castle 3 ===============================================
-nguild_pay,128,58,3	script	Kafra Service#N03	117,{
+nguild_pay,128,58,3	script	Kafra Service#N03	4_F_KAFRA1,{
 	callfunc "F_GKafra", "nguild_pay", "Prontera";
 	end;
 OnRecvCastleN03:
@@ -60,7 +60,7 @@ OnRecvCastleN03:
 }
 
 // Castle 4 ===============================================
-nguild_prt,96,173,0	script	Kafra Service#N04	117,{
+nguild_prt,96,173,0	script	Kafra Service#N04	4_F_KAFRA1,{
 	callfunc "F_GKafra", "nguild_prt", "Prontera";
 	end;
 OnRecvCastleN04:

@@ -37,7 +37,7 @@
 
 // Black Cat Ears
 //============================================================
-payon,115,131,3	script	Neko Neko#1	725,{
+payon,115,131,3	script	Neko Neko#1	4_F_JOB_ASSASSIN,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
@@ -105,7 +105,7 @@ payon,115,131,3	script	Neko Neko#1	725,{
 
 // X Hairpin, Band Aid, Flower Hairpin
 //============================================================
-geffen,129,148,3	script	Argen#1	779,{
+geffen,129,148,3	script	Argen#1	4_M_YOYOROGUE,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "[Argen]";
@@ -295,7 +295,7 @@ geffen,129,148,3	script	Argen#1	779,{
 
 // Hot-blooded Headband
 //============================================================
-yuno,300,188,5	script	Zhenbolt#1	753,{
+yuno,300,188,5	script	Zhenbolt#1	4_M_MONK,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
@@ -391,7 +391,7 @@ yuno,300,188,5	script	Zhenbolt#1	753,{
 
 // Red Ribbon
 //============================================================
-prontera,165,232,3	script	Nephia#1	744,{
+prontera,165,232,3	script	Nephia#1	4_F_ALCHE,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
@@ -506,7 +506,7 @@ prontera,165,232,3	script	Nephia#1	744,{
 
 // Indian Headband
 //============================================================
-comodo,237,217,5	script	Meruntei#1	732,{
+comodo,237,217,5	script	Meruntei#1	4_M_JOB_HUNTER,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're carrying -";
@@ -560,7 +560,7 @@ comodo,237,217,5	script	Meruntei#1	732,{
 
 // Mushroom Band
 //============================================================
-geffen,67,87,3	script	Ipore#1	700,{
+geffen,67,87,3	script	Ipore#1	8_F_GIRL,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're carrying -";
@@ -640,7 +640,7 @@ geffen,67,87,3	script	Ipore#1	700,{
 
 // Angel Wing Ears, Devil Wing Ears
 //============================================================
-yuno,241,52,3	script	Old Blacksmith#hgear	813,{
+yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
@@ -961,7 +961,7 @@ yuno,241,52,3	script	Old Blacksmith#hgear	813,{
 
 // Sea-Otter Hat
 //============================================================
-xmas,183,267,3	script	Pretty Lindsay#1	793,{
+xmas,183,267,3	script	Pretty Lindsay#1	4_F_NFLOSTGIRL,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
@@ -1076,7 +1076,7 @@ xmas,183,267,3	script	Pretty Lindsay#1	793,{
 
 // Teddybear Hat
 //============================================================
-xmas,175,156,3	script	Fuzzy Fuzz#1	712,{
+xmas,175,156,3	script	Fuzzy Fuzz#1	4_M_05,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
@@ -1164,7 +1164,7 @@ xmas,175,156,3	script	Fuzzy Fuzz#1	712,{
 
 // Model Training Hat
 //============================================================
-payon_in03,8,193,4	script	Nanhyang#1	77,{
+payon_in03,8,193,4	script	Nanhyang#1	1_F_ORIENT_03,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
@@ -1325,7 +1325,7 @@ payon_in03,8,193,4	script	Nanhyang#1	77,{
 
 // Tulip Hairpin
 //============================================================
-geffen,83,189,5	script	Seth#1	716,{
+geffen,83,189,5	script	Seth#1	4_M_KID2,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes " [Seth]";
@@ -1444,7 +1444,7 @@ geffen,83,189,5	script	Seth#1	716,{
 	
 // Party Hat, Straw Hat, Cowboy Hat, Sombrero, Beanie
 //============================================================
-xmas_in,35,30,3	script	Hat Merchant#zero	797,{
+xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
@@ -1735,7 +1735,7 @@ xmas_in,35,30,3	script	Hat Merchant#zero	797,{
 
 // Decorative Golden Bell, Crown of Ancient Queen, Crown of Mistress
 //============================================================
-yuno_in03,20,18,6	script	Nehris#1	726,{
+yuno_in03,20,18,6	script	Nehris#1	4_F_JOB_BLACKSMITH,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
@@ -1900,7 +1900,7 @@ yuno_in03,20,18,6	script	Nehris#1	726,{
 
 // Alarm Mask
 //============================================================
-alde_alche,88,180,0	script	Muscle Man#Alarm Mask	748,{
+alde_alche,88,180,0	script	Muscle Man#Alarm Mask	4_M_ALCHE_A,{
 	if (checkweight(1201,1) == 0) {
 		mes "[Muscle Man]";
 		mes "Hmmm...";
@@ -2073,7 +2073,7 @@ OnInit:
 
 // Drooping Cat, Smokie Leaf, Lazy Smokie, Blue Fish
 //============================================================
-morocc,273,79,4	script	Educated Traveller	99,{
+morocc,273,79,4	script	Educated Traveller	4W_M_03,{
 	disable_items;
 	if ((MaxWeight-Weight) < 5000 || checkweight(1201,1) == 0) {
 		mes "- Wait a minute! -";
@@ -2510,7 +2510,7 @@ OnTouch:
 	end;
 }
 
-pay_dun03,48,84,4	script	Nine Tails#Kitsune Man	762,{
+pay_dun03,48,84,4	script	Nine Tails#Kitsune Man	4_M_JPN2,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a moment! -";

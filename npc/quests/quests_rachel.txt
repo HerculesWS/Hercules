@@ -40,7 +40,7 @@
 
 // Lost Child Quest (Prerequisite to High Priest quest) :: rachel_wonjumin
 //============================================================
-ra_in01,384,246,3	script	Vincent#ra_in01	47,{
+ra_in01,384,246,3	script	Vincent#ra_in01	1_M_01,{
 	if (BaseLevel < 60) {
 		mes "[Vincent]";
 		mes "You're inside Sir Zhed's";
@@ -436,7 +436,7 @@ ra_in01,384,246,3	script	Vincent#ra_in01	47,{
 	}
 }
 
-rachel,114,232,3	script	Logan#ra_in01	869,{
+rachel,114,232,3	script	Logan#ra_in01	4_M_LGTMAN,{
 	if ((lost_boy < 1) || (lost_boy >= 3)) {
 		mes "[Logan]";
 		mes "I'm just Logan, one";
@@ -507,7 +507,7 @@ rachel,114,232,3	script	Logan#ra_in01	869,{
 	}
 }
 
-ra_in01,372,200,3	script	Manson#ra_in01	929,{
+ra_in01,372,200,3	script	Manson#ra_in01	4_M_MIDDLE,{
 	if (lost_boy < 1) {
 		mes "[Manson]";
 		mes "I am Manson, one of the";
@@ -614,7 +614,7 @@ ra_in01,372,200,3	script	Manson#ra_in01	929,{
 	}
 }
 
-rachel,48,237,3	script	Jenny#ra_in01	894,{
+rachel,48,237,3	script	Jenny#ra_in01	4_F_KHELLISIA,{
 	if (lost_boy < 3) {
 		mes "[Jenny]";
 		mes "These grounds are owned by";
@@ -786,7 +786,7 @@ rachel,48,237,3	script	Jenny#ra_in01	894,{
 	end;
 }
 
-rachel,138,73,5	script	Idle Merchant#ra_in01	85,{
+rachel,138,73,5	script	Idle Merchant#ra_in01	4_M_03,{
 	if ((lost_boy < 4) || (lost_boy >= 6)) {
 		mes "[Idle Merchant]";
 		mes "Man! Business is going";
@@ -888,7 +888,7 @@ rachel,138,73,5	script	Idle Merchant#ra_in01	85,{
 	}
 }
 
-rachel,120,47,3	script	Idle Merchant#ra_in01_2	85,{
+rachel,120,47,3	script	Idle Merchant#ra_in01_2	4_M_03,{
 	if ((lost_boy < 5) || (lost_boy > 6)) {
 		mes "[Idle Merchant]";
 		mes "I'm thinking of quitting";
@@ -982,7 +982,7 @@ rachel,120,47,3	script	Idle Merchant#ra_in01_2	85,{
 	}
 }
 
-ra_fild01,245,325,3	script	Suspicious Man#ra_in01	934,{
+ra_fild01,245,325,3	script	Suspicious Man#ra_in01	4_M_RASWORD,{
 	if ((lost_boy < 6) || (lost_boy > 7)) {
 		mes "[Suspicious Man]";
 		mes "Th-there's not enough";
@@ -1093,7 +1093,7 @@ ra_fild01,245,325,3	script	Suspicious Man#ra_in01	934,{
 	}
 }
 
-rachel,263,32,3	script	Kid#ra_in01	931,{
+rachel,263,32,3	script	Kid#ra_in01	4_M_RACHMAN1,{
 	if (lost_boy < 7) {
 		mes "[Kid]";
 		mes "Leave me alone!";
@@ -1228,7 +1228,7 @@ rachel,263,32,3	script	Kid#ra_in01	931,{
 
 // Bruspetti Quest (Perequisite: Lighthalzen "Friendship" quest) :: rachel_ryu
 //============================================================
-ra_in01,235,194,5	script	Katinshuell	931,{
+ra_in01,235,194,5	script	Katinshuell	4_M_RACHMAN1,{
 	if (rach_vice > 21) {
 		mes "[Katinshuell]";
 		mes "If I had only turned";
@@ -1935,7 +1935,7 @@ ra_in01,235,194,5	script	Katinshuell	931,{
 	close;
 }
 
-ra_in01,250,19,3	script	Mr. Shendar	929,{
+ra_in01,250,19,3	script	Mr. Shendar	4_M_MIDDLE,{
 	if (rach_vice > 21) {
 		mes "[Mr. Shendar]";
 		mes "When will my precious";
@@ -2192,7 +2192,7 @@ ra_in01,250,19,3	script	Mr. Shendar	929,{
 	close;
 }
 
-rachel,73,244,3	script	Lachellen	919,{
+rachel,73,244,3	script	Lachellen	4_F_SHABBY,{
 	if (rach_vice > 21) {
 		mes "[Lachellen]";
 		mes "If you happen to see";
@@ -2356,7 +2356,7 @@ rachel,73,244,3	script	Lachellen	919,{
 	close;
 }
 
-rachel,196,77,3	script	Kid#1rachel	921,{
+rachel,196,77,3	script	Kid#1rachel	4_M_CHILD1,{
 	mes "[Kid]";
 	mes "Hey, have you seen";
 	mes "Bruspetti? She's really";
@@ -2372,7 +2372,7 @@ rachel,196,77,3	script	Kid#1rachel	921,{
 	close;
 }
 
-rachel,151,155,3	script	Kid#2rachel	921,{
+rachel,151,155,3	script	Kid#2rachel	4_M_CHILD1,{
 	mes "[Kid]";
 	mes "Oh wow! I wanna be an";
 	mes "adventurer like you when";
@@ -2397,7 +2397,7 @@ rachel,151,155,3	script	Kid#2rachel	921,{
 	close;
 }
 
-rachel,266,35,3	script	Grandma#rachel	918,{
+rachel,266,35,3	script	Grandma#rachel	4_F_RACHOLD,{
 	if (rach_vice > 21) {
 		mes "[Grandma]";
 		mes "When you get to be my";
@@ -2470,7 +2470,7 @@ rachel,266,35,3	script	Grandma#rachel	918,{
 	close;
 }
 
-lhz_in02,213,207,0	script	#ratrace1	111,4,4,{
+lhz_in02,213,207,0	script	#ratrace1	HIDDEN_NPC,4,4,{
 OnTouch:
 	if (rach_vice == 5) {
 		mes "[" + strcharinfo(0) + "]";
@@ -2491,7 +2491,7 @@ OnTouch:
 	end;
 }
 
-rachel,265,47,0	script	#raevent1	111,2,2,{
+rachel,265,47,0	script	#raevent1	HIDDEN_NPC,2,2,{
 OnTouch:
 	if (rach_vice == 23) {
 		mes "[" + strcharinfo(0) + "]";
@@ -2610,7 +2610,7 @@ OnTouch:
 	end;
 }
 
-ra_in01,255,25,0	script	Book#ra_in	111,{
+ra_in01,255,25,0	script	Book#ra_in	HIDDEN_NPC,{
 	if (rach_vice == 15) {
 		mes "^3355FFThis is where you";
 		mes "found Bruspetti's diary.";
@@ -2652,8 +2652,8 @@ ra_in01,255,25,0	script	Book#ra_in	111,{
 //line below (npc header), and comment the line
 //under it, and then uncomment the cutin lines.
 
-//rachel,157,183,3	script	Sincere Follower Urstia	917,{
-rachel,157,183,3	script	Sincere Follower Urstia	916,{
+//rachel,157,183,3	script	Sincere Follower Urstia	4_F_MASK,{
+rachel,157,183,3	script	Sincere Follower Urstia	4_F_MASK1,{
 	cutin "ra_usti1",2;
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFWait a second!";
@@ -2866,7 +2866,7 @@ rachel,157,183,3	script	Sincere Follower Urstia	916,{
 	end;
 }
 
-ice_dun02,120,105,3	script	Man Stuck in Ice#cave	924,5,5,{
+ice_dun02,120,105,3	script	Man Stuck in Ice#cave	4_M_FROZEN1,5,5,{
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -3229,7 +3229,7 @@ OnTimer10800000:
 	end;
 }
 
-rachel,265,98,3	script	Hamion#aru	930,{
+rachel,265,98,3	script	Hamion#aru	4_M_RACHMAN2,{
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -3382,7 +3382,7 @@ rachel,265,98,3	script	Hamion#aru	930,{
 	}
 }
 
-rachel,113,96,5	script	Mohadian	929,10,10,{
+rachel,113,96,5	script	Mohadian	4_M_MIDDLE,10,10,{
 	if (ice_necklace_q == 6) {
 		mes "[Mohadian]";
 		mes "I work at the bar around";
@@ -3493,7 +3493,7 @@ OnTouch:
 	end;
 }
 
-ice_dun03,126,126,3	script	Blazing Fire#ice1	802,{
+ice_dun03,126,126,3	script	Blazing Fire#ice1	4_NFWISP,{
 	mes "^3355FFThe flames in this fire";
 	mes "barrier crackle with magic";
 	mes "power. There's no way that";
@@ -3530,7 +3530,7 @@ ice_dun03,126,126,3	script	Blazing Fire#ice1	802,{
 }
 
 
-ice_dun03,172,126,0	script	Blazing Fire#ice2	802,{
+ice_dun03,172,126,0	script	Blazing Fire#ice2	4_NFWISP,{
 	mes "^3355FFThe flames in this fire";
 	mes "barrier crackle with magic";
 	mes "power. There's no way that";
@@ -3566,7 +3566,7 @@ ice_dun03,172,126,0	script	Blazing Fire#ice2	802,{
 	close;
 }
 
-ice_dun03,172,172,0	script	Blazing Fire#ice3	802,{
+ice_dun03,172,172,0	script	Blazing Fire#ice3	4_NFWISP,{
 	mes "^3355FFThe flames in this fire";
 	mes "barrier crackle with magic";
 	mes "power. There's no way that";
@@ -3602,7 +3602,7 @@ ice_dun03,172,172,0	script	Blazing Fire#ice3	802,{
 	close;
 }
 
-ice_dun03,127,172,0	script	Blazing Fire#ice4	802,{
+ice_dun03,127,172,0	script	Blazing Fire#ice4	4_NFWISP,{
 	mes "^3355FFThe flames in this fire";
 	mes "barrier crackle with magic";
 	mes "power. There's no way that";
@@ -3729,7 +3729,7 @@ OnTimer60000:
 	end;
 }
 
-ice_dun03,150,137,0	script	#ice_4f_1	45,2,2,{
+ice_dun03,150,137,0	script	#ice_4f_1	WARPNPC,2,2,{
 OnTouch:
 	warp "ice_dun04",33,144;
 	end;
@@ -3739,7 +3739,7 @@ OnInit:
 	end;
 }
 
-ice_dun03,138,148,0	script	#ice_4f_2	45,2,2,{
+ice_dun03,138,148,0	script	#ice_4f_2	WARPNPC,2,2,{
 OnTouch:
 	warp "ice_dun04",33,144;
 	end;
@@ -3749,7 +3749,7 @@ OnInit:
 	end;
 }
 
-ice_dun03,161,148,0	script	#ice_4f_3	45,2,2,{
+ice_dun03,161,148,0	script	#ice_4f_3	WARPNPC,2,2,{
 OnTouch:
 	warp "ice_dun04",33,144;
 	end;
@@ -3759,7 +3759,7 @@ OnInit:
 	end;
 }
 
-ice_dun03,151,162,0	script	#ice_4f_4	45,2,2,{
+ice_dun03,151,162,0	script	#ice_4f_4	WARPNPC,2,2,{
 OnTouch:
 	warp "ice_dun04",33,144;
 	end;
@@ -3771,7 +3771,7 @@ OnInit:
 
 // Donation Lottery Quest/High Priest Quest :: rachel_oz & rachel_ma1
 //============================================================
-ra_temple,119,180,0	script	Temple Entrance#ra_tem	45,1,1,{
+ra_temple,119,180,0	script	Temple Entrance#ra_tem	WARPNPC,1,1,{
 OnTouch:
 	if ($rachel_donate >= 10000) {
 		if (MISC_QUEST & 8192) { warp "ra_temin",169,23; end; }
@@ -3791,7 +3791,7 @@ OnTouch:
 	end;
 }
 
-ra_temple,116,174,3	script	Nemma#ra_temple	920,{
+ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 	cutin "ra_nemma02",2;
 	if ($rachel_donate < 10000) {
 		if (ra_have_donated == 0) {
@@ -4239,7 +4239,7 @@ S_Donate:
 	}
 }
 
-rachel,243,37,3	script	Kid#Candy Addict	921,{
+rachel,243,37,3	script	Kid#Candy Addict	4_M_CHILD1,{
 	if ((ra_tem_q < 2) || (ra_tem_q > 9) || (MISC_QUEST & 8192)) {
 		mes "[Kid]";
 		mes "Hey! What's that";
@@ -4529,7 +4529,7 @@ OnTouch:
 	end;
 }
 
-que_rachel,63,82,0	script	Window#ra_temple	111,{
+que_rachel,63,82,0	script	Window#ra_temple	HIDDEN_NPC,{
 	mes "^3355FFThis window is open.^000000";
 	next;
 	if(select("Stay:Exit Through Window") == 2) {
@@ -4697,7 +4697,7 @@ que_rachel,180,37,0	duplicate(nemma01)	nemma03	-1,5,5
 que_rachel,165,37,0	duplicate(nemma01)	nemma04	-1,5,5
 que_rachel,160,37,0	duplicate(nemma01)	nemma05	-1,5,5
 
-que_rachel,169,18,0	script	Quest Temple Exit#ra_tem	45,2,2,{
+que_rachel,169,18,0	script	Quest Temple Exit#ra_tem	WARPNPC,2,2,{
 	mes "^3355FFThe gate is closed.^000000";
 	next;
 	switch(select("Push Gate:Examine Gate:Kick Gate:Smash Gate with Weapon")) {
@@ -4745,7 +4745,7 @@ que_rachel,169,18,0	script	Quest Temple Exit#ra_tem	45,2,2,{
 	close;
 }
 
-ra_temin,277,159,3	script	High Priest Zhed#rachel	932,{
+ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 	if ((ra_tem_q > 14) || (MISC_QUEST&8192)) set lost_boy,14;
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFWait a second!";
@@ -6302,7 +6302,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	932,{
 	end;
 }
 
-ra_temin,170,46,3	script	Panno#rachel	920,{
+ra_temin,170,46,3	script	Panno#rachel	4_F_TRAINEE,{
 	cutin "ra_fano03",2;
 	if (ra_tem_q >= 12 || MISC_QUEST & 8192) {
 		cutin "ra_fano03",2;
@@ -6734,7 +6734,7 @@ L_End:
 	end;
 }
 
-ra_temin,134,128,3	script	Pope's Office Guard#rac::raofficeguard	926,{
+ra_temin,134,128,3	script	Pope's Office Guard#rac::raofficeguard	4_M_MASK1,{
 	if ((ra_tem_q == 15) && (countitem(7561) > 39)) {
 		mes "[Pope's Office Guard]";
 		mes "Hm? What's that you have";
@@ -6785,9 +6785,9 @@ ra_temin,134,128,3	script	Pope's Office Guard#rac::raofficeguard	926,{
 	}
 }
 
-ra_temin,134,134,3	duplicate(raofficeguard)	Pope's Office Guard#2ra	926
+ra_temin,134,134,3	duplicate(raofficeguard)	Pope's Office Guard#2ra	4_M_MASK1
 
-ra_temin,134,131,0	script	gyoin1#rachel	45,1,1,{
+ra_temin,134,131,0	script	gyoin1#rachel	WARPNPC,1,1,{
 OnTouch:
 	if (ra_tem_q == 16)
 		warp "ra_temin",276,239;
@@ -6810,7 +6810,7 @@ OnTouch:
 	end;
 }
 
-ra_temin,275,226,0	script	#rachel33	45,1,1,{
+ra_temin,275,226,0	script	#rachel33	WARPNPC,1,1,{
 	end;
 OnTouch:
 	if (aru_em == 21)
@@ -6820,37 +6820,37 @@ OnTouch:
 	end;
 }
 
-ra_temsky,95,99,6	script	Priest#1rachel	935,{
+ra_temsky,95,99,6	script	Priest#1rachel	4_M_TRAINEE,{
 	mes "[Priest]";
 	mes "May Freya be with you.";
 	close;
 }
 
-ra_temsky,93,97,6	script	Male Follower#1rachel::ramale	926,{
+ra_temsky,93,97,6	script	Male Follower#1rachel::ramale	4_M_MASK1,{
 	mes "[Male Follower]";
 	mes "May Freya be with you.";
 	close;
 }
 
-ra_temsky,90,95,6	duplicate(ramale)	Male Follower#2rachel	926
-ra_temsky,98,59,6	duplicate(ramale)	Male Follower#3rachel	926
+ra_temsky,90,95,6	duplicate(ramale)	Male Follower#2rachel	4_M_MASK1
+ra_temsky,98,59,6	duplicate(ramale)	Male Follower#3rachel	4_M_MASK1
 
-ra_temsky,104,99,4	script	Priestess#1rachel	920,{
+ra_temsky,104,99,4	script	Priestess#1rachel	4_F_TRAINEE,{
 	mes "[Priestess]";
 	mes "May Freya be with you.";
 	close;
 }
 
-ra_temsky,106,97,4	script	Female Follower#1rachel::rafemale	916,{
+ra_temsky,106,97,4	script	Female Follower#1rachel::rafemale	4_F_MASK1,{
 	mes "[Female Follower]";
 	mes "May Freya be with you.";
 	close;
 }
 
-ra_temsky,108,95,4	duplicate(rafemale)	Female Follower#2rachel	916
-ra_temsky,101,59,4	duplicate(rafemale)	Female Follower#3rachel	916
+ra_temsky,108,95,4	duplicate(rafemale)	Female Follower#2rachel	4_F_MASK1
+ra_temsky,101,59,4	duplicate(rafemale)	Female Follower#3rachel	4_F_MASK1
 
-ra_temsky,99,99,5	script	Pope#rachel	936,{
+ra_temsky,99,99,5	script	Pope#rachel	4_F_ARUNA_POP,{
 	if (ra_tem_q == 16) {
 		cutin "ra_bishop",2;
 		mes "^3355FFTh-this little";
@@ -7043,7 +7043,7 @@ ra_temsky,99,99,5	script	Pope#rachel	936,{
 	end;
 }
 
-ra_temin,294,149,0	script	High Priestess Niren#ra	915,{
+ra_temin,294,149,0	script	High Priestess Niren#ra	4_F_MADAME,{
 	end;
 
 OnInit:
@@ -7268,7 +7268,7 @@ OnTouch:
 	end;
 }
 
-ra_temin,28,319,0	script	saint1#rachel	45,4,2,{
+ra_temin,28,319,0	script	saint1#rachel	WARPNPC,4,2,{
 OnTouch:
 	if ((ra_tem_q > 21) || (MISC_QUEST & 8192)) { warp "ra_san01",140,135; end; }
 
@@ -7394,7 +7394,7 @@ OnTouch:
 	end;
 }
 
-que_san04,122,200,4	script	High Priestess Niren#r2	915,{
+que_san04,122,200,4	script	High Priestess Niren#r2	4_F_MADAME,{
 	end;
 
 OnInit:
@@ -7430,7 +7430,7 @@ OnTouch:
 	end;
 }
 
-rachel,142,167,5	script	Seeking Follower#rachel	916,6,6,{
+rachel,142,167,5	script	Seeking Follower#rachel	4_F_MASK1,6,6,{
 	if ((lost_boy == 13) && (ra_tem_q == 20)) {
 		L_Mes:
 		mes "[Arunafeltz Follower]";

@@ -16,7 +16,7 @@
 
 // Guild Flags (Outside Castle)
 //============================================================
--	script	Bamboo Grove Hill#1::OutsideFlagsPA5	722,{
+-	script	Bamboo Grove Hill#1::OutsideFlagsPA5	GUILD_FLAG,{
 
 	set .@GID, GetCastleData("payg_cas05",1);
 
@@ -66,14 +66,14 @@ OnRecvCastlePy05:
 	end;
 }
 
-pay_gld,208,268,4	duplicate(OutsideFlagsPA5)	Bamboo Grove Hill#1-2	722
-pay_gld,199,268,4	duplicate(OutsideFlagsPA5)	Bamboo Grove Hill#2	722
-pay_gld,190,277,3	duplicate(OutsideFlagsPA5)	Bamboo Grove Hill#3	722
-pay_gld,187,294,2	duplicate(OutsideFlagsPA5)	Bamboo Grove Hill#4	722
+pay_gld,208,268,4	duplicate(OutsideFlagsPA5)	Bamboo Grove Hill#1-2	GUILD_FLAG
+pay_gld,199,268,4	duplicate(OutsideFlagsPA5)	Bamboo Grove Hill#2	GUILD_FLAG
+pay_gld,190,277,3	duplicate(OutsideFlagsPA5)	Bamboo Grove Hill#3	GUILD_FLAG
+pay_gld,187,294,2	duplicate(OutsideFlagsPA5)	Bamboo Grove Hill#4	GUILD_FLAG
 
 // Guild Flags (Inside Castle)
 //============================================================
--	script	Bamboo Grove Hill#5::InsideFlagsPA5	722,{
+-	script	Bamboo Grove Hill#5::InsideFlagsPA5	GUILD_FLAG,{
 	end;
 
 OnRecvCastlePy05:
@@ -81,29 +81,29 @@ OnRecvCastlePy05:
 	end;
 }
 
-payg_cas05,32,249,4	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#5-2	722
-payg_cas05,24,249,4	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#6	722
-payg_cas05,62,271,0	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#7	722
-payg_cas05,57,271,0	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#8	722
-payg_cas05,55,252,2	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#9	722
-payg_cas05,55,260,2	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#10	722
+payg_cas05,32,249,4	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#5-2	GUILD_FLAG
+payg_cas05,24,249,4	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#6	GUILD_FLAG
+payg_cas05,62,271,0	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#7	GUILD_FLAG
+payg_cas05,57,271,0	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#8	GUILD_FLAG
+payg_cas05,55,252,2	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#9	GUILD_FLAG
+payg_cas05,55,260,2	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#10	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-payon,123,322,4	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#11	722
-payon,166,161,3	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#12	722
+payon,123,322,4	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#11	GUILD_FLAG
+payon,166,161,3	duplicate(InsideFlagsPA5)	Bamboo Grove Hill#12	GUILD_FLAG
 
 // Kafra Employee
 //============================================================
-payg_cas05,276,227,1	duplicate(guildkafra)	Kafra Staff#payg_cas05	117
+payg_cas05,276,227,1	duplicate(guildkafra)	Kafra Staff#payg_cas05	4_F_KAFRA1
 
 // Steward
 //============================================================
-payg_cas05,277,249,3	duplicate(cm)	Nahzarf#payg_cas05	55
+payg_cas05,277,249,3	duplicate(cm)	Nahzarf#payg_cas05	1_M_JOBTESTER
 
 // Treasure Room Exit
 //============================================================
-payg_cas05,161,136,0	script	#lever_PA05	111,{
+payg_cas05,161,136,0	script	#lever_PA05	HIDDEN_NPC,{
 
 	mes " ";
 	mes "There's a small lever. Will you pull it?";
@@ -118,7 +118,7 @@ payg_cas05,161,136,0	script	#lever_PA05	111,{
 
 // Guild Dungeon Switch
 //============================================================
-payg_cas05,249,15,0	duplicate(gdlever)	#payg_cas05	111
+payg_cas05,249,15,0	duplicate(gdlever)	#payg_cas05	HIDDEN_NPC
 
 // Guild Treasure Spawns
 //============================================================

@@ -192,16 +192,16 @@ L_Mark:
 	return;
 }
 
-izlude,129,175,4	duplicate(GuideIzlude)	Guide#01izlude	105
-izlude_a,129,175,4	duplicate(GuideIzlude)	Guide#01izlude_a	105
-izlude_b,129,175,4	duplicate(GuideIzlude)	Guide#01izlude_b	105
-izlude_c,129,175,4	duplicate(GuideIzlude)	Guide#01izlude_c	105
-izlude_d,129,175,4	duplicate(GuideIzlude)	Guide#01izlude_d	105
+izlude,129,175,4	duplicate(GuideIzlude)	Guide#01izlude	8W_SOLDIER
+izlude_a,129,175,4	duplicate(GuideIzlude)	Guide#01izlude_a	8W_SOLDIER
+izlude_b,129,175,4	duplicate(GuideIzlude)	Guide#01izlude_b	8W_SOLDIER
+izlude_c,129,175,4	duplicate(GuideIzlude)	Guide#01izlude_c	8W_SOLDIER
+izlude_d,129,175,4	duplicate(GuideIzlude)	Guide#01izlude_d	8W_SOLDIER
 
-izlude,133,113,4	duplicate(GuideIzlude)	Guide#02izlude	105
-izlude_a,133,113,4	duplicate(GuideIzlude)	Guide#02izlude_a	105
-izlude_b,133,113,4	duplicate(GuideIzlude)	Guide#02izlude_b	105
-izlude_c,133,113,4	duplicate(GuideIzlude)	Guide#02izlude_c	105
-izlude_d,133,113,4	duplicate(GuideIzlude)	Guide#02izlude_d	105
+izlude,133,113,4	duplicate(GuideIzlude)	Guide#02izlude	8W_SOLDIER
+izlude_a,133,113,4	duplicate(GuideIzlude)	Guide#02izlude_a	8W_SOLDIER
+izlude_b,133,113,4	duplicate(GuideIzlude)	Guide#02izlude_b	8W_SOLDIER
+izlude_c,133,113,4	duplicate(GuideIzlude)	Guide#02izlude_c	8W_SOLDIER
+izlude_d,133,113,4	duplicate(GuideIzlude)	Guide#02izlude_d	8W_SOLDIER
 
-//izlude,120,206,4	duplicate(GuideIzlude)	Guide#03izlude	105
+//izlude,120,206,4	duplicate(GuideIzlude)	Guide#03izlude	8W_SOLDIER

@@ -26,7 +26,7 @@
 //= 2.2 Updated to match AEGIS script and Added Quest Log commands. [Kisuka]
 //============================================================
 
-que_ng,152,167,3	script	Master Miller	901,{
+que_ng,152,167,3	script	Master Miller	4_M_HUOLDARMY,{
 	if (Upper == 2) {
 		mes "[Master Miller]";
 		mes "Well, aren't you an";
@@ -208,7 +208,7 @@ que_ng,152,167,3	script	Master Miller	901,{
 	}
 }
 
-payon,184,65,3	script	Wise Bull Horn	866,{
+payon,184,65,3	script	Wise Bull Horn	4_M_LGTGRAND,{
 	if (GUNS_Q == 1) {
 		mes "[Wise Bull Horn]";
 		mes "Hello, young wolf.";

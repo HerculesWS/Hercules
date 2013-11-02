@@ -11,7 +11,7 @@
 //= 1.1 Optimized. [Euphy]
 //============================================================
 
-prontera,147,171,5	script	Lenneth	811,{
+prontera,147,171,5	script	Lenneth	4_F_VALKYRIE,{
 	mes "[Lenneth]";
 	mes "I come from Valhalla to aid you.";
 	mes "I can transmute for you many of the Valhallen items,";

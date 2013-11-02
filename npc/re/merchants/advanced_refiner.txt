@@ -16,7 +16,7 @@
 //= 1.0 Added Malangdo Refiner "Holink". [Euphy]
 //============================================================
 
-malangdo,221,174,6	script	Holink#mal_cash	559,{
+malangdo,221,174,6	script	Holink#mal_cash	4_CAT_ADV1,{
 	disable_items;
 	mes "[Holink]";
 	mes "I am the meow~ Blacksmith Holink~";

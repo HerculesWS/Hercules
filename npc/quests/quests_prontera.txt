@@ -51,7 +51,7 @@
 
 // Prontera Culvert :: prt_npc
 //============================================================
-prt_in,88,105,2	script	Recruiter	105,{
+prt_in,88,105,2	script	Recruiter	8W_SOLDIER,{
 	if (MISC_QUEST & 8) {
 		mes "[Recruiter]";
 		mes "Ah...";
@@ -143,7 +143,7 @@ S_Volunteer:
 	return;
 }
 
-prt_fild05,270,212,5	script	Culvert Guardian	105,{
+prt_fild05,270,212,5	script	Culvert Guardian	8W_SOLDIER,{
 	if (MISC_QUEST & 8) {
 		mes "[Culvert Guardian]";
 		mes "Ah, you're one of our volunteers. This is the entrance of the Prontera Culvert.";
@@ -166,7 +166,7 @@ prt_fild05,270,212,5	script	Culvert Guardian	105,{
 
 // Ph.D Hat Quest :: npc_6cript
 //============================================================
-prt_in,38,108,4	script	Teacher	53,{
+prt_in,38,108,4	script	Teacher	1_M_INNKEEPER,{
 	if ((countitem(710) > 0) && (countitem(703) > 0) && (countitem(704) > 0) && (countitem(708) > 0)) {
 		mes "[Teacher]";
 		mes "Oh...";
@@ -250,7 +250,7 @@ prt_in,38,108,4	script	Teacher	53,{
 
 // Gaebolg Family Curse :: prt_curse
 //============================================================
-prontera,248,212,3	script	Busy Boy#prt	706,3,3,{
+prontera,248,212,3	script	Busy Boy#prt	4_M_KID1,3,3,{
 	callsub S_CheckWeight; //Check Player's weight
 	if (BaseLevel > 59) {
 		if (prt_curse == 0) {
@@ -581,7 +581,7 @@ S_CheckWeight:
 	return;
 }
 
-yuno,311,195,3	script	Historian#prt01	754,{
+yuno,311,195,3	script	Historian#prt01	4_M_SAGE_A,{
 	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -932,7 +932,7 @@ yuno,311,195,3	script	Historian#prt01	754,{
 	}
 }
 
-morocc_in,45,126,3	script	Historian#prt02	702,{
+morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -1366,7 +1366,7 @@ S_GiveName:
 	close;
 }
 
-mjolnir_01,135,168,3	script	Historian#prt03	754,{
+mjolnir_01,135,168,3	script	Historian#prt03	4_M_SAGE_A,{
 	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -1603,13 +1603,13 @@ OnTouch:
 	end;
 }
 
-mjolnir_01,312,269,5	script	Dog#prt	81,{
+mjolnir_01,312,269,5	script	Dog#prt	4_DOG01,{
 	mes "[Dog]";
 	mes "Bow Wow!";
 	close;
 }
 
-mjolnir_01,313,269,5	script	Dazed Boy#prt	706,{
+mjolnir_01,313,269,5	script	Dazed Boy#prt	4_M_KID1,{
 	if (prt_curse == 11) {
 		mes "[Absent-Minded Boy]";
 		mes "The great serpent";
@@ -1757,7 +1757,7 @@ mjolnir_01,313,269,5	script	Dazed Boy#prt	706,{
 	}
 }
 
-mjolnir_01,316,268,3	script	Exhausted-Looking Woman	879,{
+mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -2174,7 +2174,7 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	879,{
 prt_church,115,122,0	warp	#sazekan	1,1,prt_church,168,106
 prt_church,166,106,0	warp	#prtchhall	1,1,prt_church,112,122
 
-prt_church,185,106,3	script	Father Bamph	60,{
+prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 	if (prt_curse == 13) {
 		mes "[Father Bamph]";
 		mes "Welcome to";
@@ -2960,7 +2960,7 @@ prt_church,185,106,3	script	Father Bamph	60,{
 	}
 }
 
-prt_church,184,110,3	script	Father Biscuss	60,{
+prt_church,184,110,3	script	Father Biscuss	1_M_PASTOR,{
 	if (prt_curse == 54) {
 		mes "[Father Biscuss]";
 		mes "Hmm, I still suspect that";
@@ -3041,14 +3041,14 @@ prt_church,184,110,3	script	Father Biscuss	60,{
 	}
 }
 
-prt_church,177,113,3	script	#gototomb	111,{
+prt_church,177,113,3	script	#gototomb	HIDDEN_NPC,{
 	if (prt_curse > 17 && prt_curse < 23 || prt_curse > 31 && prt_curse < 35 || prt_curse == 41 || prt_curse == 42 || prt_curse == 44 || prt_curse == 51 || prt_curse == 52) {
 		warp "prt_church",21,91;
 	}
 	end;
 }
 
-prt_church,23,89,3	script	Father Biscuss#tomb	60,{
+prt_church,23,89,3	script	Father Biscuss#tomb	1_M_PASTOR,{
 	mes "[Father Biscuss]";
 	mes "Hm...?";
 	mes "Are you ready to";
@@ -3068,7 +3068,7 @@ prt_church,23,89,3	script	Father Biscuss#tomb	60,{
 	close;
 }
 
-prt_church,16,114,4	script	Father Bamph#tomb	60,{
+prt_church,16,114,4	script	Father Bamph#tomb	1_M_PASTOR,{
 	if (prt_curse == 18) {
 		mes "[Father Bamph]";
 		mes "There are the bodies";
@@ -3153,7 +3153,7 @@ prt_church,16,114,4	script	Father Bamph#tomb	60,{
 	end;
 }
 
-prt_church,19,111,5	script	#prince1	887,{
+prt_church,19,111,5	script	#prince1	4_M_LIEMAN,{
 	if (prt_curse == 19) {
 		mes "[Father Bamph]";
 		mes "This is the body of";
@@ -3190,7 +3190,7 @@ prt_church,19,111,5	script	#prince1	887,{
 	}
 }
 
-prt_church,21,111,5	script	#prince2	887,{
+prt_church,21,111,5	script	#prince2	4_M_LIEMAN,{
 	if (prt_curse == 20) {
 		mes "[Father Bamph]";
 		mes "This is the body of the";
@@ -3255,7 +3255,7 @@ prt_church,21,111,5	script	#prince2	887,{
 	}
 }
 
-prt_church,24,111,5	script	#prince3	887,{
+prt_church,24,111,5	script	#prince3	4_M_LIEMAN,{
 	if (prt_curse == 21) {
 		mes "^3355FFYou and Father Bamph";
 		mes "hurriedly inspect the third";
@@ -3370,7 +3370,7 @@ prt_church,24,111,5	script	#prince3	887,{
 	}
 }
 
-moc_fild16,201,295,5	script	Assassin Guildsman#poiso	884,{
+moc_fild16,201,295,5	script	Assassin Guildsman#poiso	4_M_ACROSS,{
 	if (prt_curse == 23) {
 		mes "[Assassin Guildsman]";
 		mes "What business";
@@ -3424,7 +3424,7 @@ moc_fild16,201,295,5	script	Assassin Guildsman#poiso	884,{
 	}
 }
 
-que_job01,10,16,5	script	Marjana#poison	885,{
+que_job01,10,16,5	script	Marjana#poison	4_F_ACROSS,{
 	if (prt_curse == 24) {
 		mes "[Marjana]";
 		mes "What business brings";
@@ -3604,7 +3604,7 @@ OnTouch:
 	}
 }
 
-prt_in,162,99,4	script	Librarian#curse	67,{
+prt_in,162,99,4	script	Librarian#curse	1_F_02,{
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";

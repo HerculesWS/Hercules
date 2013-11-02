@@ -264,84 +264,84 @@ Itin:
 	callfunc "F_Itin";
 }
 
-airport,153,43,5	script	Airport Porter	774,{
+airport,153,43,5	script	Airport Porter	4_M_TWBOY,{
 	callfunc "F_Porter",0;
 }
-prt_fild08,206,279,5	script	Porter#01	774,{
+prt_fild08,206,279,5	script	Porter#01	4_M_TWBOY,{
 	callfunc "F_Porter",1;
 }
-gef_fild00,50,364,5	script	Porter#02	774,{
+gef_fild00,50,364,5	script	Porter#02	4_M_TWBOY,{
 	callfunc "F_Porter",5;
 }
-moc_fild10,163,173,5	script	Porter#03	774,{
+moc_fild10,163,173,5	script	Porter#03	4_M_TWBOY,{
 	callfunc "F_Porter",6;
 }
-mjolnir_12,61,380,5	script	Porter#04	774,{
+mjolnir_12,61,380,5	script	Porter#04	4_M_TWBOY,{
 	callfunc "F_Porter",3;
 }
-pay_fild08,159,91,5	script	Porter#05	774,{
+pay_fild08,159,91,5	script	Porter#05	4_M_TWBOY,{
 	callfunc "F_Porter",2;
 }
-pay_fild03,194,181,5	script	Porter#06	774,{
+pay_fild03,194,181,5	script	Porter#06	4_M_TWBOY,{
 	callfunc "F_Porter",4;
 }
-glast_01,196,326,1	script	Porter#07	774,{
+glast_01,196,326,1	script	Porter#07	4_M_TWBOY,{
 	callfunc "F_Porter",7;
 }
-umbala,188,98,3	script	Porter#08	774,{
+umbala,188,98,3	script	Porter#08	4_M_TWBOY,{
 	callfunc "F_Porter",8;
 }
-comodo,203,75,8	script	Porter#09	774,{
+comodo,203,75,8	script	Porter#09	4_M_TWBOY,{
 	callfunc "F_Porter",9;
 }
-amatsu,115,78,8	script	Porter#10	774,{
+amatsu,115,78,8	script	Porter#10	4_M_TWBOY,{
 	callfunc "F_Porter",10;
 }
-niflheim,132,242,5	script	Porter#11	774,{
+niflheim,132,242,5	script	Porter#11	4_M_TWBOY,{
 	callfunc "F_Porter",11;
 }
-xmas,232,309,5	script	Porter#12	774,{
+xmas,232,309,5	script	Porter#12	4_M_TWBOY,{
 	callfunc "F_Porter",12;
 }
-louyang,35,279,8	script	Porter#13	774,{
+louyang,35,279,8	script	Porter#13	4_M_TWBOY,{
 	callfunc "F_Porter",13;
 }
-gonryun,82,95,7	script	Porter#14	774,{
+gonryun,82,95,7	script	Porter#14	4_M_TWBOY,{
 	callfunc "F_Porter",14;
 }
-yuno,58,195,4	script	Porter#15	774,{
+yuno,58,195,4	script	Porter#15	4_M_TWBOY,{
 	callfunc "F_Porter",15;
 }
-moc_fild04,210,326,2	script	Porter#16	774,{
+moc_fild04,210,326,2	script	Porter#16	4_M_TWBOY,{
 	callfunc "F_Porter",16;
 }
-jawaii,247,174,7	script	Porter#17	774,{
+jawaii,247,174,7	script	Porter#17	4_M_TWBOY,{
 	callfunc "F_Porter",17;
 }
-gef_fild10,159,95,2	script	Porter#18	774,{
+gef_fild10,159,95,2	script	Porter#18	4_M_TWBOY,{
 	callfunc "F_Porter",18;
 }
-mjolnir_02,76,364,5	script	Porter#19	774,{
+mjolnir_02,76,364,5	script	Porter#19	4_M_TWBOY,{
 	callfunc "F_Porter",19;
 }
-gefenia01,97,22,6	script	Porter#20	774,{
+gefenia01,97,22,6	script	Porter#20	4_M_TWBOY,{
 	callfunc "F_Porter",20;
 }
-ayothaya,182,105,5	script	Porter#21	774,{
+ayothaya,182,105,5	script	Porter#21	4_M_TWBOY,{
 	callfunc "F_Porter",21;
 }
-lighthalzen,99,241,4	script	Porter#22	774,{
+lighthalzen,99,241,4	script	Porter#22	4_M_TWBOY,{
 	callfunc "F_Porter",22;
 }
-jupe_gate,46,18,7	script	Porter#23	774,{
+jupe_gate,46,18,7	script	Porter#23	4_M_TWBOY,{
 	callfunc "F_Porter",23;
 }
-airport,141,43,5	script	Itinerary Schedule	837,{
+airport,141,43,5	script	Itinerary Schedule	2_BULLETIN_BOARD,{
 	mes "^FF0000[Itinerary]^000000";
 	callfunc "F_Itin";
 }
 
-airplane,102,68,5	script	Docker	852,{
+airplane,102,68,5	script	Docker	4_M_EIN_SOLDIER,{
 	if($destination == 250) goto Nowhere;
 	mes "^FF0000[Airplane Attendant]^000000";
 	if($destination == 250)goto Notime;

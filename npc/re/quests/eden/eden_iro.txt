@@ -14,7 +14,7 @@
 
 // Acolyte Warper (part of other/acolyte_warp.txt)
 //============================================================
-moc_para01,14,32,5	script	Aperture#acolytewarp	90,{
+moc_para01,14,32,5	script	Aperture#acolytewarp	4_F_01,{
 	mes "[Aperture]";
 	mes "Hello there, adventurer.";
 	mes "I've been studying magic from all over Rune-Midgard to upgrade what I believe to be one of the greatest skills available to the acolyte class.";
@@ -90,7 +90,7 @@ moc_para01,14,32,5	script	Aperture#acolytewarp	90,{
 
 // Carrot & Red Potion Traders
 //============================================================
-moc_para01,166,51,3	script	Phelix#edco	85,{
+moc_para01,166,51,3	script	Phelix#edco	4_M_03,{
 	mes "[Phelix]";
 	mes "Oh... I see from that look that you want me to work and give you Meat and Carrots...";
 	mes "Well my friend Izaac here has some Red Potions with him, but I only have some Carrots.";
@@ -153,7 +153,7 @@ moc_para01,166,51,3	script	Phelix#edco	85,{
 	end;
 }
 
-moc_para01,163,51,7	script	Izaac#edco	86,{
+moc_para01,163,51,7	script	Izaac#edco	4_M_04,{
 	mes "[Izaac]";
 	mes "Good day!";
 	mes "Have you collected any weird stuff from monsters?";
@@ -259,7 +259,7 @@ moc_para01,163,51,7	script	Izaac#edco	86,{
 
 // Safe to 7 Certificate Exchanger
 //============================================================
-moc_para01,50,39,4	script	Eve Natalia	882,{
+moc_para01,50,39,4	script	Eve Natalia	4_F_SITDOWN,{
 	mes "[Eve Natalia]";
 	mes "So I'm in town for a while to see if I can strike up some commerce with MVP hunters!";
 	mes "I'm willing to take some MVP gear and give you these upgrade Certificates I have in exchange;";
@@ -337,7 +337,7 @@ moc_para01,50,39,4	script	Eve Natalia	882,{
 
 // Bubble Gum & Battle Manual Exchanger
 //============================================================
-moc_para01,48,184,2	script	Gum & Manual Exchanger	562,{
+moc_para01,48,184,2	script	Gum & Manual Exchanger	2_DROP_MACHINE,{
 	if (Weight < MaxWeight / 2) {
 		mes "You're carrying too many items right now.";
 		close;	
@@ -429,7 +429,7 @@ L_Exchange:
 
 // Kafra Stacker
 //============================================================
-moc_para01,41,169,2	script	Kafra Stacker#eden	749,{
+moc_para01,41,169,2	script	Kafra Stacker#eden	4_M_ALCHE_B,{
 	mes "[Toma]";
 	mes "I can take your non-stacking Kafra Consumables";
 	mes "and make them fit neatly into stacks!";
@@ -456,7 +456,7 @@ moc_para01,41,169,2	script	Kafra Stacker#eden	749,{
 
 // Code Redeemer
 //============================================================
-moc_para01,38,162,2	script	Code the Redeemer#Give1	405,{
+moc_para01,38,162,2	script	Code the Redeemer#Give1	4_M_YOUNGKNIGHT,{
 	mes "[Code the Redeemer]";
 	mes "Welcome, "+strcharinfo(0)+"!";
 	mes "I've been expecting you.";
@@ -484,29 +484,29 @@ moc_para01,38,162,2	script	Code the Redeemer#Give1	405,{
 //============================================================
 /* Due to the irregularity of iRO's databases, some of these sprites may not display properly. */
 
-moc_para01,32,171,4	cashshop	Kafra Headgears#eden1	115,14024:500,14098:150,17081:300,14097:500,14094:1000,14017:400,14099:300
-moc_para01,35,174,2	cashshop	Kafra Dye Shop#dyes2	114,6287:150
-moc_para01,36,170,2	cashshop	Kafra Consumables#eden3	112,13810:5,14167:400,16556:100,14111:75,14075:25,16419:30,14107:70,14104:50,14112:25,14082:30,14091:60,14088:30,14085:60,14169:40,14170:40,14172:40,14173:40,14171:40,14174:40,14159:100,14160:100,14161:100,14162:100,14163:100:14164:100,16420:1500
-moc_para01,32,174,2	cashshop	Kafra Rental Items#eden	721,16683:150,16682:50,14126:250,14125:250,16430:250,14137:250,14127:250,14118:250,14119:250,14132:250,16425:250,14124:250,14133:250,14130:250,16424:250,14136:250,14122:250,16426:250,14135:250,14134:250,14138:250,16428:250,16431:250,14139:250,14131:250,16429:250,16427:250
-moc_para01,36,172,2	cashshop	Kafra Costume#eden5	860,16974:300,16972:600,16973:150,16975:150,16977:150,17014:150,17015:150
-moc_para01,35,168,1	cashshop	Kafra Utility Shop#eden	113,16677:25,13990:400,16396:100,16394:100,17106:500,6241:10,6240:10,6225:15,6226:15,14002:5,6294:500,7776:50,7619:30,7620:30,12208:40,14156:400,12210:40,14158:400,14042:50,14044:50,14046:50,14048:50,14114:50,14166:40,16418:500,16381:400,14165:100,14157:100,14178:100
+moc_para01,32,171,4	cashshop	Kafra Headgears#eden1	4_F_KAFRA3,14024:500,14098:150,17081:300,14097:500,14094:1000,14017:400,14099:300
+moc_para01,35,174,2	cashshop	Kafra Dye Shop#dyes2	4_F_KAFRA4,6287:150
+moc_para01,36,170,2	cashshop	Kafra Consumables#eden3	4_F_KAFRA6,13810:5,14167:400,16556:100,14111:75,14075:25,16419:30,14107:70,14104:50,14112:25,14082:30,14091:60,14088:30,14085:60,14169:40,14170:40,14172:40,14173:40,14171:40,14174:40,14159:100,14160:100,14161:100,14162:100,14163:100:14164:100,16420:1500
+moc_para01,32,174,2	cashshop	Kafra Rental Items#eden	4_F_KAFRA7,16683:150,16682:50,14126:250,14125:250,16430:250,14137:250,14127:250,14118:250,14119:250,14132:250,16425:250,14124:250,14133:250,14130:250,16424:250,14136:250,14122:250,16426:250,14135:250,14134:250,14138:250,16428:250,16431:250,14139:250,14131:250,16429:250,16427:250
+moc_para01,36,172,2	cashshop	Kafra Costume#eden5	4_F_KAFRA8,16974:300,16972:600,16973:150,16975:150,16977:150,17014:150,17015:150
+moc_para01,35,168,1	cashshop	Kafra Utility Shop#eden	4_F_KAFRA5,16677:25,13990:400,16396:100,16394:100,17106:500,6241:10,6240:10,6225:15,6226:15,14002:5,6294:500,7776:50,7619:30,7620:30,12208:40,14156:400,12210:40,14158:400,14042:50,14044:50,14046:50,14048:50,14114:50,14166:40,16418:500,16381:400,14165:100,14157:100,14178:100
 
 // Duplicate NPCs
 //============================================================
 /* Technically these NPC names are different, but it's not worth editing the original scripts. */
 
 // Weapon/Armor Refiner "Normalson" (merchants/refine.txt)
-moc_para01,14,185,4	script	Normalson#ed	826,{
+moc_para01,14,185,4	script	Normalson#ed	4_M_DWARF,{
 	callfunc "refinemain","Normalson",0;
 	end;
 }
 
 // Advanced Refiner "Suhnmi" (merchants/advanced_refiner.txt)
-moc_para01,26,185,4	duplicate(Suhnbi#cash)	Suhnmi#eden	85
+moc_para01,26,185,4	duplicate(Suhnbi#cash)	Suhnmi#eden	4_M_03
 
 // HD Refiner "Blacksmith Mighty Hammer" (re/merchants/hd_refiner.txt)
 // A combination of the +7~9 and +10 and up refiner, currently a placeholder.
-moc_para01,38,185,4	duplicate(MightyHammer)	Mighty Hammer#ed	826
+moc_para01,38,185,4	duplicate(MightyHammer)	Mighty Hammer#ed	4_M_DWARF
 
 // Refiner Effect
 -	script	#eden_refine_effect	-1,{
@@ -521,25 +521,25 @@ OnTimer5000:
 }
 
 // Gym Pass Trainer "Ripped Cabus" (other/gympass)
-moc_para01,33,162,4	duplicate(Ripped Cabus#GymPass)	Ripped Callus#ed	899
+moc_para01,33,162,4	duplicate(Ripped Cabus#GymPass)	Ripped Callus#ed	4_M_HUMAN_02
 
 // RWC 2012 Enchanter "Goldenthiefberg" (events/RWC_2012.txt)
 // A combination of the slotter and enchanter, currently a placeholder.
-moc_para01,27,179,4	script	RWC Enchanter#new10	87,{ end; }
+moc_para01,27,179,4	script	RWC Enchanter#new10	4_M_BARBER,{ end; }
 
 // Cash Headgear Dyer "Alora" (merchants/cashheadgear_dye.txt)
 // Also converts some +8 and up headgears into costumes, currently a placeholder.
-moc_para01,21,185,4	duplicate(Alora)	Alora#headgear_dye2	862
+moc_para01,21,185,4	duplicate(Alora)	Alora#headgear_dye2	4_F_LGTGIRL
 
 // Stylist "Dinorah Lacostt" (?)
 // Dyes clothing for an Omni Clothing Dye, currently a placeholder.
-moc_para01,33,185,4	script	Dinorah Lacostt#ed	862,{ end; }
+moc_para01,33,185,4	script	Dinorah Lacostt#ed	4_F_LGTGIRL,{ end; }
 
 // Commonly Updated NPCs
 //============================================================
 /* These scripts change on a regular basis, so they're mostly just placeholders for now. */
 
-moc_para01,29,35,4	script	Gramps#huntquests	866,{
+moc_para01,29,35,4	script	Gramps#huntquests	4_M_LGTGRAND,{
 	mes "[Gramps]";
 	mes "When you get to being my";
 	mes "age, you become bitter.";
@@ -555,7 +555,7 @@ moc_para01,29,35,4	script	Gramps#huntquests	866,{
 	//switch(select("Yes, I'll help.:Reward Me!:^ff0000I want to quit hunting^000000:^0000ffCan you warp me?^000000:Can you erase the timer?:What missions are you giving?:Give me Limited 3 day VIP:Tell me more about the VIP Access:No thanks, pops.")) {
 }
 
-moc_para01,13,22,4	script	Merry Badger#xch	882,{
+moc_para01,13,22,4	script	Merry Badger#xch	4_F_SITDOWN,{
 	mes "[Merry Badger]";
 	mes "Hello there!  I'm Merry Badger and I was hired to exchange the ^00CC00Eden Merit Badges^000000!";
 	next;
@@ -595,4 +595,4 @@ moc_para01,174,33,3	script	Bathory#2012spirits	1102,{
 	}
 }
 
-moc_para01,26,174,4	script	Grandma Boxter#boxx	840,{ end; }
+moc_para01,26,174,4	script	Grandma Boxter#boxx	4_F_THAISHAMAN,{ end; }

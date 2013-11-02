@@ -611,7 +611,7 @@ void clif_authok(struct map_session_data *sd)
 	p.xSize = p.ySize = 5; /* not-used */
 	
 #if PACKETVER >= 20080102
-	p.font = sd->user_font;  // FIXME: Font is currently not saved.
+	p.font = sd->status.font;
 #endif
 	
 	clif->send(&p,sizeof(p),&sd->bl,SELF);
@@ -982,7 +982,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	p.state = vd->dead_sit;
 	p.clevel = clif_setlevel(bl);
 #if PACKETVER >= 20080102
-	p.font = (sd) ? sd->user_font : 0;
+	p.font = (sd) ? sd->status.font : 0;
 #endif
 #if PACKETVER >= 20140000 //actual 20120221
 	if( bl->type == BL_MOB ) {
@@ -1110,7 +1110,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	p.xSize = p.ySize = (sd) ? 5 : 0;
 	p.clevel = clif_setlevel(bl);
 #if PACKETVER >= 20080102
-	p.font = (sd) ? sd->user_font : 0;
+	p.font = (sd) ? sd->status.font : 0;
 #endif
 #if PACKETVER >= 20140000 //actual 20120221
 	if( bl->type == BL_MOB ) {
@@ -1188,7 +1188,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 	p.xSize = p.ySize = (sd) ? 5 : 0;
 	p.clevel = clif_setlevel(bl);
 #if PACKETVER >= 20080102
-	p.font = (sd) ? sd->user_font : 0;
+	p.font = (sd) ? sd->status.font : 0;
 #endif
 #if PACKETVER >= 20140000 //actual 20120221
 	if( bl->type == BL_MOB ) {
@@ -16101,7 +16101,7 @@ void clif_font(struct map_session_data *sd)
 	nullpo_retv(sd);
 	WBUFW(buf,0) = 0x2ef;
 	WBUFL(buf,2) = sd->bl.id;
-	WBUFW(buf,6) = sd->user_font;
+	WBUFW(buf,6) = sd->status.font;
 	clif->send(buf, packet_len(0x2ef), &sd->bl, AREA);
 #endif
 }

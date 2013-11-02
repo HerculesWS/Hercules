@@ -25,14 +25,14 @@
 //= 1.5 Added dummy "OnMyMobDead" event to Cursed Spirit. [L0ne_W0lf]
 //============================================================
 
-niflheim,52,147,3	script	Keedz#nif	796,{
+niflheim,52,147,3	script	Keedz#nif	4_M_NFDEADSWDMAN,{
 	mes "[Keedz]";
 	mes "I don't allow any living person";
 	mes "to come in this place!";
 	close;
 }
 
-niflheim,195,211,6	script	Gigantia#nif	796,3,3,{
+niflheim,195,211,6	script	Gigantia#nif	4_M_NFDEADSWDMAN,3,3,{
 	if (isequipped(5038) || isequipped(2257) || isequipped(2256)) {
 		mes "[" + strcharinfo(0) + "]";
 		mes "What's up?";
@@ -67,7 +67,7 @@ OnTouch:
 	end;
 }
 
-nif_in,16,27,1	script	Undead Chicken#nif	800,{
+nif_in,16,27,1	script	Undead Chicken#nif	4_NFCOCK,{
 	percentheal -5,0;
 	mes "[Undead Chicken]";
 	mes "I lived a peaceful life as a normal chicken. But then came the day I was tragically killed and eaten by humans. Well... Heh heh~! Now it's my turn! *Cackles*";
@@ -86,7 +86,7 @@ nif_in,16,27,1	script	Undead Chicken#nif	800,{
 	close;
 }
 
-nif_in,16,30,4	script	Undead Familiar#nif	799,{
+nif_in,16,30,4	script	Undead Familiar#nif	4_NFBAT,{
 	percentheal -5,0;
 	mes "[Vatoman]";
 	mes "Oooh, how handy, a living";
@@ -106,7 +106,7 @@ nif_in,16,30,4	script	Undead Familiar#nif	799,{
 	close;
 }
 
-nif_in,156,93,5	script	Child#niflheim	793,{
+nif_in,156,93,5	script	Child#niflheim	4_F_NFLOSTGIRL,{
 	mes "[Alakina Ann]";
 	mes "Where...where am I...?";
 	mes "I remember I was sleeping";
@@ -162,7 +162,7 @@ nif_in,156,93,5	script	Child#niflheim	793,{
 	}
 }
 
-niflheim,350,258,1	script	Cursed Spirit#nif	802,{
+niflheim,350,258,1	script	Cursed Spirit#nif	4_NFWISP,{
 	killmonster "niflheim","Cursed Spirit#nif::OnMyMobDead";
 	mes "[Ashe Bruce]";
 	mes "I sense you're cursed";

@@ -13,7 +13,7 @@
 
 // Brasilis
 //============================================================
-bra_in01,27,24,3	script	Hotel Keeper#bra1	478,{
+bra_in01,27,24,3	script	Hotel Keeper#bra1	4_F_BRZ_WOMAN,{
 	mes "[Hotel Keeper]";
 	mes "Welcome to the beautiful Brasilis Hotel.";
 	next;

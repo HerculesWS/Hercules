@@ -29,7 +29,7 @@
 
 // Medicine Quest :: hg_herv
 //============================================================
-hu_in01,387,245,0	script	Allen Schuwell	849,2,2,{
+hu_in01,387,245,0	script	Allen Schuwell	4_M_DIEMAN,2,2,{
 	if (BaseLevel > 49) {
 		if (hg_herb == 0) {
 			mes "[Allen]";
@@ -413,7 +413,7 @@ OnTouch:
 	
 }
 
-hu_in01,385,247,5	script	Postell Schuwell#D	97,{
+hu_in01,385,247,5	script	Postell Schuwell#D	4W_M_01,{
 	mes "[Postell]";
 	mes "Hey, uh...";
 	mes "I'm in the middle";
@@ -435,7 +435,7 @@ OnTimer100000:
 	end;
 }
 
-hu_fild06,34,123,3	script	Postell Schuwell	97,{
+hu_fild06,34,123,3	script	Postell Schuwell	4W_M_01,{
 	if (hg_herb == 1) {
 		mes "[Postell]";
 		mes "I really like living";
@@ -516,7 +516,7 @@ hu_fild06,34,123,3	script	Postell Schuwell	97,{
 	}
 }
 
-hu_in01,370,255,3	script	Upper Drawer#First	139,2,2,{
+hu_in01,370,255,3	script	Upper Drawer#First	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	set .@rand,rand(1,7);
 	if (hg_herb < 5) {
@@ -676,7 +676,7 @@ OnTouch:
 	}
 }
 
-hu_in01,370,255,3	script	Upper Drawer#Second	139,2,2,{
+hu_in01,370,255,3	script	Upper Drawer#Second	HIDDEN_WARP_NPC,2,2,{
 OnInit:
 	disablenpc "Upper Drawer#Second";
 	end;
@@ -724,7 +724,7 @@ OnTimer4500:
 
 // Biological Weapon Quest :: hg_bio
 //============================================================
-ein_in01,16,36,3	script	Morriphen	86,{
+ein_in01,16,36,3	script	Morriphen	4_M_04,{
 	if (hg_bio == 0) {
 		if (hg_herb == 13) {
 			mes "[Morriphen]";
@@ -1253,7 +1253,7 @@ ein_in01,16,36,3	script	Morriphen	86,{
 	}
 }
 
-hu_in01,326,307,3	script	Siria	90,{
+hu_in01,326,307,3	script	Siria	4_F_01,{
 	if (hg_bio == 1) {
 		mes "[Siria]";
 		mes "Oh, hello there.";
@@ -1440,7 +1440,7 @@ hu_in01,326,307,3	script	Siria	90,{
 	}
 }
 
-lighthalzen,88,79,7	script	Dono	85,{
+lighthalzen,88,79,7	script	Dono	4_M_03,{
 	if (hg_bio == 2) {
 		mes "[Dono]";
 		mes "What do you want?";
@@ -1733,7 +1733,7 @@ lighthalzen,88,79,7	script	Dono	85,{
 	}
 }
 
-lhz_in03,193,28,3	script	Makkie	83,{
+lhz_in03,193,28,3	script	Makkie	4_M_01,{
 	if (hg_bio == 4) {
 		mes "[Makkie]";
 		mes "Hello, how may";
@@ -1894,7 +1894,7 @@ lhz_in03,193,28,3	script	Makkie	83,{
 
 // Rebellion Quest :: hg_tre
 //============================================================
-hugel,70,137,5	script	Shede	879,{
+hugel,70,137,5	script	Shede	4_F_CAPEGIRL,{
 	cutin "siide1.bmp",2;
 	if (hg_tre == 0) {
 		mes "[Shede]";
@@ -2132,7 +2132,7 @@ hugel,70,137,5	script	Shede	879,{
 	}
 }
 
-hu_in01,256,40,3	script	Herico	897,{
+hu_in01,256,40,3	script	Herico	4_M_HUGRANFA,{
 	if (checkweight(7342,1) != 1) {
 		mes "[Herico]";
 		mes "Why don't you go take some load off your shoulder first, and come back?";
@@ -2890,7 +2890,7 @@ hu_in01,256,40,3	script	Herico	897,{
 	end;
 }
 
-lhz_in03,39,44,3	script	Enquro Carson	97,{
+lhz_in03,39,44,3	script	Enquro Carson	4W_M_01,{
 	if (hg_tre < 45) {
 		mes "[Enquro Carson]";
 		mes "Hello, everyone. This is Enquro Carson";
@@ -3064,7 +3064,7 @@ lhz_in03,39,44,3	script	Enquro Carson	97,{
 	}
 }
 
-hu_in01,310,380,5	script	Girl#hugel	891,{
+hu_in01,310,380,5	script	Girl#hugel	4_F_HUGIRL,{
 	if (hg_tre < 47) {
 		mes "[Girl]";
 		mes "Bah, I am bored.";
@@ -3182,7 +3182,7 @@ hu_in01,310,380,5	script	Girl#hugel	891,{
 	}
 }
 
-hu_in01,317,312,0	script	Book	111,{
+hu_in01,317,312,0	script	Book	HIDDEN_NPC,{
 	cutin "hg_book.bmp",2;
 	if (hg_tre > 47) {
 		mes "- You picked up a very thick book. -";
@@ -3424,7 +3424,7 @@ hu_in01,317,312,0	script	Book	111,{
 	}
 }
 
-einbech,208,124,3	script	Bomb Maker	851,{
+einbech,208,124,3	script	Bomb Maker	4_M_REPAIR,{
 	if (hg_tre == 54) {
 		if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
 			mes "[Boomer]";
@@ -3483,7 +3483,7 @@ einbech,208,124,3	script	Bomb Maker	851,{
 	}
 }
 
-hu_fild06,168,359,3	script	Moks Mushrooms#Mush1	111,{
+hu_fild06,168,359,3	script	Moks Mushrooms#Mush1	HIDDEN_NPC,{
 	if (hg_tre > 9 && hg_tre < 15) {
 		mes "- You found mushrooms that are as big as your palm. -";
 		next;
@@ -3538,7 +3538,7 @@ OnTimer20000:
 	end;
 }
 
-hu_fild06,194,341,3	script	Moks Mushrooms#Mush2	111,{
+hu_fild06,194,341,3	script	Moks Mushrooms#Mush2	HIDDEN_NPC,{
 	if (hg_tre > 9 && hg_tre < 15) {
 		mes "- You found mushrooms that are as big as your palm. -";
 		next;
@@ -3593,7 +3593,7 @@ OnTimer20000:
 	end;
 }
 
-hu_fild06,198,339,3	script	Moks Mushrooms#Mush3	111,{
+hu_fild06,198,339,3	script	Moks Mushrooms#Mush3	HIDDEN_NPC,{
 	if (hg_tre > 9 && hg_tre < 15) {
 		mes "- You found mushrooms that are as big as your palm. -";
 		next;
@@ -3648,7 +3648,7 @@ OnTimer20000:
 	end;
 }
 
-hugel,209,163,3	script	Clam#C1	111,{
+hugel,209,163,3	script	Clam#C1	HIDDEN_NPC,{
 	if (hg_tre > 19 && hg_tre < 25) {
 		mes "- You found very fresh clams whose shells are shining under the sunlight. -";
 		next;
@@ -3703,7 +3703,7 @@ OnTimer20000:
 	end;
 }
 
-hugel,203,166,3	script	Clam#C2	111,{
+hugel,203,166,3	script	Clam#C2	HIDDEN_NPC,{
 	if (hg_tre > 19 && hg_tre < 25) {
 		mes "- You found very fresh clams whose shells are shining under the sunlight. -";
 		next;
@@ -3758,7 +3758,7 @@ OnTimer20000:
 	end;
 }
 
-hugel,217,158,3	script	Clam#C3	111,{
+hugel,217,158,3	script	Clam#C3	HIDDEN_NPC,{
 	if (hg_tre > 19 && hg_tre < 25) {
 		mes "- You found very fresh clams whose shells are shining under the sunlight. -";
 		next;
@@ -3813,7 +3813,7 @@ OnTimer20000:
 	end;
 }
 
-hugel,204,150,3	script	Clam#C4	111,{
+hugel,204,150,3	script	Clam#C4	HIDDEN_NPC,{
 	if (hg_tre > 19 && hg_tre < 25) {
 		mes "- You found very fresh clams whose shells are shining under the sunlight. -";
 		next;
@@ -4088,7 +4088,7 @@ OnTimer20000:
 	end;
 }
 
-lhz_in01,214,129,0	script	A Pile of Paper	111,{
+lhz_in01,214,129,0	script	A Pile of Paper	HIDDEN_NPC,{
 	if (hg_tre == 52) {
 		mes "- You found a pile of paper that was tied up with a thick ribbon.";
 		mes "On the very top paper, a period and a title saying 'Report of the **th Research'";
@@ -4104,7 +4104,7 @@ lhz_in01,214,129,0	script	A Pile of Paper	111,{
 	end;
 }
 
-lhz_in01,235,129,0	script	HuMSpawner	139,{
+lhz_in01,235,129,0	script	HuMSpawner	HIDDEN_WARP_NPC,{
 	OnMonster:
 	if (rand(0,1))
 		mapannounce "lhz_in01","Intruder alert! Protect the research documents!",1,0xFF0000;
@@ -4124,7 +4124,7 @@ OnMonsterDead:
 	end;
 }
 
-lhz_dun02,244,226,0	script	Unethical Machine	111,{
+lhz_dun02,244,226,0	script	Unethical Machine	HIDDEN_NPC,{
 	if (hg_tre == 54) {
 		if (countitem(7138)) {
 			mes "["+strcharinfo(0)+"]";
@@ -4149,7 +4149,7 @@ lhz_dun02,244,226,0	script	Unethical Machine	111,{
 	}
 }
 
-lhz_dun02,244,227,0	script	HiddenExplosion	139,5,5,{
+lhz_dun02,244,227,0	script	HiddenExplosion	HIDDEN_WARP_NPC,5,5,{
 OnInit:
 	disablenpc "HiddenExplosion";
 	end;
@@ -4161,14 +4161,14 @@ OnTouch:
 	end;
 }
 
-hu_in01,365,170,3	script	Girl#Hu	793,{
+hu_in01,365,170,3	script	Girl#Hu	4_F_NFLOSTGIRL,{
 	mes "[Girl]";
 	mes "I love sitting in front of a stove because it makes me warm~";
 	mes "Ah...it is so warm and relaxing...and now I feel sleepy...Zzzzz Zzzz...";
 	close;
 }
 
-hu_in01,377,106,3	script	Pub Granny	892,{
+hu_in01,377,106,3	script	Pub Granny	4_F_HUGRANMA,{
 	mes "[Pub Granny]";
 	mes "Recently we have many tourists visiting our town.";
 	mes "They make me pretty busy, but I am so happy to see them enjoying my food. Hohoho!";
@@ -4177,7 +4177,7 @@ hu_in01,377,106,3	script	Pub Granny	892,{
 
 // Memory Quest :: hg_memo
 //============================================================
-hugel,198,169,0	script	#HugelTree	139,2,2,{
+hugel,198,169,0	script	#HugelTree	HIDDEN_WARP_NPC,2,2,{
 	if (BaseLevel > 49) {
 		if (!hg_memory) {
 			set hg_memory,1;
@@ -4225,7 +4225,7 @@ hugel,198,169,0	script	#HugelTree	139,2,2,{
 	}
 }
 
-hugel,191,172,3	script	Manainne	892,1,{
+hugel,191,172,3	script	Manainne	4_F_HUGRANMA,1,{
 	if (hg_memory == 1) {
 		mes "[Manainne]";
 		mes "This tree means so much";
@@ -4509,7 +4509,7 @@ hugel,191,172,3	script	Manainne	892,1,{
 	}
 }
 
-niflheim,90,106,3	script	A Spirit#HQuest	802,{
+niflheim,90,106,3	script	A Spirit#HQuest	4_NFWISP,{
 	if (hg_memory == 6) {
 		mes "[Spirit]";
 		mes "El Schatt...";
@@ -4571,7 +4571,7 @@ niflheim,90,106,3	script	A Spirit#HQuest	802,{
 	}
 }
 
-hugel,100,103,3	script	Perfitz	866,{
+hugel,100,103,3	script	Perfitz	4_M_LGTGRAND,{
 	if (hg_memory == 3) {
 		set hg_memory,4;
 		mes "[Perfitz]";
@@ -4633,7 +4633,7 @@ hugel,100,103,3	script	Perfitz	866,{
 	}
 }
 
-hugel,196,164,3	script	El Schatt	50,{
+hugel,196,164,3	script	El Schatt	1_M_04,{
 	if (hg_memory == 2) {
 		mes "[El Schatt]";
 		mes "What? What's that look for?";
@@ -4888,7 +4888,7 @@ hugel,196,164,3	script	El Schatt	50,{
 
 // Hide and Seek Quest :: hg_c_child
 //============================================================
-hugel,107,67,3	script	Torpy	706,{
+hugel,107,67,3	script	Torpy	4_M_KID1,{
 	if (BaseLevel > 49) {
 		if (!hg_ubu01) {
 			mes "[Torpy]";
@@ -5068,7 +5068,7 @@ hugel,107,67,3	script	Torpy	706,{
 	}
 }
 
-hu_fild06,190,367,3	script	Torpy's Mom	701,{
+hu_fild06,190,367,3	script	Torpy's Mom	4_F_GODEMOM,{
 	if (hg_ubu01 == 0) {
 		mes "[Torpy's Mom]";
 		mes "Where did he go this time?!";
@@ -5186,7 +5186,7 @@ hu_fild06,190,367,3	script	Torpy's Mom	701,{
 	}
 }
 
-hugel,100,176,3	script	Suspicious Barrel	111,{
+hugel,100,176,3	script	Suspicious Barrel	HIDDEN_NPC,{
 	if (hg_ubu01 == 3) {
 		mes "[Strange Man]";
 		mes "So... hun...gry...";
@@ -5366,7 +5366,7 @@ hugel,100,176,3	script	Suspicious Barrel	111,{
 	}
 }
 
-hugel,100,174,3	script	Strange Man#Hugel	898,{
+hugel,100,174,3	script	Strange Man#Hugel	4_M_HUMAN_01,{
 	if (hg_ubu01 == 5) {
 		mes "[Strange Man]";
 		mes "Ahhhh... Thanks for";
@@ -5454,7 +5454,7 @@ OnTimer60000:
 
 // Fish Cake Soup Delivery Quest :: hg_odeng
 //============================================================
-hu_in01,15,372,3	script	Cellette Lavit	74,{
+hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 	if (!hg_odeng) {
 		mes "[Cellette]";
 		mes "Hi there, thanks for";
@@ -5806,7 +5806,7 @@ hu_in01,15,372,3	script	Cellette Lavit	74,{
 	}
 }
 
-hugel,76,134,3	script	Neha	101,{
+hugel,76,134,3	script	Neha	4W_F_01,{
 	if (hg_odeng == 1) {
 		if (countitem(584)) {
 			mes "[Neha]";
@@ -5903,7 +5903,7 @@ hugel,76,134,3	script	Neha	101,{
 	}
 }
 
-hugel,87,139,3	script	Maewan	86,{
+hugel,87,139,3	script	Maewan	4_M_04,{
 	if (hg_odeng == 2) {
 		if (countitem(584)) {
 			mes "[Maewan]";
@@ -5982,7 +5982,7 @@ hugel,87,139,3	script	Maewan	86,{
 	
 }
 
-hugel,84,125,3	script	Layoma	700,{
+hugel,84,125,3	script	Layoma	8_F_GIRL,{
 	if (hg_odeng == 3) {
 		if (countitem(584)) {
 			mes "[Layoma]";
@@ -6051,7 +6051,7 @@ hugel,84,125,3	script	Layoma	700,{
 	
 }
 
-hugel,102,161,3	script	Erjan	100,{
+hugel,102,161,3	script	Erjan	4W_SAILOR,{
 	if (hg_odeng == 4) {
 		if (countitem(584)) {
 			mes "[Erjan]";
@@ -6138,7 +6138,7 @@ hugel,102,161,3	script	Erjan	100,{
 
 // Juno Remedy Quest :: hg_ma1
 //============================================================
-yuno,111,156,3	script	Euslan	90,{
+yuno,111,156,3	script	Euslan	4_F_01,{
 	if (BaseLevel < 60) {
 		mes "[Euslan]";
 		mes "^333333*Cough Cough*";
@@ -6481,7 +6481,7 @@ yuno,111,156,3	script	Euslan	90,{
 	
 }
 
-que_bingo,49,12,0	script	#Hg_Quest	139,4,4,{
+que_bingo,49,12,0	script	#Hg_Quest	HIDDEN_WARP_NPC,4,4,{
 OnTouch:
 	if (hg_ma1 == 6) {
 		mes "[Arcade Owner]";
@@ -6502,7 +6502,7 @@ OnTouch:
 	}
 }
 
-que_bingo,53,190,7	script	Eukran	778,{
+que_bingo,53,190,7	script	Eukran	4_M_TWTEAMAN,{
 	if (hg_ma1 == 6) {
 		mes "[Eukran]";
 		mes "Oh, weren't you just";
@@ -6548,7 +6548,7 @@ que_bingo,53,190,7	script	Eukran	778,{
 	
 }
 
-odin_tem01,129,127,0	script	HiddenActivator#Hugel	139,3,3,{
+odin_tem01,129,127,0	script	HiddenActivator#Hugel	HIDDEN_WARP_NPC,3,3,{
 OnTouch:
 	if (hg_ma1 == 8) {
 		mes "^3355FFYou can hear two";
@@ -6616,7 +6616,7 @@ OnInit:
 
 }
 
-odin_tem01,130,134,4	script	Young Man#Hu_Quest	774,{
+odin_tem01,130,134,4	script	Young Man#Hu_Quest	4_M_TWBOY,{
 	if (hg_ma1 == 8) {
 		mes "[Young Man]";
 		mes "Hm? Oh, an adventurer.";
@@ -6854,7 +6854,7 @@ odin_tem01,130,134,4	script	Young Man#Hu_Quest	774,{
 	
 }
 
-odin_tem01,111,144,0	script	HiddenHugel	139,2,2,{
+odin_tem01,111,144,0	script	HiddenHugel	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (hg_ma1 == 9) {
 		mes "^3355FFYou hear the voice of";
@@ -6891,7 +6891,7 @@ OnTouch:
 
 // Cow Milking Quest :: hg_milkingcow
 //============================================================
-hugel,56,104,3	script	Kurupe	709,3,3,{
+hugel,56,104,3	script	Kurupe	4_M_SEAMAN,3,3,{
 	if (hg_milk == 1) {
 		mes "[Kurupe]";
 		mes "Could Burupu be hiding";
@@ -7223,7 +7223,7 @@ OnTouch:
 	close;
 }
 
-hu_fild06,217,270,3	script	Burupu	896,3,3,{
+hu_fild06,217,270,3	script	Burupu	4_M_HUBOY,3,3,{
 	if (hg_milk == 3) {
 		mes "[Burupu]";
 		mes "What? Kurupe wants me";
@@ -7368,7 +7368,7 @@ OnTouch:
 	}
 }
 
-hugel,72,101,0	script	Burupu's Instructions	111,{
+hugel,72,101,0	script	Burupu's Instructions	HIDDEN_NPC,{
 	if (hg_milk < 6) {
 		mes "^3355FFYou've found a small^000000";
 		mes "^3355FFnotebook on the ground.^000000";
@@ -7503,7 +7503,7 @@ hugel,72,101,0	script	Burupu's Instructions	111,{
 	end;
 }
 
-hugel,68,99,3	script	Booboo the Cow	889,{
+hugel,68,99,3	script	Booboo the Cow	4_BULL,{
 	if (hg_milk == 7 || hg_milk == 12) {
 		mes "[Booboo]";
 		mes "Boop boop boo~";
@@ -7675,7 +7675,7 @@ L_MilkCow:
 
 // Odin Temple Excavation Quest :: hg_tem
 //============================================================
-hugel,91,152,1	script	Sign	837,{
+hugel,91,152,1	script	Sign	2_BULLETIN_BOARD,{
 	mes "**Recruitment Notice**";
 	mes " ";
 	if (hg_odin < 60) {
@@ -7694,7 +7694,7 @@ hugel,91,152,1	script	Sign	837,{
 	close;
 }
 
-hu_in01,19,161,0	script	Alex	803,{
+hu_in01,19,161,0	script	Alex	1_F_SIGNZISK,{
 	if (!hg_odin) {
 		mes "[Alex]";
 		mes "Whatever you're";
@@ -8092,7 +8092,7 @@ hu_in01,19,161,0	script	Alex	803,{
 	}
 }
 
-hu_in01,14,11,4	script	Laura	70,{
+hu_in01,14,11,4	script	Laura	1_F_GYPSY,{
 	if (!hg_odin) {
 		cutin "hu_laura02.bmp",2;
 		mes "[Laura]";
@@ -8870,7 +8870,7 @@ hu_in01,14,11,4	script	Laura	70,{
 	}
 }
 
-hu_in01,18,167,4	script	Julian	86,{
+hu_in01,18,167,4	script	Julian	4_M_04,{
 	if (!hg_odin) {
 		mes "[Julian]";
 		mes "^333333*Sigh...*^000000";
@@ -8949,7 +8949,7 @@ hu_in01,18,167,4	script	Julian	86,{
 	}
 }
 
-hu_in01,16,21,0	script	Ashe#5	139,2,2,{
+hu_in01,16,21,0	script	Ashe#5	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (hg_odin == 18) {
 		mes "[Ashe]";
@@ -8963,7 +8963,7 @@ OnTouch:
 	}
 }
 
-hu_in01,16,20,4	script	Ashe	95,{
+hu_in01,16,20,4	script	Ashe	4_F_SISTER,{
 	switch(hg_odin) {
 		case 0:
 			mes "[Ashe]";
@@ -9112,7 +9112,7 @@ hu_in01,16,20,4	script	Ashe	95,{
 	}
 }
 
-hu_in01,174,90,0	script	Entrance	139,2,2,{
+hu_in01,174,90,0	script	Entrance	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (hg_odin == 22 || hg_odin == 23) {
 		mes "[Laura]";
@@ -9123,7 +9123,7 @@ OnTouch:
 	}
 }
 
-hu_in01,159,84,3	script	Laura#2	70,{
+hu_in01,159,84,3	script	Laura#2	1_F_GYPSY,{
 	if (hg_odin == 22 || hg_odin == 23) {
 		cutin "hu_laura03.bmp",2;
 		emotion e_an,0,"Laura#2";
@@ -9291,9 +9291,9 @@ hu_in01,159,84,3	script	Laura#2	70,{
 	}
 }
 
-hu_in01,158,84,5	duplicate(Laura#2)	Alex#2	803,0,0
+hu_in01,158,84,5	duplicate(Laura#2)	Alex#2	1_F_SIGNZISK,0,0
 
-hu_in01,162,85,4	script	Ashe#2	95,{
+hu_in01,162,85,4	script	Ashe#2	4_F_SISTER,{
 	if (hg_odin == 22 || hg_odin == 23) {
 		mes "[Ashe]";
 		mes "This...";
@@ -9339,7 +9339,7 @@ hu_in01,162,85,4	script	Ashe#2	95,{
 	}
 }
 
-hu_in01,171,90,0	script	Ashe#3	139,2,2,{
+hu_in01,171,90,0	script	Ashe#3	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (hg_odin == 25) {
 		mes "^3355FFAshe picked up";
@@ -9371,7 +9371,7 @@ OnTouch:
 	}
 }
 
-hu_in01,155,82,4	script	Julian#2	86,{
+hu_in01,155,82,4	script	Julian#2	4_M_04,{
 	if (hg_odin == 22 || hg_odin == 23) {
 		mes "[Julian]";
 		mes "I...";
@@ -9388,11 +9388,11 @@ hu_in01,155,82,4	script	Julian#2	86,{
 	close;
 }
 
-moc_fild12,160,372,0	script	Hit	139,{
+moc_fild12,160,372,0	script	Hit	HIDDEN_WARP_NPC,{
 	end;
 }
 
-moc_fild12,160,365,0	script	Ashe#4	139,4,4,{
+moc_fild12,160,365,0	script	Ashe#4	HIDDEN_WARP_NPC,4,4,{
 OnTouch:
 	if (hg_odin == 59) {
 		mes "[???]";
@@ -9490,7 +9490,7 @@ OnTouch:
 	}
 }
 
-hugel,209,109,2	script	Boatman#hugel	709,{
+hugel,209,109,2	script	Boatman#hugel	4_M_SEAMAN,{
 	mes "[Boatman]";
 	mes "Ah, hello~";
 	mes "Would you like to sail";
@@ -9535,7 +9535,7 @@ hugel,209,109,2	script	Boatman#hugel	709,{
 	}
 }
 
-odin_tem01,93,146,4	script	Boatman	709,{
+odin_tem01,93,146,4	script	Boatman	4_M_SEAMAN,{
 	mes "[Boatman]";
 	mes "Ah, would you";
 	mes "like to sail back to";
@@ -9589,7 +9589,7 @@ OnTimer100000:
 	}
 }
 
-odin_tem03,266,302,0	script	warpinside#1	139,3,3,{
+odin_tem03,266,302,0	script	warpinside#1	HIDDEN_WARP_NPC,3,3,{
 OnInit:
 	disablenpc "warpinside#1";
 	end;
@@ -9621,7 +9621,7 @@ OnTouch:
 	}
 }
 
-odin_tem03,288,271,0	script	warpinside#2	139,3,3,{
+odin_tem03,288,271,0	script	warpinside#2	HIDDEN_WARP_NPC,3,3,{
 OnInit:
 	disablenpc "warpinside#2";
 	end;
@@ -9653,7 +9653,7 @@ OnTouch:
 	}
 }
 
-odin_tem03,283,241,0	script	warpinside#3	139,3,3,{
+odin_tem03,283,241,0	script	warpinside#3	HIDDEN_WARP_NPC,3,3,{
 OnInit:
 	disablenpc "warpinside#3";
 	end;
@@ -9685,7 +9685,7 @@ OnTouch:
 	}
 }
 
-odin_tem03,179,275,0	script	warpinside#4	139,3,3,{
+odin_tem03,179,275,0	script	warpinside#4	HIDDEN_WARP_NPC,3,3,{
 OnInit:
 	disablenpc "warpinside#4";
 	end;
@@ -9717,7 +9717,7 @@ OnTouch:
 	}
 }
 
-odin_tem03,320,264,0	script	warpinside#5	139,3,3,{
+odin_tem03,320,264,0	script	warpinside#5	HIDDEN_WARP_NPC,3,3,{
 OnInit:
 	disablenpc "warpinside#5";
 	end;
@@ -9749,7 +9749,7 @@ OnTouch:
 	}
 }
 
-hu_in01,99,90,0	script	Empty	139,3,3,{
+hu_in01,99,90,0	script	Empty	HIDDEN_WARP_NPC,3,3,{
 OnTouch:
 	mes "^3355FFThis place is empty.";
 	mes "Everyone must";
@@ -9757,7 +9757,7 @@ OnTouch:
 	close;
 }
 
-que_hugel,35,29,5	script	object#1	139,2,2,{
+que_hugel,35,29,5	script	object#1	HIDDEN_WARP_NPC,2,2,{
 OnTouch:
 	if (hg_odin == 21) {
 		mes "^3355FFA weathered structure";
@@ -9821,7 +9821,7 @@ OnTouch:
 	}
 }
 
-que_hugel,163,31,0	script	object#2	139,3,3,{
+que_hugel,163,31,0	script	object#2	HIDDEN_WARP_NPC,3,3,{
 OnTouch:
 	mes "^3355FFWhen you come back";
 	mes "to your senses, you";
@@ -9830,7 +9830,7 @@ OnTouch:
 	close;
 }
 
-que_hugel,163,178,0	script	object#3	139,3,3,{
+que_hugel,163,178,0	script	object#3	HIDDEN_WARP_NPC,3,3,{
 OnTouch:
 	if (hg_odin == 22) {
 		mes "["+strcharinfo(0)+"]";
@@ -9846,7 +9846,7 @@ OnTouch:
 	}
 }
 
-hu_in01,15,108,0	script	alex#warp	45,1,1,{
+hu_in01,15,108,0	script	alex#warp	WARPNPC,1,1,{
 OnTouch:
 	if (hg_odin == 17) {
 		mes "[Alex]";
@@ -9936,7 +9936,7 @@ OnTouch:
 	}
 }
 
-hugel,52,90,0	script	alex#warp2	45,1,1,{
+hugel,52,90,0	script	alex#warp2	WARPNPC,1,1,{
 OnTouch:
 	if (hg_odin > 59) warp "hu_in01",102,90;
 	else if (hg_odin > 21 && hg_odin < 60) warp "hu_in01",173,90;
@@ -9944,13 +9944,13 @@ OnTouch:
 	end;
 }
 
-hu_in01,155,70,0	script	alex#warp3	45,1,1,{
+hu_in01,155,70,0	script	alex#warp3	WARPNPC,1,1,{
 OnTouch:
 	mes "^3355FFThe door is locked.^000000";
 	close;
 }
 
-hu_in01,155,108,0	script	alex#warp4	45,1,1,{
+hu_in01,155,108,0	script	alex#warp4	WARPNPC,1,1,{
 OnTouch:
 	mes "^3355FFThe door is locked.^000000";
 	close;

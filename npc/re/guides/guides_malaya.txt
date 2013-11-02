@@ -11,7 +11,7 @@
 //= 1.1 Navigation system update. [Euphy]
 //============================================================
 
-malaya,71,72,4	script	Port Malaya Guide#01::GuideMalaya	579,{
+malaya,71,72,4	script	Port Malaya Guide#01::GuideMalaya	4_F_BARYO_WOMAN,{
 	mes "[Port Malaya Guide]";
 	mes "Welcome to ^8B4513Port Malaya^000000, the Breathing Village.";
 	mes "Where cultures and legends come to life!";
@@ -77,5 +77,5 @@ L_Mark:
 	mes "Is there anything else I can do for you?";
 	return;
 }
-malaya,250,83,6	duplicate(GuideMalaya)	Port Malaya Guide#02	579
-malaya,224,204,6	duplicate(GuideMalaya)	Port Malaya Guide#03	579
+malaya,250,83,6	duplicate(GuideMalaya)	Port Malaya Guide#02	4_F_BARYO_WOMAN
+malaya,224,204,6	duplicate(GuideMalaya)	Port Malaya Guide#03	4_F_BARYO_WOMAN

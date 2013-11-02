@@ -24,7 +24,7 @@
 //= 1.9 Added GM management NPC. [Euphy]
 //============================================================
 
-yuno_in04,190,125,4	script	Scholar	700,{
+yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 	switch(yuno_hist) {
 	case 0:
 		mes "[Scholar]";
@@ -922,7 +922,7 @@ function	script	Func_JupHist	{
 	}
 }
 
-yuno_in04,186,125,4	script	Bundle of Files	111,{
+yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 	mes "^8B6914*Thesis: The Fall of Juperos*";
 	mes "By Fayruz Khrhiyha";
 	mes "Sage Castle Researcher^000000";
@@ -1190,7 +1190,7 @@ yuno_in04,186,125,4	script	Bundle of Files	111,{
 	}
 }
 
-yuno_in04,188,118,4	script	Book#juperos	111,{
+yuno_in04,188,118,4	script	Book#juperos	HIDDEN_NPC,{
 	if (yuno_hist > 7) {
 		mes "^8B6914*Self-Honesty*";
 		mes "*'Benefits Fo' Life!'*";
@@ -1250,7 +1250,7 @@ yuno_in04,188,118,4	script	Book#juperos	111,{
 
 // Bronze Statue - juperos_01 99 112
 
-juperos_01,99,112,4	script	Bronze Statue#1	844,{
+juperos_01,99,112,4	script	Bronze Statue#1	CLEAR_NPC,{
 	if (yuno_hist > 3) {
 		mes "^3355FF''Do you wish to see";
 		mes "the end of the madness?";
@@ -1311,7 +1311,7 @@ juperos_01,99,112,4	script	Bronze Statue#1	844,{
 	}
 }
 
-yuno_in04,169,109,1	script	Ambitious Hollgrehenn	111,{
+yuno_in04,169,109,1	script	Ambitious Hollgrehenn	HIDDEN_NPC,{
 	mes "*Hollgrehenn: The Ambition*";
 	mes "By Aragham Caul*";
 	mes " ";
@@ -1336,7 +1336,7 @@ yuno_in04,169,109,1	script	Ambitious Hollgrehenn	111,{
 	close;
 }
 
-yuno_in04,174,111,1	script	Penniless Hollgrehenn	111,{
+yuno_in04,174,111,1	script	Penniless Hollgrehenn	HIDDEN_NPC,{
 	mes "^8B6914*Penniless Hollgrehenn*";
 	mes " * Pennyless Hollgrehenn * ";
 	mes "By Hollgrehenn";
@@ -1355,7 +1355,7 @@ yuno_in04,174,111,1	script	Penniless Hollgrehenn	111,{
 	close;
 }
 
-yuno_in04,102,106,1	script	Popular Feasts	111,{
+yuno_in04,102,106,1	script	Popular Feasts	HIDDEN_NPC,{
 	mes "^8B6914*Popular Feasts*";
 	mes "By Cabbage Pickle Community";
 	mes " ";
@@ -1400,14 +1400,14 @@ yuno_in04,102,106,1	script	Popular Feasts	111,{
 	}
 }
 
-yuno_in04,111,108,1	script	Hamerun, Rat Hunter	111,{
+yuno_in04,111,108,1	script	Hamerun, Rat Hunter	HIDDEN_NPC,{
 	mes "["+strcharinfo(0)+"]";
 	mes "I can't...";
 	mes "reach it...!";
 	close;
 }
 
-yuno_in04,167,127,1	script	Red Book	111,{
+yuno_in04,167,127,1	script	Red Book	HIDDEN_NPC,{
 	mes "^3355FFYou find a book";
 	mes "with red binding.^000000";
 	next;
@@ -1464,7 +1464,7 @@ yuno_in04,167,127,1	script	Red Book	111,{
 	}
 }
 
-yuno_in04,121,109,1	script	Scroll	111,{
+yuno_in04,121,109,1	script	Scroll	HIDDEN_NPC,{
 	mes "^3355FFYou've found an";
 	mes "antiquated scroll";
 	mes "that's collected a";
@@ -1517,7 +1517,7 @@ yuno_in04,121,109,1	script	Scroll	111,{
 	}
 }
 
-yuno_in04,118,116,4	script	Paper	111,{
+yuno_in04,118,116,4	script	Paper	HIDDEN_NPC,{
 	mes "^3355FFIt's a piece of";
 	mes "paper that looks";
 	mes "like a personal letter.^000000";
@@ -1570,7 +1570,7 @@ yuno_in04,118,116,4	script	Paper	111,{
 	}
 }
 
-juperos_01,123,92,4	script	Stone Statue	844,{
+juperos_01,123,92,4	script	Stone Statue	CLEAR_NPC,{
 	if (yuno_hist) {
 		mes "^3355FFIt's a stone statue";
 		mes "that looks exactly like";
@@ -1590,7 +1590,7 @@ juperos_01,123,92,4	script	Stone Statue	844,{
 	close;
 }
 
-juperos_01,99,71,4	script	Bronze Statue#2	844,{
+juperos_01,99,71,4	script	Bronze Statue#2	CLEAR_NPC,{
 	mes "^3355FFIt's an elaborate";
 	mes "bronze statue that";
 	mes "is twice the height of";
@@ -1598,13 +1598,13 @@ juperos_01,99,71,4	script	Bronze Statue#2	844,{
 	close;
 }
 
-juperos_01,79,92,4	script	Sculpture	844,{
+juperos_01,79,92,4	script	Sculpture	CLEAR_NPC,{
 	mes "^3355FFIt's a sculpture that";
 	mes "looks familiar to you.^000000";
 	close;
 }
 
-juperos_01,215,127,4	script	Machine Statue	844,{
+juperos_01,215,127,4	script	Machine Statue	CLEAR_NPC,{
 	mes "^3355FFThis is the bust of a";
 	mes "humanoid machine with";
 	mes "a familiar Crest Piece";
@@ -1730,7 +1730,7 @@ OnMyMobDead:
 }
 
 
-juperos_02,130,149,0	script	Restricted Area#jupe	139,2,2,{
+juperos_02,130,149,0	script	Restricted Area#jupe	HIDDEN_WARP_NPC,2,2,{
 OnInit:
 	disablenpc "Restricted Area#jupe";
 	end;
@@ -1815,7 +1815,7 @@ OnTouch:
 //============================================================
 // Security Checkpoint 1-1
 //============================================================
-jupe_area1,88,224,0	script	#hole#1-1	844,{
+jupe_area1,88,224,0	script	#hole#1-1	CLEAR_NPC,{
 	cutin "1",2;
 	if ($@JupreArea1InUse == 1) {
 		mes "^3355FFThis seems like";
@@ -1923,7 +1923,7 @@ OnTimer22500:
 	end;
 }
 
-jupe_area1,83,221,0	script	Warp#1-1	139,2,2,{
+jupe_area1,83,221,0	script	Warp#1-1	HIDDEN_WARP_NPC,2,2,{
 OnInit:
 	disablenpc "Warp#1-1";
 	end;
@@ -2107,7 +2107,7 @@ OnMyMobDead:
 //============================================================
 // Security Checkpoint 1-2
 //============================================================
-jupe_area1,25,238,0	script	#hole#1-2	844,{
+jupe_area1,25,238,0	script	#hole#1-2	CLEAR_NPC,{
 	cutin "2",2;
 	if ($@JupreArea1InUse == 1) {
 		mes "^3355FFThis seems like";
@@ -2217,7 +2217,7 @@ OnTimer22500:
 	end;
 }
 
-jupe_area1,21,225,0	script	Warp#1-2	139,2,2,{
+jupe_area1,21,225,0	script	Warp#1-2	HIDDEN_WARP_NPC,2,2,{
 OnInit:
 	disablenpc "Warp#1-2";
 	end;
@@ -2396,7 +2396,7 @@ OnMyMobDead:
 //============================================================
 // Security Checkpoint 1-3
 //============================================================
-jupe_area1,36,146,0	script	#hole#1-3	844,{
+jupe_area1,36,146,0	script	#hole#1-3	CLEAR_NPC,{
 	cutin "3",2;
 	if ($@JupreArea1InUse == 1) {
 		mes "^3355FFThis seems like";
@@ -2504,7 +2504,7 @@ OnTimer22500:
 	end;
 }
 
-jupe_area1,33,137,0	script	Warp#1-3	139,2,2,{
+jupe_area1,33,137,0	script	Warp#1-3	HIDDEN_WARP_NPC,2,2,{
 OnInit:
 	disablenpc "Warp#1-3";
 	end;
@@ -2684,7 +2684,7 @@ OnMyMobDead:
 //============================================================
 // Security Checkpoint 1-4
 //============================================================
-jupe_area1,50,49,0	script	#hole#1-4	844,{
+jupe_area1,50,49,0	script	#hole#1-4	CLEAR_NPC,{
 	cutin "4",2;
 	if ($@JupreArea1InUse == 1) {
 		mes "^3355FFThis seems like";
@@ -2793,7 +2793,7 @@ OnTimer5000:
 	end;
 }
 
-jupe_area1,57,53,0	script	Warp#1-4	139,2,2,{
+jupe_area1,57,53,0	script	Warp#1-4	HIDDEN_WARP_NPC,2,2,{
 OnInit:
 	disablenpc "Warp#1-4";
 	end;
@@ -2972,7 +2972,7 @@ OnMyMobDead:
 //============================================================
 // Move to Elevator
 //============================================================
-jupe_area1,112,162,0	script	Lever#ufe	844,{
+jupe_area1,112,162,0	script	Lever#ufe	CLEAR_NPC,{
 	mes "^3355FFIt's a lever";
 	mes "whose function";
 	mes "is not known to you.^000000";
@@ -2999,7 +2999,7 @@ OnTimer3000:
 	end;
 }
 
-jupe_area1,117,157,0	script	LeverWarp#ufe	139,2,2,{
+jupe_area1,117,157,0	script	LeverWarp#ufe	HIDDEN_WARP_NPC,2,2,{
 OnInit:
 	disablenpc "LeverWarp#ufe";
 	end;
@@ -3024,7 +3024,7 @@ OnTimer3000:
 //============================================================
 // Security Checkpoint 2-1
 //============================================================
-jupe_area2,74,224,0	script	#hole#2-1	844,{
+jupe_area2,74,224,0	script	#hole#2-1	CLEAR_NPC,{
 	cutin "1",2;
 	if ($@JupreArea2InUse == 1) {
 		mes "^3355FFThis seems like";
@@ -3132,7 +3132,7 @@ OnTimer22500:
 	end;
 }
 
-jupe_area2,80,221,0	script	Warp#2-1	139,2,2,{
+jupe_area2,80,221,0	script	Warp#2-1	HIDDEN_WARP_NPC,2,2,{
 OnInit:
 	disablenpc "Warp#2-1";
 	end;
@@ -3316,7 +3316,7 @@ OnMyMobDead:
 //============================================================
 // Security Checkpoint 2-2
 //============================================================
-jupe_area2,138,238,0	script	#hole#2-2	844,{
+jupe_area2,138,238,0	script	#hole#2-2	CLEAR_NPC,{
 	cutin "2",2;
 	if ($@JupreArea2InUse == 1) {
 		mes "^3355FFThis seems like";
@@ -3426,7 +3426,7 @@ OnTimer22500:
 	end;
 }
 
-jupe_area2,142,225,0	script	Warp#2-2	139,2,2,{
+jupe_area2,142,225,0	script	Warp#2-2	HIDDEN_WARP_NPC,2,2,{
 OnInit:
 	disablenpc "Warp#2-2";
 	end;
@@ -3605,7 +3605,7 @@ OnMyMobDead:
 //============================================================
 // Security Checkpoint 2-3
 //============================================================
-jupe_area2,127,146,0	script	#hole#2-3	844,{
+jupe_area2,127,146,0	script	#hole#2-3	CLEAR_NPC,{
 	cutin "3",2;
 	if ($@JupreArea2InUse == 1) {
 		mes "^3355FFThis seems like";
@@ -3713,7 +3713,7 @@ OnTimer22500:
 	end;
 }
 
-jupe_area2,130,137,0	script	Warp#2-3	139,2,2,{
+jupe_area2,130,137,0	script	Warp#2-3	HIDDEN_WARP_NPC,2,2,{
 OnInit:
 	disablenpc "Warp#2-3";
 	end;
@@ -3895,7 +3895,7 @@ OnMyMobDead:
 //============================================================
 // Security Checkpoint 2-4
 //============================================================
-jupe_area2,113,49,0	script	#hole#2-4	844,{
+jupe_area2,113,49,0	script	#hole#2-4	CLEAR_NPC,{
 	cutin "4",2;
 	if ($@JupreArea2InUse == 1) {
 		mes "^3355FFThis seems like";
@@ -4004,7 +4004,7 @@ OnTimer5000:
 	end;
 }
 
-jupe_area2,106,53,0	script	Warp#2-4	139,2,2,{
+jupe_area2,106,53,0	script	Warp#2-4	HIDDEN_WARP_NPC,2,2,{
 OnInit:
 	disablenpc "Warp#2-4";
 	end;
@@ -4185,7 +4185,7 @@ OnMyMobDead:
 //============================================================
 // Move to Elevator
 //============================================================
-jupe_area2,51,162,0	script	Lever#ufe2	844,{
+jupe_area2,51,162,0	script	Lever#ufe2	CLEAR_NPC,{
 	mes "^3355FFIt's a lever";
 	mes "whose function";
 	mes "is not known to you.^000000";
@@ -4212,7 +4212,7 @@ OnTimer3000:
 	end;
 }
 
-jupe_area2,46,157,0	script	LeverWarp#ufe2	139,2,2,{
+jupe_area2,46,157,0	script	LeverWarp#ufe2	HIDDEN_WARP_NPC,2,2,{
 OnInit:
 	disablenpc "LeverWarp#ufe2";
 	end;
@@ -4237,7 +4237,7 @@ OnTimer3000:
 //============================================================
 // Elevator Reception Room
 //============================================================
-jupe_ele_r,51,98,0	script	Switch#ufe	844,{
+jupe_ele_r,51,98,0	script	Switch#ufe	CLEAR_NPC,{
 	if ($@JupeElevatorInUse == 1) {
 		mes "^3355FFIt's some sort of";
 		mes "lever that looks like";
@@ -4388,7 +4388,7 @@ OnTimer27000:
 	end;
 }
 
-jupe_ele_r,51,98,0	script	Switch On#ufe	844,{
+jupe_ele_r,51,98,0	script	Switch On#ufe	CLEAR_NPC,{
 	mes "^3355FFIt seems like";
 	mes "someone else is";
 	mes "using this machine...^000000";
@@ -4560,7 +4560,7 @@ OnTimer10000:
 //============================================================
 // Elevator NPCs
 //============================================================
-jupe_ele,14,6,1	script	TimeOut#ufe	844,{
+jupe_ele,14,6,1	script	TimeOut#ufe	CLEAR_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -4634,7 +4634,7 @@ OnTimer142000:
 	end;
 }
 
-jupe_ele,15,6,1	script	Guard-1#ufe	844,{
+jupe_ele,15,6,1	script	Guard-1#ufe	CLEAR_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -4689,7 +4689,7 @@ OnMyMobDead:
 	end;
 }
 
-jupe_ele,16,6,1	script	Guard-2#ufe	844,{
+jupe_ele,16,6,1	script	Guard-2#ufe	CLEAR_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -4748,7 +4748,7 @@ OnMyMobDead:
 	end;
 }
 
-jupe_ele,17,6,1	script	Guard-3#ufe	844,{
+jupe_ele,17,6,1	script	Guard-3#ufe	CLEAR_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -4804,7 +4804,7 @@ OnMyMobDead:
 	end;
 }
 
-jupe_ele,18,6,1	script	Guard-4#ufe	844,{
+jupe_ele,18,6,1	script	Guard-4#ufe	CLEAR_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -4845,7 +4845,7 @@ OnMyMobDead:
 	end;
 }
 
-jupe_ele,19,6,1	script	GuardEnd#ufe	844,{
+jupe_ele,19,6,1	script	GuardEnd#ufe	CLEAR_NPC,{
 OnInit:
 	disablenpc "GuardEnd#ufe";
 	end;
@@ -4966,7 +4966,7 @@ OnTimer2000:
 	end;
 }
 
-juperos_02,33,59,0	script	jupe_goto2F	45,2,2,{
+juperos_02,33,59,0	script	jupe_goto2F	WARPNPC,2,2,{
 OnTouch:
 	switch(rand(1,4)) {
 	case 1: warp "juperos_01",120,72; end;
@@ -4980,7 +4980,7 @@ OnTouch:
 //============================================================
 // GM Management NPC
 //============================================================
-sec_in02,39,167,0	script	Juperos Manager	864,{
+sec_in02,39,167,0	script	Juperos Manager	4_F_OPERATION,{
 	callfunc "F_GM_NPC";
 	mes "[Juperos Manager]";
 	mes "I'm the NPC in";

@@ -17,15 +17,15 @@
 
 // +11 and above Refiners
 //============================================================
-prt_in,90,72,5	script	Vestri#prt	826,{
+prt_in,90,72,5	script	Vestri#prt	4_M_DWARF,{
 	callfunc "refinenew","Vestri",0;
 	end;
 }
-morocc_in,64,41,5	script	Vestri#moc	826,{
+morocc_in,64,41,5	script	Vestri#moc	4_M_DWARF,{
 	callfunc "refinenew","Vestri",0;
 	end;
 }
-payon_in01,18,132,3	script	Vestri#pay	826,{
+payon_in01,18,132,3	script	Vestri#pay	4_M_DWARF,{
 	callfunc "refinenew","Vestri",0;
 	end;
 }
@@ -387,13 +387,13 @@ function	script	refinenew	{
 	mes "or "+getitemname(.@i[0])+".";
 	close;
 }
-prt_in,85,71,5	duplicate(Austri#ref)	Austri#prt	826
-payon_in01,14,125,5	duplicate(Austri#ref)	Austri#pay	826
-morocc_in,60,38,5	duplicate(Austri#ref)	Austri#moc	826
+prt_in,85,71,5	duplicate(Austri#ref)	Austri#prt	4_M_DWARF
+payon_in01,14,125,5	duplicate(Austri#ref)	Austri#pay	4_M_DWARF
+morocc_in,60,38,5	duplicate(Austri#ref)	Austri#moc	4_M_DWARF
 
 // Malangdo Refiner
 //============================================================
-malangdo,224,172,6	script	Clink#mal_normal	544,{
+malangdo,224,172,6	script	Clink#mal_normal	4_CAT_SAILOR1,{
 	disable_items;
 	mes "[Clink]";
 	mes "My cool dad Holink said I have the world's greatest refine hammer!!";

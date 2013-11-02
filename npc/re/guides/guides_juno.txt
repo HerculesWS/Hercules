@@ -13,7 +13,7 @@
 //= 1.2 Navigation system update. [Euphy]
 //============================================================
 
-yuno,59,212,4	script	Juno Guide#yuno01::GuideJuno	700,{
+yuno,59,212,4	script	Juno Guide#yuno01::GuideJuno	8_F_GIRL,{
 	mes "[Juno Guide]";
 	mes "A place that takes the vision of the future, and gives it form in the present. Welcome to";
 	mes "the city of ^8B4513Juno^000000!";
@@ -160,4 +160,4 @@ L_Mark:
 	mes "Would you like to check any other locations?";
 	return;
 }
-yuno,153,47,4	duplicate(GuideJuno)	Juno Guide#yuno02	700
+yuno,153,47,4	duplicate(GuideJuno)	Juno Guide#yuno02	8_F_GIRL

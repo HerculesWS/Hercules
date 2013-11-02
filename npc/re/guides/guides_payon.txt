@@ -13,7 +13,7 @@
 //= 1.2 Navigation system update. [Euphy]
 //============================================================
 
-payon,163,64,3	script	Guide#01payon::GuidePayon	708,{
+payon,163,64,3	script	Guide#01payon::GuidePayon	4_M_PAY_SOLDIER,{
 	cutin "pay_soldier",2;
 	mes "[Payon Guide]";
 	mes "Welcome to ^8B4513Payon^000000,";
@@ -191,11 +191,11 @@ L_Mark:
 	return;
 }
 
-payon,151,182,6	duplicate(GuidePayon)	Guide#02payon	708
-payon,221,85,6	duplicate(GuidePayon)	Guide#03payon	708
-payon,233,324,4	duplicate(GuidePayon)	Guide#04payon	708
+payon,151,182,6	duplicate(GuidePayon)	Guide#02payon	4_M_PAY_SOLDIER
+payon,221,85,6	duplicate(GuidePayon)	Guide#03payon	4_M_PAY_SOLDIER
+payon,233,324,4	duplicate(GuidePayon)	Guide#04payon	4_M_PAY_SOLDIER
 
-pay_arche,86,33,4	script	Guide#05payon	708,{
+pay_arche,86,33,4	script	Guide#05payon	4_M_PAY_SOLDIER,{
 	cutin "pay_soldier",2;
 	mes "[Payon Guide]";
 	mes "Welcome to ^8B4513Archer Village^000000,";

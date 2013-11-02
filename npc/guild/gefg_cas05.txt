@@ -14,7 +14,7 @@
 
 // Guild Flag (Outside Castle)
 //============================================================
--	script	Mersetzdeitz#1::OutsideFlagsG5	722,{
+-	script	Mersetzdeitz#1::OutsideFlagsG5	GUILD_FLAG,{
 
 	set .@GID, GetCastleData("gefg_cas05",1);
 
@@ -64,14 +64,14 @@ OnRecvCastleG05:
 	end;
 }
 
-gef_fild13,302,87,7	duplicate(OutsideFlagsG5)	Mersetzdeitz#1-2	722
-gef_fild13,313,83,0	duplicate(OutsideFlagsG5)	Mersetzdeitz#2	722
-gef_fild13,252,51,2	duplicate(OutsideFlagsG5)	Mersetzdeitz#3	722
-gef_fild13,26,147,2	duplicate(OutsideFlagsG5)	Mersetzdeitz#4	722
+gef_fild13,302,87,7	duplicate(OutsideFlagsG5)	Mersetzdeitz#1-2	GUILD_FLAG
+gef_fild13,313,83,0	duplicate(OutsideFlagsG5)	Mersetzdeitz#2	GUILD_FLAG
+gef_fild13,252,51,2	duplicate(OutsideFlagsG5)	Mersetzdeitz#3	GUILD_FLAG
+gef_fild13,26,147,2	duplicate(OutsideFlagsG5)	Mersetzdeitz#4	GUILD_FLAG
 
 // Guild Flag (Inside Castle)
 //============================================================
--	script	Mersetzdeitz#5::InsideFlagsG5	722,{
+-	script	Mersetzdeitz#5::InsideFlagsG5	GUILD_FLAG,{
 	end;
 
 OnRecvCastleG05:
@@ -79,28 +79,28 @@ OnRecvCastleG05:
 	end;
 }
 
-gefg_cas05,77,185,7	duplicate(InsideFlagsG5)	Mersetzdeitz#5-2	722
-gefg_cas05,92,181,0	duplicate(InsideFlagsG5)	Mersetzdeitz#6	722
-gefg_cas05,83,158,1	duplicate(InsideFlagsG5)	Mersetzdeitz#7	722
-gefg_cas05,62,144,7	duplicate(InsideFlagsG5)	Mersetzdeitz#8	722
-gefg_cas05,62,66,4	duplicate(InsideFlagsG5)	Mersetzdeitz#9	722
-gefg_cas05,69,66,4	duplicate(InsideFlagsG5)	Mersetzdeitz#10	722
+gefg_cas05,77,185,7	duplicate(InsideFlagsG5)	Mersetzdeitz#5-2	GUILD_FLAG
+gefg_cas05,92,181,0	duplicate(InsideFlagsG5)	Mersetzdeitz#6	GUILD_FLAG
+gefg_cas05,83,158,1	duplicate(InsideFlagsG5)	Mersetzdeitz#7	GUILD_FLAG
+gefg_cas05,62,144,7	duplicate(InsideFlagsG5)	Mersetzdeitz#8	GUILD_FLAG
+gefg_cas05,62,66,4	duplicate(InsideFlagsG5)	Mersetzdeitz#9	GUILD_FLAG
+gefg_cas05,69,66,4	duplicate(InsideFlagsG5)	Mersetzdeitz#10	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-geffen,131,123,6	duplicate(InsideFlagsG5)	Mersetzdeitz#11	722
+geffen,131,123,6	duplicate(InsideFlagsG5)	Mersetzdeitz#11	GUILD_FLAG
 
 // Kafra Employee
 //============================================================
-gefg_cas05,61,52,5	duplicate(guildkafra)	Kafra Staff#gefg_cas05	117
+gefg_cas05,61,52,5	duplicate(guildkafra)	Kafra Staff#gefg_cas05	4_F_KAFRA1
 
 // Steward
 //============================================================
-gefg_cas05,70,52,3	duplicate(cm)	Byohre#gefg_cas05	55
+gefg_cas05,70,52,3	duplicate(cm)	Byohre#gefg_cas05	1_M_JOBTESTER
 
 // Treasure Room Exit
 //============================================================
-gefg_cas05,149,107,0	script	#lever_G05	111,{
+gefg_cas05,149,107,0	script	#lever_G05	HIDDEN_NPC,{
 
 	mes " ";
 	mes "There's a small lever. Will you pull it?";
@@ -115,7 +115,7 @@ gefg_cas05,149,107,0	script	#lever_G05	111,{
 
 // Guild Dungeon Switch
 //============================================================
-gefg_cas05,65,22,0	duplicate(gdlever)	#gefg_cas05	111
+gefg_cas05,65,22,0	duplicate(gdlever)	#gefg_cas05	HIDDEN_NPC
 
 // Guild Treasure Spawns
 //============================================================

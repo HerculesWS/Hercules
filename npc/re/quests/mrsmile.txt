@@ -12,8 +12,8 @@
 //= 1.1 Added Izlude duplicates. [Euphy]
 //============================================================
 
-izlude,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz	92
-izlude_a,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_a	92
-izlude_b,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_b	92
-izlude_c,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_c	92
-izlude_d,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_d	92
+izlude,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz	4_F_03
+izlude_a,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_a	4_F_03
+izlude_b,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_b	4_F_03
+izlude_c,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_c	4_F_03
+izlude_d,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_d	4_F_03

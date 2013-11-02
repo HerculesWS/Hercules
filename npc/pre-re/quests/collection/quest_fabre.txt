@@ -12,7 +12,7 @@
 //= 1.0 First version.
 //============================================================
 
-gef_fild07,321,193,4	script	Langry#Fabre_Hunt	754,{
+gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 	if (checkquest(60107) != -1) {
 		if (checkquest(60107,HUNTING) != 2 ) {
 			mes "[Langry]";

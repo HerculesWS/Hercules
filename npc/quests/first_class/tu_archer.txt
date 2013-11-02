@@ -26,7 +26,7 @@
 
 // Bard Jet
 //============================================================
-payon_in02,67,65,3	script	Bard Jet#tu	51,{
+payon_in02,67,65,3	script	Bard Jet#tu	1_M_BARD,{
 	mes "[Jet]";
 	mes "Every god never grows old";
 	mes "Because of beautiful";
@@ -162,7 +162,7 @@ payon_in02,67,65,3	script	Bard Jet#tu	51,{
 
 // Sign
 //============================================================
-pay_arche,127,154,4	script	Sign#arc	835,{
+pay_arche,127,154,4	script	Sign#arc	2_BOARD1,{
 	mes " ";
 	mes " Archer Job Change Office ---> ";
 	mes " <--- Icarus ";
@@ -172,7 +172,7 @@ pay_arche,127,154,4	script	Sign#arc	835,{
 
 // Master Kavaruk
 //============================================================
-payon_in02,54,13,3	script	Master Kavaruk	55,{
+payon_in02,54,13,3	script	Master Kavaruk	1_M_JOBTESTER,{
 	mes "[Master Kavaruk]";
 	mes "Hello, young one.";
 	mes "I am Master Kavaruk";
@@ -418,7 +418,7 @@ payon_in02,54,13,3	script	Master Kavaruk	55,{
 
 // Reidin Corse
 //============================================================
-pay_arche,103,165,5	script	Reidin Corse#tu	832,{
+pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 	mes "[Reidin Corse]";
 	if(MaxWeight - Weight < 2000){
 		mes "Hey, you're carrying an";
@@ -1187,7 +1187,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	832,{
 
 // Seisner
 //============================================================
-pay_arche,84,139,3	script	Seisner	727,{
+pay_arche,84,139,3	script	Seisner	4_F_JOB_HUNTER,{
 	specialeffect EF_HIT2,"#Target";
 	mes "[Seisner]";
 	mes "Aaaah!";
@@ -1393,7 +1393,7 @@ pay_arche,84,139,3	script	Seisner	727,{
 
 // Target
 //============================================================
-pay_arche,76,135,3	script	#Target	111,{ end; }
+pay_arche,76,135,3	script	#Target	HIDDEN_NPC,{ end; }
 
 // Acolyte
 //============================================================
@@ -1551,7 +1551,7 @@ pay_arche,76,135,3	script	#Target	111,{ end; }
 
 // Alchemist Guildmember
 //============================================================
-pay_arche,130,113,3	script	Alchemist Guildmember#tu	740,{
+pay_arche,130,113,3	script	Alchemist Guildmember#tu	2_M_ALCHE,{
 	mes "[Alchemist Guildmember]";
 	if(tu_archer02 > 0){
 		if((countitem(1032) > 0) || (countitem(905) > 0 )){	// Blossom_Of_Maneater & Stem
@@ -1625,7 +1625,7 @@ pay_arche,130,113,3	script	Alchemist Guildmember#tu	740,{
 
 // Arthail
 //============================================================
-prontera,126,335,5	script	Arthail	51,{
+prontera,126,335,5	script	Arthail	1_M_BARD,{
 	mes "[Arthail]";
 	if(tu_archer02 < 3){
 		mes "I am the Bard";
@@ -1806,7 +1806,7 @@ prontera,126,335,5	script	Arthail	51,{
 
 // New Guild Master
 //============================================================
-prontera,167,281,3	script	New Guild Master#tu	753,{
+prontera,167,281,3	script	New Guild Master#tu	4_M_MONK,{
 	mes "[New Guild Master]";
 	mes "Hearken, all";
 	mes "of you who seek";
@@ -1829,7 +1829,7 @@ prontera,167,281,3	script	New Guild Master#tu	753,{
 
 // Mage
 //============================================================
-prontera,144,301,5	script	Mage#tu	123,{
+prontera,144,301,5	script	Mage#tu	2_F_MAGICMASTER,{
 	mes "[Mage]";
 	mes "Did you see that";
 	mes "new guild master?";
@@ -1857,7 +1857,7 @@ prontera,144,301,5	script	Mage#tu	123,{
 
 // Minister
 //============================================================
-prt_castle,76,165,6	script	Minister#tu	55,{
+prt_castle,76,165,6	script	Minister#tu	1_M_JOBTESTER,{
 	mes "[Minister]";
 	mes "The royal family";
 	mes "is extremely busy";
@@ -1917,7 +1917,7 @@ prt_castle,76,165,6	script	Minister#tu	55,{
 
 // Range NPC
 //============================================================
-prt_castle,94,150,4	script	#sound_tu	139,6,6,{
+prt_castle,94,150,4	script	#sound_tu	HIDDEN_WARP_NPC,6,6,{
 OnTouch_:
 	if(tu_archer02 == 6) {
 		mes "[Minister]";
@@ -1932,7 +1932,7 @@ OnTouch_:
 
 // Bishop Maugins
 //============================================================
-monk_in,19,43,1	script	Bishop Maugins	60,{
+monk_in,19,43,1	script	Bishop Maugins	1_M_PASTOR,{
 	mes "[Bishop Maugins]";
 	if(tu_archer02 == 7){
 		mes "Greetings.";

@@ -20,7 +20,7 @@
 
 // Waiting Room NPCs
 //============================================================
-bat_room,86,227,4	script	Lieutenant Ator	418,{
+bat_room,86,227,4	script	Lieutenant Ator	4_M_KY_KNT,{
 	end;
 OnInit:
 	waitingroom "Battle Station",11,"start#bat_b01::OnReadyCheck",1,0,80;
@@ -30,7 +30,7 @@ OnEnterBG:
 	end;
 }
 
-bat_room,85,204,0	script	Lieutenant Thelokus	414,{
+bat_room,85,204,0	script	Lieutenant Thelokus	4_M_CRU_KNT,{
 	end;
 OnInit:
 	waitingroom "Battle Station",11,"start#bat_b01::OnReadyCheck",1,0,80;
@@ -43,7 +43,7 @@ OnEnterBG:
 bat_room,85,220,0	warp	back_bgroomb01a	1,1,bat_room,154,150
 bat_room,85,211,0	warp	back_bgroomb01b	1,1,bat_room,154,150
 
-bat_room,2,151,3	script	#bat_b01_timer	844,{
+bat_room,2,151,3	script	#bat_b01_timer	CLEAR_NPC,{
 	end;
 
 OnInit:
@@ -71,7 +71,7 @@ OnTimer1000:
 
 // Flavius Battleground Engine
 //============================================================
-bat_b01,15,15,3	script	start#bat_b01	844,{
+bat_b01,15,15,3	script	start#bat_b01	CLEAR_NPC,{
 OnInit:
 	mapwarp "bat_b01","bat_room",154,150;
 	end;
@@ -147,7 +147,7 @@ OnTimer10000:
 	end;
 }
 
-bat_b01,1,1,3	script	OBJ#bat_b01_a	844,{
+bat_b01,1,1,3	script	OBJ#bat_b01_a	CLEAR_NPC,{
 OnEnable:
 	bg_monster $@FlaviusBG1_id1,"bat_b01",61,150,"Pink Crystal",1915,"OBJ#bat_b01_a::OnMyMobDead";
 	end;
@@ -180,7 +180,7 @@ OnMyMobDead:
 	end;
 }
 
-bat_b01,1,2,3	script	OBJ#bat_b01_b	844,{
+bat_b01,1,2,3	script	OBJ#bat_b01_b	CLEAR_NPC,{
 OnEnable:
 	bg_monster $@FlaviusBG1_id2,"bat_b01",328,150,"Blue Crystal",1914,"OBJ#bat_b01_b::OnMyMobDead";
 	end;
@@ -213,7 +213,7 @@ OnMyMobDead:
 	end;
 }
 
-bat_b01,1,3,3	script	guardian#bat_b01_a	844,{
+bat_b01,1,3,3	script	guardian#bat_b01_a	CLEAR_NPC,{
 OnEnable:
 	bg_monster $@FlaviusBG1_id1,"bat_b01",108,159,"Guillaume Camp Guardian",1949,"guardian#bat_b01_a::OnMyMobDead";
 	bg_monster $@FlaviusBG1_id1,"bat_b01",108,141,"Guillaume Camp Guardian",1949,"guardian#bat_b01_a::OnMyMobDead";
@@ -231,7 +231,7 @@ OnMyMobDead:
 	end;
 }
 
-bat_b01,1,3,3	script	guardian#bat_b01_b	844,{
+bat_b01,1,3,3	script	guardian#bat_b01_b	CLEAR_NPC,{
 OnEnable:
 	bg_monster $@FlaviusBG1_id2,"bat_b01",307,160,"Croix Camp Guardian",1949,"guardian#bat_b01_b::OnMyMobDead";
 	bg_monster $@FlaviusBG1_id2,"bat_b01",307,138,"Croix Camp Guardian",1949,"guardian#bat_b01_b::OnMyMobDead";
@@ -249,7 +249,7 @@ OnMyMobDead:
 	end;
 }
 
-bat_b01,1,4,3	script	cell#bat_b01_a	844,{
+bat_b01,1,4,3	script	cell#bat_b01_a	CLEAR_NPC,{
 OnRed:
 	setcell "bat_b01",62,149,60,151,cell_basilica,1;
 	setcell "bat_b01",62,149,60,151,cell_walkable,0;
@@ -261,7 +261,7 @@ OnGreen:
 	end;
 }
 
-bat_b01,1,5,3	script	cell#bat_b01_b	844,{
+bat_b01,1,5,3	script	cell#bat_b01_b	CLEAR_NPC,{
 OnRed:
 	setcell "bat_b01",327,151,329,149,cell_basilica,1;
 	setcell "bat_b01",327,151,329,149,cell_walkable,0;
@@ -273,7 +273,7 @@ OnGreen:
 	end;
 }
 
-bat_b01,1,6,1	script	time#bat_b01	844,{
+bat_b01,1,6,1	script	time#bat_b01	CLEAR_NPC,{
 OnEnable:
 	donpcevent "Battle Therapist#b01_a::OnEnable";
 	donpcevent "Battle Therapist#b01_b::OnEnable";
@@ -285,7 +285,7 @@ OnStop:
 	end;
 }
 
-bat_b01,10,294,3	script	Battle Therapist#b01_a	95,{
+bat_b01,10,294,3	script	Battle Therapist#b01_a	4_F_SISTER,{
 	specialeffect2 EF_HEAL;
 	mes "[Battle Therapist]";
 	mes "Just close your eyes,";
@@ -319,7 +319,7 @@ OnStop:
 	end;
 }
 
-bat_b01,10,290,0	script	bat_b01_rp1_a_warp	45,10,10,{
+bat_b01,10,290,0	script	bat_b01_rp1_a_warp	WARPNPC,10,10,{
 OnInit:
 	disablenpc "bat_b01_rp1_a_warp";
 	end;
@@ -330,7 +330,7 @@ OnTouch:
 	end;
 }
 
-bat_b01,389,14,3	script	Battle Therapist#b01_b	95,{
+bat_b01,389,14,3	script	Battle Therapist#b01_b	4_F_SISTER,{
 	specialeffect2 EF_HEAL;
 	mes "[Battle Therapist]";
 	mes "Just close your eyes,";
@@ -364,7 +364,7 @@ OnStop:
 	end;
 }
 
-bat_b01,389,10,0	script	bat_b01_rp1_b_warp	45,9,9,{
+bat_b01,389,10,0	script	bat_b01_rp1_b_warp	WARPNPC,9,9,{
 OnInit:
 	disablenpc "bat_b01_rp1_a_warp";
 	end;
@@ -389,7 +389,7 @@ OnTouch:
 	end;
 }
 
-bat_b01,10,294,3	script	Guillaume Vintenar#b01_a	934,{
+bat_b01,10,294,3	script	Guillaume Vintenar#b01_a	4_M_RASWORD,{
 	if ($@FlaviusBG1_id1 == getcharid(4)) {
 		if ($@FlaviusBG1_Victory == 1) {
 			set .@your_medal,countitem(7829);
@@ -441,7 +441,7 @@ OnInit:
 	end;
 }
 
-bat_b01,389,14,3	script	Croix Vintenar#b01_b	934,{
+bat_b01,389,14,3	script	Croix Vintenar#b01_b	4_M_RASWORD,{
 	if ($@FlaviusBG1_id2 == getcharid(4)) {
 		if ($@FlaviusBG1_Victory == 2) {
 			set .@your_medal,countitem(7829);
@@ -493,7 +493,7 @@ OnInit:
 	end;
 }
 
-bat_b01,1,5,3	script	countdown#bat_b01	844,{
+bat_b01,1,5,3	script	countdown#bat_b01	CLEAR_NPC,{
 OnInit:
 	stopnpctimer;
 	end;
@@ -549,31 +549,31 @@ OnTimer1900000:
 	end;
 }
 
-bat_b01,81,83,3	script	Guillaume Camp#flag21	973,{ end; }
-bat_b01,94,83,3	script	Guillaume Camp#flag22	973,{ end; }
-bat_b01,81,66,3	script	Guillaume Camp#flag23	973,{ end; }
-bat_b01,94,66,3	script	Guillaume Camp#flag24	973,{ end; }
-bat_b01,139,142,3	script	Guillaume Camp#flag25	973,{ end; }
-bat_b01,139,158,3	script	Guillaume Camp#flag26	973,{ end; }
-bat_b01,110,161,3	script	Guillaume Camp#flag27	973,{ end; }
-bat_b01,110,137,3	script	Guillaume Camp#flag28	973,{ end; }
-bat_b01,63,135,3	script	Guillaume Camp#flag29	973,{ end; }
-bat_b01,63,165,3	script	Guillaume Camp#flag30	973,{ end; }
-bat_b01,10,296,3	script	Guillaume Camp#flag31	973,{ end; }
+bat_b01,81,83,3	script	Guillaume Camp#flag21	1_FLAG_LION,{ end; }
+bat_b01,94,83,3	script	Guillaume Camp#flag22	1_FLAG_LION,{ end; }
+bat_b01,81,66,3	script	Guillaume Camp#flag23	1_FLAG_LION,{ end; }
+bat_b01,94,66,3	script	Guillaume Camp#flag24	1_FLAG_LION,{ end; }
+bat_b01,139,142,3	script	Guillaume Camp#flag25	1_FLAG_LION,{ end; }
+bat_b01,139,158,3	script	Guillaume Camp#flag26	1_FLAG_LION,{ end; }
+bat_b01,110,161,3	script	Guillaume Camp#flag27	1_FLAG_LION,{ end; }
+bat_b01,110,137,3	script	Guillaume Camp#flag28	1_FLAG_LION,{ end; }
+bat_b01,63,135,3	script	Guillaume Camp#flag29	1_FLAG_LION,{ end; }
+bat_b01,63,165,3	script	Guillaume Camp#flag30	1_FLAG_LION,{ end; }
+bat_b01,10,296,3	script	Guillaume Camp#flag31	1_FLAG_LION,{ end; }
 
-bat_b01,306,233,3	script	Croix Camp#flag21	974,{ end; }
-bat_b01,317,233,3	script	Croix Camp#flag22	974,{ end; }
-bat_b01,306,216,3	script	Croix Camp#flag23	974,{ end; }
-bat_b01,317,216,3	script	Croix Camp#flag24	974,{ end; }
-bat_b01,257,158,3	script	Croix Camp#flag25	974,{ end; }
-bat_b01,257,141,3	script	Croix Camp#flag26	974,{ end; }
-bat_b01,297,164,3	script	Croix Camp#flag27	974,{ end; }
-bat_b01,297,136,3	script	Croix Camp#flag28	974,{ end; }
-bat_b01,336,161,3	script	Croix Camp#flag29	974,{ end; }
-bat_b01,336,139,3	script	Croix Camp#flag30	974,{ end; }
-bat_b01,389,16,3	script	Croix Camp#flag31	974,{ end; }
+bat_b01,306,233,3	script	Croix Camp#flag21	1_FLAG_EAGLE,{ end; }
+bat_b01,317,233,3	script	Croix Camp#flag22	1_FLAG_EAGLE,{ end; }
+bat_b01,306,216,3	script	Croix Camp#flag23	1_FLAG_EAGLE,{ end; }
+bat_b01,317,216,3	script	Croix Camp#flag24	1_FLAG_EAGLE,{ end; }
+bat_b01,257,158,3	script	Croix Camp#flag25	1_FLAG_EAGLE,{ end; }
+bat_b01,257,141,3	script	Croix Camp#flag26	1_FLAG_EAGLE,{ end; }
+bat_b01,297,164,3	script	Croix Camp#flag27	1_FLAG_EAGLE,{ end; }
+bat_b01,297,136,3	script	Croix Camp#flag28	1_FLAG_EAGLE,{ end; }
+bat_b01,336,161,3	script	Croix Camp#flag29	1_FLAG_EAGLE,{ end; }
+bat_b01,336,139,3	script	Croix Camp#flag30	1_FLAG_EAGLE,{ end; }
+bat_b01,389,16,3	script	Croix Camp#flag31	1_FLAG_EAGLE,{ end; }
 
-bat_b01,10,294,3	script	Vintenar#bat_b01_aover	419,{
+bat_b01,10,294,3	script	Vintenar#bat_b01_aover	4_M_KY_HEAD,{
 	set .@A_B_gap,$@Guill_ScoreBG1 - $@Croix_ScoreBG1;
 	if ($@FlaviusBG1_id1 == getcharid(4)) {
 		if (.@A_B_gap > 0) {
@@ -651,7 +651,7 @@ OnInit:
 	end;
 }
 
-bat_b01,389,14,3	script	Vintenar#bat_b01_bover	415,{
+bat_b01,389,14,3	script	Vintenar#bat_b01_bover	4_M_CRU_HEAD,{
 	set .@A_B_gap,$@Guill_ScoreBG1 - $@Croix_ScoreBG1;
 	if ($@FlaviusBG1_id2 == getcharid(4)) {
 		if (.@A_B_gap > 0) {
@@ -729,7 +729,7 @@ OnInit:
 	end;
 }
 
-bat_b01,1,10,3	script	Release all#b01	81,{
+bat_b01,1,10,3	script	Release all#b01	4_DOG01,{
 	set .@i, callfunc("F_GM_NPC",1854,0);
 	if (.@i == -1) {
 		mes "Cancelled.";

@@ -9,7 +9,7 @@
 //= with Jewel Case as a reward.
 //============================================================
 
-lighthalzen,108,229,2	script	La Fenn	766,{
+lighthalzen,108,229,2	script	La Fenn	4_M_JPNOJI,{
 	mes "[La Fenn]";
 	if(BaseLevel<99) {
 		if(Q_99LVL) {

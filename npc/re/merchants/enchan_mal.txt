@@ -13,7 +13,7 @@
 //= 1.0a Added 'delequip' command. [Euphy]
 //============================================================
 
-malangdo,213,167,4	script	Mayomayo#mal	555,{
+malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of objects. Let's try to continue after reducing those objects.";

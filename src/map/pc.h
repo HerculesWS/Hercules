@@ -449,7 +449,6 @@ struct map_session_data {
 	const char* debug_func;
 
 	unsigned int bg_id;
-	unsigned short user_font;
 
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]

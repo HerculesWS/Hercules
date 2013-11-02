@@ -79,12 +79,12 @@ function	script	Promotional_Staff	{
 	}
 }
 
-prontera,163,53,3	script	Promotional Staff#prt	100,{
+prontera,163,53,3	script	Promotional Staff#prt	4W_SAILOR,{
 	callfunc "Promotional_Staff";
 	end;
 }
 
-prt_castle,121,51,3	script	Alliance Manager#prt	752,{
+prt_castle,121,51,3	script	Alliance Manager#prt	4_M_CRU_OLD,{
 	if (ep13_ryu == 13) {
 		mes "[Alliance Manager]";
 		mes "If we'd had the initiative over Schwartzvald, we could take advantage over them! But we lost the opportunity.";
@@ -170,7 +170,7 @@ prt_castle,121,51,3	script	Alliance Manager#prt	752,{
 	close;
 }
 
-prt_castle,117,51,5	script	Member of Alliance#prt	754,{
+prt_castle,117,51,5	script	Member of Alliance#prt	4_M_SAGE_A,{
 	if ((ep13_ryu == 12) || (ep13_ryu == 13)) {
 		mes "[Member of Alliance]";
 		mes "If we have absolute power, we wouldn't have to get along with Schwartzvald and Arunafeltz.";
@@ -192,7 +192,7 @@ prt_castle,117,51,5	script	Member of Alliance#prt	754,{
 	close;
 }
 
-prt_castle,83,67,5	script	Recruiter for the Brave	109,{
+prt_castle,83,67,5	script	Recruiter for the Brave	4_M_MANAGER,{
 	if (ep13_ryu == 12) {
 		mes "[Recruiter]";
 		mes "Why have you come again?";
@@ -350,7 +350,7 @@ prt_castle,83,67,5	script	Recruiter for the Brave	109,{
 	}
 }
 
-aldebaran,127,138,3	script	Promotional Staff#alde	100,{
+aldebaran,127,138,3	script	Promotional Staff#alde	4W_SAILOR,{
 	if (ep13_ryu > 3) {
 		mes "[Promotional Staff]";
 		mes "Did you try out for the test, or are you already enjoying your adventures?";
@@ -450,7 +450,7 @@ aldebaran,127,138,3	script	Promotional Staff#alde	100,{
 	end;
 }
 
-geffen,90,67,3	script	Promotional Staff#gef	100,{
+geffen,90,67,3	script	Promotional Staff#gef	4W_SAILOR,{
 	if (ep13_ryu > 6) {
 		mes "[Promotional Staff]";
 		mes "Did you take the test?";
@@ -699,7 +699,7 @@ geffen,90,67,3	script	Promotional Staff#gef	100,{
 	end;
 }
 
-lighthalzen,220,292,3	script	Guide#ep13_1	899,{
+lighthalzen,220,292,3	script	Guide#ep13_1	4_M_HUMAN_02,{
 	if (ep13_ryu > 8) {
 		mes "[Guide]";
 		mes "Welcome! You've arrived at Lighthalzen, which is the base of three kingdoms.";
@@ -716,7 +716,7 @@ lighthalzen,220,292,3	script	Guide#ep13_1	899,{
 	close;
 }
 
-lhz_in01,136,260,5	script	Munkenro#1	967,{
+lhz_in01,136,260,5	script	Munkenro#1	4_M_RUSMAN1,{
 	if (ep13_ryu == 20) {
 		mes "-At this spot, it's possible to overhear something. Listen carefully through the wall...-";
 		next;
@@ -787,7 +787,7 @@ lhz_in01,136,260,5	script	Munkenro#1	967,{
 	close;
 }
 
-lhz_in01,132,259,5	script	Sikaiz#1	868,{
+lhz_in01,132,259,5	script	Sikaiz#1	4_M_LGTGUARD,{
 	if ((ep13_ryu == 18) || (ep13_ryu == 19)) {
 		mes "[Sikaiz]";
 		mes "Please come to me ASAP.";
@@ -1128,35 +1128,35 @@ function	script	Guard_13_1	{
 	end;
 }
 
-lhz_in01,115,250,3	script	Guard#ep13_1-1	899,2,2,{
+lhz_in01,115,250,3	script	Guard#ep13_1-1	4_M_HUMAN_02,2,2,{
 	callfunc "Guard_13_1",0,108,252;
 OnTouch:
 	callfunc "Guard_13_1",1,108,252;
 }
-lhz_in01,115,252,3	duplicate(Guard#ep13_1-1)	Guard#ep13_1-2	899,2,2
+lhz_in01,115,252,3	duplicate(Guard#ep13_1-1)	Guard#ep13_1-2	4_M_HUMAN_02,2,2
 
-lhz_in01,147,252,7	script	Guard#ep13_1-3	899,2,2,{
+lhz_in01,147,252,7	script	Guard#ep13_1-3	4_M_HUMAN_02,2,2,{
 	callfunc "Guard_13_1",0,152,252;
 OnTouch:
 	callfunc "Guard_13_1",1,152,252;
 }
-lhz_in01,147,250,7	duplicate(Guard#ep13_1-3)	Guard#ep13_1-4	899,2,2
+lhz_in01,147,250,7	duplicate(Guard#ep13_1-3)	Guard#ep13_1-4	4_M_HUMAN_02,2,2
 
-lhz_in01,124,234,5	script	Guard#ep13_1-5	899,2,2,{
+lhz_in01,124,234,5	script	Guard#ep13_1-5	4_M_HUMAN_02,2,2,{
 	callfunc "Guard_13_1",0,123,229;
 OnTouch:
 	callfunc "Guard_13_1",1,123,229;
 }
-lhz_in01,121,234,5	duplicate(Guard#ep13_1-5)	Guard#ep13_1-6	899,2,2
+lhz_in01,121,234,5	duplicate(Guard#ep13_1-5)	Guard#ep13_1-6	4_M_HUMAN_02,2,2
 
-lhz_in01,137,234,5	script	Guard#ep13_1-7	899,2,2,{
+lhz_in01,137,234,5	script	Guard#ep13_1-7	4_M_HUMAN_02,2,2,{
 	callfunc "Guard_13_1",0,139,228;
 OnTouch:
 	callfunc "Guard_13_1",1,139,228;
 }
-lhz_in01,140,234,5	duplicate(Guard#ep13_1-7)	Guard#ep13_1-8	899,2,2
+lhz_in01,140,234,5	duplicate(Guard#ep13_1-7)	Guard#ep13_1-8	4_M_HUMAN_02,2,2
 
-lhz_in01,130,232,5	script	Guard#ep13_1-9	899,{
+lhz_in01,130,232,5	script	Guard#ep13_1-9	4_M_HUMAN_02,{
 	if (ep13_ryu > 19) {
 		mes "[Guard]";
 		mes "You're not allowed to enter.";
@@ -1206,7 +1206,7 @@ lhz_in01,130,232,5	script	Guard#ep13_1-9	899,{
 	}
 }
 
-lhz_in01,128,249,1	script	Member of Alliance#1	904,{
+lhz_in01,128,249,1	script	Member of Alliance#1	4_M_KHMAN,{
 	if (ep13_ryu > 19) {
 		mes "-Munkenro and Sakaiz don't seem to be getting along very well anymore.-";
 		close;
@@ -1217,7 +1217,7 @@ lhz_in01,128,249,1	script	Member of Alliance#1	904,{
 	close;
 }
 
-lhz_in01,136,245,1	script	Member of Alliance#2	869,{
+lhz_in01,136,245,1	script	Member of Alliance#2	4_M_LGTMAN,{
 	if (ep13_ryu > 19) {
 		mes "-You should probably head over to the dimensional rift next to Morroc and find the Guard there-";
 		close;
@@ -1234,7 +1234,7 @@ lhz_in01,136,245,1	script	Member of Alliance#2	869,{
 	close;
 }
 
-lhz_in01,140,245,1	script	Member of Alliance#3	85,{
+lhz_in01,140,245,1	script	Member of Alliance#3	4_M_03,{
 	if (ep13_ryu > 19) {
 		mes "-You're still here? You're a member of the alliance now so you should head to the dimensional rift next to Morroc and find the Guard there-";
 		close;
@@ -1251,7 +1251,7 @@ lhz_in01,140,245,1	script	Member of Alliance#3	85,{
 	close;
 }
 
-lhz_in01,136,249,1	script	Member of Alliance#4	865,{
+lhz_in01,136,249,1	script	Member of Alliance#4	4_LGTSCIENCE,{
 	if (ep13_ryu > 19) {
 		mes "-I'm sure they'll settle their little dispute somehow. You should be heading to the dimensional rift next to Morroc and find the Guard there-";
 		close;
@@ -1271,7 +1271,7 @@ lhz_in01,136,249,1	script	Member of Alliance#4	865,{
 	close;
 }
 
-lhz_in01,124,245,1	script	Member of Alliance#5	932,{
+lhz_in01,124,245,1	script	Member of Alliance#5	4_M_RACHOLD1,{
 	if (ep13_ryu > 19) {
 		mes "-Maybe Munk is a better leader instead of Sakaiz. Anyways you should be heading to the dimensional rift next to Morroc and find the Guard there-";
 		close;
@@ -1288,7 +1288,7 @@ lhz_in01,124,245,1	script	Member of Alliance#5	932,{
 	close;
 }
 
-lhz_in01,136,241,3	script	Member of Alliance#6	849,{
+lhz_in01,136,241,3	script	Member of Alliance#6	4_M_DIEMAN,{
 	if (ep13_ryu > 19) {
 		mes "-I'm so bored!!! You should be heading to the dimensional rift next to Morroc and find the Guard there. It's probably less boring there than it is here-";
 		close;
@@ -1304,7 +1304,7 @@ lhz_in01,136,241,3	script	Member of Alliance#6	849,{
 	close;
 }
 
-lhz_in01,126,249,1	script	Member of Alliance#7	930,{
+lhz_in01,126,249,1	script	Member of Alliance#7	4_M_RACHMAN2,{
 	if (ep13_ryu > 19) {
 		mes "-We haven't even started and we're already bickering. Just ignore the politics and head to the dimensional rift next to Morroc and find the Guard there-";
 		close;
@@ -1315,7 +1315,7 @@ lhz_in01,126,249,1	script	Member of Alliance#7	930,{
 	close;
 }
 
-lhz_in01,122,245,1	script	Member of Alliance#8	882,{
+lhz_in01,122,245,1	script	Member of Alliance#8	4_F_SITDOWN,{
 	if (ep13_ryu > 19) {
 		mes "-You shouldn't stay around here and listen to all the complaining. You should be heading to the dimensional rift next to Morroc and find the Guard there-";
 		close;
@@ -1331,7 +1331,7 @@ lhz_in01,122,245,1	script	Member of Alliance#8	882,{
 	close;
 }
 
-ra_temple,119,113,3	script	Alliance Manager#ra	935,{
+ra_temple,119,113,3	script	Alliance Manager#ra	4_M_TRAINEE,{
 	if (ep13_ryu == 16) {
 		mes "[Manager]";
 		mes "With blessings from the Goddess Freya! We three kingdoms will know success! It's all we want. ...Khkhkhkh...";
@@ -1371,7 +1371,7 @@ ra_temple,119,113,3	script	Alliance Manager#ra	935,{
 	close;
 }
 
-lhz_in01,32,22,3	script	Officer A	109,{
+lhz_in01,32,22,3	script	Officer A	4_M_MANAGER,{
 	if (ep13_ryu == 20) {
 		mes "[Officer]";
 		mes "Why don't you go back there?";
@@ -1480,7 +1480,7 @@ lhz_in01,32,22,3	script	Officer A	109,{
 	close;
 }
 
-lhz_in01,30,24,5	script	Officer B	109,{
+lhz_in01,30,24,5	script	Officer B	4_M_MANAGER,{
 	if (ep13_ryu == 20) {
 		mes "[Officer]";
 		mes "Why don't you go back there?";
@@ -1588,7 +1588,7 @@ lhz_in01,30,24,5	script	Officer B	109,{
 	close;
 }
 
-moc_fild20,349,179,3	script	Rift Guard#1	707,{
+moc_fild20,349,179,3	script	Rift Guard#1	4_M_MOC_SOLDIER,{
 	if (ep13_ryu > 19) {
 		mes "[Guard]";
 		mes "Ah, you are a member of the alliance that discovered the dimensional rift? Welcome. Everything is prepared. Just enter and find the camp when you pass through the rift.";
@@ -1619,7 +1619,7 @@ moc_fild20,349,179,3	script	Rift Guard#1	707,{
 	close;
 }
 
-moc_fild22b,37,196,5	script	Rift Guard#2	707,{
+moc_fild22b,37,196,5	script	Rift Guard#2	4_M_MOC_SOLDIER,{
 	mes "[Guard]";
 	mes "Are you the new adventurer?";
 	mes "If you're going to the other side of the rift, the head of the alliance will guide you there.";
@@ -1645,7 +1645,7 @@ moc_fild22b,37,196,5	script	Rift Guard#2	707,{
 	}
 }
 
-moc_fild22b,330,154,3	script	Rift Guard#3	707,{
+moc_fild22b,330,154,3	script	Rift Guard#3	4_M_MOC_SOLDIER,{
 	mes "[Guard]";
 	mes "Are you new here?";
 	mes "You look like you need to find the head of the alliance. You can find him near the center of the dimensional rift.";
@@ -1657,7 +1657,7 @@ moc_fild22b,330,154,3	script	Rift Guard#3	707,{
 	close;
 }
 
-moc_fild22b,230,197,5	script	Munkenro#2	967,{
+moc_fild22b,230,197,5	script	Munkenro#2	4_M_RUSMAN1,{
 	if (ep13_ryu == 100) {
 		mes "[Munkenro]";
 		mes "Are you ready to discover Ash-Vacuum?";
@@ -1833,7 +1833,7 @@ OnTimer900000:
 	end;
 }
 
-mid_camp,213,286,3	script	Rift Guard#4	707,{
+mid_camp,213,286,3	script	Rift Guard#4	4_M_MOC_SOLDIER,{
 	mes "[Guard]";
 	mes "Are you the new adventurer?";
 	mes "If you're going to the other side of the rift, the head of the alliance will guide you there.";
@@ -1859,7 +1859,7 @@ mid_camp,213,286,3	script	Rift Guard#4	707,{
 	}
 }
 
-moc_ruins,137,89,5	script	Time-Space Gap Guard	707,{
+moc_ruins,137,89,5	script	Time-Space Gap Guard	4_M_MOC_SOLDIER,{
 	if (ep13_ryu == 100) {
 		mes "[Guard]";
 		mes "- Trembling in fear. -";
@@ -1920,7 +1920,7 @@ moc_ruins,137,89,5	script	Time-Space Gap Guard	707,{
 	close;
 }
 
-moc_fild22b,370,370,3	script	Allied Manager#gm	100,{
+moc_fild22b,370,370,3	script	Allied Manager#gm	4W_SAILOR,{
 	callfunc "F_GM_NPC";
 	mes "[Manager]";
 	mes "Please enter the password.";
@@ -1959,7 +1959,7 @@ moc_fild22b,370,370,3	script	Allied Manager#gm	100,{
 
 // New Surroundings :: ep13_newbs
 //============================================================
-mid_camp,222,283,4	script	Marian#ep13bs	727,{
+mid_camp,222,283,4	script	Marian#ep13bs	4_F_JOB_HUNTER,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "[Marian]";
 		mes "You have too many items~";
@@ -2110,7 +2110,7 @@ mid_camp,222,283,4	script	Marian#ep13bs	727,{
 	}
 }
 
-mid_camp,261,284,4	script	Instructor#ep13bs	405,{
+mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 	if (checkweight(1201,1) == 0) {
 		mes "[Instructor Lugen]";
 		mes "You are carrying too much weight.";
@@ -2709,7 +2709,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	405,{
 	}
 }
 
-mid_camp,123,290,4	script	Otto#ep13bs	967,{
+mid_camp,123,290,4	script	Otto#ep13bs	4_M_RUSMAN1,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -2821,7 +2821,7 @@ mid_camp,123,290,4	script	Otto#ep13bs	967,{
 	}
 }
 
-mid_campin,106,122,4	script	Receptionist Brink#ep13b	89,{
+mid_campin,106,122,4	script	Receptionist Brink#ep13b	4_M_ORIENT02,{
 	if (ep13_newbs < 3) {
 		mes "[Brink]";
 		mes "Hmm... Hey...";
@@ -2917,7 +2917,7 @@ mid_campin,106,122,4	script	Receptionist Brink#ep13b	89,{
 	}
 }
 
-mid_camp,264,263,4	script	Diego#ep13bs	931,{
+mid_camp,264,263,4	script	Diego#ep13bs	4_M_RACHMAN1,{
 	if (ep13_newbs < 5) {
 		mes "[Diego]";
 		mes "I'm busy right now!";
@@ -3088,7 +3088,7 @@ mid_camp,264,263,4	script	Diego#ep13bs	931,{
 	}
 }
 
-mid_campin,291,128,1	script	#ep13bs	111,1,1,{
+mid_campin,291,128,1	script	#ep13bs	HIDDEN_NPC,1,1,{
 	end;
 
 OnTouch:
@@ -3121,7 +3121,7 @@ OnTouch:
 	}
 }
 
-mid_campin,295,128,4	script	Lucas#ep13bs	884,{
+mid_campin,295,128,4	script	Lucas#ep13bs	4_M_ACROSS,{
 	if (ep13_newbs < 11) {
 		mes "[Lucas]";
 		mes "......";
@@ -3180,7 +3180,7 @@ mid_campin,295,128,4	script	Lucas#ep13bs	884,{
 	}
 }
 
-mid_campin,292,120,4	script	Davi#ep13bs	849,{
+mid_campin,292,120,4	script	Davi#ep13bs	4_M_DIEMAN,{
 	mes "[Davi]";
 	mes "Ahhh, my body...";
 	mes "I walked too much...";
@@ -3189,7 +3189,7 @@ mid_campin,292,120,4	script	Davi#ep13bs	849,{
 	close;
 }
 
-mid_camp,160,298,4	script	Jan#ep13bs	865,{
+mid_camp,160,298,4	script	Jan#ep13bs	4_LGTSCIENCE,{
 	if (ep13_newbs == 15) {
 		if (countitem(6045) > 0) {
 			mes "[Jan]";
@@ -3254,7 +3254,7 @@ mid_camp,160,298,4	script	Jan#ep13bs	865,{
 	}
 }
 
-mid_camp,30,168,4	script	Gerard#ep13bs	939,{
+mid_camp,30,168,4	script	Gerard#ep13bs	4_DST_SOLDIER,{
 	if (ep13_newbs == 17) {
 		if (countitem(6045) > 0) {
 			mes "["+ strcharinfo(0) +"]";
@@ -3330,7 +3330,7 @@ mid_camp,30,168,4	script	Gerard#ep13bs	939,{
 	}
 }
 
-man_fild01,80,248,4	script	Alberto#ep13bs	934,{
+man_fild01,80,248,4	script	Alberto#ep13bs	4_M_RASWORD,{
 	if (ep13_newbs == 19) {
 		if (countitem(6045) > 0) {
 			mes "[Alberto]";
@@ -3405,7 +3405,7 @@ man_fild01,80,248,4	script	Alberto#ep13bs	934,{
 	}
 }
 
-mid_camp,159,282,4	script	Cooking Soldier#ep13bs	886,{
+mid_camp,159,282,4	script	Cooking Soldier#ep13bs	4_COOK,{
 	mes "[Alix]";
 	mes "Huu, I made this and";
 	mes "this is really great.";
@@ -3420,7 +3420,7 @@ mid_camp,159,282,4	script	Cooking Soldier#ep13bs	886,{
 	close;
 }
 
-mid_camp,166,248,4	script	Sorcerer#ep13bs	937,{
+mid_camp,166,248,4	script	Sorcerer#ep13bs	4_M_ARUNA_NFM1,{
 	mes "[Biolay]";
 	mes "Sob...";
 	mes "Where is she?";
@@ -3437,7 +3437,7 @@ mid_camp,166,248,4	script	Sorcerer#ep13bs	937,{
 	close;
 }
 
-spl_fild02,348,76,0	script	Tree#ep13bs1::ep13tree	111,{
+spl_fild02,348,76,0	script	Tree#ep13bs1::ep13tree	HIDDEN_NPC,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -3478,12 +3478,12 @@ spl_fild02,348,76,0	script	Tree#ep13bs1::ep13tree	111,{
 	end;
 }
 
-spl_fild02,232,145,0	duplicate(ep13tree)	Tree#ep13bs2	111
-spl_fild02,380,197,0	duplicate(ep13tree)	Tree#ep13bs3	111
-spl_fild02,304,151,0	duplicate(ep13tree)	Tree#ep13bs4	111
-spl_fild02,183,235,0	duplicate(ep13tree)	Tree#ep13bs5	111
+spl_fild02,232,145,0	duplicate(ep13tree)	Tree#ep13bs2	HIDDEN_NPC
+spl_fild02,380,197,0	duplicate(ep13tree)	Tree#ep13bs3	HIDDEN_NPC
+spl_fild02,304,151,0	duplicate(ep13tree)	Tree#ep13bs4	HIDDEN_NPC
+spl_fild02,183,235,0	duplicate(ep13tree)	Tree#ep13bs5	HIDDEN_NPC
 
-mid_camp,267,263,0	script	Post#ep13bs1	111,{
+mid_camp,267,263,0	script	Post#ep13bs1	HIDDEN_NPC,{
 	if (ep13_newbs < 6) {
 		mes "- The posts of the -";
 		mes "- barracks are broken. -";
@@ -3567,7 +3567,7 @@ mid_camp,267,263,0	script	Post#ep13bs1	111,{
 	}
 }
 
-mid_camp,267,258,0	script	Post#ep13bs2	111,{
+mid_camp,267,258,0	script	Post#ep13bs2	HIDDEN_NPC,{
 	if (ep13_newbs < 6) {
 		mes "- The posts of the -";
 		mes "- barracks are broken. -";
@@ -3646,7 +3646,7 @@ mid_camp,267,258,0	script	Post#ep13bs2	111,{
 
 // Attitude to the New :: ep13_ecology
 //============================================================
-mid_camp,188,254,3	script	Monster Scholar#ep13	883,{
+mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 	if (ep13_ryu < 100 && ep13_start < 100) {
 		mes "[Monster Scholar]";
 		mes "Who... Who are you?";
@@ -4327,7 +4327,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	883,{
 	}
 }
 
-mid_camp,240,270,3	script	Botanist#ep13	750,{
+mid_camp,240,270,3	script	Botanist#ep13	4_M_ALCHE_C,{
 	if (ep13_ryu < 100 && ep13_start < 100) {
 		mes "[Botanist]";
 		mes "This new land!";
@@ -4608,7 +4608,7 @@ mid_camp,240,270,3	script	Botanist#ep13	750,{
 	}
 }
 
-mid_camp,336,171,1	script	Camp Guard#man1	852,{
+mid_camp,336,171,1	script	Camp Guard#man1	4_M_EIN_SOLDIER,{
 	mes "[Camp Guard]";
 	mes "Stop!";
 	mes "You're about to enter an area that has not been fully explored.";
@@ -4642,8 +4642,8 @@ mid_camp,336,171,1	script	Camp Guard#man1	852,{
 		close;
 	}
 }
-mid_camp,13,143,5	duplicate(Camp Guard#man1)	Camp Guard#man2	852
-mid_camp,9,215,5	duplicate(Camp Guard#man1)	Camp Guard#man3	852
+mid_camp,13,143,5	duplicate(Camp Guard#man1)	Camp Guard#man2	4_M_EIN_SOLDIER
+mid_camp,9,215,5	duplicate(Camp Guard#man1)	Camp Guard#man3	4_M_EIN_SOLDIER
 
 mid_camp,49,154,0	script	#env_clear	-1,3,3,{
 OnTouch:
@@ -4673,7 +4673,7 @@ OnTouch:
 	end;
 }
 
-mid_camp,45,148,7	script	Botanist#ep13_1	750,{
+mid_camp,45,148,7	script	Botanist#ep13_1	4_M_ALCHE_C,{
 	if (ep13_animal == 8) {
 		mes "[Botanist]";
 		mes "Please try to plant the rotting stem in the ground.";
@@ -4713,7 +4713,7 @@ OnInit:
 	end;
 }
 
-mid_camp,52,148,1	script	Dirt#ep13	844,{
+mid_camp,52,148,1	script	Dirt#ep13	CLEAR_NPC,{
 	if (ep13_animal == 8) {
 		mes "- You dug a hole into the ground, planted the rotting stem, and then watered it. -";
 		next;
@@ -4747,7 +4747,7 @@ OnTouch:
 	end;
 }
 
-man_fild01,92,230,3	script	Frozen Tree#evt_lumis	111,1,1,{
+man_fild01,92,230,3	script	Frozen Tree#evt_lumis	HIDDEN_NPC,1,1,{
 	if (ep13_animal == 11) {
 		mes "["+strcharinfo(0)+"]";
 		mes "Knock, knock. Are you here?";
@@ -4841,7 +4841,7 @@ man_fild01,92,230,3	script	Frozen Tree#evt_lumis	111,1,1,{
 
 // Finding a Fairy & Finding a Giant Tree
 //============================================================
-spl_fild02,34,223,5	script	Small Fairy#spl	442,{
+spl_fild02,34,223,5	script	Small Fairy#spl	4_M_FAIRYKID,{
 	if (BaseLevel > 69) {
 		if (checkquest(2158) == -1) {
 			mes "You find a little creature flying in the bushes.";
@@ -4879,7 +4879,7 @@ spl_fild02,34,223,5	script	Small Fairy#spl	442,{
 	}
 }
 
-man_fild03,236,105,3	script	Tree Giant#man	454,{
+man_fild03,236,105,3	script	Tree Giant#man	4_MAN_PIOM,{
 	if (BaseLevel > 69) {
 		if (checkquest(2159) == -1) {
 			mes "You have found something moving between dry branches.";
@@ -4916,7 +4916,7 @@ man_fild03,236,105,3	script	Tree Giant#man	454,{
 	}
 }
 
-mid_camp,212,237,5	script	Camp Guard Captain#man1	852,{
+mid_camp,212,237,5	script	Camp Guard Captain#man1	4_M_EIN_SOLDIER,{
 	mes "[Captain]";
 	mes "Good day. I'm here to protect the";
 	mes "peace and safety of explorers";
@@ -4977,7 +4977,7 @@ mid_camp,212,237,5	script	Camp Guard Captain#man1	852,{
 
 // The Tripartite Union's Feud :: ep13_1_rhea
 //============================================================
-mid_campin,376,120,0	script	Research Official#ep131	754,3,3,{
+mid_campin,376,120,0	script	Research Official#ep131	4_M_SAGE_A,3,3,{
 OnTouch:
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
 		mes "[United Research Official]";
@@ -5481,7 +5481,7 @@ OnTimer300000:
 	end;
 }
 
-mid_camp,165,245,0	script	Ryosen#ep131_rhea01	748,{
+mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
 		mes "[Ryosen]";
 		mes "How come you've got so much to carry?";
@@ -6027,7 +6027,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	748,{
 	}
 }
 
-mid_camp,247,255,1	script	Hue#ep131_rhea02	868,{
+mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
 		mes "[Hue]";
 		mes "How come you've got so much to carry?";
@@ -6420,7 +6420,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	868,{
 	}
 }
 
-mid_camp,222,218,3	script	Hansenne#ep131_rhea03	931,{
+mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
 		mes "[Hansenne]";
 		mes "How come you've got so much to carry?";
@@ -6889,7 +6889,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	931,{
 	}
 }
 
-mid_campin,379,123,5	script	Ryosen#ep131_rhea05	748,{
+mid_campin,379,123,5	script	Ryosen#ep131_rhea05	4_M_ALCHE_A,{
 	end;
 OnEnable:
 	initnpctimer;
@@ -6907,7 +6907,7 @@ OnTimer300000:
 	end;
 }
 
-mid_campin,372,123,5	script	Hue#ep131_rhea06	868,{
+mid_campin,372,123,5	script	Hue#ep131_rhea06	4_M_LGTGUARD,{
 	end;
 OnEnable:
 	initnpctimer;
@@ -6925,7 +6925,7 @@ OnTimer300000:
 	end;
 }
 
-mid_campin,375,129,5	script	Hansenne#ep131_rhea07	931,{
+mid_campin,375,129,5	script	Hansenne#ep131_rhea07	4_M_RACHMAN1,{
 	end;
 OnEnable:
 	initnpctimer;
@@ -6945,7 +6945,7 @@ OnTimer300000:
 
 // Part Time Work :: ep13_alba
 //============================================================
-mid_camp,1,1,0	script	#timer_alba01	844,{
+mid_camp,1,1,0	script	#timer_alba01	CLEAR_NPC,{
 	callfunc "F_GM_NPC";
 	mes "Please enter the password";
 	next;
@@ -7017,7 +7017,7 @@ OnTimer7800000:
 	end;
 }
 
-mid_camp,143,306,5	script	Breeder Taab#ep13_alba	946,{
+mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 	if (ep13_ryu > 99 || ep13_start > 99) {
 		if (ep13_alba < 1) {
 			mes "[Taab]";
@@ -7503,7 +7503,7 @@ OnTouch:
 	close;
 }
 
-mid_camp,1,2,0	script	#monster_master	844,{
+mid_camp,1,2,0	script	#monster_master	CLEAR_NPC,{
 OnEnable:
 	if (rand(1,3) > 1) initnpctimer;
 	end;
@@ -7553,7 +7553,7 @@ OnMyMobDead:
 
 // Cat Hand Trading Post :: cat_yong
 //============================================================
-mid_camp,62,125,4	script	Cat Hand Agent	421,{
+mid_camp,62,125,4	script	Cat Hand Agent	4_M_BOSSCAT,{
 function Catwarp;
 	if (ep13_yong1 < 1) {
 		mes "[Cat Hand Agent]";
@@ -7961,7 +7961,7 @@ function Catwarp {
 }
 }
 
-mid_camp,72,94,4	script	Fluffy Gyaruk	421,{
+mid_camp,72,94,4	script	Fluffy Gyaruk	4_M_BOSSCAT,{
 	if (ep13_yong1 < 1) {
 		mes "[Fluffy Gyaruk]";
 		mes "*Sniff Sniff* Can't you smell fish";
@@ -8083,7 +8083,7 @@ mid_camp,72,94,4	script	Fluffy Gyaruk	421,{
 	}
 }
 
-mid_camp,69,144,0	script	Ferocious Gorurug	421,{
+mid_camp,69,144,0	script	Ferocious Gorurug	4_M_BOSSCAT,{
 	if (checkquest(12060,PLAYTIME) == -1) {
 		if (ep13_yong1 < 4) {
 			mes "[Ferocious Gorurug]";
@@ -8251,7 +8251,7 @@ mid_camp,69,144,0	script	Ferocious Gorurug	421,{
 	}
 }
 
-spl_fild02,314,165,0	script	School of Fish#1::Fishinghole	844,{
+spl_fild02,314,165,0	script	School of Fish#1::Fishinghole	CLEAR_NPC,{
 	if ((checkquest(12060,PLAYTIME) == -1) && (countitem(6039) < 20)) {
 		specialeffect2 EF_BUBBLE;
 		specialeffect2 EF_INVENOM;
@@ -8313,11 +8313,11 @@ spl_fild02,314,165,0	script	School of Fish#1::Fishinghole	844,{
 	}
 }
 
-spl_fild02,321,169,0	duplicate(Fishinghole)	School of Fish#2	844
-spl_fild02,326,171,0	duplicate(Fishinghole)	School of Fish#3	844
-mid_camp,75,135,0	duplicate(Fishinghole)	School of Fish#4	844
+spl_fild02,321,169,0	duplicate(Fishinghole)	School of Fish#2	CLEAR_NPC
+spl_fild02,326,171,0	duplicate(Fishinghole)	School of Fish#3	CLEAR_NPC
+mid_camp,75,135,0	duplicate(Fishinghole)	School of Fish#4	CLEAR_NPC
 
-mid_camp,66,122,55	script	Henry Clifford	712,{
+mid_camp,66,122,55	script	Henry Clifford	4_M_05,{
 	if (countitem(6049) > 0) {
 		mes "[Henry Clifford]";
 		mes "Congratulations, you've caught a precious Marlin.";
@@ -8367,7 +8367,7 @@ mid_camp,66,122,55	script	Henry Clifford	712,{
 	}
 }
 
-mid_camp,88,100,55	script	Cat Hand Mining Agent	876,{
+mid_camp,88,100,55	script	Cat Hand Mining Agent	4_CAT,{
 	if (checkquest(12062,PLAYTIME) == -1) {
 		if ((countitem(6048) > 2) && (ep13_yong1 > 9)) {
 			mes "[Cat Hand Mining Agent]";
@@ -8445,26 +8445,26 @@ OnTimer120000:
 	stopnpctimer;
 	end;
 }
-man_fild01,180,170,0	duplicate(manukrock)	Mysterious Rock#1	844
-man_fild01,147,157,0	duplicate(manukrock)	Mysterious Rock#2	844
-man_fild01,114,174,0	duplicate(manukrock)	Mysterious Rock#3	844
-man_fild01,92,155,0	duplicate(manukrock)	Mysterious Rock#4	844
-man_fild01,170,318,0	duplicate(manukrock)	Mysterious Rock#5	844
-man_fild01,146,269,0	duplicate(manukrock)	Mysterious Rock#6	844
-man_fild01,118,238,0	duplicate(manukrock)	Mysterious Rock#7	844
-man_fild01,70,246,0	duplicate(manukrock)	Mysterious Rock#8	844
-man_fild01,64,197,0	duplicate(manukrock)	Mysterious Rock#9	844
-man_fild03,82,134,0	duplicate(manukrock)	Mysterious Rock#10	844
-man_fild03,67,160,0	duplicate(manukrock)	Mysterious Rock#11	844
-man_fild03,66,171,0	duplicate(manukrock)	Mysterious Rock#12	844
-man_fild03,81,198,0	duplicate(manukrock)	Mysterious Rock#13	844
-man_fild03,82,216,0	duplicate(manukrock)	Mysterious Rock#14	844
-man_fild03,98,226,0	duplicate(manukrock)	Mysterious Rock#15	844
-man_fild03,104,248,0	duplicate(manukrock)	Mysterious Rock#16	844
-man_fild03,91,272,0	duplicate(manukrock)	Mysterious Rock#17	844
-man_fild03,95,301,0	duplicate(manukrock)	Mysterious Rock#18	844
+man_fild01,180,170,0	duplicate(manukrock)	Mysterious Rock#1	CLEAR_NPC
+man_fild01,147,157,0	duplicate(manukrock)	Mysterious Rock#2	CLEAR_NPC
+man_fild01,114,174,0	duplicate(manukrock)	Mysterious Rock#3	CLEAR_NPC
+man_fild01,92,155,0	duplicate(manukrock)	Mysterious Rock#4	CLEAR_NPC
+man_fild01,170,318,0	duplicate(manukrock)	Mysterious Rock#5	CLEAR_NPC
+man_fild01,146,269,0	duplicate(manukrock)	Mysterious Rock#6	CLEAR_NPC
+man_fild01,118,238,0	duplicate(manukrock)	Mysterious Rock#7	CLEAR_NPC
+man_fild01,70,246,0	duplicate(manukrock)	Mysterious Rock#8	CLEAR_NPC
+man_fild01,64,197,0	duplicate(manukrock)	Mysterious Rock#9	CLEAR_NPC
+man_fild03,82,134,0	duplicate(manukrock)	Mysterious Rock#10	CLEAR_NPC
+man_fild03,67,160,0	duplicate(manukrock)	Mysterious Rock#11	CLEAR_NPC
+man_fild03,66,171,0	duplicate(manukrock)	Mysterious Rock#12	CLEAR_NPC
+man_fild03,81,198,0	duplicate(manukrock)	Mysterious Rock#13	CLEAR_NPC
+man_fild03,82,216,0	duplicate(manukrock)	Mysterious Rock#14	CLEAR_NPC
+man_fild03,98,226,0	duplicate(manukrock)	Mysterious Rock#15	CLEAR_NPC
+man_fild03,104,248,0	duplicate(manukrock)	Mysterious Rock#16	CLEAR_NPC
+man_fild03,91,272,0	duplicate(manukrock)	Mysterious Rock#17	CLEAR_NPC
+man_fild03,95,301,0	duplicate(manukrock)	Mysterious Rock#18	CLEAR_NPC
 
-sec_in02,80,171,0	script	Piece of crack#sec	406,{
+sec_in02,80,171,0	script	Piece of crack#sec	2_MONEMUS,{
 	callfunc "F_GM_NPC";
 	mes "1~3000";
 	input .@input;
@@ -8481,7 +8481,7 @@ sec_in02,80,171,0	script	Piece of crack#sec	406,{
 
 // Report from the New World :: ep13_1_edq
 //============================================================
-mid_campin,90,121,5	script	Hibba Agip	459,{
+mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 	cutin "ep13_captin_edq",2;
 	set .@start,(ep13_newbs + ep13_ryu + mao_morocc2 + ep13_1_rhea + ep13_animal + ep13_start);
 	if ((ep13_1_edq == 0) && (.@start > 115)) {
@@ -9246,7 +9246,7 @@ mid_campin,90,121,5	script	Hibba Agip	459,{
 	}
 }
 
-mid_campin,94,118,3	script	Staff Officer Abidal	755,{
+mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 	if ((ep13_1_edq == 13) || (ep13_1_edq == 14)) {
 		mes "[Staff Officer Abidal]";
 		mes "Phew, I'm glad the mission is over. Thank you so much for your help.";
@@ -9767,7 +9767,7 @@ mid_campin,94,118,3	script	Staff Officer Abidal	755,{
 	}
 }
 
-mid_campin,85,118,7	script	Instructor Igrid	751,{
+mid_campin,85,118,7	script	Instructor Igrid	4_M_CRU,{
 	if ((ep13_1_edq == 13) || (ep13_1_edq == 14)) {
 		mes "[Instructor Igrid]";
 		mes "Hey, rookies. I guess you were lucky enough to complete the mission.";
@@ -9819,7 +9819,7 @@ mid_campin,85,118,7	script	Instructor Igrid	751,{
 	}
 }
 
-mid_camp,206,286,3	script	Expedition Messenger	997,{
+mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 	if ((ep13_1_edq == 3) && (countitem(11012) > 0)) {
 		mes "[Expedition Messenger]";
 		mes "Welcome, I've been waiting for you.";
@@ -10002,7 +10002,7 @@ OnInit:
 	end;
 }
 
-mid_camp,2,2,3	script	Command Timer#edq	997,4,4,{
+mid_camp,2,2,3	script	Command Timer#edq	4_M_MOCASS1,4,4,{
 OnInit:
 	disablenpc "Command Timer#edq";
 	end;
@@ -10025,7 +10025,7 @@ OnTimer3600000:
 	end;
 }
 
-mid_camp,203,286,3	script	Expedition Messenger#2	997,4,4,{
+mid_camp,203,286,3	script	Expedition Messenger#2	4_M_MOCASS1,4,4,{
 	mes "[Expedition Agent]";
 	mes "......";
 	next;
@@ -10051,7 +10051,7 @@ OnDisable:
 	end;
 }
 
-mid_camp,209,286,3	script	Expedition Messenger#3	998,4,4,{
+mid_camp,209,286,3	script	Expedition Messenger#3	4_M_MOCASS2,4,4,{
 	mes "[Expedition Agent]";
 	mes "...";
 	next;
@@ -10072,7 +10072,7 @@ OnDisable:
 	end;
 }
 
-man_fild01,315,95,3	script	Expedition Scout#1	707,{
+man_fild01,315,95,3	script	Expedition Scout#1	4_M_MOC_SOLDIER,{
 	mes "[Expedition Scout]";
 	mes "Good day. I'm from the Third Scout Party under direct command of the commander of the Midgard Expedition.";
 	next;
@@ -10144,11 +10144,11 @@ man_fild01,315,95,3	script	Expedition Scout#1	707,{
 		close;
 	}
 }
-man_fild03,202,251,3	duplicate(Expedition Scout#1)	Expedition Scout#2	707
-spl_fild02,295,368,3	duplicate(Expedition Scout#1)	Expedition Scout#3	707
-spl_fild03,172,71,3	duplicate(Expedition Scout#1)	Expedition Scout#4	707
+man_fild03,202,251,3	duplicate(Expedition Scout#1)	Expedition Scout#2	4_M_MOC_SOLDIER
+spl_fild02,295,368,3	duplicate(Expedition Scout#1)	Expedition Scout#3	4_M_MOC_SOLDIER
+spl_fild03,172,71,3	duplicate(Expedition Scout#1)	Expedition Scout#4	4_M_MOC_SOLDIER
 
-prt_castle,88,165,3	script	Laur	57,{
+prt_castle,88,165,3	script	Laur	1_M_LIBRARYMASTER,{
 	mes "[Laur]";
 	if (ep13_1_edq == 9 || ep13_1_edq == 111 || ep13_1_edq == 121 || ep13_1_edq == 113 || ep13_1_edq == 123) {
 		mes "I'm Laur, the aide of the Home Minister of the Rune-Midgarts Kingdom. Do you have any business with me?";
@@ -10205,7 +10205,7 @@ prt_castle,88,165,3	script	Laur	57,{
 	}
 }
 
-ra_temple,122,174,3	script	Nuria	918,{
+ra_temple,122,174,3	script	Nuria	4_F_RACHOLD,{
 	mes "[Nuria]";
 	if (ep13_1_edq == 9 || ep13_1_edq == 101 || ep13_1_edq == 121 || ep13_1_edq == 122 || ep13_1_edq == 103) {
 		mes "Welcome, stranger. How can I help you?";
@@ -10250,7 +10250,7 @@ ra_temple,122,174,3	script	Nuria	918,{
 	}
 }
 
-lhz_in01,110,174,5	script	Gerhart	903,{
+lhz_in01,110,174,5	script	Gerhart	4_M_KHKYEL,{
 	mes "[Gerhart]";
 	if (ep13_1_edq == 9 || ep13_1_edq == 101 || ep13_1_edq == 111 || ep13_1_edq == 102 || ep13_1_edq == 112) {
 		mes "Welcome, " + strcharinfo(0) + ". What took you so long?";
@@ -10428,7 +10428,7 @@ OnMyMobDead:
 
 // Persuing Rayan Moore :: ep13_moc2
 //============================================================
-mid_campin,68,185,3	script	Pursuit Party Leader#1	803,{
+mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 	if (checkweight(714,3) == 0) {
 		mes "- You cannot proceed with the quest when you're carrying too many items with you. -";
 		close;
@@ -10825,7 +10825,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	803,{
 	}
 }
 
-mid_camp,191,206,3	script	Manager#moc2_finder	852,{
+mid_camp,191,206,3	script	Manager#moc2_finder	4_M_EIN_SOLDIER,{
 	mes "[Manager]";
 	mes "Everything's okay so far!";
 	mes "How may I help you?";
@@ -10891,7 +10891,7 @@ mid_camp,191,206,3	script	Manager#moc2_finder	852,{
 	}
 }
 
-mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	884,{
+mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 	if (checkweight(714,1) == 0) {
 		mes "- You cannot proceed with the quest when you're carrying too many items with you. -";
 		close;
@@ -11543,7 +11543,7 @@ OnTouch:
 	}
 }
 
-mid_camp,256,272,3	script	Defaria#moc2	897,{
+mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 	if (checkweight(714,1) == 0) {
 		mes "- You cannot proceed with the quest when you're carrying too many items with you. -";
 		close;
@@ -11958,7 +11958,7 @@ mid_camp,256,272,3	script	Defaria#moc2	897,{
 	}
 }
 
-mid_camp,255,269,0	script	Wet Firewood#moc2	844,{
+mid_camp,255,269,0	script	Wet Firewood#moc2	CLEAR_NPC,{
 	if (mao_morocc2 > 102) {
 		mes "You've found some half-burnt logs of high quality.";
 		mes "It seems somebody already roasted sweet potatoes with these logs.";
@@ -11971,7 +11971,7 @@ mid_camp,255,269,0	script	Wet Firewood#moc2	844,{
 	}
 }
 
-morocc,43,108,5	script	Sharp-Looking Boy#dan_07	82,{
+morocc,43,108,5	script	Sharp-Looking Boy#dan_07	4_KID01,{
 	mes "[Jack]";
 	if (BaseClass == Job_Assassin) {
 		mes "Almost half of this town has been destroyed,";
@@ -11989,7 +11989,7 @@ morocc,43,108,5	script	Sharp-Looking Boy#dan_07	82,{
 	}
 }
 
-morocc,45,110,0	script	que_job01#01	45,2,2,{
+morocc,45,110,0	script	que_job01#01	WARPNPC,2,2,{
 OnTouch:
 	if (BaseClass == Job_Assassin) {
 		warp "que_job01",9,94;
@@ -12014,7 +12014,7 @@ que_job01,6,94,0	warp	morocc#01	2,2,morocc,45,103
 que_job01,17,48,0	warp	que_job01#02	2,2,que_job01,68,92
 que_job01,68,96,0	warp	que_job01#03	2,2,que_job01,17,53;
 
-que_job01,82,95,3	script	Bar Master#moc2_01	46,{
+que_job01,82,95,3	script	Bar Master#moc2_01	1_ETC_01,{
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -12216,7 +12216,7 @@ que_job01,82,95,3	script	Bar Master#moc2_01	46,{
 	}
 }
 
-que_job01,80,77,0	script	que_job01#04	45,2,2,{
+que_job01,80,77,0	script	que_job01#04	WARPNPC,2,2,{
 OnTouch:
 	if (BaseClass == Job_Assassin || mao_request > 0 || mao_morocc2 > 4) {
 		warp "que_job01",61,50;
@@ -12322,7 +12322,7 @@ OnTouch:
 	}
 }
 
-que_job01,81,79,5	script	Idle Knight#dan_08	733,{
+que_job01,81,79,5	script	Idle Knight#dan_08	4_M_JOB_KNIGHT1,{
 	mes "[Litheron]";
 	mes "What, haven't you seen a Knight before?";
 	mes "You think Knights don't belong here?";
@@ -12337,7 +12337,7 @@ que_job01,81,79,5	script	Idle Knight#dan_08	733,{
 
 que_job01,65,50,0	warp	que_job01#05	2,2,que_job01,84,77
 
-que_job01,49,49,5	script	Tao#dan_09	877,{
+que_job01,49,49,5	script	Tao#dan_09	4_F_YUNYANG,{
 	mes "[Tao]";
 	if (BaseClass == Job_Assassin) {
 		mes "Welcome, meow.";
@@ -12419,7 +12419,7 @@ que_job01,49,49,5	script	Tao#dan_09	877,{
 	}
 }
 
-que_job01,51,55,0	script	que_job01#room_1	45,1,1,{
+que_job01,51,55,0	script	que_job01#room_1	WARPNPC,1,1,{
 OnInit:
 OnReset:
 	set $@moc_mao_room1,0; //Global Variable
@@ -12484,7 +12484,7 @@ OnTouch:
 	}
 }
 
-que_job01,1,1,0	script	 #room1timer	844,{
+que_job01,1,1,0	script	 #room1timer	CLEAR_NPC,{
 OnEnable:
 	initnpctimer;
 	mapannounce "que_job01", "You will now enter the Master Zone, Area 1.",bc_map,"0x70DBDB";
@@ -12530,14 +12530,14 @@ OnTouch:
 	end;
 }
 
-que_job01,11,4,0	script	que_job01#room1_out	45,1,1,{
+que_job01,11,4,0	script	que_job01#room1_out	WARPNPC,1,1,{
 OnTouch:
 	warp "que_job01",52,50;
 	donpcevent " #room1timer::OnStop";
 	end;
 }
 
-que_job01,16,21,5	script	Valdes#moc_master_1	55,{
+que_job01,16,21,5	script	Valdes#moc_master_1	1_M_JOBTESTER,{
 	mes "[Valdes]";
 	if (BaseClass == Job_Assassin) {
 		mes "What is it? I have nothing to ask you to do.";
@@ -12577,7 +12577,7 @@ OnEnable:
 	end;
 }
 
-que_job01,51,44,0	script	que_job01#room_2	45,1,1,{
+que_job01,51,44,0	script	que_job01#room_2	WARPNPC,1,1,{
 	end;
 
 OnInit:
@@ -12662,7 +12662,7 @@ OnTouch:
 	}
 }
 
-que_job01,1,2,0	script	 #room2timer	844,{
+que_job01,1,2,0	script	 #room2timer	CLEAR_NPC,{
 OnEnable:
 	initnpctimer;
 	mapannounce "que_job01", "Master Zone 2 is now under surveillance.",bc_map,"0x70DBDB";
@@ -12728,21 +12728,21 @@ OnTouch:
 	end;
 }
 
-que_job01,80,27,0	script	que_job01#room2_1_out	45,1,1,{
+que_job01,80,27,0	script	que_job01#room2_1_out	WARPNPC,1,1,{
 OnTouch:
 	warp "que_job01",52,50;
 	donpcevent " #room2timer::OnStop";
 	end;
 }
 
-que_job01,144,61,0	script	que_job01#room2_2_out	45,1,1,{
+que_job01,144,61,0	script	que_job01#room2_2_out	WARPNPC,1,1,{
 OnTouch:
 	warp "que_job01",52,50;
 	donpcevent " #room2timer::OnStop";
 	end;
 }
 
-que_job01,84,17,3	script	Rin#moc_room2_1	885,{
+que_job01,84,17,3	script	Rin#moc_room2_1	4_F_ACROSS,{
 	if (checkweight(714,1) == 0) {
 		mes "- You cannot proceed with the quest when you're carrying too many items with you. -";
 		close;
@@ -13013,7 +13013,7 @@ que_job01,84,17,3	script	Rin#moc_room2_1	885,{
 	end;
 }
 
-que_job01,144,54,3	script	Rin#moc_room2_2	885,{
+que_job01,144,54,3	script	Rin#moc_room2_2	4_F_ACROSS,{
 	if (checkweight(714,1) == 0) {
 		mes "- You cannot proceed with the quest when you're carrying too many items with you. -";
 		close;
@@ -13325,7 +13325,7 @@ OnEnable:
 	end;
 }
 
-que_job01,143,50,1	script	Rayan#moc_room2_2	456,{
+que_job01,143,50,1	script	Rayan#moc_room2_2	4_M_DSTMAN,{
 	mes "- For some reason, Rayan is shivering in fear. -";
 	next;
 	cutin "moc2_rin02",2;
@@ -13347,7 +13347,7 @@ OnEnable:
 	end;
 }
 
-hu_fild04,235,103,0	script	Heap of Earth#mao2_01	844,4,4,{
+hu_fild04,235,103,0	script	Heap of Earth#mao2_01	CLEAR_NPC,4,4,{
 	if (checkweight(714,1) == 0) {
 		mes "- You cannot proceed with the quest when you're carrying too many items with you. -";
 		close;
@@ -13406,7 +13406,7 @@ OnTouch:
 	end;
 }
 
-hu_fild04,321,131,0	script	Traces#mao2_object02	844,{
+hu_fild04,321,131,0	script	Traces#mao2_object02	CLEAR_NPC,{
 	if ((mao_morocc2 == 7) || (mao_morocc2 == 8)) {
 		mes "You find many footprints on the ground.";
 		mes "Considering all the blood on the ground, a battle must have occurred here fairly recently.";
@@ -13419,7 +13419,7 @@ hu_fild04,321,131,0	script	Traces#mao2_object02	844,{
 	}
 }
 
-hu_fild04,368,180,0	script	Traces#mao2_object03	844,{
+hu_fild04,368,180,0	script	Traces#mao2_object03	CLEAR_NPC,{
 	if ((mao_morocc2 == 7) || (mao_morocc2 == 8)) {
 		mes "Somebody left a mark under this small tree.";
 		mes "The mark is weathered and faded,";
@@ -13605,7 +13605,7 @@ OnTouch:
 	end;
 }
 
-que_dan01,49,36,5	script	Corpse#moc2_dead01	457,{
+que_dan01,49,36,5	script	Corpse#moc2_dead01	4_M_DSTMANDEAD,{
 	if (checkweight(714,1) == 0) {
 		mes "- You cannot proceed with the quest when you're carrying too many items with you. -";
 		close;
@@ -13722,14 +13722,14 @@ OnEnable:
 	end;
 }
 
-que_dan01,34,34,7	duplicate(#dandelion_duplicates)	Rin#moc2_bt_rin01	885
-que_dan01,29,34,7	duplicate(#dandelion_duplicates)	Rin#moc2_bt_rin02	885
-que_dan01,36,34,3	duplicate(#dandelion_duplicates)	Rayan#moc2_bt_r01	456
-que_dan01,39,37,3	duplicate(#dandelion_duplicates)	Dandelion Member#moc2_1	456
-que_dan01,41,34,3	duplicate(#dandelion_duplicates)	Dandelion Member#moc2_2	456
-que_dan01,26,40,5	duplicate(#dandelion_duplicates)	Dandelion Member#moc2_3	456
-que_dan01,21,35,5	duplicate(#dandelion_duplicates)	Dandelion Member#moc2_4	456
-que_dan01,25,32,7	duplicate(#dandelion_duplicates)	Dandelion Member#moc2_5	456
+que_dan01,34,34,7	duplicate(#dandelion_duplicates)	Rin#moc2_bt_rin01	4_F_ACROSS
+que_dan01,29,34,7	duplicate(#dandelion_duplicates)	Rin#moc2_bt_rin02	4_F_ACROSS
+que_dan01,36,34,3	duplicate(#dandelion_duplicates)	Rayan#moc2_bt_r01	4_M_DSTMAN
+que_dan01,39,37,3	duplicate(#dandelion_duplicates)	Dandelion Member#moc2_1	4_M_DSTMAN
+que_dan01,41,34,3	duplicate(#dandelion_duplicates)	Dandelion Member#moc2_2	4_M_DSTMAN
+que_dan01,26,40,5	duplicate(#dandelion_duplicates)	Dandelion Member#moc2_3	4_M_DSTMAN
+que_dan01,21,35,5	duplicate(#dandelion_duplicates)	Dandelion Member#moc2_4	4_M_DSTMAN
+que_dan01,25,32,7	duplicate(#dandelion_duplicates)	Dandelion Member#moc2_5	4_M_DSTMAN
 
 yuno_fild09,234,133,0	warp	#moc2_fild09-que_dan02	1,1,que_dan02,13,10
 que_dan02,13,6,0	warp	#moc_que_dan02-fild09	1,1,yuno_fild09,234,129
@@ -13840,7 +13840,7 @@ OnTouch:
 
 que_dan02,88,11,0	warp	#moc2_b1-b2	1,1,que_dan02,21,33
 
-que_dan02,115,53,3	script	Man#moc2_crazyR01	456,{
+que_dan02,115,53,3	script	Man#moc2_crazyR01	4_M_DSTMAN,{
 	if (mao_morocc2 == 19) {
 		mes "A man covered in blood is standing at a corner with a mysterious grin.";
 		next;
@@ -13923,7 +13923,7 @@ que_dan02,115,53,3	script	Man#moc2_crazyR01	456,{
 	end;
 }
 
-que_dan02,115,54,5	script	Mr. Kidd#moc_extra01	884,{
+que_dan02,115,54,5	script	Mr. Kidd#moc_extra01	4_M_ACROSS,{
 	end;
 
 OnInit:
@@ -13936,31 +13936,31 @@ OnEnable:
 	end;
 }
 
-que_dan02,108,17,3	script	Dismembered Corpse#moc2	457,{
+que_dan02,108,17,3	script	Dismembered Corpse#moc2	4_M_DSTMANDEAD,{
 	mes "You find a horribly dismembered dead body.";
 	mes "It is disgusting to decribe the status of the Corpse!.";
 	close;
 }
 
-que_dan02,103,24,5	script	Crushed Corpse#moc2	457,{
+que_dan02,103,24,5	script	Crushed Corpse#moc2	4_M_DSTMANDEAD,{
 	mes "You find a horribly disfigured corpse.";
 	mes "that appears to have been crushed to death.";
 	close;
 }
 
-que_dan02,92,37,7	script	Mutated Corpse#moc2	457,{
+que_dan02,92,37,7	script	Mutated Corpse#moc2	4_M_DSTMANDEAD,{
 	mes "You find a terribly mutated corpse.";
 	mes "R.I.P.";
 	close;
 }
 
-que_dan02,99,36,0	script	Mutilated Corpse#moc2	457,{
+que_dan02,99,36,0	script	Mutilated Corpse#moc2	4_M_DSTMANDEAD,{
 	mes "You find a terribly mutilated corpse.";
 	mes "Rest in peace.";
 	close;
 }
 
-que_dan02,102,42,3	script	Disfigured Corpse#moc2	457,{
+que_dan02,102,42,3	script	Disfigured Corpse#moc2	4_M_DSTMANDEAD,{
 	mes "You find a horribly disfigured corpse.";
 	mes "... . . . . . !!!";
 	close;
@@ -13970,7 +13970,7 @@ que_dan02,102,42,3	script	Disfigured Corpse#moc2	457,{
 //============================================================
 /*
 // Event NPC, now disabled on official servers.
-prontera,161,192,5	script	Ash-Vacuum Warper	707,{
+prontera,161,192,5	script	Ash-Vacuum Warper	4_M_MOC_SOLDIER,{
 	mes "[Warp Soldier]";
 	mes "For a limited period.";
 	mes "I can send you to Ash-Vacuum without any fee.";

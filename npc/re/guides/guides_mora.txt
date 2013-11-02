@@ -11,7 +11,7 @@
 //= 1.1 Navigation system update. [Euphy]
 //============================================================
 
-mora,25,158,5	script	Raffle Guide#north	516,{
+mora,25,158,5	script	Raffle Guide#north	4_M_RAFLE_GR,{
 	mes "[Raffoh]";
 	mes "Laoh~!";
 	mes "Welcome to the Village of Mora.";
@@ -62,7 +62,7 @@ mora,25,158,5	script	Raffle Guide#north	516,{
 	}
 }
 
-mora,167,76,3	script	Raffle Guide#east	522,{
+mora,167,76,3	script	Raffle Guide#east	4_M_RAFLE_OR,{
 	mes "[Raffuh]";
 	mes "Uh...";
 	mes "This, this is the Village of Mora.";
@@ -113,7 +113,7 @@ mora,167,76,3	script	Raffle Guide#east	522,{
 	}
 }
 
-mora,115,138,5	script	Raffle Guide#center	524,{
+mora,115,138,5	script	Raffle Guide#center	4_M_RAFLE_VI,{
 	mes "[Raffla]";
 	mes "Lala!";
 	mes "Welcome to the Village of Mora la!";
@@ -165,7 +165,7 @@ mora,115,138,5	script	Raffle Guide#center	524,{
 	}
 }
 
-mora,72,51,3	script	Raffle Guide#south	518,{
+mora,72,51,3	script	Raffle Guide#south	4_F_RAFLE_PK,{
 	mes "[Raffli]";
 	mes "Lali?";
 	mes "Welcome to the Village of Mora.";

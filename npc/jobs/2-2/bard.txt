@@ -25,7 +25,7 @@
 
 // Ayealo
 //============================================================
-comodo,226,123,5	script	Wandering Bard	741,{
+comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 	if(Upper == 1) {
 		mes "[Lalo]";
 		mes "Chosen ones who are destined to become Gods";

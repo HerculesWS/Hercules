@@ -19,7 +19,7 @@
 
 // Waiting Room NPCs
 //============================================================
-bat_room,169,226,5	script	KVM Waiting Room#a::KvM01R_Guillaume	418,{
+bat_room,169,226,5	script	KVM Waiting Room#a::KvM01R_Guillaume	4_M_KY_KNT,{
 	end;
 
 OnInit:
@@ -33,7 +33,7 @@ OnEnterBG:
 
 bat_room,169,220,0	warp	#kvm801	2,2,bat_room,154,150
 
-bat_room,169,205,3	script	KVM Waiting Room#b::KvM01R_Croix	414,{
+bat_room,169,205,3	script	KVM Waiting Room#b::KvM01R_Croix	4_M_CRU_KNT,{
 	end;
 
 OnInit:
@@ -61,23 +61,23 @@ OnKvM01Two:
 	end;
 }
 
-bat_c01,54,124,3	duplicate(CellEffect)	#RedcellA1-1	139
-bat_c01,55,124,3	duplicate(CellEffect)	#RedcellA2-1	139
-bat_c01,56,124,3	duplicate(CellEffect)	#RedcellA3-1	139
-bat_c01,57,124,3	duplicate(CellEffect)	#RedcellA4-1	139
-bat_c01,57,125,3	duplicate(CellEffect)	#RedcellA5-1	139
-bat_c01,57,126,3	duplicate(CellEffect)	#RedcellA6-1	139
-bat_c01,57,127,3	duplicate(CellEffect)	#RedcellA7-1	139
+bat_c01,54,124,3	duplicate(CellEffect)	#RedcellA1-1	HIDDEN_WARP_NPC
+bat_c01,55,124,3	duplicate(CellEffect)	#RedcellA2-1	HIDDEN_WARP_NPC
+bat_c01,56,124,3	duplicate(CellEffect)	#RedcellA3-1	HIDDEN_WARP_NPC
+bat_c01,57,124,3	duplicate(CellEffect)	#RedcellA4-1	HIDDEN_WARP_NPC
+bat_c01,57,125,3	duplicate(CellEffect)	#RedcellA5-1	HIDDEN_WARP_NPC
+bat_c01,57,126,3	duplicate(CellEffect)	#RedcellA6-1	HIDDEN_WARP_NPC
+bat_c01,57,127,3	duplicate(CellEffect)	#RedcellA7-1	HIDDEN_WARP_NPC
 
-bat_c01,145,59,3	duplicate(CellEffect)	#RedcellB1-1	139
-bat_c01,144,59,3	duplicate(CellEffect)	#RedcellB2-1	139
-bat_c01,143,59,3	duplicate(CellEffect)	#RedcellB3-1	139
-bat_c01,142,59,3	duplicate(CellEffect)	#RedcellB4-1	139
-bat_c01,142,56,3	duplicate(CellEffect)	#RedcellB5-1	139
-bat_c01,142,57,3	duplicate(CellEffect)	#RedcellB6-1	139
-bat_c01,142,58,3	duplicate(CellEffect)	#RedcellB7-1	139
+bat_c01,145,59,3	duplicate(CellEffect)	#RedcellB1-1	HIDDEN_WARP_NPC
+bat_c01,144,59,3	duplicate(CellEffect)	#RedcellB2-1	HIDDEN_WARP_NPC
+bat_c01,143,59,3	duplicate(CellEffect)	#RedcellB3-1	HIDDEN_WARP_NPC
+bat_c01,142,59,3	duplicate(CellEffect)	#RedcellB4-1	HIDDEN_WARP_NPC
+bat_c01,142,56,3	duplicate(CellEffect)	#RedcellB5-1	HIDDEN_WARP_NPC
+bat_c01,142,57,3	duplicate(CellEffect)	#RedcellB6-1	HIDDEN_WARP_NPC
+bat_c01,142,58,3	duplicate(CellEffect)	#RedcellB7-1	HIDDEN_WARP_NPC
 
-bat_c01,54,128,3	script	#A_camp_start01	139,4,4,{
+bat_c01,54,128,3	script	#A_camp_start01	HIDDEN_WARP_NPC,4,4,{
 	end;
 
 OnInit:
@@ -98,7 +98,7 @@ OnTouch:
 	end;
 }
 
-bat_c01,146,56,3	script	#B_camp_start01	139,4,4,{
+bat_c01,146,56,3	script	#B_camp_start01	HIDDEN_WARP_NPC,4,4,{
 	end;
 
 OnInit:
@@ -369,7 +369,7 @@ OnTimer60000:
 
 // Battleground rewards
 //============================================================
-bat_c01,51,130,5	script	KVM Officer#KVM01A	419,{
+bat_c01,51,130,5	script	KVM Officer#KVM01A	4_M_KY_HEAD,{
 	if( $@KvM01BG_Victory )
 	{
 		if( $@KvM01BG_Victory == Bat_Team )
@@ -398,7 +398,7 @@ bat_c01,51,130,5	script	KVM Officer#KVM01A	419,{
 	end;
 }
 
-bat_c01,148,53,1	script	KVM Officer#KVM01B	415,{
+bat_c01,148,53,1	script	KVM Officer#KVM01B	4_M_CRU_HEAD,{
 	if( $@KvM01BG_Victory )
 	{
 		if( $@KvM01BG_Victory == Bat_Team )

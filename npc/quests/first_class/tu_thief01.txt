@@ -18,7 +18,7 @@
 
 // Thief Trainer
 //============================================================
-moc_ruins,66,164,4	script	Thief Trainer#T	84,{
+moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 	mes "[Yierhan]";
 	if(Class == Job_Novice){
 		mes "Eh...?";

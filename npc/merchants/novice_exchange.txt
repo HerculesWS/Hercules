@@ -15,7 +15,7 @@
 //= 1.4 Added checkweight, and input min/max values. [L0ne_W0lf]
 //============================================================
 
-prontera,123,102,5	script	Merchant#pron	85,{
+prontera,123,102,5	script	Merchant#pron	4_M_03,{
 	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
@@ -71,7 +71,7 @@ prontera,123,102,5	script	Merchant#pron	85,{
 	}
 }
 
-morocc,180,259,3	script	Merchant#morroc	85,{
+morocc,180,259,3	script	Merchant#morroc	4_M_03,{
 	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
@@ -128,7 +128,7 @@ morocc,180,259,3	script	Merchant#morroc	85,{
 	}
 }
 
-payon,200,134,5	script	Merchant#pay	85,{
+payon,200,134,5	script	Merchant#pay	4_M_03,{
 	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
@@ -182,7 +182,7 @@ payon,200,134,5	script	Merchant#pay	85,{
 	}
 }
 
-aldebaran,152,63,5	script	Merchant#alde	85,{
+aldebaran,152,63,5	script	Merchant#alde	4_M_03,{
 	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
@@ -239,7 +239,7 @@ aldebaran,152,63,5	script	Merchant#alde	85,{
 	}
 }
 
-geffen,173,88,5	script	Merchant#geff	85,{
+geffen,173,88,5	script	Merchant#geff	4_M_03,{
 	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";

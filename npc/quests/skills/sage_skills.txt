@@ -12,7 +12,7 @@
 //= 1.5 Optimized. [Euphy]
 //============================================================
 
-yuno_in03,176,24,3	script	Mischna	755,{
+yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 	if(BaseJob != Job_Sage) {
 		mes "[Mishuna]";
 		mes "Good day, I'm Mishuna, one";

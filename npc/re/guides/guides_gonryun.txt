@@ -13,7 +13,7 @@
 //= 1.2 Navigation system update. [Euphy]
 //============================================================
 
-gonryun,163,60,4	script	Kunlun Guide#01gonryun	780,{
+gonryun,163,60,4	script	Kunlun Guide#01gonryun	8_M_TWSOLDIER,{
 	mes "[He Yuen Zhe]";
 	mes "Ni Hao!";
 	mes "Welcome to ^8B4513Kunlun^000000~";

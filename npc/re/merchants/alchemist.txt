@@ -12,7 +12,7 @@
 //=     Updated dialogue to match the official script.
 //============================================================
 
-alde_alche,31,186,3	script	Craft Book Merchant#alde	883,{
+alde_alche,31,186,3	script	Craft Book Merchant#alde	4_M_ALCHE_D,{
 	mes "[Craft Book Merchant]";
 	mes "Welcome.";
 	mes "I'm here to sell";

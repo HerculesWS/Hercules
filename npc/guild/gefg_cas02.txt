@@ -14,7 +14,7 @@
 
 // Guild Flag (Outside Castle)
 //============================================================
--	script	Eeyorbriggar#1::OutsideFlagsG2	722,{
+-	script	Eeyorbriggar#1::OutsideFlagsG2	GUILD_FLAG,{
 
 	set .@GID, GetCastleData("gefg_cas02",1);
 
@@ -64,14 +64,14 @@ OnRecvCastleG02:
 	end;
 }
 
-gef_fild13,303,243,4	duplicate(OutsideFlagsG2)	Eeyorbriggar#1-2	722
-gef_fild13,312,243,4	duplicate(OutsideFlagsG2)	Eeyorbriggar#2	722
-gef_fild13,290,243,4	duplicate(OutsideFlagsG2)	Eeyorbriggar#3	722
-gef_fild13,324,243,4	duplicate(OutsideFlagsG2)	Eeyorbriggar#4	722
+gef_fild13,303,243,4	duplicate(OutsideFlagsG2)	Eeyorbriggar#1-2	GUILD_FLAG
+gef_fild13,312,243,4	duplicate(OutsideFlagsG2)	Eeyorbriggar#2	GUILD_FLAG
+gef_fild13,290,243,4	duplicate(OutsideFlagsG2)	Eeyorbriggar#3	GUILD_FLAG
+gef_fild13,324,243,4	duplicate(OutsideFlagsG2)	Eeyorbriggar#4	GUILD_FLAG
 
 // Guild Flag (Inside Castle)
 //============================================================
--	script	Eeyorbriggar#5::InsideFlagsG2	722,{
+-	script	Eeyorbriggar#5::InsideFlagsG2	GUILD_FLAG,{
 	end;
 
 OnRecvCastleG02:
@@ -79,29 +79,29 @@ OnRecvCastleG02:
 	end;
 }
 
-gefg_cas02,65,130,5	duplicate(InsideFlagsG2)	Eeyorbriggar#5-2	722
-gefg_cas02,30,123,5	duplicate(InsideFlagsG2)	Eeyorbriggar#6	722
-gefg_cas02,65,139,6	duplicate(InsideFlagsG2)	Eeyorbriggar#7	722
-gefg_cas02,37,177,6	duplicate(InsideFlagsG2)	Eeyorbriggar#8	722
-gefg_cas02,37,168,6	duplicate(InsideFlagsG2)	Eeyorbriggar#9	722
-gefg_cas02,68,47,2	duplicate(InsideFlagsG2)	Eeyorbriggar#10	722
-gefg_cas02,68,36,2	duplicate(InsideFlagsG2)	Eeyorbriggar#11	722
+gefg_cas02,65,130,5	duplicate(InsideFlagsG2)	Eeyorbriggar#5-2	GUILD_FLAG
+gefg_cas02,30,123,5	duplicate(InsideFlagsG2)	Eeyorbriggar#6	GUILD_FLAG
+gefg_cas02,65,139,6	duplicate(InsideFlagsG2)	Eeyorbriggar#7	GUILD_FLAG
+gefg_cas02,37,177,6	duplicate(InsideFlagsG2)	Eeyorbriggar#8	GUILD_FLAG
+gefg_cas02,37,168,6	duplicate(InsideFlagsG2)	Eeyorbriggar#9	GUILD_FLAG
+gefg_cas02,68,47,2	duplicate(InsideFlagsG2)	Eeyorbriggar#10	GUILD_FLAG
+gefg_cas02,68,36,2	duplicate(InsideFlagsG2)	Eeyorbriggar#11	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-geffen,112,129,1	duplicate(InsideFlagsG2)	Eeyorbriggar#12	722
+geffen,112,129,1	duplicate(InsideFlagsG2)	Eeyorbriggar#12	GUILD_FLAG
 
 // Kafra Employee
 //============================================================
-gefg_cas02,23,66,3	duplicate(guildkafra)	Kafra Staff#gefg_cas02	117
+gefg_cas02,23,66,3	duplicate(guildkafra)	Kafra Staff#gefg_cas02	4_F_KAFRA1
 
 // Steward
 //============================================================
-gefg_cas02,12,66,5	duplicate(cm)	Esmarehk#gefg_cas02	55
+gefg_cas02,12,66,5	duplicate(cm)	Esmarehk#gefg_cas02	1_M_JOBTESTER
 
 // Treasure Room Exit
 //============================================================
-gefg_cas02,145,114,0	script	#lever_G02	111,{
+gefg_cas02,145,114,0	script	#lever_G02	HIDDEN_NPC,{
 
 	mes " ";
 	mes "There's a small lever. Will you pull it?";
@@ -116,7 +116,7 @@ gefg_cas02,145,114,0	script	#lever_G02	111,{
 
 // Guild Dungeon Switch
 //============================================================
-gefg_cas02,167,40,0	duplicate(gdlever)	#gefg_cas02	111
+gefg_cas02,167,40,0	duplicate(gdlever)	#gefg_cas02	HIDDEN_NPC
 
 // Guild Treasure Spawns
 //============================================================

@@ -24,7 +24,7 @@
 
 // Utility NPCs :: cat_merchant
 //============================================================
-mal_in02,134,31,5	script	Investment Cat Helper	505,{
+mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 	if (MaxWeight - Weight < 100 || checkweight(1201,1) == 0) {
 		mes "[Investment Cat Helper]";
 		mes "You have a heavy load. Maybe you're a peddler? No peddlers in this area.";
@@ -306,7 +306,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	505,{
 	}
 }
 
-malangdo,184,139,4	script	Storekeeper#mal	560,{
+malangdo,184,139,4	script	Storekeeper#mal	4_CAT_ADV2,{
 	mes "[Storekeeper]";
 	mes "Hey, looks like you might be looking to unload some of your stuff from your pack.";
 	mes "Want to open storage? For free?";
@@ -357,7 +357,7 @@ malangdo,184,139,4	script	Storekeeper#mal	560,{
 
 // Malangdo Island :: ma_tomas
 //============================================================
-mal_in02,28,56,5	script	Samuel#mal	495,{
+mal_in02,28,56,5	script	Samuel#mal	4_M_MERCAT1,{
 	mes "[Samuel]";
 	mes "Ah, you mean the ad... well, you mean our village chief?";
 	mes "You'd better not bother him, since he's always busy.";
@@ -401,7 +401,7 @@ mal_in02,28,56,5	script	Samuel#mal	495,{
 	}
 }
 
-mal_in02,22,62,3	script	Tomas#mal	556,{
+mal_in02,22,62,3	script	Tomas#mal	4_CAT_ADMIRAL,{
 	if (BaseLevel < 60) {
 		mes "[Tomas, Village Chief]";
 		mes "Ummm... Who are you?";
@@ -628,7 +628,7 @@ mal_in02,22,62,3	script	Tomas#mal	556,{
 	end;
 }
 
-mal_in02,182,61,3	script	President of Meeting#mal	421,{
+mal_in02,182,61,3	script	President of Meeting#mal	4_M_BOSSCAT,{
 	if (ma_tomas == 0) {
 		mes "[President of Meeting]";
 		mes "Please be silent, the regular meeting is getting started a moment later~";
@@ -694,7 +694,7 @@ mal_in02,182,61,3	script	President of Meeting#mal	421,{
 	close;
 }
 
-mal_in02,178,66,5	script	Scottfold#mal	422,{
+mal_in02,178,66,5	script	Scottfold#mal	4_M_BABYCAT,{
 	if (ma_tomas == 0) {
 		mes "[Scottfold]";
 		mes "Attending the meeting is an important thing to do.";
@@ -732,7 +732,7 @@ mal_in02,178,66,5	script	Scottfold#mal	422,{
 	close;
 }
 
-mal_in02,177,58,7	script	Koon#mal	546,{
+mal_in02,177,58,7	script	Koon#mal	4_CAT_SAILOR3,{
 	if (ma_tomas == 0) {
 		mes "[Koon]";
 		mes "Though I'm busy, I always attend this meeting.";
@@ -770,7 +770,7 @@ mal_in02,177,58,7	script	Koon#mal	546,{
 	close;
 }
 
-mal_in02,174,64,5	script	Linguist Devore#mal	549,{
+mal_in02,174,64,5	script	Linguist Devore#mal	4_CAT_MERMASTER,{
 	if (ma_tomas < 4) {
 		mes "[Linguist Devore]";
 		mes "Most of our cats are especially talented in language.";
@@ -944,7 +944,7 @@ mal_in02,174,64,5	script	Linguist Devore#mal	549,{
 	close;
 }
 
-mal_in02,179,57,1	script	Geologist Mali#mal	559,{
+mal_in02,179,57,1	script	Geologist Mali#mal	4_CAT_ADV1,{
 	if (ma_tomas < 5) {
 		mes "[Geologist Mali]";
 		mes "Malangdo is named because the ground here is so soft, mew~";
@@ -1145,7 +1145,7 @@ mal_in02,179,57,1	script	Geologist Mali#mal	559,{
 	close;
 }
 
-mal_in02,140,94,0	script	Bob#mal	553,{
+mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 	if (ma_tomas < 14) {
 		mes "[Bob]";
 		mes "You bow-wow! bow! wow! I mew! mew! mew!";
@@ -1387,16 +1387,16 @@ OnDisable:
 	disablenpc strnpcinfo(0);
 	end;
 }
-malangdo,114,157,0	duplicate(Crack#mal0)	Crack#mal1	550
-malangdo,284,237,0	duplicate(Crack#mal0)	Crack#mal2	550
-malangdo,134,150,0	duplicate(Crack#mal0)	Crack#mal3	550
-malangdo,173,199,0	duplicate(Crack#mal0)	Crack#mal4	550
-malangdo,233,197,0	duplicate(Crack#mal0)	Crack#mal5	550
-malangdo,137,239,0	duplicate(Crack#mal0)	Crack#mal6	550
-malangdo,239,157,0	duplicate(Crack#mal0)	Crack#mal7	550
-malangdo,221,155,0	duplicate(Crack#mal0)	Crack#mal8	550
-malangdo,217,109,0	duplicate(Crack#mal0)	Crack#mal9	550
-malangdo,162,183,0	duplicate(Crack#mal0)	Crack#mal10	550
+malangdo,114,157,0	duplicate(Crack#mal0)	Crack#mal1	4_CRACK
+malangdo,284,237,0	duplicate(Crack#mal0)	Crack#mal2	4_CRACK
+malangdo,134,150,0	duplicate(Crack#mal0)	Crack#mal3	4_CRACK
+malangdo,173,199,0	duplicate(Crack#mal0)	Crack#mal4	4_CRACK
+malangdo,233,197,0	duplicate(Crack#mal0)	Crack#mal5	4_CRACK
+malangdo,137,239,0	duplicate(Crack#mal0)	Crack#mal6	4_CRACK
+malangdo,239,157,0	duplicate(Crack#mal0)	Crack#mal7	4_CRACK
+malangdo,221,155,0	duplicate(Crack#mal0)	Crack#mal8	4_CRACK
+malangdo,217,109,0	duplicate(Crack#mal0)	Crack#mal9	4_CRACK
+malangdo,162,183,0	duplicate(Crack#mal0)	Crack#mal10	4_CRACK
 
 -	script	Crackt0#mal	-1,{
 	end;
@@ -1430,7 +1430,7 @@ OnTimer30000:
 -	duplicate(Crackt0#mal)	Crackt9#mal	-1
 -	duplicate(Crackt0#mal)	Crackt10#mal	-1
 
-mal_in02,181,55,3	script	Brie#mal	545,{
+mal_in02,181,55,3	script	Brie#mal	4_CAT_SAILOR2,{
 	if (ma_tomas < 6) {
 		mes "[Brie]";
 		mes "Sorry, but I don't feel like talking with you. Please leave me alone.";
@@ -1560,7 +1560,7 @@ mal_in02,181,55,3	script	Brie#mal	545,{
 	close;
 }
 
-mal_in01,114,169,5	script	Rican#mal	547,{
+mal_in01,114,169,5	script	Rican#mal	4_CAT_SAILOR4,{
 	if (ma_tomas < 9) {
 		mes "[Rican]";
 		mes "Woo waa hoohoo...";
@@ -1859,7 +1859,7 @@ mal_in01,114,169,5	script	Rican#mal	547,{
 	close;
 }
 
-mal_in01,116,168,0	script	Dry Machine#mal	563,{
+mal_in01,116,168,0	script	Dry Machine#mal	2_SLOT_MACHINE,{
 	if (ma_tomas == 10) {
 		if (countitem(6435) < 30) {
 			mes "[Rican]";
@@ -1925,16 +1925,16 @@ OnDisable:
 	disablenpc strnpcinfo(0);
 	end;
 }
-malangdo,221,139,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#1	557
-malangdo,208,174,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#2	557
-malangdo,191,223,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#3	557
-malangdo,150,195,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#4	557
-malangdo,116,196,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#5	557
-malangdo,178,145,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#6	557
-malangdo,142,120,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#7	557
-malangdo,136,122,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#8	557
-malangdo,152,143,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#9	557
-malangdo,242,175,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#10	557
+malangdo,221,139,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#1	4_SOIL
+malangdo,208,174,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#2	4_SOIL
+malangdo,191,223,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#3	4_SOIL
+malangdo,150,195,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#4	4_SOIL
+malangdo,116,196,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#5	4_SOIL
+malangdo,178,145,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#6	4_SOIL
+malangdo,142,120,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#7	4_SOIL
+malangdo,136,122,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#8	4_SOIL
+malangdo,152,143,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#9	4_SOIL
+malangdo,242,175,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#10	4_SOIL
 
 -	script	Water Sand0#mal	-1,{
 OnInit:
@@ -1967,7 +1967,7 @@ OnTimer30000:
 -	duplicate(Water Sand0#mal)	Water Sand9#mal	-1
 -	duplicate(Water Sand0#mal)	Water Sand10#mal	-1
 
-mal_dun01,136,120,6	script	Linguist Devore#mald	549,{
+mal_dun01,136,120,6	script	Linguist Devore#mald	4_CAT_MERMASTER,{
 	end;
 OnInit:
 	disablenpc "Linguist Devore#mald";
@@ -1985,7 +1985,7 @@ OnTimer100000:
 	end;
 }
 
-mal_dun01,136,122,3	script	Biscuit#mal	551,{
+mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 	if (ma_tomas < 20) {
 		mes "- There's something strange. -";
 		mes "- It feels like somehow - ";
@@ -2418,7 +2418,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	551,{
 	close;
 }
 
-mal_in02,102,94,3	script	Cleaning Staff#mal	544,2,2,{
+mal_in02,102,94,3	script	Cleaning Staff#mal	4_CAT_SAILOR1,2,2,{
 OnTouch:
 	if (checkweight(1201,1) == 0) {
 		mes " - Notice !! -";
@@ -2506,7 +2506,7 @@ malangdo,246,184,0	script	1st Rate Point	111,{
 	}
 }
 
-mal_dun01,133,125,5	script	Star Candy#mal	552,{
+mal_dun01,133,125,5	script	Star Candy#mal	4_F_STARFISHGIRL,{
 	if (ma_tomas == 19) {
 		mes "[Star Candy]";
 		mes "....";
@@ -2673,12 +2673,12 @@ mal_dun01,133,125,5	script	Star Candy#mal	552,{
 		close;
 	}
 }
-mal_dun01,143,137,0	duplicate(#skin_mal)	Dry Skin#29	111
-mal_dun01,131,150,0	duplicate(#skin_mal)	Prickly Skin#30	111
-mal_dun01,116,144,0	duplicate(#skin_mal)	Chapped Skin#31	111
-mal_dun01,120,129,0	duplicate(#skin_mal)	Hard Skin#32	111
+mal_dun01,143,137,0	duplicate(#skin_mal)	Dry Skin#29	HIDDEN_NPC
+mal_dun01,131,150,0	duplicate(#skin_mal)	Prickly Skin#30	HIDDEN_NPC
+mal_dun01,116,144,0	duplicate(#skin_mal)	Chapped Skin#31	HIDDEN_NPC
+mal_dun01,120,129,0	duplicate(#skin_mal)	Hard Skin#32	HIDDEN_NPC
 
-malangdo,190,167,7	script	Portali#mal	546,{
+malangdo,190,167,7	script	Portali#mal	4_CAT_SAILOR3,{
 	if (ma_tomas < 100) {
 		mes "[Portali]";
 		mes "I have no business for an immature fellow!";
@@ -2751,7 +2751,7 @@ L_Warp:
 
 // Malangdo Island :: mal_ppl
 //============================================================
-malangdo,137,200,6	script	Pipielle	549,{
+malangdo,137,200,6	script	Pipielle	4_CAT_MERMASTER,{
 	if (MaxWeight - Weight < 1000) {
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
@@ -2883,7 +2883,7 @@ malangdo,137,200,6	script	Pipielle	549,{
 
 // Help the Bad Cats in Danger :: mal_bad_guys
 //============================================================
-malangdo,175,206,3	script	Gobonge#ml	561,{
+malangdo,175,206,3	script	Gobonge#ml	4_CAT_SAILOR5,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Can't go next step due to having too many items. -";
 		close;
@@ -3087,20 +3087,20 @@ OnDisable:
 	close;
 }
 
-malangdo,181,205,3	script	Gobulee#ml1	547,{
+malangdo,181,205,3	script	Gobulee#ml1	4_CAT_SAILOR4,{
 	mes "[Gobulee]";
 	mes "What a time to show up!";
 	mes "You should come around when we're healthy.";
 	close;
 }
 
-malangdo,180,202,3	script	Gobyungee#ml1	547,{
+malangdo,180,202,3	script	Gobyungee#ml1	4_CAT_SAILOR4,{
 	mes "[Gobyungee]";
 	mes "I can't even look another cat in the eye since I'm too sick to be doin' crimes properly.";
 	close;
 }
 
-malangdo,186,201,3	script	Gosigee#ml1	547,{
+malangdo,186,201,3	script	Gosigee#ml1	4_CAT_SAILOR4,{
 	mes "[Gosigee]";
 	mes "I wish I had some peppy bistmuth pills...";
 	mes "Meanwhile the Captain only thinks about catching the bad guys and getting revenge!";
@@ -3111,14 +3111,14 @@ malangdo,186,201,3	script	Gosigee#ml1	547,{
 	close;
 }
 
-malangdo,177,202,3	script	Gonanee#ml2	547,{
+malangdo,177,202,3	script	Gonanee#ml2	4_CAT_SAILOR4,{
 	mes "[Gonanee]";
 	mes "We are the only violent gang in Malangdo and we are very proud.";
 	mes "I don't feel right just lying in bed.";
 	close;
 }
 
-malangdo,183,202,3	script	Godoree#ml3	547,{
+malangdo,183,202,3	script	Godoree#ml3	4_CAT_SAILOR4,{
 	mes "[Godoree]";
 	mes "I saw unfamiliar cats around";
 	mes "the dock recently.";
@@ -3128,7 +3128,7 @@ malangdo,183,202,3	script	Godoree#ml3	547,{
 	close;
 }
 
-malangdo,203,116,5	script	Suspious Dealer#ml	543,{
+malangdo,203,116,5	script	Suspious Dealer#ml	4_MASK_SMOKEY,{
 	mes "He appears to be listening intently.";
 	mes "Upon hearing you approach, he pretends to be completely oblivious.";
 	next;
@@ -3137,7 +3137,7 @@ malangdo,203,116,5	script	Suspious Dealer#ml	543,{
 	close;
 }
 
-malangdo,205,116,3	script	Very Suspious Dealer#ml1	543,{
+malangdo,205,116,3	script	Very Suspious Dealer#ml1	4_MASK_SMOKEY,{
 	mes "On listening to the story for";
 	mes "a while, he pretends to be indifferent once hearing someone's noise.";
 	next;
@@ -3146,7 +3146,7 @@ malangdo,205,116,3	script	Very Suspious Dealer#ml1	543,{
 	close;
 }
 
-malangdo,197,120,5	script	A Foolish Cat#ml	546,{
+malangdo,197,120,5	script	A Foolish Cat#ml	4_CAT_SAILOR3,{
 	mes "[A Foolish Cat]";
 	mes "If you stay here, you";
 	mes "can hear all they're saying.";
@@ -3234,7 +3234,7 @@ OnTouch:
 	end;
 }
 
-malangdo,171,163,3	script	Awfully Suspious Dealer	543,{
+malangdo,171,163,3	script	Awfully Suspious Dealer	4_MASK_SMOKEY,{
 	if (malang_bad_guys < 4) {
 		mes "[Awfully Suspious Dealer]";
 		mes "We quit selling them, find another merchant!";
@@ -3364,7 +3364,7 @@ malangdo,171,163,3	script	Awfully Suspious Dealer	543,{
 	close;
 }
 
-mal_in02,184,72,3	script	Gozangee#ml	547,{
+mal_in02,184,72,3	script	Gozangee#ml	4_CAT_SAILOR4,{
 	mes "[Gozangee]";
 	mes "I have too much pain in my stomach...";
 	mes "Should endure myself!";
@@ -3407,7 +3407,7 @@ OnTouch:
 	end;
 }
 
-malangdo,125,147,3	script	Patrol Leader#ml	545,{
+malangdo,125,147,3	script	Patrol Leader#ml	4_CAT_SAILOR2,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Can't go next step due to having too many items. -";
 		close;
@@ -3488,7 +3488,7 @@ malangdo,125,147,3	script	Patrol Leader#ml	545,{
 	close;
 }
 
-malangdo,129,146,3	script	Crime Prevention Staff	545,{
+malangdo,129,146,3	script	Crime Prevention Staff	4_CAT_SAILOR2,{
 	if (malang_bad_guys > 11) {
 		mes "[Crime Prevention Staff]";
 		mes "A work to do means happy things!";
@@ -3511,7 +3511,7 @@ malangdo,129,146,3	script	Crime Prevention Staff	545,{
 	close;
 }
 
-malangdo,3,1,3	script	Guidance for quest#ml	543,{
+malangdo,3,1,3	script	Guidance for quest#ml	4_MASK_SMOKEY,{
 	if (callfunc("F_GM_NPC",1854,0) < 1) {
 		mes "[Helper]";
 		mes "What is this security code?";
@@ -3560,7 +3560,7 @@ malangdo,3,1,3	script	Guidance for quest#ml	543,{
 
 // Clean the Ship :: mal_day_qook
 //============================================================
-mal_in02,76,63,7	script	Cleanyang	544,{
+mal_in02,76,63,7	script	Cleanyang	4_CAT_SAILOR1,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
@@ -3945,7 +3945,7 @@ mal_in02,76,63,7	script	Cleanyang	544,{
 	}
 }
 
-mal_in02,29,67,0	script	#CaptainRoom3	844,{
+mal_in02,29,67,0	script	#CaptainRoom3	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
@@ -4024,7 +4024,7 @@ mal_in02,29,67,0	script	#CaptainRoom3	844,{
 	close;
 }
 
-mal_in02,183,49,0	script	#MeetingFloor4	844,{
+mal_in02,183,49,0	script	#MeetingFloor4	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
@@ -4071,7 +4071,7 @@ mal_in02,183,49,0	script	#MeetingFloor4	844,{
 	close;
 }
 
-mal_in02,103,22,0	script	#MalBed5	844,{
+mal_in02,103,22,0	script	#MalBed5	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
@@ -4116,7 +4116,7 @@ mal_in02,103,22,0	script	#MalBed5	844,{
 	close;
 }
 
-malangdo,141,178,0	script	#Darkweed6	844,{
+malangdo,141,178,0	script	#Darkweed6	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
@@ -4153,7 +4153,7 @@ malangdo,141,178,0	script	#Darkweed6	844,{
 	close;
 }
 
-malangdo,133,134,0	script	Strange Pile of Sand#7	557,{
+malangdo,133,134,0	script	Strange Pile of Sand#7	4_SOIL,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
@@ -4195,9 +4195,9 @@ malangdo,133,134,0	script	Strange Pile of Sand#7	557,{
 	mes "- That's it... -";
 	close;
 }
-malangdo,197,237,0	duplicate(Strange Pile of Sand#7)	Strange Pile of Sand#12	557
+malangdo,197,237,0	duplicate(Strange Pile of Sand#7)	Strange Pile of Sand#12	4_SOIL
 
-malangdo,232,131,0	script	#UnderStairs8	844,{
+malangdo,232,131,0	script	#UnderStairs8	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
@@ -4231,7 +4231,7 @@ malangdo,232,131,0	script	#UnderStairs8	844,{
 	close;
 }
 
-mal_in01,74,20,0	script	#CornerTower9	844,{
+mal_in01,74,20,0	script	#CornerTower9	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
@@ -4262,7 +4262,7 @@ mal_in01,74,20,0	script	#CornerTower9	844,{
 	close;
 }
 
-mal_in01,159,225,0	script	#CornerLocker10	844,{
+mal_in01,159,225,0	script	#CornerLocker10	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
@@ -4293,7 +4293,7 @@ mal_in01,159,225,0	script	#CornerLocker10	844,{
 	close;
 }
 
-mal_in01,24,72,0	script	#FootholdTower11	844,{
+mal_in01,24,72,0	script	#FootholdTower11	CLEAR_NPC,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
@@ -4327,7 +4327,7 @@ mal_in01,24,72,0	script	#FootholdTower11	844,{
 
 // Help Chef Nyas :: mal_day_qook
 //============================================================
-mal_in02,187,58,3	script	Chef Nyas	548,{
+mal_in02,187,58,3	script	Chef Nyas	4_CAT_CHEF,{
 	if (checkweight(1201,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
@@ -4642,7 +4642,7 @@ mal_in02,187,58,3	script	Chef Nyas	548,{
 
 // Play with Baby Cats :: mal_nyadventurer
 //============================================================
-malangdo,165,223,4	script	Expert Cat#nya_01	561,{
+malangdo,165,223,4	script	Expert Cat#nya_01	4_CAT_SAILOR5,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 4000) {
 		mes "- You have too many items to proceed in this quest. -";
 		close;
@@ -4802,7 +4802,7 @@ malangdo,165,223,4	script	Expert Cat#nya_01	561,{
 	}
 }
 
-malangdo,211,203,4	script	[Meow Team] Charo#nya_11	560,{
+malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 4000) {
 		mes "- You have too many items to proceed in this quest. -";
 		close;
@@ -5156,7 +5156,7 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	560,{
 	}
 }
 
-malangdo,214,204,3	script	[Meow Team] Rosy#nya_09	559,{
+malangdo,214,204,3	script	[Meow Team] Rosy#nya_09	4_CAT_ADV1,{
 	if (nyadven < 2) {
 		mes "A young cat with white fur tries so hard with the weird machine.";
 		mes "The machine might be broken.";
@@ -5201,7 +5201,7 @@ malangdo,214,204,3	script	[Meow Team] Rosy#nya_09	559,{
 	}
 }
 
-malangdo,215,201,3	script	[Meow Team] Roku#nya_10	553,{
+malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 4000) {
 		mes "- You have too many items to proceed in this quest. -";
 		close;
@@ -5384,7 +5384,7 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	553,{
 	}
 }
 
-malangdo,212,204,0	script	Beginning Compass#nya_02	844,{
+malangdo,212,204,0	script	Beginning Compass#nya_02	CLEAR_NPC,{
 	if (countitem(6428) == 0) {
 		mes "There is a strange machine.";
 		mes "The kids said this was the ride called Duruduru compass of the Meow Bravery Team.";
@@ -5576,13 +5576,13 @@ L_Viewpoint:
 	}
 	close;
 }
-malangdo,213,89,0	duplicate(#malangdo_compass)	Red Flame Compass#1	844
-malangdo,128,103,0	duplicate(#malangdo_compass)	Blue Flame Compass#2	844
-malangdo,73,253,0	duplicate(#malangdo_compass)	Gold Flame Compass#3	844
-malangdo,153,146,0	duplicate(#malangdo_compass)	Forest Compass#4	844
-malangdo,111,178,0	duplicate(#malangdo_compass)	Cloud Compass#5	844
+malangdo,213,89,0	duplicate(#malangdo_compass)	Red Flame Compass#1	CLEAR_NPC
+malangdo,128,103,0	duplicate(#malangdo_compass)	Blue Flame Compass#2	CLEAR_NPC
+malangdo,73,253,0	duplicate(#malangdo_compass)	Gold Flame Compass#3	CLEAR_NPC
+malangdo,153,146,0	duplicate(#malangdo_compass)	Forest Compass#4	CLEAR_NPC
+malangdo,111,178,0	duplicate(#malangdo_compass)	Cloud Compass#5	CLEAR_NPC
 
-malangdo,175,163,0	script	Meowbell#nya_12	844,{
+malangdo,175,163,0	script	Meowbell#nya_12	CLEAR_NPC,{
 	if (countitem(6428) == 0) {
 		mes "There is a fancy bell which doesn't fit in with the ship.";
 		mes "This bell is used in a game by the Meow Bravery Team.";
@@ -5657,7 +5657,7 @@ malangdo,175,163,0	script	Meowbell#nya_12	844,{
 	}
 }
 
-malangdo,176,165,3	script	Deckhand Bubi#nya_16	544,{
+malangdo,176,165,3	script	Deckhand Bubi#nya_16	4_CAT_SAILOR1,{
 	mes "[Bubi]";
 	mes "Hey, human adventurer, what are you here for?";
 	mes "Yeah~ this is a beautiful view.";
@@ -5673,7 +5673,7 @@ malangdo,176,165,3	script	Deckhand Bubi#nya_16	544,{
 	close;
 }
 
-malangdo,172,178,7	script	Cat Detective#nya_14	560,{
+malangdo,172,178,7	script	Cat Detective#nya_14	4_CAT_ADV2,{
 	cutin "mal_homnya_n",2;
 	if (nyadven < 6) {
 		mes "[Cat Detective]";
@@ -6077,7 +6077,7 @@ malangdo,172,178,7	script	Cat Detective#nya_14	560,{
 	end;
 }
 
-malangdo,173,177,7	script	Friend of Detective#mal	559,{
+malangdo,173,177,7	script	Friend of Detective#mal	4_CAT_ADV1,{
 	cutin "mal_homnya_n",2;
 	mes "[Nyangson]";
 	mes "I am a friend of Detective Homnya, Nyangson.";
@@ -6091,7 +6091,7 @@ malangdo,173,177,7	script	Friend of Detective#mal	559,{
 	end;
 }
 
-malangdo,174,175,0	script	Noisy Machine#nya_13	844,{
+malangdo,174,175,0	script	Noisy Machine#nya_13	CLEAR_NPC,{
 	if (nyadven < 7) {
 		mes "There is a strange machine.";
 		mes "It has a Red, Blue, Yellow, and Green luminous body with buttons to react,";
@@ -6329,7 +6329,7 @@ function	script	F_Mal_Picture	{
 	}
 }
 
-mal_in02,187,45,0	script	Box#nya01	844,{
+mal_in02,187,45,0	script	Box#nya01	CLEAR_NPC,{
 	switch(callfunc(
 		"F_Mal_Picture",
 		7251,1,
@@ -6355,7 +6355,7 @@ mal_in02,187,45,0	script	Box#nya01	844,{
 	}
 }
 
-mal_in02,170,75,0	script	Book#nya02	844,{
+mal_in02,170,75,0	script	Book#nya02	CLEAR_NPC,{
 	switch(callfunc(
 		"F_Mal_Picture",
 		7252,1,
@@ -6380,7 +6380,7 @@ mal_in02,170,75,0	script	Book#nya02	844,{
 	}
 }
 
-mal_in02,133,98,0	script	Dirty Bed#nya03	844,{
+mal_in02,133,98,0	script	Dirty Bed#nya03	CLEAR_NPC,{
 	switch(callfunc(
 		"F_Mal_Picture",
 		7253,1,
@@ -6407,7 +6407,7 @@ mal_in02,133,98,0	script	Dirty Bed#nya03	844,{
 	}
 }
 
-mal_in02,31,57,0	script	Seashell#nya04	844,{
+mal_in02,31,57,0	script	Seashell#nya04	CLEAR_NPC,{
 	switch(callfunc(
 		"F_Mal_Picture",
 		7254,0,
@@ -6424,7 +6424,7 @@ mal_in02,31,57,0	script	Seashell#nya04	844,{
 	}
 }
 
-mal_in02,114,56,0	script	Ship Pillar#nya05	844,{
+mal_in02,114,56,0	script	Ship Pillar#nya05	CLEAR_NPC,{
 	switch(callfunc(
 		"F_Mal_Picture",
 		7255,1,
@@ -6450,7 +6450,7 @@ mal_in02,114,56,0	script	Ship Pillar#nya05	844,{
 	}
 }
 
-mal_in02,139,30,0	script	Ventilation Window#nya06	844,{
+mal_in02,139,30,0	script	Ventilation Window#nya06	CLEAR_NPC,{
 	switch(callfunc(
 		"F_Mal_Picture",
 		7256,0,
@@ -6471,7 +6471,7 @@ mal_in02,139,30,0	script	Ventilation Window#nya06	844,{
 	}
 }
 
-mal_in02,166,74,4	script	Neat Crew#nyaong01	555,{
+mal_in02,166,74,4	script	Neat Crew#nyaong01	4_CAT_3COLOR,{
 	mes "[Neat Crew]";
 	mes "Please clean up your stuff by yourself.";
 	mes "Especially you guys getting dirty after we came to this island!";
@@ -6488,7 +6488,7 @@ mal_in02,166,74,4	script	Neat Crew#nyaong01	555,{
 	close;
 }
 
-mal_in02,132,95,5	script	Scary Crew#nyaong02	561,{
+mal_in02,132,95,5	script	Scary Crew#nyaong02	4_CAT_SAILOR5,{
 	mes "[Scary Crew]";
 	mes "I try to be nice these days, and kids just take liberties with me.";
 	mes "Will you too?";
@@ -6499,7 +6499,7 @@ mal_in02,132,95,5	script	Scary Crew#nyaong02	561,{
 	close;
 }
 
-mal_in02,109,62,4	script	Picky Crew#nyaong03	545,{
+mal_in02,109,62,4	script	Picky Crew#nyaong03	4_CAT_SAILOR2,{
 	mes "[Picky Crew]";
 	mes "Do not run in the hall!";
 	mes "My fur falls out because of someone who";
@@ -6509,7 +6509,7 @@ mal_in02,109,62,4	script	Picky Crew#nyaong03	545,{
 
 // Cat Gamers :: mal_gamer
 //============================================================
-mal_in01,31,210,2	script	Cat Gamers Director	549,{
+mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 	if (MaxWeight - Weight < 1000) {
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
@@ -7303,7 +7303,7 @@ L_CompleteQuest:
 	close;
 }
 
-malangdo,127,111,4	script	Strange Cat#gamer	547,{
+malangdo,127,111,4	script	Strange Cat#gamer	4_CAT_SAILOR4,{
 	if (MaxWeight - Weight < 1000) {
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
@@ -7595,7 +7595,7 @@ malangdo,127,111,4	script	Strange Cat#gamer	547,{
 	}
 }
 
-malangdo,161,197,4	script	Eryu#gamer	876,{
+malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 	if (MaxWeight - Weight < 1000) {
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
@@ -7811,7 +7811,7 @@ OnDisable:
 	end;
 }
 
-malangdo,230,197,4	script	Stew#gamer	555,{
+malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 	if (MaxWeight - Weight < 1000) {
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
@@ -8040,7 +8040,7 @@ OnDisable:
 	end;
 }
 
-malangdo,244,144,4	script	Ketchup#gamer	546,{
+malangdo,244,144,4	script	Ketchup#gamer	4_CAT_SAILOR3,{
 	if (MaxWeight - Weight < 1000) {
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
@@ -8229,7 +8229,7 @@ OnDisable:
 	end;
 }
 
-malangdo,181,119,7	script	Eff#gamer	560,{
+malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 	if (MaxWeight - Weight < 1000) {
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
@@ -8490,7 +8490,7 @@ OnDisable:
 	end;
 }
 
-mal_in01,91,216,4	script	Ser#gamer	544,{
+mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 	if (MaxWeight - Weight < 1000) {
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
@@ -8834,7 +8834,7 @@ mal_in01,91,216,4	script	Ser#gamer	544,{
 	}
 }
 
-mal_in01,86,222,4	script	Paa#gamer	544,{
+mal_in01,86,222,4	script	Paa#gamer	4_CAT_SAILOR1,{
 	if (MaxWeight - Weight < 1000) {
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
@@ -9164,7 +9164,7 @@ mal_in01,86,222,4	script	Paa#gamer	544,{
 	}
 }
 
-mal_in01,91,222,4	script	Kuka#gamer	422,{
+mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 	if (MaxWeight - Weight < 1000) {
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
@@ -9486,7 +9486,7 @@ mal_in01,91,222,4	script	Kuka#gamer	422,{
 	}
 }
 
-mal_in01,134,221,4	script	KungKung#gamer	422,{
+mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 	if (MaxWeight - Weight < 1000) {
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
@@ -9904,7 +9904,7 @@ mal_in01,134,221,4	script	KungKung#gamer	422,{
 	end;
 }
 
-mal_in01,133,214,6	script	Leader#gamer	546,{
+mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 	if (MaxWeight - Weight < 1000) {
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
@@ -10277,7 +10277,7 @@ mal_in01,133,214,6	script	Leader#gamer	546,{
 	close;
 }
 
-mal_in01,136,216,2	script	Seichi#gamer	553,{
+mal_in01,136,216,2	script	Seichi#gamer	4_CAT_DOWN,{
 	if (malang_gamer == 20) {
 		mes "[Seichi]";
 		mes "Ah~ I'm hungry. Any rats wandering around?";
@@ -10301,7 +10301,7 @@ mal_in01,136,216,2	script	Seichi#gamer	553,{
 	end;
 }
 
-mal_in01,136,215,2	script	Row#gamer	559,{
+mal_in01,136,215,2	script	Row#gamer	4_CAT_ADV1,{
 	if (malang_gamer == 20) {
 		mes "[Row]";
 		mes "Hut! Human, you came to see me, Row the Great? What? No?";
@@ -10324,7 +10324,7 @@ mal_in01,136,215,2	script	Row#gamer	559,{
 	end;
 }
 
-mal_in01,136,214,2	script	Debong#gamer	876,{
+mal_in01,136,214,2	script	Debong#gamer	4_CAT,{
 	if (malang_gamer == 20) {
 		mes "[Debong]";
 		mes "Hair picking is my best hobby meow.";
@@ -10344,7 +10344,7 @@ mal_in01,136,214,2	script	Debong#gamer	876,{
 	end;
 }
 
-mal_in01,136,213,2	script	Libs#gamer	421,{
+mal_in01,136,213,2	script	Libs#gamer	4_M_BOSSCAT,{
 	if (malang_gamer == 20) {
 		mes "[Libs]";
 		mes "Arrgg!! Why should I play this stupid flag waving game here?";
@@ -10375,7 +10375,7 @@ mal_in01,136,213,2	script	Libs#gamer	421,{
 	end;
 }
 
-mal_in01,136,212,2	script	YongYong#gamer	554,{
+mal_in01,136,212,2	script	YongYong#gamer	4_CAT_REST,{
 	if (malang_gamer == 20) {
 		mes "[YongYong]";
 		mes "Meow~ I'm annoyed meow~";
@@ -10406,7 +10406,7 @@ mal_in01,136,212,2	script	YongYong#gamer	554,{
 	end;
 }
 
-malangdo,120,140,7	script	Sign#Cat G Entrance	858,{
+malangdo,120,140,7	script	Sign#Cat G Entrance	4_BULLETIN_BOARD2,{
 	mes "A small sign.";
 	next;
 	mes "[Cat Gamers Headquarters]";
@@ -10416,7 +10416,7 @@ malangdo,120,140,7	script	Sign#Cat G Entrance	858,{
 	close;
 }
 
-mal_in01,15,221,6	script	Sign#Cat G 1F	858,{
+mal_in01,15,221,6	script	Sign#Cat G 1F	4_BULLETIN_BOARD2,{
 	mes "[Cat Gamers Headquarters 1F]";
 	mes "- ~ B 1 ~ -";
 	mes "Rock Paper Scissors practice room";
@@ -10424,7 +10424,7 @@ mal_in01,15,221,6	script	Sign#Cat G 1F	858,{
 	close;
 }
 
-mal_in01,77,214,4	script	Sign#Cat G B1	858,{
+mal_in01,77,214,4	script	Sign#Cat G B1	4_BULLETIN_BOARD2,{
 	mes "[Cat Gamers Headquarters B1]";
 	mes "- ~ 1 F ~ -";
 	mes "Consult with the director...";
@@ -10435,7 +10435,7 @@ mal_in01,77,214,4	script	Sign#Cat G B1	858,{
 	close;
 }
 
-mal_in01,142,220,6	script	Sign#Cat G B2	858,{
+mal_in01,142,220,6	script	Sign#Cat G B2	4_BULLETIN_BOARD2,{
 	mes "[Cat Gamers Headquarters B2]";
 	mes "- ~ B 1 ~ -";
 	mes "Rock Paper Scissors practice room";
@@ -10443,7 +10443,7 @@ mal_in01,142,220,6	script	Sign#Cat G B2	858,{
 	close;
 }
 
-mal_in01,155,222,2	script	Uneet#gamer	890,{
+mal_in01,155,222,2	script	Uneet#gamer	4_LAM,{
 	set .@playtime, checkquest(5069,PLAYTIME);
 	if (.@playtime == 0 || .@playtime == 1) {
 		mes "[Uneet]";
@@ -10482,7 +10482,7 @@ mal_in01,155,222,2	script	Uneet#gamer	890,{
 	end;
 }
 
-mal_in01,30,222,4	script	Interview Cat#gamer	560,{
+mal_in01,30,222,4	script	Interview Cat#gamer	4_CAT_ADV2,{
 	mes "[Interview Cat]";
 	mes "I want join 'Cat Gamers'.";
 	mes "But it seems the Cat Gamers Director is busy now. Should I just leave?";
@@ -10492,7 +10492,7 @@ mal_in01,30,222,4	script	Interview Cat#gamer	560,{
 	close;
 }
 
-mal_in01,19,213,1	script	Waiting Cat#gamer	555,{
+mal_in01,19,213,1	script	Waiting Cat#gamer	4_CAT_3COLOR,{
 	mes "[Waiting Cat]";
 	mes "Why did someone put that vase inside of a glass?";
 	mes "The Cat Gamers Director did that?";
@@ -10505,14 +10505,14 @@ mal_in01,19,213,1	script	Waiting Cat#gamer	555,{
 
 // Archangel Wing Enchants :: enc_angel
 //============================================================
-malangdo,234,153,6	script	Notice Board#mal	837,{
+malangdo,234,153,6	script	Notice Board#mal	2_BULLETIN_BOARD,{
 	mes "^0000FFThere's a hastily written message on this bulletin board.^000000";
 	next;
 	mes "A fallen angel within will unlock a hidden enchantment to Archangel Wings.";
 	close;
 }
 
-mal_in01,15,16,3	script	Fallen Angel#mal	403,{
+mal_in01,15,16,3	script	Fallen Angel#mal	4_F_VALKYRIE2,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "You are carrying too many items, please reduce them and come back!";

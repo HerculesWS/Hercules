@@ -13,7 +13,7 @@
 //= 1.2 Rescripted to official 10.3 standards. [L0ne_W0lf]
 //============================================================
 
-lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	852,{
+lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	4_M_EIN_SOLDIER,{
 	cutin "ein_soldier",2;
 	mes "[Lighthalzen Guide]";
 	mes "Welcome to Lighthalzen,";
@@ -218,8 +218,8 @@ lighthalzen,207,310,5	script	Guide#lhz::LhzGuide	852,{
 	end;
 }
 
-lighthalzen,220,311,3	duplicate(LhzGuide)	Guide#2lhz	852
+lighthalzen,220,311,3	duplicate(LhzGuide)	Guide#2lhz	4_M_EIN_SOLDIER
 
-lighthalzen,154,100,5	duplicate(LhzGuide)	Guide#3lhz	852
+lighthalzen,154,100,5	duplicate(LhzGuide)	Guide#3lhz	4_M_EIN_SOLDIER
 
-lighthalzen,307,224,3	duplicate(LhzGuide)	Guide#4lhz	852
+lighthalzen,307,224,3	duplicate(LhzGuide)	Guide#4lhz	4_M_EIN_SOLDIER

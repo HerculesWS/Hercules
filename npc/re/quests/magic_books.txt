@@ -14,7 +14,7 @@
 //= 1.1a Updated NPC name to "Master Velofos". [Euphy]
 //============================================================
 
-geffen_in,176,105,4	script	Master Velofos	64,{
+geffen_in,176,105,4	script	Master Velofos	1_M_WIZARD,{
 	if (checkweight(1201,1) == 0) {
 		mes "You're carrying too many items. Please make some room in your bag first.";
 		close;
@@ -268,7 +268,7 @@ geffen_in,176,105,4	script	Master Velofos	64,{
 	close;
 }
 
-geffen_in,175,112,4	script	Lea	123,{
+geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 	if (checkweight(1201,1) == 0) {
 		mes "You're carrying too many items. Please make some room in your bag first.";
 		close;
@@ -504,7 +504,7 @@ geffen_in,175,112,4	script	Lea	123,{
 	close;
 }
 
-mid_camp,255,244,4	script	Galfos	735,{
+mid_camp,255,244,4	script	Galfos	4_M_JOB_WIZARD,{
 	if (checkweight(1201,1) == 0) {
 		mes "You're carrying too many items. Please make some room in your bag first.";
 		close;
@@ -667,7 +667,7 @@ mid_camp,255,244,4	script	Galfos	735,{
 	close;
 }
 
-dic_in01,25,190,0	script	Mysterious Documents	844,{
+dic_in01,25,190,0	script	Mysterious Documents	CLEAR_NPC,{
 	if (isequipped(2782) < 1) {
 		mes "I better not forget to equip my ring.";
 		close;
@@ -830,8 +830,8 @@ function	script	Magic_Book_Essence	{
 	mes "Someone already used this area.";
 	close;
 }
-thor_v02,163,104,0	script	Powerful Lava Energy#33	844,{ callfunc "Magic_Book_Essence",12218,7097,40,"Lava"; end; }
-thor_v01,185,91,0	script	Powerful Flame Energy#33	844,{ callfunc "Magic_Book_Essence",12219,7098,10,"Flame"; end; }
-ice_dun03,137,148,0	script	Powerful Glacier Energy	844,{ callfunc "Magic_Book_Essence",12220,7561,10,"Glacier"; end; }
-ein_dun02,181,124,0	script	Powerful Fossil Energy	844,{ callfunc "Magic_Book_Essence",12221,7312,10,"Fossil"; end; }
-gon_dun02,252,198,0	script	Powerful Storm Energy#33	844,{ callfunc "Magic_Book_Essence",12222,7266,10,"Storm"; end; }
+thor_v02,163,104,0	script	Powerful Lava Energy#33	CLEAR_NPC,{ callfunc "Magic_Book_Essence",12218,7097,40,"Lava"; end; }
+thor_v01,185,91,0	script	Powerful Flame Energy#33	CLEAR_NPC,{ callfunc "Magic_Book_Essence",12219,7098,10,"Flame"; end; }
+ice_dun03,137,148,0	script	Powerful Glacier Energy	CLEAR_NPC,{ callfunc "Magic_Book_Essence",12220,7561,10,"Glacier"; end; }
+ein_dun02,181,124,0	script	Powerful Fossil Energy	CLEAR_NPC,{ callfunc "Magic_Book_Essence",12221,7312,10,"Fossil"; end; }
+gon_dun02,252,198,0	script	Powerful Storm Energy#33	CLEAR_NPC,{ callfunc "Magic_Book_Essence",12222,7266,10,"Storm"; end; }

@@ -30,7 +30,7 @@
 //= 2.6 Removed the need for use of 'goto.' [L0ne_W0lf]
 //==========================================================
 
-prt_church,16,41,4	script	High Bishop#prst	60,{
+prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 	// Uncomment the following 'if' statement to allow High Priests to assist Acolytes with the job change quest.
 	// Officially High Priests are blocked from helping by an indiscriminate check if you are a transcended character.
 	//if (Class == Job_High_Priest) set .@AllowHPAssist,1;
@@ -530,7 +530,7 @@ prt_church,16,41,4	script	High Bishop#prst	60,{
 	}
 }
 
-prt_church,27,24,1	script	Sister Cecilia	79,{
+prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 	mes "[Sister Cecilia]";
 	if (BaseJob != Job_Acolyte) {
 		if (BaseJob == Job_Priest) {
@@ -842,7 +842,7 @@ prt_church,27,24,1	script	Sister Cecilia	79,{
 
 // 2nd Test
 //==========================================================
-job_prist,24,187,4	script	Peter S. Alberto	110,{
+job_prist,24,187,4	script	Peter S. Alberto	4_M_MINISTER,{
 	mes "[Father Peter]";
 	if (BaseJob == Job_Priest) {
 		mes "Welcome!";
@@ -1030,7 +1030,7 @@ OnDisable:
 	end;
 }
 
-job_prist,23,187,1	script	Peter S. Alberto#2	110,{
+job_prist,23,187,1	script	Peter S. Alberto#2	4_M_MINISTER,{
 	mes "[Father Peter]";
 	if (BaseJob == Job_Priest) {
 		mes "Welcome!";
@@ -1085,7 +1085,7 @@ OnDisable:
 	end;
 }
 
--	script	Zombie_Generator#prst	110,{
+-	script	Zombie_Generator#prst	4_M_MINISTER,{
 OnInit:
 	disablenpc "Zombie_Generator#prst";
 	end;
@@ -1290,7 +1290,7 @@ OnDisable:
 	disablenpc "Zombie5_1";
 }
 
-job_prist,24,109,4	script	prst1_1	45,3,3,{
+job_prist,24,109,4	script	prst1_1	WARPNPC,3,3,{
 OnTouch:
 	set .@mobs,getvariableofnpc(.MyMobs,"Zombie_Generator#prst");
 	if (BaseJob == Job_Priest) warp "job_prist",168,17;
@@ -1533,7 +1533,7 @@ OnTouch:
 	}
 }
 
-job_prist,168,150,4	script	Baphomet#prst	736,8,1,{
+job_prist,168,150,4	script	Baphomet#prst	4_BAPHOMET,8,1,{
 OnTouch:
 	if (BaseJob == Job_Priest) {
 		mes "[Baphomet]";
@@ -1595,7 +1595,7 @@ OnTouch:
 	}
 }
 
-job_prist,168,180,4	script	prst2_1	45,3,3,{
+job_prist,168,180,4	script	prst2_1	WARPNPC,3,3,{
 OnTouch:
 	if (BaseJob == Job_Priest) warp "job_prist",98,40;
 	else if (BaseClass == Job_Acolyte) {
@@ -1607,7 +1607,7 @@ OnTouch:
 
 // 4th Test
 //==========================================================
-job_prist,1,2,1	script	Mummy_Generator	110,1,1,{
+job_prist,1,2,1	script	Mummy_Generator	4_M_MINISTER,1,1,{
 OnInit:
 	disablenpc "Mummy_Generator";
 	end;
@@ -1702,7 +1702,7 @@ OnDisable:
 	end;
 }
 
-job_prist,98,105,4	script	prst3_1	45,3,3,{
+job_prist,98,105,4	script	prst3_1	WARPNPC,3,3,{
 OnTouch:
 	if (BaseJob == Job_Priest) {
 		warp "prt_church",15,36;

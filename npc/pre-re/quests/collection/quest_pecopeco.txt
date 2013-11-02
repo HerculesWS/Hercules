@@ -12,7 +12,7 @@
 //= 1.0 First version.
 //============================================================
 
-moc_fild02,74,329,3	script	Gregor#PecoPeco_Hunt	97,{
+moc_fild02,74,329,3	script	Gregor#PecoPeco_Hunt	4W_M_01,{
 	if (checkquest(60101) != -1) {
 		if (checkquest(60101,HUNTING) != 2 ) {
 			mes "[Gregor]";

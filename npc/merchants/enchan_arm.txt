@@ -15,7 +15,7 @@
 //= 1.3a Added 'disable_items' command. [Euphy]
 //============================================================
 
-prontera,165,60,2	script	Apprentice Craftsman	73,{
+prontera,165,60,2	script	Apprentice Craftsman	1_F_MERCHANT_01,{
 	disable_items;
 	mes "[Apprentice Craftsman]";
 	if (Zeny >= 400000) {

@@ -12,7 +12,7 @@
 //= 1.2 Fixed double quotes not being escaped [brianluau]
 //============================================================
 
-prontera,156,174,4	script	Snower	713,{
+prontera,156,174,4	script	Snower	4_M_06,{
 	mes "[Snower]";
 	if(Q_XMSRINGS==2){
 		mes "Oh.. is it true? You've helped my sis Sneewy? Thank you.";
@@ -97,7 +97,7 @@ OnInit:
 	end;
 }
 
-louyang,224,249,4	script	Sneewy	717,{
+louyang,224,249,4	script	Sneewy	4_F_KID3,{
 	mes "[Sneewy]";
 	if(Q_XMSRINGS==0){
 		mes "Hi! I'm waithing for my sister's birdy with mail...";
@@ -140,7 +140,7 @@ M_END:
 	close;
 }
 
-izlu2dun,133,160,2	script	Snoowy	714,{
+izlu2dun,133,160,2	script	Snoowy	4_F_06,{
 	mes "[Snoowy]";
 	if(Q_XMSRINGS==0){
 		mes "Helloooou! Do you know my bro and sis? How so? My brother Snower's well known in Prontera!! Just ask any child there.";

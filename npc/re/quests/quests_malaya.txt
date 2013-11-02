@@ -24,7 +24,7 @@
 
 // Cautious Village & Daily Quests :: hi_malaya
 //============================================================
-malaya,266,76,3	script	Rodel the Guard#malaya	570,4,4,{
+malaya,266,76,3	script	Rodel the Guard#malaya	4_MAL_SOLDIER,4,4,{
 	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
 		mes "Cannot proceed with the quest. You are carrying too many items. -";
 		close;
@@ -186,7 +186,7 @@ OnInit:
 	end;
 }
 
-malaya,185,358,3	script	Leader Phong in Mumbaki	580,{
+malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
@@ -523,7 +523,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	580,{
 	}
 }
 
-malaya,169,350,5	script	Imelda#malaya	475,{
+malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
@@ -900,7 +900,7 @@ malaya,169,350,5	script	Imelda#malaya	475,{
 	end;
 }
 
-malaya,181,353,5	script	Old Man Nardo#malaya	574,{
+malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
@@ -1167,7 +1167,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	574,{
 	end;
 }
 
-malaya,224,267,3	script	Romel#malaya	573,{
+malaya,224,267,3	script	Romel#malaya	4_M_MAYOR,{
 	if (malaya_hi < 10) {
 		mes "[Romel]";
 		mes ".........";
@@ -1323,7 +1323,7 @@ malaya,224,267,3	script	Romel#malaya	573,{
 	end;
 }
 
-malaya,223,267,5	script	Talah#malaya	941,{
+malaya,223,267,5	script	Talah#malaya	4_F_DST_CHILD,{
 	if (malaya_hi < 10) {
 		mes "[Talah]";
 		mes "..........gasp!";
@@ -1454,7 +1454,7 @@ malaya,223,267,5	script	Talah#malaya	941,{
 	end;
 }
 
-malaya,62,274,0	script	Sand Trap#malaya	557,{
+malaya,62,274,0	script	Sand Trap#malaya	4_SOIL,{
 	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
@@ -1485,10 +1485,10 @@ OnTimer30000:
 	stopnpctimer;
 	end;
 }
-malaya,66,277,0	duplicate(Sand Trap#malaya)	Sand Trap#malaya01	557
-malaya,70,282,0	duplicate(Sand Trap#malaya)	Sand Trap#malaya02	557
+malaya,66,277,0	duplicate(Sand Trap#malaya)	Sand Trap#malaya01	4_SOIL
+malaya,70,282,0	duplicate(Sand Trap#malaya)	Sand Trap#malaya02	4_SOIL
 
-ma_fild01,178,206,0	script	Black Bamboo#malaya	844,4,4,{
+ma_fild01,178,206,0	script	Black Bamboo#malaya	CLEAR_NPC,4,4,{
 	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
@@ -1521,13 +1521,13 @@ OnTimer30000:
 	stopnpctimer;
 	end;
 }
-ma_fild01,225,186,0	duplicate(Black Bamboo#malaya)	Black Bamboo#malaya01	844,4,4
-ma_fild01,230,244,0	duplicate(Black Bamboo#malaya)	Black Bamboo#malaya02	844,4,4
-ma_fild01,174,238,0	duplicate(Black Bamboo#malaya)	Black Bamboo#malaya03	844,4,4
-ma_fild01,180,273,0	duplicate(Black Bamboo#malaya)	Black Bamboo#malaya04	844,4,4
-ma_fild01,179,145,0	duplicate(Black Bamboo#malaya)	Black Bamboo#malaya05	844,4,4
+ma_fild01,225,186,0	duplicate(Black Bamboo#malaya)	Black Bamboo#malaya01	CLEAR_NPC,4,4
+ma_fild01,230,244,0	duplicate(Black Bamboo#malaya)	Black Bamboo#malaya02	CLEAR_NPC,4,4
+ma_fild01,174,238,0	duplicate(Black Bamboo#malaya)	Black Bamboo#malaya03	CLEAR_NPC,4,4
+ma_fild01,180,273,0	duplicate(Black Bamboo#malaya)	Black Bamboo#malaya04	CLEAR_NPC,4,4
+ma_fild01,179,145,0	duplicate(Black Bamboo#malaya)	Black Bamboo#malaya05	CLEAR_NPC,4,4
 
-malaya,295,171,3	script	Collection Dealer Woeon	582,{
+malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
@@ -1765,7 +1765,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	582,{
 	end;
 }
 
-malaya,119,217,3	script	Blacksmith Pandoi	538,{
+malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
@@ -2112,7 +2112,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	538,{
 	end;
 }
 
-malaya,326,68,2	script	Pedro the Sailor	100,{
+malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
@@ -2720,7 +2720,7 @@ OnTouch:
 	end;
 }
 
-ma_fild01,261,208,2	script	Kiko in Mumbaki	580,{
+ma_fild01,261,208,2	script	Kiko in Mumbaki	4_BARYO_CHIEF,{
 	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
@@ -2831,7 +2831,7 @@ ma_fild01,261,208,2	script	Kiko in Mumbaki	580,{
 	end;
 }
 
-ma_fild01,239,253,3	script	Dhong the Guard	570,{
+ma_fild01,239,253,3	script	Dhong the Guard	4_MAL_SOLDIER,{
 	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
@@ -2970,7 +2970,7 @@ ma_fild01,239,253,3	script	Dhong the Guard	570,{
 	end;
 }
 
-ma_fild01,238,257,2	script	Guard Dog Vantai	972,{
+ma_fild01,238,257,2	script	Guard Dog Vantai	4_RUS_DWOLF,{
 	mes "[Vantai]";
 	mes "Grrrrrrr...";
 	mes " ";
@@ -2978,7 +2978,7 @@ ma_fild01,238,257,2	script	Guard Dog Vantai	972,{
 	close;
 }
 
-ma_fild01,200,190,3	script	Maries#malaya	579,{
+ma_fild01,200,190,3	script	Maries#malaya	4_F_BARYO_WOMAN,{
 	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
@@ -3086,7 +3086,7 @@ ma_fild01,200,190,3	script	Maries#malaya	579,{
 	end;
 }
 
-ma_fild01,203,189,3	script	Little Girl#malaya	576,{
+ma_fild01,203,189,3	script	Little Girl#malaya	4_F_BARYO_GIRL,{
 	mes "[Little Girl]";
 	mes "He he, the forest is scary, but it's so much fun so I go there often to play~";
 	mes "Strange, how we always get lost.";
@@ -3097,7 +3097,7 @@ ma_fild01,203,189,3	script	Little Girl#malaya	576,{
 	close;
 }
 
-ma_fild01,251,93,3	script	Lost Child#malaya01	576,{
+ma_fild01,251,93,3	script	Lost Child#malaya01	4_F_BARYO_GIRL,{
 	if (checkquest(7388) > -1) {
 		if (!countitem(12700)) {
 			mes "[Little Kid]";
@@ -3169,10 +3169,10 @@ OnInit:
 	if (strnpcinfo(0) != "Lost Child#malaya01")
 		disablenpc strnpcinfo(0);
 }
-ma_fild01,114,141,3	duplicate(Lost Child#malaya01)	Lost Child#malaya02	576
-ma_fild01,130,314,3	duplicate(Lost Child#malaya01)	Lost Child#malaya03	576
+ma_fild01,114,141,3	duplicate(Lost Child#malaya01)	Lost Child#malaya02	4_F_BARYO_GIRL
+ma_fild01,130,314,3	duplicate(Lost Child#malaya01)	Lost Child#malaya03	4_F_BARYO_GIRL
 
-ma_fild02,241,39,5	script	Good Capre Budidai	572,{
+ma_fild02,241,39,5	script	Good Capre Budidai	4_MAL_BUDIDAI,{
 	mes "[Budidai]";
 	mes "Hey hey hey~";
 	mes "I am such a nice Capre~ Hey!";
@@ -3338,7 +3338,7 @@ ma_fild02,241,39,5	script	Good Capre Budidai	572,{
 
 // Traders :: malaya_npc
 //============================================================
-ma_fild01,166,214,6	script	Old Man in Dilemma#GA	575,{
+ma_fild01,166,214,6	script	Old Man in Dilemma#GA	4_F_BARYO_OLD,{
 	if (MaxWeight - Weight < 600 || checkweight(1201,1) == 0) {
 		mes "Cannot proceed because you have too many items in your possession.";
 		close;
@@ -3412,7 +3412,7 @@ ma_fild01,166,214,6	script	Old Man in Dilemma#GA	575,{
 	}
 }
 
-ma_fild01,238,198,4	script	Tikbalang Expert#malaya	582,{
+ma_fild01,238,198,4	script	Tikbalang Expert#malaya	4_M_MALAYA,{
 	if (MaxWeight - Weight < 50 || checkweight(1201,1) == 0) {
 		mes "Cannot proceed because you have too many items in your possession.";
 		close;
@@ -3599,7 +3599,7 @@ ma_fild01,238,198,4	script	Tikbalang Expert#malaya	582,{
 
 // Upgrade Boss Equipment :: malaya_mvpitem
 //============================================================
-ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	582,{
+ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "[Bayani]";
 	mes "I will upgrade your armor if you bring one that holds enormous power.";
 	next;
@@ -3829,7 +3829,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	582,{
 
 // Secret in the Woods :: malaya_buwaya
 //============================================================
-malaya,305,281,3	script	Guard#buwaya	570,7,7,{
+malaya,305,281,3	script	Guard#buwaya	4_MAL_SOLDIER,7,7,{
 	if (malaya_hi < 10) {
 		mes "- From the wary looks on the guard's face, it is obvious he is at alert at the sight of you. He won't intimidate you but seems he won't even deal with you either. -";
 		next;
@@ -3889,7 +3889,7 @@ OnTouch:
 	}
 	end;
 }
-malaya,276,288,5	script	Port Malaya Villager::buwaya_A	582,{
+malaya,276,288,5	script	Port Malaya Villager::buwaya_A	4_M_MALAYA,{
 	if (malaya_hi < 20) {
 		mes "- Look at you warily while whispering to each other. -";
 		close;
@@ -3989,10 +3989,10 @@ malaya,276,288,5	script	Port Malaya Villager::buwaya_A	582,{
 		close;
 	}
 }
-malaya,278,288,3	duplicate(buwaya_A)	Port Malaya Villager::buwaya_B	583
-malaya,276,286,7	duplicate(buwaya_A)	Port Malaya Villager::buwaya_C	582
+malaya,278,288,3	duplicate(buwaya_A)	Port Malaya Villager::buwaya_B	4_F_MALAYA
+malaya,276,286,7	duplicate(buwaya_A)	Port Malaya Villager::buwaya_C	4_M_MALAYA
 
-ma_in01,47,101,3	script	Totoy#buwaya	577,7,7,{
+ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 	if ((malaya_hi < 20) || (malaya_buwaya < 2)) {
 		mes "- See someone shaky with dopey eyes. -";
 		close;
@@ -4277,14 +4277,14 @@ OnTouch:
 	end;
 }
 
-ma_in01,43,101,7	script	Dog#buwaya_totoi	81,{
+ma_in01,43,101,7	script	Dog#buwaya_totoi	4_DOG01,{
 	end;
 OnInit:
 	disablenpc "Dog#buwaya_totoi";
 	end;
 }
 
-ma_in01,44,105,3	script	Drawer#buwaya	844,{
+ma_in01,44,105,3	script	Drawer#buwaya	CLEAR_NPC,{
 	if (malaya_buwaya == 3) {
 		mes "- You look for the Green Potion in Totoys drawer. -";
 		next;
@@ -4303,7 +4303,7 @@ ma_in01,44,105,3	script	Drawer#buwaya	844,{
 	end;
 }
 
-malaya,290,152,5	script	Master of Hunting#buwaya	578,{
+malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 	if ((malaya_hi < 20) || (malaya_buwaya < 5)) {
 		mes "[Master of Hunting]";
 		mes "Oh! Ho! Ho!";
@@ -4447,7 +4447,7 @@ malaya,290,152,5	script	Master of Hunting#buwaya	578,{
 	}
 }
 
-malaya,291,152,3	script	#buwaya_soil	557,{
+malaya,291,152,3	script	#buwaya_soil	4_SOIL,{
 	if (malaya_buwaya == 9) {
 		mes "- Rummaging, fumbling. -";
 		next;
@@ -4551,15 +4551,15 @@ OnTimer20000:
 	stopnpctimer;
 	end;
 }
-ma_fild02,155,235,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_1	557
-ma_fild02,143,142,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_2	557
-ma_fild02,266,155,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_3	557
-ma_fild02,221,91,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_4	557
-ma_fild02,205,85,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_5	557
-ma_fild02,300,98,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_6	557
-ma_fild02,100,275,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_7	557
+ma_fild02,155,235,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_1	4_SOIL
+ma_fild02,143,142,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_2	4_SOIL
+ma_fild02,266,155,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_3	4_SOIL
+ma_fild02,221,91,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_4	4_SOIL
+ma_fild02,205,85,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_5	4_SOIL
+ma_fild02,300,98,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_6	4_SOIL
+ma_fild02,100,275,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_7	4_SOIL
 
-malaya,290,340,3	script	Guard Leader#buwaya	571,{
+malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait!! -";
 		mes "- You have too many items on you. -";
@@ -4709,7 +4709,7 @@ malaya,290,340,3	script	Guard Leader#buwaya	571,{
 	close;
 }
 
-ma_fild02,307,245,0	script	#buwaya_todog1	139,3,3,{
+ma_fild02,307,245,0	script	#buwaya_todog1	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	if (malaya_buwaya == 11) {
@@ -4720,10 +4720,10 @@ OnTouch:
 	}
 	end;
 }
-ma_fild02,320,241,0	duplicate(#buwaya_todog1)	#buwaya_todog2	139,3,3
-ma_fild02,317,250,0	duplicate(#buwaya_todog1)	#buwaya_todog3	139,7,7
+ma_fild02,320,241,0	duplicate(#buwaya_todog1)	#buwaya_todog2	HIDDEN_WARP_NPC,3,3
+ma_fild02,317,250,0	duplicate(#buwaya_todog1)	#buwaya_todog3	HIDDEN_WARP_NPC,7,7
 
-ma_fild02,312,259,3	script	Dog#buwaya	81,{
+ma_fild02,312,259,3	script	Dog#buwaya	4_DOG01,{
 	if (malaya_buwaya == 11) {
 		mes "[Dog]";
 		mes "Bark bark!!";
@@ -4797,7 +4797,7 @@ OnInit:
 	end;
 }
 
-ma_fild02,308,262,3	script	Guard#buwayacave	570,{
+ma_fild02,308,262,3	script	Guard#buwayacave	4_MAL_SOLDIER,{
 	end;
 OnInit:
 	disablenpc "Guard#buwayacave";
@@ -4806,7 +4806,7 @@ OnInit:
 
 // Bakonawa Extermination :: malaya_bakonawa
 //============================================================
-malaya,280,331,4	script	Singing Man#bako1	578,{
+malaya,280,331,4	script	Singing Man#bako1	4_M_BARYO_MAN,{
 	if (malaya_bakona1 < 5) {
 		mes "[Singing Man]";
 		mes "Story of dragon that lives at a lake~";
@@ -4860,7 +4860,7 @@ malaya,280,331,4	script	Singing Man#bako1	578,{
 	}
 }
 
-malaya,275,333,5	script	Singing Woman#bako1	579,{
+malaya,275,333,5	script	Singing Woman#bako1	4_F_BARYO_WOMAN,{
 	if (malaya_bakona1 < 5) {
 		mes "[Singing Woman]";
 		mes "Bakonawa that live at a lake,";
@@ -4903,7 +4903,7 @@ malaya,275,333,5	script	Singing Woman#bako1	579,{
 	}
 }
 
-malaya,290,329,4	script	Frightened Boy#bako1	577,{
+malaya,290,329,4	script	Frightened Boy#bako1	4_M_BARYO_BOY,{
 	if (malaya_hi < 20) {
 		mes "- He seems cautious of you. -";
 		close;
@@ -4924,7 +4924,7 @@ malaya,290,329,4	script	Frightened Boy#bako1	577,{
 	}
 }
 
-malaya,264,338,4	script	Frightened Maiden#bako1	576,{
+malaya,264,338,4	script	Frightened Maiden#bako1	4_F_BARYO_GIRL,{
 	if (malaya_hi < 20) {
 		mes "- She seems cautious of you. -";
 		close;
@@ -4975,7 +4975,7 @@ malaya,264,338,4	script	Frightened Maiden#bako1	576,{
 	}
 }
 
-malaya,272,339,5	script	Old Fortune Teller#bako1	575,{
+malaya,272,339,5	script	Old Fortune Teller#bako1	4_F_BARYO_OLD,{
 	if (malaya_hi < 20) {
 		mes "- Old Fortune Teller seems cautious of you. -";
 		close;
@@ -5008,7 +5008,7 @@ malaya,272,339,5	script	Old Fortune Teller#bako1	575,{
 	}
 }
 
-malaya,285,332,4	script	Old Legend Teller#bako1	574,{
+malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
 	if (checkweight(1301,3) == 0) {
 		mes "You cannot start the conversation. You are carrying too many items. -";
 		close;
@@ -5246,7 +5246,7 @@ malaya,285,332,4	script	Old Legend Teller#bako1	574,{
 	}
 }
 
-ma_fild02,40,240,4	script	Malaya Immigrant#bako1	578,{
+ma_fild02,40,240,4	script	Malaya Immigrant#bako1	4_M_BARYO_MAN,{
 	if (malaya_bakona1 < 3) {
 		mes "[Malaya Immigrant]";
 		mes "You must have a brave heart";
@@ -5357,7 +5357,7 @@ ma_fild02,40,240,4	script	Malaya Immigrant#bako1	578,{
 	}
 }
 
-ma_fild01,165,237,4	script	Malaya Immigrant#bako2	582,{
+ma_fild01,165,237,4	script	Malaya Immigrant#bako2	4_M_MALAYA,{
 	if (malaya_bakona1 < 4) {
 		mes "[Malaya Immigrant]";
 		mes "Have you been to";
@@ -5468,7 +5468,7 @@ ma_fild01,165,237,4	script	Malaya Immigrant#bako2	582,{
 	}
 }
 
-ma_fild01,171,235,0	script	#bako1	139,2,2,{
+ma_fild01,171,235,0	script	#bako1	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (malaya_bakona1 == 5) {
@@ -5542,7 +5542,7 @@ L_Record:
 	return;
 }
 
-malaya,304,100,4	script	Old Man's Granddaughter	576,{
+malaya,304,100,4	script	Old Man's Granddaughter	4_F_BARYO_GIRL,{
 	if (malaya_hi < 20) {
 		mes "- He seems cautious of you. -";
 		close;
@@ -5585,7 +5585,7 @@ malaya,304,100,4	script	Old Man's Granddaughter	576,{
 	}
 }
 
-malaya,286,269,4	script	Angry Man#bako2	578,{
+malaya,286,269,4	script	Angry Man#bako2	4_M_BARYO_MAN,{
 	if (malaya_hi < 20) {
 		mes "- He seems cautious of you. -";
 		close;
@@ -5598,7 +5598,7 @@ malaya,286,269,4	script	Angry Man#bako2	578,{
 	close;
 }
 
-malaya,276,269,5	script	Calm Woman#bako2	579,{
+malaya,276,269,5	script	Calm Woman#bako2	4_F_BARYO_WOMAN,{
 	if (malaya_hi < 20) {
 		mes "- He seems cautious of you. -";
 		close;
@@ -5611,7 +5611,7 @@ malaya,276,269,5	script	Calm Woman#bako2	579,{
 	close;
 }
 
-malaya,276,262,4	script	Angry Boy#bako2	577,{
+malaya,276,262,4	script	Angry Boy#bako2	4_M_BARYO_BOY,{
 	if (malaya_hi < 20) {
 		mes "- He seems cautious of you. -";
 		close;
@@ -5623,7 +5623,7 @@ malaya,276,262,4	script	Angry Boy#bako2	577,{
 	close;
 }
 
-malaya,283,265,4	script	Village Chief#bako2	580,{
+malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 	if (checkweight(1301,3) == 0) {
 		mes "You cannot start the conversation. You are carrying too many items. -";
 		close;
@@ -5868,7 +5868,7 @@ malaya,283,265,4	script	Village Chief#bako2	580,{
 	}
 }
 
-malaya,269,267,5	script	Missing Person's Father	582,{
+malaya,269,267,5	script	Missing Person's Father	4_M_MALAYA,{
 	if (malaya_hi < 20) {
 		mes "- He seems cautious of you. -";
 		close;
@@ -5919,7 +5919,7 @@ malaya,269,267,5	script	Missing Person's Father	582,{
 	}
 }
 
-malaya,265,274,5	script	Missing Person's Friend	577,{
+malaya,265,274,5	script	Missing Person's Friend	4_M_BARYO_BOY,{
 	if (malaya_hi < 20) {
 		mes "- He seems cautious of you. -";
 		close;
@@ -5974,7 +5974,7 @@ L_Quest:
 	return;
 }
 
-malaya,270,278,4	script	Missing Person's Son	578,{
+malaya,270,278,4	script	Missing Person's Son	4_M_BARYO_MAN,{
 	if (malaya_hi < 20) {
 		mes "- He seems cautious of you. -";
 		close;
@@ -6020,7 +6020,7 @@ L_Quest:
 	return;
 }
 
-malaya,265,284,4	script	Missing Person's Mother	579,{
+malaya,265,284,4	script	Missing Person's Mother	4_F_BARYO_WOMAN,{
 	if (malaya_hi < 20) {
 		mes "- He seems cautious of you. -";
 		close;
@@ -6074,7 +6074,7 @@ malaya,265,284,4	script	Missing Person's Mother	579,{
 	}
 }
 
-malaya,289,364,4	script	Young Fortune Teller	583,{
+malaya,289,364,4	script	Young Fortune Teller	4_F_MALAYA,{
 	if (checkweight(1301,3) == 0) {
 		mes "You cannot start the conversation. You are carrying too many items. -";
 		close;
@@ -6162,7 +6162,7 @@ malaya,289,364,4	script	Young Fortune Teller	583,{
 	end;
 }
 
-ma_fild01,54,253,4	script	Gruffy Worker#bako2	582,{
+ma_fild01,54,253,4	script	Gruffy Worker#bako2	4_M_MALAYA,{
 	if (malaya_bakona2 < 9) {
 		mes "[Gruffy Worker]";
 		mes "The Village Chief told me to";
@@ -6189,7 +6189,7 @@ ma_fild01,54,253,4	script	Gruffy Worker#bako2	582,{
 	end;
 }
 
-ma_fild01,54,244,0	script	#bako2	139,2,2,{
+ma_fild01,54,244,0	script	#bako2	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (malaya_bakona2 == 9) {
@@ -6230,7 +6230,7 @@ OnTouch:
 	end;
 }
 
-ma_fild01,236,119,5	script	Grumpy Worker#bako2	577,{
+ma_fild01,236,119,5	script	Grumpy Worker#bako2	4_M_BARYO_BOY,{
 	if (malaya_bakona2 < 10) {
 		mes "[Grumpy Worker]";
 		mes "Village Chief told me to";
@@ -6258,7 +6258,7 @@ ma_fild01,236,119,5	script	Grumpy Worker#bako2	577,{
 	}
 }
 
-ma_fild01,242,116,0	script	#bako3	139,2,2,{
+ma_fild01,242,116,0	script	#bako3	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (malaya_bakona2 == 10) {
@@ -6300,7 +6300,7 @@ OnTouch:
 	end;
 }
 
-ma_scene01,177,89,4	script	Cowardly Worker#bako2	578,{
+ma_scene01,177,89,4	script	Cowardly Worker#bako2	4_M_BARYO_MAN,{
 	if (malaya_bakona2 < 11) {
 		mes "[Cowardly Worker]";
 		mes "Village Chief told me to";
@@ -6331,7 +6331,7 @@ ma_scene01,177,89,4	script	Cowardly Worker#bako2	578,{
 	end;
 }
 
-ma_scene01,179,85,0	script	#bako4	139,2,2,{
+ma_scene01,179,85,0	script	#bako4	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (malaya_bakona2 == 11) {
@@ -6372,7 +6372,7 @@ OnTouch:
 	end;
 }
 
-ma_scene01,141,118,4	script	Gloomy Worker#bako2	582,{
+ma_scene01,141,118,4	script	Gloomy Worker#bako2	4_M_MALAYA,{
 	if (malaya_bakona2 < 12) {
 		mes "[Gloomy Worker]";
 		mes "Village Chief told me to wait for you here.";
@@ -6401,7 +6401,7 @@ ma_scene01,141,118,4	script	Gloomy Worker#bako2	582,{
 	end;
 }
 
-ma_scene01,138,122,0	script	#bako5	139,2,2,{
+ma_scene01,138,122,0	script	#bako5	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (malaya_bakona2 == 12) {
@@ -6435,7 +6435,7 @@ OnTouch:
 	end;
 }
 
-ma_scene01,175,170,5	script	Sentimental Worker#bako2	578,{
+ma_scene01,175,170,5	script	Sentimental Worker#bako2	4_M_BARYO_MAN,{
 	if (malaya_bakona2 < 13) {
 		mes "[Sentimental Worker]";
 		mes "Village Chief told me to wait for you here.";
@@ -6468,7 +6468,7 @@ ma_scene01,175,170,5	script	Sentimental Worker#bako2	578,{
 	end;
 }
 
-ma_scene01,171,174,0	script	#bako6	139,2,2,{
+ma_scene01,171,174,0	script	#bako6	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (malaya_bakona2 == 13) {
@@ -6504,7 +6504,7 @@ OnTouch:
 }
 
 // Original name: "Bakonawa Introduction Quest Helper#bako1"
-sec_in02,10,16,5	script	Bakonawa Intro Helper	543,{
+sec_in02,10,16,5	script	Bakonawa Intro Helper	4_MASK_SMOKEY,{
 	if (callfunc("F_GM_NPC",1854,0) < 1) {
 		mes "Seafood and Black Bean Sauce Noodle!";
 		close;
@@ -6828,7 +6828,7 @@ L_Incomplete:
 	return;
 }
 
-malaya,55,72,4	script	Nurse#ma_n1	569,{
+malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 	if (malaya_hi < 20) {
 		mes "[Nurse]";
 		mes "People of this town are too cautious of outsiders.";
@@ -7404,7 +7404,7 @@ malaya,55,72,4	script	Nurse#ma_n1	569,{
 	close;
 }
 
-ma_dun01,35,108,4	script	Nurse#ma_n2	569,{
+ma_dun01,35,108,4	script	Nurse#ma_n2	4_F_NURSE,{
 	if (malaya_bang < 19) {
 		// fall through
 	} else if (malaya_bang < 30) {
@@ -7444,7 +7444,7 @@ ma_dun01,35,108,4	script	Nurse#ma_n2	569,{
 	end;
 }
 
-ma_dun01,152,23,4	script	Suspicious Wooden Stick::MalayaStick0	858,{
+ma_dun01,152,23,4	script	Suspicious Wooden Stick::MalayaStick0	4_BULLETIN_BOARD2,{
 	if (malaya_bang == 20) {
 		mes "There's a talisman similar to the ones outside the hospital.";
 		mes "Let's look around for something else.";
@@ -7512,7 +7512,7 @@ ma_dun01,152,23,4	script	Suspicious Wooden Stick::MalayaStick0	858,{
 	}
 }
 
-malaya,48,76,4	script	Hospital Door#ma_n1	844,{
+malaya,48,76,4	script	Hospital Door#ma_n1	CLEAR_NPC,{
 	if (malaya_bang == 3) {
 		mes "Pushed hard on the door, but it won't open.";
 		mes "It doesn't feel like it's locked or stuck, but encased by a layer of something.";
@@ -7547,7 +7547,7 @@ malaya,48,76,4	script	Hospital Door#ma_n1	844,{
 	}
 }
 
-malaya,64,78,4	script	Village Woman#mab	583,{
+malaya,64,78,4	script	Village Woman#mab	4_F_MALAYA,{
 	if (malaya_hi < 20) {
 		mes "[Village Woman]";
 		mes "......";
@@ -7611,7 +7611,7 @@ malaya,64,78,4	script	Village Woman#mab	583,{
 	}
 }
 
-malaya,62,37,4	script	Village Man#mab	582,{
+malaya,62,37,4	script	Village Man#mab	4_M_MALAYA,{
 	if (malaya_hi < 20) {
 		mes "[Village Man]";
 		mes "Hmmm! Haven't seen you around?";
@@ -7693,7 +7693,7 @@ malaya,62,37,4	script	Village Man#mab	582,{
 	}
 }
 
-malaya,210,200,5	script	Dr. Boon#ma	865,{
+malaya,210,200,5	script	Dr. Boon#ma	4_LGTSCIENCE,{
 	if (malaya_hi < 20) {
 		mes "[Dr. Boon]";
 		mes "......";
@@ -7766,7 +7766,7 @@ malaya,210,200,5	script	Dr. Boon#ma	865,{
 	}
 }
 
-malaya,53,68,4	script	Bushes#ma	844,{
+malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 	if (malaya_bang < 13) {
 		mes "It's just a bush.";
 		mes "A sweet scent of wood rises when shaken.";
@@ -7934,16 +7934,16 @@ OnDisable:
 	disablenpc strnpcinfo(3);
 	end;
 }
-malaya,40,52,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick1	858
-malaya,31,42,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick2	858
-malaya,34,36,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick3	858
-malaya,40,32,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick4	858
-malaya,50,85,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick5	858
-malaya,46,93,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick6	858
-malaya,36,98,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick7	858
-malaya,48,79,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick8	858
-malaya,50,46,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick9	858
-malaya,59,84,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick10	858
+malaya,40,52,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick1	4_BULLETIN_BOARD2
+malaya,31,42,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick2	4_BULLETIN_BOARD2
+malaya,34,36,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick3	4_BULLETIN_BOARD2
+malaya,40,32,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick4	4_BULLETIN_BOARD2
+malaya,50,85,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick5	4_BULLETIN_BOARD2
+malaya,46,93,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick6	4_BULLETIN_BOARD2
+malaya,36,98,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick7	4_BULLETIN_BOARD2
+malaya,48,79,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick8	4_BULLETIN_BOARD2
+malaya,50,46,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick9	4_BULLETIN_BOARD2
+malaya,59,84,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick10	4_BULLETIN_BOARD2
 
 -	script	Tent#ma	-1,{ //557
 	end;
@@ -7977,7 +7977,7 @@ OnTimer30000:
 -	duplicate(Tent#ma)	Tent9#ma	-1
 -	duplicate(Tent#ma)	Tent10#ma	-1
 
-malaya,114,183,3	script	Bent Old Lady#ma	575,{
+malaya,114,183,3	script	Bent Old Lady#ma	4_F_BARYO_OLD,{
 	if (malaya_bang == 16) {
 		mes "[Bent Old Lady]";
 		mes "Ho ho ho ho~~";
@@ -8166,7 +8166,7 @@ malaya,114,183,3	script	Bent Old Lady#ma	575,{
 	}
 }
 
-malaya,276,367,4	script	Bent Shaman#ma	782,{
+malaya,276,367,4	script	Bent Shaman#ma	4_F_UMOLDWOMAN,{
 	if (malaya_hi < 20) {
 		mes "[Bent Shaman]";
 		mes "Urgh Urgh Urghhhhhh";
@@ -8215,7 +8215,7 @@ $malaya_pintados_03  - Number of dyestuffs collected. (range: 0~300)
 $malaya_pintados_04$ - Last player to create a tattoo.
 */
 
-ma_fild01,1,1,4	script	Pintados Manager#pin	894,{
+ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
 		mes "Bingo!";
 		next;
@@ -8373,7 +8373,7 @@ OnDisableNPC:
 	end;
 }
 
-ma_fild01,179,260,2	script	Festival Helper Boy#pin	577,{
+ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "Cannot proceed because you have too many items in your possession.";
 		close;
@@ -8595,7 +8595,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	577,{
 	close;
 }
 
-ma_fild01,172,223,6	script	Tattooist#pin	574,{
+ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "Cannot proceed because you have too many items in your possession.";
 		close;
@@ -8896,13 +8896,13 @@ ma_fild01,172,223,6	script	Tattooist#pin	574,{
 	close;
 }
 
-ma_fild01,171,224,0	script	Ancient Grudge#01	139,{ end; }
-ma_fild01,173,224,0	duplicate(Ancient Grudge#01)	Ancient Grudge#02	139
-ma_fild01,173,223,0	duplicate(Ancient Grudge#01)	Ancient Grudge#03	139
-ma_fild01,172,222,0	duplicate(Ancient Grudge#01)	Ancient Grudge#04	139
-ma_fild01,171,223,0	duplicate(Ancient Grudge#01)	Ancient Grudge#05	139
+ma_fild01,171,224,0	script	Ancient Grudge#01	HIDDEN_WARP_NPC,{ end; }
+ma_fild01,173,224,0	duplicate(Ancient Grudge#01)	Ancient Grudge#02	HIDDEN_WARP_NPC
+ma_fild01,173,223,0	duplicate(Ancient Grudge#01)	Ancient Grudge#03	HIDDEN_WARP_NPC
+ma_fild01,172,222,0	duplicate(Ancient Grudge#01)	Ancient Grudge#04	HIDDEN_WARP_NPC
+ma_fild01,171,223,0	duplicate(Ancient Grudge#01)	Ancient Grudge#05	HIDDEN_WARP_NPC
 
-ma_fild01,192,200,8	script	Tourist#pin01	58,{
+ma_fild01,192,200,8	script	Tourist#pin01	1_M_MERCHANT,{
 	mes "[Tourist]";
 	mes "I came from afar and dropped everything to come and enjoy the 'Pintados Festival'.";
 	next;
@@ -8933,7 +8933,7 @@ OnDisable:
 	end;
 }
 
-ma_fild01,211,200,6	script	Tourist#pin02	775,{
+ma_fild01,211,200,6	script	Tourist#pin02	4_M_TWMASKMAN,{
 	mes "[Tourist]";
 	mes "I heard of the 'Pintados Festival' and came all the way from Gonryun.";
 	next;
@@ -8952,7 +8952,7 @@ OnDisable:
 	end;
 }
 
-ma_fild01,251,205,2	script	Tourist#pin03	824,{
+ma_fild01,251,205,2	script	Tourist#pin03	4_M_CHNOLD,{
 	mes "[Tourist]";
 	mes "Hey, hear me. This isn't the Tattoo I wanted.";
 	next;
@@ -8980,7 +8980,7 @@ OnDisable:
 	end;
 }
 
-ma_fild01,249,206,6	script	Young Tattooist#pin04	582,{
+ma_fild01,249,206,6	script	Young Tattooist#pin04	4_M_MALAYA,{
 	mes "[Tattooist]";
 	mes "Ah... I can't work with customers like this.";
 	next;
@@ -9002,7 +9002,7 @@ OnDisable:
 	end;
 }
 
-ma_fild01,162,235,6	script	Tourist#pin05	815,{
+ma_fild01,162,235,6	script	Tourist#pin05	4_F_CHNDRESS1,{
 	mes "[Tourist]";
 	mes "They say the Pintados Festival will only be held for one week.";
 	next;
@@ -9021,7 +9021,7 @@ OnDisable:
 	end;
 }
 
-ma_fild01,164,234,6	script	Drumming Young Man#pin06	578,{
+ma_fild01,164,234,6	script	Drumming Young Man#pin06	4_M_BARYO_MAN,{
 	mes "ba-dum-DUM- ba-dum-DUM";
 	next;
 	mes "[Drumming Young Man]";
@@ -9042,7 +9042,7 @@ OnDisable:
 	end;
 }
 
-ma_fild01,170,231,4	script	Drumming Young Man#pin07	578,{
+ma_fild01,170,231,4	script	Drumming Young Man#pin07	4_M_BARYO_MAN,{
 	mes "ba-dum-DUM- ba-dum-DUM";
 	next;
 	mes "[Drumming Young Man]";
@@ -9063,7 +9063,7 @@ OnDisable:
 	end;
 }
 
-ma_fild01,164,228,6	script	Drumming Young Man#pin08	578,{
+ma_fild01,164,228,6	script	Drumming Young Man#pin08	4_M_BARYO_MAN,{
 	mes "ba-dum-DUM- ba-dum-DUM";
 	next;
 	mes "[Drumming Young Man]";
@@ -9081,7 +9081,7 @@ OnDisable:
 	end;
 }
 
-ma_fild01,170,234,4	script	Beat Catching Boy#pin09	577,{
+ma_fild01,170,234,4	script	Beat Catching Boy#pin09	4_M_BARYO_BOY,{
 	mes "ba-dum-TSH- ba-dum-TSH-";
 	next;
 	mes "[Beat Catching Boy]";
@@ -9102,7 +9102,7 @@ OnDisable:
 	end;
 }
 
-ma_fild01,164,231,6	script	Beat Catching Boy#pin10	577,{
+ma_fild01,164,231,6	script	Beat Catching Boy#pin10	4_M_BARYO_BOY,{
 	mes "ba-dum-TSH- ba-dum-TSH-";
 	next;
 	mes "[Beat Catching Boy]";
@@ -9119,4 +9119,4 @@ OnDisable:
 	disablenpc strnpcinfo(0);
 	end;
 }
-ma_fild01,170,228,4	duplicate(Beat Catching Boy#pin10)	Beat Catching Boy#pin11	577
+ma_fild01,170,228,4	duplicate(Beat Catching Boy#pin10)	Beat Catching Boy#pin11	4_M_BARYO_BOY

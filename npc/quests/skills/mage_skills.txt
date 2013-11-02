@@ -13,7 +13,7 @@
 //= 1.8 Fixed JobLevel requirements. [Euphy]
 //============================================================
 
-geffen_in,151,119,4	script	Great Wizard	64,{
+geffen_in,151,119,4	script	Great Wizard	1_M_WIZARD,{
 	mes "[BLIZZARDRISS]";
 	mes "Hey ! My friend !";
 	mes "I see that you are a mage.";

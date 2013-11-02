@@ -164,12 +164,12 @@
 	}
 	close;
 }
-morocc_in,144,138,4	duplicate(pvpe)	PVP Narrator#pe1	84
-alberta_in,22,146,4	duplicate(pvpe)	PVP Narrator#pe2	84
-prt_in,56,140,4	duplicate(pvpe)	PVP Narrator#pe3	84
-geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe4	84
-payon_in01,142,50,4	duplicate(pvpe)	PVP Narrator#pe5	84
-geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe6	84
+morocc_in,144,138,4	duplicate(pvpe)	PVP Narrator#pe1	4_M_02
+alberta_in,22,146,4	duplicate(pvpe)	PVP Narrator#pe2	4_M_02
+prt_in,56,140,4	duplicate(pvpe)	PVP Narrator#pe3	4_M_02
+geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe4	4_M_02
+payon_in01,142,50,4	duplicate(pvpe)	PVP Narrator#pe5	4_M_02
+geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe6	4_M_02
 
 // Mode Select
 //============================================================
@@ -271,11 +271,11 @@ L_Warp:
 		warp .@map$,51,23;
 	return;
 }
-morocc_in,144,142,4	duplicate(gkut)	Gate Keeper#gke1	83
-alberta_in,26,146,4	duplicate(gkut)	Gate Keeper#gke2	83
-prt_in,52,140,4	duplicate(gkut)	Gate Keeper#gke3	83
-geffen_in,63,63,4	duplicate(gkut)	Gate Keeper#gke4	83
-payon_in01,140,53,4	duplicate(gkut)	Gate Keeper#gke5	83
+morocc_in,144,142,4	duplicate(gkut)	Gate Keeper#gke1	4_M_01
+alberta_in,26,146,4	duplicate(gkut)	Gate Keeper#gke2	4_M_01
+prt_in,52,140,4	duplicate(gkut)	Gate Keeper#gke3	4_M_01
+geffen_in,63,63,4	duplicate(gkut)	Gate Keeper#gke4	4_M_01
+payon_in01,140,53,4	duplicate(gkut)	Gate Keeper#gke5	4_M_01
 
 // PVP Warper Function
 //============================================================
@@ -318,7 +318,7 @@ function	script	F_PVP_FSRS	{
 
 // Event Contestant Entrance
 //============================================================
-pvp_room,54,85,4	script	Registration Staff#1	105,{
+pvp_room,54,85,4	script	Registration Staff#1	8W_SOLDIER,{
 	if (countitem(7028) == 0) {
 		mes "[PVP Combat Square Register Staff]";
 		mes "Eh? How did you get in here?";
@@ -386,10 +386,10 @@ OnInit:
 	waitingroom "Compete Square viewer's entrance",0;
 	end;
 }
-pvp_room,62,85,4	duplicate(PVPSpectator)	Spectator's Entrance#1	105
-pvp_room,70,85,4	duplicate(PVPSpectator)	Spectator's Entrance#2	105
-pvp_room,78,85,4	duplicate(PVPSpectator)	Spectator's Entrance#3	105
-pvp_room,86,85,4	duplicate(PVPSpectator)	Spectator's Entrance#4	105
+pvp_room,62,85,4	duplicate(PVPSpectator)	Spectator's Entrance#1	8W_SOLDIER
+pvp_room,70,85,4	duplicate(PVPSpectator)	Spectator's Entrance#2	8W_SOLDIER
+pvp_room,78,85,4	duplicate(PVPSpectator)	Spectator's Entrance#3	8W_SOLDIER
+pvp_room,86,85,4	duplicate(PVPSpectator)	Spectator's Entrance#4	8W_SOLDIER
 
 // Spectator Warps
 //============================================================
@@ -404,12 +404,12 @@ OnTouch:
 	warp "pvp_room",84,39;
 	end;
 }
-pvp_2vs2,5,4,0	duplicate(PVPSpecWarp)	Combat Square Staff#1	45,1,1
-pvp_2vs2,5,74,0	duplicate(PVPSpecWarp)	Combat Square Staff#2	45,1,1
-pvp_2vs2,74,74,0	duplicate(PVPSpecWarp)	Combat Square Staff#3	45,1,1
-pvp_2vs2,74,5,0	duplicate(PVPSpecWarp)	Combat Square Staff#4	45,1,1
+pvp_2vs2,5,4,0	duplicate(PVPSpecWarp)	Combat Square Staff#1	WARPNPC,1,1
+pvp_2vs2,5,74,0	duplicate(PVPSpecWarp)	Combat Square Staff#2	WARPNPC,1,1
+pvp_2vs2,74,74,0	duplicate(PVPSpecWarp)	Combat Square Staff#3	WARPNPC,1,1
+pvp_2vs2,74,5,0	duplicate(PVPSpecWarp)	Combat Square Staff#4	WARPNPC,1,1
 
-pvp_2vs2,40,40,0	script	Combat Square Staff#5	45,1,1,{
+pvp_2vs2,40,40,0	script	Combat Square Staff#5	WARPNPC,1,1,{
 	mes "[Combat Square Staff]";
 	mes "May I help you?";
 	switch(select("To the side viewer seat.:Leave Combat Square.")) {
@@ -428,7 +428,7 @@ pvp_2vs2,40,40,0	script	Combat Square Staff#5	45,1,1,{
 
 // PVP Area Exit warp
 //============================================================
-pvp_room,51,19,0	script	out#eventpvp	45,4,2,{
+pvp_room,51,19,0	script	out#eventpvp	WARPNPC,4,2,{
 OnTouch:
 	mes "[Combat Square Staff]";
 	mes "Did you have fun in Combat Square?";

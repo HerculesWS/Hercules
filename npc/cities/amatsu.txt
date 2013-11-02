@@ -122,7 +122,7 @@
 	}
 }
 
-amatsu,194,79,5	script	Sea Captain#ama2	709,{
+amatsu,194,79,5	script	Sea Captain#ama2	4_M_SEAMAN,{
 	mes "[Walter Moers]";
 	mes "You came... Did you enjoy";
 	mes "your trip to Amatsu...?";
@@ -150,7 +150,7 @@ amatsu,194,79,5	script	Sea Captain#ama2	709,{
 
 // Generic Amatsu NPCs
 //============================================================
-amatsu,230,160,3	script	Well-side Maiden#ama	757,{
+amatsu,230,160,3	script	Well-side Maiden#ama	4_F_JPN2,{
 	mes "[Yuuko]";
 	mes "I usually come to this well to";
 	mes "draw water, but never when it's";
@@ -166,7 +166,7 @@ amatsu,230,160,3	script	Well-side Maiden#ama	757,{
 	close;
 }
 	
-amatsu,179,107,4	script	John#ama	86,{
+amatsu,179,107,4	script	John#ama	4_M_04,{
 	mes "[John]";
 	mes "Yo~";
 	mes "You're not from around here.";
@@ -223,7 +223,7 @@ amatsu,179,107,4	script	John#ama	86,{
 	close;
 }
 	
-amatsu,205,163,3	script	Mimi#ama	759,{
+amatsu,205,163,3	script	Mimi#ama	4_F_JPNCHIBI,{
 	mes "[Mimi]";
 	mes "Puhuhu~!";
 	mes "Did you see Miss Amatsu near";
@@ -241,7 +241,7 @@ amatsu,205,163,3	script	Mimi#ama	759,{
 	close;
 }
 	
-amatsu,185,115,3	script	Drunken Man#ama	765,{
+amatsu,185,115,3	script	Drunken Man#ama	4_M_JPNOJI2,{
 	mes "[Kosake]";
 	mes "*Hiccup*...My wife is just like,";
 	mes "...like a man...*Hiccup*...";
@@ -281,7 +281,7 @@ amatsu,185,115,3	script	Drunken Man#ama	765,{
 	close;
 }
 	
-amatsu,217,179,1	script	Grandma#ama	760,{
+amatsu,217,179,1	script	Grandma#ama	4_F_JPNOBA2,{
 	mes "[Hatsue]";
 	mes "I'm worried about my husband.";
 	mes "He lost a lot of money in some distant town today.";
@@ -293,7 +293,7 @@ amatsu,217,179,1	script	Grandma#ama	760,{
 	close;
 }
 	
-amatsu,287,266,3	script	Jyaburo#ama	766,{
+amatsu,287,266,3	script	Jyaburo#ama	4_M_JPNOJI,{
 	mes "[Jyaburo]";
 	mes "This place is special to me.";
 	mes "It's filled with memories of my wife.";
@@ -338,7 +338,7 @@ amatsu,287,266,3	script	Jyaburo#ama	766,{
 
 // Legendary Tree
 //============================================================
-amatsu,269,221,1	script	Propose Girl#ama	758,{
+amatsu,269,221,1	script	Propose Girl#ama	4_F_JPN,{
 	set jap_tree,1;
 	mes "[Hutari Shioko]";
 	mes "It is a pleasure to meet you.";
@@ -373,7 +373,7 @@ amatsu,269,221,1	script	Propose Girl#ama	758,{
 	close;
 }
 	
-amatsu,243,202,3	script	Drama Teacher#ama	760,{
+amatsu,243,202,3	script	Drama Teacher#ama	4_F_JPNOBA2,{
 	set jap_tree,2;
 	mes "[Garakame sensei]";
 	mes "This is a beautiful place";
@@ -422,7 +422,7 @@ amatsu,283,203,1	script	Bonubonu#ama1	1323,{
 	end;
 }
 
-amatsu,283,203,1	script	Bonubonu#ama2	111,{
+amatsu,283,203,1	script	Bonubonu#ama2	HIDDEN_NPC,{
 	set jap_tree,3;
 	emotion e_swt2;
 	mes "[Bonubonu]";
@@ -452,7 +452,7 @@ amatsu,283,203,1	script	Bonubonu#ama2	111,{
 	close;
 }
 	
-amatsu,274,178,7	script	Veterinarian#ama	735,{
+amatsu,274,178,7	script	Veterinarian#ama	4_M_JOB_WIZARD,{
 	set jap_tree,4;
 	mes "[Sakura Seiichi]";
 	mes "Ah... I'm not a weirdo so";
@@ -505,7 +505,7 @@ amatsu,274,178,7	script	Veterinarian#ama	735,{
 	close;
 }
 	
-amatsu,262,197,1	script	Legendary Tree	111,{
+amatsu,262,197,1	script	Legendary Tree	HIDDEN_NPC,{
 	if (jap_tree == 1) {
 		mes "^3355FFAs she mentioned, this tree";
 		mes "seems to be a famous place";

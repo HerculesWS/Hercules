@@ -13,7 +13,7 @@
 //= 1.3 Script updates. [Euphy]
 //============================================================
 
-arena_room,64,138,5	script	Lv50 Waiting Room	124,{
+arena_room,64,138,5	script	Lv50 Waiting Room	4_F_TELEPORTER,{
 	end;
 
 OnInit:
@@ -32,7 +32,7 @@ OnStart:
 	end;
 }
 
-force_1-1,99,20,4	script	Heel and Toe#arena	124,{
+force_1-1,99,20,4	script	Heel and Toe#arena	4_F_TELEPORTER,{
 	end;
 
 OnStart:
@@ -289,21 +289,21 @@ OnReset_All:
 	end;
 }
 
-force_1-1,62,26,1	script	force_08_01#50	45,1,1,{
+force_1-1,62,26,1	script	force_08_01#50	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Heel and Toe#arena::On01_Start";
 	warp "force_1-1",40,26;
 	end;
 }
 
-force_1-1,25,44,1	script	force_01_02#50	45,1,1,{
+force_1-1,25,44,1	script	force_01_02#50	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Heel and Toe#arena::On02_Start";
 	warp "force_1-1",25,69;
 	end;
 }
 
-force_1-1,25,134,1	script	force_02_03#50	45,1,1,{
+force_1-1,25,134,1	script	force_02_03#50	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "arena#50::OnReset_02";
 	donpcevent "Heel and Toe#arena::On03_Start";
@@ -311,35 +311,35 @@ OnTouch:
 	end;
 }
 
-force_1-1,44,174,1	script	force_03_04#50	45,1,1,{
+force_1-1,44,174,1	script	force_03_04#50	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Heel and Toe#arena::On04_Start";
 	warp "force_1-1",69,174;
 	end;
 }
 
-force_1-1,134,174,1	script	force_04_05#50	45,1,1,{
+force_1-1,134,174,1	script	force_04_05#50	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Heel and Toe#arena::On05_Start";
 	warp "force_1-1",159,174;
 	end;
 }
 
-force_1-1,174,155,1	script	force_05_06#50	45,1,1,{
+force_1-1,174,155,1	script	force_05_06#50	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Heel and Toe#arena::On06_Start";
 	warp "force_1-1",174,130;
 	end;
 }
 
-force_1-1,174,65,1	script	force_06_07#50	45,1,1,{
+force_1-1,174,65,1	script	force_06_07#50	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Heel and Toe#arena::On07_Start";
 	warp "force_1-1",174,40;
 	end;
 }
 
-force_1-1,155,26,1	script	force_07_08#50	45,1,1,{
+force_1-1,155,26,1	script	force_07_08#50	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Heel and Toe#arena::On08_Start";
 	warp "force_1-1",132,26;
@@ -347,14 +347,14 @@ OnTouch:
 	end;
 }
 
-force_1-1,99,54,1	script	force_08_09#50	45,1,1,{
+force_1-1,99,54,1	script	force_08_09#50	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Heel and Toe#arena::On09_Start";
 	warp "force_1-1",99,82;
 	end;
 }
 
-force_1-1,99,124,1	script	force_exit#50	45,1,1,{
+force_1-1,99,124,1	script	force_exit#50	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Heel and Toe#arena::OnTimerOff";
 	donpcevent "#arn_timer_50::OnEnable";
@@ -780,7 +780,7 @@ OnMyMobDead:
 	end;
 }
 
-prt_are_in,129,188,3	script	Staff#50-1	67,{
+prt_are_in,129,188,3	script	Staff#50-1	1_F_02,{
 	mes "[Staff]";
 	mes "You did a good job.";
 	mes "Even if you have failed to clear a time attack battle, I will reward you with a small amount of arena points.";
@@ -801,7 +801,7 @@ prt_are_in,129,188,3	script	Staff#50-1	67,{
 	end;
 }
 
-prt_are_in,25,188,3	script	Staff#50-2	67,{
+prt_are_in,25,188,3	script	Staff#50-2	1_F_02,{
 	if($arena_min50end < $arena_min50st) {
 		if($arena_sec50end < $arena_sec50st) {
 			set @record_min50,60 - $arena_min50st + $arena_min50end -1;

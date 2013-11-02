@@ -17,15 +17,15 @@
 //= 1.5 Rescripted to official 10.3 standards. [L0ne_W0lf]
 //============================================================
 
-comodo,322,178,4	script	Comodo Guide#cmd::CmdGuide	700,{
+comodo,322,178,4	script	Comodo Guide#cmd::CmdGuide	8_F_GIRL,{
 	callfunc "F_CmdGuide","Native Kokomo";
 }
 
-comodo,176,350,4	script	Comodo Guide#2cmd	700,{
+comodo,176,350,4	script	Comodo Guide#2cmd	8_F_GIRL,{
 	callfunc "F_CmdGuide","Native Nutcoco";
 }
 
-comodo,37,219,4	script	Guide#2cmd	700,{
+comodo,37,219,4	script	Guide#2cmd	8_F_GIRL,{
 	callfunc "F_CmdGuide","Native Papaya";
 }
 

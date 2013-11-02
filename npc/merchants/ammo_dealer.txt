@@ -17,7 +17,7 @@
 //= 1.6 Moved Izlude duplicate to pre-re/re paths. [Euphy]
 //============================================================
 
-alberta,118,160,3	script	Bullet Dealer Tony#alb::bdt	86,{
+alberta,118,160,3	script	Bullet Dealer Tony#alb::bdt	4_M_04,{
 	if (BaseJob == Job_Gunslinger) {
 		mes "[Tony]";
 		mes "I'm Tony, the Bullet Dealer.";

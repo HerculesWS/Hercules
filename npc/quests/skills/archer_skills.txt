@@ -13,7 +13,7 @@
 //= 1.7 Fixed JobLevel requirements. [Euphy]
 //============================================================
 
-moc_ruins,118,99,5	script	Roberto	88,{
+moc_ruins,118,99,5	script	Roberto	4_M_ORIENT01,{
 	if (BaseClass == Job_Archer) {
 		if (getskilllv("AC_MAKINGARROW") == 1) {
 			mes "[Roberto]";
@@ -139,7 +139,7 @@ moc_ruins,118,99,5	script	Roberto	88,{
 	close;
 }
 
-payon,103,63,3	script	Jason	88,3,3,{
+payon,103,63,3	script	Jason	4_M_ORIENT01,3,3,{
 	if (BaseClass == Job_Archer) {
 		if (getskilllv("AC_CHARGEARROW") == 1) {
 			mes "[Jason]";

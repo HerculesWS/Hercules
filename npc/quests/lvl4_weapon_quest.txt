@@ -20,7 +20,7 @@
 //= 1.6 Was using the wrong IDs for the ores needed. [L0ne_W0lf]
 //============================================================
 
-umbala,117,285,3	script	Bazo#lv4	85,{
+umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 	if (checkweight(908,300) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
@@ -461,7 +461,7 @@ umbala,117,285,3	script	Bazo#lv4	85,{
 	}
 }
 
-umbala,163,257,3	script	Hibilaithan#lv4	785,{
+umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 	if (checkweight(908,300) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
@@ -919,7 +919,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	785,{
 	}
 }
 
-um_in,156,77,5	script	Tabezthan#lv4	788,{
+um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 	if (checkweight(908,300) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
@@ -1344,7 +1344,7 @@ um_in,156,77,5	script	Tabezthan#lv4	788,{
 	}
 }
 
-aldebaran,178,239,3	script	Bill Thayer#lv4	712,{
+aldebaran,178,239,3	script	Bill Thayer#lv4	4_M_05,{
 	if (lv4_weapon == 55) {
 		mes "[Bill Thayer]";
 		mes "Hmm...";
@@ -1659,7 +1659,7 @@ aldebaran,178,239,3	script	Bill Thayer#lv4	712,{
 	close;
 }
 
-geffen,203,146,5	script	Citizen#lv4-1	97,{
+geffen,203,146,5	script	Citizen#lv4-1	4W_M_01,{
 	mes "[Citizen]";
 	mes "There was a skillful";
 	mes "weaponsmith in Al De Baran";
@@ -1677,7 +1677,7 @@ geffen,203,146,5	script	Citizen#lv4-1	97,{
 	close;
 }
 
-morocc,289,230,3	script	Citizen#lv4-2	92,{
+morocc,289,230,3	script	Citizen#lv4-2	4_F_03,{
 	mes "[Citizen]";
 	mes "Meeting a person in the realm of the dead is impossible. But I've heard that if you were able to meet a dead person, you'd find that he wouldn't have all of his memories.";
 	next;
@@ -1690,7 +1690,7 @@ morocc,289,230,3	script	Citizen#lv4-2	92,{
 	close;
 }
 
-niflheim,240,193,3	script	Kayron#lv4	794,{
+niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 	if (checkweight(908,300) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
@@ -2136,7 +2136,7 @@ niflheim,240,193,3	script	Kayron#lv4	794,{
 	}
 }
 
-niflheim,99,268,5	script	Reyghema#lv4	794,{
+niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 	if (MaxWeight - Weight < 3000) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
@@ -2617,7 +2617,7 @@ niflheim,99,268,5	script	Reyghema#lv4	794,{
 	}
 }
 
-niflheim,187,280,3	script	Hein#lv4	795,{
+niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 	if (checkweight(908,300) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
@@ -3059,7 +3059,7 @@ niflheim,187,280,3	script	Hein#lv4	795,{
 	}
 }
 
-niflheim,331,72,3	script	Waltboughst#lv4	795,{
+niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 	if (checkweight(908,300) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;

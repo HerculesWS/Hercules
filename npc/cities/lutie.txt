@@ -19,7 +19,7 @@
 
 // Teleport to Lutie
 //============================================================
-aldebaran,223,222,4	script	Mr. Claus	718,{
+aldebaran,223,222,4	script	Mr. Claus	4_M_SANTA,{
 	mes "[Mr. Claus]";
 	mes "Ho Ho Ho~";
 	mes "Merry Christmas!!";
@@ -68,7 +68,7 @@ aldebaran,223,222,4	script	Mr. Claus	718,{
 
 // Inside Lutie
 //============================================================
-xmas_in,100,96,4	script	Santa Claus	718,{
+xmas_in,100,96,4	script	Santa Claus	4_M_SANTA,{
 	mes "[Santa Claus]";
 	mes "Ho Ho Ho~";
 	mes "Meeeerry Christmas !!";
@@ -89,7 +89,7 @@ xmas_in,100,96,4	script	Santa Claus	718,{
 	close;
 }
 
-xmas_in,167,173,4	script	Duffle	711,{
+xmas_in,167,173,4	script	Duffle	4_F_05,{
 	if (xmas_npc == 1) {
 		mes "[Duffle]";
 		mes "Merry Christmas!";
@@ -149,7 +149,7 @@ xmas_in,167,173,4	script	Duffle	711,{
 	}
 }
 
-xmas_in,27,103,4	script	Lenient Aunt	701,{
+xmas_in,27,103,4	script	Lenient Aunt	4_F_GODEMOM,{
 	switch (xmas_npc) {
 	case 5:
 		mes "[Thachentze]";
@@ -274,7 +274,7 @@ xmas_in,27,103,4	script	Lenient Aunt	701,{
 
 // Lutie
 //============================================================
-xmas,117,304,4	script	Poze	713,{
+xmas,117,304,4	script	Poze	4_M_06,{
 	if (xmas_npc == 3 || xmas_npc == 4) {
 		mes "[Poze]";
 		mes "You've gone to";
@@ -318,7 +318,7 @@ xmas,117,304,4	script	Poze	713,{
 	}
 }
 
-xmas,176,236,4	script	Uncle Hairy	712,{
+xmas,176,236,4	script	Uncle Hairy	4_M_05,{
 	if (xmas_npc == 4) {
 		if (countitem(1024) > 0 && countitem(938) > 0) {
 			mes "[Cantata]";
@@ -451,7 +451,7 @@ xmas,176,236,4	script	Uncle Hairy	712,{
 	}
 }
 
-xmas,134,112,4	script	Snowman	710,{
+xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 	if (checkweight(1201,1) == 0 ) {
 		cutin "rutie_snownow01.bmp",2;
 		mes "- Wait a minute !! -";
@@ -768,7 +768,7 @@ xmas,134,112,4	script	Snowman	710,{
 		}
 }
 
-xmas,146,136,4	script	Hashokii	715,{
+xmas,146,136,4	script	Hashokii	4_M_PIERROT,{
 	mes "[Hashokii]";
 	mes "Meeee~RrrrrYYYY Christmas~!";
 	mes "La La La~!";
@@ -842,7 +842,7 @@ xmas,146,136,4	script	Hashokii	715,{
 	}
 }
 
-xmas,206,168,4	script	Little Boy	706,{
+xmas,206,168,4	script	Little Boy	4_M_KID1,{
 	if (xmas_npc == 9) {
 		mes "[Charu Charu]";
 		mes "Errrm?";
@@ -884,7 +884,7 @@ xmas,206,168,4	script	Little Boy	706,{
 	}
 }
 
-xmas,208,168,4	script	Little Girl	703,{
+xmas,208,168,4	script	Little Girl	4_F_KID2,{
 	if (xmas_npc == 9 || xmas_npc == 10) {
 		switch(xmas_npc) {
 		case 9:

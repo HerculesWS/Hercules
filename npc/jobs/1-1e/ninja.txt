@@ -15,7 +15,7 @@
 //= 1.6 Fixed AEGIS amatsu warp typo. [Kisuka]
 //============================================================
 
-alberta,30,65,3	script	Akagi	730,{
+alberta,30,65,3	script	Akagi	4_M_JOB_ASSASSIN,{
 	if (Class == Job_Novice) {
 		if (JobLevel == 10) {
 			mes "[Akagi]";
@@ -71,7 +71,7 @@ alberta,30,65,3	script	Akagi	730,{
 	}
 }
 
-que_ng,30,65,3	script	Cougar#nq	730,{
+que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 	if (Upper == 2) {
 		mes "[Cougar]";
 		mes "I... I've never";
@@ -371,7 +371,7 @@ que_ng,30,65,3	script	Cougar#nq	730,{
 	}
 }
 
-einbroch,184,194,3	script	Suspicious Man#nq	 	881,{
+einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 	if (NINJ_Q == 1) {
 		mes "[Suspicious Man]";
 		mes "I've traveled to many";

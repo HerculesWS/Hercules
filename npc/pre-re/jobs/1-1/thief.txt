@@ -20,7 +20,7 @@
 //= 1.8 Added Quest Log commands. [L0ne_W0lf]
 //============================================================
 
-moc_prydb1,39,129,2	script	Thief Guide	69,{
+moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 	if (Upper == 1) {
 		if (ADVJOB == Job_Assassin_Cross || ADVJOB == Job_Stalker) {
 			if (Class == Job_Novice_High) {
@@ -346,7 +346,7 @@ moc_prydb1,39,129,2	script	Thief Guide	69,{
 	close;
 }
 
-moc_prydb1,42,133,2	script	Comrade	118,{
+moc_prydb1,42,133,2	script	Comrade	2_M_THIEFMASTER,{
 	if (BaseJob == Job_Thief) {
 		mes "[Brad]";
 		mes "We don't have any special events yet. Come some other time when there's news, alright?";
@@ -448,7 +448,7 @@ moc_prydb1,42,133,2	script	Comrade	118,{
 	}
 }
 
-moc_ruins,141,125,3	script	Mr. Irrelevant	83,{
+moc_ruins,141,125,3	script	Mr. Irrelevant	4_M_01,{
 	if (BaseJob == Job_Thief) {
 		mes "[Mr. Irrelevant]";
 		mes "Ah, I see that you are now a Thief. I always knew you'd join us.";

@@ -77,11 +77,11 @@
 		close;
 	}
 }
-new_1-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv1a	90
-new_2-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv2a	90
-new_3-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv3a	90
-new_4-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv4a	90
-new_5-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv5a	90
+new_1-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv1a	4_F_01
+new_2-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv2a	4_F_01
+new_3-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv3a	4_F_01
+new_4-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv4a	4_F_01
+new_5-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv5a	4_F_01
 
 -	script	Sprakki#newbe05::NvSprakkiB	-1,{
 	if (job_novice_q == 0) {
@@ -208,11 +208,11 @@ new_5-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv5a	90
 		end;
 	}
 }
-new_1-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv1b	90
-new_2-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv2b	90
-new_3-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv3b	90
-new_4-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv4b	90
-new_5-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv5b	90
+new_1-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv1b	4_F_01
+new_2-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv2b	4_F_01
+new_3-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv3b	4_F_01
+new_4-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv4b	4_F_01
+new_5-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv5b	4_F_01
 
 -	script	Brade#newbe02::NvBradeA	-1,{
 	if (job_novice_q < 2) {
@@ -478,11 +478,11 @@ new_5-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv5b	90
 		}
 	}
 }
-new_1-2,100,105,3	duplicate(NvBradeA)	Brade#nv1a	733
-new_2-2,100,105,3	duplicate(NvBradeA)	Brade#nv2a	733
-new_3-2,100,105,3	duplicate(NvBradeA)	Brade#nv3a	733
-new_4-2,100,105,3	duplicate(NvBradeA)	Brade#nv4a	733
-new_5-2,100,105,3	duplicate(NvBradeA)	Brade#nv5a	733
+new_1-2,100,105,3	duplicate(NvBradeA)	Brade#nv1a	4_M_JOB_KNIGHT1
+new_2-2,100,105,3	duplicate(NvBradeA)	Brade#nv2a	4_M_JOB_KNIGHT1
+new_3-2,100,105,3	duplicate(NvBradeA)	Brade#nv3a	4_M_JOB_KNIGHT1
+new_4-2,100,105,3	duplicate(NvBradeA)	Brade#nv4a	4_M_JOB_KNIGHT1
+new_5-2,100,105,3	duplicate(NvBradeA)	Brade#nv5a	4_M_JOB_KNIGHT1
 
 -	script	Jinha#newbe03::NvJinha	-1,{
 	if (job_novice_q < 5) {
@@ -573,11 +573,11 @@ new_5-2,100,105,3	duplicate(NvBradeA)	Brade#nv5a	733
 		close;
 	}
 }
-new_1-2,115,120,3	duplicate(NvJinha)	Jinha#nv1	59
-new_2-2,115,120,3	duplicate(NvJinha)	Jinha#nv2	59
-new_3-2,115,120,3	duplicate(NvJinha)	Jinha#nv3	59
-new_4-2,115,120,3	duplicate(NvJinha)	Jinha#nv4	59
-new_5-2,115,120,3	duplicate(NvJinha)	Jinha#nv5	59
+new_1-2,115,120,3	duplicate(NvJinha)	Jinha#nv1	1_M_ORIENT01
+new_2-2,115,120,3	duplicate(NvJinha)	Jinha#nv2	1_M_ORIENT01
+new_3-2,115,120,3	duplicate(NvJinha)	Jinha#nv3	1_M_ORIENT01
+new_4-2,115,120,3	duplicate(NvJinha)	Jinha#nv4	1_M_ORIENT01
+new_5-2,115,120,3	duplicate(NvJinha)	Jinha#nv5	1_M_ORIENT01
 
 // People/Services in Ragnarok
 //============================================================
@@ -757,11 +757,11 @@ new_5-2,115,120,3	duplicate(NvJinha)	Jinha#nv5	59
 		}
 	}
 }
-new_1-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv1	96
-new_2-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv2	96
-new_3-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv3	96
-new_4-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv4	96
-new_5-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv5	96
+new_1-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv1	4W_KID
+new_2-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv2	4W_KID
+new_3-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv3	4W_KID
+new_4-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv4	4W_KID
+new_5-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv5	4W_KID
 
 -	script	Kafra Employee#newbe07::NvKafra	-1,{
 	if (job_novice_q < 8) {
@@ -1001,11 +1001,11 @@ L_Services:
 	}
 	return;
 }
-new_1-2,30,176,4	duplicate(NvKafra)	Kafra Employee#nv1	117
-new_2-2,30,176,4	duplicate(NvKafra)	Kafra Employee#nv2	117
-new_3-2,30,176,4	duplicate(NvKafra)	Kafra Employee#nv3	117
-new_4-2,30,176,4	duplicate(NvKafra)	Kafra Employee#nv4	117
-new_5-2,30,176,4	duplicate(NvKafra)	Kafra Employee#nv5	117
+new_1-2,30,176,4	duplicate(NvKafra)	Kafra Employee#nv1	4_F_KAFRA1
+new_2-2,30,176,4	duplicate(NvKafra)	Kafra Employee#nv2	4_F_KAFRA1
+new_3-2,30,176,4	duplicate(NvKafra)	Kafra Employee#nv3	4_F_KAFRA1
+new_4-2,30,176,4	duplicate(NvKafra)	Kafra Employee#nv4	4_F_KAFRA1
+new_5-2,30,176,4	duplicate(NvKafra)	Kafra Employee#nv5	4_F_KAFRA1
 
 -	script	Cool Event Corp. Staff::NvCool	-1,{
 	if (job_novice_q < 9) {
@@ -1041,11 +1041,11 @@ new_5-2,30,176,4	duplicate(NvKafra)	Kafra Employee#nv5	117
 		close;
 	}
 }
-new_1-2,33,176,4	duplicate(NvCool)	Cool Event Corp. Staff::NvCool1	874
-new_2-2,33,176,4	duplicate(NvCool)	Cool Event Corp. Staff::NvCool2	874
-new_3-2,33,176,4	duplicate(NvCool)	Cool Event Corp. Staff::NvCool3	874
-new_4-2,33,176,4	duplicate(NvCool)	Cool Event Corp. Staff::NvCool4	874
-new_5-2,33,176,4	duplicate(NvCool)	Cool Event Corp. Staff::NvCool5	874
+new_1-2,33,176,4	duplicate(NvCool)	Cool Event Corp. Staff::NvCool1	4_M_ZONDAMAN
+new_2-2,33,176,4	duplicate(NvCool)	Cool Event Corp. Staff::NvCool2	4_M_ZONDAMAN
+new_3-2,33,176,4	duplicate(NvCool)	Cool Event Corp. Staff::NvCool3	4_M_ZONDAMAN
+new_4-2,33,176,4	duplicate(NvCool)	Cool Event Corp. Staff::NvCool4	4_M_ZONDAMAN
+new_5-2,33,176,4	duplicate(NvCool)	Cool Event Corp. Staff::NvCool5	4_M_ZONDAMAN
 
 -	script	Guide::NvGuide	-1,{
 	if (job_novice_q < 10) {
@@ -1095,11 +1095,11 @@ new_5-2,33,176,4	duplicate(NvCool)	Cool Event Corp. Staff::NvCool5	874
 		}
 	}
 }
-new_1-2,36,176,4	duplicate(NvGuide)	Guide#nv1	105
-new_2-2,36,176,4	duplicate(NvGuide)	Guide#nv2	105
-new_3-2,36,176,4	duplicate(NvGuide)	Guide#nv3	105
-new_4-2,36,176,4	duplicate(NvGuide)	Guide#nv4	105
-new_5-2,36,176,4	duplicate(NvGuide)	Guide#nv5	105
+new_1-2,36,176,4	duplicate(NvGuide)	Guide#nv1	8W_SOLDIER
+new_2-2,36,176,4	duplicate(NvGuide)	Guide#nv2	8W_SOLDIER
+new_3-2,36,176,4	duplicate(NvGuide)	Guide#nv3	8W_SOLDIER
+new_4-2,36,176,4	duplicate(NvGuide)	Guide#nv4	8W_SOLDIER
+new_5-2,36,176,4	duplicate(NvGuide)	Guide#nv5	8W_SOLDIER
 
 // Real Combat Training
 //============================================================
@@ -1309,11 +1309,11 @@ new_5-2,36,176,4	duplicate(NvGuide)	Guide#nv5	105
 		}
 	}
 }
-new_1-3,96,30,4	duplicate(NvBradeB)	Brade#nv1b	733
-new_2-3,96,30,4	duplicate(NvBradeB)	Brade#nv2b	733
-new_3-3,96,30,4	duplicate(NvBradeB)	Brade#nv3b	733
-new_4-3,96,30,4	duplicate(NvBradeB)	Brade#nv4b	733
-new_5-3,96,30,4	duplicate(NvBradeB)	Brade#nv5b	733
+new_1-3,96,30,4	duplicate(NvBradeB)	Brade#nv1b	4_M_JOB_KNIGHT1
+new_2-3,96,30,4	duplicate(NvBradeB)	Brade#nv2b	4_M_JOB_KNIGHT1
+new_3-3,96,30,4	duplicate(NvBradeB)	Brade#nv3b	4_M_JOB_KNIGHT1
+new_4-3,96,30,4	duplicate(NvBradeB)	Brade#nv4b	4_M_JOB_KNIGHT1
+new_5-3,96,30,4	duplicate(NvBradeB)	Brade#nv5b	4_M_JOB_KNIGHT1
 
 -	script	Swordman Guide#newbe10::NvSwordman	-1,{
 	if (job_novice_q < 15) {
@@ -1469,11 +1469,11 @@ new_5-3,96,30,4	duplicate(NvBradeB)	Brade#nv5b	733
 		close;
 	}
 }
-new_1-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv1	728
-new_2-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv2	728
-new_3-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv3	728
-new_4-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv4	728
-new_5-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv5	728
+new_1-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv1	4_F_JOB_KNIGHT
+new_2-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv2	4_F_JOB_KNIGHT
+new_3-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv3	4_F_JOB_KNIGHT
+new_4-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv4	4_F_JOB_KNIGHT
+new_5-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv5	4_F_JOB_KNIGHT
 
 -	script	Acolyte Guide#newbe10::NvAcolyte	-1,{
 	if (job_novice_q < 15) {
@@ -1559,11 +1559,11 @@ new_5-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv5	728
 		close;
 	}
 }
-new_1-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv1	95
-new_2-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv2	95
-new_3-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv3	95
-new_4-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv4	95
-new_5-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv5	95
+new_1-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv1	4_F_SISTER
+new_2-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv2	4_F_SISTER
+new_3-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv3	4_F_SISTER
+new_4-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv4	4_F_SISTER
+new_5-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv5	4_F_SISTER
 
 -	script	Thief Guide#newbe10::NvThief	-1,{
 	if (job_novice_q < 15) {
@@ -1696,11 +1696,11 @@ new_5-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv5	95
 		close;
 	}
 }
-new_1-3,105,41,3	duplicate(NvThief)	Thief Guide#nv1	118
-new_2-3,105,41,3	duplicate(NvThief)	Thief Guide#nv2	118
-new_3-3,105,41,3	duplicate(NvThief)	Thief Guide#nv3	118
-new_4-3,105,41,3	duplicate(NvThief)	Thief Guide#nv4	118
-new_5-3,105,41,3	duplicate(NvThief)	Thief Guide#nv5	118
+new_1-3,105,41,3	duplicate(NvThief)	Thief Guide#nv1	2_M_THIEFMASTER
+new_2-3,105,41,3	duplicate(NvThief)	Thief Guide#nv2	2_M_THIEFMASTER
+new_3-3,105,41,3	duplicate(NvThief)	Thief Guide#nv3	2_M_THIEFMASTER
+new_4-3,105,41,3	duplicate(NvThief)	Thief Guide#nv4	2_M_THIEFMASTER
+new_5-3,105,41,3	duplicate(NvThief)	Thief Guide#nv5	2_M_THIEFMASTER
 
 -	script	Merchant Guide#newbe10::NvMerchant	-1,{
 	if (job_novice_q < 15) {
@@ -1852,11 +1852,11 @@ new_5-3,105,41,3	duplicate(NvThief)	Thief Guide#nv5	118
 		close;
 	}
 }
-new_1-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv1	97
-new_2-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv2	97
-new_3-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv3	97
-new_4-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv4	97
-new_5-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv5	97
+new_1-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv1	4W_M_01
+new_2-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv2	4W_M_01
+new_3-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv3	4W_M_01
+new_4-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv4	4W_M_01
+new_5-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv5	4W_M_01
 
 -	script	Archer Guide#newbe10::NvArcher	-1,{
 	if (job_novice_q < 15) {
@@ -1949,11 +1949,11 @@ new_5-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv5	97
 		close;
 	}
 }
-new_1-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv1	727
-new_2-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv2	727
-new_3-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv3	727
-new_4-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv4	727
-new_5-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv5	727
+new_1-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv1	4_F_JOB_HUNTER
+new_2-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv2	4_F_JOB_HUNTER
+new_3-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv3	4_F_JOB_HUNTER
+new_4-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv4	4_F_JOB_HUNTER
+new_5-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv5	4_F_JOB_HUNTER
 
 -	script	Mage Guide#newbe10::NvMage	-1,{
 	if (job_novice_q < 15) {
@@ -2099,11 +2099,11 @@ new_5-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv5	727
 		close;
 	}
 }
-new_1-3,117,41,3	duplicate(NvMage)	Mage Guide#nv1	123
-new_2-3,117,41,3	duplicate(NvMage)	Mage Guide#nv2	123
-new_3-3,117,41,3	duplicate(NvMage)	Mage Guide#nv3	123
-new_4-3,117,41,3	duplicate(NvMage)	Mage Guide#nv4	123
-new_5-3,117,41,3	duplicate(NvMage)	Mage Guide#nv5	123
+new_1-3,117,41,3	duplicate(NvMage)	Mage Guide#nv1	2_F_MAGICMASTER
+new_2-3,117,41,3	duplicate(NvMage)	Mage Guide#nv2	2_F_MAGICMASTER
+new_3-3,117,41,3	duplicate(NvMage)	Mage Guide#nv3	2_F_MAGICMASTER
+new_4-3,117,41,3	duplicate(NvMage)	Mage Guide#nv4	2_F_MAGICMASTER
+new_5-3,117,41,3	duplicate(NvMage)	Mage Guide#nv5	2_F_MAGICMASTER
 
 -	script	Bruce#nv::NvBruce	-1,{
 	mes "[Bruce]";
@@ -2162,11 +2162,11 @@ new_5-3,117,41,3	duplicate(NvMage)	Mage Guide#nv5	123
 		}
 	}
 }
-new_1-3,121,41,3	duplicate(NvBruce)	Bruce#nv1	57
-new_2-3,121,41,3	duplicate(NvBruce)	Bruce#nv2	57
-new_3-3,121,41,3	duplicate(NvBruce)	Bruce#nv3	57
-new_4-3,121,41,3	duplicate(NvBruce)	Bruce#nv4	57
-new_5-3,121,41,3	duplicate(NvBruce)	Bruce#nv5	57
+new_1-3,121,41,3	duplicate(NvBruce)	Bruce#nv1	1_M_LIBRARYMASTER
+new_2-3,121,41,3	duplicate(NvBruce)	Bruce#nv2	1_M_LIBRARYMASTER
+new_3-3,121,41,3	duplicate(NvBruce)	Bruce#nv3	1_M_LIBRARYMASTER
+new_4-3,121,41,3	duplicate(NvBruce)	Bruce#nv4	1_M_LIBRARYMASTER
+new_5-3,121,41,3	duplicate(NvBruce)	Bruce#nv5	1_M_LIBRARYMASTER
 
 // Eden Group Officer (iRO only)
 //============================================================
@@ -2272,11 +2272,11 @@ OnTouch:
 	emotion e_gasp;
 	end;
 }
-new_1-3,97,50,4	duplicate(NvEden)	Eden Group Officer#nv1	729,5,5
-new_2-3,97,50,4	duplicate(NvEden)	Eden Group Officer#nv2	729,5,5
-new_3-3,97,50,4	duplicate(NvEden)	Eden Group Officer#nv3	729,5,5
-new_4-3,97,50,4	duplicate(NvEden)	Eden Group Officer#nv4	729,5,5
-new_5-3,97,50,4	duplicate(NvEden)	Eden Group Officer#nv5	729,5,5
+new_1-3,97,50,4	duplicate(NvEden)	Eden Group Officer#nv1	4_F_NOVICE,5,5
+new_2-3,97,50,4	duplicate(NvEden)	Eden Group Officer#nv2	4_F_NOVICE,5,5
+new_3-3,97,50,4	duplicate(NvEden)	Eden Group Officer#nv3	4_F_NOVICE,5,5
+new_4-3,97,50,4	duplicate(NvEden)	Eden Group Officer#nv4	4_F_NOVICE,5,5
+new_5-3,97,50,4	duplicate(NvEden)	Eden Group Officer#nv5	4_F_NOVICE,5,5
 */
 
 // Trainer
@@ -2337,11 +2337,11 @@ new_5-3,97,50,4	duplicate(NvEden)	Eden Group Officer#nv5	729,5,5
 		close;
 	}
 }
-new_1-3,103,50,4	duplicate(NvBrutus)	Level 1 Trainer#nv1	84
-new_2-3,103,50,4	duplicate(NvBrutus)	Level 2 Trainer#nv2	84
-new_3-3,103,50,4	duplicate(NvBrutus)	Level 3 Trainer#nv3	84
-new_4-3,103,50,4	duplicate(NvBrutus)	Level 4 Trainer#nv4	84
-new_5-3,103,50,4	duplicate(NvBrutus)	Level 5 Trainer#nv5	84
+new_1-3,103,50,4	duplicate(NvBrutus)	Level 1 Trainer#nv1	4_M_02
+new_2-3,103,50,4	duplicate(NvBrutus)	Level 2 Trainer#nv2	4_M_02
+new_3-3,103,50,4	duplicate(NvBrutus)	Level 3 Trainer#nv3	4_M_02
+new_4-3,103,50,4	duplicate(NvBrutus)	Level 4 Trainer#nv4	4_M_02
+new_5-3,103,50,4	duplicate(NvBrutus)	Level 5 Trainer#nv5	4_M_02
 
 // Monster Spawns
 //============================================================
@@ -2371,13 +2371,13 @@ new_5-3,0,0,0,0	monster	Picky	1049,15,0,0,0
 
 // Potato Merchant
 //============================================================
--	shop	Potato Merchant#newbe09::NvPotato	93,516:-1
+-	shop	Potato Merchant#newbe09::NvPotato	4_F_04,516:-1
 
-new_1-3,100,50,3	duplicate(NvPotato)	Potato Merchant#nv1	93
-new_2-3,100,50,3	duplicate(NvPotato)	Potato Merchant#nv2	93
-new_3-3,100,50,3	duplicate(NvPotato)	Potato Merchant#nv3	93
-new_4-3,100,50,3	duplicate(NvPotato)	Potato Merchant#nv4	93
-new_5-3,100,50,3	duplicate(NvPotato)	Potato Merchant#nv5	93
+new_1-3,100,50,3	duplicate(NvPotato)	Potato Merchant#nv1	4_F_04
+new_2-3,100,50,3	duplicate(NvPotato)	Potato Merchant#nv2	4_F_04
+new_3-3,100,50,3	duplicate(NvPotato)	Potato Merchant#nv3	4_F_04
+new_4-3,100,50,3	duplicate(NvPotato)	Potato Merchant#nv4	4_F_04
+new_5-3,100,50,3	duplicate(NvPotato)	Potato Merchant#nv5	4_F_04
 
 // Random Stuff
 //============================================================
@@ -2387,11 +2387,11 @@ new_5-3,100,50,3	duplicate(NvPotato)	Potato Merchant#nv5	93
 	mes "^FF0000=================================^000000";
 	close;
 }
-new_1-1,66,114,4	duplicate(NvBulletin)	Bulletin Board#nv1	111
-new_2-1,66,114,4	duplicate(NvBulletin)	Bulletin Board#nv2	111
-new_3-1,66,114,4	duplicate(NvBulletin)	Bulletin Board#nv3	111
-new_4-1,66,114,4	duplicate(NvBulletin)	Bulletin Board#nv4	111
-new_5-1,66,114,4	duplicate(NvBulletin)	Bulletin Board#nv5	111
+new_1-1,66,114,4	duplicate(NvBulletin)	Bulletin Board#nv1	HIDDEN_NPC
+new_2-1,66,114,4	duplicate(NvBulletin)	Bulletin Board#nv2	HIDDEN_NPC
+new_3-1,66,114,4	duplicate(NvBulletin)	Bulletin Board#nv3	HIDDEN_NPC
+new_4-1,66,114,4	duplicate(NvBulletin)	Bulletin Board#nv4	HIDDEN_NPC
+new_5-1,66,114,4	duplicate(NvBulletin)	Bulletin Board#nv5	HIDDEN_NPC
 
 -	script	Guard::NvGuardA	-1,{
 	mes "[Training Grounds Guard]";
@@ -2399,11 +2399,11 @@ new_5-1,66,114,4	duplicate(NvBulletin)	Bulletin Board#nv5	111
 	mes "You are now in the outer court yard. Please go inside the castle to begin your training.";
 	close;
 }
-new_1-1,144,116,2	duplicate(NvGuardA)	Guard#nv1a	105
-new_2-1,144,116,2	duplicate(NvGuardA)	Guard#nv2a	105
-new_3-1,144,116,2	duplicate(NvGuardA)	Guard#nv3a	105
-new_4-1,144,116,2	duplicate(NvGuardA)	Guard#nv4a	105
-new_5-1,144,116,2	duplicate(NvGuardA)	Guard#nv5a	105
+new_1-1,144,116,2	duplicate(NvGuardA)	Guard#nv1a	8W_SOLDIER
+new_2-1,144,116,2	duplicate(NvGuardA)	Guard#nv2a	8W_SOLDIER
+new_3-1,144,116,2	duplicate(NvGuardA)	Guard#nv3a	8W_SOLDIER
+new_4-1,144,116,2	duplicate(NvGuardA)	Guard#nv4a	8W_SOLDIER
+new_5-1,144,116,2	duplicate(NvGuardA)	Guard#nv5a	8W_SOLDIER
 
 -	script	Guard::NvGuardB	-1,{
 	mes "[Training Grounds Guard]";
@@ -2416,11 +2416,11 @@ new_5-1,144,116,2	duplicate(NvGuardA)	Guard#nv5a	105
 	}
 	close;
 }
-new_1-1,144,107,2	duplicate(NvGuardB)	Guard#nv1b	105
-new_2-1,144,107,2	duplicate(NvGuardB)	Guard#nv2b	105
-new_3-1,144,107,2	duplicate(NvGuardB)	Guard#nv3b	105
-new_4-1,144,107,2	duplicate(NvGuardB)	Guard#nv4b	105
-new_5-1,144,107,2	duplicate(NvGuardB)	Guard#nv5b	105
+new_1-1,144,107,2	duplicate(NvGuardB)	Guard#nv1b	8W_SOLDIER
+new_2-1,144,107,2	duplicate(NvGuardB)	Guard#nv2b	8W_SOLDIER
+new_3-1,144,107,2	duplicate(NvGuardB)	Guard#nv3b	8W_SOLDIER
+new_4-1,144,107,2	duplicate(NvGuardB)	Guard#nv4b	8W_SOLDIER
+new_5-1,144,107,2	duplicate(NvGuardB)	Guard#nv5b	8W_SOLDIER
 
 -	script	Instructor#Edwin::NvEdwin	-1,{
 	mes "[Edwin]";
@@ -2435,11 +2435,11 @@ new_5-1,144,107,2	duplicate(NvGuardB)	Guard#nv5b	105
 	warp strnpcinfo(4),100,100;
 	end;
 }
-new_1-2,161,182,5	duplicate(NvEdwin)	Instructor#nv1	92
-new_2-2,161,182,5	duplicate(NvEdwin)	Instructor#nv2	92
-new_3-2,161,182,5	duplicate(NvEdwin)	Instructor#nv3	92
-new_4-2,161,182,5	duplicate(NvEdwin)	Instructor#nv4	92
-new_5-2,161,182,5	duplicate(NvEdwin)	Instructor#nv5	92
+new_1-2,161,182,5	duplicate(NvEdwin)	Instructor#nv1	4_F_03
+new_2-2,161,182,5	duplicate(NvEdwin)	Instructor#nv2	4_F_03
+new_3-2,161,182,5	duplicate(NvEdwin)	Instructor#nv3	4_F_03
+new_4-2,161,182,5	duplicate(NvEdwin)	Instructor#nv4	4_F_03
+new_5-2,161,182,5	duplicate(NvEdwin)	Instructor#nv5	4_F_03
 
 function	script	F_NvErase	{
 	if (getarg(0,0)) {
@@ -2653,11 +2653,11 @@ L_Warp:
 		close;
 	}
 }
-new_1-4,100,29,1	duplicate(NvHanson)	Final Tester#nv1	46
-new_2-4,100,29,1	duplicate(NvHanson)	Final Tester#nv2	46
-new_3-4,100,29,1	duplicate(NvHanson)	Final Tester#nv3	46
-new_4-4,100,29,1	duplicate(NvHanson)	Final Tester#nv4	46
-new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	46
+new_1-4,100,29,1	duplicate(NvHanson)	Final Tester#nv1	1_ETC_01
+new_2-4,100,29,1	duplicate(NvHanson)	Final Tester#nv2	1_ETC_01
+new_3-4,100,29,1	duplicate(NvHanson)	Final Tester#nv3	1_ETC_01
+new_4-4,100,29,1	duplicate(NvHanson)	Final Tester#nv4	1_ETC_01
+new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 
 // Job Test
 //============================================================
@@ -3407,8 +3407,8 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	46
 		close;
 	}
 }
-new_1-3,106,50,4	duplicate(NvLark)	Job Guide Lark#01	706
-new_2-3,106,50,4	duplicate(NvLark)	Job Guide Lark#02	706
-new_3-3,106,50,4	duplicate(NvLark)	Job Guide Lark#03	706
-new_4-3,106,50,4	duplicate(NvLark)	Job Guide Lark#04	706
-new_5-3,106,50,4	duplicate(NvLark)	Job Guide Lark#05	706
+new_1-3,106,50,4	duplicate(NvLark)	Job Guide Lark#01	4_M_KID1
+new_2-3,106,50,4	duplicate(NvLark)	Job Guide Lark#02	4_M_KID1
+new_3-3,106,50,4	duplicate(NvLark)	Job Guide Lark#03	4_M_KID1
+new_4-3,106,50,4	duplicate(NvLark)	Job Guide Lark#04	4_M_KID1
+new_5-3,106,50,4	duplicate(NvLark)	Job Guide Lark#05	4_M_KID1

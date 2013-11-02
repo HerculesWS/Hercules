@@ -19,7 +19,7 @@
 //= 1.6 Rescripted to official 10.3 standards. [L0ne_W0lf]
 //============================================================
 
-payon,162,67,4	script	Guide#pay	708,{
+payon,162,67,4	script	Guide#pay	4_M_PAY_SOLDIER,{
 	cutin "pay_soldier",2;
 	mes "[Payon Guide]";
 	mes "Welcome to the";
@@ -188,7 +188,7 @@ payon,162,67,4	script	Guide#pay	708,{
 	end;
 }
 
-pay_arche,85,30,2	script	Guide#2pay	708,{
+pay_arche,85,30,2	script	Guide#2pay	4_M_PAY_SOLDIER,{
 	cutin "pay_soldier",2;
 	mes "[Payon Guide]";
 	mes "Welcome to the";

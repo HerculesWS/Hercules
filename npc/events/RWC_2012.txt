@@ -11,7 +11,7 @@
 //= 1.0 First Version. [Euphy]
 //============================================================
 
-prontera,147,61,3	script	Driller#pron	87,{
+prontera,147,61,3	script	Driller#pron	4_M_BARBER,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "You're carrying too many items in your inventory. Visit Kafra storage and try again.";
@@ -80,7 +80,7 @@ prontera,147,61,3	script	Driller#pron	87,{
 	}
 }
 
-prontera,147,59,3	script	Goldberg#pron	878,{
+prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 	disable_items;
 	if (checkweight(1201,1) == 0) {
 		mes "You are carrying too many items. Come back after you have organized your inventory.";

@@ -163,9 +163,9 @@
 	mes "My mood is worse when I fail!!";
 	close;
 }
-prt_in,52,56,3	duplicate(BlacksmithDister)	Blacksmith Dister#prt	826
-payon,148,172,3	duplicate(BlacksmithDister)	Blacksmith Dister#pay	826
-alberta_in,20,56,3	duplicate(BlacksmithDister)	Blacksmith Dister#alb	826
-yuno_in01,175,18,3	duplicate(BlacksmithDister)	Blacksmith Dister#yuno	826
-ein_in01,26,82,3	duplicate(BlacksmithDister)	Blacksmith Dister#ein	826
-lhz_in02,280,15,3	duplicate(BlacksmithDister)	Blacksmith Dister#lhz	826
+prt_in,52,56,3	duplicate(BlacksmithDister)	Blacksmith Dister#prt	4_M_DWARF
+payon,148,172,3	duplicate(BlacksmithDister)	Blacksmith Dister#pay	4_M_DWARF
+alberta_in,20,56,3	duplicate(BlacksmithDister)	Blacksmith Dister#alb	4_M_DWARF
+yuno_in01,175,18,3	duplicate(BlacksmithDister)	Blacksmith Dister#yuno	4_M_DWARF
+ein_in01,26,82,3	duplicate(BlacksmithDister)	Blacksmith Dister#ein	4_M_DWARF
+lhz_in02,280,15,3	duplicate(BlacksmithDister)	Blacksmith Dister#lhz	4_M_DWARF
