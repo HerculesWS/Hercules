@@ -1027,7 +1027,10 @@ void itemdb_read_packages(void) {
 		if( itemdb->packages[count].random_qty ) {
 			CREATE(itemdb->packages[count].random_groups, struct item_package_rand_group, itemdb->packages[count].random_qty);
 			for( c = 0; c < itemdb->packages[count].random_qty; c++ ) {
-				CREATE(itemdb->packages[count].random_groups[c].random_list, struct item_package_rand_entry, rgroups[ i - 1 ][c]);
+				if( !rgroups[ i - 1 ][c] )
+					ShowError("itemdb_read_packages: package '%s' missing 'Random' field %d! there must not be gaps!\n",config_setting_name(itg),c+1);
+				else
+					CREATE(itemdb->packages[count].random_groups[c].random_list, struct item_package_rand_entry, rgroups[ i - 1 ][c]);
 				itemdb->packages[count].random_groups[c].random_qty = 0;
 			}
 		}
@@ -1090,7 +1093,7 @@ void itemdb_read_packages(void) {
 				itemdb->packages[count].random_groups[gidx].random_list[r].id = data ? data->nameid : 0;
 				itemdb->packages[count].random_groups[gidx].random_list[r].qty = icount;
 				if( (itemdb->packages[count].random_groups[gidx].random_list[r].rate = rate) == 10000 ) {
-					ShowWarning("itemdb_read_packages: item '%s' in '%s' has 100% drop rate!! set this item as 'Random: 0' or other items won't drop!!!\n",itname,config_setting_name(itg));
+					ShowWarning("itemdb_read_packages: item '%s' in '%s' has 100%% drop rate!! set this item as 'Random: 0' or other items won't drop!!!\n",itname,config_setting_name(itg));
 				}
 				itemdb->packages[count].random_groups[gidx].random_list[r].hours = expire;
 				itemdb->packages[count].random_groups[gidx].random_list[r].announce = announce == true ? 1 : 0;
