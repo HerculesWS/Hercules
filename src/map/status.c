@@ -10379,7 +10379,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 				if (sd && !pc_issit(sd)) { //can't cast if sit
 					int mushroom_skill_id = 0, i;
 					unit->stop_attack(bl);
-					unit->skillcastcancel(bl,1);
+					unit->skillcastcancel(bl,0);
 					do {
 						i = rnd() % MAX_SKILL_MAGICMUSHROOM_DB;
 						mushroom_skill_id = skill->magicmushroom_db[i].skill_id;
@@ -10387,15 +10387,15 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 					while( mushroom_skill_id == 0 );
 
 					switch( skill->get_casttype(mushroom_skill_id) ) { // Magic Mushroom skills are buffs or area damage
-					case CAST_GROUND:
-						skill->castend_pos2(bl,bl->x,bl->y,mushroom_skill_id,1,tick,0);
-						break;
-					case CAST_NODAMAGE:
-						skill->castend_nodamage_id(bl,bl,mushroom_skill_id,1,tick,0);
-						break;
-					case CAST_DAMAGE:
-						skill->castend_damage_id(bl,bl,mushroom_skill_id,1,tick,0);
-						break;
+						case CAST_GROUND:
+							skill->castend_pos2(bl,bl->x,bl->y,mushroom_skill_id,1,tick,0);
+							break;
+						case CAST_NODAMAGE:
+							skill->castend_nodamage_id(bl,bl,mushroom_skill_id,1,tick,0);
+							break;
+						case CAST_DAMAGE:
+							skill->castend_damage_id(bl,bl,mushroom_skill_id,1,tick,0);
+							break;
 					}
 				}
 

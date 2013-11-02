@@ -1966,7 +1966,7 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 	else
 		ret = timer->delete( ud->skilltimer, skill->castend_id );
 	if( ret < 0 )
-		ShowError("delete timer error : skill_id : %d\n",ret);
+		ShowError("delete timer error %d : skill %d (%s)\n",ret,skill_id,skill->get_name(skill_id));
 
 	ud->skilltimer = INVALID_TIMER;
 
