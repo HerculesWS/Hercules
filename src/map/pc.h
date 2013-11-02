@@ -731,7 +731,7 @@ struct pc_interface {
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	unsigned int level_penalty[3][RC_MAX][MAX_LEVEL*2+1];
 #endif
-	unsigned short equip_pos[EQI_MAX];
+	unsigned int equip_pos[EQI_MAX];
 	/* */
 	struct skill_tree_entry skill_tree[CLASS_COUNT][MAX_SKILL_TREE];
 	struct fame_list smith_fame_list[MAX_FAME_LIST];
