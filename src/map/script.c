@@ -10695,7 +10695,7 @@ BUILDIN(getcastleid)
 {
 	const char* mapname = mapindex_getmapname(script_getstr(st,2),NULL);
 	struct guild_castle* gc = guild->mapname2gc(mapname);
-	int* id = (gc) ? gc->castle_id : -1;
+	int id = (gc) ? gc->castle_id : -1;
 	script_pushint(st,id);
 	return true;
 }
