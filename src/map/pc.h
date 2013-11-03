@@ -166,6 +166,7 @@ struct map_session_data {
 		short pmap; // Previous map on Map Change
 		unsigned short autoloot;
 		unsigned short autolootid[AUTOLOOTITEM_SIZE]; // [Zephyrus]
+		unsigned short autoloottype;
 		unsigned int autolooting : 1; //performance-saver, autolooting state for @alootid
 		unsigned short autobonus; //flag to indicate if an autobonus is activated. [Inkfish]
 		unsigned int gmaster_flag : 1;
