@@ -129,9 +129,9 @@ include_open      ^[ \t]*@include[ \t]+\"
                     return(TOK_STRING);
                   }
 
-\<\?                          { BEGIN SCRIPTBLOCK; }
-<SCRIPTBLOCK>([^\?]|\?[^\>])+ { scanctx_append_string(yyextra, yytext); }
-<SCRIPTBLOCK>\?\>             {
+\<\"                          { BEGIN SCRIPTBLOCK; }
+<SCRIPTBLOCK>([^\"]|\"[^\>])+ { scanctx_append_string(yyextra, yytext); }
+<SCRIPTBLOCK>\"\>             {
                                 yylval->sval = scanctx_take_string(yyextra);
                                 BEGIN INITIAL;
                                 return(TOK_STRING);
