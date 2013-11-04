@@ -1,11 +1,12 @@
-//===== rAthena Script =======================================
-//= Item Bound Script
+//===== Hercules Script =======================================
+//= Item Bind Script
 //===== By: ==================================================
 //= Akinari
 //===== Compatible With: =====================================
-//= Revision 17351+ (rAthena Only)
+//= Revision 17351+ (rAthena)
+//= Revision 12949+ (Hercules)
 //===== Description: =========================================
-//= Item Bound Script
+//= Item Bind Script
 //= Allows users to pay a price to make an item bound to
 //= Account, Character, or Guild
 //============================================================
