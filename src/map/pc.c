@@ -72,7 +72,7 @@ struct map_session_data* pc_get_dummy_sd(void)
 {
 	struct map_session_data *dummy_sd;
 	CREATE(dummy_sd, struct map_session_data, 1);
-	dummy_sd->group = pc_group_get_dummy_group(); // map_session_data.group is expected to be non-NULL at all times
+	dummy_sd->group = pcg->get_dummy_group(); // map_session_data.group is expected to be non-NULL at all times
 	return dummy_sd;
 }
 
@@ -82,7 +82,7 @@ struct map_session_data* pc_get_dummy_sd(void)
  */
 int pc_get_group_level(struct map_session_data *sd)
 {
-	return pc_group_get_level(sd->group);
+	return pcg->get_level(sd->group);
 }
 
 /**
@@ -93,7 +93,7 @@ int pc_get_group_level(struct map_session_data *sd)
  */
 int pc_set_group(struct map_session_data *sd, int group_id)
 {
-	GroupSettings *group = pc_group_id2group(group_id);
+	GroupSettings *group = pcg->id2group(group_id);
 	if (group == NULL)
 		return 1;
 	sd->group_id = group_id;
@@ -104,9 +104,9 @@ int pc_set_group(struct map_session_data *sd, int group_id)
 /**
  * Checks if player has permission to perform action.
  */
-bool pc_has_permission(struct map_session_data *sd, enum e_pc_permission permission)
+bool pc_has_permission(struct map_session_data *sd, unsigned int permission)
 {
-	return ((sd->extra_temp_permissions&permission) != 0 || pc_group_has_permission(sd->group, permission));
+	return ((sd->extra_temp_permissions&permission) != 0 || pcg->has_permission(sd->group, permission));
 }
 
 /**
@@ -114,7 +114,7 @@ bool pc_has_permission(struct map_session_data *sd, enum e_pc_permission permiss
  */
 bool pc_should_log_commands(struct map_session_data *sd)
 {
-	return pc_group_should_log_commands(sd->group);
+	return pcg->should_log_commands(sd->group);
 }
 
 int pc_invincible_timer(int tid, int64 tick, int id, intptr_t data) {
@@ -10203,7 +10203,7 @@ void do_final_pc(void) {
 
 	db_destroy(pc->itemcd_db);
 
-	do_final_pc_groups();
+	pcg->final();
 	
 	ers_destroy(pc->sc_display_ers);
 	return;
@@ -10241,7 +10241,7 @@ void do_init_pc(void) {
 		pc->night_timer_tid = timer->add_interval(timer->gettick() + day_duration + (map->night_flag ? night_duration : 0), pc->map_night_timer, 0, 0, day_duration + night_duration);
 	}
 
-	do_init_pc_groups();
+	pcg->init();
 	
 	pc->sc_display_ers = ers_new(sizeof(struct sc_display_entry), "pc.c:sc_display_ers", ERS_OPT_NONE);
 }

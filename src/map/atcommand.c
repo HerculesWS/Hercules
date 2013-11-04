@@ -574,7 +574,7 @@ ACMD(who) {
 				case 2: {
 					StrBuf->Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
-						StrBuf->Printf(&buf, msg_txt(344), pc_group_get_name(pl_sd->group)); // "(%s) "
+						StrBuf->Printf(&buf, msg_txt(344), pcg->get_name(pl_sd->group)); // "(%s) "
 					StrBuf->Printf(&buf, msg_txt(347), pl_sd->status.base_level, pl_sd->status.job_level,
 									 pc->job_name(pl_sd->status.class_)); // "| Lv:%d/%d | Job: %s"
 					break;
@@ -584,7 +584,7 @@ ACMD(who) {
 						StrBuf->Printf(&buf, msg_txt(912), pl_sd->status.char_id, pl_sd->status.account_id);	// "(CID:%d/AID:%d) "
 					StrBuf->Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
-						StrBuf->Printf(&buf, msg_txt(344), pc_group_get_name(pl_sd->group)); // "(%s) "
+						StrBuf->Printf(&buf, msg_txt(344), pcg->get_name(pl_sd->group)); // "(%s) "
 					StrBuf->Printf(&buf, msg_txt(348), mapindex_id2name(pl_sd->mapindex), pl_sd->bl.x, pl_sd->bl.y); // "| Location: %s %d %d"
 					break;
 				}
@@ -594,7 +594,7 @@ ACMD(who) {
 					
 					StrBuf->Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
-						StrBuf->Printf(&buf, msg_txt(344), pc_group_get_name(pl_sd->group)); // "(%s) "
+						StrBuf->Printf(&buf, msg_txt(344), pcg->get_name(pl_sd->group)); // "(%s) "
 					if (p != NULL)
 						StrBuf->Printf(&buf, msg_txt(345), p->party.name); // " | Party: '%s'"
 					if (g != NULL)
@@ -3512,7 +3512,7 @@ ACMD(reloadatcommand) {
 	config_destroy(&run_test);
 	
 	atcommand->doload();
-	pc_groups_reload();
+	pcg->reload();
 	clif->message(fd, msg_txt(254));
 	return true;
 }
@@ -8164,11 +8164,11 @@ void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommand
 		
 		switch( type ) {
 			case COMMAND_CHARCOMMAND:
-				if( cmd->char_groups[pc_group_get_idx(sd->group)] == 0 )
+				if( cmd->char_groups[pcg->get_idx(sd->group)] == 0 )
 					continue;
 				break;
 			case COMMAND_ATCOMMAND:
-				if( cmd->at_groups[pc_group_get_idx(sd->group)] == 0 )
+				if( cmd->at_groups[pcg->get_idx(sd->group)] == 0 )
 					continue;
 				break;
 			default:
@@ -8377,7 +8377,7 @@ ACMD(reloadquestdb) {
 	return true;
 }
 ACMD(addperm) {
-	int perm_size = ARRAYLENGTH(pc_g_permission_name);
+	int perm_size = pcg->permission_count;
 	bool add = (strcmpi(command+1, "addperm") == 0) ? true : false;
 	int i;
 	
@@ -8386,37 +8386,37 @@ ACMD(addperm) {
 		clif->message(fd, atcmd_output);
 		clif->message(fd, msg_txt(1379)); // -- Permission List
 		for( i = 0; i < perm_size; i++ ) {
-			sprintf(atcmd_output,"- %s",pc_g_permission_name[i].name);
+			sprintf(atcmd_output,"- %s",pcg->permissions[i].name);
 			clif->message(fd, atcmd_output);
 		}
 		return false;
 	}
 	
-	ARR_FIND(0, perm_size, i, strcmpi(pc_g_permission_name[i].name, message) == 0);
+	ARR_FIND(0, perm_size, i, strcmpi(pcg->permissions[i].name, message) == 0);
 	
 	if( i == perm_size ) {
 		sprintf(atcmd_output,msg_txt(1380),message); // '%s' is not a known permission.
 		clif->message(fd, atcmd_output);
 		clif->message(fd, msg_txt(1379)); // -- Permission List
 		for( i = 0; i < perm_size; i++ ) {
-			sprintf(atcmd_output,"- %s",pc_g_permission_name[i].name);
+			sprintf(atcmd_output,"- %s",pcg->permissions[i].name);
 			clif->message(fd, atcmd_output);
 		}
 		return false;
 	}
 	
-	if( add && (sd->extra_temp_permissions&pc_g_permission_name[i].permission) ) {
-		sprintf(atcmd_output,  msg_txt(1381),sd->status.name,pc_g_permission_name[i].name); // User '%s' already possesses the '%s' permission.
+	if( add && (sd->extra_temp_permissions&pcg->permissions[i].permission) ) {
+		sprintf(atcmd_output,  msg_txt(1381),sd->status.name,pcg->permissions[i].name); // User '%s' already possesses the '%s' permission.
 		clif->message(fd, atcmd_output);
 		return false;
-	} else if ( !add && !(sd->extra_temp_permissions&pc_g_permission_name[i].permission) ) {
-		sprintf(atcmd_output,  msg_txt(1382),sd->status.name,pc_g_permission_name[i].name); // User '%s' doesn't possess the '%s' permission.
+	} else if ( !add && !(sd->extra_temp_permissions&pcg->permissions[i].permission) ) {
+		sprintf(atcmd_output,  msg_txt(1382),sd->status.name,pcg->permissions[i].name); // User '%s' doesn't possess the '%s' permission.
 		clif->message(fd, atcmd_output);
 		sprintf(atcmd_output,msg_txt(1383),sd->status.name); // -- User '%s' Permissions
 		clif->message(fd, atcmd_output);
 		for( i = 0; i < perm_size; i++ ) {
-			if( sd->extra_temp_permissions&pc_g_permission_name[i].permission ) {
-				sprintf(atcmd_output,"- %s",pc_g_permission_name[i].name);
+			if( sd->extra_temp_permissions&pcg->permissions[i].permission ) {
+				sprintf(atcmd_output,"- %s",pcg->permissions[i].name);
 				clif->message(fd, atcmd_output);
 			}
 		}
@@ -8425,9 +8425,9 @@ ACMD(addperm) {
 	}
 	
 	if( add )
-		sd->extra_temp_permissions |= pc_g_permission_name[i].permission;
+		sd->extra_temp_permissions |= pcg->permissions[i].permission;
 	else
-		sd->extra_temp_permissions &=~ pc_g_permission_name[i].permission;
+		sd->extra_temp_permissions &=~ pcg->permissions[i].permission;
 	
 	
 	sprintf(atcmd_output, msg_txt(1384),sd->status.name); // User '%s' permissions updated successfully. The changes are temporary.
@@ -9663,7 +9663,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 			if( !pc->get_group_level(sd) ) {
 				if( x >= 1 || y >= 1 ) { /* we have command */
 					info = atcommand->get_info_byname(atcommand->check_alias(command + 1));
-					if( !info || info->char_groups[pc_group_get_idx(sd->group)] == 0 ) /* if we can't use or doesn't exist: don't even display the command failed message */
+					if( !info || info->char_groups[pcg->get_idx(sd->group)] == 0 ) /* if we can't use or doesn't exist: don't even display the command failed message */
 							return false;
 				} else
 					return false;/* display as normal message */
@@ -9743,8 +9743,8 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 	// type == 1 : player invoked
 	if (type == 1) {
 		int i;
-		if ((*command == atcommand->at_symbol && info->at_groups[pc_group_get_idx(sd->group)] == 0) ||
-		    (*command == atcommand->char_symbol && info->char_groups[pc_group_get_idx(sd->group)] == 0) ) {
+		if ((*command == atcommand->at_symbol && info->at_groups[pcg->get_idx(sd->group)] == 0) ||
+		    (*command == atcommand->char_symbol && info->char_groups[pcg->get_idx(sd->group)] == 0) ) {
 			return false;
 		}
 		if( pc_isdead(sd) && pc->has_permission(sd,PC_PERM_DISABLE_CMD_DEAD) ) {
@@ -9942,13 +9942,13 @@ void atcommand_db_load_groups(GroupSettings **groups, config_setting_t **command
 				continue;
 			}
 
-			idx = pc_group_get_idx(group);
+			idx = pcg->get_idx(group);
 			if (idx < 0 || idx >= sz) {
 				ShowError("atcommand_db_load_groups: index (%d) out of bounds [0,%d]\n", idx, sz - 1);
 				continue;
 			}
 			
-			if (pc_group_has_permission(group, PC_PERM_USE_ALL_COMMANDS)) {
+			if (pcg->has_permission(group, PC_PERM_USE_ALL_COMMANDS)) {
 				atcmd->at_groups[idx] = atcmd->char_groups[idx] = 1;
 				continue;
 			}
@@ -9986,8 +9986,8 @@ bool atcommand_can_use(struct map_session_data *sd, const char *command) {
 	if (info == NULL)
 		return false;
 	
-	if ((*command == atcommand->at_symbol && info->at_groups[pc_group_get_idx(sd->group)] != 0) ||
-		(*command == atcommand->char_symbol && info->char_groups[pc_group_get_idx(sd->group)] != 0) ) {
+	if ((*command == atcommand->at_symbol && info->at_groups[pcg->get_idx(sd->group)] != 0) ||
+		(*command == atcommand->char_symbol && info->char_groups[pcg->get_idx(sd->group)] != 0) ) {
 		return true;
 	}
 	
@@ -9999,8 +9999,8 @@ bool atcommand_can_use2(struct map_session_data *sd, const char *command, AtComm
 	if (info == NULL)
 		return false;
 	
-	if ((type == COMMAND_ATCOMMAND && info->at_groups[pc_group_get_idx(sd->group)] != 0) ||
-		(type == COMMAND_CHARCOMMAND && info->char_groups[pc_group_get_idx(sd->group)] != 0) ) {
+	if ((type == COMMAND_ATCOMMAND && info->at_groups[pcg->get_idx(sd->group)] != 0) ||
+		(type == COMMAND_CHARCOMMAND && info->char_groups[pcg->get_idx(sd->group)] != 0) ) {
 		return true;
 	}
 	

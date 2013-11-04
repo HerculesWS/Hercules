@@ -5342,6 +5342,7 @@ void map_hp_symbols(void) {
 	HPM->share(skill,"skill");
 	HPM->share(vending,"vending");
 	HPM->share(pc,"pc");
+	HPM->share(pcg,"pc_groups");
 	HPM->share(party,"party");
 	HPM->share(storage,"storage");
 	HPM->share(trade,"trade");
@@ -5396,6 +5397,7 @@ void map_load_defaults(void) {
 	skill_defaults();
 	vending_defaults();
 	pc_defaults();
+	pc_groups_defaults();
 	party_defaults();
 	storage_defaults();
 	trade_defaults();

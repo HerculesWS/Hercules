@@ -751,7 +751,7 @@ struct pc_interface {
 	bool (*can_give_items) (struct map_session_data *sd);
 	
 	bool (*can_use_command) (struct map_session_data *sd, const char *command);
-	bool (*has_permission) (struct map_session_data *sd, enum e_pc_permission permission);
+	bool (*has_permission) (struct map_session_data *sd, unsigned int permission);
 	int (*set_group) (struct map_session_data *sd, int group_id);
 	bool (*should_log_commands) (struct map_session_data *sd);
 
