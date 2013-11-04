@@ -868,7 +868,7 @@ L_Request:
 	return;
 }
 
-tha_t02,227,163,0	script	3rdf_warp#tt	45,1,1,{
+tha_t02,227,163,0	script	3rdf_warp#tt	WARPNPC,1,1,{
 	end;
 OnInit:
 	disablenpc "3rdf_warp#tt";

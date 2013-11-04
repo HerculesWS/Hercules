@@ -4904,7 +4904,7 @@ OnTimer26000:
 	donpcevent "GuardEnd#ufe::OnDisable";
 }
 
-jupe_ele,41,33,0	script	4F Enter#ufe	45,4,4,{
+jupe_ele,41,33,0	script	4F Enter#ufe	WARPNPC,4,4,{
 OnInit:
 	disablenpc "4F Enter#ufe";
 	end;

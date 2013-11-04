@@ -1918,7 +1918,7 @@ turbo_n_1,222,45,0	duplicate(TurboHint_4#tt_main)	#n1NoWayOut5	-1,1,1
 turbo_n_1,222,61,0	duplicate(TurboHint_4#tt_main)	#n1NoWayOut6	-1,1,1
 turbo_n_1,222,65,0	duplicate(TurboHint_4#tt_main)	#n1NoWayOut7	-1,1,1
 
--	script	cos_end#tt_main	01,{
+-	script	cos_end#tt_main	-1,{
 	function	GetNumber;
 OnTouch:
 	set .@w$,callfunc("F_tt");
