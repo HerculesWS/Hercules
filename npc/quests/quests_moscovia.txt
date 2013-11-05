@@ -9298,7 +9298,7 @@ moc_pryd04,126,120,0	script	Soldier#rus26	4_M_RUSMAN1,{
 //----------------------------------------------------------------------------
 // Marozka's Dungeon (Golden Thread)
 //----------------------------------------------------------------------------
-mosk_dun01,45,250,3	script	1#rus27	45,3,3,{
+mosk_dun01,45,250,3	script	1#rus27	WARPNPC,3,3,{
 	end;
 OnTouch:
 	warp "mosk_que",49,22;

@@ -1252,7 +1252,7 @@ OnTimer5000:
 	end;
 }
 
-1@tower,12,393,0	script	1FGate102tower	45,2,2,{
+1@tower,12,393,0	script	1FGate102tower	WARPNPC,2,2,{
 	end;
 
 OnInstanceInit:
@@ -1323,7 +1323,7 @@ L_Display:
 1@tower,184,51,0	duplicate(1FGate102tower)	23FGate102tower	WARPNPC,2,2
 1@tower,270,51,0	duplicate(1FGate102tower)	24FGate102tower	WARPNPC,2,2
 
-1@tower,355,51,0	script	25FGate102tower	45,2,2,{
+1@tower,355,51,0	script	25FGate102tower	WARPNPC,2,2,{
 	end;
 
 OnInstanceInit:
@@ -1347,7 +1347,7 @@ OnTimer120000:
 	end;
 }
 
-1@tower,355,51,0	script	25FGate102tower-2	45,2,2,{
+1@tower,355,51,0	script	25FGate102tower-2	WARPNPC,2,2,{
 	end;
 
 OnInstanceInit:

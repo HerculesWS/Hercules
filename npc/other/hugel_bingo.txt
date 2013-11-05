@@ -276,7 +276,7 @@ OnTimer460000:
 	end;
 }
 
-que_bingo,49,125,0	script	1a#bingo	139,1,1,{
+que_bingo,49,125,0	script	1a#bingo	HIDDEN_WARP_NPC,1,1,{
 	end;
 
 OnInit:

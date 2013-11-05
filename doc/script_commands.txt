@@ -207,7 +207,7 @@ Ex: if your NPC is named 'Hunter#hunter1', it will be displayed as 'Hunter'
 
 ** Define a warp point
 
-<from map name>,<fromX>,<fromY>,<facing>%TAB%warp%TAB%<warp name>%TAB%<spanx>,<spany>,<to map name>,<toX>,<toY>
+<from map name>,<fromX>,<fromY>{,<facing>}%TAB%warp%TAB%<warp name>%TAB%<spanx>,<spany>,<to map name>,<toX>,<toY>
 
 This will define a warp NPC that will warp a player between maps, and 
 while most arguments of that are obvious, some deserve special mention.
@@ -299,7 +299,7 @@ items here. The layout used to define sale items still count, and
 
 ** Define an warp/shop/cashshop/NPC duplicate.
 
-warp: <map name>,<x>,<y>,<facing>%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<spanx>,<spany>
+warp: <map name>,<x>,<y>{,<facing>}%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<spanx>,<spany>
 shop/cashshop/npc: -%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite id>
 shop/cashshop/npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite id>
 npc: -%TAB%duplicate(<label>)%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>
