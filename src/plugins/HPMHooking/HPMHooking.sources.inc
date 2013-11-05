@@ -30,6 +30,7 @@ memcpy(&HPMHooks.source.mob, mob, sizeof(struct mob_interface));
 memcpy(&HPMHooks.source.npc, npc, sizeof(struct npc_interface));
 memcpy(&HPMHooks.source.party, party, sizeof(struct party_interface));
 memcpy(&HPMHooks.source.path, path, sizeof(struct path_interface));
+memcpy(&HPMHooks.source.pcg, pcg, sizeof(struct pc_groups_interface));
 memcpy(&HPMHooks.source.pc, pc, sizeof(struct pc_interface));
 memcpy(&HPMHooks.source.pet, pet, sizeof(struct pet_interface));
 memcpy(&HPMHooks.source.quest, quest, sizeof(struct quest_interface));
