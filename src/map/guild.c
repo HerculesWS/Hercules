@@ -1923,7 +1923,7 @@ int guild_castledatasave(int castle_id, int index, int value)
 		gc->defense = value;
 		for (i = 0; i < MAX_GUARDIANS; i++)
 			if (gc->guardian[i].visible && (gd = map->id2md(gc->guardian[i].id)) != NULL)
-				status_calc_mob(gd, 0);
+				status_calc_mob(gd, SCO_NONE);
 		break;
 	}
 	case 4:

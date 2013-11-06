@@ -272,7 +272,7 @@ void homunculus_skillup(struct homun_data *hd,uint16 skill_id) {
 	{
 		hd->homunculus.hskill[i].lv++;
 		hd->homunculus.skillpts-- ;
-		status_calc_homunculus(hd,0);
+		status_calc_homunculus(hd,SCO_NONE);
 		if (hd->master) {
 			clif->homskillup(hd->master, skill_id);
 			clif->hominfo(hd->master,hd,0);
@@ -413,7 +413,7 @@ bool homunculus_evolve(struct homun_data *hd) {
 	//status_Calc flag&1 will make current HP/SP be reloaded from hom structure
 	hom->hp = hd->battle_status.hp;
 	hom->sp = hd->battle_status.sp;
-	status_calc_homunculus(hd,1);
+	status_calc_homunculus(hd,SCO_FIRST);
 
 	if (!(battle_config.hom_setting&0x2))
 		skill->unit_move(&sd->hd->bl,timer->gettick(),1); // apply land skills immediately
@@ -460,7 +460,7 @@ bool homunculus_mutate(struct homun_data *hd, int homun_id) {
 	hom->hp = hd->battle_status.hp;
 	hom->sp = hd->battle_status.sp;
 	hom->prev_class = prev_class;
-	status_calc_homunculus(hd,1);
+	status_calc_homunculus(hd,SCO_FIRST);
 
 	if (!(battle_config.hom_setting&0x2))
 		skill->unit_move(&sd->hd->bl,timer->gettick(),1); // apply land skills immediately
@@ -505,7 +505,7 @@ int homunculus_gainexp(struct homun_data *hd,unsigned int exp) {
 		hd->homunculus.exp = 0;
 
 	clif->specialeffect(&hd->bl,568,AREA);
-	status_calc_homunculus(hd,0);
+	status_calc_homunculus(hd,SCO_NONE);
 	status_percent_heal(&hd->bl, 100, 100);
 	return 0;
 }
@@ -757,7 +757,7 @@ bool homunculus_create(struct map_session_data *sd, struct s_homunculus *hom) {
 	hd->bl.y = hd->ud.to_y;
 
 	map->addiddb(&hd->bl);
-	status_calc_homunculus(hd,1);
+	status_calc_homunculus(hd,SCO_FIRST);
 
 	hd->hungry_timer = INVALID_TIMER;
 	return true;
@@ -1003,7 +1003,7 @@ bool homunculus_shuffle(struct homun_data *hd) {
 	memcpy(&hd->homunculus.hskill, &b_skill, sizeof(b_skill));
 	hd->homunculus.skillpts = skillpts;
 	clif->homskillinfoblock(sd);
-	status_calc_homunculus(hd,0);
+	status_calc_homunculus(hd,SCO_NONE);
 	status_percent_heal(&hd->bl, 100, 100);
 	clif->specialeffect(&hd->bl,568,AREA);
 

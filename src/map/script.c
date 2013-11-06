@@ -12099,7 +12099,7 @@ BUILDIN(nude)
 	}
 	
 	if( calcflag )
-		status_calc_pc(sd,0);
+		status_calc_pc(sd,SCO_NONE);
 	
 	return true;
 }
@@ -12425,9 +12425,9 @@ BUILDIN(npcwalkto) {
 	if( nd ) {
 		unit->bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
 		if (!nd->status.hp) {
-			status_calc_npc(nd, true);
+			status_calc_npc(nd, SCO_FIRST);
 		} else {
-			status_calc_npc(nd, false);
+			status_calc_npc(nd, SCO_NONE);
 		}
 		unit->walktoxy(&nd->bl,x,y,0);
 	}
@@ -14967,9 +14967,9 @@ BUILDIN(unitskilluseid) {
 	if( bl != NULL ) {
 		if( bl->type == BL_NPC ) {
 			if (!((TBL_NPC*)bl)->status.hp) {
-				status_calc_npc(((TBL_NPC*)bl), true);
+				status_calc_npc(((TBL_NPC*)bl), SCO_FIRST);
 			} else {
-				status_calc_npc(((TBL_NPC*)bl), false);
+				status_calc_npc(((TBL_NPC*)bl), SCO_NONE);
 			}
 		}
 		unit->skilluse_id(bl, target_id, skill_id, skill_lv);
@@ -15001,9 +15001,9 @@ BUILDIN(unitskillusepos) {
 	if( bl != NULL ) {
 		if( bl->type == BL_NPC ) {
 			if (!((TBL_NPC*)bl)->status.hp) {
-				status_calc_npc(((TBL_NPC*)bl), true);
+				status_calc_npc(((TBL_NPC*)bl), SCO_FIRST);
 			} else {
-				status_calc_npc(((TBL_NPC*)bl), false);
+				status_calc_npc(((TBL_NPC*)bl), SCO_NONE);
 			}
 		}
 		unit->skilluse_pos(bl, skill_x, skill_y, skill_id, skill_lv);
@@ -17013,9 +17013,9 @@ BUILDIN(npcskill) {
 	nd->stat_point = stat_point;
 	
 	if (!nd->status.hp) {
-		status_calc_npc(nd, true);
+		status_calc_npc(nd, SCO_FIRST);
 	} else {
-		status_calc_npc(nd, false);
+		status_calc_npc(nd, SCO_NONE);
 	}
 	
 	if (skill->get_inf(skill_id)&INF_GROUND_SKILL) {

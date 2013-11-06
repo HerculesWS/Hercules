@@ -2108,7 +2108,7 @@ void itemdb_reload(void) {
 			sd->combos.id = NULL;
 			sd->combos.count = 0;
 			if( pc->load_combo(sd) > 0 )
-				status_calc_pc(sd,0);
+				status_calc_pc(sd,SCO_FORCE);
 		}
 
 	}

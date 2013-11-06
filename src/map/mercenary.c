@@ -317,7 +317,7 @@ int merc_data_received(struct s_mercenary *merc, bool flag) {
 		md->bl.y = md->ud.to_y;
 
 		map->addiddb(&md->bl);
-		status_calc_mercenary(md,1);
+		status_calc_mercenary(md,SCO_FIRST);
 		md->contract_timer = INVALID_TIMER;
 		merc_contract_init(md);
 	}

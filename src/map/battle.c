@@ -206,7 +206,7 @@ int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data) {
 		if( !target || status->isdead(target) ) {/* nothing we can do */
 			if( dat->src_type == BL_PC && ( src = map->id2bl(dat->src_id) ) && --((TBL_PC*)src)->delayed_damage == 0 && ((TBL_PC*)src)->state.hold_recalc ) {
 				((TBL_PC*)src)->state.hold_recalc = 0;
-				status_calc_pc(((TBL_PC*)src),0);
+				status_calc_pc(((TBL_PC*)src),SCO_FORCE);
 			}
 			ers_free(battle->delay_damage_ers, dat);
 			return 0;
@@ -237,7 +237,7 @@ int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data) {
 		
 		if( src && src->type == BL_PC && --((TBL_PC*)src)->delayed_damage == 0 && ((TBL_PC*)src)->state.hold_recalc ) {
 			((TBL_PC*)src)->state.hold_recalc = 0;
-			status_calc_pc(((TBL_PC*)src),0);
+			status_calc_pc(((TBL_PC*)src),SCO_FORCE);
 		}
 	}
 	ers_free(battle->delay_damage_ers, dat);

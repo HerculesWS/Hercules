@@ -1258,6 +1258,7 @@ ACMD(baselevelup)
 		
 		sd->status.status_point += status_point;
 		sd->status.base_level += (unsigned int)level;
+		status_calc_pc(sd, SCO_FORCE);
 		status_percent_heal(&sd->bl, 100, 100);
 		clif->misceffect(&sd->bl, 0);
 		clif->message(fd, msg_txt(21)); // Base level raised.
@@ -1279,13 +1280,13 @@ ACMD(baselevelup)
 			sd->status.status_point -= status_point;
 		sd->status.base_level -= (unsigned int)level;
 		clif->message(fd, msg_txt(22)); // Base level lowered.
+		status_calc_pc(sd, SCO_FORCE);
 	}
 	sd->status.base_exp = 0;
 	clif->updatestatus(sd, SP_STATUSPOINT);
 	clif->updatestatus(sd, SP_BASELEVEL);
 	clif->updatestatus(sd, SP_BASEEXP);
 	clif->updatestatus(sd, SP_NEXTBASEEXP);
-	status_calc_pc(sd, 0);
 	pc->baselevelchanged(sd);
 	if(sd->status.party_id)
 		party->send_levelup(sd);
@@ -1338,7 +1339,7 @@ ACMD(joblevelup)
 	clif->updatestatus(sd, SP_JOBEXP);
 	clif->updatestatus(sd, SP_NEXTJOBEXP);
 	clif->updatestatus(sd, SP_SKILLPOINT);
-	status_calc_pc(sd, 0);
+	status_calc_pc(sd, SCO_FORCE);
 	
 	return true;
 }
@@ -2352,7 +2353,7 @@ ACMD(param) {
 		*stats[i] = new_value;
 		clif->updatestatus(sd, SP_STR + i);
 		clif->updatestatus(sd, SP_USTR + i);
-		status_calc_pc(sd, 0);
+		status_calc_pc(sd, SCO_FORCE);
 		clif->message(fd, msg_txt(42)); // Stat changed.
 	} else {
 		if (value < 0)
@@ -2409,7 +2410,7 @@ ACMD(stat_all) {
 	}
 	
 	if (count > 0) { // if at least 1 stat modified
-		status_calc_pc(sd, 0);
+		status_calc_pc(sd, SCO_FORCE);
 		clif->message(fd, msg_txt(84)); // All stats changed!
 	} else {
 		if (value < 0)
@@ -6725,7 +6726,7 @@ ACMD(homlevel) {
 		hd->homunculus.exp += hd->exp_next;
 	} while( hd->homunculus.level < level && homun->levelup(hd) );
 	
-	status_calc_homunculus(hd,0);
+	status_calc_homunculus(hd,SCO_NONE);
 	status_percent_heal(&hd->bl, 100, 100);
 	clif->specialeffect(&hd->bl,568,AREA);
 	return true;
