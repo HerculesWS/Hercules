@@ -36,7 +36,7 @@ struct guild_storage_interface {
 	struct guild_storage *(*id2storage) (int guild_id);
 	struct guild_storage *(*id2storage2) (int guild_id);
 	/* */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
 	int (*delete) (int guild_id);

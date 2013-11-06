@@ -849,7 +849,7 @@ int party_send_xy_timer(int tid, int64 tick, int id, intptr_t data) {
 		for( i = 0; i < MAX_PARTY; i++ )
 		{
 			struct map_session_data* sd = p->data[i].sd;
-			if( !sd ) continue;
+			if( !sd || sd->bg_id ) continue;
 
 			if( p->data[i].x != sd->bl.x || p->data[i].y != sd->bl.y )
 			{// perform position update
@@ -1306,7 +1306,10 @@ void do_final_party(void) {
 	db_destroy(party->booking_db); // Party Booking [Spiria]
 }
 // Constructor, init vars
-void do_init_party(void) {
+void do_init_party(bool minimal) {
+	if (minimal)
+		return;
+
 	party->db = idb_alloc(DB_OPT_RELEASE_DATA);
 	party->booking_db = idb_alloc(DB_OPT_RELEASE_DATA); // Party Booking [Spiria]
 	timer->add_func_list(party->send_xy_timer, "party_send_xy_timer");

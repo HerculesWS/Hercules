@@ -1023,7 +1023,7 @@ struct map_interface {
 	int (*eraseallipport_sub) (DBKey key, DBData *data, va_list va);
 	char* (*init_mapcache) (FILE *fp);
 	int (*readfromcache) (struct map_data *m, char *buffer);
-	int (*addmap) (char *mapname);
+	int (*addmap) (const char *mapname);
 	void (*delmapid) (int id);
 	void (*zone_db_clear) (void);
 	void (*list_final) (void);

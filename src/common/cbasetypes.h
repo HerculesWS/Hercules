@@ -37,7 +37,7 @@
 #define CYGWIN
 #endif
 
-// __APPLE__ is the only predefined macro on MacOS X
+// __APPLE__ is the only predefined macro on MacOS
 #if defined(__APPLE__)
 #define __DARWIN__
 #endif
@@ -92,9 +92,9 @@
 // (-20 >= USHRT_MAX) returns true
 #if defined(__FreeBSD__) && defined(__x86_64)
 #undef UCHAR_MAX
-#define UCHAR_MAX (unsigned char)0xff
+#define UCHAR_MAX ((unsigned char)0xff)
 #undef USHRT_MAX
-#define USHRT_MAX (unsigned short)0xffff
+#define USHRT_MAX ((unsigned short)0xffff)
 #endif
 
 // ILP64 isn't supported, so always 32 bits?
@@ -180,7 +180,7 @@ typedef unsigned long int   ppuint32;
 
 #if defined(WIN32) && !defined(MINGW) // does not have a signed size_t
 //////////////////////////////
-#if defined(_WIN64)	// naive 64bit windows platform
+#if defined(_WIN64)	// native 64bit windows platform
 typedef __int64			ssize_t;
 #else
 typedef int				ssize_t;
@@ -341,8 +341,8 @@ typedef char bool;
 #if defined(WIN32)
 #define PATHSEP '\\'
 #define PATHSEP_STR "\\"
-#elif defined(__APPLE__)
-// FIXME Mac OS X is unix based, is this still correct?
+#elif defined(__APPLE__) && !defined(__MACH__)
+// __MACH__ indicates OS X ( http://sourceforge.net/p/predef/wiki/OperatingSystems/ )
 #define PATHSEP ':'
 #define PATHSEP_STR ":"
 #else

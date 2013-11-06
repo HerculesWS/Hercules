@@ -1027,7 +1027,10 @@ void itemdb_read_packages(void) {
 		if( itemdb->packages[count].random_qty ) {
 			CREATE(itemdb->packages[count].random_groups, struct item_package_rand_group, itemdb->packages[count].random_qty);
 			for( c = 0; c < itemdb->packages[count].random_qty; c++ ) {
-				CREATE(itemdb->packages[count].random_groups[c].random_list, struct item_package_rand_entry, rgroups[ i - 1 ][c]);
+				if( !rgroups[ i - 1 ][c] )
+					ShowError("itemdb_read_packages: package '%s' missing 'Random' field %d! there must not be gaps!\n",config_setting_name(itg),c+1);
+				else
+					CREATE(itemdb->packages[count].random_groups[c].random_list, struct item_package_rand_entry, rgroups[ i - 1 ][c]);
 				itemdb->packages[count].random_groups[c].random_qty = 0;
 			}
 		}
@@ -1090,7 +1093,7 @@ void itemdb_read_packages(void) {
 				itemdb->packages[count].random_groups[gidx].random_list[r].id = data ? data->nameid : 0;
 				itemdb->packages[count].random_groups[gidx].random_list[r].qty = icount;
 				if( (itemdb->packages[count].random_groups[gidx].random_list[r].rate = rate) == 10000 ) {
-					ShowWarning("itemdb_read_packages: item '%s' in '%s' has 100% drop rate!! set this item as 'Random: 0' or other items won't drop!!!\n",itname,config_setting_name(itg));
+					ShowWarning("itemdb_read_packages: item '%s' in '%s' has 100%% drop rate!! set this item as 'Random: 0' or other items won't drop!!!\n",itname,config_setting_name(itg));
 				}
 				itemdb->packages[count].random_groups[gidx].random_list[r].hours = expire;
 				itemdb->packages[count].random_groups[gidx].random_list[r].announce = announce == true ? 1 : 0;
@@ -1924,7 +1927,7 @@ int itemdb_uid_load() {
 /*====================================
  * read all item-related databases
  *------------------------------------*/
-void itemdb_read(void) {
+void itemdb_read(bool minimal) {
 	int i;
 	DBData prev;
 	
@@ -1942,6 +1945,9 @@ void itemdb_read(void) {
 		}
 	}
 	
+	if (minimal)
+		return;
+
 	itemdb->read_combos();
 	itemdb->read_groups();
 	itemdb->read_chains();
@@ -2062,7 +2068,7 @@ void itemdb_reload(void) {
 	db_clear(itemdb->names);
 		
 	// read new data
-	itemdb->read();
+	itemdb->read(false);
 	
 	//Epoque's awesome @reloaditemdb fix - thanks! [Ind]
 	//- Fixes the need of a @reloadmobdb after a @reloaditemdb to re-link monster drop data
@@ -2105,7 +2111,7 @@ void itemdb_reload(void) {
 			sd->combos.id = NULL;
 			sd->combos.count = 0;
 			if( pc->load_combo(sd) > 0 )
-				status_calc_pc(sd,0);
+				status_calc_pc(sd,SCO_FORCE);
 		}
 
 	}
@@ -2171,12 +2177,16 @@ void do_final_itemdb(void) {
 	db_destroy(itemdb->names);
 }
 
-void do_init_itemdb(void) {
+void do_init_itemdb(bool minimal) {
 	memset(itemdb->array, 0, sizeof(itemdb->array));
 	itemdb->other = idb_alloc(DB_OPT_BASE);
 	itemdb->names = strdb_alloc(DB_OPT_BASE,ITEM_NAME_LENGTH);
 	itemdb->create_dummy_data(); //Dummy data item.
-	itemdb->read();
+	itemdb->read(minimal);
+
+	if (minimal)
+		return;
+
 	clif->cashshop_load();
 }
 void itemdb_defaults(void) {

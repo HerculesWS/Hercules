@@ -1722,8 +1722,6 @@ int map_quit(struct map_session_data *sd) {
 
 	if( sd->state.storage_flag == 1 ) sd->state.storage_flag = 0; // No need to Double Save Storage on Quit.
 
-	if (sd->state.permanent_speed == 1) sd->state.permanent_speed = 0; // Remove lock so speed is set back to normal at login.
-
 	if( sd->ed ) {
 		elemental->clean_effect(sd->ed);
 		unit->remove_map(&sd->ed->bl,CLR_TELEPORT,ALC_MARK);
@@ -2907,7 +2905,7 @@ int map_readfromcache(struct map_data *m, char *buffer) {
 }
 
 
-int map_addmap(char* mapname) {
+int map_addmap(const char* mapname) {
 	map->list[map->count].instance_id = -1;
 	mapindex_getmapname(mapname, map->list[map->count++].name);
 	return 0;
@@ -5344,6 +5342,7 @@ void map_hp_symbols(void) {
 	HPM->share(skill,"skill");
 	HPM->share(vending,"vending");
 	HPM->share(pc,"pc");
+	HPM->share(pcg,"pc_groups");
 	HPM->share(party,"party");
 	HPM->share(storage,"storage");
 	HPM->share(trade,"trade");
@@ -5398,6 +5397,7 @@ void map_load_defaults(void) {
 	skill_defaults();
 	vending_defaults();
 	pc_defaults();
+	pc_groups_defaults();
 	party_defaults();
 	storage_defaults();
 	trade_defaults();
@@ -5419,6 +5419,8 @@ void map_load_defaults(void) {
 }
 int do_init(int argc, char *argv[])
 {
+	bool minimal = false;
+	char *scriptcheck = NULL;
 	int i;
 
 #ifdef GCOLLECT
@@ -5468,6 +5470,11 @@ int do_init(int argc, char *argv[])
 					map->LOG_CONF_NAME = argv[++i];
 			} else if( strcmp(arg, "run-once") == 0 ) { // close the map-server as soon as its done.. for testing [Celest]
 				runflag = CORE_ST_STOP;
+			} else if( strcmp(arg, "script-check") == 0 ) {
+				minimal = true;
+				runflag = CORE_ST_STOP;
+				if( map->arg_next_value(arg, i, argc) )
+					scriptcheck = argv[++i];
 			} else {
 				ShowError("Unknown option '%s'.\n", argv[i]);
 				exit(EXIT_FAILURE);
@@ -5489,39 +5496,42 @@ int do_init(int argc, char *argv[])
 	}
 
 	map_load_defaults();
-	map->config_read(map->MAP_CONF_NAME);
-	CREATE(map->list,struct map_data,map->count);
-	map->count = 0;
-	map->config_read_sub(map->MAP_CONF_NAME);
-	// loads npcs
-	map->reloadnpc(false);
+	if (!minimal) {
+		map->config_read(map->MAP_CONF_NAME);
+		CREATE(map->list,struct map_data,map->count);
+		map->count = 0;
+		map->config_read_sub(map->MAP_CONF_NAME);
 
-	chrif->checkdefaultlogin();
+		// loads npcs
+		map->reloadnpc(false);
 
-	if (!map->ip_set || !map->char_ip_set) {
-		char ip_str[16];
-		ip2str(addr_[0], ip_str);
+		chrif->checkdefaultlogin();
 
-		ShowWarning("Not all IP addresses in /conf/map-server.conf configured, autodetecting...\n");
+		if (!map->ip_set || !map->char_ip_set) {
+			char ip_str[16];
+			ip2str(addr_[0], ip_str);
 
-		if (naddr_ == 0)
-			ShowError("Unable to determine your IP address...\n");
-		else if (naddr_ > 1)
-			ShowNotice("Multiple interfaces detected...\n");
+			ShowWarning("Not all IP addresses in /conf/map-server.conf configured, autodetecting...\n");
 
-		ShowInfo("Defaulting to %s as our IP address\n", ip_str);
+			if (naddr_ == 0)
+				ShowError("Unable to determine your IP address...\n");
+			else if (naddr_ > 1)
+				ShowNotice("Multiple interfaces detected...\n");
 
-		if (!map->ip_set)
-			clif->setip(ip_str);
-		if (!map->char_ip_set)
-			chrif->setip(ip_str);
+			ShowInfo("Defaulting to %s as our IP address\n", ip_str);
+
+			if (!map->ip_set)
+				clif->setip(ip_str);
+			if (!map->char_ip_set)
+				chrif->setip(ip_str);
+		}
+
+		battle->config_read(map->BATTLE_CONF_FILENAME);
+		atcommand->msg_read(map->MSG_CONF_NAME);
+		map->inter_config_read(map->INTER_CONF_NAME);
+		logs->config_read(map->LOG_CONF_NAME);
 	}
-
-	battle->config_read(map->BATTLE_CONF_FILENAME);
-	atcommand->msg_read(map->MSG_CONF_NAME);
 	script->config_read(map->SCRIPT_CONF_NAME);
-	map->inter_config_read(map->INTER_CONF_NAME);
-	logs->config_read(map->LOG_CONF_NAME);
 
 	map->id_db     = idb_alloc(DB_OPT_BASE);
 	map->pc_db     = idb_alloc(DB_OPT_BASE); //Added for reliable map->id2sd() use. [Skotlex]
@@ -5538,53 +5548,77 @@ int do_init(int argc, char *argv[])
 	
 	map->flooritem_ers = ers_new(sizeof(struct flooritem_data),"map.c::map_flooritem_ers",ERS_OPT_NONE);
 	ers_chunk_size(map->flooritem_ers, 100);
-	
-	map->sql_init();
-	if (logs->config.sql_logs)
-		logs->sql_init();
 
-	mapindex_init();
+	if (!minimal) {
+		map->sql_init();
+		if (logs->config.sql_logs)
+			logs->sql_init();
+	}
+
+	i = mapindex_init();
+
+	if (minimal) {
+		// Pretend all maps from the mapindex are on this mapserver
+		CREATE(map->list,struct map_data,i);
+
+		for( i = 0; i < MAX_MAPINDEX; i++ ) {
+			if (mapindex_exists(i)) {
+				map->addmap(mapindex_id2name(i));
+			}
+		}
+	}
+
 	if(map->enable_grf)
 		grfio_init(map->GRF_PATH_FILENAME);
 
 	map->readallmaps();
 
-	timer->add_func_list(map->freeblock_timer, "map_freeblock_timer");
-	timer->add_func_list(map->clearflooritem_timer, "map_clearflooritem_timer");
-	timer->add_func_list(map->removemobs_timer, "map_removemobs_timer");
-	timer->add_interval(timer->gettick()+1000, map->freeblock_timer, 0, 0, 60*1000);
 
-	HPM->load_sub = HPM_map_plugin_load_sub;
-	HPM->symbol_defaults_sub = map_hp_symbols;
-	HPM->config_read();
-	HPM->event(HPET_INIT);
+	if (!minimal) {
+		timer->add_func_list(map->freeblock_timer, "map_freeblock_timer");
+		timer->add_func_list(map->clearflooritem_timer, "map_clearflooritem_timer");
+		timer->add_func_list(map->removemobs_timer, "map_removemobs_timer");
+		timer->add_interval(timer->gettick()+1000, map->freeblock_timer, 0, 0, 60*1000);
 
-	atcommand->init();
-	battle->init();
-	instance->init();
-	chrif->init();
-	clif->init();
-	ircbot->init();
-	script->init();
-	itemdb->init();
-	skill->init();
-	map->read_zone_db();/* read after item and skill initalization */
-	mob->init();
-	pc->init();
-	status->init();
-	party->init();
-	guild->init();
-	gstorage->init();
-	pet->init();
-	homun->init();
-	mercenary->init();
-	elemental->init();
-	quest->init();
-	npc->init();
-	unit->init();
-	bg->init();
-	duel->init();
-	vending->init();
+		HPM->load_sub = HPM_map_plugin_load_sub;
+		HPM->symbol_defaults_sub = map_hp_symbols;
+		HPM->config_read();
+		HPM->event(HPET_INIT);
+	}
+
+	atcommand->init(minimal);
+	battle->init(minimal);
+	instance->init(minimal);
+	chrif->init(minimal);
+	clif->init(minimal);
+	ircbot->init(minimal);
+	script->init(minimal);
+	itemdb->init(minimal);
+	skill->init(minimal);
+	if (!minimal)
+		map->read_zone_db();/* read after item and skill initalization */
+	mob->init(minimal);
+	pc->init(minimal);
+	status->init(minimal);
+	party->init(minimal);
+	guild->init(minimal);
+	gstorage->init(minimal);
+	pet->init(minimal);
+	homun->init(minimal);
+	mercenary->init(minimal);
+	elemental->init(minimal);
+	quest->init(minimal);
+	npc->init(minimal);
+	unit->init(minimal);
+	bg->init(minimal);
+	duel->init(minimal);
+	vending->init(minimal);
+
+	if (minimal) {
+		if (npc->parsesrcfile(scriptcheck, false) == 0)
+			exit(EXIT_SUCCESS);
+		exit(EXIT_FAILURE);
+	}
 
 	npc->event_do_oninit();	// Init npcs (OnInit)
 

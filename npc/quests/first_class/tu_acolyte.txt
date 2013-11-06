@@ -1778,7 +1778,7 @@ prt_monk,223,123,3	script	Eavesdrop#tu	HIDDEN_NPC,{
 	}
 }
 
-sec_in02,17,156,3	script	1st Job Quest Reset	726,{
+sec_in02,17,156,3	script	1st Job Quest Reset	4_F_JOB_BLACKSMITH,{
 	callfunc "F_GM_NPC";
 	mes "[1st Job Quest]";
 	mes "Which would you like to reset?";

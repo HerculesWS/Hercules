@@ -10,6 +10,7 @@
 //         16 - SC considered as buff and be removed by Hermode and etc.
 //         32 - SC considered as debuff and be removed by Gospel and etc.
 //         64 - SC cannot be reset when MADO Gear is taken off.
+//        128 - SC cannot be reset by sc_end and change clear.
 //Example:
 //SC_ENDURE, 21 //SC_ENDURE: cannot be removed by death and dispell and cosidered as buff. (16 + 4 + 1 = 21)
 
@@ -395,12 +396,12 @@ SC_SOULCOLD,78
 SC_HAWKEYES,78
 
 // Unremovable
-SC_WEIGHTOVER50, 79
-SC_WEIGHTOVER90, 79
+SC_WEIGHTOVER50, 207
+SC_WEIGHTOVER90, 207
 SC_WEDDING, 77
 SC_XMAS, 77
 SC_SUMMER, 77
-SC_NOCHAT, 77
+SC_NOCHAT, 205
 SC_FUSION, 77
 SC_EARTHSCROLL, 77
 SC_STORMKICK_READY, 77
@@ -408,7 +409,7 @@ SC_DOWNKICK_READY, 77
 SC_COUNTERKICK_READY, 77
 SC_TURNKICK_READY, 77
 SC_DODGE_READY, 77
-SC_JAILED, 77
+SC_JAILED, 205
 SC_AUTOTRADE, 77
 SC_WHISTLE, 79
 SC_ASSNCROS, 79
@@ -419,6 +420,9 @@ SC_DONTFORGETME, 79
 SC_FORTUNE, 79
 SC_SERVICEFORYOU, 79
 SC_INCHIT, 77
-SC_PUSH_CART, 0x4D
-SC_MOONSTAR, 79
-SC_SUPER_STAR, 79
+SC_PUSH_CART, 205
+SC_MOONSTAR, 207
+SC_SUPER_STAR, 207
+
+//Cant Clear
+SC_ALL_RIDING, 128

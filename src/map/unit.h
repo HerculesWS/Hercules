@@ -72,7 +72,7 @@ extern const short dirx[8];
 extern const short diry[8];
 
 struct unit_interface {
-	int (*init) (void);
+	int (*init) (bool minimal);
 	int (*final) (void);
 	/* */
 	struct unit_data* (*bl2ud) (struct block_list *bl);

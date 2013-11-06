@@ -56,7 +56,7 @@ struct s_guild_skill_tree {
 
 
 struct guild_interface {
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
 	DBMap* db; // int guild_id -> struct guild*

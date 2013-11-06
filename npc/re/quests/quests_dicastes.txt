@@ -436,7 +436,7 @@ dic_in01,254,119,0	script	Item Storage#01	CLEAR_NPC,{
 	end;
 }
 
-sec_in02,10,42,1	script	13.3 Related Reset	449,{
+sec_in02,10,42,1	script	13.3 Related Reset	4_MAN_BENKUNI,{
 	callfunc "F_GM_NPC";
 	mes "[Reset]";
 	mes "Resets all quest windows including daily and map quests for 13.3.";

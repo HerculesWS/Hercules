@@ -526,7 +526,7 @@ struct clif_interface {
 	/* */
 	bool ally_only;
 	/* core */
-	int (*init) (void);
+	int (*init) (bool minimal);
 	void (*final) (void);
 	int (*setip) (const char* ip);
 	void (*setbindip) (const char* ip);

@@ -2468,7 +2468,7 @@ OnTouch:
 	close;
 }
 
-malangdo,246,184,0	script	1st Rate Point	111,{
+malangdo,246,184,0	script	1st Rate Point	HIDDEN_NPC,{
 	if (checkweight(1201,1) == 0) {
 		mes " - Notice !! -";
 		mes " - Since you have too many items - ";

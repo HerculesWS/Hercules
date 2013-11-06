@@ -360,7 +360,7 @@ void final(void) {
 	db_destroy(vending->db);
 }
 
-void init(void) {
+void init(bool minimal) {
 	vending->db = idb_alloc(DB_OPT_BASE);
 	vending->next_id = 0;
 }

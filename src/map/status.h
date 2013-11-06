@@ -34,13 +34,14 @@ enum refine_type {
 };
 
 typedef enum sc_conf_type {
-	SC_NO_REM_DEATH   = 0x1,
-	SC_NO_SAVE = 0x2,
-	SC_NO_DISPELL = 0x4,
-	SC_NO_CLEARANCE = 0x8,
-	SC_BUFF = 0x10,
-	SC_DEBUFF = 0x20,
-	SC_MADO_NO_RESET = 0x40
+	SC_NO_REM_DEATH  = 0x01,
+	SC_NO_SAVE       = 0x02,
+	SC_NO_DISPELL    = 0x04,
+	SC_NO_CLEARANCE  = 0x08,
+	SC_BUFF          = 0x10,
+	SC_DEBUFF        = 0x20,
+	SC_MADO_NO_RESET = 0x40,
+	SC_NO_CLEAR      = 0x80,
 } sc_conf_type;
 
 // Status changes listing. These code are for use by the server.
@@ -1627,6 +1628,12 @@ enum e_regen {
 	RGN_SSP = 0x08,
 };
 
+enum e_status_calc_opt {
+	SCO_NONE  = 0x0,
+	SCO_FIRST = 0x1, /* trigger the calculations that should take place only onspawn/once */
+	SCO_FORCE = 0x2, /* only relevant to BL_PC types, ensures call bypasses the queue caused by delayed damage */
+};
+
 //Define to determine who gets HP/SP consumed on doing skills/etc. [Skotlex]
 #define BL_CONSUME (BL_PC|BL_HOM|BL_MER|BL_ELEM)
 //Define to determine who has regen
@@ -1810,14 +1817,14 @@ struct status_change {
 
 #define status_change_end(bl,type,tid) status->change_end_(bl,type,tid,__FILE__,__LINE__)
 
-#define status_calc_bl(bl, flag) status->calc_bl_(bl, (enum scb_flag)(flag), false)
-#define status_calc_mob(md, first) status->calc_bl_(&(md)->bl, SCB_ALL, first)
-#define status_calc_pet(pd, first) status->calc_bl_(&(pd)->bl, SCB_ALL, first)
-#define status_calc_pc(sd, first) status->calc_bl_(&(sd)->bl, SCB_ALL, first)
-#define status_calc_homunculus(hd, first) status->calc_bl_(&(hd)->bl, SCB_ALL, first)
-#define status_calc_mercenary(md, first) status->calc_bl_(&(md)->bl, SCB_ALL, first)
-#define status_calc_elemental(ed, first) status->calc_bl_(&(ed)->bl, SCB_ALL, first)
-#define status_calc_npc(nd, first) status->calc_bl_(&(nd)->bl, SCB_ALL, first)
+#define status_calc_bl(bl, flag) status->calc_bl_(bl, (enum scb_flag)(flag), SCO_NONE)
+#define status_calc_mob(md, opt) status->calc_bl_(&(md)->bl, SCB_ALL, opt)
+#define status_calc_pet(pd, opt) status->calc_bl_(&(pd)->bl, SCB_ALL, opt)
+#define status_calc_pc(sd, opt) status->calc_bl_(&(sd)->bl, SCB_ALL, opt)
+#define status_calc_homunculus(hd, opt) status->calc_bl_(&(hd)->bl, SCB_ALL, opt)
+#define status_calc_mercenary(md, opt) status->calc_bl_(&(md)->bl, SCB_ALL, opt)
+#define status_calc_elemental(ed, opt) status->calc_bl_(&(ed)->bl, SCB_ALL, opt)
+#define status_calc_npc(nd, opt) status->calc_bl_(&(nd)->bl, SCB_ALL, opt)
 
 // bonus values and upgrade chances for refining equipment
 struct s_refine_info {
@@ -1864,7 +1871,7 @@ struct status_interface {
 	int64 natural_heal_prev_tick;
 	unsigned int natural_heal_diff_tick;
 	/* */
-	int (*init) (void);
+	int (*init) (bool minimal);
 	void (*final) (void);
 	/* funcs */
 	int (*get_refine_chance) (enum refine_type wlv, int refine);
@@ -1911,13 +1918,13 @@ struct status_interface {
 	int (*change_timer_sub) (struct block_list* bl, va_list ap);
 	int (*change_clear) (struct block_list* bl, int type);
 	int (*change_clear_buffs) (struct block_list* bl, int type);
-	void (*calc_bl_) (struct block_list *bl, enum scb_flag flag, bool first);
-	int (*calc_mob_) (struct mob_data* md, bool first);
-	int (*calc_pet_) (struct pet_data* pd, bool first);
-	int (*calc_pc_) (struct map_session_data* sd, bool first);
-	int (*calc_homunculus_) (struct homun_data *hd, bool first);
-	int (*calc_mercenary_) (struct mercenary_data *md, bool first);
-	int (*calc_elemental_) (struct elemental_data *ed, bool first);
+	void (*calc_bl_) (struct block_list *bl, enum scb_flag flag, enum e_status_calc_opt opt);
+	int (*calc_mob_) (struct mob_data* md, enum e_status_calc_opt opt);
+	int (*calc_pet_) (struct pet_data* pd, enum e_status_calc_opt opt);
+	int (*calc_pc_) (struct map_session_data* sd, enum e_status_calc_opt opt);
+	int (*calc_homunculus_) (struct homun_data *hd, enum e_status_calc_opt opt);
+	int (*calc_mercenary_) (struct mercenary_data *md, enum e_status_calc_opt opt);
+	int (*calc_elemental_) (struct elemental_data *ed, enum e_status_calc_opt opt);
 	void (*calc_misc) (struct block_list *bl, struct status_data *status, int level);
 	void (*calc_regen) (struct block_list *bl, struct status_data *st, struct regen_data *regen);
 	void (*calc_regen_rate) (struct block_list *bl, struct regen_data *regen, struct status_change *sc);
@@ -1943,7 +1950,7 @@ struct status_interface {
 	void (*calc_sigma) (void);
 	unsigned int (*base_pc_maxhp) (struct map_session_data *sd, struct status_data *st);
 	unsigned int (*base_pc_maxsp) (struct map_session_data *sd, struct status_data *st);
-	int (*calc_npc_) (struct npc_data *nd, bool first);
+	int (*calc_npc_) (struct npc_data *nd, enum e_status_calc_opt opt);
 	unsigned short (*calc_str) (struct block_list *bl, struct status_change *sc, int str);
 	unsigned short (*calc_agi) (struct block_list *bl, struct status_change *sc, int agi);
 	unsigned short (*calc_vit) (struct block_list *bl, struct status_change *sc, int vit);

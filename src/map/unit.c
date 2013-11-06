@@ -1966,7 +1966,7 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 	else
 		ret = timer->delete( ud->skilltimer, skill->castend_id );
 	if( ret < 0 )
-		ShowError("delete timer error : skill_id : %d\n",ret);
+		ShowError("delete timer error %d : skill %d (%s)\n",ret,skill_id,skill->get_name(skill_id));
 
 	ud->skilltimer = INVALID_TIMER;
 
@@ -2573,7 +2573,10 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 	return 0;
 }
 
-int do_init_unit(void) {
+int do_init_unit(bool minimal) {
+	if (minimal)
+		return 0;
+
 	timer->add_func_list(unit->attack_timer,  "unit_attack_timer");
 	timer->add_func_list(unit->walktoxy_timer,"unit_walktoxy_timer");
 	timer->add_func_list(unit->walktobl_sub, "unit_walktobl_sub");
