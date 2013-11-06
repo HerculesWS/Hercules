@@ -6759,7 +6759,10 @@ int battle_config_read(const char* cfgName)
 	return 0;
 }
 
-void do_init_battle(void) {
+void do_init_battle(bool minimal) {
+	if (minimal)
+		return;
+
 	battle->delay_damage_ers = ers_new(sizeof(struct delay_damage),"battle.c::delay_damage_ers",ERS_OPT_CLEAR);
 	timer->add_func_list(battle->delay_damage_sub, "battle_delay_damage_sub");
 

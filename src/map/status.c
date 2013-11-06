@@ -11530,7 +11530,10 @@ int status_readdb(void)
 /*==========================================
 * Status db init and destroy.
 *------------------------------------------*/
-int do_init_status(void) {
+int do_init_status(bool minimal) {
+	if (minimal)
+		return 0;
+
 	timer->add_func_list(status->change_timer,"status_change_timer");
 	timer->add_func_list(status->kaahi_heal_timer,"status_kaahi_heal_timer");
 	timer->add_func_list(status->natural_heal_timer,"status_natural_heal_timer");

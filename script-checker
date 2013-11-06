@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+# See the LICENSE file
+# Base Author: Haru @ http://hercules.ws
+
+ORIG_CWD="$(pwd)"
+BASEDIR="$(dirname "$0")"
+EXECUTABLE="./map-server"
+
+cd "${BASEDIR}"
+if [ -z "$1" ]; then
+	echo "No file specified."
+	echo "Usage: $0 <path to the script>"
+	echo " (you may use a relative or absolute path)"
+	exit -1
+elif [[ "$1" =~ ^\/ ]]; then
+	FILE="$1"
+else
+	FILE="${ORIG_CWD}/$1"
+fi
+if [ ! -x "$EXECUTABLE" ]; then
+	exit -1
+fi
+"$EXECUTABLE" --script-check "${FILE}" 2>&1

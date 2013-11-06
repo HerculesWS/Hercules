@@ -106,7 +106,7 @@ struct pet_interface {
 	struct eri *item_drop_ers; //For loot drops delay structures.
 	struct eri *item_drop_list_ers;
 	/* */
-	int (*init) (void);
+	int (*init) (bool minimal);
 	int (*final) (void);
 	/* */
 	int (*hungry_val) (struct pet_data *pd);

@@ -1306,7 +1306,10 @@ void do_final_party(void) {
 	db_destroy(party->booking_db); // Party Booking [Spiria]
 }
 // Constructor, init vars
-void do_init_party(void) {
+void do_init_party(bool minimal) {
+	if (minimal)
+		return;
+
 	party->db = idb_alloc(DB_OPT_RELEASE_DATA);
 	party->booking_db = idb_alloc(DB_OPT_RELEASE_DATA); // Party Booking [Spiria]
 	timer->add_func_list(party->send_xy_timer, "party_send_xy_timer");

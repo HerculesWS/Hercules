@@ -73,7 +73,7 @@ struct elemental_interface {
 	struct s_elemental_db db[MAX_ELEMENTAL_CLASS]; // Elemental Database
 
 	/* */
-	int (*init) (void);
+	int (*init) (bool minimal);
 	void (*final) (void);
 	/* funcs */
 	bool (*class) (int class_);

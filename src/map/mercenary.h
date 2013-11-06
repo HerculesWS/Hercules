@@ -59,7 +59,7 @@ struct mercenary_interface {
 
 	/* funcs */
 
-	void (*init) (void);
+	void (*init) (bool minimal);
 	
 	bool (*class) (int class_);
 	struct view_data * (*get_viewdata) (int class_);

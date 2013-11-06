@@ -1927,7 +1927,7 @@ int itemdb_uid_load() {
 /*====================================
  * read all item-related databases
  *------------------------------------*/
-void itemdb_read(void) {
+void itemdb_read(bool minimal) {
 	int i;
 	DBData prev;
 	
@@ -1945,6 +1945,9 @@ void itemdb_read(void) {
 		}
 	}
 	
+	if (minimal)
+		return;
+
 	itemdb->read_combos();
 	itemdb->read_groups();
 	itemdb->read_chains();
@@ -2065,7 +2068,7 @@ void itemdb_reload(void) {
 	db_clear(itemdb->names);
 		
 	// read new data
-	itemdb->read();
+	itemdb->read(false);
 	
 	//Epoque's awesome @reloaditemdb fix - thanks! [Ind]
 	//- Fixes the need of a @reloadmobdb after a @reloaditemdb to re-link monster drop data
@@ -2174,12 +2177,16 @@ void do_final_itemdb(void) {
 	db_destroy(itemdb->names);
 }
 
-void do_init_itemdb(void) {
+void do_init_itemdb(bool minimal) {
 	memset(itemdb->array, 0, sizeof(itemdb->array));
 	itemdb->other = idb_alloc(DB_OPT_BASE);
 	itemdb->names = strdb_alloc(DB_OPT_BASE,ITEM_NAME_LENGTH);
 	itemdb->create_dummy_data(); //Dummy data item.
-	itemdb->read();
+	itemdb->read(minimal);
+
+	if (minimal)
+		return;
+
 	clif->cashshop_load();
 }
 void itemdb_defaults(void) {

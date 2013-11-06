@@ -2573,7 +2573,10 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 	return 0;
 }
 
-int do_init_unit(void) {
+int do_init_unit(bool minimal) {
+	if (minimal)
+		return 0;
+
 	timer->add_func_list(unit->attack_timer,  "unit_attack_timer");
 	timer->add_func_list(unit->walktoxy_timer,"unit_walktoxy_timer");
 	timer->add_func_list(unit->walktobl_sub, "unit_walktobl_sub");

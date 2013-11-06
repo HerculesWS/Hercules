@@ -91,7 +91,7 @@ struct homunculus_interface {
 	struct s_homunculus_db db[MAX_HOMUNCULUS_CLASS];
 	struct homun_skill_tree_entry skill_tree[MAX_HOMUNCULUS_CLASS][MAX_SKILL_TREE];
 	/* */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	void (*reload) (void);
 	void (*reload_skill) (void);

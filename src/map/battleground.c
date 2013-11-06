@@ -782,7 +782,10 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 	
 	return BGQA_SUCCESS;
 }
-void do_init_battleground(void) {
+void do_init_battleground(bool minimal) {
+	if (minimal)
+		return;
+
 	bg->team_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	timer->add_func_list(bg->send_xy_timer, "bg_send_xy_timer");
 	timer->add_interval(timer->gettick() + battle_config.bg_update_interval, bg->send_xy_timer, 0, 0, battle_config.bg_update_interval);

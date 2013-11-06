@@ -742,7 +742,7 @@ struct pc_interface {
 	/* */
 	struct eri *sc_display_ers;
 	/* funcs */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	
 	struct map_session_data* (*get_dummy_sd) (void);

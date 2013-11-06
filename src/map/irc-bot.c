@@ -386,7 +386,7 @@ void irc_relay(char *name, const char *msg) {
 /**
  * IRC bot initializer
  */
-void irc_bot_init(void) {
+void irc_bot_init(bool minimal) {
 	/// Command handlers
 	const struct irc_func irc_func_base[] = {
 		{ "PING" , ircbot->pong },
@@ -398,6 +398,9 @@ void irc_bot_init(void) {
 	};
 	struct irc_func* function;
 	int i;
+
+	if (minimal)
+		return;
 
 	if( !hChSys.irc )
 		return;

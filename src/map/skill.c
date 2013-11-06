@@ -18027,7 +18027,7 @@ bool skill_parse_row_changematerialdb(char* split[], int columns, int current) {
  * create_arrow_db.txt
  * abra_db.txt
  *------------------------------*/
-void skill_readdb(void) {
+void skill_readdb(bool minimal) {
 	// init skill db structures
 	db_clear(skill->name2id_db);
 	
@@ -18050,6 +18050,10 @@ void skill_readdb(void) {
 	safestrncpy(skill->db[0].desc, "Unknown Skill", sizeof(skill->db[0].desc));
 
 	sv->readdb(map->db_path, DBPATH"skill_db.txt",           ',',  17,                       17,               MAX_SKILL_DB, skill->parse_row_skilldb);
+
+	if (minimal)
+		return;
+
 	sv->readdb(map->db_path, DBPATH"skill_require_db.txt",   ',',  32,                       32,               MAX_SKILL_DB, skill->parse_row_requiredb);
 #ifdef RENEWAL_CAST
 	sv->readdb(map->db_path, "re/skill_cast_db.txt",         ',',   8,                        8,               MAX_SKILL_DB, skill->parse_row_castdb);
@@ -18077,7 +18081,7 @@ void skill_reload (void) {
 	struct map_session_data *sd;
 	int i,c,k;
 	
-	skill->read_db();
+	skill->read_db(false);
 	
 	//[Ind/Hercules] refresh index cache
 	for(c = 0; c < CLASS_COUNT; c++) {
@@ -18103,9 +18107,12 @@ void skill_reload (void) {
 /*==========================================
  *
  *------------------------------------------*/
-int do_init_skill (void) {
+int do_init_skill(bool minimal) {
 	skill->name2id_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, MAX_SKILL_NAME_LENGTH);
-	skill->read_db();
+	skill->read_db(minimal);
+
+	if (minimal)
+		return 0;
 
 	skill->group_db = idb_alloc(DB_OPT_BASE);
 	skill->unit_db = idb_alloc(DB_OPT_BASE);
