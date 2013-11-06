@@ -9564,7 +9564,7 @@ void atcommand_basecommands(void) {
 	int i;
 	
 	for( i = 0; i < ARRAYLENGTH(atcommand_base); i++ ) {
-		if(!atcommand->add(atcommand_base[i].command,atcommand_base[i].func)) { // Should not happen if atcommand_base[] array is OK
+		if(!atcommand->add(atcommand_base[i].command,atcommand_base[i].func,false)) { // Should not happen if atcommand_base[] array is OK
 			ShowDebug("atcommand_basecommands: duplicate ACMD_DEF for '%s'.\n", atcommand_base[i].command);
 			continue;
 		}
@@ -9576,21 +9576,22 @@ void atcommand_basecommands(void) {
 	return;
 }
 
-bool atcommand_add(char *name,AtCommandFunc func) {
+bool atcommand_add(char *name,AtCommandFunc func, bool replace) {
 	AtCommandInfo* cmd;
 
-	if(atcommand->exists(name)) //caller will handle/display on false
-		return false;
-	
-	CREATE(cmd, AtCommandInfo, 1);
+	if( (cmd = atcommand->exists(name)) ) { //caller will handle/display on false
+		if( !replace )
+			return false;
+	} else {
+		CREATE(cmd, AtCommandInfo, 1);
+		strdb_put(atcommand->db, name, cmd);
+	}
 	
 	safestrncpy(cmd->command, name, sizeof(cmd->command));
 	cmd->func = func;
 	cmd->help = NULL;
 	cmd->log = true;
-	
-	strdb_put(atcommand->db, cmd->command, cmd);
-	
+		
 	return true;
 }
 
