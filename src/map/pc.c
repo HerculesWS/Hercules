@@ -5889,6 +5889,12 @@ void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned in
 
 	*job_exp = (unsigned int) cap_value(*job_exp + (double)*job_exp * bonus/100., 1, UINT_MAX);
 
+	if( sd->status.mod_exp != 100 ) {
+		*base_exp = (unsigned int) cap_value((double)*base_exp * sd->status.mod_exp/100., 1, UINT_MAX);
+		*job_exp  = (unsigned int) cap_value((double)*job_exp  * sd->status.mod_exp/100., 1, UINT_MAX);
+
+	}
+	
 	return;
 }
 /*==========================================
@@ -6911,47 +6917,55 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 
 	// changed penalty options, added death by player if pk_mode [Valaris]
 	if( battle_config.death_penalty_type
-	 && (sd->class_&MAPID_UPPERMASK) != MAPID_NOVICE // only novices will receive no penalty
-	 && !map->list[sd->bl.m].flag.noexppenalty && !map_flag_gvg2(sd->bl.m)
-	 && !sd->sc.data[SC_BABY] && !sd->sc.data[SC_CASH_DEATHPENALTY]
-	) {
-		unsigned int base_penalty =0;
+	   && (sd->class_&MAPID_UPPERMASK) != MAPID_NOVICE // only novices will receive no penalty
+	   && !map->list[sd->bl.m].flag.noexppenalty && !map_flag_gvg2(sd->bl.m)
+	   && !sd->sc.data[SC_BABY] && !sd->sc.data[SC_CASH_DEATHPENALTY]
+	   ) {
+		unsigned int base_penalty = 0;
 		if (battle_config.death_penalty_base > 0) {
+			
 			switch (battle_config.death_penalty_type) {
 				case 1:
 					base_penalty = (unsigned int) ((double)pc->nextbaseexp(sd) * (double)battle_config.death_penalty_base/10000);
-				break;
+					break;
 				case 2:
 					base_penalty = (unsigned int) ((double)sd->status.base_exp * (double)battle_config.death_penalty_base/10000);
-				break;
+					break;
 			}
+			
 			if(base_penalty) {
 			  	if (battle_config.pk_mode && src && src->type==BL_PC)
 					base_penalty*=2;
+				if( sd->status.mod_death != 100 )
+					base_penalty = base_penalty * sd->status.mod_death / 100;
 				sd->status.base_exp -= min(sd->status.base_exp, base_penalty);
 				clif->updatestatus(sd,SP_BASEEXP);
 			}
 		}
-		if(battle_config.death_penalty_job > 0)
-	  	{
+		
+		if(battle_config.death_penalty_job > 0) {
 			base_penalty = 0;
+			
 			switch (battle_config.death_penalty_type) {
 				case 1:
 					base_penalty = (unsigned int) ((double)pc->nextjobexp(sd) * (double)battle_config.death_penalty_job/10000);
-				break;
+					break;
 				case 2:
 					base_penalty = (unsigned int) ((double)sd->status.job_exp * (double)battle_config.death_penalty_job/10000);
-				break;
+					break;
 			}
+			
 			if(base_penalty) {
 			  	if (battle_config.pk_mode && src && src->type==BL_PC)
 					base_penalty*=2;
+				if( sd->status.mod_death != 100 )
+					base_penalty = base_penalty * sd->status.mod_death / 100;
 				sd->status.job_exp -= min(sd->status.job_exp, base_penalty);
 				clif->updatestatus(sd,SP_JOBEXP);
 			}
 		}
-		if(battle_config.zeny_penalty > 0 && !map->list[sd->bl.m].flag.nozenypenalty)
-	  	{
+		
+		if(battle_config.zeny_penalty > 0 && !map->list[sd->bl.m].flag.nozenypenalty) {
 			base_penalty = (unsigned int)((double)sd->status.zeny * (double)battle_config.zeny_penalty / 10000.);
 			if(base_penalty)
 				pc->payzeny(sd, base_penalty, LOG_TYPE_PICKDROP_PLAYER, NULL);
@@ -7103,6 +7117,9 @@ int pc_readparam(struct map_session_data* sd,int type)
 		case SP_KILLEDRID:       val = sd->killedrid; break;
 		case SP_SLOTCHANGE:		 val = sd->status.slotchange; break;
 		case SP_CHARRENAME:		 val = sd->status.rename; break;
+		case SP_MOD_EXP:         val = sd->status.mod_exp; break;
+		case SP_MOD_DROP:        val = sd->status.mod_drop; break;
+		case SP_MOD_DEATH:       val = sd->status.mod_death; break;
 		case SP_CRITICAL:        val = sd->battle_status.cri/10; break;
 		case SP_ASPD:            val = (2000-sd->battle_status.amotion)/10; break;
 		case SP_BASE_ATK:	     val = sd->battle_status.batk; break;
@@ -7349,6 +7366,15 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 		return 1;
 	case SP_CHARRENAME:
 		sd->status.rename = val;
+		return 1;
+	case SP_MOD_EXP:
+		sd->status.mod_exp = val;
+		return 1;
+	case SP_MOD_DROP:
+		sd->status.mod_drop = val;
+		return 1;
+	case SP_MOD_DEATH:
+		sd->status.mod_death = val;
 		return 1;
 	default:
 		ShowError("pc_setparam: Attempted to set unknown parameter '%d'.\n", type);
@@ -10200,6 +10226,7 @@ void pc_bank_withdraw(struct map_session_data *sd, int money) {
 /* status change data arrived from char-server */
 void pc_scdata_received(struct map_session_data *sd) {
 	pc->inventory_rentals(sd);
+	clif->show_modifiers(sd);
 }
 
 /*==========================================
