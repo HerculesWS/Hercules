@@ -9425,15 +9425,8 @@ BUILDIN(sc_end) {
 		if (!sce)
 			return true;
 		
-		switch (type) {
-			case SC_WEIGHTOVER50:
-			case SC_WEIGHTOVER90:
-			case SC_NOCHAT:
-			case SC_PUSH_CART:
-				return true;
-			default:
-				break;
-		}
+		if( status->get_sc_type(type)&SC_NO_CLEAR )
+			return true;
 		
 		//This should help status_change_end force disabling the SC in case it has no limit.
 		sce->val1 = sce->val2 = sce->val3 = sce->val4 = 0;

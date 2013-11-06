@@ -9223,17 +9223,8 @@ int status_change_clear(struct block_list* bl, int type) {
 				}
 			}
 		}
-		if( type == 3 ) {
-			switch (i) {// TODO: This list may be incomplete
-			case SC_WEIGHTOVER50:
-			case SC_WEIGHTOVER90:
-			case SC_NOCHAT:
-			case SC_PUSH_CART:
-			case SC_JAILED:
-			case SC_ALL_RIDING:
-				continue;
-			}
-		}
+		if( type == 3 && status->get_sc_type(i)&SC_NO_CLEAR )
+			continue;
 
 		status_change_end(bl, (sc_type)i, INVALID_TIMER);
 
