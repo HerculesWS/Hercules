@@ -302,10 +302,20 @@ int main (int argc, char **argv) {
 		arg_v = argv;
 	}
 	core_defaults();
+
+	{
+		int i;
+		for(i = 0; i < argc; i++) {
+			if( strcmp(argv[i], "--script-check") == 0 ) {
+				msg_silent = 0x7; // silence information and status messages
+			}
+		}
+	}
 	
 	iMalloc->init();// needed for Show* in display_title() [FlavioJS]
-	
-	console->display_title();
+
+	if (!(msg_silent&0x1))
+		console->display_title();
 	
 #ifdef MINICORE // minimalist Core
 	usercheck();

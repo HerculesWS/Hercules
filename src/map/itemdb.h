@@ -266,7 +266,7 @@ struct item_package {
 #define itemdb_canauction(item, gmlv) itemdb->isrestricted(item , gmlv, 0, itemdb->canauction_sub)
 
 struct itemdb_interface {
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	void (*reload) (void);
 	void (*name_constants) (void);
@@ -343,7 +343,7 @@ struct itemdb_interface {
 	int (*read_sqldb) (void);
 	uint64 (*unique_id) (int8 flag, int64 value);
 	int (*uid_load) ();
-	void (*read) (void);
+	void (*read) (bool minimal);
 	void (*destroy_item_data) (struct item_data *self, int free_self);
 	int (*final_sub) (DBKey key, DBData *data, va_list ap);
 };

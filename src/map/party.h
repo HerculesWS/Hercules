@@ -73,7 +73,7 @@ struct party_interface {
 	DBMap* booking_db; // int char_id -> struct party_booking_ad_info* (releases data) // Party Booking [Spiria]
 	unsigned long booking_nextid;
 	/* funcs */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
 	struct party_data* (*search) (int party_id);

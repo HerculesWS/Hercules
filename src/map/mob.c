@@ -4534,7 +4534,12 @@ bool mob_readdb_itemratio(char* str[], int columns, int current)
 /**
  * read all mob-related databases
  */
-void mob_load(void) {
+void mob_load(bool minimal) {
+	if (minimal) {
+		// Only read the mob db in minimal mode
+		mob->readdb();
+		return;
+	}
 	sv->readdb(map->db_path, "mob_item_ratio.txt", ',', 2, 2+MAX_ITEMRATIO_MOBS, -1, mob->readdb_itemratio); // must be read before mobdb
 	mob->readchatdb();
 	if (map->db_use_sql_mob_db) {
@@ -4569,7 +4574,7 @@ void mob_reload(void) {
 		}
 	}
 
-	mob->load();
+	mob->load(false);
 }
 
 void mob_clear_spawninfo()
@@ -4583,15 +4588,18 @@ void mob_clear_spawninfo()
 /*==========================================
  * Circumference initialization of mob
  *------------------------------------------*/
-int do_init_mob(void)
-{	//Initialize the mob database
+int do_init_mob(bool minimal) {
+	// Initialize the mob database
 	memset(mob->db_data,0,sizeof(mob->db_data)); //Clear the array
-	mob->db_data[0] = (struct mob_db*)aCalloc(1, sizeof (struct mob_db));	//This mob is used for random spawns
+	mob->db_data[0] = (struct mob_db*)aCalloc(1, sizeof (struct mob_db)); //This mob is used for random spawns
 	mob->makedummymobdb(0); //The first time this is invoked, it creates the dummy mob
 	item_drop_ers = ers_new(sizeof(struct item_drop),"mob.c::item_drop_ers",ERS_OPT_NONE);
 	item_drop_list_ers = ers_new(sizeof(struct item_drop_list),"mob.c::item_drop_list_ers",ERS_OPT_NONE);
 
-	mob->load();
+	mob->load(minimal);
+
+	if (minimal)
+		return 0;
 
 	timer->add_func_list(mob->delayspawn,"mob_delayspawn");
 	timer->add_func_list(mob->delay_item_drop,"mob_delay_item_drop");

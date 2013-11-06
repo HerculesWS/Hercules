@@ -75,7 +75,7 @@ struct battleground_interface {
 	DBMap *team_db; // int bg_id -> struct battleground_data*
 	unsigned int team_counter; // Next bg_id
 	/* */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
 	struct bg_arena *(*name2arena) (char *name);

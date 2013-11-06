@@ -20,7 +20,7 @@ struct vending_interface {
 	unsigned int next_id;/* next vender id */
 	DBMap *db;
 	/* */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
 	void (*close) (struct map_session_data* sd);

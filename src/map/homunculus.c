@@ -1229,8 +1229,12 @@ void homunculus_skill_reload(void) {
 	homun->skill_db_read();
 }
 
-void do_init_homunculus(void) {
+void do_init_homunculus(bool minimal) {
 	int class_;
+
+	if (minimal)
+		return;
+
 	homun->read_db();
 	homun->exp_db_read();
 	homun->skill_db_read();

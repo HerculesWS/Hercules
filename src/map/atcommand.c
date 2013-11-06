@@ -10151,7 +10151,10 @@ void atcommand_doload(void) {
 	atcommand->config_read(map->ATCOMMAND_CONF_FILENAME);
 }
 
-void do_init_atcommand(void) {
+void do_init_atcommand(bool minimal) {
+	if (minimal)
+		return;
+
 	atcommand->at_symbol = '@';
 	atcommand->char_symbol = '#';
 	atcommand->binding_count = 0;

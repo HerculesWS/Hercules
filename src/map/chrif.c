@@ -1611,8 +1611,10 @@ int do_final_chrif(void) {
 /*==========================================
  *
  *------------------------------------------*/
-int do_init_chrif(void) {
-	
+int do_init_chrif(bool minimal) {
+	if (minimal)
+		return 0;
+
 	chrif->auth_db = idb_alloc(DB_OPT_BASE);
 	chrif->auth_db_ers = ers_new(sizeof(struct auth_node),"chrif.c::auth_db_ers",ERS_OPT_NONE);
 

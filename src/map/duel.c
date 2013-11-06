@@ -166,7 +166,10 @@ void duel_reject(const unsigned int did, struct map_session_data* sd) {
 void do_final_duel(void) {
 }
 
-void do_init_duel(void) {
+void do_init_duel(bool minimal) {
+	if (minimal)
+		return;
+
 	memset(&duel->list[0], 0, sizeof(duel->list));
 }
 

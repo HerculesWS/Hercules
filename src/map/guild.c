@@ -2172,12 +2172,15 @@ void guild_flags_clear(void) {
 	guild->flags_count = 0;
 }
 
-void do_init_guild(void) {
-	guild->db			= idb_alloc(DB_OPT_RELEASE_DATA);
-	guild->castle_db	= idb_alloc(DB_OPT_BASE);
-	guild->expcache_db	= idb_alloc(DB_OPT_BASE);
-	guild->infoevent_db	= idb_alloc(DB_OPT_BASE);
-	guild->expcache_ers	= ers_new(sizeof(struct guild_expcache),"guild.c::expcache_ers",ERS_OPT_NONE);
+void do_init_guild(bool minimal) {
+	if (minimal)
+		return;
+
+	guild->db           = idb_alloc(DB_OPT_RELEASE_DATA);
+	guild->castle_db    = idb_alloc(DB_OPT_BASE);
+	guild->expcache_db  = idb_alloc(DB_OPT_BASE);
+	guild->infoevent_db = idb_alloc(DB_OPT_BASE);
+	guild->expcache_ers = ers_new(sizeof(struct guild_expcache),"guild.c::expcache_ers",ERS_OPT_NONE);
 		
 	sv->readdb(map->db_path, "castle_db.txt", ',', 4, 5, -1, guild->read_castledb);
 
