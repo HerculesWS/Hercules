@@ -30,6 +30,7 @@ if( !(mob = GET_SYMBOL("mob") ) ) return false;
 if( !(npc = GET_SYMBOL("npc") ) ) return false;
 if( !(party = GET_SYMBOL("party") ) ) return false;
 if( !(path = GET_SYMBOL("path") ) ) return false;
+if( !(pcg = GET_SYMBOL("pc_groups") ) ) return false;
 if( !(pc = GET_SYMBOL("pc") ) ) return false;
 if( !(pet = GET_SYMBOL("pet") ) ) return false;
 if( !(quest = GET_SYMBOL("quest") ) ) return false;
