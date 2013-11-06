@@ -849,7 +849,7 @@ int party_send_xy_timer(int tid, int64 tick, int id, intptr_t data) {
 		for( i = 0; i < MAX_PARTY; i++ )
 		{
 			struct map_session_data* sd = p->data[i].sd;
-			if( !sd ) continue;
+			if( !sd || sd->bg_id ) continue;
 
 			if( p->data[i].x != sd->bl.x || p->data[i].y != sd->bl.y )
 			{// perform position update

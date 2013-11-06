@@ -19,10 +19,11 @@
  * Enumerations
  **/
 enum bg_queue_types {
-	BGQT_INVALID,
-	BGQT_INDIVIDUAL,
-	BGQT_PARTY,
-	BGQT_GUILD
+	BGQT_INVALID    = 0x0,
+	BGQT_INDIVIDUAL = 0x1,
+	BGQT_PARTY      = 0x2,
+	/* yup no 0x3 */
+	BGQT_GUILD      = 0x4,
 };
 
 struct battleground_member_data {

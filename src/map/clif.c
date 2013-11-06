@@ -9213,7 +9213,9 @@ void clif_hercules_chsys_mjoin(struct map_session_data *sd) {
 /// Notification from the client, that it has finished map loading and is about to display player's character (CZ_NOTIFY_ACTORINIT).
 /// 007d
 void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
+#if PACKETVER >= 20090218
 	int i;
+#endif
 
 	if(sd->bl.prev != NULL)
 		return;
@@ -17572,9 +17574,7 @@ void clif_parse_bgqueue_register(int fd, struct map_session_data *sd) {
 		clif->bgqueue_ack(sd,BGQA_FAIL_BGNAME_INVALID,0);
 		return;
 	}
-	//debug
-	safestrncpy(arena->name, p->bg_name, sizeof(arena->name));
-	
+
 	switch( (enum bg_queue_types)p->type ) {
 		case BGQT_INDIVIDUAL:
 		case BGQT_PARTY:
