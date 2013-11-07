@@ -2034,7 +2034,7 @@ alde_alche,88,180,0	script	Muscle Man#Alarm Mask	4_M_ALCHE_A,{
 
 OnTimer4000:
 	specialeffect EF_FLASHER;
-	setnpcdisplay "Muscle Man#Alarm Mask", 748;
+	setnpcdisplay "Muscle Man#Alarm Mask", 4_M_ALCHE_A;
 	disablenpc " #Alarm Mask Man1";
 	disablenpc " #Alarm Mask Man2";
 	disablenpc " #Alarm Mask Man3";

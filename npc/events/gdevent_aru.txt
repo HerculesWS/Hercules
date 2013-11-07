@@ -480,19 +480,19 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 	specialeffect EF_POISONHIT;
 	set .@sprchg_gd,rand(1,5);
 	if (.@sprchg_gd == 1) {
-		setnpcdisplay "Pierrot Pier#aru_gd",950;
+		setnpcdisplay "Pierrot Pier#aru_gd", 4_GHOSTRING;
 	}
 	else if (.@sprchg_gd == 2) {
-		setnpcdisplay "Pierrot Pier#aru_gd",715;
+		setnpcdisplay "Pierrot Pier#aru_gd", 4_M_PIERROT;
 	}
 	else if (.@sprchg_gd == 3) {
-		setnpcdisplay "Pierrot Pier#aru_gd",714;
+		setnpcdisplay "Pierrot Pier#aru_gd", 4_F_06;
 	}
 	else if (.@sprchg_gd == 4) {
-		setnpcdisplay "Pierrot Pier#aru_gd",785;
+		setnpcdisplay "Pierrot Pier#aru_gd", 4_M_UMDANCEKID2;
 	}
 	else {
-		setnpcdisplay "Pierrot Pier#aru_gd",876;
+		setnpcdisplay "Pierrot Pier#aru_gd", 4_CAT;
 	}
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait!! -";
@@ -506,7 +506,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 		if ($@gdeventv_a2 == 0) {
 			set .@que_2143,checkquest(2143,PLAYTIME);
 			if (.@que_2143 == -1) {
-				setnpcdisplay "Pierrot Pier#aru_gd",715;
+				setnpcdisplay "Pierrot Pier#aru_gd", 4_M_PIERROT;
 				mes "A lonely clown is juggling.";
 				next;
 				mes "When looked at closely, the clown is just a puppet that looks like a human.";
@@ -845,7 +845,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 	}
 	else {
 		if ($@gdeventv_a2 == 0) {
-			setnpcdisplay "Pierrot Pier#aru_gd",715;
+			setnpcdisplay "Pierrot Pier#aru_gd", 4_M_PIERROT;
 			mes "A lonely clown is juggling.";
 			next;
 			mes "When looked at closely, the clown is just a puppet that looks like a human.";

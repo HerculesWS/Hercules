@@ -16248,6 +16248,31 @@ void HP_clif_bank_withdraw(struct map_session_data *sd, enum e_BANKING_WITHDRAW_
 	}
 	return;
 }
+void HP_clif_show_modifiers(struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_show_modifiers_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_show_modifiers_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_show_modifiers_pre[hIndex].func;
+			preHookFunc(sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.show_modifiers(sd);
+	}
+	if( HPMHooks.count.HP_clif_show_modifiers_post ) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_show_modifiers_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_show_modifiers_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
 void HP_clif_pWantToConnection(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_pWantToConnection_pre ) {

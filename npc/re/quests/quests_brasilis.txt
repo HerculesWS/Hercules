@@ -814,7 +814,7 @@ brasilis,56,224,7	script	Mage Paje#bra	4_M_BIBI,{
 	mes "[Mage Paje]";
 	mes "Abracadabra~";
 	specialeffect EF_POISONHIT,AREA,"Poring#bra";
-	setarray .@display[0],800,876,909;
+	setarray .@display[0], 4_NFCOCK, 4_CAT, 4_PORING;
 	setnpcdisplay "Poring#bra",.@display[rand(3)];
 	if (brazil_gua != 5) close;
 	next;
