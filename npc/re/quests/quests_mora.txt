@@ -2461,14 +2461,14 @@ bif_fild01,132,338,3	script	Lope#pa	4_M_FAIRYSOLDIER2,2,2,{
 	}
 	end;
 OnEnable:
-	setnpcdisplay "Lope#pa",999;
+	setnpcdisplay "Lope#pa", 4_M_MUT1;
 	end;
 OnDisable:
 	disablenpc "Lope#pa";
 	initnpctimer;
 	end;
 OnReset:
-	setnpcdisplay "Lope#pa",461;
+	setnpcdisplay "Lope#pa", 4_M_FAIRYSOLDIER2;
 	enablenpc "Lope#pa";
 	end;
 OnTimer2000:

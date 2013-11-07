@@ -38,7 +38,7 @@ prontera,160,155,4	script	Disguise Event	4_M_NFDEADMAN,{
 				setnpctimer 0; stopnpctimer;
 				announce "A GM has decided to turn the Disguise Event off. As a result no further prizes will be given.",bc_map | bc_blue;
 				deletepset 1;
-				setnpcdisplay "Disguise Event",795;
+				setnpcdisplay "Disguise Event", 4_M_NFDEADMAN;
 				close;
 			}
 			set .EventON,1; set .Timer,1; setnpctimer 0; initnpctimer;
@@ -171,7 +171,7 @@ OnTimer10000:
 OnTimer30000:
 	if (.Timer) end;
 	set .Change,0;
-	setnpcdisplay "Disguise Event",795;
+	setnpcdisplay "Disguise Event", 4_M_NFDEADMAN;
 	npctalk "You took too long to guess what I was. Please wait 10 seconds while I disguise again.";
 	specialeffect 725;
 	set $MonsterName$,"";
@@ -230,13 +230,13 @@ iCorrect:
 	getitem .Prize,.PrizeAmt;
 	announce strcharinfo(0)+" is correct! I was disguised as: "+$MonsterName$+"",bc_map | bc_blue;
 	if (.RoundCount>=.Rounds) {
-		setnpcdisplay "Disguise Event",795;
+		setnpcdisplay "Disguise Event", 4_M_NFDEADMAN;
 		set .RoundCount,0; set .Change,0; set .EventON,0;
 		setnpctimer 0; stopnpctimer;
 		npctalk "Thank you all for playing. That was the last round of the Disguise Event. Come play again later.";
 		end;
 	}
-	setnpcdisplay "Disguise Event",795;
+	setnpcdisplay "Disguise Event", 4_M_NFDEADMAN;
 	set .Change,0;
 	setnpctimer 0;
 	end;

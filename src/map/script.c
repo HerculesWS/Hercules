@@ -858,50 +858,87 @@ const char* parse_variable(const char* p) {
 	return p;
 }
 
+/*
+ * Checks whether the gives string is a number literal
+ *
+ * Mainly necessary to differentiate between number literals and NPC name
+ * constants, since several of those start with a digit.
+ *
+ * All this does is to check if the string begins with an optional + or - sign,
+ * followed by a hexadecimal or decimal number literal literal and is NOT
+ * followed by a underscore or letter.
+ *
+ * @param p Pointer to the string to check
+ * @return Whether the string is a number literal
+ */
+bool is_number(const char *p) {
+	const char *np;
+	if (!p)
+		return false;
+	if (*p == '-' || *p == '+')
+		p++;
+	np = p;
+	if (*p == '0' && p[1] == 'x') {
+		p+=2;
+		np = p;
+		// Hexadecimal
+		while (ISXDIGIT(*np))
+			np++;
+	} else {
+		// Decimal
+		while (ISDIGIT(*np))
+			np++;
+	}
+	if (p != np && *np != '_' && !ISALPHA(*np)) // At least one digit, and next isn't a letter or _
+		return true;
+	return false;
+}
+
 /*==========================================
  * Analysis section
  *------------------------------------------*/
-const char* parse_simpleexpr(const char *p)
-{
-	long long i;
+const char* parse_simpleexpr(const char *p) {
+	int i;
 	p=script->skip_space(p);
 
 	if(*p==';' || *p==',')
 		disp_error_message("parse_simpleexpr: unexpected end of expression",p);
-	if(*p=='('){
+	if(*p=='(') {
 		if( (i=script->syntax.curly_count-1) >= 0 && script->syntax.curly[i].type == TYPE_ARGLIST )
 			++script->syntax.curly[i].count;
 		p=script->parse_subexpr(p+1,-1);
 		p=script->skip_space(p);
-		if( (i=script->syntax.curly_count-1) >= 0 && script->syntax.curly[i].type == TYPE_ARGLIST &&
-				script->syntax.curly[i].flag == ARGLIST_UNDEFINED && --script->syntax.curly[i].count == 0
-		){
-			if( *p == ',' ){
+		if( (i=script->syntax.curly_count-1) >= 0 && script->syntax.curly[i].type == TYPE_ARGLIST
+		  && script->syntax.curly[i].flag == ARGLIST_UNDEFINED && --script->syntax.curly[i].count == 0
+		) {
+			if( *p == ',' ) {
 				script->syntax.curly[i].flag = ARGLIST_PAREN;
 				return p;
-			} else
+			} else {
 				script->syntax.curly[i].flag = ARGLIST_NO_PAREN;
+			}
 		}
 		if( *p != ')' )
 			disp_error_message("parse_simpleexpr: unmatched ')'",p);
 		++p;
-	} else if(ISDIGIT(*p) || ((*p=='-' || *p=='+') && ISDIGIT(p[1]))){
+	} else if(is_number(p)) {
 		char *np;
-		while(*p == '0' && ISDIGIT(p[1])) p++;
-		i=strtoll(p,&np,0);
-		if( i < INT_MIN ) {
-			i = INT_MIN;
+		long long lli;
+		while(*p == '0' && ISDIGIT(p[1])) p++; // Skip leading zeros, we don't support octal literals
+		lli=strtoll(p,&np,0);
+		if( lli < INT_MIN ) {
+			lli = INT_MIN;
 			script->disp_warning_message("parse_simpleexpr: underflow detected, capping value to INT_MIN",p);
-		} else if( i > INT_MAX ) {
-			i = INT_MAX;
+		} else if( lli > INT_MAX ) {
+			lli = INT_MAX;
 			script->disp_warning_message("parse_simpleexpr: overflow detected, capping value to INT_MAX",p);
 		}
-		script->addi((int)i);
+		script->addi((int)lli); // Cast is safe, as it's already been checked for overflows
 		p=np;
-	} else if(*p=='"'){
+	} else if(*p=='"') {
 		script->addc(C_STR);
 		p++;
-		while( *p && *p != '"' ){
+		while( *p && *p != '"' ) {
 			if( (unsigned char)p[-1] <= 0x7e && *p == '\\' ) {
 				char buf[8];
 				size_t len = sv->skip_escaped_c(p) - p;
@@ -911,8 +948,9 @@ const char* parse_simpleexpr(const char *p)
 				p += len;
 				script->addb(*buf);
 				continue;
-			} else if( *p == '\n' )
+			} else if( *p == '\n' ) {
 				disp_error_message("parse_simpleexpr: unexpected newline @ string",p);
+			}
 			script->addb(*p++);
 		}
 		if(!*p)
@@ -928,24 +966,24 @@ const char* parse_simpleexpr(const char *p)
 			disp_error_message("parse_simpleexpr: unexpected character",p);
 
 		l=script->add_word(p);
-		if( script->str_data[l].type == C_FUNC || script->str_data[l].type == C_USERFUNC || script->str_data[l].type == C_USERFUNC_POS)
+		if( script->str_data[l].type == C_FUNC || script->str_data[l].type == C_USERFUNC || script->str_data[l].type == C_USERFUNC_POS) {
 			return script->parse_callfunc(p,1,0);
 #ifdef SCRIPT_CALLFUNC_CHECK
-		else {
+		} else {
 			const char* name = script->get_str(l);
 			if( strdb_get(script->userfunc_db,name) != NULL ) {
 				return script->parse_callfunc(p,1,1);
 			}
-		}
 #endif
+		}
 
-		if( (pv = script->parse_variable(p)) )
-		{// successfully processed a variable assignment
+		if( (pv = script->parse_variable(p)) ) {
+			// successfully processed a variable assignment
 			return pv;
 		}
 
 		p=script->skip_word(p);
-		if( *p == '[' ){
+		if( *p == '[' ) {
 			// array(name[i] => getelementofarray(name,i) )
 			script->addl(script->buildin_getelementofarray_ref);
 			script->addc(C_ARG);
@@ -957,8 +995,9 @@ const char* parse_simpleexpr(const char *p)
 				disp_error_message("parse_simpleexpr: unmatched ']'",p);
 			++p;
 			script->addc(C_FUNC);
-		}else
+		} else {
 			script->addl(l);
+		}
 
 	}
 
@@ -1229,8 +1268,16 @@ const char* parse_syntax(const char* p)
 					disp_error_message("parse_syntax: expect space ' '",p);
 				}
 				// check whether case label is integer or not
-				v = strtol(p,&np,0);
-				if(np == p) { //Check for constants
+				if(is_number(p)) {
+					//Numeric value
+					v = strtol(p,&np,0);
+					if((*p == '-' || *p == '+') && ISDIGIT(p[1])) // pre-skip because '-' can not skip_word
+						p++;
+					p = script->skip_word(p);
+					if(np != p)
+						disp_error_message("parse_syntax: 'case' label is not an integer",np);
+				} else {
+					//Check for constants
 					p2 = script->skip_word(p);
 					v = p2-p; // length of word at p2
 					memcpy(label,p,v);
@@ -1238,12 +1285,6 @@ const char* parse_syntax(const char* p)
 					if( !script->get_constant(label, &v) )
 						disp_error_message("parse_syntax: 'case' label is not an integer",p);
 					p = script->skip_word(p);
-				} else { //Numeric value
-					if((*p == '-' || *p == '+') && ISDIGIT(p[1]))	// pre-skip because '-' can not skip_word
-						p++;
-					p = script->skip_word(p);
-					if(np != p)
-						disp_error_message("parse_syntax: 'case' label is not an integer",np);
 				}
 				p = script->skip_space(p);
 				if(*p != ':')

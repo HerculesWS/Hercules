@@ -3131,7 +3131,7 @@ ice_dun02,120,105,3	script	Man Stuck in Ice#cave	4_M_FROZEN1,5,5,{
 		mes "^3355FF*Pzzzzz*";
 		mes "*CRASH!*^000000";
 		next;
-		setnpcdisplay "Man Stuck in Ice#cave",937;
+		setnpcdisplay "Man Stuck in Ice#cave", 4_M_ARUNA_NFM1;
 		emotion e_gasp;
 		mes "[Maheo]";
 		mes "Finally...!";
@@ -3193,7 +3193,7 @@ ice_dun02,120,105,3	script	Man Stuck in Ice#cave	4_M_FROZEN1,5,5,{
 		getitem 7574,4; //Ice_Particle
 		close2;
 		cutin "",255;
-		setnpcdisplay "Man Stuck in Ice#cave",924;
+		setnpcdisplay "Man Stuck in Ice#cave", 4_M_FROZEN1;
 		end;
 	}
 
