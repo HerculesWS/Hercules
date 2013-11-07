@@ -982,15 +982,18 @@ void intif_parse_LoadGuildStorage(int fd)
 {
 	struct guild_storage *gstor;
 	struct map_session_data *sd;
-	int guild_id;
+	int guild_id, flag;
 
 	guild_id = RFIFOL(fd,8);
+	flag = RFIFOL(fd,12);
 	if(guild_id <= 0)
 		return;
 	sd=map->id2sd( RFIFOL(fd,4) );
-	if(sd==NULL){
-		ShowError("intif_parse_LoadGuildStorage: user not found %d\n",RFIFOL(fd,4));
-		return;
+	if( flag ){ //If flag != 0, we attach a player and open the storage
+		if(sd==NULL){
+			ShowError("intif_parse_LoadGuildStorage: user not found %d\n",RFIFOL(fd,4));
+			return;
+		}
 	}
 	gstor=gstorage->id2storage(guild_id);
 	if(!gstor) {
@@ -998,21 +1001,22 @@ void intif_parse_LoadGuildStorage(int fd)
 		return;
 	}
 	if (gstor->storage_status == 1) { // Already open.. lets ignore this update
-		ShowWarning("intif_parse_LoadGuildStorage: storage received for a client already open (User %d:%d)\n", sd->status.account_id, sd->status.char_id);
+		ShowWarning("intif_parse_LoadGuildStorage: storage received for a client already open (User %d:%d)\n", flag?sd->status.account_id:0, flag?sd->status.char_id:0);
 		return;
 	}
 	if (gstor->dirty) { // Already have storage, and it has been modified and not saved yet! Exploit! [Skotlex]
-		ShowWarning("intif_parse_LoadGuildStorage: received storage for an already modified non-saved storage! (User %d:%d)\n", sd->status.account_id, sd->status.char_id);
+		ShowWarning("intif_parse_LoadGuildStorage: received storage for an already modified non-saved storage! (User %d:%d)\n", flag?sd->status.account_id:0, flag?sd->status.char_id:0);
 		return;
 	}
-	if( RFIFOW(fd,2)-12 != sizeof(struct guild_storage) ){
-		ShowError("intif_parse_LoadGuildStorage: data size error %d %d\n",RFIFOW(fd,2)-12 , sizeof(struct guild_storage));
-		gstor->storage_status = 0;
+	if( RFIFOW(fd,2)-13 != sizeof(struct guild_storage) ){
+		ShowError("intif_parse_LoadGuildStorage: data size error %d %d\n",RFIFOW(fd,2)-13 , sizeof(struct guild_storage));
+ 		gstor->storage_status = 0;
 		return;
 	}
 
-	memcpy(gstor,RFIFOP(fd,12),sizeof(struct guild_storage));
-	gstorage->open(sd);
+	memcpy(gstor,RFIFOP(fd,13),sizeof(struct guild_storage));
+	if( flag )
+		gstorage->open(sd);
 }
 
 // ACK guild_storage saved
@@ -2005,7 +2009,34 @@ void intif_parse_MessageToFD(int fd) {
 
 	return;
 }
+/*==========================================
+ * Item Bound System [Xantara][Mhalicot]
+ *------------------------------------------*/
+void intif_itembound_req(int char_id,int aid,int guild_id) {
+#ifdef GP_BOUND_ITEMS
+	struct guild_storage *gstor = gstorage->id2storage2(guild_id);
+	WFIFOHEAD(inter_fd,12);
+	WFIFOW(inter_fd,0) = 0x3056;
+	WFIFOL(inter_fd,2) = char_id;
+	WFIFOL(inter_fd,6) = aid;
+	WFIFOW(inter_fd,10) = guild_id;
+	WFIFOSET(inter_fd,12);
+	if(gstor)
+		gstor->lock = 1; //Lock for retrieval process
+#endif
+}
+ 
+//3856
+void intif_parse_Itembound_ack(int fd) {
+#ifdef GP_BOUND_ITEMS
+	struct guild_storage *gstor;
+	int guild_id = RFIFOW(fd,6);
 
+	gstor = gstorage->id2storage2(guild_id);
+	if(gstor)
+		gstor->lock = 0; //Unlock now that operation is completed
+#endif
+}
 //-----------------------------------------------------------------
 // Communication from the inter server
 // Return a 0 (false) if there were any errors.
@@ -2088,7 +2119,14 @@ int intif_parse(int fd)
 		case 0x3853:	intif->pAuctionClose(fd); break;
 		case 0x3854:	intif->pAuctionMessage(fd); break;
 		case 0x3855:	intif->pAuctionBid(fd); break;
-			
+		//Bound items
+		case 0x3856:
+#ifdef GP_BOUND_ITEMS
+			intif->pItembound_ack(fd);
+#else
+			ShowWarning("intif_parse: Received 0x3856 with GP_BOUND_ITEMS disabled !!!\n")
+#endif
+			break;
 		// Mercenary System
 		case 0x3870:	intif->pMercenaryReceived(fd); break;
 		case 0x3871:	intif->pMercenaryDeleted(fd); break;
@@ -2127,7 +2165,7 @@ void intif_defaults(void) {
 		39,-1,15,15, 14,19, 7,-1,  0, 0, 0, 0,  0, 0,  0, 0, //0x3820
 		10,-1,15, 0, 79,19, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
 		-1, 0, 0,14,  0, 0, 0, 0, -1,74,-1,11, 11,-1,  0, 0, //0x3840
-		-1,-1, 7, 7,  7,11, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3850  Auctions [Zephyrus]
+		-1,-1, 7, 7,  7,11, 8, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3850  Auctions [Zephyrus] itembound[Akinari]
 		-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]
 		-1, 3, 3, 0,  0, 0, 0, 0,  0, 0, 0, 0, -1, 3,  3, 0, //0x3870  Mercenaries [Zephyrus] / Elemental [pakpil]
 		11,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3880
@@ -2216,6 +2254,8 @@ void intif_defaults(void) {
 	/* */
 	intif->CheckForCharServer = CheckForCharServer;
 	/* */
+	intif->itembound_req = intif_itembound_req;
+	/* parse functions */
 	intif->pWisMessage = intif_parse_WisMessage;
 	intif->pWisEnd = intif_parse_WisEnd;
 	intif->pWisToGM_sub = mapif_parse_WisToGM_sub;
@@ -2263,6 +2303,7 @@ void intif_defaults(void) {
 	intif->pAuctionClose = intif_parse_AuctionClose;
 	intif->pAuctionMessage = intif_parse_AuctionMessage;
 	intif->pAuctionBid = intif_parse_AuctionBid;
+	intif->pItembound_ack = intif_parse_Itembound_ack;
 	intif->pMercenaryReceived = intif_parse_MercenaryReceived;
 	intif->pMercenaryDeleted = intif_parse_MercenaryDeleted;
 	intif->pMercenarySaved = intif_parse_MercenarySaved;

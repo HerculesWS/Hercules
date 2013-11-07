@@ -3819,6 +3819,17 @@ int script_reload(void) {
 	
 	return 0;
 }
+/* returns name of current function being run, from within the stack [Ind/Hercules] */
+const char *script_getfuncname(struct script_state *st) {
+	struct script_data *data;
+	
+	data = &st->stack->stack_data[st->start];
+	
+	if( data->type == C_NAME && script->str_data[data->u.num].type == C_FUNC )
+		return script->get_str(data->u.num);
+	
+	return NULL;
+}
 
 //-----------------------------------------------------------------------------
 // buildin functions
@@ -5803,10 +5814,13 @@ BUILDIN(checkweight2)
 /*==========================================
  * getitem <item id>,<amount>{,<account ID>};
  * getitem "<item name>",<amount>{,<account ID>};
+ *
+ * getitembound <item id>,<amount>,<type>{,<account ID>};
+ * getitembound "<item id>",<amount>,<type>{,<account ID>};
  *------------------------------------------*/
 BUILDIN(getitem)
 {
-	int nameid,amount,get_count,i,flag = 0;
+	int nameid,amount,get_count,i,flag = 0, offset = 0;
 	struct item it;
 	TBL_PC *sd;
 	struct script_data *data;
@@ -5818,7 +5832,7 @@ BUILDIN(getitem)
 	{// "<item name>"
 		const char *name=script->conv_str(st,data);
 		if( (item_data = itemdb->search_name(name)) == NULL ){
-			ShowError("buildin_getitem: Nonexistant item %s requested.\n", name);
+			ShowError("buildin_%s: Nonexistant item %s requested.\n", script->getfuncname(st), name);
 			return false; //No item created.
 		}
 		nameid=item_data->nameid;
@@ -5830,11 +5844,11 @@ BUILDIN(getitem)
 			flag = 1;
 		}
 		if( nameid <= 0 || !(item_data = itemdb->exists(nameid)) ){
-			ShowError("buildin_getitem: Nonexistant item %d requested.\n", nameid);
+			ShowError("buildin_%s: Nonexistant item %d requested.\n", script->getfuncname(st), nameid);
 			return false; //No item created.
 		}
 	} else {
-		ShowError("buildin_getitem: invalid data type for argument #1 (%d).", data->type);
+		ShowError("buildin_%s: invalid data type for argument #1 (%d).", script->getfuncname(st), data->type);
 		return false;
 	}
 	
@@ -5844,13 +5858,28 @@ BUILDIN(getitem)
 	
 	memset(&it,0,sizeof(it));
 	it.nameid=nameid;
+	
 	if(!flag)
 		it.identify=1;
 	else
 		it.identify=itemdb->isidentified2(item_data);
 	
-	if( script_hasdata(st,4) )
-		sd=map->id2sd(script_getnum(st,4)); // <Account ID>
+	if( !strcmp(script->getfuncname(st),"getitembound") ) {
+		int bound = script_getnum(st,4);
+		if( bound < IBT_MIN || bound > IBT_MAX ) { //Not a correct bound type
+			ShowError("script_getitembound: Not a correct bound type! Type=%d\n",bound);
+			return false;
+		}
+		if( item_data->type == IT_PETEGG || item_data->type == IT_PETARMOR ) {
+			ShowError("script_getitembound: can't bind a pet egg/armor!\n",bound);
+			return false;
+		}
+		it.bound = (unsigned char)bound;
+		offset += 1;
+	}
+	
+	if( script_hasdata(st,4+offset) )
+		sd=map->id2sd(script_getnum(st,4+offset)); // <Account ID>
 	else
 		sd=script->rid2sd(st); // Attached player
 	
@@ -5882,15 +5911,24 @@ BUILDIN(getitem)
  *------------------------------------------*/
 BUILDIN(getitem2)
 {
-	int nameid,amount,get_count,i,flag = 0;
-	int iden,ref,attr,c1,c2,c3,c4;
+	int nameid,amount,get_count,i,flag = 0, offset = 0;
+	int iden,ref,attr,c1,c2,c3,c4, bound = 0;
 	struct item_data *item_data;
 	struct item item_tmp;
 	TBL_PC *sd;
 	struct script_data *data;
 	
-	if( script_hasdata(st,11) )
-		sd=map->id2sd(script_getnum(st,11)); // <Account ID>
+	if( !strcmp(script->getfuncname(st),"getitembound2") ) {
+		bound = script_getnum(st,11);
+		if( bound < IBT_MIN || bound > IBT_MAX ) { //Not a correct bound type
+			ShowError("script_getitembound2: Not a correct bound type! Type=%d\n",bound);
+			return false;
+		}
+		offset += 1;
+	}
+	
+	if( script_hasdata(st,11+offset) )
+		sd=map->id2sd(script_getnum(st,11+offset)); // <Account ID>
 	else
 		sd=script->rid2sd(st); // Attached player
 	
@@ -5917,6 +5955,11 @@ BUILDIN(getitem2)
 	c2=(short)script_getnum(st,8);
 	c3=(short)script_getnum(st,9);
 	c4=(short)script_getnum(st,10);
+	
+	if( bound && (itemdb_type(nameid) == IT_PETEGG || itemdb_type(nameid) == IT_PETARMOR) ) {
+		ShowError("script_getitembound2: can't bind a pet egg/armor!\n",bound);
+		return false;
+	}
 	
 	if(nameid<0) { // Invalide nameid
 		nameid = -nameid;
@@ -5947,6 +5990,7 @@ BUILDIN(getitem2)
 			item_tmp.identify=0;
 		item_tmp.refine=ref;
 		item_tmp.attribute=attr;
+		item_tmp.bound=(unsigned char)bound;
 		item_tmp.card[0]=(short)c1;
 		item_tmp.card[1]=(short)c2;
 		item_tmp.card[2]=(short)c3;
@@ -6022,6 +6066,7 @@ BUILDIN(rentitem)
 	it.nameid = nameid;
 	it.identify = 1;
 	it.expire_time = (unsigned int)(time(NULL) + seconds);
+	it.bound = 0;
 	
 	if( (flag = pc->additem(sd, &it, 1, LOG_TYPE_SCRIPT)) )
 	{
@@ -10919,6 +10964,7 @@ BUILDIN(successremovecards) {
 		item_tmp.refine      = sd->status.inventory[i].refine;
 		item_tmp.attribute   = sd->status.inventory[i].attribute;
 		item_tmp.expire_time = sd->status.inventory[i].expire_time;
+		item_tmp.bound       = sd->status.inventory[i].bound;
 		
 		for (j = sd->inventory_data[i]->slot; j < MAX_SLOTS; j++)
 			item_tmp.card[j]=sd->status.inventory[i].card[j];
@@ -10992,7 +11038,8 @@ BUILDIN(failedremovecards) {
 			item_tmp.refine      = sd->status.inventory[i].refine;
 			item_tmp.attribute   = sd->status.inventory[i].attribute;
 			item_tmp.expire_time = sd->status.inventory[i].expire_time;
-			
+			item_tmp.bound       = sd->status.inventory[i].bound;
+ 			
 			for (j = sd->inventory_data[i]->slot; j < MAX_SLOTS; j++)
 				item_tmp.card[j]=sd->status.inventory[i].card[j];
 			
@@ -11642,7 +11689,8 @@ BUILDIN(getinventorylist)
 				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.inventory[i].card[k]);
 			}
 			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_expire"), j),sd->status.inventory[i].expire_time);
-			j++;
+			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_bound"), j),sd->status.inventory[i].bound);
+ 			j++;
 		}
 	}
 	pc->setreg(sd,script->add_str("@inventorylist_count"),j);
@@ -17598,6 +17646,41 @@ BUILDIN(bg_join_team) {
 	
 	return true;
 }
+/*==============[Mhalicot]==================
+ * countbound {<type>}; 
+ * Creates an array of bounded item IDs
+ * Returns amount of items found
+ * Type:
+ *	1 - Account Bound
+ *	2 - Guild Bound
+ *	3 - Party Bound
+ *  4 - Character Bound
+ *------------------------------------------*/
+BUILDIN(countbound)
+{
+	int i, type, j=0, k=0;
+	TBL_PC *sd;
+
+	if( (sd = script->rid2sd(st)) == NULL )
+		return false;
+
+	type = script_hasdata(st,2)?script_getnum(st,2):0;
+
+	for(i=0;i<MAX_INVENTORY;i++){
+		if(sd->status.inventory[i].nameid > 0 && (
+			(!type && sd->status.inventory[i].bound > 0) ||
+			(type && sd->status.inventory[i].bound == type)
+		)) {
+			pc->setreg(sd,reference_uid(script->add_str("@bound_items"), k),sd->status.inventory[i].nameid);
+			k++;
+			j += sd->status.inventory[i].amount;
+		}
+	}
+	
+	script_pushint(st,j);
+	return 0;
+}
+
 /* bg_match_over( arena_name {, optional canceled } ) */
 /* returns 0 when successful, 1 otherwise */
 BUILDIN(bg_match_over) {
@@ -18179,6 +18262,13 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(unbindatcmd, "s"),
 		BUILDIN_DEF(useatcmd, "s"),
 		
+		/**
+		 * Item bound [Xantara] [Akinari] [Mhalicot/Hercules]
+		 **/
+		BUILDIN_DEF2(getitem,"getitembound","vii?"),
+		BUILDIN_DEF2(getitem2,"getitembound2","viiiiiiiii?"),
+		BUILDIN_DEF(countbound, "?"),
+ 		
 		//Quest Log System [Inkfish]
 		BUILDIN_DEF(questinfo, "ii??"),
 		BUILDIN_DEF(setquest, "i"),
@@ -18469,6 +18559,7 @@ void script_defaults(void) {
 	script->buildin_mobuseskill_sub = buildin_mobuseskill_sub;
 	script->cleanfloor_sub = script_cleanfloor_sub;
 	script->run_func = run_func;
+	script->getfuncname = script_getfuncname;
 	
 	/* script_config base */
 	script->config.warn_func_mismatch_argtypes = 1;

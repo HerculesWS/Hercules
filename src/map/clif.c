@@ -1804,6 +1804,9 @@ void clif_selllist(struct map_session_data *sd)
 
 			if( sd->status.inventory[i].expire_time )
 				continue; // Cannot Sell Rental Items
+ 
+			if( sd->status.inventory[i].bound && !pc->can_give_bound_items(sd))
+				continue; // Don't allow sale of bound items
 
 			val=sd->inventory_data[i]->value_sell;
 			if( val < 0 )
@@ -2229,7 +2232,10 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
 		p.HireExpireDate = sd->status.inventory[n].expire_time;
 #endif
 #if PACKETVER >= 20071002
-		p.bindOnEquipType = 0; // unused
+		/* why restrict the flag to non-stackable? because this is the only packet allows stackable to,
+		 * show the color, and therefore it'd be inconsistent with the rest (aka it'd show yellow, you relog/refresh and boom its gone)
+		 */
+		p.bindOnEquipType = sd->status.inventory[n].bound && !itemdb->isstackable2(sd->inventory_data[n]) ? 2 : 0;
 #endif
 	}
 	p.result = (unsigned char)fail;
@@ -2341,7 +2347,7 @@ void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct
 #endif
 	
 #if PACKETVER >= 20080102
-	p->bindOnEquipType = 0;
+	p->bindOnEquipType = i->bound ? 2 : 0;
 #endif
 
 #if PACKETVER >= 20100629
@@ -15063,8 +15069,9 @@ void clif_parse_Auction_setitem(int fd, struct map_session_data *sd)
 
 	if( !pc->can_give_items(sd) || sd->status.inventory[idx].expire_time ||
 			!sd->status.inventory[idx].identify ||
-				!itemdb_canauction(&sd->status.inventory[idx],pc->get_group_level(sd)) ) { // Quest Item or something else
-		clif->auction_setitem(sd->fd, idx, true);
+				!itemdb_canauction(&sd->status.inventory[idx],pc->get_group_level(sd)) || // Quest Item or something else
+					(sd->status.inventory[idx].bound && !pc->can_give_bound_items(sd)) ) {
+ 		clif->auction_setitem(sd->fd, idx, true);
 		return;
 	}
 
@@ -15140,12 +15147,11 @@ void clif_parse_Auction_register(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	// Auction checks...
 	if( sd->status.zeny < (auction.hours * battle_config.auction_feeperhour) ) {
-		clif->auction_message(fd, 5); // You do not have enough zeny to pay the Auction Fee.
+		clif_Auction_message(fd, 5); // You do not have enough zeny to pay the Auction Fee.
 		return;
 	}
-
+	
 	if( auction.buynow > battle_config.auction_maximumprice )
 	{ // Zeny Limits
 		auction.buynow = battle_config.auction_maximumprice;
@@ -15171,6 +15177,13 @@ void clif_parse_Auction_register(int fd, struct map_session_data *sd)
 		return;
 	}
 
+	// Auction checks...
+	if( sd->status.inventory[sd->auction.index].bound && !pc->can_give_bound_items(sd) ) {
+		clif->message(sd->fd, msg_txt(293));
+		clif->auction_message(fd, 2); // The auction has been canceled
+ 		return;
+	}
+	
 	safestrncpy(auction.item_name, item->jname, sizeof(auction.item_name));
 	auction.type = item->type;
 	memcpy(&auction.item, &sd->status.inventory[sd->auction.index], sizeof(struct item));

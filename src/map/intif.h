@@ -75,6 +75,7 @@ struct intif_interface {
 	int (*guild_emblem) (int guild_id, int len, const char *data);
 	int (*guild_castle_dataload) (int num, int *castle_ids);
 	int (*guild_castle_datasave) (int castle_id, int index, int value);
+	void (*itembound_req) (int char_id, int aid, int guild_id);
 	int (*request_petdata) (int account_id, int char_id, int pet_id);
 	int (*save_petdata) (int account_id, struct s_pet *p);
 	int (*delete_petdata) (int pet_id);
@@ -161,6 +162,7 @@ struct intif_interface {
 	void (*pAuctionClose) (int fd);
 	void (*pAuctionMessage) (int fd);
 	void (*pAuctionBid) (int fd);
+	void (*pItembound_ack) (int fd);
 	void (*pMercenaryReceived) (int fd);
 	void (*pMercenaryDeleted) (int fd);
 	void (*pMercenarySaved) (int fd);
