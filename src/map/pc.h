@@ -791,9 +791,6 @@ struct pc_interface {
 	int (*getzeny) (struct map_session_data *sd,int zeny, enum e_log_pick_type type, struct map_session_data *tsd);
 	int (*delitem) (struct map_session_data *sd,int n,int amount,int type, short reason, e_log_pick_type log_type);
 
-	//Bound items
-	int (*bound_chk) (TBL_PC *sd,int type,int *idxlist);
-
 	// Special Shop System
 	int (*paycash) (struct map_session_data *sd, int price, int points);
 	int (*getcash) (struct map_session_data *sd, int cash, int points);
@@ -986,6 +983,8 @@ struct pc_interface {
 	
 	void (*rental_expire) (struct map_session_data *sd, int i);
 	void (*scdata_received) (struct map_session_data *sd);
+	
+	void (*bound_clear) (struct map_session_data *sd, enum e_item_bound_type type);
 };
 
 struct pc_interface *pc;

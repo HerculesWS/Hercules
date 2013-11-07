@@ -30,7 +30,7 @@ enum e_pc_permission {
 	PC_PERM_DISABLE_PVP         = 0x080000, // #20
 	PC_PERM_DISABLE_CMD_DEAD    = 0x100000,
 	PC_PERM_HCHSYS_ADMIN        = 0x200000,
-	PC_PERM_TRADE_BOUNDED       = 0x400000,
+	PC_PERM_TRADE_BOUND         = 0x400000,
 };
 
 // Cached config settings for quick lookup

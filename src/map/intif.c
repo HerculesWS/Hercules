@@ -994,7 +994,6 @@ void intif_parse_LoadGuildStorage(int fd)
 			ShowError("intif_parse_LoadGuildStorage: user not found %d\n",RFIFOL(fd,4));
 			return;
 		}
- 	
 	}
 	gstor=gstorage->id2storage(guild_id);
 	if(!gstor) {
@@ -1002,12 +1001,12 @@ void intif_parse_LoadGuildStorage(int fd)
 		return;
 	}
 	if (gstor->storage_status == 1) { // Already open.. lets ignore this update
-		ShowWarning("intif_parse_LoadGuildStorage: storage received for a client already open (User %d:%d)\n", flag?sd->status.account_id:1, flag?sd->status.char_id:1);
- 		return;
+		ShowWarning("intif_parse_LoadGuildStorage: storage received for a client already open (User %d:%d)\n", flag?sd->status.account_id:0, flag?sd->status.char_id:0);
+		return;
 	}
 	if (gstor->dirty) { // Already have storage, and it has been modified and not saved yet! Exploit! [Skotlex]
-		ShowWarning("intif_parse_LoadGuildStorage: received storage for an already modified non-saved storage! (User %d:%d)\n", flag?sd->status.account_id:1, flag?sd->status.char_id:1);
- 		return;
+		ShowWarning("intif_parse_LoadGuildStorage: received storage for an already modified non-saved storage! (User %d:%d)\n", flag?sd->status.account_id:0, flag?sd->status.char_id:0);
+		return;
 	}
 	if( RFIFOW(fd,2)-13 != sizeof(struct guild_storage) ){
 		ShowError("intif_parse_LoadGuildStorage: data size error %d %d\n",RFIFOW(fd,2)-13 , sizeof(struct guild_storage));
@@ -1017,7 +1016,7 @@ void intif_parse_LoadGuildStorage(int fd)
 
 	memcpy(gstor,RFIFOP(fd,13),sizeof(struct guild_storage));
 	if( flag )
-	gstorage->open(sd);
+		gstorage->open(sd);
 }
 
 // ACK guild_storage saved
@@ -2013,8 +2012,8 @@ void intif_parse_MessageToFD(int fd) {
 /*==========================================
  * Item Bound System [Xantara][Mhalicot]
  *------------------------------------------*/
-#ifdef BOUND_ITEMS
 void intif_itembound_req(int char_id,int aid,int guild_id) {
+#ifdef GP_BOUND_ITEMS
 	struct guild_storage *gstor = gstorage->id2storage2(guild_id);
 	WFIFOHEAD(inter_fd,12);
 	WFIFOW(inter_fd,0) = 0x3056;
@@ -2024,17 +2023,20 @@ void intif_itembound_req(int char_id,int aid,int guild_id) {
 	WFIFOSET(inter_fd,12);
 	if(gstor)
 		gstor->lock = 1; //Lock for retrieval process
+#endif
 }
  
 //3856
 void intif_parse_Itembound_ack(int fd) {
+#ifdef GP_BOUND_ITEMS
 	struct guild_storage *gstor;
 	int guild_id = RFIFOW(fd,6);
 
 	gstor = gstorage->id2storage2(guild_id);
-	if(gstor) gstor->lock = 0; //Unlock now that operation is completed
-}
+	if(gstor)
+		gstor->lock = 0; //Unlock now that operation is completed
 #endif
+}
 //-----------------------------------------------------------------
 // Communication from the inter server
 // Return a 0 (false) if there were any errors.
@@ -2118,9 +2120,9 @@ int intif_parse(int fd)
 		case 0x3854:	intif->pAuctionMessage(fd); break;
 		case 0x3855:	intif->pAuctionBid(fd); break;
 		//Bound items
-#ifdef BOUND_ITEMS
+#ifdef GP_BOUND_ITEMS
 		case 0x3856:	intif->pItembound_ack(fd); break;
-#endif	
+#endif
 		// Mercenary System
 		case 0x3870:	intif->pMercenaryReceived(fd); break;
 		case 0x3871:	intif->pMercenaryDeleted(fd); break;
@@ -2160,7 +2162,7 @@ void intif_defaults(void) {
 		10,-1,15, 0, 79,19, 7,-1,  0,-1,-1,-1, 14,67,186,-1, //0x3830
 		-1, 0, 0,14,  0, 0, 0, 0, -1,74,-1,11, 11,-1,  0, 0, //0x3840
 		-1,-1, 7, 7,  7,11, 8, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3850  Auctions [Zephyrus] itembound[Akinari]
- 		-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]
+		-1, 7, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3860  Quests [Kevin] [Inkfish]
 		-1, 3, 3, 0,  0, 0, 0, 0,  0, 0, 0, 0, -1, 3,  3, 0, //0x3870  Mercenaries [Zephyrus] / Elemental [pakpil]
 		11,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3880
 		-1,-1, 7, 3,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0,  0, 0, //0x3890  Homunculus [albator]
@@ -2248,6 +2250,8 @@ void intif_defaults(void) {
 	/* */
 	intif->CheckForCharServer = CheckForCharServer;
 	/* */
+	intif->itembound_req = intif_itembound_req;
+	/* parse functions */
 	intif->pWisMessage = intif_parse_WisMessage;
 	intif->pWisEnd = intif_parse_WisEnd;
 	intif->pWisToGM_sub = mapif_parse_WisToGM_sub;

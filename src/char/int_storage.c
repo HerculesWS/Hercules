@@ -107,8 +107,7 @@ int guild_storage_fromsql(int guild_id, struct guild_storage* p)
 
 	StrBuf->Destroy(&buf);
 
-	for( i = 0; i < MAX_GUILD_STORAGE && SQL_SUCCESS == SQL->NextRow(sql_handle); ++i )
-	{
+	for( i = 0; i < MAX_GUILD_STORAGE && SQL_SUCCESS == SQL->NextRow(sql_handle); ++i ) {
 		item = &p->items[i];
 		SQL->GetData(sql_handle, 0, &data, NULL); item->id = atoi(data);
 		SQL->GetData(sql_handle, 1, &data, NULL); item->nameid = atoi(data);
@@ -120,9 +119,8 @@ int guild_storage_fromsql(int guild_id, struct guild_storage* p)
 		SQL->GetData(sql_handle, 7, &data, NULL); item->bound = atoi(data);
 		SQL->GetData(sql_handle, 8, &data, NULL); item->unique_id = strtoull(data, NULL, 10);
  		item->expire_time = 0;
-		item->bound = 0;
-		for( j = 0; j < MAX_SLOTS; ++j )
-		{
+
+		for( j = 0; j < MAX_SLOTS; ++j ) {
 			SQL->GetData(sql_handle, 9+j, &data, NULL); item->card[j] = atoi(data);
 		}
 	}
@@ -239,14 +237,15 @@ int mapif_parse_SaveGuildStorage(int fd)
 	return 0;
 }
 
-#ifdef BOUND_ITEMS
 int mapif_itembound_ack(int fd, int aid, int guild_id)
 {
+#ifdef GP_BOUND_ITEMS
 	WFIFOHEAD(fd,8);
 	WFIFOW(fd,0) = 0x3856;
 	WFIFOL(fd,2) = aid;
 	WFIFOW(fd,6) = guild_id;
 	WFIFOSET(fd,8);
+#endif
 	return 0;
 }
 
@@ -254,23 +253,23 @@ int mapif_itembound_ack(int fd, int aid, int guild_id)
 //Guild bound items pull for offline characters [Akinari]
 //Revised by [Mhalicot]
 //------------------------------------------------
-int mapif_parse_itembound_retrieve(int fd)
+int mapif_parse_ItemBoundRetrieve(int fd)
 {
+#ifdef GP_BOUND_ITEMS
 	StringBuf buf;
 	SqlStmt* stmt;
 	struct item item;
 	int j, i=0, s;
-	bool found=false;
 	struct item items[MAX_INVENTORY];
 	int char_id = RFIFOL(fd,2);
 	int aid = RFIFOL(fd,6);
 	int guild_id = RFIFOW(fd,10);
 
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`");
+	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`");
 	for( j = 0; j < MAX_SLOTS; ++j )
 		StrBuf->Printf(&buf, ", `card%d`", j);
-	StrBuf->Printf(&buf, " FROM `%s` WHERE `char_id`='%d'",inventory_db,char_id);
+	StrBuf->Printf(&buf, " FROM `%s` WHERE `char_id`='%d' AND `bound` = '%d'",inventory_db,char_id,IBT_GUILD);
 
 	stmt = SQL->StmtMalloc(sql_handle);
 	if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
@@ -290,15 +289,14 @@ int mapif_parse_itembound_retrieve(int fd)
 	SQL->StmtBindColumn(stmt, 5, SQLDT_CHAR,      &item.refine,      0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &item.attribute,   0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &item.expire_time, 0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 8, SQLDT_UINT,      &item.bound,       0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 8, SQLDT_UCHAR,     &item.bound,       0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 9, SQLDT_UINT64,    &item.unique_id,   0, NULL, NULL);
 	for( j = 0; j < MAX_SLOTS; ++j )
-		SQL->StmtBindColumn(stmt, 9+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
+		SQL->StmtBindColumn(stmt, 10+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
 
 	while( SQL_SUCCESS == SQL->StmtNextRow(stmt) ) {
-		if(item.bound == 2) {
-			memcpy(&items[i],&item,sizeof(struct item));
-			i++;
-		}
+		memcpy(&items[i],&item,sizeof(struct item));
+		i++;
 	}
 	SQL->FreeResult(sql_handle);
 	
@@ -312,10 +310,9 @@ int mapif_parse_itembound_retrieve(int fd)
 	StrBuf->Clear(&buf);
 	StrBuf->Printf(&buf, "DELETE FROM `%s` WHERE",inventory_db);
 	for(j=0; j<i; j++) {
-		if( found )
+		if( j )
 			StrBuf->AppendStr(&buf, " OR");
-		else
-			found = true;
+
 		StrBuf->Printf(&buf, " `id`=%d",items[j].id);
 	}
 
@@ -329,21 +326,18 @@ int mapif_parse_itembound_retrieve(int fd)
 	}
 
 	//Now let's update the guild storage with those deleted items
-	found = false;
 	StrBuf->Clear(&buf);
-	StrBuf->Printf(&buf, "INSERT INTO `%s` (`guild_id`, `nameid`, `amount`, `identify`, `refine`, `attribute`, `expire_time`, `bound`", guild_storage_db);
+	StrBuf->Printf(&buf, "INSERT INTO `%s` (`guild_id`, `nameid`, `amount`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`", guild_storage_db);
 	for( j = 0; j < MAX_SLOTS; ++j )
 		StrBuf->Printf(&buf, ", `card%d`", j);
 	StrBuf->AppendStr(&buf, ") VALUES ");
 	
 	for( j = 0; j < i; ++j ) {
-		if( found )
+		if( j )
 			StrBuf->AppendStr(&buf, ",");
-		else
-			found = true;
 
 		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d'",
-			guild_id, items[j].nameid, items[j].amount, items[j].identify, items[j].refine, items[j].attribute, items[j].expire_time, items[j].bound);
+			guild_id, items[j].nameid, items[j].amount, items[j].identify, items[j].refine, items[j].attribute, items[j].expire_time, items[j].bound, items[j].unique_id);
 		for( s = 0; s < MAX_SLOTS; ++s )
 			StrBuf->Printf(&buf, ", '%d'", items[j].card[s]);
 		StrBuf->AppendStr(&buf, ")");
@@ -364,21 +358,21 @@ int mapif_parse_itembound_retrieve(int fd)
 	//Finally reload storage and tell map we're done
 	mapif_load_guild_storage(fd,aid,guild_id,0);
 	mapif_itembound_ack(fd,aid,guild_id);
+#endif
 	return 0;
 }
-#endif
 
 int inter_storage_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 	switch(RFIFOW(fd,0)){
-	case 0x3018: mapif_parse_LoadGuildStorage(fd); break;
-	case 0x3019: mapif_parse_SaveGuildStorage(fd); break;
-#ifdef BOUND_ITEMS
-	case 0x3056: mapif_parse_itembound_retrieve(fd); break;
+		case 0x3018: mapif_parse_LoadGuildStorage(fd); break;
+		case 0x3019: mapif_parse_SaveGuildStorage(fd); break;
+#ifdef GP_BOUND_ITEMS
+		case 0x3056: mapif_parse_ItemBoundRetrieve(fd); break;
 #endif
-	default:
-		return 0;
+		default:
+			return 0;
 	}
 	return 1;
 }

@@ -417,7 +417,7 @@ void do_init_pc_groups(void) {
 		{ "disable_pvp", PC_PERM_DISABLE_PVP },
 		{ "disable_commands_when_dead", PC_PERM_DISABLE_CMD_DEAD },
 		{ "hchsys_admin", PC_PERM_HCHSYS_ADMIN },
-		{ "can_trade_bounded", PC_PERM_TRADE_BOUNDED },
+		{ "can_trade_bound", PC_PERM_TRADE_BOUND },
 	};
 	unsigned char i, len = ARRAYLENGTH(pc_g_defaults);
 	

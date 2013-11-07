@@ -747,7 +747,7 @@ int memitemdata_to_sql(const struct item items[], int max, int id, int tableswit
 	SQL->StmtBindColumn(stmt, 5, SQLDT_CHAR,      &item.refine,      0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &item.attribute,   0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &item.expire_time, 0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 8, SQLDT_UINT,      &item.bound,       0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 8, SQLDT_UCHAR,     &item.bound,       0, NULL, NULL);
  	for( j = 0; j < MAX_SLOTS; ++j )
 		SQL->StmtBindColumn(stmt, 9+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
 
@@ -894,7 +894,7 @@ int inventory_to_sql(const struct item items[], int max, int id) {
 	SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &item.attribute,   0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &item.expire_time, 0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 8, SQLDT_CHAR,      &item.favorite,    0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 9, SQLDT_CHAR,      &item.bound,       0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 9, SQLDT_UCHAR,     &item.bound,       0, NULL, NULL);
  	for( j = 0; j < MAX_SLOTS; ++j )
 		SQL->StmtBindColumn(stmt, 10+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
 
@@ -1243,17 +1243,17 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
 	||	SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, 0)
 	||	SQL_ERROR == SQL->StmtExecute(stmt)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT,       &tmp_item.id, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,     &tmp_item.nameid, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,     &tmp_item.amount, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_UINT,      &tmp_item.equip, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 4, SQLDT_CHAR,      &tmp_item.identify, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 5, SQLDT_CHAR,      &tmp_item.refine, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &tmp_item.attribute, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &tmp_item.expire_time, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 8, SQLDT_CHAR,      &tmp_item.favorite, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 9, SQLDT_CHAR,      &tmp_item.bound, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 10, SQLDT_ULONGLONG, &tmp_item.unique_id, 0, NULL, NULL) )
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  0, SQLDT_INT,       &tmp_item.id, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  1, SQLDT_SHORT,     &tmp_item.nameid, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  2, SQLDT_SHORT,     &tmp_item.amount, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  3, SQLDT_UINT,      &tmp_item.equip, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  4, SQLDT_CHAR,      &tmp_item.identify, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  5, SQLDT_CHAR,      &tmp_item.refine, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  6, SQLDT_CHAR,      &tmp_item.attribute, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  7, SQLDT_UINT,      &tmp_item.expire_time, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  8, SQLDT_CHAR,      &tmp_item.favorite, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  9, SQLDT_UCHAR,     &tmp_item.bound, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 10, SQLDT_UINT64,    &tmp_item.unique_id, 0, NULL, NULL) )
  		SqlStmt_ShowDebug(stmt);
 	for( i = 0; i < MAX_SLOTS; ++i )
 		if( SQL_ERROR == SQL->StmtBindColumn(stmt, 11+i, SQLDT_SHORT, &tmp_item.card[i], 0, NULL, NULL) )
@@ -1283,8 +1283,8 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 5, SQLDT_CHAR,        &tmp_item.refine, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,        &tmp_item.attribute, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,        &tmp_item.expire_time, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 8, SQLDT_CHAR,        &tmp_item.bound, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 9, SQLDT_ULONGLONG,   &tmp_item.unique_id, 0, NULL, NULL) )
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 8, SQLDT_UCHAR,       &tmp_item.bound, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 9, SQLDT_UINT64,      &tmp_item.unique_id, 0, NULL, NULL) )
  		SqlStmt_ShowDebug(stmt);
 	for( i = 0; i < MAX_SLOTS; ++i )
 		if( SQL_ERROR == SQL->StmtBindColumn(stmt, 10+i, SQLDT_SHORT, &tmp_item.card[i], 0, NULL, NULL) )
@@ -2959,7 +2959,7 @@ int parse_frommap(int fd)
 					break;
 				}
 				//Check account only if this ain't final save. Final-save goes through because of the char-map reconnect
-				if (RFIFOB(fd,12) || RFIFOB(fd,13) || (
+				if (RFIFOB(fd,12) || (
 					(character = (struct online_char_data*)idb_get(online_char_db, aid)) != NULL &&
 					character->char_id == cid))
 				{

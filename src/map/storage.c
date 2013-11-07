@@ -141,7 +141,7 @@ int storage_additem(struct map_session_data* sd, struct item* item_data, int amo
 		return 1;
 	}
 	
-	if( (item_data->bound > 1) && !pc->can_give_bounded_items(sd) ) {
+	if( item_data->bound > IBT_ACCOUNT && !pc->can_give_bounded_items(sd) ) {
 		clif->message(sd->fd, msg_txt(294));
 		return 1;
 	}
@@ -435,13 +435,13 @@ int guild_storage_additem(struct map_session_data* sd, struct guild_storage* sto
 		return 1;
 	}
 
-	if( !itemdb_canguildstore(item_data, pc->get_group_level(sd)) || item_data->expire_time || (item_data->bound && !pc->can_give_bounded_items(sd)) )
+	if( !itemdb_canguildstore(item_data, pc->get_group_level(sd)) || item_data->expire_time )
  	{	//Check if item is storable. [Skotlex]
 		clif->message (sd->fd, msg_txt(264));
 		return 1;
 	}
 
-	if( (item_data->bound == 1 || item_data->bound > 2) && !pc->can_give_bounded_items(sd) ) {
+	if( item_data->bound && item_data->bound != IBT_GUILD && !pc->can_give_bounded_items(sd) ) {
 		clif->message(sd->fd, msg_txt(294));
 		return 1;
 	}
@@ -531,6 +531,8 @@ int storage_guild_storageadd(struct map_session_data* sd, int index, int amount)
 
 	if(gstorage->additem(sd,stor,&sd->status.inventory[index],amount)==0)
 		pc->delitem(sd,index,amount,0,4,LOG_TYPE_GSTORAGE);
+	else
+		clif->dropitem(sd, index,0);
 
 	return 1;
 }
