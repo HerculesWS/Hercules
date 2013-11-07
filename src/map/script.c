@@ -1863,66 +1863,97 @@ void read_constdb(void) {
 	fclose(fp);
 }
 
+// Standard UNIX tab size is 8
+#define TAB_SIZE 8
+#define update_tabstop(tabstop,chars) \
+	do { \
+		(tabstop) -= (chars); \
+		while ((tabstop) <= 0) (tabstop) += TAB_SIZE; \
+	} while (false)
+
 /*==========================================
  * Display emplacement line of script
  *------------------------------------------*/
 const char* script_print_line(StringBuf* buf, const char* p, const char* mark, int line)
 {
-	int i;
+	int i, mark_pos = 0, tabstop = TAB_SIZE;
 	if( p == NULL || !p[0] ) return NULL;
 	if( line < 0 )
-		StrBuf->Printf(buf, "*% 5d : ", -line);
+		StrBuf->Printf(buf, "*%5d: ", -line);         // len = 8
 	else
-		StrBuf->Printf(buf, " % 5d : ", line);
-	for(i=0;p[i] && p[i] != '\n';i++){
-		if(p + i != mark)
-			StrBuf->Printf(buf, "%c", p[i]);
+		StrBuf->Printf(buf, " %5d: ", line);          // len = 8
+	update_tabstop(tabstop,8);                            // len = 8
+	for( i=0; p[i] && p[i] != '\n'; i++ ) {
+		char c = p[i];
+		int w = 1;
+		// Like Clang does, let's print the code with tabs expanded to spaces to ensure that the marker will be under the right character
+		if( c == '\t' ) {
+			c = ' ';
+			w = tabstop;
+		}
+		update_tabstop(tabstop, w);
+		if( p + i < mark)
+			mark_pos += w;
+		if( p + i != mark)
+			StrBuf->Printf(buf, "%*c", w, c);
 		else
-			StrBuf->Printf(buf, "\'%c\'", p[i]);
+			StrBuf->Printf(buf, CL_BT_RED"%*c"CL_RESET, w, c);
 	}
 	StrBuf->AppendStr(buf, "\n");
+	if( mark ) {
+		StrBuf->AppendStr(buf, "        "CL_BT_CYAN); // len = 8
+		for( ; mark_pos > 0; mark_pos-- ) {
+			StrBuf->AppendStr(buf, "~");
+		}
+		StrBuf->AppendStr(buf, CL_RESET CL_BT_GREEN"^"CL_RESET"\n");
+	}
 	return p+i+(p[i] == '\n' ? 1 : 0);
 }
+#undef TAB_SIZE
+#undef update_tabstop
 
+#define CONTEXTLINES 3
 void script_errorwarning_sub(StringBuf *buf, const char* src, const char* file, int start_line, const char* error_msg, const char* error_pos) {
 	// Find the line where the error occurred
 	int j;
 	int line = start_line;
-	const char *p;
-	const char *linestart[5] = { NULL, NULL, NULL, NULL, NULL };
+	const char *p, *error_linepos;
+	const char *linestart[CONTEXTLINES] = { NULL };
 
 	for(p=src;p && *p;line++){
 		const char *lineend=strchr(p,'\n');
 		if(lineend==NULL || error_pos<lineend){
 			break;
 		}
-		for( j = 0; j < 4; j++ ) {
+		for( j = 0; j < CONTEXTLINES-1; j++ ) {
 			linestart[j] = linestart[j+1];
 		}
-		linestart[4] = p;
-		p=lineend+1;
+		linestart[CONTEXTLINES-1] = p;
+		p = lineend+1;
 	}
+	error_linepos = p;
 
 	if( line >= 0 )
-		StrBuf->Printf(buf, "script error on %s line %d\n", file, line);
+		StrBuf->Printf(buf, "script error in file '%s' line %d column %d\n", file, line, error_pos-error_linepos+1);
 	else
-		StrBuf->Printf(buf, "script error on %s item ID %d\n", file, -line);
+		StrBuf->Printf(buf, "script error in file '%s' item ID %d\n", file, -line);
 
 	StrBuf->Printf(buf, "    %s\n", error_msg);
-	for(j = 0; j < 5; j++ ) {
-		script->print_line(buf, linestart[j], NULL, line + j - 5);
+	for(j = 0; j < CONTEXTLINES; j++ ) {
+		script->print_line(buf, linestart[j], NULL, line + j - CONTEXTLINES);
 	}
 	p = script->print_line(buf, p, error_pos, -line);
-	for(j = 0; j < 5; j++) {
+	for(j = 0; j < CONTEXTLINES; j++) {
 		p = script->print_line(buf, p, NULL, line + j + 1 );
 	}
 }
+#undef CONTEXTLINES
 
 void script_error(const char* src, const char* file, int start_line, const char* error_msg, const char* error_pos) {
 	StringBuf buf;
 
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "\a\n");
+	StrBuf->AppendStr(&buf, "\a");
 
 	script->errorwarning_sub(&buf, src, file, start_line, error_msg, error_pos);
 
@@ -3694,7 +3725,7 @@ void do_final_script(void) {
 /*==========================================
  * Initialization
  *------------------------------------------*/
-void do_init_script(void) {
+void do_init_script(bool minimal) {
 	script->st_db = idb_alloc(DB_OPT_BASE);
 	script->userfunc_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 	script->autobonus_db = strdb_alloc(DB_OPT_DUP_KEY,0);
@@ -3707,6 +3738,10 @@ void do_init_script(void) {
 	
 	script->parse_builtin();
 	script->read_constdb();
+
+	if (minimal)
+		return;
+
 	mapreg->init();
 }
 
@@ -9425,15 +9460,8 @@ BUILDIN(sc_end) {
 		if (!sce)
 			return true;
 		
-		switch (type) {
-			case SC_WEIGHTOVER50:
-			case SC_WEIGHTOVER90:
-			case SC_NOCHAT:
-			case SC_PUSH_CART:
-				return true;
-			default:
-				break;
-		}
+		if( status->get_sc_type(type)&SC_NO_CLEAR )
+			return true;
 		
 		//This should help status_change_end force disabling the SC in case it has no limit.
 		sce->val1 = sce->val2 = sce->val3 = sce->val4 = 0;
@@ -12108,7 +12136,7 @@ BUILDIN(nude)
 	}
 	
 	if( calcflag )
-		status_calc_pc(sd,0);
+		status_calc_pc(sd,SCO_NONE);
 	
 	return true;
 }
@@ -12434,9 +12462,9 @@ BUILDIN(npcwalkto) {
 	if( nd ) {
 		unit->bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
 		if (!nd->status.hp) {
-			status_calc_npc(nd, true);
+			status_calc_npc(nd, SCO_FIRST);
 		} else {
-			status_calc_npc(nd, false);
+			status_calc_npc(nd, SCO_NONE);
 		}
 		unit->walktoxy(&nd->bl,x,y,0);
 	}
@@ -12975,7 +13003,7 @@ BUILDIN(equip)
 		ShowError("wrong item ID : equipitem(%i)\n",nameid);
 		return false;
 	}
-	ARR_FIND( 0, MAX_INVENTORY, i, sd->status.inventory[i].nameid == nameid );
+	ARR_FIND( 0, MAX_INVENTORY, i, sd->status.inventory[i].nameid == nameid && sd->status.inventory[i].equip == 0 );
 	if( i < MAX_INVENTORY )
 		pc->equipitem(sd,i,item_data->equip);
 	
@@ -14976,9 +15004,9 @@ BUILDIN(unitskilluseid) {
 	if( bl != NULL ) {
 		if( bl->type == BL_NPC ) {
 			if (!((TBL_NPC*)bl)->status.hp) {
-				status_calc_npc(((TBL_NPC*)bl), true);
+				status_calc_npc(((TBL_NPC*)bl), SCO_FIRST);
 			} else {
-				status_calc_npc(((TBL_NPC*)bl), false);
+				status_calc_npc(((TBL_NPC*)bl), SCO_NONE);
 			}
 		}
 		unit->skilluse_id(bl, target_id, skill_id, skill_lv);
@@ -15010,9 +15038,9 @@ BUILDIN(unitskillusepos) {
 	if( bl != NULL ) {
 		if( bl->type == BL_NPC ) {
 			if (!((TBL_NPC*)bl)->status.hp) {
-				status_calc_npc(((TBL_NPC*)bl), true);
+				status_calc_npc(((TBL_NPC*)bl), SCO_FIRST);
 			} else {
-				status_calc_npc(((TBL_NPC*)bl), false);
+				status_calc_npc(((TBL_NPC*)bl), SCO_NONE);
 			}
 		}
 		unit->skilluse_pos(bl, skill_x, skill_y, skill_id, skill_lv);
@@ -17022,9 +17050,9 @@ BUILDIN(npcskill) {
 	nd->stat_point = stat_point;
 	
 	if (!nd->status.hp) {
-		status_calc_npc(nd, true);
+		status_calc_npc(nd, SCO_FIRST);
 	} else {
-		status_calc_npc(nd, false);
+		status_calc_npc(nd, SCO_NONE);
 	}
 	
 	if (skill->get_inf(skill_id)&INF_GROUND_SKILL) {
@@ -18220,7 +18248,7 @@ void script_label_add(int key, int pos) {
 
 void script_defaults(void) {
 	// aegis->athena slot position conversion table
-	unsigned int equip[SCRIPT_EQUIP_TABLE_SIZE] = {EQP_HEAD_TOP,EQP_ARMOR,EQP_HAND_L,EQP_HAND_R,EQP_GARMENT,EQP_SHOES,EQP_ACC_L,EQP_ACC_R,EQP_HEAD_MID,EQP_HEAD_LOW,EQP_COSTUME_HEAD_LOW,EQP_COSTUME_HEAD_MID,EQP_COSTUME_HEAD_TOP,EQP_COSTUME_GARMENT};
+	unsigned int equip[SCRIPT_EQUIP_TABLE_SIZE] = {EQP_HEAD_TOP,EQP_ARMOR,EQP_HAND_L,EQP_HAND_R,EQP_GARMENT,EQP_SHOES,EQP_ACC_L,EQP_ACC_R,EQP_HEAD_MID,EQP_HEAD_LOW,EQP_COSTUME_HEAD_LOW,EQP_COSTUME_HEAD_MID,EQP_COSTUME_HEAD_TOP,EQP_COSTUME_GARMENT,EQP_SHADOW_ARMOR, EQP_SHADOW_WEAPON, EQP_SHADOW_SHIELD, EQP_SHADOW_SHOES, EQP_SHADOW_ACC_R, EQP_SHADOW_ACC_L};
 
 	script = &script_s;
 	

@@ -317,7 +317,7 @@ int merc_data_received(struct s_mercenary *merc, bool flag) {
 		md->bl.y = md->ud.to_y;
 
 		map->addiddb(&md->bl);
-		status_calc_mercenary(md,1);
+		status_calc_mercenary(md,SCO_FIRST);
 		md->contract_timer = INVALID_TIMER;
 		merc_contract_init(md);
 	}
@@ -490,7 +490,10 @@ int read_mercenary_skilldb(void) {
 	return 0;
 }
 
-void do_init_mercenary(void) {
+void do_init_mercenary(bool minimal) {
+	if (minimal)
+		return;
+
 	mercenary->read_db();
 	mercenary->read_skilldb();
 	

@@ -526,7 +526,7 @@ struct clif_interface {
 	/* */
 	bool ally_only;
 	/* core */
-	int (*init) (void);
+	int (*init) (bool minimal);
 	void (*final) (void);
 	int (*setip) (const char* ip);
 	void (*setbindip) (const char* ip);
@@ -1006,6 +1006,8 @@ struct clif_interface {
 	/* Bank System [Yommy/Hercules] */
 	void (*bank_deposit) (struct map_session_data *sd, enum e_BANKING_DEPOSIT_ACK reason);
 	void (*bank_withdraw) (struct map_session_data *sd,enum e_BANKING_WITHDRAW_ACK reason);
+	/* */
+	void (*show_modifiers) (struct map_session_data *sd);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/

@@ -46,10 +46,84 @@ AC_ARG_ENABLE(
 	[packetver],
 	AC_HELP_STRING(
 		[--enable-packetver=ARG],
-		[Sets the PACKETVER define of the map-server. (see src/map/clif.h)]
+		[Sets the PACKETVER define. (see src/common/mmo.h)]
 	),
 	[enable_packetver="$enableval"],
 	[enable_packetver=""]
+)
+
+
+#
+# packetver-RE
+#
+AC_ARG_ENABLE(
+	[packetver-re],
+	AC_HELP_STRING(
+		[--disable-packetver-re],
+		[Sets or unsets the PACKETVER_RE define - see src/common/mmo.h (currently enabled by default)]
+	),
+	[
+		enable_packetver_re="$enableval"
+		case $enableval in
+			"no");;
+			"yes");;
+			*) AC_MSG_ERROR([[invalid argument --enable-packetver-re=$enableval... stopping]]);;
+		esac
+	],
+	[enable_packetver_re="yes"]
+)
+
+
+#
+# Obfuscation keys
+#
+AC_ARG_WITH(
+	[key1],
+	AC_HELP_STRING(
+		[--with-key1@<:@=ARG@:>@],
+		[Set the first obfuscation key (ignored unless the other two are also specified)]
+	),
+	[
+		obfuscationkey1="$( expr "0x$withval" : '0*x*\(0x@<:@A-Fa-f0-9@:>@\{8\}\)' )"
+		if ! expr "x$obfuscationkey1" : 'x0x@<:@A-Fa-f0-9@:>@\{8\}' >/dev/null 2>&1; then
+			obfuscationkey1=""
+		fi
+	],
+	[
+		obfuscationkey1=""
+	]
+)
+AC_ARG_WITH(
+	[key2],
+	AC_HELP_STRING(
+		[--with-key2@<:@=ARG@:>@],
+		[Set the second obfuscation key (ignored unless the other two are also specified)]
+	),
+	[
+		obfuscationkey2="$( expr "0x$withval" : '0*x*\(0x@<:@A-Fa-f0-9@:>@\{8\}\)' )"
+		if ! expr "x$obfuscationkey2" : 'x0x@<:@A-Fa-f0-9@:>@\{8\}' >/dev/null 2>&1; then
+			obfuscationkey2=""
+		fi
+	],
+	[
+		obfuscationkey2=""
+	]
+)
+AC_ARG_WITH(
+	[key3],
+	AC_HELP_STRING(
+		[--with-key3@<:@=ARG@:>@],
+		[Set the third obfuscation key (ignored unless the other two are also specified)]
+	),
+	[
+		obfuscationkey3="$( expr "0x$withval" : '0*x*\(0x@<:@A-Fa-f0-9@:>@\{8\}\)' )"
+		if ! expr "x$obfuscationkey3" : 'x0x@<:@A-Fa-f0-9@:>@\{8\}' >/dev/null 2>&1; then
+			obfuscationkey3=""
+		fi
+	],
+	[
+		obfuscationkey3=""
+	]
 )
 
 
@@ -771,6 +845,24 @@ if test -n "$enable_packetver" ; then
 	CFLAGS="$CFLAGS -DPACKETVER=$enable_packetver"
 fi
 
+#
+# Packetver-RE
+#
+case $enable_packetver_re in
+	"yes")
+		# default value
+		CFLAGS="$CFLAGS -DDISABLE_PACKETVER_RE"
+		;;
+	"no")
+		;;
+esac
+
+#
+# Obfuscation keys
+#
+if test -n "$obfuscationkey1" -a -n "$obfuscationkey2" -a -n "$obfuscationkey3"; then
+	CFLAGS="$CFLAGS -DOBFUSCATIONKEY1=$obfuscationkey1 -DOBFUSCATIONKEY2=$obfuscationkey2 -DOBFUSCATIONKEY3=$obfuscationkey3"
+fi
 
 #
 # Debug
@@ -1035,7 +1127,7 @@ esac
 AC_SUBST([DLLEXT])
 
 AC_MSG_CHECKING([for MinGW])
-if test -n "`$CC --version | grep -i mingw`" ; then
+if test -n "`$CC --version 2>/dev/null | grep -i mingw`" ; then
 	AC_MSG_RESULT([yes])
 	CPPFLAGS="$CPPFLAGS -DMINGW"
 	if test -z "$fd_setsize" ; then

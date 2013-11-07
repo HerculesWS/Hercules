@@ -258,7 +258,7 @@ int elemental_data_received(struct s_elemental *ele, bool flag) {
 		ed->bl.y = ed->ud.to_y;
 
 		map->addiddb(&ed->bl);
-		status_calc_elemental(ed,1);
+		status_calc_elemental(ed,SCO_FIRST);
 		ed->last_spdrain_time = ed->last_thinktime = timer->gettick();
 		ed->summon_timer = INVALID_TIMER;
 		elemental->summon_init(ed);
@@ -931,7 +931,10 @@ void reload_elemental_skilldb(void) {
 	elemental->read_skilldb();
 }
 
-int do_init_elemental(void) {
+int do_init_elemental(bool minimal) {
+	if (minimal)
+		return 0;
+
 	elemental->read_db();
 	elemental->read_skilldb();
 

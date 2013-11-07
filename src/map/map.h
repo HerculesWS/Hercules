@@ -360,6 +360,9 @@ enum _sp {
 	SP_KILLEDRID=122,
 	SP_SLOTCHANGE=123,
 	SP_CHARRENAME=124,
+	SP_MOD_EXP=125,
+	SP_MOD_DROP=126,
+	SP_MOD_DEATH=127,
 
 	// Mercenaries
 	SP_MERCFLEE=165, SP_MERCKILLS=189, SP_MERCFAITH=190,
@@ -1020,7 +1023,7 @@ struct map_interface {
 	int (*eraseallipport_sub) (DBKey key, DBData *data, va_list va);
 	char* (*init_mapcache) (FILE *fp);
 	int (*readfromcache) (struct map_data *m, char *buffer);
-	int (*addmap) (char *mapname);
+	int (*addmap) (const char *mapname);
 	void (*delmapid) (int id);
 	void (*zone_db_clear) (void);
 	void (*list_final) (void);

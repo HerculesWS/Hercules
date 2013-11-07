@@ -4073,7 +4073,7 @@ ein_in01,67,242,3	script	Zelmeto	4_M_REPAIR,{
 	}
 }
 
-ein_in01,49,232,3	script	2nd Control Panel#ins	111,{
+ein_in01,49,232,3	script	2nd Control Panel#ins	HIDDEN_NPC,{
 	if ((EinFactory == 1) || (EinFactory == 2)) {
 		changequest 8017,8018;
 		set EinFactory,2;
@@ -4088,7 +4088,7 @@ ein_in01,49,232,3	script	2nd Control Panel#ins	111,{
 	end;
 }
 
-ein_in01,108,217,3	script	3rd Pressure Governor#1	111,{
+ein_in01,108,217,3	script	3rd Pressure Governor#1	HIDDEN_NPC,{
 	if ((EinFactory == 3) || (EinFactory == 4)) {
 		changequest 8019,8020;
 		set EinFactory,4;

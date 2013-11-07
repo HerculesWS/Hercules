@@ -9213,7 +9213,9 @@ void clif_hercules_chsys_mjoin(struct map_session_data *sd) {
 /// Notification from the client, that it has finished map loading and is about to display player's character (CZ_NOTIFY_ACTORINIT).
 /// 007d
 void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
+#if PACKETVER >= 20090218
 	int i;
+#endif
 
 	if(sd->bl.prev != NULL)
 		return;
@@ -9473,7 +9475,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		}
 		
 		map->iwall_get(sd); // Updates Walls Info on this Map to Client
-		status_calc_pc(sd, false);/* some conditions are map-dependent so we must recalculate */
+		status_calc_pc(sd, SCO_NONE);/* some conditions are map-dependent so we must recalculate */
 		sd->state.changemap = false;
 		
 		if( hChSys.local && hChSys.local_autojoin && !map->list[sd->bl.m].flag.chsysnolocalaj ) {
@@ -17572,9 +17574,7 @@ void clif_parse_bgqueue_register(int fd, struct map_session_data *sd) {
 		clif->bgqueue_ack(sd,BGQA_FAIL_BGNAME_INVALID,0);
 		return;
 	}
-	//debug
-	safestrncpy(arena->name, p->bg_name, sizeof(arena->name));
-	
+
 	switch( (enum bg_queue_types)p->type ) {
 		case BGQT_INDIVIDUAL:
 		case BGQT_PARTY:
@@ -17797,6 +17797,19 @@ void clif_bank_withdraw(struct map_session_data *sd,enum e_BANKING_WITHDRAW_ACK 
 	p.Reason = (short)reason;
 	
 	clif->send(&p,sizeof(p), &sd->bl, SELF);
+}
+/* TODO: official response packet (tried 0x8cb/0x97b but the display was quite screwed up.) */
+/* currently mimicing */
+void clif_show_modifiers (struct map_session_data *sd) {
+
+	if( sd->status.mod_exp != 100 || sd->status.mod_drop != 100 || sd->status.mod_death != 100 ) {
+		char output[128];
+		
+		snprintf(output,128,"Base EXP : %d%% | Base Drop: %d%% | Base Death Penalty: %d%%",
+				sd->status.mod_exp,sd->status.mod_drop,sd->status.mod_death);
+		clif->broadcast2(&sd->bl,output, strlen(output) + 1, 0xffbc90, 0x190, 12, 0, 0, SELF);
+	}
+	
 }
 
 /* */
@@ -18046,9 +18059,12 @@ void clif_bc_ready(void) {
 /*==========================================
  *
  *------------------------------------------*/
-int do_init_clif(void) {
+int do_init_clif(bool minimal) {
 	const char* colors[COLOR_MAX] = { "0xFF0000", "0x00ff00", "0xffffff" };
 	int i;
+
+	if (minimal)
+		return 0;
 
 	/**
 	 * Setup Color Table (saves unnecessary load of strtoul on every call)
@@ -18597,6 +18613,8 @@ void clif_defaults(void) {
 	/* Bank System [Yommy/Hercules] */
 	clif->bank_deposit = clif_bank_deposit;
 	clif->bank_withdraw = clif_bank_withdraw;
+	/* */
+	clif->show_modifiers = clif_show_modifiers;
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/ 

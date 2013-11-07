@@ -574,7 +574,7 @@ ACMD(who) {
 				case 2: {
 					StrBuf->Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
-						StrBuf->Printf(&buf, msg_txt(344), pc_group_get_name(pl_sd->group)); // "(%s) "
+						StrBuf->Printf(&buf, msg_txt(344), pcg->get_name(pl_sd->group)); // "(%s) "
 					StrBuf->Printf(&buf, msg_txt(347), pl_sd->status.base_level, pl_sd->status.job_level,
 									 pc->job_name(pl_sd->status.class_)); // "| Lv:%d/%d | Job: %s"
 					break;
@@ -584,7 +584,7 @@ ACMD(who) {
 						StrBuf->Printf(&buf, msg_txt(912), pl_sd->status.char_id, pl_sd->status.account_id);	// "(CID:%d/AID:%d) "
 					StrBuf->Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
-						StrBuf->Printf(&buf, msg_txt(344), pc_group_get_name(pl_sd->group)); // "(%s) "
+						StrBuf->Printf(&buf, msg_txt(344), pcg->get_name(pl_sd->group)); // "(%s) "
 					StrBuf->Printf(&buf, msg_txt(348), mapindex_id2name(pl_sd->mapindex), pl_sd->bl.x, pl_sd->bl.y); // "| Location: %s %d %d"
 					break;
 				}
@@ -594,7 +594,7 @@ ACMD(who) {
 					
 					StrBuf->Printf(&buf, msg_txt(343), pl_sd->status.name); // "Name: %s "
 					if (pc_get_group_id(pl_sd) > 0) // Player title, if exists
-						StrBuf->Printf(&buf, msg_txt(344), pc_group_get_name(pl_sd->group)); // "(%s) "
+						StrBuf->Printf(&buf, msg_txt(344), pcg->get_name(pl_sd->group)); // "(%s) "
 					if (p != NULL)
 						StrBuf->Printf(&buf, msg_txt(345), p->party.name); // " | Party: '%s'"
 					if (g != NULL)
@@ -766,15 +766,21 @@ ACMD(speed)
 		return false;
 	}
 	
-	if (speed < 0) {
+	sd->state.permanent_speed = 0;
+	
+	if (speed < 0)
 		sd->base_status.speed = DEFAULT_WALK_SPEED;
-		sd->state.permanent_speed = 0; // Remove lock when set back to default speed.
-	} else {
+	else
 		sd->base_status.speed = cap_value(speed, MIN_WALK_SPEED, MAX_WALK_SPEED);
-		sd->state.permanent_speed = 1; // Set lock when set to non-default speed.
-	}
+	
 	status_calc_bl(&sd->bl, SCB_SPEED);
-	clif->message(fd, msg_txt(8)); // Speed changed.
+	
+	if( sd->base_status.speed != DEFAULT_WALK_SPEED ) {
+		sd->state.permanent_speed = 1; // Set lock when set to non-default speed.
+		clif->message(fd, msg_txt(8)); // Speed changed.
+	} else
+		clif->message(fd, msg_txt(172)); //Speed returned to normal.
+	
 	return true;
 }
 
@@ -1252,6 +1258,7 @@ ACMD(baselevelup)
 		
 		sd->status.status_point += status_point;
 		sd->status.base_level += (unsigned int)level;
+		status_calc_pc(sd, SCO_FORCE);
 		status_percent_heal(&sd->bl, 100, 100);
 		clif->misceffect(&sd->bl, 0);
 		clif->message(fd, msg_txt(21)); // Base level raised.
@@ -1273,13 +1280,13 @@ ACMD(baselevelup)
 			sd->status.status_point -= status_point;
 		sd->status.base_level -= (unsigned int)level;
 		clif->message(fd, msg_txt(22)); // Base level lowered.
+		status_calc_pc(sd, SCO_FORCE);
 	}
 	sd->status.base_exp = 0;
 	clif->updatestatus(sd, SP_STATUSPOINT);
 	clif->updatestatus(sd, SP_BASELEVEL);
 	clif->updatestatus(sd, SP_BASEEXP);
 	clif->updatestatus(sd, SP_NEXTBASEEXP);
-	status_calc_pc(sd, 0);
 	pc->baselevelchanged(sd);
 	if(sd->status.party_id)
 		party->send_levelup(sd);
@@ -1332,7 +1339,7 @@ ACMD(joblevelup)
 	clif->updatestatus(sd, SP_JOBEXP);
 	clif->updatestatus(sd, SP_NEXTJOBEXP);
 	clif->updatestatus(sd, SP_SKILLPOINT);
-	status_calc_pc(sd, 0);
+	status_calc_pc(sd, SCO_FORCE);
 	
 	return true;
 }
@@ -2346,7 +2353,7 @@ ACMD(param) {
 		*stats[i] = new_value;
 		clif->updatestatus(sd, SP_STR + i);
 		clif->updatestatus(sd, SP_USTR + i);
-		status_calc_pc(sd, 0);
+		status_calc_pc(sd, SCO_FORCE);
 		clif->message(fd, msg_txt(42)); // Stat changed.
 	} else {
 		if (value < 0)
@@ -2403,7 +2410,7 @@ ACMD(stat_all) {
 	}
 	
 	if (count > 0) { // if at least 1 stat modified
-		status_calc_pc(sd, 0);
+		status_calc_pc(sd, SCO_FORCE);
 		clif->message(fd, msg_txt(84)); // All stats changed!
 	} else {
 		if (value < 0)
@@ -3506,7 +3513,7 @@ ACMD(reloadatcommand) {
 	config_destroy(&run_test);
 	
 	atcommand->doload();
-	pc_groups_reload();
+	pcg->reload();
 	clif->message(fd, msg_txt(254));
 	return true;
 }
@@ -5597,16 +5604,16 @@ ACMD(autolootitem)
 		}
 		else if (!strcmp(message,"reset"))
 			action = 4;
-	}
-	
-	if (action < 3) // add or remove
-	{
-		if ((item_data = itemdb->exists(atoi(message))) == NULL)
-			item_data = itemdb->search_name(message);
-		if (!item_data) {
-			// No items founds in the DB with Id or Name
-			clif->message(fd, msg_txt(1189)); // Item not found.
-			return false;
+
+		if (action < 3) // add or remove
+		{
+			if ((item_data = itemdb->exists(atoi(message))) == NULL)
+				item_data = itemdb->search_name(message);
+			if (!item_data) {
+				// No items founds in the DB with Id or Name
+				clif->message(fd, msg_txt(1189)); // Item not found.
+				return false;
+			}
 		}
 	}
 	
@@ -5668,6 +5675,103 @@ ACMD(autolootitem)
 			memset(sd->state.autolootid, 0, sizeof(sd->state.autolootid));
 			clif->message(fd, msg_txt(1200)); // Your autolootitem list has been reset.
 			sd->state.autolooting = 0;
+			break;
+	}
+	return true;
+}
+
+/*==========================================
+ * @autoloottype
+ * Credits:
+ *    chriser,Aleos
+ *------------------------------------------*/
+ACMD(autoloottype) {
+	int i;
+	uint8 action = 3; // 1=add, 2=remove, 3=help+list (default), 4=reset
+	enum item_types type = -1;
+	int ITEM_NONE = 0;
+
+	if (message && *message) {
+		if (message[0] == '+') {
+			message++;
+			action = 1;
+		} else if (message[0] == '-') {
+			message++;
+			action = 2;
+		} else if (strcmp(message,"reset") == 0) {
+			action = 4;
+		}
+
+		if (action < 3) {
+			// add or remove
+			if (strncmp(message, "healing", 3) == 0)
+				type = IT_HEALING;
+			else if (strncmp(message, "usable", 3) == 0)
+				type = IT_USABLE;
+			else if (strncmp(message, "etc", 3) == 0)
+				type = IT_ETC;
+			else if (strncmp(message, "weapon", 3) == 0)
+				type = IT_WEAPON;
+			else if (strncmp(message, "armor", 3) == 0)
+				type = IT_ARMOR;
+			else if (strncmp(message, "card", 3) == 0)
+				type = IT_CARD;
+			else if (strncmp(message, "petegg", 4) == 0)
+				type = IT_PETEGG;
+			else if (strncmp(message, "petarmor", 4) == 0)
+				type = IT_PETARMOR;
+			else if (strncmp(message, "ammo", 3) == 0)
+				type = IT_AMMO;
+			else {
+				clif->message(fd, msg_txt(1491)); // Item type not found.
+				return false;
+			}
+		}
+	}
+
+	switch (action) {
+		case 1:
+			if (sd->state.autoloottype&(1<<type)) {
+				clif->message(fd, msg_txt(1490)); // You're already autolooting this item type.
+				return false;
+			}
+			sd->state.autoloottype |= (1<<type); // Stores the type
+			sprintf(atcmd_output, msg_txt(1492), itemdb->typename(type)); // Autolooting item type: '%s'
+			clif->message(fd, atcmd_output);
+			break;
+		case 2:
+			if (!(sd->state.autoloottype&(1<<type))) {
+				clif->message(fd, msg_txt(1493)); // You're currently not autolooting this item type.
+				return false;
+			}
+			sd->state.autoloottype &= ~(1<<type);
+			sprintf(atcmd_output, msg_txt(1494), itemdb->typename(type)); // Removed item type: '%s' from your autoloottype list.
+			clif->message(fd, atcmd_output);
+			break;
+		case 3:
+			clif->message(fd, msg_txt(38)); // Invalid location number, or name.
+
+			{
+				// attempt to find the text help string
+				const char *text = atcommand_help_string(info);
+				if (text) clif->messageln(fd, text); // send the text to the client
+			}
+
+			if (sd->state.autoloottype == ITEM_NONE) {
+				clif->message(fd, msg_txt(1495)); // Your autoloottype list is empty.
+			} else {
+				clif->message(fd, msg_txt(1496)); // Item types on your autoloottype list:
+				for(i=0; i < IT_MAX; i++) {
+					if (sd->state.autoloottype&(1<<i)) {
+						sprintf(atcmd_output, " '%s'", itemdb->typename(i));
+						clif->message(fd, atcmd_output);
+					}
+				}
+			}
+			break;
+		case 4:
+			sd->state.autoloottype = ITEM_NONE;
+			clif->message(fd, msg_txt(1497)); // Your autoloottype list has been reset.
 			break;
 	}
 	return true;
@@ -6622,7 +6726,7 @@ ACMD(homlevel) {
 		hd->homunculus.exp += hd->exp_next;
 	} while( hd->homunculus.level < level && homun->levelup(hd) );
 	
-	status_calc_homunculus(hd,0);
+	status_calc_homunculus(hd,SCO_NONE);
 	status_percent_heal(&hd->bl, 100, 100);
 	clif->specialeffect(&hd->bl,568,AREA);
 	return true;
@@ -8158,11 +8262,11 @@ void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommand
 		
 		switch( type ) {
 			case COMMAND_CHARCOMMAND:
-				if( cmd->char_groups[pc_group_get_idx(sd->group)] == 0 )
+				if( cmd->char_groups[pcg->get_idx(sd->group)] == 0 )
 					continue;
 				break;
 			case COMMAND_ATCOMMAND:
-				if( cmd->at_groups[pc_group_get_idx(sd->group)] == 0 )
+				if( cmd->at_groups[pcg->get_idx(sd->group)] == 0 )
 					continue;
 				break;
 			default:
@@ -8371,7 +8475,7 @@ ACMD(reloadquestdb) {
 	return true;
 }
 ACMD(addperm) {
-	int perm_size = ARRAYLENGTH(pc_g_permission_name);
+	int perm_size = pcg->permission_count;
 	bool add = (strcmpi(command+1, "addperm") == 0) ? true : false;
 	int i;
 	
@@ -8380,37 +8484,37 @@ ACMD(addperm) {
 		clif->message(fd, atcmd_output);
 		clif->message(fd, msg_txt(1379)); // -- Permission List
 		for( i = 0; i < perm_size; i++ ) {
-			sprintf(atcmd_output,"- %s",pc_g_permission_name[i].name);
+			sprintf(atcmd_output,"- %s",pcg->permissions[i].name);
 			clif->message(fd, atcmd_output);
 		}
 		return false;
 	}
 	
-	ARR_FIND(0, perm_size, i, strcmpi(pc_g_permission_name[i].name, message) == 0);
+	ARR_FIND(0, perm_size, i, strcmpi(pcg->permissions[i].name, message) == 0);
 	
 	if( i == perm_size ) {
 		sprintf(atcmd_output,msg_txt(1380),message); // '%s' is not a known permission.
 		clif->message(fd, atcmd_output);
 		clif->message(fd, msg_txt(1379)); // -- Permission List
 		for( i = 0; i < perm_size; i++ ) {
-			sprintf(atcmd_output,"- %s",pc_g_permission_name[i].name);
+			sprintf(atcmd_output,"- %s",pcg->permissions[i].name);
 			clif->message(fd, atcmd_output);
 		}
 		return false;
 	}
 	
-	if( add && (sd->extra_temp_permissions&pc_g_permission_name[i].permission) ) {
-		sprintf(atcmd_output,  msg_txt(1381),sd->status.name,pc_g_permission_name[i].name); // User '%s' already possesses the '%s' permission.
+	if( add && (sd->extra_temp_permissions&pcg->permissions[i].permission) ) {
+		sprintf(atcmd_output,  msg_txt(1381),sd->status.name,pcg->permissions[i].name); // User '%s' already possesses the '%s' permission.
 		clif->message(fd, atcmd_output);
 		return false;
-	} else if ( !add && !(sd->extra_temp_permissions&pc_g_permission_name[i].permission) ) {
-		sprintf(atcmd_output,  msg_txt(1382),sd->status.name,pc_g_permission_name[i].name); // User '%s' doesn't possess the '%s' permission.
+	} else if ( !add && !(sd->extra_temp_permissions&pcg->permissions[i].permission) ) {
+		sprintf(atcmd_output,  msg_txt(1382),sd->status.name,pcg->permissions[i].name); // User '%s' doesn't possess the '%s' permission.
 		clif->message(fd, atcmd_output);
 		sprintf(atcmd_output,msg_txt(1383),sd->status.name); // -- User '%s' Permissions
 		clif->message(fd, atcmd_output);
 		for( i = 0; i < perm_size; i++ ) {
-			if( sd->extra_temp_permissions&pc_g_permission_name[i].permission ) {
-				sprintf(atcmd_output,"- %s",pc_g_permission_name[i].name);
+			if( sd->extra_temp_permissions&pcg->permissions[i].permission ) {
+				sprintf(atcmd_output,"- %s",pcg->permissions[i].name);
 				clif->message(fd, atcmd_output);
 			}
 		}
@@ -8419,9 +8523,9 @@ ACMD(addperm) {
 	}
 	
 	if( add )
-		sd->extra_temp_permissions |= pc_g_permission_name[i].permission;
+		sd->extra_temp_permissions |= pcg->permissions[i].permission;
 	else
-		sd->extra_temp_permissions &=~ pc_g_permission_name[i].permission;
+		sd->extra_temp_permissions &=~ pcg->permissions[i].permission;
 	
 	
 	sprintf(atcmd_output, msg_txt(1384),sd->status.name); // User '%s' permissions updated successfully. The changes are temporary.
@@ -9377,6 +9481,7 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(changelook),
 		ACMD_DEF(autoloot),
 		ACMD_DEF2("alootid", autolootitem),
+		ACMD_DEF(autoloottype),
 		ACMD_DEF(mobinfo),
 		ACMD_DEF(exp),
 		ACMD_DEF(version),
@@ -9460,7 +9565,7 @@ void atcommand_basecommands(void) {
 	int i;
 	
 	for( i = 0; i < ARRAYLENGTH(atcommand_base); i++ ) {
-		if(!atcommand->add(atcommand_base[i].command,atcommand_base[i].func)) { // Should not happen if atcommand_base[] array is OK
+		if(!atcommand->add(atcommand_base[i].command,atcommand_base[i].func,false)) { // Should not happen if atcommand_base[] array is OK
 			ShowDebug("atcommand_basecommands: duplicate ACMD_DEF for '%s'.\n", atcommand_base[i].command);
 			continue;
 		}
@@ -9472,21 +9577,22 @@ void atcommand_basecommands(void) {
 	return;
 }
 
-bool atcommand_add(char *name,AtCommandFunc func) {
+bool atcommand_add(char *name,AtCommandFunc func, bool replace) {
 	AtCommandInfo* cmd;
 
-	if(atcommand->exists(name)) //caller will handle/display on false
-		return false;
-	
-	CREATE(cmd, AtCommandInfo, 1);
+	if( (cmd = atcommand->exists(name)) ) { //caller will handle/display on false
+		if( !replace )
+			return false;
+	} else {
+		CREATE(cmd, AtCommandInfo, 1);
+		strdb_put(atcommand->db, name, cmd);
+	}
 	
 	safestrncpy(cmd->command, name, sizeof(cmd->command));
 	cmd->func = func;
 	cmd->help = NULL;
 	cmd->log = true;
-	
-	strdb_put(atcommand->db, cmd->command, cmd);
-	
+		
 	return true;
 }
 
@@ -9657,7 +9763,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 			if( !pc->get_group_level(sd) ) {
 				if( x >= 1 || y >= 1 ) { /* we have command */
 					info = atcommand->get_info_byname(atcommand->check_alias(command + 1));
-					if( !info || info->char_groups[pc_group_get_idx(sd->group)] == 0 ) /* if we can't use or doesn't exist: don't even display the command failed message */
+					if( !info || info->char_groups[pcg->get_idx(sd->group)] == 0 ) /* if we can't use or doesn't exist: don't even display the command failed message */
 							return false;
 				} else
 					return false;/* display as normal message */
@@ -9737,8 +9843,8 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 	// type == 1 : player invoked
 	if (type == 1) {
 		int i;
-		if ((*command == atcommand->at_symbol && info->at_groups[pc_group_get_idx(sd->group)] == 0) ||
-		    (*command == atcommand->char_symbol && info->char_groups[pc_group_get_idx(sd->group)] == 0) ) {
+		if ((*command == atcommand->at_symbol && info->at_groups[pcg->get_idx(sd->group)] == 0) ||
+		    (*command == atcommand->char_symbol && info->char_groups[pcg->get_idx(sd->group)] == 0) ) {
 			return false;
 		}
 		if( pc_isdead(sd) && pc->has_permission(sd,PC_PERM_DISABLE_CMD_DEAD) ) {
@@ -9936,13 +10042,13 @@ void atcommand_db_load_groups(GroupSettings **groups, config_setting_t **command
 				continue;
 			}
 
-			idx = pc_group_get_idx(group);
+			idx = pcg->get_idx(group);
 			if (idx < 0 || idx >= sz) {
 				ShowError("atcommand_db_load_groups: index (%d) out of bounds [0,%d]\n", idx, sz - 1);
 				continue;
 			}
 			
-			if (pc_group_has_permission(group, PC_PERM_USE_ALL_COMMANDS)) {
+			if (pcg->has_permission(group, PC_PERM_USE_ALL_COMMANDS)) {
 				atcmd->at_groups[idx] = atcmd->char_groups[idx] = 1;
 				continue;
 			}
@@ -9980,8 +10086,8 @@ bool atcommand_can_use(struct map_session_data *sd, const char *command) {
 	if (info == NULL)
 		return false;
 	
-	if ((*command == atcommand->at_symbol && info->at_groups[pc_group_get_idx(sd->group)] != 0) ||
-		(*command == atcommand->char_symbol && info->char_groups[pc_group_get_idx(sd->group)] != 0) ) {
+	if ((*command == atcommand->at_symbol && info->at_groups[pcg->get_idx(sd->group)] != 0) ||
+		(*command == atcommand->char_symbol && info->char_groups[pcg->get_idx(sd->group)] != 0) ) {
 		return true;
 	}
 	
@@ -9993,8 +10099,8 @@ bool atcommand_can_use2(struct map_session_data *sd, const char *command, AtComm
 	if (info == NULL)
 		return false;
 	
-	if ((type == COMMAND_ATCOMMAND && info->at_groups[pc_group_get_idx(sd->group)] != 0) ||
-		(type == COMMAND_CHARCOMMAND && info->char_groups[pc_group_get_idx(sd->group)] != 0) ) {
+	if ((type == COMMAND_ATCOMMAND && info->at_groups[pcg->get_idx(sd->group)] != 0) ||
+		(type == COMMAND_CHARCOMMAND && info->char_groups[pcg->get_idx(sd->group)] != 0) ) {
 		return true;
 	}
 	
@@ -10045,7 +10151,10 @@ void atcommand_doload(void) {
 	atcommand->config_read(map->ATCOMMAND_CONF_FILENAME);
 }
 
-void do_init_atcommand(void) {
+void do_init_atcommand(bool minimal) {
+	if (minimal)
+		return;
+
 	atcommand->at_symbol = '@';
 	atcommand->char_symbol = '#';
 	atcommand->binding_count = 0;

@@ -166,6 +166,7 @@ struct map_session_data {
 		short pmap; // Previous map on Map Change
 		unsigned short autoloot;
 		unsigned short autolootid[AUTOLOOTITEM_SIZE]; // [Zephyrus]
+		unsigned short autoloottype;
 		unsigned int autolooting : 1; //performance-saver, autolooting state for @alootid
 		unsigned short autobonus; //flag to indicate if an autobonus is activated. [Inkfish]
 		unsigned int gmaster_flag : 1;
@@ -731,7 +732,7 @@ struct pc_interface {
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	unsigned int level_penalty[3][RC_MAX][MAX_LEVEL*2+1];
 #endif
-	unsigned short equip_pos[EQI_MAX];
+	unsigned int equip_pos[EQI_MAX];
 	/* */
 	struct skill_tree_entry skill_tree[CLASS_COUNT][MAX_SKILL_TREE];
 	struct fame_list smith_fame_list[MAX_FAME_LIST];
@@ -741,7 +742,7 @@ struct pc_interface {
 	/* */
 	struct eri *sc_display_ers;
 	/* funcs */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	
 	struct map_session_data* (*get_dummy_sd) (void);
@@ -751,7 +752,7 @@ struct pc_interface {
 	bool (*can_give_items) (struct map_session_data *sd);
 	
 	bool (*can_use_command) (struct map_session_data *sd, const char *command);
-	bool (*has_permission) (struct map_session_data *sd, enum e_pc_permission permission);
+	bool (*has_permission) (struct map_session_data *sd, unsigned int permission);
 	int (*set_group) (struct map_session_data *sd, int group_id);
 	bool (*should_log_commands) (struct map_session_data *sd);
 

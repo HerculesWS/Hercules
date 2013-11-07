@@ -1253,6 +1253,7 @@ int npc_buysellsel(struct map_session_data* sd, int id, int type) {
 	}
 	return 0;
 }
+
 /*==========================================
 * Cash Shop Buy List
 *------------------------------------------*/
@@ -1944,7 +1945,7 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 	if( p ) { // <Display name>::<Unique name>
 		size_t len = p-name;
 		if( len > NAME_LENGTH ) {
-			ShowWarning("npc_parsename: Display name of '%s' is too long (len=%u) in file '%s', line'%d'. Truncating to %u characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
+			ShowWarning("npc_parsename: Display name of '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %u characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
 			safestrncpy(nd->name, name, sizeof(nd->name));
 		} else {
 			memcpy(nd->name, name, len);
@@ -1952,19 +1953,19 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 		}
 		len = strlen(p+2);
 		if( len > NAME_LENGTH )
-			ShowWarning("npc_parsename: Unique name of '%s' is too long (len=%u) in file '%s', line'%d'. Truncating to %u characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
+			ShowWarning("npc_parsename: Unique name of '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %u characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
 		safestrncpy(nd->exname, p+2, sizeof(nd->exname));
 	} else {// <Display name>
 		size_t len = strlen(name);
 		if( len > NAME_LENGTH )
-			ShowWarning("npc_parsename: Name '%s' is too long (len=%u) in file '%s', line'%d'. Truncating to %u characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
+			ShowWarning("npc_parsename: Name '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %u characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
 		safestrncpy(nd->name, name, sizeof(nd->name));
 		safestrncpy(nd->exname, name, sizeof(nd->exname));
 	}
 
 	if( *nd->exname == '\0' || strstr(nd->exname,"::") != NULL ) {// invalid
 		snprintf(newname, ARRAYLENGTH(newname), "0_%d_%d_%d", nd->bl.m, nd->bl.x, nd->bl.y);
-		ShowWarning("npc_parsename: Invalid unique name in file '%s', line'%d'. Renaming '%s' to '%s'.\n", filepath, strline(buffer,start-buffer), nd->exname, newname);
+		ShowWarning("npc_parsename: Invalid unique name in file '%s', line '%d'. Renaming '%s' to '%s'.\n", filepath, strline(buffer,start-buffer), nd->exname, newname);
 		safestrncpy(nd->exname, newname, sizeof(nd->exname));
 	}
 
@@ -1981,7 +1982,7 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 		strcpy(this_mapname, (nd->bl.m == -1 ? "(not on a map)" : mapindex_id2name(map_id2index(nd->bl.m))));
 		strcpy(other_mapname, (dnd->bl.m == -1 ? "(not on a map)" : mapindex_id2name(map_id2index(dnd->bl.m))));
 
-		ShowWarning("npc_parsename: Duplicate unique name in file '%s', line'%d'. Renaming '%s' to '%s'.\n", filepath, strline(buffer,start-buffer), nd->exname, newname);
+		ShowWarning("npc_parsename: Duplicate unique name in file '%s', line '%d'. Renaming '%s' to '%s'.\n", filepath, strline(buffer,start-buffer), nd->exname, newname);
 		ShowDebug("this npc:\n   display name '%s'\n   unique name '%s'\n   map=%s, x=%d, y=%d\n", nd->name, nd->exname, this_mapname, nd->bl.x, nd->bl.y);
 		ShowDebug("other npc in '%s' :\n   display name '%s'\n   unique name '%s'\n   map=%s, x=%d, y=%d\n",dnd->path, dnd->name, dnd->exname, other_mapname, dnd->bl.x, dnd->bl.y);
 		safestrncpy(nd->exname, newname, sizeof(nd->exname));
@@ -2240,7 +2241,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 		}
 		if( type == SHOP && value*0.75 < id->value_sell*1.24 )
 		{// Exploit possible: you can buy and sell back with profit
-			ShowWarning("npc_parse_shop: Item %s [%d] discounted buying price (%d->%d) is less than overcharged selling price (%d->%d) at file '%s', line '%d'.\n",
+			ShowWarning("npc_parse_shop: Item %s [%d] discounted buying price (%d->%d) is less than overcharged selling price (%d->%d) in file '%s', line '%d'.\n",
 				id->name, nameid, value, (int)(value*0.75), id->value_sell, (int)(id->value_sell*1.24), filepath, strline(buffer,start-buffer));
 		}
 		//for logs filters, atcommands and iteminfo script command
@@ -2308,7 +2309,7 @@ void npc_convertlabel_db(struct npc_label_list* label_list, const char *filepath
 
 		// here we check if the label fit into the buffer
 		if( len > 23 ) {
-			ShowError("npc_parse_script: label name longer than 23 chars! '%s'\n (%s)", lname, filepath);
+			ShowError("npc_parse_script: label name longer than 23 chars! (%s) in file '%s'.\n", lname, filepath);
 			return;
 		}
 		
@@ -2332,7 +2333,7 @@ const char* npc_skip_script(const char* start, const char* buffer, const char* f
 	p = strchr(start,'{');
 	if( p == NULL )
 	{
-		ShowError("npc_skip_script: Missing left curly in file '%s', line'%d'.", filepath, strline(buffer,start-buffer));
+		ShowError("npc_skip_script: Missing left curly in file '%s', line '%d'.\n", filepath, strline(buffer,start-buffer));
 		return NULL;// can't continue
 	}
 
@@ -2368,7 +2369,7 @@ const char* npc_skip_script(const char* start, const char* buffer, const char* f
 		}
 		else if( *p == '\0' )
 		{// end of buffer
-			ShowError("Missing %d right curlys at file '%s', line '%d'.\n", curly_count, filepath, strline(buffer,p-buffer));
+			ShowError("Missing %d right curlys in file '%s', line '%d'.\n", curly_count, filepath, strline(buffer,p-buffer));
 			return NULL;// can't continue
 		}
 	}
@@ -2478,7 +2479,7 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 	// Loop through labels to export them as necessary
 	for (i = 0; i < nd->u.scr.label_list_num; i++) {
 		if (npc->event_export(nd, i)) {
-			ShowWarning("npc_parse_script : duplicate event %s::%s (%s)\n",
+			ShowWarning("npc_parse_script: duplicate event %s::%s in file '%s'.\n",
 			             nd->exname, nd->u.scr.label_list[i].name, filepath);
 		}
 		npc->timerevent_export(nd, i);
@@ -2529,14 +2530,14 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 	// get the npc being duplicated
 	if( w2[length-1] != ')' || length <= 11 || length-11 >= sizeof(srcname) )
 	{// does not match 'duplicate(%127s)', name is empty or too long
-		ShowError("npc_parse_script: bad duplicate name in file '%s', line '%d' : %s\n", filepath, strline(buffer,start-buffer), w2);
+		ShowError("npc_parse_script: bad duplicate name in file '%s', line '%d': %s\n", filepath, strline(buffer,start-buffer), w2);
 		return end;// next line, try to continue
 	}
 	safestrncpy(srcname, w2+10, length-10);
 
 	dnd = npc->name2id(srcname);
 	if( dnd == NULL) {
-		ShowError("npc_parse_script: original npc not found for duplicate in file '%s', line '%d' : %s\n", filepath, strline(buffer,start-buffer), srcname);
+		ShowError("npc_parse_script: original npc not found for duplicate in file '%s', line '%d': %s\n", filepath, strline(buffer,start-buffer), srcname);
 		return end;// next line, try to continue
 	}
 	src_id = dnd->bl.id;
@@ -2547,8 +2548,10 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		x = y = dir = 0;
 		m = -1;
 	} else {
-		if( sscanf(w1, "%31[^,],%d,%d,%d", mapname, &x, &y, &dir) != 4 )// <map name>,<x>,<y>,<facing>
-		{
+		int fields = sscanf(w1, "%31[^,],%d,%d,%d", mapname, &x, &y, &dir);
+		if( type == WARP && fields == 3 ) { // <map name>,<x>,<y>
+			dir = 0;
+		} else if( fields != 4 ) {// <map name>,<x>,<y>,<facing>
 			ShowError("npc_parse_duplicate: Invalid placement format for duplicate in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 			return end;// next line, try to continue
 		}
@@ -2636,7 +2639,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 	// Loop through labels to export them as necessary
 	for (i = 0; i < nd->u.scr.label_list_num; i++) {
 		if (npc->event_export(nd, i)) {
-			ShowWarning("npc_parse_duplicate : duplicate event %s::%s (%s)\n",
+			ShowWarning("npc_parse_duplicate: duplicate event %s::%s in file '%s'.\n",
 			             nd->exname, nd->u.scr.label_list[i].name, filepath);
 		}
 		npc->timerevent_export(nd, i);
@@ -2919,7 +2922,7 @@ const char* npc_parse_function(char* w1, char* w2, char* w3, char* w4, const cha
 	if (func_db->put(func_db, DB->str2key(w3), DB->ptr2data(scriptroot), &old_data))
 	{
 		struct script_code *oldscript = (struct script_code*)DB->data2ptr(&old_data);
-		ShowInfo("npc_parse_function: Overwriting user function [%s] (%s:%d)\n", w3, filepath, strline(buffer,start-buffer));
+		ShowWarning("npc_parse_function: Overwriting user function [%s] in file '%s', line '%d'.\n", w3, filepath, strline(buffer,start-buffer));
 		script->free_vars(oldscript->script_vars);
 		aFree(oldscript->script_buf);
 		aFree(oldscript);
@@ -2977,33 +2980,33 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 	mobspawn.m = (unsigned short)m;
 
 	if( x < 0 || x >= map->list[mobspawn.m].xs || y < 0 || y >= map->list[mobspawn.m].ys ) {
-		ShowError("npc_parse_mob: Spawn coordinates out of range: %s (%d,%d), map size is (%d,%d) - %s %s (file '%s', line '%d').\n", map->list[mobspawn.m].name, x, y, (map->list[mobspawn.m].xs-1), (map->list[mobspawn.m].ys-1), w1, w3, filepath, strline(buffer,start-buffer));
+		ShowError("npc_parse_mob: Spawn coordinates out of range: %s (%d,%d), map size is (%d,%d) - %s %s in file '%s', line '%d'.\n", map->list[mobspawn.m].name, x, y, (map->list[mobspawn.m].xs-1), (map->list[mobspawn.m].ys-1), w1, w3, filepath, strline(buffer,start-buffer));
 		return strchr(start,'\n');// skip and continue
 	}
 
 	// check monster ID if exists!
 	if( mob->db_checkid(class_) == 0 ) {
-		ShowError("npc_parse_mob: Unknown mob ID %d (file '%s', line '%d').\n", class_, filepath, strline(buffer,start-buffer));
+		ShowError("npc_parse_mob: Unknown mob ID %d in file '%s', line '%d'.\n", class_, filepath, strline(buffer,start-buffer));
 		return strchr(start,'\n');// skip and continue
 	}
 
 	if( num < 1 || num > 1000 ) {
-		ShowError("npc_parse_mob: Invalid number of monsters %d, must be inside the range [1,1000] (file '%s', line '%d').\n", num, filepath, strline(buffer,start-buffer));
+		ShowError("npc_parse_mob: Invalid number of monsters %d, must be inside the range [1,1000] in file '%s', line '%d'.\n", num, filepath, strline(buffer,start-buffer));
 		return strchr(start,'\n');// skip and continue
 	}
 
 	if( (mobspawn.state.size < 0 || mobspawn.state.size > 2) && size != -1 ) {
-		ShowError("npc_parse_mob: Invalid size number %d for mob ID %d (file '%s', line '%d').\n", mobspawn.state.size, class_, filepath, strline(buffer, start - buffer));
+		ShowError("npc_parse_mob: Invalid size number %d for mob ID %d in file '%s', line '%d'.\n", mobspawn.state.size, class_, filepath, strline(buffer, start - buffer));
 		return strchr(start, '\n');
 	}
 
 	if( (mobspawn.state.ai < 0 || mobspawn.state.ai > 4) && ai != -1 ) {
-		ShowError("npc_parse_mob: Invalid ai %d for mob ID %d (file '%s', line '%d').\n", mobspawn.state.ai, class_, filepath, strline(buffer, start - buffer));
+		ShowError("npc_parse_mob: Invalid ai %d for mob ID %d in file '%s', line '%d'.\n", mobspawn.state.ai, class_, filepath, strline(buffer, start - buffer));
 		return strchr(start, '\n');
 	}
 
 	if( (mob_lv == 0 || mob_lv > MAX_LEVEL) && mob_lv != -1 ) {
-		ShowError("npc_parse_mob: Invalid level %d for mob ID %d (file '%s', line '%d').\n", mob_lv, class_, filepath, strline(buffer, start - buffer));
+		ShowError("npc_parse_mob: Invalid level %d for mob ID %d in file '%s', line '%d'.\n", mob_lv, class_, filepath, strline(buffer, start - buffer));
 		return strchr(start, '\n');
 	}
 
@@ -3033,7 +3036,7 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 	}
 
 	if(mobspawn.delay1>0xfffffff || mobspawn.delay2>0xfffffff) {
-		ShowError("npc_parse_mob: Invalid spawn delays %u %u (file '%s', line '%d').\n", mobspawn.delay1, mobspawn.delay2, filepath, strline(buffer,start-buffer));
+		ShowError("npc_parse_mob: Invalid spawn delays %u %u in file '%s', line '%d'.\n", mobspawn.delay1, mobspawn.delay2, filepath, strline(buffer,start-buffer));
 		return strchr(start,'\n');// skip and continue
 	}
 
@@ -3047,7 +3050,7 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 
 	//Verify dataset.
 	if( !mob->parse_dataset(&mobspawn) ) {
-		ShowError("npc_parse_mob: Invalid dataset for monster ID %d (file '%s', line '%d').\n", class_, filepath, strline(buffer,start-buffer));
+		ShowError("npc_parse_mob: Invalid dataset for monster ID %d in file '%s', line '%d'.\n", class_, filepath, strline(buffer,start-buffer));
 		return strchr(start,'\n');// skip and continue
 	}
 
@@ -3141,7 +3144,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			map->list[m].save.x = savex;
 			map->list[m].save.y = savey;
 			if (!map->list[m].save.map) {
-				ShowWarning("npc_parse_mapflag: Specified save point map '%s' for mapflag 'nosave' not found (file '%s', line '%d'), using 'SavePoint'.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", savemap, filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
+				ShowWarning("npc_parse_mapflag: Specified save point map '%s' for mapflag 'nosave' not found in file '%s', line '%d', using 'SavePoint'.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", savemap, filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 				map->list[m].save.x = -1;
 				map->list[m].save.y = -1;
 			}
@@ -3179,11 +3182,11 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			map->list[m].flag.gvg = 0;
 			map->list[m].flag.gvg_dungeon = 0;
 			map->list[m].flag.gvg_castle = 0;
-			ShowWarning("npc_parse_mapflag: You can't set PvP and GvG flags for the same map! Removing GvG flags from %s (file '%s', line '%d').\n", map->list[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: You can't set PvP and GvG flags for the same map! Removing GvG flags from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 		}
 		if( state && map->list[m].flag.battleground ) {
 			map->list[m].flag.battleground = 0;
-			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing BattleGround flag from %s (file '%s', line '%d').\n", map->list[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing BattleGround flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 		}
 		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) && map->list[m].zone != zone ) {
 			map->zone_change(m,zone,start,buffer,filepath);
@@ -3229,11 +3232,11 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		map->list[m].flag.gvg = state;
 		if( state && map->list[m].flag.pvp ) {
 			map->list[m].flag.pvp = 0;
-			ShowWarning("npc_parse_mapflag: You can't set PvP and GvG flags for the same map! Removing PvP flag from %s (file '%s', line '%d').\n", map->list[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: You can't set PvP and GvG flags for the same map! Removing PvP flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 		}
 		if( state && map->list[m].flag.battleground ) {
 			map->list[m].flag.battleground = 0;
-			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing BattleGround flag from %s (file '%s', line '%d').\n", map->list[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing BattleGround flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 		}
 		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)) && map->list[m].zone != zone ) {
 			map->zone_change(m,zone,start,buffer,filepath);
@@ -3261,13 +3264,13 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 
 		if( map->list[m].flag.battleground && map->list[m].flag.pvp ) {
 			map->list[m].flag.pvp = 0;
-			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing PvP flag from %s (file '%s', line '%d').\n", map->list[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: You can't set PvP and BattleGround flags for the same map! Removing PvP flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 		}
 		if( map->list[m].flag.battleground && (map->list[m].flag.gvg || map->list[m].flag.gvg_dungeon || map->list[m].flag.gvg_castle) ) {
 			map->list[m].flag.gvg = 0;
 			map->list[m].flag.gvg_dungeon = 0;
 			map->list[m].flag.gvg_castle = 0;
-			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing GvG flag from %s (file '%s', line '%d').\n", map->list[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: You can't set GvG and BattleGround flags for the same map! Removing GvG flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 		}
 		
 		if( state && (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) && map->list[m].zone != zone ) {
@@ -3368,11 +3371,11 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		}
 		
 		if( modifier[0] == '\0' ) {
-			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n", map->list[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_unit_duration' flag! removing flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 		} else if( !( skill_id = skill->name2id(skill_name) ) || !skill->get_unit_id( skill->name2id(skill_name), 0) ) {
-			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n",skill_name, map->list[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_unit_duration' flag! removing flag from %s in file '%s', line '%d'.\n",skill_name, map->list[m].name, filepath, strline(buffer,start-buffer));
 		} else if ( atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
-			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_unit_duration' flag! removing flag from %s (file '%s', line '%d').\n", atoi(modifier), skill_name, map->list[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_unit_duration' flag! removing flag from %s in file '%s', line '%d'.\n", atoi(modifier), skill_name, map->list[m].name, filepath, strline(buffer,start-buffer));
 		} else {
 			int idx = map->list[m].unit_count;
 			
@@ -3422,11 +3425,11 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		}
 				
 		if( modifier[0] == '\0' ) {
-			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", map->list[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: Missing 5th param for 'adjust_skill_damage' flag! removing flag from %s in file '%s', line '%d'.\n", map->list[m].name, filepath, strline(buffer,start-buffer));
 		} else if( !( skill_id = skill->name2id(skill_name) ) ) {
-			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", skill_name, map->list[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: Unknown skill (%s) for 'adjust_skill_damage' flag! removing flag from %s in file '%s', line '%d'.\n", skill_name, map->list[m].name, filepath, strline(buffer,start-buffer));
 		} else if ( atoi(modifier) < 1 || atoi(modifier) > USHRT_MAX ) {
-			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_skill_damage' flag! removing flag from %s (file '%s', line '%d').\n", atoi(modifier), skill_name, map->list[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: Invalid modifier '%d' for skill '%s' for 'adjust_skill_damage' flag! removing flag from %s in file '%s', line '%d'.\n", atoi(modifier), skill_name, map->list[m].name, filepath, strline(buffer,start-buffer));
 		} else {
 			int idx = map->list[m].skill_count;
 			
@@ -3464,7 +3467,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		struct map_zone_data *zone;
 		
 		if( !(zone = strdb_get(map->zone_db, w4)) ) {
-			ShowWarning("npc_parse_mapflag: Invalid zone '%s'! removing flag from %s (file '%s', line '%d').\n", w4, map->list[m].name, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parse_mapflag: Invalid zone '%s'! removing flag from %s in file '%s', line '%d'.\n", w4, map->list[m].name, filepath, strline(buffer,start-buffer));
 		} else if( map->list[m].zone != zone ) {
 			map->zone_change(m,zone,start,buffer,filepath);
 		}
@@ -3489,15 +3492,14 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 	} else if ( !strcmpi(w3,"nocashshop") ) {
 		map->list[m].flag.nocashshop = (state) ? 1 : 0;
 	} else
-		ShowError("npc_parse_mapflag: unrecognized mapflag '%s' (file '%s', line '%d').\n", w3, filepath, strline(buffer,start-buffer));
+		ShowError("npc_parse_mapflag: unrecognized mapflag '%s' in file '%s', line '%d'.\n", w3, filepath, strline(buffer,start-buffer));
 
 	return strchr(start,'\n');// continue
 }
 
 //Read file and create npc/func/mapflag/monster... accordingly.
 //@runOnInit should we exec OnInit when it's done ?
-void npc_parsesrcfile(const char* filepath, bool runOnInit)
-{
+int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 	int16 m, x, y;
 	int lines = 0;
 	FILE* fp;
@@ -3510,7 +3512,7 @@ void npc_parsesrcfile(const char* filepath, bool runOnInit)
 	if( fp == NULL )
 	{
 		ShowError("npc_parsesrcfile: File not found '%s'.\n", filepath);
-		return;
+		return -1;
 	}
 	fseek(fp, 0, SEEK_END);
 	len = ftell(fp);
@@ -3523,7 +3525,7 @@ void npc_parsesrcfile(const char* filepath, bool runOnInit)
 		ShowError("npc_parsesrcfile: Failed to read file '%s' - %s\n", filepath, strerror(errno));
 		aFree(buffer);
 		fclose(fp);
-		return;
+		return -1;
 	}
 	fclose(fp);
 
@@ -3658,7 +3660,7 @@ void npc_parsesrcfile(const char* filepath, bool runOnInit)
 	}
 	aFree(buffer);
 
-	return;
+	return 0;
 }
 
 int npc_script_event(struct map_session_data* sd, enum npce_event type)
@@ -3935,8 +3937,7 @@ static void npc_debug_warps(void) {
 /*==========================================
  * npc initialization
  *------------------------------------------*/
-int do_init_npc(void)
-{
+int do_init_npc(bool minimal) {
 	struct npc_src_list *file;
 	int i;
 
@@ -3963,43 +3964,47 @@ int do_init_npc(void)
 	npc->name_db = strdb_alloc(DB_OPT_BASE, NAME_LENGTH);
 	npc->path_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, 0);
 
-	npc->timer_event_ers = ers_new(sizeof(struct timer_event_data),"clif.c::timer_event_ers",ERS_OPT_NONE);
-
 	npc_last_npd = NULL;
 	npc_last_path = NULL;
 	npc_last_ref = NULL;
 	
-	// process all npc files
-	ShowStatus("Loading NPCs...\r");
-	for( file = npc->src_files; file != NULL; file = file->next ) {
-		ShowStatus("Loading NPC file: %s"CL_CLL"\r", file->name);
-		npc->parsesrcfile(file->name,false);
+	if (!minimal) {
+		npc->timer_event_ers = ers_new(sizeof(struct timer_event_data),"clif.c::timer_event_ers",ERS_OPT_NONE);
+
+		// process all npc files
+		ShowStatus("Loading NPCs...\r");
+		for( file = npc->src_files; file != NULL; file = file->next ) {
+			ShowStatus("Loading NPC file: %s"CL_CLL"\r", file->name);
+			npc->parsesrcfile(file->name,false);
+		}
+		ShowInfo ("Done loading '"CL_WHITE"%d"CL_RESET"' NPCs:"CL_CLL"\n"
+			"\t-'"CL_WHITE"%d"CL_RESET"' Warps\n"
+			"\t-'"CL_WHITE"%d"CL_RESET"' Shops\n"
+			"\t-'"CL_WHITE"%d"CL_RESET"' Scripts\n"
+			"\t-'"CL_WHITE"%d"CL_RESET"' Spawn sets\n"
+			"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
+			"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
+			npc_id - START_NPC_NUM, npc_warp, npc_shop, npc_script, npc_mob, npc_cache_mob, npc_delay_mob);
 	}
-	ShowInfo ("Done loading '"CL_WHITE"%d"CL_RESET"' NPCs:"CL_CLL"\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Warps\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Shops\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Scripts\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Spawn sets\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
-		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
-		npc_id - START_NPC_NUM, npc_warp, npc_shop, npc_script, npc_mob, npc_cache_mob, npc_delay_mob);
 
 	itemdb->name_constants();
-	
-	map->zone_init();
-	
-	npc->motd = npc->name2id("HerculesMOTD"); /* [Ind/Hercules] */
-	
-	// set up the events cache
-	memset(script_event, 0, sizeof(script_event));
-	npc->read_event_script();
 
-	//Debug function to locate all endless loop warps.
-	if (battle_config.warp_point_debug)
-		npc->debug_warps();
+	if (!minimal) {
+		map->zone_init();
+	
+		npc->motd = npc->name2id("HerculesMOTD"); /* [Ind/Hercules] */
+	
+		// set up the events cache
+		memset(script_event, 0, sizeof(script_event));
+		npc->read_event_script();
 
-	timer->add_func_list(npc->event_do_clock,"npc_event_do_clock");
-	timer->add_func_list(npc->timerevent,"npc_timerevent");
+		//Debug function to locate all endless loop warps.
+		if (battle_config.warp_point_debug)
+			npc->debug_warps();
+
+		timer->add_func_list(npc->event_do_clock,"npc_event_do_clock");
+		timer->add_func_list(npc->timerevent,"npc_timerevent");
+	}
 
 	// Init dummy NPC
 	npc->fake_nd = (struct npc_data *)aCalloc(1,sizeof(struct npc_data));

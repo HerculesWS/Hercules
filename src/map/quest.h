@@ -19,7 +19,7 @@ typedef enum quest_check_type { HAVEQUEST, PLAYTIME, HUNTING } quest_check_type;
 struct quest_interface {
 	struct s_quest_db db[MAX_QUEST_DB];
 	/* */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*reload) (void);
 	/* */
 	int (*search_db) (int quest_id);

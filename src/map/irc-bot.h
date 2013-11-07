@@ -34,7 +34,7 @@ struct irc_bot_interface {
 		unsigned int size;
 	} funcs;
 	/* */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
 	int (*parse) (int fd);

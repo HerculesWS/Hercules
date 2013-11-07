@@ -140,7 +140,7 @@ struct npc_interface {
 	struct npc_src_list *src_files;
 	struct unit_data base_ud;
 	/* */
-	int (*init) (void);
+	int (*init) (bool minimal);
 	int (*final) (void);
 	/* */
 	int (*get_new_npc_id) (void);
@@ -218,7 +218,7 @@ struct npc_interface {
 	void (*parse_mob2) (struct spawn_data *mobspawn);
 	const char* (*parse_mob) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
 	const char* (*parse_mapflag) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
-	void (*parsesrcfile) (const char *filepath, bool runOnInit);
+	int (*parsesrcfile) (const char *filepath, bool runOnInit);
 	int (*script_event) (struct map_session_data *sd, enum npce_event type);
 	void (*read_event_script) (void);
 	int (*path_db_clear_sub) (DBKey key, DBData *data, va_list args);
