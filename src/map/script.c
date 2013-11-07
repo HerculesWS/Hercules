@@ -1918,8 +1918,7 @@ void script_errorwarning_sub(StringBuf *buf, const char* src, const char* file, 
 	int j;
 	int line = start_line;
 	const char *p, *error_linepos;
-	const char *linestart[CONTEXTLINES];
-	memset(linestart, '\0', sizeof(linestart));
+	const char *linestart[CONTEXTLINES] = { NULL };
 
 	for(p=src;p && *p;line++){
 		const char *lineend=strchr(p,'\n');
