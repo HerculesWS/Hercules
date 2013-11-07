@@ -12995,7 +12995,7 @@ BUILDIN(equip)
 		ShowError("wrong item ID : equipitem(%i)\n",nameid);
 		return false;
 	}
-	ARR_FIND( 0, MAX_INVENTORY, i, sd->status.inventory[i].nameid == nameid );
+	ARR_FIND( 0, MAX_INVENTORY, i, sd->status.inventory[i].nameid == nameid && sd->status.inventory[i].equip == 0 );
 	if( i < MAX_INVENTORY )
 		pc->equipitem(sd,i,item_data->equip);
 	
