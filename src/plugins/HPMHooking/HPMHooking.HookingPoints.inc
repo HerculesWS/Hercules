@@ -649,6 +649,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->chsys_gleave, HP_clif_chsys_gleave) },
 	{ HP_POP(clif->bank_deposit, HP_clif_bank_deposit) },
 	{ HP_POP(clif->bank_withdraw, HP_clif_bank_withdraw) },
+	{ HP_POP(clif->show_modifiers, HP_clif_show_modifiers) },
 	{ HP_POP(clif->pWantToConnection, HP_clif_pWantToConnection) },
 	{ HP_POP(clif->pLoadEndAck, HP_clif_pLoadEndAck) },
 	{ HP_POP(clif->pTickSend, HP_clif_pTickSend) },

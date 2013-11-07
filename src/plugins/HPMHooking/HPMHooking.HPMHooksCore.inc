@@ -1279,6 +1279,8 @@ struct {
 	struct HPMHookPoint *HP_clif_bank_deposit_post;
 	struct HPMHookPoint *HP_clif_bank_withdraw_pre;
 	struct HPMHookPoint *HP_clif_bank_withdraw_post;
+	struct HPMHookPoint *HP_clif_show_modifiers_pre;
+	struct HPMHookPoint *HP_clif_show_modifiers_post;
 	struct HPMHookPoint *HP_clif_pWantToConnection_pre;
 	struct HPMHookPoint *HP_clif_pWantToConnection_post;
 	struct HPMHookPoint *HP_clif_pLoadEndAck_pre;
@@ -6206,6 +6208,8 @@ struct {
 	int HP_clif_bank_deposit_post;
 	int HP_clif_bank_withdraw_pre;
 	int HP_clif_bank_withdraw_post;
+	int HP_clif_show_modifiers_pre;
+	int HP_clif_show_modifiers_post;
 	int HP_clif_pWantToConnection_pre;
 	int HP_clif_pWantToConnection_post;
 	int HP_clif_pLoadEndAck_pre;
