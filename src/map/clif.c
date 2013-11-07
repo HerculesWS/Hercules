@@ -1802,10 +1802,13 @@ void clif_selllist(struct map_session_data *sd)
 			if( !itemdb_cansell(&sd->status.inventory[i], pc->get_group_level(sd)) )
 				continue;
 
-			if( sd->status.inventory[i].expire_time )
-				continue; // Cannot Sell Rental Items
+			if( sd->status.inventory[i].expire_time || (sd->status.inventory[i].bound && !pc->can_give_bounded_items(sd)) )
+				continue; // Cannot Sell Rental Items or Account Bounded Items
+ 
+			if( sd->status.inventory[i].bound && !pc->can_give_bounded_items(sd))
+				continue; // Don't allow sale of bound items
 
-			val=sd->inventory_data[i]->value_sell;
+ 			val=sd->inventory_data[i]->value_sell;
 			if( val < 0 )
 				continue;
 			WFIFOW(fd,4+c*10)=i+2;
@@ -2229,7 +2232,7 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
 		p.HireExpireDate = sd->status.inventory[n].expire_time;
 #endif
 #if PACKETVER >= 20071002
-		p.bindOnEquipType = 0; // unused
+		p.bindOnEquipType = sd->status.inventory[n].bound ? 2 : 0;
 #endif
 	}
 	p.result = (unsigned char)fail;
@@ -2341,7 +2344,7 @@ void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct
 #endif
 	
 #if PACKETVER >= 20080102
-	p->bindOnEquipType = 0;
+	p->bindOnEquipType = i->bound ? 2 : 0;
 #endif
 
 #if PACKETVER >= 20100629
@@ -2378,6 +2381,7 @@ void clif_item_normal(short idx, struct NORMALITEM_INFO *p, struct item *i, stru
 	
 #if PACKETVER >= 20080102
 	p->HireExpireDate = i->expire_time;
+	p->bindOnEquipType = i->bound ? 2 : 0;
 #endif
 
 #if PACKETVER >= 20120925
@@ -15063,8 +15067,9 @@ void clif_parse_Auction_setitem(int fd, struct map_session_data *sd)
 
 	if( !pc->can_give_items(sd) || sd->status.inventory[idx].expire_time ||
 			!sd->status.inventory[idx].identify ||
-				!itemdb_canauction(&sd->status.inventory[idx],pc->get_group_level(sd)) ) { // Quest Item or something else
-		clif->auction_setitem(sd->fd, idx, true);
+				!itemdb_canauction(&sd->status.inventory[idx],pc->get_group_level(sd)) ||
+					(sd->status.inventory[idx].bound && !pc->can_give_bounded_items(sd)) ) { // Quest Item or something else
+ 		clif->auction_setitem(sd->fd, idx, true);
 		return;
 	}
 
@@ -15141,9 +15146,10 @@ void clif_parse_Auction_register(int fd, struct map_session_data *sd)
 	}
 
 	// Auction checks...
-	if( sd->status.zeny < (auction.hours * battle_config.auction_feeperhour) ) {
-		clif->auction_message(fd, 5); // You do not have enough zeny to pay the Auction Fee.
-		return;
+	if( sd->status.inventory[sd->auction.index].bound && !pc->can_give_bounded_items(sd) ) {
+		clif->message(sd->fd, msg_txt(293));
+		clif->auction_message(fd, 2); // The auction has been canceled
+ 		return;
 	}
 
 	if( auction.buynow > battle_config.auction_maximumprice )
