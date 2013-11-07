@@ -415,6 +415,9 @@ struct mmo_charstatus {
 
 	time_t delete_date;
 
+	/* `account_data` modifiers */
+	unsigned short mod_exp,mod_drop,mod_death;
+	
 	unsigned char font;
 };
 
