@@ -2120,9 +2120,13 @@ int intif_parse(int fd)
 		case 0x3854:	intif->pAuctionMessage(fd); break;
 		case 0x3855:	intif->pAuctionBid(fd); break;
 		//Bound items
+		case 0x3856:
 #ifdef GP_BOUND_ITEMS
-		case 0x3856:	intif->pItembound_ack(fd); break;
+			intif->pItembound_ack(fd);
+#else
+			ShowWarning("intif_parse: Received 0x3856 with GP_BOUND_ITEMS disabled !!!\n")
 #endif
+			break;
 		// Mercenary System
 		case 0x3870:	intif->pMercenaryReceived(fd); break;
 		case 0x3871:	intif->pMercenaryDeleted(fd); break;

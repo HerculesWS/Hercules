@@ -1123,7 +1123,7 @@ ACMD(item)
 		return false;
 	}
 	
-	if( bound < IBT_MIN || bound > IBT_MAX ) {
+	if(!strcmpi(command+1,"itembound") && !(bound >= IBT_MIN && bound <= IBT_MAX) ) {
 		clif->message(fd, msg_txt(298)); // Invalid bound type
 		return false;
 	}
@@ -1189,7 +1189,7 @@ ACMD(item2)
 	if (number <= 0)
 		number = 1;
 
-	if( bound < IBT_MIN || bound > IBT_MAX ) {
+	if( !strcmpi(command+1,"itembound2") && !(bound >= IBT_MIN && bound <= IBT_MAX) ) {
 		clif->message(fd, msg_txt(298)); // Invalid bound type
 		return false;
 	}

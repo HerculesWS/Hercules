@@ -368,7 +368,7 @@ void trade_tradeadditem(struct map_session_data *sd, short index, short amount) 
 	if( item->bound &&
 			!( item->bound == IBT_GUILD && sd->status.guild_id == target_sd->status.guild_id ) &&
 			!( item->bound == IBT_PARTY && sd->status.party_id == target_sd->status.party_id )
-					&& !pc->can_give_bounded_items(sd) ) {
+					&& !pc->can_give_bound_items(sd) ) {
 		clif->message(sd->fd, msg_txt(293));
 		clif->tradeitemok(sd, index+2, TIO_INDROCKS);
 		return;

@@ -141,7 +141,7 @@ int storage_additem(struct map_session_data* sd, struct item* item_data, int amo
 		return 1;
 	}
 	
-	if( item_data->bound > IBT_ACCOUNT && !pc->can_give_bounded_items(sd) ) {
+	if( item_data->bound > IBT_ACCOUNT && !pc->can_give_bound_items(sd) ) {
 		clif->message(sd->fd, msg_txt(294));
 		return 1;
 	}
@@ -441,7 +441,7 @@ int guild_storage_additem(struct map_session_data* sd, struct guild_storage* sto
 		return 1;
 	}
 
-	if( item_data->bound && item_data->bound != IBT_GUILD && !pc->can_give_bounded_items(sd) ) {
+	if( item_data->bound && item_data->bound != IBT_GUILD && !pc->can_give_bound_items(sd) ) {
 		clif->message(sd->fd, msg_txt(294));
 		return 1;
 	}

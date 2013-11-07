@@ -1805,7 +1805,7 @@ void clif_selllist(struct map_session_data *sd)
 			if( sd->status.inventory[i].expire_time )
 				continue; // Cannot Sell Rental Items
  
-			if( sd->status.inventory[i].bound && !pc->can_give_bounded_items(sd))
+			if( sd->status.inventory[i].bound && !pc->can_give_bound_items(sd))
 				continue; // Don't allow sale of bound items
 
 			val=sd->inventory_data[i]->value_sell;
@@ -15070,7 +15070,7 @@ void clif_parse_Auction_setitem(int fd, struct map_session_data *sd)
 	if( !pc->can_give_items(sd) || sd->status.inventory[idx].expire_time ||
 			!sd->status.inventory[idx].identify ||
 				!itemdb_canauction(&sd->status.inventory[idx],pc->get_group_level(sd)) || // Quest Item or something else
-					(sd->status.inventory[idx].bound && !pc->can_give_bounded_items(sd)) ) {
+					(sd->status.inventory[idx].bound && !pc->can_give_bound_items(sd)) ) {
  		clif->auction_setitem(sd->fd, idx, true);
 		return;
 	}
@@ -15178,7 +15178,7 @@ void clif_parse_Auction_register(int fd, struct map_session_data *sd)
 	}
 
 	// Auction checks...
-	if( sd->status.inventory[sd->auction.index].bound && !pc->can_give_bounded_items(sd) ) {
+	if( sd->status.inventory[sd->auction.index].bound && !pc->can_give_bound_items(sd) ) {
 		clif->message(sd->fd, msg_txt(293));
 		clif->auction_message(fd, 2); // The auction has been canceled
  		return;

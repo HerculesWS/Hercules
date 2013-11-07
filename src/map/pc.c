@@ -571,7 +571,7 @@ bool pc_can_give_items(struct map_session_data *sd)
 /**
  * Determines if player can give / drop / trade / vend bounded items
  */
-bool pc_can_give_bounded_items(struct map_session_data *sd)
+bool pc_can_give_bound_items(struct map_session_data *sd)
 {
 	return pc->has_permission(sd, PC_PERM_TRADE_BOUND);
 }
@@ -4535,7 +4535,7 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 		return 1;
 	}
 
-	if( !itemdb_cancartstore(item_data, pc->get_group_level(sd)) || (item_data->bound > IBT_ACCOUNT && !pc->can_give_bounded_items(sd)))
+	if( !itemdb_cancartstore(item_data, pc->get_group_level(sd)) || (item_data->bound > IBT_ACCOUNT && !pc->can_give_bound_items(sd)))
  	{ // Check item trade restrictions	[Skotlex]
 		clif->message (sd->fd, msg_txt(264));
 		return 1;/* TODO: there is no official response to this? */
@@ -8058,7 +8058,7 @@ int pc_setmadogear(TBL_PC* sd, int flag)
  *------------------------------------------*/
 int pc_candrop(struct map_session_data *sd, struct item *item)
 {
-	if( item && (item->expire_time || (item->bound && !pc->can_give_bounded_items(sd))) )
+	if( item && (item->expire_time || (item->bound && !pc->can_give_bound_items(sd))) )
  		return 0;
 	if( !pc->can_give_items(sd) ) //check if this GM level can drop items
 		return 0;
@@ -10395,7 +10395,7 @@ void pc_defaults(void) {
 	pc->class2idx = pc_class2idx;
 	pc->get_group_level = pc_get_group_level;
 	pc->can_give_items = pc_can_give_items;
-	pc->can_give_bounded_items = pc_can_give_bounded_items;
+	pc->can_give_bound_items = pc_can_give_bound_items;
 	
 	pc->can_use_command = pc_can_use_command;
 	pc->has_permission = pc_has_permission;
