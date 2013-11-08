@@ -9277,6 +9277,16 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 	if( map->list[sd->bl.m].users++ == 0 && battle_config.dynamic_mobs )
 		map->spawnmobs(sd->bl.m);
 	
+	if( map->list[sd->bl.m].instance_id >= 0 ) {
+		instance->list[map->list[sd->bl.m].instance_id].users++;
+		instance->check_idle(map->list[sd->bl.m].instance_id);
+	}
+	
+	if( pc->has_permission(sd,PC_PERM_VIEW_HPMETER) ) {
+		map->list[sd->bl.m].hpmeter_visible++;
+		sd->state.hpmeter_visible = 1;
+	}
+	
 	if( !(sd->sc.option&OPTION_INVISIBLE) ) { // increment the number of pvp players on the map
 		map->list[sd->bl.m].users_pvp++;
 	}
@@ -9469,17 +9479,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 			sprintf(output, "[ Kill Steal Protection Disabled. KS is allowed in this map ]");
 			clif->broadcast(&sd->bl, output, strlen(output) + 1, BC_BLUE, SELF);
 		}
-
-		if( map->list[sd->bl.m].instance_id >= 0 ) {
-			instance->list[map->list[sd->bl.m].instance_id].users++;
-			instance->check_idle(map->list[sd->bl.m].instance_id);
-		}
-		
-		if( pc->has_permission(sd,PC_PERM_VIEW_HPMETER) ) {
-			map->list[sd->bl.m].hpmeter_visible++;
-			sd->state.hpmeter_visible = 1;
-		}
-		
+				
 		map->iwall_get(sd); // Updates Walls Info on this Map to Client
 		status_calc_pc(sd, SCO_NONE);/* some conditions are map-dependent so we must recalculate */
 		sd->state.changemap = false;
