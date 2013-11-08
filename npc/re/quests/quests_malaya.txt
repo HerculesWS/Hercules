@@ -2472,7 +2472,7 @@ L_SetQuest:
 	close;
 }
 
-ma_in01,125,107,3	script	Ghost Diwata	1761,4,4,{
+ma_in01,125,107,3	script	Ghost Diwata	G_SKOGUL,4,4,{
 	end;
 OnTouch:
 	if (malaya_diwata == 0) {

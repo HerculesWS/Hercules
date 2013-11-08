@@ -354,7 +354,7 @@ OnInit:
 
 // Poring Registers
 //============================================================
-poring_w01,91,97,3	script	Poring#wop_door_all	1002,{
+poring_w01,91,97,3	script	Poring#wop_door_all	PORING,{
 	end;
 	
 OnInit:
@@ -377,7 +377,7 @@ OnDisable:
 	end;
 }
 
-poring_w01,91,68,5	script	Poring#wop_door_a	1002,{
+poring_w01,91,68,5	script	Poring#wop_door_a	PORING,{
 	end;
 
 OnInit:
@@ -469,7 +469,7 @@ OnTimer58000:
 	end;
 }
 
-poring_w01,112,68,3	script	Poring#wop_door_d	1002,{
+poring_w01,112,68,3	script	Poring#wop_door_d	PORING,{
 	end;
 
 OnInit:

@@ -748,7 +748,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 	}
 }
 
-in_orcs01,119,106,3	script	Orc Lady#2008hat03	1273,2,2,{
+in_orcs01,119,106,3	script	Orc Lady#2008hat03	ORC_LADY,2,2,{
 
 OnTouch:
 	mes "["+strcharinfo(0)+"]";

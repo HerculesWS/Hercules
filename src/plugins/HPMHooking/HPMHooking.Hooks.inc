@@ -40166,6 +40166,31 @@ int HP_mob_read_sqldb(void) {
 	}
 	return retVal___;
 }
+void HP_mob_name_constants(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_mob_name_constants_pre ) {
+		void (*preHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_name_constants_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_mob_name_constants_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mob.name_constants();
+	}
+	if( HPMHooks.count.HP_mob_name_constants_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_name_constants_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_mob_name_constants_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
 bool HP_mob_readdb_mobavail(char *str[], int columns, int current) {
 	int hIndex = 0;
 	bool retVal___ = false;

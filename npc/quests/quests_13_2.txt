@@ -3372,7 +3372,7 @@ nyd_dun02,201,166,0	duplicate(Dragon Egg#ep13_degg_2)	Dragon Egg#ep13_degg16	4_D
 nyd_dun02,203,167,0	duplicate(Dragon Egg#ep13_degg_2)	Dragon Egg#ep13_degg17	4_DRAGON_EGG
 nyd_dun02,201,164,0	duplicate(Dragon Egg#ep13_degg_2)	Dragon Egg#ep13_degg18	4_DRAGON_EGG
 
-nyd_dun02,201,157,5	script	Egg Keeper Draco#13_1	2013,3,3,{
+nyd_dun02,201,157,5	script	Egg Keeper Draco#13_1	DRACO,3,3,{
 
 OnEnable:
 	enablenpc "Egg Keeper Draco#13_1";
@@ -3388,7 +3388,7 @@ OnTouch:
 	end;
 }
 
-nyd_dun02,206,157,3	script	Egg Keeper Draco#13_2	2013,3,3,{
+nyd_dun02,206,157,3	script	Egg Keeper Draco#13_2	DRACO,3,3,{
 	end;
 
 OnEnable:

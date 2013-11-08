@@ -960,7 +960,7 @@ prt_in,228,26,5	script	Steward#sign	1_M_JOBTESTER,{
 	}
 }
 
-prt_in,248,23,3	script	Maid#sign	1275,{
+prt_in,248,23,3	script	Maid#sign	ALICE,{
 	end;
 }
 prt_in,248,23,0	script	Maid#sign2	HIDDEN_NPC,{
@@ -1771,7 +1771,7 @@ payon,154,170,3	script	Hagin#sign	1_F_ORIENT_04,{
 	}
 }
 
-payon_in03,81,22,4	script	Maid#a1	1170,{
+payon_in03,81,22,4	script	Maid#a1	SOHEE,{
 	end;
 }
 
@@ -1784,7 +1784,7 @@ payon_in03,81,22,4	script	Maid#a2	HIDDEN_NPC,{
 	close;
 }
 
-payon_in03,79,22,4	script	Maid#b1	1404,{
+payon_in03,79,22,4	script	Maid#b1	MIYABI_NINGYO,{
 	end;
 }
 
@@ -1797,7 +1797,7 @@ payon_in03,79,22,4	script	Maid#b2	HIDDEN_NPC,{
 	close;
 }
 
-payon_in03,81,15,1	script	Maid#c1	1170,{
+payon_in03,81,15,1	script	Maid#c1	SOHEE,{
 	end;
 }
 
@@ -1811,7 +1811,7 @@ payon_in03,81,15,1	script	Maid#c2	HIDDEN_NPC,{
 	close;
 }
 
-payon_in03,79,15,1	script	Maid#d1	1404,{
+payon_in03,79,15,1	script	Maid#d1	MIYABI_NINGYO,{
 	end;
 }
 
@@ -1825,7 +1825,7 @@ payon_in03,79,15,1	script	Maid#d2	HIDDEN_NPC,{
 	close;
 }
 
-payon_in03,8,31,4	script	Maid#e1	1416,{
+payon_in03,8,31,4	script	Maid#e1	WICKED_NYMPH,{
 	end;
 }
 
@@ -1845,7 +1845,7 @@ payon_in03,8,31,4	script	Maid#e2	HIDDEN_NPC,{
 	close;
 }
 
-payon_in03,13,31,4	script	Maid#f1	1416,{
+payon_in03,13,31,4	script	Maid#f1	WICKED_NYMPH,{
 	end;
 }
 

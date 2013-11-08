@@ -4118,7 +4118,7 @@ S_BS_1:
 	return;
 }
 mosk_fild01,113,108,3	duplicate(Squirrel#mos_main)	Big Squirrel#mos	HIDDEN_NPC
-mosk_fild01,113,108,5	duplicate(Squirrel#mos_main)	#mos_sq	1104,2,2
+mosk_fild01,113,108,5	duplicate(Squirrel#mos_main)	#mos_sq	COCO,2,2
 
 // Banish Winter :: mos_nowinter
 //============================================================

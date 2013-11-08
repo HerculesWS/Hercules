@@ -3868,7 +3868,7 @@ OnTimer20000:
 	end;
 }
 
-hu_fild06,155,309,1	script	Moks Bugs#Bug1	1053,{
+hu_fild06,155,309,1	script	Moks Bugs#Bug1	THIEF_BUG_,{
 	if (hg_tre > 29 && hg_tre < 35) {
 		mes "- You found big brown Moks Bugs in the bushes. -";
 		next;
@@ -3923,7 +3923,7 @@ OnTimer20000:
 	end;
 }
 
-hu_fild06,218,320,1	script	Moks Bugs#Bug2	1053,{
+hu_fild06,218,320,1	script	Moks Bugs#Bug2	THIEF_BUG_,{
 	if (hg_tre > 29 && hg_tre < 35) {
 		mes "- You found big brown Moks Bugs in the bushes. -";
 		next;
@@ -3978,7 +3978,7 @@ OnTimer20000:
 	end;
 }
 
-hu_fild06,249,329,1	script	Moks Bugs#Bug3	1053,{
+hu_fild06,249,329,1	script	Moks Bugs#Bug3	THIEF_BUG_,{
 	if (hg_tre > 29 && hg_tre < 35) {
 		mes "- You found big brown Moks Bugs in the bushes. -";
 		next;
@@ -4033,7 +4033,7 @@ OnTimer20000:
 	end;
 }
 
-hu_fild06,218,373,1	script	Moks Bugs#Bug4	1053,{
+hu_fild06,218,373,1	script	Moks Bugs#Bug4	THIEF_BUG_,{
 	if (hg_tre > 29 && hg_tre < 35) {
 		mes "- You found big brown Moks Bugs in the bushes. -";
 		next;

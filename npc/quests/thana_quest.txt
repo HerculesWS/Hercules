@@ -2078,7 +2078,7 @@ OnTimer3000:
 	end;
 }
 
-thana_boss,217,167,3	script	Memory Seal#tt1	1711,3,3,{
+thana_boss,217,167,3	script	Memory Seal#tt1	G_THA_MAERO,3,3,{
 	end;
 OnEnable:
 	hideoffnpc strnpcinfo(0);
@@ -2157,9 +2157,9 @@ OnMyMobDead:
 		mapwarp "thana_boss","thana_boss",141,228;
 	end;
 }
-thana_boss,202,75,3	duplicate(Memory Seal#tt1)	Memory Seal#tt2	1712,3,3
-thana_boss,80,76,7	duplicate(Memory Seal#tt1)	Memory Seal#tt3	1709,3,3
-thana_boss,62,171,5	duplicate(Memory Seal#tt1)	Memory Seal#tt4	1710,3,3
+thana_boss,202,75,3	duplicate(Memory Seal#tt1)	Memory Seal#tt2	G_THA_DOLOR,3,3
+thana_boss,80,76,7	duplicate(Memory Seal#tt1)	Memory Seal#tt3	G_THA_ODIUM,3,3
+thana_boss,62,171,5	duplicate(Memory Seal#tt1)	Memory Seal#tt4	G_THA_DESPERO,3,3
 
 thana_boss,141,228,0	script	#thanatos_seal	HIDDEN_WARP_NPC,3,3,{
 	end;
@@ -2200,7 +2200,7 @@ OnTimer16000:
 	end;
 }
 
-thana_boss,141,235,3	script	Memory Seal#tt5	1708,{
+thana_boss,141,235,3	script	Memory Seal#tt5	THANATOS,{
 	end;
 OnInit:
 	disablenpc "Memory Seal#tt5";
