@@ -418,7 +418,7 @@ amatsu,243,202,3	script	Drama Teacher#ama	4_F_JPNOBA2,{
 	close;
 }
 	
-amatsu,283,203,1	script	Bonubonu#ama1	1323,{
+amatsu,283,203,1	script	Bonubonu#ama1	SEE_OTTER,{
 	end;
 }
 

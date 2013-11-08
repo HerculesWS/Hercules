@@ -702,7 +702,7 @@ OnMyMobDead:
 	end;
 }
 
-1@gl_k,145,54,6	script	.#ghinstance1	2471,{
+1@gl_k,145,54,6	script	.#ghinstance1	MG_KHALITZBURG,{
 	end;
 OnInstanceInit:
 	donpcevent instance_npcname(strnpcinfo(0))+"::OnDisable";

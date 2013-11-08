@@ -3264,7 +3264,7 @@ OnMyMobDead:
 	end;
 }
 
-job3_guil03,110,27,3	script	Guard Dog#dog01	1866,3,1,{
+job3_guil03,110,27,3	script	Guard Dog#dog01	HELL_POODLE,3,1,{
 	end;
 OnEnable:
 	enablenpc "Guard Dog#dog01";
@@ -3287,7 +3287,7 @@ OnMyMobDead:
 	end;
 }
 
-job3_guil03,119,27,3	script	Guard Dog#dog02	1866,3,1,{
+job3_guil03,119,27,3	script	Guard Dog#dog02	HELL_POODLE,3,1,{
 	end;
 OnEnable:
 	enablenpc "Guard Dog#dog02";
@@ -3455,7 +3455,7 @@ job3_guil03,111,51,7	script	Priest from Rachel	4_M_MIDDLE1,{
 		next;
 		mes "[Priest from Rachel]";
 		mes "Because of you, you ruined everything!";
-		setnpcdisplay(strnpcinfo(0),2030);
+		setnpcdisplay(strnpcinfo(0), HIDEN_PRIEST);
 		next;
 		mes "[Priest from Rachel]";
 		mes "You want to destroy us forever!";

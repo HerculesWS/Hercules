@@ -20,7 +20,7 @@
 
 // Pumpkin Mojo quest (Event 1)
 //============================================================
-prontera,162,69,5	script	Gloomy Jack#06_hw	1130,2,2,{
+prontera,162,69,5	script	Gloomy Jack#06_hw	JAKK,2,2,{
 	end;
 
 OnTouch:
@@ -380,7 +380,7 @@ geffen,145,132,3	script	Hoirin#06_hw	4_F_NOVICE,{
 	}
 }
 
-nif_in,18,34,5	script	Loli Ruri#06_hw	1505,2,2,{
+nif_in,18,34,5	script	Loli Ruri#06_hw	LOLI_RURI,2,2,{
 	end;
 
 OnTouch:

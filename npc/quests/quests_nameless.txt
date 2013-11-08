@@ -1109,7 +1109,7 @@ OnInit:
 	end;
 }
 
-nameless_in,13,53,1	script	Creature#Monas	1864,3,1,{
+nameless_in,13,53,1	script	Creature#Monas	ZOMBIE_SLAUGHTER,3,1,{
 	end;
 
 OnInit:

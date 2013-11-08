@@ -1914,46 +1914,46 @@ OnInit:
 		disablenpc "Guard of Shadow#"+.@sub$+"_0"+.@i;
 	end;
 }
-que_qaru01,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru01_01	1752,4,4
-que_qaru01,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru01_02	1752,4,4
-que_qaru01,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru01_03	1752,4,4
-que_qaru01,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru01_04	1752,4,4
-que_qaru02,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru02_01	1752,4,4
-que_qaru02,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru02_02	1752,4,4
-que_qaru02,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru02_03	1752,4,4
-que_qaru02,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru02_04	1752,4,4
-que_qaru03,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru03_01	1752,4,4
-que_qaru03,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru03_02	1752,4,4
-que_qaru03,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru03_03	1752,4,4
-que_qaru03,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru03_04	1752,4,4
-que_qaru04,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru04_01	1752,4,4
-que_qaru04,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru04_02	1752,4,4
-que_qaru04,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru04_03	1752,4,4
-que_qaru04,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru04_04	1752,4,4
-que_qaru05,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru05_01	1752,4,4
-que_qaru05,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru05_02	1752,4,4
-que_qaru05,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru05_03	1752,4,4
-que_qaru05,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru05_04	1752,4,4
-que_qsch01,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch01_01	1752,4,4
-que_qsch01,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch01_02	1752,4,4
-que_qsch01,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch01_03	1752,4,4
-que_qsch01,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch01_04	1752,4,4
-que_qsch02,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch02_01	1752,4,4
-que_qsch02,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch02_02	1752,4,4
-que_qsch02,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch02_03	1752,4,4
-que_qsch02,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch02_04	1752,4,4
-que_qsch03,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch03_01	1752,4,4
-que_qsch03,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch03_02	1752,4,4
-que_qsch03,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch03_03	1752,4,4
-que_qsch03,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch03_04	1752,4,4
-que_qsch04,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch04_01	1752,4,4
-que_qsch04,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch04_02	1752,4,4
-que_qsch04,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch04_03	1752,4,4
-que_qsch04,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch04_04	1752,4,4
-que_qsch05,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch05_01	1752,4,4
-que_qsch05,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch05_02	1752,4,4
-que_qsch05,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch05_03	1752,4,4
-que_qsch05,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch05_04	1752,4,4
+que_qaru01,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru01_01	SKOGUL,4,4
+que_qaru01,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru01_02	SKOGUL,4,4
+que_qaru01,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru01_03	SKOGUL,4,4
+que_qaru01,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru01_04	SKOGUL,4,4
+que_qaru02,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru02_01	SKOGUL,4,4
+que_qaru02,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru02_02	SKOGUL,4,4
+que_qaru02,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru02_03	SKOGUL,4,4
+que_qaru02,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru02_04	SKOGUL,4,4
+que_qaru03,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru03_01	SKOGUL,4,4
+que_qaru03,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru03_02	SKOGUL,4,4
+que_qaru03,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru03_03	SKOGUL,4,4
+que_qaru03,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru03_04	SKOGUL,4,4
+que_qaru04,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru04_01	SKOGUL,4,4
+que_qaru04,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru04_02	SKOGUL,4,4
+que_qaru04,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru04_03	SKOGUL,4,4
+que_qaru04,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru04_04	SKOGUL,4,4
+que_qaru05,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru05_01	SKOGUL,4,4
+que_qaru05,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru05_02	SKOGUL,4,4
+que_qaru05,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru05_03	SKOGUL,4,4
+que_qaru05,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#aru05_04	SKOGUL,4,4
+que_qsch01,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch01_01	SKOGUL,4,4
+que_qsch01,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch01_02	SKOGUL,4,4
+que_qsch01,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch01_03	SKOGUL,4,4
+que_qsch01,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch01_04	SKOGUL,4,4
+que_qsch02,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch02_01	SKOGUL,4,4
+que_qsch02,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch02_02	SKOGUL,4,4
+que_qsch02,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch02_03	SKOGUL,4,4
+que_qsch02,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch02_04	SKOGUL,4,4
+que_qsch03,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch03_01	SKOGUL,4,4
+que_qsch03,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch03_02	SKOGUL,4,4
+que_qsch03,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch03_03	SKOGUL,4,4
+que_qsch03,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch03_04	SKOGUL,4,4
+que_qsch04,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch04_01	SKOGUL,4,4
+que_qsch04,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch04_02	SKOGUL,4,4
+que_qsch04,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch04_03	SKOGUL,4,4
+que_qsch04,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch04_04	SKOGUL,4,4
+que_qsch05,235,285,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch05_01	SKOGUL,4,4
+que_qsch05,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch05_02	SKOGUL,4,4
+que_qsch05,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch05_03	SKOGUL,4,4
+que_qsch05,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch05_04	SKOGUL,4,4
 
 -	script	Bloody Hunter#main_all	-1,{
 	end;
@@ -1988,46 +1988,46 @@ OnInit:
 		disablenpc "Bloody Hunter#"+.@sub$+"_ac0"+.@i;
 	end;
 }
-que_qaru01,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru01_ac01	1753,4,4
-que_qaru01,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru01_ac02	1753,4,4,
-que_qaru01,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru01_ac03	1753,4,4,
-que_qaru01,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru01_ac04	1753,4,4,
-que_qaru02,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru02_ac01	1753,4,4,
-que_qaru02,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru02_ac02	1753,4,4
-que_qaru02,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru02_ac03	1753,4,4
-que_qaru02,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru02_ac04	1753,4,4
-que_qaru03,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru03_ac01	1753,4,4
-que_qaru03,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru03_ac02	1753,4,4
-que_qaru03,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru03_ac03	1753,4,4
-que_qaru03,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru03_ac04	1753,4,4
-que_qaru04,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru04_ac01	1753,4,4
-que_qaru04,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru04_ac02	1753,4,4
-que_qaru04,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru04_ac03	1753,4,4
-que_qaru04,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru04_ac04	1753,4,4
-que_qaru05,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru05_ac01	1753,4,4
-que_qaru05,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru05_ac02	1753,4,4
-que_qaru05,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru05_ac03	1753,4,4
-que_qaru05,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru05_ac04	1753,4,4
-que_qsch01,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch01_ac01	1753,4,4
-que_qsch01,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch01_ac02	1753,4,4
-que_qsch01,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch01_ac03	1753,4,4
-que_qsch01,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch01_ac04	1753,4,4
-que_qsch02,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch02_ac01	1753,4,4
-que_qsch02,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch02_ac02	1753,4,4
-que_qsch02,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch02_ac03	1753,4,4
-que_qsch02,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch02_ac04	1753,4,4
-que_qsch03,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch03_ac01	1753,4,4
-que_qsch03,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch03_ac02	1753,4,4
-que_qsch03,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch03_ac03	1753,4,4
-que_qsch03,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch03_ac04	1753,4,4
-que_qsch04,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch04_ac01	1753,4,4
-que_qsch04,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch04_ac02	1753,4,4
-que_qsch04,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch04_ac03	1753,4,4
-que_qsch04,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch04_ac04	1753,4,4
-que_qsch05,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch05_ac01	1753,4,4
-que_qsch05,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch05_ac02	1753,4,4
-que_qsch05,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch05_ac03	1753,4,4
-que_qsch05,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch05_ac04	1753,4,4
+que_qaru01,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru01_ac01	FRUS,4,4
+que_qaru01,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru01_ac02	FRUS,4,4
+que_qaru01,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru01_ac03	FRUS,4,4
+que_qaru01,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru01_ac04	FRUS,4,4
+que_qaru02,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru02_ac01	FRUS,4,4
+que_qaru02,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru02_ac02	FRUS,4,4
+que_qaru02,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru02_ac03	FRUS,4,4
+que_qaru02,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru02_ac04	FRUS,4,4
+que_qaru03,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru03_ac01	FRUS,4,4
+que_qaru03,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru03_ac02	FRUS,4,4
+que_qaru03,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru03_ac03	FRUS,4,4
+que_qaru03,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru03_ac04	FRUS,4,4
+que_qaru04,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru04_ac01	FRUS,4,4
+que_qaru04,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru04_ac02	FRUS,4,4
+que_qaru04,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru04_ac03	FRUS,4,4
+que_qaru04,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru04_ac04	FRUS,4,4
+que_qaru05,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru05_ac01	FRUS,4,4
+que_qaru05,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru05_ac02	FRUS,4,4
+que_qaru05,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru05_ac03	FRUS,4,4
+que_qaru05,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#aru05_ac04	FRUS,4,4
+que_qsch01,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch01_ac01	FRUS,4,4
+que_qsch01,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch01_ac02	FRUS,4,4
+que_qsch01,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch01_ac03	FRUS,4,4
+que_qsch01,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch01_ac04	FRUS,4,4
+que_qsch02,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch02_ac01	FRUS,4,4
+que_qsch02,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch02_ac02	FRUS,4,4
+que_qsch02,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch02_ac03	FRUS,4,4
+que_qsch02,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch02_ac04	FRUS,4,4
+que_qsch03,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch03_ac01	FRUS,4,4
+que_qsch03,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch03_ac02	FRUS,4,4
+que_qsch03,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch03_ac03	FRUS,4,4
+que_qsch03,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch03_ac04	FRUS,4,4
+que_qsch04,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch04_ac01	FRUS,4,4
+que_qsch04,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch04_ac02	FRUS,4,4
+que_qsch04,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch04_ac03	FRUS,4,4
+que_qsch04,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch04_ac04	FRUS,4,4
+que_qsch05,266,296,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch05_ac01	FRUS,4,4
+que_qsch05,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch05_ac02	FRUS,4,4
+que_qsch05,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch05_ac03	FRUS,4,4
+que_qsch05,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch05_ac04	FRUS,4,4
 
 -	script	Temple Keeper#main_all	-1,{
 	end;
@@ -2060,26 +2060,26 @@ OnInit:
 		disablenpc "Temple Keeper#"+.@sub$+"_ac0"+.@i;
 	end;
 }
-que_qaru01,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#aru01_ac01	1933,4,4
-que_qaru01,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#aru01_ac02	1933,4,4
-que_qaru02,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#aru02_ac01	1933,4,4
-que_qaru02,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#aru02_ac02	1933,4,4
-que_qaru03,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#aru03_ac01	1933,4,4
-que_qaru03,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#aru03_ac02	1933,4,4
-que_qaru04,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#aru04_ac01	1933,4,4
-que_qaru04,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#aru04_ac02	1933,4,4
-que_qaru05,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#aru05_ac01	1933,4,4
-que_qaru05,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#aru05_ac02	1933,4,4
-que_qsch01,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#sch01_ac01	1933,4,4
-que_qsch01,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#sch01_ac02	1933,4,4
-que_qsch02,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#sch02_ac01	1933,4,4
-que_qsch02,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#sch02_ac02	1933,4,4
-que_qsch03,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#sch03_ac01	1933,4,4
-que_qsch03,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#sch03_ac02	1933,4,4
-que_qsch04,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#sch04_ac01	1933,4,4
-que_qsch04,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#sch04_ac02	1933,4,4
-que_qsch05,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#sch05_ac01	1933,4,4
-que_qsch05,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#sch05_ac02	1933,4,4
+que_qaru01,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#aru01_ac01	GARDEN_WATCHER,4,4
+que_qaru01,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#aru01_ac02	GARDEN_WATCHER,4,4
+que_qaru02,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#aru02_ac01	GARDEN_WATCHER,4,4
+que_qaru02,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#aru02_ac02	GARDEN_WATCHER,4,4
+que_qaru03,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#aru03_ac01	GARDEN_WATCHER,4,4
+que_qaru03,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#aru03_ac02	GARDEN_WATCHER,4,4
+que_qaru04,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#aru04_ac01	GARDEN_WATCHER,4,4
+que_qaru04,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#aru04_ac02	GARDEN_WATCHER,4,4
+que_qaru05,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#aru05_ac01	GARDEN_WATCHER,4,4
+que_qaru05,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#aru05_ac02	GARDEN_WATCHER,4,4
+que_qsch01,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#sch01_ac01	GARDEN_WATCHER,4,4
+que_qsch01,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#sch01_ac02	GARDEN_WATCHER,4,4
+que_qsch02,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#sch02_ac01	GARDEN_WATCHER,4,4
+que_qsch02,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#sch02_ac02	GARDEN_WATCHER,4,4
+que_qsch03,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#sch03_ac01	GARDEN_WATCHER,4,4
+que_qsch03,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#sch03_ac02	GARDEN_WATCHER,4,4
+que_qsch04,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#sch04_ac01	GARDEN_WATCHER,4,4
+que_qsch04,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#sch04_ac02	GARDEN_WATCHER,4,4
+que_qsch05,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#sch05_ac01	GARDEN_WATCHER,4,4
+que_qsch05,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#sch05_ac02	GARDEN_WATCHER,4,4
 
 -	script	Wish Maiden#main_boss	-1,{
 	end;

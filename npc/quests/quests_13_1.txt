@@ -7446,7 +7446,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 	}
 }
 
-mid_camp,152,316,3	script	Hillsrion#alba01	1989,3,3,{
+mid_camp,152,316,3	script	Hillsrion#alba01	HILLSRION,3,3,{
 OnEnable:
 	enablenpc "Hillsrion#alba01";
 	end;
@@ -7463,7 +7463,7 @@ OnTouch:
 	close;
 }
 
-mid_camp,145,313,5	script	Tatacho#alba02	1986,3,3,{
+mid_camp,145,313,5	script	Tatacho#alba02	TATACHO,3,3,{
 OnEnable:
 	enablenpc "Tatacho#alba02";
 	end;
@@ -7484,7 +7484,7 @@ OnTouch:
 	close;
 }
 
-mid_camp,162,306,3	script	Cornus#alba03	1992,5,5,{
+mid_camp,162,306,3	script	Cornus#alba03	CORNUS,5,5,{
 OnEnable:
 	enablenpc "Cornus#alba03";
 	end;
