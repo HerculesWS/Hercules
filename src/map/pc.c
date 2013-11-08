@@ -6580,7 +6580,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 			pc->setoption(sd, i);
 
 		if( homun_alive(sd->hd) && pc->checkskill(sd, AM_CALLHOMUN) )
-			homun->vaporize(sd, HOM_ST_ACTIVE);
+			homun->vaporize(sd, HOM_ST_REST);
 	}
 
 	for( i = 1; i < MAX_SKILL; i++ ) {
