@@ -1327,7 +1327,7 @@ que_house_s,14,52,3	script	#04homun_s	HIDDEN_NPC,{
 
 // Researcher's Pet
 //============================================================
-que_house_s,24,46,3	script	Jonathan#homun_s	6002,{
+que_house_s,24,46,3	script	Jonathan#homun_s	MER_AMISTR,{
 	end;
 }
 
