@@ -105,6 +105,17 @@ enum e_chain_cache {
 	ECC_MAX,
 };
 
+enum item_class_upper {
+	ITEMUPPER_NONE       = 0x00,
+	ITEMUPPER_NORMAL     = 0x01,
+	ITEMUPPER_UPPER      = 0x02,
+	ITEMUPPER_BABY       = 0x04,
+	ITEMUPPER_THIRD      = 0x08,
+	ITEMUPPER_THURDUPPER = 0x10,
+	ITEMUPPER_THIRDBABY  = 0x20,
+	ITEMUPPER_ALL        = 0x3f, // Sum of all the above
+};
+
 struct item_data {
 	uint16 nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
@@ -125,10 +136,8 @@ struct item_data {
 	int elv;
 	int wlv;
 	int view_id;
-#ifdef RENEWAL
 	int matk;
 	int elvmax;/* maximum level for this item */
-#endif
 
 	int delay;
 //Lupus: I rearranged order of these fields due to compatibility with ITEMINFO script command
@@ -300,7 +309,6 @@ struct itemdb_interface {
 	int (*search_name_array) (struct item_data** data, int size, const char *str, int flag);
 	struct item_data* (*load)(int nameid);
 	struct item_data* (*search)(int nameid);
-	int (*parse_dbrow) (char** str, const char* source, int line, int scriptopt);
 	struct item_data* (*exists) (int nameid);
 	bool (*in_group) (struct item_group *group, int nameid);
 	int (*group_item) (struct item_group *group);
@@ -338,7 +346,9 @@ struct itemdb_interface {
 	int (*combo_split_atoi) (char *str, int *val);
 	void (*read_combos) ();
 	int (*gendercheck) (struct item_data *id);
-	void (*re_split_atoi) (char *str, int *atk, int *matk);
+	int (*validate_entry) (struct item_data *entry, int n, const char *source);
+	int (*readdb_sql_sub) (Sql *handle, int n, const char *source);
+	int (*readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
 	int (*readdb) (void);
 	int (*read_sqldb) (void);
 	uint64 (*unique_id) (int8 flag, int64 value);
