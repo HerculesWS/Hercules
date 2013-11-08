@@ -3125,6 +3125,8 @@ struct {
 	struct HPMHookPoint *HP_mob_readdb_post;
 	struct HPMHookPoint *HP_mob_read_sqldb_pre;
 	struct HPMHookPoint *HP_mob_read_sqldb_post;
+	struct HPMHookPoint *HP_mob_name_constants_pre;
+	struct HPMHookPoint *HP_mob_name_constants_post;
 	struct HPMHookPoint *HP_mob_readdb_mobavail_pre;
 	struct HPMHookPoint *HP_mob_readdb_mobavail_post;
 	struct HPMHookPoint *HP_mob_read_randommonster_pre;
@@ -8066,6 +8068,8 @@ struct {
 	int HP_mob_readdb_post;
 	int HP_mob_read_sqldb_pre;
 	int HP_mob_read_sqldb_post;
+	int HP_mob_name_constants_pre;
+	int HP_mob_name_constants_post;
 	int HP_mob_readdb_mobavail_pre;
 	int HP_mob_readdb_mobavail_post;
 	int HP_mob_read_randommonster_pre;

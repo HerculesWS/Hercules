@@ -1588,6 +1588,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mob->readdb_sub, HP_mob_readdb_sub) },
 	{ HP_POP(mob->readdb, HP_mob_readdb) },
 	{ HP_POP(mob->read_sqldb, HP_mob_read_sqldb) },
+	{ HP_POP(mob->name_constants, HP_mob_name_constants) },
 	{ HP_POP(mob->readdb_mobavail, HP_mob_readdb_mobavail) },
 	{ HP_POP(mob->read_randommonster, HP_mob_read_randommonster) },
 	{ HP_POP(mob->parse_row_chatdb, HP_mob_parse_row_chatdb) },
