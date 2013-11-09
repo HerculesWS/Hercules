@@ -37,7 +37,7 @@ int itemdb_searchname_sub(DBKey key, DBData *data, va_list ap)
 
 	//Absolute priority to Aegis code name.
 	if (*dst != NULL) return 0;
-	if( strcmpi(item->name,str)==0 )
+	if( strcmp(item->name,str)==0 ) // Case sensitive
 		*dst=item;
 
 	//Second priority to Client displayed name.
@@ -61,7 +61,7 @@ struct item_data* itemdb_searchname(const char *str) {
 			continue;
 
 		// Absolute priority to Aegis code name.
-		if( strcasecmp(item->name,str) == 0 )
+		if( strcmp(item->name,str) == 0 ) // Case sensitive
 			return item;
 
 		//Second priority to Client displayed name.
