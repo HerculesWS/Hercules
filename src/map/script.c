@@ -1343,13 +1343,10 @@ const char* parse_syntax(const char* p)
 	switch(*p) {
 	case 'B':
 	case 'b':
-		if(p2 - p == 5 && !strncasecmp(p,"break",5)) {
+		if( p2 - p == 5 && strncmp(p,"break",5) == 0 ) {
 			// break Processing
 			char label[256];
 			int pos = script->syntax.curly_count - 1;
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "break", 5) != 0 ) disp_deprecation_message("parse_syntax", "break", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			while(pos >= 0) {
 				if(script->syntax.curly[pos].type == TYPE_DO) {
 					sprintf(label,"goto __DO%x_FIN;",script->syntax.curly[pos].index);
@@ -1379,16 +1376,17 @@ const char* parse_syntax(const char* p)
 			// Closing decision if, for , while
 			p = script->parse_syntax_close(p + 1);
 			return p;
+#ifdef ENABLE_CASE_CHECK
+		} else if( p2 - p == 5 && strncasecmp(p, "break", 5) == 0 ) {
+			disp_deprecation_message("parse_syntax", "break", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 'c':
 	case 'C':
-		if(p2 - p == 4 && !strncasecmp(p,"case",4)) {
+		if( p2 - p == 4 && strncmp(p, "case", 4) == 0 ) {
 			//Processing case
 			int pos = script->syntax.curly_count-1;
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "case", 4) != 0 ) disp_deprecation_message("parse_syntax", "case", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			if(pos < 0 || script->syntax.curly[pos].type != TYPE_SWITCH) {
 				disp_error_message("parse_syntax: unexpected 'case' ",p);
 				return p+1;
@@ -1461,13 +1459,10 @@ const char* parse_syntax(const char* p)
 				script->syntax.curly[pos].count++;
 			}
 			return p + 1;
-		} else if(p2 - p == 8 && !strncasecmp(p,"continue",8)) {
+		} else if( p2 - p == 8 && strncmp(p, "continue", 8) == 0 ) {
 			// Processing continue
 			char label[256];
 			int pos = script->syntax.curly_count - 1;
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "continue", 8) != 0 ) disp_deprecation_message("parse_syntax", "continue", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			while(pos >= 0) {
 				if(script->syntax.curly[pos].type == TYPE_DO) {
 					sprintf(label,"goto __DO%x_NXT;",script->syntax.curly[pos].index);
@@ -1495,16 +1490,19 @@ const char* parse_syntax(const char* p)
 			//Closing decision if, for , while
 			p = script->parse_syntax_close(p + 1);
 			return p;
+#ifdef ENABLE_CASE_CHECK
+		} else if( p2 - p == 4 && strncasecmp(p, "case", 4) == 0 ) {
+			disp_deprecation_message("parse_syntax", "case", p); // TODO
+		} else if( p2 - p == 8 && strncasecmp(p, "continue", 8) == 0 ) {
+			disp_deprecation_message("parse_syntax", "continue", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 'd':
 	case 'D':
-		if(p2 - p == 7 && !strncasecmp(p,"default",7)) {
+		if( p2 - p == 7 && strncmp(p, "default", 7) == 0 ) {
 			// Switch - default processing
 			int pos = script->syntax.curly_count-1;
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "default", 7) != 0 ) disp_deprecation_message("parse_syntax", "default", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			if(pos < 0 || script->syntax.curly[pos].type != TYPE_SWITCH) {
 				disp_error_message("parse_syntax: unexpected 'default'",p);
 			} else if(script->syntax.curly[pos].flag) {
@@ -1536,12 +1534,9 @@ const char* parse_syntax(const char* p)
 				script->syntax.curly[pos].count++;
 			}
 			return p + 1;
-		} else if(p2 - p == 2 && !strncasecmp(p,"do",2)) {
+		} else if( p2 - p == 2 && strncmp(p, "do", 2) == 0 ) {
 			int l;
 			char label[256];
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "do", 2) != 0 ) disp_deprecation_message("parse_syntax", "do", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			p=script->skip_space(p2);
 
 			script->syntax.curly[script->syntax.curly_count].type  = TYPE_DO;
@@ -1554,17 +1549,20 @@ const char* parse_syntax(const char* p)
 			script->set_label(l,script->pos,p);
 			script->syntax.curly_count++;
 			return p;
+#ifdef ENABLE_CASE_CHECK
+		} else if( p2 - p == 7 && strncasecmp(p, "default", 7) == 0 ) {
+			disp_deprecation_message("parse_syntax", "default", p); // TODO
+		} else if( p2 - p == 2 && strncasecmp(p, "do", 2) == 0 ) {
+			disp_deprecation_message("parse_syntax", "do", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 'f':
 	case 'F':
-		if(p2 - p == 3 && !strncasecmp(p,"for",3)) {
+		if( p2 - p == 3 && strncmp(p, "for", 3) == 0 ) {
 			int l;
 			char label[256];
 			int  pos = script->syntax.curly_count;
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "for", 3) != 0 ) disp_deprecation_message("parse_syntax", "for", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			script->syntax.curly[script->syntax.curly_count].type  = TYPE_FOR;
 			script->syntax.curly[script->syntax.curly_count].count = 1;
 			script->syntax.curly[script->syntax.curly_count].index = script->syntax.index++;
@@ -1635,14 +1633,10 @@ const char* parse_syntax(const char* p)
 			l=script->add_str(label);
 			script->set_label(l,script->pos,p);
 			return p;
-		}
-		else if( p2 - p == 8 && strncasecmp(p,"function",8) == 0 )
-		{// internal script function
+		} else if( p2 - p == 8 && strncmp(p, "function", 8) == 0 ) {
+			// internal script function
 			const char *func_name;
 
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "function", 8) != 0 ) disp_deprecation_message("parse_syntax", "function", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			func_name = script->skip_space(p2);
 			p = script->skip_word(func_name);
 			if( p == func_name )
@@ -1700,16 +1694,19 @@ const char* parse_syntax(const char* p)
 			{
 				disp_error_message("expect ';' or '{' at function syntax",p);
 			}
+#ifdef ENABLE_CASE_CHECK
+		} else if( p2 - p == 3 && strncasecmp(p, "for", 3) == 0 ) {
+			disp_deprecation_message("parse_syntax", "for", p); // TODO
+		} else if( p2 - p == 8 && strncasecmp(p, "function", 8) == 0 ) {
+			disp_deprecation_message("parse_syntax", "function", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 'i':
 	case 'I':
-		if(p2 - p == 2 && !strncasecmp(p,"if",2)) {
+		if( p2 - p == 2 && strncmp(p, "if", 2) == 0 ) {
 			// If process
 			char label[256];
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "if", 2) != 0 ) disp_deprecation_message("parse_syntax", "if", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			p=script->skip_space(p2);
 			if(*p != '(') { //Prevent if this {} non-c script->syntax. from Rayce (jA)
 				disp_error_message("need '('",p);
@@ -1727,16 +1724,17 @@ const char* parse_syntax(const char* p)
 			script->addl(script->add_str(label));
 			script->addc(C_FUNC);
 			return p;
+#ifdef ENABLE_CASE_CHECK
+		} else if( p2 - p == 2 && strncasecmp(p, "if", 2) == 0 ) {
+			disp_deprecation_message("parse_syntax", "if", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 's':
 	case 'S':
-		if(p2 - p == 6 && !strncasecmp(p,"switch",6)) {
+		if( p2 - p == 6 && strncmp(p, "switch", 6) == 0 ) {
 			// Processing of switch ()
 			char label[256];
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "switch", 6) != 0 ) disp_deprecation_message("parse_syntax", "switch", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			p=script->skip_space(p2);
 			if(*p != '(') {
 				disp_error_message("need '('",p);
@@ -1757,16 +1755,17 @@ const char* parse_syntax(const char* p)
 			}
 			script->addc(C_FUNC);
 			return p + 1;
+#ifdef ENABLE_CASE_CHECK
+		} else if( p2 - p == 6 && strncasecmp(p, "switch", 6) == 0 ) {
+			disp_deprecation_message("parse_syntax", "switch", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 'w':
 	case 'W':
-		if(p2 - p == 5 && !strncasecmp(p,"while",5)) {
+		if( p2 - p == 5 && strncmp(p, "while", 5) == 0 ) {
 			int l;
 			char label[256];
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "while", 5) != 0 ) disp_deprecation_message("parse_syntax", "while", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			p=script->skip_space(p2);
 			if(*p != '(') {
 				disp_error_message("need '('",p);
@@ -1790,6 +1789,10 @@ const char* parse_syntax(const char* p)
 			script->addl(script->add_str(label));
 			script->addc(C_FUNC);
 			return p;
+#ifdef ENABLE_CASE_CHECK
+		} else if( p2 - p == 5 && strncasecmp(p, "while", 5) == 0 ) {
+			disp_deprecation_message("parse_syntax", "while", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	}
@@ -1840,14 +1843,11 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		script->syntax.curly[pos].count++;
 		p = script->skip_space(p);
 		p2 = script->skip_word(p);
-		if(!script->syntax.curly[pos].flag && p2 - p == 4 && !strncasecmp(p,"else",4)) {
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "else", 4) != 0 ) disp_deprecation_message("parse_syntax", "else", p); // TODO
-#endif // ENABLE_CASE_CHECK
+		if( !script->syntax.curly[pos].flag && p2 - p == 4 && strncmp(p, "else", 4) == 0 ) {
 			// else  or else - if
 			p = script->skip_space(p2);
 			p2 = script->skip_word(p);
-			if(p2 - p == 2 && !strncasecmp(p,"if",2)) {
+			if( p2 - p == 2 && strncmp(p, "if", 2) == 0 ) {
 				// else - if
 				p=script->skip_space(p2);
 				if(*p != '(') {
@@ -1862,6 +1862,10 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 				script->addc(C_FUNC);
 				*flag = 0;
 				return p;
+#ifdef ENABLE_CASE_CHECK
+			} else if( p2 - p == 2 && strncasecmp(p, "if", 2) == 0 ) {
+				disp_deprecation_message("parse_syntax", "if", p); // TODO
+#endif // ENABLE_CASE_CHECK
 			} else {
 				// else
 				if(!script->syntax.curly[pos].flag) {
@@ -1870,6 +1874,10 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 					return p;
 				}
 			}
+#ifdef ENABLE_CASE_CHECK
+		} else if( !script->syntax.curly[pos].flag && p2 - p == 4 && strncasecmp(p, "else", 4) == 0 ) {
+			disp_deprecation_message("parse_syntax", "else", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		// Close if
 		script->syntax.curly_count--;
@@ -1897,12 +1905,13 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		// Skip to the end point if the condition is false
 		p = script->skip_space(p);
 		p2 = script->skip_word(p);
-		if(p2 - p != 5 || strncasecmp(p,"while",5))
-			disp_error_message("parse_syntax: need 'while'",p);
-
+		if( p2 - p != 5 || strncmp(p, "while", 5) != 0 ) {
 #ifdef ENABLE_CASE_CHECK
-		if( strncmp(p, "while", 5) != 0 ) disp_deprecation_message("parse_syntax", "while", p); // TODO
+			if( p2 - p == 5 && strncasecmp(p, "while", 5) == 0 ) disp_deprecation_message("parse_syntax", "while", p); // TODO
 #endif // ENABLE_CASE_CHECK
+			disp_error_message("parse_syntax: need 'while'",p);
+		}
+
 		p = script->skip_space(p2);
 		if(*p != '(') {
 			disp_error_message("need '('",p);
@@ -2295,7 +2304,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			disp_error_message("unexpected end of script",p);
 		// Special handling only label
 		tmpp=script->skip_space(script->skip_word(p));
-		if(*tmpp==':' && !(!strncasecmp(p,"default:",8) && p + 7 == tmpp)){
+		if(*tmpp==':' && !(strncmp(p,"default:",8) == 0 && p + 7 == tmpp)) {
 			i=script->add_word(p);
 			script->set_label(i,script->pos,p);
 			if( script->parse_options&SCRIPT_USE_LABEL_DB )
