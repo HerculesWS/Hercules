@@ -36636,14 +36636,14 @@ void HP_map_versionscreen(bool do_exit) {
 	}
 	return;
 }
-bool HP_map_arg_next_value(const char *option, int i, int argc) {
+bool HP_map_arg_next_value(const char *option, int i, int argc, bool must) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if( HPMHooks.count.HP_map_arg_next_value_pre ) {
-		bool (*preHookFunc) (const char *option, int *i, int *argc);
+		bool (*preHookFunc) (const char *option, int *i, int *argc, bool *must);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_arg_next_value_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_map_arg_next_value_pre[hIndex].func;
-			retVal___ = preHookFunc(option, &i, &argc);
+			retVal___ = preHookFunc(option, &i, &argc, &must);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -36651,13 +36651,13 @@ bool HP_map_arg_next_value(const char *option, int i, int argc) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.map.arg_next_value(option, i, argc);
+		retVal___ = HPMHooks.source.map.arg_next_value(option, i, argc, must);
 	}
 	if( HPMHooks.count.HP_map_arg_next_value_post ) {
-		bool (*postHookFunc) (bool retVal___, const char *option, int *i, int *argc);
+		bool (*postHookFunc) (bool retVal___, const char *option, int *i, int *argc, bool *must);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_arg_next_value_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_map_arg_next_value_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, option, &i, &argc);
+			retVal___ = postHookFunc(retVal___, option, &i, &argc, &must);
 		}
 	}
 	return retVal___;
