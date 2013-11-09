@@ -56,6 +56,7 @@ enum hp_event_types {
 	HPET_FINAL,/* server is shutting down */
 	HPET_READY,/* server is ready (online) */
 	HPET_POST_FINAL,/* server is done shutting down */
+	HPET_PRE_INIT,/* server is about to start (used to e.g. add custom "--args" handling) */
 	HPET_MAX,
 };
 
@@ -83,6 +84,8 @@ enum HPluginHookType {
 #define hookStop() HPMi->HookStop(__func__,HPMi->pid)
 #define hookStopped() HPMi->HookStopped()
 
+#define addArg(name,param,func,help) HPMi->addArg(HPMi->pid,name,param,func,help)
+
 /* Hercules Plugin Mananger Include Interface */
 HPExport struct HPMi_interface {
 	/* */
@@ -106,6 +109,8 @@ HPExport struct HPMi_interface {
 	bool (*AddHook) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
 	void (*HookStop) (const char *func, unsigned int pID);
 	bool (*HookStopped) (void);
+	/* program --arg/-a */
+	bool (*addArg) (unsigned int pluginID, char *name, bool has_param,void (*func) (char *param),void (*help) (void));
 } HPMi_s;
 #ifndef _HPM_H_
 HPExport struct HPMi_interface *HPMi;

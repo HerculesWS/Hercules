@@ -8,6 +8,7 @@
 #include "../common/strlib.h"
 #include "core.h"
 #include "../common/console.h"
+#include "../common/random.h"
 
 #ifndef MINICORE
 	#include "../common/db.h"
@@ -337,6 +338,10 @@ int main (int argc, char **argv) {
 
 	timer->init();
 
+	/* timer first */
+	rnd_init();
+	srand((unsigned int)timer->gettick());
+	
 	console->init();
 	
 	HCache->init();
