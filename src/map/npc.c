@@ -3749,14 +3749,15 @@ void npc_read_event_script(void)
 				break;
 			}
 
-			if( (p=strchr(p,':')) && p && strcmpi(name,p)==0 )
+			if( (p=strchr(p,':')) && strcmp(name,p) == 0 )
 			{
-#ifdef ENABLE_CASE_CHECK
-				if( strcmp(name, p) != 0 ) DeprecationWarning2("npc_read_event_script", p, name, config[i].event_name); // TODO
-#endif // ENABLE_CASE_CHECK
 				script_event[i].event[count] = ed;
 				script_event[i].event_name[count] = key.str;
 				script_event[i].event_count++;
+#ifdef ENABLE_CASE_CHECK
+			} else if( p && strcasecmp(name, p) == 0 ) {
+				DeprecationWarning2("npc_read_event_script", p, name, config[i].event_name); // TODO
+#endif // ENABLE_CASE_CHECK
 			}
 		}
 		dbi_destroy(iter);
@@ -3902,7 +3903,7 @@ bool npc_unloadfile( const char* filepath ) {
 	bool found = false;
 
 	for( nd = dbi_first(iter); dbi_exists(iter); nd = dbi_next(iter) ) {
-		if( nd->path && strcasecmp(nd->path,filepath) == 0 ) {
+		if( nd->path && strcasecmp(nd->path,filepath) == 0 ) { // FIXME: This can break in case-sensitive file systems
 			found = true;
 			npc->unload_duplicates(nd);/* unload any npcs which could duplicate this but be in a different file */
 			npc->unload(nd, true);
@@ -3994,8 +3995,8 @@ int do_init_npc(bool minimal) {
 	for( i = MAX_NPC_CLASS2_START; i < MAX_NPC_CLASS2_END; i++ )
 		npc_viewdb2[i - MAX_NPC_CLASS2_START].class_ = i;
 
-	npc->ev_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, EVENT_NAME_LENGTH);
-	npc->ev_label_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, NAME_LENGTH);
+	npc->ev_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, EVENT_NAME_LENGTH);
+	npc->ev_label_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, NAME_LENGTH);
 	npc->name_db = strdb_alloc(DB_OPT_BASE, NAME_LENGTH);
 	npc->path_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, 0);
 
