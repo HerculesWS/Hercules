@@ -26,13 +26,13 @@ function	script	F_GldTreas	{
 		//killmonster getarg(0),"Treasure_"+getarg(1)+"::OnDied";
 
 		// Don't spawn treasures if Castle is empty, or Eco is greater than 100
-		if(GetCastleData(getarg(0),2) > 100 || GetCastleData(getarg(0),1) == 0) return;
+		if(getcastledata(getarg(0),2) > 100 || getcastledata(getarg(0),1) == 0) return;
 
 		// Only spawn one treasure chest for novice castles.
 		if (compare(getarg(0),"nguild"))
 			set getarg(2),1;
 		else
-			set getarg(2),GetCastleData(getarg(0),2)/5+4;
+			set getarg(2),getcastledata(getarg(0),2)/5+4;
 
 		if (getarg(2) <= 0) return;
 

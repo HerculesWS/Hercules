@@ -3683,7 +3683,7 @@ OnStart:
 	end;
 
 OnStartTimer:
-	Initnpctimer;
+	initnpctimer;
 	end;
 
 OnStopTimer:

@@ -105,7 +105,7 @@ OnMinute00:
 			if (gettime(4) == $WOE_CONTROL[.@i] && gettime(3) == $WOE_CONTROL[.@i+2]) {
 			OnWOEEnd:
 				announce "The War Of Emperium is over!",bc_all|bc_woe;
-				AgitEnd; AgitEnd2;
+				agitend; agitend2;
 				sleep 1000;
 				for(set .@j,0; .@j<30; set .@j,.@j+1) {
 					if (.Active[0]&(1<<.@j)) Disp_Owner(.Castles$[.@j],1);
@@ -123,10 +123,10 @@ OnMinute00:
 			if (gettime(4) == $WOE_CONTROL[.@i] && gettime(3) >= $WOE_CONTROL[.@i+1] && gettime(3) < $WOE_CONTROL[.@i+2]) {
 				deletearray .Active[0],2;
 				set .Active[0], $WOE_CONTROL[.@i+3];
-				if (.Init) { AgitEnd; AgitEnd2; }
+				if (.Init) { agitend; agitend2; }
 				else announce "The War Of Emperium has begun!",bc_all|bc_woe;
 				sleep 1000;
-				AgitStart; AgitStart2;
+				agitstart; agitstart2;
 				for(set .@j,0; .@j<30; set .@j,.@j+1) {
 					if (.Active[0]&(1<<.@j)) {
 						if (!.Init) Disp_Owner(.Castles$[.@j],0);

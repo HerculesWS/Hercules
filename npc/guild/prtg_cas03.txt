@@ -18,7 +18,7 @@
 //============================================================
 -	script	Fadhgridh#1::OutsideFlagsPR3	GUILD_FLAG,{
 
-	set .@GID, GetCastleData("prtg_cas03",1);
+	set .@GID, getcastledata("prtg_cas03",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";
@@ -41,7 +41,7 @@
 		next;
 		if(select("Return to the guild castle.:Quit.") == 1) {
 			close2;
-			if (getcharid(2) == GetCastleData("prtg_cas03",1)) {
+			if (getcharid(2) == getcastledata("prtg_cas03",1)) {
 				warp "prtg_cas03",181,215;
 				end;
 			}
@@ -53,16 +53,16 @@
 	mes " ";
 	mes "1. Follow the ordinance of The Divine Rune-Midgarts Kingdom, ";
 	mes "we approve that this place is in";
-	mes "the private prossession of ^ff0000"+GetGuildName(.@GID)+"^000000 Guild.";
+	mes "the private prossession of ^ff0000"+getguildname(.@GID)+"^000000 Guild.";
 	mes " ";
-	mes "2. The guild Master of ^ff0000"+GetGuildName(.@GID)+"^000000 Guild is";
-	mes "^ff0000"+GetGuildMaster(.@GID)+"^000000";
+	mes "2. The guild Master of ^ff0000"+getguildname(.@GID)+"^000000 Guild is";
+	mes "^ff0000"+getguildmaster(.@GID)+"^000000";
 	mes "If there is anyone who objects to this,";
 	mes "prove your strength and honor with a steel blade in your hand.";
 	close;
 
 OnRecvCastlePt03:
-	FlagEmblem GetCastleData("prtg_cas03",1);
+	flagemblem getcastledata("prtg_cas03",1);
 	end;
 }
 
@@ -77,7 +77,7 @@ prt_gld,158,136,4	duplicate(OutsideFlagsPR3)	Fadhgridh#4	GUILD_FLAG
 	end;
 
 OnRecvCastlePt03:
-	FlagEmblem GetCastleData("prtg_cas03",1);
+	flagemblem getcastledata("prtg_cas03",1);
 	end;
 }
 

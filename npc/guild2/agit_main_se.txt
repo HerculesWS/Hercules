@@ -840,7 +840,7 @@ OnInit:
 	if (getcharid(2) == .@GID && getgdskilllv(.@GID,10001)) {
 		mes "[Kafra Employee]";
 		mes "Welcome, proud member";
-		mes "of the ^FF0000"+GetGuildName(.@GID)+"^000000 Guild!";
+		mes "of the ^FF0000"+getguildname(.@GID)+"^000000 Guild!";
 		mes "The Kafra Corporation is ready";
 		mes "to assist you wherever you go!";
 		next;

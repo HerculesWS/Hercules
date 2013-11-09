@@ -11802,7 +11802,7 @@ BUILDIN(misceffect)
 /*==========================================
  * Play a BGM on a single client [Rikter/Yommy]
  *------------------------------------------*/
-BUILDIN(playBGM)
+BUILDIN(playbgm)
 {
 	const char* name;
 	struct map_session_data* sd;
@@ -11817,7 +11817,7 @@ BUILDIN(playBGM)
 	return true;
 }
 
-int playBGM_sub(struct block_list* bl,va_list ap)
+int playbgm_sub(struct block_list* bl,va_list ap)
 {
 	const char* name = va_arg(ap,const char*);
 	
@@ -11826,7 +11826,7 @@ int playBGM_sub(struct block_list* bl,va_list ap)
 	return 0;
 }
 
-int playBGM_foreachpc_sub(struct map_session_data* sd, va_list args)
+int playbgm_foreachpc_sub(struct map_session_data* sd, va_list args)
 {
 	const char* name = va_arg(args, const char*);
 	
@@ -11837,7 +11837,7 @@ int playBGM_foreachpc_sub(struct map_session_data* sd, va_list args)
 /*==========================================
  * Play a BGM on multiple client [Rikter/Yommy]
  *------------------------------------------*/
-BUILDIN(playBGMall) {
+BUILDIN(playbgmall) {
 	const char* name;
 	
 	name = script_getstr(st,2);
@@ -11852,25 +11852,25 @@ BUILDIN(playBGMall) {
 		int m;
 		
 		if ( ( m = map->mapname2mapid(mapname) ) == -1 ) {
-			ShowWarning("playBGMall: Attempted to play song '%s' on non-existent map '%s'\n",name, mapname);
+			ShowWarning("playbgmall: Attempted to play song '%s' on non-existent map '%s'\n",name, mapname);
 			return true;
 		}
 		
-		map->foreachinarea(script->playBGM_sub, m, x0, y0, x1, y1, BL_PC, name);
+		map->foreachinarea(script->playbgm_sub, m, x0, y0, x1, y1, BL_PC, name);
 	} else if( script_hasdata(st,3) ) {
 		// entire map
 		const char* mapname = script_getstr(st,3);
 		int m;
 		
 		if ( ( m = map->mapname2mapid(mapname) ) == -1 ) {
-			ShowWarning("playBGMall: Attempted to play song '%s' on non-existent map '%s'\n",name, mapname);
+			ShowWarning("playbgmall: Attempted to play song '%s' on non-existent map '%s'\n",name, mapname);
 			return true;
 		}
 		
-		map->foreachinmap(script->playBGM_sub, m, BL_PC, name);
+		map->foreachinmap(script->playbgm_sub, m, BL_PC, name);
 	} else {
 		// entire server
-		map->foreachpc(script->playBGM_foreachpc_sub, name);
+		map->foreachpc(script->playbgm_foreachpc_sub, name);
 	}
 	
 	return true;
@@ -18026,8 +18026,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(clearitem,""),
 		BUILDIN_DEF(classchange,"ii"),
 		BUILDIN_DEF(misceffect,"i"),
-		BUILDIN_DEF(playBGM,"s"),
-		BUILDIN_DEF(playBGMall,"s?????"),
+		BUILDIN_DEF(playbgm,"s"),
+		BUILDIN_DEF(playbgmall,"s?????"),
 		BUILDIN_DEF(soundeffect,"si"),
 		BUILDIN_DEF(soundeffectall,"si?????"),	// SoundEffectAll [Codemaster]
 		BUILDIN_DEF(strmobinfo,"ii"),	// display mob data [Valaris]
@@ -18550,8 +18550,8 @@ void script_defaults(void) {
 	script->buildin_maprespawnguildid_sub_pc = buildin_maprespawnguildid_sub_pc;
 	script->buildin_maprespawnguildid_sub_mob = buildin_maprespawnguildid_sub_mob;
 	script->buildin_mobcount_sub = buildin_mobcount_sub;
-	script->playBGM_sub = playBGM_sub;
-	script->playBGM_foreachpc_sub = playBGM_foreachpc_sub;
+	script->playbgm_sub = playbgm_sub;
+	script->playbgm_foreachpc_sub = playbgm_foreachpc_sub;
 	script->soundeffect_sub = soundeffect_sub;
 	script->buildin_query_sql_sub = buildin_query_sql_sub;
 	script->axtoi = axtoi;

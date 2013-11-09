@@ -23,7 +23,7 @@
 //==============================================
 function	script	F_GldManager	{
 
-	set @GID, GetCastleData(getarg(1),1);
+	set @GID, getcastledata(getarg(1),1);
 	mes "[ "+getarg(0)+" ]";
 	if (@GID == 0){
 		mes "I am waiting for my master.  Brave adventurer, follow your destiny!";
@@ -48,7 +48,7 @@ function	script	F_GldManager	{
 	M_Kaf:
 	//======
 		mes "[ "+getarg(0)+" ]";
-		if (GetCastleData(getarg(1),9) == 1) goto L_Dismiss;
+		if (getcastledata(getarg(1),9) == 1) goto L_Dismiss;
 		if (getgdskilllv(@GID,10001) == 0){
 			mes "Master, you don't have a contract with the Kafra Staff Company.";
 			mes "In order to hire a Kafra, you must first learn the Guild skill ^5533FFContract With Kafra^000000.";
@@ -67,7 +67,7 @@ function	script	F_GldManager	{
 				}
 				set Zeny,Zeny-10000;
 				enablenpc "Kafra Staff#"+getarg(4);
-				SetCastleData getarg(1),9,1;
+				setcastledata getarg(1),9,1;
 				mes "You have created a contract with the Kafra Staff Company.";
 				next;
 				cutin "kafra_01",2;
@@ -100,7 +100,7 @@ function	script	F_GldManager	{
 					mes "It's unfortunate that I won't be able to serve your guild anymore....";
 					next;
 					disablenpc "Kafra Staff#"+getarg(4);
-					SetCastleData getarg(1),9,0;
+					setcastledata getarg(1),9,0;
 					cutin "kafra_01",255;
 					mes "[ "+getarg(0)+" ]";
 					mes "The Kafra has been dismissed.  But... we should really get a Kafra as soon as possible!";
