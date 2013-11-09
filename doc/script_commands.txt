@@ -414,7 +414,10 @@ Variables
 The meat of every programming language is variables - places where you 
 store data.
 
-In Hercules scripting language, variable names are not case sensitive.
+In Hercules scripting language, variable names are case sensitive. Even though
+at the current time the script engine accepts them even with the incorrect
+case, it is not advised to rely on this behavior, as it may change at any
+time.
 
 Variables are divided into and uniquely identified by the combination of:
 prefix  - determines the scope and extent (or lifetime) of the variable
@@ -1005,6 +1008,10 @@ All commands must end with a ';'. Actually, you may expect to have
 multiple commands on one line if you properly terminate them with a ';', 
 but it's better if you don't, since it is not certain just whether the 
 scripting engine will behave nicely if you do.
+
+Please note that command and function names are case sensitive. Even though at
+the current time the script engine accepts them with the incorrect case, it is
+not advised to rely on this behavior, as it may change at any time.
 
 -------------------------
 
@@ -4902,7 +4909,7 @@ like storage or cart.
 ---------------------------------------
 
 *equip <item id>;
-*autoEquip <item id>,<option>;
+*autoequip <item id>,<option>;
 
 These commands are to equip a equipment on the attached character. 
 The equip function will equip the item ID given when the player has this 
@@ -6942,8 +6949,8 @@ You can add your own effects this way, naturally.
 
 ---------------------------------------
 
-*playBGM "<BGM filename>";
-*playBGMall "<BGM filename>"{,"<map name>"{,<x0>,<y0>,<x1>,<y1>}};
+*playbgm "<BGM filename>";
+*playbgmall "<BGM filename>"{,"<map name>"{,<x0>,<y0>,<x1>,<y1>}};
 
 These two commands will play a Background Music to either the invoking 
 character only ('playBGM') or multiple characters ('playBGMall').

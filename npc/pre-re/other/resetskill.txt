@@ -107,7 +107,7 @@ prontera,146,232,4	script	Hypnotist#2	4_F_TELEPORTER,{
 				mes "services. Oh, and best";
 				mes "of luck to you on your";
 				mes "travels, adventurer.";
-				ResetSkill;
+				resetskill;
 				close;
 			}
 			mes "[Hypnotist]";

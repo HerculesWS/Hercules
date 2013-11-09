@@ -31,7 +31,7 @@ OnAgitInit2:
 	   (gettime(4)==4) && (gettime(3)>=18 && gettime(3)<21) ||
 	   (gettime(4)==6) && (gettime(3)>=22 && gettime(3)<23)) {
 		if (!agitcheck2()) {
-			AgitStart2;
+			agitstart2;
 		}
 		end;
 	}
@@ -41,7 +41,7 @@ OnAgitInit2:
 	    (gettime(4)==4) && (gettime(3)==21) ||
 	    (gettime(4)==6) && (gettime(3)==23)) { 
 		if (agitcheck2()) {
-			AgitEnd2;
+			agitend2;
 		}
 		end;
 	}

@@ -53842,14 +53842,14 @@ int HP_script_buildin_mobcount_sub(struct block_list *bl, va_list ap) {
 	}
 	return retVal___;
 }
-int HP_script_playBGM_sub(struct block_list *bl, va_list ap) {
+int HP_script_playbgm_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if( HPMHooks.count.HP_script_playBGM_sub_pre ) {
+	if( HPMHooks.count.HP_script_playbgm_sub_pre ) {
 		int (*preHookFunc) (struct block_list *bl, va_list ap);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_playBGM_sub_pre; hIndex++ ) {
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_playbgm_sub_pre; hIndex++ ) {
 			va_list ap___copy; va_copy(ap___copy, ap);
-			preHookFunc = HPMHooks.list.HP_script_playBGM_sub_pre[hIndex].func;
+			preHookFunc = HPMHooks.list.HP_script_playbgm_sub_pre[hIndex].func;
 			retVal___ = preHookFunc(bl, ap___copy);
 			va_end(ap___copy);
 		}
@@ -53860,28 +53860,28 @@ int HP_script_playBGM_sub(struct block_list *bl, va_list ap) {
 	}
 	{
 		va_list ap___copy; va_copy(ap___copy, ap);
-		retVal___ = HPMHooks.source.script.playBGM_sub(bl, ap___copy);
+		retVal___ = HPMHooks.source.script.playbgm_sub(bl, ap___copy);
 		va_end(ap___copy);
 	}
-	if( HPMHooks.count.HP_script_playBGM_sub_post ) {
+	if( HPMHooks.count.HP_script_playbgm_sub_post ) {
 		int (*postHookFunc) (int retVal___, struct block_list *bl, va_list ap);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_playBGM_sub_post; hIndex++ ) {
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_playbgm_sub_post; hIndex++ ) {
 			va_list ap___copy; va_copy(ap___copy, ap);
-			postHookFunc = HPMHooks.list.HP_script_playBGM_sub_post[hIndex].func;
+			postHookFunc = HPMHooks.list.HP_script_playbgm_sub_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl, ap___copy);
 			va_end(ap___copy);
 		}
 	}
 	return retVal___;
 }
-int HP_script_playBGM_foreachpc_sub(struct map_session_data *sd, va_list args) {
+int HP_script_playbgm_foreachpc_sub(struct map_session_data *sd, va_list args) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if( HPMHooks.count.HP_script_playBGM_foreachpc_sub_pre ) {
+	if( HPMHooks.count.HP_script_playbgm_foreachpc_sub_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, va_list args);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_playBGM_foreachpc_sub_pre; hIndex++ ) {
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_playbgm_foreachpc_sub_pre; hIndex++ ) {
 			va_list args___copy; va_copy(args___copy, args);
-			preHookFunc = HPMHooks.list.HP_script_playBGM_foreachpc_sub_pre[hIndex].func;
+			preHookFunc = HPMHooks.list.HP_script_playbgm_foreachpc_sub_pre[hIndex].func;
 			retVal___ = preHookFunc(sd, args___copy);
 			va_end(args___copy);
 		}
@@ -53892,14 +53892,14 @@ int HP_script_playBGM_foreachpc_sub(struct map_session_data *sd, va_list args) {
 	}
 	{
 		va_list args___copy; va_copy(args___copy, args);
-		retVal___ = HPMHooks.source.script.playBGM_foreachpc_sub(sd, args___copy);
+		retVal___ = HPMHooks.source.script.playbgm_foreachpc_sub(sd, args___copy);
 		va_end(args___copy);
 	}
-	if( HPMHooks.count.HP_script_playBGM_foreachpc_sub_post ) {
+	if( HPMHooks.count.HP_script_playbgm_foreachpc_sub_post ) {
 		int (*postHookFunc) (int retVal___, struct map_session_data *sd, va_list args);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_playBGM_foreachpc_sub_post; hIndex++ ) {
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_playbgm_foreachpc_sub_post; hIndex++ ) {
 			va_list args___copy; va_copy(args___copy, args);
-			postHookFunc = HPMHooks.list.HP_script_playBGM_foreachpc_sub_post[hIndex].func;
+			postHookFunc = HPMHooks.list.HP_script_playbgm_foreachpc_sub_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, args___copy);
 			va_end(args___copy);
 		}

@@ -46,7 +46,7 @@ schg_cas04,111,46,4	script	Hljod#LF_sc04_3::LF_sc04_2	GUILD_FLAG,{
 	end;
 OnAgitInit2:
 OnRecvCastlesc04:
-	FlagEmblem GetCastleData("schg_cas04",1);
+	flagemblem getcastledata("schg_cas04",1);
 	end;
 }
 schg_cas04,129,46,4	duplicate(LF_sc04_2)	Hljod#LF_sc04_4	GUILD_FLAG
@@ -66,7 +66,7 @@ sch_gld,134,97,4	script	Hljod#flag_sc04_1::sc04_Flag	GUILD_FLAG,{
 	end;
 OnAgitInit2:
 OnRecvCastlesc04:
-	FlagEmblem GetCastleData("schg_cas04",1);
+	flagemblem getcastledata("schg_cas04",1);
 	end;
 }
 sch_gld,141,97,4	duplicate(sc04_Flag)	Hljod#flag_sc04_2	GUILD_FLAG

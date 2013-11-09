@@ -621,8 +621,8 @@ struct script_interface {
 	int (*buildin_maprespawnguildid_sub_pc) (struct map_session_data *sd, va_list ap);
 	int (*buildin_maprespawnguildid_sub_mob) (struct block_list *bl, va_list ap);
 	int (*buildin_mobcount_sub) (struct block_list *bl, va_list ap);
-	int (*playBGM_sub) (struct block_list *bl, va_list ap);
-	int (*playBGM_foreachpc_sub) (struct map_session_data *sd, va_list args);
+	int (*playbgm_sub) (struct block_list *bl, va_list ap);
+	int (*playbgm_foreachpc_sub) (struct map_session_data *sd, va_list args);
 	int (*soundeffect_sub) (struct block_list *bl, va_list ap);
 	int (*buildin_query_sql_sub) (struct script_state *st, Sql *handle);
 	int (*axtoi) (const char *hexStg);

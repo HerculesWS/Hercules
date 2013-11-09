@@ -1716,7 +1716,7 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 			mes "of Cooking Kits";
 			mes "did you need?";
 			next;
-			switch(Select("Outdoor Cooking Kit - 500z:Home Cooking Kit - 1,000z:Quit")) {
+			switch(select("Outdoor Cooking Kit - 500z:Home Cooking Kit - 1,000z:Quit")) {
 			case 1:
 				callsub S_SellSets,12125;
 				close;

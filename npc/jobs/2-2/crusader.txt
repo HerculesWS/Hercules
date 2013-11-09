@@ -1113,7 +1113,7 @@ OnInit:
 	monster "job_cru",98,80,"Greatest General",1277,1,"Summoner#cr3::OnDead";
 	monster "job_cru",92,90,"Greatest General",1277,1,"Summoner#cr3::OnDead";
 	monster "job_cru",104,90,"Greatest General",1277,1,"Summoner#cr3::OnDead";
-	Initnpctimer;
+	initnpctimer;
 	end;
 
 OnStart:
@@ -1126,7 +1126,7 @@ OnStart:
 	monster "job_cru",98,80,"Greatest General",1277,1,"Summoner#cr3::OnDead";
 	monster "job_cru",92,90,"Greatest General",1277,1,"Summoner#cr3::OnDead";
 	monster "job_cru",104,90,"Greatest General",1277,1,"Summoner#cr3::OnDead";
-	Initnpctimer;
+	initnpctimer;
 	end;
 
 OnReset:

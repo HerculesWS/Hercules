@@ -327,7 +327,7 @@ prontera,248,212,3	script	Busy Boy#prt	4_M_KID1,3,3,{
 			mes "You couldn't help it:";
 			mes "it was a natural reflex!^000000";
 			next;
-			Specialeffect EF_HITDARK;
+			specialeffect EF_HITDARK;
 			emotion e_omg;
 			mes "^3355FF*BAM!*^000000";
 			next;
@@ -449,7 +449,7 @@ OnTouch:
 	callsub S_CheckWeight; //Check Player's weight
 	if (BaseLevel > 59) {
 		if (prt_curse == 0) {
-			Specialeffect EF_HITDARK;
+			specialeffect EF_HITDARK;
 			mes "^3355FF*BAM!*^000000";
 			next;
 			mes "[Busy Looking Boy]";
