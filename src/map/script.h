@@ -20,6 +20,12 @@ struct eri;
 /**
  * Defines
  **/
+// TODO: Remove temporary code
+#define ENABLE_CASE_CHECK
+#define DeprecationWarning(func, bad, good, file, line) ShowWarning("%s: use of deprecated keyword '%s' (use '%s' instead) in file '%s', line '%d'. This will be a critical error in a near future.\n", func, bad, good, file, line);
+#define DeprecationWarning2(func, bad, good, where) ShowWarning("%s: detected possible use of wrong case in a script. Found '%s', probably meant to be '%s' (in '%s'). If it is a local (.@) variable, and you're absolutely sure you used the correct case, please disragard this message, otherwise please correct your scripts, as this will become fatal in a near future.\n", func, bad, good, where);
+#define disp_deprecation_message(func, good, p) disp_warning_message(func": use of deprecated keyword (use '"good"' instead). This will be a critical error in a near future.", p);
+
 #define NUM_WHISPER_VAR 10
 
 /// Maximum amount of elements in script arrays (soon getting ducked)
