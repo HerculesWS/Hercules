@@ -199,7 +199,7 @@ prt_castle,54,34,4	script	Carl Orleans#val1	1_M_01,{
 	mes "[Carl Orleans]";
 	mes "Yes? What can I cook for you?";
 	next;
-	menu "Black handmade Chocolate, please",-,"I want a White handmade Chocolate...",M_WHITE,"I'm lost, sorry to bother you.",M_END;
+	menu "Black handmade Chocolate, please",-,"I want a White handmade Chocolate...",M_WHITE,"I'm lost, sorry to bother you.",M_End;
      
 	mes "[Carl Orleans]";
 	mes "Well, I just might be able to fulfill your needs...";
@@ -266,7 +266,7 @@ M_WHITE:
 	mes "Enjoy.";
 	close;
 
-M_END:
+M_End:
 	mes "[Carl Orleans]";
 	mes "Oh.. well, if you want me to make some of my special handmade Chocolate....";
 	mes "You will need to give me at least ^0000FF 3 Chocolates^000000 or ^0000FF 3 White Chocolates^000000.";

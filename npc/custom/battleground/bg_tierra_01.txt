@@ -322,7 +322,7 @@ bat_a01,45,19,3	script	Croix Vintenar#tv1	4_M_CRU_HEAD,{
 	{
 		if( $@TierraBG1_Victory == Bat_Team )
 		{ // Victory
-			set .@Reward, 3;
+			set .@reward, 3;
 			mes "[Swandery]";
 			mes "Blessed Croax!!";
 			mes "Let's enjoy our glorious victory!";
@@ -331,7 +331,7 @@ bat_a01,45,19,3	script	Croix Vintenar#tv1	4_M_CRU_HEAD,{
 		}
 		else
 		{ // 
-			set .@Reward, 1;
+			set .@reward, 1;
 			mes "[Swandery]";
 			mes "Oh, " + strcharinfo(0) + ". Don't be sad.";
 			mes "Even though we didn't win, we did our best.";
@@ -340,7 +340,7 @@ bat_a01,45,19,3	script	Croix Vintenar#tv1	4_M_CRU_HEAD,{
 		}
 
 		setquest 2069;
-		getitem 7828, .@Reward;
+		getitem 7828, .@reward;
 		bg_leave;
 		warp "bat_room",155,150;
 		end;
@@ -353,7 +353,7 @@ bat_a01,53,377,3	script	Guillaume Vintenar#tv1	4_M_KY_HEAD,{
 	{
 		if( $@TierraBG1_Victory == Bat_Team )
 		{ // Victory
-			set .@Reward, 3;
+			set .@reward, 3;
 			mes "[Swandery]";
 			mes "Blessed Guillaume!!";
 			mes "Let's enjoy our glorious victory!";
@@ -362,7 +362,7 @@ bat_a01,53,377,3	script	Guillaume Vintenar#tv1	4_M_KY_HEAD,{
 		}
 		else
 		{ // 
-			set .@Reward, 1;
+			set .@reward, 1;
 			mes "[Swandery]";
 			mes "You lost, but you're dedicated to this battle.";
 			mes "This is a reward for your great dedication by Guillaume Marollo!";
@@ -371,7 +371,7 @@ bat_a01,53,377,3	script	Guillaume Vintenar#tv1	4_M_KY_HEAD,{
 		}
 
 		setquest 2069;
-		getitem 7828, .@Reward;
+		getitem 7828, .@reward;
 		bg_leave;
 		warp "bat_room",155,150;
 		end;

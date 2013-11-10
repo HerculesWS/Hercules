@@ -133,15 +133,15 @@ OnInit:
 		B_MAGALETA, B_SHECIL, B_KATRINN, B_YGNIZEM, APOCALIPS_H, LADY_TANEE, THANATOS, DETALE, KIEL_, RANDGRIS,
 		GLOOMUNDERNIGHT, KTULLANUX, ATROCE, G_MAGALETA_, IFRIT, FALLINGBISHOP, BEELZEBUB_, GOPINICH, MOROCC_, KUBLIN,
 		S_NYDHOG, BOITATA, QUEEN_SCARABA, LOST_DRAGON, LEAK, I_QUEEN_SCARABA;
-	set .BlackList$, "1003,1006,1017,1021,1022,1027,1043,1075,1136,1137,1168," + 
-	    "1171,1172,1173,1181,1187,1210,1217,1218,1222,1223,1224,1225,1226,1227,1228," + 
-	    "1233,1284,1407,1411,1414,1495,1501,1900,1996,2000,2001,2002,2003,2004," + 
-	    "2005,2006,2007,2011,2012,2025,2028,2029,2030,2031,2032,2033,2034,2035," + 
-	    "2036,2037,2038,2039,2040,2041,2042,2043,2044,2045,2046,2047,2048,2049," + 
-	    "2050,2051,2052,2053,2054,2055,2056,2057,2058,2059,2060,2061,2062,2063," + 
-	    "2064,2065,2066,2067,2075,2076,2077,2078,2079,2080,2081,2083,2084,2085," + 
-	    "2086,2087,2088,2089,2090,2091,2092,2093,2094,2095,2096,2097,2098,2099," + 
-	    "2100,2101,2012,2103,2104,2105,2106,2107,2108,2109,2110,2111,2112,2113," + 
+	set .Blacklist$, "1003,1006,1017,1021,1022,1027,1043,1075,1136,1137,1168," +
+	    "1171,1172,1173,1181,1187,1210,1217,1218,1222,1223,1224,1225,1226,1227,1228," +
+	    "1233,1284,1407,1411,1414,1495,1501,1900,1996,2000,2001,2002,2003,2004," +
+	    "2005,2006,2007,2011,2012,2025,2028,2029,2030,2031,2032,2033,2034,2035," +
+	    "2036,2037,2038,2039,2040,2041,2042,2043,2044,2045,2046,2047,2048,2049," +
+	    "2050,2051,2052,2053,2054,2055,2056,2057,2058,2059,2060,2061,2062,2063," +
+	    "2064,2065,2066,2067,2075,2076,2077,2078,2079,2080,2081,2083,2084,2085," +
+	    "2086,2087,2088,2089,2090,2091,2092,2093,2094,2095,2096,2097,2098,2099," +
+	    "2100,2101,2012,2103,2104,2105,2106,2107,2108,2109,2110,2111,2112,2113," +
 	    "2114,2115,2116,2117,2118,2119,2120,2121,2123,2124,2125,1496,";
 	end;
 OnClock0000:
@@ -201,22 +201,22 @@ OnTimer180000:
 iDisguise:
 	if (.Rule==1) {
 		set .Winner,0;
-		set .@Monster, rand(SCORPION, PINGUICULA);
-		if (compare(","+.BlackList$+"," , ","+.@Monster+",")) goto iDisguise;
-		if (.@Monster==.LastMonster) goto iDisguise;
-		set .LastMonster,.@Monster;
-		set $MonsterName$,getmonsterinfo(.@Monster,0);
+		set .@monster, rand(SCORPION, PINGUICULA);
+		if (compare(","+.Blacklist$+"," , ","+.@monster+",")) goto iDisguise;
+		if (.@monster==.LastMonster) goto iDisguise;
+		set .LastMonster,.@monster;
+		set $MonsterName$,getmonsterinfo(.@monster,0);
 	}
 	if (.Rule==2) {
 		set .Winner,0;
-		set .@Monster, rand(getarraysize(.MVP));
-		set $MonsterName$,getmonsterinfo(.MVP[.@Monster],0);
+		set .@monster, rand(getarraysize(.MVP));
+		set $MonsterName$,getmonsterinfo(.MVP[.@monster],0);
 	}
 	deletepset 1;
 	defpattern 1,"([^:]+):.\\s*"+$MonsterName$+".*", "iCorrect";
 	activatepset 1;
-	if (.Rule==1) setnpcdisplay "Disguise Event",.@Monster;
-	if (.Rule==2) setnpcdisplay "Disguise Event",.MVP[.@Monster];
+	if (.Rule==1) setnpcdisplay "Disguise Event",.@monster;
+	if (.Rule==2) setnpcdisplay "Disguise Event",.MVP[.@monster];
 	set .Change,1;
 	setnpctimer 0;
 	end;

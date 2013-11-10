@@ -309,14 +309,14 @@ function	script	F_GetArmorType	{
 // Time calculation Function
 // *********************************************************************
 function	script	Time2Str	{
-	set .@Time_Left, getarg(0) - gettimetick(2);
+	set .@time_left, getarg(0) - gettimetick(2);
 	
-	set .@Days, .@Time_Left / 86400;
-	set .@Time_Left, .@Time_Left - (.@Days * 86400);
-	set .@Hours, .@Time_Left / 3600;
-	set .@Time_Left, .@Time_Left - (.@Hours * 3600);
-	set .@Minutes, .@Time_Left / 60;
-	set .@Time_Left, .@Time_Left - (.@Minutes * 60);
+	set .@Days, .@time_left / 86400;
+	set .@time_left, .@time_left - (.@Days * 86400);
+	set .@Hours, .@time_left / 3600;
+	set .@time_left, .@time_left - (.@Hours * 3600);
+	set .@Minutes, .@time_left / 60;
+	set .@time_left, .@time_left - (.@Minutes * 60);
 	
 	set .@Time$, "";
 	if( .@Days > 1 )
@@ -334,10 +334,10 @@ function	script	Time2Str	{
 	else if( .@Minutes > 0 )
 		set .@Time$, .@Time$ + .@Minutes + " minute, ";
 
-	if( .@Time_Left > 1 || .@Time_Left == 0 )
-		set .@Time$, .@Time$ + .@Time_Left + " seconds";
-	else if( .@Time_Left == 1 )
-		set .@Time$, .@Time$ + .@Time_Left + " second";
+	if( .@time_left > 1 || .@time_left == 0 )
+		set .@Time$, .@Time$ + .@time_left + " seconds";
+	else if( .@time_left == 1 )
+		set .@Time$, .@Time$ + .@time_left + " second";
 	
 	return .@Time$;
 }

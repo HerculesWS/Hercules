@@ -949,7 +949,7 @@
 1646,La'cryma_Stick,La'cryma Stick,4,20,,500,30:180,,1,2,0x00010204,58,2,2,3,50,1,10,{ bonus bInt,4; bonus bMdef,1; bonus2 bSkillAtk,WZ_STORMGUST,getrefine(); if (getrefine() > 9) bonus2 bVariableCastrate,WZ_STORMGUST,-8; },{},{}
 1647,Croce_Staff,Croce Staff,4,20,,500,30:175,,1,1,0x00008110,58,2,2,3,50,1,10,{ bonus bAtkEle,Ele_Holy; bonus bInt,4; bonus4 bAutoSpellOnSkill,AL_HEAL,AL_BLESSING,getskilllv(AL_BLESSING)>1?getskilllv(AL_BLESSING):1,20; },{},{}
 1648,Staff_Of_Bordeaux,Staff Of Bordeaux,4,20,,500,30:170,,1,0,0x00010204,58,2,2,4,50,1,10,{ bonus bInt,2; bonus bDex,1; if(getskilllv(SA_DRAGONOLOGY) == 5) { bonus bUseSPrate,-15; bonus bInt,3; } },{},{}
-1649,Rafini_Staff,Laphine Staff,4,20,,500,30:180,,1,0,0x00018300,56,2,2,3,100,1,10,{ bonus bFixedCastRate,-getrefine(); },{},{}
+1649,Rafini_Staff,Laphine Staff,4,20,,500,30:180,,1,0,0x00018300,56,2,2,3,100,1,10,{ bonus bFixedCastrate,-getrefine(); },{},{}
 1650,P_Staff1,Eden Staff I,4,0,,0,60:125,,1,0,0x00818314,63,2,2,2,26,0,10,{ bonus bInt,2; },{},{}
 1651,P_Staff2,Eden Staff II,4,0,,0,60:150,,1,0,0x00818314,63,2,2,2,40,0,10,{ bonus bInt,3; },{},{}
 1652,Tourist_Staff,Traveler's Staff,4,0,,500,35,,1,0,0x00818315,63,2,2,1,0,0,10,{ bonus bInt,2; bonus bAgi,1; },{},{}

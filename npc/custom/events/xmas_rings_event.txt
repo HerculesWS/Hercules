@@ -111,7 +111,7 @@ louyang,224,249,4	script	Sneewy	4_F_KID3,{
 		mes "[Sneewy]";
 		mes "Oh, hello. Has my brother Snower told you everything?";
 		next;
-		menu "Here are your 4 Gift Boxes",-, "I don't know any Snowhatevers...",M_END;
+		menu "Here are your 4 Gift Boxes",-, "I don't know any Snowhatevers...",M_End;
 
 		mes "[Sneewy]";
 		if(countitem(644)<4){
@@ -133,7 +133,7 @@ louyang,224,249,4	script	Sneewy	4_F_KID3,{
 	mes "Thanks again! No children will meet the holidays without the gifts!";
 	close;
 
-M_END:
+M_End:
 	mes "[Sneewy]";
 	mes "Pity... I've got a magic Santa's ring... I'd exchange it for 4 Gift Boxes...";
 	emotion e_swt;
@@ -163,7 +163,7 @@ izlu2dun,133,160,2	script	Snoowy	4_F_06,{
 		mes "[Snoowy]";
 		mes "But I too need 3 more gifts for my marine folk friends...";
 		next;
-		menu "Have these gifts!",-, "I need a li'l something in return",M_END;
+		menu "Have these gifts!",-, "I need a li'l something in return",M_End;
 
 		mes "[Snoowy]";
 		if(countitem(644)<3){
@@ -183,7 +183,7 @@ izlu2dun,133,160,2	script	Snoowy	4_F_06,{
 	if(rand(2))mes "Didn't you know that Santa's Hat reveals the real power of the rings?";
 	close;
 
-M_END:
+M_End:
 	mes "[Snoowy]";
 	mes "I'd exchange a GOLD magic ring for 3 gift boxes...";
 	emotion e_swt;

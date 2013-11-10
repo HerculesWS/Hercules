@@ -30,7 +30,7 @@ yuno_in01,112,151,6	script	Quest Manager	1_M_SIZ,{
 	mes "Good well get back out there.";
 	close;
 N_PayZeny:
-	if (zeny < 2500) goto N_ZenyFail;
+	if (Zeny < 2500) goto N_ZenyFail;
 	set one_qset, 0;
 	set two_qset, 0;
 	set three_qset, 0;

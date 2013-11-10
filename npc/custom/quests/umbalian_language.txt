@@ -155,10 +155,10 @@ L_AGAIN:
 yuno,157,366,2	script	Wise Man Fabius	2_M_SAGE_OLD,{
 	mes "[Fabius]";
 	if(event_umbala >= 3) set umb_lang,2; //You already learnt Umbalian language from Umbalian Chief. So this Quest is disabled
-	if(umb_lang<2) goto L_QUEST;
+	if(umb_lang<2) goto L_Quest;
 	mes "You speak Umbalian fluently! So you will never forget the language of Umbalians!";
 	close;
-L_QUEST:
+L_Quest:
 	if((countitem(1006) < 1) || (countitem(7118) < 1) || (countitem(7117) < 1)) goto L_DONE;//Items: Old Magic Book, Torn Scroll, Torn Spell Book,
 	delitem 1006,1;	//Items: Old Magic Book,
 	delitem 7118,1;	//Items: Torn Scroll,

@@ -54,8 +54,8 @@
 				if (countitem(.@coin)) {
 					mes .@n$;
 					mes "Thank you for coming.";
-					delitem .@Coin,1; 
-					getitem .@Items[.@i],3;
+					delitem .@coin,1;
+					getitem .@items[.@i],3;
 					close;
 				}
 				else {

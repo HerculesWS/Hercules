@@ -14,7 +14,7 @@
 prt_in,24,61,7	script	Perchik	1_M_01,{
 	
 	setarray .@item[0],644,3;	// Item requirements: <ID>,<Count>{,...} (0 to disable)
-	setarray .@Cost[0],0,5000;	// Zeny requirements: <base price>,<price per refine>
+	setarray .@cost[0],0,5000;	// Zeny requirements: <base price>,<price per refine>
 
 	disable_items;
 	mes "[Perchik]";
@@ -26,12 +26,12 @@ prt_in,24,61,7	script	Perchik	1_M_01,{
 		emotion e_ic;
 		next;
 		mes "[Perchik]";
-		if (getarraysize(.@item) || getarraysize(.@Cost)) {
+		if (getarraysize(.@item) || getarraysize(.@cost)) {
 			mes "For my work I accept:";
 			if (getarraysize(.@item)) for(set .@i,0; .@i<getarraysize(.@item); set .@i,.@i+2)
 				mes " ~ "+.@item[.@i+1]+"x "+getitemname(.@item[.@i]);
-			if (.@Cost[0]) mes " ~ "+.@Cost[0]+" Zeny";
-			if (.@Cost[1]) mes " ~ "+.@Cost[1]+" Zeny per refine";
+			if (.@cost[0]) mes " ~ "+.@cost[0]+" Zeny";
+			if (.@cost[1]) mes " ~ "+.@cost[1]+" Zeny per refine";
 		}
 		else mes "I work for free, but...";
 		next;
@@ -91,7 +91,7 @@ prt_in,24,61,7	script	Perchik	1_M_01,{
 			emotion e_hmm;
 			close;
 		}
-	set .@price, .@Cost[0]+(.@Cost[1]*.@ref);
+	set .@price, .@cost[0]+(.@cost[1]*.@ref);
 	if (getarraysize(.@item) || .@price) {
 		mes "I will need:";
 		if (getarraysize(.@item)) for(set .@i,0; .@i<getarraysize(.@item); set .@i,.@i+2) {
