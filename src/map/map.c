@@ -5204,17 +5204,18 @@ void map_helpscreen(bool do_exit)
 	ShowInfo("Usage: %s [options]\n", SERVER_NAME);
 	ShowInfo("\n");
 	ShowInfo("Options:\n");
-	ShowInfo("  -?, -h [--help]\t\tDisplays this help screen.\n");
-	ShowInfo("  -v [--version]\t\tDisplays the server's version.\n");
-	ShowInfo("  --run-once\t\t\tCloses server after loading (testing).\n");
-	ShowInfo("  --map-config <file>\t\tAlternative map-server configuration.\n");
-	ShowInfo("  --battle-config <file>\tAlternative battle configuration.\n");
-	ShowInfo("  --atcommand-config <file>\tAlternative atcommand configuration.\n");
-	ShowInfo("  --script-config <file>\tAlternative script configuration.\n");
-	ShowInfo("  --msg-config <file>\t\tAlternative message configuration.\n");
-	ShowInfo("  --grf-path <file>\t\tAlternative GRF path configuration.\n");
-	ShowInfo("  --inter-config <file>\t\tAlternative inter-server configuration.\n");
-	ShowInfo("  --log-config <file>\t\tAlternative logging configuration.\n");
+	ShowInfo("  -?, -h [--help]           Displays this help screen.\n");
+	ShowInfo("  -v [--version]            Displays the server's version.\n");
+	ShowInfo("  --run-once                Closes server after loading (testing).\n");
+	ShowInfo("  --map-config <file>       Alternative map-server configuration.\n");
+	ShowInfo("  --battle-config <file>    Alternative battle configuration.\n");
+	ShowInfo("  --atcommand-config <file> Alternative atcommand configuration.\n");
+	ShowInfo("  --script-config <file>    Alternative script configuration.\n");
+	ShowInfo("  --msg-config <file>       Alternative message configuration.\n");
+	ShowInfo("  --grf-path <file>         Alternative GRF path configuration.\n");
+	ShowInfo("  --inter-config <file>     Alternative inter-server configuration.\n");
+	ShowInfo("  --log-config <file>       Alternative logging configuration.\n");
+	ShowInfo("  --script-check <file>     Tests a script for errors, without running the server.\n");
 	HPM->arg_help();/* display help for commands implemented thru HPM */
 	if( do_exit )
 		exit(EXIT_SUCCESS);
