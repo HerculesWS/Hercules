@@ -6,6 +6,11 @@
 -- Apply in the same database you applied your main.sql
 -- Last revision: November 10, 2013, 19:00
 
+-- Drop table contents from ´sc_data´ since we use a different status order than rAthena
+-- /!\ WARNING /!\ This will remove _ALL_ of the status effects active on the server
+-- This will remove even jailed status from users!
+TRUNCATE TABLE `sc_data`;
+
 
 -- Drop table `skillcooldown` since it's not used in Hercules
 DROP TABLE IF EXISTS `skillcooldown`;
