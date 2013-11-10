@@ -444,7 +444,7 @@ prt_in,177,20,2	script	TenSue#pront	4W_M_01,{
 		mes "[TenSue]";
 		mes "The headquarters of Kafra Corporation is also located in Al de Baran. You should really stop by and check it out for yourself.";
 		close;
-	Default:
+	default:
 		mes "[TenSue]";
 		mes "The kingdom of";
 		mes "Rune-Midgarts is ruled";
@@ -631,7 +631,7 @@ prt_church,103,76,0	script	Garnet#pront	1_F_02,{
 			mes "Alright, I've";
 			mes "heard enough.";
 			close2;
-			set .@SkilLChat,0;
+			set .@SkillChat,0;
 			break;
 		}
 	}
@@ -649,7 +649,7 @@ prt_church,103,71,0	script	Henson#pront	2_M_PHARMACIST,{
 	mes "Did you have any questions about Acolyte and Priest skills?";
 	next;
 	set .@SkillChat,1;
-	while(.@Skillchat) {
+	while(.@SkillChat) {
 		switch(select("About Divine Protection:About Demon Bane:About Decrease AGI:About Signum Crusis :About Pneuma:About Ruwach:About Teleport:End conversation.")) {
 		case 1:
 			mes "[Henson]";
@@ -729,7 +729,7 @@ prt_church,103,71,0	script	Henson#pront	2_M_PHARMACIST,{
 			mes "[Henson]";
 			mes "If you wish to understand more about an Acolyte or Priest skill, you are welcome to visit me at any time.";
 			close2;
-			set .@SkilLChat,0;
+			set .@SkillChat,0;
 			break;
 		}
 	}

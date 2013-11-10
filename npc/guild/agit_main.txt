@@ -111,9 +111,9 @@ OnAgitBreak:
 	if (.@Economy < 0) set .@Economy, 0;
 	setcastledata strnpcinfo(2), 2, .@Economy;
 	// Adjust Defense Invest Level for Castle
-	set .@Defence,getcastledata(strnpcinfo(2),3) - 5;
-	if (.@Defence < 0) set .@Defence, 0;
-	setcastledata strnpcinfo(2), 3, .@Defence;
+	set .@defence,getcastledata(strnpcinfo(2),3) - 5;
+	if (.@defence < 0) set .@defence, 0;
+	setcastledata strnpcinfo(2), 3, .@defence;
 
 	// Set new Castle Occupant
 	setcastledata strnpcinfo(2),1, .@GID;
@@ -700,27 +700,27 @@ OnRecvCastle:
 			close;
 		}
 	case 3:
-		set .@Defence,getcastledata(strnpcinfo(2),3);
-		if (.@Defence < 6) { set .@def_invest,10000; }
-		else if ((.@Defence >= 6) && (.@Defence <= 10)) { set .@def_invest,20000; }
-		else if ((.@Defence >= 11) && (.@Defence <= 15)) { set .@def_invest,40000; }
-		else if ((.@Defence >= 16) && (.@Defence <= 20)) { set .@def_invest,70000; }
-		else if ((.@Defence >= 21) && (.@Defence <= 25)) { set .@def_invest,110000; }
-		else if ((.@Defence >= 26) && (.@Defence <= 30)) { set .@def_invest,160000; }
-		else if ((.@Defence >= 31) && (.@Defence <= 35)) { set .@def_invest,220000; }
-		else if ((.@Defence >= 36) && (.@Defence <= 40)) { set .@def_invest,290000; }
-		else if ((.@Defence >= 41) && (.@Defence <= 45)) { set .@def_invest,370000; }
-		else if ((.@Defence >= 46) && (.@Defence <= 50)) { set .@def_invest,460000; }
-		else if ((.@Defence >= 51) && (.@Defence <= 55)) { set .@def_invest,560000; }
-		else if ((.@Defence >= 56) && (.@Defence <= 60)) { set .@def_invest,670000; }
-		else if ((.@Defence >= 61) && (.@Defence <= 65)) { set .@def_invest,790000; }
-		else if ((.@Defence >= 66) && (.@Defence <= 70)) { set .@def_invest,920000; }
-		else if ((.@Defence >= 71) && (.@Defence <= 75)) { set .@def_invest,1060000; }
-		else if ((.@Defence >= 76) && (.@Defence <= 80)) { set .@def_invest,1210000; }
-		else if ((.@Defence >= 81) && (.@Defence <= 85)) { set .@def_invest,1370000; }
-		else if ((.@Defence >= 86) && (.@Defence <= 90)) { set .@def_invest,1540000; }
-		else if ((.@Defence >= 91) && (.@Defence <= 95)) { set .@def_invest,1720000; }
-		else if ((.@Defence >= 96) && (.@Defence <= 100)) { set .@def_invest,1910000; }
+		set .@defence,getcastledata(strnpcinfo(2),3);
+		if (.@defence < 6) { set .@def_invest,10000; }
+		else if ((.@defence >= 6) && (.@defence <= 10)) { set .@def_invest,20000; }
+		else if ((.@defence >= 11) && (.@defence <= 15)) { set .@def_invest,40000; }
+		else if ((.@defence >= 16) && (.@defence <= 20)) { set .@def_invest,70000; }
+		else if ((.@defence >= 21) && (.@defence <= 25)) { set .@def_invest,110000; }
+		else if ((.@defence >= 26) && (.@defence <= 30)) { set .@def_invest,160000; }
+		else if ((.@defence >= 31) && (.@defence <= 35)) { set .@def_invest,220000; }
+		else if ((.@defence >= 36) && (.@defence <= 40)) { set .@def_invest,290000; }
+		else if ((.@defence >= 41) && (.@defence <= 45)) { set .@def_invest,370000; }
+		else if ((.@defence >= 46) && (.@defence <= 50)) { set .@def_invest,460000; }
+		else if ((.@defence >= 51) && (.@defence <= 55)) { set .@def_invest,560000; }
+		else if ((.@defence >= 56) && (.@defence <= 60)) { set .@def_invest,670000; }
+		else if ((.@defence >= 61) && (.@defence <= 65)) { set .@def_invest,790000; }
+		else if ((.@defence >= 66) && (.@defence <= 70)) { set .@def_invest,920000; }
+		else if ((.@defence >= 71) && (.@defence <= 75)) { set .@def_invest,1060000; }
+		else if ((.@defence >= 76) && (.@defence <= 80)) { set .@def_invest,1210000; }
+		else if ((.@defence >= 81) && (.@defence <= 85)) { set .@def_invest,1370000; }
+		else if ((.@defence >= 86) && (.@defence <= 90)) { set .@def_invest,1540000; }
+		else if ((.@defence >= 91) && (.@defence <= 95)) { set .@def_invest,1720000; }
+		else if ((.@defence >= 96) && (.@defence <= 100)) { set .@def_invest,1910000; }
 		//Quadruple the cost of investing if you've already invested once.
 		if (getcastledata(strnpcinfo(2),5)) {
 			set .@def_invest,.@def_invest*4;
@@ -729,7 +729,7 @@ OnRecvCastle:
 		mes "If you raise Castle Defenses, the durability of Guardians and the Emperium will increase. Therefore, if you consider our coming battles, some investment in this area will be required.";
 		mes " ";
 		mes "Originally you can invest just once but if you pay more money, you can invest twice.";
-		if (.@Defence >= 100) {
+		if (.@defence >= 100) {
 			mes " ";
 			mes "^ff0000But the Castle Defense level of our Castle is at it's highest, 100%. No more investments are needed. Just as I have expected from a great strategist like you, Master.^000000";
 			close;
@@ -1253,8 +1253,8 @@ OnClock0001:
 		if (getcastledata(strnpcinfo(2),2) > 100) setcastledata strnpcinfo(2),2,100;
 	}
 	if (getcastledata(strnpcinfo(2),5)) {
-		set .@Defence,getcastledata(strnpcinfo(2),3);
-		setcastledata strnpcinfo(2),3,.@Defence + getcastledata(strnpcinfo(2),5);
+		set .@defence,getcastledata(strnpcinfo(2),3);
+		setcastledata strnpcinfo(2),3,.@defence + getcastledata(strnpcinfo(2),5);
 		if (getcastledata(strnpcinfo(2),3) > 100) setcastledata strnpcinfo(2),3,100;
 	}
 	// Reset daily investment limits.

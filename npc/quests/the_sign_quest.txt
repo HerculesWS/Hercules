@@ -8525,7 +8525,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 				set sign_q,134;
 				donpcevent "Serin#serin::OnDisable";
 				donpcevent "Dark Lord#serin::OnDisable";
-				donpcevent "CallMonster#serin::Oncall";
+				donpcevent "CallMonster#serin::OnCall";
 				close;
 			case 2:
 				mes "[Serin]";
@@ -8559,7 +8559,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 			set sign_q,134;
 			donpcevent "Serin#serin::OnDisable";
 			donpcevent "Dark Lord#serin::OnDisable";
-			donpcevent "CallMonster#serin::Oncall";
+			donpcevent "CallMonster#serin::OnCall";
 			close;
 		}
 	}
@@ -8657,7 +8657,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 				set sign_q,134;
 				donpcevent "Serin#serin::OnDisable";
 				donpcevent "Dark Lord#serin::OnDisable";
-				donpcevent "CallMonster#serin::Oncall";
+				donpcevent "CallMonster#serin::OnCall";
 				end;
 			}
 		}
@@ -8696,7 +8696,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 				set sign_q,134;
 				donpcevent "Serin#serin::OnDisable";
 				donpcevent "Dark Lord#serin::OnDisable";
-				donpcevent "CallMonster#serin::Oncall";
+				donpcevent "CallMonster#serin::OnCall";
 				end;
 			}
 		}
@@ -8857,7 +8857,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 			mes "now! We'll have to battle!";
 			close2;
 			set sign_q,126;
-			donpcevent "CallMonster#witch::Oncall";
+			donpcevent "CallMonster#witch::OnCall";
 			donpcevent "Serin#witch::OnDisable";
 			end;
 		}
@@ -8898,7 +8898,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 			mes "now! We'll have to battle!";
 			close2;
 			set sign_q,126;
-			donpcevent "CallMonster#witch::Oncall";
+			donpcevent "CallMonster#witch::OnCall";
 			donpcevent "Serin#witch::OnDisable";
 			end;
 		}
@@ -9006,7 +9006,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 				close2;
 				set sign_q,126;
 				donpcevent "Serin#witch::OnDisable";
-				donpcevent "CallMonster#witch::Oncall";
+				donpcevent "CallMonster#witch::OnCall";
 				end;
 			}
 		}
@@ -9053,7 +9053,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 				close2;
 				set sign_q,126;
 				donpcevent "Serin#witch::OnDisable";
-				donpcevent "CallMonster#witch::Oncall";
+				donpcevent "CallMonster#witch::OnCall";
 				end;
 			}
 		}
@@ -12348,7 +12348,7 @@ OnTimer620000:
 }
 
 que_sign01,50,1,0	script	CallMonster#serin	-1,{
-Oncall:
+OnCall:
 	monster "que_sign01",196,44,"Dark Lord Incarnation",1605,1,"CallMonster#serin::OnMyMobDead";
 	end;
 
@@ -12407,7 +12407,7 @@ OnTouch:
 }
 
 que_sign01,1,2,0	script	CallMonster#witch	-1,{
-Oncall:
+OnCall:
 	monster "que_sign01",196,195,"Dark Lord Incarnation",1605,1,"CallMonster#witch::OnMyMobDead";
 	monster "que_sign01",180,180,"Ancient Mummy",1522,1,"CallMonster#witch::OnMyMobDead";
 	monster "que_sign01",210,210,"Ancient Mummy",1522,1,"CallMonster#witch::OnMyMobDead";

@@ -15,7 +15,7 @@ yuno,109,167,5	script	Himinn	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
-OnRecvCastlesc01:
+OnRecvCastleSc01:
 	flagemblem getcastledata("schg_cas01",1);
 	end;
 }
@@ -24,7 +24,7 @@ yuno,110,171,5	script	Andlangr	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
-OnRecvCastlesc02:
+OnRecvCastleSc02:
 	flagemblem getcastledata("schg_cas02",1);
 	end;
 }
@@ -33,7 +33,7 @@ yuno,111,175,5	script	Viblainn	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
-OnRecvCastlesc03:
+OnRecvCastleSc03:
 	flagemblem getcastledata("schg_cas03",1);
 	end;
 }
@@ -42,7 +42,7 @@ yuno,112,179,5	script	Hljod	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
-OnRecvCastlesc04:
+OnRecvCastleSc04:
 	flagemblem getcastledata("schg_cas04",1);
 	end;
 }
@@ -51,7 +51,7 @@ yuno,114,183,5	script	Skidbladnir	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
-OnRecvCastlesc05:
+OnRecvCastleSc05:
 	flagemblem getcastledata("schg_cas05",1);
 	end;
 }
@@ -61,7 +61,7 @@ rachel,124,120,3	script	Mardol	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
-OnRecvCastlear01:
+OnRecvCastleAr01:
 	flagemblem getcastledata("arug_cas01",1);
 	end;
 }
@@ -70,7 +70,7 @@ rachel,136,120,5	script	Cyr	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
-OnRecvCastlear02:
+OnRecvCastleAr02:
 	flagemblem getcastledata("arug_cas02",1);
 	end;
 }
@@ -79,7 +79,7 @@ rachel,138,126,6	script	Horn	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
-OnRecvCastlear03:
+OnRecvCastleAr03:
 	flagemblem getcastledata("arug_cas03",1);
 	end;
 }
@@ -88,7 +88,7 @@ rachel,135,131,7	script	Gefn	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
-OnRecvCastlear04:
+OnRecvCastleAr04:
 	flagemblem getcastledata("arug_cas04",1);
 	end;
 }
@@ -97,7 +97,7 @@ rachel,124,130,1	script	Banadis	GUILD_FLAG,{
 	end;
 
 OnAgitInit2:
-OnRecvCastlear05:
+OnRecvCastleAr05:
 	flagemblem getcastledata("arug_cas05",1);
 	end;
 }

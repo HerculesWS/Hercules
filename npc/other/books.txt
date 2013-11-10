@@ -23,7 +23,7 @@ prt_in,168,56,4	script	Monster Encyclopedia#prt	HIDDEN_NPC,{
 		set .@loop2,1;
 		switch(select("Water Property Monsters:Wind Property Monsters:Spritual Property Monsters:Cancel")) {
 		case 1:
-			while(.@Loop2) {
+			while(.@loop2) {
 				switch(select("Small Sized Monsters:Medium Sized Monsters:Great Sized Monsters:Cancel")) {
 				case 1:
 					mes "^FF0000[Vol. 1: Small Water Monsters]^000000";

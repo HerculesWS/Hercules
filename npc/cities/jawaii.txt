@@ -970,7 +970,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				percentheal -20,0;
 				next;
 				break;
-			Default:
+			default:
 				mes "[Bartender]";
 				mes "I see...";
 				mes "Let me think";

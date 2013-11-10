@@ -31,14 +31,14 @@ alberta,26,229,0	script	Kafra Employee#bunny	4_M_01,{
 			mes "see if you brought";
 			mes "all the items...";
 			next;
-			setarray .@Items[0],949,100,706,1,722,1,2213,1;
+			setarray .@items[0],949,100,706,1,722,1,2213,1;
 			for(set .@i,0; .@i<8; set .@i,.@i+2)
-				if (countitem(.@Items[.@i]) < .@Items[.@i+1]) {
+				if (countitem(.@items[.@i]) < .@items[.@i+1]) {
 					mes "[Kafra Employee]";
 					mes "Ooh, I'm sorry";
 					mes "but you need to";
 					mes "bring at least";
-					mes .@Items[.@i+1]+" "+getitemname(.@Items[.@i])+((!.@i)?"s.":".");
+					mes .@items[.@i+1]+" "+getitemname(.@items[.@i])+((!.@i)?"s.":".");
 					close;
 				}
 			mes "[Kafra Employee]";
@@ -50,12 +50,12 @@ alberta,26,229,0	script	Kafra Employee#bunny	4_M_01,{
 			mes "while I put it together...";
 			next;
 			for(set .@i,0; .@i<8; set .@i,.@i+2)
-				if (countitem(.@Items[.@i]) < .@Items[.@i+1]) {
+				if (countitem(.@items[.@i]) < .@items[.@i+1]) {
 					mes "[Kafra Employee]";
 					mes "Hm? I'm sorry,";
 					mes "but I actually can't";
 					mes "make this right now. You";
-					mes "need "+.@Items[.@i+1]+" "+getitemname(.@Items[.@i])+((!.@i)?"s":"");
+					mes "need "+.@items[.@i+1]+" "+getitemname(.@items[.@i])+((!.@i)?"s":"");
 					mes "in order for me to put this";
 					mes "Bunny Band together...";
 					close;

@@ -143,8 +143,8 @@ OnClock0001:
 		setcastledata strnpcinfo(2),4,0;
 	}
 	if (getcastledata(strnpcinfo(2),5)) {
-		set .@Defence,getcastledata(strnpcinfo(2),3);
-		setcastledata strnpcinfo(2),3,.@Defence+getcastledata(strnpcinfo(2),5);
+		set .@defence,getcastledata(strnpcinfo(2),3);
+		setcastledata strnpcinfo(2),3,.@defence+getcastledata(strnpcinfo(2),5);
 		if (getcastledata(strnpcinfo(2),3) > 100) setcastledata strnpcinfo(2),3,100;
 		setcastledata strnpcinfo(2),5,0;
 	}
@@ -344,11 +344,11 @@ OnTreasureDied:
 			close;
 		}
 	case 3:
-		set .@Defence,getcastledata(strnpcinfo(4),3);
+		set .@defence,getcastledata(strnpcinfo(4),3);
 		setarray .@cost[0],10000,20000,40000,70000,110000,160000,220000,290000,370000,460000,560000,670000,790000,920000,1060000,1210000,1370000,1540000,1720000,1910000;
 		set .@j,0;
 		for(set .@i,6; .@i<101; set .@i,.@i+5) {
-			if (.@Defence < .@i) {
+			if (.@defence < .@i) {
 				set .@def_invest,.@cost[.@j];
 				break;
 			}
@@ -607,9 +607,9 @@ OnStartArena:
 	if (.@Economy < 0) set .@Economy, 0;
 	setcastledata strnpcinfo(4),2,.@Economy;
 	// Lower Castle Defence
-	set .@Defence,getcastledata(strnpcinfo(4),3)-5;
-	if (.@Defence < 0) set .@Defence, 0;
-	setcastledata strnpcinfo(4),3,.@Defence;
+	set .@defence,getcastledata(strnpcinfo(4),3)-5;
+	if (.@defence < 0) set .@defence, 0;
+	setcastledata strnpcinfo(4),3,.@defence;
 	// Set new owner
 	setcastledata strnpcinfo(4),1,.@GID;
 	// Clear castle's data.

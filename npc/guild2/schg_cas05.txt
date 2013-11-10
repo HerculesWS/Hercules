@@ -45,7 +45,7 @@ schg_cas05,111,46,4	script	Skidbladnir#LF_sc05_3::LF_sc05_2	GUILD_FLAG,{
 	callfunc "LinkFlag","Emperium Center",120,290;
 	end;
 OnAgitInit2:
-OnRecvCastlesc05:
+OnRecvCastleSc05:
 	flagemblem getcastledata("schg_cas05",1);
 	end;
 }
@@ -65,7 +65,7 @@ sch_gld,101,284,4	script	Skidbladnir#flag_sc05_1::sc05_Flag	GUILD_FLAG,{
 	callfunc "ReturnFlag","schg_cas05",1;
 	end;
 OnAgitInit2:
-OnRecvCastlesc05:
+OnRecvCastleSc05:
 	flagemblem getcastledata("schg_cas05",1);
 	end;
 }

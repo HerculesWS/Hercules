@@ -57,7 +57,7 @@ sch_gld,296,247,4	script	Andlangr#flag_sc02_1::Sc02_Flag	GUILD_FLAG,{
 	callfunc "ReturnFlag","schg_cas02",1;
 	end;
 OnAgitInit2:
-OnRecvCastlesc02:
+OnRecvCastleSc02:
 	flagemblem getcastledata("schg_cas02",1);
 	end;
 }

@@ -1171,7 +1171,7 @@ OnMyMobDead:
 
 OnTimer120000:
 	set $@wop_deadcount_d,$@wop_deadcount_d - 1;
-	donpcevent "#wop_devillium1::OndevilingSpawn";
+	donpcevent "#wop_devillium1::OnDevilingSpawn";
 	mapannounce "poring_w02","Mr. Doppel: The Deviling on the 1st base has been revived! 1 point gained!!",0,0x00ff00;
 	stopnpctimer;
 	end;
@@ -1185,7 +1185,7 @@ OnReset:
 	stopnpctimer;
 	end;
 
-OndevilingSpawn:
+OnDevilingSpawn:
 	monster "poring_w02",98,124,"Deviling",1767,1,"#wop_devillium2::OnMyMobDead";
 	end;
 
@@ -1206,7 +1206,7 @@ OnMyMobDead:
 
 OnTimer120000:
 	set $@wop_deadcount_d,$@wop_deadcount_d - 1;
-	donpcevent "#wop_devillium2::OndevilingSpawn";
+	donpcevent "#wop_devillium2::OnDevilingSpawn";
 	mapannounce "poring_w02","Mr. Doppel: The deviling on the 2nd base has been revived! 1 point gained!!",0,0x00ff00;
 	stopnpctimer;
 }

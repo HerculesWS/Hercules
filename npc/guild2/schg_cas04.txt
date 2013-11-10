@@ -45,7 +45,7 @@ schg_cas04,111,46,4	script	Hljod#LF_sc04_3::LF_sc04_2	GUILD_FLAG,{
 	callfunc "LinkFlag","Emperium Center",120,290;
 	end;
 OnAgitInit2:
-OnRecvCastlesc04:
+OnRecvCastleSc04:
 	flagemblem getcastledata("schg_cas04",1);
 	end;
 }
@@ -65,7 +65,7 @@ sch_gld,134,97,4	script	Hljod#flag_sc04_1::sc04_Flag	GUILD_FLAG,{
 	callfunc "ReturnFlag","schg_cas04",1;
 	end;
 OnAgitInit2:
-OnRecvCastlesc04:
+OnRecvCastleSc04:
 	flagemblem getcastledata("schg_cas04",1);
 	end;
 }

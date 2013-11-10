@@ -53,7 +53,7 @@ schg_cas03,283,206,2	script	Vidblainn#LF_sc03_11::LF_sc03_2	GUILD_FLAG,{
 	callfunc "LinkFlag","Emperium Center",308,202;
 	end;
 OnAgitInit2:
-OnRecvCastlesc03:
+OnRecvCastleSc03:
 	flagemblem getcastledata("schg_cas03",1);
 	end;
 }
@@ -65,7 +65,7 @@ sch_gld,91,191,0	script	Vidblainn#flag_sc03_1::Sc03_Flag	GUILD_FLAG,{
 	callfunc "ReturnFlag","schg_cas03",1;
 	end;
 OnAgitInit2:
-OnRecvCastlesc03:
+OnRecvCastleSc03:
 	flagemblem getcastledata("schg_cas03",1);
 	end;
 }

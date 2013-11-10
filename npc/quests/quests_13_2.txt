@@ -4821,11 +4821,11 @@ man_in01,372,221,5	script	Scientist#lifeguard	4_MAN_BENKUNI,{
 
 function	script	find_13_2	{
 	switch (getarg(0)) {
-		case 0: setarray .@Check[0],2,10; set .@str$,"Mt. Mjolnir"; break;
-		case 1: setarray .@Check[0],3,5; set .@str$,"Abyss Lake"; break;
-		case 2: setarray .@Check[0],4,5; set .@str$,"Thor Volcano"; break;
+		case 0: setarray .@check[0],2,10; set .@str$,"Mt. Mjolnir"; break;
+		case 1: setarray .@check[0],3,5; set .@str$,"Abyss Lake"; break;
+		case 2: setarray .@check[0],4,5; set .@str$,"Thor Volcano"; break;
 	}
-	if (ep13_2_tre != .@Check[0] || countitem(6076) != 1 || countitem(6077) >= .@Check[1]) end;
+	if (ep13_2_tre != .@check[0] || countitem(6076) != 1 || countitem(6077) >= .@check[1]) end;
 	mes "- Just arrived at "+.@str$+". I think I can find the mineral by using the Mineral Detector in the Portable Toolbox. -";
 	next;
 	switch(select("Check current location.:Do nothing.")) {

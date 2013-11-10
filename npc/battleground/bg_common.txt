@@ -477,10 +477,10 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			next;
 			switch(select("Garments / Shoes:Armor")) {
 			case 1:
-				setarray .@Items[0],2538,50,2539,50,2540,50,2435,50,2436,50,2437,50;
+				setarray .@items[0],2538,50,2539,50,2540,50,2435,50,2436,50,2437,50;
 				break;
 			case 2:
-				setarray .@Items[0],2376,80,2377,80,2378,80,2379,80,2380,80,2381,80,2382,80;
+				setarray .@items[0],2376,80,2377,80,2378,80,2379,80,2380,80,2381,80,2382,80;
 				break;
 			}
 			break;
@@ -489,7 +489,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			mes "You chose ^3131FFAccessory^000000.";
 			mes "You can exchange the Medal of Honors with your Badges according to the job classes, as follows:";
 			next;
-			setarray .@Items[0],2733,500,2720,500,2721,500,2722,500,2723,500,2724,500,2725,500;
+			setarray .@items[0],2733,500,2720,500,2721,500,2722,500,2723,500,2724,500,2725,500;
 			set .@menu1$,"Gunslinger:Swordman/Taekwon Master:Thief:Acolyte:Magician:Archer:Merchant";
 			break;
 		case 4:
@@ -497,7 +497,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			mes "You chose ^3131FFConsumable^000000.";
 			mes "The following consumable items are available for exchange with the battlefield badges:";
 			next;
-			setarray .@Items[0],12269,10,12270,10,12271,5,12272,10,12273,10;
+			setarray .@items[0],12269,10,12270,10,12271,5,12272,10,12273,10;
 			break;
 		}
 		break;
@@ -510,12 +510,12 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 	}
 	set .@menu$,"";
 	if (.@menu1$ != "") set .@menu$, .@menu1$;
-	else for(set .@i,0; .@i<getarraysize(.@Items); set .@i,.@i+2)
-		set .@menu$, .@menu$+getitemname(.@Items[.@i])+":";
+	else for(set .@i,0; .@i<getarraysize(.@items); set .@i,.@i+2)
+		set .@menu$, .@menu$+getitemname(.@items[.@i])+":";
 	set .@i, (select(.@menu$)-1)*2;
 	mes "[Erundek]";
-	mes "You chose ^3131FF"+getitemname(.@Items[.@i])+"^000000.";
-	switch(.@Items[.@i]) {
+	mes "You chose ^3131FF"+getitemname(.@items[.@i])+"^000000.";
+	switch(.@items[.@i]) {
 		case 2720: mes "This item is for Swordman and Taekwon Master Class only."; break;
 		case 2721: mes "This item is for Thief Class only."; break;
 		case 2722: mes "This item is for Acolyte Class only."; break;
@@ -525,7 +525,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 		case 2733: mes "This item is for Gunslinger only."; break;
 		default: break;
 	}
-	mes "You can exchange for this item with ^FF0000"+.@Items[.@i+1]+" "+getitemname(7828)+" or "+.@Items[.@i+1]+" "+getitemname(7829)+"^000000.";
+	mes "You can exchange for this item with ^FF0000"+.@items[.@i+1]+" "+getitemname(7828)+" or "+.@items[.@i+1]+" "+getitemname(7829)+"^000000.";
 	mes "Would you like to exchange?";
 	next;
 	switch(select("Do not exchange:Exchange")) {
@@ -536,7 +536,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 	case 2:
 		mes "[Erundek]";
 		mes "Which Badge do you want to exchange?";
-		mes "You need ^3131FF"+.@Items[.@i+1]+" Badges^000000 to exchange.";
+		mes "You need ^3131FF"+.@items[.@i+1]+" Badges^000000 to exchange.";
 		next;
 		if (.@item[0] < 12269 || .@item[0] > 12273 ) {
 			mes "[Erundek]";
@@ -550,10 +550,10 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			break;
 		}
 		set .@cost, ((.@j==1)?7828:7829);
-		if (countitem(.@cost) >= .@Items[.@i+1]) {
+		if (countitem(.@cost) >= .@items[.@i+1]) {
 			mes "Thank you for exchanging.";
-			delitem .@cost, .@Items[.@i+1];
-			getitem .@Items[.@i],1;
+			delitem .@cost, .@items[.@i+1];
+			getitem .@items[.@i],1;
 		}
 		else mes "You do not have enough "+getitemname(.@cost)+"s.";
 		break;

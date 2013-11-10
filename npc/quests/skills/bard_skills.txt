@@ -19,7 +19,7 @@
 //= 1.3a Tixed an item ID typo. Thanks, 2Spiritual Kid
 //= 1.3b Split into different files [DracoRPG]
 //= 1.4 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 1.4a Checks the proper variable now. (bard_q -> gef_bard_q) [L0ne_W0lf]
+//= 1.4a Checks the proper variable now. (BARD_Q -> gef_bard_q) [L0ne_W0lf]
 //= 1.5 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
 //= 1.6 Added missing checkweights. [L0ne_W0lf]
 //= 1.6 Replaced effect numerics with constants. [L0ne_W0lf]

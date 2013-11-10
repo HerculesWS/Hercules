@@ -4560,12 +4560,12 @@ moc_para01,111,83,3	script	Toren	2_M_OLDBLSMITH,{
 			close;
 		}
 		if (para_suv02 == 14) {
-			setarray .@Check[0],18514,2571,2473,15031;
-			setarray .@Item$[0],"Hat","Mantle","Boots","Uniform";
+			setarray .@check[0],18514,2571,2473,15031;
+			setarray .@item$[0],"Hat","Mantle","Boots","Uniform";
 			for(set .@i,0; .@i<4; set .@i,.@i+1) 
-				if (countitem(.@Check[.@i]) < 1) {
+				if (countitem(.@check[.@i]) < 1) {
 					mes "[Toren]";
-					mes "Where is the Paradise "+.@Item$[.@i]+" I gave you?";
+					mes "Where is the Paradise "+.@item$[.@i]+" I gave you?";
 					next;
 					mes "[Toren]";
 					mes "...Fine, I will sell you another one for ^FF0000250,000 Zeny^000000. Don't lose it this time.";
@@ -4581,7 +4581,7 @@ moc_para01,111,83,3	script	Toren	2_M_OLDBLSMITH,{
 						close;
 					}
 					set Zeny, Zeny - 250000;
-					getitem .@Check[.@i],1;
+					getitem .@check[.@i],1;
 					mes "[Toren]";
 					mes "These advanced gears are not easy to make, please take better care of this one.";
 					close;
@@ -4659,14 +4659,14 @@ moc_para01,111,83,3	script	Toren	2_M_OLDBLSMITH,{
 			mes "[Toren]";
 			mes "Now pick which gear you would like me to enchant.";
 			next;
-			setarray .@Item[0],2571,2473,15031;
+			setarray .@item[0],2571,2473,15031;
 			set .@i, select("Paradise Mantle II.:Paradise Boots IV.:Paradise Uniform IV.")-1;
-			if (countitem(.@Item[.@i]) < 1) {
+			if (countitem(.@item[.@i]) < 1) {
 				mes "[Toren]";
 				mes "Bring one and I'll enchant it.";
 				close;
 			}
-			set .@paragearcount, .@Item[.@i];
+			set .@paragearcount, .@item[.@i];
 			mes "[Toren]";
 			mes "Here we go!";
 			close2;

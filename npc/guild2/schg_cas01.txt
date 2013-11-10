@@ -65,7 +65,7 @@ sch_gld,290,90,0	script	Himinn#flag_sc01_1::Sc01_Flag	GUILD_FLAG,{
 	callfunc "ReturnFlag","schg_cas01",1;
 	end;
 OnAgitInit2:
-OnRecvCastlesc01:
+OnRecvCastleSc01:
 	flagemblem getcastledata("schg_cas01",1);
 	end;
 }

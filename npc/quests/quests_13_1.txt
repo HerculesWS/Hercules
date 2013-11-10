@@ -9838,7 +9838,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 		mes "[Expedition Messenger]";
 		mes "Guys, it's time to go.";
 		next;
-		donpcevent "Expedition Messenger#2::Ongo";
+		donpcevent "Expedition Messenger#2::OnGo";
 		mes "[Expedition Messenger]";
 		mes "You, head to Schwaltzval Republic.";
 		mes "And you, take Arunafeltz. I'll visit Prontera Palace.";
@@ -10041,7 +10041,7 @@ OnEnable:
 	enablenpc "Expedition Messenger#2";
 	end;
 
-Ongo:
+OnGo:
 	enablenpc "Expedition Messenger#2";
 	enablenpc "Expedition Messenger#3";
 	end;

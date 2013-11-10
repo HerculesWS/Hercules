@@ -433,10 +433,10 @@ OnTalk4:
 OnTalk5:
 	npctalk "Not coveting the king's throne, you're such a stupid man, only waiting for his return. Your innocence is true, I love it.";
 	end;
-Ontalk6:
+OnTalk6:
 	npctalk "You make me wish we hadn't met in this situation. Too bad we did.";
 	end;
-Ontalk7:
+OnTalk7:
 	npctalk "Well~ Today, with such a busy commandant, I won't be able to talk as much as I'd love for you to contemplate my explanation~";
 	end;
 OnTalk8:

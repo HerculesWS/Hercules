@@ -58,9 +58,9 @@ function	script	F_Okolnir	{
 				mes "Would you like to try to enter here?";
 				close;
 			case 2:
-				set .@Defence,getcastledata(strnpcinfo(4),3);
+				set .@defence,getcastledata(strnpcinfo(4),3);
 				set .@Economy,getcastledata(strnpcinfo(4),2);
-				if ((.@Economy > 64) && (.@Defence > 29)) {
+				if ((.@Economy > 64) && (.@defence > 29)) {
 					mes "[Guide]";
 					mes "Great! Economy and Defense are OK.";
 					mes "You can enter Okolnir now....";
@@ -425,7 +425,7 @@ OnTouch:
 			case 4: set .@m, 1661; break;
 			case 5: set .@m, 1660; break;
 			case 6: set .@m, 1659; break;
-			Default: set .@m, 1652; break;
+			default: set .@m, 1652; break;
 		}
 		monster "que_q"+getarg(0),getarg(1),getarg(2),strcharinfo(0),.@m,1,"#Gate_manager_"+getarg(0)+"::OnMyMobDead";
 		return;

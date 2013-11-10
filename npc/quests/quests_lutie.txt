@@ -169,7 +169,7 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 			delitem 1036,20;  //Dragon_Scale
 			delitem 7012,200;  //Tough_Scalelike_Stem
 			delitem 7065,300;  //Sea_Otter_Leather
-			emotion e_Oh;
+			emotion e_oh;
 			mes "^3355FF*Vroooooom~~*";
 			mes "*Bzzzzzt*";
 			mes "*choogachooga*";
@@ -344,7 +344,7 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 		mes "Items.^000000";
 		close;
 	}
-	emotion e_x;
+	emotion e_X;
 	mes "[Audi]";
 	mes "^555555Error Error!";
 	mes "Incorrect items!^000000";

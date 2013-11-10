@@ -60,7 +60,7 @@ prontera,124,297,3	script	Tialfi	4_M_KID1,{
 					else if (BaseJob == Job_Blacksmith){
 						set .@gift,4;
 					}
-					else if (BaseJob == Job_hunter){
+					else if (BaseJob == Job_Hunter){
 						set .@gift,5;
 					}
 					else if (BaseJob == Job_Assassin){

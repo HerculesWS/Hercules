@@ -19,7 +19,7 @@ prontera,144,174,4	script	Bound Items	429,{
 	next;
 	mes "What would you like to do?";
 	if(select("Bind:Unbind") == 1) {
-		if(zeny < .bindprice) {
+		if(Zeny < .bindprice) {
 			mes "You don't have enough zeny to bind an item.";
 			close;
 		}
@@ -55,7 +55,7 @@ prontera,144,174,4	script	Bound Items	429,{
 		next;
 		mes "Are you sure you'd like to bind your "+ getitemname(@inventorylist_id[.@item]) +" to your "+.boundtypes$[.@boundtype]+"?";
 		if(select("Yes:No") == 1) {
-			zeny -= .bindprice;
+			Zeny -= .bindprice;
 			delitem2 @inventorylist_id[.@item],@inventorylist_amount[.@item],@inventorylist_identify[.@item],@inventorylist_refine[.@item],@inventorylist_attribute[.@item],@inventorylist_card1[.@item],@inventorylist_card2[.@item],@inventorylist_card3[.@item],@inventorylist_card4[.@item];
 			getitembound2 @inventorylist_id[.@item],@inventorylist_amount[.@item],@inventorylist_identify[.@item],@inventorylist_refine[.@item],@inventorylist_attribute[.@item],@inventorylist_card1[.@item],@inventorylist_card2[.@item],@inventorylist_card3[.@item],@inventorylist_card4[.@item],.@boundtype;
 			mes "All done!";
@@ -70,7 +70,7 @@ prontera,144,174,4	script	Bound Items	429,{
 		countbound(2);
 		if(.unbindprice) {
 			mes "Unbinding an item has a fee of ^0000FF"+.unbindprice+"^000000 zeny.";
-			if(zeny < .unbindprice) {
+			if(Zeny < .unbindprice) {
 				mes "You don't have enough to unbind an item.";
 				close;
 			}
@@ -102,7 +102,7 @@ prontera,144,174,4	script	Bound Items	429,{
 		next;
 		mes "Are you sure you'd like to unbind your "+ getitemname(@inventorylist_id[.@item]) +"?";
 		if(select("Yes:No") == 1) {
-			zeny -= .unbindprice;
+			Zeny -= .unbindprice;
 			delitem2 @inventorylist_id[.@item],@inventorylist_amount[.@item],@inventorylist_identify[.@item],@inventorylist_refine[.@item],@inventorylist_attribute[.@item],@inventorylist_card1[.@item],@inventorylist_card2[.@item],@inventorylist_card3[.@item],@inventorylist_card4[.@item];
 			getitem2 @inventorylist_id[.@item],@inventorylist_amount[.@item],@inventorylist_identify[.@item],@inventorylist_refine[.@item],@inventorylist_attribute[.@item],@inventorylist_card1[.@item],@inventorylist_card2[.@item],@inventorylist_card3[.@item],@inventorylist_card4[.@item];
 			mes "All done!";

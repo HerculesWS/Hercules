@@ -384,7 +384,7 @@ arena_room,158,82,1	script	Helper Lonik	4_M_ROGUE,{
 		mes "[Lonik]";
 		mes "You'd better wait a little bit longer!";
 	} else {
-		emotion e_x,0;
+		emotion e_X,0;
 		mes "No!";
 		mes "Go for it, good luck!";
 	}

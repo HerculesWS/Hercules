@@ -54,9 +54,9 @@ function	script	F_AgitBreak	{
 	if (.@Economy < 0) set .@Economy, 0;
 	setcastledata .@map$, 2, .@Economy;
 
-	set .@Defence,getcastledata(.@map$,3) - 5;
-	if (.@Defence < 0) set .@Defence, 0;
-	setcastledata .@map$, 3, .@Defence;
+	set .@defence,getcastledata(.@map$,3) - 5;
+	if (.@defence < 0) set .@defence, 0;
+	setcastledata .@map$, 3, .@defence;
 
 	setcastledata .@map$,1, .@GID;
 	mapannounce .@map$,"The emperium has been destroyed.",bc_map,0x00CCFF;

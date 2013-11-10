@@ -681,11 +681,11 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 										//Call Wedding effect
 										wedding;
 										//Give ring to Bride, and change to wedding sprite.
-										sc_start SC_Wedding,3600000,1;
+										sc_start SC_WEDDING,3600000,1;
 										getitem 2635,1; //Bride_Ring
 										//Give ring to Groom, and change to wedding sprite.
 										attachrid(getcharid(3,$@wed_groom$));
-										sc_start SC_Wedding,3600000,1;
+										sc_start SC_WEDDING,3600000,1;
 										getitem 2634,1; //Bridegroom_Ring
 										detachrid;
 										//Switch Script progression back to Bride

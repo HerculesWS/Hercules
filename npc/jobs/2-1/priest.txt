@@ -1099,30 +1099,30 @@ OnEnable:
 	initnpctimer;
 	end;
 
-Onm1:
+OnM1:
 	set .MyMobs,13;
 	monster "job_prist",24,52,"Theft",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",18,52,"Want of Virtue",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",30,52,"Jealousy",1015,1,"Z_C#prst::OnMyMobDead";
 	end;
 
-Onm2:
+OnM2:
 	monster "job_prist",21,62,"Fury",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",27,62,"Envy",1015,1,"Z_C#prst::OnMyMobDead";
 	end;
 
-Onm3:
+OnM3:
 	monster "job_prist",24,72,"Arrogance",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",18,72,"Lewdness",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",30,72,"Sloth",1015,1,"Z_C#prst::OnMyMobDead";
 	end;
 
-Onm4:
+OnM4:
 	monster "job_prist",21,82,"Gluttony",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",27,82,"Greed",1015,1,"Z_C#prst::OnMyMobDead";
 	end;
 
-Onm5:
+OnM5:
 	monster "job_prist",24,92,"Despair",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",18,92,"Distrust",1015,1,"Z_C#prst::OnMyMobDead";
 	monster "job_prist",30,92,"Fear",1015,1,"Z_C#prst::OnMyMobDead";
@@ -1194,7 +1194,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Zombie_Generator#prst::Onm1";
+		donpcevent "Zombie_Generator#prst::OnM1";
 		donpcevent "Zombie1_1::OnDisable";
 	}
 	end;
@@ -1215,7 +1215,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Zombie_Generator#prst::Onm2";
+		donpcevent "Zombie_Generator#prst::OnM2";
 		donpcevent "Zombie2_1::OnDisable";
 	}
 	end;
@@ -1236,7 +1236,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Zombie_Generator#prst::Onm3";
+		donpcevent "Zombie_Generator#prst::OnM3";
 		donpcevent "Zombie3_1::OnDisable";
 	}
 	end;
@@ -1257,7 +1257,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Zombie_Generator#prst::Onm4";
+		donpcevent "Zombie_Generator#prst::OnM4";
 		donpcevent "Zombie4_1::OnDisable";
 	}
 	end;
@@ -1277,7 +1277,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Zombie_Generator#prst::Onm5";
+		donpcevent "Zombie_Generator#prst::OnM5";
 		donpcevent "Zombie5_1::OnDisable";
 	}
 	end;
@@ -1618,17 +1618,17 @@ OnEnable:
 	donpcevent "Mummy3_1::OnEnable";
 	end;
 
-Onm1:
+OnM1:
 	monster "job_prist",90,55,"Khamoz",1041,1;
 	monster "job_prist",105,55,"Amocsis",1041,1;
 	end;
 
-Onm2:
+OnM2:
 	monster "job_prist",90,70,"Mentuhoteph",1041,1;
 	monster "job_prist",105,70,"Akenaten",1041,1;
 	end;
 
-Onm3:
+OnM3:
 	monster "job_prist",90,85,"Mehnes",1041,1;
 	monster "job_prist",105,85,"Snepheru",1041,1;
 	end;
@@ -1646,7 +1646,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Mummy_Generator::Onm1";
+		donpcevent "Mummy_Generator::OnM1";
 		donpcevent "Mummy1_1::OnDisable";
 	}
 	end;
@@ -1667,7 +1667,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Mummy_Generator::Onm2";
+		donpcevent "Mummy_Generator::OnM2";
 		donpcevent "Mummy2_1::OnDisable";
 	}
 	end;
@@ -1688,7 +1688,7 @@ OnInit:
 
 OnTouch:
 	if (BaseJob == Job_Acolyte) {
-		donpcevent "Mummy_Generator::Onm3";
+		donpcevent "Mummy_Generator::OnM3";
 		donpcevent "Mummy3_1::OnDisable";
 	}
 	end;

@@ -12,7 +12,7 @@
 
 geffen,115,107,5	script	Lord Kaho's Servant	1_M_PUBMASTER,{
 
-	setarray .@Items[0],7005, 968, 923, 734, 724,2268,7036,7020,5053,7018,741,742,743,750,751,752,753,754;
+	setarray .@items[0],7005, 968, 923, 734, 724,2268,7036,7020,5053,7018,741,742,743,750,751,752,753,754;
 	setarray .@Drops[0],1272,1087,1039,1260,1046,1115,1252,1147,1038,1059;
 	set .@n$, "[Lord Kaho's Servant]";
 
@@ -30,13 +30,13 @@ geffen,115,107,5	script	Lord Kaho's Servant	1_M_PUBMASTER,{
 	next;
 	mes .@n$;
 	for(set .@i,0; .@i<10; set .@i,.@i+1)
-		mes "1x ^0055FF"+getitemname(.@Items[.@i])+"^000000 (from "+strmobinfo(1,.@Drops[.@i])+")";
+		mes "1x ^0055FF"+getitemname(.@items[.@i])+"^000000 (from "+strmobinfo(1,.@Drops[.@i])+")";
 	next;
 	mes .@n$;
 	mes "We're not done yet, sweetie...";
 	mes "I'm a big fan of dolls, so you need to bring me these cuties!";
 	for(set .@i,10; .@i<18; set .@i,.@i+1)
-		mes "1x ^0055FF"+getitemname(.@Items[.@i])+"^000000";
+		mes "1x ^0055FF"+getitemname(.@items[.@i])+"^000000";
 	next;
 	mes .@n$;
 	mes "Finally, I've worked hard to make these horns for my master with all the items mentioned above...";
@@ -52,12 +52,12 @@ geffen,115,107,5	script	Lord Kaho's Servant	1_M_PUBMASTER,{
 		close; }
 	mes .@n$;
 	for(set .@i,0; .@i<18; set .@i,.@i+1)
-		if (!countitem(.@Items[.@i])) { set .@nr,1; break; }
+		if (!countitem(.@items[.@i])) { set .@nr,1; break; }
 	if (.@nr || countitem(714) < 3 || Zeny < 5000000) {
 		mes "I can't afford to make this if you don't bring all materials needed. Please understand this is to benefit heroes such as yourself!";
 		close; }
 	for(set .@i,0; .@i<18; set .@i,.@i+1)
-		delitem .@Items[.@i],1;
+		delitem .@items[.@i],1;
 	delitem 714,3;
 	set Zeny, Zeny-5000000;
 	mes "Wow! You are brave indeed!";

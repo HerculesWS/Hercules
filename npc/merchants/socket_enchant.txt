@@ -18,7 +18,7 @@
 //= 1.2 Fixed some typos and a nasty bug. [SinSloth]
 //= 1.3 Fixed a wrong item ID with Sphinx Hat. [SinSloth]
 //= 1.4 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 1.5 Removed Ontouch trigger area from NPCs. [L0ne_W0lf]
+//= 1.5 Removed OnTouch trigger area from NPCs. [L0ne_W0lf]
 //= 1.6 Replaced effect numerics with constants. [Samuray22]
 //= 1.7 Adjusted prices on some armor and weapons. [L0ne_W0lf]
 //= 1.8 Added missing Gae Bolg and Dragon Slayer. [Kisuka]

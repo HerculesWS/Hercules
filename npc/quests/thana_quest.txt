@@ -455,12 +455,12 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 	mes "you please tell me what kind";
 	mes "of mission proof you brought?";
 	next;
-	setarray .@Items[1],7435,7440,7441,7442;
+	setarray .@items[1],7435,7440,7441,7442;
 	set .@i, select("Golden Ornament:Red Feather:Blue Feather:Cursed Seal");
 	mes "[Liei]";
-	if (!countitem(.@Items[.@i])) {
+	if (!countitem(.@items[.@i])) {
 		mes "I'm sorry, but you are not";
-		mes "carrying any "+getitemname(.@Items[.@i])+"s.";
+		mes "carrying any "+getitemname(.@items[.@i])+"s.";
 		mes "Please check your inventory";
 		mes "one more time, and then come";
 		mes "to me to redeem your items";
@@ -468,15 +468,15 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 		close;
 	}
 	mes "The reward for each";
-	mes getitemname(.@Items[.@i])+" is...";
+	mes getitemname(.@items[.@i])+" is...";
 	mes " ";
 	mes "1,000 zeny";
 	//mes "2,000 EXP";
 	next;
-	set .@zeny_tt,(countitem(.@Items[.@i]) * 1000);
-	//set .@exp_tt,(countitem(.@Items[.@i]) * 2000);
+	set .@zeny_tt,(countitem(.@items[.@i]) * 1000);
+	//set .@exp_tt,(countitem(.@items[.@i]) * 2000);
 	mes "[Liei]";
-	mes countitem(.@Items[.@i])+" "+getitemname(.@Items[.@i])+"s, then";
+	mes countitem(.@items[.@i])+" "+getitemname(.@items[.@i])+"s, then";
 	mes "you will receive a total of...";
 	mes " ";
 	mes ""+.@zeny_tt+" zeny";
@@ -484,7 +484,7 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 	next;
 	mes "[Liei]";
 	mes "Would you like to exchange";
-	mes "all of your "+getitemname(.@Items[.@i])+"s";
+	mes "all of your "+getitemname(.@items[.@i])+"s";
 	mes "for your reward right now?";
 	next;
 	switch(select("Yes:No")) {
@@ -495,7 +495,7 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 			//mes .@exp_tt+" EXP. Thank you,";
 			mes "and please keep up";
 			mes "the good work~";
-			delitem .@Items[.@i], countitem(.@Items[.@i]);
+			delitem .@items[.@i], countitem(.@items[.@i]);
 			set Zeny, Zeny + .@zeny_tt;
 			//getexp .@exp_tt,0;
 			close;

@@ -1865,7 +1865,7 @@ OnEnable:
 	set .@map$, instance_mapname("2@nyd");
 	monster .@map$,199,327,"Nidhoggur's Shadow",2022,1,instance_npcname("nyd_2f_boss_enter_call")+"::OnMyMobDead";
 	mapannounce .@map$, "Nidhoggur's Shadow : I will devour all of you... you and the World Tree Yggdrasil.",bc_map,"0x00ff99";
-	//donpcevent instance_npcname("nyd_2f_boss_enter_call")+"::Ongo";
+	//donpcevent instance_npcname("nyd_2f_boss_enter_call")+"::OnGo";
 	initnpctimer;
 	end;
 

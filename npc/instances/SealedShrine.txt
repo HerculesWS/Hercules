@@ -1313,7 +1313,7 @@ OnInstanceInit:
 OnEnable:
 	enablenpc instance_npcname("2f_callmon_pattern_c");
 	initnpctimer;
-	donpcevent instance_npcname("2f_callmon_pattern_c")+"::Ongo";
+	donpcevent instance_npcname("2f_callmon_pattern_c")+"::OnGo";
 	end;
 
 OnDisable:
@@ -1321,7 +1321,7 @@ OnDisable:
 	disablenpc instance_npcname("2f_callmon_pattern_c");
 	end;
 
-Ongo:
+OnGo:
 	donpcevent instance_npcname("2f_callmon_pattern")+"::OnEnable";
 	end;
 
@@ -1350,7 +1350,7 @@ OnTimer300000:
 	enablenpc instance_npcname("slave_down");
 	enablenpc instance_npcname("slave_left");
 	enablenpc instance_npcname("slave_right");
-	donpcevent instance_npcname("2f_callmon_pattern_c")+"::Ongo";
+	donpcevent instance_npcname("2f_callmon_pattern_c")+"::OnGo";
 	end;
 }
 
@@ -1362,10 +1362,10 @@ OnInstanceInit:
 OnEnable:
 	enablenpc instance_npcname("ins_2f_hero_pattern_c");
 	initnpctimer;
-	donpcevent instance_npcname("ins_2f_hero_pattern_c")+"::Ongo";
+	donpcevent instance_npcname("ins_2f_hero_pattern_c")+"::OnGo";
 	end;
 
-Ongo:
+OnGo:
 	donpcevent instance_npcname("ins_2f_hero_pattern")+"::OnEnable";
 	end;
 
@@ -1448,7 +1448,7 @@ OnTimer70000:
 		enablenpc instance_npcname("Magical Seal#10");
 	}
 	stopnpctimer;
-	donpcevent instance_npcname("ins_2f_hero_pattern_c")+"::Ongo";
+	donpcevent instance_npcname("ins_2f_hero_pattern_c")+"::OnGo";
 	end;
 }
 
