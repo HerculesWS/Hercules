@@ -138,7 +138,6 @@ int itemdb_searchname_array(struct item_data** data, int size, const char *str, 
 /* [Ind/Hercules] */
 int itemdb_chain_item(unsigned short chain_id, int *rate) {
 	struct item_chain_entry *entry;
-	int i = 0;
 	
 	if( chain_id >= itemdb->chain_count ) {
 		ShowError("itemdb_chain_item: unknown chain id %d\n", chain_id);
@@ -147,18 +146,12 @@ int itemdb_chain_item(unsigned short chain_id, int *rate) {
 	
 	entry = &itemdb->chains[chain_id].items[ rnd()%itemdb->chains[chain_id].qty ];
 	
-	for( i = 0; i < itemdb->chains[chain_id].qty; i++ ) {
-		if( rnd()%10000 >= entry->rate ) {
-			entry = entry->next;
-			continue;
-		} else {
-			if( rate )
-				rate[0] = entry->rate;
-			return entry->id;
-		}
-	}
-	
-	return 0;
+	if( rnd()%10000 >= entry->rate )
+		return 0;
+
+	if( rate )
+		rate[0] = entry->rate;
+	return entry->id;
 }
 /* [Ind/Hercules] */
 void itemdb_package_item(struct map_session_data *sd, struct item_package *package) {
