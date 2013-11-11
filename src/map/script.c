@@ -388,9 +388,10 @@ bool script_local_casecheck_add_str(const char *p, int h) {
 	if( script->local_casecheck_str_hash[h] == 0 ) { //empty bucket, add new node here
 		script->local_casecheck_str_hash[h] = script->local_casecheck_str_num;
 	} else {
+		const char *s = NULL;
 		for( i = script->local_casecheck_str_hash[h]; ; i = script->local_casecheck_str_data[i].next ) {
 			Assert( i >= 0 && i < script->local_casecheck_str_size );
-			const char *s = script->local_casecheck_str_buf+script->local_casecheck_str_data[i].str;
+			s = script->local_casecheck_str_buf+script->local_casecheck_str_data[i].str;
 			if( strcasecmp(s,p) == 0 ) {
 				if ( strcmp(s,p) != 0 ) {
 					DeprecationWarning2("script_add_str", p, s, script->parser_current_file);
@@ -433,8 +434,8 @@ bool script_local_casecheck_add_str(const char *p, int h) {
 	script->local_casecheck_str_pos += len+1;
 
 	script->local_casecheck_str_num++;
-	return false;
 #endif // ENABLE_CASE_CHECK
+	return false;
 }
 
 /// Stores a copy of the string and returns its id.
