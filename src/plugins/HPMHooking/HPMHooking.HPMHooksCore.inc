@@ -1937,6 +1937,8 @@ struct {
 	struct HPMHookPoint *HP_guild_flags_clear_post;
 	struct HPMHookPoint *HP_guild_aura_refresh_pre;
 	struct HPMHookPoint *HP_guild_aura_refresh_post;
+	struct HPMHookPoint *HP_guild_retrieveitembound_pre;
+	struct HPMHookPoint *HP_guild_retrieveitembound_post;
 	struct HPMHookPoint *HP_guild_payexp_timer_pre;
 	struct HPMHookPoint *HP_guild_payexp_timer_post;
 	struct HPMHookPoint *HP_guild_sd_check_pre;
@@ -2207,6 +2209,8 @@ struct {
 	struct HPMHookPoint *HP_intif_guild_castle_dataload_post;
 	struct HPMHookPoint *HP_intif_guild_castle_datasave_pre;
 	struct HPMHookPoint *HP_intif_guild_castle_datasave_post;
+	struct HPMHookPoint *HP_intif_itembound_req_pre;
+	struct HPMHookPoint *HP_intif_itembound_req_post;
 	struct HPMHookPoint *HP_intif_request_petdata_pre;
 	struct HPMHookPoint *HP_intif_request_petdata_post;
 	struct HPMHookPoint *HP_intif_save_petdata_pre;
@@ -2363,6 +2367,8 @@ struct {
 	struct HPMHookPoint *HP_intif_pAuctionMessage_post;
 	struct HPMHookPoint *HP_intif_pAuctionBid_pre;
 	struct HPMHookPoint *HP_intif_pAuctionBid_post;
+	struct HPMHookPoint *HP_intif_pItembound_ack_pre;
+	struct HPMHookPoint *HP_intif_pItembound_ack_post;
 	struct HPMHookPoint *HP_intif_pMercenaryReceived_pre;
 	struct HPMHookPoint *HP_intif_pMercenaryReceived_post;
 	struct HPMHookPoint *HP_intif_pMercenaryDeleted_pre;
@@ -3119,6 +3125,8 @@ struct {
 	struct HPMHookPoint *HP_mob_readdb_post;
 	struct HPMHookPoint *HP_mob_read_sqldb_pre;
 	struct HPMHookPoint *HP_mob_read_sqldb_post;
+	struct HPMHookPoint *HP_mob_name_constants_pre;
+	struct HPMHookPoint *HP_mob_name_constants_post;
 	struct HPMHookPoint *HP_mob_readdb_mobavail_pre;
 	struct HPMHookPoint *HP_mob_readdb_mobavail_post;
 	struct HPMHookPoint *HP_mob_read_randommonster_pre;
@@ -3459,6 +3467,8 @@ struct {
 	struct HPMHookPoint *HP_pc_get_group_level_post;
 	struct HPMHookPoint *HP_pc_can_give_items_pre;
 	struct HPMHookPoint *HP_pc_can_give_items_post;
+	struct HPMHookPoint *HP_pc_can_give_bound_items_pre;
+	struct HPMHookPoint *HP_pc_can_give_bound_items_post;
 	struct HPMHookPoint *HP_pc_can_use_command_pre;
 	struct HPMHookPoint *HP_pc_can_use_command_post;
 	struct HPMHookPoint *HP_pc_has_permission_pre;
@@ -3835,6 +3845,8 @@ struct {
 	struct HPMHookPoint *HP_pc_rental_expire_post;
 	struct HPMHookPoint *HP_pc_scdata_received_pre;
 	struct HPMHookPoint *HP_pc_scdata_received_post;
+	struct HPMHookPoint *HP_pc_bound_clear_pre;
+	struct HPMHookPoint *HP_pc_bound_clear_post;
 	struct HPMHookPoint *HP_pet_init_pre;
 	struct HPMHookPoint *HP_pet_init_post;
 	struct HPMHookPoint *HP_pet_final_pre;
@@ -4157,10 +4169,10 @@ struct {
 	struct HPMHookPoint *HP_script_buildin_maprespawnguildid_sub_mob_post;
 	struct HPMHookPoint *HP_script_buildin_mobcount_sub_pre;
 	struct HPMHookPoint *HP_script_buildin_mobcount_sub_post;
-	struct HPMHookPoint *HP_script_playBGM_sub_pre;
-	struct HPMHookPoint *HP_script_playBGM_sub_post;
-	struct HPMHookPoint *HP_script_playBGM_foreachpc_sub_pre;
-	struct HPMHookPoint *HP_script_playBGM_foreachpc_sub_post;
+	struct HPMHookPoint *HP_script_playbgm_sub_pre;
+	struct HPMHookPoint *HP_script_playbgm_sub_post;
+	struct HPMHookPoint *HP_script_playbgm_foreachpc_sub_pre;
+	struct HPMHookPoint *HP_script_playbgm_foreachpc_sub_post;
 	struct HPMHookPoint *HP_script_soundeffect_sub_pre;
 	struct HPMHookPoint *HP_script_soundeffect_sub_post;
 	struct HPMHookPoint *HP_script_buildin_query_sql_sub_pre;
@@ -4175,6 +4187,12 @@ struct {
 	struct HPMHookPoint *HP_script_cleanfloor_sub_post;
 	struct HPMHookPoint *HP_script_run_func_pre;
 	struct HPMHookPoint *HP_script_run_func_post;
+	struct HPMHookPoint *HP_script_getfuncname_pre;
+	struct HPMHookPoint *HP_script_getfuncname_post;
+	struct HPMHookPoint *HP_script_local_casecheck_add_str_pre;
+	struct HPMHookPoint *HP_script_local_casecheck_add_str_post;
+	struct HPMHookPoint *HP_script_local_casecheck_clear_pre;
+	struct HPMHookPoint *HP_script_local_casecheck_clear_post;
 	struct HPMHookPoint *HP_searchstore_open_pre;
 	struct HPMHookPoint *HP_searchstore_open_post;
 	struct HPMHookPoint *HP_searchstore_query_pre;
@@ -6866,6 +6884,8 @@ struct {
 	int HP_guild_flags_clear_post;
 	int HP_guild_aura_refresh_pre;
 	int HP_guild_aura_refresh_post;
+	int HP_guild_retrieveitembound_pre;
+	int HP_guild_retrieveitembound_post;
 	int HP_guild_payexp_timer_pre;
 	int HP_guild_payexp_timer_post;
 	int HP_guild_sd_check_pre;
@@ -7136,6 +7156,8 @@ struct {
 	int HP_intif_guild_castle_dataload_post;
 	int HP_intif_guild_castle_datasave_pre;
 	int HP_intif_guild_castle_datasave_post;
+	int HP_intif_itembound_req_pre;
+	int HP_intif_itembound_req_post;
 	int HP_intif_request_petdata_pre;
 	int HP_intif_request_petdata_post;
 	int HP_intif_save_petdata_pre;
@@ -7292,6 +7314,8 @@ struct {
 	int HP_intif_pAuctionMessage_post;
 	int HP_intif_pAuctionBid_pre;
 	int HP_intif_pAuctionBid_post;
+	int HP_intif_pItembound_ack_pre;
+	int HP_intif_pItembound_ack_post;
 	int HP_intif_pMercenaryReceived_pre;
 	int HP_intif_pMercenaryReceived_post;
 	int HP_intif_pMercenaryDeleted_pre;
@@ -8048,6 +8072,8 @@ struct {
 	int HP_mob_readdb_post;
 	int HP_mob_read_sqldb_pre;
 	int HP_mob_read_sqldb_post;
+	int HP_mob_name_constants_pre;
+	int HP_mob_name_constants_post;
 	int HP_mob_readdb_mobavail_pre;
 	int HP_mob_readdb_mobavail_post;
 	int HP_mob_read_randommonster_pre;
@@ -8388,6 +8414,8 @@ struct {
 	int HP_pc_get_group_level_post;
 	int HP_pc_can_give_items_pre;
 	int HP_pc_can_give_items_post;
+	int HP_pc_can_give_bound_items_pre;
+	int HP_pc_can_give_bound_items_post;
 	int HP_pc_can_use_command_pre;
 	int HP_pc_can_use_command_post;
 	int HP_pc_has_permission_pre;
@@ -8764,6 +8792,8 @@ struct {
 	int HP_pc_rental_expire_post;
 	int HP_pc_scdata_received_pre;
 	int HP_pc_scdata_received_post;
+	int HP_pc_bound_clear_pre;
+	int HP_pc_bound_clear_post;
 	int HP_pet_init_pre;
 	int HP_pet_init_post;
 	int HP_pet_final_pre;
@@ -9086,10 +9116,10 @@ struct {
 	int HP_script_buildin_maprespawnguildid_sub_mob_post;
 	int HP_script_buildin_mobcount_sub_pre;
 	int HP_script_buildin_mobcount_sub_post;
-	int HP_script_playBGM_sub_pre;
-	int HP_script_playBGM_sub_post;
-	int HP_script_playBGM_foreachpc_sub_pre;
-	int HP_script_playBGM_foreachpc_sub_post;
+	int HP_script_playbgm_sub_pre;
+	int HP_script_playbgm_sub_post;
+	int HP_script_playbgm_foreachpc_sub_pre;
+	int HP_script_playbgm_foreachpc_sub_post;
 	int HP_script_soundeffect_sub_pre;
 	int HP_script_soundeffect_sub_post;
 	int HP_script_buildin_query_sql_sub_pre;
@@ -9104,6 +9134,12 @@ struct {
 	int HP_script_cleanfloor_sub_post;
 	int HP_script_run_func_pre;
 	int HP_script_run_func_post;
+	int HP_script_getfuncname_pre;
+	int HP_script_getfuncname_post;
+	int HP_script_local_casecheck_add_str_pre;
+	int HP_script_local_casecheck_add_str_post;
+	int HP_script_local_casecheck_clear_pre;
+	int HP_script_local_casecheck_clear_post;
 	int HP_searchstore_open_pre;
 	int HP_searchstore_open_post;
 	int HP_searchstore_query_pre;

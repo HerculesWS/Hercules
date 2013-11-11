@@ -152,7 +152,7 @@ Mission_Status:
 	set .@Mission_Points, 3+(.@j[.Quests]/.Quests/6);
 	set .@Base_Exp, #Mission_Count*.@j[.Quests+1]/5;
 	set .@Job_Exp, #Mission_Count*.@j[.Quests+2]/5;
-	set .@Zeny, #Mission_Count*.Quests*.@j[.@i]*.Modifier[2];
+	set .@zeny, #Mission_Count*.Quests*.@j[.@i]*.Modifier[2];
 
 	next;
 	mes "[Hunting Missions]";
@@ -160,7 +160,7 @@ Mission_Status:
 	mes " > Mission Points: ^0055FF"+.@Mission_Points+"^000000";
 	mes " > Base Experience: ^0055FF"+Cm(.@Base_Exp)+"^000000";
 	mes " > Job Experience: ^0055FF"+Cm(.@Job_Exp)+"^000000";
-	mes " > Zeny: ^0055FF"+Cm(.@Zeny)+"^000000";
+	mes " > Zeny: ^0055FF"+Cm(.@zeny)+"^000000";
 	if (@f) { set @f,0; return; }
 	next;
 	mes "[Hunting Missions]";
@@ -173,7 +173,7 @@ Mission_Status:
 	set #Mission_Points, #Mission_Points+.@Mission_Points;
 	set BaseExp, BaseExp+.@Base_Exp;
 	set JobExp, JobExp+.@Job_Exp;
-	set Zeny, Zeny+.@Zeny;
+	set Zeny, Zeny+.@zeny;
 	for(set .@i,0; .@i<.Quests; set .@i,.@i+1) {
 		setd "Mission"+.@i,0;
 		setd "Mission"+.@i+"_",0;
@@ -259,7 +259,7 @@ OnNPCKillEvent:
 		for(set .@i,0; .@i<$@partymembercount; set .@i,.@i+1) {
 			if (isloggedin($@partymemberaid[.@i], $@partymembercid[.@i])) {
 				attachrid $@partymemberaid[.@i];
-				if (#Mission_Count && Mission0 && HP > 0) {
+				if (#Mission_Count && Mission0 && Hp > 0) {
 					getmapxy(.@map2$,.@x2,.@y2,0);
 					if ((.@map1$ == .@map2$ || .Party == 1) && (distance(.@x1,.@y1,.@x2,.@y2) <= 30 || .Party < 3)) {
 						for(set .@j,0; .@j<.Quests; set .@j,.@j+1) {

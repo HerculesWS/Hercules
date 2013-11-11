@@ -5434,7 +5434,7 @@ malangdo,212,204,0	script	Beginning Compass#nya_02	CLEAR_NPC,{
 L_Viewpoint:
 	switch(getarg(0)) {
 	case 1: // Order 1: Red, Blue, Yellow, Green, White
-		setarray .@Colors$[1],"^FF0000","^0000FF","^FFFF00","^00FF00","^cccccc";
+		setarray .@colors$[1],"^FF0000","^0000FF","^FFFF00","^00FF00","^cccccc";
 		setarray .@Text$[1],"Red","Blue","Yellow","Green","White";
 		if (getarg(1) <= 1)
 			viewpoint 1,213,89,0,0xFF0000;
@@ -5447,7 +5447,7 @@ L_Viewpoint:
 		viewpoint 1,111,178,4,0xcccccc;
 		break;
 	case 2: // Order 2: Yellow, Blue, White, Green, Red
-		setarray .@Colors$[1],"^FFFF00","^0000FF","^cccccc","^00FF00","^FF0000";
+		setarray .@colors$[1],"^FFFF00","^0000FF","^cccccc","^00FF00","^FF0000";
 		setarray .@Text$[1],"Yellow","Blue","White","Green","Red";
 		if (getarg(1) <= 1)
 			viewpoint 1,73,253,0,0xFFFF00;
@@ -5461,7 +5461,7 @@ L_Viewpoint:
 		break;
 	}
 	for(set .@i,1; .@i<=5; set .@i,.@i+1)
-		set .@str$, .@str$+((.@i >= getarg(1))?.@Colors$[.@i]:"")+.@Text$[.@i]+" ";
+		set .@str$, .@str$+((.@i >= getarg(1))?.@colors$[.@i]:"")+.@Text$[.@i]+" ";
 	if (getarg(1) > 1)
 		mes "After inserting the card and pressing the red button, the path to the destination lit up.";
 	mes "The order will be "+.@str$+"^000000.";
@@ -6226,12 +6226,12 @@ L_ShowLights:
 	mes "In that order.";
 	next;
 	mes "Luminous";
-	setarray .@Color$[0],"Red","Blue","Yellow","Green";
+	setarray .@color$[0],"Red","Blue","Yellow","Green";
 	setarray .@Cutin$[0],"nya_red","nya_blue","nya_yellow","nya_green";
 	for(set .@i,0; .@i<getarg(0); set .@i,.@i+1) {
 		set .@rand, rand(4);
 		set .@Lamp[.@i],.@rand;
-		mes .@Color$[.@rand];
+		mes .@color$[.@rand];
 		if (.@i+1 == getarg(0))
 			mes "Shines according to this order.";
 		cutin .@Cutin$[.@rand],4;
@@ -6242,9 +6242,9 @@ L_ShowLights:
 	mes "Stop the machine by pressing the right button within time.";
 	next;
 	set .@pass,0;
-	setarray .@Count$[0],"first","second","third","fourth","fifth","sixth","seventh","eighth";
+	setarray .@count$[0],"first","second","third","fourth","fifth","sixth","seventh","eighth";
 	for(set .@i,0; .@i<getarg(0); set .@i,.@i+1) {
-		mes "Which color button do you want to press "+.@Count$[.@i]+"?";
+		mes "Which color button do you want to press "+.@count$[.@i]+"?";
 		next;
 		// Red <-> Green, Blue <-> Yellow
 		set .@j, select("Red:Blue:Yellow:Green");

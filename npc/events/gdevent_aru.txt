@@ -480,19 +480,19 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 	specialeffect EF_POISONHIT;
 	set .@sprchg_gd,rand(1,5);
 	if (.@sprchg_gd == 1) {
-		setnpcdisplay "Pierrot Pier#aru_gd",950;
+		setnpcdisplay "Pierrot Pier#aru_gd", 4_GHOSTRING;
 	}
 	else if (.@sprchg_gd == 2) {
-		setnpcdisplay "Pierrot Pier#aru_gd",715;
+		setnpcdisplay "Pierrot Pier#aru_gd", 4_M_PIERROT;
 	}
 	else if (.@sprchg_gd == 3) {
-		setnpcdisplay "Pierrot Pier#aru_gd",714;
+		setnpcdisplay "Pierrot Pier#aru_gd", 4_F_06;
 	}
 	else if (.@sprchg_gd == 4) {
-		setnpcdisplay "Pierrot Pier#aru_gd",785;
+		setnpcdisplay "Pierrot Pier#aru_gd", 4_M_UMDANCEKID2;
 	}
 	else {
-		setnpcdisplay "Pierrot Pier#aru_gd",876;
+		setnpcdisplay "Pierrot Pier#aru_gd", 4_CAT;
 	}
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait!! -";
@@ -506,7 +506,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 		if ($@gdeventv_a2 == 0) {
 			set .@que_2143,checkquest(2143,PLAYTIME);
 			if (.@que_2143 == -1) {
-				setnpcdisplay "Pierrot Pier#aru_gd",715;
+				setnpcdisplay "Pierrot Pier#aru_gd", 4_M_PIERROT;
 				mes "A lonely clown is juggling.";
 				next;
 				mes "When looked at closely, the clown is just a puppet that looks like a human.";
@@ -660,7 +660,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 					mes "Let the game.. Begin!";
 					mapannounce "arug_que01", "Pierrot Pier: Let the game.. Begin!",bc_map,"0x99CC00";
 					set $@gdeventv_a2,1;
-					donpcevent "Controller#gdevent_a::Ongame_start";
+					donpcevent "Controller#gdevent_a::OnGame_start";
 					erasequest 2143;
 					close;
 				}
@@ -677,7 +677,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			if (countitem(6031) > 0) {
 				donpcevent "Controller#gdevent_a::OnStop";
 				set $@gdeventv_a2,3;
-				donpcevent "eff_mvp#aru_gd::Onmvp";
+				donpcevent "eff_mvp#aru_gd::OnMVP";
 				mes "[Pierrot Pier]";
 				mes "Wow~~!!";
 				mes "Success~!!";
@@ -762,7 +762,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				mes "Let the game.. Begin!";
 				mapannounce "arug_que01", "Pierrot Pier: Let the game.. Begin!",bc_map,"0x99CC00";
 				set $@gdeventv_a2,10;
-				donpcevent "Controller#gdevent_a::Ongame_start";
+				donpcevent "Controller#gdevent_a::OnGame_start";
 				close;
 			}
 		}
@@ -784,7 +784,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			mes "You've completeled an unbelievable task, I will give you the wonderful gift master has prepared!! Ha!";
 			mapannounce "arug_que01", "Pierrot Pier: You've completeled an unbelievable task, I will give you the wonderful gift my master has prepared!! Ha!",bc_map,"0x99CC00";
 			mapannounce "arug_que01", "Pierrot Pier: Here, take Pierre's Treasure Boxes.",bc_map,"0x99CC00";
-			donpcevent "eff_mvp#aru_gd::Onmvp";
+			donpcevent "eff_mvp#aru_gd::OnMVP";
 			set $@gdeventv_a2,5;
 			getitem 14596,10; //Pierre_Treasurebox
 			close;
@@ -819,7 +819,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			if (countitem(6031) > 0) {
 				donpcevent "Controller#gdevent_a::OnStop";
 				set $@gdeventv_a2,3;
-				donpcevent "eff_mvp#aru_gd::Onmvp";
+				donpcevent "eff_mvp#aru_gd::OnMVP";
 				mes "[Pierrot Pier]";
 				mes "Wow~~!!";
 				mes "Success~!!";
@@ -845,7 +845,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 	}
 	else {
 		if ($@gdeventv_a2 == 0) {
-			setnpcdisplay "Pierrot Pier#aru_gd",715;
+			setnpcdisplay "Pierrot Pier#aru_gd", 4_M_PIERROT;
 			mes "A lonely clown is juggling.";
 			next;
 			mes "When looked at closely, the clown is just a puppet that looks like a human.";
@@ -929,7 +929,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			if (countitem(6031) > 0) {
 				donpcevent "Controller#gdevent_a::OnStop";
 				set $@gdeventv_a2,3;
-				donpcevent "eff_mvp#aru_gd::Onmvp";
+				donpcevent "eff_mvp#aru_gd::OnMVP";
 				mes "[Pierrot Pier]";
 				mes "Wow~~!!";
 				mes "Success~!!";
@@ -993,7 +993,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			if (countitem(6031) > 0) {
 				donpcevent "Controller#gdevent_a::OnStop";
 				set $@gdeventv_a2,3;
-				donpcevent "eff_mvp#aru_gd::Onmvp";
+				donpcevent "eff_mvp#aru_gd::OnMVP";
 				mes "[Pierrot Pier]";
 				mes "Wow~~!!";
 				mes "Success~!!";
@@ -1024,11 +1024,11 @@ OnInit:
 	set $@gdeventv_a2,0;
 	end;
 
-Onwin:
+OnWin:
 	donpcevent "treg#aru_gd::OnEnable";
 	end;
 
-Ongame_start:
+OnGame_start:
 	initnpctimer;
 	donpcevent "paper_sp_1_a::OnEnable";
 	donpcevent "paper_sp_2_a::OnEnable";
@@ -1334,7 +1334,7 @@ OnTouch2:
 arug_que01,6,6,1	script	eff_mvp#aru_gd	CLEAR_NPC,{
 	end;
 
-Onmvp:
+OnMVP:
 	initnpctimer;
 	end;
 

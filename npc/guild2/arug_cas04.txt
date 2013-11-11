@@ -53,8 +53,8 @@ arug_cas04,148,103,4	script	Gefn#LF_ar04_10::LF_ar04_02	GUILD_FLAG,{
 	callfunc "LinkFlag","Emperium Center",121,318;
 	end;
 OnAgitInit2:
-OnRecvCastlear04:
-	FlagEmblem GetCastleData("arug_cas04",1);
+OnRecvCastleAr04:
+	flagemblem getcastledata("arug_cas04",1);
 	end;
 }
 arug_cas04,135,103,4	duplicate(LF_ar04_02)	Gefn#LF_ar04_11	GUILD_FLAG
@@ -65,8 +65,8 @@ aru_gld,306,359,6	script	Gefn#flag_ar04_1::ar04_Flag	GUILD_FLAG,{
 	callfunc "ReturnFlag","arug_cas04",1;
 	end;
 OnAgitInit2:
-OnRecvCastlear04:
-	FlagEmblem GetCastleData("arug_cas04",1);
+OnRecvCastleAr04:
+	flagemblem getcastledata("arug_cas04",1);
 	end;
 }
 aru_gld,306,348,6	duplicate(ar04_Flag)	Gefn#flag_ar04_2	GUILD_FLAG
@@ -74,8 +74,8 @@ aru_gld,301,318,4	script	Gefn#flag_ar04_3::ar04_Flag2	GUILD_FLAG,{
 	callfunc "ReturnFlag","arug_cas04",0;
 	end;
 OnAgitInit2:
-OnRecvCastlear04:
-	FlagEmblem GetCastleData("arug_cas04",1);
+OnRecvCastleAr04:
+	flagemblem getcastledata("arug_cas04",1);
 	end;
 }
 aru_gld,313,318,4	duplicate(ar04_Flag2)	Gefn#flag_ar04_4	GUILD_FLAG

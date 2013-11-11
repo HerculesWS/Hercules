@@ -16,7 +16,7 @@
 //============================================================
 -	script	Wuerzburg#1::OutsideFlagsA4	GUILD_FLAG,{
 
-	set .@GID, GetCastleData("aldeg_cas04",1);
+	set .@GID, getcastledata("aldeg_cas04",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";
@@ -39,7 +39,7 @@
 		next;
 		if(select("Return to the guild castle.:Quit.") == 1) {
 			close2;
-			if (getcharid(2) == GetCastleData("aldeg_cas04",1)) {
+			if (getcharid(2) == getcastledata("aldeg_cas04",1)) {
 				warp "aldeg_cas04",116,217;
 				end;
 			}
@@ -51,16 +51,16 @@
 	mes " ";
 	mes "1. Follow the ordinance of The Divine Rune-Midgarts Kingdom, ";
 	mes "we approve that this place is in";
-	mes "the private prossession of ^ff0000"+GetGuildName(.@GID)+"^000000 Guild.";
+	mes "the private prossession of ^ff0000"+getguildname(.@GID)+"^000000 Guild.";
 	mes " ";
-	mes "2. The guild Master of ^ff0000"+GetGuildName(.@GID)+"^000000 Guild is";
-	mes "^ff0000"+GetGuildMaster(.@GID)+"^000000";
+	mes "2. The guild Master of ^ff0000"+getguildname(.@GID)+"^000000 Guild is";
+	mes "^ff0000"+getguildmaster(.@GID)+"^000000";
 	mes "If there is anyone who objects to this,";
 	mes "prove your strength and honor with a steel blade in your hand.";
 	close;
 
 OnRecvCastleA04:
-	FlagEmblem GetCastleData("aldeg_cas04",1);
+	flagemblem getcastledata("aldeg_cas04",1);
 	end;
 }
 
@@ -73,7 +73,7 @@ alde_gld,239,239,2	duplicate(OutsideFlagsA4)	Wuerzburg#2	GUILD_FLAG
 	end;
 
 OnRecvCastleA04:
-	FlagEmblem GetCastleData("aldeg_cas04",1);
+	flagemblem getcastledata("aldeg_cas04",1);
 	end;
 }
 

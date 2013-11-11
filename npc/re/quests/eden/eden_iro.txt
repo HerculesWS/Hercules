@@ -567,7 +567,7 @@ moc_para01,13,22,4	script	Merry Badger#xch	4_F_SITDOWN,{
 	//switch(select("Redeem Badges:Trade in FOR badges:Exchange Rates:15 Job Manuals - 1 JM Box")) {
 }
 
-moc_para01,174,33,3	script	Bathory#2012spirits	1102,{
+moc_para01,174,33,3	script	Bathory#2012spirits	BATHORY,{
 	mes "[Bathory]";
 	mes "Eheeheeheehee! The spotlight is on Glast Heim this week, so I'm ferrying people there for a mere 1,000z!";
 	next;

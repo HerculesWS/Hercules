@@ -60,7 +60,7 @@ yuno_in03,32,15,3	script	Museum Guide	1_F_02,{
 	close;
 }
 	
-yuno_in03,36,21,3	script	Deviace#yuno	1108,{
+yuno_in03,36,21,3	script	Deviace#yuno	DEVIACE,{
 	end;
 }
 yuno_in03,33,21,1	script	#DEVIACE	HIDDEN_NPC,{
@@ -86,7 +86,7 @@ yuno_in03,33,21,1	script	#DEVIACE	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,36,27,3	script	Seal#yuno	1317,{
+yuno_in03,36,27,3	script	Seal#yuno	FUR_SEAL,{
 	end;
 }
 yuno_in03,33,27,1	script	#FUR_SEAL	HIDDEN_NPC,{
@@ -112,7 +112,7 @@ yuno_in03,33,27,1	script	#FUR_SEAL	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,36,33,3	script	Sage Worm#yuno	1281,{
+yuno_in03,36,33,3	script	Sage Worm#yuno	SAGEWORM,{
 	end;
 }
 yuno_in03,33,33,1	script	#SAGEWORM	HIDDEN_NPC,{
@@ -134,7 +134,7 @@ yuno_in03,33,33,1	script	#SAGEWORM	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,39,39,3	script	Penomena#yuno	1216,{
+yuno_in03,39,39,3	script	Penomena#yuno	PENOMENA,{
 	end;
 }
 yuno_in03,38,39,1	script	#PENOMANA	HIDDEN_NPC,{
@@ -160,7 +160,7 @@ yuno_in03,38,39,1	script	#PENOMANA	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,39,44,3	script	Galapago#yuno	1391,{
+yuno_in03,39,44,3	script	Galapago#yuno	GALAPAGO,{
 	end;
 }
 yuno_in03,37,44,3	script	#GALAPAGO	HIDDEN_NPC,{
@@ -181,7 +181,7 @@ yuno_in03,37,44,3	script	#GALAPAGO	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,15,21,5	script	Raydric#yuno	1163,{
+yuno_in03,15,21,5	script	Raydric#yuno	RAYDRIC,{
 	end;
 }
 yuno_in03,19,21,1	script	#RAYDRIC	HIDDEN_NPC,{
@@ -202,7 +202,7 @@ yuno_in03,19,21,1	script	#RAYDRIC	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,15,27,5	script	Chepet#yuno	1250,{
+yuno_in03,15,27,5	script	Chepet#yuno	CHEPET,{
 	end;
 }
 yuno_in03,19,27,1	script	#CHEPET	HIDDEN_NPC,{
@@ -221,7 +221,7 @@ yuno_in03,19,27,1	script	#CHEPET	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,15,33,5	script	Violy#yuno	1390,{
+yuno_in03,15,33,5	script	Violy#yuno	VIOLY,{
 	end;
 }
 yuno_in03,19,33,1	script	#VIOLY	HIDDEN_NPC,{
@@ -238,7 +238,7 @@ yuno_in03,19,33,1	script	#VIOLY	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,10,39,5	script	Alice#yuno	1275,{
+yuno_in03,10,39,5	script	Alice#yuno	ALICE,{
 	end;
 }
 yuno_in03,12,39,1	script	#ALICE	HIDDEN_NPC,{
@@ -260,7 +260,7 @@ yuno_in03,12,39,1	script	#ALICE	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,10,45,5	script	Assulter#yuno	1315,{
+yuno_in03,10,45,5	script	Assulter#yuno	ASSULTER,{
 	end;
 }
 yuno_in03,12,45,1	script	#ASSULTER	HIDDEN_NPC,{
@@ -285,17 +285,17 @@ yuno_in03,12,45,1	script	#ASSULTER	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,38,50,3	script	PecoPeco Egg#yuno	1047,{
+yuno_in03,38,50,3	script	PecoPeco Egg#yuno	PECOPECO_EGG,{
 	end;
 }
-yuno_in03,34,54,3	script	Thief Bug Egg#yuno	1048,{
+yuno_in03,34,54,3	script	Thief Bug Egg#yuno	THIEF_BUG_EGG,{
 	end;
 }
-yuno_in03,12,50,3	script	Ant Egg#yuno	1097,{
+yuno_in03,12,50,3	script	Ant Egg#yuno	ANT_EGG,{
 	end;
 }
 
-yuno_in03,18,96,5	script	Wanderer#yuno	1208,{
+yuno_in03,18,96,5	script	Wanderer#yuno	WANDER_MAN,{
 	end;
 }
 yuno_in03,20,96,1	script	#WANDER_MAN	HIDDEN_NPC,{
@@ -317,7 +317,7 @@ yuno_in03,20,96,1	script	#WANDER_MAN	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,16,100,5	script	Caterpillar#yuno	1300,{
+yuno_in03,16,100,5	script	Caterpillar#yuno	CATERPILLAR,{
 	end;
 }
 yuno_in03,18,100,1	script	#CATERPILLAR	HIDDEN_NPC,{
@@ -339,7 +339,7 @@ yuno_in03,18,100,1	script	#CATERPILLAR	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,16,104,5	script	Male Thiefbug#yuno	1054,{
+yuno_in03,16,104,5	script	Male Thiefbug#yuno	THIEF_BUG__,{
 	end;
 }
 yuno_in03,18,104,1	script	#THIEF_BUG__	HIDDEN_NPC,{
@@ -357,7 +357,7 @@ yuno_in03,18,104,1	script	#THIEF_BUG__	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,16,108,5	script	Tri Joint#yuno	1279,{
+yuno_in03,16,108,5	script	Tri Joint#yuno	TRI_JOINT,{
 	end;
 }
 yuno_in03,18,108,1	script	#TRI_JOINT	HIDDEN_NPC,{
@@ -377,7 +377,7 @@ yuno_in03,18,108,1	script	#TRI_JOINT	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,16,111,5	script	Arclouz#yuno	1194,{
+yuno_in03,16,111,5	script	Arclouz#yuno	ARCLOUSE,{
 	end;
 }
 yuno_in03,18,111,1	script	#ARCLOUSE	HIDDEN_NPC,{
@@ -400,7 +400,7 @@ yuno_in03,18,111,1	script	#ARCLOUSE	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,16,117,5	script	Dragon Tail#yuno	1321,{
+yuno_in03,16,117,5	script	Dragon Tail#yuno	DRAGON_TAIL,{
 	end;
 }
 yuno_in03,18,116,1	script	#DRAGON_TAIL	HIDDEN_NPC,{
@@ -419,7 +419,7 @@ yuno_in03,18,116,1	script	#DRAGON_TAIL	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,46,96,3	script	Owl Duke#yuno	1320,{
+yuno_in03,46,96,3	script	Owl Duke#yuno	OWL_DUKE,{
 	end;
 }
 yuno_in03,44,96,1	script	#OWL_DUKE	HIDDEN_NPC,{
@@ -444,7 +444,7 @@ yuno_in03,44,96,1	script	#OWL_DUKE	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,48,100,3	script	Marine Sphere#yuno	1142,{
+yuno_in03,48,100,3	script	Marine Sphere#yuno	MARINE_SPHERE,{
 	end;
 }
 yuno_in03,46,101,1	script	#MARINE_SPHERE	HIDDEN_NPC,{
@@ -468,7 +468,7 @@ yuno_in03,46,101,1	script	#MARINE_SPHERE	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,48,104,3	script	Mandragora#yuno	1020,{
+yuno_in03,48,104,3	script	Mandragora#yuno	MANDRAGORA,{
 	end;
 }
 yuno_in03,46,105,1	script	#MANDRAGORA	HIDDEN_NPC,{
@@ -499,7 +499,7 @@ yuno_in03,46,105,1	script	#MANDRAGORA	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,48,108,3	script	Geographer#yuno	1368,{
+yuno_in03,48,108,3	script	Geographer#yuno	GEOGRAPHER,{
 	end;
 }
 yuno_in03,46,108,1	script	#GEOGRAPHER	HIDDEN_NPC,{
@@ -533,7 +533,7 @@ yuno_in03,46,108,1	script	#GEOGRAPHER	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,48,112,3	script	Rafflesia#yuno	1162,{
+yuno_in03,48,112,3	script	Rafflesia#yuno	RAFFLESIA,{
 	end;
 }
 yuno_in03,46,112,1	script	#RAFFLESIA	HIDDEN_NPC,{
@@ -558,7 +558,7 @@ yuno_in03,46,112,1	script	#RAFFLESIA	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,48,116,3	script	Stem Worm#yuno	1215,{
+yuno_in03,48,116,3	script	Stem Worm#yuno	STEM_WORM,{
 	end;
 }
 yuno_in03,45,116,1	script	#STEM_WORM	HIDDEN_NPC,{
@@ -577,7 +577,7 @@ yuno_in03,45,116,1	script	#STEM_WORM	HIDDEN_NPC,{
 	close;
 }
 
-yuno_in03,24,124,3	script	Blazzer#yuno	1367,{
+yuno_in03,24,124,3	script	Blazzer#yuno	BLAZZER,{
 	end;
 }
 yuno_in03,24,122,1	script	#BLAZZER	HIDDEN_NPC,{
@@ -602,7 +602,7 @@ yuno_in03,24,122,1	script	#BLAZZER	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,28,124,5	script	Ride Word#yuno	1195,{
+yuno_in03,28,124,5	script	Ride Word#yuno	RIDEWORD,{
 	end;
 }
 yuno_in03,28,122,1	script	#RIDEWORD	HIDDEN_NPC,{
@@ -617,7 +617,7 @@ yuno_in03,28,122,1	script	#RIDEWORD	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,31,124,3	script	Megalodon#yuno	1064,{
+yuno_in03,31,124,3	script	Megalodon#yuno	MEGALODON,{
 	end;
 }
 yuno_in03,31,122,1	script	#MEGALODON	HIDDEN_NPC,{
@@ -635,7 +635,7 @@ yuno_in03,31,122,1	script	#MEGALODON	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,35,124,3	script	Sleeper#yuno	1386,{
+yuno_in03,35,124,3	script	Sleeper#yuno	SLEEPER,{
 	end;
 }
 yuno_in03,35,122,1	script	#SLEEPER	HIDDEN_NPC,{
@@ -656,7 +656,7 @@ yuno_in03,35,122,1	script	#SLEEPER	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,39,124,3	script	Ancient Mummy#yuno	1297,{
+yuno_in03,39,124,3	script	Ancient Mummy#yuno	ANCIENT_MUMMY,{
 	end;
 }
 yuno_in03,39,122,1	script	#ANCIENT_MUMMY	HIDDEN_NPC,{
@@ -685,7 +685,7 @@ yuno_in03,39,122,1	script	#ANCIENT_MUMMY	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,18,122,5	script	Incubus#yuno	1374,{
+yuno_in03,18,122,5	script	Incubus#yuno	INCUBUS,{
 	end;
 }
 yuno_in03,19,120,1	script	#INCUBUS	HIDDEN_NPC,{
@@ -707,7 +707,7 @@ yuno_in03,19,120,1	script	#INCUBUS	HIDDEN_NPC,{
 	close;
 }
 	
-yuno_in03,44,120,3	script	Succubus#yuno	1370,{
+yuno_in03,44,120,3	script	Succubus#yuno	SUCCUBUS,{
 	end;
 }
 yuno_in03,42,120,1	script	#SUCCUBUS	HIDDEN_NPC,{

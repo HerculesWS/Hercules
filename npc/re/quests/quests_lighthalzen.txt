@@ -403,14 +403,14 @@ OnEffect3:
 	specialeffect EF_FLASHER;
 	end;
 }
-que_lhz,148,231,0	duplicate(Awake Specimen#lhz)	Awake Specimen#0	2244
-que_lhz,140,231,1	duplicate(Awake Specimen#lhz)	Awake Specimen#1	2244
-que_lhz,140,224,2	duplicate(Awake Specimen#lhz)	Awake Specimen#2	2244
-que_lhz,140,216,3	duplicate(Awake Specimen#lhz)	Awake Specimen#3	2244
-que_lhz,147,216,4	duplicate(Awake Specimen#lhz)	Awake Specimen#4	2244
-que_lhz,155,216,5	duplicate(Awake Specimen#lhz)	Awake Specimen#5	2244
-que_lhz,155,224,6	duplicate(Awake Specimen#lhz)	Awake Specimen#6	2244
-que_lhz,155,231,7	duplicate(Awake Specimen#lhz)	Awake Specimen#7	2244
+que_lhz,148,231,0	duplicate(Awake Specimen#lhz)	Awake Specimen#0	QUEST_CHEN
+que_lhz,140,231,1	duplicate(Awake Specimen#lhz)	Awake Specimen#1	QUEST_CHEN
+que_lhz,140,224,2	duplicate(Awake Specimen#lhz)	Awake Specimen#2	QUEST_CHEN
+que_lhz,140,216,3	duplicate(Awake Specimen#lhz)	Awake Specimen#3	QUEST_CHEN
+que_lhz,147,216,4	duplicate(Awake Specimen#lhz)	Awake Specimen#4	QUEST_CHEN
+que_lhz,155,216,5	duplicate(Awake Specimen#lhz)	Awake Specimen#5	QUEST_CHEN
+que_lhz,155,224,6	duplicate(Awake Specimen#lhz)	Awake Specimen#6	QUEST_CHEN
+que_lhz,155,231,7	duplicate(Awake Specimen#lhz)	Awake Specimen#7	QUEST_CHEN
 
 -	script	#controllhz4	-1,{
 OnInit:

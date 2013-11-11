@@ -1919,7 +1919,7 @@ alde_alche,88,180,0	script	Muscle Man#Alarm Mask	4_M_ALCHE_A,{
 	mes "It's sexy time!";
 	next;
 	specialeffect EF_FLASHER;
-	setnpcdisplay "Muscle Man#Alarm Mask", 1193;
+	setnpcdisplay "Muscle Man#Alarm Mask", ALARM;
 	enablenpc " #Alarm Mask Man1";
 	enablenpc " #Alarm Mask Man2";
 	enablenpc " #Alarm Mask Man3";
@@ -2034,7 +2034,7 @@ alde_alche,88,180,0	script	Muscle Man#Alarm Mask	4_M_ALCHE_A,{
 
 OnTimer4000:
 	specialeffect EF_FLASHER;
-	setnpcdisplay "Muscle Man#Alarm Mask", 748;
+	setnpcdisplay "Muscle Man#Alarm Mask", 4_M_ALCHE_A;
 	disablenpc " #Alarm Mask Man1";
 	disablenpc " #Alarm Mask Man2";
 	disablenpc " #Alarm Mask Man3";
@@ -2047,25 +2047,25 @@ OnTimer4000:
 	end;
 }
 
-alde_alche,86,184,0	script	 #Alarm Mask Man1	1193,{
+alde_alche,86,184,0	script	 #Alarm Mask Man1	ALARM,{
 OnInit:
 	disablenpc " #Alarm Mask Man1";
 	end;
 }
 
-alde_alche,89,184,0	script	 #Alarm Mask Man2	1193,{
+alde_alche,89,184,0	script	 #Alarm Mask Man2	ALARM,{
 OnInit:
 	disablenpc " #Alarm Mask Man2";
 	end;
 }
 
-alde_alche,92,184,0	script	 #Alarm Mask Man3	1193,{
+alde_alche,92,184,0	script	 #Alarm Mask Man3	ALARM,{
 OnInit:
 	disablenpc " #Alarm Mask Man3";
 	end;
 }
 
-alde_alche,95,184,0	script	 #Alarm Mask Man4	1193,{
+alde_alche,95,184,0	script	 #Alarm Mask Man4	ALARM,{
 OnInit:
 	disablenpc " #Alarm Mask Man4";
 	end;
@@ -2454,7 +2454,7 @@ morocc,273,79,4	script	Educated Traveller	4W_M_03,{
 
 // Kitsune Mask
 //============================================================
-pay_dun03,48,84,4	script	Nine Tails#Kitsune Mask	1180,1,1,{
+pay_dun03,48,84,4	script	Nine Tails#Kitsune Mask	NINE_TAIL,1,1,{
 	end;
 
 OnInit:
@@ -2631,7 +2631,7 @@ OnMyMobDead2:
 
 // Orc Hero Helmet
 //============================================================
-in_orcs01,31,93,1	script	Orc Warrior#1	1023,2,2,{
+in_orcs01,31,93,1	script	Orc Warrior#1	ORK_WARRIOR,2,2,{
 OnTouch:
 	disable_items;
 	if (checkweight(1201,1) == 0) {
@@ -3502,7 +3502,7 @@ OnTouch:
 	}
 }
 
-in_orcs01,162,33,1	script	Orc Hero#1	1087,2,2,{
+in_orcs01,162,33,1	script	Orc Hero#1	ORK_HERO,2,2,{
 OnTouch:
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";

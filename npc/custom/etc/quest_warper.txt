@@ -94,7 +94,7 @@ function	script	Q_Warpra	{
 	case 10: goto L_GStorage;
 	case 11:
 	default:
-		goto L_end;
+		goto L_End;
 	}
 
 //=====================GM-Menu=Functions===========================
@@ -320,7 +320,7 @@ L_town:
 	freeloop(0);
 	set @TWMenu,select(.@menu$);
 
-	if (@Tmenuref[@TWMenu-1] == 57005) goto L_end; // 57005='dead' in hex
+	if (@Tmenuref[@TWMenu-1] == 57005) goto L_End; // 57005='dead' in hex
 
 	if(Zeny<@pTprice[@Tmenuref[@TWMenu-1]]) callsub L_Short_on_zeny,0;
 	set Zeny, Zeny-@pTprice[@Tmenuref[@TWMenu-1]];
@@ -341,7 +341,7 @@ L_dungeon:
 	freeloop(0);
 	set @DWMenu,select(.@menu$);
 
-	if (@Dmenuref[@DWMenu-1] == 57005) goto L_end; // 57005='dead' in hex
+	if (@Dmenuref[@DWMenu-1] == 57005) goto L_End; // 57005='dead' in hex
 	set @DwarpMenu, (@Dmenuref[@DWMenu-1]);
 	callfunc "QWS_DLarray";
 
@@ -355,7 +355,7 @@ L_dungeon:
 	freeloop(0);
 	set @DWLMenu,select(.@menu$);
 
-	if (@DWLmenuref[@DWLMenu-1] == 57005) goto L_end; // 57005='dead' in hex
+	if (@DWLmenuref[@DWLMenu-1] == 57005) goto L_End; // 57005='dead' in hex
 
 	set @Darrayref, @DWLmenuref[@DWLMenu-1];
 	set @warpprice, @pDprice[@Dmenuref[@DWMenu-1]]+(getd(@pDfee$[@Dmenuref[@DWMenu-1]])*(@DDepth[@Darrayref]));
@@ -387,22 +387,22 @@ L_heal_Part:
 	if (@healchoice == 1) callsub PHeal,1,1;
 	if (@healchoice == 2) callsub PHeal,1,0;
 	if (@healchoice == 3) callsub PHeal,0,1;
-	goto L_end;
+	goto L_End;
 	
 PHeal:
 	next;
 	set @Hp, MaxHp-Hp;
 	set @Sp, MaxSp-Sp;
-	set @HpPrice, @hp*$QW_HP_H_PRICE;
-	set @SpPrice, @sp*$QW_HP_S_PRICE;
+	set @HpPrice, @Hp*$QW_HP_H_PRICE;
+	set @SpPrice, @Sp*$QW_HP_S_PRICE;
 	mes "[Warpra]";
 	if(getarg(0) == 1) mes ""+@HpPrice+" Zeny for "+@Hp+" health points";
 	if(getarg(1) == 1) mes ""+@SpPrice+" Zeny for "+@Sp+" skill points";
 	set @total, @HpPrice+@SpPrice;
 	mes "for a total of "+@total+" zeny";
-    	if (select("Heal me","Let me see the choices again")==2) goto L_heal_Part;
-    	
-    	if(getarg(0) == 1)set @HpPrice, (MaxHp-Hp)*$QW_HP_H_PRICE;
+	if (select("Heal me","Let me see the choices again")==2) goto L_heal_Part;
+
+	if(getarg(0) == 1)set @HpPrice, (MaxHp-Hp)*$QW_HP_H_PRICE;
 	if(getarg(1) == 1)set @SpPrice, (MaxSp-Sp)*$QW_HP_S_PRICE;
 	set @healfee, @HpPrice+@SpPrice;
 	if (getarg(0) == 1)&&(getarg(1) == 1)&&(Zeny<@healfee) goto Zeny_Short_Both;
@@ -419,18 +419,18 @@ Zeny_Short_Both:
 	mes "[Warpra]";
 	mes "Choose another option, you can afford both.";
 	mes "I can heal as much as you can afford, too.";
-	if (select("OK","Exit") == 2) goto L_end;
+	if (select("OK","Exit") == 2) goto L_End;
 	goto PHeal;
 
 Zeny_short_HP:
 	mes "[Warpra]";
 	mes "Do you want me to partly heal your HP?";
-	if (select("Yes","No") == 2) goto L_end;
+	if (select("Yes","No") == 2) goto L_End;
 	set @Hp, Zeny/$QW_HP_H_PRICE;
-    	set @HpPrice, @Hp*$QW_HP_H_PRICE;
-    	if (@Hp == 1) mes "You're not worth the effort.";
-    	if (@Hp == 1) goto L_end;
-    	set Zeny, Zeny-@HpPrice;
+	set @HpPrice, @Hp*$QW_HP_H_PRICE;
+	if (@Hp == 1) mes "You're not worth the effort.";
+	if (@Hp == 1) goto L_End;
+	set Zeny, Zeny-@HpPrice;
 	heal @Hp,0;
 	close;
 	end;
@@ -438,12 +438,12 @@ Zeny_short_HP:
 Zeny_short_SP:
 	mes "[Warpra]";
 	mes "Do you want me to partly heal your SP?";
-	if (select("Yes","No") == 2) goto L_end;
+	if (select("Yes","No") == 2) goto L_End;
 	set @Sp, Zeny/$QW_HP_S_PRICE;
-    	set @SpPrice, @Sp*$QW_HP_S_PRICE;
-    	if (@Sp == 1) mes "You're not worth the effort.";
-    	if (@Sp == 1) goto L_end;
-    	set Zeny, Zeny-@SpPrice;
+	set @SpPrice, @Sp*$QW_HP_S_PRICE;
+	if (@Sp == 1) mes "You're not worth the effort.";
+	if (@Sp == 1) goto L_End;
+	set Zeny, Zeny-@SpPrice;
 	heal 0,@Sp;
 	close;
 	end;
@@ -495,12 +495,12 @@ L_GStorage:
 	if ($QW_KPoint == 1) set RESRVPTS, RESRVPTS + ($QW_GS_PRICE/5);
 	next;
 	mes "[Warpra]";
-	mes "Close this window and I will open the ^5533FF" + GetGuildName(@GID) + "^000000 storage.";
+	mes "Close this window and I will open the ^5533FF" + getguildname(@GID) + "^000000 storage.";
 	close2;
 	guildopenstorage;
 	end;
 	
-L_end:
+L_End:
 	close;
 	end;
 

@@ -1996,7 +1996,7 @@ job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
 		close;
 	}
 	setarray .@Words$[0],"SEED","FOOT","COLD";
-	setarray .@Numbers[0],24,25,20;
+	setarray .@numbers[0],24,25,20;
 	set .@i,job_sha-14;
 	if (job_sha > 13 && job_sha < 17) {
 		mes "There are lots of boxes.";
@@ -2023,8 +2023,8 @@ job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
 		switch(select("Input the answer.:I can't get it.")) {
 		case 1:
 			input .@input;
-			if (.@input == .@Numbers[.@i]) {
-				mes "You put 2 and "+(.@Numbers[.@i]-20)+".";
+			if (.@input == .@numbers[.@i]) {
+				mes "You put 2 and "+(.@numbers[.@i]-20)+".";
 				mes "The box opens and you get one key.";
 				next;
 				mes "You got the Key of Illusion.";

@@ -547,6 +547,9 @@ int party_member_withdraw(int party_id, int account_id, int char_id)
 	}
 
 	if( sd && sd->status.party_id == party_id && sd->status.char_id == char_id ) {
+#ifdef GP_BOUND_ITEMS
+		pc->bound_clear(sd,IBT_PARTY);
+#endif
 		sd->status.party_id = 0;
 		clif->charnameupdate(sd); //Update name display [Skotlex]
 		//TODO: hp bars should be cleared too

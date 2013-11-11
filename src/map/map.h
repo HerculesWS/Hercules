@@ -1047,7 +1047,7 @@ struct map_interface {
 	int (*abort_sub) (struct map_session_data *sd, va_list ap);
 	void (*helpscreen) (bool do_exit);
 	void (*versionscreen) (bool do_exit);
-	bool (*arg_next_value) (const char *option, int i, int argc);
+	bool (*arg_next_value) (const char *option, int i, int argc, bool must);
 	void (*addblcell) (struct block_list *bl);
 	void (*delblcell) (struct block_list *bl);
 	int (*get_new_bonus_id) (void);

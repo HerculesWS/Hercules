@@ -16,7 +16,7 @@
 /// Flag Function
 //============================================================
 function	script	F_Flags	{
-	set .@GID, GetCastleData(getarg(1),1);
+	set .@GID, getcastledata(getarg(1),1);
 	if (getarg(5) == 0) return;
 	if (.@GID == 0) {
 		mes " [ Edict of the Divine Rune Midgard Kingdom ]";
@@ -38,7 +38,7 @@ function	script	F_Flags	{
 			mes "Do you wish to return to your honorable place?";
 			next;
 			if (select("Return to the guild castle.:Quit.") == 1) {
-				if (getcharid(2) == GetCastleData(getarg(1),1))
+				if (getcharid(2) == getcastledata(getarg(1),1))
 					warp getarg(1),getarg(2),getarg(3);
 			}
 			return;
@@ -48,10 +48,10 @@ function	script	F_Flags	{
 		mes "1. Following the ordinance of the";
 		mes "Divine Rune Midgard Kingdom,";
 		mes "we approve that this place is in";
-		mes "the private possession of ^ff0000" + GetGuildName(.@GID) + "^000000 Guild.";
+		mes "the private possession of ^ff0000" + getguildname(.@GID) + "^000000 Guild.";
 		mes " ";
-		mes "2. The guild Master of ^ff0000"+ GetGuildName(.@GID) + "^000000 Guild is";
-		mes "^FF0000" + GetGuildMaster(.@GID) + "^000000";
+		mes "2. The guild Master of ^ff0000"+ getguildname(.@GID) + "^000000 Guild is";
+		mes "^FF0000" + getguildmaster(.@GID) + "^000000";
 		mes "If there is anyone who objects to this,";
 		mes " prove your strength and honor with a steel blade in your hand.";
 		return;
@@ -66,7 +66,7 @@ n_castle,110,96,1	script	NGuild Aldebaran#a1-1	GUILD_FLAG,{
 	close;
 
 OnRecvCastleN01:
-	FlagEmblem GetCastleData("nguild_alde",1);
+	flagemblem getcastledata("nguild_alde",1);
 	end;
 }
 
@@ -75,7 +75,7 @@ nguild_alde,30,248,4	script	NGuild Aldebaran#a1-6::NGuildAlde	GUILD_FLAG,{
 	close;
 
 OnRecvCastleN01:
-	FlagEmblem GetCastleData("nguild_alde",1);
+	flagemblem getcastledata("nguild_alde",1);
 	end;
 }
 // In Castle ============================================
@@ -105,7 +105,7 @@ n_castle,110,109,3	script	NGuild Geffen#g1-1	GUILD_FLAG,{
 	close;
 
 OnRecvCastleN02:
-	FlagEmblem GetCastleData("nguild_gef",1);
+	flagemblem getcastledata("nguild_gef",1);
 	end;
 }
 
@@ -114,7 +114,7 @@ nguild_gef,28,157,4	script	NGuild Geffen#g1-6::NGuildGef	GUILD_FLAG,{
 	close;
 
 OnRecvCastleN02:
-	FlagEmblem GetCastleData("nguild_gef",1);
+	flagemblem getcastledata("nguild_gef",1);
 	end;
 }
 // In Castle =============================================
@@ -135,7 +135,7 @@ n_castle,94,109,5	script	NGuild Payon#f1-1	GUILD_FLAG,{
 	close;
 
 OnRecvCastleN03:
-	FlagEmblem GetCastleData("nguild_pay",1);
+	flagemblem getcastledata("nguild_pay",1);
 	end;
 }
 
@@ -144,7 +144,7 @@ nguild_pay,238,67,4	script	NGuild Payon#f1-6::NGuildPay	GUILD_FLAG,{
 	close;
 
 OnRecvCastleN03:
-	FlagEmblem GetCastleData("nguild_pay",1);
+	flagemblem getcastledata("nguild_pay",1);
 	end;
 }
 // In Castle ===============================================
@@ -166,7 +166,7 @@ n_castle,94,96,7	script	NGuild Prontera#p1-1	GUILD_FLAG,{
 	close;
 
 OnRecvCastleN04:
-	FlagEmblem GetCastleData("nguild_prt",1);
+	flagemblem getcastledata("nguild_prt",1);
 	end;
 }
 
@@ -175,7 +175,7 @@ nguild_prt,58,56,4	script	NGuild Prontera#p1-7::NGuildPrt	GUILD_FLAG,{
 	close;
 
 OnRecvCastleN04:
-	FlagEmblem GetCastleData("nguild_prt",1);
+	flagemblem getcastledata("nguild_prt",1);
 	end;
 }
 // In Castle =============================================

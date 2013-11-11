@@ -384,7 +384,7 @@ arena_room,158,82,1	script	Helper Lonik	4_M_ROGUE,{
 		mes "[Lonik]";
 		mes "You'd better wait a little bit longer!";
 	} else {
-		emotion e_x,0;
+		emotion e_X,0;
 		mes "No!";
 		mes "Go for it, good luck!";
 	}
@@ -717,7 +717,7 @@ prt_are_in,98,14,3	script	Givu#arena	4_F_JOB_KNIGHT,{
 	}
 }
 
-prt_are_in,1,1,5	script	#arena_1039	1039,{
+prt_are_in,1,1,5	script	#arena_1039	BAPHOMET,{
 	end;
 
 OnInit:
@@ -759,13 +759,13 @@ prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_6969	4_F_06
 prt_are_in,94,26,5	duplicate(#arena_1039)	#arena_ss_2	4_F_06
 prt_are_in,100,28,3	duplicate(#arena_1039)	#arena_ss_3	4_F_06
 prt_are_in,102,26,3	duplicate(#arena_1039)	#arena_ss_4	4_F_06
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1272	1272
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1046	1046
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1115	1115
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1389	1389
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1492	1492
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1251	1251
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1159	1159
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1272	DARK_LORD
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1046	DOPPELGANGER
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1115	EDDGA
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1389	DRACULA
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1492	INCANTATION_SAMURAI
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1251	KNIGHT_OF_WINDSTORM
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1159	PHREEONI
 prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_7777	4_F_VALKYRIE
 
 -	script	npctime#arena	-1,{

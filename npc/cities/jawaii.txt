@@ -798,7 +798,7 @@ jawaii_in,15,104,0	script	Waitress#jawaii	1_F_PUBGIRL,{
 	mes "Just have your drink";
 	mes "and then leave!";
 	next;
-	if (Select("I'm a member of Single Army!!:...I just wanted to congratulate them...") == 1) {
+	if (select("I'm a member of Single Army!!:...I just wanted to congratulate them...") == 1) {
 		mes "[Employee]";
 		mes "Yeah, right.";
 		mes "Knock it off already.";
@@ -970,7 +970,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				percentheal -20,0;
 				next;
 				break;
-			Default:
+			default:
 				mes "[Bartender]";
 				mes "I see...";
 				mes "Let me think";

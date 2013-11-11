@@ -136,14 +136,14 @@ bat_room,160,140,3	script	Prince Croix	4_M_CRU_CRUA,{
 // Time calculation Function
 // *********************************************************************
 function	script	Time2Str	{
-	set .@Time_Left, getarg(0) - gettimetick(2);
+	set .@time_left, getarg(0) - gettimetick(2);
 	
-	set .@Days, .@Time_Left / 86400;
-	set .@Time_Left, .@Time_Left - (.@Days * 86400);
-	set .@Hours, .@Time_Left / 3600;
-	set .@Time_Left, .@Time_Left - (.@Hours * 3600);
-	set .@Minutes, .@Time_Left / 60;
-	set .@Time_Left, .@Time_Left - (.@Minutes * 60);
+	set .@Days, .@time_left / 86400;
+	set .@time_left, .@time_left - (.@Days * 86400);
+	set .@Hours, .@time_left / 3600;
+	set .@time_left, .@time_left - (.@Hours * 3600);
+	set .@Minutes, .@time_left / 60;
+	set .@time_left, .@time_left - (.@Minutes * 60);
 	
 	set .@Time$, "";
 	if( .@Days > 1 )
@@ -161,10 +161,10 @@ function	script	Time2Str	{
 	else if( .@Minutes > 0 )
 		set .@Time$, .@Time$ + .@Minutes + " minute, ";
 
-	if( .@Time_Left > 1 || .@Time_Left == 0 )
-		set .@Time$, .@Time$ + .@Time_Left + " seconds.";
-	else if( .@Time_Left == 1 )
-		set .@Time$, .@Time$ + .@Time_Left + " second.";
+	if( .@time_left > 1 || .@time_left == 0 )
+		set .@Time$, .@Time$ + .@time_left + " seconds.";
+	else if( .@time_left == 1 )
+		set .@Time$, .@Time$ + .@time_left + " second.";
 	
 	return .@Time$;
 }
@@ -1237,7 +1237,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			mes "[Erundek]";
 			mes "We have many items, so please take a look and purchase deliberately.";
 			close2;
-			Readbook 11010,1;
+			readbook 11010,1;
 			end;
 		case 5:
 			mes "[Erundek]";
@@ -1292,12 +1292,12 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 	mes "If you are not sure, check the catalog.";
 	next;
 
-	set .@Menu$, "";
-	set .@Count, getarraysize(.@Item_DB);
-	for( set .@i, 0; .@i < .@Count; set .@i, .@i + 1 )
-		set .@Menu$, .@Menu$ + getitemname(.@Item_DB[.@i]) + ":";
+	set .@menu$, "";
+	set .@count, getarraysize(.@Item_DB);
+	for( set .@i, 0; .@i < .@count; set .@i, .@i + 1 )
+		set .@menu$, .@menu$ + getitemname(.@Item_DB[.@i]) + ":";
 
-	set .@Item_ID, .@Item_DB[select(.@Menu$) - 1];
+	set .@Item_ID, .@Item_DB[select(.@menu$) - 1];
 
 	mes "[Erundek]";
 	mes "Would you like to exchange ^FF0000" + .@Value + " " + getitemname(.@Badge) + "^000000 for a ^0000FF" + getitemname(.@Item_ID) + "^000000?";

@@ -296,7 +296,7 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 		if (Sex) mes "...Brother.";
 		else mes "...Comrade.";
 		next;
-		if(.@JobLevel != 50) getitem 504, 6;
+		if(.@Joblevel != 50) getitem 504, 6;
 		else getitem 504, 12;
 		mes "[Michael Halig]";
 		mes "And use this in times of dire peril. It will give you strength when your wounds are most grievous.";
@@ -1113,7 +1113,7 @@ OnInit:
 	monster "job_cru",98,80,"Greatest General",1277,1,"Summoner#cr3::OnDead";
 	monster "job_cru",92,90,"Greatest General",1277,1,"Summoner#cr3::OnDead";
 	monster "job_cru",104,90,"Greatest General",1277,1,"Summoner#cr3::OnDead";
-	Initnpctimer;
+	initnpctimer;
 	end;
 
 OnStart:
@@ -1126,7 +1126,7 @@ OnStart:
 	monster "job_cru",98,80,"Greatest General",1277,1,"Summoner#cr3::OnDead";
 	monster "job_cru",92,90,"Greatest General",1277,1,"Summoner#cr3::OnDead";
 	monster "job_cru",104,90,"Greatest General",1277,1,"Summoner#cr3::OnDead";
-	Initnpctimer;
+	initnpctimer;
 	end;
 
 OnReset:

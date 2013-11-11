@@ -12,7 +12,7 @@
 //= 3.6a Slightly edited. [Euphy]
 //============================================================
 
-prontera,142,228,6	script	Find the Mushroom	1084,{
+prontera,142,228,6	script	Find the Mushroom	BLACK_MUSHROOM,{
 	mes "[ Find The Mushroom ]";
 	if (!.Status)
 		mes "There is no event at the moment!";

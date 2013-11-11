@@ -46,7 +46,7 @@ schg_cas01,111,46,4	script	Himinn#LF_sc01_3::LF_sc01_2	GUILD_FLAG,{
 	end;
 OnAgitInit2:
 OnRecvCastleSc01:
-	FlagEmblem GetCastleData("schg_cas01",1);
+	flagemblem getcastledata("schg_cas01",1);
 	end;
 }
 schg_cas01,129,46,4	duplicate(LF_sc01_2)	Himinn#LF_sc01_4	GUILD_FLAG
@@ -65,8 +65,8 @@ sch_gld,290,90,0	script	Himinn#flag_sc01_1::Sc01_Flag	GUILD_FLAG,{
 	callfunc "ReturnFlag","schg_cas01",1;
 	end;
 OnAgitInit2:
-OnRecvCastlesc01:
-	FlagEmblem GetCastleData("schg_cas01",1);
+OnRecvCastleSc01:
+	flagemblem getcastledata("schg_cas01",1);
 	end;
 }
 sch_gld,297,90,0	duplicate(Sc01_Flag)	Himinn#flag_sc01_2	GUILD_FLAG

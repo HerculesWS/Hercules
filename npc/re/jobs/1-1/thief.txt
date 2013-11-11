@@ -40,7 +40,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 				close;
 			}else{
 				mes "[Thief Guide]";
-				if (sex)
+				if (Sex)
 					mes "Hey, dude.";
 				else
 					mes "Hey, baby~";
@@ -48,7 +48,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 			}
 		}else{
 			mes "[Thief Guide]";
-			if (sex)
+			if (Sex)
 				mes "Hey, dude.";
 			else
 				mes "Hey, baby.";

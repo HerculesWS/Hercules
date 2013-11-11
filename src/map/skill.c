@@ -7541,8 +7541,12 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case AM_CALLHOMUN:	//[orn]
-			if (sd && homun->call(sd))
-				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+			if( sd ) {
+				if (homun->call(sd))
+					clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
+				else
+					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+			}
 			break;
 
 		case AM_REST:

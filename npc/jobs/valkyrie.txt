@@ -385,7 +385,7 @@ valkyrie,44,33,5	script	Teleporter	4_F_TELEPORTER,{
 		case 9: callsub S_Warpchar,"yuno",328,101;
 		}
 	}
-S_WarpChar:
+S_Warpchar:
 	mes "[Teleporter]";
 	mes "Have a nice trip.";
 	close2;

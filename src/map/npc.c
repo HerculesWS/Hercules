@@ -2564,7 +2564,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 	}
 	
 	if( type == WARP && sscanf(w4, "%d,%d", &xs, &ys) == 2 );// <spanx>,<spany>
-	else if( type == SCRIPT && sscanf(w4, "%*d,%d,%d", &xs, &ys) == 2);// <sprite id>,<triggerX>,<triggerY>
+	else if( type == SCRIPT && sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2);// <sprite id>,<triggerX>,<triggerY>
 	else if( type == WARP ) {
 		ShowError("npc_parse_duplicate: Invalid span format for duplicate warp in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 		return end;// next line, try to continue
@@ -3627,14 +3627,25 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 
 		if( strcasecmp(w2,"warp") == 0 && count > 3 )
 		{
+#ifdef ENABLE_CASE_CHECK
+			if( strcmp(w2, "warp") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "warp", filepath, strline(buffer, p-buffer)); // TODO
+#endif // ENABLE_CASE_CHECK
 			p = npc->parse_warp(w1,w2,w3,w4, p, buffer, filepath);
 		}
 		else if( (!strcasecmp(w2,"shop") || !strcasecmp(w2,"cashshop")) && count > 3 )
 		{
+#ifdef ENABLE_CASE_CHECK
+			if( strcasecmp(w2,"shop") == 0 && strcmp(w2, "shop") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "shop", filepath, strline(buffer, p-buffer)) // TODO
+			else if( strcasecmp(w2,"cashshop") == 0 && strcmp(w2, "cashshop") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "cashshop", filepath, strline(buffer, p-buffer)); // TODO
+#endif // ENABLE_CASE_CHECK
 			p = npc->parse_shop(w1,w2,w3,w4, p, buffer, filepath);
 		}
 		else if( strcasecmp(w2,"script") == 0 && count > 3 )
 		{
+#ifdef ENABLE_CASE_CHECK
+			if( strcmp(w2, "script") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "script", filepath, strline(buffer, p-buffer)); // TODO
+			if( strcasecmp(w1, "function") == 0 && strcmp(w1, "function") != 0 ) DeprecationWarning("npc_parsesrcfile", w1, "function", filepath, strline(buffer, p-buffer)); // TODO
+#endif // ENABLE_CASE_CHECK
 			if( strcasecmp(w1,"function") == 0 )
 				p = npc->parse_function(w1, w2, w3, w4, p, buffer, filepath);
 			else
@@ -3642,14 +3653,25 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 		}
 		else if( (i=0, sscanf(w2,"duplicate%n",&i), (i > 0 && w2[i] == '(')) && count > 3 )
 		{
+#ifdef ENABLE_CASE_CHECK
+			char temp[10]; safestrncpy(temp, w2, 10);
+			if( strcmp(temp, "duplicate") != 0 ) DeprecationWarning("npc_parsesrcfile", temp, "duplicate", filepath, strline(buffer, p-buffer)); // TODO
+#endif // ENABLE_CASE_CHECK
 			p = npc->parse_duplicate(w1,w2,w3,w4, p, buffer, filepath);
 		}
 		else if( (strcmpi(w2,"monster") == 0 || strcmpi(w2,"boss_monster") == 0) && count > 3 )
 		{
+#ifdef ENABLE_CASE_CHECK
+			if( strcasecmp(w2,"monster") == 0 && strcmp(w2, "monster") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "monster", filepath, strline(buffer, p-buffer)) // TODO:
+			else if( strcasecmp(w2,"boss_monster") == 0 && strcmp(w2, "boss_monster") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "boss_monster", filepath, strline(buffer, p-buffer)); // TODO
+#endif // ENABLE_CASE_CHECK
 			p = npc->parse_mob(w1, w2, w3, w4, p, buffer, filepath);
 		}
 		else if( strcmpi(w2,"mapflag") == 0 && count >= 3 )
 		{
+#ifdef ENABLE_CASE_CHECK
+			if( strcmp(w2, "mapflag") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "mapflag", filepath, strline(buffer, p-buffer)); // TODO
+#endif // ENABLE_CASE_CHECK
 			p = npc->parse_mapflag(w1, w2, trim(w3), trim(w4), p, buffer, filepath);
 		}
 		else
@@ -3719,6 +3741,9 @@ void npc_read_event_script(void)
 
 			if( (p=strchr(p,':')) && p && strcmpi(name,p)==0 )
 			{
+#ifdef ENABLE_CASE_CHECK
+				if( strcmp(name, p) != 0 ) DeprecationWarning2("npc_read_event_script", p, name, config[i].event_name); // TODO
+#endif // ENABLE_CASE_CHECK
 				script_event[i].event[count] = ed;
 				script_event[i].event_name[count] = key.str;
 				script_event[i].event_count++;

@@ -46,7 +46,7 @@ arug_cas01,92,126,4	script	Mardol#LF_ar01_3::LF_ar01_2	HIDDEN_NPC,{
 	end;
 OnAgitInit2:
 OnRecvCastleAr01:
-	FlagEmblem GetCastleData("arug_cas01",1);
+	flagemblem getcastledata("arug_cas01",1);
 	end;
 }
 arug_cas01,127,126,4	duplicate(LF_ar01_2)	Mardol#LF_ar01_3	HIDDEN_NPC
@@ -67,7 +67,7 @@ aru_gld,164,270,4	script	Mardol#flag_Ar01_1::Ar01_Flag	GUILD_FLAG,{
 	end;
 OnAgitInit2:
 OnRecvCastleAr01:
-	FlagEmblem GetCastleData("arug_cas01",1);
+	flagemblem getcastledata("arug_cas01",1);
 	end;
 }
 aru_gld,142,235,4	duplicate(Ar01_Flag)	Mardol#flag_Ar01_2	GUILD_FLAG

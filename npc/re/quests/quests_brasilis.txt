@@ -814,7 +814,7 @@ brasilis,56,224,7	script	Mage Paje#bra	4_M_BIBI,{
 	mes "[Mage Paje]";
 	mes "Abracadabra~";
 	specialeffect EF_POISONHIT,AREA,"Poring#bra";
-	setarray .@display[0],800,876,909;
+	setarray .@display[0], 4_NFCOCK, 4_CAT, 4_PORING;
 	setnpcdisplay "Poring#bra",.@display[rand(3)];
 	if (brazil_gua != 5) close;
 	next;
@@ -861,7 +861,7 @@ brasilis,59,226,3	script	Poring#bra	4_PORING,{
 	end;
 }
 
-bra_fild01,75,83,5	script	Toucan#bra	2073,2,2,{
+bra_fild01,75,83,5	script	Toucan#bra	TOUCAN,2,2,{
 OnTouch:
 	if (brazil_gua == 6) {
 		mes "[Toucan]";
@@ -921,7 +921,7 @@ OnTouch:
 	end;
 }
 
-bra_fild01,34,184,5	script	Jaguar#bra	2072,2,2,{
+bra_fild01,34,184,5	script	Jaguar#bra	JAGUAR,2,2,{
 OnTouch_:
 	if (brazil_gua == 7) {
 		mes "[Jaguar]";
@@ -983,7 +983,7 @@ OnTouch_:
 	end;
 }
 
-bra_fild01,245,53,3	script	#Monkeybra	1057,{
+bra_fild01,245,53,3	script	#Monkeybra	YOYO,{
 	end;
 }
 
@@ -2661,7 +2661,7 @@ bra_in01,151,180,3	script	Mirror#bra	CLEAR_NPC,{
 	}
 }
 
-bra_in01,136,180,5	script	Ghost#bra	1867,{
+bra_in01,136,180,5	script	Ghost#bra	BANSHEE,{
 	end;
 
 OnInit:
@@ -2832,7 +2832,7 @@ bra_fild01,323,136,1	script	Pipe#brafild	CLEAR_NPC,{
 	}
 }
 
-bra_in01,206,190,3	script	Ghost#bra_end	1867,{
+bra_in01,206,190,3	script	Ghost#bra_end	BANSHEE,{
 	end;
 
 OnInit:

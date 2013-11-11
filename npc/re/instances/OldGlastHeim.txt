@@ -433,10 +433,10 @@ OnTalk4:
 OnTalk5:
 	npctalk "Not coveting the king's throne, you're such a stupid man, only waiting for his return. Your innocence is true, I love it.";
 	end;
-Ontalk6:
+OnTalk6:
 	npctalk "You make me wish we hadn't met in this situation. Too bad we did.";
 	end;
-Ontalk7:
+OnTalk7:
 	npctalk "Well~ Today, with such a busy commandant, I won't be able to talk as much as I'd love for you to contemplate my explanation~";
 	end;
 OnTalk8:
@@ -702,7 +702,7 @@ OnMyMobDead:
 	end;
 }
 
-1@gl_k,145,54,6	script	.#ghinstance1	2471,{
+1@gl_k,145,54,6	script	.#ghinstance1	MG_KHALITZBURG,{
 	end;
 OnInstanceInit:
 	donpcevent instance_npcname(strnpcinfo(0))+"::OnDisable";
@@ -734,17 +734,17 @@ OnTalkK:
 	}
 	end;
 }
-1@gl_k,154,54,3	duplicate(.#ghinstance1)	.#ghinstance2	2471
-1@gl_k,145,64,6	duplicate(.#ghinstance1)	.#ghinstance5	2471
-1@gl_k,154,64,3	duplicate(.#ghinstance1)	.#ghinstance6	2471
-1@gl_k,145,74,6	duplicate(.#ghinstance1)	.#ghinstance9	2471
-1@gl_k,154,74,3	duplicate(.#ghinstance1)	.#ghinstance10	2471
-1@gl_k,145,84,6	duplicate(.#ghinstance1)	.#ghinstance13	2471
-1@gl_k,154,84,3	duplicate(.#ghinstance1)	.#ghinstance14	2471
-1@gl_k,145,94,6	duplicate(.#ghinstance1)	.#ghinstance17	2471
-1@gl_k,154,94,3	duplicate(.#ghinstance1)	.#ghinstance18	2471
-1@gl_k,145,104,6	duplicate(.#ghinstance1)	.#ghinstance21	2471
-1@gl_k,154,104,3	duplicate(.#ghinstance1)	.#ghinstance22	2471
+1@gl_k,154,54,3	duplicate(.#ghinstance1)	.#ghinstance2	MG_KHALITZBURG
+1@gl_k,145,64,6	duplicate(.#ghinstance1)	.#ghinstance5	MG_KHALITZBURG
+1@gl_k,154,64,3	duplicate(.#ghinstance1)	.#ghinstance6	MG_KHALITZBURG
+1@gl_k,145,74,6	duplicate(.#ghinstance1)	.#ghinstance9	MG_KHALITZBURG
+1@gl_k,154,74,3	duplicate(.#ghinstance1)	.#ghinstance10	MG_KHALITZBURG
+1@gl_k,145,84,6	duplicate(.#ghinstance1)	.#ghinstance13	MG_KHALITZBURG
+1@gl_k,154,84,3	duplicate(.#ghinstance1)	.#ghinstance14	MG_KHALITZBURG
+1@gl_k,145,94,6	duplicate(.#ghinstance1)	.#ghinstance17	MG_KHALITZBURG
+1@gl_k,154,94,3	duplicate(.#ghinstance1)	.#ghinstance18	MG_KHALITZBURG
+1@gl_k,145,104,6	duplicate(.#ghinstance1)	.#ghinstance21	MG_KHALITZBURG
+1@gl_k,154,104,3	duplicate(.#ghinstance1)	.#ghinstance22	MG_KHALITZBURG
 
 1@gl_k,145,59,6	script	.#ghinstance3	HIDDEN_NPC,{
 	end;

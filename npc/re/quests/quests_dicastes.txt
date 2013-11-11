@@ -1521,7 +1521,7 @@ dic_in01,300,280,5	script	Minister Ahat#ep133_21	4_HUMAN_GERUTOO,{
 		mes "As soon as you try to approach Ahat, someone";
 		mes "pushes down your head to force you to bow.";
 		soundeffect "wander_man_move.wav",0;
-		SC_Start SC_BLIND,60000,0;
+		sc_start SC_BLIND,60000,0;
 		next;
 		mes "[Ringing Voice]";
 		mes "That is fine, Cheshire.";
@@ -1534,7 +1534,7 @@ dic_in01,300,280,5	script	Minister Ahat#ep133_21	4_HUMAN_GERUTOO,{
 		cutin (Sex?"ep13_ahat_f":"ep13_ahat_m"),2;
 		mes "You hold up your head at the sound of Ahat's voice";
 		mes "But you see a human in high-ranking Sapha clothing in front of you.";
-		SC_End SC_BLIND;
+		sc_end SC_BLIND;
 		emotion e_omg,1;
 		set ep13_3_secret, 14;
 		erasequest 7198;

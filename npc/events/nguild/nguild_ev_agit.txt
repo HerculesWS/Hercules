@@ -21,10 +21,10 @@ function	script	F_AgitStart	{
 	set .@empx, getarg(2);
 	set .@empy, getarg(3);
 
-	MapRespawnGuildID .@map$,GetCastleData(.@map$,1),2;
+	maprespawnguildid .@map$,getcastledata(.@map$,1),2;
 	monster .@map$,.@empx,.@empy,"Emperium",1288,1,"Agit_"+.@castle$+"::OnAgitBreak";
-	GvgOn .@map$;
-	if (GetCastleData(.@map$,1) != 0) return;
+	gvgon .@map$;
+	if (getcastledata(.@map$,1) != 0) return;
 	end;
 }
 
@@ -35,10 +35,10 @@ function	script	F_GuildBreak	{
 
 	killmonsterall .@map$;
 
-	Announce "Guild Base [" + GetCastleName(.@map$) + "] has been abandoned.",0;
+	announce "Guild Base [" + getcastlename(.@map$) + "] has been abandoned.",0;
 	disablenpc "Kafra Staff#"+.@castle$;
 
-	SetCastleData .@map$,0,0;
+	setcastledata .@map$,0,0;
 	return;
 }
 
@@ -50,29 +50,29 @@ function	script	F_AgitBreak	{
 	set .@GID,getcharid(2);
 	if (.@GID <= 0) return;
 
-	set .@Economy,GetCastleData(.@map$,2) - 5;
+	set .@Economy,getcastledata(.@map$,2) - 5;
 	if (.@Economy < 0) set .@Economy, 0;
-	SetCastleData .@map$, 2, .@Economy;
+	setcastledata .@map$, 2, .@Economy;
 
-	set .@Defence,GetCastleData(.@map$,3) - 5;
-	if (.@Defence < 0) set .@Defence, 0;
-	SetCastleData .@map$, 3, .@Defence;
+	set .@defence,getcastledata(.@map$,3) - 5;
+	if (.@defence < 0) set .@defence, 0;
+	setcastledata .@map$, 3, .@defence;
 
-	SetCastleData .@map$,1, .@GID;
-	MapAnnounce .@map$,"The emperium has been destroyed.",bc_map,0x00CCFF;
-	Announce "The [" + GetCastleName(.@map$) + "] castle has been conquered by the [" + GetGuildName(.@GID) + "] guild.",bc_all;
+	setcastledata .@map$,1, .@GID;
+	mapannounce .@map$,"The emperium has been destroyed.",bc_map,0x00CCFF;
+	announce "The [" + getcastlename(.@map$) + "] castle has been conquered by the [" + getguildname(.@GID) + "] guild.",bc_all;
 	donpcevent "::OnRecvCastle"+.@castle$;
 
 	disablenpc "Kafra Staff#"+.@castle$;
 
 	// remove investment data and kafra
 	for( set .@i, 4; .@i <= 9; set .@i, .@i+1 )
-		SetCastleData .@map$, .@i, 0;
+		setcastledata .@map$, .@i, 0;
 
 	// if the new guild doesn't have Guardian Research, erase guardians
 	if( getgdskilllv(.@GID,10002) == 0 )
 		for( set .@i, 10; .@i <= 17; set .@i, .@i+1 )
-			SetCastleData .@map$, .@i, 0;
+			setcastledata .@map$, .@i, 0;
 
 	return;
 }
@@ -83,12 +83,12 @@ function	script	F_AgitEnd	{
 	set .@map$, getarg(0);
 	set .@castle$, getarg(1);
 
-	GvgOff .@map$;
+	gvgoff .@map$;
 	// Disable the following if statment to keep empty
 	// castles from being aquired after after WoE ends.
-	if (GetCastleData(.@map$,1) == 0) return;
-	MapRespawnGuildID .@map$,GetCastleData(.@map$,1),4;
-	KillMonster .@map$,"Agit_"+.@castle$+"::OnAgitBreak";
+	if (getcastledata(.@map$,1) == 0) return;
+	maprespawnguildid .@map$,getcastledata(.@map$,1),4;
+	killmonster .@map$,"Agit_"+.@castle$+"::OnAgitBreak";
 	end;
 }
 
@@ -98,7 +98,7 @@ OnInterIfInitOnce:
 	donpcevent "::OnRecvCastleN01";
 	end;
 OnRecvCastleN01:
-	RequestGuildInfo GetCastleData("nguild_alde",1);
+	requestguildinfo getcastledata("nguild_alde",1);
 	end;
 OnAgitStart:
 	callfunc "F_AgitStart","nguild_alde","N01",216,24;
@@ -111,8 +111,8 @@ OnGuildBreak:
 	callfunc "F_GuildBreak","nguild_alde","N01";
 	end;
 OnAgitEliminate:
-	MapRespawnGuildID "nguild_alde",GetCastleData("nguild_alde",1),6;
-	Monster "nguild_alde",216,24,"EMPERIUM",1288,1,"Agit_N01::OnAgitBreak";
+	maprespawnguildid "nguild_alde",getcastledata("nguild_alde",1),6;
+	monster "nguild_alde",216,24,"EMPERIUM",1288,1,"Agit_N01::OnAgitBreak";
 	end;
 OnAgitEnd:
 	callfunc "F_AgitEnd","nguild_alde","N01";
@@ -125,7 +125,7 @@ OnInterIfInitOnce:
 	donpcevent "::OnRecvCastleN02";
 	end;
 OnRecvCastleN02:
-	RequestGuildInfo GetCastleData("nguild_gef",1);
+	requestguildinfo getcastledata("nguild_gef",1);
 	end;
 OnAgitStart:
 	callfunc "F_AgitStart","nguild_gef","N02",198,182;
@@ -138,8 +138,8 @@ OnGuildBreak:
 	callfunc "F_GuildBreak","nguild_gef","N02";
 	end;
 OnAgitEliminate:
-	MapRespawnGuildID "nguild_gef",GetCastleData("nguild_gef",1),6;
-	Monster "nguild_gef",198,182,"EMPERIUM",1288,1,"Agit_N02::OnAgitBreak";
+	maprespawnguildid "nguild_gef",getcastledata("nguild_gef",1),6;
+	monster "nguild_gef",198,182,"EMPERIUM",1288,1,"Agit_N02::OnAgitBreak";
 	end;
 OnAgitEnd:
 	callfunc "F_AgitEnd","nguild_gef","N02";
@@ -152,7 +152,7 @@ OnInterIfInitOnce:
 	donpcevent "::OnRecvCastleN03";
 	end;
 OnRecvCastleN03:
-	RequestGuildInfo GetCastleData("nguild_pay",1);
+	requestguildinfo getcastledata("nguild_pay",1);
 	end;
 OnAgitStart:
 	callfunc "F_AgitStart","nguild_pay","N03",139,139;
@@ -165,8 +165,8 @@ OnGuildBreak:
 	callfunc "F_GuildBreak","nguild_pay","N03";
 	end;
 OnAgitEliminate:
-	MapRespawnGuildID "nguild_pay",GetCastleData("nguild_pay",1),6;
-	Monster "nguild_pay",139,139,"EMPERIUM",1288,1,"Agit_N03::OnAgitBreak";
+	maprespawnguildid "nguild_pay",getcastledata("nguild_pay",1),6;
+	monster "nguild_pay",139,139,"EMPERIUM",1288,1,"Agit_N03::OnAgitBreak";
 	end;
 OnAgitEnd:
 	callfunc "F_AgitEnd","nguild_pay","N03";
@@ -179,7 +179,7 @@ OnInterIfInitOnce:
 	donpcevent "::OnRecvCastleN04";
 	end;
 OnRecvCastleN04:
-	RequestGuildInfo GetCastleData("nguild_prt",1);
+	requestguildinfo getcastledata("nguild_prt",1);
 	end;
 OnAgitStart:
 	callfunc "F_AgitStart","nguild_prt","N04",197,197;
@@ -192,8 +192,8 @@ OnGuildBreak:
 	callfunc "F_GuildBreak","nguild_prt","N04";
 	end;
 OnAgitEliminate:
-	MapRespawnGuildID "nguild_prt",GetCastleData("nguild_prt",1),6;
-	Monster "nguild_prt",197,197,"EMPERIUM",1288,1,"Agit_N04::OnAgitBreak";
+	maprespawnguildid "nguild_prt",getcastledata("nguild_prt",1),6;
+	monster "nguild_prt",197,197,"EMPERIUM",1288,1,"Agit_N04::OnAgitBreak";
 	end;
 OnAgitEnd:
 	callfunc "F_AgitEnd","nguild_prt","N04";

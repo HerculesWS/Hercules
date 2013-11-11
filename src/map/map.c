@@ -5204,17 +5204,19 @@ void map_helpscreen(bool do_exit)
 	ShowInfo("Usage: %s [options]\n", SERVER_NAME);
 	ShowInfo("\n");
 	ShowInfo("Options:\n");
-	ShowInfo("  -?, -h [--help]\t\tDisplays this help screen.\n");
-	ShowInfo("  -v [--version]\t\tDisplays the server's version.\n");
-	ShowInfo("  --run-once\t\t\tCloses server after loading (testing).\n");
-	ShowInfo("  --map-config <file>\t\tAlternative map-server configuration.\n");
-	ShowInfo("  --battle-config <file>\tAlternative battle configuration.\n");
-	ShowInfo("  --atcommand-config <file>\tAlternative atcommand configuration.\n");
-	ShowInfo("  --script-config <file>\tAlternative script configuration.\n");
-	ShowInfo("  --msg-config <file>\t\tAlternative message configuration.\n");
-	ShowInfo("  --grf-path <file>\t\tAlternative GRF path configuration.\n");
-	ShowInfo("  --inter-config <file>\t\tAlternative inter-server configuration.\n");
-	ShowInfo("  --log-config <file>\t\tAlternative logging configuration.\n");
+	ShowInfo("  -?, -h [--help]           Displays this help screen.\n");
+	ShowInfo("  -v [--version]            Displays the server's version.\n");
+	ShowInfo("  --run-once                Closes server after loading (testing).\n");
+	ShowInfo("  --map-config <file>       Alternative map-server configuration.\n");
+	ShowInfo("  --battle-config <file>    Alternative battle configuration.\n");
+	ShowInfo("  --atcommand-config <file> Alternative atcommand configuration.\n");
+	ShowInfo("  --script-config <file>    Alternative script configuration.\n");
+	ShowInfo("  --msg-config <file>       Alternative message configuration.\n");
+	ShowInfo("  --grf-path <file>         Alternative GRF path configuration.\n");
+	ShowInfo("  --inter-config <file>     Alternative inter-server configuration.\n");
+	ShowInfo("  --log-config <file>       Alternative logging configuration.\n");
+	ShowInfo("  --script-check <file>     Tests a script for errors, without running the server.\n");
+	HPM->arg_help();/* display help for commands implemented thru HPM */
 	if( do_exit )
 		exit(EXIT_SUCCESS);
 }
@@ -5257,10 +5259,11 @@ void do_shutdown(void)
 	}
 }
 
-bool map_arg_next_value(const char* option, int i, int argc)
+bool map_arg_next_value(const char* option, int i, int argc, bool must)
 {
 	if( i >= argc-1 ) {
-		ShowWarning("Missing value for option '%s'.\n", option);
+		if( must )
+			ShowWarning("Missing value for option '%s'.\n", option);
 		return false;
 	}
 
@@ -5377,6 +5380,8 @@ void map_hp_symbols(void) {
 }
 
 void map_load_defaults(void) {
+	map_defaults();
+	/* */
 	atcommand_defaults();
 	battle_defaults();
 	battleground_defaults();
@@ -5426,17 +5431,23 @@ int do_init(int argc, char *argv[])
 #ifdef GCOLLECT
 	GC_enable_incremental();
 #endif
+	
+	map_load_defaults();
 
-	map_defaults();
-
-	rnd_init();
-
+	HPM->load_sub = HPM_map_plugin_load_sub;
+	HPM->symbol_defaults_sub = map_hp_symbols;
+	HPM->config_read();
+	
+	HPM->event(HPET_PRE_INIT);
+	
 	for( i = 1; i < argc ; i++ ) {
 		const char* arg = argv[i];
 
 		if( arg[0] != '-' && ( arg[0] != '/' || arg[1] == '-' ) ) {// -, -- and /
 			ShowError("Unknown option '%s'.\n", argv[i]);
 			exit(EXIT_FAILURE);
+		} else if ( HPM->parse_arg(arg,&i,argv,map->arg_next_value(arg, i, argc, false)) ) {
+			continue; /* HPM Triggered */
 		} else if( (++arg)[0] == '-' ) {// long option
 			arg++;
 
@@ -5445,35 +5456,35 @@ int do_init(int argc, char *argv[])
 			} else if( strcmp(arg, "version") == 0 ) {
 				map->versionscreen(true);
 			} else if( strcmp(arg, "map-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->MAP_CONF_NAME = argv[++i];
 			} else if( strcmp(arg, "battle-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->BATTLE_CONF_FILENAME = argv[++i];
 			} else if( strcmp(arg, "atcommand-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->ATCOMMAND_CONF_FILENAME = argv[++i];
 			} else if( strcmp(arg, "script-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->SCRIPT_CONF_NAME = argv[++i];
 			} else if( strcmp(arg, "msg-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->MSG_CONF_NAME = argv[++i];
 			} else if( strcmp(arg, "grf-path-file") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->GRF_PATH_FILENAME = argv[++i];
 			} else if( strcmp(arg, "inter-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->INTER_CONF_NAME = argv[++i];
 			} else if( strcmp(arg, "log-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->LOG_CONF_NAME = argv[++i];
 			} else if( strcmp(arg, "run-once") == 0 ) { // close the map-server as soon as its done.. for testing [Celest]
 				runflag = CORE_ST_STOP;
 			} else if( strcmp(arg, "script-check") == 0 ) {
 				minimal = true;
 				runflag = CORE_ST_STOP;
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					scriptcheck = argv[++i];
 			} else {
 				ShowError("Unknown option '%s'.\n", argv[i]);
@@ -5495,7 +5506,6 @@ int do_init(int argc, char *argv[])
 		}
 	}
 
-	map_load_defaults();
 	if (!minimal) {
 		map->config_read(map->MAP_CONF_NAME);
 		CREATE(map->list,struct map_data,map->count);
@@ -5580,9 +5590,6 @@ int do_init(int argc, char *argv[])
 		timer->add_func_list(map->removemobs_timer, "map_removemobs_timer");
 		timer->add_interval(timer->gettick()+1000, map->freeblock_timer, 0, 0, 60*1000);
 
-		HPM->load_sub = HPM_map_plugin_load_sub;
-		HPM->symbol_defaults_sub = map_hp_symbols;
-		HPM->config_read();
 		HPM->event(HPET_INIT);
 	}
 

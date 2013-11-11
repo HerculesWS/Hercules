@@ -1381,7 +1381,7 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	4_F_02,{
 	}
 }
 
-gl_prison1,137,138,5	script	Zealotus#LhzHat	1200,{
+gl_prison1,137,138,5	script	Zealotus#LhzHat	ZHERLTHSH,{
 	if(ZLMASKQ == 0)
 	{
 		mes "[Zealotus]";
@@ -1588,7 +1588,7 @@ gl_prison1,137,138,5	script	Zealotus#LhzHat	1200,{
 
 }
 
-gl_prison1,97,104,1	script	Phendark#LhzHat	1202,{
+gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 	if(ZLMASKQ == 0)
 	{
 		mes "[Phendark]";
@@ -1997,7 +1997,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	1202,{
 	}
 }
 
-gl_prison1,100,48,5	script	Rybio#LhzHat	1201,{
+gl_prison1,100,48,5	script	Rybio#LhzHat	RYBIO,{
 	if(ZLMASKQ == 2)
 	{
 		mes "[Rybio]";

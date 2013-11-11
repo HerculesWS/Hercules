@@ -414,7 +414,10 @@ Variables
 The meat of every programming language is variables - places where you 
 store data.
 
-In Hercules scripting language, variable names are not case sensitive.
+In Hercules scripting language, variable names are case sensitive. Even though
+at the current time the script engine accepts them even with the incorrect
+case, it is not advised to rely on this behavior, as it may change at any
+time.
 
 Variables are divided into and uniquely identified by the combination of:
 prefix  - determines the scope and extent (or lifetime) of the variable
@@ -1005,6 +1008,10 @@ All commands must end with a ';'. Actually, you may expect to have
 multiple commands on one line if you properly terminate them with a ';', 
 but it's better if you don't, since it is not certain just whether the 
 scripting engine will behave nicely if you do.
+
+Please note that command and function names are case sensitive. Even though at
+the current time the script engine accepts them with the incorrect case, it is
+not advised to rely on this behavior, as it may change at any time.
 
 -------------------------
 
@@ -2788,6 +2795,7 @@ recreate these items perfectly if they are destroyed. Here's what you get:
 @inventorylist_expire[]    - expire time (Unix time stamp). 0 means never 
                              expires.
 @inventorylist_count       - the number of items in these lists.
+@inventorylist_bound       - whether it is an account bounded item or not.
 
 This could be handy to save/restore a character's inventory, since no 
 other command returns such a complete set of data, and could also be the
@@ -4463,6 +4471,51 @@ two eggs, and may hatch from either, although, I'm not sure what kind of a
 mess will this really cause.
 
 ---------------------------------------
+*getitembound <item id>,<amount>,<bound type>{,<account ID>};
+*getitembound "<item name>",<amount>,<bound type>{,<account ID>};
+
+This command behaves identically to 'getitem', but the items created will be
+bound to the target character as specified by the bound type. All items created
+in this manner cannot be dropped, sold, vended, auctioned, or mailed, and in
+some cases cannot be traded or stored.
+
+Valid bound types are:
+ 1 - Account Bound
+ 2 - Guild Bound
+ 3 - Party Bound
+ 4 - Character Bound
+
+---------------------------------------
+
+*getitembound2 <item id>,<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>,<bound type>;
+*getitembound2 "<item name>",<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>,<bound type>;
+
+This command behaves identically to 'getitem2', but the items created will be
+bound to the target character as specified by the bound type. All items created
+in this manner cannot be dropped, sold, vended, auctioned, or mailed, and in
+some cases cannot be traded or stored.
+
+For a list of bound types see 'getitembound'.
+
+---------------------------------------
+
+*countbound({<bound type>})
+
+This function will return the number of bounded items in the character's
+inventory, and sets an array @bound_items[] containing all item IDs of the
+counted items. If a bound type is specified, only those items will be counted.
+
+For a list of bound types see 'getitembound'.
+
+Example:
+	mes "You currently have "+countbound()+" bounded items.";
+	next;
+	mes "The list of bounded items include:";
+	for(set .@i,0; .@i<getarraysize(@bound_items); set .@i,.@i+1)
+		mes getitemname(@bound_items[.@i]);
+	close;
+
+---------------------------------------
 
 *getnameditem <item id>,<character name|character ID>;
 *getnameditem "<item name>",<character name|character ID>;
@@ -4863,7 +4916,7 @@ like storage or cart.
 ---------------------------------------
 
 *equip <item id>;
-*autoEquip <item id>,<option>;
+*autoequip <item id>,<option>;
 
 These commands are to equip a equipment on the attached character. 
 The equip function will equip the item ID given when the player has this 
@@ -6903,8 +6956,8 @@ You can add your own effects this way, naturally.
 
 ---------------------------------------
 
-*playBGM "<BGM filename>";
-*playBGMall "<BGM filename>"{,"<map name>"{,<x0>,<y0>,<x1>,<y1>}};
+*playbgm "<BGM filename>";
+*playbgmall "<BGM filename>"{,"<map name>"{,<x0>,<y0>,<x1>,<y1>}};
 
 These two commands will play a Background Music to either the invoking 
 character only ('playBGM') or multiple characters ('playBGMall').

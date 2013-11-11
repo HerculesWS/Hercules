@@ -686,7 +686,7 @@ malaya,63,185,4	script	Woman#ma08	4_F_MALAYA,{
 // Jeepneys
 //============================================================
 function	script	F_Malaya_Jeepney	{
-	.@mapName$        = getarg(0);
+	.@mapname$        = getarg(0);
 	.@passengers      = getarg(1);
 
 	// set the other messages of varying amount)
@@ -707,9 +707,9 @@ function	script	F_Malaya_Jeepney	{
 		mes getarg(4);
 		next;
 	}
-	switch(select("Board [Passenger " + getmapusers(.@mapName$) + "/" + .@passengers +"]:Jeepney?:Are there any other Jeepneys?:Ah... Yes...")) {
+	switch(select("Board [Passenger " + getmapusers(.@mapname$) + "/" + .@passengers +"]:Jeepney?:Are there any other Jeepneys?:Ah... Yes...")) {
 	case 1:
-		if (getmapusers(.@mapName$) >= .@passengers) {
+		if (getmapusers(.@mapname$) >= .@passengers) {
 			mes "[Jeepney Driver]";
 			mes "I'm afraid the Jeepney is full.";
 			mes "I'm sorry but how about some other Jeepney?";
@@ -718,7 +718,7 @@ function	script	F_Malaya_Jeepney	{
 			mes "[Jeepney Driver]";
 			mes "Have a nice day.";
 			close2;
-			warp .@mapName$,29,24;
+			warp .@mapname$,29,24;
 			end;
 		}
 	case 2:

@@ -37,7 +37,7 @@ payon_in03,117,128,5	script	Fortune Teller	4_M_BIBI,{
 				mes "You have angered the monster spirits!";
 				close;
 			}
-			else if (.@input > zeny) {
+			else if (.@input > Zeny) {
 				mes "[Lhimetorra]";
 				mes "There's no need to overdo it. Just give with all your heart... *Tsk tsk*";
 				close;

@@ -190,6 +190,9 @@ struct hplugin *hplugin_load(const char* filename) {
 	if( ( plugin->hpi->event[HPET_POST_FINAL] = plugin_import(plugin->dll, "server_post_final",void (*)(void)) ) )
 		anyEvent = true;
 	
+	if( ( plugin->hpi->event[HPET_PRE_INIT] = plugin_import(plugin->dll, "server_preinit",void (*)(void)) ) )
+		anyEvent = true;
+	
 	if( !anyEvent ) {
 		ShowWarning("HPM:plugin_load: no events found for '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
 		HPM->unload(plugin);
@@ -200,16 +203,17 @@ struct hplugin *hplugin_load(const char* filename) {
 		return NULL;
 	
 	/* id */
-	plugin->hpi->pid				= plugin->idx;
+	plugin->hpi->pid                = plugin->idx;
 	/* core */
-	plugin->hpi->addCPCommand		= HPM->import_symbol("addCPCommand",plugin->idx);
-	plugin->hpi->addPacket			= HPM->import_symbol("addPacket",plugin->idx);
-	plugin->hpi->addToSession		= HPM->import_symbol("addToSession",plugin->idx);
-	plugin->hpi->getFromSession		= HPM->import_symbol("getFromSession",plugin->idx);
-	plugin->hpi->removeFromSession	= HPM->import_symbol("removeFromSession",plugin->idx);
-	plugin->hpi->AddHook			= HPM->import_symbol("AddHook",plugin->idx);
-	plugin->hpi->HookStop			= HPM->import_symbol("HookStop",plugin->idx);
-	plugin->hpi->HookStopped		= HPM->import_symbol("HookStopped",plugin->idx);
+	plugin->hpi->addCPCommand       = HPM->import_symbol("addCPCommand",plugin->idx);
+	plugin->hpi->addPacket          = HPM->import_symbol("addPacket",plugin->idx);
+	plugin->hpi->addToSession       = HPM->import_symbol("addToSession",plugin->idx);
+	plugin->hpi->getFromSession     = HPM->import_symbol("getFromSession",plugin->idx);
+	plugin->hpi->removeFromSession  = HPM->import_symbol("removeFromSession",plugin->idx);
+	plugin->hpi->AddHook            = HPM->import_symbol("AddHook",plugin->idx);
+	plugin->hpi->HookStop           = HPM->import_symbol("HookStop",plugin->idx);
+	plugin->hpi->HookStopped        = HPM->import_symbol("HookStopped",plugin->idx);
+	plugin->hpi->addArg             = HPM->import_symbol("addArg",plugin->idx);
 	/* server specific */
 	if( HPM->load_sub )
 		HPM->load_sub(plugin);
@@ -247,6 +251,13 @@ void hplugins_config_read(void) {
 	config_t plugins_conf;
 	config_setting_t *plist = NULL;
 	const char *config_filename = "conf/plugins.conf"; // FIXME hardcoded name
+	FILE *fp;
+	
+	/* yes its ugly, its temporary and will be gone as soon as the new inter-server.conf is set */
+	if( (fp = fopen("conf/import/plugins.conf","r")) ) {
+		config_filename = "conf/import/plugins.conf";
+		fclose(fp);
+	}
 	
 	if (conf_read_file(&plugins_conf, config_filename))
 		return;
@@ -483,6 +494,51 @@ void HPM_HookStop (const char *func, unsigned int pID) {
 bool HPM_HookStopped (void) {
 	return HPM->force_return;
 }
+/* command-line args */
+bool hpm_parse_arg(const char *arg, int *index, char *argv[], bool param) {
+	struct HPMArgData *data;
+
+	if( (data = strdb_get(HPM->arg_db,arg)) ) {
+		data->func((data->has_param && param)?argv[(*index)+1]:NULL);
+		if( data->has_param && param ) *index += 1;
+		return true;
+	}
+	
+	return false;
+}
+void hpm_arg_help(void) {
+	DBIterator *iter = db_iterator(HPM->arg_db);
+	struct HPMArgData *data = NULL;
+	
+	for( data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter) ) {
+		if( data->help != NULL )
+			data->help();
+		else
+			ShowInfo("  %s (%s)\t\t<no description provided>\n",data->name,HPM->pid2name(data->pluginID));
+	}
+	
+	dbi_destroy(iter);
+}
+bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, void (*func) (char *param),void (*help) (void)) {
+	struct HPMArgData *data = NULL;
+		
+	if( strdb_exists(HPM->arg_db, name) ) {
+		ShowError("HPM:add_arg:%s duplicate! (from %s)\n",name,HPM->pid2name(pluginID));
+		return false;
+	}
+	
+	CREATE(data, struct HPMArgData, 1);
+	
+	data->pluginID = pluginID;	
+	data->name = aStrdup(name);
+	data->func = func;
+	data->help = help;
+	data->has_param = has_param;
+	
+	strdb_put(HPM->arg_db, data->name, data);
+	
+	return true;
+}
 
 void hplugins_share_defaults(void) {
 	/* console */
@@ -497,6 +553,7 @@ void hplugins_share_defaults(void) {
 	HPM->share(HPM_AddHook,"AddHook");
 	HPM->share(HPM_HookStop,"HookStop");
 	HPM->share(HPM_HookStopped,"HookStopped");
+	HPM->share(hpm_add_arg,"addArg");
 	/* core */
 	HPM->share(&runflag,"runflag");
 	HPM->share(arg_v,"arg_v");
@@ -551,6 +608,8 @@ void hpm_init(void) {
 		HPM->packetsc[i] = 0;
 	}
 	
+	HPM->arg_db = strdb_alloc(DB_OPT_RELEASE_DATA, 0);
+	
 	HPM->symbol_defaults();
 	
 #ifdef CONSOLE_INPUT
@@ -569,6 +628,14 @@ void hpm_memdown(void) {
 	
 	if( HPM->fnames )
 		free(HPM->fnames);
+	
+}
+int hpm_arg_db_clear_sub(DBKey key, DBData *data, va_list args) {
+	struct HPMArgData *a = DB->data2ptr(data);
+	
+	aFree(a->name);
+	
+	return 0;
 }
 void hpm_final(void) {
 	unsigned int i;
@@ -593,6 +660,8 @@ void hpm_final(void) {
 		if( HPM->packets[i] )
 			aFree(HPM->packets[i]);
 	}
+	
+	HPM->arg_db->destroy(HPM->arg_db,HPM->arg_db_clear_sub);
 	
 	/* HPM->fnames is cleared after the memory manager goes down */
 	iMalloc->post_shutdown = hpm_memdown;
@@ -626,4 +695,7 @@ void hpm_defaults(void) {
 	HPM->parse_packets = hplugins_parse_packets;
 	HPM->load_sub = NULL;
 	HPM->addhook_sub = NULL;
+	HPM->arg_db_clear_sub = hpm_arg_db_clear_sub;
+	HPM->parse_arg = hpm_parse_arg;
+	HPM->arg_help = hpm_arg_help;
 }

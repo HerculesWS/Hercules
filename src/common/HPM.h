@@ -74,6 +74,14 @@ struct HPMFileNameCache {
 	char *name;
 };
 
+struct HPMArgData {
+	unsigned int pluginID;
+	char *name;/* e.g. "--my-arg","-v","--whatever" */
+	void (*help) (void);/* to display when --help is used */
+	void (*func) (char *param);/* NULL when no param is available */
+	bool has_param;/* because of the weird "--arg<space>param" instead of the "--arg=param" */
+};
+
 /* Hercules Plugin Manager Interface */
 struct HPM_interface {
 	/* vars */
@@ -93,6 +101,8 @@ struct HPM_interface {
 	/* plugin file ptr caching */
 	struct HPMFileNameCache *fnames;
 	unsigned int fnamec;
+	/* --command-line */
+	DBMap *arg_db;
 	/* funcs */
 	void (*init) (void);
 	void (*final) (void);
@@ -112,6 +122,9 @@ struct HPM_interface {
 	unsigned char (*parse_packets) (int fd, enum HPluginPacketHookingPoints point);
 	void (*load_sub) (struct hplugin *plugin);
 	bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
+	bool (*parse_arg) (const char *arg, int* index, char *argv[], bool param);
+	void (*arg_help) (void);
+	int (*arg_db_clear_sub) (DBKey key, DBData *data, va_list args);
 } HPM_s;
 
 struct HPM_interface *HPM;

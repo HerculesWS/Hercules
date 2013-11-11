@@ -347,11 +347,94 @@ int script_search_str(const char* p)
 {
 	int i;
 
-	for( i = script->str_hash[script->calc_hash(p)]; i != 0; i = script->str_data[i].next )
-		if( strcasecmp(script->get_str(i),p) == 0 )
+	for( i = script->str_hash[script->calc_hash(p)]; i != 0; i = script->str_data[i].next ) {
+		if( strcasecmp(script->get_str(i),p) == 0 ) {
+#ifdef ENABLE_CASE_CHECK
+			if( strncmp(p, ".@", 2) != 0 // Local scope vars are checked separately to decrease false positives
+					&& strcasecmp(p, "disguise") != 0 && strcasecmp(p, "Poison_Spore") != 0
+					&& strcasecmp(p, "PecoPeco_Egg") != 0 && strcasecmp(p, "Soccer_Ball") != 0
+					&& strcasecmp(p, "Horn") != 0 && strcasecmp(p, "Treasure_Box_") != 0
+					&& strcasecmp(p, "Lord_of_Death") != 0
+					&& strcmp(script->get_str(i),p) != 0 ) DeprecationWarning2("script_search_str", p, script->get_str(i), script->parser_current_file); // TODO
+#endif // ENABLE_CASE_CHECK
 			return i;
+		}
+	}
 
 	return -1;
+}
+
+void script_local_casecheck_clear(void) {
+#ifdef ENABLE_CASE_CHECK
+	if (script->local_casecheck_str_data) {
+		aFree(script->local_casecheck_str_data);
+		script->local_casecheck_str_data = NULL;
+	}
+	script->local_casecheck_str_data_size = 0;
+	script->local_casecheck_str_num = 1;
+	if (script->local_casecheck_str_buf) {
+		aFree(script->local_casecheck_str_buf);
+		script->local_casecheck_str_buf = NULL;
+	}
+	script->local_casecheck_str_pos = 0;
+	script->local_casecheck_str_size = 0;
+	memset(script->local_casecheck_str_hash, 0, sizeof(script->local_casecheck_str_hash));
+#endif // ENABLE_CASE_CHECK
+}
+
+bool script_local_casecheck_add_str(const char *p, int h) {
+#ifdef ENABLE_CASE_CHECK
+	int len, i;
+	if( script->local_casecheck_str_hash[h] == 0 ) { //empty bucket, add new node here
+		script->local_casecheck_str_hash[h] = script->local_casecheck_str_num;
+	} else {
+		for( i = script->local_casecheck_str_hash[h]; ; i = script->local_casecheck_str_data[i].next ) {
+			Assert( i >= 0 && i < script->local_casecheck_str_size );
+			const char *s = script->local_casecheck_str_buf+script->local_casecheck_str_data[i].str;
+			if( strcasecmp(s,p) == 0 ) {
+				if ( strcmp(s,p) != 0 ) {
+					DeprecationWarning2("script_add_str", p, s, script->parser_current_file);
+					return true;
+				}
+				return false; // string already in list
+			}
+			if( script->local_casecheck_str_data[i].next == 0 )
+				break; // reached the end
+		}
+
+		// append node to end of list
+		script->local_casecheck_str_data[i].next = script->local_casecheck_str_num;
+	}
+
+	// grow list if neccessary
+	if( script->local_casecheck_str_num >= script->local_casecheck_str_data_size ) {
+		script->local_casecheck_str_data_size += 1280;
+		RECREATE(script->local_casecheck_str_data,struct str_data_struct,script->local_casecheck_str_data_size);
+		memset(script->local_casecheck_str_data + (script->local_casecheck_str_data_size - 1280), '\0', 1280);
+	}
+
+	len=(int)strlen(p);
+
+	// grow string buffer if neccessary
+	while( script->local_casecheck_str_pos+len+1 >= script->local_casecheck_str_size ) {
+		script->local_casecheck_str_size += 10240;
+		RECREATE(script->local_casecheck_str_buf,char,script->local_casecheck_str_size);
+		memset(script->local_casecheck_str_buf + (script->local_casecheck_str_size - 10240), '\0', 10240);
+	}
+
+	safestrncpy(script->local_casecheck_str_buf+script->local_casecheck_str_pos, p, len+1);
+	script->local_casecheck_str_data[script->local_casecheck_str_num].type = C_NOP;
+	script->local_casecheck_str_data[script->local_casecheck_str_num].str = script->local_casecheck_str_pos;
+	script->local_casecheck_str_data[script->local_casecheck_str_num].val = 0;
+	script->local_casecheck_str_data[script->local_casecheck_str_num].next = 0;
+	script->local_casecheck_str_data[script->local_casecheck_str_num].func = NULL;
+	script->local_casecheck_str_data[script->local_casecheck_str_num].backpatch = -1;
+	script->local_casecheck_str_data[script->local_casecheck_str_num].label = -1;
+	script->local_casecheck_str_pos += len+1;
+
+	script->local_casecheck_str_num++;
+	return false;
+#endif // ENABLE_CASE_CHECK
 }
 
 /// Stores a copy of the string and returns its id.
@@ -363,12 +446,26 @@ int script_add_str(const char* p)
 
 	h = script->calc_hash(p);
 
+#ifdef ENABLE_CASE_CHECK
+	if( (strncmp(p, ".@", 2) == 0) ) // Local scope vars are checked separately to decrease false positives
+		script->local_casecheck_add_str(p, h);
+#endif // ENABLE_CASE_CHECK
+
 	if( script->str_hash[h] == 0 ) {// empty bucket, add new node here
 		script->str_hash[h] = script->str_num;
 	} else {// scan for end of list, or occurence of identical string
 		for( i = script->str_hash[h]; ; i = script->str_data[i].next ) {
-			if( strcasecmp(script->get_str(i),p) == 0 )
+			if( strcasecmp(script->get_str(i),p) == 0 ) {
+#ifdef ENABLE_CASE_CHECK
+				if( (strncmp(p, ".@", 2) != 0) // Local scope vars are checked separately to decrease false positives
+						&& strcasecmp(p, "disguise") != 0 && strcasecmp(p, "Poison_Spore") != 0
+						&& strcasecmp(p, "PecoPeco_Egg") != 0 && strcasecmp(p, "Soccer_Ball") != 0
+						&& strcasecmp(p, "Horn") != 0 && strcasecmp(p, "Treasure_Box_") != 0
+						&& strcasecmp(p, "Lord_of_Death") != 0
+						&& strcmp(script->get_str(i),p) != 0 ) DeprecationWarning2("script_add_str", p, script->get_str(i), script->parser_current_file); // TODO
+#endif // ENABLE_CASE_CHECK
 				return i; // string already in list
+			}
 			if( script->str_data[i].next == 0 )
 				break; // reached the end
 		}
@@ -858,50 +955,87 @@ const char* parse_variable(const char* p) {
 	return p;
 }
 
+/*
+ * Checks whether the gives string is a number literal
+ *
+ * Mainly necessary to differentiate between number literals and NPC name
+ * constants, since several of those start with a digit.
+ *
+ * All this does is to check if the string begins with an optional + or - sign,
+ * followed by a hexadecimal or decimal number literal literal and is NOT
+ * followed by a underscore or letter.
+ *
+ * @param p Pointer to the string to check
+ * @return Whether the string is a number literal
+ */
+bool is_number(const char *p) {
+	const char *np;
+	if (!p)
+		return false;
+	if (*p == '-' || *p == '+')
+		p++;
+	np = p;
+	if (*p == '0' && p[1] == 'x') {
+		p+=2;
+		np = p;
+		// Hexadecimal
+		while (ISXDIGIT(*np))
+			np++;
+	} else {
+		// Decimal
+		while (ISDIGIT(*np))
+			np++;
+	}
+	if (p != np && *np != '_' && !ISALPHA(*np)) // At least one digit, and next isn't a letter or _
+		return true;
+	return false;
+}
+
 /*==========================================
  * Analysis section
  *------------------------------------------*/
-const char* parse_simpleexpr(const char *p)
-{
-	long long i;
+const char* parse_simpleexpr(const char *p) {
+	int i;
 	p=script->skip_space(p);
 
 	if(*p==';' || *p==',')
 		disp_error_message("parse_simpleexpr: unexpected end of expression",p);
-	if(*p=='('){
+	if(*p=='(') {
 		if( (i=script->syntax.curly_count-1) >= 0 && script->syntax.curly[i].type == TYPE_ARGLIST )
 			++script->syntax.curly[i].count;
 		p=script->parse_subexpr(p+1,-1);
 		p=script->skip_space(p);
-		if( (i=script->syntax.curly_count-1) >= 0 && script->syntax.curly[i].type == TYPE_ARGLIST &&
-				script->syntax.curly[i].flag == ARGLIST_UNDEFINED && --script->syntax.curly[i].count == 0
-		){
-			if( *p == ',' ){
+		if( (i=script->syntax.curly_count-1) >= 0 && script->syntax.curly[i].type == TYPE_ARGLIST
+		  && script->syntax.curly[i].flag == ARGLIST_UNDEFINED && --script->syntax.curly[i].count == 0
+		) {
+			if( *p == ',' ) {
 				script->syntax.curly[i].flag = ARGLIST_PAREN;
 				return p;
-			} else
+			} else {
 				script->syntax.curly[i].flag = ARGLIST_NO_PAREN;
+			}
 		}
 		if( *p != ')' )
 			disp_error_message("parse_simpleexpr: unmatched ')'",p);
 		++p;
-	} else if(ISDIGIT(*p) || ((*p=='-' || *p=='+') && ISDIGIT(p[1]))){
+	} else if(is_number(p)) {
 		char *np;
-		while(*p == '0' && ISDIGIT(p[1])) p++;
-		i=strtoll(p,&np,0);
-		if( i < INT_MIN ) {
-			i = INT_MIN;
+		long long lli;
+		while(*p == '0' && ISDIGIT(p[1])) p++; // Skip leading zeros, we don't support octal literals
+		lli=strtoll(p,&np,0);
+		if( lli < INT_MIN ) {
+			lli = INT_MIN;
 			script->disp_warning_message("parse_simpleexpr: underflow detected, capping value to INT_MIN",p);
-		} else if( i > INT_MAX ) {
-			i = INT_MAX;
+		} else if( lli > INT_MAX ) {
+			lli = INT_MAX;
 			script->disp_warning_message("parse_simpleexpr: overflow detected, capping value to INT_MAX",p);
 		}
-		script->addi((int)i);
+		script->addi((int)lli); // Cast is safe, as it's already been checked for overflows
 		p=np;
-	} else if(*p=='"'){
+	} else if(*p=='"') {
 		script->addc(C_STR);
 		p++;
-		while( *p && *p != '"' ){
+		while( *p && *p != '"' ) {
 			if( (unsigned char)p[-1] <= 0x7e && *p == '\\' ) {
 				char buf[8];
 				size_t len = sv->skip_escaped_c(p) - p;
@@ -911,8 +1045,9 @@ const char* parse_simpleexpr(const char *p)
 				p += len;
 				script->addb(*buf);
 				continue;
-			} else if( *p == '\n' )
+			} else if( *p == '\n' ) {
 				disp_error_message("parse_simpleexpr: unexpected newline @ string",p);
+			}
 			script->addb(*p++);
 		}
 		if(!*p)
@@ -928,24 +1063,24 @@ const char* parse_simpleexpr(const char *p)
 			disp_error_message("parse_simpleexpr: unexpected character",p);
 
 		l=script->add_word(p);
-		if( script->str_data[l].type == C_FUNC || script->str_data[l].type == C_USERFUNC || script->str_data[l].type == C_USERFUNC_POS)
+		if( script->str_data[l].type == C_FUNC || script->str_data[l].type == C_USERFUNC || script->str_data[l].type == C_USERFUNC_POS) {
 			return script->parse_callfunc(p,1,0);
 #ifdef SCRIPT_CALLFUNC_CHECK
-		else {
+		} else {
 			const char* name = script->get_str(l);
 			if( strdb_get(script->userfunc_db,name) != NULL ) {
 				return script->parse_callfunc(p,1,1);
 			}
-		}
 #endif
+		}
 
-		if( (pv = script->parse_variable(p)) )
-		{// successfully processed a variable assignment
+		if( (pv = script->parse_variable(p)) ) {
+			// successfully processed a variable assignment
 			return pv;
 		}
 
 		p=script->skip_word(p);
-		if( *p == '[' ){
+		if( *p == '[' ) {
 			// array(name[i] => getelementofarray(name,i) )
 			script->addl(script->buildin_getelementofarray_ref);
 			script->addc(C_ARG);
@@ -957,8 +1092,9 @@ const char* parse_simpleexpr(const char *p)
 				disp_error_message("parse_simpleexpr: unmatched ']'",p);
 			++p;
 			script->addc(C_FUNC);
-		}else
+		} else {
 			script->addl(l);
+		}
 
 	}
 
@@ -1168,6 +1304,9 @@ const char* parse_syntax(const char* p)
 			// break Processing
 			char label[256];
 			int pos = script->syntax.curly_count - 1;
+#ifdef ENABLE_CASE_CHECK
+			if( strncmp(p, "break", 5) != 0 ) disp_deprecation_message("parse_syntax", "break", p); // TODO
+#endif // ENABLE_CASE_CHECK
 			while(pos >= 0) {
 				if(script->syntax.curly[pos].type == TYPE_DO) {
 					sprintf(label,"goto __DO%x_FIN;",script->syntax.curly[pos].index);
@@ -1204,6 +1343,9 @@ const char* parse_syntax(const char* p)
 		if(p2 - p == 4 && !strncasecmp(p,"case",4)) {
 			//Processing case
 			int pos = script->syntax.curly_count-1;
+#ifdef ENABLE_CASE_CHECK
+			if( strncmp(p, "case", 4) != 0 ) disp_deprecation_message("parse_syntax", "case", p); // TODO
+#endif // ENABLE_CASE_CHECK
 			if(pos < 0 || script->syntax.curly[pos].type != TYPE_SWITCH) {
 				disp_error_message("parse_syntax: unexpected 'case' ",p);
 				return p+1;
@@ -1229,8 +1371,16 @@ const char* parse_syntax(const char* p)
 					disp_error_message("parse_syntax: expect space ' '",p);
 				}
 				// check whether case label is integer or not
-				v = strtol(p,&np,0);
-				if(np == p) { //Check for constants
+				if(is_number(p)) {
+					//Numeric value
+					v = strtol(p,&np,0);
+					if((*p == '-' || *p == '+') && ISDIGIT(p[1])) // pre-skip because '-' can not skip_word
+						p++;
+					p = script->skip_word(p);
+					if(np != p)
+						disp_error_message("parse_syntax: 'case' label is not an integer",np);
+				} else {
+					//Check for constants
 					p2 = script->skip_word(p);
 					v = p2-p; // length of word at p2
 					memcpy(label,p,v);
@@ -1238,12 +1388,6 @@ const char* parse_syntax(const char* p)
 					if( !script->get_constant(label, &v) )
 						disp_error_message("parse_syntax: 'case' label is not an integer",p);
 					p = script->skip_word(p);
-				} else { //Numeric value
-					if((*p == '-' || *p == '+') && ISDIGIT(p[1]))	// pre-skip because '-' can not skip_word
-						p++;
-					p = script->skip_word(p);
-					if(np != p)
-						disp_error_message("parse_syntax: 'case' label is not an integer",np);
 				}
 				p = script->skip_space(p);
 				if(*p != ':')
@@ -1278,6 +1422,9 @@ const char* parse_syntax(const char* p)
 			// Processing continue
 			char label[256];
 			int pos = script->syntax.curly_count - 1;
+#ifdef ENABLE_CASE_CHECK
+			if( strncmp(p, "continue", 8) != 0 ) disp_deprecation_message("parse_syntax", "continue", p); // TODO
+#endif // ENABLE_CASE_CHECK
 			while(pos >= 0) {
 				if(script->syntax.curly[pos].type == TYPE_DO) {
 					sprintf(label,"goto __DO%x_NXT;",script->syntax.curly[pos].index);
@@ -1312,6 +1459,9 @@ const char* parse_syntax(const char* p)
 		if(p2 - p == 7 && !strncasecmp(p,"default",7)) {
 			// Switch - default processing
 			int pos = script->syntax.curly_count-1;
+#ifdef ENABLE_CASE_CHECK
+			if( strncmp(p, "default", 7) != 0 ) disp_deprecation_message("parse_syntax", "default", p); // TODO
+#endif // ENABLE_CASE_CHECK
 			if(pos < 0 || script->syntax.curly[pos].type != TYPE_SWITCH) {
 				disp_error_message("parse_syntax: unexpected 'default'",p);
 			} else if(script->syntax.curly[pos].flag) {
@@ -1346,6 +1496,9 @@ const char* parse_syntax(const char* p)
 		} else if(p2 - p == 2 && !strncasecmp(p,"do",2)) {
 			int l;
 			char label[256];
+#ifdef ENABLE_CASE_CHECK
+			if( strncmp(p, "do", 2) != 0 ) disp_deprecation_message("parse_syntax", "do", p); // TODO
+#endif // ENABLE_CASE_CHECK
 			p=script->skip_space(p2);
 
 			script->syntax.curly[script->syntax.curly_count].type  = TYPE_DO;
@@ -1366,6 +1519,9 @@ const char* parse_syntax(const char* p)
 			int l;
 			char label[256];
 			int  pos = script->syntax.curly_count;
+#ifdef ENABLE_CASE_CHECK
+			if( strncmp(p, "for", 3) != 0 ) disp_deprecation_message("parse_syntax", "for", p); // TODO
+#endif // ENABLE_CASE_CHECK
 			script->syntax.curly[script->syntax.curly_count].type  = TYPE_FOR;
 			script->syntax.curly[script->syntax.curly_count].count = 1;
 			script->syntax.curly[script->syntax.curly_count].index = script->syntax.index++;
@@ -1441,6 +1597,9 @@ const char* parse_syntax(const char* p)
 		{// internal script function
 			const char *func_name;
 
+#ifdef ENABLE_CASE_CHECK
+			if( strncmp(p, "function", 8) != 0 ) disp_deprecation_message("parse_syntax", "function", p); // TODO
+#endif // ENABLE_CASE_CHECK
 			func_name = script->skip_space(p2);
 			p = script->skip_word(func_name);
 			if( p == func_name )
@@ -1505,6 +1664,9 @@ const char* parse_syntax(const char* p)
 		if(p2 - p == 2 && !strncasecmp(p,"if",2)) {
 			// If process
 			char label[256];
+#ifdef ENABLE_CASE_CHECK
+			if( strncmp(p, "if", 2) != 0 ) disp_deprecation_message("parse_syntax", "if", p); // TODO
+#endif // ENABLE_CASE_CHECK
 			p=script->skip_space(p2);
 			if(*p != '(') { //Prevent if this {} non-c script->syntax. from Rayce (jA)
 				disp_error_message("need '('",p);
@@ -1529,6 +1691,9 @@ const char* parse_syntax(const char* p)
 		if(p2 - p == 6 && !strncasecmp(p,"switch",6)) {
 			// Processing of switch ()
 			char label[256];
+#ifdef ENABLE_CASE_CHECK
+			if( strncmp(p, "switch", 6) != 0 ) disp_deprecation_message("parse_syntax", "switch", p); // TODO
+#endif // ENABLE_CASE_CHECK
 			p=script->skip_space(p2);
 			if(*p != '(') {
 				disp_error_message("need '('",p);
@@ -1556,6 +1721,9 @@ const char* parse_syntax(const char* p)
 		if(p2 - p == 5 && !strncasecmp(p,"while",5)) {
 			int l;
 			char label[256];
+#ifdef ENABLE_CASE_CHECK
+			if( strncmp(p, "while", 5) != 0 ) disp_deprecation_message("parse_syntax", "while", p); // TODO
+#endif // ENABLE_CASE_CHECK
 			p=script->skip_space(p2);
 			if(*p != '(') {
 				disp_error_message("need '('",p);
@@ -1630,6 +1798,9 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		p = script->skip_space(p);
 		p2 = script->skip_word(p);
 		if(!script->syntax.curly[pos].flag && p2 - p == 4 && !strncasecmp(p,"else",4)) {
+#ifdef ENABLE_CASE_CHECK
+			if( strncmp(p, "else", 4) != 0 ) disp_deprecation_message("parse_syntax", "else", p); // TODO
+#endif // ENABLE_CASE_CHECK
 			// else  or else - if
 			p = script->skip_space(p2);
 			p2 = script->skip_word(p);
@@ -1686,6 +1857,9 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		if(p2 - p != 5 || strncasecmp(p,"while",5))
 			disp_error_message("parse_syntax: need 'while'",p);
 
+#ifdef ENABLE_CASE_CHECK
+		if( strncmp(p, "while", 5) != 0 ) disp_deprecation_message("parse_syntax", "while", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		p = script->skip_space(p2);
 		if(*p != '(') {
 			disp_error_message("need '('",p);
@@ -2017,6 +2191,9 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			if(script->str_data[i].type == C_NOP) script->str_data[i].type = C_NAME;
 		for(i=0; i<size; i++)
 			linkdb_final(&script->syntax.curly[i].case_label);
+#ifdef ENABLE_CASE_CHECK
+	script->local_casecheck_clear();
+#endif // ENABLE_CASE_CHECK
 		return NULL;
 	}
 
@@ -2031,6 +2208,9 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			script->pos = 0;
 			script->size = 0;
 			script->buf  = NULL;
+#ifdef ENABLE_CASE_CHECK
+	script->local_casecheck_clear();
+#endif // ENABLE_CASE_CHECK
 			return NULL;
 		}
 		end = '\0';
@@ -2046,6 +2226,9 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			script->pos  = 0;
 			script->size = 0;
 			script->buf  = NULL;
+#ifdef ENABLE_CASE_CHECK
+	script->local_casecheck_clear();
+#endif // ENABLE_CASE_CHECK
 			return NULL;
 		}
 		end = '}';
@@ -2160,6 +2343,9 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 	code->script_buf  = script->buf;
 	code->script_size = script->size;
 	code->script_vars = NULL;
+#ifdef ENABLE_CASE_CHECK
+	script->local_casecheck_clear();
+#endif // ENABLE_CASE_CHECK
 	return code;
 }
 
@@ -3777,6 +3963,17 @@ int script_reload(void) {
 	itemdb->force_name_constants();
 	
 	return 0;
+}
+/* returns name of current function being run, from within the stack [Ind/Hercules] */
+const char *script_getfuncname(struct script_state *st) {
+	struct script_data *data;
+	
+	data = &st->stack->stack_data[st->start];
+	
+	if( data->type == C_NAME && script->str_data[data->u.num].type == C_FUNC )
+		return script->get_str(data->u.num);
+	
+	return NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -5762,10 +5959,13 @@ BUILDIN(checkweight2)
 /*==========================================
  * getitem <item id>,<amount>{,<account ID>};
  * getitem "<item name>",<amount>{,<account ID>};
+ *
+ * getitembound <item id>,<amount>,<type>{,<account ID>};
+ * getitembound "<item id>",<amount>,<type>{,<account ID>};
  *------------------------------------------*/
 BUILDIN(getitem)
 {
-	int nameid,amount,get_count,i,flag = 0;
+	int nameid,amount,get_count,i,flag = 0, offset = 0;
 	struct item it;
 	TBL_PC *sd;
 	struct script_data *data;
@@ -5777,7 +5977,7 @@ BUILDIN(getitem)
 	{// "<item name>"
 		const char *name=script->conv_str(st,data);
 		if( (item_data = itemdb->search_name(name)) == NULL ){
-			ShowError("buildin_getitem: Nonexistant item %s requested.\n", name);
+			ShowError("buildin_%s: Nonexistant item %s requested.\n", script->getfuncname(st), name);
 			return false; //No item created.
 		}
 		nameid=item_data->nameid;
@@ -5789,11 +5989,11 @@ BUILDIN(getitem)
 			flag = 1;
 		}
 		if( nameid <= 0 || !(item_data = itemdb->exists(nameid)) ){
-			ShowError("buildin_getitem: Nonexistant item %d requested.\n", nameid);
+			ShowError("buildin_%s: Nonexistant item %d requested.\n", script->getfuncname(st), nameid);
 			return false; //No item created.
 		}
 	} else {
-		ShowError("buildin_getitem: invalid data type for argument #1 (%d).", data->type);
+		ShowError("buildin_%s: invalid data type for argument #1 (%d).", script->getfuncname(st), data->type);
 		return false;
 	}
 	
@@ -5803,13 +6003,28 @@ BUILDIN(getitem)
 	
 	memset(&it,0,sizeof(it));
 	it.nameid=nameid;
+	
 	if(!flag)
 		it.identify=1;
 	else
 		it.identify=itemdb->isidentified2(item_data);
 	
-	if( script_hasdata(st,4) )
-		sd=map->id2sd(script_getnum(st,4)); // <Account ID>
+	if( !strcmp(script->getfuncname(st),"getitembound") ) {
+		int bound = script_getnum(st,4);
+		if( bound < IBT_MIN || bound > IBT_MAX ) { //Not a correct bound type
+			ShowError("script_getitembound: Not a correct bound type! Type=%d\n",bound);
+			return false;
+		}
+		if( item_data->type == IT_PETEGG || item_data->type == IT_PETARMOR ) {
+			ShowError("script_getitembound: can't bind a pet egg/armor!\n",bound);
+			return false;
+		}
+		it.bound = (unsigned char)bound;
+		offset += 1;
+	}
+	
+	if( script_hasdata(st,4+offset) )
+		sd=map->id2sd(script_getnum(st,4+offset)); // <Account ID>
 	else
 		sd=script->rid2sd(st); // Attached player
 	
@@ -5841,15 +6056,24 @@ BUILDIN(getitem)
  *------------------------------------------*/
 BUILDIN(getitem2)
 {
-	int nameid,amount,get_count,i,flag = 0;
-	int iden,ref,attr,c1,c2,c3,c4;
+	int nameid,amount,get_count,i,flag = 0, offset = 0;
+	int iden,ref,attr,c1,c2,c3,c4, bound = 0;
 	struct item_data *item_data;
 	struct item item_tmp;
 	TBL_PC *sd;
 	struct script_data *data;
 	
-	if( script_hasdata(st,11) )
-		sd=map->id2sd(script_getnum(st,11)); // <Account ID>
+	if( !strcmp(script->getfuncname(st),"getitembound2") ) {
+		bound = script_getnum(st,11);
+		if( bound < IBT_MIN || bound > IBT_MAX ) { //Not a correct bound type
+			ShowError("script_getitembound2: Not a correct bound type! Type=%d\n",bound);
+			return false;
+		}
+		offset += 1;
+	}
+	
+	if( script_hasdata(st,11+offset) )
+		sd=map->id2sd(script_getnum(st,11+offset)); // <Account ID>
 	else
 		sd=script->rid2sd(st); // Attached player
 	
@@ -5876,6 +6100,11 @@ BUILDIN(getitem2)
 	c2=(short)script_getnum(st,8);
 	c3=(short)script_getnum(st,9);
 	c4=(short)script_getnum(st,10);
+	
+	if( bound && (itemdb_type(nameid) == IT_PETEGG || itemdb_type(nameid) == IT_PETARMOR) ) {
+		ShowError("script_getitembound2: can't bind a pet egg/armor!\n",bound);
+		return false;
+	}
 	
 	if(nameid<0) { // Invalide nameid
 		nameid = -nameid;
@@ -5906,6 +6135,7 @@ BUILDIN(getitem2)
 			item_tmp.identify=0;
 		item_tmp.refine=ref;
 		item_tmp.attribute=attr;
+		item_tmp.bound=(unsigned char)bound;
 		item_tmp.card[0]=(short)c1;
 		item_tmp.card[1]=(short)c2;
 		item_tmp.card[2]=(short)c3;
@@ -5981,6 +6211,7 @@ BUILDIN(rentitem)
 	it.nameid = nameid;
 	it.identify = 1;
 	it.expire_time = (unsigned int)(time(NULL) + seconds);
+	it.bound = 0;
 	
 	if( (flag = pc->additem(sd, &it, 1, LOG_TYPE_SCRIPT)) )
 	{
@@ -10887,6 +11118,7 @@ BUILDIN(successremovecards) {
 		item_tmp.refine      = sd->status.inventory[i].refine;
 		item_tmp.attribute   = sd->status.inventory[i].attribute;
 		item_tmp.expire_time = sd->status.inventory[i].expire_time;
+		item_tmp.bound       = sd->status.inventory[i].bound;
 		
 		for (j = sd->inventory_data[i]->slot; j < MAX_SLOTS; j++)
 			item_tmp.card[j]=sd->status.inventory[i].card[j];
@@ -10960,7 +11192,8 @@ BUILDIN(failedremovecards) {
 			item_tmp.refine      = sd->status.inventory[i].refine;
 			item_tmp.attribute   = sd->status.inventory[i].attribute;
 			item_tmp.expire_time = sd->status.inventory[i].expire_time;
-			
+			item_tmp.bound       = sd->status.inventory[i].bound;
+ 			
 			for (j = sd->inventory_data[i]->slot; j < MAX_SLOTS; j++)
 				item_tmp.card[j]=sd->status.inventory[i].card[j];
 			
@@ -11610,7 +11843,8 @@ BUILDIN(getinventorylist)
 				pc->setreg(sd,reference_uid(script->add_str(card_var), j),sd->status.inventory[i].card[k]);
 			}
 			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_expire"), j),sd->status.inventory[i].expire_time);
-			j++;
+			pc->setreg(sd,reference_uid(script->add_str("@inventorylist_bound"), j),sd->status.inventory[i].bound);
+ 			j++;
 		}
 	}
 	pc->setreg(sd,script->add_str("@inventorylist_count"),j);
@@ -11722,7 +11956,7 @@ BUILDIN(misceffect)
 /*==========================================
  * Play a BGM on a single client [Rikter/Yommy]
  *------------------------------------------*/
-BUILDIN(playBGM)
+BUILDIN(playbgm)
 {
 	const char* name;
 	struct map_session_data* sd;
@@ -11737,7 +11971,7 @@ BUILDIN(playBGM)
 	return true;
 }
 
-int playBGM_sub(struct block_list* bl,va_list ap)
+int playbgm_sub(struct block_list* bl,va_list ap)
 {
 	const char* name = va_arg(ap,const char*);
 	
@@ -11746,7 +11980,7 @@ int playBGM_sub(struct block_list* bl,va_list ap)
 	return 0;
 }
 
-int playBGM_foreachpc_sub(struct map_session_data* sd, va_list args)
+int playbgm_foreachpc_sub(struct map_session_data* sd, va_list args)
 {
 	const char* name = va_arg(args, const char*);
 	
@@ -11757,7 +11991,7 @@ int playBGM_foreachpc_sub(struct map_session_data* sd, va_list args)
 /*==========================================
  * Play a BGM on multiple client [Rikter/Yommy]
  *------------------------------------------*/
-BUILDIN(playBGMall) {
+BUILDIN(playbgmall) {
 	const char* name;
 	
 	name = script_getstr(st,2);
@@ -11772,25 +12006,25 @@ BUILDIN(playBGMall) {
 		int m;
 		
 		if ( ( m = map->mapname2mapid(mapname) ) == -1 ) {
-			ShowWarning("playBGMall: Attempted to play song '%s' on non-existent map '%s'\n",name, mapname);
+			ShowWarning("playbgmall: Attempted to play song '%s' on non-existent map '%s'\n",name, mapname);
 			return true;
 		}
 		
-		map->foreachinarea(script->playBGM_sub, m, x0, y0, x1, y1, BL_PC, name);
+		map->foreachinarea(script->playbgm_sub, m, x0, y0, x1, y1, BL_PC, name);
 	} else if( script_hasdata(st,3) ) {
 		// entire map
 		const char* mapname = script_getstr(st,3);
 		int m;
 		
 		if ( ( m = map->mapname2mapid(mapname) ) == -1 ) {
-			ShowWarning("playBGMall: Attempted to play song '%s' on non-existent map '%s'\n",name, mapname);
+			ShowWarning("playbgmall: Attempted to play song '%s' on non-existent map '%s'\n",name, mapname);
 			return true;
 		}
 		
-		map->foreachinmap(script->playBGM_sub, m, BL_PC, name);
+		map->foreachinmap(script->playbgm_sub, m, BL_PC, name);
 	} else {
 		// entire server
-		map->foreachpc(script->playBGM_foreachpc_sub, name);
+		map->foreachpc(script->playbgm_foreachpc_sub, name);
 	}
 	
 	return true;
@@ -17566,6 +17800,41 @@ BUILDIN(bg_join_team) {
 	
 	return true;
 }
+/*==============[Mhalicot]==================
+ * countbound {<type>}; 
+ * Creates an array of bounded item IDs
+ * Returns amount of items found
+ * Type:
+ *	1 - Account Bound
+ *	2 - Guild Bound
+ *	3 - Party Bound
+ *  4 - Character Bound
+ *------------------------------------------*/
+BUILDIN(countbound)
+{
+	int i, type, j=0, k=0;
+	TBL_PC *sd;
+
+	if( (sd = script->rid2sd(st)) == NULL )
+		return false;
+
+	type = script_hasdata(st,2)?script_getnum(st,2):0;
+
+	for(i=0;i<MAX_INVENTORY;i++){
+		if(sd->status.inventory[i].nameid > 0 && (
+			(!type && sd->status.inventory[i].bound > 0) ||
+			(type && sd->status.inventory[i].bound == type)
+		)) {
+			pc->setreg(sd,reference_uid(script->add_str("@bound_items"), k),sd->status.inventory[i].nameid);
+			k++;
+			j += sd->status.inventory[i].amount;
+		}
+	}
+	
+	script_pushint(st,j);
+	return 0;
+}
+
 /* bg_match_over( arena_name {, optional canceled } ) */
 /* returns 0 when successful, 1 otherwise */
 BUILDIN(bg_match_over) {
@@ -17912,8 +18181,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(clearitem,""),
 		BUILDIN_DEF(classchange,"ii"),
 		BUILDIN_DEF(misceffect,"i"),
-		BUILDIN_DEF(playBGM,"s"),
-		BUILDIN_DEF(playBGMall,"s?????"),
+		BUILDIN_DEF(playbgm,"s"),
+		BUILDIN_DEF(playbgmall,"s?????"),
 		BUILDIN_DEF(soundeffect,"si"),
 		BUILDIN_DEF(soundeffectall,"si?????"),	// SoundEffectAll [Codemaster]
 		BUILDIN_DEF(strmobinfo,"ii"),	// display mob data [Valaris]
@@ -18148,6 +18417,13 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(unbindatcmd, "s"),
 		BUILDIN_DEF(useatcmd, "s"),
 		
+		/**
+		 * Item bound [Xantara] [Akinari] [Mhalicot/Hercules]
+		 **/
+		BUILDIN_DEF2(getitem,"getitembound","vii?"),
+		BUILDIN_DEF2(getitem2,"getitembound2","viiiiiiiii?"),
+		BUILDIN_DEF(countbound, "?"),
+ 		
 		//Quest Log System [Inkfish]
 		BUILDIN_DEF(questinfo, "ii??"),
 		BUILDIN_DEF(setquest, "i"),
@@ -18429,8 +18705,8 @@ void script_defaults(void) {
 	script->buildin_maprespawnguildid_sub_pc = buildin_maprespawnguildid_sub_pc;
 	script->buildin_maprespawnguildid_sub_mob = buildin_maprespawnguildid_sub_mob;
 	script->buildin_mobcount_sub = buildin_mobcount_sub;
-	script->playBGM_sub = playBGM_sub;
-	script->playBGM_foreachpc_sub = playBGM_foreachpc_sub;
+	script->playbgm_sub = playbgm_sub;
+	script->playbgm_foreachpc_sub = playbgm_foreachpc_sub;
 	script->soundeffect_sub = soundeffect_sub;
 	script->buildin_query_sql_sub = buildin_query_sql_sub;
 	script->axtoi = axtoi;
@@ -18438,6 +18714,7 @@ void script_defaults(void) {
 	script->buildin_mobuseskill_sub = buildin_mobuseskill_sub;
 	script->cleanfloor_sub = script_cleanfloor_sub;
 	script->run_func = run_func;
+	script->getfuncname = script_getfuncname;
 	
 	/* script_config base */
 	script->config.warn_func_mismatch_argtypes = 1;
@@ -18456,4 +18733,16 @@ void script_defaults(void) {
 	script->config.joblvup_event_name = "OnPCJobLvUpEvent";
 	script->config.ontouch_name = "OnTouch_";//ontouch_name (runs on first visible char to enter area, picks another char if the first char leaves)
 	script->config.ontouch2_name = "OnTouch";//ontouch2_name (run whenever a char walks into the OnTouch area)
+
+	// for ENABLE_CASE_CHECK
+	script->local_casecheck_add_str = script_local_casecheck_add_str;
+	script->local_casecheck_clear = script_local_casecheck_clear;
+	script->local_casecheck_str_data = NULL;
+	script->local_casecheck_str_data_size = 0;
+	script->local_casecheck_str_num = 1;
+	script->local_casecheck_str_buf = NULL;
+	script->local_casecheck_str_size = 0;
+	script->local_casecheck_str_pos = 0;
+	memset(script->local_casecheck_str_hash, 0, sizeof(script->local_casecheck_str_hash));
+	// end ENABLE_CASE_CHECK
 }

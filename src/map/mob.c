@@ -3874,6 +3874,7 @@ void mob_readdb(void) {
 
 		sv->readdb(map->db_path, filename[fi], ',', 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP, 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP, -1, mob->readdb_sub);
 	}
+	mob->name_constants();
 }
 
 /*==========================================
@@ -3923,7 +3924,16 @@ int mob_read_sqldb(void) {
 
 		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, mob_db_name[fi]);
 	}
+	mob->name_constants();
 	return 0;
+}
+
+void mob_name_constants(void) {
+	int i;
+	for (i = 0; i < MAX_MOB_DB; i++) {
+		if (mob->db_data[i] && !mob->is_clone(i))
+			script->set_constant2(mob->db_data[i]->sprite, i, 0);
+	}
 }
 
 /*==========================================
@@ -4759,6 +4769,7 @@ void mob_defaults(void) {
 	mob->readdb_sub = mob_readdb_sub;
 	mob->readdb = mob_readdb;
 	mob->read_sqldb = mob_read_sqldb;
+	mob->name_constants = mob_name_constants;
 	mob->readdb_mobavail = mob_readdb_mobavail;
 	mob->read_randommonster = mob_read_randommonster;
 	mob->parse_row_chatdb = mob_parse_row_chatdb;

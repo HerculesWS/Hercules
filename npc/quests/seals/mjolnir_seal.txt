@@ -60,7 +60,7 @@ prontera,124,297,3	script	Tialfi	4_M_KID1,{
 					else if (BaseJob == Job_Blacksmith){
 						set .@gift,4;
 					}
-					else if (BaseJob == Job_hunter){
+					else if (BaseJob == Job_Hunter){
 						set .@gift,5;
 					}
 					else if (BaseJob == Job_Assassin){
@@ -1968,7 +1968,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 					mes "Oh, this is excellent! This piece here has been perfectly refined! But this isn't what I want. I can't do any work on this at all.";
 					close;
 				}
-				if (GetEquipPercentRefinery(.@part) == 100) {
+				if (getequippercentrefinery(.@part) == 100) {
 					mes "[Vestri]";
 					mes "This item isn't even a challenge to upgrade. You can get humans to do this kind of beginner's stuff. Get them to refine it first.";
 					next;
@@ -2186,7 +2186,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 					mes "Oh, this is excellent! This piece here has been perfectly refined! But this isn't what I want. I can't do any work on this at all.";
 					close;
 				}
-				if (GetEquipPercentRefinery(.@part) == 100) {
+				if (getequippercentrefinery(.@part) == 100) {
 					mes "[Vestri]";
 					mes "This item isn't even a challenge to upgrade. You can get humans to do this kind of beginner's stuff. Get them to refine it first.";
 					next;

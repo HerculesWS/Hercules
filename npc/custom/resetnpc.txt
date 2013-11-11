@@ -35,7 +35,7 @@ prontera,150,193,4	script	Reset Girl	4_F_TELEPORTER,{
 		}
 		set Zeny, Zeny-.@ResetSkill;
 		sc_end SC_ALL;
-		ResetSkill;
+		resetskill;
 		mes "There you go!";
 		close;
 	case 2:
@@ -45,7 +45,7 @@ prontera,150,193,4	script	Reset Girl	4_F_TELEPORTER,{
 			close;
 		}
 		set Zeny, Zeny-.@ResetStat;
-		ResetStatus;
+		resetstatus;
 		mes "There you go!";
 		close;
 	case 3:
@@ -56,8 +56,8 @@ prontera,150,193,4	script	Reset Girl	4_F_TELEPORTER,{
 		}
 		set Zeny, Zeny-.@ResetBoth;
 		sc_end SC_ALL;
-		ResetSkill;
-		ResetStatus;
+		resetskill;
+		resetstatus;
 		mes "There you go!";
 		close;
 	case 4:

@@ -755,9 +755,11 @@ bool homunculus_create(struct map_session_data *sd, struct s_homunculus *hom) {
 	unit->calc_pos(&hd->bl, sd->bl.x, sd->bl.y, sd->ud.dir);
 	hd->bl.x = hd->ud.to_x;
 	hd->bl.y = hd->ud.to_y;
-
+	hd->masterteleport_timer = 0;
+	
 	map->addiddb(&hd->bl);
 	status_calc_homunculus(hd,SCO_FIRST);
+	status_percent_heal(&hd->bl, 100, 100);
 
 	hd->hungry_timer = INVALID_TIMER;
 	return true;

@@ -345,6 +345,7 @@ struct mob_interface {
 	bool (*readdb_sub) (char *fields[], int columns, int current);
 	void (*readdb) (void);
 	int (*read_sqldb) (void);
+	void (*name_constants) (void);
 	bool (*readdb_mobavail) (char *str[], int columns, int current);
 	int (*read_randommonster) (void);
 	bool (*parse_row_chatdb) (char **str, const char *source, int line, int *last_msg_id);

@@ -335,7 +335,7 @@ void trade_tradeadditem(struct map_session_data *sd, short index, short amount) 
 
 	if( amount == 0 )
 	{	//Why do this.. ~.~ just send an ack, the item won't display on the trade window.
-		clif->tradeitemok(sd, index, 0);
+		clif->tradeitemok(sd, index, TIO_SUCCESS);
 		return;
 	}
 
@@ -354,29 +354,38 @@ void trade_tradeadditem(struct map_session_data *sd, short index, short amount) 
 		(pc->get_partner(sd) != target_sd || !itemdb_canpartnertrade(item, src_lv, dst_lv)) ) //Can't partner-trade
 	{
 		clif->message (sd->fd, msg_txt(260));
-		clif->tradeitemok(sd, index+2, 1);
+		clif->tradeitemok(sd, index+2, TIO_INDROCKS);
 		return;
 	}
 
 	if( item->expire_time )
 	{ // Rental System
 		clif->message (sd->fd, msg_txt(260));
-		clif->tradeitemok(sd, index+2, 1);
+		clif->tradeitemok(sd, index+2, TIO_INDROCKS);
 		return;
 	}
 
+	if( item->bound &&
+			!( item->bound == IBT_GUILD && sd->status.guild_id == target_sd->status.guild_id ) &&
+			!( item->bound == IBT_PARTY && sd->status.party_id == target_sd->status.party_id )
+					&& !pc->can_give_bound_items(sd) ) {
+		clif->message(sd->fd, msg_txt(293));
+		clif->tradeitemok(sd, index+2, TIO_INDROCKS);
+		return;
+	}
+	
 	//Locate a trade position
 	ARR_FIND( 0, 10, trade_i, sd->deal.item[trade_i].index == index || sd->deal.item[trade_i].amount == 0 );
 	if( trade_i == 10 ) //No space left
 	{
-		clif->tradeitemok(sd, index+2, 1);
+		clif->tradeitemok(sd, index+2, TIO_OVERWEIGHT);
 		return;
 	}
 
 	trade_weight = sd->inventory_data[index]->weight * amount;
 	if( target_sd->weight + sd->deal.weight + trade_weight > target_sd->max_weight )
 	{	//fail to add item -- the player was over weighted.
-		clif->tradeitemok(sd, index+2, 1);
+		clif->tradeitemok(sd, index+2, TIO_OVERWEIGHT);
 		return;
 	}
 
@@ -396,7 +405,7 @@ void trade_tradeadditem(struct map_session_data *sd, short index, short amount) 
 	}
 	sd->deal.weight += trade_weight;
 
-	clif->tradeitemok(sd, index+2, 0); // Return the index as it was received
+	clif->tradeitemok(sd, index+2, TIO_SUCCESS); // Return the index as it was received
 	clif->tradeadditem(sd, target_sd, index+2, amount);
 }
 
@@ -440,7 +449,7 @@ void trade_tradeok(struct map_session_data *sd) {
 		return;
 	}
 	sd->state.deal_locked = 1;
-	clif->tradeitemok(sd, 0, 0);
+	clif->tradeitemok(sd, 0, TIO_SUCCESS);
 	clif->tradedeal_lock(sd, 0);
 	clif->tradedeal_lock(target_sd, 1);
 }
