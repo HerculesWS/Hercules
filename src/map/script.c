@@ -350,17 +350,91 @@ int script_search_str(const char* p)
 	for( i = script->str_hash[script->calc_hash(p)]; i != 0; i = script->str_data[i].next ) {
 		if( strcasecmp(script->get_str(i),p) == 0 ) {
 #ifdef ENABLE_CASE_CHECK
-			if( strcasecmp(p, "disguise") != 0 && strcasecmp(p, "Poison_Spore") != 0
+			if( strncmp(p, ".@", 2) != 0 // Local scope vars are checked separately to decrease false positives
+					&& strcasecmp(p, "disguise") != 0 && strcasecmp(p, "Poison_Spore") != 0
 					&& strcasecmp(p, "PecoPeco_Egg") != 0 && strcasecmp(p, "Soccer_Ball") != 0
 					&& strcasecmp(p, "Horn") != 0 && strcasecmp(p, "Treasure_Box_") != 0
 					&& strcasecmp(p, "Lord_of_Death") != 0
-					&& strcmp(script->get_str(i),p) != 0 ) DeprecationWarning2("script_search_str", p, script->get_str(i), "source not found");
+					&& strcmp(script->get_str(i),p) != 0 ) DeprecationWarning2("script_search_str", p, script->get_str(i), script->parser_current_file); // TODO
 #endif // ENABLE_CASE_CHECK
 			return i;
 		}
 	}
 
 	return -1;
+}
+
+void script_local_casecheck_clear(void) {
+#ifdef ENABLE_CASE_CHECK
+	if (script->local_casecheck_str_data) {
+		aFree(script->local_casecheck_str_data);
+		script->local_casecheck_str_data = NULL;
+	}
+	script->local_casecheck_str_data_size = 0;
+	script->local_casecheck_str_num = 1;
+	if (script->local_casecheck_str_buf) {
+		aFree(script->local_casecheck_str_buf);
+		script->local_casecheck_str_buf = NULL;
+	}
+	script->local_casecheck_str_pos = 0;
+	script->local_casecheck_str_size = 0;
+	memset(script->local_casecheck_str_hash, 0, sizeof(script->local_casecheck_str_hash));
+#endif // ENABLE_CASE_CHECK
+}
+
+bool script_local_casecheck_add_str(const char *p, int h) {
+#ifdef ENABLE_CASE_CHECK
+	int len, i;
+	if( script->local_casecheck_str_hash[h] == 0 ) { //empty bucket, add new node here
+		script->local_casecheck_str_hash[h] = script->local_casecheck_str_num;
+	} else {
+		for( i = script->local_casecheck_str_hash[h]; ; i = script->local_casecheck_str_data[i].next ) {
+			Assert( i >= 0 && i < script->local_casecheck_str_size );
+			const char *s = script->local_casecheck_str_buf+script->local_casecheck_str_data[i].str;
+			if( strcasecmp(s,p) == 0 ) {
+				if ( strcmp(s,p) != 0 ) {
+					DeprecationWarning2("script_add_str", p, s, script->parser_current_file);
+					return true;
+				}
+				return false; // string already in list
+			}
+			if( script->local_casecheck_str_data[i].next == 0 )
+				break; // reached the end
+		}
+
+		// append node to end of list
+		script->local_casecheck_str_data[i].next = script->local_casecheck_str_num;
+	}
+
+	// grow list if neccessary
+	if( script->local_casecheck_str_num >= script->local_casecheck_str_data_size ) {
+		script->local_casecheck_str_data_size += 1280;
+		RECREATE(script->local_casecheck_str_data,struct str_data_struct,script->local_casecheck_str_data_size);
+		memset(script->local_casecheck_str_data + (script->local_casecheck_str_data_size - 1280), '\0', 1280);
+	}
+
+	len=(int)strlen(p);
+
+	// grow string buffer if neccessary
+	while( script->local_casecheck_str_pos+len+1 >= script->local_casecheck_str_size ) {
+		script->local_casecheck_str_size += 10240;
+		RECREATE(script->local_casecheck_str_buf,char,script->local_casecheck_str_size);
+		memset(script->local_casecheck_str_buf + (script->local_casecheck_str_size - 10240), '\0', 10240);
+	}
+
+	safestrncpy(script->local_casecheck_str_buf+script->local_casecheck_str_pos, p, len+1);
+	script->local_casecheck_str_data[script->local_casecheck_str_num].type = C_NOP;
+	script->local_casecheck_str_data[script->local_casecheck_str_num].str = script->local_casecheck_str_pos;
+	script->local_casecheck_str_data[script->local_casecheck_str_num].val = 0;
+	script->local_casecheck_str_data[script->local_casecheck_str_num].next = 0;
+	script->local_casecheck_str_data[script->local_casecheck_str_num].func = NULL;
+	script->local_casecheck_str_data[script->local_casecheck_str_num].backpatch = -1;
+	script->local_casecheck_str_data[script->local_casecheck_str_num].label = -1;
+	script->local_casecheck_str_pos += len+1;
+
+	script->local_casecheck_str_num++;
+	return false;
+#endif // ENABLE_CASE_CHECK
 }
 
 /// Stores a copy of the string and returns its id.
@@ -372,17 +446,23 @@ int script_add_str(const char* p)
 
 	h = script->calc_hash(p);
 
+#ifdef ENABLE_CASE_CHECK
+	if( (strncmp(p, ".@", 2) == 0) ) // Local scope vars are checked separately to decrease false positives
+		script->local_casecheck_add_str(p, h);
+#endif // ENABLE_CASE_CHECK
+
 	if( script->str_hash[h] == 0 ) {// empty bucket, add new node here
 		script->str_hash[h] = script->str_num;
 	} else {// scan for end of list, or occurence of identical string
 		for( i = script->str_hash[h]; ; i = script->str_data[i].next ) {
 			if( strcasecmp(script->get_str(i),p) == 0 ) {
 #ifdef ENABLE_CASE_CHECK
-				if( strcasecmp(p, "disguise") != 0 && strcasecmp(p, "Poison_Spore") != 0
+				if( (strncmp(p, ".@", 2) != 0) // Local scope vars are checked separately to decrease false positives
+						&& strcasecmp(p, "disguise") != 0 && strcasecmp(p, "Poison_Spore") != 0
 						&& strcasecmp(p, "PecoPeco_Egg") != 0 && strcasecmp(p, "Soccer_Ball") != 0
 						&& strcasecmp(p, "Horn") != 0 && strcasecmp(p, "Treasure_Box_") != 0
 						&& strcasecmp(p, "Lord_of_Death") != 0
-						&& strcmp(script->get_str(i),p) != 0 ) DeprecationWarning2("script_add_str", p, script->get_str(i), "source not found"); // TODO
+						&& strcmp(script->get_str(i),p) != 0 ) DeprecationWarning2("script_add_str", p, script->get_str(i), script->parser_current_file); // TODO
 #endif // ENABLE_CASE_CHECK
 				return i; // string already in list
 			}
@@ -2111,6 +2191,9 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			if(script->str_data[i].type == C_NOP) script->str_data[i].type = C_NAME;
 		for(i=0; i<size; i++)
 			linkdb_final(&script->syntax.curly[i].case_label);
+#ifdef ENABLE_CASE_CHECK
+	script->local_casecheck_clear();
+#endif // ENABLE_CASE_CHECK
 		return NULL;
 	}
 
@@ -2125,6 +2208,9 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			script->pos = 0;
 			script->size = 0;
 			script->buf  = NULL;
+#ifdef ENABLE_CASE_CHECK
+	script->local_casecheck_clear();
+#endif // ENABLE_CASE_CHECK
 			return NULL;
 		}
 		end = '\0';
@@ -2140,6 +2226,9 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			script->pos  = 0;
 			script->size = 0;
 			script->buf  = NULL;
+#ifdef ENABLE_CASE_CHECK
+	script->local_casecheck_clear();
+#endif // ENABLE_CASE_CHECK
 			return NULL;
 		}
 		end = '}';
@@ -2254,6 +2343,9 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 	code->script_buf  = script->buf;
 	code->script_size = script->size;
 	code->script_vars = NULL;
+#ifdef ENABLE_CASE_CHECK
+	script->local_casecheck_clear();
+#endif // ENABLE_CASE_CHECK
 	return code;
 }
 
@@ -18631,4 +18723,16 @@ void script_defaults(void) {
 	script->config.joblvup_event_name = "OnPCJobLvUpEvent";
 	script->config.ontouch_name = "OnTouch_";//ontouch_name (runs on first visible char to enter area, picks another char if the first char leaves)
 	script->config.ontouch2_name = "OnTouch";//ontouch2_name (run whenever a char walks into the OnTouch area)
+
+	// for ENABLE_CASE_CHECK
+	script->local_casecheck_add_str = script_local_casecheck_add_str;
+	script->local_casecheck_clear = script_local_casecheck_clear;
+	script->local_casecheck_str_data = NULL;
+	script->local_casecheck_str_data_size = 0;
+	script->local_casecheck_str_num = 1;
+	script->local_casecheck_str_buf = NULL;
+	script->local_casecheck_str_size = 0;
+	script->local_casecheck_str_pos = 0;
+	memset(script->local_casecheck_str_hash, 0, sizeof(script->local_casecheck_str_hash));
+	// end ENABLE_CASE_CHECK
 }

@@ -637,6 +637,18 @@ struct script_interface {
 	int (*cleanfloor_sub) (struct block_list *bl, va_list ap);
 	int (*run_func) (struct script_state *st);
 	const char *(*getfuncname) (struct script_state *st);
+	// for ENABLE_CASE_CHECK
+	struct str_data_struct *local_casecheck_str_data;
+	int local_casecheck_str_data_size; // size of the data
+	int local_casecheck_str_num; // next id to be assigned
+	// str_buf holds the strings themselves
+	char *local_casecheck_str_buf;
+	int local_casecheck_str_size; // size of the buffer
+	int local_casecheck_str_pos; // next position to be assigned
+	int local_casecheck_str_hash[SCRIPT_HASH_SIZE];
+	bool (*local_casecheck_add_str) (const char* p, int h);
+	void (*local_casecheck_clear) (void);
+	// end ENABLE_CASE_CHECK
 };
 
 struct script_interface *script;
