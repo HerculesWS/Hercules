@@ -1005,6 +1005,9 @@ void Sql_HerculesUpdateCheck(Sql* self) {
 	unsigned int performed = 0;
 	StringBuf buf;
 	
+	if( self == NULL )
+		return;/* return silently, build has no mysql connection */
+	
 	if( !( ifp = fopen("sql-files/upgrades/index.txt", "r") ) ) {
 		ShowError("SQL upgrade index was not found!\n");
 		return;

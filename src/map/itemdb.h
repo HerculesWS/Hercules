@@ -349,13 +349,14 @@ struct itemdb_interface {
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
 	int (*readdb_sql_sub) (Sql *handle, int n, const char *source);
 	int (*readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
-	int (*readdb) (void);
+	int (*readdb) (const char *filename);
 	int (*read_sqldb) (void);
 	uint64 (*unique_id) (int8 flag, int64 value);
 	int (*uid_load) ();
 	void (*read) (bool minimal);
 	void (*destroy_item_data) (struct item_data *self, int free_self);
 	int (*final_sub) (DBKey key, DBData *data, va_list ap);
+	void (*clear) (bool total);
 };
 
 struct itemdb_interface *itemdb;

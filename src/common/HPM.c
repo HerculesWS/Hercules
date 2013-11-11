@@ -640,7 +640,9 @@ void hplugins_share_defaults(void) {
 	HPM->share(SQL,"SQL");
 	/* timer */
 	HPM->share(timer,"timer");
-	
+	/* libconfig (temp) */
+	HPM->share(config_setting_lookup_string,"config_setting_lookup_string");
+	HPM->share(config_setting_lookup_int,"config_setting_lookup_int");
 }
 
 void hpm_init(void) {

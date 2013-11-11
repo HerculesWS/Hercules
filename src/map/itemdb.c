@@ -1826,43 +1826,36 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
  * Reading item from item db
  * item_db2 overwriting item_db
  *------------------------------------------*/
-int itemdb_readdb(void) {
-	const char* filename[] = {
-		DBPATH"item_db.conf",
-		"item_db2.conf",
-	};
+int itemdb_readdb(const char *filename) {
 	bool duplicate[MAX_ITEMDB];
-	int fi;
 	config_t item_db_conf;
 	config_setting_t *itdb, *it;
-
-	for( fi = 0; fi < ARRAYLENGTH(filename); ++fi ) {
-		char filepath[256];
-		int i = 0, count = 0;
-		sprintf(filepath, "%s/%s", map->db_path, filename[fi]);
-		memset(&duplicate,0,sizeof(duplicate));
-		if( conf_read_file(&item_db_conf, filepath) || !(itdb = config_setting_get_member(item_db_conf.root, "item_db")) ) {
-			ShowError("can't read %s\n", filepath);
-			continue;
-		}
-
-		while( (it = config_setting_get_elem(itdb,i++)) ) {
-			int nameid = itemdb->readdb_libconfig_sub(it, i-1, filename[fi]);
-
-			if( !nameid )
-				continue;
-
-			count++;
-
-			if( duplicate[nameid] ) {
-				ShowWarning("itemdb_readdb:%s: duplicate entry of ID #%d (%s/%s)\n",
-						filename[fi], nameid, itemdb_name(nameid), itemdb_jname(nameid));
-			} else
-				duplicate[nameid] = true;
-		}
-		config_destroy(&item_db_conf);
-		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename[fi]);
+	char filepath[256];
+	int i = 0, count = 0;
+	
+	sprintf(filepath, "%s/%s", map->db_path, filename);
+	memset(&duplicate,0,sizeof(duplicate));
+	if( conf_read_file(&item_db_conf, filepath) || !(itdb = config_setting_get_member(item_db_conf.root, "item_db")) ) {
+		ShowError("can't read %s\n", filepath);
+		return 0;
 	}
+
+	while( (it = config_setting_get_elem(itdb,i++)) ) {
+		int nameid = itemdb->readdb_libconfig_sub(it, i-1, filename);
+
+		if( !nameid )
+			continue;
+
+		count++;
+
+		if( duplicate[nameid] ) {
+			ShowWarning("itemdb_readdb:%s: duplicate entry of ID #%d (%s/%s)\n",
+					filename, nameid, itemdb_name(nameid), itemdb_jname(nameid));
+		} else
+			duplicate[nameid] = true;
+	}
+	config_destroy(&item_db_conf);
+	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
 		
 	return 0;
 }
@@ -1956,8 +1949,15 @@ void itemdb_read(bool minimal) {
 	
 	if (map->db_use_sql_item_db)
 		itemdb->read_sqldb();
-	else
-		itemdb->readdb();
+	else {
+		const char* filename[] = {
+			DBPATH"item_db.conf",
+			"item_db2.conf",
+		};
+
+		for(i = 0; i < ARRAYLENGTH(filename); i++)
+			itemdb->readdb(filename[i]);
+	}
 	
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
 		if( itemdb->array[i] ) {
@@ -2034,18 +2034,13 @@ int itemdb_final_sub(DBKey key, DBData *data, va_list ap)
 
 	return 0;
 }
-
-void itemdb_reload(void) {
-	struct s_mapiterator* iter;
-	struct map_session_data* sd;
-
-	int i,d,k;
-	
+void itemdb_clear(bool total) {
+	int i;
 	// clear the previous itemdb data
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i )
 		if( itemdb->array[i] )
 			itemdb->destroy_item_data(itemdb->array[i], 1);
-
+	
 	for( i = 0; i < itemdb->group_count; i++ ) {
 		if( itemdb->groups[i].nameid )
 			aFree(itemdb->groups[i].nameid);
@@ -2084,12 +2079,24 @@ void itemdb_reload(void) {
 	itemdb->packages = NULL;
 	itemdb->package_count = 0;
 	
+	if( total )
+		return;
+	
 	itemdb->other->clear(itemdb->other, itemdb->final_sub);
 	
 	memset(itemdb->array, 0, sizeof(itemdb->array));
 	
 	db_clear(itemdb->names);
-		
+
+}
+void itemdb_reload(void) {
+	struct s_mapiterator* iter;
+	struct map_session_data* sd;
+
+	int i,d,k;
+	
+	itemdb->clear(false);
+
 	// read new data
 	itemdb->read(false);
 	
@@ -2160,41 +2167,8 @@ void itemdb_force_name_constants(void) {
 	dbi_destroy(iter);
 }
 void do_final_itemdb(void) {
-	int i;
-
-	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i )
-		if( itemdb->array[i] )
-			itemdb->destroy_item_data(itemdb->array[i], 1);
-
-	for( i = 0; i < itemdb->group_count; i++ ) {
-		if( itemdb->groups[i].nameid )
-			aFree(itemdb->groups[i].nameid);
-	}
+	itemdb->clear(true);
 	
-	if( itemdb->groups )
-		aFree(itemdb->groups);
-
-	for( i = 0; i < itemdb->chain_count; i++ ) {
-		if( itemdb->chains[i].items )
-			aFree(itemdb->chains[i].items);
-	}
-	
-	if( itemdb->chains )
-		aFree(itemdb->chains);
-	
-	for( i = 0; i < itemdb->package_count; i++ ) {
-		int c;
-		for( c = 0; c < itemdb->packages[i].random_qty; c++ )
-			aFree(itemdb->packages[i].random_groups[c].random_list);
-		if( itemdb->packages[i].random_groups )
-			aFree(itemdb->packages[i].random_groups);
-		if( itemdb->packages[i].must_items )
-			aFree(itemdb->packages[i].must_items);
-	}
-	
-	if( itemdb->packages )
-		aFree(itemdb->packages);
-
 	itemdb->other->destroy(itemdb->other, itemdb->final_sub);
 	itemdb->destroy_item_data(&itemdb->dummy, 0);
 	db_destroy(itemdb->names);
@@ -2295,4 +2269,5 @@ void itemdb_defaults(void) {
 	itemdb->read = itemdb_read;
 	itemdb->destroy_item_data = destroy_item_data;
 	itemdb->final_sub = itemdb_final_sub;
+	itemdb->clear = itemdb_clear;
 }

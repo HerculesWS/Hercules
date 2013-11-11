@@ -5438,6 +5438,7 @@ int do_init(int argc, char *argv[])
 	
 	HPM->event(HPET_PRE_INIT);
 	
+	minimal = map->minimal;/* temp (perhaps make minimal a mask with options of what to load? e.g. plugin 1 does minimal |= mob_db; */
 	for( i = 1; i < argc ; i++ ) {
 		const char* arg = argv[i];
 
@@ -5619,12 +5620,17 @@ int do_init(int argc, char *argv[])
 	duel->init(minimal);
 	vending->init(minimal);
 
-	if (minimal) {
+	if (scriptcheck) {
 		if (npc->parsesrcfile(scriptcheck, false) == 0)
 			exit(EXIT_SUCCESS);
 		exit(EXIT_FAILURE);
 	}
 
+	if( minimal ) {
+		HPM->event(HPET_READY);
+		exit(EXIT_SUCCESS);
+	}
+	
 	npc->event_do_oninit();	// Init npcs (OnInit)
 
 	if (battle_config.pk_mode)
@@ -5659,6 +5665,7 @@ void map_defaults(void) {
 	map = &map_s;
 
 	/* */
+	map->minimal = false;
 	map->count = 0;
 	
 	sprintf(map->db_path ,"db");

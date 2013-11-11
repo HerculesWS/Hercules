@@ -800,6 +800,7 @@ struct map_cache_map_info {
 struct map_interface {
 
 	/* vars */
+	bool minimal;
 	int count;
 
 	int autosave_interval;
