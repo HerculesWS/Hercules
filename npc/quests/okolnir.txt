@@ -978,16 +978,16 @@ OnInit:
 	end;
 }
 
-que_qaru01,131,136,3	duplicate(Piamette#main)	Piamette#aru01	1930
-que_qaru02,131,136,3	duplicate(Piamette#main)	Piamette#aru02	1930
-que_qaru03,131,136,3	duplicate(Piamette#main)	Piamette#aru03	1930
-que_qaru04,131,136,3	duplicate(Piamette#main)	Piamette#aru04	1930
-que_qaru05,131,136,3	duplicate(Piamette#main)	Piamette#aru05	1930
-que_qsch01,131,136,3	duplicate(Piamette#main)	Piamette#sch01	1930
-que_qsch02,131,136,3	duplicate(Piamette#main)	Piamette#sch02	1930
-que_qsch03,131,136,3	duplicate(Piamette#main)	Piamette#sch03	1930
-que_qsch04,131,136,3	duplicate(Piamette#main)	Piamette#sch04	1930
-que_qsch05,131,136,3	duplicate(Piamette#main)	Piamette#sch05	1930
+que_qaru01,131,136,3	duplicate(Piamette#main)	Piamette#aru01	PIAMETTE
+que_qaru02,131,136,3	duplicate(Piamette#main)	Piamette#aru02	PIAMETTE
+que_qaru03,131,136,3	duplicate(Piamette#main)	Piamette#aru03	PIAMETTE
+que_qaru04,131,136,3	duplicate(Piamette#main)	Piamette#aru04	PIAMETTE
+que_qaru05,131,136,3	duplicate(Piamette#main)	Piamette#aru05	PIAMETTE
+que_qsch01,131,136,3	duplicate(Piamette#main)	Piamette#sch01	PIAMETTE
+que_qsch02,131,136,3	duplicate(Piamette#main)	Piamette#sch02	PIAMETTE
+que_qsch03,131,136,3	duplicate(Piamette#main)	Piamette#sch03	PIAMETTE
+que_qsch04,131,136,3	duplicate(Piamette#main)	Piamette#sch04	PIAMETTE
+que_qsch05,131,136,3	duplicate(Piamette#main)	Piamette#sch05	PIAMETTE
 
 -	script	#event_start01_main	-1,{
 	end;
@@ -2128,16 +2128,16 @@ OnInit:
 		hideonnpc "Wish Maiden#"+.@sub$+"_boss";	
 	end;
 }
-que_qaru01,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#aru01_boss	1931
-que_qaru02,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#aru02_boss	1931
-que_qaru03,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#aru03_boss	1931
-que_qaru04,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#aru04_boss	1931
-que_qaru05,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#aru05_boss	1931
-que_qsch01,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch01_boss	1931
-que_qsch02,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch02_boss	1931
-que_qsch03,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch03_boss	1931
-que_qsch04,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch04_boss	1931
-que_qsch05,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch05_boss	1931
+que_qaru01,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#aru01_boss	WISH_MAIDEN
+que_qaru02,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#aru02_boss	WISH_MAIDEN
+que_qaru03,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#aru03_boss	WISH_MAIDEN
+que_qaru04,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#aru04_boss	WISH_MAIDEN
+que_qaru05,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#aru05_boss	WISH_MAIDEN
+que_qsch01,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch01_boss	WISH_MAIDEN
+que_qsch02,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch02_boss	WISH_MAIDEN
+que_qsch03,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch03_boss	WISH_MAIDEN
+que_qsch04,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch04_boss	WISH_MAIDEN
+que_qsch05,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch05_boss	WISH_MAIDEN
 
 -	script	Wish Maiden#main_gift	-1,{
 	set .@sub$,callfunc("F_Okolnir");

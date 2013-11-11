@@ -11,7 +11,7 @@
 //= Account, Character, or Guild
 //============================================================
 
-prontera,144,174,4	script	Bound Items	429,{
+prontera,144,174,4	script	Bound Items	4_M_JP_MID,{
 
 	mes "I can bind your items to your account, guild, or character"+((.bindprice)?" for a ^0000FF"+.bindprice+"^000000 zeny fee":"")+".";
 	next;

@@ -759,13 +759,13 @@ prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_6969	4_F_06
 prt_are_in,94,26,5	duplicate(#arena_1039)	#arena_ss_2	4_F_06
 prt_are_in,100,28,3	duplicate(#arena_1039)	#arena_ss_3	4_F_06
 prt_are_in,102,26,3	duplicate(#arena_1039)	#arena_ss_4	4_F_06
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1272	1272
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1046	1046
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1115	1115
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1389	1389
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1492	1492
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1251	1251
-prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1159	1159
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1272	DARK_LORD
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1046	DOPPELGANGER
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1115	EDDGA
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1389	DRACULA
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1492	INCANTATION_SAMURAI
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1251	KNIGHT_OF_WINDSTORM
+prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1159	PHREEONI
 prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_7777	4_F_VALKYRIE
 
 -	script	npctime#arena	-1,{

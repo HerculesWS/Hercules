@@ -1652,17 +1652,17 @@ OnTouch:
 	end;
 }
 
-poring_w01,79,102,5	duplicate(Angeling Side Poring#wpa)	Angeling Side Poring#wa1	1002
-poring_w01,80,107,5	duplicate(Angeling Side Poring#wpa)	Angeling Side Poring#wa2	1002
-poring_w01,84,108,5	duplicate(Angeling Side Poring#wpa)	Angeling Side Poring#wa3	1002
-poring_w01,84,112,5	duplicate(Angeling Side Poring#wpa)	Angeling Side Poring#wa4	1002
-poring_w01,88,112,5	duplicate(Angeling Side Poring#wpa)	Angeling Side Poring#wa5	1002
+poring_w01,79,102,5	duplicate(Angeling Side Poring#wpa)	Angeling Side Poring#wa1	PORING
+poring_w01,80,107,5	duplicate(Angeling Side Poring#wpa)	Angeling Side Poring#wa2	PORING
+poring_w01,84,108,5	duplicate(Angeling Side Poring#wpa)	Angeling Side Poring#wa3	PORING
+poring_w01,84,112,5	duplicate(Angeling Side Poring#wpa)	Angeling Side Poring#wa4	PORING
+poring_w01,88,112,5	duplicate(Angeling Side Poring#wpa)	Angeling Side Poring#wa5	PORING
 
-poring_w01,114,112,3	duplicate(Deviling Side Marin#wpd)	Deviling Side Marin#wd1	1242
-poring_w01,117,111,3	duplicate(Deviling Side Marin#wpd)	Deviling Side Marin#wd2	1242
-poring_w01,117,108,3	duplicate(Deviling Side Marin#wpd)	Deviling Side Marin#wd3	1242
-poring_w01,122,108,3	duplicate(Deviling Side Marin#wpd)	Deviling Side Marin#wd4	1242
-poring_w01,121,105,3	duplicate(Deviling Side Marin#wpd)	Deviling Side Marin#wd5	1242
+poring_w01,114,112,3	duplicate(Deviling Side Marin#wpd)	Deviling Side Marin#wd1	MARIN
+poring_w01,117,111,3	duplicate(Deviling Side Marin#wpd)	Deviling Side Marin#wd2	MARIN
+poring_w01,117,108,3	duplicate(Deviling Side Marin#wpd)	Deviling Side Marin#wd3	MARIN
+poring_w01,122,108,3	duplicate(Deviling Side Marin#wpd)	Deviling Side Marin#wd4	MARIN
+poring_w01,121,105,3	duplicate(Deviling Side Marin#wpd)	Deviling Side Marin#wd5	MARIN
 
 poring_w01,84,108,3	script	#wop_ex_1	HIDDEN_WARP_NPC,3,3,{
 	end;
