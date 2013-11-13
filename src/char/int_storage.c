@@ -173,7 +173,7 @@ int mapif_load_guild_storage(int fd,int account_id,int guild_id, char flag)
 		WFIFOL(fd,8) = guild_id;
 		WFIFOB(fd,12) = flag; //1 open storage, 0 don't open
 		guild_storage_fromsql(guild_id, (struct guild_storage*)WFIFOP(fd,13));
- 		WFIFOSET(fd, WFIFOW(fd,2));
+ 		iSocket->WFIFOSET(fd, WFIFOW(fd,2));
 		return 0;
 	}
 	// guild does not exist
@@ -183,7 +183,7 @@ int mapif_load_guild_storage(int fd,int account_id,int guild_id, char flag)
 	WFIFOW(fd,2) = 12;
 	WFIFOL(fd,4) = account_id;
 	WFIFOL(fd,8) = 0;
-	WFIFOSET(fd, 12);
+	iSocket->WFIFOSET(fd, 12);
 	return 0;
 }
 int mapif_save_guild_storage_ack(int fd,int account_id,int guild_id,int fail)
@@ -193,7 +193,7 @@ int mapif_save_guild_storage_ack(int fd,int account_id,int guild_id,int fail)
 	WFIFOL(fd,2)=account_id;
 	WFIFOL(fd,6)=guild_id;
 	WFIFOB(fd,10)=fail;
-	WFIFOSET(fd,11);
+	iSocket->WFIFOSET(fd,11);
 	return 0;
 }
 
@@ -244,7 +244,7 @@ int mapif_itembound_ack(int fd, int aid, int guild_id)
 	WFIFOW(fd,0) = 0x3856;
 	WFIFOL(fd,2) = aid;
 	WFIFOW(fd,6) = guild_id;
-	WFIFOSET(fd,8);
+	iSocket->WFIFOSET(fd,8);
 #endif
 	return 0;
 }

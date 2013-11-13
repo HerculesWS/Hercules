@@ -146,7 +146,7 @@ static void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char
 	WFIFOW(fd,2) = size;
 	WFIFOB(fd,4) = flag;
 	memcpy(WFIFOP(fd,5),merc,sizeof(struct s_mercenary));
-	WFIFOSET(fd,size);
+	iSocket->WFIFOSET(fd,size);
 }
 
 static void mapif_parse_mercenary_create(int fd, struct s_mercenary* merc)
@@ -167,7 +167,7 @@ static void mapif_mercenary_deleted(int fd, unsigned char flag)
 	WFIFOHEAD(fd,3);
 	WFIFOW(fd,0) = 0x3871;
 	WFIFOB(fd,2) = flag;
-	WFIFOSET(fd,3);
+	iSocket->WFIFOSET(fd,3);
 }
 
 static void mapif_parse_mercenary_delete(int fd, int merc_id)
@@ -181,7 +181,7 @@ static void mapif_mercenary_saved(int fd, unsigned char flag)
 	WFIFOHEAD(fd,3);
 	WFIFOW(fd,0) = 0x3872;
 	WFIFOB(fd,2) = flag;
-	WFIFOSET(fd,3);
+	iSocket->WFIFOSET(fd,3);
 }
 
 static void mapif_parse_mercenary_save(int fd, struct s_mercenary* merc)

@@ -1688,7 +1688,7 @@ int map_quit(struct map_session_data *sd) {
 			script->queue_remove(sd->queues[i],sd->status.account_id);
 	}
 
-	npc->script_event(sd, NPCE_LOGOUT);
+	npc->npc_script_event(sd, NPCE_LOGOUT);
 
 	//Unit_free handles clearing the player related data,
 	//map->quit handles extra specific data which is related to quitting normally
@@ -5622,7 +5622,7 @@ int do_init(int argc, char *argv[])
 	vending->init(minimal);
 
 	if (minimal) {
-		if (npc->parsesrcfile(scriptcheck, false) == 0)
+		if (npc->parsesrcfile(scriptcheck, false, 3) == 0)
 			exit(EXIT_SUCCESS);
 		exit(EXIT_FAILURE);
 	}

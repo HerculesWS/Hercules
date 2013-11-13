@@ -2070,7 +2070,7 @@ void itemdb_reload(void) {
 		if( !((i < 1324 || i > 1363) && (i < 1938 || i > 1946)) )
 			continue;
 		entry = mob->db(i);
-		for(d = 0; d < MAX_MOB_DROP; d++) {
+		for(d = 0; d < (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION); d++) {
 			struct item_data *id;
 			if( !entry->dropitem[d].nameid )
 				continue;

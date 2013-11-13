@@ -251,7 +251,7 @@ static void mapif_Auction_sendlist(int fd, int char_id, short count, short pages
 	WFIFOW(fd,8) = count;
 	WFIFOW(fd,10) = pages;
 	memcpy(WFIFOP(fd,12), buf, len - 12);
-	WFIFOSET(fd,len);
+	iSocket->WFIFOSET(fd,len);
 }
 
 static void mapif_parse_Auction_requestlist(int fd)
@@ -305,7 +305,7 @@ static void mapif_Auction_register(int fd, struct auction_data *auction)
 	WFIFOW(fd,0) = 0x3851;
 	WFIFOW(fd,2) = len;
 	memcpy(WFIFOP(fd,4), auction, sizeof(struct auction_data));
-	WFIFOSET(fd,len);
+	iSocket->WFIFOSET(fd,len);
 }
 
 static void mapif_parse_Auction_register(int fd)
@@ -327,7 +327,7 @@ static void mapif_Auction_cancel(int fd, int char_id, unsigned char result)
 	WFIFOW(fd,0) = 0x3852;
 	WFIFOL(fd,2) = char_id;
 	WFIFOB(fd,6) = result;
-	WFIFOSET(fd,7);
+	iSocket->WFIFOSET(fd,7);
 }
 
 static void mapif_parse_Auction_cancel(int fd)
@@ -365,7 +365,7 @@ static void mapif_Auction_close(int fd, int char_id, unsigned char result)
 	WFIFOW(fd,0) = 0x3853;
 	WFIFOL(fd,2) = char_id;
 	WFIFOB(fd,6) = result;
-	WFIFOSET(fd,7);
+	iSocket->WFIFOSET(fd,7);
 }
 
 static void mapif_parse_Auction_close(int fd)
@@ -408,7 +408,7 @@ static void mapif_Auction_bid(int fd, int char_id, int bid, unsigned char result
 	WFIFOL(fd,2) = char_id;
 	WFIFOL(fd,6) = bid; // To Return Zeny
 	WFIFOB(fd,10) = result;
-	WFIFOSET(fd,11);
+	iSocket->WFIFOSET(fd,11);
 }
 
 static void mapif_parse_Auction_bid(int fd)

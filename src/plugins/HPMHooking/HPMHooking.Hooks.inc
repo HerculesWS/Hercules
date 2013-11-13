@@ -42515,14 +42515,14 @@ const char* HP_npc_parse_mapflag(char *w1, char *w2, char *w3, char *w4, const c
 	}
 	return retVal___;
 }
-int HP_npc_parsesrcfile(const char *filepath, bool runOnInit) {
+int HP_npc_parsesrcfile(const char *filepath, bool runOnInit, int reload_type) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_parsesrcfile_pre ) {
-		int (*preHookFunc) (const char *filepath, bool *runOnInit);
+		int (*preHookFunc) (const char *filepath, bool *runOnInit, int *reload_type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parsesrcfile_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_npc_parsesrcfile_pre[hIndex].func;
-			retVal___ = preHookFunc(filepath, &runOnInit);
+			retVal___ = preHookFunc(filepath, &runOnInit, &reload_type);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -42530,13 +42530,13 @@ int HP_npc_parsesrcfile(const char *filepath, bool runOnInit) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.npc.parsesrcfile(filepath, runOnInit);
+		retVal___ = HPMHooks.source.npc.parsesrcfile(filepath, runOnInit, reload_type);
 	}
 	if( HPMHooks.count.HP_npc_parsesrcfile_post ) {
-		int (*postHookFunc) (int retVal___, const char *filepath, bool *runOnInit);
+		int (*postHookFunc) (int retVal___, const char *filepath, bool *runOnInit, int *reload_type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parsesrcfile_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_parsesrcfile_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, filepath, &runOnInit);
+			retVal___ = postHookFunc(retVal___, filepath, &runOnInit, &reload_type);
 		}
 	}
 	return retVal___;
@@ -42556,7 +42556,7 @@ int HP_npc_script_event(struct map_session_data *sd, enum npce_event type) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.npc.script_event(sd, type);
+		retVal___ = HPMHooks.source.npc.npc_script_event(sd, type);
 	}
 	if( HPMHooks.count.HP_npc_script_event_post ) {
 		int (*postHookFunc) (int retVal___, struct map_session_data *sd, enum npce_event *type);
@@ -42656,14 +42656,14 @@ int HP_npc_ev_label_db_clear_sub(DBKey key, DBData *data, va_list args) {
 	}
 	return retVal___;
 }
-int HP_npc_reload(void) {
+int HP_npc_reload(int reload_type) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_npc_reload_pre ) {
-		int (*preHookFunc) (void);
+		int (*preHookFunc) (int *reload_type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_reload_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_npc_reload_pre[hIndex].func;
-			retVal___ = preHookFunc();
+			retVal___ = preHookFunc(&reload_type);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -42671,13 +42671,13 @@ int HP_npc_reload(void) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.npc.reload();
+		retVal___ = HPMHooks.source.npc.reload(reload_type);
 	}
 	if( HPMHooks.count.HP_npc_reload_post ) {
-		int (*postHookFunc) (int retVal___);
+		int (*postHookFunc) (int retVal___, int *reload_type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_reload_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_reload_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___);
+			retVal___ = postHookFunc(retVal___, &reload_type);
 		}
 	}
 	return retVal___;

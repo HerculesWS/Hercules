@@ -279,7 +279,7 @@ int chrif_save(struct map_session_data *sd, int flag) {
 	WFIFOL(chrif->fd,8) = sd->status.char_id;
 	WFIFOB(chrif->fd,12) = (flag==1)?1:0; //Flag to tell char-server this character is quitting.
 	memcpy(WFIFOP(chrif->fd,13), &sd->status, sizeof(sd->status));
-	WFIFOSET(chrif->fd, WFIFOW(chrif->fd,2));
+	iSocket->WFIFOSET(chrif->fd, WFIFOW(chrif->fd,2));
 
 	if( sd->status.pet_id > 0 && sd->pd )
 		intif->save_petdata(sd->status.account_id,&sd->pd->pet);
@@ -305,7 +305,7 @@ int chrif_connect(int fd) {
 	WFIFOL(fd,50) = 0;
 	WFIFOL(fd,54) = htonl(clif->map_ip);
 	WFIFOW(fd,58) = htons(clif->map_port);
-	WFIFOSET(fd,60);
+	iSocket->WFIFOSET(fd,60);
 
 	return 0;
 }
@@ -322,7 +322,7 @@ int chrif_sendmap(int fd) {
 	for(i = 0; i < instance->start_id; i++)
 		WFIFOW(fd,4+i*4) = map_id2index(i);
 	WFIFOW(fd,2) = 4 + i * 4;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	iSocket->WFIFOSET(fd,WFIFOW(fd,2));
 
 	return 0;
 }
@@ -393,7 +393,7 @@ int chrif_changemapserver(struct map_session_data* sd, uint32 ip, uint16 port) {
 	WFIFOB(chrif->fd,30) = sd->status.sex;
 	WFIFOL(chrif->fd,31) = htonl(session[sd->fd]->client_addr);
 	WFIFOL(chrif->fd,35) = sd->group_id;
-	WFIFOSET(chrif->fd,39);
+	iSocket->WFIFOSET(chrif->fd,39);
 	
 	return 0;
 }
@@ -535,7 +535,7 @@ int chrif_scdata_request(int account_id, int char_id) {
 	WFIFOW(chrif->fd,0) = 0x2afc;
 	WFIFOL(chrif->fd,2) = account_id;
 	WFIFOL(chrif->fd,6) = char_id;
-	WFIFOSET(chrif->fd,10);
+	iSocket->WFIFOSET(chrif->fd,10);
 #endif
 	
 	return 0;
@@ -559,7 +559,7 @@ void chrif_authreq(struct map_session_data *sd) {
 	WFIFOL(chrif->fd,10) = sd->login_id1;
 	WFIFOB(chrif->fd,14) = sd->status.sex;
 	WFIFOL(chrif->fd,15) = htonl(session[sd->fd]->client_addr);
-	WFIFOSET(chrif->fd,19);
+	iSocket->WFIFOSET(chrif->fd,19);
 	chrif->sd_to_auth(sd, ST_LOGIN);
 }
 
@@ -705,7 +705,7 @@ int chrif_charselectreq(struct map_session_data* sd, uint32 s_ip) {
 	WFIFOL(chrif->fd, 6) = sd->login_id1;
 	WFIFOL(chrif->fd,10) = sd->login_id2;
 	WFIFOL(chrif->fd,14) = htonl(s_ip);
-	WFIFOSET(chrif->fd,18);
+	iSocket->WFIFOSET(chrif->fd,18);
 
 	return 0;
 }
@@ -723,7 +723,7 @@ int chrif_searchcharid(int char_id) {
 	WFIFOHEAD(chrif->fd,6);
 	WFIFOW(chrif->fd,0) = 0x2b08;
 	WFIFOL(chrif->fd,2) = char_id;
-	WFIFOSET(chrif->fd,6);
+	iSocket->WFIFOSET(chrif->fd,6);
 
 	return 0;
 }
@@ -743,7 +743,7 @@ int chrif_changeemail(int id, const char *actual_email, const char *new_email) {
 	WFIFOL(chrif->fd,2) = id;
 	memcpy(WFIFOP(chrif->fd,6), actual_email, 40);
 	memcpy(WFIFOP(chrif->fd,46), new_email, 40);
-	WFIFOSET(chrif->fd,86);
+	iSocket->WFIFOSET(chrif->fd,86);
 
 	return 0;
 }
@@ -773,7 +773,7 @@ int chrif_char_ask_name(int acc, const char* character_name, unsigned short oper
 		WFIFOW(chrif->fd,42) = second;
 	}
 	
-	WFIFOSET(chrif->fd,44);
+	iSocket->WFIFOSET(chrif->fd,44);
 	return 0;
 }
 
@@ -785,9 +785,9 @@ int chrif_changesex(struct map_session_data *sd) {
 	WFIFOL(chrif->fd,2) = sd->status.account_id;
 	safestrncpy((char*)WFIFOP(chrif->fd,6), sd->status.name, NAME_LENGTH);
 	WFIFOW(chrif->fd,30) = 5;
-	WFIFOSET(chrif->fd,44);
+	iSocket->WFIFOSET(chrif->fd,44);
 
-	clif->message(sd->fd, msg_txt(408)); //"Need disconnection to perform change-sex request..."
+	clif->message(sd->fd, atcommand->msg_txt(408)); //"Need disconnection to perform change-sex request..."
 
 	if (sd->fd)
 		clif->authfail_fd(sd->fd, 15);
@@ -820,15 +820,15 @@ void chrif_char_ask_name_answer(int acc, const char* player_name, uint16 type, u
 	}
 
 	if( type > 0 && type <= 5 )
-		snprintf(action,25,"%s",msg_txt(427+type)); //block|ban|unblock|unban|change the sex of
+		snprintf(action,25,"%s",atcommand->msg_txt(427+type)); //block|ban|unblock|unban|change the sex of
 	else
 		snprintf(action,25,"???");
 
 	switch( answer ) {
-		case 0 : sprintf(output, msg_txt(424), action, NAME_LENGTH, player_name); break;
-		case 1 : sprintf(output, msg_txt(425), NAME_LENGTH, player_name); break;
-		case 2 : sprintf(output, msg_txt(426), action, NAME_LENGTH, player_name); break;
-		case 3 : sprintf(output, msg_txt(427), action, NAME_LENGTH, player_name); break;
+		case 0 : sprintf(output, atcommand->msg_txt(424), action, NAME_LENGTH, player_name); break;
+		case 1 : sprintf(output, atcommand->msg_txt(425), NAME_LENGTH, player_name); break;
+		case 2 : sprintf(output, atcommand->msg_txt(426), action, NAME_LENGTH, player_name); break;
+		case 3 : sprintf(output, atcommand->msg_txt(427), action, NAME_LENGTH, player_name); break;
 		default: output[0] = '\0'; break;
 	}
 	
@@ -886,7 +886,7 @@ int chrif_changedsex(int fd) {
 		// save character
 		sd->login_id1++; // change identify, because if player come back in char within the 5 seconds, he can change its characters
 							  // do same modify in login-server for the account, but no in char-server (it ask again login_id1 to login, and don't remember it)
-		clif->message(sd->fd, msg_txt(409)); //"Your sex has been changed (need disconnection by the server)..."
+		clif->message(sd->fd, atcommand->msg_txt(409)); //"Your sex has been changed (need disconnection by the server)..."
 		set_eof(sd->fd); // forced to disconnect for the change
 		map->quit(sd); // Remove leftovers (e.g. autotrading) [Paradox924X]
 	}
@@ -902,7 +902,7 @@ int chrif_divorce(int partner_id1, int partner_id2) {
 	WFIFOW(chrif->fd,0) = 0x2b11;
 	WFIFOL(chrif->fd,2) = partner_id1;
 	WFIFOL(chrif->fd,6) = partner_id2;
-	WFIFOSET(chrif->fd,10);
+	iSocket->WFIFOSET(chrif->fd,10);
 
 	return 0;
 }
@@ -983,16 +983,16 @@ int chrif_accountban(int fd) {
 	if (RFIFOB(fd,6) == 0) { // 0: change of statut, 1: ban
 		int ret_status = RFIFOL(fd,7); // status or final date of a banishment
 		if(0<ret_status && ret_status<=9)
-			clif->message(sd->fd, msg_txt(411+ret_status));
+			clif->message(sd->fd, atcommand->msg_txt(411+ret_status));
 		else if(ret_status==100)
-			clif->message(sd->fd, msg_txt(421));
+			clif->message(sd->fd, atcommand->msg_txt(421));
 		else
-			clif->message(sd->fd, msg_txt(420)); //"Your account has not more authorised."
+			clif->message(sd->fd, atcommand->msg_txt(420)); //"Your account has not more authorised."
 	} else if (RFIFOB(fd,6) == 1) { // 0: change of statut, 1: ban
 		time_t timestamp;
 		char tmpstr[2048];
 		timestamp = (time_t)RFIFOL(fd,7); // status or final date of a banishment
-		strcpy(tmpstr, msg_txt(423)); //"Your account has been banished until "
+		strcpy(tmpstr, atcommand->msg_txt(423)); //"Your account has been banished until "
 		strftime(tmpstr + strlen(tmpstr), 24, "%d-%m-%Y %H:%M:%S", localtime(&timestamp));
 		clif->message(sd->fd, tmpstr);
 	}
@@ -1057,7 +1057,7 @@ int chrif_updatefamelist(struct map_session_data* sd) {
 	WFIFOL(chrif->fd,2) = sd->status.char_id;
 	WFIFOL(chrif->fd,6) = sd->status.fame;
 	WFIFOB(chrif->fd,10) = type;
-	WFIFOSET(chrif->fd,11);
+	iSocket->WFIFOSET(chrif->fd,11);
 
 	return 0;
 }
@@ -1067,7 +1067,7 @@ int chrif_buildfamelist(void) {
 
 	WFIFOHEAD(chrif->fd,2);
 	WFIFOW(chrif->fd,0) = 0x2b1a;
-	WFIFOSET(chrif->fd,2);
+	iSocket->WFIFOSET(chrif->fd,2);
 
 	return 0;
 }
@@ -1177,7 +1177,7 @@ int chrif_save_scdata(struct map_session_data *sd) { //parses the sc_data of the
 	
 	WFIFOW(chrif->fd,12) = count;
 	WFIFOW(chrif->fd,2) = 14 +count*sizeof(struct status_change_data); //Total packet size
-	WFIFOSET(chrif->fd,WFIFOW(chrif->fd,2));
+	iSocket->WFIFOSET(chrif->fd,WFIFOW(chrif->fd,2));
 #endif
 	
 	return 0;
@@ -1231,7 +1231,7 @@ int chrif_ragsrvinfo(int base_rate, int job_rate, int drop_rate) {
 	WFIFOL(chrif->fd,2) = base_rate;
 	WFIFOL(chrif->fd,6) = job_rate;
 	WFIFOL(chrif->fd,10) = drop_rate;
-	WFIFOSET(chrif->fd,14);
+	iSocket->WFIFOSET(chrif->fd,14);
 	
 	return 0;
 }
@@ -1247,7 +1247,7 @@ int chrif_char_offline(struct map_session_data *sd) {
 	WFIFOW(chrif->fd,0) = 0x2b17;
 	WFIFOL(chrif->fd,2) = sd->status.char_id;
 	WFIFOL(chrif->fd,6) = sd->status.account_id;
-	WFIFOSET(chrif->fd,10);
+	iSocket->WFIFOSET(chrif->fd,10);
 
 	return 0;
 }
@@ -1258,7 +1258,7 @@ int chrif_char_offline_nsd(int account_id, int char_id) {
 	WFIFOW(chrif->fd,0) = 0x2b17;
 	WFIFOL(chrif->fd,2) = char_id;
 	WFIFOL(chrif->fd,6) = account_id;
-	WFIFOSET(chrif->fd,10);
+	iSocket->WFIFOSET(chrif->fd,10);
 
 	return 0;
 }
@@ -1284,7 +1284,7 @@ int chrif_char_reset_offline(void) {
 
 	WFIFOHEAD(chrif->fd,2);
 	WFIFOW(chrif->fd,0) = 0x2b18;
-	WFIFOSET(chrif->fd,2);
+	iSocket->WFIFOSET(chrif->fd,2);
 
 	return 0;
 }
@@ -1300,7 +1300,7 @@ int chrif_char_online(struct map_session_data *sd) {
 	WFIFOW(chrif->fd,0) = 0x2b19;
 	WFIFOL(chrif->fd,2) = sd->status.char_id;
 	WFIFOL(chrif->fd,6) = sd->status.account_id;
-	WFIFOSET(chrif->fd,10);
+	iSocket->WFIFOSET(chrif->fd,10);
 
 	return 0;
 }
@@ -1337,14 +1337,14 @@ void chrif_update_ip(int fd) {
 	
 	WFIFOW(fd,0) = 0x2736;
 	WFIFOL(fd,2) = htonl(new_ip);
-	WFIFOSET(fd,6);
+	iSocket->WFIFOSET(fd,6);
 }
 
 // pings the charserver ( since on-demand flag.ping was introduced, shouldn't this be dropped? only wasting traffic and processing [Ind])
 void chrif_keepalive(int fd) {
 	WFIFOHEAD(fd,2);
 	WFIFOW(fd,0) = 0x2b23;
-	WFIFOSET(fd,2);
+	iSocket->WFIFOSET(fd,2);
 }
 void chrif_keepalive_ack(int fd) {
 	session[fd]->flag.ping = 0;/* reset ping state, we received a packet */
@@ -1364,7 +1364,7 @@ void chrif_skillid2idx(int fd) {
 		}
 	}
 	WFIFOW(fd,2) = 4 + (count * 4);
-	WFIFOSET(fd,4 + (count * 4));
+	iSocket->WFIFOSET(fd,4 + (count * 4));
 
 }
 /*==========================================
@@ -1376,12 +1376,12 @@ int chrif_parse(int fd) {
 	// only process data from the char-server
 	if ( fd != chrif->fd ) {
 		ShowDebug("chrif_parse: Disconnecting invalid session #%d (is not the char-server)\n", fd);
-		do_close(fd);
+		iSocket->do_close(fd);
 		return 0;
 	}
 
 	if ( session[fd]->flag.eof ) {
-		do_close(fd);
+		iSocket->do_close(fd);
 		chrif->fd = -1;
 		chrif->on_disconnect();
 		return 0;
@@ -1458,7 +1458,7 @@ int chrif_parse(int fd) {
 				return 0;
 		}
 		if ( fd == chrif->fd ) //There's the slight chance we lost the connection during parse, in which case this would segfault if not checked [Skotlex]
-			RFIFOSKIP(fd, packet_len);
+			iSocket->RFIFOSKIP(fd, packet_len);
 	}
 
 	return 0;
@@ -1470,7 +1470,7 @@ int send_usercount_tochar(int tid, int64 tick, int id, intptr_t data) {
 	WFIFOHEAD(chrif->fd,4);
 	WFIFOW(chrif->fd,0) = 0x2afe;
 	WFIFOW(chrif->fd,2) = map->usercount();
-	WFIFOSET(chrif->fd,4);
+	iSocket->WFIFOSET(chrif->fd,4);
 	return 0;
 }
 
@@ -1502,7 +1502,7 @@ int send_users_tochar(void) {
 	
 	WFIFOW(chrif->fd,2) = 6 + 8*users;
 	WFIFOW(chrif->fd,4) = users;
-	WFIFOSET(chrif->fd, 6+8*users);
+	iSocket->WFIFOSET(chrif->fd, 6+8*users);
 
 	return 0;
 }
@@ -1521,12 +1521,12 @@ int check_connect_char_server(int tid, int64 tick, int id, intptr_t data) {
 
 		chrif->state = 0;
 		
-		if ( ( chrif->fd = make_connection(chrif->ip, chrif->port,NULL) ) == -1) //Attempt to connect later. [Skotlex]
+		if ( ( chrif->fd = iSocket->make_connection(chrif->ip, chrif->port,NULL) ) == -1) //Attempt to connect later. [Skotlex]
 			return 0;
 
 		session[chrif->fd]->func_parse = chrif->parse;
 		session[chrif->fd]->flag.server = 1;
-		realloc_fifo(chrif->fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
+		iSocket->realloc_fifo(chrif->fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 		chrif->connect(chrif->fd);
 		chrif->connected = (chrif->state == 2);
@@ -1553,7 +1553,7 @@ int chrif_removefriend(int char_id, int friend_id) {
 	WFIFOW(chrif->fd,0) = 0x2b07;
 	WFIFOL(chrif->fd,2) = char_id;
 	WFIFOL(chrif->fd,6) = friend_id;
-	WFIFOSET(chrif->fd,10);
+	iSocket->WFIFOSET(chrif->fd,10);
 	
 	return 0;
 }
@@ -1567,7 +1567,7 @@ void chrif_send_report(char* buf, int len) {
 		
 		memcpy(WFIFOP(chrif->fd,2), buf, len);
 		
-		WFIFOSET(chrif->fd,len + 2);
+		iSocket->WFIFOSET(chrif->fd,len + 2);
 		
 		flush_fifo(chrif->fd); /* ensure it's sent now. */
 	}
@@ -1597,7 +1597,7 @@ int auth_db_final(DBKey key, DBData *data, va_list ap) {
 int do_final_chrif(void) {
 	
 	if( chrif->fd != -1 ) {
-		do_close(chrif->fd);
+		iSocket->do_close(chrif->fd);
 		chrif->fd = -1;
 	}
 

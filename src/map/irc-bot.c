@@ -39,7 +39,7 @@ int irc_connect_timer(int tid, int64 tick, int id, intptr_t data) {
 	
 	ircbot->last_try = timer->gettick();
 
-	if( ( ircbot->fd = make_connection(ircbot->ip,hChSys.irc_server_port,&opt) ) > 0 ){
+	if( ( ircbot->fd = iSocket->make_connection(ircbot->ip,hChSys.irc_server_port,&opt) ) > 0 ){
 		session[ircbot->fd]->func_parse = ircbot->parse;
 		session[ircbot->fd]->flag.server = 1;
 		timer->add(timer->gettick() + 3000, ircbot->identify_timer, 0, 0);
@@ -113,7 +113,7 @@ int irc_parse(int fd) {
 	char *parse_string = NULL, *str_safe = NULL;
 
 	if (session[fd]->flag.eof) {
-		do_close(fd);
+		iSocket->do_close(fd);
 		ircbot->fd = 0;
 		ircbot->isOn = false;
 		ircbot->isIn = false;
@@ -136,7 +136,7 @@ int irc_parse(int fd) {
 		parse_string = strtok_r(NULL,"\r\n",&str_safe);
 	}
 	
-	RFIFOSKIP(fd, RFIFOREST(fd));
+	iSocket->RFIFOSKIP(fd, RFIFOREST(fd));
 	RFIFOFLUSH(fd);
 	return 0;
 }
@@ -213,7 +213,7 @@ void irc_send(char *str) {
 		len = IRC_MESSAGE_LENGTH-3;
 	WFIFOHEAD(ircbot->fd, len);
 	snprintf((char*)WFIFOP(ircbot->fd,0),IRC_MESSAGE_LENGTH, "%s\r\n", str);
-	WFIFOSET(ircbot->fd, len);
+	iSocket->WFIFOSET(ircbot->fd, len);
 }
 
 /**
@@ -259,7 +259,7 @@ void irc_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char *msg) 
 		time(&time_server);  // get time in seconds since 1/1/1970
 		datetime = localtime(&time_server); // convert seconds in structure
 		// like sprintf, but only for date/time (Sunday, November 02 2003 15:12:52)
-		strftime(temp, sizeof(temp)-1, msg_txt(230), datetime); // Server time (normal time): %A, %B %d %Y %X.
+		strftime(temp, sizeof(temp)-1, atcommand->msg_txt(230), datetime); // Server time (normal time): %A, %B %d %Y %X.
 
 		sprintf(send_string, "NOTICE %s :\001TIME %s\001",source_nick,temp);
 		ircbot->send(send_string);
@@ -444,7 +444,7 @@ void irc_bot_final(void) {
 		return;
 	if( ircbot->isOn ) {
 		ircbot->send("QUIT :Hercules is shutting down");
-		do_close(ircbot->fd);
+		iSocket->do_close(ircbot->fd);
 	}
 	
 	for( i = 0; i < ircbot->funcs.size; i++ ) {

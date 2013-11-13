@@ -129,7 +129,7 @@ int mapif_parse_quest_save(int fd)
 	WFIFOW(fd,0) = 0x3861;
 	WFIFOL(fd,2) = char_id;
 	WFIFOB(fd,6) = success?1:0;
-	WFIFOSET(fd,7);
+	iSocket->WFIFOSET(fd,7);
 
 	return 0;
 }
@@ -167,7 +167,7 @@ int mapif_parse_quest_load(int fd)
 	for( i = num_quests - num_complete; i < num_quests; i++ )
 		memcpy(WFIFOP(fd,i*sizeof(struct quest)+8), &tmp_questlog[complete[i-num_quests+num_complete]], sizeof(struct quest));
 
-	WFIFOSET(fd,num_quests*sizeof(struct quest)+8);
+	iSocket->WFIFOSET(fd,num_quests*sizeof(struct quest)+8);
 
 	return 0;
 }

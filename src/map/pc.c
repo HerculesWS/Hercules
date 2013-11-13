@@ -1179,7 +1179,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 		// message of the limited time of the account
 		if (expiration_time != 0) { // don't display if it's unlimited or unknow value
 			char tmpstr[1024];
-			strftime(tmpstr, sizeof(tmpstr) - 1, msg_txt(501), localtime(&expiration_time)); // "Your account time limit is: %d-%m-%Y %H:%M:%S."
+			strftime(tmpstr, sizeof(tmpstr) - 1, atcommand->msg_txt(501), localtime(&expiration_time)); // "Your account time limit is: %d-%m-%Y %H:%M:%S."
 			clif->wis_message(sd->fd, map->wisp_server_name, tmpstr, strlen(tmpstr)+1);
 		}
 
@@ -1346,7 +1346,7 @@ int pc_reg_received(struct map_session_data *sd)
 
 	if( sd->sc.option & OPTION_INVISIBLE ) {
 		sd->vd.class_ = INVISIBLE_CLASS;
-		clif->message(sd->fd, msg_txt(11)); // Invisible: On
+		clif->message(sd->fd, atcommand->msg_txt(11)); // Invisible: On
 		// decrement the number of pvp players on the map
 		map->list[sd->bl.m].users_pvp--;
 		
@@ -3813,7 +3813,7 @@ int pc_paycash(struct map_session_data *sd, int price, int points)
 	if( battle_config.cashshop_show_points )
 	{
 		char output[128];
-		sprintf(output, msg_txt(504), points, cash, sd->kafraPoints, sd->cashPoints);
+		sprintf(output, atcommand->msg_txt(504), points, cash, sd->kafraPoints, sd->cashPoints);
 		clif->disp_onlyself(sd, output, strlen(output));
 	}
 	return cash+points;
@@ -3838,7 +3838,7 @@ int pc_getcash(struct map_session_data *sd, int cash, int points)
 
 		if( battle_config.cashshop_show_points )
 		{
-			sprintf(output, msg_txt(505), cash, sd->cashPoints);
+			sprintf(output, atcommand->msg_txt(505), cash, sd->cashPoints);
 			clif->disp_onlyself(sd, output, strlen(output));
 		}
 		return cash;
@@ -3861,7 +3861,7 @@ int pc_getcash(struct map_session_data *sd, int cash, int points)
 
 		if( battle_config.cashshop_show_points )
 		{
-			sprintf(output, msg_txt(506), points, sd->kafraPoints);
+			sprintf(output, atcommand->msg_txt(506), points, sd->kafraPoints);
 			clif->disp_onlyself(sd, output, strlen(output));
 		}
 		return points;
@@ -4095,13 +4095,13 @@ int pc_dropitem(struct map_session_data *sd,int n,int amount)
 		return 0;
 
 	if( map->list[sd->bl.m].flag.nodrop ) {
-		clif->message (sd->fd, msg_txt(271));
+		clif->message (sd->fd, atcommand->msg_txt(271));
 		return 0; //Can't drop items in nodrop mapflag maps.
 	}
 
 	if( !pc->candrop(sd,&sd->status.inventory[n]) )
 	{
-		clif->message (sd->fd, msg_txt(263));
+		clif->message (sd->fd, atcommand->msg_txt(263));
 		return 0;
 	}
 
@@ -4236,7 +4236,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		case 14591: // Siege Teleport Scroll
 			if( sd->duel_group && !battle_config.duel_allow_teleport )
 			{
-				clif->message(sd->fd, msg_txt(663));
+				clif->message(sd->fd, atcommand->msg_txt(663));
 				return 0;
 			}
 			if( nameid != 601 && nameid != 12212 && map->list[sd->bl.m].flag.noreturn )
@@ -4308,7 +4308,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 
 	if( (item->package || item->group) && pc_is90overweight(sd) ) {
 		//##TODO## find official response to this
-		clif->colormes(sd->fd,COLOR_RED,msg_txt(1477));// Item cannot be open when overweight by 90%
+		clif->colormes(sd->fd,COLOR_RED,atcommand->msg_txt(1477));// Item cannot be open when overweight by 90%
 		return 0;
 	}
 	
@@ -4536,8 +4536,8 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 	}
 
 	if( !itemdb_cancartstore(item_data, pc->get_group_level(sd)) || (item_data->bound > IBT_ACCOUNT && !pc->can_give_bound_items(sd)))
- 	{ // Check item trade restrictions	[Skotlex]
-		clif->message (sd->fd, msg_txt(264));
+	{ // Check item trade restrictions	[Skotlex]
+		clif->message (sd->fd, atcommand->msg_txt(264));
 		return 1;/* TODO: there is no official response to this? */
 	}
 
@@ -4811,7 +4811,7 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	//A Rare Steal Global Announce by Lupus
 	if(md->db->dropitem[i].p<=battle_config.rare_drop_announce) {
 		char message[128];
-		sprintf (message, msg_txt(542), (sd->status.name != NULL)?sd->status.name :"GM", md->db->jname, data->jname, (float)md->db->dropitem[i].p/100);
+		sprintf (message, atcommand->msg_txt(542), (sd->status.name != NULL)?sd->status.name :"GM", md->db->jname, data->jname, (float)md->db->dropitem[i].p/100);
 		//MSG: "'%s' stole %s's %s (chance: %0.02f%%)"
 		intif->broadcast(message, strlen(message)+1, BC_DEFAULT);
 	}
@@ -4979,7 +4979,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 			sd->regen.state.gc = 0;
 		// make sure vending is allowed here
 		if (sd->state.vending && map->list[m].flag.novending) {
-			clif->message (sd->fd, msg_txt(276)); // "You can't open a shop on this map"
+			clif->message (sd->fd, atcommand->msg_txt(276)); // "You can't open a shop on this map"
 			vending->close(sd);
 		}
 		
@@ -4997,7 +4997,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 
 		if (sd->npc_id)
 			npc->event_dequeue(sd);
-		npc->script_event(sd, NPCE_LOGOUT);
+		npc->npc_script_event(sd, NPCE_LOGOUT);
 		//remove from map, THEN change x/y coordinates
 		unit->remove_map_pc(sd,clrtype);
 		sd->mapindex = mapindex;
@@ -5026,7 +5026,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 	}
 
 	if (sd->state.vending && map->getcell(m,x,y,CELL_CHKNOVENDING)) {
-		clif->message (sd->fd, msg_txt(204)); // "You can't open a shop on this cell."
+		clif->message (sd->fd, atcommand->msg_txt(204)); // "You can't open a shop on this cell."
 		vending->close(sd);
 	}
 
@@ -5563,7 +5563,7 @@ const char* job_name(int class_)
 	case JOB_ACOLYTE:
 	case JOB_MERCHANT:
 	case JOB_THIEF:
-		return msg_txt(550 - JOB_NOVICE+class_);
+		return atcommand->msg_txt(550 - JOB_NOVICE+class_);
 
 	case JOB_KNIGHT:
 	case JOB_PRIEST:
@@ -5571,10 +5571,10 @@ const char* job_name(int class_)
 	case JOB_BLACKSMITH:
 	case JOB_HUNTER:
 	case JOB_ASSASSIN:
-		return msg_txt(557 - JOB_KNIGHT+class_);
+		return atcommand->msg_txt(557 - JOB_KNIGHT+class_);
 
 	case JOB_KNIGHT2:
-		return msg_txt(557);
+		return atcommand->msg_txt(557);
 
 	case JOB_CRUSADER:
 	case JOB_MONK:
@@ -5583,20 +5583,20 @@ const char* job_name(int class_)
 	case JOB_ALCHEMIST:
 	case JOB_BARD:
 	case JOB_DANCER:
-		return msg_txt(563 - JOB_CRUSADER+class_);
+		return atcommand->msg_txt(563 - JOB_CRUSADER+class_);
 
 	case JOB_CRUSADER2:
-		return msg_txt(563);
+		return atcommand->msg_txt(563);
 
 	case JOB_WEDDING:
 	case JOB_SUPER_NOVICE:
 	case JOB_GUNSLINGER:
 	case JOB_NINJA:
 	case JOB_XMAS:
-		return msg_txt(570 - JOB_WEDDING+class_);
+		return atcommand->msg_txt(570 - JOB_WEDDING+class_);
 
 	case JOB_SUMMER:
-		return msg_txt(621);
+		return atcommand->msg_txt(621);
 
 	case JOB_NOVICE_HIGH:
 	case JOB_SWORDMAN_HIGH:
@@ -5605,7 +5605,7 @@ const char* job_name(int class_)
 	case JOB_ACOLYTE_HIGH:
 	case JOB_MERCHANT_HIGH:
 	case JOB_THIEF_HIGH:
-		return msg_txt(575 - JOB_NOVICE_HIGH+class_);
+		return atcommand->msg_txt(575 - JOB_NOVICE_HIGH+class_);
 
 	case JOB_LORD_KNIGHT:
 	case JOB_HIGH_PRIEST:
@@ -5613,10 +5613,10 @@ const char* job_name(int class_)
 	case JOB_WHITESMITH:
 	case JOB_SNIPER:
 	case JOB_ASSASSIN_CROSS:
-		return msg_txt(582 - JOB_LORD_KNIGHT+class_);
+		return atcommand->msg_txt(582 - JOB_LORD_KNIGHT+class_);
 
 	case JOB_LORD_KNIGHT2:
-		return msg_txt(582);
+		return atcommand->msg_txt(582);
 
 	case JOB_PALADIN:
 	case JOB_CHAMPION:
@@ -5625,10 +5625,10 @@ const char* job_name(int class_)
 	case JOB_CREATOR:
 	case JOB_CLOWN:
 	case JOB_GYPSY:
-		return msg_txt(588 - JOB_PALADIN + class_);
+		return atcommand->msg_txt(588 - JOB_PALADIN + class_);
 
 	case JOB_PALADIN2:
-		return msg_txt(588);
+		return atcommand->msg_txt(588);
 
 	case JOB_BABY:
 	case JOB_BABY_SWORDMAN:
@@ -5637,7 +5637,7 @@ const char* job_name(int class_)
 	case JOB_BABY_ACOLYTE:
 	case JOB_BABY_MERCHANT:
 	case JOB_BABY_THIEF:
-		return msg_txt(595 - JOB_BABY + class_);
+		return atcommand->msg_txt(595 - JOB_BABY + class_);
 
 	case JOB_BABY_KNIGHT:
 	case JOB_BABY_PRIEST:
@@ -5645,10 +5645,10 @@ const char* job_name(int class_)
 	case JOB_BABY_BLACKSMITH:
 	case JOB_BABY_HUNTER:
 	case JOB_BABY_ASSASSIN:
-		return msg_txt(602 - JOB_BABY_KNIGHT + class_);
+		return atcommand->msg_txt(602 - JOB_BABY_KNIGHT + class_);
 
 	case JOB_BABY_KNIGHT2:
-		return msg_txt(602);
+		return atcommand->msg_txt(602);
 
 	case JOB_BABY_CRUSADER:
 	case JOB_BABY_MONK:
@@ -5657,26 +5657,26 @@ const char* job_name(int class_)
 	case JOB_BABY_ALCHEMIST:
 	case JOB_BABY_BARD:
 	case JOB_BABY_DANCER:
-		return msg_txt(608 - JOB_BABY_CRUSADER + class_);
+		return atcommand->msg_txt(608 - JOB_BABY_CRUSADER + class_);
 
 	case JOB_BABY_CRUSADER2:
-		return msg_txt(608);
+		return atcommand->msg_txt(608);
 
 	case JOB_SUPER_BABY:
-		return msg_txt(615);
+		return atcommand->msg_txt(615);
 
 	case JOB_TAEKWON:
-		return msg_txt(616);
+		return atcommand->msg_txt(616);
 	case JOB_STAR_GLADIATOR:
 	case JOB_STAR_GLADIATOR2:
-		return msg_txt(617);
+		return atcommand->msg_txt(617);
 	case JOB_SOUL_LINKER:
-		return msg_txt(618);
+		return atcommand->msg_txt(618);
 
 	case JOB_GANGSI:
 	case JOB_DEATH_KNIGHT:
 	case JOB_DARK_COLLECTOR:
-		return msg_txt(622 - JOB_GANGSI+class_);
+		return atcommand->msg_txt(622 - JOB_GANGSI+class_);
 
 	case JOB_RUNE_KNIGHT:
 	case JOB_WARLOCK:
@@ -5684,7 +5684,7 @@ const char* job_name(int class_)
 	case JOB_ARCH_BISHOP:
 	case JOB_MECHANIC:
 	case JOB_GUILLOTINE_CROSS:
-		return msg_txt(625 - JOB_RUNE_KNIGHT+class_);
+		return atcommand->msg_txt(625 - JOB_RUNE_KNIGHT+class_);
 
 	case JOB_RUNE_KNIGHT_T:
 	case JOB_WARLOCK_T:
@@ -5692,7 +5692,7 @@ const char* job_name(int class_)
 	case JOB_ARCH_BISHOP_T:
 	case JOB_MECHANIC_T:
 	case JOB_GUILLOTINE_CROSS_T:
-            return msg_txt(681 - JOB_RUNE_KNIGHT_T+class_);
+            return atcommand->msg_txt(681 - JOB_RUNE_KNIGHT_T+class_);
 
 	case JOB_ROYAL_GUARD:
 	case JOB_SORCERER:
@@ -5701,7 +5701,7 @@ const char* job_name(int class_)
 	case JOB_SURA:
 	case JOB_GENETIC:
 	case JOB_SHADOW_CHASER:
-		return msg_txt(631 - JOB_ROYAL_GUARD+class_);
+		return atcommand->msg_txt(631 - JOB_ROYAL_GUARD+class_);
 
 	case JOB_ROYAL_GUARD_T:
 	case JOB_SORCERER_T:
@@ -5710,23 +5710,23 @@ const char* job_name(int class_)
 	case JOB_SURA_T:
 	case JOB_GENETIC_T:
 	case JOB_SHADOW_CHASER_T:
-            return msg_txt(687 - JOB_ROYAL_GUARD_T+class_);
+            return atcommand->msg_txt(687 - JOB_ROYAL_GUARD_T+class_);
 
 	case JOB_RUNE_KNIGHT2:
 	case JOB_RUNE_KNIGHT_T2:
-		return msg_txt(625);
+		return atcommand->msg_txt(625);
 
 	case JOB_ROYAL_GUARD2:
 	case JOB_ROYAL_GUARD_T2:
-		return msg_txt(631);
+		return atcommand->msg_txt(631);
 
 	case JOB_RANGER2:
 	case JOB_RANGER_T2:
-		return msg_txt(627);
+		return atcommand->msg_txt(627);
 
 	case JOB_MECHANIC2:
 	case JOB_MECHANIC_T2:
-		return msg_txt(629);
+		return atcommand->msg_txt(629);
 
 	case JOB_BABY_RUNE:
 	case JOB_BABY_WARLOCK:
@@ -5741,32 +5741,32 @@ const char* job_name(int class_)
 	case JOB_BABY_SURA:
 	case JOB_BABY_GENETIC:
 	case JOB_BABY_CHASER:
-		return msg_txt(638 - JOB_BABY_RUNE+class_);
+		return atcommand->msg_txt(638 - JOB_BABY_RUNE+class_);
 
 	case JOB_BABY_RUNE2:
-		return msg_txt(638);
+		return atcommand->msg_txt(638);
 
 	case JOB_BABY_GUARD2:
-		return msg_txt(644);
+		return atcommand->msg_txt(644);
 
 	case JOB_BABY_RANGER2:
-		return msg_txt(640);
+		return atcommand->msg_txt(640);
 
 	case JOB_BABY_MECHANIC2:
-		return msg_txt(642);
+		return atcommand->msg_txt(642);
 
 	case JOB_SUPER_NOVICE_E:
 	case JOB_SUPER_BABY_E:
-		return msg_txt(651 - JOB_SUPER_NOVICE_E+class_);
+		return atcommand->msg_txt(651 - JOB_SUPER_NOVICE_E+class_);
 
 	case JOB_KAGEROU:
 	case JOB_OBORO:
-		return msg_txt(653 - JOB_KAGEROU+class_);
+		return atcommand->msg_txt(653 - JOB_KAGEROU+class_);
 	case JOB_REBELLION:
-		return msg_txt(694);
+		return atcommand->msg_txt(694);
 
 	default:
-		return msg_txt(655);
+		return atcommand->msg_txt(655);
 	}
 }
 
@@ -5878,7 +5878,7 @@ int pc_checkbaselevelup(struct map_session_data *sd) {
 		sc_start(&sd->bl,status->skill2sc(AL_BLESSING),100,10,600000);
 	}
 	clif->misceffect(&sd->bl,0);
-	npc->script_event(sd, NPCE_BASELVUP); //LORDALFA - LVLUPEVENT
+	npc->npc_script_event(sd, NPCE_BASELVUP); //LORDALFA - LVLUPEVENT
 
 	if(sd->status.party_id)
 		party->send_levelup(sd);
@@ -5927,7 +5927,7 @@ int pc_checkjoblevelup(struct map_session_data *sd)
 	if (pc->checkskill(sd, SG_DEVIL) && !pc->nextjobexp(sd))
 		clif->status_change(&sd->bl,SI_DEVIL1, 1, 0, 0, 0, 1); //Permanent blind effect from SG_DEVIL.
 
-	npc->script_event(sd, NPCE_JOBLVUP);
+	npc->npc_script_event(sd, NPCE_JOBLVUP);
 	return 1;
 }
 
@@ -6840,7 +6840,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			npc->event(sd, queue->onDeath, 0);
 	}
 	
-	npc->script_event(sd,NPCE_DIE);
+	npc->npc_script_event(sd,NPCE_DIE);
 		
 	// Clear anything NPC-related when you die and was interacting with one.
 	if (sd->npc_id || sd->npc_shopid) {
@@ -6918,7 +6918,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	if (src && src->type == BL_PC) {
 		struct map_session_data *ssd = (struct map_session_data *)src;
 		pc->setparam(ssd, SP_KILLEDRID, sd->bl.id);
-		npc->script_event(ssd, NPCE_KILLPC);
+		npc->npc_script_event(ssd, NPCE_KILLPC);
 
 		if (battle_config.pk_mode&2) {
 			ssd->status.manner -= 5;
@@ -9442,7 +9442,7 @@ int map_day_timer(int tid, int64 tick, int id, intptr_t data) {
 
 	map->night_flag = 0; // 0=day, 1=night [Yor]
 	map->foreachpc(pc->daynight_timer_sub);
-	strcpy(tmp_soutput, (data == 0) ? msg_txt(502) : msg_txt(60)); // The day has arrived!
+	strcpy(tmp_soutput, (data == 0) ? atcommand->msg_txt(502) : atcommand->msg_txt(60)); // The day has arrived!
 	intif->broadcast(tmp_soutput, strlen(tmp_soutput) + 1, BC_DEFAULT);
 	return 0;
 }
@@ -9462,7 +9462,7 @@ int map_night_timer(int tid, int64 tick, int id, intptr_t data) {
 
 	map->night_flag = 1; // 0=day, 1=night [Yor]
 	map->foreachpc(pc->daynight_timer_sub);
-	strcpy(tmp_soutput, (data == 0) ? msg_txt(503) : msg_txt(59)); // The night has fallen...
+	strcpy(tmp_soutput, (data == 0) ? atcommand->msg_txt(503) : atcommand->msg_txt(59)); // The night has fallen...
 	intif->broadcast(tmp_soutput, strlen(tmp_soutput) + 1, BC_DEFAULT);
 	return 0;
 }
@@ -10277,7 +10277,7 @@ void pc_bank_withdraw(struct map_session_data *sd, int money) {
 		return;
 	} else if ( limit_check > MAX_ZENY ) {
 		/* no official response for this scenario exists. */
-		clif->colormes(sd->fd,COLOR_RED,msg_txt(1482));
+		clif->colormes(sd->fd,COLOR_RED,atcommand->msg_txt(1482));
 		return;
 	}
 	

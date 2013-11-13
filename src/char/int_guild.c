@@ -894,7 +894,7 @@ int mapif_guild_created(int fd,int account_id,struct guild *g)
 	} else
 		WFIFOL(fd,6)=0;
 
-	WFIFOSET(fd,10);
+	iSocket->WFIFOSET(fd,10);
 	return 0;
 }
 
@@ -936,7 +936,7 @@ int mapif_guild_memberadded(int fd,int guild_id,int account_id,int char_id,int f
 	WFIFOL(fd,6)=account_id;
 	WFIFOL(fd,10)=char_id;
 	WFIFOB(fd,14)=flag;
-	WFIFOSET(fd,15);
+	iSocket->WFIFOSET(fd,15);
 	return 0;
 }
 
@@ -1121,7 +1121,7 @@ int mapif_guild_castle_dataload(int fd, int sz, int *castle_ids)
 		gc = inter_guildcastle_fromsql(*(castle_ids++));
 		memcpy(WFIFOP(fd, 4 + i * sizeof(*gc)), gc, sizeof(*gc));
 	}
-	WFIFOSET(fd, len);
+	iSocket->WFIFOSET(fd, len);
 	return 0;
 }
 

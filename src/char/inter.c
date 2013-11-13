@@ -436,7 +436,7 @@ void inter_vmsg_to_fd(int fd, int u_fd, int aid, char* msg, va_list ap) {
 	WFIFOL(fd,8) = aid;
 	safestrncpy((char*)WFIFOP(fd,12), msg_out, len);
 
-	WFIFOSET(fd,12 + len);
+	iSocket->WFIFOSET(fd,12 + len);
 
 	return;
 }
@@ -947,7 +947,7 @@ int mapif_account_reg_reply(int fd,int account_id,int char_id, int type)
 		if (p>= 5000)
 			ShowWarning("Too many acc regs for %d:%d, not all values were loaded.\n", account_id, char_id);
 	}
-	WFIFOSET(fd,WFIFOW(fd,2));
+	iSocket->WFIFOSET(fd,WFIFOW(fd,2));
 	return 0;
 }
 
@@ -960,7 +960,7 @@ int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason)
 		WFIFOW(fd,0) = 0x2b1f;
 		WFIFOL(fd,2) = account_id;
 		WFIFOB(fd,6) = reason;
-		WFIFOSET(fd,7);
+		iSocket->WFIFOSET(fd,7);
 		return 0;
 	}
 	return -1;
@@ -1177,7 +1177,7 @@ static void mapif_namechange_ack(int fd, int account_id, int char_id, int type, 
 	WFIFOB(fd,10) = type;
 	WFIFOB(fd,11) = flag;
 	memcpy(WFIFOP(fd, 12), name, NAME_LENGTH);
-	WFIFOSET(fd, NAME_LENGTH+13);
+	iSocket->WFIFOSET(fd, NAME_LENGTH+13);
 }
 
 int mapif_parse_NameChangeRequest(int fd)
@@ -1275,7 +1275,7 @@ int inter_parse_frommap(int fd)
 			return 0;
 	}
 
-	RFIFOSKIP(fd, len);
+	iSocket->RFIFOSKIP(fd, len);
 	return 1;
 }
 

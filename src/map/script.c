@@ -8613,7 +8613,7 @@ BUILDIN(getmobdrops)
 	
 	monster = mob->db(class_);
 	
-	for( i = 0; i < MAX_MOB_DROP; i++ )
+	for( i = 0; i < (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION); i++ )
 	{
 		if( monster->dropitem[i].nameid < 1 )
 			continue;
@@ -12431,7 +12431,7 @@ BUILDIN(recovery)
 			status->revive(&sd->bl, 100, 100);
 		else
 			status_percent_heal(&sd->bl, 100, 100);
-		clif->message(sd->fd,msg_txt(680));
+		clif->message(sd->fd,atcommand->msg_txt(680));
 	}
 	mapit->free(iter);
 	return true;
@@ -14618,7 +14618,7 @@ BUILDIN(setitemscript)
  *-------------------------------------------------------*/
 BUILDIN(addmonsterdrop) {
 	struct mob_db *monster;
-	int item_id, rate, i, c = MAX_MOB_DROP;
+	int item_id, rate, i, c = (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION);
 
 	if( script_isstring(st,2) )
 		monster = mob->db(mob->db_searchname(script_getstr(st,2)));
@@ -14646,16 +14646,16 @@ BUILDIN(addmonsterdrop) {
 		rate = cap_value(rate,1,10000);
 	}
 
-	for( i = 0; i < MAX_MOB_DROP; i++ ) {
+	for( i = 0; i < (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION); i++ ) {
 		if( monster->dropitem[i].nameid == item_id ) // Item ID found
 			break;
-		if( c == MAX_MOB_DROP && monster->dropitem[i].nameid < 1 ) // First empty slot
+		if( c == (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION) && monster->dropitem[i].nameid < 1 ) // First empty slot
 			c = i;
 	}
-	if( i < MAX_MOB_DROP ) // If the item ID was found, prefer it
+	if( i < (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION) ) // If the item ID was found, prefer it
 		c = i;
 
-	if( c < MAX_MOB_DROP ) {
+	if( c < (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION) ) {
 		// Fill in the slot with the item and rate
 		monster->dropitem[c].nameid = item_id;
 		monster->dropitem[c].p = rate;
@@ -14700,7 +14700,7 @@ BUILDIN(delmonsterdrop) {
 		return false;
 	}
 
-	for( i = 0; i < MAX_MOB_DROP; i++ ) {
+	for( i = 0; i < (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION); i++ ) {
 		if( monster->dropitem[i].nameid == item_id ) {
 			monster->dropitem[i].nameid = 0;
 			monster->dropitem[i].p = 0;
@@ -17349,16 +17349,16 @@ BUILDIN(montransform) {
 		if( !sd )	return true;
 
 		if( battle_config.mon_trans_disable_in_gvg && map_flag_gvg2(sd->bl.m) ){
-			clif->message(sd->fd, msg_txt(1488)); // Transforming into monster is not allowed in Guild Wars.
+			clif->message(sd->fd, atcommand->msg_txt(1488)); // Transforming into monster is not allowed in Guild Wars.
 			return true;
 		}
 
 		if( sd->disguise != -1 ){
-			clif->message(sd->fd, msg_txt(1486)); // Cannot transform into monster while in disguise.
+			clif->message(sd->fd, atcommand->msg_txt(1486)); // Cannot transform into monster while in disguise.
 			return true;
 		}
 
-		sprintf(msg, msg_txt(1485), monster->name); // Traaaansformation-!! %s form!!
+		sprintf(msg, atcommand->msg_txt(1485), monster->name); // Traaaansformation-!! %s form!!
 		clif->ShowScript(&sd->bl, msg);
 		status_change_end(bl, SC_MONSTER_TRANSFORM, INVALID_TIMER); // Clear previous
 		sc_start2(bl, SC_MONSTER_TRANSFORM, 100, mob_id, type, tick);

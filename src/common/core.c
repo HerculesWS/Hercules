@@ -286,6 +286,7 @@ void core_defaults(void) {
 	sql_defaults();
 	timer_defaults();
 	db_defaults();
+	socket_defaults();
 #endif
 }
 /*======================================

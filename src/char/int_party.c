@@ -344,7 +344,7 @@ int mapif_party_created(int fd,int account_id,int char_id,struct party *p)
 		WFIFOL(fd,11)=0;
 		memset(WFIFOP(fd,15),0,NAME_LENGTH);
 	}
-	WFIFOSET(fd,39);
+	iSocket->WFIFOSET(fd,39);
 
 	return 0;
 }
@@ -357,7 +357,7 @@ static void mapif_party_noinfo(int fd, int party_id, int char_id)
 	WFIFOW(fd,2) = 12;
 	WFIFOL(fd,4) = char_id;
 	WFIFOL(fd,8) = party_id;
-	WFIFOSET(fd,12);
+	iSocket->WFIFOSET(fd,12);
 	ShowWarning("int_party: info not found (party_id=%d char_id=%d)\n", party_id, char_id);
 }
 
@@ -384,7 +384,7 @@ int mapif_party_memberadded(int fd, int party_id, int account_id, int char_id, i
 	WFIFOL(fd,6) = account_id;
 	WFIFOL(fd,10) = char_id;
 	WFIFOB(fd,14) = flag;
-	WFIFOSET(fd,15);
+	iSocket->WFIFOSET(fd,15);
 
 	return 0;
 }

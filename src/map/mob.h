@@ -24,6 +24,9 @@
 #define MAX_MVP_DROP 3
 #define MAX_STEAL_DROP 7
 
+// The number of drops expansion all mobs have. [Cretino]
+#define MAX_MOB_DROP_EXPANSION 10
+
 //Min time between AI executions
 #define MIN_MOBTHINKTIME 100
 //Min time before mobs do a check to call nearby friends for help (or for slaves to support their master)
@@ -107,7 +110,7 @@ struct mob_db {
 	short range2,range3;
 	short race2;	// celest
 	unsigned short lv;
-	struct { int nameid,p; } dropitem[MAX_MOB_DROP];
+	struct { int nameid,p; } dropitem[MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION];
 	struct { int nameid,p; } mvpitem[MAX_MVP_DROP];
 	struct status_data status;
 	struct view_data vd;
