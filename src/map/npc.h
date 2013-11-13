@@ -5,6 +5,8 @@
 #ifndef _NPC_H_
 #define _NPC_H_
 
+#include "../common/HPM.h" //struct HPluginData
+
 #include "map.h" // struct block_list
 #include "status.h" // struct status_change
 #include "unit.h" // struct unit_data
@@ -74,8 +76,10 @@ struct npc_data {
 			char killer_name[NAME_LENGTH];
 		} tomb;
 	} u;
+	/* HPData Support for npc_data */
+	struct HPluginData **hdata;
+	unsigned int hdatac;
 };
-
 
 
 #define START_NPC_NUM 110000000

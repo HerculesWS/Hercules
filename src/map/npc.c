@@ -1763,6 +1763,8 @@ void npc_unload_duplicates(struct npc_data* nd) {
 //Removes an npc from map and db.
 //Single is to free name (for duplicates).
 int npc_unload(struct npc_data* nd, bool single) {
+	unsigned int i;
+	
 	nullpo_ret(nd);
 
 	npc->remove_map(nd);
@@ -1849,6 +1851,15 @@ int npc_unload(struct npc_data* nd, bool single) {
 		aFree(nd->ud);
 		nd->ud = NULL;
 	}
+	
+	for( i = 0; i < nd->hdatac; i++ ) {
+		if( nd->hdata[i]->flag.free ) {
+			aFree(nd->hdata[i]->data);
+		}
+		aFree(nd->hdata[i]);
+	}
+	if( nd->hdata )
+		aFree(nd->hdata);
 	
 	aFree(nd);
 

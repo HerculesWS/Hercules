@@ -2397,8 +2397,8 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 			for( k = 0; k < sd->hdatac; k++ ) {
 				if( sd->hdata[k]->flag.free ) {
 					aFree(sd->hdata[k]->data);
-					aFree(sd->hdata[k]);
 				}
+				aFree(sd->hdata[k]);
 			}
 			if( sd->hdata )
 				aFree(sd->hdata);
