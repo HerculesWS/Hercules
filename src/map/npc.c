@@ -43,12 +43,12 @@ struct npc_interface npc_s;
 struct view_data* npc_get_viewdata(int class_)
 {	//Returns the viewdata for normal npc classes.
 	if( class_ == INVISIBLE_CLASS )
-		return &npc->npc_viewdb[0];
+		return &npc->viewdb[0];
 	if (npcdb_checkid(class_) || class_ == WARP_CLASS){
 		if( class_ > MAX_NPC_CLASS2_START ){
-			return &npc->npc_viewdb2[class_-MAX_NPC_CLASS2_START];
+			return &npc->viewdb2[class_-MAX_NPC_CLASS2_START];
 		}else{
-			return &npc->npc_viewdb[class_];
+			return &npc->viewdb[class_];
 		}
 	}
 	return NULL;
@@ -57,15 +57,15 @@ struct view_data* npc_get_viewdata(int class_)
 /// Returns a new npc id that isn't being used in id_db.
 /// Fatal error if nothing is available.
 int npc_get_new_npc_id(void) {
-	if( npc->npc_id >= START_NPC_NUM && !map->blid_exists(npc->npc_id) )
-		return npc->npc_id++;// available
+	if( npc->id >= START_NPC_NUM && !map->blid_exists(npc->id) )
+		return npc->id++;// available
 	else {// find next id
-		int base_id = npc->npc_id;
-		while( base_id != ++npc->npc_id ) {
-			if( npc->npc_id < START_NPC_NUM )
-				npc->npc_id = START_NPC_NUM;
-			if( !map->blid_exists(npc->npc_id) )
-				return npc->npc_id++;// available
+		int base_id = npc->id;
+		while( base_id != ++npc->id ) {
+			if( npc->id < START_NPC_NUM )
+				npc->id = START_NPC_NUM;
+			if( !map->blid_exists(npc->id) )
+				return npc->id++;// available
 		}
 		// full loop, nothing available
 		ShowFatalError("npc_get_new_npc_id: All ids are taken. Exiting...");
@@ -133,7 +133,7 @@ int npc_enable_sub(struct block_list *bl, va_list ap)
 
 		if( npc->ontouch_event(sd,nd) > 0 && npc->ontouch2_event(sd,nd) > 0 )
 		{ // failed to run OnTouch event, so just click the npc
-			if (sd->npc_id != 0)
+			if (sd->id != 0)
 				return 0;
 
 			pc_stop_walking(sd,1);
@@ -198,12 +198,12 @@ int npc_rr_secure_timeout_timer(int tid, int64 tick, int id, intptr_t data) {
 #ifdef SECURE_NPCTIMEOUT
 	struct map_session_data* sd = NULL;
 	unsigned int timeout = NPC_SECURE_TIMEOUT_NEXT;
-	if( (sd = map->id2sd(id)) == NULL || !sd->npc_id ) {
-		if( sd ) sd->npc_idle_timer = INVALID_TIMER;
+	if( (sd = map->id2sd(id)) == NULL || !sd->id ) {
+		if( sd ) sd->idle_timer = INVALID_TIMER;
 		return 0;//Not logged in anymore OR no longer attached to a npc
 	}
 	
-	switch( sd->npc_idle_type ) {
+	switch( sd->idle_type ) {
 		case NPCT_INPUT:
 			timeout = NPC_SECURE_TIMEOUT_INPUT;
 			break;
@@ -213,7 +213,7 @@ int npc_rr_secure_timeout_timer(int tid, int64 tick, int id, intptr_t data) {
 		//case NPCT_WAIT: var starts with this value
 	}
 	
-	if( DIFF_TICK(tick,sd->npc_idle_tick) > (timeout*1000) ) {
+	if( DIFF_TICK(tick,sd->idle_tick) > (timeout*1000) ) {
 		/**
 		 * If we still have the NPC script attached, tell it to stop.
 		 **/
@@ -221,15 +221,15 @@ int npc_rr_secure_timeout_timer(int tid, int64 tick, int id, intptr_t data) {
 			sd->st->state = END;
 		sd->state.menu_or_input = 0;
 		sd->npc_menu = 0;
-		clif->scriptmes(sd, sd->npc_id, " ");
+		clif->scriptmes(sd, sd->id, " ");
 		/**
 		 * This guy's been idle for longer than allowed, close him.
 		 **/
-		clif->scriptclose(sd,sd->npc_id);
-		clif->scriptclear(sd,sd->npc_id);
-		sd->npc_idle_timer = INVALID_TIMER;
+		clif->scriptclose(sd,sd->id);
+		clif->scriptclear(sd,sd->id);
+		sd->idle_timer = INVALID_TIMER;
 	} else //Create a new instance of ourselves to continue
-		sd->npc_idle_timer = timer->add(timer->gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc->secure_timeout_timer,sd->bl.id,0);
+		sd->idle_timer = timer->add(timer->gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc->secure_timeout_timer,sd->bl.id,0);
 #endif
 	return 0;
 }
@@ -241,16 +241,16 @@ int npc_event_dequeue(struct map_session_data* sd)
 {
 	nullpo_ret(sd);
 
-	if(sd->npc_id) { //Current script is aborted.
+	if(sd->id) { //Current script is aborted.
 		if(sd->state.using_fake_npc){
-			clif->clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
+			clif->clearunit_single(sd->id, CLR_OUTSIGHT, sd->fd);
 			sd->state.using_fake_npc = 0;
 		}
 		if (sd->st) {
 			script->free_state(sd->st);
 			sd->st = NULL;
 		}
-		sd->npc_id = 0;
+		sd->id = 0;
 	}
 
 	if (!sd->eventqueue[0][0])
@@ -734,7 +734,7 @@ int npc_settimerevent_tick(struct npc_data* nd, int newtimer)
 
 int npc_event_sub(struct map_session_data* sd, struct event_data* ev, const char* eventname)
 {
-	if ( sd->npc_id != 0 )
+	if ( sd->id != 0 )
 	{
 		//Enqueue the event trigger.
 		int i;
@@ -854,7 +854,7 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 	nullpo_retr(1, sd);
 
 	// Why not enqueue it? [Inkfish]
-	//if(sd->npc_id)
+	//if(sd->id)
 	//	return 1;
 
 	for(i=0;i<map->list[m].npc_num;i++) {
@@ -1057,7 +1057,7 @@ struct npc_data* npc_checknear(struct map_session_data* sd, struct block_list* b
 	if(bl->type != BL_NPC) return NULL;
 	nd = (TBL_NPC*)bl;
 
-	if(sd->state.using_fake_npc && sd->npc_id == bl->id)
+	if(sd->state.using_fake_npc && sd->id == bl->id)
 		return nd;
 
 	if (nd->class_<0) //Class-less npc, enable click from anywhere.
@@ -1121,7 +1121,7 @@ int npc_click(struct map_session_data* sd, struct npc_data* nd)
 {
 	nullpo_retr(1, sd);
 
-	if (sd->npc_id != 0) {
+	if (sd->id != 0) {
 		ShowError("npc_click: npc_id != 0\n");
 		return 1;
 	}
@@ -1158,11 +1158,11 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing)
 {
 	nullpo_retr(1, sd);
 
-	if( id != sd->npc_id ){
-		TBL_NPC* nd_sd=(TBL_NPC*)map->id2bl(sd->npc_id);
+	if( id != sd->id ){
+		TBL_NPC* nd_sd=(TBL_NPC*)map->id2bl(sd->id);
 		TBL_NPC* nd=(TBL_NPC*)map->id2bl(id);
-		ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
-			nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->npc_id,
+		ShowDebug("npc_scriptcont: %s (sd->id=%d) is not %s (id=%d).\n",
+			nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->id,
 		  	nd?(char*)nd->name:"'Unknown NPC'", (int)id);
 		return 1;
 	}
@@ -1180,7 +1180,7 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing)
 	/**
 	 * Update the last NPC iteration
 	 **/
-	sd->npc_idle_tick = timer->gettick();
+	sd->idle_tick = timer->gettick();
 #endif
 
 	/**
@@ -1210,8 +1210,8 @@ int npc_buysellsel(struct map_session_data* sd, int id, int type) {
 
 	if (nd->subtype!=SHOP) {
 		ShowError("no such shop npc : %d\n",id);
-		if (sd->npc_id == id)
-			sd->npc_id=0;
+		if (sd->id == id)
+			sd->id=0;
 		return 1;
 	}
     if (nd->option & OPTION_INVISIBLE) // can't buy if npc is not visible (hack?)
@@ -1760,7 +1760,7 @@ int npc_unload(struct npc_data* nd, bool single) {
 
 	if( single && nd->path ) {
 		struct npc_path_data* npd = NULL;
-		if( nd->path && nd->path != npc->npc_last_ref ) {
+		if( nd->path && nd->path != npc->last_ref ) {
 			npd = strdb_get(npc->path_db, nd->path);
 		}
 
@@ -1978,7 +1978,7 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 		safestrncpy(nd->exname, newname, sizeof(nd->exname));
 	}
 
-	if( npc->npc_last_path != filepath ) {
+	if( npc->last_path != filepath ) {
 		struct npc_path_data * npd = NULL;
 
 		if( !(npd = strdb_get(npc->path_db,filepath) ) ) {
@@ -1994,13 +1994,13 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 		nd->path = npd->path;
 		npd->references++;
 
-		npc->npc_last_npd = npd;
-		npc->npc_last_ref = npd->path;
-		npc->npc_last_path = (char*) filepath;
+		npc->last_npd = npd;
+		npc->last_ref = npd->path;
+		npc->last_path = (char*) filepath;
 	} else {
-		nd->path = npc->npc_last_ref;
-		if( npc->npc_last_npd )
-			npc->npc_last_npd->references++;
+		nd->path = npc->last_ref;
+		if( npc->last_npd )
+			npc->last_npd->references++;
 	}
 }
 
@@ -2150,7 +2150,7 @@ const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const char* s
 	nd->u.warp.y = to_y;
 	nd->u.warp.xs = xs;
 	nd->u.warp.ys = ys;
-	npc->npc_warp++;
+	npc->warp++;
 	nd->bl.type = BL_NPC;
 	nd->subtype = WARP;
 	npc->setcells(nd);
@@ -2268,7 +2268,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 	nd->class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
 	nd->speed = 200;
 
-	++npc->npc_shop;
+	++npc->shop;
 	nd->bl.type = BL_NPC;
 	nd->subtype = type;
 	if( m >= 0 ) {// normal shop npc
@@ -2457,7 +2457,7 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 	nd->u.scr.label_list = label_list;
 	nd->u.scr.label_list_num = label_list_num;
 
-	++npc->npc_script;
+	++npc->script;
 	nd->bl.type = BL_NPC;
 	nd->subtype = SCRIPT;
 
@@ -2593,7 +2593,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 	nd->subtype = (enum npc_subtype)type;
 	switch( type ) {
 		case SCRIPT:
-			++npc->npc_script;
+			++npc->script;
 			nd->u.scr.xs = xs;
 			nd->u.scr.ys = ys;
 			nd->u.scr.script = dnd->u.scr.script;
@@ -2603,13 +2603,13 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 
 		case SHOP:
 		case CASHSHOP:
-			++npc->npc_shop;
+			++npc->shop;
 			nd->u.shop.shop_item = dnd->u.shop.shop_item;
 			nd->u.shop.count = dnd->u.shop.count;
 			break;
 
 		case WARP:
-			++npc->npc_warp;
+			++npc->warp;
 			if( !battle_config.warp_point_debug )
 				nd->class_ = WARP_CLASS;
 			else
@@ -2857,7 +2857,7 @@ int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const c
 		return 0;
 	}
 
-	if( sd->npc_id != 0 ) { // Enqueue the event trigger.
+	if( sd->id != 0 ) { // Enqueue the event trigger.
 		int i;
 		ARR_FIND( 0, MAX_EVENTQUEUE, i, sd->eventqueue[i][0] == '\0' );
 		if( i < MAX_EVENTQUEUE ) {
@@ -3100,7 +3100,7 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 	// spawn / cache the new mobs
 	if( battle_config.dynamic_mobs && map->addmobtolist(data->m, data) >= 0 ) {
 		data->state.dynamic = true;
-		npc->npc_cache_mob += data->num;
+		npc->cache_mob += data->num;
 
 		// check if target map has players
 		// (usually shouldn't occur when map server is just starting,
@@ -3111,10 +3111,10 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 	} else {
 		data->state.dynamic = false;
 		npc->parse_mob2(data);
-		npc->npc_delay_mob += data->num;
+		npc->delay_mob += data->num;
 	}
 
-	npc->npc_mob++;
+	npc->mob++;
 
 	return strchr(start,'\n');// continue
 }
@@ -3763,8 +3763,8 @@ int npc_script_event(struct map_session_data* sd, enum npce_event type)
 		ShowError("npc_script_event: NULL sd. Event Type %d\n", type);
 		return 0;
 	}
-	for (i = 0; i<npc->script_event[type].event_count; i++)
-		npc->event_sub(sd,npc->script_event[type].event[i],npc->script_event[type].event_name[i]);
+	for (i = 0; i<npc->script_event_st[type].event_count; i++)
+		npc->event_sub(sd,npc->script_event_st[type].event[i],npc->script_event_st[type].event_name[i]);
 	return i;
 }
 
@@ -3794,15 +3794,15 @@ void npc_read_event_script(void)
 		char name[64]="::";
 		safestrncpy(name+2,config[i].event_name,62);
 
-		npc->script_event[i].event_count = 0;
+		npc->script_event_st[i].event_count = 0;
 		iter = db_iterator(npc->ev_db);
 		for( data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key) )
 		{
 			const char* p = key.str;
 			struct event_data* ed = DB->data2ptr(data);
-			unsigned char count = npc->script_event[i].event_count;
+			unsigned char count = npc->script_event_st[i].event_count;
 
-			if( count >= ARRAYLENGTH(npc->script_event[i].event) )
+			if( count >= ARRAYLENGTH(npc->script_event_st[i].event) )
 			{
 				ShowWarning("npc_read_event_script: too many occurences of event '%s'!\n", config[i].event_name);
 				break;
@@ -3813,9 +3813,9 @@ void npc_read_event_script(void)
 #ifdef ENABLE_CASE_CHECK
 				if( strcmp(name, p) != 0 ) DeprecationWarning2("npc_read_event_script", p, name, config[i].event_name); // TODO
 #endif // ENABLE_CASE_CHECK
-				npc->script_event[i].event[count] = ed;
-				npc->script_event[i].event_name[count] = key.str;
-				npc->script_event[i].event_count++;
+				npc->script_event_st[i].event[count] = ed;
+				npc->script_event_st[i].event_name[count] = key.str;
+				npc->script_event_st[i].event_count++;
 			}
 		}
 		dbi_destroy(iter);
@@ -3824,7 +3824,7 @@ void npc_read_event_script(void)
 	if (battle_config.etc_log) {
 		//Print summary.
 		for (i = 0; i < NPCE_MAX; i++)
-			ShowInfo("%s: %d '%s' events.\n", config[i].name, npc->script_event[i].event_count, config[i].event_name);
+			ShowInfo("%s: %d '%s' events.\n", config[i].name, npc->script_event_st[i].event_count, config[i].event_name);
 	}
 }
 
@@ -3867,9 +3867,9 @@ int npc_reload(int reload_type) {
 		db_clear(npc->ev_db);
 		npc->ev_label_db->clear(npc->ev_label_db, npc->ev_label_db_clear_sub);
 
-		npc->npc_last_npd = NULL;
-		npc->npc_last_path = NULL;
-		npc->npc_last_ref = NULL;
+		npc->last_npd = NULL;
+		npc->last_path = NULL;
+		npc->last_ref = NULL;
 	}
 	
 	//Remove all npcs/mobs. [Skotlex]
@@ -3912,7 +3912,7 @@ int npc_reload(int reload_type) {
 		// clear mob spawn lookup index
 		mob->clear_spawninfo();
 
-		npc->npc_mob = npc->npc_cache_mob = npc->npc_delay_mob = 0;
+		npc->mob = npc->cache_mob = npc->delay_mob = 0;
 	}
 
 	if (reload_type == 1 || reload_type == 3)
@@ -3920,7 +3920,7 @@ int npc_reload(int reload_type) {
 		// reset mapflags
 		map->flags_init();
 
-		npc->npc_warp = npc->npc_shop = npc->npc_script = 0;
+		npc->warp = npc->shop = npc->script = 0;
 	}
 
 	// Reloading npcs now
@@ -3931,24 +3931,24 @@ int npc_reload(int reload_type) {
 
 	if (reload_type == 1)
 	{
-		int total_npc = (npc->npc_warp + npc->npc_shop + npc->npc_script);
+		int total_npc = (npc->warp + npc->shop + npc->script);
 
 		ShowInfo("Done loading '"CL_WHITE"%d"CL_RESET"' NPCs:"CL_CLL"\n"
 			"\t-'"CL_WHITE"%d"CL_RESET"' Warps\n"
 			"\t-'"CL_WHITE"%d"CL_RESET"' Shops\n"
 			"\t-'"CL_WHITE"%d"CL_RESET"' Scripts\n",
-			total_npc, npc->npc_warp, npc->npc_shop, npc->npc_script);
+			total_npc, npc->warp, npc->shop, npc->script);
 	}
 	else if (reload_type == 2)
 	{
 		ShowInfo("Done loading '"CL_WHITE"%d"CL_RESET"' Spawn sets"CL_CLL"\n"
 			"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
 			"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
-			npc->npc_mob, npc->npc_cache_mob, npc->npc_delay_mob);
+			npc->mob, npc->cache_mob, npc->delay_mob);
 	}
 	else if (reload_type == 3)
 	{
-		int total_npc = (npc->npc_warp + npc->npc_shop + npc->npc_script);
+		int total_npc = (npc->warp + npc->shop + npc->script);
 
 		ShowInfo ("Done loading '"CL_WHITE"%d"CL_RESET"' NPCs:"CL_CLL"\n"
 			"\t-'"CL_WHITE"%d"CL_RESET"' Warps\n"
@@ -3957,7 +3957,7 @@ int npc_reload(int reload_type) {
 			"\t-'"CL_WHITE"%d"CL_RESET"' Spawn sets\n"
 			"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
 			"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
-			total_npc, npc->npc_warp, npc->npc_shop, npc->npc_script, npc->npc_mob, npc->npc_cache_mob, npc->npc_delay_mob);
+			total_npc, npc->warp, npc->shop, npc->script, npc->mob, npc->cache_mob, npc->delay_mob);
 	}
 
 	if (reload_type == 1 || reload_type == 3)
@@ -4079,22 +4079,22 @@ int do_init_npc(bool minimal) {
 	npc->base_ud.canmove_tick   = timer->gettick();
 	
 	//Stock view data for normal npcs.
-	memset(&npc->npc_viewdb, 0, sizeof(npc->npc_viewdb));
+	memset(&npc->viewdb, 0, sizeof(npc->viewdb));
 
-	npc->npc_viewdb[0].class_ = INVISIBLE_CLASS; //Invisible class is stored here.
+	npc->viewdb[0].class_ = INVISIBLE_CLASS; //Invisible class is stored here.
 	for( i = 1; i < MAX_NPC_CLASS; i++ )
-		npc->npc_viewdb[i].class_ = i;
+		npc->viewdb[i].class_ = i;
 	for( i = MAX_NPC_CLASS2_START; i < MAX_NPC_CLASS2_END; i++ )
-		npc->npc_viewdb2[i - MAX_NPC_CLASS2_START].class_ = i;
+		npc->viewdb2[i - MAX_NPC_CLASS2_START].class_ = i;
 
 	npc->ev_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, EVENT_NAME_LENGTH);
 	npc->ev_label_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, NAME_LENGTH);
 	npc->name_db = strdb_alloc(DB_OPT_BASE, NAME_LENGTH);
 	npc->path_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, 0);
 
-	npc->npc_last_npd = NULL;
-	npc->npc_last_path = NULL;
-	npc->npc_last_ref = NULL;
+	npc->last_npd = NULL;
+	npc->last_path = NULL;
+	npc->last_ref = NULL;
 	
 	if (!minimal) {
 		npc->timer_event_ers = ers_new(sizeof(struct timer_event_data),"clif.c::timer_event_ers",ERS_OPT_NONE);
@@ -4112,7 +4112,7 @@ int do_init_npc(bool minimal) {
 			"\t-'"CL_WHITE"%d"CL_RESET"' Spawn sets\n"
 			"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
 			"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
-			npc->npc_id - START_NPC_NUM, npc->npc_warp, npc->npc_shop, npc->npc_script, npc->npc_mob, npc->npc_cache_mob, npc->npc_delay_mob);
+			npc->id - START_NPC_NUM, npc->warp, npc->shop, npc->script, npc->mob, npc->cache_mob, npc->delay_mob);
 	}
 
 	itemdb->name_constants();
@@ -4123,7 +4123,7 @@ int do_init_npc(bool minimal) {
 	npc->motd = npc->name2id("HerculesMOTD"); /* [Ind/Hercules] */
 	
 	// set up the events cache
-	memset(npc->script_event, 0, sizeof(npc->script_event));
+	memset(npc->script_event_st, 0, sizeof(npc->script_event_st));
 	npc->read_event_script();
 
 	//Debug function to locate all endless loop warps.
@@ -4143,7 +4143,7 @@ int do_init_npc(bool minimal) {
 	strcpy(npc->fake_nd->name,"FAKE_NPC");
 	memcpy(npc->fake_nd->exname, npc->fake_nd->name, 9);
 
-	npc->npc_script++;
+	npc->script++;
 	npc->fake_nd->bl.type = BL_NPC;
 	npc->fake_nd->subtype = SCRIPT;
 
@@ -4157,20 +4157,20 @@ int do_init_npc(bool minimal) {
 void npc_defaults(void) {
 	npc = &npc_s;
 
-	npc->npc_id = START_NPC_NUM;
-	npc->npc_warp = 0;
-	npc->npc_shop = 0;
-	npc->npc_script = 0;
-	npc->npc_mob = 0;
-	npc->npc_delay_mob = 0;
-	npc->npc_cache_mob = 0;
-	npc->npc_last_path = NULL;
-	npc->npc_last_ref = NULL;
-	npc->npc_last_npd = NULL;
+	npc->id = START_NPC_NUM;
+	npc->warp = 0;
+	npc->shop = 0;
+	npc->script = 0;
+	npc->mob = 0;
+	npc->delay_mob = 0;
+	npc->cache_mob = 0;
+	npc->last_path = NULL;
+	npc->last_ref = NULL;
+	npc->last_npd = NULL;
 
-	memset(&npc->script_event, 0, sizeof(npc->script_event));
-	memset(&npc->npc_viewdb, 0, sizeof(npc->npc_viewdb));
-	memset(&npc->npc_viewdb2, 0, sizeof(npc->npc_viewdb2));
+	memset(&npc->script_event_st, 0, sizeof(npc->script_event_st));
+	memset(&npc->viewdb, 0, sizeof(npc->viewdb));
+	memset(&npc->viewdb2, 0, sizeof(npc->viewdb2));
 
 	npc->motd = NULL;
 	npc->ev_db = NULL;
@@ -4260,7 +4260,7 @@ void npc_defaults(void) {
 	npc->parse_mob = npc_parse_mob;
 	npc->parse_mapflag = npc_parse_mapflag;
 	npc->parsesrcfile = npc_parsesrcfile;
-	npc->npc_script_event = npc_script_event;
+	npc->script_event = npc_script_event;
 	npc->read_event_script = npc_read_event_script;
 	npc->path_db_clear_sub = npc_path_db_clear_sub;
 	npc->ev_label_db_clear_sub = npc_ev_label_db_clear_sub;

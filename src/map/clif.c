@@ -9425,7 +9425,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		map->foreachpc(clif->friendslist_toggle_sub, sd->status.account_id, sd->status.char_id, 1);
 
 		//Login Event
-		npc->npc_script_event(sd, NPCE_LOGIN);
+		npc->script_event(sd, NPCE_LOGIN);
 	} else {
 		//For some reason the client "loses" these on warp/map-change.
 		clif->updatestatus(sd,SP_STR);
@@ -9507,7 +9507,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 	}
 
 	if(map->list[sd->bl.m].flag.loadevent) // Lance
-		npc->npc_script_event(sd, NPCE_LOADMAP);
+		npc->script_event(sd, NPCE_LOADMAP);
 
 	if (pc->checkskill(sd, SG_DEVIL) && !pc->nextjobexp(sd)) //blindness [Komurka]
 		clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_DEVIL1);

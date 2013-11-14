@@ -142,22 +142,22 @@ struct script_event_s { //Holds pointers to the commonly executed scripts for sp
 /* npc.c interface */
 struct npc_interface {
 	/* */
-	int npc_id;
-	int npc_warp;
-	int npc_shop;
-	int npc_script;
-	int npc_mob;
-	int npc_delay_mob;
-	int npc_cache_mob;
-	char *npc_last_path;
-	char *npc_last_ref;
-	struct npc_path_data *npc_last_npd;
+	int id;
+	int warp;
+	int shop;
+	int script;
+	int mob;
+	int delay_mob;
+	int cache_mob;
+	char *last_path;
+	char *last_ref;
+	struct npc_path_data *last_npd;
 
 	//For holding the view data of npc classes. [Skotlex]
-	struct view_data npc_viewdb[MAX_NPC_CLASS];
-	struct view_data npc_viewdb2[MAX_NPC_CLASS2_END - MAX_NPC_CLASS2_START];
+	struct view_data viewdb[MAX_NPC_CLASS];
+	struct view_data viewdb2[MAX_NPC_CLASS2_END - MAX_NPC_CLASS2_START];
 
-	struct script_event_s script_event[NPCE_MAX];
+	struct script_event_s script_event_st[NPCE_MAX];
 	/* */
 	struct npc_data *motd;
 	DBMap *ev_db; // const char* event_name -> struct event_data*
@@ -248,7 +248,7 @@ struct npc_interface {
 	const char* (*parse_mob) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
 	const char* (*parse_mapflag) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
 	int (*parsesrcfile) (const char *filepath, bool runOnInit, int reload_type);
-	int (*npc_script_event) (struct map_session_data *sd, enum npce_event type);
+	int (*script_event) (struct map_session_data *sd, enum npce_event type);
 	void (*read_event_script) (void);
 	int (*path_db_clear_sub) (DBKey key, DBData *data, va_list args);
 	int (*ev_label_db_clear_sub) (DBKey key, DBData *data, va_list args);

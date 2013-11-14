@@ -1688,7 +1688,7 @@ int map_quit(struct map_session_data *sd) {
 			script->queue_remove(sd->queues[i],sd->status.account_id);
 	}
 
-	npc->npc_script_event(sd, NPCE_LOGOUT);
+	npc->script_event(sd, NPCE_LOGOUT);
 
 	//Unit_free handles clearing the player related data,
 	//map->quit handles extra specific data which is related to quitting normally

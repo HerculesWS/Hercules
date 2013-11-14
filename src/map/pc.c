@@ -4997,7 +4997,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 
 		if (sd->npc_id)
 			npc->event_dequeue(sd);
-		npc->npc_script_event(sd, NPCE_LOGOUT);
+		npc->script_event(sd, NPCE_LOGOUT);
 		//remove from map, THEN change x/y coordinates
 		unit->remove_map_pc(sd,clrtype);
 		sd->mapindex = mapindex;
@@ -5878,7 +5878,7 @@ int pc_checkbaselevelup(struct map_session_data *sd) {
 		sc_start(&sd->bl,status->skill2sc(AL_BLESSING),100,10,600000);
 	}
 	clif->misceffect(&sd->bl,0);
-	npc->npc_script_event(sd, NPCE_BASELVUP); //LORDALFA - LVLUPEVENT
+	npc->script_event(sd, NPCE_BASELVUP); //LORDALFA - LVLUPEVENT
 
 	if(sd->status.party_id)
 		party->send_levelup(sd);
@@ -5927,7 +5927,7 @@ int pc_checkjoblevelup(struct map_session_data *sd)
 	if (pc->checkskill(sd, SG_DEVIL) && !pc->nextjobexp(sd))
 		clif->status_change(&sd->bl,SI_DEVIL1, 1, 0, 0, 0, 1); //Permanent blind effect from SG_DEVIL.
 
-	npc->npc_script_event(sd, NPCE_JOBLVUP);
+	npc->script_event(sd, NPCE_JOBLVUP);
 	return 1;
 }
 
@@ -6840,7 +6840,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			npc->event(sd, queue->onDeath, 0);
 	}
 	
-	npc->npc_script_event(sd,NPCE_DIE);
+	npc->script_event(sd,NPCE_DIE);
 		
 	// Clear anything NPC-related when you die and was interacting with one.
 	if (sd->npc_id || sd->npc_shopid) {
@@ -6918,7 +6918,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	if (src && src->type == BL_PC) {
 		struct map_session_data *ssd = (struct map_session_data *)src;
 		pc->setparam(ssd, SP_KILLEDRID, sd->bl.id);
-		npc->npc_script_event(ssd, NPCE_KILLPC);
+		npc->script_event(ssd, NPCE_KILLPC);
 
 		if (battle_config.pk_mode&2) {
 			ssd->status.manner -= 5;
