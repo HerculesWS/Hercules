@@ -48,7 +48,7 @@ void sample_packet0f3(int fd) {
 	ShowInfo("sample_packet0f3: Hello World! received 0xf3 for '%s', redirecting!\n",sd->status.name);
 	
 	/* sample usage of appending data to a socket_data (session[]) entry */
-	if( !(data = HPMi->getFromSession(session[fd],HPMi->pid,0)) ) {
+	if( !(data = getFromSession(session[fd],0)) ) {
 		CREATE(data,struct sample_data_struct,1);
 		
 		data->lastMSGPosition.map = sd->status.last_point.map;
@@ -57,17 +57,17 @@ void sample_packet0f3(int fd) {
 		data->someNumber = rand()%777;
 		
 		ShowInfo("Created Appended session[] data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
-		HPMi->addToSession(session[fd],data,HPMi->pid,0,true);
+		addToSession(session[fd],data,0,true);
 	} else {
 		ShowInfo("Existent Appended session[] data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		if( rand()%4 == 2 ) {
 			ShowInfo("Removing Appended session[] data\n");
-			HPMi->removeFromSession(session[fd],HPMi->pid,0);
+			removeFromSession(session[fd],0);
 		}
 	}
 	
 	/* sample usage of appending data to a map_session_data (sd) entry */
-	if( !(data = HPMi->getFromMSD(sd,HPMi->pid,0)) ) {
+	if( !(data = getFromMSD(sd,0)) ) {
 		CREATE(data,struct sample_data_struct,1);
 		
 		data->lastMSGPosition.map = sd->status.last_point.map;
@@ -76,12 +76,12 @@ void sample_packet0f3(int fd) {
 		data->someNumber = rand()%777;
 		
 		ShowInfo("Created Appended map_session_data data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
-		HPMi->addToMSD(sd,data,HPMi->pid,0,true);
+		addToMSD(sd,data,0,true);
 	} else {
 		ShowInfo("Existent Appended map_session_data data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		if( rand()%4 == 2 ) {
 			ShowInfo("Removing Appended map_session_data data\n");
-			HPMi->removeFromMSD(sd,HPMi->pid,0);
+			removeFromMSD(sd,0);
 		}
 	}
 
@@ -124,7 +124,7 @@ HPExport void plugin_init (void) {
 	script = GET_SYMBOL("script");
 	clif = GET_SYMBOL("clif");
 	pc = GET_SYMBOL("pc");
-	
+
 	/* session[] */
 	session = GET_SYMBOL("session");
 

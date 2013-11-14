@@ -5372,9 +5372,6 @@ void map_hp_symbols(void) {
 	/* specific */
 	HPM->share(atcommand->create,"addCommand");
 	HPM->share(script->addScript,"addScript");
-	HPM->share(HPM_map_addToMSD,"addToMSD");
-	HPM->share(HPM_map_getFromMSD,"getFromMSD");
-	HPM->share(HPM_map_removeFromMSD,"removeFromMSD");
 	/* vars */
 	HPM->share(map->list,"map->list");
 }
@@ -5436,6 +5433,7 @@ int do_init(int argc, char *argv[])
 
 	HPM->load_sub = HPM_map_plugin_load_sub;
 	HPM->symbol_defaults_sub = map_hp_symbols;
+	HPM->grabHPDataSub = HPM_map_grabHPData;
 	HPM->config_read();
 	
 	HPM->event(HPET_PRE_INIT);

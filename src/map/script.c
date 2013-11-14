@@ -3901,6 +3901,11 @@ void do_final_script(void) {
 	if( script->word_buf != NULL )
 		aFree(script->word_buf);
 	
+	if( script->local_casecheck_str_buf )
+		aFree(script->local_casecheck_str_buf);
+	if( script->local_casecheck_str_data )
+		aFree(script->local_casecheck_str_data);
+	
 	ers_destroy(script->st_ers);
 	ers_destroy(script->stack_ers);
 	

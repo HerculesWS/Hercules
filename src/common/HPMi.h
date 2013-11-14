@@ -77,6 +77,12 @@ enum HPluginHookType {
 	HOOK_TYPE_POST,
 };
 
+enum HPluginDataTypes {
+	HPDT_SESSION,
+	HPDT_MSD,
+	HPDT_NPCD,
+};
+
 #define addHookPre(tname,hook) HPMi->AddHook(HOOK_TYPE_PRE,tname,hook,HPMi->pid)
 #define addHookPost(tname,hook) HPMi->AddHook(HOOK_TYPE_POST,tname,hook,HPMi->pid)
 /* need better names ;/ */
@@ -85,6 +91,19 @@ enum HPluginHookType {
 #define hookStopped() HPMi->HookStopped()
 
 #define addArg(name,param,func,help) HPMi->addArg(HPMi->pid,name,param,func,help)
+/* HPData handy redirects */
+/* session[] */
+#define addToSession(ptr,data,index,autofree) HPMi->addToHPData(HPDT_SESSION,HPMi->pid,ptr,data,index,autofree)
+#define getFromSession(ptr,index) HPMi->getFromHPData(HPDT_SESSION,HPMi->pid,ptr,index)
+#define removeFromSession(ptr,index) HPMi->removeFromHPData(HPDT_SESSION,HPMi->pid,ptr,index)
+/* map_session_data */
+#define addToMSD(ptr,data,index,autofree) HPMi->addToHPData(HPDT_MSD,HPMi->pid,ptr,data,index,autofree)
+#define getFromMSD(ptr,index) HPMi->getFromHPData(HPDT_MSD,HPMi->pid,ptr,index)
+#define removeFromMSD(ptr,index) HPMi->removeFromHPData(HPDT_MSD,HPMi->pid,ptr,index)
+/* npc_data */
+#define addToNPCD(ptr,data,index,autofree) HPMi->addToHPData(HPDT_NPCD,HPMi->pid,ptr,data,index,autofree)
+#define getFromNPCD(ptr,index) HPMi->getFromHPData(HPDT_NPCD,HPMi->pid,ptr,index)
+#define removeFromNPCD(ptr,index) HPMi->removeFromHPData(HPDT_NPCD,HPMi->pid,ptr,index)
 
 /* Hercules Plugin Mananger Include Interface */
 HPExport struct HPMi_interface {
@@ -95,14 +114,10 @@ HPExport struct HPMi_interface {
 	bool (*addCommand) (char *name, bool (*func)(const int fd, struct map_session_data* sd, const char* command, const char* message,struct AtCommandInfo *info));
 	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st));
 	void (*addCPCommand) (char *name, CParseFunc func);
-	/* map_session_data */
-	void (*addToMSD) (struct map_session_data *sd, void *data, unsigned int id, unsigned int type, bool autofree);
-	void *(*getFromMSD) (struct map_session_data *sd, unsigned int id, unsigned int type);
-	void (*removeFromMSD) (struct map_session_data *sd, unsigned int id, unsigned int type);
-	/* session[] */
-	void (*addToSession) (struct socket_data *sess, void *data, unsigned int id, unsigned int type, bool autofree);
-	void *(*getFromSession) (struct socket_data *sess, unsigned int id, unsigned int type);
-	void (*removeFromSession) (struct socket_data *sess, unsigned int id, unsigned int type);
+	/* HPM Custom Data */
+	void (*addToHPData) (enum HPluginDataTypes type, unsigned int pluginID, void *ptr, void *data, unsigned int index, bool autofree);
+	void *(*getFromHPData) (enum HPluginDataTypes type, unsigned int pluginID, void *ptr, unsigned int index);
+	void (*removeFromHPData) (enum HPluginDataTypes type, unsigned int pluginID, void *ptr, unsigned int index);
 	/* packet */
 	bool (*addPacket) (unsigned short cmd, unsigned short length, void (*receive)(int fd), unsigned int point, unsigned int pluginID);
 	/* Hooking */

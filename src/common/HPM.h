@@ -82,6 +82,11 @@ struct HPMArgData {
 	bool has_param;/* because of the weird "--arg<space>param" instead of the "--arg=param" */
 };
 
+struct HPDataOperationStorage {
+	void **HPDataSRCPtr;
+	unsigned int *hdatac;
+};
+
 /* Hercules Plugin Manager Interface */
 struct HPM_interface {
 	/* vars */
@@ -125,6 +130,9 @@ struct HPM_interface {
 	bool (*parse_arg) (const char *arg, int* index, char *argv[], bool param);
 	void (*arg_help) (void);
 	int (*arg_db_clear_sub) (DBKey key, DBData *data, va_list args);
+	void (*grabHPData) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
+	/* for server-specific HPData e.g. map_session_data */
+	void (*grabHPDataSub) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
 } HPM_s;
 
 struct HPM_interface *HPM;

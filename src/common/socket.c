@@ -615,8 +615,8 @@ static void delete_session(int fd)
 		for(i = 0; i < session[fd]->hdatac; i++) {
 			if( session[fd]->hdata[i]->flag.free ) {
 				aFree(session[fd]->hdata[i]->data);
-				aFree(session[fd]->hdata[i]);
 			}
+			aFree(session[fd]->hdata[i]);
 		}
 		if( session[fd]->hdata )
 			aFree(session[fd]->hdata);
