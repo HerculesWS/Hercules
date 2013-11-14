@@ -223,7 +223,7 @@ void set_char_charselect(int account_id)
 		WFIFOHEAD(login_fd,6);
 		WFIFOW(login_fd,0) = 0x272b;
 		WFIFOL(login_fd,2) = account_id;
-		WFIFOSET(login_fd,6);
+		iSocket->WFIFOSET(login_fd,6);
 	}
 
 }
@@ -269,7 +269,7 @@ void set_char_online(int map_id, int char_id, int account_id)
 		WFIFOHEAD(login_fd,6);
 		WFIFOW(login_fd,0) = 0x272b;
 		WFIFOL(login_fd,2) = account_id;
-		WFIFOSET(login_fd,6);
+		iSocket->WFIFOSET(login_fd,6);
 	}
 }
 
@@ -320,7 +320,7 @@ void set_char_offline(int char_id, int account_id)
 		WFIFOHEAD(login_fd,6);
 		WFIFOW(login_fd,0) = 0x272c;
 		WFIFOL(login_fd,2) = account_id;
-		WFIFOSET(login_fd,6);
+		iSocket->WFIFOSET(login_fd,6);
 	}
 }
 
@@ -378,7 +378,7 @@ void set_all_offline(int id)
 	//Tell login-server to also mark all our characters as offline.
 	WFIFOHEAD(login_fd,2);
 	WFIFOW(login_fd,0) = 0x2737;
-	WFIFOSET(login_fd,2);
+	iSocket->WFIFOSET(login_fd,2);
 }
 
 void set_all_offline_sql(void)
@@ -1935,7 +1935,7 @@ void mmo_char_send099d(int fd, struct char_session_data *sd) {
 	WFIFOHEAD(fd,4 + (MAX_CHARS*MAX_CHAR_BUF));
 	WFIFOW(fd,0) = 0x99d;
 	WFIFOW(fd,2) = mmo_chars_fromsql(sd, WFIFOP(fd,4)) + 4;
-	WFIFOSET(fd,WFIFOW(fd,2));
+	iSocket->WFIFOSET(fd,WFIFOW(fd,2));
 }
 int mmo_char_send006b(int fd, struct char_session_data* sd);
 //----------------------------------------
@@ -1952,7 +1952,7 @@ void mmo_char_send082d(int fd, struct char_session_data* sd) {
 	WFIFOB(fd,7) = sd->char_slots;
 	WFIFOB(fd,8) = sd->char_slots;
 	memset(WFIFOP(fd,9), 0, 20); // unused bytes
-	WFIFOSET(fd,29);
+	iSocket->WFIFOSET(fd,29);
 	mmo_char_send006b(fd,sd);
 	
 }
@@ -1979,7 +1979,7 @@ int mmo_char_send006b(int fd, struct char_session_data* sd)
 	memset(WFIFOP(fd,4 + offset), 0, 20); // unknown bytes
 	j+=mmo_chars_fromsql(sd, WFIFOP(fd,j));
 	WFIFOW(fd,2) = j; // packet len
-	WFIFOSET(fd,j);
+	iSocket->WFIFOSET(fd,j);
 
 	return 0;
 }
@@ -2079,7 +2079,7 @@ static void char_auth_ok(int fd, struct char_session_data *sd)
 			WFIFOHEAD(fd,3);
 			WFIFOW(fd,0) = 0x81;
 			WFIFOB(fd,2) = 8;
-			WFIFOSET(fd,3);
+			iSocket->WFIFOSET(fd,3);
 			return;
 		}
 		if (character->fd >= 0 && character->fd != fd)
@@ -2087,7 +2087,7 @@ static void char_auth_ok(int fd, struct char_session_data *sd)
 			WFIFOHEAD(fd,3);
 			WFIFOW(fd,0) = 0x81;
 			WFIFOB(fd,2) = 8;
-			WFIFOSET(fd,3);
+			iSocket->WFIFOSET(fd,3);
 			return;
 		}
 		character->fd = fd;
@@ -2098,7 +2098,7 @@ static void char_auth_ok(int fd, struct char_session_data *sd)
 		WFIFOHEAD(login_fd,6);
 		WFIFOW(login_fd,0) = 0x2716;
 		WFIFOL(login_fd,2) = sd->account_id;
-		WFIFOSET(login_fd,6);
+		iSocket->WFIFOSET(login_fd,6);
 	}
 
 	// mark session as 'authed'
@@ -2168,12 +2168,12 @@ int parse_fromlogin(int fd) {
 	// only process data from the login-server
 	if( fd != login_fd ) {
 		ShowDebug("parse_fromlogin: Disconnecting invalid session #%d (is not the login-server)\n", fd);
-		do_close(fd);
+		iSocket->do_close(fd);
 		return 0;
 	}
 
 	if( session[fd]->flag.eof ) {
-		do_close(fd);
+		iSocket->do_close(fd);
 		login_fd = -1;
 		loginif_on_disconnect();
 		return 0;
@@ -2184,7 +2184,7 @@ int parse_fromlogin(int fd) {
 		} else if( session[fd]->flag.ping != 2 ) { /* we haven't sent ping out yet */
 			WFIFOHEAD(fd,2);// sends a ping packet to login server (will receive pong 0x2718)
 			WFIFOW(fd,0) = 0x2719;
-			WFIFOSET(fd,2);
+			iSocket->WFIFOSET(fd,2);
 
 			session[fd]->flag.ping = 2;
 		}
@@ -2221,7 +2221,7 @@ int parse_fromlogin(int fd) {
 					ShowStatus("Connected to login-server (connection #%d).\n", fd);
 					loginif_on_ready();
 				}
-				RFIFOSKIP(fd,3);
+				iSocket->RFIFOSKIP(fd,3);
 			break;
 
 			// acknowledgement of account authentication request
@@ -2237,7 +2237,7 @@ int parse_fromlogin(int fd) {
 				int request_id = RFIFOL(fd,16);
 				uint32 version = RFIFOL(fd,20);
 				uint8 clienttype = RFIFOB(fd,24);
-				RFIFOSKIP(fd,25);
+				iSocket->RFIFOSKIP(fd,25);
 
 				if( session_isActive(request_id) && (sd=(struct char_session_data*)session[request_id]->session_data) &&
 					!sd->auth && sd->account_id == account_id && sd->login_id1 == login_id1 && sd->login_id2 == login_id2 && sd->sex == sex )
@@ -2254,7 +2254,7 @@ int parse_fromlogin(int fd) {
 						WFIFOHEAD(client_fd,3);
 						WFIFOW(client_fd,0) = 0x6c;
 						WFIFOB(client_fd,2) = 0;// rejected from server
-						WFIFOSET(client_fd,3);
+						iSocket->WFIFOSET(client_fd,3);
 						break;
 					}
 				}
@@ -2290,7 +2290,7 @@ int parse_fromlogin(int fd) {
 						WFIFOHEAD(i,3);
 						WFIFOW(i,0) = 0x6c;
 						WFIFOW(i,2) = 0;
-						WFIFOSET(i,3);
+						iSocket->WFIFOSET(i,3);
 					} else {
 						// send characters to player
 	#if PACKETVER >= 20130000
@@ -2303,14 +2303,14 @@ int parse_fromlogin(int fd) {
 	#endif
 					}
 				}
-				RFIFOSKIP(fd,72);
+				iSocket->RFIFOSKIP(fd,72);
 			break;
 
 			// login-server alive packet
 			case 0x2718:
 				if (RFIFOREST(fd) < 2)
 					return 0;
-				RFIFOSKIP(fd,2);
+				iSocket->RFIFOSKIP(fd,2);
 				session[fd]->flag.ping = 0;
 			break;
 
@@ -2323,7 +2323,7 @@ int parse_fromlogin(int fd) {
 
 				int acc = RFIFOL(fd,2);
 				int sex = RFIFOB(fd,6);
-				RFIFOSKIP(fd,7);
+				iSocket->RFIFOSKIP(fd,7);
 
 				if( acc > 0 )
 				{// TODO: Is this even possible?
@@ -2404,7 +2404,7 @@ int parse_fromlogin(int fd) {
 				memcpy(buf,RFIFOP(fd,0), RFIFOW(fd,2));
 				WBUFW(buf,0) = 0x3804; //Map server can now receive all kinds of reg values with the same packet. [Skotlex]
 				mapif_sendall(buf, WBUFW(buf,2));
-				RFIFOSKIP(fd, RFIFOW(fd,2));
+				iSocket->RFIFOSKIP(fd, RFIFOW(fd,2));
 			}
 			break;
 
@@ -2424,7 +2424,7 @@ int parse_fromlogin(int fd) {
 				// disconnect player if online on char-server
 				disconnect_player(RFIFOL(fd,2));
 
-				RFIFOSKIP(fd,11);
+				iSocket->RFIFOSKIP(fd,11);
 			break;
 
 			// Login server request to kick a character out. [Skotlex]
@@ -2434,7 +2434,7 @@ int parse_fromlogin(int fd) {
 			{
 				int aid = RFIFOL(fd,2);
 				struct online_char_data* character = (struct online_char_data*)idb_get(online_char_db, aid);
-				RFIFOSKIP(fd,6);
+				iSocket->RFIFOSKIP(fd,6);
 				if( character != NULL )
 				{// account is already marked as online!
 					if( character->server > -1 )
@@ -2453,7 +2453,7 @@ int parse_fromlogin(int fd) {
 							WFIFOHEAD(i,3);
 							WFIFOW(i,0) = 0x81;
 							WFIFOB(i,2) = 2; // "Someone has already logged in with this id"
-							WFIFOSET(i,3);
+							iSocket->WFIFOSET(i,3);
 							set_eof(i);
 						}
 						else // still moving to the map-server
@@ -2486,10 +2486,10 @@ int parse_fromlogin(int fd) {
 					WFIFOHEAD(fd,6);
 					WFIFOW(fd,0) = 0x2736;
 					WFIFOL(fd,2) = htonl(char_ip);
-					WFIFOSET(fd,6);
+					iSocket->WFIFOSET(fd,6);
 				}
 
-				RFIFOSKIP(fd,2);
+				iSocket->RFIFOSKIP(fd,2);
 			}
 			break;
 
@@ -2521,7 +2521,7 @@ void do_final_loginif(void)
 {
 	if( login_fd != -1 )
 	{
-		do_close(login_fd);
+		iSocket->do_close(login_fd);
 		login_fd = -1;
 	}
 }
@@ -2533,7 +2533,7 @@ int request_accreg2(int account_id, int char_id)
 		WFIFOW(login_fd,0) = 0x272e;
 		WFIFOL(login_fd,2) = account_id;
 		WFIFOL(login_fd,6) = char_id;
-		WFIFOSET(login_fd,10);
+		iSocket->WFIFOSET(login_fd,10);
 		return 1;
 	}
 	return 0;
@@ -2547,7 +2547,7 @@ int save_accreg2(unsigned char* buf, int len)
 		memcpy(WFIFOP(login_fd,4), buf, len);
 		WFIFOW(login_fd,0) = 0x2728;
 		WFIFOW(login_fd,2) = len+4;
-		WFIFOSET(login_fd,len+4);
+		iSocket->WFIFOSET(login_fd,len+4);
 		return 1;
 	}
 	return 0;
@@ -2693,7 +2693,7 @@ void mapif_server_destroy(int id)
 {
 	if( server[id].fd == -1 )
 	{
-		do_close(server[id].fd);
+		iSocket->do_close(server[id].fd);
 		server[id].fd = -1;
 	}
 }
@@ -2741,11 +2741,11 @@ int parse_frommap(int fd)
 	ARR_FIND( 0, ARRAYLENGTH(server), id, server[id].fd == fd );
 	if( id == ARRAYLENGTH(server) ) {// not a map server
 		ShowDebug("parse_frommap: Disconnecting invalid session #%d (is not a map-server)\n", fd);
-		do_close(fd);
+		iSocket->do_close(fd);
 		return 0;
 	}
 	if( session[fd]->flag.eof ) {
-		do_close(fd);
+		iSocket->do_close(fd);
 		server[id].fd = -1;
 		mapif_on_disconnect(id);
 		return 0;
@@ -2766,7 +2766,7 @@ int parse_frommap(int fd)
 				if( RFIFOREST(fd) < RFIFOW(fd, 2) )
 					return 0;
 				socket_datasync(fd, false);
-				RFIFOSKIP(fd,RFIFOW(fd,2));
+				iSocket->RFIFOSKIP(fd,RFIFOW(fd,2));
 				break;
 
 			case 0x2b0b:
@@ -2783,7 +2783,7 @@ int parse_frommap(int fd)
 					}
 					skillid2idx[RFIFOW(fd, 4 + (i*4))] = RFIFOW(fd, 6 + (i*4));
 				}
-				RFIFOSKIP(fd, RFIFOW(fd, 2));
+				iSocket->RFIFOSKIP(fd, RFIFOW(fd, 2));
 				break;
 			case 0x2afa: // Receiving map names list from the map-server
 				if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd,2))
@@ -2808,7 +2808,7 @@ int parse_frommap(int fd)
 				WFIFOW(fd,0) = 0x2afb;
 				WFIFOB(fd,2) = 0;
 				memcpy(WFIFOP(fd,3), wisp_server_name, NAME_LENGTH);
-				WFIFOSET(fd,3+NAME_LENGTH);
+				iSocket->WFIFOSET(fd,3+NAME_LENGTH);
 
 				char_send_fame_list(fd); //Send fame list.
 
@@ -2839,12 +2839,12 @@ int parse_frommap(int fd)
 								WFIFOW(fd,10+(j++)*4) = server[x].map[i];
 						if (j > 0) {
 							WFIFOW(fd,2) = j * 4 + 10;
-							WFIFOSET(fd,WFIFOW(fd,2));
+							iSocket->WFIFOSET(fd,WFIFOW(fd,2));
 						}
 					}
 				}
 				}
-				RFIFOSKIP(fd,RFIFOW(fd,2));
+				iSocket->RFIFOSKIP(fd,RFIFOW(fd,2));
 			break;
 
 			case 0x2afc: //Packet command is now used for sc_data request. [Skotlex]
@@ -2886,7 +2886,7 @@ int parse_frommap(int fd)
 					if (count > 0) {
 						WFIFOW(fd,2) = 14 + count*sizeof(struct status_change_data);
 						WFIFOW(fd,12) = count;
-						WFIFOSET(fd,WFIFOW(fd,2));
+						iSocket->WFIFOSET(fd,WFIFOW(fd,2));
 
 						//Clear the data once loaded.
 						if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `char_id`='%d'", scdata_db, aid, cid) )
@@ -2899,11 +2899,11 @@ int parse_frommap(int fd)
 					WFIFOL(fd,4) = aid;
 					WFIFOL(fd,8) = cid;
 					WFIFOW(fd,12) = 0;
-					WFIFOSET(fd,WFIFOW(fd,2));
+					iSocket->WFIFOSET(fd,WFIFOW(fd,2));
 				}
 				SQL->FreeResult(sql_handle);
 	#endif
-				RFIFOSKIP(fd, 10);
+				iSocket->RFIFOSKIP(fd, 10);
 			}
 			break;
 
@@ -2914,7 +2914,7 @@ int parse_frommap(int fd)
 					server[id].users = RFIFOW(fd,2);
 					ShowInfo("User Count: %d (Server: %d)\n", server[id].users, id);
 				}
-				RFIFOSKIP(fd, 4);
+				iSocket->RFIFOSKIP(fd, 4);
 				break;
 
 			case 0x2aff: //set MAP users
@@ -2941,7 +2941,7 @@ int parse_frommap(int fd)
 					character->char_id = cid;
 				}
 				//If any chars remain in -2, they will be cleaned in the cleanup timer.
-				RFIFOSKIP(fd,RFIFOW(fd,2));
+				iSocket->RFIFOSKIP(fd,RFIFOW(fd,2));
 			}
 			break;
 
@@ -2955,7 +2955,7 @@ int parse_frommap(int fd)
 				if (size - 13 != sizeof(struct mmo_charstatus))
 				{
 					ShowError("parse_from_map (save-char): Size mismatch! %d != %d\n", size-13, sizeof(struct mmo_charstatus));
-					RFIFOSKIP(fd,size);
+					iSocket->RFIFOSKIP(fd,size);
 					break;
 				}
 				//Check account only if this ain't final save. Final-save goes through because of the char-map reconnect
@@ -2978,9 +2978,9 @@ int parse_frommap(int fd)
 					WFIFOW(fd,0) = 0x2b21; //Save ack only needed on final save.
 					WFIFOL(fd,2) = aid;
 					WFIFOL(fd,6) = cid;
-					WFIFOSET(fd,10);
+					iSocket->WFIFOSET(fd,10);
 				}
-				RFIFOSKIP(fd,size);
+				iSocket->RFIFOSKIP(fd,size);
 			}
 			break;
 
@@ -2992,7 +2992,7 @@ int parse_frommap(int fd)
 				uint32 login_id1 = RFIFOL(fd,6);
 				uint32 login_id2 = RFIFOL(fd,10);
 				uint32 ip = RFIFOL(fd,14);
-				RFIFOSKIP(fd,18);
+				iSocket->RFIFOSKIP(fd,18);
 
 				if( runflag != CHARSERVER_ST_RUNNING )
 				{
@@ -3000,7 +3000,7 @@ int parse_frommap(int fd)
 					WFIFOW(fd,0) = 0x2b03;
 					WFIFOL(fd,2) = account_id;
 					WFIFOB(fd,6) = 0;// not ok
-					WFIFOSET(fd,7);
+					iSocket->WFIFOSET(fd,7);
 				}
 				else
 				{
@@ -3025,7 +3025,7 @@ int parse_frommap(int fd)
 					WFIFOW(fd,0) = 0x2b03;
 					WFIFOL(fd,2) = account_id;
 					WFIFOB(fd,6) = 1;// ok
-					WFIFOSET(fd,7);
+					iSocket->WFIFOSET(fd,7);
 				}
 			}
 			break;
@@ -3082,15 +3082,15 @@ int parse_frommap(int fd)
 					WFIFOHEAD(fd,30);
 					WFIFOW(fd,0) = 0x2b06;
 					memcpy(WFIFOP(fd,2), RFIFOP(fd,2), 28);
-					WFIFOSET(fd,30);
+					iSocket->WFIFOSET(fd,30);
 				} else { //Reply with nak
 					WFIFOHEAD(fd,30);
 					WFIFOW(fd,0) = 0x2b06;
 					memcpy(WFIFOP(fd,2), RFIFOP(fd,2), 28);
 					WFIFOL(fd,6) = 0; //Set login1 to 0.
-					WFIFOSET(fd,30);
+					iSocket->WFIFOSET(fd,30);
 				}
-				RFIFOSKIP(fd,39);
+				iSocket->RFIFOSKIP(fd,39);
 			}
 			break;
 
@@ -3106,7 +3106,7 @@ int parse_frommap(int fd)
 						Sql_ShowDebug(sql_handle);
 						break;
 					}
-					RFIFOSKIP(fd,10);
+					iSocket->RFIFOSKIP(fd,10);
 				}
 			break;
 
@@ -3118,9 +3118,9 @@ int parse_frommap(int fd)
 				WFIFOW(fd,0) = 0x2b09;
 				WFIFOL(fd,2) = RFIFOL(fd,2);
 				char_loadName((int)RFIFOL(fd,2), (char*)WFIFOP(fd,6));
-				WFIFOSET(fd,30);
+				iSocket->WFIFOSET(fd,30);
 
-				RFIFOSKIP(fd,6);
+				iSocket->RFIFOSKIP(fd,6);
 			break;
 
 			case 0x2b0c: // Map server send information to change an email of an account -> login-server
@@ -3130,9 +3130,9 @@ int parse_frommap(int fd)
 					WFIFOHEAD(login_fd,86);
 					memcpy(WFIFOP(login_fd,0), RFIFOP(fd,0),86); // 0x2722 <account_id>.L <actual_e-mail>.40B <new_e-mail>.40B
 					WFIFOW(login_fd,0) = 0x2722;
-					WFIFOSET(login_fd,86);
+					iSocket->WFIFOSET(login_fd,86);
 				}
-				RFIFOSKIP(fd, 86);
+				iSocket->RFIFOSKIP(fd, 86);
 			break;
 
 			case 0x2b0e: // Request from map-server to change an account's status (will just be forwarded to login server)
@@ -3151,7 +3151,7 @@ int parse_frommap(int fd)
 				short hour = RFIFOW(fd,38);
 				short minute = RFIFOW(fd,40);
 				short second = RFIFOW(fd,42);
-				RFIFOSKIP(fd,44);
+				iSocket->RFIFOSKIP(fd,44);
 
 				SQL->EscapeStringLen(sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
 				if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `account_id`,`name` FROM `%s` WHERE `name` = '%s'", char_db, esc_name) )
@@ -3187,7 +3187,7 @@ int parse_frommap(int fd)
 							WFIFOW(login_fd,0) = 0x2724;
 							WFIFOL(login_fd,2) = account_id;
 							WFIFOL(login_fd,6) = 5; // new account status
-							WFIFOSET(login_fd,10);
+							iSocket->WFIFOSET(login_fd,10);
 					break;
 					case 2: // ban
 							WFIFOHEAD(login_fd,18);
@@ -3199,26 +3199,26 @@ int parse_frommap(int fd)
 							WFIFOW(login_fd,12) = hour;
 							WFIFOW(login_fd,14) = minute;
 							WFIFOW(login_fd,16) = second;
-							WFIFOSET(login_fd,18);
+							iSocket->WFIFOSET(login_fd,18);
 					break;
 					case 3: // unblock
 							WFIFOHEAD(login_fd,10);
 							WFIFOW(login_fd,0) = 0x2724;
 							WFIFOL(login_fd,2) = account_id;
 							WFIFOL(login_fd,6) = 0; // new account status
-							WFIFOSET(login_fd,10);
+							iSocket->WFIFOSET(login_fd,10);
 					break;
 					case 4: // unban
 							WFIFOHEAD(login_fd,6);
 							WFIFOW(login_fd,0) = 0x272a;
 							WFIFOL(login_fd,2) = account_id;
-							WFIFOSET(login_fd,6);
+							iSocket->WFIFOSET(login_fd,6);
 					break;
 					case 5: // changesex
 							WFIFOHEAD(login_fd,6);
 							WFIFOW(login_fd,0) = 0x2727;
 							WFIFOL(login_fd,2) = account_id;
-							WFIFOSET(login_fd,6);
+							iSocket->WFIFOSET(login_fd,6);
 					break;
 					}
 				}
@@ -3233,7 +3233,7 @@ int parse_frommap(int fd)
 					safestrncpy((char*)WFIFOP(fd,6), name, NAME_LENGTH);
 					WFIFOW(fd,30) = type;
 					WFIFOW(fd,32) = result;
-					WFIFOSET(fd,34);
+					iSocket->WFIFOSET(fd,34);
 				}
 			}
 			break;
@@ -3284,7 +3284,7 @@ int parse_frommap(int fd)
 					char_send_fame_list(-1);
 				}
 
-				RFIFOSKIP(fd,11);
+				iSocket->RFIFOSKIP(fd,11);
 			}
 			break;
 
@@ -3294,7 +3294,7 @@ int parse_frommap(int fd)
 					return 0;
 
 				divorce_char_sql(RFIFOL(fd,2), RFIFOL(fd,6));
-				RFIFOSKIP(fd,10);
+				iSocket->RFIFOSKIP(fd,10);
 			break;
 
 			case 0x2b16: // Receive rates [Wizputer]
@@ -3308,7 +3308,7 @@ int parse_frommap(int fd)
 				if( SQL_ERROR == SQL->Query(sql_handle, "INSERT INTO `%s` SET `index`='%d',`name`='%s',`exp`='%d',`jexp`='%d',`drop`='%d'",
 					ragsrvinfo_db, fd, esc_server_name, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10)) )
 					Sql_ShowDebug(sql_handle);
-				RFIFOSKIP(fd,14);
+				iSocket->RFIFOSKIP(fd,14);
 			}
 			break;
 
@@ -3316,19 +3316,19 @@ int parse_frommap(int fd)
 				if (RFIFOREST(fd) < 6)
 					return 0;
 				set_char_offline(RFIFOL(fd,2),RFIFOL(fd,6));
-				RFIFOSKIP(fd,10);
+				iSocket->RFIFOSKIP(fd,10);
 			break;
 
 			case 0x2b18: // Reset all chars to offline [Wizputer]
 				set_all_offline(id);
-				RFIFOSKIP(fd,2);
+				iSocket->RFIFOSKIP(fd,2);
 			break;
 
 			case 0x2b19: // Character set online [Wizputer]
 				if (RFIFOREST(fd) < 10)
 					return 0;
 				set_char_online(id, RFIFOL(fd,2),RFIFOL(fd,6));
-				RFIFOSKIP(fd,10);
+				iSocket->RFIFOSKIP(fd,10);
 			break;
 
 			case 0x2b1a: // Build and send fame ranking lists [DracoRPG]
@@ -3336,7 +3336,7 @@ int parse_frommap(int fd)
 					return 0;
 				char_read_fame_list();
 				char_send_fame_list(-1);
-				RFIFOSKIP(fd,2);
+				iSocket->RFIFOSKIP(fd,2);
 			break;
 
 			case 0x2b1c: //Request to save status change data. [Skotlex]
@@ -3371,15 +3371,15 @@ int parse_frommap(int fd)
 					StrBuf->Destroy(&buf);
 				}
 	#endif
-				RFIFOSKIP(fd, RFIFOW(fd, 2));
+				iSocket->RFIFOSKIP(fd, RFIFOW(fd, 2));
 			}
 			break;
 
 			case 0x2b23: // map-server alive packet
 				WFIFOHEAD(fd,2);
 				WFIFOW(fd,0) = 0x2b24;
-				WFIFOSET(fd,2);
-				RFIFOSKIP(fd,2);
+				iSocket->WFIFOSET(fd,2);
+				iSocket->RFIFOSKIP(fd,2);
 			break;
 
 			case 0x2b26: // auth request from map-server
@@ -3401,7 +3401,7 @@ int parse_frommap(int fd)
 				login_id1  = RFIFOL(fd,10);
 				sex        = RFIFOB(fd,14);
 				ip         = ntohl(RFIFOL(fd,15));
-				RFIFOSKIP(fd,19);
+				iSocket->RFIFOSKIP(fd,19);
 
 				node = (struct auth_node*)idb_get(auth_db, account_id);
 				cd = (struct mmo_charstatus*)uidb_get(char_db_,char_id);
@@ -3431,7 +3431,7 @@ int parse_frommap(int fd)
 					WFIFOL(fd,20) = node->group_id;
 					WFIFOB(fd,24) = node->changing_mapservers;
 					memcpy(WFIFOP(fd,25), cd, sizeof(struct mmo_charstatus));
-					WFIFOSET(fd, WFIFOW(fd,2));
+					iSocket->WFIFOSET(fd, WFIFOW(fd,2));
 
 					// only use the auth once and mark user online
 					idb_remove(auth_db, account_id);
@@ -3446,7 +3446,7 @@ int parse_frommap(int fd)
 					WFIFOL(fd,10) = login_id1;
 					WFIFOB(fd,14) = sex;
 					WFIFOL(fd,15) = htonl(ip);
-					WFIFOSET(fd,19);
+					iSocket->WFIFOSET(fd,19);
 				}
 			}
 			break;
@@ -3455,7 +3455,7 @@ int parse_frommap(int fd)
 				if (RFIFOREST(fd) < 6) return 0;
 				server[id].ip = ntohl(RFIFOL(fd, 2));
 				ShowInfo("Updated IP address of map-server #%d to %d.%d.%d.%d.\n", id, CONVIP(server[id].ip));
-				RFIFOSKIP(fd,6);
+				iSocket->RFIFOSKIP(fd,6);
 			break;
 
 			case 0x3008:
@@ -3464,31 +3464,31 @@ int parse_frommap(int fd)
 				else {
 					int sfd;/* stat server fd */
 					struct hSockOpt opt;
-					RFIFOSKIP(fd, 2);/* we skip first 2 bytes which are the 0x3008, so we end up with a buffer equal to the one we send */
+					iSocket->RFIFOSKIP(fd, 2);/* we skip first 2 bytes which are the 0x3008, so we end up with a buffer equal to the one we send */
 
 					opt.silent = 1;
 					opt.setTimeo = 1;
 					
-					if( (sfd = make_connection(host2ip("stats.hercules.ws"),(uint16)25427,&opt) ) == -1 ) {
-						RFIFOSKIP(fd, RFIFOW(fd,2) );/* skip this packet */
+					if( (sfd = iSocket->make_connection(host2ip("stats.hercules.ws"),(uint16)25427,&opt) ) == -1 ) {
+						iSocket->RFIFOSKIP(fd, RFIFOW(fd,2) );/* skip this packet */
 						RFIFOFLUSH(fd);
 						break;/* connection not possible, we drop the report */
 					}
 			
 					session[sfd]->flag.server = 1;/* to ensure we won't drop our own packet */
-					realloc_fifo(sfd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
+					iSocket->realloc_fifo(sfd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 					
 					WFIFOHEAD(sfd, RFIFOW(fd,2) );
 
 					memcpy((char*)WFIFOP(sfd,0), (char*)RFIFOP(fd, 0), RFIFOW(fd,2));
 
-					WFIFOSET(sfd, RFIFOW(fd,2) );
+					iSocket->WFIFOSET(sfd, RFIFOW(fd,2) );
 
 					flush_fifo(sfd);
 
-					do_close(sfd);
+					iSocket->do_close(sfd);
 					
-					RFIFOSKIP(fd, RFIFOW(fd,2) );/* skip this packet */
+					iSocket->RFIFOSKIP(fd, RFIFOW(fd,2) );/* skip this packet */
 					RFIFOFLUSH(fd);
 			}
 			break;
@@ -3589,7 +3589,7 @@ void char_delete2_ack(int fd, int char_id, uint32 result, time_t delete_date)
 	WFIFOL(fd,10) = (int)delete_date;
 
 #endif
-	WFIFOSET(fd,14);
+	iSocket->WFIFOSET(fd,14);
 }
 
 
@@ -3615,7 +3615,7 @@ void char_delete2_accept_ack(int fd, int char_id, uint32 result)
 	WFIFOW(fd,0) = 0x82a;
 	WFIFOL(fd,2) = char_id;
 	WFIFOL(fd,6) = result;
-	WFIFOSET(fd,10);
+	iSocket->WFIFOSET(fd,10);
 }
 
 
@@ -3629,7 +3629,7 @@ void char_delete2_cancel_ack(int fd, int char_id, uint32 result)
 	WFIFOW(fd,0) = 0x82c;
 	WFIFOL(fd,2) = char_id;
 	WFIFOL(fd,6) = result;
-	WFIFOSET(fd,10);
+	iSocket->WFIFOSET(fd,10);
 }
 
 
@@ -3817,13 +3817,13 @@ int parse_char(int fd)
 			if( data == NULL || data->server == -1) //If it is not in any server, send it offline. [Skotlex]
 				set_char_offline(-1,sd->account_id);
 		}
-		do_close(fd);
+		iSocket->do_close(fd);
 		return 0;
 	}
 
 	while( RFIFOREST(fd) >= 2 ) {
 		//For use in packets that depend on an sd being present [Skotlex]
-		#define FIFOSD_CHECK(rest) { if(RFIFOREST(fd) < rest) return 0; if (sd==NULL || !sd->auth) { RFIFOSKIP(fd,rest); return 0; } }
+		#define FIFOSD_CHECK(rest) { if(RFIFOREST(fd) < rest) return 0; if (sd==NULL || !sd->auth) { iSocket->RFIFOSKIP(fd,rest); return 0; } }
 
 		if( HPM->packetsc[hpParse_Char] ) {
 			if( (i = HPM->parse_packets(fd,hpParse_Char)) ) {
@@ -3848,7 +3848,7 @@ int parse_char(int fd)
 				uint32 login_id1 = RFIFOL(fd,6);
 				uint32 login_id2 = RFIFOL(fd,10);
 				int sex = RFIFOB(fd,16);
-				RFIFOSKIP(fd,17);
+				iSocket->RFIFOSKIP(fd,17);
 
 				ShowInfo("request connect - account_id:%d/login_id1:%d/login_id2:%d\n", account_id, login_id1, login_id2);
 
@@ -3870,14 +3870,14 @@ int parse_char(int fd)
 				// send back account_id
 				WFIFOHEAD(fd,4);
 				WFIFOL(fd,0) = account_id;
-				WFIFOSET(fd,4);
+				iSocket->WFIFOSET(fd,4);
 
 				if( runflag != CHARSERVER_ST_RUNNING )
 				{
 					WFIFOHEAD(fd,3);
 					WFIFOW(fd,0) = 0x6c;
 					WFIFOB(fd,2) = 0;// rejected from server
-					WFIFOSET(fd,3);
+					iSocket->WFIFOSET(fd,3);
 					break;
 				}
 
@@ -3903,12 +3903,12 @@ int parse_char(int fd)
 						WFIFOB(login_fd,14) = sd->sex;
 						WFIFOL(login_fd,15) = htonl(ipl);
 						WFIFOL(login_fd,19) = fd;
-						WFIFOSET(login_fd,23);
+						iSocket->WFIFOSET(login_fd,23);
 					} else { // if no login-server, we must refuse connection
 						WFIFOHEAD(fd,3);
 						WFIFOW(fd,0) = 0x6c;
 						WFIFOB(fd,2) = 0;
-						WFIFOSET(fd,3);
+						iSocket->WFIFOSET(fd,3);
 					}
 				}
 			}
@@ -3926,7 +3926,7 @@ int parse_char(int fd)
 				struct auth_node* node;
 
 				int slot = RFIFOB(fd,2);
-				RFIFOSKIP(fd,3);
+				iSocket->RFIFOSKIP(fd,3);
 #if PACKETVER >= 20110309
 				if( *pincode->enabled ){ // hack check
 					struct online_char_data* character;	
@@ -3935,7 +3935,7 @@ int parse_char(int fd)
 						WFIFOHEAD(fd,3);
 						WFIFOW(fd,0) = 0x6c;
 						WFIFOB(fd,2) = 0;
-						WFIFOSET(fd,3);
+						iSocket->WFIFOSET(fd,3);
 						break;
 					}
 				}
@@ -3949,7 +3949,7 @@ int parse_char(int fd)
 					WFIFOHEAD(fd,3);
 					WFIFOW(fd,0) = 0x6c;
 					WFIFOB(fd,2) = 0; // rejected from server
-					WFIFOSET(fd,3);
+					iSocket->WFIFOSET(fd,3);
 					break;
 				}
 
@@ -3964,7 +3964,7 @@ int parse_char(int fd)
 					WFIFOHEAD(fd,3);
 					WFIFOW(fd,0) = 0x6c;
 					WFIFOB(fd,2) = 0;
-					WFIFOSET(fd,3);
+					iSocket->WFIFOSET(fd,3);
 					break;/* jump off this boat */
 				}
 
@@ -3995,7 +3995,7 @@ int parse_char(int fd)
 						WFIFOHEAD(fd,3);
 						WFIFOW(fd,0) = 0x81;
 						WFIFOB(fd,2) = 1; // 01 = Server closed
-						WFIFOSET(fd,3);
+						iSocket->WFIFOSET(fd,3);
 						break;
 					}
 					if ((i = search_mapserver((j=mapindex_name2id(MAP_PRONTERA)),-1,-1)) >= 0) {
@@ -4021,7 +4021,7 @@ int parse_char(int fd)
 						WFIFOHEAD(fd,3);
 						WFIFOW(fd,0) = 0x81;
 						WFIFOB(fd,2) = 1; // 01 = Server closed
-						WFIFOSET(fd,3);
+						iSocket->WFIFOSET(fd,3);
 						break;
 					}
 					ShowWarning("Unable to find map-server for '%s', sending to major city '%s'.\n", mapindex_id2name(cd->last_point.map), mapindex_id2name(j));
@@ -4039,7 +4039,7 @@ int parse_char(int fd)
 					WFIFOHEAD(fd,3);
 					WFIFOW(fd,0) = 0x81;
 					WFIFOB(fd,2) = 1; // 01 = Server closed
-					WFIFOSET(fd,3);
+					iSocket->WFIFOSET(fd,3);
 					break;
 				}
 
@@ -4051,7 +4051,7 @@ int parse_char(int fd)
 				subnet_map_ip = lan_subnetcheck(ipl); // Advanced subnet check [LuzZza]
 				WFIFOL(fd,22) = htonl((subnet_map_ip) ? subnet_map_ip : server[i].ip);
 				WFIFOW(fd,26) = ntows(htons(server[i].port)); // [!] LE byte order here [!]
-				WFIFOSET(fd,28);
+				iSocket->WFIFOSET(fd,28);
 
 				// create temporary auth entry
 				CREATE(node, struct auth_node, 1);
@@ -4101,7 +4101,7 @@ int parse_char(int fd)
 						case -3: WFIFOB(fd,2) = 0x01; break;
 						case -4: WFIFOB(fd,2) = 0x03; break;
 					}
-					WFIFOSET(fd,3);
+					iSocket->WFIFOSET(fd,3);
 				} else {
 					int len;
 					// retrieve data
@@ -4112,7 +4112,7 @@ int parse_char(int fd)
 					WFIFOHEAD(fd,2+MAX_CHAR_BUF);
 					WFIFOW(fd,0) = 0x6d;
 					len = 2 + mmo_char_tobuf(WFIFOP(fd,2), &char_dat);
-					WFIFOSET(fd,len);
+					iSocket->WFIFOSET(fd,len);
 
 					// add new entry to the chars list
 					ARR_FIND( 0, MAX_CHARS, ch, sd->found_char[ch] == -1 );
@@ -4120,9 +4120,9 @@ int parse_char(int fd)
 						sd->found_char[ch] = i; // the char_id of the new char
 				}
 	#if PACKETVER >= 20120307
-				RFIFOSKIP(fd,31);
+				iSocket->RFIFOSKIP(fd,31);
 	#else
-				RFIFOSKIP(fd,37);
+				iSocket->RFIFOSKIP(fd,37);
 	#endif
 			break;
 
@@ -4142,14 +4142,14 @@ int parse_char(int fd)
 						WFIFOHEAD(fd,3);
 						WFIFOW(fd,0) = 0x6c;
 						WFIFOB(fd,2) = 0;
-						WFIFOSET(fd,3);
+						iSocket->WFIFOSET(fd,3);
 						break;
 					}
 				}
 #endif
 				ShowInfo(CL_RED"Request Char Deletion: "CL_GREEN"%d (%d)"CL_RESET"\n", sd->account_id, cid);
 				memcpy(email, RFIFOP(fd,6), 40);
-				RFIFOSKIP(fd,( cmd == 0x68) ? 46 : 56);
+				iSocket->RFIFOSKIP(fd,( cmd == 0x68) ? 46 : 56);
 
 				// Check if e-mail is correct
 				if(strcmpi(email, sd->email) && //email does not matches and
@@ -4160,7 +4160,7 @@ int parse_char(int fd)
 					WFIFOHEAD(fd,3);
 					WFIFOW(fd,0) = 0x70;
 					WFIFOB(fd,2) = 0; // 00 = Incorrect Email address
-					WFIFOSET(fd,3);
+					iSocket->WFIFOSET(fd,3);
 					break;
 				}
 
@@ -4171,7 +4171,7 @@ int parse_char(int fd)
 					WFIFOHEAD(fd,3);
 					WFIFOW(fd,0) = 0x70;
 					WFIFOB(fd,2) = 0;
-					WFIFOSET(fd,3);
+					iSocket->WFIFOSET(fd,3);
 					break;
 				}
 
@@ -4188,13 +4188,13 @@ int parse_char(int fd)
 					WFIFOHEAD(fd,3);
 					WFIFOW(fd, 0) = 0x70;
 					WFIFOB(fd, 2) = 0;
-					WFIFOSET(fd, 3);
+					iSocket->WFIFOSET(fd, 3);
 					break;
 				}
 				/* Char successfully deleted.*/
 				WFIFOHEAD(fd,2);
 				WFIFOW(fd,0) = 0x6f;
-				WFIFOSET(fd,2);
+				iSocket->WFIFOSET(fd,2);
 			}
 			break;
 
@@ -4203,7 +4203,7 @@ int parse_char(int fd)
 			case 0x187:
 				if (RFIFOREST(fd) < 6)
 					return 0;
-				RFIFOSKIP(fd,6);
+				iSocket->RFIFOSKIP(fd,6);
 			break;
 			// char rename request
 			// R 08fc <char ID>.l <new name>.24B
@@ -4214,7 +4214,7 @@ int parse_char(int fd)
 					char name[NAME_LENGTH];
 					char esc_name[NAME_LENGTH*2+1];
 					safestrncpy(name, (char *)RFIFOP(fd,6), NAME_LENGTH);
-					RFIFOSKIP(fd,30);
+					iSocket->RFIFOSKIP(fd,30);
 					
 					ARR_FIND( 0, MAX_CHARS, i, sd->found_char[i] == cid );
 					if( i == MAX_CHARS )
@@ -4231,7 +4231,7 @@ int parse_char(int fd)
 					WFIFOHEAD(fd, 4);
 					WFIFOW(fd,0) = 0x28e;
 					WFIFOW(fd,2) = i;
-					WFIFOSET(fd,4);
+					iSocket->WFIFOSET(fd,4);
 				}
 				break;
 
@@ -4244,7 +4244,7 @@ int parse_char(int fd)
 					char name[NAME_LENGTH];
 					char esc_name[NAME_LENGTH*2+1];
 					safestrncpy(name, (char *)RFIFOP(fd,10), NAME_LENGTH);
-					RFIFOSKIP(fd,34);
+					iSocket->RFIFOSKIP(fd,34);
 
 					if( aid != sd->account_id )
 						break;
@@ -4265,7 +4265,7 @@ int parse_char(int fd)
 					WFIFOHEAD(fd, 4);
 					WFIFOW(fd,0) = 0x28e;
 					WFIFOW(fd,2) = i;
-					WFIFOSET(fd,4);
+					iSocket->WFIFOSET(fd,4);
 				}
 				break;
 			//Confirm change name.
@@ -4280,7 +4280,7 @@ int parse_char(int fd)
 				{
 					int i;
 					int cid = RFIFOL(fd,2);
-					RFIFOSKIP(fd,6);
+					iSocket->RFIFOSKIP(fd,6);
 
 					ARR_FIND( 0, MAX_CHARS, i, sd->found_char[i] == cid );
 					if( i == MAX_CHARS )
@@ -4290,7 +4290,7 @@ int parse_char(int fd)
 					WFIFOHEAD(fd, 4);
 					WFIFOW(fd,0) = 0x290;
 					WFIFOW(fd,2) = i;
-					WFIFOSET(fd,4);
+					iSocket->WFIFOSET(fd,4);
 				}
 				break;
 
@@ -4301,8 +4301,8 @@ int parse_char(int fd)
 				WFIFOW(fd,0) = 0x7e9;
 				WFIFOW(fd,2) = 5;
 				WFIFOB(fd,4) = 1;
-				WFIFOSET(fd,5);
-				RFIFOSKIP(fd,8);
+				iSocket->WFIFOSET(fd,5);
+				iSocket->RFIFOSKIP(fd,8);
 				break;
 
 			// captcha code check (not implemented)
@@ -4312,29 +4312,29 @@ int parse_char(int fd)
 				WFIFOW(fd,0) = 0x7e9;
 				WFIFOW(fd,2) = 5;
 				WFIFOB(fd,4) = 1;
-				WFIFOSET(fd,5);
-				RFIFOSKIP(fd,32);
+				iSocket->WFIFOSET(fd,5);
+				iSocket->RFIFOSKIP(fd,32);
 			break;
 
 			// deletion timer request
 			case 0x827:
 				FIFOSD_CHECK(6);
 				char_delete2_req(fd, sd);
-				RFIFOSKIP(fd,6);
+				iSocket->RFIFOSKIP(fd,6);
 			break;
 
 			// deletion accept request
 			case 0x829:
 				FIFOSD_CHECK(12);
 				char_delete2_accept(fd, sd);
-				RFIFOSKIP(fd,12);
+				iSocket->RFIFOSKIP(fd,12);
 			break;
 
 			// deletion cancel request
 			case 0x82b:
 				FIFOSD_CHECK(6);
 				char_delete2_cancel(fd, sd);
-				RFIFOSKIP(fd,6);
+				iSocket->RFIFOSKIP(fd,6);
 			break;
 
 			// login as map-server
@@ -4355,12 +4355,12 @@ int parse_char(int fd)
 					WFIFOHEAD(fd,3);
 					WFIFOW(fd,0) = 0x2af9;
 					WFIFOB(fd,2) = 3;
-					WFIFOSET(fd,3);
+					iSocket->WFIFOSET(fd,3);
 				} else {
 					WFIFOHEAD(fd,3);
 					WFIFOW(fd,0) = 0x2af9;
 					WFIFOB(fd,2) = 0;
-					WFIFOSET(fd,3);
+					iSocket->WFIFOSET(fd,3);
 
 					server[i].fd = fd;
 					server[i].ip = ntohl(RFIFOL(fd,54));
@@ -4368,12 +4368,12 @@ int parse_char(int fd)
 					server[i].users = 0;
 					session[fd]->func_parse = parse_frommap;
 					session[fd]->flag.server = 1;
-					realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
+					iSocket->realloc_fifo(fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 					char_mapif_init(fd);
 				}
 				socket_datasync(fd, true);
 
-				RFIFOSKIP(fd,60);
+				iSocket->RFIFOSKIP(fd,60);
 			}
 			return 0; // avoid processing of followup packets here
 				
@@ -4385,7 +4385,7 @@ int parse_char(int fd)
 				if( RFIFOL(fd,2) == sd->account_id )
 					pincode->check( fd, sd );
 					
-				RFIFOSKIP(fd,10);
+				iSocket->RFIFOSKIP(fd,10);
 			break;
 				
 			// request for PIN window
@@ -4395,7 +4395,7 @@ int parse_char(int fd)
 				if( RFIFOL(fd,2) == sd->account_id )
 					pincode->sendstate( fd, sd, PINCODE_NOTSET );
 							
-				RFIFOSKIP(fd,6);
+				iSocket->RFIFOSKIP(fd,6);
 			break;
 				
 			// pincode change request
@@ -4405,7 +4405,7 @@ int parse_char(int fd)
 				if( RFIFOL(fd,2) == sd->account_id )
 					pincode->change( fd, sd );
 				
-				RFIFOSKIP(fd,14);
+				iSocket->RFIFOSKIP(fd,14);
 			break;
 				
 			// activate PIN system and set first PIN
@@ -4414,7 +4414,7 @@ int parse_char(int fd)
 					return 0;
 				if( RFIFOL(fd,2) == sd->account_id )
 					pincode->setnew( fd, sd );
-				RFIFOSKIP(fd,10);
+				iSocket->RFIFOSKIP(fd,10);
 			break;
 			
 			/* 0x8d4 <from>.W <to>.W <unused>.W (2+2+2+2) */
@@ -4429,7 +4429,7 @@ int parse_char(int fd)
 					WFIFOW(fd, 2) = 8;
 					WFIFOW(fd, 4) = ret?0:1;
 					WFIFOW(fd, 6) = 0;/* we enforce it elsewhere, go 0 */
-					WFIFOSET(fd, 8);
+					iSocket->WFIFOSET(fd, 8);
 					/* for some stupid reason it requires the char data again (gravity -_-) */
 					if( ret )
 #if PACKETVER >= 20130000
@@ -4438,7 +4438,7 @@ int parse_char(int fd)
 						mmo_char_send006b(fd, sd);
 #endif
 						
-					RFIFOSKIP(fd, 8);
+					iSocket->RFIFOSKIP(fd, 8);
 				}
 			break;
 				
@@ -4464,7 +4464,7 @@ int mapif_sendall(unsigned char *buf, unsigned int len)
 		if ((fd = server[i].fd) > 0) {
 			WFIFOHEAD(fd,len);
 			memcpy(WFIFOP(fd,0), buf, len);
-			WFIFOSET(fd,len);
+			iSocket->WFIFOSET(fd,len);
 			c++;
 		}
 	}
@@ -4482,7 +4482,7 @@ int mapif_sendallwos(int sfd, unsigned char *buf, unsigned int len)
 		if ((fd = server[i].fd) > 0 && fd != sfd) {
 			WFIFOHEAD(fd,len);
 			memcpy(WFIFOP(fd,0), buf, len);
-			WFIFOSET(fd,len);
+			iSocket->WFIFOSET(fd,len);
 			c++;
 		}
 	}
@@ -4499,7 +4499,7 @@ int mapif_send(int fd, unsigned char *buf, unsigned int len)
 		{
 			WFIFOHEAD(fd,len);
 			memcpy(WFIFOP(fd,0), buf, len);
-			WFIFOSET(fd,len);
+			iSocket->WFIFOSET(fd,len);
 			return 1;
 		}
 	}
@@ -4522,7 +4522,7 @@ int broadcast_user_count(int tid, int64 tick, int id, intptr_t data) {
 		WFIFOHEAD(login_fd,6);
 		WFIFOW(login_fd,0) = 0x2714;
 		WFIFOL(login_fd,2) = users;
-		WFIFOSET(login_fd,6);
+		iSocket->WFIFOSET(login_fd,6);
 	}
 
 	// send number of players to all map-servers
@@ -4563,7 +4563,7 @@ int send_accounts_tologin(int tid, int64 tick, int id, intptr_t data) {
 		online_char_db->foreach(online_char_db, send_accounts_tologin_sub, &i, users);
 		WFIFOW(login_fd,2) = 8+ i*4;
 		WFIFOL(login_fd,4) = i;
-		WFIFOSET(login_fd,WFIFOW(login_fd,2));
+		iSocket->WFIFOSET(login_fd,WFIFOW(login_fd,2));
 	}
 	return 0;
 }
@@ -4574,14 +4574,14 @@ int check_connect_login_server(int tid, int64 tick, int id, intptr_t data) {
 
 	ShowInfo("Attempt to connect to login-server...\n");
 
-	if ( (login_fd = make_connection(login_ip, login_port, NULL)) == -1) { //Try again later. [Skotlex]
+	if ( (login_fd = iSocket->make_connection(login_ip, login_port, NULL)) == -1) { //Try again later. [Skotlex]
 		login_fd = 0;
 		return 0;
 	}
 	
 	session[login_fd]->func_parse = parse_fromlogin;
 	session[login_fd]->flag.server = 1;
-	realloc_fifo(login_fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
+	iSocket->realloc_fifo(login_fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
 	WFIFOHEAD(login_fd,86);
 	WFIFOW(login_fd,0) = 0x2710;
@@ -4594,7 +4594,7 @@ int check_connect_login_server(int tid, int64 tick, int id, intptr_t data) {
 	WFIFOW(login_fd,80) = 0;
 	WFIFOW(login_fd,82) = char_maintenance;
 	WFIFOW(login_fd,84) = char_new_display; //only display (New) if they want to [Kevin]
-	WFIFOSET(login_fd,86);
+	iSocket->WFIFOSET(login_fd,86);
 
 	return 1;
 }
@@ -4976,7 +4976,7 @@ void do_final(void) {
 	auth_db->destroy(auth_db, NULL);
 
 	if( char_fd != -1 ) {
-		do_close(char_fd);
+		iSocket->do_close(char_fd);
 		char_fd = -1;
 	}
 

@@ -34,7 +34,7 @@ static void mapif_homunculus_created(int fd, int account_id, struct s_homunculus
 	WFIFOL(fd,4) = account_id;
 	WFIFOB(fd,8)= flag;
 	memcpy(WFIFOP(fd,9),sh,sizeof(struct s_homunculus));
-	WFIFOSET(fd, WFIFOW(fd,2));
+	iSocket->WFIFOSET(fd, WFIFOW(fd,2));
 }
 
 static void mapif_homunculus_deleted(int fd, int flag)
@@ -42,7 +42,7 @@ static void mapif_homunculus_deleted(int fd, int flag)
 	WFIFOHEAD(fd, 3);
 	WFIFOW(fd, 0) = 0x3893;
 	WFIFOB(fd,2) = flag; //Flag 1 = success
-	WFIFOSET(fd, 3);
+	iSocket->WFIFOSET(fd, 3);
 }
 
 static void mapif_homunculus_loaded(int fd, int account_id, struct s_homunculus *hd)
@@ -61,7 +61,7 @@ static void mapif_homunculus_loaded(int fd, int account_id, struct s_homunculus 
 		WFIFOB(fd,8) = 0; // not found.
 		memset(WFIFOP(fd,9), 0, sizeof(struct s_homunculus));
 	}
-	WFIFOSET(fd, sizeof(struct s_homunculus)+9);
+	iSocket->WFIFOSET(fd, sizeof(struct s_homunculus)+9);
 }
 
 static void mapif_homunculus_saved(int fd, int account_id, bool flag)
@@ -70,7 +70,7 @@ static void mapif_homunculus_saved(int fd, int account_id, bool flag)
 	WFIFOW(fd,0) = 0x3892;
 	WFIFOL(fd,2) = account_id;
 	WFIFOB(fd,6) = flag; // 1:success, 0:failure
-	WFIFOSET(fd, 7);
+	iSocket->WFIFOSET(fd, 7);
 }
 
 static void mapif_homunculus_renamed(int fd, int account_id, int char_id, unsigned char flag, char* name)
@@ -81,7 +81,7 @@ static void mapif_homunculus_renamed(int fd, int account_id, int char_id, unsign
 	WFIFOL(fd, 6) = char_id;
 	WFIFOB(fd,10) = flag;
 	safestrncpy((char*)WFIFOP(fd,11), name, NAME_LENGTH);
-	WFIFOSET(fd, NAME_LENGTH+12);
+	iSocket->WFIFOSET(fd, NAME_LENGTH+12);
 }
 
 bool mapif_homunculus_save(struct s_homunculus* hd)

@@ -505,7 +505,7 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 			if( npc->isnear(&sd->bl) ) {
 				// uncomment for more verbose message.
 				//char output[150];
-				//sprintf(output, msg_txt(662), battle_config.min_npc_vendchat_distance);
+				//sprintf(output, atcommand->msg_txt(662), battle_config.min_npc_vendchat_distance);
 				//clif->message(sd->fd, output);
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_THERE_ARE_NPC_AROUND,0);
 				return 1;
@@ -5387,7 +5387,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				if (sd)
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				if (skill->break_equip(bl, EQP_WEAPON, 10000, BCT_PARTY) && sd && sd != dstsd)
-					clif->message(sd->fd, msg_txt(669));
+					clif->message(sd->fd, atcommand->msg_txt(669));
 			}
 			break;
 
@@ -6305,7 +6305,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					break;
 				}
 				if(!battle_config.duel_allow_teleport && sd->duel_group && skill_lv <= 2) { // duel restriction [LuzZza]
-					char output[128]; sprintf(output, msg_txt(365), skill->get_name(AL_TELEPORT));
+					char output[128]; sprintf(output, atcommand->msg_txt(365), skill->get_name(AL_TELEPORT));
 					clif->message(sd->fd, output); //"Duel: Can't use %s in duel."
 					break;
 				}
@@ -12463,7 +12463,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			break;
 		case AL_WARP:
 			if(!battle_config.duel_allow_teleport && sd->duel_group) { // duel restriction [LuzZza]
-				char output[128]; sprintf(output, msg_txt(365), skill->get_name(AL_WARP));
+				char output[128]; sprintf(output, atcommand->msg_txt(365), skill->get_name(AL_WARP));
 				clif->message(sd->fd, output); //"Duel: Can't use %s in duel."
 				return 0;
 			}

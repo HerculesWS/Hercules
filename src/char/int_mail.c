@@ -215,7 +215,7 @@ static void mapif_Mail_sendinbox(int fd, int char_id, unsigned char flag)
 	WFIFOL(fd,4) = char_id;
 	WFIFOB(fd,8) = flag;
 	memcpy(WFIFOP(fd,9),&md,sizeof(md));
-	WFIFOSET(fd,WFIFOW(fd,2));
+	iSocket->WFIFOSET(fd,WFIFOW(fd,2));
 }
 
 static void mapif_parse_Mail_requestinbox(int fd)
@@ -284,7 +284,7 @@ static void mapif_Mail_getattach(int fd, int char_id, int mail_id)
 	WFIFOL(fd,4) = char_id;
 	WFIFOL(fd,8) = (msg.zeny > 0)?msg.zeny:0;
 	memcpy(WFIFOP(fd,12), &msg.item, sizeof(struct item));
-	WFIFOSET(fd,WFIFOW(fd,2));
+	iSocket->WFIFOSET(fd,WFIFOW(fd,2));
 }
 
 static void mapif_parse_Mail_getattach(int fd)
@@ -309,7 +309,7 @@ static void mapif_Mail_delete(int fd, int char_id, int mail_id)
 	WFIFOL(fd,2) = char_id;
 	WFIFOL(fd,6) = mail_id;
 	WFIFOB(fd,10) = failed;
-	WFIFOSET(fd,11);
+	iSocket->WFIFOSET(fd,11);
 }
 
 static void mapif_parse_Mail_delete(int fd)
@@ -376,7 +376,7 @@ static void mapif_Mail_return(int fd, int char_id, int mail_id)
 	WFIFOL(fd,2) = char_id;
 	WFIFOL(fd,6) = mail_id;
 	WFIFOB(fd,10) = (new_mail == 0);
-	WFIFOSET(fd,11);
+	iSocket->WFIFOSET(fd,11);
 }
 
 static void mapif_parse_Mail_return(int fd)
@@ -395,7 +395,7 @@ static void mapif_Mail_send(int fd, struct mail_message* msg)
 	WFIFOW(fd,0) = 0x384d;
 	WFIFOW(fd,2) = len;
 	memcpy(WFIFOP(fd,4), msg, sizeof(struct mail_message));
-	WFIFOSET(fd,len);
+	iSocket->WFIFOSET(fd,len);
 }
 
 static void mapif_parse_Mail_send(int fd)

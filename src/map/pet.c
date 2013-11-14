@@ -27,7 +27,7 @@
 #include "script.h"
 #include "skill.h"
 #include "unit.h"
-#include "atcommand.h" // msg_txt()
+#include "atcommand.h" // atcommand->msg_txt()
 #include "log.h"
 
 #include <stdio.h>
@@ -582,7 +582,7 @@ int pet_menu(struct map_session_data *sd,int menunum)
 	egg_id = itemdb->exists(sd->pd->petDB->EggID);
 	if (egg_id) {
 		if ((egg_id->flag.trade_restriction&0x01) && !pc->inventoryblank(sd)) {
-			clif->message(sd->fd, msg_txt(451)); // You can't return your pet because your inventory is full.
+			clif->message(sd->fd, atcommand->msg_txt(451)); // You can't return your pet because your inventory is full.
 			return 1;
 		}
 	}
@@ -633,7 +633,7 @@ int pet_change_name_ack(struct map_session_data *sd, char* name, int flag)
 	normalize_name(name," ");//bugreport:3032
 
 	if ( !flag || !strlen(name) ) {
-		clif->message(sd->fd, msg_txt(280)); // You cannot use this name for your pet.
+		clif->message(sd->fd, atcommand->msg_txt(280)); // You cannot use this name for your pet.
 		clif->send_petstatus(sd); //Send status so client knows oet name change got rejected.
 		return 0;
 	}

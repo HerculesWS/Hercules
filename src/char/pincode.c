@@ -108,7 +108,7 @@ void pincode_sendstate(int fd, struct char_session_data* sd, uint16 state) {
 	WFIFOL(fd, 2) = sd->pincode_seed = rand() % 0xFFFF;
 	WFIFOL(fd, 6) = sd->account_id;
 	WFIFOW(fd,10) = state;
-	WFIFOSET(fd,12);
+	iSocket->WFIFOSET(fd,12);
 }
 
 void pincode_notifyLoginPinUpdate(int account_id, char* pin) {
@@ -116,14 +116,14 @@ void pincode_notifyLoginPinUpdate(int account_id, char* pin) {
 	WFIFOW(login_fd,0) = 0x2738;
 	WFIFOL(login_fd,2) = account_id;
 	strncpy( (char*)WFIFOP(login_fd,6), pin, 5 );
-	WFIFOSET(login_fd,11);
+	iSocket->WFIFOSET(login_fd,11);
 }
 
 void pincode_notifyLoginPinError(int account_id) {
 	WFIFOHEAD(login_fd,6);
 	WFIFOW(login_fd,0) = 0x2739;
 	WFIFOL(login_fd,2) = account_id;
-	WFIFOSET(login_fd,6);
+	iSocket->WFIFOSET(login_fd,6);
 }
 
 void pincode_decrypt(unsigned int userSeed, char* pin) {

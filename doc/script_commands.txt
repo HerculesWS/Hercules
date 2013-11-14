@@ -142,7 +142,13 @@ for a better explanation, see 'setmapflag'.
 
 ** Create a permanent monster spawn:
 
-<map name>,<x>,<y>,<xs>,<ys>%TAB%monster%TAB%<monster name>%TAB%<mob id>,<amount>,<delay1>,<delay2>,<event>{,<mob size>,<mob ai>}
+<map name>,<x>,<y>,<xs>,<ys>%TAB%monster%TAB%<monster display name>%TAB%<mob id>,<amount>,<delay1>,<delay2>,<event>{,<mob size>,<mob ai>}
+<map name>,<x>,<y>,<xs>,<ys>%TAB%monster%TAB%<monster display name>%TAB%<mob name>,<amount>,<delay1>,<delay2>,<event>{,<mob size>,<mob ai>}
+
+eg: prontera,154,154,0,0	monster	--ja--	SIDE_WINDER,1,0,0,0
+eg: prontera,155,155,0,0	monster	--en--	Thief Bug,1,0,0,0
+eg: prontera,156,156,0,0	monster	First Blood	Bloody Knight,1,0,0,0
+eg: prontera,157,157,0,0	monster	Blue Plant Mega	1079,1,0,0,0
 
 Map name is the name of the map the monsters will spawn on. x,y are the 
 coordinates where the mob should spawn. If xs and ys are non-zero, they 
@@ -154,7 +160,7 @@ move away from their specified spawn region.
 Monster name is the name the monsters will have on screen, and has no 
 relation whatsoever to their names anywhere else. It's the mob id that 
 counts, which identifies monster record in 'mob_db.txt' database of 
-monsters. If the mob name is given as "--ja--", the 'japanese name' field 
+monsters. If the mob display name is given as "--ja--", the 'japanese name' field 
 from the monster database is used, (which, in Hercules, actually contains 
 an English name) if it's "--en--", it's the 'english name' from the 
 monster database (which contains an uppercase name used to summon the 
@@ -236,9 +242,22 @@ in their trigger area, if defined. See that below.
 Facing is a direction the NPC sprite will face in. Not all NPC sprites 
 have different images depending on the direction you look from, so for 
 some facing will be meaningless. Facings are counted counterclockwise in 
-increments of 45 degrees, where 0 means facing towards the top of the map. 
-(So to turn the sprite towards the bottom of the map, you use facing 4, 
-and to make it look southeast it's facing 5.)
+increments of 45 degrees, where '0' or 'NORTH' means facing towards the top of the map. 
+(So to turn the sprite towards the bottom of the map, you use facing '4' or 'SOUTH', 
+and to make it look southeast it's facing '5' or 'SOUTHEAST'.)
+
+eg: prontera,154,154,SOUTHEAST	script	npc_test1	4_MIMIC,{<code>}
+eg: prontera,154,154,3	script	npc_test2	123,{<code>}
+
+Facings:
+NORTH		0
+NORTHWEST	1
+WEST		2
+SOUTHWEST	3
+SOUTH		4
+SOUTHEAST	5
+EAST		6
+NORTHEAST	7
 
 Sprite id is the sprite number used to display this particular NPC. For a 
 full list of sprite id numbers see http://kalen.s79.xrea.com/npc/npce.shtml
@@ -277,7 +296,12 @@ what these floating NPC objects are for. More on that below.
 ** Define a shop/cashshop NPC.
 
 -%TAB%shop%TAB%<NPC Name>%TAB%<sprite id>,<itemid>:<price>{,<itemid>:<price>...}
+-%TAB%shop%TAB%<NPC Name>%TAB%<sprite id>,<item name>:<price>{,<item name>:<price>...}
 <map name>,<x>,<y>,<facing>%TAB%shop%TAB%<NPC Name>%TAB%<sprite id>,<itemid>:<price>{,<itemid>:<price>...}
+<map name>,<x>,<y>,<facing>%TAB%shop%TAB%<NPC Name>%TAB%<sprite id>,<item name>:<price>{,<item name>:<price>...}
+
+eg: -	shop	npc_shop_test	123,Red_Potion:-1,Orange Potion:-1,503:-1
+eg: prontera,150,150,5	shop	npc_shop_test2	123,Red_Potion:-1,503:-1,Orange Potion:-1
 
 This will define a shop NPC, which, when triggered (which can only be done 
 by clicking) will cause a shop window to come up. No code whatsoever runs 
@@ -285,7 +309,8 @@ in shop NPCs and you can't change the prices otherwise than by editing the
 script itself (no variables even exist at this point of scripting, so 
 don't even bother trying to use them).
 
-The item id is the number of item in the 'item_db.txt' database. If Price 
+The <item id> is the number of item in the 'item_db.txt' database.
+The <item name> is the name of item in the 'item_db.txt' database. If Price 
 is set to -1, the 'buy price' given in the item database will be used. 
 Otherwise, the price you gave will be used for this item, which is how you 
 create differing prices for items in different shops.
@@ -2851,8 +2876,9 @@ return 0 if no such item exists.
 ---------------------------------------
 
 *getitemslots(<item ID>)
+*getitemslots("<item name>")
 
-This function will look up the item with the specified ID number in the 
+This function will look up the item with the specified ID number or Name in the 
 database and return the number of slots this kind of items has - 0 if they 
 are not slotted. It will also be 0 for all non-equippable items, 
 naturally, unless someone messed up the item database. It will return -1 
@@ -2866,8 +2892,9 @@ Example:
 ---------------------------------------
 
 *getiteminfo(<item ID>,<type>)
+*getiteminfo("<item name>",<type>)
 
-This function will look up the item with the specified ID number in the 
+This function will look up the item with the specified ID number or Name in the 
 database and return the info set by TYPE argument.
 It will return -1 if there is no such item.
 
@@ -3335,7 +3362,7 @@ Check sample in doc/sample/getmonsterinfo.txt
 
 ---------------------------------------
 
-*addmonsterdrop(<mob id or name>, <item id>, <rate>)
+*addmonsterdrop(<mob id or name>, <item id or name>, <rate>)
 
 This command will temporarily add a drop to an existing monster. If the
 monster already drops the specified item, its drop rate will be updated to the
@@ -3353,7 +3380,7 @@ Example:
 
 ---------------------------------------
 
-*delmonsterdrop(<mob id or name>, <item id>)
+*delmonsterdrop(<mob id or name>, <item id or name>)
 
 This command will temporarily remove a drop from an existing monster.
 
@@ -4909,12 +4936,14 @@ like storage or cart.
 ---------------------------------------
 
 *equip <item id>;
+*equip "<item name>";
 *autoequip <item id>,<option>;
+*autoequip "<item name>",<option>;
 
 These commands are to equip a equipment on the attached character. 
-The equip function will equip the item ID given when the player has this 
+The equip function will equip the item ID or Name given when the player has this 
 item in his/her inventory, while the autoequip function will equip the 
-given item ID when this is looted. The option parameter of the autoequip 
+given item ID or Name when this is looted. The option parameter of the autoequip 
 is 1 or 0, 1 to turn it on, and 0 to turn it off.
 
 Examples:
@@ -6315,6 +6344,7 @@ given in the shop.
 ---------------------------------------
 
 *npcshopitem "<name>",<item id>,<price>{,<item id>,<price>{,<item id>,<price>{,...}}}
+*npcshopitem "<name>","<item name>",<price>{,"<item name>",<price>{,"<item name>",<price>{,...}}}
 
 This command lets you override the contents of an existing NPC shop or 
 cashshop. The current sell list will be wiped, and only the items 
@@ -6322,11 +6352,12 @@ specified with the price specified will be for sale.
 
 The function returns 1 if shop was updated successfully, or 0 if not found.
 
-Note that you cannot use -1 to specify default selling price!
+If Price is set to -1, the 'buy price' given in the item database will be used.
 
 ---------------------------------------
 
 *npcshopadditem "<name>",<item id>,<price>{,<item id>,<price>{,<item id>,<price>{,...}}}
+*npcshopadditem "<name>","<item name>",<price>{,"<item name>",<price>{,"<item name>",<price>{,...}}}
 
 This command will add more items at the end of the selling list for the 
 specified NPC shop or cashshop. If you specify an item already for sell, 
@@ -6334,11 +6365,12 @@ that item will appear twice on the sell list.
 
 The function returns 1 if shop was updated successfully, or 0 if not found.
 
-Note that you cannot use -1 to specify default selling price!
+If Price is set to -1, the 'buy price' given in the item database will be used.
 
 ---------------------------------------
 
 *npcshopdelitem "<name>",<item id>{,<item id>{,<item id>{,...}}}
+*npcshopdelitem "<name>","<item name>"{,"<item name>"{,"<item name>"{,...}}}
 
 This command will remove items from the specified NPC shop or cashshop.
 If the item to remove exists more than once on the shop, all instances 
@@ -7230,9 +7262,10 @@ Example:
 ---------------------------------------
 
 *setiteminfo(<item id>,<type>,<value>)
+*setiteminfo("<item name>",<type>,<value>)
 
 This function will set some value of an item.
-Returns the new value on success, or -1 on fail (item_id not found or 
+Returns the new value on success, or -1 on fail (item_id or item_name not found or 
 invalid type).
 
 Valid types are:
@@ -7250,10 +7283,11 @@ setiteminfo 7049,6,9990; // Stone now weighs 999.0
 ---------------------------------------
 
 *setitemscript(<item id>,<"{ new item script }">{,<type>});
+*setitemscript("<item name>",<"{ new item script }">{,<type>});
 
 Set a new script bonus to the Item. Very useful for game events.
 You can remove an item's itemscript by leaving the itemscript argument 
-empty. Returns 1 on success, or 0 on fail (item_id not found or new item 
+empty. Returns 1 on success, or 0 on fail (item_id or item_name not found or new item 
 script is invalid).
 Type can optionally be used indicates which script to set (default is 0):
  0 - Script

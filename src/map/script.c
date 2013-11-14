@@ -8618,7 +8618,7 @@ BUILDIN(getmobdrops)
 	
 	monster = mob->db(class_);
 	
-	for( i = 0; i < MAX_MOB_DROP; i++ )
+	for( i = 0; i < (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION); i++ )
 	{
 		if( monster->dropitem[i].nameid < 1 )
 			continue;
@@ -11610,17 +11610,28 @@ BUILDIN(getitemname)
  *------------------------------------------*/
 BUILDIN(getitemslots)
 {
-	int item_id;
+	struct script_data *data;
 	struct item_data *i_data;
-	
-	item_id=script_getnum(st,2);
-	
-	i_data = itemdb->exists(item_id);
-	
+
+	data = script_getdata(st, 2);
+	script->get_val(st, data);
+
+	if (data_isstring(data))
+	{// "<item name>"
+		const char *name = script->conv_str(st, data);
+		i_data = itemdb->search_name(name);
+	}
+	else if (data_isint(data))
+	{// <item id>
+		int item_id = script->conv_num(st, data);
+		i_data = itemdb->exists(item_id);
+	}
+
 	if (i_data)
-		script_pushint(st,i_data->slot);
+		script_pushint(st, i_data->slot);
 	else
-		script_pushint(st,-1);
+		script_pushint(st, -1);
+
 	return true;
 }
 
@@ -11650,19 +11661,33 @@ BUILDIN(getitemslots)
  *------------------------------------------*/
 BUILDIN(getiteminfo)
 {
-	int item_id,n;
+	int n = script_getnum(st, 3);
 	int *item_arr;
 	struct item_data *i_data;
-	
-	item_id	= script_getnum(st,2);
-	n	= script_getnum(st,3);
-	i_data = itemdb->exists(item_id);
-	
-	if (i_data && n>=0 && n<=14) {
+	struct script_data *data;
+
+	data = script_getdata(st, 2);
+	script->get_val(st, data);
+
+	if (data_isstring(data))
+	{// "<item name>"
+		const char *name = script->conv_str(st, data);
+		i_data = itemdb->search_name(name);
+	}
+	else if (data_isint(data))
+	{// <item id>
+		int item_id = script->conv_num(st, data);
+		i_data = itemdb->exists(item_id);
+	}
+
+	if (i_data && n >= 0 && n <= 14)
+	{
 		item_arr = (int*)&i_data->value_buy;
-		script_pushint(st,item_arr[n]);
-	} else
-		script_pushint(st,-1);
+		script_pushint(st, item_arr[n]);
+	}
+	else
+		script_pushint(st, -1);
+
 	return true;
 }
 
@@ -11691,21 +11716,37 @@ BUILDIN(getiteminfo)
  *------------------------------------------*/
 BUILDIN(setiteminfo)
 {
-	int item_id,n,value;
+	int n, value;
 	int *item_arr;
 	struct item_data *i_data;
-	
-	item_id	= script_getnum(st,2);
-	n	= script_getnum(st,3);
-	value	= script_getnum(st,4);
-	i_data = itemdb->exists(item_id);
-	
-	if (i_data && n>=0 && n<=14) {
+	struct script_data *data;
+
+	data = script_getdata(st, 2);
+	script->get_val(st, data);
+
+	if (data_isstring(data))
+	{// "<item name>"
+		const char *name = script->conv_str(st, data);
+		i_data = itemdb->search_name(name);
+	}
+	else if (data_isint(data))
+	{// <item id>
+		int item_id = script->conv_num(st, data);
+		i_data = itemdb->exists(item_id);
+	}
+
+	n = script_getnum(st, 3);
+	value = script_getnum(st, 4);
+
+	if (i_data && n >= 0 && n <= 14)
+	{
 		item_arr = (int*)&i_data->value_buy;
 		item_arr[n] = value;
-		script_pushint(st,value);
-	} else
-		script_pushint(st,-1);
+		script_pushint(st, value);
+	}
+	else
+		script_pushint(st, -1);
+
 	return true;
 }
 
@@ -12436,7 +12477,7 @@ BUILDIN(recovery)
 			status->revive(&sd->bl, 100, 100);
 		else
 			status_percent_heal(&sd->bl, 100, 100);
-		clif->message(sd->fd,msg_txt(680));
+		clif->message(sd->fd,atcommand->msg_txt(680));
 	}
 	mapit->free(iter);
 	return true;
@@ -13222,22 +13263,46 @@ BUILDIN(unequip)
 
 BUILDIN(equip)
 {
-	int nameid=0,i;
+	int nameid = 0, i;
 	TBL_PC *sd;
 	struct item_data *item_data;
-	
+	struct script_data *data;
+
 	sd = script->rid2sd(st);
-	
-	nameid=script_getnum(st,2);
-	if((item_data = itemdb->exists(nameid)) == NULL)
-	{
-		ShowError("wrong item ID : equipitem(%i)\n",nameid);
-		return false;
+
+	data = script_getdata(st, 2);
+	script->get_val(st, data);
+
+	if (data_isstring(data))
+	{// "<item name>"
+		const char *name = script->conv_str(st, data);
+		item_data = itemdb->search_name(name);
+
+		if (item_data == NULL)
+		{
+			ShowError("wrong item name : equipitem(%s)\n", name);
+			return false;
+		}
+
+		nameid = item_data->nameid;
 	}
-	ARR_FIND( 0, MAX_INVENTORY, i, sd->status.inventory[i].nameid == nameid && sd->status.inventory[i].equip == 0 );
-	if( i < MAX_INVENTORY )
-		pc->equipitem(sd,i,item_data->equip);
-	
+	else if (data_isint(data))
+	{// <item id>
+		nameid = script->conv_num(st, data);
+		item_data = itemdb->exists(nameid);
+
+		if (item_data == NULL)
+		{
+			ShowError("wrong item ID : equipitem(%i)\n", nameid);
+			return false;
+		}
+	}
+
+	ARR_FIND(0, MAX_INVENTORY, i, sd->status.inventory[i].nameid == nameid);
+
+	if (i < MAX_INVENTORY)
+		pc->equipitem(sd, i, item_data->equip);
+
 	return true;
 }
 
@@ -13245,22 +13310,45 @@ BUILDIN(autoequip)
 {
 	int nameid, flag;
 	struct item_data *item_data;
-	nameid=script_getnum(st,2);
-	flag=script_getnum(st,3);
-	
-	if( ( item_data = itemdb->exists(nameid) ) == NULL )
-	{
-		ShowError("buildin_autoequip: Invalid item '%d'.\n", nameid);
-		return false;
+	struct script_data *data;
+
+	data = script_getdata(st, 2);
+	script->get_val(st, data);
+
+	if (data_isstring(data))
+	{// "<item name>"
+		const char *name = script->conv_str(st, data);
+		item_data = itemdb->search_name(name);
+
+		if (item_data == NULL)
+		{
+			ShowError("buildin_autoequip: Invalid item '%s'.\n", name);
+			return false;
+		}
+
+		nameid = item_data->nameid;
 	}
-	
-	if( !itemdb->isequip2(item_data) )
+	else if (data_isint(data))
+	{// <item id>
+		nameid = script->conv_num(st, data);
+		item_data = itemdb->exists(nameid);
+
+		if (item_data == NULL)
+		{
+			ShowError("buildin_autoequip: Invalid item '%d'.\n", nameid);
+			return false;
+		}
+	}
+
+	flag = script_getnum(st, 3);
+
+	if (!itemdb->isequip2(item_data))
 	{
 		ShowError("buildin_autoequip: Item '%d' cannot be equipped.\n", nameid);
 		return false;
 	}
-	
-	item_data->flag.autoequip = flag>0?1:0;
+
+	item_data->flag.autoequip = ((flag > 0) ? 1 : 0);
 	return true;
 }
 
@@ -14448,97 +14536,173 @@ BUILDIN(callshop)
 
 BUILDIN(npcshopitem)
 {
-	const char* npcname = script_getstr(st, 2);
-	struct npc_data* nd = npc->name2id(npcname);
-	int n, i;
-	int amount;
-	
-	if( !nd || ( nd->subtype != SHOP && nd->subtype != CASHSHOP ) )
-	{	//Not found.
-		script_pushint(st,0);
+	const char *npcname = script_getstr(st, 2);
+	struct npc_data *nd = npc->name2id(npcname);
+	struct script_data *data;
+	int amount, i, n, j, nameid;
+
+	if (!nd || (nd->subtype != SHOP && nd->subtype != CASHSHOP))
+	{//Not found.
+		script_pushint(st, 0);
 		return true;
 	}
-	
+
 	// get the count of new entries
-	amount = (script_lastdata(st)-2)/2;
-	
+	amount = (script_lastdata(st) - 2) / 2;
+
 	// generate new shop item list
 	RECREATE(nd->u.shop.shop_item, struct npc_item_list, amount);
-	for( n = 0, i = 3; n < amount; n++, i+=2 )
+	for(n = 0, i = 3, j = 0; n < amount; n++, i += 2)
 	{
-		nd->u.shop.shop_item[n].nameid = script_getnum(st,i);
-		nd->u.shop.shop_item[n].value = script_getnum(st,i+1);
+		data = script_getdata(st, i);
+		script->get_val(st, data);
+
+		if (data_isstring(data))
+		{// "<item name>"
+			const char *name = script->conv_str(st, data);
+			struct item_data *item_data = itemdb->search_name(name);
+
+			if (item_data != NULL)
+				nameid = item_data->nameid;
+			else
+				nameid = 0;
+		}
+		else if (data_isint(data))
+		{// <item id>
+			nameid = script->conv_num(st, data);
+
+			if (!itemdb->exists(nameid))
+				nameid = 0;
+		}
+
+		if (nameid > 0)
+		{
+			int value = script_getnum(st, i + 1);
+			struct item_data *item_data = itemdb->exists(nameid);
+
+			nd->u.shop.shop_item[j].nameid = item_data->nameid;
+			nd->u.shop.shop_item[j].value = ((value < 0) ? item_data->value_buy : value);
+			j++;
+		}
 	}
-	nd->u.shop.count = n;
-	
-	script_pushint(st,1);
+
+	nd->u.shop.count = j;
+	script_pushint(st, 1);
 	return true;
 }
 
 BUILDIN(npcshopadditem)
 {
-	const char* npcname = script_getstr(st,2);
-	struct npc_data* nd = npc->name2id(npcname);
-	int n, i;
-	int amount;
-	
-	if( !nd || ( nd->subtype != SHOP && nd->subtype != CASHSHOP ) )
-	{	//Not found.
+	const char *npcname = script_getstr(st, 2);
+	struct npc_data *nd = npc->name2id(npcname);
+	struct script_data *data;
+	int amount, i, n, j, nameid;
+
+	if (!nd || (nd->subtype != SHOP && nd->subtype != CASHSHOP))
+	{//Not found.
 		script_pushint(st,0);
 		return true;
 	}
-	
+
 	// get the count of new entries
-	amount = (script_lastdata(st)-2)/2;
-	
+	amount = (script_lastdata(st) - 2) / 2;
+
 	// append new items to existing shop item list
-	RECREATE(nd->u.shop.shop_item, struct npc_item_list, nd->u.shop.count+amount);
-	for( n = nd->u.shop.count, i = 3; n < nd->u.shop.count+amount; n++, i+=2 )
+	RECREATE(nd->u.shop.shop_item, struct npc_item_list, nd->u.shop.count + amount);
+	for(n = nd->u.shop.count, i = 3, j = nd->u.shop.count; n < nd->u.shop.count + amount; n++, i += 2)
 	{
-		nd->u.shop.shop_item[n].nameid = script_getnum(st,i);
-		nd->u.shop.shop_item[n].value = script_getnum(st,i+1);
+		data = script_getdata(st, i);
+		script->get_val(st, data);
+
+		if (data_isstring(data))
+		{// "<item name>"
+			const char *name = script->conv_str(st, data);
+			struct item_data *item_data = itemdb->search_name(name);
+
+			if (item_data != NULL)
+				nameid = item_data->nameid;
+			else
+				nameid = 0;
+		}
+		else if (data_isint(data))
+		{// <item id>
+			nameid = script->conv_num(st, data);
+
+			if (!itemdb->exists(nameid))
+				nameid = 0;
+		}
+
+		if (nameid > 0)
+		{
+			int value = script_getnum(st, i + 1);
+			struct item_data *item_data = itemdb->exists(nameid);
+
+			nd->u.shop.shop_item[j].nameid = item_data->nameid;
+			nd->u.shop.shop_item[j].value = ((value < 0) ? item_data->value_buy : value);
+			j++;
+		}
 	}
-	nd->u.shop.count = n;
-	
-	script_pushint(st,1);
+
+	nd->u.shop.count = j;
+	script_pushint(st, 1);
 	return true;
 }
 
 BUILDIN(npcshopdelitem)
 {
-	const char* npcname = script_getstr(st,2);
-	struct npc_data* nd = npc->name2id(npcname);
-	unsigned int nameid;
-	int n, i;
-	int amount;
-	int size;
-	
-	if( !nd || ( nd->subtype != SHOP && nd->subtype != CASHSHOP ) )
-	{	//Not found.
-		script_pushint(st,0);
+	const char *npcname = script_getstr(st, 2);
+	struct npc_data *nd = npc->name2id(npcname);
+	struct script_data *data;
+	int amount, n, i, size, nameid;
+
+	if (!nd || (nd->subtype != SHOP && nd->subtype != CASHSHOP))
+	{//Not found.
+		script_pushint(st, 0);
 		return true;
 	}
-	
-	amount = script_lastdata(st)-2;
+
+	amount = script_lastdata(st) - 2;
 	size = nd->u.shop.count;
-	
+
 	// remove specified items from the shop item list
-	for( i = 3; i < 3 + amount; i++ )
+	for(i = 3; i < 3 + amount; i++)
 	{
-		nameid = script_getnum(st,i);
-		
-		ARR_FIND( 0, size, n, nd->u.shop.shop_item[n].nameid == nameid );
-		if( n < size )
+		data = script_getdata(st, i);
+		script->get_val(st, data);
+
+		if (data_isstring(data))
+		{// "<item name>"
+			const char *name = script->conv_str(st, data);
+			struct item_data *item_data = itemdb->search_name(name);
+
+			if (item_data != NULL)
+				nameid = item_data->nameid;
+			else
+				nameid = 0;
+		}
+		else if (data_isint(data))
+		{// <item id>
+			nameid = script->conv_num(st, data);
+
+			if (!itemdb->exists(nameid))
+				nameid = 0;
+		}
+
+		if (nameid > 0)
 		{
-			memmove(&nd->u.shop.shop_item[n], &nd->u.shop.shop_item[n+1], sizeof(nd->u.shop.shop_item[0])*(size-n));
-			size--;
+			ARR_FIND(0, size, n, nd->u.shop.shop_item[n].nameid == nameid);
+
+			if (n < size)
+			{
+				memmove(&nd->u.shop.shop_item[n], &nd->u.shop.shop_item[n + 1], sizeof(nd->u.shop.shop_item[0]) * (size - n));
+				size--;
+			}
 		}
 	}
-	
+
 	RECREATE(nd->u.shop.shop_item, struct npc_item_list, size);
 	nd->u.shop.count = size;
-	
-	script_pushint(st,1);
+	script_pushint(st, 1);
 	return true;
 }
 
@@ -14577,37 +14741,57 @@ BUILDIN(npcshopattach) {
  *------------------------------------------*/
 BUILDIN(setitemscript)
 {
-	int item_id,n=0;
+	int n = 0;
 	const char *new_bonus_script;
 	struct item_data *i_data;
 	struct script_code **dstscript;
-	
-	item_id	= script_getnum(st,2);
-	new_bonus_script = script_getstr(st,3);
-	if( script_hasdata(st,4) )
-		n=script_getnum(st,4);
-	i_data = itemdb->exists(item_id);
-	
-	if (!i_data || new_bonus_script==NULL || ( new_bonus_script[0] && new_bonus_script[0]!='{' )) {
-		script_pushint(st,0);
+	struct script_data *data;
+
+	data = script_getdata(st, 2);
+	script->get_val(st, data);
+
+	if (data_isstring(data))
+	{// "<item name>"
+		const char *name = script->conv_str(st, data);
+		i_data = itemdb->search_name(name);
+	}
+	else if (data_isint(data))
+	{// <item id>
+		int item_id = script->conv_num(st, data);
+		i_data = itemdb->exists(item_id);
+	}
+
+	new_bonus_script = script_getstr(st, 3);
+
+	if (script_hasdata(st, 4))
+		n = script_getnum(st, 4);
+
+	if (!i_data || new_bonus_script == NULL || (new_bonus_script[0] && new_bonus_script[0] != '{'))
+	{
+		script_pushint(st, 0);
 		return true;
 	}
-	switch (n) {
+
+	switch(n)
+	{
 		case 2:
 			dstscript = &i_data->unequip_script;
-			break;
+		break;
+
 		case 1:
 			dstscript = &i_data->equip_script;
-			break;
+		break;
+
 		default:
 			dstscript = &i_data->script;
-			break;
+		break;
 	}
-	if(*dstscript)
+
+	if (*dstscript)
 		script->free_code(*dstscript);
-	
-	*dstscript = new_bonus_script[0] ? script->parse(new_bonus_script, "script_setitemscript", 0, 0) : NULL;
-	script_pushint(st,1);
+
+	*dstscript = ((new_bonus_script[0]) ? script->parse(new_bonus_script, "script_setitemscript", 0, 0) : NULL);
+	script_pushint(st, 1);
 	return true;
 }
 
@@ -14621,53 +14805,97 @@ BUILDIN(setitemscript)
  * is updated to the new rate.  Rate must be in the range [1:10000]
  * Returns 1 if succeeded (added/updated a mob drop)
  *-------------------------------------------------------*/
-BUILDIN(addmonsterdrop) {
+BUILDIN(addmonsterdrop)
+{
 	struct mob_db *monster;
-	int item_id, rate, i, c = MAX_MOB_DROP;
+	struct item_data *item_data;
+	struct script_data *data;
+	const char *mob_name;
+	int item_id, mob_id, rate, i, c = (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION);
 
-	if( script_isstring(st,2) )
-		monster = mob->db(mob->db_searchname(script_getstr(st,2)));
-	else
-		monster = mob->db(script_getnum(st,2));
+	data = script_getdata(st, 2);
+	script->get_val(st, data);
 
-	if( monster == mob->dummy ) {
-		if( script_isstring(st,2) ) {
-			ShowError("buildin_addmonsterdrop: invalid mob name: '%s'.\n", script_getstr(st,2));
-		} else {
-			ShowError("buildin_addmonsterdrop: invalid mob id: '%d'.\n", script_getnum(st,2));
+	if (data_isstring(data))
+	{// "<mob name>"
+		mob_name = script->conv_str(st, data);
+		monster = mob->db(mob->db_searchname(mob_name));
+	}
+	else if (data_isint(data))
+	{// <mob id>
+		mob_id = script->conv_num(st, data);
+		monster = mob->db(mob_id);
+	}
+
+	if (monster == mob->dummy)
+	{
+		if (data_isstring(data))
+			ShowError("buildin_addmonsterdrop: invalid mob name: '%s'.\n", mob_name);
+		else if (data_isint(data))
+			ShowError("buildin_addmonsterdrop: invalid mob id: '%d'.\n", mob_id);
+
+		return false;
+	}
+
+	data = script_getdata(st, 3);
+	script->get_val(st, data);
+
+	if (data_isstring(data))
+	{// "<item name>"
+		const char *name = script->conv_str(st, data);
+		item_data = itemdb->search_name(name);
+
+		if (item_data == NULL)
+		{
+			ShowError("buildin_addmonsterdrop: Invalid item name: '%s'.\n", name);
+			return false;
 		}
-		return false;
+		else
+			item_id = item_data->nameid;
+	}
+	else if (data_isint(data))
+	{// <item id>
+		item_id = script->conv_num(st, data);
+		item_data = itemdb->exists(item_id);
+
+		if (item_data == NULL)
+		{
+			ShowError("buildin_addmonsterdrop: Invalid item ID: '%s'.\n", item_id);
+			return false;
+		}
 	}
 
-	item_id = script_getnum(st,3);
-	if( !itemdb->exists(item_id) ) {
-		ShowError("buildin_addmonsterdrop: Invalid item ID: '%d'.\n", item_id);
-		return false;
-	}
+	rate = script_getnum(st, 4);
 
-	rate = script_getnum(st,4);
-	if( rate < 1 || rate > 10000 ) {
+	if (rate < 1 || rate > 10000)
+	{
 		ShowWarning("buildin_addmonsterdrop: Invalid drop rate '%d'. Capping to the [1:10000] range.\n", rate);
-		rate = cap_value(rate,1,10000);
+		rate = cap_value(rate, 1, 10000);
 	}
 
-	for( i = 0; i < MAX_MOB_DROP; i++ ) {
-		if( monster->dropitem[i].nameid == item_id ) // Item ID found
+	for(i = 0; i < (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION); i++)
+	{
+		if (monster->dropitem[i].nameid == item_id) // Item ID found
 			break;
-		if( c == MAX_MOB_DROP && monster->dropitem[i].nameid < 1 ) // First empty slot
+
+		if (c == (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION) && monster->dropitem[i].nameid < 1) // First empty slot
 			c = i;
 	}
-	if( i < MAX_MOB_DROP ) // If the item ID was found, prefer it
+
+	if (i < (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION)) // If the item ID was found, prefer it
 		c = i;
 
-	if( c < MAX_MOB_DROP ) {
+	if (c < (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION))
+	{
 		// Fill in the slot with the item and rate
 		monster->dropitem[c].nameid = item_id;
 		monster->dropitem[c].p = rate;
-		script_pushint(st,1);
-	} else {
-		//No place to put the new drop
-		script_pushint(st,0);
+		script_pushint(st, 1);
+	}
+	else
+	{
+		// No place to put the new drop
+		script_pushint(st, 0);
 	}
 
 	return true;
@@ -14681,40 +14909,79 @@ BUILDIN(addmonsterdrop) {
  *
  * Returns 1 if succeeded (deleted a mob drop)
  *-------------------------------------------------------*/
-BUILDIN(delmonsterdrop) {
+BUILDIN(delmonsterdrop)
+{
 	struct mob_db *monster;
-	int item_id, i;
+	struct item_data *item_data;
+	struct script_data *data;
+	const char *mob_name;
+	int item_id, mob_id, i;
 
-	if( script_isstring(st,2) )
-		monster = mob->db(mob->db_searchname(script_getstr(st,2)));
-	else
-		monster = mob->db(script_getnum(st,2));
+	data = script_getdata(st, 2);
+	script->get_val(st, data);
 
-	if( monster == mob->dummy ) {
-		if( script_isstring(st,2) ) {
-			ShowError("buildin_delmonsterdrop: invalid mob name: '%s'.\n", script_getstr(st,2));
-		} else {
-			ShowError("buildin_delmonsterdrop: invalid mob id: '%d'.\n", script_getnum(st,2));
+	if (data_isstring(data))
+	{// "<mob name>"
+		mob_name = script->conv_str(st, data);
+		monster = mob->db(mob->db_searchname(mob_name));
+	}
+	else if (data_isint(data))
+	{// <mob id>
+		mob_id = script->conv_num(st, data);
+		monster = mob->db(mob_id);
+	}
+
+	if (monster == mob->dummy)
+	{
+		if (data_isstring(data))
+			ShowError("buildin_delmonsterdrop: invalid mob name: '%s'.\n", mob_name);
+		else if (data_isint(data))
+			ShowError("buildin_delmonsterdrop: invalid mob id: '%d'.\n", mob_id);
+
+		return false;
+	}
+
+	data = script_getdata(st, 3);
+	script->get_val(st, data);
+
+	if (data_isstring(data))
+	{// "<item name>"
+		const char *name = script->conv_str(st, data);
+		item_data = itemdb->search_name(name);
+
+		if (item_data == NULL)
+		{
+			ShowError("buildin_delmonsterdrop: Invalid item name: '%s'.\n", name);
+			return false;
 		}
-		return false;
+		else
+			item_id = item_data->nameid;
+	}
+	else if (data_isint(data))
+	{// <item id>
+		item_id = script->conv_num(st, data);
+		item_data = itemdb->exists(item_id);
+
+		if (item_data == NULL)
+		{
+			ShowError("buildin_delmonsterdrop: Invalid item ID: '%s'.\n", item_id);
+			return false;
+		}
 	}
 
-	item_id = script_getnum(st,3);
-	if( !itemdb->exists(item_id) ) {
-		ShowError("buildin_delmonsterdrop: Invalid item ID: '%d'.\n", item_id);
-		return false;
-	}
-
-	for( i = 0; i < MAX_MOB_DROP; i++ ) {
-		if( monster->dropitem[i].nameid == item_id ) {
+	for(i = 0; i < (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION); i++)
+	{
+		if (monster->dropitem[i].nameid == item_id)
+		{
 			monster->dropitem[i].nameid = 0;
 			monster->dropitem[i].p = 0;
-			script_pushint(st,1);
+			script_pushint(st, 1);
 			return true;
 		}
 	}
+
 	// No drop on that monster
-	script_pushint(st,0);
+	script_pushint(st, 0);
 	return true;
 }
 
@@ -17354,16 +17621,16 @@ BUILDIN(montransform) {
 		if( !sd )	return true;
 
 		if( battle_config.mon_trans_disable_in_gvg && map_flag_gvg2(sd->bl.m) ){
-			clif->message(sd->fd, msg_txt(1488)); // Transforming into monster is not allowed in Guild Wars.
+			clif->message(sd->fd, atcommand->msg_txt(1488)); // Transforming into monster is not allowed in Guild Wars.
 			return true;
 		}
 
 		if( sd->disguise != -1 ){
-			clif->message(sd->fd, msg_txt(1486)); // Cannot transform into monster while in disguise.
+			clif->message(sd->fd, atcommand->msg_txt(1486)); // Cannot transform into monster while in disguise.
 			return true;
 		}
 
-		sprintf(msg, msg_txt(1485), monster->name); // Traaaansformation-!! %s form!!
+		sprintf(msg, atcommand->msg_txt(1485), monster->name); // Traaaansformation-!! %s form!!
 		clif->ShowScript(&sd->bl, msg);
 		status_change_end(bl, SC_MONSTER_TRANSFORM, INVALID_TIMER); // Clear previous
 		sc_start2(bl, SC_MONSTER_TRANSFORM, 100, mob_id, type, tick);
@@ -18169,7 +18436,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getfatherid,""),
 		BUILDIN_DEF(warppartner,"sii"),
 		BUILDIN_DEF(getitemname,"v"),
-		BUILDIN_DEF(getitemslots,"i"),
+		BUILDIN_DEF(getitemslots,"v"), // [Cretino]
 		BUILDIN_DEF(makepet,"i"),
 		BUILDIN_DEF(getexp,"ii"),
 		BUILDIN_DEF(getinventorylist,""),
@@ -18259,8 +18526,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(countstr,"ss?"),
 		BUILDIN_DEF(setnpcdisplay,"sv??"),
 		BUILDIN_DEF(compare,"ss"), // Lordalfa - To bring strstr to scripting Engine.
-		BUILDIN_DEF(getiteminfo,"ii"), //[Lupus] returns Items Buy / sell Price, etc info
-		BUILDIN_DEF(setiteminfo,"iii"), //[Lupus] set Items Buy / sell Price, etc info
+		BUILDIN_DEF(getiteminfo,"vi"), //[Lupus] returns Items Buy / sell Price, etc info // [Cretino]
+		BUILDIN_DEF(setiteminfo,"vii"), //[Lupus] set Items Buy / sell Price, etc info // [Cretino]
 		BUILDIN_DEF(getequipcardid,"ii"), //[Lupus] returns CARD ID or other info from CARD slot N of equipped item
 		// [zBuffer] List of mathematics commands --->
 		BUILDIN_DEF(sqrt,"i"),
@@ -18274,20 +18541,20 @@ void script_parse_builtin(void) {
 		// <--- [zBuffer] List of dynamic var commands
 		BUILDIN_DEF(petstat,"i"),
 		BUILDIN_DEF(callshop,"s?"), // [Skotlex]
-		BUILDIN_DEF(npcshopitem,"sii*"), // [Lance]
-		BUILDIN_DEF(npcshopadditem,"sii*"),
-		BUILDIN_DEF(npcshopdelitem,"si*"),
+		BUILDIN_DEF(npcshopitem,"svi*"), // [Lance] // [Cretino]
+		BUILDIN_DEF(npcshopadditem,"svi*"), // [Cretino]
+		BUILDIN_DEF(npcshopdelitem,"sv*"), // [Cretino]
 		BUILDIN_DEF(npcshopattach,"s?"),
-		BUILDIN_DEF(equip,"i"),
-		BUILDIN_DEF(autoequip,"ii"),
+		BUILDIN_DEF(equip,"v"), // [Cretino]
+		BUILDIN_DEF(autoequip,"vi"), // [Cretino]
 		BUILDIN_DEF(setbattleflag,"si"),
 		BUILDIN_DEF(getbattleflag,"s"),
-		BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus
+		BUILDIN_DEF(setitemscript,"vs?"), //Set NEW item bonus script. Lupus // [Cretino]
 		BUILDIN_DEF(disguise,"i"), //disguise player. Lupus
 		BUILDIN_DEF(undisguise,""), //undisguise player. Lupus
 		BUILDIN_DEF(getmonsterinfo,"ii"), //Lupus
-		BUILDIN_DEF(addmonsterdrop,"vii"),
-		BUILDIN_DEF(delmonsterdrop,"vi"),
+		BUILDIN_DEF(addmonsterdrop,"vvi"), // [Cretino]
+		BUILDIN_DEF(delmonsterdrop,"vv"), // [Cretino]
 		BUILDIN_DEF(axtoi,"s"),
 		BUILDIN_DEF(query_sql,"s*"),
 		BUILDIN_DEF(query_logsql,"s*"),

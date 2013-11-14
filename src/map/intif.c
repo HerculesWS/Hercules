@@ -64,7 +64,7 @@ int intif_create_pet(int account_id,int char_id,short pet_class,short pet_lv,sho
 	WFIFOB(inter_fd,22) = rename_flag;
 	WFIFOB(inter_fd,23) = incuvate;
 	memcpy(WFIFOP(inter_fd,24),pet_name,NAME_LENGTH);
-	WFIFOSET(inter_fd,24+NAME_LENGTH);
+	iSocket->WFIFOSET(inter_fd,24+NAME_LENGTH);
 
 	return 0;
 }
@@ -78,7 +78,7 @@ int intif_request_petdata(int account_id,int char_id,int pet_id)
 	WFIFOL(inter_fd,2) = account_id;
 	WFIFOL(inter_fd,6) = char_id;
 	WFIFOL(inter_fd,10) = pet_id;
-	WFIFOSET(inter_fd,14);
+	iSocket->WFIFOSET(inter_fd,14);
 
 	return 0;
 }
@@ -92,7 +92,7 @@ int intif_save_petdata(int account_id,struct s_pet *p)
 	WFIFOW(inter_fd,2) = sizeof(struct s_pet) + 8;
 	WFIFOL(inter_fd,4) = account_id;
 	memcpy(WFIFOP(inter_fd,8),p,sizeof(struct s_pet));
-	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
+	iSocket->WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
 
 	return 0;
 }
@@ -104,7 +104,7 @@ int intif_delete_petdata(int pet_id)
 	WFIFOHEAD(inter_fd,6);
 	WFIFOW(inter_fd,0) = 0x3083;
 	WFIFOL(inter_fd,2) = pet_id;
-	WFIFOSET(inter_fd,6);
+	iSocket->WFIFOSET(inter_fd,6);
 
 	return 1;
 }
@@ -120,7 +120,7 @@ int intif_rename(struct map_session_data *sd, int type, char *name)
 	WFIFOL(inter_fd,6) = sd->status.char_id;
 	WFIFOB(inter_fd,10) = type;  //Type: 0 - PC, 1 - PET, 2 - HOM
 	memcpy(WFIFOP(inter_fd,11),name, NAME_LENGTH);
-	WFIFOSET(inter_fd,NAME_LENGTH+12);
+	iSocket->WFIFOSET(inter_fd,NAME_LENGTH+12);
 	return 0;
 }
 
@@ -151,7 +151,7 @@ int intif_broadcast(const char* mes, int len, int type)
 	else if( type|BC_WOE )
 		WFIFOL(inter_fd,16) = 0x73737373; //If there's "ssss", game client will recognize message as 'WoE broadcast'.
 	memcpy(WFIFOP(inter_fd,16 + lp), mes, len);
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
+	iSocket->WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
 	return 0;
 }
 
@@ -175,7 +175,7 @@ int intif_broadcast2(const char* mes, int len, unsigned long fontColor, short fo
 	WFIFOW(inter_fd,12) = fontAlign;
 	WFIFOW(inter_fd,14) = fontY;
 	memcpy(WFIFOP(inter_fd,16), mes, len);
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
+	iSocket->WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
 	return 0;
 }
 
@@ -189,7 +189,7 @@ int intif_main_message(struct map_session_data* sd, const char* message)
 	nullpo_ret(sd);
 
 	// format the message for main broadcasting
-	snprintf( output, sizeof(output), msg_txt(386), sd->status.name, message );
+	snprintf( output, sizeof(output), atcommand->msg_txt(386), sd->status.name, message );
 
 	// send the message using the inter-server broadcast service
 	intif_broadcast2( output, strlen(output) + 1, 0xFE000000, 0, 0, 0, 0 );
@@ -219,7 +219,7 @@ int intif_wis_message(struct map_session_data *sd, char *nick, char *mes, int me
 	memcpy(WFIFOP(inter_fd,4), sd->status.name, NAME_LENGTH);
 	memcpy(WFIFOP(inter_fd,4+NAME_LENGTH), nick, NAME_LENGTH);
 	memcpy(WFIFOP(inter_fd,4+2*NAME_LENGTH), mes, mes_len);
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
+	iSocket->WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
 
 	if (battle_config.etc_log)
 		ShowInfo("intif_wis_message from %s to %s (message: '%s')\n", sd->status.name, nick, mes);
@@ -236,7 +236,7 @@ int intif_wis_replay(int id, int flag)
 	WFIFOW(inter_fd,0) = 0x3002;
 	WFIFOL(inter_fd,2) = id;
 	WFIFOB(inter_fd,6) = flag; // flag: 0: success to send wisper, 1: target character is not loged in?, 2: ignored by target
-	WFIFOSET(inter_fd,7);
+	iSocket->WFIFOSET(inter_fd,7);
 
 	if (battle_config.etc_log)
 		ShowInfo("intif_wis_replay: id: %d, flag:%d\n", id, flag);
@@ -257,7 +257,7 @@ int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
 	memcpy(WFIFOP(inter_fd,4), wisp_name, NAME_LENGTH);
 	WFIFOL(inter_fd,4+NAME_LENGTH) = permission;
 	memcpy(WFIFOP(inter_fd,8+NAME_LENGTH), mes, mes_len);
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
+	iSocket->WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
 
 	if (battle_config.etc_log)
 		ShowNotice("intif_wis_message_to_gm: from: '%s', required permission: %d, message: '%s'.\n", wisp_name, permission, mes);
@@ -318,7 +318,7 @@ int intif_saveregistry(struct map_session_data *sd, int type)
 		}
 	}
 	WFIFOW(inter_fd,2)=p;
-	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
+	iSocket->WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
 	return 0;
 }
 
@@ -341,7 +341,7 @@ int intif_request_registry(struct map_session_data *sd, int flag)
 	WFIFOB(inter_fd,10) = (flag&1?1:0); //Request Acc Reg 2
 	WFIFOB(inter_fd,11) = (flag&2?1:0); //Request Acc Reg
 	WFIFOB(inter_fd,12) = (flag&4?1:0); //Request Char Reg
-	WFIFOSET(inter_fd,13);
+	iSocket->WFIFOSET(inter_fd,13);
 
 	return 0;
 }
@@ -354,7 +354,7 @@ int intif_request_guild_storage(int account_id,int guild_id)
 	WFIFOW(inter_fd,0) = 0x3018;
 	WFIFOL(inter_fd,2) = account_id;
 	WFIFOL(inter_fd,6) = guild_id;
-	WFIFOSET(inter_fd,10);
+	iSocket->WFIFOSET(inter_fd,10);
 	return 0;
 }
 int intif_send_guild_storage(int account_id,struct guild_storage *gstor)
@@ -367,7 +367,7 @@ int intif_send_guild_storage(int account_id,struct guild_storage *gstor)
 	WFIFOL(inter_fd,4) = account_id;
 	WFIFOL(inter_fd,8) = gstor->guild_id;
 	memcpy( WFIFOP(inter_fd,12),gstor, sizeof(struct guild_storage) );
-	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
+	iSocket->WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
 	return 0;
 }
 
@@ -385,7 +385,7 @@ int intif_create_party(struct party_member *member,char *name,int item,int item2
 	WFIFOB(inter_fd,28)= item;
 	WFIFOB(inter_fd,29)= item2;
 	memcpy(WFIFOP(inter_fd,30), member, sizeof(struct party_member));
-	WFIFOSET(inter_fd,WFIFOW(inter_fd, 2));
+	iSocket->WFIFOSET(inter_fd,WFIFOW(inter_fd, 2));
 	return 0;
 }
 
@@ -398,7 +398,7 @@ int intif_request_partyinfo(int party_id, int char_id)
 	WFIFOW(inter_fd,0) = 0x3021;
 	WFIFOL(inter_fd,2) = party_id;
 	WFIFOL(inter_fd,6) = char_id;
-	WFIFOSET(inter_fd,10);
+	iSocket->WFIFOSET(inter_fd,10);
 	return 0;
 }
 
@@ -412,7 +412,7 @@ int intif_party_addmember(int party_id,struct party_member *member)
 	WFIFOW(inter_fd,2)=8+sizeof(struct party_member);
 	WFIFOL(inter_fd,4)=party_id;
 	memcpy(WFIFOP(inter_fd,8),member,sizeof(struct party_member));
-	WFIFOSET(inter_fd,WFIFOW(inter_fd, 2));
+	iSocket->WFIFOSET(inter_fd,WFIFOW(inter_fd, 2));
 	return 1;
 }
 
@@ -427,7 +427,7 @@ int intif_party_changeoption(int party_id,int account_id,int exp,int item)
 	WFIFOL(inter_fd,6)=account_id;
 	WFIFOW(inter_fd,10)=exp;
 	WFIFOW(inter_fd,12)=item;
-	WFIFOSET(inter_fd,14);
+	iSocket->WFIFOSET(inter_fd,14);
 	return 0;
 }
 
@@ -441,7 +441,7 @@ int intif_party_leave(int party_id,int account_id, int char_id)
 	WFIFOL(inter_fd,2)=party_id;
 	WFIFOL(inter_fd,6)=account_id;
 	WFIFOL(inter_fd,10)=char_id;
-	WFIFOSET(inter_fd,14);
+	iSocket->WFIFOSET(inter_fd,14);
 	return 0;
 }
 
@@ -467,7 +467,7 @@ int intif_party_changemap(struct map_session_data *sd,int online) {
 	WFIFOW(inter_fd,14)=mapindex;
 	WFIFOB(inter_fd,16)=online;
 	WFIFOW(inter_fd,17)=sd->status.base_level;
-	WFIFOSET(inter_fd,19);
+	iSocket->WFIFOSET(inter_fd,19);
 	return 1;
 }
 
@@ -479,7 +479,7 @@ int intif_break_party(int party_id)
 	WFIFOHEAD(inter_fd,6);
 	WFIFOW(inter_fd,0)=0x3026;
 	WFIFOL(inter_fd,2)=party_id;
-	WFIFOSET(inter_fd,6);
+	iSocket->WFIFOSET(inter_fd,6);
 	return 0;
 }
 
@@ -498,7 +498,7 @@ int intif_party_message(int party_id,int account_id,const char *mes,int len)
 	WFIFOL(inter_fd,4)=party_id;
 	WFIFOL(inter_fd,8)=account_id;
 	memcpy(WFIFOP(inter_fd,12),mes,len);
-	WFIFOSET(inter_fd,len+12);
+	iSocket->WFIFOSET(inter_fd,len+12);
 	return 0;
 }
 
@@ -512,7 +512,7 @@ int intif_party_leaderchange(int party_id,int account_id,int char_id)
 	WFIFOL(inter_fd,2)=party_id;
 	WFIFOL(inter_fd,6)=account_id;
 	WFIFOL(inter_fd,10)=char_id;
-	WFIFOSET(inter_fd,14);
+	iSocket->WFIFOSET(inter_fd,14);
 	return 0;
 }
 
@@ -529,7 +529,7 @@ int intif_guild_create(const char *name,const struct guild_member *master)
 	WFIFOL(inter_fd,4)=master->account_id;
 	memcpy(WFIFOP(inter_fd,8),name,NAME_LENGTH);
 	memcpy(WFIFOP(inter_fd,8+NAME_LENGTH),master,sizeof(struct guild_member));
-	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
+	iSocket->WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
 	return 0;
 }
 
@@ -541,7 +541,7 @@ int intif_guild_request_info(int guild_id)
 	WFIFOHEAD(inter_fd,6);
 	WFIFOW(inter_fd,0) = 0x3031;
 	WFIFOL(inter_fd,2) = guild_id;
-	WFIFOSET(inter_fd,6);
+	iSocket->WFIFOSET(inter_fd,6);
 	return 0;
 }
 
@@ -555,7 +555,7 @@ int intif_guild_addmember(int guild_id,struct guild_member *m)
 	WFIFOW(inter_fd,2) = sizeof(struct guild_member)+8;
 	WFIFOL(inter_fd,4) = guild_id;
 	memcpy(WFIFOP(inter_fd,8),m,sizeof(struct guild_member));
-	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
+	iSocket->WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
 	return 0;
 }
 
@@ -569,7 +569,7 @@ int intif_guild_change_gm(int guild_id, const char* name, int len)
 	WFIFOW(inter_fd, 2)=len+8;
 	WFIFOL(inter_fd, 4)=guild_id;
 	memcpy(WFIFOP(inter_fd,8),name,len);
-	WFIFOSET(inter_fd,len+8);
+	iSocket->WFIFOSET(inter_fd,len+8);
 	return 0;
 }
 
@@ -585,7 +585,7 @@ int intif_guild_leave(int guild_id,int account_id,int char_id,int flag,const cha
 	WFIFOL(inter_fd,10) = char_id;
 	WFIFOB(inter_fd,14) = flag;
 	safestrncpy((char*)WFIFOP(inter_fd,15),mes,40);
-	WFIFOSET(inter_fd,55);
+	iSocket->WFIFOSET(inter_fd,55);
 	return 0;
 }
 
@@ -602,7 +602,7 @@ int intif_guild_memberinfoshort(int guild_id,int account_id,int char_id,int onli
 	WFIFOB(inter_fd,14) = online;
 	WFIFOW(inter_fd,15) = lv;
 	WFIFOW(inter_fd,17) = class_;
-	WFIFOSET(inter_fd,19);
+	iSocket->WFIFOSET(inter_fd,19);
 	return 0;
 }
 
@@ -614,7 +614,7 @@ int intif_guild_break(int guild_id)
 	WFIFOHEAD(inter_fd, 6);
 	WFIFOW(inter_fd, 0) = 0x3036;
 	WFIFOL(inter_fd, 2) = guild_id;
-	WFIFOSET(inter_fd,6);
+	iSocket->WFIFOSET(inter_fd,6);
 	return 0;
 }
 
@@ -633,7 +633,7 @@ int intif_guild_message(int guild_id,int account_id,const char *mes,int len)
 	WFIFOL(inter_fd,4)=guild_id;
 	WFIFOL(inter_fd,8)=account_id;
 	memcpy(WFIFOP(inter_fd,12),mes,len);
-	WFIFOSET(inter_fd,len+12);
+	iSocket->WFIFOSET(inter_fd,len+12);
 
 	return 0;
 }
@@ -649,7 +649,7 @@ int intif_guild_change_basicinfo(int guild_id,int type,const void *data,int len)
 	WFIFOL(inter_fd,4)=guild_id;
 	WFIFOW(inter_fd,8)=type;
 	memcpy(WFIFOP(inter_fd,10),data,len);
-	WFIFOSET(inter_fd,len+10);
+	iSocket->WFIFOSET(inter_fd,len+10);
 	return 0;
 }
 
@@ -667,7 +667,7 @@ int intif_guild_change_memberinfo(int guild_id,int account_id,int char_id,
 	WFIFOL(inter_fd,12)=char_id;
 	WFIFOW(inter_fd,16)=type;
 	memcpy(WFIFOP(inter_fd,18),data,len);
-	WFIFOSET(inter_fd,len+18);
+	iSocket->WFIFOSET(inter_fd,len+18);
 	return 0;
 }
 
@@ -682,7 +682,7 @@ int intif_guild_position(int guild_id,int idx,struct guild_position *p)
 	WFIFOL(inter_fd,4)=guild_id;
 	WFIFOL(inter_fd,8)=idx;
 	memcpy(WFIFOP(inter_fd,12),p,sizeof(struct guild_position));
-	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
+	iSocket->WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
 	return 0;
 }
 
@@ -697,7 +697,7 @@ int intif_guild_skillup(int guild_id, uint16 skill_id, int account_id, int max)
 	WFIFOL(inter_fd, 6)  = skill_id;
 	WFIFOL(inter_fd, 10) = account_id;
 	WFIFOL(inter_fd, 14) = max;
-	WFIFOSET(inter_fd, 18);
+	iSocket->WFIFOSET(inter_fd, 18);
 	return 0;
 }
 
@@ -713,7 +713,7 @@ int intif_guild_alliance(int guild_id1,int guild_id2,int account_id1,int account
 	WFIFOL(inter_fd,10)=account_id1;
 	WFIFOL(inter_fd,14)=account_id2;
 	WFIFOB(inter_fd,18)=flag;
-	WFIFOSET(inter_fd,19);
+	iSocket->WFIFOSET(inter_fd,19);
 	return 0;
 }
 
@@ -727,7 +727,7 @@ int intif_guild_notice(int guild_id,const char *mes1,const char *mes2)
 	WFIFOL(inter_fd,2)=guild_id;
 	memcpy(WFIFOP(inter_fd,6),mes1,MAX_GUILDMES1);
 	memcpy(WFIFOP(inter_fd,66),mes2,MAX_GUILDMES2);
-	WFIFOSET(inter_fd,186);
+	iSocket->WFIFOSET(inter_fd,186);
 	return 0;
 }
 
@@ -744,7 +744,7 @@ int intif_guild_emblem(int guild_id,int len,const char *data)
 	WFIFOL(inter_fd,4)=guild_id;
 	WFIFOL(inter_fd,8)=0;
 	memcpy(WFIFOP(inter_fd,12),data,len);
-	WFIFOSET(inter_fd,len+12);
+	iSocket->WFIFOSET(inter_fd,len+12);
 	return 0;
 }
 
@@ -761,7 +761,7 @@ int intif_guild_castle_dataload(int num, int *castle_ids)
 	WFIFOW(inter_fd, 0) = 0x3040;
 	WFIFOW(inter_fd, 2) = 4 + num * sizeof(int);
 	memcpy(WFIFOP(inter_fd, 4), castle_ids, num * sizeof(int));
-	WFIFOSET(inter_fd, WFIFOW(inter_fd, 2));
+	iSocket->WFIFOSET(inter_fd, WFIFOW(inter_fd, 2));
 	return 1;
 }
 
@@ -776,7 +776,7 @@ int intif_guild_castle_datasave(int castle_id,int index, int value)
 	WFIFOW(inter_fd,2)=castle_id;
 	WFIFOB(inter_fd,4)=index;
 	WFIFOL(inter_fd,5)=value;
-	WFIFOSET(inter_fd,9);
+	iSocket->WFIFOSET(inter_fd,9);
 	return 1;
 }
 
@@ -793,7 +793,7 @@ int intif_homunculus_create(int account_id, struct s_homunculus *sh)
 	WFIFOW(inter_fd,2) = sizeof(struct s_homunculus)+8;
 	WFIFOL(inter_fd,4) = account_id;
 	memcpy(WFIFOP(inter_fd,8),sh,sizeof(struct s_homunculus));
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
+	iSocket->WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
 	return 0;
 }
 
@@ -804,7 +804,7 @@ bool intif_homunculus_requestload(int account_id, int homun_id) {
 	WFIFOW(inter_fd,0) = 0x3091;
 	WFIFOL(inter_fd,2) = account_id;
 	WFIFOL(inter_fd,6) = homun_id;
-	WFIFOSET(inter_fd, 10);
+	iSocket->WFIFOSET(inter_fd, 10);
 	return true;
 }
 
@@ -817,7 +817,7 @@ int intif_homunculus_requestsave(int account_id, struct s_homunculus* sh)
 	WFIFOW(inter_fd,2) = sizeof(struct s_homunculus)+8;
 	WFIFOL(inter_fd,4) = account_id;
 	memcpy(WFIFOP(inter_fd,8),sh,sizeof(struct s_homunculus));
-	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
+	iSocket->WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
 	return 0;
 
 }
@@ -829,7 +829,7 @@ int intif_homunculus_requestdelete(int homun_id)
 	WFIFOHEAD(inter_fd, 6);
 	WFIFOW(inter_fd, 0) = 0x3093;
 	WFIFOL(inter_fd,2) = homun_id;
-	WFIFOSET(inter_fd,6);
+	iSocket->WFIFOSET(inter_fd,6);
 	return 0;
 
 }
@@ -1316,7 +1316,7 @@ int intif_request_questlog(TBL_PC *sd)
 	WFIFOHEAD(inter_fd,6);
 	WFIFOW(inter_fd,0) = 0x3060;
 	WFIFOL(inter_fd,2) = sd->status.char_id;
-	WFIFOSET(inter_fd,6);
+	iSocket->WFIFOSET(inter_fd,6);
 	return 0;
 }
 
@@ -1380,7 +1380,7 @@ int intif_quest_save(TBL_PC *sd)
 	WFIFOL(inter_fd,4) = sd->status.char_id;
 	if( sd->num_quests )
 		memcpy(WFIFOP(inter_fd,8), &sd->quest_log, sizeof(struct quest)*sd->num_quests);
-	WFIFOSET(inter_fd,  len);
+	iSocket->WFIFOSET(inter_fd,  len);
 
 	return 0;
 }
@@ -1403,7 +1403,7 @@ int intif_Mail_requestinbox(int char_id, unsigned char flag)
 	WFIFOW(inter_fd,0) = 0x3048;
 	WFIFOL(inter_fd,2) = char_id;
 	WFIFOB(inter_fd,6) = flag;
-	WFIFOSET(inter_fd,7);
+	iSocket->WFIFOSET(inter_fd,7);
 
 	return 0;
 }
@@ -1432,7 +1432,7 @@ void intif_parse_MailInboxReceived(int fd) {
 		clif->mail_refreshinbox(sd);
 	else if( battle_config.mail_show_status && ( battle_config.mail_show_status == 1 || sd->mail.inbox.unread ) ) {
 		char output[128];
-		sprintf(output, msg_txt(510), sd->mail.inbox.unchecked, sd->mail.inbox.unread + sd->mail.inbox.unchecked);
+		sprintf(output, atcommand->msg_txt(510), sd->mail.inbox.unchecked, sd->mail.inbox.unread + sd->mail.inbox.unchecked);
 		clif->disp_onlyself(sd, output, strlen(output));
 	}
 }
@@ -1447,7 +1447,7 @@ int intif_Mail_read(int mail_id)
 	WFIFOHEAD(inter_fd,6);
 	WFIFOW(inter_fd,0) = 0x3049;
 	WFIFOL(inter_fd,2) = mail_id;
-	WFIFOSET(inter_fd,6);
+	iSocket->WFIFOSET(inter_fd,6);
 
 	return 0;
 }
@@ -1463,7 +1463,7 @@ int intif_Mail_getattach(int char_id, int mail_id)
 	WFIFOW(inter_fd,0) = 0x304a;
 	WFIFOL(inter_fd,2) = char_id;
 	WFIFOL(inter_fd,6) = mail_id;
-	WFIFOSET(inter_fd, 10);
+	iSocket->WFIFOSET(inter_fd, 10);
 
 	return 0;
 }
@@ -1501,7 +1501,7 @@ int intif_Mail_delete(int char_id, int mail_id)
 	WFIFOW(inter_fd,0) = 0x304b;
 	WFIFOL(inter_fd,2) = char_id;
 	WFIFOL(inter_fd,6) = mail_id;
-	WFIFOSET(inter_fd,10);
+	iSocket->WFIFOSET(inter_fd,10);
 
 	return 0;
 }
@@ -1543,7 +1543,7 @@ int intif_Mail_return(int char_id, int mail_id)
 	WFIFOW(inter_fd,0) = 0x304c;
 	WFIFOL(inter_fd,2) = char_id;
 	WFIFOL(inter_fd,6) = mail_id;
-	WFIFOSET(inter_fd,10);
+	iSocket->WFIFOSET(inter_fd,10);
 
 	return 0;
 }
@@ -1587,7 +1587,7 @@ int intif_Mail_send(int account_id, struct mail_message *msg)
 	WFIFOW(inter_fd,2) = len;
 	WFIFOL(inter_fd,4) = account_id;
 	memcpy(WFIFOP(inter_fd,8), msg, sizeof(struct mail_message));
-	WFIFOSET(inter_fd,len);
+	iSocket->WFIFOSET(inter_fd,len);
 
 	return 1;
 }
@@ -1650,7 +1650,7 @@ int intif_Auction_requestlist(int char_id, short type, int price, const char* se
 	WFIFOL(inter_fd,10) = price;
 	WFIFOW(inter_fd,14) = page;
 	memcpy(WFIFOP(inter_fd,16), searchtext, NAME_LENGTH);
-	WFIFOSET(inter_fd,len);
+	iSocket->WFIFOSET(inter_fd,len);
 
 	return 0;
 }
@@ -1678,7 +1678,7 @@ int intif_Auction_register(struct auction_data *auction)
 	WFIFOW(inter_fd,0) = 0x3051;
 	WFIFOW(inter_fd,2) = len;
 	memcpy(WFIFOP(inter_fd,4), auction, sizeof(struct auction_data));
-	WFIFOSET(inter_fd,len);
+	iSocket->WFIFOSET(inter_fd,len);
 
 	return 1;
 }
@@ -1719,7 +1719,7 @@ int intif_Auction_cancel(int char_id, unsigned int auction_id)
 	WFIFOW(inter_fd,0) = 0x3052;
 	WFIFOL(inter_fd,2) = char_id;
 	WFIFOL(inter_fd,6) = auction_id;
-	WFIFOSET(inter_fd,10);
+	iSocket->WFIFOSET(inter_fd,10);
 
 	return 0;
 }
@@ -1748,7 +1748,7 @@ int intif_Auction_close(int char_id, unsigned int auction_id)
 	WFIFOW(inter_fd,0) = 0x3053;
 	WFIFOL(inter_fd,2) = char_id;
 	WFIFOL(inter_fd,6) = auction_id;
-	WFIFOSET(inter_fd,10);
+	iSocket->WFIFOSET(inter_fd,10);
 
 	return 0;
 }
@@ -1782,7 +1782,7 @@ int intif_Auction_bid(int char_id, const char* name, unsigned int auction_id, in
 	WFIFOL(inter_fd,8) = auction_id;
 	WFIFOL(inter_fd,12) = bid;
 	memcpy(WFIFOP(inter_fd,16), name, NAME_LENGTH);
-	WFIFOSET(inter_fd,len);
+	iSocket->WFIFOSET(inter_fd,len);
 
 	return 0;
 }
@@ -1830,7 +1830,7 @@ int intif_mercenary_create(struct s_mercenary *merc)
 	WFIFOW(inter_fd,0) = 0x3070;
 	WFIFOW(inter_fd,2) = size;
 	memcpy(WFIFOP(inter_fd,4), merc, sizeof(struct s_mercenary));
-	WFIFOSET(inter_fd,size);
+	iSocket->WFIFOSET(inter_fd,size);
 	return 0;
 }
 
@@ -1855,7 +1855,7 @@ int intif_mercenary_request(int merc_id, int char_id)
 	WFIFOW(inter_fd,0) = 0x3071;
 	WFIFOL(inter_fd,2) = merc_id;
 	WFIFOL(inter_fd,6) = char_id;
-	WFIFOSET(inter_fd,10);
+	iSocket->WFIFOSET(inter_fd,10);
 	return 0;
 }
 
@@ -1867,7 +1867,7 @@ int intif_mercenary_delete(int merc_id)
 	WFIFOHEAD(inter_fd,6);
 	WFIFOW(inter_fd,0) = 0x3072;
 	WFIFOL(inter_fd,2) = merc_id;
-	WFIFOSET(inter_fd,6);
+	iSocket->WFIFOSET(inter_fd,6);
 	return 0;
 }
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
@@ -1887,7 +1887,7 @@ int intif_mercenary_save(struct s_mercenary *merc)
 	WFIFOW(inter_fd,0) = 0x3073;
 	WFIFOW(inter_fd,2) = size;
 	memcpy(WFIFOP(inter_fd,4), merc, sizeof(struct s_mercenary));
-	WFIFOSET(inter_fd,size);
+	iSocket->WFIFOSET(inter_fd,size);
 	return 0;
 }
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
@@ -1910,7 +1910,7 @@ int intif_elemental_create(struct s_elemental *ele)
 	WFIFOW(inter_fd,0) = 0x307c;
 	WFIFOW(inter_fd,2) = size;
 	memcpy(WFIFOP(inter_fd,4), ele, sizeof(struct s_elemental));
-	WFIFOSET(inter_fd,size);
+	iSocket->WFIFOSET(inter_fd,size);
 	return 0;
 }
 
@@ -1935,7 +1935,7 @@ int intif_elemental_request(int ele_id, int char_id)
 	WFIFOW(inter_fd,0) = 0x307d;
 	WFIFOL(inter_fd,2) = ele_id;
 	WFIFOL(inter_fd,6) = char_id;
-	WFIFOSET(inter_fd,10);
+	iSocket->WFIFOSET(inter_fd,10);
 	return 0;
 }
 
@@ -1947,7 +1947,7 @@ int intif_elemental_delete(int ele_id)
 	WFIFOHEAD(inter_fd,6);
 	WFIFOW(inter_fd,0) = 0x307e;
 	WFIFOL(inter_fd,2) = ele_id;
-	WFIFOSET(inter_fd,6);
+	iSocket->WFIFOSET(inter_fd,6);
 	return 0;
 }
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
@@ -1967,7 +1967,7 @@ int intif_elemental_save(struct s_elemental *ele)
 	WFIFOW(inter_fd,0) = 0x307f;
 	WFIFOW(inter_fd,2) = size;
 	memcpy(WFIFOP(inter_fd,4), ele, sizeof(struct s_elemental));
-	WFIFOSET(inter_fd,size);
+	iSocket->WFIFOSET(inter_fd,size);
 	return 0;
 }
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
@@ -1987,7 +1987,7 @@ void intif_request_accinfo( int u_fd, int aid, int group_lv, char* query ) {
 	WFIFOL(inter_fd,10) = group_lv;
     safestrncpy((char *)WFIFOP(inter_fd,14), query, NAME_LENGTH);
 
-	WFIFOSET(inter_fd,2 + 4 + 4 + 4 + NAME_LENGTH);
+	iSocket->WFIFOSET(inter_fd,2 + 4 + 4 + 4 + NAME_LENGTH);
 
 	return;
 }
@@ -2020,7 +2020,7 @@ void intif_itembound_req(int char_id,int aid,int guild_id) {
 	WFIFOL(inter_fd,2) = char_id;
 	WFIFOL(inter_fd,6) = aid;
 	WFIFOW(inter_fd,10) = guild_id;
-	WFIFOSET(inter_fd,12);
+	iSocket->WFIFOSET(inter_fd,12);
 	if(gstor)
 		gstor->lock = 1; //Lock for retrieval process
 #endif
@@ -2149,7 +2149,7 @@ int intif_parse(int fd)
 		return 0;
 	}
     // Skip packet
-	RFIFOSKIP(fd,packet_len);
+	iSocket->RFIFOSKIP(fd,packet_len);
 	return 1;
 }
 

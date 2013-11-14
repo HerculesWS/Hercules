@@ -43,6 +43,8 @@
 	#endif
 #endif
 
+struct socket_interface iSocket_s;
+
 /////////////////////////////////////////////////////////////////////
 #if defined(WIN32)
 /////////////////////////////////////////////////////////////////////
@@ -466,7 +468,7 @@ int connect_client(int listen_fd) {
 
 #ifndef MINICORE
 	if( ip_rules && !connect_check(ntohl(client_address.sin_addr.s_addr)) ) {
-		do_close(fd);
+		iSocket->do_close(fd);
 		return -1;
 	}
 #endif
@@ -531,7 +533,7 @@ int make_listen_bind(uint32 ip, uint16 port)
 	return fd;
 }
 
-int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt) {
+int _make_connection(uint32 ip, uint16 port, struct hSockOpt *opt) {
 	struct sockaddr_in remote_address;
 	int fd;
 	int result;
@@ -566,7 +568,7 @@ int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt) {
 	if( result == SOCKET_ERROR ) {
 		if( !( opt && opt->silent ) )
 			ShowError("make_connection: connect failed (socket #%d, %s)!\n", fd, error_msg());
-		do_close(fd);
+		iSocket->do_close(fd);
 		return -1;
 	}
 	//Now the socket can be made non-blocking. [Skotlex]
@@ -623,7 +625,7 @@ static void delete_session(int fd)
 	}
 }
 
-int realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size)
+int _realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size)
 {
 	if( !session_isValid(fd) )
 		return 0;
@@ -640,7 +642,7 @@ int realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size)
 	return 0;
 }
 
-int realloc_writefifo(int fd, size_t addition)
+int _realloc_writefifo(int fd, size_t addition)
 {
 	size_t newsize;
 
@@ -668,7 +670,7 @@ int realloc_writefifo(int fd, size_t addition)
 }
 
 /// advance the RFIFO cursor (marking 'len' bytes as processed)
-int RFIFOSKIP(int fd, size_t len)
+int _RFIFOSKIP(int fd, size_t len)
 {
     struct socket_data *s;
 
@@ -690,7 +692,7 @@ int RFIFOSKIP(int fd, size_t len)
 }
 
 /// advance the WFIFO cursor (marking 'len' bytes for sending)
-int WFIFOSET(int fd, size_t len)
+int _WFIFOSET(int fd, size_t len)
 {
 	size_t newreserve;
 	struct socket_data* s = session[fd];
@@ -751,7 +753,7 @@ int WFIFOSET(int fd, size_t len)
 	newreserve = s->flag.server ? FIFOSIZE_SERVERLINK / 4 : WFIFO_SIZE;
 
 	// readjust the buffer to include the chosen reserve
-	realloc_writefifo(fd, newreserve);
+	iSocket->realloc_writefifo(fd, newreserve);
 
 #ifdef SEND_SHORTLIST
 	send_shortlist_add_fd(fd);
@@ -1216,7 +1218,7 @@ void socket_final(void)
 
 	for( i = 1; i < fd_max; i++ )
 		if(session[i])
-			do_close(i);
+			iSocket->do_close(i);
 
 	// session[0] のダミーデータを削除
 	aFree(session[0]->rdata);
@@ -1227,7 +1229,7 @@ void socket_final(void)
 }
 
 /// Closes a socket.
-void do_close(int fd)
+void _do_close(int fd)
 {
 	if( fd <= 0 ||fd >= FD_SETSIZE )
 		return;// invalid
@@ -1497,7 +1499,7 @@ void socket_datasync(int fd, bool send) {
 			WFIFOL(fd, 4 + ( i * 4 ) ) = data_list[i].length;
 		}
 		
-		WFIFOSET(fd, p_len);
+		iSocket->WFIFOSET(fd, p_len);
 	} else {
 		for( i = 0; i < alen; i++ ) {
 			if( RFIFOL(fd, 4 + (i * 4) ) != data_list[i].length ) {
@@ -1506,7 +1508,7 @@ void socket_datasync(int fd, bool send) {
 				WFIFOW(fd, 0) = 0x2b0a;
 				WFIFOW(fd, 2) = 8;
 				WFIFOL(fd, 4) = 0;
-				WFIFOSET(fd, 8);
+				iSocket->WFIFOSET(fd, 8);
 				flush_fifo(fd);
 				/* shut down */
 				ShowFatalError("Servers are out of sync! recompile from scratch (%d)\n",i);
@@ -1593,3 +1595,13 @@ void send_shortlist_do_sends()
 	}
 }
 #endif
+
+void socket_defaults(void) {
+	iSocket = &iSocket_s;
+	iSocket->realloc_fifo = _realloc_fifo;
+	iSocket->realloc_writefifo = _realloc_writefifo;
+	iSocket->WFIFOSET = _WFIFOSET;
+	iSocket->RFIFOSKIP = _RFIFOSKIP;
+	iSocket->do_close = _do_close;
+	iSocket->make_connection = _make_connection;
+}

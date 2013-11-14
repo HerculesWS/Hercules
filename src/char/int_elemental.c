@@ -103,7 +103,7 @@ static void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char 
 	WFIFOW(fd,2) = size;
 	WFIFOB(fd,4) = flag;
 	memcpy(WFIFOP(fd,5),ele,sizeof(struct s_elemental));
-	WFIFOSET(fd,size);
+	iSocket->WFIFOSET(fd,size);
 }
 
 static void mapif_parse_elemental_create(int fd, struct s_elemental* ele) {
@@ -121,7 +121,7 @@ static void mapif_elemental_deleted(int fd, unsigned char flag) {
 	WFIFOHEAD(fd,3);
 	WFIFOW(fd,0) = 0x387d;
 	WFIFOB(fd,2) = flag;
-	WFIFOSET(fd,3);
+	iSocket->WFIFOSET(fd,3);
 }
 
 static void mapif_parse_elemental_delete(int fd, int ele_id) {
@@ -133,7 +133,7 @@ static void mapif_elemental_saved(int fd, unsigned char flag) {
 	WFIFOHEAD(fd,3);
 	WFIFOW(fd,0) = 0x387e;
 	WFIFOB(fd,2) = flag;
-	WFIFOSET(fd,3);
+	iSocket->WFIFOSET(fd,3);
 }
 
 static void mapif_parse_elemental_save(int fd, struct s_elemental* ele) {

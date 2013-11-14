@@ -24,7 +24,7 @@ struct HPluginData;
 
 // socket I/O macros
 #define RFIFOHEAD(fd)
-#define WFIFOHEAD(fd, size) do{ if((fd) && session[fd]->wdata_size + (size) > session[fd]->max_wdata ) realloc_writefifo(fd, size); }while(0)
+#define WFIFOHEAD(fd, size) do{ if((fd) && session[fd]->wdata_size + (size) > session[fd]->max_wdata ) iSocket->realloc_writefifo(fd, size); }while(0)
 #define RFIFOP(fd,pos) (session[fd]->rdata + session[fd]->rdata_pos + (pos))
 #define WFIFOP(fd,pos) (session[fd]->wdata + session[fd]->wdata_size + (pos))
 
@@ -125,14 +125,17 @@ extern bool session_isActive(int fd);
 // Function prototype declaration
 
 int make_listen_bind(uint32 ip, uint16 port);
-int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt);
+// int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt);
+
+/*
 int realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size);
 int realloc_writefifo(int fd, size_t addition);
 int WFIFOSET(int fd, size_t len);
 int RFIFOSKIP(int fd, size_t len);
+*/
 
 int do_sockets(int next);
-void do_close(int fd);
+// void do_close(int fd);
 void socket_init(void);
 void socket_final(void);
 
@@ -174,5 +177,18 @@ void send_shortlist_add_fd(int fd);
 // Do pending network sends (and eof handling) from the shortlist.
 void send_shortlist_do_sends();
 #endif
+
+void socket_defaults(void);
+
+struct socket_interface {
+	int (*realloc_fifo)(int fd, unsigned int rfifo_size, unsigned int wfifo_size);
+	int (*realloc_writefifo)(int fd, size_t addition);
+	int (*WFIFOSET)(int fd, size_t len);
+	int (*RFIFOSKIP)(int fd, size_t len);
+	void (*do_close)(int fd);
+	int (*make_connection)(uint32 ip, uint16 port, struct hSockOpt *opt);
+};
+
+struct socket_interface *iSocket;
 
 #endif /* _SOCKET_H_ */

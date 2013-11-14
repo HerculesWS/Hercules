@@ -140,7 +140,7 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 	nd->bl.y = md->bl.y;
 	nd->bl.type = BL_NPC;
 
-	safestrncpy(nd->name, msg_txt(656), sizeof(nd->name));
+	safestrncpy(nd->name, atcommand->msg_txt(656), sizeof(nd->name));
 
 	nd->class_ = 565;
 	nd->speed = 200;
@@ -2288,7 +2288,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		dlist->third_charid = (third_sd ? third_sd->status.char_id : 0);
 		dlist->item = NULL;
 
-		for (i = 0; i < MAX_MOB_DROP; i++)
+		for (i = 0; i < (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION); i++)
 		{
 			if (md->db->dropitem[i].nameid <= 0)
 				continue;
@@ -2352,7 +2352,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 			//A Rare Drop Global Announce by Lupus
 			if( mvp_sd && drop_rate <= battle_config.rare_drop_announce ) {
 				char message[128];
-				sprintf (message, msg_txt(541), mvp_sd->status.name, md->name, it->jname, (float)drop_rate/100);
+				sprintf (message, atcommand->msg_txt(541), mvp_sd->status.name, md->name, it->jname, (float)drop_rate/100);
 				//MSG: "'%s' won %s's %s (chance: %0.02f%%)"
 				intif->broadcast(message, strlen(message)+1, BC_DEFAULT);
 			}
@@ -2493,7 +2493,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 				//A Rare MVP Drop Global Announce by Lupus
 				if(temp<=battle_config.rare_drop_announce) {
 					char message[128];
-					sprintf (message, msg_txt(541), mvp_sd->status.name, md->name, data->jname, temp/100.);
+					sprintf (message, atcommand->msg_txt(541), mvp_sd->status.name, md->name, data->jname, temp/100.);
 					//MSG: "'%s' won %s's %s (chance: %0.02f%%)"
 					intif->broadcast(message, strlen(message)+1, BC_DEFAULT);
 				}
@@ -3767,7 +3767,7 @@ bool mob_parse_dbrow(char** str) {
 		}
 	}
 
-	for(i = 0; i < MAX_MOB_DROP; i++) {
+	for(i = 0; i < (MAX_MOB_DROP+MAX_MOB_DROP_EXPANSION); i++) {
 		int rate = 0, rate_adjust, type;
 		unsigned short ratemin, ratemax;
 		struct item_data *id;
@@ -3872,7 +3872,7 @@ void mob_readdb(void) {
 			}
 		}
 
-		sv->readdb(map->db_path, filename[fi], ',', 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP, 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP, -1, mob->readdb_sub);
+		sv->readdb(map->db_path, filename[fi], ',', 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP, 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP+2*MAX_MOB_DROP_EXPANSION, -1, mob->readdb_sub);
 	}
 	mob->name_constants();
 }
@@ -3897,12 +3897,12 @@ int mob_read_sqldb(void) {
 		while( SQL_SUCCESS == SQL->NextRow(map->mysql_handle) ) {
 			// wrap the result into a TXT-compatible format
 			char line[1024];
-			char* str[31+2*MAX_MVP_DROP+2*MAX_MOB_DROP];
+			char* str[31+2*MAX_MVP_DROP+2*MAX_MOB_DROP+2*MAX_MOB_DROP_EXPANSION];
 			char* p;
 			int i;
 
 			lines++;
-			for(i = 0, p = line; i < 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP; i++)
+			for(i = 0, p = line; i < 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP+2*MAX_MOB_DROP_EXPANSION; i++)
 			{
 				char* data;
 				size_t len;

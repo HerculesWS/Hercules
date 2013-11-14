@@ -4,6 +4,9 @@
 #ifndef _CONFIG_RENEWAL_H_
 #define _CONFIG_RENEWAL_H_
 
+/// Uncomment to disable all renewal options.
+//#define DISABLE_RENEWAL
+
 /**
  * Hercules configuration file (http://hercules.ws)
  * For detailed guidance on these check http://hercules.ws/wiki/SRC/config/

@@ -5620,7 +5620,7 @@ int do_init(int argc, char *argv[])
 	vending->init(minimal);
 
 	if (minimal) {
-		if (npc->parsesrcfile(scriptcheck, false) == 0)
+		if (npc->parsesrcfile(scriptcheck, false, 3) == 0)
 			exit(EXIT_SUCCESS);
 		exit(EXIT_FAILURE);
 	}

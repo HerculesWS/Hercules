@@ -25,6 +25,9 @@
 struct malloc_interface iMalloc_HPM;
 struct malloc_interface *HPMiMalloc;
 
+struct socket_interface iSocket_HPM;
+struct socket_interface *HPMiSocket;
+
 void hplugin_trigger_event(enum hp_event_types type) {
 	unsigned int i;
 	for( i = 0; i < HPM->plugin_count; i++ ) {
@@ -487,7 +490,7 @@ unsigned char hplugins_parse_packets(int fd, enum HPluginPacketHookingPoints poi
 		}
 		
 		packet->receive(fd);
-		RFIFOSKIP(fd, length);
+		iSocket->RFIFOSKIP(fd, length);
 		return 1;
 	}
 	
@@ -534,6 +537,37 @@ void* HPM_realloc(void *p, size_t size, const char *file, int line, const char *
 char* HPM_astrdup(const char *p, const char *file, int line, const char *func) {
 	return iMalloc->astrdup(p,HPM_file2ptr(file),line,func);
 }
+/// Sockets
+int HPM_realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size)
+{
+	return iSocket->realloc_fifo(fd,rfifo_size,wfifo_size);
+}
+
+int HPM_realloc_writefifo(int fd, size_t addition)
+{
+	return iSocket->realloc_writefifo(fd,addition);
+}
+
+int HPM_WFIFOSET(int fd, size_t len)
+{
+	return iSocket->WFIFOSET(fd,len);
+}
+
+int HPM_RFIFOSKIP(int fd, size_t len)
+{
+	return iSocket->RFIFOSKIP(fd,len);
+}
+
+void HPM_do_close(int fd)
+{
+	iSocket->do_close(fd);
+}
+
+int HPM_make_connection(uint32 ip, uint16 port, struct hSockOpt *opt)
+{
+	return iSocket->make_connection(ip,port,opt);
+}
+
 /* todo: add ability for tracking using pID for the upcoming runtime load/unload support. */
 bool HPM_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID) {
 	if( !HPM->hooking ) {
@@ -626,11 +660,12 @@ void hplugins_share_defaults(void) {
 	HPM->share((void*)get_git_hash,"get_git_hash");
 	HPM->share(DB, "DB");
 	HPM->share(HPMiMalloc, "iMalloc");
+	HPM->share(HPMiSocket, "iSocket");
 	/* socket */
-	HPM->share(RFIFOSKIP,"RFIFOSKIP");
-	HPM->share(WFIFOSET,"WFIFOSET");
-	HPM->share(do_close,"do_close");
-	HPM->share(make_connection,"make_connection");
+	// HPM->share(iSocket->RFIFOSKIP,"RFIFOSKIP");
+	// HPM->share(iSocket->WFIFOSET,"WFIFOSET");
+	// HPM->share(do_close,"do_close");
+	// HPM->share(make_connection,"make_connection");
 	//session,fd_max and addr_ are shared from within socket.c
 	/* strlib */
 	HPM->share(strlib,"strlib");
@@ -657,6 +692,15 @@ void hpm_init(void) {
 	HPMiMalloc->calloc = HPM_calloc;
 	HPMiMalloc->realloc = HPM_realloc;
 	HPMiMalloc->astrdup = HPM_astrdup;
+
+	memcpy(&iSocket_HPM, iMalloc, sizeof(struct socket_interface));
+	HPMiSocket = &iSocket_HPM;
+	HPMiSocket->realloc_fifo = HPM_realloc_fifo;
+	HPMiSocket->realloc_writefifo = HPM_realloc_writefifo;
+	HPMiSocket->WFIFOSET = HPM_WFIFOSET;
+	HPMiSocket->RFIFOSKIP = HPM_RFIFOSKIP;
+	HPMiSocket->do_close = HPM_do_close;
+	HPMiSocket->make_connection = HPM_make_connection;
 
 	sscanf(HPM_VERSION, "%u.%u", &HPM->version[0], &HPM->version[1]);
 	

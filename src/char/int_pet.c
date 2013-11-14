@@ -133,7 +133,7 @@ int mapif_pet_created(int fd, int account_id, struct s_pet *p)
 		WFIFOB(fd, 6)=1;
 		WFIFOL(fd, 7)=0;
 	}
-	WFIFOSET(fd, 11);
+	iSocket->WFIFOSET(fd, 11);
 
 	return 0;
 }
@@ -145,7 +145,7 @@ int mapif_pet_info(int fd, int account_id, struct s_pet *p){
 	WFIFOL(fd, 4) =account_id;
 	WFIFOB(fd, 8)=0;
 	memcpy(WFIFOP(fd, 9), p, sizeof(struct s_pet));
-	WFIFOSET(fd, WFIFOW(fd, 2));
+	iSocket->WFIFOSET(fd, WFIFOW(fd, 2));
 
 	return 0;
 }
@@ -157,7 +157,7 @@ int mapif_pet_noinfo(int fd, int account_id){
 	WFIFOL(fd, 4) =account_id;
 	WFIFOB(fd, 8)=1;
 	memset(WFIFOP(fd, 9), 0, sizeof(struct s_pet));
-	WFIFOSET(fd, WFIFOW(fd, 2));
+	iSocket->WFIFOSET(fd, WFIFOW(fd, 2));
 
 	return 0;
 }
@@ -167,7 +167,7 @@ int mapif_save_pet_ack(int fd, int account_id, int flag){
 	WFIFOW(fd, 0) =0x3882;
 	WFIFOL(fd, 2) =account_id;
 	WFIFOB(fd, 6) =flag;
-	WFIFOSET(fd, 7);
+	iSocket->WFIFOSET(fd, 7);
 
 	return 0;
 }
@@ -176,7 +176,7 @@ int mapif_delete_pet_ack(int fd, int flag){
 	WFIFOHEAD(fd, 3);
 	WFIFOW(fd, 0) =0x3883;
 	WFIFOB(fd, 2) =flag;
-	WFIFOSET(fd, 3);
+	iSocket->WFIFOSET(fd, 3);
 
 	return 0;
 }
