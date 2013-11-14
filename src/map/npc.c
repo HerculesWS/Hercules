@@ -133,7 +133,7 @@ int npc_enable_sub(struct block_list *bl, va_list ap)
 
 		if( npc->ontouch_event(sd,nd) > 0 && npc->ontouch2_event(sd,nd) > 0 )
 		{ // failed to run OnTouch event, so just click the npc
-			if (sd->id != 0)
+			if (sd->npc_id != 0)
 				return 0;
 
 			pc_stop_walking(sd,1);
@@ -198,12 +198,12 @@ int npc_rr_secure_timeout_timer(int tid, int64 tick, int id, intptr_t data) {
 #ifdef SECURE_NPCTIMEOUT
 	struct map_session_data* sd = NULL;
 	unsigned int timeout = NPC_SECURE_TIMEOUT_NEXT;
-	if( (sd = map->id2sd(id)) == NULL || !sd->id ) {
-		if( sd ) sd->idle_timer = INVALID_TIMER;
+	if( (sd = map->id2sd(id)) == NULL || !sd->npc_id ) {
+		if( sd ) sd->npc_idle_timer = INVALID_TIMER;
 		return 0;//Not logged in anymore OR no longer attached to a npc
 	}
 	
-	switch( sd->idle_type ) {
+	switch( sd->npc_idle_type ) {
 		case NPCT_INPUT:
 			timeout = NPC_SECURE_TIMEOUT_INPUT;
 			break;
@@ -213,7 +213,7 @@ int npc_rr_secure_timeout_timer(int tid, int64 tick, int id, intptr_t data) {
 		//case NPCT_WAIT: var starts with this value
 	}
 	
-	if( DIFF_TICK(tick,sd->idle_tick) > (timeout*1000) ) {
+	if( DIFF_TICK(tick,sd->npc_idle_tick) > (timeout*1000) ) {
 		/**
 		 * If we still have the NPC script attached, tell it to stop.
 		 **/
@@ -221,15 +221,15 @@ int npc_rr_secure_timeout_timer(int tid, int64 tick, int id, intptr_t data) {
 			sd->st->state = END;
 		sd->state.menu_or_input = 0;
 		sd->npc_menu = 0;
-		clif->scriptmes(sd, sd->id, " ");
+		clif->scriptmes(sd, sd->npc_id, " ");
 		/**
 		 * This guy's been idle for longer than allowed, close him.
 		 **/
-		clif->scriptclose(sd,sd->id);
-		clif->scriptclear(sd,sd->id);
-		sd->idle_timer = INVALID_TIMER;
+		clif->scriptclose(sd,sd->npc_id);
+		clif->scriptclear(sd,sd->npc_id);
+		sd->npc_idle_timer = INVALID_TIMER;
 	} else //Create a new instance of ourselves to continue
-		sd->idle_timer = timer->add(timer->gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc->secure_timeout_timer,sd->bl.id,0);
+		sd->npc_idle_timer = timer->add(timer->gettick() + (SECURE_NPCTIMEOUT_INTERVAL*1000),npc->secure_timeout_timer,sd->bl.id,0);
 #endif
 	return 0;
 }
@@ -241,16 +241,16 @@ int npc_event_dequeue(struct map_session_data* sd)
 {
 	nullpo_ret(sd);
 
-	if(sd->id) { //Current script is aborted.
+	if(sd->npc_id) { //Current script is aborted.
 		if(sd->state.using_fake_npc){
-			clif->clearunit_single(sd->id, CLR_OUTSIGHT, sd->fd);
+			clif->clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
 			sd->state.using_fake_npc = 0;
 		}
 		if (sd->st) {
 			script->free_state(sd->st);
 			sd->st = NULL;
 		}
-		sd->id = 0;
+		sd->npc_id = 0;
 	}
 
 	if (!sd->eventqueue[0][0])
@@ -734,7 +734,7 @@ int npc_settimerevent_tick(struct npc_data* nd, int newtimer)
 
 int npc_event_sub(struct map_session_data* sd, struct event_data* ev, const char* eventname)
 {
-	if ( sd->id != 0 )
+	if ( sd->npc_id != 0 )
 	{
 		//Enqueue the event trigger.
 		int i;
@@ -854,7 +854,7 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 	nullpo_retr(1, sd);
 
 	// Why not enqueue it? [Inkfish]
-	//if(sd->id)
+	//if(sd->npc_id)
 	//	return 1;
 
 	for(i=0;i<map->list[m].npc_num;i++) {
@@ -1057,7 +1057,7 @@ struct npc_data* npc_checknear(struct map_session_data* sd, struct block_list* b
 	if(bl->type != BL_NPC) return NULL;
 	nd = (TBL_NPC*)bl;
 
-	if(sd->state.using_fake_npc && sd->id == bl->id)
+	if(sd->state.using_fake_npc && sd->npc_id == bl->id)
 		return nd;
 
 	if (nd->class_<0) //Class-less npc, enable click from anywhere.
@@ -1121,7 +1121,7 @@ int npc_click(struct map_session_data* sd, struct npc_data* nd)
 {
 	nullpo_retr(1, sd);
 
-	if (sd->id != 0) {
+	if (sd->npc_id != 0) {
 		ShowError("npc_click: npc_id != 0\n");
 		return 1;
 	}
@@ -1158,11 +1158,11 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing)
 {
 	nullpo_retr(1, sd);
 
-	if( id != sd->id ){
-		TBL_NPC* nd_sd=(TBL_NPC*)map->id2bl(sd->id);
+	if( id != sd->npc_id ){
+		TBL_NPC* nd_sd=(TBL_NPC*)map->id2bl(sd->npc_id);
 		TBL_NPC* nd=(TBL_NPC*)map->id2bl(id);
-		ShowDebug("npc_scriptcont: %s (sd->id=%d) is not %s (id=%d).\n",
-			nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->id,
+		ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
+			nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->npc_id,
 		  	nd?(char*)nd->name:"'Unknown NPC'", (int)id);
 		return 1;
 	}
@@ -1180,7 +1180,7 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing)
 	/**
 	 * Update the last NPC iteration
 	 **/
-	sd->idle_tick = timer->gettick();
+	sd->npc_idle_tick = timer->gettick();
 #endif
 
 	/**
@@ -1210,8 +1210,8 @@ int npc_buysellsel(struct map_session_data* sd, int id, int type) {
 
 	if (nd->subtype!=SHOP) {
 		ShowError("no such shop npc : %d\n",id);
-		if (sd->id == id)
-			sd->id=0;
+		if (sd->npc_id == id)
+			sd->npc_id=0;
 		return 1;
 	}
     if (nd->option & OPTION_INVISIBLE) // can't buy if npc is not visible (hack?)
@@ -2857,7 +2857,7 @@ int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const c
 		return 0;
 	}
 
-	if( sd->id != 0 ) { // Enqueue the event trigger.
+	if( sd->npc_id != 0 ) { // Enqueue the event trigger.
 		int i;
 		ARR_FIND( 0, MAX_EVENTQUEUE, i, sd->eventqueue[i][0] == '\0' );
 		if( i < MAX_EVENTQUEUE ) {
