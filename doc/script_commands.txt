@@ -2875,10 +2875,10 @@ return 0 if no such item exists.
 
 ---------------------------------------
 
-*getitemslots(<item id>)
+*getitemslots(<item ID>)
 *getitemslots("<item name>")
 
-This function will look up the item with the specified ID number or name in the 
+This function will look up the item with the specified ID number or Name in the 
 database and return the number of slots this kind of items has - 0 if they 
 are not slotted. It will also be 0 for all non-equippable items, 
 naturally, unless someone messed up the item database. It will return -1 
@@ -2891,10 +2891,10 @@ Example:
 
 ---------------------------------------
 
-*getiteminfo(<item id>,<type>)
+*getiteminfo(<item ID>,<type>)
 *getiteminfo("<item name>",<type>)
 
-This function will look up the item with the specified ID number or name in the 
+This function will look up the item with the specified ID number or Name in the 
 database and return the info set by TYPE argument.
 It will return -1 if there is no such item.
 
@@ -4941,9 +4941,9 @@ like storage or cart.
 *autoequip "<item name>",<option>;
 
 These commands are to equip a equipment on the attached character. 
-The equip function will equip the item ID or name given when the player has this 
+The equip function will equip the item ID or Name given when the player has this 
 item in his/her inventory, while the autoequip function will equip the 
-given item ID or name when this is looted. The option parameter of the autoequip 
+given item ID or Name when this is looted. The option parameter of the autoequip 
 is 1 or 0, 1 to turn it on, and 0 to turn it off.
 
 Examples:
@@ -6344,6 +6344,7 @@ given in the shop.
 ---------------------------------------
 
 *npcshopitem "<name>",<item id>,<price>{,<item id>,<price>{,<item id>,<price>{,...}}}
+*npcshopitem "<name>","<item name>",<price>{,"<item name>",<price>{,"<item name>",<price>{,...}}}
 
 This command lets you override the contents of an existing NPC shop or 
 cashshop. The current sell list will be wiped, and only the items 
@@ -6351,11 +6352,12 @@ specified with the price specified will be for sale.
 
 The function returns 1 if shop was updated successfully, or 0 if not found.
 
-Note that you cannot use -1 to specify default selling price!
+If Price is set to -1, the 'buy price' given in the item database will be used.
 
 ---------------------------------------
 
 *npcshopadditem "<name>",<item id>,<price>{,<item id>,<price>{,<item id>,<price>{,...}}}
+*npcshopadditem "<name>","<item name>",<price>{,"<item name>",<price>{,"<item name>",<price>{,...}}}
 
 This command will add more items at the end of the selling list for the 
 specified NPC shop or cashshop. If you specify an item already for sell, 
@@ -6363,11 +6365,12 @@ that item will appear twice on the sell list.
 
 The function returns 1 if shop was updated successfully, or 0 if not found.
 
-Note that you cannot use -1 to specify default selling price!
+If Price is set to -1, the 'buy price' given in the item database will be used.
 
 ---------------------------------------
 
 *npcshopdelitem "<name>",<item id>{,<item id>{,<item id>{,...}}}
+*npcshopdelitem "<name>","<item name>"{,"<item name>"{,"<item name>"{,...}}}
 
 This command will remove items from the specified NPC shop or cashshop.
 If the item to remove exists more than once on the shop, all instances 
