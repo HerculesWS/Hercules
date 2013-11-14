@@ -42556,7 +42556,7 @@ int HP_npc_script_event(struct map_session_data *sd, enum npce_event type) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.npc.npc_script_event(sd, type);
+		retVal___ = HPMHooks.source.npc.script_event(sd, type);
 	}
 	if( HPMHooks.count.HP_npc_script_event_post ) {
 		int (*postHookFunc) (int retVal___, struct map_session_data *sd, enum npce_event *type);
