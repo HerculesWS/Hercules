@@ -1688,8 +1688,8 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	struct item_data id = { 0 };
 	config_setting_t *t = NULL;
 	const char *str = NULL;
-	uint32 ui32 = 0;
 	int i32 = 0;
+	bool inherit = false;
 
 	/*
 	 * // Mandatory fields
@@ -1720,6 +1720,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	 * ">
 	 * OnEquipScript: <" OnEquip Script ">
 	 * OnUnequipScript: <" OnUnequip Script ">
+	 * Inherit: inherit or override
 	 */
 	if( !config_setting_lookup_int(it, "Id", &i32) ) {
 		ShowWarning("itemdb_readdb_libconfig_sub: Invalid or missing id in \"%s\", entry #%d, skipping.\n", source, n);
@@ -1727,30 +1728,47 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	}
 	id.nameid = (uint16)i32;
 
-	if( !config_setting_lookup_string(it, "AegisName", &str) || !*str ) {
-		ShowWarning("itemdb_readdb_libconfig_sub: Missing AegisName in item %d of \"%s\", skipping.\n", id.nameid, source);
-		return 0;
+	if( (t = config_setting_get_member(it, "Inherit")) && (inherit = config_setting_get_bool(t)) ) {
+		if( !itemdb->exists(id.nameid) ) {
+			ShowWarning("itemdb_readdb_libconfig_sub: Trying to inherit nonexistent item %d, default values will be used instead.\n", id.nameid);
+			inherit = false;
+		} else {
+			// Use old entry as default
+			struct item_data *old_entry = itemdb->load(id.nameid);
+			memcpy(&id, old_entry, sizeof(struct item_data));
+		}
 	}
-	safestrncpy(id.name, str, sizeof(id.name));
+
+	if( !config_setting_lookup_string(it, "AegisName", &str) || !*str ) {
+		if( !inherit ) {
+			ShowWarning("itemdb_readdb_libconfig_sub: Missing AegisName in item %d of \"%s\", skipping.\n", id.nameid, source);
+			return 0;
+		}
+	} else {
+		safestrncpy(id.name, str, sizeof(id.name));
+	}
 
 	if( !config_setting_lookup_string(it, "Name", &str) || !*str ) {
-		ShowWarning("itemdb_readdb_libconfig_sub: Missing Name in item %d of \"%s\", skipping.\n", id.nameid, source);
-		return 0;
+		if( !inherit ) {
+			ShowWarning("itemdb_readdb_libconfig_sub: Missing Name in item %d of \"%s\", skipping.\n", id.nameid, source);
+			return 0;
+		}
+	} else {
+		safestrncpy(id.jname, str, sizeof(id.jname));
 	}
-	safestrncpy(id.jname, str, sizeof(id.jname));
 
 	if( config_setting_lookup_int(it, "Type", &i32) )
 		id.type = i32;
-	else
+	else if( !inherit )
 		id.type = IT_UNKNOWN;
 
 	if( config_setting_lookup_int(it, "Buy", &i32) )
 		id.value_buy = i32;
-	else
+	else if( !inherit )
 		id.value_buy = -1;
 	if( config_setting_lookup_int(it, "Sell", &i32) )
 		id.value_sell = i32;
-	else
+	else if( !inherit )
 		id.value_sell = -1;
 
 	if( config_setting_lookup_int(it, "Weight", &i32) && i32 >= 0 )
@@ -1772,19 +1790,18 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 		id.slot = i32;
 
 	if( config_setting_lookup_int(it, "Job", &i32) ) // This is an unsigned value, do not check for >= 0
-		ui32 = (unsigned int)i32;
-	else
-		ui32 = UINT_MAX;
-	itemdb->jobid2mapid(id.class_base, ui32);
+		itemdb->jobid2mapid(id.class_base, (unsigned int)i32);
+	else if( !inherit )
+		itemdb->jobid2mapid(id.class_base, UINT_MAX);
 
 	if( config_setting_lookup_int(it, "Upper", &i32) && i32 >= 0 )
 		id.class_upper = (unsigned int)i32;
-	else
+	else if( !inherit )
 		id.class_upper = ITEMUPPER_ALL;
 
 	if( config_setting_lookup_int(it, "Gender", &i32) && i32 >= 0 )
 		id.sex = i32;
-	else
+	else if( !inherit )
 		id.sex = 2;
 
 	if( config_setting_lookup_int(it, "Loc", &i32) && i32 >= 0 )
@@ -1810,14 +1827,14 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	if( config_setting_lookup_int(it, "View", &i32) && i32 >= 0 )
 		id.look = i32;
 
-	if( config_setting_lookup_string(it, "Script", &str) && *str )
-		id.script = script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS);
+	if( config_setting_lookup_string(it, "Script", &str) )
+		id.script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
 
-	if( config_setting_lookup_string(it, "OnEquipScript", &str) && *str )
-		id.equip_script = script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS);
+	if( config_setting_lookup_string(it, "OnEquipScript", &str) )
+		id.equip_script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
 
-	if( config_setting_lookup_string(it, "OnUnequipScript", &str) && *str )
-		id.unequip_script = script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS);
+	if( config_setting_lookup_string(it, "OnUnequipScript", &str) )
+		id.unequip_script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
 
 	return itemdb->validate_entry(&id, n, source);
 }
