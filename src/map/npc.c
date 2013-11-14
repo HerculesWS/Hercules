@@ -12,6 +12,8 @@
 #include "../common/ers.h"
 #include "../common/db.h"
 #include "../common/socket.h"
+#include "../common/HPM.h"
+
 #include "map.h"
 #include "log.h"
 #include "clif.h"

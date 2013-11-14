@@ -5,11 +5,11 @@
 #ifndef _NPC_H_
 #define _NPC_H_
 
-#include "../common/HPM.h" //struct HPluginData
-
 #include "map.h" // struct block_list
 #include "status.h" // struct status_change
 #include "unit.h" // struct unit_data
+
+struct HPluginData;
 struct block_list;
 struct npc_data;
 struct view_data;
