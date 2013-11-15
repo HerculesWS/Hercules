@@ -2912,7 +2912,7 @@ int map_addmap(const char* mapname) {
 }
 
 void map_delmapid(int id) {
-	ShowNotice("Removing map [ %s ] from map->list"CL_CLL"\n",map->list[id].name);
+	ShowNotice("Removing map [ %s ] from maplist"CL_CLL"\n",map->list[id].name);
 	memmove(map->list+id, map->list+id+1, sizeof(map->list[0])*(map->count-id-1));
 	map->count--;
 }
@@ -5438,7 +5438,6 @@ int do_init(int argc, char *argv[])
 	
 	HPM->event(HPET_PRE_INIT);
 	
-	minimal = map->minimal;/* temp (perhaps make minimal a mask with options of what to load? e.g. plugin 1 does minimal |= mob_db; */
 	for( i = 1; i < argc ; i++ ) {
 		const char* arg = argv[i];
 
@@ -5481,7 +5480,7 @@ int do_init(int argc, char *argv[])
 			} else if( strcmp(arg, "run-once") == 0 ) { // close the map-server as soon as its done.. for testing [Celest]
 				runflag = CORE_ST_STOP;
 			} else if( strcmp(arg, "script-check") == 0 ) {
-				minimal = true;
+				map->minimal = true;
 				runflag = CORE_ST_STOP;
 				if( map->arg_next_value(arg, i, argc, true) )
 					scriptcheck = argv[++i];
@@ -5504,7 +5503,7 @@ int do_init(int argc, char *argv[])
 			}
 		}
 	}
-
+	minimal = map->minimal;/* temp (perhaps make minimal a mask with options of what to load? e.g. plugin 1 does minimal |= mob_db; */
 	if (!minimal) {
 		map->config_read(map->MAP_CONF_NAME);
 		CREATE(map->list,struct map_data,map->count);

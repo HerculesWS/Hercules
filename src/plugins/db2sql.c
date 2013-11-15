@@ -180,7 +180,7 @@ CPCMD(db2sql) {
 	do_db2sql();
 }
 void db2sql_arg(char *param) {
-	torun = true;
+	map->minimal = torun = true;
 }
 HPExport void server_preinit (void) {
 	h_config_setting_lookup_string = GET_SYMBOL("config_setting_lookup_string");
@@ -192,9 +192,7 @@ HPExport void server_preinit (void) {
 	strlib = GET_SYMBOL("strlib");
 	iMalloc = GET_SYMBOL("iMalloc");
 	
-	addArg("--db2sql",false,db2sql_arg,NULL);
-	
-	map->minimal = true;
+	addArg("--db2sql",false,db2sql_arg,NULL);	
 }
 HPExport void plugin_init (void) {
 	HPMi->addCPCommand("server:tools:db2sql",CPCMD_A(db2sql));
