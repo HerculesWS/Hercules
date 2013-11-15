@@ -16273,6 +16273,31 @@ void HP_clif_show_modifiers(struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_notify_bounditem(struct map_session_data *sd, unsigned short index) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_notify_bounditem_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, unsigned short *index);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_notify_bounditem_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_notify_bounditem_pre[hIndex].func;
+			preHookFunc(sd, &index);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.notify_bounditem(sd, index);
+	}
+	if( HPMHooks.count.HP_clif_notify_bounditem_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, unsigned short *index);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_notify_bounditem_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_notify_bounditem_post[hIndex].func;
+			postHookFunc(sd, &index);
+		}
+	}
+	return;
+}
 void HP_clif_pWantToConnection(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_pWantToConnection_pre ) {
