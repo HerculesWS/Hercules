@@ -43,7 +43,7 @@ void hstr(const char *str) {
 		RECREATE(tosql.buf[3].p,char,tosql.buf[3].len);
 	}
 	safestrncpy(tosql.buf[3].p,str,strlen(str));
-	normalize_name(tosql.buf[3].p,"\t\n");
+	normalize_name(tosql.buf[3].p,"\t\n ");
 }
 int db2sql(config_setting_t *entry, int n, const char *source) {
 	struct item_data *it = NULL;
