@@ -33,6 +33,7 @@ item_db: (
 	EquipLv: [min, max]           (alternative syntax with min / max level)
 	Refine: Refineable            (boolean, defaults to true)
 	View: View ID                 (int, defaults to 0)
+	BindOnEquip: true/false       (boolean, defaults to false)
 	Script: <"
 		Script
 		(it can be multi-line)
@@ -215,6 +216,11 @@ View: For normal items, defines a replacement view-sprite for the item (eg:
 		7: Kunai
 		8: Cannonballs
 		9: Throwable Items (Sling Item)
+
+BindOnEquip: Whether the item will automatically bind to the character when it
+             is equipped for the first time. An item that has this field set,
+             will display a confirmation dialog the first time it is equipped,
+	     and, if accepted, the item will become character-bound.
 
 Script: Script to execute when the item is used/equipped.
 

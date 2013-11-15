@@ -174,6 +174,7 @@ item_db: (
 	EquipLv: [min, max]           (alternative syntax with min / max level)
 	Refine: Refineable            (boolean, defaults to true)
 	View: View ID                 (int, defaults to 0)
+	BindOnEquip: true/false       (boolean, defaults to false)
 	Script: <"
 		Script
 		(it can be multi-line)
