@@ -155,6 +155,19 @@ void do_db2sql(void) {
 	
 	fclose(tosql.fp);
 	
+	if ((tosql.fp = fopen("sql-files/item_db2.sql", "wt+")) == NULL) {
+		ShowError("itemdb_tosql: File not found \"%s\".\n", "sql-files/item_db2.sql");
+		return;
+ 	}
+	
+	tosql.db_name = map->item_db2_db;
+	totable();
+	
+	itemdb->clear(false);
+	itemdb->readdb("item_db2.conf");
+	
+	fclose(tosql.fp);
+	
 	/* unlink */
 	itemdb->readdb_libconfig_sub = itemdb_readdb_libconfig_sub;
 	
