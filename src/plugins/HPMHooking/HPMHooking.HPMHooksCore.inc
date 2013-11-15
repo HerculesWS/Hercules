@@ -2459,8 +2459,6 @@ struct {
 	struct HPMHookPoint *HP_itemdb_load_post;
 	struct HPMHookPoint *HP_itemdb_search_pre;
 	struct HPMHookPoint *HP_itemdb_search_post;
-	struct HPMHookPoint *HP_itemdb_parse_dbrow_pre;
-	struct HPMHookPoint *HP_itemdb_parse_dbrow_post;
 	struct HPMHookPoint *HP_itemdb_exists_pre;
 	struct HPMHookPoint *HP_itemdb_exists_post;
 	struct HPMHookPoint *HP_itemdb_in_group_pre;
@@ -2535,8 +2533,12 @@ struct {
 	struct HPMHookPoint *HP_itemdb_read_combos_post;
 	struct HPMHookPoint *HP_itemdb_gendercheck_pre;
 	struct HPMHookPoint *HP_itemdb_gendercheck_post;
-	struct HPMHookPoint *HP_itemdb_re_split_atoi_pre;
-	struct HPMHookPoint *HP_itemdb_re_split_atoi_post;
+	struct HPMHookPoint *HP_itemdb_validate_entry_pre;
+	struct HPMHookPoint *HP_itemdb_validate_entry_post;
+	struct HPMHookPoint *HP_itemdb_readdb_sql_sub_pre;
+	struct HPMHookPoint *HP_itemdb_readdb_sql_sub_post;
+	struct HPMHookPoint *HP_itemdb_readdb_libconfig_sub_pre;
+	struct HPMHookPoint *HP_itemdb_readdb_libconfig_sub_post;
 	struct HPMHookPoint *HP_itemdb_readdb_pre;
 	struct HPMHookPoint *HP_itemdb_readdb_post;
 	struct HPMHookPoint *HP_itemdb_read_sqldb_pre;
@@ -2551,6 +2553,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_destroy_item_data_post;
 	struct HPMHookPoint *HP_itemdb_final_sub_pre;
 	struct HPMHookPoint *HP_itemdb_final_sub_post;
+	struct HPMHookPoint *HP_itemdb_clear_pre;
+	struct HPMHookPoint *HP_itemdb_clear_post;
 	struct HPMHookPoint *HP_logs_pick_pc_pre;
 	struct HPMHookPoint *HP_logs_pick_pc_post;
 	struct HPMHookPoint *HP_logs_pick_mob_pre;
@@ -7406,8 +7410,6 @@ struct {
 	int HP_itemdb_load_post;
 	int HP_itemdb_search_pre;
 	int HP_itemdb_search_post;
-	int HP_itemdb_parse_dbrow_pre;
-	int HP_itemdb_parse_dbrow_post;
 	int HP_itemdb_exists_pre;
 	int HP_itemdb_exists_post;
 	int HP_itemdb_in_group_pre;
@@ -7482,8 +7484,12 @@ struct {
 	int HP_itemdb_read_combos_post;
 	int HP_itemdb_gendercheck_pre;
 	int HP_itemdb_gendercheck_post;
-	int HP_itemdb_re_split_atoi_pre;
-	int HP_itemdb_re_split_atoi_post;
+	int HP_itemdb_validate_entry_pre;
+	int HP_itemdb_validate_entry_post;
+	int HP_itemdb_readdb_sql_sub_pre;
+	int HP_itemdb_readdb_sql_sub_post;
+	int HP_itemdb_readdb_libconfig_sub_pre;
+	int HP_itemdb_readdb_libconfig_sub_post;
 	int HP_itemdb_readdb_pre;
 	int HP_itemdb_readdb_post;
 	int HP_itemdb_read_sqldb_pre;
@@ -7498,6 +7504,8 @@ struct {
 	int HP_itemdb_destroy_item_data_post;
 	int HP_itemdb_final_sub_pre;
 	int HP_itemdb_final_sub_post;
+	int HP_itemdb_clear_pre;
+	int HP_itemdb_clear_post;
 	int HP_logs_pick_pc_pre;
 	int HP_logs_pick_pc_post;
 	int HP_logs_pick_mob_pre;
