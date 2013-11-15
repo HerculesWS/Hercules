@@ -16,22 +16,20 @@ TRUNCATE TABLE `sc_data`;
 DROP TABLE IF EXISTS `skillcooldown`;
 
 -- Upgrades for table `cart_inventory`
-ALTER TABLE `cart_inventory` MODIFY `equip` INT(11) UNSIGNED NOT NULL default '0',
-	MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
+ALTER TABLE `cart_inventory` MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
 
 -- Upgrades for table `char`
-ALTER TABLE `char` DROP COLUMN `moves`,
-	ADD `slotchange` SMALLINT(3) UNSIGNED NOT NULL default '0',
+ALTER TABLE `char` CHANGE `moves` `slotchange` SMALLINT(3) UNSIGNED NOT NULL default '0',
 	ADD `char_opt` INT( 11 ) UNSIGNED NOT NULL default '0',
 	ADD `font` TINYINT( 3 ) UNSIGNED NOT NULL DEFAULT  '0';
 
 -- Upgrades for table `guild_storage`
-ALTER TABLE `guild_storage` MODIFY `equip` INT(11) UNSIGNED NOT NULL default '0',
-	MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
+ALTER TABLE `guild_storage` MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
 
 -- Upgrades for table `inventory`
-ALTER TABLE `inventory` MODIFY `equip` INT(11) UNSIGNED NOT NULL default '0',
-	MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
+ALTER TABLE `inventory` MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
+
+-- Bank vault is saved later since we need to make a table rAthena doesn't have first
 
 --
 -- Table structure for table `sql_updates`
@@ -60,8 +58,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1383205740);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1383955424);
 
 -- Updates to table `storage`
-ALTER TABLE `storage` MODIFY `equip` INT(11) UNSIGNED NOT NULL default '0',
-	MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
+ALTER TABLE `storage` MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
 
 --
 -- Table structure for table `account_data`
@@ -83,3 +80,6 @@ INSERT INTO `account_data` (`account_id`, `bank_vault`) SELECT `account_id`, `ba
 
 -- Dropping bank_vault column from login table
 ALTER TABLE `login` DROP COLUMN `bank_vault`;
+
+-- Drop table `bonus_script` since it's not used in Hercules
+DROP TABLE IF EXISTS `bonus_script`;
