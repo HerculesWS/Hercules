@@ -1786,7 +1786,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	if( config_setting_lookup_int(it, "Range", &i32) && i32 >= 0 )
 		id.range = i32;
 
-	if( config_setting_lookup_int(it, "Slot", &i32) && i32 >= 0 )
+	if( config_setting_lookup_int(it, "Slots", &i32) && i32 >= 0 )
 		id.slot = i32;
 
 	if( config_setting_lookup_int(it, "Job", &i32) ) // This is an unsigned value, do not check for >= 0
