@@ -75,8 +75,8 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 
 		upper = ui32;
 		
-		fprintf(tosql.fp,"REPLACE INTO `%s` VALUES ('%u','%s','%s','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%s','%s','%s');\n",
-				tosql.db_name,it->nameid,e_name,e_jname,it->flag.delay_consume?IT_DELAYCONSUME:it->type,it->value_buy,it->value_sell,it->weight,it->atk,it->matk,it->def,it->range,it->slot,job,upper,it->sex,it->equip,it->wlv,it->elv,it->elvmax,it->flag.no_refine?0:1,it->look,it->script?tosql.buf[0].p:"",it->equip_script?tosql.buf[1].p:"",it->unequip_script?tosql.buf[2].p:"");
+		fprintf(tosql.fp,"REPLACE INTO `%s` VALUES ('%u','%s','%s','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%s','%s','%s');\n",
+				tosql.db_name,it->nameid,e_name,e_jname,it->flag.delay_consume?IT_DELAYCONSUME:it->type,it->value_buy,it->value_sell,it->weight,it->atk,it->matk,it->def,it->range,it->slot,job,upper,it->sex,it->equip,it->wlv,it->elv,it->elvmax,it->flag.no_refine?0:1,it->look,it->flag.bindonequip?1:0,it->script?tosql.buf[0].p:"",it->equip_script?tosql.buf[1].p:"",it->unequip_script?tosql.buf[2].p:"");
 	}
 	
 	return it?it->nameid:0;
@@ -109,6 +109,7 @@ void totable(void) {
 			"   `equip_level_max` smallint(5) unsigned DEFAULT NULL,\n"
 			"   `refineable` tinyint(1) unsigned DEFAULT NULL,\n"
 			"   `view` smallint(3) unsigned DEFAULT NULL,\n"
+			"   `bindonequip` tinyint(1) unsigned DEFAULT NULL,\n"
 			"   `script` text,\n"
 			"   `equip_script` text,\n"
 			"   `unequip_script` text,\n"

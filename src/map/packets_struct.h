@@ -99,7 +99,8 @@ enum packet_headers {
 	bgqueue_revokereqType = 0x8da,
 	bgqueue_battlebeginackType = 0x8e0,
 	bgqueue_notify_entryType = 0x8d9,
-	bgqueue_battlebegins = 0x8df,
+	bgqueue_battlebeginsType = 0x8df,
+	notify_bounditemType = 0x2d3,
 #if PACKETVER > 20130000 /* not sure date */
 	dropflooritemType = 0x84b,
 #else
@@ -181,6 +182,7 @@ enum packet_headers {
 #else
 	viewequipackType = 0x2d7,
 #endif
+	notifybindonequip = 0x2d3,
 	monsterhpType = 0x977,
 	maptypeproperty2Type = 0x99b,
 };
@@ -804,6 +806,10 @@ struct packet_viewequip_ack {
 	struct EQUIPITEM_INFO list[MAX_INVENTORY];
 } __attribute__((packed));
 
+struct packet_notify_bounditem {
+	short PacketType;
+	unsigned short index;
+} __attribute__((packed));
 
 #pragma pack(pop)
 

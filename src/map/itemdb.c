@@ -1652,6 +1652,7 @@ int itemdb_readdb_sql_sub(Sql *handle, int n, const char *source) {
 	 * `equip_level_max` smallint(5)   unsigned          DEFAULT NULL
 	 * `refineable`      tinyint(1)    unsigned          DEFAULT NULL
 	 * `view`            smallint(3)   unsigned          DEFAULT NULL
+	 * `bindonequip`     tinyint(1)    unsigned          DEFAULT NULL
 	 * `script`          text
 	 * `equip_script`    text
 	 * `unequip_script`  text
@@ -1677,9 +1678,10 @@ int itemdb_readdb_sql_sub(Sql *handle, int n, const char *source) {
 	SQL->GetData(handle, 18, &data, NULL); id.elvmax = data ? atoi(data) : 0;
 	SQL->GetData(handle, 19, &data, NULL); id.flag.no_refine = data && atoi(data) ? 0 : 1;
 	SQL->GetData(handle, 20, &data, NULL); id.look = data ? atoi(data) : 0;
-	SQL->GetData(handle, 21, &data, NULL); id.script = *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
-	SQL->GetData(handle, 22, &data, NULL); id.equip_script = *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
-	SQL->GetData(handle, 23, &data, NULL); id.unequip_script = *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
+	SQL->GetData(handle, 21, &data, NULL); id.flag.bindonequip = data && atoi(data) ? 1 : 0;
+	SQL->GetData(handle, 22, &data, NULL); id.script = *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
+	SQL->GetData(handle, 23, &data, NULL); id.equip_script = *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
+	SQL->GetData(handle, 24, &data, NULL); id.unequip_script = *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
 
 	return itemdb->validate_entry(&id, n, source);
 }
@@ -1714,6 +1716,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	 * EquipLv: Equip required level
 	 * Refine: Refineable
 	 * View: View ID
+	 * BindOnEquip: (true or false)
 	 * Script: <"
 	 *     Script
 	 *     (it can be multi-line)
@@ -1827,6 +1830,9 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	if( config_setting_lookup_int(it, "View", &i32) && i32 >= 0 )
 		id.look = i32;
 
+	if( (t = config_setting_get_member(it, "BindOnEquip")) )
+		id.flag.bindonequip = config_setting_get_bool(t) ? 1 : 0;
+	
 	if( config_setting_lookup_string(it, "Script", &str) )
 		id.script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
 

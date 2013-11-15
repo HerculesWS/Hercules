@@ -2235,7 +2235,7 @@ void clif_additem(struct map_session_data *sd, int n, int amount, int fail) {
 		/* why restrict the flag to non-stackable? because this is the only packet allows stackable to,
 		 * show the color, and therefore it'd be inconsistent with the rest (aka it'd show yellow, you relog/refresh and boom its gone)
 		 */
-		p.bindOnEquipType = sd->status.inventory[n].bound && !itemdb->isstackable2(sd->inventory_data[n]) ? 2 : 0;
+		p.bindOnEquipType = sd->status.inventory[n].bound && !itemdb->isstackable2(sd->inventory_data[n]) ? 2 : sd->inventory_data[n]->flag.bindonequip ? 1 : 0;
 #endif
 	}
 	p.result = (unsigned char)fail;
@@ -2347,7 +2347,7 @@ void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct
 #endif
 	
 #if PACKETVER >= 20080102
-	p->bindOnEquipType = i->bound ? 2 : 0;
+	p->bindOnEquipType = i->bound ? 2 : id->flag.bindonequip ? 1 : 0;
 #endif
 
 #if PACKETVER >= 20100629
@@ -17663,7 +17663,7 @@ void clif_bgqueue_pcleft(struct map_session_data *sd) {
 void clif_bgqueue_battlebegins(struct map_session_data *sd, unsigned char arena_id, enum send_target target) {
 	struct packet_bgqueue_battlebegins p;
 	
-	p.PacketType = bgqueue_battlebegins;
+	p.PacketType = bgqueue_battlebeginsType;
 	safestrncpy(p.bg_name, bg->arena[arena_id]->name, sizeof(p.bg_name));
 	safestrncpy(p.game_name, bg->arena[arena_id]->name, sizeof(p.game_name));
 	
@@ -17825,6 +17825,14 @@ void clif_show_modifiers (struct map_session_data *sd) {
 	
 }
 
+void clif_notify_bounditem(struct map_session_data *sd, unsigned short index) {
+	struct packet_notify_bounditem p;
+	
+	p.PacketType = notify_bounditemType;
+	p.index = index+2;
+	
+	clif->send(&p,sizeof(p), &sd->bl, SELF);
+}
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 	if( sd ) {
@@ -18628,6 +18636,8 @@ void clif_defaults(void) {
 	clif->bank_withdraw = clif_bank_withdraw;
 	/* */
 	clif->show_modifiers = clif_show_modifiers;
+	/* */
+	clif->notify_bounditem = clif_notify_bounditem;
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/ 

@@ -1016,6 +1016,8 @@ struct clif_interface {
 	void (*bank_withdraw) (struct map_session_data *sd,enum e_BANKING_WITHDRAW_ACK reason);
 	/* */
 	void (*show_modifiers) (struct map_session_data *sd);
+	/* */
+	void (*notify_bounditem) (struct map_session_data *sd, unsigned short index);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/

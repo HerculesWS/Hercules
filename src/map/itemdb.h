@@ -158,6 +158,7 @@ struct item_data {
 		unsigned trade_restriction : 9;	//Item restrictions mask [Skotlex]
 		unsigned autoequip: 1;
 		unsigned buyingstore : 1;
+		unsigned bindonequip : 1;
 	} flag;
 	struct {// item stacking limitation
 		unsigned short amount;

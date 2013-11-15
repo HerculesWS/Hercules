@@ -8707,6 +8707,12 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 		return 0;
 	}
 
+	/* won't fail from this point onwards */
+	if( id->flag.bindonequip && !sd->status.inventory[n].bound ) {
+		sd->status.inventory[n].bound = (unsigned char)IBT_CHARACTER;
+		clif->notify_bounditem(sd,n);
+	}
+	
 	if(pos == EQP_ACC) { //Accesories should only go in one of the two,
 		pos = req_pos&EQP_ACC;
 		if (pos == EQP_ACC) //User specified both slots..
