@@ -56,6 +56,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1383162785);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1383167577);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1383205740);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1383955424);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1384545461);
 
 -- Updates to table `storage`
 ALTER TABLE `storage` MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
