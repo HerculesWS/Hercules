@@ -3754,13 +3754,13 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit, int reload_type) {
 	return 0;
 }
 
-int script_event(struct map_session_data* sd, enum npce_event type)
+int npc_script_event(struct map_session_data* sd, enum npce_event type)
 {
 	int i;
 	if (type == NPCE_MAX)
 		return 0;
 	if (!sd) {
-		ShowError("script_event: NULL sd. Event Type %d\n", type);
+		ShowError("npc_script_event: NULL sd. Event Type %d\n", type);
 		return 0;
 	}
 	for (i = 0; i<npc->script_event_st[type].event_count; i++)
@@ -4260,7 +4260,7 @@ void npc_defaults(void) {
 	npc->parse_mob = npc_parse_mob;
 	npc->parse_mapflag = npc_parse_mapflag;
 	npc->parsesrcfile = npc_parsesrcfile;
-	npc->script_event = script_event;
+	npc->script_event = npc_script_event;
 	npc->read_event_script = npc_read_event_script;
 	npc->path_db_clear_sub = npc_path_db_clear_sub;
 	npc->ev_label_db_clear_sub = npc_ev_label_db_clear_sub;
