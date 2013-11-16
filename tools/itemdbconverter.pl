@@ -74,25 +74,25 @@ sub parsedb (@) {
 #		ID,AegisName,Name,Type,Buy,Sell,Weight,ATK,DEF,Range,Slots,Job,Upper,Gender,Loc,wLV,eLV,Refineable,View,{ Script },{ OnEquip_Script },{ OnUnequip_Script }
 		if( $_ =~ qr/^
 			(?<prefix>(?:\/\/[^0-9]*)?)
-			(?<ID>[0-9]+),
+			(?<ID>[0-9]+)[^,]*,
 			(?<AegisName>[^,]+),
-			(?<Name>[^,]+),
-			(?<Type>[0-9]+),
-			(?<Buy>[0-9]*),
-			(?<Sell>[0-9]*),
-			(?<Weight>[0-9]*),
-			(?<ATK>[0-9-]*)(?<hasmatk>:(?<MATK>[0-9-]*))?,
-			(?<DEF>[0-9-]*),
-			(?<Range>[0-9]*),
-			(?<Slots>[0-9]*),
-			(?<Job>[x0-9A-Fa-f]*),
-			(?<Upper>[0-9]*),
-			(?<Gender>[0-9]*),
-			(?<Loc>[0-9]*),
-			(?<wLV>[0-9]*),
-			(?<eLV>[0-9]*)(?<hasmaxlv>:(?<eLVmax>[0-9]*))?,
-			(?<Refineable>[0-9]*),
-			(?<View>[0-9]*),
+			(?<Name>[^,]+),[\s\t]*
+			(?<Type>[0-9]+)[^,]*,[\s\t]*
+			(?<Buy>[0-9]*)[^,]*,[\s\t]*
+			(?<Sell>[0-9]*)[^,]*,[\s\t]*
+			(?<Weight>[0-9]*)[^,]*,[\s\t]*
+			(?<ATK>[0-9-]*)[^,:]*(?<hasmatk>:[\s\t]*(?<MATK>[0-9-]*))?[^,]*,[\s\t]*
+			(?<DEF>[0-9-]*)[^,]*,[\s\t]*
+			(?<Range>[0-9]*)[^,]*,[\s\t]*
+			(?<Slots>[0-9]*)[^,]*,[\s\t]*
+			(?<Job>[x0-9A-Fa-f]*)[^,]*,[\s\t]*
+			(?<Upper>[0-9]*)[^,]*,[\s\t]*
+			(?<Gender>[0-9]*)[^,]*,[\s\t]*
+			(?<Loc>[0-9]*)[^,]*,[\s\t]*
+			(?<wLV>[0-9]*)[^,]*,[\s\t]*
+			(?<eLV>[0-9]*)[^,:]*(?<hasmaxlv>:[\s\t]*(?<eLVmax>[0-9]*))?[^,]*,[\s\t]*
+			(?<Refineable>[0-9]*)[^,]*,[\s\t]*
+			(?<View>[0-9]*)[^,]*,[\s\t]*
 			{(?<Script>.*)},
 			{(?<OnEquip>.*)},
 			{(?<OnUnequip>.*)}
