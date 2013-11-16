@@ -3853,6 +3853,12 @@ struct {
 	struct HPMHookPoint *HP_pc_scdata_received_post;
 	struct HPMHookPoint *HP_pc_bound_clear_pre;
 	struct HPMHookPoint *HP_pc_bound_clear_post;
+	struct HPMHookPoint *HP_pc_expiration_timer_pre;
+	struct HPMHookPoint *HP_pc_expiration_timer_post;
+	struct HPMHookPoint *HP_pc_global_expiration_timer_pre;
+	struct HPMHookPoint *HP_pc_global_expiration_timer_post;
+	struct HPMHookPoint *HP_pc_expire_check_pre;
+	struct HPMHookPoint *HP_pc_expire_check_post;
 	struct HPMHookPoint *HP_pet_init_pre;
 	struct HPMHookPoint *HP_pet_init_post;
 	struct HPMHookPoint *HP_pet_final_pre;
@@ -8806,6 +8812,12 @@ struct {
 	int HP_pc_scdata_received_post;
 	int HP_pc_bound_clear_pre;
 	int HP_pc_bound_clear_post;
+	int HP_pc_expiration_timer_pre;
+	int HP_pc_expiration_timer_post;
+	int HP_pc_global_expiration_timer_pre;
+	int HP_pc_global_expiration_timer_post;
+	int HP_pc_expire_check_pre;
+	int HP_pc_expire_check_post;
 	int HP_pet_init_pre;
 	int HP_pet_init_post;
 	int HP_pet_final_pre;

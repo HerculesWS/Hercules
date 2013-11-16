@@ -1957,6 +1957,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->rental_expire, HP_pc_rental_expire) },
 	{ HP_POP(pc->scdata_received, HP_pc_scdata_received) },
 	{ HP_POP(pc->bound_clear, HP_pc_bound_clear) },
+	{ HP_POP(pc->expiration_timer, HP_pc_expiration_timer) },
+	{ HP_POP(pc->global_expiration_timer, HP_pc_global_expiration_timer) },
+	{ HP_POP(pc->expire_check, HP_pc_expire_check) },
 /* pet */
 	{ HP_POP(pet->init, HP_pet_init) },
 	{ HP_POP(pet->final, HP_pet_final) },
