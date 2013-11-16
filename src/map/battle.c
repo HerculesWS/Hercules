@@ -408,7 +408,10 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 		if( t < 5 && atk_elem == t )
 			damage -= damage * ( tsd->charm[t] * 3 ) / 100;// -3% custom value
 	}
-	return damage*ratio/100;
+	if( ratio < 100 )
+		return damage - (damage * (100 - ratio) / 100);
+	else
+		return damage + (damage * (ratio - 100) / 100);
 }
 int64 battle_calc_weapon_damage(struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, struct weapon_atk *watk, int nk, bool n_ele, short s_ele, short s_ele_, int size, int type, int flag, int flag2){ // [malufett]
 #ifdef RENEWAL
@@ -846,7 +849,7 @@ int64 battle_calc_elefix(struct block_list *src, struct block_list *target, uint
 			if( skill_id == MC_CARTREVOLUTION ) //Cart Revolution applies the element fix once more with neutral element
 				damage = battle->attr_fix(src,target,damage,ELE_NEUTRAL,tstatus->def_ele, tstatus->ele_lv);
 			if( skill_id == GS_GROUNDDRIFT ) //Additional 50*lv Neutral damage.
-				damage += battle_attr_fix(src,target,50*skill_lv,ELE_NEUTRAL,tstatus->def_ele, tstatus->ele_lv);
+				damage += battle->attr_fix(src,target,50*skill_lv,ELE_NEUTRAL,tstatus->def_ele, tstatus->ele_lv);
 		}
 	}
 	

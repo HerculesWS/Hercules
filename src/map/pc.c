@@ -10166,8 +10166,10 @@ int pc_readdb(void) {
 				while(*p==32 && *p>0)
 					p++;
 				battle->attr_fix_table[lv-1][i][j]=atoi(p);
+#ifndef RENEWAL
 				if(battle_config.attr_recover == 0 && battle->attr_fix_table[lv-1][i][j] < 0)
 					battle->attr_fix_table[lv-1][i][j] = 0;
+#endif
 				p=strchr(p,',');
 				if(p) *p++=0;
 			}
