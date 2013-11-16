@@ -105,7 +105,8 @@ uint32 char_ip = 0;
 char bind_ip_str[128];
 uint32 bind_ip = INADDR_ANY;
 uint16 char_port = 6121;
-int char_maintenance = 0;
+int char_server_type = 0;
+int char_maintenance_min_group_id = 0;
 bool char_new = true;
 int char_new_display = 0;
 
@@ -2226,7 +2227,7 @@ int parse_fromlogin(int fd) {
 
 			// acknowledgement of account authentication request
 			case 0x2713:
-				if (RFIFOREST(fd) < 25)
+				if (RFIFOREST(fd) < 29)
 					return 0;
 			{
 				int account_id = RFIFOL(fd,2);
@@ -2237,7 +2238,8 @@ int parse_fromlogin(int fd) {
 				int request_id = RFIFOL(fd,16);
 				uint32 version = RFIFOL(fd,20);
 				uint8 clienttype = RFIFOB(fd,24);
-				RFIFOSKIP(fd,25);
+				int group_id = RFIFOL(fd,25);
+				RFIFOSKIP(fd,29);
 
 				if( session_isActive(request_id) && (sd=(struct char_session_data*)session[request_id]->session_data) &&
 					!sd->auth && sd->account_id == account_id && sd->login_id1 == login_id1 && sd->login_id2 == login_id2 && sd->sex == sex )
@@ -2245,17 +2247,24 @@ int parse_fromlogin(int fd) {
 					int client_fd = request_id;
 					sd->version = version;
 					sd->clienttype = clienttype;
-					switch( result )
-					{
-					case 0:// ok
-						char_auth_ok(client_fd, sd);
-						break;
-					case 1:// auth failed
-						WFIFOHEAD(client_fd,3);
-						WFIFOW(client_fd,0) = 0x6c;
-						WFIFOB(client_fd,2) = 0;// rejected from server
-						WFIFOSET(client_fd,3);
-						break;
+					switch( result ) {
+						case 0:// ok
+							/* restrictions apply */
+							if( char_server_type == CST_MAINTENANCE && group_id < char_maintenance_min_group_id ) {
+								WFIFOHEAD(client_fd,3);
+								WFIFOW(client_fd,0) = 0x6c;
+								WFIFOB(client_fd,2) = 0;// rejected from server
+								WFIFOSET(client_fd,3);
+								break;
+							}
+							char_auth_ok(client_fd, sd);
+							break;
+						case 1:// auth failed
+							WFIFOHEAD(client_fd,3);
+							WFIFOW(client_fd,0) = 0x6c;
+							WFIFOB(client_fd,2) = 0;// rejected from server
+							WFIFOSET(client_fd,3);
+							break;
 					}
 				}
 			}
@@ -3889,6 +3898,14 @@ int parse_char(int fd)
 					node->login_id2  == login_id2 /*&&
 					node->ip         == ipl*/ )
 				{// authentication found (coming from map server)
+					/* restrictions apply */
+					if( char_server_type == CST_MAINTENANCE && node->group_id < char_maintenance_min_group_id ) {
+						WFIFOHEAD(fd,3);
+						WFIFOW(fd,0) = 0x6c;
+						WFIFOB(fd,2) = 0;// rejected from server
+						WFIFOSET(fd,3);
+						break;
+					}
 					idb_remove(auth_db, account_id);
 					char_auth_ok(fd, sd);
 				}
@@ -4592,7 +4609,7 @@ int check_connect_login_server(int tid, int64 tick, int id, intptr_t data) {
 	WFIFOW(login_fd,58) = htons(char_port);
 	memcpy(WFIFOP(login_fd,60), server_name, 20);
 	WFIFOW(login_fd,80) = 0;
-	WFIFOW(login_fd,82) = char_maintenance;
+	WFIFOW(login_fd,82) = char_server_type;
 	WFIFOW(login_fd,84) = char_new_display; //only display (New) if they want to [Kevin]
 	WFIFOSET(login_fd,86);
 
@@ -4852,8 +4869,8 @@ int char_config_read(const char* cfgName)
 			}
 		} else if (strcmpi(w1, "char_port") == 0) {
 			char_port = atoi(w2);
-		} else if (strcmpi(w1, "char_maintenance") == 0) {
-			char_maintenance = atoi(w2);
+		} else if (strcmpi(w1, "char_server_type") == 0) {
+			char_server_type = atoi(w2);
 		} else if (strcmpi(w1, "char_new") == 0) {
 			char_new = (bool)atoi(w2);
 		} else if (strcmpi(w1, "char_new_display") == 0) {
@@ -4940,6 +4957,8 @@ int char_config_read(const char* cfgName)
 			}
 		} else if (strcmpi(w1, "guild_exp_rate") == 0) {
 			guild_exp_rate = atoi(w2);
+		} else if (strcmpi(w1, "char_maintenance_min_group_id") == 0) {
+			char_maintenance_min_group_id = atoi(w2);
 		} else if (strcmpi(w1, "import") == 0) {
 			char_config_read(w2);
 		} else

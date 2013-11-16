@@ -853,6 +853,14 @@ enum ammo_type {
 	A_THROWWEAPON	//9
 };
 
+enum e_char_server_type {
+	CST_NORMAL      = 0,
+	CST_MAINTENANCE = 1,
+	CST_OVER18      = 2,
+	CST_PAYING      = 3,
+	CST_P2P         = 4,
+};
+
 /* packet size constant for itemlist */
 #if MAX_INVENTORY > MAX_STORAGE && MAX_INVENTORY > MAX_CART
 #define MAX_ITEMLIST MAX_INVENTORY
