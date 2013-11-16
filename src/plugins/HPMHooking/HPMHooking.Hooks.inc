@@ -49674,6 +49674,83 @@ void HP_pc_bound_clear(struct map_session_data *sd, enum e_item_bound_type type)
 	}
 	return;
 }
+int HP_pc_expiration_timer(int tid, int64 tick, int id, intptr_t data) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_pc_expiration_timer_pre ) {
+		int (*preHookFunc) (int *tid, int64 *tick, int *id, intptr_t *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_expiration_timer_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_expiration_timer_pre[hIndex].func;
+			retVal___ = preHookFunc(&tid, &tick, &id, &data);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.expiration_timer(tid, tick, id, data);
+	}
+	if( HPMHooks.count.HP_pc_expiration_timer_post ) {
+		int (*postHookFunc) (int retVal___, int *tid, int64 *tick, int *id, intptr_t *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_expiration_timer_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_expiration_timer_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &tid, &tick, &id, &data);
+		}
+	}
+	return retVal___;
+}
+int HP_pc_global_expiration_timer(int tid, int64 tick, int id, intptr_t data) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_pc_global_expiration_timer_pre ) {
+		int (*preHookFunc) (int *tid, int64 *tick, int *id, intptr_t *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_global_expiration_timer_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_global_expiration_timer_pre[hIndex].func;
+			retVal___ = preHookFunc(&tid, &tick, &id, &data);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.global_expiration_timer(tid, tick, id, data);
+	}
+	if( HPMHooks.count.HP_pc_global_expiration_timer_post ) {
+		int (*postHookFunc) (int retVal___, int *tid, int64 *tick, int *id, intptr_t *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_global_expiration_timer_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_global_expiration_timer_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &tid, &tick, &id, &data);
+		}
+	}
+	return retVal___;
+}
+void HP_pc_expire_check(struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_pc_expire_check_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_expire_check_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_expire_check_pre[hIndex].func;
+			preHookFunc(sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pc.expire_check(sd);
+	}
+	if( HPMHooks.count.HP_pc_expire_check_post ) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_expire_check_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_expire_check_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
 /* pet */
 int HP_pet_init(bool minimal) {
 	int hIndex = 0;
