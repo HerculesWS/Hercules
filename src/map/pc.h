@@ -518,8 +518,13 @@ struct map_session_data {
 	
 	unsigned char delayed_damage;//ref. counter bugreport:7307 [Ind/Hercules]
 	
+	/* HPM Custom Struct */
 	struct HPluginData **hdata;
 	unsigned int hdatac;
+	
+	/* expiration_time timer id */
+	int expiration_tid;
+	time_t expiration_time;
 	
 	/* */
 	struct {
@@ -741,6 +746,8 @@ struct pc_interface {
 	struct sg_data sg_info[MAX_PC_FEELHATE];
 	/* */
 	struct eri *sc_display_ers;
+	/* global expiration timer id */
+	int expiration_tid;
 	/* funcs */
 	void (*init) (bool minimal);
 	void (*final) (void);
@@ -985,6 +992,10 @@ struct pc_interface {
 	void (*scdata_received) (struct map_session_data *sd);
 	
 	void (*bound_clear) (struct map_session_data *sd, enum e_item_bound_type type);
+	
+	int (*expiration_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*global_expiration_timer) (int tid, int64 tick, int id, intptr_t data);
+	void (*expire_check) (struct map_session_data *sd);
 };
 
 struct pc_interface *pc;

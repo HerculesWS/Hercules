@@ -1049,6 +1049,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	sd->npc_timer_id = INVALID_TIMER;
 	sd->pvp_timer = INVALID_TIMER;
 	sd->fontcolor_tid = INVALID_TIMER;
+	sd->expiration_tid = INVALID_TIMER;
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/
@@ -1176,11 +1177,8 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 			clif->message(sd->fd, buf);
 		}
 		
-		// message of the limited time of the account
-		if (expiration_time != 0) { // don't display if it's unlimited or unknow value
-			char tmpstr[1024];
-			strftime(tmpstr, sizeof(tmpstr) - 1, msg_txt(501), localtime(&expiration_time)); // "Your account time limit is: %d-%m-%Y %H:%M:%S."
-			clif->wis_message(sd->fd, map->wisp_server_name, tmpstr, strlen(tmpstr)+1);
+		if (expiration_time != 0) {			
+			sd->expiration_time = expiration_time;
 		}
 
 		/**
@@ -10300,6 +10298,65 @@ void pc_bank_withdraw(struct map_session_data *sd, int money) {
 void pc_scdata_received(struct map_session_data *sd) {
 	pc->inventory_rentals(sd);
 	clif->show_modifiers(sd);
+	
+	if (sd->expiration_time != 0) { // don't display if it's unlimited or unknow value
+		time_t exp_time = sd->expiration_time;
+		char tmpstr[1024];
+		strftime(tmpstr, sizeof(tmpstr) - 1, msg_txt(501), localtime(&exp_time)); // "Your account time limit is: %d-%m-%Y %H:%M:%S."
+		clif->wis_message(sd->fd, map->wisp_server_name, tmpstr, strlen(tmpstr)+1);
+		
+		pc->expire_check(sd);
+	}
+}
+int pc_expiration_timer(int tid, int64 tick, int id, intptr_t data) {
+	struct map_session_data *sd = map->id2sd(id);
+	
+	if( !sd ) return 0;
+	
+	sd->expiration_tid = INVALID_TIMER;
+	
+	if( sd->fd )
+		clif->authfail_fd(sd->fd,10);
+	
+	map->quit(sd);
+	
+	return 0;
+}
+/* this timer exists only when a character with a expire timer > 24h is online */
+/* it loops thru online players once an hour to check whether a new < 24h is available */
+int pc_global_expiration_timer(int tid, int64 tick, int id, intptr_t data) {
+	struct s_mapiterator* iter;
+	struct map_session_data* sd;
+
+	iter = mapit_getallusers();
+	
+	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
+		if( sd->expiration_time )
+			pc->expire_check(sd);
+	}
+	
+	mapit->free(iter);
+	
+	return 0;
+}
+void pc_expire_check(struct map_session_data *sd) {	
+	/* ongoing timer */
+	if( sd->expiration_tid != INVALID_TIMER )
+		return;
+	
+	/* not within the next 24h, enable the global check */
+	if( sd->expiration_time > ( time(NULL) + ( ( 60 * 60 ) * 24 ) ) ) {
+		
+		/* global check not running, enable */
+		if( pc->expiration_tid == INVALID_TIMER ) {
+			/* starts in 1h, repeats every hour */
+			pc->expiration_tid = timer->add_interval(timer->gettick() + ((1000*60)*60), pc->global_expiration_timer, 0, 0, ((1000*60)*60));
+		}
+		
+		return;
+	}
+
+	sd->expiration_tid = timer->add(timer->gettick() + (int64)(sd->expiration_time - time(NULL))*1000, pc->expiration_timer, sd->bl.id, 0);
 }
 
 /*==========================================
@@ -10332,6 +10389,8 @@ void do_init_pc(bool minimal) {
 	timer->add_func_list(pc->follow_timer, "pc_follow_timer");
 	timer->add_func_list(pc->endautobonus, "pc_endautobonus");
 	timer->add_func_list(pc->charm_timer, "pc_charm_timer");
+	timer->add_func_list(pc->global_expiration_timer,"pc_global_expiration_timer");
+	timer->add_func_list(pc->expiration_timer,"pc_expiration_timer");
 
 	timer->add(timer->gettick() + map->autosave_interval, pc->autosave, 0, 0);
 
@@ -10393,6 +10452,8 @@ void pc_defaults(void) {
 	memcpy(pc->sg_info, sg_info, sizeof(pc->sg_info));
 	/* */
 	pc->sc_display_ers = NULL;
+	/* */
+	pc->expiration_tid = INVALID_TIMER;
 	/* funcs */
 	pc->init = do_init_pc;
 	pc->final = do_final_pc;
@@ -10636,4 +10697,8 @@ void pc_defaults(void) {
 	pc->scdata_received = pc_scdata_received;
 	
 	pc->bound_clear = pc_bound_clear;
+	
+	pc->expiration_timer = pc_expiration_timer;
+	pc->global_expiration_timer = pc_global_expiration_timer;
+	pc->expire_check = pc_expire_check;
 }

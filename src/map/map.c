@@ -1663,6 +1663,9 @@ int map_quit(struct map_session_data *sd) {
 		//Non-active players should not have loaded any data yet (or it was cleared already) so no additional cleanups are needed.
 		return 0;
 	}
+	
+	if( sd->expiration_tid != INVALID_TIMER )
+		timer->delete(sd->expiration_tid,pc->expiration_timer);
 
 	if (sd->npc_timer_id != INVALID_TIMER) //Cancel the event timer.
 		npc->timerevent_quit(sd);
