@@ -2277,7 +2277,6 @@ int parse_fromlogin(int fd) {
 				// find the authenticated session with this account id
 				ARR_FIND( 0, fd_max, i, session[i] && (sd = (struct char_session_data*)session[i]->session_data) && sd->auth && sd->account_id == RFIFOL(fd,2) );
 				if( i < fd_max ) {
-					int server_id;
 					memcpy(sd->email, RFIFOP(fd,6), 40);
 					sd->expiration_time = (time_t)RFIFOL(fd,46);
 					sd->group_id = RFIFOB(fd,50);
@@ -2290,10 +2289,8 @@ int parse_fromlogin(int fd) {
 					safestrncpy(sd->birthdate, (const char*)RFIFOP(fd,52), sizeof(sd->birthdate));
 					safestrncpy(sd->pincode, (const char*)RFIFOP(fd,63), sizeof(sd->pincode));
 					sd->pincode_change = RFIFOL(fd,68);
-					ARR_FIND( 0, ARRAYLENGTH(server), server_id, server[server_id].fd > 0 && server[server_id].map[0] );
 					// continued from char_auth_ok...
-					if( server_id == ARRAYLENGTH(server) || //server not online, bugreport:2359
-						(max_connect_user == 0 && sd->group_id != gm_allow_group) ||
+					if( (max_connect_user == 0 && sd->group_id != gm_allow_group) ||
 						( max_connect_user > 0 && count_users() >= max_connect_user && sd->group_id != gm_allow_group ) ) {
 						// refuse connection (over populated)
 						WFIFOHEAD(i,3);
@@ -3941,9 +3938,11 @@ int parse_char(int fd)
 				int char_id;
 				uint32 subnet_map_ip;
 				struct auth_node* node;
+				int server_id = 0;
 
 				int slot = RFIFOB(fd,2);
 				RFIFOSKIP(fd,3);
+				
 #if PACKETVER >= 20110309
 				if( *pincode->enabled ){ // hack check
 					struct online_char_data* character;	
@@ -3957,6 +3956,19 @@ int parse_char(int fd)
 					}
 				}
 #endif
+				
+				ARR_FIND( 0, ARRAYLENGTH(server), server_id, server[server_id].fd > 0 && server[server_id].map[0] );
+				/* not available, tell it to wait (client wont close; char select will respawn).
+				 * magic response found by Ind thanks to Yommy <3 */
+				if( server_id == ARRAYLENGTH(server) ) {
+					WFIFOHEAD(fd, 24);
+					WFIFOW(fd, 0) = 0x840;
+					WFIFOW(fd, 2) = 24;
+					safestrncpy((char*)WFIFOP(fd,4), "0", 20);/* we can't send empty (otherwise the list will pop up) */
+					WFIFOSET(fd, 24);
+					break;
+				}
+				
 				if ( SQL_SUCCESS != SQL->Query(sql_handle, "SELECT `char_id` FROM `%s` WHERE `account_id`='%d' AND `char_num`='%d'", char_db, sd->account_id, slot)
 				  || SQL_SUCCESS != SQL->NextRow(sql_handle)
 				  || SQL_SUCCESS != SQL->GetData(sql_handle, 0, &data, NULL) )
