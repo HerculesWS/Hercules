@@ -4,7 +4,6 @@
 -- Remember to make a backup before applying.
 -- We are not liable for any data loss this may cause.
 -- Apply in the same database you applied your main.sql
--- Last revision: November 10, 2013, 19:00
 
 -- Drop table contents from ´sc_data´ since we use a different status order than rAthena
 -- /!\ WARNING /!\ This will remove _ALL_ of the status effects active on the server
@@ -22,6 +21,7 @@ ALTER TABLE `cart_inventory` MODIFY `bound` tinyint(1) unsigned NOT NULL default
 ALTER TABLE `char` CHANGE `moves` `slotchange` SMALLINT(3) UNSIGNED NOT NULL default '0',
 	ADD `char_opt` INT( 11 ) UNSIGNED NOT NULL default '0',
 	ADD `font` TINYINT( 3 ) UNSIGNED NOT NULL DEFAULT  '0';
+	ADD `unban_time` int(11) unsigned NOT NULL default '0';
 
 -- Upgrades for table `guild_storage`
 ALTER TABLE `guild_storage` MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
@@ -57,6 +57,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1383167577);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1383205740);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1383955424);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1384545461);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1384588175);
 
 -- Updates to table `storage`
 ALTER TABLE `storage` MODIFY `bound` tinyint(1) unsigned NOT NULL default '0';
