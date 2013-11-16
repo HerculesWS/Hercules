@@ -1679,9 +1679,9 @@ int itemdb_readdb_sql_sub(Sql *handle, int n, const char *source) {
 	SQL->GetData(handle, 19, &data, NULL); id.flag.no_refine = data && atoi(data) ? 0 : 1;
 	SQL->GetData(handle, 20, &data, NULL); id.look = data ? atoi(data) : 0;
 	SQL->GetData(handle, 21, &data, NULL); id.flag.bindonequip = data && atoi(data) ? 1 : 0;
-	SQL->GetData(handle, 22, &data, NULL); id.script = *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
-	SQL->GetData(handle, 23, &data, NULL); id.equip_script = *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
-	SQL->GetData(handle, 24, &data, NULL); id.unequip_script = *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
+	SQL->GetData(handle, 22, &data, NULL); id.script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
+	SQL->GetData(handle, 23, &data, NULL); id.equip_script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
+	SQL->GetData(handle, 24, &data, NULL); id.unequip_script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
 
 	return itemdb->validate_entry(&id, n, source);
 }
