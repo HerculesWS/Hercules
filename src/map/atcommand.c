@@ -549,16 +549,16 @@ ACMD(who) {
 	int display_type = 1;
 	int map_id = -1;
 		
-	if (strstr(command, "map") != NULL) {
+	if (stristr(info->command, "map") != NULL) {
 		if (sscanf(message, "%15s %23s", map_name, player_name) < 1 || (map_id = map->mapname2mapid(map_name)) < 0)
 			map_id = sd->bl.m;
 	} else {
 		sscanf(message, "%23s", player_name);
 	}
 	
-	if (strstr(command, "2") != NULL)
+	if (stristr(info->command, "2") != NULL)
 		display_type = 2;
-	else if (strstr(command, "3") != NULL)
+	else if (stristr(info->command, "3") != NULL)
 		display_type = 3;
 	
 	level = pc->get_group_level(sd);
@@ -1002,17 +1002,17 @@ ACMD(kami)
 	
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 	
-	if(*(command + 5) != 'c' && *(command + 5) != 'C') {
+	if(*(info->command + 4) != 'c' && *(info->command + 4) != 'C') {
 		if (!message || !*message) {
 			clif->message(fd, msg_txt(980)); // Please enter a message (usage: @kami <message>).
 			return false;
 		}
 		
 		sscanf(message, "%199[^\n]", atcmd_output);
-		if (strstr(command, "l") != NULL)
+		if (stristr(info->command, "l") != NULL)
 			clif->broadcast(&sd->bl, atcmd_output, strlen(atcmd_output) + 1, BC_DEFAULT, ALL_SAMEMAP);
 		else
-			intif->broadcast(atcmd_output, strlen(atcmd_output) + 1, (*(command + 5) == 'b' || *(command + 5) == 'B') ? BC_BLUE : BC_YELLOW);
+			intif->broadcast(atcmd_output, strlen(atcmd_output) + 1, (*(info->command + 4) == 'b' || *(info->command + 4) == 'B') ? BC_BLUE : BC_YELLOW);
 	} else {
 		if(!message || !*message || (sscanf(message, "%lx %199[^\n]", &color, atcmd_output) < 2)) {
 			clif->message(fd, msg_txt(981)); // Please enter color and message (usage: @kamic <color> <message>).
@@ -1099,7 +1099,7 @@ ACMD(item)
 	
 	memset(item_name, '\0', sizeof(item_name));
 
-	if (!strcmpi(command+1,"itembound") && (!message || !*message || (
+	if (!strcmpi(info->command,"itembound") && (!message || !*message || (
 		sscanf(message, "\"%99[^\"]\" %d %d", item_name, &number, &bound) < 2 && 
 		sscanf(message, "%99s %d %d", item_name, &number, &bound) < 2 
 	))) {
@@ -1123,7 +1123,7 @@ ACMD(item)
 		return false;
 	}
 	
-	if(!strcmpi(command+1,"itembound") && !(bound >= IBT_MIN && bound <= IBT_MAX) ) {
+	if(!strcmpi(info->command,"itembound") && !(bound >= IBT_MIN && bound <= IBT_MAX) ) {
 		clif->message(fd, msg_txt(298)); // Invalid bound type
 		return false;
 	}
@@ -1171,7 +1171,7 @@ ACMD(item2)
 	
 	memset(item_name, '\0', sizeof(item_name));
 	
-	if (!strcmpi(command+1,"itembound2") && (!message || !*message || (
+	if (!strcmpi(info->command,"itembound2") && (!message || !*message || (
 		sscanf(message, "\"%99[^\"]\" %d %d %d %d %d %d %d %d %d", item_name, &number, &identify, &refine, &attr, &c1, &c2, &c3, &c4, &bound) < 10 &&
 		sscanf(message, "%99s %d %d %d %d %d %d %d %d %d", item_name, &number, &identify, &refine, &attr, &c1, &c2, &c3, &c4, &bound) < 10 ))) {
 		clif->message(fd, msg_txt(296)); // Please enter all parameters (usage: @itembound2 <item name/ID> <quantity>
@@ -1189,7 +1189,7 @@ ACMD(item2)
 	if (number <= 0)
 		number = 1;
 
-	if( !strcmpi(command+1,"itembound2") && !(bound >= IBT_MIN && bound <= IBT_MAX) ) {
+	if( !strcmpi(info->command,"itembound2") && !(bound >= IBT_MIN && bound <= IBT_MAX) ) {
 		clif->message(fd, msg_txt(298)); // Invalid bound type
 		return false;
 	}
@@ -1204,7 +1204,7 @@ ACMD(item2)
 		int loop, get_count, i;
 		loop = 1;
 		get_count = number;
-		if( !strcmpi(command+1,"itembound2") )
+		if( !strcmpi(info->command,"itembound2") )
 			bound = 1;
 		if( !itemdb->isstackable2(item_data) ) {
 			if( bound && (item_data->type == IT_PETEGG || item_data->type == IT_PETARMOR) ) {
@@ -1930,9 +1930,9 @@ ACMD(monster)
 	if (battle_config.atc_spawn_quantity_limit && number > battle_config.atc_spawn_quantity_limit)
 		number = battle_config.atc_spawn_quantity_limit;
 	
-	if (strcmp(command+1, "monstersmall") == 0)
+	if (strcmpi(info->command, "monstersmall") == 0)
 		size = SZ_MEDIUM; // This is just gorgeous [mkbu95]
-	else if (strcmp(command+1, "monsterbig") == 0)
+	else if (strcmpi(info->command, "monsterbig") == 0)
 		size = SZ_BIG;
 	else
 		size = SZ_SMALL;
@@ -1997,7 +1997,7 @@ ACMD(killmonster) {
 			map_id = sd->bl.m;
 	}
 	
-	drop_flag = strcmp(command+1, "killmonster2");
+	drop_flag = strcmpi(info->command, "killmonster2");
 	
 	map->foreachinmap(atcommand->atkillmonster_sub, map_id, BL_MOB, -drop_flag);
 	
@@ -2358,7 +2358,7 @@ ACMD(param) {
 		return false;
 	}
 	
-	ARR_FIND( 0, ARRAYLENGTH(param), i, strcmpi(command+1, param[i]) == 0 );
+	ARR_FIND( 0, ARRAYLENGTH(param), i, strcmpi(info->command, param[i]) == 0 );
 	
 	if( i == ARRAYLENGTH(param) || i > MAX_STATUS_TYPE) { // normally impossible...
 		clif->message(fd, msg_txt(1013)); // Please enter a valid value (usage: @str/@agi/@vit/@int/@dex/@luk <+/-adjustment>).
@@ -6070,7 +6070,7 @@ ACMD(npctalk)
 {
 	char name[NAME_LENGTH],mes[100],temp[100];
 	struct npc_data *nd;
-	bool ifcolor=(*(command + 8) != 'c' && *(command + 8) != 'C')?0:1;
+	bool ifcolor=(*(info->command + 7) != 'c' && *(info->command + 7) != 'C')?0:1;
 	unsigned long color=0;
 	
 	if (sd->sc.count && //no "chatting" while muted.
@@ -7754,7 +7754,7 @@ ACMD(cash)
 		return false;
 	}
 	
-	if( !strcmpi(command+1,"cash") ) {
+	if( !strcmpi(info->command,"cash") ) {
 		if( value > 0 ) {
 			if( (ret=pc->getcash(sd, value, 0)) >= 0){
 				// If this option is set, the message is already sent by pc function
@@ -7813,9 +7813,9 @@ ACMD(clone) {
 		return true;
 	}
 	
-	if (strcmpi(command+1, "clone") == 0)
+	if (strcmpi(info->command, "clone") == 0)
 		flag = 1;
-	else if (strcmpi(command+1, "slaveclone") == 0) {
+	else if (strcmpi(info->command, "slaveclone") == 0) {
 		flag = 2;
 		if(pc_isdead(sd)){
 		    clif->message(fd, msg_txt(129+flag*2));
@@ -7983,15 +7983,15 @@ ACMD(itemlist)
 	int size;
 	StringBuf buf;
 		
-	if( strcmp(command+1, "storagelist") == 0 ) {
+	if( strcmpi(info->command, "storagelist") == 0 ) {
 		location = "storage";
 		items = sd->status.storage.items;
 		size = MAX_STORAGE;
-	} else if( strcmp(command+1, "cartlist") == 0 ) {
+	} else if( strcmpi(info->command, "cartlist") == 0 ) {
 		location = "cart";
 		items = sd->status.cart;
 		size = MAX_CART;
-	} else if( strcmp(command+1, "itemlist") == 0 ) {
+	} else if( strcmpi(info->command, "itemlist") == 0 ) {
 		location = "inventory";
 		items = sd->status.inventory;
 		size = MAX_INVENTORY;
@@ -8512,7 +8512,7 @@ ACMD(reloadquestdb) {
 }
 ACMD(addperm) {
 	int perm_size = pcg->permission_count;
-	bool add = (strcmpi(command+1, "addperm") == 0) ? true : false;
+	bool add = (strcmpi(info->command, "addperm") == 0) ? true : false;
 	int i;
 	
 	if( !message || !*message ) {
