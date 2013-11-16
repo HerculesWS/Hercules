@@ -110,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `char` (
   `slotchange` SMALLINT(3) unsigned NOT NULL default '0',
   `char_opt` INT( 11 ) unsigned NOT NULL default '0',
   `font` TINYINT( 3 ) UNSIGNED NOT NULL DEFAULT  '0',
+  `unban_time` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`char_id`),
   UNIQUE KEY `name_key` (`name`),
   KEY `account_id` (`account_id`),
@@ -669,6 +670,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1383167577);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1383205740);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1383955424);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1384545461);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1384588175);
 
 --
 -- Table structure for table `sstatus`

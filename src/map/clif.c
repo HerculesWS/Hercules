@@ -5634,7 +5634,38 @@ void clif_displaymessage2(const int fd, const char* mes) {
 		aFree(message);		
 	}
 }
+/* oh noo! another version of 0x8e! */
+void clif_displaymessage_sprintf(const int fd, const char* mes, ...) {
+	va_list ap;
 
+	if( fd == -2 ) {
+		ShowInfo("HCP: ");
+		va_start(ap,mes);
+		_vShowMessage(MSG_NONE,mes,ap);
+		va_end(ap);
+		ShowMessage("\n");
+	} else if ( fd > 0 ) {
+		int len = 1;
+		char *ptr;
+		
+		WFIFOHEAD(fd, 5 + 255);/* ensure the maximum */
+
+		/* process */
+		va_start(ap,mes);
+		len += vsnprintf((char *)WFIFOP(fd,4), 255, mes, ap);
+		va_end(ap);
+
+		/* adjusting */
+		ptr = (char *)WFIFOP(fd,4);
+		ptr[len - 1] = '\0';
+		
+		/* */
+		WFIFOW(fd,0) = 0x8e;
+		WFIFOW(fd,2) = 5 + len; // 4 + len + NULL teminate
+		
+		WFIFOSET(fd, 5 + len);
+	}
+}
 /// Send broadcast message in yellow or blue without font formatting (ZC_BROADCAST).
 /// 009a <packet len>.W <message>.?B
 void clif_broadcast(struct block_list* bl, const char* mes, int len, int type, enum send_target target)
@@ -18407,6 +18438,7 @@ void clif_defaults(void) {
 	clif->msgtable_num = clif_msgtable_num;
 	clif->message = clif_displaymessage;
 	clif->messageln = clif_displaymessage2;
+	clif->messages = clif_displaymessage_sprintf;
 	clif->colormes = clif_colormes;
 	clif->process_message = clif_process_message;
 	clif->wisexin = clif_wisexin;

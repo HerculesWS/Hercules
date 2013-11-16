@@ -99,5 +99,6 @@ extern void ClearScreen(void);
 	extern void ShowFatalError(const char *, ...);
 	extern void ShowConfigWarning(config_setting_t *config, const char *string, ...);
 #endif
+extern int _vShowMessage(enum msg_type flag, const char *string, va_list ap);
 
 #endif /* _SHOWMSG_H_ */

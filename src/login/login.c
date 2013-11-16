@@ -11,6 +11,7 @@
 #include "../common/socket.h"
 #include "../common/strlib.h"
 #include "../common/timer.h"
+#include "../common/utils.h"
 #include "../common/HPM.h"
 #include "account.h"
 #include "ipban.h"
@@ -270,18 +271,6 @@ bool check_password(const char* md5key, int passwdenc, const char* passwd, const
 		       ((passwdenc&0x02) && check_encrypted(refpass, md5key, passwd));
 	}
 }
-
-
-//-----------------------------------------------------
-// custom timestamp formatting (from eApp)
-//-----------------------------------------------------
-const char* timestamp2string(char* str, size_t size, time_t timestamp, const char* format)
-{
-	size_t len = strftime(str, size, format, localtime(&timestamp));
-	memset(str + len, '\0', size - len);
-	return str;
-}
-
 
 //--------------------------------------------
 // Test to know if an IP come from LAN or WAN.
