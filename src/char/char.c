@@ -3800,7 +3800,7 @@ static void char_delete2_cancel(int fd, struct char_session_data* sd)
 
 int parse_char(int fd)
 {
-	int i, ch;
+	int i;
 	char email[40];
 	unsigned short cmd;
 	int map_fd;
@@ -3878,8 +3878,7 @@ int parse_char(int fd)
 				WFIFOL(fd,0) = account_id;
 				WFIFOSET(fd,4);
 
-				if( runflag != CHARSERVER_ST_RUNNING )
-				{
+				if( runflag != CHARSERVER_ST_RUNNING ) {
 					WFIFOHEAD(fd,3);
 					WFIFOW(fd,0) = 0x6c;
 					WFIFOB(fd,2) = 0;// rejected from server
@@ -4124,6 +4123,7 @@ int parse_char(int fd)
 					/* Others I found [Ind] */
 					/* 0x02 = Symbols in Character Names are forbidden */
 					/* 0x03 = You are not elegible to open the Character Slot. */
+					/* 0x0B = This service is only available for premium users.  */
 					switch (i) {
 						case -1: WFIFOB(fd,2) = 0x00; break;
 						case -2: WFIFOB(fd,2) = 0xFF; break;
@@ -4144,9 +4144,7 @@ int parse_char(int fd)
 					WFIFOSET(fd,len);
 
 					// add new entry to the chars list
-					ARR_FIND( 0, MAX_CHARS, ch, sd->found_char[ch] == -1 );
-					if( ch < MAX_CHARS )
-						sd->found_char[ch] = i; // the char_id of the new char
+					sd->found_char[char_dat.slot] = i; // the char_id of the new char
 				}
 	#if PACKETVER >= 20120307
 				RFIFOSKIP(fd,31);
@@ -4205,9 +4203,7 @@ int parse_char(int fd)
 				}
 
 				// remove char from list and compact it
-				for(ch = i; ch < MAX_CHARS-1; ch++)
-					sd->found_char[ch] = sd->found_char[ch+1];
-				sd->found_char[MAX_CHARS-1] = -1;
+				sd->found_char[i] = -1;
 
 				/* Delete character */
 				if(delete_char_sql(cid)<0){
