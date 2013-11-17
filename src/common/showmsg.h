@@ -8,6 +8,9 @@
 #ifndef _HPMi_H_
 	#include "../../3rdparty/libconfig/libconfig.h"
 #endif
+
+#include <stdarg.h>
+
 // for help with the console colors look here:
 // http://www.edoceo.com/liberum/?doc=printf-with-color
 // some code explanation (used here):
