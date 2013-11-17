@@ -12967,20 +12967,122 @@ void clif_parse_GuildRequestEmblem(int fd,struct map_session_data *sd)
 		clif->guild_emblem(sd,g);
 }
 
-
 /// Validates data of a guild emblem (compressed bitmap)
-bool clif_validate_emblem(const uint8* emblem, unsigned long emblem_len) {
-	bool success;
-	uint8 buf[1800];  // no well-formed emblem bitmap is larger than 1782 (24 bit) / 1654 (8 bit) bytes
+bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len) {
+	enum e_bitmapconst {
+		RGBTRIPLE_SIZE = 3,         // sizeof(RGBTRIPLE)
+		RGBQUAD_SIZE = 4,           // sizeof(RGBQUAD)
+		BITMAPFILEHEADER_SIZE = 14, // sizeof(BITMAPFILEHEADER)
+		BITMAPINFOHEADER_SIZE = 40, // sizeof(BITMAPINFOHEADER)
+		BITMAP_WIDTH = 24,
+		BITMAP_HEIGHT = 24,
+	};
+#pragma pack(push, 1)
+	struct s_bitmaptripple {
+		//uint8 b;
+		//uint8 g;
+		//uint8 r;
+		unsigned int rgb:24;
+	} __attribute__((packed));
+#pragma pack(pop)
+	uint8 buf[1800]; // no well-formed emblem bitmap is larger than 1782 (24 bit) / 1654 (8 bit) bytes
 	unsigned long buf_len = sizeof(buf);
+	int header = 0, bitmap = 0, offbits = 0, palettesize = 0, i = 0;
 
-	success = ( decode_zip(buf, &buf_len, emblem, emblem_len) == 0 && buf_len >= 18 )  // sizeof(BITMAPFILEHEADER) + sizeof(biSize) of the following info header struct
-			&& RBUFW(buf,0) == 0x4d42   // BITMAPFILEHEADER.bfType (signature)
-			&& RBUFL(buf,2) == buf_len  // BITMAPFILEHEADER.bfSize (file size)
-			&& RBUFL(buf,10) < buf_len  // BITMAPFILEHEADER.bfOffBits (offset to bitmap bits)
-			;
+	if( decode_zip(buf, &buf_len, emblem, emblem_len) != 0 || buf_len < BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE
+	 || RBUFW(buf,0) != 0x4d42 // BITMAPFILEHEADER.bfType (signature)
+	 || RBUFL(buf,2) != buf_len // BITMAPFILEHEADER.bfSize (file size)
+	 || RBUFL(buf,14) != BITMAPINFOHEADER_SIZE // BITMAPINFOHEADER.biSize (other headers are not supported)
+	 || RBUFL(buf,18) != BITMAP_WIDTH // BITMAPINFOHEADER.biWidth
+	 || RBUFL(buf,22) != BITMAP_HEIGHT // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
+	 || RBUFL(buf,30) != 0 // BITMAPINFOHEADER.biCompression == BI_RGB (compression not supported)
+	 ) {
+		// Invalid data
+		return false;
+	}
 
-	return success;
+	offbits = RBUFL(buf,10); // BITMAPFILEHEADER.bfOffBits (offset to bitmap bits)
+
+	switch( RBUFW(buf,28) ) { // BITMAPINFOHEADER.biBitCount
+		case 8:
+			palettesize = RBUFL(buf,46); // BITMAPINFOHEADER.biClrUsed (number of colors in the palette)
+			if( palettesize == 0 )
+				palettesize = 256; // Defaults to 2^n if set to zero
+			else if( palettesize > 256 )
+				return false;
+			header = BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE + RGBQUAD_SIZE * palettesize; // headers + palette
+			bitmap = BITMAP_WIDTH * BITMAP_HEIGHT;
+			break;
+		case 24:
+			header = BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE;
+			bitmap = BITMAP_WIDTH * BITMAP_HEIGHT * RGBTRIPLE_SIZE;
+			break;
+		default:
+			return false;
+	}
+
+	// NOTE: This check gives a little freedom for bitmap-producing implementations,
+	// that align the start of bitmap data, which is harmless but unnecessary.
+	// If you want it paranoidly strict, change the first condition from < to !=.
+	// This also allows files with trailing garbage at the end of the file.
+	// If you want to avoid that, change the last condition to !=.
+	if( offbits < header || buf_len <= bitmap || offbits > buf_len - bitmap ) {
+		return false;
+	}
+
+	if( battle_config.client_emblem_max_blank_percent < 100 ) {
+		int required_pixels = BITMAP_WIDTH * BITMAP_HEIGHT * (100 - battle_config.client_emblem_max_blank_percent) / 100;
+		int found_pixels = 0;
+		/// Checks what percentage of a guild emblem is blank. A blank emblem
+		/// consists solely of magenta pixels. Since the client uses 16-bit
+		/// colors, any magenta shade that reduces to #ff00ff passes off as
+		/// transparent color as well (down to #f807f8).
+		///
+		/// Unlike real magenta, reduced magenta causes the guild window to
+		/// become see-through in the transparent parts of the emblem
+		/// background (glitch).
+		switch( RBUFW(buf,28) ) {
+			case 8: // palette indexes
+			{
+				const uint8 *indexes = (const uint8 *)RBUFP(buf,offbits);
+				const uint32 *palette = (const uint32 *)RBUFP(buf,BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE);
+
+				for( i = 0; i < BITMAP_WIDTH * BITMAP_HEIGHT; i++ ) {
+					if( indexes[i] >= palettesize ) // Invalid color
+						return false;
+
+					// if( color->r < 0xF8 || color->g > 0x07 || color->b < 0xF8 )
+					if( ( palette[indexes[i]]&0x00F8F8F8 ) != 0x00F800F8 ) {
+						if( ++found_pixels >= required_pixels ) {
+							// Enough valid pixels were found
+							return true;
+						}
+					}
+				}
+				break;
+			}
+			case 24: // full colors
+			{
+				const struct s_bitmaptripple *pixels = (const struct s_bitmaptripple*)RBUFP(buf,offbits);
+
+				for( i = 0; i < BITMAP_WIDTH * BITMAP_HEIGHT; i++ ) {
+					// if( pixels[i].r < 0xF8 || pixels[i].g > 0x07 || pixels[i].b < 0xF8 )
+					if( ( pixels[i].rgb&0xF8F8F8 ) != 0xF800F8 ) {
+						if( ++found_pixels >= required_pixels ) {
+							// Enough valid pixels were found
+							return true;
+						}
+					}
+				}
+				break;
+			}
+		}
+
+		// Not enough non-blank pixels found
+		return false;
+	}
+
+	return true;
 }
 
 
