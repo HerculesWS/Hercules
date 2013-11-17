@@ -764,18 +764,18 @@ int64 battle_calc_masteryfix(struct block_list *src, struct block_list *target, 
 		if(sc->data[SC_IMPOSITIO])
 			damage += sc->data[SC_IMPOSITIO]->val2;
 		if(sc->data[SC_DRUMBATTLE]){
-			if(tstatus->size == SZ_SMALL)
+			if(tstatus->size == SZ_MEDIUM)
 				damage += sc->data[SC_DRUMBATTLE]->val2;
-			else if(tstatus->size == SZ_MEDIUM)
+			else if(tstatus->size == SZ_SMALL)
 				damage += 10 * sc->data[SC_DRUMBATTLE]->val1;
 			//else no bonus for large target
 		}
 		if(sc->data[SC_GS_MADNESSCANCEL])
 			damage += 100;
 		if(sc->data[SC_GS_GATLINGFEVER]){
-			if(tstatus->size == SZ_SMALL)
+			if(tstatus->size == SZ_MEDIUM)
 				damage += 10 * sc->data[SC_GS_GATLINGFEVER]->val1;
-			else if(tstatus->size == SZ_MEDIUM)
+			else if(tstatus->size == SZ_SMALL)
 				damage += -5 * sc->data[SC_GS_GATLINGFEVER]->val1;
 			else
 				damage += sc->data[SC_GS_GATLINGFEVER]->val1;
@@ -2200,8 +2200,8 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					break;
 				case NC_ARMSCANNON:
 					switch( tst->size ) {
-						case SZ_SMALL: skillratio += 100 + 500 * skill_lv; break;// Small
-						case SZ_MEDIUM: skillratio += 100 + 400 * skill_lv; break;// Medium
+						case SZ_MEDIUM: skillratio += 100 + 500 * skill_lv; break;// Medium
+						case SZ_SMALL: skillratio += 100 + 400 * skill_lv; break;// Small
 						case SZ_BIG: skillratio += 100 + 300 * skill_lv; break;// Large
 					}
 					RE_LVL_DMOD(100);
@@ -4438,10 +4438,10 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				i*=i;
 				ATK_ADD(i); //Add str bonus.
 				switch (tstatus->size) { //Size-fix. Is this modified by weapon perfection?
-					case SZ_SMALL: //Small: 125%
+					case SZ_MEDIUM: //Medium: 125%
 						ATK_RATE(125);
 						break;
-					//case SZ_MEDIUM: //Medium: 100%
+					//case SZ_SMALL: //Medium: 100%
 					case SZ_BIG: //Large: 75%
 						ATK_RATE(75);
 						break;
@@ -4566,7 +4566,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 						ATK_ADD(sd->inventory_data[index]->weight * 7 / 100);
 						
 					switch (tstatus->size) {
-						case SZ_SMALL: //Small: 115%
+						case SZ_MEDIUM: //Medium: 115%
 							ATK_RATE(115);
 							break;
 						case SZ_BIG: //Large: 85%
