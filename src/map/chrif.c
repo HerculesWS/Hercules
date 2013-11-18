@@ -966,21 +966,21 @@ int chrif_deadopt(int father_id, int mother_id, int child_id) {
 }
 
 /*==========================================
- * Disconnection of a player (account has been banned of has a status, from login-server) by [Yor]
+ * Disconnection of a player (account or char has been banned of has a status, from login or char server) by [Yor]
  *------------------------------------------*/
-int chrif_accountban(int fd) {
-	int acc;
+int chrif_idbanned(int fd) {
+	int id;
 	struct map_session_data *sd;
 
-	acc = RFIFOL(fd,2);
+	id = RFIFOL(fd,2);
 	
 	if ( battle_config.etc_log )
-		ShowNotice("chrif_accountban %d.\n", acc);
+		ShowNotice("chrif_idbanned %d.\n", id);
 	
-	sd = map->id2sd(acc);
+	sd = ( RFIFOB(fd,6) == 2 ) ? map->charid2sd(id) : map->id2sd(id);
 
-	if ( acc < 0 || sd == NULL ) {
-		ShowError("chrif_accountban failed - player not online.\n");
+	if ( id < 0 || sd == NULL ) {/* ?___? is this worth showing a error for? you might wanna ban a player that is not online, this is not a error and the operation is still valid */
+		ShowError("chrif_idbanned failed - player not online.\n");
 		return 0;
 	}
 
@@ -1453,7 +1453,7 @@ int chrif_parse(int fd) {
 			case 0x2b0d: chrif->changedsex(fd); break;
 			case 0x2b0f: chrif->char_ask_name_answer(RFIFOL(fd,2), (char*)RFIFOP(fd,6), RFIFOW(fd,30), RFIFOW(fd,32)); break;
 			case 0x2b12: chrif->divorceack(RFIFOL(fd,2), RFIFOL(fd,6)); break;
-			case 0x2b14: chrif->accountban(fd); break;
+			case 0x2b14: chrif->idbanned(fd); break;
 			case 0x2b1b: chrif->recvfamelist(fd); break;
 			case 0x2b1d: chrif->load_scdata(fd); break;
 			case 0x2b1e: chrif->update_ip(fd); break;
@@ -1748,7 +1748,7 @@ void chrif_defaults(void) {
 	chrif->changemapserverack = chrif_changemapserverack;
 	chrif->changedsex = chrif_changedsex;
 	chrif->divorceack = chrif_divorceack;
-	chrif->accountban = chrif_accountban;
+	chrif->idbanned = chrif_idbanned;
 	chrif->recvfamelist = chrif_recvfamelist;
 	chrif->load_scdata = chrif_load_scdata;
 	chrif->update_ip = chrif_update_ip;
