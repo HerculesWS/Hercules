@@ -1532,6 +1532,24 @@ int itemdb_gendercheck(struct item_data *id)
 
 	return (battle_config.ignore_items_gender) ? 2 : id->sex;
 }
+
+/**
+ * Validates an item DB entry and inserts it into the database.
+ * This function is called after preparing the item entry data, and it takes
+ * care of inserting it and cleaning up any remainders of the previous one.
+ *
+ * @param *entry  Pointer to the new item_data entry. Ownership is NOT taken,
+ *                but the content is modified to reflect the validation.
+ * @param n       Ordinal number of the entry, to be displayed in case of
+ *                validation errors.
+ * @param *source Source of the entry (table or file name), to be displayed in
+ *                case of validation errors.
+ * @return Nameid of the validated entry, or 0 in case of failure.
+ *
+ * Note: This is safe to call if the new entry is a copy of the old one (i.e.
+ * item_db2 inheritance), as it will make sure not to free any scripts still in
+ * use in the new entry.
+ */
 int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 	struct item_data *item;
 
@@ -1607,15 +1625,15 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 	// Validated. Finally insert it
 	item = itemdb->load(entry->nameid);
 
-	if (item->script) {
+	if (item->script && item->script != entry->script) { // Don't free if it's inheriting the same script
 		script->free_code(item->script);
 		item->script = NULL;
 	}
-	if (item->equip_script) {
+	if (item->equip_script && item->equip_script != entry->equip_script) { // Don't free if it's inheriting the same script
 		script->free_code(item->equip_script);
 		item->equip_script = NULL;
 	}
-	if (item->unequip_script) {
+	if (item->unequip_script && item->unequip_script != entry->unequip_script) { // Don't free if it's inheriting the same script
 		script->free_code(item->unequip_script);
 		item->unequip_script = NULL;
 	}
@@ -1623,9 +1641,20 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 	*item = *entry;
 	return item->nameid;
 }
-/*==========================================
- * processes one itemdb entry
- *------------------------------------------*/
+
+/**
+ * Processes one itemdb entry from the sql backend, loading and inserting it
+ * into the item database.
+ *
+ * @param *handle MySQL connection handle. It is expected to have data
+ *                available (i.e. already queried) and it won't be freed (it
+ *                is care of the caller to do so)
+ * @param n       Ordinal number of the entry, to be displayed in case of
+ *                validation errors.
+ * @param *source Source of the entry (table name), to be displayed in case of
+ *                validation errors.
+ * @return Nameid of the validated entry, or 0 in case of failure.
+ */
 int itemdb_readdb_sql_sub(Sql *handle, int n, const char *source) {
 	struct item_data id = { 0 };
 	char *data = NULL;
@@ -1686,6 +1715,19 @@ int itemdb_readdb_sql_sub(Sql *handle, int n, const char *source) {
 	return itemdb->validate_entry(&id, n, source);
 }
 
+/**
+ * Processes one itemdb entry from the sql backend, loading and inserting it
+ * into the item database.
+ *
+ * @param *it     Libconfig setting entry. It is expected to be valid and it
+ *                won't be freed (it is care of the caller to do so if
+ *                necessary)
+ * @param n       Ordinal number of the entry, to be displayed in case of
+ *                validation errors.
+ * @param *source Source of the entry (file name), to be displayed in case of
+ *                validation errors.
+ * @return Nameid of the validated entry, or 0 in case of failure.
+ */
 int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source) {
 	struct item_data id = { 0 };
 	config_setting_t *t = NULL;
@@ -1845,11 +1887,14 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	return itemdb->validate_entry(&id, n, source);
 }
 
-/*==========================================
- * Reading item from item db
- * item_db2 overwriting item_db
- *------------------------------------------*/
-int itemdb_readdb(const char *filename) {
+/**
+ * Reads from a libconfig-formatted itemdb file and inserts the found entries into the
+ * item database, overwriting duplicate ones (i.e. item_db2 overriding item_db.)
+ *
+ * @param *filename File name, relative to the database path.
+ * @return The number of found entries.
+ */
+int itemdb_readdb_libconfig(const char *filename) {
 	bool duplicate[MAX_ITEMDB];
 	config_t item_db_conf;
 	config_setting_t *itdb, *it;
@@ -1880,44 +1925,37 @@ int itemdb_readdb(const char *filename) {
 	config_destroy(&item_db_conf);
 	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
 		
-	return 0;
+	return count;
 }
-/*======================================
- * item_db table reading
- *======================================*/
-int itemdb_read_sqldb(void) {
-	const char* item_db_name[] = {
-#ifdef RENEWAL
-		map->item_db_re_db,
-#else // not RENEWAL
-		map->item_db_db,
-#endif // RENEWAL
-		map->item_db2_db };
-	int fi;
-	
-	for( fi = 0; fi < ARRAYLENGTH(item_db_name); ++fi ) {
-		int i = 0;
-		uint32 count = 0;
+
+/**
+ * Reads from a sql itemdb table and inserts the found entries into the item
+ * database, overwriting duplicate ones (i.e. item_db2 overriding item_db.)
+ *
+ * @param *tablename Table name to query.
+ * @return The number of found entries.
+ */
+int itemdb_readdb_sql(const char *tablename) {
+	int i = 0, count = 0;
 				
-		// retrieve all rows from the item database
-		if( SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT * FROM `%s`", item_db_name[fi]) ) {
-			Sql_ShowDebug(map->mysql_handle);
-			continue;
-		}
-
-		// process rows one by one
-		while( SQL_SUCCESS == SQL->NextRow(map->mysql_handle) ) {
-			if( itemdb->readdb_sql_sub(map->mysql_handle, i++, item_db_name[fi]) )
-				count++;
-		}
-
-		// free the query result
-		SQL->FreeResult(map->mysql_handle);
-
-		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, item_db_name[fi]);
+	// retrieve all rows from the item database
+	if( SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT * FROM `%s`", tablename) ) {
+		Sql_ShowDebug(map->mysql_handle);
+		return 0;
 	}
 
-	return 0;
+	// process rows one by one
+	while( SQL_SUCCESS == SQL->NextRow(map->mysql_handle) ) {
+		if( itemdb->readdb_sql_sub(map->mysql_handle, i++, tablename) )
+			count++;
+	}
+
+	// free the query result
+	SQL->FreeResult(map->mysql_handle);
+
+	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, tablename);
+
+	return count;
 }
 
 /*==========================================
@@ -1963,23 +2001,32 @@ int itemdb_uid_load() {
 	return 0;
 }
 
-/*====================================
- * read all item-related databases
- *------------------------------------*/
+/**
+ * Reads all item-related databases.
+ */
 void itemdb_read(bool minimal) {
 	int i;
 	DBData prev;
 	
-	if (map->db_use_sql_item_db)
-		itemdb->read_sqldb();
-	else {
+	if (map->db_use_sql_item_db) {
+		const char* item_db_name[] = {
+#ifdef RENEWAL
+			map->item_db_re_db,
+#else // not RENEWAL
+			map->item_db_db,
+#endif // RENEWAL
+			map->item_db2_db
+		};
+		for(i = 0; i < ARRAYLENGTH(item_db_name); i++)
+			itemdb->readdb_sql(item_db_name[i]);
+	} else {
 		const char* filename[] = {
 			DBPATH"item_db.conf",
 			"item_db2.conf",
 		};
 
 		for(i = 0; i < ARRAYLENGTH(filename); i++)
-			itemdb->readdb(filename[i]);
+			itemdb->readdb_libconfig(filename[i]);
 	}
 	
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
@@ -2001,7 +2048,7 @@ void itemdb_read(bool minimal) {
 	
 	sv->readdb(map->db_path, "item_avail.txt",             ',', 2, 2, -1, itemdb->read_itemavail);
 	sv->readdb(map->db_path, DBPATH"item_trade.txt",       ',', 3, 3, -1, itemdb->read_itemtrade);
-	sv->readdb(map->db_path, DBPATH"item_delay.txt",             ',', 2, 2, -1, itemdb->read_itemdelay);
+	sv->readdb(map->db_path, DBPATH"item_delay.txt",       ',', 2, 2, -1, itemdb->read_itemdelay);
 	sv->readdb(map->db_path, "item_stack.txt",             ',', 3, 3, -1, itemdb->read_stack);
 	sv->readdb(map->db_path, DBPATH"item_buyingstore.txt", ',', 1, 1, -1, itemdb->read_buyingstore);
 	sv->readdb(map->db_path, "item_nouse.txt",             ',', 3, 3, -1, itemdb->read_nouse);
@@ -2285,8 +2332,8 @@ void itemdb_defaults(void) {
 	itemdb->validate_entry = itemdb_validate_entry;
 	itemdb->readdb_sql_sub = itemdb_readdb_sql_sub;
 	itemdb->readdb_libconfig_sub = itemdb_readdb_libconfig_sub;
-	itemdb->readdb = itemdb_readdb;
-	itemdb->read_sqldb = itemdb_read_sqldb;
+	itemdb->readdb_libconfig = itemdb_readdb_libconfig;
+	itemdb->readdb_sql = itemdb_readdb_sql;
 	itemdb->unique_id = itemdb_unique_id;
 	itemdb->uid_load = itemdb_uid_load;
 	itemdb->read = itemdb_read;

@@ -350,8 +350,8 @@ struct itemdb_interface {
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
 	int (*readdb_sql_sub) (Sql *handle, int n, const char *source);
 	int (*readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
-	int (*readdb) (const char *filename);
-	int (*read_sqldb) (void);
+	int (*readdb_libconfig) (const char *filename);
+	int (*readdb_sql) (const char *tablename);
 	uint64 (*unique_id) (int8 flag, int64 value);
 	int (*uid_load) ();
 	void (*read) (bool minimal);
