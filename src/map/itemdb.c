@@ -1612,7 +1612,7 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 
 	if( !entry->elvmax )
 		entry->elvmax = MAX_LEVEL;
-	else if( entry->elvmax > entry->elv )
+	else if( entry->elvmax < entry->elv )
 		entry->elvmax = entry->elv;
 
 	if( entry->type != IT_ARMOR && entry->type != IT_WEAPON && !entry->flag.no_refine )
