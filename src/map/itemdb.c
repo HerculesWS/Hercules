@@ -1939,7 +1939,13 @@ int itemdb_readdb_sql(const char *tablename) {
 	int i = 0, count = 0;
 				
 	// retrieve all rows from the item database
-	if( SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT * FROM `%s`", tablename) ) {
+	if( SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT `id`, `name_english`, `name_japanese`, `type`,"
+				" `price_buy`, `price_sell`, `weight`, `atk`,"
+				" `matk`, `defence`, `range`, `slots`,"
+				" `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`,"
+				" `weapon_level`, `equip_level_min`, `equip_level_max`, `refineable`,"
+				" `view`, `bindonequip`, `script`, `equip_script`, `unequip_script`"
+				"FROM `%s`", tablename) ) {
 		Sql_ShowDebug(map->mysql_handle);
 		return 0;
 	}
