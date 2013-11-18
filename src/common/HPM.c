@@ -108,6 +108,7 @@ bool hplugin_populate(struct hplugin *plugin, const char *filename) {
 	
 	return true;
 }
+#undef HPM_POP
 struct hplugin *hplugin_load(const char* filename) {
 	struct hplugin *plugin;
 	struct hplugin_info *info;

@@ -21,14 +21,14 @@ struct status_data;
 /**
  * Defines
  **/
-#define MIN_HAIR_STYLE battle_config.min_hair_style
-#define MAX_HAIR_STYLE battle_config.max_hair_style
-#define MIN_HAIR_COLOR battle_config.min_hair_color
-#define MAX_HAIR_COLOR battle_config.max_hair_color
-#define MIN_CLOTH_COLOR battle_config.min_cloth_color
-#define MAX_CLOTH_COLOR battle_config.max_cloth_color
+#define MIN_HAIR_STYLE  (battle_config.min_hair_style)
+#define MAX_HAIR_STYLE  (battle_config.max_hair_style)
+#define MIN_HAIR_COLOR  (battle_config.min_hair_color)
+#define MAX_HAIR_COLOR  (battle_config.max_hair_color)
+#define MIN_CLOTH_COLOR (battle_config.min_cloth_color)
+#define MAX_CLOTH_COLOR (battle_config.max_cloth_color)
 
-#define	is_boss(bl)	(status_get_mode(bl)&MD_BOSS)	// Can refine later [Aru]
+#define	is_boss(bl)     (status_get_mode(bl)&MD_BOSS)	// Can refine later [Aru]
 
 /**
  * Enumerations

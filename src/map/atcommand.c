@@ -164,38 +164,32 @@ ACMD(send)
 			clif->message(fd, msg_txt(i));
 		return false;
 	}
-	
-#define PARSE_ERROR(error,p) \
-{\
-clif->message(fd, (error));\
-sprintf(atcmd_output, ">%s", (p));\
-clif->message(fd, atcmd_output);\
-}
-	//define PARSE_ERROR
-	
-#define CHECK_EOS(p) \
-if(*(p) == 0){\
-clif->message(fd, "Unexpected end of string");\
-return false;\
-}
-	//define CHECK_EOS
-	
-#define SKIP_VALUE(p) \
-{\
-while(*(p) && !ISSPACE(*(p))) ++(p); /* non-space */\
-while(*(p) && ISSPACE(*(p)))  ++(p); /* space */\
-}
-	//define SKIP_VALUE
-	
-#define GET_VALUE(p,num) \
-{\
-if(sscanf((p), "x%lx", &(num)) < 1 && sscanf((p), "%ld ", &(num)) < 1){\
-PARSE_ERROR("Invalid number in:",(p));\
-return false;\
-}\
-}
-	//define GET_VALUE
-	
+
+#define PARSE_ERROR(error,p) do {\
+	clif->message(fd, (error));\
+	sprintf(atcmd_output, ">%s", (p));\
+	clif->message(fd, atcmd_output);\
+} while(0) //define PARSE_ERROR
+
+#define CHECK_EOS(p) do { \
+	if(*(p) == 0){ \
+		clif->message(fd, "Unexpected end of string");\
+		return false;\
+	} \
+} while(0) //define CHECK_EOS
+
+#define SKIP_VALUE(p) do { \
+	while(*(p) && !ISSPACE(*(p))) ++(p); /* non-space */\
+	while(*(p) && ISSPACE(*(p)))  ++(p); /* space */\
+} while(0) //define SKIP_VALUE
+
+#define GET_VALUE(p,num) do { \
+	if(sscanf((p), "x%lx", &(num)) < 1 && sscanf((p), "%ld ", &(num)) < 1){\
+		PARSE_ERROR("Invalid number in:",(p));\
+		return false;\
+	}\
+} while(0) //define GET_VALUE
+
 	if (type > 0 && type < MAX_PACKET_DB) {
 		
 		if(len)
@@ -8585,10 +8579,11 @@ ACMD(unloadnpcfile) {
 	return true;
 }
 ACMD(cart) {
-#define MC_CART_MDFY(x,idx) \
-sd->status.skill[idx].id = x?MC_PUSHCART:0; \
-sd->status.skill[idx].lv = x?1:0; \
-sd->status.skill[idx].flag = x?1:0;
+#define MC_CART_MDFY(x,idx) do { \
+	sd->status.skill[idx].id = (x)?MC_PUSHCART:0; \
+	sd->status.skill[idx].lv = (x)?1:0; \
+	sd->status.skill[idx].flag = (x)?1:0; \
+} while(0)
 	
 	int val = atoi(message);
 	bool need_skill = pc->checkskill(sd, MC_PUSHCART) ? false : true;
@@ -9616,6 +9611,8 @@ void atcommand_basecommands(void) {
 	
 	return;
 }
+#undef ACMD_DEF
+#undef ACMD_DEF2
 
 bool atcommand_add(char *name,AtCommandFunc func, bool replace) {
 	AtCommandInfo* cmd;

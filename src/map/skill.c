@@ -47,13 +47,13 @@
 
 // ranges reserved for mapping skill ids to skilldb offsets
 #define HM_SKILLRANGEMIN 750
-#define HM_SKILLRANGEMAX HM_SKILLRANGEMIN + MAX_HOMUNSKILL
-#define MC_SKILLRANGEMIN HM_SKILLRANGEMAX + 1
-#define MC_SKILLRANGEMAX MC_SKILLRANGEMIN + MAX_MERCSKILL
-#define EL_SKILLRANGEMIN MC_SKILLRANGEMAX + 1
-#define EL_SKILLRANGEMAX EL_SKILLRANGEMIN + MAX_ELEMENTALSKILL
-#define GD_SKILLRANGEMIN EL_SKILLRANGEMAX + 1
-#define GD_SKILLRANGEMAX GD_SKILLRANGEMIN + MAX_GUILDSKILL
+#define HM_SKILLRANGEMAX (HM_SKILLRANGEMIN + MAX_HOMUNSKILL)
+#define MC_SKILLRANGEMIN (HM_SKILLRANGEMAX + 1)
+#define MC_SKILLRANGEMAX (MC_SKILLRANGEMIN + MAX_MERCSKILL)
+#define EL_SKILLRANGEMIN (MC_SKILLRANGEMAX + 1)
+#define EL_SKILLRANGEMAX (EL_SKILLRANGEMIN + MAX_ELEMENTALSKILL)
+#define GD_SKILLRANGEMIN (EL_SKILLRANGEMAX + 1)
+#define GD_SKILLRANGEMAX (GD_SKILLRANGEMIN + MAX_GUILDSKILL)
 
 #if GD_SKILLRANGEMAX > 999
 	#error GD_SKILLRANGEMAX is greater than 999
@@ -131,17 +131,17 @@ void skill_chk(uint16* skill_id) {
 	*skill_id = skill->get_index(*skill_id); // checks/adjusts id
 }
 
-#define skill_get(var,id) { skill->chk(&id); if(!id) return 0; return var; }
-#define skill_get2(var,id,lv) { \
-	skill->chk(&id); \
-	if(!id) return 0; \
-	if( lv > MAX_SKILL_LEVEL && var > 1 ) { \
-		int lv2 = lv; lv = skill->db[id].max; \
-		return (var) + ((lv2-lv)/2);\
+#define skill_get(var,id) do { skill->chk(&(id)); if(!(id)) return 0; return (var); } while(0)
+#define skill_get2(var,id,lv) do { \
+	skill->chk(&(id)); \
+	if(!(id)) return 0; \
+	if( (lv) > MAX_SKILL_LEVEL && (var) > 1 ) { \
+		int lv2__ = (lv); (lv) = skill->db[(id)].max; \
+		return (var) + ((lv2__-(lv))/2);\
 	} \
-	return var;\
-}
-#define skill_glv(lv) min(lv,MAX_SKILL_LEVEL-1)
+	return (var);\
+} while(0)
+#define skill_glv(lv) min((lv),MAX_SKILL_LEVEL-1)
 // Skill DB
 int	skill_get_hit( uint16 skill_id )               { skill_get (skill->db[skill_id].hit, skill_id); }
 int	skill_get_inf( uint16 skill_id )               { skill_get (skill->db[skill_id].inf, skill_id); }
@@ -9523,7 +9523,7 @@ int skill_castend_map (struct map_session_data *sd, uint16 skill_id, const char 
 	nullpo_ret(sd);
 
 //Simplify skill_failed code.
-#define skill_failed(sd) { sd->menuskill_id = sd->menuskill_val = 0; }
+#define skill_failed(sd) ( (sd)->menuskill_id = (sd)->menuskill_val = 0 )
 	if(skill_id != sd->menuskill_id)
 		return 0;
 

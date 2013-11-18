@@ -11,7 +11,7 @@
 
 
 // Return codes
-#define SQL_ERROR -1
+#define SQL_ERROR (-1)
 #define SQL_SUCCESS 0
 #define SQL_NO_DATA 100
 
@@ -277,7 +277,7 @@ void sql_defaults(void);
 #if defined(SQL_REMOVE_SHOWDEBUG)
 #define Sql_ShowDebug(self) (void)0
 #else
-#define Sql_ShowDebug(self) SQL->ShowDebug_(self, __FILE__, __LINE__)
+#define Sql_ShowDebug(self) (SQL->ShowDebug_((self), __FILE__, __LINE__))
 #endif
 
 void Sql_HerculesUpdateCheck(Sql* self);
@@ -286,16 +286,10 @@ void Sql_HerculesUpdateSkip(Sql* self,const char *filename);
 #if defined(SQL_REMOVE_SHOWDEBUG)
 #define SqlStmt_ShowDebug(self) (void)0
 #else
-#define SqlStmt_ShowDebug(self) SQL->StmtShowDebug_(self, __FILE__, __LINE__)
-#endif
 /// Shows debug information (with statement).
-
-
-
-
-
+#define SqlStmt_ShowDebug(self) (SQL->StmtShowDebug_((self), __FILE__, __LINE__))
+#endif
 
 void Sql_Init(void);
-
 
 #endif /* _COMMON_SQL_H_ */

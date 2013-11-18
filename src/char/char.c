@@ -3933,7 +3933,7 @@ int parse_char(int fd)
 
 	while( RFIFOREST(fd) >= 2 ) {
 		//For use in packets that depend on an sd being present [Skotlex]
-		#define FIFOSD_CHECK(rest) { if(RFIFOREST(fd) < rest) return 0; if (sd==NULL || !sd->auth) { RFIFOSKIP(fd,rest); return 0; } }
+		#define FIFOSD_CHECK(rest) do { if(RFIFOREST(fd) < (rest)) return 0; if (sd==NULL || !sd->auth) { RFIFOSKIP(fd,(rest)); return 0; } } while (0)
 
 		if( HPM->packetsc[hpParse_Char] ) {
 			if( (i = HPM->parse_packets(fd,hpParse_Char)) ) {

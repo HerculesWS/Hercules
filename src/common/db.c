@@ -315,7 +315,7 @@ static struct db_stats {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0
 };
-#define DB_COUNTSTAT(token) if (stats. ## token != UINT32_MAX) ++stats. ## token
+#define DB_COUNTSTAT(token) do { if (stats. ## token != UINT32_MAX) ++stats. ## token ; } while(0)
 #else /* !defined(DB_ENABLE_STATS) */
 #define DB_COUNTSTAT(token)
 #endif /* !defined(DB_ENABLE_STATS) */

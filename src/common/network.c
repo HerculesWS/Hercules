@@ -50,7 +50,7 @@ SESSION g_Session[MAXCONN];
 static bool onSend(int32 fd);
 
 
-#define _network_free_netbuf_async( buf ) add_timer( 0, _network_async_free_netbuf_proc, 0,  (intptr_t) buf)
+#define _network_free_netbuf_async( buf ) add_timer( 0, _network_async_free_netbuf_proc, 0,  (intptr_t)(buf))
 static int _network_async_free_netbuf_proc(int tid, unsigned int tick, int id, intptr_t data){
 	// netbuf is in data
 	netbuffer_put( (netbuf)data );

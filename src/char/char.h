@@ -48,7 +48,7 @@ DBMap* online_char_db; // int account_id -> struct online_char_data*
 
 #define MAX_MAP_SERVERS 2
 
-#define DEFAULT_AUTOSAVE_INTERVAL 300*1000
+#define DEFAULT_AUTOSAVE_INTERVAL (300*1000)
 
 enum {
 	TABLE_INVENTORY,

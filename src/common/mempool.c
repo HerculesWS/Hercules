@@ -30,16 +30,16 @@
 #include "../common/malloc.h"
 #include "../common/mutex.h"
 
-#define ALIGN16	ra_align(16)
-#define ALIGN_TO(x, a) (x + ( a - ( x % a) ) )
-#define ALIGN_TO_16(x)	ALIGN_TO(x, 16)
+#define ALIGN16        ra_align(16)
+#define ALIGN_TO(x, a) ((x) + ( (a) - ( (x) % (a)) ) )
+#define ALIGN_TO_16(x) ALIGN_TO((x), 16)
 
 #undef MEMPOOL_DEBUG
 #define MEMPOOLASSERT
 
 
-#define NODE_TO_DATA(x) ( ((char*)x) + sizeof(struct node) )
-#define DATA_TO_NODE(x) ( (struct node*)(((char*)x) - sizeof(struct node)) )
+#define NODE_TO_DATA(x) ( ((char*)(x)) + sizeof(struct node) )
+#define DATA_TO_NODE(x) ( (struct node*)(((char*)(x)) - sizeof(struct node)) )
 struct ra_align(16) node{
 	void 	*next;
 	void 	*segment;

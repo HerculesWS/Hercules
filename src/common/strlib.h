@@ -168,28 +168,28 @@ void strlib_defaults(void);
 
 /* the purpose of these macros is simply to not make calling them be an annoyance */
 #ifndef STRLIB_C
-	#define jstrescape(pt) strlib->jstrescape(pt)
-	#define jstrescapecpy(pt,spt) strlib->jstrescapecpy(pt,spt)
-	#define jmemescapecpy(pt,spt,size) strlib->jmemescapecpy(pt,spt,size)
-	#define remove_control_chars(str) strlib->remove_control_chars(str)
-	#define trim(str) strlib->trim(str)
-	#define normalize_name(str,delims) strlib->normalize_name(str,delims)
-	#define stristr(haystack,needle) strlib->stristr(haystack,needle)
+	#define jstrescape(pt)             (strlib->jstrescape(pt))
+	#define jstrescapecpy(pt,spt)      (strlib->jstrescapecpy((pt),(spt)))
+	#define jmemescapecpy(pt,spt,size) (strlib->jmemescapecpy((pt),(spt),(size)))
+	#define remove_control_chars(str)  (strlib->remove_control_chars(str))
+	#define trim(str)                  (strlib->trim(str))
+	#define normalize_name(str,delims) (strlib->normalize_name((str),(delims)))
+	#define stristr(haystack,needle)   (strlib->stristr((haystack),(needle)))
 
 	#if !(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)
-		#define strnln(string,maxlen) strlib->strnlen(string,maxlen)
+		#define strnln(string,maxlen) (strlib->strnlen((string),(maxlen)))
 	#endif
 
 	#if defined(WIN32) && defined(_MSC_VER) && _MSC_VER <= 1200
-		#define strtoull(str,endptr,base) strlib->strtoull(str,endptr,base)
+		#define strtoull(str,endptr,base) (strlib->strtoull((str),(endptr),(base)))
 	#endif
 
-	#define e_mail_check(email) strlib->e_mail_check(email)
-	#define config_switch(str) strlib->config_switch(str)
-	#define safestrncpy(dst,src,n) strlib->safestrncpy(dst,src,n)
-	#define safestrnlen(string,maxlen) strlib->safestrnlen(string,maxlen)
-	#define safesnprintf(buf,sz,fmt,...) strlib->safesnprintf(buf,sz,fmt,##__VA_ARGS__)
-	#define strline(str,pos) strlib->strline(str,pos)
-	#define bin2hex(output,input,count) strlib->bin2hex(output,input,count)
+	#define e_mail_check(email)          (strlib->e_mail_check(email))
+	#define config_switch(str)           (strlib->config_switch(str))
+	#define safestrncpy(dst,src,n)       (strlib->safestrncpy((dst),(src),(n)))
+	#define safestrnlen(string,maxlen)   (strlib->safestrnlen((string),(maxlen)))
+	#define safesnprintf(buf,sz,fmt,...) (strlib->safesnprintf((buf),(sz),(fmt),##__VA_ARGS__))
+	#define strline(str,pos)             (strlib->strline((str),(pos)))
+	#define bin2hex(output,input,count)  (strlib->bin2hex((output),(input),(count)))
 #endif /* STRLIB_C */
 #endif /* _STRLIB_H_ */

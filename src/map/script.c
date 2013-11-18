@@ -278,7 +278,7 @@ void disp_error_message2(const char *mes,const char *pos,int report)
 	script->error_report = report;
 	longjmp( script->error_jump, 1 );
 }
-#define disp_error_message(mes,pos) script->disp_error_message2(mes,pos,1)
+#define disp_error_message(mes,pos) (script->disp_error_message2((mes),(pos),1))
 
 void disp_warning_message(const char *mes, const char *pos) {
 	script->warning(script->parser_current_src,script->parser_current_file,script->parser_current_line,mes,pos);
@@ -3985,9 +3985,6 @@ const char *script_getfuncname(struct script_state *st) {
 //-----------------------------------------------------------------------------
 // buildin functions
 //
-
-#define BUILDIN_DEF(x,args) { buildin_ ## x , #x , args }
-#define BUILDIN_DEF2(x,x2,args) { buildin_ ## x , x2 , args }
 
 /////////////////////////////////////////////////////////////////////
 // NPC interaction
@@ -13016,7 +13013,7 @@ BUILDIN(isequippedcnt)
 	}
 	
 	for (i=0; id!=0; i++) {
-		script_fetch(st,i+2, id) else id = 0;
+		script_fetch(st,i+2, id);
 		if (id <= 0)
 			continue;
 		
@@ -13074,7 +13071,7 @@ BUILDIN(isequipped)
 	setitem_hash = sd->bonus.setitem_hash;
 	setitem_hash2 = sd->bonus.setitem_hash2;
 	for (i=0; id!=0; i++) {
-		script_fetch(st,i+2, id) else id = 0;
+		script_fetch(st,i+2, id);
 		if (id <= 0)
 			continue;
 		flag = 0;
@@ -13148,7 +13145,7 @@ BUILDIN(cardscnt) {
 	sd = script->rid2sd(st);
 	
 	for (i=0; id!=0; i++) {
-		script_fetch(st,i+2, id) else id = 0;
+		script_fetch(st,i+2, id);
 		if (id <= 0)
 			continue;
 		
@@ -17961,6 +17958,8 @@ bool script_hp_add(char *name, char *args, bool (*func)(struct script_state *st)
 	return true;
 }
 
+#define BUILDIN_DEF(x,args) { buildin_ ## x , #x , args }
+#define BUILDIN_DEF2(x,x2,args) { buildin_ ## x , x2 , args }
 void script_parse_builtin(void) {
 	struct script_function BUILDIN[] = {
 		// NPC interaction
@@ -18504,6 +18503,8 @@ void script_parse_builtin(void) {
 		}
 	}
 }
+#undef BUILDIN_DEF
+#undef BUILDIN_DEF2
 
 void script_label_add(int key, int pos) {
 	int idx = script->label_count;

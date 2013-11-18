@@ -26,7 +26,7 @@ enum E_MAPSERVER_ST {
 };
 
 #define MAX_NPC_PER_MAP 512
-#define AREA_SIZE battle_config.area_size
+#define AREA_SIZE (battle_config.area_size)
 #define DAMAGELOG_SIZE 30
 #define LOOTITEM_SIZE 10
 #define MAX_MOBSKILL 50
@@ -39,7 +39,7 @@ enum E_MAPSERVER_ST {
 #define MAX_LEVEL 150
 #define MAX_IGNORE_LIST 20 // official is 14
 #define MAX_VENDING 12
-#define MAX_MAP_SIZE 512*512 // Wasn't there something like this already? Can't find it.. [Shinryo]
+#define MAX_MAP_SIZE (512*512) // Wasn't there something like this already? Can't find it.. [Shinryo]
 
 #define BLOCK_SIZE 8
 #define block_free_max 1048576
@@ -221,7 +221,7 @@ enum {
 #define CHAT_SIZE_MAX (255 + 1)
 // 24 for npc name + 24 for label + 2 for a "::" and 1 for EOS
 #define EVENT_NAME_LENGTH ( NAME_LENGTH * 2 + 3 )
-#define DEFAULT_AUTOSAVE_INTERVAL 5*60*1000
+#define DEFAULT_AUTOSAVE_INTERVAL (5*60*1000)
 // Specifies maps where players may hit each other
 #define map_flag_vs(m) (map->list[m].flag.pvp || map->list[m].flag.gvg_dungeon || map->list[m].flag.gvg || ((map->agit_flag || map->agit2_flag) && map->list[m].flag.gvg_castle) || map->list[m].flag.battleground)
 // Specifies maps that have special GvG/WoE restrictions
@@ -724,7 +724,7 @@ struct map_data_other_server {
 	uint16 port;
 };
 
-#define map_id2index(id) map->list[(id)].index
+#define map_id2index(id) (map->list[(id)].index)
 
 /// Bitfield of flags for the iterator.
 enum e_mapitflags {
@@ -747,11 +747,11 @@ struct mapit_interface {
 
 struct mapit_interface *mapit;
 
-#define mapit_getallusers() mapit->alloc(MAPIT_NORMAL,BL_PC)
-#define mapit_geteachpc()   mapit->alloc(MAPIT_NORMAL,BL_PC)
-#define mapit_geteachmob()  mapit->alloc(MAPIT_NORMAL,BL_MOB)
-#define mapit_geteachnpc()  mapit->alloc(MAPIT_NORMAL,BL_NPC)
-#define mapit_geteachiddb() mapit->alloc(MAPIT_NORMAL,BL_ALL)
+#define mapit_getallusers() (mapit->alloc(MAPIT_NORMAL,BL_PC))
+#define mapit_geteachpc()   (mapit->alloc(MAPIT_NORMAL,BL_PC))
+#define mapit_geteachmob()  (mapit->alloc(MAPIT_NORMAL,BL_MOB))
+#define mapit_geteachnpc()  (mapit->alloc(MAPIT_NORMAL,BL_NPC))
+#define mapit_geteachiddb() (mapit->alloc(MAPIT_NORMAL,BL_ALL))
 
 //Useful typedefs from jA [Skotlex]
 typedef struct map_session_data TBL_PC;

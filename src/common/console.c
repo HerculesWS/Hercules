@@ -175,6 +175,10 @@ void console_load_defaults(void) {
 		}
 	}
 }
+#undef CP_DEF_C
+#undef CP_DEF_C2
+#undef CP_DEF_S
+#undef CP_DEF
 void console_parse_create(char *name, CParseFunc func) {
 	unsigned int i;
 	char *tok;

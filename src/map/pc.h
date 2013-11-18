@@ -615,8 +615,8 @@ enum equip_pos {
 // Rune Knight Dragon
 #define pc_isridingdragon(sd) ( (sd)->sc.option&OPTION_DRAGON )
 
-#define pc_stop_walking(sd, type) unit->stop_walking(&(sd)->bl, type)
-#define pc_stop_attack(sd) unit->stop_attack(&(sd)->bl)
+#define pc_stop_walking(sd, type) (unit->stop_walking(&(sd)->bl, (type)))
+#define pc_stop_attack(sd)        (unit->stop_attack(&(sd)->bl))
 
 //Weapon check considering dual wielding.
 #define pc_check_weapontype(sd, type) ((type)&((sd)->status.weapon < MAX_WEAPON_TYPE? \
@@ -633,7 +633,7 @@ enum equip_pos {
 ||	( (class_) >= JOB_KAGEROU        && (class_) <= JOB_OBORO          ) \
 ||	( (class_) >= JOB_REBELLION      && (class_) <  JOB_MAX            ) \
 )
-#define pcdb_checkid(class_) pcdb_checkid_sub((unsigned int)class_)
+#define pcdb_checkid(class_) pcdb_checkid_sub((unsigned int)(class_))
 
 // clientside display macros (values to the left/right of the "+")
 #ifdef RENEWAL
@@ -671,18 +671,18 @@ enum equip_pos {
 #define pc_checkoverhp(sd) ((sd)->battle_status.hp == (sd)->battle_status.max_hp)
 #define pc_checkoversp(sd) ((sd)->battle_status.sp == (sd)->battle_status.max_sp)
 
-#define pc_readglobalreg(sd,reg) pc->readregistry(sd,reg,3)
-#define pc_setglobalreg(sd,reg,val) pc->setregistry(sd,reg,val,3)
-#define pc_readglobalreg_str(sd,reg) pc->readregistry_str(sd,reg,3)
-#define pc_setglobalreg_str(sd,reg,val) pc->setregistry_str(sd,reg,val,3)
-#define pc_readaccountreg(sd,reg) pc->readregistry(sd,reg,2)
-#define pc_setaccountreg(sd,reg,val) pc->setregistry(sd,reg,val,2)
-#define pc_readaccountregstr(sd,reg) pc->readregistry_str(sd,reg,2)
-#define pc_setaccountregstr(sd,reg,val) pc->setregistry_str(sd,reg,val,2)
-#define pc_readaccountreg2(sd,reg) pc->readregistry(sd,reg,1)
-#define pc_setaccountreg2(sd,reg,val) pc->setregistry(sd,reg,val,1)
-#define pc_readaccountreg2str(sd,reg) pc->readregistry_str(sd,reg,1)
-#define pc_setaccountreg2str(sd,reg,val) pc->setregistry_str(sd,reg,val,1)
+#define pc_readglobalreg(sd,reg)         (pc->readregistry((sd),(reg),3))
+#define pc_setglobalreg(sd,reg,val)      (pc->setregistry((sd),(reg),(val),3))
+#define pc_readglobalreg_str(sd,reg)     (pc->readregistry_str((sd),(reg),3))
+#define pc_setglobalreg_str(sd,reg,val)  (pc->setregistry_str((sd),(reg),(val),3))
+#define pc_readaccountreg(sd,reg)        (pc->readregistry((sd),(reg),2))
+#define pc_setaccountreg(sd,reg,val)     (pc->setregistry((sd),(reg),(val),2))
+#define pc_readaccountregstr(sd,reg)     (pc->readregistry_str((sd),(reg),2))
+#define pc_setaccountregstr(sd,reg,val)  (pc->setregistry_str((sd),(reg),(val),2))
+#define pc_readaccountreg2(sd,reg)       (pc->readregistry((sd),(reg),1))
+#define pc_setaccountreg2(sd,reg,val)    (pc->setregistry((sd),(reg),(val),1))
+#define pc_readaccountreg2str(sd,reg)    (pc->readregistry_str((sd),(reg),1))
+#define pc_setaccountreg2str(sd,reg,val) (pc->setregistry_str((sd),(reg),(val),1))
 
 struct skill_tree_entry {
 	short id;

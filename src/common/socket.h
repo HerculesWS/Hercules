@@ -24,18 +24,18 @@ struct HPluginData;
 
 // socket I/O macros
 #define RFIFOHEAD(fd)
-#define WFIFOHEAD(fd, size) do{ if((fd) && session[fd]->wdata_size + (size) > session[fd]->max_wdata ) realloc_writefifo(fd, size); }while(0)
+#define WFIFOHEAD(fd, size) do{ if((fd) && session[fd]->wdata_size + (size) > session[fd]->max_wdata ) realloc_writefifo((fd), (size)); }while(0)
 #define RFIFOP(fd,pos) (session[fd]->rdata + session[fd]->rdata_pos + (pos))
 #define WFIFOP(fd,pos) (session[fd]->wdata + session[fd]->wdata_size + (pos))
 
-#define RFIFOB(fd,pos) (*(uint8*)RFIFOP(fd,pos))
-#define WFIFOB(fd,pos) (*(uint8*)WFIFOP(fd,pos))
-#define RFIFOW(fd,pos) (*(uint16*)RFIFOP(fd,pos))
-#define WFIFOW(fd,pos) (*(uint16*)WFIFOP(fd,pos))
-#define RFIFOL(fd,pos) (*(uint32*)RFIFOP(fd,pos))
-#define WFIFOL(fd,pos) (*(uint32*)WFIFOP(fd,pos))
-#define RFIFOQ(fd,pos) (*(uint64*)RFIFOP(fd,pos))
-#define WFIFOQ(fd,pos) (*(uint64*)WFIFOP(fd,pos))
+#define RFIFOB(fd,pos) (*(uint8*)RFIFOP((fd),(pos)))
+#define WFIFOB(fd,pos) (*(uint8*)WFIFOP((fd),(pos)))
+#define RFIFOW(fd,pos) (*(uint16*)RFIFOP((fd),(pos)))
+#define WFIFOW(fd,pos) (*(uint16*)WFIFOP((fd),(pos)))
+#define RFIFOL(fd,pos) (*(uint32*)RFIFOP((fd),(pos)))
+#define WFIFOL(fd,pos) (*(uint32*)WFIFOP((fd),(pos)))
+#define RFIFOQ(fd,pos) (*(uint64*)RFIFOP((fd),(pos)))
+#define WFIFOQ(fd,pos) (*(uint64*)WFIFOP((fd),(pos)))
 #define RFIFOSPACE(fd) (session[fd]->max_rdata - session[fd]->rdata_size)
 #define WFIFOSPACE(fd) (session[fd]->max_wdata - session[fd]->wdata_size)
 
@@ -146,8 +146,9 @@ void set_defaultparse(ParseFunc defaultparse);
 uint32 host2ip(const char* hostname);
 const char* ip2str(uint32 ip, char ip_str[16]);
 uint32 str2ip(const char* ip_str);
+// Note: purposely returns four comma-separated arguments
 #define CONVIP(ip) ((ip)>>24)&0xFF,((ip)>>16)&0xFF,((ip)>>8)&0xFF,((ip)>>0)&0xFF
-#define MAKEIP(a,b,c,d) (uint32)( ( ( (a)&0xFF ) << 24 ) | ( ( (b)&0xFF ) << 16 ) | ( ( (c)&0xFF ) << 8 ) | ( ( (d)&0xFF ) << 0 ) )
+#define MAKEIP(a,b,c,d) ((uint32)( ( ( (a)&0xFF ) << 24 ) | ( ( (b)&0xFF ) << 16 ) | ( ( (c)&0xFF ) << 8 ) | ( ( (d)&0xFF ) << 0 ) ))
 uint16 ntows(uint16 netshort);
 
 int socket_getips(uint32* ips, int max);

@@ -3189,7 +3189,7 @@ int battle_blewcount_bonus(struct map_session_data *sd, uint16 skill_id) {
 	return 0;
 }
 //For quick div adjustment.
-#define damage_div_fix(dmg, div) { if (div > 1) (dmg)*=div; else if (div < 0) (div)*=-1; }
+#define damage_div_fix(dmg, div) do { if ((div) > 1) (dmg)*=(div); else if ((div) < 0) (div)*=-1; } while(0)
 /*==========================================
  * battle_calc_magic_attack [DracoRPG]
  *------------------------------------------*/
@@ -3305,11 +3305,11 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 		ad.damage = 0; //reinitialize..
 #endif
 //MATK_RATE scales the damage. 100 = no change. 50 is halved, 200 is doubled, etc
-#define MATK_RATE( a ) { ad.damage= ad.damage*(a)/100; }
+#define MATK_RATE( a ) ( ad.damage= ad.damage*(a)/100 )
 //Adds dmg%. 100 = +100% (double) damage. 10 = +10% damage
-#define MATK_ADDRATE( a ) { ad.damage+= ad.damage*(a)/100; }
+#define MATK_ADDRATE( a ) ( ad.damage+= ad.damage*(a)/100 )
 //Adds an absolute value to damage. 100 = +100 damage
-#define MATK_ADD( a ) { ad.damage+= a; }
+#define MATK_ADD( a ) ( ad.damage+= (a) )
 
 		switch (skill_id)
 		{	//Calc base damage according to skill
@@ -3499,6 +3499,9 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 	}
 
 	return ad;
+#undef MATK_RATE
+#undef MATK_ADDRATE
+#undef MATK_ADD
 }
 
 /*==========================================
@@ -4359,19 +4362,19 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 
 //Assuming that 99% of the cases we will not need to check for the flag.rh... we don't.
 //ATK_RATE scales the damage. 100 = no change. 50 is halved, 200 is doubled, etc
-#define ATK_RATE( a ) { wd.damage= wd.damage*(a)/100 ; if(flag.lh) wd.damage2= wd.damage2*(a)/100; }
-#define ATK_RATE2( a , b ) { wd.damage= wd.damage*(a)/100 ; if(flag.lh) wd.damage2= wd.damage2*(b)/100; }
-#define ATK_RATER(a){ wd.damage = wd.damage*(a)/100;}
-#define ATK_RATEL(a){ wd.damage2 = wd.damage2*(a)/100;}
+#define ATK_RATE( a ) do { int64 temp__ = (a); wd.damage= wd.damage*temp__/100 ; if(flag.lh) wd.damage2= wd.damage2*temp__/100; } while(0)
+#define ATK_RATE2( a , b ) do { wd.damage= wd.damage*(a)/100 ; if(flag.lh) wd.damage2= wd.damage2*(b)/100; } while(0)
+#define ATK_RATER(a) ( wd.damage = wd.damage*(a)/100 )
+#define ATK_RATEL(a) ( wd.damage2 = wd.damage2*(a)/100 )
 //Adds dmg%. 100 = +100% (double) damage. 10 = +10% damage
-#define ATK_ADDRATE( a ) { wd.damage+= wd.damage*(a)/100 ; if(flag.lh) wd.damage2+= wd.damage2*(a)/100; }
-#define ATK_ADDRATE2( a , b ) { wd.damage+= wd.damage*(a)/100 ; if(flag.lh) wd.damage2+= wd.damage2*(b)/100; }
+#define ATK_ADDRATE( a ) do { int64 temp__ = (a); wd.damage+= wd.damage*temp__/100; if(flag.lh) wd.damage2+= wd.damage2*temp__/100; } while(0)
+#define ATK_ADDRATE2( a , b ) do { wd.damage+= wd.damage*(a)/100 ; if(flag.lh) wd.damage2+= wd.damage2*(b)/100; } while(0)
 //Adds an absolute value to damage. 100 = +100 damage
-#define ATK_ADD( a ) { wd.damage+= a; if (flag.lh) wd.damage2+= a; }
-#define ATK_ADD2( a , b ) { wd.damage+= a; if (flag.lh) wd.damage2+= b; }
+#define ATK_ADD( a ) do { int64 temp__ = (a); wd.damage += temp__; if (flag.lh) wd.damage2 += temp__; } while(0)
+#define ATK_ADD2( a , b ) do { wd.damage += (a); if (flag.lh) wd.damage2 += (b); } while(0)
 #ifdef RENEWAL
-#define GET_NORMAL_ATTACK( f ) { wd.damage = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_R, f, wd.flag); }
-#define GET_NORMAL_ATTACK2( f ) { wd.damage2 = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_L, f, wd.flag); }
+#define GET_NORMAL_ATTACK( f ) ( wd.damage = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_R, (f), wd.flag) )
+#define GET_NORMAL_ATTACK2( f ) ( wd.damage2 = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_L, (f), wd.flag) )
 #endif
 		switch (skill_id)
 		{	//Calc base damage according to skill
@@ -5070,7 +5073,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		)) &&
 		rnd()%100 < tsc->data[SC_SWORDREJECT]->val2
 		) {
-		ATK_RATER(50)
+		ATK_RATER(50);
 		status_fix_damage(target,src,wd.damage,clif->damage(target,src,timer->gettick(),0,0,wd.damage,0,0,0));
 		clif->skill_nodamage(target,target,ST_REJECTSWORD,tsc->data[SC_SWORDREJECT]->val1,1);
 		if( --(tsc->data[SC_SWORDREJECT]->val3) <= 0 )
@@ -5147,9 +5150,9 @@ int64 battle_calc_return_damage(struct block_list* bl, struct block_list *src, i
 	sc = status->get_sc(bl);
 
 #ifdef RENEWAL
-#define NORMALIZE_RDAMAGE(d){ trdamage += rdamage = max(1, min(max_reflect_damage, d)); }
+#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = max(1, min(max_reflect_damage, (d))) )
 #else
-#define NORMALIZE_RDAMAGE(d){ trdamage += rdamage = max(1, d); }
+#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = max(1, (d)) )
 #endif
 
 	 if( sc && sc->data[SC_CRESCENTELBOW] && !is_boss(src) && rnd()%100 < sc->data[SC_CRESCENTELBOW]->val2 ){
@@ -5214,6 +5217,7 @@ int64 battle_calc_return_damage(struct block_list* bl, struct block_list *src, i
 	}
 
 	return max(0, trdamage);
+#undef NORMALIZE_RDAMAGE
 }
 
 void battle_drain(TBL_PC *sd, struct block_list *tbl, int64 rdamage, int64 ldamage, int race, int boss)
@@ -5468,7 +5472,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 
 	if( sc && sc->count ) {
 		if (sc->data[SC_EXEEDBREAK]) {
-			ATK_RATER(sc->data[SC_EXEEDBREAK]->val1)
+			ATK_RATER(sc->data[SC_EXEEDBREAK]->val1);
 			status_change_end(src, SC_EXEEDBREAK, INVALID_TIMER);
 		}
 		if( sc->data[SC_SPELLFIST] ) {
@@ -5670,6 +5674,16 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 	map->freeblock_unlock();
 	return wd.dmg_lv;
 }
+#undef ATK_RATE
+#undef ATK_RATE2
+#undef ATK_RATER
+#undef ATK_RATEL
+#undef ATK_ADDRATE
+#undef ATK_ADDRATE2
+#undef ATK_ADD
+#undef ATK_ADD2
+#undef GET_NORMAL_ATTACK
+#undef GET_NORMAL_ATTACK2
 
 int battle_check_undead(int race,int element)
 {

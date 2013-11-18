@@ -35,7 +35,7 @@
 
 struct intif_interface intif_s;
 
-#define inter_fd chrif->fd	// alias
+#define inter_fd (chrif->fd) // alias
 
 //-----------------------------------------------------------------
 // Send to inter server

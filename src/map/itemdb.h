@@ -28,7 +28,7 @@ struct item_package;
 #define CARD0_PET ((short)0xFF00)
 
 //Marks if the card0 given is "special" (non-item id used to mark pets/created items. [Skotlex]
-#define itemdb_isspecial(i) (i == CARD0_FORGE || i == CARD0_CREATE || i == CARD0_PET)
+#define itemdb_isspecial(i) ((i) == CARD0_FORGE || (i) == CARD0_CREATE || (i) == CARD0_PET)
 
 //Use apple for unknown items.
 #define UNKNOWN_ITEM_ID 512
@@ -236,44 +236,45 @@ struct item_package {
 	unsigned short must_qty;
 };
 
-#define itemdb_name(n) itemdb->search(n)->name
-#define itemdb_jname(n) itemdb->search(n)->jname
-#define itemdb_type(n) itemdb->search(n)->type
-#define itemdb_atk(n) itemdb->search(n)->atk
-#define itemdb_def(n) itemdb->search(n)->def
-#define itemdb_look(n) itemdb->search(n)->look
-#define itemdb_weight(n) itemdb->search(n)->weight
-#define itemdb_equip(n) itemdb->search(n)->equip
-#define itemdb_usescript(n) itemdb->search(n)->script
-#define itemdb_equipscript(n) itemdb->search(n)->script
-#define itemdb_wlv(n) itemdb->search(n)->wlv
-#define itemdb_range(n) itemdb->search(n)->range
-#define itemdb_slot(n) itemdb->search(n)->slot
-#define itemdb_available(n) (itemdb->search(n)->flag.available)
-#define itemdb_viewid(n) (itemdb->search(n)->view_id)
-#define itemdb_autoequip(n) (itemdb->search(n)->flag.autoequip)
-#define itemdb_is_rune(n) ((n >= ITEMID_NAUTHIZ && n <= ITEMID_HAGALAZ) || n == ITEMID_LUX_ANIMA)
-#define itemdb_is_element(n) (n >= 990 && n <= 993)
-#define itemdb_is_spellbook(n) (n >= 6188 && n <= 6205)
-#define itemdb_is_poison(n) (n >= 12717 && n <= 12724)
-#define itemid_isgemstone(id) ( (id) >= ITEMID_YELLOW_GEMSTONE && (id) <= ITEMID_BLUE_GEMSTONE )
-#define itemdb_iscashfood(id) ( (id) >= 12202 && (id) <= 12207 )
-#define itemdb_is_GNbomb(n) (n >= 13260 && n <= 13267)
-#define itemdb_is_GNthrowable(n) (n >= 13268 && n <= 13290)
+#define itemdb_name(n)        (itemdb->search(n)->name)
+#define itemdb_jname(n)       (itemdb->search(n)->jname)
+#define itemdb_type(n)        (itemdb->search(n)->type)
+#define itemdb_atk(n)         (itemdb->search(n)->atk)
+#define itemdb_def(n)         (itemdb->search(n)->def)
+#define itemdb_look(n)        (itemdb->search(n)->look)
+#define itemdb_weight(n)      (itemdb->search(n)->weight)
+#define itemdb_equip(n)       (itemdb->search(n)->equip)
+#define itemdb_usescript(n)   (itemdb->search(n)->script)
+#define itemdb_equipscript(n) (itemdb->search(n)->script)
+#define itemdb_wlv(n)         (itemdb->search(n)->wlv)
+#define itemdb_range(n)       (itemdb->search(n)->range)
+#define itemdb_slot(n)        (itemdb->search(n)->slot)
+#define itemdb_available(n)   (itemdb->search(n)->flag.available)
+#define itemdb_viewid(n)      (itemdb->search(n)->view_id)
+#define itemdb_autoequip(n)   (itemdb->search(n)->flag.autoequip)
+#define itemdb_value_buy(n)   (itemdb->search(n)->value_buy)
+#define itemdb_value_sell(n)  (itemdb->search(n)->value_sell)
+#define itemdb_canrefine(n)   (!itemdb->search(n)->flag.no_refine)
 
-#define itemdb_value_buy(n) itemdb->search(n)->value_buy
-#define itemdb_value_sell(n) itemdb->search(n)->value_sell
-#define itemdb_canrefine(n) (!itemdb->search(n)->flag.no_refine)
+#define itemdb_is_rune(n)        (((n) >= ITEMID_NAUTHIZ && (n) <= ITEMID_HAGALAZ) || (n) == ITEMID_LUX_ANIMA)
+#define itemdb_is_element(n)     ((n) >= 990 && (n) <= 993)
+#define itemdb_is_spellbook(n)   ((n) >= 6188 && (n) <= 6205)
+#define itemdb_is_poison(n)      ((n) >= 12717 && (n) <= 12724)
+#define itemid_isgemstone(n)     ((n) >= ITEMID_YELLOW_GEMSTONE && (n) <= ITEMID_BLUE_GEMSTONE)
+#define itemdb_iscashfood(n)     ((n) >= 12202 && (n) <= 12207)
+#define itemdb_is_GNbomb(n)      ((n) >= 13260 && (n) <= 13267)
+#define itemdb_is_GNthrowable(n) ((n) >= 13268 && (n) <= 13290)
+
 //Item trade restrictions [Skotlex]
-#define itemdb_isdropable(item, gmlv) itemdb->isrestricted(item, gmlv, 0, itemdb->isdropable_sub)
-#define itemdb_cantrade(item, gmlv, gmlv2) itemdb->isrestricted(item, gmlv, gmlv2, itemdb->cantrade_sub)
-#define itemdb_canpartnertrade(item, gmlv, gmlv2) itemdb->isrestricted(item, gmlv, gmlv2, itemdb->canpartnertrade_sub)
-#define itemdb_cansell(item, gmlv) itemdb->isrestricted(item, gmlv, 0, itemdb->cansell_sub)
-#define itemdb_cancartstore(item, gmlv)  itemdb->isrestricted(item, gmlv, 0, itemdb->cancartstore_sub)
-#define itemdb_canstore(item, gmlv) itemdb->isrestricted(item, gmlv, 0, itemdb->canstore_sub)
-#define itemdb_canguildstore(item, gmlv) itemdb->isrestricted(item , gmlv, 0, itemdb->canguildstore_sub)
-#define itemdb_canmail(item, gmlv) itemdb->isrestricted(item , gmlv, 0, itemdb->canmail_sub)
-#define itemdb_canauction(item, gmlv) itemdb->isrestricted(item , gmlv, 0, itemdb->canauction_sub)
+#define itemdb_isdropable(item, gmlv)             (itemdb->isrestricted((item), (gmlv), 0, itemdb->isdropable_sub))
+#define itemdb_cantrade(item, gmlv, gmlv2)        (itemdb->isrestricted((item), (gmlv), (gmlv2), itemdb->cantrade_sub))
+#define itemdb_canpartnertrade(item, gmlv, gmlv2) (itemdb->isrestricted((item), (gmlv), (gmlv2), itemdb->canpartnertrade_sub))
+#define itemdb_cansell(item, gmlv)                (itemdb->isrestricted((item), (gmlv), 0, itemdb->cansell_sub))
+#define itemdb_cancartstore(item, gmlv)           (itemdb->isrestricted((item), (gmlv), 0, itemdb->cancartstore_sub))
+#define itemdb_canstore(item, gmlv)               (itemdb->isrestricted((item), (gmlv), 0, itemdb->canstore_sub))
+#define itemdb_canguildstore(item, gmlv)          (itemdb->isrestricted((item), (gmlv), 0, itemdb->canguildstore_sub))
+#define itemdb_canmail(item, gmlv)                (itemdb->isrestricted((item), (gmlv), 0, itemdb->canmail_sub))
+#define itemdb_canauction(item, gmlv)             (itemdb->isrestricted((item), (gmlv), 0, itemdb->canauction_sub))
 
 struct itemdb_interface {
 	void (*init) (bool minimal);
