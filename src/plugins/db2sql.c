@@ -139,7 +139,7 @@ void do_db2sql(void) {
 	memset(&tosql.buf, 0, sizeof(tosql.buf) );
 	
 	itemdb->clear(false);
-	itemdb->readdb("re/item_db.conf");
+	itemdb->readdb_libconfig("re/item_db.conf");
 	
 	fclose(tosql.fp);
 	
@@ -152,7 +152,7 @@ void do_db2sql(void) {
 	totable();
 	
 	itemdb->clear(false);
-	itemdb->readdb("pre-re/item_db.conf");
+	itemdb->readdb_libconfig("pre-re/item_db.conf");
 	
 	fclose(tosql.fp);
 	
@@ -165,7 +165,7 @@ void do_db2sql(void) {
 	totable();
 	
 	itemdb->clear(false);
-	itemdb->readdb("item_db2.conf");
+	itemdb->readdb_libconfig("item_db2.conf");
 	
 	fclose(tosql.fp);
 	
