@@ -1004,7 +1004,7 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	struct mmo_charstatus p;
 	int j = 0, i;
 	char last_map[MAP_NAME_LENGTH_EXT];
-	size_t unban_time;
+	time_t unban_time;
 
 	stmt = SQL->StmtMalloc(sql_handle);
 	if( stmt == NULL ) {
@@ -1949,9 +1949,9 @@ void mmo_char_send099d(int fd, struct char_session_data *sd) {
 void mmo_char_send020d(int fd, struct char_session_data *sd) {
 	int i;
 	time_t now = time(NULL);
-	
-	ARR_FIND(0, MAX_CHARS, i, sd->unban_time[i] > now);
-	
+		
+	ARR_FIND(0, MAX_CHARS, i, sd->unban_time[i]);
+		
 	if( i != MAX_CHARS ) {
 		int c;
 		
@@ -1960,9 +1960,19 @@ void mmo_char_send020d(int fd, struct char_session_data *sd) {
 		WFIFOW(fd, 0) = 0x20d;
 		
 		for(i = 0, c = 0; i < MAX_CHARS; i++) {
-			if( sd->unban_time[i] > now ) {
-				WFIFOL(fd, 4 + (24*c)) = sd->found_char[i];
+			if( sd->unban_time[i] ) {
 				timestamp2string((char*)WFIFOP(fd,8 + (28*c)), 20, sd->unban_time[i], "%Y-%m-%d %H:%M:%S");
+
+				if( sd->unban_time[i] > now )
+					WFIFOL(fd, 4 + (24*c)) = sd->found_char[i];
+				else {
+					/* reset -- client keeps this information even if you logout so we need to clear */
+					WFIFOL(fd, 4 + (24*c)) = 0;
+					/* also update on mysql */
+					sd->unban_time[i] = 0;
+					if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `unban_time`='0' WHERE `char_id`='%d' LIMIT 1", char_db, sd->found_char[i]) )
+						Sql_ShowDebug(sql_handle);
+				}
 				c++;
 			}
 		}
@@ -2338,7 +2348,7 @@ int parse_fromlogin(int fd) {
 	#else
 						mmo_char_send006b(i, sd);
 	#endif
-	#if PACKETVER >= 20080000
+	#if PACKETVER >= 20060819
 						mmo_char_send020d(i, sd);
 	#endif
 	#if PACKETVER >= 20110309
@@ -3301,7 +3311,7 @@ int parse_frommap(int fd)
 									unsigned char buf[11];
 									
 									WBUFW(buf,0) = 0x2b14;
-									WBUFL(buf,2) = account_id;
+									WBUFL(buf,2) = char_id;
 									WBUFB(buf,6) = 2;
 									WBUFL(buf,7) = (unsigned int)timestamp;
 									mapif_sendall(buf, 11);

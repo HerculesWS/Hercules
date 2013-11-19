@@ -979,8 +979,8 @@ int chrif_idbanned(int fd) {
 	
 	sd = ( RFIFOB(fd,6) == 2 ) ? map->charid2sd(id) : map->id2sd(id);
 
-	if ( id < 0 || sd == NULL ) {/* ?___? is this worth showing a error for? you might wanna ban a player that is not online, this is not a error and the operation is still valid */
-		ShowError("chrif_idbanned failed - player not online.\n");
+	if ( id < 0 || sd == NULL ) {
+		/* player not online or unknown id, either way no error is necessary (since if you try to ban a offline char it still works) */
 		return 0;
 	}
 
