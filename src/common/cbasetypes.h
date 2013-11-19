@@ -293,7 +293,9 @@ typedef char bool;
 // if using macros then something that is type independent
 //#define swap(a,b) ((a == b) || ((a ^= b), (b ^= a), (a ^= b)))
 // Avoid "value computed is not used" warning and generates the same assembly code
-#define swap(a,b) if (a != b) ((a ^= b), (b ^= a), (a ^= b))
+//#define swap(a,b) if (a != b) ((a ^= b), (b ^= a), (a ^= b))
+// but is vulnerable to 'if (foo) swap(bar, baz); else quux();', causing the else to nest incorrectly.
+#define swap(a,b) do { if ((a) != (b)) { (a) ^= (b); (b) ^= (a); (a) ^= (b); } } while(0)
 #if 0 //to be activated soon, more tests needed on how VS works with the macro above
 #ifdef WIN32
 #undef swap
@@ -313,7 +315,7 @@ typedef char bool;
 #endif
 #endif
 
-#define swap_ptr(a,b) if ((a) != (b)) ((a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)), (b) = (void*)((intptr_t)(a) ^ (intptr_t)(b)), (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)))
+#define swap_ptr(a,b) do { if ((a) != (b)) (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (b) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); } while(0)
 
 #ifndef max
 #define max(a,b) (((a) > (b)) ? (a) : (b))
@@ -429,8 +431,8 @@ void SET_FUNCPOINTER(T1& var, T2 p)
 	var = tmp.out;
 }
 #else
-#define SET_POINTER(var,p) (var) = (p)
-#define SET_FUNCPOINTER(var,p) (var) = (p)
+#define SET_POINTER(var,p) ((var) = (p))
+#define SET_FUNCPOINTER(var,p) ((var) = (p))
 #endif
 
 

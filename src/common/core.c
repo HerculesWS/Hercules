@@ -53,7 +53,7 @@ char *SERVER_NAME = NULL;
 #endif
 
 #ifndef POSIX
-#define compat_signal(signo, func) signal(signo, func)
+#define compat_signal(signo, func) signal((signo), (func))
 #else
 sigfunc *compat_signal(int signo, sigfunc *func) {
 	struct sigaction sact, oact;

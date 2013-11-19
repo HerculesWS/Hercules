@@ -12,29 +12,29 @@
 		#define WIN32_LEAN_AND_MEAN
 	#endif
 	#include <windows.h>
-	#define plugin_open(x)		LoadLibraryA(x)
-	#define plugin_import(x,y,z)	(z)GetProcAddress(x,y)
-	#define plugin_close(x)	FreeLibrary(x)
+	#define plugin_open(x)        LoadLibraryA(x)
+	#define plugin_import(x,y,z)  (z)GetProcAddress((x),(y))
+	#define plugin_close(x)       FreeLibrary(x)
 
-	#define DLL_EXT			".dll"
-	#define DLL				HINSTANCE
+	#define DLL_EXT               ".dll"
+	#define DLL                   HINSTANCE
 #else // ! WIN32
 	#include <dlfcn.h>
 	#ifdef RTLD_DEEPBIND // Certain linux ditributions require this, but it's not available everywhere
-		#define plugin_open(x)		dlopen(x,RTLD_NOW|RTLD_DEEPBIND)
+		#define plugin_open(x) dlopen((x),RTLD_NOW|RTLD_DEEPBIND)
 	#else // ! RTLD_DEEPBIND
-		#define plugin_open(x)		dlopen(x,RTLD_NOW)
+		#define plugin_open(x) dlopen((x),RTLD_NOW)
 	#endif // RTLD_DEEPBIND
-	#define plugin_import(x,y,z)	(z)dlsym(x,y)
-	#define plugin_close(x)	dlclose(x)
+	#define plugin_import(x,y,z)   (z)dlsym((x),(y))
+	#define plugin_close(x)        dlclose(x)
 
 	#ifdef CYGWIN
-		#define DLL_EXT		".dll"
+		#define DLL_EXT        ".dll"
 	#else
-		#define DLL_EXT		".so"
+		#define DLL_EXT        ".so"
 	#endif
 
-	#define DLL				void *
+	#define DLL                    void *
 
 	#include <string.h> // size_t
 

@@ -88,7 +88,7 @@ struct chrif_interface chrif_s;
 //2b27: Incoming, chrif_authfail -> 'client authentication failed'
 
 //This define should spare writing the check in every function. [Skotlex]
-#define chrif_check(a) { if(!chrif->isconnected()) return a; }
+#define chrif_check(a) do { if(!chrif->isconnected()) return a; } while(0)
 
 /// Resets all the data.
 void chrif_reset(void) {

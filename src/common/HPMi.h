@@ -47,9 +47,9 @@ struct hplugin_info {
 HPExport void *(*import_symbol) (char *name, unsigned int pID);
 HPExport Sql *mysql_handle;
 
-#define GET_SYMBOL(n) import_symbol(n,HPMi->pid)
+#define GET_SYMBOL(n) import_symbol((n),HPMi->pid)
 
-#define SERVER_TYPE_ALL SERVER_TYPE_LOGIN|SERVER_TYPE_CHAR|SERVER_TYPE_MAP
+#define SERVER_TYPE_ALL (SERVER_TYPE_LOGIN|SERVER_TYPE_CHAR|SERVER_TYPE_MAP)
 
 enum hp_event_types {
 	HPET_INIT,/* server starts */
@@ -83,27 +83,27 @@ enum HPluginDataTypes {
 	HPDT_NPCD,
 };
 
-#define addHookPre(tname,hook) HPMi->AddHook(HOOK_TYPE_PRE,tname,hook,HPMi->pid)
-#define addHookPost(tname,hook) HPMi->AddHook(HOOK_TYPE_POST,tname,hook,HPMi->pid)
+#define addHookPre(tname,hook) (HPMi->AddHook(HOOK_TYPE_PRE,(tname),(hook),HPMi->pid))
+#define addHookPost(tname,hook) (HPMi->AddHook(HOOK_TYPE_POST,(tname),(hook),HPMi->pid))
 /* need better names ;/ */
 /* will not run the original function after pre-hook processing is complete (other hooks will run) */
-#define hookStop() HPMi->HookStop(__func__,HPMi->pid)
-#define hookStopped() HPMi->HookStopped()
+#define hookStop() (HPMi->HookStop(__func__,HPMi->pid))
+#define hookStopped() (HPMi->HookStopped())
 
-#define addArg(name,param,func,help) HPMi->addArg(HPMi->pid,name,param,func,help)
+#define addArg(name,param,func,help) (HPMi->addArg(HPMi->pid,(name),(param),(func),(help)))
 /* HPData handy redirects */
 /* session[] */
-#define addToSession(ptr,data,index,autofree) HPMi->addToHPData(HPDT_SESSION,HPMi->pid,ptr,data,index,autofree)
-#define getFromSession(ptr,index) HPMi->getFromHPData(HPDT_SESSION,HPMi->pid,ptr,index)
-#define removeFromSession(ptr,index) HPMi->removeFromHPData(HPDT_SESSION,HPMi->pid,ptr,index)
+#define addToSession(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_SESSION,HPMi->pid,(ptr),(data),(index),(autofree)))
+#define getFromSession(ptr,index) (HPMi->getFromHPData(HPDT_SESSION,HPMi->pid,(ptr),(index)))
+#define removeFromSession(ptr,index) (HPMi->removeFromHPData(HPDT_SESSION,HPMi->pid,(ptr),(index)))
 /* map_session_data */
-#define addToMSD(ptr,data,index,autofree) HPMi->addToHPData(HPDT_MSD,HPMi->pid,ptr,data,index,autofree)
-#define getFromMSD(ptr,index) HPMi->getFromHPData(HPDT_MSD,HPMi->pid,ptr,index)
-#define removeFromMSD(ptr,index) HPMi->removeFromHPData(HPDT_MSD,HPMi->pid,ptr,index)
+#define addToMSD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_MSD,HPMi->pid,(ptr),(data),(index),(autofree)))
+#define getFromMSD(ptr,index) (HPMi->getFromHPData(HPDT_MSD,HPMi->pid,(ptr),(index)))
+#define removeFromMSD(ptr,index) (HPMi->removeFromHPData(HPDT_MSD,HPMi->pid,(ptr),(index)))
 /* npc_data */
-#define addToNPCD(ptr,data,index,autofree) HPMi->addToHPData(HPDT_NPCD,HPMi->pid,ptr,data,index,autofree)
-#define getFromNPCD(ptr,index) HPMi->getFromHPData(HPDT_NPCD,HPMi->pid,ptr,index)
-#define removeFromNPCD(ptr,index) HPMi->removeFromHPData(HPDT_NPCD,HPMi->pid,ptr,index)
+#define addToNPCD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_NPCD,HPMi->pid,(ptr),(data),(index),(autofree)))
+#define getFromNPCD(ptr,index) (HPMi->getFromHPData(HPDT_NPCD,HPMi->pid,(ptr),(index)))
+#define removeFromNPCD(ptr,index) (HPMi->removeFromHPData(HPDT_NPCD,HPMi->pid,(ptr),(index)))
 
 /* Hercules Plugin Mananger Include Interface */
 HPExport struct HPMi_interface {

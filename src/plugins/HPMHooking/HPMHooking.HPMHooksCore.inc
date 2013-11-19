@@ -1561,6 +1561,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pGMReqAccountName_post;
 	struct HPMHookPoint *HP_clif_pGMChangeMapType_pre;
 	struct HPMHookPoint *HP_clif_pGMChangeMapType_post;
+	struct HPMHookPoint *HP_clif_pGMFullStrip_pre;
+	struct HPMHookPoint *HP_clif_pGMFullStrip_post;
 	struct HPMHookPoint *HP_clif_pPMIgnore_pre;
 	struct HPMHookPoint *HP_clif_pPMIgnore_post;
 	struct HPMHookPoint *HP_clif_pPMIgnoreAll_pre;
@@ -6520,6 +6522,8 @@ struct {
 	int HP_clif_pGMReqAccountName_post;
 	int HP_clif_pGMChangeMapType_pre;
 	int HP_clif_pGMChangeMapType_post;
+	int HP_clif_pGMFullStrip_pre;
+	int HP_clif_pGMFullStrip_post;
 	int HP_clif_pPMIgnore_pre;
 	int HP_clif_pPMIgnore_post;
 	int HP_clif_pPMIgnoreAll_pre;

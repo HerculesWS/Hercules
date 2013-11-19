@@ -2095,9 +2095,7 @@ struct s_mapiterator
 /// @param _bl_ block_list
 /// @return true if it matches
 #define MAPIT_MATCHES(_mapit_,_bl_) \
-	( \
-	( (_bl_)->type & (_mapit_)->types /* type matches */ ) \
-	)
+	( (_bl_)->type & (_mapit_)->types /* type matches */ )
 
 /// Allocates a new iterator.
 /// Returns the new iterator.

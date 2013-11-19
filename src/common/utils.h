@@ -20,7 +20,7 @@ void findfile(const char *p, const char *pat, void (func)(const char*));
 bool exists(const char* filename);
 
 //Caps values to min/max
-#define cap_value(a, min, max) ((a >= max) ? max : (a <= min) ? min : a)
+#define cap_value(a, min, max) (((a) >= (max)) ? (max) : ((a) <= (min)) ? (min) : (a))
 
 /// calculates the value of A / B, in percent (rounded down)
 unsigned int get_percentage(const unsigned int A, const unsigned int B);

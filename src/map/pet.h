@@ -98,8 +98,8 @@ struct pet_data {
 	struct map_session_data *msd;
 };
 
-#define pet_stop_walking(pd, type) unit->stop_walking(&(pd)->bl, type)
-#define pet_stop_attack(pd) unit->stop_attack(&(pd)->bl)
+#define pet_stop_walking(pd, type) (unit->stop_walking(&(pd)->bl, (type)))
+#define pet_stop_attack(pd)        (unit->stop_attack(&(pd)->bl))
 
 struct pet_interface {
 	struct s_pet_db db[MAX_PET_DB];

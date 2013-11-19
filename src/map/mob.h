@@ -37,7 +37,7 @@
 #define MOB_CLONE_END MAX_MOB_DB
 
 //Used to determine default enemy type of mobs (for use in eachinrange calls)
-#define DEFAULT_ENEMY_TYPE(md) (md->special_state.ai?BL_CHAR:BL_MOB|BL_PC|BL_HOM|BL_MER)
+#define DEFAULT_ENEMY_TYPE(md) ((md)->special_state.ai?BL_CHAR:BL_MOB|BL_PC|BL_HOM|BL_MER)
 
 #define MAX_MOB_CHAT 250 //Max Skill's messages
 
@@ -63,8 +63,8 @@ enum MobDamageLogFlag
 };
 
 enum size {
-	SZ_SMALL = 0,
-	SZ_MEDIUM,
+	SZ_MEDIUM = 0,
+	SZ_SMALL,
 	SZ_BIG,
 };
 
@@ -243,8 +243,9 @@ struct item_drop_list {
 };
 
 
-#define mob_stop_walking(md, type) unit->stop_walking(&(md)->bl, type)
-#define mob_stop_attack(md) unit->stop_attack(&(md)->bl)
+#define mob_stop_walking(md, type) (unit->stop_walking(&(md)->bl, (type)))
+#define mob_stop_attack(md)        (unit->stop_attack(&(md)->bl))
+
 #define mob_is_battleground(md) ( map->list[(md)->bl.m].flag.battleground && ((md)->class_ == MOBID_BARRICADE2 || ((md)->class_ >= MOBID_FOOD_STOR && (md)->class_ <= MOBID_PINK_CRYST)) )
 #define mob_is_gvg(md) (map->list[(md)->bl.m].flag.gvg_castle && ( (md)->class_ == MOBID_EMPERIUM || (md)->class_ == MOBID_BARRICADE1 || (md)->class_ == MOBID_GUARIDAN_STONE1 || (md)->class_ == MOBID_GUARIDAN_STONE2) )
 #define mob_is_treasure(md) (((md)->class_ >= MOBID_TREAS01 && (md)->class_ <= MOBID_TREAS40) || ((md)->class_ >= MOBID_TREAS41 && (md)->class_ <= MOBID_TREAS49))

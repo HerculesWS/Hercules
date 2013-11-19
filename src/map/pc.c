@@ -938,12 +938,10 @@ int pc_isequip(struct map_session_data *sd,int n)
 		clif->msg(sd, 0x6ED);
 		return 0;
 	}
-#ifdef RENEWAL
 	if(item->elvmax && sd->status.base_level > (unsigned int)item->elvmax){
 		clif->msg(sd, 0x6ED);
 		return 0;
 	}
-#endif
 	if(item->sex != 2 && sd->status.sex != item->sex)
 		return 0;
 
@@ -4209,89 +4207,87 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		return 0; // You cannot use this item while sitting.
 	}
 
-	switch( nameid ) //@TODO, lot oh harcoded nameid here
-	{
-		case 605: // Anodyne
+	switch( nameid ) { // TODO: Is there no better way to handle this, other than hardcoding item IDs?
+		case ITEMID_ANODYNE:
 			if( map_flag_gvg2(sd->bl.m) )
 				return 0;
-		case 606:
+		case ITEMID_ALOEBERA:
 			if( pc_issit(sd) )
 				return 0;
 			break;
-		case 601: // Fly Wing
-		case 12212: // Giant Fly Wing
+		case ITEMID_WING_OF_FLY:
+		case ITEMID_GIANT_FLY_WING:
 			if( map->list[sd->bl.m].flag.noteleport || map_flag_gvg2(sd->bl.m) ) {
 				clif->skill_mapinfomessage(sd,0);
 				return 0;
 			}
-		case 602: // ButterFly Wing
-		case 14527: // Dungeon Teleport Scroll
-		case 14581: // Dungeon Teleport Scroll
-		case 14582: // Yellow Butterfly Wing
-		case 14583: // Green Butterfly Wing
-		case 14584: // Red Butterfly Wing
-		case 14585: // Blue Butterfly Wing
-		case 14591: // Siege Teleport Scroll
+		case ITEMID_WING_OF_BUTTERFLY:
+		case ITEMID_DUN_TELE_SCROLL1:
+		case ITEMID_DUN_TELE_SCROLL2:
+		case ITEMID_WOB_RUNE:     // Yellow Butterfly Wing
+		case ITEMID_WOB_SCHWALTZ: // Green Butterfly Wing
+		case ITEMID_WOB_RACHEL:   // Red Butterfly Wing
+		case ITEMID_WOB_LOCAL:    // Blue Butterfly Wing
+		case ITEMID_SIEGE_TELEPORT_SCROLL:
 			if( sd->duel_group && !battle_config.duel_allow_teleport )
 			{
 				clif->message(sd->fd, msg_txt(663));
 				return 0;
 			}
-			if( nameid != 601 && nameid != 12212 && map->list[sd->bl.m].flag.noreturn )
+			if( nameid != ITEMID_WING_OF_FLY && nameid != ITEMID_GIANT_FLY_WING && map->list[sd->bl.m].flag.noreturn )
 				return 0;
 			break;
-		case 604: // Dead Branch
-		case 12024: // Red Pouch
-		case 12103: // Bloody Branch
-		case 12109: // Poring Box
+		case ITEMID_BRANCH_OF_DEAD_TREE:
+		case ITEMID_RED_POUCH_OF_SURPRISE:
+		case ITEMID_BLOODY_DEAD_BRANCH:
+		case ITEMID_PORING_BOX:
 			if( map->list[sd->bl.m].flag.nobranch || map_flag_gvg2(sd->bl.m) )
 				return 0;
 			break;
-		case 12210: // Bubble Gum
-		case 12264: // Comp Bubble Gum
+		case ITEMID_BUBBLE_GUM:
+		case ITEMID_COMP_BUBBLE_GUM:
 			if( sd->sc.data[SC_CASH_RECEIVEITEM] )
 				return 0;
 			break;
-		case 12208: // Battle Manual
-		case 12263: // Comp Battle Manual
-		case 12312: // Thick Battle Manual
-		case 12705: // Noble Nameplate
-		case 14532: // Battle_Manual25
-		case 14533: // Battle_Manual100
-		case 14545: // Battle_Manual300
+		case ITEMID_BATTLE_MANUAL:
+		case ITEMID_COMP_BATTLE_MANUAL:
+		case ITEMID_THICK_MANUAL50:
+		case ITEMID_NOBLE_NAMEPLATE:
+		case ITEMID_BATTLE_MANUAL25:
+		case ITEMIDBATTLE_MANUAL100:
+		case ITEMID_BATTLE_MANUAL_X3:
 			if( sd->sc.data[SC_CASH_PLUSEXP] )
 				return 0;
 			break;
-		case 14592: // JOB_Battle_Manual
+		case ITEMID_JOB_MANUAL50:
 			if( sd->sc.data[SC_CASH_PLUSONLYJOBEXP] )
 				return 0;
 			break;
 
 		// Mercenary Items
-
-		case 12184: // Mercenary's Red Potion
-		case 12185: // Mercenary's Blue Potion
-		case 12241: // Mercenary's Concentration Potion
-		case 12242: // Mercenary's Awakening Potion
-		case 12243: // Mercenary's Berserk Potion
+		case ITEMID_MERCENARY_RED_POTION:
+		case ITEMID_MERCENARY_BLUE_POTION:
+		case ITEMID_M_CENTER_POTION:
+		case ITEMID_M_AWAKENING_POTION:
+		case ITEMID_M_BERSERK_POTION:
 			if( sd->md == NULL || sd->md->db == NULL )
 				return 0;
 			if (sd->md->sc.data[SC_BERSERK] || sd->md->sc.data[SC_SATURDAY_NIGHT_FEVER])
 				return 0;
-			if( nameid == 12242 && sd->md->db->lv < 40 )
+			if( nameid == ITEMID_M_AWAKENING_POTION && sd->md->db->lv < 40 )
 				return 0;
-			if( nameid == 12243 && sd->md->db->lv < 80 )
+			if( nameid == ITEMID_M_BERSERK_POTION && sd->md->db->lv < 80 )
 				return 0;
 			break;
 
-		case 12213: //Neuralizer
+		case ITEMID_NEURALIZER:
 			if( !map->list[sd->bl.m].flag.reset )
 				return 0;
 			break;
 	}
 
-	if( nameid >= 12153 && nameid <= 12182 && sd->md != NULL )
-		return 0; // Mercenary Scrolls
+	if( nameid >= ITEMID_BOW_MERCENARY_SCROLL1 && nameid <= ITEMID_SPEARMERCENARY_SCROLL10 && sd->md != NULL ) // Mercenary Scrolls
+		return 0;
 
 	/**
 	 * Only Rune Knights may use runes
@@ -4319,12 +4315,10 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		return 0;
 	}
 
-#ifdef RENEWAL
 	if(item->elvmax && sd->status.base_level > (unsigned int)item->elvmax){
 		clif->msg(sd, 0x6EE);
 		return 0;
 	}
-#endif
 
 	//Not equipable by class. [Skotlex]
 	if (!(
@@ -4356,8 +4350,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 	}
 
 	//Dead Branch & Bloody Branch & Porings Box
-	// FIXME: outdated, use constants or database
-	if( nameid == 604 || nameid == 12103 || nameid == 12109 )
+	if( nameid == ITEMID_BRANCH_OF_DEAD_TREE || nameid == ITEMID_BLOODY_DEAD_BRANCH || nameid == ITEMID_PORING_BOX )
 		logs->branch(sd);
 
 	return 1;
@@ -5886,7 +5879,6 @@ int pc_checkbaselevelup(struct map_session_data *sd) {
 }
 
 void pc_baselevelchanged(struct map_session_data *sd) {
-#ifdef RENEWAL
 	int i;
 	for( i = 0; i < EQI_MAX; i++ ) {
 		if( sd->equip_index[i] >= 0 ) {
@@ -5894,9 +5886,8 @@ void pc_baselevelchanged(struct map_session_data *sd) {
 				pc->unequipitem(sd, sd->equip_index[i], 3);
 		}
 	}
-#endif
-
 }
+
 int pc_checkjoblevelup(struct map_session_data *sd)
 {
 	unsigned int next = pc->nextjobexp(sd);

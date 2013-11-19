@@ -102,10 +102,6 @@ int status_type2relevant_bl_types(int type)
 	return status->RelevantBLTypes[type];
 }
 
-#define add_sc(skill,sc) set_sc(skill,sc,SI_BLANK,SCB_NONE)
-// indicates that the status displays a visual effect for the affected unit, and should be sent to the client for all supported units
-#define set_sc_with_vfx(skill, sc, icon, flag) set_sc((skill), (sc), (icon), (flag)); if((icon) < SI_MAX) status->RelevantBLTypes[(icon)] |= BL_SCEFFECT
-
 static void set_sc(uint16 skill_id, sc_type sc, int icon, unsigned int flag) {
 	uint16 idx;
 	if( (idx = skill->get_index(skill_id)) == 0 ) {
@@ -128,6 +124,10 @@ static void set_sc(uint16 skill_id, sc_type sc, int icon, unsigned int flag) {
 }
 
 void initChangeTables(void) {
+#define add_sc(skill,sc) set_sc((skill),(sc),SI_BLANK,SCB_NONE)
+// indicates that the status displays a visual effect for the affected unit, and should be sent to the client for all supported units
+#define set_sc_with_vfx(skill, sc, icon, flag) do { set_sc((skill), (sc), (icon), (flag)); if((icon) < SI_MAX) status->RelevantBLTypes[(icon)] |= BL_SCEFFECT; } while(0)
+
 	int i;
 
 	for (i = 0; i < SC_MAX; i++)
@@ -1034,6 +1034,8 @@ void initChangeTables(void) {
 
 	if( !battle_config.display_hallucination ) //Disable Hallucination.
 		status->IconChangeTable[SC_ILLUSION] = SI_BLANK;
+#undef add_sc
+#undef set_sc_with_vfx
 }
 
 void initDummyData(void)
@@ -2096,7 +2098,7 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 
 	if (flag&2 && battle_config.mob_size_influence) {
 		// change for sized monsters [Valaris]
-		if (md->special_state.size==SZ_MEDIUM) {
+		if (md->special_state.size==SZ_SMALL) {
 			mstatus->max_hp>>=1;
 			mstatus->max_sp>>=1;
 			if (!mstatus->max_hp) mstatus->max_hp = 1;
@@ -2402,13 +2404,13 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	//Give them all modes except these (useful for clones)
 	bstatus->mode = MD_MASK&~(MD_BOSS|MD_PLANT|MD_DETECTOR|MD_ANGRY|MD_TARGETWEAK);
 
-	bstatus->size = (sd->class_&JOBL_BABY)?SZ_SMALL:SZ_MEDIUM;
+	bstatus->size = (sd->class_&JOBL_BABY)?SZ_MEDIUM:SZ_SMALL;
 	if (battle_config.character_size && (pc_isriding(sd) || pc_isridingdragon(sd)) ) { //[Lupus]
 		if (sd->class_&JOBL_BABY) {
 			if (battle_config.character_size&SZ_BIG)
 				bstatus->size++;
 		} else
-			if(battle_config.character_size&SZ_MEDIUM)
+			if(battle_config.character_size&SZ_SMALL)
 				bstatus->size++;
 	}
 	bstatus->aspd_rate = 1000;
@@ -3432,50 +3434,43 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 	if (!sc || !sc->count)
 		return;
 
-	if (
-		(sc->data[SC_POISON] && !sc->data[SC_SLOWPOISON])
-		|| (sc->data[SC_DPOISON] && !sc->data[SC_SLOWPOISON])
-		|| sc->data[SC_BERSERK]
-	|| sc->data[SC_TRICKDEAD]
-	|| sc->data[SC_BLOODING]
-	|| sc->data[SC_MAGICMUSHROOM]
-	|| sc->data[SC_RAISINGDRAGON]
-	|| sc->data[SC_SATURDAY_NIGHT_FEVER]
+	if ((sc->data[SC_POISON] && !sc->data[SC_SLOWPOISON])
+	 || (sc->data[SC_DPOISON] && !sc->data[SC_SLOWPOISON])
+	 || sc->data[SC_BERSERK]
+	 || sc->data[SC_TRICKDEAD]
+	 || sc->data[SC_BLOODING]
+	 || sc->data[SC_MAGICMUSHROOM]
+	 || sc->data[SC_RAISINGDRAGON]
+	 || sc->data[SC_SATURDAY_NIGHT_FEVER]
 	)	//No regen
 		regen->flag = 0;
 
-	if (
-		sc->data[SC_DANCING] || sc->data[SC_OBLIVIONCURSE] || sc->data[SC_MAXIMIZEPOWER] || sc->data[SC_REBOUND]
-	|| (
-		(bl->type == BL_PC && ((TBL_PC*)bl)->class_&MAPID_UPPERMASK) == MAPID_MONK &&
-		(sc->data[SC_EXTREMITYFIST] || (sc->data[SC_EXPLOSIONSPIRITS] && (!sc->data[SC_SOULLINK] || sc->data[SC_SOULLINK]->val2 != SL_MONK)))
-		)
-		)	//No natural SP regen
-		regen->flag &=~RGN_SP;
-
-	if(
-		sc->data[SC_TENSIONRELAX]
+	if ( sc->data[SC_DANCING] || sc->data[SC_OBLIVIONCURSE] || sc->data[SC_MAXIMIZEPOWER] || sc->data[SC_REBOUND]
+	   || ( bl->type == BL_PC && (((TBL_PC*)bl)->class_&MAPID_UPPERMASK) == MAPID_MONK
+	      && (sc->data[SC_EXTREMITYFIST] || (sc->data[SC_EXPLOSIONSPIRITS] && (!sc->data[SC_SOULLINK] || sc->data[SC_SOULLINK]->val2 != SL_MONK)))
+	      )
 	) {
+		regen->flag &=~RGN_SP; //No natural SP regen
+	}
+
+	if (sc->data[SC_TENSIONRELAX]) {
 		regen->rate.hp += 2;
 		if (regen->sregen)
 			regen->sregen->rate.hp += 3;
 	}
-	if (sc->data[SC_MAGNIFICAT])
-	{
+	if (sc->data[SC_MAGNIFICAT]) {
 		regen->rate.hp += 1;
 		regen->rate.sp += 1;
 	}
-	if (sc->data[SC_GDSKILL_REGENERATION])
-	{
+	if (sc->data[SC_GDSKILL_REGENERATION]) {
 		const struct status_change_entry *sce = sc->data[SC_GDSKILL_REGENERATION];
-		if (!sce->val4)
-		{
+		if (!sce->val4) {
 			regen->rate.hp += sce->val2;
 			regen->rate.sp += sce->val3;
 		} else
 			regen->flag&=~sce->val4; //Remove regen as specified by val4
 	}
-	if(sc->data[SC_GENTLETOUCH_REVITALIZE]){
+	if(sc->data[SC_GENTLETOUCH_REVITALIZE]) {
 		regen->hp = cap_value(regen->hp*sc->data[SC_GENTLETOUCH_REVITALIZE]->val3/100, 1, SHRT_MAX);
 		regen->state.walk= 1;
 	}
@@ -8559,12 +8554,14 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				break;
 			case SC_GENSOU:
 
-	#define PER( a ) do { \
-		if( a <= 15 ) lv = 1; \
-		else if( a <= 30 ) lv = 2; \
-		else if( a <= 50 ) lv = 3; \
-		else if( a <= 75 ) lv = 4; \
-	} while(0)
+#define PER( a, lvl ) do { \
+	int temp__ = (a); \
+	if( temp__ <= 15 ) (lvl) = 1; \
+	else if( temp__ <= 30 ) (lvl) = 2; \
+	else if( temp__ <= 50 ) (lvl) = 3; \
+	else if( temp__ <= 75 ) (lvl) = 4; \
+	else (lvl) = 5; \
+} while(0)
 
 			{
 				int hp = status_get_hp(bl), sp = status_get_sp(bl), lv = 5;
@@ -8572,13 +8569,13 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				if( rand()%100 > (25 + 10 * val1) - status_get_int(bl) / 2)
 					return 0;
 
-				PER( 100 / (status_get_max_hp(bl) / hp) );
+				PER( 100 / (status_get_max_hp(bl) / hp), lv );
 				status->heal(bl, (!(hp%2) ? (6-lv) *4 / 100 : -(lv*4) / 100), 0, 1);
 
-				PER( 100 / (status_get_max_sp(bl) / sp) );
+				PER( 100 / (status_get_max_sp(bl) / sp), lv );
 				status->heal(bl, 0,(!(sp%2) ? (6-lv) *3 / 100 : -(lv*3) / 100), 1);
 			}
-	#undef PER
+#undef PER
 				break;
 			case SC_ANGRIFFS_MODUS:
 				val2 = 50 + 20 * val1; //atk bonus
@@ -8876,18 +8873,18 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		case SC_ITEMSCRIPT:
 			if( sd ) {
 				switch( val1 ) {
-					//case 4121://Phree
-					//case 4047://Ghostring
-					case 4302://Gunka
+					//case ITEMID_PHREEONI_CARD:
+					//case ITEMID_GHOSTRING_CARD:
+					case ITEMID_TAO_GUNKA_CARD:
 						clif->status_change(bl,SI_MVPCARD_TAOGUNKA,1,tick,0,0,0);
 						break;
-					case 4132://Mistress
+					case ITEMID_MISTRESS_CARD:
 						clif->status_change(bl,SI_MVPCARD_MISTRESS,1,tick,0,0,0);
 						break;
-					case 4143://Orc Hero
+					case ITEMID_ORC_HERO_CARD:
 						clif->status_change(bl,SI_MVPCARD_ORCHERO,1,tick,0,0,0);
 						break;
-					case 4135://Orc Lord
+					case ITEMID_ORC_LOAD_CARD:
 						clif->status_change(bl,SI_MVPCARD_ORCLORD,1,tick,0,0,0);
 						break;
 				}
@@ -9732,18 +9729,18 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 	case SC_ITEMSCRIPT:
 		if( sd ) {
 			switch( sce->val1 ) {
-				//case 4121://Phree
-				//case 4047://Ghostring
-			case 4302://Gunka
+			//case ITEMID_PHREEONI_CARD:
+			//case ITEMID_GHOSTRING_CARD:
+			case ITEMID_TAO_GUNKA_CARD:
 				clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_MVPCARD_TAOGUNKA);
 				break;
-			case 4132://Mistress
+			case ITEMID_MISTRESS_CARD:
 				clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_MVPCARD_MISTRESS);
 				break;
-			case 4143://Orc Hero
+			case ITEMID_ORC_HERO_CARD:
 				clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_MVPCARD_ORCHERO);
 				break;
-			case 4135://Orc Lord
+			case ITEMID_ORC_LOAD_CARD:
 				clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_MVPCARD_ORCLORD);
 				break;
 			}
@@ -10022,7 +10019,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 	// set the next timer of the sce (don't assume the status still exists)
 #define sc_timer_next(t,f,i,d) do { \
 	if( (sce=sc->data[type]) ) \
-		sce->timer = timer->add(t,f,i,d); \
+		sce->timer = timer->add((t),(f),(i),(d)); \
 	else \
 		ShowError("status_change_timer: Unexpected NULL status change id: %d data: %d\n", id, data); \
 } while(0)

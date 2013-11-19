@@ -19773,6 +19773,31 @@ void HP_clif_pGMChangeMapType(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_pGMFullStrip(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pGMFullStrip_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pGMFullStrip_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pGMFullStrip_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pGMFullStrip(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pGMFullStrip_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pGMFullStrip_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pGMFullStrip_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
 void HP_clif_pPMIgnore(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_pPMIgnore_pre ) {
