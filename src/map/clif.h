@@ -1162,6 +1162,7 @@ struct clif_interface {
 	void (*pGMRc) (int fd, struct map_session_data* sd);
 	void (*pGMReqAccountName) (int fd, struct map_session_data *sd);
 	void (*pGMChangeMapType) (int fd, struct map_session_data *sd);
+	void (*pGMFullStrip) (int fd, struct map_session_data *sd);
 	void (*pPMIgnore) (int fd, struct map_session_data* sd);
 	void (*pPMIgnoreAll) (int fd, struct map_session_data *sd);
 	void (*pPMIgnoreList) (int fd,struct map_session_data *sd);

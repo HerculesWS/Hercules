@@ -1613,7 +1613,7 @@ packet(0x020d,-1);
 
 //2009-10-27aRagexeRE
 #if PACKETVER >= 20091027
-	packet(0x07f5,6,clif->pGMReqAccountName,2);
+	packet(0x07f5,6,clif->pGMFullStrip,2);
 	packet(0x07f6,14);
 #endif
 

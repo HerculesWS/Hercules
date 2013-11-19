@@ -17966,6 +17966,22 @@ void clif_notify_bounditem(struct map_session_data *sd, unsigned short index) {
 	
 	clif->send(&p,sizeof(p), &sd->bl, SELF);
 }
+
+/* (GM) right click -> 'remove all equipment' */
+void clif_parse_GMFullStrip(int fd, struct map_session_data *sd) {
+	struct map_session_data *tsd = map->id2sd(RFIFOL(fd,2));
+	int i;
+	
+	/* TODO maybe this could be a new permission? using gm level in the meantime */
+	if( !tsd || pc->get_group_level(tsd) >= pc->get_group_level(sd) )
+		return;
+	
+	for( i = 0; i < EQI_MAX; i++ ) {
+		if( tsd->equip_index[ i ] >= 0 )
+			pc->unequipitem( tsd , tsd->equip_index[ i ] , 2 );
+	}
+}
+
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 	if( sd ) {
@@ -18914,6 +18930,7 @@ void clif_defaults(void) {
 	clif->pGMRc = clif_parse_GMRc;
 	clif->pGMReqAccountName = clif_parse_GMReqAccountName;
 	clif->pGMChangeMapType = clif_parse_GMChangeMapType;
+	clif->pGMFullStrip = clif_parse_GMFullStrip;
 	clif->pPMIgnore = clif_parse_PMIgnore;
 	clif->pPMIgnoreAll = clif_parse_PMIgnoreAll;
 	clif->pPMIgnoreList = clif_parse_PMIgnoreList;
