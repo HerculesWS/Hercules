@@ -193,7 +193,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(chrif->changemapserverack, HP_chrif_changemapserverack) },
 	{ HP_POP(chrif->changedsex, HP_chrif_changedsex) },
 	{ HP_POP(chrif->divorceack, HP_chrif_divorceack) },
-	{ HP_POP(chrif->accountban, HP_chrif_accountban) },
+	{ HP_POP(chrif->idbanned, HP_chrif_idbanned) },
 	{ HP_POP(chrif->recvfamelist, HP_chrif_recvfamelist) },
 	{ HP_POP(chrif->load_scdata, HP_chrif_load_scdata) },
 	{ HP_POP(chrif->update_ip, HP_chrif_update_ip) },

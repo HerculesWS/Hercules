@@ -4793,13 +4793,13 @@ int HP_chrif_divorceack(int char_id, int partner_id) {
 	}
 	return retVal___;
 }
-int HP_chrif_accountban(int fd) {
+int HP_chrif_idbanned(int fd) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if( HPMHooks.count.HP_chrif_accountban_pre ) {
+	if( HPMHooks.count.HP_chrif_idbanned_pre ) {
 		int (*preHookFunc) (int *fd);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_accountban_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_chrif_accountban_pre[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_idbanned_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chrif_idbanned_pre[hIndex].func;
 			retVal___ = preHookFunc(&fd);
 		}
 		if( *HPMforce_return ) {
@@ -4808,12 +4808,12 @@ int HP_chrif_accountban(int fd) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.chrif.accountban(fd);
+		retVal___ = HPMHooks.source.chrif.idbanned(fd);
 	}
-	if( HPMHooks.count.HP_chrif_accountban_post ) {
+	if( HPMHooks.count.HP_chrif_idbanned_post ) {
 		int (*postHookFunc) (int retVal___, int *fd);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_accountban_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_chrif_accountban_post[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_idbanned_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chrif_idbanned_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, &fd);
 		}
 	}
