@@ -2414,21 +2414,21 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case GN_SLINGITEM_RANGEMELEEATK:
 					if( sd ) {
 						switch( sd->itemid ) {
-							case 13260: // Apple Bomob
-							case 13261: // Coconut Bomb
-							case 13262: // Melon Bomb
-							case 13263: // Pinapple Bomb
-								skillratio += 400;	// Unconfirded
+							case ITEMID_APPLE_BOMB:
+							case ITEMID_COCONUT_BOMB:
+							case ITEMID_MELON_BOMB:
+							case ITEMID_PINEAPPLE_BOMB:
+								skillratio += 400; // Unconfirmed
 								break;
-							case 13264: // Banana Bomb 2000%
+							case ITEMID_BANANA_BOMB: // 2000%
 								skillratio += 1900;
 								break;
-							case 13265: skillratio -= 75; break; // Black Lump 25%
-							case 13266: skillratio -= 25; break; // Hard Black Lump 75%
-							case 13267: skillratio += 100; break; // Extremely Hard Black Lump 200%
+							case ITEMID_BLACK_LUMP:      skillratio -= 75;  break; // 25%
+							case ITEMID_BLACK_HARD_LUMP: skillratio -= 25;  break; // 75%
+							case ITEMID_VERY_HARD_LUMP:  skillratio += 100; break; // 200%
 						}
 					} else
-						skillratio += 300;	// Bombs
+						skillratio += 300; // Bombs
 					break;
 				case SO_VARETYR_SPEAR://ATK [{( Striking Level x 50 ) + ( Varetyr Spear Skill Level x 50 )} x Caster Base Level / 100 ] %
 					skillratio += -100 + 50 * skill_lv + ( sd ? pc->checkskill(sd, SO_STRIKING) * 50 : 0 );
