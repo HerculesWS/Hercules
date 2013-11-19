@@ -1004,7 +1004,7 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	struct mmo_charstatus p;
 	int j = 0, i;
 	char last_map[MAP_NAME_LENGTH_EXT];
-	time_t unban_time;
+	time_t unban_time = 0;
 
 	stmt = SQL->StmtMalloc(sql_handle);
 	if( stmt == NULL ) {
