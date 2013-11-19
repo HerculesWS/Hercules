@@ -369,8 +369,8 @@ struct {
 	struct HPMHookPoint *HP_chrif_changedsex_post;
 	struct HPMHookPoint *HP_chrif_divorceack_pre;
 	struct HPMHookPoint *HP_chrif_divorceack_post;
-	struct HPMHookPoint *HP_chrif_accountban_pre;
-	struct HPMHookPoint *HP_chrif_accountban_post;
+	struct HPMHookPoint *HP_chrif_idbanned_pre;
+	struct HPMHookPoint *HP_chrif_idbanned_post;
 	struct HPMHookPoint *HP_chrif_recvfamelist_pre;
 	struct HPMHookPoint *HP_chrif_recvfamelist_post;
 	struct HPMHookPoint *HP_chrif_load_scdata_pre;
@@ -5328,8 +5328,8 @@ struct {
 	int HP_chrif_changedsex_post;
 	int HP_chrif_divorceack_pre;
 	int HP_chrif_divorceack_post;
-	int HP_chrif_accountban_pre;
-	int HP_chrif_accountban_post;
+	int HP_chrif_idbanned_pre;
+	int HP_chrif_idbanned_post;
 	int HP_chrif_recvfamelist_pre;
 	int HP_chrif_recvfamelist_post;
 	int HP_chrif_load_scdata_pre;
