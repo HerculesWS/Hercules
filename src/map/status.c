@@ -3434,50 +3434,43 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 	if (!sc || !sc->count)
 		return;
 
-	if (
-		(sc->data[SC_POISON] && !sc->data[SC_SLOWPOISON])
-		|| (sc->data[SC_DPOISON] && !sc->data[SC_SLOWPOISON])
-		|| sc->data[SC_BERSERK]
-	|| sc->data[SC_TRICKDEAD]
-	|| sc->data[SC_BLOODING]
-	|| sc->data[SC_MAGICMUSHROOM]
-	|| sc->data[SC_RAISINGDRAGON]
-	|| sc->data[SC_SATURDAY_NIGHT_FEVER]
+	if ((sc->data[SC_POISON] && !sc->data[SC_SLOWPOISON])
+	 || (sc->data[SC_DPOISON] && !sc->data[SC_SLOWPOISON])
+	 || sc->data[SC_BERSERK]
+	 || sc->data[SC_TRICKDEAD]
+	 || sc->data[SC_BLOODING]
+	 || sc->data[SC_MAGICMUSHROOM]
+	 || sc->data[SC_RAISINGDRAGON]
+	 || sc->data[SC_SATURDAY_NIGHT_FEVER]
 	)	//No regen
 		regen->flag = 0;
 
-	if (
-		sc->data[SC_DANCING] || sc->data[SC_OBLIVIONCURSE] || sc->data[SC_MAXIMIZEPOWER] || sc->data[SC_REBOUND]
-	|| (
-		(bl->type == BL_PC && ((TBL_PC*)bl)->class_&MAPID_UPPERMASK) == MAPID_MONK &&
-		(sc->data[SC_EXTREMITYFIST] || (sc->data[SC_EXPLOSIONSPIRITS] && (!sc->data[SC_SOULLINK] || sc->data[SC_SOULLINK]->val2 != SL_MONK)))
-		)
-		)	//No natural SP regen
-		regen->flag &=~RGN_SP;
-
-	if(
-		sc->data[SC_TENSIONRELAX]
+	if ( sc->data[SC_DANCING] || sc->data[SC_OBLIVIONCURSE] || sc->data[SC_MAXIMIZEPOWER] || sc->data[SC_REBOUND]
+	   || ( bl->type == BL_PC && (((TBL_PC*)bl)->class_&MAPID_UPPERMASK) == MAPID_MONK
+	      && (sc->data[SC_EXTREMITYFIST] || (sc->data[SC_EXPLOSIONSPIRITS] && (!sc->data[SC_SOULLINK] || sc->data[SC_SOULLINK]->val2 != SL_MONK)))
+	      )
 	) {
+		regen->flag &=~RGN_SP; //No natural SP regen
+	}
+
+	if (sc->data[SC_TENSIONRELAX]) {
 		regen->rate.hp += 2;
 		if (regen->sregen)
 			regen->sregen->rate.hp += 3;
 	}
-	if (sc->data[SC_MAGNIFICAT])
-	{
+	if (sc->data[SC_MAGNIFICAT]) {
 		regen->rate.hp += 1;
 		regen->rate.sp += 1;
 	}
-	if (sc->data[SC_GDSKILL_REGENERATION])
-	{
+	if (sc->data[SC_GDSKILL_REGENERATION]) {
 		const struct status_change_entry *sce = sc->data[SC_GDSKILL_REGENERATION];
-		if (!sce->val4)
-		{
+		if (!sce->val4) {
 			regen->rate.hp += sce->val2;
 			regen->rate.sp += sce->val3;
 		} else
 			regen->flag&=~sce->val4; //Remove regen as specified by val4
 	}
-	if(sc->data[SC_GENTLETOUCH_REVITALIZE]){
+	if(sc->data[SC_GENTLETOUCH_REVITALIZE]) {
 		regen->hp = cap_value(regen->hp*sc->data[SC_GENTLETOUCH_REVITALIZE]->val3/100, 1, SHRT_MAX);
 		regen->state.walk= 1;
 	}
