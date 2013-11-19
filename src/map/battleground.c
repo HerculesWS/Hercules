@@ -520,13 +520,43 @@ void bg_begin(struct bg_arena *arena) {
 				bg->queue_pc_cleanup(sd);
 		}
 	}
+	/* TODO/FIXME? I *think* it should check what kind of queue the player used, then check if his party/guild
+	 * (his team) still meet the join criteria (sort of what bg->can_queue does)
+	 */
 
 	if( count < arena->min_players ) {
 		bg->match_over(arena,true);
 	} else {
 		arena->ongoing = true;
-		mapreg->setreg(script->add_str("$@bg_queue_id"),arena->queue_id);/* TODO: make this a arena-independant var? or just .@? */
+		/* TODO: make this a arena-independant var? or just .@? */
+		mapreg->setreg(script->add_str("$@bg_queue_id"),arena->queue_id);
 		mapreg->setregstr(script->add_str("$@bg_delay_var$"),bg->gdelay_var);
+		
+		count = 0;
+		for( i = 0; i < queue->size; i++ ) {
+			struct map_session_data * sd = NULL;
+			
+			if( queue->item[i] > 0 && ( sd = map->id2sd(queue->item[i]) ) ) {
+				if( sd->bg_queue.ready == 1 ) {
+					
+					mapreg->setreg(reference_uid(script->add_str("$@bg_member"), count), sd->status.account_id);
+
+					mapreg->setreg(reference_uid(script->add_str("$@bg_member_group"), count),
+								   sd->bg_queue.type == BGQT_GUILD ? sd->status.guild_id :
+								   sd->bg_queue.type == BGQT_PARTY ? sd->status.party_id :
+								   0
+								   );
+					mapreg->setreg(reference_uid(script->add_str("$@bg_member_type"), count),
+								   sd->bg_queue.type == BGQT_GUILD ? 1 :
+								   sd->bg_queue.type == BGQT_PARTY ? 2 :
+								   0
+								   );
+					count++;
+				}
+			}
+		}
+		mapreg->setreg(script->add_str("$@bg_member_size"),count);
+		
 		npc->event_do(arena->npc_event);
 		/* we split evenly? */
 		/* but if a party of say 10 joins, it cant be split evenly unless by luck there are 10 soloers in the queue besides them */
@@ -685,12 +715,7 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 
 	if( sd->bg_queue.arena != NULL )
 		return BGQA_DUPLICATE_REQUEST;
-	
-	if( type != BGQT_INDIVIDUAL ) {/* until we get the damn balancing correct */
-		clif->colormes(sd->fd,COLOR_RED,"Queueing is only currently enabled only for Solo Mode");
-		return BGQA_FAIL_TEAM_COUNT;
-	}
-		
+			
 	switch(type) {
 		case BGQT_GUILD:
 			if( !sd->guild || !sd->state.gmaster_flag )
@@ -757,7 +782,10 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 	
 	return BGQA_SUCCESS;
 }
-void do_init_battleground(void) {
+void do_init_battleground(bool minimal) {
+	if (minimal)
+		return;
+
 	bg->team_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	timer->add_func_list(bg->send_xy_timer, "bg_send_xy_timer");
 	timer->add_interval(timer->gettick() + battle_config.bg_update_interval, bg->send_xy_timer, 0, 0, battle_config.bg_update_interval);

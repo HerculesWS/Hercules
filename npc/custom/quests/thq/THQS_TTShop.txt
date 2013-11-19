@@ -16,7 +16,7 @@
 
 prt_in,159,172,0	warp	thqwrp	3,3,yuno_in01,123,155
 
-prt_in,164,174,1	script	Treasure Hunter's Shop	65,{
+prt_in,164,174,1	script	Treasure Hunter's Shop	1_M_YOUNGKNIGHT,{
 	mes "[Ash]";
 	mes "Ahh, "+strcharinfo(0)+"! Welcome to the Offical Treasure Hunter's Guild Shop.";
 	mes "You currently have ^FF0000"+#Treasure_Token+"^000000 treasure tokens!!!";
@@ -51,7 +51,7 @@ N_Shop:
 	close;
 N_GetZeny1k:
 	set #Treasure_Token,#Treasure_Token-1;
-	set zeny,zeny+1000;
+	set Zeny,Zeny+1000;
 	close;
 N_10T:
 	if (#Treasure_Token > 9) goto N_GetZeny10k;
@@ -59,7 +59,7 @@ N_10T:
 	close;
 N_GetZeny10k:
 	set #Treasure_Token,#Treasure_Token-10;
-	set zeny,zeny+10000;
+	set Zeny,Zeny+10000;
 	close;
 N_100T:
 	if (#Treasure_Token > 99) goto N_GetZeny100k;
@@ -67,7 +67,7 @@ N_100T:
 	close;
 N_GetZeny100k:
 	set #Treasure_Token,#Treasure_Token-100;
-	set zeny,zeny+100000;
+	set Zeny,Zeny+100000;
 	close;
 
 N_BuyWeps:

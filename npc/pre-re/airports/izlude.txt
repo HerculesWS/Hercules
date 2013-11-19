@@ -8,4 +8,4 @@
 //= Official NPCs.
 //============================================================
 
-izlude,206,55,3	duplicate(Airship_Staff_izlude)	Airship Staff#izlude	90
+izlude,206,55,3	duplicate(Airship_Staff_izlude)	Airship Staff#izlude	4_F_01

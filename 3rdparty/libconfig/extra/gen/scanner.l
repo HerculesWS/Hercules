@@ -100,7 +100,7 @@ float             ([-+]?([0-9]*)?\.[0-9]*([eE][-+]?[0-9]+)?)|([-+]?([0-9]+)(\.[0
 comment           (#|\/\/).*$
 include_open      ^[ \t]*@include[ \t]+\"
 
-%x COMMENT STRING INCLUDE
+%x COMMENT STRING INCLUDE SCRIPTBLOCK
 
 %%
 
@@ -128,6 +128,14 @@ include_open      ^[ \t]*@include[ \t]+\"
                     BEGIN INITIAL;
                     return(TOK_STRING);
                   }
+
+\<\"                          { BEGIN SCRIPTBLOCK; }
+<SCRIPTBLOCK>([^\"]|\"[^\>])+ { scanctx_append_string(yyextra, yytext); }
+<SCRIPTBLOCK>\"\>             {
+                                yylval->sval = scanctx_take_string(yyextra);
+                                BEGIN INITIAL;
+                                return(TOK_STRING);
+                              }
 
 {include_open}    { BEGIN INCLUDE; }
 <INCLUDE>[^\"\\]+ { scanctx_append_string(yyextra, yytext); }

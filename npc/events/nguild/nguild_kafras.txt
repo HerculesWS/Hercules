@@ -16,11 +16,11 @@
 
 function	script	F_GKafra	{
 	cutin "kafra_01",2;
-	set @GID, GetCastleData(getarg(0),1);
+	set @GID, getcastledata(getarg(0),1);
 	if (getcharid(2) == @GID && getgdskilllv(@GID,10001)) goto L_StartG;
 
 	mes "[Kafra Service]";
-	mes "I am contracted to provide service only for the ^ff0000" + GetGuildName(@GID) + "^000000 Guild. Please use another Kafra Corporation staff member around here. I am Sorry for your inconvenience.";
+	mes "I am contracted to provide service only for the ^ff0000" + getguildname(@GID) + "^000000 Guild. Please use another Kafra Corporation staff member around here. I am Sorry for your inconvenience.";
 	cutin "",255;
 	close;
 L_StartG:
@@ -32,38 +32,38 @@ L_StartG:
 }
 
 // Castle 1 ===============================================
-nguild_alde,218,170,0	script	Kafra Service#N01	117,{
+nguild_alde,218,170,0	script	Kafra Service#N01	4_F_KAFRA1,{
 	callfunc "F_GKafra", "nguild_alde", "Prontera";
 	end;
 OnRecvCastleN01:
-	if (GetCastleData("nguild_alde",9) < 1) disablenpc "Kafra Service#N01";
+	if (getcastledata("nguild_alde",9) < 1) disablenpc "Kafra Service#N01";
 	end;
 }
 
 // Castle 2 ===============================================
-//nguild_gef,96,173,0	script	Kafra Service#N02	117,{
-nguild_gef,35,37,0	script	Kafra Service#N02	117,{
+//nguild_gef,96,173,0	script	Kafra Service#N02	4_F_KAFRA1,{
+nguild_gef,35,37,0	script	Kafra Service#N02	4_F_KAFRA1,{
 	callfunc "F_GKafra", "nguild_gef", "Prontera";
 	end;
 OnRecvCastleN02:
-	if (GetCastleData("nguild_gef",9) < 1) disablenpc "Kafra Service#N02";
+	if (getcastledata("nguild_gef",9) < 1) disablenpc "Kafra Service#N02";
 	end;
 }
 
 // Castle 3 ===============================================
-nguild_pay,128,58,3	script	Kafra Service#N03	117,{
+nguild_pay,128,58,3	script	Kafra Service#N03	4_F_KAFRA1,{
 	callfunc "F_GKafra", "nguild_pay", "Prontera";
 	end;
 OnRecvCastleN03:
-	if (GetCastleData("nguild_pay",9) < 1) disablenpc "Kafra Service#N03";
+	if (getcastledata("nguild_pay",9) < 1) disablenpc "Kafra Service#N03";
 	end;
 }
 
 // Castle 4 ===============================================
-nguild_prt,96,173,0	script	Kafra Service#N04	117,{
+nguild_prt,96,173,0	script	Kafra Service#N04	4_F_KAFRA1,{
 	callfunc "F_GKafra", "nguild_prt", "Prontera";
 	end;
 OnRecvCastleN04:
-	if (GetCastleData("nguild_prt",9) < 1) disablenpc "Kafra Service#N04";
+	if (getcastledata("nguild_prt",9) < 1) disablenpc "Kafra Service#N04";
 	end;
 }

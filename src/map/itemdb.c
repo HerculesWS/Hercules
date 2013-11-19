@@ -138,7 +138,6 @@ int itemdb_searchname_array(struct item_data** data, int size, const char *str, 
 /* [Ind/Hercules] */
 int itemdb_chain_item(unsigned short chain_id, int *rate) {
 	struct item_chain_entry *entry;
-	int i = 0;
 	
 	if( chain_id >= itemdb->chain_count ) {
 		ShowError("itemdb_chain_item: unknown chain id %d\n", chain_id);
@@ -147,18 +146,12 @@ int itemdb_chain_item(unsigned short chain_id, int *rate) {
 	
 	entry = &itemdb->chains[chain_id].items[ rnd()%itemdb->chains[chain_id].qty ];
 	
-	for( i = 0; i < itemdb->chains[chain_id].qty; i++ ) {
-		if( rnd()%10000 >= entry->rate ) {
-			entry = entry->next;
-			continue;
-		} else {
-			if( rate )
-				rate[0] = entry->rate;
-			return entry->id;
-		}
-	}
-	
-	return 0;
+	if( rnd()%10000 >= entry->rate )
+		return 0;
+
+	if( rate )
+		rate[0] = entry->rate;
+	return entry->id;
 }
 /* [Ind/Hercules] */
 void itemdb_package_item(struct map_session_data *sd, struct item_package *package) {
@@ -1027,7 +1020,10 @@ void itemdb_read_packages(void) {
 		if( itemdb->packages[count].random_qty ) {
 			CREATE(itemdb->packages[count].random_groups, struct item_package_rand_group, itemdb->packages[count].random_qty);
 			for( c = 0; c < itemdb->packages[count].random_qty; c++ ) {
-				CREATE(itemdb->packages[count].random_groups[c].random_list, struct item_package_rand_entry, rgroups[ i - 1 ][c]);
+				if( !rgroups[ i - 1 ][c] )
+					ShowError("itemdb_read_packages: package '%s' missing 'Random' field %d! there must not be gaps!\n",config_setting_name(itg),c+1);
+				else
+					CREATE(itemdb->packages[count].random_groups[c].random_list, struct item_package_rand_entry, rgroups[ i - 1 ][c]);
 				itemdb->packages[count].random_groups[c].random_qty = 0;
 			}
 		}
@@ -1090,7 +1086,7 @@ void itemdb_read_packages(void) {
 				itemdb->packages[count].random_groups[gidx].random_list[r].id = data ? data->nameid : 0;
 				itemdb->packages[count].random_groups[gidx].random_list[r].qty = icount;
 				if( (itemdb->packages[count].random_groups[gidx].random_list[r].rate = rate) == 10000 ) {
-					ShowWarning("itemdb_read_packages: item '%s' in '%s' has 100% drop rate!! set this item as 'Random: 0' or other items won't drop!!!\n",itname,config_setting_name(itg));
+					ShowWarning("itemdb_read_packages: item '%s' in '%s' has 100%% drop rate!! set this item as 'Random: 0' or other items won't drop!!!\n",itname,config_setting_name(itg));
 				}
 				itemdb->packages[count].random_groups[gidx].random_list[r].hours = expire;
 				itemdb->packages[count].random_groups[gidx].random_list[r].announce = announce == true ? 1 : 0;
@@ -1536,346 +1532,436 @@ int itemdb_gendercheck(struct item_data *id)
 
 	return (battle_config.ignore_items_gender) ? 2 : id->sex;
 }
+
 /**
- * [RRInd]
- * For backwards compatibility, in Renewal mode, MATK from weapons comes from the atk slot
- * We use a ':' delimiter which, if not found, assumes the weapon does not provide any matk.
- **/
-void itemdb_re_split_atoi(char *str, int *atk, int *matk) {
-	int i, val[2];
+ * Validates an item DB entry and inserts it into the database.
+ * This function is called after preparing the item entry data, and it takes
+ * care of inserting it and cleaning up any remainders of the previous one.
+ *
+ * @param *entry  Pointer to the new item_data entry. Ownership is NOT taken,
+ *                but the content is modified to reflect the validation.
+ * @param n       Ordinal number of the entry, to be displayed in case of
+ *                validation errors.
+ * @param *source Source of the entry (table or file name), to be displayed in
+ *                case of validation errors.
+ * @return Nameid of the validated entry, or 0 in case of failure.
+ *
+ * Note: This is safe to call if the new entry is a copy of the old one (i.e.
+ * item_db2 inheritance), as it will make sure not to free any scripts still in
+ * use in the new entry.
+ */
+int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
+	struct item_data *item;
 
-	for (i=0; i<2; i++) {
-		if (!str) break;
-		val[i] = atoi(str);
-		str = strchr(str,':');
-		if (str)
-			*str++=0;
-	}
-	if( i == 0 ) {
-		*atk = *matk = 0;
-		return;//no data found
-	}
-	if( i == 1 ) {//Single Value, we assume it's the ATK
-		*atk = val[0];
-		*matk = 0;
-		return;
-	}
-	//We assume we have 2 values.
-	*atk = val[0];
-	*matk = val[1];
-	return;
-}
-/*==========================================
- * processes one itemdb entry
- *------------------------------------------*/
-int itemdb_parse_dbrow(char** str, const char* source, int line, int scriptopt) {
-	/*
-		+----+--------------+---------------+------+-----------+------------+--------+--------+---------+-------+-------+------------+-------------+---------------+-----------------+--------------+-------------+------------+------+--------+--------------+----------------+
-		| 00 |      01      |       02      |  03  |     04    |     05     |   06   |   07   |    08   |   09  |   10  |     11     |      12     |       13      |        14       |      15      |      16     |     17     |  18  |   19   |      20      |        21      |
-		+----+--------------+---------------+------+-----------+------------+--------+--------+---------+-------+-------+------------+-------------+---------------+-----------------+--------------+-------------+------------+------+--------+--------------+----------------+
-		| id | name_english | name_japanese | type | price_buy | price_sell | weight | attack | defence | range | slots | equip_jobs | equip_upper | equip_genders | equip_locations | weapon_level | equip_level | refineable | view | script | equip_script | unequip_script |
-		+----+--------------+---------------+------+-----------+------------+--------+--------+---------+-------+-------+------------+-------------+---------------+-----------------+--------------+-------------+------------+------+--------+--------------+----------------+
-	*/
-	int nameid;
-	struct item_data* id;
-	unsigned char offset = 0;
-	
-	nameid = atoi(str[0]);
-	if( nameid <= 0 ) {
-		ShowWarning("itemdb_parse_dbrow: Invalid id %d in line %d of \"%s\", skipping.\n", nameid, line, source);
-		return 0;
-	} else if ( nameid >= MAX_ITEMDB ) {
-		ShowWarning("itemdb_parse_dbrow: Invalid id %d in line %d of \"%s\", beyond MAX_ITEMDB, skipping.\n", nameid, line, source);
+	if( entry->nameid <= 0 || entry->nameid >= MAX_ITEMDB ) {
+		ShowWarning("itemdb_validate_entry: Invalid item ID %d in entry %d of '%s', allowed values 0 < ID < %d (MAX_ITEMDB), skipping.\n",
+				entry->nameid, n, source, MAX_ITEMDB);
+		if (entry->script) {
+			script->free_code(entry->script);
+			entry->script = NULL;
+		}
+		if (entry->equip_script) {
+			script->free_code(entry->equip_script);
+			entry->equip_script = NULL;
+		}
+		if (entry->unequip_script) {
+			script->free_code(entry->unequip_script);
+			entry->unequip_script = NULL;
+		}
 		return 0;
 	}
 
-	//ID,Name,Jname,Type,Price,Sell,Weight,ATK,DEF,Range,Slot,Job,Job Upper,Gender,Loc,wLV,eLV,refineable,View
-	id = itemdb->load(nameid);
-	safestrncpy(id->name, str[1], sizeof(id->name));
-	safestrncpy(id->jname, str[2], sizeof(id->jname));
-
-	id->type = atoi(str[3]);
-
-	if( id->type < 0 || id->type == IT_UNKNOWN || id->type == IT_UNKNOWN2 || ( id->type > IT_DELAYCONSUME && id->type < IT_CASH ) || id->type >= IT_MAX )
-	{// catch invalid item types
-		ShowWarning("itemdb_parse_dbrow: Invalid item type %d for item %d. IT_ETC will be used.\n", id->type, nameid);
-		id->type = IT_ETC;
+	if( entry->type < 0 || entry->type == IT_UNKNOWN || entry->type == IT_UNKNOWN2
+	 || (entry->type > IT_DELAYCONSUME && entry->type < IT_CASH ) || entry->type >= IT_MAX
+	) {
+		// catch invalid item types
+		ShowWarning("itemdb_validate_entry: Invalid item type %d for item %d. IT_ETC will be used.\n", entry->type, entry->nameid);
+		entry->type = IT_ETC;
+	} else if( entry->type == IT_DELAYCONSUME ) {
+		//Items that are consumed only after target confirmation
+		entry->type = IT_USABLE;
+		entry->flag.delay_consume = 1;
 	}
-
-	if (id->type == IT_DELAYCONSUME)
-	{	//Items that are consumed only after target confirmation
-		id->type = IT_USABLE;
-		id->flag.delay_consume = 1;
-	} else //In case of an itemdb reload and the item type changed.
-		id->flag.delay_consume = 0;
 
 	//When a particular price is not given, we should base it off the other one
 	//(it is important to make a distinction between 'no price' and 0z)
-	if ( str[4][0] )
-		id->value_buy = atoi(str[4]);
-	else
-		id->value_buy = atoi(str[5]) * 2;
-
-	if ( str[5][0] )
-		id->value_sell = atoi(str[5]);
-	else
-		id->value_sell = id->value_buy / 2;
-	/* 
-	if ( !str[4][0] && !str[5][0])
-	{  
-		ShowWarning("itemdb_parse_dbrow: No buying/selling price defined for item %d (%s), using 20/10z\n",       nameid, id->jname);
-		id->value_buy = 20;
-		id->value_sell = 10;
-	} else
-	*/
-	if (id->value_buy/124. < id->value_sell/75.)
-		ShowWarning("itemdb_parse_dbrow: Buying/Selling [%d/%d] price of item %d (%s) allows Zeny making exploit  through buying/selling at discounted/overcharged prices!\n",
-			id->value_buy, id->value_sell, nameid, id->jname);
-
-	id->weight = atoi(str[6]);
-#ifdef RENEWAL
-	if( map->db_use_sql_item_db ) {
-		id->atk = atoi(str[7]);
-		id->matk = atoi(str[8]);
-		offset += 1;
-	} else
-		itemdb->re_split_atoi(str[7],&id->atk,&id->matk);
-#else
-	id->atk = atoi(str[7]);
-#endif
-	id->def = atoi(str[8+offset]);
-	id->range = atoi(str[9+offset]);
-	id->slot = atoi(str[10+offset]);
-
-	if (id->slot > MAX_SLOTS) {
-		ShowWarning("itemdb_parse_dbrow: Item %d (%s) specifies %d slots, but the server only supports up to %d. Using %d slots.\n", nameid, id->jname, id->slot, MAX_SLOTS, MAX_SLOTS);
-		id->slot = MAX_SLOTS;
+	if( entry->value_buy < 0 && entry->value_sell < 0 ) {
+		entry->value_buy = entry->value_sell = 0;
+	} else if( entry->value_buy < 0 ) {
+		entry->value_buy = entry->value_sell * 2;
+	} else if( entry->value_sell < 0 ) {
+		entry->value_sell = entry->value_buy / 2;
+	}
+	if( entry->value_buy/124. < entry->value_sell/75. ) {
+		ShowWarning("itemdb_validate_entry: Buying/Selling [%d/%d] price of item %d (%s) allows Zeny making exploit through buying/selling at discounted/overcharged prices!\n",
+				entry->value_buy, entry->value_sell, entry->nameid, entry->jname);
 	}
 
-	itemdb->jobid2mapid(id->class_base, (unsigned int)strtoul(str[11+offset],NULL,0));
-	id->class_upper = atoi(str[12+offset]);
-	id->sex	= atoi(str[13+offset]);
-	id->equip = atoi(str[14+offset]);
-
-	if (!id->equip && itemdb->isequip2(id)) {
-		ShowWarning("Item %d (%s) is an equipment with no equip-field! Making it an etc item.\n", nameid, id->jname);
-		id->type = IT_ETC;
+	if( entry->slot > MAX_SLOTS ) {
+		ShowWarning("itemdb_validate_entry: Item %d (%s) specifies %d slots, but the server only supports up to %d. Using %d slots.\n",
+				entry->nameid, entry->jname, entry->slot, MAX_SLOTS, MAX_SLOTS);
+		entry->slot = MAX_SLOTS;
 	}
 
-	id->wlv = cap_value(atoi(str[15+offset]), REFINE_TYPE_ARMOR, REFINE_TYPE_MAX);
-#ifdef RENEWAL
-	if( map->db_use_sql_item_db ) {
-		id->elv = atoi(str[16+offset]);
-		id->elvmax = atoi(str[17+offset]);
-		offset += 1;
-	} else
-		itemdb->re_split_atoi(str[16],&id->elv,&id->elvmax);
-#else
-	id->elv = atoi(str[16]);
-#endif
-	id->flag.no_refine = atoi(str[17+offset]) ? 0 : 1; //FIXME: verify this
-	id->look = atoi(str[18+offset]);
-
-	id->flag.available = 1;
-	id->view_id = 0;
-	id->sex = itemdb->gendercheck(id); //Apply gender filtering.
-
-	if (id->script) {
-		script->free_code(id->script);
-		id->script = NULL;
-	}
-	if (id->equip_script) {
-		script->free_code(id->equip_script);
-		id->equip_script = NULL;
-	}
-	if (id->unequip_script) {
-		script->free_code(id->unequip_script);
-		id->unequip_script = NULL;
+	if (!entry->equip && itemdb->isequip2(entry)) {
+		ShowWarning("itemdb_validate_entry: Item %d (%s) is an equipment with no equip-field! Making it an etc item.\n", entry->nameid, entry->jname);
+		entry->type = IT_ETC;
 	}
 
-	if (*str[19+offset])
-		id->script = script->parse(str[19+offset], source, line, scriptopt);
-	if (*str[20+offset])
-		id->equip_script = script->parse(str[20+offset], source, line, scriptopt);
-	if (*str[21+offset])
-		id->unequip_script = script->parse(str[21+offset], source, line, scriptopt);
+	entry->wlv = cap_value(entry->wlv, REFINE_TYPE_ARMOR, REFINE_TYPE_MAX);
 
-	return id->nameid;
+	if( !entry->elvmax )
+		entry->elvmax = MAX_LEVEL;
+	else if( entry->elvmax < entry->elv )
+		entry->elvmax = entry->elv;
+
+	if( entry->type != IT_ARMOR && entry->type != IT_WEAPON && !entry->flag.no_refine )
+		entry->flag.no_refine = 1;
+
+	entry->flag.available = 1;
+	entry->view_id = 0;
+	entry->sex = itemdb->gendercheck(entry); //Apply gender filtering.
+
+	// Validated. Finally insert it
+	item = itemdb->load(entry->nameid);
+
+	if (item->script && item->script != entry->script) { // Don't free if it's inheriting the same script
+		script->free_code(item->script);
+		item->script = NULL;
+	}
+	if (item->equip_script && item->equip_script != entry->equip_script) { // Don't free if it's inheriting the same script
+		script->free_code(item->equip_script);
+		item->equip_script = NULL;
+	}
+	if (item->unequip_script && item->unequip_script != entry->unequip_script) { // Don't free if it's inheriting the same script
+		script->free_code(item->unequip_script);
+		item->unequip_script = NULL;
+	}
+
+	*item = *entry;
+	return item->nameid;
 }
 
-/*==========================================
- * Reading item from item db
- * item_db2 overwriting item_db
- *------------------------------------------*/
-int itemdb_readdb(void) {
-	const char* filename[] = {
-		DBPATH"item_db.txt",
-		"item_db2.txt" };
-	bool duplicate[MAX_ITEMDB];
-	int fi;
+/**
+ * Processes one itemdb entry from the sql backend, loading and inserting it
+ * into the item database.
+ *
+ * @param *handle MySQL connection handle. It is expected to have data
+ *                available (i.e. already queried) and it won't be freed (it
+ *                is care of the caller to do so)
+ * @param n       Ordinal number of the entry, to be displayed in case of
+ *                validation errors.
+ * @param *source Source of the entry (table name), to be displayed in case of
+ *                validation errors.
+ * @return Nameid of the validated entry, or 0 in case of failure.
+ */
+int itemdb_readdb_sql_sub(Sql *handle, int n, const char *source) {
+	struct item_data id = { 0 };
+	char *data = NULL;
 
-	for( fi = 0; fi < ARRAYLENGTH(filename); ++fi ) {
-		uint32 lines = 0, count = 0;
-		char line[1024];
+	/*
+	 * `id`              smallint(5)   unsigned NOT NULL DEFAULT '0'
+	 * `name_english`    varchar(50)            NOT NULL DEFAULT ''
+	 * `name_japanese`   varchar(50)            NOT NULL DEFAULT ''
+	 * `type`            tinyint(2)    unsigned NOT NULL DEFAULT '0'
+	 * `price_buy`       mediumint(10)                   DEFAULT NULL
+	 * `price_sell`      mediumint(10)                   DEFAULT NULL
+	 * `weight`          smallint(5)   unsigned          DEFAULT NULL
+	 * `atk`             smallint(5)   unsigned          DEFAULT NULL
+	 * `matk`            smallint(5)   unsigned          DEFAULT NULL
+	 * `defence`         smallint(5)   unsigned          DEFAULT NULL
+	 * `range`           tinyint(2)    unsigned          DEFAULT NULL
+	 * `slots`           tinyint(2)    unsigned          DEFAULT NULL
+	 * `equip_jobs`      int(12)       unsigned          DEFAULT NULL
+	 * `equip_upper`     tinyint(8)    unsigned          DEFAULT NULL
+	 * `equip_genders`   tinyint(2)    unsigned          DEFAULT NULL
+	 * `equip_locations` smallint(4)   unsigned          DEFAULT NULL
+	 * `weapon_level`    tinyint(2)    unsigned          DEFAULT NULL
+	 * `equip_level_min` smallint(5)   unsigned          DEFAULT NULL
+	 * `equip_level_max` smallint(5)   unsigned          DEFAULT NULL
+	 * `refineable`      tinyint(1)    unsigned          DEFAULT NULL
+	 * `view`            smallint(3)   unsigned          DEFAULT NULL
+	 * `bindonequip`     tinyint(1)    unsigned          DEFAULT NULL
+	 * `script`          text
+	 * `equip_script`    text
+	 * `unequip_script`  text
+	 */
+	SQL->GetData(handle,  0, &data, NULL); id.nameid = (uint16)atoi(data);
+	SQL->GetData(handle,  1, &data, NULL); safestrncpy(id.name, data, sizeof(id.name));
+	SQL->GetData(handle,  2, &data, NULL); safestrncpy(id.jname, data, sizeof(id.jname));
+	SQL->GetData(handle,  3, &data, NULL); id.type = atoi(data);
+	SQL->GetData(handle,  4, &data, NULL); id.value_buy = data ? atoi(data) : -1; // Using invalid price -1 when missing, it'll be validated later
+	SQL->GetData(handle,  5, &data, NULL); id.value_sell = data ? atoi(data) : -1;
+	SQL->GetData(handle,  6, &data, NULL); id.weight = data ? atoi(data) : 0;
+	SQL->GetData(handle,  7, &data, NULL); id.atk = data ? atoi(data) : 0;
+	SQL->GetData(handle,  8, &data, NULL); id.matk = data ? atoi(data) : 0;
+	SQL->GetData(handle,  9, &data, NULL); id.def = data ? atoi(data) : 0;
+	SQL->GetData(handle, 10, &data, NULL); id.range = data ? atoi(data) : 0;
+	SQL->GetData(handle, 11, &data, NULL); id.slot = data ? atoi(data) : 0;
+	SQL->GetData(handle, 12, &data, NULL); itemdb->jobid2mapid(id.class_base, data ? (unsigned int)strtoul(data,NULL,0) : UINT_MAX);
+	SQL->GetData(handle, 13, &data, NULL); id.class_upper = data ? (unsigned int)atoi(data) : ITEMUPPER_ALL;
+	SQL->GetData(handle, 14, &data, NULL); id.sex = data ? atoi(data) : 2;
+	SQL->GetData(handle, 15, &data, NULL); id.equip = data ? atoi(data) : 0;
+	SQL->GetData(handle, 16, &data, NULL); id.wlv = data ? atoi(data) : 0;
+	SQL->GetData(handle, 17, &data, NULL); id.elv = data ? atoi(data) : 0;
+	SQL->GetData(handle, 18, &data, NULL); id.elvmax = data ? atoi(data) : 0;
+	SQL->GetData(handle, 19, &data, NULL); id.flag.no_refine = data && atoi(data) ? 0 : 1;
+	SQL->GetData(handle, 20, &data, NULL); id.look = data ? atoi(data) : 0;
+	SQL->GetData(handle, 21, &data, NULL); id.flag.bindonequip = data && atoi(data) ? 1 : 0;
+	SQL->GetData(handle, 22, &data, NULL); id.script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
+	SQL->GetData(handle, 23, &data, NULL); id.equip_script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
+	SQL->GetData(handle, 24, &data, NULL); id.unequip_script = data && *data ? script->parse(data, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
 
-		char filepath[256];
-		FILE* fp;
+	return itemdb->validate_entry(&id, n, source);
+}
 
-		sprintf(filepath, "%s/%s", map->db_path, filename[fi]);
-		fp = fopen(filepath, "r");
-		if( fp == NULL ) {
-			ShowWarning("itemdb_readdb: File not found \"%s\", skipping.\n", filepath);
-			continue;
+/**
+ * Processes one itemdb entry from the sql backend, loading and inserting it
+ * into the item database.
+ *
+ * @param *it     Libconfig setting entry. It is expected to be valid and it
+ *                won't be freed (it is care of the caller to do so if
+ *                necessary)
+ * @param n       Ordinal number of the entry, to be displayed in case of
+ *                validation errors.
+ * @param *source Source of the entry (file name), to be displayed in case of
+ *                validation errors.
+ * @return Nameid of the validated entry, or 0 in case of failure.
+ */
+int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source) {
+	struct item_data id = { 0 };
+	config_setting_t *t = NULL;
+	const char *str = NULL;
+	int i32 = 0;
+	bool inherit = false;
+
+	/*
+	 * // Mandatory fields
+	 * Id: ID
+	 * AegisName: "Aegis_Name"
+	 * Name: "Item Name"
+	 * // Optional fields
+	 * Type: Item Type
+	 * Buy: Buy Price
+	 * Sell: Sell Price
+	 * Weight: Item Weight
+	 * Atk: Attack
+	 * Matk: Attack
+	 * Def: Defense
+	 * Range: Attack Range
+	 * Slots: Slots
+	 * Job: Job mask
+	 * Upper: Upper mask
+	 * Gender: Gender
+	 * Loc: Equip location
+	 * WeaponLv: Weapon Level
+	 * EquipLv: Equip required level
+	 * Refine: Refineable
+	 * View: View ID
+	 * BindOnEquip: (true or false)
+	 * Script: <"
+	 *     Script
+	 *     (it can be multi-line)
+	 * ">
+	 * OnEquipScript: <" OnEquip Script ">
+	 * OnUnequipScript: <" OnUnequip Script ">
+	 * Inherit: inherit or override
+	 */
+	if( !config_setting_lookup_int(it, "Id", &i32) ) {
+		ShowWarning("itemdb_readdb_libconfig_sub: Invalid or missing id in \"%s\", entry #%d, skipping.\n", source, n);
+		return 0;
+	}
+	id.nameid = (uint16)i32;
+
+	if( (t = config_setting_get_member(it, "Inherit")) && (inherit = config_setting_get_bool(t)) ) {
+		if( !itemdb->exists(id.nameid) ) {
+			ShowWarning("itemdb_readdb_libconfig_sub: Trying to inherit nonexistent item %d, default values will be used instead.\n", id.nameid);
+			inherit = false;
+		} else {
+			// Use old entry as default
+			struct item_data *old_entry = itemdb->load(id.nameid);
+			memcpy(&id, old_entry, sizeof(struct item_data));
 		}
-
-		memset(&duplicate,0,sizeof(duplicate));
-		
-		// process rows one by one
-		while(fgets(line, sizeof(line), fp))
-		{
-			char *str[32], *p;
-			int i, id = 0;
-			lines++;
-			if(line[0] == '/' && line[1] == '/')
-				continue;
-			memset(str, 0, sizeof(str));
-
-			p = line;
-			while( ISSPACE(*p) )
-				++p;
-			if( *p == '\0' )
-				continue;// empty line
-			for( i = 0; i < 19; ++i ) {
-				str[i] = p;
-				p = strchr(p,',');
-				if( p == NULL )
-					break;// comma not found
-				*p = '\0';
-				++p;
-			}
-
-			if( p == NULL ) {
-				ShowError("itemdb_readdb: Insufficient columns in line %d of \"%s\" (item with id %d), skipping.\n", lines, filepath, atoi(str[0]));
-				continue;
-			}
-
-			// Script
-			if( *p != '{' ) {
-				ShowError("itemdb_readdb: Invalid format (Script column) in line %d of \"%s\" (item with id %d), skipping.\n", lines, filepath, atoi(str[0]));
-				continue;
-			}
-			str[19] = p;
-			p = strstr(p+1,"},");
-			if( p == NULL ) {
-				ShowError("itemdb_readdb: Invalid format (Script column) in line %d of \"%s\" (item with id %d), skipping.\n", lines, filepath, atoi(str[0]));
-				continue;
-			}
-			p[1] = '\0';
-			p += 2;
-
-			// OnEquip_Script
-			if( *p != '{' ) {
-				ShowError("itemdb_readdb: Invalid format (OnEquip_Script column) in line %d of \"%s\" (item with id %d), skipping.\n", lines, filepath, atoi(str[0]));
-				continue;
-			}
-			str[20] = p;
-			p = strstr(p+1,"},");
-			if( p == NULL ) {
-				ShowError("itemdb_readdb: Invalid format (OnEquip_Script column) in line %d of \"%s\" (item with id %d), skipping.\n", lines, filepath, atoi(str[0]));
-				continue;
-			}
-			p[1] = '\0';
-			p += 2;
-
-			// OnUnequip_Script (last column)
-			if( *p != '{' ) {
-				ShowError("itemdb_readdb: Invalid format (OnUnequip_Script column) in line %d of \"%s\" (item with id %d), skipping.\n", lines, filepath, atoi(str[0]));
-				continue;
-			}
-			str[21] = p;
-			
-			if ( str[21][strlen(str[21])-2] != '}' ) {
-				/* lets count to ensure it's not something silly e.g. a extra space at line ending */
-				int v, lcurly = 0, rcurly = 0;
-				
-				for( v = 0; v < strlen(str[21]); v++ ) {
-					if( str[21][v] == '{' )
-						lcurly++;
-					else if ( str[21][v] == '}' )
-						rcurly++;
-				}
-				
-				if( lcurly != rcurly ) {
-					ShowError("itemdb_readdb: Mismatching curly braces in line %d of \"%s\" (item with id %d), skipping.\n", lines, filepath, atoi(str[0]));
-					continue;
-				}
-			}
-
-			if (!(id = itemdb->parse_dbrow(str, filepath, lines, 0)))
-				continue;
-			
-			if( duplicate[id] ) {
-				ShowWarning("itemdb_readdb:%s: duplicate entry of ID #%d (%s/%s)\n",filename[fi],id,itemdb_name(id),itemdb_jname(id));
-			} else
-				duplicate[id] = true;
-			
-			count++;
-		}
-
-		fclose(fp);
-
-		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename[fi]);
 	}
 
-	return 0;
-}
-/*======================================
- * item_db table reading
- *======================================*/
-int itemdb_read_sqldb(void) {
+	if( !config_setting_lookup_string(it, "AegisName", &str) || !*str ) {
+		if( !inherit ) {
+			ShowWarning("itemdb_readdb_libconfig_sub: Missing AegisName in item %d of \"%s\", skipping.\n", id.nameid, source);
+			return 0;
+		}
+	} else {
+		safestrncpy(id.name, str, sizeof(id.name));
+	}
 
-	const char* item_db_name[] = {
-#ifdef RENEWAL
-		map->item_db_re_db,
-#else // not RENEWAL
-		map->item_db_db,
-#endif // RENEWAL
-		map->item_db2_db };
-	int fi;
+	if( !config_setting_lookup_string(it, "Name", &str) || !*str ) {
+		if( !inherit ) {
+			ShowWarning("itemdb_readdb_libconfig_sub: Missing Name in item %d of \"%s\", skipping.\n", id.nameid, source);
+			return 0;
+		}
+	} else {
+		safestrncpy(id.jname, str, sizeof(id.jname));
+	}
+
+	if( config_setting_lookup_int(it, "Type", &i32) )
+		id.type = i32;
+	else if( !inherit )
+		id.type = IT_UNKNOWN;
+
+	if( config_setting_lookup_int(it, "Buy", &i32) )
+		id.value_buy = i32;
+	else if( !inherit )
+		id.value_buy = -1;
+	if( config_setting_lookup_int(it, "Sell", &i32) )
+		id.value_sell = i32;
+	else if( !inherit )
+		id.value_sell = -1;
+
+	if( config_setting_lookup_int(it, "Weight", &i32) && i32 >= 0 )
+		id.weight = i32;
+
+	if( config_setting_lookup_int(it, "Atk", &i32) && i32 >= 0 )
+		id.atk = i32;
+
+	if( config_setting_lookup_int(it, "Matk", &i32) && i32 >= 0 )
+		id.matk = i32;
+
+	if( config_setting_lookup_int(it, "Def", &i32) && i32 >= 0 )
+		id.def = i32;
+
+	if( config_setting_lookup_int(it, "Range", &i32) && i32 >= 0 )
+		id.range = i32;
+
+	if( config_setting_lookup_int(it, "Slots", &i32) && i32 >= 0 )
+		id.slot = i32;
+
+	if( config_setting_lookup_int(it, "Job", &i32) ) // This is an unsigned value, do not check for >= 0
+		itemdb->jobid2mapid(id.class_base, (unsigned int)i32);
+	else if( !inherit )
+		itemdb->jobid2mapid(id.class_base, UINT_MAX);
+
+	if( config_setting_lookup_int(it, "Upper", &i32) && i32 >= 0 )
+		id.class_upper = (unsigned int)i32;
+	else if( !inherit )
+		id.class_upper = ITEMUPPER_ALL;
+
+	if( config_setting_lookup_int(it, "Gender", &i32) && i32 >= 0 )
+		id.sex = i32;
+	else if( !inherit )
+		id.sex = 2;
+
+	if( config_setting_lookup_int(it, "Loc", &i32) && i32 >= 0 )
+		id.equip = i32;
+
+	if( config_setting_lookup_int(it, "WeaponLv", &i32) && i32 >= 0 )
+		id.wlv = i32;
+
+	if( (t = config_setting_get_member(it, "EquipLv")) ) {
+		if( config_setting_is_aggregate(t) ) {
+			if( config_setting_length(t) >= 2 )
+				id.elvmax = config_setting_get_int_elem(t, 1);
+			if( config_setting_length(t) >= 1 )
+				id.elv = config_setting_get_int_elem(t, 0);
+		} else {
+			id.elv = config_setting_get_int(t);
+		}
+	}
+
+	if( (t = config_setting_get_member(it, "Refine")) )
+		id.flag.no_refine = config_setting_get_bool(t) ? 0 : 1;
+
+	if( config_setting_lookup_int(it, "View", &i32) && i32 >= 0 )
+		id.look = i32;
+
+	if( (t = config_setting_get_member(it, "BindOnEquip")) )
+		id.flag.bindonequip = config_setting_get_bool(t) ? 1 : 0;
 	
-	for( fi = 0; fi < ARRAYLENGTH(item_db_name); ++fi ) {
-		uint32 count = 0;
-				
-		// retrieve all rows from the item database
-		if( SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT * FROM `%s`", item_db_name[fi]) ) {
-			Sql_ShowDebug(map->mysql_handle);
-			continue;
-		}
+	if( config_setting_lookup_string(it, "Script", &str) )
+		id.script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
 
-		// process rows one by one
-		while( SQL_SUCCESS == SQL->NextRow(map->mysql_handle) ) {// wrap the result into a TXT-compatible format
-			char* str[ITEMDB_SQL_COLUMNS];
-			char* dummy = "";
-			int i;
-			for( i = 0; i < ITEMDB_SQL_COLUMNS; ++i ) {
-				SQL->GetData(map->mysql_handle, i, &str[i], NULL);
-				if( str[i] == NULL )
-					str[i] = dummy; // get rid of NULL columns
-			}
+	if( config_setting_lookup_string(it, "OnEquipScript", &str) )
+		id.equip_script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
 
-			if (!itemdb->parse_dbrow(str, item_db_name[fi], -(atoi(str[0])), SCRIPT_IGNORE_EXTERNAL_BRACKETS))
-				continue;
-						
-			++count;
-		}
+	if( config_setting_lookup_string(it, "OnUnequipScript", &str) )
+		id.unequip_script = *str ? script->parse(str, source, -id.nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS) : NULL;
 
-		// free the query result
-		SQL->FreeResult(map->mysql_handle);
+	return itemdb->validate_entry(&id, n, source);
+}
 
-		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, item_db_name[fi]);
+/**
+ * Reads from a libconfig-formatted itemdb file and inserts the found entries into the
+ * item database, overwriting duplicate ones (i.e. item_db2 overriding item_db.)
+ *
+ * @param *filename File name, relative to the database path.
+ * @return The number of found entries.
+ */
+int itemdb_readdb_libconfig(const char *filename) {
+	bool duplicate[MAX_ITEMDB];
+	config_t item_db_conf;
+	config_setting_t *itdb, *it;
+	char filepath[256];
+	int i = 0, count = 0;
+	
+	sprintf(filepath, "%s/%s", map->db_path, filename);
+	memset(&duplicate,0,sizeof(duplicate));
+	if( conf_read_file(&item_db_conf, filepath) || !(itdb = config_setting_get_member(item_db_conf.root, "item_db")) ) {
+		ShowError("can't read %s\n", filepath);
+		return 0;
 	}
 
-	return 0;
+	while( (it = config_setting_get_elem(itdb,i++)) ) {
+		int nameid = itemdb->readdb_libconfig_sub(it, i-1, filename);
+
+		if( !nameid )
+			continue;
+
+		count++;
+
+		if( duplicate[nameid] ) {
+			ShowWarning("itemdb_readdb:%s: duplicate entry of ID #%d (%s/%s)\n",
+					filename, nameid, itemdb_name(nameid), itemdb_jname(nameid));
+		} else
+			duplicate[nameid] = true;
+	}
+	config_destroy(&item_db_conf);
+	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
+		
+	return count;
+}
+
+/**
+ * Reads from a sql itemdb table and inserts the found entries into the item
+ * database, overwriting duplicate ones (i.e. item_db2 overriding item_db.)
+ *
+ * @param *tablename Table name to query.
+ * @return The number of found entries.
+ */
+int itemdb_readdb_sql(const char *tablename) {
+	int i = 0, count = 0;
+				
+	// retrieve all rows from the item database
+	if( SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT `id`, `name_english`, `name_japanese`, `type`,"
+				" `price_buy`, `price_sell`, `weight`, `atk`,"
+				" `matk`, `defence`, `range`, `slots`,"
+				" `equip_jobs`, `equip_upper`, `equip_genders`, `equip_locations`,"
+				" `weapon_level`, `equip_level_min`, `equip_level_max`, `refineable`,"
+				" `view`, `bindonequip`, `script`, `equip_script`, `unequip_script`"
+				"FROM `%s`", tablename) ) {
+		Sql_ShowDebug(map->mysql_handle);
+		return 0;
+	}
+
+	// process rows one by one
+	while( SQL_SUCCESS == SQL->NextRow(map->mysql_handle) ) {
+		if( itemdb->readdb_sql_sub(map->mysql_handle, i++, tablename) )
+			count++;
+	}
+
+	// free the query result
+	SQL->FreeResult(map->mysql_handle);
+
+	ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, tablename);
+
+	return count;
 }
 
 /*==========================================
@@ -1921,17 +2007,33 @@ int itemdb_uid_load() {
 	return 0;
 }
 
-/*====================================
- * read all item-related databases
- *------------------------------------*/
-void itemdb_read(void) {
+/**
+ * Reads all item-related databases.
+ */
+void itemdb_read(bool minimal) {
 	int i;
 	DBData prev;
 	
-	if (map->db_use_sql_item_db)
-		itemdb->read_sqldb();
-	else
-		itemdb->readdb();
+	if (map->db_use_sql_item_db) {
+		const char* item_db_name[] = {
+#ifdef RENEWAL
+			map->item_db_re_db,
+#else // not RENEWAL
+			map->item_db_db,
+#endif // RENEWAL
+			map->item_db2_db
+		};
+		for(i = 0; i < ARRAYLENGTH(item_db_name); i++)
+			itemdb->readdb_sql(item_db_name[i]);
+	} else {
+		const char* filename[] = {
+			DBPATH"item_db.conf",
+			"item_db2.conf",
+		};
+
+		for(i = 0; i < ARRAYLENGTH(filename); i++)
+			itemdb->readdb_libconfig(filename[i]);
+	}
 	
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
 		if( itemdb->array[i] ) {
@@ -1942,6 +2044,9 @@ void itemdb_read(void) {
 		}
 	}
 	
+	if (minimal)
+		return;
+
 	itemdb->read_combos();
 	itemdb->read_groups();
 	itemdb->read_chains();
@@ -1949,7 +2054,7 @@ void itemdb_read(void) {
 	
 	sv->readdb(map->db_path, "item_avail.txt",             ',', 2, 2, -1, itemdb->read_itemavail);
 	sv->readdb(map->db_path, DBPATH"item_trade.txt",       ',', 3, 3, -1, itemdb->read_itemtrade);
-	sv->readdb(map->db_path, DBPATH"item_delay.txt",             ',', 2, 2, -1, itemdb->read_itemdelay);
+	sv->readdb(map->db_path, DBPATH"item_delay.txt",       ',', 2, 2, -1, itemdb->read_itemdelay);
 	sv->readdb(map->db_path, "item_stack.txt",             ',', 3, 3, -1, itemdb->read_stack);
 	sv->readdb(map->db_path, DBPATH"item_buyingstore.txt", ',', 1, 1, -1, itemdb->read_buyingstore);
 	sv->readdb(map->db_path, "item_nouse.txt",             ',', 3, 3, -1, itemdb->read_nouse);
@@ -2005,18 +2110,13 @@ int itemdb_final_sub(DBKey key, DBData *data, va_list ap)
 
 	return 0;
 }
-
-void itemdb_reload(void) {
-	struct s_mapiterator* iter;
-	struct map_session_data* sd;
-
-	int i,d,k;
-	
+void itemdb_clear(bool total) {
+	int i;
 	// clear the previous itemdb data
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i )
 		if( itemdb->array[i] )
 			itemdb->destroy_item_data(itemdb->array[i], 1);
-
+	
 	for( i = 0; i < itemdb->group_count; i++ ) {
 		if( itemdb->groups[i].nameid )
 			aFree(itemdb->groups[i].nameid);
@@ -2055,14 +2155,26 @@ void itemdb_reload(void) {
 	itemdb->packages = NULL;
 	itemdb->package_count = 0;
 	
+	if( total )
+		return;
+	
 	itemdb->other->clear(itemdb->other, itemdb->final_sub);
 	
 	memset(itemdb->array, 0, sizeof(itemdb->array));
 	
 	db_clear(itemdb->names);
-		
+
+}
+void itemdb_reload(void) {
+	struct s_mapiterator* iter;
+	struct map_session_data* sd;
+
+	int i,d,k;
+	
+	itemdb->clear(false);
+
 	// read new data
-	itemdb->read();
+	itemdb->read(false);
 	
 	//Epoque's awesome @reloaditemdb fix - thanks! [Ind]
 	//- Fixes the need of a @reloadmobdb after a @reloaditemdb to re-link monster drop data
@@ -2105,7 +2217,7 @@ void itemdb_reload(void) {
 			sd->combos.id = NULL;
 			sd->combos.count = 0;
 			if( pc->load_combo(sd) > 0 )
-				status_calc_pc(sd,0);
+				status_calc_pc(sd,SCO_FORCE);
 		}
 
 	}
@@ -2131,52 +2243,23 @@ void itemdb_force_name_constants(void) {
 	dbi_destroy(iter);
 }
 void do_final_itemdb(void) {
-	int i;
-
-	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i )
-		if( itemdb->array[i] )
-			itemdb->destroy_item_data(itemdb->array[i], 1);
-
-	for( i = 0; i < itemdb->group_count; i++ ) {
-		if( itemdb->groups[i].nameid )
-			aFree(itemdb->groups[i].nameid);
-	}
+	itemdb->clear(true);
 	
-	if( itemdb->groups )
-		aFree(itemdb->groups);
-
-	for( i = 0; i < itemdb->chain_count; i++ ) {
-		if( itemdb->chains[i].items )
-			aFree(itemdb->chains[i].items);
-	}
-	
-	if( itemdb->chains )
-		aFree(itemdb->chains);
-	
-	for( i = 0; i < itemdb->package_count; i++ ) {
-		int c;
-		for( c = 0; c < itemdb->packages[i].random_qty; c++ )
-			aFree(itemdb->packages[i].random_groups[c].random_list);
-		if( itemdb->packages[i].random_groups )
-			aFree(itemdb->packages[i].random_groups);
-		if( itemdb->packages[i].must_items )
-			aFree(itemdb->packages[i].must_items);
-	}
-	
-	if( itemdb->packages )
-		aFree(itemdb->packages);
-
 	itemdb->other->destroy(itemdb->other, itemdb->final_sub);
 	itemdb->destroy_item_data(&itemdb->dummy, 0);
 	db_destroy(itemdb->names);
 }
 
-void do_init_itemdb(void) {
+void do_init_itemdb(bool minimal) {
 	memset(itemdb->array, 0, sizeof(itemdb->array));
 	itemdb->other = idb_alloc(DB_OPT_BASE);
 	itemdb->names = strdb_alloc(DB_OPT_BASE,ITEM_NAME_LENGTH);
 	itemdb->create_dummy_data(); //Dummy data item.
-	itemdb->read();
+	itemdb->read(minimal);
+
+	if (minimal)
+		return;
+
 	clif->cashshop_load();
 }
 void itemdb_defaults(void) {
@@ -2215,7 +2298,6 @@ void itemdb_defaults(void) {
 	itemdb->search_name_array = itemdb_searchname_array;
 	itemdb->load = itemdb_load;
 	itemdb->search = itemdb_search;
-	itemdb->parse_dbrow = itemdb_parse_dbrow;
 	itemdb->exists = itemdb_exists;
 	itemdb->in_group = itemdb_in_group;
 	itemdb->group_item = itemdb_searchrandomid;
@@ -2253,12 +2335,15 @@ void itemdb_defaults(void) {
 	itemdb->combo_split_atoi = itemdb_combo_split_atoi;
 	itemdb->read_combos = itemdb_read_combos;
 	itemdb->gendercheck = itemdb_gendercheck;
-	itemdb->re_split_atoi = itemdb_re_split_atoi;
-	itemdb->readdb = itemdb_readdb;
-	itemdb->read_sqldb = itemdb_read_sqldb;
+	itemdb->validate_entry = itemdb_validate_entry;
+	itemdb->readdb_sql_sub = itemdb_readdb_sql_sub;
+	itemdb->readdb_libconfig_sub = itemdb_readdb_libconfig_sub;
+	itemdb->readdb_libconfig = itemdb_readdb_libconfig;
+	itemdb->readdb_sql = itemdb_readdb_sql;
 	itemdb->unique_id = itemdb_unique_id;
 	itemdb->uid_load = itemdb_uid_load;
 	itemdb->read = itemdb_read;
 	itemdb->destroy_item_data = destroy_item_data;
 	itemdb->final_sub = itemdb_final_sub;
+	itemdb->clear = itemdb_clear;
 }

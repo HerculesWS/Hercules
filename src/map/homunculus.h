@@ -10,7 +10,7 @@
 #include "pc.h"
 
 #define MAX_HOM_SKILL_REQUIRE 5
-#define homdb_checkid(id) (id >=  HM_CLASS_BASE && id <= HM_CLASS_MAX)
+#define homdb_checkid(id) ((id) >=  HM_CLASS_BASE && (id) <= HM_CLASS_MAX)
 #define homun_alive(x) ((x) && (x)->homunculus.vaporize == HOM_ST_ACTIVE && (x)->battle_status.hp > 0)
 
 struct h_stats {
@@ -64,6 +64,8 @@ struct homun_data {
 	int hungry_timer;                     //[orn]
 	unsigned int exp_next;
 	char blockskill[MAX_SKILL];           // [orn]
+	
+	int64 masterteleport_timer;
 };
 
 struct homun_skill_tree_entry {
@@ -91,7 +93,7 @@ struct homunculus_interface {
 	struct s_homunculus_db db[MAX_HOMUNCULUS_CLASS];
 	struct homun_skill_tree_entry skill_tree[MAX_HOMUNCULUS_CLASS][MAX_SKILL_TREE];
 	/* */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	void (*reload) (void);
 	void (*reload_skill) (void);

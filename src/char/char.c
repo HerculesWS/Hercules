@@ -105,7 +105,8 @@ uint32 char_ip = 0;
 char bind_ip_str[128];
 uint32 bind_ip = INADDR_ANY;
 uint16 char_port = 6121;
-int char_maintenance = 0;
+int char_server_type = 0;
+int char_maintenance_min_group_id = 0;
 bool char_new = true;
 int char_new_display = 0;
 
@@ -463,7 +464,7 @@ int mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		(p->ele_id != cp->ele_id) || (p->shield != cp->shield) || (p->head_top != cp->head_top) ||
 		(p->head_mid != cp->head_mid) || (p->head_bottom != cp->head_bottom) || (p->delete_date != cp->delete_date) ||
 		(p->rename != cp->rename) || (p->slotchange != cp->slotchange) || (p->robe != cp->robe) ||
-		(p->show_equip != cp->show_equip) || (p->allow_party != cp->allow_party)
+		(p->show_equip != cp->show_equip) || (p->allow_party != cp->allow_party) || (p->font != cp->font)
 	) {	//Save status
 		unsigned int opt = 0;
 		
@@ -479,7 +480,7 @@ int mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			"`option`='%d',`party_id`='%d',`guild_id`='%d',`pet_id`='%d',`homun_id`='%d',`elemental_id`='%d',"
 			"`weapon`='%d',`shield`='%d',`head_top`='%d',`head_mid`='%d',`head_bottom`='%d',"
 			"`last_map`='%s',`last_x`='%d',`last_y`='%d',`save_map`='%s',`save_x`='%d',`save_y`='%d', `rename`='%d',"
-			"`delete_date`='%lu',`robe`='%d',`slotchange`='%d', `char_opt`='%u'"
+			"`delete_date`='%lu',`robe`='%d',`slotchange`='%d', `char_opt`='%u', `font`='%u'"
 			" WHERE  `account_id`='%d' AND `char_id` = '%d'",
 			char_db, p->base_level, p->job_level,
 			p->base_exp, p->job_exp, p->zeny,
@@ -490,7 +491,7 @@ int mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			mapindex_id2name(p->last_point.map), p->last_point.x, p->last_point.y,
 			mapindex_id2name(p->save_point.map), p->save_point.x, p->save_point.y, p->rename,
 			(unsigned long)p->delete_date,  // FIXME: platform-dependent size
-			p->robe,p->slotchange,opt,
+			p->robe,p->slotchange,opt,p->font,
 			p->account_id, p->char_id) )
 		{
 			Sql_ShowDebug(sql_handle);
@@ -499,12 +500,12 @@ int mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 			strcat(save_status, " status");
 	}
 	
-	if( p->bank_vault != cp->bank_vault ) {
-		if( SQL_ERROR == SQL->Query(sql_handle, "REPLACE INTO `%s` (`account_id`,`bank_vault`) VALUES ('%d','%d')",account_data_db,p->account_id,p->bank_vault) ) {
+	if( p->bank_vault != cp->bank_vault || p->mod_exp != cp->mod_exp || p->mod_drop != cp->mod_drop || p->mod_death != p->mod_death ) {
+		if( SQL_ERROR == SQL->Query(sql_handle, "REPLACE INTO `%s` (`account_id`,`bank_vault`,`base_exp`,`base_drop`,`base_death`) VALUES ('%d','%d','%d','%d','%d')",account_data_db,p->account_id,p->bank_vault,p->mod_exp,p->mod_drop,p->mod_death) ) {
 			Sql_ShowDebug(sql_handle);
 			errors++;
 		} else
-			strcat(save_status, " bank");
+			strcat(save_status, " accdata");
 	}
 
 	//Values that will seldom change (to speed up saving)
@@ -724,8 +725,8 @@ int memitemdata_to_sql(const struct item items[], int max, int id, int tableswit
 	// it significantly reduces cpu load on the database server.
 
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`");
-	for( j = 0; j < MAX_SLOTS; ++j )
+	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`");
+ 	for( j = 0; j < MAX_SLOTS; ++j )
 		StrBuf->Printf(&buf, ", `card%d`", j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `%s`='%d'", tablename, selectoption, id);
 
@@ -742,13 +743,14 @@ int memitemdata_to_sql(const struct item items[], int max, int id, int tableswit
 	SQL->StmtBindColumn(stmt, 0, SQLDT_INT,       &item.id,          0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,     &item.nameid,      0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,     &item.amount,      0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 3, SQLDT_USHORT,    &item.equip,       0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 3, SQLDT_UINT,      &item.equip,       0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 4, SQLDT_CHAR,      &item.identify,    0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 5, SQLDT_CHAR,      &item.refine,      0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &item.attribute,   0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &item.expire_time, 0, NULL, NULL);
-	for( j = 0; j < MAX_SLOTS; ++j )
-		SQL->StmtBindColumn(stmt, 8+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 8, SQLDT_UCHAR,     &item.bound,       0, NULL, NULL);
+ 	for( j = 0; j < MAX_SLOTS; ++j )
+		SQL->StmtBindColumn(stmt, 9+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
 
 	// bit array indicating which inventory items have already been matched
 	flag = (bool*) aCalloc(max, sizeof(bool));
@@ -775,17 +777,18 @@ int memitemdata_to_sql(const struct item items[], int max, int id, int tableswit
 				    items[i].identify == item.identify &&
 				    items[i].refine == item.refine &&
 				    items[i].attribute == item.attribute &&
-				    items[i].expire_time == item.expire_time )
+				    items[i].expire_time == item.expire_time &&
+				    items[i].bound == item.bound )
 				;	//Do nothing.
 				else
 				{
 					// update all fields.
 					StrBuf->Clear(&buf);
-					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%d', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u'",
-						tablename, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time);
-					for( j = 0; j < MAX_SLOTS; ++j )
-						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);
-					StrBuf->Printf(&buf, " WHERE `id`='%d' LIMIT 1", item.id);
+					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%d', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u', `bound`='%d'",
+						tablename, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].bound);
+ 					for( j = 0; j < MAX_SLOTS; ++j )for( j = 0; j < MAX_SLOTS; ++j )
+						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);	
+ 					StrBuf->Printf(&buf, " WHERE `id`='%d' LIMIT 1", item.id);
 
 					if( SQL_ERROR == SQL->QueryStr(sql_handle, StrBuf->Value(&buf)) )
 					{
@@ -810,8 +813,8 @@ int memitemdata_to_sql(const struct item items[], int max, int id, int tableswit
 	SQL->StmtFree(stmt);
 
 	StrBuf->Clear(&buf);
-	StrBuf->Printf(&buf, "INSERT INTO `%s`(`%s`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `unique_id`", tablename, selectoption);
-	for( j = 0; j < MAX_SLOTS; ++j )
+	StrBuf->Printf(&buf, "INSERT INTO `%s`(`%s`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`", tablename, selectoption);
+ 	for( j = 0; j < MAX_SLOTS; ++j )
 		StrBuf->Printf(&buf, ", `card%d`", j);
 	StrBuf->AppendStr(&buf, ") VALUES ");
 
@@ -828,9 +831,9 @@ int memitemdata_to_sql(const struct item items[], int max, int id, int tableswit
 		else
 			found = true;
 
-		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%u', '%"PRIu64"'",
-			id, items[i].nameid, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].unique_id);
-		for( j = 0; j < MAX_SLOTS; ++j )
+		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
+			id, items[i].nameid, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].bound, items[i].unique_id);
+ 		for( j = 0; j < MAX_SLOTS; ++j )
 			StrBuf->Printf(&buf, ", '%d'", items[i].card[j]);
 		StrBuf->AppendStr(&buf, ")");
 		
@@ -868,8 +871,8 @@ int inventory_to_sql(const struct item items[], int max, int id) {
 	// it significantly reduces cpu load on the database server.
 
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `favorite`");
-	for( j = 0; j < MAX_SLOTS; ++j )
+	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `favorite`, `bound`");
+ 	for( j = 0; j < MAX_SLOTS; ++j )
 		StrBuf->Printf(&buf, ", `card%d`", j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `char_id`='%d'", inventory_db, id);
 
@@ -886,14 +889,15 @@ int inventory_to_sql(const struct item items[], int max, int id) {
 	SQL->StmtBindColumn(stmt, 0, SQLDT_INT,       &item.id,          0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,     &item.nameid,      0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,     &item.amount,      0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 3, SQLDT_USHORT,    &item.equip,       0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 3, SQLDT_UINT,      &item.equip,       0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 4, SQLDT_CHAR,      &item.identify,    0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 5, SQLDT_CHAR,      &item.refine,      0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &item.attribute,   0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &item.expire_time, 0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 8, SQLDT_CHAR,      &item.favorite,    0, NULL, NULL);
-	for( j = 0; j < MAX_SLOTS; ++j )
-		SQL->StmtBindColumn(stmt, 9+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 9, SQLDT_UCHAR,     &item.bound,       0, NULL, NULL);
+ 	for( j = 0; j < MAX_SLOTS; ++j )
+		SQL->StmtBindColumn(stmt, 10+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
 
 	// bit array indicating which inventory items have already been matched
 	flag = (bool*) aCalloc(max, sizeof(bool));
@@ -919,15 +923,16 @@ int inventory_to_sql(const struct item items[], int max, int id) {
 				   items[i].refine == item.refine &&
 				   items[i].attribute == item.attribute &&
 				   items[i].expire_time == item.expire_time &&
-				   items[i].favorite == item.favorite )
+				   items[i].favorite == item.favorite &&
+				   items[i].bound == item.bound )
 					;	//Do nothing.
 				else {
 					// update all fields.
 					StrBuf->Clear(&buf);
-					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%d', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u', `favorite`='%d'",
-									 inventory_db, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].favorite);
-					for( j = 0; j < MAX_SLOTS; ++j )
-						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);
+					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%d', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u', `favorite`='%d', `bound`='%d'",
+									 inventory_db, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].favorite, items[i].bound);
+ 					for( j = 0; j < MAX_SLOTS; ++j )
+ 						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);
 					StrBuf->Printf(&buf, " WHERE `id`='%d' LIMIT 1", item.id);
 
 					if( SQL_ERROR == SQL->QueryStr(sql_handle, StrBuf->Value(&buf)) ) {
@@ -950,8 +955,8 @@ int inventory_to_sql(const struct item items[], int max, int id) {
 	SQL->StmtFree(stmt);
 
 	StrBuf->Clear(&buf);
-	StrBuf->Printf(&buf, "INSERT INTO `%s` (`char_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `favorite`, `unique_id`", inventory_db);
-	for( j = 0; j < MAX_SLOTS; ++j )
+	StrBuf->Printf(&buf, "INSERT INTO `%s` (`char_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `favorite`, `bound`, `unique_id`", inventory_db);
+ 	for( j = 0; j < MAX_SLOTS; ++j )
 		StrBuf->Printf(&buf, ", `card%d`", j);
 	StrBuf->AppendStr(&buf, ") VALUES ");
 
@@ -967,9 +972,9 @@ int inventory_to_sql(const struct item items[], int max, int id) {
 		else
 			found = true;
 
-		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
-						 id, items[i].nameid, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].favorite, items[i].unique_id);
-		for( j = 0; j < MAX_SLOTS; ++j )
+		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%u', '%d', '%d', '%"PRIu64"'",
+						 id, items[i].nameid, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].favorite, items[i].bound, items[i].unique_id);
+ 		for( j = 0; j < MAX_SLOTS; ++j )
 			StrBuf->Printf(&buf, ", '%d'", items[i].card[j]);
 		StrBuf->AppendStr(&buf, ")");
 
@@ -999,6 +1004,7 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	struct mmo_charstatus p;
 	int j = 0, i;
 	char last_map[MAP_NAME_LENGTH_EXT];
+	time_t unban_time = 0;
 
 	stmt = SQL->StmtMalloc(sql_handle);
 	if( stmt == NULL ) {
@@ -1007,8 +1013,10 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	}
 	memset(&p, 0, sizeof(p));
 
-	for(i = 0 ; i < MAX_CHARS; i++ )
+	for(i = 0 ; i < MAX_CHARS; i++ ) {
 		sd->found_char[i] = -1;
+		sd->unban_time[i] = 0;
+	}
 	
 	// read char data
 	if( SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT "
@@ -1016,7 +1024,7 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 		"`str`,`agi`,`vit`,`int`,`dex`,`luk`,`max_hp`,`hp`,`max_sp`,`sp`,"
 		"`status_point`,`skill_point`,`option`,`karma`,`manner`,`hair`,`hair_color`,"
 		"`clothes_color`,`weapon`,`shield`,`head_top`,`head_mid`,`head_bottom`,`last_map`,`rename`,`delete_date`,"
-		"`robe`,`slotchange`"
+		"`robe`,`slotchange`,`unban_time`"
 		" FROM `%s` WHERE `account_id`='%d' AND `char_num` < '%d'", char_db, sd->account_id, MAX_CHARS)
 	||	SQL_ERROR == SQL->StmtExecute(stmt)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 0,  SQLDT_INT,    &p.char_id, 0, NULL, NULL)
@@ -1052,10 +1060,11 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 30, SQLDT_SHORT,  &p.head_mid, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 31, SQLDT_SHORT,  &p.head_bottom, 0, NULL, NULL)
 	||  SQL_ERROR == SQL->StmtBindColumn(stmt, 32, SQLDT_STRING, &last_map, sizeof(last_map), NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 33, SQLDT_USHORT,	&p.rename, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 33, SQLDT_USHORT, &p.rename, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 34, SQLDT_UINT32, &p.delete_date, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 35, SQLDT_SHORT,  &p.robe, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 36, SQLDT_USHORT, &p.slotchange, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 37, SQLDT_LONG,   &unban_time, 0, NULL, NULL)
 	)
 	{
 		SqlStmt_ShowDebug(stmt);
@@ -1066,6 +1075,7 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	for( i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->StmtNextRow(stmt); i++ ) {
 		p.last_point.map = mapindex_name2id(last_map);
 		sd->found_char[p.slot] = p.char_id;
+		sd->unban_time[p.slot] = unban_time;
 		j += mmo_char_tobuf(WBUFP(buf, j), &p);
 	}
 	
@@ -1115,7 +1125,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 		"`status_point`,`skill_point`,`option`,`karma`,`manner`,`party_id`,`guild_id`,`pet_id`,`homun_id`,`elemental_id`,`hair`,"
 		"`hair_color`,`clothes_color`,`weapon`,`shield`,`head_top`,`head_mid`,`head_bottom`,`last_map`,`last_x`,`last_y`,"
 		"`save_map`,`save_x`,`save_y`,`partner_id`,`father`,`mother`,`child`,`fame`,`rename`,`delete_date`,`robe`,`slotchange`,"
-		"`char_opt`"
+		"`char_opt`,`font`"
 		" FROM `%s` WHERE `char_id`=? LIMIT 1", char_db)
 	||	SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, 0)
 	||	SQL_ERROR == SQL->StmtExecute(stmt)
@@ -1148,7 +1158,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 26, SQLDT_INT,    &p->guild_id, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 27, SQLDT_INT,    &p->pet_id, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 28, SQLDT_INT,    &p->hom_id, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 29, SQLDT_INT,	&p->ele_id, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 29, SQLDT_INT,    &p->ele_id, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 30, SQLDT_SHORT,  &p->hair, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 31, SQLDT_SHORT,  &p->hair_color, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 32, SQLDT_SHORT,  &p->clothes_color, 0, NULL, NULL)
@@ -1168,11 +1178,12 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 46, SQLDT_INT,    &p->mother, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 47, SQLDT_INT,    &p->child, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 48, SQLDT_INT,    &p->fame, 0, NULL, NULL)
-	||  SQL_ERROR == SQL->StmtBindColumn(stmt, 49, SQLDT_USHORT,	&p->rename, 0, NULL, NULL)
+	||  SQL_ERROR == SQL->StmtBindColumn(stmt, 49, SQLDT_USHORT, &p->rename, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 50, SQLDT_UINT32, &p->delete_date, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 51, SQLDT_SHORT,  &p->robe, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 52, SQLDT_USHORT, &p->slotchange, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 53, SQLDT_UINT,	&opt, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 53, SQLDT_UINT,   &opt, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 54, SQLDT_UCHAR,  &p->font, 0, NULL, NULL)
 	)
 	{
 		SqlStmt_ShowDebug(stmt);
@@ -1228,29 +1239,30 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	strcat(t_msg, " memo");
 
 	//read inventory
-	//`inventory` (`id`,`char_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `card0`, `card1`, `card2`, `card3`, `expire_time`, `favorite`, `unique_id`)
-	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `favorite`, `unique_id`");
-	for( i = 0; i < MAX_SLOTS; ++i )
+	//`inventory` (`id`,`char_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `card0`, `card1`, `card2`, `card3`, `expire_time`, `favorite`, `bound`, `unique_id`)
+ 	StrBuf->Init(&buf);
+	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `favorite`, `bound`, `unique_id`");
+ 	for( i = 0; i < MAX_SLOTS; ++i )
 		StrBuf->Printf(&buf, ", `card%d`", i);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `char_id`=? LIMIT %d", inventory_db, MAX_INVENTORY);
 
 	if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
 	||	SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, 0)
 	||	SQL_ERROR == SQL->StmtExecute(stmt)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT,       &tmp_item.id, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,     &tmp_item.nameid, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,     &tmp_item.amount, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_USHORT,    &tmp_item.equip, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 4, SQLDT_CHAR,      &tmp_item.identify, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 5, SQLDT_CHAR,      &tmp_item.refine, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &tmp_item.attribute, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &tmp_item.expire_time, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 8, SQLDT_CHAR,      &tmp_item.favorite, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 9, SQLDT_ULONGLONG, &tmp_item.unique_id, 0, NULL, NULL) )
-		SqlStmt_ShowDebug(stmt);
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  0, SQLDT_INT,       &tmp_item.id, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  1, SQLDT_SHORT,     &tmp_item.nameid, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  2, SQLDT_SHORT,     &tmp_item.amount, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  3, SQLDT_UINT,      &tmp_item.equip, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  4, SQLDT_CHAR,      &tmp_item.identify, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  5, SQLDT_CHAR,      &tmp_item.refine, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  6, SQLDT_CHAR,      &tmp_item.attribute, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  7, SQLDT_UINT,      &tmp_item.expire_time, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  8, SQLDT_CHAR,      &tmp_item.favorite, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt,  9, SQLDT_UCHAR,     &tmp_item.bound, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 10, SQLDT_UINT64,    &tmp_item.unique_id, 0, NULL, NULL) )
+ 		SqlStmt_ShowDebug(stmt);
 	for( i = 0; i < MAX_SLOTS; ++i )
-		if( SQL_ERROR == SQL->StmtBindColumn(stmt, 10+i, SQLDT_SHORT, &tmp_item.card[i], 0, NULL, NULL) )
+		if( SQL_ERROR == SQL->StmtBindColumn(stmt, 11+i, SQLDT_SHORT, &tmp_item.card[i], 0, NULL, NULL) )
 			SqlStmt_ShowDebug(stmt);
 
 	for( i = 0; i < MAX_INVENTORY && SQL_SUCCESS == SQL->StmtNextRow(stmt); ++i )
@@ -1259,10 +1271,10 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	strcat(t_msg, " inventory");
 
 	//read cart
-	//`cart_inventory` (`id`,`char_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `card0`, `card1`, `card2`, `card3`, expire_time`, `unique_id`)
-	StrBuf->Clear(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `unique_id`");
-	for( j = 0; j < MAX_SLOTS; ++j )
+	//`cart_inventory` (`id`,`char_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `card0`, `card1`, `card2`, `card3`, expire_time`, `bound`, `unique_id`)
+ 	StrBuf->Clear(&buf);
+	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`");
+ 	for( j = 0; j < MAX_SLOTS; ++j )
 		StrBuf->Printf(&buf, ", `card%d`", j);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `char_id`=? LIMIT %d", cart_db, MAX_CART);
 
@@ -1272,15 +1284,16 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT,         &tmp_item.id, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,       &tmp_item.nameid, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,       &tmp_item.amount, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_USHORT,      &tmp_item.equip, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_UINT,        &tmp_item.equip, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 4, SQLDT_CHAR,        &tmp_item.identify, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 5, SQLDT_CHAR,        &tmp_item.refine, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,        &tmp_item.attribute, 0, NULL, NULL)
 	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,        &tmp_item.expire_time, 0, NULL, NULL)
-	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 8, SQLDT_ULONGLONG,   &tmp_item.unique_id, 0, NULL, NULL) )
-		SqlStmt_ShowDebug(stmt);
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 8, SQLDT_UCHAR,       &tmp_item.bound, 0, NULL, NULL)
+	||	SQL_ERROR == SQL->StmtBindColumn(stmt, 9, SQLDT_UINT64,      &tmp_item.unique_id, 0, NULL, NULL) )
+ 		SqlStmt_ShowDebug(stmt);
 	for( i = 0; i < MAX_SLOTS; ++i )
-		if( SQL_ERROR == SQL->StmtBindColumn(stmt, 9+i, SQLDT_SHORT, &tmp_item.card[i], 0, NULL, NULL) )
+		if( SQL_ERROR == SQL->StmtBindColumn(stmt, 10+i, SQLDT_SHORT, &tmp_item.card[i], 0, NULL, NULL) )
 			SqlStmt_ShowDebug(stmt);
 
 	for( i = 0; i < MAX_CART && SQL_SUCCESS == SQL->StmtNextRow(stmt); ++i )
@@ -1352,15 +1365,21 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	mercenary_owner_fromsql(char_id, p);
 	strcat(t_msg, " mercenary");
 
-	//`account_data` (`account_id`,`bank_vault`)
-	if( SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `bank_vault` FROM `%s` WHERE `account_id`=? LIMIT 1", account_data_db)
+	/* default */
+	p->mod_exp = p->mod_drop = p->mod_death = 100;
+	
+	//`account_data` (`account_id`,`bank_vault`,`base_exp`,`base_drop`,`base_death`)
+	if( SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `bank_vault`,`base_exp`,`base_drop`,`base_death` FROM `%s` WHERE `account_id`=? LIMIT 1", account_data_db)
 	   ||	SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &account_id, 0)
 	   ||	SQL_ERROR == SQL->StmtExecute(stmt)
-	   ||	SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT, &p->bank_vault, 0, NULL, NULL) )
+	   ||	SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT, &p->bank_vault, 0, NULL, NULL)
+	   ||	SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_USHORT, &p->mod_exp, 0, NULL, NULL)
+	   ||	SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_USHORT, &p->mod_drop, 0, NULL, NULL)
+	   ||	SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_USHORT, &p->mod_death, 0, NULL, NULL) )
 		SqlStmt_ShowDebug(stmt);
 	
 	if( SQL_SUCCESS == SQL->StmtNextRow(stmt) )
-		strcat(t_msg, " bank");
+		strcat(t_msg, " accdata");
 
 	if (save_log) ShowInfo("Loaded char (%d - %s): %s\n", char_id, p->name, t_msg);	//ok. all data load successfuly!
 	SQL->StmtFree(stmt);
@@ -1917,12 +1936,51 @@ int mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p) {
 
 	return 106+offset;
 }
+	
 /* Made Possible by Yommy~! <3 */
 void mmo_char_send099d(int fd, struct char_session_data *sd) {
 	WFIFOHEAD(fd,4 + (MAX_CHARS*MAX_CHAR_BUF));
 	WFIFOW(fd,0) = 0x99d;
 	WFIFOW(fd,2) = mmo_chars_fromsql(sd, WFIFOP(fd,4)) + 4;
 	WFIFOSET(fd,WFIFOW(fd,2));
+}
+/* Sends character ban list */
+/* Made Possible by Yommy~! <3 */
+void mmo_char_send020d(int fd, struct char_session_data *sd) {
+	int i;
+	time_t now = time(NULL);
+		
+	ARR_FIND(0, MAX_CHARS, i, sd->unban_time[i]);
+		
+	if( i != MAX_CHARS ) {
+		int c;
+		
+		WFIFOHEAD(fd, 4 + (MAX_CHARS*24));
+
+		WFIFOW(fd, 0) = 0x20d;
+		
+		for(i = 0, c = 0; i < MAX_CHARS; i++) {
+			if( sd->unban_time[i] ) {
+				timestamp2string((char*)WFIFOP(fd,8 + (28*c)), 20, sd->unban_time[i], "%Y-%m-%d %H:%M:%S");
+
+				if( sd->unban_time[i] > now )
+					WFIFOL(fd, 4 + (24*c)) = sd->found_char[i];
+				else {
+					/* reset -- client keeps this information even if you logout so we need to clear */
+					WFIFOL(fd, 4 + (24*c)) = 0;
+					/* also update on mysql */
+					sd->unban_time[i] = 0;
+					if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `unban_time`='0' WHERE `char_id`='%d' LIMIT 1", char_db, sd->found_char[i]) )
+						Sql_ShowDebug(sql_handle);
+				}
+				c++;
+			}
+		}
+		
+		WFIFOW(fd, 2) = 4 + (24*c);
+		
+		WFIFOSET(fd, WFIFOW(fd, 2));
+	}
 }
 int mmo_char_send006b(int fd, struct char_session_data* sd);
 //----------------------------------------
@@ -2213,7 +2271,7 @@ int parse_fromlogin(int fd) {
 
 			// acknowledgement of account authentication request
 			case 0x2713:
-				if (RFIFOREST(fd) < 25)
+				if (RFIFOREST(fd) < 29)
 					return 0;
 			{
 				int account_id = RFIFOL(fd,2);
@@ -2224,7 +2282,8 @@ int parse_fromlogin(int fd) {
 				int request_id = RFIFOL(fd,16);
 				uint32 version = RFIFOL(fd,20);
 				uint8 clienttype = RFIFOB(fd,24);
-				RFIFOSKIP(fd,25);
+				int group_id = RFIFOL(fd,25);
+				RFIFOSKIP(fd,29);
 
 				if( session_isActive(request_id) && (sd=(struct char_session_data*)session[request_id]->session_data) &&
 					!sd->auth && sd->account_id == account_id && sd->login_id1 == login_id1 && sd->login_id2 == login_id2 && sd->sex == sex )
@@ -2232,17 +2291,24 @@ int parse_fromlogin(int fd) {
 					int client_fd = request_id;
 					sd->version = version;
 					sd->clienttype = clienttype;
-					switch( result )
-					{
-					case 0:// ok
-						char_auth_ok(client_fd, sd);
-						break;
-					case 1:// auth failed
-						WFIFOHEAD(client_fd,3);
-						WFIFOW(client_fd,0) = 0x6c;
-						WFIFOB(client_fd,2) = 0;// rejected from server
-						WFIFOSET(client_fd,3);
-						break;
+					switch( result ) {
+						case 0:// ok
+							/* restrictions apply */
+							if( char_server_type == CST_MAINTENANCE && group_id < char_maintenance_min_group_id ) {
+								WFIFOHEAD(client_fd,3);
+								WFIFOW(client_fd,0) = 0x6c;
+								WFIFOB(client_fd,2) = 0;// rejected from server
+								WFIFOSET(client_fd,3);
+								break;
+							}
+							char_auth_ok(client_fd, sd);
+							break;
+						case 1:// auth failed
+							WFIFOHEAD(client_fd,3);
+							WFIFOW(client_fd,0) = 0x6c;
+							WFIFOB(client_fd,2) = 0;// rejected from server
+							WFIFOSET(client_fd,3);
+							break;
 					}
 				}
 			}
@@ -2255,7 +2321,6 @@ int parse_fromlogin(int fd) {
 				// find the authenticated session with this account id
 				ARR_FIND( 0, fd_max, i, session[i] && (sd = (struct char_session_data*)session[i]->session_data) && sd->auth && sd->account_id == RFIFOL(fd,2) );
 				if( i < fd_max ) {
-					int server_id;
 					memcpy(sd->email, RFIFOP(fd,6), 40);
 					sd->expiration_time = (time_t)RFIFOL(fd,46);
 					sd->group_id = RFIFOB(fd,50);
@@ -2268,10 +2333,8 @@ int parse_fromlogin(int fd) {
 					safestrncpy(sd->birthdate, (const char*)RFIFOP(fd,52), sizeof(sd->birthdate));
 					safestrncpy(sd->pincode, (const char*)RFIFOP(fd,63), sizeof(sd->pincode));
 					sd->pincode_change = RFIFOL(fd,68);
-					ARR_FIND( 0, ARRAYLENGTH(server), server_id, server[server_id].fd > 0 && server[server_id].map[0] );
 					// continued from char_auth_ok...
-					if( server_id == ARRAYLENGTH(server) || //server not online, bugreport:2359
-						(max_connect_user == 0 && sd->group_id != gm_allow_group) ||
+					if( (max_connect_user == 0 && sd->group_id != gm_allow_group) ||
 						( max_connect_user > 0 && count_users() >= max_connect_user && sd->group_id != gm_allow_group ) ) {
 						// refuse connection (over populated)
 						WFIFOHEAD(i,3);
@@ -2284,6 +2347,9 @@ int parse_fromlogin(int fd) {
 						mmo_char_send082d(i, sd);
 	#else
 						mmo_char_send006b(i, sd);
+	#endif
+	#if PACKETVER >= 20060819
+						mmo_char_send020d(i, sd);
 	#endif
 	#if PACKETVER >= 20110309
 						pincode->handle(i, sd);
@@ -2849,8 +2915,7 @@ int parse_frommap(int fd)
 					Sql_ShowDebug(sql_handle);
 					break;
 				}
-				if( SQL->NumRows(sql_handle) > 0 )
-				{
+				if( SQL->NumRows(sql_handle) > 0 ) {
 					struct status_change_data scdata;
 					int count;
 					char* data;
@@ -2871,8 +2936,7 @@ int parse_frommap(int fd)
 					}
 					if (count >= 50)
 						ShowWarning("Too many status changes for %d:%d, some of them were not loaded.\n", aid, cid);
-					if (count > 0)
-					{
+					if (count > 0) {
 						WFIFOW(fd,2) = 14 + count*sizeof(struct status_change_data);
 						WFIFOW(fd,12) = count;
 						WFIFOSET(fd,WFIFOW(fd,2));
@@ -2881,6 +2945,14 @@ int parse_frommap(int fd)
 						if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `char_id`='%d'", scdata_db, aid, cid) )
 							Sql_ShowDebug(sql_handle);
 					}
+				} else { //no sc (needs a response)
+					WFIFOHEAD(fd,14);
+					WFIFOW(fd,0) = 0x2b1d;
+					WFIFOW(fd,2) = 14;
+					WFIFOL(fd,4) = aid;
+					WFIFOL(fd,8) = cid;
+					WFIFOW(fd,12) = 0;
+					WFIFOSET(fd,WFIFOW(fd,2));
 				}
 				SQL->FreeResult(sql_handle);
 	#endif
@@ -3116,7 +3188,7 @@ int parse_frommap(int fd)
 				RFIFOSKIP(fd, 86);
 			break;
 
-			case 0x2b0e: // Request from map-server to change an account's status (will just be forwarded to login server)
+			case 0x2b0e: // Request from map-server to change an account's or character's status (accounts will just be forwarded to login server)
 				if (RFIFOREST(fd) < 44)
 					return 0;
 			{
@@ -3125,7 +3197,7 @@ int parse_frommap(int fd)
 
 				int acc = RFIFOL(fd,2); // account_id of who ask (-1 if server itself made this request)
 				const char* name = (char*)RFIFOP(fd,6); // name of the target character
-				int type = RFIFOW(fd,30); // type of operation: 1-block, 2-ban, 3-unblock, 4-unban
+				int type = RFIFOW(fd,30); // type of operation: 1-block, 2-ban, 3-unblock, 4-unban, 5 changesex, 6 charban, 7 charunban
 				short year = RFIFOW(fd,32);
 				short month = RFIFOW(fd,34);
 				short day = RFIFOW(fd,36);
@@ -3135,25 +3207,24 @@ int parse_frommap(int fd)
 				RFIFOSKIP(fd,44);
 
 				SQL->EscapeStringLen(sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
-				if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `account_id`,`name` FROM `%s` WHERE `name` = '%s'", char_db, esc_name) )
+				
+				if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `account_id`,`name`,`char_id`,`unban_time` FROM `%s` WHERE `name` = '%s'", char_db, esc_name) )
 					Sql_ShowDebug(sql_handle);
-				else
-				if( SQL->NumRows(sql_handle) == 0 )
-				{
+				else if( SQL->NumRows(sql_handle) == 0 ) {
 					result = 1; // 1-player not found
-				}
-				else
-				if( SQL_SUCCESS != SQL->NextRow(sql_handle) )
+				} else if( SQL_SUCCESS != SQL->NextRow(sql_handle) ) {
 					Sql_ShowDebug(sql_handle);
-					//FIXME: set proper result value?
-				else
-				{
+					result = 1; // 1-player not found
+				} else {
 					char name[NAME_LENGTH];
-					int account_id;
+					int account_id, char_id;
 					char* data;
+					time_t unban_time;
 
 					SQL->GetData(sql_handle, 0, &data, NULL); account_id = atoi(data);
 					SQL->GetData(sql_handle, 1, &data, NULL); safestrncpy(name, data, sizeof(name));
+					SQL->GetData(sql_handle, 2, &data, NULL); char_id = atoi(data);
+					SQL->GetData(sql_handle, 3, &data, NULL); unban_time = atol(data);
 
 					if( login_fd <= 0 )
 						result = 3; // 3-login-server offline
@@ -3161,53 +3232,111 @@ int parse_frommap(int fd)
 	//				else
 	//				if( acc != -1 && isGM(acc) < isGM(account_id) )
 	//					result = 2; // 2-gm level too low
-					else
-					switch( type ) {
-					case 1: // block
-							WFIFOHEAD(login_fd,10);
-							WFIFOW(login_fd,0) = 0x2724;
-							WFIFOL(login_fd,2) = account_id;
-							WFIFOL(login_fd,6) = 5; // new account status
-							WFIFOSET(login_fd,10);
-					break;
-					case 2: // ban
-							WFIFOHEAD(login_fd,18);
-							WFIFOW(login_fd, 0) = 0x2725;
-							WFIFOL(login_fd, 2) = account_id;
-							WFIFOW(login_fd, 6) = year;
-							WFIFOW(login_fd, 8) = month;
-							WFIFOW(login_fd,10) = day;
-							WFIFOW(login_fd,12) = hour;
-							WFIFOW(login_fd,14) = minute;
-							WFIFOW(login_fd,16) = second;
-							WFIFOSET(login_fd,18);
-					break;
-					case 3: // unblock
-							WFIFOHEAD(login_fd,10);
-							WFIFOW(login_fd,0) = 0x2724;
-							WFIFOL(login_fd,2) = account_id;
-							WFIFOL(login_fd,6) = 0; // new account status
-							WFIFOSET(login_fd,10);
-					break;
-					case 4: // unban
-							WFIFOHEAD(login_fd,6);
-							WFIFOW(login_fd,0) = 0x272a;
-							WFIFOL(login_fd,2) = account_id;
-							WFIFOSET(login_fd,6);
-					break;
-					case 5: // changesex
-							WFIFOHEAD(login_fd,6);
-							WFIFOW(login_fd,0) = 0x2727;
-							WFIFOL(login_fd,2) = account_id;
-							WFIFOSET(login_fd,6);
-					break;
+					else {
+						switch( type ) {
+							case 1: // block
+									WFIFOHEAD(login_fd,10);
+									WFIFOW(login_fd,0) = 0x2724;
+									WFIFOL(login_fd,2) = account_id;
+									WFIFOL(login_fd,6) = 5; // new account status
+									WFIFOSET(login_fd,10);
+							break;
+							case 2: // ban
+									WFIFOHEAD(login_fd,18);
+									WFIFOW(login_fd, 0) = 0x2725;
+									WFIFOL(login_fd, 2) = account_id;
+									WFIFOW(login_fd, 6) = year;
+									WFIFOW(login_fd, 8) = month;
+									WFIFOW(login_fd,10) = day;
+									WFIFOW(login_fd,12) = hour;
+									WFIFOW(login_fd,14) = minute;
+									WFIFOW(login_fd,16) = second;
+									WFIFOSET(login_fd,18);
+							break;
+							case 3: // unblock
+									WFIFOHEAD(login_fd,10);
+									WFIFOW(login_fd,0) = 0x2724;
+									WFIFOL(login_fd,2) = account_id;
+									WFIFOL(login_fd,6) = 0; // new account status
+									WFIFOSET(login_fd,10);
+							break;
+							case 4: // unban
+									WFIFOHEAD(login_fd,6);
+									WFIFOW(login_fd,0) = 0x272a;
+									WFIFOL(login_fd,2) = account_id;
+									WFIFOSET(login_fd,6);
+							break;
+							case 5: // changesex
+									WFIFOHEAD(login_fd,6);
+									WFIFOW(login_fd,0) = 0x2727;
+									WFIFOL(login_fd,2) = account_id;
+									WFIFOSET(login_fd,6);
+							break;
+							case 6: //char ban
+							/* handled by char server, so no redirection */
+							{
+								time_t timestamp;
+								struct tm *tmtime;
+								SqlStmt* stmt = SQL->StmtMalloc(sql_handle);
+
+								if (unban_time == 0 || unban_time < time(NULL))
+									timestamp = time(NULL); // new ban
+								else
+									timestamp = unban_time; // add to existing ban
+								
+								tmtime = localtime(&timestamp);
+								tmtime->tm_year = tmtime->tm_year + year;
+								tmtime->tm_mon  = tmtime->tm_mon + month;
+								tmtime->tm_mday = tmtime->tm_mday + day;
+								tmtime->tm_hour = tmtime->tm_hour + hour;
+								tmtime->tm_min  = tmtime->tm_min + minute;
+								tmtime->tm_sec  = tmtime->tm_sec + second;
+								timestamp = mktime(tmtime);
+																
+								if( SQL_SUCCESS != SQL->StmtPrepare(stmt,
+																	"UPDATE `%s` SET `unban_time` = ? WHERE `char_id` = ? LIMIT 1",
+																	char_db)
+								   || SQL_SUCCESS != SQL->StmtBindParam(stmt,  0, SQLDT_LONG,   (void*)&timestamp,   sizeof(timestamp))
+								   || SQL_SUCCESS != SQL->StmtBindParam(stmt,  1, SQLDT_INT,    (void*)&char_id,     sizeof(char_id))
+								   || SQL_SUCCESS != SQL->StmtExecute(stmt)
+
+								   ) {
+									SqlStmt_ShowDebug(stmt);
+								}
+								
+								SQL->StmtFree(stmt);
+								
+								// condition applies; send to all map-servers to disconnect the player
+								if( timestamp > time(NULL) ) {
+									unsigned char buf[11];
+									
+									WBUFW(buf,0) = 0x2b14;
+									WBUFL(buf,2) = char_id;
+									WBUFB(buf,6) = 2;
+									WBUFL(buf,7) = (unsigned int)timestamp;
+									mapif_sendall(buf, 11);
+									
+									// disconnect player if online on char-server
+									disconnect_player(account_id);
+								}
+							}
+							break;
+						case 7: //char unban
+							/* handled by char server, so no redirection */
+							if( SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `unban_time` = '0' WHERE `char_id` = '%d' LIMIT 1", char_db, char_id) ) {
+								Sql_ShowDebug(sql_handle);
+								result = 1;
+							}
+							break;
+
+						}
 					}
 				}
 
 				SQL->FreeResult(sql_handle);
 
 				// send answer if a player ask, not if the server ask
-				if( acc != -1 && type != 5) { // Don't send answer for changesex
+				if( acc != -1 && type != 5 ) { // Don't send answer for changesex
 					WFIFOHEAD(fd,34);
 					WFIFOW(fd, 0) = 0x2b0f;
 					WFIFOL(fd, 2) = acc;
@@ -3775,7 +3904,7 @@ static void char_delete2_cancel(int fd, struct char_session_data* sd)
 
 int parse_char(int fd)
 {
-	int i, ch;
+	int i;
 	char email[40];
 	unsigned short cmd;
 	int map_fd;
@@ -3804,7 +3933,7 @@ int parse_char(int fd)
 
 	while( RFIFOREST(fd) >= 2 ) {
 		//For use in packets that depend on an sd being present [Skotlex]
-		#define FIFOSD_CHECK(rest) { if(RFIFOREST(fd) < rest) return 0; if (sd==NULL || !sd->auth) { RFIFOSKIP(fd,rest); return 0; } }
+		#define FIFOSD_CHECK(rest) do { if(RFIFOREST(fd) < (rest)) return 0; if (sd==NULL || !sd->auth) { RFIFOSKIP(fd,(rest)); return 0; } } while (0)
 
 		if( HPM->packetsc[hpParse_Char] ) {
 			if( (i = HPM->parse_packets(fd,hpParse_Char)) ) {
@@ -3853,8 +3982,7 @@ int parse_char(int fd)
 				WFIFOL(fd,0) = account_id;
 				WFIFOSET(fd,4);
 
-				if( runflag != CHARSERVER_ST_RUNNING )
-				{
+				if( runflag != CHARSERVER_ST_RUNNING ) {
 					WFIFOHEAD(fd,3);
 					WFIFOW(fd,0) = 0x6c;
 					WFIFOB(fd,2) = 0;// rejected from server
@@ -3870,6 +3998,14 @@ int parse_char(int fd)
 					node->login_id2  == login_id2 /*&&
 					node->ip         == ipl*/ )
 				{// authentication found (coming from map server)
+					/* restrictions apply */
+					if( char_server_type == CST_MAINTENANCE && node->group_id < char_maintenance_min_group_id ) {
+						WFIFOHEAD(fd,3);
+						WFIFOW(fd,0) = 0x6c;
+						WFIFOB(fd,2) = 0;// rejected from server
+						WFIFOSET(fd,3);
+						break;
+					}
 					idb_remove(auth_db, account_id);
 					char_auth_ok(fd, sd);
 				}
@@ -3905,9 +4041,11 @@ int parse_char(int fd)
 				int char_id;
 				uint32 subnet_map_ip;
 				struct auth_node* node;
+				int server_id = 0;
 
 				int slot = RFIFOB(fd,2);
 				RFIFOSKIP(fd,3);
+				
 #if PACKETVER >= 20110309
 				if( *pincode->enabled ){ // hack check
 					struct online_char_data* character;	
@@ -3921,6 +4059,19 @@ int parse_char(int fd)
 					}
 				}
 #endif
+				
+				ARR_FIND( 0, ARRAYLENGTH(server), server_id, server[server_id].fd > 0 && server[server_id].map[0] );
+				/* not available, tell it to wait (client wont close; char select will respawn).
+				 * magic response found by Ind thanks to Yommy <3 */
+				if( server_id == ARRAYLENGTH(server) ) {
+					WFIFOHEAD(fd, 24);
+					WFIFOW(fd, 0) = 0x840;
+					WFIFOW(fd, 2) = 24;
+					safestrncpy((char*)WFIFOP(fd,4), "0", 20);/* we can't send empty (otherwise the list will pop up) */
+					WFIFOSET(fd, 24);
+					break;
+				}
+				
 				if ( SQL_SUCCESS != SQL->Query(sql_handle, "SELECT `char_id` FROM `%s` WHERE `account_id`='%d' AND `char_num`='%d'", char_db, sd->account_id, slot)
 				  || SQL_SUCCESS != SQL->NextRow(sql_handle)
 				  || SQL_SUCCESS != SQL->GetData(sql_handle, 0, &data, NULL) )
@@ -3936,6 +4087,15 @@ int parse_char(int fd)
 
 				char_id = atoi(data);
 				SQL->FreeResult(sql_handle);
+				
+				/* client doesn't let it get to this point if you're banned, so its a forged packet */
+				if( sd->found_char[slot] == char_id && sd->unban_time[slot] > time(NULL) ) {
+					WFIFOHEAD(fd,3);
+					WFIFOW(fd,0) = 0x6c;
+					WFIFOB(fd,2) = 0; // rejected from server
+					WFIFOSET(fd,3);
+					break;
+				}
 				
 				/* set char as online prior to loading its data so 3rd party applications will realise the sql data is not reliable */
 				set_char_online(-2,char_id,sd->account_id);
@@ -4076,6 +4236,7 @@ int parse_char(int fd)
 					/* Others I found [Ind] */
 					/* 0x02 = Symbols in Character Names are forbidden */
 					/* 0x03 = You are not elegible to open the Character Slot. */
+					/* 0x0B = This service is only available for premium users.  */
 					switch (i) {
 						case -1: WFIFOB(fd,2) = 0x00; break;
 						case -2: WFIFOB(fd,2) = 0xFF; break;
@@ -4096,9 +4257,7 @@ int parse_char(int fd)
 					WFIFOSET(fd,len);
 
 					// add new entry to the chars list
-					ARR_FIND( 0, MAX_CHARS, ch, sd->found_char[ch] == -1 );
-					if( ch < MAX_CHARS )
-						sd->found_char[ch] = i; // the char_id of the new char
+					sd->found_char[char_dat.slot] = i; // the char_id of the new char
 				}
 	#if PACKETVER >= 20120307
 				RFIFOSKIP(fd,31);
@@ -4157,9 +4316,7 @@ int parse_char(int fd)
 				}
 
 				// remove char from list and compact it
-				for(ch = i; ch < MAX_CHARS-1; ch++)
-					sd->found_char[ch] = sd->found_char[ch+1];
-				sd->found_char[MAX_CHARS-1] = -1;
+				sd->found_char[i] = -1;
 
 				/* Delete character */
 				if(delete_char_sql(cid)<0){
@@ -4573,7 +4730,7 @@ int check_connect_login_server(int tid, int64 tick, int id, intptr_t data) {
 	WFIFOW(login_fd,58) = htons(char_port);
 	memcpy(WFIFOP(login_fd,60), server_name, 20);
 	WFIFOW(login_fd,80) = 0;
-	WFIFOW(login_fd,82) = char_maintenance;
+	WFIFOW(login_fd,82) = char_server_type;
 	WFIFOW(login_fd,84) = char_new_display; //only display (New) if they want to [Kevin]
 	WFIFOSET(login_fd,86);
 
@@ -4833,8 +4990,8 @@ int char_config_read(const char* cfgName)
 			}
 		} else if (strcmpi(w1, "char_port") == 0) {
 			char_port = atoi(w2);
-		} else if (strcmpi(w1, "char_maintenance") == 0) {
-			char_maintenance = atoi(w2);
+		} else if (strcmpi(w1, "char_server_type") == 0) {
+			char_server_type = atoi(w2);
 		} else if (strcmpi(w1, "char_new") == 0) {
 			char_new = (bool)atoi(w2);
 		} else if (strcmpi(w1, "char_new_display") == 0) {
@@ -4921,6 +5078,8 @@ int char_config_read(const char* cfgName)
 			}
 		} else if (strcmpi(w1, "guild_exp_rate") == 0) {
 			guild_exp_rate = atoi(w2);
+		} else if (strcmpi(w1, "char_maintenance_min_group_id") == 0) {
+			char_maintenance_min_group_id = atoi(w2);
 		} else if (strcmpi(w1, "import") == 0) {
 			char_config_read(w2);
 		} else

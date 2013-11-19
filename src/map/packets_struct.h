@@ -9,12 +9,6 @@
 #include "../common/mmo.h"
 
 /**
- * structs for data
- */
-struct EQUIPSLOTINFO {
-	unsigned short card[4];
-};
-/**
  *
  **/
 enum packet_headers {
@@ -105,17 +99,168 @@ enum packet_headers {
 	bgqueue_revokereqType = 0x8da,
 	bgqueue_battlebeginackType = 0x8e0,
 	bgqueue_notify_entryType = 0x8d9,
-	bgqueue_battlebegins = 0x8df,
+	bgqueue_battlebeginsType = 0x8df,
+	notify_bounditemType = 0x2d3,
 #if PACKETVER > 20130000 /* not sure date */
 	dropflooritemType = 0x84b,
 #else
 	dropflooritemType = 0x9e,
 #endif
+#if PACKETVER >= 20120925
+	inventorylistnormalType = 0x991,
+#elif PACKETVER >= 20080102
+	inventorylistnormalType = 0x2e8,
+#elif PACKETVER >= 20071002
+	inventorylistnormalType = 0x1ee,
+#else
+	inventorylistnormalType = 0xa3,
+#endif
+#if PACKETVER >= 20120925
+	inventorylistequipType = 0x992,
+#elif PACKETVER >= 20080102
+	inventorylistequipType = 0x2d0,
+#elif PACKETVER >= 20071002
+	inventorylistequipType = 0x295,
+#else
+	inventorylistequipType = 0xa4,
+#endif
+#if PACKETVER >= 20120925
+	storagelistnormalType = 0x995,
+#elif PACKETVER >= 20080102
+	storagelistnormalType = 0x2ea,
+#elif PACKETVER >= 20071002
+	storagelistnormalType = 0x295,
+#else
+	storagelistnormalType = 0xa5,
+#endif
+#if PACKETVER >= 20120925
+	storagelistequipType = 0x996,
+#elif PACKETVER >= 20080102
+	storagelistequipType = 0x2d1,
+#elif PACKETVER >= 20071002
+	storagelistequipType = 0x296,
+#else
+	storagelistequipType = 0xa6,
+#endif
+#if PACKETVER >= 20120925
+	cartlistnormalType = 0x993,
+#elif PACKETVER >= 20080102
+	cartlistnormalType = 0x2e9,
+#elif PACKETVER >= 20071002
+	cartlistnormalType = 0x1ef,
+#else
+	cartlistnormalType = 0x123,
+#endif
+#if PACKETVER >= 20120925
+	cartlistequipType = 0x994,
+#elif PACKETVER >= 20080102
+	cartlistequipType = 0x2d2,
+#elif PACKETVER >= 20071002
+	cartlistequipType = 0x297,
+#else
+	cartlistequipType = 0x122,
+#endif
+#if PACKETVER >= 20120925
+	equipitemType = 0x998,
+#else
+	equipitemType = 0xa9,
+#endif
+#if PACKETVER >= 20120925
+	equipitemackType = 0x999,
+#else
+	equipitemackType = 0xaa,
+#endif
+#if PACKETVER >= 20120925
+	unequipitemackType = 0x99a,
+#else
+	unequipitemackType = 0xac,
+#endif
+#if PACKETVER >= 20120925
+	viewequipackType = 0x997,
+#elif PACKETVER >= 20101124
+	viewequipackType = 0x859,
+#else
+	viewequipackType = 0x2d7,
+#endif
+	notifybindonequip = 0x2d3,
 	monsterhpType = 0x977,
 	maptypeproperty2Type = 0x99b,
 };
 
 #pragma pack(push, 1)
+
+/**
+ * structs for data
+ */
+struct EQUIPSLOTINFO {
+	unsigned short card[4];
+} __attribute__((packed));
+
+struct NORMALITEM_INFO {
+	short index;
+	unsigned short ITID;
+	unsigned char type;
+#if PACKETVER < 20120925
+	uint8 IsIdentified;
+#endif
+	short count;
+#if PACKETVER >= 20120925
+	unsigned int WearState;
+#else
+	unsigned short WearState;
+#endif
+#if PACKETVER >= 5
+	struct EQUIPSLOTINFO slot;
+#endif
+#if PACKETVER >= 20080102
+	int HireExpireDate;
+#endif
+#if PACKETVER >= 20120925
+	struct {
+		unsigned char IsIdentified : 1;
+		unsigned char PlaceETCTab : 1;
+		unsigned char SpareBits : 6;
+	} Flag;
+#endif
+} __attribute__((packed));
+
+struct EQUIPITEM_INFO {
+	short index;
+	unsigned short ITID;
+	unsigned char type;
+#if PACKETVER < 20120925
+	uint8 IsIdentified;
+#endif
+#if PACKETVER >= 20120925
+	unsigned int location;
+	unsigned int WearState;
+#else
+	unsigned short location;
+	unsigned short WearState;
+#endif
+#if PACKETVER < 20120925
+	uint8 IsDamaged;
+#endif
+	unsigned char RefiningLevel;
+	struct EQUIPSLOTINFO slot;
+#if PACKETVER >= 20071002
+	int HireExpireDate;
+#endif
+#if PACKETVER >= 20080102
+    unsigned short bindOnEquipType;
+#endif
+#if PACKETVER >= 20100629
+    unsigned short wItemSpriteNumber;
+#endif
+#if PACKETVER >= 20120925
+	struct {
+		unsigned char IsIdentified : 1;
+		unsigned char IsDamaged : 1;
+		unsigned char PlaceETCTab : 1;
+		unsigned char SpareBits : 5;
+	} Flag;
+#endif
+} __attribute__((packed));
 
 struct packet_authok {
 	short PacketType;
@@ -147,8 +292,8 @@ struct packet_additem {
 	unsigned short Index;
 	unsigned short count;
 	unsigned short nameid;
-	bool IsIdentified;
-	bool IsDamaged;
+	uint8 IsIdentified;
+	uint8 IsDamaged;
 	unsigned char refiningLevel;
 	struct EQUIPSLOTINFO slot;
 #if PACKETVER >= 20120925
@@ -173,7 +318,7 @@ struct packet_dropflooritem {
 #if PACKETVER >= 20130000 /* not sure date */
 	unsigned short type;
 #endif
-	bool IsIdentified;
+	uint8 IsIdentified;
 	short xPos;
 	short yPos;
 	unsigned char subX;
@@ -205,7 +350,7 @@ struct packet_idle_unit2 {
 	short GEmblemVer;
 	short honor;
 	short virtue;
-	bool isPKModeON;
+	uint8 isPKModeON;
 	unsigned char sex;
 	unsigned char PosDir[3];
 	unsigned char xSize;
@@ -233,7 +378,7 @@ struct packet_spawn_unit2 {
 	short headpalette;
 	short bodypalette;
 	short headDir;
-	bool isPKModeON;
+	uint8 isPKModeON;
 	unsigned char sex;
 	unsigned char PosDir[3];
 	unsigned char xSize;
@@ -282,7 +427,7 @@ struct packet_spawn_unit {
 #else
 	short virtue;
 #endif
-	bool isPKModeON;
+	uint8 isPKModeON;
 	unsigned char sex;
 	unsigned char PosDir[3];
 	unsigned char xSize;
@@ -343,7 +488,7 @@ struct packet_unit_walking {
 #else
 	short virtue;
 #endif
-	bool isPKModeON;
+	uint8 isPKModeON;
 	unsigned char sex;
 	unsigned char MoveData[6];
 	unsigned char xSize;
@@ -401,7 +546,7 @@ struct packet_idle_unit {
 #else
 	short virtue;
 #endif
-	bool isPKModeON;
+	uint8 isPKModeON;
 	unsigned char sex;
 	unsigned char PosDir[3];
 	unsigned char xSize;
@@ -576,6 +721,94 @@ struct packet_banking_withdraw_ack {
 	short Reason;
 	int64 Money;
 	int Balance;
+} __attribute__((packed));
+
+struct packet_itemlist_normal {
+	short PacketType;
+	short PacketLength;
+	struct NORMALITEM_INFO list[MAX_ITEMLIST];
+} __attribute__((packed));
+
+struct packet_itemlist_equip {
+	short PacketType;
+	short PacketLength;
+	struct EQUIPITEM_INFO list[MAX_ITEMLIST];
+} __attribute__((packed));
+
+struct packet_storelist_normal {
+	short PacketType;
+	short PacketLength;
+#if PACKETVER >= 20120925
+	char name[NAME_LENGTH];
+#endif
+	struct NORMALITEM_INFO list[MAX_ITEMLIST];
+} __attribute__((packed));
+
+struct packet_storelist_equip {
+	short PacketType;
+	short PacketLength;
+#if PACKETVER >= 20120925
+	char name[NAME_LENGTH];
+#endif
+	struct EQUIPITEM_INFO list[MAX_ITEMLIST];
+} __attribute__((packed));
+
+struct packet_equip_item {
+	short PacketType;
+	unsigned short index;
+#if PACKETVER >= 20120925
+	unsigned int wearLocation;
+#else
+	unsigned short wearLocation;
+#endif
+} __attribute__((packed));
+
+struct packet_equipitem_ack {
+	short PacketType;
+	unsigned short index;
+#if PACKETVER >= 20120925
+	unsigned int wearLocation;
+#else
+	unsigned short wearLocation;
+#endif
+#if PACKETVER >= 20100629
+	unsigned short wItemSpriteNumber;
+#endif
+	unsigned char result;
+} __attribute__((packed));
+
+struct packet_unequipitem_ack {
+	short PacketType;
+	unsigned short index;
+#if PACKETVER >= 20120925
+	unsigned int wearLocation;
+#else
+	unsigned short wearLocation;
+#endif
+	unsigned char result;
+} __attribute__((packed));
+
+struct packet_viewequip_ack {
+	short PacketType;
+	short PacketLength;
+	char characterName[NAME_LENGTH];
+	short job;
+	short head;
+	short accessory;
+	short accessory2;
+	short accessory3;
+#if PACKETVER >= 20101124
+	short robe;
+#endif
+	short headpalette;
+	short bodypalette;
+	unsigned char sex;
+	struct EQUIPITEM_INFO list[MAX_INVENTORY];
+} __attribute__((packed));
+
+struct packet_notify_bounditem {
+	short PacketType;
+	unsigned short index;
 } __attribute__((packed));
 
 #pragma pack(pop)

@@ -11,7 +11,7 @@
 //= 1.1 Added Baby Job compatibility [Streusel]
 //= 1.2 Rewrote bits [Euphy]
 //============================================================
-izlude_in,74,172,4	script	Swordman#swd	119,{
+izlude_in,74,172,4	script	Swordman#swd	2_M_SWORDMASTER,{
 	if (Upper == 1) {
 		if (Class == Job_Novice_High && (ADVJOB == Job_Lord_Knight || ADVJOB == Job_Paladin)) {
 			mes "[Swordman]";

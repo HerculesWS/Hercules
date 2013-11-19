@@ -287,6 +287,17 @@ unsigned int get_percentage(const unsigned int A, const unsigned int B)
 	return (unsigned int)floor(result);
 }
 
+//-----------------------------------------------------
+// custom timestamp formatting (from eApp)
+//-----------------------------------------------------
+const char* timestamp2string(char* str, size_t size, time_t timestamp, const char* format)
+{
+	size_t len = strftime(str, size, format, localtime(&timestamp));
+	memset(str + len, '\0', size - len);
+	return str;
+}
+
+
 /* [Ind/Hercules] Caching */
 bool HCache_check(const char *file) {
 	struct stat bufa, bufb;

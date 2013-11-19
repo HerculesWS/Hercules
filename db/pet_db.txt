@@ -69,7 +69,7 @@
 1167,SAVAGE_BABE,Savage Babe,627,9009,10015,537,80,60,40,100,250,20,1500,150,0,0,500,500,200,{ petskillbonus bVit,4,10,50; },{ bonus bVit,1; bonus bMaxHP,50; }
 1107,DESERT_WOLF_B,Baby Desert Wolf,628,9010,10003,537,80,60,40,100,250,20,1000,150,0,0,400,400,400,{ petskillattack "SM_PROVOKE",1,0,5;},{ bonus bInt,1; bonus bMaxSP,50; }
 1052,ROCKER,Rocker,629,9011,10014,537,80,60,30,100,250,20,1500,150,0,0,350,350,600,{ petskillbonus bAllStats,1,10,50; },{ bonus bHPrecovRate,5; bonus bMaxHP,25; }
-1014,SPORE,Spore,630,9012,10017,537,80,60,30,100,250,20,1500,150,0,0,350,500,500,{ petrecovery SC_Poison,60; },{ bonus bHit,5; bonus bAtk,-2; }
+1014,SPORE,Spore,630,9012,10017,537,80,60,30,100,250,20,1500,150,0,0,350,500,500,{ petrecovery SC_POISON,60; },{ bonus bHit,5; bonus bAtk,-2; }
 1077,POISON_SPORE,Poison Spore,631,9013,10017,537,80,60,20,100,250,20,1000,150,0,0,600,200,400,{ petskillattack "NPC_POISON",20,0,10; },{ bonus bStr,1; bonus bInt,1; }
 1019,PECOPECO,PecoPeco,632,9014,10010,537,80,60,30,100,250,20,1000,150,1,0,400,500,800,{ petskillbonus bSpeedRate,25,20,20; },{ bonus bMaxHP,150; bonus bMaxSP,-10; }
 1056,SMOKIE,Smokie,633,9015,10019,537,80,60,30,100,250,20,1000,150,1,0,600,600,100,{ petskillbonus bPerfectHide,1,3600,0; },{ bonus bAgi,1; bonus bFlee2,1; }
@@ -83,7 +83,7 @@
 1109,DEVIRUCHI,Deviruchi,641,9023,10004,711,80,60,10,100,250,20,500,150,0,0,800,200,100,{ petskillbonus bAgiDexStr,6,20,40; },{ bonus bMatkRate,1; bonus bAtkRate,1; bonus bMaxHPrate,-3; bonus bMaxSPrate,-3; }
 1101,BAPHOMET_,Baphomet Jr.,642,9024,10001,518,80,60,10,100,250,20,200,150,0,0,1000,100,200,{ petskillattack2 "NPC_DARKNESSATTACK",1776,4,0,5; },{ bonus bDef,1; bonus bMdef,1; bonus2 bResEff,Eff_Stun,-100; }
 1188,BON_GUN,Bon Gun,659,9025,10020,537,80,60,30,100,250,20,500,150,1,0,600,200,400,{ petskillattack2 "NPC_DARKNESSATTACK",555,1,1,1; },{ bonus bVit,1; bonus2 bResEff,Eff_Stun,100; }
-1200,ZHERLTHSH,Zealotus,660,9026,0,929,80,60,10,100,250,20,300,150,0,0,1000,100,500,{ petskillattack "AS_SONICBLOW",1,0,3; },{ bonus2 bAddRace,RC_Demihuman,2; bonus2 bMagicAddRace,RC_DemiHuman,2; }
+1200,ZHERLTHSH,Zealotus,660,9026,0,929,80,60,10,100,250,20,300,150,0,0,1000,100,500,{ petskillattack "AS_SONICBLOW",1,0,3; },{ bonus2 bAddRace,RC_DemiHuman,2; bonus2 bMagicAddRace,RC_DemiHuman,2; }
 1275,ALICE,Alice,661,9027,0,504,80,60,20,100,250,20,800,150,0,0,100,1000,200,{ petskillsupport "AL_HEAL",5,60,25,100; },{ bonus bMdef,1; bonus2 bSubRace,RC_DemiHuman,1; }
 1815,EVENT_RICECAKE,Rice Cake,0,9028,0,511,80,60,50,100,250,20,2000,150,1,0,500,500,200,{ petskillsupport "CR_DEFENDER",3,240,50,100; },{ bonus2 bSubEle,Ele_Neutral,1; bonus bMaxHPrate,-1; }
 1245,GOBLINE_XMAS,Christmas Goblin,12225,9029,0,911,80,60,50,100,250,20,2000,150,0,0,300,300,800,{ petskillattack "MG_SIGHT",5,5,5; },{ bonus bMaxHP,30; bonus2 bSubEle,Ele_Water,1; }
@@ -106,15 +106,15 @@
 1148,MEDUSA,Medusa,12368,9050,10032,6108,80,60,10,100,250,20,200,150,0,0,300,300,800,{},{ bonus bVit,1; bonus2 bResEff,Eff_Stone,500; }
 1179,WHISPER,Whisper,12363,9045,10027,6100,80,60,20,100,250,20,500,150,0,0,300,300,800,{},{ bonus bFlee,7; bonus bDef,-3; }
 1299,GOBLIN_LEADER,Goblin Leader,12364,9046,10028,6104,80,60,10,100,250,20,50,150,0,0,300,300,800,{},{ bonus2 bAddRace,RC_DemiHuman,3; }
-1370,SUCCUBUS,Succubus,12373,9055,10037,6113,80,60,10,100,250,20,200,150,0,0,300,300,800,{},{ bonus2 bHpDrainRate,50,5; }
-1374,INCUBUS,Incubus,12370,9052,10034,6110,80,60,10,100,250,20,50,150,0,0,300,300,800,{},{ bonus bMaxSPRate,3; }
+1370,SUCCUBUS,Succubus,12373,9055,10037,6113,80,60,10,100,250,20,200,150,0,0,300,300,800,{},{ bonus2 bHPDrainRate,50,5; }
+1374,INCUBUS,Incubus,12370,9052,10034,6110,80,60,10,100,250,20,50,150,0,0,300,300,800,{},{ bonus bMaxSPrate,3; }
 1379,NIGHTMARE_TERROR,Nightmare Terror,12372,9054,10036,6112,80,60,10,100,250,20,200,150,0,0,300,300,800,{},{ bonus2 bResEff,Eff_Sleep,10000; }
 1401,SHINOBI,Shinobi,12362,9044,10026,6099,80,60,20,100,250,20,500,150,0,0,300,300,800,{},{ bonus bAgi,2; }
 1404,MIYABI_NINGYO,Miyabi Doll,12366,9048,10030,6106,80,60,15,100,250,20,200,150,0,0,300,300,800,{},{ bonus bInt,1; bonus bCastrate,-3; }
 1416,WICKED_NYMPH,Evil Nymph,12365,9047,10029,6105,80,60,15,100,250,20,500,150,0,0,300,300,800,{},{ bonus bMaxSP,30; bonus bSPrecovRate,5; }
 1495,STONE_SHOOTER,Stone Shooter,12369,9051,10033,6109,80,60,20,100,250,20,500,150,0,0,300,300,800,{},{ bonus2 bSubEle,Ele_Fire,3; }
 1504,DULLAHAN,Dullahan,12367,9049,10031,6107,80,60,10,100,250,20,200,150,0,0,300,300,800,{},{ bonus bCritAtkRate,5; }
-1505,LOLI_RURI,Loli Ruri,12360,9042,10024,6097,80,60,15,100,250,20,200,150,0,0,300,300,800,{},{ bonus bMaxHPRate,3; bonus3 bAutoSpellWhenHit,"AL_HEAL",1,50; }
+1505,LOLI_RURI,Loli Ruri,12360,9042,10024,6097,80,60,15,100,250,20,200,150,0,0,300,300,800,{},{ bonus bMaxHPrate,3; bonus3 bAutoSpellWhenHit,"AL_HEAL",1,50; }
 1513,CIVIL_SERVANT,Mao Guai,12358,9040,10022,6095,80,60,10,100,250,20,500,150,0,0,300,300,800,{},{ bonus bMaxSP,10; }
 1586,LEAF_CAT,Leaf Cat,12359,9041,10023,6096,80,60,20,100,250,20,200,150,0,0,300,300,800,{},{ bonus2 bSubRace,RC_Brute,3; }
 1630,BACSOJIN_,White Lady,12357,9039,10021,6094,80,60,10,100,250,20,2000,150,0,0,300,300,800,{},{}

@@ -12,7 +12,7 @@
 //= 1.1 Navigation system update. [Euphy]
 //============================================================
 
-rachel,138,146,5	script	Rachel Guide#rachel	934,{
+rachel,138,146,5	script	Rachel Guide#rachel	4_M_RASWORD,{
 	mes "[Rachel Guide]";
 	mes "Welcome to the capital of Arunafeltz, ^8B4513Rachel^000000 where the warm breath of the goddess Freya reaches.";
 	mes "If this is the first time for you to use the guide services, I suggest you ask many questions.";

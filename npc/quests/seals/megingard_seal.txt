@@ -22,7 +22,7 @@
 //= 2.2 Renewal script update. [Euphy]
 //============================================================
 
-prt_castle,44,151,0	script	Rebarev Doug	56,{
+prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 	if (checkweight(1301,3) == 0) {
 		mes "- You are carrying too many items! -";
 		close;
@@ -536,7 +536,7 @@ prt_castle,44,151,0	script	Rebarev Doug	56,{
 	end;
 }
 
-prt_castle,48,164,0	script	Crusader#God	734,{
+prt_castle,48,164,0	script	Crusader#God	4_M_JOB_KNIGHT2,{
 	if ($God1 >= $@god_check1 && $God2 < $@god_check2) {
 		if (god_eremes > 22 && god_eremes < 25) {
 			mes "[Max Von Shedough]";
@@ -615,7 +615,7 @@ prt_castle,48,164,0	script	Crusader#God	734,{
 	}
 }
 
-prt_in,172,109,0	script	A File#megin1	111,{
+prt_in,172,109,0	script	A File#megin1	HIDDEN_NPC,{
 	if (god_eremes == 12) {
 		mes "^3355FFYou have found";
 		mes "^660000The 3rd Platoon Records^3355FF!^000000";
@@ -647,7 +647,7 @@ prt_in,172,109,0	script	A File#megin1	111,{
 	}
 }
 
-prt_in,170,109,0	script	A File#megin2	111,{
+prt_in,170,109,0	script	A File#megin2	HIDDEN_NPC,{
 	if (god_eremes == 12) {
 		mes "You have found ^0000FFThe 3rd Platoon Records^000000!";
 		close;
@@ -679,7 +679,7 @@ prt_in,170,109,0	script	A File#megin2	111,{
 	}
 }
 
-prt_in,168,109,0	script	A File#megin3	111,{
+prt_in,168,109,0	script	A File#megin3	HIDDEN_NPC,{
 	if (god_eremes == 12) {
 		mes "You have found";
 		mes "^0000FFThe 3rd Platoon Records^000000!";
@@ -712,7 +712,7 @@ prt_in,168,109,0	script	A File#megin3	111,{
 	}
 }
 
-prt_in,169,109,0	script	A File#megin4	111,{
+prt_in,169,109,0	script	A File#megin4	HIDDEN_NPC,{
 	if (god_eremes == 12) {
 		mes "You have found ^0000FFThe 3rd Platoon Records^000000!";
 		close;
@@ -744,7 +744,7 @@ prt_in,169,109,0	script	A File#megin4	111,{
 	}
 }
 
-prt_in,166,109,0	script	A File#megin5	111,{
+prt_in,166,109,0	script	A File#megin5	HIDDEN_NPC,{
 	if (god_eremes == 12) {
 		mes "You have found";
 		mes "^0000FFThe 3rd Platoon Records^000000!";
@@ -777,7 +777,7 @@ prt_in,166,109,0	script	A File#megin5	111,{
 	}
 }
 
-prt_in,172,106,0	script	Librarian#megin	833,{
+prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 	if ($God1 >= $@god_check1 && $God2 < $@god_check2) {
 		if (god_eremes > 2 && god_eremes < 7) {
 			mes "[Librarian Jekan]";
@@ -1535,7 +1535,7 @@ prt_in,172,106,0	script	Librarian#megin	833,{
 	close;
 }
 
-geffen_in,109,161,3	script	Crusader#God1	751,{
+geffen_in,109,161,3	script	Crusader#God1	4_M_CRU,{
 	if ($God1 >= $@god_check1 && $God2 < $@god_check2) {
 		if (god_eremes > 17 && god_megin_1 < 2) {
 			mes "[Zan.Huadoku]";
@@ -1789,7 +1789,7 @@ geffen_in,109,161,3	script	Crusader#God1	751,{
 	}
 }
 
-morocc_in,146,179,0	script	Employee#megin1	66,{
+morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 	if ($God1 >= $@god_check1 && $God2 < $@god_check2) {
 		if (god_eremes > 17 && god_megin_2 < 1) {
 			mes "^3355FFThe Inn Employee";
@@ -1994,7 +1994,7 @@ morocc_in,146,179,0	script	Employee#megin1	66,{
 	}
 }
 
-in_rogue,243,61,0	script	Suspicious Man#megin	748,{
+in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 	if ($God1 >= $@god_check1 && $God2 < $@god_check2) {
 		if (god_eremes == 18) {
 			mes "[Cuaque Donon]";
@@ -2263,7 +2263,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	748,{
 	}
 }
 
-alberta,196,146,0	script	Crusader#megin2	751,{
+alberta,196,146,0	script	Crusader#megin2	4_M_CRU,{
 	if ($God1 >= $@god_check1 && $God2 < $@god_check2) {
 		if (god_eremes == 18) {
 			mes "[Jack O]";
@@ -2454,7 +2454,7 @@ alberta,196,146,0	script	Crusader#megin2	751,{
 	}
 }
 
-aldebaran,66,213,0	script	Lady#megin	69,{
+aldebaran,66,213,0	script	Lady#megin	1_F_04,{
 	if (checkweight(1301,3) == 0) {
 		mes "- You are carrying too many items!";
 		close;
@@ -2703,7 +2703,7 @@ aldebaran,66,213,0	script	Lady#megin	69,{
 	}
 }
 
-cmd_in02,190,94,3	script	Man#megin	828,{
+cmd_in02,190,94,3	script	Man#megin	4_M_ROGUE,{
 	if ($God1 >= $@god_check1 && $God2 < $@god_check2) {
 		if (god_eremes == 18) {
 			mes "[Royal Myst]";
@@ -2907,7 +2907,7 @@ cmd_in02,190,94,3	script	Man#megin	828,{
 	}
 }
 
-jawaii_in,44,110,0	script	Security Officer#megin	734,{
+jawaii_in,44,110,0	script	Security Officer#megin	4_M_JOB_KNIGHT2,{
 	if ($God1 >= $@god_check1 && $God2 < $@god_check2) {
 		if (god_eremes == 18) {
 			mes "[The Nineball]";
@@ -2965,7 +2965,7 @@ jawaii_in,44,110,0	script	Security Officer#megin	734,{
 
 }
 
-niflheim,109,254,0	script	Egnigem	796,{
+niflheim,109,254,0	script	Egnigem	4_M_NFDEADSWDMAN,{
 	if ($God1 >= $@god_check1 && $God2 < $@god_check2) {
 		if (god_eremes > 19 && god_eremes < 25) {
 			if (god_eremes > 22) {

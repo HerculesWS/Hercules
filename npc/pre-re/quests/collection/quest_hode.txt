@@ -12,7 +12,7 @@
 //= 1.0 First version.
 //============================================================
 
-moc_fild17,208,346,5	script	Shone#Hode_Hunt	707,{
+moc_fild17,208,346,5	script	Shone#Hode_Hunt	4_M_MOC_SOLDIER,{
 	if (checkquest(60104) != -1) {
 		if (checkquest(60104,HUNTING) != 2 ) {
 			mes "[Shone]";

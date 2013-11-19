@@ -355,17 +355,17 @@ int64 timer_settick(int tid, int64 tick) {
 		return -1;
 	}
 
-	if( (int)tick == -1 )
-		tick = 0;// add 1ms to avoid the error value -1
+	if( tick == -1 )
+		tick = 0; // add 1ms to avoid the error value -1
 
 	if( timer_data[tid].tick == tick )
-		return (int)tick;// nothing to do, already in propper position
+		return tick; // nothing to do, already in proper position
 
 	// pop and push adjusted timer
 	BHEAP_POPINDEX(timer_heap, i, DIFFTICK_MINTOPCMP, swap);
 	timer_data[tid].tick = tick;
 	BHEAP_PUSH(timer_heap, tid, DIFFTICK_MINTOPCMP, swap);
-	return (int)tick;
+	return tick;
 }
 
 /// Executes all expired timers.

@@ -12,7 +12,7 @@
 //= 1.1 Navigation system update. [Euphy]
 //============================================================
 
-louyang,224,104,4	script	Louyang Guide#01louyang	818,{
+louyang,224,104,4	script	Louyang Guide#01louyang	4_F_CHNWOMAN,{
 	mes "[Representative]";
 	mes "Welcome to ^8B4513Louyang^000000,";
 	mes "an ancient land with";

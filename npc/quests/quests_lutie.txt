@@ -16,7 +16,7 @@
 //= 1.4 Updated NPCs once again. [L0ne_W0lf]
 //============================================================
 
-xmas,117,295,4	script	Vending Machine Man	704,{
+xmas,117,295,4	script	Vending Machine Man	4_M_BIBI,{
 	mes "[Titicupe]";
 	mes "Hmm...?";
 	mes "I, Titicupe, esteemed manager of the Toy Factory and genius inventor, has done it again! I've just created the world's most sophisticated vending machine!";
@@ -138,7 +138,7 @@ xmas,117,295,4	script	Vending Machine Man	704,{
 	}
 }
 
-xmas,115,297,4	script	Vending Machine	111,{
+xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 	mes "[Audi]";
 	mes "^555555Exciting item vending machine. Invented by great Titicupe. Select the desired item and place required items into snowmouth receptacle.^000000";
 	next;
@@ -169,7 +169,7 @@ xmas,115,297,4	script	Vending Machine	111,{
 			delitem 1036,20;  //Dragon_Scale
 			delitem 7012,200;  //Tough_Scalelike_Stem
 			delitem 7065,300;  //Sea_Otter_Leather
-			emotion e_Oh;
+			emotion e_oh;
 			mes "^3355FF*Vroooooom~~*";
 			mes "*Bzzzzzt*";
 			mes "*choogachooga*";
@@ -344,7 +344,7 @@ xmas,115,297,4	script	Vending Machine	111,{
 		mes "Items.^000000";
 		close;
 	}
-	emotion e_x;
+	emotion e_X;
 	mes "[Audi]";
 	mes "^555555Error Error!";
 	mes "Incorrect items!^000000";

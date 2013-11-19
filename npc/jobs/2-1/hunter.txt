@@ -55,7 +55,7 @@
 
 // Notices in the old Hunter Guild.
 //============================================================
-in_hunter,99,99,4	script	Hunter Info#hnt::HntNotice	727,{
+in_hunter,99,99,4	script	Hunter Info#hnt::HntNotice	4_F_JOB_HUNTER,{
 	mes "============Notice ============";
 	mes "We would like to inform that the Hunter Job Change Location";
 	mes "has been moved to ^ff0000Hugel^000000 in the Schwaltzvalt Republic.";
@@ -72,11 +72,11 @@ in_hunter,99,99,4	script	Hunter Info#hnt::HntNotice	727,{
 	close;
 }
 
-pay_fild10,148,252,3	duplicate(HntNotice)	Job Change Location#hu	857
+pay_fild10,148,252,3	duplicate(HntNotice)	Job Change Location#hu	4_BOARD3
 
 // Actual Job quest start
 //============================================================
-hu_in01,386,373,4	script	Hunter Guildsman#hnt	727,{
+hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 	if (Upper == 1) {
 		mes "[Hunter Sherin]";
 		mes "Oh, how have you been? It's been a long time, hasn't it?";
@@ -468,7 +468,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	727,{
 	close;
 }
 
-hu_in01,382,382,4	script	Guild Receptionist#hnt	732,{
+hu_in01,382,382,4	script	Guild Receptionist#hnt	4_M_JOB_HUNTER,{
 	if (HNTR_Q == 2) {
 		mes "[Guild Receptionist]";
 		mes "Greetings. They call me... ^660000The Demon Hunter^000000. I am the one in charge of processing applications. Your name is ... " + strcharinfo(0) + ", correct?";
@@ -612,7 +612,7 @@ hu_in01,382,382,4	script	Guild Receptionist#hnt	732,{
 	}
 }
 
-payon_in03,131,7,3	script	Hunter#htnGM	59,{
+payon_in03,131,7,3	script	Hunter#htnGM	1_M_ORIENT01,{
 	if (HNTR_Q == 10) {
 		mes "[Hunter Guildmaster]";
 		mes "Hmpf. You must be here for the Hunter job test. Let me tell you about the testing process. What would you like to know?";
@@ -765,7 +765,7 @@ payon_in03,131,7,3	script	Hunter#htnGM	59,{
 	}
 }
 
-payon_in02,21,31,1	script	Hunter#htnGM2	59,{
+payon_in02,21,31,1	script	Hunter#htnGM2	1_M_ORIENT01,{
 	cutin "job_huntermaster",2;
 	if (HNTR_Q == 11) {
 		mes "[Hunter Guildmaster]";
@@ -966,7 +966,7 @@ payon_in02,21,31,1	script	Hunter#htnGM2	59,{
 	}
 }
 
-job_hunte,178,32,1	script	Guide#hnt	107,5,2,{
+job_hunte,178,32,1	script	Guide#hnt	1_M_PAY_ELDER,5,2,{
 OnTouch:
 	if (HNTR_Q == 12) {
 		mes "[Guide]";
@@ -1023,7 +1023,7 @@ OnTouch:
 	end;
 }
 
-job_hunte,178,38,1	script	Waiting Room#hnt	66,{
+job_hunte,178,38,1	script	Waiting Room#hnt	1_F_01,{
 	end;
 
 OnInit:
@@ -1042,7 +1042,7 @@ OnStart:
 	end;
 }
 
-job_hunte,1,1,1	script	Manager#hnt	66,{
+job_hunte,1,1,1	script	Manager#hnt	1_F_01,{
 OnInit:
 	disablenpc "Manager#hnt";
 	end;
@@ -1203,7 +1203,7 @@ OnTimer197000:
 	end;
 }
 
-job_hunte,93,101,1	script	Switch#hnt	723,1,1,{
+job_hunte,93,101,1	script	Switch#hnt	1_SHADOW_NPC,1,1,{
 OnTouch:
 	mes "^3355FFThere are 3 buttons";
 	mes "on the escape switch.^000000";
@@ -1246,7 +1246,7 @@ OnEnable:
 	end;
 }
 
-job_hunte,89,139,0	script	exit#hnttest	45,2,2,{
+job_hunte,89,139,0	script	exit#hnttest	WARPNPC,2,2,{
 OnInit:
 	disablenpc "exit#hnttest";
 	end;
@@ -1633,7 +1633,7 @@ job_hunte,64,92,0	duplicate(HntTrap)	57-1	-1,0,0
 job_hunte,64,93,0	duplicate(HntTrap)	57-2	-1,0,0
 job_hunte,65,92,0	duplicate(HntTrap)	57-3	-1,0,0
 
-job_hunte,65,93,0	script	57-4::HntTrap2	-1,{
+job_hunte,65,93,0	script	1_M_LIBRARYMASTER-4::HntTrap2	-1,{
 OnTouch:
 	mapannounce "job_hunte",strcharinfo(0) + ", has failed me! Go back to where you started!",bc_map;
 	set HNTR_Q,13;

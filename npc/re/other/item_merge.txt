@@ -12,7 +12,7 @@
 //= 1.0 First version, currently useless/disabled.
 //============================================================
 
-prontera,146,95,3	script	Mergician#pron	64,{
+prontera,146,95,3	script	Mergician#pron	1_M_WIZARD,{
 	if (checkweight(1301,1) == 0) {
 		mes "- Wait a second !! -";
 		mes "- You are carrying too many items -";

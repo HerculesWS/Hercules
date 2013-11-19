@@ -1613,17 +1613,6 @@ enum {
 	UNT_MAX = 0x190
 };
 
-enum gx_poison {
-	PO_PARALYSE = 12717,
-	PO_LEECHESEND,
-	PO_OBLIVIONCURSE,
-	PO_DEATHHURT,
-	PO_TOXIN,
-	PO_PYREXIA,
-	PO_MAGICMUSHROOM,
-	PO_VENOMBLEED
-};
-
 /**
  * Structures
  **/
@@ -1797,10 +1786,10 @@ typedef int (*SkillFunc)(struct block_list *src, struct block_list *target, uint
  * Skill.c Interface
  **/
 struct skill_interface {
-	int (*init) (void);
+	int (*init) (bool minimal);
 	int (*final) (void);
 	void (*reload) (void);
-	void (*read_db) (void);
+	void (*read_db) (bool minimal);
 	/* */
 	DBMap* cd_db; // char_id -> struct skill_cd
 	DBMap* name2id_db;

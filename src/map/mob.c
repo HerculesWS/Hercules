@@ -52,7 +52,7 @@ struct mob_interface mob_s;
 #define MOB_LAZYSKILLPERC 0	// Probability for mobs far from players from doing their IDLE skill. (rate of 1000 minute)
 // Move probability for mobs away from players (rate of 1000 minute)
 // in Aegis, this is 100% for mobs that have been activated by players and none otherwise.
-#define MOB_LAZYMOVEPERC(md) (md->state.spotted?1000:0)
+#define MOB_LAZYMOVEPERC(md) ((md)->state.spotted?1000:0)
 #define MOB_MAX_DELAY (24*3600*1000)
 #define MAX_MINCHASE 30	//Max minimum chase value to use for mobs.
 #define RUDE_ATTACKED_COUNT 2	//After how many rude-attacks should the skill be used?
@@ -601,7 +601,7 @@ int mob_spawn_guardian_sub(int tid, int64 tick, int id, intptr_t data) {
 	memcpy(md->guardian_data->guild_name, g->name, NAME_LENGTH);
 	md->guardian_data->guardup_lv = guardup_lv;
 	if( guardup_lv )
-		status_calc_mob(md, 0); //Give bonuses.
+		status_calc_mob(md, SCO_NONE); //Give bonuses.
 	return 0;
 }
 
@@ -919,7 +919,7 @@ int mob_spawn (struct mob_data *md)
 	}
 
 	memset(&md->state, 0, sizeof(md->state));
-	status_calc_mob(md, 1);
+	status_calc_mob(md, SCO_FIRST);
 	md->attacked_id = 0;
 	md->target_id = 0;
 	md->move_fail_count = 0;
@@ -2183,7 +2183,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		// change experience for different sized monsters [Valaris]
 		if (battle_config.mob_size_influence) {
 			switch( md->special_state.size ) {
-				case SZ_MEDIUM:
+				case SZ_SMALL:
 					per /= 2.;
 					break;
 				case SZ_BIG:
@@ -2304,7 +2304,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 			// change drops depending on monsters size [Valaris]
 			if (battle_config.mob_size_influence)
 			{
-				if (md->special_state.size == SZ_MEDIUM && drop_rate >= 2)
+				if (md->special_state.size == SZ_SMALL && drop_rate >= 2)
 					drop_rate /= 2;
 				else if( md->special_state.size == SZ_BIG)
 					drop_rate *= 2;
@@ -2332,6 +2332,12 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 					drop_rate = 1;
 			}
 #endif
+			if( sd && sd->status.mod_drop != 100 ) {
+				drop_rate = drop_rate * sd->status.mod_drop / 100;
+				if( drop_rate < 1 )
+					drop_rate = 1;
+			}
+			
 			// attempt to drop the item
 			if (rnd() % 10000 >= drop_rate)
 					continue;
@@ -2725,7 +2731,7 @@ int mob_class_change (struct mob_data *md, int class_)
 	unit->skillcastcancel(&md->bl, 0);
 	status->set_viewdata(&md->bl, class_);
 	clif->class_change(&md->bl, md->vd->class_, 1);
-	status_calc_mob(md, 1);
+	status_calc_mob(md, SCO_FIRST);
 	md->ud.state.speed_changed = 1; //Speed change update.
 
 	if (battle_config.monster_class_change_recover) {
@@ -3464,7 +3470,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 	sd->fd = fd;
 
 	//Finally, spawn it.
-	md = mob->once_spawn_sub(&sd->bl, m, x, y, "--en--", class_, event, SZ_SMALL, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, m, x, y, "--en--", class_, event, SZ_MEDIUM, AI_NONE);
 	if (!md) return 0; //Failed?
 
 	md->special_state.clone = 1;
@@ -3868,6 +3874,7 @@ void mob_readdb(void) {
 
 		sv->readdb(map->db_path, filename[fi], ',', 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP, 31+2*MAX_MVP_DROP+2*MAX_MOB_DROP, -1, mob->readdb_sub);
 	}
+	mob->name_constants();
 }
 
 /*==========================================
@@ -3917,7 +3924,16 @@ int mob_read_sqldb(void) {
 
 		ShowStatus("Done reading '"CL_WHITE"%lu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, mob_db_name[fi]);
 	}
+	mob->name_constants();
 	return 0;
+}
+
+void mob_name_constants(void) {
+	int i;
+	for (i = 0; i < MAX_MOB_DB; i++) {
+		if (mob->db_data[i] && !mob->is_clone(i))
+			script->set_constant2(mob->db_data[i]->sprite, i, 0);
+	}
 }
 
 /*==========================================
@@ -4534,7 +4550,12 @@ bool mob_readdb_itemratio(char* str[], int columns, int current)
 /**
  * read all mob-related databases
  */
-void mob_load(void) {
+void mob_load(bool minimal) {
+	if (minimal) {
+		// Only read the mob db in minimal mode
+		mob->readdb();
+		return;
+	}
 	sv->readdb(map->db_path, "mob_item_ratio.txt", ',', 2, 2+MAX_ITEMRATIO_MOBS, -1, mob->readdb_itemratio); // must be read before mobdb
 	mob->readchatdb();
 	if (map->db_use_sql_mob_db) {
@@ -4569,7 +4590,7 @@ void mob_reload(void) {
 		}
 	}
 
-	mob->load();
+	mob->load(false);
 }
 
 void mob_clear_spawninfo()
@@ -4583,15 +4604,18 @@ void mob_clear_spawninfo()
 /*==========================================
  * Circumference initialization of mob
  *------------------------------------------*/
-int do_init_mob(void)
-{	//Initialize the mob database
+int do_init_mob(bool minimal) {
+	// Initialize the mob database
 	memset(mob->db_data,0,sizeof(mob->db_data)); //Clear the array
-	mob->db_data[0] = (struct mob_db*)aCalloc(1, sizeof (struct mob_db));	//This mob is used for random spawns
+	mob->db_data[0] = (struct mob_db*)aCalloc(1, sizeof (struct mob_db)); //This mob is used for random spawns
 	mob->makedummymobdb(0); //The first time this is invoked, it creates the dummy mob
 	item_drop_ers = ers_new(sizeof(struct item_drop),"mob.c::item_drop_ers",ERS_OPT_NONE);
 	item_drop_list_ers = ers_new(sizeof(struct item_drop_list),"mob.c::item_drop_list_ers",ERS_OPT_NONE);
 
-	mob->load();
+	mob->load(minimal);
+
+	if (minimal)
+		return 0;
 
 	timer->add_func_list(mob->delayspawn,"mob_delayspawn");
 	timer->add_func_list(mob->delay_item_drop,"mob_delay_item_drop");
@@ -4745,6 +4769,7 @@ void mob_defaults(void) {
 	mob->readdb_sub = mob_readdb_sub;
 	mob->readdb = mob_readdb;
 	mob->read_sqldb = mob_read_sqldb;
+	mob->name_constants = mob_name_constants;
 	mob->readdb_mobavail = mob_readdb_mobavail;
 	mob->read_randommonster = mob_read_randommonster;
 	mob->parse_row_chatdb = mob_parse_row_chatdb;

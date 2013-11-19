@@ -76,7 +76,7 @@ struct party_interface {
 	unsigned long booking_nextid;
 	int create_byscript;
 	/* funcs */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
 	struct party_data* (*search) (int party_id);

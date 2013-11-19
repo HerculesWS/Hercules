@@ -89,8 +89,8 @@ struct Login_Config {
 	struct client_hash_node *client_hash_nodes;		// linked list containg md5 hash for each gm group
 };
 
-#define sex_num2str(num) ( (num ==  SEX_FEMALE  ) ? 'F' : (num ==  SEX_MALE  ) ? 'M' : 'S' )
-#define sex_str2num(str) ( (str == 'F' ) ?  SEX_FEMALE  : (str == 'M' ) ?  SEX_MALE  :  SEX_SERVER  )
+#define sex_num2str(num) ( ((num) ==  SEX_FEMALE) ? 'F' : ((num) ==  SEX_MALE) ? 'M' : 'S' )
+#define sex_str2num(str) ( ((str) == 'F') ? SEX_FEMALE : ((str) == 'M') ? SEX_MALE : SEX_SERVER )
 
 #define MAX_SERVERS 30
 extern struct mmo_char_server server[MAX_SERVERS];

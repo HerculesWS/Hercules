@@ -12,7 +12,7 @@
 //= 1.1 Navigation system update. [Euphy]
 //============================================================
 
-einbroch,72,202,4	script	Einbroch Guide#ein01::GuideEinbroch	852,{
+einbroch,72,202,4	script	Einbroch Guide#ein01::GuideEinbroch	4_M_EIN_SOLDIER,{
 	cutin "ein_soldier",2;
 	mes "[Einbroch Guide]";
 	mes "Welcome";
@@ -206,11 +206,11 @@ einbroch,72,202,4	script	Einbroch Guide#ein01::GuideEinbroch	852,{
 		}
 	}
 }
-einbroch,155,43,4	duplicate(GuideEinbroch)	Einbroch Guide#ein02	852
-einbroch,162,317,4	duplicate(GuideEinbroch)	Einbroch Guide#ein03	852
-einbroch,252,320,3	duplicate(GuideEinbroch)	Einbroch Guide#ein04	852
+einbroch,155,43,4	duplicate(GuideEinbroch)	Einbroch Guide#ein02	4_M_EIN_SOLDIER
+einbroch,162,317,4	duplicate(GuideEinbroch)	Einbroch Guide#ein03	4_M_EIN_SOLDIER
+einbroch,252,320,3	duplicate(GuideEinbroch)	Einbroch Guide#ein04	4_M_EIN_SOLDIER
 
-einbech,67,37,4	script	Einbech Guide#einbech01::GuideEinbech	852,{
+einbech,67,37,4	script	Einbech Guide#einbech01::GuideEinbech	4_M_EIN_SOLDIER,{
 	cutin "ein_soldier",2;
 	mes "[Einbech Guide]";
 	mes "Welcome to ^8B4513Einbech^000000,";
@@ -289,4 +289,4 @@ einbech,67,37,4	script	Einbech Guide#einbech01::GuideEinbech	852,{
 		}
 	}
 }
-einbech,48,214,4	duplicate(GuideEinbech)	Einbech Guide#einbech02	852
+einbech,48,214,4	duplicate(GuideEinbech)	Einbech Guide#einbech02	4_M_EIN_SOLDIER

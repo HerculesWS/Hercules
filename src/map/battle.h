@@ -21,14 +21,14 @@ struct status_data;
 /**
  * Defines
  **/
-#define MIN_HAIR_STYLE battle_config.min_hair_style
-#define MAX_HAIR_STYLE battle_config.max_hair_style
-#define MIN_HAIR_COLOR battle_config.min_hair_color
-#define MAX_HAIR_COLOR battle_config.max_hair_color
-#define MIN_CLOTH_COLOR battle_config.min_cloth_color
-#define MAX_CLOTH_COLOR battle_config.max_cloth_color
+#define MIN_HAIR_STYLE  (battle_config.min_hair_style)
+#define MAX_HAIR_STYLE  (battle_config.max_hair_style)
+#define MIN_HAIR_COLOR  (battle_config.min_hair_color)
+#define MAX_HAIR_COLOR  (battle_config.max_hair_color)
+#define MIN_CLOTH_COLOR (battle_config.min_cloth_color)
+#define MAX_CLOTH_COLOR (battle_config.max_cloth_color)
 
-#define	is_boss(bl)	(status_get_mode(bl)&MD_BOSS)	// Can refine later [Aru]
+#define	is_boss(bl)     (status_get_mode(bl)&MD_BOSS)	// Can refine later [Aru]
 
 /**
  * Enumerations
@@ -426,6 +426,7 @@ struct Battle_Config {
 	int cashshop_show_points;
 	int mail_show_status;
 	int client_limit_unit_lv;
+	int client_emblem_max_blank_percent;
 	int hom_max_level;
 	int hom_S_max_level;
 	
@@ -506,7 +507,7 @@ struct battle_interface {
 	int attr_fix_table[4][ELE_MAX][ELE_MAX];
 	struct eri *delay_damage_ers; //For battle delay damage structures.
 	/* init */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	/* final */
 	void (*final) (void);
 	/* damage calculation */

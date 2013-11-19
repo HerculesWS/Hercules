@@ -15,7 +15,7 @@
 //= 1.5 Added Lighthalzen Hair Dying NPC. [L0ne_W0lf]
 //============================================================
 
-prt_in,243,168,4	script	Jovovich	91,{
+prt_in,243,168,4	script	Jovovich	4_F_02,{
 	mes "[Hairdresser Jovovich]";
 	mes "Welcome~!";
 	mes "How may I help you?";
@@ -154,7 +154,7 @@ S_NoDye:
 }
 
 // Lighthalzen
-lhz_in02,100,134,3	script	Hair Dyer#lich	850,{
+lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 	mes "[Rossa]";
 	if (Sex == 1) {
 		mes "Welcome, come in~";

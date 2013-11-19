@@ -28,7 +28,7 @@
 //= 2.3 Fixed an issue with completequest by adding checkquest. [Kisuka]
 //============================================================
 
-alberta_in,53,43,6	script	Merchant#mer	86,{
+alberta_in,53,43,6	script	Merchant#mer	4_M_04,{
 	if (Upper == 1) {
 		if (Class == Job_Novice_High && (ADVJOB == Job_Whitesmith || ADVJOB == Job_Creator)) {
 			mes "[Chief Mahnsoo]";
@@ -509,7 +509,7 @@ S_GiveSerial:
 	return;
 }
 
-alberta_in,28,29,2	script	Merchant Guildsman#mer	83,{
+alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 	if (BaseJob == Job_Merchant) {
 		mes "[Union Staff Kay]";
 		mes "Heya pal.";
@@ -786,7 +786,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	83,{
 	}
 }
 
-morocc_in,140,102,4	script	Student#mer	86,{
+morocc_in,140,102,4	script	Student#mer	4_M_04,{
 	if ((job_merchant_q == 4) || (job_merchant_q == 3)) {
 		mes "[Dyer's Student]";
 		mes "You're from";
@@ -871,7 +871,7 @@ morocc_in,140,102,4	script	Student#mer	86,{
 	}
 }
 
-geffen_in,155,122,4	script	Guild Staff#mer	47,{
+geffen_in,155,122,4	script	Guild Staff#mer	1_M_01,{
 	if (job_merchant_q == 4 || job_merchant_q == 3) {
 		mes "[Guild Staff]";
 		mes "Ah, you must be with the Merchant Guild. Finally, my package has arrived! Alright...!";
@@ -952,7 +952,7 @@ geffen_in,155,122,4	script	Guild Staff#mer	47,{
 	}
 }
 
-prontera,248,42,0	script	Kafra Employee#mer	116,{
+prontera,248,42,0	script	Kafra Employee#mer	4_F_KAFRA2,{
 	cutin "kafra_02",2;
 	if (job_merchant_q == 6 || job_merchant_q == 5) && (job_merchant_q2 == 2 || job_merchant_q2 == 1) {
 		mes "[Kafra Employee]";
@@ -1070,7 +1070,7 @@ prontera,248,42,0	script	Kafra Employee#mer	116,{
 	}
 }
 
-//izlu2dun,106,58,4	script	Kafra Employee#mer	116,{
+//izlu2dun,106,58,4	script	Kafra Employee#mer	4_F_KAFRA2,{
 function	script	F_MercKafra	{
 	if ((job_merchant_q == 6 || job_merchant_q == 5) && (job_merchant_q2 == 8 || job_merchant_q2 == 7)) {
 		mes "[Kafra Employee]";

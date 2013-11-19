@@ -12,7 +12,7 @@
 //= 1.1 Navigation system update. [Euphy]
 //============================================================
 
-veins,210,345,5	script	Veins Guide#veins01::GuideVeins	934,{
+veins,210,345,5	script	Veins Guide#veins01::GuideVeins	4_M_RASWORD,{
 	mes "[Veins Guide]";
 	mes "Thank you for coming through the rough sand storms. Welcome to ^8B4513Veins^000000, the Canyon Village.";
 	mes "If this is the first time for you to use the guide services, why don't you check the \"Notice\" menu first?";
@@ -105,4 +105,4 @@ veins,210,345,5	script	Veins Guide#veins01::GuideVeins	934,{
 		}
 	}
 }
-veins,189,101,5	duplicate(GuideVeins)	Veins Guide#veins02	934
+veins,189,101,5	duplicate(GuideVeins)	Veins Guide#veins02	4_M_RASWORD

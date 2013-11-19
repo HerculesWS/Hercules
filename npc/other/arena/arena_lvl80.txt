@@ -13,7 +13,7 @@
 //= 1.3 Script updates, and removed a level restriction. [Euphy]
 //============================================================
 
-arena_room,147,42,1	script	Lv80 Waiting Room	124,{
+arena_room,147,42,1	script	Lv80 Waiting Room	4_F_TELEPORTER,{
 	end;
 
 OnInit:
@@ -32,7 +32,7 @@ OnStart:
 	end;
 }
 
-force_4-1,99,20,4	script	Octus#arena	124,{
+force_4-1,99,20,4	script	Octus#arena	4_F_TELEPORTER,{
 	end;
 
 OnStart:
@@ -310,28 +310,28 @@ OnReset_All:
 	end;
 }
 
-force_4-1,62,26,1	script	force_08_01#80	45,1,1,{
+force_4-1,62,26,1	script	force_08_01#80	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Octus#arena::On01_Start";
 	warp "force_4-1",40,26;
 	end;
 }
 
-force_4-1,25,44,1	script	force_01_02#80	45,1,1,{
+force_4-1,25,44,1	script	force_01_02#80	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Octus#arena::On02_Start";
 	warp "force_4-1",25,69;
 	end;
 }
 
-force_4-1,25,134,1	script	force_02_03#80	45,1,1,{
+force_4-1,25,134,1	script	force_02_03#80	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Octus#arena::On03_Start";
 	warp "force_4-1",25,159;
 	end;
 }
 
-force_4-1,44,174,1	script	force_03_04#80	45,1,1,{
+force_4-1,44,174,1	script	force_03_04#80	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Octus#arena::On04_Start";
 	warp "force_4-1",69,174;
@@ -339,28 +339,28 @@ OnTouch:
 
 }
 
-force_4-1,134,174,1	script	force_04_05#80	45,1,1,{
+force_4-1,134,174,1	script	force_04_05#80	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Octus#arena::On05_Start";
 	warp "force_4-1",159,174;
 	end;
 }
 
-force_4-1,174,155,1	script	force_05_06#80	45,1,1,{
+force_4-1,174,155,1	script	force_05_06#80	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Octus#arena::On06_Start";
 	warp "force_4-1",174,130;
 	end;
 }
 
-force_4-1,174,65,1	script	force_06_07#80	45,1,1,{
+force_4-1,174,65,1	script	force_06_07#80	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Octus#arena::On07_Start";
 	warp "force_4-1",174,40;
 	end;
 }
 
-force_4-1,155,26,1	script	force_07_08#80	45,1,1,{
+force_4-1,155,26,1	script	force_07_08#80	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Octus#arena::On08_Start";
 	warp "force_4-1",132,26;
@@ -368,14 +368,14 @@ OnTouch:
 	end;
 }
 
-force_4-1,99,54,1	script	force_08_09#80	45,1,1,{
+force_4-1,99,54,1	script	force_08_09#80	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Octus#arena::On09_Start";
 	warp "force_4-1",99,82;
 	end;
 }
 
-force_4-1,99,124,1	script	force_exit#80	45,1,1,{
+force_4-1,99,124,1	script	force_exit#80	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "Octus#arena::OnTimerOff";
 	donpcevent "#arn_timer_80::OnEnable";
@@ -736,7 +736,7 @@ OnMyMobDead:
 	end;
 }
 
-prt_are_in,181,188,3	script	Staff#80-1	67,{
+prt_are_in,181,188,3	script	Staff#80-1	1_F_02,{
 	mes "[Staff]";
 	mes "You did a good job.";
 	mes "Even if you have failed to clear a time attack battle, I will reward you with a small amount of arena points.";
@@ -757,7 +757,7 @@ prt_are_in,181,188,3	script	Staff#80-1	67,{
 	end;
 }
 
-prt_are_in,77,187,3	script	Staff#80-2	67,{
+prt_are_in,77,187,3	script	Staff#80-2	1_F_02,{
 	if($arena_min80end < $arena_min80st) {
 		if($arena_sec80end < $arena_sec80st) {
 			set @record_min80,60 - $arena_min80st + $arena_min80end -1;

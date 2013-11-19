@@ -204,23 +204,28 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 		} else
 			sd->areanpc_id=0;
 
-		if( sd->md && !check_distance_bl(&sd->bl, &sd->md->bl, MAX_MER_DISTANCE) )
-		{
-			// mercenary should be warped after being 3 seconds too far from the master [greenbox]
-			if (sd->md->masterteleport_timer == 0)
-			{
-				sd->md->masterteleport_timer = timer->gettick();
-			}
-			else if (DIFF_TICK(timer->gettick(), sd->md->masterteleport_timer) > 3000)
-			{
+		if( sd->md ) { // mercenary should be warped after being 3 seconds too far from the master [greenbox]
+			if( !check_distance_bl(&sd->bl, &sd->md->bl, MAX_MER_DISTANCE) ) {
+				if (sd->md->masterteleport_timer == 0)
+					sd->md->masterteleport_timer = timer->gettick();
+				else if (DIFF_TICK(timer->gettick(), sd->md->masterteleport_timer) > 3000) {
+					sd->md->masterteleport_timer = 0;
+					unit->warp( &sd->md->bl, sd->bl.m, sd->bl.x, sd->bl.y, CLR_TELEPORT );
+				}
+			} else // reset the tick, he is not far anymore
 				sd->md->masterteleport_timer = 0;
-				unit->warp( &sd->md->bl, sd->bl.m, sd->bl.x, sd->bl.y, CLR_TELEPORT );
-			}
+			
 		}
-		else if( sd->md )
-		{
-			// reset the tick, he is not far anymore
-			sd->md->masterteleport_timer = 0;
+		if( sd->hd ) {
+			if( homun_alive(sd->hd) && !check_distance_bl(&sd->bl, &sd->hd->bl, MAX_MER_DISTANCE) ) {
+				if (sd->hd->masterteleport_timer == 0)
+					sd->hd->masterteleport_timer = timer->gettick();
+				else if (DIFF_TICK(timer->gettick(), sd->hd->masterteleport_timer) > 3000) {
+					sd->hd->masterteleport_timer = 0;
+					unit->warp( &sd->hd->bl, sd->bl.m, sd->bl.x, sd->bl.y, CLR_TELEPORT );
+				}
+			} else
+				sd->hd->masterteleport_timer = 0;
 		}
 	} else if (md) {
 		if( map->getcell(bl->m,x,y,CELL_CHKNPC) ) {
@@ -1966,7 +1971,7 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 	else
 		ret = timer->delete( ud->skilltimer, skill->castend_id );
 	if( ret < 0 )
-		ShowError("delete timer error : skill_id : %d\n",ret);
+		ShowError("delete timer error %d : skill %d (%s)\n",ret,skill_id,skill->get_name(skill_id));
 
 	ud->skilltimer = INVALID_TIMER;
 
@@ -2194,6 +2199,10 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 				instance->list[map->list[bl->m].instance_id].users--;
 				instance->check_idle(map->list[bl->m].instance_id);
 			}
+			if( sd->state.hpmeter_visible ) {
+				map->list[bl->m].hpmeter_visible--;
+				sd->state.hpmeter_visible = 0;
+			}
 			sd->state.debug_remove_map = 1; // temporary state to track double remove_map's [FlavioJS]
 			sd->debug_file = file;
 			sd->debug_line = line;
@@ -2227,7 +2236,6 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 		}
 		case BL_HOM: {
 			struct homun_data *hd = (struct homun_data *)bl;
-			ud->canact_tick = ud->canmove_tick; //It appears HOM do reset the can-act tick.
 			if( !hd->homunculus.intimacy && !(hd->master && !hd->master->state.active) ) {
 				//If logging out, this is deleted on unit->free
 				clif->emotion(bl, E_SOB);
@@ -2389,8 +2397,8 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 			for( k = 0; k < sd->hdatac; k++ ) {
 				if( sd->hdata[k]->flag.free ) {
 					aFree(sd->hdata[k]->data);
-					aFree(sd->hdata[k]);
 				}
+				aFree(sd->hdata[k]);
 			}
 			if( sd->hdata )
 				aFree(sd->hdata);
@@ -2569,7 +2577,10 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 	return 0;
 }
 
-int do_init_unit(void) {
+int do_init_unit(bool minimal) {
+	if (minimal)
+		return 0;
+
 	timer->add_func_list(unit->attack_timer,  "unit_attack_timer");
 	timer->add_func_list(unit->walktoxy_timer,"unit_walktoxy_timer");
 	timer->add_func_list(unit->walktobl_sub, "unit_walktobl_sub");

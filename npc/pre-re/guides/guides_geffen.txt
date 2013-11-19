@@ -18,7 +18,7 @@
 //=     Thanks to $ephiroth.
 //============================================================
 
-geffen,203,116,0	script	Guide#gef::GefGuide	705,{
+geffen,203,116,0	script	Guide#gef::GefGuide	4_M_GEF_SOLDIER,{
 	cutin "gef_soldier",2;
 	mes "[Geffen Guide]";
 	mes "Welcome to Geffen,";
@@ -169,4 +169,4 @@ geffen,203,116,0	script	Guide#gef::GefGuide	705,{
 	end;
 }
 
-geffen,118,62,0	duplicate(GefGuide)	Guide#2gef	705
+geffen,118,62,0	duplicate(GefGuide)	Guide#2gef	4_M_GEF_SOLDIER

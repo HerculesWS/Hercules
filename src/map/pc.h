@@ -48,6 +48,12 @@ enum equip_index {
 	EQI_COSTUME_LOW,
 	EQI_COSTUME_GARMENT,
 	EQI_AMMO,
+	EQI_SHADOW_ARMOR,
+	EQI_SHADOW_WEAPON,
+	EQI_SHADOW_SHIELD,
+	EQI_SHADOW_SHOES,
+	EQI_SHADOW_ACC_R,
+	EQI_SHADOW_ACC_L,
 	EQI_MAX
 };
 struct weapon_data {
@@ -160,6 +166,7 @@ struct map_session_data {
 		short pmap; // Previous map on Map Change
 		unsigned short autoloot;
 		unsigned short autolootid[AUTOLOOTITEM_SIZE]; // [Zephyrus]
+		unsigned short autoloottype;
 		unsigned int autolooting : 1; //performance-saver, autolooting state for @alootid
 		unsigned short autobonus; //flag to indicate if an autobonus is activated. [Inkfish]
 		unsigned int gmaster_flag : 1;
@@ -171,6 +178,7 @@ struct map_session_data {
 		unsigned int workinprogress : 3; // 1 = disable skill/item, 2 = disable npc interaction, 3 = disable both
 		unsigned int hold_recalc : 1;
 		unsigned int snovice_call_flag : 3; //Summon Angel (stage 1~3)
+		unsigned int hpmeter_visible : 1;
 	} state;
 	struct {
 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;
@@ -442,7 +450,6 @@ struct map_session_data {
 	const char* debug_func;
 
 	unsigned int bg_id;
-	unsigned short user_font;
 
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
@@ -511,8 +518,13 @@ struct map_session_data {
 	
 	unsigned char delayed_damage;//ref. counter bugreport:7307 [Ind/Hercules]
 	
+	/* HPM Custom Struct */
 	struct HPluginData **hdata;
 	unsigned int hdatac;
+	
+	/* expiration_time timer id */
+	int expiration_tid;
+	time_t expiration_time;
 	
 	/* */
 	struct {
@@ -526,21 +538,28 @@ struct map_session_data {
 
 //Equip position constants
 enum equip_pos {
-	EQP_HEAD_LOW         = 0x0001,
-	EQP_HEAD_MID         = 0x0200, //512
-	EQP_HEAD_TOP         = 0x0100, //256
-	EQP_HAND_R           = 0x0002, //2
-	EQP_HAND_L           = 0x0020, //32
-	EQP_ARMOR            = 0x0010, //16
-	EQP_SHOES            = 0x0040, //64
-	EQP_GARMENT          = 0x0004, //4
-	EQP_ACC_L            = 0x0008, //8
-	EQP_ACC_R            = 0x0080, //128
-	EQP_COSTUME_HEAD_TOP = 0x0400, //1024
-	EQP_COSTUME_HEAD_MID = 0x0800, //2048
-	EQP_COSTUME_HEAD_LOW = 0x1000, //4096
-	EQP_COSTUME_GARMENT	 = 0x2000, //8192
-	EQP_AMMO             = 0x8000, //32768
+	EQP_HEAD_LOW           = 0x000001,
+	EQP_HEAD_MID           = 0x000200, //512
+	EQP_HEAD_TOP           = 0x000100, //256
+	EQP_HAND_R             = 0x000002, //2
+	EQP_HAND_L             = 0x000020, //32
+	EQP_ARMOR              = 0x000010, //16
+	EQP_SHOES              = 0x000040, //64
+	EQP_GARMENT            = 0x000004, //4
+	EQP_ACC_L              = 0x000008, //8
+	EQP_ACC_R              = 0x000080, //128
+	EQP_COSTUME_HEAD_TOP   = 0x000400, //1024
+	EQP_COSTUME_HEAD_MID   = 0x000800, //2048
+	EQP_COSTUME_HEAD_LOW   = 0x001000, //4096
+	EQP_COSTUME_GARMENT    = 0x002000, //8192
+	//UNUSED_COSTUME_FLOOR = 0x004000, //16384
+	EQP_AMMO               = 0x008000, //32768
+	EQP_SHADOW_ARMOR       = 0x010000, //65536
+	EQP_SHADOW_WEAPON      = 0x020000, //131072
+	EQP_SHADOW_SHIELD      = 0x040000, //262144
+	EQP_SHADOW_SHOES       = 0x080000, //524288
+	EQP_SHADOW_ACC_R       = 0x100000, //1048576
+	EQP_SHADOW_ACC_L       = 0x200000, //2097152
 };
 
 #define EQP_WEAPON EQP_HAND_R
@@ -596,8 +615,8 @@ enum equip_pos {
 // Rune Knight Dragon
 #define pc_isridingdragon(sd) ( (sd)->sc.option&OPTION_DRAGON )
 
-#define pc_stop_walking(sd, type) unit->stop_walking(&(sd)->bl, type)
-#define pc_stop_attack(sd) unit->stop_attack(&(sd)->bl)
+#define pc_stop_walking(sd, type) (unit->stop_walking(&(sd)->bl, (type)))
+#define pc_stop_attack(sd)        (unit->stop_attack(&(sd)->bl))
 
 //Weapon check considering dual wielding.
 #define pc_check_weapontype(sd, type) ((type)&((sd)->status.weapon < MAX_WEAPON_TYPE? \
@@ -614,7 +633,7 @@ enum equip_pos {
 ||	( (class_) >= JOB_KAGEROU        && (class_) <= JOB_OBORO          ) \
 ||	( (class_) >= JOB_REBELLION      && (class_) <  JOB_MAX            ) \
 )
-#define pcdb_checkid(class_) pcdb_checkid_sub((unsigned int)class_)
+#define pcdb_checkid(class_) pcdb_checkid_sub((unsigned int)(class_))
 
 // clientside display macros (values to the left/right of the "+")
 #ifdef RENEWAL
@@ -652,18 +671,18 @@ enum equip_pos {
 #define pc_checkoverhp(sd) ((sd)->battle_status.hp == (sd)->battle_status.max_hp)
 #define pc_checkoversp(sd) ((sd)->battle_status.sp == (sd)->battle_status.max_sp)
 
-#define pc_readglobalreg(sd,reg) pc->readregistry(sd,reg,3)
-#define pc_setglobalreg(sd,reg,val) pc->setregistry(sd,reg,val,3)
-#define pc_readglobalreg_str(sd,reg) pc->readregistry_str(sd,reg,3)
-#define pc_setglobalreg_str(sd,reg,val) pc->setregistry_str(sd,reg,val,3)
-#define pc_readaccountreg(sd,reg) pc->readregistry(sd,reg,2)
-#define pc_setaccountreg(sd,reg,val) pc->setregistry(sd,reg,val,2)
-#define pc_readaccountregstr(sd,reg) pc->readregistry_str(sd,reg,2)
-#define pc_setaccountregstr(sd,reg,val) pc->setregistry_str(sd,reg,val,2)
-#define pc_readaccountreg2(sd,reg) pc->readregistry(sd,reg,1)
-#define pc_setaccountreg2(sd,reg,val) pc->setregistry(sd,reg,val,1)
-#define pc_readaccountreg2str(sd,reg) pc->readregistry_str(sd,reg,1)
-#define pc_setaccountreg2str(sd,reg,val) pc->setregistry_str(sd,reg,val,1)
+#define pc_readglobalreg(sd,reg)         (pc->readregistry((sd),(reg),3))
+#define pc_setglobalreg(sd,reg,val)      (pc->setregistry((sd),(reg),(val),3))
+#define pc_readglobalreg_str(sd,reg)     (pc->readregistry_str((sd),(reg),3))
+#define pc_setglobalreg_str(sd,reg,val)  (pc->setregistry_str((sd),(reg),(val),3))
+#define pc_readaccountreg(sd,reg)        (pc->readregistry((sd),(reg),2))
+#define pc_setaccountreg(sd,reg,val)     (pc->setregistry((sd),(reg),(val),2))
+#define pc_readaccountregstr(sd,reg)     (pc->readregistry_str((sd),(reg),2))
+#define pc_setaccountregstr(sd,reg,val)  (pc->setregistry_str((sd),(reg),(val),2))
+#define pc_readaccountreg2(sd,reg)       (pc->readregistry((sd),(reg),1))
+#define pc_setaccountreg2(sd,reg,val)    (pc->setregistry((sd),(reg),(val),1))
+#define pc_readaccountreg2str(sd,reg)    (pc->readregistry_str((sd),(reg),1))
+#define pc_setaccountreg2str(sd,reg,val) (pc->setregistry_str((sd),(reg),(val),1))
 
 struct skill_tree_entry {
 	short id;
@@ -718,7 +737,7 @@ struct pc_interface {
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	unsigned int level_penalty[3][RC_MAX][MAX_LEVEL*2+1];
 #endif
-	unsigned short equip_pos[EQI_MAX];
+	unsigned int equip_pos[EQI_MAX];
 	/* */
 	struct skill_tree_entry skill_tree[CLASS_COUNT][MAX_SKILL_TREE];
 	struct fame_list smith_fame_list[MAX_FAME_LIST];
@@ -727,8 +746,10 @@ struct pc_interface {
 	struct sg_data sg_info[MAX_PC_FEELHATE];
 	/* */
 	struct eri *sc_display_ers;
+	/* global expiration timer id */
+	int expiration_tid;
 	/* funcs */
-	void (*init) (void);
+	void (*init) (bool minimal);
 	void (*final) (void);
 	
 	struct map_session_data* (*get_dummy_sd) (void);
@@ -736,9 +757,10 @@ struct pc_interface {
 	int (*get_group_level) (struct map_session_data *sd);
 	//int (*getrefinebonus) (int lv,int type); FIXME: This function does not exist, nor it is ever called
 	bool (*can_give_items) (struct map_session_data *sd);
-	
+	bool (*can_give_bound_items) (struct map_session_data *sd);
+ 	
 	bool (*can_use_command) (struct map_session_data *sd, const char *command);
-	bool (*has_permission) (struct map_session_data *sd, enum e_pc_permission permission);
+	bool (*has_permission) (struct map_session_data *sd, unsigned int permission);
 	int (*set_group) (struct map_session_data *sd, int group_id);
 	bool (*should_log_commands) (struct map_session_data *sd);
 
@@ -775,6 +797,7 @@ struct pc_interface {
 	int (*additem) (struct map_session_data *sd,struct item *item_data,int amount,e_log_pick_type log_type);
 	int (*getzeny) (struct map_session_data *sd,int zeny, enum e_log_pick_type type, struct map_session_data *tsd);
 	int (*delitem) (struct map_session_data *sd,int n,int amount,int type, short reason, e_log_pick_type log_type);
+
 	// Special Shop System
 	int (*paycash) (struct map_session_data *sd, int price, int points);
 	int (*getcash) (struct map_session_data *sd, int cash, int points);
@@ -964,6 +987,15 @@ struct pc_interface {
 	
 	void (*bank_deposit) (struct map_session_data *sd, int money);
 	void (*bank_withdraw) (struct map_session_data *sd, int money);
+	
+	void (*rental_expire) (struct map_session_data *sd, int i);
+	void (*scdata_received) (struct map_session_data *sd);
+	
+	void (*bound_clear) (struct map_session_data *sd, enum e_item_bound_type type);
+	
+	int (*expiration_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*global_expiration_timer) (int tid, int64 tick, int id, intptr_t data);
+	void (*expire_check) (struct map_session_data *sd);
 };
 
 struct pc_interface *pc;

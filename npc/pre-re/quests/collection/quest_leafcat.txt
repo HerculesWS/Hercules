@@ -12,7 +12,7 @@
 //= 1.0 First version.
 //============================================================
 
-ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	877,{
+ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 	if (checkquest(60143) != -1) {
 		if (checkquest(60143,HUNTING) != 2 ) {
 			mes "[Lella]";

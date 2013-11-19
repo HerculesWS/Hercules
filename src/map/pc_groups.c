@@ -16,51 +16,9 @@
 #include "map.h"       // mapiterator
 #include "pc.h"        // pc->set_group()
 
-// Cached config settings for quick lookup
-struct GroupSettings {
-	unsigned int id; // groups.[].id
-	int level; // groups.[].level
-	char *name; // copy of groups.[].name
-	unsigned int e_permissions; // packed groups.[].permissions
-	bool log_commands; // groups.[].log_commands
-	int index; // internal index of the group (contiguous range starting at 0) [Ind]
-	/// Following are used/available only during config reading
-	config_setting_t *commands; // groups.[].commands
-	config_setting_t *permissions; // groups.[].permissions
-	config_setting_t *inherit; // groups.[].inherit
-	bool inheritance_done; // have all inheritance rules been evaluated?
-	config_setting_t *root; // groups.[]
-};
-
-const struct pc_permission_name_table pc_g_permission_name[NUM_PC_PERM] = {
-	{ "can_trade", PC_PERM_TRADE },
-	{ "can_party", PC_PERM_PARTY },
-	{ "all_skill", PC_PERM_ALL_SKILL },
-	{ "all_equipment", PC_PERM_USE_ALL_EQUIPMENT },
-	{ "skill_unconditional", PC_PERM_SKILL_UNCONDITIONAL },
-	{ "join_chat", PC_PERM_JOIN_ALL_CHAT },
-	{ "kick_chat", PC_PERM_NO_CHAT_KICK },
-	{ "hide_session", PC_PERM_HIDE_SESSION },
-	{ "who_display_aid", PC_PERM_WHO_DISPLAY_AID },
-	{ "hack_info", PC_PERM_RECEIVE_HACK_INFO },
-	{ "any_warp", PC_PERM_WARP_ANYWHERE },
-	{ "view_hpmeter", PC_PERM_VIEW_HPMETER },
-	{ "view_equipment", PC_PERM_VIEW_EQUIPMENT },
-	{ "use_check", PC_PERM_USE_CHECK },
-	{ "use_changemaptype", PC_PERM_USE_CHANGEMAPTYPE },
-	{ "all_commands", PC_PERM_USE_ALL_COMMANDS },
-	{ "receive_requests", PC_PERM_RECEIVE_REQUESTS },
-	{ "show_bossmobs", PC_PERM_SHOW_BOSS },
-	{ "disable_pvm", PC_PERM_DISABLE_PVM },
-	{ "disable_pvp", PC_PERM_DISABLE_PVP },
-	{ "disable_commands_when_dead", PC_PERM_DISABLE_CMD_DEAD },
-	{ "hchsys_admin", PC_PERM_HCHSYS_ADMIN },
-};
-
-static DBMap* pc_group_db; // id -> GroupSettings
-static DBMap* pc_groupname_db; // name -> GroupSettings
-
 static GroupSettings dummy_group; ///< dummy group used in dummy map sessions @see pc_get_dummy_sd()
+
+struct pc_groups_interface pcg_s;
 
 /**
  * Returns dummy group.
@@ -78,7 +36,7 @@ GroupSettings* pc_group_get_dummy_group(void)
  */
 static inline GroupSettings* name2group(const char* group_name)
 {
-	return strdb_get(pc_groupname_db, group_name);
+	return strdb_get(pcg->name_db, group_name);
 }
 
 /**
@@ -116,7 +74,7 @@ static void read_config(void) {
 				continue;
 			}
 
-			if (pc_group_exists(id)) {
+			if (pcg->exists(id)) {
 				ShowConfigWarning(group, "pc_groups:read_config: duplicate group id %d, removing...", i);
 				config_setting_remove_elem(groups, i);
 				--i;
@@ -162,15 +120,15 @@ static void read_config(void) {
 			group_settings->root = group;
 			group_settings->index = i;
 
-			strdb_put(pc_groupname_db, groupname, group_settings);
-			idb_put(pc_group_db, id, group_settings);
+			strdb_put(pcg->name_db, groupname, group_settings);
+			idb_put(pcg->db, id, group_settings);
 			
 		}
 		group_count = config_setting_length(groups); // Save number of groups
-		assert(group_count == db_size(pc_group_db));
+		assert(group_count == db_size(pcg->db));
 		
 		// Check if all commands and permissions exist
-		iter = db_iterator(pc_group_db);
+		iter = db_iterator(pcg->db);
 		for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
 			config_setting_t *commands = group_settings->commands, *permissions = group_settings->permissions;
 			int count = 0, i;
@@ -201,8 +159,8 @@ static void read_config(void) {
 				const char *name = config_setting_name(permission);
 				int j;
 
-				ARR_FIND(0, ARRAYLENGTH(pc_g_permission_name), j, strcmp(pc_g_permission_name[j].name, name) == 0);
-				if (j == ARRAYLENGTH(pc_g_permission_name)) {
+				ARR_FIND(0, pcg->permission_count, j, strcmp(pcg->permissions[j].name, name) == 0);
+				if (j == pcg->permission_count) {
 					ShowConfigWarning(permission, "pc_groups:read_config: non-existent permission name '%s', removing...", name);
 					config_setting_remove(permissions, name);
 					--i;
@@ -215,7 +173,7 @@ static void read_config(void) {
 		// Apply inheritance
 		i = 0; // counter for processed groups
 		while (i < group_count) {
-			iter = db_iterator(pc_group_db);
+			iter = db_iterator(pcg->db);
 			for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
 				config_setting_t *inherit = NULL,
 				                 *commands = group_settings->commands,
@@ -280,7 +238,7 @@ static void read_config(void) {
 		} // while(i < group_count)
 		
 		// Pack permissions into GroupSettings.e_permissions for faster checking
-		iter = db_iterator(pc_group_db);
+		iter = db_iterator(pcg->db);
 		for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
 			config_setting_t *permissions = group_settings->permissions;
 			int i, count = config_setting_length(permissions);
@@ -293,8 +251,8 @@ static void read_config(void) {
 
 				if (val == 0) // does not have this permission
 					continue;
-				ARR_FIND(0, ARRAYLENGTH(pc_g_permission_name), j, strcmp(pc_g_permission_name[j].name, name) == 0);
-				group_settings->e_permissions |= pc_g_permission_name[j].permission;
+				ARR_FIND(0, pcg->permission_count, j, strcmp(pcg->permissions[j].name, name) == 0);
+				group_settings->e_permissions |= pcg->permissions[j].permission;
 			}
 		}
 		dbi_destroy(iter);
@@ -308,7 +266,7 @@ static void read_config(void) {
 			config_setting_t **commands = NULL;
 			CREATE(groups, GroupSettings*, group_count);
 			CREATE(commands, config_setting_t*, group_count);
-			iter = db_iterator(pc_group_db);
+			iter = db_iterator(pcg->db);
 			for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
 				groups[i] = group_settings;
 				commands[i] = group_settings->commands;
@@ -332,7 +290,7 @@ static void read_config(void) {
  * @param group group
  * @param permission permission to check
  */
-bool pc_group_has_permission(GroupSettings *group, enum e_pc_permission permission)
+bool pc_group_has_permission(GroupSettings *group, unsigned int permission)
 {
 	return ((group->e_permissions&permission) != 0);
 }
@@ -353,7 +311,7 @@ bool pc_group_should_log_commands(GroupSettings *group)
  */
 bool pc_group_exists(int group_id)
 {
-	return idb_exists(pc_group_db, group_id);
+	return idb_exists(pcg->db, group_id);
 }
 
 /**
@@ -361,7 +319,7 @@ bool pc_group_exists(int group_id)
  */
 GroupSettings* pc_group_id2group(int group_id)
 {
-	return idb_get(pc_group_db, group_id);
+	return idb_get(pcg->db, group_id);
 }
 
 /**
@@ -398,13 +356,80 @@ int pc_group_get_idx(GroupSettings *group)
 }
 
 /**
+ * Insert a new permission
+ * @return inserted key or 0 upon failure.
+ **/
+unsigned int pc_groups_add_permission(const char *name) {
+	uint64 key = 0x1;
+	unsigned char i;
+	
+	for(i = 0; i < pcg->permission_count; i++) {
+		if( strcmpi(name,pcg->permissions[i].name) == 0 ) {
+			ShowError("pc_groups_add_permission(%s): failed! duplicate permission name!\n",name);
+			return 0;
+		}
+	}
+	
+	if( i != 0 )
+		key = (uint64)pcg->permissions[i - 1].permission << 1;
+	
+	if( key >= UINT_MAX ) {
+		ShowError("pc_groups_add_permission(%s): failed! not enough room, too many permissions!\n",name);
+		return 0;
+	}
+	
+	i = pcg->permission_count;
+	RECREATE(pcg->permissions, struct pc_groups_permission_table, ++pcg->permission_count);
+	
+	pcg->permissions[i].name = aStrdup(name);
+	pcg->permissions[i].permission = (unsigned int)key;
+	
+	return (unsigned int)key;
+}
+/**
  * Initialize PC Groups: allocate DBMaps and read config.
  * @public
  */
-void do_init_pc_groups(void)
-{
-	pc_group_db = idb_alloc(DB_OPT_RELEASE_DATA);
-	pc_groupname_db = stridb_alloc(DB_OPT_DUP_KEY, 0);
+void do_init_pc_groups(void) {
+	const struct {
+		const char *name;
+		unsigned int permission;
+	} pc_g_defaults[] = {
+		{ "can_trade", PC_PERM_TRADE },
+		{ "can_party", PC_PERM_PARTY },
+		{ "all_skill", PC_PERM_ALL_SKILL },
+		{ "all_equipment", PC_PERM_USE_ALL_EQUIPMENT },
+		{ "skill_unconditional", PC_PERM_SKILL_UNCONDITIONAL },
+		{ "join_chat", PC_PERM_JOIN_ALL_CHAT },
+		{ "kick_chat", PC_PERM_NO_CHAT_KICK },
+		{ "hide_session", PC_PERM_HIDE_SESSION },
+		{ "who_display_aid", PC_PERM_WHO_DISPLAY_AID },
+		{ "hack_info", PC_PERM_RECEIVE_HACK_INFO },
+		{ "any_warp", PC_PERM_WARP_ANYWHERE },
+		{ "view_hpmeter", PC_PERM_VIEW_HPMETER },
+		{ "view_equipment", PC_PERM_VIEW_EQUIPMENT },
+		{ "use_check", PC_PERM_USE_CHECK },
+		{ "use_changemaptype", PC_PERM_USE_CHANGEMAPTYPE },
+		{ "all_commands", PC_PERM_USE_ALL_COMMANDS },
+		{ "receive_requests", PC_PERM_RECEIVE_REQUESTS },
+		{ "show_bossmobs", PC_PERM_SHOW_BOSS },
+		{ "disable_pvm", PC_PERM_DISABLE_PVM },
+		{ "disable_pvp", PC_PERM_DISABLE_PVP },
+		{ "disable_commands_when_dead", PC_PERM_DISABLE_CMD_DEAD },
+		{ "hchsys_admin", PC_PERM_HCHSYS_ADMIN },
+		{ "can_trade_bound", PC_PERM_TRADE_BOUND },
+	};
+	unsigned char i, len = ARRAYLENGTH(pc_g_defaults);
+	
+	for(i = 0; i < len; i++) {
+		unsigned int p;
+		if( ( p = pcg->add_permission(pc_g_defaults[i].name) ) != pc_g_defaults[i].permission )
+			ShowError("do_init_pc_groups: %s error : %d != %d\n",pc_g_defaults[i].name,p,pc_g_defaults[i].permission);
+	}
+	
+	pcg->db = idb_alloc(DB_OPT_RELEASE_DATA);
+	pcg->name_db = stridb_alloc(DB_OPT_DUP_KEY, 0);
+	
 	read_config();
 }
 
@@ -425,10 +450,19 @@ static int group_db_clear_sub(DBKey key, DBData *data, va_list args)
  */
 void do_final_pc_groups(void)
 {
-	if (pc_group_db != NULL)
-		pc_group_db->destroy(pc_group_db, group_db_clear_sub);
-	if (pc_groupname_db != NULL)
-		db_destroy(pc_groupname_db);
+	if (pcg->db != NULL)
+		pcg->db->destroy(pcg->db, group_db_clear_sub);
+	if (pcg->name_db != NULL)
+		db_destroy(pcg->name_db);
+	
+	if(pcg->permissions != NULL) {
+		unsigned char i;
+		for(i = 0; i < pcg->permission_count; i++)
+			aFree(pcg->permissions[i].name);
+		aFree(pcg->permissions);
+		pcg->permissions = NULL;
+	}
+	pcg->permission_count = 0;
 }
 
 /**
@@ -440,8 +474,8 @@ void pc_groups_reload(void) {
 	struct map_session_data *sd = NULL;
 	struct s_mapiterator *iter;
 
-	do_final_pc_groups();
-	do_init_pc_groups();
+	pcg->final();
+	pcg->init();
 	
 	/* refresh online users permissions */
 	iter = mapit_getallusers();
@@ -453,4 +487,32 @@ void pc_groups_reload(void) {
 		}
 	}
 	mapit->free(iter);
+}
+
+/**
+ * Connect Interface
+ **/
+void pc_groups_defaults(void) {
+	pcg = &pcg_s;
+	
+	/* */
+	pcg->db = NULL;
+	pcg->name_db = NULL;
+	/* */
+	pcg->permissions = NULL;
+	pcg->permission_count = 0;
+	/* */
+	pcg->init = do_init_pc_groups;
+	pcg->final = do_final_pc_groups;
+	pcg->reload = pc_groups_reload;
+	/* */
+	pcg->get_dummy_group = pc_group_get_dummy_group;
+	pcg->exists = pc_group_exists;
+	pcg->id2group = pc_group_id2group;
+	pcg->has_permission = pc_group_has_permission;
+	pcg->should_log_commands = pc_group_should_log_commands;
+	pcg->get_name = pc_group_get_name;
+	pcg->get_level = pc_group_get_level;
+	pcg->get_idx = pc_group_get_idx;
+	pcg->add_permission = pc_groups_add_permission;
 }

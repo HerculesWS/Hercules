@@ -16,7 +16,7 @@
 //= 1.2a Switched 'atcommand' to 'unitskilluseid'.
 //============================================================
 
-prontera,156,219,4	script	Cluckers	800,{
+prontera,156,219,4	script	Cluckers	4_NFCOCK,{
 
 	set .@GMAccess,80;	// GM level required to access NPC
 

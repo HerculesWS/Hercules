@@ -16,7 +16,7 @@
 //= 1.0 First Version.
 //============================================================
 
-bat_room,151,144,3	script	KVM Logistic Officer#a	734,{
+bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 	if (countitem(7773)) {
 		set .@pointstoadd,countitem(7773);
 		delitem 7773,.@pointstoadd;

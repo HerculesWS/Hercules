@@ -13,7 +13,7 @@
 //= 1.2 Updated RE/Pre-RE EXP. [Euphy]
 //============================================================
 
-payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
+payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 	getpartymember(getcharid(1));
 	set .@partymembercount,$@partymembercount;
 	set .@partyleader,getpartyleader(getcharid(1),2);
@@ -381,7 +381,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	109,{
 	}
 }
 
-payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
+payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 	getpartymember(getcharid(1));
 	set .@partymembercount,$@partymembercount;
 	set .@partyleader,getpartyleader(getcharid(1),2);
@@ -1816,7 +1816,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	86,{
 	close;
 }
 
-payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
+payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 	getpartymember(getcharid(1));
 	set .@partymembercount,$@partymembercount;
 	set .@partyleader,getpartyleader(getcharid(1),2);
@@ -2449,7 +2449,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	731,{
 	close;
 }
 
-payon,168,314,3	script	Lospii#payon::RelayLospii	706,{
+payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 	getpartymember(getcharid(1));
 	set .@partymembercount,$@partymembercount;
 	set .@partyleader,getpartyleader(getcharid(1),2);
@@ -3098,31 +3098,31 @@ function	script	F_PartyRelay_Exp	{
 }
 
 // Comodo Relay
-comodo,71,137,3	duplicate(RelayLedrion)	Ledrion#comodo	109
-comodo,236,197,3	duplicate(RelayGatan)	Gatan#comodo	86
-comodo,152,184,3	duplicate(RelayBafhail)	Bafhail#comodo	731
-comodo,64,219,3	duplicate(RelayLospii)	Lospii#comodo	706
+comodo,71,137,3	duplicate(RelayLedrion)	Ledrion#comodo	4_M_MANAGER
+comodo,236,197,3	duplicate(RelayGatan)	Gatan#comodo	4_M_04
+comodo,152,184,3	duplicate(RelayBafhail)	Bafhail#comodo	4_M_JOB_BLACKSMITH
+comodo,64,219,3	duplicate(RelayLospii)	Lospii#comodo	4_M_KID1
 
 // Einbroch Relay
-einbroch,107,93,3	duplicate(RelayLedrion)	Ledrion#einbroch	109
-einbroch,260,128,3	duplicate(RelayGatan)	Gatan#einbroch	86
-einbroch,251,178,3	duplicate(RelayBafhail)	Bafhail#einbroch	731
-einbroch,173,72,3	duplicate(RelayLospii)	Lospii#einbroch	706
+einbroch,107,93,3	duplicate(RelayLedrion)	Ledrion#einbroch	4_M_MANAGER
+einbroch,260,128,3	duplicate(RelayGatan)	Gatan#einbroch	4_M_04
+einbroch,251,178,3	duplicate(RelayBafhail)	Bafhail#einbroch	4_M_JOB_BLACKSMITH
+einbroch,173,72,3	duplicate(RelayLospii)	Lospii#einbroch	4_M_KID1
 
 // Relay Hugel
-hugel,102,130,3	duplicate(RelayLedrion)	Ledrion#hugel	109
-hugel,169,139,3	duplicate(RelayGatan)	Gatan#hugel	86
-hugel,55,200,3	duplicate(RelayBafhail)	Bafhail#hugel	731
-hugel,144,201,3	duplicate(RelayLospii)	Lospii#hugel	706
+hugel,102,130,3	duplicate(RelayLedrion)	Ledrion#hugel	4_M_MANAGER
+hugel,169,139,3	duplicate(RelayGatan)	Gatan#hugel	4_M_04
+hugel,55,200,3	duplicate(RelayBafhail)	Bafhail#hugel	4_M_JOB_BLACKSMITH
+hugel,144,201,3	duplicate(RelayLospii)	Lospii#hugel	4_M_KID1
 
 // Relay Rachel
-rachel,215,71,3	duplicate(RelayLedrion)	Ledrion#rachel	109
-rachel,45,163,3	duplicate(RelayGatan)	Gatan#rachel	86
-rachel,245,132,3	duplicate(RelayBafhail)	Bafhail#rachel	731
-rachel,158,215,3	duplicate(RelayLospii)	Lospii#rachel	706
+rachel,215,71,3	duplicate(RelayLedrion)	Ledrion#rachel	4_M_MANAGER
+rachel,45,163,3	duplicate(RelayGatan)	Gatan#rachel	4_M_04
+rachel,245,132,3	duplicate(RelayBafhail)	Bafhail#rachel	4_M_JOB_BLACKSMITH
+rachel,158,215,3	duplicate(RelayLospii)	Lospii#rachel	4_M_KID1
 
 // Relay Veins
-veins,274,188,5	duplicate(RelayLedrion)	Ledrion#veins	109
-veins,138,207,3	duplicate(RelayGatan)	Gatan#veins	86
-veins,202,235,3	duplicate(RelayBafhail)	Bafhail#veins	731
-veins,97,245,5	duplicate(RelayLospii)	Lospii#veins	706
+veins,274,188,5	duplicate(RelayLedrion)	Ledrion#veins	4_M_MANAGER
+veins,138,207,3	duplicate(RelayGatan)	Gatan#veins	4_M_04
+veins,202,235,3	duplicate(RelayBafhail)	Bafhail#veins	4_M_JOB_BLACKSMITH
+veins,97,245,5	duplicate(RelayLospii)	Lospii#veins	4_M_KID1

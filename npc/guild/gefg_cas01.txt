@@ -14,9 +14,9 @@
 
 // Guild Flag (Outside Castle)
 //============================================================
--	script	Repherion#1::OutsideFlagsG1	722,{
+-	script	Repherion#1::OutsideFlagsG1	GUILD_FLAG,{
 
-	set .@GID, GetCastleData("gefg_cas01",1);
+	set .@GID, getcastledata("gefg_cas01",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";
@@ -39,7 +39,7 @@
 		next;
 		if(select("Return to the guild castle.:Quit.") == 1) {
 			close2;
-			if (getcharid(2) == GetCastleData("gefg_cas01",1)) {
+			if (getcharid(2) == getcastledata("gefg_cas01",1)) {
 				warp "gefg_cas01",197,36;
 				end;
 			}
@@ -51,56 +51,56 @@
 	mes " ";
 	mes "1. Follow the ordinance of The Divine Rune-Midgarts Kingdom, ";
 	mes "we approve that this place is in";
-	mes "the private prossession of ^ff0000"+GetGuildName(.@GID)+"^000000 Guild.";
+	mes "the private prossession of ^ff0000"+getguildname(.@GID)+"^000000 Guild.";
 	mes " ";
-	mes "2. The guild Master of ^ff0000"+GetGuildName(.@GID)+"^000000 Guild is";
-	mes "^ff0000"+GetGuildMaster(.@GID)+"^000000";
+	mes "2. The guild Master of ^ff0000"+getguildname(.@GID)+"^000000 Guild is";
+	mes "^ff0000"+getguildmaster(.@GID)+"^000000";
 	mes "If there is anyone who objects to this,";
 	mes "prove your strength and honor with a steel blade in your hand.";
 	close;
 
 OnRecvCastleG01:
-	FlagEmblem GetCastleData("gefg_cas01",1);
+	flagemblem getcastledata("gefg_cas01",1);
 	end;
 }
 
-gef_fild13,148,51,5	duplicate(OutsideFlagsG1)	Repherion#1-2	722
-gef_fild13,155,54,5	duplicate(OutsideFlagsG1)	Repherion#2	722
-gef_fild13,212,79,6	duplicate(OutsideFlagsG1)	Repherion#3	722
-gef_fild13,211,71,6	duplicate(OutsideFlagsG1)	Repherion#4	722
+gef_fild13,148,51,5	duplicate(OutsideFlagsG1)	Repherion#1-2	GUILD_FLAG
+gef_fild13,155,54,5	duplicate(OutsideFlagsG1)	Repherion#2	GUILD_FLAG
+gef_fild13,212,79,6	duplicate(OutsideFlagsG1)	Repherion#3	GUILD_FLAG
+gef_fild13,211,71,6	duplicate(OutsideFlagsG1)	Repherion#4	GUILD_FLAG
 
 // Guild Flag (Inside Castle)
 //============================================================
--	script	Repherion#5::InsideFlagsG1	722,{
+-	script	Repherion#5::InsideFlagsG1	GUILD_FLAG,{
 	end;
 
 OnRecvCastleG01:
-	FlagEmblem GetCastleData("gefg_cas01",1);
+	flagemblem getcastledata("gefg_cas01",1);
 	end;
 }
 
-gefg_cas01,28,157,4	duplicate(InsideFlagsG1)	Repherion#5-2	722
-gefg_cas01,22,156,5	duplicate(InsideFlagsG1)	Repherion#6	722
-gefg_cas01,68,185,3	duplicate(InsideFlagsG1)	Repherion#7	722
-gefg_cas01,17,171,5	duplicate(InsideFlagsG1)	Repherion#8	722
-gefg_cas01,59,16,4	duplicate(InsideFlagsG1)	Repherion#9	722
-gefg_cas01,64,16,4	duplicate(InsideFlagsG1)	Repherion#10	722
+gefg_cas01,28,157,4	duplicate(InsideFlagsG1)	Repherion#5-2	GUILD_FLAG
+gefg_cas01,22,156,5	duplicate(InsideFlagsG1)	Repherion#6	GUILD_FLAG
+gefg_cas01,68,185,3	duplicate(InsideFlagsG1)	Repherion#7	GUILD_FLAG
+gefg_cas01,17,171,5	duplicate(InsideFlagsG1)	Repherion#8	GUILD_FLAG
+gefg_cas01,59,16,4	duplicate(InsideFlagsG1)	Repherion#9	GUILD_FLAG
+gefg_cas01,64,16,4	duplicate(InsideFlagsG1)	Repherion#10	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-geffen,109,123,2	duplicate(InsideFlagsG1)	Repherion#11	722
+geffen,109,123,2	duplicate(InsideFlagsG1)	Repherion#11	GUILD_FLAG
 
 // Kafra Employee
 //============================================================
-gefg_cas01,83,47,3	duplicate(guildkafra)	Kafra Staff#gefg_cas01	117
+gefg_cas01,83,47,3	duplicate(guildkafra)	Kafra Staff#gefg_cas01	4_F_KAFRA1
 
 // Steward
 //============================================================
-gefg_cas01,40,48,5	duplicate(cm)	Gnahcher#gefg_cas01	55
+gefg_cas01,40,48,5	duplicate(cm)	Gnahcher#gefg_cas01	1_M_JOBTESTER
 
 // Treasure Room Exit
 //============================================================
-gefg_cas01,152,117,0	script	#lever_G01	111,{
+gefg_cas01,152,117,0	script	#lever_G01	HIDDEN_NPC,{
 
 	mes " ";
 	mes "There's a small lever. Will you pull it?";
@@ -115,7 +115,7 @@ gefg_cas01,152,117,0	script	#lever_G01	111,{
 
 // Guild Dungeon Switch
 //============================================================
-gefg_cas01,78,84,0	duplicate(gdlever)	#gefg_cas01	111
+gefg_cas01,78,84,0	duplicate(gdlever)	#gefg_cas01	HIDDEN_NPC
 
 // Guild Treasure Spawns
 //============================================================

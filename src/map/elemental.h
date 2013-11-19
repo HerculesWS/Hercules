@@ -21,8 +21,8 @@
 #define EL_SKILLMODE_ASSIST 0x2
 #define EL_SKILLMODE_AGGRESSIVE 0x4
 
-#define elemental_stop_walking(ed, type) unit->stop_walking(&(ed)->bl, type)
-#define elemental_stop_attack(ed) unit->stop_attack(&(ed)->bl)
+#define elemental_stop_walking(ed, type) (unit->stop_walking(&(ed)->bl, (type)))
+#define elemental_stop_attack(ed)        (unit->stop_attack(&(ed)->bl))
 
 /**
  * Structures
@@ -73,7 +73,7 @@ struct elemental_interface {
 	struct s_elemental_db db[MAX_ELEMENTAL_CLASS]; // Elemental Database
 
 	/* */
-	int (*init) (void);
+	int (*init) (bool minimal);
 	void (*final) (void);
 	/* funcs */
 	bool (*class) (int class_);

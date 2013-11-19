@@ -73,11 +73,9 @@ void netbuffer_incref( netbuf buf );
 
 
 // Some Useful macros
-#define NBUFP(netbuf,pos) (((uint8*)(netbuf->buf)) + (pos))
-#define NBUFB(netbuf,pos) (*(uint8*)((netbuf->buf) + (pos)))
-#define NBUFW(netbuf,pos) (*(uint16*)((netbuf->buf) + (pos)))
-#define NBUFL(netbuf,pos) (*(uint32*)((netbuf->buf) + (pos)))
-
-
+#define NBUFP(netbuf,pos) (((uint8*)((netbuf)->buf)) + (pos))
+#define NBUFB(netbuf,pos) (*(uint8*)(((netbuf)->buf) + (pos)))
+#define NBUFW(netbuf,pos) (*(uint16*)(((netbuf)->buf) + (pos)))
+#define NBUFL(netbuf,pos) (*(uint32*)(((netbuf)->buf) + (pos)))
 
 #endif

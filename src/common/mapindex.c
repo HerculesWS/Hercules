@@ -21,7 +21,12 @@ int max_index = 0;
 
 char mapindex_cfgfile[80] = "db/map_index.txt";
 
-#define mapindex_exists(id) (indexes[id].name[0] != '\0')
+#define mapindex_exists_sub(id) (indexes[id].name[0] != '\0')
+
+bool mapindex_exists(int id) {
+	return mapindex_exists_sub(id);
+}
+
 /// Retrieves the map name from 'string' (removing .gat extension if present).
 /// Result gets placed either into 'buf' or in a static local buffer.
 const char* mapindex_getmapname(const char* string, char* output) {
@@ -102,7 +107,7 @@ int mapindex_addmap(int index, const char* name) {
 		return 0;
 	}
 
-	if (mapindex_exists(index)) {
+	if (mapindex_exists_sub(index)) {
 		ShowWarning("(mapindex_add) Overriding index %d: map \"%s\" -> \"%s\"\n", index, indexes[index].name, map_name);
 		strdb_remove(mapindex_db, indexes[index].name);
 	}
@@ -129,18 +134,18 @@ unsigned short mapindex_name2id(const char* name) {
 }
 
 const char* mapindex_id2name_sub(unsigned short id,const char *file, int line, const char *func) {
-	if (id > MAX_MAPINDEX || !mapindex_exists(id)) {
+	if (id > MAX_MAPINDEX || !mapindex_exists_sub(id)) {
 		ShowDebug("mapindex_id2name: Requested name for non-existant map index [%d] in cache. %s:%s:%d\n", id,file,func,line);
 		return indexes[0].name; // dummy empty string so that the callee doesn't crash
 	}
 	return indexes[id].name;
 }
 
-void mapindex_init(void) {
+int mapindex_init(void) {
 	FILE *fp;
 	char line[1024];
 	int last_index = -1;
-	int index;
+	int index, total = 0;
 	char map_name[12];
 	
 	if( ( fp = fopen(mapindex_cfgfile,"r") ) == NULL ){
@@ -158,6 +163,7 @@ void mapindex_init(void) {
 				index = last_index+1;
 			case 2: //Map with ID given
 				mapindex_addmap(index,map_name);
+				total++;
 				break;
 			default:
 				continue;
@@ -169,6 +175,7 @@ void mapindex_init(void) {
 	if( !strdb_iget(mapindex_db, MAP_DEFAULT) ) {
 		ShowError("mapindex_init: MAP_DEFAULT '%s' not found in cache! update mapindex.h MAP_DEFAULT var!!!\n",MAP_DEFAULT);
 	}
+	return total;
 }
 
 int mapindex_removemap(int index){

@@ -12,7 +12,7 @@
 //= 1.0 First version.
 //============================================================
 
-mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	779,{
+mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 	if (checkquest(60113) != -1) {
 		if (checkquest(60113,HUNTING) != 2 ) {
 			mes "[Nutters]";

@@ -63,7 +63,7 @@ struct chrif_interface {
 	int state;
 	/* */
 	int (*final) (void);
-	int (*init) (void);
+	int (*init) (bool minimal);
 	/* funcs */
 	void (*setuserid) (char* id);
 	void (*setpasswd) (char* pwd);
@@ -127,7 +127,7 @@ struct chrif_interface {
 	int (*changemapserverack) (int account_id, int login_id1, int login_id2, int char_id, short map_index, short x, short y, uint32 ip, uint16 port);
 	int (*changedsex) (int fd);
 	int (*divorceack) (int char_id, int partner_id);
-	int (*accountban) (int fd);
+	int (*idbanned) (int fd);
 	int (*recvfamelist) (int fd);
 	int (*load_scdata) (int fd);
 	void (*update_ip) (int fd);

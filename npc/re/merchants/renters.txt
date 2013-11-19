@@ -14,7 +14,7 @@
 
 // Dragon Breeder
 //============================================================
-job3_rune01,88,62,5	script	Dragon Breeder	105,{
+job3_rune01,88,62,5	script	Dragon Breeder	8W_SOLDIER,{
 	mes "[Dragon Breeder]";
 	if (Class == Job_Rune_Knight || Class == Job_Rune_Knight_T || Class == Job_Baby_Rune) {
 		mes "Welcome. Would you like to rent a Dragon?";
@@ -52,7 +52,7 @@ job3_rune01,88,62,5	script	Dragon Breeder	105,{
 
 // Dragon/Gryphon Master
 //============================================================
-prontera,130,213,5	script	Riding Creature Master	105,{
+prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 	mes "[Riding Creature Master]";
 	if (Class == Job_Rune_Knight || Class == Job_Rune_Knight_T || Class == Job_Baby_Rune) {
 		mes "Welcome. Would you like to rent a Dragon?";
@@ -117,7 +117,7 @@ prontera,130,213,5	script	Riding Creature Master	105,{
 
 // Peco removing NPC
 //============================================================
-prontera,125,208,5	script	Peco Peco Remover	105,{
+prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
 	mes "[Soldier]";
 	mes "If you're unable to dismount from a Peco Peco";
 	mes "for some unknown reason,";
@@ -196,13 +196,13 @@ prontera,125,208,5	script	Peco Peco Remover	105,{
 	mes "Magic Gears are only available for Mechanics.";
 	close;
 }
-prontera,163,178,3	duplicate(mgm)	Magic Gear Master#prt	105
-geffen,103,55,5	duplicate(mgm)	Magic Gear Master#gef	105
-payon,166,106,5	duplicate(mgm)	Magic Gear Master#pay	105
-aldebaran,133,112,5	duplicate(mgm)	Magic Gear Master#alde	105
-yuno,167,187,3	duplicate(mgm)	Magic Gear Master#yuno	105
-rachel,106,134,5	duplicate(mgm)	Magic Gear Master#ra	105
-dicastes01,187,207,3	duplicate(mgm)	Magic Gear Master#dic	105
-manuk,273,212,5	duplicate(mgm)	Magic Gear Master#man	105
-splendide,180,174,5	duplicate(mgm)	Magic Gear Master#spl	105
-mid_camp,242,243,3	duplicate(mgm)	Magic Gear Master#mid	105
+prontera,163,178,3	duplicate(mgm)	Magic Gear Master#prt	8W_SOLDIER
+geffen,103,55,5	duplicate(mgm)	Magic Gear Master#gef	8W_SOLDIER
+payon,166,106,5	duplicate(mgm)	Magic Gear Master#pay	8W_SOLDIER
+aldebaran,133,112,5	duplicate(mgm)	Magic Gear Master#alde	8W_SOLDIER
+yuno,167,187,3	duplicate(mgm)	Magic Gear Master#yuno	8W_SOLDIER
+rachel,106,134,5	duplicate(mgm)	Magic Gear Master#ra	8W_SOLDIER
+dicastes01,187,207,3	duplicate(mgm)	Magic Gear Master#dic	8W_SOLDIER
+manuk,273,212,5	duplicate(mgm)	Magic Gear Master#man	8W_SOLDIER
+splendide,180,174,5	duplicate(mgm)	Magic Gear Master#spl	8W_SOLDIER
+mid_camp,242,243,3	duplicate(mgm)	Magic Gear Master#mid	8W_SOLDIER

@@ -12,29 +12,29 @@
 		#define WIN32_LEAN_AND_MEAN
 	#endif
 	#include <windows.h>
-	#define plugin_open(x)		LoadLibraryA(x)
-	#define plugin_import(x,y,z)	(z)GetProcAddress(x,y)
-	#define plugin_close(x)	FreeLibrary(x)
+	#define plugin_open(x)        LoadLibraryA(x)
+	#define plugin_import(x,y,z)  (z)GetProcAddress((x),(y))
+	#define plugin_close(x)       FreeLibrary(x)
 
-	#define DLL_EXT			".dll"
-	#define DLL				HINSTANCE
+	#define DLL_EXT               ".dll"
+	#define DLL                   HINSTANCE
 #else // ! WIN32
 	#include <dlfcn.h>
 	#ifdef RTLD_DEEPBIND // Certain linux ditributions require this, but it's not available everywhere
-		#define plugin_open(x)		dlopen(x,RTLD_NOW|RTLD_DEEPBIND)
+		#define plugin_open(x) dlopen((x),RTLD_NOW|RTLD_DEEPBIND)
 	#else // ! RTLD_DEEPBIND
-		#define plugin_open(x)		dlopen(x,RTLD_NOW)
+		#define plugin_open(x) dlopen((x),RTLD_NOW)
 	#endif // RTLD_DEEPBIND
-	#define plugin_import(x,y,z)	(z)dlsym(x,y)
-	#define plugin_close(x)	dlclose(x)
+	#define plugin_import(x,y,z)   (z)dlsym((x),(y))
+	#define plugin_close(x)        dlclose(x)
 
 	#ifdef CYGWIN
-		#define DLL_EXT		".dll"
+		#define DLL_EXT        ".dll"
 	#else
-		#define DLL_EXT		".so"
+		#define DLL_EXT        ".so"
 	#endif
 
-	#define DLL				void *
+	#define DLL                    void *
 
 	#include <string.h> // size_t
 
@@ -74,6 +74,19 @@ struct HPMFileNameCache {
 	char *name;
 };
 
+struct HPMArgData {
+	unsigned int pluginID;
+	char *name;/* e.g. "--my-arg","-v","--whatever" */
+	void (*help) (void);/* to display when --help is used */
+	void (*func) (char *param);/* NULL when no param is available */
+	bool has_param;/* because of the weird "--arg<space>param" instead of the "--arg=param" */
+};
+
+struct HPDataOperationStorage {
+	void **HPDataSRCPtr;
+	unsigned int *hdatac;
+};
+
 /* Hercules Plugin Manager Interface */
 struct HPM_interface {
 	/* vars */
@@ -93,6 +106,8 @@ struct HPM_interface {
 	/* plugin file ptr caching */
 	struct HPMFileNameCache *fnames;
 	unsigned int fnamec;
+	/* --command-line */
+	DBMap *arg_db;
 	/* funcs */
 	void (*init) (void);
 	void (*final) (void);
@@ -112,6 +127,12 @@ struct HPM_interface {
 	unsigned char (*parse_packets) (int fd, enum HPluginPacketHookingPoints point);
 	void (*load_sub) (struct hplugin *plugin);
 	bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
+	bool (*parse_arg) (const char *arg, int* index, char *argv[], bool param);
+	void (*arg_help) (void);
+	int (*arg_db_clear_sub) (DBKey key, DBData *data, va_list args);
+	void (*grabHPData) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
+	/* for server-specific HPData e.g. map_session_data */
+	void (*grabHPDataSub) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
 } HPM_s;
 
 struct HPM_interface *HPM;

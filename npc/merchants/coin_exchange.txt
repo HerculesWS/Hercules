@@ -28,15 +28,15 @@
 		mes "What are you looking for?";
 		next;
 		if (strnpcinfo(1) == "Merchant of Manuk") {
-			setarray .@Items[2],12342,12343,12348;
+			setarray .@items[2],12342,12343,12348;
 			set .@Book,11019; //Manuk_Selling_Item
-			set .@Coin,6080; //Manuk_Coin
+			set .@coin,6080; //Manuk_Coin
 			set .@i, select("View item description:Manuk's Opportunity:Manuk's Courage:Manuk's Faith:Cancel");
 		}
 		else {
-			setarray .@Items[2],12344,12345,12349;
+			setarray .@items[2],12344,12345,12349;
 			set .@Book,11018; //Splendide_Selling_Item
-			set .@Coin,6081; //Splendide_Coin
+			set .@coin,6081; //Splendide_Coin
 			set .@i, select("View item description:Buy Pinguicula's Fruit Jam:Buy Luciola's Honey Jam:Buy Cornus' Tears:Do nothing");
 		}
 		mes .@n$;
@@ -47,15 +47,15 @@
 			end;
 		}
 		else if (.@i < 5) {
-			mes "I can sell you 3 "+getitemname(.@Items[.@i])+" for ^3131FF1 coin^000000.";
+			mes "I can sell you 3 "+getitemname(.@items[.@i])+" for ^3131FF1 coin^000000.";
 			next;
 			switch(select("Purchase:Do not purchase")) {
 			case 1:
-				if (countitem(.@Coin)) {
+				if (countitem(.@coin)) {
 					mes .@n$;
 					mes "Thank you for coming.";
-					delitem .@Coin,1; 
-					getitem .@Items[.@i],3;
+					delitem .@coin,1;
+					getitem .@items[.@i],3;
 					close;
 				}
 				else {
@@ -83,5 +83,5 @@
 		close;
 	}
 }
-man_in01,286,16,1	duplicate(merchant_13_2)	Merchant of Manuk	454
-spl_in01,110,326,5	duplicate(merchant_13_2)	Merchant of Splendide	439
+man_in01,286,16,1	duplicate(merchant_13_2)	Merchant of Manuk	4_MAN_PIOM
+spl_in01,110,326,5	duplicate(merchant_13_2)	Merchant of Splendide	4_F_FAIRYKID4

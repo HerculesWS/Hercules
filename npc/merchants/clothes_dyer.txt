@@ -19,7 +19,7 @@
 //= 2.5 Optimized. [Euphy]
 //============================================================
 
-prt_in,284,168,2	script	Dyer Ginedin Rephere	55,{
+prt_in,284,168,2	script	Dyer Ginedin Rephere	1_M_JOBTESTER,{
 function Dyes;
 
 	set .@EnableDyes,1;	// Disable (set to 0) if palettes cause errors [see note v2.4]

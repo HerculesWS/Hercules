@@ -21,7 +21,7 @@
 //= 2.9 Added Quest Log commands. [Kisuka]
 //============================================================
 
-moc_ruins,86,103,1	script	Thug#rg	118,{
+moc_ruins,86,103,1	script	Thug#rg	2_M_THIEFMASTER,{
 	mes "[Thug]";
 	mes "*Sigh...*";
 	mes "What is life?";
@@ -52,7 +52,7 @@ moc_ruins,86,103,1	script	Thug#rg	118,{
 	close;
 }
 
-in_rogue,363,122,4	script	Rogue Guildsman#rg	747,{
+in_rogue,363,122,4	script	Rogue Guildsman#rg	4_F_ROGUE,{
 	if (Upper == 1) {
 		mes "[Markie]";
 		mes "Eh? You...you...?!";
@@ -487,7 +487,7 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	747,{
 	}
 }
 
-in_rogue,376,23,1	script	Mr. Smith#rg	57,{
+in_rogue,376,23,1	script	Mr. Smith#rg	1_M_LIBRARYMASTER,{
 	if (ROGUE_Q == 2) {
 		mes "[Mr. Smith]";
 		mes "Welcome to";
@@ -1009,7 +1009,7 @@ S_CheckItems:
 	close;
 }
 
-cmd_fild09,106,195,0	script	Warp#1	45,1,1,{
+cmd_fild09,106,195,0	script	Warp#1	WARPNPC,1,1,{
 OnTouch:
 	mes "[???]";
 	mes "Who's there?!";
@@ -1079,7 +1079,7 @@ OnTouch:
 	}
 }
 
-cmd_fild09,335,143,0	script	Warp#2	45,1,1,{
+cmd_fild09,335,143,0	script	Warp#2	WARPNPC,1,1,{
 OnTouch:
 	mes "[???]";
 	mes "Who's there?!";
@@ -1149,7 +1149,7 @@ OnTouch:
 	}
 }
 
-cmd_fild04,304,180,0	script	Warp#3	45,1,1,{
+cmd_fild04,304,180,0	script	Warp#3	WARPNPC,1,1,{
 OnTouch:
 	mes "[???]";
 	mes "Who's there?!";
@@ -1219,7 +1219,7 @@ OnTouch:
 	}
 }
 
-in_rogue,272,135,1	script	Hermanthorn Jr#rg	85,{
+in_rogue,272,135,1	script	Hermanthorn Jr#rg	4_M_03,{
 	if (ROGUE_Q == 8) {
 		mes "[HermanthornJr.]";
 		mes "I see...";
@@ -1269,7 +1269,7 @@ in_rogue,272,135,1	script	Hermanthorn Jr#rg	85,{
 	}
 }
 
-in_rogue,270,130,0	script	he_to_rogue#rg	45,1,1,{
+in_rogue,270,130,0	script	he_to_rogue#rg	WARPNPC,1,1,{
 OnTouch:
 	mes "^3355FFThe door is locked. You'll need to enter the four number combination to open it.^000000";
 	next;
@@ -1382,7 +1382,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,9,389,0	script	oneway_to_gu	45,1,1,{
+in_rogue,9,389,0	script	oneway_to_gu	WARPNPC,1,1,{
 OnTouch:
 	donpcevent "gen_ro#4::OnDisable";
 	set ROGUE_Q,17;
@@ -1390,7 +1390,7 @@ OnTouch:
 	end;
 }
 
-in_rogue,244,39,1	script	Aragham Junior#rg	99,{
+in_rogue,244,39,1	script	Aragham Junior#rg	4W_M_03,{
 	if (ROGUE_Q == 9) {
 		mes "[Aragham Jr.]";
 		mes "Oh, you must be";
@@ -1476,7 +1476,7 @@ in_rogue,244,39,1	script	Aragham Junior#rg	99,{
 	}
 }
 
-in_rogue,160,34,1	script	Hollgrehenn junior#rg	85,{
+in_rogue,160,34,1	script	Hollgrehenn junior#rg	4_M_03,{
 	if (ROGUE_Q == 11) {
 		mes "[Hollgrehenn Jr.]";
 		mes "Huh...";
@@ -1562,7 +1562,7 @@ in_rogue,160,34,1	script	Hollgrehenn junior#rg	85,{
 	}
 }
 
-in_rogue,177,109,1	script	Antonio junior#rg	88,{
+in_rogue,177,109,1	script	Antonio junior#rg	4_M_ORIENT01,{
 	if (ROGUE_Q == 10) {
 		mes "[Antonio Jr.]";
 		mes "You're from";
@@ -1647,7 +1647,7 @@ in_rogue,177,109,1	script	Antonio junior#rg	88,{
 	}
 }
 
-in_rogue,370,320,0	script	quest_out	45,1,1,{
+in_rogue,370,320,0	script	quest_out	WARPNPC,1,1,{
 OnTouch:
 	set ROGUE_Q,16;
 	warp "in_rogue",378,113;
@@ -1988,7 +1988,7 @@ OnInit:
 	end;
 }
 
-in_rogue,399,286,1	script	switch#rogreset	88,{
+in_rogue,399,286,1	script	switch#rogreset	4_M_ORIENT01,{
 	mes "^F08080Tah dah~";
 	mes "Monsters for the";
 	mes "Rogue Job Change";

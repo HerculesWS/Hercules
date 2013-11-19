@@ -12,7 +12,7 @@
 //= 1.0 First version.
 //============================================================
 
-cmd_fild01,362,256,3	script	Cuir#Gator_Hunt	106,{
+cmd_fild01,362,256,3	script	Cuir#Gator_Hunt	1_M_MOC_LORD,{
 	if (checkquest(60119) != -1) {
 		if (checkquest(60119,HUNTING) != 2 ) {
 			mes "[Cuir]";

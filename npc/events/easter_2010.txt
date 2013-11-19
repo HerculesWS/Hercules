@@ -10,7 +10,7 @@
 //= 1.0 First version. [Euphy]
 //============================================================
 
-prontera,202,297,3	script	Rina#Easter	727,{
+prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 	disable_items;
 	if (BaseLevel < 40) {
 		mes "[Rina]";
@@ -293,7 +293,7 @@ prontera,202,297,3	script	Rina#Easter	727,{
 	}
 }
 
-geffen,207,114,4	script	#Hiddne01Easter	844,{
+geffen,207,114,4	script	#Hiddne01Easter	CLEAR_NPC,{
 	if (oversea_event2 > 519) {
 	OnRelease:
 		specialeffect EF_PATTACK;
@@ -313,25 +313,25 @@ geffen,207,114,4	script	#Hiddne01Easter	844,{
 	end;
 }
 
-xmas,144,52,4	script	#Hiddne02Easter	844,{
+xmas,144,52,4	script	#Hiddne02Easter	CLEAR_NPC,{
 	if (oversea_event3 > 269)
 		doevent "#Hiddne01Easter::OnRelease";
 	end;
 }
 
-yuno,164,46,4	script	#Hiddne03Easter	844,{
+yuno,164,46,4	script	#Hiddne03Easter	CLEAR_NPC,{
 	if (oversea_event6 > 244)
 		doevent "#Hiddne01Easter::OnRelease";
 	end;
 }
 
-rachel,36,132,4	script	#Hiddne04Easter	844,{
+rachel,36,132,4	script	#Hiddne04Easter	CLEAR_NPC,{
 	if (oversea_event9 > 196)
 		doevent "#Hiddne01Easter::OnRelease";
 	end;
 }
 
-prontera,204,297,3	script	Rina's Little Friend	463,{
+prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 	disable_items;
 	if (checkquest(9117) == -1) {
 		emotion e_swt2;
@@ -527,7 +527,7 @@ prontera,204,297,3	script	Rina's Little Friend	463,{
 	close;
 }
 
-prontera,116,82,5	script	Traveler#01Easter	85,{
+prontera,116,82,5	script	Traveler#01Easter	4_M_03,{
 	mes "[Traveler]";
 	mes "I'm a traveler";
 	mes "and I often visit ^8B4513Prontera^000000.";
@@ -588,7 +588,7 @@ OnTimer5000:
 	end;
 }
 
-prontera,163,194,5	script	Traveler#02Easter	92,{
+prontera,163,194,5	script	Traveler#02Easter	4_F_03,{
 	mes "[Traveler]";
 	mes "A while ago,";
 	mes "I met a lady";

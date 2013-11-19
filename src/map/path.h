@@ -23,13 +23,13 @@ struct shootpath_data {
 	int y[MAX_WALKPATH];
 };
 
-#define check_distance_bl(bl1, bl2, distance) path->check_distance((bl1)->x - (bl2)->x, (bl1)->y - (bl2)->y, distance)
-#define check_distance_blxy(bl, x1, y1, distance) path->check_distance((bl)->x-(x1), (bl)->y-(y1), distance)
-#define check_distance_xy(x0, y0, x1, y1, distance) path->check_distance((x0)-(x1), (y0)-(y1), distance)
+#define check_distance_bl(bl1, bl2, distance)       (path->check_distance((bl1)->x - (bl2)->x, (bl1)->y - (bl2)->y, distance))
+#define check_distance_blxy(bl, x1, y1, distance)   (path->check_distance((bl)->x - (x1), (bl)->y - (y1), distance))
+#define check_distance_xy(x0, y0, x1, y1, distance) (path->check_distance((x0) - (x1), (y0) - (y1), distance))
 
-#define distance_bl(bl1, bl2) path->distance((bl1)->x - (bl2)->x, (bl1)->y - (bl2)->y)
-#define distance_blxy(bl, x1, y1) path->distance((bl)->x-(x1), (bl)->y-(y1))
-#define distance_xy(x0, y0, x1, y1) path->distance((x0)-(x1), (y0)-(y1))
+#define distance_bl(bl1, bl2)       (path->distance((bl1)->x - (bl2)->x, (bl1)->y - (bl2)->y))
+#define distance_blxy(bl, x1, y1)   (path->distance((bl)->x - (x1), (bl)->y - (y1)))
+#define distance_xy(x0, y0, x1, y1) (path->distance((x0) - (x1), (y0) - (y1)))
 
 struct path_interface {
 	// calculates destination cell for knockback

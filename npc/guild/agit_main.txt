@@ -61,8 +61,8 @@
 // War of Emperium has started.
 OnAgitStart:
 	if (strnpcinfo(0) == "Gld_Agit_Manager") end;
-	MapRespawnGuildID strnpcinfo(2),GetCastleData(strnpcinfo(2),1),6;
-	GvgOn strnpcinfo(2);
+	maprespawnguildid strnpcinfo(2),getcastledata(strnpcinfo(2),1),6;
+	gvgon strnpcinfo(2);
 
 // Spawn (fall through), or respawn the Emperium once it has been broken.
 OnStartArena:
@@ -107,31 +107,31 @@ OnAgitBreak:
 		end;
 	}
 	// Adjust Economy Invest Level for Castle
-	set .@Economy,GetCastleData(strnpcinfo(2),2) - 5;
+	set .@Economy,getcastledata(strnpcinfo(2),2) - 5;
 	if (.@Economy < 0) set .@Economy, 0;
-	SetCastleData strnpcinfo(2), 2, .@Economy;
+	setcastledata strnpcinfo(2), 2, .@Economy;
 	// Adjust Defense Invest Level for Castle
-	set .@Defence,GetCastleData(strnpcinfo(2),3) - 5;
-	if (.@Defence < 0) set .@Defence, 0;
-	SetCastleData strnpcinfo(2), 3, .@Defence;
+	set .@defence,getcastledata(strnpcinfo(2),3) - 5;
+	if (.@defence < 0) set .@defence, 0;
+	setcastledata strnpcinfo(2), 3, .@defence;
 
 	// Set new Castle Occupant
-	SetCastleData strnpcinfo(2),1, .@GID;
+	setcastledata strnpcinfo(2),1, .@GID;
 
 	// Announce that the Emperium is destroyed, and respawn all but new castle-occupants.
 	mapannounce strnpcinfo(2),"The emperium has been destroyed.",bc_map|bc_woe,"0x00CCFF",FW_NORMAL,12;
-	MapRespawnGuildID strnpcinfo(2),.@GID,6;
+	maprespawnguildid strnpcinfo(2),.@GID,6;
 
 	// Refresh castle data, disable Kafra and reset Invest information.
 	donpcevent strnpcinfo(0)+"::OnRecvCastle";
 	disablenpc "Kafra Staff#"+strnpcinfo(2);
 	for( set .@i, 4; .@i <= 9; set .@i, .@i+1 ) {
-		SetCastleData strnpcinfo(2), .@i, 0;
+		setcastledata strnpcinfo(2), .@i, 0;
 	}
 	// Erase Guardian Database information if the new owners do not have Guardian Research.
 	if( getgdskilllv(.@GID,10002) == 0 ) {
 		for( set .@i, 10; .@i <= 17; set .@i, .@i+1 ) {
-			SetCastleData strnpcinfo(2), .@i, 0;
+			setcastledata strnpcinfo(2), .@i, 0;
 		}
 	}
 	// Respawn the Emperium, and display new owners.
@@ -139,16 +139,16 @@ OnAgitBreak:
 	if( agitcheck() )
 		donpcevent "Agit#"+strnpcinfo(2)+"::OnStartArena";
 	sleep 7000;
-	announce "The [" + getcastlename(strnpcinfo(2)) + "] castle has been conquered by the [" + getguildName(.@GID) + "] guild.",bc_all|bc_woe;
+	announce "The [" + getcastlename(strnpcinfo(2)) + "] castle has been conquered by the [" + getguildname(.@GID) + "] guild.",bc_all|bc_woe;
 	end;
 
 // War of Emperium has ended.
 OnAgitEnd:
 	if (strnpcinfo(0) == "Gld_Agit_Manager") end;
-	GvgOff strnpcinfo(2);
+	gvgoff strnpcinfo(2);
 	// If the castle has no owner at the end of WoE, do not kill Emperium.
-	if (GetCastleData(strnpcinfo(2),1)) {
-		KillMonster strnpcinfo(2),"Agit#"+strnpcinfo(2)+"::OnAgitBreak";
+	if (getcastledata(strnpcinfo(2),1)) {
+		killmonster strnpcinfo(2),"Agit#"+strnpcinfo(2)+"::OnAgitBreak";
 	}
 	end;
 
@@ -158,10 +158,10 @@ OnGuildBreak:
 	// Kill guardians, disable the Kafra, and set owner to 0.
 	killmonster strnpcinfo(2),"Guardian#"+strnpcinfo(2)+"::OnGuardianDied";
 	disablenpc "Kafra Staff#"+strnpcinfo(2);
-	SetCastleData strnpcinfo(2),1,0;
+	setcastledata strnpcinfo(2),1,0;
 	// Wait before refreshing guild information.
 	sleep 7000;
-	Announce "Guild Base [" + GetCastleName(strnpcinfo(2)) + "] has been abandoned.",0;
+	announce "Guild Base [" + getcastlename(strnpcinfo(2)) + "] has been abandoned.",0;
 	donpcevent strnpcinfo(0)+"::OnRecvCastle";
 	end;
 
@@ -169,7 +169,7 @@ OnAgitInit:
 OnRecvCastle:
 	if (strnpcinfo(0) == "Gld_Agit_Manager") end;
 	// Spawn Monsters if the castle is empty.
-	set .@GID, GetCastleData(strnpcinfo(2),1);
+	set .@GID, getcastledata(strnpcinfo(2),1);
 	if (.@GID == 0) {
 		killmonsterall strnpcinfo(2);
 		if (compare(strnpcinfo(2),"aldeg")) {
@@ -307,7 +307,7 @@ OnRecvCastle:
 		// And load purchased Guardian in castles.
 		donpcevent "Guardian#"+strnpcinfo(2)+"::OnSpawnGuardians";
 		// And display Kafra if purchased.
-		if (GetCastleData(strnpcinfo(2),9) < 1) disablenpc "Kafra Staff#"+strnpcinfo(2);
+		if (getcastledata(strnpcinfo(2),9) < 1) disablenpc "Kafra Staff#"+strnpcinfo(2);
 	}
 	end;
 }
@@ -316,7 +316,7 @@ OnRecvCastle:
 //============================================================
 -	script	Kafra Staff#woe::guildkafra	-1,{
 
-	set .@GID,GetCastleData(strnpcinfo(2),1);
+	set .@GID,getcastledata(strnpcinfo(2),1);
 
 	if (compare(strnpcinfo(2),"aldeg")) {
 		setarray .@destination$[0],"Al De Baran","aldebaran";
@@ -342,7 +342,7 @@ OnRecvCastle:
 	cutin "kafra_01",2;
 	if (getcharid(2) == .@GID) {
 		mes "[Kafra Employee]";
-		mes "Welcome. ^ff0000" + GetGuildName(.@GID) + "^000000 Member.";
+		mes "Welcome. ^ff0000" + getguildname(.@GID) + "^000000 Member.";
 		mes "The Kafra Corporation will stay with you wherever you go.";
 		next;
 		switch (select("Use Storage:Use Teleport Service:Rent a Pushcart:Cancel")) {
@@ -455,7 +455,7 @@ OnRecvCastle:
 		}
 	}
 	mes "[Kafra Employee]";
-	mes "I am instructed to only offer my services to the ^ff0000"+GetGuildName(.@GID)+"^000000 Guild. Please try another Kafra Employee around here. Sorry for the inconvenience.";
+	mes "I am instructed to only offer my services to the ^ff0000"+getguildname(.@GID)+"^000000 Guild. Please try another Kafra Employee around here. Sorry for the inconvenience.";
 	close2;
 	cutin "",255;
 	end;
@@ -465,7 +465,7 @@ OnRecvCastle:
 //============================================================
 -	script	Castle Manager#cm::cm	-1,{
 
-	set .@GID,GetCastleData(strnpcinfo(2),1);
+	set .@GID,getcastledata(strnpcinfo(2),1);
 
 	// .@guardiantype = Defines the types of guardians per castle basis.
 	// 1 - Soldier Guardian, 2 - Archer Guardian, 3 - Knight Guardian
@@ -608,9 +608,9 @@ OnRecvCastle:
 		mes "Brave soul... fate will guide you towards your future...";
 		close;
 	}
-	if (GetGuildMaster(.@GID) != strcharinfo(0)) {
+	if (getguildmaster(.@GID) != strcharinfo(0)) {
 		mes "["+strnpcinfo(1)+"]";
-		mes "No matter how much you pester me, I'll still follow my master ^ff0000"+GetGuildMaster(.@GID)+"^000000. Where are the Guardians?! Send these ruffians away right now!";
+		mes "No matter how much you pester me, I'll still follow my master ^ff0000"+getguildmaster(.@GID)+"^000000. Where are the Guardians?! Send these ruffians away right now!";
 		close;
 	}
 	mes "["+strnpcinfo(1)+"]";
@@ -622,19 +622,19 @@ OnRecvCastle:
 		mes "["+strnpcinfo(1)+"]";
 		mes "I will report the Castle briefing, Master.";
 		mes " ";
-		mes "^0000ffNow, the commercial growth level is "+GetCastleData(strnpcinfo(2),2)+".";
-		if (GetCastleData(strnpcinfo(2),4)) {
-			mes " You invested "+GetCastleData(strnpcinfo(2),4)+" times in past 1 day.";
+		mes "^0000ffNow, the commercial growth level is "+getcastledata(strnpcinfo(2),2)+".";
+		if (getcastledata(strnpcinfo(2),4)) {
+			mes " You invested "+getcastledata(strnpcinfo(2),4)+" times in past 1 day.";
 		}
-		mes " Now, the Castle Defense level is "+GetCastleData(strnpcinfo(2),3)+".^000000";
-		if (GetCastleData(strnpcinfo(2),5)) {
-			mes " ^0000ff- You invested "+GetCastleData(strnpcinfo(2),5)+" times in past 1 day.^000000";
+		mes " Now, the Castle Defense level is "+getcastledata(strnpcinfo(2),3)+".^000000";
+		if (getcastledata(strnpcinfo(2),5)) {
+			mes " ^0000ff- You invested "+getcastledata(strnpcinfo(2),5)+" times in past 1 day.^000000";
 		}
 		mes " ";
 		mes "That's all I have to report, Master.";
 		close;
 	case 2:
-		set .@Economy,GetCastleData(strnpcinfo(2),2);
+		set .@Economy,getcastledata(strnpcinfo(2),2);
 		if (.@Economy < 6) { set .@eco_invest,5000; }
 		else if ((.@Economy >= 6) && (.@Economy <= 10)) { set .@eco_invest,10000; }
 		else if ((.@Economy >= 11) && (.@Economy <= 15)) { set .@eco_invest,20000; }
@@ -656,7 +656,7 @@ OnRecvCastle:
 		else if ((.@Economy >= 91) && (.@Economy <= 95)) { set .@eco_invest,860000; }
 		else if ((.@Economy >= 96) && (.@Economy <= 100)) { set .@eco_invest,955000; }
 		//Quadruple the cost of investing if you've already invested once.
-		if (GetCastleData(strnpcinfo(2),4)) {
+		if (getcastledata(strnpcinfo(2),4)) {
 			set .@eco_invest,.@eco_invest*4;
 		}
 		mes "["+strnpcinfo(1)+"]";
@@ -668,12 +668,12 @@ OnRecvCastle:
 			mes "^ff0000The commercial growth level of our Castle is at it's highest, 100%. No more investments are needed. Just as I have expected from a great economist like you, Master.^000000";
 			close;
 		}
-		if (GetCastleData(strnpcinfo(2),4) >= 2) {
+		if (getcastledata(strnpcinfo(2),4) >= 2) {
 			mes " ";
 			mes "^ff0000You have already invested twice today. You cannot invest any more.^000000 I expect riches of the guild to grow at a high rate.";
 			close;
 		}
-		if (GetCastleData(strnpcinfo(2),4) == 0) {
+		if (getcastledata(strnpcinfo(2),4) == 0) {
 			mes " ";
 			mes "The current investment amount required is ^ff0000"+.@eco_invest+"^000000 zeny. Will you invest?";
 		}
@@ -690,7 +690,7 @@ OnRecvCastle:
 				close;
 			}
 			set Zeny, Zeny - .@eco_invest;
-			SetCastleData strnpcinfo(2),4,GetCastleData(strnpcinfo(2),4)+1;
+			setcastledata strnpcinfo(2),4,getcastledata(strnpcinfo(2),4)+1;
 			mes "[ "+strnpcinfo(1)+"]";
 			mes "We finished the investment safely. I expect that our growth level will be increased by tomorrow.";
 			close;
@@ -700,46 +700,46 @@ OnRecvCastle:
 			close;
 		}
 	case 3:
-		set .@Defence,GetCastleData(strnpcinfo(2),3);
-		if (.@Defence < 6) { set .@def_invest,10000; }
-		else if ((.@Defence >= 6) && (.@Defence <= 10)) { set .@def_invest,20000; }
-		else if ((.@Defence >= 11) && (.@Defence <= 15)) { set .@def_invest,40000; }
-		else if ((.@Defence >= 16) && (.@Defence <= 20)) { set .@def_invest,70000; }
-		else if ((.@Defence >= 21) && (.@Defence <= 25)) { set .@def_invest,110000; }
-		else if ((.@Defence >= 26) && (.@Defence <= 30)) { set .@def_invest,160000; }
-		else if ((.@Defence >= 31) && (.@Defence <= 35)) { set .@def_invest,220000; }
-		else if ((.@Defence >= 36) && (.@Defence <= 40)) { set .@def_invest,290000; }
-		else if ((.@Defence >= 41) && (.@Defence <= 45)) { set .@def_invest,370000; }
-		else if ((.@Defence >= 46) && (.@Defence <= 50)) { set .@def_invest,460000; }
-		else if ((.@Defence >= 51) && (.@Defence <= 55)) { set .@def_invest,560000; }
-		else if ((.@Defence >= 56) && (.@Defence <= 60)) { set .@def_invest,670000; }
-		else if ((.@Defence >= 61) && (.@Defence <= 65)) { set .@def_invest,790000; }
-		else if ((.@Defence >= 66) && (.@Defence <= 70)) { set .@def_invest,920000; }
-		else if ((.@Defence >= 71) && (.@Defence <= 75)) { set .@def_invest,1060000; }
-		else if ((.@Defence >= 76) && (.@Defence <= 80)) { set .@def_invest,1210000; }
-		else if ((.@Defence >= 81) && (.@Defence <= 85)) { set .@def_invest,1370000; }
-		else if ((.@Defence >= 86) && (.@Defence <= 90)) { set .@def_invest,1540000; }
-		else if ((.@Defence >= 91) && (.@Defence <= 95)) { set .@def_invest,1720000; }
-		else if ((.@Defence >= 96) && (.@Defence <= 100)) { set .@def_invest,1910000; }
+		set .@defence,getcastledata(strnpcinfo(2),3);
+		if (.@defence < 6) { set .@def_invest,10000; }
+		else if ((.@defence >= 6) && (.@defence <= 10)) { set .@def_invest,20000; }
+		else if ((.@defence >= 11) && (.@defence <= 15)) { set .@def_invest,40000; }
+		else if ((.@defence >= 16) && (.@defence <= 20)) { set .@def_invest,70000; }
+		else if ((.@defence >= 21) && (.@defence <= 25)) { set .@def_invest,110000; }
+		else if ((.@defence >= 26) && (.@defence <= 30)) { set .@def_invest,160000; }
+		else if ((.@defence >= 31) && (.@defence <= 35)) { set .@def_invest,220000; }
+		else if ((.@defence >= 36) && (.@defence <= 40)) { set .@def_invest,290000; }
+		else if ((.@defence >= 41) && (.@defence <= 45)) { set .@def_invest,370000; }
+		else if ((.@defence >= 46) && (.@defence <= 50)) { set .@def_invest,460000; }
+		else if ((.@defence >= 51) && (.@defence <= 55)) { set .@def_invest,560000; }
+		else if ((.@defence >= 56) && (.@defence <= 60)) { set .@def_invest,670000; }
+		else if ((.@defence >= 61) && (.@defence <= 65)) { set .@def_invest,790000; }
+		else if ((.@defence >= 66) && (.@defence <= 70)) { set .@def_invest,920000; }
+		else if ((.@defence >= 71) && (.@defence <= 75)) { set .@def_invest,1060000; }
+		else if ((.@defence >= 76) && (.@defence <= 80)) { set .@def_invest,1210000; }
+		else if ((.@defence >= 81) && (.@defence <= 85)) { set .@def_invest,1370000; }
+		else if ((.@defence >= 86) && (.@defence <= 90)) { set .@def_invest,1540000; }
+		else if ((.@defence >= 91) && (.@defence <= 95)) { set .@def_invest,1720000; }
+		else if ((.@defence >= 96) && (.@defence <= 100)) { set .@def_invest,1910000; }
 		//Quadruple the cost of investing if you've already invested once.
-		if (GetCastleData(strnpcinfo(2),5)) {
+		if (getcastledata(strnpcinfo(2),5)) {
 			set .@def_invest,.@def_invest*4;
 		}
 		mes "["+strnpcinfo(1)+"]";
 		mes "If you raise Castle Defenses, the durability of Guardians and the Emperium will increase. Therefore, if you consider our coming battles, some investment in this area will be required.";
 		mes " ";
 		mes "Originally you can invest just once but if you pay more money, you can invest twice.";
-		if (.@Defence >= 100) {
+		if (.@defence >= 100) {
 			mes " ";
 			mes "^ff0000But the Castle Defense level of our Castle is at it's highest, 100%. No more investments are needed. Just as I have expected from a great strategist like you, Master.^000000";
 			close;
 		}
-		if (GetCastleData(strnpcinfo(2),5) >= 2) {
+		if (getcastledata(strnpcinfo(2),5) >= 2) {
 			mes " ";
 			mes "^ff0000You have already invested twice today. You cannot invest any more.^000000 I expect the Defenses of the guild to grow at a high rate.";
 			close;
 		}
-		if (GetCastleData(strnpcinfo(2),5) == 0) {
+		if (getcastledata(strnpcinfo(2),5) == 0) {
 			mes " ";
 			mes "The current investment amount required is ^ff0000"+.@def_invest+"^000000 zeny. Will you invest?";
 		}
@@ -756,7 +756,7 @@ OnRecvCastle:
 				close;
 			}
 			set Zeny, Zeny - .@def_invest;
-			SetCastleData strnpcinfo(2),5,GetCastleData(strnpcinfo(2),5)+1;
+			setcastledata strnpcinfo(2),5,getcastledata(strnpcinfo(2),5)+1;
 			mes "[ "+strnpcinfo(1)+"]";
 			mes "We finished the investment safely. I expect that our Castle Defense level will be increased by tomorrow.";
 			close;
@@ -793,7 +793,7 @@ OnRecvCastle:
 				mes "Master, we have not the resources to Summon the Guardian. If you want to accumulate them, you have to learn the Guild skill. We failed to summon the Guardian.";
 				close;
 			}
-			if (GetCastleData(strnpcinfo(2),.@GDnum) == 1) {
+			if (getcastledata(strnpcinfo(2),.@GDnum) == 1) {
 				mes "["+strnpcinfo(1)+"]";
 				mes "Master, you already have summoned that Guardian. We cannot summon another.";
 				close;
@@ -804,7 +804,7 @@ OnRecvCastle:
 				close;
 			}
 			set Zeny, Zeny - 10000;
-			SetCastleData strnpcinfo(2),.@GDnum,1; // mark as 'installed'
+			setcastledata strnpcinfo(2),.@GDnum,1; // mark as 'installed'
 			set .@UseGID,.@GDnum - 10;
 			if (.@guardiantype[.@UseGID] == 1) { set .@type,1287; }
 			else if (.@guardiantype[.@UseGID] == 2) { set .@type,1285; }
@@ -819,7 +819,7 @@ OnRecvCastle:
 			close;
 		}
 	case 5:
-		if (GetCastleData(strnpcinfo(2),9) == 1) {
+		if (getcastledata(strnpcinfo(2),9) == 1) {
 			mes "["+strnpcinfo(1)+"]";
 			mes "We are currently hiring a Kafra Employee... Do you want to fire the Kafra Employee?";
 			next;
@@ -848,7 +848,7 @@ OnRecvCastle:
 				close;
 			}
 			disablenpc "Kafra Staff#"+strnpcinfo(2);
-			SetCastleData strnpcinfo(2),9,0;
+			setcastledata strnpcinfo(2),9,0;
 			mes "["+strnpcinfo(1)+"]";
 			mes "....";
 			mes "I have discharged the Kafra Employee... But... are you unsatisfied with something?";
@@ -872,7 +872,7 @@ OnRecvCastle:
 			}
 			set Zeny, Zeny - 10000;
 			enablenpc "Kafra Staff#"+strnpcinfo(2);
-			SetCastleData strnpcinfo(2),9,1;
+			setcastledata strnpcinfo(2),9,1;
 			mes "["+strnpcinfo(1)+"]";
 			mes "We obtained a contract with the kafra Main Office, and hired a Kafra Employee.";
 			next;
@@ -917,7 +917,7 @@ OnRecvCastle:
 //============================================================
 -	script	Lever#gd::gdlever	-1,{
 
-	set .@GID,GetCastleData(strnpcinfo(2),1);
+	set .@GID,getcastledata(strnpcinfo(2),1);
 
 	if (.@GID == 0) {
 		mes "[Ringing Voice]";
@@ -1112,7 +1112,7 @@ OnSpawnGuardians:
 		if (.@guardiantype[.@i] == 1) { set .@type,1287; }
 		else if (.@guardiantype[.@i] == 2) { set .@type,1285; }
 		else { set .@type,1286; }
-		if (GetCastleData(strnpcinfo(2),.@UseGID)) {
+		if (getcastledata(strnpcinfo(2),.@UseGID)) {
 			guardian strnpcinfo(2),.@guardianposx[.@i],.@guardianposy[.@i],strmobinfo(2,.@type),.@type,"Guardian#"+strnpcinfo(2)+"::OnGuardianDied",.@i;
 		}
 	}
@@ -1131,13 +1131,13 @@ OnClock0001:
 	// Do nothing if this script is the template.
 	if (strnpcinfo(1) == "Gld_Trea_Spawn") end;
 	
-	set .@GID, GetCastleData(strnpcinfo(2),1);
+	set .@GID, getcastledata(strnpcinfo(2),1);
 	
 	// If there is no owner, do nothing.
 	if (!.@GID) end;
 
 	// Is there Economy in this castle?
-	set .@Treasure,GetCastleData(strnpcinfo(2),2)/5+4;
+	set .@Treasure,getcastledata(strnpcinfo(2),2)/5+4;
 
 	// Set information
 	if (strnpcinfo(2) == "aldeg_cas01") { 
@@ -1247,15 +1247,15 @@ OnClock0001:
 
 	// Apply investment to Eco. and Def. Only happens if there were investments made.
 	// Permanent Development can only happen once per day.
-	if (GetCastleData(strnpcinfo(2),4)) {
-		set .@Economy,GetCastleData(strnpcinfo(2),2);
-		SetCastleData strnpcinfo(2),2,.@Economy + GetCastleData(strnpcinfo(2),4) + (rand(2) && getgdskilllv(.@GID,10014));
-		if (GetCastleData(strnpcinfo(2),2) > 100) SetCastleData strnpcinfo(2),2,100;
+	if (getcastledata(strnpcinfo(2),4)) {
+		set .@Economy,getcastledata(strnpcinfo(2),2);
+		setcastledata strnpcinfo(2),2,.@Economy + getcastledata(strnpcinfo(2),4) + (rand(2) && getgdskilllv(.@GID,10014));
+		if (getcastledata(strnpcinfo(2),2) > 100) setcastledata strnpcinfo(2),2,100;
 	}
-	if (GetCastleData(strnpcinfo(2),5)) {
-		set .@Defence,GetCastleData(strnpcinfo(2),3);
-		SetCastleData strnpcinfo(2),3,.@Defence + GetCastleData(strnpcinfo(2),5);
-		if (GetCastleData(strnpcinfo(2),3) > 100) SetCastleData strnpcinfo(2),3,100;
+	if (getcastledata(strnpcinfo(2),5)) {
+		set .@defence,getcastledata(strnpcinfo(2),3);
+		setcastledata strnpcinfo(2),3,.@defence + getcastledata(strnpcinfo(2),5);
+		if (getcastledata(strnpcinfo(2),3) > 100) setcastledata strnpcinfo(2),3,100;
 	}
 	// Reset daily investment limits.
 	setcastledata strnpcinfo(2),4,0;

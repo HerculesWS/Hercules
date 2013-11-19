@@ -52,8 +52,8 @@ static forceinline void FinalizeSpinLock(PSPIN_LOCK lck){
 }
 
 
-#define getsynclock(l) { while(1){ if(InterlockedCompareExchange(l, 1, 0) == 0) break; rathread_yield(); } }
-#define dropsynclock(l) { InterlockedExchange(l, 0); }
+#define getsynclock(l) do { if(InterlockedCompareExchange((l), 1, 0) == 0) break; rathread_yield(); } while(/*always*/1)
+#define dropsynclock(l) do { InterlockedExchange((l), 0); } while(0)
 
 static forceinline void EnterSpinLock(PSPIN_LOCK lck){
 		int tid = rathread_get_tid();

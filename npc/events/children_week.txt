@@ -11,7 +11,7 @@
 //= 1.1 First Beta. [Samuray22]
 //============================================================
 
-prontera,146,91,5	script	Pandit chacha#child07	61,{
+prontera,146,91,5	script	Pandit chacha#child07	1_M_PUBMASTER,{
 	if (BaseLevel > 50) {
 		mes "[Pandit chacha]";
 		mes "Hahaha~";

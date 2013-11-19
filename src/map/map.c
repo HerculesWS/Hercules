@@ -1663,6 +1663,9 @@ int map_quit(struct map_session_data *sd) {
 		//Non-active players should not have loaded any data yet (or it was cleared already) so no additional cleanups are needed.
 		return 0;
 	}
+	
+	if( sd->expiration_tid != INVALID_TIMER )
+		timer->delete(sd->expiration_tid,pc->expiration_timer);
 
 	if (sd->npc_timer_id != INVALID_TIMER) //Cancel the event timer.
 		npc->timerevent_quit(sd);
@@ -1721,8 +1724,6 @@ int map_quit(struct map_session_data *sd) {
 	if( sd->pd ) pet->lootitem_drop(sd->pd, sd);
 
 	if( sd->state.storage_flag == 1 ) sd->state.storage_flag = 0; // No need to Double Save Storage on Quit.
-
-	if (sd->state.permanent_speed == 1) sd->state.permanent_speed = 0; // Remove lock so speed is set back to normal at login.
 
 	if( sd->ed ) {
 		elemental->clean_effect(sd->ed);
@@ -2094,9 +2095,7 @@ struct s_mapiterator
 /// @param _bl_ block_list
 /// @return true if it matches
 #define MAPIT_MATCHES(_mapit_,_bl_) \
-	( \
-	( (_bl_)->type & (_mapit_)->types /* type matches */ ) \
-	)
+	( (_bl_)->type & (_mapit_)->types /* type matches */ )
 
 /// Allocates a new iterator.
 /// Returns the new iterator.
@@ -2907,14 +2906,14 @@ int map_readfromcache(struct map_data *m, char *buffer) {
 }
 
 
-int map_addmap(char* mapname) {
+int map_addmap(const char* mapname) {
 	map->list[map->count].instance_id = -1;
 	mapindex_getmapname(mapname, map->list[map->count++].name);
 	return 0;
 }
 
 void map_delmapid(int id) {
-	ShowNotice("Removing map [ %s ] from map->list"CL_CLL"\n",map->list[id].name);
+	ShowNotice("Removing map [ %s ] from maplist"CL_CLL"\n",map->list[id].name);
 	memmove(map->list+id, map->list+id+1, sizeof(map->list[0])*(map->count-id-1));
 	map->count--;
 }
@@ -5206,17 +5205,19 @@ void map_helpscreen(bool do_exit)
 	ShowInfo("Usage: %s [options]\n", SERVER_NAME);
 	ShowInfo("\n");
 	ShowInfo("Options:\n");
-	ShowInfo("  -?, -h [--help]\t\tDisplays this help screen.\n");
-	ShowInfo("  -v [--version]\t\tDisplays the server's version.\n");
-	ShowInfo("  --run-once\t\t\tCloses server after loading (testing).\n");
-	ShowInfo("  --map-config <file>\t\tAlternative map-server configuration.\n");
-	ShowInfo("  --battle-config <file>\tAlternative battle configuration.\n");
-	ShowInfo("  --atcommand-config <file>\tAlternative atcommand configuration.\n");
-	ShowInfo("  --script-config <file>\tAlternative script configuration.\n");
-	ShowInfo("  --msg-config <file>\t\tAlternative message configuration.\n");
-	ShowInfo("  --grf-path <file>\t\tAlternative GRF path configuration.\n");
-	ShowInfo("  --inter-config <file>\t\tAlternative inter-server configuration.\n");
-	ShowInfo("  --log-config <file>\t\tAlternative logging configuration.\n");
+	ShowInfo("  -?, -h [--help]           Displays this help screen.\n");
+	ShowInfo("  -v [--version]            Displays the server's version.\n");
+	ShowInfo("  --run-once                Closes server after loading (testing).\n");
+	ShowInfo("  --map-config <file>       Alternative map-server configuration.\n");
+	ShowInfo("  --battle-config <file>    Alternative battle configuration.\n");
+	ShowInfo("  --atcommand-config <file> Alternative atcommand configuration.\n");
+	ShowInfo("  --script-config <file>    Alternative script configuration.\n");
+	ShowInfo("  --msg-config <file>       Alternative message configuration.\n");
+	ShowInfo("  --grf-path <file>         Alternative GRF path configuration.\n");
+	ShowInfo("  --inter-config <file>     Alternative inter-server configuration.\n");
+	ShowInfo("  --log-config <file>       Alternative logging configuration.\n");
+	ShowInfo("  --script-check <file>     Tests a script for errors, without running the server.\n");
+	HPM->arg_help();/* display help for commands implemented thru HPM */
 	if( do_exit )
 		exit(EXIT_SUCCESS);
 }
@@ -5259,10 +5260,11 @@ void do_shutdown(void)
 	}
 }
 
-bool map_arg_next_value(const char* option, int i, int argc)
+bool map_arg_next_value(const char* option, int i, int argc, bool must)
 {
 	if( i >= argc-1 ) {
-		ShowWarning("Missing value for option '%s'.\n", option);
+		if( must )
+			ShowWarning("Missing value for option '%s'.\n", option);
 		return false;
 	}
 
@@ -5344,6 +5346,7 @@ void map_hp_symbols(void) {
 	HPM->share(skill,"skill");
 	HPM->share(vending,"vending");
 	HPM->share(pc,"pc");
+	HPM->share(pcg,"pc_groups");
 	HPM->share(party,"party");
 	HPM->share(storage,"storage");
 	HPM->share(trade,"trade");
@@ -5370,14 +5373,13 @@ void map_hp_symbols(void) {
 	/* specific */
 	HPM->share(atcommand->create,"addCommand");
 	HPM->share(script->addScript,"addScript");
-	HPM->share(HPM_map_addToMSD,"addToMSD");
-	HPM->share(HPM_map_getFromMSD,"getFromMSD");
-	HPM->share(HPM_map_removeFromMSD,"removeFromMSD");
 	/* vars */
 	HPM->share(map->list,"map->list");
 }
 
 void map_load_defaults(void) {
+	map_defaults();
+	/* */
 	atcommand_defaults();
 	battle_defaults();
 	battleground_defaults();
@@ -5398,6 +5400,7 @@ void map_load_defaults(void) {
 	skill_defaults();
 	vending_defaults();
 	pc_defaults();
+	pc_groups_defaults();
 	party_defaults();
 	storage_defaults();
 	trade_defaults();
@@ -5419,22 +5422,31 @@ void map_load_defaults(void) {
 }
 int do_init(int argc, char *argv[])
 {
+	bool minimal = false;
+	char *scriptcheck = NULL;
 	int i;
 
 #ifdef GCOLLECT
 	GC_enable_incremental();
 #endif
+	
+	map_load_defaults();
 
-	map_defaults();
-
-	rnd_init();
-
+	HPM->load_sub = HPM_map_plugin_load_sub;
+	HPM->symbol_defaults_sub = map_hp_symbols;
+	HPM->grabHPDataSub = HPM_map_grabHPData;
+	HPM->config_read();
+	
+	HPM->event(HPET_PRE_INIT);
+	
 	for( i = 1; i < argc ; i++ ) {
 		const char* arg = argv[i];
 
 		if( arg[0] != '-' && ( arg[0] != '/' || arg[1] == '-' ) ) {// -, -- and /
 			ShowError("Unknown option '%s'.\n", argv[i]);
 			exit(EXIT_FAILURE);
+		} else if ( HPM->parse_arg(arg,&i,argv,map->arg_next_value(arg, i, argc, false)) ) {
+			continue; /* HPM Triggered */
 		} else if( (++arg)[0] == '-' ) {// long option
 			arg++;
 
@@ -5443,31 +5455,36 @@ int do_init(int argc, char *argv[])
 			} else if( strcmp(arg, "version") == 0 ) {
 				map->versionscreen(true);
 			} else if( strcmp(arg, "map-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->MAP_CONF_NAME = argv[++i];
 			} else if( strcmp(arg, "battle-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->BATTLE_CONF_FILENAME = argv[++i];
 			} else if( strcmp(arg, "atcommand-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->ATCOMMAND_CONF_FILENAME = argv[++i];
 			} else if( strcmp(arg, "script-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->SCRIPT_CONF_NAME = argv[++i];
 			} else if( strcmp(arg, "msg-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->MSG_CONF_NAME = argv[++i];
 			} else if( strcmp(arg, "grf-path-file") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->GRF_PATH_FILENAME = argv[++i];
 			} else if( strcmp(arg, "inter-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->INTER_CONF_NAME = argv[++i];
 			} else if( strcmp(arg, "log-config") == 0 ) {
-				if( map->arg_next_value(arg, i, argc) )
+				if( map->arg_next_value(arg, i, argc, true) )
 					map->LOG_CONF_NAME = argv[++i];
 			} else if( strcmp(arg, "run-once") == 0 ) { // close the map-server as soon as its done.. for testing [Celest]
 				runflag = CORE_ST_STOP;
+			} else if( strcmp(arg, "script-check") == 0 ) {
+				map->minimal = true;
+				runflag = CORE_ST_STOP;
+				if( map->arg_next_value(arg, i, argc, true) )
+					scriptcheck = argv[++i];
 			} else {
 				ShowError("Unknown option '%s'.\n", argv[i]);
 				exit(EXIT_FAILURE);
@@ -5487,41 +5504,43 @@ int do_init(int argc, char *argv[])
 			}
 		}
 	}
+	minimal = map->minimal;/* temp (perhaps make minimal a mask with options of what to load? e.g. plugin 1 does minimal |= mob_db; */
+	if (!minimal) {
+		map->config_read(map->MAP_CONF_NAME);
+		CREATE(map->list,struct map_data,map->count);
+		map->count = 0;
+		map->config_read_sub(map->MAP_CONF_NAME);
 
-	map_load_defaults();
-	map->config_read(map->MAP_CONF_NAME);
-	CREATE(map->list,struct map_data,map->count);
-	map->count = 0;
-	map->config_read_sub(map->MAP_CONF_NAME);
-	// loads npcs
-	map->reloadnpc(false);
+		// loads npcs
+		map->reloadnpc(false);
 
-	chrif->checkdefaultlogin();
+		chrif->checkdefaultlogin();
 
-	if (!map->ip_set || !map->char_ip_set) {
-		char ip_str[16];
-		ip2str(addr_[0], ip_str);
+		if (!map->ip_set || !map->char_ip_set) {
+			char ip_str[16];
+			ip2str(addr_[0], ip_str);
 
-		ShowWarning("Not all IP addresses in /conf/map-server.conf configured, autodetecting...\n");
+			ShowWarning("Not all IP addresses in /conf/map-server.conf configured, autodetecting...\n");
 
-		if (naddr_ == 0)
-			ShowError("Unable to determine your IP address...\n");
-		else if (naddr_ > 1)
-			ShowNotice("Multiple interfaces detected...\n");
+			if (naddr_ == 0)
+				ShowError("Unable to determine your IP address...\n");
+			else if (naddr_ > 1)
+				ShowNotice("Multiple interfaces detected...\n");
 
-		ShowInfo("Defaulting to %s as our IP address\n", ip_str);
+			ShowInfo("Defaulting to %s as our IP address\n", ip_str);
 
-		if (!map->ip_set)
-			clif->setip(ip_str);
-		if (!map->char_ip_set)
-			chrif->setip(ip_str);
+			if (!map->ip_set)
+				clif->setip(ip_str);
+			if (!map->char_ip_set)
+				chrif->setip(ip_str);
+		}
+
+		battle->config_read(map->BATTLE_CONF_FILENAME);
+		atcommand->msg_read(map->MSG_CONF_NAME);
+		map->inter_config_read(map->INTER_CONF_NAME);
+		logs->config_read(map->LOG_CONF_NAME);
 	}
-
-	battle->config_read(map->BATTLE_CONF_FILENAME);
-	atcommand->msg_read(map->MSG_CONF_NAME);
 	script->config_read(map->SCRIPT_CONF_NAME);
-	map->inter_config_read(map->INTER_CONF_NAME);
-	logs->config_read(map->LOG_CONF_NAME);
 
 	map->id_db     = idb_alloc(DB_OPT_BASE);
 	map->pc_db     = idb_alloc(DB_OPT_BASE); //Added for reliable map->id2sd() use. [Skotlex]
@@ -5538,54 +5557,80 @@ int do_init(int argc, char *argv[])
 	
 	map->flooritem_ers = ers_new(sizeof(struct flooritem_data),"map.c::map_flooritem_ers",ERS_OPT_NONE);
 	ers_chunk_size(map->flooritem_ers, 100);
-	
-	map->sql_init();
-	if (logs->config.sql_logs)
-		logs->sql_init();
 
-	mapindex_init();
+	if (!minimal) {
+		map->sql_init();
+		if (logs->config.sql_logs)
+			logs->sql_init();
+	}
+
+	i = mapindex_init();
+
+	if (minimal) {
+		// Pretend all maps from the mapindex are on this mapserver
+		CREATE(map->list,struct map_data,i);
+
+		for( i = 0; i < MAX_MAPINDEX; i++ ) {
+			if (mapindex_exists(i)) {
+				map->addmap(mapindex_id2name(i));
+			}
+		}
+	}
+
 	if(map->enable_grf)
 		grfio_init(map->GRF_PATH_FILENAME);
 
 	map->readallmaps();
 
-	timer->add_func_list(map->freeblock_timer, "map_freeblock_timer");
-	timer->add_func_list(map->clearflooritem_timer, "map_clearflooritem_timer");
-	timer->add_func_list(map->removemobs_timer, "map_removemobs_timer");
-	timer->add_interval(timer->gettick()+1000, map->freeblock_timer, 0, 0, 60*1000);
 
-	HPM->load_sub = HPM_map_plugin_load_sub;
-	HPM->symbol_defaults_sub = map_hp_symbols;
-	HPM->config_read();
-	HPM->event(HPET_INIT);
+	if (!minimal) {
+		timer->add_func_list(map->freeblock_timer, "map_freeblock_timer");
+		timer->add_func_list(map->clearflooritem_timer, "map_clearflooritem_timer");
+		timer->add_func_list(map->removemobs_timer, "map_removemobs_timer");
+		timer->add_interval(timer->gettick()+1000, map->freeblock_timer, 0, 0, 60*1000);
 
-	atcommand->init();
-	battle->init();
-	instance->init();
-	chrif->init();
-	clif->init();
-	ircbot->init();
-	script->init();
-	itemdb->init();
-	skill->init();
-	map->read_zone_db();/* read after item and skill initalization */
-	mob->init();
-	pc->init();
-	status->init();
-	party->init();
-	guild->init();
-	gstorage->init();
-	pet->init();
-	homun->init();
-	mercenary->init();
-	elemental->init();
-	quest->init();
-	npc->init();
-	unit->init();
-	bg->init();
-	duel->init();
-	vending->init();
+		HPM->event(HPET_INIT);
+	}
 
+	atcommand->init(minimal);
+	battle->init(minimal);
+	instance->init(minimal);
+	chrif->init(minimal);
+	clif->init(minimal);
+	ircbot->init(minimal);
+	script->init(minimal);
+	itemdb->init(minimal);
+	skill->init(minimal);
+	if (!minimal)
+		map->read_zone_db();/* read after item and skill initalization */
+	mob->init(minimal);
+	pc->init(minimal);
+	status->init(minimal);
+	party->init(minimal);
+	guild->init(minimal);
+	gstorage->init(minimal);
+	pet->init(minimal);
+	homun->init(minimal);
+	mercenary->init(minimal);
+	elemental->init(minimal);
+	quest->init(minimal);
+	npc->init(minimal);
+	unit->init(minimal);
+	bg->init(minimal);
+	duel->init(minimal);
+	vending->init(minimal);
+
+	if (scriptcheck) {
+		if (npc->parsesrcfile(scriptcheck, false) == 0)
+			exit(EXIT_SUCCESS);
+		exit(EXIT_FAILURE);
+	}
+
+	if( minimal ) {
+		HPM->event(HPET_READY);
+		exit(EXIT_SUCCESS);
+	}
+	
 	npc->event_do_oninit();	// Init npcs (OnInit)
 
 	if (battle_config.pk_mode)
@@ -5620,6 +5665,7 @@ void map_defaults(void) {
 	map = &map_s;
 
 	/* */
+	map->minimal = false;
 	map->count = 0;
 	
 	sprintf(map->db_path ,"db");

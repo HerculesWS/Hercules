@@ -10,7 +10,7 @@
 //= 1.0 Moved Izlude NPCs to Pre-RE/RE paths.
 //============================================================
 
-izlude,131,116,4	script	Bulletin Board#5	837,{
+izlude,131,116,4	script	Bulletin Board#5	2_BULLETIN_BOARD,{
 	mes "[Izlude: The Satellite City]";
 	mes "Welcome to Izlude, the satellite of Prontera. Izlude was built to support Prontera's defense and to accommodate its burgeoning population.";
 	next;

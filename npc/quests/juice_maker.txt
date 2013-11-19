@@ -16,7 +16,7 @@
 //= 2.1 Fixed dialog for if your missing the needed items (He always said the dialog for grape juice). [Kisuka]
 //============================================================
 
-prt_in,49,172,3	script	Marianne#juice	53,{
+prt_in,49,172,3	script	Marianne#juice	1_M_INNKEEPER,{
 	if (MISC_QUEST&1 || morison_meat == 15) {
 		mes "[Housewife Marianne]";
 		mes "Whew...!";
@@ -77,7 +77,7 @@ prt_in,49,172,3	script	Marianne#juice	53,{
 	close;
 }
 
-prt_in,47,173,3	script	Morrison#juice	97,{
+prt_in,47,173,3	script	Morrison#juice	4W_M_01,{
 	if (MISC_QUEST&1 || morison_meat == 15) {
 		mes "[Little Morrison]";
 		mes "Bleh... Forget it.";
@@ -167,7 +167,7 @@ prt_in,47,173,3	script	Morrison#juice	97,{
 	close;
 }
 
-payon_in03,188,146,5	script	Marx Hansen#juice	86,{
+payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";

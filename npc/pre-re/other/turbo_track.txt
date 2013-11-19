@@ -11,4 +11,4 @@
 //= 1.0 Split Peco Peco Manager NPC.
 //============================================================
 
-alde_gld,181,199,5	duplicate(MountManager_turbo)	Peco Peco Manager	845
+alde_gld,181,199,5	duplicate(MountManager_turbo)	Peco Peco Manager	4_F_RACING

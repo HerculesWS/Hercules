@@ -6,13 +6,12 @@
 
 #include "../common/cbasetypes.h"
 #include "../map/atcommand.h"
+#include "../common/HPM.h"
 
 struct hplugin;
 struct map_session_data;
 
-void HPM_map_addToMSD(struct map_session_data *sd, void *data, unsigned int id, unsigned int type, bool autofree);
-void *HPM_map_getFromMSD(struct map_session_data *sd, unsigned int id, unsigned int type);
-void HPM_map_removeFromMSD(struct map_session_data *sd, unsigned int id, unsigned int type);
+void HPM_map_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
 
 bool HPM_map_add_atcommand(char *name, AtCommandFunc func);
 void HPM_map_atcommands(void);

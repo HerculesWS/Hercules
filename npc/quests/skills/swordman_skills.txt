@@ -13,7 +13,7 @@
 //= 1.8 Fixed JobLevel requirements. [Euphy]
 //============================================================
 
-izlude_in,175,130,2	script	Knight De Thomas	98,4,4,{
+izlude_in,175,130,2	script	Knight De Thomas	4W_M_02,4,4,{
 	if ((BaseClass == Job_Swordman) && (sm_movingrecovery_x < 1)) {
 		mes "[De Thomas]";
 		mes "Oh, no! You must have been hurt! Are you ok?";
@@ -147,7 +147,7 @@ izlude_in,175,130,2	script	Knight De Thomas	98,4,4,{
 	close;
 }
 
-prt_in,75,88,5	script	Leon Von Frich	85,3,3,{
+prt_in,75,88,5	script	Leon Von Frich	4_M_03,3,3,{
 
 	if ((BaseClass == Job_Swordman) && (JobLevel >= 25 || (BaseJob == Job_Knight || BaseJob == Job_Crusader))) {
 		if (getskilllv("SM_FATALBLOW") == 1) {
@@ -301,7 +301,7 @@ OnTouch:
 	close;
 }
 
-prt_in,94,57,3	script	Juan	85,4,4,{
+prt_in,94,57,3	script	Juan	4_M_03,4,4,{
 	if (BaseClass == Job_Swordman) {
 		if (getskilllv("SM_AUTOBERSERK") == 1) {
 			mes "[Juan]";

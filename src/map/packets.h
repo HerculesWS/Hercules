@@ -1613,7 +1613,7 @@ packet(0x020d,-1);
 
 //2009-10-27aRagexeRE
 #if PACKETVER >= 20091027
-	packet(0x07f5,6,clif->pGMReqAccountName,2);
+	packet(0x07f5,6,clif->pGMFullStrip,2);
 	packet(0x07f6,14);
 #endif
 
@@ -2644,6 +2644,10 @@ packet(0x020d,-1);
 
 #if PACKETVER >= 20130807
 	packetKeys(0x7E241DE0,0x5E805580,0x3D807D80); /* Thanks to Shakto */
+#endif
+
+#if defined(OBFUSCATIONKEY1) && defined(OBFUSCATIONKEY2) && defined(OBFUSCATIONKEY3)
+	packetKeys(OBFUSCATIONKEY1,OBFUSCATIONKEY2,OBFUSCATIONKEY3);
 #endif
 
 #endif /* _PACKETS_H_ */

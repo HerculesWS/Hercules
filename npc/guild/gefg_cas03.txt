@@ -14,9 +14,9 @@
 
 // Guild Flag (Outside Castle)
 //============================================================
--	script	Yesnelph#1::OutsideFlagsG3	722,{
+-	script	Yesnelph#1::OutsideFlagsG3	GUILD_FLAG,{
 
-	set .@GID, GetCastleData("gefg_cas03",1);
+	set .@GID, getcastledata("gefg_cas03",1);
 
 	if (.@GID == 0) {
 		mes "[ Edict of the Divine Rune-Midgarts Kingdom ]";
@@ -39,7 +39,7 @@
 		next;
 		if(select("Return to the guild castle.:Quit.") == 1) {
 			close2;
-			if (getcharid(2) == GetCastleData("gefg_cas03",1)) {
+			if (getcharid(2) == getcastledata("gefg_cas03",1)) {
 				warp "gefg_cas03",221,30;
 				end;
 			}
@@ -51,60 +51,60 @@
 	mes " ";
 	mes "1. Follow the ordinance of The Divine Rune-Midgarts Kingdom, ";
 	mes "we approve that this place is in";
-	mes "the private prossession of ^ff0000"+GetGuildName(.@GID)+"^000000 Guild.";
+	mes "the private prossession of ^ff0000"+getguildname(.@GID)+"^000000 Guild.";
 	mes " ";
-	mes "2. The guild Master of ^ff0000"+GetGuildName(.@GID)+"^000000 Guild is";
-	mes "^ff0000"+GetGuildMaster(.@GID)+"^000000";
+	mes "2. The guild Master of ^ff0000"+getguildname(.@GID)+"^000000 Guild is";
+	mes "^ff0000"+getguildmaster(.@GID)+"^000000";
 	mes "If there is anyone who objects to this,";
 	mes "prove your strength and honor with a steel blade in your hand.";
 	close;
 
 OnRecvCastleG03:
-	FlagEmblem GetCastleData("gefg_cas03",1);
+	flagemblem getcastledata("gefg_cas03",1);
 	end;
 }
 
-gef_fild13,78,182,4	duplicate(OutsideFlagsG3)	Yesnelph#1-2	722
-gef_fild13,87,182,4	duplicate(OutsideFlagsG3)	Yesnelph#2	722
-gef_fild13,73,295,7	duplicate(OutsideFlagsG3)	Yesnelph#3	722
-gef_fild13,113,274,7	duplicate(OutsideFlagsG3)	Yesnelph#4	722
-gef_fild13,144,235,6	duplicate(OutsideFlagsG3)	Yesnelph#5	722
-gef_fild13,144,244,6	duplicate(OutsideFlagsG3)	Yesnelph#6	722
+gef_fild13,78,182,4	duplicate(OutsideFlagsG3)	Yesnelph#1-2	GUILD_FLAG
+gef_fild13,87,182,4	duplicate(OutsideFlagsG3)	Yesnelph#2	GUILD_FLAG
+gef_fild13,73,295,7	duplicate(OutsideFlagsG3)	Yesnelph#3	GUILD_FLAG
+gef_fild13,113,274,7	duplicate(OutsideFlagsG3)	Yesnelph#4	GUILD_FLAG
+gef_fild13,144,235,6	duplicate(OutsideFlagsG3)	Yesnelph#5	GUILD_FLAG
+gef_fild13,144,244,6	duplicate(OutsideFlagsG3)	Yesnelph#6	GUILD_FLAG
 
 // Guild Flag (Inside Castle)
 //============================================================
--	script	Yesnelph#7::InsideFlagsG3	722,{
+-	script	Yesnelph#7::InsideFlagsG3	GUILD_FLAG,{
 	end;
 
 OnRecvCastleG03:
-	FlagEmblem GetCastleData("gefg_cas03",1);
+	flagemblem getcastledata("gefg_cas03",1);
 	end;
 }
 
-gefg_cas03,122,220,6	duplicate(InsideFlagsG3)	Yesnelph#7-2	722
-gefg_cas03,122,229,6	duplicate(InsideFlagsG3)	Yesnelph#8	722
-gefg_cas03,91,257,7	duplicate(InsideFlagsG3)	Yesnelph#9	722
-gefg_cas03,52,276,7	duplicate(InsideFlagsG3)	Yesnelph#10	722
-gefg_cas03,56,164,4	duplicate(InsideFlagsG3)	Yesnelph#11	722
-gefg_cas03,65,164,4	duplicate(InsideFlagsG3)	Yesnelph#12	722
-gefg_cas03,37,214,1	duplicate(InsideFlagsG3)	Yesnelph#13	722
-gefg_cas03,34,208,1	duplicate(InsideFlagsG3)	Yesnelph#14	722
+gefg_cas03,122,220,6	duplicate(InsideFlagsG3)	Yesnelph#7-2	GUILD_FLAG
+gefg_cas03,122,229,6	duplicate(InsideFlagsG3)	Yesnelph#8	GUILD_FLAG
+gefg_cas03,91,257,7	duplicate(InsideFlagsG3)	Yesnelph#9	GUILD_FLAG
+gefg_cas03,52,276,7	duplicate(InsideFlagsG3)	Yesnelph#10	GUILD_FLAG
+gefg_cas03,56,164,4	duplicate(InsideFlagsG3)	Yesnelph#11	GUILD_FLAG
+gefg_cas03,65,164,4	duplicate(InsideFlagsG3)	Yesnelph#12	GUILD_FLAG
+gefg_cas03,37,214,1	duplicate(InsideFlagsG3)	Yesnelph#13	GUILD_FLAG
+gefg_cas03,34,208,1	duplicate(InsideFlagsG3)	Yesnelph#14	GUILD_FLAG
 
 // Guild Flag (Town)
 //============================================================
-geffen,120,132,8	duplicate(InsideFlagsG3)	Yesnelph#15	722
+geffen,120,132,8	duplicate(InsideFlagsG3)	Yesnelph#15	GUILD_FLAG
 
 // Kafra Employee
 //============================================================
-gefg_cas03,116,89,5	duplicate(guildkafra)	Kafra Staff#gefg_cas03	117
+gefg_cas03,116,89,5	duplicate(guildkafra)	Kafra Staff#gefg_cas03	4_F_KAFRA1
 
 // Steward
 //============================================================
-gefg_cas03,106,23,5	duplicate(cm)	Jyang#gefg_cas03	55
+gefg_cas03,106,23,5	duplicate(cm)	Jyang#gefg_cas03	1_M_JOBTESTER
 
 // Treasure Room Exit
 //============================================================
-gefg_cas03,275,289,0	script	#lever_G03	111,{
+gefg_cas03,275,289,0	script	#lever_G03	HIDDEN_NPC,{
 
 	mes " ";
 	mes "There's a small lever. Will you pull it?";
@@ -119,7 +119,7 @@ gefg_cas03,275,289,0	script	#lever_G03	111,{
 
 // Guild Dungeon Switch
 //============================================================
-gefg_cas03,221,43,0	duplicate(gdlever)	#gefg_cas03	111
+gefg_cas03,221,43,0	duplicate(gdlever)	#gefg_cas03	HIDDEN_NPC
 
 // Guild Treasure Spawns
 //============================================================

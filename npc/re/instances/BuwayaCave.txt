@@ -14,7 +14,7 @@
 
 1@ma_c	mapflag	src4instance
 //============================================================
-ma_fild02,312,317,5	script	Guard#buwaya_cave	570,{
+ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 	if (BaseLevel < 130) {
 		mes "[Guard]";
 		mes "People under ^ff0000level 130^000000";
@@ -108,7 +108,7 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	570,{
 	}
 }
 
-ma_fild02,315,323,0	script	Cave Entrance#buwaya	45,2,2,{
+ma_fild02,315,323,0	script	Cave Entrance#buwaya	WARPNPC,2,2,{
 	end;
 OnTouch:
 	if (BaseLevel < 130) {
@@ -151,7 +151,7 @@ OnTouch:
 	}
 }
 
-1@ma_c,33,112,0	script	#damage	139,7,7,{
+1@ma_c,33,112,0	script	#damage	HIDDEN_WARP_NPC,7,7,{
 	end;
 OnInstanceInit:
 	initnpctimer;
@@ -173,7 +173,7 @@ OnTouch:
 	end;
 }
 
-1@ma_c,29,110,5	script	Kidnapped People#1	575,{
+1@ma_c,29,110,5	script	Kidnapped People#1	4_F_BARYO_OLD,{
 	mes "[Kidnapped Residents]";
 	mes "Buwaya was running around,";
 	mes "and new people got caught.";
@@ -205,7 +205,7 @@ OnEnable:
 	end;
 }
 
-1@ma_c,36,110,5	script	Kidnapped People#2	574,{
+1@ma_c,36,110,5	script	Kidnapped People#2	4_M_BARYO_OLD,{
 	mes "[Kidnapped Residents]";
 	mes "Ahaa! I wish I had a little more power...";
 	mes "I know its weakness...";
@@ -239,7 +239,7 @@ OnEnable:
 	end;
 }
 
-1@ma_c,3,3,0	script	#box_mob_call	139,1,1,{
+1@ma_c,3,3,0	script	#box_mob_call	HIDDEN_WARP_NPC,1,1,{
 	end;
 OnInstanceInit:
 	setcell instance_mapname("1@ma_c"),30,118,35,118,cell_shootable,1; //custom
@@ -262,7 +262,7 @@ OnMyMobDead:
 	end;
 }
 
-1@ma_c,38,118,0	script	#box_out	45,2,2,{
+1@ma_c,38,118,0	script	#box_out	WARPNPC,2,2,{
 OnInstanceInit:
 OnDisable:
 	disablenpc instance_npcname("#box_out");
@@ -277,7 +277,7 @@ OnTouch:
 	end;
 }
 
-1@ma_c,97,74,0	script	#box_call	139,50,50,{
+1@ma_c,97,74,0	script	#box_call	HIDDEN_WARP_NPC,50,50,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("#box_call");
@@ -313,7 +313,7 @@ OnDisable:
 	end;
 }
 
-1@ma_c,97,74,0	script	#yunobi1	139,{
+1@ma_c,97,74,0	script	#yunobi1	HIDDEN_WARP_NPC,{
 	end;
 OnInstanceInit:
 	hideonnpc instance_npcname(strnpcinfo(0));
@@ -322,16 +322,16 @@ OnEnable:
 	specialeffect EF_MAPPILLAR2;
 	end;
 }
-1@ma_c,97,94,0	duplicate(#yunobi1)	#yunobi2	139
-1@ma_c,117,94,0	duplicate(#yunobi1)	#yunobi3	139
-1@ma_c,117,74,0	duplicate(#yunobi1)	#yunobi4	139
-1@ma_c,117,54,0	duplicate(#yunobi1)	#yunobi5	139
-1@ma_c,97,54,0	duplicate(#yunobi1)	#yunobi6	139
-1@ma_c,77,54,0	duplicate(#yunobi1)	#yunobi7	139
-1@ma_c,77,74,0	duplicate(#yunobi1)	#yunobi8	139
-1@ma_c,77,94,0	duplicate(#yunobi1)	#yunobi9	139
+1@ma_c,97,94,0	duplicate(#yunobi1)	#yunobi2	HIDDEN_WARP_NPC
+1@ma_c,117,94,0	duplicate(#yunobi1)	#yunobi3	HIDDEN_WARP_NPC
+1@ma_c,117,74,0	duplicate(#yunobi1)	#yunobi4	HIDDEN_WARP_NPC
+1@ma_c,117,54,0	duplicate(#yunobi1)	#yunobi5	HIDDEN_WARP_NPC
+1@ma_c,97,54,0	duplicate(#yunobi1)	#yunobi6	HIDDEN_WARP_NPC
+1@ma_c,77,54,0	duplicate(#yunobi1)	#yunobi7	HIDDEN_WARP_NPC
+1@ma_c,77,74,0	duplicate(#yunobi1)	#yunobi8	HIDDEN_WARP_NPC
+1@ma_c,77,94,0	duplicate(#yunobi1)	#yunobi9	HIDDEN_WARP_NPC
 
-1@ma_c,1,1,0	script	#bunshin	139,{
+1@ma_c,1,1,0	script	#bunshin	HIDDEN_WARP_NPC,{
 	end;
 OnInstanceInit:
 	initnpctimer;
@@ -380,7 +380,7 @@ OnDisable:
 	end;
 }
 
-1@ma_c,2,2,0	script	#buwaya_con	139,{
+1@ma_c,2,2,0	script	#buwaya_con	HIDDEN_WARP_NPC,{
 	end;
 OnInstanceInit:
 	areamonster instance_mapname("1@ma_c"),90,67,104,81,"Buwaya",2319,1,instance_npcname("#buwaya_con")+"::OnMyMobDead";
@@ -397,7 +397,7 @@ OnMyMobDead:
 	end;
 }
 
-1@ma_c,3,3,0	script	#exit_mob	139,{
+1@ma_c,3,3,0	script	#exit_mob	HIDDEN_WARP_NPC,{
 	end;
 OnInstanceInit:
 	initnpctimer;
@@ -423,7 +423,7 @@ OnMyMobDead:
 	end;
 }
 
-1@ma_c,28,57,0	script	#cave_out	45,2,2,{
+1@ma_c,28,57,0	script	#cave_out	WARPNPC,2,2,{
 OnInstanceInit:
 	disablenpc instance_npcname("#cave_out");
 	end;

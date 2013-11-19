@@ -8,6 +8,8 @@
 #include "map.h" // struct block_list
 #include "status.h" // struct status_change
 #include "unit.h" // struct unit_data
+
+struct HPluginData;
 struct block_list;
 struct npc_data;
 struct view_data;
@@ -74,8 +76,10 @@ struct npc_data {
 			char killer_name[NAME_LENGTH];
 		} tomb;
 	} u;
+	/* HPData Support for npc_data */
+	struct HPluginData **hdata;
+	unsigned int hdatac;
 };
-
 
 
 #define START_NPC_NUM 110000000
@@ -92,7 +96,7 @@ enum actor_classes {
 #define MAX_NPC_CLASS 1000
 // New NPC range
 #define MAX_NPC_CLASS2_START 10000
-#define MAX_NPC_CLASS2_END 10049
+#define MAX_NPC_CLASS2_END 10070
 
 //Checks if a given id is a valid npc id. [Skotlex]
 //Since new npcs are added all the time, the max valid value is the one before the first mob (Scorpion = 1001)
@@ -140,7 +144,7 @@ struct npc_interface {
 	struct npc_src_list *src_files;
 	struct unit_data base_ud;
 	/* */
-	int (*init) (void);
+	int (*init) (bool minimal);
 	int (*final) (void);
 	/* */
 	int (*get_new_npc_id) (void);
@@ -197,6 +201,8 @@ struct npc_interface {
 	void (*addsrcfile) (const char *name);
 	void (*delsrcfile) (const char *name);
 	void (*parsename) (struct npc_data *nd, const char *name, const char *start, const char *buffer, const char *filepath);
+	int (*parseview) (const char *w4, const char *start, const char *buffer, const char *filepath);
+	bool (*viewisid) (const char *viewid);
 	struct npc_data* (*add_warp) (char *name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y);
 	const char* (*parse_warp) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
 	const char* (*parse_shop) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
@@ -216,7 +222,7 @@ struct npc_interface {
 	void (*parse_mob2) (struct spawn_data *mobspawn);
 	const char* (*parse_mob) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
 	const char* (*parse_mapflag) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
-	void (*parsesrcfile) (const char *filepath, bool runOnInit);
+	int (*parsesrcfile) (const char *filepath, bool runOnInit);
 	int (*script_event) (struct map_session_data *sd, enum npce_event type);
 	void (*read_event_script) (void);
 	int (*path_db_clear_sub) (DBKey key, DBData *data, va_list args);

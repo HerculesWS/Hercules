@@ -107,7 +107,8 @@ int compare_item(struct item *a, struct item *b)
 		a->identify == b->identify &&
 		a->refine == b->refine &&
 		a->attribute == b->attribute &&
-		a->expire_time == b->expire_time )
+		a->expire_time == b->expire_time &&
+		a->bound == b->bound )
 	{
 		int i;
 		for (i = 0; i < MAX_SLOTS && (a->card[i] == b->card[i]); i++);
@@ -140,6 +141,11 @@ int storage_additem(struct map_session_data* sd, struct item* item_data, int amo
 		return 1;
 	}
 	
+	if( item_data->bound > IBT_ACCOUNT && !pc->can_give_bound_items(sd) ) {
+		clif->message(sd->fd, msg_txt(294));
+		return 1;
+	}
+
 	if( itemdb->isstackable2(data) )
 	{//Stackable
 		for( i = 0; i < MAX_STORAGE; i++ )
@@ -430,11 +436,16 @@ int guild_storage_additem(struct map_session_data* sd, struct guild_storage* sto
 	}
 
 	if( !itemdb_canguildstore(item_data, pc->get_group_level(sd)) || item_data->expire_time )
-	{	//Check if item is storable. [Skotlex]
+ 	{	//Check if item is storable. [Skotlex]
 		clif->message (sd->fd, msg_txt(264));
 		return 1;
 	}
 
+	if( item_data->bound && item_data->bound != IBT_GUILD && !pc->can_give_bound_items(sd) ) {
+		clif->message(sd->fd, msg_txt(294));
+		return 1;
+	}
+	
 	if(itemdb->isstackable2(data)){ //Stackable
 		for(i=0;i<MAX_GUILD_STORAGE;i++){
 			if(compare_item(&stor->items[i], item_data)) {
@@ -520,6 +531,8 @@ int storage_guild_storageadd(struct map_session_data* sd, int index, int amount)
 
 	if(gstorage->additem(sd,stor,&sd->status.inventory[index],amount)==0)
 		pc->delitem(sd,index,amount,0,4,LOG_TYPE_GSTORAGE);
+	else
+		clif->dropitem(sd, index,0);
 
 	return 1;
 }
@@ -717,7 +730,9 @@ int storage_guild_storage_quit(struct map_session_data* sd, int flag) {
 
 	return 0;
 }
-void do_init_gstorage(void) {
+void do_init_gstorage(bool minimal) {
+	if (minimal)
+		return;
 	gstorage->db = idb_alloc(DB_OPT_RELEASE_DATA);
 }
 void do_final_gstorage(void) {

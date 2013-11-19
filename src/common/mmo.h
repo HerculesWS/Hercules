@@ -48,18 +48,18 @@
 // 20120307 - 2012-03-07aRagexeRE+ - 0x970
 
 #ifndef PACKETVER
-	#define PACKETVER 20120418
-#endif
+#define PACKETVER 20120418
+#endif // PACKETVER
 
+#ifndef DISABLE_PACKETVER_RE
 // Comment the following line if your client is NOT ragexeRE (required because of conflicting packets in ragexe vs ragexeRE).
 #define PACKETVER_RE
+#endif // DISABLE_PACKETVER_RE
 
 // Client support for experimental RagexeRE UI present in 2012-04-10 and 2012-04-18
-#ifdef PACKETVER_RE
-#if (PACKETVER == 20120410) || (PACKETVER == 20120418)
-	#define	PARTY_RECRUIT
-#endif
-#endif
+#if defined(PACKETVER_RE) && ( PACKETVER == 20120410 || PACKETVER == 20120418 )
+#define	PARTY_RECRUIT
+#endif // PACKETVER_RE && (PACKETVER == 20120410 || PACKETVER == 10120418)
 
 // Comment the following line to disable sc_data saving. [Skotlex]
 #define ENABLE_SC_SAVING
@@ -107,12 +107,12 @@
 //Should hold the max of GLOBAL/ACCOUNT/ACCOUNT2 (needed for some arrays that hold all three)
 #define MAX_REG_NUM 256
 #define DEFAULT_WALK_SPEED 150
-#define MIN_WALK_SPEED 0
+#define MIN_WALK_SPEED 20 /* below 20 clips animation */
 #define MAX_WALK_SPEED 1000
 #define MAX_STORAGE 600
 #define MAX_GUILD_STORAGE 600
 #define MAX_PARTY 12
-#define MAX_GUILD 16+10*6       // Increased max guild members +6 per 1 extension levels [Lupus]
+#define MAX_GUILD (16+10*6)     // Increased max guild members +6 per 1 extension levels [Lupus]
 #define MAX_GUILDPOSITION 20    // Increased max guild positions to accomodate for all members [Valaris] (removed) [PoW]
 #define MAX_GUILDEXPULSION 32
 #define MAX_GUILDALLIANCE 16
@@ -216,13 +216,14 @@ struct item {
 	int id;
 	short nameid;
 	short amount;
-	unsigned short equip; // Location(s) where item is equipped (using enum equip_pos for bitmasking).
+	unsigned int equip; // Location(s) where item is equipped (using enum equip_pos for bitmasking).
 	char identify;
 	char refine;
 	char attribute;
 	short card[MAX_SLOTS];
 	unsigned int expire_time;
 	char favorite;
+	unsigned char bound;
 	uint64 unique_id;
 };
 
@@ -247,6 +248,15 @@ enum e_mmo_charstatus_opt {
 	OPT_NONE		= 0x0,
 	OPT_SHOW_EQUIP	= 0x1,
 	OPT_ALLOW_PARTY	= 0x2,
+};
+
+enum e_item_bound_type {
+	IBT_MIN       = 0x1,
+	IBT_ACCOUNT   = 0x1,
+	IBT_GUILD     = 0x2,
+	IBT_PARTY     = 0x3,
+	IBT_CHARACTER = 0x4,
+	IBT_MAX       = 0x4,
 };
 
 struct s_skill {
@@ -414,6 +424,11 @@ struct mmo_charstatus {
 	unsigned short slotchange;
 
 	time_t delete_date;
+
+	/* `account_data` modifiers */
+	unsigned short mod_exp,mod_drop,mod_death;
+	
+	unsigned char font;
 };
 
 typedef enum mail_status {
@@ -838,6 +853,22 @@ enum ammo_type {
 	A_THROWWEAPON	//9
 };
 
+enum e_char_server_type {
+	CST_NORMAL      = 0,
+	CST_MAINTENANCE = 1,
+	CST_OVER18      = 2,
+	CST_PAYING      = 3,
+	CST_P2P         = 4,
+};
+
+/* packet size constant for itemlist */
+#if MAX_INVENTORY > MAX_STORAGE && MAX_INVENTORY > MAX_CART
+#define MAX_ITEMLIST MAX_INVENTORY
+#elif MAX_CART > MAX_INVENTORY && MAX_CART > MAX_STORAGE
+#define MAX_ITEMLIST MAX_CART
+#else
+#define MAX_ITEMLIST MAX_STORAGE
+#endif
 
 // sanity checks...
 #if MAX_ZENY > INT_MAX

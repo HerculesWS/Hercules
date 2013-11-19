@@ -13,7 +13,7 @@
 //= 1.1 Updated dialogue. [Euphy]
 //============================================================
 
-moc_para01,22,16,5	script	Catalog Magician#catal01	704,{
+moc_para01,22,16,5	script	Catalog Magician#catal01	4_M_BIBI,{
 	if (!checkweight(1301,3)) {
 		mes "- You have too many items. Please make space. -";
 		close;

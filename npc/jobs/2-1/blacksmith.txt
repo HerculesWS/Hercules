@@ -40,7 +40,7 @@
 //= 2.8 Removed the need for use of 'goto.' [L0ne_W0lf]
 //==============================================================
 
-ein_in01,18,28,4	script	Guildsman#BLS	731,{
+ein_in01,18,28,4	script	Guildsman#BLS	4_M_JOB_BLACKSMITH,{
 	if (Upper == 1) {
 		mes "[Altiregen]";
 		mes "Hey hey. I don't have time for chit-chat, I'm a pretty busy guy. There's all these Merchants working hard to become Blacksmiths.";
@@ -276,7 +276,7 @@ ein_in01,18,28,4	script	Guildsman#BLS	731,{
 	}
 }
 
-ein_in01,201,27,3	script	Guildsman#alberta	63,{
+ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 	mes "[Geschupenschte]";
 	mes "Hello there!";
 	mes "I'm ^8E6B23Geschupenschte^000000,";
@@ -931,7 +931,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	63,{
 	}
 }
 
-geffen,46,164,1	script	Baisulist#BLS	69,{
+geffen,46,164,1	script	Baisulist#BLS	1_F_04,{
 	if (BSMITH_Q == 9 && countitem(1610) > 0) {
 		mes "[Baisulist]";
 		mes "Oh, hello!";
@@ -1006,7 +1006,7 @@ geffen,46,164,1	script	Baisulist#BLS	69,{
 	}
 }
 
-morocc,27,112,4	script	Wickebine#BLS	725,{
+morocc,27,112,4	script	Wickebine#BLS	4_F_JOB_ASSASSIN,{
 	if (BSMITH_Q == 10 && countitem(1219) > 0) {
 		cutin "Job_Black_hucke01",2;
 		mes "[Wickebine]";
@@ -1107,7 +1107,7 @@ morocc,27,112,4	script	Wickebine#BLS	725,{
 	}
 }
 
-lighthalzen,209,80,4	script	Krongast#BLS	734,{
+lighthalzen,209,80,4	script	Krongast#BLS	4_M_JOB_KNIGHT2,{
 	if (BSMITH_Q == 11 && countitem(1119) > 0) {
 		mes "[Krongast]";
 		mes "Ohhhhhh~";
@@ -1185,7 +1185,7 @@ lighthalzen,209,80,4	script	Krongast#BLS	734,{
 	}
 }
 
-payon,214,79,4	script	Talpiz#BLS	59,{
+payon,214,79,4	script	Talpiz#BLS	1_M_ORIENT01,{
 	if (BSMITH_Q == 12 && countitem(1713) > 0) {
 		mes "[Talpiz]";
 		mes "Oh~";
@@ -1259,7 +1259,7 @@ payon,214,79,4	script	Talpiz#BLS	59,{
 	}
 }
 
-hugel,168,183,1	script	Bismarc#BLS	118,{
+hugel,168,183,1	script	Bismarc#BLS	2_M_THIEFMASTER,{
 	if (BSMITH_Q == 13 && countitem(1122) > 0) {
 		mes "[Bismarc]";
 		mes "Sweet God...";
@@ -1356,7 +1356,7 @@ hugel,168,183,1	script	Bismarc#BLS	118,{
 	}
 }
 
-ein_in01,24,41,5	script	Blacksmith Guildsman#moc	726,{
+ein_in01,24,41,5	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
 	if (BSMITH_Q == 16) {
 		emotion e_hmm;
 		mes "[Mitehmaeeuh]";
@@ -1578,7 +1578,7 @@ ein_in01,24,41,5	script	Blacksmith Guildsman#moc	726,{
 	}
 }
 
-geffen_in,109,170,3	script	Blacksmith Guildsman#gef	726,{
+geffen_in,109,170,3	script	Blacksmith Guildsman#gef	4_F_JOB_BLACKSMITH,{
 	mes "[Blacksmith Guildsman]";
 	mes "Good day, are you here to visit Blacksmith Guild?";
 	next;

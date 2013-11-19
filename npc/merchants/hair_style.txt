@@ -15,7 +15,7 @@
 
 // Hair Dresser Veronica
 // ============================================================
-alberta_in,55,142,7	script	Hair Dresser	91,{
+alberta_in,55,142,7	script	Hair Dresser	4_F_02,{
 	mes "[Veronica]";
 	mes "Welcome to Veronica's hair salon.";
 	mes "How can I help you?";
@@ -522,7 +522,7 @@ L_cutin:
 
 // Roving Hair Dresser
 // ============================================================
-alberta,33,141,7	script	Roving Hair Dresser	87,{
+alberta,33,141,7	script	Roving Hair Dresser	4_M_BARBER,{
 	mes "[Rui Vishop]";
 	mes "That Veronica...";
 	mes "Hah! Best hair dresser my ass.";
@@ -683,7 +683,7 @@ alberta,33,141,7	script	Roving Hair Dresser	87,{
 
 
 // Lighthalzen
-lhz_in02,100,143,3	script	Hair Dresser#li	122,{
+lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 	mes "[Prince Shammi]";
 	mes "Welcome to Prince Shammi's";
 	mes "Beauty Shop, the place to go";
@@ -1096,7 +1096,7 @@ lhz_in02,100,143,3	script	Hair Dresser#li	122,{
 	}
 }
 
-lhz_in02,91,155,5	script	Assistant Beautician#li	862,{
+lhz_in02,91,155,5	script	Assistant Beautician#li	4_F_LGTGIRL,{
 	mes "[Assistant Beautician]";
 	mes "Wah?! Sweet Jiminy,";
 	mes "you freaked me out!";

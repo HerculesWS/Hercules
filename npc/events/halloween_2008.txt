@@ -15,7 +15,7 @@
 //= 1.1 Some small changes. [Kisuka]
 //============================================================
 
-payon,162,176,4	script	Halloween Magician#iRO08	704,{
+payon,162,176,4	script	Halloween Magician#iRO08	4_M_BIBI,{
 	if (Hallow08 < 1) {
 		mes "[Halloween Magician]";
 		mes "Kkkkkkkkk!";
@@ -232,7 +232,7 @@ payon,162,176,4	script	Halloween Magician#iRO08	704,{
 		}
 }
 
-evt_zombie,16,142,1	script	zombiewarp001	45,2,2,{
+evt_zombie,16,142,1	script	zombiewarp001	WARPNPC,2,2,{
 OnTouch:
 	if (@Hallow08Warp == 1) {
 		set Hallow08Kill,2;
@@ -242,7 +242,7 @@ OnTouch:
 	end;
 }
 
-evt_zombie,122,27,1	script	zombiewarp002	45,2,2,{
+evt_zombie,122,27,1	script	zombiewarp002	WARPNPC,2,2,{
 OnTouch:
 	if (@Hallow08Warp == 2) {
 		set Hallow08Kill,2;
@@ -252,7 +252,7 @@ OnTouch:
 	end;
 }
 
-evt_zombie,267,89,1	script	zombiewarp003	45,2,2,{
+evt_zombie,267,89,1	script	zombiewarp003	WARPNPC,2,2,{
 OnTouch:
 	if (@Hallow08Warp == 3) {
 		set Hallow08Kill,2;

@@ -45,7 +45,7 @@ struct skill_cd;
  **/
 #define packet_len(cmd) packet_db[cmd].len
 #define P2PTR(fd) RFIFO2PTR(fd)
-#define clif_menuskill_clear(sd) (sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0;
+#define clif_menuskill_clear(sd) ((sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0)
 #define HCHSYS_NAME_LENGTH 20
 
 /**
@@ -426,6 +426,37 @@ enum e_BANKING_WITHDRAW_ACK {
 	BWA_UNKNOWN_ERROR = 0x2,
 };
 
+/* because the client devs were replaced by monkeys. */
+enum e_EQUIP_ITEM_ACK {
+#if PACKETVER >= 20120925
+	EIA_SUCCESS = 0x0,
+	EIA_FAIL_LV = 0x1,
+	EIA_FAIL    = 0x2,
+#else
+	EIA_SUCCESS = 0x1,
+	EIA_FAIL_LV = 0x2,
+	EIA_FAIL    = 0x0,
+#endif
+};
+
+/* and again. because the client devs were replaced by monkeys. */
+enum e_UNEQUIP_ITEM_ACK {
+#if PACKETVER >= 20120925
+	UIA_SUCCESS = 0x0,
+	UIA_FAIL    = 0x1,
+#else
+	UIA_SUCCESS = 0x1,
+	UIA_FAIL    = 0x0,
+#endif
+};
+
+enum e_trade_item_ok {
+	TIO_SUCCESS    = 0x0,
+	TIO_OVERWEIGHT = 0x1,
+	TIO_CANCEL     = 0x2,
+	/* feedback-friendly code that causes the client not to display a error message */
+	TIO_INDROCKS   = 0x9,
+};
 
 /**
  * Structures
@@ -500,8 +531,10 @@ struct clif_interface {
 	} cs;
 	/* */
 	unsigned int cryptKey[3];
+	/* */
+	bool ally_only;
 	/* core */
-	int (*init) (void);
+	int (*init) (bool minimal);
 	void (*final) (void);
 	int (*setip) (const char* ip);
 	void (*setbindip) (const char* ip);
@@ -529,8 +562,8 @@ struct clif_interface {
 	void (*use_card) (struct map_session_data *sd,int idx);
 	void (*cart_additem) (struct map_session_data *sd,int n,int amount,int fail);
 	void (*cart_delitem) (struct map_session_data *sd,int n,int amount);
-	void (*equipitemack) (struct map_session_data *sd,int n,int pos,int ok);
-	void (*unequipitemack) (struct map_session_data *sd,int n,int pos,int ok);
+	void (*equipitemack) (struct map_session_data *sd,int n,int pos,enum e_EQUIP_ITEM_ACK result);
+	void (*unequipitemack) (struct map_session_data *sd,int n,int pos,enum e_UNEQUIP_ITEM_ACK result);
 	void (*useitemack) (struct map_session_data *sd,int index,int amount,bool ok);
 	void (*addcards) (unsigned char* buf, struct item* item);
 	void (*addcards2) (unsigned short *cards, struct item* item);
@@ -754,6 +787,8 @@ struct clif_interface {
 	void (*msgtable_num) (int fd, int line, int num);
 	void (*message) (const int fd, const char* mes);
 	void (*messageln) (const int fd, const char* mes);
+	/* message+s(printf) */
+	void (*messages) (const int fd, const char* mes, ...);
 	int (*colormes) (int fd, enum clif_colors color, const char* msg);
 	bool (*process_message) (struct map_session_data* sd, int format, char** name_, int* namelen_, char** message_, int* messagelen_);
 	void (*wisexin) (struct map_session_data *sd,int type,int flag);
@@ -981,6 +1016,10 @@ struct clif_interface {
 	/* Bank System [Yommy/Hercules] */
 	void (*bank_deposit) (struct map_session_data *sd, enum e_BANKING_DEPOSIT_ACK reason);
 	void (*bank_withdraw) (struct map_session_data *sd,enum e_BANKING_WITHDRAW_ACK reason);
+	/* */
+	void (*show_modifiers) (struct map_session_data *sd);
+	/* */
+	void (*notify_bounditem) (struct map_session_data *sd, unsigned short index);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/
@@ -1123,6 +1162,7 @@ struct clif_interface {
 	void (*pGMRc) (int fd, struct map_session_data* sd);
 	void (*pGMReqAccountName) (int fd, struct map_session_data *sd);
 	void (*pGMChangeMapType) (int fd, struct map_session_data *sd);
+	void (*pGMFullStrip) (int fd, struct map_session_data *sd);
 	void (*pPMIgnore) (int fd, struct map_session_data* sd);
 	void (*pPMIgnoreAll) (int fd, struct map_session_data *sd);
 	void (*pPMIgnoreList) (int fd,struct map_session_data *sd);

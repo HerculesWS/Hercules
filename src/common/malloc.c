@@ -19,28 +19,28 @@ struct malloc_interface iMalloc_s;
 
 #	include <string.h> 
 #	include "memwatch.h"
-#	define MALLOC(n,file,line,func)	mwMalloc((n),(file),(line))
-#	define CALLOC(m,n,file,line,func)	mwCalloc((m),(n),(file),(line))
-#	define REALLOC(p,n,file,line,func)	mwRealloc((p),(n),(file),(line))
-#	define STRDUP(p,file,line,func)	mwStrdup((p),(file),(line))
-#	define FREE(p,file,line,func)		mwFree((p),(file),(line))
-#	define MEMORY_USAGE()	0
-#	define MEMORY_VERIFY(ptr)	mwIsSafeAddr(ptr, 1)
-#	define MEMORY_CHECK() CHECK()
+#	define MALLOC(n,file,line,func)    mwMalloc((n),(file),(line))
+#	define CALLOC(m,n,file,line,func)  mwCalloc((m),(n),(file),(line))
+#	define REALLOC(p,n,file,line,func) mwRealloc((p),(n),(file),(line))
+#	define STRDUP(p,file,line,func)    mwStrdup((p),(file),(line))
+#	define FREE(p,file,line,func)      mwFree((p),(file),(line))
+#	define MEMORY_USAGE()              (size_t)0
+#	define MEMORY_VERIFY(ptr)          mwIsSafeAddr((ptr), 1)
+#	define MEMORY_CHECK()              CHECK()
 
 #elif defined(DMALLOC)
 
 #	include <string.h>
 #	include <stdlib.h>
 #	include "dmalloc.h"
-#	define MALLOC(n,file,line,func)	dmalloc_malloc((file),(line),(n),DMALLOC_FUNC_MALLOC,0,0)
-#	define CALLOC(m,n,file,line,func)	dmalloc_malloc((file),(line),(m)*(n),DMALLOC_FUNC_CALLOC,0,0)
-#	define REALLOC(p,n,file,line,func)	dmalloc_realloc((file),(line),(p),(n),DMALLOC_FUNC_REALLOC,0)
-#	define STRDUP(p,file,line,func)	strdup(p)
-#	define FREE(p,file,line,func)		free(p)
-#	define MEMORY_USAGE()	dmalloc_memory_allocated()
-#	define MEMORY_VERIFY(ptr)	(dmalloc_verify(ptr) == DMALLOC_VERIFY_NOERROR)
-#	define MEMORY_CHECK()	dmalloc_log_stats(); dmalloc_log_unfreed()
+#	define MALLOC(n,file,line,func)    dmalloc_malloc((file),(line),(n),DMALLOC_FUNC_MALLOC,0,0)
+#	define CALLOC(m,n,file,line,func)  dmalloc_malloc((file),(line),(m)*(n),DMALLOC_FUNC_CALLOC,0,0)
+#	define REALLOC(p,n,file,line,func) dmalloc_realloc((file),(line),(p),(n),DMALLOC_FUNC_REALLOC,0)
+#	define STRDUP(p,file,line,func)    strdup(p)
+#	define FREE(p,file,line,func)      free(p)
+#	define MEMORY_USAGE()              dmalloc_memory_allocated()
+#	define MEMORY_VERIFY(ptr)          (dmalloc_verify(ptr) == DMALLOC_VERIFY_NOERROR)
+#	define MEMORY_CHECK()              do { dmalloc_log_stats(); dmalloc_log_unfreed() } while(0)
 
 #elif defined(GCOLLECT)
 
@@ -50,24 +50,26 @@ struct malloc_interface iMalloc_s;
 #	else
 #		define RETURN_ADDR
 #	endif
-#	define MALLOC(n,file,line,func)	GC_debug_malloc((n), RETURN_ADDR (file),(line))
-#	define CALLOC(m,n,file,line,func)	GC_debug_malloc((m)*(n), RETURN_ADDR (file),(line))
-#	define REALLOC(p,n,file,line,func)	GC_debug_realloc((p),(n), RETURN_ADDR (file),(line))
-#	define STRDUP(p,file,line,func)	GC_debug_strdup((p), RETURN_ADDR (file),(line))
-#	define FREE(p,file,line,func)		GC_debug_free(p)
-#	define MEMORY_USAGE()	GC_get_heap_size()
-#	define MEMORY_VERIFY(ptr)	(GC_base(ptr) != NULL)
-#	define MEMORY_CHECK()	GC_gcollect()
+#	define MALLOC(n,file,line,func)    GC_debug_malloc((n), RETURN_ADDR (file),(line))
+#	define CALLOC(m,n,file,line,func)  GC_debug_malloc((m)*(n), RETURN_ADDR (file),(line))
+#	define REALLOC(p,n,file,line,func) GC_debug_realloc((p),(n), RETURN_ADDR (file),(line))
+#	define STRDUP(p,file,line,func)    GC_debug_strdup((p), RETURN_ADDR (file),(line))
+#	define FREE(p,file,line,func)      GC_debug_free(p)
+#	define MEMORY_USAGE()              GC_get_heap_size()
+#	define MEMORY_VERIFY(ptr)          (GC_base(ptr) != NULL)
+#	define MEMORY_CHECK()              GC_gcollect()
+
+#	undef RETURN_ADDR
 
 #else
 
-#	define MALLOC(n,file,line,func)	malloc(n)
-#	define CALLOC(m,n,file,line,func)	calloc((m),(n))
-#	define REALLOC(p,n,file,line,func)	realloc((p),(n))
-#	define STRDUP(p,file,line,func)	strdup(p)
-#	define FREE(p,file,line,func)		free(p)
-#	define MEMORY_USAGE()	0
-#	define MEMORY_VERIFY(ptr)	true
+#	define MALLOC(n,file,line,func)    malloc(n)
+#	define CALLOC(m,n,file,line,func)  calloc((m),(n))
+#	define REALLOC(p,n,file,line,func) realloc((p),(n))
+#	define STRDUP(p,file,line,func)    strdup(p)
+#	define FREE(p,file,line,func)      free(p)
+#	define MEMORY_USAGE()              (size_t)0
+#	define MEMORY_VERIFY(ptr)          true
 #	define MEMORY_CHECK()
 
 #endif

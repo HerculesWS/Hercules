@@ -13,7 +13,7 @@
 //= 1.8 Fixed JobLevel requirements. [Euphy]
 //============================================================
 
-prt_church,173,23,4	script	Cleric	79,{
+prt_church,173,23,4	script	Cleric	1_F_PRIEST,{
 	mes "[Acolyte Klift]";
 	mes "Ahh . Brothers ! Does the task of";
 	mes "caring for out lost sheep burden";

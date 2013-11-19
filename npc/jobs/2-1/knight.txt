@@ -40,7 +40,7 @@
 //= 3.3 Fixed missing changequest. [Joseph]
 //============================================================
 
-prt_in,88,101,4	script	Chivalry Captain#knt	56,{
+prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 	mes "[Captain Herman]";
 	if (Upper == 1) {
 		mes "Hm? You're... What is it about you? I've been an honorable Knight for a long time, but I cannot understand this feeling I'm getting from you...";
@@ -464,7 +464,7 @@ L_Mission:
 	}
 }
 
-prt_in,75,107,4	script	Sir Andrew#knt	65,{
+prt_in,75,107,4	script	Sir Andrew#knt	1_M_YOUNGKNIGHT,{
 	mes "[Sir Andrew]";
 	if (BaseJob != Job_Swordman) {
 		if (BaseJob == Job_Knight) {
@@ -668,7 +668,7 @@ prt_in,75,107,4	script	Sir Andrew#knt	65,{
 	}
 }
 
-prt_in,71,91,0	script	Sir Siracuse#knt	65,{
+prt_in,71,91,0	script	Sir Siracuse#knt	1_M_YOUNGKNIGHT,{
 	mes "[Sir Siracuse]";
 	if (BaseJob != Job_Swordman) {
 		if (BaseJob == Job_Knight) {
@@ -1053,7 +1053,7 @@ prt_in,71,91,0	script	Sir Siracuse#knt	65,{
 	}
 }
 
-prt_in,79,94,4	script	Sir Windsor#knt	733,{
+prt_in,79,94,4	script	Sir Windsor#knt	4_M_JOB_KNIGHT1,{
 	mes "[Sir Windsor]";
 	mes "...";
 	next;
@@ -1148,7 +1148,7 @@ prt_in,79,94,4	script	Sir Windsor#knt	733,{
 
 // Test 2 part 1
 //==========================================================
-job_knt,89,106,4	script	Knight Windsor#knt	733,{
+job_knt,89,106,4	script	Knight Windsor#knt	4_M_JOB_KNIGHT1,{
 	mes "[Sir Windsor]";
 	mes "...";
 	next;
@@ -1221,7 +1221,7 @@ job_knt,89,106,4	script	Knight Windsor#knt	733,{
 	}
 }
 
-job_knt,89,106,4	script	Windsor Benedict#knt	733,{
+job_knt,89,106,4	script	Windsor Benedict#knt	4_M_JOB_KNIGHT1,{
 	end;
 
 OnInit:
@@ -1443,7 +1443,7 @@ OnTimer182000:
 
 // Test 3 (Manners)
 //==========================================================
-prt_in,69,107,6	script	Lady Amy#knt	728,{
+prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 	mes "[Lady Amy]";
 	if (BaseJob != Job_Swordman) {
 		if (BaseJob == Job_Knight) {
@@ -1785,7 +1785,7 @@ prt_in,69,107,6	script	Lady Amy#knt	728,{
 
 // Test 4 (patience)
 //==========================================================
-prt_in,70,99,6	script	Sir Edmond#knt	734,{
+prt_in,70,99,6	script	Sir Edmond#knt	4_M_JOB_KNIGHT2,{
 	mes "[Sir Edmond]";
 	if (BaseJob != Job_Swordman) {
 		if (BaseJob == Job_Knight) {
@@ -1938,7 +1938,7 @@ prt_in,70,99,6	script	Sir Edmond#knt	734,{
 	}
 }
 
-job_knt,1,1,1	script	Timer#knt	107,{
+job_knt,1,1,1	script	Timer#knt	1_M_PAY_ELDER,{
 OnTimer300000:
 	enablenpc "Warp#knt";
 	end;
@@ -1987,7 +1987,7 @@ OnMyMobDead:
 	end;
 }
 
-job_knt,145,57,1	script	Warp#knt	107,22,22,{
+job_knt,145,57,1	script	Warp#knt	1_M_PAY_ELDER,22,22,{
 OnInit:
 	disablenpc "Warp#knt";
 	end;
@@ -2000,7 +2000,7 @@ OnTouch:
 
 // Test 5, and creates Claymores for knights
 //==========================================================
-prt_in,87,92,4	script	Sir Gray#knt	119,{
+prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 	mes "[Sir Gray]";
 	if (BaseJob != Job_Swordman) {
 		if (BaseJob == Job_Knight) {

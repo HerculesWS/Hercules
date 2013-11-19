@@ -22,7 +22,7 @@
 //= 1.9 Added Quest Log commands. [L0ne_W0lf]
 //============================================================
 
-payon_in02,64,71,4	script	Archer Guildsman#archer	85,{
+payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 	if (Upper == 1) {
 		if (Class == Job_Novice_High && (ADVJOB == Job_Sniper || ADVJOB == Job_Clown || ADVJOB == Job_Gypsy)) {
 			mes "[Archer Guildsman]";
@@ -50,7 +50,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	85,{
 			mes "I know you'll make a great Archer...";
 			next;
 			skill 143,0,0;
-			jobchange Job_Archer_high;
+			jobchange Job_Archer_High;
 			skill 147,1,0;
 			skill 148,1,0;
 			mes "[Archer Guildsman]";

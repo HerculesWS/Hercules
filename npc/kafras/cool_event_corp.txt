@@ -18,7 +18,7 @@
 //= 1.5 Cool Event Corp staff is now more iRO like. [L0ne_W0lf]
 //============================================================
 
-hugel,88,168,4	script	Cool Event Corp. Staff::CoolEventCorpStaffHugel	874,{
+hugel,88,168,4	script	Cool Event Corp. Staff::CoolEventCorpStaffHugel	4_M_ZONDAMAN,{
 	cutin "zonda_01",2;
 	mes "[Cool Event Corp. Staff]";
 	mes "Welcome to Cool Event Corp.";
@@ -134,7 +134,7 @@ hugel,88,168,4	script	Cool Event Corp. Staff::CoolEventCorpStaffHugel	874,{
 	end;
 }
 
-rachel,109,138,5	script	Cool Event Corp. Staff::CoolEventCorpStaffRachel	874,{
+rachel,109,138,5	script	Cool Event Corp. Staff::CoolEventCorpStaffRachel	4_M_ZONDAMAN,{
 	cutin "zonda_01",2;
 	mes "[Cool Event Corp. Staff]";
 	mes "Welcome to Cool Event Corp.";
@@ -276,7 +276,7 @@ rachel,109,138,5	script	Cool Event Corp. Staff::CoolEventCorpStaffRachel	874,{
 	end;
 }
 
-veins,208,128,5	script	Cool Event Corp. Staff::CoolEventCorpStaffVeins	874,{
+veins,208,128,5	script	Cool Event Corp. Staff::CoolEventCorpStaffVeins	4_M_ZONDAMAN,{
 	cutin "zonda_01",2;
 	mes "[Cool Event Corp. Staff]";
 	mes "Welcome to Cool Event Corp.";

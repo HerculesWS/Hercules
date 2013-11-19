@@ -8,6 +8,9 @@
 #ifndef _HPMi_H_
 	#include "../../3rdparty/libconfig/libconfig.h"
 #endif
+
+#include <stdarg.h>
+
 // for help with the console colors look here:
 // http://www.edoceo.com/liberum/?doc=printf-with-color
 // some code explanation (used here):
@@ -99,5 +102,6 @@ extern void ClearScreen(void);
 	extern void ShowFatalError(const char *, ...);
 	extern void ShowConfigWarning(config_setting_t *config, const char *string, ...);
 #endif
+extern int _vShowMessage(enum msg_type flag, const char *string, va_list ap);
 
 #endif /* _SHOWMSG_H_ */

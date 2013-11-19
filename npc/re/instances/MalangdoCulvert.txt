@@ -23,7 +23,7 @@
 
 // Quest NPCs
 //============================================================
-mal_in01,172,28,2	script	Albo#mal	561,{
+mal_in01,172,28,2	script	Albo#mal	4_CAT_SAILOR5,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of objects. Try to continue after reducing those objects.";
 		close;
@@ -147,7 +147,7 @@ L_GiveQuest:
 	close;
 }
 
-mal_in01,172,26,2	script	Madeca#mal	544,{
+mal_in01,172,26,2	script	Madeca#mal	4_CAT_SAILOR1,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of objects. Try to continue after reducing those objects.";
 		close;
@@ -269,7 +269,7 @@ L_CheckQuest:
 
 // Instance Creation
 //============================================================
-mal_in01,160,34,4	script	Missing, the Cleaner	545,{
+mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 	if (BaseLevel < 90) {
 		mes "[Missing, the Cleaner]";
 		mes "Are you talking to me?!";
@@ -461,7 +461,7 @@ L_Enter:
 
 // Instance: Common Scripts
 //============================================================
-1@pump,63,100,4	script	Missing, the Cleaner#0	545,{
+1@pump,63,100,4	script	Missing, the Cleaner#0	4_CAT_SAILOR2,{
 	if (getcharid(0) != getpartyleader(getcharid(1),2)) {
 		mes "[Missing, the Cleaner]";
 		mes "I am trying to have a conversation with your leader now. Please don't disturb and wait!";
@@ -518,7 +518,7 @@ L_Enter:
 	end;
 }
 
-1@pump,84,105,0	script	Culvert Entrance#i	45,3,3,{
+1@pump,84,105,0	script	Culvert Entrance#i	WARPNPC,3,3,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname("Culvert Entrance#i");
@@ -574,7 +574,7 @@ function	script	F_mal_missing	{
 
 // Instance: Normal Mode
 //============================================================
-1@pump,84,105,4	script	Missing, the Cleaner#nf	545,{
+1@pump,84,105,4	script	Missing, the Cleaner#nf	4_CAT_SAILOR2,{
 	mes "[Missing, the Cleaner]";
 	mes "I have the cleaning job for 40 years and I've never seen such a terrible team!!";
 	next;
@@ -612,7 +612,7 @@ OnInstanceInit:
 	end;
 }
 
-1@pump,84,105,4	script	Missing, the Cleaner#n	545,{
+1@pump,84,105,4	script	Missing, the Cleaner#n	4_CAT_SAILOR2,{
 	callfunc "F_mal_missing";
 	donpcevent instance_npcname("Missing, the Cleaner#n")+"::OnStart";
 	close;
@@ -715,7 +715,7 @@ OnClear:
 	end;
 }
 
-1@pump,36,111,4	script	#Culvert_n1	844,14,14,{ //temporary workaround for ALL_SAMEMAP
+1@pump,36,111,4	script	#Culvert_n1	CLEAR_NPC,14,14,{ //temporary workaround for ALL_SAMEMAP
 	progressbar "0xFFFF00",10;
 	stopnpctimer;
 	disablenpc instance_npcname(strnpcinfo(0));
@@ -770,11 +770,11 @@ OnTouch:
 	specialeffect EF_MAPPILLAR2;
 	end;
 }
-1@pump,68,124,4	duplicate(#Culvert_n1)	#Culvert_n2	844,14,14
-1@pump,80,114,4	duplicate(#Culvert_n1)	#Culvert_n3	844,14,14
-1@pump,40,80,4	duplicate(#Culvert_n1)	#Culvert_n4	844,14,14
-1@pump,75,80,4	duplicate(#Culvert_n1)	#Culvert_n5	844,14,14
-1@pump,58,101,4	duplicate(#Culvert_n1)	#Culvert_n6	844,14,14
+1@pump,68,124,4	duplicate(#Culvert_n1)	#Culvert_n2	CLEAR_NPC,14,14
+1@pump,80,114,4	duplicate(#Culvert_n1)	#Culvert_n3	CLEAR_NPC,14,14
+1@pump,40,80,4	duplicate(#Culvert_n1)	#Culvert_n4	CLEAR_NPC,14,14
+1@pump,75,80,4	duplicate(#Culvert_n1)	#Culvert_n5	CLEAR_NPC,14,14
+1@pump,58,101,4	duplicate(#Culvert_n1)	#Culvert_n6	CLEAR_NPC,14,14
 
 1@pump,1,1,4	script	Boss Creation#n	-1,{
 	end;
@@ -851,7 +851,7 @@ OnMyMobDead:
 	end;
 }
 
-1@pump,84,105,4	script	Missing, the Cleaner#no	545,{
+1@pump,84,105,4	script	Missing, the Cleaner#no	4_CAT_SAILOR2,{
 	set .@i$, charat(strnpcinfo(2),0);
 	if (.@i$ == "n") {
 		mes "[Missing, the Cleaner]";
@@ -885,7 +885,7 @@ OnInstanceInit:
 	end;
 }
 
-1@pump,32,100,0	script	Culvert Entrance#n	45,3,3,{
+1@pump,32,100,0	script	Culvert Entrance#n	WARPNPC,3,3,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname(strnpcinfo(0));
@@ -904,9 +904,9 @@ OnInstanceInit:
 
 // Instance: Hard Mode
 //============================================================
-2@pump,39,88,4	duplicate(Missing, the Cleaner#nf)	Missing, the Cleaner#hf	545
+2@pump,39,88,4	duplicate(Missing, the Cleaner#nf)	Missing, the Cleaner#hf	4_CAT_SAILOR2
 
-2@pump,39,88,4	script	Missing, the Cleaner#h	545,{
+2@pump,39,88,4	script	Missing, the Cleaner#h	4_CAT_SAILOR2,{
 	callfunc "F_mal_missing";
 	donpcevent instance_npcname("Missing, the Cleaner#h")+"::OnStart";
 	close;
@@ -983,7 +983,7 @@ OnTimer425000:
 	end;
 }
 
-2@pump,53,114,4	script	#Culvert_h1	844,14,14,{ //temporary workaround for ALL_SAMEMAP
+2@pump,53,114,4	script	#Culvert_h1	CLEAR_NPC,14,14,{ //temporary workaround for ALL_SAMEMAP
 	progressbar "0xFFFF00",15;
 	stopnpctimer;
 	disablenpc instance_npcname(strnpcinfo(0));
@@ -1032,20 +1032,20 @@ OnTouch:
 	specialeffect EF_MAPPILLAR2;
 	end;
 }
-2@pump,79,109,4	duplicate(#Culvert_h1)	#Culvert_h2	844,14,14
-2@pump,114,114,4	duplicate(#Culvert_h1)	#Culvert_h3	844,14,14
-2@pump,98,98,4	duplicate(#Culvert_h1)	#Culvert_h4	844,14,14
-2@pump,62,96,4	duplicate(#Culvert_h1)	#Culvert_h5	844,14,14
-2@pump,57,70,4	duplicate(#Culvert_h1)	#Culvert_h6	844,14,14
-2@pump,47,49,4	duplicate(#Culvert_h1)	#Culvert_h7	844,14,14
-2@pump,81,63,4	duplicate(#Culvert_h1)	#Culvert_h8	844,14,14
-2@pump,100,74,4	duplicate(#Culvert_h1)	#Culvert_h9	844,14,14
-2@pump,115,50,4	duplicate(#Culvert_h1)	#Culvert_h10	844,14,14
+2@pump,79,109,4	duplicate(#Culvert_h1)	#Culvert_h2	CLEAR_NPC,14,14
+2@pump,114,114,4	duplicate(#Culvert_h1)	#Culvert_h3	CLEAR_NPC,14,14
+2@pump,98,98,4	duplicate(#Culvert_h1)	#Culvert_h4	CLEAR_NPC,14,14
+2@pump,62,96,4	duplicate(#Culvert_h1)	#Culvert_h5	CLEAR_NPC,14,14
+2@pump,57,70,4	duplicate(#Culvert_h1)	#Culvert_h6	CLEAR_NPC,14,14
+2@pump,47,49,4	duplicate(#Culvert_h1)	#Culvert_h7	CLEAR_NPC,14,14
+2@pump,81,63,4	duplicate(#Culvert_h1)	#Culvert_h8	CLEAR_NPC,14,14
+2@pump,100,74,4	duplicate(#Culvert_h1)	#Culvert_h9	CLEAR_NPC,14,14
+2@pump,115,50,4	duplicate(#Culvert_h1)	#Culvert_h10	CLEAR_NPC,14,14
 
 2@pump,1,1,4	duplicate(Monster Hole#n)	Monster Hole#h	-1
 2@pump,1,1,4	duplicate(Boss Creation#n)	Boss Creation#h	-1
-2@pump,39,88,4	duplicate(Missing, the Cleaner#no)	Missing, the Cleaner#ho	545
-2@pump,38,100,0	duplicate(Culvert Entrance#n)	Culvert Entrance#h	45,3,3
+2@pump,39,88,4	duplicate(Missing, the Cleaner#no)	Missing, the Cleaner#ho	4_CAT_SAILOR2
+2@pump,38,100,0	duplicate(Culvert Entrance#n)	Culvert Entrance#h	WARPNPC,3,3
 
 //MD_Putmob "2@pump" 0 0 0 0 20 HYDRA 0 0 2
 2@pump,1,1,4	duplicate(Hydra#n)	Hydra#h	-1

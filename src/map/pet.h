@@ -98,15 +98,15 @@ struct pet_data {
 	struct map_session_data *msd;
 };
 
-#define pet_stop_walking(pd, type) unit->stop_walking(&(pd)->bl, type)
-#define pet_stop_attack(pd) unit->stop_attack(&(pd)->bl)
+#define pet_stop_walking(pd, type) (unit->stop_walking(&(pd)->bl, (type)))
+#define pet_stop_attack(pd)        (unit->stop_attack(&(pd)->bl))
 
 struct pet_interface {
 	struct s_pet_db db[MAX_PET_DB];
 	struct eri *item_drop_ers; //For loot drops delay structures.
 	struct eri *item_drop_list_ers;
 	/* */
-	int (*init) (void);
+	int (*init) (bool minimal);
 	int (*final) (void);
 	/* */
 	int (*hungry_val) (struct pet_data *pd);

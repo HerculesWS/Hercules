@@ -17,7 +17,7 @@
 //= 1.3 Added Quest Log commands. [Kisuka]
 //============================================================
 
-payon,215,102,3	script	Moohyun#job_star	828,3,3,{
+payon,215,102,3	script	Moohyun#job_star	4_M_ROGUE,3,3,{
 	if (Class == Job_Taekwon) {
 		if (STGL_Q == 0) {
 			mes "[Moohyun]";
@@ -353,7 +353,7 @@ OnTouch:
 	close;
 }
 	
-comodo,172,230,3	script	Wandering Master#job_sta	730,{
+comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 	if (Class == Job_Taekwon) {
 		if (STGL_Q == 1) {
 			mes "[Moogang]";
@@ -816,7 +816,7 @@ comodo,172,230,3	script	Wandering Master#job_sta	730,{
 	close;
 }
 
-job_star,29,33,0	script	Daru#job_star	59,{
+job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 	if (Class == Job_Taekwon) {
 		if (STGL_Q == 3) {
 			mes "[Daru]";
@@ -1101,7 +1101,7 @@ job_star,29,33,0	script	Daru#job_star	59,{
 	close;
 }
 
-job_star,95,33,0	script	Beeryu#job_star	106,{
+job_star,95,33,0	script	Beeryu#job_star	1_M_MOC_LORD,{
 	if (Class == Job_Taekwon) {
 		if (STGL_Q == 4) {
 			mes "[Beeryu]";
@@ -1413,7 +1413,7 @@ job_star,95,33,0	script	Beeryu#job_star	106,{
 	close;
 }
 
-job_star,161,33,0	script	Cheehee#job_star	77,{
+job_star,161,33,0	script	Cheehee#job_star	1_F_ORIENT_03,{
 	if (Class == Job_Taekwon) {
 		if (STGL_Q == 6) {
 			mes "[Cheehee]";

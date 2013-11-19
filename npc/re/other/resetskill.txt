@@ -13,7 +13,7 @@
 //= 1.1 Added Izlude duplicates. [Euphy]
 //============================================================
 
-izlude,127,175,3	script	Hypnotist#novice	124,{
+izlude,127,175,3	script	Hypnotist#novice	4_F_TELEPORTER,{
 	mes "[Hypnotist]";
 	mes "Greetings, adventurer.";
 	mes "I'm a member of the Hypnotist";
@@ -141,7 +141,7 @@ izlude,127,175,3	script	Hypnotist#novice	124,{
 		close;
 	}
 }
-izlude_a,127,175,3	duplicate(Hypnotist#novice)	Hypnotist#novice_a	124
-izlude_b,127,175,3	duplicate(Hypnotist#novice)	Hypnotist#novice_b	124
-izlude_c,127,175,3	duplicate(Hypnotist#novice)	Hypnotist#novice_c	124
-izlude_d,127,175,3	duplicate(Hypnotist#novice)	Hypnotist#novice_d	124
+izlude_a,127,175,3	duplicate(Hypnotist#novice)	Hypnotist#novice_a	4_F_TELEPORTER
+izlude_b,127,175,3	duplicate(Hypnotist#novice)	Hypnotist#novice_b	4_F_TELEPORTER
+izlude_c,127,175,3	duplicate(Hypnotist#novice)	Hypnotist#novice_c	4_F_TELEPORTER
+izlude_d,127,175,3	duplicate(Hypnotist#novice)	Hypnotist#novice_d	4_F_TELEPORTER

@@ -382,21 +382,20 @@ static bool configParse(raconf inst,  const char *fileName){
 }//end: configParse()
 
 
-#define MAKEKEY(dest, section, key) { size_t section_len, key_len; \
-										if(section == NULL || *section == '\0'){ \
-											strncpy(dest, "<unnamed>", 9); \
-											section_len = 9; \
-										}else{ \
-											section_len = strlen(section); \
-											strncpy(dest, section, section_len); \
-										} \
-										\
-										dest[section_len] = '.'; \
-										\
-										key_len = strlen(key); \
-										strncpy(&dest[section_len+1],  key,  key_len); \
-										dest[section_len + key_len + 1] = '\0'; \
-									}
+#define MAKEKEY(dest, section, key) do { \
+	size_t section_len_, key_len_; \
+	if((section) == NULL || *(section) == '\0'){ \
+		strncpy((dest), "<unnamed>", 9); \
+		section_len_ = 9; \
+	} else { \
+		section_len_ = strlen(section); \
+		strncpy((dest), (section), section_len_); \
+	} \
+	(dest)[section_len_] = '.'; \
+	key_len_ = strlen(key); \
+	strncpy(&(dest)[section_len_+1], (key), key_len_); \
+	(dest)[section_len_ + key_len_ + 1] = '\0'; \
+} while(0)
 										
 
 raconf  raconf_parse(const char *file_name){

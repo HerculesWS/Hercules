@@ -88,7 +88,7 @@ struct chrif_interface chrif_s;
 //2b27: Incoming, chrif_authfail -> 'client authentication failed'
 
 //This define should spare writing the check in every function. [Skotlex]
-#define chrif_check(a) { if(!chrif->isconnected()) return a; }
+#define chrif_check(a) do { if(!chrif->isconnected()) return a; } while(0)
 
 /// Resets all the data.
 void chrif_reset(void) {
@@ -752,7 +752,7 @@ int chrif_changeemail(int id, const char *actual_email, const char *new_email) {
  * S 2b0e <accid>.l <name>.24B <type>.w { <year>.w <month>.w <day>.w <hour>.w <minute>.w <second>.w }
  * Send an account modification request to the login server (via char server).
  * type of operation:
- *   1: block, 2: ban, 3: unblock, 4: unban, 5: changesex (use next function for 5)
+ *   1: block, 2: ban, 3: unblock, 4: unban, 5: changesex (use next function for 5), 6: charban
  *------------------------------------------*/
 int chrif_char_ask_name(int acc, const char* character_name, unsigned short operation_type, int year, int month, int day, int hour, int minute, int second) {
 	
@@ -764,7 +764,7 @@ int chrif_char_ask_name(int acc, const char* character_name, unsigned short oper
 	safestrncpy((char*)WFIFOP(chrif->fd,6), character_name, NAME_LENGTH);
 	WFIFOW(chrif->fd,30) = operation_type;
 	
-	if ( operation_type == 2 ) {
+	if ( operation_type == 2 || operation_type == 6 ) {
 		WFIFOW(chrif->fd,32) = year;
 		WFIFOW(chrif->fd,34) = month;
 		WFIFOW(chrif->fd,36) = day;
@@ -800,7 +800,7 @@ int chrif_changesex(struct map_session_data *sd) {
  * R 2b0f <accid>.l <name>.24B <type>.w <answer>.w
  * Processing a reply to chrif->char_ask_name() (request to modify an account).
  * type of operation:
- *   1: block, 2: ban, 3: unblock, 4: unban, 5: changesex
+ *   1: block, 2: ban, 3: unblock, 4: unban, 5: changesex, 6: charban, 7: charunban
  * type of answer:
  *   0: login-server request done
  *   1: player not found
@@ -811,6 +811,7 @@ void chrif_char_ask_name_answer(int acc, const char* player_name, uint16 type, u
 	struct map_session_data* sd;
 	char action[25];
 	char output[256];
+	bool charsrv = ( type == 6 || type == 7 ) ? true : false;
 	
 	sd = map->id2sd(acc);
 	
@@ -819,13 +820,17 @@ void chrif_char_ask_name_answer(int acc, const char* player_name, uint16 type, u
 		return;
 	}
 
+	/* re-use previous msg_txt */
+	if( type == 6 ) type = 2;
+	if( type == 7 ) type = 4;
+	
 	if( type > 0 && type <= 5 )
 		snprintf(action,25,"%s",msg_txt(427+type)); //block|ban|unblock|unban|change the sex of
 	else
 		snprintf(action,25,"???");
 
 	switch( answer ) {
-		case 0 : sprintf(output, msg_txt(424), action, NAME_LENGTH, player_name); break;
+		case 0 : sprintf(output, msg_txt(charsrv?434:424), action, NAME_LENGTH, player_name); break;
 		case 1 : sprintf(output, msg_txt(425), NAME_LENGTH, player_name); break;
 		case 2 : sprintf(output, msg_txt(426), action, NAME_LENGTH, player_name); break;
 		case 3 : sprintf(output, msg_txt(427), action, NAME_LENGTH, player_name); break;
@@ -961,26 +966,26 @@ int chrif_deadopt(int father_id, int mother_id, int child_id) {
 }
 
 /*==========================================
- * Disconnection of a player (account has been banned of has a status, from login-server) by [Yor]
+ * Disconnection of a player (account or char has been banned of has a status, from login or char server) by [Yor]
  *------------------------------------------*/
-int chrif_accountban(int fd) {
-	int acc;
+int chrif_idbanned(int fd) {
+	int id;
 	struct map_session_data *sd;
 
-	acc = RFIFOL(fd,2);
+	id = RFIFOL(fd,2);
 	
 	if ( battle_config.etc_log )
-		ShowNotice("chrif_accountban %d.\n", acc);
+		ShowNotice("chrif_idbanned %d.\n", id);
 	
-	sd = map->id2sd(acc);
+	sd = ( RFIFOB(fd,6) == 2 ) ? map->charid2sd(id) : map->id2sd(id);
 
-	if ( acc < 0 || sd == NULL ) {
-		ShowError("chrif_accountban failed - player not online.\n");
+	if ( id < 0 || sd == NULL ) {
+		/* player not online or unknown id, either way no error is necessary (since if you try to ban a offline char it still works) */
 		return 0;
 	}
 
 	sd->login_id1++; // change identify, because if player come back in char within the 5 seconds, he can change its characters
-	if (RFIFOB(fd,6) == 0) { // 0: change of statut, 1: ban
+	if (RFIFOB(fd,6) == 0) { // 0: change of statut
 		int ret_status = RFIFOL(fd,7); // status or final date of a banishment
 		if(0<ret_status && ret_status<=9)
 			clif->message(sd->fd, msg_txt(411+ret_status));
@@ -988,11 +993,18 @@ int chrif_accountban(int fd) {
 			clif->message(sd->fd, msg_txt(421));
 		else
 			clif->message(sd->fd, msg_txt(420)); //"Your account has not more authorised."
-	} else if (RFIFOB(fd,6) == 1) { // 0: change of statut, 1: ban
+	} else if (RFIFOB(fd,6) == 1) { // 1: ban
 		time_t timestamp;
 		char tmpstr[2048];
 		timestamp = (time_t)RFIFOL(fd,7); // status or final date of a banishment
 		strcpy(tmpstr, msg_txt(423)); //"Your account has been banished until "
+		strftime(tmpstr + strlen(tmpstr), 24, "%d-%m-%Y %H:%M:%S", localtime(&timestamp));
+		clif->message(sd->fd, tmpstr);
+	} else if (RFIFOB(fd,6) == 2) { // 2: change of status for character
+		time_t timestamp;
+		char tmpstr[2048];
+		timestamp = (time_t)RFIFOL(fd,7); // status or final date of a banishment
+		strcpy(tmpstr, msg_txt(433)); //"This character has been banned until  "
 		strftime(tmpstr + strlen(tmpstr), 24, "%d-%m-%Y %H:%M:%S", localtime(&timestamp));
 		clif->message(sd->fd, tmpstr);
 	}
@@ -1212,6 +1224,8 @@ int chrif_load_scdata(int fd) {
 		data = (struct status_change_data*)RFIFOP(fd,14 + i*sizeof(struct status_change_data));
 		status->change_start(&sd->bl, (sc_type)data->type, 10000, data->val1, data->val2, data->val3, data->val4, data->tick, 15);
 	}
+	
+	pc->scdata_received(sd);
 #endif
 	
 	return 0;
@@ -1439,7 +1453,7 @@ int chrif_parse(int fd) {
 			case 0x2b0d: chrif->changedsex(fd); break;
 			case 0x2b0f: chrif->char_ask_name_answer(RFIFOL(fd,2), (char*)RFIFOP(fd,6), RFIFOW(fd,30), RFIFOW(fd,32)); break;
 			case 0x2b12: chrif->divorceack(RFIFOL(fd,2), RFIFOL(fd,6)); break;
-			case 0x2b14: chrif->accountban(fd); break;
+			case 0x2b14: chrif->idbanned(fd); break;
 			case 0x2b1b: chrif->recvfamelist(fd); break;
 			case 0x2b1d: chrif->load_scdata(fd); break;
 			case 0x2b1e: chrif->update_ip(fd); break;
@@ -1609,8 +1623,10 @@ int do_final_chrif(void) {
 /*==========================================
  *
  *------------------------------------------*/
-int do_init_chrif(void) {
-	
+int do_init_chrif(bool minimal) {
+	if (minimal)
+		return 0;
+
 	chrif->auth_db = idb_alloc(DB_OPT_BASE);
 	chrif->auth_db_ers = ers_new(sizeof(struct auth_node),"chrif.c::auth_db_ers",ERS_OPT_NONE);
 
@@ -1732,7 +1748,7 @@ void chrif_defaults(void) {
 	chrif->changemapserverack = chrif_changemapserverack;
 	chrif->changedsex = chrif_changedsex;
 	chrif->divorceack = chrif_divorceack;
-	chrif->accountban = chrif_accountban;
+	chrif->idbanned = chrif_idbanned;
 	chrif->recvfamelist = chrif_recvfamelist;
 	chrif->load_scdata = chrif_load_scdata;
 	chrif->update_ip = chrif_update_ip;

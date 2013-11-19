@@ -13,7 +13,7 @@
 //= 1.8 Added Baby support. [Zopokx]
 //============================================================
 
-prt_in,234,133,4	script	Nami	66,{
+prt_in,234,133,4	script	Nami	1_F_01,{
 	if ((Class == Job_Novice || Class == Job_Baby) && (JobLevel > 3 || BaseLevel > 11) && (skill_nov < 3)) {
 		mes "[Nami]";
 		mes "Hello!";
@@ -187,7 +187,7 @@ prt_in,234,133,4	script	Nami	66,{
 	close;
 }
 
-prt_in,73,87,4	script	Chivalry Member	65,{
+prt_in,73,87,4	script	Chivalry Member	1_M_YOUNGKNIGHT,{
 	if ((Class == Job_Novice || Class == Job_Baby) && (JobLevel > 6) && ((skill_nov >= 3) && (skill_nov <= 5))) {
 		mes "[Bulma]";
 		mes "Yeah. . . I look great. . .";
@@ -355,7 +355,7 @@ prt_in,73,87,4	script	Chivalry Member	65,{
 	close;
 }
 
-prt_castle,175,146,4	script	Nursing Instructor	50,{
+prt_castle,175,146,4	script	Nursing Instructor	1_M_04,{
 	mes "[Dread Lord]";
 	mes ". . . . . . . . . .";
 	mes ". . . . . . . . . .";

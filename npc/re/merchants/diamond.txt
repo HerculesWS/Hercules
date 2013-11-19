@@ -16,7 +16,7 @@
 //= 1.5 Added This Version History (#15429)
 //============================================================
 
--	script	RareDiamondMerchant	58,{
+-	script	RareDiamondMerchant	1_M_MERCHANT,{
 
 	set .@npc$, "[Rare Diamond Merchant]";
 
@@ -233,10 +233,10 @@
 	}
 }
 
-prontera,165,89,6	duplicate(RareDiamondMerchant)	Rare Diamond Merchant#1	58
-geffen,106,63,6	duplicate(RareDiamondMerchant)	Rare Diamond Merchant#2	58
-morocc,146,100,6	duplicate(RareDiamondMerchant)	Rare Diamond Merchant#3	58
-alberta,129,60,6	duplicate(RareDiamondMerchant)	Rare Diamond Merchant#4	58
-lighthalzen,163,65,6	duplicate(RareDiamondMerchant)	Rare Diamond Merchant#5	58
-rachel,106,142,6	duplicate(RareDiamondMerchant)	Rare Diamond Merchant#6	58
-payon,180,130,6	duplicate(RareDiamondMerchant)	Rare Diamond Merchant#7	58
+prontera,165,89,6	duplicate(RareDiamondMerchant)	Rare Diamond Merchant#1	1_M_MERCHANT
+geffen,106,63,6	duplicate(RareDiamondMerchant)	Rare Diamond Merchant#2	1_M_MERCHANT
+morocc,146,100,6	duplicate(RareDiamondMerchant)	Rare Diamond Merchant#3	1_M_MERCHANT
+alberta,129,60,6	duplicate(RareDiamondMerchant)	Rare Diamond Merchant#4	1_M_MERCHANT
+lighthalzen,163,65,6	duplicate(RareDiamondMerchant)	Rare Diamond Merchant#5	1_M_MERCHANT
+rachel,106,142,6	duplicate(RareDiamondMerchant)	Rare Diamond Merchant#6	1_M_MERCHANT
+payon,180,130,6	duplicate(RareDiamondMerchant)	Rare Diamond Merchant#7	1_M_MERCHANT

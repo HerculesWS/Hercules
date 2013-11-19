@@ -13,7 +13,7 @@
 //= 1.2 Navigation system update. [Euphy]
 //============================================================
 
-morocc,153,286,6	script	Guide#01morocc::GuideMorroc	707,{
+morocc,153,286,6	script	Guide#01morocc::GuideMorroc	4_M_MOC_SOLDIER,{
 	cutin "moc_soldier",2;
 	mes "[Morroc Guide]";
 	mes "Welcome to ^8B4513Morroc^000000,";
@@ -161,11 +161,11 @@ L_Mark:
 	mes "Would you like to check any other locations?";
 	return;
 }
-morocc,154,38,6	duplicate(GuideMorroc)	Guide#02morocc	707
-morocc,296,213,4	duplicate(GuideMorroc)	Guide#03morocc	707
-morocc,28,170,5	duplicate(GuideMorroc)	Guide#04morocc	707
+morocc,154,38,6	duplicate(GuideMorroc)	Guide#02morocc	4_M_MOC_SOLDIER
+morocc,296,213,4	duplicate(GuideMorroc)	Guide#03morocc	4_M_MOC_SOLDIER
+morocc,28,170,5	duplicate(GuideMorroc)	Guide#04morocc	4_M_MOC_SOLDIER
 
-moc_ruins,159,53,3	script	Guide#01ruins::GuideMocRuins	707,{
+moc_ruins,159,53,3	script	Guide#01ruins::GuideMocRuins	4_M_MOC_SOLDIER,{
 	cutin "moc_soldier",2;
 	mes "[Morroc Guide]";
 	mes "Welcome to ^8B4513Morroc^000000,";
@@ -305,5 +305,5 @@ L_Mark:
 	mes "Would you like to check any other locations?";
 	return;
 }
-moc_ruins,70,164,3	duplicate(GuideMocRuins)	Guide#02ruins	707
-moc_ruins,65,44,5	duplicate(GuideMocRuins)	Guide#03ruins	707
+moc_ruins,70,164,3	duplicate(GuideMocRuins)	Guide#02ruins	4_M_MOC_SOLDIER
+moc_ruins,65,44,5	duplicate(GuideMocRuins)	Guide#03ruins	4_M_MOC_SOLDIER

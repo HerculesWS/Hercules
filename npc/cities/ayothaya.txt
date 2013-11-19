@@ -82,7 +82,7 @@
 	}
 }
 
-ayothaya,152,68,1	script	Aibakthing#ayo2	843,{
+ayothaya,152,68,1	script	Aibakthing#ayo2	4_M_THAIONGBAK,{
 	mes "[Aibakthing]";
 	mes "Hoo! Hah! Hmm! Hah!";
 	mes "So, how did you like Ayotaya? Did you get a chance to try Tom Yum Goong? When you're ready, I shall take you back home.";
@@ -105,7 +105,7 @@ ayothaya,152,68,1	script	Aibakthing#ayo2	843,{
 
 // Generic Ayothaya NPCs
 //============================================================
-ayothaya,189,120,3	script	Young Man#Thang	843,{
+ayothaya,189,120,3	script	Young Man#Thang	4_M_THAIONGBAK,{
 	mes "[Thang]";
 	mes "There's an ancient,";
 	mes "dreadful building in";
@@ -121,7 +121,7 @@ ayothaya,189,120,3	script	Young Man#Thang	843,{
 	close;
 }
 	
-ayothaya,171,152,5	script	Girl#Lalitha	838,{
+ayothaya,171,152,5	script	Girl#Lalitha	4_F_THAIAYO,{
 	set .@sit,rand(1,5);
 	if (.@sit > 0 && .@sit < 3) {
 		mes "[Lalitha]";
@@ -192,7 +192,7 @@ ayothaya,171,152,5	script	Girl#Lalitha	838,{
 	close;
 }
 	
-ayothaya,143,102,5	script	Old Man#ayothaya	842,{
+ayothaya,143,102,5	script	Old Man#ayothaya	4_M_THAIOLD,{
 	mes "[Villager]";
 	mes "Ummm.";
 	mes "Hmmmmm...";
@@ -237,7 +237,7 @@ ayothaya,143,102,5	script	Old Man#ayothaya	842,{
 	close;
 }
 	
-ayothaya,197,189,5	script	Young Man#1ayothaya	841,{
+ayothaya,197,189,5	script	Young Man#1ayothaya	4_M_THAIAYO,{
 	mes "[Kwan]";
 	mes "Phew, isn't it";
 	mes "soooo hot today?";
@@ -263,7 +263,7 @@ ayothaya,197,189,5	script	Young Man#1ayothaya	841,{
 	close;
 }
 	
-ayothaya,214,142,5	script	Young Man#5ayothaya	843,{
+ayothaya,214,142,5	script	Young Man#5ayothaya	4_M_THAIONGBAK,{
 	mes "[Detzi]";
 	mes "In Ayotaya, we have our own traditional martial arts. We, the young men of the village, practice our traditional martial arts in order to become strong.";
 	next;
@@ -272,7 +272,7 @@ ayothaya,214,142,5	script	Young Man#5ayothaya	843,{
 	close;
 }
 	
-ayothaya,241,264,5	script	Young Man#5ayothaya2	843,{
+ayothaya,241,264,5	script	Young Man#5ayothaya2	4_M_THAIONGBAK,{
 	mes "[Eik]";
 	mes "Hey...";
 	mes "You look pretty strong";

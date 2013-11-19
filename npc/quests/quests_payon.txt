@@ -19,7 +19,7 @@
 
 // 'Pretend Murdered' Quest
 //============================================================
-payon_in01,99,72,4	script	Granny	103,{
+payon_in01,99,72,4	script	Granny	8_F_GRANDMOTHER,{
 	if (checkweight(908,1) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
@@ -71,7 +71,7 @@ payon_in01,99,72,4	script	Granny	103,{
 
 // 'Ear Muffs' Quest
 //============================================================
-payon_in01,18,10,4	script	Mystic Lady	76,{
+payon_in01,18,10,4	script	Mystic Lady	1_F_ORIENT_02,{
 	mes "[Mystic Lady]";
 	mes "My family has produced and sold the special Winter product ^3355FFEar Muffs^000000 for many years. We just moved here, but the weather is always warm so we can hardly make a living.";
 	next;
@@ -119,7 +119,7 @@ payon_in01,18,10,4	script	Mystic Lady	76,{
 
 // 'Oxygen Mask' Quest
 //============================================================
-payon_in02,25,71,4	script	Boy	86,{
+payon_in02,25,71,4	script	Boy	4_M_04,{
 	if (countitem(701) > 4) {
 		mes "[Young Man]";
 		mes "ArrrGggghh!";
@@ -214,7 +214,7 @@ payon_in02,25,71,4	script	Boy	86,{
 
 // 'Helm of Angel' and 'Deviruchi Cap' Quest
 //============================================================
-payon_in01,56,12,7	script	Young man#12	89,{
+payon_in01,56,12,7	script	Young man#12	4_M_ORIENT02,{
 	mes "[Young man]";
 	mes "...What is it?";
 	next;

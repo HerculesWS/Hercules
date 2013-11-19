@@ -24,7 +24,7 @@
 //= 1.4a Minor script updates. [Euphy]
 //============================================================
 
-comodo,219,158,6	script	Kachua	91,{
+comodo,219,158,6	script	Kachua	4_F_02,{
 
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
@@ -392,7 +392,7 @@ comodo,219,158,6	script	Kachua	91,{
 	end;
 }
 
-comodo,204,148,7	script	Devellin	90,{
+comodo,204,148,7	script	Devellin	4_F_01,{
 
 	mes "[Devellin]";
 	mes "It seems some traveller showed";
@@ -406,7 +406,7 @@ comodo,204,148,7	script	Devellin	90,{
 	close;
 }
 
-comodo,210,154,2	script	Suspicious Guy#cmd	118,{
+comodo,210,154,2	script	Suspicious Guy#cmd	2_M_THIEFMASTER,{
 
 	if (BaseClass == Job_Thief){
 		mes "[Cain]";
@@ -489,7 +489,7 @@ comodo,210,154,2	script	Suspicious Guy#cmd	118,{
 	}
 }
 
-mjolnir_02,85,362,3	script	Blacksmith Miner	726,{
+mjolnir_02,85,362,3	script	Blacksmith Miner	4_F_JOB_BLACKSMITH,{
 
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";

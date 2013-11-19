@@ -17,7 +17,7 @@
 //= 1.5 Moved Izlude NPC to pre-re/re paths.
 //============================================================
 
-alberta_in,173,76,4	script	Monster Tamer#alb	125,{
+alberta_in,173,76,4	script	Monster Tamer#alb	4_M_TELEPORTER,{
 	mes "[Iwado]";
 	mes "This is the height of the era of Monster Taming! Don't you feel the need to gather monster items to be able to connect and to communicate with the Cute Monsters!?";
 	next;
@@ -185,7 +185,7 @@ alberta_in,173,76,4	script	Monster Tamer#alb	125,{
 }
 
 
-aldeba_in,168,175,4	script	Monster Tamer#alde	125,{
+aldeba_in,168,175,4	script	Monster Tamer#alde	4_M_TELEPORTER,{
 	mes "[YuU]";
 	mes "You must be looking for monster items! In making monster items, there is no monster tamer in Rune Midgard that's better than me.";
 	next;
@@ -619,7 +619,7 @@ aldeba_in,168,175,4	script	Monster Tamer#alde	125,{
 	}
 }
 
-comodo,112,182,0	script	Munak's Grandma	103,{
+comodo,112,182,0	script	Munak's Grandma	8_F_GRANDMOTHER,{
 	if (countitem(1558) > 0) {
 		mes "[Munak's grandma]";
 		mes "Oh my...";

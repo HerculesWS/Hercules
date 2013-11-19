@@ -137,11 +137,11 @@ typedef struct eri {
 #else /* not DISABLE_ERS */
 // These defines should be used to allow the code to keep working whenever 
 // the system is disabled
-#	define ers_alloc(obj,type) (type *)(obj)->alloc(obj)
-#	define ers_free(obj,entry) (obj)->free((obj),(entry))
-#	define ers_entry_size(obj) (obj)->entry_size(obj)
-#	define ers_destroy(obj)    (obj)->destroy(obj)
-#	define ers_chunk_size(obj,size) (obj)->chunk_size(obj,size)
+#	define ers_alloc(obj,type) ((type *)(obj)->alloc(obj))
+#	define ers_free(obj,entry) ((obj)->free((obj),(entry)))
+#	define ers_entry_size(obj) ((obj)->entry_size(obj))
+#	define ers_destroy(obj)    ((obj)->destroy(obj))
+#	define ers_chunk_size(obj,size) ((obj)->chunk_size((obj),(size)))
 
 /**
  * Get a new instance of the manager that handles the specified entry size.
