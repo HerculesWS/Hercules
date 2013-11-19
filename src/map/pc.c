@@ -938,12 +938,10 @@ int pc_isequip(struct map_session_data *sd,int n)
 		clif->msg(sd, 0x6ED);
 		return 0;
 	}
-#ifdef RENEWAL
 	if(item->elvmax && sd->status.base_level > (unsigned int)item->elvmax){
 		clif->msg(sd, 0x6ED);
 		return 0;
 	}
-#endif
 	if(item->sex != 2 && sd->status.sex != item->sex)
 		return 0;
 
@@ -4317,12 +4315,10 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		return 0;
 	}
 
-#ifdef RENEWAL
 	if(item->elvmax && sd->status.base_level > (unsigned int)item->elvmax){
 		clif->msg(sd, 0x6EE);
 		return 0;
 	}
-#endif
 
 	//Not equipable by class. [Skotlex]
 	if (!(
@@ -5883,7 +5879,6 @@ int pc_checkbaselevelup(struct map_session_data *sd) {
 }
 
 void pc_baselevelchanged(struct map_session_data *sd) {
-#ifdef RENEWAL
 	int i;
 	for( i = 0; i < EQI_MAX; i++ ) {
 		if( sd->equip_index[i] >= 0 ) {
@@ -5891,9 +5886,8 @@ void pc_baselevelchanged(struct map_session_data *sd) {
 				pc->unequipitem(sd, sd->equip_index[i], 3);
 		}
 	}
-#endif
-
 }
+
 int pc_checkjoblevelup(struct map_session_data *sd)
 {
 	unsigned int next = pc->nextjobexp(sd);
