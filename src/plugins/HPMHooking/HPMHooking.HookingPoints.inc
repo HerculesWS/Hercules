@@ -790,6 +790,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pGMRc, HP_clif_pGMRc) },
 	{ HP_POP(clif->pGMReqAccountName, HP_clif_pGMReqAccountName) },
 	{ HP_POP(clif->pGMChangeMapType, HP_clif_pGMChangeMapType) },
+	{ HP_POP(clif->pGMFullStrip, HP_clif_pGMFullStrip) },
 	{ HP_POP(clif->pPMIgnore, HP_clif_pPMIgnore) },
 	{ HP_POP(clif->pPMIgnoreAll, HP_clif_pPMIgnoreAll) },
 	{ HP_POP(clif->pPMIgnoreList, HP_clif_pPMIgnoreList) },
