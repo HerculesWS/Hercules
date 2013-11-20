@@ -2692,7 +2692,7 @@ ACMD(char_block)
 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
 	
 	if (!message || !*message || sscanf(message, "%23[^\n]", atcmd_player_name) < 1) {
-		clif->message(fd, msg_txt(1021)); // Please enter a player name (usage: @charblock/@block <char name>).
+		clif->message(fd, msg_txt(1021)); // Please enter a player name (usage: @block <char name>).
 		return false;
 	}
 	
@@ -2728,7 +2728,7 @@ ACMD(char_ban)
 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
 	
 	if (!message || !*message || sscanf(message, "%255s %23[^\n]", atcmd_output, atcmd_player_name) < 2) {
-		clif->message(fd, msg_txt(1022)); // Please enter ban time and a player name (usage: @charban/@ban/@banish/@charbanish <time> <char name>).
+		clif->message(fd, msg_txt(1022)); // Please enter ban time and a player name (usage: @ban <time> <char name>).
 		return false;
 	}
 	
@@ -2807,7 +2807,7 @@ ACMD(char_unblock)
 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
 	
 	if (!message || !*message || sscanf(message, "%23[^\n]", atcmd_player_name) < 1) {
-		clif->message(fd, msg_txt(1024)); // Please enter a player name (usage: @charunblock <char name>).
+		clif->message(fd, msg_txt(1024)); // Please enter a player name (usage: @unblock <char name>).
 		return false;
 	}
 	
@@ -2827,7 +2827,7 @@ ACMD(char_unban)
 	memset(atcmd_player_name, '\0', sizeof(atcmd_player_name));
 	
 	if (!message || !*message || sscanf(message, "%23[^\n]", atcmd_player_name) < 1) {
-		clif->message(fd, msg_txt(1025)); // Please enter a player name (usage: @charunban <char name>).
+		clif->message(fd, msg_txt(1025)); // Please enter a player name (usage: @unban <char name>).
 		return false;
 	}
 	
