@@ -1,13 +1,13 @@
 @SET_MAKE@
 
-COMMON_C = $(shell ls ../../src/common/*.c)
-COMMON_H = $(shell ls ../../src/common/*.h)
-MAP_C = $(shell ls ../../src/map/*.c)
-MAP_H = $(shell ls ../../src/map/*.h)
-CHAR_C = $(shell ls ../../src/char/*.c)
-CHAR_H = $(shell ls ../../src/char/*.h)
-LOGIN_C = $(shell ls ../../src/login/*.c)
-LOGIN_H = $(shell ls ../../src/login/*.h)
+COMMON_C = $(wildcard ../../src/common/*.c)
+COMMON_H = $(wildcard ../../src/common/*.h)
+MAP_C = $(wildcard ../../src/map/*.c)
+MAP_H = $(wildcard ../../src/map/*.h)
+CHAR_C = $(wildcard ../../src/char/*.c)
+CHAR_H = $(wildcard ../../src/char/*.h)
+LOGIN_C = $(wildcard ../../src/login/*.c)
+LOGIN_H = $(wildcard ../../src/login/*.h)
 ALL_C = $(COMMON_C) $(MAP_C) $(CHAR_C) $(LOGIN_C)
 ALL_H = $(COMMON_H) $(MAP_H) $(CHAR_H) $(LOGIN_H)
 

@@ -1,23 +1,26 @@
 
-COMMON_H = $(shell ls ../common/*.h)
-CONFIG_H = $(shell ls ../config/*.h ../config/*/*.h)
+CONFIG_D = ../config
+CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
+
+COMMON_D = ../common
+COMMON_H = $(wildcard $(COMMON_D)/*.h)
+
+LIBCONFIG_D = ../../3rdparty/libconfig
+LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
+                scanner.o strbuf.o)
+LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
+              scanctx.h scanner.h strbuf.h wincompat.h)
+LIBCONFIG_INCLUDE = -I$(LIBCONFIG_D)
 
 MT19937AR_D = ../../3rdparty/mt19937ar
 MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
 MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
 MT19937AR_INCLUDE = -I$(MT19937AR_D)
 
-LIBCONFIG_D = ../../3rdparty/libconfig
-LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
-		scanner.o strbuf.o)
-LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
-	      scanctx.h scanner.h strbuf.h wincompat.h)
-LIBCONFIG_INCLUDE = -I$(LIBCONFIG_D)
-
 TEST_SPINLOCK_OBJ=obj/test_spinlock.o
 TEST_SPINLOCK_H=
-TEST_SPINLOCK_DEPENDS=$(TEST_SPINLOCK_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ)
-    
+TEST_SPINLOCK_DEPENDS=$(TEST_SPINLOCK_OBJ) $(COMMON_D)/obj_sql/common_sql.a $(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ)
+
 @SET_MAKE@
 
 CC = @CC@
@@ -51,7 +54,8 @@ obj:
 
 test_spinlock: $(TEST_SPINLOCK_DEPENDS) Makefile
 	@echo "	LD	$@"
-	@$(CC) @LDFLAGS@ -o ../../test_spinlock@EXEEXT@ $(TEST_SPINLOCK_OBJ) ../common/obj_sql/common_sql.a ../common/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
+	@$(CC) @LDFLAGS@ -o ../../test_spinlock@EXEEXT@ $(TEST_SPINLOCK_OBJ) $(COMMON_D)/obj_sql/common_sql.a \
+		$(COMMON_D)/obj_all/common.a $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) @LIBS@ @MYSQL_LIBS@
 
 # login object files
 
@@ -60,13 +64,13 @@ obj/%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj
 	@$(CC) @CFLAGS@ $(MT19937AR_INCLUDE) $(LIBCONFIG_INCLUDE) -DWITH_SQL @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 # missing object files
-../common/obj_all/common.a:
+$(COMMON_D)/obj_all/common.a:
 	@echo "	MAKE	$@"
-	@$(MAKE) -C ../common sql
+	@$(MAKE) -C $(COMMON_D) sql
 	
-../common/obj_sql/common_sql.a:
+$(COMMON_D)/obj_sql/common_sql.a:
 	@echo "	MAKE	$@"
-	@$(MAKE) -C ../common sql
+	@$(MAKE) -C $(COMMON_D) sql
 
 $(MT19937AR_OBJ):
 	@echo "	MAKE	$@"

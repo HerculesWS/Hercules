@@ -15,11 +15,15 @@ MYPLUGINS =
 
 PLUGINS = sample db2sql HPMHooking $(MYPLUGINS)
 
-COMMON_H = $(shell ls ../common/*.h)
-CONFIG_H = $(shell ls ../config/*.h ../config/*/*.h)
-MAP_H = $(shell ls ../map/*.h)
-CHAR_H = $(shell ls ../char/*.h)
-LOGIN_H = $(shell ls ../login/*.h)
+COMMON_D = ../common
+COMMON_H = $(wildcard $(COMMON_D)/*.h)
+
+CONFIG_D = ../config
+CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
+
+MAP_H = $(wildcard ../map/*.h)
+CHAR_H = $(wildcard ../char/*.h)
+LOGIN_H = $(wildcard ../login/*.h)
 ALL_H = $(COMMON_H) $(CONFIG_H) $(MAP_H) $(CHAR_H) $(LOGIN_H)
 
 @SET_MAKE@

@@ -110,6 +110,10 @@ plugins: $(PLUGIN_DEPENDS) src/plugins/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C src/plugins
 
+plugin.%: $(PLUGIN_DEPENDS) src/plugins/Makefile
+	@echo "	MAKE	$@"
+	@$(MAKE) -C src/plugins $(patsubst plugin.%,%,$@)
+
 hooks: tools/HPMHookGen/Makefile
 	@echo "	MAKE	$@"
 	@$(MAKE) -C tools/HPMHookGen
@@ -150,6 +154,8 @@ help: Makefile
 	@echo "'all'         - builds all the above targets"
 	@echo "'sql'         - builds sql servers (targets 'common_sql' 'login_sql' 'char_sql'"
 	@echo "                'map_sql' and 'import')"
+	@echo "'plugins'     - builds all available plugins"
+	@echo "'plugin.Name' - builds plugin named 'Name'"
 	@echo "'test'        - builds tests"
 	@echo "'clean'       - cleans executables and objects"
 	@echo "'buildclean'  - cleans build temporary (object) files, without deleting the"
