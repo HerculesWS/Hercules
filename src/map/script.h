@@ -145,7 +145,6 @@ struct eri;
 #define is_string_variable(name) ( (name)[strlen(name) - 1] == '$' )
 
 #define BUILDIN(x) bool buildin_ ## x (struct script_state* st)
-#define BUILDIN_A(x) buildin_ ## x
 
 #define script_fetch(st, n, t) do { \
 	if( script_hasdata((st),(n)) ) \

@@ -105,6 +105,30 @@ enum HPluginDataTypes {
 #define getFromNPCD(ptr,index) (HPMi->getFromHPData(HPDT_NPCD,HPMi->pid,(ptr),(index)))
 #define removeFromNPCD(ptr,index) (HPMi->removeFromHPData(HPDT_NPCD,HPMi->pid,(ptr),(index)))
 
+/* HPMi->addCommand */
+#define addAtcommand(cname,funcname) \
+	if ( HPMi->addCommand != NULL ) { \
+		HPMi->addCommand(cname,atcommand_ ## funcname); \
+	} else { \
+		ShowWarning("HPM (%s):addAtcommand(\"%s\",%s) failed, addCommand sub is NULL!\n",pinfo.name,cname,# funcname);\
+	}
+/* HPMi->addScript */
+#define addScriptCommand(cname,scinfo,funcname) \
+	if ( HPMi->addScript != NULL ) { \
+		HPMi->addScript(cname,scinfo,buildin_ ## funcname); \
+	} else { \
+		ShowWarning("HPM (%s):addScriptCommand(\"%s\",\"%s\",%s) failed, addScript sub is NULL!\n",pinfo.name,cname,scinfo,# funcname);\
+	}
+/* HPMi->addCPCommand */
+#define addCPCommand(cname,funcname) \
+	if ( HPMi->addCPCommand != NULL ) { \
+		HPMi->addCPCommand(cname,console_parse_ ## funcname); \
+	} else { \
+		ShowWarning("HPM (%s):addCPCommand(\"%s\",%s) failed, addCPCommand sub is NULL!\n",pinfo.name,cname,# funcname);\
+	}
+/* HPMi->addPacket */
+#define addPacket(cmd,len,receive,point) HPMi->addPacket(cmd,len,receive,point,HPMi->pid)
+
 /* Hercules Plugin Mananger Include Interface */
 HPExport struct HPMi_interface {
 	/* */

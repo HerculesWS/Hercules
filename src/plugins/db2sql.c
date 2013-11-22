@@ -196,7 +196,7 @@ HPExport void server_preinit (void) {
 	addArg("--db2sql",false,db2sql_arg,NULL);	
 }
 HPExport void plugin_init (void) {
-	HPMi->addCPCommand("server:tools:db2sql",CPCMD_A(db2sql));
+	addCPCommand("server:tools:db2sql",db2sql);
 }
 HPExport void server_online (void) {
 	if( torun )

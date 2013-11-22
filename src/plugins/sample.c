@@ -36,6 +36,7 @@ struct sample_data_struct {
 	struct point lastMSGPosition;
 	unsigned int someNumber;
 };
+
 /* sample packet implementation */
 /* cmd 0xf3 - it is a client-server existent id, for clif_parse_GlobalMessage */
 /* in this sample we do nothing and simply redirect */
@@ -138,26 +139,31 @@ HPExport void plugin_init (void) {
 	
 	ShowInfo ("I'm being run from the '%s' filename\n", server_name);
 	
-	if( HPMi->addCommand != NULL ) {//link our '@sample' command
-		HPMi->addCommand("sample",ACMD_A(sample));
-	}
+	/* addAtcommand("command-key",command-function) tells map server to call ACMD(sample) when "sample" command is used */
+	/* - it will print a warning when used on a non-map-server plugin */
+	addAtcommand("sample",sample);//link our '@sample' command
 	
-	if( HPMi->addScript != NULL ) {//link our 'sample' script command
-		HPMi->addScript("sample","i",BUILDIN_A(sample));
-	}
+	/* addScriptCommand("script-command-name","script-command-params-info",script-function) tells map server to call BUILDIN(sample) for the "sample(i)" command */
+	/* - it will print a warning when used on a non-map-server plugin */
+	addScriptCommand("sample","i",sample);
 	
-	if( HPMi->addCPCommand != NULL ) {//link our 'sample' console command
-		HPMi->addCPCommand("this:is:a:sample",CPCMD_A(sample));
-	}
+	/* addCPCommand("console-command-name",command-function) tells server to call CPCMD(sample) for the 'this is a sample <optional-args>' console call */
+	/* in "console-command-name" usage of ':' indicates a category, for example 'this:is:a:sample' translates to 'this is a sample',
+	 * therefore 'this -> is -> a -> sample', it can be used to aggregate multiple commands under the same category or to append commands to existing categories
+	 * categories inherit the special keyword 'help' which prints the subsequent commands, e.g. 'server help' prints all categories and commands under 'server'
+	 * therefore 'this help' would inform about 'is (category) -> a (category) -> sample (command)'*/
+	addCPCommand("this:is:a:sample",sample);
 	
-	if( HPMi->addPacket != NULL ) {//link our 'sample' packet to map-server
-		HPMi->addPacket(0xf3,-1,sample_packet0f3,hpClif_Parse,HPMi->pid);
-	}
-	
+	/* addPacket(packetID,packetLength,packetFunction,packetIncomingPoint) */
+	/* adds packetID of packetLength (-1 for dynamic length where length is defined in the packet { packetID (2 Byte) , packetLength (2 Byte) , ... })
+	 * to trigger packetFunction in the packetIncomingPoint section ( available points listed in enum HPluginPacketHookingPoints within src/common/HPMi.h ) */
+	addPacket(0xf3,-1,sample_packet0f3,hpClif_Parse);
+		
 	/* in this sample we add a PreHook to pc->dropitem */
 	/* to identify whether the item being dropped is on amount higher than 1 */
 	/* if so, it stores the amount on a variable (my_pc_dropitem_storage) and changes the amount to 1 */
 	addHookPre("pc->dropitem",my_pc_dropitem_pre);
+	
 	/* in this sample we add a PostHook to pc->dropitem */
 	/* if the original pc->dropitem was successful and the amount stored on my_pc_dropitem_storage is higher than 1, */
 	/* our posthook will display a message to the user about the cap */
