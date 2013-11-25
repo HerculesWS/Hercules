@@ -586,7 +586,6 @@ struct clif_interface {
 	void (*changetraplook) (struct block_list *bl,int val);
 	void (*refreshlook) (struct block_list *bl,int id,int type,int val,enum send_target target);
 	void (*class_change) (struct block_list *bl,int class_,int type);
-	void (*skill_setunit) (struct skill_unit *su);
 	void (*skill_delunit) (struct skill_unit *su);
 	void (*skillunit_update) (struct block_list* bl);
 	int (*clearunit_delayed_sub) (int tid, int64 tick, int id, intptr_t data);
@@ -596,10 +595,11 @@ struct clif_interface {
 	void (*set_unit_idle2) (struct block_list* bl, struct map_session_data *tsd, enum send_target target);
 	void (*set_unit_walking) (struct block_list* bl, struct map_session_data *tsd,struct unit_data* ud, enum send_target target);
 	int (*calc_walkdelay) (struct block_list *bl,int delay, int type, int damage, int div_);
-	void (*getareachar_skillunit) (struct map_session_data *sd, struct skill_unit *su);
+	void (*getareachar_skillunit) (struct block_list *bl, struct skill_unit *su, enum send_target target);
 	void (*getareachar_unit) (struct map_session_data* sd,struct block_list *bl);
 	void (*clearchar_skillunit) (struct skill_unit *su, int fd);
 	int (*getareachar) (struct block_list* bl,va_list ap);
+	void (*graffiti_entry) (struct block_list *bl, struct skill_unit *su, enum send_target target);
 	/* main unit spawn */
 	int (*spawn) (struct block_list *bl);
 	/* map-related */

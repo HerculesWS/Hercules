@@ -3344,7 +3344,7 @@ int skill_reveal_trap (struct block_list *bl, va_list ap) {
 	if (su->alive && su->group && skill->get_inf2(su->group->skill_id)&INF2_TRAP) {	//Reveal trap.
 		//Change look is not good enough, the client ignores it as an actual trap still. [Skotlex]
 		//clif->changetraplook(bl, su->group->unit_id);
-		clif->skill_setunit(su);
+		clif->getareachar_skillunit(&su->bl,su,AREA);
 		return 1;
 	}
 	return 0;
@@ -10364,7 +10364,7 @@ int skill_dance_overlap_sub(struct block_list* bl, va_list ap) {
 	else //Remove dissonance
 		target->val2 &= ~UF_ENSEMBLE;
 
-	clif->skill_setunit(target); //Update look of affected cell.
+	clif->getareachar_skillunit(&target->bl,target,AREA); //Update look of affected cell.
 
 	return 1;
 }
@@ -15176,7 +15176,7 @@ struct skill_unit *skill_initunit (struct skill_unit_group *group, int idx, int 
 			break;
 	}
 
-	clif->skill_setunit(su);
+	clif->getareachar_skillunit(&su->bl,su,AREA);
 
 	return su;
 }
@@ -15979,7 +15979,7 @@ int skill_unit_move_unit_group(struct skill_unit_group *group, int16 m, int16 dx
 		if (!(m_flag[i]&0x2)) { //We only moved the cell in 0-1
 			if (group->state.song_dance&0x1) //Check for dissonance effect.
 				skill->dance_overlap(su1, 1);
-			clif->skill_setunit(su1);
+			clif->getareachar_skillunit(&su1->bl,su1,AREA);
 			map->foreachincell(skill->unit_effect,su1->bl.m,su1->bl.x,su1->bl.y,group->bl_flag,&su1->bl,tick,1);
 		}
 	}

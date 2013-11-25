@@ -4415,6 +4415,7 @@ int clif_damage(struct block_list* src, struct block_list* dst, int64 tick, int 
 	WBUFW(buf,26)=div;
 	WBUFB(buf,28)=type;
 #endif
+	
 	if(disguised(dst)) {
 		clif->send(buf,packet_len(cmd),dst,AREA_WOS);
 		WBUFL(buf,6) = -dst->id;
@@ -4439,6 +4440,7 @@ int clif_damage(struct block_list* src, struct block_list* dst, int64 tick, int 
 	if(src == dst) {
 		unit->setdir(src,unit->getdir(src));
 	}
+	
 	//Return adjusted can't walk delay for further processing.
 	return clif->calc_walkdelay(dst,ddelay,type,damage+damage2,div);
 }
@@ -4503,8 +4505,7 @@ void clif_standing(struct block_list* bl)
 
 /// Inform client(s) about a map-cell change (ZC_UPDATE_MAPINFO).
 /// 0192 <x>.W <y>.W <type>.W <map name>.16B
-void clif_changemapcell(int fd, int16 m, int x, int y, int type, enum send_target target)
-{
+void clif_changemapcell(int fd, int16 m, int x, int y, int type, enum send_target target) {
 	unsigned char buf[32];
 
 	WBUFW(buf,0) = 0x192;
@@ -4550,65 +4551,72 @@ void clif_getareachar_item(struct map_session_data* sd,struct flooritem_data* fi
 	WFIFOSET(fd,packet_len(0x9d));
 }
 
+void clif_graffiti_entry(struct block_list *bl, struct skill_unit *su, enum send_target target) {
+	struct packet_graffiti_entry p;
+	
+	p.PacketType = graffiti_entryType;
+	p.AID = su->bl.id;
+	p.creatorAID = su->group->src_id;
+	p.xPos = su->bl.x;
+	p.yPos = su->bl.y;
+	p.job = su->group->unit_id;
+	p.isContens = 1;
+	p.isVisible = 1;
+	safestrncpy(p.msg, su->group->valstr, 80);
+	
+	clif->send(&p,sizeof(p),bl,target);
+}
 
 /// Notifies the client of a skill unit.
 /// 011f <id>.L <creator id>.L <x>.W <y>.W <unit id>.B <visible>.B (ZC_SKILL_ENTRY)
 /// 01c9 <id>.L <creator id>.L <x>.W <y>.W <unit id>.B <visible>.B <has msg>.B <msg>.80B (ZC_SKILL_ENTRY2)
 /// 08c7 <lenght>.W <id> L <creator id>.L <x>.W <y>.W <unit id>.B <range>.W <visible>.B (ZC_SKILL_ENTRY3)
 /// 099f <lenght>.W <id> L <creator id>.L <x>.W <y>.W <unit id>.L <range>.W <visible>.B (ZC_SKILL_ENTRY4)
-void clif_getareachar_skillunit(struct map_session_data *sd, struct skill_unit *su) {
-	int fd = sd->fd, header = 0x11f, pos=0;
-
+void clif_getareachar_skillunit(struct block_list *bl, struct skill_unit *su, enum send_target target) {
+	struct packet_skill_entry p;
+	
 	if( su->group->state.guildaura )
 		return;
 
-#if PACKETVER >= 20130320
-	if(su->group->unit_id > UCHAR_MAX) {
-		header = 0x99f;
-		pos = 2;
-	}
-#endif
-
 #if PACKETVER >= 3
-	if(su->group->unit_id==UNT_GRAFFITI) {
-		// Graffiti [Valaris]
-		WFIFOHEAD(fd,packet_len(0x1c9));
-		WFIFOW(fd, 0)=0x1c9;
-		WFIFOL(fd, 2)=su->bl.id;
-		WFIFOL(fd, 6)=su->group->src_id;
-		WFIFOW(fd,10)=su->bl.x;
-		WFIFOW(fd,12)=su->bl.y;
-		WFIFOB(fd,14)=su->group->unit_id;
-		WFIFOB(fd,15)=1;
-		WFIFOB(fd,16)=1;
-		safestrncpy((char*)WFIFOP(fd,17),su->group->valstr,MESSAGE_SIZE);
-		WFIFOSET(fd,packet_len(0x1c9));
+	if(su->group->unit_id == UNT_GRAFFITI) {
+		clif->graffiti_entry(bl,su,target);
 		return;
 	}
 #endif
-	WFIFOHEAD(fd,packet_len(header));
-	WFIFOW(fd, 0)=header;
-	if(pos > 0)
-		WFIFOL(fd, pos)=packet_len(header);
-	WFIFOL(fd, 2 + pos)=su->bl.id;
-	WFIFOL(fd, 6 + pos)=su->group->src_id;
-	WFIFOW(fd,10 + pos)=su->bl.x;
-	WFIFOW(fd,12 + pos)=su->bl.y;
-	if (battle_config.traps_setting&1 && skill->get_inf2(su->group->skill_id)&INF2_TRAP)
-		WFIFOB(fd,14)=UNT_DUMMYSKILL; //Use invisible unit id for traps.
-    else if (skill->get_unit_flag(su->group->skill_id) & UF_RANGEDSINGLEUNIT && !(su->val2 & UF_RANGEDSINGLEUNIT))
-		WFIFOB(fd,14)=UNT_DUMMYSKILL; //Use invisible unit id for traps.
-	else if(pos > 0){
-		WFIFOL(fd,16)=su->group->unit_id;
-		WFIFOW(fd,20)=su->range;
-		pos += 5;
-	}else
-		WFIFOB(fd,14)=su->group->unit_id;
-	WFIFOB(fd,15 + pos)=1; // ignored by client (always gets set to 1)
-	WFIFOSET(fd,packet_len(header));
+	
+	p.PacketType = skill_entryType;
+	
+#if PACKETVER >= 20110718
+	p.PacketLength = sizeof(p);
+#endif
+	
+	p.AID = su->bl.id;
+	p.creatorAID = su->group->src_id;
+	p.xPos = su->bl.x;
+	p.yPos = su->bl.y;
+	
+	//Use invisible unit id for traps.
+	if ((battle_config.traps_setting&1 && skill->get_inf2(su->group->skill_id)&INF2_TRAP) ||
+		(skill->get_unit_flag(su->group->skill_id) & UF_RANGEDSINGLEUNIT && !(su->val2 & UF_RANGEDSINGLEUNIT)))
+		p.job = UNT_DUMMYSKILL;
+	else
+		p.job = su->group->unit_id;
+	
+#if PACKETVER >= 20110718
+	p.RadiusRange = su->range;
+#endif
+	
+	p.isVisible = 1;
+
+#if PACKETVER >= 20130731
+	p.level = (unsigned char)unit->group->skill_lv;
+#endif
+	
+	clif->send(&p,sizeof(p),bl,target);
 
 	if(su->group->skill_id == WZ_ICEWALL)
-		clif->changemapcell(fd,su->bl.m,su->bl.x,su->bl.y,5,SELF);
+		clif->changemapcell(bl->type == BL_PC ? ((TBL_PC*)bl)->fd : 0,su->bl.m,su->bl.x,su->bl.y,5,SELF);
 }
 
 
@@ -4674,7 +4682,7 @@ int clif_getareachar(struct block_list* bl,va_list ap) {
 			clif->getareachar_item(sd,(struct flooritem_data*) bl);
 			break;
 		case BL_SKILL:
-			clif->getareachar_skillunit(sd,(TBL_SKILL*)bl);
+			clif->getareachar_skillunit(&sd->bl,(TBL_SKILL*)bl,SELF);
 			break;
 		default:
 			if(&sd->bl == bl)
@@ -4758,7 +4766,7 @@ int clif_insight(struct block_list *bl,va_list ap)
 				clif->getareachar_item(tsd,(struct flooritem_data*)bl);
 				break;
 			case BL_SKILL:
-				clif->getareachar_skillunit(tsd,(TBL_SKILL*)bl);
+				clif->getareachar_skillunit(&tsd->bl,(TBL_SKILL*)bl,SELF);
 				break;
 			default:
 				clif->getareachar_unit(tsd,bl);
@@ -5246,65 +5254,6 @@ void clif_skill_poseffect(struct block_list *src, uint16 skill_id, int val, int 
 	} else
 		clif->send(buf,packet_len(0x117),src,AREA);
 }
-
-
-/*==========================================
- * Tells all client's nearby 'unit' sight range that it spawned
- *------------------------------------------*/
-//FIXME: this is just an AREA version of clif_getareachar_skillunit()
-void clif_skill_setunit(struct skill_unit *su) {
-	unsigned char buf[128];
-	int header = 0x11f, pos = 0;
-
-	nullpo_retv(su);
-
-	if( su->group->state.guildaura )
-		return;
-
-#if PACKETVER >= 20130320
-	if(su->group->unit_id > UCHAR_MAX) {
-		header = 0x99f;
-		pos = 2;
-	}
-#endif
-
-#if PACKETVER >= 3
-	if(su->group->unit_id==UNT_GRAFFITI) {
-		// Graffiti [Valaris]
-		WBUFW(buf, 0)=0x1c9;
-		WBUFL(buf, 2)=su->bl.id;
-		WBUFL(buf, 6)=su->group->src_id;
-		WBUFW(buf,10)=su->bl.x;
-		WBUFW(buf,12)=su->bl.y;
-		WBUFB(buf,14)=su->group->unit_id;
-		WBUFB(buf,15)=1;
-		WBUFB(buf,16)=1;
-		safestrncpy((char*)WBUFP(buf,17),su->group->valstr,MESSAGE_SIZE);
-		clif->send(buf,packet_len(0x1c9),&su->bl,AREA);
-		return;
-	}
-#endif
-	WBUFW(buf, 0)=header;
-	if(pos > 0)
-		WBUFW(buf, pos)=packet_len(header);
-	WBUFL(buf, 2 + pos)=su->bl.id;
-	WBUFL(buf, 6 + pos)=su->group->src_id;
-	WBUFW(buf,10 + pos)=su->bl.x;
-	WBUFW(buf,12 + pos)=su->bl.y;
-	if (su->group->state.song_dance&0x1 && su->val2&UF_ENSEMBLE)
-		WBUFB(buf,14)=su->val2&UF_SONG?UNT_DISSONANCE:UNT_UGLYDANCE;
-	else if (skill->get_unit_flag(su->group->skill_id) & UF_RANGEDSINGLEUNIT && !(su->val2 & UF_RANGEDSINGLEUNIT))
-		WBUFB(buf, 14) = UNT_DUMMYSKILL; // Only display the unit at center.
-	else if(pos > 0) {
-		WBUFL(buf,16)=su->group->unit_id;
-		WBUFW(buf,20)=su->range;
-		pos += 5;
-	}else
-		WBUFB(buf,14)=su->group->unit_id;
-	WBUFB(buf,15 + pos)=1; // ignored by client (always gets set to 1)
-	clif->send(buf,packet_len(header),&su->bl,AREA);
-}
-
 
 /// Presents a list of available warp destinations (ZC_WARPLIST).
 /// 011c <skill id>.W { <map name>.16B }*4
@@ -18356,7 +18305,6 @@ void clif_defaults(void) {
 	clif->changetraplook = clif_changetraplook;
 	clif->refreshlook = clif_refreshlook;
 	clif->class_change = clif_class_change;
-	clif->skill_setunit = clif_skill_setunit;
 	clif->skill_delunit = clif_skill_delunit;
 	clif->skillunit_update = clif_skillunit_update;
 	clif->clearunit_delayed_sub = clif_clearunit_delayed_sub;
@@ -18370,6 +18318,7 @@ void clif_defaults(void) {
 	clif->getareachar_unit = clif_getareachar_unit;
 	clif->clearchar_skillunit = clif_clearchar_skillunit;
 	clif->getareachar = clif_getareachar;
+	clif->graffiti_entry = clif_graffiti_entry;
 	/* main unit spawn */
 	clif->spawn = clif_spawn;
 	/* map-related */

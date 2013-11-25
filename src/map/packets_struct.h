@@ -101,6 +101,16 @@ enum packet_headers {
 	bgqueue_notify_entryType = 0x8d9,
 	bgqueue_battlebeginsType = 0x8df,
 	notify_bounditemType = 0x2d3,
+#if PACKETVER < 3
+	skill_entryType = 0x11f,
+#elif PACKETVER < 20121212
+	skill_entryType = 0x8c7,
+#elif PACKETVER < 20130731
+	skill_entryType = 0x99f,
+#else
+	skill_entryType = 0x9ca,
+#endif
+	graffiti_entryType = 0x1c9,
 #if PACKETVER > 20130000 /* not sure date */
 	dropflooritemType = 0x84b,
 #else
@@ -809,6 +819,41 @@ struct packet_viewequip_ack {
 struct packet_notify_bounditem {
 	short PacketType;
 	unsigned short index;
+} __attribute__((packed));
+
+struct packet_skill_entry {
+	short PacketType;
+#if PACKETVER >= 20110718
+	short PacketLength;
+#endif
+	unsigned int AID;
+	unsigned int creatorAID;
+	short xPos;
+	short yPos;
+#if PACKETVER >= 20121212
+	int job;
+#else
+	unsigned char job;
+#endif
+#if PACKETVER >= 20110718
+	char RadiusRange;
+#endif
+	unsigned char isVisible;
+#if PACKETVER >= 20130731
+	unsigned char level;
+#endif
+} __attribute__((packed));
+
+struct packet_graffiti_entry {
+	short PacketType;
+	unsigned int AID;
+	unsigned int creatorAID;
+	short xPos;
+	short yPos;
+	unsigned char job;
+	unsigned char isVisible;
+	unsigned char isContens;
+	char msg[80];
 } __attribute__((packed));
 
 #pragma pack(pop)
