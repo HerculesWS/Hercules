@@ -205,7 +205,7 @@ alberta,189,151,5	script	Fisk	4W_SAILOR,{
 				mes "Hey now, don't try to cheat me! I said 250 zeny!";
 				close;
 			}
-			set Zeny,Zeny - 250;
+			Zeny -= 250;
 			warp "alb2trea",43,53;
 			end;
 		case 2:
@@ -214,7 +214,7 @@ alberta,189,151,5	script	Fisk	4W_SAILOR,{
 				mes "Ain't no way yer getting there without the 500 zeny first!";
 				close;
 			}
-			set Zeny,Zeny - 500;
+			Zeny -= 500;
 			if(checkre(0))
 				warp "izlude",195,212;
 			else
@@ -262,7 +262,7 @@ alberta,195,151,2	script	Paul	4_M_04,{
 				mes "It seems you don't have the money, my friend. But please come back when you're able to pay.";
 				close;
 			} else {
-				set Zeny,Zeny - 200;
+				Zeny -= 200;
 				warp "alb2trea",62,69;
 				close;
 			}

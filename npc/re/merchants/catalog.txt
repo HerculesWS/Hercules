@@ -74,7 +74,7 @@ moc_para01,22,16,5	script	Catalog Magician#catal01	4_M_BIBI,{
 			close;
 		}
 		mes "Ok, here you go.";
-		set Zeny, Zeny - .@sell;
+		Zeny -= .@sell;
 		getitem 12580,.@input; //Vending_Search_Scroll
 		close;
 	case 2:

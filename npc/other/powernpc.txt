@@ -137,7 +137,7 @@ gon_test,50,14,4	script	Administrator#gnp	8_M_TWSOLDIER,{
 		mes "I'm sorry but you don't have enough zeny.";
 		close;
 	}
-	set Zeny,Zeny - 500;
+	Zeny -= 500;
 	set in_battle,1;
 	warp "gon_test",42,86;
 	set $@in_battle,1;

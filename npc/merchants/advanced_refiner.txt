@@ -147,7 +147,7 @@ S_RefineValidate:
 		}
 		if (countitem(getarg(1)) > 0 && Zeny > getarg(2)) {
 			delitem getarg(1),1;
-			set Zeny, Zeny - getarg(2);
+			Zeny -= getarg(2);
 			return;
 		}
 		mes "[Suhnbi]";

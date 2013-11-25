@@ -292,7 +292,7 @@ function	script	Func_Socket	{
 					delitem getarg(5),getarg(6);
 					if (getarg(7,0) != 0 && getarg(8,0) != 0)
 						delitem getarg(7),getarg(8);
-					set Zeny, Zeny - getarg(4)*1000;
+					Zeny -= getarg(4)*1000;
 					getitem getarg(1),1;
 					next;
 					mes "[Seiyablem]";
@@ -311,7 +311,7 @@ function	script	Func_Socket	{
 					delitem getarg(5),getarg(6);
 					if (getarg(7,0) != 0 && getarg(8,0) != 0)
 						delitem getarg(7),getarg(8);
-					set Zeny, Zeny - getarg(4)*1000;
+					Zeny -= getarg(4)*1000;
 					next;
 					mes "[Seiyablem]";
 					mes "I wish you good luck next time!";

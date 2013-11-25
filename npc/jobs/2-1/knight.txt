@@ -2062,7 +2062,7 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 						mes "You attained a reliable item.";
 						mes "It'll be a good companion on your adventures.";
 						delitem 999,1; //Steel
-						set Zeny, Zeny - 74000;
+						Zeny -= 74000;
 						getitem 1163,1; //Claymore
 						close;
 					}

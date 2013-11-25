@@ -253,7 +253,7 @@ payon,210,110,1	script	Drunkard#payon	2_M_PHARMACIST,{
 	next;
 	switch(select("Alright, but only one drink.:No thanks, pal.:Oh my God! Hell no!")) {
 	case 1:
-		set Zeny, (Zeny < 100)?0:(Zeny - 100);
+		Zeny = (Zeny < 100) ? 0 : (Zeny - 100);
 		mes "[Drunkard]";
 		mes "Thanks...!";
 		mes "..Brother!";

@@ -94,7 +94,7 @@
 				mes "Summoned Mercenaries will";
 				mes "offer their support to you for";
 				mes "30 minutes. Take care now.";
-				set Zeny, Zeny - (.@ZenyCost * 1000);
+				Zeny -= (.@ZenyCost * 1000);
 				getitem .@item[.@type] - 10 + .@Grade, 1;
 			}
 			close;
@@ -280,7 +280,7 @@ pay_arche,99,167,4	duplicate(Mercenary Manager#main)	Mercenary Manager#Bow	4_M_J
 	mes "Thank you, and please come";
 	mes "again when you need more";
 	mes "potions for your Mercenaries.";
-	set Zeny, Zeny - .@total_po;
+	Zeny -= .@total_po;
 	getitem .@item[.@m], .@input;
 	close;
 }

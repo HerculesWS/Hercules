@@ -531,7 +531,7 @@ airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 			close;
 		}
 		else {
-			set Zeny, Zeny - .@pay;
+			Zeny -= .@pay;
 			getitem 512,.@input; //Apple
 			mes "[Fruitz]";
 			mes "Thanks for stopping by";
@@ -895,7 +895,7 @@ airplane_01,50,66,5	script	Apple Merchant#air01	4_M_04,{
 			close;
 		}
 		else {
-			set Zeny, Zeny - .@pay;
+			Zeny -= .@pay;
 			getitem 512,.@input; //Apple
 			mes "[Meltz]";
 			mes "Thanks for stopping by";

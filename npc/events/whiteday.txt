@@ -72,7 +72,7 @@ L_INPUT:
 	if (@maplenum == 0) goto M_End;
 	set @maplePriceT,@maplePrice*@maplenum;
 	if (Zeny < @maplePriceT) goto L_ERROR2;
-	set Zeny,Zeny- @maplePriceT;
+	Zeny -= @maplePriceT;
 	getitem @mapleItemID,@maplenum;
 	mes "[Sugar]";
 	mes "Thank you!!!";

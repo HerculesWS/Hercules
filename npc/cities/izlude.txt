@@ -48,7 +48,7 @@
 			mes "Only 150 Zeny to ride!";
 			close;
 		}
-		set Zeny, Zeny - 150;
+		Zeny -= 150;
 		warp "izlu2dun",107,50;
 		end;
 	case 2:
@@ -58,7 +58,7 @@
 			mes "Only 500 Zeny to ride!";
 			close;
 		}
-		set Zeny, Zeny - 500;
+		Zeny -= 500;
 		warp "alberta",188,169;
 		end;
 	case 3:
