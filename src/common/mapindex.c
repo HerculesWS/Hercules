@@ -179,6 +179,7 @@ int mapindex_init(void) {
 }
 
 int mapindex_removemap(int index){
+	strdb_remove(mapindex_db, indexes[index].name);
 	indexes[index].name[0] = '\0';
 	return 0;
 }
