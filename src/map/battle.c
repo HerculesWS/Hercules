@@ -5175,7 +5175,19 @@ int64 battle_calc_return_damage(struct block_list* bl, struct block_list *src, i
 		}
 		if( sc && sc->count ) {
 			if( sc->data[SC_REFLECTSHIELD] && skill_id != WS_CARTTERMINATION ){
-				NORMALIZE_RDAMAGE(damage * sc->data[SC_REFLECTSHIELD]->val2 / 100);
+				int64 t = damage * sc->data[SC_REFLECTSHIELD]->val2 / 100;
+				
+				if (flag & BF_SKILL) {
+					if (flag&BF_WEAPON)
+						t = t * map->list[bl->m].weapon_damage_rate / 100;
+					if (flag&BF_MISC)
+						t = t * map->list[bl->m].misc_damage_rate / 100;
+				} else {
+					if (flag & BF_SHORT)
+						t = t * map->list[bl->m].short_damage_rate / 100;
+				}
+				
+				NORMALIZE_RDAMAGE(t);
 				*delay = clif->skill_damage(src, src, timer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, CR_REFLECTSHIELD, 1, 4);
 			}
 			if( sc->data[SC_LG_REFLECTDAMAGE] && rand()%100 < (30 + 10*sc->data[SC_LG_REFLECTDAMAGE]->val1) ) {
