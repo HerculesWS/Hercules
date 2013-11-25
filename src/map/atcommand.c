@@ -4275,8 +4275,6 @@ char* txt_time(unsigned int duration)
  * Calculation management of GM modification (@day/@night GM commands) is done
  *------------------------------------------*/
 ACMD(servertime) {
-	const struct TimerData * timer_data;
-	const struct TimerData * timer_data2;
 	time_t time_server;  // variable for number of seconds (used with time() function)
 	struct tm *datetime; // variable for time in structure ->tm_mday, ->tm_sec, ...
 	char temp[CHAT_SIZE_MAX];
@@ -4289,33 +4287,11 @@ ACMD(servertime) {
 	strftime(temp, sizeof(temp)-1, msg_txt(230), datetime); // Server time (normal time): %A, %B %d %Y %X.
 	clif->message(fd, temp);
 	
-	if (battle_config.night_duration == 0 && battle_config.day_duration == 0) {
-		if (map->night_flag == 0)
-			clif->message(fd, msg_txt(231)); // Game time: The game is in permanent daylight.
-		else
-			clif->message(fd, msg_txt(232)); // Game time: The game is in permanent night.
-	} else if (battle_config.night_duration == 0) {
-		if (map->night_flag == 1) { // we start with night
-			timer_data = timer->get(pc->day_timer_tid);
-			sprintf(temp, msg_txt(233), // Game time: The game is actually in night for %s.
-			        txt_time((unsigned int)(DIFF_TICK(timer_data->tick,timer->gettick())/1000)));
-			clif->message(fd, temp);
-			clif->message(fd, msg_txt(234)); // Game time: After, the game will be in permanent daylight.
-		} else
-			clif->message(fd, msg_txt(231)); // Game time: The game is in permanent daylight.
-	} else if (battle_config.day_duration == 0) {
-		if (map->night_flag == 0) { // we start with day
-			timer_data = timer->get(pc->night_timer_tid);
-			sprintf(temp, msg_txt(235), // Game time: The game is actualy in daylight for %s.
-			        txt_time((unsigned int)(DIFF_TICK(timer_data->tick,timer->gettick())/1000)));
-			clif->message(fd, temp);
-			clif->message(fd, msg_txt(236)); // Game time: After, the game will be in permanent night.
-		} else
-			clif->message(fd, msg_txt(232)); // Game time: The game is in permanent night.
-	} else {
+	if (pc->day_timer_tid != INVALID_TIMER && pc->night_timer_tid != INVALID_TIMER) {
+		const struct TimerData * timer_data = timer->get(pc->night_timer_tid);
+		const struct TimerData * timer_data2 = timer->get(pc->day_timer_tid);
+		
 		if (map->night_flag == 0) {
-			timer_data = timer->get(pc->night_timer_tid);
-			timer_data2 = timer->get(pc->day_timer_tid);
 			sprintf(temp, msg_txt(235), // Game time: The game is actualy in daylight for %s.
 			        txt_time((unsigned int)(DIFF_TICK(timer_data->tick,timer->gettick())/1000)));
 			clif->message(fd, temp);
@@ -4327,21 +4303,24 @@ ACMD(servertime) {
 				        txt_time((unsigned int)(DIFF_TICK(timer_data2->tick,timer_data->tick)/1000)));
 			clif->message(fd, temp);
 		} else {
-			timer_data = timer->get(pc->day_timer_tid);
-			timer_data2 = timer->get(pc->night_timer_tid);
 			sprintf(temp, msg_txt(233), // Game time: The game is actualy in night for %s.
-			        txt_time((unsigned int)(DIFF_TICK(timer_data->tick,timer->gettick()) / 1000)));
+			        txt_time((unsigned int)(DIFF_TICK(timer_data2->tick,timer->gettick()) / 1000)));
 			clif->message(fd, temp);
-			if (DIFF_TICK(timer_data->tick,timer_data2->tick) > 0)
+			if (DIFF_TICK(timer_data2->tick,timer_data->tick) > 0)
 				sprintf(temp, msg_txt(239), // Game time: After, the game will be in daylight for %s.
-				        txt_time((unsigned int)((timer_data->interval - DIFF_TICK(timer_data->tick, timer_data2->tick)) / 1000)));
+				        txt_time((unsigned int)((timer_data2->interval - DIFF_TICK(timer_data2->tick, timer_data->tick)) / 1000)));
 			else
 				sprintf(temp, msg_txt(239), // Game time: After, the game will be in daylight for %s.
-				        txt_time((unsigned int)(DIFF_TICK(timer_data2->tick, timer_data->tick) / 1000)));
+				        txt_time((unsigned int)(DIFF_TICK(timer_data->tick, timer_data2->tick) / 1000)));
 			clif->message(fd, temp);
 		}
-		sprintf(temp, msg_txt(238), txt_time(timer_data->interval / 1000)); // Game time: A day cycle has a normal duration of %s.
+		sprintf(temp, msg_txt(238), txt_time(timer_data2->interval / 1000)); // Game time: A day cycle has a normal duration of %s.
 		clif->message(fd, temp);
+	} else {
+		if (map->night_flag == 0)
+			clif->message(fd, msg_txt(231)); // Game time: The game is in permanent daylight.
+		else
+			clif->message(fd, msg_txt(232)); // Game time: The game is in permanent night.
 	}
 	
 	return true;
