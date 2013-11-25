@@ -42,8 +42,8 @@ switch(select("I'd like to make a deposit.:I'd like to make a withdrawl.:What's 
 			close;
 		}
 		else {
-		set Zeny,Zeny - @deposit;
-		set Zeny,Zeny - @cost;
+		Zeny -= @deposit;
+		Zeny -= @cost;
 		set #bankstorage,#bankstorage + @deposit;
 		mes "[Banker]";
 		mes "Thank you very much... Your zeny is in good hands.";
@@ -80,8 +80,8 @@ switch(select("I'd like to make a deposit.:I'd like to make a withdrawl.:What's 
 				set #bankstorage,#bankstorage - @cost;
 				set @cost,0;
 				next;
-				set Zeny,Zeny - @cost;
-				set Zeny,Zeny + @withdrawl;
+				Zeny -= @cost;
+				Zeny += @withdrawl;
 				set #bankstorage,#bankstorage - @withdrawl;
 				mes "[Banker]";
 				mes "There's your Zeny. Have a good day.";
@@ -93,8 +93,8 @@ switch(select("I'd like to make a deposit.:I'd like to make a withdrawl.:What's 
 			}
 		}
 		else {
-			set Zeny,Zeny - @cost;
-			set Zeny,Zeny + @withdrawl;
+			Zeny -= @cost;
+			Zeny += @withdrawl;
 			set #bankstorage,#bankstorage - @withdrawl;
 			mes "[Banker]";
 			mes "There's your Zeny. Have a good day.";

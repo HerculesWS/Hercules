@@ -243,7 +243,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 				mes "[Daora]";
 				if (Zeny > 799) {
 					mes "Here you are, take it.";
-					set Zeny, Zeny - 800;
+					Zeny -= 800;
 					getitem 12112,1; //Tropical_Sograt
 					close;
 				}
@@ -253,7 +253,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 				mes "[Daora]";
 				if (Zeny > 799) {
 					mes "Here you are, take it.";
-					set Zeny, Zeny - 800;
+					Zeny -= 800;
 					getitem 12113,1; //Vermilion_The_Beach
 					close;
 				}
@@ -697,7 +697,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					if (Zeny > 499) {
 						mes "Here you are. Milk.";
 						mes "Then take a rest.";
-						set Zeny, Zeny - 500;
+						Zeny -= 500;
 						getitem 519,1; //Milk
 						close;
 					}
@@ -737,7 +737,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			mes "[Daora]";
 			if (Zeny > 799) {
 				mes "Here you are, take it.";
-				set Zeny, Zeny - 800;
+				Zeny -= 800;
 				getitem 12112,1; //Tropical_Sograt
 				close;
 			}
@@ -747,7 +747,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			mes "[Daora]";
 			if (Zeny > 799) {
 				mes "Here you are, take it.";
-				set Zeny, Zeny - 800;
+				Zeny -= 800;
 				getitem 12113,1; //Vermilion_The_Beach
 				close;
 			}
@@ -764,7 +764,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 				if (Zeny > 499) {
 					mes "I feel sorry to take 500 zeny per bottle, but I have to.";
 					mes "It's very hard to get milk in Veins.";
-					set Zeny, Zeny - 500;
+					Zeny -= 500;
 					getitem 519,1; //Milk
 					close;
 				}
@@ -799,7 +799,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			mes "[Daora]";
 			if (Zeny > 999) {
 				mes "Here you are, take it.";
-				set Zeny, Zeny - 1000;
+				Zeny -= 1000;
 				getitem 12112,1; //Tropical_Sograt
 				close;
 			}
@@ -809,7 +809,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			mes "[Daora]";
 			if (Zeny > 999) {
 				mes "Here you are, take it.";
-				set Zeny, Zeny - 1000;
+				Zeny -= 1000;
 				getitem 12113,1; //Vermilion_The_Beach
 				close;
 			}
@@ -1289,7 +1289,7 @@ ve_in,228,108,3	script	Waitress#3rdgc04	1_F_PUBGIRL,{
 							mes "[Waitress]";
 							mes "Oh by the way, my name is Madelle.";
 							mes "I hope you remember my name.";
-							set Zeny, Zeny - 5000;
+							Zeny -= 5000;
 							setquest 7112;
 							next;
 							mes "- Madelle's information is attached to a quest board. What information have I collected? -";

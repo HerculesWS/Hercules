@@ -198,7 +198,7 @@ geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe6	4_M_02
 			switch(select("Move:Cancel")) {
 			case 1:
 				if ((Zeny > 499) && (BaseLevel > 30)) {
-					set Zeny, Zeny - 500;
+					Zeny -= 500;
 					callsub L_Warp,"pvp_y_room";
 				}
 				else {
@@ -237,7 +237,7 @@ geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe6	4_M_02
 			}
 			mes "[Gate Keeper]";
 			mes "Yes, thank you for participating. Have fun!";
-			if (Zeny >= 500) set Zeny, Zeny - 500;
+			if (Zeny >= 500) Zeny -= 500;
 			callsub L_Warp,"pvp_room";
 			break;
 		case 4:

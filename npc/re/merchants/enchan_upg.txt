@@ -250,7 +250,7 @@ prt_in,28,73,3	script	Devil Enchant Master#prq	1_M_SMITH,{
 		}
 		specialeffect EF_REPAIRWEAPON;
 		mes "I initialized the enchant effects.";
-		set Zeny, Zeny - 100000;
+		Zeny -= 100000;
 		delequip .@part;
 
 //		GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] 0

@@ -2097,7 +2097,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		}
 		specialeffect2 EF_REPAIRWEAPON;
 		progressbar "0xFFFF00",3;
-		set Zeny, Zeny - 100000;
+		Zeny -= 100000;
 
 		// Socket 3
 		set .@i, rand(4300);

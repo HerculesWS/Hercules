@@ -710,7 +710,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 				mes "There's no way you carry all of this! Why don't you put some of your stuff in Kafra Storage before coming back?";
 				close;
 			} else {
-				set Zeny, Zeny - 420;
+				Zeny -= 420;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -758,7 +758,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 				close2;
 				end;
 			} else {
-				set Zeny, Zeny - 410;
+				Zeny -= 410;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -805,7 +805,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 				mes "There's no way you carry all of this! Why don't you put some of your stuff in Kafra Storage before coming back?";
 				close;
 			} else {
-				set Zeny, Zeny - 390;
+				Zeny -= 390;
 				set tu_merchant, 9;
 				getitem 501,10; //Red_Potion
 				close;
@@ -862,7 +862,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 				mes "You better put some of your stuff in Kafra Storage, you can't carry much else!";
 				close;
 			} else { 
-				set Zeny, Zeny - 340;
+				Zeny -= 340;
 				set tu_merchant, 10;
 				getitem 569,10; //Novice_Potion
 				close;
@@ -901,7 +901,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 				mes "You better put some of your stuff in Kafra Storage, you can't carry much else!";
 				close;
 			} else { 
-				set Zeny, Zeny - 390;
+				Zeny -= 390;
 				set tu_merchant, 9;
 				getitem 501,10; //Red_Potion
 				close;
@@ -940,7 +940,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 				mes "You better put some of your stuff in Kafra Storage, you can't carry much else!";
 				close;
 			} else { 
-				set Zeny, Zeny - 400;
+				Zeny -= 400;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -1000,7 +1000,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 				mes "You can't possibly carry any more items. Why don't you put your things in Kafra Storage first?";
 				close;
 			} else {
-				set Zeny, Zeny - 390;
+				Zeny -= 390;
 				set tu_merchant, 9;
 				getitem 501,10; //Red_Potion
 				close;
@@ -1045,7 +1045,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 				mes "You can't possibly carry any more items. Why don't you put your things in Kafra Storage first?";
 				close;
 			} else {
-				set Zeny, Zeny - 420;
+				Zeny -= 420;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -1090,7 +1090,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 				mes "You can't possibly carry any more items. Why don't you put your things in Kafra Storage first?";
 				close;
 			} else {
-				set Zeny, Zeny - 340;
+				Zeny -= 340;
 				set tu_merchant, 10;
 				getitem 569,10; //Novice_Potion
 				close;
@@ -1145,7 +1145,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 				mes "You ought to free up some of your inventory space when you get the chance.";
 				close;
 			} else {
-				set Zeny, Zeny - 410;
+				Zeny -= 410;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -1191,7 +1191,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 				mes "You ought to free up some of your inventory space when you get the chance.";
 				close;
 			} else {
-				set Zeny, Zeny - 400;
+				Zeny -= 400;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -1238,7 +1238,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 				mes "You ought to free up some of your inventory space when you get the chance.";
 				close;
 			} else {
-				set Zeny, Zeny - 410;
+				Zeny -= 410;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -1293,7 +1293,7 @@ prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 				mes "Ooh, but it doesn't look like you've got enough inventory space to carry any more items.";
 				close;
 			} else {
-				set Zeny, Zeny - 420;
+				Zeny -= 420;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -1328,7 +1328,7 @@ prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 				mes "Ooh, but it doesn't look like you've got enough inventory space to carry any more items.";
 				close;
 			} else {
-				set Zeny, Zeny - 340;
+				Zeny -= 340;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;
@@ -1363,7 +1363,7 @@ prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 				mes "Ooh, but it doesn't look like you've got enough inventory space to carry any more items.";
 				close;
 			} else {
-				set Zeny, Zeny - 400;
+				Zeny -= 400;
 				set tu_merchant, 10;
 				getitem 501,10; //Red_Potion
 				close;

@@ -48,7 +48,7 @@ alberta,26,243,4	script	Stephen	1_M_MERCHANT,{
 	if (Zeny < .@i*5000) {
 		mes "I'm sorry, but it seems you can't afford to buy these off me.";
 		close; }
-	set Zeny, Zeny - .@i*5000;
+	Zeny -= .@i*5000;
 	getitem 558,.@i;
 	mes "There you go!";
 	mes "You can give that to someone as a gift, or enjoy it yourself!";

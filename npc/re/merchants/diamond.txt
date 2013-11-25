@@ -140,7 +140,7 @@
 					mes "501,000,000 zeny.";
 					mes "Amount has been confirmed.";
 					emotion e_loud;
-					set Zeny, Zeny - 501000000;
+					Zeny -= 501000000;
 					getitem 6024, 1;
 					next;
 
@@ -220,7 +220,7 @@
 				mes "come back anytime with 500 million zeny.";
 				emotion e_thx;
 				delitem 6024, 1;
-				set Zeny, Zeny + 499000000;
+				Zeny += 499000000;
 				close;
 			}
 			else {

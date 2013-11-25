@@ -572,7 +572,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 				delitem 7301,1887;
 				delitem 5120,1;
 				delitem 611,10;
-				set Zeny, Zeny - 1887;
+				Zeny -= 1887;
 				set DTHATQ,2;
 				getitem 5108,1;
 				next;
@@ -730,7 +730,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 				delitem 7301,1887;
 				delitem 5120,1;
 				delitem 611,10;
-				set Zeny, Zeny - 1887;
+				Zeny -= 1887;
 				set DTHATQ,2;
 				getitem 5108,1;
 				next;
@@ -917,7 +917,7 @@ einbech,70,222,5	script	Metelle#LhzHat	4_F_02,{
 				delitem 983,1;
 				delitem 7267,999;
 				delitem 749,1;
-				set Zeny,Zeny - 50000;
+				Zeny -= 50000;
 				getitem 5115,1;
 				next;
 				mes "...";
@@ -1034,7 +1034,7 @@ lhz_in02,91,38,5	script	Margaret Mary#LhzHat	4_F_01,{
 						delitem 731,10;
 						delitem 748,3;
 						delitem 982,1;
-						set Zeny,Zeny - 50000;
+						Zeny -= 50000;
 						getitem 5117,1;
 						close;
 
@@ -1282,7 +1282,7 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	4_F_02,{
 				delitem 10007,1;
 				delitem 975,1;
 				delitem 5032,1;
-				set Zeny,Zeny - 50000;
+				Zeny -= 50000;
 				getitem 5109,1;
 				set LHZBTQ,3;
 				next;
@@ -1355,7 +1355,7 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	4_F_02,{
 				delitem 10007,1;
 				delitem 975,1;
 				delitem 5032,1;
-				set Zeny,Zeny - 50000;
+				Zeny -= 50000;
 				getitem 5109,1;
 				next;
 				mes "[Achiha]";
