@@ -644,6 +644,8 @@ void hplugins_share_defaults(void) {
 	/* libconfig (temp) */
 	HPM->share(config_setting_lookup_string,"config_setting_lookup_string");
 	HPM->share(config_setting_lookup_int,"config_setting_lookup_int");
+	HPM->share(config_setting_get_member,"config_setting_get_member");
+	HPM->share(config_setting_length,"config_setting_length");
 }
 
 void hpm_init(void) {

@@ -36,6 +36,8 @@ bool torun = false;
 int (*itemdb_readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
 int (*h_config_setting_lookup_string) (const config_setting_t *setting, const char *name, const char **value);
 int (*h_config_setting_lookup_int) (const config_setting_t *setting, const char *name, int *value);
+config_setting_t *(*h_config_setting_get_member) (const config_setting_t *setting, const char *name);
+int (*h_config_setting_length) (const config_setting_t *setting);
 
 void hstr(const char *str) {
 	if( strlen(str) > tosql.buf[3].len ) {
@@ -54,7 +56,8 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 		char *str;
 		int i32;
 		unsigned int ui32, job = 0, upper = 0;
-		
+		config_setting_t *t = NULL;
+
 		SQL->EscapeString(NULL, e_name, it->name);
 		SQL->EscapeString(NULL, e_jname, it->jname);
 		if( it->script )  { h_config_setting_lookup_string(entry, "Script", &script); hstr(script); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[0].len ) { tosql.buf[0].len = tosql.buf[0].len + strlen(str) + 1000; RECREATE(tosql.buf[0].p,char,tosql.buf[0].len); } SQL->EscapeString(NULL, tosql.buf[0].p, str); }
@@ -75,8 +78,13 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 
 		upper = ui32;
 		
-		fprintf(tosql.fp,"REPLACE INTO `%s` VALUES ('%u','%s','%s','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%s','%s','%s');\n",
-				tosql.db_name,it->nameid,e_name,e_jname,it->flag.delay_consume?IT_DELAYCONSUME:it->type,it->value_buy,it->value_sell,it->weight,it->atk,it->matk,it->def,it->range,it->slot,job,upper,it->sex,it->equip,it->wlv,it->elv,it->elvmax,it->flag.no_refine?0:1,it->look,it->flag.bindonequip?1:0,it->script?tosql.buf[0].p:"",it->equip_script?tosql.buf[1].p:"",it->unequip_script?tosql.buf[2].p:"");
+		/* check if we have the equip_level_max, if so we send it -- otherwise we send NULL */
+		if( (t = h_config_setting_get_member(entry, "EquipLv")) && config_setting_is_aggregate(t) && h_config_setting_length(t) >= 2 )
+			fprintf(tosql.fp,"REPLACE INTO `%s` VALUES ('%u','%s','%s','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%s','%s','%s');\n",
+					tosql.db_name,it->nameid,e_name,e_jname,it->flag.delay_consume?IT_DELAYCONSUME:it->type,it->value_buy,it->value_sell,it->weight,it->atk,it->matk,it->def,it->range,it->slot,job,upper,it->sex,it->equip,it->wlv,it->elv,it->elvmax,it->flag.no_refine?0:1,it->look,it->flag.bindonequip?1:0,it->script?tosql.buf[0].p:"",it->equip_script?tosql.buf[1].p:"",it->unequip_script?tosql.buf[2].p:"");
+		else
+			fprintf(tosql.fp,"REPLACE INTO `%s` VALUES ('%u','%s','%s','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u',NULL,'%u','%u','%u','%s','%s','%s');\n",
+					tosql.db_name,it->nameid,e_name,e_jname,it->flag.delay_consume?IT_DELAYCONSUME:it->type,it->value_buy,it->value_sell,it->weight,it->atk,it->matk,it->def,it->range,it->slot,job,upper,it->sex,it->equip,it->wlv,it->elv,it->flag.no_refine?0:1,it->look,it->flag.bindonequip?1:0,it->script?tosql.buf[0].p:"",it->equip_script?tosql.buf[1].p:"",it->unequip_script?tosql.buf[2].p:"");
 	}
 	
 	return it?it->nameid:0;
@@ -186,6 +194,8 @@ void db2sql_arg(char *param) {
 HPExport void server_preinit (void) {
 	h_config_setting_lookup_string = GET_SYMBOL("config_setting_lookup_string");
 	h_config_setting_lookup_int = GET_SYMBOL("config_setting_lookup_int");
+	h_config_setting_get_member = GET_SYMBOL("config_setting_get_member");
+	h_config_setting_length = GET_SYMBOL("config_setting_length");
 	
 	SQL = GET_SYMBOL("SQL");
 	itemdb = GET_SYMBOL("itemdb");
