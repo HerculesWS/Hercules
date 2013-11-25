@@ -495,8 +495,6 @@ struct {
 	struct HPMHookPoint *HP_clif_refreshlook_post;
 	struct HPMHookPoint *HP_clif_class_change_pre;
 	struct HPMHookPoint *HP_clif_class_change_post;
-	struct HPMHookPoint *HP_clif_skill_setunit_pre;
-	struct HPMHookPoint *HP_clif_skill_setunit_post;
 	struct HPMHookPoint *HP_clif_skill_delunit_pre;
 	struct HPMHookPoint *HP_clif_skill_delunit_post;
 	struct HPMHookPoint *HP_clif_skillunit_update_pre;
@@ -523,6 +521,8 @@ struct {
 	struct HPMHookPoint *HP_clif_clearchar_skillunit_post;
 	struct HPMHookPoint *HP_clif_getareachar_pre;
 	struct HPMHookPoint *HP_clif_getareachar_post;
+	struct HPMHookPoint *HP_clif_graffiti_entry_pre;
+	struct HPMHookPoint *HP_clif_graffiti_entry_post;
 	struct HPMHookPoint *HP_clif_spawn_pre;
 	struct HPMHookPoint *HP_clif_spawn_post;
 	struct HPMHookPoint *HP_clif_changemap_pre;
@@ -5456,8 +5456,6 @@ struct {
 	int HP_clif_refreshlook_post;
 	int HP_clif_class_change_pre;
 	int HP_clif_class_change_post;
-	int HP_clif_skill_setunit_pre;
-	int HP_clif_skill_setunit_post;
 	int HP_clif_skill_delunit_pre;
 	int HP_clif_skill_delunit_post;
 	int HP_clif_skillunit_update_pre;
@@ -5484,6 +5482,8 @@ struct {
 	int HP_clif_clearchar_skillunit_post;
 	int HP_clif_getareachar_pre;
 	int HP_clif_getareachar_post;
+	int HP_clif_graffiti_entry_pre;
+	int HP_clif_graffiti_entry_post;
 	int HP_clif_spawn_pre;
 	int HP_clif_spawn_post;
 	int HP_clif_changemap_pre;
