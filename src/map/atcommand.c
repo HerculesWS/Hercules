@@ -4237,10 +4237,9 @@ ACMD(unloadnpc)
 char* txt_time(unsigned int duration)
 {
 	int days, hours, minutes, seconds;
-	char temp[CHAT_SIZE_MAX];
 	static char temp1[CHAT_SIZE_MAX];
+	int tlen = 0;
 	
-	memset(temp, '\0', sizeof(temp));
 	memset(temp1, '\0', sizeof(temp1));
 	
 	days = duration / (60 * 60 * 24);
@@ -4251,22 +4250,22 @@ char* txt_time(unsigned int duration)
 	seconds = duration - (60 * minutes);
 	
 	if (days == 1)
-		sprintf(temp, msg_txt(219), days); // %d day
+		tlen += sprintf(tlen + temp1, msg_txt(219), days); // %d day
 	else if (days > 1)
-		sprintf(temp, msg_txt(220), days); // %d days
+		tlen += sprintf(tlen + temp1, msg_txt(220), days); // %d days
 	if (hours == 1)
-		sprintf(temp1, msg_txt(221), temp, hours); // %s %d hour
+		tlen += sprintf(tlen + temp1, msg_txt(221), hours); // %d hour
 	else if (hours > 1)
-		sprintf(temp1, msg_txt(222), temp, hours); // %s %d hours
+		tlen += sprintf(tlen + temp1, msg_txt(222), hours); // %d hours
 	if (minutes < 2)
-		sprintf(temp, msg_txt(223), temp1, minutes); // %s %d minute
+		tlen += sprintf(tlen + temp1, msg_txt(223), minutes); // %d minute
 	else
-		sprintf(temp, msg_txt(224), temp1, minutes); // %s %d minutes
+		tlen += sprintf(tlen + temp1, msg_txt(224), minutes); // %d minutes
 	if (seconds == 1)
-		sprintf(temp1, msg_txt(225), temp, seconds); // %s and %d second
+		tlen += sprintf(tlen + temp1, msg_txt(225), seconds); // and %d second
 	else if (seconds > 1)
-		sprintf(temp1, msg_txt(226), temp, seconds); // %s and %d seconds
-	
+		tlen += sprintf(tlen + temp1, msg_txt(226), seconds); // and %d seconds
+		
 	return temp1;
 }
 
