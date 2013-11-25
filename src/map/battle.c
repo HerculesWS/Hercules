@@ -4994,45 +4994,44 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			break;
 	}
 
-	if( wd.damage + wd.damage2 )
-	{	//There is a total damage value
-		int64 damage = wd.damage + wd.damage2, rdamage = 0;
-		int rdelay = 0;
+	if( wd.damage + wd.damage2 ) { //There is a total damage value
+		if( src != target ) { // Don't reflect your own damage (Grand Cross)
+			int64 rdamage = 0;
 
-		if( src != target &&
-			(!skill_id || skill_id ||
-			( src->type == BL_SKILL && ( skill_id == SG_SUN_WARM || skill_id == SG_MOON_WARM || skill_id == SG_STAR_WARM ) )) ){
+			rdamage = battle->calc_return_damage(target, src, wd.damage + wd.damage2, wd.flag, skill_id);
+
+			if( tsc && tsc->data[SC_DEATHBOUND] ) {
+				wd.damage = wd.damage + wd.damage2;
+				wd.damage2 = 0;
+				status_change_end(target,SC_DEATHBOUND,INVALID_TIMER);
+			}
 			
-				rdamage = battle->calc_return_damage(target, src, &damage, wd.flag, 0, &rdelay);
+			if( rdamage > 0 ) {
+				
+				if( tsc && tsc->data[SC_LG_REFLECTDAMAGE] ) {
+					bool change = false;
+					if( sd && !sd->state.autocast )
+						change = true;
+					if( change )
+						sd->state.autocast = 1;
+					map->foreachinshootrange(battle->damage_area,target,skill->get_splash(LG_REFLECTDAMAGE,1),BL_CHAR,timer->gettick(),target,wd.amotion,sstatus->dmotion,rdamage,tstatus->race);
+					if( change )
+						sd->state.autocast = 0;
+				} else {
+					int rdelay;
+					
+					rdelay = clif->damage(src, src, timer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
 
-				if( tsc && tsc->count ) {
-					if( tsc && tsc->data[SC_DEATHBOUND] ){
-						wd.damage = damage;
-						wd.damage2 = 0;
-						status_change_end(target,SC_DEATHBOUND,INVALID_TIMER);
-					}
+					//Use Reflect Shield to signal this kind of skill trigger. [Skotlex]
+					if( tsd )
+						battle->drain(tsd, src, rdamage, rdamage, sstatus->race, is_boss(src));
+					battle->delay_damage(timer->gettick(), wd.amotion,target,src,0,CR_REFLECTSHIELD,0,rdamage,ATK_DEF,rdelay,true);
+					skill->additional_effect(target, src, CR_REFLECTSHIELD, 1, BF_WEAPON|BF_SHORT|BF_NORMAL,ATK_DEF,timer->gettick());
 				}
-				if( rdamage > 0 ) {
-					if( tsc && tsc->data[SC_LG_REFLECTDAMAGE] ) {
-						if( src != target ) {// Don't reflect your own damage (Grand Cross)
-							bool change = false;
-							if( sd && !sd->state.autocast )
-								change = true;
-							if( change )
-								sd->state.autocast = 1;
-							map->foreachinshootrange(battle->damage_area,target,skill->get_splash(LG_REFLECTDAMAGE,1),BL_CHAR,timer->gettick(),target,wd.amotion,sstatus->dmotion,rdamage,tstatus->race);
-							if( change )
-								sd->state.autocast = 0;
-						}
-					} else {
-						//Use Reflect Shield to signal this kind of skill trigger. [Skotlex]
-						if( tsd && src != target )
-							battle->drain(tsd, src, rdamage, rdamage, sstatus->race, is_boss(src));
-						battle->delay_damage(timer->gettick(), wd.amotion,target,src,0,CR_REFLECTSHIELD,0,rdamage,ATK_DEF,rdelay,true);
-						skill->additional_effect(target, src, CR_REFLECTSHIELD, 1, BF_WEAPON|BF_SHORT|BF_NORMAL,ATK_DEF,timer->gettick());
-					}
-				}
+				
+			}
 		}
+		
 		if(!wd.damage2) {
 			wd.damage = battle->calc_damage(src,target,&wd,wd.damage,skill_id,skill_lv);
 			if( map_flag_gvg2(target->m) )
@@ -5137,97 +5136,100 @@ struct Damage battle_calc_attack(int attack_type,struct block_list *bl,struct bl
 }
 
 //Calculates BF_WEAPON returned damage.
-int64 battle_calc_return_damage(struct block_list* bl, struct block_list *src, int64 *dmg, int flag, uint16 skill_id, int *delay){
-	int64 rdamage = 0, damage = *dmg, trdamage = 0;
+int64 battle_calc_return_damage(struct block_list *target, struct block_list *src, int64 damage, int flag, uint16 skill_id){
+	int64 rdamage = 0, trdamage = 0;
 	struct map_session_data* sd;
 	struct status_change* sc;
 #ifdef RENEWAL
 	int max_reflect_damage;
 
-	max_reflect_damage = max(status_get_max_hp(bl), status_get_max_hp(bl) * status->get_lv(bl) / 100);
+	max_reflect_damage = max(status_get_max_hp(target), status_get_max_hp(target) * status->get_lv(target) / 100);
 #endif
-	sd = BL_CAST(BL_PC, bl);
-	sc = status->get_sc(bl);
+	sd = BL_CAST(BL_PC, target);
+	sc = status->get_sc(target);
 
 #ifdef RENEWAL
-#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = max(1, min(max_reflect_damage, (d))) )
+	#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = max(1, min(max_reflect_damage, (d))) )
 #else
-#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = max(1, (d)) )
+	#define NORMALIZE_RDAMAGE(d) ( trdamage += rdamage = max(1, (d)) )
 #endif
-
-	 if( sc && sc->data[SC_CRESCENTELBOW] && !is_boss(src) && rnd()%100 < sc->data[SC_CRESCENTELBOW]->val2 ){
-		//ATK [{(Target HP / 100) x Skill Level} x Caster Base Level / 125] % + [Received damage x {1 + (Skill Level x 0.2)}]
-		int ratio = (status_get_hp(src) / 100) * sc->data[SC_CRESCENTELBOW]->val1 * status->get_lv(bl) / 125;
-		if (ratio > 5000) ratio = 5000; // Maximum of 5000% ATK
-		rdamage = rdamage * ratio / 100 + (*dmg) * (10 + sc->data[SC_CRESCENTELBOW]->val1 * 20 / 10) / 10;
-		skill->blown(bl, src, skill->get_blewcount(SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1), unit->getdir(src), 0);
-		clif->skill_damage(bl, src, timer->gettick(), status_get_amotion(src), 0, rdamage,
-			1, SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1, 6); // This is how official does
-		clif->damage(src, bl, timer->gettick(), status_get_amotion(src)+1000, 0, rdamage/10, 1, 0, 0);
-		status->damage(src, bl, status->damage(bl, src, rdamage, 0, 0, 1)/10, 0, 0, 1);
-		status_change_end(bl, SC_CRESCENTELBOW, INVALID_TIMER);
-		return 0; // Just put here to minimize redundancy
-	 }
-	if( flag & BF_SHORT) {//Bounces back part of the damage.
-		if ( sd && sd->bonus.short_weapon_damage_return ){
-			NORMALIZE_RDAMAGE(damage * sd->bonus.short_weapon_damage_return / 100);
-			*delay = clif->damage(src, src, timer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
+	
+	if( sc && !sc->count )
+		sc = NULL;
+	
+	if( sc ) {
+			
+		if( sc->data[SC_CRESCENTELBOW] && !is_boss(src) && rnd()%100 < sc->data[SC_CRESCENTELBOW]->val2 ){
+			//ATK [{(Target HP / 100) x Skill Level} x Caster Base Level / 125] % + [Received damage x {1 + (Skill Level x 0.2)}]
+			int ratio = (status_get_hp(src) / 100) * sc->data[SC_CRESCENTELBOW]->val1 * status->get_lv(target) / 125;
+			if (ratio > 5000) ratio = 5000; // Maximum of 5000% ATK
+			rdamage = rdamage * ratio / 100 + (damage) * (10 + sc->data[SC_CRESCENTELBOW]->val1 * 20 / 10) / 10;
+			skill->blown(target, src, skill->get_blewcount(SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1), unit->getdir(src), 0);
+			clif->skill_damage(target, src, timer->gettick(), status_get_amotion(src), 0, rdamage,
+				1, SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1, 6); // This is how official does
+			clif->damage(src, target, timer->gettick(), status_get_amotion(src)+1000, 0, rdamage/10, 1, 0, 0);
+			status->damage(src, target, status->damage(target, src, rdamage, 0, 0, 1)/10, 0, 0, 1);
+			status_change_end(target, SC_CRESCENTELBOW, INVALID_TIMER);
+			return 0; // Just put here to minimize redundancy
 		}
-		if( sc && sc->count ) {
+	
+		if( sc->data[SC_KYOMU] && !sc->data[SC_DEATHBOUND] ){
+			// Nullify reflecting ability
+			return 0;
+		}
+
+	}
+	
+	if( flag & BF_SHORT) {//Bounces back part of the damage.
+		if ( sd && sd->bonus.short_weapon_damage_return ) {
+			NORMALIZE_RDAMAGE(damage * sd->bonus.short_weapon_damage_return / 100);
+		}
+		if( sc ) {
 			if( sc->data[SC_REFLECTSHIELD] && skill_id != WS_CARTTERMINATION ){
 				int64 t = damage * sc->data[SC_REFLECTSHIELD]->val2 / 100;
 				
 				if (flag & BF_SKILL) {
 					if (flag&BF_WEAPON)
-						t = t * map->list[bl->m].weapon_damage_rate / 100;
+						t = t * map->list[src->m].weapon_damage_rate / 100;
 					if (flag&BF_MISC)
-						t = t * map->list[bl->m].misc_damage_rate / 100;
+						t = t * map->list[src->m].misc_damage_rate / 100;
 				} else {
 					if (flag & BF_SHORT)
-						t = t * map->list[bl->m].short_damage_rate / 100;
+						t = t * map->list[src->m].short_damage_rate / 100;
 				}
 				
 				NORMALIZE_RDAMAGE(t);
-				*delay = clif->skill_damage(src, src, timer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, CR_REFLECTSHIELD, 1, 4);
 			}
 			if( sc->data[SC_LG_REFLECTDAMAGE] && rand()%100 < (30 + 10*sc->data[SC_LG_REFLECTDAMAGE]->val1) ) {
-				if( skill_id != HT_LANDMINE && skill_id  != HT_CLAYMORETRAP
-					&& skill_id  != RA_CLUSTERBOMB && (skill_id <= RA_VERDURETRAP || skill_id  > RA_ICEBOUNDTRAP) && skill_id != MA_LANDMINE ){
-					NORMALIZE_RDAMAGE((*dmg) * sc->data[SC_LG_REFLECTDAMAGE]->val2 / 100);
-					*delay = clif->damage(src, src, timer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
-				}
+				NORMALIZE_RDAMAGE(damage * sc->data[SC_LG_REFLECTDAMAGE]->val2 / 100);
 			}
-			if( sc->data[SC_DEATHBOUND] && skill_id != WS_CARTTERMINATION && !is_boss(src) ) {
-				uint8 dir = map->calc_dir(bl,src->x,src->y),
-				t_dir = unit->getdir(bl);
+			
+			if( !is_boss(src) ) {
+			
+				if( sc->data[SC_DEATHBOUND] && skill_id != WS_CARTTERMINATION ) {
+					uint8 dir = map->calc_dir(target,src->x,src->y),
+					t_dir = unit->getdir(target);
 
-				if( !map->check_dir(dir,t_dir) ) {
-					int64 rd1 = damage * sc->data[SC_DEATHBOUND]->val2 / 100; // Amplify damage.
-					trdamage += rdamage = rd1 - (*dmg = rd1 * 30 / 100); // not normalized as intended.
-					clif->skill_damage(src, bl, timer->gettick(), status_get_amotion(src), 0, -3000, 1, RK_DEATHBOUND, sc->data[SC_DEATHBOUND]->val1, 6);
-					skill->blown(bl, src, skill->get_blewcount(RK_DEATHBOUND, sc->data[SC_DEATHBOUND]->val1), unit->getdir(src), 0);
-					if( skill_id )
-						status_change_end(bl, SC_DEATHBOUND, INVALID_TIMER);
-					*delay = clif->damage(src, src, timer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
+					if( !map->check_dir(dir,t_dir) ) {
+						int64 rd1 = damage * sc->data[SC_DEATHBOUND]->val2 / 100; // Amplify damage.
+						trdamage += rdamage = rd1 - (damage = rd1 * 30 / 100); // not normalized as intended.
+						clif->skill_damage(src, target, timer->gettick(), status_get_amotion(src), 0, -3000, 1, RK_DEATHBOUND, sc->data[SC_DEATHBOUND]->val1, 6);
+						skill->blown(target, src, skill->get_blewcount(RK_DEATHBOUND, sc->data[SC_DEATHBOUND]->val1), unit->getdir(src), 0);
+					}
 				}
-			}
-			if( sc->data[SC_SHIELDSPELL_DEF] && sc->data[SC_SHIELDSPELL_DEF]->val1 == 2 && !is_boss(src) ){
-				NORMALIZE_RDAMAGE(damage * sc->data[SC_SHIELDSPELL_DEF]->val2 / 100);
-				*delay = clif->damage(src, src, timer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
+				
+				if( sc->data[SC_SHIELDSPELL_DEF] && sc->data[SC_SHIELDSPELL_DEF]->val1 == 2 ){
+					NORMALIZE_RDAMAGE(damage * sc->data[SC_SHIELDSPELL_DEF]->val2 / 100);
+				}
+				
 			}
 		}
 	} else {
 		if (sd && sd->bonus.long_weapon_damage_return){ 
 			NORMALIZE_RDAMAGE(damage * sd->bonus.long_weapon_damage_return / 100);
-			*delay = clif->damage(src, src, timer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
 		}
 	}
 		
-	if( !(sc && sc->data[SC_DEATHBOUND]) ){
-		if( sc && sc->data[SC_KYOMU] ) // Nullify reflecting ability
-			return 0;
-	}
-
 	return max(0, trdamage);
 #undef NORMALIZE_RDAMAGE
 }

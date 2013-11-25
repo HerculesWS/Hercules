@@ -527,7 +527,7 @@ struct battle_interface {
 	/* drain damage */
 	void (*drain) (struct map_session_data *sd, struct block_list *tbl, int64 rdamage, int64 ldamage, int race, int boss);
 	/* damage return/reflect */
-	int64 (*calc_return_damage) (struct block_list *bl, struct block_list *src, int64 *, int flag, uint16 skill_id, int *rdelay);
+	int64 (*calc_return_damage) (struct block_list *target, struct block_list *src, int64 damage, int flag, uint16 skill_id);
 	/* attribute rate */
 	int (*attr_ratio) (int atk_elem, int def_type, int def_lv);
 	/* applies attribute modifiers */
