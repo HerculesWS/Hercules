@@ -4622,7 +4622,7 @@ ACMD(disguise)
 		
 	if(sd->sc.data[SC_MONSTER_TRANSFORM])
 	{
-		clif->message(fd, msg_txt(1488)); // Character cannot be disguised while in monster form.
+		clif->message(fd, msg_txt(1487)); // Character cannot be disguised while in monster form.
 		return false;
 	}
 
