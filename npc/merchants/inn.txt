@@ -137,7 +137,7 @@ lhz_in02,230,284,4	script	Hotel Employee#01	4_M_04,{
 			mes "in order to check in.";
 			close;
 		}
-		set Zeny,Zeny - 5000;
+		Zeny -= 5000;
 		mes "[Hotel Employee]";
 		mes "Thank you~";
 		mes "I hope you enjoy";
@@ -190,7 +190,7 @@ ve_in,157,219,5	script	Inn Master#Receptionist	4_M_SEAMAN,{
 		}
 		mes "Enjoy your stay~";
 		close2;
-		set Zeny,Zeny - 5000;
+		Zeny -= 5000;
 		percentheal 100,100;
 		warp "ve_in",184,228;
 		end;
@@ -227,7 +227,7 @@ function	script	F_InnMaid	{
 		mes "I hope you";
 		mes "enjoy your rest~";
 		close2;
-		set Zeny,Zeny - 5000;
+		Zeny -= 5000;
 		percentheal 100,100;
 		return;
 	case 3:

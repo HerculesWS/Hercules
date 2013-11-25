@@ -137,7 +137,7 @@ dic_dun01,266,113,5	script	Curious Sapha#ep13_3_	4_MAN_BENKUNI,{
 			mes "You changed your mind?";
 			close;
 		}
-		set Zeny, Zeny - .@deal;
+		Zeny -= .@deal;
 		getitem 6437,.@input; //Scaraba_Perfume
 		mes "[Curious Sapha]";
 		mes "Here you go. Scaraba might flock around you so don't use it near Scaraba Hall.";
@@ -430,7 +430,7 @@ dic_in01,254,119,0	script	Item Storage#01	CLEAR_NPC,{
 		mes "Not enough Zeny.";
 		close; 
 	}
-	set Zeny, Zeny-500;
+	Zeny -= 500;
 	close2;
 	openstorage;
 	end;
@@ -3704,7 +3704,7 @@ dic_in01,245,119,4	script	Shay#ep133_13	4_M_ACROSS,{
 			if (Zeny > 1999) {
 				mes "[Shay]";
 				mes "Here is your "+.@str$[@menu]+".";
-				set Zeny, Zeny - 2000;
+				Zeny -= 2000;
 				getitem .@item[@menu],1; //Tropical_Sograt
 				break;
 			}
@@ -7540,7 +7540,7 @@ moc_para01,44,19,3	script	Cat Hand Agent#gekk	4_M_MERCAT2,{
 								mes "[Agent Geck]";
 								mes "With this, our contract is now complete.";
 								mes "Geck will help you to get to Ash-Vacuum in one piece.";
-								set Zeny, Zeny - 50000;
+								Zeny -= 50000;
 								set ep13_start, 100;
 								next;
 								mes "[Agent Geck]";

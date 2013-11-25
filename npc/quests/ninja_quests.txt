@@ -181,7 +181,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 			mes "Come and find me whenever you're ready to request more.";
 			delitem 2102,1;
 			delitem 2117,1;
-			set Zeny,Zeny-10000;
+			Zeny -= 10000;
 			set ninbo,0;
 			set MISC_QUEST,MISC_QUEST | 2048;
 			getitem 2118,1;
@@ -249,7 +249,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 				mes "If you ever want to ask me to make you more items, feel free to come back anytime.";
 				delitem 2102,1;
 				delitem 2117,1;
-				set Zeny,Zeny-10000;
+				Zeny -= 10000;
 				getitem 2118,1;
 				close;
 			}
@@ -351,7 +351,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 				mes "If you ever want to ask me to make you more items, feel free to come back anytime.";
 				delitem 2102,1;
 				delitem 2117,1;
-				set Zeny,Zeny-10000;
+				Zeny -= 10000;
 				set MISC_QUEST,MISC_QUEST | 2048;
 				getitem 2118,1;
 				close;
@@ -521,7 +521,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 			mes "If you ever want me to create more items, come and ask me anytime.";
 			delitem 2107,1;
 			delitem 2117,1;
-			set Zeny,Zeny-20000;
+			Zeny -= 20000;
 			set ninbot,0;
 			set MISC_QUEST,MISC_QUEST | 4096;
 			getitem 2119,1;
@@ -594,7 +594,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 				mes "If you ever want me to create more items, come and ask me anytime.";
 				delitem 2107,1;
 				delitem 2117,1;
-				set Zeny,Zeny-20000;
+				Zeny -= 20000;
 				getitem 2119,1;
 				close;
 			}
@@ -702,7 +702,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 				mes "If you ever want me to create more items, come and ask me anytime.";
 				delitem 2107,1;
 				delitem 2117,1;
-				set Zeny,Zeny-20000;
+				Zeny -= 20000;
 				set MISC_QUEST,MISC_QUEST | 4096;
 				getitem 2119,1;
 				close;
@@ -801,7 +801,7 @@ que_ng,27,18,3	script	Toshu	4_M_SEAMAN,{
 			}
 			delitem 2104,1;
 			delitem 2119,1;
-			set Zeny,Zeny-40000;
+			Zeny -= 40000;
 
 			switch (rand(5)) {
 				case 1:
@@ -905,7 +905,7 @@ que_ng,72,34,3	script	Craftsman Kaibara	4_M_EINOLD,{
 				delitem 1036,400;
 				delitem 984,5;
 				delitem 7123,30;
-				set Zeny,Zeny-200000;
+				Zeny -= 200000;
 				getitem 13006,1;
 				mes "[Kaibara]";
 				mes "Hmm, looks good.";
@@ -956,7 +956,7 @@ que_ng,72,34,3	script	Craftsman Kaibara	4_M_EINOLD,{
 				}
 				delitem 999,30;
 				delitem 7022,1;
-				set Zeny,Zeny-20000;
+				Zeny -= 20000;
 				getitem 13007,1;
 				mes "[Kaibara]";
 				mes "Hmm, very well.";
@@ -1004,7 +1004,7 @@ que_ng,72,34,3	script	Craftsman Kaibara	4_M_EINOLD,{
 				}
 				delitem 999,25;
 				delitem 7099,5;
-				set Zeny,Zeny-32000;
+				Zeny -= 32000;
 				getitem 13011,1;
 				mes "[Kaibara]";
 				mes "Hmm, very well.";
@@ -1053,7 +1053,7 @@ que_ng,72,34,3	script	Craftsman Kaibara	4_M_EINOLD,{
 				}
 				delitem 999,30;
 				delitem 720,10;
-				set Zeny,Zeny-48000;
+				Zeny -= 48000;
 				getitem 13012,1;
 				mes "[Kaibara]";
 				mes "Hmm, very well.";
@@ -1104,7 +1104,7 @@ que_ng,72,34,3	script	Craftsman Kaibara	4_M_EINOLD,{
 				delitem 932,500;
 				delitem 12001,10;
 				delitem 722,5;
-				set Zeny,Zeny-120000;
+				Zeny -= 120000;
 				getitem 13014,1;
 				mes "[Kaibara]";
 				mes "Hmm, very well.";
@@ -1191,7 +1191,7 @@ M_BENEKI:
 	delitem 999,50;
 	delitem 7115,20;
 	delitem 984,5;
-	set Zeny,Zeny-90000;
+	Zeny -= 90000;
 	getitem 13300,1;
 	mes "[Tetsu]";
 	mes "Hmm, very well.";
@@ -1239,7 +1239,7 @@ M_DAIS:
 	delitem 999,30;
 	delitem 7301,100;
 	delitem 984,2;
-	set Zeny,Zeny-40000;
+	Zeny -= 40000;
 	getitem 13301,1;
 	mes "[Tetsu]";
 	mes "Hmm, very well.";
@@ -1291,7 +1291,7 @@ M_DAIS4:
 	}
 	delitem 733,20;
 	delitem 984,3;
-	set Zeny,Zeny-40000;
+	Zeny -= 40000;
 	delitem 13301,1;
 	getitem 13302,1;
 	mes "[Tetsu]";
@@ -1340,7 +1340,7 @@ M_REKKA:
 	delitem 7098,100;
 	delitem 7097,100;
 	delitem 7521,50;
-	set Zeny,Zeny-78000;
+	Zeny -= 78000;
 	getitem 13303,1;
 	mes "[Tetsu]";
 	mes "Hmm, very well.";

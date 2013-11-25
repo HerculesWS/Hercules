@@ -231,7 +231,7 @@ yuno_in02,88,164,5	script	Metheus Sylphe#Library	2_M_SAGE_B,{
 			next;
 			if (select("Donate.:Cancel.") == 1) {
 				if (Zeny >= 1285000) {
-					set Zeny, Zeny-1285000;
+					Zeny -= 1285000;
 					set valkyrie_Q,1;
 					mes "[Metheus Sylphe]";
 					mes "Thank you, your donation will be used for a good cause. You may";

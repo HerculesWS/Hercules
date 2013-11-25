@@ -50,7 +50,7 @@ rachel,91,273,8	script	?	4_M_RACHMAN2,{
 		delitem 983,1; //Black_Dyestuffs
 		delitem 7111,100; //Smooth_Paper
 		delitem 938,99; //Sticky_Mucus 
-		set Zeny,Zeny-100000;
+		Zeny -= 100000;
 		getitem 5175,1; //Anonimity_Request
 		mes "[?]";
 		mes "Phew...it's done. Well, it was not that difficult to make, but...";
@@ -319,7 +319,7 @@ hugel,147,103,3	script	Ghenirhemin	4_M_HUGRANFA,{
 			delitem 4166,1; //Nightmare_Terror_Card
 			delitem 7511,1000; //Rune_Of_Darkness
 			delitem 7563,1000; //Bloody_Rune
-			set Zeny,Zeny-10000000;
+			Zeny -= 10000000;
 			set moza_valkylie,3;
 			mes "[Ghenirhemin]";
 			mes "Now I am all nervous";

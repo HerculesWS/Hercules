@@ -42,7 +42,7 @@ prontera,158,356,4	script	Royal Messenger	8W_SOLDIER,{
 		close; }
 	for(set .@j,1; .@j<13; set .@j,.@j+2)
 		delitem getd(".@Req"+.@i+"["+.@j+"]"), getd(".@Req"+.@i+"["+(.@j+1)+"]");
-	set Zeny, Zeny-1000000;
+	Zeny -= 1000000;
 	mes "I see you already have all the items you need. Here's your "+getitemname(getd(".@Req"+.@i+"[0]"))+", as promised.";
 	getitem getd(".@Req"+.@i+"[0]"),1;
 	close;

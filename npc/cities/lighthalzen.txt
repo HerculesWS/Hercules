@@ -563,7 +563,7 @@ lighthalzen,182,102,3	script	Lucius#zen5	4_M_LGTGRAND,{
 				mes "as much as you possibly can...";
 				close;
 			}
-			set Zeny, Zeny-.@input;
+			Zeny -= .@input;
 			set $donatedzeny,$donatedzeny + .@input;
 			mes "[Lucius]";
 			mes "So far, I've received";
@@ -1020,7 +1020,7 @@ OnTouch:
 		mes "[" + strcharinfo(0) + "]";
 		mes "Here you go,";
 		mes "take this.";
-		set Zeny, Zeny-50;
+		Zeny -= 50;
 		next;
 		mes "[Beggar]";
 		mes "Thank you so much.";

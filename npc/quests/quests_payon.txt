@@ -90,7 +90,7 @@ payon_in01,18,10,4	script	Mystic Lady	1_F_ORIENT_02,{
 			delitem 724,1; //Cardinal_Jewel_
 			delitem 949,200; //Feather
 			delitem 5001,1; //Headset
-			set Zeny,Zeny-5000;
+			Zeny -= 5000;
 			mes "Here, I will give you this pre-made one.";
 			getitem 2283,1; //Ear_Mufs
 			next;

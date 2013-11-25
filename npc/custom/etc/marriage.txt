@@ -716,7 +716,7 @@ function SF_TryRegister {
 		mes "Come back once you have collected "+@cost+"z."; 
 		close;
 	}
-	set Zeny,Zeny-@cost;
+	Zeny -= @cost;
 	sc_start SC_WEDDING,3600000,1; //Start Wedding Effect (SC_WEDDING)
 	if (@bride) {
 		set $wed_bride_progress,1;
@@ -911,7 +911,7 @@ function SF_InProgress {
 		emotion e_swt2;
 		close;
 	}
-	set Zeny,Zeny-$@wed_divorce_fee;
+	Zeny -= $@wed_divorce_fee;
 	announce $@divorcer$+" has just divorced "+strcharinfo(0)+"...", 8;
 	mes "["+@name$+"]";
 	mes "Your divorce has been filed. You are no longer wed.";

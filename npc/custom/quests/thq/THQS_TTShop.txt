@@ -51,7 +51,7 @@ N_Shop:
 	close;
 N_GetZeny1k:
 	set #Treasure_Token,#Treasure_Token-1;
-	set Zeny,Zeny+1000;
+	Zeny += 1000;
 	close;
 N_10T:
 	if (#Treasure_Token > 9) goto N_GetZeny10k;
@@ -59,7 +59,7 @@ N_10T:
 	close;
 N_GetZeny10k:
 	set #Treasure_Token,#Treasure_Token-10;
-	set Zeny,Zeny+10000;
+	Zeny += 10000;
 	close;
 N_100T:
 	if (#Treasure_Token > 99) goto N_GetZeny100k;
@@ -67,7 +67,7 @@ N_100T:
 	close;
 N_GetZeny100k:
 	set #Treasure_Token,#Treasure_Token-100;
-	set Zeny,Zeny+100000;
+	Zeny += 100000;
 	close;
 
 N_BuyWeps:

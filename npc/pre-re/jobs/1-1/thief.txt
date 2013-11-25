@@ -443,7 +443,7 @@ moc_prydb1,42,133,2	script	Comrade	2_M_THIEFMASTER,{
 		next;
 		mes "[Brad]";
 		mes "Here is a small subsidy for a Newbie like you. Spend it whereever you want. Alright then, I'll see you around~";
-		set Zeny, Zeny+.@money_thief;
+		Zeny += .@money_thief;
 		close;
 	}
 }

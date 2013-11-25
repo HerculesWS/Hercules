@@ -251,7 +251,7 @@ function	script	F_KafStor	{
 				mes "Storage access fee is "+getarg(1)+" zeny.";
 				return;
 			}
-			set Zeny, Zeny-getarg(1);
+			Zeny -= getarg(1);
 			set RESRVPTS, RESRVPTS + (getarg(1)/5);
 		}
 	}
@@ -308,7 +308,7 @@ function	script	F_KafTele	{
 			cutin "", 255;
 			end;
 		}
-		set Zeny, Zeny - @wrpP[.@j];
+		Zeny -= @wrpP[.@j];
 		set RESRVPTS, RESRVPTS + (@wrpP[.@j]/16);
 	}
 	cutin "", 255;
@@ -371,7 +371,7 @@ function	script	F_KafCart	{
 				mes "rental fee of "+getarg(1)+" zeny.";
 				return 1;
 			}
-			set Zeny,Zeny-getarg(1);
+			Zeny -= getarg(1);
 			set RESRVPTS, RESRVPTS + 48;
 	}
 	setcart;
@@ -504,7 +504,7 @@ function	script	F_SetKafCode	{
 					emotion e_cash;
 					break;
 				}
-				set Zeny,Zeny-1000;
+				Zeny -= 1000;
 				if(@code == #kafra_code) {
 					set #kafra_code,0;
 					mes "You've successfully cleared your storage password.";
@@ -548,7 +548,7 @@ S_SET:
 		emotion e_cash;
 		return;
 	}
-	set Zeny,Zeny-5000;
+	Zeny -= 5000;
 	set #kafra_code,@code;
 	mes "You've protected your storage with a secret password.";
 	mes "Thank you for using "+getarg(1)+".";

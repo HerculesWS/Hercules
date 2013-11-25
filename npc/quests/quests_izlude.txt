@@ -32,7 +32,7 @@
 				mes "get some more cash?";
 				close ;
 			}
-			set Zeny, Zeny-250;
+			Zeny -= 250;
 			warp "alberta",195,164;
 			end;
 		}
@@ -79,7 +79,7 @@
 				mes "some more.";
 				close;
 			}
-			set Zeny, Zeny-250;
+			Zeny -= 250;
 			warp "alberta",195,164;
 			end;
 		}

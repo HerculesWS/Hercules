@@ -93,7 +93,7 @@ OnTouch:
 	if(Zeny < 1000)
 		warp "arena_room",100,75;
 	else {
-		set Zeny,Zeny -1000;
+		Zeny -= 1000;
 		set $arn_partywait,0;
 		donpcevent "toout#party::OnStop";
 		warp "force_1-2",99,26;

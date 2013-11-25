@@ -2108,7 +2108,7 @@ S_SellSets:
 		mes getitemname(getarg(0))+"...";
 		close;
 	}
-	set Zeny, Zeny-.@total_cost;
+	Zeny -= .@total_cost;
 	getitem getarg(0),.@sell;
 	mes "[Madeleine Chu]";
 	mes "Here you are~";
@@ -2196,7 +2196,7 @@ payon,209,127,3	script	Servant	4_M_ORIENT01,{
 				mes "raise 200 zeny, right?";
 				close;
 			}
-			set Zeny, Zeny-200;
+			Zeny -= 200;
 			getitem 555,1; //Rice_Cake
 			mes "[Chulsoo]";
 			mes "Thank you very";
@@ -2367,7 +2367,7 @@ payon,209,127,3	script	Servant	4_M_ORIENT01,{
 				mes "raise 200 zeny, right?";
 				close;
 			}
-			set Zeny, Zeny-200;
+			Zeny -= 200;
 			getitem 555,1; //Rice_Cake
 			mes "[Chulsoo]";
 			mes "Thank you very";

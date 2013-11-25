@@ -661,7 +661,7 @@ in_rogue,376,23,1	script	Mr. Smith#rg	1_M_LIBRARYMASTER,{
 			countitem(908) > 4 && countitem(945) > 4) {
 				mes "[Mr. Smith]";
 				mes "Ummm...let's see...";
-				set Zeny, Zeny-10000;
+				Zeny -= 10000;
 				delitem 915,5; //Chrysalis
 				delitem 713,5; //Empty_Bottle
 				delitem 1002,5; //Iron_Ore
@@ -974,7 +974,7 @@ S_CheckItems:
 	if (Zeny > 9999 && countitem(getarg(0)) >= getarg(1) && countitem(getarg(2)) >= getarg(3) && countitem(getarg(4)) >= getarg(5) && countitem(getarg(6)) >= getarg(7)) {
 		mes "[Mr. Smith]";
 		mes "Okay, we've got the application fee, ^FF000010,000 zeny^000000, "+getarg(1)+" "+getitemname(getarg(0))+", "+getarg(3)+" "+getitemname(getarg(2))+", "+getarg(5)+" "+getitemname(getarg(4))+" and "+getarg(7)+" "+getitemname(getarg(6))+"...";
-		set Zeny, Zeny-10000;
+		Zeny -= 10000;
 		delitem getarg(0),getarg(1);
 		delitem getarg(2),getarg(3);
 		delitem getarg(4),getarg(5);

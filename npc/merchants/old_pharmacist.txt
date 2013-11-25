@@ -83,7 +83,7 @@ alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
 						mes "You rascal! You don't even have all the materials and you want me to make you potions?!";
 						close;
 					}
-					set Zeny,Zeny-(.@max*5);
+					Zeny -= (.@max*5);
 					delitem 507,.@max; //Red_Herb
 					delitem 508,.@max; //Yellow_Herb
 					delitem 713,.@max; //Empty_Bottle
@@ -113,7 +113,7 @@ alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
 						close;
 					}
 					next;
-					set Zeny,Zeny-(.@amount*5);
+					Zeny -= (.@amount*5);
 					delitem 507,.@amount; //Red_Herb
 					delitem 508,.@amount; //Yellow_Herb
 					delitem 713,.@amount; //Empty_Bottle
@@ -209,7 +209,7 @@ L_Making:
 			mes "You rascal! You don't even have all the materials and you want me to make you potions?!";
 			close;
 		}
-		set Zeny,Zeny-(.@max*getarg(1));
+		Zeny -= (.@max*getarg(1));
 		delitem getarg(0),.@max*2;
 		delitem 713,.@max; //Empty_Bottle
 		getitem getarg(2),.@max; 
@@ -235,7 +235,7 @@ L_Making:
 			mes "You rascal! You don't even have all the materials and you want me to make you potions?!";
 			close;
 		}
-		set Zeny,Zeny-(.@amount*getarg(1));
+		Zeny -= (.@amount*getarg(1));
 		delitem getarg(0),.@amount*2;
 		delitem 713,.@amount; //Empty_Bottle
 		getitem getarg(2),.@amount; 

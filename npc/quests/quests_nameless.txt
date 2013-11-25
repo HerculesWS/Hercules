@@ -437,7 +437,7 @@ OnTouch:
 		set aru_monas,8;
 		changequest 17003,17004;
 		if (Zeny > 3000) {
-			set Zeny, Zeny-3000;
+			Zeny -= 3000;
 			getitem 12052,4; //Vit_Dish02
 		}
 		close;
@@ -6114,7 +6114,7 @@ in_rogue,366,46,3	script	Rogue Investigator	4_M_ROGUE,{
 		switch(select("Sounds good!:Never mind, I'll find it myself...")) {
 		case 1:
 			if (Zeny > 9999) {
-				set Zeny, Zeny-10000;
+				Zeny -= 10000;
 				mes "[Investigator]";
 				mes "Thanks for the money~";
 				mes "Of course, if you became";
@@ -6192,7 +6192,7 @@ in_rogue,366,46,3	script	Rogue Investigator	4_M_ROGUE,{
 		switch(select("Sounds good!:Forget it...")) {
 		case 1:
 			if (Zeny > 9999) {
-				set Zeny, Zeny-10000;
+				Zeny -= 10000;
 				mes "[Investigator]";
 				mes "Right on, right on.";
 				mes "Alright, I didn't charge";
@@ -7390,7 +7390,7 @@ payon,244,62,3	script	Moonho Ahn	4_M_HUGRANFA,{
 		switch(select("Yes, let's play!:How does this game work again?")) {
 		case 1:
 			if (Zeny > 500) {
-				set Zeny, Zeny-500;
+				Zeny -= 500;
 				mes "[Moonho Ahn]";
 				mes "Good, let's get started!";
 				mes "I'll let you go first~";
@@ -9380,7 +9380,7 @@ morocc,143,63,3	script	Ragged Man#nd	4_M_MIDDLE,{
 						close;
 					}
 					else {
-						set Zeny, Zeny-1200;
+						Zeny -= 1200;
 						mes "[Ragged Man]";
 						mes "Let's see... I just need";
 						mes "1,200 zeny. That's enough";
@@ -9459,7 +9459,7 @@ morocc,143,63,3	script	Ragged Man#nd	4_M_MIDDLE,{
 				mes "up the funds. I'll be waiting.";
 				close;			}
 			else {
-				set Zeny, Zeny-1200;
+				Zeny -= 1200;
 				mes "[Ragged Man]";
 				mes "Remember that hidden";
 				mes "treasure I was looking for?";
@@ -10499,7 +10499,7 @@ alberta_in,70,109,5	script	Shaman	4_M_UMOLDMAN,{
 			mes "If all goes well, you'll be";
 			mes "free of your curse, and I can";
 			mes "buy some Prontera real estate.";
-			set Zeny, Zeny-200000;
+			Zeny -= 200000;
 			set jewel_nd,14;
 			next;
 			mes "[Shaman]";
@@ -10550,7 +10550,7 @@ alberta_in,70,109,5	script	Shaman	4_M_UMOLDMAN,{
 			mes "Hopefully, the";
 			mes "spirits will be more";
 			mes "cooperative this time.";
-			set Zeny, Zeny-100000;
+			Zeny -= 100000;
 			set jewel_nd,16;
 			next;
 			mes "[Shaman]";

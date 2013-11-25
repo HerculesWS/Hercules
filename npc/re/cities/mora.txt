@@ -453,7 +453,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	mes "[Raffle Philosopher]";
 	mes "The quote I'm going to tell you is...";
 	mes "Let's see... Wait a second.";
-	set Zeny, Zeny-.@input;
+	Zeny -= .@input;
 	next;
 	mes ". . . . . . . . .";
 	next;
@@ -1021,9 +1021,9 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	next;
 	mes "You feel somebody rummaging through your pockets before you pass out.";
 	if (Zeny >= 5000)
-		set Zeny, Zeny-5000;
+		Zeny -= 5000;
 	else
-		set Zeny, 0;
+		Zeny = 0;
 	close2;
 	percentheal -99,0;
 	warp "mora",31,132;
@@ -1120,7 +1120,7 @@ mora,43,127,3	script	Innkeeper#mora_inn	4_M_RAFLE_OR,{
 			mes "[Innkeeper]";
 			mes "Make yourself at home.";
 			close2;
-			set Zeny, Zeny-5000;
+			Zeny -= 5000;
 			percentheal 100,100;
 			warp "mora",32,123;
 			end;
@@ -1176,7 +1176,7 @@ mora,48,128,0	script	Drawer#mora_warehouse	HIDDEN_NPC,{
 			mes "- You don't seem to have 100 zeny with you. -";
 			close;
 		}
-		set Zeny, Zeny-100;
+		Zeny -= 100;
 		openstorage;
 		close;
 	case 2:

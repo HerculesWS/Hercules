@@ -2190,7 +2190,7 @@ OnTouch:
 						mes "tired. Let me take a";
 						mes "freakin' 20 second yawn.";
 						mes "*Yaaaaaaaaaaaaaaaaaaaaaaaaaawn*";
-						set Zeny,Zeny - 1000;
+						Zeny -= 1000;
 						close2;
 						warp "que_job01",9,94;
 						end;
@@ -2309,7 +2309,7 @@ OnTouch:
 						mes "Hey, bartender! Gimme";
 						mes "the usual! I like your";
 						mes "style, adventurer...";
-						set Zeny,Zeny - 1000;
+						Zeny -= 1000;
 						next;
 						mes "[Litheron]";
 						mes "Alright, you can come";
@@ -2473,7 +2473,7 @@ que_job01,82,95,3	script	Bar Master	1_ETC_01,{
 						mes "ask you for 800. Enjoy it,";
 						mes "my friend, and drink it as";
 						mes "deeply as you would life.";
-						set Zeny,Zeny - 800;
+						Zeny -= 800;
 						if(.@maodrink) getitem 12112,1;
 						else getitem 12113,1;
 						close;
@@ -2495,7 +2495,7 @@ que_job01,82,95,3	script	Bar Master	1_ETC_01,{
 					mes "hard feelings, but you're";
 					mes "already lucky to be here.";
 					mes "Hey, enjoy your drink~";
-					set Zeny,Zeny - 1000;
+					Zeny -= 1000;
 					if(.@maodrink) getitem 12112,1;
 					else getitem 12113,1;
 					close;

@@ -257,7 +257,7 @@ payon,126,113,4	script	Miss Lunar#rat	4_F_NACORURI,{
 		next;
 		if (select("Yes:No") == 1) {
 			if (Zeny >= 3000) {
-				set Zeny,Zeny-3000;
+				Zeny -= 3000;
 				getitem 554,10; // Mojji
 				mes "[Lunar]";
 				mes "Thank you, and I hope you";

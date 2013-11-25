@@ -42,7 +42,7 @@ L_Menu:
 	if (Zeny < getarg(2)) {
 		mes "Are youz playin wit me? You don't have ze money!";
 		close; }
-	set Zeny, Zeny-getarg(2);
+	Zeny -= getarg(2);
 	mes "O ho ho, it's a deal, then!";
 	getitem 7114,1;
 	set sphmask_q,1;

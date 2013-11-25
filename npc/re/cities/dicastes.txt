@@ -653,7 +653,7 @@ dicastes01,202,197,4	script	Crazy Venknick#fihsing1	4_MAN_BENKUNI,{
 			close;
 			close; 
 		}
-		set Zeny, Zeny-5000;
+		Zeny -= 5000;
 		mes "[Crazy Venknick]";
 		mes "Thanks.";
 		emotion e_gg,0,"Complaining Galten#fihs";

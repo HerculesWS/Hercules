@@ -3478,7 +3478,7 @@ rachel,113,96,5	script	Mohadian	4_M_MIDDLE,10,10,{
 		mes "It's always a pleasure";
 		mes "doing business with you~";
 		delitem 7561,.@hearts; //Glacial Hearts
-		set Zeny, Zeny+.@totalprice;
+		Zeny += .@totalprice;
 		close;
 	}
 
@@ -4194,7 +4194,7 @@ S_Donate:
 		}
 		set $rachel_donate,$rachel_donate+getarg(0);
 		getitem 7570,getarg(0); //Temple_Lottery_Ticket
-		set Zeny, Zeny-getarg(0)*50000;
+		Zeny -= getarg(0)*50000;
 		set ra_have_donated,1;
 		if ($rachel_donate > 9999) {
 			cutin "ra_nemma03",2;

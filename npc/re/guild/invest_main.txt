@@ -163,7 +163,7 @@ function	script	F_Invest_Abyss	{
 		mes getarg(1);
 		mes "You've invested "+.@units+" unit"+((.@units == 1)?"":"s")+" "+((.@units < 100)?.@units:insertchar(""+.@units,",",1))+"0,000 Zeny"+getarg(2,"")+".";
 		mes "Not much but this is a small gift. You can exchange it with items in Malangdo.";
-		set Zeny, Zeny-.@zeny;
+		Zeny -= .@zeny;
 		setd getarg(0), getd(getarg(0)) + .@units;
 		getitem 6488,.@units; //Thanks_Invest_Ticket
 		close;
@@ -990,7 +990,7 @@ OnAgitInvest:
 		}
 		mes .@n$;
 		mes "I'm sending you to the "+.@realm$+" Agit Dungeon "+.@i+"F.";
-		set Zeny, Zeny-10000;
+		Zeny -= 10000;
 		setd "$fund_"+.@npc$+"_extra", getd("$fund_"+.@npc$+"_extra") + 1;
 		close2;
 		if (compare(strnpcinfo(2),"alde"))

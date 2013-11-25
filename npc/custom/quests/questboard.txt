@@ -194,7 +194,7 @@ L_checkitems:
 	mes "[^FF7700Questboard^000000]";
 	mes "Congratulation! Here is your Reward.";
 	if(getd("." +currentquest$+"_collectionprize")!=0) getitem(getd("." +currentquest$+"_collectionprize"),getd("." +currentquest$+"_collectionamount"));
-	set Zeny,Zeny+getd("." +currentquest$+"_collectionzeny");
+	Zeny += getd("." +currentquest$+"_collectionzeny");
 	getexp getd("." +currentquest$+"_collectionexp["+0+"]"),getd("." +currentquest$+"_collectionexp["+1+"]");
 	setd(currentquest$ + "_collection_delay"),gettimetick(2)+.quest_delay;
 	set currentquest$, "";
@@ -228,7 +228,7 @@ L_checkmobs2:
 		setd(currentquest$+"_"+.@currentmob+"_"+.@x+"_killcount", 0);
 	}
 	if(getd("." +currentquest$+"_huntingprize")!=0) getitem(getd("." +currentquest$+"_huntingprize"),getd("." +currentquest$+"_huntingamount"));
-	set Zeny, Zeny+getd("." +currentquest$+"_huntingzeny");
+	Zeny += getd("." +currentquest$+"_huntingzeny");
 	getexp getd("." +currentquest$+"_huntingexp["+0+"]"),getd("." +currentquest$+"_huntingexp["+1+"]");
 	setd(currentquest$ + "_hunting_delay"),gettimetick(2)+.quest_delay;
 	set currentquest$, "";

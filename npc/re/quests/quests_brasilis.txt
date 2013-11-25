@@ -471,7 +471,7 @@ brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 			if (Zeny > 3999) {
 				mes "[Candy Maker]";
 				mes "Here is a delicious guarana candy.";
-				set Zeny, Zeny-4000;
+				Zeny -= 4000;
 				getitem 12414,1; //Guarana_Candy
 				close;
 			}

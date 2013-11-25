@@ -311,7 +311,7 @@ SubGarrison:
 			delitem 999,50; //Steel
 			delitem 1003,50; //Coal
 			delitem 7317,20; //Rusty Screw
-			set Zeny,Zeny-30000;
+			Zeny -= 30000;
 			getitem 13104,1; //Garrison
 			close;
 
@@ -586,7 +586,7 @@ SubInferno:
 		mes "I see you have the proper amount of materials and Zeny.";
 		mes "Here is the Inferno I've created for you.";
 		mes "Use it well.";
-		set Zeny,Zeny-200000;
+		Zeny -= 200000;
 		delitem 7319,100;
 		delitem 984,10;
 		delitem 7317,50;
@@ -859,7 +859,7 @@ SubDestroyer:
 		mes "You've got the perfect materials and Zeny~";
 		mes "Here's the Destroyer I made ahead of time for you.";
 		mes "Use it well.";
-		set Zeny,Zeny-100000;
+		Zeny -= 100000;
 		delitem 7319,50;
 		delitem 984,5;
 		delitem 7317,70;
@@ -993,7 +993,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 				mes "Please clear your inventory.";
 				close;
 			}
-			set Zeny,Zeny-100000;
+			Zeny -= 100000;
 			set gun_na,0;
 			getitem 13158,1;
 			mes "[N. A]";
@@ -1022,7 +1022,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 			delitem 984,3;
 			delitem 1003,70;
 			delitem 7317,50;
-			set Zeny,Zeny-50000;
+			Zeny -= 50000;
 			set gun_na,11;
 			mes "[N. A]";
 			mes "Aha, you got me all the";

@@ -1196,7 +1196,7 @@ alberta_in,23,104,4	script	Grandpa Turtle#tur	2_M_PHARMACIST,{
 					mes "You've made your choice! With my experience, we will arrive without fail! I appreciate your spirit!";
 					next;
 					mes "^3355FF*Choo Choo*^000000";
-					set Zeny, Zeny-10000;
+					Zeny -= 10000;
 					warp "tur_dun01",157,39;
 					close;
 				}

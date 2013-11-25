@@ -1616,7 +1616,7 @@ geffen_in,109,170,3	script	Blacksmith Guildsman#gef	4_F_JOB_BLACKSMITH,{
 			mes "Excuse me, but you do not have enough money.";
 			close;
 		}
-		set Zeny, Zeny-600;
+		Zeny -= 600;
 		warp "izlude",94,103;
 		end;
 	case 3:

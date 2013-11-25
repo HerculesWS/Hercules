@@ -38,7 +38,7 @@
 			close;
 		}
 		mes "Thank you, please come again.";
-		set Zeny, Zeny - 130;
+		Zeny -= 130;
 		close2;
 		openmail;
 		end;

@@ -156,7 +156,7 @@ function	script	refinenew	{
 			mes "Please come back when you have them.";
 			close;
 		}
-		set Zeny,Zeny - .@price;
+		Zeny -= .@price;
 		delitem .@material,1;
 
 		//custom checks
@@ -272,7 +272,7 @@ function	script	refinenew	{
 		mes "Please come back when you have them.";
 		close;
 	}
-	set Zeny,Zeny - .@fullprice;
+	Zeny -= .@fullprice;
 	delitem .@material,.@refinecnt;
 	while(.@refinecnt){
 		if (getequipisequiped(.@part) == 0) {
@@ -368,7 +368,7 @@ function	script	refinenew	{
 	}
 	if (countitem(.@i[0]) >= .@i[1] && Zeny >= 50000) {
 		delitem .@i[0],.@i[1];
-		set Zeny, Zeny - 50000;
+		Zeny -= 50000;
 		getitem .@i[2],1;
 		mes "[Austri]";
 		if (.@i[0] == 6090) {
@@ -517,7 +517,7 @@ malangdo,224,172,6	script	Clink#mal_normal	4_CAT_SAILOR1,{
 		close;
 	}
 	delitem .@material,1;
-	set Zeny, Zeny-.@price;
+	Zeny -= .@price;
 	if (getequippercentrefinery(.@part) <= rand(100)) {
 		failedrefitem .@part;
 		mes "[Clink]";

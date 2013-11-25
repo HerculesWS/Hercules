@@ -383,7 +383,7 @@ OnRecvCastle:
 					cutin "",255;
 					end;
 				}
-				set Zeny, Zeny - 200;
+				Zeny -= 200;
 				set RESRVPTS,RESRVPTS+2;
 				close2;
 				warp .@destination$[1],.@coordinates[0],.@coordinates[1];
@@ -435,7 +435,7 @@ OnRecvCastle:
 					end;
 				}
 				set RESRVPTS,RESRVPTS+8;
-				set Zeny, Zeny - 800;
+				Zeny -= 800;
 				setcart;
 				close2;
 				cutin "",255;
@@ -689,7 +689,7 @@ OnRecvCastle:
 				mes "I'm sorry but there is not enough zeny to invest. You will have to try again when you have the funds, Master.";
 				close;
 			}
-			set Zeny, Zeny - .@eco_invest;
+			Zeny -= .@eco_invest;
 			setcastledata strnpcinfo(2),4,getcastledata(strnpcinfo(2),4)+1;
 			mes "[ "+strnpcinfo(1)+"]";
 			mes "We finished the investment safely. I expect that our growth level will be increased by tomorrow.";
@@ -755,7 +755,7 @@ OnRecvCastle:
 				mes "I'm sorry but there is not enough zeny to invest. You will have to try again when you have the funds, Master.";
 				close;
 			}
-			set Zeny, Zeny - .@def_invest;
+			Zeny -= .@def_invest;
 			setcastledata strnpcinfo(2),5,getcastledata(strnpcinfo(2),5)+1;
 			mes "[ "+strnpcinfo(1)+"]";
 			mes "We finished the investment safely. I expect that our Castle Defense level will be increased by tomorrow.";
@@ -803,7 +803,7 @@ OnRecvCastle:
 				mes "Well... I'm sorry but we don't have funds to summon the Guardian. We failed to summon the Guardian.";
 				close;
 			}
-			set Zeny, Zeny - 10000;
+			Zeny -= 10000;
 			setcastledata strnpcinfo(2),.@GDnum,1; // mark as 'installed'
 			set .@UseGID,.@GDnum - 10;
 			if (.@guardiantype[.@UseGID] == 1) { set .@type,1287; }
@@ -870,7 +870,7 @@ OnRecvCastle:
 				mes "Well... I'm sorry but we don't have enough funds to hire a Kafra Employee.";
 				close;
 			}
-			set Zeny, Zeny - 10000;
+			Zeny -= 10000;
 			enablenpc "Kafra Staff#"+strnpcinfo(2);
 			setcastledata strnpcinfo(2),9,1;
 			mes "["+strnpcinfo(1)+"]";

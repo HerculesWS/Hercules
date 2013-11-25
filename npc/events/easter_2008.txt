@@ -118,7 +118,7 @@ prontera,111,99,5	script	Egg Salesman#prt::EggVendor	4W_M_02,{
 							mes "them, but I don't know anything";
 							mes "about that. Well, have a good";
 							mes "time, and I'll see you again!";
-							set Zeny, Zeny-.@egg_zeny;
+							Zeny -= .@egg_zeny;
 							getitem 7605,.@input; //Chicken_Egg
 							close;
 						}

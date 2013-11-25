@@ -81,7 +81,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				close;
 			}
 			getitem 986,1; // Anvil
-			set Zeny, Zeny-30000;
+			Zeny -= 30000;
 			mes "[Christopher Guillenrow]";
 			mes "This is the cheapest one, but efficient enough to forge most items. Thank ye fer shopping at me workshop.  Feel free to come anytime, whenever ye need.";
 			close;
@@ -92,7 +92,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				close;
 			}
 			getitem 987,1; // Oridecon_Anvil
-			set Zeny, Zeny-120000;
+			Zeny -= 120000;
 			mes "[Christopher Guillenrow]";
 			mes "Aye, friend ye have an eye for the anvil. This must be the proper anvil for a Blacksmith, eh? Thank ye fer shopping at me workshop.  Feel free to come anytime, whenever ye need.";
 			close;
@@ -103,7 +103,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				close;
 			}
 			getitem 988,1; // Golden_Anvil
-			set Zeny, Zeny-300000;
+			Zeny -= 300000;
 			mes "[Christopher Guillenrow]";
 			mes "This one is the best among all me stuffs in me workshop! With this, ye can rule the Blacksmith world! Thank ye fer shopping at me workshop.  Feel free to come anytime, whenever ye need.";
 			close;
@@ -156,7 +156,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				close;
 			}
 			getitem 612,.@input; // Portable_Furnace
-			set Zeny, Zeny-.@sell;
+			Zeny -= .@sell;
 			mes "[Christopher Guillenrow]";
 			mes "Thank ye fer shopping at me workshop. Feel free to come anytime, whenever ye need.";
 			close;
@@ -167,7 +167,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				close;
 			}
 			getitem 613,1; // Iron_Hammer
-			set Zeny, Zeny-1000;
+			Zeny -= 1000;
 			mes "[Christopher Guillenrow]";
 			mes "Thank ye fer shopping at me workshop. Feel free to come anytime, whenever ye need.";
 			close;
@@ -178,7 +178,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				close;
 			}
 			getitem 614,1; // Golden_Hammer
-			set Zeny, Zeny-3000;
+			Zeny -= 3000;
 			mes "[Christopher Guillenrow]";
 			mes "Thank ye fer shopping at me workshop. Feel free to come anytime, whenever ye need.";
 			close;
@@ -189,7 +189,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				close;
 			}
 			getitem 615,1; // Oridecon_Hammer
-			set Zeny, Zeny-5000;
+			Zeny -= 5000;
 			mes "[Christopher Guillenrow]";
 			mes "Thank ye fer shopping at me workshop. Feel free to come anytime, whenever ye need.";
 			close;
@@ -237,7 +237,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				close;
 			}
 			getitem 1010,.@input; // Phracon
-			set Zeny, Zeny-.@sell;
+			Zeny -= .@sell;
 			mes "[Christopher Guillenrow]";
 			mes "Thank ye fer shopping at me workshop. Feel free to come anytime, whenever ye need.";
 			close;
@@ -275,7 +275,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				close;
 			}
 			getitem 1011,.@input; // Emveretarcon
-			set Zeny, Zeny-.@sell;
+			Zeny -= .@sell;
 			mes "[Christopher Guillenrow]";
 			mes "Thank ye fer shopping at me workshop. Feel free to come anytime, whenever ye need, whenever ye want.";
 			close;
@@ -357,7 +357,7 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 				close;
 			}
 			getitem 986,1; //Anvil
-			set Zeny, Zeny-30000;
+			Zeny -= 30000;
 			mes "[Paul Spanner]";
 			mes "It is the cheapest anvil which has the most basic ability.";
 			mes "Thank you for using my shop. If you need anything, just let me know.";
@@ -369,7 +369,7 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 				close;
 			}
 			getitem 987,1; //Oridecon_Anvil
-			set Zeny, Zeny-120000;
+			Zeny -= 120000;
 			mes "[Paul Spanner]";
 			mes "Ah, you have an eye for anvil. A Blacksmith needs an anvil at least as good as this.";
 			mes "Thank you for using my shop. If you need anything, just let me know.";
@@ -381,7 +381,7 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 				close;
 			}
 			getitem 988,1; //Golden_Anvil
-			set Zeny, Zeny-300000;
+			Zeny -= 300000;
 			mes "[Paul Spanner]";
 			mes "I can tell your ambition to become a good Blacksmith just by looking at you to choose this Golden Anvil!";
 			mes "This anvil will surely aid you in creating the best weapons.";
@@ -460,7 +460,7 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 			mes "Hey, you look pale. Why don't you go lighten your weight first.";
 			close;
 		}
-		set Zeny, Zeny-.@sell;
+		Zeny -= .@sell;
 		getitem .@item,.@input;
 		mes "[Paul Spanner]";
 		mes "Thank you for using my shop. If you need anything, just let me know.";
@@ -515,7 +515,7 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 			close;
 		}
 		getitem .@item,.@input;
-		set Zeny, Zeny-.@sell;
+		Zeny -= .@sell;
 		mes "[Paul Spanner]";
 		mes "Thank you for using my shop. If you need anything, just let me know.";
 		close;
@@ -735,7 +735,7 @@ function	script	refinemain	{
 			mes "here all day if you need me.";
 			close;
 		}
-		set Zeny, Zeny-.@price;
+		Zeny -= .@price;
 		delitem .@material,1;
 
 		//custom checks
@@ -856,7 +856,7 @@ function	script	refinemain	{
 		mes "Is that all you got? Unfortunately I can't work for you at a lower price. Try putting yourself in my shoes.";
 		close;
 	}
-	set Zeny, Zeny - .@fullprice;
+	Zeny -= .@fullprice;
 	delitem .@material,.@refinecnt;
 	while(.@refinecnt){
 		if (getequipisequiped(.@part) == 0) {
@@ -882,7 +882,7 @@ function	script	refinemain	{
 			mes "Here's the unused Zeny and materials back...";
 			getitem .@material,.@refinecnt;
 			set .@fullprice,.@refinecnt * .@price;
-			set Zeny, Zeny + .@fullprice;
+			Zeny += .@fullprice;
 			close;
 		}
 		successrefitem .@part;
@@ -1000,7 +1000,7 @@ function	script	phramain	{
 		close;
 	}
 	getitem .@material,.@input;
-	set Zeny, Zeny-.@sell;
+	Zeny -= .@sell;
 	mes "[" + getarg(0) + "]";
 	mes "Here you are!";
 	mes "Thank you for";
@@ -1238,7 +1238,7 @@ function	script	repairmain	{
 			}
 			set .@checkitem2,.@checkitem2-1;
 			if (.@checkitem == .@checkitem2) {
-				set Zeny, Zeny-.@totalcost;
+				Zeny -= .@totalcost;
 				while (.@checkitem) {
 					repair(.@checkitem);
 					set .@checkitem,.@checkitem-1;

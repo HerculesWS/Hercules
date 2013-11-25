@@ -517,7 +517,7 @@ nif_fild01,165,115,3	script	Chicken Masta#06_hw	4_M_NFDEADMAN2,{
 					mes "[Chicken Masta]";
 					mes "Thanks.";
 					mes "Here are the eggs.";
-					set Zeny,Zeny-2000;
+					Zeny -= 2000;
 					set halloween, 102;
 					getitem 574,2; //Egg
 					close;
@@ -533,7 +533,7 @@ nif_fild01,165,115,3	script	Chicken Masta#06_hw	4_M_NFDEADMAN2,{
 					mes "[Chicken Masta]";
 					mes "Thanks.";
 					mes "Here are the eggs.";
-					set Zeny,Zeny-1000;
+					Zeny -= 1000;
 					set halloween, 102;
 					getitem 574,1; //Egg
 					close;
@@ -624,7 +624,7 @@ nif_fild01,165,115,3	script	Chicken Masta#06_hw	4_M_NFDEADMAN2,{
 		mes "Here you are.";
 		mes "But no more.";
 		mes "If you want more eggs, find me more chickens.";
-		set Zeny,Zeny-@hw_egg;
+		Zeny -= @hw_egg;
 		getitem 574, @input;//Egg
 		set halloween, 102;
 		close;

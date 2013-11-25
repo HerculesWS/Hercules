@@ -27,7 +27,7 @@ pay_arche,122,100,0	script	Dollshoi	4_M_ORIENT01,{
 			close;
 		}
 		delitem 1092,1; //Empty_Cylinder
-		set Zeny, Zeny-50;
+		Zeny -= 50;
 		getitem 1089,1; //Payon_Potion
 	}
 	close;
@@ -48,7 +48,7 @@ moc_ruins,91,150,0	script	Ponka-Hontas	4_F_04,{
 			close;
 		}
 		delitem 1092,1; //Empty_Cylinder
-		set Zeny, Zeny-50;
+		Zeny -= 50;
 		getitem 1088,1; //Morocc_Potion
 	}
 	close;

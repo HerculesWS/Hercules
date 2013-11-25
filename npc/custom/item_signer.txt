@@ -121,7 +121,7 @@ prt_in,24,61,7	script	Perchik	1_M_01,{
 		emotion e_wah;
 		close;
 	}
-	if (.@price) set Zeny, Zeny-.@price;
+	if (.@price) Zeny -= .@price;
 	if (getarraysize(.@item))  for(set .@i,0; .@i<getarraysize(.@item); set .@i,.@i+2)
 		delitem .@item[.@i], .@item[.@i+1];
 	delitem2 .@id,1,1,.@ref,0,.@slot[0],.@slot[1],.@slot[2],.@slot[3];

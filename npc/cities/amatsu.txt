@@ -96,7 +96,7 @@
 				mes "[Walter Moers]";
 				mes "Alright, I will start the engine!";
 				close2;
-				set Zeny, Zeny-10000;
+				Zeny -= 10000;
 				warp "amatsu",197,83;
 				end;
 			}

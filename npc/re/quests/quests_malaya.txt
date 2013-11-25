@@ -2403,7 +2403,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 				mes "[Pedro the Sailor]";
 				mes "Thank you~";
 				mes "Let's go before the ghosts come back!";
-				set Zeny, Zeny - 1000;
+				Zeny -= 1000;
 				close2;
 				warp "izlude",195,180;
 				end;
@@ -3359,7 +3359,7 @@ ma_fild01,166,214,6	script	Old Man in Dilemma#GA	4_F_BARYO_OLD,{
 				if (countitem(6497) >= 3 && Zeny >= 1000) {
 					specialeffect2 EF_CONE;
 					specialeffect EF_FORESTLIGHT2;
-					set Zeny, Zeny-1000;
+					Zeny -= 1000;
 					getitem 12775,1; //Ancient_Spirit_Agimat
 				} else {
 					mes "[Old Man in Dilemma]";

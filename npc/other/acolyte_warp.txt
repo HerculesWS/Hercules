@@ -59,7 +59,7 @@ prontera,98,121,4	script	Acolyte#Prtclear	4_F_01,{
 		specialeffect2 EF_TELEPORTATION;
 		specialeffect2 EF_PORTAL;
 		next;
-		set Zeny, Zeny - .@cost[.@i];
+		Zeny -= .@cost[.@i];
 		switch(.@i) {
 			case 0: if (checkre(0)) warp "izlude",128,98; else warp "izlude",91,105; break;
 			case 1: warp "geffen",120,39; break;
@@ -122,7 +122,7 @@ yuno,142,184,6	script	Acolyte#Junoclear	4_F_01,{
 		specialeffect2 EF_TELEPORTATION;
 		specialeffect2 EF_PORTAL;
 		next;
-		set Zeny, Zeny - .@cost[.@i];
+		Zeny -= .@cost[.@i];
 		switch(.@i) {
 			case 0: warp "einbroch",67,195; break;
 			case 1: warp "lighthalzen",159,90; break;

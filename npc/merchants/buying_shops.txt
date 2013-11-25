@@ -62,7 +62,7 @@ que_job01,68,84,1	script	Black Marketeer#Buying	4_M_SITDOWN,{
 					mes "Mr. Hugh, I'll take over your license business. You'll see!";
 					mes "*Giggle Giggle*";
 					getitem 12548,.@input; //Shabby_Purchase_Street
-					set Zeny,Zeny-(.@input*500);
+					Zeny -= (.@input*500);
 				}
 				close;
 			}
@@ -126,7 +126,7 @@ alberta_in,58,52,4	script	Purchasing Team#Buying	1_M_ORIENT01,{
 					} else {
 						mes "Thank you for your patronage.";
 						getitem 6377,.@input; //Buy_Stall_Permit
-						set Zeny,Zeny-(.@input*200);
+						Zeny -= (.@input*200);
 					}
 					close;
 				}
@@ -210,7 +210,7 @@ alberta_in,58,52,4	script	Purchasing Team#Buying	1_M_ORIENT01,{
 				mes .@name$+"....";
 				mes "I like your handwriting.";
 				mes "Okay, you're now approved to open the Bulk Buyer Shop.";
-				set Zeny,Zeny-10000;
+				Zeny -= 10000;
 				getitem 6377,5; //Buy_Stall_Permit
 				skill "ALL_BUYING_STORE",1,3;
 				next;

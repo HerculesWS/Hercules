@@ -63,7 +63,7 @@ moc_para01,14,32,5	script	Aperture#acolytewarp	4_F_01,{
 		specialeffect2 EF_TELEPORTATION;
 		specialeffect2 EF_PORTAL;
 		next;
-		set Zeny, Zeny - .@cost[.@i];
+		Zeny -= .@cost[.@i];
 		switch(.@i) {
 			case 0: warp "prontera",116,72; break;
 			case 1: warp "izlude",128,98; break;
@@ -585,7 +585,7 @@ moc_para01,174,33,3	script	Bathory#2012spirits	BATHORY,{
 		mes "[Bathory]";
 		mes "Alright, hold on tight!";
 		close2;
-		set Zeny, Zeny-1000;
+		Zeny -= 1000;
 		warp "niflheim",194,185;
 		end;
 	case 2:

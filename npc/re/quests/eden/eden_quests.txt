@@ -3622,7 +3622,7 @@ moc_para01,179,44,3	script	Chef	4_M_CHNCOOK,{
 					next;
 					mes "- After eating the meal, You feel a little bit full.";
 					mes "You've recovered some HP and SP. -";
-					set Zeny, Zeny - 2700;
+					Zeny -= 2700;
 					percentheal 50,0;
 					percentheal 0,50;
 					close;
@@ -3639,7 +3639,7 @@ moc_para01,179,44,3	script	Chef	4_M_CHNCOOK,{
 				next;
 				mes "- After eating the meal, You feel a little bit full.";
 				mes "You've recovered some HP and SP. -";
-				set Zeny, Zeny - 3000;
+				Zeny -= 3000;
 				percentheal 50,0;
 				percentheal 0,50;
 				close;
@@ -3661,7 +3661,7 @@ moc_para01,179,44,3	script	Chef	4_M_CHNCOOK,{
 					next;
 					mes "- After eating the meal, You feel a little bit full.";
 					mes "You've recovered some HP and SP. -";
-					set Zeny, Zeny - 3600;
+					Zeny -= 3600;
 					percentheal 75,0;
 					percentheal 0,75;
 					close;
@@ -3678,7 +3678,7 @@ moc_para01,179,44,3	script	Chef	4_M_CHNCOOK,{
 				next;
 				mes "- After eating the meal, You feel a little bit full.";
 				mes "You've recovered some HP and SP. -";
-				set Zeny, Zeny - 4000;
+				Zeny -= 4000;
 				percentheal 75,0;
 				percentheal 0,75;
 				close;
@@ -3697,7 +3697,7 @@ moc_para01,179,44,3	script	Chef	4_M_CHNCOOK,{
 					mes "- The Rib Eye Roll is grilled on the oak.";
 					mes "- After eating the meal, You feel a little bit full.";
 					mes "You've recovered your HP and SP. -";
-					set Zeny, Zeny - 4500;
+					Zeny -= 4500;
 					percentheal 100,0;
 					percentheal 0,100;
 					close;
@@ -3716,7 +3716,7 @@ moc_para01,179,44,3	script	Chef	4_M_CHNCOOK,{
 				mes "- The Rib Eye Roll is grilled on the oak.";
 				mes "- After eating the meal, You feel a little bit full.";
 				mes "You've recovered your HP and SP. -";
-				set Zeny, Zeny - 5000;
+				Zeny -= 5000;
 				percentheal 100,0;
 				percentheal 0,100;
 				close;
@@ -4580,7 +4580,7 @@ moc_para01,111,83,3	script	Toren	2_M_OLDBLSMITH,{
 						mes "You dont have enough zeny.";
 						close;
 					}
-					set Zeny, Zeny - 250000;
+					Zeny -= 250000;
 					getitem .@check[.@i],1;
 					mes "[Toren]";
 					mes "These advanced gears are not easy to make, please take better care of this one.";
@@ -4764,7 +4764,7 @@ moc_para01,112,79,3	script	Weapons Expert	4_M_REPAIR,{
 					mes "Wait... Your Class doesn't have a weapon.";
 					close;
 				}
-				set Zeny, Zeny - 250000;
+				Zeny -= 250000;
 				if (BaseClass == Job_Swordman) {
 					mes "Swordman Class gets a choice of weapons, would you like to have a sword or a spear?";
 					callsub L_Select,

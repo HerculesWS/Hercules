@@ -72,7 +72,7 @@ prontera,132,125,4	script	Bossnia Staff#1	4_M_PHILMAN,{
 		mes "Take care, boy~";
 		mes "Don't hold a grudge against me.";
 		close2;
-		set Zeny, Zeny - 5000;
+		Zeny -= 5000;
 		warp "bossnia_0"+.@i,rand(202,204),rand(202,204);
 		end;
 	}

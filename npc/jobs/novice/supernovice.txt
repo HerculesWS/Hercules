@@ -431,7 +431,7 @@ aldebaran,54,238,5	script	Kafra Employee#sn	4_F_KAFRA1,{
 				}
 				if (Zeny >= 1899) {
 					set RESRVPTS, RESRVPTS + 190;
-					set Zeny, Zeny-1900;
+					Zeny -= 1900;
 					if (getskilllv("MC_PUSHCART") > 0) setcart;
 					mes "[Kafra Employee]";
 					mes "Thank you for using my service.";

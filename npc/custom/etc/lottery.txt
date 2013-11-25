@@ -107,7 +107,7 @@ L_Buy:
 	next;
 	menu "Buy Ticket",-,"Cancel",L_Cancel;
 	if (Zeny < $L_TicketPrice) goto L_NoZeny;
-	set Zeny,Zeny-$L_TicketPrice;
+	Zeny -= $L_TicketPrice;
 	mes "[Lottery]";
 	mes "Would you like your numbers hand picked or computer generated?";
 	next;
@@ -292,7 +292,7 @@ LWinBig:
 	mes "You have matched all six numbers!";
 	mes "Jackpot!";
 	mes "You've won ^0000FF" + $L_Prize_Money + "z^000000.";
-	set Zeny,Zeny+$L_Prize_Money;
+	Zeny += $L_Prize_Money;
 	announce "Lottery: " + strcharinfo(0) + " has won the JACKPOT of " + $L_Prize_Money + "z!",8;
 	set #LID,0;
 	close;
@@ -302,7 +302,7 @@ LWinSmall:
 	mes "[Lottery]";
 	mes "You have matched at least 4 numbers!";
 	mes "You've won ^0000FF" + $L_Prize_Money_Small + "z^000000.";
-	set Zeny,Zeny+$L_Prize_Money_Small;
+	Zeny += $L_Prize_Money_Small;
 	announce "Lottery: " + strcharinfo(0) + " has won a prize of " + $L_Prize_Money_Small + "z!",8;
 	set #LID,0;
 	close;

@@ -286,7 +286,7 @@ OnTouch:
 			mes "^333333Now I gotta find some other sucker to dump this junk on!^000000 *Ahem* I mean, come again!";
 			close;
 		}
-		set Zeny, Zeny-.@Red_potion_hap;
+		Zeny -= .@Red_potion_hap;
 		getitem 501,.@input; //Red_Potion
 		break;
 	case 2:
@@ -351,7 +351,7 @@ OnTouch:
 			mes "When the greatest deal in your life is right before your eyes?! Tragic, truly tragic...";
 			close;
 		}
-		set Zeny, Zeny-.@Main_gauche_hap;
+		Zeny -= .@Main_gauche_hap;
 		getitem 1207,.@input; //Main_Gauche
 		break;
 	case 3:
@@ -403,7 +403,7 @@ OnTouch:
 			mes "Short on zeny, eh?";
 			close;
 		}
-		set Zeny, Zeny-.@Hood__hap;
+		Zeny -= .@Hood__hap;
 		getitem 2501,.@input; //Hood
 		break;
 	case 4:

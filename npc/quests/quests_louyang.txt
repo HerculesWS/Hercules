@@ -1885,7 +1885,7 @@ lou_in02,210,47,0	script	City Hall Officer#lou	4_M_CHNSOLDIER,{
 					mes "[Jin Chiyuan]";
 					mes "^666666*Whispers*^000000";
 					mes "^333333When you go up stairs, another officer will give you the document you want.^000000 ^666666*Ahem*^000000 Louyang thanks you!";
-					set Zeny, Zeny-.@input;
+					Zeny -= .@input;
 					if (ch_par == 5) {
 						set ch_par,11;
 						changequest 11046,11051;
@@ -4124,7 +4124,7 @@ lou_fild01,224,348,0	script	Lady#delivery	4_F_CHNDRESS3,{
 			mes "[Lady]";
 			mes "Alright, there you go!";
 			if (Zeny > 99) {
-				set Zeny, Zeny-100;
+				Zeny -= 100;
 			}
 			close2;
 			specialeffect EF_BLASTMINEBOMB,AREA," #fire";
@@ -4146,7 +4146,7 @@ lou_fild01,224,348,0	script	Lady#delivery	4_F_CHNDRESS3,{
 			mes "Alright,";
 			mes "there you go!";
 			if (Zeny > 99) {
-				set Zeny, Zeny-100;
+				Zeny -= 100;
 			}
 			close2;
 			donpcevent " #fire::OnClaymore";
@@ -4176,7 +4176,7 @@ lou_fild01,224,348,0	script	Lady#delivery	4_F_CHNDRESS3,{
 				mes "delivery fee of 1,000 zeny.";
 				next;
 				if (Zeny > 999) {
-					set Zeny, Zeny-1000;
+					Zeny -= 1000;
 					getitem 7126,1; //Large_Jellopy
 					mes "[Lady]";
 					mes "Thank you~";
@@ -4234,7 +4234,7 @@ lou_fild01,224,348,0	script	Lady#delivery	4_F_CHNDRESS3,{
 			mes "Alright~";
 			mes "There you go!";
 			if (Zeny > 99) {
-				set Zeny, Zeny-100;
+				Zeny -= 100;
 			}
 			close2;
 			donpcevent " #fire::OnClaymore";

@@ -76,7 +76,7 @@ comodo,171,137,1	script	Haith#um	4_F_03,{
 	next;
 	if (select("Pay 1,000 zeny:Refuse to pay") == 1) {
 		if (Zeny > 999) {
-			set Zeny, Zeny-1000;
+			Zeny -= 1000;
 			mes "[Haith]";
 			mes "Hahahaha! You the man!";
 			next;
@@ -273,7 +273,7 @@ umbala,70,106,3	script	Utan Kid#um	4_F_UMGIRL,{
 			mes "You the man~!";
 			mes "Thank you so much, yay~!";
 			if (Zeny > 1000) {
-				set Zeny, Zeny-1000;
+				Zeny -= 1000;
 				if (checkweight(517,1)) {
 					getitem 517,1; //Meat
 				}
@@ -334,7 +334,7 @@ umbala,70,106,3	script	Utan Kid#um	4_F_UMGIRL,{
 			mes "Um~bahumbah~ Um~baumbah~";
 			mes "Um~baumbah~ um~baumbah~";
 			if (Zeny > 1000) {
-				set Zeny, Zeny-1000;
+				Zeny -= 1000;
 				if (checkweight(517,1)) {
 					getitem 517,1; //Meat
 				}

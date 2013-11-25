@@ -3185,7 +3185,7 @@ mosk_in,135,191,5	script	Landlord#mos	4_F_RUSWOMAN3,{
 					mes "Ok, I'll bring you the best room.";
 					mes "Please have a rest, young adventurer.";
 					close2;
-					set Zeny,Zeny-5000;
+					Zeny -= 5000;
 					percentheal 100,100;
 					warp "mosk_in",215,181;
 					end;
@@ -3242,7 +3242,7 @@ mosk_in,135,191,5	script	Landlord#mos	4_F_RUSWOMAN3,{
 				mes "I wish you a good night's rest. Hohoho.";
 				set mos_swan,4;
 				close2;
-				set Zeny,Zeny-5000;
+				Zeny -= 5000;
 				percentheal 100,100;
 				warp "mosk_in",215,181;
 				end;
@@ -3332,7 +3332,7 @@ mosk_in,135,191,5	script	Landlord#mos	4_F_RUSWOMAN3,{
 		mes "[Landlord]";
 		mes "Please be comfortable.";
 		close2;
-		set Zeny,Zeny-5000;
+		Zeny -= 5000;
 		percentheal 100,100;
 		warp "mosk_in",215,181;
 		end;
@@ -3399,7 +3399,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	4_M_RUSBALD,{
 			close;
 		}
 		if (Zeny > 999) {
-			set Zeny,Zeny-1000;
+			Zeny -= 1000;
 			set mos_swan,9;
 			if (!.@j) getitem 519,1; else getitem 531,1;
 			mes "[Pub Owner]";
@@ -3462,7 +3462,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	4_M_RUSBALD,{
 		switch(select("Milk - 1000z:Apple juice - 1000z:They are all expensive!")) {
 			case 1:
 				if (Zeny > 999) {
-					set Zeny,Zeny-1000;
+					Zeny -= 1000;
 					set mos_swan,9;
 					getitem 519,1;
 					mes "[Pub Owner]";
@@ -3476,7 +3476,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	4_M_RUSBALD,{
 				close;
 			case 2:
 				if (Zeny > 999) {
-					set Zeny,Zeny-1000;
+					Zeny -= 1000;
 					set mos_swan,9;
 					getitem 531,1;
 					mes "[Pub Owner]";
@@ -3999,7 +3999,7 @@ moscovia,208,182,7	script	Acorn Dealer#mos	4_M_RUSMAN1,{
 	mes "[Acorn Dealer]";
 	mes "Oh, thank you...";
 	mes "What do you think of them? They're fresh, aren't they?";
-	set Zeny,Zeny - .@price;
+	Zeny -= .@price;
 	getitem 1026,.@input;
 	close;
 }
@@ -10241,7 +10241,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 					delitem 1092,.@redtube_send;
 					delitem 7134,.@redcup_send;
 					delitem 512,.@redapple_send;
-					set Zeny,Zeny-.@redzeny_send;
+					Zeny -= .@redzeny_send;
 					getitem 545,.@total_red01;
 					close;
 				}
@@ -10328,7 +10328,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 					delitem 1092,.@yelltube_send;
 					delitem 7134,.@yellcup_send;
 					delitem 513,.@yellbanana_send;
-					set Zeny,Zeny-.@yellzeny_send;
+					Zeny -= .@yellzeny_send;
 					getitem 546,.@total_yell01;
 					close;
 				}
@@ -11184,7 +11184,7 @@ amatsu,233,234,3	script	Momotoro Publisher#rus42	4_F_JPN2,{
 		}
 		mes "[Momotoro Publisher]";
 		mes "Thank you for buying our books. If you need more books, contact us please.";
-		set Zeny,Zeny-5000;
+		Zeny -= 5000;
 		set rhea_rus_main,27;
 		getitem 7881,1;
 		close;

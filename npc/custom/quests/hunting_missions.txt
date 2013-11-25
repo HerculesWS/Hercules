@@ -92,7 +92,7 @@ function Chk; function Cm;
 					emotion e_sry;
 					close;
 				}
-				set Zeny, Zeny-.Reset;
+				Zeny -= .Reset;
 				emotion e_cash;
 			}
 			mes "[Hunting Missions]";
@@ -173,7 +173,7 @@ Mission_Status:
 	set #Mission_Points, #Mission_Points+.@Mission_Points;
 	set BaseExp, BaseExp+.@Base_Exp;
 	set JobExp, JobExp+.@Job_Exp;
-	set Zeny, Zeny+.@zeny;
+	Zeny += .@zeny;
 	for(set .@i,0; .@i<.Quests; set .@i,.@i+1) {
 		setd "Mission"+.@i,0;
 		setd "Mission"+.@i+"_",0;

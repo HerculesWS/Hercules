@@ -1720,7 +1720,7 @@ OnTouch:
 		mes "^3355FF*SHHHHHHUK!*^000000";
 		specialeffect EF_STEAL;
 		if (Zeny >= 100) {
-			set Zeny, Zeny-100;
+			Zeny -= 100;
 		}
 		next;
 		mes "[" + strcharinfo(0) + "]";
@@ -1736,7 +1736,7 @@ OnTouch:
 		mes "^3355FF*SHHHHHHUK!*^000000";
 		specialeffect EF_STEAL;
 		if (Zeny >= 200) {
-			set Zeny, Zeny-200;
+			Zeny -= 200;
 		}
 		next;
 		mes "[" + strcharinfo(0) + "]";
@@ -1753,7 +1753,7 @@ OnTouch:
 		mes "^3355FF*SHHHHHHUK!*^000000";
 		specialeffect EF_STEAL;
 		if (Zeny >= 10) {
-			set Zeny, Zeny-10;
+			Zeny -= 10;
 		}
 		next;
 		mes "[" + strcharinfo(0) + "]";
@@ -1793,7 +1793,7 @@ OnTouch:
 		mes "^3355FF*SHHHHHHUK!*^000000";
 		specialeffect EF_STEAL;
 		if (Zeny >= 100) {
-			set Zeny, Zeny-100;
+			Zeny -= 100;
 		}
 		next;
 		mes "[" + strcharinfo(0) + "]";
@@ -1809,7 +1809,7 @@ OnTouch:
 		mes "^3355FF*SHHHHHHUK!*^000000";
 		specialeffect EF_STEAL;
 		if (Zeny >= 200) {
-			set Zeny, Zeny-200;
+			Zeny -= 200;
 		}
 		next;
 		mes "[" + strcharinfo(0) + "]";
@@ -1826,7 +1826,7 @@ OnTouch:
 		mes "^3355FF*SHHHHHHUK!*^000000";
 		specialeffect EF_STEAL;
 		if (Zeny >= 10) {
-			set Zeny, Zeny-10;
+			Zeny -= 10;
 		}
 		next;
 		mes "[" + strcharinfo(0) + "]";
@@ -1866,7 +1866,7 @@ OnTouch:
 		mes "^3355FF*SHHHHHHUK!*^000000";
 		specialeffect EF_STEAL;
 		if (Zeny >= 100) {
-			set Zeny, Zeny-100;
+			Zeny -= 100;
 		}
 		next;
 		mes "[" + strcharinfo(0) + "]";
@@ -1883,7 +1883,7 @@ OnTouch:
 		mes "^3355FF*SHHHHHHUK!*^000000";
 		specialeffect EF_STEAL;
 		if (Zeny >= 200) {
-			set Zeny, Zeny-200;
+			Zeny -= 200;
 		}
 		next;
 		mes "[" + strcharinfo(0) + "]";
@@ -1900,7 +1900,7 @@ OnTouch:
 		mes "^3355FF*SHHHHHHUK!*^000000";
 		specialeffect EF_STEAL;
 		if (Zeny >= 10) {
-			set Zeny, Zeny-10;
+			Zeny -= 10;
 		}
 		next;
 		mes "[" + strcharinfo(0) + "]";
@@ -2017,7 +2017,7 @@ OnTouch:
 						mes "but I hope we never bump";
 						mes "into each other ever again!";
 					}
-					set Zeny, Zeny-.@price;
+					Zeny -= .@price;
 					getitem 12016,.@number; //Speed_Up_Potion
 				}
 			}

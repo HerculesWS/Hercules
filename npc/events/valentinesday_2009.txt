@@ -91,7 +91,7 @@ prontera,164,174,4	script	Trader#Val09	1_M_MERCHANT,{
 				mes "[Marco Bassinio]";
 				mes "If you want more, you should come back.";
 				mes "Might be a good idea to buy some more while you have a chance...!";
-				set Zeny,Zeny - .@price;
+				Zeny -= .@price;
 				getitem 558,.@input;
 				close;
 			}
@@ -140,7 +140,7 @@ prontera,164,174,4	script	Trader#Val09	1_M_MERCHANT,{
 			delitem 7175,1;
 			delitem 7174,1;
 			delitem 7948,1;
-			set Zeny,Zeny-500;
+			Zeny -= 500;
 			getnameditem 12744,strcharinfo(0);
 			mes "[Marco Bassinio]";
 			mes "Happy Valentine's Day!";
@@ -206,7 +206,7 @@ prontera,147,171,5	script	Packs Trader#Val09	1_M_MERCHANT,{
 					mes "[Packs Trader]";
 					mes "Here they are.";
 					mes "Hope it makes your Valentine's Day more pleasing!";
-					set Zeny,Zeny-.@price;
+					Zeny -= .@price;
 					getitem 7175,.@input;
 					next;
 					break;
@@ -247,7 +247,7 @@ prontera,147,171,5	script	Packs Trader#Val09	1_M_MERCHANT,{
 					mes "[Packs Trader]";
 					mes "Here they are.";
 					mes "Hope it makes your Valentine's Day more pleasing!";
-					set Zeny,Zeny-.@price;
+					Zeny -= .@price;
 					getitem 7174,.@input;
 					next;
 					break;
@@ -288,7 +288,7 @@ prontera,147,171,5	script	Packs Trader#Val09	1_M_MERCHANT,{
 					mes "[Packs Trader]";
 					mes "Here they are.";
 					mes "Hope it makes your Valentine's Day more pleasing!";
-					set Zeny,Zeny-.@price;
+					Zeny -= .@price;
 					getitem 7948,.@input;
 					next;
 					break;
@@ -376,7 +376,7 @@ prontera,154,185,5	script	Event Ring Maker#Val09	4_F_KAFRA7,{
 	delitem 7175,1;
 	delitem 7174,1;
 	delitem 7948,1;
-	set Zeny,Zeny-1000;
+	Zeny -= 1000;
 	set iROval09ring,1;
 	if (Sex) {
 		getnameditem 12742,strcharinfo(0);

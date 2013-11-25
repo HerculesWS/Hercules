@@ -128,7 +128,7 @@ function	script	EinTower	{
 			mes "using our services.";
 			mes "Let me guide you to";
 			mes "the tower right away.";
-			set Zeny, Zeny-10;
+			Zeny -= 10;
 			close2;
 			warp "einbroch",181,196;
 			end;
@@ -155,7 +155,7 @@ function	script	EinTower	{
 				mes "using our services.";
 				mes "Let me guide you to";
 				mes "the tower right away.";
-				set Zeny, Zeny-20;
+				Zeny -= 20;
 				getitem 512,1; //Apple
 				close2;
 				warp "einbroch",174,204;
@@ -203,7 +203,7 @@ einbroch,232,272,3	script	Train Station Staff#ein1::EinbrochTrain	4_M_EIN_SOLDIE
 			mes "Have a safe trip.";
 			mes "^333333*Ahem*^000000 All aboard!";
 			close2;
-			set Zeny, Zeny-200;
+			Zeny -= 200;
 			warp "einbech",43,215;
 			end;
 		}
@@ -834,7 +834,7 @@ ein_in01,206,224,3	script	Hotel Employee#ein	4_M_EINMAN,{
 				mes "Please enjoy";
 				mes "your rest~";
 				close2;
-				set Zeny, Zeny-5000;
+				Zeny -= 5000;
 				percentheal 100,100;
 				warp "ein_in01",272,167;
 				end;

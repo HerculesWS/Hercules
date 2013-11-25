@@ -722,7 +722,7 @@ morocc_in,166,76,3	script	Bartender#02	1_ETC_01,{
 	switch(select("Tropical Sograt:Vemillion the Beach:Nothing.")) {
 	case 1:
 		if (Zeny >= 1000 ) {
-			set Zeny, Zeny-1000;
+			Zeny -= 1000;
 			getitem 12112,1;
 			mes "[Bartender]";
 			mes "Here you go.";
@@ -733,7 +733,7 @@ morocc_in,166,76,3	script	Bartender#02	1_ETC_01,{
 		break;
 	case 2:
 		if (Zeny >= 1000 ) {
-			set Zeny, Zeny-1000;
+			Zeny -= 1000;
 			getitem 12113,1;
 			mes "[Bartender]";
 			mes "Here you go.";

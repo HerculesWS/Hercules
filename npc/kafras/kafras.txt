@@ -66,7 +66,7 @@ aldeba_in,96,181,4	script	Kafra Service	4_F_KAFRA5,{
 		mes "and administrative functions,";
 		mes "I'll access your Storage for you.";
 		next;
-		set Zeny, Zeny-20;
+		Zeny -= 20;
 		set RESRVPTS, RESRVPTS + (20/5);
 		mes "[Kafra Leilah]";
 		mes "In the future, please";

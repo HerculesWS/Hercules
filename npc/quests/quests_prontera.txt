@@ -2894,7 +2894,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 					mes "to cover your Airship fee.";
 					mes "Thank you, and good luck.";
 					set aru_monas,6;
-					set Zeny, Zeny + (checkre(0)?5000:1500);
+					Zeny += (checkre(0)?5000:1500);
 					changequest 17002,17003;
 					close;
 				}
@@ -3639,7 +3639,7 @@ prt_in,162,99,4	script	Librarian#curse	1_F_02,{
 					mes "replacement copies,";
 					mes "and try not to lose";
 					mes "them again. Thank you.";
-					set Zeny, Zeny-700;
+					Zeny -= 700;
 					getitem 7431,1; //Books
 					close;
 				}

@@ -107,7 +107,7 @@ function	script	Func_Casing	{
 				mes "for visiting my shop, and";
 				mes "I hope that you use all";
 				mes "of your ammo wisely.";
-				set Zeny,Zeny-500*.@amount;
+				Zeny -= 500*.@amount;
 				delitem getarg(0),500*.@amount;
 				getitem getarg(1),.@amount;
 				close;

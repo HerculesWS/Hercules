@@ -26,7 +26,7 @@ yuno_in01,124,164,6	script	Guild Leader	1_M_PRON_KING,{
 	next;
 	menu "Pay ^FF000025,000z^000000.",-,"Thats way to high!!",N_HighPrice;
 	if (Zeny < 25000) goto N_NoZeny;
-	set Zeny,Zeny-25000;
+	Zeny -= 25000;
 	//getitem 7950, 1;
 	//getitem 7951, 1;
 	set Event_THQS,1;

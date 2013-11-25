@@ -1100,7 +1100,7 @@ L_Socket:
 			close;
 		}
 		delitem 6380,1; //Mora_Coin
-		set Zeny, Zeny-100000;
+		Zeny -= 100000;
 		delequip .@part;
 		if (.@enchant == 9) {
 			specialeffect2 EF_SUI_EXPLOSION;
@@ -1135,7 +1135,7 @@ L_Socket:
 		mes "[Artifact Researcher]";
 		mes "The ability to enhance remains.";
 		delitem 6380,1; //Mora_Coin
-		set Zeny, Zeny-100000;
+		Zeny -= 100000;
 		delequip .@part;
 
 //		GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]

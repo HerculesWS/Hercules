@@ -106,7 +106,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				close;
 			}
 			else if (Zeny >= 60) {
-				set Zeny, Zeny-60;
+				Zeny -= 60;
 				mes "[Cat Hand Agent]";
 				mes "Thank you.";
 				mes "Your storage will be opened shortly.";
@@ -153,7 +153,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				close;
 			}
 			else if (Zeny >= 60) {
-				set Zeny, Zeny-60;
+				Zeny -= 60;
 				mes "[Cat Hand Agent]";
 				mes "Thank you.";
 				mes "Your storage will be opened shortly.";
@@ -274,7 +274,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				close;
 			}
 			else if (Zeny >= 60) {
-				set Zeny, Zeny-60;
+				Zeny -= 60;
 				mes "[Cat Hand Agent]";
 				mes "Thank you.";
 				mes "Your storage will be opened shortly.";
@@ -395,7 +395,7 @@ function Catwarp {
 		close;
 	}
 	close2;
-	set Zeny, Zeny-getarg(0);
+	Zeny -= getarg(0);
 	switch(getarg(1)) {
 		case 1: warp "alberta",117,56; end;
 		case 2: warp "prontera",116,72; end;

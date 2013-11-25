@@ -200,7 +200,7 @@
 			set .@sf_c_num,150;
 			set .@sf_r_num,150;
 			set .@sf_w_num,150;
-			set Zeny, Zeny - 1000000;
+			Zeny -= 1000000;
 			break;
 		case 3:
 			if (countitem(6441) == 0) {

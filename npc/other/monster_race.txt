@@ -657,7 +657,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 			mes "that you enjoy the race~";
 			mes "Let me guide you inside";
 			mes "the Monster Race Arena now.";
-			set Zeny, Zeny-2000;
+			Zeny -= 2000;
 			set monster_race_1,0;
 			close2;
 			warp "p_track01",75,41;
@@ -678,7 +678,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 			mes "you enjoy this race.";
 			mes "Let me guide you now";
 			mes "to the Monster Race Arena.";
-			set Zeny, Zeny-2000;
+			Zeny -= 2000;
 			set monster_race_1,0;
 			close2;
 			warp "p_track01",75,41;
@@ -715,7 +715,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 			mes "Thank you~";
 			mes "I hope you enjoy";
 			mes "watching this race!";
-			set Zeny, Zeny-500;
+			Zeny -= 500;
 			set monster_race_1,0;
 			close2;
 			warp "p_track01",75,41;
@@ -1281,7 +1281,7 @@ hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 			mes "that you enjoy the race~";
 			mes "Let me guide you inside";
 			mes "the Monster Race Arena now.";
-			set Zeny, Zeny-2000;
+			Zeny -= 2000;
 			set monster_race_2_1,0;
 			set monster_race_2_2,0;
 			close2;
@@ -1304,7 +1304,7 @@ hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 			mes "you enjoy this race.";
 			mes "Let me guide you now";
 			mes "to the Monster Race Arena.";
-			set Zeny, Zeny-2000;
+			Zeny -= 2000;
 			set monster_race_2_1,0;
 			set monster_race_2_2,0;
 			close2;
@@ -1342,7 +1342,7 @@ hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 			mes "Thank you~";
 			mes "I hope you enjoy";
 			mes "watching this race!";
-			set Zeny, Zeny-500;
+			Zeny -= 500;
 			set monster_race_2_1,0;
 			set monster_race_2_2,0;
 			close2;
