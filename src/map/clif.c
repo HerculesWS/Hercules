@@ -4604,13 +4604,13 @@ void clif_getareachar_skillunit(struct block_list *bl, struct skill_unit *su, en
 		p.job = su->group->unit_id;
 	
 #if PACKETVER >= 20110718
-	p.RadiusRange = su->range;
+	p.RadiusRange = (unsigned char)su->range;
 #endif
 	
 	p.isVisible = 1;
 
 #if PACKETVER >= 20130731
-	p.level = (unsigned char)unit->group->skill_lv;
+	p.level = (unsigned char)su->group->skill_lv;
 #endif
 	
 	clif->send(&p,sizeof(p),bl,target);
