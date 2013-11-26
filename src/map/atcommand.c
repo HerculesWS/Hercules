@@ -5258,11 +5258,13 @@ ACMD(useskill) {
 	else
 		bl = &sd->bl;
 	
+	pc->delinvincibletimer(sd);
+	
 	if (skill->get_inf(skill_id)&INF_GROUND_SKILL)
 		unit->skilluse_pos(bl, pl_sd->bl.x, pl_sd->bl.y, skill_id, skill_lv);
 	else
 		unit->skilluse_id(bl, pl_sd->bl.id, skill_id, skill_lv);
-	
+		
 	return true;
 }
 
