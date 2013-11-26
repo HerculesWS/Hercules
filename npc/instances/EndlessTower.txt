@@ -1450,7 +1450,7 @@ OnTimer5000:
 2@tower,96,138,0	duplicate(1FGate102tower)	42FGate102tower	WARPNPC,2,2
 2@tower,184,138,0	duplicate(1FGate102tower)	43FGate102tower	WARPNPC,2,2
 2@tower,270,138,0	duplicate(1FGate102tower)	44FGate102tower	WARPNPC,2,2
-2@tower,355,138,0	duplicate(1FGate102tower)	WARPNPCFGate102tower	WARPNPC,2,2
+2@tower,355,138,0	duplicate(1FGate102tower)	45FGate102tower	WARPNPC,2,2
 2@tower,12,51,0	duplicate(1FGate102tower)	46FGate102tower	WARPNPC,2,2
 2@tower,96,51,0	duplicate(1FGate102tower)	47FGate102tower	WARPNPC,2,2
 2@tower,184,51,0	duplicate(1FGate102tower)	48FGate102tower	WARPNPC,2,2
