@@ -2116,7 +2116,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 	struct map_session_data *sd, *tsd;
 	int type;
 	int64 damage;
-	int8 rmdamage=0;//magic reflected
+	bool rmdamage = false;//magic reflected
 	bool additional_effects = true, shadow_flag = false;
 
 	if(skill_id > 0 && !skill_lv) return 0;
@@ -2173,7 +2173,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		if( (dmg.damage || dmg.damage2) && (type = skill->magic_reflect(src, bl, src==dsrc)) ) {
 			//Magic reflection, switch caster/target
 			struct block_list *tbl = bl;
-			rmdamage = 1;
+			rmdamage = true;
 			bl = src;
 			src = tbl;
 			dsrc = tbl;
@@ -2184,7 +2184,8 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 				sc = NULL; //Don't need it.
 			/* bugreport:2564 flag&2 disables double casting trigger */
 			flag |= 2;
-
+			/* bugreport:7859 magical reflect'd zeroes blewcount */
+			dmg.blewcount = 0;
 			//Spirit of Wizard blocks Kaite's reflection
 			if( type == 2 && sc && sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_WIZARD )
 			{	//Consume one Fragment per hit of the casted skill? [Skotlex]
