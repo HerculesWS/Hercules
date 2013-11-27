@@ -2022,8 +2022,6 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 
 	if (md->guardian_data && md->guardian_data->guardup_lv)
 		flag|=4;
-	if (md->class_ == MOBID_EMPERIUM)
-		flag|=4;
 
 	if (battle_config.slaves_inherit_speed && md->master_id)
 		flag|=8;

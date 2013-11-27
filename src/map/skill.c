@@ -12930,7 +12930,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				if (map->foreachinrange(mob->count_sub, &sd->bl, skill->get_splash(skill_id, skill_lv), BL_MOB,
 				                        MOBID_EMPERIUM, MOBID_GUARIDAN_STONE1, MOBID_GUARIDAN_STONE2)) {
 					char output[128];
-					sprintf(output, "You're too close to a stone or emperium to do this skill");
+					sprintf(output, "You're too close to a stone or emperium to do this skill"); /* TODO official response? or message.conf it */
 					clif->colormes(sd->fd, COLOR_RED, output);
 					return 0;
 				}

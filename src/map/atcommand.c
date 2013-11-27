@@ -1927,12 +1927,7 @@ ACMD(monster)
 		clif->message(fd, msg_txt(40)); // Invalid monster ID or name.
 		return false;
 	}
-	
-	if (mob_id == MOBID_EMPERIUM) {
-		clif->message(fd, msg_txt(83)); // Monster 'Emperium' cannot be spawned.
-		return false;
-	}
-	
+		
 	if (number <= 0)
 		number = 1;
 	
@@ -1957,7 +1952,7 @@ ACMD(monster)
 	range = (int)sqrt((float)number) +2; // calculation of an odd number (+ 4 area around)
 	for (i = 0; i < number; i++) {
 		map->search_freecell(&sd->bl, 0, &mx,  &my, range, range, 0);
-		k = mob->once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, eventname, size, AI_NONE);
+		k = mob->once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, eventname, size, AI_NONE|(mob_id == MOBID_EMPERIUM?0x200:0x0));
 		count += (k != 0) ? 1 : 0;
 	}
 	
