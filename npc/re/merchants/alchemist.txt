@@ -106,7 +106,7 @@ alde_alche,31,186,3	script	Craft Book Merchant#alde	4_M_ALCHE_D,{
 		}
 		mes "[Craft Book Merchant]";
 		mes "Thank you for your patronage.";
-		Zeny -= .@total;
+		set Zeny,Zeny - .@total;
 		getitem .@item,.@amount;
 		close;
 	}

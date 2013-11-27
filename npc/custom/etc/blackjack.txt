@@ -233,12 +233,12 @@ sL_Win:
 	mes "[Dealer]";
 	mes "Congratulations, you've won!";
 	next;
-	Zeny += @bet;
+	set Zeny, Zeny + @bet;
 	goto L_Play;
 sL_Lose:
 	mes "[Dealer]";
 	mes "I'm sorry but you've lost.";
-	Zeny -= @bet;
+	set Zeny, Zeny - @bet;
 	next;
 	goto L_Play;
 sL_Push:

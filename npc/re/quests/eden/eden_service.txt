@@ -41,7 +41,7 @@
 						mes "Maybe I am not yet qualified to use Cabinet.";
 						close;
 					}
-					Zeny -= 500;
+					set Zeny, Zeny - 500;
 					close2;
 					openstorage;
 					end;

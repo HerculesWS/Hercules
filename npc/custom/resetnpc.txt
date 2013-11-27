@@ -33,7 +33,7 @@ prontera,150,193,4	script	Reset Girl	4_F_TELEPORTER,{
 			mes "Sorry, you don't have enough Zeny.";
 			close;
 		}
-		Zeny -=.@ResetSkill;
+		set Zeny, Zeny-.@ResetSkill;
 		sc_end SC_ALL;
 		resetskill;
 		mes "There you go!";
@@ -44,7 +44,7 @@ prontera,150,193,4	script	Reset Girl	4_F_TELEPORTER,{
 			mes "Sorry, you don't have enough Zeny.";
 			close;
 		}
-		Zeny -=.@ResetStat;
+		set Zeny, Zeny-.@ResetStat;
 		resetstatus;
 		mes "There you go!";
 		close;
@@ -54,7 +54,7 @@ prontera,150,193,4	script	Reset Girl	4_F_TELEPORTER,{
 			mes "Sorry, you don't have enough Zeny.";
 			close;
 		}
-		Zeny -=.@ResetBoth;
+		set Zeny, Zeny-.@ResetBoth;
 		sc_end SC_ALL;
 		resetskill;
 		resetstatus;
