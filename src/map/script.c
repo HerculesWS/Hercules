@@ -11921,18 +11921,31 @@ BUILDIN(undisguise)
 }
 
 /*==========================================
- * Transform a bl to another _class,
+ * Transforms an NPC's sprite into another one.
+ * Transformation only to those within view of it.
  * @type unused
  *------------------------------------------*/
-BUILDIN(classchange) {
+BUILDIN(changespr) {
 	int _class,type;
 	struct block_list *bl=map->id2bl(st->oid);
 	
-	if(bl==NULL) return true;
+	if(bl==NULL)
+		return true;
+
+	_class	= script_getnum(st,2);
+	type	= 0;	// Unused
+
+	if( script_hasdata(st,3) )
+	{
+		TBL_NPC *nd = npc->name2id(script_getstr(st,3));
+		if(nd)
+			clif->class_change(&nd->bl, _class, type);
+	}
+	else
+	{
+		clif->class_change(bl, _class, type);
+	}
 	
-	_class=script_getnum(st,2);
-	type=script_getnum(st,3);
-	clif->class_change(bl,_class,type);
 	return true;
 }
 
@@ -18182,7 +18195,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getinventorylist,""),
 		BUILDIN_DEF(getskilllist,""),
 		BUILDIN_DEF(clearitem,""),
-		BUILDIN_DEF(classchange,"ii"),
+		BUILDIN_DEF(changespr,"i?"),
 		BUILDIN_DEF(misceffect,"i"),
 		BUILDIN_DEF(playbgm,"s"),
 		BUILDIN_DEF(playbgmall,"s?????"),
