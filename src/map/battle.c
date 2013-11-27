@@ -2611,19 +2611,17 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				/**
 				 * in RE, SW possesses a lifetime equal to 3 times the caster's health
 				 **/
-			#ifdef RENEWAL
 				d->dmg_lv = ATK_BLOCK;
+			#ifdef RENEWAL
 				if ( ( group->val2 - damage) > 0 ) {
 					group->val2 -= (int)cap_value(damage,INT_MIN,INT_MAX);
 				} else
 					skill->del_unitgroup(group,ALC_MARK);
-				return 0;
 			#else
 				if (--group->val2<=0)
 					skill->del_unitgroup(group,ALC_MARK);
-				d->dmg_lv = ATK_BLOCK;
-				return 0;
 			#endif
+				return 0;
 			}
 			status_change_end(bl, SC_SAFETYWALL, INVALID_TIMER);
 		}
@@ -2654,6 +2652,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 
 			if(sc->data[SC_CR_SHRINK] && rnd()%100<5*sce->val1)
 				skill->blown(bl,src,skill->get_blewcount(CR_SHRINK,1),-1,0);
+			d->dmg_lv = ATK_MISS;
 			return 0;
 		}
 
@@ -4995,41 +4994,10 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	}
 
 	if( wd.damage + wd.damage2 ) { //There is a total damage value
+		int64 rdamage = 0;
+
 		if( src != target ) { // Don't reflect your own damage (Grand Cross)
-			int64 rdamage = 0;
-
 			rdamage = battle->calc_return_damage(target, src, wd.damage + wd.damage2, wd.flag, skill_id);
-
-			if( tsc && tsc->data[SC_DEATHBOUND] ) {
-				wd.damage = wd.damage + wd.damage2;
-				wd.damage2 = 0;
-				status_change_end(target,SC_DEATHBOUND,INVALID_TIMER);
-			}
-			
-			if( rdamage > 0 ) {
-				
-				if( tsc && tsc->data[SC_LG_REFLECTDAMAGE] ) {
-					bool change = false;
-					if( sd && !sd->state.autocast )
-						change = true;
-					if( change )
-						sd->state.autocast = 1;
-					map->foreachinshootrange(battle->damage_area,target,skill->get_splash(LG_REFLECTDAMAGE,1),BL_CHAR,timer->gettick(),target,wd.amotion,sstatus->dmotion,rdamage,tstatus->race);
-					if( change )
-						sd->state.autocast = 0;
-				} else {
-					int rdelay;
-					
-					rdelay = clif->damage(src, src, timer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
-
-					//Use Reflect Shield to signal this kind of skill trigger. [Skotlex]
-					if( tsd )
-						battle->drain(tsd, src, rdamage, rdamage, sstatus->race, is_boss(src));
-					battle->delay_damage(timer->gettick(), wd.amotion,target,src,0,CR_REFLECTSHIELD,0,rdamage,ATK_DEF,rdelay,true);
-					skill->additional_effect(target, src, CR_REFLECTSHIELD, 1, BF_WEAPON|BF_SHORT|BF_NORMAL,ATK_DEF,timer->gettick());
-				}
-				
-			}
 		}
 		
 		if(!wd.damage2) {
@@ -5062,6 +5030,38 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			wd.damage-=wd.damage2;
 #endif
 		}
+		
+		if( rdamage && wd.dmg_lv >= ATK_BLOCK ) {/* yes block still applies, somehow gravity thinks it makes sense. */
+			
+			if( tsc && tsc->data[SC_DEATHBOUND] ) {
+				wd.damage = wd.damage + wd.damage2;
+				wd.damage2 = 0;
+				status_change_end(target,SC_DEATHBOUND,INVALID_TIMER);
+			}
+							
+			if( tsc && tsc->data[SC_LG_REFLECTDAMAGE] ) {
+				bool change = false;
+				if( sd && !sd->state.autocast )
+					change = true;
+				if( change )
+					sd->state.autocast = 1;
+				map->foreachinshootrange(battle->damage_area,target,skill->get_splash(LG_REFLECTDAMAGE,1),BL_CHAR,timer->gettick(),target,wd.amotion,sstatus->dmotion,rdamage,tstatus->race);
+				if( change )
+					sd->state.autocast = 0;
+			} else {
+				int rdelay;
+				
+				rdelay = clif->damage(src, src, timer->gettick(), status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4, 0);
+				
+				//Use Reflect Shield to signal this kind of skill trigger. [Skotlex]
+				if( tsd )
+					battle->drain(tsd, src, rdamage, rdamage, sstatus->race, is_boss(src));
+				battle->delay_damage(timer->gettick(), wd.amotion,target,src,0,CR_REFLECTSHIELD,0,rdamage,ATK_DEF,rdelay,true);
+				skill->additional_effect(target, src, CR_REFLECTSHIELD, 1, BF_WEAPON|BF_SHORT|BF_NORMAL,ATK_DEF,timer->gettick());
+			}
+				
+		}
+		
 	}
 	//Reject Sword bugreport:4493 by Daegaladh
 	if(wd.damage && tsc && tsc->data[SC_SWORDREJECT] &&
