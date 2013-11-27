@@ -21,7 +21,7 @@ struct block_list;
  **/
 #define ATCOMMAND_LENGTH 50
 #define MAX_MSG 1500
-
+#define msg_txt(idx) atcommand->msg(idx)
 /**
  * Enumerations
  **/
@@ -111,12 +111,10 @@ struct atcommand_interface {
 	void (*doload) (void);
 	void (*base_commands) (void);
 	bool (*add) (char *name, AtCommandFunc func, bool replace);
+	const char* (*msg) (int msg_number);
 };
 
 struct atcommand_interface *atcommand;
-
-/* will remain outside for a while, we have plans for this little fellow */
-const char* msg_txt(int msg_number);
 
 void atcommand_defaults(void);
 

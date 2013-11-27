@@ -72,8 +72,7 @@ struct atcmd_binding_data* get_atcommandbind_byname(const char* name) {
 //-----------------------------------------------------------
 // Return the message string of the specified number by [Yor]
 //-----------------------------------------------------------
-const char* msg_txt(int msg_number)
-{
+const char* atcommand_msg(int msg_number) {
 	if (msg_number >= 0 && msg_number < MAX_MSG &&
 	    atcommand->msg_table[msg_number] != NULL && atcommand->msg_table[msg_number][0] != '\0')
 		return atcommand->msg_table[msg_number];
@@ -10235,4 +10234,5 @@ void atcommand_defaults(void) {
 	atcommand->doload = atcommand_doload;
 	atcommand->base_commands = atcommand_basecommands;
 	atcommand->add = atcommand_add;
+	atcommand->msg = atcommand_msg;
 }
