@@ -5059,6 +5059,10 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		sd->md->bl.y = sd->md->ud.to_y = y;
 		sd->md->ud.dir = sd->ud.dir;
 	}
+	
+	/* given autotrades have no clients you have to trigger this manually otherwise they get stuck in memory limbo bugreport:7495 */
+	if( sd->state.autotrade )
+		clif->pLoadEndAck(0,sd);
 
 	return 0;
 }
