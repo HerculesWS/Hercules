@@ -15889,20 +15889,20 @@ BUILDIN(questinfo)
 	return true;
 }
 
-BUILDIN(setquest)
-{
+BUILDIN(setquest) {
 	struct map_session_data *sd = script->rid2sd(st);
 	unsigned short i;
-	
-	if (!sd)
-		return false;
+	int quest_id;
+	nullpo_retr(false,sd);
 
-	quest->add(sd, script_getnum(st, 2));
+	quest_id = script_getnum(st, 2);
+
+	quest->add(sd, quest_id);
 
 	// If questinfo is set, remove quest bubble once quest is set.
 	for(i = 0; i < map->list[sd->bl.m].qi_count; i++) {
 		struct questinfo *qi = &map->list[sd->bl.m].qi_data[i];
-		if( qi->quest_id == script_getnum(st, 2) ) {
+		if( qi->quest_id == quest_id ) {
 #if PACKETVER >= 20120410
 			clif->quest_show_event(sd, &qi->nd->bl, 9999, 0);
 #else
@@ -15914,8 +15914,7 @@ BUILDIN(setquest)
 	return true;
 }
 
-BUILDIN(erasequest)
-{
+BUILDIN(erasequest) {
 	struct map_session_data *sd = script->rid2sd(st);
 	nullpo_retr(false,sd);
 	
@@ -15923,8 +15922,7 @@ BUILDIN(erasequest)
 	return true;
 }
 
-BUILDIN(completequest)
-{
+BUILDIN(completequest) {
 	struct map_session_data *sd = script->rid2sd(st);
 	nullpo_retr(false,sd);
 	
@@ -15932,8 +15930,7 @@ BUILDIN(completequest)
 	return true;
 }
 
-BUILDIN(changequest)
-{
+BUILDIN(changequest) {
 	struct map_session_data *sd = script->rid2sd(st);
 	nullpo_retr(false,sd);
 	
@@ -15941,15 +15938,14 @@ BUILDIN(changequest)
 	return true;
 }
 
-BUILDIN(checkquest)
-{
+BUILDIN(checkquest) {
 	struct map_session_data *sd = script->rid2sd(st);
-	quest_check_type type = HAVEQUEST;
+	enum quest_check_type type = HAVEQUEST;
 	
 	nullpo_retr(false,sd);
 	
 	if( script_hasdata(st, 3) )
-		type = (quest_check_type)script_getnum(st, 3);
+		type = (enum quest_check_type)script_getnum(st, 3);
 	
 	script_pushint(st, quest->check(sd, script_getnum(st, 2), type));
 	

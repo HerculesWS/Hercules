@@ -2393,6 +2393,11 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 				aFree(sd->queues);
 				sd->queues = NULL;
 			}
+			if( sd->quest_log != NULL ) {
+				aFree(sd->quest_log);
+				sd->quest_log = NULL;
+				sd->num_quests = sd->avail_quests = 0;
+			}
 			
 			for( k = 0; k < sd->hdatac; k++ ) {
 				if( sd->hdata[k]->flag.free ) {
