@@ -17776,6 +17776,21 @@ void clif_package_item_announce(struct map_session_data *sd, unsigned short name
 	
 	clif->send(&p,sizeof(p), &sd->bl, ALL_CLIENT);
 }
+/* Made Possible Thanks to Yommy! */
+void clif_item_drop_announce(struct map_session_data *sd, unsigned short nameid, char *monsterName) {
+	struct packet_item_drop_announce p;
+	
+	p.PacketType = item_drop_announceType;
+	p.PacketLength = sizeof(p);
+	p.type = 0x1;
+	p.ItemID = nameid;
+	p.len = NAME_LENGTH;
+	safestrncpy(p.Name, sd->status.name, sizeof(p.Name));
+	p.monsterNameLen = NAME_LENGTH;
+	safestrncpy(p.monsterName, monsterName, sizeof(p.monsterName));
+	
+	clif->send(&p,sizeof(p), &sd->bl, ALL_CLIENT);
+}
 /* [Ind/Hercules] special thanks to Yommy~! */
 void clif_skill_cooldown_list(int fd, struct skill_cd* cd) {
 #if PACKETVER >= 20120604
@@ -18291,6 +18306,7 @@ void clif_defaults(void) {
 	clif->cart_additem_ack = clif_cart_additem_ack;
 	clif->cashshop_load = clif_cashshop_db;
 	clif->package_announce = clif_package_item_announce;
+	clif->item_drop_announce = clif_item_drop_announce;
 	/* unit-related */
 	clif->clearunit_single = clif_clearunit_single;
 	clif->clearunit_area = clif_clearunit_area;

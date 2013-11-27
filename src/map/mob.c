@@ -2362,6 +2362,14 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 				//MSG: "'%s' won %s's %s (chance: %0.02f%%)"
 				intif->broadcast(message, strlen(message)+1, BC_DEFAULT);
 			}
+			
+			/* heres the thing we got the feature set up however we're still discussing how to best define the ids,
+			 * so while we discuss, for a small period of time, the list is hardcoded (yes officially only those 2 use it,
+			 * thus why we're unsure on how to best place the setting) */
+			/* temp, will not be hardcoded for long thudu. */
+			if( it->nameid == 7782 || it->nameid == 7783 ) /* for when not hardcoded: add a check on mvp bonus drop as well */
+				clif->item_drop_announce(mvp_sd, it->nameid, md->name);
+			
 			// Announce first, or else ditem will be freed. [Lance]
 			// By popular demand, use base drop rate for autoloot code. [Skotlex]
 			mob->item_drop(md, dlist, ditem, 0, md->db->dropitem[i].p, homkillonly);

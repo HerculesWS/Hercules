@@ -76,6 +76,7 @@ enum packet_headers {
 #endif
 	script_clearType = 0x8d6,
 	package_item_announceType = 0x7fd,
+	item_drop_announceType = 0x7fd,
 #if PACKETVER < 4
 	unit_walkingType = 0x7b,
 #elif PACKETVER < 7
@@ -694,6 +695,18 @@ struct packet_package_item_announce {
 	char Name[NAME_LENGTH];
 	char unknown;
 	unsigned short BoxItemID;
+} __attribute__((packed));
+
+/* made possible thanks to Yommy!! */
+struct packet_item_drop_announce {
+	short PacketType;
+	short PacketLength;
+	unsigned char type;
+	unsigned short ItemID;
+	char len;
+	char Name[NAME_LENGTH];
+	char monsterNameLen;
+	char monsterName[NAME_LENGTH];
 } __attribute__((packed));
 
 struct packet_cart_additem_ack {
