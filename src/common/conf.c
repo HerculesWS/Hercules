@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #include "conf.h"
 #include "../../3rdparty/libconfig/libconfig.h"
@@ -32,9 +33,12 @@ void config_setting_copy_simple(config_setting_t *parent, const config_setting_t
 		config_setting_copy_aggregate(parent, src);
 	}
 	else {
-		config_setting_t *set = config_setting_add(parent, config_setting_name(src), config_setting_type(src));
-
-		if (set == NULL)
+		config_setting_t *set;
+		
+		if( config_setting_get_member(parent, config_setting_name(src)) != NULL )
+			return;
+		
+		if ((set = config_setting_add(parent, config_setting_name(src), config_setting_type(src))) == NULL)
 			return;
 
 		if (CONFIG_TYPE_INT == config_setting_type(src)) {
