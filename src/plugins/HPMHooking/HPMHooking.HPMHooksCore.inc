@@ -63,6 +63,8 @@ struct {
 	struct HPMHookPoint *HP_atcommand_base_commands_post;
 	struct HPMHookPoint *HP_atcommand_add_pre;
 	struct HPMHookPoint *HP_atcommand_add_post;
+	struct HPMHookPoint *HP_atcommand_msg_pre;
+	struct HPMHookPoint *HP_atcommand_msg_post;
 	struct HPMHookPoint *HP_battle_init_pre;
 	struct HPMHookPoint *HP_battle_init_post;
 	struct HPMHookPoint *HP_battle_final_pre;
@@ -83,8 +85,8 @@ struct {
 	struct HPMHookPoint *HP_battle_delay_damage_post;
 	struct HPMHookPoint *HP_battle_drain_pre;
 	struct HPMHookPoint *HP_battle_drain_post;
-	struct HPMHookPoint *HP_battle_calc_return_damage_pre;
-	struct HPMHookPoint *HP_battle_calc_return_damage_post;
+	struct HPMHookPoint *HP_battle_reflect_damage_pre;
+	struct HPMHookPoint *HP_battle_reflect_damage_post;
 	struct HPMHookPoint *HP_battle_attr_ratio_pre;
 	struct HPMHookPoint *HP_battle_attr_ratio_post;
 	struct HPMHookPoint *HP_battle_attr_fix_pre;
@@ -469,6 +471,8 @@ struct {
 	struct HPMHookPoint *HP_clif_cashshop_load_post;
 	struct HPMHookPoint *HP_clif_package_announce_pre;
 	struct HPMHookPoint *HP_clif_package_announce_post;
+	struct HPMHookPoint *HP_clif_item_drop_announce_pre;
+	struct HPMHookPoint *HP_clif_item_drop_announce_post;
 	struct HPMHookPoint *HP_clif_clearunit_single_pre;
 	struct HPMHookPoint *HP_clif_clearunit_single_post;
 	struct HPMHookPoint *HP_clif_clearunit_area_pre;
@@ -1283,6 +1287,10 @@ struct {
 	struct HPMHookPoint *HP_clif_show_modifiers_post;
 	struct HPMHookPoint *HP_clif_notify_bounditem_pre;
 	struct HPMHookPoint *HP_clif_notify_bounditem_post;
+	struct HPMHookPoint *HP_clif_delay_damage_pre;
+	struct HPMHookPoint *HP_clif_delay_damage_post;
+	struct HPMHookPoint *HP_clif_delay_damage_sub_pre;
+	struct HPMHookPoint *HP_clif_delay_damage_sub_post;
 	struct HPMHookPoint *HP_clif_pWantToConnection_pre;
 	struct HPMHookPoint *HP_clif_pWantToConnection_post;
 	struct HPMHookPoint *HP_clif_pLoadEndAck_pre;
@@ -5024,6 +5032,8 @@ struct {
 	int HP_atcommand_base_commands_post;
 	int HP_atcommand_add_pre;
 	int HP_atcommand_add_post;
+	int HP_atcommand_msg_pre;
+	int HP_atcommand_msg_post;
 	int HP_battle_init_pre;
 	int HP_battle_init_post;
 	int HP_battle_final_pre;
@@ -5044,8 +5054,8 @@ struct {
 	int HP_battle_delay_damage_post;
 	int HP_battle_drain_pre;
 	int HP_battle_drain_post;
-	int HP_battle_calc_return_damage_pre;
-	int HP_battle_calc_return_damage_post;
+	int HP_battle_reflect_damage_pre;
+	int HP_battle_reflect_damage_post;
 	int HP_battle_attr_ratio_pre;
 	int HP_battle_attr_ratio_post;
 	int HP_battle_attr_fix_pre;
@@ -5430,6 +5440,8 @@ struct {
 	int HP_clif_cashshop_load_post;
 	int HP_clif_package_announce_pre;
 	int HP_clif_package_announce_post;
+	int HP_clif_item_drop_announce_pre;
+	int HP_clif_item_drop_announce_post;
 	int HP_clif_clearunit_single_pre;
 	int HP_clif_clearunit_single_post;
 	int HP_clif_clearunit_area_pre;
@@ -6244,6 +6256,10 @@ struct {
 	int HP_clif_show_modifiers_post;
 	int HP_clif_notify_bounditem_pre;
 	int HP_clif_notify_bounditem_post;
+	int HP_clif_delay_damage_pre;
+	int HP_clif_delay_damage_post;
+	int HP_clif_delay_damage_sub_pre;
+	int HP_clif_delay_damage_sub_post;
 	int HP_clif_pWantToConnection_pre;
 	int HP_clif_pWantToConnection_post;
 	int HP_clif_pLoadEndAck_pre;
