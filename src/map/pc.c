@@ -3997,9 +3997,11 @@ int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_l
 			return 4;
 
 		memcpy(&sd->status.inventory[i], item_data, sizeof(sd->status.inventory[0]));
-		// clear equips field first, just in case
+		// clear equip and favorite fields first, just in case
 		if( item_data->equip )
 			sd->status.inventory[i].equip = 0;
+		if( item_data->favorite )
+			sd->status.inventory[i].favorite = 0;
 
 		sd->status.inventory[i].amount = amount;
 		sd->inventory_data[i] = data;

@@ -2448,7 +2448,6 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 	if(mvp_sd && md->db->mexp > 0 && !md->special_state.ai) {
 		int log_mvp[2] = {0};
 		unsigned int mexp;
-		struct item item;
 		double exp;
 
 		//mapflag: noexp check [Lorky]
@@ -2471,6 +2470,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 			/* pose them randomly in the list -- so on 100% drop servers it wont always drop the same item */
 			int mdrop_id[MAX_MVP_DROP];
 			int mdrop_p[MAX_MVP_DROP];
+			struct item item;
 
 			memset(&mdrop_id,0,MAX_MVP_DROP*sizeof(int));
 
