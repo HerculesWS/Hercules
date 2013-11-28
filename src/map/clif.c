@@ -45,7 +45,6 @@
 #include "clif.h"
 #include "mail.h"
 #include "quest.h"
-#include "packets_struct.h"
 #include "irc-bot.h"
 
 #include <stdio.h>
@@ -4363,78 +4362,68 @@ int clif_calc_walkdelay(struct block_list *bl,int delay, int type, int damage, i
 ///     10 = critical hit
 ///     11 = lucky dodge
 ///     12 = (touch skill?)
-int clif_damage(struct block_list* src, struct block_list* dst, int64 tick, int sdelay, int ddelay, int64 in_damage, int div, int type, int64 in_damage2) {
-	unsigned char buf[33];
+int clif_damage(struct block_list* src, struct block_list* dst, int sdelay, int ddelay, int64 in_damage, short div, unsigned char type, int64 in_damage2) {
+	struct packet_damage p;
 	struct status_change *sc;
-	int damage,damage2;
 #if PACKETVER < 20071113
-	const int cmd = 0x8a;
+	short damage,damage2;
 #else
-	const int cmd = 0x2e1;
+	int damage,damage2;
 #endif
 
 	nullpo_ret(src);
 	nullpo_ret(dst);
+		
+	sc = status->get_sc(dst);
 	
-	damage = (int)cap_value(in_damage,INT_MIN,INT_MAX);
-	damage2 = (int)cap_value(in_damage2,INT_MIN,INT_MAX);
+	if(sc && sc->count && sc->data[SC_ILLUSION]) {
+		if(in_damage) in_damage = in_damage*(sc->data[SC_ILLUSION]->val2) + rnd()%100;
+		if(in_damage2) in_damage2 = in_damage2*(sc->data[SC_ILLUSION]->val2) + rnd()%100;
+	}
+	
+#if PACKETVER < 20071113
+	damage = (short)min(in_damage,INT16_MAX);
+	damage2 = (short)min(in_damage2,INT16_MAX);
+#else
+	damage = (int)min(in_damage,INT_MAX);
+	damage2 = (int)min(in_damage2,INT_MAX);
+#endif
 	
 	type = clif_calc_delay(type,div,damage+damage2,ddelay);
-	sc = status->get_sc(dst);
-	if(sc && sc->count) {
-		if(sc->data[SC_ILLUSION]) {
-			if(damage) damage = damage*(sc->data[SC_ILLUSION]->val2) + rnd()%100;
-			if(damage2) damage2 = damage2*(sc->data[SC_ILLUSION]->val2) + rnd()%100;
-		}
-	}
-
-	WBUFW(buf,0)=cmd;
-	WBUFL(buf,2)=src->id;
-	WBUFL(buf,6)=dst->id;
-	WBUFL(buf,10)=(uint32)tick;
-	WBUFL(buf,14)=sdelay;
-	WBUFL(buf,18)=ddelay;
-#if PACKETVER < 20071113
-	if (battle_config.hide_woe_damage && map_flag_gvg2(src->m)) {
-		WBUFW(buf,22)=damage?div:0;
-		WBUFW(buf,27)=damage2?div:0;
-	} else {
-		WBUFW(buf,22)=min(damage, INT16_MAX);
-		WBUFW(buf,27)=damage2;
-	}
-	WBUFW(buf,24)=div;
-	WBUFB(buf,26)=type;
-#else
-	if (battle_config.hide_woe_damage && map_flag_gvg2(src->m)) {
-		WBUFL(buf,22)=damage?div:0;
-		WBUFL(buf,29)=damage2?div:0;
-	} else {
-		WBUFL(buf,22)=damage;
-		WBUFL(buf,29)=damage2;
-	}
-	WBUFW(buf,26)=div;
-	WBUFB(buf,28)=type;
-#endif
 	
+	p.PacketType = damageType;
+	p.GID = src->id;
+	p.targetGID = dst->id;
+	p.startTime = (uint32)timer->gettick();
+	p.attackMT = sdelay;
+	p.attackedMT = ddelay;
+	p.count = div;
+	p.action = type;
+	
+	if( battle_config.hide_woe_damage && map_flag_gvg2(src->m) ) {
+		p.damage = damage?div:0;
+		p.leftDamage = damage2?div:0;
+	} else {
+		p.damage = damage;
+		p.leftDamage = damage2;
+	}
+		
 	if(disguised(dst)) {
-		clif->send(buf,packet_len(cmd),dst,AREA_WOS);
-		WBUFL(buf,6) = -dst->id;
-		clif->send(buf,packet_len(cmd),dst,SELF);
+		clif->send(&p,sizeof(p),dst,AREA_WOS);
+		p.targetGID = -dst->id;
+		clif->send(&p,sizeof(p),dst,SELF);
 	} else
-		clif->send(buf,packet_len(cmd),dst,AREA);
+		clif->send(&p,sizeof(p),dst,AREA);
 
 	if(disguised(src)) {
-		WBUFL(buf,2) = -src->id;
+		p.GID = -src->id;
 		if (disguised(dst))
-			WBUFL(buf,6) = dst->id;
-#if PACKETVER < 20071113
-		if(damage > 0) WBUFW(buf,22) = -1;
-		if(damage2 > 0) WBUFW(buf,27) = -1;
-#else
-		if(damage > 0) WBUFL(buf,22) = -1;
-		if(damage2 > 0) WBUFL(buf,29) = -1;
-#endif
-		clif->send(buf,packet_len(cmd),src,SELF);
+			p.targetGID = dst->id;
+
+		if(damage > 0) p.damage = -1;
+		if(damage2 > 0) p.leftDamage = -1;
+
+		clif->send(&p,sizeof(p),src,SELF);
 	}
 
 	if(src == dst) {
@@ -4450,7 +4439,7 @@ int clif_damage(struct block_list* src, struct block_list* dst, int64 tick, int 
  *------------------------------------------*/
 void clif_takeitem(struct block_list* src, struct block_list* dst)
 {
-	//clif->damage(src,dst,0,0,0,0,0,1,0);
+	//clif->damage(src,dst,0,0,0,0,1,0);
 	unsigned char buf[32];
 
 	nullpo_retv(src);
@@ -17932,7 +17921,9 @@ void clif_notify_bounditem(struct map_session_data *sd, unsigned short index) {
 	clif->send(&p,sizeof(p), &sd->bl, SELF);
 }
 
-/* (GM) right click -> 'remove all equipment' */
+/**
+ * Parses the (GM) right click option 'remove all equipment'
+ **/
 void clif_parse_GMFullStrip(int fd, struct map_session_data *sd) {
 	struct map_session_data *tsd = map->id2sd(RFIFOL(fd,2));
 	int i;
@@ -17945,6 +17936,90 @@ void clif_parse_GMFullStrip(int fd, struct map_session_data *sd) {
 		if( tsd->equip_index[ i ] >= 0 )
 			pc->unequipitem( tsd , tsd->equip_index[ i ] , 2 );
 	}
+}
+/**
+ * clif_delay_damage timer, sends the stored data and clears the memory afterwards
+ **/
+int clif_delay_damage_sub(int tid, int64 tick, int id, intptr_t data) {
+	struct cdelayed_damage *dd = (struct cdelayed_damage *)data;
+		
+	clif->send(&dd->p,sizeof(struct packet_damage),&dd->bl,AREA_WOS);
+	
+	ers_free(clif->delayed_damage_ers,dd);
+	
+	return 0;
+}
+/**
+ * Delays sending a damage packet in order to avoid the visual display to overlap
+ *
+ * @param tick when to trigger the timer (e.g. timer->gettick() + 500)
+ * @param src block_list pointer of the src
+ * @param dst block_list pointer of the damage source
+ * @param sdelay attack motion usually status_get_amotion()
+ * @param ddelay damage motion usually status_get_dmotion()
+ * @param in_damage total damage to be sent
+ * @param div amount of hits
+ * @param type action type
+ *
+ * @return clif->calc_walkdelay used in further processing
+ **/
+int clif_delay_damage(int64 tick, struct block_list *src, struct block_list *dst, int sdelay, int ddelay, int64 in_damage, short div, unsigned char type) {
+	struct cdelayed_damage *dd;
+	struct status_change *sc;
+#if PACKETVER < 20071113
+	short damage;
+#else
+	int damage;
+#endif
+	
+	nullpo_ret(src);
+	nullpo_ret(dst);
+	
+	sc = status->get_sc(dst);
+	
+	if(sc && sc->count && sc->data[SC_ILLUSION]) {
+		if(in_damage) in_damage = in_damage*(sc->data[SC_ILLUSION]->val2) + rnd()%100;
+	}
+	
+#if PACKETVER < 20071113
+	damage = (short)min(in_damage,INT16_MAX);
+#else
+	damage = (int)min(in_damage,INT_MAX);
+#endif
+	
+	type = clif_calc_delay(type,div,damage,ddelay);
+	
+	dd = ers_alloc(clif->delayed_damage_ers, struct cdelayed_damage);
+	
+	dd->p.PacketType = damageType;
+	dd->p.GID = src->id;
+	dd->p.targetGID = dst->id;
+	dd->p.startTime = (uint32)timer->gettick();
+	dd->p.attackMT = sdelay;
+	dd->p.attackedMT = ddelay;
+	dd->p.count = div;
+	dd->p.action = type;
+	dd->p.leftDamage = 0;
+	
+	if( battle_config.hide_woe_damage && map_flag_gvg2(src->m) )
+		dd->p.damage = damage?div:0;
+	else
+		dd->p.damage = damage;
+	
+	dd->bl.m = dst->m;
+	dd->bl.x = dst->x;
+	dd->bl.y = dst->y;
+	dd->bl.type = BL_NUL;
+	
+	if( tick > timer->gettick() )
+		timer->add(tick,clif->delay_damage_sub,0,(intptr_t)dd);
+	else {
+		clif->send(&dd->p,sizeof(struct packet_damage),&dd->bl,AREA_WOS);
+		
+		ers_free(clif->delayed_damage_ers,dd);
+	}
+	
+	return clif->calc_walkdelay(dst,ddelay,type,damage,div);
 }
 
 /* */
@@ -18221,7 +18296,8 @@ int do_init_clif(bool minimal) {
 	timer->add_func_list(clif->delayquit, "clif_delayquit");
 
 	clif->delay_clearunit_ers = ers_new(sizeof(struct block_list),"clif.c::delay_clearunit_ers",ERS_OPT_CLEAR);
-
+	clif->delayed_damage_ers = ers_new(sizeof(struct cdelayed_damage),"clif.c::delayed_damage_ers",ERS_OPT_CLEAR);
+	
 	clif->channel_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, HCHSYS_NAME_LENGTH);
 	hChSys.ally = hChSys.local = hChSys.irc = hChSys.ally_autojoin = hChSys.local_autojoin = false;
 	clif->chann_config_read();
@@ -18251,6 +18327,7 @@ void do_final_clif(void) {
 
 	db_destroy(clif->channel_db);
 	ers_destroy(clif->delay_clearunit_ers);
+	ers_destroy(clif->delayed_damage_ers);
 	
 	for(i = 0; i < CASHSHOP_TAB_MAX; i++) {
 		int k;
@@ -18267,6 +18344,7 @@ void clif_defaults(void) {
 	clif->bind_ip = INADDR_ANY;
 	clif->map_port = 5121;
 	clif->ally_only = false;
+	clif->delayed_damage_ers = NULL;
 	/* core */
 	clif->init = do_init_clif;
 	clif->final = do_final_clif;
@@ -18754,6 +18832,9 @@ void clif_defaults(void) {
 	clif->show_modifiers = clif_show_modifiers;
 	/* */
 	clif->notify_bounditem = clif_notify_bounditem;
+	/* */
+	clif->delay_damage = clif_delay_damage;
+	clif->delay_damage_sub = clif_delay_damage_sub;
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/ 

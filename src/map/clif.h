@@ -9,6 +9,8 @@
 #include "../common/db.h"
 #include "../common/mmo.h"
 #include "../common/socket.h"
+#include "../map/map.h"
+#include "../map/packets_struct.h"
 #include <stdarg.h>
 
 /**
@@ -505,6 +507,11 @@ struct hCSData {
 	unsigned int price;
 };
 
+struct cdelayed_damage {
+	struct packet_damage p;
+	struct block_list bl;
+};
+
 /**
  * Vars
  **/
@@ -533,6 +540,8 @@ struct clif_interface {
 	unsigned int cryptKey[3];
 	/* */
 	bool ally_only;
+	/* */
+	struct eri *delayed_damage_ers;
 	/* core */
 	int (*init) (bool minimal);
 	void (*final) (void);
@@ -634,7 +643,7 @@ struct clif_interface {
 	void (*scriptclear) (struct map_session_data *sd, int npcid);
 	/* client-user-interface-related */
 	void (*viewpoint) (struct map_session_data *sd, int npc_id, int type, int x, int y, int id, int color);
-	int (*damage) (struct block_list* src, struct block_list* dst, int64 tick, int sdelay, int ddelay, int64 damage, int div, int type, int64 damage2);
+	int (*damage) (struct block_list* src, struct block_list* dst, int sdelay, int ddelay, int64 damage, short div, unsigned char type, int64 damage2);
 	void (*sitting) (struct block_list* bl);
 	void (*standing) (struct block_list* bl);
 	void (*arrow_create_list) (struct map_session_data *sd);
@@ -1021,6 +1030,9 @@ struct clif_interface {
 	void (*show_modifiers) (struct map_session_data *sd);
 	/* */
 	void (*notify_bounditem) (struct map_session_data *sd, unsigned short index);
+	/* */
+	int (*delay_damage) (int64 tick, struct block_list *src, struct block_list *dst, int sdelay, int ddelay, int64 in_damage, short div, unsigned char type);
+	int (*delay_damage_sub) (int tid, int64 tick, int id, intptr_t data);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/

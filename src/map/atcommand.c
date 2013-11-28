@@ -1052,7 +1052,7 @@ ACMD(heal)
 	
 	if ( hp < 0 && sp <= 0 ) {
 		status->damage(NULL, &sd->bl, -hp, -sp, 0, 0);
-		clif->damage(&sd->bl,&sd->bl, timer->gettick(), 0, 0, -hp, 0, 4, 0);
+		clif->damage(&sd->bl,&sd->bl, 0, 0, -hp, 0, 4, 0);
 		clif->message(fd, msg_txt(156)); // HP or/and SP modified.
 		return true;
 	}
@@ -1063,7 +1063,7 @@ ACMD(heal)
 			status->heal(&sd->bl, hp, 0, 0);
 		else {
 			status->damage(NULL, &sd->bl, -hp, 0, 0, 0);
-			clif->damage(&sd->bl,&sd->bl, timer->gettick(), 0, 0, -hp, 0, 4, 0);
+			clif->damage(&sd->bl,&sd->bl, 0, 0, -hp, 0, 4, 0);
 		}
 	}
 	

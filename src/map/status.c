@@ -9629,7 +9629,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			struct block_list* src = map->id2bl(sce->val2);
 			if( tid == -1 || !src)
 				break; // Terminated by Damage
-			status_fix_damage(src,bl,400*sce->val1,clif->damage(bl,bl,timer->gettick(),0,0,400*sce->val1,0,0,0));
+			status_fix_damage(src,bl,400*sce->val1,clif->damage(bl,bl,0,0,400*sce->val1,0,0,0));
 		}
 		break;
 	case SC_WUGDASH:
@@ -10325,7 +10325,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 	case SC_PYREXIA:
 		if( --(sce->val4) > 0 ) {
 			map->freeblock_lock();
-			clif->damage(bl,bl,tick,status_get_amotion(bl),status_get_dmotion(bl)+500,100,0,0,0);
+			clif->damage(bl,bl,status_get_amotion(bl),status_get_dmotion(bl)+500,100,0,0,0);
 			status_fix_damage(NULL,bl,100,0);
 			if( sc->data[type] ) {
 				sc_timer_next(3000+tick,status->change_timer,bl->id,data);
@@ -10341,7 +10341,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 			damage += st->vit * (sce->val1 - 3);
 			unit->skillcastcancel(bl,2);
 			map->freeblock_lock();
-			status->damage(bl, bl, damage, 0, clif->damage(bl,bl,tick,status_get_amotion(bl),status_get_dmotion(bl)+500,damage,1,0,0), 1);
+			status->damage(bl, bl, damage, 0, clif->damage(bl,bl,status_get_amotion(bl),status_get_dmotion(bl)+500,damage,1,0,0), 1);
 			if( sc->data[type] ) {
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data );
 			}
@@ -10399,7 +10399,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 		if( --(sce->val4) > 0 ) {
 			//Damage is every 10 seconds including 3%sp drain.
 			map->freeblock_lock();
-			clif->damage(bl,bl,tick,status_get_amotion(bl),1,1,0,0,0);
+			clif->damage(bl,bl,status_get_amotion(bl),1,1,0,0,0);
 			status->damage(NULL, bl, 1, st->max_sp * 3 / 100, 0, 0); //cancel dmg only if cancelable
 			if( sc->data[type] ) {
 				sc_timer_next(10000 + tick, status->change_timer, bl->id, data );
@@ -10449,7 +10449,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 			int damage = 1000 + 3 * status_get_max_hp(bl) / 100; // Deals fixed (1000 + 3%*MaxHP)
 
 			map->freeblock_lock();
-			clif->damage(bl,bl,tick,0,0,damage,1,9,0); //damage is like endure effect with no walk delay
+			clif->damage(bl,bl,0,0,damage,1,9,0); //damage is like endure effect with no walk delay
 			status->damage(src, bl, damage, 0, 0, 1);
 
 			if( sc->data[type]){ // Target still lives. [LimitLine]
@@ -10554,7 +10554,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 				break;
 			map->freeblock_lock();
 			damage =  sce->val3;
-			status->damage(src, bl, damage, 0, clif->damage(bl,bl,tick,st->amotion,st->dmotion+200,damage,1,0,0), 1);
+			status->damage(src, bl, damage, 0, clif->damage(bl,bl,st->amotion,st->dmotion+200,damage,1,0,0), 1);
 			unit->skillcastcancel(bl,1);
 			if ( sc->data[type] ) {
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
@@ -10657,7 +10657,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 			int damage = st->max_hp / 100; // Suggestion 1% each second
 			if( damage >= st->hp ) damage = st->hp - 1; // Do not kill, just keep you with 1 hp minimum
 			map->freeblock_lock();
-			status_fix_damage(NULL,bl,damage,clif->damage(bl,bl,tick,0,0,damage,0,0,0));
+			status_fix_damage(NULL,bl,damage,clif->damage(bl,bl,0,0,damage,0,0,0));
 			if( sc->data[type] ) {
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 			}

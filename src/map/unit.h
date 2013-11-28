@@ -113,7 +113,7 @@ struct unit_interface {
 	int (*skillcastcancel) (struct block_list *bl, int type);
 	void (*dataset) (struct block_list *bl);
 	int (*counttargeted) (struct block_list *bl);
-	int (*fixdamage) (struct block_list *src, struct block_list *target, int64 tick, int sdelay, int ddelay, int64 damage, int div, int type, int64 damage2);
+	int (*fixdamage) (struct block_list *src, struct block_list *target, int sdelay, int ddelay, int64 damage, short div, unsigned char type, int64 damage2);
 	int (*changeviewsize) (struct block_list *bl, short size);
 	int (*remove_map) (struct block_list *bl, clr_type clrtype, const char *file, int line, const char *func);
 	void (*remove_map_pc) (struct map_session_data *sd, clr_type clrtype);
