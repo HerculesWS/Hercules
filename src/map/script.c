@@ -66,11 +66,9 @@ static inline void SETVALUE(unsigned char* buf, int i, int n) {
 
 struct script_interface script_s;
 
-const char* script_op2name(int op)
-{
+const char* script_op2name(int op) {
 #define RETURN_OP_NAME(type) case type: return #type
-	switch( op )
-	{
+	switch( op ) {
 	RETURN_OP_NAME(C_NOP);
 	RETURN_OP_NAME(C_POS);
 	RETURN_OP_NAME(C_INT);
@@ -84,6 +82,8 @@ const char* script_op2name(int op)
 	RETURN_OP_NAME(C_RETINFO);
 	RETURN_OP_NAME(C_USERFUNC);
 	RETURN_OP_NAME(C_USERFUNC_POS);
+
+	RETURN_OP_NAME(C_REF);
 
 	// operators
 	RETURN_OP_NAME(C_OP3);
@@ -108,6 +108,10 @@ const char* script_op2name(int op)
 	RETURN_OP_NAME(C_NOT);
 	RETURN_OP_NAME(C_R_SHIFT);
 	RETURN_OP_NAME(C_L_SHIFT);
+	RETURN_OP_NAME(C_ADD_POST);
+	RETURN_OP_NAME(C_SUB_POST);
+	RETURN_OP_NAME(C_ADD_PRE);
+	RETURN_OP_NAME(C_SUB_PRE);
 
 	default:
 		ShowDebug("script_op2name: unexpected op=%d\n", op);
@@ -819,97 +823,15 @@ void parse_nextline(bool first, const char* p)
 	script->str_data[LABEL_NEXTLINE].label     = -1;
 }
 
-/// Parse a variable assignment using the direct equals operator
-/// @param p script position where the function should run from
-/// @return NULL if not a variable assignment, the new position otherwise
-const char* parse_variable(const char* p) {
-	int i, j, word;
-	c_op type = C_NOP;
-	const char *p2 = NULL;
-	const char *var = p;
+/**
+ * Pushes a variable into stack, processing its array index if needed.
+ * @see parse_variable
+ */
+void parse_variable_sub_push(int word, const char *p2) {
+	const char* p3 = NULL;
 
-	// skip the variable where applicable
-	p = script->skip_word(p);
-	p = script->skip_space(p);
-
-	if( p == NULL ) {// end of the line or invalid buffer
-		return NULL;
-	}
-
-	if( *p == '[' ) {// array variable so process the array as appropriate
-		for( p2 = p, i = 0, j = 1; p; ++ i ) {
-			if( *p ++ == ']' && --(j) == 0 ) break;
-			if( *p == '[' ) ++ j;
-		}
-
-		if( !(p = script->skip_space(p)) ) {// end of line or invalid characters remaining
-			disp_error_message("Missing right expression or closing bracket for variable.", p);
-		}
-	}
-
-	if( type == C_NOP &&
-	!( ( p[0] == '=' && p[1] != '=' && (type = C_EQ) ) // =
-	|| ( p[0] == '+' && p[1] == '=' && (type = C_ADD) ) // +=
-	|| ( p[0] == '-' && p[1] == '=' && (type = C_SUB) ) // -=
-	|| ( p[0] == '^' && p[1] == '=' && (type = C_XOR) ) // ^=
-	|| ( p[0] == '|' && p[1] == '=' && (type = C_OR ) ) // |=
-	|| ( p[0] == '&' && p[1] == '=' && (type = C_AND) ) // &=
-	|| ( p[0] == '*' && p[1] == '=' && (type = C_MUL) ) // *=
-	|| ( p[0] == '/' && p[1] == '=' && (type = C_DIV) ) // /=
-	|| ( p[0] == '%' && p[1] == '=' && (type = C_MOD) ) // %=
-	|| ( p[0] == '~' && p[1] == '=' && (type = C_NOT) ) // ~=
-	|| ( p[0] == '+' && p[1] == '+' && (type = C_ADD_PP) ) // ++
-	|| ( p[0] == '-' && p[1] == '-' && (type = C_SUB_PP) ) // --
-	|| ( p[0] == '<' && p[1] == '<' && p[2] == '=' && (type = C_L_SHIFT) ) // <<=
-	|| ( p[0] == '>' && p[1] == '>' && p[2] == '=' && (type = C_R_SHIFT) ) // >>=
-	) )
-	{// failed to find a matching operator combination so invalid
-		return NULL;
-	}
-
-	switch( type ) {
-		case C_EQ: {// incremental modifier
-			p = script->skip_space( &p[1] );
-		}
-		break;
-
-		case C_L_SHIFT:
-		case C_R_SHIFT: {// left or right shift modifier
-			p = script->skip_space( &p[3] );
-		}
-		break;
-
-		default: {// normal incremental command
-			p = script->skip_space( &p[2] );
-		}
-	}
-
-	if( p == NULL ) {// end of line or invalid buffer
-		return NULL;
-	}
-
-	// push the set function onto the stack
-	script->addl(script->buildin_set_ref);
-	script->addc(C_ARG);
-
-	// always append parenthesis to avoid errors
-	script->syntax.curly[script->syntax.curly_count].type = TYPE_ARGLIST;
-	script->syntax.curly[script->syntax.curly_count].count = 0;
-	script->syntax.curly[script->syntax.curly_count].flag = ARGLIST_PAREN;
-
-	// increment the total curly count for the position in the script
-	++ script->syntax.curly_count;
-
-	// parse the variable currently being modified
-	word = script->add_word(var);
-
-	if( script->str_data[word].type == C_FUNC || script->str_data[word].type == C_USERFUNC || script->str_data[word].type == C_USERFUNC_POS )
-	{// cannot assign a variable which exists as a function or label
-		disp_error_message("Cannot modify a variable which has the same name as a function or label.", p);
-	}
-
-	if( p2 ) {// process the variable index
-		const char* p3 = NULL;
+	if( p2 ) {
+		// process the variable index
 
 		// push the getelementofarray method into the stack
 		script->addl(script->buildin_getelementofarray_ref);
@@ -926,28 +848,141 @@ const char* parse_variable(const char* p) {
 
 		// push the closing function stack operator onto the stack
 		script->addc(C_FUNC);
-		p3 ++;
-	} else {// simply push the variable or value onto the stack
+		p3++;
+	} else {
+		// No array index, simply push the variable or value onto the stack
 		script->addl(word);
 	}
+}
+
+/// Parse a variable assignment using the direct equals operator
+/// @param p script position where the function should run from
+/// @return NULL if not a variable assignment, the new position otherwise
+const char* parse_variable(const char* p) {
+	int i, j, word;
+	c_op type = C_NOP;
+	const char *p2 = NULL;
+	const char *var = p;
+
+	if( ( p[0] == '+' && p[1] == '+' && (type = C_ADD_PRE) ) // pre ++
+	 || ( p[1] == '-' && p[1] == '-' && (type = C_SUB_PRE) ) // pre --
+	) {
+		var = p = script->skip_space(&p[2]);
+	}
+
+	// skip the variable where applicable
+	p = script->skip_word(p);
+	p = script->skip_space(p);
+
+	if( p == NULL ) {
+		// end of the line or invalid buffer
+		return NULL;
+	}
+
+	if( *p == '[' ) {
+		// array variable so process the array as appropriate
+		for( p2 = p, i = 0, j = 1; p; ++ i ) {
+			if( *p ++ == ']' && --(j) == 0 ) break;
+			if( *p == '[' ) ++ j;
+		}
+
+		if( !(p = script->skip_space(p)) ) {
+			// end of line or invalid characters remaining
+			disp_error_message("Missing right expression or closing bracket for variable.", p);
+		}
+	}
+
+	if( type == C_NOP &&
+	!( ( p[0] == '=' && p[1] != '=' && (type = C_EQ) ) // =
+	|| ( p[0] == '+' && p[1] == '=' && (type = C_ADD) ) // +=
+	|| ( p[0] == '-' && p[1] == '=' && (type = C_SUB) ) // -=
+	|| ( p[0] == '^' && p[1] == '=' && (type = C_XOR) ) // ^=
+	|| ( p[0] == '|' && p[1] == '=' && (type = C_OR ) ) // |=
+	|| ( p[0] == '&' && p[1] == '=' && (type = C_AND) ) // &=
+	|| ( p[0] == '*' && p[1] == '=' && (type = C_MUL) ) // *=
+	|| ( p[0] == '/' && p[1] == '=' && (type = C_DIV) ) // /=
+	|| ( p[0] == '%' && p[1] == '=' && (type = C_MOD) ) // %=
+	|| ( p[0] == '+' && p[1] == '+' && (type = C_ADD_POST) ) // post ++
+	|| ( p[0] == '-' && p[1] == '-' && (type = C_SUB_POST) ) // post --
+	|| ( p[0] == '<' && p[1] == '<' && p[2] == '=' && (type = C_L_SHIFT) ) // <<=
+	|| ( p[0] == '>' && p[1] == '>' && p[2] == '=' && (type = C_R_SHIFT) ) // >>=
+	) )
+	{// failed to find a matching operator combination so invalid
+		return NULL;
+	}
+
+	switch( type ) {
+		case C_ADD_PRE: // pre ++
+		case C_SUB_PRE: // pre --
+			// (nothing more to skip)
+			break;
+
+		case C_EQ: // =
+			p = script->skip_space( &p[1] );
+			break;
+
+		case C_L_SHIFT: // <<=
+		case C_R_SHIFT: // >>=
+			p = script->skip_space( &p[3] );
+			break;
+
+		default: // everything else
+			p = script->skip_space( &p[2] );
+	}
+
+	if( p == NULL ) {
+		// end of line or invalid buffer
+		return NULL;
+	}
+
+	// push the set function onto the stack
+	script->addl(script->buildin_set_ref);
+	script->addc(C_ARG);
+
+	// always append parenthesis to avoid errors
+	script->syntax.curly[script->syntax.curly_count].type = TYPE_ARGLIST;
+	script->syntax.curly[script->syntax.curly_count].count = 0;
+	script->syntax.curly[script->syntax.curly_count].flag = ARGLIST_PAREN;
+
+	// increment the total curly count for the position in the script
+	++script->syntax.curly_count;
+
+	// parse the variable currently being modified
+	word = script->add_word(var);
+
+	if( script->str_data[word].type == C_FUNC
+	 || script->str_data[word].type == C_USERFUNC
+	 || script->str_data[word].type == C_USERFUNC_POS
+	) {
+		// cannot assign a variable which exists as a function or label
+		disp_error_message("Cannot modify a variable which has the same name as a function or label.", p);
+	}
+
+	parse_variable_sub_push(word, p2); // Push variable onto the stack
 
 	if( type != C_EQ )
 		script->addc(C_REF);
 
-	if( type == C_ADD_PP || type == C_SUB_PP ) {// incremental operator for the method
+	if( type == C_ADD_POST || type == C_SUB_POST ) { // post ++ / --
 		script->addi(1);
-		script->addc(type == C_ADD_PP ? C_ADD : C_SUB);
-	} else {// process the value as an expression
+		script->addc(type == C_ADD_POST ? C_ADD : C_SUB);
+
+		parse_variable_sub_push(word, p2); // Push variable onto the stack (third argument of setr)
+	} else if( type == C_ADD_PRE || type == C_SUB_PRE ) { // pre ++ / --
+		script->addi(1);
+		script->addc(type == C_ADD_PRE ? C_ADD : C_SUB);
+	} else {
+		// process the value as an expression
 		p = script->parse_subexpr(p, -1);
 
-		if( type != C_EQ )
-		{// push the type of modifier onto the stack
+		if( type != C_EQ ) {
+			// push the type of modifier onto the stack
 			script->addc(type);
 		}
 	}
 
 	// decrement the curly count for the position within the script
-	-- script->syntax.curly_count;
+	--script->syntax.curly_count;
 
 	// close the script by appending the function operator
 	script->addc(C_FUNC);
@@ -1035,26 +1070,29 @@ const char* parse_simpleexpr(const char *p) {
 		p=np;
 	} else if(*p=='"') {
 		script->addc(C_STR);
-		p++;
-		while( *p && *p != '"' ) {
-			if( (unsigned char)p[-1] <= 0x7e && *p == '\\' ) {
-				char buf[8];
-				size_t len = sv->skip_escaped_c(p) - p;
-				size_t n = sv->unescape_c(buf, p, len);
-				if( n != 1 )
-					ShowDebug("parse_simpleexpr: unexpected length %d after unescape (\"%.*s\" -> %.*s)\n", (int)n, (int)len, p, (int)n, buf);
-				p += len;
-				script->addb(*buf);
-				continue;
-			} else if( *p == '\n' ) {
-				disp_error_message("parse_simpleexpr: unexpected newline @ string",p);
+		do {
+			p++;
+			while( *p && *p != '"' ) {
+				if( (unsigned char)p[-1] <= 0x7e && *p == '\\' ) {
+					char buf[8];
+					size_t len = sv->skip_escaped_c(p) - p;
+					size_t n = sv->unescape_c(buf, p, len);
+					if( n != 1 )
+						ShowDebug("parse_simpleexpr: unexpected length %d after unescape (\"%.*s\" -> %.*s)\n", (int)n, (int)len, p, (int)n, buf);
+					p += len;
+					script->addb(*buf);
+					continue;
+				} else if( *p == '\n' ) {
+					disp_error_message("parse_simpleexpr: unexpected newline @ string",p);
+				}
+				script->addb(*p++);
 			}
-			script->addb(*p++);
-		}
-		if(!*p)
-			disp_error_message("parse_simpleexpr: unexpected end of file @ string",p);
+			if(!*p)
+				disp_error_message("parse_simpleexpr: unexpected end of file @ string",p);
+			p++;	//'"'
+			p = script->skip_space(p);
+		} while( *p && *p == '"' );
 		script->addb(0);
-		p++;	//'"'
 	} else {
 		int l;
 		const char* pv;
@@ -1105,48 +1143,51 @@ const char* parse_simpleexpr(const char *p) {
 /*==========================================
  * Analysis of the expression
  *------------------------------------------*/
-const char* script_parse_subexpr(const char* p,int limit)
-{
+const char* script_parse_subexpr(const char* p,int limit) {
 	int op,opl,len;
 	const char* tmpp;
 
 	p=script->skip_space(p);
 
-	if( *p == '-' ){
+	if( *p == '-' ) {
 		 tmpp = script->skip_space(p+1);
-		if( *tmpp == ';' || *tmpp == ',' ){
+		if( *tmpp == ';' || *tmpp == ',' ) {
 			script->addl(LABEL_NEXTLINE);
 			p++;
 			return p;
 		}
 	}
 
-	if((op=C_NEG,*p=='-') || (op=C_LNOT,*p=='!') || (op=C_NOT,*p=='~')){
-		p=script->parse_subexpr(p+1,10);
+	if( (op=C_ADD_PRE,p[0]=='+'&&p[1]=='+') || (op=C_SUB_PRE,p[0]=='-'&&p[1]=='-') ) { // Pre ++ -- operators
+		p=script->parse_variable(p);
+	} else if( (op=C_NEG,*p=='-') || (op=C_LNOT,*p=='!') || (op=C_NOT,*p=='~') ) { // Unary - ! ~ operators
+		p=script->parse_subexpr(p+1,11);
 		script->addc(op);
-	} else
+	} else {
 		p=script->parse_simpleexpr(p);
+	}
 	p=script->skip_space(p);
 	while((
-			(op=C_OP3,opl=0,len=1,*p=='?') ||
-			(op=C_ADD,opl=8,len=1,*p=='+') ||
-			(op=C_SUB,opl=8,len=1,*p=='-') ||
-			(op=C_MUL,opl=9,len=1,*p=='*') ||
-			(op=C_DIV,opl=9,len=1,*p=='/') ||
-			(op=C_MOD,opl=9,len=1,*p=='%') ||
-			(op=C_LAND,opl=2,len=2,*p=='&' && p[1]=='&') ||
-			(op=C_AND,opl=6,len=1,*p=='&') ||
-			(op=C_LOR,opl=1,len=2,*p=='|' && p[1]=='|') ||
-			(op=C_OR,opl=5,len=1,*p=='|') ||
-			(op=C_XOR,opl=4,len=1,*p=='^') ||
-			(op=C_EQ,opl=3,len=2,*p=='=' && p[1]=='=') ||
-			(op=C_NE,opl=3,len=2,*p=='!' && p[1]=='=') ||
-			(op=C_R_SHIFT,opl=7,len=2,*p=='>' && p[1]=='>') ||
-			(op=C_GE,opl=3,len=2,*p=='>' && p[1]=='=') ||
-			(op=C_GT,opl=3,len=1,*p=='>') ||
-			(op=C_L_SHIFT,opl=7,len=2,*p=='<' && p[1]=='<') ||
-			(op=C_LE,opl=3,len=2,*p=='<' && p[1]=='=') ||
-			(op=C_LT,opl=3,len=1,*p=='<')) && opl>limit){
+	   (op=C_OP3,    opl=0, len=1,*p=='?')              // ?:
+	|| (op=C_ADD,    opl=9, len=1,*p=='+')              // +
+	|| (op=C_SUB,    opl=9, len=1,*p=='-')              // -
+	|| (op=C_MUL,    opl=10,len=1,*p=='*')              // *
+	|| (op=C_DIV,    opl=10,len=1,*p=='/')              // /
+	|| (op=C_MOD,    opl=10,len=1,*p=='%')              // %
+	|| (op=C_LAND,   opl=2, len=2,*p=='&' && p[1]=='&') // &&
+	|| (op=C_AND,    opl=5, len=1,*p=='&')              // &
+	|| (op=C_LOR,    opl=1, len=2,*p=='|' && p[1]=='|') // ||
+	|| (op=C_OR,     opl=3, len=1,*p=='|')              // |
+	|| (op=C_XOR,    opl=4, len=1,*p=='^')              // ^
+	|| (op=C_EQ,     opl=6, len=2,*p=='=' && p[1]=='=') // ==
+	|| (op=C_NE,     opl=6, len=2,*p=='!' && p[1]=='=') // !=
+	|| (op=C_R_SHIFT,opl=8, len=2,*p=='>' && p[1]=='>') // >>
+	|| (op=C_GE,     opl=7, len=2,*p=='>' && p[1]=='=') // >=
+	|| (op=C_GT,     opl=7, len=1,*p=='>')              // >
+	|| (op=C_L_SHIFT,opl=8, len=2,*p=='<' && p[1]=='<') // <<
+	|| (op=C_LE,     opl=7, len=2,*p=='<' && p[1]=='=') // <=
+	|| (op=C_LT,     opl=7, len=1,*p=='<')              // <
+	) && opl>limit) {
 		p+=len;
 		if(op == C_OP3) {
 			p=script->parse_subexpr(p,-1);
@@ -2330,7 +2371,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 				i += 3;
 				break;
 			case C_STR:
-				j = strlen(script->buf + i);
+				j = strlen((char*)script->buf + i);
 				ShowMessage(" %s", script->buf + i);
 				i += j+1;
 				break;
@@ -5121,8 +5162,7 @@ BUILDIN(copyarray);
 /// The value is converted to the type of the variable.
 ///
 /// set(<variable>,<value>) -> <variable>
-BUILDIN(set)
-{
+BUILDIN(setr) {
 	TBL_PC* sd = NULL;
 	struct script_data* data;
 	//struct script_data* datavalue;
@@ -5132,8 +5172,7 @@ BUILDIN(set)
 	
 	data = script_getdata(st,2);
 	//datavalue = script_getdata(st,3);
-	if( !data_isreference(data) )
-	{
+	if( !data_isreference(data) ) {
 		ShowError("script:set: not a variable\n");
 		script->reportdata(script_getdata(st,2));
 		st->state = END;
@@ -5144,31 +5183,30 @@ BUILDIN(set)
 	name = reference_getname(data);
 	prefix = *name;
 	
-	if( not_server_variable(prefix) )
-	{
+	if( not_server_variable(prefix) ) {
 		sd = script->rid2sd(st);
-		if( sd == NULL )
-		{
+		if( sd == NULL ) {
 			ShowError("script:set: no player attached for player variable '%s'\n", name);
 			return true;
 		}
 	}
 	
 #if 0
-	if( data_isreference(datavalue) )
-	{// the value being referenced is a variable
+	// TODO: see de43fa0f73be01080bd11c08adbfb7c158324c81
+	if( data_isreference(datavalue) ) {
+		// the value being referenced is a variable
 		const char* namevalue = reference_getname(datavalue);
 		
-		if( !not_array_variable(*namevalue) )
-		{// array variable being copied into another array variable
-			if( sd == NULL && not_server_variable(*namevalue) && !(sd = script->rid2sd(st)) )
-			{// player must be attached in order to copy a player variable
+		if( !not_array_variable(*namevalue) ) {
+			// array variable being copied into another array variable
+			if( sd == NULL && not_server_variable(*namevalue) && !(sd = script->rid2sd(st)) ) {
+				// player must be attached in order to copy a player variable
 				ShowError("script:set: no player attached for player variable '%s'\n", namevalue);
 				return true;
 			}
 			
-			if( is_string_variable(namevalue) != is_string_variable(name) )
-			{// non-matching array value types
+			if( is_string_variable(namevalue) != is_string_variable(name) ) {
+				// non-matching array value types
 				ShowWarning("script:set: two array variables do not match in type.\n");
 				return true;
 			}
@@ -5182,13 +5220,22 @@ BUILDIN(set)
 	}
 #endif
 	
+	if( script_hasdata(st, 4) ) {
+		// Optional argument used by post-increment/post-decrement constructs to return the previous value
+		if( is_string_variable(name) ) {
+			script_pushstrcopy(st, script_getstr(st, 4));
+		} else {
+			script_pushint(st, script_getnum(st, 4));
+		}
+	} else {
+		// return a copy of the variable reference
+		script_pushcopy(st,2);
+	}
+
 	if( is_string_variable(name) )
 		script->set_reg(st,sd,num,name,(void*)script_getstr(st,3),script_getref(st,2));
 	else
 		script->set_reg(st,sd,num,name,(void*)__64BPTRSIZE(script_getnum(st,3)),script_getref(st,2));
-	
-	// return a copy of the variable reference
-	script_pushcopy(st,2);
 	
 	return true;
 }
@@ -17989,7 +18036,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(warpguild,"siii"), // [Fredzilla]
 		BUILDIN_DEF(setlook,"ii"),
 		BUILDIN_DEF(changelook,"ii"), // Simulates but don't Store it
-		BUILDIN_DEF(set,"rv"),
+		BUILDIN_DEF2(setr,"set","rv"),
+		BUILDIN_DEF(setr,"rv?"), // Not meant to be used directly, required for var++/var--
 		BUILDIN_DEF(setarray,"rv*"),
 		BUILDIN_DEF(cleararray,"rvi"),
 		BUILDIN_DEF(copyarray,"rri"),
@@ -18482,10 +18530,10 @@ void script_parse_builtin(void) {
 			int slen = strlen(BUILDIN[i].arg), offset = start + i;
 			n = script->add_str(BUILDIN[i].name);
 			
-			if (!strcmp(BUILDIN[i].name, "set")) script->buildin_set_ref = n;
-            else if (!strcmp(BUILDIN[i].name, "callsub")) script->buildin_callsub_ref = n;
-            else if (!strcmp(BUILDIN[i].name, "callfunc")) script->buildin_callfunc_ref = n;
-            else if (!strcmp(BUILDIN[i].name, "getelementofarray") ) script->buildin_getelementofarray_ref = n;
+			if (!strcmp(BUILDIN[i].name, "setr")) script->buildin_set_ref = n;
+			else if (!strcmp(BUILDIN[i].name, "callsub")) script->buildin_callsub_ref = n;
+			else if (!strcmp(BUILDIN[i].name, "callfunc")) script->buildin_callfunc_ref = n;
+			else if (!strcmp(BUILDIN[i].name, "getelementofarray") ) script->buildin_getelementofarray_ref = n;
 			
 			if( script->str_data[n].func && script->str_data[n].func != BUILDIN[i].func )
 				continue;/* something replaced it, skip. */

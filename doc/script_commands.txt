@@ -578,6 +578,29 @@ Operators section described below. All operators listed there may be
 placed in-front of the '=' sign when modifying variables to perform the 
 action as required.
 
+Increment and decrement operators are also provided, for your convenience.
+Pre-increment and pre-decrement operators:
+
+    ++@x; // same as @x = @x + 1
+    --@x; // same as @x = @x - 1
+
+Post-increment and post-decrement operators:
+
+    @x++; // similar to @x = @x + 1
+    @x--; // similar to @x = @x - 1
+
+The difference between pre- and post- increment/decrement operators is that,
+when used in an expression, the pre- ones will be executed before evaluating
+the expression, while the post- ones will be executed after. For example:
+
+    @x = 1;
+    @y = ++@x; // After this line is executed, both @y and @x will be 2
+    @x = 1;
+    @y = @x++; // After this line is executed, @y will be 1, @x will be 2
+
+Note: The pre-increment/pre-decrement operators are, by design, faster (or at
+least not slower) than their respective post- equivalent.
+
 Note:
 
  !! Currently the scripting engine does not support directly copying array 
@@ -853,6 +876,74 @@ and are the following:
 	or to replace any other simple if-else clauses. It might be worth
 	mentioning that ?: has low priority and has to be enclosed with
 	parenthesis in most (if not all) cases.
+
+Operator Precedence and Associativity
+
+Operator precedence and associativity work more or less like they do in
+mathematics. The rules can be summarized with the following table:
+
+Precedence  |  Description                                  | Associativity
+---------------------------------------------------------------------------
+1 (highest) | []  Array subscripting                        | None
+---------------------------------------------------------------------------
+2           | ++  Increment                                 | None
+            | --  Decrement                                 |
+---------------------------------------------------------------------------
+2           |  -  Unary minus                               | Right to left
+            |  !  Logical NOT                               |
+            |  ~  Bitwise NOT (One's Complement)            |
+---------------------------------------------------------------------------
+3           |  *  Multiplication                            | Left to right
+            |  /  Division                                  |
+            |  %  Modulo (remainder)                        |
+---------------------------------------------------------------------------
+4           |  +  Addition                                  | Left to right
+            |  -  Subtraction                               |
+---------------------------------------------------------------------------
+5           | <<  Bitwise left shift                        | Left to right
+            | >>  Bitwise right shift                       |
+---------------------------------------------------------------------------
+6           |  <  Less than                                 | Left to right
+            | <=  Less than or equal to                     |
+            |  >  Greater than                              |
+            | >=  Greater than or equal to                  |
+---------------------------------------------------------------------------
+7           | ==  Equal to                                  | Left to right
+            | !=  Not equal to                              |
+---------------------------------------------------------------------------
+8           |  &  Bitwise AND                               | Left to right
+---------------------------------------------------------------------------
+9           |  ^  Bitwise XOR (exclusive or)                | Left to right
+---------------------------------------------------------------------------
+10          |  |  Bitwise OR (inclusive or)                 | Left to right
+---------------------------------------------------------------------------
+11          | &&  Logical AND                               | Left to right
+---------------------------------------------------------------------------
+12          | ||  Logical OR                                | Left to right
+---------------------------------------------------------------------------
+13          | ?:  Ternary conditional                       | Right to left
+---------------------------------------------------------------------------
+14          |  =  Direct assignment                         | Right to left
+(lowest)    | +=  Assignment by sum                         |
+            | -=  Assignment by difference                  |
+            | *=  Assignment by product                     |
+            | /=  Assignment by quotient                    |
+            | %=  Assignment by remainder                   |
+            | <<= Assignment by bitwise left shift          |
+            | >>= Assignment by bitwise right shift         |
+            | &=  Assignment by bitwise AND                 |
+            | ^=  Assignment by bitwise XOR                 |
+            | |=  Assignment by bitwise OR                  |
+
+Operator precedence means some operators are evaluated before others. For
+example, in 2 + 4 * 5 , the multiplication has higher precedence so 4 * 5 is
+evaluated first yielding 2 + 20 == 22 and not 6 * 5 == 30 .
+
+Operator associativity defines what happens if a sequence of the same
+operators is used one after another: whether the evaluator will evaluate the
+left operations first or the right. For example, in 8 - 4 - 2 , subtraction is
+left associative so the expression is evaluated left to right. 8 - 4 is
+evaluated first making the expression 4 - 2 == 2 and not 8 - 2 == 6 .
 
 Labels
 ------

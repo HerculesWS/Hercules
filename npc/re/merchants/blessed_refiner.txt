@@ -135,7 +135,7 @@
 		close;
 	}
 	delitem .@material,1;
-	Zeny -=.@price;
+	set Zeny, Zeny-.@price;
 	mes "[Blacksmith Dister]";
 	mes "Tac! Tac! Tac!";
 	if (getequippercentrefinery(.@part) > rand(100) || getequippercentrefinery(.@part) > rand(100)) {

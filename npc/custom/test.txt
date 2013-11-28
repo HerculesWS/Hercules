@@ -1,0 +1,430 @@
+//===== Hercules Script ======================================
+//= Script engine self-tests
+//===== By: ==================================================
+//= Haru
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= Script to test operators and possibly other elements of
+//= the script engine, useful for regression testing.
+
+-	script	HerculesSelfTest	-1,{
+	end;
+OnCheck:
+	.@msg$ = getarg(0,"Unknown Error");
+	.@val = getarg(1,0);
+	.@ref = getarg(2,1);
+	if (.@val != .@ref) {
+		debugmes "Error: "+.@msg$+": '"+.@val+"' != '"+.@ref+"'";
+		//end;
+	}
+	return;
+OnCheckStr:
+	.@msg$ = getarg(0,"Unknown Error");
+	.@val$ = getarg(1,"");
+	.@ref$ = getarg(2,"");
+	if (.@val$ != .@ref$) {
+		debugmes "Error: "+.@msg$+": '"+.@val$+"' != '"+.@ref$+"'";
+		//end;
+	}
+	return;
+OnInit:
+	// Array subscript
+	setarray .@a, 3, 2, 1;
+	callsub(OnCheck, "Array subscript", .@a[2]);
+
+
+	// Increment and decrement operators ++, --
+	.@x = 1;
+	.@y = .@x++; // .@y = .@x; .@x = .@x + 1;
+	callsub(OnCheck, "Suffix increment ++", .@y);
+	callsub(OnCheck, "Suffix increment ++", .@x, 2);
+	.@x = 1;
+	.@y = .@x--; // .@y = .@x; .@x = .@x - 1;
+	callsub(OnCheck, "Suffix decrement --", .@y);
+	callsub(OnCheck, "Suffix decrement --", .@x, 0);
+	.@x = 0;
+	.@y = ++.@x; // .@x = .@x + 1; .@y = .@x;
+	callsub(OnCheck, "Prefix increment ++", .@y);
+	callsub(OnCheck, "Prefix increment ++", .@x);
+	.@x = 2;
+	.@y = --.@x; // .@x = .@x - 1; .@y = .@x;
+	callsub(OnCheck, "Prefix decrement --", .@y);
+	callsub(OnCheck, "Prefix decrement --", .@x);
+
+	// Order of [] and --/++
+	.@a[1] = 0;
+	.@a[1]++; // .@a[1] = .@a[1] + 1;
+	callsub(OnCheck, "Order of [] and ++", .@a[1]);
+	.@a[1] = 2;
+	.@a[1]--; // .@a[1] = .@a[1] - 1;
+	callsub(OnCheck, "Order of [] and --", .@a[1]);
+
+
+	// Unary operators -, !, ~
+	.@x = 1;
+	.@y = -.@x; // .@y = 0 - .@x;
+	callsub(OnCheck, "Unary operator -", .@y, -1);
+	.@x = 1;
+	.@y = !.@x; // if(.@x == 0) .@y = 1; else .@y = 0;
+	callsub(OnCheck, "Unary operator !", .@y, 0);
+	.@x = 0x00000001;
+	.@y = ~.@x; // One's complement of 0x00000001 is 0xfffffffe, which is -2
+	callsub(OnCheck, "Unary operator ~", .@y, -2);
+
+	// Associativity of unary operators -, !, ~
+	.@x = 1;
+	.@y = ~ ! .@x; // .@y = ~(!.@x);
+	callsub(OnCheck, "Associativity of unary ~ and !", .@y, -1);
+	.@x = 0;
+	.@y = - ! .@x; // .@y = -(!.@x);
+	callsub(OnCheck, "Associativity of unary - and !", .@y, -1);
+	.@x = 1;
+	.@y = ~ - .@x; // .@y = ~(-.@x);
+	callsub(OnCheck, "Associativity of unary ~ and -", .@y, 0);
+	.@x = 1;
+	.@y = - ~ .@x; // .@y = -(~.@x);
+	callsub(OnCheck, "Associativity of unary - and ~", .@y, 2);
+
+	// Order of unary -, !, ~ and prefix/suffix ++/--
+	.@x = 2;
+	.@y = - --.@x; // .@y = -(--.@x);
+	callsub(OnCheck, "Order of unary - and prefix --", .@y, -1);
+	callsub(OnCheck, "Order of unary - and prefix --", .@x);
+	.@x = 1;
+	.@y = - .@x--; // .@y = -(.@x--);
+	callsub(OnCheck, "Order of unary - and suffix --", .@y, -1);
+	callsub(OnCheck, "Order of unary - and suffix --", .@x, 0);
+	.@x = 0;
+	.@y = - ++.@x; // .@y = -(++.@x);
+	callsub(OnCheck, "Order of unary - and prefix ++", .@y, -1);
+	callsub(OnCheck, "Order of unary - and prefix ++", .@x);
+	.@x = 1;
+	.@y = - .@x++; // .@y = -(.@x++);
+	callsub(OnCheck, "Order of unary - and suffix ++", .@y, -1);
+	callsub(OnCheck, "Order of unary - and suffix ++", .@x, 2);
+	.@x = 1;
+	.@y = !--.@x; // .@y = !(--.@x);
+	callsub(OnCheck, "Order of unary ! and prefix --", .@y);
+	callsub(OnCheck, "Order of unary ! and prefix --", .@x, 0);
+	.@x = 1;
+	.@y = !.@x--; // .@y = !(.@x--);
+	callsub(OnCheck, "Order of unary ! and suffix --", .@y, 0);
+	callsub(OnCheck, "Order of unary ! and suffix --", .@x, 0);
+	.@x = 0;
+	.@y = !++.@x; // .@y = !(++.@x);
+	callsub(OnCheck, "Order of unary ! and prefix ++", .@y, 0);
+	callsub(OnCheck, "Order of unary ! and prefix ++", .@x);
+	.@x = 0;
+	.@y = !.@x++; // .@y = !(.@x++);
+	callsub(OnCheck, "Order of unary ! and suffix ++", .@y);
+	callsub(OnCheck, "Order of unary ! and suffix ++", .@x);
+	.@x = 2;
+	.@y = ~--.@x; // .@y = ~(--.@x);
+	callsub(OnCheck, "Order of unary ~ and prefix --", .@y, -2);
+	callsub(OnCheck, "Order of unary ~ and prefix --", .@x, 1);
+	.@x = 1;
+	.@y = ~.@x--; // .@y = ~(.@x--);
+	callsub(OnCheck, "Order of unary ~ and suffix --", .@y, -2);
+	callsub(OnCheck, "Order of unary ~ and suffix --", .@x, 0);
+	.@x = 0;
+	.@y = ~++.@x; // .@y = ~(++.@x);
+	callsub(OnCheck, "Order of unary ~ and prefix ++", .@y, -2);
+	callsub(OnCheck, "Order of unary ~ and prefix ++", .@x, 1);
+	.@x = 1;
+	.@y = ~.@x++; // .@y = ~(.@x++);
+	callsub(OnCheck, "Order of unary ~ and suffix ++", .@y, -2);
+	callsub(OnCheck, "Order of unary ~ and suffix ++", .@x, 2);
+
+	// Binary *, /, % operators
+	.@x = 2 * 3; // .@x = 6;
+	callsub(OnCheck, "Binary * operator", .@x, 6);
+	.@x = 7 / 2; // .@x = 3;
+	callsub(OnCheck, "Binary / operator", .@x, 3);
+	.@x = 7 % 2; // .@x = 1;
+	callsub(OnCheck, "Binary % operator", .@x, 1);
+
+	// Associativity of *, /, %
+	.@x = 8 * 3 / 2; // .@x = (8 * 3) / 2;
+	callsub(OnCheck, "Associativity of * and /", .@x, 12);
+
+	// Order of binary *%/ and unary !-~
+	.@x = 2 * ! 3; // .@x = 2 * (!3);
+	callsub(OnCheck, "Order of binary * and unary !", .@x, 0);
+	.@x = ~ 1 * 2; // .@x = (~1) * 2;
+	callsub(OnCheck, "Order of unary ~ and binary *", .@x, -4);
+
+
+	// Binary +, - operators
+	.@x = 1 + 3; // .@x = 4;
+	callsub(OnCheck, "Binary + operator", .@x, 4);
+	.@x = 1 - 3; // .@x = -2;
+	callsub(OnCheck, "Binary - operator", .@x, -2);
+
+	// Associativity of +,-
+	.@x = 0x7fffffff - 0x7ffffff0 + 1; // .@x = (0x7fffffff - 0x7ffffff0) + 1; (without overflow)
+	callsub(OnCheck, "Associativity of + and -", .@x, 16);
+
+	// Order of +, - and *, /, %
+	.@x = 1 + 3 * 2; // .@x = 1 + (3 * 2);
+	callsub(OnCheck, "Order of + and *", .@x, 7);
+
+
+	// << and >> operators
+	.@x = 1<<3; // .@x = 1*2*2*2;
+	callsub(OnCheck, "Left shift << operator", .@x, 8);
+	.@x = 12>>2; // .@x = 12/2/2;
+	callsub(OnCheck, "Right shift >> operator", .@x, 3);
+
+	// Associativity of << and >>
+	.@x = 0x40000000 >> 4 << 2; // .@x = (0x40000000 >> 4) << 2
+	callsub(OnCheck, "Associativity of >> and <<", .@x, 0x10000000);
+
+	// Order of <</>> and +/-
+	.@x = 4 << 2 + 1; // .@x = 4 << (2+1);
+	callsub(OnCheck, "Order of << and +", .@x, 32);
+
+
+	// <, <=, >, >= operators
+	.@x = (1 < 2); // true
+	.@y = (2 < 2); // false
+	callsub(OnCheck, "< operator", .@x);
+	callsub(OnCheck, "< operator", .@y, 0);
+	.@x = (1 <= 2); // true
+	.@y = (2 <= 2); // true
+	callsub(OnCheck, "<= operator", .@x);
+	callsub(OnCheck, "<= operator", .@y);
+	.@x = (2 > 1); // true
+	.@y = (2 > 2); // false
+	callsub(OnCheck, "> operator", .@x);
+	callsub(OnCheck, "> operator", .@y, 0);
+	.@x = (2 >= 1); // true
+	.@y = (2 >= 2); // true
+	callsub(OnCheck, ">= operator", .@x);
+	callsub(OnCheck, ">= operator", .@y);
+
+	// Associativity of <,<=,>,>=
+	.@x = 1 > 0 > 0; // (1 > 0) > 0  -->  1 > 0  -->  true
+	callsub(OnCheck, "Associativity of > operators", .@x);
+
+	// Order of >>/<< and </<=/>/>=
+	.@x = 1 < 1 << 2; // .@x = 1 < (1<<2);
+	callsub(OnCheck, "Order of < and <<", .@x);
+
+
+	// ==, != operators
+	.@x = (0 == 0); // true
+	.@y = (1 == 0); // false
+	callsub(OnCheck, "== operator", .@x);
+	callsub(OnCheck, "== operator", .@y, 0);
+	.@x = (1 != 0); // true
+	.@y = (1 != 1); // false
+	callsub(OnCheck, "!= operator", .@x);
+	callsub(OnCheck, "!= operator", .@y, 0);
+
+	// Associativity of ==, !=
+	.@x = (1 == 0 == 0); // (1 == 0) == 0  -->  0 == 0  --> 1
+	.@y = (1 != 0 == 0); // (1 != 0) == 0  -->  1 == 0  --> 0
+	callsub(OnCheck, "Associativity of != and == operators", .@x);
+	callsub(OnCheck, "Associativity of != and == operators", .@y, 0);
+
+	// Order of </<=/>/>= and ==/!=
+	.@x = (1 == 2 > 1); // true
+	.@y = (1 < 2 == 1); // true
+	callsub(OnCheck, "Order of <,>,==", .@x);
+	callsub(OnCheck, "Order of <,>,==", .@y);
+
+
+	.@x$ = "string "
+		"concatenation" /* test */ " succeeded";
+	callsub(OnCheckStr, "String concatenation", .@x$, "string concatenation succeeded");
+
+
+	// Bitwise & operator
+	.@x = (7&4); // 0111 & 0100 --> 0100
+	.@y = (4&1); // 0100 & 0001 --> 0000
+	callsub(OnCheck, "Bitwise & operator", .@x, 4);
+	callsub(OnCheck, "Bitwise & operator", .@y, 0);
+
+	// Order of & and ==/!=
+	.@x = (4 == 7 & 4); // (4 == 7)&4
+	.@y = (1 & 3 != 1); // 1 & (3 != 1)
+	callsub(OnCheck, "Order of ==/!= and &", .@x, 0);
+	callsub(OnCheck, "Order of ==/!= and &", .@y);
+
+
+	// Bitwise ^ operator
+	.@x = (3^1); // 0011 ^ 0001 --> 0010
+	callsub(OnCheck, "Bitwise ^ operator", .@x, 2);
+
+	// Order of ^ and &
+	.@x = (0 & 2 ^ 2); // (0 & 2) ^ 2 --> (0000 & 0010) | 0010 --> 0000 ^ 0010 --> 0010
+	.@y = (2 ^ 2 & 0); // 2 ^ (2 & 0) --> 0010 | (0010 & 0000) --> 0010 ^ 0000 --> 0010
+	callsub(OnCheck, "Order of ^ and &", .@x, 2);
+	callsub(OnCheck, "Order of ^ and &", .@y, 2);
+
+
+	// Bitwise | operator
+	.@x = (3|4); // 0011 | 0100 --> 0111
+	.@y = (4|1); // 0100 | 0001 --> 0101
+	callsub(OnCheck, "Bitwise | operator", .@x, 7);
+	callsub(OnCheck, "Bitwise | operator", .@y, 5);
+
+	// Order of ^ and |
+	.@x = (2 ^ 2 | 2); // (2 ^ 1) | 4 --> (0010 ^ 0010) | 0010 --> 0000 | 0010 --> 0010
+	.@y = (2 | 2 ^ 2); // 4 | (1 ^ 2) --> 0010 | (0010 ^ 0010) --> 0010 | 0000 --> 0010
+	callsub(OnCheck, "Order of | and ^", .@x, 2);
+	callsub(OnCheck, "Order of | and ^", .@y, 2);
+
+
+	// Logical && operator
+	.@x = (1 && 1); // true
+	.@y = (0 && 1); // false
+	callsub(OnCheck, "Logical && operator", .@x);
+	callsub(OnCheck, "Logical && operator", .@y, 0);
+
+	// Associativity of && and short-circuit
+	.@x = 0;
+	.@y = (1 && 0 && (.@x = 1)); // should short circuit as false before evaluating the assignment
+	//FIXME callsub(OnCheck, "Short-circuit of &&", .@x, 0);
+	callsub(OnCheck, "Associativity of &&", .@y, 0);
+
+	// Order of bitwise | and logical &&
+	.@x = (1 && 0 | 4); // 1 && (0|4)
+	.@y = (4 | 0 && 1); // (4|0) && 1
+	callsub(OnCheck, "Order of && and |", .@x);
+	callsub(OnCheck, "Order of && and |", .@y);
+
+
+	// Logical || operator
+	.@x = (1 || 1); // true
+	.@y = (0 || 1); // true
+	callsub(OnCheck, "Logical || operator", .@x);
+	callsub(OnCheck, "Logical || operator", .@y);
+
+	// Associativity of || and short-circuit
+	.@x = 0;
+	.@y = (1 || 0 || (.@x = 1)); // should short circuit as true before evaluating the assignment
+	//FIXME callsub(OnCheck, "Short-circuit of ||", .@x, 0);
+	callsub(OnCheck, "Associativity of ||", .@y);
+
+	// Order of logical && and ||
+	.@x = (0 && 1 || 1); // (0 && 1) || 1
+	.@y = (1 || 1 && 0); // 1 || (1 && 0)
+	callsub(OnCheck, "Order of && and ||", .@x);
+	callsub(OnCheck, "Order of && and ||", .@y);
+
+	// Ternary conditional operator ?:
+	.@x = (1 ? 2 : 3); // 2
+	.@y = (0 ? 2 : 3); // 3
+	callsub(OnCheck, "Ternary conditional operator", .@x, 2);
+	callsub(OnCheck, "Ternary conditional operator", .@y, 3);
+
+	// Associativity of ?:
+	.@x = (1 ? 2 : 0 ? 3 : 4);
+	.@y = (1 ? 1 ? 2 : 3 : 5);
+	callsub(OnCheck, "Associativity of ?:", .@x, 2);
+	callsub(OnCheck, "Associativity of ?:", .@y, 2);
+
+	// Order of logical || and ternary ?:
+	.@x = (1 ? 0 : 0 || 1); // 1 ? 0 : (0 || 1) --> false
+	callsub(OnCheck, "Order of || and ?:", .@x, 0);
+
+
+	// Assignment operators
+	.@x = 1;
+	callsub(OnCheck, "Direct assignment operator =", .@x);
+	.@x += 7; // 1 + 7
+	callsub(OnCheck, "Assignment by sum +=", .@x, 8);
+	.@x -= 1; // 8 - 1
+	callsub(OnCheck, "Assignment by difference -=", .@x, 7);
+	.@x *= 2; // 7 * 2
+	callsub(OnCheck, "Assignment by product *=", .@x, 14);
+	.@x /= 2; // 14 / 2
+	callsub(OnCheck, "Assignment by quotient /=", .@x, 7);
+	.@x %= 4; // 7 % 4
+	callsub(OnCheck, "Assignment by remainder %=", .@x, 3);
+	.@x <<= 2; // 3 << 2
+	callsub(OnCheck, "Assignment by bitwise left shift <<=", .@x, 12);
+	.@x >>= 1; // 12 >> 1
+	callsub(OnCheck, "Assignment by bitwise right shift >>=", .@x, 6);
+	.@x &= 5; // 6 & 5 (0110 & 0101 --> 0100)
+	callsub(OnCheck, "Assignment by bitwise and &=", .@x, 4);
+	.@x ^= 5; // 4 ^ 5 (0100 ^ 0101 --> 0001)
+	callsub(OnCheck, "Assignment by bitwise xor ^=", .@x, 1);
+	.@x |= 2; // 1 | 2 (0001 | 0010 --> 0011)
+	callsub(OnCheck, "Assignment by bitwise or |=", .@x, 3);
+
+	// Associativity of assignment operators
+	.@x = 0; .@y = 0;
+	.@x = .@y = 1;
+	callsub(OnCheck, "1Associativity of =", .@x);
+	callsub(OnCheck, "2Associativity of =", .@y);
+	.@x = 0; .@y = 1;
+	.@x = .@y += 4;
+	callsub(OnCheck, "3Associativity of =", .@x, 5);
+	callsub(OnCheck, "4Associativity of =", .@y, 5);
+	.@x = 5; .@y = 3;
+	.@z = 8;
+/*
+ * 0001b4 C_NAME setr
+ * 0001b8 C_ARG
+ * 0001b9 C_NAME .@x
+ * 0001bd C_REF
+ * 0001bd C_INT 16
+ * 0001bf C_MUL
+ * 0001c0 C_FUNC
+ * 0001c1 C_EOL
+ */
+	/* FIXME
+	.@x *= (.@y += 1);
+	//set(.@x, .@x * set(.@y, .@y + 1));
+	//.@x = (.@x * (.@y = .@y + 1));
+	*/
+/*
+ *  0001c2 C_NAME setr
+ *  0001c6 C_ARG
+ *  0001c7 C_NAME .@x
+ *   0001cb C_REF
+ *    0001cc C_NAME setr
+ *    0001d0 C_ARG
+ *    0001d1 C_NAME .@y
+ *     0001d5 C_REF
+ *     0001d5 C_INT 1
+ *     0001d7 C_ADD
+ *    0001d8 C_FUNC
+ *   0001d9 C_MUL
+ *  0001da C_FUNC
+ * 0001db C_EOL
+ */
+/*
+ * 0001c2 C_NAME setr
+ * 0001c6 C_ARG
+ * 0001c7 C_NAME .@x
+ * 0001cb C_REF
+ * 0001cc C_NAME setr
+ * 0001d0 C_ARG
+ * 0001d1 C_NAME .@y
+ * 0001d4 C_INT 2
+ * 0001d6 C_FUNC
+ * 0001d7 C_MUL
+ * 0001d8 C_FUNC
+ * 0001d9 C_EOL
+ */
+	/*
+	callsub(OnCheck, "5Associativity of =", .@x, 20);
+	callsub(OnCheck, "6Associativity of =", .@y, 4);
+	*/
+
+	.@x = 0;
+	if (0)
+		if (1)
+			.@x = 2;
+		else
+			.@x = 3;
+	callsub(OnCheck, "Dangling else", .@x, 0);
+
+	debugmes "Script engine self-test   [ PASSED ]";
+}
+
+// vim: set ft=ath :
