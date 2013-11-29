@@ -5759,11 +5759,12 @@ const char* job_name(int class_)
 	case JOB_KAGEROU:
 	case JOB_OBORO:
 		return msg_txt(653 - JOB_KAGEROU+class_);
+
 	case JOB_REBELLION:
-		return msg_txt(694);
+		return msg_txt(655);
 
 	default:
-		return msg_txt(655);
+		return msg_txt(656);
 	}
 }
 
