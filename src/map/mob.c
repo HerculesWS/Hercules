@@ -1046,7 +1046,7 @@ int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
 	mode= va_arg(ap,int);
 
 	//If can't seek yet, not an enemy, or you can't attack it, skip.
-	if ((*target) == bl || !status->check_skilluse(&md->bl, bl, 0, 0))
+	if (md->bl.id == bl->id || (*target) == bl || !status->check_skilluse(&md->bl, bl, 0, 0))
 		return 0;
 
 	if ((mode&MD_TARGETWEAK) && status->get_lv(bl) >= md->level-5)
@@ -1055,39 +1055,38 @@ int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
 	if(battle->check_target(&md->bl,bl,BCT_ENEMY)<=0)
 		return 0;
 
-	switch (bl->type)
-	{
-	case BL_PC:
-		if (((TBL_PC*)bl)->state.gangsterparadise &&
-			!(status_get_mode(&md->bl)&MD_BOSS))
-			return 0; //Gangster paradise protection.
-	default:
-		if (battle_config.hom_setting&0x4 &&
-			(*target) && (*target)->type == BL_HOM && bl->type != BL_HOM)
-			return 0; //For some reason Homun targets are never overriden.
+	switch (bl->type) {
+		case BL_PC:
+			if (((TBL_PC*)bl)->state.gangsterparadise &&
+				!(status_get_mode(&md->bl)&MD_BOSS))
+				return 0; //Gangster paradise protection.
+		default:
+			if (battle_config.hom_setting&0x4 &&
+				(*target) && (*target)->type == BL_HOM && bl->type != BL_HOM)
+				return 0; //For some reason Homun targets are never overriden.
 
-		dist = distance_bl(&md->bl, bl);
-		if(
-			((*target) == NULL || !check_distance_bl(&md->bl, *target, dist)) &&
-			battle->check_range(&md->bl,bl,md->db->range2)
-		) { //Pick closest target?
+			dist = distance_bl(&md->bl, bl);
+			if(
+				((*target) == NULL || !check_distance_bl(&md->bl, *target, dist)) &&
+				battle->check_range(&md->bl,bl,md->db->range2)
+			) { //Pick closest target?
 
-			if( map->list[bl->m].icewall_num &&
-				!path->search_long(NULL,bl->m,md->bl.x,md->bl.y,bl->x,bl->y,CELL_CHKICEWALL) ) {
+				if( map->list[bl->m].icewall_num &&
+					!path->search_long(NULL,bl->m,md->bl.x,md->bl.y,bl->x,bl->y,CELL_CHKICEWALL) ) {
 
-				if( !check_distance_bl(&md->bl, bl, status_get_range(&md->bl) ) )
-					return 0;
+					if( !check_distance_bl(&md->bl, bl, status_get_range(&md->bl) ) )
+						return 0;
 
+				}
+
+				(*target) = bl;
+				md->target_id=bl->id;
+				md->min_chase= dist + md->db->range3;
+				if(md->min_chase>MAX_MINCHASE)
+					md->min_chase=MAX_MINCHASE;
+				return 1;
 			}
-
-			(*target) = bl;
-			md->target_id=bl->id;
-			md->min_chase= dist + md->db->range3;
-			if(md->min_chase>MAX_MINCHASE)
-				md->min_chase=MAX_MINCHASE;
-			return 1;
-		}
-		break;
+			break;
 	}
 	return 0;
 }
@@ -1104,7 +1103,7 @@ int mob_ai_sub_hard_changechase(struct block_list *bl,va_list ap) {
 	target= va_arg(ap,struct block_list**);
 
 	//If can't seek yet, not an enemy, or you can't attack it, skip.
-	if( *target == bl
+	if( md->bl.id == bl->id || *target == bl
 	 || battle->check_target(&md->bl,bl,BCT_ENEMY) <= 0
 	 || !status->check_skilluse(&md->bl, bl, 0, 0)
 	)

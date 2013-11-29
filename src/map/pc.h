@@ -179,6 +179,7 @@ struct map_session_data {
 		unsigned int hold_recalc : 1;
 		unsigned int snovice_call_flag : 3; //Summon Angel (stage 1~3)
 		unsigned int hpmeter_visible : 1;
+		unsigned int itemcheck : 1;
 	} state;
 	struct {
 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;

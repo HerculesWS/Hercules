@@ -1124,6 +1124,9 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	
 	sd->delayed_damage = 0;
 	
+	if( battle_config.item_check )
+		sd->state.itemcheck = 1;
+	
 	// Event Timers
 	for( i = 0; i < MAX_EVENTTIMER; i++ )
 		sd->eventtimer[i] = INVALID_TIMER;
@@ -9060,7 +9063,7 @@ int pc_checkitem(struct map_session_data *sd)
 	if( sd->state.vending ) //Avoid reorganizing items when we are vending, as that leads to exploits (pointed out by End of Exam)
 		return 0;
 
-	if( battle_config.item_check ) { // check for invalid(ated) items
+	if( sd->state.itemcheck ) { // check for invalid(ated) items
 		for( i = 0; i < MAX_INVENTORY; i++ ) {
 			id = sd->status.inventory[i].nameid;
 
@@ -9088,7 +9091,7 @@ int pc_checkitem(struct map_session_data *sd)
 			}
 		}
 		
-		if (sd->state.gmaster_flag) {
+		if (sd->guild) {
 			struct guild_storage *guild_storage = gstorage->id2storage2(sd->guild->guild_id);
 			if (guild_storage) {
 				for( i = 0; i < MAX_GUILD_STORAGE; i++ ) {
@@ -9101,6 +9104,7 @@ int pc_checkitem(struct map_session_data *sd)
 				}
 			}
 		}
+		sd->state.itemcheck = 0;
 	}
 
 	for( i = 0; i < MAX_INVENTORY; i++) {
