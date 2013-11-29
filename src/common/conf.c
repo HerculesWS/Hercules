@@ -83,6 +83,9 @@ void config_setting_copy_aggregate(config_setting_t *parent, const config_settin
 	config_setting_t *newAgg;
 	int i, n;
 
+	if( config_setting_get_member(parent, config_setting_name(src)) != NULL )
+		return;
+	
 	newAgg = config_setting_add(parent, config_setting_name(src), config_setting_type(src));
 
 	if (newAgg == NULL)
