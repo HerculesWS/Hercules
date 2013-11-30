@@ -1484,7 +1484,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 			mes "This is a traditional instrument";
 			mes "which comes from a faraway land of";
 			mes "the ancestors of Moscovia.";
-			getitem 2707,1;
+			getitem GUSLI, 1;
 			set mos_whale_edq,35;
 			next;
 			mes "[Aged Stranger]";
@@ -1509,7 +1509,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 		mes "Are you ready to learn the Gusli?";
 		mes "Please equip the Gusli.";
 		next;
-		if (getequipid(EQI_ACC_L) || getequipid(EQI_ACC_R) == 2707) {
+		if (getequipid(EQI_ACC_L) == GUSLI || getequipid(EQI_ACC_R) == GUSLI) {
 			mes "[Aged Stranger]";
 			mes "Hm... Very well.";
 			mes "At first, look at me how I play,";
@@ -1552,7 +1552,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 		mes "[Aged Stranger]";
 		mes "Are you ready to learn the Gusli?";
 		next;
-		if (getequipid(EQI_ACC_L) || getequipid(EQI_ACC_R) == 2707) {
+		if (getequipid(EQI_ACC_L) == GUSLI || getequipid(EQI_ACC_R) == GUSLI) {
 			mes "[Aged Stranger]";
 			mes "Um... You did well.";
 			next;
@@ -2123,7 +2123,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 		mes "A Gooselri? Which only exists";
 		mes "in the whale island? Let's see.";
 		next;
-		if (getequipid(EQI_ACC_L) || getequipid(EQI_ACC_R) == 2707 || countitem(2707) > 0) {
+		if (countitem(GUSLI) > 0) {
 			mes "[Csar Alexsay III]";
 			mes "Oh... Is this instrument... a Gooselri?";
 			next;
@@ -2233,7 +2233,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 		mes "something to satisfy me";
 		mes "at the whale island?";
 		next;
-		if (getequipid(EQI_ACC_L) || getequipid(EQI_ACC_R) == 2707 || countitem(2707)) {
+		if (countitem(GUSLI) > 0) {
 			mes "[Csar Alexsay III]";
 			mes "Oh... Is this instrument... a Gooselri?";
 			next;
@@ -2478,7 +2478,7 @@ OnTouch:
 	mes "Stop by the whale island?";
 	next;
 	if(select("Go to Whale Island.:Stay put.") == 1) {
-		if (getequipid(EQI_ACC_L) == 2707 || getequipid(EQI_ACC_R) == 2707) {
+		if (getequipid(EQI_ACC_L) == GUSLI || getequipid(EQI_ACC_R) == GUSLI) {
 			soundeffect "mos_gusli2.wav",0;
 			mes "-Slowly, your hands are on the";
 			mes "Gusli, and the playing starts...";
