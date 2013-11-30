@@ -9164,6 +9164,10 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 }
 void clif_hercules_chsys_mjoin(struct map_session_data *sd) {
 	if( !map->list[sd->bl.m].channel ) {
+		
+		if (map->list[sd->bl.m].flag.chsysnolocalaj || (map->list[sd->bl.m].instance_id >= 0 && instance->list[map->list[sd->bl.m].instance_id].owner_type != IOT_NONE) )
+			return;
+		
 		CREATE(map->list[sd->bl.m].channel, struct hChSysCh , 1);
 		safestrncpy(map->list[sd->bl.m].channel->name, hChSys.local_name, HCHSYS_NAME_LENGTH);
 		map->list[sd->bl.m].channel->type = hChSys_MAP;
@@ -9453,7 +9457,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 		status_calc_pc(sd, SCO_NONE);/* some conditions are map-dependent so we must recalculate */
 		sd->state.changemap = false;
 		
-		if( hChSys.local && hChSys.local_autojoin && !map->list[sd->bl.m].flag.chsysnolocalaj ) {
+		if( hChSys.local && hChSys.local_autojoin ) {
 			clif->chsys_mjoin(sd);
 		}
 	}

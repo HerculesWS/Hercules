@@ -589,6 +589,9 @@ int party_broken(int party_id)
 		}
 	}
 
+	if( p->instance )
+		aFree(p->instance);
+	
 	idb_remove(party->db,party_id);
 	return 0;
 }

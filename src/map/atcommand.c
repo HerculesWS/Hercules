@@ -6812,8 +6812,10 @@ ACMD(makehomun) {
 	
 	homunid = atoi(message);
 	
-	if( homunid == -1 && sd->status.hom_id && !homun_alive(sd->hd) ) {
-		if( sd->hd->homunculus.vaporize )
+	if( homunid == -1 && sd->status.hom_id && !(sd->hd && homun_alive(sd->hd)) ) {
+		if( !sd->hd )
+			homun->call(sd);
+		else if( sd->hd->homunculus.vaporize )
 			homun->ressurect(sd, 100, sd->bl.x, sd->bl.y);
 		else
 			homun->call(sd);
@@ -8615,7 +8617,7 @@ ACMD(cart) {
 }
 /* [Ind/Hercules] */
 ACMD(join) {
-	struct hChSysCh *channel;
+	struct hChSysCh *channel = NULL;
 	char name[HCHSYS_NAME_LENGTH], pass[HCHSYS_NAME_LENGTH];
 	
 	if( !message || !*message || sscanf(message, "%s %s", name, pass) < 1 ) {
@@ -8626,7 +8628,8 @@ ACMD(join) {
 	if( hChSys.local && strcmpi(name + 1, hChSys.local_name) == 0 ) {
 		if( !map->list[sd->bl.m].channel ) {
 			clif->chsys_mjoin(sd);
-			return true;
+			if( map->list[sd->bl.m].channel ) /* mjoin might have refused, map has chatting capabilities disabled */
+				return true;
 		} else
 			channel = map->list[sd->bl.m].channel;
 	} else if( hChSys.ally && sd->status.guild_id && strcmpi(name + 1, hChSys.ally_name) == 0 ) {
@@ -8638,6 +8641,13 @@ ACMD(join) {
 		clif->message(fd, atcmd_output);
 		return false;
 	}
+	
+	if( !channel ) {
+		sprintf(atcmd_output, msg_txt(1400),name,command); // Unknown Channel '%s' (usage: %s <#channel_name>)
+		clif->message(fd, atcmd_output);
+		return false;
+	}
+		
 	
 	if( idb_exists(channel->users, sd->status.char_id) ) {
 		sprintf(atcmd_output, msg_txt(1475),name); // You're already in the '%s' channel
