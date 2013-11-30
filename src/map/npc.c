@@ -1142,6 +1142,7 @@ void run_tomb(struct map_session_data* sd, struct npc_data* nd)
  *------------------------------------------*/
 int npc_click(struct map_session_data* sd, struct npc_data* nd)
 {
+	char output[CHAT_SIZE_MAX];
 	nullpo_retr(1, sd);
 
 	if (sd->npc_id != 0) {
@@ -1156,10 +1157,50 @@ int npc_click(struct map_session_data* sd, struct npc_data* nd)
 	if (nd->class_ < 0 || nd->option&(OPTION_INVISIBLE|OPTION_HIDE))
 		return 1;
 
-	switch(nd->subtype) {
+	switch(nd->subtype) {	//[Dastgir Pojee]
 		case SHOP:
 			clif->npcbuysell(sd,nd->bl.id);
 			break;
+
+		case ITEMSHOP:{
+				struct item_data *i_data = NULL;
+				int i=0,val=0;
+				if ((i_data = itemdb->exists(nd->u.shop.itemshop_nameid)) == NULL){
+					return 1;	//Item Not Found
+					break;
+				}
+
+				if( (i = pc->search_inventory(sd,nd->u.shop.itemshop_nameid)) >= 0 )
+					val = sd->status.inventory[i].amount;
+
+				sprintf(output, msg_txt(453), i_data->jname, nd->u.shop.itemshop_nameid);
+				clif->broadcast(&sd->bl, output, strlen(output) + 1, 0x10, SELF);
+				sprintf(output, msg_txt(455), val,i_data->jname);
+				clif->colormes(sd->fd,COLOR_DEFAULT,output);
+				clif->npcbuysell(sd,nd->bl.id);
+				break;
+			}
+		case POINTSHOP:{
+				int count;
+				sprintf(output, msg_txt(454),nd->u.shop.pointshop_desc,nd->u.shop.pointshop_desc);
+				clif->broadcast(&sd->bl, output, strlen(output) + 1, 0x10, SELF);
+				switch(nd->u.shop.pointshop_scriptstr[0]) {
+					case '#':
+						if (nd->u.shop.pointshop_scriptstr[1] == '#')
+							count = pc_readaccountreg2(sd, nd->u.shop.pointshop_scriptstr);
+						else
+							count = pc_readaccountreg(sd, nd->u.shop.pointshop_scriptstr);
+						break;
+					case '@':
+					default:
+						count = pc_readglobalreg(sd, nd->u.shop.pointshop_scriptstr);
+						break;
+				}
+				sprintf(output, msg_txt(455),count,nd->u.shop.pointshop_desc);
+				clif->colormes(sd->fd,COLOR_DEFAULT,output);
+				clif->npcbuysell(sd,nd->bl.id);
+				break;
+			}
 		case CASHSHOP:
 			clif->cashshop_show(sd,nd);
 			break;
@@ -1231,7 +1272,7 @@ int npc_buysellsel(struct map_session_data* sd, int id, int type) {
 	if ((nd = npc->checknear(sd,map->id2bl(id))) == NULL)
 		return 1;
 
-	if (nd->subtype!=SHOP) {
+	if (nd->subtype!=SHOP && nd->subtype!=ITEMSHOP && nd->subtype!=POINTSHOP) {
 		ShowError("no such shop npc : %d\n",id);
 		if (sd->npc_id == id)
 			sd->npc_id=0;
@@ -1445,7 +1486,8 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 	struct npc_data* nd;
 	double z;
-	int i,j,w,skill_t,new_, idx = skill->get_index(MC_DISCOUNT);
+	int i,j,k,w,skill_t,new_, idx = skill->get_index(MC_DISCOUNT),count = 0;
+	char output[CHAT_SIZE_MAX];
 
 	nullpo_retr(3, sd);
 	nullpo_retr(3, item_list);
@@ -1453,7 +1495,7 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 	nd = npc->checknear(sd,map->id2bl(sd->npc_shopid));
 	if( nd == NULL )
 		return 3;
-	if( nd->subtype != SHOP )
+	if( nd->subtype != SHOP && nd->subtype != ITEMSHOP && nd->subtype != POINTSHOP )
 		return 3;
 
 	z = 0;
@@ -1512,14 +1554,72 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 	if( nd->master_nd != NULL ) //Script-based shops.
 		return npc->buylist_sub(sd,n,item_list,nd->master_nd);
 
-	if( z > (double)sd->status.zeny )
-		return 1;	// Not enough Zeny
+	switch(nd->subtype){	//[Dastgir Pojee]
+		case SHOP:
+			if (z > (double)sd->status.zeny)
+				return 1;	// Not enough Zeny
+			break;
+		case ITEMSHOP:
+			for (k = 0; k < MAX_INVENTORY; k++) {
+				if (sd->status.inventory[k].nameid == nd->u.shop.itemshop_nameid)
+					count += sd->status.inventory[k].amount;
+			}
+			if (z > (double)count) {
+				struct item_data *i_data = itemdb->exists(nd->u.shop.itemshop_nameid);
+
+				sprintf(output, msg_txt(452), i_data->jname); // You do not have enough %s.
+				clif->colormes(sd->fd,COLOR_RED,output);
+				return 3;
+			}
+			break;
+		case POINTSHOP:
+			switch(nd->u.shop.pointshop_scriptstr[0]) {
+				case '#':
+					if (nd->u.shop.pointshop_scriptstr[1] == '#')
+						count = pc_readaccountreg2(sd, nd->u.shop.pointshop_scriptstr);
+					else
+						count = pc_readaccountreg(sd, nd->u.shop.pointshop_scriptstr);
+					break;
+				case '@':
+				default:
+					count = pc_readglobalreg(sd, nd->u.shop.pointshop_scriptstr);
+					break;
+			}
+			if (z > (double)count) {
+				sprintf(output, msg_txt(452),nd->u.shop.pointshop_desc); // You do not have enough %s.
+				clif->colormes(sd->fd, COLOR_RED, output);
+				return 3;
+			}
+			break;
+	}
+
 	if( w + sd->weight > sd->max_weight )
 		return 2;	// Too heavy
 	if( pc->inventoryblank(sd) < new_ )
 		return 3;	// Not enough space to store items
 
-	pc->payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
+	switch(nd->subtype){	//[Dastgir Pojee]
+		case SHOP:
+			pc->payzeny(sd, (int)z, LOG_TYPE_NPC, NULL);
+			break;
+		case ITEMSHOP:
+			pc->delitem(sd, pc->search_inventory(sd, nd->u.shop.itemshop_nameid), (int)z, 0, 0, LOG_TYPE_NPC);
+			break;
+		case POINTSHOP:
+			switch(nd->u.shop.pointshop_scriptstr[0]) {
+				case '#':
+					if (nd->u.shop.pointshop_scriptstr[1] == '#')
+						pc_setaccountreg2(sd, nd->u.shop.pointshop_scriptstr, count - (int)z);
+					else
+						pc_setaccountreg(sd, nd->u.shop.pointshop_scriptstr, count - (int)z);
+					break;
+				case '@':
+				default:
+					pc_setglobalreg(sd, nd->u.shop.pointshop_scriptstr, count - (int)z);
+					break;
+			}
+			break;
+	}
 
 	for( i = 0; i < n; ++i ) {
 		int nameid = item_list[i*2+1];
@@ -1622,7 +1722,7 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 	nullpo_retr(1, sd);
 	nullpo_retr(1, item_list);
 
-	if( ( nd = npc->checknear(sd, map->id2bl(sd->npc_shopid)) ) == NULL || nd->subtype != SHOP ) {
+	if( ( nd = npc->checknear(sd, map->id2bl(sd->npc_shopid)) ) == NULL || nd->subtype != SHOP && nd->subtype != ITEMSHOP && nd->subtype != POINTSHOP ) {
 		return 1;
 	}
 
@@ -1796,7 +1896,7 @@ int npc_unload(struct npc_data* nd, bool single) {
 	if( single && nd->bl.m != -1 )
 		map->remove_questinfo(nd->bl.m,nd);
 
-	if( (nd->subtype == SHOP || nd->subtype == CASHSHOP) && nd->src_id == 0) //src check for duplicate shops [Orcao]
+	if( (nd->subtype == SHOP || nd->subtype == CASHSHOP || nd->subtype == ITEMSHOP || nd->subtype == POINTSHOP) && nd->src_id == 0) //src check for duplicate shops [Orcao]
 		aFree(nd->u.shop.shop_item);
 	else if( nd->subtype == SCRIPT ) {
 		struct s_mapiterator* iter;
@@ -2193,8 +2293,8 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 	//TODO: could be rewritten to NOT need this temp array [ultramage]
 	#define MAX_SHOPITEM 100
 	struct npc_item_list items[MAX_SHOPITEM];
-	char *p;
-	int x, y, dir, m, i;
+	char *p,ps_scriptstr[32],ps_desc[32];
+	int x, y, dir, m, i,is_nameid = 0;
 	struct npc_data *nd;
 	enum npc_subtype type;
 
@@ -2220,10 +2320,51 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 	
 	if( !strcasecmp(w2,"cashshop") )
 		type = CASHSHOP;
+	else if( !strcasecmp(w2,"itemshop") )
+		type = ITEMSHOP;
+	else if( !strcasecmp(w2,"pointshop") )
+		type = POINTSHOP;
 	else
 		type = SHOP;
 
 	p = strchr(w4,',');
+
+	switch(type) {
+		case ITEMSHOP: {
+			struct item_data* tmp;
+
+			if (sscanf(p, ",%d", &is_nameid) != 1) {
+				ShowError("npc_parse_shop: Invalid ItemID in ItemShop in file '%s', line '%d'. Ignoring the rest of the line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
+				return strchr(start, '\n'); // skip and continue
+			}
+			if ((tmp = itemdb->exists(is_nameid)) == NULL) {
+				ShowWarning("npc_parse_shop: Invalid item ID(ItemShop) in file '%s', line '%d' (id:%d).\n", filepath, strline(buffer,start-buffer), is_nameid);
+				return strchr(start, '\n'); // skip and continue
+			}
+			p = strchr(p+1, ',');
+			break;
+		}
+		case POINTSHOP:
+			if (sscanf(p, ",\"%31[^\"]\":\"%[^\"]\"", ps_scriptstr,ps_desc) != 2) {
+				ShowError("npc_parse_shop: Invalid VariableCost/Description definition in file '%s', line '%d'. Ignoring the rest of the line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
+				return strchr(start, '\n'); // skip and continue
+			}
+			switch(ps_scriptstr[0]) {
+				case '$':
+				case '.':
+				case '\'':
+					ShowWarning("npc_parse_shop: Invalid Variable cost variable type(must be character/account based) in file '%s', line '%d'. Ignoring the rest of the line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
+					return strchr(start, '\n'); // skip and continue
+					break;
+			}
+			if (ps_scriptstr[strlen(ps_scriptstr) - 1] == '$') {
+				ShowWarning("npc_parse_shop: Invalid Variable cost variable type(must be integer)in file '%s', line '%d'. Ignoring the rest of the line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
+				return strchr(start, '\n'); // skip and continue
+			}
+			p = strchr(p+1, ',');
+			break;
+	}
+
 	for( i = 0; i < ARRAYLENGTH(items) && p; ++i )
 	{
 		int nameid, value;
@@ -2247,7 +2388,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 			else value = 0; // Cashshop doesn't have a "buy price" in the item_db
 		}
 
-		if( type == SHOP && value == 0 )
+		if((type == SHOP || type == ITEMSHOP || type == POINTSHOP) && value == 0 )
 		{ // NPC selling items for free!
 			ShowWarning("npc_parse_shop: Item %s [%d] is being sold for FREE in file '%s', line '%d'.\n",
 				id->name, nameid, filepath, strline(buffer,start-buffer));
@@ -2275,6 +2416,9 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 	CREATE(nd->u.shop.shop_item, struct npc_item_list, i);
 	memcpy(nd->u.shop.shop_item, items, sizeof(struct npc_item_list)*i);
 	nd->u.shop.count = i;
+	nd->u.shop.itemshop_nameid = is_nameid; // Item shop currency
+	safestrncpy(nd->u.shop.pointshop_scriptstr,ps_scriptstr,sizeof(nd->u.shop.pointshop_scriptstr)); // Point shop currency
+	safestrncpy(nd->u.shop.pointshop_desc,ps_desc,sizeof(nd->u.shop.pointshop_desc)); //Point Shop Currency Name
 	nd->bl.prev = nd->bl.next = NULL;
 	nd->bl.m = m;
 	nd->bl.x = x;
@@ -2557,7 +2701,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 	type = dnd->subtype;
 
 	// get placement
-	if( (type==SHOP || type==CASHSHOP || type==SCRIPT) && strcmp(w1, "-") == 0 ) {// floating shop/chashshop/script
+	if( (type==SHOP || type==CASHSHOP || type == ITEMSHOP || type == POINTSHOP || type==SCRIPT) && strcmp(w1, "-") == 0 ) {// floating shop/chashshop/script/itemshop/pointshop
 		x = y = dir = 0;
 		m = -1;
 	} else {
@@ -2608,6 +2752,8 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 
 		case SHOP:
 		case CASHSHOP:
+		case ITEMSHOP:
+		case POINTSHOP:
 			++npc_shop;
 			nd->u.shop.shop_item = dnd->u.shop.shop_item;
 			nd->u.shop.count = dnd->u.shop.count;
@@ -3645,11 +3791,13 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 #endif // ENABLE_CASE_CHECK
 			p = npc->parse_warp(w1,w2,w3,w4, p, buffer, filepath);
 		}
-		else if( (!strcasecmp(w2,"shop") || !strcasecmp(w2,"cashshop")) && count > 3 )
+		else if( (!strcasecmp(w2,"shop") || !strcasecmp(w2,"cashshop") || !strcasecmp(w2,"itemshop") || !strcasecmp(w2,"pointshop")) && count > 3 )
 		{
 #ifdef ENABLE_CASE_CHECK
 			if( strcasecmp(w2,"shop") == 0 && strcmp(w2, "shop") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "shop", filepath, strline(buffer, p-buffer)) // TODO
-			else if( strcasecmp(w2,"cashshop") == 0 && strcmp(w2, "cashshop") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "cashshop", filepath, strline(buffer, p-buffer)); // TODO
+			else if( strcasecmp(w2,"cashshop") == 0 && strcmp(w2, "cashshop") != 0 ) {DeprecationWarning("npc_parsesrcfile", w2, "cashshop", filepath, strline(buffer, p-buffer));} // TODO
+			else if( strcasecmp(w2,"itemshop") == 0 && strcmp(w2, "itemshop") != 0 ) {DeprecationWarning("npc_parsesrcfile", w2, "itemshop", filepath, strline(buffer, p-buffer));} // TODO
+			else if( strcasecmp(w2,"pointshop") == 0 && strcmp(w2, "pointshop") != 0 ) {DeprecationWarning("npc_parsesrcfile", w2, "pointshop", filepath, strline(buffer, p-buffer));} // TODO
 #endif // ENABLE_CASE_CHECK
 			p = npc->parse_shop(w1,w2,w3,w4, p, buffer, filepath);
 		}

@@ -64,6 +64,9 @@ struct npc_data {
 		struct {
 			struct npc_item_list* shop_item;
 			int count;
+			int itemshop_nameid; // Item Shop item ID
+			char pointshop_scriptstr[32]; // Point Shop variable
+			char pointshop_desc[32];	//Point Shop Variable Name
 		} shop;
 		struct {
 			short xs,ys; // OnTouch area radius

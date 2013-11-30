@@ -14471,14 +14471,14 @@ BUILDIN(callshop)
 	if( script_hasdata(st,3) )
 		flag = script_getnum(st,3);
 	nd = npc->name2id(shopname);
-	if( !nd || nd->bl.type != BL_NPC || (nd->subtype != SHOP && nd->subtype != CASHSHOP) )
+	if( !nd || nd->bl.type != BL_NPC || (nd->subtype != SHOP && nd->subtype != CASHSHOP && nd->subtype != ITEMSHOP && nd->subtype != POINTSHOP) )
 	{
 		ShowError("buildin_callshop: Shop [%s] not found (or NPC is not shop type)\n", shopname);
 		script_pushint(st,0);
 		return false;
 	}
 	
-	if( nd->subtype == SHOP )
+	if( nd->subtype == SHOP || nd->subtype == ITEMSHOP || nd->subtype == POINTSHOP )
 	{
 		// flag the user as using a valid script call for opening the shop (for floating NPCs)
 		sd->state.callshop = 1;
@@ -14505,7 +14505,7 @@ BUILDIN(npcshopitem)
 	int n, i;
 	int amount;
 	
-	if( !nd || ( nd->subtype != SHOP && nd->subtype != CASHSHOP ) )
+	if( !nd || ( nd->subtype != SHOP && nd->subtype != CASHSHOP && nd->subtype != ITEMSHOP && nd->subtype != POINTSHOP ) )
 	{	//Not found.
 		script_pushint(st,0);
 		return true;
@@ -14534,7 +14534,7 @@ BUILDIN(npcshopadditem)
 	int n, i;
 	int amount;
 	
-	if( !nd || ( nd->subtype != SHOP && nd->subtype != CASHSHOP ) )
+	if( !nd || ( nd->subtype != SHOP && nd->subtype != CASHSHOP && nd->subtype != ITEMSHOP && nd->subtype != POINTSHOP ) )
 	{	//Not found.
 		script_pushint(st,0);
 		return true;
@@ -14565,7 +14565,7 @@ BUILDIN(npcshopdelitem)
 	int amount;
 	int size;
 	
-	if( !nd || ( nd->subtype != SHOP && nd->subtype != CASHSHOP ) )
+	if( !nd || ( nd->subtype != SHOP && nd->subtype != CASHSHOP && nd->subtype != ITEMSHOP && nd->subtype != POINTSHOP ) )
 	{	//Not found.
 		script_pushint(st,0);
 		return true;
