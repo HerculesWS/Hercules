@@ -960,8 +960,9 @@ const char* parse_variable(const char* p) {
 
 	parse_variable_sub_push(word, p2); // Push variable onto the stack
 
-	if( type != C_EQ )
-		script->addc(C_REF);
+	if( type != C_EQ ) {
+		parse_variable_sub_push(word, p2); // Push variable onto the stack once again (first argument of setr)
+	}
 
 	if( type == C_ADD_POST || type == C_SUB_POST ) { // post ++ / --
 		script->addi(1);
