@@ -301,9 +301,43 @@ void check_event(struct script_state *st, const char *evt)
 /*==========================================
  * Hashes the input string
  *------------------------------------------*/
-unsigned int calc_hash(const char* p)
-{
+unsigned int calc_hash(const char* p) {
 	unsigned int h;
+
+#if defined(SCRIPT_HASH_DJB2)
+	h = 5381;
+	while( *p ) // hash*33 + c
+		h = ( h << 5 ) + h + ((unsigned char)(*p++));
+#elif defined(SCRIPT_HASH_SDBM)
+	h = 0;
+	while( *p ) // hash*65599 + c
+		h = ( h << 6 ) + ( h << 16 ) - h + ((unsigned char)(*p++));
+#elif defined(SCRIPT_HASH_ELF) // UNIX ELF hash
+	h = 0;
+	while( *p ) {
+		unsigned int g;
+		h = ( h << 4 ) + ((unsigned char)(*p++));
+		g = h & 0xF0000000;
+		if( g ) {
+			h ^= g >> 24;
+			h &= ~g;
+		}
+	}
+#else // athena hash
+	h = 0;
+	while( *p )
+		h = ( h << 1 ) + ( h >> 3 ) + ( h >> 5 ) + ( h >> 8 ) + (unsigned char)(*p++);
+#endif
+
+	return h % SCRIPT_HASH_SIZE;
+}
+
+/*==========================================
+ * Hashes the input string in a case insensitive way
+ *------------------------------------------*/
+unsigned int calc_hash_ci(const char* p) {
+	unsigned int h = 0;
+#ifdef ENABLE_CASE_CHECK
 
 #if defined(SCRIPT_HASH_DJB2)
 	h = 5381;
@@ -315,12 +349,11 @@ unsigned int calc_hash(const char* p)
 		h = ( h << 6 ) + ( h << 16 ) - h + ((unsigned char)TOLOWER(*p++));
 #elif defined(SCRIPT_HASH_ELF) // UNIX ELF hash
 	h = 0;
-	while( *p ){
+	while( *p ) {
 		unsigned int g;
 		h = ( h << 4 ) + ((unsigned char)TOLOWER(*p++));
 		g = h & 0xF0000000;
-		if( g )
-		{
+		if( g ) {
 			h ^= g >> 24;
 			h &= ~g;
 		}
@@ -331,6 +364,7 @@ unsigned int calc_hash(const char* p)
 		h = ( h << 1 ) + ( h >> 3 ) + ( h >> 5 ) + ( h >> 8 ) + (unsigned char)TOLOWER(*p++);
 #endif
 
+#endif // ENABLE_CASE_CHECK
 	return h % SCRIPT_HASH_SIZE;
 }
 
@@ -352,15 +386,7 @@ int script_search_str(const char* p)
 	int i;
 
 	for( i = script->str_hash[script->calc_hash(p)]; i != 0; i = script->str_data[i].next ) {
-		if( strcasecmp(script->get_str(i),p) == 0 ) {
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, ".@", 2) != 0 // Local scope vars are checked separately to decrease false positives
-					&& strcasecmp(p, "disguise") != 0 && strcasecmp(p, "Poison_Spore") != 0
-					&& strcasecmp(p, "PecoPeco_Egg") != 0 && strcasecmp(p, "Soccer_Ball") != 0
-					&& strcasecmp(p, "Horn") != 0 && strcasecmp(p, "Treasure_Box_") != 0
-					&& strcasecmp(p, "Lord_of_Death") != 0
-					&& strcmp(script->get_str(i),p) != 0 ) DeprecationWarning2("script_search_str", p, script->get_str(i), script->parser_current_file); // TODO
-#endif // ENABLE_CASE_CHECK
+		if( strcmp(script->get_str(i),p) == 0 ) {
 			return i;
 		}
 	}
@@ -368,107 +394,121 @@ int script_search_str(const char* p)
 	return -1;
 }
 
-void script_local_casecheck_clear(void) {
+void script_casecheck_clear_sub(struct casecheck_data *ccd) {
 #ifdef ENABLE_CASE_CHECK
-	if (script->local_casecheck_str_data) {
-		aFree(script->local_casecheck_str_data);
-		script->local_casecheck_str_data = NULL;
+	if (ccd->str_data) {
+		aFree(ccd->str_data);
+		ccd->str_data = NULL;
 	}
-	script->local_casecheck_str_data_size = 0;
-	script->local_casecheck_str_num = 1;
-	if (script->local_casecheck_str_buf) {
-		aFree(script->local_casecheck_str_buf);
-		script->local_casecheck_str_buf = NULL;
+	ccd->str_data_size = 0;
+	ccd->str_num = 1;
+	if (ccd->str_buf) {
+		aFree(ccd->str_buf);
+		ccd->str_buf = NULL;
 	}
-	script->local_casecheck_str_pos = 0;
-	script->local_casecheck_str_size = 0;
-	memset(script->local_casecheck_str_hash, 0, sizeof(script->local_casecheck_str_hash));
+	ccd->str_pos = 0;
+	ccd->str_size = 0;
+	memset(ccd->str_hash, 0, sizeof(ccd->str_hash));
 #endif // ENABLE_CASE_CHECK
 }
 
-bool script_local_casecheck_add_str(const char *p, int h) {
+void script_global_casecheck_clear(void) {
+	script_casecheck_clear_sub(&script->global_casecheck);
+}
+
+void script_local_casecheck_clear(void) {
+	script_casecheck_clear_sub(&script->local_casecheck);
+}
+
+bool script_casecheck_add_str_sub(struct casecheck_data *ccd, const char *p) {
 #ifdef ENABLE_CASE_CHECK
 	int len, i;
-	if( script->local_casecheck_str_hash[h] == 0 ) { //empty bucket, add new node here
-		script->local_casecheck_str_hash[h] = script->local_casecheck_str_num;
+	int h = script->calc_hash_ci(p);
+	if( ccd->str_hash[h] == 0 ) { //empty bucket, add new node here
+		ccd->str_hash[h] = ccd->str_num;
 	} else {
 		const char *s = NULL;
-		for( i = script->local_casecheck_str_hash[h]; ; i = script->local_casecheck_str_data[i].next ) {
-			Assert( i >= 0 && i < script->local_casecheck_str_size );
-			s = script->local_casecheck_str_buf+script->local_casecheck_str_data[i].str;
+		for( i = ccd->str_hash[h]; ; i = ccd->str_data[i].next ) {
+			Assert( i >= 0 && i < ccd->str_size );
+			s = ccd->str_buf+ccd->str_data[i].str;
 			if( strcasecmp(s,p) == 0 ) {
-				if ( strcmp(s,p) != 0 ) {
-					DeprecationWarning2("script_add_str", p, s, script->parser_current_file);
-					return true;
-				}
-				return false; // string already in list
+				return true; // string already in list
 			}
-			if( script->local_casecheck_str_data[i].next == 0 )
+			if( ccd->str_data[i].next == 0 )
 				break; // reached the end
 		}
 
 		// append node to end of list
-		script->local_casecheck_str_data[i].next = script->local_casecheck_str_num;
+		ccd->str_data[i].next = ccd->str_num;
 	}
 
 	// grow list if neccessary
-	if( script->local_casecheck_str_num >= script->local_casecheck_str_data_size ) {
-		script->local_casecheck_str_data_size += 1280;
-		RECREATE(script->local_casecheck_str_data,struct str_data_struct,script->local_casecheck_str_data_size);
-		memset(script->local_casecheck_str_data + (script->local_casecheck_str_data_size - 1280), '\0', 1280);
+	if( ccd->str_num >= ccd->str_data_size ) {
+		ccd->str_data_size += 1280;
+		RECREATE(ccd->str_data,struct str_data_struct,ccd->str_data_size);
+		memset(ccd->str_data + (ccd->str_data_size - 1280), '\0', 1280);
 	}
 
 	len=(int)strlen(p);
 
 	// grow string buffer if neccessary
-	while( script->local_casecheck_str_pos+len+1 >= script->local_casecheck_str_size ) {
-		script->local_casecheck_str_size += 10240;
-		RECREATE(script->local_casecheck_str_buf,char,script->local_casecheck_str_size);
-		memset(script->local_casecheck_str_buf + (script->local_casecheck_str_size - 10240), '\0', 10240);
+	while( ccd->str_pos+len+1 >= ccd->str_size ) {
+		ccd->str_size += 10240;
+		RECREATE(ccd->str_buf,char,ccd->str_size);
+		memset(ccd->str_buf + (ccd->str_size - 10240), '\0', 10240);
 	}
 
-	safestrncpy(script->local_casecheck_str_buf+script->local_casecheck_str_pos, p, len+1);
-	script->local_casecheck_str_data[script->local_casecheck_str_num].type = C_NOP;
-	script->local_casecheck_str_data[script->local_casecheck_str_num].str = script->local_casecheck_str_pos;
-	script->local_casecheck_str_data[script->local_casecheck_str_num].val = 0;
-	script->local_casecheck_str_data[script->local_casecheck_str_num].next = 0;
-	script->local_casecheck_str_data[script->local_casecheck_str_num].func = NULL;
-	script->local_casecheck_str_data[script->local_casecheck_str_num].backpatch = -1;
-	script->local_casecheck_str_data[script->local_casecheck_str_num].label = -1;
-	script->local_casecheck_str_pos += len+1;
+	safestrncpy(ccd->str_buf+ccd->str_pos, p, len+1);
+	ccd->str_data[ccd->str_num].type = C_NOP;
+	ccd->str_data[ccd->str_num].str = ccd->str_pos;
+	ccd->str_data[ccd->str_num].val = 0;
+	ccd->str_data[ccd->str_num].next = 0;
+	ccd->str_data[ccd->str_num].func = NULL;
+	ccd->str_data[ccd->str_num].backpatch = -1;
+	ccd->str_data[ccd->str_num].label = -1;
+	ccd->str_pos += len+1;
 
-	script->local_casecheck_str_num++;
+	ccd->str_num++;
 #endif // ENABLE_CASE_CHECK
 	return false;
+}
+
+bool script_global_casecheck_add_str(const char *p) {
+	return script_casecheck_add_str_sub(&script->global_casecheck, p);
+}
+
+bool script_local_casecheck_add_str(const char *p) {
+	return script_casecheck_add_str_sub(&script->local_casecheck, p);
 }
 
 /// Stores a copy of the string and returns its id.
 /// If an identical string is already present, returns its id instead.
 int script_add_str(const char* p)
 {
-	int i, h;
-	int len;
-
-	h = script->calc_hash(p);
+	int i, len, h = script->calc_hash(p);
 
 #ifdef ENABLE_CASE_CHECK
+	bool alreadyexists = false;
 	if( (strncmp(p, ".@", 2) == 0) ) // Local scope vars are checked separately to decrease false positives
-		script->local_casecheck_add_str(p, h);
+		alreadyexists = script->local_casecheck.add_str(p);
+	else {
+		alreadyexists = script->global_casecheck.add_str(p);
+		if( alreadyexists ) {
+			if( strcasecmp(p, "disguise") == 0 || strcasecmp(p, "Poison_Spore") == 0
+				|| strcasecmp(p, "PecoPeco_Egg") == 0 || strcasecmp(p, "Soccer_Ball") == 0
+				|| strcasecmp(p, "Horn") == 0 || strcasecmp(p, "Treasure_Box_") == 0
+				|| strcasecmp(p, "Lord_of_Death") == 0
+			  ) // Known duplicates, don't bother warning the user
+				alreadyexists = false;
+		}
+	}
 #endif // ENABLE_CASE_CHECK
 
 	if( script->str_hash[h] == 0 ) {// empty bucket, add new node here
 		script->str_hash[h] = script->str_num;
 	} else {// scan for end of list, or occurence of identical string
 		for( i = script->str_hash[h]; ; i = script->str_data[i].next ) {
-			if( strcasecmp(script->get_str(i),p) == 0 ) {
-#ifdef ENABLE_CASE_CHECK
-				if( (strncmp(p, ".@", 2) != 0) // Local scope vars are checked separately to decrease false positives
-						&& strcasecmp(p, "disguise") != 0 && strcasecmp(p, "Poison_Spore") != 0
-						&& strcasecmp(p, "PecoPeco_Egg") != 0 && strcasecmp(p, "Soccer_Ball") != 0
-						&& strcasecmp(p, "Horn") != 0 && strcasecmp(p, "Treasure_Box_") != 0
-						&& strcasecmp(p, "Lord_of_Death") != 0
-						&& strcmp(script->get_str(i),p) != 0 ) DeprecationWarning2("script_add_str", p, script->get_str(i), script->parser_current_file); // TODO
-#endif // ENABLE_CASE_CHECK
+			if( strcmp(script->get_str(i),p) == 0 ) {
 				return i; // string already in list
 			}
 			if( script->str_data[i].next == 0 )
@@ -478,6 +518,12 @@ int script_add_str(const char* p)
 		// append node to end of list
 		script->str_data[i].next = script->str_num;
 	}
+	
+#ifdef ENABLE_CASE_CHECK
+	if( alreadyexists ) {
+		DeprecationWarning2("script_add_str", p, script->get_str(i), script->parser_current_file); // TODO
+	}
+#endif // ENABLE_CASE_CHECK
 
 	// grow list if neccessary
 	if( script->str_num >= script->str_data_size ) {
@@ -1343,13 +1389,10 @@ const char* parse_syntax(const char* p)
 	switch(*p) {
 	case 'B':
 	case 'b':
-		if(p2 - p == 5 && !strncasecmp(p,"break",5)) {
+		if( p2 - p == 5 && strncmp(p,"break",5) == 0 ) {
 			// break Processing
 			char label[256];
 			int pos = script->syntax.curly_count - 1;
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "break", 5) != 0 ) disp_deprecation_message("parse_syntax", "break", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			while(pos >= 0) {
 				if(script->syntax.curly[pos].type == TYPE_DO) {
 					sprintf(label,"goto __DO%x_FIN;",script->syntax.curly[pos].index);
@@ -1379,16 +1422,17 @@ const char* parse_syntax(const char* p)
 			// Closing decision if, for , while
 			p = script->parse_syntax_close(p + 1);
 			return p;
+#ifdef ENABLE_CASE_CHECK
+		} else if( p2 - p == 5 && strncasecmp(p, "break", 5) == 0 ) {
+			disp_deprecation_message("parse_syntax", "break", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 'c':
 	case 'C':
-		if(p2 - p == 4 && !strncasecmp(p,"case",4)) {
+		if( p2 - p == 4 && strncmp(p, "case", 4) == 0 ) {
 			//Processing case
 			int pos = script->syntax.curly_count-1;
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "case", 4) != 0 ) disp_deprecation_message("parse_syntax", "case", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			if(pos < 0 || script->syntax.curly[pos].type != TYPE_SWITCH) {
 				disp_error_message("parse_syntax: unexpected 'case' ",p);
 				return p+1;
@@ -1461,13 +1505,10 @@ const char* parse_syntax(const char* p)
 				script->syntax.curly[pos].count++;
 			}
 			return p + 1;
-		} else if(p2 - p == 8 && !strncasecmp(p,"continue",8)) {
+		} else if( p2 - p == 8 && strncmp(p, "continue", 8) == 0 ) {
 			// Processing continue
 			char label[256];
 			int pos = script->syntax.curly_count - 1;
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "continue", 8) != 0 ) disp_deprecation_message("parse_syntax", "continue", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			while(pos >= 0) {
 				if(script->syntax.curly[pos].type == TYPE_DO) {
 					sprintf(label,"goto __DO%x_NXT;",script->syntax.curly[pos].index);
@@ -1495,16 +1536,19 @@ const char* parse_syntax(const char* p)
 			//Closing decision if, for , while
 			p = script->parse_syntax_close(p + 1);
 			return p;
+#ifdef ENABLE_CASE_CHECK
+		} else if( p2 - p == 4 && strncasecmp(p, "case", 4) == 0 ) {
+			disp_deprecation_message("parse_syntax", "case", p); // TODO
+		} else if( p2 - p == 8 && strncasecmp(p, "continue", 8) == 0 ) {
+			disp_deprecation_message("parse_syntax", "continue", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 'd':
 	case 'D':
-		if(p2 - p == 7 && !strncasecmp(p,"default",7)) {
+		if( p2 - p == 7 && strncmp(p, "default", 7) == 0 ) {
 			// Switch - default processing
 			int pos = script->syntax.curly_count-1;
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "default", 7) != 0 ) disp_deprecation_message("parse_syntax", "default", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			if(pos < 0 || script->syntax.curly[pos].type != TYPE_SWITCH) {
 				disp_error_message("parse_syntax: unexpected 'default'",p);
 			} else if(script->syntax.curly[pos].flag) {
@@ -1536,12 +1580,9 @@ const char* parse_syntax(const char* p)
 				script->syntax.curly[pos].count++;
 			}
 			return p + 1;
-		} else if(p2 - p == 2 && !strncasecmp(p,"do",2)) {
+		} else if( p2 - p == 2 && strncmp(p, "do", 2) == 0 ) {
 			int l;
 			char label[256];
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "do", 2) != 0 ) disp_deprecation_message("parse_syntax", "do", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			p=script->skip_space(p2);
 
 			script->syntax.curly[script->syntax.curly_count].type  = TYPE_DO;
@@ -1554,17 +1595,20 @@ const char* parse_syntax(const char* p)
 			script->set_label(l,script->pos,p);
 			script->syntax.curly_count++;
 			return p;
+#ifdef ENABLE_CASE_CHECK
+		} else if( p2 - p == 7 && strncasecmp(p, "default", 7) == 0 ) {
+			disp_deprecation_message("parse_syntax", "default", p); // TODO
+		} else if( p2 - p == 2 && strncasecmp(p, "do", 2) == 0 ) {
+			disp_deprecation_message("parse_syntax", "do", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 'f':
 	case 'F':
-		if(p2 - p == 3 && !strncasecmp(p,"for",3)) {
+		if( p2 - p == 3 && strncmp(p, "for", 3) == 0 ) {
 			int l;
 			char label[256];
 			int  pos = script->syntax.curly_count;
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "for", 3) != 0 ) disp_deprecation_message("parse_syntax", "for", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			script->syntax.curly[script->syntax.curly_count].type  = TYPE_FOR;
 			script->syntax.curly[script->syntax.curly_count].count = 1;
 			script->syntax.curly[script->syntax.curly_count].index = script->syntax.index++;
@@ -1635,14 +1679,10 @@ const char* parse_syntax(const char* p)
 			l=script->add_str(label);
 			script->set_label(l,script->pos,p);
 			return p;
-		}
-		else if( p2 - p == 8 && strncasecmp(p,"function",8) == 0 )
-		{// internal script function
+		} else if( p2 - p == 8 && strncmp(p, "function", 8) == 0 ) {
+			// internal script function
 			const char *func_name;
 
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "function", 8) != 0 ) disp_deprecation_message("parse_syntax", "function", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			func_name = script->skip_space(p2);
 			p = script->skip_word(func_name);
 			if( p == func_name )
@@ -1700,16 +1740,19 @@ const char* parse_syntax(const char* p)
 			{
 				disp_error_message("expect ';' or '{' at function syntax",p);
 			}
+#ifdef ENABLE_CASE_CHECK
+		} else if( p2 - p == 3 && strncasecmp(p, "for", 3) == 0 ) {
+			disp_deprecation_message("parse_syntax", "for", p); // TODO
+		} else if( p2 - p == 8 && strncasecmp(p, "function", 8) == 0 ) {
+			disp_deprecation_message("parse_syntax", "function", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 'i':
 	case 'I':
-		if(p2 - p == 2 && !strncasecmp(p,"if",2)) {
+		if( p2 - p == 2 && strncmp(p, "if", 2) == 0 ) {
 			// If process
 			char label[256];
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "if", 2) != 0 ) disp_deprecation_message("parse_syntax", "if", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			p=script->skip_space(p2);
 			if(*p != '(') { //Prevent if this {} non-c script->syntax. from Rayce (jA)
 				disp_error_message("need '('",p);
@@ -1727,16 +1770,17 @@ const char* parse_syntax(const char* p)
 			script->addl(script->add_str(label));
 			script->addc(C_FUNC);
 			return p;
+#ifdef ENABLE_CASE_CHECK
+		} else if( p2 - p == 2 && strncasecmp(p, "if", 2) == 0 ) {
+			disp_deprecation_message("parse_syntax", "if", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 's':
 	case 'S':
-		if(p2 - p == 6 && !strncasecmp(p,"switch",6)) {
+		if( p2 - p == 6 && strncmp(p, "switch", 6) == 0 ) {
 			// Processing of switch ()
 			char label[256];
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "switch", 6) != 0 ) disp_deprecation_message("parse_syntax", "switch", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			p=script->skip_space(p2);
 			if(*p != '(') {
 				disp_error_message("need '('",p);
@@ -1757,16 +1801,17 @@ const char* parse_syntax(const char* p)
 			}
 			script->addc(C_FUNC);
 			return p + 1;
+#ifdef ENABLE_CASE_CHECK
+		} else if( p2 - p == 6 && strncasecmp(p, "switch", 6) == 0 ) {
+			disp_deprecation_message("parse_syntax", "switch", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	case 'w':
 	case 'W':
-		if(p2 - p == 5 && !strncasecmp(p,"while",5)) {
+		if( p2 - p == 5 && strncmp(p, "while", 5) == 0 ) {
 			int l;
 			char label[256];
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "while", 5) != 0 ) disp_deprecation_message("parse_syntax", "while", p); // TODO
-#endif // ENABLE_CASE_CHECK
 			p=script->skip_space(p2);
 			if(*p != '(') {
 				disp_error_message("need '('",p);
@@ -1790,6 +1835,10 @@ const char* parse_syntax(const char* p)
 			script->addl(script->add_str(label));
 			script->addc(C_FUNC);
 			return p;
+#ifdef ENABLE_CASE_CHECK
+		} else if( p2 - p == 5 && strncasecmp(p, "while", 5) == 0 ) {
+			disp_deprecation_message("parse_syntax", "while", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		break;
 	}
@@ -1840,14 +1889,11 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		script->syntax.curly[pos].count++;
 		p = script->skip_space(p);
 		p2 = script->skip_word(p);
-		if(!script->syntax.curly[pos].flag && p2 - p == 4 && !strncasecmp(p,"else",4)) {
-#ifdef ENABLE_CASE_CHECK
-			if( strncmp(p, "else", 4) != 0 ) disp_deprecation_message("parse_syntax", "else", p); // TODO
-#endif // ENABLE_CASE_CHECK
+		if( !script->syntax.curly[pos].flag && p2 - p == 4 && strncmp(p, "else", 4) == 0 ) {
 			// else  or else - if
 			p = script->skip_space(p2);
 			p2 = script->skip_word(p);
-			if(p2 - p == 2 && !strncasecmp(p,"if",2)) {
+			if( p2 - p == 2 && strncmp(p, "if", 2) == 0 ) {
 				// else - if
 				p=script->skip_space(p2);
 				if(*p != '(') {
@@ -1862,6 +1908,10 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 				script->addc(C_FUNC);
 				*flag = 0;
 				return p;
+#ifdef ENABLE_CASE_CHECK
+			} else if( p2 - p == 2 && strncasecmp(p, "if", 2) == 0 ) {
+				disp_deprecation_message("parse_syntax", "if", p); // TODO
+#endif // ENABLE_CASE_CHECK
 			} else {
 				// else
 				if(!script->syntax.curly[pos].flag) {
@@ -1870,6 +1920,10 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 					return p;
 				}
 			}
+#ifdef ENABLE_CASE_CHECK
+		} else if( !script->syntax.curly[pos].flag && p2 - p == 4 && strncasecmp(p, "else", 4) == 0 ) {
+			disp_deprecation_message("parse_syntax", "else", p); // TODO
+#endif // ENABLE_CASE_CHECK
 		}
 		// Close if
 		script->syntax.curly_count--;
@@ -1897,12 +1951,13 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		// Skip to the end point if the condition is false
 		p = script->skip_space(p);
 		p2 = script->skip_word(p);
-		if(p2 - p != 5 || strncasecmp(p,"while",5))
-			disp_error_message("parse_syntax: need 'while'",p);
-
+		if( p2 - p != 5 || strncmp(p, "while", 5) != 0 ) {
 #ifdef ENABLE_CASE_CHECK
-		if( strncmp(p, "while", 5) != 0 ) disp_deprecation_message("parse_syntax", "while", p); // TODO
+			if( p2 - p == 5 && strncasecmp(p, "while", 5) == 0 ) disp_deprecation_message("parse_syntax", "while", p); // TODO
 #endif // ENABLE_CASE_CHECK
+			disp_error_message("parse_syntax: need 'while'",p);
+		}
+
 		p = script->skip_space(p2);
 		if(*p != '(') {
 			disp_error_message("need '('",p);
@@ -2235,7 +2290,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 		for(i=0; i<size; i++)
 			linkdb_final(&script->syntax.curly[i].case_label);
 #ifdef ENABLE_CASE_CHECK
-	script->local_casecheck_clear();
+	script->local_casecheck.clear();
 #endif // ENABLE_CASE_CHECK
 		return NULL;
 	}
@@ -2252,7 +2307,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			script->size = 0;
 			script->buf  = NULL;
 #ifdef ENABLE_CASE_CHECK
-	script->local_casecheck_clear();
+	script->local_casecheck.clear();
 #endif // ENABLE_CASE_CHECK
 			return NULL;
 		}
@@ -2270,7 +2325,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			script->size = 0;
 			script->buf  = NULL;
 #ifdef ENABLE_CASE_CHECK
-	script->local_casecheck_clear();
+	script->local_casecheck.clear();
 #endif // ENABLE_CASE_CHECK
 			return NULL;
 		}
@@ -2295,7 +2350,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			disp_error_message("unexpected end of script",p);
 		// Special handling only label
 		tmpp=script->skip_space(script->skip_word(p));
-		if(*tmpp==':' && !(!strncasecmp(p,"default:",8) && p + 7 == tmpp)){
+		if(*tmpp==':' && !(strncmp(p,"default:",8) == 0 && p + 7 == tmpp)) {
 			i=script->add_word(p);
 			script->set_label(i,script->pos,p);
 			if( script->parse_options&SCRIPT_USE_LABEL_DB )
@@ -2387,7 +2442,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 	code->script_size = script->size;
 	code->script_vars = NULL;
 #ifdef ENABLE_CASE_CHECK
-	script->local_casecheck_clear();
+	script->local_casecheck.clear();
 #endif // ENABLE_CASE_CHECK
 	return code;
 }
@@ -3943,10 +3998,10 @@ void do_final_script(void) {
 	if( script->word_buf != NULL )
 		aFree(script->word_buf);
 	
-	if( script->local_casecheck_str_buf )
-		aFree(script->local_casecheck_str_buf);
-	if( script->local_casecheck_str_data )
-		aFree(script->local_casecheck_str_data);
+#ifdef ENABLE_CASE_CHECK
+	script->global_casecheck.clear();
+	script->local_casecheck.clear();
+#endif // ENABLE_CASE_CHECK
 	
 	ers_destroy(script->st_ers);
 	ers_destroy(script->stack_ers);
@@ -3983,6 +4038,10 @@ int script_reload(void) {
 	int i;
 	DBIterator *iter;
 	struct script_state *st;
+
+#ifdef ENABLE_CASE_CHECK
+	script->global_casecheck.clear();
+#endif // ENABLE_CASE_CHECK
 
 	iter = db_iterator(script->st_db);
 	
@@ -18784,14 +18843,24 @@ void script_defaults(void) {
 	script->config.ontouch2_name = "OnTouch";//ontouch2_name (run whenever a char walks into the OnTouch area)
 
 	// for ENABLE_CASE_CHECK
-	script->local_casecheck_add_str = script_local_casecheck_add_str;
-	script->local_casecheck_clear = script_local_casecheck_clear;
-	script->local_casecheck_str_data = NULL;
-	script->local_casecheck_str_data_size = 0;
-	script->local_casecheck_str_num = 1;
-	script->local_casecheck_str_buf = NULL;
-	script->local_casecheck_str_size = 0;
-	script->local_casecheck_str_pos = 0;
-	memset(script->local_casecheck_str_hash, 0, sizeof(script->local_casecheck_str_hash));
+	script->calc_hash_ci = calc_hash_ci;
+	script->local_casecheck.add_str = script_local_casecheck_add_str;
+	script->local_casecheck.clear = script_local_casecheck_clear;
+	script->local_casecheck.str_data = NULL;
+	script->local_casecheck.str_data_size = 0;
+	script->local_casecheck.str_num = 1;
+	script->local_casecheck.str_buf = NULL;
+	script->local_casecheck.str_size = 0;
+	script->local_casecheck.str_pos = 0;
+	memset(script->local_casecheck.str_hash, 0, sizeof(script->local_casecheck.str_hash));
+	script->global_casecheck.add_str = script_global_casecheck_add_str;
+	script->global_casecheck.clear = script_global_casecheck_clear;
+	script->global_casecheck.str_data = NULL;
+	script->global_casecheck.str_data_size = 0;
+	script->global_casecheck.str_num = 1;
+	script->global_casecheck.str_buf = NULL;
+	script->global_casecheck.str_size = 0;
+	script->global_casecheck.str_pos = 0;
+	memset(script->global_casecheck.str_hash, 0, sizeof(script->global_casecheck.str_hash));
 	// end ENABLE_CASE_CHECK
 }

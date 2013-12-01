@@ -95,7 +95,7 @@ int mobdb_searchname(const char *str)
 		monster = mob->db(i);
 		if(monster == mob->dummy) //Skip dummy mobs.
 			continue;
-		if(strcmpi(monster->name,str)==0 || strcmpi(monster->jname,str)==0 || strcmpi(monster->sprite,str)==0)
+		if(strcmpi(monster->name,str)==0 || strcmpi(monster->jname,str)==0 || strcmp(monster->sprite,str)==0) // Sprite name case sensitive
 			return i;
 	}
 
@@ -113,9 +113,9 @@ int mobdb_searchname_array_sub(struct mob_db* monster, const char *str, int flag
 			return 0;
 		return strcmpi(monster->jname,str);
 	}
-	if(strcmp(monster->jname,str) == 0)
+	if(strcmpi(monster->jname,str) == 0)
 		return 0;
-	if(strcmp(monster->name,str) == 0)
+	if(strcmpi(monster->name,str) == 0)
 		return 0;
 	return strcmp(monster->sprite,str);
 }
