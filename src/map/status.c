@@ -2453,10 +2453,11 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	pc->delautobonus(sd,sd->autobonus3,ARRAYLENGTH(sd->autobonus3),true);
 
 	// Parse equipment.
-	for(i=0;i<EQI_MAX-1;i++) {
+	for(i=0;i<EQI_MAX;i++) {
 		status->current_equip_item_index = index = sd->equip_index[i]; //We pass INDEX to status->current_equip_item_index - for EQUIP_SCRIPT (new cards solution) [Lupus]
 		if(index < 0)
 			continue;
+		if(i == EQI_AMMO) continue;/* ammo has special handler down there */
 		if(i == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == index)
 			continue;
 		if(i == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == index)
@@ -2588,10 +2589,11 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	bstatus->def += (refinedef+50)/100;
 
 	//Parse Cards
-	for(i=0;i<EQI_MAX-1;i++) {
+	for(i=0;i<EQI_MAX;i++) {
 		status->current_equip_item_index = index = sd->equip_index[i]; //We pass INDEX to status->current_equip_item_index - for EQUIP_SCRIPT (new cards solution) [Lupus]
 		if(index < 0)
 			continue;
+		if(i == EQI_AMMO) continue;/* ammo doesn't have cards */
 		if(i == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == index)
 			continue;
 		if(i == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == index)

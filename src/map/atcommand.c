@@ -2051,9 +2051,10 @@ ACMD(refine)
 	refine = cap_value(refine, -MAX_REFINE, MAX_REFINE);
 	
 	count = 0;
-	for (j = 0; j < EQI_MAX-1; j++) {
+	for (j = 0; j < EQI_MAX; j++) {
 		if ((i = sd->equip_index[j]) < 0)
 			continue;
+		if(j == EQI_AMMO) continue; /* can't equip ammo */
 		if(j == EQI_HAND_R && sd->equip_index[EQI_HAND_L] == i)
 			continue;
 		if(j == EQI_HEAD_MID && sd->equip_index[EQI_HEAD_LOW] == i)
