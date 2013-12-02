@@ -452,7 +452,7 @@ struct casecheck_data {
 	int str_size; // size of the buffer
 	int str_pos; // next position to be assigned
 	int str_hash[SCRIPT_HASH_SIZE];
-	bool (*add_str) (const char* p);
+	const char *(*add_str) (const char* p);
 	void (*clear) (void);
 };
 

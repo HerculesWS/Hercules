@@ -420,7 +420,7 @@ void script_local_casecheck_clear(void) {
 	script_casecheck_clear_sub(&script->local_casecheck);
 }
 
-bool script_casecheck_add_str_sub(struct casecheck_data *ccd, const char *p) {
+const char *script_casecheck_add_str_sub(struct casecheck_data *ccd, const char *p) {
 #ifdef ENABLE_CASE_CHECK
 	int len, i;
 	int h = script->calc_hash_ci(p);
@@ -432,7 +432,7 @@ bool script_casecheck_add_str_sub(struct casecheck_data *ccd, const char *p) {
 			Assert( i >= 0 && i < ccd->str_size );
 			s = ccd->str_buf+ccd->str_data[i].str;
 			if( strcasecmp(s,p) == 0 ) {
-				return true; // string already in list
+				return s; // string already in list
 			}
 			if( ccd->str_data[i].next == 0 )
 				break; // reached the end
@@ -470,14 +470,14 @@ bool script_casecheck_add_str_sub(struct casecheck_data *ccd, const char *p) {
 
 	ccd->str_num++;
 #endif // ENABLE_CASE_CHECK
-	return false;
+	return NULL;
 }
 
-bool script_global_casecheck_add_str(const char *p) {
+const char *script_global_casecheck_add_str(const char *p) {
 	return script_casecheck_add_str_sub(&script->global_casecheck, p);
 }
 
-bool script_local_casecheck_add_str(const char *p) {
+const char *script_local_casecheck_add_str(const char *p) {
 	return script_casecheck_add_str_sub(&script->local_casecheck, p);
 }
 
@@ -486,22 +486,8 @@ bool script_local_casecheck_add_str(const char *p) {
 int script_add_str(const char* p)
 {
 	int i, len, h = script->calc_hash(p);
-
 #ifdef ENABLE_CASE_CHECK
-	bool alreadyexists = false;
-	if( (strncmp(p, ".@", 2) == 0) ) // Local scope vars are checked separately to decrease false positives
-		alreadyexists = script->local_casecheck.add_str(p);
-	else {
-		alreadyexists = script->global_casecheck.add_str(p);
-		if( alreadyexists ) {
-			if( strcasecmp(p, "disguise") == 0 || strcasecmp(p, "Poison_Spore") == 0
-				|| strcasecmp(p, "PecoPeco_Egg") == 0 || strcasecmp(p, "Soccer_Ball") == 0
-				|| strcasecmp(p, "Horn") == 0 || strcasecmp(p, "Treasure_Box_") == 0
-				|| strcasecmp(p, "Lord_of_Death") == 0
-			  ) // Known duplicates, don't bother warning the user
-				alreadyexists = false;
-		}
-	}
+	const char *existingentry = NULL;
 #endif // ENABLE_CASE_CHECK
 
 	if( script->str_hash[h] == 0 ) {// empty bucket, add new node here
@@ -520,8 +506,21 @@ int script_add_str(const char* p)
 	}
 	
 #ifdef ENABLE_CASE_CHECK
-	if( alreadyexists ) {
-		DeprecationWarning2("script_add_str", p, script->get_str(i), script->parser_current_file); // TODO
+	if( (strncmp(p, ".@", 2) == 0) ) // Local scope vars are checked separately to decrease false positives
+		existingentry = script->local_casecheck.add_str(p);
+	else {
+		existingentry = script->global_casecheck.add_str(p);
+		if( existingentry ) {
+			if( strcasecmp(p, "disguise") == 0 || strcasecmp(p, "Poison_Spore") == 0
+				|| strcasecmp(p, "PecoPeco_Egg") == 0 || strcasecmp(p, "Soccer_Ball") == 0
+				|| strcasecmp(p, "Horn") == 0 || strcasecmp(p, "Treasure_Box_") == 0
+				|| strcasecmp(p, "Lord_of_Death") == 0
+			  ) // Known duplicates, don't bother warning the user
+				existingentry = NULL;
+		}
+	}
+	if( existingentry ) {
+		DeprecationWarning2("script_add_str", p, existingentry, script->parser_current_file); // TODO
 	}
 #endif // ENABLE_CASE_CHECK
 
