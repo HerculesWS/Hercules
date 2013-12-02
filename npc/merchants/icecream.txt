@@ -69,7 +69,7 @@
 		mes "before making a purchase.";
 		close;
 	}
-	set Zeny,Zeny-100*.@input;
+	Zeny -= 100*.@input;
 	getitem 536,.@input;	// Ice_Cream
 	close;
 }

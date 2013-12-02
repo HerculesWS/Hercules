@@ -105,7 +105,7 @@ M_CHOCO:
 	if (@flag_num > 5) goto L_ERR;
 	set @needmon,@flag_num*5000;
 	if (Zeny < @needmon) goto L_NOTENO;
-	set Zeny,Zeny - @needmon;
+	Zeny -= @needmon;
 	getitem 558,@flag_num;
 	mes "[Stephen]";
 	mes "There you go!";
@@ -167,7 +167,7 @@ M_CHOCO:
 	set @needmon,@flag_num*4500;
 	if (Zeny < @needmon) goto L_NOTENO;
 	if (countitem(519) < @flag_num) goto L_NOMILK;
-	set Zeny,Zeny - @needmon;
+	Zeny -= @needmon;
 	delitem 519,@flag_num;
 	getitem 561,@flag_num;
 	mes "[Jainie]";

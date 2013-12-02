@@ -510,7 +510,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 			mes "Good. Almost done!";
 			next;
 			specialeffect2 EF_SUI_EXPLOSION;
-			set Zeny, Zeny - 50000;
+			Zeny -= 50000;
 			hommutate .@Homunculus;
 			break;
 		case 2:

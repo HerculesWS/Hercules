@@ -69,7 +69,7 @@ prontera,73,140,0	script	Milk Vendor	4_M_04,{
 			mes "all of this milk?";
 			close;
 		}
-		set Zeny, Zeny-.@total_cost;
+		Zeny -= .@total_cost;
 		delitem 713,.@bottles; //Empty Bottles
 		getitem 519,.@bottles; //Milk
 		close;

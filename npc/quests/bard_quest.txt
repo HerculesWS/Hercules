@@ -1127,7 +1127,7 @@ S_StorySong:
 		case 1:
 			mes "[Errende]";
 			if (Zeny > 499) {
-				set Zeny, Zeny-500;
+				Zeny -= 500;
 				cutin "bard_eland03",2;
 				mes "Alright.";
 				mes "Here we go~";

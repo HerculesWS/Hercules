@@ -8,7 +8,7 @@
 //= Comodo Gambling: Win random Items with 3 Carat Diamonds.
 //===== Additional Comments: =================================
 //= 0.1- so far just a basic setup, and working on the function
-//= 0.2- fixed some spelling errors and set zeny,zeny - (@amount * 55000)[Cypress]
+//= 0.2- fixed some spelling errors and Zeny -= (@amount * 55000)[Cypress]
 //= 0.3- Revised the gambling NPC using the official Aegis script [MasterOfMuppets]
 //=      for information. Thanks to Zefris for doing it for me.
 //= 0.4- Fixed an exploit. thanks to reddozen [MasterOfMuppets]
@@ -474,7 +474,7 @@ comodo,210,154,2	script	Suspicious Guy#cmd	2_M_THIEFMASTER,{
 			next;
 			mes "[Cain]";
 			mes "I guess it can't hurt to gather some Diamonds there and try to exchange them for whatever the old lady's got. Take care, pal~";
-			set Zeny,Zeny-500;
+			Zeny -= 500;
 			close;
 		}
 		mes "[Cain]";
@@ -554,7 +554,7 @@ mjolnir_02,85,362,3	script	Blacksmith Miner	4_F_JOB_BLACKSMITH,{
 			mes "I don't think give you anything if there's no room in your inventory. Why don't you put some of your stuff into Kafra Storage?";
 			close;
 		}
-		set Zeny,Zeny - .@cost;
+		Zeny -= .@cost;
 		getitem 732,.@amount;
 		mes "[Dwayne]";
 		mes "Thank you for";

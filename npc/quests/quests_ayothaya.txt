@@ -862,7 +862,7 @@ ayothaya,253,99,3	script	Fisherman	4_M_THAIONGBAK,{
 				mes "^3355FFYou've hooked a Phen!^000000";
 				next;
 				delitem 528,1; //Monster's_Feed
-				set Zeny, Zeny-50;
+				Zeny -= 50;
 				set .@randfish,rand(1,100);
 				if (.@randfish > 0 && .@randfish < 40) {
 					mes "^3355FFWhile cooking the Phen, you";
@@ -2546,7 +2546,7 @@ ayothaya,153,86,5	script	Thongpool#ayo	4_M_THAIONGBAK,{
 			if (select("I will take them.:I could get 100 Jellopies for that much!") == 1) {
 				if (Zeny > 10999) {
 					if (MaxWeight - Weight > 3999) {
-						set Zeny, Zeny-11000;
+						Zeny -= 11000;
 						set tomyumgoong,3;
 						getitem 567,20; //Prawn
 						emotion e_no1;
@@ -2590,7 +2590,7 @@ ayothaya,153,86,5	script	Thongpool#ayo	4_M_THAIONGBAK,{
 		if (select("Yes!:No, thanks.") == 1) {
 			if (Zeny > 10999) {
 				if (MaxWeight - Weight > 3999) {
-					set Zeny, Zeny-11000;
+					Zeny -= 11000;
 					getitem 567,20; //Prawn
 					mes "[Thongpool]";
 					mes "There you go~";
@@ -2941,7 +2941,7 @@ ayothaya,213,94,7	script	Merchant#ayo	4_M_THAIAYO,{
 			emotion e_thx;
 			if (Zeny > 1999) {
 				if (MaxWeight - Weight > 1199) {
-					set Zeny, Zeny-2000;
+					Zeny -= 2000;
 					set tomyumgoong,7;
 					getitem 7286,30; //Chilli
 					mes "[Merchant Thongdum]";
@@ -2997,7 +2997,7 @@ ayothaya,213,94,7	script	Merchant#ayo	4_M_THAIAYO,{
 		}
 		if (Zeny > 1999) {
 			if (MaxWeight - Weight > 1199) {
-				set Zeny, Zeny-2000;
+				Zeny -= 2000;
 				getitem 7286,30; //Chilli
 				mes "[Merchant Thongdum]";
 				mes "Thank you,";

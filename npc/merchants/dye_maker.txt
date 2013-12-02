@@ -182,7 +182,7 @@ S_MakeDye:
 		// delete items
 		for (set .@i, 0; .@i < .@size ; set .@i, .@i+1)
 			delitem .@item[.@i], .@count[.@i];
-		set Zeny, Zeny-.@cost;
+		Zeny -= .@cost;
 		// get dyestuff
 		getitem .@dyestuff,1;
 		

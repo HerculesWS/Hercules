@@ -49,7 +49,7 @@ alberta,196,202,3	script	Optamara Crew#alberta	4W_SAILOR,{
 		mes "[Optamara Crew]";
 		mes "Great!";
 		mes "Heading for Port Malaya!!";
-		set Zeny, Zeny-10000;
+		Zeny -= 10000;
 		close2;
 		warp "malaya",271,55;
 		end;
@@ -124,7 +124,7 @@ ma_in01,30,94,4	script	Inn Keeper#ma	4_F_MALAYA,{
 		mes "[Inn Keeper]";
 		mes "Hope you enjoy your stay.";
 		close2;
-		set Zeny, Zeny-5000;
+		Zeny -= 5000;
 		percentheal 100,100;
 		warp "ma_in01",43,98;
 		end;

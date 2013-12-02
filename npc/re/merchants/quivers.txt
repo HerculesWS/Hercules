@@ -113,7 +113,7 @@ S_BuyQuiver:
 	mes "There is ^3131FFsomething you need to know^000000 - try to remember it.";
 	mes "^FF0000You can't use quivers when your encumbrance is over 70%.^000000";
 	mes "You'd better keep that in mind, or you might be in trouble later.";
-	set Zeny, Zeny-.@arrow_zeny01;
+	Zeny -= .@arrow_zeny01;
 	delitem getarg(0),.@arrows_used;
 	getitem getarg(3),.@quiver;
 	close;

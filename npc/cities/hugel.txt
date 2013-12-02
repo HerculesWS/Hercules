@@ -154,7 +154,7 @@ hu_in01,23,311,4	script	Party Supplies Shop	4_M_HUMAN_01,{
 				mes "enough money~";
 				close;
 			}
-			set Zeny,Zeny-500;
+			Zeny -= 500;
 			getitem 12018,5;	// Fire_Cracker
 			mes "[Shopkeeper]";
 			mes "Here you go!";

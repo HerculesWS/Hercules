@@ -4777,7 +4777,7 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 						if (countitem(7310) > 0)
 							delitem 7310,1; //Free_Peco_Ticket
 						else
-							set Zeny, Zeny-.@zeny;
+							Zeny -= .@zeny;
 					}
 				}
 				switch(.@i) {

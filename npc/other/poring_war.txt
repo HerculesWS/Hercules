@@ -41,7 +41,7 @@ prt_fild08,159,371,3	script	Poring War Recruiter#wop	4_PORING,{
 			mes "Oh, and there's an entrance fee of 500 zeny, ring.";
 			mes "Have a good time, ring.";
 			delitem 7773,countitem(7773);
-			set Zeny,Zeny-500;
+			Zeny -= 500;
 			close2;
 			warp "poring_w01",112,138;
 			end;

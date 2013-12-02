@@ -3461,7 +3461,7 @@ einbech,208,124,3	script	Bomb Maker	4_M_REPAIR,{
 				mes "[Boomer]";
 				mes "Just make sure that you are not going to";
 				mes "blow yourself away with this bomb, hahah!";
-				set Zeny,Zeny-3000;
+				Zeny -= 3000;
 				getitem 7138,1; //Marine Sphere Bottle
 				close;
 			case 2:
@@ -5567,7 +5567,7 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 					mes "bowl of Fish Cake Soup.";
 					mes "I hope you come and ";
 					mes "visit me again, okay?";
-					set Zeny,Zeny-100;
+					Zeny -= 100;
 					getitem 584,1; //Fish_Ball_Soup 
 					close;
 				} else {
@@ -5625,7 +5625,7 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 				mes "There, I took 100 zeny";
 				mes "from you. That's fair, so";
 				mes "please don't lose it this time.";
-				set Zeny,Zeny-100;
+				Zeny -= 100;
 				getitem 584,1; //Fish_Ball_Soup 
 				close;
 			} else {
@@ -5666,7 +5666,7 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 				mes "There, I took 100 zeny";
 				mes "from you. That's fair, so";
 				mes "please don't lose it this time.";
-				set Zeny,Zeny-100;
+				Zeny -= 100;
 				getitem 584,1; //Fish_Ball_Soup 
 				close;
 			} else {
@@ -5708,7 +5708,7 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 				mes "There, I took 100 zeny";
 				mes "from you. That's fair, so";
 				mes "please don't lose it this time.";
-				set Zeny,Zeny-100;
+				Zeny -= 100;
 				getitem 584,1; //Fish_Ball_Soup 
 				close;
 			} else {
@@ -5749,7 +5749,7 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 				mes "There, I took 100 zeny";
 				mes "from you. That's fair, so";
 				mes "please don't lose it this time.";
-				set Zeny,Zeny-100;
+				Zeny -= 100;
 				getitem 584,1; //Fish_Ball_Soup
 				close;
 			} else {
@@ -9525,7 +9525,7 @@ hugel,209,109,2	script	Boatman#hugel	4_M_SEAMAN,{
 			mes "We'll arrive near";
 			mes "the Odin Shrine soon~";
 			close2;
-			set Zeny,Zeny -800;
+			Zeny -= 800;
 			if (hg_odin == 2) set hg_odin,3;
 			else if (hg_odin == 4) set hg_odin,5;
 			else if (hg_odin == 12) set hg_odin,13;

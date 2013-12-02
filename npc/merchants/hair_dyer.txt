@@ -109,7 +109,7 @@ prt_in,243,168,4	script	Jovovich	4_F_02,{
 						case 7: delitem 983,1; break; //Black_Dyestuffs
 						case 8: delitem 975,1; break; //Scarlet_Dyestuffs
 						}
-						set Zeny, Zeny-1000;
+						Zeny -= 1000;
 						setlook VAR_HEADPALETTE,.@headpalette;
 						set .@choose_success,1;
 						break;
@@ -367,7 +367,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 						else if (.@headpalette == 5) delitem 978,1; //Cobaltblue_Dyestuffs
 						else if (.@headpalette == 6) delitem 982,1; //White_Dyestuffs
 						else if (.@headpalette == 7) delitem 983,1; //Black_Dyestuffs
-						set Zeny, Zeny-1000;
+						Zeny -= 1000;
 						setlook VAR_HEADPALETTE,.@headpalette;
 						set .@choose_success,1;
 						break;

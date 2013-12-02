@@ -351,7 +351,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 				mes "finished, it will be your";
 				mes "bride's turn to speak to";
 				mes "Bishop Vomars.";
-				set Zeny, Zeny-1300000;
+				Zeny -= 1300000;
 				delitem 7170,1; //Tuxedo
 			}
 			else {
@@ -361,7 +361,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 				mes "Vomars first. When he's";
 				mes "finished, it'll be your turn";
 				mes "to speak to Bishop Vomars.";
-				set Zeny, Zeny-1200000;
+				Zeny -= 1200000;
 				delitem 2338,1; //Wedding_Dress
 			}
 			delitem 2613,1; //Diamond_Ring

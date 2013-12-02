@@ -73,7 +73,7 @@
 		mes "Check how much money you have first.";
 		close;
 	}
-	set Zeny, Zeny - .@total;
+	Zeny -= .@total;
 	getitem .@item, .@amount;
 	mes "[Poison Herb Merchant]";
 	mes "Thank you. Come back again~!";
@@ -141,7 +141,7 @@ lhz_in02,16,205,4	duplicate(phs)	Poison Herb Merchant#lhz	4_F_YUNYANG
 		mes "It doesn't seem like you are able to carry it all, why are you trying it?!";
 		close;
 	}
-	set Zeny, Zeny - .@total;
+	Zeny -= .@total;
 	getitem .@item, .@amount;
 	mes "[Rune Merchant]";
 	mes "Thank you.";
@@ -204,7 +204,7 @@ job3_guil01,91,93,3	script	Rare Herb Collector	1_M_03,{
 			mes "[Rare Poison Herb Collector]";
 			mes "Good. I've received the money and the special item.";
 			delitem .@item, .@amount;
-			set Zeny, Zeny - .@total;
+			Zeny -= .@total;
 			getitem 709, .@amount; //Izidor
 			close;
 		}
@@ -254,7 +254,7 @@ job3_guil01,91,93,3	script	Rare Herb Collector	1_M_03,{
 		mes "You don't have enough space in your inventory to buy this amount.";
 		close;
 	}
-	set Zeny, Zeny-(.@amount*200);
+	Zeny -= (.@amount*200);
 	getitem .@itemid[.@i],.@amount;
 	mes "Thank you very much. See you~!";
 	close;

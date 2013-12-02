@@ -1591,7 +1591,7 @@ pay_arche,130,113,3	script	Alchemist Guildmember#tu	2_M_ALCHE,{
 					delitem 1032, .@alche_f; //Blossom_Of_Maneater
 					delitem 905, .@alche_s; //Stem
 				}
-				set Zeny,Zeny+.@total_zeny;
+				Zeny += .@total_zeny;
 				close;
 			case 2:
 				mes "[Alchemist Guildmember]";

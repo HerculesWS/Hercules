@@ -436,7 +436,7 @@ aldeba_in,168,175,4	script	Monster Tamer#alde	4_M_TELEPORTER,{
 			mes "Rocker Glasses!";
 			delitem 912,2;  //Zargon
 			delitem 2208,1;  //Ribbon
-			set Zeny,Zeny-400;
+			Zeny -= 400;
 			getitem 10014,1; // Rocker_Glasses
 			close;
 		}

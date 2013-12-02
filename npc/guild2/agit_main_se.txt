@@ -330,7 +330,7 @@ OnTreasureDied:
 				mes "for the guild today.";
 				close;
 			}
-			set Zeny, Zeny-.@eco_invest;
+			Zeny -= .@eco_invest;
 			setcastledata strnpcinfo(4),4,getcastledata(strnpcinfo(4),4)+1;
 			mes "[ Steward ]";
 			mes "A wise use of the guild's";
@@ -418,7 +418,7 @@ OnTreasureDied:
 				mes "for the guild today.";
 				close;
 			}
-			set Zeny, Zeny-.@def_invest;
+			Zeny -= .@def_invest;
 			setcastledata strnpcinfo(4),5,getcastledata(strnpcinfo(4),5)+1;
 			mes "[ Steward ]";
 			mes "A wise use of the guild's";
@@ -510,7 +510,7 @@ OnTreasureDied:
 					mes "funds to pay the contract fee.";
 					close;
 				}
-				set Zeny, Zeny-10000;
+				Zeny -= 10000;
 				enablenpc "Kafra Employee#"+strnpcinfo(2);
 				setcastledata strnpcinfo(4),9,1;
 				mes "[ Steward ]";
@@ -871,7 +871,7 @@ OnInit:
 					cutin "kafra_01",255;
 					end;
 				}
-				set Zeny, Zeny-200;
+				Zeny -= 200;
 				warp "rachel",115,125;
 				end;
 			case 2:
@@ -909,7 +909,7 @@ OnInit:
 						cutin "kafra_01",255;
 						end;
 					}
-					set Zeny, Zeny-800;
+					Zeny -= 800;
 					setcart;
 					break;
 				case 2:

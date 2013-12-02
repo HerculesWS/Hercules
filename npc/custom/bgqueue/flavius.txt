@@ -222,7 +222,7 @@ OnMyMobDead:
 		else {
 			set $@Croix_ScoreBG1,1;
 			donpcevent "time#bat_b01::OnEnable";
-			donpcevent "start#bat_b01::onReset";
+			donpcevent "start#bat_b01::OnReset";
 		}
 		bg_updatescore "bat_b01",$@Guill_ScoreBG1,$@Croix_ScoreBG1;
 		bg_warp $@FlaviusBG1_id1,"bat_b01",10,290;
@@ -253,7 +253,7 @@ OnMyMobDead:
 		else {
 			set $@Guill_ScoreBG1,1;
 			donpcevent "time#bat_b01::OnEnable";
-			donpcevent "start#bat_b01::onReset";
+			donpcevent "start#bat_b01::OnReset";
 		}
 		bg_updatescore "bat_b01",$@Guill_ScoreBG1,$@Croix_ScoreBG1;
 		bg_warp $@FlaviusBG1_id1,"bat_b01",10,290;
@@ -353,7 +353,7 @@ OnTimer26000:
 
 OnTimer26500:
 	stopnpctimer;
-	donpcevent "Battle Therapist#b01_a::onEnable";
+	donpcevent "Battle Therapist#b01_a::OnEnable";
 	end;
 
 OnEnable:

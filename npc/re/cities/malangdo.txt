@@ -199,7 +199,7 @@ mora,57,150,4	duplicate(Dolangmal)	Dolangmal#9	4_CAT_DOWN
 		mes "Money? Where is the money? You can't go anywhere without the money. Shame on you.";
 		close;
 	}
-	set Zeny, Zeny - .@price;
+	Zeny -= .@price;
 	mes "[Odgnalam]";
 	mes "Let me send you right away. Let's go~";
 	warp "malangdo",217,85;
@@ -273,7 +273,7 @@ malangdo,219,86,4	script	Kong#malang	4_CAT_SAILOR2,{
 		mes .@no_money$;
 		close;
 	}
-	set Zeny, Zeny - .@price;
+	Zeny -= .@price;
 	mes .@yes_money$;
 	if (.@i == 1)
 		warp "izlude",195,212;

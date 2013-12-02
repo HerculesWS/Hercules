@@ -16,6 +16,7 @@ OnCheck:
 	.@ref = getarg(2,1);
 	if (.@val != .@ref) {
 		debugmes "Error: "+.@msg$+": '"+.@val+"' != '"+.@ref+"'";
+		.errors++;
 		//end;
 	}
 	return;
@@ -25,10 +26,13 @@ OnCheckStr:
 	.@ref$ = getarg(2,"");
 	if (.@val$ != .@ref$) {
 		debugmes "Error: "+.@msg$+": '"+.@val$+"' != '"+.@ref$+"'";
+		.errors++;
 		//end;
 	}
 	return;
 OnInit:
+	.errors = 0;
+
 	// Array subscript
 	setarray .@a, 3, 2, 1;
 	callsub(OnCheck, "Array subscript", .@a[2]);
@@ -358,63 +362,25 @@ OnInit:
 	// Associativity of assignment operators
 	.@x = 0; .@y = 0;
 	.@x = .@y = 1;
-	callsub(OnCheck, "1Associativity of =", .@x);
-	callsub(OnCheck, "2Associativity of =", .@y);
+	callsub(OnCheck, "Associativity of =", .@x);
+	callsub(OnCheck, "Associativity of =", .@y);
 	.@x = 0; .@y = 1;
 	.@x = .@y += 4;
-	callsub(OnCheck, "3Associativity of =", .@x, 5);
-	callsub(OnCheck, "4Associativity of =", .@y, 5);
+	callsub(OnCheck, "Associativity of = and +=", .@x, 5);
+	callsub(OnCheck, "Associativity of = and +=", .@y, 5);
 	.@x = 5; .@y = 3;
 	.@z = 8;
-/*
- * 0001b4 C_NAME setr
- * 0001b8 C_ARG
- * 0001b9 C_NAME .@x
- * 0001bd C_REF
- * 0001bd C_INT 16
- * 0001bf C_MUL
- * 0001c0 C_FUNC
- * 0001c1 C_EOL
- */
-	/* FIXME
-	.@x *= (.@y += 1);
-	//set(.@x, .@x * set(.@y, .@y + 1));
-	//.@x = (.@x * (.@y = .@y + 1));
-	*/
-/*
- *  0001c2 C_NAME setr
- *  0001c6 C_ARG
- *  0001c7 C_NAME .@x
- *   0001cb C_REF
- *    0001cc C_NAME setr
- *    0001d0 C_ARG
- *    0001d1 C_NAME .@y
- *     0001d5 C_REF
- *     0001d5 C_INT 1
- *     0001d7 C_ADD
- *    0001d8 C_FUNC
- *   0001d9 C_MUL
- *  0001da C_FUNC
- * 0001db C_EOL
- */
-/*
- * 0001c2 C_NAME setr
- * 0001c6 C_ARG
- * 0001c7 C_NAME .@x
- * 0001cb C_REF
- * 0001cc C_NAME setr
- * 0001d0 C_ARG
- * 0001d1 C_NAME .@y
- * 0001d4 C_INT 2
- * 0001d6 C_FUNC
- * 0001d7 C_MUL
- * 0001d8 C_FUNC
- * 0001d9 C_EOL
- */
-	/*
-	callsub(OnCheck, "5Associativity of =", .@x, 20);
-	callsub(OnCheck, "6Associativity of =", .@y, 4);
-	*/
+	.@x *= .@y += 1;
+	callsub(OnCheck, "Associativity of *= and +=", .@x, 20);
+	callsub(OnCheck, "Associativity of *= and +=", .@y, 4);
+
+	.@x = 1; .@y = 3;
+	.@x += .@y * 10;
+	callsub(OnCheck, "Order of += and *", .@x, 31);
+	.@x = 1; .@y = 3;
+	.@x = .@y != 3 ? .@y = 2 : 4;
+	callsub(OnCheck, "Order of = and ?:", .@x, 4);
+	// FIXME callsub(OnCheck, "Short-circuit of ?:", .@y, 3);
 
 	.@x = 0;
 	if (0)
@@ -424,7 +390,11 @@ OnInit:
 			.@x = 3;
 	callsub(OnCheck, "Dangling else", .@x, 0);
 
-	debugmes "Script engine self-test   [ PASSED ]";
+	if (.errors) {
+		debugmes "Script engine self-test   [ FAILED ]";
+		debugmes "The test was completed with " + .errors + " errors.";
+	} else {
+		debugmes "Script engine self-test   [ PASSED ]";
+	}
 }
 
-// vim: set ft=ath :

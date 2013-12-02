@@ -4211,10 +4211,8 @@ struct {
 	struct HPMHookPoint *HP_script_run_func_post;
 	struct HPMHookPoint *HP_script_getfuncname_pre;
 	struct HPMHookPoint *HP_script_getfuncname_post;
-	struct HPMHookPoint *HP_script_local_casecheck_add_str_pre;
-	struct HPMHookPoint *HP_script_local_casecheck_add_str_post;
-	struct HPMHookPoint *HP_script_local_casecheck_clear_pre;
-	struct HPMHookPoint *HP_script_local_casecheck_clear_post;
+	struct HPMHookPoint *HP_script_calc_hash_ci_pre;
+	struct HPMHookPoint *HP_script_calc_hash_ci_post;
 	struct HPMHookPoint *HP_searchstore_open_pre;
 	struct HPMHookPoint *HP_searchstore_open_post;
 	struct HPMHookPoint *HP_searchstore_query_pre;
@@ -9180,10 +9178,8 @@ struct {
 	int HP_script_run_func_post;
 	int HP_script_getfuncname_pre;
 	int HP_script_getfuncname_post;
-	int HP_script_local_casecheck_add_str_pre;
-	int HP_script_local_casecheck_add_str_post;
-	int HP_script_local_casecheck_clear_pre;
-	int HP_script_local_casecheck_clear_post;
+	int HP_script_calc_hash_ci_pre;
+	int HP_script_calc_hash_ci_post;
 	int HP_searchstore_open_pre;
 	int HP_searchstore_open_post;
 	int HP_searchstore_query_pre;

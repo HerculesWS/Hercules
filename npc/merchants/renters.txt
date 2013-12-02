@@ -68,7 +68,7 @@ prontera,55,350,5	script	Peco Peco Breeder#knt	8W_SOLDIER,{
 				mes "Please remove your cash mount.";
 				close;
 			}
-			set Zeny, Zeny-.@price;
+			Zeny -= .@price;
 			setriding;
 			close;
 		case 2:
@@ -131,7 +131,7 @@ prontera,232,318,3	script	Peco Peco Breeder#cru	8W_SOLDIER,{
 				mes "Please remove your cash mount.";
 				close;
 			}
-			set Zeny, Zeny-.@price;
+			Zeny -= .@price;
 			setriding;
 			close;
 		case 2:
@@ -205,7 +205,7 @@ hu_in01,381,304,5	script	Falcon Breeder#hnt	8W_SOLDIER,{
 				mes "there, can't you see it?";
 				close;
 			}
-			set Zeny, Zeny-.@price;
+			Zeny -= .@price;
 			setfalcon;
 			close;
 		case 2:

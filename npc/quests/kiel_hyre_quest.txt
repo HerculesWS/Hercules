@@ -412,7 +412,7 @@ yuno_in01,35,179,4	script	Pub Master#kh	1_ETC_01,5,5,{
 			mes "Thank you so much";
 			mes "for helping me out~";
 			getitem 7487,1; //Tavern_Wine
-			set Zeny, Zeny+1000;
+			Zeny += 1000;
 			close;
 		}
 		else {
@@ -2226,7 +2226,7 @@ kh_vila,16,175,0	script	Box#khp1	HIDDEN_NPC,{
 			mes "special about it";
 			mes "at all! It's just";
 			mes "normal Pet Food!";
-			set Zeny, Zeny-1100;
+			Zeny -= 1100;
 			getitem 537,1;	//Pet_Food
 			close;
 		}

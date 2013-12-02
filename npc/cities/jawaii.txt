@@ -245,7 +245,7 @@ jawaii,141,200,3	script	Employee#sroom	4_M_NFMAN,{
 			mes "ffffor you. Thank y-you.";
 			mes "Ha-have a good time.";
 			close2;
-			set Zeny, Zeny-1000;
+			Zeny -= 1000;
 			warp "jawaii_in",116,64;
 			end;
 		}
@@ -294,7 +294,7 @@ jawaii,108,199,5	script	Employee#antroom	1_F_MERCHANT_02,{
 			mes "Make yourself";
 			mes "comfortable.";
 			close2;
-			set Zeny, Zeny-1000;
+			Zeny -= 1000;
 			warp "jawaii_in",129,110;
 			end;
 		}
@@ -325,7 +325,7 @@ jawaii,107,189,5	script	Employee#horoom	4_F_04,{
 			mes "Eh, alright.";
 			mes "Let's get going.";
 			close2;
-			set Zeny, Zeny-1000;
+			Zeny -= 1000;
 			warp "jawaii_in",86,117;
 			end;
 		}
@@ -368,7 +368,7 @@ jawaii,112,173,7	script	Employee#villroom	4_F_04,{
 			mes "Thank you~";
 			mes "Enjoy your stay.";
 			close2;
-			set Zeny, Zeny-1000;
+			Zeny -= 1000;
 			warp "jawaii_in",87,75;
 			end;
 		}
@@ -413,7 +413,7 @@ jawaii,214,168,5	script	Honeymoon Helper#Jawaii	1_F_LIBRARYGIRL,{
 	if (select("I shall buy it.:No, thanks.") == 1) {
 		mes "[Helper]";
 		if (Zeny > 49999) {
-			set Zeny, Zeny-50000;
+			Zeny -= 50000;
 			getitem 681,1; //Memory_Of_Wedding 
 			mes "Thank you very much~!";
 			mes "Please remember, you";
@@ -737,7 +737,7 @@ jawaii_in,15,104,0	script	Waitress#jawaii	1_F_PUBGIRL,{
 			if (select("Yes.:Wha--! It's too expensive!") == 1) {
 				mes "[Waitress]";
 				if (Zeny > 999) {
-					set Zeny, Zeny-1000;
+					Zeny -= 1000;
 					getitem 517,1; //Meat
 					mes "There you go~";
 					mes "Enjoy your meal~!";
@@ -763,7 +763,7 @@ jawaii_in,15,104,0	script	Waitress#jawaii	1_F_PUBGIRL,{
 			if (select("Yes.:Wha--! It's too expensive!") == 1) {
 				mes "[Waitress]";
 				if (Zeny > 999) {
-					set Zeny, Zeny-1000;
+					Zeny -= 1000;
 					getitem 503,1; //Yelow_Potion
 					mes "There you go~";
 					mes "Enjoy your meal~!";
@@ -895,7 +895,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				percentheal -100,0;
 				end;
 			}
-			if (Zeny > 99) set Zeny, Zeny-100;
+			if (Zeny > 99) Zeny -= 100;
 			switch(rand(4)) {
 			case 1:
 				mes "[Bartender]";
@@ -1105,7 +1105,7 @@ S_KillChar:
 		percentheal -100,0;
 		end;
 	}
-	if (Zeny > 99) set Zeny, Zeny-100;
+	if (Zeny > 99) Zeny -= 100;
 	set .@roof_jaw,.@roof_jaw+getarg(0);
 	mes "[Bartender]";
 	mes "There you go.";
@@ -1431,7 +1431,7 @@ prt_in,170,14,0	script	Customer#Bachewcca	4_M_ORIENT02,{
 			close;
 		}
 		else if (Zeny > 99999) {
-			set Zeny, Zeny-100000;
+			Zeny -= 100000;
 			mes "Bon Voyage...!!";
 			mes "Let me guide";
 			mes "you to 'Jawaii!'";

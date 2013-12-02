@@ -67,7 +67,7 @@
 			mes "I'm afraid it's not enough. Sorry, but it can't be done for free~";
 			close;
 		}
-		set Zeny, Zeny-.@price;
+		Zeny -= .@price;
 	} else {
 		if (countitem(12636) < .@price) {
 			mes "[Teleport Cat]";

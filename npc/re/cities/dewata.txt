@@ -29,7 +29,7 @@ alberta,212,202,4	script	Dewata Sailor#alberta	4_M_DEWMAN,{
 			mes "^8B4513Dewata^000000 is a beautiful and peaceful island country.";
 			mes "Have a nice trip~";
 			close2;
-			set Zeny, Zeny - 10000;
+			Zeny -= 10000;
 			warp "dewata",232,53;
 			end;
 		} else {
@@ -296,7 +296,7 @@ dewata,146,109,5	script	Restauranteur#dew	4_COOK,{
 			}
 			mes "[Restauranteur]";
 			mes "Here's your "+getitemname(.@food)+", you won't regret it!";
-			set Zeny, Zeny - 5000;
+			Zeny -= 5000;
 			getitem .@food,1;
 			close;
 		case 2:
@@ -509,7 +509,7 @@ dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 		mes "You make a wish for ^0000FF" + .@wish$ + "^000000 to the small shrine.";
 		next;
 		callsub L_Wish;
-		set Zeny, Zeny - .@input;
+		Zeny -= .@input;
 		if (.@stat & 1 && .@bonus)
 			consumeitem 12043; //Str_Dish03
 		else if (.@stat & 2 && .@bonus)

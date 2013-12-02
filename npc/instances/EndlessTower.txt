@@ -159,7 +159,7 @@ alberta,214,77,6	script	Captain Janssen	4_M_SEAMAN,{
 			else {
 				mes "[Captain Janssen]";
 				mes "Excellent! Now we're good to go. Let's pull up the anchor again!";
-				set Zeny, Zeny-10000;
+				Zeny -= 10000;
 				close2;
 				warp "e_tower",70,114;
 				end;
@@ -199,7 +199,7 @@ alberta,214,77,6	script	Captain Janssen	4_M_SEAMAN,{
 				next;
 				mes "[Captain Janssen]";
 				mes "Thank you so much! Now I can stock up on food and materials for my ship. You're kind, very kind!";
-				set Zeny, Zeny-10000;
+				Zeny -= 10000;
 				set in_102tower,1;
 				close;
 			}

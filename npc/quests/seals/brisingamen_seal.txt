@@ -784,7 +784,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 					mes "represents the";
 					mes "heart of a poet!";
 					soundeffect "bragis_poem.wav",1;
-					set Zeny,Zeny-500;
+					Zeny -= 500;
 					close2;
 				}
 				else {
@@ -802,7 +802,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 					mes "and energetic music, eh?";
 					mes "As you wish~";
 					soundeffect "chaos_of_eternity.wav",1;
-					set Zeny,Zeny-500;
+					Zeny -= 500;
 					close2;
 				}
 				else {
@@ -822,7 +822,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 					mes "well with Assassins.";
 					mes "Don't you agree?";
 					soundeffect "assassin_of_sunset.wav",1;
-					set Zeny,Zeny-500;
+					Zeny -= 500;
 					close2;
 				}
 				else {

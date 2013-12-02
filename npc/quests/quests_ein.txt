@@ -274,7 +274,7 @@ einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
 									mes "you a small present";
 									mes "as a token of my gratitute.";
 									mes "If you would, please take this.";
-									set Zeny,Zeny-1000;
+									Zeny -= 1000;
 									set ein_gear1,2;
 									switch(rand(1,7)) {
 									case 1:
@@ -331,7 +331,7 @@ einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
 									next;
 									switch(select("Sure~!:No, thanks.")) {
 									case 1:
-										set Zeny,Zeny-1000;
+										Zeny -= 1000;
 										set ein_gear1,1;
 										mes "[Cavitar]";
 										mes "Great...!";
@@ -355,7 +355,7 @@ einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
 										mes "this small gift";
 										mes "as a token of";
 										mes "my gratitude.";
-										set Zeny,Zeny-1000;
+										Zeny -= 1000;
 										getitem 1010,1; // Phracon
 										close;
 									}
@@ -384,7 +384,7 @@ einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
 								next;
 								switch(select("Sure~!:No, thanks.")) {
 						 		case 1:
-									set Zeny,Zeny-1000;
+									Zeny -= 1000;
 									set $einamanoama,$einamanoama + 1;
 									set ein_gear1,1;
 									mes "[Cavitar]";
@@ -409,7 +409,7 @@ einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
 									mes "this small gift";
 									mes "as a token of";
 									mes "my gratitude.";
-									set Zeny,Zeny-1000;
+									Zeny -= 1000;
 									getitem 1010,1; // Phracon
 									close;
 								}

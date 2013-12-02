@@ -1127,7 +1127,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				mes "If you want to eat delicious fish slices, you better bring more money.";
 				close;
 			}
-			set Zeny, Zeny-700;
+			Zeny -= 700;
 			getitem 551,10; //Shusi
 			mes "[Magumagu]";
 			mes "There you go. If you like the taste, please order some more.";
@@ -1140,7 +1140,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				mes "you better bring more money.";
 				close;
 			}
-			set Zeny, Zeny-74;
+			Zeny -= 74;
 			getitem 551,1; //Shusi
 			mes "[Magumagu]";
 			mes "There you go. If you like the taste, please order some more.";
@@ -1168,7 +1168,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				mes "If you want to eat delicious fish slices, you better bring more money.";
 				close;
 			}
-			set Zeny, Zeny-350;
+			Zeny -= 350;
 			getitem 544,10; //Fish_Slice
 			mes "[Magumagu]";
 			mes "There you go. If you like the taste, please order some more.";
@@ -1181,7 +1181,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				mes "";
 				close;
 			}
-			set Zeny, Zeny-37;
+			Zeny -= 37;
 			getitem 544,1; //Fish_Slice
 			mes "[Magumagu]";
 			mes "There you go. If you like the taste, please order some more.";
@@ -1474,7 +1474,7 @@ ama_in02,170,62,4	script	Soldier#ama2	8_M_JPNSOLDIER,{
 			mes "to issue another Transit Permit.";
 			next;
 			if (select("Issue one:Talk to you later") == 1) {
-				set Zeny, Zeny-10000;
+				Zeny -= 10000;
 				getitem 7160,1; //Lord's_Passable_Ticket
 				mes "[Jiro]";
 				mes "There you go.";

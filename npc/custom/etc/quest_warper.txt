@@ -323,11 +323,11 @@ L_town:
 	if (@Tmenuref[@TWMenu-1] == 57005) goto L_End; // 57005='dead' in hex
 
 	if(Zeny<@pTprice[@Tmenuref[@TWMenu-1]]) callsub L_Short_on_zeny,0;
-	set Zeny, Zeny-@pTprice[@Tmenuref[@TWMenu-1]];
+	Zeny -= @pTprice[@Tmenuref[@TWMenu-1]];
 	if ($QW_KPoint == 1) set RESRVPTS, RESRVPTS + (@pTprice[@Tmenuref[@TWMenu-1]]/16);
 	warp @pTmap$[@Tmenuref[@TWMenu-1]],@pTXcoords[@Tmenuref[@TWMenu-1]],@pTYcoords[@Tmenuref[@TWMenu-1]];
 	close2;
-	set Zeny, Zeny+@pTprice[@Tmenuref[@TWMenu-1]];
+	Zeny += @pTprice[@Tmenuref[@TWMenu-1]];
 	end;
 
 //=========================Dungeons================================
@@ -361,11 +361,11 @@ L_dungeon:
 	set @warpprice, @pDprice[@Dmenuref[@DWMenu-1]]+(getd(@pDfee$[@Dmenuref[@DWMenu-1]])*(@DDepth[@Darrayref]));
 
 	if(Zeny<@warpprice) callsub L_Short_on_zeny,1;
-	set Zeny, Zeny-(@warpprice);
+	Zeny -= (@warpprice);
 	if ($QW_KPoint == 1) set RESRVPTS, RESRVPTS + (@warpprice/16);
 	warp @DGat$[@Darrayref],@DXcoords[@Darrayref],@DYcoords[@Darrayref];
 	close2;
-	set Zeny, Zeny+@pTprice[@Tmenuref[@DWMenu-1]];
+	Zeny += @pTprice[@Tmenuref[@DWMenu-1]];
 	end;
 
 //=============================Healing=============================
@@ -373,7 +373,7 @@ L_dungeon:
 L_heal_Full:
 	set @healfee, $QW_HF_PRICE;
 	if(Zeny<@healfee) callsub L_Short_on_zeny,4;
-	set Zeny, Zeny-@healfee;
+	Zeny -= @healfee;
 	if ($QW_KPoint == 1) set RESRVPTS, RESRVPTS + (@healfee/500);
 	next;
 	mes "[Warpra]";
@@ -408,7 +408,7 @@ PHeal:
 	if (getarg(0) == 1)&&(getarg(1) == 1)&&(Zeny<@healfee) goto Zeny_Short_Both;
 	if (getarg(0) == 1)&&(Zeny<@healfee) goto Zeny_short_HP;
 	if (getarg(1) == 1)&&(Zeny<@healfee) goto Zeny_short_SP;
-	set Zeny, Zeny-@healfee;
+	Zeny -= @healfee;
 	if (getarg(0) == 1)&&(getarg(1) == 1) percentheal 100,100;
 	if (getarg(0) == 1) percentheal 100,0;
 	if (getarg(1) == 1) percentheal 0,100;
@@ -430,7 +430,7 @@ Zeny_short_HP:
 	set @HpPrice, @Hp*$QW_HP_H_PRICE;
 	if (@Hp == 1) mes "You're not worth the effort.";
 	if (@Hp == 1) goto L_End;
-	set Zeny, Zeny-@HpPrice;
+	Zeny -= @HpPrice;
 	heal @Hp,0;
 	close;
 	end;
@@ -443,7 +443,7 @@ Zeny_short_SP:
 	set @SpPrice, @Sp*$QW_HP_S_PRICE;
 	if (@Sp == 1) mes "You're not worth the effort.";
 	if (@Sp == 1) goto L_End;
-	set Zeny, Zeny-@SpPrice;
+	Zeny -= @SpPrice;
 	heal 0,@Sp;
 	close;
 	end;
@@ -457,7 +457,7 @@ L_Storage:
 	if ($QW_S_PRICE == 60)&&(BaseJob == Job_Novice) set @fee, 30;
 	if ($QW_S_PRICE == 60)&&(BaseJob != Job_Novice) set @fee, 60;
 	if(Zeny<@fee) callsub L_Short_on_zeny,2;
-	set Zeny, Zeny-@fee;
+	Zeny -= @fee;
 	if ($QW_KPoint == 1) set RESRVPTS, RESRVPTS + (@fee/5);
 
 	mes "[Warpra]";
@@ -491,7 +491,7 @@ L_GStorage:
 		end;
 	}
 	if (Zeny<$QW_GS_PRICE) callsub L_Short_on_zeny,3;
-	set Zeny, Zeny-$QW_GS_PRICE;
+	Zeny -= $QW_GS_PRICE;
 	if ($QW_KPoint == 1) set RESRVPTS, RESRVPTS + ($QW_GS_PRICE/5);
 	next;
 	mes "[Warpra]";

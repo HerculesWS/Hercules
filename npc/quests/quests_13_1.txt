@@ -7661,7 +7661,7 @@ function Catwarp;
 				close;
 			}
 			else if (Zeny >= 60) {
-				set Zeny, Zeny-60;
+				Zeny -= 60;
 				mes "[Cat Hand Agent]";
 				mes "Thank you.";
 				mes "Your storage will";
@@ -7708,7 +7708,7 @@ function Catwarp;
 				close;
 			}
 			else if (Zeny >= 60) {
-				set Zeny, Zeny-60;
+				Zeny -= 60;
 				mes "[Cat Hand Agent]";
 				mes "Thank you.";
 				mes "Your storage will";
@@ -7830,7 +7830,7 @@ function Catwarp;
 				close;
 			}
 			else if (Zeny >= 60) {
-				set Zeny, Zeny-60;
+				Zeny -= 60;
 				mes "[Cat Hand Agent]";
 				mes "Thank you.";
 				mes "Your storage will";
@@ -7943,7 +7943,7 @@ function Catwarp {
 		close;
 	}
 	close2;
-	set Zeny, Zeny-getarg(0);
+	Zeny -= getarg(0);
 	switch(getarg(1)) {
 		case 1: warp "alberta",117,56; end;
 		case 2: warp "prontera",116,72; end;
@@ -12064,7 +12064,7 @@ que_job01,82,95,3	script	Bar Master#moc2_01	1_ETC_01,{
 						mes "Here, drink up.";
 						mes "This drink is mainly made of fruit juice,";
 						mes "but you still shouldn't drink too much.";
-						set Zeny, Zeny-800;
+						Zeny -= 800;
 						getitem 12112,1; //Tropical_Sograt
 					}
 					close;
@@ -12082,7 +12082,7 @@ que_job01,82,95,3	script	Bar Master#moc2_01	1_ETC_01,{
 						mes "There you go.";
 						mes "This drink is mainly made of fruit juice,";
 						mes "but you still shouldn't drink too much.";
-						set Zeny, Zeny-1000;
+						Zeny -= 1000;
 						getitem 12112,1; //Tropical_Sograt
 						close;
 					}
@@ -12108,7 +12108,7 @@ que_job01,82,95,3	script	Bar Master#moc2_01	1_ETC_01,{
 						mes "[Karred]";
 						mes "I'll give you a special discount.";
 						mes "Here, enjoy.";
-						set Zeny, Zeny-800;
+						Zeny -= 800;
 						getitem 12113,1; //Vermilion_The_Beach
 					}
 					close;
@@ -12125,7 +12125,7 @@ que_job01,82,95,3	script	Bar Master#moc2_01	1_ETC_01,{
 						mes "[Karred]";
 						mes "There you go.";
 						mes "Don't drink too much, alright?";
-						set Zeny, Zeny-1000;
+						Zeny -= 1000;
 						getitem 12113,1; //Vermilion_The_Beach
 						close;
 					}
@@ -12273,7 +12273,7 @@ OnTouch:
 					mes "Hey, bartender! Gimme";
 					mes "the usual! I like your";
 					mes "style, adventurer...";
-					set Zeny, Zeny-1000;
+					Zeny -= 1000;
 					next;
 					mes "[Litheron]";
 					mes "Alright, you can come";

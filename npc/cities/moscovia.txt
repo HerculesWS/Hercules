@@ -77,7 +77,7 @@
 				mes "[Moscovia P.R. Officer]";
 				mes "Ok then, we're leaving now.";
 				close2;
-				set Zeny,Zeny - 10000;
+				Zeny -= 10000;
 				warp "moscovia",163,55;
 				end;
 			}

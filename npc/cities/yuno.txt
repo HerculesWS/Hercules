@@ -76,7 +76,7 @@ yuno,337,227,4	script	Juno Granny#juno	8_F_GRANDMOTHER,{
 				mes "[Granny]";
 				mes "*Giggle*";
 				mes "There you go~";
-				set Zeny, Zeny-1000;
+				Zeny -= 1000;
 				getitem 529,1; //Candy
 				next;
 				mes "[Granny]";
@@ -167,7 +167,7 @@ yuno,165,111,4	script	Juno Sage#juno	2_F_MAGICMASTER,,{
 			if (select("Choose ^FF3355Red Herb^000000:Choose ^3355FFBlue Herb^000000.") == 1) {
 				mes "[Le Morpheus]";
 				mes "As you have chosen, you will forget everything, and remain in this virtual reality.";
-				set Zeny, Zeny-5000;
+				Zeny -= 5000;
 				getitem 507,1; //Red_Herb
 				close2;
 				warp "prontera",182,206;
@@ -175,7 +175,7 @@ yuno,165,111,4	script	Juno Sage#juno	2_F_MAGICMASTER,,{
 			}
 			mes "[Le Morpheus]";
 			mes "You will see the truth.";
-			set Zeny, Zeny-5000;
+			Zeny -= 5000;
 			getitem 510,1; //Blue_Herb
 			close2;
 			warp "pay_dun03",200,222;
@@ -378,7 +378,7 @@ yuno,142,183,5	script	Airship Representative	4W_SAILOR,{
 
 S_Warp:
 	if (Zeny >= 1800) {
-		set Zeny, Zeny-1800;
+		Zeny -= 1800;
 		warp getarg(0),getarg(1),getarg(2);
 		end;
 	}

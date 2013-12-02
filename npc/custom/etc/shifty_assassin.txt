@@ -55,7 +55,7 @@ M_Buy:
 	next;
 	menu "Continue",-,"Cancel",M_Exit;
 
-	set Zeny,Zeny-@price;
+	Zeny -= @price;
 	set #ninjas,#ninjas+@buy;
 	set $ninja_avail,$ninja_avail-@buy;
 

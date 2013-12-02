@@ -384,7 +384,7 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 			specialeffect EF_ASPERSIO;
 			delitem 574,1; //Egg
 			delitem 1001,20; //Sparkling_Dust
-			set Zeny, Zeny - .@nCharge;
+			Zeny -= .@nCharge;
 			set .@nPercentage, rand(1,100);
 			if (.@nPercentage <= 41) {
 				mes "[Rina's Little Friend]";

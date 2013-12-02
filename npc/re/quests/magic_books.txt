@@ -334,7 +334,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 					next;
 					mes "[Lea]";
 					mes "Please try not to lose or damage the book to avoid paying any extra charges.";
-					if (.@Payment == 1) set Zeny, Zeny - 10000;
+					if (.@Payment == 1) Zeny -= 10000;
 					else if (.@Payment == 2) delitem 1006,2; //Old_Magic_Book
 					else delitem 1097,50; //Worn_Out_Page
 					getitem 6188+.@i,1; //Magic_Book_FB, Magic_Book_CB, Magic_Book_LB
@@ -379,7 +379,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 					next;
 					mes "[Lea]";
 					mes "The Intermediate and Superior Magic Books must be returned upon borrowing the Ultimate Magic Book. Remember that you're just borrowing them, so make sure you take good care of those books.";
-					if (.@Payment == 1) set Zeny, Zeny - 50000;
+					if (.@Payment == 1) Zeny -= 50000;
 					else if (.@Payment == 2) delitem 603,2; //Old_Blue_Box
 					else delitem 985,9; //Elunium
 					getitem .@Books[.@i-1],1; //Magic_Book_SG, Magic_Book_LOV, Magic_Book_MS, Magic_Book_TS, Magic_Book_JT, Magic_Book_WB, Magic_Book_HD, Magic_Book_ES
@@ -451,11 +451,11 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 					next;
 					mes "[Lea]";
 					mes "The Intermediate and Superior Magic Books must be returned upon borrowing the Ultimate Magic Book. Remember that you're just borrowing them, so make sure you take good care of those books.";
-					if (.@Payment == 1) set Zeny, Zeny - 200000;
+					if (.@Payment == 1) Zeny -= 200000;
 					else if (.@Payment == 2) delitem 7094,12; //Mystery_Piece
 					else if (.@Payment == 3) delitem 984,7; //Oridecon
 					else delitem 617,1; //Old_Violet_Box
-					if (.@Payment > 1) set Zeny, Zeny - 100000;
+					if (.@Payment > 1) Zeny -= 100000;
 					getitem 6201+.@i,1; //Magic_Book_ES_, Magic_Book_CL, Magic_Book_CR, Magic_Book_DL
 					close;
 				}
@@ -647,7 +647,7 @@ mid_camp,255,244,4	script	Galfos	4_M_JOB_WIZARD,{
 				specialeffect2 EF_DISPELL;
 				progressbar "ffff00",4;
 				specialeffect2 EF_LORD;
-				set Zeny, Zeny - 1000000;
+				Zeny -= 1000000;
 				getitem 6194+.@i,1; //Magic_Book_CM, Magic_Book_TV
 				mes "[Galfos]";
 				mes "Man, I almost lost my control to the incredible magic energy! Here's your Magic Book.";

@@ -343,7 +343,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 				next;
 				if (select("Pay 70,000 zeny.:Give him Old Magicbook and Necklace of Wisdom.") == 1) {
 					if (Zeny > 69999) {
-						set Zeny, Zeny-70000;
+						Zeny -= 70000;
 						mes "[Metheus Sylphe]";
 						mes "Thank you, your application has been accepted.";
 						mes "Next, you will take an entrance test.";
@@ -515,7 +515,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 			next;
 		}
 		else if (Zeny > 69999) {
-			set Zeny, Zeny-70000;
+			Zeny -= 70000;
 			mes "[Metheus Sylphe]";
 			mes "Well done. Let me proceed with your application request.";
 			set SAGE_Q,4;
@@ -545,7 +545,7 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 				if (Zeny > 29999) {
 					for (set .@i, 0; .@i < .@size ; set .@i, .@i+1)
 						delitem .@item[.@i], .@count[.@i];  
-					set Zeny, Zeny-30000;
+					Zeny -= 30000;
 					mes "[Metheus Sylphe]";
 					mes "Well done. Let me proceed with your application request.";
 					set .@SAGE_Q_T,SAGE_Q;

@@ -49,7 +49,7 @@ geffen_in,144,166,4	script	Blacksmith	1_M_SMITH,{
 				mes "Ah, I see that you appreciate a Blacksmith's work! Alright, I'll do it right away !!";
 				next;
 				delitem 999,50;  //Steel
-				set Zeny,Zeny-2000;
+				Zeny -= 2000;
 				getitem 2292,1; // Welding_Mask
 				mes "[Blacksmith]";
 				mes "Hahaha~! Make good use of that!";

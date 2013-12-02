@@ -93,7 +93,7 @@ moc_prydb1,103,54,3	script	Suspicious Cat#night	4_CAT_SAILOR4,{
 			mes "Where do you think you're going! You're so broke!";
 			close;
 		}
-		set Zeny, Zeny-5000;
+		Zeny -= 5000;
 		mes "[Suspicious Cat]";
 		mes "Bah, what's up with this old money... you don't have anything sparkly or shiny?!";
 		mes "Ahh, just follow me!";

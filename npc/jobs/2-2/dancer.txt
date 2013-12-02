@@ -316,7 +316,7 @@ job_duncer,43,93,4	script	Aile#da	4_F_07,{
 			mes "tuition fee.";
 			next;
 			cutin "job_dancer_eir01",2;
-			set Zeny, Zeny-10000;
+			Zeny -= 10000;
 			mes "[Aile]";
 			mes "Next, go to ^CD6889Bijou^000000, who is in charge of the interviewing process. She will have a couple of things she'll need to ask you.";
 			set DANC_Q,5;

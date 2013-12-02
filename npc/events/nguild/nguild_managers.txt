@@ -65,7 +65,7 @@ function	script	F_GldManager	{
 					mes "Master, you do not have enough money to employ a Kafra. Employment has been cancelled.";
 					return;
 				}
-				set Zeny,Zeny-10000;
+				Zeny -= 10000;
 				enablenpc "Kafra Staff#"+getarg(4);
 				setcastledata getarg(1),9,1;
 				mes "You have created a contract with the Kafra Staff Company.";

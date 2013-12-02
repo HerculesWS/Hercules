@@ -56,7 +56,7 @@
 				mes "Let us be off! Back to my";
 				mes "beautiful Ayotaya!";
 				close2;
-				set Zeny, Zeny-10000;
+				Zeny -= 10000;
 				warp "ayothaya",149,71;
 				end;
 			}

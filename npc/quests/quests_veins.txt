@@ -722,7 +722,7 @@ prontera,202,122,0	script	Kid#sch	4_F_KID2,{
 		mes "[Rooney]";
 		mes "Hey, alright! Thanks";
 		mes "for the cash! Heh heh~";
-		set Zeny, Zeny-100;
+		Zeny -= 100;
 		set que_sch,3;
 		close;
 	}
@@ -818,7 +818,7 @@ prt_church,89,108,6	script	Bard#sch	2_M_BARD_ORIENT,{
 		mes "kid that was supposed";
 		mes "to come find me here.";
 		set que_sch,2;
-		set Zeny, Zeny+100;
+		Zeny += 100;
 		next;
 		mes "[Lasda]";
 		mes "I'd like you to come";
@@ -1581,7 +1581,7 @@ job_duncer,93,106,6	script	Dance Instructor#sch	4_F_HUGRANMA,{
 			mes "your Megaphone. Thanks";
 			mes "for everything, and I'll see";
 			mes "you around, adventurer~";
-			set Zeny, Zeny-500000;
+			Zeny -= 500000;
 			set que_sch,18;
 			getitem 7040,1; //Megaphone
 			close;
@@ -1627,7 +1627,7 @@ job_duncer,93,106,6	script	Dance Instructor#sch	4_F_HUGRANMA,{
 				mes "so I'm not supposed to let";
 				mes "you have this. Don't let";
 				mes "anyone know I gave you this!";
-				set Zeny, Zeny-500000;
+				Zeny -= 500000;
 				getitem 7040,1; //Megaphone
 				close;
 			}

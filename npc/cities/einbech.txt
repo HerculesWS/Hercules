@@ -212,7 +212,7 @@ einbech,39,215,5	script	Train Station Staff#ein3	4_M_EIN_SOLDIER,{
 			mes "we hope you enjoy";
 			mes "the ride. All aboard!";
 			close2;
-			set Zeny, Zeny-200;
+			Zeny -= 200;
 			warp "einbroch",226,276;
 			end;
 		}

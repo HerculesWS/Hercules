@@ -207,7 +207,7 @@ geffen_in,164,124,4	script	Mage Guildsman	2_F_MAGICMASTER,{
 		next;
 		callfunc "Job_Change",Job_Mage;
 		callfunc "F_ClearJobVar";
-		set Zeny,Zeny+50;
+		Zeny += 50;
 		if(checkquest(1005) != -1) {
 			completequest 1005;
 		}

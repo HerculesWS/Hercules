@@ -184,7 +184,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 						delitem 999,1; //Steel
 						delitem 971,1; //Detrimindexta
 						delitem 613,1; //Iron_Hammer
-						set Zeny, Zeny-500;
+						Zeny -= 500;
 						set BLACK_SK,2;
 						close;
 					}

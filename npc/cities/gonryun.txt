@@ -100,7 +100,7 @@
 				mes "[Wa Bai Hu]";
 				mes "Thank you, let me guide you there immediately.";
 				close2;
-				set Zeny, Zeny-10000;
+				Zeny -= 10000;
 				warp "gon_fild01",258,82;
 				end;
 			}

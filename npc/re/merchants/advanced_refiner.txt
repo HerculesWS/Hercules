@@ -154,7 +154,7 @@ malangdo,221,174,6	script	Holink#mal_cash	4_CAT_ADV1,{
 		close;
 	}
 	delitem .@material,1;
-	set Zeny, Zeny-.@price;
+	Zeny -= .@price;
 	if (getequippercentrefinery(.@part) > rand(100) || getequippercentrefinery(.@part) > rand(100)) {
 		successrefitem .@part;
 		mes "[Holink]";

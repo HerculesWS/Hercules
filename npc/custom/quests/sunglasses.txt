@@ -56,7 +56,7 @@ alberta,88,193,5	script	Sunglasses Trader	1_F_MERCHANT_01,{
 		close; }
 	delitem 730,1;
 	delitem 949,50;
-	set Zeny, Zeny-100000;
+	Zeny -= 100000;
 	set SG_QUEST1,1;
 	mes "[Sunglasses Trader]";
 	mes "Great. Now, listen carefully.";
@@ -94,7 +94,7 @@ moc_fild07,334,186,5	script	Maseph	4_F_GON,{
 		mes "You do not have enough Zeny. Come back to me when you do.";
 		close; }
 	delitem 2201,1;
-	set Zeny, Zeny-400000;
+	Zeny -= 400000;
 	mes "Thank you. I will get on it right away...";
 	next;
 	mes "[Maseph]";

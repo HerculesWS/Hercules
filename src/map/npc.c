@@ -2218,7 +2218,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 		return strchr(start,'\n');;//try next
 	}
 	
-	if( !strcasecmp(w2,"cashshop") )
+	if( strcmp(w2,"cashshop") == 0 )
 		type = CASHSHOP;
 	else
 		type = SHOP;
@@ -2971,7 +2971,7 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 
 	memset(&mobspawn, 0, sizeof(struct spawn_data));
 
-	mobspawn.state.boss = !strcmpi(w2,"boss_monster");
+	mobspawn.state.boss = (strcmp(w2,"boss_monster") == 0 ? 1 : 0);
 
 	// w1=<map name>,<x>,<y>,<xs>,<ys>
 	// w3=<mob name>{,<mob level>}
@@ -3593,7 +3593,7 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 			break;
 		}
 
-		if( strcmp(w1,"-") !=0 && strcasecmp(w1,"function") != 0 )
+		if( strcmp(w1,"-") != 0 && strcmp(w1,"function") != 0 )
 		{// w1 = <map name>,<x>,<y>,<facing>
 			char mapname[MAP_NAME_LENGTH*2];
 			x = y = 0;
@@ -3601,7 +3601,7 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 			if( !mapindex_name2id(mapname) )
 			{// Incorrect map, we must skip the script info...
 				ShowError("npc_parsesrcfile: Unknown map '%s' in file '%s', line '%d'. Skipping line...\n", mapname, filepath, strline(buffer,p-buffer));
-				if( strcasecmp(w2,"script") == 0 && count > 3 )
+				if( strcmp(w2,"script") == 0 && count > 3 )
 				{
 					if((p = npc->skip_script(p,buffer,filepath)) == NULL)
 					{
@@ -3614,7 +3614,7 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 			m = map->mapname2mapid(mapname);
 			if( m < 0 ) {
 				// "mapname" is not assigned to this server, we must skip the script info...
-				if( strcasecmp(w2,"script") == 0 && count > 3 )
+				if( strcmp(w2,"script") == 0 && count > 3 )
 				{
 					if((p = npc->skip_script(p,buffer,filepath)) == NULL)
 					{
@@ -3626,7 +3626,7 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 			}
 			if (x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys) {
 				ShowError("npc_parsesrcfile: Unknown coordinates ('%d', '%d') for map '%s' in file '%s', line '%d'. Skipping line...\n", x, y, mapname, filepath, strline(buffer,p-buffer));
-				if( strcasecmp(w2,"script") == 0 && count > 3 )
+				if( strcmp(w2,"script") == 0 && count > 3 )
 				{
 					if((p = npc->skip_script(p,buffer,filepath)) == NULL)
 					{
@@ -3638,57 +3638,54 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 			}
 		}
 
-		if( strcasecmp(w2,"warp") == 0 && count > 3 )
+		if( strcmp(w2,"warp") == 0 && count > 3 )
 		{
-#ifdef ENABLE_CASE_CHECK
-			if( strcmp(w2, "warp") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "warp", filepath, strline(buffer, p-buffer)); // TODO
-#endif // ENABLE_CASE_CHECK
 			p = npc->parse_warp(w1,w2,w3,w4, p, buffer, filepath);
 		}
-		else if( (!strcasecmp(w2,"shop") || !strcasecmp(w2,"cashshop")) && count > 3 )
+		else if( (strcmp(w2,"shop") == 0 || strcmp(w2,"cashshop") == 0) && count > 3 )
 		{
-#ifdef ENABLE_CASE_CHECK
-			if( strcasecmp(w2,"shop") == 0 && strcmp(w2, "shop") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "shop", filepath, strline(buffer, p-buffer)) // TODO
-			else if( strcasecmp(w2,"cashshop") == 0 && strcmp(w2, "cashshop") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "cashshop", filepath, strline(buffer, p-buffer)); // TODO
-#endif // ENABLE_CASE_CHECK
 			p = npc->parse_shop(w1,w2,w3,w4, p, buffer, filepath);
 		}
-		else if( strcasecmp(w2,"script") == 0 && count > 3 )
+		else if( strcmp(w2,"script") == 0 && count > 3 )
 		{
-#ifdef ENABLE_CASE_CHECK
-			if( strcmp(w2, "script") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "script", filepath, strline(buffer, p-buffer)); // TODO
-			if( strcasecmp(w1, "function") == 0 && strcmp(w1, "function") != 0 ) DeprecationWarning("npc_parsesrcfile", w1, "function", filepath, strline(buffer, p-buffer)); // TODO
-#endif // ENABLE_CASE_CHECK
-			if( strcasecmp(w1,"function") == 0 )
+			if( strcmp(w1,"function") == 0 ) {
 				p = npc->parse_function(w1, w2, w3, w4, p, buffer, filepath);
-			else
+			} else {
+#ifdef ENABLE_CASE_CHECK
+				if( strcasecmp(w1, "function") == 0 ) DeprecationWarning("npc_parsesrcfile", w1, "function", filepath, strline(buffer, p-buffer)); // TODO
+#endif // ENABLE_CASE_CHECK
 				p = npc->parse_script(w1,w2,w3,w4, p, buffer, filepath,runOnInit);
+			}
 		}
 		else if( (i=0, sscanf(w2,"duplicate%n",&i), (i > 0 && w2[i] == '(')) && count > 3 )
 		{
-#ifdef ENABLE_CASE_CHECK
-			char temp[10]; safestrncpy(temp, w2, 10);
-			if( strcmp(temp, "duplicate") != 0 ) DeprecationWarning("npc_parsesrcfile", temp, "duplicate", filepath, strline(buffer, p-buffer)); // TODO
-#endif // ENABLE_CASE_CHECK
 			p = npc->parse_duplicate(w1,w2,w3,w4, p, buffer, filepath);
 		}
-		else if( (strcmpi(w2,"monster") == 0 || strcmpi(w2,"boss_monster") == 0) && count > 3 )
+		else if( (strcmp(w2,"monster") == 0 || strcmp(w2,"boss_monster") == 0) && count > 3 )
 		{
-#ifdef ENABLE_CASE_CHECK
-			if( strcasecmp(w2,"monster") == 0 && strcmp(w2, "monster") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "monster", filepath, strline(buffer, p-buffer)) // TODO:
-			else if( strcasecmp(w2,"boss_monster") == 0 && strcmp(w2, "boss_monster") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "boss_monster", filepath, strline(buffer, p-buffer)); // TODO
-#endif // ENABLE_CASE_CHECK
 			p = npc->parse_mob(w1, w2, w3, w4, p, buffer, filepath);
 		}
-		else if( strcmpi(w2,"mapflag") == 0 && count >= 3 )
+		else if( strcmp(w2,"mapflag") == 0 && count >= 3 )
 		{
-#ifdef ENABLE_CASE_CHECK
-			if( strcmp(w2, "mapflag") != 0 ) DeprecationWarning("npc_parsesrcfile", w2, "mapflag", filepath, strline(buffer, p-buffer)); // TODO
-#endif // ENABLE_CASE_CHECK
 			p = npc->parse_mapflag(w1, w2, trim(w3), trim(w4), p, buffer, filepath);
 		}
 		else
 		{
+#ifdef ENABLE_CASE_CHECK
+			if( strcasecmp(w2, "warp") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "warp", filepath, strline(buffer, p-buffer)); } // TODO
+			else if( strcasecmp(w2,"shop") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "shop", filepath, strline(buffer, p-buffer)); } // TODO
+			else if( strcasecmp(w2,"cashshop") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "cashshop", filepath, strline(buffer, p-buffer)); } // TODO
+			else if( strcasecmp(w2, "script") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "script", filepath, strline(buffer, p-buffer)); } // TODO
+			else if( strncasecmp(w2, "duplicate", 9) == 0 ) {
+				char temp[10];
+				safestrncpy(temp, w2, 10);
+				DeprecationWarning("npc_parsesrcfile", temp, "duplicate", filepath, strline(buffer, p-buffer)); // TODO
+			}
+			else if( strcasecmp(w2,"monster") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "monster", filepath, strline(buffer, p-buffer)); } // TODO:
+			else if( strcasecmp(w2,"boss_monster") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "boss_monster", filepath, strline(buffer, p-buffer)); } // TODO
+			else if( strcasecmp(w2, "mapflag") == 0 ) { DeprecationWarning("npc_parsesrcfile", w2, "mapflag", filepath, strline(buffer, p-buffer)); } // TODO
+			else
+#endif // ENABLE_CASE_CHECK
 			ShowError("npc_parsesrcfile: Unable to parse, probably a missing or extra TAB in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,p-buffer), w1, w2, w3, w4);
 			p = strchr(p,'\n');// skip and continue
 		}
@@ -3752,14 +3749,15 @@ void npc_read_event_script(void)
 				break;
 			}
 
-			if( (p=strchr(p,':')) && p && strcmpi(name,p)==0 )
+			if( (p=strchr(p,':')) && strcmp(name,p) == 0 )
 			{
-#ifdef ENABLE_CASE_CHECK
-				if( strcmp(name, p) != 0 ) DeprecationWarning2("npc_read_event_script", p, name, config[i].event_name); // TODO
-#endif // ENABLE_CASE_CHECK
 				script_event[i].event[count] = ed;
 				script_event[i].event_name[count] = key.str;
 				script_event[i].event_count++;
+#ifdef ENABLE_CASE_CHECK
+			} else if( p && strcasecmp(name, p) == 0 ) {
+				DeprecationWarning2("npc_read_event_script", p, name, config[i].event_name); // TODO
+#endif // ENABLE_CASE_CHECK
 			}
 		}
 		dbi_destroy(iter);
@@ -3905,7 +3903,7 @@ bool npc_unloadfile( const char* filepath ) {
 	bool found = false;
 
 	for( nd = dbi_first(iter); dbi_exists(iter); nd = dbi_next(iter) ) {
-		if( nd->path && strcasecmp(nd->path,filepath) == 0 ) {
+		if( nd->path && strcasecmp(nd->path,filepath) == 0 ) { // FIXME: This can break in case-sensitive file systems
 			found = true;
 			npc->unload_duplicates(nd);/* unload any npcs which could duplicate this but be in a different file */
 			npc->unload(nd, true);
@@ -3997,8 +3995,8 @@ int do_init_npc(bool minimal) {
 	for( i = MAX_NPC_CLASS2_START; i < MAX_NPC_CLASS2_END; i++ )
 		npc_viewdb2[i - MAX_NPC_CLASS2_START].class_ = i;
 
-	npc->ev_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, EVENT_NAME_LENGTH);
-	npc->ev_label_db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, NAME_LENGTH);
+	npc->ev_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, EVENT_NAME_LENGTH);
+	npc->ev_label_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, NAME_LENGTH);
 	npc->name_db = strdb_alloc(DB_OPT_BASE, NAME_LENGTH);
 	npc->path_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, 0);
 

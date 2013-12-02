@@ -529,7 +529,7 @@ S_DelItems:
 	delitem 7043,5; //Fine_Sand
 	delitem 757,3; //Elunium_Stone
 	delitem 756,3; //Oridecon_Stone
-	set Zeny, Zeny-2000;
+	Zeny -= 2000;
 	getitem getarg(0),getarg(1); //Gold
 	mes "[Bain]";
 	mes "AHHH, it is a success!";
@@ -657,7 +657,7 @@ S_DelItems:
 	delitem 7043,5; //Fine_Sand
 	delitem 757,3; //Elunium_Stone
 	delitem 756,3; //Oridecon_Stone
-	set Zeny, Zeny-2000;
+	Zeny -= 2000;
 	getitem getarg(0),getarg(1); //Gold
 	mes "[Bajin]";
 	mes "AHHH, it is a success!";

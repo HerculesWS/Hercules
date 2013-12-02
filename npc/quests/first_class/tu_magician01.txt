@@ -786,7 +786,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "again, thanks very much~";
 		set tu_magician01, 28;
 		getitem 2321,1; //Silk_Robe
-		set Zeny, Zeny + 3000;
+		Zeny += 3000;
 		getexp 3000,1000;
 		close;
 	default:

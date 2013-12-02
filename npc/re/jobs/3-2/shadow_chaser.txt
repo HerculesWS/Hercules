@@ -2304,7 +2304,7 @@ s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 			mes "Good luck!";
 			delitem 7150,.@i[2]; //Bamboo_Cut
 			delitem 949,.@i[3]; //Feather
-			set Zeny, Zeny - .@i[4];
+			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;
 		}
@@ -2357,7 +2357,7 @@ s_atelier,136,70,3	script	Titika#sc09_ra	4_F_CHILD,{
 			mes "I'll exchange it with the goods that I made.";
 			delitem 7150,.@i[2]; //Bamboo_Cut
 			delitem 949,.@i[3]; //Feather
-			set Zeny, Zeny - .@i[4];
+			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;
 		}
@@ -2407,7 +2407,7 @@ s_atelier,124,128,3	script	RimiGX#sc07_yuno	4_F_LGTGIRL,{
 			mes "It will be fast when I exchange the stuff made?";
 			delitem 7150,.@i[2]; //Bamboo_Cut
 			delitem 949,.@i[3]; //Feather
-			set Zeny, Zeny - .@i[4];
+			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;
 		}
@@ -2457,7 +2457,7 @@ s_atelier,26,68,3	script	Vito#sc11_lgt	4_M_KHMAN,{
 			mes "I'm going to exchange the blush I made before.";
 			delitem 7150,.@i[2]; //Bamboo_Cut
 			delitem 949,.@i[3]; //Feather
-			set Zeny, Zeny - .@i[4];
+			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;
 		}

@@ -63,7 +63,7 @@
 			mes "[Falcon Flute Trader]";
 			mes "Here, take this flute.";
 			mes "With it you can whistle for your Falcon from anywhere.";
-		  	set Zeny, Zeny - .@price;
+		  	Zeny -= .@price;
 			getitem 12848,1; //Falcon_Flute
 			next;
 			mes "[Falcon Flute Trader]";
@@ -115,7 +115,7 @@ tur_dun01,89,170,5	script	Expert Flute Crafter	1_M_ORIENT01,{
 				mes "Here's the new Wolf Flute.";
 				mes "Hope you are ready to use it.";
 				delitem 7150,1; //Bamboo_Cut
-				set Zeny, Zeny-100000;
+				Zeny -= 100000;
 				getitem 6124,1; //Wolf's_Flute
 				close;
 			}

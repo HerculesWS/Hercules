@@ -96,7 +96,7 @@ L_Reset:
 		emotion e_hmm;
 		close;
 	}
-	set Zeny, Zeny-@zeny;
+	Zeny -= @zeny;
 	set MISC_QUEST,MISC_QUEST | 1024;
 	resetskill;
 	mes @npcname$;

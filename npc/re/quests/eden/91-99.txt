@@ -13,7 +13,7 @@
 //= 1.3 Updated to match the official script. [Euphy]
 //============================================================
 
-moc_para01,48,177,3	script	4_F_02-99 Mission Board	4_BOARD3,{
+moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 	if (countitem(6219) < 1) {
 		mes "Wait a minute!";
 		mes "-You need to have an-";

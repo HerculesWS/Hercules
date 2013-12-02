@@ -1202,7 +1202,7 @@ morocc_in,166,76,7	script	Bartender#bard_qskill	1_ETC_01,{
 		mes "mild, but if you're not";
 		mes "careful, you'll pass out";
 		mes "in no time flat. Take it easy.";
-		set Zeny, Zeny-1000;
+		Zeny -= 1000;
 		getitem 12112,1; //Tropical_Sograt
 		close;
 
@@ -1232,7 +1232,7 @@ morocc_in,166,76,7	script	Bartender#bard_qskill	1_ETC_01,{
 		mes "Be sure that you";
 		mes "enjoy your drinking";
 		mes "without going crazy.";
-		set Zeny, Zeny-1000;
+		Zeny -= 1000;
 		getitem 12113,1; //Vermilion_The_Beach
 		close;
 

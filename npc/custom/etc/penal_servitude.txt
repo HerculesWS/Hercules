@@ -43,7 +43,7 @@ M_PAY:
 
 M_PAYCASH:
 	if (@MUSTPAY>Zeny) goto L_NOCASH;
-	set Zeny,Zeny-@MUSTPAY;
+	Zeny -= @MUSTPAY;
 	mes "[Saddeus]";
 	mes "OK, sing here and there.";
 	goto L_RELEASE;

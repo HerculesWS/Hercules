@@ -269,7 +269,7 @@ payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
 			}
 			delitem .@fruit,.@make;
 			delitem 713,.@make;
-			set Zeny, Zeny-.@total_zeny;
+			Zeny -= .@total_zeny;
 			getitem .@juice,.@make;
 
 			mes "[Merchant Marx Hansen]";

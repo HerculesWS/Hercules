@@ -345,7 +345,7 @@ malangdo,184,139,4	script	Storekeeper#mal	4_CAT_ADV2,{
 			mes "You don't have enough zeny...";
 			close;
 		}
-		set Zeny, Zeny-.@zeny;
+		Zeny -= .@zeny;
 		break;
 	}
 	mes "[Storekeeper]";
@@ -10624,7 +10624,7 @@ mal_in01,15,16,3	script	Fallen Angel#mal	4_F_VALKYRIE2,{
 		else if (.@i < 854) set .@enchant,4710; //Inteligence1
 		else set .@enchant,0;
 
-		set Zeny, Zeny - 1000000;
+		Zeny -= 1000000;
 		delequip EQI_GARMENT;
 		if (.@enchant == 0) {
 			mes "[Fallen Angel]";

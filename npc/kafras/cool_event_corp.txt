@@ -56,7 +56,7 @@ hugel,88,168,4	script	Cool Event Corp. Staff::CoolEventCorpStaffHugel	4_M_ZONDAM
 			close2;
 			break;
 		}
-		set Zeny, Zeny - 40;
+		Zeny -= 40;
 		mes "Let me open your personal";
 		mes "storage for you right away.";
 		mes "Thanks for supporting Cool";
@@ -110,7 +110,7 @@ hugel,88,168,4	script	Cool Event Corp. Staff::CoolEventCorpStaffHugel	4_M_ZONDAM
 				mes "Zeny to pay the Pushcart";
 				mes "rental fee of 800 Zeny.";
 			} else {
-				set Zeny, Zeny - 800;
+				Zeny -= 800;
 				setcart;
 			}
 		}
@@ -172,7 +172,7 @@ rachel,109,138,5	script	Cool Event Corp. Staff::CoolEventCorpStaffRachel	4_M_ZON
 			close2;
 			break;
 		}
-		set Zeny, Zeny - 40;
+		Zeny -= 40;
 		mes "Let me open your personal";
 		mes "storage for you right away.";
 		mes "Thanks for supporting Cool";
@@ -192,7 +192,7 @@ rachel,109,138,5	script	Cool Event Corp. Staff::CoolEventCorpStaffRachel	4_M_ZON
 					delitem 7060,1;
 				}
 				else {
-					set Zeny,Zeny-2200;
+					Zeny -= 2200;
 				}
 				warp "veins",205,101;
 				cutin "",255;
@@ -252,7 +252,7 @@ rachel,109,138,5	script	Cool Event Corp. Staff::CoolEventCorpStaffRachel	4_M_ZON
 				mes "Zeny to pay the Pushcart";
 				mes "rental fee of 800 Zeny.";
 			} else {
-				set Zeny, Zeny - 800;
+				Zeny -= 800;
 				setcart;
 			}
 		}
@@ -314,7 +314,7 @@ veins,208,128,5	script	Cool Event Corp. Staff::CoolEventCorpStaffVeins	4_M_ZONDA
 			close2;
 			break;
 		}
-		set Zeny, Zeny - 40;
+		Zeny -= 40;
 		mes "Let me open your personal";
 		mes "storage for you right away.";
 		mes "Thanks for supporting Cool";
@@ -334,7 +334,7 @@ veins,208,128,5	script	Cool Event Corp. Staff::CoolEventCorpStaffVeins	4_M_ZONDA
 					delitem 7060,1;
 				}
 				else {
-					set Zeny,Zeny-2200;
+					Zeny -= 2200;
 				}
 				warp "rachel",115,125;
 				cutin "",255;
@@ -395,7 +395,7 @@ veins,208,128,5	script	Cool Event Corp. Staff::CoolEventCorpStaffVeins	4_M_ZONDA
 				mes "rental fee of 800 Zeny.";
 				close2;
 			} else {
-				set Zeny, Zeny - 800;
+				Zeny -= 800;
 				setcart;
 			}
 		}

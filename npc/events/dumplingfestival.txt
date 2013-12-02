@@ -38,7 +38,7 @@ payon,93,81,4	script	Exorcist Master Fahae	4_M_BUDDHIST,{
 	if(@input==0) close;
 	if(@input>5) goto L_SORRY;
 	if(Zeny< @input*20000) goto L_NoZeny;
-	set Zeny,Zeny-20000*@input;
+	Zeny -= 20000*@input;
 	getitem 682,@input;
 	mes "[Exorcist Master Fahae]";
 	mes "Here you go, I hope you may succeed in my quest.";
@@ -65,7 +65,7 @@ M_HERB:
 	if(@input==0) close;
 	if(@input>5) goto L_SORRY;
 	if(Zeny< @input*10000) goto L_NoZeny;
-	set Zeny,Zeny-10000*@input;
+	Zeny -= 10000*@input;
 	getitem 683,@input;
 	mes "[Exorcist Master Fahae]";
 	mes "Here you go, I hope you may succeed in my quest.";

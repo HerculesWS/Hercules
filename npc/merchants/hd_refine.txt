@@ -123,7 +123,7 @@
 		close;
 	}
 	delitem .@material,1;
-	set Zeny, Zeny-.@price;
+	Zeny -= .@price;
 	mes "[Blacksmith Mighty Hammer]";
 	mes "Tac! Tac! Tac!";
 	if (getequippercentrefinery(.@part) > rand(100) || getequippercentrefinery(.@part) > rand(100)) {
@@ -280,7 +280,7 @@ lhz_in02,280,19,3	duplicate(MightyHammer)	Mighty Hammer#lhz	4_M_DWARF
 		close;
 	}
 	delitem .@material,1;
-	set Zeny, Zeny-.@price;
+	Zeny -= .@price;
 	mes "Pow! Pow! Pow! Pow!";
 	if (getequippercentrefinery(.@part) > rand(100) || getequippercentrefinery(.@part) > rand(100)) {
 		successrefitem .@part;

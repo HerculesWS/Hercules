@@ -67,7 +67,7 @@ moc_ruins,113,181,4	script	William	4_M_ORIENT02,{
 		if ((countitem(1019) > 49) && (countitem(983) > 0) && (Zeny > 91099)) {
 			delitem 1019,50;  //Wooden_Block
 			delitem 983,1;  //Black_Dyestuffs
-			set Zeny, Zeny-91100;
+			Zeny -= 91100;
 			mes "[William]";
 			mes "Here you are~!";
 			mes "This ^3355FFStop Post^000000 has";
@@ -134,7 +134,7 @@ moc_ruins,118,176,4	script	Alchemist	1_M_WIZARD,{
 			next;
 			delitem 2243,1;  //Spinning_Eyes
 			delitem 999,100;  //Steel
-			set Zeny, Zeny-50000;
+			Zeny -= 50000;
 			mes "[Marius]";
 			mes "Here you are!";
 			mes "Binoculars !";
@@ -261,7 +261,7 @@ OnTouch:
 					mes "Hey, bartender! Gimme";
 					mes "the usual! I like your";
 					mes "style, adventurer...";
-					set Zeny, Zeny-1000;
+					Zeny -= 1000;
 					next;
 					mes "[Litheron]";
 					mes "Alright, you can come";
@@ -406,7 +406,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 						mes "ask you for 800. Enjoy it,";
 						mes "my friend, and drink it as";
 						mes "deeply as you would life.";
-						set Zeny, Zeny-800;
+						Zeny -= 800;
 						getitem 12112,1; //Tropical_Sograt
 					}
 					close;
@@ -429,7 +429,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 						mes "hard feelings, but you're";
 						mes "already lucky to be here.";
 						mes "Hey, enjoy your drink~";
-						set Zeny, Zeny-1000;
+						Zeny -= 1000;
 						getitem 12112,1; //Tropical_Sograt
 						close;
 					}
@@ -465,7 +465,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 						mes "ask you for 800. Enjoy it,";
 						mes "my friend, and drink it as";
 						mes "deeply as you would life.";
-						set Zeny, Zeny-800;
+						Zeny -= 800;
 						getitem 12113,1; //Vermilion_The_Beach
 					}
 					close;
@@ -488,7 +488,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 						mes "hard feelings, but you're";
 						mes "already lucky to be here.";
 						mes "Hey, enjoy your drink~";
-						set Zeny, Zeny-1000;
+						Zeny -= 1000;
 						getitem 12113,1; //Vermilion_The_Beach
 						close;
 					}
