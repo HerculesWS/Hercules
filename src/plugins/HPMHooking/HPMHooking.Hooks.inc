@@ -54419,14 +54419,14 @@ const char* HP_script_getfuncname(struct script_state *st) {
 	}
 	return retVal___;
 }
-bool HP_script_local_casecheck_add_str(const char *p, int h) {
+unsigned int HP_script_calc_hash_ci(const char *p) {
 	int hIndex = 0;
-	bool retVal___ = false;
-	if( HPMHooks.count.HP_script_local_casecheck_add_str_pre ) {
-		bool (*preHookFunc) (const char *p, int *h);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_local_casecheck_add_str_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_script_local_casecheck_add_str_pre[hIndex].func;
-			retVal___ = preHookFunc(p, &h);
+	unsigned int retVal___ = 0;
+	if( HPMHooks.count.HP_script_calc_hash_ci_pre ) {
+		unsigned int (*preHookFunc) (const char *p);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_calc_hash_ci_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_calc_hash_ci_pre[hIndex].func;
+			retVal___ = preHookFunc(p);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -54434,41 +54434,16 @@ bool HP_script_local_casecheck_add_str(const char *p, int h) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.script.local_casecheck_add_str(p, h);
+		retVal___ = HPMHooks.source.script.calc_hash_ci(p);
 	}
-	if( HPMHooks.count.HP_script_local_casecheck_add_str_post ) {
-		bool (*postHookFunc) (bool retVal___, const char *p, int *h);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_local_casecheck_add_str_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_script_local_casecheck_add_str_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, p, &h);
+	if( HPMHooks.count.HP_script_calc_hash_ci_post ) {
+		unsigned int (*postHookFunc) (unsigned int retVal___, const char *p);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_calc_hash_ci_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_calc_hash_ci_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, p);
 		}
 	}
 	return retVal___;
-}
-void HP_script_local_casecheck_clear(void) {
-	int hIndex = 0;
-	if( HPMHooks.count.HP_script_local_casecheck_clear_pre ) {
-		void (*preHookFunc) (void);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_local_casecheck_clear_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_script_local_casecheck_clear_pre[hIndex].func;
-			preHookFunc();
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.script.local_casecheck_clear();
-	}
-	if( HPMHooks.count.HP_script_local_casecheck_clear_post ) {
-		void (*postHookFunc) (void);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_local_casecheck_clear_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_script_local_casecheck_clear_post[hIndex].func;
-			postHookFunc();
-		}
-	}
-	return;
 }
 /* searchstore */
 bool HP_searchstore_open(struct map_session_data *sd, unsigned int uses, unsigned short effect) {

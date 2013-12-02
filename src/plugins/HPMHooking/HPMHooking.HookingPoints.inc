@@ -2139,8 +2139,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->cleanfloor_sub, HP_script_cleanfloor_sub) },
 	{ HP_POP(script->run_func, HP_script_run_func) },
 	{ HP_POP(script->getfuncname, HP_script_getfuncname) },
-	{ HP_POP(script->local_casecheck_add_str, HP_script_local_casecheck_add_str) },
-	{ HP_POP(script->local_casecheck_clear, HP_script_local_casecheck_clear) },
+	{ HP_POP(script->calc_hash_ci, HP_script_calc_hash_ci) },
 /* searchstore */
 	{ HP_POP(searchstore->open, HP_searchstore_open) },
 	{ HP_POP(searchstore->query, HP_searchstore_query) },
