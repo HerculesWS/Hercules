@@ -4814,14 +4814,16 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	return 1;
 }
 
-/*==========================================
- * Stole zeny from bl (mob)
- * return
- *	0 = fail
- *	1 = success
- *------------------------------------------*/
-int pc_steal_coin(struct map_session_data *sd,struct block_list *target) {
-	int rate,skill_lv;
+/**
+ * Steals zeny from a monster through the RG_STEALCOIN skill.
+ *
+ * @param sd     Source character
+ * @param target Target monster
+ *
+ * @return Amount of stolen zeny (0 in case of failure)
+ **/
+int pc_steal_coin(struct map_session_data *sd, struct block_list *target) {
+	int rate, skill_lv;
 	struct mob_data *md;
 	if(!sd || !target || target->type != BL_MOB)
 		return 0;
@@ -4833,15 +4835,14 @@ int pc_steal_coin(struct map_session_data *sd,struct block_list *target) {
 	if( mob_is_treasure(md) )
 		return 0;
 
-	// FIXME: This formula is either custom or outdated.
-	skill_lv = pc->checkskill(sd,RG_STEALCOIN)*10;
-	rate = skill_lv + (sd->status.base_level - md->level)*3 + sd->battle_status.dex*2 + sd->battle_status.luk*2;
+	skill_lv = pc->checkskill(sd, RG_STEALCOIN);
+	rate = skill_lv*10 + (sd->status.base_level - md->level)*2 + sd->battle_status.dex/2 + sd->battle_status.luk/2;
 	if(rnd()%1000 < rate) {
-		int amount = md->level*10 + rnd()%100;
+		int amount = md->level * skill_lv / 10 + md->level*8 + rnd()%(md->level*2 + 1); // mob_lv * skill_lv / 10 + random [mob_lv*8; mob_lv*10]
 
 		pc->getzeny(sd, amount, LOG_TYPE_STEAL, NULL);
 		md->state.steal_coin_flag = 1;
-		return 1;
+		return amount;
 	}
 	return 0;
 }
