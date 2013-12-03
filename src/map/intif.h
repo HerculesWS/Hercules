@@ -85,7 +85,7 @@ struct intif_interface {
 	int (*homunculus_requestsave) (int account_id, struct s_homunculus* sh);
 	int (*homunculus_requestdelete) (int homun_id);
 	/******QUEST SYTEM*******/
-	int (*request_questlog) (struct map_session_data * sd);
+	void (*request_questlog) (struct map_session_data * sd);
 	int (*quest_save) (struct map_session_data * sd);
 	// MERCENARY SYSTEM
 	int (*mercenary_create) (struct s_mercenary *merc);

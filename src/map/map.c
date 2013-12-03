@@ -5116,6 +5116,7 @@ void do_final(void)
 	ircbot->final();/* before clif. */
 	clif->final();
 	npc->final();
+	quest->final();
 	script->final();
 	itemdb->final();
 	instance->final();
