@@ -2007,8 +2007,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pet->read_db, HP_pet_read_db) },
 /* quest */
 	{ HP_POP(quest->init, HP_quest_init) },
+	{ HP_POP(quest->final, HP_quest_final) },
 	{ HP_POP(quest->reload, HP_quest_reload) },
-	{ HP_POP(quest->search_db, HP_quest_search_db) },
+	{ HP_POP(quest->db, HP_quest_db) },
 	{ HP_POP(quest->pc_login, HP_quest_pc_login) },
 	{ HP_POP(quest->add, HP_quest_add) },
 	{ HP_POP(quest->change, HP_quest_change) },
@@ -2017,6 +2018,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(quest->update_objective, HP_quest_update_objective) },
 	{ HP_POP(quest->update_status, HP_quest_update_status) },
 	{ HP_POP(quest->check, HP_quest_check) },
+	{ HP_POP(quest->clear, HP_quest_clear) },
 	{ HP_POP(quest->read_db, HP_quest_read_db) },
 /* script */
 	{ HP_POP(script->init, HP_script_init) },
