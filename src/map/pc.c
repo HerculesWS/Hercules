@@ -4305,10 +4305,15 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 	else if( itemdb_is_poison(nameid) && (sd->class_&MAPID_THIRDMASK) != MAPID_GUILLOTINE_CROSS )
 		return 0;
 
-	if( (item->package || item->group) && pc_is90overweight(sd) ) {
-		//##TODO## find official response to this
-		clif->colormes(sd->fd,COLOR_RED,msg_txt(1477));// Item cannot be open when overweight by 90%
-		return 0;
+	if( item->package || item->group ) {
+		if( pc_is90overweight(sd) ) {
+			clif->msgtable(sd->fd,ITEM_CANT_OBTAIN_WEIGHT);
+			return 0;
+		}
+		if( !pc->inventoryblank(sd) ) {
+			clif->colormes(sd->fd,COLOR_RED,msg_txt(1477));
+			return 0;
+		}
 	}
 	
 	//Gender check
