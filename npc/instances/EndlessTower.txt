@@ -246,7 +246,7 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 				instance_init(.@instance);
 				close;
 			case 2:
-				callsub L_Enter,0,1;
+				callsub L_Enter,0,1,.@md_name$,.@p_name$;
 			case 3:
 				mes "I will move you to Alberta.";
 				close2;
@@ -258,7 +258,7 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 		}
 		switch(select("Enter the "+.@md_name$+":Return to Alberta:Cancel")) {
 		case 1:
-			callsub L_Enter,1,1;
+			callsub L_Enter,1,1,.@md_name$,.@p_name$;
 		case 2:
 			mes "I will move you to Alberta.";
 			close2;
@@ -272,7 +272,7 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 		next;
 		switch(select("Enter the "+.@md_name$+":Return to Alberta:Cancel")) {
 		case 1:
-			callsub L_Enter,0,0;
+			callsub L_Enter,0,0,.@md_name$,.@p_name$;
 		case 2:
 			mes "I will move you to Alberta.";
 			close2;
@@ -308,11 +308,11 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 
 L_Enter:
 	if (has_instance("1@tower") == "") {
-		mes "The memorial dungeon " + .@md_name$ + " does not exist.";
+		mes "The memorial dungeon " +getarg(2)+ " does not exist.";
 		mes "The party leader did not generate the dungeon yet.";
 		close;
 	} else {
-		mapannounce "e_tower", strcharinfo(0)+" of the party, "+.@p_name$+", is entering the dungeon, Endless Tower.",bc_map,"0x00ff99",FW_NORMAL,12;
+		mapannounce "e_tower", strcharinfo(0)+" of the party, " +getarg(3)+", is entering the dungeon, Endless Tower.",bc_map,"0x00ff99",FW_NORMAL,12;
 		if (getarg(1)) {
 			set etower_timer,gettimetick(2);
 			setquest 60200;
