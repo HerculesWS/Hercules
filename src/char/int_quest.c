@@ -59,7 +59,7 @@ struct quest *mapif_quests_fromsql(int char_id, int *count) {
 		return NULL;
 	}
 
-	*count = (int)SQL->NumRows(sql_handle);
+	*count = (int)SQL->StmtNumRows(stmt);
 	if (*count > 0) {
 		int i = 0;
 		questlog = (struct quest *)aCalloc(*count, sizeof(struct quest));
