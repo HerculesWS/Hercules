@@ -18024,43 +18024,94 @@ BUILDIN(instance_set_respawn) {
 	BUILDIN(deletepset);
 #endif
 
-bool script_hp_add(char *name, char *args, bool (*func)(struct script_state *st)) {
-	int n = script->add_str(name), i = 0;
-	
-	if( script->str_data[n].type == C_FUNC ) {
-		script->str_data[n].func = func;
-		i = script->str_data[n].val;
-		if( args ) {
-			int slen = strlen(args);
-			if( script->buildin[i] ) {
-				aFree(script->buildin[i]);
-			}
-			CREATE(script->buildin[i], char, slen + 1);
-			safestrncpy(script->buildin[i], args, slen + 1);
-		} else {
-			if( script->buildin[i] )
-				aFree(script->buildin[i]);
-			script->buildin[i] = NULL;
-		}
-
-	} else {
-		i = script->buildin_count;
-		script->str_data[n].type = C_FUNC;
-		script->str_data[n].val = i;
-		script->str_data[n].func = func;
-		
-		RECREATE(script->buildin, char *, ++script->buildin_count);
-				
-		/* we only store the arguments, its the only thing used out of this */
-		if( args != NULL ) {
-			int slen = strlen(args);
-			CREATE(script->buildin[i], char, slen + 1);
-			safestrncpy(script->buildin[i], args, slen + 1);
-		} else
-			script->buildin[i] = NULL;
+/**
+ * Adds a built-in script function.
+ *
+ * @param buildin Script function data
+ * @param force   Whether to override an existing function with the same name
+ *                (i.e. a plugin overriding a built-in function)
+ * @return Whether the function was successfully added.
+ */
+bool script_add_builtin(const struct script_function *buildin, bool override) {
+	int slen = 0, n = 0, offset = 0;
+	if( !buildin ) {
+		return false;
 	}
-	
+	if( buildin->arg ) {
+		// arg must follow the pattern: (v|s|i|r|l)*\?*\*?
+		// 'v' - value (either string or int or reference)
+		// 's' - string
+		// 'i' - int
+		// 'r' - reference (of a variable)
+		// 'l' - label
+		// '?' - one optional parameter
+		// '*' - unknown number of optional parameters
+		char *p = buildin->arg;
+		while( *p == 'v' || *p == 's' || *p == 'i' || *p == 'r' || *p == 'l' ) ++p;
+		while( *p == '?' ) ++p;
+		if( *p == '*' ) ++p;
+		if( *p != 0 ) {
+			ShowWarning("add_builtin: ignoring function \"%s\" with invalid arg \"%s\".\n", buildin->name, buildin->arg);
+			return false;
+		}
+	}
+	if( !buildin->name || *script->skip_word(buildin->name) != 0 ) {
+		ShowWarning("add_builtin: ignoring function with invalid name \"%s\" (must be a word).\n", buildin->name);
+		return false;
+	}
+	if ( !buildin->func ) {
+		ShowWarning("add_builtin: ignoring function \"%s\" with invalid source function.\n", buildin->name);
+		return false;
+	}
+	slen = buildin->arg ? strlen(buildin->arg) : 0;
+	n = script->add_str(buildin->name);
+
+	if( !override && script->str_data[n].func && script->str_data[n].func != buildin->func ) {
+		return false; /* something replaced it, skip. */
+	}
+
+	if( override && script->str_data[n].type == C_FUNC ) {
+		// Overriding
+		offset = script->str_data[n].val;
+		if( script->buildin[offset] )
+			aFree(script->buildin[offset]);
+		script->buildin[offset] = NULL;
+	} else {
+		// Adding new function
+		if( strcmp(buildin->name, "setr") == 0 ) script->buildin_set_ref = n;
+		else if( strcmp(buildin->name, "callsub") == 0 ) script->buildin_callsub_ref = n;
+		else if( strcmp(buildin->name, "callfunc") == 0 ) script->buildin_callfunc_ref = n;
+		else if( strcmp(buildin->name, "getelementofarray") == 0 ) script->buildin_getelementofarray_ref = n;
+
+		offset = script->buildin_count;
+
+		script->str_data[n].type = C_FUNC;
+		script->str_data[n].val = offset;
+
+		// Note: This is a no-op if script->buildin is already large enough
+		//   (it'll only have effect when a plugin adds a new command)
+		RECREATE(script->buildin, char *, ++script->buildin_count);
+	}
+
+	script->str_data[n].func = buildin->func;
+
+	/* we only store the arguments, its the only thing used out of this */
+	if( slen ) {
+		CREATE(script->buildin[offset], char, slen + 1);
+		safestrncpy(script->buildin[offset], buildin->arg, slen + 1);
+	} else {
+		script->buildin[offset] = NULL;
+	}
+
 	return true;
+}
+
+bool script_hp_add(char *name, char *args, bool (*func)(struct script_state *st)) {
+	struct script_function buildin;
+	buildin.name = name;
+	buildin.arg = args;
+	buildin.func = func;
+	return script->add_builtin(&buildin, true);
 }
 
 #define BUILDIN_DEF(x,args) { buildin_ ## x , #x , args }
@@ -18561,52 +18612,11 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(bg_join_team,"i?"),
 		BUILDIN_DEF(bg_match_over,"s?"),
 	};
-	int i,n, len = ARRAYLENGTH(BUILDIN), start = script->buildin_count;
-	char* p;
-	RECREATE(script->buildin, char *, start + len);
+	int i, len = ARRAYLENGTH(BUILDIN);
+	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up
+	memset(script->buildin + script->buildin_count, '\0', sizeof(char *) * len);
 	for( i = 0; i < len; i++ ) {
-		// arg must follow the pattern: (v|s|i|r|l)*\?*\*?
-		// 'v' - value (either string or int or reference)
-		// 's' - string
-		// 'i' - int
-		// 'r' - reference (of a variable)
-		// 'l' - label
-		// '?' - one optional parameter
-		// '*' - unknown number of optional parameters
-		p = BUILDIN[i].arg;
-		while( *p == 'v' || *p == 's' || *p == 'i' || *p == 'r' || *p == 'l' ) ++p;
-		while( *p == '?' ) ++p;
-		if( *p == '*' ) ++p;
-		if( *p != 0 ){
-			ShowWarning("parse_builtin: ignoring function \"%s\" with invalid arg \"%s\".\n", BUILDIN[i].name, BUILDIN[i].arg);
-		} else if( *script->skip_word(BUILDIN[i].name) != 0 ){
-			ShowWarning("parse_builtin: ignoring function with invalid name \"%s\" (must be a word).\n", BUILDIN[i].name);
-		} else {
-			int slen = strlen(BUILDIN[i].arg), offset = start + i;
-			n = script->add_str(BUILDIN[i].name);
-			
-			if (!strcmp(BUILDIN[i].name, "setr")) script->buildin_set_ref = n;
-			else if (!strcmp(BUILDIN[i].name, "callsub")) script->buildin_callsub_ref = n;
-			else if (!strcmp(BUILDIN[i].name, "callfunc")) script->buildin_callfunc_ref = n;
-			else if (!strcmp(BUILDIN[i].name, "getelementofarray") ) script->buildin_getelementofarray_ref = n;
-			
-			if( script->str_data[n].func && script->str_data[n].func != BUILDIN[i].func )
-				continue;/* something replaced it, skip. */
-			
-			script->str_data[n].type = C_FUNC;
-			script->str_data[n].val = offset;
-			script->str_data[n].func = BUILDIN[i].func;
-			
-			/* we only store the arguments, its the only thing used out of this */
-			if( slen ) {
-				CREATE(script->buildin[offset], char, slen + 1);
-				safestrncpy(script->buildin[offset], BUILDIN[i].arg, slen + 1);
-			} else
-				script->buildin[offset] = NULL;
-			
-			script->buildin_count++;
-
-		}
+		script->add_builtin(&BUILDIN[i], false);
 	}
 }
 #undef BUILDIN_DEF
@@ -18699,6 +18709,7 @@ void script_defaults(void) {
 	
 	/* parse */
 	script->parse = parse_script;
+	script->add_builtin = script_add_builtin;
 	script->parse_builtin = script_parse_builtin;
 	script->skip_space = script_skip_space;
 	script->error = script_error;
