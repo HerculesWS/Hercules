@@ -2208,10 +2208,10 @@ void itemdb_reload(void) {
 	iter = mapit_geteachpc();
 	for( sd = (struct map_session_data*)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data*)mapit->next(iter) ) {
 		memset(sd->item_delay, 0, sizeof(sd->item_delay));  // reset item delays
+		pc->setinventorydata(sd);
 		if( battle_config.item_check )
 			sd->state.itemcheck = 1;
 		pc->checkitem(sd);
-		pc->setinventorydata(sd);
 		/* clear combo bonuses */
 		if( sd->combos.count ) {
 			aFree(sd->combos.bonus);
