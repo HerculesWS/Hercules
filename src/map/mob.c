@@ -95,7 +95,11 @@ int mobdb_searchname(const char *str)
 		monster = mob->db(i);
 		if(monster == mob->dummy) //Skip dummy mobs.
 			continue;
-		if(strcmpi(monster->name,str)==0 || strcmpi(monster->jname,str)==0 || strcmp(monster->sprite,str)==0) // Sprite name case sensitive
+		if(strcmpi(monster->name,str)==0 || strcmpi(monster->jname,str)==0)
+			return i;
+		if(battle_config.case_sensitive_aegisnames && strcmp(monster->sprite,str)==0)
+			return i;
+		if(!battle_config.case_sensitive_aegisnames && strcasecmp(monster->sprite,str)==0)
 			return i;
 	}
 
@@ -106,18 +110,20 @@ int mobdb_searchname_array_sub(struct mob_db* monster, const char *str, int flag
 		return 1;
 	if(!monster->base_exp && !monster->job_exp && monster->spawn[0].qty < 1)
 		return 1; // Monsters with no base/job exp and no spawn point are, by this criteria, considered "slave mobs" and excluded from search results
-	if( !flag ){
+	if( !flag ) {
 		if(stristr(monster->jname,str))
 			return 0;
 		if(stristr(monster->name,str))
 			return 0;
-		return strcmpi(monster->jname,str);
+	} else {
+		if(strcmpi(monster->jname,str) == 0)
+			return 0;
+		if(strcmpi(monster->name,str) == 0)
+			return 0;
 	}
-	if(strcmpi(monster->jname,str) == 0)
-		return 0;
-	if(strcmpi(monster->name,str) == 0)
-		return 0;
-	return strcmp(monster->sprite,str);
+	if (battle_config.case_sensitive_aegisnames)
+		return strcmp(monster->sprite,str);
+	return strcasecmp(monster->sprite,str);
 }
 
 /*==========================================

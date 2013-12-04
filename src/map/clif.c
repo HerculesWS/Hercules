@@ -13524,7 +13524,12 @@ void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd)
 
 	if ( (count=itemdb->search_name_array(item_array, 10, item_monster_name, 1)) > 0 ){
 		for(i = 0; i < count; i++){
-			if( item_array[i] && strcmp(item_array[i]->name, item_monster_name) == 0 )// It only accepts aegis name
+			if( !item_array[i] )
+				continue;
+			// It only accepts aegis name
+			if( battle_config.case_sensitive_aegisnames && strcmp(item_array[i]->name, item_monster_name) == 0 )
+				break;
+			if( !battle_config.case_sensitive_aegisnames && strcasecmp(item_array[i]->name, item_monster_name) == 0 )
 				break;
 		}
 
@@ -13546,7 +13551,12 @@ void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd)
 
 	if( (count=mob->db_searchname_array(mob_array, 10, item_monster_name, 1)) > 0){
 		for(i = 0; i < count; i++){
-			if( mob_array[i] && strcmp(mob_array[i]->sprite, item_monster_name) == 0 ) // It only accepts sprite name
+			if( !mob_array[i] )
+				continue;
+			// It only accepts sprite name
+			if( battle_config.case_sensitive_aegisnames && strcmp(mob_array[i]->sprite, item_monster_name) == 0 )
+				break;
+			if( !battle_config.case_sensitive_aegisnames && strcasecmp(mob_array[i]->sprite, item_monster_name) == 0 )
 				break;
 		}
 

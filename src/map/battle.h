@@ -444,7 +444,7 @@ struct Battle_Config {
 	int mvp_tomb_enabled;
 	
 	int atcommand_suggestions_enabled;
-    int min_npc_vendchat_distance;
+	int min_npc_vendchat_distance;
 	int atcommand_mobinfo_type;
 	
 	int mob_size_influence; // Enable modifications on earned experience, drop rates and monster status depending on monster size. [mkbu95]
@@ -466,6 +466,8 @@ struct Battle_Config {
 	int feature_auction;
 
 	int mon_trans_disable_in_gvg;
+
+	int case_sensitive_aegisnames;
 } battle_config;
 
 /* criteria for battle_config.idletime_critera */
