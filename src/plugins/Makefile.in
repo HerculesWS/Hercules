@@ -6,6 +6,11 @@
 #                                                                    #
 # MYPLUGINS = my_cool_plugin my_second_plugin                        #
 #                                                                    #
+# This is only needed if you want to build your plugin through       #
+#   'make plugins' or 'make all'. If you don't add it to this list,  #
+#   you will still be able to build your plugin through              #
+#   'make plugin.my_plugin'                                          #
+#                                                                    #
 # Note: DO NOT include the .c extension!!!                           #
 
 MYPLUGINS = 
@@ -13,6 +18,10 @@ MYPLUGINS =
 #                                                                    #
 #########  DO NOT EDIT ANYTHING BELOW THIS LINE!!!  ##################
 
+# All plugins in the src/plugins directory
+ALLPLUGINS = $(basename $(wildcard *.c))
+
+# Plugins that will be built through 'make plugins' or 'make all'
 PLUGINS = sample db2sql HPMHooking $(MYPLUGINS)
 
 COMMON_D = ../common
@@ -32,11 +41,11 @@ CC = @CC@
 export CC
 
 #####################################################################
-.PHONY: all $(PLUGINS) clean buildclean help
+.PHONY: all $(ALLPLUGINS) clean buildclean help
 
 all: $(PLUGINS) Makefile
 
-$(PLUGINS): %: ../../plugins/%@DLLEXT@
+$(ALLPLUGINS): %: ../../plugins/%@DLLEXT@
 
 buildclean:
 	@echo "	CLEAN	plugins (build temp files)"
