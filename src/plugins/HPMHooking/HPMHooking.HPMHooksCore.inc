@@ -3983,6 +3983,8 @@ struct {
 	struct HPMHookPoint *HP_script_reload_post;
 	struct HPMHookPoint *HP_script_parse_pre;
 	struct HPMHookPoint *HP_script_parse_post;
+	struct HPMHookPoint *HP_script_add_builtin_pre;
+	struct HPMHookPoint *HP_script_add_builtin_post;
 	struct HPMHookPoint *HP_script_parse_builtin_pre;
 	struct HPMHookPoint *HP_script_parse_builtin_post;
 	struct HPMHookPoint *HP_script_parse_subexpr_pre;
@@ -8954,6 +8956,8 @@ struct {
 	int HP_script_reload_post;
 	int HP_script_parse_pre;
 	int HP_script_parse_post;
+	int HP_script_add_builtin_pre;
+	int HP_script_add_builtin_post;
 	int HP_script_parse_builtin_pre;
 	int HP_script_parse_builtin_post;
 	int HP_script_parse_subexpr_pre;

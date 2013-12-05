@@ -2025,6 +2025,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->final, HP_script_final) },
 	{ HP_POP(script->reload, HP_script_reload) },
 	{ HP_POP(script->parse, HP_script_parse) },
+	{ HP_POP(script->add_builtin, HP_script_add_builtin) },
 	{ HP_POP(script->parse_builtin, HP_script_parse_builtin) },
 	{ HP_POP(script->parse_subexpr, HP_script_parse_subexpr) },
 	{ HP_POP(script->skip_space, HP_script_skip_space) },

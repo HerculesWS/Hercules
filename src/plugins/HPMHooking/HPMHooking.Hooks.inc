@@ -51372,6 +51372,32 @@ struct script_code* HP_script_parse(const char *src, const char *file, int line,
 	}
 	return retVal___;
 }
+bool HP_script_add_builtin(const struct script_function *buildin, bool override) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_script_add_builtin_pre ) {
+		bool (*preHookFunc) (const struct script_function *buildin, bool *override);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_add_builtin_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_add_builtin_pre[hIndex].func;
+			retVal___ = preHookFunc(buildin, &override);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.add_builtin(buildin, override);
+	}
+	if( HPMHooks.count.HP_script_add_builtin_post ) {
+		bool (*postHookFunc) (bool retVal___, const struct script_function *buildin, bool *override);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_add_builtin_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_add_builtin_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, buildin, &override);
+		}
+	}
+	return retVal___;
+}
 void HP_script_parse_builtin(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_script_parse_builtin_pre ) {
