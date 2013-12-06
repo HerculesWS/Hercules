@@ -1337,12 +1337,13 @@ void intif_parse_QuestLog(int fd) {
 	if (!sd) // User not online anymore
 		return;
 
+	sd->num_quests = sd->avail_quests = 0;
+
 	if (num_received == 0) {
 		if (sd->quest_log) {
 			aFree(sd->quest_log);
 			sd->quest_log = NULL;
 		}
-		sd->num_quests = sd->avail_quests = 0;
 	} else {
 		struct quest *received = (struct quest *)RFIFOP(fd, 8);
 		int i, k = num_received;
@@ -1357,7 +1358,7 @@ void intif_parse_QuestLog(int fd) {
 				ShowError("intif_parse_QuestLog: quest %d not found in DB.\n", received[i].quest_id);
 				continue;
 			}
-			if (received->state != Q_COMPLETE) {
+			if (received[i].state != Q_COMPLETE) {
 				// Insert at the beginning
 				memcpy(&sd->quest_log[sd->avail_quests++], &received[i], sizeof(struct quest));
 			} else {

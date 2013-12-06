@@ -460,9 +460,9 @@ int quest_reload_check_sub(struct map_session_data *sd, va_list ap) {
 		}
 		j++;
 	}
-	sd->num_quests = 0;
-	ARR_FIND(sd->avail_quests, 0, j, sd->quest_log[j].state != Q_COMPLETE);
-	sd->avail_quests = j+1;
+	sd->num_quests = j;
+	ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].state == Q_COMPLETE);
+	sd->avail_quests = i;
 
 	return 1;
 }
