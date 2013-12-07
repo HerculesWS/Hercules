@@ -4754,7 +4754,7 @@ BUILDIN(warp)
 	else if(strcmp(str,"SavePoint")==0 || strcmp(str,"Save")==0)
 		ret = pc->setpos(sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
 	else
-		ret = pc->setpos(sd,mapindex_name2id(str),x,y,CLR_OUTSIGHT);
+		ret = pc->setpos(sd,mapindex->name2id(str),x,y,CLR_OUTSIGHT);
 	
 	if( ret ) {
 		ShowError("buildin_warp: moving player '%s' to \"%s\",%d,%d failed.\n", sd->status.name, str, x, y);
@@ -4831,7 +4831,7 @@ BUILDIN(areawarp)
 	
 	if( strcmp(str,"Random") == 0 )
 		index = 0;
-	else if( !(index=mapindex_name2id(str)) )
+	else if( !(index=mapindex->name2id(str)) )
 		return true;
 	
 	map->foreachinarea(script->buildin_areawarp_sub, m,x0,y0,x1,y1, BL_PC, index,x2,y2,x3,y3);
@@ -4895,7 +4895,7 @@ BUILDIN(warpchar) {
 		if(strcmp(str, "SavePoint") == 0)
 			pc->setpos(sd, sd->status.save_point.map,sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 		else
-			pc->setpos(sd, mapindex_name2id(str), x, y, CLR_TELEPORT);
+			pc->setpos(sd, mapindex->name2id(str), x, y, CLR_TELEPORT);
 	
 	return true;
 }
@@ -4910,7 +4910,7 @@ BUILDIN(warpparty)
 	TBL_PC *pl_sd;
 	struct party_data* p;
 	int type;
-	int mapindex;
+	int map_index;
 	int i;
 	
 	const char* str = script_getstr(st,2);
@@ -4938,19 +4938,19 @@ BUILDIN(warpparty)
 			if (i == MAX_PARTY || !p->data[i].sd) //Leader not found / not online
 				return true;
 			pl_sd = p->data[i].sd;
-			mapindex = pl_sd->mapindex;
+			map_index = pl_sd->mapindex;
 			x = pl_sd->bl.x;
 			y = pl_sd->bl.y;
 			break;
 		case 4:
-			mapindex = mapindex_name2id(str);
+			map_index = mapindex->name2id(str);
 			break;
 		case 2:
 			//"SavePoint" uses save point of the currently attached player
 			if (( sd = script->rid2sd(st) ) == NULL )
 				return true;
 		default:
-			mapindex = 0;
+			map_index = 0;
 			break;
 	}
 	
@@ -4981,7 +4981,7 @@ BUILDIN(warpparty)
 			case 3: // Leader
 			case 4: // m,x,y
 				if(!map->list[pl_sd->bl.m].flag.noreturn && !map->list[pl_sd->bl.m].flag.nowarp)
-					pc->setpos(pl_sd,mapindex,x,y,CLR_TELEPORT);
+					pc->setpos(pl_sd,map_index,x,y,CLR_TELEPORT);
 				break;
 		}
 	}
@@ -5041,7 +5041,7 @@ BUILDIN(warpguild)
 				break;
 			case 3: // m,x,y
 				if(!map->list[pl_sd->bl.m].flag.noreturn && !map->list[pl_sd->bl.m].flag.nowarp)
-					pc->setpos(pl_sd,mapindex_name2id(str),x,y,CLR_TELEPORT);
+					pc->setpos(pl_sd,mapindex->name2id(str),x,y,CLR_TELEPORT);
 				break;
 		}
 	}
@@ -8336,7 +8336,7 @@ BUILDIN(savepoint) {
 	str   = script_getstr(st,2);
 	x     = script_getnum(st,3);
 	y     = script_getnum(st,4);
-	mapid = mapindex_name2id(str);
+	mapid = mapindex->name2id(str);
 	if( mapid )
 		pc->setsavepoint(sd, mapid, x, y);
 	
@@ -10434,7 +10434,7 @@ BUILDIN(warpwaitingpc) {
 		else if( strcmp(map_name,"SavePoint") == 0 )
 			pc->setpos(sd, sd->status.save_point.map, sd->status.save_point.x, sd->status.save_point.y, CLR_TELEPORT);
 		else
-			pc->setpos(sd, mapindex_name2id(map_name), x, y, CLR_OUTSIGHT);
+			pc->setpos(sd, mapindex->name2id(map_name), x, y, CLR_OUTSIGHT);
 	}
 	mapreg->setreg(script->add_str("$@warpwaitingpcnum"), i);
 	return true;
@@ -10496,7 +10496,7 @@ BUILDIN(isloggedin) {
  *------------------------------------------*/
 BUILDIN(setmapflagnosave) {
 	int16 m,x,y;
-	unsigned short mapindex;
+	unsigned short map_index;
 	const char *str,*str2;
 	
 	str=script_getstr(st,2);
@@ -10504,11 +10504,11 @@ BUILDIN(setmapflagnosave) {
 	x=script_getnum(st,4);
 	y=script_getnum(st,5);
 	m = map->mapname2mapid(str);
-	mapindex = mapindex_name2id(str2);
+	map_index = mapindex->name2id(str2);
 	
 	if(m >= 0 && mapindex) {
 		map->list[m].flag.nosave=1;
-		map->list[m].save.map=mapindex;
+		map->list[m].save.map=map_index;
 		map->list[m].save.x=x;
 		map->list[m].save.y=y;
 	}
@@ -11060,7 +11060,7 @@ BUILDIN(flagemblem) {
 
 BUILDIN(getcastlename)
 {
-	const char* mapname = mapindex_getmapname(script_getstr(st,2),NULL);
+	const char* mapname = mapindex->getmapname(script_getstr(st,2),NULL);
 	struct guild_castle* gc = guild->mapname2gc(mapname);
 	const char* name = (gc) ? gc->castle_name : "";
 	script_pushstrcopy(st,name);
@@ -11069,7 +11069,7 @@ BUILDIN(getcastlename)
 
 BUILDIN(getcastledata)
 {
-	const char *mapname = mapindex_getmapname(script_getstr(st,2),NULL);
+	const char *mapname = mapindex->getmapname(script_getstr(st,2),NULL);
 	int index = script_getnum(st,3);
 	struct guild_castle *gc = guild->mapname2gc(mapname);
 	
@@ -11112,7 +11112,7 @@ BUILDIN(getcastledata)
 
 BUILDIN(setcastledata)
 {
-	const char *mapname = mapindex_getmapname(script_getstr(st,2),NULL);
+	const char *mapname = mapindex->getmapname(script_getstr(st,2),NULL);
 	int index = script_getnum(st,3);
 	int value = script_getnum(st,4);
 	struct guild_castle *gc = guild->mapname2gc(mapname);
@@ -11343,7 +11343,7 @@ BUILDIN(mapwarp) {
 	if((m=map->mapname2mapid(mapname))< 0)
 		return true;
 	
-	if(!(index=mapindex_name2id(str)))
+	if(!(index=mapindex->name2id(str)))
 		return true;
 	
 	switch(check_val){
@@ -11518,7 +11518,7 @@ BUILDIN(getfatherid)
 BUILDIN(warppartner)
 {
 	int x,y;
-	unsigned short mapindex;
+	unsigned short map_index;
 	const char *str;
 	TBL_PC *sd=script->rid2sd(st);
 	TBL_PC *p_sd=NULL;
@@ -11533,9 +11533,9 @@ BUILDIN(warppartner)
 	x=script_getnum(st,3);
 	y=script_getnum(st,4);
 	
-	mapindex = mapindex_name2id(str);
-	if (mapindex) {
-		pc->setpos(p_sd,mapindex,x,y,CLR_OUTSIGHT);
+	map_index = mapindex->name2id(str);
+	if (map_index) {
+		pc->setpos(p_sd,map_index,x,y,CLR_OUTSIGHT);
 		script_pushint(st,1);
 	} else
 		script_pushint(st,0);
@@ -11655,7 +11655,7 @@ BUILDIN(delwall) {
 ///       2 - current hp
 ///
 BUILDIN(guardianinfo) {
-	const char* mapname = mapindex_getmapname(script_getstr(st,2),NULL);
+	const char* mapname = mapindex->getmapname(script_getstr(st,2),NULL);
 	int id = script_getnum(st,3);
 	int type = script_getnum(st,4);
 	
@@ -15539,7 +15539,7 @@ BUILDIN(getvariableofnpc)
 BUILDIN(warpportal) {
 	int spx;
 	int spy;
-	unsigned short mapindex;
+	unsigned short map_index;
 	int tpx;
 	int tpy;
 	struct skill_unit_group* group;
@@ -15554,11 +15554,11 @@ BUILDIN(warpportal) {
 	
 	spx = script_getnum(st,2);
 	spy = script_getnum(st,3);
-	mapindex = mapindex_name2id(script_getstr(st, 4));
+	map_index = mapindex->name2id(script_getstr(st, 4));
 	tpx = script_getnum(st,5);
 	tpy = script_getnum(st,6);
 	
-	if( mapindex == 0 )
+	if( map_index == 0 )
 		return true;// map not found
 	
 	group = skill->unitsetting(bl, AL_WARP, 4, spx, spy, 0);
@@ -15566,7 +15566,7 @@ BUILDIN(warpportal) {
 		return true;// failed
 	group->val1 = (group->val1<<16)|(short)0;
 	group->val2 = (tpx<<16) | tpy;
-	group->val3 = mapindex;
+	group->val3 = map_index;
 	
 	return true;
 }
@@ -15991,7 +15991,7 @@ BUILDIN(waitingroom2bg) {
 	struct npc_data *nd;
 	struct chat_data *cd;
 	const char *map_name, *ev = "", *dev = "";
-	int x, y, i, mapindex = 0, bg_id, n;
+	int x, y, i, map_index = 0, bg_id, n;
 	struct map_session_data *sd;
 	
 	if( script_hasdata(st,7) )
@@ -16007,8 +16007,8 @@ BUILDIN(waitingroom2bg) {
 	map_name = script_getstr(st,2);
 	if( strcmp(map_name,"-") != 0 )
 	{
-		mapindex = mapindex_name2id(map_name);
-		if( mapindex == 0 )
+		map_index = mapindex->name2id(map_name);
+		if( map_index == 0 )
 		{ // Invalid Map
 			script_pushint(st,0);
 			return true;
@@ -16020,7 +16020,7 @@ BUILDIN(waitingroom2bg) {
 	ev = script_getstr(st,5); // Logout Event
 	dev = script_getstr(st,6); // Die Event
 	
-	if( (bg_id = bg->create(mapindex, x, y, ev, dev)) == 0 )
+	if( (bg_id = bg->create(map_index, x, y, ev, dev)) == 0 )
 	{ // Creation failed
 		script_pushint(st,0);
 		return true;
@@ -16045,11 +16045,11 @@ BUILDIN(waitingroom2bg_single) {
 	struct npc_data *nd;
 	struct chat_data *cd;
 	struct map_session_data *sd;
-	int x, y, mapindex, bg_id;
+	int x, y, map_index, bg_id;
 	
 	bg_id = script_getnum(st,2);
 	map_name = script_getstr(st,3);
-	if( (mapindex = mapindex_name2id(map_name)) == 0 )
+	if( (map_index = mapindex->name2id(map_name)) == 0 )
 		return true; // Invalid Map
 	
 	x = script_getnum(st,4);
@@ -16064,7 +16064,7 @@ BUILDIN(waitingroom2bg_single) {
 	
 	if( bg->team_join(bg_id, sd) )
 	{
-		pc->setpos(sd, mapindex, x, y, CLR_TELEPORT);
+		pc->setpos(sd, map_index, x, y, CLR_TELEPORT);
 		script_pushint(st,1);
 	}
 	else
@@ -16089,16 +16089,16 @@ BUILDIN(bg_team_setxy)
 
 BUILDIN(bg_warp)
 {
-	int x, y, mapindex, bg_id;
+	int x, y, map_index, bg_id;
 	const char* map_name;
 	
 	bg_id = script_getnum(st,2);
 	map_name = script_getstr(st,3);
-	if( (mapindex = mapindex_name2id(map_name)) == 0 )
+	if( (map_index = mapindex->name2id(map_name)) == 0 )
 		return true; // Invalid Map
 	x = script_getnum(st,4);
 	y = script_getnum(st,5);
-	bg->team_warp(bg_id, mapindex, x, y);
+	bg->team_warp(bg_id, map_index, x, y);
 	return true;
 }
 
@@ -17858,12 +17858,12 @@ BUILDIN(packageitem) {
 /* returns created team id or -1 when fails */
 BUILDIN(bg_create_team) {
 	const char *map_name, *ev = "", *dev = "";//ev and dev will be dropped.
-	int x, y, mapindex = 0, bg_id;
+	int x, y, map_index = 0, bg_id;
 		
 	map_name = script_getstr(st,2);
 	if( strcmp(map_name,"-") != 0 ) {
-		mapindex = mapindex_name2id(map_name);
-		if( mapindex == 0 ) { // Invalid Map
+		map_index = mapindex->name2id(map_name);
+		if( map_index == 0 ) { // Invalid Map
 			script_pushint(st,0);
 			return true;
 		}
@@ -17872,7 +17872,7 @@ BUILDIN(bg_create_team) {
 	x = script_getnum(st,3);
 	y = script_getnum(st,4);
 	
-	if( (bg_id = bg->create(mapindex, x, y, ev, dev)) == 0 ) { // Creation failed
+	if( (bg_id = bg->create(map_index, x, y, ev, dev)) == 0 ) { // Creation failed
 		script_pushint(st,-1);
 	} else
 		script_pushint(st,bg_id);

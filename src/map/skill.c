@@ -8791,28 +8791,25 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if( sd )
 			{
 				short x, y; // Destiny position.
-				unsigned short mapindex;
+				unsigned short map_index;
 
-				if( skill_id == RETURN_TO_ELDICASTES)
-				{
+				if( skill_id == RETURN_TO_ELDICASTES) {
 					x = 198;
 					y = 187;
-					mapindex  = mapindex_name2id(MAP_DICASTES);
-				}
-				else
-				{
+					map_index  = mapindex->name2id(MAP_DICASTES);
+				} else {
 					x = 44;
 					y = 151;
-					mapindex  = mapindex_name2id(MAP_MORA);
+					map_index  = mapindex->name2id(MAP_MORA);
 				}
 
-				if(!mapindex) {
+				if(!map_index) {
 					//Given map not found?
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					map->freeblock_unlock();
 					return 0;
 				}
-				pc->setpos(sd, mapindex, x, y, CLR_TELEPORT);
+				pc->setpos(sd, map_index, x, y, CLR_TELEPORT);
 			}
 			break;
 
@@ -9582,9 +9579,9 @@ int skill_castend_map (struct map_session_data *sd, uint16 skill_id, const char 
 				int i, lv, wx, wy;
 				int maxcount=0;
 				int x,y;
-				unsigned short mapindex;
+				unsigned short map_index;
 
-				mapindex = mapindex_name2id(mapname);
+				map_index = mapindex->name2id(mapname);
 				if(!mapindex) { //Given map not found?
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					skill_failed(sd);
@@ -9615,7 +9612,7 @@ int skill_castend_map (struct map_session_data *sd, uint16 skill_id, const char 
 				if( lv > 4 ) lv = 4; // crash prevention
 
 				// check if the chosen map exists in the memo list
-				ARR_FIND( 0, lv, i, mapindex == p[i]->map );
+				ARR_FIND( 0, lv, i, map_index == p[i]->map );
 				if( i < lv ) {
 					x=p[i]->x;
 					y=p[i]->y;
@@ -9640,7 +9637,7 @@ int skill_castend_map (struct map_session_data *sd, uint16 skill_id, const char 
 				group->val1 = (group->val1<<16)|(short)0;
 				// record the destination coordinates
 				group->val2 = (x<<16)|y;
-				group->val3 = mapindex;
+				group->val3 = map_index;
 			}
 			break;
 	}

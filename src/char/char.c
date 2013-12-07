@@ -1073,7 +1073,7 @@ int mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	}
 	
 	for( i = 0; i < MAX_CHARS && SQL_SUCCESS == SQL->StmtNextRow(stmt); i++ ) {
-		p.last_point.map = mapindex_name2id(last_map);
+		p.last_point.map = mapindex->name2id(last_map);
 		sd->found_char[p.slot] = p.char_id;
 		sd->unban_time[p.slot] = unban_time;
 		j += mmo_char_tobuf(WBUFP(buf, j), &p);
@@ -1199,17 +1199,17 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 	
 	account_id = p->account_id;
 	
-	p->last_point.map = mapindex_name2id(last_map);
-	p->save_point.map = mapindex_name2id(save_map);
+	p->last_point.map = mapindex->name2id(last_map);
+	p->save_point.map = mapindex->name2id(save_map);
 
 	if( p->last_point.map == 0 ) {
-		p->last_point.map = (unsigned short)strdb_iget(mapindex_db, MAP_DEFAULT);
+		p->last_point.map = (unsigned short)strdb_iget(mapindex->db, MAP_DEFAULT);
 		p->last_point.x = MAP_DEFAULT_X;
 		p->last_point.y = MAP_DEFAULT_Y;
 	}
 	
 	if( p->save_point.map == 0 ) {
-		p->save_point.map = (unsigned short)strdb_iget(mapindex_db, MAP_DEFAULT);
+		p->save_point.map = (unsigned short)strdb_iget(mapindex->db, MAP_DEFAULT);
 		p->save_point.x = MAP_DEFAULT_X;
 		p->save_point.y = MAP_DEFAULT_Y;
 	}
@@ -1233,7 +1233,7 @@ int mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_everything
 		SqlStmt_ShowDebug(stmt);
 
 	for( i = 0; i < MAX_MEMOPOINTS && SQL_SUCCESS == SQL->StmtNextRow(stmt); ++i ) {
-		tmp_point.map = mapindex_name2id(point_map);
+		tmp_point.map = mapindex->name2id(point_map);
 		memcpy(&p->memo_point[i], &tmp_point, sizeof(tmp_point));
 	}
 	strcat(t_msg, " memo");
@@ -1913,7 +1913,7 @@ int mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p) {
 	offset += 2;
 #endif
 #if (PACKETVER >= 20100720 && PACKETVER <= 20100727) || PACKETVER >= 20100803
-	mapindex_getmapname_ext(mapindex_id2name(p->last_point.map), (char*)WBUFP(buf,108));
+	mapindex->getmapname_ext(mapindex_id2name(p->last_point.map), (char*)WBUFP(buf,108));
 	offset += MAP_NAME_LENGTH_EXT;
 #endif
 #if PACKETVER >= 20100803
@@ -4140,22 +4140,22 @@ int parse_char(int fd)
 						WFIFOSET(fd,3);
 						break;
 					}
-					if ((i = search_mapserver((j=mapindex_name2id(MAP_PRONTERA)),-1,-1)) >= 0) {
+					if ((i = search_mapserver((j=mapindex->name2id(MAP_PRONTERA)),-1,-1)) >= 0) {
 						cd->last_point.x = 273;
 						cd->last_point.y = 354;
-					} else if ((i = search_mapserver((j=mapindex_name2id(MAP_GEFFEN)),-1,-1)) >= 0) {
+					} else if ((i = search_mapserver((j=mapindex->name2id(MAP_GEFFEN)),-1,-1)) >= 0) {
 						cd->last_point.x = 120;
 						cd->last_point.y = 100;
-					} else if ((i = search_mapserver((j=mapindex_name2id(MAP_MORROC)),-1,-1)) >= 0) {
+					} else if ((i = search_mapserver((j=mapindex->name2id(MAP_MORROC)),-1,-1)) >= 0) {
 						cd->last_point.x = 160;
 						cd->last_point.y = 94;
-					} else if ((i = search_mapserver((j=mapindex_name2id(MAP_ALBERTA)),-1,-1)) >= 0) {
+					} else if ((i = search_mapserver((j=mapindex->name2id(MAP_ALBERTA)),-1,-1)) >= 0) {
 						cd->last_point.x = 116;
 						cd->last_point.y = 57;
-					} else if ((i = search_mapserver((j=mapindex_name2id(MAP_PAYON)),-1,-1)) >= 0) {
+					} else if ((i = search_mapserver((j=mapindex->name2id(MAP_PAYON)),-1,-1)) >= 0) {
 						cd->last_point.x = 87;
 						cd->last_point.y = 117;
-					} else if ((i = search_mapserver((j=mapindex_name2id(MAP_IZLUDE)),-1,-1)) >= 0) {
+					} else if ((i = search_mapserver((j=mapindex->name2id(MAP_IZLUDE)),-1,-1)) >= 0) {
 						cd->last_point.x = 94;
 						cd->last_point.y = 103;
 					} else {
@@ -4189,7 +4189,7 @@ int parse_char(int fd)
 				WFIFOHEAD(fd,28);
 				WFIFOW(fd,0) = 0x71;
 				WFIFOL(fd,2) = cd->char_id;
-				mapindex_getmapname_ext(mapindex_id2name(cd->last_point.map), (char*)WFIFOP(fd,6));
+				mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), (char*)WFIFOP(fd,6));
 				subnet_map_ip = lan_subnetcheck(ipl); // Advanced subnet check [LuzZza]
 				WFIFOL(fd,22) = htonl((subnet_map_ip) ? subnet_map_ip : server[i].ip);
 				WFIFOW(fd,26) = ntows(htons(server[i].port)); // [!] LE byte order here [!]
@@ -5014,7 +5014,7 @@ int char_config_read(const char* cfgName)
 			int x, y;
 			if (sscanf(w2, "%15[^,],%d,%d", map, &x, &y) < 3)
 				continue;
-			start_point.map = mapindex_name2id(map);
+			start_point.map = mapindex->name2id(map);
 			if (!start_point.map)
 				ShowError("Specified start_point %s not found in map-index cache.\n", map);
 			start_point.x = x;
@@ -5122,7 +5122,7 @@ void do_final(void) {
 	}
 
 	SQL->Free(sql_handle);
-	mapindex_final();
+	mapindex->final();
 
 	for(i = 0; i < MAX_MAP_SERVERS; i++ )
 		if( server[i].map )
@@ -5169,13 +5169,13 @@ int do_init(int argc, char **argv) {
 	for(i = 0; i < MAX_MAP_SERVERS; i++ )
 		server[i].map = NULL;
 
-	//Read map indexes
-	mapindex_init();
-	start_point.map = mapindex_name2id("new_zone01");
-
-	
+	mapindex_defaults();
 	pincode_defaults();
 	
+	//Read map indexes
+	mapindex->init();
+	start_point.map = mapindex->name2id("new_zone01");
+		
 	char_config_read((argc < 2) ? CHAR_CONF_NAME : argv[1]);
 	char_lan_config_read((argc > 3) ? argv[3] : LAN_CONF_NAME);
 	sql_config_read(SQL_CONF_NAME);

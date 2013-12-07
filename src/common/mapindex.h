@@ -6,17 +6,16 @@
 #define _MAPINDEX_H_
 
 #include "../common/db.h"
+#include "../common/mmo.h"
+
+#define MAX_MAPINDEX 2000
+
+/* wohoo, someone look at all those |: map_default could (or *should*) be a char-server.conf */
 
 // When a map index search fails, return results from what map? default:prontera
 #define MAP_DEFAULT "prontera"
 #define MAP_DEFAULT_X 150
 #define MAP_DEFAULT_Y 150
-DBMap *mapindex_db;
-
-//File in charge of assigning a numberic ID to each map in existance for space saving when passing map info between servers.
-extern char mapindex_cfgfile[80];
-
-#define MAX_MAPINDEX 2000
 
 //Some definitions for the mayor city maps.
 #define MAP_PRONTERA "prontera"
@@ -56,16 +55,39 @@ extern char mapindex_cfgfile[80];
 #define MAP_MALAYA "malaya"
 #define MAP_ECLAGE "eclage"
 
-bool mapindex_exists(int id);
-const char* mapindex_getmapname(const char* string, char* output);
-const char* mapindex_getmapname_ext(const char* string, char* output);
-unsigned short mapindex_name2id(const char*);
-#define mapindex_id2name(n) mapindex_id2name_sub((n),__FILE__, __LINE__, __func__)
-const char* mapindex_id2name_sub(unsigned short,const char *file, int line, const char *func);
-int mapindex_init(void);
-void mapindex_final(void);
+#define mapindex_id2name(n) mapindex->id2name((n),__FILE__, __LINE__, __func__)
+#define mapindex_exists(n) ( mapindex->list[(n)].name[0] != '\0' )
 
-int mapindex_addmap(int index, const char* name);
-int mapindex_removemap(int index);
+/**
+ * mapindex.c interface
+ **/
+struct mapindex_interface {
+	char config_file[80];
+	/* mapname (str) -> index (int) */
+	DBMap *db;
+	/* number of entries in the index table */
+	int num;
+	/* index list -- since map server map count is *unlimited* this should be too */
+	struct {
+		char name[MAP_NAME_LENGTH];
+	} list[MAX_MAPINDEX];
+	/* */
+	int (*init) (void);
+	void (*final) (void);
+	/* */
+	int (*addmap) (int index, const char* name);
+	void (*removemap) (int index);
+	const char* (*getmapname) (const char* string, char* output);
+	/* TODO: server shouldn't be handling the extension, game client automatically adds .gat/.rsw/.whatever
+	 * and there are official map names taking advantage of it that we cant support due to the .gat room being saved */
+	const char* (*getmapname_ext) (const char* string, char* output);
+	/* TODO: Hello World! make up your mind, this thing is int on some places and unsigned short on others */
+	unsigned short (*name2id) (const char*);
+	const char* (*id2name) (unsigned short,const char *file, int line, const char *func);
+};
+
+struct mapindex_interface *mapindex;
+
+void mapindex_defaults(void);
 
 #endif /* _MAPINDEX_H_ */

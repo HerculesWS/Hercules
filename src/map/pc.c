@@ -1146,7 +1146,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 		ShowError ("Last_point_map %s - id %d not found (error code %d)\n", mapindex_id2name(sd->status.last_point.map), sd->status.last_point.map, i);
 
 		// try warping to a default map instead (church graveyard)
-		if (pc->setpos(sd, mapindex_name2id(MAP_PRONTERA), 273, 354, CLR_OUTSIGHT) != 0) {
+		if (pc->setpos(sd, mapindex->name2id(MAP_PRONTERA), 273, 354, CLR_OUTSIGHT) != 0) {
 			// if we fail again
 			clif->authfail_fd(sd->fd, 0);
 			return false;
@@ -4864,13 +4864,13 @@ int pc_steal_coin(struct map_session_data *sd, struct block_list *target) {
  * 1 - Invalid map index.
  * 2 - Map not in this map-server, and failed to locate alternate map-server.
  *------------------------------------------*/
-int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y, clr_type clrtype) {
+int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int y, clr_type clrtype) {
 	int16 m;
 
 	nullpo_ret(sd);
 
-	if( !mapindex || !mapindex_id2name(mapindex) || ( m = map->mapindex2mapid(mapindex) ) == -1 ) {
-		ShowDebug("pc_setpos: Passed mapindex(%d) is invalid!\n", mapindex);
+	if( !map_index || !mapindex_id2name(map_index) || ( m = map->mapindex2mapid(map_index) ) == -1 ) {
+		ShowDebug("pc_setpos: Passed mapindex(%d) is invalid!\n", map_index);
 		return 1;
 	}
 
@@ -4894,7 +4894,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 			}
 			if( i != sd->instances ) {
 				m = instance->list[sd->instance[i]].map[j];
-				mapindex = map_id2index(m);
+				map_index = map_id2index(m);
 				stop = true;
 			}
 		}
@@ -4908,7 +4908,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 			}
 			if( i != p->instances ) {
 				m = instance->list[p->instance[i]].map[j];
-				mapindex = map_id2index(m);
+				map_index = map_id2index(m);
 				stop = true;
 			}
 		}
@@ -4922,7 +4922,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 			}
 			if( i != sd->guild->instances ) {
 				m = instance->list[sd->guild->instance[i]].map[j];
-				mapindex = map_id2index(m);
+				map_index = map_id2index(m);
 				stop = true;
 			}
 		}
@@ -4930,13 +4930,13 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		if( map->list[m].instance_id >= 0 && instance->list[map->list[m].instance_id].respawn.map == 0 &&
 		    instance->list[map->list[m].instance_id].respawn.x == 0 &&
 		    instance->list[map->list[m].instance_id].respawn.y == 0) {
-			instance->list[map->list[m].instance_id].respawn.map = mapindex;
+			instance->list[map->list[m].instance_id].respawn.map = map_index;
 			instance->list[map->list[m].instance_id].respawn.x = x;
 			instance->list[map->list[m].instance_id].respawn.y = y;
 		}
 	}
 
-	sd->state.changemap = (sd->mapindex != mapindex);
+	sd->state.changemap = (sd->mapindex != map_index);
 	sd->state.warping = 1;
 	sd->state.workinprogress = 0;
 	if( sd->state.changemap ) { // Misc map-changing settings
@@ -4999,7 +4999,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		uint32 ip;
 		uint16 port;
 		//if can't find any map-servers, just abort setting position.
-		if(!sd->mapindex || map->mapname2ipport(mapindex,&ip,&port))
+		if(!sd->mapindex || map->mapname2ipport(map_index,&ip,&port))
 			return 2;
 
 		if (sd->npc_id)
@@ -5007,7 +5007,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		npc->script_event(sd, NPCE_LOGOUT);
 		//remove from map, THEN change x/y coordinates
 		unit->remove_map_pc(sd,clrtype);
-		sd->mapindex = mapindex;
+		sd->mapindex = map_index;
 		sd->bl.x=x;
 		sd->bl.y=y;
 		pc->clean_skilltree(sd);
@@ -5021,7 +5021,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 	}
 
 	if( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) {
-		ShowError("pc_setpos: attempt to place player %s (%d:%d) on invalid coordinates (%s-%d,%d)\n", sd->status.name, sd->status.account_id, sd->status.char_id, mapindex_id2name(mapindex),x,y);
+		ShowError("pc_setpos: attempt to place player %s (%d:%d) on invalid coordinates (%s-%d,%d)\n", sd->status.name, sd->status.account_id, sd->status.char_id, mapindex_id2name(map_index),x,y);
 		x = y = 0; // make it random
 	}
 
@@ -5044,7 +5044,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short mapindex, int x, int y
 		//Tag player for rewarping after map-loading is done. [Skotlex]
 		sd->state.rewarp = 1;
 
-	sd->mapindex = mapindex;
+	sd->mapindex = map_index;
 	sd->bl.m = m;
 	sd->bl.x = sd->ud.to_x = x;
 	sd->bl.y = sd->ud.to_y = y;

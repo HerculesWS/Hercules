@@ -2330,7 +2330,7 @@ void map_removemobs(int16 m) {
  *------------------------------------------*/
 int16 map_mapname2mapid(const char* name) {
 	unsigned short map_index;
-	map_index = mapindex_name2id(name);
+	map_index = mapindex->name2id(name);
 	if (!map_index)
 		return -1;
 	return map->mapindex2mapid(map_index);
@@ -2766,27 +2766,27 @@ void map_iwall_remove(const char *wall_name)
 DBData create_map_data_other_server(DBKey key, va_list args)
 {
 	struct map_data_other_server *mdos;
-	unsigned short mapindex = (unsigned short)key.ui;
+	unsigned short map_index = (unsigned short)key.ui;
 	mdos=(struct map_data_other_server *)aCalloc(1,sizeof(struct map_data_other_server));
-	mdos->index = mapindex;
-	memcpy(mdos->name, mapindex_id2name(mapindex), MAP_NAME_LENGTH);
+	mdos->index = map_index;
+	memcpy(mdos->name, mapindex_id2name(map_index), MAP_NAME_LENGTH);
 	return DB->ptr2data(mdos);
 }
 
 /*==========================================
  * Add mapindex to db of another map server
  *------------------------------------------*/
-int map_setipport(unsigned short mapindex, uint32 ip, uint16 port)
+int map_setipport(unsigned short map_index, uint32 ip, uint16 port)
 {
 	struct map_data_other_server *mdos;
 
-	mdos= uidb_ensure(map->map_db,(unsigned int)mapindex, map->create_map_data_other_server);
+	mdos= uidb_ensure(map->map_db,(unsigned int)map_index, map->create_map_data_other_server);
 
 	if(mdos->cell) //Local map,Do nothing. Give priority to our own local maps over ones from another server. [Skotlex]
 		return 0;
 	if(ip == clif->map_ip && port == clif->map_port) {
 		//That's odd, we received info that we are the ones with this map, but... we don't have it.
-		ShowFatalError("map_setipport : received info that this map-server SHOULD have map '%s', but it is not loaded.\n",mapindex_id2name(mapindex));
+		ShowFatalError("map_setipport : received info that this map-server SHOULD have map '%s', but it is not loaded.\n",mapindex_id2name(map_index));
 		exit(EXIT_FAILURE);
 	}
 	mdos->ip   = ip;
@@ -2908,7 +2908,7 @@ int map_readfromcache(struct map_data *m, char *buffer) {
 
 int map_addmap(const char* mapname) {
 	map->list[map->count].instance_id = -1;
-	mapindex_getmapname(mapname, map->list[map->count++].name);
+	mapindex->getmapname(mapname, map->list[map->count++].name);
 	return 0;
 }
 
@@ -2927,7 +2927,7 @@ int map_delmap(char* mapname) {
 		return 0;
 	}
 
-	mapindex_getmapname(mapname, map_name);
+	mapindex->getmapname(mapname, map_name);
 	for(i = 0; i < map->count; i++) {
 		if (strcmp(map->list[i].name, map_name) == 0) {
 			map->delmapid(i);
@@ -3318,7 +3318,7 @@ int map_readallmaps (void) {
 				continue;
 		}
 
-		map->list[i].index = mapindex_name2id(map->list[i].name);
+		map->list[i].index = mapindex->name2id(map->list[i].name);
 
 		if ( map->index2mapid[map_id2index(i)] != -1 ) {
 			ShowWarning("Map %s already loaded!"CL_CLL"\n", map->list[i].name);
@@ -5141,7 +5141,7 @@ void do_final(void)
 	
 	map->map_db->destroy(map->map_db, map->db_final);
 
-	mapindex_final();
+	mapindex->final();
 	if(map->enable_grf)
 		grfio_final();
 
@@ -5379,6 +5379,7 @@ void map_hp_symbols(void) {
 }
 
 void map_load_defaults(void) {
+	mapindex_defaults();
 	map_defaults();
 	/* */
 	atcommand_defaults();
@@ -5565,7 +5566,7 @@ int do_init(int argc, char *argv[])
 			logs->sql_init();
 	}
 
-	i = mapindex_init();
+	i = mapindex->init();
 
 	if (minimal) {
 		// Pretend all maps from the mapindex are on this mapserver

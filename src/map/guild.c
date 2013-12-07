@@ -124,14 +124,14 @@ int guild_check_skill_require(struct guild *g,int id)
 bool guild_read_castledb(char* str[], int columns, int current)
 {// <castle id>,<map name>,<castle name>,<castle event>[,<reserved/unused switch flag>]
 	struct guild_castle *gc;
-	int mapindex = mapindex_name2id(str[1]);
+	int index = mapindex->name2id(str[1]);
 
-	if (map->mapindex2mapid(mapindex) < 0) // Map not found or on another map-server
+	if (map->mapindex2mapid(index) < 0) // Map not found or on another map-server
 		return false;
 
 	CREATE(gc, struct guild_castle, 1);
 	gc->castle_id = atoi(str[0]);
-	gc->mapindex = mapindex;
+	gc->mapindex = index;
 	safestrncpy(gc->castle_name, str[2], sizeof(gc->castle_name));
 	safestrncpy(gc->castle_event, str[3], sizeof(gc->castle_event));
 
@@ -189,7 +189,7 @@ struct guild_castle* guild_mapindex2gc(short mapindex)
 /// lookup: map name -> castle*
 struct guild_castle* guild_mapname2gc(const char* mapname)
 {
-	return guild->mapindex2gc(mapindex_name2id(mapname));
+	return guild->mapindex2gc(mapindex->name2id(mapname));
 }
 
 struct map_session_data* guild_getavailablesd(struct guild* g)

@@ -2140,7 +2140,7 @@ const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const char* s
 	}
 
 	m = map->mapname2mapid(mapname);
-	i = mapindex_name2id(to_mapname);
+	i = mapindex->name2id(to_mapname);
 	if( i == 0 )
 	{
 		ShowError("npc_parse_warp: Unknown destination map in file '%s', line '%d' : %s\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), to_mapname, w1, w2, w3, w4);
@@ -2983,7 +2983,7 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 		ShowError("npc_parse_mob: Invalid mob definition in file '%s', line '%d'.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 		return strchr(start,'\n');// skip and continue
 	}
-	if( mapindex_name2id(mapname) == 0 ) {
+	if( mapindex->name2id(mapname) == 0 ) {
 		ShowError("npc_parse_mob: Unknown map '%s' in file '%s', line '%d'.\n", mapname, filepath, strline(buffer,start-buffer));
 		return strchr(start,'\n');// skip and continue
 	}
@@ -3153,7 +3153,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 			map->list[m].save.x = -1;
 			map->list[m].save.y = -1;
 		} else if (sscanf(w4, "%31[^,],%d,%d", savemap, &savex, &savey) == 3) {
-			map->list[m].save.map = mapindex_name2id(savemap);
+			map->list[m].save.map = mapindex->name2id(savemap);
 			map->list[m].save.x = savex;
 			map->list[m].save.y = savey;
 			if (!map->list[m].save.map) {
@@ -3598,7 +3598,7 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit) {
 			char mapname[MAP_NAME_LENGTH*2];
 			x = y = 0;
 			sscanf(w1,"%23[^,],%hd,%hd[^,]",mapname,&x,&y);
-			if( !mapindex_name2id(mapname) )
+			if( !mapindex->name2id(mapname) )
 			{// Incorrect map, we must skip the script info...
 				ShowError("npc_parsesrcfile: Unknown map '%s' in file '%s', line '%d'. Skipping line...\n", mapname, filepath, strline(buffer,p-buffer));
 				if( strcmp(w2,"script") == 0 && count > 3 )

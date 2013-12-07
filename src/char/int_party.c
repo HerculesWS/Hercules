@@ -241,7 +241,7 @@ struct party_data *inter_party_fromsql(int party_id)
 		SQL->GetData(sql_handle, 1, &data, NULL); m->char_id = atoi(data);
 		SQL->GetData(sql_handle, 2, &data, &len); memcpy(m->name, data, min(len, NAME_LENGTH));
 		SQL->GetData(sql_handle, 3, &data, NULL); m->lv = atoi(data);
-		SQL->GetData(sql_handle, 4, &data, NULL); m->map = mapindex_name2id(data);
+		SQL->GetData(sql_handle, 4, &data, NULL); m->map = mapindex->name2id(data);
 		SQL->GetData(sql_handle, 5, &data, NULL); m->online = (atoi(data) ? 1 : 0);
 		SQL->GetData(sql_handle, 6, &data, NULL); m->class_ = atoi(data);
 		m->leader = (m->account_id == leader_id && m->char_id == leader_char ? 1 : 0);
