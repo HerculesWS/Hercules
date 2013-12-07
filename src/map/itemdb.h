@@ -70,6 +70,7 @@ enum item_itemid {
 	ITEMID_PHRACON               = 1010,
 	ITEMID_EMVERETARCON          = 1011,
 	ITEMID_TRAP                  = 1065,
+	ITEMID_ANGRA_MANYU           = 1599,
 	ITEMID_STRANGE_EMBRYO        = 6415,
 	ITEMID_FACE_PAINT            = 6120,
 	ITEMID_STONE                 = 7049,

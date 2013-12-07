@@ -1836,11 +1836,11 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st) 
 	short mod = -1;
 
 	switch( sd->weapontype2 ){ // adjustment for dual weilding
-	case W_DAGGER:	mod = 0;	break; // 0, 1, 1
-	case W_1HSWORD:
-	case W_1HAXE:	mod = 1;
-		if( (sd->class_&MAPID_THIRDMASK) == MAPID_GUILLOTINE_CROSS ) // 0, 2, 3
-			mod = sd->weapontype2 / W_1HSWORD + W_1HSWORD / sd->weapontype2 ;
+		case W_DAGGER:	mod = 0;	break; // 0, 1, 1
+		case W_1HSWORD:
+		case W_1HAXE:	mod = 1;
+			if( (sd->class_&MAPID_THIRDMASK) == MAPID_GUILLOTINE_CROSS ) // 0, 2, 3
+				mod = sd->weapontype2 / W_1HSWORD + W_1HSWORD / sd->weapontype2 ;
 	}
 
 	amotion = ( sd->status.weapon < MAX_WEAPON_TYPE && mod < 0 )
@@ -1863,9 +1863,14 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st) 
 	// percentual delay reduction from stats
 	amotion -= amotion * (4*st->agi + st->dex)/1000;
 #endif
+	
 	// raw delay adjustment from bAspd bonus
 	amotion += sd->bonus.aspd_add;
 
+	/* angra manyu disregards aspd_base and similar */
+	if( sd->equip_index[EQI_HAND_R] >= 0 && sd->status.inventory[sd->equip_index[EQI_HAND_R]].nameid == ITEMID_ANGRA_MANYU )
+		return 0;
+	
 	return amotion;
 }
 
