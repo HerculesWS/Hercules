@@ -7772,7 +7772,7 @@ OnTouch:
 }
 
 prt_castle,354,276,0	script	#peter	WARPNPC,1,1,{
-OnTouch:;
+OnTouch:
 	if (checkquest(10019) == 0 || checkquest(10019) == 1) {
 		donpcevent "Prince#eisen5::OnEnable";
 	}

@@ -227,8 +227,8 @@ OnDie:
 	if($@beardmob > 0) end;
 	set $@beardMobD,1;
 	end;
-On1201:
-On0001:
+OnClock1201:
+OnClock0001:
 	set $@beardmob,0;
 	set $@beardMobD,0;
 	end;

@@ -243,7 +243,7 @@ OnTimer308000:
 
 OnTimer600000:
 	announce "The second 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
-	donpcevent "Rmimi Ravies#gq_fes01::oncall";
+	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer603000:
