@@ -45430,14 +45430,14 @@ int HP_pc_clean_skilltree(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-int HP_pc_setpos(struct map_session_data *sd, unsigned short mapindex, int x, int y, clr_type clrtype) {
+int HP_pc_setpos(struct map_session_data *sd, unsigned short map_index, int x, int y, clr_type clrtype) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_setpos_pre ) {
-		int (*preHookFunc) (struct map_session_data *sd, unsigned short *mapindex, int *x, int *y, clr_type *clrtype);
+		int (*preHookFunc) (struct map_session_data *sd, unsigned short *map_index, int *x, int *y, clr_type *clrtype);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setpos_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_setpos_pre[hIndex].func;
-			retVal___ = preHookFunc(sd, &mapindex, &x, &y, &clrtype);
+			retVal___ = preHookFunc(sd, &map_index, &x, &y, &clrtype);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -45445,13 +45445,13 @@ int HP_pc_setpos(struct map_session_data *sd, unsigned short mapindex, int x, in
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.setpos(sd, mapindex, x, y, clrtype);
+		retVal___ = HPMHooks.source.pc.setpos(sd, map_index, x, y, clrtype);
 	}
 	if( HPMHooks.count.HP_pc_setpos_post ) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, unsigned short *mapindex, int *x, int *y, clr_type *clrtype);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, unsigned short *map_index, int *x, int *y, clr_type *clrtype);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_setpos_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_setpos_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, &mapindex, &x, &y, &clrtype);
+			retVal___ = postHookFunc(retVal___, sd, &map_index, &x, &y, &clrtype);
 		}
 	}
 	return retVal___;
