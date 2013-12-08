@@ -45,11 +45,11 @@ OnEnable:
 	end;
 
 OnKill:
-	killmonster "schg_dun01","Monster Controler1#sch::OnMyMObDead";
+	killmonster "schg_dun01","Monster Controler1#sch::OnMyMobDead";
 	end;
 
 OnMyMobDead:
-	if (mobcount("schg_dun01","Monster Controler1#sch::OnMyMObDead") == 0) {
+	if (mobcount("schg_dun01","Monster Controler1#sch::OnMyMobDead") == 0) {
 		mapannounce "schg_dun01", "Kublin: Aargh!",bc_map,"0x99CC00";
 		mapannounce "schg_dun01", "Morestone: I thought I heard Kublin screaming!! Who is there? What happened to Kublin? Hey you!",bc_map,"0x99CC00";
 		donpcevent "Dwarf#sch_gd::OnEnable";

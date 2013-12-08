@@ -1097,7 +1097,7 @@ OnMyMobDead:
 	if (.MyMobs < 3) {
 		mapannounce "job_hunte","Okay, good job... Now, find the switch in the center of the map!! Be careful of the traps!!",bc_map;
 		set HNTR_Q,14;
-		donpcevent "switch#hnt::OnEnable";
+		donpcevent "Switch#hnt::OnEnable";
 		donpcevent "Manager#hnt::OnDisable";
 	}
 	else {

@@ -358,7 +358,7 @@ OnTimer5000:
 	mapannounce "bat_c03", "Please be careful.",bc_map,"0x00ff00";
 	end;
 
-OnTimer:55000:
+OnTimer55000:
 	mapannounce "bat_c03", "You will be sent back.",bc_map,"0x00ff00";
 	end;
 

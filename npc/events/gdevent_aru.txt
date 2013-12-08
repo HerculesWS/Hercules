@@ -45,11 +45,11 @@ OnEnable:
 	end;
 
 OnKill:
-	killmonster "arug_dun01","Monster Controler1#aru::OnMyMObDead";
+	killmonster "arug_dun01","Monster Controler1#aru::OnMyMobDead";
 	end;
 
 OnMyMobDead:
-	if (mobcount("arug_dun01","Monster Controler1#aru::OnMyMObDead") == 0) {
+	if (mobcount("arug_dun01","Monster Controler1#aru::OnMyMobDead") == 0) {
 		mapannounce "arug_dun01", "Kublin: Aargh!",bc_map,"0x99CC00";
 		mapannounce "arug_dun01", "Morestone: I thought I heard Kublin screaming!! Who is there? What happened to Kublin? Hey you!",bc_map,"0x99CC00";
 		donpcevent "Dwarf#aru_gd::OnEnable";
