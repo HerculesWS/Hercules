@@ -5367,15 +5367,13 @@ void map_hp_symbols(void) {
 #ifdef PCRE_SUPPORT
 	HPM->share(npc_chat,"npc_chat");
 #endif
-	/* partial */
 	HPM->share(mapit,"mapit");
+	HPM->share(mapindex,"mapindex");
 	/* sql link */
 	HPM->share(map->mysql_handle,"sql_handle");
 	/* specific */
 	HPM->share(atcommand->create,"addCommand");
 	HPM->share(script->addScript,"addScript");
-	/* vars */
-	HPM->share(map->list,"map->list");
 }
 
 void map_load_defaults(void) {
