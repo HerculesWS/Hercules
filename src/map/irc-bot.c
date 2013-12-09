@@ -289,7 +289,7 @@ void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 	} else if( strcmpi(target,hChSys.irc_nick) == 0 ) {
 		ShowDebug("irc_privmsg: Received message from %s: '%s'\n", source ? source : "(null)", msg);
 #endif // IRCBOT_DEBUG
-	} else if( strcmpi(target,hChSys.irc_channel) == 0 ) {
+	} else if( msg && strcmpi(target,hChSys.irc_channel) == 0 ) {
 		char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
 
 		source_nick[0] = source_ident[0] = source_host[0] = '\0';

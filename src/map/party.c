@@ -553,7 +553,7 @@ int party_member_withdraw(int party_id, int account_id, int char_id)
 		sd->status.party_id = 0;
 		clif->charnameupdate(sd); //Update name display [Skotlex]
 		//TODO: hp bars should be cleared too
-		if( p->instances )
+		if( p && p->instances )
 			instance->check_kick(sd);
 	}
 	if (sd && sd->sc.data[SC_DANCING]) {

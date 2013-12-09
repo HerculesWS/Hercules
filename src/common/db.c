@@ -1696,7 +1696,7 @@ static DBData* db_obj_vensure(DBMap* self, DBKey key, DBCreateData create, va_li
 		if (db->options&DB_OPT_DUP_KEY) {
 			node->key = db_dup_key(db, key);
 			if (db->options&DB_OPT_RELEASE_KEY)
-				db->release(key, *data, DB_RELEASE_KEY);
+				db->release(key, node->data, DB_RELEASE_KEY);
 		} else {
 			node->key = key;
 		}

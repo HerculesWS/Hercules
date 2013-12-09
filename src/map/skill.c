@@ -9266,14 +9266,16 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 		case MH_GRANITIC_ARMOR:
 		case MH_PYROCLASTIC:
-		{
-			struct block_list *s_bl = battle->get_master(src);
-			if(s_bl)
-				sc_start2(s_bl, type, 100, skill_lv, hd->homunculus.level, skill->get_time(skill_id, skill_lv)); //start on master
-			sc_start2(bl, type, 100, skill_lv, hd->homunculus.level, skill->get_time(skill_id, skill_lv));
-			if (hd)
+			if( hd ){
+				struct block_list *s_bl = battle->get_master(src);
+				
+				if(s_bl)
+					sc_start2(s_bl, type, 100, skill_lv, hd->homunculus.level, skill->get_time(skill_id, skill_lv)); //start on master
+				
+				sc_start2(bl, type, 100, skill_lv, hd->homunculus.level, skill->get_time(skill_id, skill_lv));
+				
 				skill->blockhomun_start(hd, skill_id, skill->get_cooldown(skill_id, skill_lv));
-		}
+			}
 			break;
 
 		case MH_LIGHT_OF_REGENE:

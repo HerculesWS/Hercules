@@ -54,11 +54,11 @@ struct chat_data* chat_createchat(struct block_list* bl, const char* title, cons
 
 	if( cd->bl.id == 0 ) {
 		aFree(cd);
-		cd = NULL;
+		return NULL;
 	}
 
 	map->addiddb(&cd->bl);
-
+	
 	if( bl->type != BL_NPC )
 		cd->kick_list = idb_alloc(DB_OPT_BASE);
 	

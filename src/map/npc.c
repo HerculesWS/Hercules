@@ -3148,7 +3148,7 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 		int savex, savey;
 		if (state == 0)
 			; //Map flag disabled.
-		else if (!strcmpi(w4, "SavePoint")) {
+		else if (w4 && !strcmpi(w4, "SavePoint")) {
 			map->list[m].save.map = 0;
 			map->list[m].save.x = -1;
 			map->list[m].save.y = -1;
@@ -3370,10 +3370,11 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 	else if (!strcmpi(w3,"adjust_unit_duration")) {
 		int skill_id, k;
 		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
-		int len = strlen(w4);
+		int len = w4 ? strlen(w4) : 0;
 		
 		modifier[0] = '\0';
-		memcpy(skill_name, w4, MAP_ZONE_MAPFLAG_LENGTH);
+		if( w4 )
+			memcpy(skill_name, w4, MAP_ZONE_MAPFLAG_LENGTH);
 		
 		for(k = 0; k < len; k++) {
 			if( skill_name[k] == '\t' ) {
@@ -3424,10 +3425,12 @@ const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char
 	} else if (!strcmpi(w3,"adjust_skill_damage")) {
 		int skill_id, k;
 		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
-		int len = strlen(w4);
+		int len = w4 ? strlen(w4) : 0;
 		
 		modifier[0] = '\0';
-		memcpy(skill_name, w4, MAP_ZONE_MAPFLAG_LENGTH);
+		
+		if( w4 )
+			memcpy(skill_name, w4, MAP_ZONE_MAPFLAG_LENGTH);
 		
 		for(k = 0; k < len; k++) {
 			if( skill_name[k] == '\t' ) {
