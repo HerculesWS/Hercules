@@ -3198,7 +3198,7 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 					break;
 				case GN_SPORE_EXPLOSION:
 					map->foreachinrange(skill->area_sub, target, skill->get_splash(skl->skill_id, skl->skill_lv), BL_CHAR,
-					                    src, skl->skill_id, skl->skill_lv, 0, skl->flag|1|BCT_ENEMY, skill->castend_damage_id);
+					                    src, skl->skill_id, skl->skill_lv, (int64)0, skl->flag|1|BCT_ENEMY, skill->castend_damage_id);
 					break;
 				case SR_FLASHCOMBO_ATK_STEP1:
 				case SR_FLASHCOMBO_ATK_STEP2:

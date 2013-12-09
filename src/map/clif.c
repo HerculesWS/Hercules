@@ -18250,6 +18250,7 @@ static void __attribute__ ((unused)) packetdb_addpacket(short cmd, int len, ...)
 		
 		packet_db[cmd].pos[i] = pos;
 	}
+	va_end(va);
 }
 void packetdb_loaddb(void) {
 	
