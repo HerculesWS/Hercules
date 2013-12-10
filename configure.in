@@ -1123,6 +1123,9 @@ CYGWIN*)
 	fd_setsize="done"
 	DLLEXT=".dll"
 	;;
+Darwin*)
+	DLLEXT=".dylib"
+	;;
 esac
 AC_SUBST([DLLEXT])
 
