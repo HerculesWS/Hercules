@@ -27,7 +27,7 @@ struct {
 	FILE *fp;
 	struct {
 		char *p;
-		unsigned int len;
+		size_t len;
 	} buf[4];
 	char *db_name;
 } tosql;
@@ -52,7 +52,7 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 	
 	if( (it = itemdb->exists(itemdb_readdb_libconfig_sub(entry,n,source))) ) {
 		char e_name[ITEM_NAME_LENGTH*2+1], e_jname[ITEM_NAME_LENGTH*2+1];
-		const char *script = NULL;
+		const char *bonus = NULL;
 		char *str;
 		int i32;
 		unsigned int ui32, job = 0, upper = 0;
@@ -60,9 +60,9 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 
 		SQL->EscapeString(NULL, e_name, it->name);
 		SQL->EscapeString(NULL, e_jname, it->jname);
-		if( it->script )  { h_config_setting_lookup_string(entry, "Script", &script); hstr(script); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[0].len ) { tosql.buf[0].len = tosql.buf[0].len + strlen(str) + 1000; RECREATE(tosql.buf[0].p,char,tosql.buf[0].len); } SQL->EscapeString(NULL, tosql.buf[0].p, str); }
-		if( it->equip_script ) { h_config_setting_lookup_string(entry, "OnEquipScript", &script); hstr(script); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[1].len ) { tosql.buf[1].len = tosql.buf[1].len + strlen(str) + 1000; RECREATE(tosql.buf[1].p,char,tosql.buf[1].len); } SQL->EscapeString(NULL, tosql.buf[1].p, str); }
-		if( it->unequip_script ) { h_config_setting_lookup_string(entry, "OnUnequipScript", &script); hstr(script); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[2].len ) { tosql.buf[2].len = tosql.buf[2].len + strlen(str) + 1000; RECREATE(tosql.buf[2].p,char,tosql.buf[2].len); } SQL->EscapeString(NULL, tosql.buf[2].p, str); }
+		if( it->script )  { h_config_setting_lookup_string(entry, "Script", &bonus); hstr(bonus); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[0].len ) { tosql.buf[0].len = tosql.buf[0].len + strlen(str) + 1000; RECREATE(tosql.buf[0].p,char,tosql.buf[0].len); } SQL->EscapeString(NULL, tosql.buf[0].p, str); }
+		if( it->equip_script ) { h_config_setting_lookup_string(entry, "OnEquipScript", &bonus); hstr(bonus); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[1].len ) { tosql.buf[1].len = tosql.buf[1].len + strlen(str) + 1000; RECREATE(tosql.buf[1].p,char,tosql.buf[1].len); } SQL->EscapeString(NULL, tosql.buf[1].p, str); }
+		if( it->unequip_script ) { h_config_setting_lookup_string(entry, "OnUnequipScript", &bonus); hstr(bonus); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[2].len ) { tosql.buf[2].len = tosql.buf[2].len + strlen(str) + 1000; RECREATE(tosql.buf[2].p,char,tosql.buf[2].len); } SQL->EscapeString(NULL, tosql.buf[2].p, str); }
 		
 		if( h_config_setting_lookup_int(entry, "Job", &i32) ) // This is an unsigned value, do not check for >= 0
 			ui32 = (unsigned int)i32;
