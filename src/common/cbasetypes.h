@@ -255,6 +255,13 @@ typedef uintptr_t uintptr;
 #define ra_align(n) __attribute__(( aligned(n) ))
 #endif
 
+// Directives for the (clang) static analyzer
+#ifdef __clang__
+#define analyzer_noreturn __attribute__((analyzer_noreturn))
+#else
+#define analyzer_noreturn
+#endif
+
 
 /////////////////////////////
 // for those still not building c++

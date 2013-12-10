@@ -12,6 +12,7 @@
 		A5380CD91856CF4A0090CBC4 /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC694185643BB009EB79C /* core.c */; };
 		A5380CDA1856D0650090CBC4 /* socket.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6BA185643BB009EB79C /* socket.c */; };
 		A5380CDB1856D0690090CBC4 /* malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6A3185643BB009EB79C /* malloc.c */; };
+		A567612D185D11D700997C0D /* nullpo.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC6B2185643BB009EB79C /* nullpo.c */; };
 		A56CC68918564387009EB79C /* account_sql.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68118564387009EB79C /* account_sql.c */; };
 		A56CC68A18564387009EB79C /* ipban_sql.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68318564387009EB79C /* ipban_sql.c */; };
 		A56CC68B18564387009EB79C /* login.c in Sources */ = {isa = PBXBuildFile; fileRef = A56CC68518564387009EB79C /* login.c */; };
@@ -960,6 +961,7 @@
 			files = (
 				A58A5A1A185800CD0099683E /* strlib.c in Sources */,
 				A5380CD91856CF4A0090CBC4 /* core.c in Sources */,
+				A567612D185D11D700997C0D /* nullpo.c in Sources */,
 				A5380CD81856CE8A0090CBC4 /* console.c in Sources */,
 				A58A5A19185800C20099683E /* des.c in Sources */,
 				A5380CD71856CE3C0090CBC4 /* mapcache.c in Sources */,

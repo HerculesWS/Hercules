@@ -31,6 +31,7 @@ AM_YFLAGS = -d -p $(PARSER_PREFIX)
 AM_LFLAGS = --nounistd --header-file=scanner.h --prefix=$(PARSER_PREFIX)
 
 all: $(BUILT_SOURCES)
+	@patch -p1 < clangwarnings.patch
 
 .SUFFIXES: .c .l .y
 

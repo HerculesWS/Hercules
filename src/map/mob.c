@@ -878,14 +878,15 @@ int mob_setdelayspawn(struct mob_data *md)
 }
 
 int mob_count_sub(struct block_list *bl, va_list ap) {
-    int mobid[10], i;
-    ARR_FIND(0, 10, i, (mobid[i] = va_arg(ap, int)) == 0); //fetch till 0
-    if (mobid[0]) { //if there one let's check it otherwise go backward
-        TBL_MOB *md = BL_CAST(BL_MOB, bl);
-        ARR_FIND(0, 10, i, md->class_ == mobid[i]);
-        return (i < 10) ? 1 : 0;
-    }
-    return 1; //backward compatibility
+	int mobid[10] = { 0 }, i;
+	ARR_FIND(0, 10, i, (mobid[i] = va_arg(ap, int)) == 0); //fetch till 0
+	if (mobid[0]) { //if there one let's check it otherwise go backward
+		TBL_MOB *md = BL_CAST(BL_MOB, bl);
+		nullpo_ret(md);
+		ARR_FIND(0, 10, i, md->class_ == mobid[i]);
+		return (i < 10) ? 1 : 0;
+	}
+	return 1; //backward compatibility
 }
 
 /*==========================================
@@ -4104,7 +4105,7 @@ bool mob_parse_row_chatdb(char** str, const char* source, int line, int* last_ms
 	//MSG ID
 	ms->msg_id=msg_id;
 	//Color
-	ms->color=strtoul(str[1],NULL,0);
+	ms->color=(unsigned int)strtoul(str[1],NULL,0);
 	//Message
 	msg = str[2];
 	len = strlen(msg);

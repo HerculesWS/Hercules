@@ -4,9 +4,9 @@ CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
 
 COMMON_D = ../common
 COMMON_OBJ = $(addprefix $(COMMON_D)/obj_all/, des.o grfio.o malloc.o \
-             miniconsole.o minicore.o showmsg.o strlib.o utils.o)
+             nullpo.o miniconsole.o minicore.o showmsg.o strlib.o utils.o)
 COMMON_H = $(addprefix $(COMMON_D)/, cbasetypes.h console.h core.h des.h \
-           grfio.h malloc.h mmo.h showmsg.h strlib.h utils.h)
+           grfio.h malloc.h mmo.h nullpo.h showmsg.h strlib.h utils.h)
 
 LIBCONFIG_D = ../../3rdparty/libconfig
 LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \

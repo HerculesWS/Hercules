@@ -23,8 +23,8 @@ enum E_LOGINSERVER_ST
 
 struct login_session_data {
 	int account_id;
-	long login_id1;
-	long login_id2;
+	int login_id1;
+	int login_id2;
 	char sex;// 'F','M','S'
 
 	char userid[NAME_LENGTH];

@@ -131,7 +131,7 @@ static void read_config(void) {
 		iter = db_iterator(pcg->db);
 		for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
 			config_setting_t *commands = group_settings->commands, *permissions = group_settings->permissions;
-			int count = 0, i;
+			int count = 0;
 
 			// Make sure there is "commands" group
 			if (commands == NULL)
@@ -209,15 +209,15 @@ static void read_config(void) {
 
 					// Copy settings (commands/permissions) that are not defined yet
 					if (inherited_group->commands != NULL) {
-						int i = 0, commands_count = config_setting_length(inherited_group->commands);
-						for (i = 0; i < commands_count; ++i)
-							config_setting_copy(commands, config_setting_get_elem(inherited_group->commands, i));
+						int k = 0, commands_count = config_setting_length(inherited_group->commands);
+						for (k = 0; k < commands_count; ++k)
+							config_setting_copy(commands, config_setting_get_elem(inherited_group->commands, k));
 					}
 
 					if (inherited_group->permissions != NULL) {
-						int i = 0, permissions_count = config_setting_length(inherited_group->permissions);
-						for (i = 0; i < permissions_count; ++i)
-							config_setting_copy(permissions, config_setting_get_elem(inherited_group->permissions, i));
+						int k = 0, permissions_count = config_setting_length(inherited_group->permissions);
+						for (k = 0; k < permissions_count; ++k)
+							config_setting_copy(permissions, config_setting_get_elem(inherited_group->permissions, k));
 					}
 
 					++done; // copied commands and permissions from one of inherited groups
@@ -241,7 +241,7 @@ static void read_config(void) {
 		iter = db_iterator(pcg->db);
 		for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
 			config_setting_t *permissions = group_settings->permissions;
-			int i, count = config_setting_length(permissions);
+			int count = config_setting_length(permissions);
 
 			for (i = 0; i < count; ++i) {
 				config_setting_t *perm = config_setting_get_elem(permissions, i);
@@ -261,20 +261,20 @@ static void read_config(void) {
 		// Fetch all groups and relevant config setting and send them
 		// to atcommand->load_group() for processing.
 		if (group_count > 0) {
-			int i = 0;
-			GroupSettings **groups = NULL;
+			GroupSettings **pc_groups = NULL;
 			config_setting_t **commands = NULL;
-			CREATE(groups, GroupSettings*, group_count);
+			CREATE(pc_groups, GroupSettings*, group_count);
 			CREATE(commands, config_setting_t*, group_count);
+			i = 0;
 			iter = db_iterator(pcg->db);
 			for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
-				groups[i] = group_settings;
+				pc_groups[i] = group_settings;
 				commands[i] = group_settings->commands;
 				i++;
 			}
-			atcommand->load_groups(groups, commands, group_count);
+			atcommand->load_groups(pc_groups, commands, group_count);
 			dbi_destroy(iter);
-			aFree(groups);
+			aFree(pc_groups);
 			aFree(commands);
 		}
 	}

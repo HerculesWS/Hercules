@@ -275,14 +275,14 @@ void script_reportfunc(struct script_state* st)
 /*==========================================
  * Output error message
  *------------------------------------------*/
-void disp_error_message2(const char *mes,const char *pos,int report)
-{
+static void disp_error_message2(const char *mes,const char *pos,int report) analyzer_noreturn;
+static void disp_error_message2(const char *mes,const char *pos,int report) {
 	script->error_msg = aStrdup(mes);
 	script->error_pos = pos;
 	script->error_report = report;
 	longjmp( script->error_jump, 1 );
 }
-#define disp_error_message(mes,pos) (script->disp_error_message2((mes),(pos),1))
+#define disp_error_message(mes,pos) (disp_error_message2((mes),(pos),1))
 
 void disp_warning_message(const char *mes, const char *pos) {
 	script->warning(script->parser_current_src,script->parser_current_file,script->parser_current_line,mes,pos);
@@ -728,7 +728,7 @@ const char* skip_word(const char* p) {
 /// @see skip_word
 /// @see script->add_str
 int add_word(const char* p) {
-	int len;
+	size_t len;
 	int i;
 
 	// Check for a word
@@ -1204,7 +1204,7 @@ const char* script_parse_subexpr(const char* p,int limit) {
 		}
 	}
 
-	if( (op=C_ADD_PRE,p[0]=='+'&&p[1]=='+') || (op=C_SUB_PRE,p[0]=='-'&&p[1]=='-') ) { // Pre ++ -- operators
+	if( (p[0]=='+' && p[1]=='+') /* C_ADD_PRE */ || (p[0]=='-'&&p[1]=='-') /* C_SUB_PRE */ ) { // Pre ++ -- operators
 		p=script->parse_variable(p);
 	} else if( (op=C_NEG,*p=='-') || (op=C_LNOT,*p=='!') || (op=C_NOT,*p=='~') ) { // Unary - ! ~ operators
 		p=script->parse_subexpr(p+1,11);
@@ -1459,7 +1459,7 @@ const char* parse_syntax(const char* p)
 				// check whether case label is integer or not
 				if(is_number(p)) {
 					//Numeric value
-					v = strtol(p,&np,0);
+					v = (int)strtol(p,&np,0);
 					if((*p == '-' || *p == '+') && ISDIGIT(p[1])) // pre-skip because '-' can not skip_word
 						p++;
 					p = script->skip_word(p);
@@ -1468,7 +1468,7 @@ const char* parse_syntax(const char* p)
 				} else {
 					//Check for constants
 					p2 = script->skip_word(p);
-					v = p2-p; // length of word at p2
+					v = (int)(size_t) (p2-p); // length of word at p2
 					memcpy(label,p,v);
 					label[v]='\0';
 					if( !script->get_constant(label, &v) )
@@ -1936,8 +1936,6 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		}
 		return p;
 	} else if(script->syntax.curly[pos].type == TYPE_DO) {
-		int l;
-		char label[256];
 		const char *p2;
 
 		if(script->syntax.curly[pos].flag) {
@@ -2023,10 +2021,7 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		script->set_label(l,script->pos,p);
 		script->syntax.curly_count--;
 		return p;
-	} else if(script->syntax.curly[script->syntax.curly_count-1].type == TYPE_USERFUNC) {
-		int pos = script->syntax.curly_count-1;
-		char label[256];
-		int l;
+	} else if(script->syntax.curly[pos].type == TYPE_USERFUNC) {
 		// Back
 		sprintf(label,"return;");
 		script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
@@ -2275,7 +2270,6 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 
 	if( setjmp( script->error_jump ) != 0 ) {
 		//Restore program state when script has problems. [from jA]
-		int i;
 		const int size = ARRAYLENGTH(script->syntax.curly);
 		if( script->error_report )
 			script->error(src,file,line,script->error_msg,script->error_pos);
@@ -6165,10 +6159,8 @@ BUILDIN(getitem)
  *------------------------------------------*/
 BUILDIN(getitem2)
 {
-	int nameid,amount,get_count,i,flag = 0, offset = 0;
+	int nameid,amount,i,flag = 0, offset = 0;
 	int iden,ref,attr,c1,c2,c3,c4, bound = 0;
-	struct item_data *item_data;
-	struct item item_tmp;
 	TBL_PC *sd;
 	struct script_data *data;
 	
@@ -6221,8 +6213,10 @@ BUILDIN(getitem2)
 	}
 	
 	if(nameid > 0) {
+		struct item item_tmp;
+		struct item_data *item_data = itemdb->exists(nameid);
+		int get_count;
 		memset(&item_tmp,0,sizeof(item_tmp));
-		item_data=itemdb->exists(nameid);
 		if (item_data == NULL)
 			return -1;
 		if(item_data->type==IT_WEAPON || item_data->type==IT_ARMOR){
@@ -9332,12 +9326,12 @@ BUILDIN(announce) {
 		}
 
 		if (fontColor)
-			clif->broadcast2(bl, mes, (int)strlen(mes)+1, strtol(fontColor, (char **)NULL, 0), fontType, fontSize, fontAlign, fontY, target);
+			clif->broadcast2(bl, mes, (int)strlen(mes)+1, (unsigned int)strtoul(fontColor, (char **)NULL, 0), fontType, fontSize, fontAlign, fontY, target);
 		else
 			clif->broadcast(bl, mes, (int)strlen(mes)+1, flag&BC_COLOR_MASK, target);
 	} else {
 		if (fontColor)
-			intif->broadcast2(mes, (int)strlen(mes)+1, strtol(fontColor, (char **)NULL, 0), fontType, fontSize, fontAlign, fontY);
+			intif->broadcast2(mes, (int)strlen(mes)+1, (unsigned int)strtoul(fontColor, (char **)NULL, 0), fontType, fontSize, fontAlign, fontY);
 		else
 			intif->broadcast(mes, (int)strlen(mes)+1, flag&BC_COLOR_MASK);
 	}
@@ -9356,7 +9350,7 @@ int buildin_announce_sub(struct block_list *bl, va_list ap)
 	short fontAlign = (short)va_arg(ap, int);
 	short fontY     = (short)va_arg(ap, int);
 	if (fontColor)
-		clif->broadcast2(bl, mes, len, strtol(fontColor, (char **)NULL, 0), fontType, fontSize, fontAlign, fontY, SELF);
+		clif->broadcast2(bl, mes, len, (unsigned int)strtoul(fontColor, (char **)NULL, 0), fontType, fontSize, fontAlign, fontY, SELF);
 	else
 		clif->broadcast(bl, mes, len, type, SELF);
 	return 0;
@@ -13502,7 +13496,7 @@ BUILDIN(insertchar)
 	if(index < 0)
 		index = 0;
 	else if(index > len)
-		index = len;
+		index = (int)len;
 	
 	output = (char*)aMalloc(len + 2);
 	
@@ -13685,9 +13679,9 @@ BUILDIN(implode)
 {
 	struct script_data* data = script_getdata(st, 2);
 	const char *glue = NULL, *name, *temp;
-	int32 glue_len = 0, array_size, id;
-	size_t len = 0;
-	int i, k = 0;
+	int32 array_size, id;
+	size_t len = 0, glue_len = 0, k = 0;
+	int i;
 	
 	TBL_PC* sd = NULL;
 	
@@ -13782,13 +13776,14 @@ BUILDIN(implode)
 //-------------------------------------------------------
 BUILDIN(sprintf)
 {
-    unsigned int len, argc = 0, arg = 0, buf2_len = 0;
+    unsigned int argc = 0, arg = 0;
     const char* format;
     char* p;
     char* q;
     char* buf  = NULL;
     char* buf2 = NULL;
     struct script_data* data;
+	size_t len, buf2_len = 0;
     StringBuf final_buf;
 	
     // Fetch init data
@@ -13913,7 +13908,7 @@ BUILDIN(sprintf)
 // Implements C sscanf.
 //-------------------------------------------------------
 BUILDIN(sscanf){
-    unsigned int argc, arg = 0, len;
+    unsigned int argc, arg = 0;
     struct script_data* data;
     struct map_session_data* sd = NULL;
     const char* str;
@@ -13924,6 +13919,7 @@ BUILDIN(sscanf){
     char* buf_p;
     char* ref_str = NULL;
     int ref_int;
+	size_t len;
 	
     // Get data
     str = script_getstr(st, 2);
@@ -16704,7 +16700,7 @@ BUILDIN(progressbar)
 	sd->progressbar.timeout = timer->gettick() + second*1000;
 	sd->state.workinprogress = 3;
 	
-	clif->progressbar(sd, strtol(color, (char **)NULL, 0), second);
+	clif->progressbar(sd, (unsigned int)strtoul(color, (char **)NULL, 0), second);
     return true;
 }
 
@@ -18034,7 +18030,8 @@ BUILDIN(instance_set_respawn) {
  * @return Whether the function was successfully added.
  */
 bool script_add_builtin(const struct script_function *buildin, bool override) {
-	int slen = 0, n = 0, offset = 0;
+	int n = 0, offset = 0;
+	size_t slen;
 	if( !buildin ) {
 		return false;
 	}
@@ -18769,7 +18766,6 @@ void script_defaults(void) {
 	script->reportsrc = script_reportsrc;
 	script->reportdata = script_reportdata;
 	script->reportfunc = script_reportfunc;
-	script->disp_error_message2 = disp_error_message2;
 	script->disp_warning_message = disp_warning_message;
 	script->check_event = check_event;
 	script->calc_hash = calc_hash;

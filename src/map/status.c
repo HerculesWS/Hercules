@@ -1418,34 +1418,28 @@ int status_percent_change(struct block_list *src,struct block_list *target,signe
 
 	st = status->get_status_data(target);
 
-
-	//It's safe now [MarkZD]
-	if (hp_rate > 99)
-		hp = st->hp;
-	else if (hp_rate > 0)
-		hp = st->hp>10000?
-		hp_rate*(st->hp/100):
-		((int64)hp_rate*st->hp)/100;
-	else if (hp_rate < -99)
-		hp = st->max_hp;
-	else if (hp_rate < 0)
-		hp = st->max_hp>10000?
-		(-hp_rate)*(st->max_hp/100):
-	((int64)-hp_rate*st->max_hp)/100;
+	if (hp_rate > 100)
+		hp_rate = 100;
+	else if (hp_rate < -100)
+		hp_rate = -100;
+	if (hp_rate > 0)
+		hp = APPLY_RATE(st->hp, hp_rate);
+	else
+		hp = APPLY_RATE(st->max_hp, -hp_rate);
 	if (hp_rate && !hp)
 		hp = 1;
 
 	if (flag == 2 && hp >= st->hp)
 		hp = st->hp-1; //Must not kill target.
 
-	if (sp_rate > 99)
-		sp = st->sp;
-	else if (sp_rate > 0)
-		sp = ((int64)sp_rate*st->sp)/100;
-	else if (sp_rate < -99)
-		sp = st->max_sp;
-	else if (sp_rate < 0)
-		sp = ((int64)-sp_rate)*st->max_sp/100;
+	if (sp_rate > 100)
+		sp_rate = 100;
+	else if (sp_rate < -100)
+		sp_rate = -100;
+	if (sp_rate > 0)
+		sp = APPLY_RATE(st->sp, sp_rate);
+	else
+		sp = APPLY_RATE(st->max_sp, -sp_rate);
 	if (sp_rate && !sp)
 		sp = 1;
 
@@ -1479,8 +1473,8 @@ int status_revive(struct block_list *bl, unsigned char per_hp, unsigned char per
 	if (st == &status->dummy)
 		return 0; //Invalid target.
 
-	hp = (int64)st->max_hp * per_hp/100;
-	sp = (int64)st->max_sp * per_sp/100;
+	hp = APPLY_RATE(st->max_hp, per_hp);
+	sp = APPLY_RATE(st->max_sp, per_sp);
 
 	if(hp > st->max_hp - st->hp)
 		hp = st->max_hp - st->hp;
@@ -2059,12 +2053,12 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 		mbl = map->id2bl(md->master_id);
 
 	if (flag&8 && mbl) {
-		struct status_data *mstatus;
-		if ( (mstatus = status->get_base_status(mbl)) ) {
-			if( battle_config.slaves_inherit_speed&(mstatus->mode&MD_CANMOVE?1:2) )
-				mstatus->speed = mstatus->speed;
-			if( mstatus->speed < 2 ) /* minimum for the unit to function properly */
-				mstatus->speed = 2;
+		struct status_data *masterstatus = status->get_base_status(mbl);
+		if ( masterstatus ) {
+			if( battle_config.slaves_inherit_speed&(masterstatus->mode&MD_CANMOVE?1:2) )
+				masterstatus->speed = masterstatus->speed;
+			if( masterstatus->speed < 2 ) /* minimum for the unit to function properly */
+				masterstatus->speed = 2;
 		}
 	}
 
@@ -2778,9 +2772,9 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	if(sd->hprate < 0)
 		sd->hprate = 0;
 	if(sd->hprate!=100)
-		bstatus->max_hp = (int64)bstatus->max_hp * sd->hprate/100;
+		bstatus->max_hp = APPLY_RATE(bstatus->max_hp, sd->hprate);
 	if(battle_config.hp_rate != 100)
-		bstatus->max_hp = (int64)bstatus->max_hp * battle_config.hp_rate/100;
+		bstatus->max_hp = APPLY_RATE(bstatus->max_hp, battle_config.hp_rate);
 
 	if(bstatus->max_hp > (unsigned int)battle_config.max_hp)
 		bstatus->max_hp = battle_config.max_hp;
@@ -2812,9 +2806,9 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	if(sd->sprate < 0)
 		sd->sprate = 0;
 	if(sd->sprate!=100)
-		bstatus->max_sp = (int64)bstatus->max_sp * sd->sprate/100;
+		bstatus->max_sp = APPLY_RATE(bstatus->max_sp, sd->sprate);
 	if(battle_config.sp_rate != 100)
-		bstatus->max_sp = (int64)bstatus->max_sp * battle_config.sp_rate/100;
+		bstatus->max_sp = APPLY_RATE(bstatus->max_sp, battle_config.sp_rate);
 
 	if(bstatus->max_sp > (unsigned int)battle_config.max_sp)
 		bstatus->max_sp = battle_config.max_sp;
@@ -2833,11 +2827,11 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 			&& battle_config.restart_hp_rate < 50)
 			bstatus->hp = bstatus->max_hp>>1;
 		else
-			bstatus->hp = (int64)bstatus->max_hp * battle_config.restart_hp_rate/100;
+			bstatus->hp = APPLY_RATE(bstatus->max_hp, battle_config.restart_hp_rate);
 		if(!bstatus->hp)
 			bstatus->hp = 1;
 
-		bstatus->sp = (int64)bstatus->max_sp * battle_config.restart_sp_rate /100;
+		bstatus->sp = APPLY_RATE(bstatus->max_sp, battle_config.restart_sp_rate);
 
 		if( !bstatus->sp ) /* the minimum for the respawn setting is SP:1 */
 			bstatus->sp = 1;
@@ -6573,10 +6567,8 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 		case SC_NIBELUNGEN:
 		case SC_INTOABYSS:
 		case SC_SIEGFRIED:
-			if( bl->type == BL_PC) { 
-				struct map_session_data *sd = BL_CAST(BL_PC,bl);
-				if (!sd->status.party_id) return 0;
-			}
+			if( sd && !sd->status.party_id )
+				return 0;
 			break;
 		case SC_ANGRIFFS_MODUS:
 		case SC_GOLDENE_FERSE:
@@ -7302,7 +7294,7 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				val2 = val1*20; //SP gained
 				break;
 			case SC_KYRIE:
-				val2 = (int64)st->max_hp * (val1 * 2 + 10) / 100; //%Max HP to absorb
+				val2 = APPLY_RATE(st->max_hp, (val1 * 2 + 10)); //%Max HP to absorb
 				val3 = (val1 / 2 + 5); //Hits
 				break;
 			case SC_MAGICPOWER:
@@ -9402,15 +9394,15 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 
 	case SC_BLADESTOP:
 		if(sce->val4) {
-			int tid = sce->val4;
-			struct block_list *tbl = map->id2bl(tid);
+			int target_id = sce->val4;
+			struct block_list *tbl = map->id2bl(target_id);
 			struct status_change *tsc = status->get_sc(tbl);
 			sce->val4 = 0;
 			if(tbl && tsc && tsc->data[SC_BLADESTOP]) {
 				tsc->data[SC_BLADESTOP]->val4 = 0;
 				status_change_end(tbl, SC_BLADESTOP, INVALID_TIMER);
 			}
-			clif->bladestop(bl, tid, 0);
+			clif->bladestop(bl, target_id, 0);
 		}
 		break;
 	case SC_DANCING:
@@ -9708,8 +9700,8 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 	case SC_CURSEDCIRCLE_TARGET:
 	{
 		struct block_list *src = map->id2bl(sce->val2);
-		struct status_change *sc = status->get_sc(src);
-		if( sc && sc->data[SC_CURSEDCIRCLE_ATKER] && --(sc->data[SC_CURSEDCIRCLE_ATKER]->val2) == 0 ){
+		struct status_change *ssc = status->get_sc(src);
+		if( ssc && ssc->data[SC_CURSEDCIRCLE_ATKER] && --(ssc->data[SC_CURSEDCIRCLE_ATKER]->val2) == 0 ){
 			status_change_end(src, SC_CURSEDCIRCLE_ATKER, INVALID_TIMER);
 			clif->bladestop(bl, sce->val2, 0);
 		}
@@ -9719,8 +9711,8 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		if( sce->val2 ){
 			struct block_list *src = map->id2bl(sce->val2);
 			if(src) {
-				struct status_change *sc = status->get_sc(src);
-				sc->bs_counter--;
+				struct status_change *ssc = status->get_sc(src);
+				ssc->bs_counter--;
 			}
 		}
 		break;
@@ -10977,7 +10969,7 @@ int status_get_matk(struct block_list *bl, int flag) {
 	st->matk_min = status_base_matk_min(st) + (sd?sd->bonus.ematk:0);
 	st->matk_max = status_base_matk_max(st) + (sd?sd->bonus.ematk:0);
 #endif
-	if (bl->type&BL_PC && sd->matk_rate != 100) {
+	if (sd && sd->matk_rate != 100) {
 		st->matk_max = st->matk_max * sd->matk_rate/100;
 		st->matk_min = st->matk_min * sd->matk_rate/100;
 	}

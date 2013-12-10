@@ -15,7 +15,6 @@
 	#include "../common/socket.h"
 	#include "../common/timer.h"
 	#include "../common/thread.h"
-	#include "../common/mempool.h"
 	#include "../common/sql.h"
 	#include "../config/core.h"
 	#include "../common/HPM.h"
@@ -328,7 +327,6 @@ int main (int argc, char **argv) {
 
 	Sql_Init();
 	rathread_init();
-	mempool_init();
 	DB->init();
 	signals_init();
 	
@@ -370,7 +368,6 @@ int main (int argc, char **argv) {
 	timer->final();
 	socket_final();
 	DB->final();
-	mempool_final();
 	rathread_final();
 #endif
 

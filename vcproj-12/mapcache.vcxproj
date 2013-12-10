@@ -135,6 +135,7 @@
     <ClCompile Include="..\src\common\showmsg.c" />
     <ClCompile Include="..\src\common\strlib.c" />
     <ClCompile Include="..\src\common\utils.c" />
+    <ClCompile Include="..\src\common\nullpo.c" />
     <ClCompile Include="..\src\tool\mapcache.c" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +150,7 @@
     <ClInclude Include="..\src\common\strlib.h" />
     <ClInclude Include="..\src\common\utils.h" />
     <ClInclude Include="..\src\common\winapi.h" />
+    <ClInclude Include="..\src\common\nullpo.h" />
     <ClInclude Include="..\src\config\renewal.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

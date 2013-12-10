@@ -335,11 +335,11 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 		if( atk_elem == ELE_FIRE && battle->get_current_skill(target) == GN_WALLOFTHORN ) {
 			struct skill_unit *su = (struct skill_unit*)target;
 			struct skill_unit_group *sg;
-			struct block_list *src;
+			struct block_list *sgsrc;
 
 			if( !su || !su->alive
 			 || (sg = su->group) == NULL || sg->val3 == -1
-			 || (src = map->id2bl(sg->src_id)) == NULL || status->isdead(src)
+			 || (sgsrc = map->id2bl(sg->src_id)) == NULL || status->isdead(sgsrc)
 			)
 				return 0;
 
@@ -347,7 +347,7 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 				int x,y;
 				x = sg->val3 >> 16;
 				y = sg->val3 & 0xffff;
-				skill->unitsetting(src,su->group->skill_id,su->group->skill_lv,x,y,1);
+				skill->unitsetting(sgsrc,su->group->skill_id,su->group->skill_lv,x,y,1);
 				sg->val3 = -1;
 				sg->limit = DIFF_TICK32(timer->gettick(),sg->tick)+300;
 			}
@@ -2332,11 +2332,12 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 						break;
 				case SR_RAMPAGEBLASTER:
 					skillratio += 20 * skill_lv * (sd?sd->spiritball_old:5) - 100;
-					if( sc && sc->data[SC_EXPLOSIONSPIRITS] ){
+					if( sc && sc->data[SC_EXPLOSIONSPIRITS] ) {
 						skillratio += sc->data[SC_EXPLOSIONSPIRITS]->val1 * 20;
 						RE_LVL_DMOD(120);
-					}else
+					} else {
 						RE_LVL_DMOD(150);
+					}
 					break;
 				case SR_KNUCKLEARROW:
 					if( flag&4 ){  // ATK [(Skill Level x 150) + (1000 x Target current weight / Maximum weight) + (Target Base Level x 5) x (Caster Base Level / 150)] %
@@ -2600,10 +2601,10 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if( sc->data[SC_SAFETYWALL] && (flag&(BF_SHORT|BF_MAGIC))==BF_SHORT )
 		{
 			struct skill_unit_group* group = skill->id2group(sc->data[SC_SAFETYWALL]->val3);
-			uint16 skill_id = sc->data[SC_SAFETYWALL]->val2;
+			uint16 src_skill_id = sc->data[SC_SAFETYWALL]->val2;
 			if (group) {
 				d->dmg_lv = ATK_BLOCK;
-				if(skill_id == MH_STEINWAND){
+				if(src_skill_id == MH_STEINWAND){
 				    if (--group->val2<=0)
 					    skill->del_unitgroup(group,ALC_MARK);
 				    return 0;
@@ -3638,12 +3639,12 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 					md.damage = 7 * md.damage / 20;
 				}*/
 			}else{
-				float vitfactor = 0.0f, temp;
+				float vitfactor = 0.0f, ftemp;
 				
 				if( (vitfactor=(status_get_vit(target)-120.0f)) > 0)
 					vitfactor = (vitfactor * (matk + atk) / 10) / status_get_vit(target);
-				temp = max(0, vitfactor) + (targetVit * (matk + atk)) / 10;
-				md.damage = (int64)(temp * 70 * skill_lv / 100);
+				ftemp = max(0, vitfactor) + (targetVit * (matk + atk)) / 10;
+				md.damage = (int64)(ftemp * 70 * skill_lv / 100);
 			}
 			md.damage -= totaldef;
 		}
@@ -4553,7 +4554,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					short index = sd?sd->equip_index[EQI_HAND_R]:0;
 					GET_NORMAL_ATTACK( (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0) );
 					wd.damage = wd.damage * 70 / 100;
-					n_ele = true;
+					//n_ele = true; // FIXME: This is has no effect if it's after GET_NORMAL_ATTACK (was this intended, or was it supposed to be put above?)
 					
 					if (sd && index >= 0 &&
 						sd->inventory_data[index] &&
@@ -5261,6 +5262,11 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 			delay += 100;/* gradual increase so the numbers don't clip in the client */
 		}
 	}
+
+#ifdef __clang_analyzer__
+	// Tell Clang's static analyzer that we want to += it even the value is currently unused (it'd be used if we added new checks)
+	(void)delay;
+#endif // __clang_analyzer
 	
 	/* something caused reflect */
 	if( trdamage ) {

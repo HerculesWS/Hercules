@@ -1121,8 +1121,10 @@ void  linkdb_foreach (struct linkdb_node** head, LinkDBFunc func, ...);
 #define VECTOR_ENSURE(__vec,__n,__step) \
 	do{ \
 		size_t _empty_ = VECTOR_CAPACITY(__vec)-VECTOR_LENGTH(__vec); \
-		while( (__n) > _empty_ ) _empty_ += (__step); \
-		if( _empty_ != VECTOR_CAPACITY(__vec)-VECTOR_LENGTH(__vec) ) VECTOR_RESIZE(__vec,_empty_+VECTOR_LENGTH(__vec)); \
+		if( (__n) > _empty_ ) { \
+			while( (__n) > _empty_ ) _empty_ += (__step); \
+			VECTOR_RESIZE(__vec,_empty_+VECTOR_LENGTH(__vec)); \
+		} \
 	}while(0)
 
 

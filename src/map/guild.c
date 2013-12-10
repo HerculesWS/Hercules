@@ -1594,10 +1594,10 @@ int guild_opposition(struct map_session_data *sd,struct map_session_data *tsd)
  * Notification of a relationship between 2 guilds
  *---------------------------------------------------*/
 int guild_allianceack(int guild_id1,int guild_id2,int account_id1,int account_id2,int flag,const char *name1,const char *name2) {
-	struct guild *g[2];
-	int guild_id[2];
-	const char *guild_name[2];
-	struct map_session_data *sd[2];
+	struct guild *g[2] = { NULL };
+	int guild_id[2] = { 0 };
+	const char *guild_name[2] = { NULL };
+	struct map_session_data *sd[2] = { NULL };
 	int j,i;
 
 	guild_id[0] = guild_id1;
@@ -1664,11 +1664,11 @@ int guild_allianceack(int guild_id1,int guild_id2,int account_id1,int account_id
 
 
 	for (i = 0; i < 2 - (flag & 1); i++) { // Retransmission of the relationship list to all members
-		struct map_session_data *sd;
+		struct map_session_data *msd;
 		if(g[i]!=NULL)
 			for(j=0;j<g[i]->max_member;j++)
-				if((sd=g[i]->member[j].sd)!=NULL)
-					clif->guild_allianceinfo(sd);
+				if((msd=g[i]->member[j].sd)!=NULL)
+					clif->guild_allianceinfo(msd);
 	}
 	return 0;
 }

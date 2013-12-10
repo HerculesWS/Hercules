@@ -140,8 +140,8 @@ static int waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data) 
 static int online_db_setoffline(DBKey key, DBData *data, va_list ap)
 {
 	struct online_login_data* p = DB->data2ptr(data);
-	int server = va_arg(ap, int);
-	if( server == -1 )
+	int server_id = va_arg(ap, int);
+	if( server_id == -1 )
 	{
 		p->char_server = -1;
 		if( p->waiting_disconnect != INVALID_TIMER )
@@ -150,7 +150,7 @@ static int online_db_setoffline(DBKey key, DBData *data, va_list ap)
 			p->waiting_disconnect = INVALID_TIMER;
 		}
 	}
-	else if( p->char_server == server )
+	else if( p->char_server == server_id )
 		p->char_server = -2; //Char server disconnected.
 	return 0;
 }
@@ -948,7 +948,7 @@ int mmo_auth_new(const char* userid, const char* pass, const char sex, const cha
 //-----------------------------------------------------
 int mmo_auth(struct login_session_data* sd, bool isServer) {
 	struct mmo_account acc;
-	int len;
+	size_t len;
 
 	char ip[16];
 	ip2str(session[sd->fd]->client_addr, ip);
@@ -1615,7 +1615,7 @@ int login_config_read(const char* cfgName)
 		else if(!strcmpi(w1, "check_client_version"))
 			login_config.check_client_version = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "client_version_to_connect"))
-			login_config.client_version_to_connect = strtoul(w2, NULL, 10);
+			login_config.client_version_to_connect = (unsigned int)strtoul(w2, NULL, 10);
 		else if(!strcmpi(w1, "use_MD5_passwords"))
 			login_config.use_md5_passwds = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "group_id_to_connect"))

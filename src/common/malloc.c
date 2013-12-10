@@ -669,7 +669,7 @@ void memmgr_report (int extra) {
 	struct {
 		const char *file;
 		unsigned short line;
-		unsigned int size;
+		size_t size;
 		unsigned int count;
 	} data[100];
 	memset(&data, 0, sizeof(data));

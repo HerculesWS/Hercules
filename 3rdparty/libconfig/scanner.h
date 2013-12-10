@@ -334,7 +334,7 @@ extern int libconfig_yylex \
 #undef YY_DECL
 #endif
 
-#line 205 "scanner.l"
+#line 209 "scanner.l"
 
 #line 340 "scanner.h"
 #undef libconfig_yyIN_HEADER

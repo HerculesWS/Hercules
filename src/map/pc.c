@@ -4437,7 +4437,6 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		return 0;
 
 	if( sd->inventory_data[n]->delay > 0 ) {
-		int i;
 		ARR_FIND(0, MAX_ITEMDELAYS, i, sd->item_delay[i].nameid == nameid );
 			if( i == MAX_ITEMDELAYS ) /* item not found. try first empty now */
 				ARR_FIND(0, MAX_ITEMDELAYS, i, !sd->item_delay[i].nameid );
@@ -4922,9 +4921,10 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 			if( i != sd->guild->instances ) {
 				m = instance->list[sd->guild->instance[i]].map[j];
 				map_index = map_id2index(m);
-				stop = true;
+				//stop = true; Uncomment if adding new checks
 			}
 		}
+
 		/* we hit a instance, if empty we populate the spawn data */
 		if( map->list[m].instance_id >= 0 && instance->list[map->list[m].instance_id].respawn.map == 0 &&
 		    instance->list[map->list[m].instance_id].respawn.x == 0 &&
@@ -6789,15 +6789,15 @@ void pc_damage(struct map_session_data *sd,struct block_list *src,unsigned int h
  * Invoked when a player has negative current hp
  *------------------------------------------*/
 int pc_dead(struct map_session_data *sd,struct block_list *src) {
-	int i=0,j=0,k=0;
+	int i=0,j=0;
 	int64 tick = timer->gettick();
 
-	for(k = 0; k < 5; k++)
-		if (sd->devotion[k]){
-			struct map_session_data *devsd = map->id2sd(sd->devotion[k]);
+	for(j = 0; j < 5; j++)
+		if (sd->devotion[j]){
+			struct map_session_data *devsd = map->id2sd(sd->devotion[j]);
 			if (devsd)
 				status_change_end(&devsd->bl, SC_DEVOTION, INVALID_TIMER);
-			sd->devotion[k] = 0;
+			sd->devotion[j] = 0;
 		}
 
 	if(sd->status.pet_id > 0 && sd->pd) {
@@ -7057,14 +7057,13 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			if(id == 0)
 				continue;
 			if(id == -1){
-				int eq_num=0,eq_n[MAX_INVENTORY];
+				int eq_num=0,eq_n[MAX_INVENTORY],k;
 				memset(eq_n,0,sizeof(eq_n));
 				for(i=0;i<MAX_INVENTORY;i++){
 					if( (type == 1 && !sd->status.inventory[i].equip)
 						|| (type == 2 && sd->status.inventory[i].equip)
 						||  type == 3)
 					{
-						int k;
 						ARR_FIND( 0, MAX_INVENTORY, k, eq_n[k] <= 0 );
 						if( k < MAX_INVENTORY )
 							eq_n[k] = i;
@@ -10206,7 +10205,7 @@ int pc_readdb(void) {
 			int stat;
 			if(line[0]=='/' && line[1]=='/')
 				continue;
-			if ((stat=strtoul(line,NULL,10))<0)
+			if ((stat=(int)strtol(line,NULL,10))<0)
 				stat=0;
 			if (i > MAX_LEVEL)
 				break;

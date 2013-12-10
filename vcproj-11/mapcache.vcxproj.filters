@@ -4,7 +4,7 @@
     <ClCompile Include="..\src\common\core.c">
       <Filter>common</Filter>
     </ClCompile>
-	<ClCompile Include="..\src\common\console.c">
+    <ClCompile Include="..\src\common\console.c">
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\des.c">
@@ -25,6 +25,9 @@
     <ClCompile Include="..\src\common\utils.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\common\nullpo.c">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\tool\mapcache.c">
       <Filter>mapcache</Filter>
     </ClCompile>
@@ -36,7 +39,7 @@
     <ClInclude Include="..\src\common\core.h">
       <Filter>common</Filter>
     </ClInclude>
-	<ClInclude Include="..\src\common\console.h">
+    <ClInclude Include="..\src\common\console.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\des.h">
@@ -61,6 +64,9 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\winapi.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\nullpo.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\config\renewal.h" />
