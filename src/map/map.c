@@ -695,7 +695,7 @@ int map_vforeachinrange(int (*func)(struct block_list*, va_list), struct block_l
 
 	va_copy(apcopy, ap);
 	returnCount = bl_vforeach(func, blockcount, INT_MAX, apcopy);
-	va_end(ap);
+	va_end(apcopy);
 
 	return returnCount;
 }
