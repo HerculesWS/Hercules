@@ -1925,7 +1925,7 @@ struct status_interface {
 	int (*calc_homunculus_) (struct homun_data *hd, enum e_status_calc_opt opt);
 	int (*calc_mercenary_) (struct mercenary_data *md, enum e_status_calc_opt opt);
 	int (*calc_elemental_) (struct elemental_data *ed, enum e_status_calc_opt opt);
-	void (*calc_misc) (struct block_list *bl, struct status_data *status, int level);
+	void (*calc_misc) (struct block_list *bl, struct status_data *st, int level);
 	void (*calc_regen) (struct block_list *bl, struct status_data *st, struct regen_data *regen);
 	void (*calc_regen_rate) (struct block_list *bl, struct regen_data *regen, struct status_change *sc);
 	int (*check_skilluse) (struct block_list *src, struct block_list *target, uint16 skill_id, int flag); // [Skotlex]

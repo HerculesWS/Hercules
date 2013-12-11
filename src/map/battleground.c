@@ -60,12 +60,12 @@ int bg_team_delete(int bg_id) {
 }
 
 /// Warps a Team
-int bg_team_warp(int bg_id, unsigned short mapindex, short x, short y) {
+int bg_team_warp(int bg_id, unsigned short map_index, short x, short y) {
 	int i;
 	struct battleground_data *bgd = bg->team_search(bg_id);
 	if( bgd == NULL ) return 0;
 	for( i = 0; i < MAX_BG_MEMBERS; i++ )
-		if( bgd->members[i].sd != NULL ) pc->setpos(bgd->members[i].sd, mapindex, x, y, CLR_TELEPORT);
+		if( bgd->members[i].sd != NULL ) pc->setpos(bgd->members[i].sd, map_index, x, y, CLR_TELEPORT);
 	return 1;
 }
 
@@ -168,14 +168,14 @@ int bg_member_respawn(struct map_session_data *sd) {
 	return 1; // Warped
 }
 
-int bg_create(unsigned short mapindex, short rx, short ry, const char *ev, const char *dev) {
+int bg_create(unsigned short map_index, short rx, short ry, const char *ev, const char *dev) {
 	struct battleground_data *bgd;
 	bg->team_counter++;
 
 	CREATE(bgd, struct battleground_data, 1);
 	bgd->bg_id = bg->team_counter;
 	bgd->count = 0;
-	bgd->mapindex = mapindex;
+	bgd->mapindex = map_index;
 	bgd->x = rx;
 	bgd->y = ry;
 	safestrncpy(bgd->logout_event, ev, sizeof(bgd->logout_event));

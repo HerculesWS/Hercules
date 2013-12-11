@@ -171,14 +171,14 @@ struct guild_castle* guild_castle_search(int gcid)
 }
 
 /// lookup: map index -> castle*
-struct guild_castle* guild_mapindex2gc(short mapindex)
+struct guild_castle* guild_mapindex2gc(short map_index)
 {
 	struct guild_castle* gc;
 	DBIterator *iter = db_iterator(guild->castle_db);
 
 	for( gc = dbi_first(iter); dbi_exists(iter); gc = dbi_next(iter) )
 	{
-		if( gc->mapindex == mapindex )
+		if( gc->mapindex == map_index )
 			break;
 	}
 	dbi_destroy(iter);

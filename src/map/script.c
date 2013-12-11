@@ -10506,7 +10506,7 @@ BUILDIN(setmapflagnosave) {
 	m = map->mapname2mapid(str);
 	map_index = mapindex->name2id(str2);
 	
-	if(m >= 0 && mapindex) {
+	if(m >= 0 && map_index) {
 		map->list[m].flag.nosave=1;
 		map->list[m].save.map=map_index;
 		map->list[m].save.x=x;
@@ -15839,13 +15839,13 @@ BUILDIN(readbook)
 BUILDIN(questinfo)
 {
 	struct npc_data *nd = map->id2nd(st->oid);
-	int quest, icon, job, color = 0;
+	int quest_id, icon, job, color = 0;
 	struct questinfo qi;
 
 	if( nd == NULL || nd->bl.m == -1 )
 		return true;
 
-	quest = script_getnum(st, 2);
+	quest_id = script_getnum(st, 2);
 	icon = script_getnum(st, 3);
 	
 	#if PACKETVER >= 20120410
@@ -15858,7 +15858,7 @@ BUILDIN(questinfo)
 			icon = icon + 1;
 	#endif
 	
-	qi.quest_id = quest;
+	qi.quest_id = quest_id;
 	qi.icon = (unsigned char)icon;
 	qi.nd = nd;
 		
@@ -16502,11 +16502,11 @@ BUILDIN(has_instance) {
 }
 int buildin_instance_warpall_sub(struct block_list *bl,va_list ap) {
 	struct map_session_data *sd = ((TBL_PC*)bl);
-	int mapindex = va_arg(ap,int);
+	int map_index = va_arg(ap,int);
 	int x = va_arg(ap,int);
 	int y = va_arg(ap,int);
 	
-	pc->setpos(sd,mapindex,x,y,CLR_TELEPORT);
+	pc->setpos(sd,map_index,x,y,CLR_TELEPORT);
 	
 	return 0;
 }
@@ -16515,7 +16515,7 @@ BUILDIN(instance_warpall) {
 	int instance_id = -1;
 	const char *mapn;
 	int x, y;
-	int mapindex;
+	int map_index;
 	
 	mapn = script_getstr(st,2);
 	x    = script_getnum(st,3);
@@ -16531,9 +16531,9 @@ BUILDIN(instance_warpall) {
 	if( (m = map->mapname2mapid(mapn)) < 0 || (map->list[m].flag.src4instance && (m = instance->mapid2imapid(m, instance_id)) < 0) )
 		return true;
 		
-	mapindex = map_id2index(m);
+	map_index = map_id2index(m);
 	
-	map->foreachininstance(script->buildin_instance_warpall_sub, instance_id, BL_PC,mapindex,x,y);
+	map->foreachininstance(script->buildin_instance_warpall_sub, instance_id, BL_PC,map_index,x,y);
 
 	return true;
 }

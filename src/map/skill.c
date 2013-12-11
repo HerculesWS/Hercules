@@ -9584,7 +9584,7 @@ int skill_castend_map (struct map_session_data *sd, uint16 skill_id, const char 
 				unsigned short map_index;
 
 				map_index = mapindex->name2id(mapname);
-				if(!mapindex) { //Given map not found?
+				if(!map_index) { //Given map not found?
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					skill_failed(sd);
 					return 0;

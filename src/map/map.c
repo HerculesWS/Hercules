@@ -2339,12 +2339,12 @@ int16 map_mapname2mapid(const char* name) {
 /*==========================================
  * Returns the map of the given mapindex. [Skotlex]
  *------------------------------------------*/
-int16 map_mapindex2mapid(unsigned short mapindex) {
+int16 map_mapindex2mapid(unsigned short map_index) {
 
-	if (!mapindex || mapindex > MAX_MAPINDEX)
+	if (!map_index || map_index > MAX_MAPINDEX)
 		return -1;
 
-	return map->index2mapid[mapindex];
+	return map->index2mapid[map_index];
 }
 
 /*==========================================
@@ -2816,15 +2816,15 @@ int map_eraseallipport(void) {
 /*==========================================
  * Delete mapindex from db of another map server
  *------------------------------------------*/
-int map_eraseipport(unsigned short mapindex, uint32 ip, uint16 port) {
+int map_eraseipport(unsigned short map_index, uint32 ip, uint16 port) {
 	struct map_data_other_server *mdos;
 
-	mdos = (struct map_data_other_server*)uidb_get(map->map_db,(unsigned int)mapindex);
+	mdos = (struct map_data_other_server*)uidb_get(map->map_db,(unsigned int)map_index);
 	if(!mdos || mdos->cell) //Map either does not exists or is a local map.
 		return 0;
 
 	if(mdos->ip==ip && mdos->port == port) {
-		uidb_remove(map->map_db,(unsigned int)mapindex);
+		uidb_remove(map->map_db,(unsigned int)map_index);
 		aFree(mdos);
 		return 1;
 	}

@@ -7959,11 +7959,11 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 					if (sd->mapindex != val2)
 					{
 						int pos = (bl->x&0xFFFF)|(bl->y<<16); /// Current Coordinates
-						int mapindex = sd->mapindex; /// Current Map
+						int map_index = sd->mapindex; /// Current Map
 						//1. Place in Jail (val2 -> Jail Map, val3 -> x, val4 -> y
 						pc->setpos(sd,(unsigned short)val2,val3,val4, CLR_TELEPORT);
 						//2. Set restore point (val3 -> return map, val4 return coords
-						val3 = mapindex;
+						val3 = map_index;
 						val4 = pos;
 					} else if (!val3 || val3 == sd->mapindex) { //Use save point.
 						val3 = sd->status.save_point.map;

@@ -447,7 +447,7 @@ int intif_party_leave(int party_id,int account_id, int char_id)
 
 // Request keeping party for new map ??
 int intif_party_changemap(struct map_session_data *sd,int online) {
-	int16 m, mapindex;
+	int16 m, map_index;
 
 	if (intif->CheckForCharServer())
 		return 0;
@@ -455,16 +455,16 @@ int intif_party_changemap(struct map_session_data *sd,int online) {
 		return 0;
 
 	if( (m=map->mapindex2mapid(sd->mapindex)) >= 0 && map->list[m].instance_id >= 0 )
-		mapindex = map_id2index(map->list[m].instance_src_map);
+		map_index = map_id2index(map->list[m].instance_src_map);
 	else
-		mapindex = sd->mapindex;
+		map_index = sd->mapindex;
 
 	WFIFOHEAD(inter_fd,19);
 	WFIFOW(inter_fd,0)=0x3025;
 	WFIFOL(inter_fd,2)=sd->status.party_id;
 	WFIFOL(inter_fd,6)=sd->status.account_id;
 	WFIFOL(inter_fd,10)=sd->status.char_id;
-	WFIFOW(inter_fd,14)=mapindex;
+	WFIFOW(inter_fd,14)=map_index;
 	WFIFOB(inter_fd,16)=online;
 	WFIFOW(inter_fd,17)=sd->status.base_level;
 	WFIFOSET(inter_fd,19);

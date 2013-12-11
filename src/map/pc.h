@@ -786,7 +786,7 @@ struct pc_interface {
 	int (*clean_skilltree) (struct map_session_data *sd);
 	
 	int (*setpos) (struct map_session_data* sd, unsigned short map_index, int x, int y, clr_type clrtype);
-	int (*setsavepoint) (struct map_session_data *sd, short mapindex,int x,int y);
+	int (*setsavepoint) (struct map_session_data *sd, short map_index, int x, int y);
 	int (*randomwarp) (struct map_session_data *sd,clr_type type);
 	int (*memo) (struct map_session_data* sd, int pos);
 	

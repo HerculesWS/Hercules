@@ -1871,7 +1871,7 @@ struct skill_interface {
 	int (*get_casttype) (uint16 skill_id);
 	int (*get_casttype2) (uint16 index);
 	int (*name2id) (const char* name);
-	int (*isammotype) (struct map_session_data *sd, int skill);
+	int (*isammotype) (struct map_session_data *sd, int skill_id);
 	int (*castend_id) (int tid, int64 tick, int id, intptr_t data);
 	int (*castend_pos) (int tid, int64 tick, int id, intptr_t data);
 	int (*castend_map) ( struct map_session_data *sd,uint16 skill_id, const char *mapname);

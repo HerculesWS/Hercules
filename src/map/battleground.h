@@ -94,12 +94,12 @@ struct battleground_interface {
 	struct battleground_data* (*team_search) (int bg_id);
 	struct map_session_data* (*getavailablesd) (struct battleground_data *bgd);
 	int (*team_delete) (int bg_id);
-	int (*team_warp) (int bg_id, unsigned short mapindex, short x, short y);
+	int (*team_warp) (int bg_id, unsigned short map_index, short x, short y);
 	int (*send_dot_remove) (struct map_session_data *sd);
 	int (*team_join) (int bg_id, struct map_session_data *sd);
 	int (*team_leave) (struct map_session_data *sd, int flag);
 	int (*member_respawn) (struct map_session_data *sd);
-	int (*create) (unsigned short mapindex, short rx, short ry, const char *ev, const char *dev);
+	int (*create) (unsigned short map_index, short rx, short ry, const char *ev, const char *dev);
 	int (*team_get_id) (struct block_list *bl);
 	int (*send_message) (struct map_session_data *sd, const char *mes, int len);
 	int (*send_xy_timer_sub) (DBKey key, DBData *data, va_list ap);

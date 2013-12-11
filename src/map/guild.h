@@ -83,7 +83,7 @@ struct guild_interface {
 	struct guild_castle *(*castle_search) (int gcid);
 	/* */
 	struct guild_castle *(*mapname2gc) (const char* mapname);
-	struct guild_castle *(*mapindex2gc) (short mapindex);
+	struct guild_castle *(*mapindex2gc) (short map_index);
 	/* */
 	struct map_session_data *(*getavailablesd) (struct guild *g);
 	int (*getindex) (struct guild *g,int account_id,int char_id);

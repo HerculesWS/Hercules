@@ -270,7 +270,7 @@ struct mob_interface {
 	int (*spawn_guardian_sub) (int tid, int64 tick, int id, intptr_t data);
 	int (*skill_id2skill_idx) (int class_, uint16 skill_id);
 	int (*db_searchname) (const char *str);
-	int (*db_searchname_array_sub) (struct mob_db *mob, const char *str, int flag);
+	int (*db_searchname_array_sub) (struct mob_db *monster, const char *str, int flag);
 	// MvP Tomb System
 	void (*mvptomb_create) (struct mob_data *md, char *killer, time_t time);
 	void (*mvptomb_destroy) (struct mob_data *md);

@@ -970,11 +970,11 @@ struct map_interface {
 	struct chat_data* (*id2cd) (int id);
 	struct block_list * (*id2bl) (int id);
 	bool (*blid_exists) (int id);
-	int16 (*mapindex2mapid) (unsigned short mapindex);
+	int16 (*mapindex2mapid) (unsigned short map_index);
 	int16 (*mapname2mapid) (const char* name);
 	int (*mapname2ipport) (unsigned short name, uint32* ip, uint16* port);
-	int (*setipport) (unsigned short mapindex, uint32 ip, uint16 port);
-	int (*eraseipport) (unsigned short mapindex, uint32 ip, uint16 port);
+	int (*setipport) (unsigned short map_index, uint32 ip, uint16 port);
+	int (*eraseipport) (unsigned short map_index, uint32 ip, uint16 port);
 	int (*eraseallipport) (void);
 	void (*addiddb) (struct block_list *bl);
 	void (*deliddb) (struct block_list *bl);
