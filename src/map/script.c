@@ -3685,7 +3685,7 @@ void run_script_main(struct script_state *st) {
 				break;
 		}
 		if( !st->freeloop && cmdcount>0 && (--cmdcount)<=0 ){
-			ShowError("run_script: infinity loop !\n");
+			ShowError("run_script: too many opeartions being processed non-stop !\n");
 			script->reportsrc(st);
 			st->state=END;
 		}
