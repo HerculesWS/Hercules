@@ -2940,6 +2940,7 @@ struct script_state* script_alloc_state(struct script_code* rootscript, int pos,
 	struct script_state* st;
 	
 	st = ers_alloc(script->st_ers, struct script_state);
+	memset(st, 0, sizeof(struct script_state));
 	st->stack = ers_alloc(script->stack_ers, struct script_stack);
 	st->stack->sp = 0;
 	st->stack->sp_max = 64;
