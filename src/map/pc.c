@@ -4216,6 +4216,11 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		return 0; // You cannot use this item while sitting.
 	}
 
+	if (sd->state.storage_flag && item->type != IT_CASH) {
+		clif->colormes(sd->fd, COLOR_RED, msg_txt(1475));
+		return 0; // You cannot use this item while storage is open.
+	}
+
 	switch( nameid ) { // TODO: Is there no better way to handle this, other than hardcoding item IDs?
 		case ITEMID_ANODYNE:
 			if( map_flag_gvg2(sd->bl.m) )
