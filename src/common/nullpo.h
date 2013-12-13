@@ -14,212 +14,73 @@
 #define NULLPO_CHECK
 #endif
 
-/*----------------------------------------------------------------------------
- * Macros
- *----------------------------------------------------------------------------
- */
-/*======================================
- * Nullチェック 及び 情報出力後 return
- *・展開するとifとかreturn等が出るので
- *  一行単体で使ってください。
- *・nullpo_ret(x = func());
- *  のような使用法も想定しています。
- *--------------------------------------
- * nullpo_ret(t)
- *   戻り値 0固定
- * [引数]
- *  t       チェック対象
- *--------------------------------------
- * nullpo_retv(t)
- *   戻り値 なし
- * [引数]
- *  t       チェック対象
- *--------------------------------------
- * nullpo_retr(ret, t)
- *   戻り値 指定
- * [引数]
- *  ret     return(ret);
- *  t       チェック対象
- *--------------------------------------
- * nullpo_ret_f(t, fmt, ...)
- *   詳細情報出力用
- *   戻り値 0
- * [引数]
- *  t       チェック対象
- *  fmt ... vprintfに渡される
- *    備考や関係変数の書き出しなどに
- *--------------------------------------
- * nullpo_retv_f(t, fmt, ...)
- *   詳細情報出力用
- *   戻り値 なし
- * [引数]
- *  t       チェック対象
- *  fmt ... vprintfに渡される
- *    備考や関係変数の書き出しなどに
- *--------------------------------------
- * nullpo_retr_f(ret, t, fmt, ...)
- *   詳細情報出力用
- *   戻り値 指定
- * [引数]
- *  ret     return(ret);
- *  t       チェック対象
- *  fmt ... vprintfに渡される
- *    備考や関係変数の書き出しなどに
- *--------------------------------------
- */
-
 #if defined(NULLPO_CHECK)
+/**
+ * Reports NULL pointer information if the passed pointer is NULL
+ *
+ * @param t pointer to check
+ * @return true if the passed pointer is NULL, false otherwise
+ */
+#define nullpo_chk(t) ( (t) != NULL ? false : (nullpo_info(NLP_MARK, #t), true) )
+#else // ! NULLPO_CHECK
+#define nullpo_chk(t) ((t), false)
+#endif // NULLPO_CHECK
 
+/**
+ * The following macros check for NULL pointers and return from the current
+ * function or block in case one is found.
+ *
+ * It is guaranteed that the argument is evaluated once and only once, so it
+ * is safe to call them as:
+ * nullpo_ret(x = func());
+ * The macros can be used safely in any context, as they expand to a do/while
+ * construct, except nullpo_retb, which expands to an if/else construct.
+ */
+
+/**
+ * Returns 0 if a NULL pointer is found.
+ *
+ * @param t pointer to check
+ */
 #define nullpo_ret(t) \
-	if (nullpo_chk(NLP_MARK, (void *)(t))) {return(0);}
+	do { if (nullpo_chk(t)) return(0); } while(0)
 
+/**
+ * Returns void if a NULL pointer is found.
+ *
+ * @param t pointer to check
+ */
 #define nullpo_retv(t) \
-	if (nullpo_chk(NLP_MARK, (void *)(t))) {return;}
+	do { if (nullpo_chk(t)) return; } while(0)
 
+/**
+ * Returns the given value if a NULL pointer is found.
+ *
+ * @param ret value to return
+ * @param t   pointer to check
+ */
 #define nullpo_retr(ret, t) \
-	if (nullpo_chk(NLP_MARK, (void *)(t))) {return(ret);}
+	do { if (nullpo_chk(t)) return(ret); } while(0)
 
+/**
+ * Breaks fromt he current loop/switch if a NULL pointer is found.
+ *
+ * @param t pointer to check
+ */
 #define nullpo_retb(t) \
-	if (nullpo_chk(NLP_MARK, (void *)(t))) {break;}
+	if (nullpo_chk(t)) break; else (void)0
 
-// 可変引数マクロに関する条件コンパイル
-#if __STDC_VERSION__ >= 199901L
-/* C99に対応 */
-#define nullpo_ret_f(t, fmt, ...) \
-	if (nullpo_chk_f(NLP_MARK, (void *)(t), (fmt), __VA_ARGS__)) {return(0);}
-
-#define nullpo_retv_f(t, fmt, ...) \
-	if (nullpo_chk_f(NLP_MARK, (void *)(t), (fmt), __VA_ARGS__)) {return;}
-
-#define nullpo_retr_f(ret, t, fmt, ...) \
-	if (nullpo_chk_f(NLP_MARK, (void *)(t), (fmt), __VA_ARGS__)) {return(ret);}
-
-#define nullpo_retb_f(t, fmt, ...) \
-	if (nullpo_chk_f(NLP_MARK, (void *)(t), (fmt), __VA_ARGS__)) {break;}
-
-#elif __GNUC__ >= 2
-/* GCC用 */
-#define nullpo_ret_f(t, fmt, args...) \
-	if (nullpo_chk_f(NLP_MARK, (void *)(t), (fmt), ## args)) {return(0);}
-
-#define nullpo_retv_f(t, fmt, args...) \
-	if (nullpo_chk_f(NLP_MARK, (void *)(t), (fmt), ## args)) {return;}
-
-#define nullpo_retr_f(ret, t, fmt, args...) \
-	if (nullpo_chk_f(NLP_MARK, (void *)(t), (fmt), ## args)) {return(ret);}
-
-#define nullpo_retb_f(t, fmt, args...) \
-	if (nullpo_chk_f(NLP_MARK, (void *)(t), (fmt), ## args)) {break;}
-
-#else
-
-/* その他の場合・・・ orz */
-
-#endif
-
-#else /* NULLPO_CHECK */
-/* No Nullpo check */
-
-// if((t)){;}
-// 良い方法が思いつかなかったので・・・苦肉の策です。
-// 一応ワーニングは出ないはず
-
-#define nullpo_ret(t) (void)(t)
-#define nullpo_retv(t) (void)(t)
-#define nullpo_retr(ret, t) (void)(t)
-#define nullpo_retb(t) (void)(t)
-
-// 可変引数マクロに関する条件コンパイル
-#if __STDC_VERSION__ >= 199901L
-/* C99に対応 */
-#define nullpo_ret_f(t, fmt, ...) (void)(t)
-#define nullpo_retv_f(t, fmt, ...) (void)(t)
-#define nullpo_retr_f(ret, t, fmt, ...) (void)(t)
-#define nullpo_retb_f(t, fmt, ...) (void)(t)
-
-#elif __GNUC__ >= 2
-/* GCC用 */
-#define nullpo_ret_f(t, fmt, args...) (void)(t)
-#define nullpo_retv_f(t, fmt, args...) (void)(t)
-#define nullpo_retr_f(ret, t, fmt, args...) (void)(t)
-#define nullpo_retb_f(t, fmt, args...) (void)(t)
-
-#else
-/* その他の場合・・・ orz */
-#endif
-
-#endif /* NULLPO_CHECK */
-
-/*----------------------------------------------------------------------------
- * Functions
- *----------------------------------------------------------------------------
+/**
+ * Reports NULL pointer information
+ *
+ * @param file       Source file where the error was detected
+ * @param line       Line
+ * @param func       Function
+ * @param targetname Name of the checked symbol
+ *
+ * It is possible to use the NLP_MARK macro that expands to:
+ *   __FILE__, __LINE__, __func__
  */
-/*======================================
- * nullpo_chk
- *   Nullチェック 及び 情報出力
- * [引数]
- *  file    __FILE__
- *  line    __LINE__
- *  func    __func__ (関数名)
- *    これらには NLP_MARK を使うとよい
- *  target  チェック対象
- * [返り値]
- *  0 OK
- *  1 NULL
- *--------------------------------------
- */
-int nullpo_chk(const char *file, int line, const char *func, const void *target);
-
-
-/*======================================
- * nullpo_chk_f
- *   Nullチェック 及び 詳細な情報出力
- * [引数]
- *  file    __FILE__
- *  line    __LINE__
- *  func    __func__ (関数名)
- *    これらには NLP_MARK を使うとよい
- *  target  チェック対象
- *  fmt ... vprintfに渡される
- *    備考や関係変数の書き出しなどに
- * [返り値]
- *  0 OK
- *  1 NULL
- *--------------------------------------
- */
-int nullpo_chk_f(const char *file, int line, const char *func, const void *target,
-                 const char *fmt, ...)
-                 __attribute__((format(printf,5,6)));
-
-
-/*======================================
- * nullpo_info
- *   nullpo情報出力
- * [引数]
- *  file    __FILE__
- *  line    __LINE__
- *  func    __func__ (関数名)
- *    これらには NLP_MARK を使うとよい
- *--------------------------------------
- */
-void nullpo_info(const char *file, int line, const char *func);
-
-
-/*======================================
- * nullpo_info_f
- *   nullpo詳細情報出力
- * [引数]
- *  file    __FILE__
- *  line    __LINE__
- *  func    __func__ (関数名)
- *    これらには NLP_MARK を使うとよい
- *  fmt ... vprintfに渡される
- *    備考や関係変数の書き出しなどに
- *--------------------------------------
- */
-void nullpo_info_f(const char *file, int line, const char *func, 
-                   const char *fmt, ...)
-                   __attribute__((format(printf,4,5)));
-
+void nullpo_info(const char *file, int line, const char *func, const char *targetname);
 
 #endif /* _NULLPO_H_ */
