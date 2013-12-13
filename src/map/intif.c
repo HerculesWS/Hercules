@@ -192,7 +192,7 @@ int intif_main_message(struct map_session_data* sd, const char* message)
 	snprintf( output, sizeof(output), msg_txt(386), sd->status.name, message );
 
 	// send the message using the inter-server broadcast service
-	intif_broadcast2( output, strlen(output) + 1, 0xFE000000, 0, 0, 0, 0 );
+	intif->broadcast2( output, strlen(output) + 1, 0xFE000000, 0, 0, 0, 0 );
 
 	// log the chat message
 	logs->chat( LOG_CHAT_MAINCHAT, 0, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, message );
@@ -1559,7 +1559,7 @@ void intif_parse_MailDelete(int fd) {
 		}
 
 		if( sd->mail.inbox.full )
-			intif_Mail_requestinbox(sd->status.char_id, 1); // Free space is available for new mails
+			intif->Mail_requestinbox(sd->status.char_id, 1); // Free space is available for new mails
 	}
 
 	clif->mail_delete(sd->fd, mail_id, failed);
@@ -1600,7 +1600,7 @@ void intif_parse_MailReturn(int fd) {
 		}
 
 		if( sd->mail.inbox.full )
-			intif_Mail_requestinbox(sd->status.char_id, 1); // Free space is available for new mails
+			intif->Mail_requestinbox(sd->status.char_id, 1); // Free space is available for new mails
 	}
 
 	clif->mail_return(sd->fd, mail_id, fail);
@@ -1797,7 +1797,7 @@ void intif_parse_AuctionClose(int fd) {
 	if( result == 0 ) {
 		// FIXME: Leeching off a parse function
 		clif->pAuction_cancelreg(fd, sd);
-		intif_Auction_requestlist(sd->status.char_id, 6, 0, "", 1);
+		intif->Auction_requestlist(sd->status.char_id, 6, 0, "", 1);
 	}
 }
 
@@ -1834,7 +1834,7 @@ void intif_parse_AuctionBid(int fd) {
 	}
 	if( result == 1 ) { // To update the list, display your buy list
 		clif->pAuction_cancelreg(fd, sd);
-		intif_Auction_requestlist(sd->status.char_id, 7, 0, "", 1);
+		intif->Auction_requestlist(sd->status.char_id, 7, 0, "", 1);
 	}
 }
 
