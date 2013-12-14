@@ -77,15 +77,6 @@ struct map_session_data* pc_get_dummy_sd(void)
 }
 
 /**
- * Gets player's group level.
- * @see pc_group_get_level()
- */
-int pc_get_group_level(struct map_session_data *sd)
-{
-	return pcg->get_level(sd->group);
-}
-
-/**
  * Sets player's group.
  * Caller should handle error (preferably display message and disconnect).
  * @param group_id Group ID
@@ -4210,7 +4201,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 	if( !item->script ) //if it has no script, you can't really consume it!
 		return 0;
 
-	if( (item->item_usage.flag&NOUSE_SITTING) && (pc_issit(sd) == 1) && (pc->get_group_level(sd) < item->item_usage.override) ) {
+	if( (item->item_usage.flag&NOUSE_SITTING) && (pc_issit(sd) == 1) && (pc_get_group_level(sd) < item->item_usage.override) ) {
 		clif->msgtable(sd->fd,0x297);
 		//clif->colormes(sd->fd,COLOR_WHITE,msg_txt(1474));
 		return 0; // You cannot use this item while sitting.
@@ -4539,7 +4530,7 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 		return 1;
 	}
 
-	if( !itemdb_cancartstore(item_data, pc->get_group_level(sd)) || (item_data->bound > IBT_ACCOUNT && !pc->can_give_bound_items(sd)))
+	if( !itemdb_cancartstore(item_data, pc_get_group_level(sd)) || (item_data->bound > IBT_ACCOUNT && !pc->can_give_bound_items(sd)))
  	{ // Check item trade restrictions	[Skotlex]
 		clif->message (sd->fd, msg_txt(264));
 		return 1;/* TODO: there is no official response to this? */
@@ -8070,7 +8061,7 @@ int pc_candrop(struct map_session_data *sd, struct item *item)
  		return 0;
 	if( !pc->can_give_items(sd) ) //check if this GM level can drop items
 		return 0;
-	return (itemdb_isdropable(item, pc->get_group_level(sd)));
+	return (itemdb_isdropable(item, pc_get_group_level(sd)));
 }
 
 /*==========================================
@@ -10472,7 +10463,6 @@ void pc_defaults(void) {
 
 	pc->get_dummy_sd = pc_get_dummy_sd;
 	pc->class2idx = pc_class2idx;
-	pc->get_group_level = pc_get_group_level;
 	pc->can_give_items = pc_can_give_items;
 	pc->can_give_bound_items = pc_can_give_bound_items;
 	

@@ -348,8 +348,8 @@ void trade_tradeadditem(struct map_session_data *sd, short index, short amount) 
 		return;
 
 	item = &sd->status.inventory[index];
-	src_lv = pc->get_group_level(sd);
-	dst_lv = pc->get_group_level(target_sd);
+	src_lv = pc_get_group_level(sd);
+	dst_lv = pc_get_group_level(target_sd);
 	if( !itemdb_cantrade(item, src_lv, dst_lv) && //Can't trade
 		(pc->get_partner(sd) != target_sd || !itemdb_canpartnertrade(item, src_lv, dst_lv)) ) //Can't partner-trade
 	{

@@ -1805,7 +1805,7 @@ void clif_selllist(struct map_session_data *sd)
 	{
 		if( sd->status.inventory[i].nameid > 0 && sd->inventory_data[i] )
 		{
-			if( !itemdb_cansell(&sd->status.inventory[i], pc->get_group_level(sd)) )
+			if( !itemdb_cansell(&sd->status.inventory[i], pc_get_group_level(sd)) )
 				continue;
 
 			if( sd->status.inventory[i].expire_time )
@@ -5855,7 +5855,7 @@ void clif_wis_message(int fd, const char* nick, const char* mes, size_t mes_len)
 	WFIFOW(fd,0) = 0x97;
 	WFIFOW(fd,2) = mes_len + NAME_LENGTH + 8;
 	safestrncpy((char*)WFIFOP(fd,4), nick, NAME_LENGTH);
-	WFIFOL(fd,28) = (ssd && pc->get_group_level(ssd) == 99) ? 1 : 0; // isAdmin; if nonzero, also displays text above char
+	WFIFOL(fd,28) = (ssd && pc_get_group_level(ssd) == 99) ? 1 : 0; // isAdmin; if nonzero, also displays text above char
 	safestrncpy((char*)WFIFOP(fd,32), mes, mes_len);
 	WFIFOSET(fd,WFIFOW(fd,2));
 #endif
@@ -9749,7 +9749,7 @@ void clif_parse_GetCharNameRequest(int fd, struct map_session_data *sd) {
 	sc = status->get_sc(bl);
 	if (sc && sc->option&OPTION_INVISIBLE && !disguised(bl) &&
 		bl->type != BL_NPC && //Skip hidden NPCs which can be seen using Maya Purple
-		pc->get_group_level(sd) < battle_config.hack_info_GM_level
+		pc_get_group_level(sd) < battle_config.hack_info_GM_level
 	) {
 		char gm_msg[256];
 		sprintf(gm_msg, "Hack on NameRequest: character '%s' (account: %d) requested the name of an invisible target (id: %d).\n", sd->status.name, sd->status.account_id, id);
@@ -10406,8 +10406,8 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 	}
 
 	// if player ignores everyone
-	if (dstsd->state.ignoreAll && pc->get_group_level(sd) <= pc->get_group_level(dstsd)) {
-		if (dstsd->sc.option & OPTION_INVISIBLE && pc->get_group_level(sd) < pc->get_group_level(dstsd))
+	if (dstsd->state.ignoreAll && pc_get_group_level(sd) <= pc_get_group_level(dstsd)) {
+		if (dstsd->sc.option & OPTION_INVISIBLE && pc_get_group_level(sd) < pc_get_group_level(dstsd))
 			clif->wis_end(fd, 1); // 1: target character is not logged in
 		else
 			clif->wis_end(fd, 3); // 3: everyone ignored by target
@@ -10422,7 +10422,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 		return;
 	}
 
-	if( pc->get_group_level(sd) <= pc->get_group_level(dstsd) ) {
+	if( pc_get_group_level(sd) <= pc_get_group_level(dstsd) ) {
 		// if player ignores the source character
 		ARR_FIND(0, MAX_IGNORE_LIST, i, dstsd->ignore[i].name[0] == '\0' || strcmp(dstsd->ignore[i].name, sd->status.name) == 0);
 		if(i < MAX_IGNORE_LIST && dstsd->ignore[i].name[0] != '\0') { // source char present in ignore list
@@ -13615,7 +13615,7 @@ void clif_parse_GMReqNoChat(int fd,struct map_session_data *sd) {
 	if (type == 2) {
 		if (!battle_config.client_accept_chatdori)
 			return;
-		if (pc->get_group_level(sd) > 0 || sd->bl.id != id)
+		if (pc_get_group_level(sd) > 0 || sd->bl.id != id)
 			return;
 
 		value = battle_config.client_accept_chatdori;
@@ -13626,7 +13626,7 @@ void clif_parse_GMReqNoChat(int fd,struct map_session_data *sd) {
 			return;
 	}
 	
-	if (type == 2 || ( (pc->get_group_level(sd)) > pc->get_group_level(dstsd) && !pc->can_use_command(sd, "@mute"))) {
+	if (type == 2 || ( (pc_get_group_level(sd)) > pc_get_group_level(dstsd) && !pc->can_use_command(sd, "@mute"))) {
 		clif->manner_message(sd, 0);
 		clif->manner_message(dstsd, 5);
 
@@ -14584,7 +14584,7 @@ void clif_parse_Check(int fd, struct map_session_data *sd)
 
 	safestrncpy(charname, (const char*)RFIFOP(fd,packet_db[RFIFOW(fd,0)].pos[0]), sizeof(charname));
 
-	if( ( pl_sd = map->nick2sd(charname) ) == NULL || pc->get_group_level(sd) < pc->get_group_level(pl_sd) ) {
+	if( ( pl_sd = map->nick2sd(charname) ) == NULL || pc_get_group_level(sd) < pc_get_group_level(pl_sd) ) {
 		return;
 	}
 
@@ -15173,7 +15173,7 @@ void clif_parse_Auction_setitem(int fd, struct map_session_data *sd)
 
 	if( !pc->can_give_items(sd) || sd->status.inventory[idx].expire_time ||
 			!sd->status.inventory[idx].identify ||
-				!itemdb_canauction(&sd->status.inventory[idx],pc->get_group_level(sd)) || // Quest Item or something else
+				!itemdb_canauction(&sd->status.inventory[idx],pc_get_group_level(sd)) || // Quest Item or something else
 					(sd->status.inventory[idx].bound && !pc->can_give_bound_items(sd)) ) {
  		clif->auction_setitem(sd->fd, idx, true);
 		return;
@@ -17956,7 +17956,7 @@ void clif_parse_GMFullStrip(int fd, struct map_session_data *sd) {
 	int i;
 	
 	/* TODO maybe this could be a new permission? using gm level in the meantime */
-	if( !tsd || pc->get_group_level(tsd) >= pc->get_group_level(sd) )
+	if( !tsd || pc_get_group_level(tsd) >= pc_get_group_level(sd) )
 		return;
 	
 	for( i = 0; i < EQI_MAX; i++ ) {

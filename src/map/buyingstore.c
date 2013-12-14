@@ -123,7 +123,7 @@ void buyingstore_create(struct map_session_data* sd, int zenylimit, unsigned cha
 			break;
 		}
 
-		if( !id->flag.buyingstore || !itemdb->cantrade_sub(id, pc->get_group_level(sd), pc->get_group_level(sd)) || ( idx = pc->search_inventory(sd, nameid) ) == -1 )
+		if( !id->flag.buyingstore || !itemdb->cantrade_sub(id, pc_get_group_level(sd), pc_get_group_level(sd)) || ( idx = pc->search_inventory(sd, nameid) ) == -1 )
 		{// restrictions: allowed, no character-bound items and at least one must be owned
 			break;
 		}
@@ -290,7 +290,7 @@ void buyingstore_trade(struct map_session_data* sd, int account_id, unsigned int
 			return;
 		}
 
-		if( sd->status.inventory[index].expire_time || (sd->status.inventory[index].bound && !pc->can_give_bound_items(sd)) || !itemdb_cantrade(&sd->status.inventory[index], pc->get_group_level(sd), pc->get_group_level(pl_sd)) || memcmp(sd->status.inventory[index].card, buyingstore->blankslots, sizeof(buyingstore->blankslots)) )
+		if( sd->status.inventory[index].expire_time || (sd->status.inventory[index].bound && !pc->can_give_bound_items(sd)) || !itemdb_cantrade(&sd->status.inventory[index], pc_get_group_level(sd), pc_get_group_level(pl_sd)) || memcmp(sd->status.inventory[index].card, buyingstore->blankslots, sizeof(buyingstore->blankslots)) )
  		{// non-tradable item
 			clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, nameid);
 			return;

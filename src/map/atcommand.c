@@ -398,7 +398,7 @@ ACMD(mapmove) {
 		return false;
 	}
 	
-	if ((x || y) && map->getcell(m, x, y, CELL_CHKNOPASS) && pc->get_group_level(sd) < battle_config.gm_ignore_warpable_area) {
+	if ((x || y) && map->getcell(m, x, y, CELL_CHKNOPASS) && pc_get_group_level(sd) < battle_config.gm_ignore_warpable_area) {
 		//This is to prevent the pc->setpos call from printing an error.
 		clif->message(fd, msg_txt(2));
 		if (!map->search_freecell(NULL, m, &x, &y, 10, 10, 1))
@@ -437,7 +437,7 @@ ACMD(where) {
 	pl_sd = map->nick2sd(atcmd_player_name);
 	if (pl_sd == NULL ||
 	    strncmp(pl_sd->status.name, atcmd_player_name, NAME_LENGTH) != 0 ||
-	    (pc->has_permission(pl_sd, PC_PERM_HIDE_SESSION) && pc->get_group_level(pl_sd) > pc->get_group_level(sd) && !pc->has_permission(sd, PC_PERM_WHO_DISPLAY_AID))
+	    (pc->has_permission(pl_sd, PC_PERM_HIDE_SESSION) && pc_get_group_level(pl_sd) > pc_get_group_level(sd) && !pc->has_permission(sd, PC_PERM_WHO_DISPLAY_AID))
 		) {
 		clif->message(fd, msg_txt(3)); // Character not found.
 		return false;
@@ -554,12 +554,12 @@ ACMD(who) {
 	else if (stristr(info->command, "3") != NULL)
 		display_type = 3;
 	
-	level = pc->get_group_level(sd);
+	level = pc_get_group_level(sd);
 	StrBuf->Init(&buf);
 	
 	iter = mapit_getallusers();
 	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter))	{
-		if (!((pc->has_permission(pl_sd, PC_PERM_HIDE_SESSION) || (pl_sd->sc.option & OPTION_INVISIBLE)) && pc->get_group_level(pl_sd) > level)) { // you can look only lower or same level
+		if (!((pc->has_permission(pl_sd, PC_PERM_HIDE_SESSION) || (pl_sd->sc.option & OPTION_INVISIBLE)) && pc_get_group_level(pl_sd) > level)) { // you can look only lower or same level
 			if (stristr(pl_sd->status.name, player_name) == NULL // search with no case sensitive
 				|| (map_id >= 0 && pl_sd->bl.m != map_id))
 				continue;
@@ -646,12 +646,12 @@ ACMD(whogm)
 		match_text[j] = TOLOWER(match_text[j]);
 	
 	count = 0;
-	level = pc->get_group_level(sd);
+	level = pc_get_group_level(sd);
 	
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
-		pl_level = pc->get_group_level(pl_sd);
+		pl_level = pc_get_group_level(pl_sd);
 		if (!pl_level)
 			continue;
 		
@@ -2674,7 +2674,7 @@ ACMD(recall) {
 		return false;
 	}
 	
-	if ( pc->get_group_level(sd) < pc->get_group_level(pl_sd) )
+	if ( pc_get_group_level(sd) < pc_get_group_level(pl_sd) )
 	{
 		clif->message(fd, msg_txt(81)); // Your GM level doesn't authorize you to preform this action on the specified player.
 		return false;
@@ -2895,7 +2895,7 @@ ACMD(doom)
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
-		if (pl_sd->fd != fd && pc->get_group_level(sd) >= pc->get_group_level(pl_sd))
+		if (pl_sd->fd != fd && pc_get_group_level(sd) >= pc_get_group_level(pl_sd))
 		{
 			status_kill(&pl_sd->bl);
 			clif->specialeffect(&pl_sd->bl,450,AREA);
@@ -2920,7 +2920,7 @@ ACMD(doommap)
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
-		if (pl_sd->fd != fd && sd->bl.m == pl_sd->bl.m && pc->get_group_level(sd) >= pc->get_group_level(pl_sd))
+		if (pl_sd->fd != fd && sd->bl.m == pl_sd->bl.m && pc_get_group_level(sd) >= pc_get_group_level(pl_sd))
 		{
 			status_kill(&pl_sd->bl);
 			clif->specialeffect(&pl_sd->bl,450,AREA);
@@ -3002,7 +3002,7 @@ ACMD(kick)
 		return false;
 	}
 	
-	if ( pc->get_group_level(sd) < pc->get_group_level(pl_sd) )
+	if ( pc_get_group_level(sd) < pc_get_group_level(pl_sd) )
 	{
 		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
 		return false;
@@ -3024,7 +3024,7 @@ ACMD(kickall)
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
-		if (pc->get_group_level(sd) >= pc->get_group_level(pl_sd)) { // you can kick only lower or same gm level
+		if (pc_get_group_level(sd) >= pc_get_group_level(pl_sd)) { // you can kick only lower or same gm level
 			if (sd->status.account_id != pl_sd->status.account_id)
 				clif->GM_kick(NULL, pl_sd);
 		}
@@ -3360,7 +3360,7 @@ ACMD(recallall)
 	count = 0;
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) ) {
-		if (sd->status.account_id != pl_sd->status.account_id && pc->get_group_level(sd) >= pc->get_group_level(pl_sd)) {
+		if (sd->status.account_id != pl_sd->status.account_id && pc_get_group_level(sd) >= pc_get_group_level(pl_sd)) {
 			if (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y)
 				continue; // Don't waste time warping the character to the same place.
 			if (pl_sd->bl.m >= 0 && map->list[pl_sd->bl.m].flag.nowarp && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE))
@@ -3422,7 +3422,7 @@ ACMD(guildrecall)
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
 	{
 		if (sd->status.account_id != pl_sd->status.account_id && pl_sd->status.guild_id == g->guild_id) {
-			if (pc->get_group_level(pl_sd) > pc->get_group_level(sd) || (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y))
+			if (pc_get_group_level(pl_sd) > pc_get_group_level(sd) || (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y))
 				continue; // Skip GMs greater than you...             or chars already on the cell
 			if (pl_sd->bl.m >= 0 && map->list[pl_sd->bl.m].flag.nowarp && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE))
 				count++;
@@ -3478,7 +3478,7 @@ ACMD(partyrecall)
 	iter = mapit_getallusers();
 	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) ) {
 		if (sd->status.account_id != pl_sd->status.account_id && pl_sd->status.party_id == p->party.party_id) {
-			if (pc->get_group_level(pl_sd) > pc->get_group_level(sd) || (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y))
+			if (pc_get_group_level(pl_sd) > pc_get_group_level(sd) || (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y))
 				continue; // Skip GMs greater than you...             or chars already on the cell
 			if (pl_sd->bl.m >= 0 && map->list[pl_sd->bl.m].flag.nowarp && !pc->has_permission(sd, PC_PERM_WARP_ANYWHERE))
 				count++;
@@ -4106,7 +4106,7 @@ ACMD(nuke) {
 	}
 	
 	if ((pl_sd = map->nick2sd(atcmd_player_name)) != NULL) {
-		if (pc->get_group_level(sd) >= pc->get_group_level(pl_sd)) { // you can kill only lower or same GM level
+		if (pc_get_group_level(sd) >= pc_get_group_level(pl_sd)) { // you can kill only lower or same GM level
 			skill->castend_nodamage_id(&pl_sd->bl, &pl_sd->bl, NPC_SELFDESTRUCTION, 99, timer->gettick(), 0);
 			clif->message(fd, msg_txt(109)); // Player has been nuked!
 		} else {
@@ -4390,7 +4390,7 @@ ACMD(jail) {
 		return false;
 	}
 	
-	if (pc->get_group_level(sd) < pc->get_group_level(pl_sd))
+	if (pc_get_group_level(sd) < pc_get_group_level(pl_sd))
   	{ // you can jail only lower or same GM
 		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
 		return false;
@@ -4441,7 +4441,7 @@ ACMD(unjail) {
 		return false;
 	}
 	
-	if (pc->get_group_level(sd) < pc->get_group_level(pl_sd)) { // you can jail only lower or same GM
+	if (pc_get_group_level(sd) < pc_get_group_level(pl_sd)) { // you can jail only lower or same GM
 		
 		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
 		return false;
@@ -4519,7 +4519,7 @@ ACMD(jailfor) {
 		return false;
 	}
 	
-	if (pc->get_group_level(pl_sd) > pc->get_group_level(sd)) {
+	if (pc_get_group_level(pl_sd) > pc_get_group_level(sd)) {
 		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
 		return false;
 	}
@@ -5263,7 +5263,7 @@ ACMD(useskill) {
 		return false;
 	}
 	
-	if ( pc->get_group_level(sd) < pc->get_group_level(pl_sd) )
+	if ( pc_get_group_level(sd) < pc_get_group_level(pl_sd) )
 	{
 		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
 		return false;
@@ -6415,7 +6415,7 @@ ACMD(mute) {
 		return false;
 	}
 	
-	if ( pc->get_group_level(sd) < pc->get_group_level(pl_sd) )
+	if ( pc_get_group_level(sd) < pc_get_group_level(pl_sd) )
 	{
 		clif->message(fd, msg_txt(81)); // Your GM level don't authorise you to do this action on this player.
 		return false;
@@ -7218,7 +7218,7 @@ int atcommand_mutearea_sub(struct block_list *bl,va_list ap)
 	id = va_arg(ap, int);
 	time = va_arg(ap, int);
 	
-	if (id != bl->id && !pc->get_group_level(pl_sd)) {
+	if (id != bl->id && !pc_get_group_level(pl_sd)) {
 		pl_sd->status.manner -= time;
 		if (pl_sd->status.manner < 0)
 			sc_start(&pl_sd->bl,SC_NOCHAT,100,0,0);
@@ -7801,7 +7801,7 @@ ACMD(clone) {
 		return true;
 	}
 	
-	if(pc->get_group_level(pl_sd) > pc->get_group_level(sd)) {
+	if(pc_get_group_level(pl_sd) > pc_get_group_level(sd)) {
 		clif->message(fd, msg_txt(126));	// Cannot clone a player of higher GM level than yourself.
 		return true;
 	}
@@ -8376,7 +8376,7 @@ ACMD(accinfo) {
 	//remove const type
 	safestrncpy(query, message, NAME_LENGTH);
 	
-	intif->request_accinfo( sd->fd, sd->bl.id, pc->get_group_level(sd), query );
+	intif->request_accinfo( sd->fd, sd->bl.id, pc_get_group_level(sd), query );
 	
 	return true;
 }
@@ -9770,7 +9770,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 	// 1 = player invoked
 	if ( type == 1) {
 		//Commands are disabled on maps flagged as 'nocommand'
-		if ( map->list[sd->bl.m].nocommand && pc->get_group_level(sd) < map->list[sd->bl.m].nocommand ) {
+		if ( map->list[sd->bl.m].nocommand && pc_get_group_level(sd) < map->list[sd->bl.m].nocommand ) {
 			clif->message(fd, msg_txt(143));
 			return false;
 		}
@@ -9805,7 +9805,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 				break;
 			}
 
-			if( !pc->get_group_level(sd) ) {
+			if( !pc_get_group_level(sd) ) {
 				if( x >= 1 || y >= 1 ) { /* we have command */
 					info = atcommand->get_info_byname(atcommand->check_alias(command + 1));
 					if( !info || info->char_groups[pcg->get_idx(sd->group)] == 0 ) /* if we can't use or doesn't exist: don't even display the command failed message */
@@ -9848,8 +9848,8 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 		if( binding != NULL
 		 && binding->npc_event[0]
 		 && (
-		       (*atcmd_msg == atcommand->at_symbol && pc->get_group_level(sd) >= binding->group_lv)
-		    || (*atcmd_msg == atcommand->char_symbol && pc->get_group_level(sd) >= binding->group_lv_char)
+		       (*atcmd_msg == atcommand->at_symbol && pc_get_group_level(sd) >= binding->group_lv)
+		    || (*atcmd_msg == atcommand->char_symbol && pc_get_group_level(sd) >= binding->group_lv_char)
 		    )
 		) {
 			// Check if self or character invoking; if self == character invoked, then self invoke.
@@ -9876,7 +9876,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 	//Grab the command information and check for the proper GM level required to use it or if the command exists
 	info = atcommand->get_info_byname(atcommand->check_alias(command + 1));
 	if (info == NULL) {
-		if( pc->get_group_level(sd) ) { // TODO: remove or replace with proper permission
+		if( pc_get_group_level(sd) ) { // TODO: remove or replace with proper permission
 			sprintf(output, msg_txt(153), command); // "%s is Unknown Command."
 			clif->message(fd, output);
 			atcommand->get_suggestions(sd, command + 1, *message == atcommand->at_symbol);
@@ -9898,7 +9898,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 		}
 		for(i = 0; i < map->list[sd->bl.m].zone->disabled_commands_count; i++) {
 			if( info->func == map->list[sd->bl.m].zone->disabled_commands[i]->cmd ) {
-				if( pc->get_group_level(sd) < map->list[sd->bl.m].zone->disabled_commands[i]->group_lv ) {
+				if( pc_get_group_level(sd) < map->list[sd->bl.m].zone->disabled_commands[i]->group_lv ) {
 					clif->colormes(sd->fd,COLOR_RED,"This command is disabled in this area");
 					return true;
 				} else

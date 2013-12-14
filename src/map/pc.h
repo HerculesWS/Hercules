@@ -684,6 +684,8 @@ enum equip_pos {
 #define pc_readaccountreg2str(sd,reg)    (pc->readregistry_str((sd),(reg),1))
 #define pc_setaccountreg2str(sd,reg,val) (pc->setregistry_str((sd),(reg),(val),1))
 
+#define pc_get_group_level(sd) ( (sd)->group->level )
+
 struct skill_tree_entry {
 	short id;
 	unsigned short idx;
@@ -754,7 +756,6 @@ struct pc_interface {
 	
 	struct map_session_data* (*get_dummy_sd) (void);
 	int (*class2idx) (int class_);
-	int (*get_group_level) (struct map_session_data *sd);
 	//int (*getrefinebonus) (int lv,int type); FIXME: This function does not exist, nor it is ever called
 	bool (*can_give_items) (struct map_session_data *sd);
 	bool (*can_give_bound_items) (struct map_session_data *sd);
