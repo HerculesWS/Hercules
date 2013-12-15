@@ -1120,6 +1120,7 @@ From here on, we will have the commands sorted as follow:
 9.- Battleground commands.
 10.- Mercenary commands.
 11.- Queue commands.
+12.- Party commands.
 
 
 =====================
@@ -8383,7 +8384,6 @@ If the character does not have a mercenary, the command returns ""
 for name and 0 for all other types.
 
 ----------------------------------------
-
 ======================
 |11.- Queue Commands.|
 ======================
@@ -8471,3 +8471,85 @@ Deletes a queue iterator from memory and returns 1 when it fails,
 otherwise 0 is returned.
 
 ---------------------------------------
+======================
+|12.- Party commands.|
+======================
+---------------------------------------
+
+*party_create("<party name>"{,<character id>{,<item share>,<item share type>}});
+
+Organizes a party with the attached or specified character as leader. If
+successful, the command returns 1 and sets the global temporary variable
+"$@party_create_id" to the ID of the party created.
+
+Additionally, item sharing options can be provided:
+ - Item Share: 0-Each Take (default), 1-Party Share
+ - Item Share Type: 0-Each Take (default), 1-Even Share
+
+These values are returned upon failure:
+ 0: Unknown error.
+-1: Player not found.
+-2: Player already has a party.
+-3: Party name exists.
+
+---------------------------------------
+
+*party_destroy(<party id>);
+
+Disbands a party. The command returns 1 upon success and 0 upon failure.
+
+---------------------------------------
+
+*party_addmember(<party id>,<character id>);
+
+Adds a player to an existing party.
+
+The command returns 1 upon success, and these values upon failure:
+ 0: Unknown error.
+-1: Player not found.
+-2: Player already has a party.
+-3: Party not found.
+-4: Party is full.
+
+---------------------------------------
+
+*party_delmember({<character id>,<party id>}); 
+
+Removes a player from his/her party. If no player is specified, the command
+will run for the invoking player. If that player is the only party member
+remaining, the party will be disbanded.
+
+The command returns 1 upon success, and these values upon failure:
+ 0: Unknown error.
+-1: Player not found.
+-2: Party not found. 
+-3: Player is not in the party. 
+
+---------------------------------------
+
+*party_changeleader(<party id>,<character id>);
+
+Transfers leadership of a party to the specified character. The original
+party leader doesn't need be online.
+
+The command returns 1 upon success, and these values upon failure:
+ 0: Unknown error.
+-1: Party not found.
+-2: Player not found.
+-3: Player is not in the party.
+-4: Player is already party leader
+
+---------------------------------------
+
+*party_changeoption(<party id>,<option>,<flag>);
+
+Changes a party option.
+
+Valid options are:
+ 0 - Exp Share (flags: 0-Each Take, 1-Even Share)
+ 1 - Item Share (flags: 0-Each Take, 1-Party Share)
+ 2 - Item Share Type (flags: 0-Each Take, 1-Even Share)
+
+The command returns 1 upon success, and these values upon failure:
+ 0: Invalid option.
+-1: Party not found.

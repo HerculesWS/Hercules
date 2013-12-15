@@ -14,6 +14,8 @@
 #define PARTY_BOOKING_JOBS 6
 #define PARTY_BOOKING_RESULTS 10
 
+#define party_add_member(party_id,sd) party->reply_invite(sd,party_id,1)
+
 struct party_member_data {
 	struct map_session_data *sd;
 	unsigned int hp; //For HP,x,y refreshing.
@@ -72,6 +74,7 @@ struct party_interface {
 	DBMap* db; // int party_id -> struct party_data* (releases data)
 	DBMap* booking_db; // int char_id -> struct party_booking_ad_info* (releases data) // Party Booking [Spiria]
 	unsigned long booking_nextid;
+	int create_byscript;
 	/* funcs */
 	void (*init) (bool minimal);
 	void (*final) (void);
@@ -90,14 +93,16 @@ struct party_interface {
 	int (*leave) (struct map_session_data *sd);
 	int (*removemember) (struct map_session_data *sd,int account_id,char *name);
 	int (*member_withdraw) (int party_id,int account_id,int char_id);
-	void (*reply_invite) (struct map_session_data *sd,int party_id,int flag);
+	int (*reply_invite) (struct map_session_data *sd,int party_id,int flag);
+	int (*party_removemember2) (struct map_session_data *sd,int char_id,int party_id); 
 	int (*recv_noinfo) (int party_id, int char_id);
 	int (*recv_info) (struct party* sp, int char_id);
 	int (*recv_movemap) (int party_id,int account_id,int char_id, unsigned short mapid,int online,int lv);
 	int (*broken) (int party_id);
 	int (*optionchanged) (int party_id,int account_id,int exp,int item,int flag);
 	int (*changeoption) (struct map_session_data *sd,int exp,int item);
-	bool (*changeleader) (struct map_session_data *sd, struct map_session_data *t_sd);
+	int (*setoption) (struct party_data *party, int option, int flag);
+	int (*changeleader) (struct map_session_data *sd, struct map_session_data *t_sd, struct party_data *p);
 	void (*send_movemap) (struct map_session_data *sd);
 	void (*send_levelup) (struct map_session_data *sd);
 	int (*send_logout) (struct map_session_data *sd);
