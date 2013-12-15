@@ -69,7 +69,7 @@ void trade_traderequest(struct map_session_data *sd, struct map_session_data *ta
 		return;
 	}
 
-	if (!pc->can_give_items(sd) || !pc->can_give_items(target_sd)) //check if both GMs are allowed to trade
+	if (!pc_can_give_items(sd) || !pc_can_give_items(target_sd)) //check if both GMs are allowed to trade
 	{
 		clif->message(sd->fd, msg_txt(246));
 		clif->tradestart(sd, 2); // GM is not allowed to trade
@@ -368,7 +368,7 @@ void trade_tradeadditem(struct map_session_data *sd, short index, short amount) 
 	if( item->bound &&
 			!( item->bound == IBT_GUILD && sd->status.guild_id == target_sd->status.guild_id ) &&
 			!( item->bound == IBT_PARTY && sd->status.party_id == target_sd->status.party_id )
-					&& !pc->can_give_bound_items(sd) ) {
+					&& !pc_can_give_bound_items(sd) ) {
 		clif->message(sd->fd, msg_txt(293));
 		clif->tradeitemok(sd, index+2, TIO_INDROCKS);
 		return;

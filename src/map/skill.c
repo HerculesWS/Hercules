@@ -446,7 +446,7 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 	if (idx == 0)
 		return 1; // invalid skill id
 
-	if (pc->has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL))
+	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL))
 		return 0; // can do any damn thing they want
 
 	if( skill_id == AL_TELEPORT && sd->skillitem == skill_id && sd->skillitemlv > 2 )
@@ -6309,7 +6309,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case MC_VENDING:
 			if(sd)
 			{	//Prevent vending of GMs with unnecessary Level to trade/drop. [Skotlex]
-				if ( !pc->can_give_items(sd) )
+				if ( !pc_can_give_items(sd) )
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				else {
 					sd->state.prevend = sd->state.workinprogress = 3;
@@ -12262,7 +12262,7 @@ int skill_check_pc_partner (struct map_session_data *sd, uint16 skill_id, uint16
 	int i;
 	bool is_chorus = ( skill->get_inf2(skill_id)&INF2_CHORUS_SKILL );
 
-	if (!battle_config.player_skill_partner_check || pc->has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL))
+	if (!battle_config.player_skill_partner_check || pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL))
 		return is_chorus ? MAX_PARTY : 99; //As if there were infinite partners.
 
 	if (cast_flag) {	//Execute the skill on the partners.
@@ -12358,7 +12358,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 
 	if (sd->chatID) return 0;
 
-	if( pc->has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->skillitem != skill_id )
+	if( pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->skillitem != skill_id )
 	{	//GMs don't override the skillItem check, otherwise they can use items without them being consumed! [Skotlex]
 		sd->state.arrow_atk = skill->get_ammotype(skill_id)?1:0; //Need to do arrow state check.
 		sd->spiritball_old = sd->spiritball; //Need to do Spiritball check.
@@ -13282,7 +13282,7 @@ int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, 
 	if( sd->chatID )
 		return 0;
 
-	if( pc->has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->skillitem != skill_id ) {
+	if( pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->skillitem != skill_id ) {
 		//GMs don't override the skillItem check, otherwise they can use items without them being consumed! [Skotlex]
 		sd->state.arrow_atk = skill->get_ammotype(skill_id)?1:0; //Need to do arrow state check.
 		sd->spiritball_old = sd->spiritball; //Need to do Spiritball check.

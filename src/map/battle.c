@@ -5830,11 +5830,11 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 	if ( s_bl->type == BL_PC ) {
 		switch( t_bl->type ) {
 			case BL_MOB: // Source => PC, Target => MOB
-				if (pc->has_permission((TBL_PC*)s_bl, PC_PERM_DISABLE_PVM) )
+				if (pc_has_permission((TBL_PC*)s_bl, PC_PERM_DISABLE_PVM) )
 					return 0;
 				break;
 			case BL_PC:
-				if (pc->has_permission((TBL_PC*)s_bl, PC_PERM_DISABLE_PVP))
+				if (pc_has_permission((TBL_PC*)s_bl, PC_PERM_DISABLE_PVP))
 					return 0;
 				break;
 			default:/* anything else goes */

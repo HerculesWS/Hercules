@@ -684,7 +684,11 @@ enum equip_pos {
 #define pc_readaccountreg2str(sd,reg)    (pc->readregistry_str((sd),(reg),1))
 #define pc_setaccountreg2str(sd,reg,val) (pc->setregistry_str((sd),(reg),(val),1))
 
+/* pc_groups easy access */
 #define pc_get_group_level(sd) ( (sd)->group->level )
+#define pc_has_permission(sd,permission) ( ((sd)->extra_temp_permissions&(permission)) != 0 || ((sd)->group->e_permissions&(permission)) != 0 )
+#define pc_can_give_items(sd) ( pc_has_permission((sd),PC_PERM_TRADE) )
+#define pc_can_give_bound_items(sd) ( pc_has_permission((sd),PC_PERM_TRADE_BOUND) )
 
 struct skill_tree_entry {
 	short id;
@@ -761,7 +765,6 @@ struct pc_interface {
 	bool (*can_give_bound_items) (struct map_session_data *sd);
  	
 	bool (*can_use_command) (struct map_session_data *sd, const char *command);
-	bool (*has_permission) (struct map_session_data *sd, unsigned int permission);
 	int (*set_group) (struct map_session_data *sd, int group_id);
 	bool (*should_log_commands) (struct map_session_data *sd);
 

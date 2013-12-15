@@ -893,7 +893,7 @@ int mapif_parse_WisToGM_sub(struct map_session_data* sd,va_list va) {
 	char *message;
 	int len;
 
-	if (!pc->has_permission(sd, permission))
+	if (!pc_has_permission(sd, permission))
 		return 0;
 	wisp_name = va_arg(va, char*);
 	message = va_arg(va, char*);
