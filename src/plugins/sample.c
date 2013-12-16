@@ -109,6 +109,10 @@ int my_pc_dropitem_post(int retVal, struct map_session_data *sd,int *n,int *amou
 	}
 	return 1;
 }
+void parse_my_setting(const char *val) {
+	ShowDebug("Received 'my_setting:%s'\n",val);
+	/* do anything with the var e.g. config_switch(val) */
+}
 /* run when server starts */
 HPExport void plugin_init (void) {
 	char *server_type;
@@ -168,7 +172,14 @@ HPExport void plugin_init (void) {
 	/* if the original pc->dropitem was successful and the amount stored on my_pc_dropitem_storage is higher than 1, */
 	/* our posthook will display a message to the user about the cap */
 	/* - by checking whether it was successful (retVal value) it allows for the originals conditions to take place */
-	addHookPost("pc->dropitem",my_pc_dropitem_post);	
+	addHookPost("pc->dropitem",my_pc_dropitem_post);
+}
+/* triggered when server starts loading, before any server-specific data is set */
+HPExport void server_preinit (void) {
+	/* makes map server listen to mysetting:value in any "battleconf" file (including imported or custom ones) */
+	/* value is not limited to numbers, its passed to our plugins handler (parse_my_setting) as const char *,
+	 * and thus can be manipulated at will */
+	addBattleConf("my_setting",parse_my_setting);
 }
 /* run when server is ready (online) */
 HPExport void server_online (void) {

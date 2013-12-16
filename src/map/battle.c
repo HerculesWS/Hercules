@@ -12,6 +12,7 @@
 #include "../common/socket.h"
 #include "../common/strlib.h"
 #include "../common/utils.h"
+#include "../common/HPM.h"
 
 #include "map.h"
 #include "path.h"
@@ -6708,8 +6709,11 @@ int battle_set_value(const char* w1, const char* w2)
 
 	int i;
 	ARR_FIND(0, ARRAYLENGTH(battle_data), i, strcmpi(w1, battle_data[i].str) == 0);
-	if (i == ARRAYLENGTH(battle_data))
+	if (i == ARRAYLENGTH(battle_data)) {
+		if( HPM->parseConf(w1,w2,HPCT_BATTLE) ) /* if plugin-owned, succeed */
+			return 1;
 		return 0; // not found
+	}
 
 	if (val < battle_data[i].min || val > battle_data[i].max)
 	{

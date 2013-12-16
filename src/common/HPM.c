@@ -215,6 +215,7 @@ struct hplugin *hplugin_load(const char* filename) {
 	plugin->hpi->HookStop           = HPM->import_symbol("HookStop",plugin->idx);
 	plugin->hpi->HookStopped        = HPM->import_symbol("HookStopped",plugin->idx);
 	plugin->hpi->addArg             = HPM->import_symbol("addArg",plugin->idx);
+	plugin->hpi->addConf            = HPM->import_symbol("addConf",plugin->idx);
 	/* server specific */
 	if( HPM->load_sub )
 		HPM->load_sub(plugin);
@@ -602,6 +603,48 @@ bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, void (*func)
 	
 	return true;
 }
+bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *name, void (*func) (const char *val)) {
+	struct HPConfListenStorage *conf;
+	unsigned int i;
+	
+	if( type >= HPCT_MAX ) {
+		ShowError("HPM->addConf:%s: unknown point '%u' specified for config '%s'\n",HPM->pid2name(pluginID),type,name);
+		return false;
+	}
+	
+	for(i = 0; i < HPM->confsc[type]; i++) {
+		if( !strcmpi(name,HPM->confs[type][i].key) ) {
+			ShowError("HPM->addConf:%s: duplicate '%s', already in use by '%s'!",HPM->pid2name(pluginID),name,HPM->pid2name(HPM->confs[type][i].pluginID));
+			return false;
+		}
+	}
+	
+	RECREATE(HPM->confs[type], struct HPConfListenStorage, ++HPM->confsc[type]);
+	conf = &HPM->confs[type][HPM->confsc[type] - 1];
+	
+	conf->pluginID = pluginID;
+	safestrncpy(conf->key, name, HPM_ADDCONF_LENGTH);
+	conf->func = func;
+	
+	return true;
+}
+bool hplugins_parse_conf(const char *w1, const char *w2, enum HPluginConfType point) {
+	unsigned int i;
+	
+	/* exists? */
+	for(i = 0; i < HPM->confsc[point]; i++) {
+		if( !strcmpi(w1,HPM->confs[point][i].key) )
+			break;
+	}
+	
+	/* trigger and we're set! */
+	if( i != HPM->confsc[point] ) {
+		HPM->confs[point][i].func(w2);
+		return true;
+	}
+	
+	return false;
+}
 
 void hplugins_share_defaults(void) {
 	/* console */
@@ -617,6 +660,7 @@ void hplugins_share_defaults(void) {
 	HPM->share(HPM_HookStop,"HookStop");
 	HPM->share(HPM_HookStopped,"HookStopped");
 	HPM->share(hpm_add_arg,"addArg");
+	HPM->share(hplugins_addconf,"addConf");
 	/* core */
 	HPM->share(&runflag,"runflag");
 	HPM->share(arg_v,"arg_v");
@@ -728,6 +772,11 @@ void hpm_final(void) {
 			aFree(HPM->packets[i]);
 	}
 	
+	for( i = 0; i < HPCT_MAX; i++ ) {
+		if( HPM->confsc[i] )
+			aFree(HPM->confs[i]);
+	}
+	
 	HPM->arg_db->destroy(HPM->arg_db,HPM->arg_db_clear_sub);
 	
 	/* HPM->fnames is cleared after the memory manager goes down */
@@ -736,13 +785,26 @@ void hpm_final(void) {
 	return;
 }
 void hpm_defaults(void) {
+	unsigned int i;
 	HPM = &HPM_s;
 	
 	HPM->fnames = NULL;
 	HPM->fnamec = 0;
 	HPM->force_return = false;
 	HPM->hooking = false;
-	
+	/* */
+	HPM->fnames = NULL;
+	HPM->fnamec = 0;
+	for(i = 0; i < hpPHP_MAX; i++) {
+		HPM->packets[i] = NULL;
+		HPM->packetsc[i] = 0;
+	}
+	for(i = 0; i < HPCT_MAX; i++) {
+		HPM->confs[i] = NULL;
+		HPM->confsc[i] = 0;
+	}
+	HPM->arg_db = NULL;
+	/* */
 	HPM->init = hpm_init;
 	HPM->final = hpm_final;
 	
@@ -767,4 +829,5 @@ void hpm_defaults(void) {
 	HPM->arg_help = hpm_arg_help;
 	HPM->grabHPData = hplugins_grabHPData;
 	HPM->grabHPDataSub = NULL;
+	HPM->parseConf = hplugins_parse_conf;
 }

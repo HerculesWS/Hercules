@@ -88,6 +88,12 @@ struct HPDataOperationStorage {
 	void **HPDataSRCPtr;
 	unsigned int *hdatac;
 };
+/*  */
+struct HPConfListenStorage {
+	unsigned int pluginID;
+	char key[HPM_ADDCONF_LENGTH];
+	void (*func) (const char *val);
+};
 
 /* Hercules Plugin Manager Interface */
 struct HPM_interface {
@@ -108,6 +114,9 @@ struct HPM_interface {
 	/* plugin file ptr caching */
 	struct HPMFileNameCache *fnames;
 	unsigned int fnamec;
+	/* config listen */
+	struct HPConfListenStorage *confs[HPCT_MAX];
+	unsigned int confsc[HPCT_MAX];
 	/* --command-line */
 	DBMap *arg_db;
 	/* funcs */
@@ -135,6 +144,8 @@ struct HPM_interface {
 	void (*grabHPData) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
 	/* for server-specific HPData e.g. map_session_data */
 	void (*grabHPDataSub) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
+	/* for custom config parsing */
+	bool (*parseConf) (const char *w1, const char *w2, enum HPluginConfType point);
 } HPM_s;
 
 struct HPM_interface *HPM;

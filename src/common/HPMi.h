@@ -36,6 +36,7 @@ struct map_session_data;
 #include "../common/showmsg.h"
 
 #define HPM_VERSION "1.0"
+#define HPM_ADDCONF_LENGTH 40
 
 struct hplugin_info {
 	char* name;
@@ -83,6 +84,12 @@ enum HPluginDataTypes {
 	HPDT_NPCD,
 };
 
+/* used in macros and conf storage */
+enum HPluginConfType {
+	HPCT_BATTLE, /* battle-conf (map-server */
+	HPCT_MAX,
+};
+
 #define addHookPre(tname,hook) (HPMi->AddHook(HOOK_TYPE_PRE,(tname),(hook),HPMi->pid))
 #define addHookPost(tname,hook) (HPMi->AddHook(HOOK_TYPE_POST,(tname),(hook),HPMi->pid))
 /* need better names ;/ */
@@ -128,6 +135,8 @@ enum HPluginDataTypes {
 	}
 /* HPMi->addPacket */
 #define addPacket(cmd,len,receive,point) HPMi->addPacket(cmd,len,receive,point,HPMi->pid)
+/* HPMi->addBattleConf */
+#define addBattleConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_BATTLE,bcname,funcname)
 
 /* Hercules Plugin Mananger Include Interface */
 HPExport struct HPMi_interface {
@@ -150,6 +159,8 @@ HPExport struct HPMi_interface {
 	bool (*HookStopped) (void);
 	/* program --arg/-a */
 	bool (*addArg) (unsigned int pluginID, char *name, bool has_param,void (*func) (char *param),void (*help) (void));
+	/* battle-config recv param */
+	bool (*addConf) (unsigned int pluginID, enum HPluginConfType type, char *name, void (*func) (const char *val));
 } HPMi_s;
 #ifndef _HPM_H_
 HPExport struct HPMi_interface *HPMi;
