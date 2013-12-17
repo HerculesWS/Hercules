@@ -433,7 +433,7 @@ AC_PATH_PROG(AR, ar)
 AC_LANG([C])
 
 
-CFLAGS="$CFLAGS -pipe -ffast-math -Wall -Wno-sign-compare"
+CFLAGS="$CFLAGS -pipe -ffast-math -Wall -Wextra -Wno-sign-compare"
 CPPFLAGS="$CPPFLAGS -I../common"
 
 
@@ -563,23 +563,21 @@ if test "$enable_lto" != "no" ; then
 fi
 
 
-
-AC_MSG_CHECKING([whether $CC supports -Wno-pointer-sign])
+AC_MSG_CHECKING([whether $CC supports -Wno-maybe-uninitialized])
 OLD_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -Wno-pointer-sign"
+CFLAGS="$CFLAGS -Wno-maybe-uninitialized"
 AC_COMPILE_IFELSE(
 	[AC_LANG_SOURCE([int foo;])],
 	[
 		AC_MSG_RESULT([yes])
-		AC_MSG_CHECKING([whether $CC can actually use -Wno-pointer-sign])
-		# This option causes warnings in C++ mode
-		# Note: -Werror must be before -Wno-pointer-sign, otherwise it does not do anything
-		CFLAGS="$OLD_CFLAGS -Werror -Wno-pointer-sign"
+		AC_MSG_CHECKING([whether $CC can actually use -Wno-maybe-uninitialized])
+		# Note: -Werror must be before -Wno-maybe-uninitialized, otherwise it does not do anything
+		CFLAGS="$OLD_CFLAGS -Werror -Wno-maybe-uninitialized"
 		AC_COMPILE_IFELSE(
 			[AC_LANG_SOURCE([int foo;])],
 			[
 				AC_MSG_RESULT([yes])
-				CFLAGS="$OLD_CFLAGS -Wno-pointer-sign"
+				CFLAGS="$OLD_CFLAGS -Wno-maybe-uninitialized"
 			],
 			[
 				AC_MSG_RESULT([no])
@@ -594,9 +592,155 @@ AC_COMPILE_IFELSE(
 )
 
 
+AC_MSG_CHECKING([whether $CC supports -Wno-clobbered])
+OLD_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -Wno-clobbered"
+AC_COMPILE_IFELSE(
+	[AC_LANG_SOURCE([int foo;])],
+	[
+		AC_MSG_RESULT([yes])
+		AC_MSG_CHECKING([whether $CC can actually use -Wno-clobbered])
+		# Note: -Werror must be before -Wno-clobbered, otherwise it does not do anything
+		CFLAGS="$OLD_CFLAGS -Werror -Wno-clobbered"
+		AC_COMPILE_IFELSE(
+			[AC_LANG_SOURCE([int foo;])],
+			[
+				AC_MSG_RESULT([yes])
+				CFLAGS="$OLD_CFLAGS -Wno-clobbered"
+			],
+			[
+				AC_MSG_RESULT([no])
+				CFLAGS="$OLD_CFLAGS"
+			]
+		)
+	],
+	[
+		AC_MSG_RESULT([no])
+		CFLAGS="$OLD_CFLAGS"
+	]
+)
+
+
+AC_MSG_CHECKING([whether $CC supports -Wempty-body])
+OLD_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -Wempty-body"
+AC_COMPILE_IFELSE(
+	[AC_LANG_SOURCE([int foo;])],
+	[AC_MSG_RESULT([yes])],
+	[
+		AC_MSG_RESULT([no])
+		CFLAGS="$OLD_CFLAGS"
+	]
+)
+
+
+AC_MSG_CHECKING([whether $CC supports -Wnewline-eof])
+OLD_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -Wnewline-eof"
+AC_COMPILE_IFELSE(
+	[AC_LANG_SOURCE([int foo;])],
+	[AC_MSG_RESULT([yes])],
+	[
+		AC_MSG_RESULT([no])
+		CFLAGS="$OLD_CFLAGS"
+	]
+)
+
+
+AC_MSG_CHECKING([whether $CC supports -Wshadow])
+OLD_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -Wshadow"
+AC_COMPILE_IFELSE(
+	[AC_LANG_SOURCE([int foo;])],
+	[AC_MSG_RESULT([yes])],
+	[
+		AC_MSG_RESULT([no])
+		CFLAGS="$OLD_CFLAGS"
+	]
+)
+
+
+AC_MSG_CHECKING([whether $CC supports -Wint-conversion])
+OLD_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -Wenum-conversion"
+AC_COMPILE_IFELSE(
+	[AC_LANG_SOURCE([int foo;])],
+	[AC_MSG_RESULT([yes])],
+	[
+		AC_MSG_RESULT([no])
+		CFLAGS="$OLD_CFLAGS"
+	]
+)
+
+
+AC_MSG_CHECKING([whether $CC supports -Wenum-conversion])
+OLD_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -Wenum-conversion"
+AC_COMPILE_IFELSE(
+	[AC_LANG_SOURCE([int foo;])],
+	[AC_MSG_RESULT([yes])],
+	[
+		AC_MSG_RESULT([no])
+		CFLAGS="$OLD_CFLAGS"
+	]
+)
+
+
+AC_MSG_CHECKING([whether $CC supports -Wshorten-64-to-32])
+OLD_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -Wshorten-64-to-32"
+AC_COMPILE_IFELSE(
+	[AC_LANG_SOURCE([int foo;])],
+	[AC_MSG_RESULT([yes])],
+	[
+		AC_MSG_RESULT([no])
+		CFLAGS="$OLD_CFLAGS"
+	]
+)
+
+
+AC_MSG_CHECKING([whether $CC supports -Wconstant-conversion])
+OLD_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -Wconstant-conversion"
+AC_COMPILE_IFELSE(
+	[AC_LANG_SOURCE([int foo;])],
+	[AC_MSG_RESULT([yes])],
+	[
+		AC_MSG_RESULT([no])
+		CFLAGS="$OLD_CFLAGS"
+	]
+)
+
+
+AC_MSG_CHECKING([whether $CC supports -Wbool-conversion])
+OLD_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -Wbool-conversion"
+AC_COMPILE_IFELSE(
+	[AC_LANG_SOURCE([int foo;])],
+	[AC_MSG_RESULT([yes])],
+	[
+		AC_MSG_RESULT([no])
+		CFLAGS="$OLD_CFLAGS"
+	]
+)
+
+
 AC_MSG_CHECKING([whether $CC supports -Wno-switch])
 OLD_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -Wno-switch"
+AC_COMPILE_IFELSE(
+	[AC_LANG_SOURCE([int foo;])],
+	[AC_MSG_RESULT([yes])],
+	[
+		AC_MSG_RESULT([no])
+		CFLAGS="$OLD_CFLAGS"
+	]
+)
+
+
+AC_MSG_CHECKING([whether $CC supports -Wno-missing-field-initializers])
+OLD_CFLAGS="$CFLAGS"
+CFLAGS="$CFLAGS -Wno-missing-field-initializers"
 AC_COMPILE_IFELSE(
 	[AC_LANG_SOURCE([int foo;])],
 	[AC_MSG_RESULT([yes])],
@@ -870,7 +1014,7 @@ fi
 case $enable_debug in
 	"no")
 		# default value
-		CFLAGS="$CFLAGS -Wno-unused -Wno-parentheses"
+#		CFLAGS="$CFLAGS -Wno-unused -Wno-parentheses"
 		;;
 	"yes")
 		CFLAGS="$CFLAGS -g -DDEBUG"
