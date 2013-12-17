@@ -543,16 +543,16 @@ static bool mmo_auth_fromsql(AccountDB_SQL* db, struct mmo_account* acc, int acc
 	SQL->GetData(sql_handle,  3, &data, NULL); acc->sex = data[0];
 	SQL->GetData(sql_handle,  4, &data, NULL); safestrncpy(acc->email, data, sizeof(acc->email));
 	SQL->GetData(sql_handle,  5, &data, NULL); acc->group_id = atoi(data);
-	SQL->GetData(sql_handle,  6, &data, NULL); acc->state = strtoul(data, NULL, 10);
+	SQL->GetData(sql_handle,  6, &data, NULL); acc->state = (unsigned int)strtoul(data, NULL, 10);
 	SQL->GetData(sql_handle,  7, &data, NULL); acc->unban_time = atol(data);
 	SQL->GetData(sql_handle,  8, &data, NULL); acc->expiration_time = atol(data);
-	SQL->GetData(sql_handle,  9, &data, NULL); acc->logincount = strtoul(data, NULL, 10);
+	SQL->GetData(sql_handle,  9, &data, NULL); acc->logincount = (unsigned int)strtoul(data, NULL, 10);
 	SQL->GetData(sql_handle, 10, &data, NULL); safestrncpy(acc->lastlogin, data, sizeof(acc->lastlogin));
 	SQL->GetData(sql_handle, 11, &data, NULL); safestrncpy(acc->last_ip, data, sizeof(acc->last_ip));
 	SQL->GetData(sql_handle, 12, &data, NULL); safestrncpy(acc->birthdate, data, sizeof(acc->birthdate));
 	SQL->GetData(sql_handle, 13, &data, NULL); acc->char_slots = (uint8)atoi(data);
 	SQL->GetData(sql_handle, 14, &data, NULL); safestrncpy(acc->pincode, data, sizeof(acc->pincode));
-	SQL->GetData(sql_handle, 15, &data, NULL); acc->pincode_change = atol(data);
+	SQL->GetData(sql_handle, 15, &data, NULL); acc->pincode_change = (unsigned int)atol(data);
 	
 	SQL->FreeResult(sql_handle);
 
@@ -568,7 +568,6 @@ static bool mmo_auth_fromsql(AccountDB_SQL* db, struct mmo_account* acc, int acc
 
 	while( SQL_SUCCESS == SQL->NextRow(sql_handle) )
 	{
-		char* data;
 		SQL->GetData(sql_handle, 0, &data, NULL); safestrncpy(acc->account_reg2[i].str, data, sizeof(acc->account_reg2[i].str));
 		SQL->GetData(sql_handle, 1, &data, NULL); safestrncpy(acc->account_reg2[i].value, data, sizeof(acc->account_reg2[i].value));
 		++i;

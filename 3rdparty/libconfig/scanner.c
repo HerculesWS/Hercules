@@ -625,8 +625,15 @@ static unsigned long long fromhex(const char *s)
 #endif /* __MINGW32__ */
 }
 
+static int fromihex(const char *s) {
+  unsigned long l = strtoul(s, NULL, 16);
+  if (l > INT32_MAX)
+    l = INT32_MAX;
+  return (int)l;
+}
 
-#line 630 "scanner.c"
+
+#line 637 "scanner.c"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -858,10 +865,10 @@ YY_DECL
 	register int yy_act;
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-#line 105 "scanner.l"
+#line 112 "scanner.l"
 
 
-#line 865 "scanner.c"
+#line 872 "scanner.c"
 
     yylval = yylval_param;
 
@@ -957,69 +964,69 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 107 "scanner.l"
+#line 114 "scanner.l"
 { BEGIN COMMENT; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 108 "scanner.l"
+#line 115 "scanner.l"
 { BEGIN INITIAL; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 109 "scanner.l"
+#line 116 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 110 "scanner.l"
+#line 117 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 112 "scanner.l"
+#line 119 "scanner.l"
 { BEGIN STRING; }
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 113 "scanner.l"
+#line 120 "scanner.l"
 { scanctx_append_string(yyextra, yytext); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 114 "scanner.l"
+#line 121 "scanner.l"
 { scanctx_append_string(yyextra, "\n"); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 115 "scanner.l"
+#line 122 "scanner.l"
 { scanctx_append_string(yyextra, "\r"); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 116 "scanner.l"
+#line 123 "scanner.l"
 { scanctx_append_string(yyextra, "\t"); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 117 "scanner.l"
+#line 124 "scanner.l"
 { scanctx_append_string(yyextra, "\f"); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 118 "scanner.l"
+#line 125 "scanner.l"
 { scanctx_append_string(yyextra, "\\"); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 119 "scanner.l"
+#line 126 "scanner.l"
 { scanctx_append_string(yyextra, "\""); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 120 "scanner.l"
+#line 127 "scanner.l"
 {
                     char c[2] = { (char)(strtol(yytext + 2, NULL, 16) & 0xFF),
                                   0 };
@@ -1028,12 +1035,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 125 "scanner.l"
+#line 132 "scanner.l"
 { scanctx_append_string(yyextra, "\\"); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 126 "scanner.l"
+#line 133 "scanner.l"
 {
                     yylval->sval = scanctx_take_string(yyextra);
                     BEGIN INITIAL;
@@ -1042,18 +1049,18 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 132 "scanner.l"
+#line 139 "scanner.l"
 { BEGIN SCRIPTBLOCK; }
 	YY_BREAK
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-#line 133 "scanner.l"
+#line 140 "scanner.l"
 { scanctx_append_string(yyextra, yytext); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 134 "scanner.l"
+#line 141 "scanner.l"
 {
                                 yylval->sval = scanctx_take_string(yyextra);
                                 BEGIN INITIAL;
@@ -1062,28 +1069,28 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 140 "scanner.l"
+#line 147 "scanner.l"
 { BEGIN INCLUDE; }
 	YY_BREAK
 case 20:
 /* rule 20 can match eol */
 YY_RULE_SETUP
-#line 141 "scanner.l"
+#line 148 "scanner.l"
 { scanctx_append_string(yyextra, yytext); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 142 "scanner.l"
+#line 149 "scanner.l"
 { scanctx_append_string(yyextra, "\\"); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 143 "scanner.l"
+#line 150 "scanner.l"
 { scanctx_append_string(yyextra, "\""); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 144 "scanner.l"
+#line 151 "scanner.l"
 {
                     const char *error;
                     FILE *fp = scanctx_push_include(yyextra,
@@ -1109,100 +1116,97 @@ YY_RULE_SETUP
 case 24:
 /* rule 24 can match eol */
 YY_RULE_SETUP
-#line 168 "scanner.l"
+#line 175 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 169 "scanner.l"
+#line 176 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 171 "scanner.l"
+#line 178 "scanner.l"
 { return(TOK_EQUALS); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 172 "scanner.l"
+#line 179 "scanner.l"
 { return(TOK_COMMA); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 173 "scanner.l"
+#line 180 "scanner.l"
 { return(TOK_GROUP_START); }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 174 "scanner.l"
+#line 181 "scanner.l"
 { return(TOK_GROUP_END); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 175 "scanner.l"
+#line 182 "scanner.l"
 { yylval->ival = 1; return(TOK_BOOLEAN); }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 176 "scanner.l"
+#line 183 "scanner.l"
 { yylval->ival = 0; return(TOK_BOOLEAN); }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 177 "scanner.l"
+#line 184 "scanner.l"
 { yylval->sval = yytext; return(TOK_NAME); }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 178 "scanner.l"
+#line 185 "scanner.l"
 { yylval->fval = atof(yytext); return(TOK_FLOAT); }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 179 "scanner.l"
+#line 186 "scanner.l"
 { yylval->ival = atoi(yytext); return(TOK_INTEGER); }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 180 "scanner.l"
+#line 187 "scanner.l"
 { yylval->llval = atoll(yytext); return(TOK_INTEGER64); }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 181 "scanner.l"
-{
-                    yylval->ival = strtoul(yytext, NULL, 16);
-                    return(TOK_HEX);
-                  }
+#line 188 "scanner.l"
+{ yylval->ival = fromihex(yytext); return(TOK_HEX); }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 185 "scanner.l"
+#line 189 "scanner.l"
 { yylval->llval = fromhex(yytext); return(TOK_HEX64); }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 186 "scanner.l"
+#line 190 "scanner.l"
 { return(TOK_ARRAY_START); }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 187 "scanner.l"
+#line 191 "scanner.l"
 { return(TOK_ARRAY_END); }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 188 "scanner.l"
+#line 192 "scanner.l"
 { return(TOK_LIST_START); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 189 "scanner.l"
+#line 193 "scanner.l"
 { return(TOK_LIST_END); }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 190 "scanner.l"
+#line 194 "scanner.l"
 { return(TOK_SEMICOLON); }
 	YY_BREAK
 case 43:
@@ -1210,12 +1214,12 @@ case 43:
 yyg->yy_c_buf_p = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 191 "scanner.l"
+#line 195 "scanner.l"
 { /* ignore */ }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 192 "scanner.l"
+#line 196 "scanner.l"
 { return(TOK_GARBAGE); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
@@ -1223,7 +1227,7 @@ case YY_STATE_EOF(COMMENT):
 case YY_STATE_EOF(STRING):
 case YY_STATE_EOF(INCLUDE):
 case YY_STATE_EOF(SCRIPTBLOCK):
-#line 194 "scanner.l"
+#line 198 "scanner.l"
 {
                     YY_BUFFER_STATE buf = (YY_BUFFER_STATE)scanctx_pop_include(
                       yyextra);
@@ -1238,10 +1242,10 @@ case YY_STATE_EOF(SCRIPTBLOCK):
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 205 "scanner.l"
+#line 209 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1245 "scanner.c"
+#line 1249 "scanner.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1496,6 +1500,8 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 	else
 		ret_val = EOB_ACT_CONTINUE_SCAN;
 
+#ifndef __clang_analyzer__
+	// FIXME: Clang's static analyzer complains about leaking the result of libconfig_yyrealloc
 	if ((yy_size_t) (yyg->yy_n_chars + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
 		/* Extend the array by 50%, plus the number we really need. */
 		yy_size_t new_size = yyg->yy_n_chars + number_to_move + (yyg->yy_n_chars >> 1);
@@ -1503,6 +1509,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 		if ( ! YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
 			YY_FATAL_ERROR( "out of dynamic memory in yy_get_next_buffer()" );
 	}
+#endif // __clang_analyzer__
 
 	yyg->yy_n_chars += number_to_move;
 	YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[yyg->yy_n_chars] = YY_END_OF_BUFFER_CHAR;
@@ -2375,4 +2382,4 @@ void libconfig_yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 205 "scanner.l"
+#line 209 "scanner.l"

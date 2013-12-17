@@ -1209,7 +1209,7 @@ void homunculus_exp_db_read(void) {
 			if(line[0] == '/' && line[1] == '/')
 				continue;
 
-			if (!(homun->exptable[j++] = strtoul(line, NULL, 10)))
+			if (!(homun->exptable[j++] = (unsigned int)strtoul(line, NULL, 10)))
 				break;
 		}
 		// Last permitted level have to be 0!

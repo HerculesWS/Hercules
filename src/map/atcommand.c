@@ -993,7 +993,7 @@ ACMD(alive)
  *------------------------------------------*/
 ACMD(kami)
 {
-	unsigned long color=0;
+	unsigned int color=0;
 	
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 	
@@ -1009,7 +1009,7 @@ ACMD(kami)
 		else
 			intif->broadcast(atcmd_output, strlen(atcmd_output) + 1, (*(info->command + 4) == 'b' || *(info->command + 4) == 'B') ? BC_BLUE : BC_YELLOW);
 	} else {
-		if(!message || !*message || (sscanf(message, "%lx %199[^\n]", &color, atcmd_output) < 2)) {
+		if(!message || !*message || (sscanf(message, "%u %199[^\n]", &color, atcmd_output) < 2)) {
 			clif->message(fd, msg_txt(981)); // Please enter color and message (usage: @kamic <color> <message>).
 			return false;
 		}
@@ -4278,9 +4278,9 @@ char* txt_time(unsigned int duration)
 	else
 		tlen += sprintf(tlen + temp1, msg_txt(224), minutes); // %d minutes
 	if (seconds == 1)
-		tlen += sprintf(tlen + temp1, msg_txt(225), seconds); // and %d second
+		sprintf(tlen + temp1, msg_txt(225), seconds); // and %d second
 	else if (seconds > 1)
-		tlen += sprintf(tlen + temp1, msg_txt(226), seconds); // and %d seconds
+		sprintf(tlen + temp1, msg_txt(226), seconds); // and %d seconds
 		
 	return temp1;
 }
@@ -5200,7 +5200,8 @@ ACMD(clearcart)
 #define MAX_SKILLID_PARTIAL_RESULTS 5
 #define MAX_SKILLID_PARTIAL_RESULTS_LEN 74 /* "skill " (6) + "%d:" (up to 5) + "%s" (up to 30) + " (%s)" (up to 33) */
 ACMD(skillid) {
-	int skillen, idx, i, found = 0;
+	int idx, i, found = 0;
+	size_t skillen;
 	DBIterator* iter;
 	DBKey key;
 	DBData *data;
@@ -6061,7 +6062,7 @@ ACMD(npctalk)
 	char name[NAME_LENGTH],mes[100],temp[100];
 	struct npc_data *nd;
 	bool ifcolor=(*(info->command + 7) != 'c' && *(info->command + 7) != 'C')?0:1;
-	unsigned long color=0;
+	unsigned int color = 0;
 	
 	if (sd->sc.count && //no "chatting" while muted.
 		(sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] ||
@@ -6075,7 +6076,7 @@ ACMD(npctalk)
 		}
 	}
 	else {
-		if (!message || !*message || sscanf(message, "%lx %23[^,], %99[^\n]", &color, name, mes) < 3) {
+		if (!message || !*message || sscanf(message, "%u %23[^,], %99[^\n]", &color, name, mes) < 3) {
 			clif->message(fd, msg_txt(1223)); // Please enter the correct parameters (usage: @npctalkc <color> <npc name>, <message>).
 			return false;
 		}
@@ -8286,7 +8287,7 @@ void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommand
 	clif->message(fd, msg_txt(273)); // "Commands available:"
 	
 	for (cmd = dbi_first(iter); dbi_exists(iter); cmd = dbi_next(iter)) {
-		unsigned int slen = 0;
+		size_t slen;
 		
 		switch( type ) {
 			case COMMAND_CHARCOMMAND:
@@ -8384,8 +8385,9 @@ ACMD(accinfo) {
 ACMD(set) {
 	char reg[32], val[128];
 	struct script_data* data;
-	int toset = 0, len;
+	int toset = 0;
 	bool is_str = false;
+	size_t len;
 	
 	if( !message || !*message || (toset = sscanf(message, "%31s %128[^\n]s", reg, val)) < 1  ) {
 		clif->message(fd, msg_txt(1367)); // Usage: @set <variable name> <value>
@@ -8746,16 +8748,16 @@ static inline void atcmd_channel_help(int fd, const char *command, bool can_crea
 /* [Ind/Hercules] */
 ACMD(channel) {
 	struct hChSysCh *channel;
-	char key[HCHSYS_NAME_LENGTH], sub1[HCHSYS_NAME_LENGTH], sub2[HCHSYS_NAME_LENGTH], sub3[HCHSYS_NAME_LENGTH];
+	char subcmd[HCHSYS_NAME_LENGTH], sub1[HCHSYS_NAME_LENGTH], sub2[HCHSYS_NAME_LENGTH], sub3[HCHSYS_NAME_LENGTH];
 	unsigned char k = 0;
 	sub1[0] = sub2[0] = sub3[0] = '\0';
 	
-	if( !message || !*message || sscanf(message, "%s %s %s %s", key, sub1, sub2, sub3) < 1 ) {
+	if( !message || !*message || sscanf(message, "%s %s %s %s", subcmd, sub1, sub2, sub3) < 1 ) {
 		atcmd_channel_help(fd,command,( hChSys.allow_user_channel_creation || pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ));
 		return true;
 	}
 	
-	if( strcmpi(key,"create") == 0 && ( hChSys.allow_user_channel_creation || pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) ) {
+	if( strcmpi(subcmd,"create") == 0 && ( hChSys.allow_user_channel_creation || pc->has_permission(sd, PC_PERM_HCHSYS_ADMIN) ) ) {
 		if( sub1[0] != '#' ) {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
 			return false;
@@ -8787,7 +8789,7 @@ ACMD(channel) {
 		
 		clif->chsys_join(channel,sd);
 		
-	} else if ( strcmpi(key,"list") == 0 ) {
+	} else if ( strcmpi(subcmd,"list") == 0 ) {
 		if( sub1[0] != '\0' && strcmpi(sub1,"colors") == 0 ) {
 			char mout[40];
 			for( k = 0; k < hChSys.colors_count; k++ ) {
@@ -8824,7 +8826,7 @@ ACMD(channel) {
 			}
 			dbi_destroy(iter);
 		}
-	} else if ( strcmpi(key,"setcolor") == 0 ) {
+	} else if ( strcmpi(subcmd,"setcolor") == 0 ) {
 		
 		if( sub1[0] != '#' ) {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
@@ -8855,7 +8857,7 @@ ACMD(channel) {
 		channel->color = k;
 		sprintf(atcmd_output, msg_txt(1413),sub1,hChSys.colors_name[k]);// '%s' channel color updated to '%s'
 		clif->message(fd, atcmd_output);
-	} else if ( strcmpi(key,"leave") == 0 ) {
+	} else if ( strcmpi(subcmd,"leave") == 0 ) {
 		
 		if( sub1[0] != '#' ) {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
@@ -8883,7 +8885,7 @@ ACMD(channel) {
 			clif->chsys_left(sd->channels[k],sd);
 		sprintf(atcmd_output, msg_txt(1426),sub1); // You've left the '%s' channel
 		clif->message(fd, atcmd_output);
-	} else if ( strcmpi(key,"bindto") == 0 ) {
+	} else if ( strcmpi(subcmd,"bindto") == 0 ) {
 		
 		if( sub1[0] != '#' ) {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
@@ -8903,7 +8905,7 @@ ACMD(channel) {
 		sd->gcbind = sd->channels[k];
 		sprintf(atcmd_output, msg_txt(1431),sub1); // Your global chat is now binded to the '%s' channel
 		clif->message(fd, atcmd_output);
-	} else if ( strcmpi(key,"unbind") == 0 ) {
+	} else if ( strcmpi(subcmd,"unbind") == 0 ) {
 		
 		if( sd->gcbind == NULL ) {
 			clif->message(fd, msg_txt(1432));// Your global chat is not binded to any channel
@@ -8914,7 +8916,7 @@ ACMD(channel) {
 		clif->message(fd, atcmd_output);
 		
 		sd->gcbind = NULL;
-	} else if ( strcmpi(key,"ban") == 0 ) {
+	} else if ( strcmpi(subcmd,"ban") == 0 ) {
 		struct map_session_data *pl_sd = NULL;
 		struct hChSysBanEntry *entry = NULL;
 		
@@ -8935,7 +8937,7 @@ ACMD(channel) {
 			return false;
 		}
 		
-		if (!message || !*message || sscanf(message, "%s %s %24[^\n]", key, sub1, sub2) < 1) {
+		if (!message || !*message || sscanf(message, "%s %s %24[^\n]", subcmd, sub1, sub2) < 1) {
 			sprintf(atcmd_output, msg_txt(1434), sub2);// Player '%s' was not found
 			clif->message(fd, atcmd_output);
 			return false;
@@ -8971,7 +8973,7 @@ ACMD(channel) {
 		
 		sprintf(atcmd_output, msg_txt(1437),pl_sd->status.name,sub1); // Player '%s' has now been banned from '%s' channel
 		clif->message(fd, atcmd_output);
-	} else if ( strcmpi(key,"unban") == 0 ) {
+	} else if ( strcmpi(subcmd,"unban") == 0 ) {
 		struct map_session_data *pl_sd = NULL;
 		
 		if( sub1[0] != '#' ) {
@@ -9018,7 +9020,7 @@ ACMD(channel) {
 		
 		sprintf(atcmd_output, msg_txt(1441),pl_sd->status.name,sub1); // Player '%s' has now been unbanned from the '%s' channel
 		clif->message(fd, atcmd_output);
-	} else if ( strcmpi(key,"unbanall") == 0 ) {
+	} else if ( strcmpi(subcmd,"unbanall") == 0 ) {
 		if( sub1[0] != '#' ) {
 			clif->message(fd, msg_txt(1405));// Channel name must start with a '#'
 			return false;
@@ -9047,7 +9049,7 @@ ACMD(channel) {
 		
 		sprintf(atcmd_output, msg_txt(1442),sub1); // Removed all bans from '%s' channel
 		clif->message(fd, atcmd_output);
-	} else if ( strcmpi(key,"banlist") == 0 ) {
+	} else if ( strcmpi(subcmd,"banlist") == 0 ) {
 		DBIterator *iter = NULL;
 		DBKey key;
 		DBData *data;
@@ -9092,7 +9094,7 @@ ACMD(channel) {
 		
 		dbi_destroy(iter);
 		
-	} else if ( strcmpi(key,"setopt") == 0 ) {
+	} else if ( strcmpi(subcmd,"setopt") == 0 ) {
 		const char* opt_str[3] = {
 			"None",
 			"JoinAnnounce",
@@ -9817,7 +9819,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 			return true;
 		} while(0);
 	}
-	else if (*message == atcommand->at_symbol) {
+	else /*if (*message == atcommand->at_symbol)*/ {
 		//atcmd_msg is constructed above differently for charcommands
 		//it's copied from message if not a charcommand so it can
 		//pass through the rest of the code compatible with both symbols
@@ -10037,7 +10039,7 @@ void atcommand_config_read(const char* config_filename) {
 			else {
 				if( commandinfo->help == NULL ) {
 					const char *str = config_setting_get_string(command);
-					int len = strlen(str);
+					size_t len = strlen(str);
 					commandinfo->help = aMalloc( len * sizeof(char) );
 					safestrncpy(commandinfo->help, str, len);
 				}

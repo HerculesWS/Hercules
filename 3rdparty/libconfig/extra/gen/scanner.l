@@ -86,6 +86,13 @@ static unsigned long long fromhex(const char *s)
 #endif /* __MINGW32__ */
 }
 
+static int fromihex(const char *s) {
+  unsigned long l = strtoul(s, NULL, 16);
+  if (l > INT32_MAX)
+    l = INT32_MAX;
+  return (int)l;
+}
+
 %}
 
 true              [Tt][Rr][Uu][Ee]
@@ -178,10 +185,7 @@ include_open      ^[ \t]*@include[ \t]+\"
 {float}           { yylval->fval = atof(yytext); return(TOK_FLOAT); }
 {integer}         { yylval->ival = atoi(yytext); return(TOK_INTEGER); }
 {integer64}       { yylval->llval = atoll(yytext); return(TOK_INTEGER64); }
-{hex}             {
-                    yylval->ival = strtoul(yytext, NULL, 16);
-                    return(TOK_HEX);
-                  }
+{hex}             { yylval->ival = fromihex(yytext); return(TOK_HEX); }
 {hex64}           { yylval->llval = fromhex(yytext); return(TOK_HEX64); }
 \[                { return(TOK_ARRAY_START); }
 \]                { return(TOK_ARRAY_END); }

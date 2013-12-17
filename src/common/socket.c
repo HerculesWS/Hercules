@@ -340,7 +340,7 @@ void set_eof(int fd)
 
 int recv_to_fifo(int fd)
 {
-	int len;
+	ssize_t len;
 
 	if( !session_isActive(fd) )
 		return -1;
@@ -377,7 +377,7 @@ int recv_to_fifo(int fd)
 
 int send_from_fifo(int fd)
 {
-	int len;
+	ssize_t len;
 
 	if( !session_isValid(fd) )
 		return -1;
@@ -855,6 +855,10 @@ int do_sockets(int next)
 			}
 		}
 
+#ifdef __clang_analyzer__
+		// Let Clang's static analyzer know this never happens (it thinks it might because of a NULL check in session_isValid)
+		if (!session[i]) continue;
+#endif // __clang_analyzer__
 		session[i]->func_parse(i);
 
 		if(!session[i])
@@ -1330,7 +1334,7 @@ int socket_getips(uint32* ips, int max)
 void socket_init(void)
 {
 	char *SOCKET_CONF_FILENAME = "conf/packet.conf";
-	unsigned int rlim_cur = FD_SETSIZE;
+	uint64 rlim_cur = FD_SETSIZE;
 
 #ifdef WIN32
 	{// Start up windows networking
@@ -1403,7 +1407,7 @@ void socket_init(void)
 	timer->add_interval(timer->gettick()+1000, connect_check_clear, 0, 0, 5*60*1000);
 #endif
 
-	ShowInfo("Server supports up to '"CL_WHITE"%u"CL_RESET"' concurrent connections.\n", rlim_cur);
+	ShowInfo("Server supports up to '"CL_WHITE"%lld"CL_RESET"' concurrent connections.\n", rlim_cur);
 	
 	/* Hercules Plugin Manager */
 	HPM->share(session,"session");

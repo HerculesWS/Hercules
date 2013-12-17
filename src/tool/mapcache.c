@@ -181,7 +181,7 @@ void cache_map(char *name, struct map_data *m)
 	strncpy(info.name, name, MAP_NAME_LENGTH);
 	info.xs = MakeShortLE(m->xs);
 	info.ys = MakeShortLE(m->ys);
-	info.len = MakeLongLE(len);
+	info.len = MakeLongLE((uint32)len);
 
 	// Append map header then compressed cells at the end of the file
 	fseek(map_cache_fp, header.file_size, SEEK_SET);

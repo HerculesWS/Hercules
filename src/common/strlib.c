@@ -952,7 +952,7 @@ bool sv_readdb(const char* directory, const char* filename, char delim, int minc
 		if( line[0] == '\0' || line[0] == '\n' || line[0] == '\r')
 			continue;
 
-		columns = sv_split(line, strlen(line), 0, delim, fields, fields_length, (e_svopt)(SV_TERMINATE_LF|SV_TERMINATE_CRLF));
+		columns = sv_split(line, (int)strlen(line), 0, delim, fields, fields_length, (e_svopt)(SV_TERMINATE_LF|SV_TERMINATE_CRLF));
 
 		if( columns < mincols ) {
 			ShowError("sv_readdb: Insufficient columns in line %d of \"%s\" (found %d, need at least %d).\n", lines, path, columns, mincols);
@@ -1018,7 +1018,8 @@ int StringBuf_Printf(StringBuf* self, const char* fmt, ...) {
 
 /// Appends the result of vprintf to the StringBuf
 int StringBuf_Vprintf(StringBuf* self, const char* fmt, va_list ap) {
-	int n, size, off;
+	int n, off;
+	size_t size;
 
 	for(;;) {
 		va_list apcopy;
@@ -1028,7 +1029,7 @@ int StringBuf_Vprintf(StringBuf* self, const char* fmt, va_list ap) {
 		n = vsnprintf(self->ptr_, size, fmt, apcopy);
 		va_end(apcopy);
 		/* If that worked, return the length. */
-		if( n > -1 && n < size ) {
+		if( n > -1 && (size_t)n < size ) {
 			self->ptr_ += n;
 			return (int)(self->ptr_ - self->buf_);
 		}
@@ -1042,11 +1043,11 @@ int StringBuf_Vprintf(StringBuf* self, const char* fmt, va_list ap) {
 
 /// Appends the contents of another StringBuf to the StringBuf
 int StringBuf_Append(StringBuf* self, const StringBuf* sbuf) {
-	int available = self->max_ - (self->ptr_ - self->buf_);
-	int needed = (int)(sbuf->ptr_ - sbuf->buf_);
+	size_t available = self->max_ - (self->ptr_ - self->buf_);
+	size_t needed = sbuf->ptr_ - sbuf->buf_;
 
 	if( needed >= available ) {
-		int off = (int)(self->ptr_ - self->buf_);
+		size_t off = (self->ptr_ - self->buf_);
 		self->max_ += needed;
 		self->buf_ = (char*)aRealloc(self->buf_, self->max_ + 1);
 		self->ptr_ = self->buf_ + off;
@@ -1059,12 +1060,12 @@ int StringBuf_Append(StringBuf* self, const StringBuf* sbuf) {
 
 // Appends str to the StringBuf
 int StringBuf_AppendStr(StringBuf* self, const char* str)  {
-	int available = self->max_ - (self->ptr_ - self->buf_);
-	int needed = (int)strlen(str);
+	size_t available = self->max_ - (self->ptr_ - self->buf_);
+	size_t needed = strlen(str);
 
 	if( needed >= available ) {
 		// not enough space, expand the buffer (minimum expansion = 1024)
-		int off = (int)(self->ptr_ - self->buf_);
+		size_t off = (self->ptr_ - self->buf_);
 		self->max_ += max(needed, 1024);
 		self->buf_ = (char*)aRealloc(self->buf_, self->max_ + 1);
 		self->ptr_ = self->buf_ + off;

@@ -24,7 +24,7 @@ struct irc_bot_interface {
 	bool isIn, isOn;
 	int64 last_try;
 	unsigned char fails;
-	unsigned long ip;
+	uint32 ip;
 	unsigned short port;
 	/* */
 	struct hChSysCh *channel;

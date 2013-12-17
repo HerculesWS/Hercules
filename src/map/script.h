@@ -480,12 +480,12 @@ struct script_interface {
 	int str_num; // next id to be assigned
 	// str_buf holds the strings themselves
 	char *str_buf;
-	int str_size; // size of the buffer
+	size_t str_size; // size of the buffer
 	int str_pos; // next position to be assigned
 	int str_hash[SCRIPT_HASH_SIZE];
 	/* */
 	char *word_buf;
-	int word_size;
+	size_t word_size;
 	/*  */
 	unsigned short current_item_id;
 	/* */
@@ -594,7 +594,6 @@ struct script_interface {
 	void (*reportsrc) (struct script_state *st);
 	void (*reportdata) (struct script_data *data);
 	void (*reportfunc) (struct script_state *st);
-	void (*disp_error_message2) (const char *mes, const char *pos, int report);
 	void (*disp_warning_message) (const char *mes, const char *pos);
 	void (*check_event) (struct script_state *st, const char *evt);
 	unsigned int (*calc_hash) (const char *p);

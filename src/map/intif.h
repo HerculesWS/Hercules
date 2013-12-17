@@ -40,10 +40,10 @@ struct intif_interface {
 	int (*parse) (int fd);
 	int (*create_pet)(int account_id, int char_id, short pet_type, short pet_lv, short pet_egg_id,
 					  short pet_equip, short intimate, short hungry, char rename_flag, char incuvate, char *pet_name);
-	int (*broadcast) (const char* mes, int len, int type);
-	int (*broadcast2) (const char* mes, int len, unsigned long fontColor, short fontType, short fontSize, short fontAlign, short fontY);
+	int (*broadcast) (const char* mes, size_t len, int type);
+	int (*broadcast2) (const char* mes, size_t len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY);
 	int (*main_message) (struct map_session_data* sd, const char* message);
-	int (*wis_message) (struct map_session_data *sd,char *nick,char *mes,int mes_len);
+	int (*wis_message) (struct map_session_data *sd,char *nick,char *mes,size_t mes_len);
 	int (*wis_message_to_gm) (char *Wisp_name, int permission, char *mes);
 	int (*saveregistry) (struct map_session_data *sd, int type);
 	int (*request_registry) (struct map_session_data *sd, int flag);
@@ -65,7 +65,7 @@ struct intif_interface {
 	int (*guild_memberinfoshort) (int guild_id, int account_id, int char_id, int online, int lv, int class_);
 	int (*guild_break) (int guild_id);
 	int (*guild_message) (int guild_id, int account_id, const char *mes, int len);
-	int (*guild_change_gm) (int guild_id, const char* name, int len);
+	int (*guild_change_gm) (int guild_id, const char* name, size_t len);
 	int (*guild_change_basicinfo) (int guild_id, int type, const void *data, int len);
 	int (*guild_change_memberinfo) (int guild_id, int account_id, int char_id, int type, const void *data, int len);
 	int (*guild_position) (int guild_id, int idx, struct guild_position *p);

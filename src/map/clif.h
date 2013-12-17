@@ -472,7 +472,7 @@ struct s_packet_db {
 };
 
 struct {
-	unsigned long *colors;
+	unsigned int *colors;
 	char **colors_name;
 	unsigned char colors_count;
 	bool local, ally, irc;
@@ -517,7 +517,7 @@ struct cdelayed_damage {
  * Vars
  **/
 struct s_packet_db packet_db[MAX_PACKET_DB + 1];
-unsigned long color_table[COLOR_MAX];
+unsigned int color_table[COLOR_MAX];
 
 /**
  * Clif.c Interface
@@ -706,7 +706,7 @@ struct clif_interface {
 	void (*equpcheckbox) (struct map_session_data* sd);
 	void (*displayexp) (struct map_session_data *sd, unsigned int exp, char type, bool is_quest);
 	void (*font) (struct map_session_data *sd);
-	void (*progressbar) (struct map_session_data * sd, unsigned long color, unsigned int second);
+	void (*progressbar) (struct map_session_data * sd, unsigned int color, unsigned int second);
 	void (*progressbar_abort) (struct map_session_data * sd);
 	void (*showdigit) (struct map_session_data* sd, unsigned char type, int value);
 	int (*elementalconverter_list) (struct map_session_data *sd);
@@ -783,13 +783,13 @@ struct clif_interface {
 	void (*clearchat) (struct chat_data *cd,int fd);
 	void (*leavechat) (struct chat_data* cd, struct map_session_data* sd, bool flag);
 	void (*changechatstatus) (struct chat_data* cd);
-	void (*wis_message) (int fd, const char* nick, const char* mes, int mes_len);
+	void (*wis_message) (int fd, const char* nick, const char* mes, size_t mes_len);
 	void (*wis_end) (int fd, int flag);
-	void (*disp_onlyself) (struct map_session_data *sd, const char *mes, int len);
-	void (*disp_message) (struct block_list* src, const char* mes, int len, enum send_target target);
-	void (*broadcast) (struct block_list* bl, const char* mes, int len, int type, enum send_target target);
-	void (*broadcast2) (struct block_list* bl, const char* mes, int len, unsigned long fontColor, short fontType, short fontSize, short fontAlign, short fontY, enum send_target target);
-	void (*messagecolor) (struct block_list* bl, unsigned long color, const char* msg);
+	void (*disp_onlyself) (struct map_session_data *sd, const char *mes, size_t len);
+	void (*disp_message) (struct block_list* src, const char* mes, size_t len, enum send_target target);
+	void (*broadcast) (struct block_list* bl, const char* mes, size_t len, int type, enum send_target target);
+	void (*broadcast2) (struct block_list* bl, const char* mes, size_t len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, enum send_target target);
+	void (*messagecolor) (struct block_list* bl, unsigned int color, const char* msg);
 	void (*disp_overhead) (struct block_list *bl, const char* mes);
 	void (*msg) (struct map_session_data* sd, unsigned short id);
 	void (*msg_value) (struct map_session_data* sd, unsigned short id, int value);
@@ -801,7 +801,7 @@ struct clif_interface {
 	/* message+s(printf) */
 	void (*messages) (const int fd, const char* mes, ...);
 	int (*colormes) (int fd, enum clif_colors color, const char* msg);
-	bool (*process_message) (struct map_session_data* sd, int format, char** name_, int* namelen_, char** message_, int* messagelen_);
+	bool (*process_message) (struct map_session_data *sd, int format, char **name_, size_t *namelen_, char **message_, size_t *messagelen_);
 	void (*wisexin) (struct map_session_data *sd,int type,int flag);
 	void (*wisall) (struct map_session_data *sd,int type,int flag);
 	void (*PMIgnoreList) (struct map_session_data* sd);
@@ -887,7 +887,7 @@ struct clif_interface {
 	void (*bg_hp) (struct map_session_data *sd);
 	void (*bg_xy) (struct map_session_data *sd);
 	void (*bg_xy_remove) (struct map_session_data *sd);
-	void (*bg_message) (struct battleground_data *bgd, int src_id, const char *name, const char *mes, int len);
+	void (*bg_message) (struct battleground_data *bgd, int src_id, const char *name, const char *mes, size_t len);
 	void (*bg_updatescore) (int16 m);
 	void (*bg_updatescore_single) (struct map_session_data *sd);
 	void (*sendbgemblem_area) (struct map_session_data *sd);
@@ -970,7 +970,7 @@ struct clif_interface {
 	void (*PartyRecruitInsertNotify) (struct map_session_data* sd, struct party_booking_ad_info* pb_ad);
 	/* Group Search System Update */
 	void (*PartyBookingVolunteerInfo) (int index, struct map_session_data *sd);
-	void (*PartyBookingRefuseVolunteer) (unsigned long aid, struct map_session_data *sd);
+	void (*PartyBookingRefuseVolunteer) (unsigned int aid, struct map_session_data *sd);
 	void (*PartyBookingCancelVolunteer) (int index, struct map_session_data *sd);
 	void (*PartyBookingAddFilteringList) (int index, struct map_session_data *sd);
 	void (*PartyBookingSubFilteringList) (int gid, struct map_session_data *sd);

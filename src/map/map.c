@@ -2239,7 +2239,7 @@ bool map_addnpc(int16 m,struct npc_data *nd) {
 // Stores the spawn data entry in the mob list.
 // Returns the index of successful, or -1 if the list was full.
 int map_addmobtolist(unsigned short m, struct spawn_data *spawn) {
-	size_t i;
+	int i;
 	ARR_FIND( 0, MAX_MOB_LIST_PER_MAP, i, map->list[m].moblist[i] == NULL );
 	if( i < MAX_MOB_LIST_PER_MAP ) {
 		map->list[m].moblist[i] = spawn;
@@ -3684,7 +3684,7 @@ void map_zone_remove(int m) {
 	unsigned short k;
 	char empty[1] = "\0";
 	for(k = 0; k < map->list[m].zone_mf_count; k++) {
-		int len = strlen(map->list[m].zone_mf[k]),j;
+		size_t len = strlen(map->list[m].zone_mf[k]),j;
 		params[0] = '\0';
 		memcpy(flag, map->list[m].zone_mf[k], MAP_ZONE_MAPFLAG_LENGTH);
 		for(j = 0; j < len; j++) {
@@ -4236,7 +4236,7 @@ bool map_zone_mf_cache(int m, char *flag, char *params) {
 	} else if (!strcmpi(flag,"adjust_unit_duration")) {
 		int skill_id, k;
 		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
-		int len = strlen(params);
+		size_t len = strlen(params);
 
 		modifier[0] = '\0';
 		memcpy(skill_name, params, MAP_ZONE_MAPFLAG_LENGTH);
@@ -4254,7 +4254,6 @@ bool map_zone_mf_cache(int m, char *flag, char *params) {
 		} else {
 			int idx = map->list[m].unit_count;
 
-			k = 0;
 			ARR_FIND(0, idx, k, map->list[m].units[k]->skill_id == skill_id);
 
 			if( k < idx ) {
@@ -4270,7 +4269,7 @@ bool map_zone_mf_cache(int m, char *flag, char *params) {
 	} else if (!strcmpi(flag,"adjust_skill_damage")) {
 		int skill_id, k;
 		char skill_name[MAP_ZONE_MAPFLAG_LENGTH], modifier[MAP_ZONE_MAPFLAG_LENGTH];
-		int len = strlen(params);
+		size_t len = strlen(params);
 
 		modifier[0] = '\0';
 		memcpy(skill_name, params, MAP_ZONE_MAPFLAG_LENGTH);
@@ -4288,7 +4287,6 @@ bool map_zone_mf_cache(int m, char *flag, char *params) {
 		} else {
 			int idx = map->list[m].skill_count;
 
-			k = 0;
 			ARR_FIND(0, idx, k, map->list[m].skills[k]->skill_id == skill_id);
 
 			if( k < idx ) {
@@ -4414,7 +4412,7 @@ void map_zone_apply(int m, struct map_zone_data *zone, const char* start, const 
 	char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
 	map->list[m].zone = zone;
 	for(i = 0; i < zone->mapflags_count; i++) {
-		int len = strlen(zone->mapflags[i]);
+		size_t len = strlen(zone->mapflags[i]);
 		int k;
 		params[0] = '\0';
 		memcpy(flag, zone->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
@@ -4442,7 +4440,7 @@ void map_zone_init(void) {
 	zone = &map->zone_all;
 
 	for(i = 0; i < zone->mapflags_count; i++) {
-		int len = strlen(zone->mapflags[i]);
+		size_t len = strlen(zone->mapflags[i]);
 		params[0] = '\0';
 		memcpy(flag, zone->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
 		for(k = 0; k < len; k++) {
@@ -4465,7 +4463,7 @@ void map_zone_init(void) {
 	if( battle_config.pk_mode ) {
 		zone = &map->zone_pk;
 		for(i = 0; i < zone->mapflags_count; i++) {
-			int len = strlen(zone->mapflags[i]);
+			size_t len = strlen(zone->mapflags[i]);
 			params[0] = '\0';
 			memcpy(flag, zone->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
 			for(k = 0; k < len; k++) {

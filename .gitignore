@@ -36,7 +36,12 @@ Thumbs.db
 /plugins/
 
 #OSX Xcode project user-sensitive-stuff
+/DerivedData
 /Hercules
+/build
+/Hercules.xcodeproj/xcuserdata
+/Hercules.xcodeproj/project.xcworkspace/xcuserdata/
+/Hercules.xcodeproj/project.xcworkspace/xcshareddata/Hercules.xccheckout
 
 # /3rdparty/libconfig/
 /3rdparty/libconfig/Makefile

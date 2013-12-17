@@ -15,8 +15,8 @@ MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
 MT19937AR_INCLUDE = -I$(MT19937AR_D)
 
 COMMON_SHARED_C = conf.c db.c des.c ers.c grfio.c HPM.c mapindex.c md5calc.c \
-                  mempool.c mutex.c nullpo.c raconf.c random.c showmsg.c strlib.c \
-                  thread.c timer.c utils.c
+                  mutex.c nullpo.c random.c showmsg.c strlib.c thread.c \
+                  timer.c utils.c
 COMMON_C = $(COMMON_SHARED_C)
 COMMON_SHARED_OBJ = $(patsubst %.c,%.o,$(COMMON_SHARED_C))
 COMMON_OBJ = $(addprefix obj_all/, $(COMMON_SHARED_OBJ) \
@@ -25,9 +25,8 @@ COMMON_MINI_OBJ = $(addprefix obj_all/, $(COMMON_SHARED_OBJ) \
                   miniconsole.o minicore.o minimalloc.o minisocket.o)
 COMMON_C += console.c core.c malloc.c socket.c
 COMMON_H = atomic.h cbasetypes.h conf.h console.h core.h db.h des.h ers.h \
-           evdp.h grfio.h HPM.h HPMi.h malloc.h mapindex.h md5calc.h \
-           mempool.h mmo.h mutex.h netbuffer.h network.h nullpo.h raconf.h \
-           random.h showmsg.h socket.h spinlock.h sql.h strlib.h \
+           grfio.h HPM.h HPMi.h malloc.h mapindex.h md5calc.h mmo.h mutex.h \
+           nullpo.h random.h showmsg.h socket.h spinlock.h sql.h strlib.h \
            thread.h timer.h utils.h winapi.h
 
 COMMON_SQL_OBJ = obj_sql/sql.o

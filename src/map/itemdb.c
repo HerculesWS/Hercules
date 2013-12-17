@@ -806,7 +806,7 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 
 	for( i = 0; i < pcount; i++ ) {
 		unsigned short id = 0, random_qty = 0, must_qty = 0;
-		struct item_data *data;
+		struct item_data *pdata;
 		struct item_package *package = &itemdb->packages[i];
 		unsigned short c;
 		
@@ -817,10 +817,10 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 		//next 2 bytes = random count
 		hread(&random_qty,sizeof(random_qty),1,file);
 		
-		if( !(data = itemdb->exists(id)) )
+		if( !(pdata = itemdb->exists(id)) )
 			ShowWarning("itemdb_read_packages: unknown package item '%d', skipping..\n",id);
 		else
-			data->package = &itemdb->packages[i];
+			pdata->package = &itemdb->packages[i];
 		
 		package->id = id;
 		package->random_qty = random_qty;
@@ -1022,7 +1022,6 @@ void itemdb_read_packages(void) {
 		for(r = 0; r < highest_gcount; r++) {
 			prev[r] = NULL;
 		}
-		r = 0;
 		
 		data->package = &itemdb->packages[count];
 		
@@ -1300,7 +1299,7 @@ bool itemdb_read_stack(char* fields[], int columns, int current)
 	}
 
 	amount = (unsigned short)strtoul(fields[1], NULL, 10);
-	type = strtoul(fields[2], NULL, 10);
+	type = (unsigned int)strtoul(fields[2], NULL, 10);
 
 	if( !amount )
 	{// ignore

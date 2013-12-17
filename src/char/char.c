@@ -331,15 +331,15 @@ void set_char_offline(int char_id, int account_id)
 static int char_db_setoffline(DBKey key, DBData *data, va_list ap)
 {
 	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
-	int server = va_arg(ap, int);
-	if (server == -1) {
+	int server_id = va_arg(ap, int);
+	if (server_id == -1) {
 		character->char_id = -1;
 		character->server = -1;
 		if(character->waiting_disconnect != INVALID_TIMER){
 			timer->delete(character->waiting_disconnect, chardb_waiting_disconnect);
 			character->waiting_disconnect = INVALID_TIMER;
 		}
-	} else if (character->server == server)
+	} else if (character->server == server_id)
 		character->server = -2; //In some map server that we aren't connected to.
 	return 0;
 }
@@ -2209,7 +2209,6 @@ void loginif_on_ready(void)
 
 int parse_fromlogin(int fd) {
 	struct char_session_data* sd = NULL;
-	int i;
 
 	// only process data from the login-server
 	if( fd != login_fd ) {
@@ -2242,10 +2241,9 @@ int parse_fromlogin(int fd) {
 		uint16 command = RFIFOW(fd,0);
 		
 		if( HPM->packetsc[hpParse_FromLogin] ) {
-			if( (i = HPM->parse_packets(fd,hpParse_FromLogin)) ) {
-				if( i == 1 ) continue;
-				if( i == 2 ) return 0;
-			}
+			int success = HPM->parse_packets(fd,hpParse_FromLogin);
+			if( success == 1 ) continue;
+			else if( success == 2 ) return 0;
 		}
 		
 		switch( command ) {
@@ -2316,6 +2314,8 @@ int parse_fromlogin(int fd) {
 			break;
 
 			case 0x2717: // account data
+			{
+				int i;
 				if (RFIFOREST(fd) < 72)
 					return 0;
 
@@ -2358,6 +2358,7 @@ int parse_fromlogin(int fd) {
 					}
 				}
 				RFIFOSKIP(fd,72);
+			}
 			break;
 
 			// login-server alive packet
@@ -2385,6 +2386,7 @@ int parse_fromlogin(int fd) {
 					int class_[MAX_CHARS];
 					int guild_id[MAX_CHARS];
 					int num;
+					int i;
 					char* data;
 
 					struct auth_node* node = (struct auth_node*)idb_get(auth_db, acc);
@@ -3209,7 +3211,7 @@ int parse_frommap(int fd)
 
 				SQL->EscapeStringLen(sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
 				
-				if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `account_id`,`name`,`char_id`,`unban_time` FROM `%s` WHERE `name` = '%s'", char_db, esc_name) )
+				if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `account_id`,`char_id`,`unban_time` FROM `%s` WHERE `name` = '%s'", char_db, esc_name) )
 					Sql_ShowDebug(sql_handle);
 				else if( SQL->NumRows(sql_handle) == 0 ) {
 					result = 1; // 1-player not found
@@ -3217,15 +3219,13 @@ int parse_frommap(int fd)
 					Sql_ShowDebug(sql_handle);
 					result = 1; // 1-player not found
 				} else {
-					char name[NAME_LENGTH];
 					int account_id, char_id;
 					char* data;
 					time_t unban_time;
 
 					SQL->GetData(sql_handle, 0, &data, NULL); account_id = atoi(data);
-					SQL->GetData(sql_handle, 1, &data, NULL); safestrncpy(name, data, sizeof(name));
-					SQL->GetData(sql_handle, 2, &data, NULL); char_id = atoi(data);
-					SQL->GetData(sql_handle, 3, &data, NULL); unban_time = atol(data);
+					SQL->GetData(sql_handle, 1, &data, NULL); char_id = atoi(data);
+					SQL->GetData(sql_handle, 2, &data, NULL); unban_time = atol(data);
 
 					if( login_fd <= 0 )
 						result = 3; // 3-login-server offline
@@ -3465,7 +3465,6 @@ int parse_frommap(int fd)
 				{
 					struct status_change_data data;
 					StringBuf buf;
-					int i;
 
 					StrBuf->Init(&buf);
 					StrBuf->Printf(&buf, "INSERT INTO `%s` (`account_id`, `char_id`, `type`, `tick`, `val1`, `val2`, `val3`, `val4`) VALUES ", scdata_db);
@@ -3905,7 +3904,6 @@ static void char_delete2_cancel(int fd, struct char_session_data* sd)
 
 int parse_char(int fd)
 {
-	int i;
 	char email[40];
 	unsigned short cmd;
 	int map_fd;
@@ -3937,10 +3935,9 @@ int parse_char(int fd)
 		#define FIFOSD_CHECK(rest) do { if(RFIFOREST(fd) < (rest)) return 0; if (sd==NULL || !sd->auth) { RFIFOSKIP(fd,(rest)); return 0; } } while (0)
 
 		if( HPM->packetsc[hpParse_Char] ) {
-			if( (i = HPM->parse_packets(fd,hpParse_Char)) ) {
-				if( i == 1 ) continue;
-				if( i == 2 ) return 0;
-			}
+			int success = HPM->parse_packets(fd,hpParse_Char);
+			if( success == 1 ) continue;
+			else if( success == 2 ) return 0;
 		}
 		
 		cmd = RFIFOW(fd,0);
@@ -4043,6 +4040,7 @@ int parse_char(int fd)
 				uint32 subnet_map_ip;
 				struct auth_node* node;
 				int server_id = 0;
+				int i;
 
 				int slot = RFIFOB(fd,2);
 				RFIFOSKIP(fd,3);
@@ -4214,31 +4212,35 @@ int parse_char(int fd)
 	#if PACKETVER >= 20120307
 			// S 0970 <name>.24B <slot>.B <hair color>.W <hair style>.W
 			case 0x970:
+			{
+				int result;
 				FIFOSD_CHECK(31);
 	#else
 			// S 0067 <name>.24B <str>.B <agi>.B <vit>.B <int>.B <dex>.B <luk>.B <slot>.B <hair color>.W <hair style>.W
 			case 0x67:
+			{
+				int result;
 				FIFOSD_CHECK(37);
 	#endif
 
 				if( !char_new ) //turn character creation on/off [Kevin]
-					i = -2;
+					result = -2;
 				else
 	#if PACKETVER >= 20120307
-					i = make_new_char_sql(sd, (char*)RFIFOP(fd,2),RFIFOB(fd,26),RFIFOW(fd,27),RFIFOW(fd,29));
+					result = make_new_char_sql(sd, (char*)RFIFOP(fd,2),RFIFOB(fd,26),RFIFOW(fd,27),RFIFOW(fd,29));
 	#else
-					i = make_new_char_sql(sd, (char*)RFIFOP(fd,2),RFIFOB(fd,26),RFIFOB(fd,27),RFIFOB(fd,28),RFIFOB(fd,29),RFIFOB(fd,30),RFIFOB(fd,31),RFIFOB(fd,32),RFIFOW(fd,33),RFIFOW(fd,35));
+					result = make_new_char_sql(sd, (char*)RFIFOP(fd,2),RFIFOB(fd,26),RFIFOB(fd,27),RFIFOB(fd,28),RFIFOB(fd,29),RFIFOB(fd,30),RFIFOB(fd,31),RFIFOB(fd,32),RFIFOW(fd,33),RFIFOW(fd,35));
 	#endif
 
 				//'Charname already exists' (-1), 'Char creation denied' (-2) and 'You are underaged' (-3)
-				if (i < 0) {
+				if (result < 0) {
 					WFIFOHEAD(fd,3);
 					WFIFOW(fd,0) = 0x6e;
 					/* Others I found [Ind] */
 					/* 0x02 = Symbols in Character Names are forbidden */
 					/* 0x03 = You are not elegible to open the Character Slot. */
 					/* 0x0B = This service is only available for premium users.  */
-					switch (i) {
+					switch (result) {
 						case -1: WFIFOB(fd,2) = 0x00; break;
 						case -2: WFIFOB(fd,2) = 0xFF; break;
 						case -3: WFIFOB(fd,2) = 0x01; break;
@@ -4249,7 +4251,7 @@ int parse_char(int fd)
 					int len;
 					// retrieve data
 					struct mmo_charstatus char_dat;
-					mmo_char_fromsql(i, &char_dat, false); //Only the short data is needed.
+					mmo_char_fromsql(result, &char_dat, false); //Only the short data is needed.
 
 					// send to player
 					WFIFOHEAD(fd,2+MAX_CHAR_BUF);
@@ -4258,13 +4260,14 @@ int parse_char(int fd)
 					WFIFOSET(fd,len);
 
 					// add new entry to the chars list
-					sd->found_char[char_dat.slot] = i; // the char_id of the new char
+					sd->found_char[char_dat.slot] = result; // the char_id of the new char
 				}
 	#if PACKETVER >= 20120307
 				RFIFOSKIP(fd,31);
 	#else
 				RFIFOSKIP(fd,37);
 	#endif
+			}
 			break;
 
 			// delete char
@@ -4275,6 +4278,7 @@ int parse_char(int fd)
 				if (cmd == 0x1fb) FIFOSD_CHECK(56);
 			{
 				int cid = RFIFOL(fd,2);
+				int i;
 #if PACKETVER >= 20110309
 				if( *pincode->enabled ){ // hack check
 					struct online_char_data* character;	
@@ -4483,6 +4487,7 @@ int parse_char(int fd)
 			{
 				char* l_user = (char*)RFIFOP(fd,2);
 				char* l_pass = (char*)RFIFOP(fd,26);
+				int i;
 				l_user[23] = '\0';
 				l_pass[23] = '\0';
 				ARR_FIND( 0, ARRAYLENGTH(server), i, server[i].fd <= 0 );

@@ -28,8 +28,10 @@
 	#define plugin_import(x,y,z)   (z)dlsym((x),(y))
 	#define plugin_close(x)        dlclose(x)
 
-	#ifdef CYGWIN
+	#if defined CYGWIN
 		#define DLL_EXT        ".dll"
+	#elif defined __DARWIN__
+		#define DLL_EXT        ".dylib"
 	#else
 		#define DLL_EXT        ".so"
 	#endif

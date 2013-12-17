@@ -152,7 +152,8 @@ int irc_parse(int fd) {
  *               NULL, needs to be able to fit an IRC_HOST_LENGTH long string)
  */
 void irc_parse_source(char *source, char *nick, char *ident, char *host) {
-	int i, len = strlen(source), pos = 0;
+	int i, pos = 0;
+	size_t len = strlen(source);
 	unsigned char stage = 0;
 	
 	for(i = 0; i < len; i++) {
@@ -208,7 +209,7 @@ void irc_parse_sub(int fd, char *str) {
  * @param str Command to send
  */
 void irc_send(char *str) {
-	int len = strlen(str) + 2;
+	size_t len = strlen(str) + 2;
 	if (len > IRC_MESSAGE_LENGTH-3)
 		len = IRC_MESSAGE_LENGTH-3;
 	WFIFOHEAD(ircbot->fd, len);
@@ -298,7 +299,7 @@ void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 			ircbot->parse_source(source,source_nick,source_ident,source_host);
 				
 		if( ircbot->channel ) {
-			int padding_len = strlen(ircbot->channel->name) + strlen(source_nick) + 13;
+			size_t padding_len = strlen(ircbot->channel->name) + strlen(source_nick) + 13;
 			while (1) {
 				snprintf(send_string, 150, "[ #%s ] IRC.%s : %s",ircbot->channel->name,source_nick,msg);
 				clif->chsys_msg2(ircbot->channel,send_string);

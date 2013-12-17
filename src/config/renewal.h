@@ -13,6 +13,7 @@
  * @INFO: This file holds general-purpose renewal settings, for class-specific ones check /src/config/classes folder
  **/
 
+//#define DISABLE_RENEWAL
 #ifndef DISABLE_RENEWAL
 
 /// game renewal server mode

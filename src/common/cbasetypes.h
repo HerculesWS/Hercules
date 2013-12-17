@@ -255,6 +255,13 @@ typedef uintptr_t uintptr;
 #define ra_align(n) __attribute__(( aligned(n) ))
 #endif
 
+// Directives for the (clang) static analyzer
+#ifdef __clang__
+#define analyzer_noreturn __attribute__((analyzer_noreturn))
+#else
+#define analyzer_noreturn
+#endif
+
 
 /////////////////////////////
 // for those still not building c++
@@ -353,23 +360,6 @@ typedef char bool;
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-// Assert
-
-#if ! defined(Assert)
-#if defined(RELEASE)
-#define Assert(EX)
-#else
-// extern "C" {
-#include <assert.h>
-// }
-#if !defined(DEFCPP) && defined(WIN32) && !defined(MINGW)
-#include <crtdbg.h>
-#endif
-#define Assert(EX) assert(EX)
-#endif
-#endif /* ! defined(Assert) */
-
-//////////////////////////////////////////////////////////////////////////
 // Has to be unsigned to avoid problems in some systems
 // Problems arise when these functions expect an argument in the range [0,256[ and are fed a signed char.
 #include <ctype.h>
@@ -405,7 +395,7 @@ typedef char bool;
 
 
 //////////////////////////////////////////////////////////////////////////
-// Use the preprocessor to 'stringify' stuff (concert to a string).
+// Use the preprocessor to 'stringify' stuff (convert to a string).
 // example:
 //   #define TESTE blabla
 //   QUOTE(TESTE) -> "TESTE"

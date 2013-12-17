@@ -14,6 +14,21 @@ struct homun_data;
 struct mercenary_data;
 struct status_change;
 
+//Change the equation when the values are high enough to discard the
+//imprecision in exchange of overflow protection [Skotlex]
+//Also add 100% checks since those are the most used cases where we don't
+//want aproximation errors.
+#define APPLY_RATE(value, rate) ( \
+	(rate) == 100 ? \
+		(value) \
+	: ( \
+		(value) > 100000 ? \
+			(rate) * ( (value) / 100 ) \
+		: \
+			(value) * (rate) / 100 \
+	) \
+)
+
 /**
  * Max Refine available to your server
  * Changing this limit requires edits to refine_db.txt

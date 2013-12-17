@@ -284,7 +284,8 @@ struct accreg {
 // For saving status changes across sessions. [Skotlex]
 struct status_change_data {
 	unsigned short type; //SC_type
-	long val1, val2, val3, val4, tick; //Remaining duration.
+	int val1, val2, val3, val4;
+	unsigned int tick; //Remaining duration.
 };
 
 struct storage_data {

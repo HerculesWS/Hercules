@@ -1187,9 +1187,7 @@ yydestruct (yymsg, yytype, yyvaluep, scanner, ctx, scan_ctx)
   YYUSE (ctx);
   YYUSE (scan_ctx);
 
-  if (!yymsg)
-    yymsg = "Deleting";
-  YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
+  YY_SYMBOL_PRINT (yymsg ? yymsg : "Deleting", yytype, yyvaluep, yylocationp);
 
   switch (yytype)
     {

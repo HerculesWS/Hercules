@@ -125,7 +125,7 @@ int intif_rename(struct map_session_data *sd, int type, char *name)
 }
 
 // GM Send a message
-int intif_broadcast(const char* mes, int len, int type)
+int intif_broadcast(const char* mes, size_t len, int type)
 {
 	int lp = (type|BC_COLOR_MASK) ? 4 : 0;
 
@@ -155,7 +155,7 @@ int intif_broadcast(const char* mes, int len, int type)
 	return 0;
 }
 
-int intif_broadcast2(const char* mes, int len, unsigned long fontColor, short fontType, short fontSize, short fontAlign, short fontY)
+int intif_broadcast2(const char* mes, size_t len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY)
 {
 	// Send to the local players
 	clif->broadcast2(NULL, mes, len, fontColor, fontType, fontSize, fontAlign, fontY, ALL_CLIENT);
@@ -201,7 +201,7 @@ int intif_main_message(struct map_session_data* sd, const char* message)
 }
 
 // The transmission of Wisp/Page to inter-server (player not found on this server)
-int intif_wis_message(struct map_session_data *sd, char *nick, char *mes, int mes_len)
+int intif_wis_message(struct map_session_data *sd, char *nick, char *mes, size_t mes_len)
 {
 	nullpo_ret(sd);
 	if (intif->CheckForCharServer())
@@ -247,7 +247,7 @@ int intif_wis_replay(int id, int flag)
 // The transmission of GM only Wisp/Page from server to inter-server
 int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
 {
-	int mes_len;
+	size_t mes_len;
 	if (intif->CheckForCharServer())
 		return 0;
 	mes_len = strlen(mes) + 1; // + null
@@ -560,7 +560,7 @@ int intif_guild_addmember(int guild_id,struct guild_member *m)
 }
 
 // Request a new leader for guild
-int intif_guild_change_gm(int guild_id, const char* name, int len)
+int intif_guild_change_gm(int guild_id, const char* name, size_t len)
 {
 	if (intif->CheckForCharServer())
 		return 0;

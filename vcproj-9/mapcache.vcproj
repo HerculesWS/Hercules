@@ -282,6 +282,14 @@
 				RelativePath="..\src\common\winapi.h"
 				>
 			</File>
+			<File
+				RelativePath="..\src\common\nullpo.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\common\nullpo.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="mapcache"

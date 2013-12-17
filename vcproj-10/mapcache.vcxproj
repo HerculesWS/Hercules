@@ -124,19 +124,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\common\core.c" />
-	<ClCompile Include="..\src\common\console.c" />
+    <ClCompile Include="..\src\common\console.c" />
     <ClCompile Include="..\src\common\des.c" />
     <ClCompile Include="..\src\common\grfio.c" />
     <ClCompile Include="..\src\common\malloc.c" />
     <ClCompile Include="..\src\common\showmsg.c" />
     <ClCompile Include="..\src\common\strlib.c" />
     <ClCompile Include="..\src\common\utils.c" />
+    <ClCompile Include="..\src\common\nullpo.c" />
     <ClCompile Include="..\src\tool\mapcache.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\common\cbasetypes.h" />
     <ClInclude Include="..\src\common\core.h" />
-	<ClInclude Include="..\src\common\console.h" />
+    <ClInclude Include="..\src\common\console.h" />
     <ClInclude Include="..\src\common\des.h" />
     <ClInclude Include="..\src\common\grfio.h" />
     <ClInclude Include="..\src\common\malloc.h" />
@@ -145,7 +146,8 @@
     <ClInclude Include="..\src\common\strlib.h" />
     <ClInclude Include="..\src\common\utils.h" />
     <ClInclude Include="..\src\common\winapi.h" />
-	<ClInclude Include="..\src\config\renewal.h" />
+    <ClInclude Include="..\src\common\nullpo.h" />
+    <ClInclude Include="..\src\config\renewal.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -44,9 +44,9 @@ struct party_booking_detail {
 };
 
 struct party_booking_ad_info {
-	unsigned long index;
+	unsigned int index;
 	char charname[NAME_LENGTH];
-	long expiretime;
+	int expiretime;
 	struct party_booking_detail p_detail;
 };
 #else /* PARTY_RECRUIT */
@@ -56,8 +56,8 @@ struct party_booking_detail {
 };
 
 struct party_booking_ad_info {
-	unsigned long index;
-	long expiretime;
+	unsigned int index;
+	int expiretime;
 	char charname[NAME_LENGTH];
 	struct party_booking_detail p_detail;
 };
@@ -71,7 +71,7 @@ struct party_booking_ad_info {
 struct party_interface {
 	DBMap* db; // int party_id -> struct party_data* (releases data)
 	DBMap* booking_db; // int char_id -> struct party_booking_ad_info* (releases data) // Party Booking [Spiria]
-	unsigned long booking_nextid;
+	unsigned int booking_nextid;
 	/* funcs */
 	void (*init) (bool minimal);
 	void (*final) (void);

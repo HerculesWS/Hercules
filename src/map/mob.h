@@ -91,7 +91,7 @@ struct mob_skill {
 
 struct mob_chat {
 	unsigned short msg_id;
-	unsigned long color;
+	unsigned int color;
 	char msg[CHAT_SIZE_MAX];
 };
 
