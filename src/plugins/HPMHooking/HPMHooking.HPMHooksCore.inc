@@ -4095,8 +4095,6 @@ struct {
 	struct HPMHookPoint *HP_script_reportdata_post;
 	struct HPMHookPoint *HP_script_reportfunc_pre;
 	struct HPMHookPoint *HP_script_reportfunc_post;
-	struct HPMHookPoint *HP_script_disp_error_message2_pre;
-	struct HPMHookPoint *HP_script_disp_error_message2_post;
 	struct HPMHookPoint *HP_script_disp_warning_message_pre;
 	struct HPMHookPoint *HP_script_disp_warning_message_post;
 	struct HPMHookPoint *HP_script_check_event_pre;
@@ -9068,8 +9066,6 @@ struct {
 	int HP_script_reportdata_post;
 	int HP_script_reportfunc_pre;
 	int HP_script_reportfunc_post;
-	int HP_script_disp_error_message2_pre;
-	int HP_script_disp_error_message2_post;
 	int HP_script_disp_warning_message_pre;
 	int HP_script_disp_warning_message_post;
 	int HP_script_check_event_pre;
