@@ -142,7 +142,7 @@ static void rdtsc_calibrate(){
  * platform-abstracted tick retrieval
  * @return server's current tick
  */
-static int64 tick(void) {
+static int64 sys_tick(void) {
 #if defined(WIN32)
 	// Windows: GetTickCount/GetTickCount64: Return the number of
 	//   milliseconds that have elapsed since the system was started.
@@ -206,7 +206,7 @@ static int gettick_count = 1;
 
 int64 timer_gettick_nocache(void) {
 	gettick_count = TICK_CACHE;
-	gettick_cache = tick();
+	gettick_cache = sys_tick();
 	return gettick_cache;
 }
 
@@ -219,11 +219,11 @@ int64 timer_gettick(void) {
 // tick doesn't get cached
 int64 timer_gettick_nocache(void)
 {
-	return tick();
+	return sys_tick();
 }
 
 int64 timer_gettick(void) {
-	return tick();
+	return sys_tick();
 }
 //////////////////////////////////////////////////////////////////////////
 #endif

@@ -248,22 +248,22 @@ AC_ARG_ENABLE(
 # LTO
 #
 AC_ARG_ENABLE(
-    [lto],
-    AC_HELP_STRING(
-        [--enable-lto],
-        [
+	[lto],
+	AC_HELP_STRING(
+		[--enable-lto],
+		[
 			Enables or Disables Linktime Code Optimization (LTO is enabled by default)
-        ]
-    ),
-    [
-        enable_lto="$enableval"
-        case $enableval in
-            "no");;
-            "yes");;
-            *) AC_MSG_ERROR([[invalid argument --enable-lto=$disableval... stopping]]);;
-        esac
-    ],
-    [enable_lto="yes"]
+		]
+	),
+	[
+		enable_lto="$enableval"
+		case $enableval in
+			"no");;
+			"yes");;
+			*) AC_MSG_ERROR([[invalid argument --enable-lto=$disableval... stopping]]);;
+		esac
+	],
+	[enable_lto="yes"]
 )
 
 
@@ -517,19 +517,6 @@ AC_RUN_IFELSE(
 )
 
 
-AC_MSG_CHECKING([whether $CC supports -Wno-unused-parameter])
-OLD_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -Wno-unused-parameter"
-AC_COMPILE_IFELSE(
-	[AC_LANG_SOURCE([int foo;])],
-	[AC_MSG_RESULT([yes])],
-	[
-		AC_MSG_RESULT([no])
-		CFLAGS="$OLD_CFLAGS"
-	]
-)
-
-
 #
 # LTO Support test
 #
@@ -545,8 +532,8 @@ if test "$enable_lto" != "no" ; then
 	AC_RUN_IFELSE(
 		[AC_LANG_SOURCE([
 			int main(int argc, char **argv){
-               return 0;
-           }
+				return 0;
+			}
 		])],
 		[
 			AC_MSG_RESULT([yes])
@@ -563,193 +550,141 @@ if test "$enable_lto" != "no" ; then
 fi
 
 
-AC_MSG_CHECKING([whether $CC supports -Wno-maybe-uninitialized])
-OLD_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -Wno-maybe-uninitialized"
-AC_COMPILE_IFELSE(
-	[AC_LANG_SOURCE([int foo;])],
+AC_DEFUN(AC_CHECK_COMPILER_WFLAG,
 	[
-		AC_MSG_RESULT([yes])
-		AC_MSG_CHECKING([whether $CC can actually use -Wno-maybe-uninitialized])
-		# Note: -Werror must be before -Wno-maybe-uninitialized, otherwise it does not do anything
-		CFLAGS="$OLD_CFLAGS -Werror -Wno-maybe-uninitialized"
+		AC_MSG_CHECKING([whether $CC supports -W$1])
+		OLD_CFLAGS="$CFLAGS"
+		CFLAGS="$CFLAGS -Werror -W$1"
 		AC_COMPILE_IFELSE(
 			[AC_LANG_SOURCE([int foo;])],
 			[
 				AC_MSG_RESULT([yes])
-				CFLAGS="$OLD_CFLAGS -Wno-maybe-uninitialized"
+				CFLAGS="$OLD_CFLAGS -W$1"
+				# Optionally, run a test
+				if test "x$2" != "x"; then
+					AC_MSG_CHECKING([whether $CC can actually use -W$1])
+					CFLAGS="$OLD_CFLAGS -Werror -W$1"
+					AC_COMPILE_IFELSE(
+						[AC_LANG_SOURCE([$2])],
+						[
+							AC_MSG_RESULT([no])
+							CFLAGS="$OLD_CFLAGS"
+						]
+						[
+							AC_MSG_RESULT([yes])
+							CFLAGS="$OLD_CFLAGS -W$1"
+						],
+					)
+				fi
 			],
 			[
 				AC_MSG_RESULT([no])
 				CFLAGS="$OLD_CFLAGS"
 			]
 		)
-	],
-	[
-		AC_MSG_RESULT([no])
-		CFLAGS="$OLD_CFLAGS"
 	]
 )
 
-
-AC_MSG_CHECKING([whether $CC supports -Wno-clobbered])
-OLD_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -Wno-clobbered"
-AC_COMPILE_IFELSE(
-	[AC_LANG_SOURCE([int foo;])],
+AC_DEFUN(AC_CHECK_COMPILER_WNOFLAG,
 	[
-		AC_MSG_RESULT([yes])
-		AC_MSG_CHECKING([whether $CC can actually use -Wno-clobbered])
-		# Note: -Werror must be before -Wno-clobbered, otherwise it does not do anything
-		CFLAGS="$OLD_CFLAGS -Werror -Wno-clobbered"
+		AC_MSG_CHECKING([whether $CC supports -Wno-$1])
+		OLD_CFLAGS="$CFLAGS"
+		CFLAGS="$CFLAGS -Werror -Wno-$1"
 		AC_COMPILE_IFELSE(
 			[AC_LANG_SOURCE([int foo;])],
 			[
-				AC_MSG_RESULT([yes])
-				CFLAGS="$OLD_CFLAGS -Wno-clobbered"
+				# Recent versions of gcc don't fail if -Wno-foo is not recognized
+				# (unless there are also other warnings), so we also check for -Wfoo
+				# which always fails if not supported
+				CFLAGS="$OLD_CFLAGS -Werror -W$1"
+				AC_COMPILE_IFELSE(
+					[AC_LANG_SOURCE([int foo;])],
+					[
+						AC_MSG_RESULT([yes])
+						CFLAGS="$OLD_CFLAGS -Wno-$1"
+						# Optionally, run a test
+						if test "x$2" != "x"; then
+							AC_MSG_CHECKING([whether $CC can actually use -Wno-$1])
+							CFLAGS="$OLD_CFLAGS -Werror -W$1"
+							AC_COMPILE_IFELSE(
+								[AC_LANG_SOURCE([$2])],
+								[
+									AC_MSG_RESULT([not needed but enabled])
+									CFLAGS="$OLD_CFLAGS"
+								],
+								[
+									CFLAGS="$OLD_CFLAGS -Werror -Wno-$1"
+									AC_COMPILE_IFELSE(
+										[AC_LANG_SOURCE([$2])],
+										[
+											AC_MSG_RESULT([yes])
+											CFLAGS="$OLD_CFLAGS -Wno-$1"
+										],
+										[
+											AC_MSG_RESULT([no])
+											CFLAGS="$OLD_CFLAGS"
+										]
+									)
+								]
+							)
+						fi
+					],
+					[
+						AC_MSG_RESULT([no])
+						CFLAGS="$OLD_CFLAGS"
+					]
+				)
 			],
 			[
 				AC_MSG_RESULT([no])
 				CFLAGS="$OLD_CFLAGS"
 			]
 		)
-	],
-	[
-		AC_MSG_RESULT([no])
-		CFLAGS="$OLD_CFLAGS"
 	]
 )
 
+AC_CHECK_COMPILER_WNOFLAG(unused-parameter, [int foo(int bar) { return 0; }])
+AC_CHECK_COMPILER_WNOFLAG(maybe-uninitialized)
+AC_CHECK_COMPILER_WNOFLAG(clobbered)
+AC_CHECK_COMPILER_WFLAG(empty-body)
+AC_CHECK_COMPILER_WFLAG(newline-eof)
+AC_CHECK_COMPILER_WFLAG(int-conversion)
+AC_CHECK_COMPILER_WFLAG(enum-conversion)
+AC_CHECK_COMPILER_WFLAG(shorten-64-to-32)
+AC_CHECK_COMPILER_WFLAG(constant-conversion)
+AC_CHECK_COMPILER_WFLAG(bool-conversion)
+AC_CHECK_COMPILER_WNOFLAG(switch)
+AC_CHECK_COMPILER_WNOFLAG(missing-field-initializers)
 
-AC_MSG_CHECKING([whether $CC supports -Wempty-body])
-OLD_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -Wempty-body"
-AC_COMPILE_IFELSE(
-	[AC_LANG_SOURCE([int foo;])],
-	[AC_MSG_RESULT([yes])],
-	[
-		AC_MSG_RESULT([no])
-		CFLAGS="$OLD_CFLAGS"
-	]
-)
-
-
-AC_MSG_CHECKING([whether $CC supports -Wnewline-eof])
-OLD_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -Wnewline-eof"
-AC_COMPILE_IFELSE(
-	[AC_LANG_SOURCE([int foo;])],
-	[AC_MSG_RESULT([yes])],
-	[
-		AC_MSG_RESULT([no])
-		CFLAGS="$OLD_CFLAGS"
-	]
-)
-
-
-AC_MSG_CHECKING([whether $CC supports -Wshadow])
-OLD_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -Wshadow"
-AC_COMPILE_IFELSE(
-	[AC_LANG_SOURCE([int foo;])],
-	[AC_MSG_RESULT([yes])],
-	[
-		AC_MSG_RESULT([no])
-		CFLAGS="$OLD_CFLAGS"
-	]
-)
-
-
-AC_MSG_CHECKING([whether $CC supports -Wint-conversion])
-OLD_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -Wenum-conversion"
-AC_COMPILE_IFELSE(
-	[AC_LANG_SOURCE([int foo;])],
-	[AC_MSG_RESULT([yes])],
-	[
-		AC_MSG_RESULT([no])
-		CFLAGS="$OLD_CFLAGS"
-	]
-)
-
-
-AC_MSG_CHECKING([whether $CC supports -Wenum-conversion])
-OLD_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -Wenum-conversion"
-AC_COMPILE_IFELSE(
-	[AC_LANG_SOURCE([int foo;])],
-	[AC_MSG_RESULT([yes])],
-	[
-		AC_MSG_RESULT([no])
-		CFLAGS="$OLD_CFLAGS"
-	]
-)
-
-
-AC_MSG_CHECKING([whether $CC supports -Wshorten-64-to-32])
-OLD_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -Wshorten-64-to-32"
-AC_COMPILE_IFELSE(
-	[AC_LANG_SOURCE([int foo;])],
-	[AC_MSG_RESULT([yes])],
-	[
-		AC_MSG_RESULT([no])
-		CFLAGS="$OLD_CFLAGS"
-	]
-)
-
-
-AC_MSG_CHECKING([whether $CC supports -Wconstant-conversion])
-OLD_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -Wconstant-conversion"
-AC_COMPILE_IFELSE(
-	[AC_LANG_SOURCE([int foo;])],
-	[AC_MSG_RESULT([yes])],
-	[
-		AC_MSG_RESULT([no])
-		CFLAGS="$OLD_CFLAGS"
-	]
-)
-
-
-AC_MSG_CHECKING([whether $CC supports -Wbool-conversion])
-OLD_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -Wbool-conversion"
-AC_COMPILE_IFELSE(
-	[AC_LANG_SOURCE([int foo;])],
-	[AC_MSG_RESULT([yes])],
-	[
-		AC_MSG_RESULT([no])
-		CFLAGS="$OLD_CFLAGS"
-	]
-)
-
-
-AC_MSG_CHECKING([whether $CC supports -Wno-switch])
-OLD_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -Wno-switch"
-AC_COMPILE_IFELSE(
-	[AC_LANG_SOURCE([int foo;])],
-	[AC_MSG_RESULT([yes])],
-	[
-		AC_MSG_RESULT([no])
-		CFLAGS="$OLD_CFLAGS"
-	]
-)
-
-
-AC_MSG_CHECKING([whether $CC supports -Wno-missing-field-initializers])
-OLD_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -Wno-missing-field-initializers"
-AC_COMPILE_IFELSE(
-	[AC_LANG_SOURCE([int foo;])],
-	[AC_MSG_RESULT([yes])],
-	[
-		AC_MSG_RESULT([no])
-		CFLAGS="$OLD_CFLAGS"
-	]
-)
-
+# Certain versions of gcc make -Wshadow completely useless by making it flood
+# you with unnecessary warnings <https://lkml.org/lkml/2006/11/28/239>
+# Let's check if we can really use it
+SAVED_OLD_CFLAGS="$CFLAGS"
+AC_CHECK_COMPILER_WFLAG(shadow)
+if test "x$CFLAGS" != "x$SAVED_OLD_CFLAGS"; then
+	AC_MSG_CHECKING([whether $CC can efficiently use -Wshadow])
+	NEW_CFLAGS="$CFLAGS"
+	CFLAGS="$CFLAGS -Werror -Wshadow"
+	AC_COMPILE_IFELSE(
+		[AC_LANG_SOURCE([
+			int foo(void) {
+				return 0;
+			}
+			int bar(void) {
+				int foo = 0;
+				return foo + 1;
+			}
+		])],
+		[
+			AC_MSG_RESULT([yes])
+			CFLAGS="$NEW_CFLAGS"
+		],
+		[
+			AC_MSG_RESULT([no])
+			CFLAGS="$SAVED_OLD_CFLAGS"
+		]
+	)
+fi
 
 AC_MSG_CHECKING([whether $CC supports -fPIC])
 OLD_CFLAGS="$CFLAGS"
