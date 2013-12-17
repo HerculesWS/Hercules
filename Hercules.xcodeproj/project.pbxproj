@@ -467,9 +467,7 @@
 				A58A5A1C185801490099683E /* core */,
 				A56CC65B185642B4009EB79C /* Products */,
 			);
-			indentWidth = 8;
 			sourceTree = "<group>";
-			tabWidth = 8;
 			usesTabs = 1;
 		};
 		A56CC65B185642B4009EB79C /* Products */ = {
