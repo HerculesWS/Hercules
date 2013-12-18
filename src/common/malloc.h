@@ -33,6 +33,7 @@
 #	define aMalloc(n)    (iMalloc->malloc((n),ALC_MARK))
 #	define aCalloc(m,n)  (iMalloc->calloc((m),(n),ALC_MARK))
 #	define aRealloc(p,n) (iMalloc->realloc((p),(n),ALC_MARK))
+#	define aReallocz(p,n) (iMalloc->reallocz((p),(n),ALC_MARK))
 #	define aStrdup(p)    (iMalloc->astrdup((p),ALC_MARK))
 #	define aFree(p)      (iMalloc->free((p),ALC_MARK))
 
@@ -54,7 +55,7 @@
 ////////////// Others //////////////////////////
 // should be merged with any of above later
 #define CREATE(result, type, number) ((result) = (type *) aCalloc((number), sizeof(type)))
-#define RECREATE(result, type, number) ((result) = (type *) aRealloc((result), sizeof(type) * (number)))
+#define RECREATE(result, type, number) ((result) = (type *) aReallocz((result), sizeof(type) * (number)))
 
 ////////////////////////////////////////////////
 
@@ -73,6 +74,7 @@ struct malloc_interface {
 	void* (*malloc	)(size_t size, const char *file, int line, const char *func);
 	void* (*calloc	)(size_t num, size_t size, const char *file, int line, const char *func);
 	void* (*realloc	)(void *p, size_t size, const char *file, int line, const char *func);
+	void* (*reallocz)(void *p, size_t size, const char *file, int line, const char *func);
 	char* (*astrdup	)(const char *p, const char *file, int line, const char *func);
 	void  (*free	)(void *p, const char *file, int line, const char *func);
 	/* */

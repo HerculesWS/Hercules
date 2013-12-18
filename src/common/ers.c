@@ -40,6 +40,7 @@
  * @see common#ers.h                                                         *
 \*****************************************************************************/
 #include <stdlib.h>
+#include <string.h>
 
 #include "../common/cbasetypes.h"
 #include "../common/malloc.h" // CREATE, RECREATE, aMalloc, aFree
@@ -238,6 +239,9 @@ static void ers_obj_free_entry(ERS self, void *entry)
 		return;
 	}
 
+	if( instance->Options & ERS_OPT_CLEAN )
+		memset((unsigned char*)reuse + sizeof(struct ers_list), 0, instance->Cache->ObjectSize - sizeof(struct ers_list));
+	
 	reuse->Next = instance->Cache->ReuseList;
 	instance->Cache->ReuseList = reuse;
 	instance->Count--;

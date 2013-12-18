@@ -17141,10 +17141,7 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick)
 	
 	if( !(cd = idb_get(skill->cd_db,sd->status.char_id)) ) {// create a new skill cooldown object for map storage
 		cd = ers_alloc(skill->cd_ers, struct skill_cd);
-		
-		cd->cursor = 0;
-		memset(cd->entry, 0, sizeof(cd->entry));
-		
+				
 		idb_put( skill->cd_db, sd->status.char_id, cd );
 	} else {
 		int i;
@@ -18215,9 +18212,9 @@ int do_init_skill(bool minimal) {
 	skill->cd_db = idb_alloc(DB_OPT_BASE);
 	skill->usave_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	
-	skill->unit_ers = ers_new(sizeof(struct skill_unit_group),"skill.c::skill_unit_ers",ERS_OPT_NONE);
+	skill->unit_ers = ers_new(sizeof(struct skill_unit_group),"skill.c::skill_unit_ers",ERS_OPT_CLEAN);
 	skill->timer_ers  = ers_new(sizeof(struct skill_timerskill),"skill.c::skill_timer_ers",ERS_OPT_NONE);
-	skill->cd_ers = ers_new(sizeof(struct skill_cd),"skill.c::skill_cd_ers",ERS_OPT_CLEAR);
+	skill->cd_ers = ers_new(sizeof(struct skill_cd),"skill.c::skill_cd_ers",ERS_OPT_CLEAR|ERS_OPT_CLEAN);
 	skill->cd_entry_ers = ers_new(sizeof(struct skill_cd_entry),"skill.c::skill_cd_entry_ers",ERS_OPT_CLEAR);
 
 	ers_chunk_size(skill->cd_ers, 25);

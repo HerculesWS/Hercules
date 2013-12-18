@@ -369,6 +369,37 @@ void* _mrealloc(void *memblock, size_t size, const char *file, int line, const c
 	}
 }
 
+/* a _mrealloc clone with the difference it 'z'eroes the newly created memory */
+void* _mreallocz(void *memblock, size_t size, const char *file, int line, const char *func ) {
+	size_t old_size;
+	void *p = NULL;
+	
+	if(memblock == NULL) {
+		p = iMalloc->malloc(size,file,line,func);
+		memset(p,0,size);
+		return p;
+	}
+	
+	old_size = ((struct unit_head *)((char *)memblock - sizeof(struct unit_head) + sizeof(long)))->size;
+	if( old_size == 0 ) {
+		old_size = ((struct unit_head_large *)((char *)memblock - sizeof(struct unit_head_large) + sizeof(long)))->size;
+	}
+	if(old_size > size) {
+		// Size reduction - return> as it is (negligence)
+		return memblock;
+	}  else {
+		// Size Large
+		p = iMalloc->malloc(size,file,line,func);
+		if(p != NULL) {
+			memcpy(p,memblock,old_size);
+			memset(p+old_size,0,size-old_size);
+		}
+		iMalloc->free(memblock,file,line,func);
+		return p;
+	}
+}
+
+
 char* _mstrdup(const char *p, const char *file, int line, const char *func )
 {
 	if(p == NULL) {
@@ -822,12 +853,14 @@ void malloc_defaults(void) {
 	iMalloc->malloc  =	 _mmalloc;
 	iMalloc->calloc  =	 _mcalloc;
 	iMalloc->realloc =	 _mrealloc;
+	iMalloc->reallocz=	 _mreallocz;
 	iMalloc->astrdup =	 _mstrdup;
 	iMalloc->free    =	 _mfree;
 #else
 	iMalloc->malloc  =	aMalloc_;
 	iMalloc->calloc  =	aCalloc_;
 	iMalloc->realloc =	aRealloc_;
+	iMalloc->reallocz=	aRealloc_;/* not using memory manager huhum o.o perhaps we could still do something about */
 	iMalloc->astrdup =	aStrdup_;
 	iMalloc->free    =	aFree_;
 #endif

@@ -291,7 +291,7 @@ void mapreg_final(void) {
 void mapreg_init(void) {
 	mapreg->db = idb_alloc(DB_OPT_BASE);
 	mapreg->str_db = idb_alloc(DB_OPT_BASE);
-	mapreg->ers = ers_new(sizeof(struct mapreg_save), "mapreg_sql.c::mapreg_ers", ERS_OPT_NONE);
+	mapreg->ers = ers_new(sizeof(struct mapreg_save), "mapreg_sql.c::mapreg_ers", ERS_OPT_CLEAN);
 
 	mapreg->load();
 

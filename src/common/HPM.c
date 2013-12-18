@@ -533,6 +533,9 @@ void* HPM_calloc(size_t num, size_t size, const char *file, int line, const char
 void* HPM_realloc(void *p, size_t size, const char *file, int line, const char *func) {
 	return iMalloc->realloc(p,size,HPM_file2ptr(file),line,func);
 }
+void* HPM_reallocz(void *p, size_t size, const char *file, int line, const char *func) {
+	return iMalloc->reallocz(p,size,HPM_file2ptr(file),line,func);
+}
 char* HPM_astrdup(const char *p, const char *file, int line, const char *func) {
 	return iMalloc->astrdup(p,HPM_file2ptr(file),line,func);
 }
@@ -705,6 +708,7 @@ void hpm_init(void) {
 	HPMiMalloc->malloc = HPM_mmalloc;
 	HPMiMalloc->calloc = HPM_calloc;
 	HPMiMalloc->realloc = HPM_realloc;
+	HPMiMalloc->reallocz = HPM_reallocz;
 	HPMiMalloc->astrdup = HPM_astrdup;
 
 	sscanf(HPM_VERSION, "%u.%u", &HPM->version[0], &HPM->version[1]);
