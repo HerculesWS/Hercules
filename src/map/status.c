@@ -1168,6 +1168,21 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 	if( hp && !(flag&1) ) {
 		if( sc ) {
 			struct status_change_entry *sce;
+			
+#ifdef DEVOTION_REFLECT_DAMAGE
+			if(src && (sce = sc->data[SC_DEVOTION])) {
+				struct block_list *d_bl = map->id2bl(sce->val1);
+				
+				if(d_bl &&((d_bl->type == BL_MER && ((TBL_MER *)d_bl)->master && ((TBL_MER *)d_bl)->master->bl.id == target->id)
+						   || (d_bl->type == BL_PC && ((TBL_PC *)d_bl)->devotion[sce->val2] == target->id)) && check_distance_bl(target, d_bl, sce->val3)) {
+					clif->damage(d_bl, d_bl, 0, 0, hp, 0, 0, 0);
+					status_fix_damage(NULL, d_bl, hp, 0);
+					return 0;
+				}
+				status_change_end(target, SC_DEVOTION, INVALID_TIMER);
+			}
+#endif
+			
 			if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
 				status_change_end(target, SC_STONE, INVALID_TIMER);
 			status_change_end(target, SC_FREEZE, INVALID_TIMER);
