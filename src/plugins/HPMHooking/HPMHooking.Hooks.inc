@@ -44808,32 +44808,6 @@ int HP_pc_class2idx(int class_) {
 	}
 	return retVal___;
 }
-int HP_pc_get_group_level(struct map_session_data *sd) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if( HPMHooks.count.HP_pc_get_group_level_pre ) {
-		int (*preHookFunc) (struct map_session_data *sd);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_get_group_level_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_pc_get_group_level_pre[hIndex].func;
-			retVal___ = preHookFunc(sd);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.pc.get_group_level(sd);
-	}
-	if( HPMHooks.count.HP_pc_get_group_level_post ) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_get_group_level_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_pc_get_group_level_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd);
-		}
-	}
-	return retVal___;
-}
 bool HP_pc_can_give_items(struct map_session_data *sd) {
 	int hIndex = 0;
 	bool retVal___ = false;
@@ -44908,32 +44882,6 @@ bool HP_pc_can_use_command(struct map_session_data *sd, const char *command) {
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_can_use_command_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_can_use_command_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, command);
-		}
-	}
-	return retVal___;
-}
-bool HP_pc_has_permission(struct map_session_data *sd, unsigned int permission) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if( HPMHooks.count.HP_pc_has_permission_pre ) {
-		bool (*preHookFunc) (struct map_session_data *sd, unsigned int *permission);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_has_permission_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_pc_has_permission_pre[hIndex].func;
-			retVal___ = preHookFunc(sd, &permission);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.pc.has_permission(sd, permission);
-	}
-	if( HPMHooks.count.HP_pc_has_permission_post ) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, unsigned int *permission);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_has_permission_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_pc_has_permission_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, &permission);
 		}
 	}
 	return retVal___;
