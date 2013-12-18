@@ -41,7 +41,7 @@
  */
 #define nullpo_chk(t) ( (t) != NULL ? false : (assert_report(__FILE__, __LINE__, __func__, #t, "nullpo info"), true) )
 #else // ! NULLPO_CHECK
-#define nullpo_chk(t) ((t), false)
+#define nullpo_chk(t) ((void)(t), false)
 #endif // NULLPO_CHECK
 
 /**
