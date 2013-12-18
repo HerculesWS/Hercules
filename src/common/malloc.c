@@ -392,7 +392,7 @@ void* _mreallocz(void *memblock, size_t size, const char *file, int line, const 
 		p = iMalloc->malloc(size,file,line,func);
 		if(p != NULL) {
 			memcpy(p,memblock,old_size);
-			memset(p+old_size,0,size-old_size);
+			memset((char*)p+old_size,0,size-old_size);
 		}
 		iMalloc->free(memblock,file,line,func);
 		return p;
