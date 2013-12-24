@@ -16400,6 +16400,56 @@ int HP_clif_delay_damage_sub(int tid, int64 tick, int id, intptr_t data) {
 	}
 	return retVal___;
 }
+void HP_clif_npc_market_open(struct map_session_data *sd, struct npc_data *nd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_npc_market_open_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, struct npc_data *nd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_npc_market_open_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_npc_market_open_pre[hIndex].func;
+			preHookFunc(sd, nd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.npc_market_open(sd, nd);
+	}
+	if( HPMHooks.count.HP_clif_npc_market_open_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, struct npc_data *nd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_npc_market_open_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_npc_market_open_post[hIndex].func;
+			postHookFunc(sd, nd);
+		}
+	}
+	return;
+}
+void HP_clif_npc_market_purchase_ack(struct map_session_data *sd, struct packet_npc_market_purchase *req, unsigned char response) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_npc_market_purchase_ack_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, struct packet_npc_market_purchase *req, unsigned char *response);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_npc_market_purchase_ack_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_npc_market_purchase_ack_pre[hIndex].func;
+			preHookFunc(sd, req, &response);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.npc_market_purchase_ack(sd, req, response);
+	}
+	if( HPMHooks.count.HP_clif_npc_market_purchase_ack_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, struct packet_npc_market_purchase *req, unsigned char *response);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_npc_market_purchase_ack_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_npc_market_purchase_ack_post[hIndex].func;
+			postHookFunc(sd, req, &response);
+		}
+	}
+	return;
+}
 void HP_clif_pWantToConnection(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_pWantToConnection_pre ) {
@@ -21895,6 +21945,81 @@ void HP_clif_pBankClose(int fd, struct map_session_data *sd) {
 		void (*postHookFunc) (int *fd, struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pBankClose_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_pBankClose_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pNPCShopClosed(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pNPCShopClosed_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pNPCShopClosed_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pNPCShopClosed_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pNPCShopClosed(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pNPCShopClosed_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pNPCShopClosed_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pNPCShopClosed_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pNPCMarketClosed(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pNPCMarketClosed_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pNPCMarketClosed_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pNPCMarketClosed_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pNPCMarketClosed(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pNPCMarketClosed_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pNPCMarketClosed_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pNPCMarketClosed_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
+void HP_clif_pNPCMarketPurchase(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pNPCMarketPurchase_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pNPCMarketPurchase_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pNPCMarketPurchase_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pNPCMarketPurchase(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pNPCMarketPurchase_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pNPCMarketPurchase_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pNPCMarketPurchase_post[hIndex].func;
 			postHookFunc(&fd, sd);
 		}
 	}
@@ -42354,14 +42479,14 @@ const char* HP_npc_skip_script(const char *start, const char *buffer, const char
 	}
 	return retVal___;
 }
-const char* HP_npc_parse_script(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, bool runOnInit) {
+const char* HP_npc_parse_script(char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int options) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if( HPMHooks.count.HP_npc_parse_script_pre ) {
-		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, bool *runOnInit);
+		const char* (*preHookFunc) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *options);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_script_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_npc_parse_script_pre[hIndex].func;
-			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath, &runOnInit);
+			retVal___ = preHookFunc(w1, w2, w3, w4, start, buffer, filepath, &options);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -42369,13 +42494,13 @@ const char* HP_npc_parse_script(char *w1, char *w2, char *w3, char *w4, const ch
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.npc.parse_script(w1, w2, w3, w4, start, buffer, filepath, runOnInit);
+		retVal___ = HPMHooks.source.npc.parse_script(w1, w2, w3, w4, start, buffer, filepath, options);
 	}
 	if( HPMHooks.count.HP_npc_parse_script_post ) {
-		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, bool *runOnInit);
+		const char* (*postHookFunc) (const char* retVal___, char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *options);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_script_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_parse_script_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath, &runOnInit);
+			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath, &options);
 		}
 	}
 	return retVal___;
@@ -42982,6 +43107,209 @@ void HP_npc_debug_warps(void) {
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_debug_warps_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_debug_warps_post[hIndex].func;
 			postHookFunc();
+		}
+	}
+	return;
+}
+void HP_npc_trader_count_funds(struct npc_data *nd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_npc_trader_count_funds_pre ) {
+		void (*preHookFunc) (struct npc_data *nd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_trader_count_funds_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_trader_count_funds_pre[hIndex].func;
+			preHookFunc(nd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.npc.trader_count_funds(nd, sd);
+	}
+	if( HPMHooks.count.HP_npc_trader_count_funds_post ) {
+		void (*postHookFunc) (struct npc_data *nd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_trader_count_funds_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_trader_count_funds_post[hIndex].func;
+			postHookFunc(nd, sd);
+		}
+	}
+	return;
+}
+bool HP_npc_trader_pay(struct npc_data *nd, struct map_session_data *sd, int price, int points) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_npc_trader_pay_pre ) {
+		bool (*preHookFunc) (struct npc_data *nd, struct map_session_data *sd, int *price, int *points);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_trader_pay_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_trader_pay_pre[hIndex].func;
+			retVal___ = preHookFunc(nd, sd, &price, &points);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.trader_pay(nd, sd, price, points);
+	}
+	if( HPMHooks.count.HP_npc_trader_pay_post ) {
+		bool (*postHookFunc) (bool retVal___, struct npc_data *nd, struct map_session_data *sd, int *price, int *points);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_trader_pay_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_trader_pay_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, nd, sd, &price, &points);
+		}
+	}
+	return retVal___;
+}
+void HP_npc_trader_update(int master) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_npc_trader_update_pre ) {
+		void (*preHookFunc) (int *master);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_trader_update_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_trader_update_pre[hIndex].func;
+			preHookFunc(&master);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.npc.trader_update(master);
+	}
+	if( HPMHooks.count.HP_npc_trader_update_post ) {
+		void (*postHookFunc) (int *master);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_trader_update_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_trader_update_post[hIndex].func;
+			postHookFunc(&master);
+		}
+	}
+	return;
+}
+int HP_npc_market_buylist(struct map_session_data *sd, unsigned short list_size, struct packet_npc_market_purchase *p) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_npc_market_buylist_pre ) {
+		int (*preHookFunc) (struct map_session_data *sd, unsigned short *list_size, struct packet_npc_market_purchase *p);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_market_buylist_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_market_buylist_pre[hIndex].func;
+			retVal___ = preHookFunc(sd, &list_size, p);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.market_buylist(sd, list_size, p);
+	}
+	if( HPMHooks.count.HP_npc_market_buylist_post ) {
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, unsigned short *list_size, struct packet_npc_market_purchase *p);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_market_buylist_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_market_buylist_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, &list_size, p);
+		}
+	}
+	return retVal___;
+}
+bool HP_npc_trader_open(struct map_session_data *sd, struct npc_data *nd) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_npc_trader_open_pre ) {
+		bool (*preHookFunc) (struct map_session_data *sd, struct npc_data *nd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_trader_open_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_trader_open_pre[hIndex].func;
+			retVal___ = preHookFunc(sd, nd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.trader_open(sd, nd);
+	}
+	if( HPMHooks.count.HP_npc_trader_open_post ) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, struct npc_data *nd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_trader_open_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_trader_open_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, nd);
+		}
+	}
+	return retVal___;
+}
+void HP_npc_market_fromsql(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_npc_market_fromsql_pre ) {
+		void (*preHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_market_fromsql_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_market_fromsql_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.npc.market_fromsql();
+	}
+	if( HPMHooks.count.HP_npc_market_fromsql_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_market_fromsql_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_market_fromsql_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+void HP_npc_market_tosql(struct npc_data *nd, unsigned short index) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_npc_market_tosql_pre ) {
+		void (*preHookFunc) (struct npc_data *nd, unsigned short *index);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_market_tosql_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_market_tosql_pre[hIndex].func;
+			preHookFunc(nd, &index);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.npc.market_tosql(nd, index);
+	}
+	if( HPMHooks.count.HP_npc_market_tosql_post ) {
+		void (*postHookFunc) (struct npc_data *nd, unsigned short *index);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_market_tosql_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_market_tosql_post[hIndex].func;
+			postHookFunc(nd, &index);
+		}
+	}
+	return;
+}
+void HP_npc_market_delfromsql(struct npc_data *nd, unsigned short index) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_npc_market_delfromsql_pre ) {
+		void (*preHookFunc) (struct npc_data *nd, unsigned short *index);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_market_delfromsql_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_market_delfromsql_pre[hIndex].func;
+			preHookFunc(nd, &index);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.npc.market_delfromsql(nd, index);
+	}
+	if( HPMHooks.count.HP_npc_market_delfromsql_post ) {
+		void (*postHookFunc) (struct npc_data *nd, unsigned short *index);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_market_delfromsql_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_market_delfromsql_post[hIndex].func;
+			postHookFunc(nd, &index);
 		}
 	}
 	return;
