@@ -9273,17 +9273,28 @@ ACMD(searchstore){
 	return true;
 }
 ACMD(costume){
-	const char* names[4] = {
+	const char* names[] = {
 		"Wedding",
 		"Xmas",
 		"Summer",
 		"Hanbok",
+#if PACKETVER >= 20131218
+		"Oktoberfest",
+#endif
 	};
-	const int name2id[4] = { SC_WEDDING, SC_XMAS, SC_SUMMER, SC_HANBOK };
-	unsigned short k = 0;
+	const int name2id[] = {
+		SC_WEDDING,
+		SC_XMAS,
+		SC_SUMMER,
+		SC_HANBOK,
+#if PACKETVER >= 20131218
+		SC_OKTOBERFEST,
+#endif
+	};
+	unsigned short k = 0, len = ARRAYLENGTH(names);
 	
 	if( !message || !*message ) {
-		for( k = 0; k < 4; k++ ) {
+		for( k = 0; k < len; k++ ) {
 			if( sd->sc.data[name2id[k]] ) {
 				sprintf(atcmd_output,msg_txt(1473),names[k]);//Costume '%s' removed.
 				clif->message(sd->fd,atcmd_output);
@@ -9293,14 +9304,14 @@ ACMD(costume){
 		}
 		
 		clif->message(sd->fd,msg_txt(1472));
-		for( k = 0; k < 4; k++ ) {
+		for( k = 0; k < len; k++ ) {
 			sprintf(atcmd_output,msg_txt(1471),names[k]);//-- %s
 			clif->message(sd->fd,atcmd_output);
 		}
 		return false;
 	}
 	
-	for( k = 0; k < 4; k++ ) {
+	for( k = 0; k < len; k++ ) {
 		if( sd->sc.data[name2id[k]] ) {
 			sprintf(atcmd_output,msg_txt(1470),names[k]);// You're already with a '%s' costume, type '@costume' to remove it.
 			clif->message(sd->fd,atcmd_output);
@@ -9308,11 +9319,11 @@ ACMD(costume){
 		}
 	}
 	
-	for( k = 0; k < 4; k++ ) {
+	for( k = 0; k < len; k++ ) {
 		if( strcmpi(message,names[k]) == 0 )
 			break;
 	}
-	if( k == 4 ) {
+	if( k == len ) {
 		sprintf(atcmd_output,msg_txt(1469),message);// '%s' is not a known costume
 		clif->message(sd->fd,atcmd_output);
 		return false;

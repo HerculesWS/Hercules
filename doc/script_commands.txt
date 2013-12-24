@@ -1120,6 +1120,7 @@ From here on, we will have the commands sorted as follow:
 9.- Battleground commands.
 10.- Mercenary commands.
 11.- Queue commands.
+12.- NPC Trader commands
 
 
 =====================
@@ -8469,5 +8470,68 @@ Example:
 
 Deletes a queue iterator from memory and returns 1 when it fails,
 otherwise 0 is returned.
+
+---------------------------------------
+
+======================
+|12.- NPC Trader Commands.|
+======================
+---------------------------------------
+Commands that control NPC Trader Shops
+See /doc/sample/npc_trader_sample.txt
+
+---------------------------------------
+
+*openshop({NPC_Name});
+
+opens the trader shop from the currently-attached npc unless,
+when the optional NPC_Name param is used.
+
+---------------------------------------
+
+*sellitem <Item_ID>{,<price>{,<qty>}};
+
+adds (or modifies) <Item_ID> data to the shop,
+when <price> is not provided (or when it is -1) itemdb default is used.
+qty is only necessary for NST_MARKET trader types.
+
+when <Item_ID> is already in the shop,
+the previous data (price/qty), is overwritten with the new.
+
+---------------------------------------
+
+*stopselling <Item_ID>;
+
+attempts to remove <Item_ID> from the current shop list.
+
+---------------------------------------
+
+*setcurrency <Val1>{,<Val2>};
+
+updates the currently attached player shop funds.
+
+---------------------------------------
+
+*tradertype(<Type>);
+
+Modifies the npc trader type, item list is cleared upon modifiying the value.
+By default, all npcs staart with tradertype(NST_ZENY);
+
+- NST_ZENY (0) Normal Zeny Shop
+- NST_CASH (1) Normal Cash Shop
+- NST_MARKET (2) Normal NPC Market Shop (where items have limited availability and need to be refurbished)
+- NST_CUSTOM (3) Custom Shop (any currency, item/var/etca, check sample)
+
+---------------------------------------
+
+*purchaseok();
+
+Signs that the transaction (on a NST_CUSTOM trader) has been successful.
+
+---------------------------------------
+
+*shopcount(<Item_ID>);
+
+Returns the amount of still-available <Item_ID> in the shop (on a NST_MARKET trader).
 
 ---------------------------------------

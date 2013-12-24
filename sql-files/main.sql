@@ -671,6 +671,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1383205740);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1383955424);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1384545461);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1384588175);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1387844126);
 
 --
 -- Table structure for table `sstatus`
@@ -730,4 +731,15 @@ CREATE TABLE IF NOT EXISTS `account_data` (
   `base_death` TINYINT( 4 ) UNSIGNED NOT NULL default '100',
   PRIMARY KEY  (`account_id`)
 ) ENGINE=MyISAM; 
+
+--
+-- Table structure for table `npc_market_data`
+--
+
+CREATE TABLE IF NOT EXISTS `npc_market_data` (
+  `name` varchar(24) NOT NULL default '',
+  `itemid` int(11) unsigned NOT NULL default '0',
+  `amount` int(11) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`name`,`itemid`)
+) ENGINE=MyISAM;
 

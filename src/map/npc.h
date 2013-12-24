@@ -14,6 +14,21 @@ struct block_list;
 struct npc_data;
 struct view_data;
 
+enum npc_parse_options {
+	NPO_NONE  = 0x0,
+	NPO_ONINIT  = 0x1,
+	NPO_TRADER  = 0x2,
+};
+
+enum npc_shop_types {
+	NST_ZENY,/* default */
+	NST_CASH,/* official npc cash shop */
+	NST_MARKET,/* official npc market type */
+	NST_CUSTOM,
+	/* */
+	NST_MAX,
+};
+
 struct npc_timerevent_list {
 	int timer,pos;
 };
@@ -22,9 +37,15 @@ struct npc_label_list {
 	int pos;
 };
 struct npc_item_list {
-	unsigned int nameid,value;
+	unsigned short nameid;
+	unsigned int value;
+	unsigned int qty;
 };
-
+struct npc_shop_data {
+	unsigned char type;/* what am i */
+	struct npc_item_list *item;/* list */
+	unsigned short items;/* total */
+};
 struct npc_data {
 	struct block_list bl;
 	struct unit_data *ud;
@@ -60,10 +81,13 @@ struct npc_data {
 			struct npc_timerevent_list *timer_event;
 			int label_list_num;
 			struct npc_label_list *label_list;
+			/* */
+			struct npc_shop_data *shop;
+			bool trader;
 		} scr;
-		struct {
+		struct { /* TODO duck this as soon as the new shop formatting is deemed stable */
 			struct npc_item_list* shop_item;
-			int count;
+			unsigned short count;
 		} shop;
 		struct {
 			short xs,ys; // OnTouch area radius
@@ -143,6 +167,9 @@ struct npc_interface {
 	struct npc_data *fake_nd;
 	struct npc_src_list *src_files;
 	struct unit_data base_ud;
+	/* npc trader global data, for ease of transition between the script, cleared on every usage */
+	bool trader_ok;
+	int trader_funds[2];
 	/* */
 	int (*init) (bool minimal);
 	int (*final) (void);
@@ -208,7 +235,7 @@ struct npc_interface {
 	const char* (*parse_shop) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
 	void (*convertlabel_db) (struct npc_label_list *label_list, const char *filepath);
 	const char* (*skip_script) (const char *start, const char *buffer, const char *filepath);
-	const char* (*parse_script) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, bool runOnInit);
+	const char* (*parse_script) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int options);
 	const char* (*parse_duplicate) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath);
 	int (*duplicate4instance) (struct npc_data *snd, int16 m);
 	void (*setcells) (struct npc_data *nd);
@@ -232,6 +259,15 @@ struct npc_interface {
 	void (*do_clear_npc) (void);
 	void (*debug_warps_sub) (struct npc_data *nd);
 	void (*debug_warps) (void);
+	/* */
+	void (*trader_count_funds) (struct npc_data *nd, struct map_session_data *sd);
+	bool (*trader_pay) (struct npc_data *nd, struct map_session_data *sd, int price, int points);
+	void (*trader_update) (int master);
+	int (*market_buylist) (struct map_session_data* sd, unsigned short list_size, struct packet_npc_market_purchase *p);
+	bool (*trader_open) (struct map_session_data *sd, struct npc_data *nd);
+	void (*market_fromsql) (void);
+	void (*market_tosql) (struct npc_data *nd, unsigned short index);
+	void (*market_delfromsql) (struct npc_data *nd, unsigned short index);
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
 	 **/

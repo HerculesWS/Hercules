@@ -1034,6 +1034,9 @@ struct clif_interface {
 	/* */
 	int (*delay_damage) (int64 tick, struct block_list *src, struct block_list *dst, int sdelay, int ddelay, int64 in_damage, short div, unsigned char type);
 	int (*delay_damage_sub) (int tid, int64 tick, int id, intptr_t data);
+	/* NPC Market */
+	void (*npc_market_open) (struct map_session_data *sd, struct npc_data *nd);
+	void (*npc_market_purchase_ack) (struct map_session_data *sd, struct packet_npc_market_purchase *req, unsigned char response);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/
@@ -1261,6 +1264,11 @@ struct clif_interface {
 	void (*pBankCheck) (int fd, struct map_session_data *sd);
 	void (*pBankOpen) (int fd, struct map_session_data *sd);
 	void (*pBankClose) (int fd, struct map_session_data *sd);
+	/* */
+	void (*pNPCShopClosed) (int fd, struct map_session_data *sd);
+	/* NPC Market (by Ind after an extensive debugging of the packet, only possible thanks to Yommy <3) */
+	void (*pNPCMarketClosed) (int fd, struct map_session_data *sd);
+	void (*pNPCMarketPurchase) (int fd, struct map_session_data *sd);
 };
 
 struct clif_interface *clif;

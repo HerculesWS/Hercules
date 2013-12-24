@@ -1,0 +1,58 @@
+//===== Hercules Script =======================================
+//= Sample: NPC Trader
+//===== By: ==================================================
+//= Hercules Dev Team
+//===== Current Version: =====================================
+//= 20131223
+//===== Description: ========================================= 
+//= Demonstrates NPC Trader.
+//============================================================
+
+/* ordinary zeny trader */
+prontera,152,151,1	trader	TestTrader	952,{
+	OnInit:
+	sellitem 2115;
+	end;
+}
+/* ordinary cash trader */
+prontera,152,152,1	trader	TestTraderCash	952,{
+	OnInit:
+	tradertype(NST_CASH);
+	sellitem 2115;
+	end;
+}
+/* custom npc trader */
+prontera,153,152,1	trader	TestCustom2	952,{
+	OnInit:
+	tradertype(NST_CUSTOM);
+	sellitem 501,2;
+	end;
+	
+/* allows currency to be item 501 and 502 */
+OnCountFunds:
+	setcurrency(countitem(501),countitem(502));
+	end;
+
+/* receives @price (total cost) and @points (the secondary input field for cash windows) */
+OnPayFunds:
+	dispbottom "Hi: price="+@price+" and points="+@points;
+	if( countitem(502) < @points || countitem(501) < @price-@points )
+		end;
+	delitem 502,@points;
+	delitem 501,@price-@points;
+	purchaseok();
+	end;
+}
+/* demonstrates Market Trader */
+prontera,150,160,6	trader	HaiMarket	952,{
+OnInit:
+	tradertype(NST_MARKET);
+	sellitem 501,-1,49;
+	end;
+	
+OnClock0000://resupplies red potions on midnight
+OnMyResupply:
+	if( shopcount(501) < 20 )
+		sellitem 501,-1,49;
+	end;
+}
