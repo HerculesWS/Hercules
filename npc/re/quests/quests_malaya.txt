@@ -1,9 +1,9 @@
 //===== Hercules Script ======================================
 //= Port Malaya Quest NPCs
 //===== By: ==================================================
-//= Euphy
+//= Masao
 //===== Current Version: =====================================
-//= 1.1
+//= 1.2
 //===== Description: =========================================
 //= [Official Conversion]
 //= Quest NPCs related to Port Malaya:
@@ -20,6 +20,7 @@
 //= 0.5 Added "Bakonawa Extermination" quest. [Euphy]
 //= 1.0 Added "Nurse in Port Malaya" and "Pintados Festival" quests. [Euphy]
 //= 1.1 Added GM management function and NPC. [Euphy]
+//= 1.2 Added item Lost_Belongings to Tiyanak mob & fix wrong item id [Michieru]
 //============================================================
 
 // Cautious Village & Daily Quests :: hi_malaya
@@ -5868,6 +5869,35 @@ malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 	}
 }
 
+ma_fild01,1,1,0	script	malaya_ma_fild01_mon	-1,{
+OnInit:
+	enablenpc "malaya_ma_fild01_mon";
+	donpcevent "malaya_ma_fild01_mon::OnEnable";
+	end;
+
+OnEnable:
+	monster "ma_fild01",0,0,"Tiyanak",2314,5,"malaya_ma_fild01_mon::OnMyMobDead";
+	initnpctimer;
+	end;
+
+OnDisable:
+	stopnpctimer;
+	killmonster "ma_fild01","malaya_ma_fild01_mon::OnMyMobDead";
+	disablenpc "malaya_ma_fild01_mon";
+	end;
+
+OnTimer600000:
+	killmonster "ma_fild01","malaya_ma_fild01_mon::OnMyMobDead";
+	stopnpctimer;
+	donpcevent "malaya_ma_fild01_mon::OnEnable";
+	end;
+
+OnMyMobDead:
+	if (mobcount("ma_fild01","malaya_ma_fild01_mon::OnMyMobDead") < 5 && (malaya_bakona2 == 1 || malaya_bakona2 == 2 || malaya_bakona2 == 3 || malaya_bakona2 == 4))
+		getitem 6520,1; //Lost_Belongings
+	end;
+}
+
 malaya,269,267,5	script	Missing Person's Father	4_M_MALAYA,{
 	if (malaya_hi < 20) {
 		mes "- He seems cautious of you. -";
@@ -5881,7 +5911,7 @@ malaya,269,267,5	script	Missing Person's Father	4_M_MALAYA,{
 		mes "He must be around here somewhere.";
 		close;
 	} else if (malaya_bakona2 == 1) {
-		if (countitem(6501) < 2) {
+		if (countitem(6520) < 2) {
 			mes "[Missing Person's Father]";
 			mes "You are looking for two of his ^FF0000Lost Belongings^000000?";
 			mes "Are you confident that";
@@ -5898,7 +5928,7 @@ malaya,269,267,5	script	Missing Person's Father	4_M_MALAYA,{
 		mes "Let's retrieve them from Tiucknuc that roams Baryo Mahiwaga Field,";
 		mes "seven ^FF0000Lost Belongings^000000";
 		mes "and deliver them to ^0000FFMissing Person's Friend^000000.";
-		delitem 6501,2; //Lost_Belongings
+		delitem 6520,2; //Lost_Belongings
 		erasequest 1180;
 		setquest 1181;
 		set malaya_bakona2,2;
@@ -5936,7 +5966,7 @@ malaya,265,274,5	script	Missing Person's Friend	4_M_BARYO_BOY,{
 		mes "somewhere.";
 		close;
 	} else if (malaya_bakona2 == 2) {
-		if (countitem(6501) < 7) {
+		if (countitem(6520) < 7) {
 			mes "[Missing Person's Friend]";
 			mes "You are looking for seven ^FF0000Lost Belongings^000000";
 			mes "of my friend?";
@@ -5949,7 +5979,7 @@ malaya,265,274,5	script	Missing Person's Friend	4_M_BARYO_BOY,{
 		mes "of my friend... Where is my friend?";
 		mes "Bring him here, bring him here now!";
 		callsub L_Quest;
-		delitem 6501,7; //Lost_Belongings
+		delitem 6520,7; //Lost_Belongings
 		erasequest 1181;
 		setquest 1182;
 		set malaya_bakona2,3;
@@ -5986,7 +6016,7 @@ malaya,270,278,4	script	Missing Person's Son	4_M_BARYO_MAN,{
 		mes "Please find my father!";
 		close;
 	} else if (malaya_bakona2 == 3) {
-		if (countitem(6501) < 3) {
+		if (countitem(6520) < 3) {
 			mes "[Missing Person's Son]";
 			mes "You are looking for three ^FF0000Lost Belongings^000000";
 			mes "of my father? Why lost belongings and not my father?";
@@ -5998,7 +6028,7 @@ malaya,270,278,4	script	Missing Person's Son	4_M_BARYO_MAN,{
 		mes "These are ^FF0000Lost Belongings^000000 of my father.";
 		mes "Oh dear lord... father!";
 		callsub L_Quest;
-		delitem 6501,3; //Lost_Belongings
+		delitem 6520,3; //Lost_Belongings
 		erasequest 1182;
 		setquest 1183;
 		set malaya_bakona2,4;
@@ -6032,7 +6062,7 @@ malaya,265,284,4	script	Missing Person's Mother	4_F_BARYO_WOMAN,{
 		mes "and she still isn't back.";
 		close;
 	} else if (malaya_bakona2 == 4) {
-		if (countitem(6501) < 5) {
+		if (countitem(6520) < 5) {
 			mes "[Missing Person's Mother]";
 			mes "You are looking for five ^FF0000Lost Belongings^000000 of my child?";
 			mes "What does this mean?";
@@ -6053,7 +6083,7 @@ malaya,265,284,4	script	Missing Person's Mother	4_F_BARYO_WOMAN,{
 		mes "A mother that has gone mad...";
 		mes "Now that I finished finding the missing people,";
 		mes "I should report back to the Village Chief.";
-		delitem 6501,5; //Lost_Belongings
+		delitem 6520,5; //Lost_Belongings
 		erasequest 1183;
 		setquest 1184;
 		set malaya_bakona2,5;

@@ -63,7 +63,7 @@ prontera,144,174,4	script	Bound Items	4_M_JP_MID,{
 				logmes "Bound "+ @inventorylist_amount[.@item]+" "+@inventorylist_id[.@item]+" as "+.boundtypes$[.@boundtype]+" type.";
 		}
 	} else {
-		/*if(!countbound()) {
+		if(!countbound()) {
 			mes "You don't have any bound items in your inventory.  Not much I can do here.";
 			close;
 		}
@@ -74,7 +74,7 @@ prontera,144,174,4	script	Bound Items	4_M_JP_MID,{
 				mes "You don't have enough to unbind an item.";
 				close;
 			}
-		}*/
+		}
 		getinventorylist();
 		for(.@i = 0; .@i < @inventorylist_count; .@i++) {
 			if(@inventorylist_bound[.@i]) {
