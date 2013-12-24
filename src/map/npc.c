@@ -1483,8 +1483,8 @@ bool npc_trader_open(struct map_session_data *sd, struct npc_data *nd) {
 	switch( nd->u.scr.shop->type ) {
 		case NST_ZENY:
 			sd->state.callshop = 1;
-			npc->buysellsel(sd,nd->bl.id,0);
-			break;
+			clif->npcbuysell(sd,nd->bl.id);
+			return true;/* we skip sd->npc_shopid, npc->buysell will set it then when the player selects */
 		case NST_MARKET: {
 				unsigned short i;
 				
@@ -2002,10 +2002,16 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 	nullpo_retr(1, sd);
 	nullpo_retr(1, item_list);
 
-	if( ( nd = npc->checknear(sd, map->id2bl(sd->npc_shopid)) ) == NULL || nd->subtype != SHOP ) {
+	if( ( nd = npc->checknear(sd, map->id2bl(sd->npc_shopid)) ) == NULL ) {
 		return 1;
 	}
 
+	if( nd->subtype != SHOP ) {
+		if( !(nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type == NST_ZENY) )
+			return 1;
+	}
+
+	
 	z = 0;
 
 	// verify the sell list
