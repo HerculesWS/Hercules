@@ -3,8 +3,8 @@
 //===== By: ==================================================
 //= Hercules Dev Team
 //===== Current Version: =====================================
-//= 20070915
-//===== Description: ========================================= 
+//= 20131225
+//===== Description: =========================================
 //= An example of how duplicate NPCs are handled:
 //=  NPC variables are shared between all duplicates.
 //=  Each duplicate knows its own map coordinates.
@@ -27,6 +27,6 @@ OnTouch:
 	end;
 }
 
-prontera,150,175,4	duplicate(Test Script)	Test1	909
-prontera,155,175,4	duplicate(Test Script)	Test2	909,2,2
-prontera,160,175,4	duplicate(Test Script)	Test3	909,3,3
+prontera,150,175,4	duplicate(Test Script)	Test1	4_PORING
+prontera,155,175,4	duplicate(Test Script)	Test2	4_PORING,2,2
+prontera,160,175,4	duplicate(Test Script)	Test3	4_PORING,3,3
