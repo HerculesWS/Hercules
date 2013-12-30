@@ -6069,6 +6069,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					clif->skill_nodamage(src,bl,skill_id,( skill_id == LG_FORCEOFVANGUARD ) ? skill_lv : -1,failure);
 				else if( sd )
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				if ( skill_id == LG_FORCEOFVANGUARD )
+					break;
 				map->freeblock_unlock();
 				return 0;
 			}
@@ -12949,13 +12951,6 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;
 			}
-			break;
-		case LG_RAGEBURST:
-			if( sd->spiritball == 0 ) {
-				clif->skill_fail(sd,skill_id,USESKILL_FAIL_SKILLINTERVAL,0);
-				return 0;
-			}
-			sd->spiritball_old = require.spiritball = sd->spiritball;
 			break;
 		case LG_RAYOFGENESIS:
 			if( sc && sc->data[SC_INSPIRATION]  )

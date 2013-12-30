@@ -1777,6 +1777,7 @@ struct status_change {
 	unsigned char sg_counter; //Storm gust counter (previous hits from storm gust)
 #endif
 	unsigned char bs_counter; // Blood Sucker counter
+	unsigned char fv_counter; // Force of vanguard counter
 	struct status_change_entry *data[SC_MAX];
 };
 
