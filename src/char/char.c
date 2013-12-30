@@ -2270,7 +2270,7 @@ int parse_fromlogin(int fd) {
 
 			// acknowledgement of account authentication request
 			case 0x2713:
-				if (RFIFOREST(fd) < 29)
+				if (RFIFOREST(fd) < 33)
 					return 0;
 			{
 				int account_id = RFIFOL(fd,2);
@@ -2282,7 +2282,8 @@ int parse_fromlogin(int fd) {
 				uint32 version = RFIFOL(fd,20);
 				uint8 clienttype = RFIFOB(fd,24);
 				int group_id = RFIFOL(fd,25);
-				RFIFOSKIP(fd,29);
+				unsigned int expiration_time = RFIFOL(fd, 29);
+				RFIFOSKIP(fd,33);
 
 				if( session_isActive(request_id) && (sd=(struct char_session_data*)session[request_id]->session_data) &&
 					!sd->auth && sd->account_id == account_id && sd->login_id1 == login_id1 && sd->login_id2 == login_id2 && sd->sex == sex )
@@ -2294,6 +2295,14 @@ int parse_fromlogin(int fd) {
 						case 0:// ok
 							/* restrictions apply */
 							if( char_server_type == CST_MAINTENANCE && group_id < char_maintenance_min_group_id ) {
+								WFIFOHEAD(client_fd,3);
+								WFIFOW(client_fd,0) = 0x6c;
+								WFIFOB(client_fd,2) = 0;// rejected from server
+								WFIFOSET(client_fd,3);
+								break;
+							}
+							/* the client will already deny this request, this check is to avoid someone bypassing. */
+							if( char_server_type == CST_PAYING && (time_t)expiration_time < time(NULL) ) {
 								WFIFOHEAD(client_fd,3);
 								WFIFOW(client_fd,0) = 0x6c;
 								WFIFOB(client_fd,2) = 0;// rejected from server
@@ -3070,6 +3079,7 @@ int parse_frommap(int fd)
 					node->login_id2 = login_id2;
 					//node->sex = 0;
 					node->ip = ntohl(ip);
+					/* sounds troublesome. */
 					//node->expiration_time = 0; // unlimited/unknown time by default (not display in map-server)
 					//node->gmlevel = 0;
 					idb_put(auth_db, account_id, node);
@@ -3998,6 +4008,14 @@ int parse_char(int fd)
 				{// authentication found (coming from map server)
 					/* restrictions apply */
 					if( char_server_type == CST_MAINTENANCE && node->group_id < char_maintenance_min_group_id ) {
+						WFIFOHEAD(fd,3);
+						WFIFOW(fd,0) = 0x6c;
+						WFIFOB(fd,2) = 0;// rejected from server
+						WFIFOSET(fd,3);
+						break;
+					}
+					/* the client will already deny this request, this check is to avoid someone bypassing. */
+					if( char_server_type == CST_PAYING && (time_t)node->expiration_time < time(NULL) ) {
 						WFIFOHEAD(fd,3);
 						WFIFOW(fd,0) = 0x6c;
 						WFIFOB(fd,2) = 0;// rejected from server

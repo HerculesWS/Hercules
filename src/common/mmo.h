@@ -863,7 +863,7 @@ enum e_char_server_type {
 	CST_MAINTENANCE = 1,
 	CST_OVER18      = 2,
 	CST_PAYING      = 3,
-	CST_P2P         = 4,
+	CST_F2P         = 4,
 };
 
 /* packet size constant for itemlist */

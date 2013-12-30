@@ -67,6 +67,7 @@ struct auth_node {
 	uint32 version;
 	uint8 clienttype;
 	int group_id;
+	time_t expiration_time;
 };
 
 static DBMap* auth_db; // int account_id -> struct auth_node*
@@ -398,7 +399,7 @@ int parse_fromchar(int fd)
 				//ShowStatus("Char-server '%s': authentication of the account %d accepted (ip: %s).\n", server[id].name, account_id, ip);
 
 				// send ack
-				WFIFOHEAD(fd,29);
+				WFIFOHEAD(fd,33);
 				WFIFOW(fd,0) = 0x2713;
 				WFIFOL(fd,2) = account_id;
 				WFIFOL(fd,6) = login_id1;
@@ -409,7 +410,8 @@ int parse_fromchar(int fd)
 				WFIFOL(fd,20) = node->version;
 				WFIFOB(fd,24) = node->clienttype;
 				WFIFOL(fd,25) = node->group_id;
-				WFIFOSET(fd,29);
+				WFIFOL(fd,29) = (unsigned int)node->expiration_time;
+				WFIFOSET(fd,33);
 
 				// each auth entry can only be used once
 				idb_remove(auth_db, account_id);
@@ -417,7 +419,7 @@ int parse_fromchar(int fd)
 			else
 			{// authentication not found
 				ShowStatus("Char-server '%s': authentication of the account %d REFUSED (ip: %s).\n", server[id].name, account_id, ip);
-				WFIFOHEAD(fd,29);
+				WFIFOHEAD(fd,33);
 				WFIFOW(fd,0) = 0x2713;
 				WFIFOL(fd,2) = account_id;
 				WFIFOL(fd,6) = login_id1;
@@ -428,7 +430,8 @@ int parse_fromchar(int fd)
 				WFIFOL(fd,20) = 0;
 				WFIFOB(fd,24) = 0;
 				WFIFOL(fd,25) = 0;
-				WFIFOSET(fd,29);
+				WFIFOL(fd,29) = 0;
+				WFIFOSET(fd,33);
 			}
 		}
 		break;
@@ -1006,11 +1009,6 @@ int mmo_auth(struct login_session_data* sd, bool isServer) {
 		return 1; // 1 = Incorrect Password
 	}
 
-	if( acc.expiration_time != 0 && acc.expiration_time < time(NULL) ) {
-		ShowNotice("Connection refused (account: %s, pass: %s, expired ID, ip: %s)\n", sd->userid, sd->passwd, ip);
-		return 2; // 2 = This ID is expired
-	}
-
 	if( acc.unban_time != 0 && acc.unban_time > time(NULL) ) {
 		char tmpstr[24];
 		timestamp2string(tmpstr, sizeof(tmpstr), acc.unban_time, login_config.date_format);
@@ -1062,6 +1060,7 @@ int mmo_auth(struct login_session_data* sd, bool isServer) {
 	safestrncpy(sd->lastlogin, acc.lastlogin, sizeof(sd->lastlogin));
 	sd->sex = acc.sex;
 	sd->group_id = (uint8)acc.group_id;
+	sd->expiration_time = acc.expiration_time;
 
 	// update account data
 	timestamp2string(acc.lastlogin, sizeof(acc.lastlogin), time(NULL), "%Y-%m-%d %H:%M:%S");
@@ -1183,7 +1182,12 @@ void login_auth_ok(struct login_session_data* sd)
 		WFIFOW(fd,47+n*32+4) = ntows(htons(server[i].port)); // [!] LE byte order here [!]
 		memcpy(WFIFOP(fd,47+n*32+6), server[i].name, 20);
 		WFIFOW(fd,47+n*32+26) = server[i].users;
-		WFIFOW(fd,47+n*32+28) = server[i].type;
+		
+		if( server[i].type == CST_PAYING && sd->expiration_time > time(NULL) )
+			WFIFOW(fd,47+n*32+28) = CST_NORMAL;
+		else
+			WFIFOW(fd,47+n*32+28) = server[i].type;
+		
 		WFIFOW(fd,47+n*32+30) = server[i].new_;
 		n++;
 	}
@@ -1199,6 +1203,7 @@ void login_auth_ok(struct login_session_data* sd)
 	node->version = sd->version;
 	node->clienttype = sd->clienttype;
 	node->group_id = sd->group_id;
+	node->expiration_time = sd->expiration_time;
 	idb_put(auth_db, sd->account_id, node);
 
 	{
