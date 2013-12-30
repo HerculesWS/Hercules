@@ -51956,30 +51956,31 @@ struct script_data* HP_script_push_val(struct script_stack *stack, enum c_op typ
 	}
 	return retVal___;
 }
-void HP_script_get_val(struct script_state *st, struct script_data *data) {
+struct script_data* HP_script_get_val(struct script_state *st, struct script_data *data) {
 	int hIndex = 0;
+	struct script_data* retVal___ = NULL;
 	if( HPMHooks.count.HP_script_get_val_pre ) {
-		void (*preHookFunc) (struct script_state *st, struct script_data *data);
+		struct script_data* (*preHookFunc) (struct script_state *st, struct script_data *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_script_get_val_pre[hIndex].func;
-			preHookFunc(st, data);
+			retVal___ = preHookFunc(st, data);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
-			return;
+			return retVal___;
 		}
 	}
 	{
-		HPMHooks.source.script.get_val(st, data);
+		retVal___ = HPMHooks.source.script.get_val(st, data);
 	}
 	if( HPMHooks.count.HP_script_get_val_post ) {
-		void (*postHookFunc) (struct script_state *st, struct script_data *data);
+		struct script_data* (*postHookFunc) (struct script_data* retVal___, struct script_state *st, struct script_data *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_script_get_val_post[hIndex].func;
-			postHookFunc(st, data);
+			retVal___ = postHookFunc(retVal___, st, data);
 		}
 	}
-	return;
+	return retVal___;
 }
 void* HP_script_get_val2(struct script_state *st, int uid, struct DBMap **ref) {
 	int hIndex = 0;
