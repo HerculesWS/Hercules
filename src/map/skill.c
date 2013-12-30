@@ -908,7 +908,6 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			//Chance to cause blind status vs demon and undead element, but not against players
 			if(!dstsd && (battle->check_undead(tstatus->race,tstatus->def_ele) || tstatus->race == RC_DEMON))
 				sc_start(bl,SC_BLIND,100,skill_lv,skill->get_time2(skill_id,skill_lv));
-			attack_type |= BF_WEAPON;
 			break;
 
 		case AM_ACIDTERROR:
