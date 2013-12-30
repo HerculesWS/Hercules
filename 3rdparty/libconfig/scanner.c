@@ -628,7 +628,7 @@ static unsigned long long fromhex(const char *s)
 static int fromihex(const char *s) {
   unsigned long l = strtoul(s, NULL, 16);
   if (l > INT32_MAX)
-    l = INT32_MAX;
+    l &= INT32_MAX;
   return (int)l;
 }
 
