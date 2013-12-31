@@ -910,7 +910,7 @@ const char* parse_variable(const char* p) {
 	const char *var = p;
 
 	if( ( p[0] == '+' && p[1] == '+' && (type = C_ADD_PRE) ) // pre ++
-	 || ( p[1] == '-' && p[1] == '-' && (type = C_SUB_PRE) ) // pre --
+	 || ( p[0] == '-' && p[1] == '-' && (type = C_SUB_PRE) ) // pre --
 	) {
 		var = p = script->skip_space(&p[2]);
 	}

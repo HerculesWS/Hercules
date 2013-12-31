@@ -2071,9 +2071,9 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 		struct status_data *masterstatus = status->get_base_status(mbl);
 		if ( masterstatus ) {
 			if( battle_config.slaves_inherit_speed&(masterstatus->mode&MD_CANMOVE?1:2) )
-				masterstatus->speed = masterstatus->speed;
-			if( masterstatus->speed < 2 ) /* minimum for the unit to function properly */
-				masterstatus->speed = 2;
+				mstatus->speed = masterstatus->speed;
+			if( mstatus->speed < 2 ) /* minimum for the unit to function properly */
+				mstatus->speed = 2;
 		}
 	}
 
