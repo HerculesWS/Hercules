@@ -1746,10 +1746,8 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 		hide_flag &= ~OPTION_HIDE;
 	else {
 		switch ( skill_id ) {
-			case LG_OVERBRAND:
-			case LG_OVERBRAND_BRANDISH:
-			case LG_OVERBRAND_PLUSATK:
-				hide_flag &=~ OPTION_CLOAK|OPTION_CHASEWALK;
+			case MO_ABSORBSPIRITS: // it works when already casted and target suddenly hides.
+				hide_flag &= ~OPTION_HIDE;
 				break;
 		}
 	}

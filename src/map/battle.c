@@ -2234,7 +2234,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case SC_FEINTBOMB:
 					skillratio += 100 + 100 * skill_lv;
 					break;
-				case LG_CANNONSPEAR:// Stimated formula. Still need confirm it.
+				case LG_CANNONSPEAR:
 					skillratio += -100 + (50  + status_get_str(src)) * skill_lv;
 					RE_LVL_DMOD(100);
 					break;
@@ -2271,15 +2271,15 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					RE_LVL_DMOD(100);
 					break;
 				case LG_OVERBRAND:
-					skillratio += -100 + 400 * skill_lv + (pc->checkskill(sd,CR_SPEARQUICKEN) * 30);
-					RE_LVL_DMOD(100);
+					skillratio += -100 + 50 * (((sd) ? pc->checkskill(sd,CR_SPEARQUICKEN) : 1) + 8 * skill_lv);
+					RE_LVL_DMOD(150);
 					break;
 				case LG_OVERBRAND_BRANDISH:
-					skillratio += -100 + 300 * skill_lv + (2 * (status_get_str(src) + status_get_dex(src)) / 3);
-					RE_LVL_DMOD(100);
+					skillratio += -100 + 300 * skill_lv + status_get_str(src) + status_get_dex(src);
+					RE_LVL_DMOD(150);
 					break;
 				case LG_OVERBRAND_PLUSATK:
-					skillratio += -100 + 150 * skill_lv;
+					skillratio += -100 + 100 * skill_lv;
 					RE_LVL_DMOD(100);
 					break;
 				case LG_RAYOFGENESIS:
@@ -4329,6 +4329,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				break;
 			case GC_VENOMPRESSURE:
 				hitrate += 10 + 4 * skill_lv;
+				break;
+			case LG_BANISHINGPOINT:
+				hitrate += 3 * skill_lv;
 				break;
 		}
 
