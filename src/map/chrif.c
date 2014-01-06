@@ -119,7 +119,7 @@ struct auth_node* chrif_auth_check(int account_id, int char_id, enum sd_state st
 
 bool chrif_auth_delete(int account_id, int char_id, enum sd_state state) {
 	struct auth_node *node;
-	
+
 	if ( (node = chrif->auth_check(account_id, char_id, state) ) ) {
 		int fd = node->sd ? node->sd->fd : node->fd;
 		
@@ -128,7 +128,7 @@ bool chrif_auth_delete(int account_id, int char_id, enum sd_state state) {
 		
 		if ( node->char_dat )
 			aFree(node->char_dat);
-		
+
 		if ( node->sd )
 			aFree(node->sd);
 		
@@ -486,6 +486,7 @@ int chrif_reconnect(DBKey key, DBData *data, va_list ap) {
 
 /// Called when all the connection steps are completed.
 void chrif_on_ready(void) {
+	static bool once = false;
 	ShowStatus("Map Server is now online.\n");
 	
 	chrif->state = 2;
@@ -503,6 +504,13 @@ void chrif_on_ready(void) {
 
 	//Re-save any guild castles that were modified in the disconnection time.
 	guild->castle_reconnect(-1, 0, 0);
+	
+	if( !once ) {
+#ifdef AUTOTRADE_PERSISTENCY
+		pc->autotrade_load();
+#endif
+		once = true;
+	}
 }
 
 
@@ -544,22 +552,23 @@ int chrif_scdata_request(int account_id, int char_id) {
 /*==========================================
  * Request auth confirmation
  *------------------------------------------*/
-void chrif_authreq(struct map_session_data *sd) {
+void chrif_authreq(struct map_session_data *sd, bool hstandalone) {
 	struct auth_node *node= chrif->search(sd->bl.id);
-
+	
 	if( node != NULL || !chrif->isconnected() ) {
 		set_eof(sd->fd);
 		return;
 	}
 
-	WFIFOHEAD(chrif->fd,19);
+	WFIFOHEAD(chrif->fd,20);
 	WFIFOW(chrif->fd,0) = 0x2b26;
 	WFIFOL(chrif->fd,2) = sd->status.account_id;
 	WFIFOL(chrif->fd,6) = sd->status.char_id;
 	WFIFOL(chrif->fd,10) = sd->login_id1;
 	WFIFOB(chrif->fd,14) = sd->status.sex;
 	WFIFOL(chrif->fd,15) = htonl(session[sd->fd]->client_addr);
-	WFIFOSET(chrif->fd,19);
+	WFIFOB(chrif->fd,19) = hstandalone ? 1 : 0;
+	WFIFOSET(chrif->fd,20);
 	chrif->sd_to_auth(sd, ST_LOGIN);
 }
 

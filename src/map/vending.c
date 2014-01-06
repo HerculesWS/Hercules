@@ -212,7 +212,8 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 			//Close Vending (this was automatically done by the client, we have to do it manually for autovenders) [Skotlex]
 			vending->close(vsd);
 			map->quit(vsd); //They have no reason to stay around anymore, do they?
-		}
+		} else
+			pc->autotrade_update(vsd,PAUC_REFRESH);
 	}
 }
 

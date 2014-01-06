@@ -1676,6 +1676,9 @@ int map_quit(struct map_session_data *sd) {
 	if( sd->bg_id && !sd->bg_queue.arena ) /* TODO: dump this chunk after bg_queue is fully enabled */
 		bg->team_leave(sd,1);
 
+	if( sd->state.autotrade && runflag != MAPSERVER_ST_SHUTDOWN && !hChSys.closing )
+		pc->autotrade_update(sd,PAUC_REMOVE);
+
 	skill->cooldown_save(sd);
 	pc->itemcd_do(sd,false);
 
@@ -3606,6 +3609,10 @@ int inter_config_read(char *cfgName) {
 			map->db_use_sql_mob_skill_db = config_switch(w2);
 			ShowStatus ("Using monster skill database as SQL: '%s'\n", w2);
 		}
+		else if(strcmpi(w1,"autotrade_merchants_db")==0)
+			strcpy(map->autotrade_merchants_db, w2);
+		else if(strcmpi(w1,"autotrade_data_db")==0)
+			strcpy(map->autotrade_data_db, w2);
 		/* sql log db */
 		else if(strcmpi(w1,"log_db_ip")==0)
 			strcpy(logs->db_ip, w2);

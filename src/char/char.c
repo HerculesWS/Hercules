@@ -3503,14 +3503,14 @@ int parse_frommap(int fd)
 			break;
 
 			case 0x2b26: // auth request from map-server
-				if (RFIFOREST(fd) < 19)
+				if (RFIFOREST(fd) < 20)
 					return 0;
 
 			{
 				int account_id;
 				int char_id;
 				int login_id1;
-				char sex;
+				char sex, standalone;
 				uint32 ip;
 				struct auth_node* node;
 				struct mmo_charstatus* cd;
@@ -3521,15 +3521,36 @@ int parse_frommap(int fd)
 				login_id1  = RFIFOL(fd,10);
 				sex        = RFIFOB(fd,14);
 				ip         = ntohl(RFIFOL(fd,15));
-				RFIFOSKIP(fd,19);
+				standalone = RFIFOB(fd, 19);
+				RFIFOSKIP(fd,20);
 
 				node = (struct auth_node*)idb_get(auth_db, account_id);
 				cd = (struct mmo_charstatus*)uidb_get(char_db_,char_id);
-				if( cd == NULL )
-				{	//Really shouldn't happen.
+				
+				if( cd == NULL ) { //Really shouldn't happen.
 					mmo_char_fromsql(char_id, &char_dat, true);
 					cd = (struct mmo_charstatus*)uidb_get(char_db_,char_id);
 				}
+
+				if( runflag == CHARSERVER_ST_RUNNING && cd && standalone ) {
+					cd->sex = sex;
+					
+					WFIFOHEAD(fd,25 + sizeof(struct mmo_charstatus));
+					WFIFOW(fd,0) = 0x2afd;
+					WFIFOW(fd,2) = 25 + sizeof(struct mmo_charstatus);
+					WFIFOL(fd,4) = account_id;
+					WFIFOL(fd,8) = 0;
+					WFIFOL(fd,12) = 0;
+					WFIFOL(fd,16) = 0;
+					WFIFOL(fd,20) = 0;
+					WFIFOB(fd,24) = 0;
+					memcpy(WFIFOP(fd,25), cd, sizeof(struct mmo_charstatus));
+					WFIFOSET(fd, WFIFOW(fd,2));
+					
+					set_char_online(id, char_id, account_id);
+					break;
+				}
+				
 				if( runflag == CHARSERVER_ST_RUNNING &&
 					cd != NULL &&
 					node != NULL &&

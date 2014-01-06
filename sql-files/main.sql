@@ -672,6 +672,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1383955424);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1384545461);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1384588175);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1387844126);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1389028967);
 
 --
 -- Table structure for table `sstatus`
@@ -742,4 +743,28 @@ CREATE TABLE IF NOT EXISTS `npc_market_data` (
   `amount` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`name`,`itemid`)
 ) ENGINE=MyISAM;
+
+--
+-- Table structure for table `autotrade_merchants`
+--
+
+CREATE TABLE IF NOT EXISTS `autotrade_merchants` (
+  `account_id` int(11) NOT NULL default '0',
+  `char_id` int(11) NOT NULL default '0',
+  `sex` tinyint(2) NOT NULL default '0',
+  `title` varchar(80) NOT NULL default 'Buy From Me!',
+  PRIMARY KEY  (`account_id`,`char_id`)
+) ENGINE=MyISAM; 
+
+--
+-- Table structure for table `autotrade_data`
+--
+
+CREATE TABLE IF NOT EXISTS `autotrade_data` (
+  `char_id` int(11) NOT NULL default '0',
+  `itemkey` int(11) NOT NULL default '0',
+  `amount` int(11) NOT NULL default '0',
+  `price` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`char_id`,`itemkey`)
+) ENGINE=MyISAM; 
 

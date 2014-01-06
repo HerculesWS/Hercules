@@ -5479,12 +5479,19 @@ ACMD(autotrade) {
 		int timeout = atoi(message);
 		status->change_start(&sd->bl, SC_AUTOTRADE, 10000, 0, 0, 0, 0, ((timeout > 0) ? min(timeout,battle_config.at_timeout) : battle_config.at_timeout) * 60000, 0);
 	}
-	
+		
 	clif->chsys_quit(sd);
 	
 	clif->authfail_fd(sd->fd, 15);
 	
+	
+#ifdef AUTOTRADE_PERSISTENCY
+	pc->autotrade_prepare(sd);
+	
+	return false;/* we fail to not cause it to proceed on is_atcommand */
+#else
 	return true;
+#endif
 }
 
 /*==========================================

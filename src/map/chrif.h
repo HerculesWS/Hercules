@@ -79,7 +79,7 @@ struct chrif_interface {
 	bool (*auth_delete) (int account_id, int char_id, enum sd_state state);
 	bool (*auth_finished) (struct map_session_data* sd);
 	
-	void (*authreq) (struct map_session_data* sd);
+	void (*authreq) (struct map_session_data* sd, bool hstandalone);
 	void (*authok) (int fd);
 	int (*scdata_request) (int account_id, int char_id);
 	int (*save) (struct map_session_data* sd, int flag);

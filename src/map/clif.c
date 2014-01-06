@@ -9188,7 +9188,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 	WFIFOSET(fd,packet_len(0x283));
 #endif
 
-	chrif->authreq(sd);
+	chrif->authreq(sd,false);
 }
 void clif_hercules_chsys_mjoin(struct map_session_data *sd) {
 	if( !map->list[sd->bl.m].channel ) {

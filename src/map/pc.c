@@ -1330,7 +1330,7 @@ int pc_reg_received(struct map_session_data *sd)
 
 	if( npc->motd ) /* [Ind/Hercules] */
 		script->run(npc->motd->u.scr.script, 0, sd->bl.id, npc->fake_nd->bl.id);
-
+	
 	return 1;
 }
 
@@ -10291,6 +10291,12 @@ void pc_scdata_received(struct map_session_data *sd) {
 		
 		pc->expire_check(sd);
 	}
+	
+	if( sd->state.standalone ) {
+		clif->pLoadEndAck(0,sd);
+		pc->autotrade_populate(sd);
+		pc->autotrade_start(sd);
+	}
 }
 int pc_expiration_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data *sd = map->id2sd(id);
@@ -10342,14 +10348,211 @@ void pc_expire_check(struct map_session_data *sd) {
 
 	sd->expiration_tid = timer->add(timer->gettick() + (int64)(sd->expiration_time - time(NULL))*1000, pc->expiration_timer, sd->bl.id, 0);
 }
+/**
+ * Loads autotraders
+ ***/
+void pc_autotrade_load(void) {
+	struct map_session_data *sd;
+	char *data;
+	
+	if (SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT `account_id`,`char_id`,`sex`,`title` FROM `%s`",map->autotrade_merchants_db))
+		Sql_ShowDebug(map->mysql_handle);
+	
+	while( SQL_SUCCESS == SQL->NextRow(map->mysql_handle) ) {
+		int account_id, char_id;
+		char title[MESSAGE_SIZE];
+		unsigned char sex;
+		
+		SQL->GetData(map->mysql_handle, 0, &data, NULL); account_id = atoi(data);
+		SQL->GetData(map->mysql_handle, 1, &data, NULL); char_id = atoi(data);
+		SQL->GetData(map->mysql_handle, 2, &data, NULL); sex = atoi(data);
+		SQL->GetData(map->mysql_handle, 3, &data, NULL); safestrncpy(title, data, sizeof(title));
 
-/*==========================================
- * pc Init/Terminate
- *------------------------------------------*/
+		CREATE(sd, TBL_PC, 1);
+		
+		pc->setnewpc(sd, account_id, char_id, 0, 0, sex, 0);
+		
+		safestrncpy(sd->message, title, MESSAGE_SIZE);
+		
+		sd->state.standalone = 1;
+		sd->group = pcg->get_dummy_group();
+		
+		chrif->authreq(sd,true);
+	}
+		
+	SQL->FreeResult(map->mysql_handle);
+}
+/**
+ * Loads vending data and sets it up, is triggered when char server data that pc_autotrade_load requested arrives
+ **/
+void pc_autotrade_start(struct map_session_data *sd) {
+	unsigned int count = 0;
+	int i;
+	char *data;
+
+	if (SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT `itemkey`,`amount`,`price` FROM `%s` WHERE `char_id` = '%d'",map->autotrade_data_db,sd->status.char_id))
+		Sql_ShowDebug(map->mysql_handle);
+
+	while( SQL_SUCCESS == SQL->NextRow(map->mysql_handle) ) {
+		int itemkey, amount, price;
+		
+		SQL->GetData(map->mysql_handle, 0, &data, NULL); itemkey = atoi(data);
+		SQL->GetData(map->mysql_handle, 1, &data, NULL); amount = atoi(data);
+		SQL->GetData(map->mysql_handle, 2, &data, NULL); price = atoi(data);
+
+		ARR_FIND(0, MAX_CART, i, sd->status.cart[i].id == itemkey);
+				
+		if( i != MAX_CART && itemdb_cantrade(&sd->status.cart[i], 0, 0) ) {
+			if( amount > sd->status.cart[i].amount )
+				amount = sd->status.cart[i].amount;
+			
+			if( amount ) {
+				sd->vending[count].index = i;
+				sd->vending[count].amount = amount;
+				sd->vending[count].value = cap_value(price, 0, (unsigned int)battle_config.vending_max_value);
+
+				count++;
+			}
+		}
+	}
+		
+	if( !count ) {
+		pc->autotrade_update(sd,PAUC_REMOVE);
+		map->quit(sd);
+	} else {
+		sd->state.autotrade = 1;
+		sd->vender_id = ++vending->next_id;
+		sd->vend_num = count;
+		sd->state.vending = true;
+		idb_put(vending->db, sd->status.char_id, sd);
+		if( map->list[sd->bl.m].users )
+			clif->showvendingboard(&sd->bl,sd->message,0);
+	}
+}
+/**
+ * Perform a autotrade action
+ **/
+void pc_autotrade_update(struct map_session_data *sd, enum e_pc_autotrade_update_action action) {
+	int i;
+	
+	/* either way, this goes down */
+	if( action != PAUC_START ) {
+		if (SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d'",map->autotrade_data_db,sd->status.char_id))
+			Sql_ShowDebug(map->mysql_handle);
+	}
+	
+	switch( action ) {
+		case PAUC_REMOVE:
+			if (SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d' LIMIT 1",map->autotrade_merchants_db,sd->status.char_id))
+				Sql_ShowDebug(map->mysql_handle);
+			break;
+		case PAUC_START:
+			if (SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s` (`account_id`,`char_id`,`sex`,`title`) VALUES ('%d','%d','%d','%s')",
+										map->autotrade_merchants_db,
+										sd->status.account_id,
+										sd->status.char_id,
+										sd->status.sex,
+										sd->message
+										))
+				Sql_ShowDebug(map->mysql_handle);
+			/* yes we want it to fall */
+		case PAUC_REFRESH:
+			for( i = 0; i < sd->vend_num; i++ ) {
+				if( sd->vending[i].amount == 0 )
+					continue;
+				
+				if (SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s` (`char_id`,`itemkey`,`amount`,`price`) VALUES ('%d','%d','%d','%d')",
+											map->autotrade_data_db,
+											sd->status.char_id,
+											sd->status.cart[sd->vending[i].index].id,
+											sd->vending[i].amount,
+											sd->vending[i].value
+											))
+					Sql_ShowDebug(map->mysql_handle);
+			}
+			break;
+	}
+}
+/**
+ * Handles characters upon @autotrade usage
+ **/
+void pc_autotrade_prepare(struct map_session_data *sd) {
+	struct autotrade_vending *data;
+	int i, cursor = 0;
+	int account_id, char_id;
+	char title[MESSAGE_SIZE];
+	unsigned char sex;
+
+	CREATE(data, struct autotrade_vending, 1);
+	
+	memcpy(data->vending, sd->vending, sizeof(sd->vending));
+	
+	for(i = 0; i < sd->vend_num; i++) {
+		if( sd->vending[i].amount ) {
+			memcpy(&data->list[cursor],&sd->status.cart[sd->vending[i].index],sizeof(struct item));
+			cursor++;
+		}
+	}
+	
+	data->vend_num = (unsigned char)cursor;
+	
+	idb_put(pc->at_db, sd->status.char_id, data);
+	
+	account_id = sd->status.account_id;
+	char_id = sd->status.char_id;
+	sex = sd->status.sex;
+	safestrncpy(title, sd->message, sizeof(title));
+	
+	map->quit(sd);
+	chrif->auth_delete(account_id, char_id, ST_LOGOUT);
+
+	CREATE(sd, TBL_PC, 1);
+	
+	pc->setnewpc(sd, account_id, char_id, 0, 0, sex, 0);
+	
+	safestrncpy(sd->message, title, MESSAGE_SIZE);
+	
+	sd->state.standalone = 1;
+	sd->group = pcg->get_dummy_group();
+
+	chrif->authreq(sd,true);
+}
+/**
+ * Prepares autotrade data from pc->at_db from a player that has already returned from char server
+ **/
+void pc_autotrade_populate(struct map_session_data *sd) {
+	struct autotrade_vending *data;
+	int i, j, cursor = 0;
+
+	if( !(data = idb_get(pc->at_db,sd->status.char_id)) )
+		return;
+
+	for(i = 0; i < data->vend_num; i++) {
+		if( !data->vending[i].amount )
+			continue;
+		
+		ARR_FIND(0, MAX_CART, j, !memcmp((char*)(&data->list[i]) + sizeof(data->list[0].id), (char*)(&sd->status.cart[j]) + sizeof(data->list[0].id), sizeof(struct item) - sizeof(data->list[0].id)));
+		
+		if( j != MAX_CART ) {
+			sd->vending[cursor].index = j;
+			sd->vending[cursor].amount = data->vending[i].amount;
+			sd->vending[cursor].value = data->vending[i].value;
+			
+			cursor++;
+		}
+	}
+	
+	sd->vend_num = cursor;
+
+	pc->autotrade_update(sd,PAUC_START);
+	
+	idb_remove(pc->at_db, sd->status.char_id);
+}
 void do_final_pc(void) {
-
+	
 	db_destroy(pc->itemcd_db);
-
+	db_destroy(pc->at_db);
+	
 	pcg->final();
 	
 	ers_destroy(pc->sc_display_ers);
@@ -10359,11 +10562,12 @@ void do_final_pc(void) {
 void do_init_pc(bool minimal) {
 	if (minimal)
 		return;
-
+	
 	pc->itemcd_db = idb_alloc(DB_OPT_RELEASE_DATA);
-
+	pc->at_db = idb_alloc(DB_OPT_RELEASE_DATA);
+	
 	pc->readdb();
-
+	
 	timer->add_func_list(pc->invincible_timer, "pc_invincible_timer");
 	timer->add_func_list(pc->eventtimer, "pc_eventtimer");
 	timer->add_func_list(pc->inventory_rental_end, "pc_inventory_rental_end");
@@ -10375,28 +10579,27 @@ void do_init_pc(bool minimal) {
 	timer->add_func_list(pc->charm_timer, "pc_charm_timer");
 	timer->add_func_list(pc->global_expiration_timer,"pc_global_expiration_timer");
 	timer->add_func_list(pc->expiration_timer,"pc_expiration_timer");
-
+	
 	timer->add(timer->gettick() + map->autosave_interval, pc->autosave, 0, 0);
-
+	
 	// 0=day, 1=night [Yor]
 	map->night_flag = battle_config.night_at_start ? 1 : 0;
-
+	
 	if (battle_config.day_duration > 0 && battle_config.night_duration > 0) {
 		int day_duration = battle_config.day_duration;
 		int night_duration = battle_config.night_duration;
 		// add night/day timer [Yor]
 		timer->add_func_list(pc->map_day_timer, "pc_map_day_timer");
 		timer->add_func_list(pc->map_night_timer, "pc_map_night_timer");
-
+		
 		pc->day_timer_tid   = timer->add_interval(timer->gettick() + (map->night_flag ? 0 : day_duration) + night_duration, pc->map_day_timer,   0, 0, day_duration + night_duration);
 		pc->night_timer_tid = timer->add_interval(timer->gettick() + day_duration + (map->night_flag ? night_duration : 0), pc->map_night_timer, 0, 0, day_duration + night_duration);
 	}
-
+	
 	pcg->init();
 	
 	pc->sc_display_ers = ers_new(sizeof(struct sc_display_entry), "pc.c:sc_display_ers", ERS_OPT_NONE);
 }
-
 /*=====================================
 * Default Functions : pc.h 
 * Generated by HerculesInterfaceMaker
@@ -10414,6 +10617,7 @@ void pc_defaults(void) {
 	pc = &pc_s;
 
 	/* vars */
+	pc->at_db = NULL;
 	pc->itemcd_db = NULL;
 	/* */
 	pc->day_timer_tid = INVALID_TIMER;
@@ -10681,4 +10885,13 @@ void pc_defaults(void) {
 	pc->expiration_timer = pc_expiration_timer;
 	pc->global_expiration_timer = pc_global_expiration_timer;
 	pc->expire_check = pc_expire_check;
+	
+	/**
+	 * Autotrade persistency [Ind/Hercules <3]
+	 **/
+	pc->autotrade_load = pc_autotrade_load;
+	pc->autotrade_update = pc_autotrade_update;
+	pc->autotrade_start = pc_autotrade_start;
+	pc->autotrade_prepare = pc_autotrade_prepare;
+	pc->autotrade_populate = pc_autotrade_populate;
 }
