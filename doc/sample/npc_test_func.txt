@@ -3,8 +3,8 @@
 //===== By: ==================================================
 //= Hercules Dev Team
 //===== Current Version: =====================================
-//= 20120901
-//===== Description: ========================================= 
+//= 20131225
+//===== Description: =========================================
 //= Demonstrates use of functions.
 //============================================================
 
@@ -21,11 +21,11 @@ function	script	func002	{
 }
 
 // Uses 3 different methods of displaying dialogue from both internal and external sources.
-prontera,168,189,1	script	Functions	112,{
-	callfunc "func001";		// Calls func001 and displays "Hello there!"
-	mes callfunc("func002");	// Calls func002 and displays "I'm a function"
+prontera,168,189,1	script	Functions	4_F_KAFRA6,{
+	callfunc "func001";      // Calls func001 and displays "Hello there!"
+	mes callfunc("func002"); // Calls func002 and displays "I'm a function"
 	next;
-	callsub L_SUB001;		// Calls the label L_SUB001 and displays "I'm a label"
+	callsub L_SUB001;        // Calls the label L_SUB001 and displays "I'm a label"
 	close;
 	end;
 

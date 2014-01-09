@@ -43314,6 +43314,31 @@ void HP_npc_market_delfromsql(struct npc_data *nd, unsigned short index) {
 	}
 	return;
 }
+void HP_npc_market_delfromsql_sub(const char *npcname, unsigned short index) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_npc_market_delfromsql_sub_pre ) {
+		void (*preHookFunc) (const char *npcname, unsigned short *index);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_market_delfromsql_sub_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_market_delfromsql_sub_pre[hIndex].func;
+			preHookFunc(npcname, &index);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.npc.market_delfromsql_sub(npcname, index);
+	}
+	if( HPMHooks.count.HP_npc_market_delfromsql_sub_post ) {
+		void (*postHookFunc) (const char *npcname, unsigned short *index);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_market_delfromsql_sub_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_market_delfromsql_sub_post[hIndex].func;
+			postHookFunc(npcname, &index);
+		}
+	}
+	return;
+}
 int HP_npc_secure_timeout_timer(int tid, int64 tick, int id, intptr_t data) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -51956,30 +51981,31 @@ struct script_data* HP_script_push_val(struct script_stack *stack, enum c_op typ
 	}
 	return retVal___;
 }
-void HP_script_get_val(struct script_state *st, struct script_data *data) {
+struct script_data* HP_script_get_val(struct script_state *st, struct script_data *data) {
 	int hIndex = 0;
+	struct script_data* retVal___ = NULL;
 	if( HPMHooks.count.HP_script_get_val_pre ) {
-		void (*preHookFunc) (struct script_state *st, struct script_data *data);
+		struct script_data* (*preHookFunc) (struct script_state *st, struct script_data *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_script_get_val_pre[hIndex].func;
-			preHookFunc(st, data);
+			retVal___ = preHookFunc(st, data);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
-			return;
+			return retVal___;
 		}
 	}
 	{
-		HPMHooks.source.script.get_val(st, data);
+		retVal___ = HPMHooks.source.script.get_val(st, data);
 	}
 	if( HPMHooks.count.HP_script_get_val_post ) {
-		void (*postHookFunc) (struct script_state *st, struct script_data *data);
+		struct script_data* (*postHookFunc) (struct script_data* retVal___, struct script_state *st, struct script_data *data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_get_val_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_script_get_val_post[hIndex].func;
-			postHookFunc(st, data);
+			retVal___ = postHookFunc(retVal___, st, data);
 		}
 	}
-	return;
+	return retVal___;
 }
 void* HP_script_get_val2(struct script_state *st, int uid, struct DBMap **ref) {
 	int hIndex = 0;

@@ -139,7 +139,7 @@ Upper: Equippable upper-types. Uses the following bitmasks:
 
 Gender: Gender restriction. 0 is female, 1 is male, 2 for both (default value).
 
-Loc: Equipment's placement. A value needs to be spevified if the item is an
+Loc: Equipment's placement. A value needs to be specified if the item is an
      equipment piece. Values are:
 
 	2^0  001 = Lower Headgear

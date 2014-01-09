@@ -1,14 +1,14 @@
 //===== Hercules Script =======================================
 //= Sample: PCRE
 //===== By: ==================================================
-//= rAthena Dev Team
+//= Hercules Dev Team
 //===== Current Version: =====================================
-//= 20100108
-//===== Description: ========================================= 
+//= 20131225
+//===== Description: =========================================
 //= Demonstrates PCRE commands.
 //============================================================
 
-prontera,152,181,5	script	MouseJstr	763,{
+prontera,152,181,5	script	MouseJstr	4_M_JPN,{
 
 // hello
 Lquote0:

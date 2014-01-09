@@ -1709,6 +1709,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(npc->market_fromsql, HP_npc_market_fromsql) },
 	{ HP_POP(npc->market_tosql, HP_npc_market_tosql) },
 	{ HP_POP(npc->market_delfromsql, HP_npc_market_delfromsql) },
+	{ HP_POP(npc->market_delfromsql_sub, HP_npc_market_delfromsql_sub) },
 	{ HP_POP(npc->secure_timeout_timer, HP_npc_secure_timeout_timer) },
 /* party */
 	{ HP_POP(party->init, HP_party_init) },

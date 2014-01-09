@@ -3,12 +3,12 @@
 //===== By: ==================================================
 //= Hercules Dev Team
 //===== Current Version: =====================================
-//= 20110123
-//===== Description: ========================================= 
+//= 20131225
+//===== Description: =========================================
 //= Outputs the values of class constants.
 //============================================================
 
-prontera,155,177,1	script	Tell Me	725,{
+prontera,155,177,1	script	Tell Me	4_F_JOB_ASSASSIN,{
 	mes "[Tell Me]";
 	mes "Class: " + Class;
 	mes "BaseClass: " + BaseClass;

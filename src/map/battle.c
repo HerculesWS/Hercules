@@ -2234,7 +2234,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case SC_FEINTBOMB:
 					skillratio += 100 + 100 * skill_lv;
 					break;
-				case LG_CANNONSPEAR:// Stimated formula. Still need confirm it.
+				case LG_CANNONSPEAR:
 					skillratio += -100 + (50  + status_get_str(src)) * skill_lv;
 					RE_LVL_DMOD(100);
 					break;
@@ -2251,10 +2251,10 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					RE_LVL_DMOD(100);
 					break;
 				case LG_RAGEBURST:
-					if( sd && sd->spiritball_old )
-						skillratio += -100 + (sd->spiritball_old * 200);
-					else
-						skillratio += -100 + 15 * 200;
+					if( sc ){
+						skillratio += -100 + (status_get_max_hp(src) - status_get_hp(src)) / 100 + sc->fv_counter * 200;
+						clif->millenniumshield(sd, (sc->fv_counter = 0));
+					}
 					RE_LVL_DMOD(100);
 					break;
 				case LG_SHIELDSPELL:// [(Casters Base Level x 4) + (Shield DEF x 10) + (Casters VIT x 2)] %
@@ -2271,15 +2271,15 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					RE_LVL_DMOD(100);
 					break;
 				case LG_OVERBRAND:
-					skillratio += -100 + 400 * skill_lv + (pc->checkskill(sd,CR_SPEARQUICKEN) * 30);
-					RE_LVL_DMOD(100);
+					skillratio += -100 + 50 * (((sd) ? pc->checkskill(sd,CR_SPEARQUICKEN) : 1) + 8 * skill_lv);
+					RE_LVL_DMOD(150);
 					break;
 				case LG_OVERBRAND_BRANDISH:
-					skillratio += -100 + 300 * skill_lv + (2 * (status_get_str(src) + status_get_dex(src)) / 3);
-					RE_LVL_DMOD(100);
+					skillratio += -100 + 300 * skill_lv + status_get_str(src) + status_get_dex(src);
+					RE_LVL_DMOD(150);
 					break;
 				case LG_OVERBRAND_PLUSATK:
-					skillratio += -100 + 150 * skill_lv;
+					skillratio += -100 + 100 * skill_lv;
 					RE_LVL_DMOD(100);
 					break;
 				case LG_RAYOFGENESIS:
@@ -2932,8 +2932,10 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			rnd()%100 < sce->val3)
 			status->heal(src, damage*sce->val4/100, 0, 3);
 
-		if( sd && (sce = sc->data[SC_FORCEOFVANGUARD]) && flag&BF_WEAPON && rnd()%100 < sce->val2 )
-			pc->addspiritball(sd,skill->get_time(LG_FORCEOFVANGUARD,sce->val1),sce->val3);
+		if( sd && (sce = sc->data[SC_FORCEOFVANGUARD]) && flag&BF_WEAPON 
+			&& rnd()%100 < sce->val2 && sc->fv_counter <= sce->val3 )
+				clif->millenniumshield(sd, sc->fv_counter++);
+
 		if (sc->data[SC_STYLE_CHANGE] && rnd()%2) {
 			TBL_HOM *hd = BL_CAST(BL_HOM,bl);
 			if (hd) homun->addspiritball(hd, 10); //add a sphere
@@ -4327,6 +4329,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				break;
 			case GC_VENOMPRESSURE:
 				hitrate += 10 + 4 * skill_lv;
+				break;
+			case LG_BANISHINGPOINT:
+				hitrate += 3 * skill_lv;
 				break;
 		}
 

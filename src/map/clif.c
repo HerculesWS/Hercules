@@ -322,7 +322,7 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 	}
 
 	/* unless visible, hold it here */
-	if( clif->ally_only && !sd->special_state.intravision && battle->check_target( src_bl, &sd->bl, BCT_ENEMY ) > 0 )
+	if( clif->ally_only && !sd->sc.data[SC_CLAIRVOYANCE] && !sd->special_state.intravision && battle->check_target( src_bl, &sd->bl, BCT_ENEMY ) > 0 )
 		return 0;
 
 	WFIFOHEAD(fd, len);
@@ -5947,9 +5947,15 @@ void clif_use_card(struct map_session_data *sd,int idx)
 		if( j == sd->inventory_data[i]->slot )	// No room
 			continue;
 
+		if( sd->status.inventory[i].equip > 0 ) // Do not check items that are already equipped
+			continue;
+
 		WFIFOW(fd,4+c*2)=i+2;
 		c++;
 	}
+
+	if( !c ) return; // no item is available for card insertion
+
 	WFIFOW(fd,2)=4+c*2;
 	WFIFOSET(fd,WFIFOW(fd,2));
 }

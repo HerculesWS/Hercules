@@ -85,6 +85,8 @@ struct eri;
 
 #define script_isstring(st,i) data_isstring(script_getdata((st),(i)))
 #define script_isint(st,i) data_isint(script_getdata((st),(i)))
+#define script_isstringtype(st,i) data_isstring(script->get_val((st), script_getdata((st),(i))))
+#define script_isinttype(st,i) data_isint(script->get_val((st), script_getdata((st),(i))))
 
 #define script_getnum(st,val) (script->conv_num((st), script_getdata((st),(val))))
 #define script_getstr(st,val) (script->conv_str((st), script_getdata((st),(val))))
@@ -548,7 +550,7 @@ struct script_interface {
 	TBL_PC *(*rid2sd) (struct script_state *st);
 	void (*detach_rid) (struct script_state* st);
 	struct script_data* (*push_val)(struct script_stack* stack, enum c_op type, int val, struct DBMap** ref);
-	void (*get_val) (struct script_state* st, struct script_data* data);
+	struct script_data *(*get_val) (struct script_state* st, struct script_data* data);
 	void* (*get_val2) (struct script_state* st, int uid, struct DBMap** ref);
 	struct script_data* (*push_str) (struct script_stack* stack, enum c_op type, char* str);
 	struct script_data* (*push_copy) (struct script_stack* stack, int pos);

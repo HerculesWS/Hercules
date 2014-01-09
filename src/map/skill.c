@@ -908,7 +908,6 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			//Chance to cause blind status vs demon and undead element, but not against players
 			if(!dstsd && (battle->check_undead(tstatus->race,tstatus->def_ele) || tstatus->race == RC_DEMON))
 				sc_start(bl,SC_BLIND,100,skill_lv,skill->get_time2(skill_id,skill_lv));
-			attack_type |= BF_WEAPON;
 			break;
 
 		case AM_ACIDTERROR:
@@ -2407,7 +2406,11 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,1,WL_CHAINLIGHTNING,-2,6);
 			break;
 		case LG_OVERBRAND_BRANDISH:
+		case LG_OVERBRAND:
+			dmg.amotion = status_get_amotion(src) * 2;
 		case LG_OVERBRAND_PLUSATK:
+			dmg.dmotion = clif->skill_damage(dsrc,bl,tick,status_get_amotion(src),dmg.dmotion,damage,dmg.div_,skill_id,-1,5);
+			break;
 		case EL_FIRE_BOMB:
 		case EL_FIRE_BOMB_ATK:
 		case EL_FIRE_WAVE:
@@ -2604,7 +2607,6 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			case MG_FIREWALL:
 			case PR_SANCTUARY:
 			case SC_TRIANGLESHOT:
-			case LG_OVERBRAND:
 			case SR_KNUCKLEARROW:
 			case GN_WALLOFTHORN:
 			case EL_FIRE_MANTLE:
@@ -2626,15 +2628,9 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		
 		//blown-specific handling
 		switch( skill_id ) {
-			case LG_OVERBRAND:
-				if( skill->blown(dsrc,bl,dmg.blewcount,dir,0) ) {
-					short dir_x, dir_y;
-					dir_x = dirx[(dir+4)%8];
-					dir_y = diry[(dir+4)%8];
-					if( map->getcell(bl->m, bl->x+dir_x, bl->y+dir_y, CELL_CHKNOPASS) != 0 )
-						skill->addtimerskill(src, tick + status_get_amotion(src), bl->id, 0, 0, LG_OVERBRAND_PLUSATK, skill_lv, BF_WEAPON, flag );
-				} else
-					skill->addtimerskill(src, tick + status_get_amotion(src), bl->id, 0, 0, LG_OVERBRAND_PLUSATK, skill_lv, BF_WEAPON, flag );
+			case LG_OVERBRAND_BRANDISH:
+				if( skill->blown(dsrc,bl,dmg.blewcount,dir,0) < dmg.blewcount ) 
+					skill->addtimerskill(src, tick + status_get_amotion(src), bl->id, 0, 0, LG_OVERBRAND_PLUSATK, skill_lv, BF_WEAPON, flag|SD_ANIMATION);
 				break;
 			case SR_KNUCKLEARROW:
 				if( skill->blown(dsrc,bl,dmg.blewcount,dir,0) && !(flag&4) ) {
@@ -3188,13 +3184,6 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 						}
 					}
 					break;
-				case LG_OVERBRAND_BRANDISH:
-				case LG_OVERBRAND_PLUSATK:
-					if( status->check_skilluse(src, target, skl->skill_id, 1) )
-						skill->attack(BF_WEAPON, src, src, target, skl->skill_id, skl->skill_lv, tick, skl->flag|SD_LEVEL);
-					else
-						clif->skill_damage(src, target, tick, status_get_amotion(src), status_get_dmotion(target), 0, 1, skl->skill_id, skl->skill_lv, skill->get_hit(skl->skill_id));
-					break;
 				case SR_KNUCKLEARROW:
 					skill->attack(BF_WEAPON, src, src, target, skl->skill_id, skl->skill_lv, tick, skl->flag|SD_LEVEL);
 					break;
@@ -3257,9 +3246,21 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 					int dummy = 1, i = skill->get_unit_range(skl->skill_id,skl->skill_lv);
 					map->foreachinarea(skill->cell_overlap, src->m, skl->x-i, skl->y-i, skl->x+i, skl->y+i, BL_SKILL, skl->skill_id, &dummy, src);
 				}
-				// FIXME: there's no 'break' here. If it was intended, please consider adding a comment (issue #160)
+				// fall through ...
 				case WL_EARTHSTRAIN:
 					skill->unitsetting(src,skl->skill_id,skl->skill_lv,skl->x,skl->y,(skl->type<<16)|skl->flag);
+					break;
+				case LG_OVERBRAND_BRANDISH:
+					{
+						short x2 = src->x, y2 = src->y, x = x2, y = y2;
+						switch( skl->type ){								
+							case 0: case 1: case 7: x2 += 4; x -= 4; y2 += 4; break;
+							case 3: case 4: case 5: x2 += 4; x -= 4; y -= 4; break;
+							case 2: y2 += 4; y -= 4; x -= 4; break;
+							case 6: y2 += 4; y -= 4; x2 += 4; break;
+						}
+						map->foreachinarea(skill->area_sub, src->m, x, y, x2, y2, BL_CHAR, src, skl->skill_id, skl->skill_lv, tick, skl->flag|BCT_ENEMY|SD_ANIMATION|1,skill->castend_damage_id);
+					}
 					break;
 			}
 		}
@@ -3511,6 +3512,8 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		case KO_JYUMONJIKIRI:
 		case KO_SETSUDAN:
 		case GC_DARKCROW:
+		case LG_OVERBRAND_BRANDISH:
+		case LG_OVERBRAND:
 			skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 		break;
 
@@ -4334,16 +4337,6 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 			skill->attack((flag&1)?BF_WEAPON:BF_MAGIC,src,src,bl,skill_id,skill_lv,tick,flag);
 			break;
 
-		case LG_OVERBRAND:
-			if( status->check_skilluse(src, bl, skill_id, 1) )
-				skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag|SD_LEVEL);
-			else
-				clif->skill_damage(src, bl, tick, status_get_amotion(src), status_get_dmotion(bl), 0, 1, skill_id, skill_lv, skill->get_hit(skill_id));
-			break;
-
-		case LG_OVERBRAND_BRANDISH:
-			skill->addtimerskill(src, tick + status_get_amotion(src)*8/10, bl->id, 0, 0, skill_id, skill_lv, BF_WEAPON, flag|SD_LEVEL);
-			break;
 		case SR_DRAGONCOMBO:
 			skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 			break;
@@ -6069,6 +6062,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					clif->skill_nodamage(src,bl,skill_id,( skill_id == LG_FORCEOFVANGUARD ) ? skill_lv : -1,failure);
 				else if( sd )
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				if ( skill_id == LG_FORCEOFVANGUARD )
+					break;
 				map->freeblock_unlock();
 				return 0;
 			}
@@ -10274,14 +10269,16 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 
 		case LG_OVERBRAND:
 			{
-				int width;//according to data from irowiki it actually is a square
-				int i;
-				for( width = 0; width < 7; width++ )
-					for( i = 0; i < 7; i++ )
-						map->foreachincell(skill->area_sub, src->m, x-2+i, y-2+width, splash_target(src), src, LG_OVERBRAND_BRANDISH, skill_lv, tick, flag|BCT_ENEMY,skill->castend_damage_id);
-				for( width = 0; width < 7; width++ )
-					for( i = 0; i < 7; i++ )
-						map->foreachincell(skill->area_sub, src->m, x-2+i, y-2+width, splash_target(src), src, skill_id, skill_lv, tick, flag|BCT_ENEMY,skill->castend_damage_id);
+				uint8 dir = map->calc_dir(src, x, y);
+				uint8 x2 = x = src->x, y2 = y = src->y;
+				switch( dir ){
+					case 0: case 1: case 7: x2++; x--; y2 += 7; break;
+					case 3: case 4: case 5: x2++; x--; y -= 7; break;
+					case 2: y2++; y--; x -= 7;break;
+					case 6: y2++; y--; x2 += 7;break;
+				}
+				map->foreachinarea(skill->area_sub, src->m, x, y, x2, y2, BL_CHAR, src, skill_id, skill_lv, tick, flag|BCT_ENEMY|SD_ANIMATION|1,skill->castend_damage_id);
+				skill->addtimerskill(src,timer->gettick() + status_get_amotion(src), 0, 0, 0, LG_OVERBRAND_BRANDISH, skill_lv, dir, flag);
 			}
 			break;
 
@@ -12949,13 +12946,6 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return 0;
 			}
-			break;
-		case LG_RAGEBURST:
-			if( sd->spiritball == 0 ) {
-				clif->skill_fail(sd,skill_id,USESKILL_FAIL_SKILLINTERVAL,0);
-				return 0;
-			}
-			sd->spiritball_old = require.spiritball = sd->spiritball;
 			break;
 		case LG_RAYOFGENESIS:
 			if( sc && sc->data[SC_INSPIRATION]  )
