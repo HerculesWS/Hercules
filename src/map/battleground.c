@@ -496,7 +496,7 @@ void bg_match_over(struct bg_arena *arena, bool canceled) {
 			if( canceled )
 				clif->colormes(sd->fd,COLOR_RED,"BG Match Cancelled: not enough players");
 			else {
-				pc_setglobalreg(sd, arena->delay_var, (unsigned int)time(NULL));
+				pc_setglobalreg(sd, script->add_str(arena->delay_var), (unsigned int)time(NULL));
 			}
 		}
 	}
@@ -693,7 +693,7 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 	
 	tsec = (unsigned int)time(NULL);
 	
-	if ( ( tick = pc_readglobalreg(sd, bg->gdelay_var) ) && tsec < tick ) {
+	if ( ( tick = pc_readglobalreg(sd, script->add_str(bg->gdelay_var)) ) && tsec < tick ) {
 		char response[100];
 		if( (tick-tsec) > 60 )
 			sprintf(response, "You are a deserter! Wait %d minute(s) before you can apply again",(tick-tsec)/60);
@@ -703,7 +703,7 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 		return BGQA_FAIL_DESERTER;
 	}
 	
-	if ( ( tick = pc_readglobalreg(sd, arena->delay_var) ) && tsec < tick ) {
+	if ( ( tick = pc_readglobalreg(sd, script->add_str(arena->delay_var)) ) && tsec < tick ) {
 		char response[100];
 		if( (tick-tsec) > 60 )
 			sprintf(response, "You can't reapply to this arena so fast. Apply to the different arena or wait %d minute(s)",(tick-tsec)/60);

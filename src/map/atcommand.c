@@ -8444,12 +8444,12 @@ ACMD(set) {
 				break;
 			case '#':
 				if( reg[1] == '#' )
-					data->u.str = pc_readaccountreg2str(sd, reg);// global
+					data->u.str = pc_readaccountreg2str(sd, script->add_str(reg));// global
 				else
-					data->u.str = pc_readaccountregstr(sd, reg);// local
+					data->u.str = pc_readaccountregstr(sd, script->add_str(reg));// local
 				break;
 			default:
-				data->u.str = pc_readglobalreg_str(sd, reg);
+				data->u.str = pc_readglobalreg_str(sd, script->add_str(reg));
 				break;
 		}
 		
@@ -8473,12 +8473,12 @@ ACMD(set) {
 				break;
 			case '#':
 				if( reg[1] == '#' )
-					data->u.num = pc_readaccountreg2(sd, reg);// global
+					data->u.num = pc_readaccountreg2(sd, script->add_str(reg));// global
 				else
-					data->u.num = pc_readaccountreg(sd, reg);// local
+					data->u.num = pc_readaccountreg(sd, script->add_str(reg));// local
 				break;
 			default:
-				data->u.num = pc_readglobalreg(sd, reg);
+				data->u.num = pc_readglobalreg(sd, script->add_str(reg));
 				break;
 		}
 		

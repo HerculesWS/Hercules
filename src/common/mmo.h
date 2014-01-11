@@ -101,11 +101,6 @@
 //Update this max as necessary. 55 is the value needed for Super Baby currently
 //Raised to 84 since Expanded Super Novice needs it.
 #define MAX_SKILL_TREE 84
-#define GLOBAL_REG_NUM 256   // Max permanent character variables per char
-#define ACCOUNT_REG_NUM 64   // Max permanent local account variables per account
-#define ACCOUNT_REG2_NUM 16  // Max permanent global account variables per account
-//Should hold the max of GLOBAL/ACCOUNT/ACCOUNT2 (needed for some arrays that hold all three)
-#define MAX_REG_NUM 256
 #define DEFAULT_WALK_SPEED 150
 #define MIN_WALK_SPEED 20 /* below 20 clips animation */
 #define MAX_WALK_SPEED 1000
@@ -269,16 +264,19 @@ struct s_skill {
 	unsigned char flag; // See enum e_skill_flag
 };
 
-struct global_reg {
-	char str[32];
-	char value[256];
+struct script_reg_state {
+	unsigned int type   : 1;/* because I'm a memory hoarder and having them in the same struct would be a 8-byte/instance waste while ints outnumber str on a 10000-to-1 ratio. */
+	unsigned int update : 1;/* whether it needs to be sent to char server for insertion/update/delete */
 };
 
-// Holds array of global registries, used by the char server and converter.
-struct accreg {
-	int account_id, char_id;
-	int reg_num;
-	struct global_reg reg[MAX_REG_NUM];
+struct script_reg_num {
+	struct script_reg_state flag;
+	int value;
+};
+
+struct script_reg_str {
+	struct script_reg_state flag;
+	char *value;
 };
 
 // For saving status changes across sessions. [Skotlex]
@@ -481,15 +479,6 @@ struct auction_data {
 	int price, buynow;
 	time_t timestamp; // auction's end time
 	int auction_end_timer;
-};
-
-struct registry {
-	int global_num;
-	struct global_reg global[GLOBAL_REG_NUM];
-	int account_num;
-	struct global_reg account[ACCOUNT_REG_NUM];
-	int account2_num;
-	struct global_reg account2[ACCOUNT_REG2_NUM];
 };
 
 struct party_member {
@@ -864,6 +853,14 @@ enum e_char_server_type {
 	CST_OVER18      = 2,
 	CST_PAYING      = 3,
 	CST_F2P         = 4,
+};
+
+enum e_pc_reg_loading {
+	PRL_NONE = 0x0,
+	PRL_CHAR = 0x1,
+	PRL_ACCL = 0x2,/* local */
+	PRL_ACCG = 0x4,/* global */
+	PRL_ALL  = 0xFF,
 };
 
 /* packet size constant for itemlist */

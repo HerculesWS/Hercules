@@ -2539,8 +2539,8 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 				}
 
 				tsd->reproduceskill_id = copy_skill;
-				pc_setglobalreg(tsd, "REPRODUCE_SKILL", copy_skill);
-				pc_setglobalreg(tsd, "REPRODUCE_SKILL_LV", lv);
+				pc_setglobalreg(tsd, script->add_str("REPRODUCE_SKILL"), copy_skill);
+				pc_setglobalreg(tsd, script->add_str("REPRODUCE_SKILL_LV"), lv);
 
 				tsd->status.skill[cidx].id = copy_skill;
 				tsd->status.skill[cidx].lv = lv;
@@ -2562,8 +2562,8 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 					lv = type;
 
 				tsd->cloneskill_id = copy_skill;
-				pc_setglobalreg(tsd, "CLONE_SKILL", copy_skill);
-				pc_setglobalreg(tsd, "CLONE_SKILL_LV", lv);
+				pc_setglobalreg(tsd, script->add_str("CLONE_SKILL"), copy_skill);
+				pc_setglobalreg(tsd, script->add_str("CLONE_SKILL_LV"), lv);
 
 				tsd->status.skill[cidx].id = copy_skill;
 				tsd->status.skill[cidx].lv = lv;
@@ -5660,7 +5660,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				}
 				sd->mission_mobid = id;
 				sd->mission_count = 0;
-				pc_setglobalreg(sd,"TK_MISSION_ID", id);
+				pc_setglobalreg(sd,script->add_str("TK_MISSION_ID"), id);
 				clif->mission_info(sd, id, 0);
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			}
@@ -7414,7 +7414,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if (skill_id == SL_SUPERNOVICE && dstsd && dstsd->die_counter && !(rnd()%100))
 			{	//Erase death count 1% of the casts
 				dstsd->die_counter = 0;
-				pc_setglobalreg(dstsd,"PC_DIE_COUNTER", 0);
+				pc_setglobalreg(dstsd,script->add_str("PC_DIE_COUNTER"), 0);
 				clif->specialeffect(bl, 0x152, AREA);
 				//SC_SOULLINK invokes status_calc_pc for us.
 			}
@@ -16597,7 +16597,7 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 					{ //Cooking items.
 						clif->specialeffect(&sd->bl, 608, AREA);
 						if( sd->cook_mastery < 1999 )
-							pc_setglobalreg(sd, "COOK_MASTERY",sd->cook_mastery + ( 1 << ( (skill->produce_db[idx].itemlv - 11) / 2 ) ) * 5);
+							pc_setglobalreg(sd, script->add_str("COOK_MASTERY"),sd->cook_mastery + ( 1 << ( (skill->produce_db[idx].itemlv - 11) / 2 ) ) * 5);
 					}
 					break;
 			}
@@ -16698,7 +16698,7 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 				{ //Cooking items.
 					clif->specialeffect(&sd->bl, 609, AREA);
 					if( sd->cook_mastery > 0 )
-						pc_setglobalreg(sd, "COOK_MASTERY", sd->cook_mastery - ( 1 << ((skill->produce_db[idx].itemlv - 11) / 2) ) - ( ( ( 1 << ((skill->produce_db[idx].itemlv - 11) / 2) ) >> 1 ) * 3 ));
+						pc_setglobalreg(sd, script->add_str("COOK_MASTERY"), sd->cook_mastery - ( 1 << ((skill->produce_db[idx].itemlv - 11) / 2) ) - ( ( ( 1 << ((skill->produce_db[idx].itemlv - 11) / 2) ) >> 1 ) * 3 ));
 				}
 		}
 	}

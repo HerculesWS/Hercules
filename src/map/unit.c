@@ -2352,20 +2352,13 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 			pc->delspiritball(sd,sd->spiritball,1);
 			for(i = 1; i < 5; i++)
 				pc->del_charm(sd, sd->charm[i], i);
-
-			if( sd->reg ) {	//Double logout already freed pointer fix... [Skotlex]
-				aFree(sd->reg);
-				sd->reg = NULL;
-				sd->reg_num = 0;
-			}
-			if( sd->regstr ) {
-				for( i = 0; i < sd->regstr_num; ++i )
-					if( sd->regstr[i].data )
-						aFree(sd->regstr[i].data);
-				aFree(sd->regstr);
-				sd->regstr = NULL;
-				sd->regstr_num = 0;
-			}
+			
+			if( sd->var_db )
+				sd->var_db->destroy(sd->var_db,script->reg_destroy);
+							
+			if( sd->array_db )
+				sd->array_db->destroy(sd->array_db,script->array_free_db);
+			
 			if( sd->st && sd->st->state != RUN ) {// free attached scripts that are waiting
 				script->free_state(sd->st);
 				sd->st = NULL;

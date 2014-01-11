@@ -33,8 +33,9 @@ struct instance_data {
 	unsigned short num_map;
 	unsigned short users;
 
-	struct DBMap* vars; // Instance Variable for scripts
-
+	struct DBMap *vars; // Instance Variable for scripts
+	struct DBMap *array_db ;
+	
 	int progress_timer;
 	unsigned int progress_timeout;
 

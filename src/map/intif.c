@@ -265,60 +265,117 @@ int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
 	return 0;
 }
 
-int intif_regtostr(char* str, struct global_reg *reg, int qty)
-{
-	int len =0, i;
-
-	for (i = 0; i < qty; i++) {
-		len+= sprintf(str+len, "%s", reg[i].str)+1; //We add 1 to consider the '\0' in place.
-		len+= sprintf(str+len, "%s", reg[i].value)+1;
-	}
-	return len;
-}
-
 //Request for saving registry values.
-int intif_saveregistry(struct map_session_data *sd, int type)
-{
-	struct global_reg *reg;
-	int count;
-	int i, p;
+int intif_saveregistry(struct map_session_data *sd) {
+	DBIterator *iter;
+	DBKey key;
+	DBData *data;
+	int plen = 0;
+	size_t len;
 
 	if (intif->CheckForCharServer())
 		return -1;
+	
+	WFIFOHEAD(inter_fd, 60000 + 300);
+	WFIFOW(inter_fd,0)  = 0x3004;
+	/* 0x2 = length (set later) */
+	WFIFOL(inter_fd,4)  = sd->status.account_id;
+	WFIFOL(inter_fd,8)  = sd->status.char_id;
+	WFIFOW(inter_fd,12) = 0;/* count */
 
-	switch (type) {
-	case 3: //Character reg
-		reg = sd->save_reg.global;
-		count = sd->save_reg.global_num;
-		sd->state.reg_dirty &= ~0x4;
-	break;
-	case 2: //Account reg
-		reg = sd->save_reg.account;
-		count = sd->save_reg.account_num;
-		sd->state.reg_dirty &= ~0x2;
-	break;
-	case 1: //Account2 reg
-		reg = sd->save_reg.account2;
-		count = sd->save_reg.account2_num;
-		sd->state.reg_dirty &= ~0x1;
-	break;
-	default: //Broken code?
-		ShowError("intif_saveregistry: Invalid type %d\n", type);
-		return -1;
-	}
-	WFIFOHEAD(inter_fd, 288 * MAX_REG_NUM+13);
-	WFIFOW(inter_fd,0)=0x3004;
-	WFIFOL(inter_fd,4)=sd->status.account_id;
-	WFIFOL(inter_fd,8)=sd->status.char_id;
-	WFIFOB(inter_fd,12)=type;
-	for( p = 13, i = 0; i < count; i++ ) {
-		if (reg[i].str[0] != '\0' && reg[i].value[0] != '\0') {
-			p+= sprintf((char*)WFIFOP(inter_fd,p), "%s", reg[i].str)+1; //We add 1 to consider the '\0' in place.
-			p+= sprintf((char*)WFIFOP(inter_fd,p), "%s", reg[i].value)+1;
+	plen = 14;
+	
+	iter = db_iterator(sd->var_db);
+	for( data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key) ) {
+		const char *varname = NULL;
+		void *src = NULL;
+		
+		if( data->type != DB_DATA_PTR ) /* its a @number */
+			continue;
+		
+		varname = script->get_str(script_getvarid(key.i64));
+		
+		if( varname[0] == '@' ) /* @string$ can get here, so we skip */
+			continue;
+		
+		src = DB->data2ptr(data);
+
+		/* no need! */
+		if( !((struct script_reg_state*)src)->update )
+			continue;
+		
+		((struct script_reg_state*)src)->update = false;
+				
+		len = strlen(varname)+1;
+		
+		WFIFOB(inter_fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
+		plen += 1;
+		
+		safestrncpy((char*)WFIFOP(inter_fd,plen), varname, len);
+		plen += len;
+				
+		WFIFOL(inter_fd, plen) = script_getvaridx(key.i64);
+		plen += 4;
+		
+		if( ((struct script_reg_state*)src)->type ) {
+			struct script_reg_str *p = src;
+						
+			WFIFOB(inter_fd, plen) = p->value ? 2 : 3;
+			plen += 1;
+			
+			if( p->value ) {
+				len = strlen(p->value)+1;
+				
+				WFIFOB(inter_fd, plen) = (unsigned char)len;/* won't be higher; the column size is 254 */
+				plen += 1;
+				
+				safestrncpy((char*)WFIFOP(inter_fd,plen), p->value, len);
+				plen += len;
+			} else {
+				script->reg_destroy_single(sd,key.i64,&p->flag);
+			}
+			
+		} else {
+			struct script_reg_num *p = src;
+
+			WFIFOB(inter_fd, plen) =  p->value ? 0 : 1;
+			plen += 1;
+		
+			if( p->value ) {
+				WFIFOL(inter_fd, plen) = p->value;
+				plen += 4;
+			} else {
+				script->reg_destroy_single(sd,key.i64,&p->flag);
+			}
+			
 		}
+		
+		WFIFOW(inter_fd,12) += 1;
+		
+		if( plen > 60000 ) {
+			WFIFOW(inter_fd, 2) = plen;
+			WFIFOSET(inter_fd, plen);
+			
+			/* prepare follow up */
+			WFIFOHEAD(inter_fd, 60000 + 300);
+			WFIFOW(inter_fd,0)  = 0x3004;
+			/* 0x2 = length (set later) */
+			WFIFOL(inter_fd,4)  = sd->status.account_id;
+			WFIFOL(inter_fd,8)  = sd->status.char_id;
+			WFIFOW(inter_fd,12) = 0;/* count */
+			
+			plen = 14;
+		}
+		
 	}
-	WFIFOW(inter_fd,2)=p;
-	WFIFOSET(inter_fd,WFIFOW(inter_fd,2));
+	dbi_destroy(iter);
+
+	/* mark & go. */
+	WFIFOW(inter_fd, 2) = plen;
+	WFIFOSET(inter_fd, plen);
+	
+	sd->vars_dirty = false;
+	
 	return 0;
 }
 
@@ -327,10 +384,7 @@ int intif_request_registry(struct map_session_data *sd, int flag)
 {
 	nullpo_ret(sd);
 
-	sd->save_reg.account2_num = -1;
-	sd->save_reg.account_num = -1;
-	sd->save_reg.global_num = -1;
-
+	/* if char server aint online it doesn't load, shouldn't we kill the session then? */
 	if (intif->CheckForCharServer())
 		return 0;
 
@@ -927,54 +981,93 @@ void mapif_parse_WisToGM(int fd)
 // Request player registre
 void intif_parse_Registers(int fd)
 {
-	int j,p,len,max, flag;
+	int i, flag;
 	struct map_session_data *sd;
-	struct global_reg *reg;
-	int *qty;
 	int account_id = RFIFOL(fd,4), char_id = RFIFOL(fd,8);
 	struct auth_node *node = chrif->auth_check(account_id, char_id, ST_LOGIN);
+	char type = RFIFOB(fd, 13);
+
 	if (node)
 		sd = node->sd;
 	else { //Normally registries should arrive for in log-in chars.
 		sd = map->id2sd(account_id);
-		if (sd && RFIFOB(fd,12) == 3 && sd->status.char_id != char_id)
-			sd = NULL; //Character registry from another character.
 	}
-	if (!sd) return;
-
-	flag = (sd->save_reg.global_num == -1 || sd->save_reg.account_num == -1 || sd->save_reg.account2_num == -1);
-
+	
+	if (!sd || sd->status.char_id != char_id) {
+		return; //Character registry from another character.
+	}
+		
+	flag = ( sd->vars_received&PRL_ACCG && sd->vars_received&PRL_ACCL && sd->vars_received&PRL_CHAR ) ? 0 : 1;
+	
 	switch (RFIFOB(fd,12)) {
 		case 3: //Character Registry
-			reg = sd->save_reg.global;
-			qty = &sd->save_reg.global_num;
-			max = GLOBAL_REG_NUM;
-		break;
+			sd->vars_received |= PRL_CHAR;
+			break;
 		case 2: //Account Registry
-			reg = sd->save_reg.account;
-			qty = &sd->save_reg.account_num;
-			max = ACCOUNT_REG_NUM;
-		break;
+			sd->vars_received |= PRL_ACCL;
+			break;
 		case 1: //Account2 Registry
-			reg = sd->save_reg.account2;
-			qty = &sd->save_reg.account2_num;
-			max = ACCOUNT_REG2_NUM;
-		break;
+			sd->vars_received |= PRL_ACCG;
+			break;
+		case 0:
+			break;
 		default:
 			ShowError("intif_parse_Registers: Unrecognized type %d\n",RFIFOB(fd,12));
 			return;
 	}
-	for(j=0,p=13;j<max && p<RFIFOW(fd,2);j++){
-		sscanf((char*)RFIFOP(fd,p), "%31c%n", reg[j].str,&len);
-		reg[j].str[len]='\0';
-		p += len+1; //+1 to skip the '\0' between strings.
-		sscanf((char*)RFIFOP(fd,p), "%255c%n", reg[j].value,&len);
-		reg[j].value[len]='\0';
-		p += len+1;
+	/* have it not complain about insertion of vars before loading, and not set those vars as new or modified */
+	pc->reg_load = true;
+	
+	if( RFIFOW(fd, 14) ) {
+		char key[32], sval[254];
+		unsigned int index;
+		int max = RFIFOW(fd, 14), cursor = 16, ival;
+		
+		/**
+		 * Vessel!char_reg_num_db
+		 *
+		 * str type
+		 * { keyLength(B), key(<keyLength>), index(L), valLength(B), val(<valLength>) }
+		 **/
+		if( type ) {
+			for(i = 0; i < max; i++) {
+				safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
+				cursor += RFIFOB(fd, cursor) + 1;
+				
+				index = RFIFOL(fd, cursor);
+				cursor += 4;
+				
+				safestrncpy(sval, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
+				cursor += RFIFOB(fd, cursor) + 1;
+								
+				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (void*)sval, NULL);
+			}
+		/**
+		 * Vessel!
+		 *
+		 * int type
+		 * { keyLength(B), key(<keyLength>), index(L), value(L) }
+		 **/
+		} else {
+			for(i = 0; i < max; i++) {
+				safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
+				cursor += RFIFOB(fd, cursor) + 1;
+				
+				index = RFIFOL(fd, cursor);
+				cursor += 4;
+				
+				ival = RFIFOL(fd, cursor);
+				cursor += 4;
+								
+				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (void*)__64BPTRSIZE(ival), NULL);
+			}
+		}
 	}
-	*qty = j;
-
-	if (flag && sd->save_reg.global_num > -1 && sd->save_reg.account_num > -1 && sd->save_reg.account2_num > -1)
+	
+	/* flag it back */
+	pc->reg_load = false;
+		
+	if (flag && sd->vars_received&PRL_ACCG && sd->vars_received&PRL_ACCL && sd->vars_received&PRL_CHAR)
 		pc->reg_received(sd); //Received all registry values, execute init scripts and what-not. [Skotlex]
 }
 

@@ -45,7 +45,6 @@ char inventory_db[256] = "inventory";
 char charlog_db[256] = "charlog";
 char storage_db[256] = "storage";
 char interlog_db[256] = "interlog";
-char reg_db[256] = "global_reg_value";
 char skill_db[256] = "skill";
 char memo_db[256] = "memo";
 char guild_db[256] = "guild";
@@ -71,6 +70,10 @@ char ragsrvinfo_db[256] = "ragsrvinfo";
 char elemental_db[256] = "elemental";
 char interreg_db[32] = "interreg";
 char account_data_db[256] = "account_data";
+char acc_reg_num_db[32] = "acc_reg_num_db";
+char acc_reg_str_db[32] = "acc_reg_str_db";
+char char_reg_str_db[32] = "char_reg_str_db";
+char char_reg_num_db[32] = "char_reg_num_db";
 
 // show loading/saving messages
 int save_log = 1;
@@ -1793,7 +1796,9 @@ int delete_char_sql(int char_id)
 		Sql_ShowDebug(sql_handle);
 
 	/* delete character registry */
-	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `type`=3 AND `char_id`='%d'", reg_db, char_id) )
+	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", char_reg_str_db, char_id) )
+		Sql_ShowDebug(sql_handle);
+	if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", char_reg_num_db, char_id) )
 		Sql_ShowDebug(sql_handle);
 
 	/* delete skills */
@@ -2460,17 +2465,12 @@ int parse_fromlogin(int fd) {
 			break;
 
 			// reply to an account_reg2 registry request
-			case 0x2729:
+			case 0x3804:
 				if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd,2))
 					return 0;
-
-			{	//Receive account_reg2 registry, forward to map servers.
-				unsigned char buf[13+ACCOUNT_REG2_NUM*sizeof(struct global_reg)];
-				memcpy(buf,RFIFOP(fd,0), RFIFOW(fd,2));
-				WBUFW(buf,0) = 0x3804; //Map server can now receive all kinds of reg values with the same packet. [Skotlex]
-				mapif_sendall(buf, WBUFW(buf,2));
+				//Receive account_reg2 registry, forward to map servers.
+				mapif_sendall(RFIFOP(fd, 0), RFIFOW(fd,2));
 				RFIFOSKIP(fd, RFIFOW(fd,2));
-			}
 			break;
 
 			// State change of account/ban notification (from login-server)
@@ -2603,21 +2603,76 @@ int request_accreg2(int account_id, int char_id)
 	}
 	return 0;
 }
-
-//Send packet forward to login-server for account saving
-int save_accreg2(unsigned char* buf, int len)
-{
-	if (login_fd > 0) {
-		WFIFOHEAD(login_fd,len+4);
-		memcpy(WFIFOP(login_fd,4), buf, len);
-		WFIFOW(login_fd,0) = 0x2728;
-		WFIFOW(login_fd,2) = len+4;
-		WFIFOSET(login_fd,len+4);
-		return 1;
-	}
-	return 0;
+/**
+ * Handles global account reg saving that continues with global_accreg_to_login_add and global_accreg_to_send
+ **/
+void global_accreg_to_login_start (int account_id, int char_id) {
+	WFIFOHEAD(login_fd, 60000 + 300);
+	WFIFOW(login_fd,0)  = 0x2728;
+	WFIFOW(login_fd,2)  = 14;
+	WFIFOL(login_fd,4)  = account_id;
+	WFIFOL(login_fd,8)  = char_id;
+	WFIFOW(login_fd,12) = 0;/* count */
 }
-
+/**
+ * Completes global account reg saving that starts global_accreg_to_login_start and continues with global_accreg_to_login_add
+ **/
+void global_accreg_to_login_send (void) {
+	WFIFOSET(login_fd, WFIFOW(login_fd,2));
+}
+/**
+ * Handles global account reg saving that starts global_accreg_to_login_start and ends with global_accreg_to_send
+ **/
+void global_accreg_to_login_add (const char *key, unsigned int index, intptr_t val, bool is_string) {
+	int nlen = WFIFOW(login_fd, 2);
+	size_t len;
+	
+	len = strlen(key)+1;
+	
+	WFIFOB(login_fd, nlen) = (unsigned char)len;/* won't be higher; the column size is 32 */
+	nlen += 1;
+	
+	safestrncpy((char*)WFIFOP(login_fd,nlen), key, len);
+	nlen += len;
+	
+	WFIFOL(login_fd, nlen) = index;
+	nlen += 4;
+	
+	if( is_string ) {
+		WFIFOB(login_fd, nlen) = val ? 2 : 3;
+		nlen += 1;
+		
+		if( val ) {
+			char *sval = (char*)val;
+			len = strlen(sval)+1;
+			
+			WFIFOB(login_fd, nlen) = (unsigned char)len;/* won't be higher; the column size is 254 */
+			nlen += 1;
+			
+			safestrncpy((char*)WFIFOP(login_fd,nlen), sval, len);
+			nlen += len;
+		}
+		
+	} else {
+		WFIFOB(login_fd, nlen) = val ? 0 : 1;
+		nlen += 1;
+		
+		if( val ) {
+			WFIFOL(login_fd, nlen) = (int)val;
+			nlen += 4;
+		}
+		
+	}
+	
+	WFIFOW(login_fd,12) += 1;
+	
+	WFIFOW(login_fd, 2) = nlen;
+	if( WFIFOW(login_fd, 2) > 60000 ) {
+		int account_id = WFIFOL(login_fd,4), char_id = WFIFOL(login_fd,8);
+		global_accreg_to_login_send();
+		global_accreg_to_login_start(account_id,char_id);/* prepare next */
+	}
+}
 void char_read_fame_list(void) {
 	int i;
 	char* data;
@@ -4901,8 +4956,6 @@ void sql_config_read(const char* cfgName)
 			safestrncpy(charlog_db, w2, sizeof(charlog_db));
 		else if(!strcmpi(w1,"storage_db"))
 			safestrncpy(storage_db, w2, sizeof(storage_db));
-		else if(!strcmpi(w1,"reg_db"))
-			safestrncpy(reg_db, w2, sizeof(reg_db));
 		else if(!strcmpi(w1,"skill_db"))
 			safestrncpy(skill_db, w2, sizeof(skill_db));
 		else if(!strcmpi(w1,"interlog_db"))
@@ -4955,6 +5008,15 @@ void sql_config_read(const char* cfgName)
 			safestrncpy(interreg_db,w2,sizeof(interreg_db));
 		else if(!strcmpi(w1,"account_data_db"))
 			safestrncpy(account_data_db,w2,sizeof(account_data_db));
+		else if(!strcmpi(w1,"char_reg_num_db"))
+			safestrncpy(char_reg_num_db, w2, sizeof(char_reg_num_db));
+		else if(!strcmpi(w1,"char_reg_str_db"))
+			safestrncpy(char_reg_str_db, w2, sizeof(char_reg_str_db));
+		else if(!strcmpi(w1,"acc_reg_str_db"))
+			safestrncpy(acc_reg_str_db, w2, sizeof(acc_reg_str_db));
+		else if(!strcmpi(w1,"acc_reg_num_db"))
+			safestrncpy(acc_reg_num_db, w2, sizeof(acc_reg_num_db));
+
 		//support the import command, just like any other config
 		else if(!strcmpi(w1,"import"))
 			sql_config_read(w2);

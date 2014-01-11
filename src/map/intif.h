@@ -45,7 +45,7 @@ struct intif_interface {
 	int (*main_message) (struct map_session_data* sd, const char* message);
 	int (*wis_message) (struct map_session_data *sd,char *nick,char *mes,size_t mes_len);
 	int (*wis_message_to_gm) (char *Wisp_name, int permission, char *mes);
-	int (*saveregistry) (struct map_session_data *sd, int type);
+	int (*saveregistry) (struct map_session_data *sd);
 	int (*request_registry) (struct map_session_data *sd, int flag);
 	int (*request_guild_storage) (int account_id, int guild_id);
 	int (*send_guild_storage) (int account_id, struct guild_storage *gstor);

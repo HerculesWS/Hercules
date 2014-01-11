@@ -139,7 +139,6 @@ struct map_session_data {
 		unsigned int abra_flag : 2; // Abracadabra bugfix by Aru
 		unsigned int autocast : 1; // Autospell flag [Inkfish]
 		unsigned int autotrade : 1;	//By Fantik
-		unsigned int reg_dirty : 4; //By Skotlex (marks whether registry variables have been saved or not yet)
 		unsigned int showdelay :1;
 		unsigned int showexp :1;
 		unsigned int showzeny :1;
@@ -203,7 +202,6 @@ struct map_session_data {
 	unsigned int extra_temp_permissions; /* permissions from @addperm */
 	
 	struct mmo_charstatus status;
-	struct registry save_reg;
 	struct item_data* inventory_data[MAX_INVENTORY]; // direct pointers to itemdb entries (faster than doing item_id lookups)
 	short equip_index[EQI_MAX];
 	unsigned int weight,max_weight;
@@ -363,10 +361,6 @@ struct map_session_data {
 	short mission_mobid; //Stores the target mob_id for TK_MISSION
 	int die_counter; //Total number of times you've died
 	int devotion[5]; //Stores the account IDs of chars devoted to.
-	int reg_num; //Number of registries (type numeric)
-	int regstr_num; //Number of registries (type string)
-	struct script_reg *reg;
-	struct script_regstr *regstr;
 	int trade_partner;
 	struct {
 		struct {
@@ -531,6 +525,16 @@ struct map_session_data {
 	struct {
 		unsigned int second,third;
 	} sktree;
+	
+	/**
+	 * Account/Char variables & array control of those variables
+	 **/
+	DBMap *var_db;
+	DBMap *array_db;
+	unsigned char vars_received;/* char loading is only complete when you get it all. */
+	bool vars_ok;
+	bool vars_dirty;
+	
 	// temporary debugging of bug #3504
 	const char* delunit_prevfile;
 	int delunit_prevline;
@@ -672,18 +676,18 @@ enum equip_pos {
 #define pc_checkoverhp(sd) ((sd)->battle_status.hp == (sd)->battle_status.max_hp)
 #define pc_checkoversp(sd) ((sd)->battle_status.sp == (sd)->battle_status.max_sp)
 
-#define pc_readglobalreg(sd,reg)         (pc->readregistry((sd),(reg),3))
-#define pc_setglobalreg(sd,reg,val)      (pc->setregistry((sd),(reg),(val),3))
-#define pc_readglobalreg_str(sd,reg)     (pc->readregistry_str((sd),(reg),3))
-#define pc_setglobalreg_str(sd,reg,val)  (pc->setregistry_str((sd),(reg),(val),3))
-#define pc_readaccountreg(sd,reg)        (pc->readregistry((sd),(reg),2))
-#define pc_setaccountreg(sd,reg,val)     (pc->setregistry((sd),(reg),(val),2))
-#define pc_readaccountregstr(sd,reg)     (pc->readregistry_str((sd),(reg),2))
-#define pc_setaccountregstr(sd,reg,val)  (pc->setregistry_str((sd),(reg),(val),2))
-#define pc_readaccountreg2(sd,reg)       (pc->readregistry((sd),(reg),1))
-#define pc_setaccountreg2(sd,reg,val)    (pc->setregistry((sd),(reg),(val),1))
-#define pc_readaccountreg2str(sd,reg)    (pc->readregistry_str((sd),(reg),1))
-#define pc_setaccountreg2str(sd,reg,val) (pc->setregistry_str((sd),(reg),(val),1))
+#define pc_readglobalreg(sd,reg)         (pc->readregistry((sd),(reg)))
+#define pc_setglobalreg(sd,reg,val)      (pc->setregistry((sd),(reg),(val)))
+#define pc_readglobalreg_str(sd,reg)     (pc->readregistry_str((sd),(reg)))
+#define pc_setglobalreg_str(sd,reg,val)  (pc->setregistry_str((sd),(reg),(val)))
+#define pc_readaccountreg(sd,reg)        (pc->readregistry((sd),(reg)))
+#define pc_setaccountreg(sd,reg,val)     (pc->setregistry((sd),(reg),(val)))
+#define pc_readaccountregstr(sd,reg)     (pc->readregistry_str((sd),(reg)))
+#define pc_setaccountregstr(sd,reg,val)  (pc->setregistry_str((sd),(reg),(val)))
+#define pc_readaccountreg2(sd,reg)       (pc->readregistry((sd),(reg)))
+#define pc_setaccountreg2(sd,reg,val)    (pc->setregistry((sd),(reg),(val)))
+#define pc_readaccountreg2str(sd,reg)    (pc->readregistry_str((sd),(reg)))
+#define pc_setaccountreg2str(sd,reg,val) (pc->setregistry_str((sd),(reg),(val)))
 
 /* pc_groups easy access */
 #define pc_get_group_level(sd) ( (sd)->group->level )
@@ -772,6 +776,13 @@ struct pc_interface {
 	struct eri *sc_display_ers;
 	/* global expiration timer id */
 	int expiration_tid;
+	/**
+	 * ERS for the bulk of pc vars
+	 **/
+	struct eri *num_reg_ers;
+	struct eri *str_reg_ers;
+	/* */
+	bool reg_load;
 	/* funcs */
 	void (*init) (bool minimal);
 	void (*final) (void);
@@ -908,14 +919,14 @@ struct pc_interface {
 	
 	int (*readparam) (struct map_session_data *sd,int type);
 	int (*setparam) (struct map_session_data *sd,int type,int val);
-	int (*readreg) (struct map_session_data *sd,int reg);
-	int (*setreg) (struct map_session_data *sd,int reg,int val);
-	char * (*readregstr) (struct map_session_data *sd,int reg);
-	int (*setregstr) (struct map_session_data *sd,int reg,const char *str);
-	int (*readregistry) (struct map_session_data *sd,const char *reg,int type);
-	int (*setregistry) (struct map_session_data *sd,const char *reg,int val,int type);
-	char * (*readregistry_str) (struct map_session_data *sd,const char *reg,int type);
-	int (*setregistry_str) (struct map_session_data *sd,const char *reg,const char *val,int type);
+	int (*readreg) (struct map_session_data *sd, int64 reg);
+	void (*setreg) (struct map_session_data *sd, int64 reg,int val);
+	char * (*readregstr) (struct map_session_data *sd, int64 reg);
+	void (*setregstr) (struct map_session_data *sd, int64 reg, const char *str);
+	int (*readregistry) (struct map_session_data *sd, int64 reg);
+	int (*setregistry) (struct map_session_data *sd, int64 reg, int val);
+	char * (*readregistry_str) (struct map_session_data *sd, int64 reg);
+	int (*setregistry_str) (struct map_session_data *sd, int64 reg, const char *val);
 	
 	int (*addeventtimer) (struct map_session_data *sd,int tick,const char *name);
 	int (*deleventtimer) (struct map_session_data *sd,const char *name);

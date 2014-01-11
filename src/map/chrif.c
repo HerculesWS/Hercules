@@ -265,12 +265,8 @@ int chrif_save(struct map_session_data *sd, int flag) {
 		sd->state.storage_flag = 0; //Force close it.
 
 	//Saving of registry values. 
-	if (sd->state.reg_dirty&4)
-		intif->saveregistry(sd, 3); //Save char regs
-	if (sd->state.reg_dirty&2)
-		intif->saveregistry(sd, 2); //Save account regs
-	if (sd->state.reg_dirty&1)
-		intif->saveregistry(sd, 1); //Save account2 regs
+	if (sd->vars_dirty)
+		intif->saveregistry(sd);
 
 	WFIFOHEAD(chrif->fd, sizeof(sd->status) + 13);
 	WFIFOW(chrif->fd,0) = 0x2b01;
@@ -603,7 +599,7 @@ void chrif_authok(int fd) {
 	//Causes problems if the currently connected player tries to quit or this data belongs to an already connected player which is trying to re-auth.
 	if ( ( sd = map->id2sd(account_id) ) != NULL )
 		return;
-	
+
 	if ( ( node = chrif->search(account_id) ) == NULL )
 		return; // should not happen
 

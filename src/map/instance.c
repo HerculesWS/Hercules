@@ -109,7 +109,8 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 	instance->list[i].num_map = 0;
 	instance->list[i].owner_id = owner_id;
 	instance->list[i].owner_type = type;
-	instance->list[i].vars = idb_alloc(DB_OPT_RELEASE_DATA);
+	instance->list[i].vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+	instance->list[i].array_db = NULL;
 	instance->list[i].respawn.map = 0;
 	instance->list[i].respawn.y = 0;
 	instance->list[i].respawn.x = 0;
@@ -551,6 +552,8 @@ void instance_destroy(int instance_id) {
 	
 	if( instance->list[instance_id].vars )
 		db_destroy(instance->list[instance_id].vars);
+	if( instance->list[instance_id].array_db )
+		instance->list[instance_id].array_db->destroy(instance->list[instance_id].array_db,script->array_free_db);
 
 	if( instance->list[instance_id].progress_timer != INVALID_TIMER )
 		timer->delete( instance->list[instance_id].progress_timer, instance->destroy_timer);

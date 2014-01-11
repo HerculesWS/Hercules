@@ -189,20 +189,6 @@ CREATE TABLE IF NOT EXISTS `hotkey` (
 ) ENGINE=MyISAM;
 
 --
--- Table structure for table `global_reg_value`
---
-
-CREATE TABLE IF NOT EXISTS `global_reg_value` (
-  `char_id` int(11) unsigned NOT NULL default '0',
-  `str` varchar(255) NOT NULL default '',
-  `value` varchar(255) NOT NULL default '0',
-  `type` tinyint(1) NOT NULL default '3',
-  `account_id` int(11) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`char_id`,`str`,`account_id`),
-  KEY `account_id` (`account_id`)
-) ENGINE=MyISAM;
-
---
 -- Table structure for table `guild`
 --
 
@@ -462,11 +448,10 @@ INSERT INTO `login` (`account_id`, `userid`, `user_pass`, `sex`, `email`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `mapreg` (
-  `varname` varchar(32) NOT NULL,
+  `varname` varchar(32) BINARY NOT NULL,
   `index` int(11) unsigned NOT NULL default '0',
   `value` varchar(255) NOT NULL,
-  KEY `varname` (`varname`),
-  KEY `index` (`index`)
+  PRIMARY KEY  (`varname`,`index`)
 ) ENGINE=MyISAM;
 
 --
@@ -672,6 +657,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1383955424);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1384545461);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1384588175);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1387844126);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1388854043);
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1389028967);
 
 --
@@ -742,6 +728,85 @@ CREATE TABLE IF NOT EXISTS `npc_market_data` (
   `itemid` int(11) unsigned NOT NULL default '0',
   `amount` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`name`,`itemid`)
+) ENGINE=MyISAM;
+
+--
+-- Table structure for table `acc_reg_num_db`
+--
+
+CREATE TABLE IF NOT EXISTS `acc_reg_num_db` (
+  `account_id` int(11) unsigned NOT NULL default '0',
+  `key` varchar(32) BINARY NOT NULL default '',
+  `index` int(11) unsigned NOT NULL default '0',
+  `value` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`account_id`,`key`,`index`),
+  KEY `account_id` (`account_id`)
+) ENGINE=MyISAM;
+
+--
+-- Table structure for table `acc_reg_str_db`
+--
+
+CREATE TABLE IF NOT EXISTS `acc_reg_str_db` (
+  `account_id` int(11) unsigned NOT NULL default '0',
+  `key` varchar(32) BINARY NOT NULL default '',
+  `index` int(11) unsigned NOT NULL default '0',
+  `value` varchar(254) NOT NULL default '0',
+  PRIMARY KEY  (`account_id`,`key`,`index`),
+  KEY `account_id` (`account_id`)
+) ENGINE=MyISAM;
+
+--
+-- Table structure for table `char_reg_num_db`
+--
+
+CREATE TABLE IF NOT EXISTS `char_reg_num_db` (
+  `char_id` int(11) unsigned NOT NULL default '0',
+  `key` varchar(32) BINARY NOT NULL default '',
+  `index` int(11) unsigned NOT NULL default '0',
+  `value` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`char_id`,`key`,`index`),
+  KEY `char_id` (`char_id`)
+) ENGINE=MyISAM;
+
+--
+-- Table structure for table `char_reg_str_db`
+--
+
+CREATE TABLE IF NOT EXISTS `char_reg_str_db` (
+  `char_id` int(11) unsigned NOT NULL default '0',
+  `key` varchar(32) BINARY NOT NULL default '',
+  `index` int(11) unsigned NOT NULL default '0',
+  `value` varchar(254) NOT NULL default '0',
+  PRIMARY KEY  (`char_id`,`key`,`index`),
+  KEY `char_id` (`char_id`)
+) ENGINE=MyISAM;
+
+--
+-- Table structure for table `global_acc_reg_num_db`
+--
+
+CREATE TABLE IF NOT EXISTS `global_acc_reg_num_db` (
+  `account_id` int(11) unsigned NOT NULL default '0',
+  `key` varchar(32) BINARY NOT NULL default '',
+  `index` int(11) unsigned NOT NULL default '0',
+  `value` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`account_id`,`key`,`index`),
+  KEY `account_id` (`account_id`)
+) ENGINE=MyISAM;
+
+--
+-- Table structure for table `global_acc_reg_str_db`
+--
+
+
+CREATE TABLE IF NOT EXISTS `global_acc_reg_str_db` (
+  `account_id` int(11) unsigned NOT NULL default '0',
+  `key` varchar(32) BINARY NOT NULL default '',
+  `index` int(11) unsigned NOT NULL default '0',
+  `value` varchar(254) NOT NULL default '0',
+  PRIMARY KEY  (`account_id`,`key`,`index`),
+  KEY `account_id` (`account_id`)
 ) ENGINE=MyISAM;
 
 --

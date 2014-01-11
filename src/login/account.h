@@ -1,5 +1,6 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
 #ifndef __ACCOUNT_H_INCLUDED__
 #define __ACCOUNT_H_INCLUDED__
@@ -32,8 +33,6 @@ struct mmo_account
 	char lastlogin[24];         // date+time of last successful login
 	char last_ip[16];           // save of last IP of connection
 	char birthdate[10+1];       // assigned birth date (format: YYYY-MM-DD, default: 0000-00-00)
-	int account_reg2_num;
-	struct global_reg account_reg2[ACCOUNT_REG2_NUM]; // account script variables (stored on login server)
 };
 
 
@@ -136,5 +135,8 @@ struct AccountDB
 };
 
 Sql *account_db_sql_up(AccountDB* self);
+
+void mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id);
+void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id);
 
 #endif // __ACCOUNT_H_INCLUDED__

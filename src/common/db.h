@@ -20,6 +20,7 @@
  *  - see what functions need or should be added to the database interface   *
  *                                                                           *
  *  HISTORY:                                                                 *
+ *    2013/08/25 - Added int64/uint64 support for keys                       *
  *    2012/03/09 - Added enum for data types (int, uint, void*)              *
  *    2007/11/09 - Added an iterator to the database.                        *
  *    2.1 (Athena build #???#) - Portability fix                             *
@@ -83,6 +84,8 @@ typedef enum DBRelease {
  * @param DB_UINT Uses unsigned int's for keys
  * @param DB_STRING Uses strings for keys.
  * @param DB_ISTRING Uses case insensitive strings for keys.
+ * @param DB_INT64 Uses int64's for keys
+ * @param DB_UINT64 Uses uint64's for keys
  * @public
  * @see #DBOptions
  * @see #DBKey
@@ -96,7 +99,9 @@ typedef enum DBType {
 	DB_INT,
 	DB_UINT,
 	DB_STRING,
-	DB_ISTRING
+	DB_ISTRING,
+	DB_INT64,
+	DB_UINT64,
 } DBType;
 
 /**
@@ -145,6 +150,8 @@ typedef union DBKey {
 	int i;
 	unsigned int ui;
 	const char *str;
+	int64 i64;
+	uint64 ui64;
 } DBKey;
 
 /**
@@ -158,7 +165,7 @@ typedef union DBKey {
 typedef enum DBDataType {
 	DB_DATA_INT,
 	DB_DATA_UINT,
-	DB_DATA_PTR
+	DB_DATA_PTR,
 } DBDataType;
 
 /**
@@ -245,7 +252,7 @@ typedef int (*DBComparator)(DBKey key1, DBKey key2, unsigned short maxlen);
  * @public
  * @see #db_default_hash(DBType)
  */
-typedef unsigned int (*DBHasher)(DBKey key, unsigned short maxlen);
+typedef uint64 (*DBHasher)(DBKey key, unsigned short maxlen);
 
 /**
  * Format of the releaser used by the database system.
@@ -598,65 +605,86 @@ struct DBMap {
 
 // For easy access to the common functions.
 
-#define db_exists(db,k)    ( (db)->exists((db),(k)) )
-#define idb_exists(db,k)   ( (db)->exists((db),DB->i2key(k)) )
-#define uidb_exists(db,k)  ( (db)->exists((db),DB->ui2key(k)) )
-#define strdb_exists(db,k) ( (db)->exists((db),DB->str2key(k)) )
+#define db_exists(db,k)     ( (db)->exists((db),(k)) )
+#define idb_exists(db,k)    ( (db)->exists((db),DB->i2key(k)) )
+#define uidb_exists(db,k)   ( (db)->exists((db),DB->ui2key(k)) )
+#define strdb_exists(db,k)  ( (db)->exists((db),DB->str2key(k)) )
+#define i64db_exists(db,k)  ( (db)->exists((db),DB->i642key(k)) )
+#define ui64db_exists(db,k) ( (db)->exists((db),DB->ui642key(k)) )
 
 // Get pointer-type data from DBMaps of various key types
-#define db_get(db,k)    ( DB->data2ptr((db)->get((db),(k))) )
-#define idb_get(db,k)   ( DB->data2ptr((db)->get((db),DB->i2key(k))) )
-#define uidb_get(db,k)  ( DB->data2ptr((db)->get((db),DB->ui2key(k))) )
-#define strdb_get(db,k) ( DB->data2ptr((db)->get((db),DB->str2key(k))) )
+#define db_get(db,k)     ( DB->data2ptr((db)->get((db),(k))) )
+#define idb_get(db,k)    ( DB->data2ptr((db)->get((db),DB->i2key(k))) )
+#define uidb_get(db,k)   ( DB->data2ptr((db)->get((db),DB->ui2key(k))) )
+#define strdb_get(db,k)  ( DB->data2ptr((db)->get((db),DB->str2key(k))) )
+#define i64db_get(db,k)  ( DB->data2ptr((db)->get((db),DB->i642key(k))) )
+#define ui64db_get(db,k) ( DB->data2ptr((db)->get((db),DB->ui642key(k))) )
+
 
 // Get int-type data from DBMaps of various key types
-#define db_iget(db,k)    ( DB->data2i((db)->get((db),(k))) )
-#define idb_iget(db,k)   ( DB->data2i((db)->get((db),DB->i2key(k))) )
-#define uidb_iget(db,k)  ( DB->data2i((db)->get((db),DB->ui2key(k))) )
-#define strdb_iget(db,k) ( DB->data2i((db)->get((db),DB->str2key(k))) )
+#define db_iget(db,k)     ( DB->data2i((db)->get((db),(k))) )
+#define idb_iget(db,k)    ( DB->data2i((db)->get((db),DB->i2key(k))) )
+#define uidb_iget(db,k)   ( DB->data2i((db)->get((db),DB->ui2key(k))) )
+#define strdb_iget(db,k)  ( DB->data2i((db)->get((db),DB->str2key(k))) )
+#define i64db_iget(db,k)  ( DB->data2i((db)->get((db),DB->i642key(k))) )
+#define ui64db_iget(db,k) ( DB->data2i((db)->get((db),DB->ui642key(k))) )
 
 // Get uint-type data from DBMaps of various key types
-#define db_uiget(db,k)    ( DB->data2ui((db)->get((db),(k))) )
-#define idb_uiget(db,k)   ( DB->data2ui((db)->get((db),DB->i2key(k))) )
-#define uidb_uiget(db,k)  ( DB->data2ui((db)->get((db),DB->ui2key(k))) )
-#define strdb_uiget(db,k) ( DB->data2ui((db)->get((db),DB->str2key(k))) )
+#define db_uiget(db,k)     ( DB->data2ui((db)->get((db),(k))) )
+#define idb_uiget(db,k)    ( DB->data2ui((db)->get((db),DB->i2key(k))) )
+#define uidb_uiget(db,k)   ( DB->data2ui((db)->get((db),DB->ui2key(k))) )
+#define strdb_uiget(db,k)  ( DB->data2ui((db)->get((db),DB->str2key(k))) )
+#define i64db_uiget(db,k)  ( DB->data2ui((db)->get((db),DB->i642key(k))) )
+#define ui64db_uiget(db,k) ( DB->data2ui((db)->get((db),DB->ui642key(k))) )
 
 // Put pointer-type data into DBMaps of various key types
-#define db_put(db,k,d)    ( (db)->put((db),(k),DB->ptr2data(d),NULL) )
-#define idb_put(db,k,d)   ( (db)->put((db),DB->i2key(k),DB->ptr2data(d),NULL) )
-#define uidb_put(db,k,d)  ( (db)->put((db),DB->ui2key(k),DB->ptr2data(d),NULL) )
-#define strdb_put(db,k,d) ( (db)->put((db),DB->str2key(k),DB->ptr2data(d),NULL) )
+#define db_put(db,k,d)     ( (db)->put((db),(k),DB->ptr2data(d),NULL) )
+#define idb_put(db,k,d)    ( (db)->put((db),DB->i2key(k),DB->ptr2data(d),NULL) )
+#define uidb_put(db,k,d)   ( (db)->put((db),DB->ui2key(k),DB->ptr2data(d),NULL) )
+#define strdb_put(db,k,d)  ( (db)->put((db),DB->str2key(k),DB->ptr2data(d),NULL) )
+#define i64db_put(db,k,d)  ( (db)->put((db),DB->i642key(k),DB->ptr2data(d),NULL) )
+#define ui64db_put(db,k,d) ( (db)->put((db),DB->ui642key(k),DB->ptr2data(d),NULL) )
 
 // Put int-type data into DBMaps of various key types
-#define db_iput(db,k,d)    ( (db)->put((db),(k),DB->i2data(d),NULL) )
-#define idb_iput(db,k,d)   ( (db)->put((db),DB->i2key(k),DB->i2data(d),NULL) )
-#define uidb_iput(db,k,d)  ( (db)->put((db),DB->ui2key(k),DB->i2data(d),NULL) )
-#define strdb_iput(db,k,d) ( (db)->put((db),DB->str2key(k),DB->i2data(d),NULL) )
+#define db_iput(db,k,d)     ( (db)->put((db),(k),DB->i2data(d),NULL) )
+#define idb_iput(db,k,d)    ( (db)->put((db),DB->i2key(k),DB->i2data(d),NULL) )
+#define uidb_iput(db,k,d)   ( (db)->put((db),DB->ui2key(k),DB->i2data(d),NULL) )
+#define strdb_iput(db,k,d)  ( (db)->put((db),DB->str2key(k),DB->i2data(d),NULL) )
+#define i64db_iput(db,k,d)  ( (db)->put((db),DB->i642key(k),DB->i2data(d),NULL) )
+#define ui64db_iput(db,k,d) ( (db)->put((db),DB->ui642key(k),DB->i2data(d),NULL) )
 
 // Put uint-type data into DBMaps of various key types
-#define db_uiput(db,k,d)    ( (db)->put((db),(k),DB->ui2data(d),NULL) )
-#define idb_uiput(db,k,d)   ( (db)->put((db),DB->i2key(k),DB->ui2data(d),NULL) )
-#define uidb_uiput(db,k,d)  ( (db)->put((db),DB->ui2key(k),DB->ui2data(d),NULL) )
-#define strdb_uiput(db,k,d) ( (db)->put((db),DB->str2key(k),DB->ui2data(d),NULL) )
+#define db_uiput(db,k,d)     ( (db)->put((db),(k),DB->ui2data(d),NULL) )
+#define idb_uiput(db,k,d)    ( (db)->put((db),DB->i2key(k),DB->ui2data(d),NULL) )
+#define uidb_uiput(db,k,d)   ( (db)->put((db),DB->ui2key(k),DB->ui2data(d),NULL) )
+#define strdb_uiput(db,k,d)  ( (db)->put((db),DB->str2key(k),DB->ui2data(d),NULL) )
+#define i64db_uiput(db,k,d)  ( (db)->put((db),DB->i642key(k),DB->ui2data(d),NULL) )
+#define ui64db_uiput(db,k,d) ( (db)->put((db),DB->ui642key(k),DB->ui2data(d),NULL) )
 
 // Remove entry from DBMaps of various key types
-#define db_remove(db,k)    ( (db)->remove((db),(k),NULL) )
-#define idb_remove(db,k)   ( (db)->remove((db),DB->i2key(k),NULL) )
-#define uidb_remove(db,k)  ( (db)->remove((db),DB->ui2key(k),NULL) )
-#define strdb_remove(db,k) ( (db)->remove((db),DB->str2key(k),NULL) )
+#define db_remove(db,k)     ( (db)->remove((db),(k),NULL) )
+#define idb_remove(db,k)    ( (db)->remove((db),DB->i2key(k),NULL) )
+#define uidb_remove(db,k)   ( (db)->remove((db),DB->ui2key(k),NULL) )
+#define strdb_remove(db,k)  ( (db)->remove((db),DB->str2key(k),NULL) )
+#define i64db_remove(db,k)  ( (db)->remove((db),DB->i642key(k),NULL) )
+#define ui64db_remove(db,k) ( (db)->remove((db),DB->ui642key(k),NULL) )
 
 //These are discarding the possible vargs you could send to the function, so those
 //that require vargs must not use these defines.
-#define db_ensure(db,k,f)    ( DB->data2ptr((db)->ensure((db),(k),(f))) )
-#define idb_ensure(db,k,f)   ( DB->data2ptr((db)->ensure((db),DB->i2key(k),(f))) )
-#define uidb_ensure(db,k,f)  ( DB->data2ptr((db)->ensure((db),DB->ui2key(k),(f))) )
-#define strdb_ensure(db,k,f) ( DB->data2ptr((db)->ensure((db),DB->str2key(k),(f))) )
+#define db_ensure(db,k,f)     ( DB->data2ptr((db)->ensure((db),(k),(f))) )
+#define idb_ensure(db,k,f)    ( DB->data2ptr((db)->ensure((db),DB->i2key(k),(f))) )
+#define uidb_ensure(db,k,f)   ( DB->data2ptr((db)->ensure((db),DB->ui2key(k),(f))) )
+#define strdb_ensure(db,k,f)  ( DB->data2ptr((db)->ensure((db),DB->str2key(k),(f))) )
+#define i64db_ensure(db,k,f)  ( DB->data2ptr((db)->ensure((db),DB->i642key(k),(f))) )
+#define ui64db_ensure(db,k,f) ( DB->data2ptr((db)->ensure((db),DB->ui642key(k),(f))) )
 
 // Database creation and destruction macros
 #define idb_alloc(opt)            DB->alloc(__FILE__,__func__,__LINE__,DB_INT,(opt),sizeof(int))
 #define uidb_alloc(opt)           DB->alloc(__FILE__,__func__,__LINE__,DB_UINT,(opt),sizeof(unsigned int))
 #define strdb_alloc(opt,maxlen)   DB->alloc(__FILE__,__func__,__LINE__,DB_STRING,(opt),(maxlen))
 #define stridb_alloc(opt,maxlen)  DB->alloc(__FILE__,__func__,__LINE__,DB_ISTRING,(opt),(maxlen))
+#define i64db_alloc(opt)          DB->alloc(__FILE__,__func__,__LINE__,DB_INT64,(opt),sizeof(int64))
+#define ui64db_alloc(opt)         DB->alloc(__FILE__,__func__,__LINE__,DB_UINT64,(opt),sizeof(uint64))
 #define db_destroy(db)            ( (db)->destroy((db),NULL) )
 // Other macros
 #define db_clear(db)        ( (db)->clear((db),NULL) )
@@ -682,6 +710,8 @@ struct DBMap {
  *  db_i2key           - Manual cast from 'int' to 'DBKey'.                  *
  *  db_ui2key          - Manual cast from 'unsigned int' to 'DBKey'.         *
  *  db_str2key         - Manual cast from 'unsigned char *' to 'DBKey'.      *
+ *  db_i642key         - Manual cast from 'int64' to 'DBKey'.                *
+ *  db_ui642key        - Manual cast from 'uint64' to 'DBKey'.               *
  *  db_i2data          - Manual cast from 'int' to 'DBData'.                 *
  *  db_ui2data         - Manual cast from 'unsigned int' to 'DBData'.        *
  *  db_ptr2data        - Manual cast from 'void*' to 'DBData'.               *
@@ -802,6 +832,22 @@ DBKey (*ui2key) (unsigned int key);
  */
 DBKey (*str2key) (const char *key);
 
+/**
+ * Manual cast from 'int64' to the union DBKey.
+ * @param key Key to be casted
+ * @return The key as a DBKey union
+ * @public
+ */
+DBKey (*i642key) (int64 key);
+
+/**
+ * Manual cast from 'uint64' to the union DBKey.
+ * @param key Key to be casted
+ * @return The key as a DBKey union
+ * @public
+ */
+DBKey (*ui642key) (uint64 key);
+	
 /**
  * Manual cast from 'int' to the struct DBData.
  * @param data Data to be casted
