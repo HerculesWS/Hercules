@@ -5536,8 +5536,8 @@ BUILDIN(setarray)
 {
 	struct script_data* data;
 	const char* name;
-	int32 start;
-	int32 end;
+	uint32 start;
+	uint32 end;
 	int32 id;
 	int32 i;
 	TBL_PC* sd = NULL;
@@ -5587,8 +5587,8 @@ BUILDIN(cleararray)
 {
 	struct script_data* data;
 	const char* name;
-	int32 start;
-	int32 end;
+	uint32 start;
+	uint32 end;
 	int32 id;
 	void* v;
 	TBL_PC* sd = NULL;
@@ -5643,7 +5643,7 @@ BUILDIN(copyarray)
 	int32 id2;
 	void* v;
 	int32 i;
-	int32 count;
+	uint32 count;
 	TBL_PC* sd = NULL;
 
 	data1 = script_getdata(st, 2);
@@ -5780,10 +5780,7 @@ BUILDIN(deletearray)
 		st->state = END;
 		return false;// not a variable
 	} else if ( !(sa = idb_get(src, id)) ) { /* non-existent array, nothing to empty */
-		ShowError("script:deletearray: unknown array\n");
-		script->reportdata(data);
-		st->state = END;
-		return false;// not a variable
+		return true;// not a variable
 	}
 
 	end = script->array_highest_key(st,sd,name);
@@ -14436,7 +14433,7 @@ int buildin_query_sql_sub(struct script_state* st, Sql* handle)
 	const char* query;
 	struct script_data* data;
 	const char* name;
-	int max_rows = SCRIPT_MAX_ARRAYSIZE; // maximum number of rows
+	unsigned int max_rows = SCRIPT_MAX_ARRAYSIZE; // maximum number of rows
 	int num_vars;
 	int num_cols;
 

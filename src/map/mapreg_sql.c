@@ -263,8 +263,11 @@ void mapreg_reload(void) {
 	db_clear(mapreg->db);
 	db_clear(mapreg->str_db);
 	
-	if( mapreg->array_db )
+	if( mapreg->array_db ) {
 		mapreg->array_db->destroy(mapreg->array_db,script->array_free_db);
+		mapreg->array_db = NULL;
+	}
+	
 	
 	mapreg->load();
 }
