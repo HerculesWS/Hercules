@@ -1407,7 +1407,7 @@ void socket_init(void)
 	timer->add_interval(timer->gettick()+1000, connect_check_clear, 0, 0, 5*60*1000);
 #endif
 
-	ShowInfo("Server supports up to '"CL_WHITE"%lld"CL_RESET"' concurrent connections.\n", rlim_cur);
+	ShowInfo("Server supports up to '"CL_WHITE"%"PRId64""CL_RESET"' concurrent connections.\n", rlim_cur);
 	
 	/* Hercules Plugin Manager */
 	HPM->share(session,"session");

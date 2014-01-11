@@ -2751,6 +2751,8 @@ void script_array_update(struct DBMap **src, int64 num, bool empty) {
 	} else if ( !empty ) {/* we only move to create if not empty */
 		sa = ers_alloc(script->array_ers, struct script_array);
 		sa->id = id;
+		sa->members = NULL;
+		sa->size = 0;
 		script->array_add_member(sa,index);
 		idb_put(*src, id, sa);
 	}
@@ -2917,7 +2919,7 @@ const char* conv_str(struct script_state* st, struct script_data* data)
 	else if( data_isint(data) )
 	{// int -> string
 		CREATE(p, char, ITEM_NAME_LENGTH);
-		snprintf(p, ITEM_NAME_LENGTH, "%lld", data->u.num);
+		snprintf(p, ITEM_NAME_LENGTH, "%"PRId64"", data->u.num);
 		p[ITEM_NAME_LENGTH-1] = '\0';
 		data->type = C_STR;
 		data->u.str = p;
@@ -3619,7 +3621,7 @@ int run_func(struct script_state *st)
 		if (!(script->str_data[func].func(st))) //Report error
 			script->reportsrc(st);
 	} else {
-		ShowError("script:run_func: '%s' (id=%lld type=%s) has no C function. please report this!!!\n", script->get_str(func), func, script->op2name(script->str_data[func].type));
+		ShowError("script:run_func: '%s' (id=%"PRId64" type=%s) has no C function. please report this!!!\n", script->get_str(func), func, script->op2name(script->str_data[func].type));
 		script->reportsrc(st);
 		st->state = END;
 	}
