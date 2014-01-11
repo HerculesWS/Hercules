@@ -5857,7 +5857,6 @@ BUILDIN(deletearray)
 BUILDIN(getelementofarray)
 {
 	struct script_data* data;
-	const char* name;
 	int32 id;
 	int64 i;
 
