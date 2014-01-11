@@ -2597,6 +2597,49 @@ void* get_val2(struct script_state* st, int64 uid, struct DBMap** ref) {
 	return (data->type == C_INT ? (void*)__64BPTRSIZE(data->u.num) : (void*)__64BPTRSIZE(data->u.str));
 }
 /**
+ * Because, currently, array members with key 0 are indifferenciable from normal variables, we should ensure its actually in
+ * Will be gone as soon as undefined var feature is implemented
+ **/
+void script_array_ensure_zero(struct script_state *st, struct map_session_data *sd, int64 uid, struct DBMap** ref) {
+	const char *name = script->get_str(script_getvarid(uid));
+	bool insert = false;
+	
+	if( sd ) /* when sd comes, st isn't available */
+		insert = true;
+	else {
+		if( is_string_variable(name) ) {
+			char* str = (char*)script->get_val2(st, uid, ref);
+			if( str && *str )
+				insert = true;
+			script_removetop(st, -1, 0);
+		} else {
+			int32 num = (int32)__64BPTRSIZE(script->get_val2(st, uid, ref));
+			if( num )
+				insert = true;
+			script_removetop(st, -1, 0);
+		}
+	}
+
+	if( insert ) {
+		struct script_array *sa = NULL;
+		struct DBMap *src = script->array_src(st, sd ? sd : st->rid ? map->id2sd(st->rid) : NULL, name);
+
+		if( src ) {
+			if( (sa = idb_get(src, script_getvarid(uid)) ) ) {
+				unsigned int i;
+				
+				ARR_FIND(0, sa->size, i, sa->members[i] == 0);
+				if( i != sa->size )
+					return;
+				
+				script->array_add_member(sa,0);
+			} else {
+				script->array_update(&src,reference_uid(script_getvarid(uid), 0),false);
+			}
+		}
+	}
+}
+/**
  * Returns array size by ID
  **/
 unsigned int script_array_size(struct script_state *st, struct map_session_data *sd, const char *name) {
@@ -2614,16 +2657,23 @@ unsigned int script_array_size(struct script_state *st, struct map_session_data 
 unsigned int script_array_highest_key(struct script_state *st, struct map_session_data *sd, const char *name) {
 	struct script_array *sa = NULL;
 	struct DBMap *src = script->array_src(st, sd, name);
+	
+	
+	if( src ) {
+		int key = script->add_word(name);
 		
-	if( src && ( sa = idb_get(src, script->search_str(name)) ) ) {
-		unsigned int i, highest_key = 0;
+		script->array_ensure_zero(st,sd,reference_uid(key, 0),NULL);
 		
-		for(i = 0; i < sa->size; i++) {
-			if( sa->members[i] > highest_key )
-				highest_key = sa->members[i];
+		if( ( sa = idb_get(src, key) ) ) {
+			unsigned int i, highest_key = 0;
+			
+			for(i = 0; i < sa->size; i++) {
+				if( sa->members[i] > highest_key )
+					highest_key = sa->members[i];
+			}
+			
+			return highest_key + 1;
 		}
-		
-		return highest_key + 1;
 	}
 	
 	return 0;
@@ -4024,6 +4074,9 @@ void script_cleararray_pc(struct map_session_data* sd, const char* varname, void
 	
 	if( !(src = script->array_src(NULL,sd,varname) ) )
 		return;
+	
+	if( value )
+		script->array_ensure_zero(NULL,sd,reference_uid(key,0),NULL);
 	
 	if( !(sa = idb_get(src, key)) ) /* non-existent array, nothing to empty */
 		return;
@@ -5779,7 +5832,11 @@ BUILDIN(deletearray)
 		script->reportdata(data);
 		st->state = END;
 		return false;// not a variable
-	} else if ( !(sa = idb_get(src, id)) ) { /* non-existent array, nothing to empty */
+	}
+	
+	script->array_ensure_zero(st,NULL,data->u.num,reference_getref(data));
+	
+	if ( !(sa = idb_get(src, id)) ) { /* non-existent array, nothing to empty */
 		return true;// not a variable
 	}
 
@@ -19217,6 +19274,7 @@ void script_defaults(void) {
 	script->array_size = script_array_size;
 	script->array_free_db = script_free_array_db;
 	script->array_highest_key = script_array_highest_key;
+	script->array_ensure_zero = script_array_ensure_zero;
 	/* */
 	script->reg_destroy_single = script_reg_destroy_single;
 	script->reg_destroy = script_reg_destroy;
