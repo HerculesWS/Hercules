@@ -45,6 +45,7 @@
 #include "../common/cbasetypes.h"
 #include "../common/malloc.h" // CREATE, RECREATE, aMalloc, aFree
 #include "../common/showmsg.h" // ShowMessage, ShowError, ShowFatalError, CL_BOLD, CL_NORMAL
+#include "../common/nullpo.h"
 #include "ers.h"
 
 #ifndef DISABLE_ERS
@@ -88,6 +89,9 @@ typedef struct ers_cache
 	// Default = ERS_BLOCK_ENTRIES, can be adjusted for performance for individual cache sizes.
 	unsigned int ChunkSize;
 	
+	// Misc options, some options are shared from the instance
+	enum ERSOptions Options;
+	
 	// Linked list
 	struct ers_cache *Next, *Prev;
 } ers_cache_t;
@@ -123,12 +127,14 @@ static ers_cache_t *CacheList = NULL;
 	static struct ers_instance_t *InstanceList = NULL;
 #endif
 
-static ers_cache_t *ers_find_cache(unsigned int size)
-{
+/**
+ * @param Options the options from the instance seeking a cache, we use it to give it a cache with matching configuration
+ **/
+static ers_cache_t *ers_find_cache(unsigned int size, enum ERSOptions Options) {
 	ers_cache_t *cache;
 
 	for (cache = CacheList; cache; cache = cache->Next)
-		if (cache->ObjectSize == size)
+		if ( cache->ObjectSize == size && cache->Options == ( Options & ERS_CACHE_OPTIONS ) )
 			return cache;
 
 	CREATE(cache, ers_cache_t, 1);
@@ -141,6 +147,7 @@ static ers_cache_t *ers_find_cache(unsigned int size)
 	cache->UsedObjs = 0;
 	cache->Max = 0;
 	cache->ChunkSize = ERS_BLOCK_ENTRIES;
+	cache->Options = (Options & ERS_CACHE_OPTIONS);
 	
 	if (CacheList == NULL)
 	{
@@ -239,7 +246,7 @@ static void ers_obj_free_entry(ERS self, void *entry)
 		return;
 	}
 
-	if( instance->Options & ERS_OPT_CLEAN )
+	if( instance->Cache->Options & ERS_OPT_CLEAN )
 		memset((unsigned char*)reuse + sizeof(struct ers_list), 0, instance->Cache->ObjectSize - sizeof(struct ers_list));
 	
 	reuse->Next = instance->Cache->ReuseList;
@@ -297,9 +304,10 @@ static void ers_obj_destroy(ERS self)
 void ers_cache_size(ERS self, unsigned int new_size) {
 	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 	
-	if (instance == NULL) {//change as per piotrhalaczkiewicz comment
-		ShowError("ers_cache_size: NULL object, skipping...\n");
-		return;
+	nullpo_retv(instance);
+	
+	if( !(instance->Cache->Options&ERS_OPT_FLEX_CHUNK) ) {
+		ShowWarning("ers_cache_size: '%s' has adjusted its chunk size to '%d', however ERS_OPT_FLEX_CHUNK is missing!\n",instance->Name,new_size);
 	}
 	
 	instance->Cache->ChunkSize = new_size;
@@ -324,7 +332,8 @@ ERS ers_new(uint32 size, char *name, enum ERSOptions options)
 	instance->Name = ( options & ERS_OPT_FREE_NAME ) ? aStrdup(name) : name;
 	instance->Options = options;
 
-	instance->Cache = ers_find_cache(size);
+	instance->Cache = ers_find_cache(size,instance->Options);
+	
 	instance->Cache->ReferenceCount++;
 #ifdef DEBUG
 	if (InstanceList == NULL) {

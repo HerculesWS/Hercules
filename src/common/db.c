@@ -2751,9 +2751,10 @@ void* db_data2ptr(DBData *data)
  * @see #db_final(void)
  */
 void db_init(void) {
-	db_iterator_ers = ers_new(sizeof(struct DBIterator_impl),"db.c::db_iterator_ers",ERS_OPT_CLEAN);
-	db_alloc_ers = ers_new(sizeof(struct DBMap_impl),"db.c::db_alloc_ers",ERS_OPT_CLEAN);
+	db_iterator_ers = ers_new(sizeof(struct DBIterator_impl),"db.c::db_iterator_ers",ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
+	db_alloc_ers = ers_new(sizeof(struct DBMap_impl),"db.c::db_alloc_ers",ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK);
 	ers_chunk_size(db_alloc_ers, 50);
+	ers_chunk_size(db_iterator_ers, 10);
 	DB_COUNTSTAT(db_init);
 }
 
