@@ -2602,6 +2602,8 @@ void* get_val2(struct script_state* st, int64 uid, struct DBMap** ref) {
  **/
 void script_array_ensure_zero(struct script_state *st, struct map_session_data *sd, int64 uid, struct DBMap** ref) {
 	const char *name = script->get_str(script_getvarid(uid));
+	struct DBMap *src = script->array_src(st, sd ? sd : st->rid ? map->id2sd(st->rid) : NULL, name);\
+	struct script_array *sa = NULL;
 	bool insert = false;
 	
 	if( sd ) /* when sd comes, st isn't available */
@@ -2620,22 +2622,20 @@ void script_array_ensure_zero(struct script_state *st, struct map_session_data *
 		}
 	}
 
-	if( insert ) {
-		struct script_array *sa = NULL;
-		struct DBMap *src = script->array_src(st, sd ? sd : st->rid ? map->id2sd(st->rid) : NULL, name);
-
-		if( src ) {
-			if( (sa = idb_get(src, script_getvarid(uid)) ) ) {
-				unsigned int i;
-				
-				ARR_FIND(0, sa->size, i, sa->members[i] == 0);
-				if( i != sa->size )
-					return;
-				
-				script->array_add_member(sa,0);
-			} else {
-				script->array_update(&src,reference_uid(script_getvarid(uid), 0),false);
+	if( src ) {
+		if( (sa = idb_get(src, script_getvarid(uid)) ) ) {
+			unsigned int i;
+			
+			ARR_FIND(0, sa->size, i, sa->members[i] == 0);
+			if( i != sa->size ) {
+				if( !insert )
+					script->array_remove_member(src,sa,i);
+				return;
 			}
+			
+			script->array_add_member(sa,0);
+		} else if( insert ) {
+			script->array_update(&src,reference_uid(script_getvarid(uid), 0),false);
 		}
 	}
 }
@@ -2672,7 +2672,7 @@ unsigned int script_array_highest_key(struct script_state *st, struct map_sessio
 					highest_key = sa->members[i];
 			}
 			
-			return highest_key + 1;
+			return sa->size ? highest_key + 1 : 0;
 		}
 	}
 	
