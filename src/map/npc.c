@@ -2188,7 +2188,7 @@ int npc_unload(struct npc_data* nd, bool single) {
 	if( single && nd->bl.m != -1 )
 		map->remove_questinfo(nd->bl.m,nd);
 
-	if( (nd->subtype == SHOP || nd->subtype == CASHSHOP) && nd->src_id == 0) //src check for duplicate shops [Orcao]
+	if( nd->src_id == 0 && ( nd->subtype == SHOP || nd->subtype == CASHSHOP ) ) //src check for duplicate shops [Orcao]
 		aFree(nd->u.shop.shop_item);
 	else if( nd->subtype == SCRIPT ) {
 		struct s_mapiterator* iter;

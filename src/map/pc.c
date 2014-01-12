@@ -4343,10 +4343,6 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		return 0;
 	}
 
-	//Dead Branch & Bloody Branch & Porings Box
-	if( nameid == ITEMID_BRANCH_OF_DEAD_TREE || nameid == ITEMID_BLOODY_DEAD_BRANCH || nameid == ITEMID_PORING_BOX )
-		logs->branch(sd);
-
 	return 1;
 }
 
@@ -4455,6 +4451,10 @@ int pc_useitem(struct map_session_data *sd,int n) {
 			return 0;
 		}
 	}
+	
+	//Dead Branch & Bloody Branch & Porings Box
+	if( nameid == ITEMID_BRANCH_OF_DEAD_TREE || nameid == ITEMID_BLOODY_DEAD_BRANCH || nameid == ITEMID_PORING_BOX )
+		logs->branch(sd);
 	
 	sd->itemid = sd->status.inventory[n].nameid;
 	sd->itemindex = n;

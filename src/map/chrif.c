@@ -126,9 +126,6 @@ bool chrif_auth_delete(int account_id, int char_id, enum sd_state state) {
 		if ( session[fd] && session[fd]->session_data == node->sd )
 			session[fd]->session_data = NULL;
 		
-		if ( node->char_dat )
-			aFree(node->char_dat);
-
 		if ( node->sd )
 			aFree(node->sd);
 		
@@ -452,7 +449,7 @@ int chrif_reconnect(DBKey key, DBData *data, va_list ap) {
 	
 	switch (node->state) {
 		case ST_LOGIN:
-			if ( node->sd && node->char_dat == NULL ) {//Since there is no way to request the char auth, make it fail.
+			if ( node->sd ) {//Since there is no way to request the char auth, make it fail.
 				pc->authfail(node->sd);
 				chrif->char_offline(node->sd);
 				chrif->auth_delete(node->account_id, node->char_id, ST_LOGIN);
@@ -618,7 +615,6 @@ void chrif_authok(int fd) {
 	sd = node->sd;
 
 	if( runflag == MAPSERVER_ST_RUNNING &&
-		node->char_dat == NULL &&
 		node->account_id == account_id &&
 		node->char_id == char_id &&
 		node->login_id1 == login_id1 )
@@ -1596,9 +1592,6 @@ void chrif_send_report(char* buf, int len) {
  */
 int auth_db_final(DBKey key, DBData *data, va_list ap) {
 	struct auth_node *node = DB->data2ptr(data);
-	
-	if (node->char_dat)
-		aFree(node->char_dat);
 	
 	if (node->sd)
 		aFree(node->sd);

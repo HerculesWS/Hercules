@@ -32,7 +32,6 @@ struct auth_node {
 	int login_id1, login_id2, sex, fd;
 	time_t expiration_time;          // # of seconds 1/1/1970 (timestamp): Validity limit of the account (0 = unlimited)
 	struct map_session_data *sd;     //Data from logged on char.
-	struct mmo_charstatus *char_dat; //Data from char server.
 	int64 node_created;              //timestamp for node timeouts
 	enum sd_state state;             //To track whether player was login in/out or changing maps.
 };
