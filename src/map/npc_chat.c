@@ -91,9 +91,9 @@ void finalize_pcrematch_entry(struct pcrematch_entry* e)
 struct pcrematch_set* lookup_pcreset(struct npc_data* nd, int setid) 
 {
 	struct pcrematch_set *pcreset;
-	struct npc_parse *npcParse = (struct npc_parse *) nd->chatdb;
+	struct npc_parse *npcParse = nd->chatdb;
 	if (npcParse == NULL) 
-		nd->chatdb = npcParse = (struct npc_parse *) aCalloc(sizeof(struct npc_parse), 1);
+		nd->chatdb = npcParse = (struct npc_parse *)aCalloc(sizeof(struct npc_parse), 1);
 	
 	pcreset = npcParse->active;
 	
@@ -112,7 +112,7 @@ struct pcrematch_set* lookup_pcreset(struct npc_data* nd, int setid)
 	}
 	
 	if (pcreset == NULL) {
-		pcreset = (struct pcrematch_set *) aCalloc(sizeof(struct pcrematch_set), 1);
+		pcreset = (struct pcrematch_set *)aCalloc(sizeof(struct pcrematch_set), 1);
 		pcreset->next = npcParse->inactive;
 		if (pcreset->next != NULL)
 			pcreset->next->prev = pcreset;
@@ -132,7 +132,7 @@ struct pcrematch_set* lookup_pcreset(struct npc_data* nd, int setid)
 void activate_pcreset(struct npc_data* nd, int setid)
 {
 	struct pcrematch_set *pcreset;
-	struct npc_parse *npcParse = (struct npc_parse *) nd->chatdb;
+	struct npc_parse *npcParse = nd->chatdb;
 	if (npcParse == NULL) 
 		return; // Nothing to activate...
 	pcreset = npcParse->inactive;
@@ -165,7 +165,7 @@ void activate_pcreset(struct npc_data* nd, int setid)
 void deactivate_pcreset(struct npc_data* nd, int setid)
 {
 	struct pcrematch_set *pcreset;
-	struct npc_parse *npcParse = (struct npc_parse *) nd->chatdb;
+	struct npc_parse *npcParse = nd->chatdb;
 	if (npcParse == NULL) 
 		return; // Nothing to deactivate...
 	if (setid == -1) {
@@ -202,7 +202,7 @@ void delete_pcreset(struct npc_data* nd, int setid)
 {
 	int active = 1;
 	struct pcrematch_set *pcreset;
-	struct npc_parse *npcParse = (struct npc_parse *) nd->chatdb;
+	struct npc_parse *npcParse = nd->chatdb;
 	if (npcParse == NULL) 
 		return; // Nothing to deactivate...
 	pcreset = npcParse->active;
@@ -299,7 +299,7 @@ void npc_chat_def_pattern(struct npc_data* nd, int setid, const char* pattern, c
  */
 void npc_chat_finalize(struct npc_data* nd)
 {
-	struct npc_parse *npcParse = (struct npc_parse *) nd->chatdb;
+	struct npc_parse *npcParse = nd->chatdb;
 	if (npcParse == NULL)
 		return;
 	
@@ -318,8 +318,8 @@ void npc_chat_finalize(struct npc_data* nd)
  */
 int npc_chat_sub(struct block_list* bl, va_list ap)
 {
-	struct npc_data* nd = (struct npc_data *) bl;
-	struct npc_parse* npcParse = (struct npc_parse *) nd->chatdb;
+	struct npc_data *nd = (struct npc_data *) bl;
+	struct npc_parse *npcParse = nd->chatdb;
 	char* msg;
 	int len, i;
 	struct map_session_data* sd;

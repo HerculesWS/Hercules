@@ -8647,7 +8647,7 @@ ACMD(join) {
 	} else if( hChSys.ally && sd->status.guild_id && strcmpi(name + 1, hChSys.ally_name) == 0 ) {
 		struct guild *g = sd->guild;
 		if( !g ) return false;/* unlikely, but we wont let it crash anyway. */
-		channel = (struct hChSysCh *)g->channel;
+		channel = g->channel;
 	} else if( !( channel = strdb_get(clif->channel_db, name + 1) ) ) {
 		sprintf(atcmd_output, msg_txt(1400),name,command); // Unknown Channel '%s' (usage: %s <#channel_name>)
 		clif->message(fd, atcmd_output);
@@ -8691,8 +8691,8 @@ ACMD(join) {
 		int i;
 		for (i = 0; i < MAX_GUILDALLIANCE; i++) {
 			if( g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild->search(g->alliance[i].guild_id) ) ) {
-				if( !(((struct hChSysCh*)sg->channel)->banned && idb_exists(((struct hChSysCh*)sg->channel)->banned, sd->status.account_id))) {
-					clif->chsys_join((struct hChSysCh *)sg->channel,sd);
+				if( !(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id))) {
+					clif->chsys_join(sg->channel,sd);
 				}
 			}
 		}
@@ -8822,7 +8822,7 @@ ACMD(channel) {
 			if( hChSys.ally && sd->status.guild_id ) {
 				struct guild *g = sd->guild;
 				if( !g ) { dbi_destroy(iter); return false; }
-				sprintf(atcmd_output, msg_txt(1409), hChSys.ally_name, db_size(((struct hChSysCh *)g->channel)->users));// - #%s ( %d users )
+				sprintf(atcmd_output, msg_txt(1409), hChSys.ally_name, db_size(g->channel->users));// - #%s ( %d users )
 				clif->message(fd, atcmd_output);
 			}
 			for(channel = dbi_first(iter); dbi_exists(iter); channel = dbi_next(iter)) {

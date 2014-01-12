@@ -2837,20 +2837,20 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 							i64db_put(n, num, aStrdup(str));
 							if( script_getvaridx(num) )
 								script->array_update(
-													 (name[1] == '@') ?
-														&st->stack->array_function_db :
-														&st->script->script_arrays_db,
-													 num,
-													 false);
+								                     (name[1] == '@') ?
+								                        &st->stack->array_function_db :
+								                        &st->script->script_arrays_db,
+								                     num,
+								                     false);
 						} else {
 							i64db_remove(n, num);
 							if( script_getvaridx(num) )
 								script->array_update(
-													 (name[1] == '@') ?
-													 &st->stack->array_function_db :
-													 &st->script->script_arrays_db,
-													 num,
-													 true);
+								                     (name[1] == '@') ?
+								                         &st->stack->array_function_db :
+								                         &st->script->script_arrays_db,
+								                     num,
+								                     true);
 						}
 					}
 				}
@@ -2908,20 +2908,20 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 							i64db_iput(n, num, val);
 							if( script_getvaridx(num) )
 								script->array_update(
-													 (name[1] == '@') ?
-													 &st->stack->array_function_db :
-													 &st->script->script_arrays_db,
-													 num,
-													 false);
+								                     (name[1] == '@') ?
+								                         &st->stack->array_function_db :
+								                         &st->script->script_arrays_db,
+								                     num,
+								                     false);
 						} else {
 							i64db_remove(n, num);
 							if( script_getvaridx(num) )
 								script->array_update(
-													 (name[1] == '@') ?
-													 &st->stack->array_function_db :
-													 &st->script->script_arrays_db,
-													 num,
-													 true);
+								                     (name[1] == '@') ?
+								                         &st->stack->array_function_db :
+								                         &st->script->script_arrays_db,
+								                     num,
+								                     true);
 						}
 					}
 				}
@@ -4113,15 +4113,15 @@ void script_setarray_pc(struct map_session_data* sd, const char* varname, uint32
  * Clears persistent variables from memory
  **/
 int script_reg_destroy(DBKey key, DBData *data, va_list ap) {
-	void *src;
+	struct script_reg_state *src;
 	
 	if( data->type != DB_DATA_PTR )/* got no need for those! */
 		return 0;
 	
 	src = DB->data2ptr(data);
 	
-	if( ((struct script_reg_state*)src)->type ) {
-		struct script_reg_str *p = src;
+	if( src->type ) {
+		struct script_reg_str *p = (struct script_reg_str *)src;
 		
 		if( p->value )
 			aFree(p->value);
