@@ -16558,11 +16558,15 @@ BUILDIN(has_instance) {
 	const char *str;
 	int16 m;
 	int instance_id = -1;
-
+	bool type = strcmp(script->getfuncname(st),"has_instance2") == 0 ? true : false;
+	
 	str = script_getstr(st, 2);
 
 	if( (m = map->mapname2mapid(str)) < 0 ) {
-		script_pushconststr(st, "");
+		if( type )
+			script_pushint(st, -1);
+		else
+			script_pushconststr(st, "");
 		return true;
 	}
 
@@ -16609,11 +16613,17 @@ BUILDIN(has_instance) {
 	}
 
 	if( !instance->valid(instance_id) || (m = instance->map2imap(m, instance_id)) < 0 ) {
-		script_pushconststr(st, "");
+		if( type )
+			script_pushint(st, -1);
+		else
+			script_pushconststr(st, "");
 		return true;
 	}
 
-	script_pushconststr(st, map->list[m].name);
+	if( type )
+		script_pushint(st, instance_id);
+	else
+		script_pushconststr(st, map->list[m].name);
 	return true;
 }
 int buildin_instance_warpall_sub(struct block_list *bl,va_list ap) {
@@ -18921,6 +18931,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(instance_check_party,"i???"),
 		BUILDIN_DEF(instance_mapname,"s?"),
 		BUILDIN_DEF(instance_set_respawn,"sii?"),
+		BUILDIN_DEF2(has_instance,"has_instance2","s"),
 
 		/**
 		 * 3rd-related

@@ -7960,6 +7960,14 @@ Returns name of the instanced map on success, otherwise an empty string.
 
 ---------------------------------------
 
+*has_instance2("<map name>");
+
+Same as has_instance, with exception it returns the instance id of the map,
+as long as the user is assigned to a instance containing that map.
+It will return -1 upon failure, valid instance ids are >= 0.
+
+---------------------------------------
+
 *instance_id();
 
 Retrieves the instance id of the script it is being run on.
