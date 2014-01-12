@@ -46,6 +46,7 @@ struct npc_shop_data {
 	struct npc_item_list *item;/* list */
 	unsigned short items;/* total */
 };
+struct npc_parse;
 struct npc_data {
 	struct block_list bl;
 	struct unit_data *ud;
@@ -67,7 +68,7 @@ struct npc_data {
 	unsigned short level;
 	unsigned short stat_point;
 
-	void* chatdb; // pointer to a npc_parse struct (see npc_chat.c)
+	struct npc_parse *chatdb;
 	char* path;/* path dir */
 	enum npc_subtype subtype;
 	int src_id;
@@ -302,12 +303,6 @@ struct pcrematch_set {
 
 /*
  * Entire data structure hung off a NPC
- *
- * The reason I have done it this way (a void * in npc_data and then
- * this) was to reduce the number of patches that needed to be applied
- * to a ragnarok distribution to bring this code online.  I
- * also wanted people to be able to grab this one file to get updates
- * without having to do a large number of changes.
  */
 struct npc_parse {
 	struct pcrematch_set* active;

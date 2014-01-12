@@ -454,7 +454,7 @@ int guild_recv_info(struct guild *sg) {
 	DBData data;
 	struct map_session_data *sd;
 	bool guild_new = false;
-	void *aChSysSave = NULL;
+	struct hChSysCh *aChSysSave = NULL;
 
 	nullpo_ret(sg);
 
@@ -494,8 +494,8 @@ int guild_recv_info(struct guild *sg) {
 								if( sg->alliance[i].guild_id == sd->status.guild_id ) {
 									clif->chsys_join(channel,sd);
 								} else if( tg[i] != NULL ) {
-									if( !(((struct hChSysCh*)tg[i]->channel)->banned && idb_exists(((struct hChSysCh*)tg[i]->channel)->banned, sd->status.account_id)))
-										clif->chsys_join((struct hChSysCh*)tg[i]->channel,sd);
+									if( !(tg[i]->channel->banned && idb_exists(tg[i]->channel->banned, sd->status.account_id)))
+										clif->chsys_join(tg[i]->channel,sd);
 								}
 							}
 						}
@@ -506,7 +506,7 @@ int guild_recv_info(struct guild *sg) {
 				
 			}
 			
-			aChSysSave = (void*)channel;
+			aChSysSave = channel;
 
 		}
 		before=*sg;
@@ -725,14 +725,14 @@ void guild_member_joined(struct map_session_data *sd)
 		
 		if( hChSys.ally && hChSys.ally_autojoin ) {
 			struct guild* sg = NULL;
-			struct hChSysCh *channel = (struct hChSysCh*)g->channel;
+			struct hChSysCh *channel = g->channel;
 
 			if( !(channel->banned && idb_exists(channel->banned, sd->status.account_id) ) )
 				clif->chsys_join(channel,sd);
 			for (i = 0; i < MAX_GUILDALLIANCE; i++) {
 				if( g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild->search(g->alliance[i].guild_id) ) ) {
-					if( !(((struct hChSysCh*)sg->channel)->banned && idb_exists(((struct hChSysCh*)sg->channel)->banned, sd->status.account_id)))
-						clif->chsys_join((struct hChSysCh*)sg->channel,sd);
+					if( !(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id)))
+						clif->chsys_join(sg->channel,sd);
 				}
 			}
 		}
@@ -1753,7 +1753,7 @@ int guild_broken(int guild_id,int flag)
 	gstorage->delete(guild_id);
 	if( hChSys.ally ) {
 		if( g->channel != NULL ) {
-			clif->chsys_delete(( struct hChSysCh * )g->channel);
+			clif->chsys_delete(g->channel);
 		}
 	}
 	if( g->instance )
@@ -2231,7 +2231,7 @@ void do_final_guild(void) {
 	
 	for( g = dbi_first(iter); dbi_exists(iter); g = dbi_next(iter) ) {
 		if( g->channel != NULL )
-			clif->chsys_delete((struct hChSysCh *)g->channel);
+			clif->chsys_delete(g->channel);
 		if( g->instance != NULL ) {
 			aFree(g->instance);
 			g->instance = NULL;

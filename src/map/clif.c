@@ -10387,7 +10387,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 		} else if( hChSys.ally && sd->status.guild_id && strcmpi(chname, hChSys.ally_name) == 0 ) {
 			struct guild *g = sd->guild;
 			if( !g ) return;
-			channel = (struct hChSysCh *)g->channel;
+			channel = g->channel;
 		}
 		if( channel || (channel = strdb_get(clif->channel_db,chname)) ) {
 			int k;
@@ -10402,8 +10402,8 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 					struct guild *g = sd->guild, *sg = NULL;
 					for (k = 0; k < MAX_GUILDALLIANCE; k++) {
 						if( g->alliance[k].opposition == 0 && g->alliance[k].guild_id && (sg = guild->search(g->alliance[k].guild_id) ) ) {
-							if( !(((struct hChSysCh*)sg->channel)->banned && idb_exists(((struct hChSysCh*)sg->channel)->banned, sd->status.account_id)))
-								clif->chsys_join((struct hChSysCh *)sg->channel,sd);
+							if( !(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id)))
+								clif->chsys_join(sg->channel,sd);
 						}
 					}
 				}
@@ -10683,19 +10683,19 @@ void clif_hercules_chsys_gjoin(struct guild *g1,struct guild *g2) {
 	struct hChSysCh *channel;
 	int j;
 	
-	if( (channel = (struct hChSysCh*)g1->channel) ) {
+	if( (channel = g1->channel) ) {
 		for(j = 0; j < g2->max_member; j++) {
 			if( (sd = g2->member[j].sd) != NULL ) {
-				if( !(((struct hChSysCh*)g1->channel)->banned && idb_exists(((struct hChSysCh*)g1->channel)->banned, sd->status.account_id)))
+				if( !(g1->channel->banned && idb_exists(g1->channel->banned, sd->status.account_id)))
 					clif->chsys_join(channel,sd);
 			}
 		}
 	}
 	
-	if( (channel = (struct hChSysCh*)g2->channel) ) {
+	if( (channel = g2->channel) ) {
 		for(j = 0; j < g1->max_member; j++) {
 			if( (sd = g1->member[j].sd) != NULL ) {
-				if( !(((struct hChSysCh*)g2->channel)->banned && idb_exists(((struct hChSysCh*)g2->channel)->banned, sd->status.account_id)))
+				if( !(g2->channel->banned && idb_exists(g2->channel->banned, sd->status.account_id)))
 				clif->chsys_join(channel,sd);
 			}
 		}
@@ -10706,7 +10706,7 @@ void clif_hercules_chsys_gleave(struct guild *g1,struct guild *g2) {
 	struct hChSysCh *channel;
 	int j;
 	
-	if( (channel = (struct hChSysCh*)g1->channel) ) {
+	if( (channel = g1->channel) ) {
 		for(j = 0; j < g2->max_member; j++) {
 			if( (sd = g2->member[j].sd) != NULL ) {
 				clif->chsys_left(channel,sd);
@@ -10714,7 +10714,7 @@ void clif_hercules_chsys_gleave(struct guild *g1,struct guild *g2) {
 		}
 	}
 	
-	if( (channel = (struct hChSysCh*)g2->channel) ) {
+	if( (channel = g2->channel) ) {
 		for(j = 0; j < g1->max_member; j++) {
 			if( (sd = g1->member[j].sd) != NULL ) {
 				clif->chsys_left(channel,sd);

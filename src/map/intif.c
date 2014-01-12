@@ -288,7 +288,7 @@ int intif_saveregistry(struct map_session_data *sd) {
 	iter = db_iterator(sd->var_db);
 	for( data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key) ) {
 		const char *varname = NULL;
-		void *src = NULL;
+		struct script_reg_state *src = NULL;
 		
 		if( data->type != DB_DATA_PTR ) /* its a @number */
 			continue;
@@ -301,10 +301,10 @@ int intif_saveregistry(struct map_session_data *sd) {
 		src = DB->data2ptr(data);
 
 		/* no need! */
-		if( !((struct script_reg_state*)src)->update )
+		if( !src->update )
 			continue;
 		
-		((struct script_reg_state*)src)->update = false;
+		src->update = false;
 				
 		len = strlen(varname)+1;
 		
@@ -317,8 +317,8 @@ int intif_saveregistry(struct map_session_data *sd) {
 		WFIFOL(inter_fd, plen) = script_getvaridx(key.i64);
 		plen += 4;
 		
-		if( ((struct script_reg_state*)src)->type ) {
-			struct script_reg_str *p = src;
+		if( src->type ) {
+			struct script_reg_str *p = (struct script_reg_str *)src;
 						
 			WFIFOB(inter_fd, plen) = p->value ? 2 : 3;
 			plen += 1;
@@ -336,7 +336,7 @@ int intif_saveregistry(struct map_session_data *sd) {
 			}
 			
 		} else {
-			struct script_reg_num *p = src;
+			struct script_reg_num *p = (struct script_reg_num *)src;
 
 			WFIFOB(inter_fd, plen) =  p->value ? 0 : 1;
 			plen += 1;
