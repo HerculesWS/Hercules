@@ -8097,6 +8097,7 @@ void pc_setregstr(struct map_session_data* sd, int64 reg, const char* str) {
 		p = ers_alloc(pc->str_reg_ers, struct script_reg_str);
 		
 		p->value = aStrdup(str);
+		p->flag.type = 1;
 		
 		if( sd->var_db->put(sd->var_db,DB->i642key(reg),DB->ptr2data(p),&prev) ) {
 			p = DB->data2ptr(&prev);
