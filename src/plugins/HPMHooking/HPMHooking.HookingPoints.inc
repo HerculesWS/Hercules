@@ -2165,6 +2165,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->array_size, HP_script_array_size) },
 	{ HP_POP(script->array_highest_key, HP_script_array_highest_key) },
 	{ HP_POP(script->array_free_db, HP_script_array_free_db) },
+	{ HP_POP(script->array_ensure_zero, HP_script_array_ensure_zero) },
 	{ HP_POP(script->reg_destroy_single, HP_script_reg_destroy_single) },
 	{ HP_POP(script->reg_destroy, HP_script_reg_destroy) },
 	{ HP_POP(script->generic_ui_array_expand, HP_script_generic_ui_array_expand) },
