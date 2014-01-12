@@ -637,8 +637,8 @@ even a value from an another array) to get at an array value:
     
 This will make @arrayofnumbers[100] equal to 10.
 
-Notice that index numbering always starts with 0. Arrays cannot hold more 
-than 128 variables (so the last one can't have a number higher than 127).
+Notice that index numbering always starts with 0. Arrays can hold over
+4 billion variables.
 
 And array indexes probably can't be negative. Nobody tested what happens 
 when you try to get a negatively numbered variable from an array, but it's 
@@ -8508,7 +8508,11 @@ attempts to remove <Item_ID> from the current shop list.
 
 *setcurrency <Val1>{,<Val2>};
 
-updates the currently attached player shop funds.
+updates the currently attached player shop funds,
+to be used within a "OnCountFunds" event of a NST_CUSTOM trader type.
+
+<Val1> is the value used in the *Cash* Points field
+<Val2> is the value used in the Kafra Points field
 
 ---------------------------------------
 
@@ -8526,7 +8530,8 @@ By default, all npcs staart with tradertype(NST_ZENY);
 
 *purchaseok();
 
-Signs that the transaction (on a NST_CUSTOM trader) has been successful.
+Signs that the transaction (on a NST_CUSTOM trader) has been successful,
+to be used within a "OnPayFunds" event of a NST_CUSTOM trader.
 
 ---------------------------------------
 
