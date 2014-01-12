@@ -2250,7 +2250,7 @@ int intif_parse(int fd)
 #ifdef GP_BOUND_ITEMS
 			intif->pItembound_ack(fd);
 #else
-			ShowWarning("intif_parse: Received 0x3856 with GP_BOUND_ITEMS disabled !!!\n")
+			ShowWarning("intif_parse: Received 0x3856 with GP_BOUND_ITEMS disabled !!!\n");
 #endif
 			break;
 		// Mercenary System
