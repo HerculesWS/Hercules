@@ -10,14 +10,24 @@
 
 -	script	HerculesSelfTest	-1,{
 	end;
+
+OnReportError:
+	.@msg$ = getarg(0,"Unknown Error");
+	.@val$ = getarg(1,"");
+	.@ref$ = getarg(2,"");
+	if (.errors == 1)
+		debugmes "**** WARNING: Any self-test results past this point are unreliable because of previous errors. ****";
+	debugmes "Error: "+.@msg$+": '"+.@val$+"' (found) != '"+.@ref$+"' (expected)";
+	.errors++;
+	//end;
+	return;
+
 OnCheck:
 	.@msg$ = getarg(0,"Unknown Error");
 	.@val = getarg(1,0);
 	.@ref = getarg(2,1);
 	if (.@val != .@ref) {
-		debugmes "Error: "+.@msg$+": '"+.@val+"' != '"+.@ref+"'";
-		.errors++;
-		//end;
+		callsub(OnReportError, .@msg$, ""+.@val, ""+.@ref); // String coercion
 	}
 	return;
 OnCheckStr:
@@ -25,9 +35,7 @@ OnCheckStr:
 	.@val$ = getarg(1,"");
 	.@ref$ = getarg(2,"");
 	if (.@val$ != .@ref$) {
-		debugmes "Error: "+.@msg$+": '"+.@val$+"' != '"+.@ref$+"'";
-		.errors++;
-		//end;
+		callsub(OnReportError, .@msg$, .@val$, .@ref$);
 	}
 	return;
 OnInit:
@@ -390,9 +398,105 @@ OnInit:
 			.@x = 3;
 	callsub(OnCheck, "Dangling else", .@x, 0);
 
+
+	// Array operations
+	.@x[0] = 1;
+	callsub(OnCheck, "Array size (single value)", getarraysize(.@x), 1);
+	.@x[0] = 0;
+	callsub(OnCheck, "Array size (single value removal)", getarraysize(.@x), 0);
+
+	.@x[0] = 1;
+	.@x[1] = 2;
+	.@x[2] = 3;
+	.@x[5] = 4;
+	.@x[8] = 5;
+	.@x[9] = 0;
+	setarray .@y[0], 1, 2, 3, 0, 0, 4, 0, 0, 5;
+	callsub(OnCheck, "Array size (assignment)", getarraysize(.@x), 9);
+	callsub(OnCheck, "Array size (setarray)", getarraysize(.@y), 9);
+	for (.@i = 0; .@i < 10; ++.@i) {
+		callsub(OnCheck, "Array subscript and setarray [" + .@i + "]", .@x[.@i], .@y[.@i]);
+	}
+
+	cleararray .@x[1], 8, 6;
+	callsub(OnCheck, "cleararray (value) [0]", .@x[0], 1);
+	for (.@i = 1; .@i < 7; ++.@i) {
+		callsub(OnCheck, "cleararray (value) [" + .@i + "]", .@x[.@i], 8);
+	}
+	callsub(OnCheck, "cleararray (value) [7]", .@x[7], 0);
+	callsub(OnCheck, "cleararray (value) [8]", .@x[8], 5);
+	callsub(OnCheck, "cleararray (value) [9]", .@x[9], 0);
+
+	cleararray .@x, 0, getarraysize(.@x);
+	cleararray .@y, 0, getarraysize(.@y);
+	callsub(OnCheck, "cleararray and getarraysize", getarraysize(.@x), 0);
+	for (.@i = 0; .@i < 10; ++.@i) {
+		callsub(OnCheck, "cleararray (zero) [" + .@i + "]", .@x[.@i], 0);
+	}
+
+	cleararray .@x, 0, getarraysize(.@x);
+	setarray .@x[1], 1, 2, 0, 0, 0, 6, 7, 8, 0, 0, 0, 13, 14, 15, 16;
+	deletearray .@x;
+	callsub(OnCheck, "deletearray (clear) and getarraysize", getarraysize(.@x), 0);
+	for (.@i = 0; .@i < 18; ++.@i) {
+		callsub(OnCheck, "deletearray (clear) [" + .@i + "]", .@x[.@i], 0);
+	}
+
+	deletearray .@x;
+	deletearray .@y;
+	setarray .@x[1], 1, 2, 0, 0, 0, 6, 7, 8, 0, 0, 0, 0, 13, 14, 15, 16;
+	setarray .@y, 0, 1, 2, 0, 0, 0, 6, 7, 8,    0, 0, 0, 13, 14, 15, 16;
+	deletearray .@x[9], 1;
+	callsub(OnCheck, "deletearray (single) and getarraysize", getarraysize(.@x), 16);
+	for (.@i = 0; .@i < 18; ++.@i) {
+		callsub(OnCheck, "deletearray (single) [" + .@i + "]", .@x[.@i], .@y[.@i]);
+	}
+
+	deletearray .@x;
+	deletearray .@y;
+	setarray .@x[1], 1, 2, 0, 0, 0, 6, 7, 8, 0, 0, 0, 13, 14, 15, 16;
+	setarray .@y, 0, 1,             6, 7, 8, 0, 0, 0, 13, 14, 15, 16;
+	deletearray .@x[2], 4;
+	callsub(OnCheck, "deletearray (multiple) and getarraysize", getarraysize(.@x), 12);
+	for (.@i = 0; .@i < 18; ++.@i) {
+		callsub(OnCheck, "deletearray (multiple) [" + .@i + "]", .@x[.@i], .@y[.@i]);
+	}
+
+	deletearray .@x;
+	deletearray .@y;
+	setarray .@x[1], 1, 2, 0, 0, 0, 6, 7, 8, 0, 0, 0, 13, 14, 15, 16;
+	setarray .@y, 0, 1;
+	deletearray .@x[2], 1000;
+	callsub(OnCheck, "deletearray (large count) and getarraysize", getarraysize(.@x), 2);
+	for (.@i = 0; .@i < 18; ++.@i) {
+		callsub(OnCheck, "deletearray (large count) [" + .@i + "]", .@x[.@i], .@y[.@i]);
+	}
+
+	deletearray .@x;
+	deletearray .@y;
+	setarray .@x[1], 1, 2, 0, 0, 0, 6, 7, 8, 0, 0, 0, 13, 14, 15, 16;
+	setarray .@y, 0, 1;
+	deletearray .@x[2];
+	callsub(OnCheck, "deletearray (truncate) and getarraysize", getarraysize(.@x), 2);
+	for (.@i = 0; .@i < 18; ++.@i) {
+		callsub(OnCheck, "deletearray (truncate) [" + .@i + "]", .@x[.@i], .@y[.@i]);
+	}
+
+	deletearray .@x;
+	.@x[1] = 2;
+	.@x[65536] = 1;
+	callsub(OnCheck, "large array index", .@x[65536], 1);
+	callsub(OnCheck, "large array index and getarraysize", getarraysize(.@x), 65537);
+	.@x[65536] = 0;
+	callsub(OnCheck, "large array index (shrink)", .@x[65536], 0);
+	callsub(OnCheck, "large array index and getarraysize (shrink)", getarraysize(.@x), 2);
+	.@x[1] = 0;
+	callsub(OnCheck, "array shrink", .@x[1], 0);
+	callsub(OnCheck, "array shrink and getarraysize", getarraysize(.@x), 0);
+
 	if (.errors) {
 		debugmes "Script engine self-test   [ FAILED ]";
-		debugmes "The test was completed with " + .errors + " errors.";
+		debugmes "**** The test was completed with " + .errors + " errors. ****";
 	} else {
 		debugmes "Script engine self-test   [ PASSED ]";
 	}
