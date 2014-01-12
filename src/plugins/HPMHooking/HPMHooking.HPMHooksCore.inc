@@ -4263,6 +4263,8 @@ struct {
 	struct HPMHookPoint *HP_script_array_highest_key_post;
 	struct HPMHookPoint *HP_script_array_free_db_pre;
 	struct HPMHookPoint *HP_script_array_free_db_post;
+	struct HPMHookPoint *HP_script_array_ensure_zero_pre;
+	struct HPMHookPoint *HP_script_array_ensure_zero_post;
 	struct HPMHookPoint *HP_script_reg_destroy_single_pre;
 	struct HPMHookPoint *HP_script_reg_destroy_single_post;
 	struct HPMHookPoint *HP_script_reg_destroy_pre;
@@ -9288,6 +9290,8 @@ struct {
 	int HP_script_array_highest_key_post;
 	int HP_script_array_free_db_pre;
 	int HP_script_array_free_db_post;
+	int HP_script_array_ensure_zero_pre;
+	int HP_script_array_ensure_zero_post;
 	int HP_script_reg_destroy_single_pre;
 	int HP_script_reg_destroy_single_post;
 	int HP_script_reg_destroy_pre;

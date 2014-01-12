@@ -55078,6 +55078,31 @@ int HP_script_array_free_db(DBKey key, DBData *data, va_list ap) {
 	}
 	return retVal___;
 }
+void HP_script_array_ensure_zero(struct script_state *st, struct map_session_data *sd, int64 uid, struct DBMap **ref) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_array_ensure_zero_pre ) {
+		void (*preHookFunc) (struct script_state *st, struct map_session_data *sd, int64 *uid, struct DBMap **ref);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_array_ensure_zero_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_array_ensure_zero_pre[hIndex].func;
+			preHookFunc(st, sd, &uid, ref);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.array_ensure_zero(st, sd, uid, ref);
+	}
+	if( HPMHooks.count.HP_script_array_ensure_zero_post ) {
+		void (*postHookFunc) (struct script_state *st, struct map_session_data *sd, int64 *uid, struct DBMap **ref);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_array_ensure_zero_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_array_ensure_zero_post[hIndex].func;
+			postHookFunc(st, sd, &uid, ref);
+		}
+	}
+	return;
+}
 void HP_script_reg_destroy_single(struct map_session_data *sd, int64 reg, struct script_reg_state *data) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_script_reg_destroy_single_pre ) {
