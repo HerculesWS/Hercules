@@ -2594,7 +2594,7 @@ void* get_val2(struct script_state* st, int64 uid, struct DBMap** ref) {
 	script->push_val(st->stack, C_NAME, uid, ref);
 	data = script_getdatatop(st, -1);
 	script->get_val(st, data);
-	return (data->type == C_INT ? (void*)__64BPTRSIZE(data->u.num) : (void*)__64BPTRSIZE(data->u.str));
+	return (data->type == C_INT ? (void*)__64BPTRSIZE((int32)data->u.num) : (void*)__64BPTRSIZE(data->u.str)); // u.num is int32 because it comes from script->get_val
 }
 /**
  * Because, currently, array members with key 0 are indifferenciable from normal variables, we should ensure its actually in
