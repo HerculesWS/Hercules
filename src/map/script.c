@@ -2601,7 +2601,7 @@ void script_array_ensure_zero(struct script_state *st, struct map_session_data *
 	struct script_array *sa = NULL;
 	bool insert = false;
 	
-	if( sd ) /* when sd comes, st isn't available */
+	if( sd && !st ) /* when sd comes, st isn't available */
 		insert = true;
 	else {
 		if( is_string_variable(name) ) {
