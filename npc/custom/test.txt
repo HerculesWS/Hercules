@@ -494,6 +494,32 @@ OnInit:
 	callsub(OnCheck, "array shrink", .@x[1], 0);
 	callsub(OnCheck, "array shrink and getarraysize", getarraysize(.@x), 0);
 
+
+	// Constants
+	callsub(OnCheck, "'true' constant", true, 1);
+	callsub(OnCheck, "'false' constant", false, 0);
+	callsub(OnCheck, "'PORING' mob ID", PORING, 1002);
+	callsub(OnCheck, "'NV_BASIC' skill ID", NV_BASIC, 1);
+	callsub(OnCheck, "'Red_Potion' item ID", Red_Potion, 501);
+	callsub(OnCheck, "'Monster's_Feed' item ID", Monster's_Feed, 528);
+
+
+	// setd/getd
+	.@x = 1; .@x$ = ".@x";
+	callsub(OnCheck, "getd", getd(".@x"), 1);
+	callsub(OnCheck, "getd arguments", getd(.@x$), 1);
+	.@y = 0; .@y$ = ".@y";
+	setd(".@y", .@x);
+	callsub(OnCheck, "setd", .@y, 1);
+	setd(.@y$, 2);
+	callsub(OnCheck, "setd arguments", .@y, 2);
+	set getd(".@x"), getd(".@y");
+	callsub(OnCheck, "set getd", .@x, .@y);
+	.@y = 1;
+	setd(".@x", getd(".@y"));
+	callsub(OnCheck, "setd getd", .@x, .@y);
+
+
 	if (.errors) {
 		debugmes "Script engine self-test   [ FAILED ]";
 		debugmes "**** The test was completed with " + .errors + " errors. ****";
