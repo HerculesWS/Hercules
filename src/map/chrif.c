@@ -1367,6 +1367,9 @@ void chrif_skillid2idx(int fd) {
 	
 	if( fd == 0 ) fd = chrif->fd;
 	
+	if( !session_isValid(fd) )
+		return;
+	
 	WFIFOHEAD(fd,4 + (MAX_SKILL * 4));
 	WFIFOW(fd,0) = 0x2b0b;
 	for(i = 0; i < MAX_SKILL; i++) {
