@@ -83,7 +83,7 @@ const char* atcommand_msg(int msg_number) {
 /*==========================================
  * Read Message Data
  *------------------------------------------*/
-int msg_config_read(const char* cfgName)
+bool msg_config_read(const char* cfgName)
 {
 	int msg_number;
 	char line[1024], w1[1024], w2[1024];
@@ -92,7 +92,7 @@ int msg_config_read(const char* cfgName)
 
 	if ((fp = fopen(cfgName, "r")) == NULL) {
 		ShowError("Messages file not found: %s\n", cfgName);
-		return 1;
+		return false;
 	}
 
 	if ((--called) == 0)
@@ -123,7 +123,7 @@ int msg_config_read(const char* cfgName)
 
 	fclose(fp);
 
-	return 0;
+	return true;
 }
 
 /*==========================================
@@ -3917,7 +3917,6 @@ ACMD(mapinfo) {
 		default: // normally impossible to arrive here
 			clif->message(fd, msg_txt(1118)); // Please enter at least one valid list number (usage: @mapinfo <0-3> <map>).
 			return false;
-			break;
 	}
 	
 	return true;
@@ -5339,7 +5338,7 @@ ACMD(skilltree) {
 	if( j == MAX_SKILL_TREE || pc->skill_tree[c][j].id == 0 )
 	{
 		clif->message(fd, msg_txt(1169)); // The player cannot use that skill.
-		return true;
+		return false;
 	}
 	
 	ent = &pc->skill_tree[c][j];
@@ -7215,7 +7214,7 @@ ACMD(version) {
  * @mutearea by MouseJstr
  *------------------------------------------*/
 int atcommand_mutearea_sub(struct block_list *bl,va_list ap)
-{
+{ // As it is being used [ACMD(mutearea)] there's no need to be a bool, but if there's need to reuse it, it's better to be this way
 	
 	int time, id;
 	struct map_session_data *pl_sd = (struct map_session_data *)bl;
@@ -7232,7 +7231,7 @@ int atcommand_mutearea_sub(struct block_list *bl,va_list ap)
 		else
 			status_change_end(&pl_sd->bl, SC_NOCHAT, INVALID_TIMER);
 	}
-	return 0;
+	return 1;
 }
 
 ACMD(mutearea) {
@@ -7593,10 +7592,11 @@ ACMD(invite) {
 	unsigned int did = sd->duel_group;
 	struct map_session_data *target_sd = map->nick2sd((char *)message);
 	
-	if(did == 0)	{
+	if(did == 0)
+	{
 		// "Duel: @invite without @duel."
 		clif->message(fd, msg_txt(350));
-		return true;
+		return false;
 	}
 	
 	if(duel->list[did].max_players_limit > 0 &&
@@ -7604,26 +7604,27 @@ ACMD(invite) {
 		
 		// "Duel: Limit of players is reached."
 		clif->message(fd, msg_txt(351));
-		return true;
+		return false;
 	}
 	
 	if(target_sd == NULL) {
 		// "Duel: Player not found."
 		clif->message(fd, msg_txt(352));
-		return true;
+		return false;
 	}
 	
 	if(target_sd->duel_group > 0 || target_sd->duel_invite > 0) {
 		// "Duel: Player already in duel."
 		clif->message(fd, msg_txt(353));
-		return true;
+		return false;
 	}
 	
 	if(battle_config.duel_only_on_same_map && target_sd->bl.m != sd->bl.m)
 	{
+		// "Duel: You can't invite %s because he/she isn't on the same map."
 		sprintf(atcmd_output, msg_txt(364), message);
 		clif->message(fd, atcmd_output);
-		return true;
+		return false;
 	}
 	
 	duel->invite(did, sd, target_sd);
@@ -7643,7 +7644,7 @@ ACMD(duel) {
 	if(sd->duel_invite > 0) {
 		// "Duel: @duel without @reject."
 		clif->message(fd, msg_txt(355));
-		return true;
+		return false;
 	}
 	
 	if(!duel->checktime(sd)) {
@@ -7651,14 +7652,14 @@ ACMD(duel) {
 		// "Duel: You can take part in duel only one time per %d minutes."
 		sprintf(output, msg_txt(356), battle_config.duel_time_interval);
 		clif->message(fd, output);
-		return true;
+		return false;
 	}
 	
 	if( message[0] ) {
 		if(sscanf(message, "%d", &maxpl) >= 1) {
 			if(maxpl < 2 || maxpl > 65535) {
 				clif->message(fd, msg_txt(357)); // "Duel: Invalid value."
-				return true;
+				return false;
 			}
 			duel->create(sd, maxpl);
 		} else {
@@ -7669,7 +7670,7 @@ ACMD(duel) {
 				if((newduel = duel->create(sd, 2)) != -1) {
 					if(target_sd->duel_group > 0 ||	target_sd->duel_invite > 0) {
 						clif->message(fd, msg_txt(353)); // "Duel: Player already in duel."
-						return true;
+						return false;
 					}
 					duel->invite(newduel, sd, target_sd);
 					clif->message(fd, msg_txt(354)); // "Duel: Invitation has been sent."
@@ -7677,7 +7678,7 @@ ACMD(duel) {
 			} else {
 				// "Duel: Player not found."
 				clif->message(fd, msg_txt(352));
-				return true;
+				return false;
 			}
 		}
 	} else
@@ -7691,7 +7692,7 @@ ACMD(leave) {
 	if(sd->duel_group <= 0) {
 		// "Duel: @leave without @duel."
 		clif->message(fd, msg_txt(358));
-		return true;
+		return false;
 	}
 	
 	duel->leave(sd->duel_group, sd);
@@ -7705,20 +7706,20 @@ ACMD(accept) {
 		// "Duel: You can take part in duel only one time per %d minutes."
 		sprintf(output, msg_txt(356), battle_config.duel_time_interval);
 		clif->message(fd, output);
-		return true;
+		return false;
 	}
 	
 	if(sd->duel_invite <= 0) {
 		// "Duel: @accept without invititation."
 		clif->message(fd, msg_txt(360));
-		return true;
+		return false;
 	}
 	
 	if( duel->list[sd->duel_invite].max_players_limit > 0
 	 && duel->list[sd->duel_invite].members_count >= duel->list[sd->duel_invite].max_players_limit ) {
 		// "Duel: Limit of players is reached."
 		clif->message(fd, msg_txt(351));
-		return true;
+		return false;
 	}
 	
 	duel->accept(sd->duel_invite, sd);
@@ -7731,7 +7732,7 @@ ACMD(reject) {
 	if(sd->duel_invite <= 0) {
 		// "Duel: @reject without invititation."
 		clif->message(fd, msg_txt(362));
-		return true;
+		return false;
 	}
 	
 	duel->reject(sd->duel_invite, sd);
@@ -7800,17 +7801,17 @@ ACMD(clone) {
 	
 	if (!message || !*message) {
 		clif->message(sd->fd,msg_txt(1323)); // You must enter a player name or ID.
-		return true;
+		return false;
 	}
 	
 	if((pl_sd=map->nick2sd((char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_txt(3));	// Character not found.
-		return true;
+		return false;
 	}
 	
 	if(pc_get_group_level(pl_sd) > pc_get_group_level(sd)) {
 		clif->message(fd, msg_txt(126));	// Cannot clone a player of higher GM level than yourself.
-		return true;
+		return false;
 	}
 	
 	if (strcmpi(info->command, "clone") == 0)
@@ -7818,14 +7819,15 @@ ACMD(clone) {
 	else if (strcmpi(info->command, "slaveclone") == 0) {
 		flag = 2;
 		if(pc_isdead(sd)){
+			//"Unable to spawn slave clone."
 		    clif->message(fd, msg_txt(129+flag*2));
-		    return true;
+		    return false;
 		}
 		master = sd->bl.id;
 		if (battle_config.atc_slave_clone_limit
 			&& mob->countslave(&sd->bl) >= battle_config.atc_slave_clone_limit) {
 			clif->message(fd, msg_txt(127));	// You've reached your slave clones limit.
-			return true;
+			return false;
 		}
 	}
 	
@@ -7844,7 +7846,7 @@ ACMD(clone) {
 		return true;
 	}
 	clif->message(fd, msg_txt(129+flag*2));	// Unable to spawn evil clone. Unable to spawn clone. Unable to spawn slave clone.
-	return true;
+	return false;
 }
 
 /*=====================================
