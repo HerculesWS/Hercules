@@ -138,6 +138,9 @@ enum HPluginConfType {
 /* HPMi->addBattleConf */
 #define addBattleConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_BATTLE,bcname,funcname)
 
+/* HPMi->addPCGPermission */
+#define addGroupPermission(pcgname,maskptr) HPMi->addPCGPermission(HPMi->pid,pcgname,&maskptr)
+
 /* Hercules Plugin Mananger Include Interface */
 HPExport struct HPMi_interface {
 	/* */
@@ -161,6 +164,8 @@ HPExport struct HPMi_interface {
 	bool (*addArg) (unsigned int pluginID, char *name, bool has_param,void (*func) (char *param),void (*help) (void));
 	/* battle-config recv param */
 	bool (*addConf) (unsigned int pluginID, enum HPluginConfType type, char *name, void (*func) (const char *val));
+	/* pc group permission */
+	void (*addPCGPermission) (unsigned int pluginID, char *name, unsigned int *mask);
 } HPMi_s;
 #ifndef _HPM_H_
 HPExport struct HPMi_interface *HPMi;

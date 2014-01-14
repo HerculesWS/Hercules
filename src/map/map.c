@@ -5379,6 +5379,7 @@ void map_hp_symbols(void) {
 	/* specific */
 	HPM->share(atcommand->create,"addCommand");
 	HPM->share(script->addScript,"addScript");
+	HPM->share(HPM_map_add_group_permission,"addGroupPermission");
 }
 
 void map_load_defaults(void) {

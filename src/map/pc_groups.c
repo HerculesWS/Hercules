@@ -423,8 +423,15 @@ void do_init_pc_groups(void) {
 	
 	for(i = 0; i < len; i++) {
 		unsigned int p;
-		if( ( p = pcg->add_permission(pc_g_defaults[i].name) ) != pc_g_defaults[i].permission )
+		if( ( p = pc_groups_add_permission(pc_g_defaults[i].name) ) != pc_g_defaults[i].permission )
 			ShowError("do_init_pc_groups: %s error : %d != %d\n",pc_g_defaults[i].name,p,pc_g_defaults[i].permission);
+	}
+	
+	/**
+	 * Handle plugin-provided permissions
+	 **/
+	for(i = 0; i < pcg->HPMpermissions_count; i++) {
+		*pcg->HPMpermissions[i].mask = pc_groups_add_permission(pcg->HPMpermissions[i].name);
 	}
 	
 	pcg->db = idb_alloc(DB_OPT_RELEASE_DATA);
@@ -502,6 +509,9 @@ void pc_groups_defaults(void) {
 	pcg->permissions = NULL;
 	pcg->permission_count = 0;
 	/* */
+	pcg->HPMpermissions = NULL;
+	pcg->HPMpermissions_count = 0;
+	/* */
 	pcg->init = do_init_pc_groups;
 	pcg->final = do_final_pc_groups;
 	pcg->reload = pc_groups_reload;
@@ -514,5 +524,4 @@ void pc_groups_defaults(void) {
 	pcg->get_name = pc_group_get_name;
 	pcg->get_level = pc_group_get_level;
 	pcg->get_idx = pc_group_get_idx;
-	pcg->add_permission = pc_groups_add_permission;
 }

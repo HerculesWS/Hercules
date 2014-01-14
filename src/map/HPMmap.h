@@ -20,4 +20,6 @@ void HPM_map_plugin_load_sub(struct hplugin *plugin);
 
 void HPM_map_do_final(void);
 
+void HPM_map_add_group_permission(unsigned int pluginID, char *name, unsigned int *mask);
+
 #endif /* _HPM_MAP_ */

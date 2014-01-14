@@ -49,12 +49,19 @@ struct GroupSettings {
 	config_setting_t *root; // groups.[]
 };
 
+typedef struct GroupSettings GroupSettings;
+
 struct pc_groups_permission_table {
 	char *name;
 	unsigned int permission;
 };
 
-typedef struct GroupSettings GroupSettings;
+/* used by plugins to list permissions */
+struct pc_groups_new_permission {
+	unsigned int pID;/* plugin identity (for the future unload during runtime support) */
+	char *name;/* aStrdup' of the permission name */
+	unsigned int *mask;/* pointer to the plugin val that will store the value of the mask */
+};
 
 struct pc_groups_interface {
 	/* */
@@ -63,6 +70,9 @@ struct pc_groups_interface {
 	/* */
 	struct pc_groups_permission_table *permissions;
 	unsigned char permission_count;
+	/* */
+	struct pc_groups_new_permission *HPMpermissions;
+	unsigned char HPMpermissions_count;
 	/* */
 	void (*init) (void);
 	void (*final) (void);
@@ -76,7 +86,6 @@ struct pc_groups_interface {
 	const char* (*get_name) (GroupSettings *group);
 	int (*get_level) (GroupSettings *group);
 	int (*get_idx) (GroupSettings *group);
-	unsigned int (*add_permission) (const char *name);
 };
 
 struct pc_groups_interface *pcg;

@@ -65,8 +65,9 @@ void HPM_map_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataType
 }
 
 void HPM_map_plugin_load_sub(struct hplugin *plugin) {
-	plugin->hpi->addCommand = HPM->import_symbol("addCommand",plugin->idx);
-	plugin->hpi->addScript  = HPM->import_symbol("addScript",plugin->idx);
+	plugin->hpi->addCommand       = HPM->import_symbol("addCommand",plugin->idx);
+	plugin->hpi->addScript        = HPM->import_symbol("addScript",plugin->idx);
+	plugin->hpi->addPCGPermission = HPM->import_symbol("addGroupPermission",plugin->idx);
 }
 
 bool HPM_map_add_atcommand(char *name, AtCommandFunc func) {
@@ -98,6 +99,30 @@ void HPM_map_atcommands(void) {
 }
 
 void HPM_map_do_final(void) {
+	unsigned char i;
+	
 	if( atcommand_list )
 		aFree(atcommand_list);
+	/**
+	 * why is pcg->HPM being cleared here? because PCG's do_final is not final,
+	 * is used on reload, and would thus cause plugin-provided permissions to go away
+	 **/
+	for( i = 0; i < pcg->HPMpermissions_count; i++ ) {
+		aFree(pcg->HPMpermissions[i].name);
+	}
+	if( pcg->HPMpermissions )
+		aFree(pcg->HPMpermissions);
+}
+
+/**
+ * Adds a new group permission to the HPM-provided list
+ **/
+void HPM_map_add_group_permission(unsigned int pluginID, char *name, unsigned int *mask) {
+	unsigned char index = pcg->HPMpermissions_count;
+	
+	RECREATE(pcg->HPMpermissions, struct pc_groups_new_permission, ++pcg->HPMpermissions_count);
+	
+	pcg->HPMpermissions[index].pID = pluginID;
+	pcg->HPMpermissions[index].name = aStrdup(name);
+	pcg->HPMpermissions[index].mask = mask;
 }
