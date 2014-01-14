@@ -31324,31 +31324,6 @@ void HP_itemdb_name_constants(void) {
 	}
 	return;
 }
-void HP_itemdb_force_name_constants(void) {
-	int hIndex = 0;
-	if( HPMHooks.count.HP_itemdb_force_name_constants_pre ) {
-		void (*preHookFunc) (void);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_force_name_constants_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_itemdb_force_name_constants_pre[hIndex].func;
-			preHookFunc();
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.itemdb.force_name_constants();
-	}
-	if( HPMHooks.count.HP_itemdb_force_name_constants_post ) {
-		void (*postHookFunc) (void);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_force_name_constants_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_itemdb_force_name_constants_post[hIndex].func;
-			postHookFunc();
-		}
-	}
-	return;
-}
 void HP_itemdb_read_groups(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_itemdb_read_groups_pre ) {
@@ -52278,31 +52253,6 @@ void HP_script_set_constant2(const char *name, int value, bool isparameter) {
 		void (*postHookFunc) (const char *name, int *value, bool *isparameter);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_constant2_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_script_set_constant2_post[hIndex].func;
-			postHookFunc(name, &value, &isparameter);
-		}
-	}
-	return;
-}
-void HP_script_set_constant_force(const char *name, int value, bool isparameter) {
-	int hIndex = 0;
-	if( HPMHooks.count.HP_script_set_constant_force_pre ) {
-		void (*preHookFunc) (const char *name, int *value, bool *isparameter);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_constant_force_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_script_set_constant_force_pre[hIndex].func;
-			preHookFunc(name, &value, &isparameter);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.script.set_constant_force(name, value, isparameter);
-	}
-	if( HPMHooks.count.HP_script_set_constant_force_post ) {
-		void (*postHookFunc) (const char *name, int *value, bool *isparameter);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_constant_force_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_script_set_constant_force_post[hIndex].func;
 			postHookFunc(name, &value, &isparameter);
 		}
 	}

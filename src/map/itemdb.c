@@ -2249,16 +2249,6 @@ void itemdb_name_constants(void) {
 
 	dbi_destroy(iter);	
 }
-/* used to clear conflicts during script reload */
-void itemdb_force_name_constants(void) {
-	DBIterator *iter = db_iterator(itemdb->names);
-	struct item_data *data;
-	
-	for( data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter) )
-		script->set_constant_force(data->name,data->nameid,0);
-	
-	dbi_destroy(iter);
-}
 void do_final_itemdb(void) {
 	itemdb->clear(true);
 	
@@ -2286,7 +2276,6 @@ void itemdb_defaults(void) {
 	itemdb->final = do_final_itemdb;
 	itemdb->reload = itemdb_reload;
 	itemdb->name_constants = itemdb_name_constants;
-	itemdb->force_name_constants = itemdb_force_name_constants;
 	/* */
 	itemdb->groups = NULL;
 	itemdb->group_count = 0;
