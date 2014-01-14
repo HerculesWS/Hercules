@@ -126,7 +126,7 @@ function Chk; function Cm;
 	case 6:
 		mes "[Hunting Missions]";
 		mes "The top hunters are:";
-		query_sql("SELECT char_id AS id, (SELECT `name` FROM `char` WHERE char_id = id),`value` FROM `global_reg_value` WHERE str = 'Mission_Total' ORDER BY CAST(`value` AS SIGNED) DESC LIMIT 5",.@id,.@name$,.@val);
+		query_sql("SELECT char_id AS id, (SELECT `name` FROM `char` WHERE char_id = id),`value` FROM `char_reg_num_db` WHERE `key` = 'Mission_Total' ORDER BY CAST(`value` AS SIGNED) DESC LIMIT 5",.@id,.@name$,.@val);
 		for(set .@i,0; .@i<5; set .@i,.@i+1)
 			mes "  [Rank "+(.@i+1)+"]  "+((.@name$[.@i] == "")?"^777777none":"^0055FF"+.@name$[.@i]+"^000000 : ^FF0000"+.@val[.@i]+" pt.")+"^000000";
 		close;
@@ -181,8 +181,8 @@ Mission_Status:
 	set #Mission_Count,0;
 	if (.Delay) set #Mission_Delay, gettimetick(2)+(.Delay*3600);
 	set Mission_Total, Mission_Total+1;
-	if (Mission_Total == 1) query_sql("INSERT INTO `global_reg_value` (`char_id`,`str`,`value`,`type`,`account_id`) VALUES ("+getcharid(0)+",'Mission_Total','1',3,0)");
-	else query_sql("UPDATE `global_reg_value` SET `value` = "+Mission_Total+" WHERE char_id = "+getcharid(0)+" AND `str` = 'Mission_Total'");
+	if (Mission_Total == 1) query_sql("INSERT INTO `char_reg_num_db` (`char_id`,`key`,`index`,`value`) VALUES ("+getcharid(0)+",'Mission_Total','0',1)");
+	else query_sql("UPDATE `char_reg_num_db` SET `value` = "+Mission_Total+" WHERE `char_id` = "+getcharid(0)+" AND `key` = 'Mission_Total'");
 	close;
 
 Mission_Info:
