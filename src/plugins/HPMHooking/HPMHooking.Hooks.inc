@@ -45007,32 +45007,6 @@ int HP_pcg_get_idx(GroupSettings *group) {
 	}
 	return retVal___;
 }
-unsigned int HP_pcg_add_permission(const char *name) {
-	int hIndex = 0;
-	unsigned int retVal___ = 0;
-	if( HPMHooks.count.HP_pcg_add_permission_pre ) {
-		unsigned int (*preHookFunc) (const char *name);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pcg_add_permission_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_pcg_add_permission_pre[hIndex].func;
-			retVal___ = preHookFunc(name);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.pcg.add_permission(name);
-	}
-	if( HPMHooks.count.HP_pcg_add_permission_post ) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, const char *name);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pcg_add_permission_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_pcg_add_permission_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, name);
-		}
-	}
-	return retVal___;
-}
 /* pc */
 void HP_pc_init(bool minimal) {
 	int hIndex = 0;

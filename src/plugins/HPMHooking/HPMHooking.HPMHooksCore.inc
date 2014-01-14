@@ -3495,8 +3495,6 @@ struct {
 	struct HPMHookPoint *HP_pcg_get_level_post;
 	struct HPMHookPoint *HP_pcg_get_idx_pre;
 	struct HPMHookPoint *HP_pcg_get_idx_post;
-	struct HPMHookPoint *HP_pcg_add_permission_pre;
-	struct HPMHookPoint *HP_pcg_add_permission_post;
 	struct HPMHookPoint *HP_pc_init_pre;
 	struct HPMHookPoint *HP_pc_init_post;
 	struct HPMHookPoint *HP_pc_final_pre;
@@ -8518,8 +8516,6 @@ struct {
 	int HP_pcg_get_level_post;
 	int HP_pcg_get_idx_pre;
 	int HP_pcg_get_idx_post;
-	int HP_pcg_add_permission_pre;
-	int HP_pcg_add_permission_post;
 	int HP_pc_init_pre;
 	int HP_pc_init_post;
 	int HP_pc_final_pre;
