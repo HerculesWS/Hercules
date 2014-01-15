@@ -13347,8 +13347,6 @@ void clif_parse_CatchPet(int fd, struct map_session_data *sd)
 void clif_parse_SelectEgg(int fd, struct map_session_data *sd)
 {
 	if (sd->menuskill_id != SA_TAMINGMONSTER || sd->menuskill_val != -1) {
-		//Forged packet, disconnect them [Kevin]
-		clif->authfail_fd(fd, 0);
 		return;
 	}
 	pet->select_egg(sd,RFIFOW(fd,2)-2);
