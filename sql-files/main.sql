@@ -639,26 +639,28 @@ CREATE TABLE IF NOT EXISTS `sql_updates` (
 ) ENGINE=MyISAM;
 
 -- Existent updates to enter
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1360858500);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1360951560);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1362445531);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1362528000);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1362794218);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1364409316);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1366075474);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1366078541);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1381354728);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1381423003);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1382892428);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1383162785);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1383167577);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1383205740);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1383955424);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1384545461);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1384588175);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1387844126);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1388854043);
-INSERT INTO `sql_updates` (`timestamp`) VALUES (1389028967);
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1360858500); -- 2013-02-14--16-15.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1360951560); -- 2013-02-15--18-06.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1362445531); -- 2013-03-05--01-05.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1362528000); -- 2013-03-06--00-00.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1362794218); -- 2013-03-09--01-56.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1364409316); -- 2013-03-27--18-35.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1366075474); -- 2013-04-16--01-24.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1366078541); -- 2013-04-16--02-15.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1381354728); -- 2013-10-09--21-38.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1381423003); -- 2013-10-10--16-36.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1382892428); -- 2013-10-27--16-47.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1383162785); -- 2013-10-30--19-53.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1383167577); -- 2013-10-30--21-12.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1383205740); -- 2013-10-31--07-49.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1383955424); -- 2013-11-09--00-03.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1384473995); -- 2013-11-15--00-06.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1384545461); -- 2013-11-15--19-57.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1384588175); -- 2013-11-16--07-49.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1384763034); -- 2013-11-18--08-23.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1387844126); -- 2013-12-24--00-15.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1388854043); -- 2014-01-04--16-47.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1389028967); -- 2014-01-06--17-22.sql
 
 --
 -- Table structure for table `sstatus`
