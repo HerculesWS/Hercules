@@ -52,8 +52,8 @@
 #endif // PACKETVER
 
 #ifndef DISABLE_PACKETVER_RE
-// Comment the following line if your client is NOT ragexeRE (required because of conflicting packets in ragexe vs ragexeRE).
-#define PACKETVER_RE
+	//Uncomment the following line if your client is ragexeRE instead of ragexe (required because of conflicting packets in ragexe vs ragexeRE).
+	//#define PACKETVER_RE
 #endif // DISABLE_PACKETVER_RE
 
 // Client support for experimental RagexeRE UI present in 2012-04-10 and 2012-04-18
