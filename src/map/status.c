@@ -96,7 +96,7 @@ int status_type2relevant_bl_types(int type)
 {
 	if( type < 0 || type >= SI_MAX ) {
 		ShowError("status_type2relevant_bl_types: Unsupported type %d\n", type);
-		return SI_BLANK;
+		return BL_NUL;
 	}
 
 	return status->RelevantBLTypes[type];
