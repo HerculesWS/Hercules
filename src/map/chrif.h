@@ -113,7 +113,7 @@ struct chrif_interface {
 	void (*save_ack) (int fd);
 	int (*reconnect) (DBKey key, DBData *data, va_list ap);
 	int (*auth_db_cleanup_sub) (DBKey key, DBData *data, va_list ap);
-	void (*char_ask_name_answer) (int acc, const char* player_name, uint16 type, uint16 answer);
+	bool (*char_ask_name_answer) (int acc, const char* player_name, uint16 type, uint16 answer);
 	int (*auth_db_final) (DBKey key, DBData *data, va_list ap);
 	int (*send_usercount_tochar) (int tid, int64 tick, int id, intptr_t data);
 	int (*auth_db_cleanup) (int tid, int64 tick, int id, intptr_t data);
@@ -123,7 +123,7 @@ struct chrif_interface {
 	void (*sendmap) (int fd);
 	void (*sendmapack) (int fd);
 	void (*recvmap) (int fd);
-	void (*changemapserverack) (int account_id, int login_id1, int login_id2, int char_id, short map_index, short x, short y, uint32 ip, uint16 port);
+	bool (*changemapserverack) (int account_id, int login_id1, int login_id2, int char_id, short map_index, short x, short y, uint32 ip, uint16 port);
 	void (*changedsex) (int fd);
 	bool (*divorceack) (int char_id, int partner_id);
 	void (*idbanned) (int fd);

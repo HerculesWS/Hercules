@@ -1360,18 +1360,18 @@ int chrif_parse(int fd) {
 	if ( fd != chrif->fd ) {
 		ShowDebug("chrif_parse: Disconnecting invalid session #%d (is not the char-server)\n", fd);
 		do_close(fd);
-		return false;
+		return 0;
 	}
 
 	if ( session[fd]->flag.eof ) {
 		do_close(fd);
 		chrif->fd = -1;
 		chrif->on_disconnect();
-		return false;
+		return 0;
 	} else if ( session[fd]->flag.ping ) {/* we've reached stall time */
 		if( DIFF_TICK(last_tick, session[fd]->rdata_tick) > (stall_time * 2) ) {/* we can't wait any longer */
 			set_eof(fd);
-			return false;
+			return 0;
 		} else if( session[fd]->flag.ping != 2 ) { /* we haven't sent ping out yet */
 			chrif->keepalive(fd);
 			session[fd]->flag.ping = 2;
@@ -1383,7 +1383,7 @@ int chrif_parse(int fd) {
 		if( HPM->packetsc[hpChrif_Parse] ) {
 			if( (r = HPM->parse_packets(fd,hpChrif_Parse)) ) {
 				if( r == 1 ) continue;
-				if( r == 2 ) return false;
+				if( r == 2 ) return 0;
 			}
 		}
 
@@ -1392,22 +1392,22 @@ int chrif_parse(int fd) {
 		if (cmd < 0x2af8 || cmd >= 0x2af8 + ARRAYLENGTH(chrif->packet_len_table) || chrif->packet_len_table[cmd-0x2af8] == 0) {
 			r = intif->parse(fd); // Passed on to the intif
 
-			if (r == 1) continue;		// Treated in intif 
-			if (r == 2) return false;	// Didn't have enough data (len==-1)
+			if (r == 1) continue;	// Treated in intif 
+			if (r == 2) return 0;	// Didn't have enough data (len==-1)
 
 			ShowWarning("chrif_parse: session #%d, intif->parse failed (unrecognized command 0x%.4x).\n", fd, cmd);
 			set_eof(fd);
-			return false;
+			return 0;
 		}
 
 		if ( ( packet_len = chrif->packet_len_table[cmd-0x2af8] ) == -1) { // dynamic-length packet, second WORD holds the length
 			if (RFIFOREST(fd) < 4)
-				return false;
+				return 0;
 			packet_len = RFIFOW(fd,2);
 		}
 
 		if ((int)RFIFOREST(fd) < packet_len)
-			return false;
+			return 0;
 
 		//ShowDebug("Received packet 0x%4x (%d bytes) from char-server (connection %d)\n", RFIFOW(fd,0), packet_len, fd);
 
@@ -1438,13 +1438,13 @@ int chrif_parse(int fd) {
 			default:
 				ShowError("chrif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, cmd);
 				set_eof(fd);
-				return false;
+				return 0;
 		}
 		if ( fd == chrif->fd ) //There's the slight chance we lost the connection during parse, in which case this would segfault if not checked [Skotlex]
 			RFIFOSKIP(fd, packet_len);
 	}
 
-	return true;
+	return 0;
 }
 
 int send_usercount_tochar(int tid, int64 tick, int id, intptr_t data) {
