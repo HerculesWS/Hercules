@@ -9197,6 +9197,8 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 	chrif->authreq(sd,false);
 }
 void clif_hercules_chsys_mjoin(struct map_session_data *sd) {
+	if( sd->state.autotrade || sd->state.standalone )
+		return;
 	if( !map->list[sd->bl.m].channel ) {
 		
 		if (map->list[sd->bl.m].flag.chsysnolocalaj || (map->list[sd->bl.m].instance_id >= 0 && instance->list[map->list[sd->bl.m].instance_id].owner_type != IOT_NONE) )
