@@ -10435,7 +10435,7 @@ void pc_autotrade_prepare(struct map_session_data *sd) {
  **/
 void pc_autotrade_populate(struct map_session_data *sd) {
 	struct autotrade_vending *data;
-	int i, j, cursor = 0;
+	int i, j, k, cursor = 0;
 
 	if( !(data = idb_get(pc->at_db,sd->status.char_id)) )
 		return;
@@ -10444,7 +10444,16 @@ void pc_autotrade_populate(struct map_session_data *sd) {
 		if( !data->vending[i].amount )
 			continue;
 		
-		ARR_FIND(0, MAX_CART, j, !memcmp((char*)(&data->list[i]) + sizeof(data->list[0].id), (char*)(&sd->status.cart[j]) + sizeof(data->list[0].id), sizeof(struct item) - sizeof(data->list[0].id)));
+		for(j = 0; j < MAX_CART; j++) {
+			if( !memcmp((char*)(&data->list[i]) + sizeof(data->list[0].id), (char*)(&sd->status.cart[j]) + sizeof(data->list[0].id), sizeof(struct item) - sizeof(data->list[0].id)) ) {
+				if( cursor ) {
+					ARR_FIND(0, cursor, k, sd->vending[k].index == j);
+					if( k != cursor )
+						continue;
+				}
+				break;
+			}
+		}
 		
 		if( j != MAX_CART ) {
 			sd->vending[cursor].index = j;
