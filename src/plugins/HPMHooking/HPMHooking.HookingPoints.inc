@@ -1777,7 +1777,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pcg->get_name, HP_pcg_get_name) },
 	{ HP_POP(pcg->get_level, HP_pcg_get_level) },
 	{ HP_POP(pcg->get_idx, HP_pcg_get_idx) },
-	{ HP_POP(pcg->add_permission, HP_pcg_add_permission) },
 /* pc */
 	{ HP_POP(pc->init, HP_pc_init) },
 	{ HP_POP(pc->final, HP_pc_final) },
