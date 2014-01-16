@@ -697,6 +697,8 @@ typedef enum sc_type {
 	SC_SUPER_STAR,
 
 	SC_OKTOBERFEST,
+	SC_STRANGELIGHTS,
+	SC_DECORATION_OF_MUSIC,
 	
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
@@ -1458,6 +1460,7 @@ enum si_type {
 	SI_PACKING_ENVELOPE10 = 775,
 	SI_GLASTHEIM_TRANS = 776,
 	SI_HEAT_BARREL_AFTER = 778,
+	SI_DECORATION_OF_MUSIC = 779,
 	SI_MAX,
 };
 // JOINTBEAT stackable ailments
