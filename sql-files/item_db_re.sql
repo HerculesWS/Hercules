@@ -8019,6 +8019,7 @@ REPLACE INTO `item_db_re` VALUES ('18730','Cryptura_Academy_Hat','Criatura Hat',
 REPLACE INTO `item_db_re` VALUES ('18737','Fortier_Mask','Fortier Masque','5','20','10','200','0','0','0','0','0','4294967295','63','2','512','0','10',NULL,'0','876','0','bonus bUnbreakableHelm,0;','','');
 REPLACE INTO `item_db_re` VALUES ('18739','Carnation_Hairband','Carnation Hairband','5','20','10','100','0','0','0','0','0','4294967295','63','2','256','0','0',NULL,'1','878','0','bonus bLuk,1;','','');
 REPLACE INTO `item_db_re` VALUES ('18740','Hair_Of_The_Strong','RMSC2012 Special Costume','5','20','10','0','0','0','0','0','0','4294967295','63','2','1024','0','0',NULL,'0','879','0','','','');
+REPLACE INTO `item_db_re` VALUES ('18741','C_WillOWisp_Accessory','Will O Wisp','5','20','10','0','0','0','0','0','0','4294967295','63','2','1024','0','0',NULL,'0','880','0','','sc_start SC_STRANGELIGHTS,-1,0;','sc_end SC_STRANGELIGHTS;');
 REPLACE INTO `item_db_re` VALUES ('18742','C_MoonStar_Accessory','Moon and Stars','5','20','10','0','0','0','0','0','0','4294967295','63','2','2048','0','0',NULL,'0','881','0','','sc_start SC_MOONSTAR,-1,0;','sc_end SC_MOONSTAR;');
 REPLACE INTO `item_db_re` VALUES ('18743','Spirit_Of_Chung_E','Spirit Of Chung E','5','20','10','0','0','0','0','0','0','4294967295','63','2','1024','0','0',NULL,'0','882','0','','','');
 REPLACE INTO `item_db_re` VALUES ('18744','C_World_Star','Twilight','5','20','10','0','0','0','0','0','0','4294967295','63','2','2048','0','0',NULL,'0','883','0','','sc_start SC_SUPER_STAR,-1,0;','sc_end SC_SUPER_STAR;');
@@ -8142,3 +8143,4 @@ REPLACE INTO `item_db_re` VALUES ('21004','Alca_Bringer_','Alca Bringer','4','20
 REPLACE INTO `item_db_re` VALUES ('21005','Metal_Two_Hand_Sword','Metal Two-Handed Sword','4','20','10','0','95','0','0','1','1','16514','63','2','34','3','0',NULL,'1','3','0','','','');
 REPLACE INTO `item_db_re` VALUES ('22514','Candy_Holder','Candy Holder','11','20','10','10','0','0','0','0','0','4294967295','63','2','0','0','0',NULL,'0','0','0','','','');
 REPLACE INTO `item_db_re` VALUES ('22540','Runstone_Luxanima','Lux Anima Rune','11','2','1','100','0','0','0','0','0','4294967295','63','2','0','0','0',NULL,'0','0','0','itemskill RK_LUXANIMA,1;','','');
+REPLACE INTO `item_db_re` VALUES ('19871','C_DecorationOfMusic_Accessory','Decoration of Music','5','20','10','0','0','0','0','0','0','4294967295','63','2','2048','0','0',NULL,'0','1074','0','','sc_start SC_DECORATION_OF_MUSIC,-1,0;','sc_end SC_DECORATION_OF_MUSIC;');
