@@ -173,13 +173,13 @@ void script_load_mapreg(void) {
 				ShowWarning("load_mapreg: duplicate! '%s' => '%s' skipping...\n",varname,value);
 				continue;
 			}
-			script->set_reg(NULL,NULL,reference_uid(s, i), varname, (void*)value, NULL);
+			mapreg->setregstr(reference_uid(s, i),value);
 		} else {
 			if( i64db_exists(mapreg->db, reference_uid(s, i)) ) {
 				ShowWarning("load_mapreg: duplicate! '%s' => '%s' skipping...\n",varname,value);
 				continue;
 			}
-			script->set_reg(NULL,NULL,reference_uid(s, i), varname, (void*)__64BPTRSIZE(atoi(value)), NULL);
+			mapreg->setreg(reference_uid(s, i),atoi(value));
 		}
 	}
 	
