@@ -251,7 +251,7 @@ bool chrif_save(struct map_session_data *sd, int flag) {
 			ShowError("chrif_save: Failed to set up player %d:%d for proper quitting!\n", sd->status.account_id, sd->status.char_id);
 	}
 
-	chrif_check(-1); //Character is saved on reconnect.
+	chrif_check(false); //Character is saved on reconnect.
 
 	//For data sync
 	if (sd->state.storage_flag == 2)
@@ -361,7 +361,7 @@ bool chrif_changemapserver(struct map_session_data* sd, uint32 ip, uint16 port) 
 		return false;
 	}
 
-	chrif_check(-1);
+	chrif_check(false);
 
 	WFIFOHEAD(chrif->fd,35);
 	WFIFOW(chrif->fd, 0) = 0x2b05;
@@ -1678,7 +1678,6 @@ void chrif_defaults(void) {
 	chrif->buildfamelist = chrif_buildfamelist;
 	chrif->save_scdata = chrif_save_scdata;
 	chrif->ragsrvinfo = chrif_ragsrvinfo;
-	//chrif->char_offline = chrif_char_offline;
 	chrif->char_offline_nsd = chrif_char_offline_nsd;
 	chrif->char_reset_offline = chrif_char_reset_offline;
 	chrif->send_users_tochar = send_users_tochar;

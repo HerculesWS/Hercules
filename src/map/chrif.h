@@ -146,6 +146,6 @@ struct chrif_interface *chrif;
 
 void chrif_defaults(void);
 // There's no need for another function when a simple macro can do exactly the same effect
-#define chrif_char_offline(x) chrif->char_offline_nsd(x->status.account_id,x->status.char_id)
+#define chrif_char_offline(x) chrif->char_offline_nsd((x)->status.account_id,(x)->status.char_id)
 
 #endif /* _CHRIF_H_ */
