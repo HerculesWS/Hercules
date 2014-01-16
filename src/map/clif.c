@@ -5492,10 +5492,10 @@ void clif_status_change_notick(struct block_list *bl,int type,int flag,int tick,
 	
 	nullpo_retv(bl);
 	
-	if (!(status->type2relevant_bl_types(type)&bl->type)) // only send status changes that actually matter to the client
+	if (type == SI_BLANK)  //It shows nothing on the client...
 		return;
 	
-	if (type == SI_BLANK)  //It shows nothing on the client...
+	if (!(status->type2relevant_bl_types(type)&bl->type)) // only send status changes that actually matter to the client
 		return;
 	
 	sd = BL_CAST(BL_PC, bl);
