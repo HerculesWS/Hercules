@@ -139,8 +139,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(chat->trigger_event, HP_chat_trigger_event) },
 	{ HP_POP(chat->create, HP_chat_create) },
 /* chrif */
-	{ HP_POP(chrif->final, HP_chrif_final) },
 	{ HP_POP(chrif->init, HP_chrif_init) },
+	{ HP_POP(chrif->final, HP_chrif_final) },
 	{ HP_POP(chrif->setuserid, HP_chrif_setuserid) },
 	{ HP_POP(chrif->setpasswd, HP_chrif_setpasswd) },
 	{ HP_POP(chrif->checkdefaultlogin, HP_chrif_checkdefaultlogin) },
@@ -165,7 +165,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(chrif->buildfamelist, HP_chrif_buildfamelist) },
 	{ HP_POP(chrif->save_scdata, HP_chrif_save_scdata) },
 	{ HP_POP(chrif->ragsrvinfo, HP_chrif_ragsrvinfo) },
-	{ HP_POP(chrif->char_offline, HP_chrif_char_offline) },
 	{ HP_POP(chrif->char_offline_nsd, HP_chrif_char_offline_nsd) },
 	{ HP_POP(chrif->char_reset_offline, HP_chrif_char_reset_offline) },
 	{ HP_POP(chrif->send_users_tochar, HP_chrif_send_users_tochar) },
