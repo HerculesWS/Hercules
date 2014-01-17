@@ -559,7 +559,7 @@ struct battle_interface {
 	/* the current skill being processed/casted by this unit */
 	int (*get_current_skill) (struct block_list *bl);
 	/* is either this race or element enough to be considered undead? */
-	int (*check_undead) (int race,int element);
+	bool (*check_undead) (int race,int element);
 	/* check if src and target are part of flag (e.g. enemies or allies) */
 	int (*check_target) (struct block_list *src, struct block_list *target,int flag);
 	/* is src and bl within range? */

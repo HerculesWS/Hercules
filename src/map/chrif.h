@@ -61,13 +61,13 @@ struct chrif_interface {
 	char userid[NAME_LENGTH], passwd[NAME_LENGTH];
 	int state;
 	/* */
-	int (*final) (void);
-	int (*init) (bool minimal);
+	void (*init) (bool minimal);
+	void (*final) (void);
 	/* funcs */
 	void (*setuserid) (char* id);
 	void (*setpasswd) (char* pwd);
 	void (*checkdefaultlogin) (void);
-	int (*setip) (const char* ip);
+	bool (*setip) (const char* ip);
 	void (*setport) (uint16 port);
 	
 	int (*isconnected) (void);
@@ -80,31 +80,31 @@ struct chrif_interface {
 	
 	void (*authreq) (struct map_session_data* sd, bool hstandalone);
 	void (*authok) (int fd);
-	int (*scdata_request) (int account_id, int char_id);
-	int (*save) (struct map_session_data* sd, int flag);
-	int (*charselectreq) (struct map_session_data* sd, uint32 s_ip);
-	int (*changemapserver) (struct map_session_data* sd, uint32 ip, uint16 port);
+	bool (*scdata_request) (int account_id, int char_id);
+	bool (*save) (struct map_session_data* sd, int flag);
+	bool (*charselectreq) (struct map_session_data* sd, uint32 s_ip);
+	bool (*changemapserver) (struct map_session_data* sd, uint32 ip, uint16 port);
 	
-	int (*searchcharid) (int char_id);
-	int (*changeemail) (int id, const char *actual_email, const char *new_email);
-	int (*char_ask_name) (int acc, const char* character_name, unsigned short operation_type, int year, int month, int day, int hour, int minute, int second);
+	bool (*searchcharid) (int char_id);
+	bool (*changeemail) (int id, const char *actual_email, const char *new_email);
+	bool (*char_ask_name) (int acc, const char* character_name, unsigned short operation_type, int year, int month, int day, int hour, int minute, int second);
 	int (*updatefamelist) (struct map_session_data *sd);
-	int (*buildfamelist) (void);
-	int (*save_scdata) (struct map_session_data *sd);
-	int (*ragsrvinfo) (int base_rate,int job_rate, int drop_rate);
-	int (*char_offline) (struct map_session_data *sd);
-	int (*char_offline_nsd) (int account_id, int char_id);
-	int (*char_reset_offline) (void);
-	int (*send_users_tochar) (void);
-	int (*char_online) (struct map_session_data *sd);
-	int (*changesex) (struct map_session_data *sd);
+	bool (*buildfamelist) (void);
+	bool (*save_scdata) (struct map_session_data *sd);
+	bool (*ragsrvinfo) (int base_rate,int job_rate, int drop_rate);
+	//int (*char_offline) (struct map_session_data *sd);
+	bool (*char_offline_nsd) (int account_id, int char_id);
+	bool (*char_reset_offline) (void);
+	bool (*send_users_tochar) (void);
+	bool (*char_online) (struct map_session_data *sd);
+	bool (*changesex) (struct map_session_data *sd);
 	//int (*chardisconnect) (struct map_session_data *sd); // FIXME: Commented out in clif.c, function does not exist
-	int (*divorce) (int partner_id1, int partner_id2);
+	bool (*divorce) (int partner_id1, int partner_id2);
 	
-	int (*removefriend) (int char_id, int friend_id);
+	bool (*removefriend) (int char_id, int friend_id);
 	void (*send_report) (char* buf, int len);
 			
-	int (*flush_fifo) (void);
+	bool (*flush_fifo) (void);
 	void (*skillid2idx) (int fd);
 	
 	bool (*sd_to_auth) (TBL_PC* sd, enum sd_state state);
@@ -113,29 +113,29 @@ struct chrif_interface {
 	void (*save_ack) (int fd);
 	int (*reconnect) (DBKey key, DBData *data, va_list ap);
 	int (*auth_db_cleanup_sub) (DBKey key, DBData *data, va_list ap);
-	void (*char_ask_name_answer) (int acc, const char* player_name, uint16 type, uint16 answer);
+	bool (*char_ask_name_answer) (int acc, const char* player_name, uint16 type, uint16 answer);
 	int (*auth_db_final) (DBKey key, DBData *data, va_list ap);
 	int (*send_usercount_tochar) (int tid, int64 tick, int id, intptr_t data);
 	int (*auth_db_cleanup) (int tid, int64 tick, int id, intptr_t data);
 
-	int (*connect) (int fd);
-	int (*connectack) (int fd);
-	int (*sendmap) (int fd);
-	int (*sendmapack) (int fd);
-	int (*recvmap) (int fd);
-	int (*changemapserverack) (int account_id, int login_id1, int login_id2, int char_id, short map_index, short x, short y, uint32 ip, uint16 port);
-	int (*changedsex) (int fd);
-	int (*divorceack) (int char_id, int partner_id);
-	int (*idbanned) (int fd);
-	int (*recvfamelist) (int fd);
-	int (*load_scdata) (int fd);
+	void (*connect) (int fd);
+	void (*connectack) (int fd);
+	void (*sendmap) (int fd);
+	void (*sendmapack) (int fd);
+	void (*recvmap) (int fd);
+	bool (*changemapserverack) (int account_id, int login_id1, int login_id2, int char_id, short map_index, short x, short y, uint32 ip, uint16 port);
+	void (*changedsex) (int fd);
+	bool (*divorceack) (int char_id, int partner_id);
+	void (*idbanned) (int fd);
+	void (*recvfamelist) (int fd);
+	bool (*load_scdata) (int fd);
 	void (*update_ip) (int fd);
 	int (*disconnectplayer) (int fd);
-	int (*removemap) (int fd);
+	void (*removemap) (int fd);
 	int (*updatefamelist_ack) (int fd);
 	void (*keepalive)(int fd);
 	void (*keepalive_ack) (int fd);
-	int (*deadopt) (int father_id, int mother_id, int child_id);
+	void (*deadopt) (int father_id, int mother_id, int child_id);
 	void (*authfail) (int fd);
 	void (*on_ready) (void);
 	void (*on_disconnect) (void);
@@ -145,5 +145,7 @@ struct chrif_interface {
 struct chrif_interface *chrif;
 
 void chrif_defaults(void);
+// There's no need for another function when a simple macro can do exactly the same effect
+#define chrif_char_offline(x) chrif->char_offline_nsd((x)->status.account_id,(x)->status.char_id)
 
 #endif /* _CHRIF_H_ */

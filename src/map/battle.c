@@ -5747,21 +5747,21 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 #undef GET_NORMAL_ATTACK
 #undef GET_NORMAL_ATTACK2
 
-int battle_check_undead(int race,int element)
+bool battle_check_undead(int race,int element)
 {
 	if(battle_config.undead_detect_type == 0) {
 		if(element == ELE_UNDEAD)
-			return 1;
+			return true;
 	}
 	else if(battle_config.undead_detect_type == 1) {
 		if(race == RC_UNDEAD)
-			return 1;
+			return true;
 	}
 	else {
 		if(element == ELE_UNDEAD || race == RC_UNDEAD)
-			return 1;
+			return true;
 	}
-	return 0;
+	return false;
 }
 
 //Returns the upmost level master starting with the given object

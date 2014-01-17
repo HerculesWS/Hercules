@@ -14154,7 +14154,7 @@ void clif_parse_FriendsListRemove(int fd, struct map_session_data *sd)
 		}
 
 	} else { //friend not online -- ask char server to delete from his friendlist
-		if(chrif->removefriend(char_id,sd->status.char_id)) { // char-server offline, abort
+		if(!chrif->removefriend(char_id,sd->status.char_id)) { // char-server offline, abort
 			clif->message(fd, msg_txt(673)); //"This action can't be performed at the moment. Please try again later."
 			return;
 		}

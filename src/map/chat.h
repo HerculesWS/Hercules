@@ -36,18 +36,18 @@ struct chat_data {
 struct chat_interface {
 	
 	/* funcs */
-	int (*create_pc_chat) (struct map_session_data* sd, const char* title, const char* pass, int limit, bool pub);
-	int (*join) (struct map_session_data* sd, int chatid, const char* pass);
+	bool (*create_pc_chat) (struct map_session_data* sd, const char* title, const char* pass, int limit, bool pub);
+	bool (*join) (struct map_session_data* sd, int chatid, const char* pass);
 	int (*leave) (struct map_session_data* sd, bool kicked);
-	int (*change_owner) (struct map_session_data* sd, const char* nextownername);
-	int (*change_status) (struct map_session_data* sd, const char* title, const char* pass, int limit, bool pub);
-	int (*kick) (struct map_session_data* sd, const char* kickusername);
-	int (*create_npc_chat) (struct npc_data* nd, const char* title, int limit, bool pub, int trigger, const char* ev, int zeny, int minLvl, int maxLvl);
-	int (*delete_npc_chat) (struct npc_data* nd);
-	int (*enable_event) (struct chat_data* cd);
-	int (*disable_event) (struct chat_data* cd);
-	int (*npc_kick_all) (struct chat_data* cd);
-	int (*trigger_event) (struct chat_data *cd);
+	bool (*change_owner) (struct map_session_data* sd, const char* nextownername);
+	bool (*change_status) (struct map_session_data* sd, const char* title, const char* pass, int limit, bool pub);
+	bool (*kick) (struct map_session_data* sd, const char* kickusername);
+	bool (*create_npc_chat) (struct npc_data* nd, const char* title, int limit, bool pub, int trigger, const char* ev, int zeny, int minLvl, int maxLvl);
+	bool (*delete_npc_chat) (struct npc_data* nd);
+	bool (*enable_event) (struct chat_data* cd);
+	bool (*disable_event) (struct chat_data* cd);
+	bool (*npc_kick_all) (struct chat_data* cd);
+	bool (*trigger_event) (struct chat_data *cd);
 	struct chat_data* (*create) (struct block_list* bl, const char* title, const char* pass, int limit, bool pub, int trigger, const char* ev, int zeny, int minLvl, int maxLvl);
 };
 

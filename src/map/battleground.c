@@ -42,12 +42,12 @@ struct map_session_data* bg_getavailablesd(struct battleground_data *bgd) {
 }
 
 /// Deletes BG Team from db
-int bg_team_delete(int bg_id) {
+bool bg_team_delete(int bg_id) {
 	int i;
 	struct map_session_data *sd;
 	struct battleground_data *bgd = bg->team_search(bg_id);
 
-	if( bgd == NULL ) return 0;
+	if( bgd == NULL ) return false;
 	for( i = 0; i < MAX_BG_MEMBERS; i++ ) {
 		if( (sd = bgd->members[i].sd) == NULL )
 			continue;
@@ -56,35 +56,34 @@ int bg_team_delete(int bg_id) {
 		sd->bg_id = 0;
 	}
 	idb_remove(bg->team_db, bg_id);
-	return 1;
+	return true;
 }
 
 /// Warps a Team
-int bg_team_warp(int bg_id, unsigned short map_index, short x, short y) {
+bool bg_team_warp(int bg_id, unsigned short map_index, short x, short y) {
 	int i;
 	struct battleground_data *bgd = bg->team_search(bg_id);
-	if( bgd == NULL ) return 0;
+	if( bgd == NULL ) return false;
 	for( i = 0; i < MAX_BG_MEMBERS; i++ )
 		if( bgd->members[i].sd != NULL ) pc->setpos(bgd->members[i].sd, map_index, x, y, CLR_TELEPORT);
-	return 1;
+	return true;
 }
 
-int bg_send_dot_remove(struct map_session_data *sd) {
+void bg_send_dot_remove(struct map_session_data *sd) {
 	if( sd && sd->bg_id )
 		clif->bg_xy_remove(sd);
-	return 0;
 }
 
 /// Player joins team
-int bg_team_join(int bg_id, struct map_session_data *sd) {
+bool bg_team_join(int bg_id, struct map_session_data *sd) {
 	int i;
 	struct battleground_data *bgd = bg->team_search(bg_id);
 	struct map_session_data *pl_sd;
 
-	if( bgd == NULL || sd == NULL || sd->bg_id ) return 0;
+	if( bgd == NULL || sd == NULL || sd->bg_id ) return false;
 
 	ARR_FIND(0, MAX_BG_MEMBERS, i, bgd->members[i].sd == NULL);
-	if( i == MAX_BG_MEMBERS ) return 0; // No free slots
+	if( i == MAX_BG_MEMBERS ) return false; // No free slots
 
 	sd->bg_id = bg_id;
 	bgd->members[i].sd = sd;
@@ -110,7 +109,7 @@ int bg_team_join(int bg_id, struct map_session_data *sd) {
 
 	clif->bg_hp(sd);
 	clif->bg_xy(sd);
-	return 1;
+	return true;
 }
 
 /// Single Player leaves team
@@ -156,16 +155,16 @@ int bg_team_leave(struct map_session_data *sd, int flag) {
 }
 
 /// Respawn after killed
-int bg_member_respawn(struct map_session_data *sd) {
+bool bg_member_respawn(struct map_session_data *sd) {
 	struct battleground_data *bgd;
 	if( sd == NULL || !pc_isdead(sd) || !sd->bg_id || (bgd = bg->team_search(sd->bg_id)) == NULL )
-		return 0;
+		return false;
 	if( bgd->mapindex == 0 )
-		return 0; // Respawn not handled by Core
+		return false; // Respawn not handled by Core
 	pc->setpos(sd, bgd->mapindex, bgd->x, bgd->y, CLR_OUTSIGHT);
 	status->revive(&sd->bl, 1, 100);
 
-	return 1; // Warped
+	return true; // Warped
 }
 
 int bg_create(unsigned short map_index, short rx, short ry, const char *ev, const char *dev) {
@@ -219,14 +218,14 @@ int bg_team_get_id(struct block_list *bl) {
 	return 0;
 }
 
-int bg_send_message(struct map_session_data *sd, const char *mes, int len) {
+bool bg_send_message(struct map_session_data *sd, const char *mes, int len) {
 	struct battleground_data *bgd;
 
 	nullpo_ret(sd);
 	if( sd->bg_id == 0 || (bgd = bg->team_search(sd->bg_id)) == NULL )
-		return 0;
+		return false; // Couldn't send message
 	clif->bg_message(bgd, sd->bl.id, sd->status.name, mes, len);
-	return 0;
+	return true;
 }
 
 /**
