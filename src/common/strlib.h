@@ -70,13 +70,11 @@ struct strlib_interface {
 	char *(*normalize_name) (char* str,const char* delims);
 	const char *(*stristr) (const char *haystack, const char *needle);
 		
-#if !(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)
+	/* only used when '!(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)', needs to be defined at all times however  */
 	size_t (*strnlen) (const char* string, size_t maxlen);
-#endif
-	
-#if defined(WIN32) && defined(_MSC_VER) && _MSC_VER <= 1200
+
+	/* only used when 'defined(WIN32) && defined(_MSC_VER) && _MSC_VER <= 1200', needs to be defined at all times however  */
 	uint64 (*strtoull) (const char* str, char** endptr, int base);
-#endif
 	
 	int (*e_mail_check) (char* email);
 	int (*config_switch) (const char* str);
