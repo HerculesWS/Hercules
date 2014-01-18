@@ -36,8 +36,8 @@ typedef struct FILELIST {
 } FILELIST;
 
 #define FILELIST_TYPE_FILE           0x01 // entry is a file
-#define FILELIST_TYPE_ENCRYPT_HEADER 0x04 // encryption mode 1 (header DES only)
 #define FILELIST_TYPE_ENCRYPT_MIXED  0x02 // encryption mode 0 (header DES + periodic DES/shuffle)
+#define FILELIST_TYPE_ENCRYPT_HEADER 0x04 // encryption mode 1 (header DES only)
 
 //gentry ... > 0  : data read from a grf file (gentry_table[gentry-1])
 //gentry ... 0    : data read from a local file (data directory)

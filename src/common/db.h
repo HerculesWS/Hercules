@@ -71,10 +71,10 @@
  * @see #db_custom_release(DBRelease)
  */
 typedef enum DBRelease {
-	DB_RELEASE_NOTHING = 0,
-	DB_RELEASE_KEY     = 1,
-	DB_RELEASE_DATA    = 2,
-	DB_RELEASE_BOTH    = 3
+	DB_RELEASE_NOTHING = 0x0,
+	DB_RELEASE_KEY     = 0x1,
+	DB_RELEASE_DATA    = 0x2,
+	DB_RELEASE_BOTH    = DB_RELEASE_KEY|DB_RELEASE_DATA,
 } DBRelease;
 
 /**
@@ -127,13 +127,13 @@ typedef enum DBType {
  * @see #db_alloc(const char *,int,DBType,DBOptions,unsigned short)
  */
 typedef enum DBOptions {
-	DB_OPT_BASE            = 0,
-	DB_OPT_DUP_KEY         = 1,
-	DB_OPT_RELEASE_KEY     = 2,
-	DB_OPT_RELEASE_DATA    = 4,
-	DB_OPT_RELEASE_BOTH    = 6,
-	DB_OPT_ALLOW_NULL_KEY  = 8,
-	DB_OPT_ALLOW_NULL_DATA = 16,
+	DB_OPT_BASE            = 0x00,
+	DB_OPT_DUP_KEY         = 0x01,
+	DB_OPT_RELEASE_KEY     = 0x02,
+	DB_OPT_RELEASE_DATA    = 0x04,
+	DB_OPT_RELEASE_BOTH    = DB_OPT_RELEASE_KEY|DB_OPT_RELEASE_DATA,
+	DB_OPT_ALLOW_NULL_KEY  = 0x08,
+	DB_OPT_ALLOW_NULL_DATA = 0x10,
 } DBOptions;
 
 /**

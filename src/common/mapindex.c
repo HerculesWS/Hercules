@@ -193,7 +193,7 @@ void mapindex_defaults(void) {
 	mapindex = &mapindex_s;
 
 	/* TODO: place it in inter-server.conf? */
-	snprintf(mapindex->config_file, 80, "%s","db/map_index.txt");
+	snprintf(mapindex->config_file, sizeof(mapindex->config_file), "%s","db/map_index.txt");
 	/* */
 	mapindex->db = NULL;
 	mapindex->num = 0;

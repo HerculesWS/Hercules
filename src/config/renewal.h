@@ -74,7 +74,6 @@
 #define RENEWAL_EDP
 
 /// renewal ASPD [malufett]
-/// (disable by commenting the line)
 ///
 /// leave this line to enable renewal ASPD
 /// - shield penalty is applied
