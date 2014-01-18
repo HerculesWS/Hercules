@@ -27,6 +27,11 @@ unsigned int get_percentage(const unsigned int A, const unsigned int B);
 
 const char* timestamp2string(char* str, size_t size, time_t timestamp, const char* format);
 
+// Some might say that checking bits is more optimized n&1
+// I've checked with gcc and both codes translate to the same instruction [panikon]
+#define is_odd(n) ( ((n)%2) != 0 )
+#define is_even(n) ( ((n)%2) == 0 )
+
 //////////////////////////////////////////////////////////////////////////
 // byte word dword access [Shinomori]
 //////////////////////////////////////////////////////////////////////////

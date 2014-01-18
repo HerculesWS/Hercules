@@ -7761,14 +7761,14 @@ ACMD(cash)
 				// If this option is set, the message is already sent by pc function
 				if( !battle_config.cashshop_show_points ){
 					sprintf(output, msg_txt(505), ret, sd->cashPoints);
-					clif->disp_onlyself(sd, output, strlen(output));
+					clif_disp_onlyself(sd, output, strlen(output));
 				}
 			} else
 				clif->message(fd, msg_txt(149)); // Unable to decrease the number/value.
 		} else {
 			if( (ret=pc->paycash(sd, -value, 0)) >= 0){
 			    sprintf(output, msg_txt(410), ret, sd->cashPoints);
-			    clif->disp_onlyself(sd, output, strlen(output));
+			    clif_disp_onlyself(sd, output, strlen(output));
 			} else
 				clif->message(fd, msg_txt(41)); // Unable to decrease the number/value.
 		}
@@ -7778,14 +7778,14 @@ ACMD(cash)
 				// If this option is set, the message is already sent by pc function
 				if( !battle_config.cashshop_show_points ){
 					sprintf(output, msg_txt(506), ret, sd->kafraPoints);
-					clif->disp_onlyself(sd, output, strlen(output));
+					clif_disp_onlyself(sd, output, strlen(output));
 				}
 			} else
 				clif->message(fd, msg_txt(149)); // Unable to decrease the number/value.
 		} else {
 			if( (ret=pc->paycash(sd, -value, -value)) >= 0){
 			    sprintf(output, msg_txt(411), ret, sd->kafraPoints);
-			    clif->disp_onlyself(sd, output, strlen(output));
+			    clif_disp_onlyself(sd, output, strlen(output));
 			} else
 				clif->message(fd, msg_txt(41)); // Unable to decrease the number/value.
 		}
@@ -7879,7 +7879,7 @@ ACMD(request)
 	
 	sprintf(atcmd_output, msg_txt(278), message);	// (@request): %s
 	intif->wis_message_to_gm(sd->status.name, PC_PERM_RECEIVE_REQUESTS, atcmd_output);
-	clif->disp_onlyself(sd, atcmd_output, strlen(atcmd_output));
+	clif_disp_onlyself(sd, atcmd_output, strlen(atcmd_output));
 	clif->message(sd->fd,msg_txt(279));	// @request sent.
 	return true;
 }

@@ -48,7 +48,7 @@ static int duel_showinfo_sub(struct map_session_data* sd, va_list va)
 	if (sd->duel_group != ssd->duel_group) return 0;
 	
 	sprintf(output, "      %d. %s", ++(*p), sd->status.name);
-	clif->disp_onlyself(ssd, output, strlen(output));
+	clif_disp_onlyself(ssd, output, strlen(output));
 	return 1;
 }
 
@@ -68,7 +68,7 @@ void duel_showinfo(const unsigned int did, struct map_session_data* sd) {
 			duel->list[did].members_count,
 			duel->list[did].members_count + duel->list[did].invites_count);
 
-	clif->disp_onlyself(sd, output, strlen(output));
+	clif_disp_onlyself(sd, output, strlen(output));
 	map->foreachpc(duel_showinfo_sub, sd, &p);
 }
 
@@ -86,7 +86,7 @@ int duel_create(struct map_session_data* sd, const unsigned int maxpl) {
 	duel->list[i].max_players_limit = maxpl;
 	
 	strcpy(output, msg_txt(372)); // " -- Duel has been created (@invite/@leave) --"
-	clif->disp_onlyself(sd, output, strlen(output));
+	clif_disp_onlyself(sd, output, strlen(output));
 	
 	clif->map_property(sd, MAPPROPERTY_FREEPVPZONE);
 	clif->maptypeproperty2(&sd->bl,SELF);
