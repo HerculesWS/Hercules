@@ -15044,7 +15044,7 @@ BUILDIN(checkidle) {
 		sd = script->rid2sd(st);
 
 	if (sd)
-		script_pushint(st, DIFF_TICK32(last_tick, sd->idletime)); // TODO: change this to int64 when we'll support 64 bit script values
+		script_pushint(st, DIFF_TICK32(sockt->last_tick, sd->idletime)); // TODO: change this to int64 when we'll support 64 bit script values
 	else
 		script_pushint(st, 0);
 

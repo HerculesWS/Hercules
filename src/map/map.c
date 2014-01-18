@@ -5113,7 +5113,7 @@ void do_final(void)
 
 	map->id_db->foreach(map->id_db,map->cleanup_db_sub);
 	chrif->char_reset_offline();
-	chrif->flush_fifo();
+	chrif->flush();
 
 	atcommand->final();
 	battle->final();
@@ -5200,7 +5200,7 @@ void do_abort(void)
 	}
 	ShowError("Server received crash signal! Attempting to save all online characters!\n");
 	map->foreachpc(map->abort_sub);
-	chrif->flush_fifo();
+	chrif->flush();
 }
 
 /*======================================================
@@ -5524,13 +5524,13 @@ int do_init(int argc, char *argv[])
 
 		if (!map->ip_set || !map->char_ip_set) {
 			char ip_str[16];
-			ip2str(addr_[0], ip_str);
+			ip2str(sockt->addr_[0], ip_str);
 
 			ShowWarning("Not all IP addresses in /conf/map-server.conf configured, autodetecting...\n");
 
-			if (naddr_ == 0)
+			if (sockt->naddr_ == 0)
 				ShowError("Unable to determine your IP address...\n");
-			else if (naddr_ > 1)
+			else if (sockt->naddr_ > 1)
 				ShowNotice("Multiple interfaces detected...\n");
 
 			ShowInfo("Defaulting to %s as our IP address\n", ip_str);

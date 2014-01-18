@@ -107,73 +107,93 @@ struct hSockOpt {
 	unsigned int setTimeo : 1;
 };
 
-// Data prototype declaration
-
-struct socket_data **session;
-
-extern int fd_max;
-
-extern time_t last_tick;
-extern time_t stall_time;
-
-//////////////////////////////////
-// some checking on sockets
-extern bool session_isValid(int fd);
-extern bool session_isActive(int fd);
-//////////////////////////////////
-
-// Function prototype declaration
-
-int make_listen_bind(uint32 ip, uint16 port);
-int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt);
-int realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size);
-int realloc_writefifo(int fd, size_t addition);
-int WFIFOSET(int fd, size_t len);
-int RFIFOSKIP(int fd, size_t len);
-
-int do_sockets(int next);
-void do_close(int fd);
-void socket_init(void);
-void socket_final(void);
-
-extern void flush_fifo(int fd);
-extern void flush_fifos(void);
-extern void set_nonblocking(int fd, unsigned long yes);
-
-void set_defaultparse(ParseFunc defaultparse);
-
-// hostname/ip conversion functions
-uint32 host2ip(const char* hostname);
-const char* ip2str(uint32 ip, char ip_str[16]);
-uint32 str2ip(const char* ip_str);
-// Note: purposely returns four comma-separated arguments
-#define CONVIP(ip) ((ip)>>24)&0xFF,((ip)>>16)&0xFF,((ip)>>8)&0xFF,((ip)>>0)&0xFF
-#define MAKEIP(a,b,c,d) ((uint32)( ( ( (a)&0xFF ) << 24 ) | ( ( (b)&0xFF ) << 16 ) | ( ( (c)&0xFF ) << 8 ) | ( ( (d)&0xFF ) << 0 ) ))
-uint16 ntows(uint16 netshort);
-
-int socket_getips(uint32* ips, int max);
-
-extern uint32 addr_[16];   // ip addresses of local host (host byte order)
-extern int naddr_;   // # of ip addresses
-
-void set_eof(int fd);
-
-/* [Ind/Hercules] - socket_datasync */
-void socket_datasync(int fd, bool send);
-
-/// Use a shortlist of sockets instead of iterating all sessions for sockets 
+/// Use a shortlist of sockets instead of iterating all sessions for sockets
 /// that have data to send or need eof handling.
 /// Adapted to use a static array instead of a linked list.
 ///
 /// @author Buuyo-tama
 #define SEND_SHORTLIST
 
-#ifdef SEND_SHORTLIST
-// Add a fd to the shortlist so that it'll be recognized as a fd that needs
-// sending done on it.
-void send_shortlist_add_fd(int fd);
-// Do pending network sends (and eof handling) from the shortlist.
-void send_shortlist_do_sends();
-#endif
+// Note: purposely returns four comma-separated arguments
+#define CONVIP(ip) ((ip)>>24)&0xFF,((ip)>>16)&0xFF,((ip)>>8)&0xFF,((ip)>>0)&0xFF
+#define MAKEIP(a,b,c,d) ((uint32)( ( ( (a)&0xFF ) << 24 ) | ( ( (b)&0xFF ) << 16 ) | ( ( (c)&0xFF ) << 8 ) | ( ( (d)&0xFF ) << 0 ) ))
+
+/**
+ * This stays out of the interface.
+ **/
+struct socket_data **session;
+
+/**
+ * Socket.c interface, mostly for reading however.
+ **/
+struct socket_interface {
+	int fd_max;
+	/* */
+	time_t stall_time;
+	time_t last_tick;
+	/* */
+	uint32 addr_[16];   // ip addresses of local host (host byte order)
+	int naddr_;   // # of ip addresses
+	/* */
+	void (*init) (void);
+	void (*final) (void);
+	/* */
+	int (*perform) (int next);
+	/* [Ind/Hercules] - socket_datasync */
+	void (*datasync) (int fd, bool send);
+	/* */
+	int (*make_listen_bind) (uint32 ip, uint16 port);
+	int (*make_connection) (uint32 ip, uint16 port, struct hSockOpt *opt);
+	int (*realloc_fifo) (int fd, unsigned int rfifo_size, unsigned int wfifo_size);
+	int (*realloc_writefifo) (int fd, size_t addition);
+	int (*WFIFOSET) (int fd, size_t len);
+	int (*RFIFOSKIP) (int fd, size_t len);
+	void (*close) (int fd);
+	/* */
+	bool (*session_isValid) (int fd);
+	bool (*session_isActive) (int fd);
+	/* */
+	void (*flush_fifo) (int fd);
+	void (*flush_fifos) (void);
+	void (*set_nonblocking) (int fd, unsigned long yes);
+	void (*set_defaultparse) (ParseFunc defaultparse);
+	/* hostname/ip conversion functions */
+	uint32 (*host2ip) (const char* hostname);
+	const char * (*ip2str) (uint32 ip, char ip_str[16]);
+	uint32 (*str2ip) (const char* ip_str);
+	/* */
+	uint16 (*ntows) (uint16 netshort);
+	/* */
+	int (*getips) (uint32* ips, int max);
+	/* */
+	void (*set_eof) (int fd);
+};
+
+struct socket_interface *sockt;
+
+void socket_defaults(void);
+
+/* the purpose of these macros is simply to not make calling them be an annoyance */
+#ifndef _H_SOCKET_C_
+	#define make_listen_bind(ip, port) ( sockt->make_listen_bind(ip, port) )
+	#define make_connection(ip, port, opt) ( sockt->make_connection(ip, port, opt) )
+	#define realloc_fifo(fd, rfifo_size, wfifo_size) ( sockt->realloc_fifo(fd, rfifo_size, wfifo_size) )
+	#define realloc_writefifo(fd, addition) ( sockt->realloc_writefifo(fd, addition) )
+	#define WFIFOSET(fd, len) ( sockt->WFIFOSET(fd, len) )
+	#define RFIFOSKIP(fd, len) ( sockt->RFIFOSKIP(fd, len) )
+	#define do_close(fd) ( sockt->close(fd) )
+	#define session_isValid(fd) ( sockt->session_isValid(fd) )
+	#define session_isActive(fd) ( sockt->session_isActive(fd) )
+	#define flush_fifo(fd) ( sockt->flush_fifo(fd) )
+	#define flush_fifos() ( sockt->flush_fifos() )
+	#define set_nonblocking(fd, yes) ( sockt->set_nonblocking(fd, yes) )
+	#define set_defaultparse(defaultparse) ( sockt->set_defaultparse(defaultparse) )
+	#define host2ip(hostname) ( sockt->host2ip(hostname) )
+	#define ip2str(ip, ip_str) ( sockt->ip2str(ip, ip_str) )
+	#define str2ip(ip_str) ( sockt->str2ip(ip_str) )
+	#define ntows(netshort) ( sockt->ntows(netshort) )
+	#define getips(ips, max) ( sockt->getips(ips, max) )
+	#define set_eof(fd) ( sockt->set_eof(fd) )
+#endif /* _H_SOCKET_C_ */
 
 #endif /* _SOCKET_H_ */

@@ -287,6 +287,7 @@ void core_defaults(void) {
 	sql_defaults();
 	timer_defaults();
 	db_defaults();
+	socket_defaults();
 #endif
 }
 /*======================================
@@ -350,14 +351,14 @@ int main (int argc, char **argv) {
 	HPM->init();
 #endif
 		
-	socket_init();
+	sockt->init();
 
 	do_init(argc,argv);
 	{// Main runtime cycle
 		int next;
 		while (runflag != CORE_ST_STOP) {
-			next = timer->do_timer(timer->gettick_nocache());
-			do_sockets(next);
+			next = timer->perform(timer->gettick_nocache());
+			sockt->perform(next);
 		}
 	}
 
@@ -368,7 +369,7 @@ int main (int argc, char **argv) {
 	HPM->final();
 #endif
 	timer->final();
-	socket_final();
+	sockt->final();
 	DB->final();
 	rathread_final();
 #endif

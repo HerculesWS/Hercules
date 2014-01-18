@@ -426,7 +426,7 @@ void chrif_connectack(int fd) {
 		guild->castle_map_init();
 	}
 	
-	socket_datasync(fd, true);
+	sockt->datasync(fd, true);
 	chrif->skillid2idx(fd);
 }
 
@@ -1251,7 +1251,7 @@ bool chrif_char_offline_nsd(int account_id, int char_id) {
 /*=========================================
  * Tell char-server to reset all chars offline [Wizputer]
  *-----------------------------------------*/
-bool chrif_flush_fifo(void) {
+bool chrif_flush(void) {
 	chrif_check(false);
 
 	set_nonblocking(chrif->fd, 0);
@@ -1372,7 +1372,7 @@ int chrif_parse(int fd) {
 		chrif->on_disconnect();
 		return 0;
 	} else if ( session[fd]->flag.ping ) {/* we've reached stall time */
-		if( DIFF_TICK(last_tick, session[fd]->rdata_tick) > (stall_time * 2) ) {/* we can't wait any longer */
+		if( DIFF_TICK(sockt->last_tick, session[fd]->rdata_tick) > (sockt->stall_time * 2) ) {/* we can't wait any longer */
 			set_eof(fd);
 			return 0;
 		} else if( session[fd]->flag.ping != 2 ) { /* we haven't sent ping out yet */
@@ -1423,7 +1423,7 @@ int chrif_parse(int fd) {
 			case 0x2b04: chrif->recvmap(fd); break;
 			case 0x2b06: chrif->changemapserverack(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14), RFIFOW(fd,18), RFIFOW(fd,20), RFIFOW(fd,22), RFIFOL(fd,24), RFIFOW(fd,28)); break;
 			case 0x2b09: map->addnickdb(RFIFOL(fd,2), (char*)RFIFOP(fd,6)); break;
-			case 0x2b0a: socket_datasync(fd, false); break;
+			case 0x2b0a: sockt->datasync(fd, false); break;
 			case 0x2b0d: chrif->changedsex(fd); break;
 			case 0x2b0f: chrif->char_ask_name_answer(RFIFOL(fd,2), (char*)RFIFOP(fd,6), RFIFOW(fd,30), RFIFOW(fd,32)); break;
 			case 0x2b12: chrif->divorceack(RFIFOL(fd,2), RFIFOL(fd,6)); break;
@@ -1692,7 +1692,7 @@ void chrif_defaults(void) {
 	chrif->removefriend = chrif_removefriend;
 	chrif->send_report = chrif_send_report;
 		
-	chrif->flush_fifo = chrif_flush_fifo;
+	chrif->flush = chrif_flush;
 	chrif->skillid2idx = chrif_skillid2idx;
 	
 	chrif->sd_to_auth = chrif_sd_to_auth;

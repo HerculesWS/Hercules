@@ -468,7 +468,7 @@ void timer_defaults(void) {
 	timer->addtick = timer_addtick;
 	timer->settick = timer_settick;
 	timer->get_uptime = timer_get_uptime;
-	timer->do_timer = do_timer;
+	timer->perform = do_timer;
 	timer->init = timer_init;
 	timer->final = timer_final;
 }

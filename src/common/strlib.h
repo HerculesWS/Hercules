@@ -190,4 +190,5 @@ void strlib_defaults(void);
 	#define strline(str,pos)             (strlib->strline((str),(pos)))
 	#define bin2hex(output,input,count)  (strlib->bin2hex((output),(input),(count)))
 #endif /* STRLIB_C */
+
 #endif /* _STRLIB_H_ */

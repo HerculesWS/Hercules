@@ -9847,7 +9847,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 	}
 
 	if( battle_config.idletime_criteria & BCIDLE_ATCOMMAND )
-		sd->idletime = last_tick;
+		sd->idletime = sockt->last_tick;
 	
 	//Clearing these to be used once more.
 	memset(command, '\0', sizeof(command));

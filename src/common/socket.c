@@ -10,6 +10,9 @@
 #include "../common/strlib.h"
 #include "../config/core.h"
 #include "../common/HPM.h"
+
+#define _H_SOCKET_C_
+
 #include "socket.h"
 
 #include <stdio.h>
@@ -41,6 +44,19 @@
 	#ifdef HAVE_SETRLIMIT
 	#include <sys/resource.h>
 	#endif
+#endif
+
+/**
+ * Socket Interface Source
+ **/
+struct socket_interface sockt_s;
+
+#ifdef SEND_SHORTLIST
+	// Add a fd to the shortlist so that it'll be recognized as a fd that needs
+	// sending done on it.
+	void send_shortlist_add_fd(int fd);
+	// Do pending network sends (and eof handling) from the shortlist.
+	void send_shortlist_do_sends();
 #endif
 
 /////////////////////////////////////////////////////////////////////
@@ -212,12 +228,6 @@ char* sErr(int code)
 #endif
 
 fd_set readfds;
-int fd_max;
-time_t last_tick;
-time_t stall_time = 60;
-
-uint32 addr_[16];   // ip addresses of local host (host byte order)
-int naddr_ = 0;   // # of ip addresses
 
 // Maximum packet size in bytes, which the client is able to handle.
 // Larger packets cause a buffer overflow and stack corruption.
@@ -328,7 +338,7 @@ void setsocketopts(int fd, struct hSockOpt *opt) {
  *--------------------------------------*/
 void set_eof(int fd)
 {
-	if( session_isActive(fd) )
+	if( sockt->session_isActive(fd) )
 	{
 #ifdef SEND_SHORTLIST
 		// Add this socket to the shortlist for eof handling.
@@ -342,7 +352,7 @@ int recv_to_fifo(int fd)
 {
 	ssize_t len;
 
-	if( !session_isActive(fd) )
+	if( !sockt->session_isActive(fd) )
 		return -1;
 
 	len = sRecv(fd, (char *) session[fd]->rdata + session[fd]->rdata_size, (int)RFIFOSPACE(fd), 0);
@@ -363,7 +373,7 @@ int recv_to_fifo(int fd)
 	}
 
 	session[fd]->rdata_size += len;
-	session[fd]->rdata_tick = last_tick;
+	session[fd]->rdata_tick = sockt->last_tick;
 #ifdef SHOW_SERVER_STATS
 	socket_data_i += len;
 	socket_data_qi += len;
@@ -379,7 +389,7 @@ int send_from_fifo(int fd)
 {
 	ssize_t len;
 
-	if( !session_isValid(fd) )
+	if( !sockt->session_isValid(fd) )
 		return -1;
 
 	if( session[fd]->wdata_size == 0 )
@@ -431,8 +441,8 @@ void flush_fifo(int fd)
 void flush_fifos(void)
 {
 	int i;
-	for(i = 1; i < fd_max; i++)
-		flush_fifo(i);
+	for(i = 1; i < sockt->fd_max; i++)
+		sockt->flush_fifo(i);
 }
 
 /*======================================
@@ -466,12 +476,12 @@ int connect_client(int listen_fd) {
 
 #ifndef MINICORE
 	if( ip_rules && !connect_check(ntohl(client_address.sin_addr.s_addr)) ) {
-		do_close(fd);
+		sockt->close(fd);
 		return -1;
 	}
 #endif
 
-	if( fd_max <= fd ) fd_max = fd + 1;
+	if( sockt->fd_max <= fd ) sockt->fd_max = fd + 1;
 	sFD_SET(fd,&readfds);
 
 	create_session(fd, recv_to_fifo, send_from_fifo, default_func_parse);
@@ -521,7 +531,7 @@ int make_listen_bind(uint32 ip, uint16 port)
 		exit(EXIT_FAILURE);
 	}
 
-	if(fd_max <= fd) fd_max = fd + 1;
+	if(sockt->fd_max <= fd) sockt->fd_max = fd + 1;
 	sFD_SET(fd, &readfds);
 
 	create_session(fd, connect_client, null_send, null_parse);
@@ -566,13 +576,13 @@ int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt) {
 	if( result == SOCKET_ERROR ) {
 		if( !( opt && opt->silent ) )
 			ShowError("make_connection: connect failed (socket #%d, %s)!\n", fd, error_msg());
-		do_close(fd);
+		sockt->close(fd);
 		return -1;
 	}
 	//Now the socket can be made non-blocking. [Skotlex]
 	set_nonblocking(fd, 1);
 
-	if (fd_max <= fd) fd_max = fd + 1;
+	if (sockt->fd_max <= fd) sockt->fd_max = fd + 1;
 	sFD_SET(fd,&readfds);
 
 	create_session(fd, recv_to_fifo, send_from_fifo, default_func_parse);
@@ -591,7 +601,7 @@ static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseF
 	session[fd]->func_recv  = func_recv;
 	session[fd]->func_send  = func_send;
 	session[fd]->func_parse = func_parse;
-	session[fd]->rdata_tick = last_tick;
+	session[fd]->rdata_tick = sockt->last_tick;
 	session[fd]->session_data = NULL;
 	session[fd]->hdata = NULL;
 	session[fd]->hdatac = 0;
@@ -600,7 +610,7 @@ static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseF
 
 static void delete_session(int fd)
 {
-	if( session_isValid(fd) ) {
+	if( sockt->session_isValid(fd) ) {
 		unsigned int i;
 #ifdef SHOW_SERVER_STATS
 		socket_data_qi -= session[fd]->rdata_size - session[fd]->rdata_pos;
@@ -625,7 +635,7 @@ static void delete_session(int fd)
 
 int realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size)
 {
-	if( !session_isValid(fd) )
+	if( !sockt->session_isValid(fd) )
 		return 0;
 
 	if( session[fd]->max_rdata != rfifo_size && session[fd]->rdata_size < rfifo_size) {
@@ -644,7 +654,7 @@ int realloc_writefifo(int fd, size_t addition)
 {
 	size_t newsize;
 
-	if( !session_isValid(fd) ) // might not happen
+	if( !sockt->session_isValid(fd) ) // might not happen
 		return 0;
 
 	if( session[fd]->wdata_size + addition  > session[fd]->max_wdata )
@@ -672,7 +682,7 @@ int RFIFOSKIP(int fd, size_t len)
 {
     struct socket_data *s;
 
-	if ( !session_isActive(fd) )
+	if ( !sockt->session_isActive(fd) )
 		return 0;
 
 	s = session[fd];
@@ -695,7 +705,7 @@ int WFIFOSET(int fd, size_t len)
 	size_t newreserve;
 	struct socket_data* s = session[fd];
 
-	if( !session_isValid(fd) || s->wdata == NULL )
+	if( !sockt->session_isValid(fd) || s->wdata == NULL )
 		return 0;
 
 	// we have written len bytes to the buffer already before calling WFIFOSET
@@ -771,7 +781,7 @@ int do_sockets(int next)
 #ifdef SEND_SHORTLIST
 	send_shortlist_do_sends();
 #else
-	for (i = 1; i < fd_max; i++)
+	for (i = 1; i < sockt->fd_max; i++)
 	{
 		if(!session[i])
 			continue;
@@ -786,7 +796,7 @@ int do_sockets(int next)
 	timeout.tv_usec = next%1000*1000;
 
 	memcpy(&rfd, &readfds, sizeof(rfd));
-	ret = sSelect(fd_max, &rfd, NULL, NULL, &timeout);
+	ret = sSelect(sockt->fd_max, &rfd, NULL, NULL, &timeout);
 
 	if( ret == SOCKET_ERROR )
 	{
@@ -798,7 +808,7 @@ int do_sockets(int next)
 		return 0; // interrupted by a signal, just loop and try again
 	}
 
-	last_tick = time(NULL);
+	sockt->last_tick = time(NULL);
 
 #if defined(WIN32)
 	// on windows, enumerating all members of the fd_set is way faster if we access the internals
@@ -810,7 +820,7 @@ int do_sockets(int next)
 	}
 #else
 	// otherwise assume that the fd_set is a bit-array and enumerate it in a standard way
-	for( i = 1; ret && i < fd_max; ++i )
+	for( i = 1; ret && i < sockt->fd_max; ++i )
 	{
 		if(sFD_ISSET(i,&rfd) && session[i])
 		{
@@ -824,7 +834,7 @@ int do_sockets(int next)
 #ifdef SEND_SHORTLIST
 	send_shortlist_do_sends();
 #else
-	for (i = 1; i < fd_max; i++)
+	for (i = 1; i < sockt->fd_max; i++)
 	{
 		if(!session[i])
 			continue;
@@ -840,12 +850,12 @@ int do_sockets(int next)
 #endif
 
 	// parse input data on each socket
-	for(i = 1; i < fd_max; i++)
+	for(i = 1; i < sockt->fd_max; i++)
 	{
 		if(!session[i])
 			continue;
 
-		if (session[i]->rdata_tick && DIFF_TICK(last_tick, session[i]->rdata_tick) > stall_time) {
+		if (session[i]->rdata_tick && DIFF_TICK(sockt->last_tick, session[i]->rdata_tick) > sockt->stall_time) {
 			if( session[i]->flag.server ) {/* server is special */
 				if( session[i]->flag.ping != 2 )/* only update if necessary otherwise it'd resend the ping unnecessarily */
 					session[i]->flag.ping = 1;
@@ -873,7 +883,7 @@ int do_sockets(int next)
 	}
 
 #ifdef SHOW_SERVER_STATS
-	if (last_tick != socket_data_last_tick)
+	if (sockt->last_tick != socket_data_last_tick)
 	{
 		char buf[1024];
 		
@@ -883,7 +893,7 @@ int do_sockets(int next)
 #else
 		ShowMessage("\033[s\033[1;1H\033[2K%s\033[u", buf);
 #endif
-		socket_data_last_tick = last_tick;
+		socket_data_last_tick = sockt->last_tick;
 		socket_data_i = socket_data_ci = 0;
 		socket_data_o = socket_data_co = 0;
 	}
@@ -1148,9 +1158,9 @@ int socket_config_read(const char* cfgName)
 			continue;
 
 		if (!strcmpi(w1, "stall_time")) {
-			stall_time = atoi(w2);
-			if( stall_time < 3 )
-				stall_time = 3;/* a minimum is required to refrain it from killing itself */
+			sockt->stall_time = atoi(w2);
+			if( sockt->stall_time < 3 )
+				sockt->stall_time = 3;/* a minimum is required to refrain it from killing itself */
 		}
 #ifndef MINICORE
 		else if (!strcmpi(w1, "enable_ip_rules")) {
@@ -1218,9 +1228,9 @@ void socket_final(void)
 		aFree(access_deny);
 #endif
 
-	for( i = 1; i < fd_max; i++ )
+	for( i = 1; i < sockt->fd_max; i++ )
 		if(session[i])
-			do_close(i);
+			sockt->close(i);
 
 	// session[0] のダミーデータを削除
 	aFree(session[0]->rdata);
@@ -1382,7 +1392,7 @@ void socket_init(void)
 #endif
 
 	// Get initial local ips
-	naddr_ = socket_getips(addr_,16);
+	sockt->naddr_ = socket_getips(sockt->addr_,16);
 
 	sFD_ZERO(&readfds);
 #if defined(SEND_SHORTLIST)
@@ -1394,7 +1404,7 @@ void socket_init(void)
 	socket_config_read(SOCKET_CONF_FILENAME);
 
 	// initialise last send-receive tick
-	last_tick = time(NULL);
+	sockt->last_tick = time(NULL);
 
 	// session[0] is now currently used for disconnected sessions of the map server, and as such,
 	// should hold enough buffer (it is a vacuum so to speak) as it is never flushed. [Skotlex]
@@ -1411,8 +1421,6 @@ void socket_init(void)
 	
 	/* Hercules Plugin Manager */
 	HPM->share(session,"session");
-	HPM->share(&fd_max,"fd_max");
-	HPM->share(addr_,"addr");
 }
 
 bool session_isValid(int fd)
@@ -1422,7 +1430,7 @@ bool session_isValid(int fd)
 
 bool session_isActive(int fd)
 {
-	return ( session_isValid(fd) && !session[fd]->flag.eof );
+	return ( sockt->session_isValid(fd) && !session[fd]->flag.eof );
 }
 
 // Resolves hostname into a numeric ip.
@@ -1526,7 +1534,7 @@ void send_shortlist_add_fd(int fd)
 	int i;
 	int bit;
 
-	if( !session_isValid(fd) )
+	if( !sockt->session_isValid(fd) )
 		return;// out of range
 
 	i = fd/32;
@@ -1595,3 +1603,44 @@ void send_shortlist_do_sends()
 	}
 }
 #endif
+
+void socket_defaults(void) {
+	sockt = &sockt_s;
+	
+	sockt->fd_max = 0;
+	/* */
+	sockt->stall_time = 60;
+	sockt->last_tick = 0;
+	/* */
+	memset(&sockt->addr_, 0, sizeof(sockt->addr_));
+	sockt->naddr_ = 0;
+	/* */
+	sockt->init = socket_init;
+	sockt->final = socket_final;
+	/* */
+	sockt->perform = do_sockets;
+	/* */
+	sockt->datasync = socket_datasync;
+	/* */
+	sockt->make_listen_bind = make_listen_bind;
+	sockt->make_connection = make_connection;
+	sockt->realloc_fifo = realloc_fifo;
+	sockt->realloc_writefifo = realloc_writefifo;
+	sockt->WFIFOSET = WFIFOSET;
+	sockt->RFIFOSKIP = RFIFOSKIP;
+	sockt->close = do_close;
+	/* */
+	sockt->session_isValid = session_isValid;
+	sockt->session_isActive = session_isActive;
+	/* */
+	sockt->flush_fifo = flush_fifo;
+	sockt->flush_fifos = flush_fifos;
+	sockt->set_nonblocking = set_nonblocking;
+	sockt->set_defaultparse = set_defaultparse;
+	sockt->host2ip = host2ip;
+	sockt->ip2str = ip2str;
+	sockt->str2ip = str2ip;
+	sockt->ntows = ntows;
+	sockt->getips = socket_getips;
+	sockt->set_eof = set_eof;
+}

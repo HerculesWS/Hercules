@@ -675,11 +675,7 @@ void hplugins_share_defaults(void) {
 	HPM->share(DB, "DB");
 	HPM->share(HPMiMalloc, "iMalloc");
 	/* socket */
-	HPM->share(RFIFOSKIP,"RFIFOSKIP");
-	HPM->share(WFIFOSET,"WFIFOSET");
-	HPM->share(do_close,"do_close");
-	HPM->share(make_connection,"make_connection");
-	//session,fd_max and addr_ are shared from within socket.c
+	HPM->share(sockt,"sockt");
 	/* strlib */
 	HPM->share(strlib,"strlib");
 	HPM->share(sv,"sv");

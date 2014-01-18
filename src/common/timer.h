@@ -56,7 +56,7 @@ struct timer_interface {
 
 	unsigned long (*get_uptime) (void);
 
-	int (*do_timer) (int64 tick);
+	int (*perform) (int64 tick);
 	void (*init) (void);
 	void (*final) (void);
 };

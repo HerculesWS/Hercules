@@ -104,7 +104,7 @@ struct chrif_interface {
 	bool (*removefriend) (int char_id, int friend_id);
 	void (*send_report) (char* buf, int len);
 			
-	bool (*flush_fifo) (void);
+	bool (*flush) (void);
 	void (*skillid2idx) (int fd);
 	
 	bool (*sd_to_auth) (TBL_PC* sd, enum sd_state state);
