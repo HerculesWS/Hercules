@@ -2624,13 +2624,13 @@ void read_channels_config(void) {
 	config_setting_t *chsys = NULL;
 	const char *config_filename = "conf/channels.conf"; // FIXME hardcoded name
 	
-	if (conf_read_file(&channels_conf, config_filename))
+	if (libconfig->read_file(&channels_conf, config_filename))
 		return;
 	
-	chsys = config_lookup(&channels_conf, "chsys");
+	chsys = libconfig->lookup(&channels_conf, "chsys");
 	
 	if (chsys != NULL) {
-		config_setting_t *settings = config_setting_get_elem(chsys, 0);
+		config_setting_t *settings = libconfig->setting_get_elem(chsys, 0);
 		config_setting_t *channels;
 		config_setting_t *colors;
 		int i,k;
@@ -2642,21 +2642,21 @@ void read_channels_config(void) {
 			allow_user_channel_creation = 0,
 			irc_enabled = 0;
 		
-		if( !config_setting_lookup_string(settings, "map_local_channel_name", &local_name) )
+		if( !libconfig->setting_lookup_string(settings, "map_local_channel_name", &local_name) )
 			local_name = "map";
 		safestrncpy(hChSys.local_name, local_name, HCHSYS_NAME_LENGTH);
 		
-		if( !config_setting_lookup_string(settings, "ally_channel_name", &ally_name) )
+		if( !libconfig->setting_lookup_string(settings, "ally_channel_name", &ally_name) )
 			ally_name = "ally";
 		safestrncpy(hChSys.ally_name, ally_name, HCHSYS_NAME_LENGTH);
 		
-		if( !config_setting_lookup_string(settings, "irc_channel_name", &irc_name) )
+		if( !libconfig->setting_lookup_string(settings, "irc_channel_name", &irc_name) )
 			irc_name = "irc";
 		safestrncpy(hChSys.irc_name, irc_name, HCHSYS_NAME_LENGTH);
 		
-		config_setting_lookup_bool(settings, "map_local_channel", &local_enabled);
-		config_setting_lookup_bool(settings, "ally_channel_enabled", &ally_enabled);
-		config_setting_lookup_bool(settings, "irc_channel_enabled", &irc_enabled);
+		libconfig->setting_lookup_bool(settings, "map_local_channel", &local_enabled);
+		libconfig->setting_lookup_bool(settings, "ally_channel_enabled", &ally_enabled);
+		libconfig->setting_lookup_bool(settings, "irc_channel_enabled", &irc_enabled);
 		
 		if( local_enabled )
 			hChSys.local = true;
@@ -2671,7 +2671,7 @@ void read_channels_config(void) {
 			const char *irc_server, *irc_channel,
 				 *irc_nick, *irc_nick_pw;
 			int irc_use_ghost = 0;
-			if( config_setting_lookup_string(settings, "irc_channel_network", &irc_server) ) {
+			if( libconfig->setting_lookup_string(settings, "irc_channel_network", &irc_server) ) {
 				if( !strstr(irc_server,":") ) {
 					hChSys.irc = false;
 					ShowWarning("channels.conf : network port wasn't found in 'irc_channel_network', disabling irc channel...\n");
@@ -2695,13 +2695,13 @@ void read_channels_config(void) {
 				hChSys.irc = false;
 				ShowWarning("channels.conf : irc channel enabled but irc_channel_network wasn't found, disabling irc channel...\n");
 			}
-			if( config_setting_lookup_string(settings, "irc_channel_channel", &irc_channel) )
+			if( libconfig->setting_lookup_string(settings, "irc_channel_channel", &irc_channel) )
 				safestrncpy(hChSys.irc_channel, irc_channel, 50);
 			else {
 				hChSys.irc = false;
 				ShowWarning("channels.conf : irc channel enabled but irc_channel_channel wasn't found, disabling irc channel...\n");
 			}
-			if( config_setting_lookup_string(settings, "irc_channel_nick", &irc_nick) ) {
+			if( libconfig->setting_lookup_string(settings, "irc_channel_nick", &irc_nick) ) {
 				if( strcmpi(irc_nick,"Hercules_chSysBot") == 0 ) {
 					sprintf(hChSys.irc_nick, "Hercules_chSysBot%d",rand()%777);
 				} else
@@ -2710,7 +2710,7 @@ void read_channels_config(void) {
 				hChSys.irc = false;
 				ShowWarning("channels.conf : irc channel enabled but irc_channel_nick wasn't found, disabling irc channel...\n");
 			}
-			if( config_setting_lookup_string(settings, "irc_channel_nick_pw", &irc_nick_pw) ) {
+			if( libconfig->setting_lookup_string(settings, "irc_channel_nick_pw", &irc_nick_pw) ) {
 				safestrncpy(hChSys.irc_nick_pw, irc_nick_pw, 30);
 				config_setting_lookup_bool(settings, "irc_channel_use_ghost", &irc_use_ghost);
 				hChSys.irc_use_ghost = irc_use_ghost;
@@ -2718,37 +2718,37 @@ void read_channels_config(void) {
 
 		}
 		
-		config_setting_lookup_bool(settings, "map_local_channel_autojoin", &local_autojoin);
-		config_setting_lookup_bool(settings, "ally_channel_autojoin", &ally_autojoin);
+		libconfig->setting_lookup_bool(settings, "map_local_channel_autojoin", &local_autojoin);
+		libconfig->setting_lookup_bool(settings, "ally_channel_autojoin", &ally_autojoin);
 
 		if( local_autojoin )
 			hChSys.local_autojoin = true;
 		if( ally_autojoin )
 			hChSys.ally_autojoin = true;
 		
-		config_setting_lookup_bool(settings, "allow_user_channel_creation", &allow_user_channel_creation);
+		libconfig->setting_lookup_bool(settings, "allow_user_channel_creation", &allow_user_channel_creation);
 
 		if( allow_user_channel_creation )
 			hChSys.allow_user_channel_creation = true;
 
-		if( (colors = config_setting_get_member(settings, "colors")) != NULL ) {
-			int color_count = config_setting_length(colors);
+		if( (colors = libconfig->setting_get_member(settings, "colors")) != NULL ) {
+			int color_count = libconfig->setting_length(colors);
 			CREATE( hChSys.colors, unsigned int, color_count );
 			CREATE( hChSys.colors_name, char *, color_count );
 			for(i = 0; i < color_count; i++) {
-				config_setting_t *color = config_setting_get_elem(colors, i);
+				config_setting_t *color = libconfig->setting_get_elem(colors, i);
 
 				CREATE( hChSys.colors_name[i], char, HCHSYS_NAME_LENGTH );
 				
 				safestrncpy(hChSys.colors_name[i], config_setting_name(color), HCHSYS_NAME_LENGTH);
 
-				hChSys.colors[i] = (unsigned int)strtoul(config_setting_get_string_elem(colors,i),NULL,0);
+				hChSys.colors[i] = (unsigned int)strtoul(libconfig->setting_get_string_elem(colors,i),NULL,0);
 				hChSys.colors[i] = (hChSys.colors[i] & 0x0000FF) << 16 | (hChSys.colors[i] & 0x00FF00) | (hChSys.colors[i] & 0xFF0000) >> 16;//RGB to BGR
 			}
 			hChSys.colors_count = color_count;
 		}
 		
-		config_setting_lookup_string(settings, "map_local_channel_color", &local_color);
+		libconfig->setting_lookup_string(settings, "map_local_channel_color", &local_color);
 		
 		for (k = 0; k < hChSys.colors_count; k++) {
 			if( strcmpi(hChSys.colors_name[k],local_color) == 0 )
@@ -2762,7 +2762,7 @@ void read_channels_config(void) {
 			hChSys.local = false;
 		}
 		
-		config_setting_lookup_string(settings, "ally_channel_color", &ally_color);
+		libconfig->setting_lookup_string(settings, "ally_channel_color", &ally_color);
 		
 		for (k = 0; k < hChSys.colors_count; k++) {
 			if( strcmpi(hChSys.colors_name[k],ally_color) == 0 )
@@ -2776,7 +2776,7 @@ void read_channels_config(void) {
 			hChSys.ally = false;
 		}
 		
-		config_setting_lookup_string(settings, "irc_channel_color", &irc_color);
+		libconfig->setting_lookup_string(settings, "irc_channel_color", &irc_color);
 		
 		for (k = 0; k < hChSys.colors_count; k++) {
 			if( strcmpi(hChSys.colors_name[k],irc_color) == 0 )
@@ -2801,13 +2801,13 @@ void read_channels_config(void) {
 			ircbot->channel = chd;
 		}
 		
-		if( (channels = config_setting_get_member(settings, "default_channels")) != NULL ) {
-			int channel_count = config_setting_length(channels);
+		if( (channels = libconfig->setting_get_member(settings, "default_channels")) != NULL ) {
+			int channel_count = libconfig->setting_length(channels);
 		
 			for(i = 0; i < channel_count; i++) {
-				config_setting_t *channel = config_setting_get_elem(channels, i);
+				config_setting_t *channel = libconfig->setting_get_elem(channels, i);
 				const char *name = config_setting_name(channel);
-				const char *color = config_setting_get_string_elem(channels,i);
+				const char *color = libconfig->setting_get_string_elem(channels,i);
 				struct hChSysCh *chd;
 				
 				for (k = 0; k < hChSys.colors_count; k++) {
@@ -2833,7 +2833,7 @@ void read_channels_config(void) {
 		}
 					
 		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' channels in '"CL_WHITE"%s"CL_RESET"'.\n", db_size(clif->channel_db), config_filename);
-		config_destroy(&channels_conf);
+		libconfig->destroy(&channels_conf);
 	}
 }
 
@@ -17378,32 +17378,33 @@ void clif_cashshop_db(void) {
 	config_setting_t *cashshop = NULL, *cats = NULL;
 	const char *config_filename = "db/cashshop_db.conf"; // FIXME hardcoded name
 	int i, item_count_t = 0;
+	
 	for( i = 0; i < CASHSHOP_TAB_MAX; i++ ) {
 		CREATE(clif->cs.data[i], struct hCSData *, 1);
 		clif->cs.item_count[i] = 0;
 	}
 	
-	if (conf_read_file(&cashshop_conf, config_filename)) {
+	if (libconfig->read_file(&cashshop_conf, config_filename)) {
 		ShowError("can't read %s\n", config_filename);
 		return;
 	}
 	
-	cashshop = config_lookup(&cashshop_conf, "cash_shop");
+	cashshop = libconfig->lookup(&cashshop_conf, "cash_shop");
 	
-	if( cashshop != NULL && (cats = config_setting_get_elem(cashshop, 0)) != NULL ) {
+	if( cashshop != NULL && (cats = libconfig->setting_get_elem(cashshop, 0)) != NULL ) {
 		for(i = 0; i < CASHSHOP_TAB_MAX; i++) {
 			config_setting_t *cat;
 			char entry_name[10];
 			
 			sprintf(entry_name,"cat_%d",i);
 			
-			if( (cat = config_setting_get_member(cats, entry_name)) != NULL ) {
-				int k, item_count = config_setting_length(cat);
+			if( (cat = libconfig->setting_get_member(cats, entry_name)) != NULL ) {
+				int k, item_count = libconfig->setting_length(cat);
 				
 				for(k = 0; k < item_count; k++) {
-					config_setting_t *entry = config_setting_get_elem(cat,k);
+					config_setting_t *entry = libconfig->setting_get_elem(cat,k);
 					const char *name = config_setting_name(entry);
-					int price = config_setting_get_int(entry);
+					int price = libconfig->setting_get_int(entry);
 					struct item_data * data = NULL;
 
 					if( price < 1 ) {
@@ -17434,7 +17435,7 @@ void clif_cashshop_db(void) {
 			}
 		}
 		
-		config_destroy(&cashshop_conf);
+		libconfig->destroy(&cashshop_conf);
 	}
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", item_count_t, config_filename);
 }

@@ -261,21 +261,21 @@ void hplugins_config_read(void) {
 		fclose(fp);
 	}
 	
-	if (conf_read_file(&plugins_conf, config_filename))
+	if (libconfig->read_file(&plugins_conf, config_filename))
 		return;
 
 	if( HPM->symbol_defaults_sub )
 		HPM->symbol_defaults_sub();
 	
-	plist = config_lookup(&plugins_conf, "plugins_list");
+	plist = libconfig->lookup(&plugins_conf, "plugins_list");
 	
 	if (plist != NULL) {
-		int length = config_setting_length(plist), i;
+		int length = libconfig->setting_length(plist), i;
 		char filename[60];
 		for(i = 0; i < length; i++) {
-			if( !strcmpi(config_setting_get_string_elem(plist,i),"HPMHooking") ) {//must load it first
+			if( !strcmpi(libconfig->setting_get_string_elem(plist,i),"HPMHooking") ) {//must load it first
 				struct hplugin *plugin;
-				snprintf(filename, 60, "plugins/%s%s", config_setting_get_string_elem(plist,i), DLL_EXT);
+				snprintf(filename, 60, "plugins/%s%s", libconfig->setting_get_string_elem(plist,i), DLL_EXT);
 				if( ( plugin = HPM->load(filename) )  ) {
 					bool (*func)(bool *fr);
 					bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
@@ -289,12 +289,12 @@ void hplugins_config_read(void) {
 			}
 		}
 		for(i = 0; i < length; i++) {
-			if( strcmpi(config_setting_get_string_elem(plist,i),"HPMHooking") ) {//now all others
-				snprintf(filename, 60, "plugins/%s%s", config_setting_get_string_elem(plist,i), DLL_EXT);
+			if( strcmpi(libconfig->setting_get_string_elem(plist,i),"HPMHooking") ) {//now all others
+				snprintf(filename, 60, "plugins/%s%s", libconfig->setting_get_string_elem(plist,i), DLL_EXT);
 				HPM->load(filename);
 			}
 		}
-		config_destroy(&plugins_conf);
+		libconfig->destroy(&plugins_conf);
 	}
 	
 	if( HPM->plugin_count )
@@ -688,11 +688,8 @@ void hplugins_share_defaults(void) {
 	HPM->share(SQL,"SQL");
 	/* timer */
 	HPM->share(timer,"timer");
-	/* libconfig (temp) */
-	HPM->share(config_setting_lookup_string,"config_setting_lookup_string");
-	HPM->share(config_setting_lookup_int,"config_setting_lookup_int");
-	HPM->share(config_setting_get_member,"config_setting_get_member");
-	HPM->share(config_setting_length,"config_setting_length");
+	/* libconfig */
+	HPM->share(libconfig,"libconfig");
 }
 
 void hpm_init(void) {

@@ -3544,19 +3544,19 @@ ACMD(reloadskilldb)
 ACMD(reloadatcommand) {
 	config_t run_test;
 	
-	if (conf_read_file(&run_test, "conf/groups.conf")) {
+	if (libconfig->read_file(&run_test, "conf/groups.conf")) {
 		clif->message(fd, msg_txt(1036)); // Error reading groups.conf, reload failed.
 		return false;
 	}
 	
-	config_destroy(&run_test);
+	libconfig->destroy(&run_test);
 	
-	if (conf_read_file(&run_test, map->ATCOMMAND_CONF_FILENAME)) {
+	if (libconfig->read_file(&run_test, map->ATCOMMAND_CONF_FILENAME)) {
 		clif->message(fd, msg_txt(1037)); // Error reading atcommand.conf, reload failed.
 		return false;
 	}
 	
-	config_destroy(&run_test);
+	libconfig->destroy(&run_test);
 	
 	atcommand->doload();
 	pcg->reload();
@@ -9959,11 +9959,11 @@ void atcommand_config_read(const char* config_filename) {
 	const char *symbol = NULL;
 	int num_aliases = 0;
 
-	if (conf_read_file(&atcommand_config, config_filename))
+	if (libconfig->read_file(&atcommand_config, config_filename))
 		return;
 
 	// Command symbols
-	if (config_lookup_string(&atcommand_config, "atcommand_symbol", &symbol)) {
+	if (libconfig->lookup_string(&atcommand_config, "atcommand_symbol", &symbol)) {
 		if (ISPRINT(*symbol) && // no control characters
 			*symbol != '/' && // symbol of client commands
 			*symbol != '%' && // symbol of party chat
@@ -9972,7 +9972,7 @@ void atcommand_config_read(const char* config_filename) {
 			atcommand->at_symbol = *symbol;
 	}
 
-	if (config_lookup_string(&atcommand_config, "charcommand_symbol", &symbol)) {
+	if (libconfig->lookup_string(&atcommand_config, "charcommand_symbol", &symbol)) {
 		if (ISPRINT(*symbol) && // no control characters
 			*symbol != '/' && // symbol of client commands
 			*symbol != '%' && // symbol of party chat
@@ -9982,10 +9982,10 @@ void atcommand_config_read(const char* config_filename) {
 	}
 
 	// Command aliases
-	aliases = config_lookup(&atcommand_config, "aliases");
+	aliases = libconfig->lookup(&atcommand_config, "aliases");
 	if (aliases != NULL) {
 		int i = 0;
-		int count = config_setting_length(aliases);
+		int count = libconfig->setting_length(aliases);
 
 		for (i = 0; i < count; ++i) {
 			config_setting_t *command;
@@ -9993,7 +9993,7 @@ void atcommand_config_read(const char* config_filename) {
 			int j = 0, alias_count = 0;
 			AtCommandInfo *commandinfo = NULL;
 
-			command = config_setting_get_elem(aliases, i);
+			command = libconfig->setting_get_elem(aliases, i);
 			if (config_setting_type(command) != CONFIG_TYPE_ARRAY)
 				continue;
 			commandname = config_setting_name(command);
@@ -10001,9 +10001,9 @@ void atcommand_config_read(const char* config_filename) {
 				ShowConfigWarning(command, "atcommand_config_read: can not set alias for non-existent command %s", commandname);
 				continue;
 			}
-			alias_count = config_setting_length(command);
+			alias_count = libconfig->setting_length(command);
 			for (j = 0; j < alias_count; ++j) {
-				const char *alias = config_setting_get_string_elem(command, j);
+				const char *alias = libconfig->setting_get_string_elem(command, j);
 				if (alias != NULL) {
 					AliasInfo *alias_info;
 					if (strdb_exists(atcommand->alias_db, alias)) {
@@ -10020,17 +10020,17 @@ void atcommand_config_read(const char* config_filename) {
 		}
 	}
 
-	nolog = config_lookup(&atcommand_config, "nolog");
+	nolog = libconfig->lookup(&atcommand_config, "nolog");
 	if (nolog != NULL) {
 		int i = 0;
-		int count = config_setting_length(nolog);
+		int count = libconfig->setting_length(nolog);
 		
 		for (i = 0; i < count; ++i) {
 			config_setting_t *command;
 			const char *commandname = NULL;
 			AtCommandInfo *commandinfo = NULL;
 			
-			command = config_setting_get_elem(nolog, i);
+			command = libconfig->setting_get_elem(nolog, i);
 			commandname = config_setting_name(command);
 			if ( !( commandinfo = atcommand_exists(commandname) ) ) {
 				ShowConfigWarning(command, "atcommand_config_read: can not disable logging for non-existent command %s", commandname);
@@ -10042,9 +10042,9 @@ void atcommand_config_read(const char* config_filename) {
 	
 	// Commands help
 	// We only check if all commands exist
-	help = config_lookup(&atcommand_config, "help");
+	help = libconfig->lookup(&atcommand_config, "help");
 	if (help != NULL) {
-		int count = config_setting_length(help);
+		int count = libconfig->setting_length(help);
 		int i;
 
 		for (i = 0; i < count; ++i) {
@@ -10052,13 +10052,13 @@ void atcommand_config_read(const char* config_filename) {
 			const char *commandname;
 			AtCommandInfo *commandinfo = NULL;
 
-			command = config_setting_get_elem(help, i);
+			command = libconfig->setting_get_elem(help, i);
 			commandname = config_setting_name(command);
 			if ( !( commandinfo = atcommand_exists(commandname) ) )
 				ShowConfigWarning(command, "atcommand_config_read: command %s does not exist", commandname);
 			else {
 				if( commandinfo->help == NULL ) {
-					const char *str = config_setting_get_string(command);
+					const char *str = libconfig->setting_get_string(command);
 					size_t len = strlen(str);
 					commandinfo->help = aMalloc( len * sizeof(char) );
 					safestrncpy(commandinfo->help, str, len);
@@ -10069,7 +10069,7 @@ void atcommand_config_read(const char* config_filename) {
 
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' command aliases in '"CL_WHITE"%s"CL_RESET"'.\n", num_aliases, config_filename);
 	
-	config_destroy(&atcommand_config);
+	libconfig->destroy(&atcommand_config);
 	return;
 }
 

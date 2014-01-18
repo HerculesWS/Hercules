@@ -19,6 +19,7 @@
 	#include "../config/core.h"
 	#include "../common/HPM.h"
 	#include "../common/utils.h"
+	#include "../common/conf.h"
 #endif
 
 #include <stdio.h>
@@ -282,6 +283,7 @@ void core_defaults(void) {
 	strlib_defaults();
 	malloc_defaults();
 #ifndef MINICORE
+	libconfig_defaults();
 	sql_defaults();
 	timer_defaults();
 	db_defaults();

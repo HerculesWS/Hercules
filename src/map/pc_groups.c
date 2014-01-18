@@ -49,26 +49,26 @@ static void read_config(void) {
 	const char *config_filename = "conf/groups.conf"; // FIXME hardcoded name
 	int group_count = 0;
 	
-	if (conf_read_file(&pc_group_config, config_filename))
+	if (libconfig->read_file(&pc_group_config, config_filename))
 		return;
 
-	groups = config_lookup(&pc_group_config, "groups");
+	groups = libconfig->lookup(&pc_group_config, "groups");
 
 	if (groups != NULL) {
 		GroupSettings *group_settings = NULL;
 		DBIterator *iter = NULL;
 		int i, loop = 0;
 
-		group_count = config_setting_length(groups);
+		group_count = libconfig->setting_length(groups);
 		for (i = 0; i < group_count; ++i) {
 			int id = 0, level = 0;
 			const char *groupname = NULL;
 			int log_commands = 0;
-			config_setting_t *group = config_setting_get_elem(groups, i);
+			config_setting_t *group = libconfig->setting_get_elem(groups, i);
 
-			if (!config_setting_lookup_int(group, "id", &id)) {
+			if (!libconfig->setting_lookup_int(group, "id", &id)) {
 				ShowConfigWarning(group, "pc_groups:read_config: \"groups\" list member #%d has undefined id, removing...", i);
-				config_setting_remove_elem(groups, i);
+				libconfig->setting_remove_elem(groups, i);
 				--i;
 				--group_count;
 				continue;
@@ -76,16 +76,16 @@ static void read_config(void) {
 
 			if (pcg->exists(id)) {
 				ShowConfigWarning(group, "pc_groups:read_config: duplicate group id %d, removing...", i);
-				config_setting_remove_elem(groups, i);
+				libconfig->setting_remove_elem(groups, i);
 				--i;
 				--group_count;
 				continue;
 			}
 
-			config_setting_lookup_int(group, "level", &level);
-			config_setting_lookup_bool(group, "log_commands", &log_commands);
+			libconfig->setting_lookup_int(group, "level", &level);
+			libconfig->setting_lookup_bool(group, "log_commands", &log_commands);
 
-			if (!config_setting_lookup_string(group, "name", &groupname)) {
+			if (!libconfig->setting_lookup_string(group, "name", &groupname)) {
 				char temp[20];
 				config_setting_t *name = NULL;
 				snprintf(temp, sizeof(temp), "Group %d", id);
@@ -97,12 +97,12 @@ static void read_config(void) {
 					--group_count;
 					continue;
 				}
-				config_setting_lookup_string(group, "name", &groupname); // Retrieve the pointer
+				libconfig->setting_lookup_string(group, "name", &groupname); // Retrieve the pointer
 			}
 
 			if (name2group(groupname) != NULL) {
 				ShowConfigWarning(group, "pc_groups:read_config: duplicate group name %s, removing...", groupname);
-				config_setting_remove_elem(groups, i);
+				libconfig->setting_remove_elem(groups, i);
 				--i;
 				--group_count;
 				continue;
@@ -113,9 +113,9 @@ static void read_config(void) {
 			group_settings->level = level;
 			group_settings->name = aStrdup(groupname);
 			group_settings->log_commands = (bool)log_commands;
-			group_settings->inherit = config_setting_get_member(group, "inherit");
-			group_settings->commands = config_setting_get_member(group, "commands");
-			group_settings->permissions = config_setting_get_member(group, "permissions");
+			group_settings->inherit = libconfig->setting_get_member(group, "inherit");
+			group_settings->commands = libconfig->setting_get_member(group, "commands");
+			group_settings->permissions = libconfig->setting_get_member(group, "permissions");
 			group_settings->inheritance_done = false;
 			group_settings->root = group;
 			group_settings->index = i;
@@ -124,7 +124,7 @@ static void read_config(void) {
 			idb_put(pcg->db, id, group_settings);
 			
 		}
-		group_count = config_setting_length(groups); // Save number of groups
+		group_count = libconfig->setting_length(groups); // Save number of groups
 		assert(group_count == db_size(pcg->db));
 		
 		// Check if all commands and permissions exist
@@ -135,15 +135,15 @@ static void read_config(void) {
 
 			// Make sure there is "commands" group
 			if (commands == NULL)
-				commands = group_settings->commands = config_setting_add(group_settings->root, "commands", CONFIG_TYPE_GROUP);
-			count = config_setting_length(commands);
+				commands = group_settings->commands = libconfig->setting_add(group_settings->root, "commands", CONFIG_TYPE_GROUP);
+			count = libconfig->setting_length(commands);
 
 			for (i = 0; i < count; ++i) {
-				config_setting_t *command = config_setting_get_elem(commands, i);
+				config_setting_t *command = libconfig->setting_get_elem(commands, i);
 				const char *name = config_setting_name(command);
 				if (!atcommand->exists(name)) {
 					ShowConfigWarning(command, "pc_groups:read_config: non-existent command name '%s', removing...", name);
-					config_setting_remove(commands, name);
+					libconfig->setting_remove(commands, name);
 					--i;
 					--count;
 				}
@@ -151,18 +151,18 @@ static void read_config(void) {
 
 			// Make sure there is "permissions" group
 			if (permissions == NULL)
-				permissions = group_settings->permissions = config_setting_add(group_settings->root, "permissions", CONFIG_TYPE_GROUP);
-			count = config_setting_length(permissions);
+				permissions = group_settings->permissions = libconfig->setting_add(group_settings->root, "permissions", CONFIG_TYPE_GROUP);
+			count = libconfig->setting_length(permissions);
 
 			for(i = 0; i < count; ++i) {
-				config_setting_t *permission = config_setting_get_elem(permissions, i);
+				config_setting_t *permission = libconfig->setting_get_elem(permissions, i);
 				const char *name = config_setting_name(permission);
 				int j;
 
 				ARR_FIND(0, pcg->permission_count, j, strcmp(pcg->permissions[j].name, name) == 0);
 				if (j == pcg->permission_count) {
 					ShowConfigWarning(permission, "pc_groups:read_config: non-existent permission name '%s', removing...", name);
-					config_setting_remove(permissions, name);
+					libconfig->setting_remove(permissions, name);
 					--i;
 					--count;
 				}
@@ -184,7 +184,7 @@ static void read_config(void) {
 					continue; 
 
 				if ((inherit = group_settings->inherit) == NULL ||
-				    (inherit_count = config_setting_length(inherit)) <= 0) { // this group does not inherit from others
+				    (inherit_count = libconfig->setting_length(inherit)) <= 0) { // this group does not inherit from others
 					++i;
 					group_settings->inheritance_done = true;
 					continue;
@@ -192,16 +192,16 @@ static void read_config(void) {
 				
 				for (j = 0; j < inherit_count; ++j) {
 					GroupSettings *inherited_group = NULL;
-					const char *groupname = config_setting_get_string_elem(inherit, j);
+					const char *groupname = libconfig->setting_get_string_elem(inherit, j);
 
 					if (groupname == NULL) {
 						ShowConfigWarning(inherit, "pc_groups:read_config: \"inherit\" array member #%d is not a name, removing...", j);
-						config_setting_remove_elem(inherit,j);
+						libconfig->setting_remove_elem(inherit,j);
 						continue;
 					}
 					if ((inherited_group = name2group(groupname)) == NULL) {
 						ShowConfigWarning(inherit, "pc_groups:read_config: non-existent group name \"%s\", removing...", groupname);
-						config_setting_remove_elem(inherit,j);
+						libconfig->setting_remove_elem(inherit,j);
 						continue;
 					}
 					if (!inherited_group->inheritance_done)
@@ -209,15 +209,15 @@ static void read_config(void) {
 
 					// Copy settings (commands/permissions) that are not defined yet
 					if (inherited_group->commands != NULL) {
-						int k = 0, commands_count = config_setting_length(inherited_group->commands);
+						int k = 0, commands_count = libconfig->setting_length(inherited_group->commands);
 						for (k = 0; k < commands_count; ++k)
-							config_setting_copy(commands, config_setting_get_elem(inherited_group->commands, k));
+							libconfig->setting_copy(commands, libconfig->setting_get_elem(inherited_group->commands, k));
 					}
 
 					if (inherited_group->permissions != NULL) {
-						int k = 0, permissions_count = config_setting_length(inherited_group->permissions);
+						int k = 0, permissions_count = libconfig->setting_length(inherited_group->permissions);
 						for (k = 0; k < permissions_count; ++k)
-							config_setting_copy(permissions, config_setting_get_elem(inherited_group->permissions, k));
+							libconfig->setting_copy(permissions, libconfig->setting_get_elem(inherited_group->permissions, k));
 					}
 
 					++done; // copied commands and permissions from one of inherited groups
@@ -241,12 +241,12 @@ static void read_config(void) {
 		iter = db_iterator(pcg->db);
 		for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
 			config_setting_t *permissions = group_settings->permissions;
-			int count = config_setting_length(permissions);
+			int count = libconfig->setting_length(permissions);
 
 			for (i = 0; i < count; ++i) {
-				config_setting_t *perm = config_setting_get_elem(permissions, i);
+				config_setting_t *perm = libconfig->setting_get_elem(permissions, i);
 				const char *name = config_setting_name(perm);
-				int val = config_setting_get_bool(perm);
+				int val = libconfig->setting_get_bool(perm);
 				int j;
 
 				if (val == 0) // does not have this permission
@@ -282,7 +282,7 @@ static void read_config(void) {
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' groups in '"CL_WHITE"%s"CL_RESET"'.\n", group_count, config_filename);
 
 	// All data is loaded now, discard config
-	config_destroy(&pc_group_config);
+	libconfig->destroy(&pc_group_config);
 }
 
 /**

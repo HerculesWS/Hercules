@@ -34,10 +34,6 @@ struct {
 bool torun = false;
 
 int (*itemdb_readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
-int (*h_config_setting_lookup_string) (const config_setting_t *setting, const char *name, const char **value);
-int (*h_config_setting_lookup_int) (const config_setting_t *setting, const char *name, int *value);
-config_setting_t *(*h_config_setting_get_member) (const config_setting_t *setting, const char *name);
-int (*h_config_setting_length) (const config_setting_t *setting);
 
 void hstr(const char *str) {
 	if( strlen(str) > tosql.buf[3].len ) {
@@ -60,18 +56,18 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 
 		SQL->EscapeString(NULL, e_name, it->name);
 		SQL->EscapeString(NULL, e_jname, it->jname);
-		if( it->script )  { h_config_setting_lookup_string(entry, "Script", &bonus); hstr(bonus); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[0].len ) { tosql.buf[0].len = tosql.buf[0].len + strlen(str) + 1000; RECREATE(tosql.buf[0].p,char,tosql.buf[0].len); } SQL->EscapeString(NULL, tosql.buf[0].p, str); }
-		if( it->equip_script ) { h_config_setting_lookup_string(entry, "OnEquipScript", &bonus); hstr(bonus); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[1].len ) { tosql.buf[1].len = tosql.buf[1].len + strlen(str) + 1000; RECREATE(tosql.buf[1].p,char,tosql.buf[1].len); } SQL->EscapeString(NULL, tosql.buf[1].p, str); }
-		if( it->unequip_script ) { h_config_setting_lookup_string(entry, "OnUnequipScript", &bonus); hstr(bonus); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[2].len ) { tosql.buf[2].len = tosql.buf[2].len + strlen(str) + 1000; RECREATE(tosql.buf[2].p,char,tosql.buf[2].len); } SQL->EscapeString(NULL, tosql.buf[2].p, str); }
+		if( it->script )  { libconfig->setting_lookup_string(entry, "Script", &bonus); hstr(bonus); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[0].len ) { tosql.buf[0].len = tosql.buf[0].len + strlen(str) + 1000; RECREATE(tosql.buf[0].p,char,tosql.buf[0].len); } SQL->EscapeString(NULL, tosql.buf[0].p, str); }
+		if( it->equip_script ) { libconfig->setting_lookup_string(entry, "OnEquipScript", &bonus); hstr(bonus); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[1].len ) { tosql.buf[1].len = tosql.buf[1].len + strlen(str) + 1000; RECREATE(tosql.buf[1].p,char,tosql.buf[1].len); } SQL->EscapeString(NULL, tosql.buf[1].p, str); }
+		if( it->unequip_script ) { libconfig->setting_lookup_string(entry, "OnUnequipScript", &bonus); hstr(bonus); str = tosql.buf[3].p; if ( strlen(str) > tosql.buf[2].len ) { tosql.buf[2].len = tosql.buf[2].len + strlen(str) + 1000; RECREATE(tosql.buf[2].p,char,tosql.buf[2].len); } SQL->EscapeString(NULL, tosql.buf[2].p, str); }
 		
-		if( h_config_setting_lookup_int(entry, "Job", &i32) ) // This is an unsigned value, do not check for >= 0
+		if( libconfig->setting_lookup_int(entry, "Job", &i32) ) // This is an unsigned value, do not check for >= 0
 			ui32 = (unsigned int)i32;
 		else
 			ui32 = UINT_MAX;
 		
 		job = ui32;
 		
-		if( h_config_setting_lookup_int(entry, "Upper", &i32) && i32 >= 0 )
+		if( libconfig->setting_lookup_int(entry, "Upper", &i32) && i32 >= 0 )
 			ui32 = (unsigned int)i32;
 		else
 			ui32 = ITEMUPPER_ALL;
@@ -79,7 +75,7 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 		upper = ui32;
 		
 		/* check if we have the equip_level_max, if so we send it -- otherwise we send NULL */
-		if( (t = h_config_setting_get_member(entry, "EquipLv")) && config_setting_is_aggregate(t) && h_config_setting_length(t) >= 2 )
+		if( (t = libconfig->setting_get_member(entry, "EquipLv")) && config_setting_is_aggregate(t) && libconfig->setting_length(t) >= 2 )
 			fprintf(tosql.fp,"REPLACE INTO `%s` VALUES ('%u','%s','%s','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%u','%s','%s','%s');\n",
 					tosql.db_name,it->nameid,e_name,e_jname,it->flag.delay_consume?IT_DELAYCONSUME:it->type,it->value_buy,it->value_sell,it->weight,it->atk,it->matk,it->def,it->range,it->slot,job,upper,it->sex,it->equip,it->wlv,it->elv,it->elvmax,it->flag.no_refine?0:1,it->look,it->flag.bindonequip?1:0,it->script?tosql.buf[0].p:"",it->equip_script?tosql.buf[1].p:"",it->unequip_script?tosql.buf[2].p:"");
 		else
@@ -192,16 +188,13 @@ void db2sql_arg(char *param) {
 	map->minimal = torun = true;
 }
 HPExport void server_preinit (void) {
-	h_config_setting_lookup_string = GET_SYMBOL("config_setting_lookup_string");
-	h_config_setting_lookup_int = GET_SYMBOL("config_setting_lookup_int");
-	h_config_setting_get_member = GET_SYMBOL("config_setting_get_member");
-	h_config_setting_length = GET_SYMBOL("config_setting_length");
-	
 	SQL = GET_SYMBOL("SQL");
 	itemdb = GET_SYMBOL("itemdb");
 	map = GET_SYMBOL("map");
 	strlib = GET_SYMBOL("strlib");
 	iMalloc = GET_SYMBOL("iMalloc");
+	libconfig = GET_SYMBOL("libconfig");
+
 	
 	addArg("--db2sql",false,db2sql_arg,NULL);	
 }
