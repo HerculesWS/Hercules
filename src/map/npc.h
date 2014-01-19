@@ -323,6 +323,25 @@ struct npc_chat_interface {
 
 struct npc_chat_interface *npc_chat;
 
+/**
+ * pcre interface (libpcre)
+ * so that plugins may share and take advantage of the core's pcre
+ **/
+struct pcre_interface {
+	pcre *(*compile) (const char *pattern, int options, const char **errptr, int *erroffset, const unsigned char *tableptr);
+	pcre_extra *(*study) (const pcre *code, int options, const char **errptr);
+	int (*exec) (const pcre *code, const pcre_extra *extra, PCRE_SPTR subject, int length, int startoffset, int options, int *ovector, int ovecsize);
+	void (*free) (void *ptr);
+	int (*copy_substring) (const char *subject, int *ovector, int stringcount, int stringnumber, char *buffer, int buffersize);
+	void (*free_substring) (const char *stringptr);
+	int (*copy_named_substring) (const pcre *code, const char *subject, int *ovector, int stringcount, const char *stringname, char *buffer, int buffersize);
+};
+
+struct pcre_interface *libpcre;
+
+/**
+ * Also defaults libpcre
+ **/
 void npc_chat_defaults(void);
 #endif
 

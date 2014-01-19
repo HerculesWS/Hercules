@@ -22,7 +22,12 @@
 #include <string.h>
 #include <stdarg.h>
 
+/**
+ * interface sources
+ **/
 struct npc_chat_interface npc_chat_s;
+struct pcre_interface libpcre_s;
+
 
 /**
  *  Written by MouseJstr in a vision... (2/21/2005)
@@ -79,8 +84,8 @@ struct npc_chat_interface npc_chat_s;
  */
 void finalize_pcrematch_entry(struct pcrematch_entry* e)
 {
-	pcre_free(e->pcre_);
-	pcre_free(e->pcre_extra_);
+	libpcre->free(e->pcre_);
+	libpcre->free(e->pcre_extra_);
 	aFree(e->pattern);
 	aFree(e->label);
 }
@@ -287,8 +292,8 @@ void npc_chat_def_pattern(struct npc_data* nd, int setid, const char* pattern, c
 	struct pcrematch_entry *e = npc_chat->create_pcrematch_entry(s);
 	e->pattern = aStrdup(pattern);
 	e->label = aStrdup(label);
-	e->pcre_ = pcre_compile(pattern, PCRE_CASELESS, &err, &erroff, NULL);
-	e->pcre_extra_ = pcre_study(e->pcre_, 0, &err);
+	e->pcre_ = libpcre->compile(pattern, PCRE_CASELESS, &err, &erroff, NULL);
+	e->pcre_extra_ = libpcre->study(e->pcre_, 0, &err);
 }
 
 /**
@@ -344,7 +349,7 @@ int npc_chat_sub(struct block_list* bl, va_list ap)
 			int offsets[2*10 + 10]; // 1/3 reserved for temp space requred by pcre_exec
 			
 			// perform pattern match
-			int r = pcre_exec(e->pcre_, e->pcre_extra_, msg, len, 0, 0, offsets, ARRAYLENGTH(offsets));
+			int r = libpcre->exec(e->pcre_, e->pcre_extra_, msg, len, 0, 0, offsets, ARRAYLENGTH(offsets));
 			if (r > 0)
 			{
 				// save out the matched strings
@@ -352,7 +357,7 @@ int npc_chat_sub(struct block_list* bl, va_list ap)
 				{
 					char var[6], val[255];
 					snprintf(var, sizeof(var), "$@p%i$", i);
-					pcre_copy_substring(msg, offsets, r, i, val, sizeof(val));
+					libpcre->copy_substring(msg, offsets, r, i, val, sizeof(val));
 					script->set_var(sd, var, val);
 				}
 				
@@ -425,6 +430,16 @@ void npc_chat_defaults(void) {
 	npc_chat->activate_pcreset = activate_pcreset;
 	npc_chat->lookup_pcreset = lookup_pcreset;
 	npc_chat->finalize_pcrematch_entry = finalize_pcrematch_entry;
+	
+	libpcre = &libpcre_s;
+	
+	libpcre->compile = pcre_compile;
+	libpcre->study = pcre_study;
+	libpcre->exec = pcre_exec;
+	libpcre->free = pcre_free;
+	libpcre->copy_substring = pcre_copy_substring;
+	libpcre->free_substring = pcre_free_substring;
+	libpcre->copy_named_substring = pcre_copy_named_substring;
 }
 
 #endif //PCRE_SUPPORT

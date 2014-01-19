@@ -5371,6 +5371,7 @@ void map_hp_symbols(void) {
 	HPM->share(quest,"quest");
 #ifdef PCRE_SUPPORT
 	HPM->share(npc_chat,"npc_chat");
+	HPM->share(libpcre,"libpcre");
 #endif
 	HPM->share(mapit,"mapit");
 	HPM->share(mapindex,"mapindex");
