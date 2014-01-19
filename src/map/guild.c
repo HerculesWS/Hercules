@@ -11,6 +11,7 @@
 #include "../common/ers.h"
 #include "../common/strlib.h"
 #include "../common/utils.h"
+#include "../common/HPM.h"
 
 #include "map.h"
 #include "guild.h"
@@ -1758,6 +1759,16 @@ int guild_broken(int guild_id,int flag)
 	}
 	if( g->instance )
 		aFree(g->instance);
+	
+	for( i = 0; i < g->hdatac; i++ ) {
+		if( g->hdata[i]->flag.free ) {
+			aFree(g->hdata[i]->data);
+		}
+		aFree(g->hdata[i]);
+	}
+	if( g->hdata )
+		aFree(g->hdata);
+	
 	idb_remove(guild->db,guild_id);
 	return 0;
 }
@@ -2228,6 +2239,7 @@ void do_init_guild(bool minimal) {
 void do_final_guild(void) {
 	DBIterator *iter = db_iterator(guild->db);
 	struct guild *g;
+	int i;
 	
 	for( g = dbi_first(iter); dbi_exists(iter); g = dbi_next(iter) ) {
 		if( g->channel != NULL )
@@ -2236,6 +2248,14 @@ void do_final_guild(void) {
 			aFree(g->instance);
 			g->instance = NULL;
 		}
+		for( i = 0; i < g->hdatac; i++ ) {
+			if( g->hdata[i]->flag.free ) {
+				aFree(g->hdata[i]->data);
+			}
+			aFree(g->hdata[i]);
+		}
+		if( g->hdata )
+			aFree(g->hdata);
 	}
 	
 	dbi_destroy(iter);

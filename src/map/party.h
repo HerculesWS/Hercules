@@ -14,6 +14,8 @@
 #define PARTY_BOOKING_JOBS 6
 #define PARTY_BOOKING_RESULTS 10
 
+struct HPluginData;
+
 struct party_member_data {
 	struct map_session_data *sd;
 	unsigned int hp; //For HP,x,y refreshing.
@@ -32,6 +34,10 @@ struct party_data {
 		unsigned snovice :1; //There's a Super Novice
 		unsigned tk : 1; //There's a taekwon
 	} state;
+	
+	/* HPM Custom Struct */
+	struct HPluginData **hdata;
+	unsigned int hdatac;
 };
 
 #define PB_NOTICE_LENGTH (36 + 1)

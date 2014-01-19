@@ -46,7 +46,7 @@ struct HPM_atcommand_list {
 struct HPM_atcommand_list *atcommand_list = NULL;
 unsigned int atcommand_list_items = 0;
 
-void HPM_map_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr) {
+bool HPM_map_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr) {
 	/* record address */
 	switch( type ) {
 		case HPDT_MSD:
@@ -57,11 +57,26 @@ void HPM_map_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataType
 			ret->HPDataSRCPtr = (void**)(&((struct npc_data *)ptr)->hdata);
 			ret->hdatac = &((struct npc_data *)ptr)->hdatac;
 			break;
+		case HPDT_MAP:
+			ret->HPDataSRCPtr = (void**)(&((struct map_data *)ptr)->hdata);
+			ret->hdatac = &((struct map_data *)ptr)->hdatac;
+			break;
+		case HPDT_PARTY:
+			ret->HPDataSRCPtr = (void**)(&((struct party_data *)ptr)->hdata);
+			ret->hdatac = &((struct party_data *)ptr)->hdatac;
+			break;
+		case HPDT_GUILD:
+			ret->HPDataSRCPtr = (void**)(&((struct guild *)ptr)->hdata);
+			ret->hdatac = &((struct guild *)ptr)->hdatac;
+			break;
+		case HPDT_INSTANCE:
+			ret->HPDataSRCPtr = (void**)(&((struct instance_data *)ptr)->hdata);
+			ret->hdatac = &((struct instance_data *)ptr)->hdatac;
+			break;
 		default:
-			ret->HPDataSRCPtr = NULL;
-			ret->hdatac = NULL;
-			return;
+			return false;
 	}
+	return true;
 }
 
 void HPM_map_plugin_load_sub(struct hplugin *plugin) {

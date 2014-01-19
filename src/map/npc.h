@@ -326,6 +326,7 @@ struct npc_chat_interface *npc_chat;
 /**
  * pcre interface (libpcre)
  * so that plugins may share and take advantage of the core's pcre
+ * should be moved into core/perhaps its own file once hpm is enhanced for login/char
  **/
 struct pcre_interface {
 	pcre *(*compile) (const char *pattern, int options, const char **errptr, int *erroffset, const unsigned char *tableptr);

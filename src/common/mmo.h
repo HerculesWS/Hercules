@@ -178,6 +178,8 @@
 #define EL_CLASS_BASE 2114
 #define EL_CLASS_MAX (EL_CLASS_BASE+MAX_ELEMENTAL_CLASS-1)
 
+struct HPluginData;
+
 enum item_types {
 	IT_HEALING = 0,
 	IT_UNKNOWN, //1
@@ -498,7 +500,7 @@ struct party {
 	unsigned char count; //Count of online characters.
 	unsigned exp : 1,
 				item : 2; //&1: Party-Share (round-robin), &2: pickup style: shared.
-	struct party_member member[MAX_PARTY];
+	struct party_member member[MAX_PARTY];	
 };
 
 struct map_session_data;
@@ -553,13 +555,17 @@ struct guild {
 	struct guild_expulsion expulsion[MAX_GUILDEXPULSION];
 	struct guild_skill skill[MAX_GUILDSKILL];
 	
-	/* TODO: still used for something?|: */
-	unsigned short save_flag; // for TXT saving
+	/* used on char.c to state what kind of data is being saved/processed */
+	unsigned short save_flag;
 	
 	short *instance;
 	unsigned short instances;
 	
 	struct hChSysCh *channel;
+	
+	/* HPM Custom Struct */
+	struct HPluginData **hdata;
+	unsigned int hdatac;
 };
 
 struct guild_castle {

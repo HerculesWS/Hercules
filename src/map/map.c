@@ -3116,6 +3116,14 @@ void do_final_maps(void) {
 		if( map->list[i].qi_data )
 			aFree(map->list[i].qi_data);
 		
+		for( v = 0; v < map->list[i].hdatac; v++ ) {
+			if( map->list[i].hdata[v]->flag.free ) {
+				aFree(map->list[i].hdata[v]->data);
+			}
+			aFree(map->list[i].hdata[v]);
+		}
+		if( map->list[i].hdata )
+			aFree(map->list[i].hdata);
 	}
 
 	map->zone_db_clear();

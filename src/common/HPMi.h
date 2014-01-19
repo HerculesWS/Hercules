@@ -82,6 +82,10 @@ enum HPluginDataTypes {
 	HPDT_SESSION,
 	HPDT_MSD,
 	HPDT_NPCD,
+	HPDT_MAP,
+	HPDT_INSTANCE,
+	HPDT_GUILD,
+	HPDT_PARTY,
 };
 
 /* used in macros and conf storage */
@@ -111,6 +115,22 @@ enum HPluginConfType {
 #define addToNPCD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_NPCD,HPMi->pid,(ptr),(data),(index),(autofree)))
 #define getFromNPCD(ptr,index) (HPMi->getFromHPData(HPDT_NPCD,HPMi->pid,(ptr),(index)))
 #define removeFromNPCD(ptr,index) (HPMi->removeFromHPData(HPDT_NPCD,HPMi->pid,(ptr),(index)))
+/* map_data */
+#define addToMAPD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_MAP,HPMi->pid,(ptr),(data),(index),(autofree)))
+#define getFromMAPD(ptr,index) (HPMi->getFromHPData(HPDT_MAP,HPMi->pid,(ptr),(index)))
+#define removeFromMAPD(ptr,index) (HPMi->removeFromHPData(HPDT_MAP,HPMi->pid,(ptr),(index)))
+/* party_data */
+#define addToPAD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_PARTY,HPMi->pid,(ptr),(data),(index),(autofree)))
+#define getFromPAD(ptr,index) (HPMi->getFromHPData(HPDT_PARTY,HPMi->pid,(ptr),(index)))
+#define removeFromPAD(ptr,index) (HPMi->removeFromHPData(HPDT_PARTY,HPMi->pid,(ptr),(index)))
+/* guild */
+#define addToGLD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_GUILD,HPMi->pid,(ptr),(data),(index),(autofree)))
+#define getFromGLD(ptr,index) (HPMi->getFromHPData(HPDT_GUILD,HPMi->pid,(ptr),(index)))
+#define removeFromGLD(ptr,index) (HPMi->removeFromHPData(HPDT_GUILD,HPMi->pid,(ptr),(index)))
+/* instance_data */
+#define addToINSTD(ptr,data,index,autofree) (HPMi->addToHPData(HPDT_INSTANCE,HPMi->pid,(ptr),(data),(index),(autofree)))
+#define getFromINSTD(ptr,index) (HPMi->getFromHPData(HPDT_INSTANCE,HPMi->pid,(ptr),(index)))
+#define removeFromINSTD(ptr,index) (HPMi->removeFromHPData(HPDT_INSTANCE,HPMi->pid,(ptr),(index)))
 
 /* HPMi->addCommand */
 #define addAtcommand(cname,funcname) \

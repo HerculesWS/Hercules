@@ -11,7 +11,7 @@
 struct hplugin;
 struct map_session_data;
 
-void HPM_map_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
+bool HPM_map_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
 
 bool HPM_map_add_atcommand(char *name, AtCommandFunc func);
 void HPM_map_atcommands(void);

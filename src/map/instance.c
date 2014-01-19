@@ -11,6 +11,7 @@
 #include "../common/strlib.h"
 #include "../common/utils.h"
 #include "../common/db.h"
+#include "../common/HPM.h"
 
 #include "clif.h"
 #include "instance.h"
@@ -568,6 +569,18 @@ void instance_destroy(int instance_id) {
 	instance->list[instance_id].map = NULL;
 	instance->list[instance_id].state = INSTANCE_FREE;
 	instance->list[instance_id].num_map = 0;
+	
+	for( j = 0; j < instance->list[instance_id].hdatac; j++ ) {
+		if( instance->list[instance_id].hdata[j]->flag.free ) {
+			aFree(instance->list[instance_id].hdata[j]->data);
+		}
+		aFree(instance->list[instance_id].hdata[j]);
+	}
+	if( instance->list[instance_id].hdata )
+		aFree(instance->list[instance_id].hdata);
+	
+	instance->list[instance_id].hdata = NULL;
+	instance->list[instance_id].hdatac = 0;
 }
 
 /*--------------------------------------

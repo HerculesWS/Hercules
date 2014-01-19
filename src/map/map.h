@@ -712,6 +712,10 @@ struct map_data {
 	
 	/* speeds up clif_updatestatus processing by causing hpmeter to run only when someone with the permission can view it */
 	unsigned short hpmeter_visible;
+	
+	/* HPM Custom Struct */
+	struct HPluginData **hdata;
+	unsigned int hdatac;
 };
 
 /// Stores information about a remote map (for multi-mapserver setups).

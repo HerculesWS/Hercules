@@ -143,7 +143,7 @@ struct HPM_interface {
 	int (*arg_db_clear_sub) (DBKey key, DBData *data, va_list args);
 	void (*grabHPData) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
 	/* for server-specific HPData e.g. map_session_data */
-	void (*grabHPDataSub) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
+	bool (*grabHPDataSub) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
 	/* for custom config parsing */
 	bool (*parseConf) (const char *w1, const char *w2, enum HPluginConfType point);
 } HPM_s;

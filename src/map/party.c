@@ -11,6 +11,7 @@
 #include "../common/showmsg.h"
 #include "../common/utils.h"
 #include "../common/strlib.h"
+#include "../common/HPM.h"
 
 #include "party.h"
 #include "atcommand.h"	//msg_txt()
@@ -94,8 +95,21 @@ TBL_PC* party_sd_check(int party_id, int account_id, int char_id) {
 int party_db_final(DBKey key, DBData *data, va_list ap) {
 	struct party_data *p;
 	
-	if( ( p = DB->data2ptr(data) ) && p->instance )
-		aFree(p->instance);
+	if( ( p = DB->data2ptr(data) ) ) {
+		int j;
+		
+		if( p->instance )
+			aFree(p->instance);
+		
+		for( j = 0; j < p->hdatac; j++ ) {
+			if( p->hdata[j]->flag.free ) {
+				aFree(p->hdata[j]->data);
+			}
+			aFree(p->hdata[j]);
+		}
+		if( p->hdata )
+			aFree(p->hdata);
+	}
 	
 	return 0;
 }
@@ -591,6 +605,15 @@ int party_broken(int party_id)
 
 	if( p->instance )
 		aFree(p->instance);
+
+	for( j = 0; j < p->hdatac; j++ ) {
+		if( p->hdata[j]->flag.free ) {
+			aFree(p->hdata[j]->data);
+		}
+		aFree(p->hdata[j]);
+	}
+	if( p->hdata )
+		aFree(p->hdata);
 	
 	idb_remove(party->db,party_id);
 	return 0;

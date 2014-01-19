@@ -316,19 +316,21 @@ CPCMD(plugins) {
 void hplugins_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr) {
 	/* record address */
 	switch( type ) {
+		/* core-handled */
 		case HPDT_SESSION:
 			ret->HPDataSRCPtr = (void**)(&((struct socket_data *)ptr)->hdata);
 			ret->hdatac = &((struct socket_data *)ptr)->hdatac;
 			break;
 		/* goes to sub */
-		case HPDT_MSD:
-		case HPDT_NPCD:
-			if( HPM->grabHPDataSub )
-				HPM->grabHPDataSub(ret,type,ptr);
-			else
-				ShowError("HPM:grabHPData failed, type %d needs sub-handler!\n",type);
-			break;
 		default:
+			if( HPM->grabHPDataSub ) {
+				if( HPM->grabHPDataSub(ret,type,ptr) )
+					return;
+				else {
+					ShowError("HPM:HPM:grabHPData failed, unknown type %d!\n",type);
+				}
+			} else
+				ShowError("HPM:grabHPData failed, type %d needs sub-handler!\n",type);
 			ret->HPDataSRCPtr = NULL;
 			ret->hdatac = NULL;
 			return;
