@@ -4254,13 +4254,13 @@ void HP_chrif_send_report(char *buf, int len) {
 	}
 	return;
 }
-bool HP_chrif_flush_fifo(void) {
+bool HP_chrif_flush(void) {
 	int hIndex = 0;
 	bool retVal___ = false;
-	if( HPMHooks.count.HP_chrif_flush_fifo_pre ) {
+	if( HPMHooks.count.HP_chrif_flush_pre ) {
 		bool (*preHookFunc) (void);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_flush_fifo_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_chrif_flush_fifo_pre[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_flush_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chrif_flush_pre[hIndex].func;
 			retVal___ = preHookFunc();
 		}
 		if( *HPMforce_return ) {
@@ -4269,12 +4269,12 @@ bool HP_chrif_flush_fifo(void) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.chrif.flush_fifo();
+		retVal___ = HPMHooks.source.chrif.flush();
 	}
-	if( HPMHooks.count.HP_chrif_flush_fifo_post ) {
+	if( HPMHooks.count.HP_chrif_flush_post ) {
 		bool (*postHookFunc) (bool retVal___);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_flush_fifo_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_chrif_flush_fifo_post[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_flush_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chrif_flush_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___);
 		}
 	}
