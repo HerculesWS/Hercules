@@ -31,6 +31,9 @@ struct quest *mapif_quests_fromsql(int char_id, int *count) {
 	struct quest *questlog = NULL;
 	struct quest tmp_quest;
 	SqlStmt *stmt;
+	StringBuf buf;
+	int i;
+	int sqlerror = SQL_SUCCESS;
 
 	if (!count)
 		return NULL;
@@ -42,18 +45,31 @@ struct quest *mapif_quests_fromsql(int char_id, int *count) {
 		return NULL;
 	}
 
+	StrBuf->Init(&buf);
+	StrBuf->AppendStr(&buf, "SELECT `quest_id`, `state`, `time`");
+	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
+		StrBuf->Printf(&buf, ", `count%d`", i+1);
+	}
+	StrBuf->Printf(&buf, " FROM `%s` WHERE `char_id`=?", quest_db);
+
 	memset(&tmp_quest, 0, sizeof(struct quest));
 
-	if (SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT `quest_id`, `state`, `time`, `count1`, `count2`, `count3` FROM `%s` WHERE `char_id`=?", quest_db)
+	if (SQL_ERROR == SQL->StmtPrepare(stmt, StrBuf->Value(&buf))
 	 || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, 0)
 	 || SQL_ERROR == SQL->StmtExecute(stmt)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT,  &tmp_quest.quest_id, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_INT,  &tmp_quest.state,    0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_UINT, &tmp_quest.time,     0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_INT,  &tmp_quest.count[0], 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4, SQLDT_INT,  &tmp_quest.count[1], 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 5, SQLDT_INT,  &tmp_quest.count[2], 0, NULL, NULL)
-	) {
+	)
+		sqlerror = SQL_ERROR;
+
+	StrBuf->Destroy(&buf);
+
+	for (i = 0; sqlerror != SQL_ERROR && i < MAX_QUEST_OBJECTIVES; i++) { // Stop on the first error
+		sqlerror = SQL->StmtBindColumn(stmt, 3+i, SQLDT_INT,  &tmp_quest.count[i], 0, NULL, NULL);
+	}
+
+	if (sqlerror == SQL_ERROR) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
 		*count = 0;
@@ -62,7 +78,7 @@ struct quest *mapif_quests_fromsql(int char_id, int *count) {
 
 	*count = (int)SQL->StmtNumRows(stmt);
 	if (*count > 0) {
-		int i = 0;
+		i = 0;
 		questlog = (struct quest *)aCalloc(*count, sizeof(struct quest));
 
 		while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
@@ -105,13 +121,25 @@ bool mapif_quest_delete(int char_id, int quest_id) {
  * @return false in case of errors, true otherwise
  */
 bool mapif_quest_add(int char_id, struct quest qd) {
-	if (SQL_ERROR == SQL->Query(sql_handle, "INSERT INTO `%s`(`quest_id`, `char_id`, `state`, `time`, `count1`, `count2`, `count3`) "
-	                                        "VALUES ('%d', '%d', '%d','%d', '%d', '%d', '%d')",
-	                            quest_db, qd.quest_id, char_id, qd.state, qd.time, qd.count[0], qd.count[1], qd.count[2])
-	) {
+	StringBuf buf;
+	int i;
+
+	StrBuf->Init(&buf);
+	StrBuf->Printf(&buf, "INSERT INTO `%s`(`quest_id`, `char_id`, `state`, `time`", quest_db);
+	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
+		StrBuf->Printf(&buf, ", `count%d`", i+1);
+	}
+	StrBuf->Printf(&buf, ") VALUES ('%d', '%d', '%d', '%d'", qd.quest_id, char_id, qd.state, qd.time);
+	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
+		StrBuf->Printf(&buf, ", '%d'", qd.count[i]);
+	}
+	StrBuf->AppendStr(&buf, ")");
+	if (SQL_ERROR == SQL->Query(sql_handle, StrBuf->Value(&buf))) {
 		Sql_ShowDebug(sql_handle);
+		StrBuf->Destroy(&buf);
 		return false;
 	}
+	StrBuf->Destroy(&buf);
 
 	return true;
 }
@@ -124,13 +152,22 @@ bool mapif_quest_add(int char_id, struct quest qd) {
  * @return false in case of errors, true otherwise
  */
 bool mapif_quest_update(int char_id, struct quest qd) {
-	if (SQL_ERROR == SQL->Query(sql_handle, "UPDATE `%s` SET `state`='%d', `count1`='%d', `count2`='%d', `count3`='%d' "
-	                                        "WHERE `quest_id` = '%d' AND `char_id` = '%d'",
-	                            quest_db, qd.state, qd.count[0], qd.count[1], qd.count[2], qd.quest_id, char_id)
-	) {
+	StringBuf buf;
+	int i;
+
+	StrBuf->Init(&buf);
+	StrBuf->Printf(&buf, "UPDATE `%s` SET `state`='%d'", quest_db, qd.state);
+	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
+		StrBuf->Printf(&buf, ", `count%d`='%d'", i+1, qd.count[i]);
+	}
+	StrBuf->Printf(&buf, " WHERE `quest_id` = '%d' AND `char_id` = '%d'", qd.quest_id, char_id);
+
+	if (SQL_ERROR == SQL->Query(sql_handle, StrBuf->Value(&buf))) {
 		Sql_ShowDebug(sql_handle);
+		StrBuf->Destroy(&buf);
 		return false;
 	}
+	StrBuf->Destroy(&buf);
 
 	return true;
 }
@@ -148,7 +185,7 @@ int mapif_parse_quest_save(int fd) {
 	struct quest *old_qd = NULL, *new_qd = NULL;
 	bool success = true;
 
-	if (new_n)
+	if (new_n > 0)
 		new_qd = (struct quest*)RFIFOP(fd,8);
 
 	old_qd = mapif_quests_fromsql(char_id, &old_n);
