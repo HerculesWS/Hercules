@@ -80,7 +80,7 @@ struct atcommand_interface {
 	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
-	bool (*parse) (const int fd, struct map_session_data* sd, const char* message, int type);
+	bool (*exec) (const int fd, struct map_session_data *sd, const char *message, bool player_invoked);
 	bool (*create) (char *name, AtCommandFunc func);
 	bool (*can_use) (struct map_session_data *sd, const char *command);
 	bool (*can_use2) (struct map_session_data *sd, const char *command, AtCommandType type);

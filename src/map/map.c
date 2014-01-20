@@ -5316,7 +5316,7 @@ CPCMD(gm_use) {
 		return;
 	}
 	map->cpsd->fd = -2;
-	if( !atcommand->parse(map->cpsd->fd, map->cpsd, line, 0) )
+	if( !atcommand->exec(map->cpsd->fd, map->cpsd, line, false) )
 		ShowInfo("HCP: '"CL_WHITE"%s"CL_RESET"' failed\n",line);
 	else
 		ShowInfo("HCP: '"CL_WHITE"%s"CL_RESET"' was used\n",line);

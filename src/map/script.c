@@ -12659,7 +12659,7 @@ BUILDIN(atcommand) {
 		}
 	}
 
-	if (!atcommand->parse(fd, sd, cmd, 0)) {
+	if (!atcommand->exec(fd, sd, cmd, false)) {
 		ShowWarning("script: buildin_atcommand: failed to execute command '%s'\n", cmd);
 		script->reportsrc(st);
 		ret = false;
@@ -17320,7 +17320,7 @@ BUILDIN(useatcmd) {
 			cmd++;
 	}
 
-	atcommand->parse(fd, sd, cmd, 1);
+	atcommand->exec(fd, sd, cmd, true);
 	if (dummy_sd) aFree(dummy_sd);
 	return true;
 }

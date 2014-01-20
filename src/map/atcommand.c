@@ -9755,9 +9755,14 @@ void atcommand_get_suggestions(struct map_session_data* sd, const char *name, bo
 	dbi_destroy(alias_iter);
 }
 
-/// Executes an at-command.
-bool is_atcommand(const int fd, struct map_session_data* sd, const char* message, int type)
-{
+/**
+ * Executes an at-command
+ * @param fd             fd associated to the invoking character
+ * @param sd             sd associated to the invoking character
+ * @param message        atcommand arguments
+ * @param player_invoked true if the command was invoked by a player, false if invoked by the server (bypassing any restrictions)
+ */
+bool atcommand_exec(const int fd, struct map_session_data *sd, const char *message, bool player_invoked) {
 	char charname[NAME_LENGTH], params[100];
 	char charname2[NAME_LENGTH], params2[100];
 	char command[100];
@@ -9787,9 +9792,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 	if ( *message != atcommand->at_symbol && *message != atcommand->char_symbol )
 		return false;
 
-	// type value 0 = server invoked: bypass restrictions
-	// 1 = player invoked
-	if ( type == 1) {
+	if (player_invoked) {
 		//Commands are disabled on maps flagged as 'nocommand'
 		if ( map->list[sd->bl.m].nocommand && pc_get_group_level(sd) < map->list[sd->bl.m].nocommand ) {
 			clif->message(fd, msg_txt(143));
@@ -9859,7 +9862,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 		params[0] = '\0';
 
 	// @commands (script based)
-	if(type == 1 && atcommand->binding_count > 0) {
+	if(player_invoked && atcommand->binding_count > 0) {
 		struct atcmd_binding_data * binding;
 
 		// Get atcommand binding
@@ -9906,8 +9909,7 @@ bool is_atcommand(const int fd, struct map_session_data* sd, const char* message
 			return false;
 	}
 
-	// type == 1 : player invoked
-	if (type == 1) {
+	if (player_invoked) {
 		int i;
 		if ((*command == atcommand->at_symbol && info->at_groups[pcg->get_idx(sd->group)] == 0) ||
 		    (*command == atcommand->char_symbol && info->char_groups[pcg->get_idx(sd->group)] == 0) ) {
@@ -10243,7 +10245,7 @@ void atcommand_defaults(void) {
 	atcommand->init = do_init_atcommand;
 	atcommand->final = do_final_atcommand;
 	
-	atcommand->parse = is_atcommand;
+	atcommand->exec = atcommand_exec;
 	atcommand->create = atcommand_hp_add;
 	atcommand->can_use = atcommand_can_use;
 	atcommand->can_use2 = atcommand_can_use2;
