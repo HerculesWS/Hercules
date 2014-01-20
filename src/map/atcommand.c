@@ -2472,10 +2472,9 @@ ACMD(stat_all) {
 /*==========================================
  *
  *------------------------------------------*/
-ACMD(guildlevelup)
-{
+ACMD(guildlevelup) {
 	int level = 0;
-	short added_level;
+	int16 added_level;
 	struct guild *guild_info;
 	
 	if (!message || !*message || sscanf(message, "%d", &level) < 1 || level == 0) {
@@ -2487,16 +2486,18 @@ ACMD(guildlevelup)
 		clif->message(fd, msg_txt(43)); // You're not in a guild.
 		return false;
 	}
-	//if (strcmp(sd->status.name, guild_info->master) != 0) {
-	//	clif->message(fd, msg_txt(44)); // You're not the master of your guild.
-	//	return false;
-	//}
+#if 0 // By enabling this, only the guild leader can use this command
+	if (strcmp(sd->status.name, guild_info->master) != 0) {
+		clif->message(fd, msg_txt(44)); // You're not the master of your guild.
+		return false;
+	}
+#endif // 0
 	
-	added_level = (short)level;
-	if (level > 0 && (level > MAX_GUILDLEVEL || added_level > ((short)MAX_GUILDLEVEL - guild_info->guild_lv))) // fix positiv overflow
-		added_level = (short)MAX_GUILDLEVEL - guild_info->guild_lv;
-	else if (level < 0 && (level < -MAX_GUILDLEVEL || added_level < (1 - guild_info->guild_lv))) // fix negativ overflow
-		added_level = 1 - guild_info->guild_lv;
+	if (level > INT16_MAX || (level > 0 && level > MAX_GUILDLEVEL - guild_info->guild_lv)) // fix positive overflow
+		level = MAX_GUILDLEVEL - guild_info->guild_lv;
+	else if (level < INT16_MIN || (level < 0 && level < 1 - guild_info->guild_lv)) // fix negative overflow
+		level = 1 - guild_info->guild_lv;
+	added_level = (int16)level;
 	
 	if (added_level != 0) {
 		intif->guild_change_basicinfo(guild_info->guild_id, GBI_GUILDLV, &added_level, sizeof(added_level));

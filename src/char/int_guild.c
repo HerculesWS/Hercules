@@ -35,7 +35,7 @@ static const char dataToHex[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9
 static DBMap* guild_db_; // int guild_id -> struct guild*
 static DBMap *castle_db;
 
-static unsigned int guild_exp[100];
+static unsigned int guild_exp[MAX_GUILDLEVEL];
 
 int mapif_parse_GuildLeave(int fd,int guild_id,int account_id,int char_id,int flag,const char *mes);
 int mapif_guild_broken(int guild_id,int flag);
@@ -598,16 +598,15 @@ static struct guild_castle* inter_guildcastle_fromsql(int castle_id)
 
 
 // Read exp_guild.txt
-static bool exp_guild_parse_row(char* split[], int column, int current)
-{
-	unsigned int exp = (unsigned int)atol(split[0]);
+static bool exp_guild_parse_row(char* split[], int column, int current) {
+	int64 exp = strtoll(split[0], NULL, 10);
 
-	if (exp >= UINT_MAX) {
-		ShowError("exp_guild: Invalid exp %d at line %d\n", exp, current);
+	if (exp < 0 || exp >= UINT_MAX) {
+		ShowError("exp_guild: Invalid exp %"PRId64" (valid range: 0 - %u) at line %d\n", exp, UINT_MAX, current);
 		return false;
 	}
 
-	guild_exp[current] = exp;
+	guild_exp[current] = (unsigned int)exp;
 	return true;
 }
 
@@ -725,7 +724,7 @@ int inter_guild_sql_init(void)
 	castle_db = idb_alloc(DB_OPT_RELEASE_DATA);
 
 	//Read exp file
-	sv->readdb("db", DBPATH"exp_guild.txt", ',', 1, 1, 100, exp_guild_parse_row);
+	sv->readdb("db", DBPATH"exp_guild.txt", ',', 1, 1, MAX_GUILDLEVEL, exp_guild_parse_row);
 
 	timer->add_func_list(guild_save_timer, "guild_save_timer");
 	timer->add(timer->gettick() + 10000, guild_save_timer, 0, 0);
@@ -794,14 +793,13 @@ static bool guild_check_empty(struct guild *g)
 	return true;
 }
 
-unsigned int guild_nextexp(int level)
-{
+unsigned int guild_nextexp(int level) {
 	if (level == 0)
 		return 1;
-	if (level < 100 && level > 0) // Change by hack
-		return guild_exp[level-1];
+	if (level <= 0 || level >= MAX_GUILDLEVEL)
+		return 0;
 
-	return 0;
+	return guild_exp[level-1];
 }
 
 int guild_checkskill(struct guild *g,int id)
@@ -825,7 +823,7 @@ int guild_calcinfo(struct guild *g)
 	nextexp = guild_nextexp(g->guild_lv);
 
 	// Consume guild exp and increase guild level
-	while(g->exp >= nextexp && nextexp > 0){	//fixed guild exp overflow [Kevin]
+	while(g->exp >= nextexp && nextexp > 0) { // nextexp would be 0 if g->guild_lv was >= MAX_GUILDLEVEL
 		g->exp-=nextexp;
 		g->guild_lv++;
 		g->skill_point++;
@@ -1424,24 +1422,20 @@ int mapif_parse_GuildMessage(int fd,int guild_id,int account_id,char *mes,int le
 }
 
 // Modification of the guild
-int mapif_parse_GuildBasicInfoChange(int fd,int guild_id,int type,const char *data,int len)
-{
-	struct guild * g;
-	short dw=*((short *)data);
+int mapif_parse_GuildBasicInfoChange(int fd, int guild_id, int type, const void *data, int len) {
+	struct guild *g;
+	short value = *((const int16 *)data);
 	g = inter_guild_fromsql(guild_id);
 	if(g==NULL)
 		return 0;
 
-	switch(type)
-	{
+	switch(type) {
 		case GBI_GUILDLV:
-			if(dw>0 && g->guild_lv+dw<=50)
-			{
-				g->guild_lv+=dw;
-				g->skill_point+=dw;
-			}
-			else if(dw<0 && g->guild_lv+dw>=1)
-				g->guild_lv+=dw;
+			if (value > 0 && g->guild_lv + value <= MAX_GUILDLEVEL) {
+				g->guild_lv += value;
+				g->skill_point += value;
+			} else if (value < 0 && g->guild_lv + value >= 1)
+				g->guild_lv += value;
 			mapif_guild_info(-1,g);
 			g->save_flag |= GS_LEVEL;
 			return 0;
@@ -1837,7 +1831,7 @@ int inter_guild_parse_frommap(int fd)
 	case 0x3035: mapif_parse_GuildChangeMemberInfoShort(fd,RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOW(fd,17)); break;
 	case 0x3036: mapif_parse_BreakGuild(fd,RFIFOL(fd,2)); break;
 	case 0x3037: mapif_parse_GuildMessage(fd,RFIFOL(fd,4),RFIFOL(fd,8),(char*)RFIFOP(fd,12),RFIFOW(fd,2)-12); break;
-	case 0x3039: mapif_parse_GuildBasicInfoChange(fd,RFIFOL(fd,4),RFIFOW(fd,8),(const char*)RFIFOP(fd,10),RFIFOW(fd,2)-10); break;
+	case 0x3039: mapif_parse_GuildBasicInfoChange(fd,RFIFOL(fd,4),RFIFOW(fd,8),(const int16 *)RFIFOP(fd,10),RFIFOW(fd,2)-10); break;
 	case 0x303A: mapif_parse_GuildMemberInfoChange(fd,RFIFOL(fd,4),RFIFOL(fd,8),RFIFOL(fd,12),RFIFOW(fd,16),(const char*)RFIFOP(fd,18),RFIFOW(fd,2)-18); break;
 	case 0x303B: mapif_parse_GuildPosition(fd,RFIFOL(fd,4),RFIFOL(fd,8),(struct guild_position *)RFIFOP(fd,12)); break;
 	case 0x303C: mapif_parse_GuildSkillUp(fd,RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOL(fd,14)); break;
