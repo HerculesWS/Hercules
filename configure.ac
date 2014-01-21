@@ -37,6 +37,51 @@ m4_ifdef([AC_USE_SYSTEM_EXTENSIONS],
 	[AC_GNU_SOURCE]
 )
 
+# Root-check
+host_is="`uname`"
+case $host_os in
+CYGWIN*)
+	;;
+*)
+	if type id >/dev/null 2>&1; then
+		euid="`id -u`"
+		if test "$euid" == "0"; then
+			echo ""
+			echo "********************************************************************************"
+			echo '*                            W A R N I N G      /!\                            *'
+			echo "********************************************************************************"
+			echo "* It appears that you're planning to run Hercules with root privileges. That's *"
+			echo "* not necessary, nor recommended, and it may open your machine to unnecessary  *"
+			echo "* security risks.  You should never ever run software as root unless it        *"
+			echo "* requires the extra privileges (which Hercules does not.)                     *"
+			echo "*                                                                              *"
+			echo "* More info:                                                                   *"
+			echo "* http://www.tldp.org/HOWTO/Security-HOWTO/local-security.html                 *"
+			echo "* https://wiki.debian.org/sudo                                                 *"
+			echo "* http://wiki.centos.org/TipsAndTricks/BecomingRoot                            *"
+			echo "* http://fedoraproject.org/wiki/Configuring_Sudo                               *"
+			echo "* https://help.ubuntu.com/community/RootSudo                                   *"
+			echo "* http://www.freebsdwiki.net/index.php/Root                                    *"
+			echo "*                                                                              *"
+			echo "* If your service provider forces (or encourages) you to run server software   *"
+			echo "* as root, please complain to them. It is a very bad idea.                     *"
+			echo "********************************************************************************"
+			echo "Execution will be paused for 60 seconds... Press Ctrl-C now if you wish to stop."
+			for j in 1 2 3 4 5 6; do
+				for i in 1 2 3 4 5 6 7 8 9 10; do
+					printf "\a. "
+					sleep 1
+				done
+				echo ""
+			done
+			echo ""
+			echo "Resuming as root. If anything breaks, you'll get to keep the pieces."
+			sleep 2
+		fi
+	fi
+	;;
+esac
+
 #
 # Memory managers
 #
