@@ -55,14 +55,14 @@ void HP_atcommand_final(void) {
 	}
 	return;
 }
-bool HP_atcommand_parse(const int fd, struct map_session_data *sd, const char *message, int type) {
+bool HP_atcommand_exec(const int fd, struct map_session_data *sd, const char *message, bool player_invoked) {
 	int hIndex = 0;
 	bool retVal___ = false;
-	if( HPMHooks.count.HP_atcommand_parse_pre ) {
-		bool (*preHookFunc) (const int *fd, struct map_session_data *sd, const char *message, int *type);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_parse_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_atcommand_parse_pre[hIndex].func;
-			retVal___ = preHookFunc(&fd, sd, message, &type);
+	if( HPMHooks.count.HP_atcommand_exec_pre ) {
+		bool (*preHookFunc) (const int *fd, struct map_session_data *sd, const char *message, bool *player_invoked);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_exec_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_atcommand_exec_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd, sd, message, &player_invoked);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -70,13 +70,13 @@ bool HP_atcommand_parse(const int fd, struct map_session_data *sd, const char *m
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.atcommand.parse(fd, sd, message, type);
+		retVal___ = HPMHooks.source.atcommand.exec(fd, sd, message, player_invoked);
 	}
-	if( HPMHooks.count.HP_atcommand_parse_post ) {
-		bool (*postHookFunc) (bool retVal___, const int *fd, struct map_session_data *sd, const char *message, int *type);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_parse_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_atcommand_parse_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, sd, message, &type);
+	if( HPMHooks.count.HP_atcommand_exec_post ) {
+		bool (*postHookFunc) (bool retVal___, const int *fd, struct map_session_data *sd, const char *message, bool *player_invoked);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_exec_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_atcommand_exec_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &fd, sd, message, &player_invoked);
 		}
 	}
 	return retVal___;

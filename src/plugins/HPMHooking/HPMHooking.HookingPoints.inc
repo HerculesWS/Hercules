@@ -8,7 +8,7 @@ struct HookingPointData HookingPoints[] = {
 /* atcommand */
 	{ HP_POP(atcommand->init, HP_atcommand_init) },
 	{ HP_POP(atcommand->final, HP_atcommand_final) },
-	{ HP_POP(atcommand->parse, HP_atcommand_parse) },
+	{ HP_POP(atcommand->exec, HP_atcommand_exec) },
 	{ HP_POP(atcommand->create, HP_atcommand_create) },
 	{ HP_POP(atcommand->can_use, HP_atcommand_can_use) },
 	{ HP_POP(atcommand->can_use2, HP_atcommand_can_use2) },

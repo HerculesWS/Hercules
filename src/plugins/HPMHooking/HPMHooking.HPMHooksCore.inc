@@ -9,8 +9,8 @@ struct {
 	struct HPMHookPoint *HP_atcommand_init_post;
 	struct HPMHookPoint *HP_atcommand_final_pre;
 	struct HPMHookPoint *HP_atcommand_final_post;
-	struct HPMHookPoint *HP_atcommand_parse_pre;
-	struct HPMHookPoint *HP_atcommand_parse_post;
+	struct HPMHookPoint *HP_atcommand_exec_pre;
+	struct HPMHookPoint *HP_atcommand_exec_post;
 	struct HPMHookPoint *HP_atcommand_create_pre;
 	struct HPMHookPoint *HP_atcommand_create_post;
 	struct HPMHookPoint *HP_atcommand_can_use_pre;
@@ -5028,8 +5028,8 @@ struct {
 	int HP_atcommand_init_post;
 	int HP_atcommand_final_pre;
 	int HP_atcommand_final_post;
-	int HP_atcommand_parse_pre;
-	int HP_atcommand_parse_post;
+	int HP_atcommand_exec_pre;
+	int HP_atcommand_exec_post;
 	int HP_atcommand_create_pre;
 	int HP_atcommand_create_post;
 	int HP_atcommand_can_use_pre;
