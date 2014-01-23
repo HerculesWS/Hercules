@@ -7071,9 +7071,7 @@ void clif_guild_created(struct map_session_data *sd,int flag)
 
 /// Notifies the client that it is belonging to a guild (ZC_UPDATE_GDID).
 /// 016c <guild id>.L <emblem id>.L <mode>.L <ismaster>.B <inter sid>.L <guild name>.24B
-/// mode:
-///     &0x01 = allow invite
-///     &0x10 = allow expel
+/// mode: @see enum guild_permission
 void clif_guild_belonginfo(struct map_session_data *sd, struct guild *g)
 {
 	int ps,fd;
@@ -7323,9 +7321,7 @@ void clif_guild_positionnamelist(struct map_session_data *sd) {
 
 /// Guild position information (ZC_POSITION_INFO).
 /// 0160 <packet len>.W { <position id>.L <mode>.L <ranking>.L <pay rate>.L }*
-/// mode:
-///     &0x01 = allow invite
-///     &0x10 = allow expel
+/// mode: @see enum guild_permission
 /// ranking:
 ///     TODO
 void clif_guild_positioninfolist(struct map_session_data *sd) {
@@ -7353,9 +7349,7 @@ void clif_guild_positioninfolist(struct map_session_data *sd) {
 
 /// Notifies clients in a guild about updated position information (ZC_ACK_CHANGE_GUILD_POSITIONINFO).
 /// 0174 <packet len>.W { <position id>.L <mode>.L <ranking>.L <pay rate>.L <position name>.24B }*
-/// mode:
-///     &0x01 = allow invite
-///     &0x10 = allow expel
+/// mode: @see enum guild_permission
 /// ranking:
 ///     TODO
 void clif_guild_positionchanged(struct guild *g,int idx)

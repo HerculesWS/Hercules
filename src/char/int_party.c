@@ -70,9 +70,10 @@ static void inter_party_calc_state(struct party_data *p)
 		if(p->party.member[i].online)
 			p->party.count++;
 	}
+	// FIXME[Haru]: What if the occupied positions aren't the first three? It can happen if some party members leave. This is the reason why family sharing some times stops working until you recreate your party
 	if( p->size == 2 && ( chr->char_child(p->party.member[0].char_id,p->party.member[1].char_id) || chr->char_child(p->party.member[1].char_id,p->party.member[0].char_id) ) ) {
 		//Child should be able to share with either of their parents  [RoM]
-		if(p->party.member[0].class_&0x2000) //first slot is the child?
+		if(p->party.member[0].class_&JOBL_BABY) //first slot is the child?
 			p->family = p->party.member[0].char_id;
 		else
 			p->family = p->party.member[1].char_id;
@@ -261,12 +262,12 @@ int inter_party_sql_init(void)
 		exit(EXIT_FAILURE);
 	}
 
-	/* Uncomment the following if you want to do a party_db cleanup (remove parties with no members) on startup.[Skotlex]
+#if 0 // Enable if you want to do a party_db cleanup (remove parties with no members) on startup.[Skotlex]
 	ShowStatus("cleaning party table...\n");
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` USING `%s` LEFT JOIN `%s` ON `%s`.leader_id =`%s`.account_id AND `%s`.leader_char = `%s`.char_id WHERE `%s`.account_id IS NULL",
 		party_db, party_db, char_db, party_db, char_db, party_db, char_db, char_db) )
 		Sql_ShowDebug(inter->sql_handle);
-	*/
+#endif // 0
 	return 0;
 }
 
@@ -594,7 +595,7 @@ int mapif_parse_PartyChangeOption(int fd,int party_id,int account_id,int exp,int
 int mapif_parse_PartyLeave(int fd, int party_id, int account_id, int char_id)
 {
 	struct party_data *p;
-	int i,j=-1;
+	int i,j;
 
 	p = inter_party->fromsql(party_id);
 	if( p == NULL )
@@ -745,8 +746,8 @@ int mapif_parse_PartyLeaderChange(int fd, int party_id, int account_id, int char
 // Data packet length is set to inter.c that you
 // Do NOT go and check the packet length, RFIFOSKIP is done by the caller
 // Return :
-// 0 : error
-// 1 : ok
+//  0 : error
+//  1 : ok
 int inter_party_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);

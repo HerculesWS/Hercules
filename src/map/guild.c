@@ -615,7 +615,7 @@ int guild_invite(struct map_session_data *sd, struct map_session_data *tsd) {
 	if(tsd==NULL || g==NULL)
 		return 0;
 
-	if( (i=guild->getposition(g,sd))<0 || !(g->position[i].mode&0x0001) )
+	if( (i=guild->getposition(g,sd)) < 0 || !(g->position[i].mode&GPERM_INVITE) )
 		return 0; //Invite permission.
 
 	if(!battle_config.invite_request_check) {
@@ -840,7 +840,7 @@ int guild_expulsion(struct map_session_data* sd, int guild_id, int account_id, i
 	if(sd->status.guild_id!=guild_id)
 		return 0;
 
-	if( (ps=guild->getposition(g,sd))<0 || !(g->position[ps].mode&0x0010) )
+	if ((ps=guild->getposition(g,sd))<0 || !(g->position[ps].mode&GPERM_EXPEL))
 		return 0; //Expulsion permission
 
 	//Can't leave inside guild castles.
@@ -1095,9 +1095,7 @@ int guild_change_position(int guild_id,int idx,int mode,int exp_mode,const char 
 	struct guild_position p;
 
 	exp_mode = cap_value(exp_mode, 0, battle_config.guild_exp_limit);
-	//Mode 0x01 <- Invite
-	//Mode 0x10 <- Expel.
-	p.mode=mode&0x11;
+	p.mode=mode&GPERM_BOTH; // Invite and Expel
 	p.exp_mode=exp_mode;
 	safestrncpy(p.name,name,NAME_LENGTH);
 	return intif->guild_position(guild_id,idx,&p);

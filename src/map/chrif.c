@@ -747,15 +747,15 @@ bool chrif_changeemail(int id, const char *actual_email, const char *new_email) 
  * S 2b0e <accid>.l <name>.24B <type>.w { <additional fields>.12B }
  * { <year>.w <month>.w <day>.w <hour>.w <minute>.w <second>.w }
  * Send an account modification request to the login server (via char server).
- * type of operation {additional fields}:
- *   1: block         { n/a }
- *   2: ban           { <year>.w <month>.w <day>.w <hour>.w <minute>.w <second>.w }
- *   3: unblock       { n/a }
- *   4: unban         { n/a }
- *   5: changesex     { n/a } -- use chrif_changesex
- *   6: charban       { <year>.w <month>.w <day>.w <hour>.w <minute>.w <second>.w }
- *   7: charunban     { n/a }
- *   8: changecharsex { <sex>.b } -- use chrif_changesex
+ * type of operation: @see enum zh_char_ask_name
+ *   block         { n/a }
+ *   ban           { <year>.w <month>.w <day>.w <hour>.w <minute>.w <second>.w }
+ *   unblock       { n/a }
+ *   unban         { n/a }
+ *   changesex     { n/a } -- use chrif_changesex
+ *   charban       { <year>.w <month>.w <day>.w <hour>.w <minute>.w <second>.w }
+ *   charunban     { n/a }
+ *   changecharsex { <sex>.b } -- use chrif_changesex
  *------------------------------------------*/
 bool chrif_char_ask_name(int acc, const char* character_name, unsigned short operation_type, int year, int month, int day, int hour, int minute, int second)
 {
@@ -767,7 +767,7 @@ bool chrif_char_ask_name(int acc, const char* character_name, unsigned short ope
 	safestrncpy((char*)WFIFOP(chrif->fd,6), character_name, NAME_LENGTH);
 	WFIFOW(chrif->fd,30) = operation_type;
 
-	if ( operation_type == 2 || operation_type == 6 ) {
+	if (operation_type == CHAR_ASK_NAME_BAN || operation_type == CHAR_ASK_NAME_CHARBAN) {
 		WFIFOW(chrif->fd,32) = year;
 		WFIFOW(chrif->fd,34) = month;
 		WFIFOW(chrif->fd,36) = day;
@@ -795,7 +795,7 @@ bool chrif_changesex(struct map_session_data *sd, bool change_account)
 	WFIFOW(chrif->fd,0) = 0x2b0e;
 	WFIFOL(chrif->fd,2) = sd->status.account_id;
 	safestrncpy((char*)WFIFOP(chrif->fd,6), sd->status.name, NAME_LENGTH);
-	WFIFOW(chrif->fd,30) = change_account ? 5 : 8;
+	WFIFOW(chrif->fd,30) = change_account ? CHAR_ASK_NAME_CHANGESEX : CHAR_ASK_NAME_CHANGECHARSEX;
 	if (!change_account)
 		WFIFOB(chrif->fd,32) = sd->status.sex == SEX_MALE ? SEX_FEMALE : SEX_MALE;
 	WFIFOSET(chrif->fd,44);
@@ -812,19 +812,14 @@ bool chrif_changesex(struct map_session_data *sd, bool change_account)
 /*==========================================
  * R 2b0f <accid>.l <name>.24B <type>.w <answer>.w
  * Processing a reply to chrif->char_ask_name() (request to modify an account).
- * type of operation:
- *   1: block, 2: ban, 3: unblock, 4: unban, 5: changesex, 6: charban, 7: charunban, 8: changecharsex
- * type of answer:
- *   0: login-server request done
- *   1: player not found
- *   2: gm level too low
- *   3: login-server offline
+ * type of operation: @see chrif_char_ask_name
+ * type of answer: @see hz_char_ask_name_answer
  *------------------------------------------*/
 bool chrif_char_ask_name_answer(int acc, const char* player_name, uint16 type, uint16 answer) {
 	struct map_session_data* sd;
 	char action[25];
 	char output[256];
-	bool charsrv = ( type == 6 || type == 7 ) ? true : false;
+	bool charsrv = ( type == CHAR_ASK_NAME_CHARBAN || type == CHAR_ASK_NAME_CHARUNBAN ) ? true : false;
 
 	sd = map->id2sd(acc);
 
@@ -834,19 +829,19 @@ bool chrif_char_ask_name_answer(int acc, const char* player_name, uint16 type, u
 	}
 
 	/* re-use previous msg_number */
-	if( type == 6 ) type = 2;
-	if( type == 7 ) type = 4;
+	if( type == CHAR_ASK_NAME_CHARBAN ) type = CHAR_ASK_NAME_BAN;
+	if( type == CHAR_ASK_NAME_CHARUNBAN ) type = CHAR_ASK_NAME_UNBAN;
 
-	if( type > 0 && type <= 5 )
+	if( type >= CHAR_ASK_NAME_BLOCK && type <= CHAR_ASK_NAME_CHANGESEX )
 		snprintf(action,25,"%s",msg_sd(sd,427+type)); //block|ban|unblock|unban|change the sex of
 	else
 		snprintf(action,25,"???");
 
 	switch( answer ) {
-		case 0 : sprintf(output, msg_sd(sd,charsrv?434:424), action, NAME_LENGTH, player_name); break;
-		case 1 : sprintf(output, msg_sd(sd,425), NAME_LENGTH, player_name); break;
-		case 2 : sprintf(output, msg_sd(sd,426), action, NAME_LENGTH, player_name); break;
-		case 3 : sprintf(output, msg_sd(sd,427), action, NAME_LENGTH, player_name); break;
+		case CHAR_ASK_NAME_ANS_DONE:     sprintf(output, msg_sd(sd,charsrv?434:424), action, NAME_LENGTH, player_name); break;
+		case CHAR_ASK_NAME_ANS_NOTFOUND: sprintf(output, msg_sd(sd,425), NAME_LENGTH, player_name); break;
+		case CHAR_ASK_NAME_ANS_GMLOW:    sprintf(output, msg_sd(sd,426), action, NAME_LENGTH, player_name); break;
+		case CHAR_ASK_NAME_ANS_OFFLINE:  sprintf(output, msg_sd(sd,427), action, NAME_LENGTH, player_name); break;
 		default: output[0] = '\0'; break;
 	}
 

@@ -65,16 +65,6 @@ enum MOBID {
 	MOBID_MAGICDECOY_WIND = 2046,
 };
 
-// The following system marks a different job ID system used by the map server,
-// which makes a lot more sense than the normal one. [Skotlex]
-// These marks the "level" of the job.
-#define JOBL_2_1 0x100 //256
-#define JOBL_2_2 0x200 //512
-#define JOBL_2 0x300
-#define JOBL_UPPER 0x1000 //4096
-#define JOBL_BABY 0x2000  //8192
-#define JOBL_THIRD 0x4000 //16384
-
 // For filtering and quick checking.
 #define MAPID_BASEMASK 0x00ff
 #define MAPID_UPPERMASK 0x0fff

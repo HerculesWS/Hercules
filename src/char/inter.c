@@ -1219,9 +1219,9 @@ int mapif_parse_Registry(int fd)
 int mapif_parse_RegistryRequest(int fd)
 {
 	//Load Char Registry
-	if (RFIFOB(fd,12)) mapif->account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),3);
+	if (RFIFOB(fd,12)) mapif->account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),3); // 3: char reg
 	//Load Account Registry
-	if (RFIFOB(fd,11)) mapif->account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),2);
+	if (RFIFOB(fd,11)) mapif->account_reg_reply(fd,RFIFOL(fd,2),RFIFOL(fd,6),2); // 2: account reg
 	//Ask Login Server for Account2 values.
 	if (RFIFOB(fd,10)) chr->request_accreg2(RFIFOL(fd,2),RFIFOL(fd,6));
 	return 1;

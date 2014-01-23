@@ -837,7 +837,7 @@ int inter_guild_calcinfo(struct guild *g)
 	g->next_exp = nextexp;
 
 	// Set the max number of members, Guild Extension skill - currently adds 6 to max per skill lv.
-	g->max_member = 16 + inter_guild->checkskill(g, GD_EXTENSION) * 6;
+	g->max_member = BASE_GUILD_SIZE + inter_guild->checkskill(g, GD_EXTENSION) * 6;
 	if(g->max_member > MAX_GUILD)
 	{
 		ShowError("Guild %d:%s has capacity for too many guild members (%d), max supported is %d\n", g->guild_id, g->name, g->max_member, MAX_GUILD);
@@ -1186,7 +1186,7 @@ int mapif_parse_CreateGuild(int fd,int account_id,char *name,struct guild_member
 	g->member[0].modified = GS_MEMBER_MODIFIED;
 
 	// Set default positions
-	g->position[0].mode=0x11;
+	g->position[0].mode = GPERM_BOTH;
 	strcpy(g->position[0].name,"GuildMaster");
 	strcpy(g->position[MAX_GUILDPOSITION-1].name,"Newbie");
 	g->position[0].modified = g->position[MAX_GUILDPOSITION-1].modified = GS_POSITION_MODIFIED;
@@ -1196,10 +1196,10 @@ int mapif_parse_CreateGuild(int fd,int account_id,char *name,struct guild_member
 	}
 
 	// Initialize guild property
-	g->max_member=16;
-	g->average_lv=master->lv;
-	g->connect_member=1;
-	g->guild_lv=1;
+	g->max_member = BASE_GUILD_SIZE;
+	g->average_lv = master->lv;
+	g->connect_member = 1;
+	g->guild_lv = 1;
 
 	for(i=0;i<MAX_GUILDSKILL;i++)
 		g->skill[i].id=i + GD_SKILLBASE;
@@ -1252,8 +1252,7 @@ int mapif_parse_GuildAddMember(int fd, int guild_id, struct guild_member *m)
 	nullpo_ret(m);
 	g = inter_guild->fromsql(guild_id);
 	if(g==NULL){
-		// Failed to add
-		mapif->guild_memberadded(fd,guild_id,m->account_id,m->char_id,1);
+		mapif->guild_memberadded(fd,guild_id,m->account_id,m->char_id,1); // 1: Failed to add
 		return 0;
 	}
 
@@ -1264,7 +1263,7 @@ int mapif_parse_GuildAddMember(int fd, int guild_id, struct guild_member *m)
 		{
 			memcpy(&g->member[i],m,sizeof(struct guild_member));
 			g->member[i].modified = (GS_MEMBER_NEW | GS_MEMBER_MODIFIED);
-			mapif->guild_memberadded(fd,guild_id,m->account_id,m->char_id,0);
+			mapif->guild_memberadded(fd,guild_id,m->account_id,m->char_id,0); // 0: success
 			if (!inter_guild->calcinfo(g)) //Send members if it was not invoked.
 				mapif->guild_info(-1,g);
 
@@ -1275,8 +1274,7 @@ int mapif_parse_GuildAddMember(int fd, int guild_id, struct guild_member *m)
 		}
 	}
 
-	// Failed to add
-	mapif->guild_memberadded(fd,guild_id,m->account_id,m->char_id,1);
+	mapif->guild_memberadded(fd,guild_id,m->account_id,m->char_id,1); // 1: Failed to add
 	return 0;
 }
 
@@ -1883,8 +1881,8 @@ int mapif_parse_GuildMasterChange(int fd, int guild_id, const char* name, int le
 // Data packet length that you set to inter.c
 //- Shouldn't do checking and packet length, RFIFOSKIP is done by the caller
 // Must Return
-// 1 : ok
-// 0 : error
+//  1 : ok
+//  0 : error
 int inter_guild_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
