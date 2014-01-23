@@ -227,17 +227,14 @@ bool login_check_password(const char* md5key, int passwdenc, const char* passwd,
 {
 	nullpo_ret(passwd);
 	nullpo_ret(refpass);
-	if(passwdenc == 0)
-	{
+	if(passwdenc == PWENC_NONE) {
 		return (0==strcmp(passwd, refpass));
-	}
-	else
-	{
-		// password mode set to 1 -> md5(md5key, refpass) enable with <passwordencrypt></passwordencrypt>
-		// password mode set to 2 -> md5(refpass, md5key) enable with <passwordencrypt2></passwordencrypt2>
+	} else {
+		// password mode set to PWENC_ENCRYPT  -> md5(md5key, refpass) enable with <passwordencrypt></passwordencrypt>
+		// password mode set to PWENC_ENCRYPT2 -> md5(refpass, md5key) enable with <passwordencrypt2></passwordencrypt2>
 
-		return ((passwdenc&0x01) && login->check_encrypted(md5key, refpass, passwd)) ||
-		       ((passwdenc&0x02) && login->check_encrypted(refpass, md5key, passwd));
+		return ((passwdenc&PWENC_ENCRYPT) && login->check_encrypted(md5key, refpass, passwd)) ||
+		       ((passwdenc&PWENC_ENCRYPT2) && login->check_encrypted(refpass, md5key, passwd));
 	}
 }
 
@@ -396,7 +393,7 @@ void login_fromchar_parse_request_change_email(int fd, int id, const char *const
 	if( !accounts->load_num(accounts, &acc, account_id) || strcmp(acc.email, "a@a.com") == 0 || acc.email[0] == '\0' )
 		ShowNotice("Char-server '%s': Attempt to create an e-mail on an account with a default e-mail REFUSED - account doesn't exist or e-mail of account isn't default e-mail (account: %d, ip: %s).\n", server[id].name, account_id, ip);
 	else {
-		memcpy(acc.email, email, 40);
+		memcpy(acc.email, email, sizeof(acc.email));
 		ShowNotice("Char-server '%s': Create an e-mail on an account with a default e-mail (account: %d, new e-mail: %s, ip: %s).\n", server[id].name, account_id, email, ip);
 		// Save
 		accounts->save(accounts, &acc);
@@ -503,7 +500,7 @@ void login_fromchar_parse_change_email(int fd, int id, const char *const ip)
 	if( strcmpi(acc.email, actual_email) != 0 )
 		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but actual e-mail is incorrect (account: %d (%s), actual e-mail: %s, proposed e-mail: %s, ip: %s).\n", server[id].name, account_id, acc.userid, acc.email, actual_email, ip);
 	else {
-		safestrncpy(acc.email, new_email, 40);
+		safestrncpy(acc.email, new_email, sizeof(acc.email));
 		ShowNotice("Char-server '%s': Modify an e-mail on an account (@email GM command) (account: %d (%s), new e-mail: %s, ip: %s).\n", server[id].name, account_id, acc.userid, new_email, ip);
 		// Save
 		accounts->save(accounts, &acc);
@@ -733,9 +730,9 @@ void login_fromchar_parse_change_pincode(int fd)
 {
 	struct mmo_account acc;
 
-	if( accounts->load_num(accounts, &acc, RFIFOL(fd,2) ) ) {
-		safestrncpy( acc.pincode, (char*)RFIFOP(fd,6), sizeof(acc.pincode) );
-		acc.pincode_change = ((unsigned int)time( NULL ));
+	if (accounts->load_num(accounts, &acc, RFIFOL(fd,2))) {
+		safestrncpy(acc.pincode, (char*)RFIFOP(fd,6), sizeof(acc.pincode));
+		acc.pincode_change = ((unsigned int)time(NULL));
 		accounts->save(accounts, &acc);
 	}
 	RFIFOSKIP(fd,11);
@@ -753,7 +750,7 @@ bool login_fromchar_parse_wrong_pincode(int fd)
 			return true;
 		}
 
-		login_log(host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed");
+		login_log(host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed"); // FIXME: Do we really want to log this with the same code as successful logins?
 	}
 
 	login->remove_online_user(acc.account_id);
@@ -1077,6 +1074,7 @@ int login_mmo_auth_new(const char* userid, const char* pass, const char sex, con
 //-----------------------------------------------------
 // Check/authentication of a connection
 //-----------------------------------------------------
+// TODO: Map result values to an enum (or at least document them)
 int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 	struct mmo_account acc;
 	size_t len;
@@ -1113,7 +1111,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 	// Account creation with _M/_F
 	if( login_config.new_account_flag ) {
 		if (len > 2 && sd->passwd[0] != '\0' && // valid user and password lengths
-			sd->passwdenc == 0 && // unencoded password
+			sd->passwdenc == PWENC_NONE && // unencoded password
 			sd->userid[len-2] == '_' && memchr("FfMm", sd->userid[len-1], 4)) // _M/_F suffix
 		{
 			int result;
@@ -1392,7 +1390,7 @@ void login_auth_failed(struct login_session_data* sd, int result)
 		default : error = "Unknown Error."; break;
 		}
 
-		login_log(ip, sd->userid, result, error);
+		login_log(ip, sd->userid, result, error); // FIXME: result can be 100, conflicting with the value 100 we use for successful login...
 	}
 
 	if( result == 1 && login_config.dynamic_pass_failure_ban )
@@ -1502,7 +1500,7 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 		safestrncpy(sd->passwd, password, PASSWD_LEN);
 		if( login_config.use_md5_passwds )
 			MD5_String(sd->passwd, sd->passwd);
-		sd->passwdenc = 0;
+		sd->passwdenc = PWENC_NONE;
 	}
 	else
 	{
@@ -1511,8 +1509,7 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 		sd->passwdenc = PASSWORDENC;
 	}
 
-	if( sd->passwdenc != 0 && login_config.use_md5_passwds )
-	{
+	if (sd->passwdenc != PWENC_NONE && login_config.use_md5_passwds) {
 		login->auth_failed(sd, 3); // send "rejected from server"
 		return true;
 	}
@@ -1566,7 +1563,7 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 	safestrncpy(sd->passwd, (char*)RFIFOP(fd,26), NAME_LENGTH);
 	if( login_config.use_md5_passwds )
 		MD5_String(sd->passwd, sd->passwd);
-	sd->passwdenc = 0;
+	sd->passwdenc = PWENC_NONE;
 	sd->version = login_config.client_version_to_connect; // hack to skip version check
 	server_ip = ntohl(RFIFOL(fd,54));
 	server_port = ntohs(RFIFOW(fd,58));
