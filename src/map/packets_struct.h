@@ -205,7 +205,9 @@ enum packet_headers {
 	npcmarketopenType = 0x9d5,
 };
 
+#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(push, 1)
+#endif // not NetBSD < 6 / Solaris
 
 /**
  * structs for data
@@ -939,6 +941,8 @@ struct packet_npc_market_open {
 	} list[1000];/* TODO: whats the actual max of this? */
 } __attribute__((packed));
 
+#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
+#endif // not NetBSD < 6 / Solaris
 
 #endif /* _PACKETS_STRUCT_H_ */

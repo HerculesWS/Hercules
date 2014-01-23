@@ -12959,14 +12959,18 @@ bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len) {
 		BITMAP_WIDTH = 24,
 		BITMAP_HEIGHT = 24,
 	};
+#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(push, 1)
+#endif // not NetBSD < 6 / Solaris
 	struct s_bitmaptripple {
 		//uint8 b;
 		//uint8 g;
 		//uint8 r;
 		unsigned int rgb:24;
 	} __attribute__((packed));
+#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
+#endif // not NetBSD < 6 / Solaris
 	uint8 buf[1800]; // no well-formed emblem bitmap is larger than 1782 (24 bit) / 1654 (8 bit) bytes
 	unsigned long buf_len = sizeof(buf);
 	int header = 0, bitmap = 0, offbits = 0, palettesize = 0, i = 0;
