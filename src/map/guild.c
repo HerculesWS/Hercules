@@ -343,14 +343,12 @@ int guild_create(struct map_session_data *sd, const char *name)
 	if( !tname[0] )
 		return 0; // empty name
 
-	if( sd->status.guild_id )
-	{// already in a guild
-		clif->guild_created(sd,1);
+	if( sd->status.guild_id ) {
+		clif->guild_created(sd,1); // You're already in a guild
 		return 0;
 	}
 	if (battle_config.guild_emperium_check && pc->search_inventory(sd, ITEMID_EMPERIUM) == INDEX_NOT_FOUND) {
-		// item required
-		clif->guild_created(sd,3);
+		clif->guild_created(sd,3); // You need the necessary item to create a guild
 		return 0;
 	}
 
@@ -367,14 +365,14 @@ int guild_created(int account_id,int guild_id) {
 	if(sd==NULL)
 		return 0;
 	if(!guild_id) {
-		clif->guild_created(sd, 2); // Creation failure (presence of the same name Guild)
+		clif->guild_created(sd, 2); // Creation failure (The guild name already exists)
 		return 0;
 	}
 	//struct guild *g;
 	sd->status.guild_id=guild_id;
-	clif->guild_created(sd,0);
+	clif->guild_created(sd,0); // Success
 	if(battle_config.guild_emperium_check)
-		pc->delitem(sd,pc->search_inventory(sd,ITEMID_EMPERIUM),1,0,0,LOG_TYPE_CONSUME); //emperium consumption
+		pc->delitem(sd, pc->search_inventory(sd, ITEMID_EMPERIUM), 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME); //emperium consumption
 	return 0;
 }
 
@@ -895,7 +893,7 @@ int guild_member_withdraw(int guild_id, int account_id, int char_id, int flag, c
 	// update char, if online
 	if(sd != NULL && sd->status.guild_id == guild_id) {
 		// do stuff that needs the guild_id first, BEFORE we wipe it
-		if (sd->state.storage_flag == 2) //Close the guild storage.
+		if (sd->state.storage_flag == STORAGE_FLAG_GUILD) //Close the guild storage.
 			gstorage->close(sd);
 		guild->send_dot_remove(sd);
 		if (channel->config->ally) {
@@ -926,7 +924,7 @@ void guild_retrieveitembound(int char_id,int aid,int guild_id) {
 		if(gstor && gstor->storage_status == 1) { //Someone is in guild storage, close them
 			struct s_mapiterator* iter = mapit_getallusers();
 			for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
-				if(sd->status.guild_id == guild_id && sd->state.storage_flag == 2) {
+				if(sd->status.guild_id == guild_id && sd->state.storage_flag == STORAGE_FLAG_GUILD) {
 					gstorage->close(sd);
 					break;
 				}
@@ -1748,7 +1746,7 @@ int guild_broken(int guild_id,int flag)
 	for(i=0;i<g->max_member;i++){
 		// Destroy all relationships
 		if((sd=g->member[i].sd)!=NULL){
-			if(sd->state.storage_flag == 2)
+			if(sd->state.storage_flag == STORAGE_FLAG_GUILD)
 				gstorage->pc_quit(sd,1);
 			sd->status.guild_id=0;
 			sd->guild = NULL;
@@ -1908,7 +1906,7 @@ int guild_break(struct map_session_data *sd,char *name) {
 			}
 			
 		}
-		for(i = 0; i < count; i++) {
+		for(i = 0; i < count; i++) { // FIXME: Why is this not done in the above loop?
 			skill->del_unitgroup(groups[i],ALC_MARK);
 		}
 	}

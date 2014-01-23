@@ -38,7 +38,7 @@ void vending_closevending(struct map_session_data* sd) {
 	nullpo_retv(sd);
 
 	if( sd->state.vending ) {
-		sd->state.vending = false;
+		sd->state.vending = 0;
 		clif->closevendingboard(&sd->bl, 0);
 		idb_remove(vending->db, sd->status.char_id);
 	}

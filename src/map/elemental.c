@@ -560,7 +560,7 @@ int elemental_unlocktarget(struct elemental_data *ed) {
 
 	ed->target_id = 0;
 	elemental_stop_attack(ed);
-	elemental_stop_walking(ed,1);
+	elemental_stop_walking(ed, STOPWALKING_FLAG_FIXPOS);
 	return 0;
 }
 

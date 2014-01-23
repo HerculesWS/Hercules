@@ -1194,7 +1194,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 
 				if(d_bl &&((d_bl->type == BL_MER && ((TBL_MER *)d_bl)->master && ((TBL_MER *)d_bl)->master->bl.id == target->id)
 						   || (d_bl->type == BL_PC && ((TBL_PC *)d_bl)->devotion[sce->val2] == target->id)) && check_distance_bl(target, d_bl, sce->val3)) {
-					clif->damage(d_bl, d_bl, 0, 0, hp, 0, 0, 0);
+					clif->damage(d_bl, d_bl, 0, 0, hp, 0, BDT_NORMAL, 0);
 					status_fix_damage(NULL, d_bl, hp, 0);
 					return 0;
 				}
@@ -1261,7 +1261,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 	}
 
 	if( src && target->type == BL_PC && (((TBL_PC*)target)->disguise) > 0 ) {// stop walking when attacked in disguise to prevent walk-delay bug
-		unit->stop_walking( target, 1 );
+		unit->stop_walking(target, STOPWALKING_FLAG_FIXPOS);
 	}
 
 	if (st->hp || (flag&8)) {
@@ -1344,7 +1344,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 		unit->remove_map(target,CLR_DEAD,ALC_MARK);
 	else { //Some death states that would normally be handled by unit_remove_map
 		unit->stop_attack(target);
-		unit->stop_walking(target,1);
+		unit->stop_walking(target, STOPWALKING_FLAG_FIXPOS);
 		unit->skillcastcancel(target,0);
 		clif->clearunit_area(target,CLR_DEAD);
 		skill->unit_move(target,timer->gettick(),4);
@@ -1874,7 +1874,7 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 	if (battle_config.slaves_inherit_speed && md->master_id)
 		flag|=8;
 
-	if (md->master_id && md->special_state.ai>1)
+	if (md->master_id && md->special_state.ai > AI_ATTACK)
 		flag|=16;
 
 	if (!flag)
@@ -1910,8 +1910,8 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 		//Max HP setting from Summon Flora/marine Sphere
 		struct unit_data *ud = unit->bl2ud(mbl);
 		//Remove special AI when this is used by regular mobs.
-		if (mbl->type == BL_MOB && !((TBL_MOB*)mbl)->special_state.ai)
-			md->special_state.ai = 0;
+		if (mbl->type == BL_MOB && ((TBL_MOB*)mbl)->special_state.ai == AI_NONE)
+			md->special_state.ai = AI_NONE;
 		if (ud) {
 			// different levels of HP according to skill level
 			if (ud->skill_id == AM_SPHEREMINE) {
@@ -3557,7 +3557,7 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 		if (!(st->mode&MD_CANATTACK))
 			unit->stop_attack(bl);
 		if (!(st->mode&MD_CANMOVE))
-			unit->stop_walking(bl,1);
+			unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 	}
 
 	// No status changes alter these yet.
@@ -5960,7 +5960,7 @@ int status_get_party_id(struct block_list *bl) {
 		struct mob_data *md=(TBL_MOB*)bl;
 		if( md->master_id > 0 ) {
 			struct map_session_data *msd;
-			if (md->special_state.ai && (msd = map->id2sd(md->master_id)) != NULL)
+			if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL)
 				return msd->status.party_id;
 			return -md->master_id;
 		}
@@ -6003,7 +6003,7 @@ int status_get_guild_id(struct block_list *bl) {
 			// Guardian guild data may not been available yet, castle data is always set
 			return (md->guardian_data->g)?md->guardian_data->g->guild_id:md->guardian_data->castle->guild_id;
 		}
-		if( md->special_state.ai && (msd = map->id2sd(md->master_id)) != NULL )
+		if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL)
 			return msd->status.guild_id; //Alchemist's mobs [Skotlex]
 		break;
 	}
@@ -6045,7 +6045,7 @@ int status_get_emblem_id(struct block_list *bl) {
 		struct mob_data *md = (struct mob_data *)bl;
 		if (md->guardian_data) //Guardian's guild [Skotlex]
 			return (md->guardian_data->g) ? md->guardian_data->g->emblem_id:0;
-		if (md->special_state.ai && (msd = map->id2sd(md->master_id)) != NULL)
+		if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL)
 			return msd->guild_emblem_id; //Alchemist's mobs [Skotlex]
 				 }
 				 break;
@@ -6971,7 +6971,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				i = sd->equip_index[EQI_HAND_R];
 				if (i>=0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_WEAPON) {
 					opt_flag|=2;
-					pc->unequipitem(sd,i,3);
+					pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
 				}
 				if (!opt_flag) return 0;
 			}
@@ -6987,7 +6987,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					i = sd->equip_index[EQI_HAND_L];
 					if ( i < 0 || !sd->inventory_data[i] || sd->inventory_data[i]->type != IT_ARMOR )
 						return 0;
-					pc->unequipitem(sd,i,3);
+					pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
 				}
 				if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
 				break;
@@ -6999,7 +6999,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				i = sd->equip_index[EQI_ARMOR];
 				if ( i < 0 || !sd->inventory_data[i] )
 					return 0;
-				pc->unequipitem(sd,i,3);
+				pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
 			}
 			if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
 			break;
@@ -7011,7 +7011,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				i = sd->equip_index[EQI_HEAD_TOP];
 				if ( i < 0 || !sd->inventory_data[i] )
 					return 0;
-				pc->unequipitem(sd,i,3);
+				pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
 			}
 			if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
 			break;
@@ -7081,12 +7081,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				if( !(sd->bonus.unstripable_equip&EQP_ACC_L) ) {
 					i = sd->equip_index[EQI_ACC_L];
 					if( i >= 0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_ARMOR )
-						pc->unequipitem(sd,i,3); //L-Accessory
+						pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE); //L-Accessory
 				}
 				if( !(sd->bonus.unstripable_equip&EQP_ACC_R) ) {
 					i = sd->equip_index[EQI_ACC_R];
 					if( i >= 0 && sd->inventory_data[i] && sd->inventory_data[i]->type == IT_ARMOR )
-						pc->unequipitem(sd,i,3); //R-Accessory
+						pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE); //R-Accessory
 				}
 				if( i < 0 )
 					return 0;
@@ -7536,7 +7536,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					struct map_session_data *tsd;
 					if( sd ) {
 						int i;
-						for( i = 0; i < 5; i++ ) {
+						for( i = 0; i < MAX_PC_DEVOTION; i++ ) {
 							if( sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) )
 								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, val3, val4, tick, SCFLAG_ALL);
 						}
@@ -7635,7 +7635,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					struct map_session_data *tsd;
 					if( sd ) {
 						int i;
-						for( i = 0; i < 5; i++ ) {
+						for( i = 0; i < MAX_PC_DEVOTION; i++ ) {
 							if( sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) )
 								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
 						}
@@ -7893,7 +7893,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 
 					if( bl->type&(BL_PC|BL_MER) ) {
 						if( sd ) {
-							for( i = 0; i < 5; i++ ) {
+							for( i = 0; i < MAX_PC_DEVOTION; i++ ) {
 								if( sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) )
 									status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
 							}
@@ -7913,7 +7913,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					if (sd) {
 						struct map_session_data *tsd;
 						int i;
-						for (i = 0; i < 5; i++) {
+						for (i = 0; i < MAX_PC_DEVOTION; i++) {
 							//See if there are devoted characters, and pass the status to them. [Skotlex]
 							if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])))
 								status->change_start(bl, &tsd->bl,type,10000,val1,5+val1*5,val3,val4,tick,SCFLAG_NOAVOID);
@@ -9257,11 +9257,11 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_NEEDLE_OF_PARALYZE:
 		case SC_DEATHBOUND:
 		case SC_NETHERWORLD:
-			unit->stop_walking(bl,1);
+			unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 			break;
 		case SC_ANKLESNARE:
 			if( battle_config.skill_trap_type || !map_flag_gvg(bl->m) )
-				unit->stop_walking(bl,1);
+				unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 			break;
 		case SC_HIDING:
 		case SC_CLOAKING:
@@ -9783,7 +9783,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 						begin_spurt = false;
 					ud->state.running = 0;
 					if (ud->walktimer != INVALID_TIMER)
-						unit->stop_walking(bl,1);
+						unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 				}
 				if (begin_spurt && sce->val1 >= 7
 				 && DIFF_TICK(timer->gettick(), starttick) <= 1000
@@ -9806,7 +9806,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 				if( bl->type == BL_PC ) {
 					// Clear Status from others
 					int i;
-					for( i = 0; i < 5; i++ ) {
+					for( i = 0; i < MAX_PC_DEVOTION; i++ ) {
 						if( sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) && tsd->sc.data[type] )
 							status_change_end(&tsd->bl, type, INVALID_TIMER);
 					}
@@ -10078,7 +10078,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 				struct block_list* src = map->id2bl(sce->val2);
 				if( tid == -1 || !src)
 					break; // Terminated by Damage
-				status_fix_damage(src,bl,400*sce->val1,clif->damage(bl,bl,0,0,400*sce->val1,0,0,0));
+				status_fix_damage(src,bl,400*sce->val1,clif->damage(bl,bl,0,0,400*sce->val1,0,BDT_NORMAL,0));
 			}
 			break;
 		case SC_WUGDASH:
@@ -10087,7 +10087,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 				if (ud) {
 					ud->state.running = 0;
 					if (ud->walktimer != -1)
-						unit->stop_walking(bl,1);
+						unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 				}
 			}
 			break;
@@ -10573,7 +10573,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 		case SC_STONE:
 			if(sc->opt1 == OPT1_STONEWAIT && sce->val3) {
 				sce->val4 = 0;
-				unit->stop_walking(bl,1);
+				unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 				unit->stop_attack(bl);
 				sc->opt1 = OPT1_STONE;
 				clif->changeoption(bl);
@@ -10620,14 +10620,16 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 
 		case SC_KNOWLEDGE:
 			if (!sd) break;
-			if (bl->m == sd->feel_map[0].m
-			 || bl->m == sd->feel_map[1].m
-			 || bl->m == sd->feel_map[2].m
-			) {
-				//Timeout will be handled by pc->setpos
-				sce->timer = INVALID_TIMER;
-				return 0;
+		{
+			int i;
+			for (i = 0; i < MAX_PC_FEELHATE; i++) {
+				if (bl->m == sd->feel_map[i].m) {
+					//Timeout will be handled by pc->setpos
+					sce->timer = INVALID_TIMER;
+					return 0;
+				}
 			}
+		}
 			break;
 
 		case SC_BLOODING:
@@ -10814,7 +10816,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 		case SC_PYREXIA:
 			if( --(sce->val4) > 0 ) {
 				map->freeblock_lock();
-				clif->damage(bl,bl,status_get_amotion(bl),status_get_dmotion(bl)+500,100,0,0,0);
+				clif->damage(bl,bl,status_get_amotion(bl),status_get_dmotion(bl)+500,100,0,BDT_NORMAL,0);
 				status_fix_damage(NULL,bl,100,0);
 				if( sc->data[type] ) {
 					sc_timer_next(3000+tick,status->change_timer,bl->id,data);
@@ -10830,7 +10832,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 				damage += st->vit * (sce->val1 - 3);
 				unit->skillcastcancel(bl,2);
 				map->freeblock_lock();
-				status->damage(bl, bl, damage, 0, clif->damage(bl,bl,status_get_amotion(bl),status_get_dmotion(bl)+500,damage,1,0,0), 1);
+				status->damage(bl, bl, damage, 0, clif->damage(bl,bl,status_get_amotion(bl),status_get_dmotion(bl)+500,damage,1,BDT_NORMAL,0), 1);
 				if( sc->data[type] ) {
 					sc_timer_next(1000 + tick, status->change_timer, bl->id, data );
 				}
@@ -10892,7 +10894,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 			if( --(sce->val4) > 0 ) {
 				//Damage is every 10 seconds including 3%sp drain.
 				map->freeblock_lock();
-				clif->damage(bl,bl,status_get_amotion(bl),1,1,0,0,0);
+				clif->damage(bl,bl,status_get_amotion(bl),1,1,0,BDT_NORMAL,0);
 				status->damage(NULL, bl, 1, st->max_sp * 3 / 100, 0, 0); //cancel dmg only if cancelable
 				if( sc->data[type] ) {
 					sc_timer_next(10000 + tick, status->change_timer, bl->id, data );
@@ -10949,7 +10951,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 				int damage = 1000 + 3 * status_get_max_hp(bl) / 100; // Deals fixed (1000 + 3%*MaxHP)
 
 				map->freeblock_lock();
-				clif->damage(bl,bl,0,0,damage,1,9,0); //damage is like endure effect with no walk delay
+				clif->damage(bl,bl,0,0,damage,1,BDT_MULTIENDURE,0); //damage is like endure effect with no walk delay
 				status->damage(src, bl, damage, 0, 0, 1);
 
 				if( sc->data[type]){ // Target still lives. [LimitLine]
@@ -11051,7 +11053,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 					break;
 				map->freeblock_lock();
 				damage =  sce->val3;
-				status->damage(src, bl, damage, 0, clif->damage(bl,bl,st->amotion,st->dmotion+200,damage,1,0,0), 1);
+				status->damage(src, bl, damage, 0, clif->damage(bl,bl,st->amotion,st->dmotion+200,damage,1,BDT_NORMAL,0), 1);
 				unit->skillcastcancel(bl,1);
 				if ( sc->data[type] ) {
 					sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
@@ -11159,7 +11161,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 				int damage = st->max_hp / 100; // Suggestion 1% each second
 				if( damage >= st->hp ) damage = st->hp - 1; // Do not kill, just keep you with 1 hp minimum
 				map->freeblock_lock();
-				status_fix_damage(NULL,bl,damage,clif->damage(bl,bl,0,0,damage,0,0,0));
+				status_fix_damage(NULL,bl,damage,clif->damage(bl,bl,0,0,damage,0,BDT_NORMAL,0));
 				if( sc->data[type] ) {
 					sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				}
@@ -11257,7 +11259,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 			if( --(sce->val4) > 0 ) {
 				status->charge(bl,0,sce->val2); // Reduce 8 every 10 seconds.
 				if( sd && !pc_issit(sd) ) {     // Force to sit every 10 seconds.
-					pc_stop_walking(sd,1|4);
+					pc_stop_walking(sd, STOPWALKING_FLAG_FIXPOS|STOPWALKING_FLAG_NEXTCELL);
 					pc_stop_attack(sd);
 					pc_setsit(sd);
 					clif->sitting(bl);

@@ -640,7 +640,7 @@ int party_optionchanged(int party_id,int account_id,int exp,int item,int flag) {
 	if( (p=party->search(party_id))==NULL)
 		return 0;
 
-	//Flag&1: Exp change denied. Flag&2: Item change denied.
+	//Flag&0x1: Exp change denied. Flag&0x10: Item change denied.
 	if(!(flag&0x01) && p->party.exp != exp)
 		p->party.exp=exp;
 	if(!(flag&0x10) && p->party.item != item) {

@@ -515,6 +515,20 @@ enum CLOSE_ROULETTE_ACK {
 };
 
 /**
+ * Reason for item deletion (clif->delitem)
+ */
+enum delitem_reason {
+	DELITEM_NORMAL         = 0, /// Normal
+	DELITEM_SKILLUSE       = 1, /// Item used for a skill
+	DELITEM_FAILREFINE     = 2, /// Refine failed
+	DELITEM_MATERIALCHANGE = 3, /// Material changed
+	DELITEM_TOSTORAGE      = 4, /// Moved to storage
+	DELITEM_TOCART         = 5, /// Moved to cart
+	DELITEM_SOLD           = 6, /// Item sold
+	DELITEM_ANALYSIS       = 7, /// Consumed by Four Spirit Analysis (SO_EL_ANALYSIS) skill
+};
+
+/**
  * Structures
  **/
 typedef void (*pFunc)(int, struct map_session_data *); //cant help but put it first

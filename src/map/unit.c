@@ -737,7 +737,7 @@ int unit_movepos(struct block_list *bl, short dst_x, short dst_y, int easy, bool
 
 	if( ud == NULL) return 0;
 
-	unit->stop_walking(bl,1);
+	unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 	unit->stop_attack(bl);
 
 	if( checkpath && (map->getcell(bl->m,dst_x,dst_y,CELL_CHKNOPASS) || !path->search(NULL,bl->m,bl->x,bl->y,dst_x,dst_y,easy,CELL_CHKNOREACH)) )
@@ -834,7 +834,7 @@ int unit_blown(struct block_list* bl, int dx, int dy, int count, int flag)
 		ny = result&0xffff;
 
 		if(!su) {
-			unit->stop_walking(bl, 0);
+			unit->stop_walking(bl, STOPWALKING_FLAG_NONE);
 		}
 
 		if( sd ) {
@@ -952,14 +952,10 @@ int unit_warp(struct block_list *bl,short m,short x,short y,clr_type type)
 
 /*==========================================
  * Caused the target object to stop moving.
- * Flag values:
- * &0x1: Issue a fixpos packet afterwards
- * &0x2: Force the unit to move one cell if it hasn't yet
- * &0x4: Enable moving to the next cell when unit was already half-way there
- *       (may cause on-touch/place side-effects, such as a scripted map change)
+ * Flag values: @see unit_stopwalking_flag.
+ * Upper bytes may be used for other purposes depending on the unit type.
  *------------------------------------------*/
-int unit_stop_walking(struct block_list *bl,int type)
-{
+int unit_stop_walking(struct block_list *bl, int flag) {
 	struct unit_data *ud;
 	const struct TimerData* td;
 	int64 tick;
@@ -976,22 +972,22 @@ int unit_stop_walking(struct block_list *bl,int type)
 	ud->walktimer = INVALID_TIMER;
 	ud->state.change_walk_target = 0;
 	tick = timer->gettick();
-	if( (type&0x02 && !ud->walkpath.path_pos) //Force moving at least one cell.
-	||  (type&0x04 && td && DIFF_TICK(td->tick, tick) <= td->data/2) //Enough time has passed to cover half-cell
+	if( (flag&STOPWALKING_FLAG_ONESTEP && !ud->walkpath.path_pos) //Force moving at least one cell.
+	||  (flag&STOPWALKING_FLAG_NEXTCELL && td && DIFF_TICK(td->tick, tick) <= td->data/2) //Enough time has passed to cover half-cell
 	) {
 		ud->walkpath.path_len = ud->walkpath.path_pos+1;
 		unit->walktoxy_timer(INVALID_TIMER, tick, bl->id, ud->walkpath.path_pos);
 	}
 
-	if(type&0x01)
+	if(flag&STOPWALKING_FLAG_FIXPOS)
 		clif->fixpos(bl);
 
 	ud->walkpath.path_len = 0;
 	ud->walkpath.path_pos = 0;
 	ud->to_x = bl->x;
 	ud->to_y = bl->y;
-	if(bl->type == BL_PET && type&~0xff)
-		ud->canmove_tick = timer->gettick() + (type>>8);
+	if(bl->type == BL_PET && flag&~STOPWALKING_FLAG_MASK)
+		ud->canmove_tick = timer->gettick() + (flag>>8);
 
 	//Read, the check in unit_set_walkdelay means dmg during running won't fall through to this place in code [Kevin]
 	if (ud->state.running) {
@@ -1169,17 +1165,14 @@ int unit_set_walkdelay(struct block_list *bl, int64 tick, int delay, int type) {
 		//Stop walking, if chasing, readjust timers.
 		if (delay == 1) {
 			//Minimal delay (walk-delay) disabled. Just stop walking.
-			unit->stop_walking(bl,4);
+			unit->stop_walking(bl, STOPWALKING_FLAG_NEXTCELL);
 		} else {
 			//Resume running after can move again [Kevin]
-			if(ud->state.running)
-			{
+			if (ud->state.running) {
 				timer->add(ud->canmove_tick, unit->resume_running, bl->id, (intptr_t)ud);
-			}
-			else
-			{
-				unit->stop_walking(bl,4);
-				if(ud->target)
+			} else {
+				unit->stop_walking(bl, STOPWALKING_FLAG_NEXTCELL);
+				if (ud->target)
 					timer->add(ud->canmove_tick+1, unit->walktobl_sub, bl->id, ud->target);
 			}
 		}
@@ -1376,7 +1369,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 			case NPC_SUMMONSLAVE:
 			case NPC_SUMMONMONSTER:
 			case AL_TELEPORT:
-				if( ((TBL_MOB*)src)->master_id && ((TBL_MOB*)src)->special_state.ai )
+				if (((TBL_MOB*)src)->master_id && ((TBL_MOB*)src)->special_state.ai != AI_NONE)
 					return 0;
 		}
 
@@ -1547,8 +1540,8 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		}
 	}
 
-	if(!ud->state.running) //need TK_RUN or WUGDASH handler to be done before that, see bugreport:6026
-		unit->stop_walking(src,1);// even though this is not how official works but this will do the trick. bugreport:6829
+	if (!ud->state.running) //need TK_RUN or WUGDASH handler to be done before that, see bugreport:6026
+		unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);// even though this is not how official works but this will do the trick. bugreport:6829
 
 	// in official this is triggered even if no cast time.
 	clif->skillcasting(src, src->id, target_id, 0,0, skill_id, skill->get_ele(skill_id, skill_lv), casttime);
@@ -1745,7 +1738,7 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 		}
 	}
 
-	unit->stop_walking(src,1);
+	unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);
 	// in official this is triggered even if no cast time.
 	clif->skillcasting(src, src->id, 0, skill_x, skill_y, skill_id, skill->get_ele(skill_id, skill_lv), casttime);
 	if( casttime > 0 ) {
@@ -2134,7 +2127,7 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick) {
 			ud->dir = map->calc_dir(src, target->x,target->y );
 		}
 		if(ud->walktimer != INVALID_TIMER)
-			unit->stop_walking(src,1);
+			unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);
 		if(md) {
 			//First attack is always a normal attack
 			if(md->state.skillstate == MSS_ANGRY || md->state.skillstate == MSS_BERSERK) {
@@ -2329,7 +2322,7 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 	map->freeblock_lock();
 
 	if (ud->walktimer != INVALID_TIMER)
-		unit->stop_walking(bl,0);
+		unit->stop_walking(bl, STOPWALKING_FLAG_NONE);
 	if (ud->skilltimer != INVALID_TIMER)
 		unit->skillcastcancel(bl,0);
 
@@ -2398,18 +2391,18 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 			}
 			//Leave/reject all invitations.
 			if(sd->chatID)
-				chat->leave(sd,0);
+				chat->leave(sd, false);
 			if(sd->trade_partner)
 				trade->cancel(sd);
 			buyingstore->close(sd);
 			searchstore->close(sd);
 			if( sd->menuskill_id != AL_TELEPORT ) { // issue: 8027
-				if(sd->state.storage_flag == 1)
+				if(sd->state.storage_flag == STORAGE_FLAG_NORMAL)
 					storage->pc_quit(sd,0);
-				else if (sd->state.storage_flag == 2)
+				else if (sd->state.storage_flag == STORAGE_FLAG_GUILD)
 					gstorage->pc_quit(sd,0);
 
-				sd->state.storage_flag = 0; //Force close it when being warped.
+				sd->state.storage_flag = STORAGE_FLAG_CLOSED; //Force close it when being warped.
 			}
 			if(sd->party_invite>0)
 				party->reply_invite(sd,sd->party_invite,0);

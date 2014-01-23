@@ -83,7 +83,7 @@ int storage_storageopen(struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	if(sd->state.storage_flag)
+	if (sd->state.storage_flag != STORAGE_FLAG_CLOSED)
 		return 1; //Already open?
 
 	if( !pc_can_give_items(sd) ) {
@@ -92,7 +92,7 @@ int storage_storageopen(struct map_session_data *sd)
 		return 1;
 	}
 
-	sd->state.storage_flag = 1;
+	sd->state.storage_flag = STORAGE_FLAG_NORMAL;
 	storage->sortitem(sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
 	clif->storagelist(sd, sd->status.storage.items, ARRAYLENGTH(sd->status.storage.items));
 	clif->updatestorageamount(sd, sd->status.storage.storage_amount, MAX_STORAGE);
@@ -190,9 +190,11 @@ int storage_delitem(struct map_session_data* sd, int n, int amount)
 	{
 		memset(&sd->status.storage.items[n],0,sizeof(sd->status.storage.items[0]));
 		sd->status.storage.storage_amount--;
-		if( sd->state.storage_flag == 1 ) clif->updatestorageamount(sd, sd->status.storage.storage_amount, MAX_STORAGE);
+		if( sd->state.storage_flag == STORAGE_FLAG_NORMAL )
+			clif->updatestorageamount(sd, sd->status.storage.storage_amount, MAX_STORAGE);
 	}
-	if( sd->state.storage_flag == 1 ) clif->storageitemremoved(sd,n,amount);
+	if( sd->state.storage_flag == STORAGE_FLAG_NORMAL )
+		clif->storageitemremoved(sd,n,amount);
 	return 0;
 }
 
@@ -219,9 +221,9 @@ int storage_storageadd(struct map_session_data* sd, int index, int amount) {
 		return 0;
 
 	if( storage->additem(sd,&sd->status.inventory[index],amount) == 0 )
-		pc->delitem(sd,index,amount,0,4,LOG_TYPE_STORAGE);
+		pc->delitem(sd, index, amount, 0, DELITEM_TOSTORAGE, LOG_TYPE_STORAGE);
 	else
-		clif->dropitem(sd, index,0);
+		clif->dropitem(sd, index, 0);
 
 	return 1;
 }
@@ -325,7 +327,7 @@ void storage_storageclose(struct map_session_data* sd) {
 	if( map->save_settings&4 )
 		chrif->save(sd,0); //Invokes the storage saving as well.
 
-	sd->state.storage_flag = 0;
+	sd->state.storage_flag = STORAGE_FLAG_CLOSED;
 }
 
 /*==========================================
@@ -337,7 +339,7 @@ void storage_storage_quit(struct map_session_data* sd, int flag) {
 	if (map->save_settings&4)
 		chrif->save(sd, flag); //Invokes the storage saving as well.
 
-	sd->state.storage_flag = 0;
+	sd->state.storage_flag = STORAGE_FLAG_CLOSED;
 }
 
 /**
@@ -380,7 +382,7 @@ int storage_guild_storageopen(struct map_session_data* sd)
 	if(sd->status.guild_id <= 0)
 		return 2;
 
-	if(sd->state.storage_flag)
+	if (sd->state.storage_flag != STORAGE_FLAG_CLOSED)
 		return 1; //Can't open both storages at a time.
 
 	if( !pc_can_give_items(sd) ) { //check is this GM level can open guild storage and store items [Lupus]
@@ -399,7 +401,7 @@ int storage_guild_storageopen(struct map_session_data* sd)
 		return 1;
 
 	gstor->storage_status = 1;
-	sd->state.storage_flag = 2;
+	sd->state.storage_flag = STORAGE_FLAG_GUILD;
 	storage->sortitem(gstor->items, ARRAYLENGTH(gstor->items));
 	clif->storagelist(sd, gstor->items, ARRAYLENGTH(gstor->items));
 	clif->updatestorageamount(sd, gstor->storage_amount, MAX_GUILD_STORAGE);
@@ -525,10 +527,10 @@ int storage_guild_storageadd(struct map_session_data* sd, int index, int amount)
 		return 0;
 	}
 
-	if(gstorage->additem(sd,stor,&sd->status.inventory[index],amount)==0)
-		pc->delitem(sd,index,amount,0,4,LOG_TYPE_GSTORAGE);
+	if( gstorage->additem(sd,stor,&sd->status.inventory[index],amount) == 0 )
+		pc->delitem(sd, index, amount, 0, DELITEM_TOSTORAGE, LOG_TYPE_GSTORAGE);
 	else
-		clif->dropitem(sd, index,0);
+		clif->dropitem(sd, index, 0);
 
 	return 1;
 }
@@ -694,7 +696,7 @@ int storage_guild_storageclose(struct map_session_data* sd) {
 			gstorage->save(sd->status.account_id, sd->status.guild_id,0);
 		stor->storage_status=0;
 	}
-	sd->state.storage_flag = 0;
+	sd->state.storage_flag = STORAGE_FLAG_CLOSED;
 
 	return 0;
 }
@@ -707,7 +709,7 @@ int storage_guild_storage_quit(struct map_session_data* sd, int flag) {
 
 	if(flag) {
 		//Only during a guild break flag is 1 (don't save storage)
-		sd->state.storage_flag = 0;
+		sd->state.storage_flag = STORAGE_FLAG_CLOSED;
 		stor->storage_status = 0;
 		clif->storageclose(sd);
 		if (map->save_settings&4)
@@ -721,7 +723,7 @@ int storage_guild_storage_quit(struct map_session_data* sd, int flag) {
 		else
 			gstorage->save(sd->status.account_id,sd->status.guild_id,1);
 	}
-	sd->state.storage_flag = 0;
+	sd->state.storage_flag = STORAGE_FLAG_CLOSED;
 	stor->storage_status = 0;
 
 	return 0;

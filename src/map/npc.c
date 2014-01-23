@@ -203,7 +203,7 @@ int npc_enable_sub(struct block_list *bl, va_list ap)
 			if (sd->npc_id != 0)
 				return 0;
 
-			pc_stop_walking(sd,1);
+			pc_stop_walking(sd, STOPWALKING_FLAG_FIXPOS);
 			npc->click(sd,nd);
 		}
 	}
@@ -2145,7 +2145,7 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 			}
 		}
 
-		pc->delitem(sd, idx, amount, 0, 6, LOG_TYPE_NPC);
+		pc->delitem(sd, idx, amount, 0, DELITEM_SOLD, LOG_TYPE_NPC);
 	}
 
 	if( z > MAX_ZENY )
@@ -3555,7 +3555,7 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 		return strchr(start, '\n');
 	}
 
-	if (mobspawn.state.ai > 4 && ai != -1) {
+	if (mobspawn.state.ai >= AI_MAX && ai != -1) {
 		ShowError("npc_parse_mob: Invalid ai %d for mob ID %d in file '%s', line '%d'.\n", mobspawn.state.ai, class_, filepath, strline(buffer, start - buffer));
 		if (retval) *retval = EXIT_FAILURE;
 		return strchr(start, '\n');
@@ -3578,7 +3578,7 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 		mobspawn.level = mob_lv;
 	if (size > 0 && size <= 2)
 		mobspawn.state.size = size;
-	if (ai > 0 && ai <= 4)
+	if (ai > AI_NONE && ai < AI_MAX)
 		mobspawn.state.ai = ai;
 
 	if (mobspawn.num > 1 && battle_config.mob_count_rate != 100) {

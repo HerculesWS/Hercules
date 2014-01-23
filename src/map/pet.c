@@ -91,7 +91,7 @@ int pet_unlocktarget(struct pet_data *pd)
 
 	pd->target_id=0;
 	pet_stop_attack(pd);
-	pet_stop_walking(pd,1);
+	pet_stop_walking(pd, STOPWALKING_FLAG_FIXPOS);
 	return 0;
 }
 
@@ -280,7 +280,7 @@ int pet_performance(struct map_session_data *sd, struct pet_data *pd)
 	else
 		val = 1;
 
-	pet_stop_walking(pd,2000<<8);
+	pet_stop_walking(pd,STOPWALKING_FLAG_NONE | (2000<<8)); // Stop walking for 2000ms
 	clif->send_petdata(NULL, pd, 4, rnd()%val + 1);
 	pet->lootitem_drop(pd,NULL);
 	return 1;
@@ -445,7 +445,7 @@ int pet_recv_petdata(int account_id,struct s_pet *p,int flag) {
 			return 1;
 		}
 		if (!pet->birth_process(sd,p)) //Pet hatched. Delete egg.
-			pc->delitem(sd,i,1,0,0,LOG_TYPE_OTHER);
+			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_OTHER);
 	} else {
 		pet->data_init(sd,p);
 		if(sd->pd && sd->bl.prev != NULL) {
@@ -678,7 +678,7 @@ int pet_equipitem(struct map_session_data *sd,int index) {
 		return 1;
 	}
 
-	pc->delitem(sd,index,1,0,0,LOG_TYPE_OTHER);
+	pc->delitem(sd, index, 1, 0, DELITEM_NORMAL, LOG_TYPE_OTHER);
 	pd->pet.equip = nameid;
 	status->set_viewdata(&pd->bl, pd->pet.class_); //Updates view_data.
 	clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);
@@ -743,7 +743,7 @@ int pet_food(struct map_session_data *sd, struct pet_data *pd) {
 		clif->pet_food(sd, food_id, 0);
 		return 1;
 	}
-	pc->delitem(sd,i,1,0,0,LOG_TYPE_CONSUME);
+	pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME);
 
 	if (pd->pet.hungry > 90) {
 		pet->set_intimate(pd, pd->pet.intimate - pd->petDB->r_full);
@@ -1144,7 +1144,7 @@ int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data) {
 	}
 	
 	pet_stop_attack(pd);
-	pet_stop_walking(pd,1);
+	pet_stop_walking(pd, STOPWALKING_FLAG_FIXPOS);
 	pd->s_skill->timer=timer->add(tick+pd->s_skill->delay*1000,pet->skill_support_timer,sd->bl.id,0);
 	if (skill->get_inf(pd->s_skill->id) & INF_GROUND_SKILL)
 		unit->skilluse_pos(&pd->bl, sd->bl.x, sd->bl.y, pd->s_skill->id, pd->s_skill->lv);

@@ -38,7 +38,7 @@
 #define MOB_CLONE_END MAX_MOB_DB
 
 //Used to determine default enemy type of mobs (for use in each in range calls)
-#define DEFAULT_ENEMY_TYPE(md) ((md)->special_state.ai?BL_CHAR:BL_MOB|BL_PC|BL_HOM|BL_MER)
+#define DEFAULT_ENEMY_TYPE(md) ((md)->special_state.ai != AI_NONE ?BL_CHAR:BL_MOB|BL_PC|BL_HOM|BL_MER)
 
 #define MAX_MOB_CHAT 250 //Max Skill's messages
 
@@ -79,11 +79,23 @@ enum size {
 };
 
 enum ai {
-	AI_NONE = 0,
-	AI_ATTACK,
-	AI_SPHERE,
-	AI_FLORA,
-	AI_ZANZOU,
+	AI_NONE = 0, //0: Normal mob.
+	AI_ATTACK,   //1: Standard summon, attacks mobs.
+	AI_SPHERE,   //2: Alchemist Marine Sphere
+	AI_FLORA,    //3: Alchemist Summon Flora
+	AI_ZANZOU,   //4: Summon Zanzou
+
+	AI_MAX
+};
+
+/**
+ * Acceptable values for map_session_data.state.noks
+ */
+enum ksprotection_mode {
+	KSPROTECT_NONE  = 0,
+	KSPROTECT_SELF  = 1,
+	KSPROTECT_PARTY = 2,
+	KSPROTECT_GUILD = 3,
 };
 
 struct mob_skill {
@@ -141,13 +153,8 @@ struct mob_data {
 	struct mob_db *db; //For quick data access (saves doing mob_db(md->class_) all the time) [Skotlex]
 	char name[NAME_LENGTH];
 	struct {
-		unsigned int size : 2; //Small/Big monsters.
-		unsigned int ai : 4; //Special AI for summoned monsters.
-							//0: Normal mob.
-							//1: Standard summon, attacks mobs.
-							//2: Alchemist Marine Sphere
-							//3: Alchemist Summon Flora
-							//4: Summon Zanzou
+		unsigned int size : 2; //Small/Big monsters. @see enum size
+		unsigned int ai : 4; //Special AI for summoned monsters. @see enum ai
 		unsigned int clone : 1;/* is clone? 1:0 */
 	} special_state; //Special mob information that does not needs to be zero'ed on mob respawn.
 	struct {

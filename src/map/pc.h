@@ -29,7 +29,8 @@
 #define MAX_PC_BONUS 10
 #define MAX_PC_SKILL_REQUIRE 5
 #define MAX_PC_FEELHATE 3
-#define PVP_CALCRANK_INTERVAL 1000 // PVP calculation interval
+#define MAX_PC_DEVOTION 5          ///< Max amount of devotion targets
+#define PVP_CALCRANK_INTERVAL 1000 ///< PVP calculation interval
 
 //Equip indexes constants. (eg: sd->equip_index[EQI_AMMO] returns the index
 //where the arrows are equipped)
@@ -57,6 +58,20 @@ enum equip_index {
 	EQI_SHADOW_ACC_L,
 	EQI_MAX
 };
+
+enum pc_unequipitem_flag {
+	PCUNEQUIPITEM_NONE   = 0x0, ///< Just unequip
+	PCUNEQUIPITEM_RECALC = 0x1, ///< Recalculate status after unequipping
+	PCUNEQUIPITEM_FORCE  = 0x2, ///< Force unequip
+};
+
+enum pc_resetskill_flag {
+	PCRESETSKILL_NONE    = 0x0,
+	PCRESETSKILL_RESYNC  = 0x1, // perform block resync and status_calc call
+	PCRESETSKILL_RECOUNT = 0x2, // just count total amount of skill points used by player, do not really reset
+	PCRESETSKILL_CHSEX   = 0x4, // just reset the skills if the player class is a bard/dancer type (for changesex.)
+};
+
 struct weapon_data {
 	int atkmods[3];
 BEGIN_ZEROED_BLOCK; // all the variables within this block get zero'ed in each call of status_calc_pc
@@ -144,7 +159,7 @@ struct map_session_data {
 		unsigned int arrow_atk : 1;
 		unsigned int gangsterparadise : 1;
 		unsigned int rest : 1;
-		unsigned int storage_flag : 2; //0: closed, 1: Normal Storage open, 2: guild storage open [Skotlex]
+		unsigned int storage_flag : 2; // @see enum storage_flag
 		unsigned int snovice_dead_flag : 1; //Explosion spirits on death: 0 off, 1 used.
 		unsigned int abra_flag : 2; // Abracadabra bugfix by Aru
 		unsigned int autocast : 1; // Autospell flag [Inkfish]
@@ -377,7 +392,7 @@ END_ZEROED_BLOCK;
 	unsigned char mission_count; //Stores the bounty kill count for TK_MISSION
 	short mission_mobid; //Stores the target mob_id for TK_MISSION
 	int die_counter; //Total number of times you've died
-	int devotion[5]; //Stores the account IDs of chars devoted to.
+	int devotion[MAX_PC_DEVOTION]; //Stores the account IDs of chars devoted to.
 	int trade_partner;
 	struct {
 		struct {
@@ -409,11 +424,11 @@ END_ZEROED_BLOCK;
 	struct mercenary_data *md;
 	struct elemental_data *ed;
 
-	struct{
+	struct {
 		int  m; //-1 - none, other: map index corresponding to map name.
 		unsigned short index; //map index
-	} feel_map[3];// 0 - Sun; 1 - Moon; 2 - Stars
-	short hate_mob[3];
+	} feel_map[MAX_PC_FEELHATE];// 0 - Sun; 1 - Moon; 2 - Stars
+	short hate_mob[MAX_PC_FEELHATE];
 
 	int pvp_timer;
 	short pvp_point;
@@ -724,6 +739,16 @@ enum e_pc_autotrade_update_action {
 	PAUC_START,
 	PAUC_REFRESH,
 	PAUC_REMOVE,
+};
+
+/**
+ * Flag values for pc->skill
+ */
+enum pc_skill_flag {
+	SKILL_GRANT_PERMANENT     = 0, // Grant permanent skill to be bound to skill tree
+	SKILL_GRANT_TEMPORARY     = 1, // Grant an item skill (temporary)
+	SKILL_GRANT_TEMPSTACK     = 2, // Like 1, except the level granted can stack with previously learned level.
+	SKILL_GRANT_UNCONDITIONAL = 3, // Grant skill unconditionally and forever (persistent to job changes and skill resets)
 };
 
 /**

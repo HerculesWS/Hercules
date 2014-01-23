@@ -14,6 +14,7 @@
 #include "itemdb.h"
 #include "log.h"
 #include "pc.h"
+#include "storage.h"
 #include "../common/nullpo.h"
 #include "../common/showmsg.h"
 
@@ -36,7 +37,7 @@ int mail_removeitem(struct map_session_data *sd, short flag)
 	if( sd->mail.amount )
 	{
 		if (flag) // Item send
-			pc->delitem(sd, sd->mail.index, sd->mail.amount, 1, 0, LOG_TYPE_MAIL);
+			pc->delitem(sd, sd->mail.index, sd->mail.amount, 1, DELITEM_NORMAL, LOG_TYPE_MAIL);
 		else
 			clif->additem(sd, sd->mail.index, sd->mail.amount, 0);
 	}
@@ -151,7 +152,7 @@ int mail_openmail(struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	if( sd->state.storage_flag || sd->state.vending || sd->state.buyingstore || sd->state.trading )
+	if (sd->state.storage_flag != STORAGE_FLAG_CLOSED || sd->state.vending || sd->state.buyingstore || sd->state.trading)
 		return 0;
 
 	clif->mail_window(sd->fd, 0);

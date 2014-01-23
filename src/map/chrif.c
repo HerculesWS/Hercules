@@ -247,6 +247,7 @@ int chrif_isconnected(void) {
  * Flag = 1: Character is quitting
  * Flag = 2: Character is changing map-servers
  *------------------------------------------*/
+// TODO: Flag enum
 bool chrif_save(struct map_session_data *sd, int flag) {
 	nullpo_ret(sd);
 
@@ -263,11 +264,11 @@ bool chrif_save(struct map_session_data *sd, int flag) {
 	chrif_check(false); //Character is saved on reconnect.
 
 	//For data sync
-	if (sd->state.storage_flag == 2)
+	if (sd->state.storage_flag == STORAGE_FLAG_GUILD)
 		gstorage->save(sd->status.account_id, sd->status.guild_id, flag);
 
 	if (flag)
-		sd->state.storage_flag = 0; //Force close it.
+		sd->state.storage_flag = STORAGE_FLAG_CLOSED; //Force close it.
 
 	//Saving of registry values.
 	if (sd->vars_dirty)
@@ -401,7 +402,7 @@ bool chrif_changemapserverack(int account_id, int login_id1, int login_id2, int 
 
 	if ( !login_id1 ) {
 		ShowError("chrif_changemapserverack: map server change failed.\n");
-		clif->authfail_fd(node->fd, 0);
+		clif->authfail_fd(node->fd, 0); // Disconnected from server
 	} else
 		clif->changemapserver(node->sd, map_index, x, y, ntohl(ip), ntohs(port));
 
@@ -465,7 +466,7 @@ int chrif_reconnect(DBKey key, DBData *data, va_list ap) {
 			if( map->mapname2ipport(sd->mapindex,&ip,&port) == 0 )
 				chrif->changemapserver(sd, ip, port);
 			else //too much lag/timeout is the closest explanation for this error.
-				clif->authfail_fd(sd->fd, 3);
+				clif->authfail_fd(sd->fd, 3); // timeout
 			break;
 			}
 	}
@@ -643,7 +644,7 @@ void chrif_authfail(int fd) {/* HELLO WORLD. ip in RFIFOL 15 is not being used (
 		node->sex == sex &&
 		node->state == ST_LOGIN )
 	{// found a match
-		clif->authfail_fd(node->fd, 0);
+		clif->authfail_fd(node->fd, 0); // Disconnected from server
 		chrif->auth_delete(account_id, char_id, ST_LOGIN);
 	}
 }
@@ -899,14 +900,14 @@ bool chrif_divorceack(int char_id, int partner_id) {
 		sd->status.partner_id = 0;
 		for(i = 0; i < MAX_INVENTORY; i++)
 			if (sd->status.inventory[i].nameid == WEDDING_RING_M || sd->status.inventory[i].nameid == WEDDING_RING_F)
-				pc->delitem(sd, i, 1, 0, 0, LOG_TYPE_OTHER);
+				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_OTHER);
 	}
 
 	if( ( sd = map->charid2sd(partner_id) ) != NULL && sd->status.partner_id == char_id ) {
 		sd->status.partner_id = 0;
 		for(i = 0; i < MAX_INVENTORY; i++)
 			if (sd->status.inventory[i].nameid == WEDDING_RING_M || sd->status.inventory[i].nameid == WEDDING_RING_F)
-				pc->delitem(sd, i, 1, 0, 0, LOG_TYPE_OTHER);
+				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_OTHER);
 	}
 
 	return true;

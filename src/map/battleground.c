@@ -211,7 +211,7 @@ int bg_team_get_id(struct block_list *bl) {
 		{
 			struct map_session_data *msd;
 			struct mob_data *md = (TBL_MOB*)bl;
-			if( md->special_state.ai && (msd = map->id2sd(md->master_id)) != NULL )
+			if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL)
 				return msd->bg_id;
 			return md->bg_id;
 		}

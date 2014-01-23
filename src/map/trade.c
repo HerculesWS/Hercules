@@ -145,8 +145,8 @@ void trade_tradeack(struct map_session_data *sd, int type) {
 	}
 
 	//Check if you can start trade.
-	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.storage_flag
-	 || tsd->npc_id || tsd->state.vending || tsd->state.buyingstore || tsd->state.storage_flag
+	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.storage_flag != STORAGE_FLAG_CLOSED
+	 || tsd->npc_id || tsd->state.vending || tsd->state.buyingstore || tsd->state.storage_flag != STORAGE_FLAG_CLOSED
 	) {
 		//Fail
 		clif->tradestart(sd, 2);
@@ -561,7 +561,7 @@ void trade_tradecommit(struct map_session_data *sd) {
 
 			flag = pc->additem(tsd, &sd->status.inventory[n], sd->deal.item[trade_i].amount,LOG_TYPE_TRADE);
 			if (flag == 0)
-				pc->delitem(sd, n, sd->deal.item[trade_i].amount, 1, 6, LOG_TYPE_TRADE);
+				pc->delitem(sd, n, sd->deal.item[trade_i].amount, 1, DELITEM_SOLD, LOG_TYPE_TRADE);
 			else
 				clif->additem(sd, n, sd->deal.item[trade_i].amount, 0);
 			sd->deal.item[trade_i].index = 0;
@@ -573,7 +573,7 @@ void trade_tradecommit(struct map_session_data *sd) {
 
 			flag = pc->additem(sd, &tsd->status.inventory[n], tsd->deal.item[trade_i].amount,LOG_TYPE_TRADE);
 			if (flag == 0)
-				pc->delitem(tsd, n, tsd->deal.item[trade_i].amount, 1, 6, LOG_TYPE_TRADE);
+				pc->delitem(tsd, n, tsd->deal.item[trade_i].amount, 1, DELITEM_SOLD, LOG_TYPE_TRADE);
 			else
 				clif->additem(tsd, n, tsd->deal.item[trade_i].amount, 0);
 			tsd->deal.item[trade_i].index = 0;

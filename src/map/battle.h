@@ -77,6 +77,27 @@ enum e_battle_check_target { //New definitions [Skotlex]
 };
 
 /**
+ * Values used by (struct Damage).type, as well as clif->damage(type) and clif->skill_damage(type)
+ *
+ * Note: some values may not apply in some contexts.
+ */
+enum battle_dmg_type {
+	BDT_NORMAL      = 0,  // Normal attack
+	//BDT_PICKUP      = 1,  // Pick up item
+	//BDT_SITDOWN     = 2,  // Sit down
+	//BDT_STANDUP     = 3,  // Stand up
+	BDT_ENDURE      = 4,  // Damage (endure)
+	BDT_SPLASH      = 5,  // Splash
+	BDT_SKILL       = 6,  // Skill
+	//BDT_REPEAT      = 7,  // (repeat damage?)
+	BDT_MULTIHIT    = 8,  // Multi-hit damage
+	BDT_MULTIENDURE = 9,  // Multi-hit damage (endure)
+	BDT_CRIT        = 10, // Critical hit
+	BDT_PDODGE      = 11, // Lucky dodge
+	//BDT_TOUCH       = 12, // (touch skill?)
+};
+
+/**
  * Structures
  **/
 
