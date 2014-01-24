@@ -47,4 +47,15 @@
  **/
 #define SECURE_NPCTIMEOUT_INTERVAL 1
 
+/**
+ * Uncomment to disable
+ * while enabled, movement of invisible (cloaking, hide, etca [not chase walk]) units is not informed to nearby foes,
+ * rendering any client-side cheat, that would otherwise make these units visible, to
+ * - "Why is this a setting?" because theres a cost, while enabled if a hidden character uses a skill with cast time,
+ * - for example "cloaking -> walk a bit -> soul break another player" the character display will be momentarily abrupted
+ * - on the action of unhiding (its a quick effect, ~0.007s in duration), and due to the nature of the skill cast on the client
+ * - it was not possible to work around this, and thus why it is optional, comment the line to disable.
+ **/
+#define ANTI_MAYAP_CHEAT
+
 #endif // _CONFIG_SECURE_H_

@@ -1550,11 +1550,12 @@ void clif_walkok(struct map_session_data *sd)
 
 
 void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_data *ud) {
+#ifdef ANTI_MAYAP_CHEAT
 	struct status_change *sc = NULL;
 	
-	if( (sc = status->get_sc(bl)) && sc->option&(OPTION_HIDE|OPTION_CLOAK|OPTION_INVISIBLE|OPTION_CHASEWALK) )
+	if( (sc = status->get_sc(bl)) && sc->option&(OPTION_HIDE|OPTION_CLOAK|OPTION_INVISIBLE) )
 		clif->ally_only = true;
-
+#endif
 	clif->set_unit_walking(bl,NULL,ud,AREA_WOS);
 
 	if(vd->cloth_color)
@@ -1585,8 +1586,9 @@ void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_data *u
 				clif->send_petdata(NULL, (TBL_PET*)bl, 3, vd->head_bottom);
 			break;
 	}
-	
+#ifdef ANTI_MAYAP_CHEAT
 	clif->ally_only = false;
+#endif
 }
 
 
@@ -1598,9 +1600,11 @@ void clif_move(struct unit_data *ud)
 	unsigned char buf[16];
 	struct view_data *vd;
 	struct block_list *bl = ud->bl;
+#ifdef ANTI_MAYAP_CHEAT
 	struct status_change *sc = NULL;
-	vd = status->get_viewdata(bl);
-	if (!vd || vd->class_ == INVISIBLE_CLASS)
+#endif
+	
+	if ( !(vd = status->get_viewdata(bl)) || vd->class_ == INVISIBLE_CLASS )
 		return; //This performance check is needed to keep GM-hidden objects from being notified to bots.
 
 	/**
@@ -1616,21 +1620,27 @@ void clif_move(struct unit_data *ud)
 		clif->move2(bl, vd, ud);
 		return;
 	}
-	
-	if( (sc = status->get_sc(bl)) && sc->option&(OPTION_HIDE|OPTION_CLOAK|OPTION_INVISIBLE|OPTION_CHASEWALK) )
-		clif->ally_only = true;
 
+#ifdef ANTI_MAYAP_CHEAT
+	if( (sc = status->get_sc(bl)) && sc->option&(OPTION_HIDE|OPTION_CLOAK|OPTION_INVISIBLE) )
+		clif->ally_only = true;
+#endif
+	
 	WBUFW(buf,0)=0x86;
 	WBUFL(buf,2)=bl->id;
 	WBUFPOS2(buf,6,bl->x,bl->y,ud->to_x,ud->to_y,8,8);
 	WBUFL(buf,12)=(unsigned int)timer->gettick();
+	
 	clif->send(buf, packet_len(0x86), bl, AREA_WOS);
+	
 	if (disguised(bl)) {
 		WBUFL(buf,2)=-bl->id;
 		clif->send(buf, packet_len(0x86), bl, SELF);
 	}
-	
+
+#ifdef ANTI_MAYAP_CHEAT
 	clif->ally_only = false;
+#endif
 }
 
 

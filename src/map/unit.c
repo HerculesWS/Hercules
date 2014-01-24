@@ -1345,6 +1345,19 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		casttime = 0;
 	}
 
+	if( sc ) {
+		/**
+		 * why the if else chain: these 3 status do not stack, so its efficient that way.
+		 **/
+ 		if( sc->data[SC_CLOAKING] && !(sc->data[SC_CLOAKING]->val4&4) && skill_id != AS_CLOAKING ) {
+			status_change_end(src, SC_CLOAKING, INVALID_TIMER);
+			if (!src->prev) return 0; //Warped away!
+		} else if( sc->data[SC_CLOAKINGEXCEED] && !(sc->data[SC_CLOAKINGEXCEED]->val4&4) && skill_id != GC_CLOAKINGEXCEED ) {
+			status_change_end(src,SC_CLOAKINGEXCEED, INVALID_TIMER);
+			if (!src->prev) return 0;
+		}
+	}
+	
 	if(!ud->state.running) //need TK_RUN or WUGDASH handler to be done before that, see bugreport:6026
 		unit->stop_walking(src,1);// eventhough this is not how official works but this will do the trick. bugreport:6829
 	
@@ -1400,20 +1413,6 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	ud->skilly       = 0;
 	ud->skill_id      = skill_id;
 	ud->skill_lv      = skill_lv;
-
-	if( sc ) {
-		/**
-		 * why the if else chain: these 3 status do not stack, so its efficient that way.
-		 **/
- 		if( sc->data[SC_CLOAKING] && !(sc->data[SC_CLOAKING]->val4&4) && skill_id != AS_CLOAKING ) {
-			status_change_end(src, SC_CLOAKING, INVALID_TIMER);
-			if (!src->prev) return 0; //Warped away!
-		} else if( sc->data[SC_CLOAKINGEXCEED] && !(sc->data[SC_CLOAKINGEXCEED]->val4&4) && skill_id != GC_CLOAKINGEXCEED ) {
-			status_change_end(src,SC_CLOAKINGEXCEED, INVALID_TIMER);
-			if (!src->prev) return 0;
-		}
-	}
-
 
 	if( casttime > 0 ) {
 		ud->skilltimer = timer->add( tick+casttime, skill->castend_id, src->id, 0 );
