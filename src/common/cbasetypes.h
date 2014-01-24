@@ -42,6 +42,11 @@
 #define __DARWIN__
 #endif
 
+// Necessary for __NetBSD_Version__ (defined as VVRR00PP00) on NetBSD
+#ifdef __NETBSD__
+#include <sys/param.h>
+#endif // __NETBSD__
+
 // 64bit OS
 #if defined(_M_IA64) || defined(_M_X64) || defined(_WIN64) || defined(_LP64) || defined(_ILP64) || defined(__LP64__) || defined(__ppc64__)
 #define __64BIT__

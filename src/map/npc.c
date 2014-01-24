@@ -2432,7 +2432,7 @@ int npc_parseview(const char* w4, const char* start, const char* buffer, const c
 
 	// Extract view ID / constant
 	while (w4[i] != '\0') {
-		if (isspace(w4[i]) || w4[i] == '/' || w4[i] == ',')
+		if (ISSPACE(w4[i]) || w4[i] == '/' || w4[i] == ',')
 			break;
 
 		i++;
@@ -2464,7 +2464,7 @@ bool npc_viewisid(const char * viewid)
 	{
 		// Loop through view, looking for non-numeric character.
 		while (*viewid) {
-			if (isdigit(*viewid++) == 0) return false;
+			if (ISDIGIT(*viewid++) == 0) return false;
 		}
 	}
 

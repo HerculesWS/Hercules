@@ -55,14 +55,14 @@ void HP_atcommand_final(void) {
 	}
 	return;
 }
-bool HP_atcommand_parse(const int fd, struct map_session_data *sd, const char *message, int type) {
+bool HP_atcommand_exec(const int fd, struct map_session_data *sd, const char *message, bool player_invoked) {
 	int hIndex = 0;
 	bool retVal___ = false;
-	if( HPMHooks.count.HP_atcommand_parse_pre ) {
-		bool (*preHookFunc) (const int *fd, struct map_session_data *sd, const char *message, int *type);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_parse_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_atcommand_parse_pre[hIndex].func;
-			retVal___ = preHookFunc(&fd, sd, message, &type);
+	if( HPMHooks.count.HP_atcommand_exec_pre ) {
+		bool (*preHookFunc) (const int *fd, struct map_session_data *sd, const char *message, bool *player_invoked);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_exec_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_atcommand_exec_pre[hIndex].func;
+			retVal___ = preHookFunc(&fd, sd, message, &player_invoked);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -70,13 +70,13 @@ bool HP_atcommand_parse(const int fd, struct map_session_data *sd, const char *m
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.atcommand.parse(fd, sd, message, type);
+		retVal___ = HPMHooks.source.atcommand.exec(fd, sd, message, player_invoked);
 	}
-	if( HPMHooks.count.HP_atcommand_parse_post ) {
-		bool (*postHookFunc) (bool retVal___, const int *fd, struct map_session_data *sd, const char *message, int *type);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_parse_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_atcommand_parse_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, sd, message, &type);
+	if( HPMHooks.count.HP_atcommand_exec_post ) {
+		bool (*postHookFunc) (bool retVal___, const int *fd, struct map_session_data *sd, const char *message, bool *player_invoked);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_exec_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_atcommand_exec_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &fd, sd, message, &player_invoked);
 		}
 	}
 	return retVal___;
@@ -4254,13 +4254,13 @@ void HP_chrif_send_report(char *buf, int len) {
 	}
 	return;
 }
-bool HP_chrif_flush_fifo(void) {
+bool HP_chrif_flush(void) {
 	int hIndex = 0;
 	bool retVal___ = false;
-	if( HPMHooks.count.HP_chrif_flush_fifo_pre ) {
+	if( HPMHooks.count.HP_chrif_flush_pre ) {
 		bool (*preHookFunc) (void);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_flush_fifo_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_chrif_flush_fifo_pre[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_flush_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_chrif_flush_pre[hIndex].func;
 			retVal___ = preHookFunc();
 		}
 		if( *HPMforce_return ) {
@@ -4269,12 +4269,12 @@ bool HP_chrif_flush_fifo(void) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.chrif.flush_fifo();
+		retVal___ = HPMHooks.source.chrif.flush();
 	}
-	if( HPMHooks.count.HP_chrif_flush_fifo_post ) {
+	if( HPMHooks.count.HP_chrif_flush_post ) {
 		bool (*postHookFunc) (bool retVal___);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_flush_fifo_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_chrif_flush_fifo_post[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_chrif_flush_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_chrif_flush_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___);
 		}
 	}

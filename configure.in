@@ -59,8 +59,8 @@ AC_ARG_ENABLE(
 AC_ARG_ENABLE(
 	[packetver-re],
 	AC_HELP_STRING(
-		[--disable-packetver-re],
-		[Sets or unsets the PACKETVER_RE define - see src/common/mmo.h (currently enabled by default)]
+		[--enable-packetver-re],
+		[Sets or unsets the PACKETVER_RE define - see src/common/mmo.h (currently disabled by default)]
 	),
 	[
 		enable_packetver_re="$enableval"
@@ -70,7 +70,7 @@ AC_ARG_ENABLE(
 			*) AC_MSG_ERROR([[invalid argument --enable-packetver-re=$enableval... stopping]]);;
 		esac
 	],
-	[enable_packetver_re="yes"]
+	[enable_packetver_re="no"]
 )
 
 
@@ -929,10 +929,10 @@ fi
 #
 case $enable_packetver_re in
 	"yes")
-		# default value
-		CFLAGS="$CFLAGS -DDISABLE_PACKETVER_RE"
+		CFLAGS="$CFLAGS -DENABLE_PACKETVER_RE"
 		;;
 	"no")
+		# default value
 		;;
 esac
 

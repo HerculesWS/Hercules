@@ -9824,7 +9824,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 	if( !clif->process_message(sd, 0, &name, &namelen, &message, &messagelen) )
 		return;
 
-	if( atcommand->parse(fd, sd, message, 1)  )
+	if( atcommand->exec(fd, sd, message, true)  )
 		return;
 
 	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
@@ -9958,7 +9958,7 @@ void clif_parse_MapMove(int fd, struct map_session_data *sd)
 	map_name = (char*)RFIFOP(fd,2);
 	map_name[MAP_NAME_LENGTH_EXT-1]='\0';
 	sprintf(command, "%cmapmove %s %d %d", atcommand->at_symbol, map_name, RFIFOW(fd,18), RFIFOW(fd,20));
-	atcommand->parse(fd, sd, command, 1);
+	atcommand->exec(fd, sd, command, true);
 }
 
 
@@ -10328,7 +10328,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 	if( !clif->process_message(sd, 1, &target, &namelen, &message, &messagelen) )
 		return;
 
-	if ( atcommand->parse(fd, sd, message, 1) )
+	if ( atcommand->exec(fd, sd, message, true) )
 		return;
 
 	if (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT))
@@ -10487,7 +10487,7 @@ void clif_parse_Broadcast(int fd, struct map_session_data* sd) {
 	mes_len_check(msg, len, CHAT_SIZE_MAX);
 
 	sprintf(command, "%ckami %s", atcommand->at_symbol, msg);
-	atcommand->parse(fd, sd, command, 1);
+	atcommand->exec(fd, sd, command, true);
 }
 
 
@@ -11822,7 +11822,7 @@ void clif_parse_ResetChar(int fd, struct map_session_data *sd) {
 	else
 		sprintf(cmd,"%cstreset",atcommand->at_symbol);
 
-	atcommand->parse(fd, sd, cmd, 1);
+	atcommand->exec(fd, sd, cmd, true);
 }
 
 
@@ -11839,7 +11839,7 @@ void clif_parse_LocalBroadcast(int fd, struct map_session_data* sd)
 	mes_len_check(msg, len, CHAT_SIZE_MAX);
 
 	sprintf(command, "%clkami %s", atcommand->at_symbol, msg);
-	atcommand->parse(fd, sd, command, 1);
+	atcommand->exec(fd, sd, command, true);
 }
 
 
@@ -12150,7 +12150,7 @@ void clif_parse_PartyMessage(int fd, struct map_session_data* sd)
 	if( !clif->process_message(sd, 0, &name, &namelen, &message, &messagelen) )
 		return;
 
-	if( atcommand->parse(fd, sd, message, 1)  )
+	if( atcommand->exec(fd, sd, message, true)  )
 		return;
 
 	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
@@ -12969,14 +12969,18 @@ bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len) {
 		BITMAP_WIDTH = 24,
 		BITMAP_HEIGHT = 24,
 	};
+#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(push, 1)
+#endif // not NetBSD < 6 / Solaris
 	struct s_bitmaptripple {
 		//uint8 b;
 		//uint8 g;
 		//uint8 r;
 		unsigned int rgb:24;
 	} __attribute__((packed));
+#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
+#endif // not NetBSD < 6 / Solaris
 	uint8 buf[1800]; // no well-formed emblem bitmap is larger than 1782 (24 bit) / 1654 (8 bit) bytes
 	unsigned long buf_len = sizeof(buf);
 	int header = 0, bitmap = 0, offbits = 0, palettesize = 0, i = 0;
@@ -13210,7 +13214,7 @@ void clif_parse_GuildMessage(int fd, struct map_session_data* sd)
 	if( !clif->process_message(sd, 0, &name, &namelen, &message, &messagelen) )
 		return;
 
-	if( atcommand->parse(fd, sd, message, 1) )
+	if( atcommand->exec(fd, sd, message, true) )
 		return;
 
 	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
@@ -13425,7 +13429,7 @@ void clif_parse_GMKick(int fd, struct map_session_data *sd) {
 		{
 			char command[NAME_LENGTH+6];
 			sprintf(command, "%ckick %s", atcommand->at_symbol, status->get_name(target));
-			atcommand->parse(fd, sd, command, 1);
+			atcommand->exec(fd, sd, command, true);
 		}
 		break;
 
@@ -13470,7 +13474,7 @@ void clif_parse_GMKick(int fd, struct map_session_data *sd) {
 void clif_parse_GMKickAll(int fd, struct map_session_data* sd) {
 	char cmd[15];
 	sprintf(cmd,"%ckickall",atcommand->at_symbol);
-	atcommand->parse(fd, sd, cmd, 1);
+	atcommand->exec(fd, sd, cmd, true);
 }
 
 
@@ -13490,7 +13494,7 @@ void clif_parse_GMShift(int fd, struct map_session_data *sd)
 	player_name[NAME_LENGTH-1] = '\0';
 
 	sprintf(command, "%cjumpto %s", atcommand->at_symbol, player_name);
-	atcommand->parse(fd, sd, command, 1);
+	atcommand->exec(fd, sd, command, true);
 }
 
 
@@ -13505,7 +13509,7 @@ void clif_parse_GMRemove2(int fd, struct map_session_data* sd) {
 	if( (pl_sd = map->id2sd(account_id)) != NULL ) {
 		char command[NAME_LENGTH+8];
 		sprintf(command, "%cjumpto %s", atcommand->at_symbol, pl_sd->status.name);
-		atcommand->parse(fd, sd, command, 1);
+		atcommand->exec(fd, sd, command, true);
 	}
 }
 
@@ -13526,7 +13530,7 @@ void clif_parse_GMRecall(int fd, struct map_session_data *sd)
 	player_name[NAME_LENGTH-1] = '\0';
 
 	sprintf(command, "%crecall %s", atcommand->at_symbol, player_name);
-	atcommand->parse(fd, sd, command, 1);
+	atcommand->exec(fd, sd, command, true);
 }
 
 
@@ -13541,7 +13545,7 @@ void clif_parse_GMRecall2(int fd, struct map_session_data* sd) {
 	if( (pl_sd = map->id2sd(account_id)) != NULL ) {
 		char command[NAME_LENGTH+8];
 		sprintf(command, "%crecall %s", atcommand->at_symbol, pl_sd->status.name);
-		atcommand->parse(fd, sd, command, 1);
+		atcommand->exec(fd, sd, command, true);
 	}
 }
 
@@ -13586,14 +13590,14 @@ void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd) {
 				snprintf(command, sizeof(command)-1, "%citem2 %d 1 0 0 0 0 0 0 0", atcommand->at_symbol, item_array[i]->nameid);
 			else
 				snprintf(command, sizeof(command)-1, "%citem %d 20", atcommand->at_symbol, item_array[i]->nameid);
-			atcommand->parse(fd, sd, command, 1);
+			atcommand->exec(fd, sd, command, true);
 			return;
 		}
 	}
 
 	if( strcmp("money", item_monster_name) == 0 ){
 		snprintf(command, sizeof(command)-1, "%czeny %d", atcommand->at_symbol, INT_MAX);
-		atcommand->parse(fd, sd, command, 1);
+		atcommand->exec(fd, sd, command, true);
 		return;
 	}
 
@@ -13610,7 +13614,7 @@ void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd) {
 
 		if( i < count ){
 			snprintf(command, sizeof(command)-1, "%cmonster %s", atcommand->at_symbol, mob_array[i]->sprite);
-			atcommand->parse(fd, sd, command, 1);
+			atcommand->exec(fd, sd, command, true);
 		}
 	}
 }
@@ -13625,7 +13629,7 @@ void clif_parse_GMHide(int fd, struct map_session_data *sd) {
 
 	sprintf(cmd,"%chide",atcommand->at_symbol);
 
-	atcommand->parse(fd, sd, cmd, 1);
+	atcommand->exec(fd, sd, cmd, true);
 }
 
 
@@ -13679,7 +13683,7 @@ void clif_parse_GMReqNoChat(int fd,struct map_session_data *sd) {
 	}
 
 	sprintf(command, "%cmute %d %s", atcommand->at_symbol, value, dstsd->status.name);
-	atcommand->parse(fd, sd, command, 1);
+	atcommand->exec(fd, sd, command, true);
 }
 
 
@@ -13693,7 +13697,7 @@ void clif_parse_GMRc(int fd, struct map_session_data* sd)
 
 	name[NAME_LENGTH-1] = '\0';
 	sprintf(command, "%cmute %d %s", atcommand->at_symbol, 60, name);
-	atcommand->parse(fd, sd, command, 1);
+	atcommand->exec(fd, sd, command, true);
 }
 
 
@@ -16200,7 +16204,7 @@ void clif_parse_BattleChat(int fd, struct map_session_data* sd)
 	if( !clif->process_message(sd, 0, &name, &namelen, &message, &messagelen) )
 		return;
 
-	if( atcommand->parse(fd, sd, message, 1) )
+	if( atcommand->exec(fd, sd, message, true) )
 		return;
 
 	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )

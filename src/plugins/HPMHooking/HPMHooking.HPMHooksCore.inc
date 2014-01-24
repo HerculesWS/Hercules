@@ -9,8 +9,8 @@ struct {
 	struct HPMHookPoint *HP_atcommand_init_post;
 	struct HPMHookPoint *HP_atcommand_final_pre;
 	struct HPMHookPoint *HP_atcommand_final_post;
-	struct HPMHookPoint *HP_atcommand_parse_pre;
-	struct HPMHookPoint *HP_atcommand_parse_post;
+	struct HPMHookPoint *HP_atcommand_exec_pre;
+	struct HPMHookPoint *HP_atcommand_exec_post;
 	struct HPMHookPoint *HP_atcommand_create_pre;
 	struct HPMHookPoint *HP_atcommand_create_post;
 	struct HPMHookPoint *HP_atcommand_can_use_pre;
@@ -329,8 +329,8 @@ struct {
 	struct HPMHookPoint *HP_chrif_removefriend_post;
 	struct HPMHookPoint *HP_chrif_send_report_pre;
 	struct HPMHookPoint *HP_chrif_send_report_post;
-	struct HPMHookPoint *HP_chrif_flush_fifo_pre;
-	struct HPMHookPoint *HP_chrif_flush_fifo_post;
+	struct HPMHookPoint *HP_chrif_flush_pre;
+	struct HPMHookPoint *HP_chrif_flush_post;
 	struct HPMHookPoint *HP_chrif_skillid2idx_pre;
 	struct HPMHookPoint *HP_chrif_skillid2idx_post;
 	struct HPMHookPoint *HP_chrif_sd_to_auth_pre;
@@ -5028,8 +5028,8 @@ struct {
 	int HP_atcommand_init_post;
 	int HP_atcommand_final_pre;
 	int HP_atcommand_final_post;
-	int HP_atcommand_parse_pre;
-	int HP_atcommand_parse_post;
+	int HP_atcommand_exec_pre;
+	int HP_atcommand_exec_post;
 	int HP_atcommand_create_pre;
 	int HP_atcommand_create_post;
 	int HP_atcommand_can_use_pre;
@@ -5348,8 +5348,8 @@ struct {
 	int HP_chrif_removefriend_post;
 	int HP_chrif_send_report_pre;
 	int HP_chrif_send_report_post;
-	int HP_chrif_flush_fifo_pre;
-	int HP_chrif_flush_fifo_post;
+	int HP_chrif_flush_pre;
+	int HP_chrif_flush_post;
 	int HP_chrif_skillid2idx_pre;
 	int HP_chrif_skillid2idx_post;
 	int HP_chrif_sd_to_auth_pre;

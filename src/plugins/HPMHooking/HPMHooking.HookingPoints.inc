@@ -8,7 +8,7 @@ struct HookingPointData HookingPoints[] = {
 /* atcommand */
 	{ HP_POP(atcommand->init, HP_atcommand_init) },
 	{ HP_POP(atcommand->final, HP_atcommand_final) },
-	{ HP_POP(atcommand->parse, HP_atcommand_parse) },
+	{ HP_POP(atcommand->exec, HP_atcommand_exec) },
 	{ HP_POP(atcommand->create, HP_atcommand_create) },
 	{ HP_POP(atcommand->can_use, HP_atcommand_can_use) },
 	{ HP_POP(atcommand->can_use2, HP_atcommand_can_use2) },
@@ -173,7 +173,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(chrif->divorce, HP_chrif_divorce) },
 	{ HP_POP(chrif->removefriend, HP_chrif_removefriend) },
 	{ HP_POP(chrif->send_report, HP_chrif_send_report) },
-	{ HP_POP(chrif->flush_fifo, HP_chrif_flush_fifo) },
+	{ HP_POP(chrif->flush, HP_chrif_flush) },
 	{ HP_POP(chrif->skillid2idx, HP_chrif_skillid2idx) },
 	{ HP_POP(chrif->sd_to_auth, HP_chrif_sd_to_auth) },
 	{ HP_POP(chrif->check_connect_char_server, HP_chrif_check_connect_char_server) },

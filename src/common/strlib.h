@@ -175,7 +175,7 @@ void strlib_defaults(void);
 	#define stristr(haystack,needle)   (strlib->stristr((haystack),(needle)))
 
 	#if !(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)
-		#define strnln(string,maxlen) (strlib->strnlen((string),(maxlen)))
+		#define strnlen(string,maxlen) (strlib->strnlen((string),(maxlen)))
 	#endif
 
 	#if defined(WIN32) && defined(_MSC_VER) && _MSC_VER <= 1200
