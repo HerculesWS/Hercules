@@ -5529,12 +5529,14 @@ short status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int
 }
 
 unsigned short status_calc_dmotion(struct block_list *bl, struct status_change *sc, int dmotion) {
+	// It has been confirmed on official servers that MvP mobs have no dmotion even without endure
+	if( bl->type == BL_MOB && (((TBL_MOB*)bl)->status.mode&MD_BOSS) )
+		return 0;
+
 	if( !sc || !sc->count || map_flag_gvg2(bl->m) || map->list[bl->m].flag.battleground )
 		return cap_value(dmotion,0,USHRT_MAX);
-	/**
-	* It has been confirmed on official servers that MvP mobs have no dmotion even without endure
-	**/
-	if( sc->data[SC_ENDURE] || ( bl->type == BL_MOB && (((TBL_MOB*)bl)->status.mode&MD_BOSS) ) )
+
+	if( sc->data[SC_ENDURE] )
 		return 0;
 	if( sc->data[SC_RUN] || sc->data[SC_WUGDASH] )
 		return 0;
