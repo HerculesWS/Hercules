@@ -1,8 +1,10 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
-#ifndef	_TIMER_H_
-#define	_TIMER_H_
+
+#ifndef	_COMMON_TIMER_H_
+#define	_COMMON_TIMER_H_
+
 #include "../common/cbasetypes.h"
 
 #define DIFF_TICK(a,b) ((a)-(b))
@@ -65,4 +67,4 @@ struct timer_interface *timer;
 
 void timer_defaults(void);
 
-#endif /* _TIMER_H_ */
+#endif /* _COMMON_TIMER_H_ */

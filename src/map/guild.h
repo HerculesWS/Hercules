@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _GUILD_H_
-#define _GUILD_H_
+#ifndef _MAP_GUILD_H_
+#define _MAP_GUILD_H_
 
 //#include "../common/mmo.h"
 #include "map.h" // NAME_LENGTH
@@ -173,4 +173,4 @@ struct guild_interface *guild;
 
 void guild_defaults(void);
 
-#endif /* _GUILD_H_ */
+#endif /* _MAP_GUILD_H_ */

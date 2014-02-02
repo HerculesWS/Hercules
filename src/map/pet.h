@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _PET_H_
-#define _PET_H_
+#ifndef _MAP_PET_H_
+#define _MAP_PET_H_
 
 #define MAX_PET_DB	300
 #define MAX_PETLOOT_SIZE	30
@@ -152,4 +152,4 @@ struct pet_interface *pet;
 
 void pet_defaults(void);
 
-#endif /* _PET_H_ */
+#endif /* _MAP_PET_H_ */

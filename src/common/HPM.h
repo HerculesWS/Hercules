@@ -1,8 +1,8 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#ifndef	_HPM_H_
-#define _HPM_H_
+#ifndef	_COMMON_HPM_H_
+#define _COMMON_HPM_H_
 
 #include "../common/cbasetypes.h"
 #include "../common/HPMi.h"
@@ -146,10 +146,12 @@ struct HPM_interface {
 	bool (*grabHPDataSub) (struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
 	/* for custom config parsing */
 	bool (*parseConf) (const char *w1, const char *w2, enum HPluginConfType point);
+	/* validates plugin data */
+	bool (*DataCheck) (struct s_HPMDataCheck *src, unsigned int size, char *name);
 } HPM_s;
 
 struct HPM_interface *HPM;
 
 void hpm_defaults(void);
 
-#endif /* _HPM_H_ */
+#endif /* _COMMON_HPM_H_ */

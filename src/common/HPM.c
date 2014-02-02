@@ -116,6 +116,8 @@ struct hplugin *hplugin_load(const char* filename) {
 	bool anyEvent = false;
 	void **import_symbol_ref;
 	Sql **sql_handle;
+	unsigned int *HPMDataCheckLen;
+	struct s_HPMDataCheck *HPMDataCheck;
 		
 	if( HPM->exists(filename) ) {
 		ShowWarning("HPM:plugin_load: attempting to load duplicate '"CL_WHITE"%s"CL_RESET"', skipping...\n", filename);
@@ -203,6 +205,24 @@ struct hplugin *hplugin_load(const char* filename) {
 	if( !HPM->populate(plugin,filename) )
 		return NULL;
 	
+	if( !( HPMDataCheckLen = plugin_import(plugin->dll, "HPMDataCheckLen", unsigned int *) ) ) {
+		ShowWarning("HPM:plugin_load: failed to retrieve 'HPMDataCheckLen' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h, skipping...\n", filename);
+		HPM->unload(plugin);
+		return NULL;
+	}
+	
+	if( !( HPMDataCheck = plugin_import(plugin->dll, "HPMDataCheck", struct s_HPMDataCheck *) ) ) {
+		ShowWarning("HPM:plugin_load: failed to retrieve 'HPMDataCheck' for '"CL_WHITE"%s"CL_RESET"', most likely not including HPMDataCheck.h, skipping...\n", filename);
+		HPM->unload(plugin);
+		return NULL;
+	}
+	
+	if( !HPM->DataCheck(HPMDataCheck,*HPMDataCheckLen,plugin->info->name) ) {
+		ShowWarning("HPM:plugin_load: '"CL_WHITE"%s"CL_RESET"' failed DataCheck, out of sync from the core (recompile plugin), skipping...\n", filename);
+		HPM->unload(plugin);
+		return NULL;
+	}
+		
 	/* id */
 	plugin->hpi->pid                = plugin->idx;
 	/* core */
@@ -254,6 +274,11 @@ void hplugins_config_read(void) {
 	config_setting_t *plist = NULL;
 	const char *config_filename = "conf/plugins.conf"; // FIXME hardcoded name
 	FILE *fp;
+	
+	if( !HPM->DataCheck ) {
+		ShowError("HPM:config_read: HPM->DataCheck not set! Failure\n");
+		return;
+	}
 	
 	/* yes its ugly, its temporary and will be gone as soon as the new inter-server.conf is set */
 	if( (fp = fopen("conf/import/plugins.conf","r")) ) {
@@ -829,4 +854,5 @@ void hpm_defaults(void) {
 	HPM->grabHPData = hplugins_grabHPData;
 	HPM->grabHPDataSub = NULL;
 	HPM->parseConf = hplugins_parse_conf;
+	HPM->DataCheck = NULL;
 }

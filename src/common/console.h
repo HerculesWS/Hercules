@@ -1,8 +1,8 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#ifndef	_CONSOLE_H_
-#define	_CONSOLE_H_
+#ifndef	_COMMON_CONSOLE_H_
+#define	_COMMON_CONSOLE_H_
 
 #include "../common/thread.h"
 #include "../common/mutex.h"
@@ -72,4 +72,4 @@ struct console_interface *console;
 
 void console_defaults(void);
 
-#endif /* _CONSOLE_H_ */
+#endif /* _COMMON_CONSOLE_H_ */

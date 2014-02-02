@@ -3,8 +3,8 @@
 // Base Author: shennetsind @ http://hercules.ws
 
 
-#ifndef _IRC_BOT_H_
-#define _IRC_BOT_H_
+#ifndef _MAP_IRC_BOT_H_
+#define _MAP_IRC_BOT_H_
 
 #define IRC_NICK_LENGTH 40
 #define IRC_IDENT_LENGTH 40
@@ -61,4 +61,4 @@ struct irc_bot_interface *ircbot;
 
 void ircbot_defaults(void);
 
-#endif /* _IRC_BOT_H_ */
+#endif /* _MAP_IRC_BOT_H_ */

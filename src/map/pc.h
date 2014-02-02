@@ -1,8 +1,9 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
-#ifndef _PC_H_
-#define _PC_H_
+
+#ifndef _MAP_PC_H_
+#define _MAP_PC_H_
 
 #include "../common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus
 #include "../common/ers.h"
@@ -1044,4 +1045,4 @@ struct pc_interface *pc;
 
 void pc_defaults(void);
 
-#endif /* _PC_H_ */
+#endif /* _MAP_PC_H_ */

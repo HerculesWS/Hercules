@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAIL_H_
-#define _MAIL_H_
+#ifndef _MAP_MAIL_H_
+#define _MAP_MAIL_H_
 
 #include "../common/mmo.h"
 
@@ -23,4 +23,4 @@ struct mail_interface *mail;
 
 void mail_defaults(void);
 
-#endif /* _MAIL_H_ */
+#endif /* _MAP_MAIL_H_ */

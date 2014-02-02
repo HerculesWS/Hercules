@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _PC_GROUPS_H_
-#define _PC_GROUPS_H_
+#ifndef _MAP_PC_GROUPS_H_
+#define _MAP_PC_GROUPS_H_
 
 /// PC permissions
 enum e_pc_permission {
@@ -92,4 +92,4 @@ struct pc_groups_interface *pcg;
 
 void pc_groups_defaults(void);
 
-#endif // _PC_GROUPS_H_
+#endif /* _MAP_PC_GROUPS_H_ */

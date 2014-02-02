@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _CLIF_H_
-#define _CLIF_H_
+#ifndef _MAP_CLIF_H_
+#define _MAP_CLIF_H_
 
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
@@ -1275,4 +1275,4 @@ struct clif_interface *clif;
 
 void clif_defaults(void);
 
-#endif /* _CLIF_H_ */
+#endif /* _MAP_CLIF_H_ */

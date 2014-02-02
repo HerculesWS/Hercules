@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _INSTANCE_H_
-#define _INSTANCE_H_
+#ifndef _MAP_INSTANCE_H_
+#define _MAP_INSTANCE_H_
 
 #define INSTANCE_NAME_LENGTH (60+1)
 
@@ -82,4 +82,4 @@ struct instance_interface *instance;
 
 void instance_defaults(void);
 
-#endif
+#endif /* _MAP_INSTANCE_H_ */

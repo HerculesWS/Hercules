@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _INTIF_H_
-#define _INFIF_H_
+#ifndef _MAP_INTIF_H_
+#define _MAP_INTIF_H_
 
 
 /**
@@ -183,4 +183,4 @@ struct intif_interface *intif;
 
 void intif_defaults(void);
 
-#endif /* _INTIF_H_ */
+#endif /* _MAP_INTIF_H_ */

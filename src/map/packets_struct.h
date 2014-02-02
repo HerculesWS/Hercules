@@ -3,8 +3,8 @@
 
 /* Hercules Renewal: Phase Two http://hercules.ws/board/topic/383-hercules-renewal-phase-two/ */
 
-#ifndef _PACKETS_STRUCT_H_
-#define _PACKETS_STRUCT_H_
+#ifndef _MAP_PACKETS_STRUCT_H_
+#define _MAP_PACKETS_STRUCT_H_
 
 #include "../common/mmo.h"
 
@@ -945,4 +945,4 @@ struct packet_npc_market_open {
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
 
-#endif /* _PACKETS_STRUCT_H_ */
+#endif /* _MAP_PACKETS_STRUCT_H_ */

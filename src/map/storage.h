@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _STORAGE_H_
-#define _STORAGE_H_
+#ifndef _MAP_STORAGE_H_
+#define _MAP_STORAGE_H_
 
 struct storage_data;
 struct guild_storage;
@@ -59,4 +59,4 @@ struct guild_storage_interface *gstorage;
 void storage_defaults(void);
 void gstorage_defaults(void);
 
-#endif /* _STORAGE_H_ */
+#endif /* _MAP_STORAGE_H_ */

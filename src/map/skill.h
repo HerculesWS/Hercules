@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _SKILL_H_
-#define _SKILL_H_
+#ifndef _MAP_SKILL_H_
+#define _MAP_SKILL_H_
 
 #include "../common/mmo.h" // MAX_SKILL, struct square
 #include "../common/db.h"
@@ -2015,4 +2015,4 @@ struct skill_interface *skill;
 
 void skill_defaults(void);
 
-#endif /* _SKILL_H_ */
+#endif /* _MAP_SKILL_H_ */

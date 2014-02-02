@@ -39,8 +39,8 @@
  * @encoding US-ASCII                                                        *
  * @see common#db.c                                                          *
 \*****************************************************************************/
-#ifndef _DB_H_
-#define _DB_H_
+#ifndef _COMMON_DB_H_
+#define _COMMON_DB_H_
 
 #include "../common/cbasetypes.h"
 #include <stdarg.h>
@@ -1548,4 +1548,4 @@ void  linkdb_foreach (struct linkdb_node** head, LinkDBFunc func, ...);
 
 
 
-#endif /* _DB_H_ */
+#endif /* _COMMON_DB_H_ */

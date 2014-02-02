@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _BUYINGSTORE_H_
-#define _BUYINGSTORE_H_
+#ifndef _MAP_BUYINGSTORE_H_
+#define _MAP_BUYINGSTORE_H_
 
 /**
  * Declarations
@@ -70,4 +70,4 @@ struct buyingstore_interface *buyingstore;
 
 void buyingstore_defaults (void);
 
-#endif  // _BUYINGSTORE_H_
+#endif  // _MAP_BUYINGSTORE_H_

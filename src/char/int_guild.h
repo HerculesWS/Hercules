@@ -1,8 +1,8 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _INT_GUILD_SQL_H_
-#define _INT_GUILD_SQL_H_
+#ifndef _CHAR_INT_GUILD_H_
+#define _CHAR_INT_GUILD_H_
 
 enum {
 	GS_BASIC = 0x0001,
@@ -34,4 +34,4 @@ int inter_guild_charname_changed(int guild_id,int account_id, int char_id, char 
 int inter_guild_CharOnline(int char_id, int guild_id);
 int inter_guild_CharOffline(int char_id, int guild_id);
 
-#endif /* _INT_GUILD_SQL_H_ */
+#endif /* _CHAR_INT_GUILD_H_ */

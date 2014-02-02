@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _LOG_H_
-#define _LOG_H_
+#ifndef _MAP_LOG_H_
+#define _MAP_LOG_H_
 
 #include "../common/cbasetypes.h"
 #include "../common/sql.h"
@@ -134,4 +134,4 @@ struct log_interface *logs;
 
 void log_defaults(void);
 
-#endif /* _LOG_H_ */
+#endif /* _MAP_LOG_H_ */

@@ -1,8 +1,8 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
-#ifndef _MERCENARY_H_
-#define _MERCENARY_H_
+#ifndef _MAP_MERCENARY_H_
+#define _MAP_MERCENARY_H_
 
 #include "status.h" // struct status_data, struct status_change
 #include "unit.h" // struct unit_data
@@ -98,4 +98,4 @@ struct mercenary_interface *mercenary;
 
 void mercenary_defaults(void);
 
-#endif /* _MERCENARY_H_ */
+#endif /* _MAP_MERCENARY_H_ */

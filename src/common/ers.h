@@ -37,8 +37,8 @@
  * @author Flavio @ Amazon Project                                           *
  * @encoding US-ASCII                                                        *
 \*****************************************************************************/
-#ifndef _ERS_H_
-#define _ERS_H_
+#ifndef _COMMON_ERS_H_
+#define _COMMON_ERS_H_
 
 #include "../common/cbasetypes.h"
 
@@ -180,4 +180,4 @@ void ers_report(void);
 void ers_force_destroy_all(void);
 #endif /* DISABLE_ERS / not DISABLE_ERS */
 
-#endif /* _ERS_H_ */
+#endif /* _COMMON_ERS_H_ */

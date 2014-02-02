@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _CHAT_H_
-#define _CHAT_H_
+#ifndef _MAP_CHAT_H_
+#define _MAP_CHAT_H_
 
 #include "map.h" // struct block_list, CHATROOM_TITLE_SIZE
 
@@ -55,4 +55,4 @@ struct chat_interface *chat;
 
 void chat_defaults(void);
 
-#endif /* _CHAT_H_ */
+#endif /* _MAP_CHAT_H_ */

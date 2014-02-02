@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _DUEL_H_
-#define _DUEL_H_
+#ifndef _MAP_DUEL_H_
+#define _MAP_DUEL_H_
 
 struct duel {
 	int members_count;
@@ -42,4 +42,4 @@ struct duel_interface *duel;
 
 void duel_defaults(void);
 
-#endif /* _DUEL_H_ */
+#endif /* _MAP_DUEL_H_ */

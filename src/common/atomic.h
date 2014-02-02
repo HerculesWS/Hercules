@@ -1,8 +1,8 @@
 // Copyright (c) rAthena Project (www.rathena.org) - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _rA_ATOMIC_H_
-#define _rA_ATOMIC_H_
+#ifndef _COMMON_ATOMIC_H_
+#define _COMMON_ATOMIC_H_
 
 // Atomic Operations 
 // (Interlocked CompareExchange, Add .. and so on ..)
@@ -144,4 +144,4 @@ static forceinline int32 InterlockedExchange(volatile int32 *target, int32 val){
 #endif //endif compiler decission
 
 
-#endif
+#endif /* _COMMON_ATOMIC_H_ */

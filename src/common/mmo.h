@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef	_MMO_H_
-#define	_MMO_H_
+#ifndef	_COMMON_MMO_H_
+#define	_COMMON_MMO_H_
 
 #include "cbasetypes.h"
 #include "../common/db.h"
@@ -886,4 +886,4 @@ enum e_pc_reg_loading {
 #error MAX_ZENY is too big
 #endif
 
-#endif /* _MMO_H_ */
+#endif /* _COMMON_MMO_H_ */

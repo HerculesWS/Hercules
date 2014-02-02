@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef	_SOCKET_H_
-#define _SOCKET_H_
+#ifndef	_COMMON_SOCKET_H_
+#define _COMMON_SOCKET_H_
 
 #include "../common/cbasetypes.h"
 
@@ -196,4 +196,4 @@ void socket_defaults(void);
 	#define set_eof(fd) ( sockt->set_eof(fd) )
 #endif /* _H_SOCKET_C_ */
 
-#endif /* _SOCKET_H_ */
+#endif /* _COMMON_SOCKET_H_ */

@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _PARTY_H_
-#define _PARTY_H_
+#ifndef _MAP_PARTY_H_
+#define _MAP_PARTY_H_
 
 #include "../common/mmo.h" // struct party
 #include "../config/core.h"
@@ -141,4 +141,4 @@ struct party_interface *party;
 
 void party_defaults(void);
 
-#endif /* _PARTY_H_ */
+#endif /* _MAP_PARTY_H_ */

@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _BATTLEGROUND_H_
-#define _BATTLEGROUND_H_
+#ifndef _MAP_BATTLEGROUND_H_
+#define _MAP_BATTLEGROUND_H_
 
 #include "../common/mmo.h" // struct party
 #include "clif.h"
@@ -112,4 +112,4 @@ struct battleground_interface *bg;
 
 void battleground_defaults(void);
 
-#endif /* _BATTLEGROUND_H_ */
+#endif /* _MAP_BATTLEGROUND_H_ */

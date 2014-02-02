@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _QUEST_H_
-#define _QUEST_H_
+#ifndef _MAP_QUEST_H_
+#define _MAP_QUEST_H_
 
 #define MAX_QUEST_DB (60355+1) // Highest quest ID + 1
 
@@ -48,4 +48,4 @@ struct quest_interface *quest;
 
 void quest_defaults(void);
 
-#endif
+#endif /* _MAP_QUEST_H_ */

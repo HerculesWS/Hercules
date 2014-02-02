@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MAP_H_
-#define _MAP_H_
+#ifndef _MAP_MAP_H_
+#define _MAP_MAP_H_
 
 #include "../common/cbasetypes.h"
 #include "../common/core.h" // CORE_ST_LAST
@@ -1066,4 +1066,4 @@ struct map_interface *map;
 
 void map_defaults(void);
 
-#endif /* _MAP_H_ */
+#endif /* _MAP_MAP_H_ */

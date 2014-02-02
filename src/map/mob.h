@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _MOB_H_
-#define _MOB_H_
+#ifndef _MAP_MOB_H_
+#define _MAP_MOB_H_
 
 #include "../common/mmo.h" // struct item
 #include "guild.h" // struct guardian_data
@@ -364,4 +364,4 @@ struct mob_interface *mob;
 
 void mob_defaults(void);
 
-#endif /* _MOB_H_ */
+#endif /* _MAP_MOB_H_ */

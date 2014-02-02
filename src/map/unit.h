@@ -1,8 +1,9 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
-// For more information, see LICENCE in the main folder
+// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
+// See the LICENSE file
+// Portions Copyright (c) Athena Dev Teams
 
-#ifndef _UNIT_H_
-#define _UNIT_H_
+#ifndef _MAP_UNIT_H_
+#define _MAP_UNIT_H_
 
 //#include "map.h"
 struct block_list;
@@ -125,4 +126,4 @@ struct unit_interface *unit;
 
 void unit_defaults(void);
 
-#endif /* _UNIT_H_ */
+#endif /* _MAP_UNIT_H_ */

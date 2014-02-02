@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _STRLIB_H_
-#define _STRLIB_H_
+#ifndef _COMMON_STRLIB_H_
+#define _COMMON_STRLIB_H_
 
 #include "../common/cbasetypes.h"
 #include <stdarg.h>
@@ -191,4 +191,4 @@ void strlib_defaults(void);
 	#define bin2hex(output,input,count)  (strlib->bin2hex((output),(input),(count)))
 #endif /* STRLIB_C */
 
-#endif /* _STRLIB_H_ */
+#endif /* _COMMON_STRLIB_H_ */

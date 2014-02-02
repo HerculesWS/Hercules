@@ -1,8 +1,8 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _DATE_H_
-#define _DATE_H_
+#ifndef _MAP_DATE_H_
+#define _MAP_DATE_H_
 
 int date_get_year(void);
 int date_get_month(void);
@@ -15,4 +15,4 @@ int is_day_of_sun(void);
 int is_day_of_moon(void);
 int is_day_of_star(void);
 
-#endif /* _DATE_H_ */
+#endif /* _MAP_DATE_H_ */

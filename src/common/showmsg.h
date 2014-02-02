@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _SHOWMSG_H_
-#define _SHOWMSG_H_
+#ifndef _COMMON_SHOWMSG_H_
+#define _COMMON_SHOWMSG_H_
 
 #ifndef _HPMi_H_
 	#include "../../3rdparty/libconfig/libconfig.h"
@@ -104,4 +104,4 @@ extern void ClearScreen(void);
 #endif
 extern int _vShowMessage(enum msg_type flag, const char *string, va_list ap);
 
-#endif /* _SHOWMSG_H_ */
+#endif /* _COMMON_SHOWMSG_H_ */

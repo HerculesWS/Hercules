@@ -3,8 +3,8 @@
 
 //Included directly by clif.h in packet_loaddb()
 
-#ifndef _PACKETS_H_
-#define _PACKETS_H_
+#ifndef _MAP_PACKETS_H_
+#define _MAP_PACKETS_H_
 
 #ifndef packet
 	#define packet(a,b,...)
@@ -2693,4 +2693,4 @@ packet(0x020d,-1);
 	packetKeys(OBFUSCATIONKEY1,OBFUSCATIONKEY2,OBFUSCATIONKEY3);
 #endif
 
-#endif /* _PACKETS_H_ */
+#endif /* _MAP_PACKETS_H_ */

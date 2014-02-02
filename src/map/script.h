@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _SCRIPT_H_
-#define _SCRIPT_H_
+#ifndef _MAP_SCRIPT_H_
+#define _MAP_SCRIPT_H_
 
 #include "../common/strlib.h" //StringBuf
 #include "../common/cbasetypes.h"
@@ -700,4 +700,4 @@ struct script_interface *script;
 
 void script_defaults(void);
 
-#endif /* _SCRIPT_H_ */
+#endif /* _MAP_SCRIPT_H_ */

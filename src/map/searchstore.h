@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _SEARCHSTORE_H_
-#define _SEARCHSTORE_H_
+#ifndef _MAP_SEARCHSTORE_H_
+#define _MAP_SEARCHSTORE_H_
 
 /**
  * Defines
@@ -93,4 +93,4 @@ struct searchstore_interface *searchstore;
 
 void searchstore_defaults (void);
 
-#endif  // _SEARCHSTORE_H_
+#endif /* _MAP_SEARCHSTORE_H_ */

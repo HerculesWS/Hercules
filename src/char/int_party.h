@@ -1,8 +1,8 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _INT_PARTY_SQL_H_
-#define _INT_PARTY_SQL_H_
+#ifndef _CHAR_INT_PARTY_H_
+#define _CHAR_INT_PARTY_H_
 
 //Party Flags on what to save/delete.
 enum {
@@ -23,4 +23,4 @@ int inter_party_leave(int party_id,int account_id, int char_id);
 int inter_party_CharOnline(int char_id, int party_id);
 int inter_party_CharOffline(int char_id, int party_id);
 
-#endif /* _INT_PARTY_SQL_H_ */
+#endif /* _CHAR_INT_PARTY_H_ */

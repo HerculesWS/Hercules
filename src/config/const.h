@@ -1,8 +1,9 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
-#ifndef _H_CONSTANTS_
-#define _H_CONSTANTS_
+
+#ifndef _CONFIG_CONSTANTS_H_
+#define _CONFIG_CONSTANTS_H_
 
 /**
  * Hercules configuration file (http://hercules.ws)
@@ -117,4 +118,4 @@
 /**
  * End of File
  **/
-#endif /* _H_CONSTANTS_ */
+#endif /* _CONFIG_CONSTANTS_H_ */

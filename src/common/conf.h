@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _CONF_H_
-#define _CONF_H_
+#ifndef _COMMON_CONF_H_
+#define _COMMON_CONF_H_
 
 #include "../common/cbasetypes.h"
 #include "../../3rdparty/libconfig/libconfig.h"
@@ -94,4 +94,4 @@ struct libconfig_interface *libconfig;
 
 void libconfig_defaults(void);
 
-#endif // _CONF_H_
+#endif // _COMMON_CONF_H_

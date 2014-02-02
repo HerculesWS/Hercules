@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _NPC_H_
-#define _NPC_H_
+#ifndef _MAP_NPC_H_
+#define _MAP_NPC_H_
 
 #include "map.h" // struct block_list
 #include "status.h" // struct status_change
@@ -346,4 +346,4 @@ struct pcre_interface *libpcre;
 void npc_chat_defaults(void);
 #endif
 
-#endif /* _NPC_H_ */
+#endif /* _MAP_NPC_H_ */

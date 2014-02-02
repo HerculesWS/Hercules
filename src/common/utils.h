@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _UTILS_H_
-#define _UTILS_H_
+#ifndef _COMMON_UTILS_H_
+#define _COMMON_UTILS_H_
 
 #include "../common/cbasetypes.h"
 #include <stdio.h> // FILE*
@@ -54,4 +54,4 @@ struct HCache_interface *HCache;
 
 void HCache_defaults(void);
 
-#endif /* _UTILS_H_ */
+#endif /* _COMMON_UTILS_H_ */

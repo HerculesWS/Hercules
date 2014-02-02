@@ -2,8 +2,8 @@
 // For more information, see LICENCE in the main folder
 
 #pragma once 
-#ifndef _rA_THREAD_H_
-#define _rA_THREAD_H_
+#ifndef _COMMON_THREAD_H_
+#define _COMMON_THREAD_H_
 
 #include "../common/cbasetypes.h"
 
@@ -116,4 +116,4 @@ void rathread_init();
 void rathread_final();
 
 
-#endif
+#endif /* _COMMON_THREAD_H_ */

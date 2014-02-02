@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _STATUS_H_
-#define _STATUS_H_
+#ifndef _MAP_STATUS_H_
+#define _MAP_STATUS_H_
 
 #include "../common/mmo.h"
 
@@ -2012,4 +2012,4 @@ struct status_interface *status;
 
 void status_defaults(void);
 
-#endif /* _STATUS_H_ */
+#endif /* _MAP_STATUS_H_ */

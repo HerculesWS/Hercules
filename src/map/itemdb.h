@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _ITEMDB_H_
-#define _ITEMDB_H_
+#ifndef _MAP_ITEMDB_H_
+#define _MAP_ITEMDB_H_
 
 #include "../common/db.h"
 #include "../common/mmo.h" // ITEM_NAME_LENGTH
@@ -582,4 +582,4 @@ struct itemdb_interface *itemdb;
 
 void itemdb_defaults(void);
 
-#endif /* _ITEMDB_H_ */
+#endif /* _MAP_ITEMDB_H_ */

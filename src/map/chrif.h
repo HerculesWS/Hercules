@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _CHRIF_H_
-#define _CHRIF_H_
+#ifndef _MAP_CHRIF_H_
+#define _MAP_CHRIF_H_
 
 #include "../common/cbasetypes.h"
 #include <time.h>
@@ -148,4 +148,4 @@ void chrif_defaults(void);
 // There's no need for another function when a simple macro can do exactly the same effect
 #define chrif_char_offline(x) chrif->char_offline_nsd((x)->status.account_id,(x)->status.char_id)
 
-#endif /* _CHRIF_H_ */
+#endif /* _MAP_CHRIF_H_ */

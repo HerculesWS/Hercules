@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef _INTER_SQL_H_
-#define _INTER_SQL_H_
+#ifndef _CHAR_INTER_H_
+#define _CHAR_INTER_H_
 
 struct accreg;
 #include "../common/sql.h"
@@ -41,4 +41,4 @@ uint64 inter_chk_lastuid(int8 flag, uint64 value);
 	#define updateLastUid(val_)
 #endif
 
-#endif /* _INTER_SQL_H_ */
+#endif /* _CHAR_INTER_H_ */

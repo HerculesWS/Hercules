@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _rA_SPINLOCK_H_
-#define _rA_SPINLOCK_H_
+#ifndef _COMMON_SPINLOCK_H_
+#define _COMMON_SPINLOCK_H_
 
 //
 // CAS based Spinlock Implementation
@@ -101,4 +101,4 @@ static forceinline void LeaveSpinLock(PSPIN_LOCK lck){
 
 
 
-#endif
+#endif /* _COMMON_SPINLOCK_H_ */

@@ -1,8 +1,8 @@
 // Copyright (c) Athena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
-#ifndef _MALLOC_H_
-#define _MALLOC_H_
+#ifndef _COMMON_MALLOC_H_
+#define _COMMON_MALLOC_H_
 
 #include "../common/cbasetypes.h"
 
@@ -88,4 +88,4 @@ struct malloc_interface {
 void memmgr_report (int extra);
 
 struct malloc_interface *iMalloc;
-#endif /* _MALLOC_H_ */
+#endif /* _COMMON_MALLOC_H_ */

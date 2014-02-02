@@ -1,8 +1,8 @@
 // Copyright (c) rAthena Project (www.rathena.org) - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder  
 
-#ifndef _rA_MUTEX_H_
-#define _rA_MUTEX_H_
+#ifndef _COMMON_MUTEX_H_
+#define _COMMON_MUTEX_H_
 
 
 typedef struct ramutex *ramutex; // Mutex
@@ -89,4 +89,4 @@ void racond_signal( racond c );
 void racond_broadcast( racond c );
 
 
-#endif
+#endif /* _COMMON_MUTEX_H_ */

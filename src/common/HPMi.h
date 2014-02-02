@@ -1,8 +1,8 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#ifndef	_HPMi_H_
-#define _HPMi_H_
+#ifndef	_COMMON_HPMi_H_
+#define _COMMON_HPMi_H_
 
 #include "../common/cbasetypes.h"
 #include "../common/core.h"
@@ -20,7 +20,7 @@ struct map_session_data;
 	#define HPExport
 #endif
 
-#ifndef _SHOWMSG_H_
+#ifndef _COMMON_SHOWMSG_H_
 	HPExport void (*ShowMessage) (const char *, ...);
 	HPExport void (*ShowStatus) (const char *, ...);
 	HPExport void (*ShowSQL) (const char *, ...);
@@ -43,6 +43,11 @@ struct hplugin_info {
 	enum server_types type;
 	char* version;
 	char* req_version;
+};
+
+struct s_HPMDataCheck {
+	char *name;
+	unsigned int size;
 };
 
 HPExport void *(*import_symbol) (char *name, unsigned int pID);
@@ -187,8 +192,8 @@ HPExport struct HPMi_interface {
 	/* pc group permission */
 	void (*addPCGPermission) (unsigned int pluginID, char *name, unsigned int *mask);
 } HPMi_s;
-#ifndef _HPM_H_
+#ifndef _COMMON_HPM_H_
 HPExport struct HPMi_interface *HPMi;
 #endif
 
-#endif /* _HPMi_H_ */
+#endif /* _COMMON_HPMi_H_ */

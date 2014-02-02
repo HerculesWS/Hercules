@@ -1,5 +1,5 @@
-#ifndef _CBASETYPES_H_
-#define _CBASETYPES_H_
+#ifndef _COMMON_CBASETYPES_H_
+#define _COMMON_CBASETYPES_H_
 
 /*              +--------+-----------+--------+---------+
  *              | ILP32  |   LP64    |  ILP64 | (LL)P64 |
@@ -431,4 +431,4 @@ void SET_FUNCPOINTER(T1& var, T2 p)
 #endif
 
 
-#endif /* _CBASETYPES_H_ */
+#endif /* _COMMON_CBASETYPES_H_ */
