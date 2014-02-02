@@ -2363,11 +2363,11 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 				sd->st = NULL;
 				sd->npc_id = 0;
 			}
-			if( sd->combos.count ) {
-				aFree(sd->combos.bonus);
-				aFree(sd->combos.id);
-				sd->combos.count = 0;
+			if( sd->combos ) {
+				aFree(sd->combos);
+				sd->combos = NULL;
 			}
+			sd->combo_count = 0;
 			/* [Ind/Hercules] */
 			if( sd->sc_display_count ) {
 				for(i = 0; i < sd->sc_display_count; i++) {

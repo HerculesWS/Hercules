@@ -8410,17 +8410,19 @@ int pc_cleareventtimer(struct map_session_data *sd)
 /* called when a item with combo is worn */
 int pc_checkcombo(struct map_session_data *sd, struct item_data *data ) {
 	int i, j, k, z;
-	int index, idx, success = 0;
+	int index, success = 0;
+	struct pc_combos *combo;
 
 	for( i = 0; i < data->combos_count; i++ ) {
 
 		/* ensure this isn't a duplicate combo */
-		if( sd->combos.bonus != NULL ) {
+		if( sd->combos != NULL ) {
 			int x;
-			ARR_FIND( 0, sd->combos.count, x, sd->combos.id[x] == data->combos[i]->id );
+			
+			ARR_FIND( 0, sd->combo_count, x, sd->combos[x].id == data->combos[i]->id );
 
 			/* found a match, skip this combo */
-			if( x < sd->combos.count )
+			if( x < sd->combo_count )
 				continue;
 		}
 
@@ -8437,7 +8439,7 @@ int pc_checkcombo(struct map_session_data *sd, struct item_data *data ) {
 
 				if(!sd->inventory_data[index])
 					continue;
-
+				
 				if ( itemdb_type(id) != IT_CARD ) {
 					if ( sd->inventory_data[index]->nameid != id )
 						continue;
@@ -8471,22 +8473,13 @@ int pc_checkcombo(struct map_session_data *sd, struct item_data *data ) {
 
 		/* we got here, means all items in the combo are matching */
 
-		idx = sd->combos.count;
-
-		if( sd->combos.bonus == NULL ) {
-			CREATE(sd->combos.bonus, struct script_code *, 1);
-			CREATE(sd->combos.id, unsigned short, 1);
-			sd->combos.count = 1;
-		} else {
-			RECREATE(sd->combos.bonus, struct script_code *, ++sd->combos.count);
-			RECREATE(sd->combos.id, unsigned short, sd->combos.count);
-		}
-
-		/* we simply copy the pointer */
-		sd->combos.bonus[idx] = data->combos[i]->script;
-		/* save this combo's id */
-		sd->combos.id[idx] = data->combos[i]->id;
-
+		RECREATE(sd->combos, struct pc_combos, ++sd->combo_count);
+		
+		combo = &sd->combos[sd->combo_count - 1];
+		
+		combo->bonus = data->combos[i]->script;
+		combo->id = data->combos[i]->id;
+		
 		success++;
 	}
 	return success;
@@ -8496,26 +8489,30 @@ int pc_checkcombo(struct map_session_data *sd, struct item_data *data ) {
 int pc_removecombo(struct map_session_data *sd, struct item_data *data ) {
 	int i, retval = 0;
 
-	if( sd->combos.bonus == NULL )
+	if( !sd->combos )
 		return 0;/* nothing to do here, player has no combos */
+	
 	for( i = 0; i < data->combos_count; i++ ) {
 		/* check if this combo exists in this user */
 		int x = 0, cursor = 0, j;
-		ARR_FIND( 0, sd->combos.count, x, sd->combos.id[x] == data->combos[i]->id );
+		
+		ARR_FIND( 0, sd->combo_count, x, sd->combos[x].id == data->combos[i]->id );
 		/* no match, skip this combo */
-		if( !(x < sd->combos.count) )
+		if( !(x < sd->combo_count) )
 			continue;
 
-		sd->combos.bonus[x] = NULL;
-		sd->combos.id[x] = 0;
+		sd->combos[x].bonus = NULL;
+		sd->combos[x].id = 0;
+		
 		retval++;
-		for( j = 0, cursor = 0; j < sd->combos.count; j++ ) {
-			if( sd->combos.bonus[j] == NULL )
+		
+		for( j = 0, cursor = 0; j < sd->combo_count; j++ ) {
+			if( sd->combos[j].bonus == NULL )
 				continue;
 
 			if( cursor != j ) {
-				sd->combos.bonus[cursor] = sd->combos.bonus[j];
-				sd->combos.id[cursor]    = sd->combos.id[j];
+				sd->combos[cursor].bonus = sd->combos[j].bonus;
+				sd->combos[cursor].id    = sd->combos[j].id;
 			}
 
 			cursor++;
@@ -8526,11 +8523,10 @@ int pc_removecombo(struct map_session_data *sd, struct item_data *data ) {
 			continue;
 
 		/* it's empty, we can clear all the memory */
-		if( (sd->combos.count = cursor) == 0 ) {
-			aFree(sd->combos.bonus);
-			aFree(sd->combos.id);
-			sd->combos.bonus = NULL;
-			sd->combos.id = NULL;
+		if( (sd->combo_count = cursor) == 0 ) {
+			aFree(sd->combos);
+			sd->combos = NULL;
+			
 			return retval; /* we also can return at this point for we have no more combos to check */
 		}
 
@@ -8953,7 +8949,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
  *------------------------------------------*/
 int pc_checkitem(struct map_session_data *sd)
 {
-	int i,id,calc_flag = 0;
+	int i, id, calc_flag = 0;
 
 	nullpo_ret(sd);
 
@@ -9019,7 +9015,7 @@ int pc_checkitem(struct map_session_data *sd)
 		}
 
 	}
-
+		
 	if( calc_flag && sd->state.active ) {
 		pc->checkallowskill(sd);
 		status_calc_pc(sd,SCO_NONE);

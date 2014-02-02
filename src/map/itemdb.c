@@ -1449,8 +1449,7 @@ void itemdb_read_combos() {
 		} else {
 			int items[MAX_ITEMS_PER_COMBO];
 			int v = 0, retcount = 0;
-			struct item_data * id = NULL;
-			int idx = 0;
+			struct item_combo *combo = NULL;
 			
 			if((retcount = itemdb->combo_split_atoi(str[0], items)) < 2) {
 				ShowError("itemdb_read_combos: line %d of \"%s\" doesn't have enough items to make for a combo (min:2), skipping.\n", lines, filepath);
@@ -1467,33 +1466,23 @@ void itemdb_read_combos() {
 			/* failed at some item */
 			if( v < retcount )
 				continue;
-
-			id = itemdb->exists(items[0]);
 			
-			idx = id->combos_count;
+			RECREATE(itemdb->combos, struct item_combo*, ++itemdb->combo_count);
 			
-			/* first entry, create */
-			if( id->combos == NULL ) {
-				CREATE(id->combos, struct item_combo*, 1);
-				id->combos_count = 1;
-			} else {
-				RECREATE(id->combos, struct item_combo*, ++id->combos_count);
-			}
+			CREATE(combo, struct item_combo, 1);
 			
-			CREATE(id->combos[idx],struct item_combo,1);
-			
-			id->combos[idx]->nameid = aMalloc( retcount * sizeof(unsigned short) );
-			id->combos[idx]->count = retcount;
-			id->combos[idx]->script = script->parse(str[1], filepath, lines, 0);
-			id->combos[idx]->id = count;
-			id->combos[idx]->isRef = false;
+			combo->count = retcount;
+			combo->script = script->parse(str[1], filepath, lines, 0);
+			combo->id = itemdb->combo_count - 1;
 			/* populate ->nameid field */
 			for( v = 0; v < retcount; v++ ) {
-				id->combos[idx]->nameid[v] = items[v];
+				combo->nameid[v] = items[v];
 			}
 			
-			/* populate the children to refer to this combo */
-			for( v = 1; v < retcount; v++ ) {
+			itemdb->combos[itemdb->combo_count - 1] = combo;
+			
+			/* populate the items to refer to this combo */
+			for( v = 0; v < retcount; v++ ) {
 				struct item_data * it;
 				int index;
 				
@@ -1501,19 +1490,9 @@ void itemdb_read_combos() {
 				
 				index = it->combos_count;
 				
-				if( it->combos == NULL ) {
-					CREATE(it->combos, struct item_combo*, 1);
-					it->combos_count = 1;
-				} else {
-					RECREATE(it->combos, struct item_combo*, ++it->combos_count);
-				}
+				RECREATE(it->combos, struct item_combo*, ++it->combos_count);
 				
-				CREATE(it->combos[index],struct item_combo,1);
-				
-				/* we copy previously alloc'd pointers and just set it to reference */
-				memcpy(it->combos[index],id->combos[idx],sizeof(struct item_combo));
-				/* we flag this way to ensure we don't double-dealloc same data */
-				it->combos[index]->isRef = true;
+				it->combos[index] = combo;
 			}
 			
 		}
@@ -2076,6 +2055,15 @@ void itemdb_read(bool minimal) {
 	itemdb->uid_load();
 }
 
+/**
+ * retrieves item_combo data by combo id
+ **/
+struct item_combo * itemdb_id2combo( unsigned short id ) {
+	if( id > itemdb->combo_count )
+		return NULL;
+	return itemdb->combos[id];
+}
+
 /*==========================================
  * Initialize / Finalize
  *------------------------------------------*/
@@ -2092,17 +2080,8 @@ void destroy_item_data(struct item_data* self, int free_self)
 		script->free_code(self->equip_script);
 	if( self->unequip_script )
 		script->free_code(self->unequip_script);
-	if( self->combos_count ) {
-		int i;
-		for( i = 0; i < self->combos_count; i++ ) {
-			if( !self->combos[i]->isRef ) {
-				aFree(self->combos[i]->nameid);
-				script->free_code(self->combos[i]->script);
-			}
-			aFree(self->combos[i]);
-		}
+	if( self->combos )
 		aFree(self->combos);
-	}
 #if defined(DEBUG)
 	// trash item
 	memset(self, 0xDD, sizeof(struct item_data));
@@ -2169,6 +2148,16 @@ void itemdb_clear(bool total) {
 	itemdb->packages = NULL;
 	itemdb->package_count = 0;
 	
+	for(i = 0; i < itemdb->combo_count; i++) {
+		script->free_code(itemdb->combos[i]->script);
+		aFree(itemdb->combos[i]);
+	}
+	if( itemdb->combos )
+		aFree(itemdb->combos);
+	
+	itemdb->combos = NULL;
+	itemdb->combo_count = 0;
+	
 	if( total )
 		return;
 	
@@ -2225,18 +2214,15 @@ void itemdb_reload(void) {
 		pc->setinventorydata(sd);
 		if( battle_config.item_check )
 			sd->state.itemcheck = 1;
-		pc->checkitem(sd);
 		/* clear combo bonuses */
-		if( sd->combos.count ) {
-			aFree(sd->combos.bonus);
-			aFree(sd->combos.id);
-			sd->combos.bonus = NULL;
-			sd->combos.id = NULL;
-			sd->combos.count = 0;
+		if( sd->combo_count ) {
+			aFree(sd->combos);
+			sd->combos = NULL;
+			sd->combo_count = 0;
 			if( pc->load_combo(sd) > 0 )
 				status_calc_pc(sd,SCO_FORCE);
 		}
-
+		pc->checkitem(sd);
 	}
 	mapit->free(iter);
 }
@@ -2285,6 +2271,9 @@ void itemdb_defaults(void) {
 	/* */
 	itemdb->packages = NULL;
 	itemdb->package_count = 0;
+	/* */
+	itemdb->combos = NULL;
+	itemdb->combo_count = 0;
 	/* */
 	itemdb->names = NULL;
 	/* */
@@ -2352,4 +2341,5 @@ void itemdb_defaults(void) {
 	itemdb->destroy_item_data = destroy_item_data;
 	itemdb->final_sub = itemdb_final_sub;
 	itemdb->clear = itemdb_clear;
+	itemdb->id2combo = itemdb_id2combo;
 }

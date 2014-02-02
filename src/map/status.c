@@ -2598,12 +2598,29 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	}
 
 	/* we've got combos to process */
-	if( sd->combos.count ) {
-		for( i = 0; i < sd->combos.count; i++ ) {
-			script->run(sd->combos.bonus[i],0,sd->bl.id,0);
-			if (!calculating) //Abort, script->run retriggered this.
-				return 1;
+	for( i = 0; i < sd->combo_count; i++ ) {
+		struct item_combo *combo = itemdb->id2combo(sd->combos[i].id);
+		unsigned char j;
+		
+		/**
+		 * ensure combo usage is allowed at this location
+		 **/
+		for(j = 0; j < combo->count; j++) {
+			for(k = 0; k < map->list[sd->bl.m].zone->disabled_items_count; k++) {
+				if( map->list[sd->bl.m].zone->disabled_items[k] == combo->nameid[j] ) {
+					break;
+				}
+			}
+			if( k != map->list[sd->bl.m].zone->disabled_items_count )
+				break;
 		}
+		
+		if( j != combo->count )
+			continue;
+		
+		script->run(sd->combos[i].bonus,0,sd->bl.id,0);
+		if (!calculating) //Abort, script->run retriggered this.
+			return 1;
 	}
 
 	//Store equipment script bonuses

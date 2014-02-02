@@ -116,6 +116,12 @@ enum npc_timeout_type {
 	NPCT_MENU  = 1,
 	NPCT_WAIT  = 2,
 };
+
+struct pc_combos {
+	struct script_code *bonus;/* the script of the combo */
+	unsigned short id;/* this combo id */
+};
+
 struct map_session_data {
 	struct block_list bl;
 	struct unit_data ud;
@@ -468,12 +474,9 @@ struct map_session_data {
 	enum npc_timeout_type npc_idle_type;
 #endif
 
-	struct {
-		struct script_code **bonus;/* the script */
-		unsigned short *id;/* array of combo ids */
-		unsigned char count;
-	} combos;
-
+	struct pc_combos *combos;
+	unsigned char combo_count;
+	
 	/**
 	 * Guarantees your friend request is legit (for bugreport:4629)
 	 **/
