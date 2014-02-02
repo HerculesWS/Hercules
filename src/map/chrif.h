@@ -9,6 +9,8 @@
 #include <time.h>
 #include "map.h" //TBL_stuff
 
+struct status_change_entry;
+
 /**
  * Defines
  **/
@@ -140,6 +142,8 @@ struct chrif_interface {
 	void (*on_ready) (void);
 	void (*on_disconnect) (void);
 	int (*parse) (int fd);
+	void (*save_scdata_single) (int account_id, int char_id, short type, struct status_change_entry *sce);
+	void (*del_scdata_single) (int account_id, int char_id, short type);
 };
 
 struct chrif_interface *chrif;

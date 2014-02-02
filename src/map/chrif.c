@@ -1561,6 +1561,50 @@ void chrif_send_report(char* buf, int len) {
 }
 
 /**
+ * Sends a single scdata for saving into char server, meant to ensure integrity of durationless conditions
+ **/
+void chrif_save_scdata_single(int account_id, int char_id, short type, struct status_change_entry *sce) {
+	
+	if( !chrif->fd )
+		return;
+	
+	WFIFOHEAD(chrif->fd, 28);
+	
+	WFIFOW(chrif->fd, 0) = 0x2740;
+	WFIFOL(chrif->fd, 2) = account_id;
+	WFIFOL(chrif->fd, 6) = char_id;
+	WFIFOW(chrif->fd, 10) = type;
+	WFIFOL(chrif->fd, 12) = sce->val1;
+	WFIFOL(chrif->fd, 16) = sce->val2;
+	WFIFOL(chrif->fd, 20) = sce->val3;
+	WFIFOL(chrif->fd, 24) = sce->val4;
+	
+	WFIFOSET(chrif->fd, 28);
+	
+}
+/**
+ * Sends a single scdata deletion request into char server, meant to ensure integrity of durationless conditions
+ **/
+void chrif_del_scdata_single(int account_id, int char_id, short type) {
+	
+	if( !chrif->fd ) {
+		ShowError("MAYDAY! failed to delete status %d from CID:%d/AID:%d\n",type,char_id,account_id);
+		return;
+	}
+
+	
+	WFIFOHEAD(chrif->fd, 12);
+	
+	WFIFOW(chrif->fd, 0) = 0x2741;
+	WFIFOL(chrif->fd, 2) = account_id;
+	WFIFOL(chrif->fd, 6) = char_id;
+	WFIFOW(chrif->fd, 10) = type;
+	
+	WFIFOSET(chrif->fd, 12);
+
+}
+
+/**	`
  * @see DBApply
  */
 int auth_db_final(DBKey key, DBData *data, va_list ap) {
@@ -1728,4 +1772,6 @@ void chrif_defaults(void) {
 	chrif->on_ready = chrif_on_ready;
 	chrif->on_disconnect = chrif_on_disconnect;
 	chrif->parse = chrif_parse;
+	chrif->save_scdata_single = chrif_save_scdata_single;
+	chrif->del_scdata_single = chrif_del_scdata_single;
 }
