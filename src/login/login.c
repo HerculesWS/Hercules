@@ -832,6 +832,46 @@ int parse_fromchar(int fd)
 			}
 		break;
 				
+		case 0x2740: // Accinfo request forwarded by charserver on mapserver's account
+			if( RFIFOREST(fd) < 22 )
+				return 0;
+			else {
+				struct mmo_account acc;
+				int account_id = RFIFOL(fd, 2), u_fd = RFIFOL(fd, 6), u_aid = RFIFOL(fd, 10), u_group = RFIFOL(fd, 14), map_fd = RFIFOL(fd, 18);
+				if (accounts->load_num(accounts, &acc, account_id)) {
+					WFIFOHEAD(fd,183);
+					WFIFOW(fd,0) = 0x2737;
+					safestrncpy((char*)WFIFOP(fd,2), acc.userid, NAME_LENGTH);
+					if (u_group >= acc.group_id) {
+						safestrncpy((char*)WFIFOP(fd,26), acc.pass, 33);
+					}
+					safestrncpy((char*)WFIFOP(fd,59), acc.email, 40);
+					safestrncpy((char*)WFIFOP(fd,99), acc.last_ip, 16);
+					WFIFOL(fd,115) = acc.group_id;
+					safestrncpy((char*)WFIFOP(fd,119), acc.lastlogin, 24);
+					WFIFOL(fd,143) = acc.logincount;
+					WFIFOL(fd,147) = acc.state;
+					if (u_group >= acc.group_id) {
+						safestrncpy((char*)WFIFOP(fd,151), acc.pincode, 5);
+					}
+					safestrncpy((char*)WFIFOP(fd,156), acc.birthdate, 11);
+					WFIFOL(fd,167) = map_fd;
+					WFIFOL(fd,171) = u_fd;
+					WFIFOL(fd,175) = u_aid;
+					WFIFOL(fd,179) = account_id;
+					WFIFOSET(fd,183);
+				} else {
+					WFIFOHEAD(fd,18);
+					WFIFOW(fd,0) = 0x2736;
+					WFIFOL(fd,2) = map_fd;
+					WFIFOL(fd,6) = u_fd;
+					WFIFOL(fd,10) = u_aid;
+					WFIFOL(fd,14) = account_id;
+					WFIFOSET(fd,18);
+				}
+				RFIFOSKIP(fd,22);
+			}
+		break;
 		default:
 			ShowError("parse_fromchar: Unknown packet 0x%x from a char-server! Disconnecting!\n", command);
 			set_eof(fd);

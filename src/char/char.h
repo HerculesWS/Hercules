@@ -63,6 +63,7 @@ int memitemdata_to_sql(const struct item items[], int max, int id, int tableswit
 int mapif_sendall(unsigned char *buf,unsigned int len);
 int mapif_sendallwos(int fd,unsigned char *buf,unsigned int len);
 int mapif_send(int fd,unsigned char *buf,unsigned int len);
+void mapif_on_parse_accinfo(int account_id,int u_fd, int aid, int castergroup, int map_fd);
 
 int char_married(int pl1,int pl2);
 int char_child(int parent_id, int child_id);
