@@ -7803,8 +7803,7 @@ BUILDIN(delequip)
 /*==========================================
  *
  *------------------------------------------*/
-BUILDIN(statusup)
-{
+BUILDIN(statusup) {
 	int type;
 	TBL_PC *sd;
 
@@ -7813,7 +7812,7 @@ BUILDIN(statusup)
 	if( sd == NULL )
 		return true;
 
-	pc->statusup(sd,type);
+	pc->statusup(sd, type, 1);
 
 	return true;
 }

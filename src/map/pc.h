@@ -888,7 +888,8 @@ struct pc_interface {
 	unsigned int (*thisjobexp) (struct map_session_data *sd);
 	int (*gets_status_point) (int level);
 	int (*need_status_point) (struct map_session_data *sd,int type,int val);
-	int (*statusup) (struct map_session_data *sd,int type);
+	int (*maxparameterincrease) (struct map_session_data* sd, int type);
+	bool (*statusup) (struct map_session_data *sd, int type, int increase);
 	int (*statusup2) (struct map_session_data *sd,int type,int val);
 	int (*skillup) (struct map_session_data *sd,uint16 skill_id);
 	int (*allskillup) (struct map_session_data *sd);
