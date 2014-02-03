@@ -11175,11 +11175,10 @@ void clif_parse_ChangeCart(int fd,struct map_session_data *sd)
 /// status id:
 ///     SP_STR ~ SP_LUK
 /// amount:
-///     client sends always 1 for this, even when using /str+ and
-///     the like
-void clif_parse_StatusUp(int fd,struct map_session_data *sd)
-{
-	pc->statusup(sd,RFIFOW(fd,2));
+///     Old clients send always 1 for this, even when using /str+ and the like.
+///     Newer clients (2013-12-23 and newer) send the correct amount.
+void clif_parse_StatusUp(int fd,struct map_session_data *sd) {
+	pc->statusup(sd,RFIFOW(fd,2), RFIFOB(fd, 4));
 }
 
 
