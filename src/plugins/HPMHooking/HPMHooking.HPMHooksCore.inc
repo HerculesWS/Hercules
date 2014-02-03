@@ -3649,6 +3649,8 @@ struct {
 	struct HPMHookPoint *HP_pc_gets_status_point_post;
 	struct HPMHookPoint *HP_pc_need_status_point_pre;
 	struct HPMHookPoint *HP_pc_need_status_point_post;
+	struct HPMHookPoint *HP_pc_maxparameterincrease_pre;
+	struct HPMHookPoint *HP_pc_maxparameterincrease_post;
 	struct HPMHookPoint *HP_pc_statusup_pre;
 	struct HPMHookPoint *HP_pc_statusup_post;
 	struct HPMHookPoint *HP_pc_statusup2_pre;
@@ -8668,6 +8670,8 @@ struct {
 	int HP_pc_gets_status_point_post;
 	int HP_pc_need_status_point_pre;
 	int HP_pc_need_status_point_post;
+	int HP_pc_maxparameterincrease_pre;
+	int HP_pc_maxparameterincrease_post;
 	int HP_pc_statusup_pre;
 	int HP_pc_statusup_post;
 	int HP_pc_statusup2_pre;

@@ -46994,13 +46994,13 @@ int HP_pc_need_status_point(struct map_session_data *sd, int type, int val) {
 	}
 	return retVal___;
 }
-int HP_pc_statusup(struct map_session_data *sd, int type) {
+int HP_pc_maxparameterincrease(struct map_session_data *sd, int type) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if( HPMHooks.count.HP_pc_statusup_pre ) {
+	if( HPMHooks.count.HP_pc_maxparameterincrease_pre ) {
 		int (*preHookFunc) (struct map_session_data *sd, int *type);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_statusup_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_pc_statusup_pre[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_maxparameterincrease_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_maxparameterincrease_pre[hIndex].func;
 			retVal___ = preHookFunc(sd, &type);
 		}
 		if( *HPMforce_return ) {
@@ -47009,13 +47009,39 @@ int HP_pc_statusup(struct map_session_data *sd, int type) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.statusup(sd, type);
+		retVal___ = HPMHooks.source.pc.maxparameterincrease(sd, type);
+	}
+	if( HPMHooks.count.HP_pc_maxparameterincrease_post ) {
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int *type);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_maxparameterincrease_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_maxparameterincrease_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, &type);
+		}
+	}
+	return retVal___;
+}
+bool HP_pc_statusup(struct map_session_data *sd, int type, int increase) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_pc_statusup_pre ) {
+		bool (*preHookFunc) (struct map_session_data *sd, int *type, int *increase);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_statusup_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_statusup_pre[hIndex].func;
+			retVal___ = preHookFunc(sd, &type, &increase);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.statusup(sd, type, increase);
 	}
 	if( HPMHooks.count.HP_pc_statusup_post ) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int *type);
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, int *type, int *increase);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_statusup_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_statusup_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, &type);
+			retVal___ = postHookFunc(retVal___, sd, &type, &increase);
 		}
 	}
 	return retVal___;
