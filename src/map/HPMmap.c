@@ -5,6 +5,15 @@
 #include "../common/malloc.h"
 #include "../common/showmsg.h"
 #include "../common/HPM.h"
+#include "../common/conf.h"
+#include "../common/db.h"
+#include "../common/des.h"
+#include "../common/ers.h"
+#include "../common/mapindex.h"
+#include "../common/mmo.h"
+#include "../common/socket.h"
+#include "../common/strlib.h"
+
 
 #include "HPMmap.h"
 #include "pc.h"
@@ -12,29 +21,46 @@
 
 //
 #include "atcommand.h"
+#include "battle.h"
+#include "battleground.h"
 #include "chat.h"
 #include "chrif.h"
+#include "clif.h"
+#include "date.h"
 #include "duel.h"
 #include "elemental.h"
+#include "guild.h"
 #include "homunculus.h"
 #include "instance.h"
 #include "intif.h"
 #include "irc-bot.h"
+#include "itemdb.h"
+#include "log.h"
 #include "mail.h"
 #include "mapreg.h"
 #include "mercenary.h"
+#include "mob.h"
+#include "npc.h"
 #include "party.h"
+#include "path.h"
+#include "pc_groups.h"
 #include "pet.h"
 #include "quest.h"
+#include "script.h"
+#include "searchstore.h"
+#include "skill.h"
+#include "status.h"
 #include "storage.h"
 #include "trade.h"
+#include "unit.h"
+#include "vending.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-#include "../plugins/HPMDataCheck.h"
+#include "../common/HPMDataCheck.h"
 
 struct HPM_atcommand_list {
 	//tracking currently not enabled

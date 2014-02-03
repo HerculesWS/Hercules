@@ -46,6 +46,8 @@
 #include "../map/mail.h"
 #include "../map/irc-bot.h"
 
+#include "../common/HPMDataCheck.h"
+
 HPExport struct hplugin_info pinfo = {
 	"HPMHooking",   // Plugin name
 	SERVER_TYPE_MAP,// Which server types this plugin works with?

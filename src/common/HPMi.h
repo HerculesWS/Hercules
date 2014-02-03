@@ -1,8 +1,8 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-#ifndef	_COMMON_HPMi_H_
-#define _COMMON_HPMi_H_
+#ifndef	_COMMON_HPMI_H_
+#define _COMMON_HPMI_H_
 
 #include "../common/cbasetypes.h"
 #include "../common/core.h"
@@ -196,4 +196,4 @@ HPExport struct HPMi_interface {
 HPExport struct HPMi_interface *HPMi;
 #endif
 
-#endif /* _COMMON_HPMi_H_ */
+#endif /* _COMMON_HPMI_H_ */

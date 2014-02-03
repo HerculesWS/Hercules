@@ -16,6 +16,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../common/HPMDataCheck.h"
+
 HPExport struct hplugin_info pinfo = {
 	"DB2SQL",        // Plugin name
 	SERVER_TYPE_MAP, // Which server types this plugin works with?

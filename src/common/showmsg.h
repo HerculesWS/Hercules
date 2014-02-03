@@ -5,7 +5,7 @@
 #ifndef _COMMON_SHOWMSG_H_
 #define _COMMON_SHOWMSG_H_
 
-#ifndef _HPMi_H_
+#ifndef _COMMON_HPMI_H_
 	#include "../../3rdparty/libconfig/libconfig.h"
 #endif
 
@@ -90,7 +90,7 @@ enum msg_type {
 };
 
 extern void ClearScreen(void);
-#ifndef _HPMi_H_
+#ifndef _COMMON_HPMI_H_
 	extern void ShowMessage(const char *, ...);
 	extern void ShowStatus(const char *, ...);
 	extern void ShowSQL(const char *, ...);
