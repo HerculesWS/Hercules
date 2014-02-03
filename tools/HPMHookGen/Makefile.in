@@ -1,18 +1,24 @@
 @SET_MAKE@
 
-COMMON_C = $(wildcard ../../src/common/*.c)
-COMMON_H = $(wildcard ../../src/common/*.h)
-MAP_C = $(wildcard ../../src/map/*.c)
-MAP_H = $(wildcard ../../src/map/*.h)
-CHAR_C = $(wildcard ../../src/char/*.c)
-CHAR_H = $(wildcard ../../src/char/*.h)
-LOGIN_C = $(wildcard ../../src/login/*.c)
-LOGIN_H = $(wildcard ../../src/login/*.h)
+COMMON_D = ../../src/common
+MAP_D = ../../src/map
+CHAR_D = ../../src/char
+LOGIN_D = ../../src/login
+PLUGIN_D = ../../src/plugins
+COMMON_C = $(wildcard $(COMMON_D)/*.c)
+COMMON_H = $(filter-out $(COMMON_D)/HPMDataCheck.%,$(wildcard $(COMMON_D)/*.h))
+MAP_C = $(wildcard $(MAP_D)/*.c)
+MAP_H = $(wildcard $(MAP_D)/*.h)
+CHAR_C = $(wildcard $(CHAR_D)/*.c)
+CHAR_H = $(wildcard $(CHAR_D)/*.h)
+LOGIN_C = $(wildcard $(LOGIN_D)/*.c)
+LOGIN_H = $(wildcard $(LOGIN_D)/*.h)
 ALL_C = $(COMMON_C) $(MAP_C) $(CHAR_C) $(LOGIN_C)
 ALL_H = $(COMMON_H) $(MAP_H) $(CHAR_H) $(LOGIN_H)
 
-HOOK_INC = $(addprefix ../../src/plugins/HPMHooking., \
-           $(addsuffix .inc, HookingPoints sources GetSymbol HPMHooksCore Hooks))
+HOOK_INC = $(addprefix $(PLUGIN_D)/HPMHooking., \
+           $(addsuffix .inc, HookingPoints sources GetSymbol HPMHooksCore Hooks)) \
+           $(COMMON_D)/HPMDataCheck.h
 
 HAVE_DOXYGEN=@HAVE_DOXYGEN@
 HAVE_PERL=@HAVE_PERL@
@@ -49,8 +55,10 @@ hooks: $(HOOK_INC)
 $(HOOK_INC): generate
 
 generate: doxyoutput
-	@echo "	Regenerating hook definitions..."
+	@echo "	Regenerating HPM Hook definitions..."
 	@perl HPMHookGen.pl
+	@echo "	Regenerating HPM Data Check definitions..."
+	@perl HPMDataCheckGen.pl
 
 doxyoutput: $(ALL_C) $(ALL_H) doxygen.conf
 	@echo "	Extracting functions information..."

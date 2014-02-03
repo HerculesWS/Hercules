@@ -7,6 +7,12 @@ use strict;
 use warnings;
 use XML::Simple;
 
+# XML Parser hint (some are faster than others)
+#local $ENV{XML_SIMPLE_PREFERRED_PARSER} = '';                 # 0m7.138s
+local $ENV{XML_SIMPLE_PREFERRED_PARSER} = 'XML::Parser';      # 0m2.674s
+#local $ENV{XML_SIMPLE_PREFERRED_PARSER} = 'XML::SAX::Expat';  # 0m7.026s
+#local $ENV{XML_SIMPLE_PREFERRED_PARSER} = 'XML::LibXML::SAX'; # 0m4.152s
+
 sub trim($) {
 	my $s = $_[0];
 	$s =~ s/^\s+//; $s =~ s/\s+$//;
