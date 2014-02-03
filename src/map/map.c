@@ -3675,14 +3675,115 @@ int map_sql_close(void)
 	return 0;
 }
 
+/**
+ * Merges two zones into a new one
+ * @param main the zone whose data must override the others upon conflict,
+ *        e.g. enabling pvp on a town means that main is the pvp zone, while "other" is the towns previous zone
+ *
+ * @return the newly created zone from merging main and other
+ **/
+struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct map_zone_data *other) {
+	char newzone[MAP_ZONE_NAME_LENGTH];
+	struct map_zone_data *zone = NULL;
+	int cursor, i;
+	
+	sprintf(newzone, "%s+%s",main->name,other->name);
+	
+	if( (zone = strdb_get(map->zone_db, newzone)) )
+		return zone;/* this zone has already been merged */
+	
+	CREATE(zone, struct map_zone_data, 1);
+	
+	safestrncpy(zone->name, newzone, MAP_ZONE_NAME_LENGTH);
+	
+	zone->disabled_skills_count = main->disabled_skills_count + other->disabled_skills_count;
+	zone->disabled_items_count = main->disabled_items_count + other->disabled_items_count;
+	zone->mapflags_count = main->mapflags_count + other->mapflags_count;
+	zone->disabled_commands_count = main->disabled_commands_count + other->disabled_commands_count;
+	zone->capped_skills_count = main->capped_skills_count + other->capped_skills_count;
+	
+	CREATE(zone->disabled_skills, struct map_zone_disabled_skill_entry *, zone->disabled_skills_count );
+	
+	for(i = 0, cursor = 0; i < main->disabled_skills_count; i++, cursor++ ) {
+		CREATE(zone->disabled_skills[cursor], struct map_zone_disabled_skill_entry, 1 );
+		memcpy(zone->disabled_skills[cursor], main->disabled_skills[i], sizeof(struct map_zone_disabled_skill_entry));
+	}
+	
+	for(i = 0; i < other->disabled_skills_count; i++, cursor++ ) {
+		CREATE(zone->disabled_skills[cursor], struct map_zone_disabled_skill_entry, 1 );
+		memcpy(zone->disabled_skills[cursor], other->disabled_skills[i], sizeof(struct map_zone_disabled_skill_entry));
+	}
+	
+	CREATE(zone->disabled_items, int, zone->disabled_items_count );
+	
+	for(i = 0, cursor = 0; i < main->disabled_items_count; i++, cursor++ ) {
+		zone->disabled_items[cursor] = main->disabled_items[i];
+	}
+	
+	for(i = 0; i < other->disabled_items_count; i++, cursor++ ) {
+		zone->disabled_items[cursor] = other->disabled_items[i];
+	}
+
+	CREATE(zone->mapflags, char *, zone->mapflags_count );
+	
+	for(i = 0, cursor = 0; i < main->mapflags_count; i++, cursor++ ) {
+		CREATE(zone->mapflags[cursor], char, MAP_ZONE_MAPFLAG_LENGTH );
+		safestrncpy(zone->mapflags[cursor], main->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
+	}
+	
+	for(i = 0; i < other->mapflags_count; i++, cursor++ ) {
+		CREATE(zone->mapflags[cursor], char, MAP_ZONE_MAPFLAG_LENGTH );
+		safestrncpy(zone->mapflags[cursor], other->mapflags[i], MAP_ZONE_MAPFLAG_LENGTH);
+	}
+	
+	CREATE(zone->disabled_commands, struct map_zone_disabled_command_entry *, zone->disabled_commands_count);
+	
+	for(i = 0, cursor = 0; i < main->disabled_commands_count; i++, cursor++ ) {
+		CREATE(zone->disabled_commands[cursor], struct map_zone_disabled_command_entry, 1);
+		memcpy(zone->disabled_commands[cursor], main->disabled_commands[i], sizeof(struct map_zone_disabled_command_entry));
+	}
+	
+	for(i = 0; i < other->disabled_commands_count; i++, cursor++ ) {
+		CREATE(zone->disabled_commands[cursor], struct map_zone_disabled_command_entry, 1);
+		memcpy(zone->disabled_commands[cursor], other->disabled_commands[i], sizeof(struct map_zone_disabled_command_entry));
+	}
+	
+	CREATE(zone->capped_skills, struct map_zone_skill_damage_cap_entry *, zone->capped_skills_count);
+	
+	
+	for(i = 0, cursor = 0; i < main->capped_skills_count; i++, cursor++ ) {
+		CREATE(zone->capped_skills[cursor], struct map_zone_skill_damage_cap_entry, 1);
+		memcpy(zone->capped_skills[cursor], main->disabled_commands[i], sizeof(struct map_zone_skill_damage_cap_entry));
+	}
+	
+	for(i = 0; i < other->capped_skills_count; i++, cursor++ ) {
+		CREATE(zone->capped_skills[cursor], struct map_zone_skill_damage_cap_entry, 1);
+		memcpy(zone->capped_skills[cursor], other->capped_skills[i], sizeof(struct map_zone_skill_damage_cap_entry));
+	}
+	
+	zone->info.special = 2;
+	
+	strdb_put(map->zone_db, newzone, zone);
+	
+	return zone;
+}
+
 void map_zone_change2(int m, struct map_zone_data *zone) {
 	char empty[1] = "\0";
 
-	map->list[m].prev_zone = map->list[m].zone;
-
+	if( map->list[m].zone == zone )
+		return;
+	
+	if( map->list[m].zone->info.special != 2 ) /* we don't update it for merged zones! */
+		map->list[m].prev_zone = map->list[m].zone;
+	
 	if( map->list[m].zone_mf_count )
 		map->zone_remove(m);
 
+	if( zone->info.special ) {
+		zone = map->merge_zone(zone,map->list[m].prev_zone);
+	}
+	
 	map->zone_apply(m,zone,empty,empty,empty);
 }
 /* when changing from a mapflag to another during runtime */
@@ -4640,7 +4741,7 @@ void read_map_zone_db(void) {
 				zone->disabled_skills_count = 0;
 				zone->disabled_items_count  = 0;
 			}
-			safestrncpy(zone->name, zonename, MAP_ZONE_NAME_LENGTH);
+			safestrncpy(zone->name, zonename, MAP_ZONE_NAME_LENGTH/2);
 
 			if( (skills = libconfig->setting_get_member(zone_e, "disabled_skills")) != NULL ) {
 				disabled_skills_count = libconfig->setting_length(skills);
@@ -4981,6 +5082,14 @@ void read_map_zone_db(void) {
 		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' zones in '"CL_WHITE"%s"CL_RESET"'.\n", zone_count, config_filename);
 		/* not supposed to go in here but in skill_final whatever */
 		libconfig->destroy(&map_zone_db);
+		
+		/* post-load processing */
+		if( (zone = strdb_get(map->zone_db, MAP_ZONE_PVP_NAME)) )
+			zone->info.special = 1;
+		if( (zone = strdb_get(map->zone_db, MAP_ZONE_GVG_NAME)) )
+			zone->info.special = 1;
+		if( (zone = strdb_get(map->zone_db, MAP_ZONE_BG_NAME)) )
+			zone->info.special = 1;
 	}
 }
 
@@ -5943,6 +6052,8 @@ void map_defaults(void) {
 	map->add_questinfo = map_add_questinfo;
 	map->remove_questinfo = map_remove_questinfo;
 	
+	map->merge_zone = map_merge_zone;
+	
 	/**
 	 * mapit interface
 	 **/
@@ -5956,4 +6067,5 @@ void map_defaults(void) {
 	mapit->next = mapit_next;
 	mapit->prev = mapit_prev;
 	mapit->exists = mapit_exists;
+	
 }

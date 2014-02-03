@@ -133,7 +133,6 @@ bool HPM_map_DataCheck (struct s_HPMDataCheck *src, unsigned int size, char *nam
 			return false;
 		} else {
 			j = strdb_uiget(datacheck_db, src[i].name);/* not double lookup; exists sets cache to found data */
-			ShowDebug("Testing[%s/%s] %u vs %u\n",src[i].name,HPMDataCheck[j].name,src[i].size,HPMDataCheck[j].size);
 			if( src[i].size != HPMDataCheck[j].size ) {
 				ShowWarning("HPMDataCheck:%s: '%s' size mismatch %u != %u\n",name,src[i].name,src[i].size,HPMDataCheck[j].size);
 				return false;

@@ -3173,12 +3173,17 @@ void npc_unsetcells(struct npc_data* nd) {
 	int16 m = nd->bl.m, x = nd->bl.x, y = nd->bl.y, xs, ys;
 	int i,j, x0, x1, y0, y1;
 
-	if (nd->subtype == WARP) {
-		xs = nd->u.warp.xs;
-		ys = nd->u.warp.ys;
-	} else {
-		xs = nd->u.scr.xs;
-		ys = nd->u.scr.ys;
+	switch(nd->subtype) {
+		case WARP:
+			xs = nd->u.warp.xs;
+			ys = nd->u.warp.ys;
+			break;
+		case SCRIPT:
+			xs = nd->u.scr.xs;
+			ys = nd->u.scr.ys;
+			break;
+		default:
+			return; // Other types doesn't have touch area
 	}
 
 	if (m < 0 || xs < 0 || ys < 0 || map->list[m].cell == (struct mapcell *)0xdeadbeaf)

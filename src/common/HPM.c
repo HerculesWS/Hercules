@@ -217,7 +217,7 @@ struct hplugin *hplugin_load(const char* filename) {
 		return NULL;
 	}
 	
-	if( !HPM->DataCheck(HPMDataCheck,*HPMDataCheckLen,plugin->info->name) ) {
+	if( HPM->DataCheck && !HPM->DataCheck(HPMDataCheck,*HPMDataCheckLen,plugin->info->name) ) {
 		ShowWarning("HPM:plugin_load: '"CL_WHITE"%s"CL_RESET"' failed DataCheck, out of sync from the core (recompile plugin), skipping...\n", filename);
 		HPM->unload(plugin);
 		return NULL;
@@ -275,10 +275,11 @@ void hplugins_config_read(void) {
 	const char *config_filename = "conf/plugins.conf"; // FIXME hardcoded name
 	FILE *fp;
 	
-	if( !HPM->DataCheck ) {
-		ShowError("HPM:config_read: HPM->DataCheck not set! Failure\n");
-		return;
-	}
+// uncomment once login/char support is wrapped up
+//	if( !HPM->DataCheck ) {
+//		ShowError("HPM:config_read: HPM->DataCheck not set! Failure\n");
+//		return;
+//	}
 	
 	/* yes its ugly, its temporary and will be gone as soon as the new inter-server.conf is set */
 	if( (fp = fopen("conf/import/plugins.conf","r")) ) {
