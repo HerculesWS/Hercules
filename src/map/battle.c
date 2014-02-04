@@ -2253,7 +2253,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case LG_RAGEBURST:
 					if( sc ){
 						skillratio += -100 + (status_get_max_hp(src) - status_get_hp(src)) / 100 + sc->fv_counter * 200;
-						clif->millenniumshield(sd, (sc->fv_counter = 0));
+						clif->millenniumshield(src, (sc->fv_counter = 0));
 					}
 					RE_LVL_DMOD(100);
 					break;
@@ -2665,8 +2665,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			if( sce->val3 <= 0 ) { // Shield Down
 				sce->val2--;
 				if( sce->val2 > 0 ) {
-					if( sd )
-						clif->millenniumshield(sd,sce->val2);
+					clif->millenniumshield(bl,sce->val2);
 					sce->val3 = 1000; // Next Shield
 				} else
 					status_change_end(bl,SC_MILLENNIUMSHIELD,INVALID_TIMER); // All shields down
@@ -2932,9 +2931,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			rnd()%100 < sce->val3)
 			status->heal(src, damage*sce->val4/100, 0, 3);
 
-		if( sd && (sce = sc->data[SC_FORCEOFVANGUARD]) && flag&BF_WEAPON 
+		if( (sce = sc->data[SC_FORCEOFVANGUARD]) && flag&BF_WEAPON 
 			&& rnd()%100 < sce->val2 && sc->fv_counter <= sce->val3 )
-				clif->millenniumshield(sd, sc->fv_counter++);
+				clif->millenniumshield(bl, sc->fv_counter++);
 
 		if (sc->data[SC_STYLE_CHANGE] && rnd()%2) {
 			TBL_HOM *hd = BL_CAST(BL_HOM,bl);

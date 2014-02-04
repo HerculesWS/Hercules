@@ -7778,10 +7778,10 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case RK_MILLENNIUMSHIELD:
-			if( sd ){
+			{
 				short shields = (rnd()%100<50) ? 4 : ((rnd()%100<80) ? 3 : 2);
 				sc_start4(bl,type,100,skill_lv,shields,1000,0,skill->get_time(skill_id,skill_lv));
-				clif->millenniumshield(sd,shields);
+				clif->millenniumshield(src,shields);
 				clif->skill_nodamage(src,bl,skill_id,1,1);
 			}
 			break;
@@ -7811,12 +7811,10 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					int value = 0;
 					type = SC_NONE;
 					if( skill->area_temp[5]&0x10 ){
-						if( dstsd ){
-							value = (rnd()%100<50) ? 4 : ((rnd()%100<80) ? 3 : 2);
-							clif->millenniumshield(dstsd,value);
-							skill->area_temp[5] &= ~0x10;
-							type = SC_MILLENNIUMSHIELD;
-						}
+						value = (rnd()%100<50) ? 4 : ((rnd()%100<80) ? 3 : 2);
+						clif->millenniumshield(bl,value);
+						skill->area_temp[5] &= ~0x10;
+						type = SC_MILLENNIUMSHIELD;
 					}else if( skill->area_temp[5]&0x20 ){
 						value = status_get_max_hp(bl) * 25 / 100;
 						status->change_clear_buffs(bl,4);
