@@ -5770,30 +5770,27 @@ BUILDIN(copyarray)
 	count = script_getnum(st, 4);
 	if( count > SCRIPT_MAX_ARRAYSIZE - idx1 )
 		count = SCRIPT_MAX_ARRAYSIZE - idx1;
-	if( count <= 0 || (id1 == id2 && idx1 == idx2) )
+	if( count <= 0 || (idx1 == idx2 && is_same_reference(data1, data2)) )
 		return true;// nothing to copy
 
-	if( id1 == id2 && idx1 > idx2 )
-	{// destination might be overlapping the source - copy in reverse order
-		for( i = count - 1; i >= 0; --i )
-		{
+	if( is_same_reference(data1, data2) && idx1 > idx2 ) {
+		// destination might be overlapping the source - copy in reverse order
+		for( i = count - 1; i >= 0; --i ) {
 			v = script->get_val2(st, reference_uid(id2, idx2 + i), reference_getref(data2));
 			script->set_reg(st, sd, reference_uid(id1, idx1 + i), name1, v, reference_getref(data1));
 			script_removetop(st, -1, 0);
 		}
-	}
-	else
-	{// normal copy
-		for( i = 0; i < count; ++i )
-		{
-			if( idx2 + i < SCRIPT_MAX_ARRAYSIZE )
-			{
+	} else {
+		// normal copy
+		for( i = 0; i < count; ++i ) {
+			if( idx2 + i < SCRIPT_MAX_ARRAYSIZE ) {
 				v = script->get_val2(st, reference_uid(id2, idx2 + i), reference_getref(data2));
 				script->set_reg(st, sd, reference_uid(id1, idx1 + i), name1, v, reference_getref(data1));
 				script_removetop(st, -1, 0);
-			}
-			else// out of range - assume ""/0
+			} else {
+				// out of range - assume ""/0
 				script->set_reg(st, sd, reference_uid(id1, idx1 + i), name1, (is_string_variable(name1)?(void*)"":(void*)0), reference_getref(data1));
+			}
 		}
 	}
 	return true;

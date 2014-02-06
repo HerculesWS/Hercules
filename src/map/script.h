@@ -144,6 +144,13 @@ struct eri;
 /// Composes the uid of a reference from the id and the index
 #define reference_uid(id,idx) ( (int64) ((uint64)(id) & 0xFFFFFFFF) | ((uint64)(idx) << 32) )
 
+/// Checks whether two references point to the same variable (or array)
+#define is_same_reference(data1, data2) \
+	(  reference_getid(data1) == reference_getid(data2) \
+	&& ( (data1->ref == data2->ref && data1->ref == NULL) \
+	  || (data1->ref != NULL && data2->ref != NULL && data1->ref->vars == data2->ref->vars \
+	     ) ) )
+
 #define script_getvarid(var)  ( (int32)(int64)(var & 0xFFFFFFFF) )
 #define script_getvaridx(var) ( (uint32)(int64)((var >> 32) & 0xFFFFFFFF) )
 
