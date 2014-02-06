@@ -41,7 +41,7 @@ print FH <<"EOF";
 #define _HPM_DATA_CHECK_H_
 
 
-const struct s_HPMDataCheck HPMDataCheck[] = {
+HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 EOF
 
 foreach my $key (sort keys %out) {
@@ -61,7 +61,7 @@ EOF
 }
 print FH <<"EOF";
 };
-unsigned int HPMDataCheckLen = ARRAYLENGTH(HPMDataCheck);
+HPExport unsigned int HPMDataCheckLen = ARRAYLENGTH(HPMDataCheck);
 
 #endif /* _HPM_DATA_CHECK_H_ */
 EOF
