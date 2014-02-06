@@ -10445,13 +10445,13 @@ void HP_clif_specialeffect_value(struct block_list *bl, int effect_id, int num, 
 	}
 	return;
 }
-void HP_clif_millenniumshield(struct map_session_data *sd, short shields) {
+void HP_clif_millenniumshield(struct block_list *bl, short shields) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_millenniumshield_pre ) {
-		void (*preHookFunc) (struct map_session_data *sd, short *shields);
+		void (*preHookFunc) (struct block_list *bl, short *shields);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_millenniumshield_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_clif_millenniumshield_pre[hIndex].func;
-			preHookFunc(sd, &shields);
+			preHookFunc(bl, &shields);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -10459,13 +10459,13 @@ void HP_clif_millenniumshield(struct map_session_data *sd, short shields) {
 		}
 	}
 	{
-		HPMHooks.source.clif.millenniumshield(sd, shields);
+		HPMHooks.source.clif.millenniumshield(bl, shields);
 	}
 	if( HPMHooks.count.HP_clif_millenniumshield_post ) {
-		void (*postHookFunc) (struct map_session_data *sd, short *shields);
+		void (*postHookFunc) (struct block_list *bl, short *shields);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_millenniumshield_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_millenniumshield_post[hIndex].func;
-			postHookFunc(sd, &shields);
+			postHookFunc(bl, &shields);
 		}
 	}
 	return;
