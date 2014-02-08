@@ -14064,6 +14064,15 @@ BUILDIN(sscanf) {
 	argc = script_lastdata(st)-3;
 
 	len = strlen(format);
+
+	if (len != 0 && strlen(str) == 0) {
+		// If the source string is empty but the format string is not, we return -1
+		// according to the C specs. (if the format string is also empty, we shall
+		// continue and return 0: 0 conversions took place out of the 0 attempted.)
+		script_pushint(st, -1);
+		return true;
+	}
+
 	CREATE(buf, char, len*2+1);
 
 	// Issue sscanf for each parameter
@@ -14379,11 +14388,31 @@ BUILDIN(setnpcdisplay) {
 	return true;
 }
 
-BUILDIN(atoi)
-{
+BUILDIN(atoi) {
 	const char *value;
 	value = script_getstr(st,2);
 	script_pushint(st,atoi(value));
+	return true;
+}
+
+BUILDIN(axtoi) {
+	const char *hex = script_getstr(st,2);
+	long value = strtol(hex, NULL, 16);
+#if LONG_MAX > INT_MAX || LONG_MIN < INT_MIN
+	value = cap_value(value, INT_MIN, INT_MAX);
+#endif
+	script_pushint(st, (int)value);
+	return true;
+}
+
+BUILDIN(strtol) {
+	const char *string = script_getstr(st, 2);
+	int base = script_getnum(st, 3);
+	long value = strtol(string, NULL, base);
+#if LONG_MAX > INT_MAX || LONG_MIN < INT_MIN
+	value = cap_value(value, INT_MIN, INT_MAX);
+#endif
+	script_pushint(st, (int)value);
 	return true;
 }
 
@@ -15109,47 +15138,6 @@ BUILDIN(searchitem)
 	}
 
 	script_pushint(st, count);
-	return true;
-}
-
-int axtoi(const char *hexStg)
-{
-	int n = 0;         // position in string
-	int16 m = 0;         // position in digit[] to shift
-	int count;         // loop index
-	int intValue = 0;  // integer value of hex string
-	int digit[11];      // hold values to convert
-	while (n < 10) {
-		if (hexStg[n]=='\0')
-			break;
-		if (hexStg[n] > 0x29 && hexStg[n] < 0x40 ) //if 0 to 9
-			digit[n] = hexStg[n] & 0x0f;            //convert to int
-		else if (hexStg[n] >='a' && hexStg[n] <= 'f') //if a to f
-			digit[n] = (hexStg[n] & 0x0f) + 9;      //convert to int
-		else if (hexStg[n] >='A' && hexStg[n] <= 'F') //if A to F
-			digit[n] = (hexStg[n] & 0x0f) + 9;      //convert to int
-		else break;
-		n++;
-	}
-	count = n;
-	m = n - 1;
-	n = 0;
-	while(n < count) {
-		// digit[n] is value of hex digit at position n
-		// (m << 2) is the number of positions to shift
-		// OR the bits into return value
-		intValue = intValue | (digit[n] << (m << 2));
-		m--;   // adjust the position to set
-		n++;   // next digit to process
-	}
-	return (intValue);
-}
-
-// [Lance] Hex string to integer converter
-BUILDIN(axtoi)
-{
-	const char *hex = script_getstr(st,2);
-	script_pushint(st,script->axtoi(hex));
 	return true;
 }
 
@@ -18837,6 +18825,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(query_logsql,"s*"),
 		BUILDIN_DEF(escape_sql,"v"),
 		BUILDIN_DEF(atoi,"s"),
+		BUILDIN_DEF(strtol,"si"),
 		// [zBuffer] List of player cont commands --->
 		BUILDIN_DEF(rid2name,"i"),
 		BUILDIN_DEF(pcfollow,"ii"),
@@ -19220,7 +19209,6 @@ void script_defaults(void) {
 	script->playbgm_foreachpc_sub = playbgm_foreachpc_sub;
 	script->soundeffect_sub = soundeffect_sub;
 	script->buildin_query_sql_sub = buildin_query_sql_sub;
-	script->axtoi = axtoi;
 	script->buildin_instance_warpall_sub = buildin_instance_warpall_sub;
 	script->buildin_mobuseskill_sub = buildin_mobuseskill_sub;
 	script->cleanfloor_sub = script_cleanfloor_sub;
