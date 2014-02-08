@@ -440,6 +440,7 @@ void npc_chat_defaults(void) {
 	libpcre->copy_substring = pcre_copy_substring;
 	libpcre->free_substring = pcre_free_substring;
 	libpcre->copy_named_substring = pcre_copy_named_substring;
+	libpcre->get_substring = pcre_get_substring;
 }
 
 #endif //PCRE_SUPPORT
