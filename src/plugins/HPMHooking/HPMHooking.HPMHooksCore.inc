@@ -4235,8 +4235,6 @@ struct {
 	struct HPMHookPoint *HP_script_soundeffect_sub_post;
 	struct HPMHookPoint *HP_script_buildin_query_sql_sub_pre;
 	struct HPMHookPoint *HP_script_buildin_query_sql_sub_post;
-	struct HPMHookPoint *HP_script_axtoi_pre;
-	struct HPMHookPoint *HP_script_axtoi_post;
 	struct HPMHookPoint *HP_script_buildin_instance_warpall_sub_pre;
 	struct HPMHookPoint *HP_script_buildin_instance_warpall_sub_post;
 	struct HPMHookPoint *HP_script_buildin_mobuseskill_sub_pre;
@@ -9264,8 +9262,6 @@ struct {
 	int HP_script_soundeffect_sub_post;
 	int HP_script_buildin_query_sql_sub_pre;
 	int HP_script_buildin_query_sql_sub_post;
-	int HP_script_axtoi_pre;
-	int HP_script_axtoi_post;
 	int HP_script_buildin_instance_warpall_sub_pre;
 	int HP_script_buildin_instance_warpall_sub_post;
 	int HP_script_buildin_mobuseskill_sub_pre;
