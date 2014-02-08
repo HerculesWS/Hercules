@@ -10391,15 +10391,20 @@ void pc_autotrade_update(struct map_session_data *sd, enum e_pc_autotrade_update
 			if (SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d' LIMIT 1",map->autotrade_merchants_db,sd->status.char_id))
 				Sql_ShowDebug(map->mysql_handle);
 			break;
-		case PAUC_START:
+		case PAUC_START: {
+			char title[MESSAGE_SIZE*2+1];
+			
+			SQL->EscapeStringLen(map->mysql_handle, title, sd->message, strnlen(sd->message, MESSAGE_SIZE));
+
 			if (SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s` (`account_id`,`char_id`,`sex`,`title`) VALUES ('%d','%d','%d','%s')",
 										map->autotrade_merchants_db,
 										sd->status.account_id,
 										sd->status.char_id,
 										sd->status.sex,
-										sd->message
+										title
 										))
 				Sql_ShowDebug(map->mysql_handle);
+		}
 			/* yes we want it to fall */
 		case PAUC_REFRESH:
 			for( i = 0; i < sd->vend_num; i++ ) {
