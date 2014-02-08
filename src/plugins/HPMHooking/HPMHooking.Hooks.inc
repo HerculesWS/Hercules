@@ -54682,32 +54682,6 @@ int HP_script_buildin_query_sql_sub(struct script_state *st, Sql *handle) {
 	}
 	return retVal___;
 }
-int HP_script_axtoi(const char *hexStg) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if( HPMHooks.count.HP_script_axtoi_pre ) {
-		int (*preHookFunc) (const char *hexStg);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_axtoi_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_script_axtoi_pre[hIndex].func;
-			retVal___ = preHookFunc(hexStg);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.script.axtoi(hexStg);
-	}
-	if( HPMHooks.count.HP_script_axtoi_post ) {
-		int (*postHookFunc) (int retVal___, const char *hexStg);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_axtoi_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_script_axtoi_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, hexStg);
-		}
-	}
-	return retVal___;
-}
 int HP_script_buildin_instance_warpall_sub(struct block_list *bl, va_list ap) {
 	int hIndex = 0;
 	int retVal___ = 0;

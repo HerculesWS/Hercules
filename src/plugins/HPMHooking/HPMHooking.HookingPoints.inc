@@ -2151,7 +2151,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->playbgm_foreachpc_sub, HP_script_playbgm_foreachpc_sub) },
 	{ HP_POP(script->soundeffect_sub, HP_script_soundeffect_sub) },
 	{ HP_POP(script->buildin_query_sql_sub, HP_script_buildin_query_sql_sub) },
-	{ HP_POP(script->axtoi, HP_script_axtoi) },
 	{ HP_POP(script->buildin_instance_warpall_sub, HP_script_buildin_instance_warpall_sub) },
 	{ HP_POP(script->buildin_mobuseskill_sub, HP_script_buildin_mobuseskill_sub) },
 	{ HP_POP(script->cleanfloor_sub, HP_script_cleanfloor_sub) },

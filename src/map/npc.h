@@ -336,6 +336,7 @@ struct pcre_interface {
 	int (*copy_substring) (const char *subject, int *ovector, int stringcount, int stringnumber, char *buffer, int buffersize);
 	void (*free_substring) (const char *stringptr);
 	int (*copy_named_substring) (const pcre *code, const char *subject, int *ovector, int stringcount, const char *stringname, char *buffer, int buffersize);
+	int (*get_substring) (const char *subject, int *ovector, int stringcount, int stringnumber, const char **stringptr);
 };
 
 struct pcre_interface *libpcre;

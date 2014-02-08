@@ -7,7 +7,7 @@
 #define _HPM_DATA_CHECK_H_
 
 
-const struct s_HPMDataCheck HPMDataCheck[] = {
+HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef _COMMON_CONF_H_
 		{ "libconfig_interface", sizeof(struct libconfig_interface) },
 	#else
@@ -125,6 +125,6 @@ const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define _MAP_SKILL_H_
 	#endif // _MAP_SKILL_H_
 };
-unsigned int HPMDataCheckLen = ARRAYLENGTH(HPMDataCheck);
+HPExport unsigned int HPMDataCheckLen = ARRAYLENGTH(HPMDataCheck);
 
 #endif /* _HPM_DATA_CHECK_H_ */
