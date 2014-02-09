@@ -2275,7 +2275,10 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 		for(i=0; i<size; i++)
 			linkdb_final(&script->syntax.curly[i].case_label);
 #ifdef ENABLE_CASE_CHECK
-	script->local_casecheck.clear();
+		script->local_casecheck.clear();
+		script->parser_current_src = NULL;
+		script->parser_current_file = NULL;
+		script->parser_current_line = 0;
 #endif // ENABLE_CASE_CHECK
 		return NULL;
 	}
@@ -2292,7 +2295,10 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			script->size = 0;
 			script->buf  = NULL;
 #ifdef ENABLE_CASE_CHECK
-	script->local_casecheck.clear();
+			script->local_casecheck.clear();
+			script->parser_current_src = NULL;
+			script->parser_current_file = NULL;
+			script->parser_current_line = 0;
 #endif // ENABLE_CASE_CHECK
 			return NULL;
 		}
@@ -2310,7 +2316,10 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			script->size = 0;
 			script->buf  = NULL;
 #ifdef ENABLE_CASE_CHECK
-	script->local_casecheck.clear();
+			script->local_casecheck.clear();
+			script->parser_current_src = NULL;
+			script->parser_current_file = NULL;
+			script->parser_current_line = 0;
 #endif // ENABLE_CASE_CHECK
 			return NULL;
 		}
@@ -2428,6 +2437,9 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 	code->script_vars = NULL;
 #ifdef ENABLE_CASE_CHECK
 	script->local_casecheck.clear();
+	script->parser_current_src = NULL;
+	script->parser_current_file = NULL;
+	script->parser_current_line = 0;
 #endif // ENABLE_CASE_CHECK
 	return code;
 }

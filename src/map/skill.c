@@ -18130,7 +18130,13 @@ void skill_readdb(bool minimal) {
 	safestrncpy(skill->db[0].name, "UNKNOWN_SKILL", sizeof(skill->db[0].name));
 	safestrncpy(skill->db[0].desc, "Unknown Skill", sizeof(skill->db[0].desc));
 
+#ifdef ENABLE_CASE_CHECK
+	script->parser_current_file = DBPATH"skill_db.txt";
+#endif // ENABLE_CASE_CHECK
 	sv->readdb(map->db_path, DBPATH"skill_db.txt",           ',',  17,                       17,               MAX_SKILL_DB, skill->parse_row_skilldb);
+#ifdef ENABLE_CASE_CHECK
+	script->parser_current_file = NULL;
+#endif // ENABLE_CASE_CHECK
 
 	if (minimal)
 		return;
