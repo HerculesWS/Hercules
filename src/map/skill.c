@@ -14012,6 +14012,12 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 	if( sd && !(skill->get_castnodex(skill_id, skill_lv)&4) ){
 		VARCAST_REDUCTION( max(sd->bonus.varcastrate, 0) + max(i, 0) );
 		fixcast_r = max(fixcast_r, sd->bonus.fixcastrate) + min(sd->bonus.fixcastrate,0);
+		for( i = 0; i < ARRAYLENGTH(sd->skillcast) && sd->skillcast[i].id; i++ )
+			if( sd->skillcast[i].id == skill_id ){ // bonus2 bVariableCastrate
+				if( (i=sd->skillcast[i].val) > 0)
+					VARCAST_REDUCTION(i);
+				break;
+			}
 	}
 
 	if( varcast_r < 0 ) // now compute overall factors

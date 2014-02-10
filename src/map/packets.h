@@ -2415,7 +2415,7 @@ packet(0x020d,-1);
 	packet(0x0873,36,clif->pStoragePassword,0);
 	packet(0x097C,4,clif->pRanklist);
 #endif
-
+	
 //2013-08-07Ragexe (Shakto)
 #if PACKETVER >= 20130807
 	packet(0x0369,7,clif->pActionRequest,2,6);
@@ -2490,6 +2490,7 @@ packet(0x020d,-1);
 	/* NPC Market */
 	packet(0x09d8,2,clif->pNPCMarketClosed);
 	packet(0x09d6,-1,clif->pNPCMarketPurchase);
+	packet(0x09df,7);
 #endif
 
 /* PacketKeys: http://hercules.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
