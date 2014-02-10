@@ -2498,12 +2498,14 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 			}
 			//Skill damage modifiers that stack linearly
 			if(sc && skill_id != PA_SACRIFICE){
+#ifdef RENEWAL_EDP
 				if( sc->data[SC_EDP] ){
 					if( skill_id == AS_SONICBLOW ||
 						skill_id == GC_COUNTERSLASH ||
 						skill_id == GC_CROSSIMPACT )
 							skillratio >>= 1;
 				}
+#endif
 				if(sc->data[SC_OVERTHRUST])
 					skillratio += sc->data[SC_OVERTHRUST]->val3;
 				if(sc->data[SC_OVERTHRUSTMAX])
