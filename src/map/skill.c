@@ -15067,7 +15067,7 @@ int skill_maelstrom_suction(struct block_list *bl, va_list ap) {
  *------------------------------------------*/
 int skill_enchant_elemental_end (struct block_list *bl, int type) {
 	struct status_change *sc;
-	const enum sc_type scs[] = { SC_ENCHANTPOISON, SC_ASPERSIO, SC_PROPERTYFIRE, SC_PROPERTYWATER, SC_PROPERTYWIND, SC_PROPERTYGROUND, SC_PROPERTYDARK, SC_PROPERTYTELEKINESIS, SC_ENCHANTARMS, SC_EXEEDBREAK };
+	const enum sc_type scs[] = { SC_ENCHANTPOISON, SC_ASPERSIO, SC_PROPERTYFIRE, SC_PROPERTYWATER, SC_PROPERTYWIND, SC_PROPERTYGROUND, SC_PROPERTYDARK, SC_PROPERTYTELEKINESIS, SC_ENCHANTARMS };
 	int i;
 	nullpo_ret(bl);
 	nullpo_ret(sc = status->get_sc(bl));

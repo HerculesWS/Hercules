@@ -4576,6 +4576,10 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				ATK_ADD( 30 * tsc->data[SC_DARKCROW]->val1 );
 		}
 
+		if ( sc && !skill_id && sc->data[SC_EXEEDBREAK] ) {
+			ATK_ADDRATE(sc->data[SC_EXEEDBREAK]->val1);
+			status_change_end(src, SC_EXEEDBREAK, INVALID_TIMER);
+		}
 	#ifdef RENEWAL
 		if( sd && skill_id == NJ_KUNAI ){
 			flag.tdef = 1;
@@ -5599,10 +5603,6 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 	wd = battle->calc_attack(BF_WEAPON, src, target, 0, 0, flag);
 
 	if( sc && sc->count ) {
-		if (sc->data[SC_EXEEDBREAK]) {
-			ATK_RATER(sc->data[SC_EXEEDBREAK]->val1);
-			status_change_end(src, SC_EXEEDBREAK, INVALID_TIMER);
-		}
 		if( sc->data[SC_SPELLFIST] ) {
 			if( --(sc->data[SC_SPELLFIST]->val1) >= 0 ){
 				struct Damage ad = battle->calc_attack(BF_MAGIC,src,target,sc->data[SC_SPELLFIST]->val3,sc->data[SC_SPELLFIST]->val4,flag|BF_SHORT);
