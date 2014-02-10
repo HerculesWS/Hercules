@@ -3411,36 +3411,36 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 		ad.damage = battle->calc_cardfix(BF_MAGIC, src, target, nk, s_ele, 0, ad.damage, 0, ad.flag);
 #endif
 		if(sd) {
-			uint16 skill;
+			uint16 rskill;/* redirect skill */
 			//Damage bonuses
 			if ((i = pc->skillatk_bonus(sd, skill_id)))
 				ad.damage += ad.damage*i/100;
 			switch(skill_id){
 				case WL_CHAINLIGHTNING_ATK:
-					skill = WL_CHAINLIGHTNING;
+					rskill = WL_CHAINLIGHTNING;
 					break;
 				case AB_DUPLELIGHT_MAGIC:
-					skill = AB_DUPLELIGHT;
+					rskill = AB_DUPLELIGHT;
 					break;
 				case WL_TETRAVORTEX_FIRE:
 				case WL_TETRAVORTEX_WATER:
 				case WL_TETRAVORTEX_WIND:
 				case WL_TETRAVORTEX_GROUND:
-					skill = WL_TETRAVORTEX;
+					rskill = WL_TETRAVORTEX;
 					break;
 				case WL_SUMMON_ATK_FIRE:
 				case WL_SUMMON_ATK_WIND:
 				case WL_SUMMON_ATK_WATER:
 				case WL_SUMMON_ATK_GROUND:
-					skill = WL_RELEASE;
+					rskill = WL_RELEASE;
 					break;
 				case WM_REVERBERATION_MAGIC:
-					skill = WM_REVERBERATION;
+					rskill = WM_REVERBERATION;
 					break;
 				default:
-					skill = skill_id;
+					rskill = skill_id;
 			}
-			if( (i = battle->adjust_skill_damage(src->m,skill)) )
+			if( (i = battle->adjust_skill_damage(src->m,rskill)) )
 				MATK_RATE(i);
 
 			//Ignore Defense?
@@ -3877,15 +3877,15 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 #endif
     md.damage = battle->calc_cardfix(BF_MISC, src, target, nk, s_ele, 0, md.damage, 0, md.flag);
 	if(skill_id){
-		uint16 skill;
+		uint16 rskill;/* redirect skill id */
 		switch(skill_id){
 			case GN_HELLS_PLANT_ATK:
-				skill = GN_HELLS_PLANT;
+				rskill = GN_HELLS_PLANT;
 				break;
 			default:
-				skill = skill_id;
+				rskill = skill_id;
 		}
-		if (sd && (i = pc->skillatk_bonus(sd, skill)))
+		if (sd && (i = pc->skillatk_bonus(sd, rskill)))
 			md.damage += md.damage*i/100;
 	}
 	if( (i = battle->adjust_skill_damage(src->m,skill_id)) )
@@ -4734,40 +4734,40 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				break;
 		}
 		if( skill_id ){
-			uint16 skill;
+			uint16 rskill;/* redirect skill id */
 			switch(skill_id){
 				case AB_DUPLELIGHT_MELEE:
-					skill = AB_DUPLELIGHT;
+					rskill = AB_DUPLELIGHT;
 					break;
 				case LG_OVERBRAND_BRANDISH:
 				case LG_OVERBRAND_PLUSATK:
-					skill = LG_OVERBRAND;
+					rskill = LG_OVERBRAND;
 					break;
 				case WM_SEVERE_RAINSTORM_MELEE:
-					skill = WM_SEVERE_RAINSTORM;
+					rskill = WM_SEVERE_RAINSTORM;
 					break;
 				case WM_REVERBERATION_MELEE:
-					skill = WM_REVERBERATION;
+					rskill = WM_REVERBERATION;
 					break;
 				case GN_CRAZYWEED_ATK:
-					skill = GN_CRAZYWEED;
+					rskill = GN_CRAZYWEED;
 					break;
 				case GN_SLINGITEM_RANGEMELEEATK:
-					skill = GN_SLINGITEM;
+					rskill = GN_SLINGITEM;
 					break;
 				case RL_R_TRIP_PLUSATK:
-					skill = RL_R_TRIP;
+					rskill = RL_R_TRIP;
 					break;
 				case RL_B_FLICKER_ATK:
-					skill = RL_FLICKER;
+					rskill = RL_FLICKER;
 					break;
 				case RL_GLITTERING_GREED_ATK:
-					skill = RL_GLITTERING_GREED;
+					rskill = RL_GLITTERING_GREED;
 					break;
 				default:
-					skill = skill_id;
+					rskill = skill_id;
 			}
-			if( (i = battle->adjust_skill_damage(src->m,skill)) )
+			if( (i = battle->adjust_skill_damage(src->m,rskill)) )
 				ATK_RATE(i);
 		}
 

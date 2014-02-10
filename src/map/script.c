@@ -7666,9 +7666,8 @@ BUILDIN(getequippercentrefinery) {
 /*==========================================
  * Refine +1 item at pos and log and display refine
  *------------------------------------------*/
-BUILDIN(successrefitem)
-{
-	int i=-1,num,ep;
+BUILDIN(successrefitem) {
+	int i = -1 , num, ep, up = 1;
 	TBL_PC *sd;
 
 	num = script_getnum(st,2);
@@ -7676,6 +7675,9 @@ BUILDIN(successrefitem)
 	if( sd == NULL )
 		return true;
 
+	if( script_hasdata(st, 3) )
+		up = script_getnum(st, 3);
+	
 	if (num > 0 && num <= ARRAYLENGTH(script->equip))
 		i=pc->checkequip(sd,script->equip[num-1]);
 	if(i >= 0) {
@@ -7687,7 +7689,8 @@ BUILDIN(successrefitem)
 		if (sd->status.inventory[i].refine >= MAX_REFINE)
 			return true;
 
-		sd->status.inventory[i].refine++;
+		sd->status.inventory[i].refine += up;
+		sd->status.inventory[i].refine = cap_value( sd->status.inventory[i].refine, 0, MAX_REFINE);
 		pc->unequipitem(sd,i,2); // status calc will happen in pc->equipitem() below
 
 		clif->refine(sd->fd,0,i,sd->status.inventory[i].refine);
@@ -18580,7 +18583,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getequiprefinerycnt,"i"),
 		BUILDIN_DEF(getequipweaponlv,"i"),
 		BUILDIN_DEF(getequippercentrefinery,"i"),
-		BUILDIN_DEF(successrefitem,"i"),
+		BUILDIN_DEF(successrefitem,"i?"),
 		BUILDIN_DEF(failedrefitem,"i"),
 		BUILDIN_DEF(downrefitem,"i?"),
 		BUILDIN_DEF(statusup,"i"),

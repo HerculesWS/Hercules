@@ -2558,6 +2558,26 @@ int parse_fromlogin(int fd) {
 			}
 			break;
 
+			case 0x2736: // Failed accinfo lookup to forward to mapserver
+				if (RFIFOREST(fd) < 18)
+					return 0;
+
+				mapif_parse_accinfo2(false, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14),
+				                     NULL, NULL, NULL, NULL, NULL, NULL, NULL, -1, 0, 0);
+				RFIFOSKIP(fd,18);
+			break;
+
+			case 0x2737: // Successful accinfo lookup to forward to mapserver
+				if (RFIFOREST(fd) < 183)
+					return 0;
+
+				mapif_parse_accinfo2(true, RFIFOL(fd,167), RFIFOL(fd,171), RFIFOL(fd,175), RFIFOL(fd,179),
+				                     (char*)RFIFOP(fd,2), (char*)RFIFOP(fd,26), (char*)RFIFOP(fd,59),
+				                     (char*)RFIFOP(fd,99), (char*)RFIFOP(fd,119), (char*)RFIFOP(fd,151),
+				                     (char*)RFIFOP(fd,156), RFIFOL(fd,115), RFIFOL(fd,143), RFIFOL(fd,147));
+				RFIFOSKIP(fd,183);
+			break;
+
 			default:
 				ShowError("Unknown packet 0x%04x received from login-server, disconnecting.\n", command);
 				set_eof(fd);
@@ -2852,6 +2872,16 @@ void mapif_on_disconnect(int id)
 	mapif_server_reset(id);
 }
 
+void mapif_on_parse_accinfo(int account_id, int u_fd, int u_aid, int u_group, int map_fd) {
+	WFIFOHEAD(login_fd,22);
+	WFIFOW(login_fd,0) = 0x2740;
+	WFIFOL(login_fd,2) = account_id;
+	WFIFOL(login_fd,6) = u_fd;
+	WFIFOL(login_fd,10) = u_aid;
+	WFIFOL(login_fd,14) = u_group;
+	WFIFOL(login_fd,18) = map_fd;
+	WFIFOSET(login_fd,22);
+}
 
 int parse_frommap(int fd)
 {

@@ -638,7 +638,7 @@ even a value from an another array) to get at an array value:
 This will make @arrayofnumbers[100] equal to 10.
 
 Notice that index numbering always starts with 0. Arrays can hold over
-4 billion variables.
+2 billion variables.
 
 And array indexes probably can't be negative. Nobody tested what happens 
 when you try to get a negatively numbered variable from an array, but it's 
@@ -4939,20 +4939,16 @@ the command will end silently.
 
 ---------------------------------------
 
-*successrefitem <equipment slot>;
+*successrefitem <equipment slot>{,<upgrade_count>};
 
 This command will refine an item in the specified equipment slot of the 
-invoking character by +1. For a list of equipment slots see 'getequipid'. 
-This command will not only add the +1, but also display a 'refine success' 
+invoking character by +1 (unless <upgrade_count> is specified).
+For a list of equipment slots see 'getequipid'. 
+This command will also display a 'refine success' 
 effect on the character and put appropriate messages into their chat 
 window. It will also give the character fame points if a weapon reached 
 +10 this way, even though these will only take effect for blacksmith who 
 will later forge a weapon.
-
-The official scripts seems to use the 'successrefitem' command as a 
-function instead: 'successrefitem(<number>)' but it returns nothing on the 
-stack. This is since jAthena, so probably nobody knows for sure why is it 
-so.
 
 ---------------------------------------
 
