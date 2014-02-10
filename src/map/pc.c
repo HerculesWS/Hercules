@@ -5206,7 +5206,8 @@ int pc_checkallowskill(struct map_session_data *sd)
 		SC_LKCONCENTRATION,
 		SC_EDP,
 #endif
-		SC_FEARBREEZE
+		SC_FEARBREEZE,
+		SC_EXEEDBREAK,
 	};
 	const enum sc_type scs_list[] = {
 		SC_AUTOGUARD,

@@ -60,6 +60,7 @@
 ///  - damage is NOT increased by 400%
 ///  - it does NOT affect grimtooth
 ///  - weapon and status ATK are increased
+///  - some skill's damage ratio has modified
 #define RENEWAL_EDP
 
 /// renewal ASPD [malufett]
