@@ -645,11 +645,14 @@ int pc_equippoint(struct map_session_data *sd,int n)
 	if(sd->inventory_data[n]->look == W_DAGGER	||
 		sd->inventory_data[n]->look == W_1HSWORD ||
 		sd->inventory_data[n]->look == W_1HAXE) {
-		if(ep == EQP_HAND_R && (pc->checkskill(sd,AS_LEFT) > 0 || (sd->class_&MAPID_UPPERMASK) == MAPID_ASSASSIN ||
-			(sd->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO))//Kagerou and Oboro can dual wield daggers. [Rytech]
-			return EQP_ARMS;
-		if( ep == EQP_SHADOW_SHIELD )/* are there conditions for those? */
-			return EQP_SHADOW_WEAPON|EQP_SHADOW_SHIELD;
+		if(  (pc->checkskill(sd,AS_LEFT) > 0 ||
+			 (sd->class_&MAPID_UPPERMASK) == MAPID_ASSASSIN ||
+			 (sd->class_&MAPID_UPPERMASK) == MAPID_KAGEROUOBORO) ) { //Kagerou and Oboro can dual wield daggers. [Rytech]
+			if( ep == EQP_HAND_R )
+				return EQP_ARMS;
+			if( ep == EQP_SHADOW_WEAPON )
+				return EQP_SHADOW_ARMS;
+		}
 	}
 	return ep;
 }
@@ -8642,13 +8645,18 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 		pos = req_pos&EQP_ACC;
 		if (pos == EQP_ACC) //User specified both slots..
 			pos = sd->equip_index[EQI_ACC_R] >= 0 ? EQP_ACC_L : EQP_ACC_R;
-	}
-
-	if(pos == EQP_ARMS && id->equip == EQP_HAND_R)
-	{	//Dual wield capable weapon.
+	} else if(pos == EQP_ARMS && id->equip == EQP_HAND_R) { //Dual wield capable weapon.
 	  	pos = (req_pos&EQP_ARMS);
 		if (pos == EQP_ARMS) //User specified both slots, pick one for them.
 			pos = sd->equip_index[EQI_HAND_R] >= 0 ? EQP_HAND_L : EQP_HAND_R;
+	} else if(pos == EQP_SHADOW_ACC) { //Accesories should only go in one of the two,
+		pos = req_pos&EQP_SHADOW_ACC;
+		if (pos == EQP_SHADOW_ACC) //User specified both slots..
+			pos = sd->equip_index[EQI_SHADOW_ACC_R] >= 0 ? EQP_SHADOW_ACC_L : EQP_SHADOW_ACC_R;
+	} else if( pos == EQP_SHADOW_ARMS && id->equip == EQP_SHADOW_WEAPON) { //Dual wield capable weapon.
+	  	pos = (req_pos&EQP_SHADOW_ARMS);
+		if (pos == EQP_SHADOW_ARMS) //User specified both slots, pick one for them.
+			pos = sd->equip_index[EQI_SHADOW_WEAPON] >= 0 ? EQP_SHADOW_SHIELD : EQP_SHADOW_WEAPON;
 	}
 
 	if (pos&EQP_HAND_R && battle_config.use_weapon_skill_range&BL_PC)
@@ -8678,7 +8686,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 
 	sd->status.inventory[n].equip=pos;
 
-	if(pos & EQP_HAND_R) {
+	if(pos & (EQP_HAND_R|EQP_SHADOW_WEAPON)) {
 		if(id)
 			sd->weapontype1 = id->look;
 		else
@@ -8686,19 +8694,16 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 		pc->calcweapontype(sd);
 		clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
 	}
-	if(pos & EQP_HAND_L) {
+	if(pos & (EQP_HAND_L|EQP_SHADOW_SHIELD)) {
 		if(id) {
 			if(id->type == IT_WEAPON) {
 				sd->status.shield = 0;
 				sd->weapontype2 = id->look;
-			}
-			else
-			if(id->type == IT_ARMOR) {
+			} else if(id->type == IT_ARMOR) {
 				sd->status.shield = id->look;
 				sd->weapontype2 = 0;
 			}
-		}
-		else
+		} else
 			sd->status.shield = sd->weapontype2 = 0;
 		pc->calcweapontype(sd);
 		clif->changelook(&sd->bl,LOOK_SHIELD,sd->status.shield);
