@@ -14823,6 +14823,9 @@ int skill_cell_overlap(struct block_list *bl, va_list ap) {
 	if( su == NULL || su->group == NULL || (*alive) == 0 )
 		return 0;
 	
+	if( su->group->state.guildaura ) /* guild auras are not cancelled! */
+		return 0;
+	
 	switch (skill_id) {
 		case SA_LANDPROTECTOR:
 			if( su->group->skill_id == SA_LANDPROTECTOR ) {//Check for offensive Land Protector to delete both. [Skotlex]
