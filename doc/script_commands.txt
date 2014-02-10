@@ -638,7 +638,7 @@ even a value from an another array) to get at an array value:
 This will make @arrayofnumbers[100] equal to 10.
 
 Notice that index numbering always starts with 0. Arrays can hold over
-4 billion variables.
+2 billion variables.
 
 And array indexes probably can't be negative. Nobody tested what happens 
 when you try to get a negatively numbered variable from an array, but it's 
