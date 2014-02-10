@@ -8520,6 +8520,7 @@ int pc_checkcombo(struct map_session_data *sd, struct item_data *data ) {
 		
 		success++;
 	}
+	
 	return success;
 }
 
@@ -8536,7 +8537,7 @@ int pc_removecombo(struct map_session_data *sd, struct item_data *data ) {
 		
 		ARR_FIND( 0, sd->combo_count, x, sd->combos[x].id == data->combos[i]->id );
 		/* no match, skip this combo */
-		if( !(x < sd->combo_count) )
+		if( x == sd->combo_count )
 			continue;
 
 		sd->combos[x].bonus = NULL;
@@ -8556,19 +8557,16 @@ int pc_removecombo(struct map_session_data *sd, struct item_data *data ) {
 			cursor++;
 		}
 		
-		/* check if combo requirements still fit */
-		if( pc->checkcombo( sd, data ) )
-			continue;
-
 		/* it's empty, we can clear all the memory */
 		if( (sd->combo_count = cursor) == 0 ) {
 			aFree(sd->combos);
 			sd->combos = NULL;
-			
-			return retval; /* we also can return at this point for we have no more combos to check */
+			break;
 		}
-
 	}
+	
+	/* check if combo requirements still fit -- don't touch retval! */
+	pc->checkcombo( sd, data );
 
 	return retval;
 }
