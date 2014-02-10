@@ -986,7 +986,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 #if PACKETVER >= 20080102
 	p.font = (sd) ? sd->status.font : 0;
 #endif
-#if PACKETVER >= 20140000 //actual 20120221
+#if PACKETVER >= 20150000 //actual 20120221
 	if( bl->type == BL_MOB ) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
@@ -1116,7 +1116,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 #if PACKETVER >= 20080102
 	p.font = (sd) ? sd->status.font : 0;
 #endif
-#if PACKETVER >= 20140000 //actual 20120221
+#if PACKETVER >= 20150000 //actual 20120221
 	if( bl->type == BL_MOB ) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
@@ -1197,7 +1197,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 #if PACKETVER >= 20080102
 	p.font = (sd) ? sd->status.font : 0;
 #endif
-#if PACKETVER >= 20140000 //actual 20120221
+#if PACKETVER >= 20150000 //actual 20120221
 	if( bl->type == BL_MOB ) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
