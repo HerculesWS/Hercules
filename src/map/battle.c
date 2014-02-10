@@ -3409,11 +3409,36 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 		ad.damage = battle->calc_cardfix(BF_MAGIC, src, target, nk, s_ele, 0, ad.damage, 0, ad.flag);
 #endif
 		if(sd) {
+			uint16 skill;
 			//Damage bonuses
 			if ((i = pc->skillatk_bonus(sd, skill_id)))
 				ad.damage += ad.damage*i/100;
-			
-			if( (i = battle->adjust_skill_damage(src->m,skill_id)) )
+			switch(skill_id){
+				case WL_CHAINLIGHTNING_ATK:
+					skill = WL_CHAINLIGHTNING;
+					break;
+				case AB_DUPLELIGHT_MAGIC:
+					skill = AB_DUPLELIGHT;
+					break;
+				case WL_TETRAVORTEX_FIRE:
+				case WL_TETRAVORTEX_WATER:
+				case WL_TETRAVORTEX_WIND:
+				case WL_TETRAVORTEX_GROUND:
+					skill = WL_TETRAVORTEX;
+					break;
+				case WL_SUMMON_ATK_FIRE:
+				case WL_SUMMON_ATK_WIND:
+				case WL_SUMMON_ATK_WATER:
+				case WL_SUMMON_ATK_GROUND:
+					skill = WL_RELEASE;
+					break;
+				case WM_REVERBERATION_MAGIC:
+					skill = WM_REVERBERATION;
+					break;
+				default:
+					skill = skill_id;
+			}
+			if( (i = battle->adjust_skill_damage(src->m,skill)) )
 				MATK_RATE(i);
 
 			//Ignore Defense?
@@ -3849,10 +3874,18 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	}
 #endif
     md.damage = battle->calc_cardfix(BF_MISC, src, target, nk, s_ele, 0, md.damage, 0, md.flag);
-
-	if (sd && (i = pc->skillatk_bonus(sd, skill_id)))
-		md.damage += md.damage*i/100;
-
+	if(skill_id){
+		uint16 skill;
+		switch(skill_id){
+			case GN_HELLS_PLANT_ATK:
+				skill = GN_HELLS_PLANT;
+				break;
+			default:
+				skill = skill_id;
+		}
+		if (sd && (i = pc->skillatk_bonus(sd, skill)))
+			md.damage += md.damage*i/100;
+	}
 	if( (i = battle->adjust_skill_damage(src->m,skill_id)) )
 		md.damage = md.damage * i / 100;
 
@@ -4694,9 +4727,43 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					ATK_ADDRATE(50);
 				break;
 		}
-
-		if( (i = battle->adjust_skill_damage(src->m,skill_id)) )
-			ATK_RATE(i);
+		if( skill_id ){
+			uint16 skill;
+			switch(skill_id){
+				case AB_DUPLELIGHT_MELEE:
+					skill = AB_DUPLELIGHT;
+					break;
+				case LG_OVERBRAND_BRANDISH:
+				case LG_OVERBRAND_PLUSATK:
+					skill = LG_OVERBRAND;
+					break;
+				case WM_SEVERE_RAINSTORM_MELEE:
+					skill = WM_SEVERE_RAINSTORM;
+					break;
+				case WM_REVERBERATION_MELEE:
+					skill = WM_REVERBERATION;
+					break;
+				case GN_CRAZYWEED_ATK:
+					skill = GN_CRAZYWEED;
+					break;
+				case GN_SLINGITEM_RANGEMELEEATK:
+					skill = GN_SLINGITEM;
+					break;
+				case RL_R_TRIP_PLUSATK:
+					skill = RL_R_TRIP;
+					break;
+				case RL_B_FLICKER_ATK:
+					skill = RL_FLICKER;
+					break;
+				case RL_GLITTERING_GREED_ATK:
+					skill = RL_GLITTERING_GREED;
+					break;
+				default:
+					skill = skill_id;
+			}
+			if( (i = battle->adjust_skill_damage(src->m,skill)) )
+				ATK_RATE(i);
+		}
 
 		if( sd ) {
 			if (skill_id && (i = pc->skillatk_bonus(sd, skill_id)))
