@@ -5174,7 +5174,8 @@ int char_config_read(const char* cfgName)
 				++i;
 			}
 
-			if (i%2) { //we know it must be a even number
+			// Format is: id1,qt1,idn,qtn
+			if( is_odd(i) ) { //we know it must be a even number
 				ShowError("Specified 'start_items' is missing a parameter. Removing '%d'.\n", start_items[i - 1]);
 				start_items[i - 1] = 0;
 			}

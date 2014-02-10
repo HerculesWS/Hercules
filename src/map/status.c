@@ -8436,10 +8436,15 @@ int status_change_start(struct block_list* bl,enum sc_type type,int rate,int val
 				break;
 			case SC_EXEEDBREAK:
 				val1 *= 150; // 150 * skill_lv
-				if( sd && sd->inventory_data[sd->equip_index[EQI_HAND_R]] ) { // Chars.
-					val1 += (sd->inventory_data[sd->equip_index[EQI_HAND_R]]->weight/10 * sd->inventory_data[sd->equip_index[EQI_HAND_R]]->wlv * status->get_lv(bl) / 100);
-					val1 += 15 * (sd ? sd->status.job_level:50) + 100;
-				} else // Mobs
+				if( sd )
+				{
+					if( sd->equip_index[EQI_HAND_R] >= 0 && sd->inventory_data[sd->equip_index[EQI_HAND_R]] )
+					{
+						val1 += (sd->inventory_data[sd->equip_index[EQI_HAND_R]]->weight/10 * sd->inventory_data[sd->equip_index[EQI_HAND_R]]->wlv * status->get_lv(bl) / 100);
+						val1 += 15 * (sd ? sd->status.job_level:50) + 100;
+					}
+				}
+				else // Mobs
 					val1 += (400 * status->get_lv(bl) / 100) + (15 * (status->get_lv(bl) / 2)); // About 1138% at mob_lvl 99. Is an aproximation to a standard weapon. [pakpil]
 				break;
 			case SC_PRESTIGE: // Based on suggested formula in iRO Wiki and some test, still need more test. [pakpil]
