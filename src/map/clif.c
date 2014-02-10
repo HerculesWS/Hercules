@@ -5897,10 +5897,15 @@ void clif_wis_message(int fd, const char* nick, const char* mes, size_t mes_len)
 ///     3 = everyone ignored by target
 void clif_wis_end(int fd, int flag)
 {
-	WFIFOHEAD(fd,packet_len(0x98));
-	WFIFOW(fd,0) = 0x98;
+#if PACKETVER >= 20131223
+	const int cmd = 0x9df;
+#else
+	const int cmd = 0x98;
+#endif
+	WFIFOHEAD(fd,packet_len(cmd));
+	WFIFOW(fd,0) = cmd;
 	WFIFOW(fd,2) = flag;
-	WFIFOSET(fd,packet_len(0x98));
+	WFIFOSET(fd,packet_len(cmd));
 }
 
 
