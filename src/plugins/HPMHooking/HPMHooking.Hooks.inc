@@ -54856,14 +54856,14 @@ unsigned int HP_script_calc_hash_ci(const char *p) {
 	}
 	return retVal___;
 }
-struct DBMap* HP_script_array_src(struct script_state *st, struct map_session_data *sd, const char *name) {
+struct DBMap* HP_script_array_src(struct script_state *st, struct map_session_data *sd, const char *name, struct DBMap **ref) {
 	int hIndex = 0;
 	struct DBMap* retVal___ = NULL;
 	if( HPMHooks.count.HP_script_array_src_pre ) {
-		struct DBMap* (*preHookFunc) (struct script_state *st, struct map_session_data *sd, const char *name);
+		struct DBMap* (*preHookFunc) (struct script_state *st, struct map_session_data *sd, const char *name, struct DBMap **ref);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_array_src_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_script_array_src_pre[hIndex].func;
-			retVal___ = preHookFunc(st, sd, name);
+			retVal___ = preHookFunc(st, sd, name, ref);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -54871,13 +54871,13 @@ struct DBMap* HP_script_array_src(struct script_state *st, struct map_session_da
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.script.array_src(st, sd, name);
+		retVal___ = HPMHooks.source.script.array_src(st, sd, name, ref);
 	}
 	if( HPMHooks.count.HP_script_array_src_post ) {
-		struct DBMap* (*postHookFunc) (struct DBMap* retVal___, struct script_state *st, struct map_session_data *sd, const char *name);
+		struct DBMap* (*postHookFunc) (struct DBMap* retVal___, struct script_state *st, struct map_session_data *sd, const char *name, struct DBMap **ref);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_array_src_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_script_array_src_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, st, sd, name);
+			retVal___ = postHookFunc(retVal___, st, sd, name, ref);
 		}
 	}
 	return retVal___;
@@ -54982,14 +54982,14 @@ void HP_script_array_add_member(struct script_array *sa, unsigned int idx) {
 	}
 	return;
 }
-unsigned int HP_script_array_size(struct script_state *st, struct map_session_data *sd, const char *name) {
+unsigned int HP_script_array_size(struct script_state *st, struct map_session_data *sd, const char *name, struct DBMap **ref) {
 	int hIndex = 0;
 	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_script_array_size_pre ) {
-		unsigned int (*preHookFunc) (struct script_state *st, struct map_session_data *sd, const char *name);
+		unsigned int (*preHookFunc) (struct script_state *st, struct map_session_data *sd, const char *name, struct DBMap **ref);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_array_size_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_script_array_size_pre[hIndex].func;
-			retVal___ = preHookFunc(st, sd, name);
+			retVal___ = preHookFunc(st, sd, name, ref);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -54997,25 +54997,25 @@ unsigned int HP_script_array_size(struct script_state *st, struct map_session_da
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.script.array_size(st, sd, name);
+		retVal___ = HPMHooks.source.script.array_size(st, sd, name, ref);
 	}
 	if( HPMHooks.count.HP_script_array_size_post ) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, struct script_state *st, struct map_session_data *sd, const char *name);
+		unsigned int (*postHookFunc) (unsigned int retVal___, struct script_state *st, struct map_session_data *sd, const char *name, struct DBMap **ref);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_array_size_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_script_array_size_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, st, sd, name);
+			retVal___ = postHookFunc(retVal___, st, sd, name, ref);
 		}
 	}
 	return retVal___;
 }
-unsigned int HP_script_array_highest_key(struct script_state *st, struct map_session_data *sd, const char *name) {
+unsigned int HP_script_array_highest_key(struct script_state *st, struct map_session_data *sd, const char *name, struct DBMap **ref) {
 	int hIndex = 0;
 	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_script_array_highest_key_pre ) {
-		unsigned int (*preHookFunc) (struct script_state *st, struct map_session_data *sd, const char *name);
+		unsigned int (*preHookFunc) (struct script_state *st, struct map_session_data *sd, const char *name, struct DBMap **ref);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_array_highest_key_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_script_array_highest_key_pre[hIndex].func;
-			retVal___ = preHookFunc(st, sd, name);
+			retVal___ = preHookFunc(st, sd, name, ref);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -55023,13 +55023,13 @@ unsigned int HP_script_array_highest_key(struct script_state *st, struct map_ses
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.script.array_highest_key(st, sd, name);
+		retVal___ = HPMHooks.source.script.array_highest_key(st, sd, name, ref);
 	}
 	if( HPMHooks.count.HP_script_array_highest_key_post ) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, struct script_state *st, struct map_session_data *sd, const char *name);
+		unsigned int (*postHookFunc) (unsigned int retVal___, struct script_state *st, struct map_session_data *sd, const char *name, struct DBMap **ref);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_array_highest_key_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_script_array_highest_key_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, st, sd, name);
+			retVal___ = postHookFunc(retVal___, st, sd, name, ref);
 		}
 	}
 	return retVal___;
