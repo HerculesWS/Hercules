@@ -447,7 +447,7 @@ struct mob_data *mob_once_spawn_sub(struct block_list *bl, int16 m, int16 x, int
 		map->search_freecell(bl, m, &x, &y, 1, 1, 0);
 
 	// if none found, pick random position on map
-	if (x <= 0 || y <= 0 || map->getcell(m,x,y,CELL_CHKNOREACH))
+	if (x <= 0 || x >= map->list[m].xs || y <= 0 || y >= map->list[m].ys)
 		map->search_freecell(NULL, m, &x, &y, -1, -1, 1);
 
 	data.x = x;
