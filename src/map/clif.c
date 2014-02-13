@@ -1487,12 +1487,12 @@ void clif_homskillinfoblock(struct map_session_data *sd) {
 	nullpo_retv(sd);
 
 	fd = sd->fd;
+	hd = sd->hd;
+
+	if ( !hd )
+		return;
 
 	WFIFOHEAD(fd, 4+37*MAX_HOMUNSKILL);
-
-	hd = sd->hd;
-	if ( !hd ) // FIXME: If nothing is going to be sent should WFIFOHEAD be above this check? [panikon]
-		return;
 
 	WFIFOW(fd,0)=0x235;
 	for ( i = 0; i < MAX_HOMUNSKILL; i++){
