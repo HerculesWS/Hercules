@@ -3542,6 +3542,8 @@ void map_reloadnpc_sub(char *cfgName)
 			npc->addsrcfile(w2);
 		else if (strcmpi(w1, "import") == 0)
 			map->reloadnpc_sub(w2);
+		else if (strcmpi(w1, "delnpc") == 0)
+			npc->delsrcfile(w2);
 		else
 			ShowWarning("Unknown setting '%s' in file %s\n", w1, cfgName);
 	}
