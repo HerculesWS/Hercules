@@ -65,12 +65,12 @@ int date_get_sec(void)
 
 bool is_day_of_sun(void)
 {
-	return is_even( date_get_day() );
+	return date_get_day()%2 == 0;
 }
 
 bool is_day_of_moon(void)
 {
-	return is_odd( date_get_day() );
+	return date_get_day()%2 == 1;
 }
 
 bool is_day_of_star(void)
