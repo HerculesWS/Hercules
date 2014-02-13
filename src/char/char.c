@@ -137,7 +137,7 @@ int max_connect_user = -1;
 int gm_allow_group = -1;
 int autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
 int start_zeny = 0;
-int start_items[MAX_START_ITEMS*2];
+int start_items[MAX_START_ITEMS*3];
 int guild_exp_rate = 100;
 
 //Custom limits for the fame lists. [Skotlex]
@@ -1579,7 +1579,7 @@ int make_new_char_sql(struct char_session_data* sd, char* name_, int str, int ag
 
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
-	int char_id, flag, k;
+	int char_id, flag, k, l;
 
 	safestrncpy(name, name_, NAME_LENGTH);
 	normalize_name(name,TRIM_CHARS);
@@ -1642,11 +1642,29 @@ int make_new_char_sql(struct char_session_data* sd, char* name_, int str, int ag
 #endif
 	//Retrieve the newly auto-generated char id
 	char_id = (int)SQL->LastInsertId(sql_handle);
+
 	//Give the char the default items
-	
-	for (k = 0; k < ARRAYLENGTH(start_items) && start_items[k] != 0; k += 2) {
-		if( SQL_ERROR == SQL->Query(sql_handle, "INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')", inventory_db, char_id, start_items[k], start_items[k + 1], 1) )
-				Sql_ShowDebug(sql_handle);
+	for (k = 0; k < ARRAYLENGTH(start_items) && start_items[k] != 0; k += 3) {
+		// FIXME: How to define if an item is stackable without having to lookup itemdb? [panikon]
+		if( start_items[k+2] == 1 )
+		{
+			if( SQL_ERROR == SQL->Query(sql_handle,
+				"INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')",
+				inventory_db, char_id, start_items[k], start_items[k + 1], 1) )
+					Sql_ShowDebug(sql_handle);
+		}
+		else if( start_items[k+2] == 0 )
+		{
+			// Non-stackable items should have their own entries (issue: 7279)
+			for( l = 0; l < start_items[k+1]; l++ )
+			{
+				if( SQL_ERROR == SQL->Query(sql_handle,
+					"INSERT INTO `%s` (`char_id`,`nameid`, `amount`, `identify`) VALUES ('%d', '%d', '%d', '%d')",
+					inventory_db, char_id, start_items[k], 1, 1) 
+					)
+					Sql_ShowDebug(sql_handle);
+			}
+		}
 	}
 
 	ShowInfo("Created char: account: %d, char: %d, slot: %d, name: %s\n", sd->account_id, char_id, slot, name);
@@ -5195,18 +5213,25 @@ int char_config_read(const char* cfgName)
 
 			i = 0;
 			split = strtok(w2, ",");
-			while (split != NULL && i < MAX_START_ITEMS*2) {
+			while (split != NULL && i < MAX_START_ITEMS*3) {
 				split2 = split;
 				split = strtok(NULL, ",");
 				start_items[i] = atoi(split2);
+
 				if (start_items[i] < 0)
 					start_items[i] = 0;
+
 				++i;
 			}
 
-			if (i%2) { //we know it must be a even number
-				ShowError("Specified 'start_items' is missing a parameter. Removing '%d'.\n", start_items[i - 1]);
-				start_items[i - 1] = 0;
+			// Format is: id1,quantity1,stackable1,idN,quantityN,stackableN
+			if( i%3 )
+			{
+				ShowWarning("char_config_read: There are not enough parameters in start_items, ignoring last item...\n");
+				if( i%3 == 1 )
+					start_items[i-1] = 0;
+				else
+					start_items[i-2] = 0;
 			}
 		} else if (strcmpi(w1, "start_zeny") == 0) {
 			start_zeny = atoi(w2);
