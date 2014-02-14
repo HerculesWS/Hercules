@@ -9868,7 +9868,7 @@ BUILDIN(sc_start) {
 	}
 
 	if( bl )
-		status->change_start(bl, type, 10000, val1, 0, 0, val4, tick, 2);
+		status->change_start(NULL, bl, type, 10000, val1, 0, 0, val4, tick, 2);
 
 	return true;
 }
@@ -9906,7 +9906,7 @@ BUILDIN(sc_start2) {
 	}
 
 	if( bl )
-		status->change_start(bl, type, rate, val1, 0, 0, val4, tick, 2);
+		status->change_start(NULL, bl, type, rate, val1, 0, 0, val4, tick, 2);
 
 	return true;
 }
@@ -9946,7 +9946,7 @@ BUILDIN(sc_start4) {
 	}
 
 	if( bl )
-		status->change_start(bl, type, 10000, val1, val2, val3, val4, tick, 2);
+		status->change_start(NULL, bl, type, 10000, val1, val2, val3, val4, tick, 2);
 
 	return true;
 }
@@ -10013,7 +10013,7 @@ BUILDIN(getscrate) {
 		bl = map->id2bl(st->rid);
 
 	if (bl)
-		rate = status->get_sc_def(bl, (sc_type)type, 10000, 10000, 0);
+		rate = status->get_sc_def(bl, bl, (sc_type)type, 10000, 10000, 0);
 
 	script_pushint(st,rate);
 	return true;
@@ -13259,7 +13259,7 @@ BUILDIN(summon)
 		md->deletetimer = timer->add(tick+(timeout>0?timeout*1000:60000),mob->timer_delete,md->bl.id,0);
 		mob->spawn (md); //Now it is ready for spawning.
 		clif->specialeffect(&md->bl,344,AREA);
-		sc_start4(&md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 60000);
+		sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE, 0, 60000);
 	}
 	return true;
 }
@@ -15812,7 +15812,7 @@ BUILDIN(mercenary_sc_start) {
 	tick = script_getnum(st,3);
 	val1 = script_getnum(st,4);
 
-	status->change_start(&sd->md->bl, type, 10000, val1, 0, 0, 0, tick, 2);
+	status->change_start(NULL, &sd->md->bl, type, 10000, val1, 0, 0, 0, tick, 2);
 	return true;
 }
 
@@ -17044,7 +17044,7 @@ BUILDIN(setmounting) {
 		if( sd->sc.data[SC_ALL_RIDING] )
 			status_change_end(&sd->bl, SC_ALL_RIDING, INVALID_TIMER);
 		else
-			sc_start(&sd->bl, SC_ALL_RIDING, 100, 0, -1);
+			sc_start(NULL,&sd->bl, SC_ALL_RIDING, 100, 0, -1);
 		script_pushint(st,1);//in both cases, return 1.
 	}
 	return true;
@@ -17595,8 +17595,8 @@ BUILDIN(montransform) {
 		sprintf(msg, msg_txt(1485), monster->name); // Traaaansformation-!! %s form!!
 		clif->ShowScript(&sd->bl, msg);
 		status_change_end(bl, SC_MONSTER_TRANSFORM, INVALID_TIMER); // Clear previous
-		sc_start2(bl, SC_MONSTER_TRANSFORM, 100, mob_id, type, tick);
-		sc_start4(bl, type, 100, val1, val2, val3, val4, tick);
+		sc_start2(NULL, bl, SC_MONSTER_TRANSFORM, 100, mob_id, type, tick);
+		sc_start4(NULL, bl, type, 100, val1, val2, val3, val4, tick);
 	}
 	return true;
 }

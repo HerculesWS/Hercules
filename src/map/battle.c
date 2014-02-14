@@ -2681,7 +2681,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		{
 			clif->skill_nodamage(bl,src,GC_WEAPONBLOCKING,1,1);
 			d->dmg_lv = ATK_BLOCK;
-			sc_start2(bl,SC_COMBOATTACK,100,GC_WEAPONBLOCKING,src->id,2000);
+			sc_start2(src,bl,SC_COMBOATTACK,100,GC_WEAPONBLOCKING,src->id,2000);
 			return 0;
 		}
 		if( sc->data[SC_HOVERING] && skill_id && (skill->get_inf(skill_id)&INF_GROUND_SKILL || skill_id == SR_WINDMILL) ) {
@@ -2711,7 +2711,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			clif->skill_nodamage(bl, bl, RK_MILLENNIUMSHIELD, 1, 1);
 			sce->val3 -= (int)cap_value(damage,INT_MIN,INT_MAX); // absorb damage
 			d->dmg_lv = ATK_BLOCK;
-			sc_start(bl,SC_STUN,15,0,skill->get_time2(RK_MILLENNIUMSHIELD,sce->val1)); // There is a chance to be stuned when one shield is broken.
+			sc_start(src,bl,SC_STUN,15,0,skill->get_time2(RK_MILLENNIUMSHIELD,sce->val1)); // There is a chance to be stuned when one shield is broken.
 			if( sce->val3 <= 0 ) { // Shield Down
 				sce->val2--;
 				if( sce->val2 > 0 ) {
@@ -2736,7 +2736,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			if (sd && pc_issit(sd)) pc->setstand(sd); //Stand it to dodge.
 			clif->skill_nodamage(bl,bl,TK_DODGE,1,1);
 			if (!sc->data[SC_COMBOATTACK])
-				sc_start4(bl, SC_COMBOATTACK, 100, TK_JUMPKICK, src->id, 1, 0, 2000);
+				sc_start4(src, bl, SC_COMBOATTACK, 100, TK_JUMPKICK, src->id, 1, 0, 2000);
 			return 0;
 		}
 
@@ -2921,7 +2921,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				skill->break_equip(src, EQP_WEAPON, 3000, BCT_SELF);
 			// 30% chance to reduce monster's ATK by 25% for 10 seconds.
 			if( src->type == BL_MOB )
-				sc_start(src, SC_NOEQUIPWEAPON, 30, 0, skill->get_time2(RK_STONEHARDSKIN, sce->val1));
+				sc_start(bl,src, SC_NOEQUIPWEAPON, 30, 0, skill->get_time2(RK_STONEHARDSKIN, sce->val1));
 			if( sce->val2 <= 0 )
 				status_change_end(bl, SC_STONEHARDSKIN, INVALID_TIMER);
 		}
@@ -3027,7 +3027,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			if ( !(flag&BF_SKILL) && (flag&BF_WEAPON) && damage > 0 && rnd()%100 < tsc->data[SC_POISONINGWEAPON]->val3 ) {
 				if ( tsc->data[SC_POISONINGWEAPON]->val1 == 9 ) // Oblivion Curse gives a 2nd success chance after the 1st one passes which is reduceable. [Rytech]
 					rate = 100 - tstatus->int_ * 4 / 5;
-				sc_start(bl,tsc->data[SC_POISONINGWEAPON]->val2,rate,tsc->data[SC_POISONINGWEAPON]->val1,skill->get_time2(GC_POISONINGWEAPON,1) - (tstatus->vit + tstatus->luk) / 2 * 1000);
+				sc_start(src,bl,tsc->data[SC_POISONINGWEAPON]->val2,rate,tsc->data[SC_POISONINGWEAPON]->val1,skill->get_time2(GC_POISONINGWEAPON,1) - (tstatus->vit + tstatus->luk) / 2 * 1000);
 			}
 		}
 		if( sc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * sc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
@@ -5627,11 +5627,11 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 		uint16 skill_lv = tsc->data[SC_BLADESTOP_WAIT]->val1;
 		int duration = skill->get_time2(MO_BLADESTOP,skill_lv);
 		status_change_end(target, SC_BLADESTOP_WAIT, INVALID_TIMER);
-		if(sc_start4(src, SC_BLADESTOP, 100, sd?pc->checkskill(sd, MO_BLADESTOP):5, 0, 0, target->id, duration)) {
+		if(sc_start4(target, src, SC_BLADESTOP, 100, sd?pc->checkskill(sd, MO_BLADESTOP):5, 0, 0, target->id, duration)) {
 			//Target locked.
 			clif->damage(src, target, sstatus->amotion, 1, 0, 1, 0, 0); //Display MISS.
 			clif->bladestop(target, src->id, 1);
-			sc_start4(target, SC_BLADESTOP, 100, skill_lv, 0, 0, src->id, duration);
+			sc_start4(target, target, SC_BLADESTOP, 100, skill_lv, 0, 0, src->id, duration);
 			return ATK_BLOCK;
 		}
 	}
@@ -5694,7 +5694,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 		}
 		if( tsc && tsc->data[SC_MTF_MLEATKED] && rnd()%100 < 20 )
 			clif->skill_nodamage(target, target, SM_ENDURE, 5,
-				sc_start(target, SC_ENDURE, 100, 5, skill->get_time(SM_ENDURE, 5)));
+				sc_start(target,target, SC_ENDURE, 100, 5, skill->get_time(SM_ENDURE, 5)));
 	}
 
 	if(tsc && tsc->data[SC_KAAHI] && tsc->data[SC_KAAHI]->val4 == INVALID_TIMER && tstatus->hp < tstatus->max_hp)
