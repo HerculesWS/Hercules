@@ -1450,7 +1450,6 @@ int pc_calc_skilltree(struct map_session_data *sd)
 				case WL_SUMMON_ATK_GROUND:
 				case LG_OVERBRAND_BRANDISH:
 				case LG_OVERBRAND_PLUSATK:
-				case WM_SEVERE_RAINSTORM_MELEE:
 					continue;
 				default:
 					break;
@@ -4265,7 +4264,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		case ITEMID_M_BERSERK_POTION:
 			if( sd->md == NULL || sd->md->db == NULL )
 				return 0;
-			if (sd->md->sc.data[SC_BERSERK] || sd->md->sc.data[SC_SATURDAY_NIGHT_FEVER])
+			if (sd->md->sc.data[SC_BERSERK])
 				return 0;
 			if( nameid == ITEMID_M_AWAKENING_POTION && sd->md->db->lv < 40 )
 				return 0;
@@ -4389,9 +4388,12 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		sd->sc.data[SC_TRICKDEAD] ||
 		sd->sc.data[SC_HIDING] ||
 		sd->sc.data[SC__SHADOWFORM] ||
+		sd->sc.data[SC__INVISIBILITY] ||
 		sd->sc.data[SC__MANHOLE] ||
 		sd->sc.data[SC_KG_KAGEHUMI] ||
 		sd->sc.data[SC_WHITEIMPRISON] ||
+		sd->sc.data[SC_DEEP_SLEEP] ||
+		sd->sc.data[SC_SATURDAY_NIGHT_FEVER] ||
 		(sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOITEM)
 	    ))
 		return 0;
@@ -4945,6 +4947,10 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 			status_change_end(&sd->bl, SC_MOON_COMFORT, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_STAR_COMFORT, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_MIRACLE, INVALID_TIMER);
+			status_change_end(&sd->bl, SC_NEUTRALBARRIER_MASTER, INVALID_TIMER);//Will later check if this is needed. [Rytech]
+			status_change_end(&sd->bl, SC_NEUTRALBARRIER, INVALID_TIMER);
+			status_change_end(&sd->bl, SC_STEALTHFIELD_MASTER, INVALID_TIMER);
+			status_change_end(&sd->bl, SC_STEALTHFIELD, INVALID_TIMER);
 			if (sd->sc.data[SC_KNOWLEDGE]) {
 				struct status_change_entry *sce = sd->sc.data[SC_KNOWLEDGE];
 				if (sce->timer != INVALID_TIMER)
@@ -7549,6 +7555,11 @@ int pc_itemheal(struct map_session_data *sd,int itemid, int hp,int sp)
 			sp -= sp * sd->sc.data[SC_CRITICALWOUND]->val2 / 100;
 		}
 
+		if( sd->sc.data[SC_VITALITYACTIVATION] ){
+			hp += hp / 2; // 1.5 times
+			sp -= sp / 2;
+		}
+
 		if ( sd->sc.data[SC_DEATHHURT] ) {
 			hp -= hp * 20 / 100;
 			sp -= sp * 20 / 100;
@@ -8629,7 +8640,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 		return 0;
 	}
 
-	if (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_SATURDAY_NIGHT_FEVER])
+	if (sd->sc.data[SC_BERSERK])
 	{
 		clif->equipitemack(sd,n,0,EIA_FAIL);	// fail
 		return 0;
@@ -8833,7 +8844,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag) {
 	}
 
 	// if player is berserk then cannot unequip
-	if (!(flag & 2) && sd->sc.count && (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_SATURDAY_NIGHT_FEVER]))
+	if (!(flag & 2) && sd->sc.count && (sd->sc.data[SC_BERSERK]))
 	{
 		clif->unequipitemack(sd,n,0,UIA_FAIL);
 		return 0;

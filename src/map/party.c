@@ -1108,6 +1108,22 @@ int party_vforeachsamemap(int (*func)(struct block_list*,va_list), struct map_se
 	return total;
 }
 
+// Special check for Minstrel's and Wanderer's chorus skills.
+int party_sub_count_chorus(struct block_list *bl, va_list ap) {
+	struct map_session_data *sd = (TBL_PC *)bl;
+
+	if (sd->state.autotrade)
+		return 0;
+	
+	if (battle_config.idle_no_share && pc_isidle(sd))
+		return 0;
+
+	if ( (sd->class_&MAPID_THIRDMASK) != MAPID_MINSTRELWANDERER )
+		return 0;
+
+	return 1;
+}
+
 /**
  * Executes 'func' for each party member on the same map and within a 'range' cells area
  * @param func  Function to execute
@@ -1393,6 +1409,7 @@ void party_defaults(void) {
 	party->share_loot = party_share_loot;
 	party->send_dot_remove = party_send_dot_remove;
 	party->sub_count = party_sub_count;
+	party->sub_count_chorus = party_sub_count_chorus;
 	party->booking_register = party_booking_register;
 	party->booking_update = party_booking_update;
 	party->booking_search = party_booking_search;

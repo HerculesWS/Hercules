@@ -115,6 +115,7 @@ struct party_interface {
 	int (*share_loot) (struct party_data* p, struct map_session_data* sd, struct item* item_data, int first_charid);
 	int (*send_dot_remove) (struct map_session_data *sd);
 	int (*sub_count) (struct block_list *bl, va_list ap);
+	int (*sub_count_chorus) (struct block_list *bl, va_list ap);
 	/*==========================================
 	 * Party Booking in KRO [Spiria]
 	 *------------------------------------------*/

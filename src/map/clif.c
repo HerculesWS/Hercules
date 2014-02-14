@@ -9753,7 +9753,7 @@ void clif_disconnect_ack(struct map_session_data* sd, short result)
 void clif_parse_QuitGame(int fd, struct map_session_data *sd)
 {
 	/*	Rovert's prevent logout option fixed [Valaris]	*/
-	if( !sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] &&
+	if( !sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC__INVISIBILITY] &&
 		(!battle_config.prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle_config.prevent_logout) )
 	{
 		set_eof(fd);
@@ -9832,7 +9832,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 	if( atcommand->exec(fd, sd, message, true)  )
 		return;
 
-	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
+	if( sd->sc.data[SC_BERSERK] || (sd->sc.data[SC_DEEP_SLEEP] && sd->sc.data[SC_DEEP_SLEEP]->val2) || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
 		return;
 
 	if( battle_config.min_chat_delay ) { //[Skotlex]
@@ -10081,6 +10081,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 		(sd->sc.data[SC_TRICKDEAD] ||
 		sd->sc.data[SC_AUTOCOUNTER] ||
 		 sd->sc.data[SC_BLADESTOP] ||
+		 sd->sc.data[SC_DEEP_SLEEP] ||
 		 sd->sc.data[SC__MANHOLE] ||
 		 sd->sc.data[SC_CURSEDCIRCLE_ATKER] ||
 		 sd->sc.data[SC_CURSEDCIRCLE_TARGET] ))
@@ -10102,7 +10103,8 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 			if( sd->sc.option&(OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER|OPTION_HANBOK|OPTION_OKTOBERFEST) )
 				return;
 
-			if( sd->sc.data[SC_BASILICA] || sd->sc.data[SC__SHADOWFORM] )
+			if( sd->sc.data[SC_BASILICA] || sd->sc.data[SC__SHADOWFORM] ||
+			(sd->sc.data[SC_SIREN] && sd->sc.data[SC_SIREN]->val2 == target_id) )
 				return;
 
 			if (!battle_config.sdelay_attack_enable && pc->checkskill(sd, SA_FREECAST) <= 0) {
@@ -10307,7 +10309,7 @@ void clif_parse_Restart(int fd, struct map_session_data *sd) {
 			break;
 		case 0x01:
 			/*	Rovert's Prevent logout option - Fixed [Valaris]	*/
-			if( !sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] &&
+			if( !sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC__INVISIBILITY] &&
 				(!battle_config.prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle_config.prevent_logout) )
 			{	//Send to char-server for character selection.
 				chrif->charselectreq(sd, session[fd]->client_addr);
@@ -10336,7 +10338,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 	if ( atcommand->exec(fd, sd, message, true) )
 		return;
 
-	if (sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT))
+	if (sd->sc.data[SC_BERSERK] || (sd->sc.data[SC_DEEP_SLEEP] && sd->sc.data[SC_DEEP_SLEEP]->val2) || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT))
 		return;
 
 	if (battle_config.min_chat_delay) { //[Skotlex]
@@ -12157,7 +12159,7 @@ void clif_parse_PartyMessage(int fd, struct map_session_data* sd)
 	if( atcommand->exec(fd, sd, message, true)  )
 		return;
 
-	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
+	if( sd->sc.data[SC_BERSERK] || (sd->sc.data[SC_DEEP_SLEEP] && sd->sc.data[SC_DEEP_SLEEP]->val2) || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
 		return;
 
 	if( battle_config.min_chat_delay )
@@ -13221,7 +13223,7 @@ void clif_parse_GuildMessage(int fd, struct map_session_data* sd)
 	if( atcommand->exec(fd, sd, message, true) )
 		return;
 
-	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
+	if( sd->sc.data[SC_BERSERK] || (sd->sc.data[SC_DEEP_SLEEP] && sd->sc.data[SC_DEEP_SLEEP]->val2) || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
 		return;
 
 	if( battle_config.min_chat_delay )
@@ -16211,7 +16213,7 @@ void clif_parse_BattleChat(int fd, struct map_session_data* sd)
 	if( atcommand->exec(fd, sd, message, true) )
 		return;
 
-	if( sd->sc.data[SC_BERSERK] || sd->sc.data[SC_DEEP_SLEEP] || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
+	if( sd->sc.data[SC_BERSERK] || (sd->sc.data[SC_DEEP_SLEEP] && sd->sc.data[SC_DEEP_SLEEP]->val2) || (sd->sc.data[SC_NOCHAT] && sd->sc.data[SC_NOCHAT]->val1&MANNER_NOCHAT) )
 		return;
 
 	if( battle_config.min_chat_delay ) {
