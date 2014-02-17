@@ -97,6 +97,8 @@ struct {
 	struct HPMHookPoint *HP_battle_calc_elefix_post;
 	struct HPMHookPoint *HP_battle_calc_masteryfix_pre;
 	struct HPMHookPoint *HP_battle_calc_masteryfix_post;
+	struct HPMHookPoint *HP_battle_calc_chorusbonus_pre;
+	struct HPMHookPoint *HP_battle_calc_chorusbonus_post;
 	struct HPMHookPoint *HP_battle_calc_skillratio_pre;
 	struct HPMHookPoint *HP_battle_calc_skillratio_post;
 	struct HPMHookPoint *HP_battle_calc_sizefix_pre;
@@ -3441,6 +3443,8 @@ struct {
 	struct HPMHookPoint *HP_party_send_dot_remove_post;
 	struct HPMHookPoint *HP_party_sub_count_pre;
 	struct HPMHookPoint *HP_party_sub_count_post;
+	struct HPMHookPoint *HP_party_sub_count_chorus_pre;
+	struct HPMHookPoint *HP_party_sub_count_chorus_post;
 	struct HPMHookPoint *HP_party_booking_register_pre;
 	struct HPMHookPoint *HP_party_booking_register_post;
 	struct HPMHookPoint *HP_party_booking_update_pre;
@@ -4655,8 +4659,6 @@ struct {
 	struct HPMHookPoint *HP_skill_get_elemental_type_post;
 	struct HPMHookPoint *HP_skill_cooldown_save_pre;
 	struct HPMHookPoint *HP_skill_cooldown_save_post;
-	struct HPMHookPoint *HP_skill_maelstrom_suction_pre;
-	struct HPMHookPoint *HP_skill_maelstrom_suction_post;
 	struct HPMHookPoint *HP_skill_get_new_group_id_pre;
 	struct HPMHookPoint *HP_skill_get_new_group_id_post;
 	struct HPMHookPoint *HP_skill_check_shadowform_pre;
@@ -4691,6 +4693,8 @@ struct {
 	struct HPMHookPoint *HP_status_heal_post;
 	struct HPMHookPoint *HP_status_revive_pre;
 	struct HPMHookPoint *HP_status_revive_post;
+	struct HPMHookPoint *HP_status_fixed_revive_pre;
+	struct HPMHookPoint *HP_status_fixed_revive_post;
 	struct HPMHookPoint *HP_status_get_regen_data_pre;
 	struct HPMHookPoint *HP_status_get_regen_data_post;
 	struct HPMHookPoint *HP_status_get_status_data_pre;
@@ -5124,6 +5128,8 @@ struct {
 	int HP_battle_calc_elefix_post;
 	int HP_battle_calc_masteryfix_pre;
 	int HP_battle_calc_masteryfix_post;
+	int HP_battle_calc_chorusbonus_pre;
+	int HP_battle_calc_chorusbonus_post;
 	int HP_battle_calc_skillratio_pre;
 	int HP_battle_calc_skillratio_post;
 	int HP_battle_calc_sizefix_pre;
@@ -8468,6 +8474,8 @@ struct {
 	int HP_party_send_dot_remove_post;
 	int HP_party_sub_count_pre;
 	int HP_party_sub_count_post;
+	int HP_party_sub_count_chorus_pre;
+	int HP_party_sub_count_chorus_post;
 	int HP_party_booking_register_pre;
 	int HP_party_booking_register_post;
 	int HP_party_booking_update_pre;
@@ -9682,8 +9690,6 @@ struct {
 	int HP_skill_get_elemental_type_post;
 	int HP_skill_cooldown_save_pre;
 	int HP_skill_cooldown_save_post;
-	int HP_skill_maelstrom_suction_pre;
-	int HP_skill_maelstrom_suction_post;
 	int HP_skill_get_new_group_id_pre;
 	int HP_skill_get_new_group_id_post;
 	int HP_skill_check_shadowform_pre;
@@ -9718,6 +9724,8 @@ struct {
 	int HP_status_heal_post;
 	int HP_status_revive_pre;
 	int HP_status_revive_post;
+	int HP_status_fixed_revive_pre;
+	int HP_status_fixed_revive_post;
 	int HP_status_get_regen_data_pre;
 	int HP_status_get_regen_data_post;
 	int HP_status_get_status_data_pre;
