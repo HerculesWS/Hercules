@@ -6286,7 +6286,7 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 #ifdef RENEWAL
 #define SCDEF_LVL_DIFF(bl, src, maxlv, factor) ( ( SCDEF_LVL_CAP((bl), (maxlv)) - SCDEF_LVL_CAP((src), (maxlv)) ) * (factor) )
 #else
-#define SCDEF_LVL_DIFF(bl, src, laxlv, factor) 0
+#define SCDEF_LVL_DIFF(bl, src, maxlv, factor) 0
 #endif
 
 	//Status that are blocked by Golden Thief Bug card or Wand of Hermod
