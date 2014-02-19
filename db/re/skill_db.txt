@@ -693,11 +693,11 @@
 2001,0,6,4,0,0x1,0,5,1,yes,0,0,0,none,0,	RK_ENCHANTBLADE,Enchant Blade
 2002,7:8:9:10:11,6,1,-1,0,0,5,1,no,0,0,0,weapon,0,	RK_SONICWAVE,Sonic Wave
 2003,0,6,4,0,0x1,0,10,1,no,0,0,0,weapon,3,	RK_DEATHBOUND,Death Bound
-2004,1,8,1,-1,0,0,10,-5,no,0,0,0,weapon,0,	RK_HUNDREDSPEAR,Hundred Spear
+2004,5,8,1,-1,0,0,10,-5,no,0,0,0,weapon,0,	RK_HUNDREDSPEAR,Hundred Spear
 2005,1,6,2,4,0x2,2,5,1,no,0,0,0,weapon,3,	RK_WINDCUTTER,Wind Cutter
 2006,0,6,4,-1,0x2,5,5,1,no,0,0,0,weapon,0,	RK_IGNITIONBREAK,Ignition Break
 2007,0,0,0,0,0,0,5,0,no,0,0,0,weapon,0,		RK_DRAGONTRAINING,Dragon Training
-2008,9,6,2,3,0xC2,1:1:1:2:2:2:3:3:4:4,10,1,no,0,0,0,misc,0,	RK_DRAGONBREATH,Dragon Breath
+2008,9,6,2,3,0x2,1:1:1:2:2:2:3:3:4:4,10,1,no,0,0,0,weapon,0,	RK_DRAGONBREATH,Dragon Breath
 2009,0,6,4,0,0x3,3:4:5:6:7,5,1,yes,0,0,0,none,0,	RK_DRAGONHOWLING,Dragon Howling
 2010,0,0,0,0,0,0,10,0,no,0,0,0,none,0,		RK_RUNEMASTERY,Rune Mastery
 2011,0,6,4,0,0x1,0,1,1,yes,0,0,0,none,0,	RK_MILLENNIUMSHIELD,Millenium Shield
@@ -765,7 +765,7 @@
 2204,0,8,4,1,0x2,13,5,-5,yes,0,0,0,magic,0,	WL_JACKFROST,Jack Frost
 2205,11,6,1,0,0x1,0,5,1,yes,0,0,0,magic,0,	WL_MARSHOFABYSS,Marsh of Abyss
 2206,0,6,4,0,0x1,0,5,1,yes,0,0,0,magic,0,	WL_RECOGNIZEDSPELL,Recognized Spell
-2207,7,6,1,2,0x3,1:2:2:3:3,5,1,yes,0,0,0,magic,0,	WL_SIENNAEXECRATE,Sienna Execrate
+2207,7,6,1,2,0x3,1:2:2:3:3,5,0,yes,0,0,0,magic,0,	WL_SIENNAEXECRATE,Sienna Execrate
 2208,0,0,0,0,0,0,3,0,no,0,0,0,none,0,		WL_RADIUS,Radius
 2209,0,6,4,0,0x3,9:10:11:12:13,5,1,yes,0,0,0,magic,0,	WL_STASIS,Stasis
 2210,11,6,1,0,0,0,5,1,yes,0,0,0,magic,0,	WL_DRAINLIFE,Drain Life
@@ -815,39 +815,39 @@
 2250,3,6,2,1,0x43,2,1,1,no,0,0x80,1,misc,0,	RA_COBALTTRAP,Cobalt Trap
 2251,3,6,2,2,0x43,2,1,1,no,0,0x80,1,misc,0,	RA_MAIZETRAP,Maize Trap
 2252,3,6,2,4,0x43,2,1,1,no,0,0x80,1,misc,0,	RA_VERDURETRAP,Verdure Trap
-2253,3,6,2,0,0x42,2,5,1,no,0,0x80,2,misc,0,	RA_FIRINGTRAP,Firing Trap
-2254,3,6,2,0,0x42,2,5,1,no,0,0x80,2,misc,0,	RA_ICEBOUNDTRAP,Icebound Trap
+2253,3,6,2,3,0x42,2,5,1,no,0,0x80,2,misc,0,	RA_FIRINGTRAP,Firing Trap
+2254,3,6,2,1,0x42,2,5,1,no,0,0x80,2,misc,0,	RA_ICEBOUNDTRAP,Icebound Trap
 
 //****
 // NC Mechanic
 2255,0,0,0,0,0,0,5,0,no,0,0,0,none,0,		NC_MADOLICENCE,Mado License
 2256,11,6,1,-1,0,0,5,1,no,0,0,0,weapon,0,	NC_BOOSTKNUCKLE,Boost Knuckle
 2257,3,6,1,-1,0,0,3,1,no,0,0,0,weapon,0,	NC_PILEBUNKER,Pile Bunker
-2258,13,6,1,-1,0,0,3,1,no,0,0,0,weapon,0,	NC_VULCANARM,Vulcan Arm
-2259,5,6,1,3,0,2,3,1,no,0,0,5,weapon,0,		NC_FLAMELAUNCHER,Flame Launcher
+2258,13,6,1,-1,0x2,1,3,1,no,0,0,0,weapon,0,	NC_VULCANARM,Vulcan Arm
+2259,7,6,1,3,0,2,3,1,no,0,0,5,weapon,0,		NC_FLAMELAUNCHER,Flame Launcher
 2260,7,6,2,1,0x2,2:3:4,3,1,no,0,0,0,weapon,0,	NC_COLDSLOWER,Cold Slower
-2261,7,6,2,-1,0x42,3:2:1,3,1,no,0,0,0,weapon,0,	NC_ARMSCANNON,Arm Cannon
+2261,9:11:13,6,1,-1,0x42,3:2:1,3,1,no,0,0,0,weapon,0,	NC_ARMSCANNON,Arm Cannon
 2262,0,6,4,0,0x1,0,3,1,no,0,0,0,none,0,		NC_ACCELERATION,Acceleration
 2263,0,6,4,0,0x1,0,1,1,no,0,0,0,none,0,		NC_HOVERING,Hovering
 2264,0,6,4,0,0x1,0,1,1,no,0,0,0,none,7,		NC_F_SIDESLIDE,Front-Side Slide
 2265,0,6,4,0,0x1,0,1,1,no,0,0,0,none,7,		NC_B_SIDESLIDE,Back-Side Slide
 2266,0,0,0,0,0,0,4,0,no,0,0,0,none,0,		NC_MAINFRAME,Mainframe Restructure // Check me. Part of the code notes translated to "The amount of fuel have".
-2267,0,6,4,-1,0x42,2:3:4,3,1,no,0,0,0,misc,5,	NC_SELFDESTRUCTION,Self Destruction
+2267,0,6,4,-1,0xC2,2:3:4,3,1,no,0,0,0,misc,5,	NC_SELFDESTRUCTION,Self Destruction
 2268,0,6,4,0,0x1,0,4,1,yes,0,0,0,none,0,	NC_SHAPESHIFT,Shape Shift
 2269,0,6,4,0,0x1,0,1,1,no,0,0,0,none,0,		NC_EMERGENCYCOOL,Emergency Cool
 2270,0,6,4,0,0x3,7,1,1,yes,0,0,0,none,0,	NC_INFRAREDSCAN,Infrared Scan
 2271,9,6,1,0,0x1,0,3,1,yes,0,0,0,none,0,	NC_ANALYZE,Analyze
-2272,0,6,4,0,0x3,1:2:3,3,1,yes,0,0,0,none,0,	NC_MAGNETICFIELD,Magnetic Field
+2272,0,6,4,0,0x3,2,3,1,yes,0,0,0,none,0,	NC_MAGNETICFIELD,Magnetic Field
 2273,0,6,4,0,0x1,0,3,1,yes,0,0,0,none,0,	NC_NEUTRALBARRIER,Neutral Barrier
 2274,0,6,4,0,0x1,0,3,1,yes,0,0,0,none,0,	NC_STEALTHFIELD,Stealth Field
-2275,5,6,16,0,0x1,0,5,1,yes,0,0,0,magic,0,	NC_REPAIR,Repair
+2275,5:6:7:8:9,6,16,0,0x1,0,5,1,yes,0,0,0,magic,0,	NC_REPAIR,Repair
 2276,0,0,0,0,0,0,10,0,no,0,0,0,none,0,		NC_TRAININGAXE,Axe Training
 2277,0,0,0,0,0,0,5,0,no,0,0,0,none,0,		NC_RESEARCHFE,Research Fire/Earth
-2278,4:5:6:7:8,6,1,-1,0,0,5,1,no,0,0,0,weapon,2:3:4:5:6,	NC_AXEBOOMERANG,Axe Boomerang
+2278,5:6:7:8:9,6,1,-1,0,0,5,1,no,0,0,0,weapon,2:3:4:5:6,	NC_AXEBOOMERANG,Axe Boomerang
 2279,1,6,1,-1,0,0,5,1,no,0,0,0,weapon,0,	NC_POWERSWING,Power Swing
-2280,0,8,4,-1,0x2,2:2:3:3:3,5,-6,no,0,0,0,weapon,0,	NC_AXETORNADO,Axe Tornado // Check me. Takes 20 * Skill LV amount of HP each use.
+2280,0,8,4,-1,0x2,2:2:3:3:3,5,-3,no,0,0,0,weapon,0,	NC_AXETORNADO,Axe Tornado // Check me. Takes 20 * Skill LV amount of HP each use.
 2281,2,6,2,0,0x1,0,5,1,yes,0,0,2,none,0,	NC_SILVERSNIPER,FAW - Silver Sniper
-2282,2,6,2,0,0x1,0,5,1,yes,0,0,2,none,0,	NC_MAGICDECOY,FAW - Magic Decoy //CHECK FIX ME!!!! Wind and Earth stones spawning opposite decoys.
+2282,2,6,2,0,0x1,0,5,1,yes,0,0,2,none,0,	NC_MAGICDECOY,FAW - Magic Decoy
 2283,2,6,1,0,0x1,0,1,1,no,0,0,0,none,0,		NC_DISJOINT,FAW Removal
 
 //****
@@ -867,11 +867,11 @@
 2296,3,6,1,0,0x1,0,3,1,yes,0,0,0,none,0,	SC_UNLUCKY,Masquerade - Unlucky
 2297,3,6,1,0,0x1,0,3,1,yes,0,0,0,none,0,	SC_WEAKNESS,Masquerade - Weakness
 2298,3,6,1,0,0x1,0,5,1,yes,0,0,0,weapon,0,	SC_STRIPACCESSARY,Strip Accessory //CHECK Is weapon attack type needed?
-2299,7,6,2,0,0x1,0,3,1,yes,0,0,3,none,0,	SC_MANHOLE,Man Hole
-2300,7,6,2,0,0x1,0,3,1,yes,0,0,1,none,0,	SC_DIMENSIONDOOR,Dimension Door
-2301,7,6,2,0,0x1,0,3,1,yes,0,0,0,none,0,	SC_CHAOSPANIC,Chaos Panic
-2302,7,6,2,0,0x1,0,3,1,yes,0,0,0,none,0,	SC_MAELSTROM,Maelstrom
-2303,7,6,2,0,0x1,3,3,1,yes,0,0,1,none,0,	SC_BLOODYLUST,Bloody Lust
+2299,7,6,2,0,0x1,0,3,1,yes,0,0,3,magic,0,	SC_MANHOLE,Man Hole
+2300,7,6,2,0,0x1,0,3,1,yes,0,0,1,magic,0,	SC_DIMENSIONDOOR,Dimension Door
+2301,7,6,2,0,0x1,2,3,1,yes,0,0,1,magic,0,	SC_CHAOSPANIC,Chaos Panic
+2302,7,6,2,0,0x1,2,3,1,yes,0,0,1,magic,0,	SC_MAELSTROM,Maelstrom
+2303,7,6,2,0,0x1,0,3,1,yes,0,0,0,none,0,	SC_BLOODYLUST,Bloody Lust
 2304,0,6,4,-1,0,0,3,1,no,0,0,0,weapon,0,	SC_FEINTBOMB,Feint Bomb
 
 //****
@@ -884,7 +884,7 @@
 2312,5,6,1,-1,0,0,5,1,no,0,0,0,weapon,0,	LG_PINPOINTATTACK,Pinpoint Attack
 2313,0,6,4,0,0x1,0,5,1,yes,0,0,0,none,0,	LG_FORCEOFVANGUARD,Force of Vanguard
 2314,1,6,1,-1,0,0,1,1,no,0,0,0,weapon,0,	LG_RAGEBURST,Rage Burst
-2315,0,6,4,0,0x2,3,3,1,yes,0,0,0,none,2,	LG_SHIELDSPELL,Shield Spell
+2315,0,6,4,0:6:0,0x2,0,3,1,yes,0,0,0,none,2:0:0,LG_SHIELDSPELL,Shield Spell
 2316,0,6,4,0,0x1,0,5,1,yes,0,0,0,none,0,	LG_EXEEDBREAK,Exceed Break
 2317,2,6,2,-1,0x2,0,5,1,yes,0,0,0,weapon,0, LG_OVERBRAND,Over Brand
 2318,0,6,4,0,0x1,0,5,1,yes,0,0,0,none,0,	LG_PRESTIGE,Prestige
@@ -899,15 +899,15 @@
 
 //****
 // SR Sura
-2326,-2,8,1,-1,0,0,10,2,no,0,0,0,weapon,0,	SR_DRAGONCOMBO,Dragon Combo //CHECK Is this 2 regular hits or sub hits? Yes its 2 sub hits.
-2327,0,8,4,-1,0x2,2,5,-3,no,0,0,0,weapon,3,	SR_SKYNETBLOW,Sky Net Blow //CHECK Video shows 3 hits. Its sub hits right? Data check shows no sub, one source shows 3 hits, another shows 5.
+2326,-2,8,1,-1,0,0,10,-2,no,0,0,0,weapon,0,	SR_DRAGONCOMBO,Dragon Combo
+2327,0,8,4,-1,0x2,2,5,-3,no,0,0,0,weapon,3,	SR_SKYNETBLOW,Sky Net Blow
 2328,0,6,4,-1,0x2,1:2:3:4:5,5,1,no,0,0,0,weapon,0,	SR_EARTHSHAKER,Earth Shaker //CHECK Must add a check in battle.c to triple damage if hitting a hidden target.
 2329,-2,8,4,-1,0,0,5,-2,no,0,0x200,0,weapon,0,	SR_FALLENEMPIRE,Fallen Empire //CHECK Video shows 2 hits. Is it sub hits? Yes its divided between 2 hits.
 2330,-2,6,1,-1,0x42,1:1:1:1:1:2:2:2:2:2,10,1,yes,0,0,0,weapon,0,	SR_TIGERCANNON,Tiger Cannon //CHECK Need to fix to be enemy targeted and also combo after Fallen Empire.
 2331,0,0,0,0,0,0,10,0,no,0,0,0,none,0,		SR_HELLGATE,Hell Gate
 2332,5,6,4,-1,0x2,3,5,1,no,0,0,0,weapon,0,	SR_RAMPAGEBLASTER,Rampage Blaster
 2333,0,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		SR_CRESCENTELBOW,Crescent Elbow //CHECK Check the autospell ID.
-2334,0,6,4,0,0x3,1:1:2:2:3,5,1,no,0,0,0,none,0,	SR_CURSEDCIRCLE,Cursed Circle //CHECK Code shows it takes up to 5% of your HP upon use?
+2334,0,6,4,0,0x3,1:1:2:2:3,5,1,no,0,0,0,none,0,	SR_CURSEDCIRCLE,Cursed Circle
 2335,0,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		SR_LIGHTNINGWALK,Lightning Walk
 2336,7:8:9:10:11,6,1,-1,0,0,5,1,no,0,0,0,weapon,2:3:4:5:6,	SR_KNUCKLEARROW,Knuckle Arrow
 2337,0,6,4,-1,0x2,2,1,1,yes,0,0,0,weapon,0,	SR_WINDMILL,Windmill
@@ -939,27 +939,27 @@
 // WM Wanderer/Minstrel
 2412,0,0,0,0,0,0,10,0,no,0,0,0,none,0,		WM_LESSON,Lesson
 2413,9,8,1,-1,0,0,5,-2:-2:-3:-3:-4,yes,0,0,0,magic,0,	WM_METALICSOUND,Metallic Sound
-2414,9,6,2,-1,0x3,1,5,1,yes,0,0x80,3,none,0,	WM_REVERBERATION,Reverberation
-2415,0,6,1,-1,0x6,1,5,1,no,0,0,0,weapon,0,	WM_REVERBERATION_MELEE,Reverberation Melee
-2416,0,6,1,0,0x6,1,5,1,no,0,0,0,magic,0,	WM_REVERBERATION_MAGIC,Reverberation Magic
+2414,9,6,2,-1,0x1,1,5,1,yes,0,0x80,0,none,0,	WM_REVERBERATION,Reverberation //CHECK May need to recode. Testing needed. Also need to test AoE size.
+2415,0,0,0,-1,0,0,5,1,no,0,0,0,weapon,0,	WM_REVERBERATION_MELEE,Reverberation Melee
+2416,0,0,0,-1,0,0,5,1,no,0,0,0,magic,0,		WM_REVERBERATION_MAGIC,Reverberation Magic
 2417,11,6,2,0,0x3,5,1,1,no,0,0,0,none,0,	WM_DOMINION_IMPULSE,Dominion Impulse
-2418,9,6,2,-1,0x1,0,5,1,yes,0,0,0,none,0,	WM_SEVERE_RAINSTORM,Severe Rainstorm
+2418,9,6,2,0,0x1,0,5,1,yes,0,0,0,none,0,	WM_SEVERE_RAINSTORM,Severe Rainstorm
 2419,9,6,2,0,0x3,1,5,1,yes,0,0x80,5,none,0,	WM_POEMOFNETHERWORLD,Poem of The Netherworld //CHECK May need to recode too.
-2420,0,6,4,0,0x2,2:3:4:5:6,5,1,yes,0,0,0,none,0,	WM_VOICEOFSIREN,Voice of Siren
-2421,7,6,16,0,0x1,0,5,1,yes,0,0,0,none,0,	WM_DEADHILLHERE,Valley of Death
-2422,7,6,4,0,0x3,5:6:7:8:9,5,1,yes,0,0,0,none,0,	WM_LULLABY_DEEPSLEEP,Deep Sleep Lullaby
-2423,0,6,4,0,0x3,3:4:5:6:7,5,1,yes,0,0,0,none,0,	WM_SIRCLEOFNATURE,Circle of Nature's Sound
+2420,0,6,4,0,0x2,2:3:4:5:6,5,1,yes,0,0,0,none,0,WM_VOICEOFSIREN,Voice of Siren
+2421,7,6,16,0,0x1,0,5,1,yes,0,0,0,none,0,	WM_DEADHILLHERE,Valley of Death//Enemy targeted magic skill in official. Really? WTF???
+2422,0,6,4,0,0x3,5:6:7:8:9,5,1,yes,0,0,0,none,0,WM_LULLABY_DEEPSLEEP,Deep Sleep Lullaby
+2423,0,6,4,0,0x3,3:4:5:6:7,5,1,yes,0,0,0,none,0,WM_SIRCLEOFNATURE,Circle of Nature's Sound
 2424,9,6,4,0,0x1,0,5,1,yes,0,0,0,magic,0,	WM_RANDOMIZESPELL,Improvised Song
 2425,9,6,16,0,0x1,0,5,1,yes,0,0,0,none,0,	WM_GLOOMYDAY,Gloomy Day
-2426,9,6,2,0,0x2,2:3:3:4:4,5,1,yes,0,0x4000,0,weapon,0,	WM_GREAT_ECHO,Great Echo
+2426,9,6,2,0,0x2,2:3:3:4:4,5,1,yes,0,0x4000,0,weapon,0,	WM_GREAT_ECHO,Great Echo//Skill type in official is set to none. Why?
 2427,0,6,4,0,0x3,5:6:7:8:9,5,1,yes,0,0x4000,0,none,0,	WM_SONG_OF_MANA,Song of Mana
 2428,0,6,4,0,0x3,5:6:7:8:9,5,1,yes,0,0x4000,0,none,0,	WM_DANCE_WITH_WUG,Dance With A Warg
-2429,9,6,1,0,0x2,2:2:3:3:4,5,1,yes,0,0x4000,0,weapon,0,	WM_SOUND_OF_DESTRUCTION,Sound of Destruction //CHECK Source shows its magic attack. Need to confirm before changing.
-2430,0,6,4,0,0x3,3:4:5:6:7,5,1,yes,0,0x4000,0,none,0,	WM_SATURDAY_NIGHT_FEVER,Saturday Night Fever
-2431,0,6,4,0,0x3,5,5,1,yes,0,0x4000,0,magic,0,	WM_LERADS_DEW,Lerad's Dew
-2432,0,6,4,0,0x3,5,5,1,yes,0,0x4000,0,none,0,	WM_MELODYOFSINK,Melody of Sink
-2433,0,6,4,0,0x3,5,5,1,yes,0,0x4000,0,none,0,	WM_BEYOND_OF_WARCRY,Warcry of Beyond
-2434,0,6,4,0,0x3,5,5,1,yes,0,0x4000,0,none,0,	WM_UNLIMITED_HUMMING_VOICE,Unlimited Humming Voice
+2429,9,6,2,0,0x42,4:4:5:5:6,5,1,yes,0,0x4000,0,none,0,	WM_SOUND_OF_DESTRUCTION,Sound of Destruction//Using clif damage to deal the fixed damage for now. Testing needed to see how it dealed.
+2430,0,6,4,0,0x3,3:4:5:6:7,5,1,yes,0,0x4000,0,none,0,	WM_SATURDAY_NIGHT_FEVER,Saturday Night Fever//Info for above skill. Type in official is magic. Has damage changed since 2011? Recheck AoE.
+2431,0,6,4,0,0x3,5:5:6:6:7,5,1,yes,0,0x4000,0,none,0,	WM_LERADS_DEW,Lerad's Dew
+2432,0,6,4,0,0x3,5:5:6:6:7,5,1,yes,0,0x4000,0,none,0,	WM_MELODYOFSINK,Melody of Sink
+2433,0,6,4,0,0x3,5:5:6:6:7,5,1,yes,0,0x4000,0,none,0,	WM_BEYOND_OF_WARCRY,Warcry of Beyond
+2434,0,6,4,0,0x3,5:5:6:6:7,5,1,yes,0,0x4000,0,none,0,	WM_UNLIMITED_HUMMING_VOICE,Unlimited Humming Voice
 
 //****
 // SO Sorcerer
@@ -1000,7 +1000,7 @@
 2479,9,6,2,0,0,0,5,1,yes,0,0x80,5,misc,0,	GN_THORNS_TRAP,Thorn Trap
 2480,11,6,1,0,0x1,0,5,1,yes,0,0,3,misc,0,		GN_BLOOD_SUCKER,Blood Sucker //CHECK Data says its a magic attack. Hmmmm....
 2481,11,6,1,-1,0x2,1:2:3:4:5,5,1,yes,0,0,0,weapon,0,	GN_SPORE_EXPLOSION,Spore Explosion //CHECK Data says its element is set to neutral. Need to confirm.
-2482,11,6,16,0,0,0,5,1,yes,0,0,1,weapon,2,	GN_WALLOFTHORN,Wall of Thorns
+2482,11,6,16,0,0x1,0,5,-1,yes,0,0,1,weapon,2,	GN_WALLOFTHORN,Wall of Thorns
 2483,11,6,2,0,0x3,4,10,1,yes,0,0x2000,0,weapon,0,	GN_CRAZYWEED,Crazy Weed
 2484,0,6,2,2,0x2,3,10,1,no,0,0x2000,0,weapon,0,	GN_CRAZYWEED_ATK,Crazy Weed Attack
 2485,9,6,2,3,0,0,5,1,yes,0,0,0,magic,0,		GN_DEMONIC_FIRE,Demonic Fire
@@ -1109,7 +1109,7 @@
 5001,1,8,1,-1,0,0,5,3,no,0,0,0,weapon,0,	GC_DARKCROW,Dark Claw
 5002,0,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		RA_UNLIMIT,Unlimited
 5003,7,6,1,-1,0x2,4:5:6:7:8,5,1,no,0,0,0,weapon,0,	GN_ILLUSIONDOPING,Illusion Doping
-5004,9,6,2,1,0x2,1:1:1:2:2:2:3:3:4:4,10,1,no,0,0,0,misc,0,	RK_DRAGONBREATH_WATER,Dragon Breath - Water
+5004,9,6,2,1,0x2,1:1:1:2:2:2:3:3:4:4,10,1,no,0,0,0,weapon,0,	RK_DRAGONBREATH_WATER,Dragon Breath - Water
 5005,0,6,4,0,0x3,3,1,1,no,0,0,0,none,0,		RK_LUXANIMA,Lux Anima
 5006,1,6,2,3,0,0,5,1,no,0,0,3,misc,0,		NC_MAGMA_ERUPTION,Magma Eruption
 5007,0,6,4,0,0x3,5:6:7:8:9,5,1,no,0,0,0,none,0,	WM_FRIGG_SONG,Frigg's Song
