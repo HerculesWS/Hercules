@@ -457,7 +457,6 @@ int chrif_reconnect(DBKey key, DBData *data, va_list ap) {
 				chrif->changemapserver(sd, ip, port);
 			else //too much lag/timeout is the closest explanation for this error.
 				clif->authfail_fd(sd->fd, 3);
-			
 			break;
 			}
 	}
@@ -1565,7 +1564,7 @@ void chrif_send_report(char* buf, int len) {
  **/
 void chrif_save_scdata_single(int account_id, int char_id, short type, struct status_change_entry *sce) {
 	
-	if( !chrif->fd )
+	if( !chrif->isconnected() )
 		return;
 	
 	WFIFOHEAD(chrif->fd, 28);
@@ -1587,7 +1586,7 @@ void chrif_save_scdata_single(int account_id, int char_id, short type, struct st
  **/
 void chrif_del_scdata_single(int account_id, int char_id, short type) {
 	
-	if( !chrif->fd ) {
+	if( !chrif->isconnected() ) {
 		ShowError("MAYDAY! failed to delete status %d from CID:%d/AID:%d\n",type,char_id,account_id);
 		return;
 	}
