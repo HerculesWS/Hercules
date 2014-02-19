@@ -3,32 +3,49 @@
 // Structure of Database:
 // SkillID,HPCost,MaxHPTrigger,SPCost,HPRateCost,SPRateCost,ZenyCost,RequiredWeapons,RequiredAmmoTypes,RequiredAmmoAmount,RequiredState,SpiritSphereCost,RequiredItemID1,RequiredItemAmount1,RequiredItemID2,RequiredItemAmount2,RequiredItemID3,RequiredItemAmount3,RequiredItemID4,RequiredItemAmount4,RequiredItemID5,RequiredItemAmount5,RequiredItemID6,RequiredItemAmount6,RequiredItemID7,RequiredItemAmount7,RequiredItemID8,RequiredItemAmount8,RequiredItemID9,RequiredItemAmount9,RequiredItemID10,RequiredItemAmount10
 //
-// If HP/SPratecost is positive, it is a percent of your current life, otherwise it is a percent of your max life.
-//
-// Legend for 'RequiredState' field:
-//  none = Nothing special
-//  move_enable = Requires to be able to move
-//  recover_weight_rate = Requires to be less than 50% weight
-//  water = Requires to be standing on a water cell
-//  cart = Requires a Pushcart
-//  riding = Requires to ride either a peco or a dragon
-//  falcon = Requires a Falcon
-//  sight = Requires Sight skill activated
-//  hiding = Requires Hiding skill activated
-//  cloaking = Requires Cloaking skill activated
-//  explosionspirits = Requires Fury skill activated
-//  cartboost = Requires a Pushcart and Cart Boost skill activated
-//  shield = Requires a 0,shield equipped
-//  warg = Requires a Warg
-//  dragon = Requires to ride a Dragon
-//  ridingwarg = Requires to ride a Warg
-//  mado = Requires to have an active mado
-//  poisonweapon = Requires to be under Poisoning Weapon.
-//  rollingcutter = Requires at least one Rotation Counter from Rolling Cutter.
-//  elementalspirit = Requires to have an Elemental Spirit summoned.
-//  mh_fighting = Requires Eleanor fighthing mode
-//  mh_grappling = Requires Eleanor grappling mode
-//  peco = Requires riding a peco
+// 01 ID
+// 02 HP cost required to cast
+//	If positive, it is a percent of your current hp, otherwise it is a percent of your max hp.
+// 03 Max HP trigger
+// 04 SP cost
+//	If positive, it is a percent of your current sp, otherwise it is a percent of your max sp.
+// 05 HP rate
+// 06 SP rate
+// 07 Zeny cost
+// 08 Required Weapon
+//	See doc/item_db.txt for weapon types
+//	99 any weapon **includes bare fists**
+//	To include more than one weapon type use type1:type2:type3
+// 09 Required Ammo
+//	See doc/item_db.txt for ammo types
+//	99 any ammo type
+//	To include more than one ammo type use type1:type2:type3
+// 10 Required ammo ammount
+// 11 Required State
+//	none = Nothing special
+//	move_enable = Requires to be able to move
+//	recover_weight_rate = Requires to be less than 50% weight
+//	water = Requires to be standing on a water cell
+//	cart = Requires a Pushcart
+//	riding = Requires to ride either a peco or a dragon
+//	falcon = Requires a Falcon
+//	sight = Requires Sight skill activated
+//	hiding = Requires Hiding skill activated
+//	cloaking = Requires Cloaking skill activated
+//	explosionspirits = Requires Fury skill activated
+//	cartboost = Requires a Pushcart and Cart Boost skill activated
+//	shield = Requires a 0,shield equipped
+//	warg = Requires a Warg
+//	dragon = Requires to ride a Dragon
+//	ridingwarg = Requires to ride a Warg
+//	mado = Requires to have an active mado
+//	poisonweapon = Requires to be under Poisoning Weapon.
+//	rollingcutter = Requires at least one Rotation Counter from Rolling Cutter.
+//	elementalspirit = Requires to have an Elemental Spirit summoned.
+//	mh_fighting = Requires Eleanor fighthing mode
+//	mh_grappling = Requires Eleanor grappling mode
+//	peco = Requires riding a peco
+// 12 Spirit sphere cost
 
 5,0,0,8:8:8:8:8:15:15:15:15:15,0,0,0,0:1:2:3:4:5:6:7:8:9:10:12:13:14:15:16:17:18:19:20:21:22,0,0,none,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//SM_BASH#バッシュ#
 6,0,0,4:5:6:7:8:9:10:11:12:13,0,0,0,99,0,0,none,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//SM_PROVOKE#プロボック#
