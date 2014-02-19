@@ -3574,6 +3574,10 @@ int parse_frommap(int fd)
 				cid = RFIFOL(fd, 8);
 				count = RFIFOW(fd, 12);
 
+				/* clear; ensure no left overs e.g. permanent */
+				if( SQL_ERROR == SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `char_id`='%d'", scdata_db, aid, cid) )
+					Sql_ShowDebug(sql_handle);
+				
 				if( count > 0 )
 				{
 					struct status_change_data data;
