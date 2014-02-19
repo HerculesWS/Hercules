@@ -2609,7 +2609,7 @@ void* get_val2(struct script_state* st, int64 uid, struct DBMap** ref) {
  **/
 void script_array_ensure_zero(struct script_state *st, struct map_session_data *sd, int64 uid, struct DBMap** ref) {
 	const char *name = script->get_str(script_getvarid(uid));
-	struct DBMap *src = script->array_src(st, sd ? sd : st->rid ? map->id2sd(st->rid) : NULL, name, ref);\
+	struct DBMap *src = script->array_src(st, sd ? sd : st->rid ? map->id2sd(st->rid) : NULL, name, ref);
 	struct script_array *sa = NULL;
 	bool insert = false;
 	
@@ -4847,8 +4847,17 @@ BUILDIN(callfunc)
 			const char* name = reference_getname(data);
 			if( name[0] == '.' ) {
 				if( !ref ) {
-					ref = (struct DBMap**)aCalloc(sizeof(struct DBMap*), 1);
+					ref = (struct DBMap**)aCalloc(sizeof(struct DBMap*), 2);
 					ref[0] = (name[1] == '@' ? st->stack->var_function : st->script->script_vars);
+					if( name[1] == '@' ) {
+						if( !st->stack->array_function_db )
+							st->stack->array_function_db = idb_alloc(DB_OPT_BASE);
+						ref[1] = st->stack->array_function_db;
+					} else {
+						if( !st->script->script_arrays_db )
+							st->script->script_arrays_db = idb_alloc(DB_OPT_BASE);
+						ref[1] = st->script->script_arrays_db;
+					}
 				}
 				data->ref = ref;
 			}
@@ -4897,8 +4906,11 @@ BUILDIN(callsub)
 			const char* name = reference_getname(data);
 			if( name[0] == '.' && name[1] == '@' ) {
 				if ( !ref ) {
-					ref = (struct DBMap**)aCalloc(sizeof(struct DBMap*), 1);
+					ref = (struct DBMap**)aCalloc(sizeof(struct DBMap*), 2);
 					ref[0] = st->stack->var_function;
+					if( !st->stack->array_function_db )
+						st->stack->array_function_db = idb_alloc(DB_OPT_BASE);
+					ref[1] = st->stack->array_function_db;
 				}
 				data->ref = ref;
 			}
@@ -4971,12 +4983,16 @@ BUILDIN(return)
 			const char* name = reference_getname(data);
 			if( name[0] == '.' && name[1] == '@' )
 			{// scope variable
-				if( !data->ref || data->ref == (DBMap**)&st->stack->var_function )
+				if( !data->ref || data->ref[0] == st->stack->var_function )
 					script->get_val(st, data);// current scope, convert to value
 			}
 			else if( name[0] == '.' && !data->ref )
 			{// script variable, link to current script
-				data->ref = &st->script->script_vars;
+				data->ref = (struct DBMap**)aCalloc(sizeof(struct DBMap*), 2);
+				data->ref[0] = st->script->script_vars;
+				if( !st->script->script_arrays_db )
+					st->script->script_arrays_db = idb_alloc(DB_OPT_BASE);
+				data->ref[1] = st->script->script_arrays_db;
 			}
 		}
 	}
