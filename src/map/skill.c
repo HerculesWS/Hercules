@@ -11541,6 +11541,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 					int count = 0;
 					const int x = bl->x, y = bl->y;
 
+					map->freeblock_lock();
 					//If target isn't knocked back it should hit every "interval" ms [Playtester]
 					do {
 						if( bl->type == BL_PC )
@@ -11554,8 +11555,9 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 							sg->limit = DIFF_TICK32(tick,sg->tick);
 							break;
 						}
-					} while( x == bl->x && y == bl->y
+					} while( x == bl->x && y == bl->y && sg->alive_count
 					      && ++count < SKILLUNITTIMER_INTERVAL/sg->interval && !status->isdead(bl) );
+					map->freeblock_unlock();
 				}
 				break;
 		/**
