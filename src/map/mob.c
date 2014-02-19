@@ -415,7 +415,7 @@ bool mob_ksprotected(struct block_list *src, struct block_list *target) {
 		return true;
 	} while(0);
 
-	status->change_start(NULL, target, SC_KSPROTECTED, 10000, sd->bl.id, sd->state.noks, sd->status.party_id, sd->status.guild_id, battle_config.ksprotection, 0);
+	status->change_start(target, SC_KSPROTECTED, 10000, sd->bl.id, sd->state.noks, sd->status.party_id, sd->status.guild_id, battle_config.ksprotection, 0);
 
 	return false;
 }
@@ -506,7 +506,7 @@ int mob_once_spawn(struct map_session_data* sd, int16 m, int16 x, int16 y, const
 		if (class_ < 0 && battle_config.dead_branch_active) {
 			//Behold Aegis's masterful decisions yet again...
 			//"I understand the "Aggressive" part, but the "Can Move" and "Can Attack" is just stupid" - Poki#3
-			sc_start4(NULL, &md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE|MD_CANATTACK|MD_CANMOVE|MD_ANGRY, 0, 60000);
+			sc_start4(&md->bl, SC_MODECHANGE, 100, 1, 0, MD_AGGRESSIVE|MD_CANATTACK|MD_CANMOVE|MD_ANGRY, 0, 60000);
 		}
 	}
 
@@ -1412,8 +1412,7 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 
 	// Abnormalities
 	if(( md->sc.opt1 > 0 && md->sc.opt1 != OPT1_STONEWAIT && md->sc.opt1 != OPT1_BURNING && md->sc.opt1 != OPT1_CRYSTALIZE )
-	  || md->sc.data[SC_DEEP_SLEEP] || md->sc.data[SC_BLADESTOP] || md->sc.data[SC__MANHOLE] || md->sc.data[SC_CURSEDCIRCLE_TARGET]) {
-		//Should reset targets.
+	   || md->sc.data[SC_BLADESTOP] || md->sc.data[SC__MANHOLE] || md->sc.data[SC_CURSEDCIRCLE_TARGET]) {//Should reset targets.
 		md->target_id = md->attacked_id = 0;
 		return false;
 	}
@@ -1466,7 +1465,7 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 			}
 		}
 		else
-		if( (abl = map->id2bl(md->attacked_id)) && (!tbl || mob->can_changetarget(md, abl, mode) || (md->sc.count && md->sc.data[SC__CHAOS]))) {
+		if( (abl = map->id2bl(md->attacked_id)) && (!tbl || mob->can_changetarget(md, abl, mode)) ) {
 			int dist;
 			if( md->bl.m != abl->m || abl->prev == NULL
 			 || (dist = distance_bl(&md->bl, abl)) >= MAX_MINCHASE // Attacker longer than visual area
@@ -1529,7 +1528,7 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 
 	if ((!tbl && mode&MD_AGGRESSIVE) || md->state.skillstate == MSS_FOLLOW) {
 		map->foreachinrange (mob->ai_sub_hard_activesearch, &md->bl, view_range, DEFAULT_ENEMY_TYPE(md), md, &tbl, mode);
-	} else if ((mode&MD_CHANGECHASE && (md->state.skillstate == MSS_RUSH || md->state.skillstate == MSS_FOLLOW)) || (md->sc.count && md->sc.data[SC__CHAOS])) {
+	} else if (mode&MD_CHANGECHASE && (md->state.skillstate == MSS_RUSH || md->state.skillstate == MSS_FOLLOW)) {
 		int search_size;
 		search_size = view_range<md->status.rhw.range ? view_range:md->status.rhw.range;
 		map->foreachinrange (mob->ai_sub_hard_changechase, &md->bl, search_size, DEFAULT_ENEMY_TYPE(md), md, &tbl);
@@ -2928,17 +2927,17 @@ int mob_summonslave(struct mob_data *md2,int *value,int amount,uint16 skill_id)
 			switch (battle_config.slaves_inherit_mode) {
 			case 1: //Always aggressive
 				if (!(md->status.mode&MD_AGGRESSIVE))
-					sc_start4(NULL, &md->bl, SC_MODECHANGE, 100,1,0, MD_AGGRESSIVE, 0, 0);
+					sc_start4(&md->bl, SC_MODECHANGE, 100,1,0, MD_AGGRESSIVE, 0, 0);
 				break;
 			case 2: //Always passive
 				if (md->status.mode&MD_AGGRESSIVE)
-					sc_start4(NULL, &md->bl, SC_MODECHANGE, 100,1,0, 0, MD_AGGRESSIVE, 0);
+					sc_start4(&md->bl, SC_MODECHANGE, 100,1,0, 0, MD_AGGRESSIVE, 0);
 				break;
 			default: //Copy master.
 				if (md2->status.mode&MD_AGGRESSIVE)
-					sc_start4(NULL, &md->bl, SC_MODECHANGE, 100,1,0, MD_AGGRESSIVE, 0, 0);
+					sc_start4(&md->bl, SC_MODECHANGE, 100,1,0, MD_AGGRESSIVE, 0, 0);
 				else
-					sc_start4(NULL, &md->bl, SC_MODECHANGE, 100,1,0, 0, MD_AGGRESSIVE, 0);
+					sc_start4(&md->bl, SC_MODECHANGE, 100,1,0, 0, MD_AGGRESSIVE, 0);
 				break;
 			}
 		}

@@ -443,6 +443,7 @@ typedef enum {
 	CELL_LANDPROTECTOR,
 	CELL_NOVENDING,
 	CELL_NOCHAT,
+	CELL_MAELSTROM,
 	CELL_ICEWALL,
 
 } cell_t;
@@ -466,6 +467,7 @@ typedef enum {
 	CELL_CHKLANDPROTECTOR,
 	CELL_CHKNOVENDING,
 	CELL_CHKNOCHAT,
+	CELL_CHKMAELSTROM,
 	CELL_CHKICEWALL,
 
 } cell_chk;
@@ -484,6 +486,7 @@ struct mapcell {
 		landprotector : 1,
 		novending : 1,
 		nochat : 1,
+		maelstrom : 1,
 		icewall : 1;
 
 #ifdef CELL_NOSTACK
