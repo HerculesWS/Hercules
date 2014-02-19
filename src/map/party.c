@@ -841,7 +841,7 @@ int party_skill_check(struct map_session_data *sd, int party_id, uint16 skill_id
 			case TK_COUNTER: //Increase Triple Attack rate of Monks.
 				if((p_sd->class_&MAPID_UPPERMASK) == MAPID_MONK
 					&& pc->checkskill(p_sd,MO_TRIPLEATTACK)) {
-					sc_start4(&p_sd->bl,SC_SKILLRATE_UP,100,MO_TRIPLEATTACK,
+					sc_start4(&p_sd->bl,&p_sd->bl,SC_SKILLRATE_UP,100,MO_TRIPLEATTACK,
 						50+50*skill_lv, //+100/150/200% rate
 						0,0,skill->get_time(SG_FRIEND, 1));
 				}
@@ -850,7 +850,7 @@ int party_skill_check(struct map_session_data *sd, int party_id, uint16 skill_id
 				if((p_sd->class_&MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
 					&& sd->sc.data[SC_COUNTERKICK_READY]
 					&& pc->checkskill(p_sd,SG_FRIEND)) {
-					sc_start4(&p_sd->bl,SC_SKILLRATE_UP,100,TK_COUNTER,
+					sc_start4(&p_sd->bl,&p_sd->bl,SC_SKILLRATE_UP,100,TK_COUNTER,
 						50+50*pc->checkskill(p_sd,SG_FRIEND), //+100/150/200% rate
 						0,0,skill->get_time(SG_FRIEND, 1));
 				}
@@ -1106,6 +1106,22 @@ int party_vforeachsamemap(int (*func)(struct block_list*,va_list), struct map_se
 	map->freeblock_unlock();
 
 	return total;
+}
+
+// Special check for Minstrel's and Wanderer's chorus skills.
+int party_sub_count_chorus(struct block_list *bl, va_list ap) {
+	struct map_session_data *sd = (TBL_PC *)bl;
+
+	if (sd->state.autotrade)
+		return 0;
+	
+	if (battle_config.idle_no_share && pc_isidle(sd))
+		return 0;
+
+	if ( (sd->class_&MAPID_THIRDMASK) != MAPID_MINSTRELWANDERER )
+		return 0;
+
+	return 1;
 }
 
 /**
@@ -1393,6 +1409,7 @@ void party_defaults(void) {
 	party->share_loot = party_share_loot;
 	party->send_dot_remove = party_send_dot_remove;
 	party->sub_count = party_sub_count;
+	party->sub_count_chorus = party_sub_count_chorus;
 	party->booking_register = party_booking_register;
 	party->booking_update = party_booking_update;
 	party->booking_search = party_booking_search;

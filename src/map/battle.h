@@ -540,6 +540,8 @@ struct battle_interface {
 	int64 (*calc_elefix) (struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, int nk, int n_ele, int s_ele, int s_ele_, bool left, int flag);
 	/* applies mastery modifiers */	
 	int64 (*calc_masteryfix) (struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int64 damage, int div, bool left, bool weapon);
+	/* calculates chorus bonus */
+	int (*calc_chorusbonus) (struct map_session_data *sd);
 	/* applies skill modifiers */
 	int (*calc_skillratio) (int attack_type, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int skillratio, int flag);
 	/* applies size modifiers */

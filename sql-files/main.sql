@@ -468,7 +468,8 @@ CREATE TABLE IF NOT EXISTS `sc_data` (
   `val3` int(11) NOT NULL default '0',
   `val4` int(11) NOT NULL default '0',
   KEY (`account_id`),
-  KEY (`char_id`)
+  KEY (`char_id`),
+  PRIMARY KEY  (`account_id`,`char_id`,`type`)
 ) ENGINE=MyISAM;
 
 --
@@ -661,6 +662,7 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1384763034); -- 2013-11-18--08-2
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1387844126); -- 2013-12-24--00-15.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1388854043); -- 2014-01-04--16-47.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1389028967); -- 2014-01-06--17-22.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1392832626); -- 2014-02-19--17-57.sql
 
 --
 -- Table structure for table `sstatus`

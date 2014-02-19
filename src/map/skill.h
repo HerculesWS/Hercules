@@ -2006,7 +2006,6 @@ struct skill_interface {
 	int (*changematerial) (struct map_session_data *sd, int n, unsigned short *item_list);
 	int (*get_elemental_type) (uint16 skill_id, uint16 skill_lv);
 	void (*cooldown_save) (struct map_session_data * sd);
-	int (*maelstrom_suction) (struct block_list *bl, va_list ap);
 	int (*get_new_group_id) (void);
 	bool (*check_shadowform) (struct block_list *bl, int64 damage, int hit);
 };

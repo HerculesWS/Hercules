@@ -377,7 +377,7 @@ int unit_walktoxy( struct block_list *bl, short x, short y, int flag)
 	unit->set_target(ud, 0);
 
 	sc = status->get_sc(bl);
-	if (sc && sc->data[SC_CONFUSION]) //Randomize the target position
+	if (sc && (sc->data[SC_CONFUSION] || sc->data[SC__CHAOS])) //Randomize the target position
 		map->random_dir(bl, &ud->to_x, &ud->to_y);
 
 	if(ud->walktimer != INVALID_TIMER) {
@@ -449,7 +449,7 @@ int unit_walktobl(struct block_list *bl, struct block_list *tbl, int range, int 
 	unit->set_target(ud, 0);
 
 	sc = status->get_sc(bl);
-	if (sc && sc->data[SC_CONFUSION]) //Randomize the target position
+	if (sc && (sc->data[SC_CONFUSION] || sc->data[SC__CHAOS])) //Randomize the target position
 		map->random_dir(bl, &ud->to_x, &ud->to_y);
 
 	if(ud->walktimer != INVALID_TIMER) {
@@ -968,7 +968,7 @@ int unit_can_move(struct block_list *bl) {
 		    ||  sc->data[SC_CURSEDCIRCLE_ATKER]
 		    ||  sc->data[SC_CURSEDCIRCLE_TARGET]
 		    || (sc->data[SC_COLD] && bl->type != BL_MOB)
-		    ||  sc->data[SC_NETHERWORLD]
+		    ||  sc->data[SC_DEEP_SLEEP]
 		    || (sc->data[SC_CAMOUFLAGE] && sc->data[SC_CAMOUFLAGE]->val1 < 3 && !(sc->data[SC_CAMOUFLAGE]->val3&1))
 		    ||  sc->data[SC_MEIKYOUSISUI]
 		    ||  sc->data[SC_KG_KAGEHUMI]
@@ -1012,10 +1012,10 @@ int unit_resume_running(int tid, int64 tick, int id, intptr_t data) {
 
 	if(sd && pc_isridingwug(sd))
 		clif->skill_nodamage(ud->bl,ud->bl,RA_WUGDASH,ud->skill_lv,
-		                     sc_start4(ud->bl,status->skill2sc(RA_WUGDASH),100,ud->skill_lv,unit->getdir(ud->bl),0,0,1));
+		                     sc_start4(ud->bl,ud->bl,status->skill2sc(RA_WUGDASH),100,ud->skill_lv,unit->getdir(ud->bl),0,0,1));
 	else
 		clif->skill_nodamage(ud->bl,ud->bl,TK_RUN,ud->skill_lv,
-		                     sc_start4(ud->bl,status->skill2sc(TK_RUN),100,ud->skill_lv,unit->getdir(ud->bl),0,0,0));
+		                     sc_start4(ud->bl,ud->bl,status->skill2sc(TK_RUN),100,ud->skill_lv,unit->getdir(ud->bl),0,0,0));
 
 	if (sd) clif->walkok(sd);
 
@@ -1467,10 +1467,6 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 		 * if we cancel it from nodamage_id, so it has to be here for it to not display the animation.
 		 **/
 		if( skill_id == AL_PNEUMA && map->getcell(src->m, skill_x, skill_y, CELL_CHKLANDPROTECTOR) ) {
-			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-			return 0;
-		}
-		if( (skill_id >= SC_MANHOLE && skill_id <= SC_FEINTBOMB) && map->getcell(src->m, skill_x, skill_y, CELL_CHKMAELSTROM) ) {
 			clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			return 0;
 		}
@@ -1956,7 +1952,7 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 			return 0;
 
 		if (sd && (sd->special_state.no_castcancel2 ||
-                ((sd->sc.data[SC_UNLIMITED_HUMMING_VOICE] || sd->special_state.no_castcancel) && !map_flag_gvg(bl->m) && !map->list[bl->m].flag.battleground))) //fixed flags being read the wrong way around [blackhole89]
+                ( sd->special_state.no_castcancel && !map_flag_gvg(bl->m) && !map->list[bl->m].flag.battleground))) //fixed flags being read the wrong way around [blackhole89]
 			return 0;
 	}
 
@@ -2106,6 +2102,11 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 		status_change_end(bl, SC_STOP, INVALID_TIMER);
 		status_change_end(bl, SC_WUGDASH, INVALID_TIMER);
 		status_change_end(bl, SC_CAMOUFLAGE, INVALID_TIMER);
+		status_change_end(bl, SC_MAGNETICFIELD, INVALID_TIMER);
+		status_change_end(bl, SC_NEUTRALBARRIER_MASTER, INVALID_TIMER);
+		status_change_end(bl, SC_NEUTRALBARRIER, INVALID_TIMER);
+		status_change_end(bl, SC_STEALTHFIELD_MASTER, INVALID_TIMER);
+		status_change_end(bl, SC_STEALTHFIELD, INVALID_TIMER);
 		status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
 		status_change_end(bl, SC__MANHOLE, INVALID_TIMER);
 		status_change_end(bl, SC_VACUUM_EXTREME, INVALID_TIMER);
