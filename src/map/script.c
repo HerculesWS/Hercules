@@ -7352,7 +7352,8 @@ BUILDIN(strnpcinfo) {
 			name = aStrdup(nd->exname);
 			break;
 		case 4: // map name
-			name = aStrdup(map->list[nd->bl.m].name);
+			if( nd->bl.m >= 0 ) // Only valid map indexes allowed (issue:8034)
+				name = aStrdup(map->list[nd->bl.m].name);
 			break;
 	}
 
