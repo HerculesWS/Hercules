@@ -126,8 +126,16 @@ bool chrif_auth_delete(int account_id, int char_id, enum sd_state state) {
 		if ( session[fd] && session[fd]->session_data == node->sd )
 			session[fd]->session_data = NULL;
 		
-		if ( node->sd )
+		if ( node->sd ) {
+			
+			if( node->sd->var_db )
+				node->sd->var_db->destroy(node->sd->var_db,script->reg_destroy);
+			
+			if( node->sd->array_db )
+				node->sd->array_db->destroy(node->sd->array_db,script->array_free_db);
+			
 			aFree(node->sd);
+		}
 		
 		ers_free(chrif->auth_db_ers, node);
 		idb_remove(chrif->auth_db,account_id);

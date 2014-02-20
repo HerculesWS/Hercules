@@ -2352,13 +2352,7 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 			pc->delspiritball(sd,sd->spiritball,1);
 			for(i = 1; i < 5; i++)
 				pc->del_charm(sd, sd->charm[i], i);
-			
-			if( sd->var_db )
-				sd->var_db->destroy(sd->var_db,script->reg_destroy);
-							
-			if( sd->array_db )
-				sd->array_db->destroy(sd->array_db,script->array_free_db);
-			
+
 			if( sd->st && sd->st->state != RUN ) {// free attached scripts that are waiting
 				script->free_state(sd->st);
 				sd->st = NULL;
