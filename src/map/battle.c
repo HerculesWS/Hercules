@@ -5415,11 +5415,12 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 				if( ssc->data[SC_INSPIRATION] ) {
 					NORMALIZE_RDAMAGE(damage / 100);
 
-					rdelay = clif->delay_damage(tick+delay,src, src, status_get_amotion(src), status_get_dmotion(src), rdamage, 1, 4);
+					rdelay = clif->delay_damage(tick+delay,target, target, status_get_amotion(target), status_get_dmotion(target), rdamage, 1, 4);
 
 					/* is this right? rdamage as both left and right? */
-					battle->drain(tsd, src, rdamage, rdamage, status_get_race(src), 0);
-					battle->delay_damage(tick, wd->amotion,target,src,0,CR_REFLECTSHIELD,0,rdamage,ATK_DEF,rdelay,true);
+					if( sd )
+						battle->drain(sd, target, rdamage, rdamage, status_get_race(target), 0);
+					battle->delay_damage(tick, wd->amotion,src,target,0,CR_REFLECTSHIELD,0,rdamage,ATK_DEF,rdelay,true);
 
 					delay += 100;/* gradual increase so the numbers don't clip in the client */
 				}
