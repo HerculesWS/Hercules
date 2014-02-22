@@ -719,7 +719,7 @@ struct sg_data {
 	short comfort_id;
 	char feel_var[NAME_LENGTH];
 	char hate_var[NAME_LENGTH];
-	int (*day_func)(void);
+	bool (*day_func)(void);
 };
 
 enum { ADDITEM_EXIST , ADDITEM_NEW , ADDITEM_OVERAMOUNT };

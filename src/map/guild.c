@@ -1325,7 +1325,7 @@ int guild_skillupack(int guild_id,uint16 skill_id,int account_id) {
 	if(g==NULL)
 		return 0;
 	if( sd != NULL ) {
-		clif->guild_skillup(sd,skill_id,g->skill[skill_id-GD_SKILLBASE].lv);
+		clif->skillup(sd,skill_id,g->skill[skill_id-GD_SKILLBASE].lv, 0);
 
 		/* Guild Aura handling */
 		switch( skill_id ) {

@@ -3752,7 +3752,7 @@ int pc_payzeny(struct map_session_data *sd,int zeny, enum e_log_pick_type type, 
 	if( zeny > 0 && sd->state.showzeny ) {
 		char output[255];
 		sprintf(output, "Removed %dz.", zeny);
-		clif->disp_onlyself(sd,output,strlen(output));
+		clif_disp_onlyself(sd,output,strlen(output));
 	}
 
 	return 0;
@@ -3794,7 +3794,7 @@ int pc_paycash(struct map_session_data *sd, int price, int points)
 	{
 		char output[128];
 		sprintf(output, msg_txt(504), points, cash, sd->kafraPoints, sd->cashPoints);
-		clif->disp_onlyself(sd, output, strlen(output));
+		clif_disp_onlyself(sd, output, strlen(output));
 	}
 	return cash+points;
 }
@@ -3819,7 +3819,7 @@ int pc_getcash(struct map_session_data *sd, int cash, int points)
 		if( battle_config.cashshop_show_points )
 		{
 			sprintf(output, msg_txt(505), cash, sd->cashPoints);
-			clif->disp_onlyself(sd, output, strlen(output));
+			clif_disp_onlyself(sd, output, strlen(output));
 		}
 		return cash;
 	}
@@ -3842,7 +3842,7 @@ int pc_getcash(struct map_session_data *sd, int cash, int points)
 		if( battle_config.cashshop_show_points )
 		{
 			sprintf(output, msg_txt(506), points, sd->kafraPoints);
-			clif->disp_onlyself(sd, output, strlen(output));
+			clif_disp_onlyself(sd, output, strlen(output));
 		}
 		return points;
 	}
@@ -3880,7 +3880,7 @@ int pc_getzeny(struct map_session_data *sd,int zeny, enum e_log_pick_type type, 
 	if( zeny > 0 && sd->state.showzeny ) {
 		char output[255];
 		sprintf(output, "Gained %dz.", zeny);
-		clif->disp_onlyself(sd,output,strlen(output));
+		clif_disp_onlyself(sd,output,strlen(output));
 	}
 
 	return 0;
@@ -6040,7 +6040,7 @@ int pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned int
 		char output[256];
 		sprintf(output,
 			"Experience Gained Base:%u (%.2f%%) Job:%u (%.2f%%)",base_exp,nextbp*(float)100,job_exp,nextjp*(float)100);
-		clif->disp_onlyself(sd,output,strlen(output));
+		clif_disp_onlyself(sd,output,strlen(output));
 	}
 
 	return 1;
@@ -6341,7 +6341,7 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 		else
 			pc->check_skilltree(sd, skill_id); // Check if a new skill can Lvlup
 
-		clif->skillup(sd,skill_id);
+		clif->skillup(sd,skill_id, sd->status.skill[index].lv, 1);
 		clif->updatestatus(sd,SP_SKILLPOINT);
 		if( skill_id == GN_REMODELING_CART ) /* cart weight info was updated by status_calc_pc */
 			clif->updatestatus(sd,SP_CARTINFO);

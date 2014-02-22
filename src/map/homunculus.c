@@ -352,7 +352,7 @@ bool homunculus_levelup(struct homun_data *hd) {
 			growth_max_hp, growth_max_sp,
 			growth_str/10.0, growth_agi/10.0, growth_vit/10.0,
 			growth_int/10.0, growth_dex/10.0, growth_luk/10.0);
-		clif->disp_onlyself(hd->master,output,strlen(output));
+		clif_disp_onlyself(hd->master,output,strlen(output));
 	}
 	return true;
 }
