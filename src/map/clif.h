@@ -48,6 +48,8 @@ struct skill_cd;
 #define packet_len(cmd) packet_db[cmd].len
 #define P2PTR(fd) RFIFO2PTR(fd)
 #define clif_menuskill_clear(sd) ((sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0)
+#define clif_disp_onlyself(sd,mes,len) clif->disp_message( &(sd)->bl, (mes), (len), SELF )
+#define clif_viewequip_fail( sd ) clif_msg( (sd), 0x54d );
 #define HCHSYS_NAME_LENGTH 20
 
 /**
@@ -546,11 +548,11 @@ struct clif_interface {
 	/* core */
 	int (*init) (bool minimal);
 	void (*final) (void);
-	int (*setip) (const char* ip);
-	void (*setbindip) (const char* ip);
+	bool (*setip) (const char* ip);
+	bool (*setbindip) (const char* ip);
 	void (*setport) (uint16 port);
 	uint32 (*refresh_ip) (void);
-	int (*send) (const void* buf, int len, struct block_list* bl, enum send_target type);
+	bool (*send) (const void* buf, int len, struct block_list* bl, enum send_target type);
 	int (*send_sub) (struct block_list *bl, va_list ap);
 	int (*parse) (int fd);
 	unsigned short (*parse_cmd) ( int fd, struct map_session_data *sd );
@@ -612,7 +614,7 @@ struct clif_interface {
 	int (*getareachar) (struct block_list* bl,va_list ap);
 	void (*graffiti_entry) (struct block_list *bl, struct skill_unit *su, enum send_target target);
 	/* main unit spawn */
-	int (*spawn) (struct block_list *bl);
+	bool (*spawn) (struct block_list *bl);
 	/* map-related */
 	void (*changemap) (struct map_session_data *sd, short m, int x, int y);
 	void (*changemapcell) (int fd, int16 m, int x, int y, int type, enum send_target target);
@@ -702,7 +704,6 @@ struct clif_interface {
 	void (*partytickack) (struct map_session_data* sd, bool flag);
 	void (*equiptickack) (struct map_session_data* sd, int flag);
 	void (*viewequip_ack) (struct map_session_data* sd, struct map_session_data* tsd);
-	void (*viewequip_fail) (struct map_session_data* sd);
 	void (*equpcheckbox) (struct map_session_data* sd);
 	void (*displayexp) (struct map_session_data *sd, unsigned int exp, char type, bool is_quest);
 	void (*font) (struct map_session_data *sd);
@@ -785,7 +786,6 @@ struct clif_interface {
 	void (*changechatstatus) (struct chat_data* cd);
 	void (*wis_message) (int fd, const char* nick, const char* mes, size_t mes_len);
 	void (*wis_end) (int fd, int flag);
-	void (*disp_onlyself) (struct map_session_data *sd, const char *mes, size_t len);
 	void (*disp_message) (struct block_list* src, const char* mes, size_t len, enum send_target target);
 	void (*broadcast) (struct block_list* bl, const char* mes, size_t len, int type, enum send_target target);
 	void (*broadcast2) (struct block_list* bl, const char* mes, size_t len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, enum send_target target);
@@ -831,7 +831,7 @@ struct clif_interface {
 	void (*storageclose) (struct map_session_data* sd);
 	/* skill-list handling */
 	void (*skillinfoblock) (struct map_session_data *sd);
-	void (*skillup) (struct map_session_data *sd,uint16 skill_id);
+	void (*skillup) (struct map_session_data *sd, uint16 skill_id, int skill_lv, int flag);
 	void (*skillinfo) (struct map_session_data *sd,int skill_id, int inf);
 	void (*addskill) (struct map_session_data *sd, int id);
 	void (*deleteskill) (struct map_session_data *sd, int id);
@@ -870,7 +870,6 @@ struct clif_interface {
 	void (*guild_emblem_area) (struct block_list* bl);
 	void (*guild_notice) (struct map_session_data* sd, struct guild* g);
 	void (*guild_message) (struct guild *g,int account_id,const char *mes,int len);
-	int (*guild_skillup) (struct map_session_data *sd,uint16 skill_id,int lv);
 	void (*guild_reqalliance) (struct map_session_data *sd,int account_id,const char *name);
 	void (*guild_allianceack) (struct map_session_data *sd,int flag);
 	void (*guild_delalliance) (struct map_session_data *sd,int guild_id,int flag);
@@ -919,9 +918,9 @@ struct clif_interface {
 	void (*check) (int fd, struct map_session_data* pl_sd);
 	/* hom-related */
 	void (*hominfo) (struct map_session_data *sd, struct homun_data *hd, int flag);
-	int (*homskillinfoblock) (struct map_session_data *sd);
+	void (*homskillinfoblock) (struct map_session_data *sd);
 	void (*homskillup) (struct map_session_data *sd, uint16 skill_id);
-	int (*hom_food) (struct map_session_data *sd,int foodid,int fail);
+	void (*hom_food) (struct map_session_data *sd,int foodid,int fail);
 	void (*send_homdata) (struct map_session_data *sd, int state, int param);
 	/* questlog-related */
 	void (*quest_send_list) (struct map_session_data *sd);

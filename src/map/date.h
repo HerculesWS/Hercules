@@ -11,8 +11,8 @@ int date_get_hour(void);
 int date_get_min(void);
 int date_get_sec(void);
 
-int is_day_of_sun(void);
-int is_day_of_moon(void);
-int is_day_of_star(void);
+bool is_day_of_sun(void);
+bool is_day_of_moon(void);
+bool is_day_of_star(void);
 
 #endif /* _MAP_DATE_H_ */

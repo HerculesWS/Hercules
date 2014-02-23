@@ -4,13 +4,13 @@
 // SkillID,HPCost,MaxHPTrigger,SPCost,HPRateCost,SPRateCost,ZenyCost,RequiredWeapons,RequiredAmmoTypes,RequiredAmmoAmount,RequiredState,SpiritSphereCost,RequiredItemID1,RequiredItemAmount1,RequiredItemID2,RequiredItemAmount2,RequiredItemID3,RequiredItemAmount3,RequiredItemID4,RequiredItemAmount4,RequiredItemID5,RequiredItemAmount5,RequiredItemID6,RequiredItemAmount6,RequiredItemID7,RequiredItemAmount7,RequiredItemID8,RequiredItemAmount8,RequiredItemID9,RequiredItemAmount9,RequiredItemID10,RequiredItemAmount10
 //
 // 01 ID
-// 02 HP cost required to cast
-//	If positive, it is a percent of your current hp, otherwise it is a percent of your max hp.
+// 02 HP cost
 // 03 Max HP trigger
 // 04 SP cost
-//	If positive, it is a percent of your current sp, otherwise it is a percent of your max sp.
 // 05 HP rate
+//	If positive, it is a percent of your current hp, otherwise it is a percent of your max hp.
 // 06 SP rate
+//	If positive, it is a percent of your current sp, otherwise it is a percent of your max sp.
 // 07 Zeny cost
 // 08 Required Weapon
 //	See doc/item_db.txt for weapon types

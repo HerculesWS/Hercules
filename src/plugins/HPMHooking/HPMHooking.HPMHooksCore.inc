@@ -701,8 +701,6 @@ struct {
 	struct HPMHookPoint *HP_clif_equiptickack_post;
 	struct HPMHookPoint *HP_clif_viewequip_ack_pre;
 	struct HPMHookPoint *HP_clif_viewequip_ack_post;
-	struct HPMHookPoint *HP_clif_viewequip_fail_pre;
-	struct HPMHookPoint *HP_clif_viewequip_fail_post;
 	struct HPMHookPoint *HP_clif_equpcheckbox_pre;
 	struct HPMHookPoint *HP_clif_equpcheckbox_post;
 	struct HPMHookPoint *HP_clif_displayexp_pre;
@@ -859,8 +857,6 @@ struct {
 	struct HPMHookPoint *HP_clif_wis_message_post;
 	struct HPMHookPoint *HP_clif_wis_end_pre;
 	struct HPMHookPoint *HP_clif_wis_end_post;
-	struct HPMHookPoint *HP_clif_disp_onlyself_pre;
-	struct HPMHookPoint *HP_clif_disp_onlyself_post;
 	struct HPMHookPoint *HP_clif_disp_message_pre;
 	struct HPMHookPoint *HP_clif_disp_message_post;
 	struct HPMHookPoint *HP_clif_broadcast_pre;
@@ -1013,8 +1009,6 @@ struct {
 	struct HPMHookPoint *HP_clif_guild_notice_post;
 	struct HPMHookPoint *HP_clif_guild_message_pre;
 	struct HPMHookPoint *HP_clif_guild_message_post;
-	struct HPMHookPoint *HP_clif_guild_skillup_pre;
-	struct HPMHookPoint *HP_clif_guild_skillup_post;
 	struct HPMHookPoint *HP_clif_guild_reqalliance_pre;
 	struct HPMHookPoint *HP_clif_guild_reqalliance_post;
 	struct HPMHookPoint *HP_clif_guild_allianceack_pre;
@@ -5732,8 +5726,6 @@ struct {
 	int HP_clif_equiptickack_post;
 	int HP_clif_viewequip_ack_pre;
 	int HP_clif_viewequip_ack_post;
-	int HP_clif_viewequip_fail_pre;
-	int HP_clif_viewequip_fail_post;
 	int HP_clif_equpcheckbox_pre;
 	int HP_clif_equpcheckbox_post;
 	int HP_clif_displayexp_pre;
@@ -5890,8 +5882,6 @@ struct {
 	int HP_clif_wis_message_post;
 	int HP_clif_wis_end_pre;
 	int HP_clif_wis_end_post;
-	int HP_clif_disp_onlyself_pre;
-	int HP_clif_disp_onlyself_post;
 	int HP_clif_disp_message_pre;
 	int HP_clif_disp_message_post;
 	int HP_clif_broadcast_pre;
@@ -6044,8 +6034,6 @@ struct {
 	int HP_clif_guild_notice_post;
 	int HP_clif_guild_message_pre;
 	int HP_clif_guild_message_post;
-	int HP_clif_guild_skillup_pre;
-	int HP_clif_guild_skillup_post;
 	int HP_clif_guild_reqalliance_pre;
 	int HP_clif_guild_reqalliance_post;
 	int HP_clif_guild_allianceack_pre;

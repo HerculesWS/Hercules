@@ -179,7 +179,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 		if( battle_config.buyer_name ) {
 			char temp[256];
 			sprintf(temp, msg_txt(265), sd->status.name);
-			clif->disp_onlyself(vsd,temp,strlen(temp));
+			clif_disp_onlyself(vsd,temp,strlen(temp));
 		}
 	}
 

@@ -12711,7 +12711,7 @@ BUILDIN(dispbottom)
 	const char *message;
 	message=script_getstr(st,2);
 	if(sd)
-		clif->disp_onlyself(sd,message,(int)strlen(message));
+		clif_disp_onlyself(sd,message,(int)strlen(message));
 	return true;
 }
 
