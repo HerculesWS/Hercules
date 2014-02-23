@@ -210,8 +210,8 @@ ACMD(send)
 			len=SHRT_MAX-4; // maximum length
 			off=4;
 		}
-		WFIFOHEAD(fd, len);
-		WFIFOW(fd,0)=TOW(type);
+		WFIFOHEAD(sd->fd, len);
+		WFIFOW(sd->fd,0)=TOW(type);
 		
 		// parse packet contents
 		SKIP_VALUE(message);
@@ -219,25 +219,25 @@ ACMD(send)
 			if(ISDIGIT(*message) || *message == '-' || *message == '+')
 			{// default (byte)
 				GET_VALUE(message,num);
-				WFIFOB(fd,off)=TOB(num);
+				WFIFOB(sd->fd,off)=TOB(num);
 				++off;
 			} else if(TOUPPER(*message) == 'B')
 			{// byte
 				++message;
 				GET_VALUE(message,num);
-				WFIFOB(fd,off)=TOB(num);
+				WFIFOB(sd->fd,off)=TOB(num);
 				++off;
 			} else if(TOUPPER(*message) == 'W')
 			{// word (2 bytes)
 				++message;
 				GET_VALUE(message,num);
-				WFIFOW(fd,off)=TOW(num);
+				WFIFOW(sd->fd,off)=TOW(num);
 				off+=2;
 			} else if(TOUPPER(*message) == 'L')
 			{// long word (4 bytes)
 				++message;
 				GET_VALUE(message,num);
-				WFIFOL(fd,off)=TOL(num);
+				WFIFOL(sd->fd,off)=TOL(num);
 				off+=4;
 			} else if(TOUPPER(*message) == 'S')
 			{// string - escapes are valid
@@ -290,7 +290,7 @@ ACMD(send)
 									num<<=8;
 									num+=(ISDIGIT(*message)?*message-'0':TOLOWER(*message)-'a'+10);
 								}
-								WFIFOB(fd,off)=TOB(num);
+								WFIFOB(sd->fd,off)=TOB(num);
 								++message;
 								CHECK_EOS(message);
 								continue;
@@ -319,13 +319,13 @@ ACMD(send)
 										CHECK_EOS(message);
 									}
 								}
-								WFIFOB(fd,off)=TOB(num);
+								WFIFOB(sd->fd,off)=TOB(num);
 								continue;
 							}
 						}
 					} else
 						num=*message;
-					WFIFOB(fd,off)=TOB(num);
+					WFIFOB(sd->fd,off)=TOB(num);
 					++message;
 					CHECK_EOS(message);
 				}//for
@@ -338,7 +338,7 @@ ACMD(send)
 				// terminate the string
 				if(off < end)
 				{// fill the rest with 0's
-					memset(WFIFOP(fd,off),0,end-off);
+					memset(WFIFOP(sd->fd,off),0,end-off);
 					off=end;
 				}
 			} else
@@ -350,12 +350,12 @@ ACMD(send)
 		}
 		
 		if(packet_db[type].len == -1) {// send dynamic packet
-			WFIFOW(fd,2)=TOW(off);
-			WFIFOSET(fd,off);
+			WFIFOW(sd->fd,2)=TOW(off);
+			WFIFOSET(sd->fd,off);
 		} else {// send static packet
 			if(off < len)
-				memset(WFIFOP(fd,off),0,len-off);
-			WFIFOSET(fd,len);
+				memset(WFIFOP(sd->fd,off),0,len-off);
+			WFIFOSET(sd->fd,len);
 		}
 	} else {
 		clif->message(fd, msg_txt(259)); // Invalid packet
