@@ -7769,7 +7769,7 @@ ACMD(cash)
 		} else {
 			if( (ret=pc->paycash(sd, -value, 0)) >= 0){
 			    sprintf(output, msg_txt(410), ret, sd->cashPoints);
-			    clif_disp_onlyself(sd, output, strlen(output));(sd, output, strlen(output));
+			    clif_disp_onlyself(sd, output, strlen(output));
 			} else
 				clif->message(fd, msg_txt(41)); // Unable to decrease the number/value.
 		}
