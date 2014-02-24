@@ -64,7 +64,7 @@ bool mapreg_setreg(int64 uid, int val) {
 			}
 		} else {
 			if( i )
-				script->array_update(&mapreg->regs.arrays, uid, false);
+				script->array_update(&mapreg->regs, uid, false);
 
 			m = ers_alloc(mapreg->ers, struct mapreg_save);
 
@@ -83,7 +83,7 @@ bool mapreg_setreg(int64 uid, int val) {
 		}
 	} else { // val == 0
 		if( i )
-			script->array_update(&mapreg->regs.arrays, uid, true);
+			script->array_update(&mapreg->regs, uid, true);
 		if( (m = i64db_get(mapreg->regs.vars, uid)) ) {
 			ers_free(mapreg->ers, m);
 		}
@@ -113,7 +113,7 @@ bool mapreg_setregstr(int64 uid, const char* str) {
 
 	if( str == NULL || *str == 0 ) {
 		if( i )
-			script->array_update(&mapreg->regs.arrays, uid, true);
+			script->array_update(&mapreg->regs, uid, true);
 		if(name[1] != '@') {
 			if( SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `varname`='%s' AND `index`='%d'", mapreg->table, name, i) )
 				Sql_ShowDebug(map->mysql_handle);
@@ -135,7 +135,7 @@ bool mapreg_setregstr(int64 uid, const char* str) {
 			}
 		} else {
 			if( i )
-				script->array_update(&mapreg->regs.arrays, uid, false);
+				script->array_update(&mapreg->regs, uid, false);
 
 			m = ers_alloc(mapreg->ers, struct mapreg_save);
 
