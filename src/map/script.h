@@ -332,12 +332,20 @@ struct Script_Config {
 	const char* ontouch2_name;
 };
 
+/**
+ * Generic reg database abstraction to be used with various types of regs/script variables.
+ */
+struct reg_db {
+	struct DBMap *vars;
+	struct DBMap *arrays;
+};
+
 struct script_retinfo {
-	struct DBMap* var_function;// scope variables
-	struct script_code* script;// script code
-	int pos;// script location
-	int nargs;// argument count
-	int defsp;// default stack pointer
+	struct reg_db scope;        ///< scope variables
+	struct script_code* script; ///< script code
+	int pos;                    ///< script location
+	int nargs;                  ///< argument count
+	int defsp;                  ///< default stack pointer
 };
 
 struct script_data {
@@ -355,17 +363,15 @@ struct script_data {
 struct script_code {
 	int script_size;
 	unsigned char *script_buf;
-	struct DBMap *script_vars;
-	struct DBMap *script_arrays_db;
+	struct reg_db local; ///< Local (npc) vars
 };
 
 struct script_stack {
-	int sp;// number of entries in the stack
-	int sp_max;// capacity of the stack
+	int sp;                         ///< number of entries in the stack
+	int sp_max;                     ///< capacity of the stack
 	int defsp;
-	struct script_data *stack_data;// stack
-	struct DBMap *var_function;// scope variables
-	struct DBMap *array_function_db;
+	struct script_data *stack_data; ///< stack
+	struct reg_db scope;            ///< scope variables
 };
 
 /* [Ind/Hercules] */

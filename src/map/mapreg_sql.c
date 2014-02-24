@@ -27,7 +27,7 @@ struct mapreg_interface mapreg_s;
  * @return variable's integer value
  */
 int mapreg_readreg(int64 uid) {
-	struct mapreg_save *m = i64db_get(mapreg->db, uid);
+	struct mapreg_save *m = i64db_get(mapreg->regs.vars, uid);
 	return m?m->u.i:0;
 }
 
@@ -38,7 +38,7 @@ int mapreg_readreg(int64 uid) {
  * @return variable's string value
  */
 char* mapreg_readregstr(int64 uid) {
-	struct mapreg_save *m = i64db_get(mapreg->db, uid);
+	struct mapreg_save *m = i64db_get(mapreg->regs.vars, uid);
 	return m?m->u.str:NULL;
 }
 
@@ -56,7 +56,7 @@ bool mapreg_setreg(int64 uid, int val) {
 	const char* name = script->get_str(num);
 
 	if( val != 0 ) {
-		if( (m = i64db_get(mapreg->db,uid)) ) {
+		if( (m = i64db_get(mapreg->regs.vars, uid)) ) {
 			m->u.i = val;
 			if(name[1] != '@') {
 				m->save = true;
@@ -64,7 +64,7 @@ bool mapreg_setreg(int64 uid, int val) {
 			}
 		} else {
 			if( i )
-				script->array_update(&mapreg->array_db,uid,false);
+				script->array_update(&mapreg->regs.arrays, uid, false);
 
 			m = ers_alloc(mapreg->ers, struct mapreg_save);
 
@@ -79,15 +79,15 @@ bool mapreg_setreg(int64 uid, int val) {
 				if( SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s`(`varname`,`index`,`value`) VALUES ('%s','%d','%d')", mapreg->table, tmp_str, i, val) )
 					Sql_ShowDebug(map->mysql_handle);
 			}
-			i64db_put(mapreg->db, uid, m);
+			i64db_put(mapreg->regs.vars, uid, m);
 		}
 	} else { // val == 0
 		if( i )
-			script->array_update(&mapreg->array_db,uid,true);
-		if( (m = i64db_get(mapreg->db,uid)) ) {
+			script->array_update(&mapreg->regs.arrays, uid, true);
+		if( (m = i64db_get(mapreg->regs.vars, uid)) ) {
 			ers_free(mapreg->ers, m);
 		}
-		i64db_remove(mapreg->db,uid);
+		i64db_remove(mapreg->regs.vars, uid);
 
 		if( name[1] != '@' ) {// Remove from database because it is unused.
 			if( SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `varname`='%s' AND `index`='%d'", mapreg->table, name, i) )
@@ -113,19 +113,19 @@ bool mapreg_setregstr(int64 uid, const char* str) {
 
 	if( str == NULL || *str == 0 ) {
 		if( i )
-			script->array_update(&mapreg->array_db,uid,true);
+			script->array_update(&mapreg->regs.arrays, uid, true);
 		if(name[1] != '@') {
 			if( SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `varname`='%s' AND `index`='%d'", mapreg->table, name, i) )
 				Sql_ShowDebug(map->mysql_handle);
 		}
-		if( (m = i64db_get(mapreg->db,uid)) ) {
+		if( (m = i64db_get(mapreg->regs.vars, uid)) ) {
 			if( m->u.str != NULL )
 				aFree(m->u.str);
 			ers_free(mapreg->ers, m);
 		}
-		i64db_remove(mapreg->db,uid);
+		i64db_remove(mapreg->regs.vars, uid);
 	} else {
-		if( (m = i64db_get(mapreg->db,uid)) ) {
+		if( (m = i64db_get(mapreg->regs.vars, uid)) ) {
 			if( m->u.str != NULL )
 				aFree(m->u.str);
 			m->u.str = aStrdup(str);
@@ -135,7 +135,7 @@ bool mapreg_setregstr(int64 uid, const char* str) {
 			}
 		} else {
 			if( i )
-				script->array_update(&mapreg->array_db,uid,false);
+				script->array_update(&mapreg->regs.arrays, uid, false);
 
 			m = ers_alloc(mapreg->ers, struct mapreg_save);
 
@@ -152,7 +152,7 @@ bool mapreg_setregstr(int64 uid, const char* str) {
 				if( SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s`(`varname`,`index`,`value`) VALUES ('%s','%d','%s')", mapreg->table, tmp_str, i, tmp_str2) )
 					Sql_ShowDebug(map->mysql_handle);
 			}
-			i64db_put(mapreg->db, uid, m);
+			i64db_put(mapreg->regs.vars, uid, m);
 		}
 	}
 
@@ -194,7 +194,7 @@ void script_load_mapreg(void) {
 		int i = index;
 
 
-		if( i64db_exists(mapreg->db, reference_uid(s, i)) ) {
+		if( i64db_exists(mapreg->regs.vars, reference_uid(s, i)) ) {
 			ShowWarning("load_mapreg: duplicate! '%s' => '%s' skipping...\n",varname,value);
 			continue;
 		}
@@ -220,7 +220,7 @@ void script_save_mapreg(void) {
 	struct mapreg_save *m = NULL;
 
 	if( mapreg->dirty ) {
-		iter = db_iterator(mapreg->db);
+		iter = db_iterator(mapreg->regs.vars);
 		for( m = dbi_first(iter); dbi_exists(iter); m = dbi_next(iter) ) {
 			if( m->save ) {
 				int num = script_getvarid(m->uid);
@@ -284,11 +284,11 @@ int mapreg_destroyreg(DBKey key, DBData *data, va_list ap) {
 void mapreg_reload(void) {
 	mapreg->save();
 
-	mapreg->db->clear(mapreg->db, mapreg->destroyreg);
+	mapreg->regs.vars->clear(mapreg->regs.vars, mapreg->destroyreg);
 
-	if( mapreg->array_db ) {
-		mapreg->array_db->destroy(mapreg->array_db,script->array_free_db);
-		mapreg->array_db = NULL;
+	if( mapreg->regs.arrays ) {
+		mapreg->regs.arrays->destroy(mapreg->regs.arrays, script->array_free_db);
+		mapreg->regs.arrays = NULL;
 	}
 
 	mapreg->load();
@@ -300,19 +300,19 @@ void mapreg_reload(void) {
 void mapreg_final(void) {
 	mapreg->save();
 
-	mapreg->db->destroy(mapreg->db, mapreg->destroyreg);
+	mapreg->regs.vars->destroy(mapreg->regs.vars, mapreg->destroyreg);
 
 	ers_destroy(mapreg->ers);
 
-	if( mapreg->array_db )
-		mapreg->array_db->destroy(mapreg->array_db,script->array_free_db);
+	if( mapreg->regs.arrays )
+		mapreg->regs.arrays->destroy(mapreg->regs.arrays, script->array_free_db);
 }
 
 /**
  * Initializer.
  */
 void mapreg_init(void) {
-	mapreg->db = i64db_alloc(DB_OPT_BASE);
+	mapreg->regs.vars = i64db_alloc(DB_OPT_BASE);
 	mapreg->ers = ers_new(sizeof(struct mapreg_save), "mapreg_sql.c::mapreg_ers", ERS_OPT_CLEAN);
 
 	mapreg->load();
@@ -340,7 +340,7 @@ void mapreg_defaults(void) {
 	mapreg = &mapreg_s;
 
 	/* */
-	mapreg->db = NULL;
+	mapreg->regs.vars = NULL;
 	mapreg->ers = NULL;
 	mapreg->skip_insert = false;
 
@@ -348,7 +348,7 @@ void mapreg_defaults(void) {
 	mapreg->dirty = false;
 
 	/* */
-	mapreg->array_db = NULL;
+	mapreg->regs.arrays = NULL;
 
 	/* */
 	mapreg->init = mapreg_init;

@@ -533,8 +533,7 @@ struct map_session_data {
 	/**
 	 * Account/Char variables & array control of those variables
 	 **/
-	DBMap *var_db;
-	DBMap *array_db;
+	struct reg_db regs;
 	unsigned char vars_received;/* char loading is only complete when you get it all. */
 	bool vars_ok;
 	bool vars_dirty;

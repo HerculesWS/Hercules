@@ -5,6 +5,10 @@
 #ifndef _MAP_INSTANCE_H_
 #define _MAP_INSTANCE_H_
 
+#include "script.h" // struct reg_db
+#include "../common/mmo.h" // struct point
+struct block_list;
+
 #define INSTANCE_NAME_LENGTH (60+1)
 
 typedef enum instance_state {
@@ -24,7 +28,7 @@ enum instance_owner_type {
 
 struct instance_data {
 	unsigned short id;
-	char name[INSTANCE_NAME_LENGTH]; // Instance Name - required for clif functions.
+	char name[INSTANCE_NAME_LENGTH]; ///< Instance Name - required for clif functions.
 	instance_state state;
 	enum instance_owner_type owner_type;
 	int owner_id;
@@ -33,8 +37,7 @@ struct instance_data {
 	unsigned short num_map;
 	unsigned short users;
 
-	struct DBMap *vars; // Instance Variable for scripts
-	struct DBMap *array_db ;
+	struct reg_db regs; ///< Instance variables for scripts
 	
 	int progress_timer;
 	unsigned int progress_timeout;
@@ -44,9 +47,9 @@ struct instance_data {
 	
 	unsigned int original_progress_timeout;
 	
-	struct point respawn;/* reload spawn */
+	struct point respawn; ///< reload spawn
 	
-	/* HPM Custom Struct */
+	/** HPM Custom Struct */
 	struct HPluginData **hdata;
 	unsigned int hdatac;
 };

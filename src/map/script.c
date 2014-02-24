@@ -151,7 +151,7 @@ static void script_dump_stack(struct script_state* st)
 		case C_RETINFO:
 			{
 				struct script_retinfo* ri = data->u.ri;
-				ShowMessage(" %p {var_function=%p, script=%p, pos=%d, nargs=%d, defsp=%d}\n", ri, ri->var_function, ri->script, ri->pos, ri->nargs, ri->defsp);
+				ShowMessage(" %p {scope.vars=%p, scope.arrays=%p, script=%p, pos=%d, nargs=%d, defsp=%d}\n", ri, ri->scope.vars, ri->scope.arrays, ri->script, ri->pos, ri->nargs, ri->defsp);
 			}
 			break;
 		default:
@@ -2434,7 +2434,8 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 	CREATE(code,struct script_code,1);
 	code->script_buf  = script->buf;
 	code->script_size = script->size;
-	code->script_vars = NULL;
+	code->local.vars = NULL;
+	code->local.arrays = NULL;
 #ifdef ENABLE_CASE_CHECK
 	script->local_casecheck.clear();
 	script->parser_current_src = NULL;
@@ -2513,8 +2514,8 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 				{
 					struct DBMap* n = data->ref ?
 							*data->ref : name[1] == '@' ?
-							st->stack->var_function : // instance/scope variable
-							st->script->script_vars;  // npc variable
+							st->stack->scope.vars : // instance/scope variable
+							st->script->local.vars; // npc variable
 					if( n )
 						data->u.str = (char*)i64db_get(n,reference_getuid(data));
 					else
@@ -2523,7 +2524,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 				break;
 			case '\'':
 					if ( st->instance_id >= 0 ) {
-						data->u.str = (char*)i64db_get(instance->list[st->instance_id].vars,reference_getuid(data));
+						data->u.str = (char*)i64db_get(instance->list[st->instance_id].regs.vars, reference_getuid(data));
 					} else {
 						ShowWarning("script_get_val: cannot access instance variable '%s', defaulting to \"\"\n", name);
 						data->u.str = NULL;
@@ -2568,8 +2569,8 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 					{
 						struct DBMap* n = data->ref ?
 								*data->ref : name[1] == '@' ?
-								st->stack->var_function : // instance/scope variable
-								st->script->script_vars;  // npc variable
+								st->stack->scope.vars : // instance/scope variable
+								st->script->local.vars; // npc variable
 						if( n )
 							data->u.num = (int)i64db_iget(n,reference_getuid(data));
 						else
@@ -2578,7 +2579,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 					break;
 				case '\'':
 						if( st->instance_id >= 0 )
-							data->u.num = (int)i64db_iget(instance->list[st->instance_id].vars,reference_getuid(data));
+							data->u.num = (int)i64db_iget(instance->list[st->instance_id].regs.vars, reference_getuid(data));
 						else {
 							ShowWarning("script_get_val: cannot access instance variable '%s', defaulting to 0\n", name);
 							data->u.num = 0;
@@ -2749,20 +2750,20 @@ struct DBMap *script_array_src(struct script_state *st, struct map_session_data 
 		default: /* char reg */
 		case '@':/* temp char reg */
 		case '#':/* account reg */
-			src = &sd->array_db;
+			src = &sd->regs.arrays;
 			break;
 		case '$':/* map reg */
-			src = &mapreg->array_db;
+			src = &mapreg->regs.arrays;
 			break;
 		case '.':/* npc/script */
 			if( ref )
 				src = (struct DBMap **)((char *)ref + sizeof(struct DBMap *));
 			else
-				src = (name[1] == '@') ? &st->stack->array_function_db : &st->script->script_arrays_db;
+				src = (name[1] == '@') ? &st->stack->scope.arrays : &st->script->local.arrays;
 			break;
 		case '\'':/* instance */
 			if( st->instance_id >= 0 ) {
-				src = &instance->list[st->instance_id].array_db;
+				src = &instance->list[st->instance_id].regs.arrays;
 			}
 			break;
 	}
@@ -2820,7 +2821,7 @@ void script_array_update(struct DBMap **src, int64 num, bool empty) {
 /*==========================================
  * Stores the value of a script variable
  * Return value is 0 on fail, 1 on success.
- * TODO: return values are screwed up, have been for some time (reaad: years), e.g. some functions return 1 failure and success. 
+ * TODO: return values are screwed up, have been for some time (reaad: years), e.g. some functions return 1 failure and success.
  *------------------------------------------*/
 int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, const void* value, struct DBMap** ref) {
 	char prefix = name[0];
@@ -2841,15 +2842,15 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 			case '.':
 				{
 					struct DBMap* n;
-					n = (ref) ? *ref : (name[1] == '@') ? st->stack->var_function : st->script->script_vars;
+					n = (ref) ? *ref : (name[1] == '@') ? st->stack->scope.vars : st->script->local.vars;
 					if( n ) {
 						if (str[0])  {
 							i64db_put(n, num, aStrdup(str));
 							if( script_getvaridx(num) )
 								script->array_update(
 								                     (name[1] == '@') ?
-								                        &st->stack->array_function_db :
-								                        &st->script->script_arrays_db,
+								                        &st->stack->scope.arrays :
+								                        &st->script->local.arrays,
 								                     num,
 								                     false);
 						} else {
@@ -2857,8 +2858,8 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 							if( script_getvaridx(num) )
 								script->array_update(
 								                     (name[1] == '@') ?
-								                         &st->stack->array_function_db :
-								                         &st->script->script_arrays_db,
+								                         &st->stack->scope.arrays :
+								                         &st->script->local.arrays,
 								                     num,
 								                     true);
 						}
@@ -2868,13 +2869,13 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 			case '\'':
 				if( st->instance_id >= 0 ) {
 					if( str[0] ) {
-						i64db_put(instance->list[st->instance_id].vars, num, aStrdup(str));
+						i64db_put(instance->list[st->instance_id].regs.vars, num, aStrdup(str));
 						if( script_getvaridx(num) )
-							script->array_update(&instance->list[st->instance_id].array_db,num,false);
+							script->array_update(&instance->list[st->instance_id].regs.arrays, num, false);
 					} else {
-						i64db_remove(instance->list[st->instance_id].vars, num);
+						i64db_remove(instance->list[st->instance_id].regs.vars, num);
 						if( script_getvaridx(num) )
-							script->array_update(&instance->list[st->instance_id].array_db,num,true);
+							script->array_update(&instance->list[st->instance_id].regs.arrays, num, true);
 					}
 				} else {
 					ShowError("script_set_reg: cannot write instance variable '%s', NPC not in a instance!\n", name);
@@ -2912,15 +2913,15 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 			case '.':
 				{
 					struct DBMap* n;
-					n = (ref) ? *ref : (name[1] == '@') ? st->stack->var_function : st->script->script_vars;
+					n = (ref) ? *ref : (name[1] == '@') ? st->stack->scope.vars : st->script->local.vars;
 					if( n ) {
 						if( val != 0 ) {
 							i64db_iput(n, num, val);
 							if( script_getvaridx(num) )
 								script->array_update(
 								                     (name[1] == '@') ?
-								                         &st->stack->array_function_db :
-								                         &st->script->script_arrays_db,
+								                         &st->stack->scope.arrays :
+								                         &st->script->local.arrays,
 								                     num,
 								                     false);
 						} else {
@@ -2928,8 +2929,8 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 							if( script_getvaridx(num) )
 								script->array_update(
 								                     (name[1] == '@') ?
-								                         &st->stack->array_function_db :
-								                         &st->script->script_arrays_db,
+								                         &st->stack->scope.arrays :
+								                         &st->script->local.arrays,
 								                     num,
 								                     true);
 						}
@@ -2939,13 +2940,13 @@ int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, co
 			case '\'':
 				if( st->instance_id >= 0 ) {
 					if( val != 0 ) {
-						i64db_iput(instance->list[st->instance_id].vars, num, val);
+						i64db_iput(instance->list[st->instance_id].regs.vars, num, val);
 						if( script_getvaridx(num) )
-							script->array_update(&instance->list[st->instance_id].array_db,num,false);
+							script->array_update(&instance->list[st->instance_id].regs.arrays, num, false);
 					} else {
-						i64db_remove(instance->list[st->instance_id].vars, num);
+						i64db_remove(instance->list[st->instance_id].regs.vars, num);
 						if( script_getvaridx(num) )
-							script->array_update(&instance->list[st->instance_id].array_db,num,true);
+							script->array_update(&instance->list[st->instance_id].regs.arrays, num, true);
 					}
 				} else {
 					ShowError("script_set_reg: cannot write instance variable '%s', NPC not in a instance!\n", name);
@@ -3151,8 +3152,14 @@ void pop_stack(struct script_state* st, int start, int end)
 		if( data->type == C_RETINFO )
 		{
 			struct script_retinfo* ri = data->u.ri;
-			if( ri->var_function )
-				script->free_vars(ri->var_function);
+			if( ri->scope.vars ) {
+				script->free_vars(ri->scope.vars);
+				ri->scope.vars = NULL;
+			}
+			if( ri->scope.arrays ) {
+				script->free_vars(ri->scope.arrays);
+				ri->scope.arrays = NULL;
+			}
 			if( data->ref )
 				aFree(data->ref);
 			aFree(ri);
@@ -3198,9 +3205,9 @@ void script_free_vars(struct DBMap* var_storage) {
 
 void script_free_code(struct script_code* code)
 {
-	script->free_vars( code->script_vars );
-	if( code->script_arrays_db )
-		code->script_arrays_db->destroy(code->script_arrays_db,script->array_free_db);
+	script->free_vars(code->local.vars);
+	if( code->local.arrays )
+		code->local.arrays->destroy(code->local.arrays,script->array_free_db);
 	aFree( code->script_buf );
 	aFree( code );
 }
@@ -3221,8 +3228,8 @@ struct script_state* script_alloc_state(struct script_code* rootscript, int pos,
 	st->stack->sp_max = 64;
 	CREATE(st->stack->stack_data, struct script_data, st->stack->sp_max);
 	st->stack->defsp = st->stack->sp;
-	st->stack->var_function = i64db_alloc(DB_OPT_RELEASE_DATA);
-	st->stack->array_function_db = NULL;
+	st->stack->scope.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+	st->stack->scope.arrays = NULL;
 	st->state = RUN;
 	st->script = rootscript;
 	st->pos = pos;
@@ -3231,8 +3238,8 @@ struct script_state* script_alloc_state(struct script_code* rootscript, int pos,
 	st->sleep.timer = INVALID_TIMER;
 	st->npc_item_flag = battle_config.item_enabled_npc;
 
-	if( !st->script->script_vars )
-		st->script->script_vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+	if( !st->script->local.vars )
+		st->script->local.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
 
 	st->id = script->next_id++;
 	script->active_scripts++;
@@ -3254,22 +3261,22 @@ void script_free_state(struct script_state* st) {
 		if( st->sleep.timer != INVALID_TIMER )
 			timer->delete(st->sleep.timer, script->run_timer);
 		if( st->stack ) {
-			script->free_vars(st->stack->var_function);
-			if( st->stack->array_function_db )
-				st->stack->array_function_db->destroy(st->stack->array_function_db,script->array_free_db);
+			script->free_vars(st->stack->scope.vars);
+			if( st->stack->scope.arrays )
+				st->stack->scope.arrays->destroy(st->stack->scope.arrays,script->array_free_db);
 			script->pop_stack(st, 0, st->stack->sp);
 			aFree(st->stack->stack_data);
 			ers_free(script->stack_ers, st->stack);
 			st->stack = NULL;
 		}
 		if( st->script ) {
-			if( st->script->script_vars && !db_size(st->script->script_vars) ) {
-				script->free_vars(st->script->script_vars);
-				st->script->script_vars = NULL;
+			if( st->script->local.vars && !db_size(st->script->local.vars) ) {
+				script->free_vars(st->script->local.vars);
+				st->script->local.vars = NULL;
 			}
-			if( st->script->script_arrays_db && !db_size(st->script->script_arrays_db) ) {
-				script->free_vars(st->script->script_arrays_db);
-				st->script->script_arrays_db = NULL;
+			if( st->script->local.arrays && !db_size(st->script->local.arrays) ) {
+				script->free_vars(st->script->local.arrays);
+				st->script->local.arrays = NULL;
 			}
 		}
 		st->pos = -1;
@@ -3705,13 +3712,14 @@ int run_func(struct script_state *st)
 			st->state = END;
 			return 1;
 		}
-		script->free_vars( st->stack->var_function );
+		script->free_vars(st->stack->scope.vars);
 
 		ri = st->stack->stack_data[st->stack->defsp-1].u.ri;
 		nargs = ri->nargs;
 		st->pos = ri->pos;
 		st->script = ri->script;
-		st->stack->var_function = ri->var_function;
+		st->stack->scope.vars = ri->scope.vars;
+		st->stack->scope.arrays = ri->scope.arrays;
 		st->stack->defsp = ri->defsp;
 		memset(ri, 0, sizeof(struct script_retinfo));
 
@@ -4147,7 +4155,7 @@ int script_reg_destroy(DBKey key, DBData *data, va_list ap) {
  * Clears a single persistent variable
  **/
 void script_reg_destroy_single(struct map_session_data *sd, int64 reg, struct script_reg_state *data) {
-	i64db_remove(sd->var_db, reg);
+	i64db_remove(sd->regs.vars, reg);
 
 	if( data->type ) {
 		struct script_reg_str *p = (struct script_reg_str*)data;
@@ -4849,15 +4857,15 @@ BUILDIN(callfunc)
 			if( name[0] == '.' ) {
 				if( !ref ) {
 					ref = (struct DBMap**)aCalloc(sizeof(struct DBMap*), 2);
-					ref[0] = (name[1] == '@' ? st->stack->var_function : st->script->script_vars);
+					ref[0] = (name[1] == '@' ? st->stack->scope.vars : st->script->local.vars);
 					if( name[1] == '@' ) {
-						if( !st->stack->array_function_db )
-							st->stack->array_function_db = idb_alloc(DB_OPT_BASE);
-						ref[1] = st->stack->array_function_db;
+						if( !st->stack->scope.arrays )
+							st->stack->scope.arrays = idb_alloc(DB_OPT_BASE);
+						ref[1] = st->stack->scope.arrays;
 					} else {
-						if( !st->script->script_arrays_db )
-							st->script->script_arrays_db = idb_alloc(DB_OPT_BASE);
-						ref[1] = st->script->script_arrays_db;
+						if( !st->script->local.arrays )
+							st->script->local.arrays = idb_alloc(DB_OPT_BASE);
+						ref[1] = st->script->local.arrays;
 					}
 				}
 				data->ref = ref;
@@ -4866,18 +4874,19 @@ BUILDIN(callfunc)
 	}
 
 	CREATE(ri, struct script_retinfo, 1);
-	ri->script       = st->script;// script code
-	ri->var_function = st->stack->var_function;// scope variables
-	ri->pos          = st->pos;// script location
-	ri->nargs        = j;// argument count
-	ri->defsp        = st->stack->defsp;// default stack pointer
+	ri->script       = st->script;              // script code
+	ri->scope.vars   = st->stack->scope.vars;   // scope variables
+	ri->scope.arrays = st->stack->scope.arrays; // scope arrays
+	ri->pos          = st->pos;                 // script location
+	ri->nargs        = j;                       // argument count
+	ri->defsp        = st->stack->defsp;        // default stack pointer
 	script->push_retinfo(st->stack, ri, ref);
 
 	st->pos = 0;
 	st->script = scr;
 	st->stack->defsp = st->stack->sp;
 	st->state = GOTO;
-	st->stack->var_function = i64db_alloc(DB_OPT_RELEASE_DATA);
+	st->stack->scope.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
 
 	return true;
 }
@@ -4908,10 +4917,10 @@ BUILDIN(callsub)
 			if( name[0] == '.' && name[1] == '@' ) {
 				if ( !ref ) {
 					ref = (struct DBMap**)aCalloc(sizeof(struct DBMap*), 2);
-					ref[0] = st->stack->var_function;
-					if( !st->stack->array_function_db )
-						st->stack->array_function_db = idb_alloc(DB_OPT_BASE);
-					ref[1] = st->stack->array_function_db;
+					ref[0] = st->stack->scope.vars;
+					if( !st->stack->scope.arrays )
+						st->stack->scope.arrays = idb_alloc(DB_OPT_BASE);
+					ref[1] = st->stack->scope.arrays;
 				}
 				data->ref = ref;
 			}
@@ -4919,17 +4928,18 @@ BUILDIN(callsub)
 	}
 
 	CREATE(ri, struct script_retinfo, 1);
-	ri->script       = st->script;// script code
-	ri->var_function = st->stack->var_function;// scope variables
-	ri->pos          = st->pos;// script location
-	ri->nargs        = j;// argument count
-	ri->defsp        = st->stack->defsp;// default stack pointer
+	ri->script       = st->script;              // script code
+	ri->scope.vars   = st->stack->scope.vars;   // scope variables
+	ri->scope.arrays = st->stack->scope.arrays; // scope arrays
+	ri->pos          = st->pos;                 // script location
+	ri->nargs        = j;                       // argument count
+	ri->defsp        = st->stack->defsp;        // default stack pointer
 	script->push_retinfo(st->stack, ri, ref);
 
 	st->pos = pos;
 	st->stack->defsp = st->stack->sp;
 	st->state = GOTO;
-	st->stack->var_function = i64db_alloc(DB_OPT_RELEASE_DATA);
+	st->stack->scope.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
 
 	return true;
 }
@@ -4984,16 +4994,16 @@ BUILDIN(return)
 			const char* name = reference_getname(data);
 			if( name[0] == '.' && name[1] == '@' )
 			{// scope variable
-				if( !data->ref || data->ref[0] == st->stack->var_function )
+				if( !data->ref || data->ref[0] == st->stack->scope.vars )
 					script->get_val(st, data);// current scope, convert to value
 			}
 			else if( name[0] == '.' && !data->ref )
 			{// script variable, link to current script
 				data->ref = (struct DBMap**)aCalloc(sizeof(struct DBMap*), 2);
-				data->ref[0] = st->script->script_vars;
-				if( !st->script->script_arrays_db )
-					st->script->script_arrays_db = idb_alloc(DB_OPT_BASE);
-				data->ref[1] = st->script->script_arrays_db;
+				data->ref[0] = st->script->local.vars;
+				if( !st->script->local.arrays )
+					st->script->local.arrays = idb_alloc(DB_OPT_BASE);
+				data->ref[1] = st->script->local.arrays;
 			}
 		}
 	}
@@ -15661,7 +15671,7 @@ BUILDIN(getvariableofnpc)
 		return false;
 	}
 
-	script->push_val(st->stack, C_NAME, reference_getuid(data), &nd->u.scr.script->script_vars );
+	script->push_val(st->stack, C_NAME, reference_getuid(data), &nd->u.scr.script->local.vars);
 	return true;
 }
 
