@@ -875,13 +875,14 @@ struct map_interface {
 	DBMap* iwall_db;
 	/* order respected by map_defaults() in order to zero */
 	/* from block_free until zone_pk */
-	struct block_list *block_free[block_free_max];
-	int block_free_count, block_free_lock;
-	struct block_list *bl_list[BL_LIST_MAX];
-	int bl_list_count;
+	struct block_list **block_free;
+	int block_free_count, block_free_lock, block_free_list_size;
+	struct block_list **bl_list;
+	int bl_list_count, bl_list_size;
 	struct block_list bl_head;
 	struct map_zone_data zone_all;/* used as a base on all maps */
 	struct map_zone_data zone_pk;/* used for (pk_mode) */
+	/* */
 	struct map_session_data *cpsd;
 	struct map_data *list;
 	/* [Ind/Hercules] */

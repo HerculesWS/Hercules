@@ -76,6 +76,22 @@ int map_getusers(void) {
 	return map->users;
 }
 
+/**
+ * Expands map->bl_list on demand
+ **/
+static inline void map_bl_list_expand(void) {
+	map->bl_list_size += 250;
+	RECREATE(map->bl_list, struct block_list *, map->bl_list_size);
+}
+
+/**
+ * Expands map->block_free on demand
+ **/
+static inline void map_block_free_expand(void) {
+	map->block_free_list_size += 100;
+	RECREATE(map->block_free, struct block_list *, map->block_free_list_size);
+}
+
 /*==========================================
  * server player count (this mapserver only)
  *------------------------------------------*/
@@ -88,17 +104,20 @@ int map_usercount(void) {
  *------------------------------------------*/
 int map_freeblock (struct block_list *bl) {
 	nullpo_retr(map->block_free_lock, bl);
-	
-	if (map->block_free_lock == 0 || map->block_free_count >= block_free_max) {
+		
+	if (map->block_free_lock == 0) {
 		if( bl->type == BL_ITEM )
 			ers_free(map->flooritem_ers, bl);
 		else
 			aFree(bl);
 		bl = NULL;
-		if (map->block_free_count >= block_free_max)
-			ShowWarning("map_freeblock: too many free block! %d %d\n", map->block_free_count, map->block_free_lock);
-	} else
+	} else {
+		
+		if( map->block_free_count >= map->block_free_list_size )
+			map_block_free_expand();
+		
 		map->block_free[map->block_free_count++] = bl;
+	}
 
 	return map->block_free_lock;
 }
@@ -483,22 +502,21 @@ static int map_vforeachinmap(int (*func)(struct block_list*, va_list), int16 m, 
 	for (i = 0; i < bsize; i++) {
 		if (type&~BL_MOB) {
 			for (bl = map->list[m].block[i]; bl != NULL; bl = bl->next) {
-				if (bl->type&type && map->bl_list_count < BL_LIST_MAX) {
+				if (bl->type&type) {
+					if( map->bl_list_count >= map->bl_list_size )
+						map_bl_list_expand();
 					map->bl_list[map->bl_list_count++] = bl;
 				}
 			}
 		}
 		if (type&BL_MOB) {
 			for (bl = map->list[m].block_mob[i]; bl != NULL; bl = bl->next) {
-				if (map->bl_list_count < BL_LIST_MAX) {
-					map->bl_list[map->bl_list_count++] = bl;
-				}
+				if( map->bl_list_count >= map->bl_list_size )
+					map_bl_list_expand();
+				map->bl_list[map->bl_list_count++] = bl;
 			}
 		}
 	}
-
-	if (map->bl_list_count >= BL_LIST_MAX)
-		ShowError("map.c:map_vforeachinmap: bl_list size (%d) exceeded\n", BL_LIST_MAX);
 
 	va_copy(argscopy, args);
 	returnCount = bl_vforeach(func, blockcount, INT_MAX, argscopy);
@@ -607,51 +625,44 @@ static int bl_getall_area(int type, int m, int x0, int y0, int x1, int y1, int (
 		for (bx = x0 / BLOCK_SIZE; bx <= x1 / BLOCK_SIZE; bx++) {
 			if (type&~BL_MOB) {
 				for (bl = map->list[m].block[bx + by * map->list[m].bxs]; bl != NULL; bl = bl->next) {
-					if (map->bl_list_count < BL_LIST_MAX
-						&& bl->type&type
-						&& bl->x >= x0 && bl->x <= x1
-						&& bl->y >= y0 && bl->y <= y1) {
-							if (func) {
-								va_start(args, func);
-								if (func(bl, args)) {
-									map->bl_list[map->bl_list_count++] = bl;
-									found++;
-								}
-								va_end(args);
-							}
-							else {
+					if (bl->type&type && bl->x >= x0 && bl->x <= x1 && bl->y >= y0 && bl->y <= y1) {
+						if( map->bl_list_count >= map->bl_list_size )
+							map_bl_list_expand();
+						if (func) {
+							va_start(args, func);
+							if (func(bl, args)) {
 								map->bl_list[map->bl_list_count++] = bl;
 								found++;
 							}
+							va_end(args);
+						} else {
+							map->bl_list[map->bl_list_count++] = bl;
+							found++;
+						}
 					}
 				}
 			}
 			if (type&BL_MOB) { // TODO: fix this code duplication
 				for (bl = map->list[m].block_mob[bx + by * map->list[m].bxs]; bl != NULL; bl = bl->next) {
-					if (map->bl_list_count < BL_LIST_MAX
-						//&& bl->type&type // block_mob contains BL_MOBs only
-						&& bl->x >= x0 && bl->x <= x1
-						&& bl->y >= y0 && bl->y <= y1) {
-							if (func) {
-								va_start(args, func);
-								if (func(bl, args)) {
-									map->bl_list[map->bl_list_count++] = bl;
-									found++;
-								}
-								va_end(args);
-							}
-							else {
+					if (bl->x >= x0 && bl->x <= x1 && bl->y >= y0 && bl->y <= y1) {
+						if( map->bl_list_count >= map->bl_list_size )
+							map_bl_list_expand();
+						if (func) {
+							va_start(args, func);
+							if (func(bl, args)) {
 								map->bl_list[map->bl_list_count++] = bl;
 								found++;
 							}
+							va_end(args);
+						} else {
+							map->bl_list[map->bl_list_count++] = bl;
+							found++;
+						}
 					}
 				}
 			}
 		}
 	}
-
-	if (map->bl_list_count >= BL_LIST_MAX)
-		ShowError("map.c:bl_getall_area: bl_list size (%d) exceeded\n", BL_LIST_MAX);
 
 	return found;
 }
@@ -5281,6 +5292,12 @@ void do_final(void)
 
 	aFree(map->list);
 
+	if( map->block_free )
+		aFree(map->block_free);
+	if( map->bl_list )
+		aFree(map->bl_list);
+	
+	
 	if( !map->enable_grf )
 		aFree(map->cache_buffer);
 
@@ -5863,17 +5880,20 @@ void map_defaults(void) {
 	map->zone_db = NULL;
 	map->iwall_db = NULL;
 
+	map->block_free = NULL;
+	map->block_free_count = 0;
+	map->block_free_lock = 0;
+	map->block_free_list_size = 0;
+	map->bl_list = NULL;
+	map->bl_list_count = 0;
+	map->bl_list_size = 0;
+	
 	//all in a big chunk, respects order
-	memset(map->block_free,0,sizeof(map->block_free)
-		   + sizeof(map->block_free_count)
-		   + sizeof(map->block_free_lock)
-		   + sizeof(map->bl_list)
-		   + sizeof(map->bl_list_count)
-		   + sizeof(map->bl_head)
+	memset(&map->bl_head,0,sizeof(map->bl_head)
 		   + sizeof(map->zone_all)
 		   + sizeof(map->zone_pk)
 		   );
-
+	
 	map->cpsd = NULL;
 	map->list = NULL;
 	
@@ -6056,7 +6076,7 @@ void map_defaults(void) {
 	map->remove_questinfo = map_remove_questinfo;
 	
 	map->merge_zone = map_merge_zone;
-	
+		
 	/**
 	 * mapit interface
 	 **/
