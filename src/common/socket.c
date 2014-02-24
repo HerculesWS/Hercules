@@ -873,13 +873,13 @@ int do_sockets(int next)
 
 		if(!session[i])
 			continue;
-
+		
+		RFIFOFLUSH(i);
 		// after parse, check client's RFIFO size to know if there is an invalid packet (too big and not parsed)
 		if (session[i]->rdata_size == session[i]->max_rdata) {
 			set_eof(i);
 			continue;
 		}
-		RFIFOFLUSH(i);
 	}
 
 #ifdef SHOW_SERVER_STATS

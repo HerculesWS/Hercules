@@ -5587,7 +5587,7 @@ void clif_status_change(struct block_list *bl,int type,int flag,int tick,int val
 void clif_displaymessage(const int fd, const char* mes) {
 	nullpo_retv(mes);
 
-	if( fd == -2 ) {
+	if( map->cpsd_active && fd == 0 ) {
 		ShowInfo("HCP: %s\n",mes);
 	} else if ( fd > 0 ) {
 		size_t len;
@@ -5619,7 +5619,7 @@ void clif_displaymessage2(const int fd, const char* mes) {
 			size_t len = strnlen(line, 255);
 
 			if (len > 0) { // don't send a void message (it's not displaying on the client chat). @help can send void line.
-				if( fd == -2 ) {
+				if( map->cpsd_active && fd == 0 ) {
 					ShowInfo("HCP: %s\n",line);
 				} else {
 					WFIFOHEAD(fd, 5 + len);
@@ -5638,7 +5638,7 @@ void clif_displaymessage2(const int fd, const char* mes) {
 void clif_displaymessage_sprintf(const int fd, const char* mes, ...) {
 	va_list ap;
 
-	if( fd == -2 ) {
+	if( map->cpsd_active && fd == 0 ) {
 		ShowInfo("HCP: ");
 		va_start(ap,mes);
 		_vShowMessage(MSG_NONE,mes,ap);

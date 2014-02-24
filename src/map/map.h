@@ -891,6 +891,8 @@ struct map_interface {
 	struct eri *flooritem_ers;
 	/* */
 	int bonus_id;
+	/* */
+	bool cpsd_active;
 	/* funcs */
 	void (*zone_init) (void);
 	void (*zone_remove) (int m);

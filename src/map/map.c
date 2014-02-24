@@ -5423,13 +5423,15 @@ CPCMD(gm_use) {
 		ShowError("gm:use invalid syntax. use '"CL_WHITE"gm:use @command <optional params>"CL_RESET"'\n");
 		return;
 	}
-	map->cpsd->fd = -2;
+
+	map->cpsd_active = true;
+	
 	if( !atcommand->exec(map->cpsd->fd, map->cpsd, line, false) )
 		ShowInfo("HCP: '"CL_WHITE"%s"CL_RESET"' failed\n",line);
 	else
 		ShowInfo("HCP: '"CL_WHITE"%s"CL_RESET"' was used\n",line);
-	map->cpsd->fd = 0;
-
+	
+	map->cpsd_active = false;
 }
 /* Hercules Console Parser */
 void map_cp_defaults(void) {
@@ -5840,6 +5842,8 @@ void map_defaults(void) {
 	sprintf(map->server_db,"ragnarok");
 	map->mysql_handle = NULL;
 
+	map->cpsd_active = false;
+	
 	map->port = 0;
 	map->users = 0;
 	map->ip_set = 0;

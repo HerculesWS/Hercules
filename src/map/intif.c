@@ -2125,7 +2125,7 @@ void intif_parse_MessageToFD(int fd) {
 		int aid = RFIFOL(fd,8);
 		struct map_session_data * sd = session[u_fd]->session_data;
 		/* matching e.g. previous fd owner didn't dc during request or is still the same */
-		if( sd->bl.id == aid ) {
+		if( sd && sd->bl.id == aid ) {
 			char msg[512];
 			safestrncpy(msg, (char*)RFIFOP(fd,12), RFIFOW(fd,2) - 12);
 			clif->message(u_fd,msg);
