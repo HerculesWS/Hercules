@@ -407,17 +407,6 @@ struct script_state {
 	unsigned int id;
 };
 
-/* TODO: HELLO DUCK THIS */
-struct script_reg {
-	int64 index;
-	int data;
-};
-/* TODO: HELLO DUCK THIS */
-struct script_regstr {
-	int64 index;
-	char* data;
-};
-
 struct script_function {
 	bool (*func)(struct script_state *st);
 	char *name;

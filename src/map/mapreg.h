@@ -8,19 +8,19 @@
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
 
+/** Container for a mapreg value */
 struct mapreg_save {
-	int64 uid;
+	int64 uid;         ///< Unique ID
 	union {
-		int i;
-		char *str;
+		int i;     ///< Numeric value
+		char *str; ///< String value
 	} u;
-	bool save;
+	bool is_string;    ///< true if it's a string, false if it's a number
+	bool save;         ///< Whether a save operation is pending
 };
 
 struct mapreg_interface {
-	DBMap *db; // int var_id -> int value
-	/* TODO duck str_db, use same */
-	DBMap *str_db; // int var_id -> char* value
+	DBMap *db; // int var_id -> struct mapreg_save
 	/* */
 	DBMap *array_db;
 	/* */
@@ -30,8 +30,7 @@ struct mapreg_interface {
 	/* */
 	char table[32];
 	/* */
-	bool i_dirty;
-	bool str_dirty;
+	bool dirty; ///< Whether there are modified regs to be saved
 	/* */
 	void (*init) (void);
 	void (*final) (void);
@@ -43,6 +42,7 @@ struct mapreg_interface {
 	void (*load) (void);
 	void (*save) (void);
 	int (*save_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*destroyreg) (DBKey key, DBData *data, va_list ap);
 	void (*reload) (void);
 	bool (*config_read) (const char *w1, const char *w2);
 };
