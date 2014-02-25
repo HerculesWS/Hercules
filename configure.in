@@ -481,8 +481,29 @@ AC_RUN_IFELSE(
 	])],
 	[
 		AC_MSG_RESULT([yes])
+		AC_MSG_CHECKING([whether $CC supports -march=i686 (and we can run it)])
+		OLD_CFLAGS="$CFLAGS"
+		OLD_LDFLAGS="$LDFLAGS"
 		CFLAGS="$CFLAGS -march=i686"
 		LDFLAGS="$LDFLAGS -march=i686"
+		AC_RUN_IFELSE(
+			[AC_LANG_SOURCE([
+				int main(int argc, char **argv) { return 0; }
+			])],
+			[
+				AC_MSG_RESULT([yes])
+			],
+			[
+				AC_MSG_RESULT([no])
+				CFLAGS="$OLD_CFLAGS"
+				LDFLAGS="$OLD_LDFLAGS"
+			],
+			[
+				AC_MSG_RESULT([guessing no])
+				CFLAGS="$OLD_CFLAGS"
+				LDFLAGS="$OLD_LDFLAGS"
+			]
+		)
 	],
 	[
 		AC_MSG_RESULT([no])
