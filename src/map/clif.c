@@ -5923,12 +5923,12 @@ void clif_wis_message(int fd, const char* nick, const char* mes, size_t mes_len)
 void clif_wis_end(int fd, int flag) {
 	struct map_session_data *sd = session_isValid(fd) ? session[fd]->session_data : NULL;
 	struct packet_wis_end p;
-	
+
 	if( !sd )
 		return;
-	
+
 	p.PacketType = wisendType;
-	p.flag = (char)flag;
+	p.result = (char)flag;
 #if PACKETVER >= 20131223
 	p.unknown = 0;
 #endif
