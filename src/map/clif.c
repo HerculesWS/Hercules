@@ -5920,17 +5920,20 @@ void clif_wis_message(int fd, const char* nick, const char* mes, size_t mes_len)
 ///     1 = target character is not loged in
 ///     2 = ignored by target
 ///     3 = everyone ignored by target
-void clif_wis_end(int fd, int flag)
-{
+void clif_wis_end(int fd, int flag) {
+	struct map_session_data *sd = session_isValid(fd) ? session[fd]->session_data : NULL;
+	struct packet_wis_end p;
+	
+	if( !sd )
+		return;
+	
+	p.PacketType = wisendType;
+	p.flag = (char)flag;
 #if PACKETVER >= 20131223
-	const int cmd = 0x9df;
-#else
-	const int cmd = 0x98;
+	p.unknown = 0;
 #endif
-	WFIFOHEAD(fd,packet_len(cmd));
-	WFIFOW(fd,0) = cmd;
-	WFIFOW(fd,2) = flag;
-	WFIFOSET(fd,packet_len(cmd));
+	
+	clif->send(&p, sizeof(p), &sd->bl, SELF);
 }
 
 

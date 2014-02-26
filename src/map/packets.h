@@ -2453,6 +2453,45 @@ packet(0x020d,-1);
 	packet(0x0887,36,clif->pStoragePassword,0);
 #endif
 
+// 2013-12-18bRagexe - Yommy
+#if PACKETVER >= 20131218
+	packet(0x0369,7,clif->pActionRequest,2,6);
+	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
+	packet(0x0437,5,clif->pWalkToXY,2);
+	packet(0x035F,6,clif->pTickSend,2);
+	packet(0x0947,5,clif->pChangeDir,2,4);
+	packet(0x07E4,6,clif->pTakeItem,2);
+	packet(0x0362,6,clif->pDropItem,2,4);
+	packet(0x07EC,8,clif->pMoveToKafra,2,4);
+	packet(0x0364,8,clif->pMoveFromKafra,2,4);
+	packet(0x0438,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0366,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x096A,6,clif->pGetCharNameRequest,2);
+	packet(0x0368,6,clif->pSolveCharName,2);
+	packet(0x0838,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0835,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0819,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x022D,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0360,6,clif->pReqClickBuyingStore,2);
+	packet(0x0817,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0815,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);
+	// packet(0x0363,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0281,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x092F,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x0802,26,clif->pPartyInvite2,2);
+	// packet(0x087B,4); // CZ_GANGSI_RANK
+	packet(0x08AB,26,clif->pFriendsListAdd,2);
+	packet(0x0811,5,clif->pHomMenu,2,4);
+	packet(0x085C,36,clif->pStoragePassword,0);
+	/* New */
+	packet(0x09d4,2,clif->pNPCShopClosed);
+	packet(0x09ce,102,clif->pGM_Monster_Item,2);
+	/* NPC Market */
+	packet(0x09d8,2,clif->pNPCMarketClosed);
+	packet(0x09d6,-1,clif->pNPCMarketPurchase);
+#endif
+
 // 2013-12-23cRagexe - Yommy
 #if PACKETVER >= 20131223
 	packet(0x0369,7,clif->pActionRequest,2,6);
@@ -2484,13 +2523,40 @@ packet(0x020d,-1);
 	packet(0x023B,26,clif->pFriendsListAdd,2);
 	packet(0x0361,5,clif->pHomMenu,2,4);
 	packet(0x08A4,36,clif->pStoragePassword,0);
-	/* New */
-	packet(0x09d4,2,clif->pNPCShopClosed);
-	packet(0x09ce,102,clif->pGM_Monster_Item,2);
-	/* NPC Market */
-	packet(0x09d8,2,clif->pNPCMarketClosed);
-	packet(0x09d6,-1,clif->pNPCMarketPurchase);
 	packet(0x09df,7);
+#endif
+
+// 2013-12-30aRagexe - Yommy
+#if PACKETVER >= 20131230
+	packet(0x0871,7,clif->pActionRequest,2,6);
+	packet(0x02C4,10,clif->pUseSkillToId,2,4,6);
+	packet(0x035F,5,clif->pWalkToXY,2);
+	packet(0x0438,6,clif->pTickSend,2);
+	packet(0x094A,5,clif->pChangeDir,2,4);
+	packet(0x092A,6,clif->pTakeItem,2);
+	packet(0x0860,6,clif->pDropItem,2,4);
+	packet(0x0968,8,clif->pMoveToKafra,2,4);
+	packet(0x0895,8,clif->pMoveFromKafra,2,4);
+	packet(0x091E,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x096A,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x0926,6,clif->pGetCharNameRequest,2);
+	packet(0x0898,6,clif->pSolveCharName,2);
+	packet(0x087B,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0369,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x093D,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x087F,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0969,6,clif->pReqClickBuyingStore,2);
+	packet(0x094C,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0365,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x091F,18,clif->pPartyBookingRegisterReq,2,4);
+	// packet(0x093E,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x022D,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x089C,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x08A9,26,clif->pPartyInvite2,2);
+	// packet(0x087E,4); // CZ_GANGSI_RANK
+	packet(0x0943,26,clif->pFriendsListAdd,2);
+	packet(0x0949,5,clif->pHomMenu,2,4);
+	packet(0x091D,36,clif->pStoragePassword,0);
 #endif
 
 /* PacketKeys: http://hercules.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
@@ -2686,8 +2752,16 @@ packet(0x020d,-1);
 	packetKeys(0x7E241DE0,0x5E805580,0x3D807D80); /* Thanks to Shakto */
 #endif
 
+#if PACKETVER >= 20131218
+	packetKeys(0x6A596301,0x76866D0E,0x32294A45);
+#endif
+
 #if PACKETVER >= 20131223
-	packetKeys(0x631C511C, 0x111C111C,0x111C111C);
+	packetKeys(0x631C511C,0x111C111C,0x111C111C);
+#endif
+
+#if PACKETVER >= 20131230
+	packetKeys(0x611B7097,0x01F957A1,0x768A0FCB);
 #endif
 
 #if defined(OBFUSCATIONKEY1) && defined(OBFUSCATIONKEY2) && defined(OBFUSCATIONKEY3)

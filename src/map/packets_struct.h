@@ -203,6 +203,11 @@ enum packet_headers {
 	maptypeproperty2Type = 0x99b,
 	npcmarketresultackType = 0x9d7,
 	npcmarketopenType = 0x9d5,
+#if PACKETVER >= 20131223
+	wisendType = 0x9df,
+#else
+	wisendType = 0x98,
+#endif
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -940,6 +945,15 @@ struct packet_npc_market_open {
 		unsigned short view;
 	} list[1000];/* TODO: whats the actual max of this? */
 } __attribute__((packed));
+
+struct packet_wis_end {
+	short PacketType;
+	char result;
+#if PACKETVER >= 20131223
+	unsigned int unknown;/* maybe AID, not sure what for (works sending as 0) */
+#endif
+} __attribute__((packed));
+
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
