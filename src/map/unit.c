@@ -2288,9 +2288,10 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 void unit_remove_map_pc(struct map_session_data *sd, clr_type clrtype)
 {
 	unit->remove_map(&sd->bl,clrtype,ALC_MARK);
-
-	if (clrtype == CLR_TELEPORT) clrtype = CLR_OUTSIGHT; //CLR_TELEPORT is the warp from logging out, but pets/homunc need to just 'vanish' instead of showing the warping out animation.
-
+	
+	//CLR_RESPAWN is the warp from logging out, CLR_TELEPORT is the warp from teleporting, but pets/homunc need to just 'vanish' instead of showing the warping animation.
+	if (clrtype == CLR_RESPAWN || clrtype == CLR_TELEPORT) clrtype = CLR_OUTSIGHT;
+	
 	if(sd->pd)
 		unit->remove_map(&sd->pd->bl, clrtype, ALC_MARK);
 	if(homun_alive(sd->hd))
