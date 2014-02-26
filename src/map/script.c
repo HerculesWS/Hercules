@@ -19063,6 +19063,17 @@ void script_label_add(int key, int pos) {
  **/
 void script_hardcoded_constants(void) {
 	
+	/* server defines */
+	script->set_constant("PACKETVER",PACKETVER,false);
+	script->set_constant("MAX_LEVEL",MAX_LEVEL,false);
+	script->set_constant("MAX_STORAGE",MAX_STORAGE,false);
+	script->set_constant("MAX_GUILD_STORAGE",MAX_GUILD_STORAGE,false);
+	script->set_constant("MAX_CART",MAX_INVENTORY,false);
+	script->set_constant("MAX_INVENTORY",MAX_INVENTORY,false);
+	script->set_constant("MAX_ZENY",MAX_ZENY,false);
+	script->set_constant("MAX_BG_MEMBERS",MAX_BG_MEMBERS,false);
+	script->set_constant("MAX_CHAT_USERS",MAX_CHAT_USERS,false);
+
 	/* status options */
 	script->set_constant("Option_Nothing",OPTION_NOTHING,false);
 	script->set_constant("Option_Sight",OPTION_SIGHT,false);
