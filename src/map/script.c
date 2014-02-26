@@ -4321,6 +4321,7 @@ void do_init_script(bool minimal) {
 
 	script->parse_builtin();
 	script->read_constdb();
+	script->hardcoded_constants();
 
 	if (minimal)
 		return;
@@ -19057,6 +19058,42 @@ void script_label_add(int key, int pos) {
 	script->label_count++;
 }
 
+/**
+ * Sets source-end constants for scripts to play with
+ **/
+void script_hardcoded_constants(void) {
+	
+	/* status options */
+	script->set_constant("Option_Nothing",OPTION_NOTHING,false);
+	script->set_constant("Option_Sight",OPTION_SIGHT,false);
+	script->set_constant("Option_Hide",OPTION_HIDE,false);
+	script->set_constant("Option_Cloak",OPTION_CLOAK,false);
+	script->set_constant("Option_Falcon",OPTION_FALCON,false);
+	script->set_constant("Option_Riding",OPTION_RIDING,false);
+	script->set_constant("Option_Invisible",OPTION_INVISIBLE,false);
+	script->set_constant("Option_Orcish",OPTION_ORCISH,false);
+	script->set_constant("Option_Wedding",OPTION_WEDDING,false);
+	script->set_constant("Option_Chasewalk",OPTION_CHASEWALK,false);
+	script->set_constant("Option_Flying",OPTION_FLYING,false);
+	script->set_constant("Option_Xmas",OPTION_XMAS,false);
+	script->set_constant("Option_Transform",OPTION_TRANSFORM,false);
+	script->set_constant("Option_Summer",OPTION_SUMMER,false);
+	script->set_constant("Option_Dragon1",OPTION_DRAGON1,false);
+	script->set_constant("Option_Wug",OPTION_WUG,false);
+	script->set_constant("Option_Wugrider",OPTION_WUGRIDER,false);
+	script->set_constant("Option_Madogear",OPTION_MADOGEAR,false);
+	script->set_constant("Option_Dragon2",OPTION_DRAGON2,false);
+	script->set_constant("Option_Dragon3",OPTION_DRAGON3,false);
+	script->set_constant("Option_Dragon4",OPTION_DRAGON4,false);
+	script->set_constant("Option_Dragon5",OPTION_DRAGON5,false);
+	script->set_constant("Option_Hanbok",OPTION_HANBOK,false);
+	script->set_constant("Option_Oktoberfest",OPTION_OKTOBERFEST,false);
+
+	/* status option compounds */
+	script->set_constant("Option_Dragon",OPTION_DRAGON,false);
+	script->set_constant("Option_Costume",OPTION_COSTUME,false);
+}
+
 void script_defaults(void) {
 	// aegis->athena slot position conversion table
 	unsigned int equip[SCRIPT_EQUIP_TABLE_SIZE] = {EQP_HEAD_TOP,EQP_ARMOR,EQP_HAND_L,EQP_HAND_R,EQP_GARMENT,EQP_SHOES,EQP_ACC_L,EQP_ACC_R,EQP_HEAD_MID,EQP_HEAD_LOW,EQP_COSTUME_HEAD_LOW,EQP_COSTUME_HEAD_MID,EQP_COSTUME_HEAD_TOP,EQP_COSTUME_GARMENT,EQP_SHADOW_ARMOR, EQP_SHADOW_WEAPON, EQP_SHADOW_SHIELD, EQP_SHADOW_SHOES, EQP_SHADOW_ACC_R, EQP_SHADOW_ACC_L};
@@ -19308,5 +19345,7 @@ void script_defaults(void) {
 	/* */
 	script->generic_ui_array_expand = script_generic_ui_array_expand;
 	script->array_cpy_list = script_array_cpy_list;
+	/* */
+	script->hardcoded_constants = script_hardcoded_constants;
 	
 }

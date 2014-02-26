@@ -818,7 +818,7 @@ void clif_clearunit_delayed(struct block_list* bl, clr_type type, int64 tick) {
 /// Gets weapon view info from sd's inventory_data and points (*rhand,*lhand)
 void clif_get_weapon_view(struct map_session_data* sd, unsigned short *rhand, unsigned short *lhand)
 {
-	if(sd->sc.option&(OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER|OPTION_HANBOK|OPTION_OKTOBERFEST)) {
+	if(sd->sc.option&OPTION_COSTUME) {
 		*rhand = *lhand = 0;
 		return;
 	}
@@ -3209,7 +3209,7 @@ void clif_changelook(struct block_list *bl,int type,int val)
 			case LOOK_BASE:
 				if( !sd ) break;
 
-				if( sd->sc.option&(OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER|OPTION_HANBOK|OPTION_OKTOBERFEST) )
+				if( sd->sc.option&OPTION_COSTUME )
 					vd->weapon = vd->shield = 0;
 
 				if( !vd->cloth_color )
@@ -10086,7 +10086,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 			if( pc_cant_act(sd) || sd->sc.option&OPTION_HIDE )
 				return;
 
-			if( sd->sc.option&(OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER|OPTION_HANBOK|OPTION_OKTOBERFEST) )
+			if( sd->sc.option&OPTION_COSTUME )
 				return;
 
 			if( sd->sc.data[SC_BASILICA] || sd->sc.data[SC__SHADOWFORM] ||
@@ -11331,7 +11331,7 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 		}
 	}
 
-	if( sd->sc.option&(OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER|OPTION_HANBOK|OPTION_OKTOBERFEST) )
+	if( sd->sc.option&OPTION_COSTUME )
 		return;
 
 	if( sd->sc.data[SC_BASILICA] && (skill_id != HP_BASILICA || sd->sc.data[SC_BASILICA]->val4 != sd->bl.id) )
@@ -11423,7 +11423,7 @@ void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uint16 ski
 		}
 	}
 
-	if( sd->sc.option&(OPTION_WEDDING|OPTION_XMAS|OPTION_SUMMER|OPTION_HANBOK|OPTION_OKTOBERFEST) )
+	if( sd->sc.option&OPTION_COSTUME )
 		return;
 
 	if( sd->sc.data[SC_BASILICA] && (skill_id != HP_BASILICA || sd->sc.data[SC_BASILICA]->val4 != sd->bl.id) )
