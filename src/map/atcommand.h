@@ -86,7 +86,7 @@ struct atcommand_interface {
 	bool (*can_use2) (struct map_session_data *sd, const char *command, AtCommandType type);
 	void (*load_groups) (GroupSettings **groups, config_setting_t **commands_, size_t sz);
 	AtCommandInfo* (*exists) (const char* name);
-	bool (*msg_read) (const char* cfgName);
+	bool (*msg_read) (const char *cfg_name, bool allow_override);
 	void (*final_msg) (void);
 	/* atcommand binding */
 	struct atcmd_binding_data* (*get_bind_byname) (const char* name);

@@ -66,8 +66,8 @@ struct WisData {
 static DBMap* wis_db = NULL; // int wis_id -> struct WisData*
 static int wis_dellist[WISDELLIST_MAX], wis_delnum;
 
-#define MAX_JOB_NAMES 106
-static char* msg_table[MAX_JOB_NAMES]; //  messages 550 ~ 655 are job names
+#define MAX_JOB_NAMES 150
+static char* msg_table[MAX_JOB_NAMES]; //  messages 550 ~ 699 are job names
 
 const char* msg_txt(int msg_number) {
 	msg_number -= 550;
@@ -78,17 +78,24 @@ const char* msg_txt(int msg_number) {
 	return "Unknown";
 }
 
-/*==========================================
- * Read Message Data -- at char server we only keep job names.
- *------------------------------------------*/
-int msg_config_read(const char* cfgName) {
+/**
+ * Reads Message Data.
+ *
+ * This is a modified version of the mapserver's msg_config_read to
+ * only read messages with IDs between 550 and 550+MAX_JOB_NAMES.
+ *
+ * @param[in] cfg_name       configuration filename to read.
+ * @param[in] allow_override whether to allow duplicate message IDs to override the original value.
+ * @return success state.
+ */
+bool msg_config_read(const char *cfg_name, bool allow_override) {
 	int msg_number;
 	char line[1024], w1[1024], w2[1024];
 	FILE *fp;
 	static int called = 1;
 
-	if ((fp = fopen(cfgName, "r")) == NULL) {
-		ShowError("Messages file not found: %s\n", cfgName);
+	if ((fp = fopen(cfg_name, "r")) == NULL) {
+		ShowError("Messages file not found: %s\n", cfg_name);
 		return 1;
 	}
 
@@ -102,15 +109,21 @@ int msg_config_read(const char* cfgName) {
 			continue;
 
 		if (strcmpi(w1, "import") == 0)
-			msg_config_read(w2);
+			msg_config_read(w2, true);
 		else {
 			msg_number = atoi(w1);
 			if( msg_number < 550 || msg_number > (550+MAX_JOB_NAMES) )
 				continue;
 			msg_number -= 550;
 			if (msg_number >= 0 && msg_number < MAX_JOB_NAMES) {
-				if (msg_table[msg_number] != NULL)
+				if (msg_table[msg_number] != NULL) {
+					if (!allow_override) {
+						ShowError("Duplicate message: ID '%d' was already used for '%s'. Message '%s' will be ignored.\n",
+						          msg_number, w2, msg_table[msg_number]);
+						continue;
+					}
 					aFree(msg_table[msg_number]);
+				}
 				msg_table[msg_number] = (char *)aMalloc((strlen(w2) + 1)*sizeof (char));
 				strcpy(msg_table[msg_number],w2);
 			}
@@ -133,107 +146,107 @@ void do_final_msg(void) {
 /* from pc.c due to @accinfo. any ideas to replace this crap are more than welcome. */
 const char* job_name(int class_) {
 	switch (class_) {
-		case JOB_NOVICE:
-		case JOB_SWORDMAN:
-		case JOB_MAGE:
-		case JOB_ARCHER:
-		case JOB_ACOLYTE:
-		case JOB_MERCHANT:
-		case JOB_THIEF:
+		case JOB_NOVICE:   // 550
+		case JOB_SWORDMAN: // 551
+		case JOB_MAGE:     // 552
+		case JOB_ARCHER:   // 553
+		case JOB_ACOLYTE:  // 554
+		case JOB_MERCHANT: // 555
+		case JOB_THIEF:    // 556
 			return msg_txt(550 - JOB_NOVICE+class_);
 
-		case JOB_KNIGHT:
-		case JOB_PRIEST:
-		case JOB_WIZARD:
-		case JOB_BLACKSMITH:
-		case JOB_HUNTER:
-		case JOB_ASSASSIN:
+		case JOB_KNIGHT:     // 557
+		case JOB_PRIEST:     // 558
+		case JOB_WIZARD:     // 559
+		case JOB_BLACKSMITH: // 560
+		case JOB_HUNTER:     // 561
+		case JOB_ASSASSIN:   // 562
 			return msg_txt(557 - JOB_KNIGHT+class_);
 
 		case JOB_KNIGHT2:
 			return msg_txt(557);
 
-		case JOB_CRUSADER:
-		case JOB_MONK:
-		case JOB_SAGE:
-		case JOB_ROGUE:
-		case JOB_ALCHEMIST:
-		case JOB_BARD:
-		case JOB_DANCER:
+		case JOB_CRUSADER:  // 563
+		case JOB_MONK:      // 564
+		case JOB_SAGE:      // 565
+		case JOB_ROGUE:     // 566
+		case JOB_ALCHEMIST: // 567
+		case JOB_BARD:      // 568
+		case JOB_DANCER:    // 569
 			return msg_txt(563 - JOB_CRUSADER+class_);
 
 		case JOB_CRUSADER2:
 			return msg_txt(563);
 
-		case JOB_WEDDING:
-		case JOB_SUPER_NOVICE:
-		case JOB_GUNSLINGER:
-		case JOB_NINJA:
-		case JOB_XMAS:
+		case JOB_WEDDING:      // 570
+		case JOB_SUPER_NOVICE: // 571
+		case JOB_GUNSLINGER:   // 572
+		case JOB_NINJA:        // 573
+		case JOB_XMAS:         // 574
 			return msg_txt(570 - JOB_WEDDING+class_);
 
 		case JOB_SUMMER:
 			return msg_txt(621);
 
-		case JOB_NOVICE_HIGH:
-		case JOB_SWORDMAN_HIGH:
-		case JOB_MAGE_HIGH:
-		case JOB_ARCHER_HIGH:
-		case JOB_ACOLYTE_HIGH:
-		case JOB_MERCHANT_HIGH:
-		case JOB_THIEF_HIGH:
+		case JOB_NOVICE_HIGH:   // 575
+		case JOB_SWORDMAN_HIGH: // 576
+		case JOB_MAGE_HIGH:     // 577
+		case JOB_ARCHER_HIGH:   // 578
+		case JOB_ACOLYTE_HIGH:  // 579
+		case JOB_MERCHANT_HIGH: // 580
+		case JOB_THIEF_HIGH:    // 581
 			return msg_txt(575 - JOB_NOVICE_HIGH+class_);
 
-		case JOB_LORD_KNIGHT:
-		case JOB_HIGH_PRIEST:
-		case JOB_HIGH_WIZARD:
-		case JOB_WHITESMITH:
-		case JOB_SNIPER:
-		case JOB_ASSASSIN_CROSS:
+		case JOB_LORD_KNIGHT:    // 582
+		case JOB_HIGH_PRIEST:    // 583
+		case JOB_HIGH_WIZARD:    // 584
+		case JOB_WHITESMITH:     // 585
+		case JOB_SNIPER:         // 586
+		case JOB_ASSASSIN_CROSS: // 587
 			return msg_txt(582 - JOB_LORD_KNIGHT+class_);
 
 		case JOB_LORD_KNIGHT2:
 			return msg_txt(582);
 
-		case JOB_PALADIN:
-		case JOB_CHAMPION:
-		case JOB_PROFESSOR:
-		case JOB_STALKER:
-		case JOB_CREATOR:
-		case JOB_CLOWN:
-		case JOB_GYPSY:
+		case JOB_PALADIN:   // 588
+		case JOB_CHAMPION:  // 589
+		case JOB_PROFESSOR: // 590
+		case JOB_STALKER:   // 591
+		case JOB_CREATOR:   // 592
+		case JOB_CLOWN:     // 593
+		case JOB_GYPSY:     // 594
 			return msg_txt(588 - JOB_PALADIN + class_);
 
 		case JOB_PALADIN2:
 			return msg_txt(588);
 
-		case JOB_BABY:
-		case JOB_BABY_SWORDMAN:
-		case JOB_BABY_MAGE:
-		case JOB_BABY_ARCHER:
-		case JOB_BABY_ACOLYTE:
-		case JOB_BABY_MERCHANT:
-		case JOB_BABY_THIEF:
+		case JOB_BABY:          // 595
+		case JOB_BABY_SWORDMAN: // 596
+		case JOB_BABY_MAGE:     // 597
+		case JOB_BABY_ARCHER:   // 598
+		case JOB_BABY_ACOLYTE:  // 599
+		case JOB_BABY_MERCHANT: // 600
+		case JOB_BABY_THIEF:    // 601
 			return msg_txt(595 - JOB_BABY + class_);
 
-		case JOB_BABY_KNIGHT:
-		case JOB_BABY_PRIEST:
-		case JOB_BABY_WIZARD:
-		case JOB_BABY_BLACKSMITH:
-		case JOB_BABY_HUNTER:
-		case JOB_BABY_ASSASSIN:
+		case JOB_BABY_KNIGHT:     // 602
+		case JOB_BABY_PRIEST:     // 603
+		case JOB_BABY_WIZARD:     // 604
+		case JOB_BABY_BLACKSMITH: // 605
+		case JOB_BABY_HUNTER:     // 606
+		case JOB_BABY_ASSASSIN:   // 607
 			return msg_txt(602 - JOB_BABY_KNIGHT + class_);
 
 		case JOB_BABY_KNIGHT2:
 			return msg_txt(602);
 
-		case JOB_BABY_CRUSADER:
-		case JOB_BABY_MONK:
-		case JOB_BABY_SAGE:
-		case JOB_BABY_ROGUE:
-		case JOB_BABY_ALCHEMIST:
-		case JOB_BABY_BARD:
-		case JOB_BABY_DANCER:
+		case JOB_BABY_CRUSADER:  // 608
+		case JOB_BABY_MONK:      // 609
+		case JOB_BABY_SAGE:      // 610
+		case JOB_BABY_ROGUE:     // 611
+		case JOB_BABY_ALCHEMIST: // 612
+		case JOB_BABY_BARD:      // 613
+		case JOB_BABY_DANCER:    // 614
 			return msg_txt(608 - JOB_BABY_CRUSADER + class_);
 
 		case JOB_BABY_CRUSADER2:
@@ -250,74 +263,82 @@ const char* job_name(int class_) {
 		case JOB_SOUL_LINKER:
 			return msg_txt(618);
 
-		case JOB_GANGSI:
-		case JOB_DEATH_KNIGHT:
-		case JOB_DARK_COLLECTOR:
+		case JOB_GANGSI:         // 622
+		case JOB_DEATH_KNIGHT:   // 623
+		case JOB_DARK_COLLECTOR: // 624
 			return msg_txt(622 - JOB_GANGSI+class_);
 
-		case JOB_RUNE_KNIGHT:
-		case JOB_WARLOCK:
-		case JOB_RANGER:
-		case JOB_ARCH_BISHOP:
-		case JOB_MECHANIC:
-		case JOB_GUILLOTINE_CROSS:
+		case JOB_RUNE_KNIGHT:      // 625
+		case JOB_WARLOCK:          // 626
+		case JOB_RANGER:           // 627
+		case JOB_ARCH_BISHOP:      // 628
+		case JOB_MECHANIC:         // 629
+		case JOB_GUILLOTINE_CROSS: // 630
 			return msg_txt(625 - JOB_RUNE_KNIGHT+class_);
 
-		case JOB_RUNE_KNIGHT_T:
-		case JOB_WARLOCK_T:
-		case JOB_RANGER_T:
-		case JOB_ARCH_BISHOP_T:
-		case JOB_MECHANIC_T:
-		case JOB_GUILLOTINE_CROSS_T:
-			return msg_txt(625 - JOB_RUNE_KNIGHT_T+class_);
+		case JOB_RUNE_KNIGHT_T:      // 656
+		case JOB_WARLOCK_T:          // 657
+		case JOB_RANGER_T:           // 658
+		case JOB_ARCH_BISHOP_T:      // 659
+		case JOB_MECHANIC_T:         // 660
+		case JOB_GUILLOTINE_CROSS_T: // 661
+			return msg_txt(656 - JOB_RUNE_KNIGHT_T+class_);
 
-		case JOB_ROYAL_GUARD:
-		case JOB_SORCERER:
-		case JOB_MINSTREL:
-		case JOB_WANDERER:
-		case JOB_SURA:
-		case JOB_GENETIC:
-		case JOB_SHADOW_CHASER:
+		case JOB_ROYAL_GUARD:   // 631
+		case JOB_SORCERER:      // 632
+		case JOB_MINSTREL:      // 633
+		case JOB_WANDERER:      // 634
+		case JOB_SURA:          // 635
+		case JOB_GENETIC:       // 636
+		case JOB_SHADOW_CHASER: // 637
 			return msg_txt(631 - JOB_ROYAL_GUARD+class_);
 
-		case JOB_ROYAL_GUARD_T:
-		case JOB_SORCERER_T:
-		case JOB_MINSTREL_T:
-		case JOB_WANDERER_T:
-		case JOB_SURA_T:
-		case JOB_GENETIC_T:
-		case JOB_SHADOW_CHASER_T:
-			return msg_txt(631 - JOB_ROYAL_GUARD_T+class_);
+		case JOB_ROYAL_GUARD_T:   // 662
+		case JOB_SORCERER_T:      // 663
+		case JOB_MINSTREL_T:      // 664
+		case JOB_WANDERER_T:      // 665
+		case JOB_SURA_T:          // 666
+		case JOB_GENETIC_T:       // 667
+		case JOB_SHADOW_CHASER_T: // 668
+			return msg_txt(662 - JOB_ROYAL_GUARD_T+class_);
 
 		case JOB_RUNE_KNIGHT2:
-		case JOB_RUNE_KNIGHT_T2:
 			return msg_txt(625);
 
+		case JOB_RUNE_KNIGHT_T2:
+			return msg_txt(656);
+
 		case JOB_ROYAL_GUARD2:
-		case JOB_ROYAL_GUARD_T2:
 			return msg_txt(631);
 
+		case JOB_ROYAL_GUARD_T2:
+			return msg_txt(662);
+
 		case JOB_RANGER2:
-		case JOB_RANGER_T2:
 			return msg_txt(627);
 
+		case JOB_RANGER_T2:
+			return msg_txt(658);
+
 		case JOB_MECHANIC2:
-		case JOB_MECHANIC_T2:
 			return msg_txt(629);
 
-		case JOB_BABY_RUNE:
-		case JOB_BABY_WARLOCK:
-		case JOB_BABY_RANGER:
-		case JOB_BABY_BISHOP:
-		case JOB_BABY_MECHANIC:
-		case JOB_BABY_CROSS:
-		case JOB_BABY_GUARD:
-		case JOB_BABY_SORCERER:
-		case JOB_BABY_MINSTREL:
-		case JOB_BABY_WANDERER:
-		case JOB_BABY_SURA:
-		case JOB_BABY_GENETIC:
-		case JOB_BABY_CHASER:
+		case JOB_MECHANIC_T2:
+			return msg_txt(660);
+
+		case JOB_BABY_RUNE:     // 638
+		case JOB_BABY_WARLOCK:  // 639
+		case JOB_BABY_RANGER:   // 640
+		case JOB_BABY_BISHOP:   // 641
+		case JOB_BABY_MECHANIC: // 642
+		case JOB_BABY_CROSS:    // 643
+		case JOB_BABY_GUARD:    // 644
+		case JOB_BABY_SORCERER: // 645
+		case JOB_BABY_MINSTREL: // 646
+		case JOB_BABY_WANDERER: // 647
+		case JOB_BABY_SURA:     // 648
+		case JOB_BABY_GENETIC:  // 649
+		case JOB_BABY_CHASER:   // 650
 			return msg_txt(638 - JOB_BABY_RUNE+class_);
 
 		case JOB_BABY_RUNE2:
@@ -332,19 +353,19 @@ const char* job_name(int class_) {
 		case JOB_BABY_MECHANIC2:
 			return msg_txt(642);
 
-		case JOB_SUPER_NOVICE_E:
-		case JOB_SUPER_BABY_E:
+		case JOB_SUPER_NOVICE_E: // 651
+		case JOB_SUPER_BABY_E:   // 652
 			return msg_txt(651 - JOB_SUPER_NOVICE_E+class_);
 
-		case JOB_KAGEROU:
-		case JOB_OBORO:
+		case JOB_KAGEROU: // 653
+		case JOB_OBORO:   // 654
 			return msg_txt(653 - JOB_KAGEROU+class_);
 
 		case JOB_REBELLION:
 			return msg_txt(655);
 
 		default:
-			return msg_txt(656);
+			return msg_txt(620); // "Unknown Job"
 	}
 }
 
@@ -916,7 +937,7 @@ int inter_init_sql(const char *file)
 	inter_auction_sql_init();
 
 	geoip_readdb();
-	msg_config_read("conf/messages.conf");
+	msg_config_read("conf/messages.conf", false);
 	return 0;
 }
 

@@ -512,7 +512,7 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 			if( npc->isnear(&sd->bl) ) {
 				// uncomment for more verbose message.
 				//char output[150];
-				//sprintf(output, msg_txt(662), battle_config.min_npc_vendchat_distance);
+				//sprintf(output, msg_txt(862), battle_config.min_npc_vendchat_distance); // "You're too close to a NPC, you must be at least %d cells away from any NPC."
 				//clif->message(sd->fd, output);
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_THERE_ARE_NPC_AROUND,0);
 				return 1;
@@ -5503,7 +5503,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				if (sd)
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				if (skill->break_equip(bl, EQP_WEAPON, 10000, BCT_PARTY) && sd && sd != dstsd)
-					clif->message(sd->fd, msg_txt(669));
+					clif->message(sd->fd, msg_txt(869)); // "You broke the target's weapon."
 			}
 			break;
 

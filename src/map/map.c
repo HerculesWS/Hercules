@@ -5680,7 +5680,7 @@ int do_init(int argc, char *argv[])
 		}
 
 		battle->config_read(map->BATTLE_CONF_FILENAME);
-		atcommand->msg_read(map->MSG_CONF_NAME);
+		atcommand->msg_read(map->MSG_CONF_NAME, false);
 		map->inter_config_read(map->INTER_CONF_NAME);
 		logs->config_read(map->LOG_CONF_NAME);
 	}

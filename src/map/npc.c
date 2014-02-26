@@ -1115,28 +1115,27 @@ int npc_globalmessage(const char* name, const char* mes)
 }
 
 // MvP tomb [GreenBox]
-void run_tomb(struct map_session_data* sd, struct npc_data* nd)
-{
+void run_tomb(struct map_session_data* sd, struct npc_data* nd) {
 	char buffer[200];
-    char time[10];
+	char time[10];
 
-    strftime(time, sizeof(time), "%H:%M", localtime(&nd->u.tomb.kill_time));
+	strftime(time, sizeof(time), "%H:%M", localtime(&nd->u.tomb.kill_time));
 
 	// TODO: Find exact color?
-	snprintf(buffer, sizeof(buffer), msg_txt(657), nd->u.tomb.md->db->name);
-    clif->scriptmes(sd, nd->bl.id, buffer);
+	snprintf(buffer, sizeof(buffer), msg_txt(857), nd->u.tomb.md->db->name); // "[ ^EE0000%s^000000 ]"
+	clif->scriptmes(sd, nd->bl.id, buffer);
 
-    clif->scriptmes(sd, nd->bl.id, msg_txt(658));
+	clif->scriptmes(sd, nd->bl.id, msg_txt(858)); // "Has met its demise"
 
-    snprintf(buffer, sizeof(buffer), msg_txt(659), time);
-    clif->scriptmes(sd, nd->bl.id, buffer);
+	snprintf(buffer, sizeof(buffer), msg_txt(859), time); // "Time of death : ^EE0000%s^000000"
+	clif->scriptmes(sd, nd->bl.id, buffer);
 
-    clif->scriptmes(sd, nd->bl.id, msg_txt(660));
+	clif->scriptmes(sd, nd->bl.id, msg_txt(860)); // "Defeated by"
 
-	snprintf(buffer, sizeof(buffer), msg_txt(661), nd->u.tomb.killer_name[0] ? nd->u.tomb.killer_name : "Unknown");
-    clif->scriptmes(sd, nd->bl.id, buffer);
+	snprintf(buffer, sizeof(buffer), msg_txt(861), nd->u.tomb.killer_name[0] ? nd->u.tomb.killer_name : msg_txt(15)); // "[^EE0000%s^000000]" / "Unknown"
+	clif->scriptmes(sd, nd->bl.id, buffer);
 
-    clif->scriptclose(sd, nd->bl.id);
+	clif->scriptclose(sd, nd->bl.id);
 }
 
 /*==========================================

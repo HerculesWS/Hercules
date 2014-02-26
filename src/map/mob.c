@@ -146,7 +146,7 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 	nd->bl.y = md->bl.y;
 	nd->bl.type = BL_NPC;
 
-	safestrncpy(nd->name, msg_txt(656), sizeof(nd->name));
+	safestrncpy(nd->name, msg_txt(856), sizeof(nd->name)); // "Tomb"
 
 	nd->class_ = 565;
 	nd->speed = 200;

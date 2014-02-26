@@ -6931,7 +6931,7 @@ void clif_sendegg(struct map_session_data *sd)
 
 	fd=sd->fd;
 	if (battle_config.pet_no_gvg && map_flag_gvg2(sd->bl.m)) { //Disable pet hatching in GvG grounds during Guild Wars [Skotlex]
-		clif->message(fd, msg_txt(666));
+		clif->message(fd, msg_txt(866)); // "Pets are not allowed in Guild Wars."
 		return;
 	}
 	WFIFOHEAD(fd, MAX_INVENTORY * 2 + 4);
@@ -9350,7 +9350,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 	// pet
 	if( sd->pd ) {
 		if( battle_config.pet_no_gvg && map_flag_gvg2(sd->bl.m) ) { //Return the pet to egg. [Skotlex]
-			clif->message(sd->fd, msg_txt(666));
+			clif->message(sd->fd, msg_txt(866)); // "Pets are not allowed in Guild Wars."
 			pet->menu(sd, 3); //Option 3 is return to egg.
 		} else {
 			map->addblock(&sd->pd->bl);
@@ -10908,7 +10908,7 @@ void clif_parse_CreateChatRoom(int fd, struct map_session_data* sd)
 	if( npc->isnear(&sd->bl) ) {
 		// uncomment for more verbose message.
 		//char output[150];
-		//sprintf(output, msg_txt(662), battle_config.min_npc_vendchat_distance);
+		//sprintf(output, msg_txt(862), battle_config.min_npc_vendchat_distance); // "You're too close to a NPC, you must be at least %d cells away from any NPC."
 		//clif_displaymessage(sd->fd, output);
 		clif->skill_fail(sd,1,USESKILL_FAIL_THERE_ARE_NPC_AROUND,0);
 		return;
@@ -13173,7 +13173,7 @@ void clif_parse_GuildLeave(int fd,struct map_session_data *sd) {
 		return;
 	}
 	if( sd->bg_id ) {
-		clif->message(fd, msg_txt(670)); //"You can't leave battleground guilds."
+		clif->message(fd, msg_txt(870)); //"You can't leave battleground guilds."
 		return;
 	}
 
@@ -14041,7 +14041,7 @@ void clif_parse_FriendsListAdd(int fd, struct map_session_data *sd) {
 	// Friend already exists
 	for (i = 0; i < MAX_FRIENDS && sd->status.friends[i].char_id != 0; i++) {
 		if (sd->status.friends[i].char_id == f_sd->status.char_id) {
-			clif->message(fd, msg_txt(671)); //"Friend already exists."
+			clif->message(fd, msg_txt(871)); //"Friend already exists."
 			return;
 		}
 	}
@@ -14137,7 +14137,7 @@ void clif_parse_FriendsListRemove(int fd, struct map_session_data *sd)
 		(sd->status.friends[i].char_id != char_id || sd->status.friends[i].account_id != account_id); i++);
 
 	if (i == MAX_FRIENDS) {
-		clif->message(fd, msg_txt(672)); //"Name not found in list."
+		clif->message(fd, msg_txt(872)); //"Name not found in list."
 		return;
 	}
 
@@ -14162,7 +14162,7 @@ void clif_parse_FriendsListRemove(int fd, struct map_session_data *sd)
 
 	} else { //friend not online -- ask char server to delete from his friendlist
 		if(!chrif->removefriend(char_id,sd->status.char_id)) { // char-server offline, abort
-			clif->message(fd, msg_txt(673)); //"This action can't be performed at the moment. Please try again later."
+			clif->message(fd, msg_txt(873)); //"This action can't be performed at the moment. Please try again later."
 			return;
 		}
 	}
@@ -14175,7 +14175,7 @@ void clif_parse_FriendsListRemove(int fd, struct map_session_data *sd)
 		memcpy(&sd->status.friends[j-1], &sd->status.friends[j], sizeof(sd->status.friends[0]));
 
 	memset(&sd->status.friends[MAX_FRIENDS-1], 0, sizeof(sd->status.friends[MAX_FRIENDS-1]));
-	clif->message(fd, msg_txt(674)); //"Friend removed"
+	clif->message(fd, msg_txt(874)); //"Friend removed"
 
 	WFIFOHEAD(fd,packet_len(0x20a));
 	WFIFOW(fd,0) = 0x20a;
@@ -15032,7 +15032,7 @@ void clif_parse_Mail_send(int fd, struct map_session_data *sd)
 	}
 
 	if( DIFF_TICK(sd->cansendmail_tick, timer->gettick()) > 0 ) {
-		clif->message(sd->fd,msg_txt(675)); //"Cannot send mails too fast!!."
+		clif->message(sd->fd,msg_txt(875)); //"Cannot send mails too fast!!."
 		clif->mail_send(fd, true); // fail
 		return;
 	}

@@ -80,40 +80,46 @@ const char* atcommand_msg(int msg_number) {
 	return "??";
 }
 
-/*==========================================
- * Read Message Data
- *------------------------------------------*/
-bool msg_config_read(const char* cfgName)
-{
+/**
+ * Reads Message Data
+ *
+ * @param[in] cfg_name       configuration filename to read.
+ * @param[in] allow_override whether to allow duplicate message IDs to override the original value.
+ * @return success state.
+ */
+bool msg_config_read(const char *cfg_name, bool allow_override) {
 	int msg_number;
 	char line[1024], w1[1024], w2[1024];
 	FILE *fp;
 	static int called = 1;
 
-	if ((fp = fopen(cfgName, "r")) == NULL) {
-		ShowError("Messages file not found: %s\n", cfgName);
+	if ((fp = fopen(cfg_name, "r")) == NULL) {
+		ShowError("Messages file not found: %s\n", cfg_name);
 		return false;
 	}
 
 	if ((--called) == 0)
 		memset(atcommand->msg_table, 0, sizeof(atcommand->msg_table[0]) * MAX_MSG);
 
-	while(fgets(line, sizeof(line), fp))
-	{
+	while(fgets(line, sizeof(line), fp)) {
 		if (line[0] == '/' && line[1] == '/')
 			continue;
 		if (sscanf(line, "%[^:]: %[^\r\n]", w1, w2) != 2)
 			continue;
 
-		if (strcmpi(w1, "import") == 0)
-			msg_config_read(w2);
-		else
-		{
+		if (strcmpi(w1, "import") == 0) {
+			msg_config_read(w2, true);
+		} else {
 			msg_number = atoi(w1);
-			if (msg_number >= 0 && msg_number < MAX_MSG)
-			{
-				if (atcommand->msg_table[msg_number] != NULL)
+			if (msg_number >= 0 && msg_number < MAX_MSG) {
+				if (atcommand->msg_table[msg_number] != NULL) {
+					if (!allow_override) {
+						ShowError("Duplicate message: ID '%d' was already used for '%s'. Message '%s' will be ignored.\n",
+						          msg_number, w2, atcommand->msg_table[msg_number]);
+						continue;
+					}
 					aFree(atcommand->msg_table[msg_number]);
+				}
 				/* this could easily become consecutive memory like get_str() and save the malloc overhead for over 1k calls [Ind] */
 				atcommand->msg_table[msg_number] = (char *)aMalloc((strlen(w2) + 1)*sizeof (char));
 				strcpy(atcommand->msg_table[msg_number],w2);
@@ -156,11 +162,11 @@ ACMD(send)
 	// read message type as hex number (without the 0x)
 	if(!message || !*message ||
 	   !((sscanf(message, "len %x", &type)==1 && (len=1))
-		 || sscanf(message, "%x", &type)==1) )
-	{
-		int i;
-		for (i = 900; i <= 903; ++i)
-			clif->message(fd, msg_txt(i));
+		 || sscanf(message, "%x", &type)==1) ) {
+		clif->message(fd, msg_txt(900)); // Usage:
+		clif->message(fd, msg_txt(901)); // 	@send len <packet hex number>
+		clif->message(fd, msg_txt(902)); // 	@send <packet hex number> {<value>}*
+		clif->message(fd, msg_txt(903)); // 	Value: <type=B(default),W,L><number> or S<length>"<string>"
 		return false;
 	}
 
@@ -476,7 +482,7 @@ ACMD(jumpto) {
 	}
 	
 	if( pc_isdead(sd) ) {
-		clif->message(fd, msg_txt(664));
+		clif->message(fd, msg_txt(864)); // "You cannot use this command when dead."
 		return false;
 	}
 	
@@ -503,9 +509,8 @@ ACMD(jump)
 		return false;
 	}
 	
-	if( pc_isdead(sd) )
-	{
-		clif->message(fd, msg_txt(664));
+	if( pc_isdead(sd) ) {
+		clif->message(fd, msg_txt(864)); // "You cannot use this command when dead."
 		return false;
 	}
 	
@@ -980,7 +985,7 @@ ACMD(kill)
 ACMD(alive)
 {
 	if (!status->revive(&sd->bl, 100, 100)) {
-		clif->message(fd, msg_txt(667));
+		clif->message(fd, msg_txt(867)); // "You're not dead."
 		return false;
 	}
 	clif->skill_nodamage(&sd->bl,&sd->bl,ALL_RESURRECTION,4,1);
@@ -1901,7 +1906,7 @@ ACMD(monster)
 	memset(atcmd_output, '\0', sizeof(atcmd_output));
 	
 	if (!message || !*message) {
-		clif->message(fd, msg_txt(80)); // Give the display name or monster name/id please.
+		clif->message(fd, msg_txt(80)); // Please specify a display name or monster name/id.
 		return false;
 	}
 	if (sscanf(message, "\"%23[^\"]\" %23s %d", name, monster, &number) > 1 ||
@@ -2163,7 +2168,7 @@ ACMD(memo)
 	if( !message || !*message || sscanf(message, "%d", &position) < 1 )
 	{
 		int i;
-		clif->message(sd->fd,  msg_txt(668));
+		clif->message(sd->fd,  msg_txt(868)); // "Your current memo positions are:"
 		for( i = 0; i < MAX_MEMOPOINTS; i++ )
 		{
 			if( sd->status.memo_point[i].map )
@@ -3324,7 +3329,7 @@ ACMD(idsearch)
 		return false;
 	}
 	
-	sprintf(atcmd_output, msg_txt(77), item_name); // The reference result of '%s' (name: id):
+	sprintf(atcmd_output, msg_txt(77), item_name); // Search results for '%s' (name: id):
 	clif->message(fd, atcmd_output);
 	match = itemdb->search_name_array(item_array, MAX_SEARCH, item_name, 0);
 	if (match > MAX_SEARCH) {
@@ -3336,7 +3341,7 @@ ACMD(idsearch)
 		sprintf(atcmd_output, msg_txt(78), item_array[i]->jname, item_array[i]->nameid); // %s: %d
 		clif->message(fd, atcmd_output);
 	}
-	sprintf(atcmd_output, msg_txt(79), match); // It is %d affair above.
+	sprintf(atcmd_output, msg_txt(79), match); // %d results found.
 	clif->message(fd, atcmd_output);
 	
 	return true;
@@ -4417,7 +4422,7 @@ ACMD(jail) {
 	
 	//Duration of INT_MAX to specify infinity.
 	sc_start4(NULL,&pl_sd->bl,SC_JAILED,100,INT_MAX,m_index,x,y,1000);
-	clif->message(pl_sd->fd, msg_txt(117)); // GM has send you in jails.
+	clif->message(pl_sd->fd, msg_txt(117)); // You have been jailed by a GM.
 	clif->message(fd, msg_txt(118)); // Player warped in jails.
 	return true;
 }
@@ -4734,7 +4739,7 @@ ACMD(undisguise)
 {
 	if (sd->disguise != -1) {
 		pc->disguise(sd, -1);
-		clif->message(fd, msg_txt(124)); // Undisguise applied.
+		clif->message(fd, msg_txt(124)); // Disguise removed.
 	} else {
 		clif->message(fd, msg_txt(125)); // You're not disguised.
 		return false;
@@ -4756,7 +4761,7 @@ ACMD(undisguiseall) {
 			pc->disguise(pl_sd, -1);
 	mapit->free(iter);
 	
-	clif->message(fd, msg_txt(124)); // Undisguise applied.
+	clif->message(fd, msg_txt(124)); // Disguise removed.
 	
 	return true;
 }
@@ -4787,7 +4792,7 @@ ACMD(undisguiseguild)
 		if( (pl_sd = g->member[i].sd) && pl_sd->disguise != -1 )
 			pc->disguise(pl_sd, -1);
 	
-	clif->message(fd, msg_txt(124)); // Undisguise applied.
+	clif->message(fd, msg_txt(124)); // Disguise removed.
 	
 	return true;
 }
@@ -4866,21 +4871,21 @@ ACMD(email)
 	memset(new_email, '\0', sizeof(new_email));
 	
 	if (!message || !*message || sscanf(message, "%99s %99s", actual_email, new_email) < 2) {
-		clif->message(fd, msg_txt(1151)); // Please enter 2 emails (usage: @email <actual@email> <new@email>).
+		clif->message(fd, msg_txt(1151)); // Please enter two e-mail addresses (usage: @email <current@email> <new@email>).
 		return false;
 	}
 	
 	if (e_mail_check(actual_email) == 0) {
-		clif->message(fd, msg_txt(144)); // Invalid actual email. If you have default e-mail, give a@a.com.
+		clif->message(fd, msg_txt(144)); // Invalid e-mail. If your email hasn't been set, use a@a.com.
 		return false;
 	} else if (e_mail_check(new_email) == 0) {
-		clif->message(fd, msg_txt(145)); // Invalid new email. Please enter a real e-mail.
+		clif->message(fd, msg_txt(145)); // Invalid new email. Please enter a real e-mail address.
 		return false;
 	} else if (strcmpi(new_email, "a@a.com") == 0) {
-		clif->message(fd, msg_txt(146)); // New email must be a real e-mail.
+		clif->message(fd, msg_txt(146)); // New email must be a real e-mail address.
 		return false;
 	} else if (strcmpi(actual_email, new_email) == 0) {
-		clif->message(fd, msg_txt(147)); // New email must be different of the actual e-mail.
+		clif->message(fd, msg_txt(147)); // New e-mail must be different from the current e-mail address.
 		return false;
 	}
 	
@@ -4980,7 +4985,7 @@ ACMD(npcmove) {
 	}
 	
 	if ((m=nd->bl.m) < 0 || nd->bl.prev == NULL) {
-		clif->message(fd, msg_txt(1154)); // NPC is not on this map.
+		clif->message(fd, msg_txt(1154)); // NPC is not in this map.
 		return false;	//Not on a map.
 	}
 	
@@ -5460,7 +5465,7 @@ ACMD(changelook)
 ACMD(autotrade) {
 	
 	if( map->list[sd->bl.m].flag.autotrade != battle_config.autotrade_mapflag ) {
-		clif->message(fd, msg_txt(1179)); // Autotrade is not allowed on this map.
+		clif->message(fd, msg_txt(1179)); // Autotrade is not allowed in this map.
 		return false;
 	}
 	
@@ -5470,7 +5475,7 @@ ACMD(autotrade) {
 	}
 	
 	if( !sd->state.vending && !sd->state.buyingstore ) { //check if player is vending or buying
-		clif->message(fd, msg_txt(549)); // "You should have a shop open to use @autotrade."
+		clif->message(fd, msg_txt(549)); // "You should have a shop open in order to use @autotrade."
 		return false;
 	}
 	
@@ -5508,7 +5513,7 @@ ACMD(changegm) {
 	}
 	
 	if( map->list[sd->bl.m].flag.guildlock || map->list[sd->bl.m].flag.gvg_castle ) {
-		clif->message(fd, msg_txt(1182)); // You cannot change guild leaders on this map.
+		clif->message(fd, msg_txt(1182)); // You cannot change guild leaders in this map.
 		return false;
 	}
 	
@@ -5948,7 +5953,7 @@ ACMD(clearweather) {
 	map->list[sd->bl.m].flag.fireworks=0;
 	map->list[sd->bl.m].flag.leaves=0;
 	clif->weather(sd->bl.m);
-	clif->message(fd, msg_txt(291));
+	clif->message(fd, msg_txt(291)); // "Weather effects will disappear after teleporting or refreshing."
 	
 	return true;
 }
@@ -7203,7 +7208,7 @@ ACMD(version) {
 		sprintf(atcmd_output,msg_txt(1295),git); // Git Hash '%s'
 		clif->message(fd,atcmd_output);
 	} else if ( svn[0] != HERC_UNKNOWN_VER ) {
-		sprintf(atcmd_output,msg_txt(1436),git); // SVN r%s
+		sprintf(atcmd_output,msg_txt(1294),git); // SVN r%s
 		clif->message(fd,atcmd_output);
 	} else
 		clif->message(fd,msg_txt(1296)); // Cannot determine version
@@ -7622,7 +7627,7 @@ ACMD(invite) {
 	
 	if(battle_config.duel_only_on_same_map && target_sd->bl.m != sd->bl.m)
 	{
-		// "Duel: You can't invite %s because he/she isn't on the same map."
+		// "Duel: You can't invite %s because he/she isn't in the same map."
 		sprintf(atcmd_output, msg_txt(364), message);
 		clif->message(fd, atcmd_output);
 		return false;
@@ -8294,7 +8299,7 @@ void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommand
 	memset(line_buff,' ',CHATBOX_SIZE);
 	line_buff[CHATBOX_SIZE-1] = 0;
 	
-	clif->message(fd, msg_txt(273)); // "Commands available:"
+	clif->message(fd, msg_txt(273)); // "Available commands:"
 	
 	for (cmd = dbi_first(iter); dbi_exists(iter); cmd = dbi_next(iter)) {
 		size_t slen;
@@ -8665,7 +8670,7 @@ ACMD(join) {
 		
 	
 	if( idb_exists(channel->users, sd->status.char_id) ) {
-		sprintf(atcmd_output, msg_txt(1475),name); // You're already in the '%s' channel
+		sprintf(atcmd_output, msg_txt(1436),name); // You're already in the '%s' channel
 		clif->message(fd, atcmd_output);
 		return false;
 	}

@@ -12732,7 +12732,7 @@ BUILDIN(recovery)
 			status->revive(&sd->bl, 100, 100);
 		else
 			status_percent_heal(&sd->bl, 100, 100);
-		clif->message(sd->fd,msg_txt(680));
+		clif->message(sd->fd,msg_txt(880)); // "You have been recovered!"
 	}
 	mapit->free(iter);
 	return true;

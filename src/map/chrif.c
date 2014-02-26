@@ -782,7 +782,7 @@ bool chrif_changesex(struct map_session_data *sd) {
 	WFIFOW(chrif->fd,30) = 5;
 	WFIFOSET(chrif->fd,44);
 
-	clif->message(sd->fd, msg_txt(408)); //"Need disconnection to perform change-sex request..."
+	clif->message(sd->fd, msg_txt(408)); //"Disconnecting to perform change-sex request..."
 
 	if (sd->fd)
 		clif->authfail_fd(sd->fd, 15);
@@ -887,7 +887,7 @@ void chrif_changedsex(int fd) {
 		// save character
 		sd->login_id1++; // change identify, because if player come back in char within the 5 seconds, he can change its characters
 							  // do same modify in login-server for the account, but no in char-server (it ask again login_id1 to login, and don't remember it)
-		clif->message(sd->fd, msg_txt(409)); //"Your sex has been changed (need disconnection by the server)..."
+		clif->message(sd->fd, msg_txt(409)); //"Your sex has been changed (disconnection required to complete the process)..."
 		set_eof(sd->fd); // forced to disconnect for the change
 		map->quit(sd); // Remove leftovers (e.g. autotrading) [Paradox924X]
 	}
@@ -982,7 +982,7 @@ void chrif_idbanned(int fd) {
 	if (RFIFOB(fd,6) == 0) { // 0: change of statut
 		int ret_status = RFIFOL(fd,7); // status or final date of a banishment
 		if(0<ret_status && ret_status<=9)
-			clif->message(sd->fd, msg_txt(411+ret_status));
+			clif->message(sd->fd, msg_txt(411+ret_status)); // Message IDs (for search convenience): 412, 413, 414, 415, 416, 417, 418, 419, 420
 		else if(ret_status==100)
 			clif->message(sd->fd, msg_txt(421));
 		else
