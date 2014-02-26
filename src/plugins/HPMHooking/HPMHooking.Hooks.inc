@@ -210,14 +210,14 @@ AtCommandInfo* HP_atcommand_exists(const char *name) {
 	}
 	return retVal___;
 }
-bool HP_atcommand_msg_read(const char *cfgName) {
+bool HP_atcommand_msg_read(const char *cfg_name, bool allow_override) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if( HPMHooks.count.HP_atcommand_msg_read_pre ) {
-		bool (*preHookFunc) (const char *cfgName);
+		bool (*preHookFunc) (const char *cfg_name, bool *allow_override);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_msg_read_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_atcommand_msg_read_pre[hIndex].func;
-			retVal___ = preHookFunc(cfgName);
+			retVal___ = preHookFunc(cfg_name, &allow_override);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -225,13 +225,13 @@ bool HP_atcommand_msg_read(const char *cfgName) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.atcommand.msg_read(cfgName);
+		retVal___ = HPMHooks.source.atcommand.msg_read(cfg_name, allow_override);
 	}
 	if( HPMHooks.count.HP_atcommand_msg_read_post ) {
-		bool (*postHookFunc) (bool retVal___, const char *cfgName);
+		bool (*postHookFunc) (bool retVal___, const char *cfg_name, bool *allow_override);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_msg_read_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_atcommand_msg_read_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, cfgName);
+			retVal___ = postHookFunc(retVal___, cfg_name, &allow_override);
 		}
 	}
 	return retVal___;
