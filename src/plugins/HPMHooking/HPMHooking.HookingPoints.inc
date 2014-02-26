@@ -2169,6 +2169,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->reg_destroy, HP_script_reg_destroy) },
 	{ HP_POP(script->generic_ui_array_expand, HP_script_generic_ui_array_expand) },
 	{ HP_POP(script->array_cpy_list, HP_script_array_cpy_list) },
+	{ HP_POP(script->hardcoded_constants, HP_script_hardcoded_constants) },
+	{ HP_POP(script->mapindexname2id, HP_script_mapindexname2id) },
 /* searchstore */
 	{ HP_POP(searchstore->open, HP_searchstore_open) },
 	{ HP_POP(searchstore->query, HP_searchstore_query) },
