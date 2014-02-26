@@ -55180,6 +55180,57 @@ unsigned int* HP_script_array_cpy_list(struct script_array *sa) {
 	}
 	return retVal___;
 }
+void HP_script_hardcoded_constants(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_hardcoded_constants_pre ) {
+		void (*preHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_hardcoded_constants_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_hardcoded_constants_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.hardcoded_constants();
+	}
+	if( HPMHooks.count.HP_script_hardcoded_constants_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_hardcoded_constants_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_hardcoded_constants_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+unsigned short HP_script_mapindexname2id(struct script_state *st, const char *name) {
+	int hIndex = 0;
+	unsigned short retVal___ = 0;
+	if( HPMHooks.count.HP_script_mapindexname2id_pre ) {
+		unsigned short (*preHookFunc) (struct script_state *st, const char *name);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_mapindexname2id_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_mapindexname2id_pre[hIndex].func;
+			retVal___ = preHookFunc(st, name);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.mapindexname2id(st, name);
+	}
+	if( HPMHooks.count.HP_script_mapindexname2id_post ) {
+		unsigned short (*postHookFunc) (unsigned short retVal___, struct script_state *st, const char *name);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_mapindexname2id_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_mapindexname2id_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, st, name);
+		}
+	}
+	return retVal___;
+}
 /* searchstore */
 bool HP_searchstore_open(struct map_session_data *sd, unsigned int uses, unsigned short effect) {
 	int hIndex = 0;
