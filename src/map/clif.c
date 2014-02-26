@@ -10291,7 +10291,7 @@ void clif_parse_ActionRequest(int fd, struct map_session_data *sd)
 void clif_parse_Restart(int fd, struct map_session_data *sd) {
 	switch(RFIFOB(fd,2)) {
 		case 0x00:
-			pc->respawn(sd,CLR_RESPAWN);
+			pc->respawn(sd,CLR_OUTSIGHT);
 			break;
 		case 0x01:
 			/*	Rovert's Prevent logout option - Fixed [Valaris]	*/
