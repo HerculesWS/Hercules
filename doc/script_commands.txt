@@ -144,8 +144,8 @@ for a better explanation, see 'setmapflag'.
 
 <map name>,<x>,<y>,<xs>,<ys>%TAB%monster%TAB%<monster name>%TAB%<mob id>,<amount>,<delay1>,<delay2>,<event>{,<mob size>,<mob ai>}
 
-Map name is the name of the map the monsters will spawn on. x,y are the 
-coordinates where the mob should spawn. If xs and ys are non-zero, they 
+Map name is the name of the map the monsters will spawn on. X,Y are the 
+coordinates where the mob should spawn. If X's and Y's are non-zero, they 
 specify the 'radius' of a spawn-rectangle area centered at x,y. Putting 
 zeros instead of these coordinates will spawn the monsters randomly. Note 
 this is only the initial spawn zone, as mobs random-walk, they are free to 
@@ -445,7 +445,7 @@ nothing  - A permanent variable attached to the character, the default
 "$"      - A global permanent variable. 
            They are stored in database table `mapreg`.
 "$@"     - A global temporary variable.
-           Thhey are important for scripts which are called with no RID
+           They are important for scripts which are called with no RID
            attached, that is, not triggered by a specific character object.
 "."      - A NPC variable.
            They exist in the NPC and disappear when the server restarts or 
@@ -1102,30 +1102,39 @@ scripting engine will behave nicely if you do.
 
 Please note that command and function names are case sensitive. Even though at
 the current time the script engine accepts them with the incorrect case, it is
-not advised to rely on this behavior, as it may change at any time.
+not advised to rely on this behavior as it may change at any time.
 
 -------------------------
 
 
-From here on, we will have the commands sorted as follow:
+From here on, we will have the commands sorted as followed:
 
-1.- Basic commands.
-2.- Information-retrieving commands.
-3.- Checking commands.
-4.- Player-related commands.
-5.- Mob / NPC -related commands.
-6.- Other commands.
-7.- Instance commands.
-8.- Quest Log commands.
-9.- Battleground commands.
-10.- Mercenary commands.
-11.- Queue commands.
-12.- NPC Trader commands
+1 - Basic Commands
+2 - Information-Retrieving Commands
+    -- 2.1: Information Item-Related Commands
+    -- 2.2: Information Guild-Related Commands
+3 - Checking Commands
+    -- 3.1: Checking Item-Related Commands
+4 - Player-Related Commands
+    -- 4.1: Player Item-Related Commands
+    -- 4.2: Guild-Related Commands
+    -- 4.3: Marriage-Related Commands
+5 - Mob / NPC Related commands
+    -- 5.1: Time-Related Commands
+    -- 5.2: Guild-Related Commands
+6 - Other Commands
+7 - Instance Commands
+8 - Quest Log Commands
+9 - Battleground Commands
+10 - Mercenary Commands
+11 - Queue Commands
+12 - NPC Trader Commands
 
 
-=====================
-|1.- Basic commands.|
-=====================
+---------------------------------------
+//=====================================
+1 - Basic Commands
+//=====================================
 ---------------------------------------
 
 *mes "<string>"{,"<string>"..."<string>"};
@@ -2250,10 +2259,16 @@ an array, shifting all the elements beyond this towards the beginning.
 	deletearray @array[1],3
 
 ---------------------------------------
+//=====================================
+1 - End of Basic-Related Commands
+//=====================================
+---------------------------------------
 
-======================================
-|2.- Information-retrieving commands.|
-======================================
+
+---------------------------------------
+//=====================================
+2 - Information-retrieving Related Commands
+//=====================================
 ---------------------------------------
 
 *strcharinfo(<type>)
@@ -2625,9 +2640,9 @@ If the character is sitting, it will return 1, otherwise (standing) it will retu
 In case no player is specified, the function will return the state of the attached player.
 
 ---------------------------------------
-\\
-2,2 Item-related commands
-\\
+//=====================================
+2.1 - Item-Related Commands
+//=====================================
 ---------------------------------------
 
 *getequipid(<equipment slot>)
@@ -2677,9 +2692,8 @@ Plate armor, but also don't want them to equip if after the check, you
 would do this:
 
 		if ((getequipid(EQI_ARMOR) == 2341) || (getequipid(EQI_ARMOR) == 2342) goto L_EquipedLegionPlate;
-	// the || is used as an or argument, there is 2341 and 2342 cause 
-	// there are two different legion plate armors, one with a slot one 
-	// without.
+	// the || is used as an or argument, there is 2341 and 2342 'cause there
+	// are two different legion plate armors; one with a slot and one without.
 		if ((countitem(2341) > 0) || (countitem(2432) > 0) goto L_InventoryLegionPlate;
 		mes "I will lets you pass";
 		close2;
@@ -2694,7 +2708,7 @@ would do this:
 
 ---------------------------------------
 
-*getequipname(<equpment slot>)
+*getequipname(<equipment slot>)
 
 Returns the jname of the item equipped in the specified equipment slot on 
 the invoking character, or an empty string if nothing is equipped in that 
@@ -2706,7 +2720,7 @@ See 'getequipid' for a full list of valid equipment slots.
 		if( getequipname(EQI_HEAD_TOP) != "" )
 			mes "So you are wearing a "+getequipname(EQI_HEAD_TOP)+" on your head";
 	else
-			mes "You are not wearing any head gear";
+			mes "You are not wearing a head gear";
 
 ---------------------------------------
 
@@ -2986,9 +3000,9 @@ produced). It's useful for when you want to check whether an item contains
 cards or if it's signed.
 
 ---------------------------------------
-//
-2,1.- End of item-related commands.
-//
+//=====================================
+2.1 - End of Item-Related Commands
+//=====================================
 ---------------------------------------
 
 *getmapxy("<variable for map name>",<variable for x>,<variable for y>,<type>{,"<search string>"})
@@ -3163,10 +3177,11 @@ window (see 'mes') paging it by 10 names as if with the 'next' command.
 You need to put a 'close' after that yourself.
 
 ---------------------------------------
-\\
-2,2.- Guild-related commands
-\\
+//=====================================
+2.2 - Guild-Related Commands
+//=====================================
 ---------------------------------------
+
 *getguildname(<guild id>)
 
 This function returns a guild's name given an ID number. If there is no 
@@ -3300,9 +3315,9 @@ Example:
 mes "You have "+getMapGuildUsers("prontera",getcharid(2))+" guild members in Prontera.";
 
 ---------------------------------------
-//
-2,2.- End of guild-related commands
-//
+//=====================================
+2.2 - End of Guild-Related Commands
+//=====================================
 ---------------------------------------
 
 *getskilllv(<skill id>)
@@ -3548,11 +3563,10 @@ You can see the full list of available effect types you can possibly
 inflict in 'db/const.txt' under 'Eff_'.
 
 ---------------------------------------
-
-========================
-|3.- Checking commands.|
-========================
--------------------------
+//=====================================
+3 - Checking-Related Commands
+//=====================================
+---------------------------------------
 
 *playerattached()
 
@@ -3864,10 +3878,11 @@ by the type parameter.
  6 - RENEWAL_ASPD (renewal ASPD)
 
 ---------------------------------------
-\\
-3,1.- Item-related commands
-\\
+//=====================================
+3.1 - Checking Item-Related Commands
+//=====================================
 ---------------------------------------
+
 *isequipped(<id>{,<id>{,<id>{,<id>}}})
 
 This function will return 1 if the invoking character has all of the item 
@@ -3915,15 +3930,16 @@ equipment slot, which makes this script command kinda pointless.
 For a list of equipment slots see 'getequipid'.
 
 ---------------------------------------
-//
-3,1.- End of item-related commands
-//
+//=====================================
+3.0 & 3.1 - End of Checking/Item-Related Commands
+//=====================================
 ---------------------------------------
 
-==============================
-|4.- Player-related commands.|
-==============================
--------------------------
+---------------------------------------
+//=====================================
+4 - Player-Related Commands
+//=====================================
+---------------------------------------
 
 *attachrid(<account ID>)
 *detachrid;
@@ -4406,12 +4422,12 @@ server is currently running on (depends on whether you used a SVN or Git
 client for getting Hercules).
 
 	if ( get_version() >= 15000 )
-		mes "Welcome Hercules!";
+		mes "Welcome to Hercules!";
 
 ---------------------------------------
-\\
-4,1.- Item-related commands
-\\
+//=====================================
+4.1 - Player Item-Related Commands
+//=====================================
 ---------------------------------------
 
 *getitem <item id>,<amount>{,<account ID>};
@@ -5052,9 +5068,9 @@ Example:
 	searchstores 10,1;
 
 ---------------------------------------
-//
-4,1.- End of item-related commands
-//
+//=====================================
+4.1 - End of Player Item-Related Commands
+//=====================================
 ---------------------------------------
 
 *openstorage;
@@ -5097,9 +5113,9 @@ character.
 	end;
 
 ---------------------------------------
-\\
-4,2.- Guild-related commands
-\\
+//=====================================
+4.2 - Guild-Related Commands
+//=====================================
 ---------------------------------------
 
 *guildopenstorage()
@@ -5159,9 +5175,9 @@ a good idea for a fun quest. (Wasting a level point on that is really
 annoying :D)
 
 ---------------------------------------
-//
-4,2 End of guild-related commands.
-//
+//=====================================
+4.2 - End of Guild-Related Commands
+//=====================================
 ---------------------------------------
 
 *resetlvl <action type>;
@@ -5506,9 +5522,9 @@ next;
 undisguise; // Return to normal character sprite.
 
 ---------------------------------------
-\\
-4,3 Marriage-related commands
-\\
+//=====================================
+4.3 - Marriage-Related Commands
+//=====================================
 ---------------------------------------
 
 *marriage("<spouse name>");
@@ -5547,9 +5563,9 @@ This function will also destroy both wedding rings and send a message to
 both players, telling them they are now divorced.
 
 ---------------------------------------
-//
-4,3.- End of marriage-related commands
-//
+//=====================================
+4.3 - End of Marriage-Related Commands
+//=====================================
 ---------------------------------------
 
 *pcfollow <id>,<target id>;
@@ -5585,11 +5601,17 @@ Examples:
 // Enables the current char to move again.
 	pcblockmove getcharid(3),0;
 
---------------------------------------- 
 
-==================================
-|5.- Mob / NPC -related commands.|
-==================================
+---------------------------------------
+//=====================================
+4 - End of Player-Related Commands
+//=====================================
+---------------------------------------
+
+---------------------------------------
+//=====================================
+5 - Mob / NPC Related Commands
+//=====================================
 ---------------------------------------
 
 *monster     "<map name>",<x>,<y>,"<name to show>",<mob id>,<amount>{,"<event label>",<size>,<ai>};
@@ -5765,9 +5787,11 @@ commands can have non-empty event label.
 If you pass this function an empty string for the event label, it will 
 return the total count of monster without event label, including 
 permanently spawning monsters.
+
 With the dynamic mobs system enabled, where mobs are not kept in memory 
 for maps with no actual people playing on them, this will return a 0 for 
 any such map.
+
 If the event label is given as "all", all monsters will be counted, 
 regardless of having any event label attached.
 
@@ -6066,10 +6090,11 @@ Returns 0 is successful, 1 if the NPC does not exist.
 Size is 0 = normal 1 = small 2 = big.
 
 ---------------------------------------
-\\
-5,1.- Time-related commands
-\\
+//=====================================
+5.1 - Time-Related Commands
+//=====================================
 ---------------------------------------
+
 *addtimer <ticks>,"NPC::OnLabel";
 *deltimer "NPC::OnLabel";
 *addtimercount <ticks>,"NPC::OnLabel";
@@ -6269,9 +6294,10 @@ color format is in RGB (0xRRGGBB). The color is currently ignored by the
 client and appears always green.
 
 ---------------------------------------
-//
-5,1.- End of time-related commands
-//
+//=====================================
+5.1 - End of Time-related commands
+//=====================================
+---------------------------------------
 
 *announce "<text>",<flag>{,<fontColor>{,<fontType>{,<fontSize>{,<fontAlign>{,<fontY>}}}}};
 
@@ -6691,9 +6717,9 @@ Example:
 	mapwarp "prontera","alberta",150,150,1,63;
 
 ---------------------------------------
-\\
-5,2.- Guild-related Commands
-\\
+//=====================================
+5.2 - Guild-Related Commands
+//=====================================
 ---------------------------------------
 
 *maprespawnguildid "<map name>",<guild id>,<flag>;
@@ -6791,9 +6817,9 @@ Type indicates what information to return:
  2 - current hp
 
 ---------------------------------------
-//
-5,2.- End of guild-related commands
-//
+//=====================================
+5.2 - End of Guild-Related Commands
+//=====================================
 ---------------------------------------
 
 *npcspeed <speed value>;
@@ -6842,10 +6868,9 @@ Example:
 	moveNPC "Bugga",100,20;
 
 ---------------------------------------
-
-=====================
-|6.- Other commands.|
-=====================
+//=====================================
+6 - Other Commands
+//=====================================
 ---------------------------------------
 
 *debugmes "<message>";
@@ -7856,10 +7881,9 @@ Directions are the same as NPC sprite facing directions: 0=north,
 This will open a book item at the specified page.
 
 ---------------------------------------
-
-========================
-|7.- Instance commands.|
-========================
+//=====================================
+7 - Instance-Related Commands
+//=====================================
 ---------------------------------------
 
 *instance_create("<instance name>",<owner id>{,<optional owner_type>});
@@ -8049,9 +8073,18 @@ the instance the script is attached to is used. If the script is not attached to
 an instance, the instance of the currently attached player's party is used. If
 that fails, the command returns an empty string instead.
 
-=========================
-|8.- Quest Log commands.|
-=========================
+
+---------------------------------------
+//=====================================
+7 - End of Instance-Related Commands
+//=====================================
+---------------------------------------
+
+
+---------------------------------------
+//=====================================
+8 - Quest Log-Related Commands
+//=====================================
 ---------------------------------------
 
 *questinfo <Quest ID>, <Icon> {, <Map Mark Color>{, <Job Class>}};
@@ -8176,11 +8209,17 @@ Mark Color:
 2 - Green Mark
 3 - Purple Mark
 
-----------------------------------------
+---------------------------------------
+//=====================================
+8 - End of Quest Log-Related Commands
+//=====================================
+---------------------------------------
 
-============================
-|9.- Battleground commands.|
-============================
+
+---------------------------------------
+//=====================================
+9 - Battlegrounds-Related Commands
+//=====================================
 ---------------------------------------
 
 *waitingroom2bg_single(<battle group>,"<mapname>",<x>,<y>,"<npc name>");
@@ -8328,11 +8367,17 @@ This command will force the update of the displayed scoreboard.
 It is only usable when the map is defined as a Type 2 Battleground:
 mapflag%TAB%<mapname>%TAB%battleground%TAB%2
 
-----------------------------------------
+---------------------------------------
+//=====================================
+9 - End of Battlegrounds-Related Commands
+//=====================================
+---------------------------------------
 
-==========================
-|10.- Mercenary commands.|
-==========================
+
+---------------------------------------
+//=====================================
+10 - Mercenary Commands
+//=====================================
 ---------------------------------------
 
 *mercenary_create <class>,<contract time>;
@@ -8399,11 +8444,17 @@ following:
 If the character does not have a mercenary, the command returns ""
 for name and 0 for all other types.
 
-----------------------------------------
+---------------------------------------
+//=====================================
+10 - End of Mercenary-Related Commands
+//=====================================
+---------------------------------------
 
-======================
-|11.- Queue Commands.|
-======================
+
+---------------------------------------
+//=====================================
+11 - Queue-Related Commands
+//=====================================
 ---------------------------------------
 
 *queue();
@@ -8488,14 +8539,17 @@ Deletes a queue iterator from memory and returns 1 when it fails,
 otherwise 0 is returned.
 
 ---------------------------------------
-
-======================
-|12.- NPC Trader Commands.|
-======================
+//=====================================
+11 - End of Queue-Related Commands
+//=====================================
 ---------------------------------------
+
+---------------------------------------
+//=====================================
+12 - NPC Trader-Related Commands
+//=====================================
 Commands that control NPC Trader Shops
 See /doc/sample/npc_trader_sample.txt
-
 ---------------------------------------
 
 *openshop({NPC_Name});
