@@ -1488,6 +1488,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mapreg->load, HP_mapreg_load) },
 	{ HP_POP(mapreg->save, HP_mapreg_save) },
 	{ HP_POP(mapreg->save_timer, HP_mapreg_save_timer) },
+	{ HP_POP(mapreg->destroyreg, HP_mapreg_destroyreg) },
 	{ HP_POP(mapreg->reload, HP_mapreg_reload) },
 	{ HP_POP(mapreg->config_read, HP_mapreg_config_read) },
 /* mercenary */

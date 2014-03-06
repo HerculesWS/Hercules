@@ -2929,6 +2929,8 @@ struct {
 	struct HPMHookPoint *HP_mapreg_save_post;
 	struct HPMHookPoint *HP_mapreg_save_timer_pre;
 	struct HPMHookPoint *HP_mapreg_save_timer_post;
+	struct HPMHookPoint *HP_mapreg_destroyreg_pre;
+	struct HPMHookPoint *HP_mapreg_destroyreg_post;
 	struct HPMHookPoint *HP_mapreg_reload_pre;
 	struct HPMHookPoint *HP_mapreg_reload_post;
 	struct HPMHookPoint *HP_mapreg_config_read_pre;
@@ -7958,6 +7960,8 @@ struct {
 	int HP_mapreg_save_post;
 	int HP_mapreg_save_timer_pre;
 	int HP_mapreg_save_timer_post;
+	int HP_mapreg_destroyreg_pre;
+	int HP_mapreg_destroyreg_post;
 	int HP_mapreg_reload_pre;
 	int HP_mapreg_reload_post;
 	int HP_mapreg_config_read_pre;

@@ -89,6 +89,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define _MAP_GUILD_H_
 	#endif // _MAP_GUILD_H_
+	#ifdef _MAP_MAPREG_H_
+		{ "mapreg_save", sizeof(struct mapreg_save) },
+	#else
+		#define _MAP_MAPREG_H_
+	#endif // _MAP_MAPREG_H_
 	#ifdef _MAP_MAP_H_
 		{ "map_data_other_server", sizeof(struct map_data_other_server) },
 	#else
@@ -107,6 +112,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#endif // _MAP_PC_H_
 	#ifdef _MAP_SCRIPT_H_
 		{ "Script_Config", sizeof(struct Script_Config) },
+		{ "reg_db", sizeof(struct reg_db) },
 		{ "script_interface", sizeof(struct script_interface) },
 	#else
 		#define _MAP_SCRIPT_H_
