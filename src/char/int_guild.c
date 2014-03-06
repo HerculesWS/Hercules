@@ -611,10 +611,9 @@ static bool exp_guild_parse_row(char* split[], int column, int current) {
 }
 
 
-int inter_guild_CharOnline(int char_id, int guild_id)
-{
-   struct guild *g;
-   int i;
+int inter_guild_CharOnline(int char_id, int guild_id) {
+	struct guild *g;
+	int i;
 
 	if (guild_id == -1) {
 		//Get guild_id from the database

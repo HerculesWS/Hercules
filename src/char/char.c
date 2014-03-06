@@ -195,7 +195,7 @@ static DBData create_online_char_data(DBKey key, va_list args)
 	CREATE(character, struct online_char_data, 1);
 	character->account_id = key.i;
 	character->char_id = -1;
-  	character->server = -1;
+	character->server = -1;
 	character->pincode_enable = -1;
 	character->fd = -1;
 	character->waiting_disconnect = INVALID_TIMER;
@@ -1724,8 +1724,8 @@ int delete_char_sql(int char_id)
 	SQL->GetData(sql_handle, 6, &data, NULL); partner_id = atoi(data);
 	SQL->GetData(sql_handle, 7, &data, NULL); father_id = atoi(data);
 	SQL->GetData(sql_handle, 8, &data, NULL); mother_id = atoi(data);
-        SQL->GetData(sql_handle, 9, &data, NULL);
-        elemental_id = atoi(data);
+	SQL->GetData(sql_handle, 9, &data, NULL);
+	elemental_id = atoi(data);
 
 	SQL->EscapeStringLen(sql_handle, esc_name, name, min(len, NAME_LENGTH));
 	SQL->FreeResult(sql_handle);
@@ -1779,9 +1779,9 @@ int delete_char_sql(int char_id)
 	if( hom_id )
 		mapif_homunculus_delete(hom_id);
 
-    /* remove elemental */
-    if (elemental_id)
-        mapif_elemental_delete(elemental_id);
+	/* remove elemental */
+	if (elemental_id)
+		mapif_elemental_delete(elemental_id);
 
 	/* remove mercenary data */
 	mercenary_owner_delete(char_id);
