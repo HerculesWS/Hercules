@@ -334,14 +334,13 @@ struct s_homunculus {	//[orn]
 	unsigned int exp;
 	short rename_flag;
 	short vaporize; //albator
-	int str ;
-	int agi ;
-	int vit ;
-	int int_ ;
-	int dex ;
-	int luk ;
-
-	char spiritball; //for homun S [lighta]
+	int str;
+	int agi;
+	int vit;
+	int int_;
+	int dex;
+	int luk;
+	int8 spiritball; //for homun S [lighta]
 };
 
 struct s_mercenary {
