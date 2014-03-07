@@ -42,6 +42,18 @@
 #define __DARWIN__
 #endif
 
+// Standardize the ARM platform version, if available (the only values we're interested in right now are >= ARMv6)
+#if defined(__ARMV6__) || defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) || defined(__ARM_ARCH_6K__) \
+	|| defined(__ARM_ARCH_6Z__) || defined(__ARM_ARCH_6ZK__) || defined(__ARM_ARCH_6T2__) // gcc ARMv6
+#define __ARM_ARCH_VERSION__ 6
+#elif defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7S__) // gcc ARMv7
+#define __ARM_ARCH_VERSION__ 7
+#elif defined(_M_ARM) // MSVC
+#define __ARM_ARCH_VERSION__ _M_ARM
+#else
+#define __ARM_ARCH_VERSION__ 0
+#endif
+
 // Necessary for __NetBSD_Version__ (defined as VVRR00PP00) on NetBSD
 #ifdef __NETBSD__
 #include <sys/param.h>
