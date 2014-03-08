@@ -512,7 +512,7 @@ unsigned char hplugins_parse_packets(int fd, enum HPluginPacketHookingPoints poi
 		short length;
 		
 		if( (length = packet->len) == -1 ) {
-			if( (length = RFIFOW(fd, 2)) < (int)RFIFOREST(fd) )
+			if( (length = RFIFOW(fd, 2)) > (int)RFIFOREST(fd) )
 			   return 2;
 		}
 		
