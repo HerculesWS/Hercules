@@ -4657,7 +4657,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	#endif
 		switch(skill_id){
 			case SR_GATEOFHELL:
+	#ifdef RENEWAL
 				RE_SKILL_REDUCTION();
+	#endif // RENEWAL
 				if (wd.dmg_lv != ATK_FLEE)
 					ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
 				else
