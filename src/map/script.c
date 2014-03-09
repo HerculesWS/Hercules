@@ -19107,6 +19107,40 @@ void script_hardcoded_constants(void) {
 	/* status option compounds */
 	script->set_constant("Option_Dragon",OPTION_DRAGON,false);
 	script->set_constant("Option_Costume",OPTION_COSTUME,false);
+
+	/* send_target */
+	script->set_constant("ALL_CLIENT",ALL_CLIENT,false);
+	script->set_constant("ALL_SAMEMAP",ALL_SAMEMAP,false);
+	script->set_constant("AREA",AREA,false);
+	script->set_constant("AREA_WOS",AREA_WOS,false);
+	script->set_constant("AREA_WOC",AREA_WOC,false);
+	script->set_constant("AREA_WOSC",AREA_WOSC,false);
+	script->set_constant("AREA_CHAT_WOC",AREA_CHAT_WOC,false);
+	script->set_constant("CHAT",CHAT,false);
+	script->set_constant("CHAT_WOS",CHAT_WOS,false);
+	script->set_constant("PARTY",PARTY,false);
+	script->set_constant("PARTY_WOS",PARTY_WOS,false);
+	script->set_constant("PARTY_SAMEMAP",PARTY_SAMEMAP,false);
+	script->set_constant("PARTY_SAMEMAP_WOS",PARTY_SAMEMAP_WOS,false);
+	script->set_constant("PARTY_AREA",PARTY_AREA,false);
+	script->set_constant("PARTY_AREA_WOS",PARTY_AREA_WOS,false);
+	script->set_constant("GUILD",GUILD,false);
+	script->set_constant("GUILD_WOS",GUILD_WOS,false);
+	script->set_constant("GUILD_SAMEMAP",GUILD_SAMEMAP,false);
+	script->set_constant("GUILD_SAMEMAP_WOS",GUILD_SAMEMAP_WOS,false);
+	script->set_constant("GUILD_AREA",GUILD_AREA,false);
+	script->set_constant("GUILD_AREA_WOS",GUILD_AREA_WOS,false);
+	script->set_constant("GUILD_NOBG",GUILD_NOBG,false);
+	script->set_constant("DUEL",DUEL,false);
+	script->set_constant("DUEL_WOS",DUEL_WOS,false);
+	script->set_constant("SELF",SELF,false);
+	script->set_constant("BG",BG,false);
+	script->set_constant("BG_WOS",BG_WOS,false);
+	script->set_constant("BG_SAMEMAP",BG_SAMEMAP,false);
+	script->set_constant("BG_SAMEMAP_WOS",BG_SAMEMAP_WOS,false);
+	script->set_constant("BG_AREA",BG_AREA,false);
+	script->set_constant("BG_AREA_WOS",BG_AREA_WOS,false);
+	script->set_constant("BG_QUEUE",BG_QUEUE,false);
 }
 
 /**
