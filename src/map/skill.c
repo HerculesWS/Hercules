@@ -8151,7 +8151,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case AB_LAUDAAGNUS:
-			if( flag&1 || sd == NULL ) {
+			if( (flag&1 || sd == NULL) || !sd->status.party_id) {
 				if( tsc && (tsc->data[SC_FREEZE] || tsc->data[SC_STONE] || tsc->data[SC_BLIND] ||
 					tsc->data[SC_BURNING] || tsc->data[SC_FROSTMISTY] || tsc->data[SC_COLD])) {
 					// Success Chance: (40 + 10 * Skill Level) %
@@ -8171,8 +8171,9 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case AB_LAUDARAMUS:
-			if( flag&1 || sd == NULL ) {
-				if( tsc && (tsc->data[SC_SLEEP] || tsc->data[SC_STUN] || tsc->data[SC_MANDRAGORA] || tsc->data[SC_SILENCE] || tsc->data[SC_DEEP_SLEEP]) ){
+			if( (flag&1 || sd == NULL) || !sd->status.party_id ) {
+				if( tsc && (tsc->data[SC_SLEEP] || tsc->data[SC_STUN] || tsc->data[SC_MANDRAGORA] ||
+					tsc->data[SC_SILENCE] || tsc->data[SC_DEEP_SLEEP]) ){
 					// Success Chance: (40 + 10 * Skill Level) %
 					if( rnd()%100 > 40+10*skill_lv )  break;
 					status_change_end(bl, SC_SLEEP, INVALID_TIMER);
