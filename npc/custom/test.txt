@@ -8,8 +8,114 @@
 //= Script to test operators and possibly other elements of
 //= the script engine, useful for regression testing.
 
+function	script	F_TestReturnValue	{
+	return getarg(0);
+}
+
+function	script	F_TestScopeVars	{
+	.@x = 2;
+	return .@x+1;
+}
+
+function	script	F_TestNPCVars	{
+	.x = 2;
+	return .x+1;
+}
+
+function	script	F_TestDeepNestedScope	{
+	if (getarg(0) <= 0)
+		return getarg(1); // Stop recursion
+	if (getarg(1))
+		return callfunc("F_TestDeepNestedScope", getarg(0)-1, getarg(1)); // Recursion step
+	.@x = 1;
+	return callfunc("F_TestDeepNestedScope", getarg(0)-1, .@x); // First step
+}
+
+function	script	F_TestDeepNestedScopeNPC2	{
+	if (getarg(0) <= 0)
+		return getarg(1); // Stop recursion
+	if (getarg(1))
+		return callfunc("F_TestDeepNestedScopeNPC", getarg(0)-1, getarg(1)); // Recursion step
+	.x = 1;
+	return callfunc("F_TestDeepNestedScopeNPC", getarg(0)-1, .x); // First step
+}
+
+function	script	F_TestDeepNestedScopeNPC	{
+	if (getarg(0) <= 0)
+		return getarg(1); // Stop recursion
+	if (getarg(1))
+		return callfunc("F_TestDeepNestedScopeNPC2", getarg(0)-1, getarg(1)); // Recursion step
+	.x = 1;
+	return callfunc("F_TestDeepNestedScopeNPC2", getarg(0)-1, .x); // First step
+}
+
+function	script	F_TestNestedScope	{
+	.@x = 1;
+	.@y = callfunc("F_TestReturnValue", .@x);
+	return .@y;
+}
+
+function	script	F_TestNestedScopeNPC	{
+	.x = 1;
+	.y = callfunc("F_TestReturnValue", .x);
+	return .y;
+}
+
+function	script	F_TestArrayRefs	{
+	return getelementofarray(getarg(0), getarraysize(getarg(0)) - 1);
+}
+
+function	script	F_TestReturnArrayRef	{
+	setarray getarg(0), 5, 6, 7, 8;
+	return getarraysize(getarg(0));
+}
+
+function	script	F_TestScopeArrays	{
+	setarray .@x, 1, 2, 3, 4;
+	copyarray .@y, getarg(0), getarraysize(getarg(0));
+	return getarraysize(.@y);
+}
+
+function	script	F_TestNPCArrays	{
+	setarray .x, 1, 2, 3, 4;
+	copyarray .y, getarg(0), getarraysize(getarg(0));
+	return getarraysize(.y);
+}
+
 -	script	HerculesSelfTest	-1,{
 	end;
+
+OnTestReturnValue:
+	return getarg(0);
+
+OnTestScopeVars:
+	.@x = 2;
+	return .@x+1;
+
+OnTestDeepNestedScope:
+	if (getarg(0) <= 0)
+		return getarg(1); // Stop recursion
+	if (getarg(1))
+		return callsub(OnTestDeepNestedScope, getarg(0)-1, getarg(1)); // Recursion step
+	.@x = 1;
+	return callsub(OnTestDeepNestedScope, getarg(0)-1, .@x); // First step
+
+OnTestNestedScope:
+	.@x = 1;
+	.@y = callsub(OnTestReturnValue, .@x);
+	return .@y;
+
+OnTestArrayRefs:
+	return getelementofarray(getarg(0), getarraysize(getarg(0)) - 1);
+
+OnTestReturnArrayRef:
+	setarray getarg(0), 5, 6, 7, 8;
+	return getarraysize(getarg(0));
+
+OnTestScopeArrays:
+	setarray .@x, 1, 2, 3, 4;
+	copyarray .@y, getarg(0), getarraysize(getarg(0));
+	return getarraysize(.@y);
 
 OnReportError:
 	.@msg$ = getarg(0,"Unknown Error");
@@ -546,7 +652,53 @@ OnInit:
 	setarray .@y, 5, 6, 7, 8, 9;
 	callsub(OnCheck, "Callsub (copyarray from reference with the same name)", getarraysize(.@y), callsub(OnTestScopeArrays, .@y));
 	callsub(OnCheck, "Callsub (parent array vars isolation)", getarraysize(.@x), .@z);
+	deletearray .@x;
+	deletearray .@y;
 
+	// Callfunc
+	callsub(OnCheck, "Callfunc return value", callfunc("F_TestReturnValue", 1));
+	.@x = 1;
+	callsub(OnCheck, "Callfunc return with scope variables", callfunc("F_TestScopeVars"), 3);
+	callsub(OnCheck, "Callfunc (parent scope vars isolation)", .@x, 1);
+	callsub(OnCheck, "Callfunc (nested scopes)", callfunc("F_TestNestedScope"), 1);
+	callsub(OnCheck, "Callfunc (deeply nested scopes)", callfunc("F_TestDeepNestedScope", 30, 0), 1);
+	deletearray .@x;
+	setarray .@x, 1, 2, 3, 4;
+	callsub(OnCheck, "Callfunc (array references)", callfunc("F_TestArrayRefs", .@x), 4);
+	deletearray .@x;
+	.@y = callfunc("F_TestReturnArrayRef", .@x);
+	callsub(OnCheck, "Callfunc return array references (size check)", getarraysize(.@x), .@y);
+	callsub(OnCheck, "Callfunc return array references", getelementofarray(.@x, 3), 8);
+	deletearray .@x;
+	deletearray .@y;
+	setarray .@x, 1, 2;
+	.@z = getarraysize(.@x);
+	setarray .@y, 5, 6, 7, 8, 9;
+	callsub(OnCheck, "Callfunc (copyarray from reference with the same name)", getarraysize(.@y), callfunc("F_TestScopeArrays", .@y));
+	callsub(OnCheck, "Callfunc (parent array vars isolation)", getarraysize(.@x), .@z);
+	deletearray .@x;
+	deletearray .@y;
+	.x = 1;
+	callsub(OnCheck, "Callfunc return with NPC variables", callfunc("F_TestNPCVars"), 3); // FIXME: segfault
+	callsub(OnCheck, "Callfunc (parent NPC vars isolation)", .x, 1);
+	callsub(OnCheck, "Callfunc (nested scopes and NPC variables)", callfunc("F_TestNestedScopeNPC"), 1); // FIXME: segfault
+	callsub(OnCheck, "Callfunc (deeply nested scopes and NPC variables)", callfunc("F_TestDeepNestedScopeNPC", 30, 0), 1); // FIXME: segfault
+	deletearray .x;
+	setarray .x, 1, 2, 3, 4;
+	callsub(OnCheck, "Callfunc (array references and NPC variables)", callfunc("F_TestArrayRefs", .x), 4); // FIXME: segfault
+	deletearray .x;
+	.y = callfunc("F_TestReturnArrayRef", .x);
+	callsub(OnCheck, "Callfunc return array references with NPC variables (size check)", getarraysize(.x), .y);
+	callsub(OnCheck, "Callfunc return array references wuth NPC variables", getelementofarray(.x, 3), 8);
+	deletearray .x;
+	deletearray .y;
+	setarray .x, 1, 2;
+	.@z = getarraysize(.@x);
+	setarray .y, 5, 6, 7, 8, 9;
+	callsub(OnCheck, "Callfunc (copyarray from NPC variable reference with the same name)", getarraysize(.@y), callfunc("F_TestNPCArrays", .@y)); // FIXME: segfault
+	callsub(OnCheck, "Callfunc (parent array NPC vars isolation)", getarraysize(.@x), .@z);
+	deletearray .x;
+	deletearray .y;
 
 	if (.errors) {
 		debugmes "Script engine self-test   [ \033[0;31mFAILED\033[0m ]";
@@ -555,37 +707,5 @@ OnInit:
 		debugmes "Script engine self-test   [ \033[0;32mPASSED\033[0m ]";
 	}
 	end;
-
-OnTestReturnValue:
-	return getarg(0);
-
-OnTestScopeVars:
-	.@x = 2;
-	return .@x+1;
-
-OnTestDeepNestedScope:
-	if (getarg(0) <= 0)
-		return getarg(1); // Stop recursion
-	if (getarg(1))
-		return callsub(OnTestDeepNestedScope, getarg(0)-1, getarg(1)); // Recursion step
-	.@x = 1;
-	return callsub(OnTestDeepNestedScope, getarg(0)-1, .@x); // First step
-
-OnTestNestedScope:
-	.@x = 1;
-	.@y = callsub(OnTestReturnValue, .@x);
-	return .@y;
-
-OnTestArrayRefs:
-	return getelementofarray(getarg(0), getarraysize(getarg(0)) - 1);
-
-OnTestReturnArrayRef:
-	setarray getarg(0), 5, 6, 7, 8;
-	return getarraysize(getarg(0));
-
-OnTestScopeArrays:
-	setarray .@x, 1, 2, 3, 4;
-	copyarray .@y, getarg(0), getarraysize(getarg(0));
-	return getarraysize(.@y);
 }
 

@@ -3130,8 +3130,7 @@ struct script_data* push_copy(struct script_stack* stack, int pos) {
 
 /// Removes the values in indexes [start,end[ from the stack.
 /// Adjusts all stack pointers.
-void pop_stack(struct script_state* st, int start, int end)
-{
+void pop_stack(struct script_state* st, int start, int end) {
 	struct script_stack* stack = st->stack;
 	struct script_data* data;
 	int i;
@@ -3153,6 +3152,10 @@ void pop_stack(struct script_state* st, int start, int end)
 		{
 			struct script_retinfo* ri = data->u.ri;
 			if( ri->scope.vars ) {
+				// Note: This is necessary evern if we're also doing it in run_func
+				// (in the RETFUNC block) because not all functions return.  If a
+				// function (or a sub) has an 'end' or a 'close', it'll reach this
+				// block with its scope vars still to be freed.
 				script->free_vars(ri->scope.vars);
 				ri->scope.vars = NULL;
 			}
@@ -3224,6 +3227,8 @@ struct script_state* script_alloc_state(struct script_code* rootscript, int pos,
 
 	st = ers_alloc(script->st_ers, struct script_state);
 	st->stack = ers_alloc(script->stack_ers, struct script_stack);
+	st->pending_refs = NULL;
+	st->pending_ref_count = 0;
 	st->stack->sp = 0;
 	st->stack->sp_max = 64;
 	CREATE(st->stack->stack_data, struct script_data, st->stack->sp_max);
@@ -3280,12 +3285,31 @@ void script_free_state(struct script_state* st) {
 			}
 		}
 		st->pos = -1;
+		if (st->pending_ref_count > 0) {
+			while (st->pending_ref_count > 0)
+				aFree(st->pending_refs[--st->pending_ref_count]);
+			aFree(st->pending_refs);
+			st->pending_refs = NULL;
+		}
 		idb_remove(script->st_db, st->id);
 		ers_free(script->st_ers, st);
 		if( --script->active_scripts == 0 ) {
 			script->next_id = 0;
 		}
 	}
+}
+
+/**
+ * Adds a pending reference entry to the current script.
+ *
+ * @see struct script_state::pending_refs
+ *
+ * @param st[in]  Script state.
+ * @param ref[in] Reference to be added.
+ */
+void script_add_pending_ref(struct script_state *st, struct reg_db *ref) {
+	RECREATE(st->pending_refs, struct reg_db*, ++st->pending_ref_count);
+	st->pending_refs[st->pending_ref_count-1] = ref;
 }
 
 //
@@ -4883,7 +4907,10 @@ BUILDIN(callfunc)
 	st->stack->defsp = st->stack->sp;
 	st->state = GOTO;
 	st->stack->scope.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
-	st->stack->scope.arrays = i64db_alloc(DB_OPT_BASE);
+	st->stack->scope.arrays = idb_alloc(DB_OPT_BASE);
+
+	if( !st->script->local.vars )
+		st->script->local.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
 
 	return true;
 }
@@ -4934,7 +4961,7 @@ BUILDIN(callsub)
 	st->stack->defsp = st->stack->sp;
 	st->state = GOTO;
 	st->stack->scope.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
-	st->stack->scope.arrays = i64db_alloc(DB_OPT_BASE);
+	st->stack->scope.arrays = idb_alloc(DB_OPT_BASE);
 
 	return true;
 }
@@ -4977,30 +5004,30 @@ BUILDIN(getarg)
 ///
 /// return;
 /// return <value>;
-BUILDIN(return)
-{
+BUILDIN(return) {
 	if( script_hasdata(st,2) )
 	{// return value
 		struct script_data* data;
 		script_pushcopy(st, 2);
 		data = script_getdatatop(st, -1);
-		if( data_isreference(data) )
-		{
+		if( data_isreference(data) ) {
 			const char* name = reference_getname(data);
-			if( name[0] == '.' && name[1] == '@' )
-			{// scope variable
+			if( name[0] == '.' && name[1] == '@' ) {
+				// scope variable
 				if( !data->ref || data->ref->vars == st->stack->scope.vars )
 					script->get_val(st, data);// current scope, convert to value
 				if( data->ref && data->ref->vars == st->stack->stack_data[st->stack->defsp-1].u.ri->scope.vars )
 					data->ref = NULL; // Reference to the parent scope, remove reference pointer
-			}
-			else if( name[0] == '.' && !data->ref )
-			{// script variable, link to current script
+			} else if( name[0] == '.' && !data->ref ) {
+				// script variable without a reference set, link to current script
 				data->ref = (struct reg_db *)aCalloc(sizeof(struct reg_db), 1);
+				script->add_pending_ref(st, data->ref);
 				data->ref->vars = st->script->local.vars;
 				if( !st->script->local.arrays )
 					st->script->local.arrays = idb_alloc(DB_OPT_BASE);
 				data->ref->arrays = st->script->local.arrays;
+			} else if ( name[0] == '.' /* && data->ref != NULL */ ) {
+				data->ref = NULL; // Reference to the parent scope's script, remove reference pointer.
 			}
 		}
 	}
@@ -19231,6 +19258,7 @@ void script_defaults(void) {
 	script->free_vars = script_free_vars;
 	script->alloc_state = script_alloc_state;
 	script->free_state = script_free_state;
+	script->add_pending_ref = script_add_pending_ref;
 	script->run_autobonus = script_run_autobonus;
 	script->cleararray_pc = script_cleararray_pc;
 	script->setarray_pc = script_setarray_pc;
