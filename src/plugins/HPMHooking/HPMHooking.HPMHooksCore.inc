@@ -4081,6 +4081,8 @@ struct {
 	struct HPMHookPoint *HP_script_alloc_state_post;
 	struct HPMHookPoint *HP_script_free_state_pre;
 	struct HPMHookPoint *HP_script_free_state_post;
+	struct HPMHookPoint *HP_script_add_pending_ref_pre;
+	struct HPMHookPoint *HP_script_add_pending_ref_post;
 	struct HPMHookPoint *HP_script_run_autobonus_pre;
 	struct HPMHookPoint *HP_script_run_autobonus_post;
 	struct HPMHookPoint *HP_script_cleararray_pc_pre;
@@ -9112,6 +9114,8 @@ struct {
 	int HP_script_alloc_state_post;
 	int HP_script_free_state_pre;
 	int HP_script_free_state_post;
+	int HP_script_add_pending_ref_pre;
+	int HP_script_add_pending_ref_post;
 	int HP_script_run_autobonus_pre;
 	int HP_script_run_autobonus_post;
 	int HP_script_cleararray_pc_pre;

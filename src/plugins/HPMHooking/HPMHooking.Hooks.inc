@@ -52614,6 +52614,31 @@ void HP_script_free_state(struct script_state *st) {
 	}
 	return;
 }
+void HP_script_add_pending_ref(struct script_state *st, struct reg_db *ref) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_add_pending_ref_pre ) {
+		void (*preHookFunc) (struct script_state *st, struct reg_db *ref);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_add_pending_ref_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_add_pending_ref_pre[hIndex].func;
+			preHookFunc(st, ref);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.add_pending_ref(st, ref);
+	}
+	if( HPMHooks.count.HP_script_add_pending_ref_post ) {
+		void (*postHookFunc) (struct script_state *st, struct reg_db *ref);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_add_pending_ref_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_add_pending_ref_post[hIndex].func;
+			postHookFunc(st, ref);
+		}
+	}
+	return;
+}
 void HP_script_run_autobonus(const char *autobonus, int id, int pos) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_script_run_autobonus_pre ) {

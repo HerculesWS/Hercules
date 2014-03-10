@@ -2074,6 +2074,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->free_vars, HP_script_free_vars) },
 	{ HP_POP(script->alloc_state, HP_script_alloc_state) },
 	{ HP_POP(script->free_state, HP_script_free_state) },
+	{ HP_POP(script->add_pending_ref, HP_script_add_pending_ref) },
 	{ HP_POP(script->run_autobonus, HP_script_run_autobonus) },
 	{ HP_POP(script->cleararray_pc, HP_script_cleararray_pc) },
 	{ HP_POP(script->setarray_pc, HP_script_setarray_pc) },
