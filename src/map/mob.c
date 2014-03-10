@@ -546,7 +546,7 @@ int mob_once_spawn_area(struct map_session_data* sd, int16 m, int16 x0, int16 y0
 			x = rnd()%(x1-x0+1)+x0;
 			y = rnd()%(y1-y0+1)+y0;
 			j++;
-		} while (map->getcell(m,x,y,CELL_CHKNOPASS) && j < max);
+		} while ( (map->getcell(m,x,y,CELL_CHKNOPASS) || (battle_config.avoid_warp && npc->check_areanpc(1,m,x,y,battle_config.avoid_distance_mob)) || (battle_config.avoid_ontouch && npc->check_areanpc(2,m,x,y,battle_config.avoid_distance_mob)) ) && j < max);
 
 		if (j == max)
 		{// attempt to find an available cell failed
@@ -915,7 +915,7 @@ int mob_spawn (struct mob_data *md)
 
 		if( (md->bl.x == 0 && md->bl.y == 0) || md->spawn->xs || md->spawn->ys ) {
 			//Monster can be spawned on an area.
-			if( !map->search_freecell(&md->bl, -1, &md->bl.x, &md->bl.y, md->spawn->xs, md->spawn->ys, battle_config.no_spawn_on_player?4:0) ) {
+			if( !map->search_freecell(&md->bl, -1, &md->bl.x, &md->bl.y, md->spawn->xs, md->spawn->ys, battle_config.no_spawn_on_player?4:0) || (battle_config.avoid_warp && npc->check_areanpc(1,md->bl.m,md->bl.x,md->bl.y,battle_config.avoid_distance_mob)) || (battle_config.avoid_ontouch && npc->check_areanpc(2,md->bl.m,md->bl.x,md->bl.y,battle_config.avoid_distance_mob)) ) {
 				// retry again later
 				if( md->spawn_timer != INVALID_TIMER )
 					timer->delete(md->spawn_timer, mob->delayspawn);
@@ -1338,7 +1338,7 @@ int mob_randomwalk(struct mob_data *md, int64 tick) {
 		x+=md->bl.x;
 		y+=md->bl.y;
 
-		if((map->getcell(md->bl.m,x,y,CELL_CHKPASS)) && unit->walktoxy(&md->bl,x,y,1)){
+		if((map->getcell(md->bl.m,x,y,CELL_CHKPASS)) && (battle_config.avoid_warp ? !npc->check_areanpc(1,md->bl.m,x,y,battle_config.avoid_distance_mob) : 1) && (battle_config.avoid_ontouch ? !npc->check_areanpc(2,md->bl.m,x,y,battle_config.avoid_distance_mob) : 1) && unit->walktoxy(&md->bl,x,y,1)){
 			break;
 		}
 	}
