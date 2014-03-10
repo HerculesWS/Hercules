@@ -585,7 +585,7 @@ int skillnotok_hom(uint16 skill_id, struct homun_data *hd)
 		return 1;
 	switch(skill_id){
 	    case MH_LIGHT_OF_REGENE:
-		if(hd->homunculus.intimacy <= 750) //if not cordial
+		if(hd->homunculus.intimacy <= 75000) //if not cordial
 		    return 1;
 		break;
 	    case MH_OVERED_BOOST:
@@ -9449,7 +9449,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case MH_LIGHT_OF_REGENE:
 			if(hd) {
-				hd->homunculus.intimacy = 251; //change to neutral (can't be cast if < 750)
+				hd->homunculus.intimacy = 25100; //change to neutral (can't be cast if < 750)
 				if(sd) clif->send_homdata(sd, SP_INTIMATE, hd->homunculus.intimacy); //refresh intimacy info
 			}
 			//don't break need to start status and start block timer
