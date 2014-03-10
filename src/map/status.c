@@ -9605,7 +9605,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 	if (sce->timer != tid && tid != INVALID_TIMER)
 		return 0;
 
-	if( sd && sce->timer == INVALID_TIMER )
+	if( sd && sce->timer == INVALID_TIMER && !sd->state.loggingout )
 		chrif->del_scdata_single(sd->status.account_id,sd->status.char_id,type);
 	
 	if (tid == INVALID_TIMER) {
