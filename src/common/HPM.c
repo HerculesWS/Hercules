@@ -269,11 +269,12 @@ void hplugin_unload(struct hplugin* plugin) {
 	}
 }
 
-void hplugins_config_read(void) {
+void hplugins_config_read(const char * const *extra_plugins, int extra_plugins_count) {
 	config_t plugins_conf;
 	config_setting_t *plist = NULL;
 	const char *config_filename = "conf/plugins.conf"; // FIXME hardcoded name
 	FILE *fp;
+	int i;
 	
 // uncomment once login/char support is wrapped up
 //	if( !HPM->DataCheck ) {
@@ -294,9 +295,13 @@ void hplugins_config_read(void) {
 		HPM->symbol_defaults_sub();
 	
 	plist = libconfig->lookup(&plugins_conf, "plugins_list");
+	for (i = 0; i < extra_plugins_count; i++) {
+		config_setting_t *entry = libconfig->setting_add(plist, NULL, CONFIG_TYPE_STRING);
+		config_setting_set_string(entry, extra_plugins[i]);
+	}
 	
 	if (plist != NULL) {
-		int length = libconfig->setting_length(plist), i;
+		int length = libconfig->setting_length(plist);
 		char filename[60];
 		for(i = 0; i < length; i++) {
 			if( !strcmpi(libconfig->setting_get_string_elem(plist,i),"HPMHooking") ) {//must load it first

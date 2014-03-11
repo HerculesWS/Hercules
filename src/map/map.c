@@ -5356,6 +5356,7 @@ void map_helpscreen(bool do_exit)
 	ShowInfo("  --inter-config <file>     Alternative inter-server configuration.\n");
 	ShowInfo("  --log-config <file>       Alternative logging configuration.\n");
 	ShowInfo("  --script-check <file>     Tests a script for errors, without running the server.\n");
+	ShowInfo("  --load-plugin <name>      Loads an additional plugin (can be repeated).\n");
 	HPM->arg_help();/* display help for commands implemented thru HPM */
 	if( do_exit )
 		exit(EXIT_SUCCESS);
@@ -5566,7 +5567,8 @@ int do_init(int argc, char *argv[])
 {
 	bool minimal = false;
 	char *scriptcheck = NULL;
-	int i;
+	int i, extra_plugins_count = 0;
+	const char **extra_plugins = NULL;
 
 #ifdef GCOLLECT
 	GC_enable_incremental();
@@ -5579,7 +5581,21 @@ int do_init(int argc, char *argv[])
 	HPM->load_sub = HPM_map_plugin_load_sub;
 	HPM->symbol_defaults_sub = map_hp_symbols;
 	HPM->grabHPDataSub = HPM_map_grabHPData;
-	HPM->config_read();
+	for( i = 1; i < argc; i++ ) {
+		const char* arg = argv[i];
+		if( strcmp(arg, "--load-plugin") == 0 ) {
+			if( map->arg_next_value(arg, i, argc, true) ) {
+				RECREATE(extra_plugins, const char *, ++extra_plugins_count);
+				extra_plugins[extra_plugins_count-1] = argv[++i];
+			}
+		}
+	}
+	HPM->config_read(extra_plugins, extra_plugins_count);
+	if (extra_plugins) {
+		aFree(extra_plugins);
+		extra_plugins = NULL;
+		extra_plugins_count = 0;
+	}
 	
 	HPM->event(HPET_PRE_INIT);
 	
@@ -5629,6 +5645,9 @@ int do_init(int argc, char *argv[])
 				runflag = CORE_ST_STOP;
 				if( map->arg_next_value(arg, i, argc, true) )
 					scriptcheck = argv[++i];
+			} else if( strcmp(arg, "load-plugin") == 0 ) {
+				if( map->arg_next_value(arg, i, argc, true) )
+					i++;
 			} else {
 				ShowError("Unknown option '%s'.\n", argv[i]);
 				exit(EXIT_FAILURE);

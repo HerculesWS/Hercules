@@ -1821,7 +1821,7 @@ int do_init(int argc, char** argv)
 	}
 
 	HPM->share(account_db_sql_up(accounts),"sql_handle");
-	HPM->config_read();
+	HPM->config_read(NULL, 0);
 	HPM->event(HPET_INIT);
 	
 	// server port open & binding	
