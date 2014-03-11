@@ -15692,6 +15692,9 @@ BUILDIN(getvariableofnpc)
 		return false;
 	}
 
+	if( !nd->u.scr.script->local.vars )
+		nd->u.scr.script->local.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+	
 	script->push_val(st->stack, C_NAME, reference_getuid(data), &nd->u.scr.script->local);
 	return true;
 }
