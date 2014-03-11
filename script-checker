@@ -14,12 +14,21 @@ if [ -z "$1" ]; then
 	echo "Usage: $0 <path to the script>"
 	echo " (you may use a relative or absolute path)"
 	exit -1
-elif [[ "$1" =~ ^\/ ]]; then
-	FILE="$1"
-else
-	FILE="${ORIG_CWD}/$1"
 fi
 if [ ! -x "$EXECUTABLE" ]; then
 	exit -1
 fi
-"$EXECUTABLE" --script-check "${FILE}" 2>&1
+
+while [ -n "$1" ]; do
+	[ -n "$FILES" ] && FILES="${FILES}!"
+	if [[ "$1" =~ ^\/ ]]; then
+		FILES="${FILES}--load-script!$1"
+	else
+		FILES="${FILES}--load-script!${ORIG_CWD}/$1"
+	fi
+	shift
+done
+
+# We assume that filenames don't contain exclamation marks.
+IFS=!
+"$EXECUTABLE" --script-check $FILES 2>&1
