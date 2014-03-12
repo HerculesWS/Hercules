@@ -4,10 +4,17 @@
 -- Remember to make a backup before applying.
 -- We are not liable for any data loss this may cause.
 -- Apply in the same database you applied your logs.sql
--- Last revision: November 10, 2013, 19:00
+-- Last revision: 3/12/2014 7:24:15 PM
 
--- Upgrades to table `picklog`
-ALTER TABLE `picklog` MODIFY `type` enum('M','P','L','T','V','S','N','C','A','R','G','E','B','O','I','X','D','U') NOT NULL default 'P';
+--
+-- cashlog
+-- 
 
--- Drop table `cashlog` since it's not used in Hercules
-DROP TABLE IF EXISTS `cashlog`;
+DROP TABLE cashlog;
+
+--
+-- picklog
+-- 
+
+ALTER TABLE picklog CHANGE COLUMN type type ENUM('M','P','L','T','V','S','N','C','A','R','G','E','B','O','I','X','D','U') DEFAULT 'P' NOT NULL COMMENT '';
+
