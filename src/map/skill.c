@@ -10408,11 +10408,12 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			break;
 
 		case SC_FEINTBOMB:
-			skill->unitsetting(src,skill_id,skill_lv,x,y,0); // Set bomb on current Position
-			clif->skill_nodamage(src,src,skill_id,skill_lv,1);
-			skill->blown(src,src,3*skill_lv,unit->getdir(src),0);
-			//After back sliding, the player goes into hiding. Hiding level used is throught to be the learned level.
-			sc_start(src,src,SC_HIDING,100,(sd?pc->checkskill(sd,TF_HIDING):10),skill->get_time(TF_HIDING,(sd?pc->checkskill(sd,TF_HIDING):10)));
+			skill->unitsetting(src, skill_id, skill_lv, x, y, 0); // Set bomb on current Position
+			clif->skill_nodamage(src, src, skill_id, skill_lv, 1);
+			if( skill->blown(src, src, 3 * skill_lv, unit->getdir(src), 0) && sc){
+				sc->option |= OPTION_INVISIBLE;
+				clif->changeoption(src);
+			}
 			break;
 
 		case SC_ESCAPE:
@@ -15869,8 +15870,14 @@ int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap) {
 
 			case UNT_FEINTBOMB: {
 				struct block_list *src = map->id2bl(group->src_id);
-				if( src )
-					map->foreachinrange(skill->area_sub, &group->unit->bl, su->range, splash_target(src), src, SC_FEINTBOMB, group->skill_lv, tick, BCT_ENEMY|1, skill->castend_damage_id);
+				if( src ){
+					struct status_change *sc = status->get_sc(src);
+					map->foreachinrange(skill->area_sub, &group->unit->bl, su->range, splash_target(src), src, SC_FEINTBOMB, group->skill_lv, tick, BCT_ENEMY|SD_ANIMATION|1, skill->castend_damage_id);
+					if(sc){
+						sc->option &= ~OPTION_INVISIBLE;
+						clif->changeoption(src);
+					}
+				}
 				skill->delunit(su);
 				break;
 			}
