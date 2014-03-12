@@ -13,6 +13,7 @@
 #include "../map/script.h"
 #include "../map/pc.h"
 #include "../map/clif.h"
+#include "../common/strlib.h"
 
 #include "../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
@@ -106,7 +107,7 @@ int my_pc_dropitem_post(int retVal, struct map_session_data *sd,int *n,int *amou
 	if( retVal != 1 ) return retVal;/* we don't do anything if pc_dropitem didn't return 1 (success) */
 	if( my_pc_dropitem_storage ) {/* signs whether pre-hook did this */
 		char output[99];
-		snprintf(output,99,"[ Warning ] you can only drop 1 item at a time, capped from %d to 1",my_pc_dropitem_storage);
+		safesnprintf(output,99,"[ Warning ] you can only drop 1 item at a time, capped from %d to 1",my_pc_dropitem_storage);
 		clif->colormes(sd->fd,COLOR_RED,output);
 	}
 	return 1;
@@ -131,6 +132,7 @@ HPExport void plugin_init (void) {
 	script = GET_SYMBOL("script");
 	clif = GET_SYMBOL("clif");
 	pc = GET_SYMBOL("pc");
+	strlib = GET_SYMBOL("strlib");
 
 	/* session[] */
 	session = GET_SYMBOL("session");

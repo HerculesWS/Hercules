@@ -10477,6 +10477,12 @@ void pc_autotrade_prepare(struct map_session_data *sd) {
 	sex = sd->status.sex;
 	safestrncpy(title, sd->message, sizeof(title));
 	
+	sd->npc_id = 0;
+	sd->npc_shopid = 0;
+	if (sd->st) {
+		sd->st->state = END;
+		sd->st = NULL;
+	}
 	map->quit(sd);
 	chrif->auth_delete(account_id, char_id, ST_LOGOUT);
 

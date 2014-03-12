@@ -1985,7 +1985,9 @@ unsigned short status_base_atk(const struct block_list *bl, const struct status_
 	return cap_value(str, 0, USHRT_MAX);
 }
 
+#ifndef RENEWAL
 static inline unsigned short status_base_matk_min(const struct status_data *st){ return st->int_+(st->int_/7)*(st->int_/7); }
+#endif // not RENEWAL
 static inline unsigned short status_base_matk_max(const struct status_data *st){ return st->int_+(st->int_/5)*(st->int_/5); }
 
 unsigned short status_base_matk(const struct status_data *st, int level) {
@@ -9605,7 +9607,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 	if (sce->timer != tid && tid != INVALID_TIMER)
 		return 0;
 
-	if( sd && sce->timer == INVALID_TIMER )
+	if( sd && sce->timer == INVALID_TIMER && !sd->state.loggingout )
 		chrif->del_scdata_single(sd->status.account_id,sd->status.char_id,type);
 	
 	if (tid == INVALID_TIMER) {

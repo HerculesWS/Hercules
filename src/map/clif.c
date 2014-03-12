@@ -99,16 +99,15 @@ static inline void WBUFPOS2(uint8* p, unsigned short pos, short x0, short y0, sh
 	p[5] = (uint8)((sx0<<4) | (sy0&0x0f));
 }
 
-
+#if 0 // Currently unused
 static inline void WFIFOPOS(int fd, unsigned short pos, short x, short y, unsigned char dir) {
 	WBUFPOS(WFIFOP(fd,pos), 0, x, y, dir);
 }
-
+#endif // 0
 
 static inline void WFIFOPOS2(int fd, unsigned short pos, short x0, short y0, short x1, short y1, unsigned char sx0, unsigned char sy0) {
 	WBUFPOS2(WFIFOP(fd,pos), 0, x0, y0, x1, y1, sx0, sy0);
 }
-
 
 static inline void RBUFPOS(const uint8* p, unsigned short pos, short* x, short* y, unsigned char* dir) {
 	p += pos;
@@ -126,7 +125,11 @@ static inline void RBUFPOS(const uint8* p, unsigned short pos, short* x, short* 
 	}
 }
 
+static inline void RFIFOPOS(int fd, unsigned short pos, short* x, short* y, unsigned char* dir) {
+	RBUFPOS(RFIFOP(fd,pos), 0, x, y, dir);
+}
 
+#if 0 // currently unused
 static inline void RBUFPOS2(const uint8* p, unsigned short pos, short* x0, short* y0, short* x1, short* y1, unsigned char* sx0, unsigned char* sy0) {
 	p += pos;
 
@@ -154,19 +157,12 @@ static inline void RBUFPOS2(const uint8* p, unsigned short pos, short* x0, short
 		sy0[0] = ( p[5] & 0x0f ) >> 0;
 	}
 }
-
-
-static inline void RFIFOPOS(int fd, unsigned short pos, short* x, short* y, unsigned char* dir) {
-	RBUFPOS(RFIFOP(fd,pos), 0, x, y, dir);
-}
-
-
 static inline void RFIFOPOS2(int fd, unsigned short pos, short* x0, short* y0, short* x1, short* y1, unsigned char* sx0, unsigned char* sy0) {
 	RBUFPOS2(WFIFOP(fd,pos), 0, x0, y0, x1, y1, sx0, sy0);
 }
+#endif // 0
 
-
-//To idenfity disguised characters.
+//To identify disguised characters.
 static inline bool disguised(struct block_list* bl) {
 	return (bool)( bl->type == BL_PC && ((TBL_PC*)bl)->disguise != -1 );
 }
@@ -9931,13 +9927,13 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 	}
 	WFIFOSET(fd, WFIFOW(fd,2));
 	
+	// Chat logging type 'O' / Global Chat
+	logs->chat(LOG_CHAT_GLOBAL, 0, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, message);
+	
 #ifdef PCRE_SUPPORT
 	// trigger listening npcs
 	map->foreachinrange(npc_chat->sub, &sd->bl, AREA_SIZE, BL_NPC, text, textlen, &sd->bl);
 #endif
-
-	// Chat logging type 'O' / Global Chat
-	logs->chat(LOG_CHAT_GLOBAL, 0, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, message);
 }
 
 
