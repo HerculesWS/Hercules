@@ -186,6 +186,11 @@ ROW_FORMAT = Dynamic
 
 /* Header line. Object: sc_data. Script date:  3/12/2014 7:24:15 PM. */
 ALTER TABLE sc_data ADD PRIMARY KEY (account_id,char_id,type);
+-- Drop table contents from ´sc_data´ since we use a different status order than rAthena
+-- /!\ WARNING /!\ This will remove _ALL_ of the status effects active on the server
+-- You can disable this, but this is a SECURITY MEASURE
+-- This will remove even jailed status from users!
+TRUNCATE TABLE `sc_data`;
 
 /* Header line. Object: sql_updates. Script date:  3/12/2014 7:24:15 PM. */
 CREATE TABLE `sql_updates` (
