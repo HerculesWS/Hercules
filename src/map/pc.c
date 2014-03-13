@@ -7521,7 +7521,7 @@ void pc_heal(struct map_session_data *sd,unsigned int hp,unsigned int sp, int ty
  *------------------------------------------*/
 int pc_itemheal(struct map_session_data *sd,int itemid, int hp,int sp)
 {
-	int bonus;
+	int bonus, tmp;
 
 	if(hp) {
 		int i;
@@ -7541,8 +7541,10 @@ int pc_itemheal(struct map_session_data *sd,int itemid, int hp,int sp)
 				break;
 			}
 		}
-		if(bonus!=100)
-			hp = hp * bonus / 100;
+
+		tmp = hp*bonus/100;
+		if(bonus != 100 && tmp > hp)
+			hp = tmp;
 
 		// Recovery Potion
 		if( sd->sc.data[SC_HEALPLUS] )
@@ -7554,8 +7556,10 @@ int pc_itemheal(struct map_session_data *sd,int itemid, int hp,int sp)
 			+ pc->checkskill(sd,AM_LEARNINGPOTION)*5;
 		if (script->potion_flag > 1)
 			bonus += bonus*(script->potion_flag-1)*50/100;
-		if(bonus != 100)
-			sp = sp * bonus / 100;
+
+		tmp = sp*bonus/100;
+		if(bonus != 100 && tmp > sp)
+			sp = tmp;
 	}
 	if( sd->sc.count ) {
 		if ( sd->sc.data[SC_CRITICALWOUND] ) {
