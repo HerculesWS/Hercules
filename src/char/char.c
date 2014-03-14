@@ -3153,14 +3153,15 @@ int parse_frommap(int fd)
 			break;
 
 			case 0x2b02: // req char selection
-				if( RFIFOREST(fd) < 18 )
+				if( RFIFOREST(fd) < 22 )
 					return 0;
 			{
 				int account_id = RFIFOL(fd,2);
 				uint32 login_id1 = RFIFOL(fd,6);
 				uint32 login_id2 = RFIFOL(fd,10);
 				uint32 ip = RFIFOL(fd,14);
-				RFIFOSKIP(fd,18);
+				int32 group_id = RFIFOL(fd, 18);
+				RFIFOSKIP(fd,22);
 
 				if( runflag != CHARSERVER_ST_RUNNING )
 				{
@@ -3180,6 +3181,7 @@ int parse_frommap(int fd)
 					node->char_id = 0;
 					node->login_id1 = login_id1;
 					node->login_id2 = login_id2;
+					node->group_id = group_id;
 					//node->sex = 0;
 					node->ip = ntohl(ip);
 					/* sounds troublesome. */
