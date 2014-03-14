@@ -15308,11 +15308,11 @@ BUILDIN(pcstopfollow)
 // [zBuffer] List of mob control commands --->
 //## TODO always return if the request/whatever was successfull [FlavioJS]
 
-/// Makes the unit walk to target position or map
+/// Makes the unit walk to target position or target id
 /// Returns if it was successfull
 ///
 /// unitwalk(<unit_id>,<x>,<y>) -> <bool>
-/// unitwalk(<unit_id>,<map_id>) -> <bool>
+/// unitwalk(<unit_id>,<target_id>) -> <bool>
 BUILDIN(unitwalk) {
 	struct block_list* bl;
 
@@ -15330,8 +15330,8 @@ BUILDIN(unitwalk) {
 		int y = script_getnum(st,4);
 		script_pushint(st, unit->walktoxy(bl,x,y,0));// We'll use harder calculations.
 	} else {
-		int map_id = script_getnum(st,3);
-		script_pushint(st, unit->walktobl(bl,map->id2bl(map_id),65025,1));
+		int target_id = script_getnum(st,3);
+		script_pushint(st, unit->walktobl(bl,map->id2bl(target_id),1,1));
 	}
 
 	return true;
