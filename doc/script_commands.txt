@@ -4141,17 +4141,26 @@ character and produces no other output whatsoever.
 
 *itemheal <hp>,<sp>;
 
-This command heals given absolute amounts of HP and/or SP on the invoking 
+This command heals given relative amounts of HP and/or SP on the invoking 
 character. Unlike heal, this command is intended for use in item scripts. 
-It applies potion-related bonuses, such as alchemist ranking, cards and 
-status changes. When used inside an NPC script, certain bonuses are 
-omitted.
+It applies potion-related bonuses, such as alchemist ranking, cards, 
+status changes.
+It also applies a sp/vit-related bonus that is calculated by:
+	heal = heal*[(100+STATUS*2)/100]
+So if a player has 99 vit and the script is 'itemheal 5,0':
+	heal(hp) = 5*[(100+99*2)/100]
+	heal(hp) = 14,9
+	heal(hp) = 14
+	heal(sp) = 0
+
+When used inside an NPC script, potion-related bonuses are omitted.
 
 There is also a nice example on using this with the 'rand' function, to 
 give you a random amount of healing.
 
-	// This will heal anything thing from 100 to 150 HP and no SP
-	itemheal rand(100,150),0;
+	// If the player has 50 vit and no bonuses this will heal
+	// anything from 200 to 300 HP and 5 SP
+	itemheal rand(100,150),5;
 
 ---------------------------------------
 
