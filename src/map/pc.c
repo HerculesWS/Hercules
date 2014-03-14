@@ -4450,7 +4450,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	for(i = 0; i < map->list[sd->bl.m].zone->disabled_items_count; i++) {
 		if( map->list[sd->bl.m].zone->disabled_items[i] == nameid ) {
 			clif->msg(sd, ITEM_CANT_USE_AREA); // This item cannot be used within this area
-			if( battle_config.item_restricted_consumption_type ) {
+			if( battle_config.item_restricted_consumption_type && sd->status.inventory[n].expire_time == 0 ) {
 				clif->useitemack(sd,n,sd->status.inventory[n].amount-1,true);
 				pc->delitem(sd,n,1,1,0,LOG_TYPE_CONSUME);
 			}
