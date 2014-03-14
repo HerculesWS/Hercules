@@ -21,7 +21,7 @@
 //1920,1047,0
 //1921,1093,0
 
-// rAthena Dev Team
+// eA Dev Team
 // Valaris
 //1900,4013,1,1,1,1254,0,67,12,54,16,1
 // Valaris Worshiper
