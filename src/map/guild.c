@@ -907,7 +907,7 @@ int guild_member_withdraw(int guild_id, int account_id, int char_id, int flag, c
 
 void guild_retrieveitembound(int char_id,int aid,int guild_id) {
 #ifdef GP_BOUND_ITEMS
-	TBL_PC *sd = map->id2sd(aid);
+	TBL_PC *sd = map->charid2sd(char_id);
 	if(sd){ //Character is online
 		pc->bound_clear(sd,IBT_GUILD);
 	} else { //Character is offline, ask char server to do the job
