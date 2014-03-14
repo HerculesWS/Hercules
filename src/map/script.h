@@ -371,6 +371,7 @@ struct script_code {
 	int script_size;
 	unsigned char *script_buf;
 	struct reg_db local; ///< Local (npc) vars
+	unsigned short instances;
 };
 
 struct script_stack {
@@ -407,7 +408,7 @@ struct script_state {
 	int pos;
 	enum e_script_state state;
 	int rid,oid;
-	struct script_code *script, *scriptroot;
+	struct script_code *script;
 	struct sleep_data {
 		int tick,timer,charid;
 	} sleep;

@@ -1185,21 +1185,21 @@ int npc_click(struct map_session_data* sd, struct npc_data* nd)
 /*==========================================
  *
  *------------------------------------------*/
-int npc_scriptcont(struct map_session_data* sd, int id, bool closing)
-{
+int npc_scriptcont(struct map_session_data* sd, int id, bool closing) {
+	struct block_list *target = map->id2bl(id);
 	nullpo_retr(1, sd);
 
 	if( id != sd->npc_id ){
 		TBL_NPC* nd_sd=(TBL_NPC*)map->id2bl(sd->npc_id);
-		TBL_NPC* nd=(TBL_NPC*)map->id2bl(id);
+		TBL_NPC* nd = BL_CAST(BL_NPC, target);
 		ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
 			nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->npc_id,
 		  	nd?(char*)nd->name:"'Unknown NPC'", (int)id);
 		return 1;
 	}
-
+	
 	if(id != npc->fake_nd->bl.id) { // Not item script
-		if ((npc->checknear(sd,map->id2bl(id))) == NULL){
+		if ((npc->checknear(sd,target)) == NULL){
 			ShowWarning("npc_scriptcont: failed npc->checknear test.\n");
 			return 1;
 		}
@@ -1219,7 +1219,10 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing)
 	 **/
 	if( sd->progressbar.npc_id && DIFF_TICK(sd->progressbar.timeout,timer->gettick()) > 0 )
 		return 1;
-
+	
+	if( !sd->st )
+		return 1;
+	
 	if( closing && sd->st->state == CLOSE )
 		sd->st->state = END;
 
@@ -2226,7 +2229,6 @@ int npc_unload(struct npc_data* nd, bool single) {
 			aFree(nd->u.scr.timer_event);
 		if (nd->src_id == 0) {
 			if(nd->u.scr.script) {
-				script->stop_instances(nd->u.scr.script);
 				script->free_code(nd->u.scr.script);
 				nd->u.scr.script = NULL;
 			}
