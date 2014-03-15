@@ -3210,6 +3210,11 @@ void script_free_code(struct script_code* code)
 {
 	if( code->instances )
 		script->stop_instances(code);
+	else {
+		script->free_vars(code->local.vars);
+		if( code->local.arrays )
+			code->local.arrays->destroy(code->local.arrays,script->array_free_db);
+	}
 	aFree( code->script_buf );
 	aFree( code );
 }
