@@ -15327,7 +15327,9 @@ bool skill_check_shadowform(struct block_list *bl, int64 damage, int hit){
 		}
 
 		status->damage(bl, src, damage, 0, clif->damage(src, src, 500, 500, damage, hit, (hit > 1 ? 8 : 0), 0), 0);
-		if( (--sc->data[SC__SHADOWFORM]->val3) <= 0 ) {
+
+		/* because damage can cancel it */
+		if( sc->data[SC__SHADOWFORM] && (--sc->data[SC__SHADOWFORM]->val3) <= 0 ) {
 			status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
 			if( src->type == BL_PC )
 				((TBL_PC*)src)->shadowform_id = 0;
