@@ -3264,16 +3264,9 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 					skill->unitsetting(src,skl->skill_id,skl->skill_lv,skl->x,skl->y,(skl->type<<16)|skl->flag);
 					break;
 				case LG_OVERBRAND_BRANDISH:
-					{
-						short x2 = src->x, y2 = src->y, x = x2, y = y2;
-						switch( skl->type ){								
-							case 0: case 1: case 7: x2 += 4; x -= 4; y2 += 4; break;
-							case 3: case 4: case 5: x2 += 4; x -= 4; y -= 4; break;
-							case 2: y2 += 4; y -= 4; x -= 4; break;
-							case 6: y2 += 4; y -= 4; x2 += 4; break;
-						}
-						map->foreachinarea(skill->area_sub, src->m, x, y, x2, y2, BL_CHAR, src, skl->skill_id, skl->skill_lv, tick, skl->flag|BCT_ENEMY|SD_ANIMATION|1,skill->castend_damage_id);
-					}
+					skill->area_temp[1] = 0;
+					map->foreachinpath(skill->attack_area,src->m,src->x,src->y,skl->x,skl->y,4,2,BL_CHAR,
+						skill->get_type(skl->skill_id),src,src,skl->skill_id,skl->skill_lv,tick,skl->flag,BCT_ENEMY);
 					break;
 				case GN_CRAZYWEED:
 					if( skl->type >= 0 ) {
@@ -10423,18 +10416,10 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			break;
 
 		case LG_OVERBRAND:
-			{
-				uint8 dir = map->calc_dir(src, x, y);
-				uint8 x2 = x = src->x, y2 = y = src->y;
-				switch( dir ){
-					case 0: case 1: case 7: x2++; x--; y2 += 7; break;
-					case 3: case 4: case 5: x2++; x--; y -= 7; break;
-					case 2: y2++; y--; x -= 7;break;
-					case 6: y2++; y--; x2 += 7;break;
-				}
-				map->foreachinarea(skill->area_sub, src->m, x, y, x2, y2, BL_CHAR, src, skill_id, skill_lv, tick, flag|BCT_ENEMY|SD_ANIMATION|1,skill->castend_damage_id);
-				skill->addtimerskill(src,timer->gettick() + status_get_amotion(src), 0, 0, 0, LG_OVERBRAND_BRANDISH, skill_lv, dir, flag);
-			}
+			skill->area_temp[1] = 0;
+			map->foreachinpath(skill->attack_area,src->m,src->x,src->y,x,y,1,5,BL_CHAR,
+				skill->get_type(skill_id),src,src,skill_id,skill_lv,tick,flag,BCT_ENEMY);
+			skill->addtimerskill(src,timer->gettick() + status_get_amotion(src), 0, x, y, LG_OVERBRAND_BRANDISH, skill_lv, 0, flag);
 			break;
 
 		case LG_BANDING:
