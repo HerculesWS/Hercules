@@ -7881,6 +7881,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_TURNKICK_READY:
 			case SC_DODGE_READY:
 			case SC_PUSH_CART:
+				tick = -1;
 				break;
 
 			case SC_AUTOGUARD:
