@@ -623,7 +623,7 @@ OnStartArena:
 	donpcevent "Manager#"+strnpcinfo(4)+"::OnReset";
 	maprespawnguildid strnpcinfo(4),getcastledata(strnpcinfo(4),1),2;
 	donpcevent "Manager#"+strnpcinfo(4)+"::OnRecvCastle2";
-	donpcevent "::OnRecvCastle"+strnpcinfo(2);
+	donpcevent "::OnRecvCastle"+ strtoupper( substr( strnpcinfo(2), 0, 0 ) ) + substr( strnpcinfo(2), 1, getstrlen( strnpcinfo(2) ) -1 );
 	sleep 10000;
 	if (agitcheck2()) {
 		donpcevent "Manager#"+strnpcinfo(4)+"::OnChange";
