@@ -8285,6 +8285,18 @@ BUILDIN(getgroupid)
 /// end
 BUILDIN(end) {
 	st->state = END;
+	
+	/* are we stopping inside a function? */
+	if( st->stack->defsp >= 1 && st->stack->stack_data[st->stack->defsp-1].type == C_RETINFO ) {
+		int i;
+		for(i = 0; i < st->stack->sp; i++) {
+			if( st->stack->stack_data[i].type == C_RETINFO ) {/* grab the first, aka the original */
+				struct script_retinfo *ri = st->stack->stack_data[i].u.ri;
+				st->script = ri->script;
+				break;
+			}
+		}
+	}
 	return true;
 }
 
