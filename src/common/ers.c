@@ -115,17 +115,14 @@ struct ers_instance_t {
 #ifdef DEBUG
 	/* for data analysis [Ind/Hercules] */
 	unsigned int Peak;
-	struct ers_instance_t *Next, *Prev;
 #endif
-
+	struct ers_instance_t *Next, *Prev;
 };
 
 
 // Array containing a pointer for all ers_cache structures
 static ers_cache_t *CacheList = NULL;
-#ifdef DEBUG
-	static struct ers_instance_t *InstanceList = NULL;
-#endif
+static struct ers_instance_t *InstanceList = NULL;
 
 /**
  * @param Options the options from the instance seeking a cache, we use it to give it a cache with matching configuration
@@ -180,6 +177,7 @@ static void ers_free_cache(ers_cache_t *cache, bool remove)
 		CacheList = cache->Next;
 
 	aFree(cache->Blocks);
+	
 	aFree(cache);
 }
 
@@ -285,7 +283,6 @@ static void ers_obj_destroy(ERS self)
 	if (--instance->Cache->ReferenceCount <= 0)
 		ers_free_cache(instance->Cache, true);
 
-#ifdef DEBUG
 	if (instance->Next)
 		instance->Next->Prev = instance->Prev;
 	
@@ -293,7 +290,6 @@ static void ers_obj_destroy(ERS self)
 		instance->Prev->Next = instance->Next;
 	else
 		InstanceList = instance->Next;
-#endif
 	
 	if( instance->Options & ERS_OPT_FREE_NAME )
 		aFree(instance->Name);
@@ -335,7 +331,7 @@ ERS ers_new(uint32 size, char *name, enum ERSOptions options)
 	instance->Cache = ers_find_cache(size,instance->Options);
 	
 	instance->Cache->ReferenceCount++;
-#ifdef DEBUG
+
 	if (InstanceList == NULL) {
 		InstanceList = instance;
 	} else {
@@ -344,7 +340,6 @@ ERS ers_new(uint32 size, char *name, enum ERSOptions options)
 		InstanceList = instance;
 		InstanceList->Prev = NULL;
 	}
-#endif
 
 	instance->Count = 0;
 
@@ -392,12 +387,17 @@ void ers_report(void) {
 	ShowInfo("ers_report: '"CL_WHITE"%u"CL_NORMAL"' blocks total, consuming '"CL_WHITE"%.2f MB"CL_NORMAL"' \n",blocks_a,(double)((memory_t)/1024)/1024);
 }
 
-void ers_force_destroy_all(void)
-{
-	ers_cache_t *cache;
+/**
+ * Call on shutdown to clear remaining entries
+ **/
+void ers_final(void) {
+	struct ers_instance_t *instance = InstanceList, *next;
 	
-	for (cache = CacheList; cache; cache = cache->Next)
-			ers_free_cache(cache, false);
+	while( instance ) {
+		next = instance->Next;
+		ers_obj_destroy((ERS)instance);
+		instance = next;
+	}
 }
 
 #endif
