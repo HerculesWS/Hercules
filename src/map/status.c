@@ -8734,6 +8734,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				tick_time = 5000; // [GodLesZ] tick time
 				status->change_clear_buffs(bl,3); //Remove buffs/debuffs
 				break;
+			case SC_CRESCENTELBOW:
+				val2 = (sd ? sd->status.job_level : 2) / 2 + 50 + 5 * val1;
+				break;
 			case SC_LIGHTNINGWALK: //  [(Job Level / 2) + (40 + 5 * Skill Level)] %
 				val1 = (sd?sd->status.job_level:2)/2 + 40 + 5 * val1;
 				break;
