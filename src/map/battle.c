@@ -5317,20 +5317,21 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 		sc = NULL;
 
 	if( sc ) {
-
-		if( sc->data[SC_CRESCENTELBOW] && !is_boss(src) && rnd()%100 < sc->data[SC_CRESCENTELBOW]->val2 ){
-			//ATK [{(Target HP / 100) x Skill Level} x Caster Base Level / 125] % + [Received damage x {1 + (Skill Level x 0.2)}]
-			int ratio = (status_get_hp(src) / 100) * sc->data[SC_CRESCENTELBOW]->val1 * status->get_lv(target) / 125;
-			if (ratio > 5000) ratio = 5000; // Maximum of 5000% ATK
-			rdamage = rdamage * ratio / 100 + (damage) * (10 + sc->data[SC_CRESCENTELBOW]->val1 * 20 / 10) / 10;
-			skill->blown(target, src, skill->get_blewcount(SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1), unit->getdir(src), 0);
-			clif->skill_damage(target, src, tick, status_get_amotion(src), 0, rdamage,
-					   1, SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1, 6); // This is how official does
-			clif->delay_damage(tick + delay, src, target,status_get_amotion(src)+1000,0, rdamage/10, 1, 0);
-			status->damage(src, target, status->damage(target, src, rdamage, 0, 0, 1)/10, 0, 0, 1);
-			status_change_end(target, SC_CRESCENTELBOW, INVALID_TIMER);
-			/* shouldn't this trigger skill->additional_effect? */
-			return; // Just put here to minimize redundancy
+		if (wd->flag & BF_SHORT && !(skill->get_inf(skill_id) & (INF_GROUND_SKILL | INF_SELF_SKILL))) {
+			if( sc->data[SC_CRESCENTELBOW] && !is_boss(src) && rnd()%100 < sc->data[SC_CRESCENTELBOW]->val2 ){
+				//ATK [{(Target HP / 100) x Skill Level} x Caster Base Level / 125] % + [Received damage x {1 + (Skill Level x 0.2)}]
+				int ratio = (status_get_hp(src) / 100) * sc->data[SC_CRESCENTELBOW]->val1 * status->get_lv(target) / 125;
+				if (ratio > 5000) ratio = 5000; // Maximum of 5000% ATK
+				rdamage = rdamage * ratio / 100 + (damage) * (10 + sc->data[SC_CRESCENTELBOW]->val1 * 20 / 10) / 10;
+				skill->blown(target, src, skill->get_blewcount(SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1), unit->getdir(src), 0);
+				clif->skill_damage(target, src, tick, status_get_amotion(src), 0, rdamage,
+						   1, SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1, 6); // This is how official does
+				clif->delay_damage(tick + delay, src, target,status_get_amotion(src)+1000,0, rdamage/10, 1, 0);
+				status->damage(src, target, status->damage(target, src, rdamage, 0, 0, 1)/10, 0, 0, 1);
+				status_change_end(target, SC_CRESCENTELBOW, INVALID_TIMER);
+				/* shouldn't this trigger skill->additional_effect? */
+				return; // Just put here to minimize redundancy
+			}
 		}
 
 		if( wd->flag & BF_SHORT ) {
