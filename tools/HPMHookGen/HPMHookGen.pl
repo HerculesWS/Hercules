@@ -138,7 +138,7 @@ sub parse($$) {
 				}
 				last; # No other modifiers
 			}
-			if ($current =~ /^\s*(\w+)([*\s]*)(\w*)\s*((?:\[\])?)$/) { # Variable type and name
+			if ($current =~ /^\s*(\w+)((?:const|[*\s])*)(\w*)\s*((?:\[\])?)$/) { # Variable type and name
 				$type1 .= trim($1);
 				$indir = trim($2 // '');
 				$var = trim($3 // '');
@@ -147,7 +147,7 @@ sub parse($$) {
 			} else { # Unsupported
 				$notes .= "\n/* Error: Unhandled var type '$current' */";
 				print "Error: Unhandled var type '$current'\n";
-				push(@args, {$current});
+				push(@args, { var => $current });
 				next;
 			}
 		}
