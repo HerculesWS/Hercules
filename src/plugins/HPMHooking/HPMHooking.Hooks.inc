@@ -35401,14 +35401,13 @@ struct mob_data* HP_map_id2boss(int id) {
 	}
 	return retVal___;
 }
-void HP_map_reloadnpc(bool clear, , int extra_scripts_count) {
-/* Error: Unhandled var type 'char *const *extra_scripts' */
+void HP_map_reloadnpc(bool clear, const char *const *extra_scripts, int extra_scripts_count) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_map_reloadnpc_pre ) {
-		void (*preHookFunc) (bool *clear, , int *extra_scripts_count);
+		void (*preHookFunc) (bool *clear, const char *const *extra_scripts, int *extra_scripts_count);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_reloadnpc_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_map_reloadnpc_pre[hIndex].func;
-			preHookFunc(&clear, , &extra_scripts_count);
+			preHookFunc(&clear, extra_scripts, &extra_scripts_count);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -35416,13 +35415,13 @@ void HP_map_reloadnpc(bool clear, , int extra_scripts_count) {
 		}
 	}
 	{
-		HPMHooks.source.map.reloadnpc(clear, , extra_scripts_count);
+		HPMHooks.source.map.reloadnpc(clear, extra_scripts, extra_scripts_count);
 	}
 	if( HPMHooks.count.HP_map_reloadnpc_post ) {
-		void (*postHookFunc) (bool *clear, , int *extra_scripts_count);
+		void (*postHookFunc) (bool *clear, const char *const *extra_scripts, int *extra_scripts_count);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_reloadnpc_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_map_reloadnpc_post[hIndex].func;
-			postHookFunc(&clear, , &extra_scripts_count);
+			postHookFunc(&clear, extra_scripts, &extra_scripts_count);
 		}
 	}
 	return;
