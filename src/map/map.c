@@ -5575,7 +5575,7 @@ int do_init(int argc, char *argv[])
 	bool minimal = false;
 	bool scriptcheck = false;
 	int i, load_extras_count = 0;
-	const char **load_extras = NULL;
+	char **load_extras = NULL;
 
 #ifdef GCOLLECT
 	GC_enable_incremental();
@@ -5592,12 +5592,12 @@ int do_init(int argc, char *argv[])
 		const char* arg = argv[i];
 		if( strcmp(arg, "--load-plugin") == 0 ) {
 			if( map->arg_next_value(arg, i, argc, true) ) {
-				RECREATE(load_extras, const char *, ++load_extras_count);
+				RECREATE(load_extras, char *, ++load_extras_count);
 				load_extras[load_extras_count-1] = argv[++i];
 			}
 		}
 	}
-	HPM->config_read(load_extras, load_extras_count);
+	HPM->config_read((const char * const *)load_extras, load_extras_count);
 	if (load_extras) {
 		aFree(load_extras);
 		load_extras = NULL;
@@ -5656,7 +5656,7 @@ int do_init(int argc, char *argv[])
 					i++;
 			} else if( strcmp(arg, "load-script") == 0 ) {
 				if( map->arg_next_value(arg, i, argc, true) ) {
-					RECREATE(load_extras, const char *, ++load_extras_count);
+					RECREATE(load_extras, char *, ++load_extras_count);
 					load_extras[load_extras_count-1] = argv[++i];
 				}
 			} else {
@@ -5686,7 +5686,7 @@ int do_init(int argc, char *argv[])
 		map->config_read_sub(map->MAP_CONF_NAME);
 
 		// loads npcs
-		map->reloadnpc(false, load_extras, load_extras_count);
+		map->reloadnpc(false, (const char * const *)load_extras, load_extras_count);
 
 		chrif->checkdefaultlogin();
 
