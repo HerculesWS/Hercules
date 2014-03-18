@@ -26,6 +26,12 @@ enum bg_queue_types {
 	BGQT_GUILD      = 0x4,
 };
 
+enum bg_team_leave_type {
+	BGTL_LEFT = 0x0,
+	BGTL_QUIT = 0x1,
+	BGTL_AFK  = 0x2,
+};
+
 struct battleground_member_data {
 	unsigned short x, y;
 	struct map_session_data *sd;
@@ -62,12 +68,13 @@ struct bg_arena {
 	unsigned short fillup_duration;
 	unsigned short pregame_duration;
 	bool ongoing;
+	enum bg_queue_types allowed_types;
 };
 
 struct battleground_interface {
 	bool queue_on;
 	/* */
-	int mafksec;
+	int mafksec, afk_timer_id;
 	char gdelay_var[BG_DELAY_VAR_LENGTH];
 	/* */
 	struct bg_arena **arena;
@@ -97,13 +104,16 @@ struct battleground_interface {
 	bool (*team_warp) (int bg_id, unsigned short map_index, short x, short y);
 	void (*send_dot_remove) (struct map_session_data *sd);
 	bool (*team_join) (int bg_id, struct map_session_data *sd);
-	int (*team_leave) (struct map_session_data *sd, int flag);
+	int (*team_leave) (struct map_session_data *sd, enum bg_team_leave_type flag);
 	bool (*member_respawn) (struct map_session_data *sd);
 	int (*create) (unsigned short map_index, short rx, short ry, const char *ev, const char *dev);
 	int (*team_get_id) (struct block_list *bl);
 	bool (*send_message) (struct map_session_data *sd, const char *mes, int len);
 	int (*send_xy_timer_sub) (DBKey key, DBData *data, va_list ap);
-	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);	
+	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*afk_timer) (int tid, int64 tick, int id, intptr_t data);
+	/* */
+	enum bg_queue_types (*str2teamtype) (const char *str);
 	/* */
 	void (*config_read) (void);
 };

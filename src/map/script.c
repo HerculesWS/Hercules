@@ -16350,7 +16350,7 @@ BUILDIN(bg_leave)
 	if( sd == NULL || !sd->bg_id )
 		return true;
 
-	bg->team_leave(sd,0);
+	bg->team_leave(sd,BGTL_LEFT);
 	return true;
 }
 
