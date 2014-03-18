@@ -992,7 +992,7 @@ struct map_interface {
 	struct mob_data * (*getmob_boss) (int16 m);
 	struct mob_data * (*id2boss) (int id);
 	// reload config file looking only for npcs
-	void (*reloadnpc) (bool clear);
+	void (*reloadnpc) (bool clear, const char * const *extra_scripts, int extra_scripts_count);
 
 	int (*check_dir) (int s_dir,int t_dir);
 	uint8 (*calc_dir) (struct block_list *src,int16 x,int16 y);

@@ -5393,7 +5393,7 @@ int do_init(int argc, char **argv) {
 	online_char_db = idb_alloc(DB_OPT_RELEASE_DATA);
 
 	HPM->share(sql_handle,"sql_handle");
-	HPM->config_read();
+	HPM->config_read(NULL, 0);
 	HPM->event(HPET_INIT);
 	
 	mmo_char_sql_init();

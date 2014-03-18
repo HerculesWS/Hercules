@@ -3559,8 +3559,8 @@ void map_reloadnpc_sub(char *cfgName)
 	fclose(fp);
 }
 
-void map_reloadnpc(bool clear)
-{
+void map_reloadnpc(bool clear, const char * const *extra_scripts, int extra_scripts_count) {
+	int i;
 	if (clear)
 		npc->addsrcfile("clear"); // this will clear the current script list
 
@@ -3569,6 +3569,11 @@ void map_reloadnpc(bool clear)
 #else
 	map->reloadnpc_sub("npc/pre-re/scripts_main.conf");
 #endif
+
+	// Append extra scripts
+	for( i = 0; i < extra_scripts_count; i++ ) {
+		npc->addsrcfile(extra_scripts[i]);
+	}
 }
 
 int inter_config_read(char *cfgName) {
@@ -5355,7 +5360,10 @@ void map_helpscreen(bool do_exit)
 	ShowInfo("  --grf-path <file>         Alternative GRF path configuration.\n");
 	ShowInfo("  --inter-config <file>     Alternative inter-server configuration.\n");
 	ShowInfo("  --log-config <file>       Alternative logging configuration.\n");
-	ShowInfo("  --script-check <file>     Tests a script for errors, without running the server.\n");
+	ShowInfo("  --script-check            Doesn't run the server, only tests the\n");
+	ShowInfo("                            scripts passed through --load-script.\n");
+	ShowInfo("  --load-script <file>      Loads an additional script (can be repeated).\n");
+	ShowInfo("  --load-plugin <name>      Loads an additional plugin (can be repeated).\n");
 	HPM->arg_help();/* display help for commands implemented thru HPM */
 	if( do_exit )
 		exit(EXIT_SUCCESS);
@@ -5565,8 +5573,9 @@ void map_load_defaults(void) {
 int do_init(int argc, char *argv[])
 {
 	bool minimal = false;
-	char *scriptcheck = NULL;
-	int i;
+	bool scriptcheck = false;
+	int i, load_extras_count = 0;
+	char **load_extras = NULL;
 
 #ifdef GCOLLECT
 	GC_enable_incremental();
@@ -5579,7 +5588,21 @@ int do_init(int argc, char *argv[])
 	HPM->load_sub = HPM_map_plugin_load_sub;
 	HPM->symbol_defaults_sub = map_hp_symbols;
 	HPM->grabHPDataSub = HPM_map_grabHPData;
-	HPM->config_read();
+	for( i = 1; i < argc; i++ ) {
+		const char* arg = argv[i];
+		if( strcmp(arg, "--load-plugin") == 0 ) {
+			if( map->arg_next_value(arg, i, argc, true) ) {
+				RECREATE(load_extras, char *, ++load_extras_count);
+				load_extras[load_extras_count-1] = argv[++i];
+			}
+		}
+	}
+	HPM->config_read((const char * const *)load_extras, load_extras_count);
+	if (load_extras) {
+		aFree(load_extras);
+		load_extras = NULL;
+		load_extras_count = 0;
+	}
 	
 	HPM->event(HPET_PRE_INIT);
 	
@@ -5627,8 +5650,15 @@ int do_init(int argc, char *argv[])
 			} else if( strcmp(arg, "script-check") == 0 ) {
 				map->minimal = true;
 				runflag = CORE_ST_STOP;
+				scriptcheck = true;
+			} else if( strcmp(arg, "load-plugin") == 0 ) {
 				if( map->arg_next_value(arg, i, argc, true) )
-					scriptcheck = argv[++i];
+					i++;
+			} else if( strcmp(arg, "load-script") == 0 ) {
+				if( map->arg_next_value(arg, i, argc, true) ) {
+					RECREATE(load_extras, char *, ++load_extras_count);
+					load_extras[load_extras_count-1] = argv[++i];
+				}
 			} else {
 				ShowError("Unknown option '%s'.\n", argv[i]);
 				exit(EXIT_FAILURE);
@@ -5656,7 +5686,7 @@ int do_init(int argc, char *argv[])
 		map->config_read_sub(map->MAP_CONF_NAME);
 
 		// loads npcs
-		map->reloadnpc(false);
+		map->reloadnpc(false, (const char * const *)load_extras, load_extras_count);
 
 		chrif->checkdefaultlogin();
 
@@ -5766,9 +5796,19 @@ int do_init(int argc, char *argv[])
 	vending->init(minimal);
 
 	if (scriptcheck) {
-		if (npc->parsesrcfile(scriptcheck, false) == 0)
-			exit(EXIT_SUCCESS);
-		exit(EXIT_FAILURE);
+		bool failed = load_extras_count > 0 ? false : true;
+		for (i = 0; i < load_extras_count; i++) {
+			if (npc->parsesrcfile(load_extras[i], false) != 0)
+				failed = true;
+		}
+		if (failed)
+			exit(EXIT_FAILURE);
+		exit(EXIT_SUCCESS);
+	}
+	if (load_extras) {
+		aFree(load_extras);
+		load_extras = NULL;
+		load_extras_count = 0;
 	}
 
 	if( minimal ) {
