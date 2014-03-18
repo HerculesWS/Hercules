@@ -219,6 +219,10 @@ struct {
 	struct HPMHookPoint *HP_bg_send_xy_timer_sub_post;
 	struct HPMHookPoint *HP_bg_send_xy_timer_pre;
 	struct HPMHookPoint *HP_bg_send_xy_timer_post;
+	struct HPMHookPoint *HP_bg_afk_timer_pre;
+	struct HPMHookPoint *HP_bg_afk_timer_post;
+	struct HPMHookPoint *HP_bg_str2teamtype_pre;
+	struct HPMHookPoint *HP_bg_str2teamtype_post;
 	struct HPMHookPoint *HP_bg_config_read_pre;
 	struct HPMHookPoint *HP_bg_config_read_post;
 	struct HPMHookPoint *HP_buyingstore_setup_pre;
@@ -5252,6 +5256,10 @@ struct {
 	int HP_bg_send_xy_timer_sub_post;
 	int HP_bg_send_xy_timer_pre;
 	int HP_bg_send_xy_timer_post;
+	int HP_bg_afk_timer_pre;
+	int HP_bg_afk_timer_post;
+	int HP_bg_str2teamtype_pre;
+	int HP_bg_str2teamtype_post;
 	int HP_bg_config_read_pre;
 	int HP_bg_config_read_post;
 	int HP_buyingstore_setup_pre;

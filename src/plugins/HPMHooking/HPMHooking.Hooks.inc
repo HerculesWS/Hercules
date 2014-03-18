@@ -2648,11 +2648,11 @@ bool HP_bg_team_join(int bg_id, struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-int HP_bg_team_leave(struct map_session_data *sd, int flag) {
+int HP_bg_team_leave(struct map_session_data *sd, enum bg_team_leave_type flag) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_bg_team_leave_pre ) {
-		int (*preHookFunc) (struct map_session_data *sd, int *flag);
+		int (*preHookFunc) (struct map_session_data *sd, enum bg_team_leave_type *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_team_leave_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_bg_team_leave_pre[hIndex].func;
 			retVal___ = preHookFunc(sd, &flag);
@@ -2666,7 +2666,7 @@ int HP_bg_team_leave(struct map_session_data *sd, int flag) {
 		retVal___ = HPMHooks.source.bg.team_leave(sd, flag);
 	}
 	if( HPMHooks.count.HP_bg_team_leave_post ) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int *flag);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, enum bg_team_leave_type *flag);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_team_leave_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_bg_team_leave_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, &flag);
@@ -2832,6 +2832,59 @@ int HP_bg_send_xy_timer(int tid, int64 tick, int id, intptr_t data) {
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_send_xy_timer_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_bg_send_xy_timer_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, &tid, &tick, &id, &data);
+		}
+	}
+	return retVal___;
+}
+int HP_bg_afk_timer(int tid, int64 tick, int id, intptr_t data) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_bg_afk_timer_pre ) {
+		int (*preHookFunc) (int *tid, int64 *tick, int *id, intptr_t *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_afk_timer_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_bg_afk_timer_pre[hIndex].func;
+			retVal___ = preHookFunc(&tid, &tick, &id, &data);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.bg.afk_timer(tid, tick, id, data);
+	}
+	if( HPMHooks.count.HP_bg_afk_timer_post ) {
+		int (*postHookFunc) (int retVal___, int *tid, int64 *tick, int *id, intptr_t *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_afk_timer_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_bg_afk_timer_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &tid, &tick, &id, &data);
+		}
+	}
+	return retVal___;
+}
+enum bg_queue_types HP_bg_str2teamtype(const char *str) {
+/* Unknown return type 'enum bg_queue_types'. Initializing to '0'. */
+	int hIndex = 0;
+	enum bg_queue_types retVal___ = 0;
+	if( HPMHooks.count.HP_bg_str2teamtype_pre ) {
+		enum bg_queue_types (*preHookFunc) (const char *str);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_str2teamtype_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_bg_str2teamtype_pre[hIndex].func;
+			retVal___ = preHookFunc(str);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.bg.str2teamtype(str);
+	}
+	if( HPMHooks.count.HP_bg_str2teamtype_post ) {
+		enum bg_queue_types (*postHookFunc) (enum bg_queue_types retVal___, const char *str);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_str2teamtype_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_bg_str2teamtype_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, str);
 		}
 	}
 	return retVal___;
