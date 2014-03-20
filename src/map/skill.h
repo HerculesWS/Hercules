@@ -1870,6 +1870,7 @@ struct skill_interface {
 	/* whether its CAST_GROUND, CAST_DAMAGE or CAST_NODAMAGE */
 	int (*get_casttype) (uint16 skill_id);
 	int (*get_casttype2) (uint16 index);
+	bool (*is_combo) (int skill_id);
 	int (*name2id) (const char* name);
 	int (*isammotype) (struct map_session_data *sd, int skill_id);
 	int (*castend_id) (int tid, int64 tick, int id, intptr_t data);

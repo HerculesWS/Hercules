@@ -12496,6 +12496,35 @@ int skill_isammotype (struct map_session_data *sd, int skill_id)
 	);
 }
 
+/**
+ * Checks whether a skill can be used in combos or not
+ **/
+bool skill_is_combo( int skill_id )
+{
+	switch( skill_id )
+	{
+		case MO_CHAINCOMBO:
+		case MO_COMBOFINISH:
+		case CH_TIGERFIST:
+		case CH_CHAINCRUSH:
+		case MO_EXTREMITYFIST:
+		case TK_TURNKICK:
+		case TK_STORMKICK:
+		case TK_DOWNKICK:
+		case TK_COUNTER:
+		case TK_JUMPKICK:
+		case HT_POWER:
+		case GC_COUNTERSLASH:
+		case GC_WEAPONCRUSH:
+		case SR_FALLENEMPIRE:
+		case SR_DRAGONCOMBO:
+		case SR_TIGERCANNON:
+		case SR_GATEOFHELL:
+			return true;
+	}
+	return false;
+}
+
 int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id, uint16 skill_lv) {
 	struct status_data *st;
 	struct status_change *sc;
@@ -13389,29 +13418,11 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		return 0;
 	}
 
-	if( sd->sc.data[SC_COMBOATTACK] ) {
-		switch( skill_id ) {
-			case MO_CHAINCOMBO:
-			case MO_COMBOFINISH:
-			case CH_TIGERFIST:
-			case CH_CHAINCRUSH:
-			case MO_EXTREMITYFIST:
-			case TK_TURNKICK:
-			case TK_STORMKICK:
-			case TK_DOWNKICK:
-			case TK_COUNTER:
-			case TK_JUMPKICK:
-			case HT_POWER:
-			case GC_COUNTERSLASH:
-			case GC_WEAPONCRUSH:
-			case SR_FALLENEMPIRE:
-			case SR_DRAGONCOMBO:
-			case SR_TIGERCANNON:
-			case SR_GATEOFHELL:
-				break;
-			default: return 0;
-		}
-	}
+	// There's no need to check if the skill is part of a combo if it's
+	// already been checked before, see unit_skilluse_id2 [Panikon]
+	// Note that if this check is readded part of issue:8047 will reapear!
+	//if( sd->sc.data[SC_COMBOATTACK] && !skill->is_combo(skill_id ) )
+	//	return 0;
 			
 	return 1;
 }
@@ -18471,6 +18482,7 @@ void skill_defaults(void) {
 	skill->chk = skill_chk;
 	skill->get_casttype = skill_get_casttype;
 	skill->get_casttype2 = skill_get_casttype2;
+	skill->is_combo = skill_is_combo;
 	skill->name2id = skill_name2id;
 	skill->isammotype = skill_isammotype;
 	skill->castend_id = skill_castend_id;
