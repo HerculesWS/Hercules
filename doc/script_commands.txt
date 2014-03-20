@@ -5511,10 +5511,6 @@ Flag 3 is the same as flag 0 in that it saves to the database. However,
 these skills are ignored when any action is taken that adjusts the skill 
 tree (reset/job change).
 
-Flag 4 is the same as flag 1 in that it saves to the database. However, 
-these skills are ignored when any action is taken that adjusts the skill 
-tree (reset/job change).
-
 ---------------------------------------
 
 *nude;
