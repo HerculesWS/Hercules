@@ -56894,6 +56894,32 @@ int HP_skill_get_casttype2(uint16 index) {
 	}
 	return retVal___;
 }
+bool HP_skill_is_combo(int skill_id) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_skill_is_combo_pre ) {
+		bool (*preHookFunc) (int *skill_id);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_is_combo_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_is_combo_pre[hIndex].func;
+			retVal___ = preHookFunc(&skill_id);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.skill.is_combo(skill_id);
+	}
+	if( HPMHooks.count.HP_skill_is_combo_post ) {
+		bool (*postHookFunc) (bool retVal___, int *skill_id);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_is_combo_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_is_combo_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &skill_id);
+		}
+	}
+	return retVal___;
+}
 int HP_skill_name2id(const char *name) {
 	int hIndex = 0;
 	int retVal___ = 0;

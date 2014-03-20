@@ -2237,6 +2237,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->chk, HP_skill_chk) },
 	{ HP_POP(skill->get_casttype, HP_skill_get_casttype) },
 	{ HP_POP(skill->get_casttype2, HP_skill_get_casttype2) },
+	{ HP_POP(skill->is_combo, HP_skill_is_combo) },
 	{ HP_POP(skill->name2id, HP_skill_name2id) },
 	{ HP_POP(skill->isammotype, HP_skill_isammotype) },
 	{ HP_POP(skill->castend_id, HP_skill_castend_id) },
