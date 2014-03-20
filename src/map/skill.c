@@ -760,15 +760,15 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 				// Chance to trigger Taekwon kicks [Dralnu]
 				if(sc && !sc->data[SC_COMBOATTACK]) {
 					if(sc->data[SC_STORMKICK_READY] &&
-						sc_start(NULL,src,SC_COMBOATTACK, 15, TK_STORMKICK,
+						sc_start(src,src,SC_COMBOATTACK, 15, TK_STORMKICK,
 							(2000 - 4*sstatus->agi - 2*sstatus->dex)))
 						; //Stance triggered
 					else if(sc->data[SC_DOWNKICK_READY] &&
-						sc_start(NULL,src,SC_COMBOATTACK, 15, TK_DOWNKICK,
+						sc_start(src,src,SC_COMBOATTACK, 15, TK_DOWNKICK,
 							(2000 - 4*sstatus->agi - 2*sstatus->dex)))
 						; //Stance triggered
 					else if(sc->data[SC_TURNKICK_READY] &&
-						sc_start(NULL,src,SC_COMBOATTACK, 15, TK_TURNKICK,
+						sc_start(src,src,SC_COMBOATTACK, 15, TK_TURNKICK,
 							(2000 - 4*sstatus->agi - 2*sstatus->dex)))
 						; //Stance triggered
 						else if (sc->data[SC_COUNTERKICK_READY]) { //additional chance from SG_FRIEND [Komurka]
@@ -777,7 +777,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 							rate += rate*sc->data[SC_SKILLRATE_UP]->val2/100;
 							status_change_end(src, SC_SKILLRATE_UP, INVALID_TIMER);
 						}
-						sc_start2(NULL, src, SC_COMBOATTACK, rate, TK_COUNTER, bl->id,
+						sc_start2(src, src, SC_COMBOATTACK, rate, TK_COUNTER, bl->id,
 							(2000 - 4*sstatus->agi - 2*sstatus->dex));
 					}
 				}
