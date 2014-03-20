@@ -18,7 +18,7 @@ item_db: (
 	Type: Item Type               (int, defaults to 3 = etc item)
 	Buy: Buy Price                (int, defaults to Sell * 2)
 	Sell: Sell Price              (int, defaults to Buy / 2)
-	Weight: Item Weight           (int, defaults to 0)
+	Weight: Item Weight           (int, defaults to 0, units in Weight/10 )
 	Atk: Attack                   (int, defaults to 0)
 	Matk: Magical Attack          (int, defaults to 0, ignored in pre-re)
 	Def: Defense                  (int, defaults to 0)

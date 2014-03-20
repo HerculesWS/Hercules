@@ -522,7 +522,9 @@ JobExp      - Amount of job experience points.
 NextBaseExp - Amount of base experience points needed to reach next level.
 NextJobExp  - Amount of job experience points needed to reach next level.
 Weight      - Amount of weight the character currently carries.
+              Display as in Weight/10.
 MaxWeight   - Maximum weight the character can carry.
+              Display as in MaxWeight/10.
 Sex         - 0 if female, 1 if male.
 Class       - Character's job.
 Upper       - 0 if the character is normal class, 1 if advanced, 2 if baby.
@@ -2375,6 +2377,11 @@ You can also use this command to get stat values.
 
 	if (readparam(bVit) > 77)
 		mes "Only people with over 77 Vit are reading this!";
+
+Example 3:
+
+	// Display your current weight
+	mes "Your current weight is "+( Weight/10 )+"/"+( MaxWeight/10 );
 
 ---------------------------------------
 
