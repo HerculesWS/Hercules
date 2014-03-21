@@ -4403,6 +4403,8 @@ struct {
 	struct HPMHookPoint *HP_skill_get_casttype_post;
 	struct HPMHookPoint *HP_skill_get_casttype2_pre;
 	struct HPMHookPoint *HP_skill_get_casttype2_post;
+	struct HPMHookPoint *HP_skill_is_combo_pre;
+	struct HPMHookPoint *HP_skill_is_combo_post;
 	struct HPMHookPoint *HP_skill_name2id_pre;
 	struct HPMHookPoint *HP_skill_name2id_post;
 	struct HPMHookPoint *HP_skill_isammotype_pre;
@@ -9440,6 +9442,8 @@ struct {
 	int HP_skill_get_casttype_post;
 	int HP_skill_get_casttype2_pre;
 	int HP_skill_get_casttype2_post;
+	int HP_skill_is_combo_pre;
+	int HP_skill_is_combo_post;
 	int HP_skill_name2id_pre;
 	int HP_skill_name2id_post;
 	int HP_skill_isammotype_pre;
