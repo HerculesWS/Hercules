@@ -2054,8 +2054,11 @@ int skill_blown(struct block_list* src, struct block_list* target, int count, in
 }
 
 
-//Checks if 'bl' should reflect back a spell cast by 'src'.
-//type is the type of magic attack: 0: indirect (aoe), 1: direct (targetted)
+// Checks if 'bl' should reflect back a spell cast by 'src'.
+// type is the type of magic attack: 0: indirect (aoe), 1: direct (targetted)
+// In case of success returns type of reflection, otherwise 0
+//		1 - Regular reflection (Maya)
+//		2 - SL_KAITE reflection
 int skill_magic_reflect(struct block_list* src, struct block_list* bl, int type) {
 	struct status_change *sc = status->get_sc(bl);
 	struct map_session_data* sd = BL_CAST(BL_PC, bl);
@@ -2197,7 +2200,15 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		 * Official Magic Reflection Behavior : damage reflected depends on gears caster wears, not target
 		 **/
 		#if MAGIC_REFLECTION_TYPE
-			if( dmg.dmg_lv != ATK_MISS ){ //Wiz SL cancelled and consumed fragment
+
+		#if defined(DISABLE_RENEWAL)
+			// issue:6415 in pre-renewal Kaite reflected the entire damage received
+			// regardless of caster's equipament (Aegis 11.1)
+			if( dmg.dmg_lv != ATK_MISS && type == 1 ) //Wiz SL cancelled and consumed fragment
+		#else
+			if( dmg.dmg_lv != ATK_MISS ) //Wiz SL cancelled and consumed fragment
+		#endif
+			{
 				short s_ele = skill->get_ele(skill_id, skill_lv);
 				
 				if (s_ele == -1) // the skill takes the weapon's element
@@ -2218,10 +2229,9 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 						status_change_end(bl, SC_ENERGYCOAT, INVALID_TIMER);
 					//Reduction: 6% + 6% every 20%
 					dmg.damage -= dmg.damage * (6 * (1+per)) / 100;
-				}
-				
+				}	
 			}
-		#endif
+		#endif /* MAGIC_REFLECTION_TYPE */
 		}
 		if(sc && sc->data[SC_MAGICROD] && src == dsrc) {
 			int sp = skill->get_sp(skill_id,skill_lv);
