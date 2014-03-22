@@ -9403,7 +9403,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd) {
 
 		if (sd->sc.option&OPTION_FALCON)
 			clif->status_change(&sd->bl, SI_FALCON, 1, 0, 0, 0, 0);
-		if (sd->sc.option&OPTION_RIDING)
+		if (sd->sc.option&(OPTION_RIDING|OPTION_DRAGON))
 			clif->status_change(&sd->bl, SI_RIDING, 1, 0, 0, 0, 0);
 		else if (sd->sc.option&OPTION_WUGRIDER)
 			clif->status_change(&sd->bl, SI_WUGRIDER, 1, 0, 0, 0, 0);
