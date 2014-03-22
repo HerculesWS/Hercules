@@ -115,6 +115,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(bg->send_message, HP_bg_send_message) },
 	{ HP_POP(bg->send_xy_timer_sub, HP_bg_send_xy_timer_sub) },
 	{ HP_POP(bg->send_xy_timer, HP_bg_send_xy_timer) },
+	{ HP_POP(bg->afk_timer, HP_bg_afk_timer) },
+	{ HP_POP(bg->str2teamtype, HP_bg_str2teamtype) },
 	{ HP_POP(bg->config_read, HP_bg_config_read) },
 /* buyingstore */
 	{ HP_POP(buyingstore->setup, HP_buyingstore_setup) },
@@ -2235,6 +2237,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->chk, HP_skill_chk) },
 	{ HP_POP(skill->get_casttype, HP_skill_get_casttype) },
 	{ HP_POP(skill->get_casttype2, HP_skill_get_casttype2) },
+	{ HP_POP(skill->is_combo, HP_skill_is_combo) },
 	{ HP_POP(skill->name2id, HP_skill_name2id) },
 	{ HP_POP(skill->isammotype, HP_skill_isammotype) },
 	{ HP_POP(skill->castend_id, HP_skill_castend_id) },

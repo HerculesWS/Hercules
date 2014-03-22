@@ -1846,6 +1846,8 @@ static DBData* db_obj_ensure(DBMap* self, DBKey key, DBCreateData create, ...)
  * @protected
  * @see #db_malloc_dbn(void)
  * @see DBMap#put
+ * FIXME: If this method fails shouldn't it return another value?
+ *		 Other functions rely on this to know if they were able to put something [Panikon]
  */
 static int db_obj_put(DBMap* self, DBKey key, DBData data, DBData *out_data)
 {

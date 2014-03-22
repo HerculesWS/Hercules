@@ -522,7 +522,9 @@ JobExp      - Amount of job experience points.
 NextBaseExp - Amount of base experience points needed to reach next level.
 NextJobExp  - Amount of job experience points needed to reach next level.
 Weight      - Amount of weight the character currently carries.
+              Display as in Weight/10.
 MaxWeight   - Maximum weight the character can carry.
+              Display as in MaxWeight/10.
 Sex         - 0 if female, 1 if male.
 Class       - Character's job.
 Upper       - 0 if the character is normal class, 1 if advanced, 2 if baby.
@@ -2375,6 +2377,11 @@ You can also use this command to get stat values.
 
 	if (readparam(bVit) > 77)
 		mes "Only people with over 77 Vit are reading this!";
+
+Example 3:
+
+	// Display your current weight
+	mes "Your current weight is "+( Weight/10 )+"/"+( MaxWeight/10 );
 
 ---------------------------------------
 
@@ -5508,10 +5515,6 @@ skill previously, they will now at 0+the level given.
     skill 152,1,0;
 
 Flag 3 is the same as flag 0 in that it saves to the database. However, 
-these skills are ignored when any action is taken that adjusts the skill 
-tree (reset/job change).
-
-Flag 4 is the same as flag 1 in that it saves to the database. However, 
 these skills are ignored when any action is taken that adjusts the skill 
 tree (reset/job change).
 

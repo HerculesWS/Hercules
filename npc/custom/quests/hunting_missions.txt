@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= Euphy
 //===== Current Version: =====================================
-//= 1.3a
+//= 1.4a
 //===== Description: =========================================
 //= Random hunting missions.
 //= Rewards are based on quest difficulty.
@@ -14,6 +14,9 @@
 //=     SQL query, both thanks to AnnieRuru.
 //= 1.3 Re-added a blacklist adapted for the SQL query.
 //= 1.3a Added mission reset options.
+//= 1.4 Fix ranking table using new SQL database [ossi0110]
+//= 1.4a Fix a bug when a character has deleted, that account
+//=     can't do mission. [AnnieRuru]
 //============================================================
 
 prontera,152,187,6	script	Hunting Missions	4_F_EDEN_MASTER,{
@@ -41,7 +44,7 @@ function Chk; function Cm;
 	switch(select(((!Mission0)?" ~ New Mission::":": ~ Mission Status: ~ Abandon Mission")+": ~ Information: ~ Mission Shop: ~ View Top Hunters: ~ ^777777Cancel^000000")) {
 	case 1:
 		mes "[Hunting Missions]";
-		if (#Mission_Count) {
+		if ( query_sql( "SELECT 1 FROM `char_reg_num_db` WHERE `key` = 'Mission0' AND `char_id` IN ( SELECT `char_id` FROM `char` WHERE `account_id` = "+ getcharid(3) +" )", .@dummy ) && #Mission_Count ) {
 			mes "You've started a mission";
 			mes "on another character.";
 			close;
@@ -126,7 +129,7 @@ function Chk; function Cm;
 	case 6:
 		mes "[Hunting Missions]";
 		mes "The top hunters are:";
-		query_sql("SELECT char_id AS id, (SELECT `name` FROM `char` WHERE char_id = id),`value` FROM `char_reg_num_db` WHERE `key` = 'Mission_Total' ORDER BY CAST(`value` AS SIGNED) DESC LIMIT 5",.@id,.@name$,.@val);
+		query_sql("SELECT char_id AS id, (SELECT `name` FROM `char` WHERE char_id = id),`value` FROM `char_reg_num_db` WHERE `key` = 'Mission_Total' ORDER BY `value` DESC LIMIT 5",.@id,.@name$,.@val);
 		for(set .@i,0; .@i<5; set .@i,.@i+1)
 			mes "  [Rank "+(.@i+1)+"]  "+((.@name$[.@i] == "")?"^777777none":"^0055FF"+.@name$[.@i]+"^000000 : ^FF0000"+.@val[.@i]+" pt.")+"^000000";
 		close;

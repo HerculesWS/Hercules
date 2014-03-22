@@ -3,13 +3,13 @@
 //===== By: ==================================================
 //= Hercules Dev Team
 //===== Current Version: =====================================
-//= 20131225
+//= 20140320
 //===== Description: =========================================
 //= An example of how duplicate NPCs are handled:
 //=  NPC variables are shared between all duplicates.
-//=  Each duplicate knows its own map coordinates.
+//=  In this sample, to get the NPC coordinate, has to trigger OnTouch
 //=  Duplicates always override the source NPC's trigger area (even 0x0).
-//=  'OnInit' loads the middle Poring last, for some reason.
+//=  'OnInit' loads the main npc last, for some reason. (check with debugmes)
 //============================================================
 
 -	script	Test Script	-1,1,1,{
@@ -19,6 +19,7 @@
 
 OnInit:
 	getmapxy(.map$, .x, .y, 1);
+	debugmes strnpcinfo(0);
 	end;
 
 OnTouch:

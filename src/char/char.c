@@ -125,6 +125,8 @@ int char_del_delay = 86400;
 int log_char = 1;	// loggin char or not [devil]
 int log_inter = 1;	// loggin inter or not [devil]
 
+int char_aegis_delete = 0; // Verify if char is in guild/party or char and reacts as Aegis does (doesn't allow deletion), see char_delete2_req for more information
+
 // Advanced subnet check [LuzZza]
 struct s_subnet {
 	uint32 mask;
@@ -3854,6 +3856,7 @@ int lan_subnetcheck(uint32 ip)
 }
 
 
+/// Answers to deletion request (HC_DELETE_CHAR3_RESERVED)
 /// @param result
 /// 0 (0x718): An unknown error has occurred.
 /// 1: none/success
@@ -3919,7 +3922,7 @@ void char_delete2_cancel_ack(int fd, int char_id, uint32 result)
 
 static void char_delete2_req(int fd, struct char_session_data* sd)
 {// CH: <0827>.W <char id>.L
-	int char_id, i;
+	int char_id, party_id, guild_id, i;
 	char* data;
 	time_t delete_date;
 
@@ -3946,22 +3949,34 @@ static void char_delete2_req(int fd, struct char_session_data* sd)
 		return;
 	}
 
-/*
-	// Aegis imposes these checks probably to avoid dead member
-	// entries in guilds/parties, otherwise they are not required.
-	// TODO: Figure out how these are enforced during waiting.
-	if( guild_id )
-	{// character in guild
-		char_delete2_ack(fd, char_id, 4, 0);
-		return;
-	}
+	// This check is imposed by Aegis to avoid dead entries in databases
+	// _it is not needed_ as we clear data properly
+	// see issue: 7338
+	if( char_aegis_delete )
+	{
+		if( SQL_SUCCESS != SQL->Query(sql_handle, "SELECT `party_id`, `guild_id` FROM `%s` WHERE `char_id`='%d'", char_db, char_id) 
+		|| SQL_SUCCESS != SQL->NextRow(sql_handle)
+		)
+		{
+			Sql_ShowDebug(sql_handle);
+			char_delete2_ack(fd, char_id, 3, 0);
+			return;
+		}
+		SQL->GetData(sql_handle, 0, &data, NULL); party_id = atoi(data);
+		SQL->GetData(sql_handle, 1, &data, NULL); guild_id = atoi(data);
 
-	if( party_id )
-	{// character in party
-		char_delete2_ack(fd, char_id, 5, 0);
-		return;
+		if( guild_id )
+		{
+			char_delete2_ack(fd, char_id, 4, 0);
+			return;
+		}
+
+		if( party_id )
+		{
+			char_delete2_ack(fd, char_id, 5, 0);
+			return;
+		}
 	}
-*/
 
 	// success
 	delete_date = time(NULL)+char_del_delay;
@@ -5258,6 +5273,8 @@ int char_config_read(const char* cfgName)
 			char_del_level = atoi(w2);
 		} else if (strcmpi(w1, "char_del_delay") == 0) {
 			char_del_delay = atoi(w2);
+		} else if (strcmpi(w1, "char_aegis_delete") == 0) {
+			char_aegis_delete = atoi(w2);
 		} else if(strcmpi(w1,"db_path")==0) {
 			safestrncpy(db_path, w2, sizeof(db_path));
 		} else if (strcmpi(w1, "fame_list_alchemist") == 0) {

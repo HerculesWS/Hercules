@@ -760,15 +760,15 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 				// Chance to trigger Taekwon kicks [Dralnu]
 				if(sc && !sc->data[SC_COMBOATTACK]) {
 					if(sc->data[SC_STORMKICK_READY] &&
-						sc_start(NULL,src,SC_COMBOATTACK, 15, TK_STORMKICK,
+						sc_start(src,src,SC_COMBOATTACK, 15, TK_STORMKICK,
 							(2000 - 4*sstatus->agi - 2*sstatus->dex)))
 						; //Stance triggered
 					else if(sc->data[SC_DOWNKICK_READY] &&
-						sc_start(NULL,src,SC_COMBOATTACK, 15, TK_DOWNKICK,
+						sc_start(src,src,SC_COMBOATTACK, 15, TK_DOWNKICK,
 							(2000 - 4*sstatus->agi - 2*sstatus->dex)))
 						; //Stance triggered
 					else if(sc->data[SC_TURNKICK_READY] &&
-						sc_start(NULL,src,SC_COMBOATTACK, 15, TK_TURNKICK,
+						sc_start(src,src,SC_COMBOATTACK, 15, TK_TURNKICK,
 							(2000 - 4*sstatus->agi - 2*sstatus->dex)))
 						; //Stance triggered
 						else if (sc->data[SC_COUNTERKICK_READY]) { //additional chance from SG_FRIEND [Komurka]
@@ -777,7 +777,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 							rate += rate*sc->data[SC_SKILLRATE_UP]->val2/100;
 							status_change_end(src, SC_SKILLRATE_UP, INVALID_TIMER);
 						}
-						sc_start2(NULL, src, SC_COMBOATTACK, rate, TK_COUNTER, bl->id,
+						sc_start2(src, src, SC_COMBOATTACK, rate, TK_COUNTER, bl->id,
 							(2000 - 4*sstatus->agi - 2*sstatus->dex));
 					}
 				}
@@ -2054,8 +2054,11 @@ int skill_blown(struct block_list* src, struct block_list* target, int count, in
 }
 
 
-//Checks if 'bl' should reflect back a spell cast by 'src'.
-//type is the type of magic attack: 0: indirect (aoe), 1: direct (targetted)
+// Checks if 'bl' should reflect back a spell cast by 'src'.
+// type is the type of magic attack: 0: indirect (aoe), 1: direct (targetted)
+// In case of success returns type of reflection, otherwise 0
+//		1 - Regular reflection (Maya)
+//		2 - SL_KAITE reflection
 int skill_magic_reflect(struct block_list* src, struct block_list* bl, int type) {
 	struct status_change *sc = status->get_sc(bl);
 	struct map_session_data* sd = BL_CAST(BL_PC, bl);
@@ -2197,7 +2200,15 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		 * Official Magic Reflection Behavior : damage reflected depends on gears caster wears, not target
 		 **/
 		#if MAGIC_REFLECTION_TYPE
-			if( dmg.dmg_lv != ATK_MISS ){ //Wiz SL cancelled and consumed fragment
+
+		#if defined(DISABLE_RENEWAL)
+			// issue:6415 in pre-renewal Kaite reflected the entire damage received
+			// regardless of caster's equipament (Aegis 11.1)
+			if( dmg.dmg_lv != ATK_MISS && type == 1 ) //Wiz SL cancelled and consumed fragment
+		#else
+			if( dmg.dmg_lv != ATK_MISS ) //Wiz SL cancelled and consumed fragment
+		#endif
+			{
 				short s_ele = skill->get_ele(skill_id, skill_lv);
 				
 				if (s_ele == -1) // the skill takes the weapon's element
@@ -2218,10 +2229,9 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 						status_change_end(bl, SC_ENERGYCOAT, INVALID_TIMER);
 					//Reduction: 6% + 6% every 20%
 					dmg.damage -= dmg.damage * (6 * (1+per)) / 100;
-				}
-				
+				}	
 			}
-		#endif
+		#endif /* MAGIC_REFLECTION_TYPE */
 		}
 		if(sc && sc->data[SC_MAGICROD] && src == dsrc) {
 			int sp = skill->get_sp(skill_id,skill_lv);
@@ -12495,6 +12505,35 @@ int skill_isammotype (struct map_session_data *sd, int skill_id)
 	);
 }
 
+/**
+ * Checks whether a skill can be used in combos or not
+ **/
+bool skill_is_combo( int skill_id )
+{
+	switch( skill_id )
+	{
+		case MO_CHAINCOMBO:
+		case MO_COMBOFINISH:
+		case CH_TIGERFIST:
+		case CH_CHAINCRUSH:
+		case MO_EXTREMITYFIST:
+		case TK_TURNKICK:
+		case TK_STORMKICK:
+		case TK_DOWNKICK:
+		case TK_COUNTER:
+		case TK_JUMPKICK:
+		case HT_POWER:
+		case GC_COUNTERSLASH:
+		case GC_WEAPONCRUSH:
+		case SR_FALLENEMPIRE:
+		case SR_DRAGONCOMBO:
+		case SR_TIGERCANNON:
+		case SR_GATEOFHELL:
+			return true;
+	}
+	return false;
+}
+
 int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id, uint16 skill_lv) {
 	struct status_data *st;
 	struct status_change *sc;
@@ -13388,29 +13427,11 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		return 0;
 	}
 
-	if( sd->sc.data[SC_COMBOATTACK] ) {
-		switch( skill_id ) {
-			case MO_CHAINCOMBO:
-			case MO_COMBOFINISH:
-			case CH_TIGERFIST:
-			case CH_CHAINCRUSH:
-			case MO_EXTREMITYFIST:
-			case TK_TURNKICK:
-			case TK_STORMKICK:
-			case TK_DOWNKICK:
-			case TK_COUNTER:
-			case TK_JUMPKICK:
-			case HT_POWER:
-			case GC_COUNTERSLASH:
-			case GC_WEAPONCRUSH:
-			case SR_FALLENEMPIRE:
-			case SR_DRAGONCOMBO:
-			case SR_TIGERCANNON:
-			case SR_GATEOFHELL:
-				break;
-			default: return 0;
-		}
-	}
+	// There's no need to check if the skill is part of a combo if it's
+	// already been checked before, see unit_skilluse_id2 [Panikon]
+	// Note that if this check is readded part of issue:8047 will reapear!
+	//if( sd->sc.data[SC_COMBOATTACK] && !skill->is_combo(skill_id ) )
+	//	return 0;
 			
 	return 1;
 }
@@ -18466,6 +18487,7 @@ void skill_defaults(void) {
 	skill->chk = skill_chk;
 	skill->get_casttype = skill_get_casttype;
 	skill->get_casttype2 = skill_get_casttype2;
+	skill->is_combo = skill_is_combo;
 	skill->name2id = skill_name2id;
 	skill->isammotype = skill_isammotype;
 	skill->castend_id = skill_castend_id;
