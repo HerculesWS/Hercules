@@ -9493,6 +9493,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				skill->blockhomun_start(hd, skill_id, skill->get_cooldown(skill_id, skill_lv));
 		}
 			break;
+		case SO_ELEMENTAL_SHIELD:/* somehow its handled outside this switch, so we need a empty case otherwise default would be triggered. */
+			break;
 		default:
 			ShowWarning("skill_castend_nodamage_id: Unknown skill used:%d\n",skill_id);
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
