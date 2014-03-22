@@ -2453,6 +2453,43 @@ packet(0x020d,-1);
 	packet(0x0887,36,clif->pStoragePassword,0);
 #endif
 
+//2013-08-14aRagexe - Themon
+#if PACKETVER >= 20130814
+	packet(0x0874,7,clif->pActionRequest,2,6);
+	packet(0x0947,10,clif->pUseSkillToId,2,4,6);
+	packet(0x093A,5,clif->pWalkToXY,2);
+	packet(0x088A,6,clif->pTickSend,2);
+	packet(0x088C,5,clif->pChangeDir,2,4);
+	packet(0x0926,6,clif->pTakeItem,2);
+	packet(0x095F,6,clif->pDropItem,2,4);
+	packet(0x0202,8,clif->pMoveToKafra,2,4);
+	packet(0x0873,8,clif->pMoveFromKafra,2,4);
+	packet(0x0887,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0962,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x0937,6,clif->pGetCharNameRequest,2);
+	packet(0x0923,6,clif->pSolveCharName,2);
+	packet(0x0868,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0941,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0889,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0835,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0895,6,clif->pReqClickBuyingStore,2);
+	packet(0x094E,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0936,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+#ifdef PACKETVER_RE
+	packet(0x0365,41,clif->pPartyRecruitRegisterReq,2,4);
+#else // not PACKETVER_RE
+	packet(0x0959,18,clif->pPartyBookingRegisterReq,2,4);
+#endif // PACKETVER_RE
+	// packet(0x0896,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x08A4,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x0368,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x0927,26,clif->pPartyInvite2,2);
+	// packet(0x0815,4); // CZ_GANGSI_RANK
+	packet(0x0281,26,clif->pFriendsListAdd,2);
+	packet(0x0958,5,clif->pHomMenu,2,4);
+	packet(0x0885,36,clif->pStoragePassword,0);
+#endif
+
 // 2013-12-18bRagexe - Yommy
 #if PACKETVER >= 20131218
 	packet(0x0369,7,clif->pActionRequest,2,6);
@@ -2853,6 +2890,10 @@ packet(0x020d,-1);
 
 #if PACKETVER >= 20130807
 	packetKeys(0x7E241DE0,0x5E805580,0x3D807D80); /* Thanks to Shakto */
+#endif
+
+#if PACKETVER >= 20130814
+	packetKeys(0x23A23148,0x0C41420E,0x53785AD7); /* Themon */
 #endif
 
 #if PACKETVER >= 20131218
