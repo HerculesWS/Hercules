@@ -2,8 +2,8 @@
 // See the LICENSE file
 // Portions Copyright (c) Athena Dev Teams
 
-#ifndef	_MAP_VENDING_H_
-#define	_MAP_VENDING_H_
+#ifndef _MAP_VENDING_H_
+#define _MAP_VENDING_H_
 
 #include "../common/cbasetypes.h"
 #include "../common/db.h"
