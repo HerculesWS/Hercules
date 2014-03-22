@@ -2629,6 +2629,9 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			case WL_CRIMSONROCK:
 				dir = map->calc_dir(bl,skill->area_temp[4],skill->area_temp[5]);
 				break;
+			case MC_CARTREVOLUTION:
+				dir = 6; // Official servers push target to the West
+				break;
 
 		}
 		
