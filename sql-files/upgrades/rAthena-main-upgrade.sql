@@ -4,7 +4,7 @@
 -- Remember to make a backup before applying.
 -- We are not liable for any data loss this may cause.
 -- Apply in the same database you applied your main.sql
--- Last revised: March 21, 2014 20:30
+-- Last revised: March 21, 2014 20:30 GMT
 
 -- Drop table contents from ´sc_data´ since we use a different status order than rAthena
 -- /!\ WARNING /!\ This will remove _ALL_ of the status effects active on the server
