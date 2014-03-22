@@ -10413,9 +10413,8 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case SC_FEINTBOMB:
 			skill->unitsetting(src, skill_id, skill_lv, x, y, 0); // Set bomb on current Position
 			clif->skill_nodamage(src, src, skill_id, skill_lv, 1);
-			if( skill->blown(src, src, 3 * skill_lv, unit->getdir(src), 0) && sc){
-				sc->option |= OPTION_INVISIBLE;
-				clif->changeoption(src);
+			if( skill->blown(src, src, 3 * skill_lv, unit->getdir(src), 0) && sc) {
+				sc_start(src, src, SC__FEINTBOMB_MASTER, 100, 0, skill->get_unit_interval(SC_FEINTBOMB));
 			}
 			break;
 
@@ -15878,13 +15877,9 @@ int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap) {
 
 			case UNT_FEINTBOMB: {
 				struct block_list *src = map->id2bl(group->src_id);
-				if( src ){
-					struct status_change *sc = status->get_sc(src);
+				if( src ) {
 					map->foreachinrange(skill->area_sub, &group->unit->bl, su->range, splash_target(src), src, SC_FEINTBOMB, group->skill_lv, tick, BCT_ENEMY|SD_ANIMATION|1, skill->castend_damage_id);
-					if(sc){
-						sc->option &= ~OPTION_INVISIBLE;
-						clif->changeoption(src);
-					}
+					status_change_end(src, SC__FEINTBOMB_MASTER, INVALID_TIMER);
 				}
 				skill->delunit(su);
 				break;
