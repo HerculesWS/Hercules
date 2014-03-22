@@ -9386,6 +9386,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			sc->option |= OPTION_OKTOBERFEST;
 			opt_flag |= 0x4;
 			break;
+		case SC__FEINTBOMB_MASTER:
+			sc->option |= OPTION_INVISIBLE;
+			opt_flag |= 0x4;
+			break;
 		default:
 			opt_flag = 0;
 	}
@@ -10161,6 +10165,10 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			break;
 		case SC_OKTOBERFEST:
 			sc->option &= ~OPTION_OKTOBERFEST;
+			opt_flag |= 0x4;
+			break;
+		case SC__FEINTBOMB_MASTER:
+			sc->option &= ~OPTION_INVISIBLE;
 			opt_flag |= 0x4;
 			break;
 		case SC_ORCISH:
